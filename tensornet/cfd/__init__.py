@@ -10,6 +10,7 @@ Phase 5: QTT compression for tensor network CFD coupling.
 Phase 6: Navier-Stokes viscous terms for boundary layers and heat transfer.
 Phase 7: Coupled NS, 3D Euler, and real-gas thermodynamics.
 Phase 8: SBLI benchmarks, multi-species chemistry, reactive NS.
+Phase 9: RANS turbulence, adjoint solver, shape optimization.
 """
 
 from tensornet.cfd.euler_1d import (
@@ -156,6 +157,51 @@ from tensornet.cfd.reactive_ns import (
     reactive_flat_plate_ic,
 )
 
+from tensornet.cfd.turbulence import (
+    TurbulenceModel,
+    TurbulentState,
+    k_epsilon_eddy_viscosity,
+    k_epsilon_production,
+    k_epsilon_source,
+    k_omega_sst_eddy_viscosity,
+    k_omega_sst_source,
+    sst_blending_functions,
+    k_omega_blending,
+    spalart_allmaras_eddy_viscosity,
+    spalart_allmaras_source,
+    log_law_velocity,
+    wall_function_tau,
+    sarkar_correction,
+    wilcox_compressibility,
+    initialize_turbulence,
+)
+
+from tensornet.cfd.adjoint import (
+    AdjointMethod,
+    ObjectiveType,
+    AdjointState,
+    SensitivityResult,
+    AdjointConfig,
+    ObjectiveFunction,
+    DragObjective,
+    HeatFluxObjective,
+    AdjointEuler2D,
+    compute_shape_sensitivity,
+)
+
+from tensornet.cfd.optimization import (
+    OptimizerType,
+    ConstraintType,
+    OptimizationConfig,
+    ConstraintSpec,
+    OptimizationResult,
+    GeometryParameterization,
+    BSplineParameterization,
+    FFDParameterization,
+    ShapeOptimizer,
+    create_wedge_design_problem,
+)
+
 __all__ = [
     # 1D Euler equations
     'Euler1D',
@@ -273,4 +319,43 @@ __all__ = [
     'ReactiveConfig',
     'ReactiveNS',
     'reactive_flat_plate_ic',
+    # RANS Turbulence (Phase 9)
+    'TurbulenceModel',
+    'TurbulentState',
+    'k_epsilon_eddy_viscosity',
+    'k_epsilon_production',
+    'k_epsilon_source',
+    'k_omega_sst_eddy_viscosity',
+    'k_omega_sst_source',
+    'sst_blending_functions',
+    'k_omega_blending',
+    'spalart_allmaras_eddy_viscosity',
+    'spalart_allmaras_source',
+    'log_law_velocity',
+    'wall_function_tau',
+    'sarkar_correction',
+    'wilcox_compressibility',
+    'initialize_turbulence',
+    # Adjoint Solver (Phase 9)
+    'AdjointMethod',
+    'ObjectiveType',
+    'AdjointState',
+    'SensitivityResult',
+    'AdjointConfig',
+    'ObjectiveFunction',
+    'DragObjective',
+    'HeatFluxObjective',
+    'AdjointEuler2D',
+    'compute_shape_sensitivity',
+    # Shape Optimization (Phase 9)
+    'OptimizerType',
+    'ConstraintType',
+    'OptimizationConfig',
+    'ConstraintSpec',
+    'OptimizationResult',
+    'GeometryParameterization',
+    'BSplineParameterization',
+    'FFDParameterization',
+    'ShapeOptimizer',
+    'create_wedge_design_problem',
 ]

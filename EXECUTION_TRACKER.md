@@ -1,8 +1,8 @@
 # Project HyperTensor: Execution Tracker
 
-**Document Version**: 1.7.0  
+**Document Version**: 1.8.0  
 **Last Updated**: 2025-12-20  
-**Status**: ACTIVE DEVELOPMENT - PHASE 8 COMPLETE
+**Status**: ACTIVE DEVELOPMENT - PHASE 9 COMPLETE
 
 ---
 
@@ -56,7 +56,13 @@ Project HyperTensor/
 │       ├── real_gas.py           # Real-gas thermodynamics (Phase 7)
 │       ├── chemistry.py          # Multi-species chemistry (Phase 8)
 │       ├── implicit.py           # Implicit time integration (Phase 8)
-│       └── reactive_ns.py        # Reactive Navier-Stokes (Phase 8)
+│       ├── reactive_ns.py        # Reactive Navier-Stokes (Phase 8)
+│       ├── turbulence.py         # RANS turbulence models (Phase 9)
+│       ├── adjoint.py            # Adjoint solver for sensitivity (Phase 9)
+│       └── optimization.py       # Shape optimization (Phase 9)
+├── .github/
+│   └── workflows/
+│       └── ci.yml                # GitHub Actions CI/CD (Phase 9)
 ├── benchmarks/                   # Performance validation
 │   ├── compare_tenpy.py
 │   ├── heisenberg_ground_state.py
@@ -77,7 +83,7 @@ Project HyperTensor/
 │   └── proof_run.json
 ├── tests/
 │   ├── test_proofs.py
-│   └── test_integration.py       # 77 integration tests
+│   └── test_integration.py       # 97 integration tests
 ├── scripts/
 │   ├── reproduce.py
 │   └── test_excited.py
@@ -237,6 +243,41 @@ Project HyperTensor/
 | ReactiveNS | `cfd/reactive_ns.py` | ✅ Implemented | Coupled chemistry+NS |
 | reactive_flat_plate_ic | `cfd/reactive_ns.py` | ✅ Implemented | Reacting flat plate IC |
 | SBLI Benchmark | `benchmarks/sbli_benchmark.py` | ✅ Implemented | Compression corner SBLI |
+
+#### Phase 9: RANS Turbulence, Adjoint Solver, Shape Optimization
+
+| Component | File | Status | Description |
+|-----------|------|--------|-------------|
+| TurbulenceModel | `cfd/turbulence.py` | ✅ Implemented | LAMINAR, K_EPSILON, K_OMEGA_SST, SA |
+| TurbulentState | `cfd/turbulence.py` | ✅ Implemented | k, ε, ω, ν̃, μ_t container |
+| k_epsilon_eddy_viscosity | `cfd/turbulence.py` | ✅ Implemented | μ_t = ρ C_μ k²/ε |
+| k_epsilon_production | `cfd/turbulence.py` | ✅ Implemented | P_k = μ_t S² |
+| k_epsilon_source | `cfd/turbulence.py` | ✅ Implemented | S_k, S_ε source terms |
+| k_omega_sst_eddy_viscosity | `cfd/turbulence.py` | ✅ Implemented | SST with vorticity limiter |
+| sst_blending_functions | `cfd/turbulence.py` | ✅ Implemented | F1, F2 blending for SST |
+| k_omega_sst_source | `cfd/turbulence.py` | ✅ Implemented | S_k, S_ω with cross-diffusion |
+| spalart_allmaras_eddy_viscosity | `cfd/turbulence.py` | ✅ Implemented | μ_t = ρ ν̃ f_v1 |
+| spalart_allmaras_source | `cfd/turbulence.py` | ✅ Implemented | SA production/destruction |
+| log_law_velocity | `cfd/turbulence.py` | ✅ Implemented | u⁺ = (1/κ) ln(y⁺) + B |
+| wall_function_tau | `cfd/turbulence.py` | ✅ Implemented | Iterative τ_w from wall functions |
+| sarkar_correction | `cfd/turbulence.py` | ✅ Implemented | Compressibility dilatation dissipation |
+| wilcox_compressibility | `cfd/turbulence.py` | ✅ Implemented | β* modification for M_t |
+| initialize_turbulence | `cfd/turbulence.py` | ✅ Implemented | Model-specific initialization |
+| AdjointMethod | `cfd/adjoint.py` | ✅ Implemented | CONTINUOUS, DISCRETE |
+| AdjointState | `cfd/adjoint.py` | ✅ Implemented | ψ_ρ, ψ_ρu, ψ_ρv, ψ_E |
+| AdjointConfig | `cfd/adjoint.py` | ✅ Implemented | Solver configuration |
+| DragObjective | `cfd/adjoint.py` | ✅ Implemented | C_D pressure drag objective |
+| HeatFluxObjective | `cfd/adjoint.py` | ✅ Implemented | q_w integrated heat flux |
+| AdjointEuler2D | `cfd/adjoint.py` | ✅ Implemented | Adjoint PDE solver |
+| flux_jacobian_x/y | `cfd/adjoint.py` | ✅ Implemented | ∂F/∂U, ∂G/∂U Jacobians |
+| compute_shape_sensitivity | `cfd/adjoint.py` | ✅ Implemented | dJ/dn surface sensitivity |
+| OptimizerType | `cfd/optimization.py` | ✅ Implemented | STEEPEST_DESCENT, LBFGS, etc. |
+| OptimizationConfig | `cfd/optimization.py` | ✅ Implemented | Optimizer settings |
+| BSplineParameterization | `cfd/optimization.py` | ✅ Implemented | B-spline control point param |
+| FFDParameterization | `cfd/optimization.py` | ✅ Implemented | Free-Form Deformation box |
+| ShapeOptimizer | `cfd/optimization.py` | ✅ Implemented | Main optimization driver |
+| create_wedge_design_problem | `cfd/optimization.py` | ✅ Implemented | Wedge shape test problem |
+| GitHub Actions CI | `.github/workflows/ci.yml` | ✅ Implemented | pytest, lint, coverage |
 
 ### C. Hamiltonian Library (`tensornet/mps/hamiltonians.py`)
 
@@ -490,6 +531,10 @@ $$S(x) = \frac{c}{6} \log\left(\frac{L}{\pi} \sin\frac{\pi x}{L}\right) + \text{
 | 2025-12-20 | Park 5-species kinetics | Standard hypersonic chemistry model |
 | 2025-12-20 | Backward Euler for chemistry | Stiff ODE stability |
 | 2025-12-20 | Strang operator splitting for reactive NS | Decoupled chemistry/transport |
+| 2025-12-20 | k-ω SST as default turbulence | Best accuracy for separated flows |
+| 2025-12-20 | Discrete adjoint over continuous | Better numerical consistency |
+| 2025-12-20 | B-spline parameterization | Smooth gradient-friendly shapes |
+| 2025-12-20 | L-BFGS optimizer with line search | Robust quasi-Newton method |
 
 ---
 
@@ -526,10 +571,14 @@ $$S(x) = \frac{c}{6} \log\left(\frac{L}{\pi} \sin\frac{\pi x}{L}\right) + \text{
 | ✅ | Multi-species chemistry | Complete | Phase 8 |
 | ✅ | Implicit time integration | Complete | Phase 8 |
 | ✅ | Reactive Navier-Stokes solver | Complete | Phase 8 |
-| P0 | Turbulence modeling (RANS/LES) | TBD | Phase 9 |
-| P0 | Adjoint-based optimization | TBD | Phase 9 |
+| ✅ | Turbulence modeling (RANS) | Complete | Phase 9 |
+| ✅ | Adjoint solver framework | Complete | Phase 9 |
+| ✅ | Shape optimization | Complete | Phase 9 |
+| ✅ | GitHub Actions CI/CD | Complete | Phase 9 |
+| P0 | LES turbulence models | TBD | Phase 10 |
+| P0 | Multi-objective optimization | TBD | Phase 10 |
+| P1 | GPU acceleration (CUDA kernels) | TBD | Phase 10 |
 | P2 | Create Sphinx documentation | TBD | Ongoing |
-| P2 | CI/CD pipeline (GitHub Actions) | TBD | Ongoing |
 
 ---
 

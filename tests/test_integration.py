@@ -1031,5 +1031,341 @@ class TestReactiveNS:
         assert dt < 1e-3
 
 
+class TestTurbulence:
+    """Test RANS turbulence modeling (Phase 9)."""
+    
+    def test_turbulence_imports(self):
+        from tensornet.cfd.turbulence import (
+            TurbulenceModel, TurbulentState,
+            k_epsilon_eddy_viscosity, k_omega_sst_eddy_viscosity,
+            spalart_allmaras_eddy_viscosity
+        )
+        assert TurbulenceModel.K_EPSILON is not None
+        assert TurbulenceModel.K_OMEGA_SST is not None
+        assert TurbulenceModel.SPALART_ALLMARAS is not None
+    
+    def test_turbulent_state(self):
+        from tensornet.cfd.turbulence import TurbulentState
+        
+        shape = (10, 10)
+        state = TurbulentState.zeros(shape)
+        
+        assert state.k.shape == shape
+        assert state.epsilon.shape == shape
+        assert state.omega.shape == shape
+        assert state.mu_t.shape == shape
+    
+    def test_k_epsilon_eddy_viscosity(self):
+        from tensornet.cfd.turbulence import k_epsilon_eddy_viscosity
+        
+        rho = torch.full((10, 10), 1.2, dtype=torch.float64)
+        k = torch.full((10, 10), 1.0, dtype=torch.float64)
+        epsilon = torch.full((10, 10), 0.1, dtype=torch.float64)
+        
+        mu_t = k_epsilon_eddy_viscosity(rho, k, epsilon)
+        
+        # mu_t = rho * C_mu * k^2 / epsilon = 1.2 * 0.09 * 1 / 0.1 = 1.08
+        assert torch.allclose(mu_t, torch.full_like(mu_t, 1.08), atol=1e-6)
+    
+    def test_k_omega_sst(self):
+        from tensornet.cfd.turbulence import (
+            k_omega_sst_eddy_viscosity, sst_blending_functions
+        )
+        
+        rho = torch.full((10, 10), 1.2, dtype=torch.float64)
+        k = torch.full((10, 10), 100.0, dtype=torch.float64)
+        omega = torch.full((10, 10), 1000.0, dtype=torch.float64)
+        y = torch.linspace(0.001, 0.1, 10, dtype=torch.float64).unsqueeze(0).expand(10, 10)
+        mu = torch.full((10, 10), 1.8e-5, dtype=torch.float64)
+        
+        F1, F2 = sst_blending_functions(k, omega, y, rho, mu)
+        
+        # F1, F2 should be between 0 and 1
+        assert (F1 >= 0).all() and (F1 <= 1).all()
+        assert (F2 >= 0).all() and (F2 <= 1).all()
+        
+        # Get eddy viscosity (just check it runs)
+        mu_t = k_omega_sst_eddy_viscosity(rho, k, omega, F2)
+        assert mu_t.shape == (10, 10)
+        assert (mu_t >= 0).all()
+    
+    def test_spalart_allmaras(self):
+        from tensornet.cfd.turbulence import spalart_allmaras_eddy_viscosity
+        
+        rho = torch.full((10, 10), 1.2, dtype=torch.float64)
+        nu = torch.full((10, 10), 1.5e-5, dtype=torch.float64)
+        nu_tilde = torch.full((10, 10), 3e-5, dtype=torch.float64)
+        
+        mu_t = spalart_allmaras_eddy_viscosity(rho, nu_tilde, nu)
+        
+        assert mu_t.shape == (10, 10)
+        assert (mu_t >= 0).all()
+    
+    def test_wall_functions(self):
+        from tensornet.cfd.turbulence import log_law_velocity
+        
+        y_plus = torch.tensor([30.0, 100.0, 300.0], dtype=torch.float64)
+        u_plus = log_law_velocity(y_plus)
+        
+        # For y+ > 30, log law should give u+ ~ 14-20 range
+        assert (u_plus > 10).all()
+        assert (u_plus < 25).all()
+    
+    def test_compressibility_corrections(self):
+        from tensornet.cfd.turbulence import sarkar_correction, wilcox_compressibility
+        
+        k = torch.full((5, 5), 1000.0, dtype=torch.float64)
+        T = torch.full((5, 5), 300.0, dtype=torch.float64)
+        
+        sarkar = sarkar_correction(k, T)
+        beta_star_mod, F_Mt = wilcox_compressibility(k, T)
+        
+        # Both should return tensors of the right shape
+        assert sarkar.shape == (5, 5)
+        assert beta_star_mod.shape == (5, 5)
+        assert F_Mt.shape == (5, 5)
+    
+    def test_turbulence_initialization(self):
+        from tensornet.cfd.turbulence import (
+            TurbulenceModel, TurbulentState, initialize_turbulence
+        )
+        
+        rho = torch.full((10, 10), 1.2, dtype=torch.float64)
+        u = torch.full((10, 10), 100.0, dtype=torch.float64)
+        mu = torch.full((10, 10), 1.8e-5, dtype=torch.float64)
+        
+        for model in [TurbulenceModel.K_EPSILON, TurbulenceModel.K_OMEGA_SST]:
+            state = initialize_turbulence(model, rho, u, mu)
+            
+            assert isinstance(state, TurbulentState)
+            assert (state.k > 0).all()
+
+
+class TestAdjoint:
+    """Test adjoint solver framework (Phase 9)."""
+    
+    def test_adjoint_imports(self):
+        from tensornet.cfd.adjoint import (
+            AdjointMethod, AdjointState, AdjointConfig,
+            DragObjective, HeatFluxObjective, AdjointEuler2D
+        )
+        assert AdjointMethod.CONTINUOUS is not None
+        assert AdjointMethod.DISCRETE is not None
+    
+    def test_adjoint_state(self):
+        from tensornet.cfd.adjoint import AdjointState
+        
+        psi = AdjointState.zeros((10, 10))
+        
+        assert psi.shape == (10, 10)
+        assert psi.to_tensor().shape == (4, 10, 10)
+        
+        # Test round-trip
+        tensor = psi.to_tensor()
+        psi2 = AdjointState.from_tensor(tensor)
+        
+        assert torch.allclose(psi.psi_rho, psi2.psi_rho)
+    
+    def test_drag_objective(self):
+        from tensornet.cfd.adjoint import DragObjective
+        
+        surface_mask = torch.zeros(10, 10, dtype=torch.float64)
+        surface_mask[0, :] = 1.0
+        normal_x = torch.zeros(10, 10, dtype=torch.float64)
+        normal_x[0, :] = 1.0
+        normal_y = torch.zeros(10, 10, dtype=torch.float64)
+        
+        obj = DragObjective(surface_mask, normal_x, normal_y, q_inf=6000.0, S_ref=1.0)
+        
+        rho = torch.ones(10, 10, dtype=torch.float64)
+        u = torch.full((10, 10), 100.0, dtype=torch.float64)
+        v = torch.zeros(10, 10, dtype=torch.float64)
+        p = torch.full((10, 10), 101325.0, dtype=torch.float64)
+        
+        J = obj.evaluate(rho, u, v, p)
+        
+        assert J.item() > 0
+        
+        # Test gradient
+        dJ = obj.gradient(rho, u, v, p)
+        
+        assert len(dJ) == 4
+        # Only pressure gradient should be nonzero on surface
+        assert (dJ[3][0, :] != 0).any()
+    
+    def test_flux_jacobians(self):
+        from tensornet.cfd.adjoint import AdjointEuler2D
+        
+        solver = AdjointEuler2D(Nx=10, Ny=10, dx=0.1, dy=0.1)
+        
+        rho = torch.ones(10, 10, dtype=torch.float64)
+        u = torch.full((10, 10), 100.0, dtype=torch.float64)
+        v = torch.zeros(10, 10, dtype=torch.float64)
+        p = torch.full((10, 10), 101325.0, dtype=torch.float64)
+        
+        A = solver.flux_jacobian_x(rho, u, v, p)
+        B = solver.flux_jacobian_y(rho, u, v, p)
+        
+        assert A.shape == (4, 4, 10, 10)
+        assert B.shape == (4, 4, 10, 10)
+        
+        # Check for NaN/Inf
+        assert not torch.isnan(A).any()
+        assert not torch.isnan(B).any()
+    
+    def test_adjoint_rhs(self):
+        from tensornet.cfd.adjoint import AdjointEuler2D, AdjointState
+        
+        solver = AdjointEuler2D(Nx=10, Ny=10, dx=0.1, dy=0.1)
+        
+        psi = AdjointState.zeros((10, 10))
+        rho = torch.ones(10, 10, dtype=torch.float64)
+        u = torch.full((10, 10), 100.0, dtype=torch.float64)
+        v = torch.zeros(10, 10, dtype=torch.float64)
+        p = torch.full((10, 10), 101325.0, dtype=torch.float64)
+        source = torch.zeros(4, 10, 10, dtype=torch.float64)
+        
+        rhs = solver.adjoint_rhs(psi, rho, u, v, p, source)
+        
+        assert rhs.shape == (10, 10)
+        # Zero psi and source should give small RHS
+        assert rhs.to_tensor().norm().item() < 1e-10
+    
+    def test_shape_sensitivity(self):
+        from tensornet.cfd.adjoint import AdjointState, compute_shape_sensitivity
+        
+        psi = AdjointState.zeros((10, 10))
+        psi.psi_rho = torch.ones(10, 10, dtype=torch.float64)
+        
+        rho = torch.ones(10, 10, dtype=torch.float64)
+        u = torch.full((10, 10), 100.0, dtype=torch.float64)
+        v = torch.zeros(10, 10, dtype=torch.float64)
+        p = torch.full((10, 10), 101325.0, dtype=torch.float64)
+        
+        surface_mask = torch.zeros(10, 10, dtype=torch.float64)
+        surface_mask[0, :] = 1.0
+        normal_x = torch.ones(10, 10, dtype=torch.float64)
+        normal_y = torch.zeros(10, 10, dtype=torch.float64)
+        
+        sens = compute_shape_sensitivity(
+            psi, rho, u, v, p, surface_mask, normal_x, normal_y
+        )
+        
+        assert sens.shape == (10, 10)
+
+
+class TestOptimization:
+    """Test shape optimization framework (Phase 9)."""
+    
+    def test_optimization_imports(self):
+        from tensornet.cfd.optimization import (
+            OptimizerType, OptimizationConfig, ShapeOptimizer,
+            BSplineParameterization, FFDParameterization
+        )
+        assert OptimizerType.LBFGS is not None
+        assert OptimizerType.STEEPEST_DESCENT is not None
+    
+    def test_bspline_parameterization(self):
+        from tensornet.cfd.optimization import BSplineParameterization
+        
+        n_control = 6
+        param = BSplineParameterization(n_control, degree=3, n_eval_points=20)
+        
+        # Straight line control points (diagonal)
+        alpha = torch.zeros(n_control * 2, dtype=torch.float64)
+        alpha[0::2] = torch.linspace(0, 1, n_control, dtype=torch.float64)
+        alpha[1::2] = torch.linspace(0, 1, n_control, dtype=torch.float64)  # y = x line
+        
+        curve = param.evaluate(alpha)
+        
+        assert curve.shape == (20, 2)
+        
+        # Curve should approximately follow y = x
+        # Check that middle points are roughly on the line
+        middle_pts = curve[5:15, :]
+        diff = (middle_pts[:, 1] - middle_pts[:, 0]).abs()
+        assert diff.mean() < 0.2  # Allow some deviation due to B-spline smoothing
+    
+    def test_bspline_gradient(self):
+        from tensornet.cfd.optimization import BSplineParameterization
+        
+        n_control = 5
+        param = BSplineParameterization(n_control, n_eval_points=10)
+        
+        alpha = torch.zeros(n_control * 2, dtype=torch.float64)
+        alpha[0::2] = torch.linspace(0, 1, n_control, dtype=torch.float64)
+        
+        jac = param.gradient(alpha)
+        
+        assert jac.shape == (20, 10)  # (n_eval*2, n_control*2)
+    
+    def test_ffd_parameterization(self):
+        from tensornet.cfd.optimization import FFDParameterization
+        
+        # Simple surface
+        surface = torch.zeros(10, 2, dtype=torch.float64)
+        surface[:, 0] = torch.linspace(0, 1, 10)
+        surface[:, 1] = 0.0
+        
+        ffd = FFDParameterization(
+            box_origin=(0, -0.5),
+            box_size=(1.0, 1.0),
+            n_control=(2, 2),
+            surface_coords=surface
+        )
+        
+        # Zero displacement should return original
+        alpha = torch.zeros(ffd.n_design_vars, dtype=torch.float64)
+        deformed = ffd.evaluate(alpha)
+        
+        assert torch.allclose(deformed, surface, atol=1e-10)
+    
+    def test_wedge_design_problem(self):
+        from tensornet.cfd.optimization import create_wedge_design_problem
+        
+        param, alpha0 = create_wedge_design_problem(n_control=8, theta_initial=10.0)
+        
+        curve = param.evaluate(alpha0)
+        
+        # Should have 100 evaluation points by default
+        assert curve.shape[0] >= 10
+        
+        # Control points should span x from 0 to 1
+        # Extract x control points
+        x_controls = alpha0[0::2]
+        assert x_controls[0].item() < 0.1  # Near zero
+        assert x_controls[-1].item() > 0.8  # Near one
+        
+        # y control points should increase (wedge shape)
+        y_controls = alpha0[1::2]
+        assert y_controls[-1].item() > y_controls[0].item()
+    
+    def test_gradient_smoothing(self):
+        from tensornet.cfd.optimization import (
+            OptimizationConfig, ShapeOptimizer, BSplineParameterization
+        )
+        
+        config = OptimizationConfig(gradient_smoothing=True, smoothing_iterations=5)
+        param = BSplineParameterization(5)
+        
+        optimizer = ShapeOptimizer(
+            parameterization=param,
+            flow_solver=lambda x: {},
+            adjoint_solver=lambda x, s: torch.zeros(100),
+            objective=lambda s: 0.0,
+            config=config
+        )
+        
+        # Oscillatory gradient
+        grad = torch.zeros(10, dtype=torch.float64)
+        grad[0::2] = 1.0
+        grad[1::2] = -1.0
+        
+        smoothed = optimizer._smooth_gradient(grad)
+        
+        # Oscillation should be reduced
+        assert (smoothed[1:] - smoothed[:-1]).abs().mean() < (grad[1:] - grad[:-1]).abs().mean()
+
+
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])
