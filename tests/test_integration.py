@@ -10,6 +10,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import math
 import torch
 import pytest
 
@@ -1365,6 +1366,425 @@ class TestOptimization:
         
         # Oscillation should be reduced
         assert (smoothed[1:] - smoothed[:-1]).abs().mean() < (grad[1:] - grad[:-1]).abs().mean()
+
+
+# ============================================================================
+# PHASE 10: LES, Hybrid RANS-LES, Multi-Objective, GPU
+# ============================================================================
+
+class TestLES:
+    """Test LES subgrid-scale models."""
+    
+    def test_les_imports(self):
+        from tensornet.cfd import (
+            LESModel, LESState, filter_width, strain_rate_magnitude,
+            smagorinsky_viscosity, wale_viscosity, vreman_viscosity,
+            compute_sgs_viscosity
+        )
+        assert LESModel is not None
+        assert LESState is not None
+    
+    def test_filter_width_2d(self):
+        from tensornet.cfd.les import filter_width
+        
+        dx = torch.ones(32, 32) * 0.01
+        dy = torch.ones(32, 32) * 0.02
+        
+        delta = filter_width(dx, dy)
+        
+        # (dx * dy)^0.5 = (0.01 * 0.02)^0.5 ≈ 0.0141
+        expected = (0.01 * 0.02) ** 0.5
+        assert torch.allclose(delta, torch.ones_like(delta) * expected, rtol=1e-4)
+    
+    def test_filter_width_3d(self):
+        from tensornet.cfd.les import filter_width
+        
+        dx = torch.ones(16, 16, 16) * 0.01
+        dy = torch.ones(16, 16, 16) * 0.02
+        dz = torch.ones(16, 16, 16) * 0.03
+        
+        delta = filter_width(dx, dy, dz)
+        
+        # (dx * dy * dz)^(1/3)
+        expected = (0.01 * 0.02 * 0.03) ** (1.0/3.0)
+        assert torch.allclose(delta, torch.ones_like(delta) * expected, rtol=1e-4)
+    
+    def test_strain_rate_magnitude(self):
+        from tensornet.cfd.les import strain_rate_magnitude
+        
+        Nx, Ny = 32, 32
+        # Simple shear: u = y, v = 0
+        # du/dx = 0, du/dy = 1, dv/dx = 0, dv/dy = 0
+        du_dx = torch.zeros(Nx, Ny)
+        du_dy = torch.ones(Nx, Ny)
+        dv_dx = torch.zeros(Nx, Ny)
+        dv_dy = torch.zeros(Nx, Ny)
+        
+        S_mag = strain_rate_magnitude(du_dx, du_dy, dv_dx, dv_dy)
+        
+        # For Couette, S_12 = 0.5 * du/dy = 0.5, |S| = sqrt(2 * 2 * S_12^2) = 1
+        assert torch.allclose(S_mag, torch.ones_like(S_mag), rtol=1e-4)
+    
+    def test_smagorinsky_viscosity(self):
+        from tensornet.cfd.les import smagorinsky_viscosity
+        
+        S = torch.ones(32, 32) * 100.0
+        delta = 0.01  # scalar
+        rho = torch.ones(32, 32)  # unit density
+        c_s = 0.17
+        
+        mu_sgs = smagorinsky_viscosity(S, delta, rho, c_s)
+        
+        # μ_sgs = ρ * (C_s Δ)² |S| = 1 * (0.17 * 0.01)² * 100 = 2.89e-4
+        expected = (0.17 * 0.01) ** 2 * 100.0
+        assert torch.allclose(mu_sgs, torch.ones_like(mu_sgs) * expected, rtol=1e-4)
+    
+    def test_van_driest_damping(self):
+        from tensornet.cfd.les import van_driest_damping
+        
+        y_plus = torch.tensor([0.0, 5.0, 25.0, 100.0])
+        D = van_driest_damping(y_plus, A_plus=25.0)
+        
+        # D = 1 - exp(-y+/A+), so at y+ = 25, D ≈ 1 - 1/e ≈ 0.632
+        assert D[0].item() < 0.01  # Near zero at wall
+        assert abs(D[2].item() - (1 - 1/math.e)) < 0.02  # Relaxed tolerance
+        assert D[3].item() > 0.9  # Near one far from wall
+    
+    def test_wale_viscosity(self):
+        from tensornet.cfd.les import wale_viscosity
+        
+        Nx, Ny = 16, 16
+        delta = 0.01  # scalar
+        rho = torch.ones(Nx, Ny)
+        
+        # Simple shear velocity gradients
+        du_dx = torch.zeros(Nx, Ny)
+        du_dy = torch.ones(Nx, Ny) * 0.5
+        dv_dx = torch.zeros(Nx, Ny)
+        dv_dy = torch.zeros(Nx, Ny)
+        
+        mu_wale = wale_viscosity(du_dx, du_dy, dv_dx, dv_dy, delta, rho)
+        
+        # WALE should produce non-zero viscosity in shear regions
+        assert mu_wale.shape == (Nx, Ny)
+        assert (mu_wale >= 0).all()
+    
+    def test_compute_sgs_viscosity_dispatch(self):
+        from tensornet.cfd.les import compute_sgs_viscosity, LESModel
+        
+        Nx, Ny = 16, 16
+        rho = torch.ones(Nx, Ny)
+        du_dx = torch.randn(Nx, Ny) * 10
+        du_dy = torch.randn(Nx, Ny) * 10
+        dv_dx = torch.randn(Nx, Ny) * 10
+        dv_dy = torch.randn(Nx, Ny) * 10
+        delta = 0.01
+        
+        for model in [LESModel.SMAGORINSKY, LESModel.WALE, LESModel.VREMAN]:
+            mu_sgs = compute_sgs_viscosity(model, du_dx, du_dy, dv_dx, dv_dy, delta, rho)
+            
+            assert mu_sgs.shape == (Nx, Ny)
+            assert (mu_sgs >= 0).all()
+
+
+class TestHybridLES:
+    """Test hybrid RANS-LES models."""
+    
+    def test_hybrid_les_imports(self):
+        from tensornet.cfd import (
+            HybridModel, HybridLESState, des_length_scale, ddes_delay_function,
+            run_hybrid_les, estimate_rans_les_ratio
+        )
+        assert HybridModel is not None
+        assert HybridLESState is not None
+    
+    def test_grid_scale_computation(self):
+        from tensornet.cfd.hybrid_les import compute_grid_scale
+        
+        dx = torch.ones(10, 10) * 0.01
+        dy = torch.ones(10, 10) * 0.02
+        
+        delta = compute_grid_scale(dx, dy, method="max")
+        assert torch.allclose(delta, torch.ones_like(delta) * 0.02)
+        
+        delta_cube = compute_grid_scale(dx, dy, method="cube")
+        expected = (0.01 * 0.02) ** 0.5
+        assert torch.allclose(delta_cube, torch.ones_like(delta_cube) * expected, rtol=1e-4)
+    
+    def test_des_length_scale(self):
+        from tensornet.cfd.hybrid_les import des_length_scale, compute_wall_distance_scale
+        
+        d_wall = torch.linspace(0.001, 0.1, 20)
+        l_rans = compute_wall_distance_scale(d_wall)
+        delta = torch.ones(20) * 0.02
+        
+        l_des = des_length_scale(l_rans, delta)
+        
+        # Near wall: l_RANS < C_DES*Δ → use l_RANS
+        # Far from wall: l_RANS > C_DES*Δ → use C_DES*Δ
+        assert l_des[0] < l_des[-1]
+        
+        # Should be min of RANS and LES length scales
+        C_DES = 0.65
+        l_les = C_DES * delta
+        expected = torch.minimum(l_rans, l_les)
+        assert torch.allclose(l_des, expected)
+    
+    def test_ddes_delay_function(self):
+        from tensornet.cfd.hybrid_les import ddes_delay_function
+        
+        r_d = torch.tensor([0.1, 0.5, 1.0, 2.0, 5.0])
+        f_d = ddes_delay_function(r_d)
+        
+        # f_d = 1 - tanh(...)
+        # Should be high for low r_d, low for high r_d
+        assert f_d[0] > f_d[-1]
+        assert (f_d >= 0).all()
+        assert (f_d <= 1).all()
+    
+    def test_run_hybrid_les_ddes(self):
+        from tensornet.cfd.hybrid_les import run_hybrid_les, HybridModel
+        
+        Nx, Ny = 32, 32
+        rho = torch.ones(Nx, Ny)
+        u = torch.zeros(2, Nx, Ny)
+        u[0] = torch.linspace(0, 1, Ny).unsqueeze(0).expand(Nx, -1)
+        
+        d_wall = torch.linspace(0.001, 0.5, Ny).unsqueeze(0).expand(Nx, -1)
+        dx = torch.ones(Nx, Ny) * 0.02
+        dy = torch.ones(Nx, Ny) * 0.02
+        nu_rans = torch.ones(Nx, Ny) * 0.001
+        
+        state = run_hybrid_les(
+            rho=rho, u=u, d_wall=d_wall, grid_spacing=(dx, dy),
+            nu=1e-5, nu_rans=nu_rans, model=HybridModel.DDES
+        )
+        
+        assert state.nu_sgs.shape == (Nx, Ny)
+        assert state.blending.shape == (Nx, Ny)
+        assert state.f_d is not None
+    
+    def test_hybrid_model_comparison(self):
+        from tensornet.cfd.hybrid_les import run_hybrid_les, estimate_rans_les_ratio, HybridModel
+        
+        Nx, Ny = 32, 32
+        rho = torch.ones(Nx, Ny)
+        u = torch.zeros(2, Nx, Ny)
+        d_wall = torch.linspace(0.001, 0.5, Ny).unsqueeze(0).expand(Nx, -1)
+        dx = torch.ones(Nx, Ny) * 0.02
+        dy = torch.ones(Nx, Ny) * 0.02
+        nu_rans = torch.ones(Nx, Ny) * 0.001
+        
+        for model in [HybridModel.DES, HybridModel.DDES, HybridModel.IDDES]:
+            state = run_hybrid_les(
+                rho=rho, u=u, d_wall=d_wall, grid_spacing=(dx, dy),
+                nu=1e-5, nu_rans=nu_rans, model=model
+            )
+            
+            stats = estimate_rans_les_ratio(state)
+            
+            assert 0 <= stats['rans_fraction'] <= 1
+            assert 0 <= stats['les_fraction'] <= 1
+            assert abs(stats['rans_fraction'] + stats['les_fraction'] - 1.0) < 1e-10
+
+
+class TestMultiObjectiveOptimization:
+    """Test multi-objective optimization framework."""
+    
+    def test_moo_imports(self):
+        from tensornet.cfd import (
+            MOOAlgorithm, ObjectiveSpec, ParetoSolution, MOOResult, MOOConfig,
+            dominates, fast_non_dominated_sort, MultiObjectiveOptimizer
+        )
+        assert MOOAlgorithm is not None
+        assert MultiObjectiveOptimizer is not None
+    
+    def test_dominance_relation(self):
+        from tensornet.cfd.multi_objective import dominates
+        
+        obj_a = {"f1": 1.0, "f2": 2.0}
+        obj_b = {"f1": 2.0, "f2": 3.0}
+        obj_c = {"f1": 1.5, "f2": 1.5}
+        minimize = {"f1": True, "f2": True}
+        
+        # A dominates B (better in both)
+        assert dominates(obj_a, obj_b, minimize) == True
+        
+        # A does not dominate C (C is better in f2)
+        assert dominates(obj_a, obj_c, minimize) == False
+        
+        # C does not dominate A (A is better in f1)
+        assert dominates(obj_c, obj_a, minimize) == False
+    
+    def test_non_dominated_sorting(self):
+        from tensornet.cfd.multi_objective import fast_non_dominated_sort, ParetoSolution
+        
+        population = [
+            ParetoSolution(design=torch.zeros(2), objectives={"f1": 1.0, "f2": 3.0}),
+            ParetoSolution(design=torch.zeros(2), objectives={"f1": 2.0, "f2": 2.0}),
+            ParetoSolution(design=torch.zeros(2), objectives={"f1": 3.0, "f2": 1.0}),
+            ParetoSolution(design=torch.zeros(2), objectives={"f1": 2.5, "f2": 2.5}),
+        ]
+        
+        minimize = {"f1": True, "f2": True}
+        fronts = fast_non_dominated_sort(population, minimize)
+        
+        # First three are non-dominated (Pareto front)
+        assert set(fronts[0]) == {0, 1, 2}
+        
+        # Fourth is dominated
+        if len(fronts) > 1:
+            assert 3 in fronts[1]
+    
+    def test_crowding_distance(self):
+        from tensornet.cfd.multi_objective import crowding_distance, ParetoSolution
+        
+        population = [
+            ParetoSolution(design=torch.zeros(2), objectives={"f1": 1.0, "f2": 3.0}),
+            ParetoSolution(design=torch.zeros(2), objectives={"f1": 2.0, "f2": 2.0}),
+            ParetoSolution(design=torch.zeros(2), objectives={"f1": 3.0, "f2": 1.0}),
+        ]
+        
+        front_indices = [0, 1, 2]
+        minimize = {"f1": True, "f2": True}
+        
+        crowding_distance(population, front_indices, minimize)
+        
+        # Boundary points should have infinite distance
+        assert population[0].crowding_distance == float('inf')
+        assert population[2].crowding_distance == float('inf')
+        
+        # Interior point should have finite distance
+        assert population[1].crowding_distance < float('inf')
+    
+    def test_hypervolume_2d(self):
+        from tensornet.cfd.multi_objective import hypervolume_2d, ParetoSolution
+        
+        front = [
+            ParetoSolution(design=torch.zeros(2), objectives={"f1": 1.0, "f2": 3.0}),
+            ParetoSolution(design=torch.zeros(2), objectives={"f1": 2.0, "f2": 2.0}),
+            ParetoSolution(design=torch.zeros(2), objectives={"f1": 3.0, "f2": 1.0}),
+        ]
+        
+        reference = {"f1": 4.0, "f2": 4.0}
+        hv = hypervolume_2d(front, reference, ("f1", "f2"))
+        
+        # Expected: (4-1)*(4-3) + (4-2)*(3-2) + (4-3)*(2-1) = 3 + 2 + 1 = 6
+        assert abs(hv - 6.0) < 0.01
+    
+    def test_nsga2_optimization(self):
+        from tensornet.cfd.multi_objective import (
+            MultiObjectiveOptimizer, MOOConfig, MOOAlgorithm,
+            create_drag_heating_problem
+        )
+        
+        objectives, bounds = create_drag_heating_problem(n_vars=3)
+        
+        config = MOOConfig(
+            algorithm=MOOAlgorithm.NSGA_II,
+            population_size=10,
+            n_generations=5
+        )
+        
+        optimizer = MultiObjectiveOptimizer(objectives, bounds, config)
+        result = optimizer.optimize()
+        
+        assert len(result.pareto_front) > 0
+        assert result.n_evaluations > 0
+        assert 'drag' in result.utopia_point
+        assert 'heating' in result.utopia_point
+
+
+class TestGPUAcceleration:
+    """Test GPU acceleration utilities."""
+    
+    def test_gpu_imports(self):
+        from tensornet.core import (
+            DeviceType, GPUConfig, get_device, to_device, MemoryPool,
+            roe_flux_gpu, compute_strain_rate_gpu
+        )
+        assert DeviceType is not None
+        assert GPUConfig is not None
+    
+    def test_get_device(self):
+        from tensornet.core.gpu import get_device, GPUConfig, DeviceType
+        
+        # Should get CPU if CUDA not available
+        config = GPUConfig(device=DeviceType.CPU)
+        device = get_device(config)
+        assert device.type == "cpu"
+    
+    def test_memory_pool(self):
+        from tensornet.core.gpu import MemoryPool, get_device
+        
+        device = get_device()
+        pool = MemoryPool(device)
+        
+        t1 = pool.allocate((100, 100), torch.float32)
+        assert t1.shape == (100, 100)
+        
+        pool.reset()
+    
+    def test_roe_flux_gpu(self):
+        from tensornet.core.gpu import roe_flux_gpu, get_device
+        
+        device = get_device()
+        Nx, Ny = 32, 32
+        
+        # Sod shock tube-like initial condition
+        rho_L = torch.ones(Nx, Ny, device=device)
+        rho_R = torch.ones(Nx, Ny, device=device) * 0.125
+        u_L = torch.zeros(2, Nx, Ny, device=device)
+        u_R = torch.zeros(2, Nx, Ny, device=device)
+        p_L = torch.ones(Nx, Ny, device=device)
+        p_R = torch.ones(Nx, Ny, device=device) * 0.1
+        
+        gamma = 1.4
+        E_L = p_L / (gamma - 1) + 0.5 * rho_L * (u_L ** 2).sum(dim=0)
+        E_R = p_R / (gamma - 1) + 0.5 * rho_R * (u_R ** 2).sum(dim=0)
+        
+        F_rho, F_rhou, F_rhov, F_E = roe_flux_gpu(
+            rho_L, rho_R, u_L, u_R, p_L, p_R, E_L, E_R
+        )
+        
+        # Should have non-zero flux
+        assert F_rho.abs().max() > 0
+    
+    def test_strain_rate_gpu(self):
+        from tensornet.core.gpu import compute_strain_rate_gpu, get_device
+        
+        device = get_device()
+        Nx, Ny = 32, 32
+        
+        # Couette flow: u = y
+        u = torch.zeros(2, Nx, Ny, device=device)
+        y = torch.linspace(0, 1, Ny, device=device).unsqueeze(0).expand(Nx, -1)
+        u[0] = y
+        
+        dx = torch.ones(Nx, Ny, device=device) * 0.1
+        dy = torch.ones(Nx, Ny, device=device) * (1.0 / Ny)
+        
+        S_mag = compute_strain_rate_gpu(u, dx, dy)
+        
+        # For Couette flow, |S| should be approximately 1
+        interior = S_mag[2:-2, 2:-2]
+        assert 0.5 < interior.mean().item() < 2.0
+    
+    def test_benchmark_kernel(self):
+        from tensornet.core.gpu import benchmark_kernel, compute_strain_rate_gpu, get_device
+        
+        device = get_device()
+        u = torch.randn(2, 64, 64, device=device)
+        dx = torch.ones(64, 64, device=device) * 0.01
+        dy = torch.ones(64, 64, device=device) * 0.01
+        
+        stats = benchmark_kernel(
+            compute_strain_rate_gpu, u, dx, dy,
+            n_warmup=1, n_runs=3, device=device
+        )
+        
+        assert stats.elapsed_ms > 0
+        assert stats.name == "compute_strain_rate_gpu"
 
 
 if __name__ == '__main__':

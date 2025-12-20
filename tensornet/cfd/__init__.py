@@ -11,6 +11,7 @@ Phase 6: Navier-Stokes viscous terms for boundary layers and heat transfer.
 Phase 7: Coupled NS, 3D Euler, and real-gas thermodynamics.
 Phase 8: SBLI benchmarks, multi-species chemistry, reactive NS.
 Phase 9: RANS turbulence, adjoint solver, shape optimization.
+Phase 10: LES turbulence, hybrid RANS-LES, multi-objective optimization.
 """
 
 from tensornet.cfd.euler_1d import (
@@ -202,6 +203,53 @@ from tensornet.cfd.optimization import (
     create_wedge_design_problem,
 )
 
+from tensornet.cfd.les import (
+    LESModel,
+    LESState,
+    filter_width,
+    strain_rate_magnitude,
+    vorticity_magnitude,
+    smagorinsky_viscosity,
+    van_driest_damping,
+    dynamic_smagorinsky_coefficient,
+    wale_viscosity,
+    vreman_viscosity,
+    sigma_viscosity,
+    sgs_heat_flux,
+    compute_sgs_viscosity,
+)
+
+from tensornet.cfd.hybrid_les import (
+    HybridModel,
+    HybridLESState,
+    compute_grid_scale,
+    compute_wall_distance_scale,
+    des_length_scale,
+    compute_r_d,
+    ddes_delay_function,
+    ddes_length_scale,
+    iddes_blending_function,
+    iddes_length_scale,
+    sas_length_scale,
+    compute_hybrid_viscosity,
+    run_hybrid_les,
+    estimate_rans_les_ratio,
+)
+
+from tensornet.cfd.multi_objective import (
+    MOOAlgorithm,
+    ObjectiveSpec,
+    ParetoSolution,
+    MOOResult,
+    MOOConfig,
+    dominates,
+    fast_non_dominated_sort,
+    crowding_distance,
+    hypervolume_2d,
+    MultiObjectiveOptimizer,
+    create_drag_heating_problem,
+)
+
 __all__ = [
     # 1D Euler equations
     'Euler1D',
@@ -358,4 +406,45 @@ __all__ = [
     'FFDParameterization',
     'ShapeOptimizer',
     'create_wedge_design_problem',
+    # LES Turbulence (Phase 10)
+    'LESModel',
+    'LESState',
+    'filter_width',
+    'strain_rate_magnitude',
+    'vorticity_magnitude',
+    'smagorinsky_viscosity',
+    'van_driest_damping',
+    'dynamic_smagorinsky_coefficient',
+    'wale_viscosity',
+    'vreman_viscosity',
+    'sigma_viscosity',
+    'sgs_heat_flux',
+    'compute_sgs_viscosity',
+    # Hybrid RANS-LES (Phase 10)
+    'HybridModel',
+    'HybridLESState',
+    'compute_grid_scale',
+    'compute_wall_distance_scale',
+    'des_length_scale',
+    'compute_r_d',
+    'ddes_delay_function',
+    'ddes_length_scale',
+    'iddes_blending_function',
+    'iddes_length_scale',
+    'sas_length_scale',
+    'compute_hybrid_viscosity',
+    'run_hybrid_les',
+    'estimate_rans_les_ratio',
+    # Multi-Objective Optimization (Phase 10)
+    'MOOAlgorithm',
+    'ObjectiveSpec',
+    'ParetoSolution',
+    'MOOResult',
+    'MOOConfig',
+    'dominates',
+    'fast_non_dominated_sort',
+    'crowding_distance',
+    'hypervolume_2d',
+    'MultiObjectiveOptimizer',
+    'create_drag_heating_problem',
 ]
