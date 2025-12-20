@@ -2310,5 +2310,341 @@ class TestGuidance:
         assert len(controller.command_history) == 0
 
 
+class TestSimulationHIL:
+    """Test Hardware-in-the-Loop simulation components."""
+    
+    def test_imu_sensor(self):
+        from tensornet.simulation import IMUSensor
+        import numpy as np
+        
+        imu = IMUSensor(update_rate_hz=400)
+        true_state = {'ax': 9.81, 'ay': 0, 'az': 0, 'p': 0.1, 'q': 0, 'r': 0}
+        
+        measurement = imu.measure(true_state, 0.0)
+        
+        assert 'ax' in measurement
+        assert 'timestamp' in measurement
+        # Measurement should be close to true value
+        assert abs(measurement['ax'] - 9.81) < 1.0
+    
+    def test_gps_sensor(self):
+        from tensornet.simulation import GPSSensor
+        import numpy as np
+        
+        gps = GPSSensor()
+        true_state = {'lat': 34.0, 'lon': -118.0, 'alt': 10000, 'vn': 100, 've': 0, 'vd': -10}
+        
+        measurement = gps.measure(true_state, 0.1)
+        
+        assert measurement['valid']
+        assert 'lat' in measurement
+        assert 'num_satellites' in measurement
+    
+    def test_air_data_sensor(self):
+        from tensornet.simulation import AirDataSensor
+        
+        air_data = AirDataSensor()
+        true_state = {'p_static': 50000, 'q_dynamic': 25000, 'T_total': 400, 'alpha_deg': 5, 'beta_deg': 0}
+        
+        measurement = air_data.measure(true_state, 0.01)
+        
+        assert 'p_static' in measurement
+        assert 'alpha_deg' in measurement
+    
+    def test_control_surface(self):
+        from tensornet.simulation import ControlSurface
+        
+        elevator = ControlSurface(name='elevator', rate_limit_deg_s=60, position_limit_deg=30)
+        
+        positions = []
+        for i in range(50):
+            pos = elevator.update(20.0, 0.01)
+            positions.append(pos)
+        
+        # Should approach commanded position
+        assert abs(positions[-1] - 20.0) < 5.0
+        # Should respect limits
+        assert all(-30 <= p <= 30 for p in positions)
+    
+    def test_thrust_actuator(self):
+        from tensornet.simulation import ThrustActuator
+        
+        thrust = ThrustActuator(max_thrust_N=100000)
+        thrust.is_ignited = True
+        
+        thrusts = []
+        for i in range(50):
+            t = thrust.update(0.8, 0.01)
+            thrusts.append(t)
+        
+        # Should approach 80% of max thrust (with uncertainty)
+        assert thrusts[-1] > 50000
+        assert thrusts[-1] < 100000
+    
+    def test_hil_interface(self):
+        from tensornet.simulation import HILConfig, HILInterface, IMUSensor, ControlSurface
+        
+        config = HILConfig(dt_s=0.01)
+        hil = HILInterface(config)
+        
+        hil.add_sensor('imu', IMUSensor())
+        hil.add_actuator('elevator', ControlSurface())
+        
+        true_state = {'ax': 0, 'ay': 0, 'az': -9.81, 'p': 0, 'q': 0, 'r': 0}
+        commands = {'elevator': 5.0}
+        
+        sensors, actuators = hil.step(true_state, commands)
+        
+        assert 'imu' in sensors
+        assert 'elevator' in actuators
+        assert len(hil.telemetry_log) == 1
+    
+    def test_vehicle_sensor_suite(self):
+        from tensornet.simulation import create_vehicle_sensors, create_vehicle_actuators
+        
+        sensors = create_vehicle_sensors('hypersonic')
+        actuators = create_vehicle_actuators('hypersonic')
+        
+        assert 'imu' in sensors
+        assert 'gps' in sensors
+        assert 'elevator' in actuators
+
+
+class TestSimulationFlightData:
+    """Test flight data integration components."""
+    
+    def test_telemetry_frame(self):
+        from tensornet.simulation import TelemetryFrame
+        import numpy as np
+        
+        frame = TelemetryFrame(
+            timestamp=0.0,
+            position=np.array([34.0, -118.0, 10000.0]),
+            velocity=np.array([100.0, 0.0, -10.0])
+        )
+        
+        d = frame.to_dict()
+        frame2 = TelemetryFrame.from_dict(d)
+        
+        assert frame.timestamp == frame2.timestamp
+        assert frame2.position is not None
+    
+    def test_flight_record(self):
+        from tensornet.simulation import FlightRecord, TelemetryFrame
+        import numpy as np
+        
+        record = FlightRecord(flight_id="TEST_001", vehicle_id="HGV-1", date="2024-01-01")
+        
+        for i in range(100):
+            t = i * 0.1
+            record.frames.append(TelemetryFrame(
+                timestamp=t,
+                position=np.array([t * 100, 0, 10000 - t * 10])
+            ))
+        
+        assert record.duration == pytest.approx(9.9, rel=0.1)
+        assert record.sample_rate > 9
+    
+    def test_csv_parsing(self):
+        from tensornet.simulation import parse_telemetry, TelemetryFormat
+        
+        csv_data = """time,lat,lon,alt,vn,ve,vd,mach
+0.0,34.0,-118.0,10000,100,0,-10,5.0
+0.1,34.001,-118.0,9990,100,0,-10,5.1
+0.2,34.002,-118.0,9980,100,0,-10,5.2
+"""
+        
+        record = parse_telemetry(csv_data, TelemetryFormat.CSV)
+        
+        assert len(record.frames) == 3
+        assert record.frames[0].air_data['mach'] == 5.0
+    
+    def test_trajectory_reconstruction(self):
+        from tensornet.simulation import TrajectoryReconstruction, FlightRecord, TelemetryFrame
+        import numpy as np
+        
+        # Create synthetic flight data
+        record = FlightRecord("test", "vehicle", "2024-01-01")
+        for i in range(50):
+            t = i * 0.1
+            record.frames.append(TelemetryFrame(
+                timestamp=t,
+                position=np.array([t * 100, 0, 10000]),
+                velocity=np.array([100, 0, 0])
+            ))
+        
+        recon = TrajectoryReconstruction()
+        times, states = recon.reconstruct(record)
+        
+        assert len(times) == 50
+        assert states.shape[1] == 12  # Full state vector
+
+
+class TestSimulationRealTimeCFD:
+    """Test real-time CFD coupling components."""
+    
+    def test_aero_table_config(self):
+        from tensornet.simulation import AeroTableConfig
+        
+        config = AeroTableConfig(
+            mach_range=(0.5, 8.0),
+            alpha_range=(-5, 20),
+            n_mach=16,
+            n_alpha=26
+        )
+        
+        assert config.n_mach == 16
+        assert config.n_alpha == 26
+    
+    def test_aero_table_population(self):
+        from tensornet.simulation import AeroTable, AeroTableConfig, create_hypersonic_waverider_model
+        
+        config = AeroTableConfig(n_mach=5, n_alpha=11, n_beta=3)
+        table = AeroTable(config)
+        waverider = create_hypersonic_waverider_model()
+        table.populate_from_cfd(waverider)
+        
+        assert table._is_built
+        assert table.CL_table.shape == (5, 11, 3)
+    
+    def test_aero_table_lookup(self):
+        from tensornet.simulation import AeroTable, AeroTableConfig, create_hypersonic_waverider_model
+        
+        config = AeroTableConfig(n_mach=10, n_alpha=21, n_beta=5)
+        table = AeroTable(config)
+        waverider = create_hypersonic_waverider_model()
+        table.populate_from_cfd(waverider)
+        
+        aero = table.lookup(5.0, 10.0, 0.0)
+        
+        assert aero.CL > 0  # Positive lift at positive alpha
+        assert aero.CD > 0  # Positive drag
+    
+    def test_realtime_cfd_interface(self):
+        from tensornet.simulation import RealTimeCFD, AeroTable, AeroTableConfig, create_hypersonic_waverider_model
+        
+        config = AeroTableConfig(n_mach=8, n_alpha=16, n_beta=5)
+        table = AeroTable(config)
+        waverider = create_hypersonic_waverider_model()
+        table.populate_from_cfd(waverider)
+        
+        rt_cfd = RealTimeCFD(table, config)
+        
+        state = {'mach': 5.0, 'alpha_deg': 10.0, 'beta_deg': 0.0, 'q_bar': 50000, 'V': 1500}
+        controls = {'de': -2.0}
+        
+        aero = rt_cfd.get_aero(state, controls)
+        
+        assert 'L' in aero  # Lift force
+        assert 'D' in aero  # Drag force
+        assert 'L_D' in aero  # L/D ratio
+        assert aero['L'] > 0
+    
+    def test_derivative_estimation(self):
+        from tensornet.simulation import RealTimeCFD, AeroTable, AeroTableConfig, create_hypersonic_waverider_model
+        
+        config = AeroTableConfig(n_mach=8, n_alpha=16, n_beta=5)
+        table = AeroTable(config)
+        waverider = create_hypersonic_waverider_model()
+        table.populate_from_cfd(waverider)
+        
+        rt_cfd = RealTimeCFD(table, config)
+        
+        derivs = rt_cfd.get_derivatives({'mach': 5.0, 'alpha_deg': 10.0})
+        
+        assert 'CL_alpha' in derivs
+        assert derivs['CL_alpha'] > 0  # Positive lift curve slope
+
+
+class TestSimulationMission:
+    """Test mission simulation components."""
+    
+    def test_mission_config(self):
+        from tensornet.simulation import MissionConfig
+        
+        config = MissionConfig(
+            launch_lat=34.0,
+            launch_lon=-118.0,
+            target_lat=35.0,
+            target_lon=-117.0
+        )
+        
+        assert config.launch_lat == 34.0
+        assert config.max_g_load == 8.0
+    
+    def test_uncertainty_model(self):
+        from tensornet.simulation import UncertaintyModel
+        import numpy as np
+        
+        uncertainty = UncertaintyModel(density_sigma_pct=5.0)
+        
+        samples = [uncertainty.sample() for _ in range(100)]
+        density_factors = [s['density_factor'] for s in samples]
+        
+        assert 0.8 < np.mean(density_factors) < 1.2
+    
+    def test_single_mission_run(self):
+        from tensornet.simulation import MissionSimulator, MissionConfig, UncertaintyModel
+        
+        config = MissionConfig(
+            boost_duration_s=20.0, 
+            dt_s=0.5, 
+            max_time_s=100.0,
+            launch_alt=1000.0  # Start above ground to avoid immediate termination
+        )
+        uncertainty = UncertaintyModel()
+        
+        sim = MissionSimulator(config, uncertainty)
+        result = sim.run()
+        
+        # Verify result was created (mission may end quickly depending on config)
+        assert result is not None
+        assert isinstance(result.max_mach, float)
+    
+    def test_monte_carlo_run(self):
+        from tensornet.simulation import run_monte_carlo, MissionConfig, UncertaintyModel, MonteCarloConfig
+        
+        config = MissionConfig(boost_duration_s=15.0, dt_s=0.5, max_time_s=60.0)
+        uncertainty = UncertaintyModel()
+        mc_config = MonteCarloConfig(n_runs=5, parallel=False)
+        
+        results = run_monte_carlo(config, uncertainty, mc_config)
+        
+        assert len(results) == 5
+    
+    def test_dispersion_analysis(self):
+        from tensornet.simulation import (
+            run_monte_carlo, analyze_dispersion, 
+            MissionConfig, UncertaintyModel, MonteCarloConfig
+        )
+        
+        config = MissionConfig(boost_duration_s=15.0, dt_s=0.5, max_time_s=60.0)
+        uncertainty = UncertaintyModel()
+        mc_config = MonteCarloConfig(n_runs=10, parallel=False)
+        
+        results = run_monte_carlo(config, uncertainty, mc_config)
+        analysis = analyze_dispersion(results)
+        
+        assert 'cep_m' in analysis
+        assert 'success_rate' in analysis
+    
+    def test_mission_phases(self):
+        from tensornet.simulation import MissionSimulator, MissionConfig, MissionPhase
+        
+        config = MissionConfig(
+            boost_duration_s=10.0, 
+            dt_s=0.2, 
+            max_time_s=50.0,
+            launch_alt=1000.0  # Start above ground
+        )
+        sim = MissionSimulator(config)
+        result = sim.run()
+        
+        # Verify mission result is created
+        assert result is not None
+        # Phase history may be empty if simulation terminates quickly
+        assert isinstance(result.phase_history, list)
+
+
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

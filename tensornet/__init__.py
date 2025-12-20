@@ -119,6 +119,44 @@ from tensornet.guidance import (
     bank_angle_guidance,
 )
 
+# Simulation Module (Phase 12)
+from tensornet.simulation import (
+    # HIL
+    HILConfig,
+    HILMode,
+    SensorModel,
+    IMUSensor,
+    GPSSensor,
+    AirDataSensor,
+    ActuatorModel,
+    ControlSurface,
+    ThrustActuator,
+    HILInterface,
+    create_vehicle_sensors,
+    create_vehicle_actuators,
+    # Flight Data
+    TelemetryFrame,
+    FlightRecord,
+    TrajectoryReconstruction,
+    parse_telemetry,
+    validate_against_flight,
+    # Real-Time CFD
+    AeroTableConfig,
+    AeroTable,
+    RealTimeCFD,
+    build_aero_table,
+    interpolate_coefficients,
+    # Mission Simulation
+    MissionPhase,
+    MissionConfig,
+    UncertaintyModel,
+    MonteCarloConfig,
+    MissionResult,
+    MissionSimulator,
+    run_monte_carlo,
+    analyze_dispersion,
+)
+
 __all__ = [
     # Core
     "MPS",
@@ -208,4 +246,35 @@ __all__ = [
     "GuidanceController",
     "proportional_navigation",
     "bank_angle_guidance",
+    # Simulation (Phase 12)
+    "HILConfig",
+    "HILMode",
+    "SensorModel",
+    "IMUSensor",
+    "GPSSensor",
+    "AirDataSensor",
+    "ActuatorModel",
+    "ControlSurface",
+    "ThrustActuator",
+    "HILInterface",
+    "create_vehicle_sensors",
+    "create_vehicle_actuators",
+    "TelemetryFrame",
+    "FlightRecord",
+    "TrajectoryReconstruction",
+    "parse_telemetry",
+    "validate_against_flight",
+    "AeroTableConfig",
+    "AeroTable",
+    "RealTimeCFD",
+    "build_aero_table",
+    "interpolate_coefficients",
+    "MissionPhase",
+    "MissionConfig",
+    "UncertaintyModel",
+    "MonteCarloConfig",
+    "MissionResult",
+    "MissionSimulator",
+    "run_monte_carlo",
+    "analyze_dispersion",
 ]
