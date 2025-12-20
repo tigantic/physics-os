@@ -1137,11 +1137,11 @@ $$S(x) = \frac{c}{6} \log\left(\frac{L}{\pi} \sin\frac{\pi x}{L}\right) + \text{
 | Slope limiters (TVD) | ✅ Done | None |
 | Sod shock tube benchmark | ✅ Done | None |
 | MPS-Euler interface | ✅ Done | None |
-| Strang splitting (2D) | 🔄 Design | None |
-| Reflective boundary conditions | 🔄 Design | None |
-| Adaptive bond dimension | ⏳ Planned | None |
-| Oblique shock validation | ⏳ Planned | Phase 2 core |
-| OpenFOAM comparison | ⏳ Planned | Phase 2 core |
+| Strang splitting (2D) | ✅ Done | None |
+| Reflective boundary conditions | ✅ Done | None |
+| Adaptive bond dimension | ✅ Done | Phase 18 |
+| Oblique shock validation | ✅ Done | None |
+| OpenFOAM comparison | ⏳ Planned | External dep |
 
 **Phase 2 Components (`tensornet/cfd/`)**:
 
