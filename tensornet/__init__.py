@@ -83,6 +83,42 @@ from tensornet.cfd.qtt import (
     QTTCompressionResult,
 )
 
+# Deployment Module (Phase 11)
+from tensornet.deployment import (
+    ExportConfig,
+    ExportResult,
+    TensorRTExporter,
+    export_to_onnx,
+    optimize_for_tensorrt,
+    validate_exported_model,
+    benchmark_inference,
+    JetsonConfig,
+    MemoryProfile,
+    PowerMode,
+    EmbeddedRuntime,
+    optimize_memory_layout,
+    configure_jetson_power,
+    create_inference_pipeline,
+)
+
+# Guidance Module (Phase 11)
+from tensornet.guidance import (
+    AtmosphericModel,
+    VehicleState,
+    AeroCoefficients,
+    TrajectoryConfig,
+    TrajectorySolver,
+    isa_atmosphere,
+    exponential_atmosphere,
+    GuidanceMode,
+    ConstraintType,
+    GuidanceCommand,
+    TrajectoryConstraint,
+    GuidanceController,
+    proportional_navigation,
+    bank_angle_guidance,
+)
+
 __all__ = [
     # Core
     "MPS",
@@ -142,4 +178,34 @@ __all__ = [
     "euler_to_qtt",
     "qtt_to_euler",
     "QTTCompressionResult",
+    # Deployment (Phase 11)
+    "ExportConfig",
+    "ExportResult",
+    "TensorRTExporter",
+    "export_to_onnx",
+    "optimize_for_tensorrt",
+    "validate_exported_model",
+    "benchmark_inference",
+    "JetsonConfig",
+    "MemoryProfile",
+    "PowerMode",
+    "EmbeddedRuntime",
+    "optimize_memory_layout",
+    "configure_jetson_power",
+    "create_inference_pipeline",
+    # Guidance (Phase 11)
+    "AtmosphericModel",
+    "VehicleState",
+    "AeroCoefficients",
+    "TrajectoryConfig",
+    "TrajectorySolver",
+    "isa_atmosphere",
+    "exponential_atmosphere",
+    "GuidanceMode",
+    "ConstraintType",
+    "GuidanceCommand",
+    "TrajectoryConstraint",
+    "GuidanceController",
+    "proportional_navigation",
+    "bank_angle_guidance",
 ]

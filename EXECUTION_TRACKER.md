@@ -1,8 +1,8 @@
 # Project HyperTensor: Execution Tracker
 
-**Document Version**: 1.9.0  
+**Document Version**: 2.0.0  
 **Last Updated**: 2025-12-20  
-**Status**: ACTIVE DEVELOPMENT - PHASE 10 COMPLETE
+**Status**: ACTIVE DEVELOPMENT - PHASE 11 COMPLETE
 
 ---
 
@@ -20,7 +20,7 @@ Turbulent flow fields satisfy an **Area Law** analogous to quantum entanglement�
 
 ## II. Repository Architecture
 
-### Current Structure (Post-Phase 3)
+### Current Structure (Post-Phase 11)
 
 ```
 Project HyperTensor/
@@ -42,28 +42,36 @@ Project HyperTensor/
 │   ├── mps/                      # Hamiltonian constructions
 │   │   ├── __init__.py
 │   │   └── hamiltonians.py       # MPO builders
-│   └── cfd/                      # Phase 2+3: CFD module
-│       ├── __init__.py
-│       ├── euler_1d.py           # 1D Euler equations
-│       ├── euler_2d.py           # 2D Euler equations (Strang splitting)
-│       ├── euler_3d.py           # 3D Euler equations (Phase 7)
-│       ├── godunov.py            # Riemann solvers
-│       ├── limiters.py           # TVD slope limiters
-│       ├── boundaries.py         # Boundary conditions
-│       ├── geometry.py           # Wedge geometry, immersed boundary
-│       ├── qtt.py                # QTT compression (TN-CFD coupling)
-│       ├── viscous.py            # Navier-Stokes viscous terms
-│       ├── navier_stokes.py      # Coupled NS solver (Phase 7)
-│       ├── real_gas.py           # Real-gas thermodynamics (Phase 7)
-│       ├── chemistry.py          # Multi-species chemistry (Phase 8)
-│       ├── implicit.py           # Implicit time integration (Phase 8)
-│       ├── reactive_ns.py        # Reactive Navier-Stokes (Phase 8)
-│       ├── turbulence.py         # RANS turbulence models (Phase 9)
-│       ├── adjoint.py            # Adjoint solver for sensitivity (Phase 9)
-│       ├── optimization.py       # Shape optimization (Phase 9)
-│       ├── les.py                # LES subgrid-scale models (Phase 10)
-│       ├── hybrid_les.py         # Hybrid RANS-LES (DES/DDES/IDDES) (Phase 10)
-│       └── multi_objective.py    # Multi-objective optimization (Phase 10)
+│   ├── cfd/                      # Phase 2-10: CFD module
+│   │   ├── __init__.py
+│   │   ├── euler_1d.py           # 1D Euler equations
+│   │   ├── euler_2d.py           # 2D Euler equations (Strang splitting)
+│   │   ├── euler_3d.py           # 3D Euler equations (Phase 7)
+│   │   ├── godunov.py            # Riemann solvers
+│   │   ├── limiters.py           # TVD slope limiters
+│   │   ├── boundaries.py         # Boundary conditions
+│   │   ├── geometry.py           # Wedge geometry, immersed boundary
+│   │   ├── qtt.py                # QTT compression (TN-CFD coupling)
+│   │   ├── viscous.py            # Navier-Stokes viscous terms
+│   │   ├── navier_stokes.py      # Coupled NS solver (Phase 7)
+│   │   ├── real_gas.py           # Real-gas thermodynamics (Phase 7)
+│   │   ├── chemistry.py          # Multi-species chemistry (Phase 8)
+│   │   ├── implicit.py           # Implicit time integration (Phase 8)
+│   │   ├── reactive_ns.py        # Reactive Navier-Stokes (Phase 8)
+│   │   ├── turbulence.py         # RANS turbulence models (Phase 9)
+│   │   ├── adjoint.py            # Adjoint solver for sensitivity (Phase 9)
+│   │   ├── optimization.py       # Shape optimization (Phase 9)
+│   │   ├── les.py                # LES subgrid-scale models (Phase 10)
+│   │   ├── hybrid_les.py         # Hybrid RANS-LES (DES/DDES/IDDES) (Phase 10)
+│   │   └── multi_objective.py    # Multi-objective optimization (Phase 10)
+│   ├── deployment/               # Phase 11: Embedded deployment
+│   │   ├── __init__.py           # Deployment module exports
+│   │   ├── tensorrt_export.py    # TensorRT/ONNX export pipeline
+│   │   └── embedded.py           # Jetson deployment utilities
+│   └── guidance/                 # Phase 11: Trajectory & Guidance
+│       ├── __init__.py           # Guidance module exports
+│       ├── trajectory.py         # 6-DOF trajectory solver
+│       └── controller.py         # Physics-aware guidance controller
 ├── .github/
 │   └── workflows/
 │       └── ci.yml                # GitHub Actions CI/CD (Phase 9)
@@ -87,7 +95,7 @@ Project HyperTensor/
 │   └── proof_run.json
 ├── tests/
 │   ├── test_proofs.py
-│   └── test_integration.py       # 123 integration tests
+│   └── test_integration.py       # 157 integration tests (2 skipped)
 ├── scripts/
 │   ├── reproduce.py
 │   └── test_excited.py
@@ -326,6 +334,57 @@ Project HyperTensor/
 | compute_strain_rate_gpu | `core/gpu.py` | ✅ Implemented | GPU strain rate tensor |
 | viscous_flux_gpu | `core/gpu.py` | ✅ Implemented | GPU viscous flux compute |
 | benchmark_kernel | `core/gpu.py` | ✅ Implemented | Kernel timing utility |
+
+#### Phase 11: Deployment, Trajectory, Guidance
+
+| Component | File | Status | Description |
+|-----------|------|--------|-------------|
+| Precision | `deployment/tensorrt_export.py` | ✅ Implemented | FP32, FP16, INT8, TF32 modes |
+| OptimizationLevel | `deployment/tensorrt_export.py` | ✅ Implemented | O0-O3 TensorRT optimization |
+| ExportConfig | `deployment/tensorrt_export.py` | ✅ Implemented | ONNX/TRT export configuration |
+| ExportResult | `deployment/tensorrt_export.py` | ✅ Implemented | Export result container |
+| CFDInferenceModule | `deployment/tensorrt_export.py` | ✅ Implemented | Exportable CFD module |
+| TTContraction | `deployment/tensorrt_export.py` | ✅ Implemented | TT contraction as nn.Module |
+| export_to_onnx | `deployment/tensorrt_export.py` | ✅ Implemented | PyTorch → ONNX export |
+| optimize_for_tensorrt | `deployment/tensorrt_export.py` | ✅ Implemented | ONNX → TRT engine build |
+| validate_exported_model | `deployment/tensorrt_export.py` | ✅ Implemented | Reference output validation |
+| benchmark_inference | `deployment/tensorrt_export.py` | ✅ Implemented | Latency/throughput benchmark |
+| TensorRTExporter | `deployment/tensorrt_export.py` | ✅ Implemented | High-level export interface |
+| PowerMode | `deployment/embedded.py` | ✅ Implemented | MAXN, 50W, 30W, 15W, 10W |
+| ThermalState | `deployment/embedded.py` | ✅ Implemented | NORMAL, THROTTLE_1/2, CRITICAL |
+| JetsonConfig | `deployment/embedded.py` | ✅ Implemented | Jetson deployment config |
+| MemoryProfile | `deployment/embedded.py` | ✅ Implemented | SWaP memory analysis |
+| InferenceMetrics | `deployment/embedded.py` | ✅ Implemented | Real-time metrics container |
+| MemoryPool | `deployment/embedded.py` | ✅ Implemented | Pre-allocated memory pool |
+| ThermalMonitor | `deployment/embedded.py` | ✅ Implemented | Thermal throttling management |
+| EmbeddedRuntime | `deployment/embedded.py` | ✅ Implemented | Runtime manager for HIL |
+| configure_jetson_power | `deployment/embedded.py` | ✅ Implemented | nvpmodel interface |
+| optimize_memory_layout | `deployment/embedded.py` | ✅ Implemented | Cache-aligned tensors |
+| create_inference_pipeline | `deployment/embedded.py` | ✅ Implemented | Full deployment pipeline |
+| IntegrationMethod | `guidance/trajectory.py` | ✅ Implemented | EULER, RK2, RK4, RK45 |
+| AtmosphereType | `guidance/trajectory.py` | ✅ Implemented | ISA, EXPONENTIAL, US76, MARS |
+| AtmosphericModel | `guidance/trajectory.py` | ✅ Implemented | T, p, ρ, a at altitude |
+| VehicleState | `guidance/trajectory.py` | ✅ Implemented | 14-element 6-DOF state |
+| AeroCoefficients | `guidance/trajectory.py` | ✅ Implemented | CL, CD, Cm + derivatives |
+| VehicleGeometry | `guidance/trajectory.py` | ✅ Implemented | S_ref, c, b, I_xx/yy/zz |
+| TrajectoryConfig | `guidance/trajectory.py` | ✅ Implemented | Solver configuration |
+| isa_atmosphere | `guidance/trajectory.py` | ✅ Implemented | ISA model to 85 km |
+| exponential_atmosphere | `guidance/trajectory.py` | ✅ Implemented | Simple exp density model |
+| gravity_model | `guidance/trajectory.py` | ✅ Implemented | WGS84 with J2 correction |
+| TrajectorySolver | `guidance/trajectory.py` | ✅ Implemented | 6-DOF RK4 propagator |
+| create_reentry_trajectory | `guidance/trajectory.py` | ✅ Implemented | Reentry test case |
+| GuidanceMode | `guidance/controller.py` | ✅ Implemented | ENTRY, EQ_GLIDE, RANGE, TAEM, TERMINAL |
+| ConstraintType | `guidance/controller.py` | ✅ Implemented | THERMAL_RATE/LOAD, G, Q_DYN, ALT |
+| GuidanceCommand | `guidance/controller.py` | ✅ Implemented | Bank, AoA, rate commands |
+| TrajectoryConstraint | `guidance/controller.py` | ✅ Implemented | Constraint tracking |
+| WaypointTarget | `guidance/controller.py` | ✅ Implemented | Target lat/lon/alt/vel |
+| CorridorBounds | `guidance/controller.py` | ✅ Implemented | Entry corridor definition |
+| proportional_navigation | `guidance/controller.py` | ✅ Implemented | PN guidance law |
+| bank_angle_guidance | `guidance/controller.py` | ✅ Implemented | Bank-to-turn for glide |
+| GuidanceController | `guidance/controller.py` | ✅ Implemented | Main guidance controller |
+| estimate_heating | `guidance/controller.py` | ✅ Implemented | Sutton-Graves q̇ estimate |
+| estimate_g_load | `guidance/controller.py` | ✅ Implemented | Normal load factor |
+| closed_loop_simulation | `guidance/controller.py` | ✅ Implemented | Closed-loop trajectory sim |
 
 ### C. Hamiltonian Library (`tensornet/mps/hamiltonians.py`)
 
@@ -627,9 +686,13 @@ $$S(x) = \frac{c}{6} \log\left(\frac{L}{\pi} \sin\frac{\pi x}{L}\right) + \text{
 | ✅ | Hybrid RANS-LES (DES, DDES, IDDES) | Complete | Phase 10 |
 | ✅ | Multi-objective optimization (NSGA-II) | Complete | Phase 10 |
 | ✅ | GPU acceleration utilities | Complete | Phase 10 |
+| ✅ | TensorRT/ONNX export pipeline | Complete | Phase 11 |
+| ✅ | Jetson embedded deployment | Complete | Phase 11 |
+| ✅ | 6-DOF trajectory solver | Complete | Phase 11 |
+| ✅ | Physics-aware guidance controller | Complete | Phase 11 |
 | P1 | Sphinx documentation | TBD | Ongoing |
-| P2 | TensorRT optimization for Jetson | TBD | Phase 11 |
-| P2 | Real-time trajectory integration | TBD | Phase 11 |
+| P2 | Hardware-in-the-loop testing | TBD | Phase 12 |
+| P2 | Real flight data integration | TBD | Phase 12 |
 
 ---
 

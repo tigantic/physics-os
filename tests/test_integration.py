@@ -1787,5 +1787,528 @@ class TestGPUAcceleration:
         assert stats.name == "compute_strain_rate_gpu"
 
 
+# =============================================================================
+# PHASE 11: DEPLOYMENT TESTS
+# =============================================================================
+
+class TestDeployment:
+    """Test TensorRT export and embedded deployment utilities."""
+    
+    def test_tensorrt_imports(self):
+        from tensornet.deployment import (
+            ExportConfig, ExportResult, TensorRTExporter,
+            export_to_onnx, optimize_for_tensorrt, validate_exported_model,
+            benchmark_inference
+        )
+        assert ExportConfig is not None
+        assert TensorRTExporter is not None
+    
+    def test_embedded_imports(self):
+        from tensornet.deployment import (
+            JetsonConfig, MemoryProfile, PowerMode, EmbeddedRuntime,
+            optimize_memory_layout, configure_jetson_power, create_inference_pipeline
+        )
+        assert JetsonConfig is not None
+        assert EmbeddedRuntime is not None
+    
+    def test_precision_modes(self):
+        from tensornet.deployment.tensorrt_export import Precision, OptimizationLevel
+        
+        assert Precision.FP16.value == "fp16"
+        assert Precision.INT8.value == "int8"
+        assert OptimizationLevel.O3.value == 3
+    
+    def test_export_config(self):
+        from tensornet.deployment import ExportConfig
+        from tensornet.deployment.tensorrt_export import Precision
+        
+        config = ExportConfig(
+            precision=Precision.FP16,
+            max_batch_size=4,
+            workspace_size_mb=2048
+        )
+        
+        assert config.precision == Precision.FP16
+        assert config.max_batch_size == 4
+        assert config.opset_version == 17
+    
+    def test_cfd_inference_module(self):
+        from tensornet.deployment.tensorrt_export import CFDInferenceModule
+        
+        model = CFDInferenceModule((64, 64), n_vars=4, gamma=1.4)
+        
+        x = torch.randn(1, 4, 64, 64)
+        y = model(x)
+        
+        assert y.shape == x.shape
+    
+    def test_tt_contraction_module(self):
+        from tensornet.deployment.tensorrt_export import TTContraction
+        
+        cores = [
+            torch.randn(1, 4, 4, 3),
+            torch.randn(3, 4, 4, 3),
+            torch.randn(3, 4, 4, 1)
+        ]
+        
+        module = TTContraction(cores)
+        assert module.n_cores == 3
+    
+    def test_onnx_export(self):
+        try:
+            import onnxscript
+        except ImportError:
+            pytest.skip("onnxscript not installed - skipping ONNX export test")
+            
+        from tensornet.deployment import export_to_onnx, ExportConfig
+        from tensornet.deployment.tensorrt_export import CFDInferenceModule
+        import tempfile
+        from pathlib import Path
+        
+        model = CFDInferenceModule((32, 32))
+        x = torch.randn(1, 4, 32, 32)
+        
+        with tempfile.TemporaryDirectory() as tmpdir:
+            onnx_path = export_to_onnx(model, x, Path(tmpdir) / "test.onnx")
+            assert onnx_path.exists()
+            assert onnx_path.stat().st_size > 0
+    
+    def test_tensorrt_exporter_class(self):
+        try:
+            import onnxscript
+        except ImportError:
+            pytest.skip("onnxscript not installed - skipping TensorRT exporter test")
+            
+        from tensornet.deployment import TensorRTExporter, ExportConfig
+        from tensornet.deployment.tensorrt_export import Precision
+        import tempfile
+        
+        config = ExportConfig(precision=Precision.FP32)
+        exporter = TensorRTExporter(config)
+        
+        with tempfile.TemporaryDirectory() as tmpdir:
+            result = exporter.export_cfd_solver((16, 16), tmpdir)
+            
+            assert result.onnx_path.exists()
+            assert result.export_time_s > 0
+            assert result.model_size_mb > 0
+    
+    def test_benchmark_result(self):
+        from tensornet.deployment.tensorrt_export import BenchmarkResult
+        
+        result = BenchmarkResult(
+            latency_ms=1.5,
+            throughput_samples_per_sec=666.0,
+            memory_mb=128.0,
+            gpu_utilization=75.0
+        )
+        
+        assert result.latency_ms == 1.5
+        assert result.throughput_samples_per_sec == 666.0
+    
+    def test_power_modes(self):
+        from tensornet.deployment import PowerMode
+        
+        assert PowerMode.MAXN.value == "MAXN"
+        assert PowerMode.MODE_30W.value == "30W"
+        assert PowerMode.MODE_10W.value == "10W"
+    
+    def test_jetson_config(self):
+        from tensornet.deployment import JetsonConfig, PowerMode
+        
+        config = JetsonConfig(
+            power_mode=PowerMode.MODE_30W,
+            target_fps=100.0,
+            thermal_limit_c=85.0
+        )
+        
+        assert config.power_mode == PowerMode.MODE_30W
+        assert config.enable_dla == True
+        assert config.target_fps == 100.0
+    
+    def test_memory_profile(self):
+        from tensornet.deployment import MemoryProfile
+        
+        profile = MemoryProfile(
+            total_system_mb=64000,
+            model_weights_mb=500,
+            inference_buffer_mb=1000
+        )
+        
+        assert profile.available_mb > 50000
+        assert profile.utilization_pct < 20
+    
+    def test_memory_pool(self):
+        from tensornet.deployment.embedded import MemoryPool
+        
+        pool = MemoryPool(pool_size_mb=10, device="cpu")
+        
+        t1 = pool.allocate("state", (1, 4, 32, 32))
+        t2 = pool.allocate("flux", (1, 4, 32, 32))
+        
+        assert t1.shape == (1, 4, 32, 32)
+        assert t2.shape == (1, 4, 32, 32)
+        assert pool.get_usage_mb() > 0
+        
+        pool.reset()
+        assert pool.get_usage_mb() == 0
+    
+    def test_thermal_monitor(self):
+        from tensornet.deployment.embedded import ThermalMonitor, ThermalState
+        from tensornet.deployment import JetsonConfig
+        
+        config = JetsonConfig()
+        monitor = ThermalMonitor(config)
+        
+        temps = monitor.get_temperatures()
+        assert 'gpu' in temps
+        assert 'cpu' in temps
+        
+        monitor.update_thermal_state()
+        assert monitor.thermal_state == ThermalState.NORMAL
+    
+    def test_embedded_runtime(self):
+        from tensornet.deployment import EmbeddedRuntime, JetsonConfig
+        
+        config = JetsonConfig(target_fps=50.0)
+        runtime = EmbeddedRuntime(config)
+        
+        runtime.initialize(pool_size_mb=10)
+        
+        metrics = runtime.get_metrics()
+        assert metrics.deadline_hit_rate == 100.0
+        
+        runtime.shutdown()
+    
+    def test_inference_metrics(self):
+        from tensornet.deployment.embedded import InferenceMetrics
+        
+        metrics = InferenceMetrics(
+            latency_ms=5.0,
+            throughput_hz=200.0,
+            deadline_misses=2,
+            total_inferences=1000
+        )
+        
+        assert metrics.deadline_hit_rate == 99.8
+
+
+# =============================================================================
+# PHASE 11: GUIDANCE TESTS
+# =============================================================================
+
+class TestGuidance:
+    """Test trajectory and guidance modules."""
+    
+    def test_trajectory_imports(self):
+        from tensornet.guidance import (
+            AtmosphericModel, VehicleState, AeroCoefficients,
+            TrajectoryConfig, TrajectorySolver,
+            isa_atmosphere, exponential_atmosphere
+        )
+        assert VehicleState is not None
+        assert TrajectorySolver is not None
+    
+    def test_controller_imports(self):
+        from tensornet.guidance import (
+            GuidanceMode, ConstraintType, GuidanceCommand,
+            TrajectoryConstraint, GuidanceController,
+            proportional_navigation, bank_angle_guidance
+        )
+        assert GuidanceController is not None
+        assert proportional_navigation is not None
+    
+    def test_isa_atmosphere(self):
+        from tensornet.guidance import isa_atmosphere
+        
+        atm_0 = isa_atmosphere(0)
+        atm_10k = isa_atmosphere(10000)
+        atm_30k = isa_atmosphere(30000)
+        
+        # Sea level values
+        assert abs(atm_0.temperature_K - 288.15) < 1
+        assert abs(atm_0.density_kg_m3 - 1.225) < 0.01
+        
+        # Density decreases with altitude
+        assert atm_10k.density_kg_m3 < atm_0.density_kg_m3
+        assert atm_30k.density_kg_m3 < atm_10k.density_kg_m3
+    
+    def test_exponential_atmosphere(self):
+        from tensornet.guidance import exponential_atmosphere
+        
+        atm_0 = exponential_atmosphere(0)
+        atm_20k = exponential_atmosphere(20000)
+        
+        assert abs(atm_0.density_kg_m3 - 1.225) < 0.01
+        assert atm_20k.density_kg_m3 < atm_0.density_kg_m3
+    
+    def test_vehicle_state(self):
+        from tensornet.guidance import VehicleState
+        
+        state = VehicleState(
+            altitude_m=20000,
+            u_m_s=1000,
+            v_m_s=0,
+            w_m_s=100
+        )
+        
+        V = state.velocity_magnitude
+        assert abs(V - math.sqrt(1000**2 + 100**2)) < 1
+        
+        alpha = state.angle_of_attack
+        assert abs(alpha - math.atan2(100, 1000)) < 1e-10
+    
+    def test_vehicle_state_tensor_conversion(self):
+        from tensornet.guidance import VehicleState
+        
+        state = VehicleState(
+            latitude_rad=0.1,
+            longitude_rad=0.2,
+            altitude_m=15000,
+            u_m_s=500
+        )
+        
+        t = state.to_tensor()
+        assert t.shape == (14,)  # 14-element state vector
+        
+        state2 = VehicleState.from_tensor(t)
+        
+        assert abs(state2.latitude_rad - 0.1) < 1e-6
+        assert abs(state2.altitude_m - 15000) < 1
+    
+    def test_aero_coefficients(self):
+        from tensornet.guidance.trajectory import AeroCoefficients
+        
+        aero = AeroCoefficients(
+            CD=0.02,
+            CL=0.5,
+            CL_alpha=5.7
+        )
+        
+        assert aero.CD == 0.02
+        assert aero.CL_alpha == 5.7
+    
+    def test_trajectory_config(self):
+        from tensornet.guidance import TrajectoryConfig
+        from tensornet.guidance.trajectory import IntegrationMethod
+        
+        config = TrajectoryConfig(
+            dt_s=0.001,
+            integration_method=IntegrationMethod.RK4
+        )
+        
+        assert config.dt_s == 0.001
+        assert config.save_interval == 10
+    
+    def test_gravity_model(self):
+        from tensornet.guidance.trajectory import gravity_model
+        
+        g_0 = gravity_model(0)
+        g_100k = gravity_model(100000)
+        
+        assert abs(g_0 - 9.81) < 0.01
+        assert g_100k < g_0  # Gravity decreases with altitude
+    
+    def test_trajectory_solver_step(self):
+        from tensornet.guidance import VehicleState, TrajectorySolver, TrajectoryConfig
+        
+        config = TrajectoryConfig(dt_s=0.01)
+        solver = TrajectorySolver(config)
+        
+        state = VehicleState(
+            altitude_m=10000,
+            u_m_s=500,
+            w_m_s=0
+        )
+        
+        new_state = solver.single_step(state)
+        
+        # State should change
+        assert new_state.altitude_m != state.altitude_m or new_state.u_m_s != state.u_m_s
+    
+    def test_trajectory_propagation(self):
+        from tensornet.guidance import VehicleState, TrajectorySolver, TrajectoryConfig
+        
+        config = TrajectoryConfig(dt_s=0.01, save_interval=100)
+        solver = TrajectorySolver(config)
+        
+        initial = VehicleState(
+            altitude_m=30000,
+            u_m_s=2000,
+            w_m_s=-50
+        )
+        
+        trajectory = solver.propagate(initial, duration_s=1.0)
+        
+        assert len(trajectory) > 1
+        # State should evolve (altitude may increase or decrease depending on dynamics)
+        assert trajectory[-1].altitude_m != trajectory[0].altitude_m or \
+               trajectory[-1].velocity_magnitude != trajectory[0].velocity_magnitude
+    
+    def test_guidance_command(self):
+        from tensornet.guidance import GuidanceCommand, GuidanceMode
+        
+        cmd = GuidanceCommand(
+            bank_angle_rad=math.radians(30),
+            angle_of_attack_rad=math.radians(15),
+            mode=GuidanceMode.EQUILIBRIUM_GLIDE
+        )
+        
+        controls = cmd.to_controls()
+        assert 'de' in controls
+        assert 'da' in controls
+        assert 'dr' in controls
+    
+    def test_trajectory_constraint(self):
+        from tensornet.guidance import TrajectoryConstraint, ConstraintType
+        
+        # Test constraint within active margin (>90% of limit)
+        constraint = TrajectoryConstraint(
+            ConstraintType.THERMAL_RATE,
+            max_value=100.0,
+            current_value=95.0
+        )
+        
+        assert constraint.relative_margin == 0.95
+        assert constraint.is_active  # Within 10% of limit (>90%)
+        assert constraint.violation == 0
+        
+        # Test constraint below active margin
+        constraint2 = TrajectoryConstraint(
+            ConstraintType.THERMAL_RATE,
+            max_value=100.0,
+            current_value=80.0
+        )
+        assert not constraint2.is_active  # Not within 10% of limit
+    
+    def test_proportional_navigation(self):
+        from tensornet.guidance import VehicleState, proportional_navigation
+        
+        vehicle = VehicleState(
+            latitude_rad=0.0,
+            longitude_rad=0.0,
+            u_m_s=1000.0
+        )
+        
+        target = VehicleState(
+            latitude_rad=0.01,
+            longitude_rad=0.01,
+            u_m_s=0.0
+        )
+        
+        a_cmd = proportional_navigation(vehicle, target, nav_ratio=3.0)
+        # Should return a finite value
+        assert math.isfinite(a_cmd)
+    
+    def test_bank_angle_guidance(self):
+        from tensornet.guidance import VehicleState, bank_angle_guidance
+        from tensornet.guidance.controller import WaypointTarget, CorridorBounds
+        
+        state = VehicleState(
+            altitude_m=50000,
+            u_m_s=3000
+        )
+        
+        target = WaypointTarget(
+            latitude_rad=0.1,
+            longitude_rad=0.1
+        )
+        
+        corridor = CorridorBounds()
+        
+        cmd = bank_angle_guidance(state, target, corridor, L_over_D=1.5)
+        
+        assert abs(cmd.bank_angle_rad) <= corridor.max_bank_angle_rad
+        assert cmd.mode is not None
+    
+    def test_guidance_controller(self):
+        from tensornet.guidance import VehicleState, GuidanceController
+        from tensornet.guidance.controller import WaypointTarget, CorridorBounds
+        
+        target = WaypointTarget(
+            latitude_rad=0.1,
+            longitude_rad=0.1
+        )
+        
+        controller = GuidanceController(
+            corridor=CorridorBounds(),
+            target=target
+        )
+        
+        state = VehicleState(
+            altitude_m=40000,
+            u_m_s=2500
+        )
+        
+        cmd = controller.compute_guidance(state)
+        
+        # constraint_margin is 1.0 by default, may be reduced by apply_constraint_limiting
+        assert cmd.constraint_margin >= 0
+        assert cmd.constraint_margin <= 1.1  # Allow small numerical tolerance
+    
+    def test_heating_estimate(self):
+        from tensornet.guidance import VehicleState, GuidanceController, isa_atmosphere
+        from tensornet.guidance.controller import WaypointTarget
+        
+        controller = GuidanceController(target=WaypointTarget(0, 0))
+        
+        state = VehicleState(
+            altitude_m=60000,
+            u_m_s=3000
+        )
+        
+        atm = isa_atmosphere(60000)
+        q_dot = controller.estimate_heating(state, atm)
+        
+        # Should have positive heating at hypersonic speeds
+        assert q_dot > 0
+    
+    def test_aerodynamic_lookup(self):
+        from tensornet.guidance import GuidanceController
+        from tensornet.guidance.controller import WaypointTarget
+        
+        controller = GuidanceController(target=WaypointTarget(0, 0))
+        
+        CL, CD, Cm = controller.lookup_aerodynamics(5.0, 10.0)
+        
+        assert CL > 0  # Positive lift
+        assert CD > 0  # Positive drag
+        assert CL / CD > 0  # Finite L/D
+    
+    def test_constraint_limiting(self):
+        from tensornet.guidance import VehicleState, GuidanceCommand, GuidanceController
+        from tensornet.guidance.controller import WaypointTarget, CorridorBounds
+        
+        controller = GuidanceController(
+            corridor=CorridorBounds(max_bank_angle_rad=math.radians(80)),
+            target=WaypointTarget(0, 0)
+        )
+        
+        state = VehicleState(altitude_m=40000, u_m_s=2000)
+        
+        # Command exceeding limits
+        cmd = GuidanceCommand(
+            bank_angle_rad=math.radians(90),  # Exceeds 80 deg limit
+            angle_of_attack_rad=math.radians(50)  # Exceeds AoA limit
+        )
+        
+        limited = controller.apply_constraint_limiting(cmd, state)
+        
+        assert abs(limited.bank_angle_rad) <= math.radians(80)
+    
+    def test_controller_reset(self):
+        from tensornet.guidance import GuidanceController
+        from tensornet.guidance.controller import WaypointTarget
+        
+        controller = GuidanceController(target=WaypointTarget(0, 0))
+        controller.heat_load_accumulated = 100.0
+        controller.command_history.append(None)
+        
+        controller.reset()
+        
+        assert controller.heat_load_accumulated == 0.0
+        assert len(controller.command_history) == 0
+
+
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])
