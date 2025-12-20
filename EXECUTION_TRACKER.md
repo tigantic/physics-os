@@ -1162,17 +1162,17 @@ $$S(x) = \frac{c}{6} \log\left(\frac{L}{\pi} \sin\frac{\pi x}{L}\right) + \text{
 | mc_limiter | `limiters.py` | ✅ Done | Monotonized central limiter |
 | MUSCL | `limiters.py` | ✅ Done | Second-order reconstruction |
 
-### Phase 3: Inverse Design (PLANNED)
+### Phase 3: Inverse Design (COMPLETED)
 
 **Objective**: Differentiable geometry optimization
 
 | Task | Status | Dependency |
 |------|--------|------------|
-| Differentiable simulation | ⏳ Planned | Phase 2 |
-| Loss function (drag + heating) | ⏳ Planned | Phase 2 |
-| Geometry tensor parameterization | ⏳ Planned | Phase 2 |
-| L-BFGS optimizer integration | ⏳ Planned | Phase 2 |
-| Sears-Haack emergence test | ⏳ Planned | Phase 3 core |
+| Differentiable simulation | ✅ Done | `cfd/adjoint.py` |
+| Loss function (drag + heating) | ✅ Done | `DragObjective`, `HeatFluxObjective` |
+| Geometry tensor parameterization | ✅ Done | `BSplineParameterization`, `FFDParameterization` |
+| L-BFGS optimizer integration | ✅ Done | `cfd/optimization.py` |
+| Sears-Haack emergence test | ⏳ Planned | Validation test pending |
 
 ---
 
