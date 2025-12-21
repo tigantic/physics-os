@@ -244,9 +244,10 @@ None are fundamental flaws; they are areas to watch in an otherwise well-run pro
   - [ ] Prototype distributed DMRG (future)
   - [ ] GPU acceleration for CFD (future)
 
-- [ ] **Compliance & Quality**:
-  - Lightweight requirements mapping to tests
-  - Archive proof results with releases
+- [x] **Compliance & Quality**: — DONE (2025-12-21)
+  - [x] Created `docs/REQUIREMENTS_TRACEABILITY.md` with requirements → test mapping
+  - [x] Proof results archived in `proofs/` directory
+  - All proof JSONs include timestamps and test results
 
 ---
 
