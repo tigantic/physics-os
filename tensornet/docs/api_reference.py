@@ -1356,7 +1356,7 @@ def generate_api_markdown(
         output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
         for filename, content in files.items():
-            (output_dir / filename).write_text(content)
+            (output_dir / filename).write_text(content, encoding='utf-8')
     
     return files
 
@@ -1387,6 +1387,6 @@ def generate_api_rst(
         output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
         for filename, content in files.items():
-            (output_dir / filename).write_text(content)
+            (output_dir / filename).write_text(content, encoding='utf-8')
     
     return files
