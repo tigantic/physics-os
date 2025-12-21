@@ -27,6 +27,7 @@ Convergence when ΔE < tol.
 
 from dataclasses import dataclass
 from typing import Optional, List, Tuple, Callable
+import warnings
 import torch
 from torch import Tensor
 import math
@@ -35,6 +36,9 @@ from tensornet.core.mps import MPS
 from tensornet.core.mpo import MPO
 from tensornet.core.decompositions import svd_truncated
 from tensornet.core.profiling import memory_profile
+
+# Article V.5.2 truncation error threshold (warn if exceeded)
+TRUNCATION_ERROR_WARN_THRESHOLD = 1e-10
 
 
 @dataclass
@@ -383,6 +387,17 @@ def dmrg_sweep(
             
             U, S, Vh, info = svd_truncated(theta_mat, chi_max, cutoff=svd_cutoff, return_info=True)
             
+            # Article V.5.2: Warn if truncation error exceeds threshold (left-to-right sweep)
+            truncation_err = info.get('truncation_error', 0.0)
+            if truncation_err > TRUNCATION_ERROR_WARN_THRESHOLD:
+                warnings.warn(
+                    f"DMRG truncation error {truncation_err:.2e} exceeds threshold "
+                    f"{TRUNCATION_ERROR_WARN_THRESHOLD:.0e} at site {i}. "
+                    f"Consider increasing chi_max.",
+                    RuntimeWarning,
+                    stacklevel=2
+                )
+            
             chi_new = S.shape[0]
             
             # Compute entropy
@@ -390,7 +405,7 @@ def dmrg_sweep(
             S2 = S_normalized ** 2
             entropy = -torch.sum(S2 * torch.log(S2 + 1e-20)).item()
             max_entropy = max(max_entropy, entropy)
-            max_trunc_err = max(max_trunc_err, info.get('truncation_error', 0.0))
+            max_trunc_err = max(max_trunc_err, truncation_err)
             
             # Update tensors
             psi.tensors[i] = U.reshape(chi_L, d1, chi_new)
@@ -417,6 +432,17 @@ def dmrg_sweep(
             
             U, S, Vh, info = svd_truncated(theta_mat, chi_max, cutoff=svd_cutoff, return_info=True)
             
+            # Article V.5.2: Warn if truncation error exceeds threshold (right-to-left sweep)
+            truncation_err = info.get('truncation_error', 0.0)
+            if truncation_err > TRUNCATION_ERROR_WARN_THRESHOLD:
+                warnings.warn(
+                    f"DMRG truncation error {truncation_err:.2e} exceeds threshold "
+                    f"{TRUNCATION_ERROR_WARN_THRESHOLD:.0e} at site {i}. "
+                    f"Consider increasing chi_max.",
+                    RuntimeWarning,
+                    stacklevel=2
+                )
+            
             chi_new = S.shape[0]
             
             # Compute entropy
@@ -424,7 +450,7 @@ def dmrg_sweep(
             S2 = S_normalized ** 2
             entropy = -torch.sum(S2 * torch.log(S2 + 1e-20)).item()
             max_entropy = max(max_entropy, entropy)
-            max_trunc_err = max(max_trunc_err, info.get('truncation_error', 0.0))
+            max_trunc_err = max(max_trunc_err, truncation_err)
             
             # Update tensors (put S on right for left-canonicalization)
             psi.tensors[i] = (U @ torch.diag(S)).reshape(chi_L, d1, chi_new)

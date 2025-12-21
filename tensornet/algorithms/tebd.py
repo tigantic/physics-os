@@ -25,6 +25,7 @@ Error Scaling:
 
 from dataclasses import dataclass
 from typing import Optional, List, Tuple, Callable, Union
+import warnings
 import torch
 from torch import Tensor
 import math
@@ -32,6 +33,9 @@ import math
 from tensornet.core.mps import MPS
 from tensornet.core.decompositions import svd_truncated
 from tensornet.core.profiling import memory_profile
+
+# Article V.5.2 truncation error threshold (warn if exceeded)
+TRUNCATION_ERROR_WARN_THRESHOLD = 1e-10
 
 
 @dataclass
@@ -104,6 +108,17 @@ def _apply_two_site_gate(
     theta_mat = theta_new.reshape(chi_L * d1, d2 * chi_R)
     
     U, S, Vh, info = svd_truncated(theta_mat, chi_max, cutoff=cutoff, return_info=True)
+    
+    # Article V.5.2: Warn if truncation error exceeds threshold
+    truncation_err = info.get('truncation_error', 0.0)
+    if truncation_err > TRUNCATION_ERROR_WARN_THRESHOLD:
+        warnings.warn(
+            f"TEBD truncation error {truncation_err:.2e} exceeds threshold "
+            f"{TRUNCATION_ERROR_WARN_THRESHOLD:.0e} at site {site}. "
+            f"Consider increasing chi_max or decreasing dt.",
+            RuntimeWarning,
+            stacklevel=2
+        )
     
     chi_new = S.shape[0]
     
