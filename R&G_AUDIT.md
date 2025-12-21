@@ -212,9 +212,11 @@ None are fundamental flaws; they are areas to watch in an otherwise well-run pro
   - Classic M=5, theta=15 test case matches NACA 1135 within 0.1%
   - ImmersedBoundary + WedgeGeometry working
 
-- [x] **User Documentation & Outreach**: — IN PROGRESS
+- [x] **User Documentation & Outreach**: — DONE (2025-12-21)
   - [x] Complete auto-generated API Reference (86 markdown files in docs/api/)
-  - [ ] Write tutorial article ("MPS for spin chain physics" or "Compressing CFD simulation")
+  - [x] Write tutorial articles (commit 3776b52):
+    - `docs/tutorials/mps_ground_state.md` — MPS ground state physics (Heisenberg, TFIM, TEBD)
+    - `docs/tutorials/cfd_compressible_flow.md` — Compressible flow simulation (shock tubes, wedge flow)
   - [ ] Consider Zenodo DOI for citation
 
 - [ ] **Community Engagement**:
