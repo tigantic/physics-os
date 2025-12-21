@@ -182,14 +182,14 @@ None are fundamental flaws; they are areas to watch in an otherwise well-run pro
   - Created 4 boundary condition tests in `test_cfd_physics.py`
   - Total: 19 CFD physics tests now passing
 
-- [ ] **Phase 3 – 2D Solver Integration**: (In Progress)
+- [x] **Phase 3 – 2D Solver Integration**: — DONE (2025-12-21)
   - [x] Debug and test Euler2D with small 2D test cases (15 tests passing)
   - [x] Created `test_euler2d_physics.py` with physics validation tests
   - [x] Fixed `double_mach_reflection_ic` shadowed import bug
   - [x] Fixed SUPERSONIC_INFLOW BC: added handling in `_apply_bc_x` (commit b5a5ac2)
   - [x] Strang dimensional splitting validation — works correctly
   - [x] Supersonic wedge flow tests with ImmersedBoundary (commit 10e6c14)
-  - [ ] Full wedge flow simulation demo
+  - [x] Wedge flow demo: `scripts/wedge_flow_demo.py` validates oblique shock relations
 
 - [x] **Performance Profiling**: — DONE (2025-12-21)
   - Created `scripts/profile_performance.py` with PyTorch profiler
