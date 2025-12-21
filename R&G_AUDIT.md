@@ -207,7 +207,10 @@ None are fundamental flaws; they are areas to watch in an otherwise well-run pro
 
 ### Next 90 Days (Longer-term) — Expand Capability and Prepare for Wider Use
 
-- [ ] **Phase 3 Completion**: 2D CFD feature-complete with demo (Mach reflection, shock interaction)
+- [x] **Phase 3 Completion**: 2D CFD feature-complete with demo — DONE (2025-12-21)
+  - Oblique shock relations validated (M=2-5, theta=10-20 deg)
+  - Classic M=5, theta=15 test case matches NACA 1135 within 0.1%
+  - ImmersedBoundary + WedgeGeometry working
 
 - [ ] **User Documentation & Outreach**:
   - Complete auto-generated API Reference
