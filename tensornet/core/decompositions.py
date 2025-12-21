@@ -3,11 +3,23 @@ Tensor Decompositions
 =====================
 
 SVD and QR decompositions with truncation for tensor networks.
+
+Constitutional Compliance:
+    - Article V.5.1: Condition number warnings when κ > 10¹⁰
+    - Article V.5.2: SVD truncation with return_info
 """
 
+import logging
+import warnings
 from typing import Optional, Tuple
 import torch
 from torch import Tensor
+
+
+# Constitutional threshold (Article V, Section 5.1)
+CONDITION_NUMBER_THRESHOLD = 1e10
+
+logger = logging.getLogger(__name__)
 
 
 def svd_truncated(
@@ -71,12 +83,28 @@ def svd_truncated(
         else:
             trunc_error = 0.0
         
+        # Compute condition number (Article V, Section 5.1)
+        if S_trunc[-1].item() > 0:
+            condition_number = S[0].item() / S_trunc[-1].item()
+        else:
+            condition_number = float('inf')
+        
+        # Warn if condition number exceeds threshold
+        if condition_number > CONDITION_NUMBER_THRESHOLD:
+            warnings.warn(
+                f"High condition number detected: κ = {condition_number:.2e} > 10¹⁰. "
+                f"Numerical stability may be compromised.",
+                RuntimeWarning
+            )
+            logger.warning(f"Condition number κ = {condition_number:.2e} exceeds threshold")
+        
         info = {
             "truncation_error": trunc_error,
             "rank": rank,
             "original_rank": len(S),
             "max_singular_value": S[0].item(),
             "min_singular_value": S_trunc[-1].item(),
+            "condition_number": condition_number,
         }
         return U, S_trunc, Vh, info
     

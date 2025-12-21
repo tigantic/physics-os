@@ -1,0 +1,180 @@
+{
+  "meta": {
+    "generated_at": "2025-12-21T00:01:44.867310",
+    "category": "MPS Operations",
+    "torch_version": "2.9.1+cpu",
+    "seed": 42
+  },
+  "proofs": [
+    {
+      "id": "2.1",
+      "name": "MPS Round-Trip Fidelity",
+      "category": "MPS Operations",
+      "claim": "tensor -> MPS -> tensor preserves information within bond dimension",
+      "status": "PASS",
+      "measurements": [
+        {
+          "property": "input_shape",
+          "value": [
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "property": "bond_dimension",
+          "value": 4
+        },
+        {
+          "property": "||T - T_reconstructed||_F",
+          "value": 4.956821395704106e-15
+        }
+      ],
+      "tolerance": 1e-10,
+      "max_error": 4.956821395704106e-15
+    },
+    {
+      "id": "2.2",
+      "name": "GHZ Entanglement Entropy",
+      "category": "MPS Operations",
+      "claim": "GHZ state has S = ln(2) = 0.693... at every bipartition",
+      "status": "PASS",
+      "measurements": [
+        {
+          "bond": 0,
+          "computed_S": 0.6931471805599452,
+          "theoretical_S": 0.6931471805599453,
+          "error": 1.1102230246251565e-16
+        },
+        {
+          "bond": 1,
+          "computed_S": 0.6931471805599452,
+          "theoretical_S": 0.6931471805599453,
+          "error": 1.1102230246251565e-16
+        },
+        {
+          "bond": 2,
+          "computed_S": 0.6931471805599452,
+          "theoretical_S": 0.6931471805599453,
+          "error": 1.1102230246251565e-16
+        },
+        {
+          "bond": 3,
+          "computed_S": 0.6931471805599452,
+          "theoretical_S": 0.6931471805599453,
+          "error": 1.1102230246251565e-16
+        },
+        {
+          "bond": 4,
+          "computed_S": 0.6931471805599452,
+          "theoretical_S": 0.6931471805599453,
+          "error": 1.1102230246251565e-16
+        }
+      ],
+      "tolerance": 1e-10,
+      "max_error": 1.1102230246251565e-16
+    },
+    {
+      "id": "2.3",
+      "name": "Product State Zero Entropy",
+      "category": "MPS Operations",
+      "claim": "Product state has zero entanglement entropy",
+      "status": "PASS",
+      "measurements": [
+        {
+          "bond": 0,
+          "computed_S": -0.0,
+          "expected": 0.0
+        },
+        {
+          "bond": 1,
+          "computed_S": -0.0,
+          "expected": 0.0
+        },
+        {
+          "bond": 2,
+          "computed_S": -0.0,
+          "expected": 0.0
+        },
+        {
+          "bond": 3,
+          "computed_S": -0.0,
+          "expected": 0.0
+        },
+        {
+          "bond": 4,
+          "computed_S": -0.0,
+          "expected": 0.0
+        }
+      ],
+      "tolerance": 1e-14,
+      "max_error": 0.0
+    },
+    {
+      "id": "2.4",
+      "name": "Norm Preservation Under Canonicalization",
+      "category": "MPS Operations",
+      "claim": "Canonicalization preserves MPS norm",
+      "status": "PASS",
+      "measurements": [
+        {
+          "property": "norm_before",
+          "value": 0.9999999999999998
+        },
+        {
+          "property": "norm_after",
+          "value": 0.9999999999999999
+        },
+        {
+          "property": "difference",
+          "value": 1.1102230246251565e-16
+        }
+      ],
+      "tolerance": 1e-10,
+      "max_error": 1.1102230246251565e-16
+    },
+    {
+      "id": "2.5",
+      "name": "Left-Canonical Orthogonality",
+      "category": "MPS Operations",
+      "claim": "Left-canonical tensors satisfy A^\u2020 @ A = I",
+      "status": "PASS",
+      "measurements": [
+        {
+          "site": 0,
+          "||A^\u2020A - I||_F": 1.3597399555105182e-16
+        },
+        {
+          "site": 1,
+          "||A^\u2020A - I||_F": 6.1721061478217895e-16
+        },
+        {
+          "site": 2,
+          "||A^\u2020A - I||_F": 6.430227211467706e-16
+        },
+        {
+          "site": 3,
+          "||A^\u2020A - I||_F": 9.179469444506744e-16
+        },
+        {
+          "site": 4,
+          "||A^\u2020A - I||_F": 3.513318286776665e-16
+        },
+        {
+          "site": 5,
+          "||A^\u2020A - I||_F": 4.2998752849492583e-16
+        }
+      ],
+      "tolerance": 1e-10,
+      "max_error": 9.179469444506744e-16
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "passed": 5,
+    "failed": 0,
+    "all_passed": true
+  }
+}

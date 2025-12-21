@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "generated_at": "2025-12-21T00:05:09.391975",
+    "category": "Tensor Decompositions",
+    "torch_version": "2.9.1+cpu",
+    "seed": 42
+  },
+  "proofs": [
+    {
+      "id": "1.1",
+      "name": "SVD Truncation Optimality",
+      "category": "Tensor Decompositions",
+      "claim": "svd_truncated(A, k) produces optimal rank-k approximation (Eckart-Young-Mirsky)",
+      "status": "PASS",
+      "measurements": [
+        {
+          "k": 5,
+          "our_error": 80.66251876283839,
+          "ref_error": 80.66251876283839,
+          "diff": 0.0
+        },
+        {
+          "k": 10,
+          "our_error": 72.56998603211332,
+          "ref_error": 72.56998603211332,
+          "diff": 0.0
+        },
+        {
+          "k": 20,
+          "our_error": 58.08995394899879,
+          "ref_error": 58.08995394899879,
+          "diff": 0.0
+        },
+        {
+          "k": 40,
+          "our_error": 33.79407342533207,
+          "ref_error": 33.79407342533207,
+          "diff": 0.0
+        }
+      ],
+      "tolerance": 1e-10,
+      "max_error": 0.0
+    },
+    {
+      "id": "1.2",
+      "name": "SVD Orthogonality",
+      "category": "Tensor Decompositions",
+      "claim": "U and V from SVD are orthogonal matrices",
+      "status": "PASS",
+      "measurements": [
+        {
+          "property": "||U^T @ U - I||_F",
+          "value": 1.070199716920431e-14
+        },
+        {
+          "property": "||V @ V^T - I||_F",
+          "value": 9.860920594766705e-15
+        }
+      ],
+      "tolerance": 1e-10,
+      "max_error": 1.070199716920431e-14
+    },
+    {
+      "id": "1.3",
+      "name": "QR Reconstruction",
+      "category": "Tensor Decompositions",
+      "claim": "QR decomposition satisfies A = Q @ R",
+      "status": "PASS",
+      "measurements": [
+        {
+          "property": "||A - Q @ R||_F",
+          "value": 1.552471594765298e-14
+        }
+      ],
+      "tolerance": 1e-10,
+      "max_error": 1.552471594765298e-14
+    },
+    {
+      "id": "1.4",
+      "name": "QR Orthogonality",
+      "category": "Tensor Decompositions",
+      "claim": "Q from QR is orthogonal",
+      "status": "PASS",
+      "measurements": [
+        {
+          "property": "||Q^T @ Q - I||_F",
+          "value": 2.6156762786245676e-15
+        }
+      ],
+      "tolerance": 1e-10,
+      "max_error": 2.6156762786245676e-15
+    }
+  ],
+  "summary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "all_passed": true
+  }
+}

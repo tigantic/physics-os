@@ -1,7 +1,7 @@
 # Project HyperTensor: Constitutional Law
 
 **Ratified**: 2025-12-20  
-**Version**: 1.0.0  
+**Version**: 1.1.0  
 **Authority**: Principal Investigator  
 **Enforcement**: Mandatory for all contributions
 
@@ -52,17 +52,41 @@ Every proof MUST generate:
 ```
 Project HyperTensor/
 ├── tensornet/              # Core library (pip-installable)
-│   ├── core/               # Fundamental operations (SVD, QR, contractions)
-│   ├── mps/                # Matrix Product States and Operators
-│   ├── algorithms/         # DMRG, TEBD, TDVP, Lanczos
-│   └── physics/            # Hamiltonians, observables, symmetries
+│   ├── core/               # Fundamental operations (SVD, QR, contractions, GPU)
+│   ├── mps/                # Matrix Product States, Operators, Hamiltonians
+│   ├── algorithms/         # DMRG, TEBD, TDVP, Lanczos, fermionic
+│   ├── cfd/                # Computational fluid dynamics solvers
+│   ├── quantum/            # Quantum-classical hybrid, error mitigation
+│   ├── certification/      # DO-178C, hardware deployment
+│   ├── neural/             # Neural-enhanced tensor networks
+│   ├── autonomy/           # Mission planning, path planning, decisions
+│   ├── coordination/       # Swarm, formation, consensus
+│   ├── distributed_tn/     # Distributed DMRG, parallel TEBD
+│   ├── validation/         # Physical validation, V&V
+│   ├── simulation/         # HIL, mission simulation
+│   ├── deployment/         # TensorRT, embedded systems
+│   ├── ml_surrogates/      # PINNs, DeepONet, FNO
+│   ├── digital_twin/       # State sync, anomaly detection
+│   ├── adaptive/           # Bond optimization, compression
+│   ├── realtime/           # Inference engine, memory management
+│   ├── integration/        # Workflow orchestration
+│   ├── guidance/           # 6-DOF trajectory, GNC
+│   ├── flight_validation/  # Telemetry, flight data
+│   ├── docs/               # API documentation generation
+│   └── benchmarks/         # Internal benchmark utilities
 ├── benchmarks/             # Performance and accuracy benchmarks
 ├── notebooks/              # Exploratory and demonstration notebooks
-├── proofs/                 # Mathematical verification artifacts
+├── proofs/                 # Mathematical verification artifacts (proof_*.py)
 ├── tests/                  # pytest test suite
+│   └── integration/        # Integration tests
 ├── docs/                   # Documentation and specifications
+│   └── api/                # Auto-generated API reference
 └── results/                # Generated outputs (gitignored except README)
 ```
+
+**Amendment History**:
+- v1.0.0 (2025-12-20): Initial ratification
+- v1.1.0 (2025-12-20): Extended module structure to reflect 20-phase implementation
 
 ### Section 2.2 — Naming Conventions
 
