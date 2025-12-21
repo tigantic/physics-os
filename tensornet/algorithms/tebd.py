@@ -31,6 +31,7 @@ import math
 
 from tensornet.core.mps import MPS
 from tensornet.core.decompositions import svd_truncated
+from tensornet.core.profiling import memory_profile
 
 
 @dataclass
@@ -141,6 +142,7 @@ def build_gates_from_mpo(
     )
 
 
+@memory_profile
 def tebd_step(
     psi: MPS,
     gates_odd: List[Tensor],
@@ -365,6 +367,7 @@ def build_tfim_gates(
     return gates_odd, gates_even
 
 
+@memory_profile
 def tebd(
     psi: MPS,
     gates_odd: List[Tensor],

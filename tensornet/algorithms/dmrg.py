@@ -34,6 +34,7 @@ import math
 from tensornet.core.mps import MPS
 from tensornet.core.mpo import MPO
 from tensornet.core.decompositions import svd_truncated
+from tensornet.core.profiling import memory_profile
 
 
 @dataclass
@@ -119,6 +120,7 @@ def _contract_right_env(
     return R_new
 
 
+@memory_profile
 def _build_environments(
     psi: MPS,
     H: MPO,
@@ -434,6 +436,7 @@ def dmrg_sweep(
     return energy, max_entropy, max_trunc_err
 
 
+@memory_profile
 def dmrg(
     H: MPO,
     chi_max: int,

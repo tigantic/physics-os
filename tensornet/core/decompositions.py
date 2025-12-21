@@ -7,6 +7,7 @@ SVD and QR decompositions with truncation for tensor networks.
 Constitutional Compliance:
     - Article V.5.1: Condition number warnings when κ > 10¹⁰
     - Article V.5.2: SVD truncation with return_info
+    - Article VIII.8.2: Memory profiling decorator
 """
 
 import logging
@@ -15,6 +16,8 @@ from typing import Optional, Tuple
 import torch
 from torch import Tensor
 
+from tensornet.core.profiling import memory_profile
+
 
 # Constitutional threshold (Article V, Section 5.1)
 CONDITION_NUMBER_THRESHOLD = 1e10
@@ -22,6 +25,7 @@ CONDITION_NUMBER_THRESHOLD = 1e10
 logger = logging.getLogger(__name__)
 
 
+@memory_profile
 def svd_truncated(
     A: Tensor,
     chi_max: Optional[int] = None,
