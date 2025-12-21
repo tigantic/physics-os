@@ -271,5 +271,141 @@ class TestObliqueShockRelations:
         assert result['M2'] > 1.0, "Weak shock should maintain supersonic M2"
 
 
+class TestSupersonicWedgeFlow:
+    """Test supersonic flow over a wedge with immersed boundary method."""
+    
+    def test_wedge_geometry_inside_detection(self):
+        """Verify is_inside correctly identifies points inside wedge."""
+        from tensornet.cfd.geometry import WedgeGeometry
+        
+        wedge = WedgeGeometry(
+            x_leading_edge=0.2,
+            y_leading_edge=0.5,
+            half_angle=math.radians(20),
+            length=0.5
+        )
+        
+        # Point on centerline downstream of LE
+        x_in = torch.tensor([0.4])
+        y_in = torch.tensor([0.5])
+        assert wedge.is_inside(x_in, y_in)[0].item() == True
+        
+        # Point clearly outside (above wedge)
+        x_out = torch.tensor([0.4])
+        y_out = torch.tensor([0.9])
+        assert wedge.is_inside(x_out, y_out)[0].item() == False
+        
+        # Point before leading edge
+        x_before = torch.tensor([0.1])
+        y_before = torch.tensor([0.5])
+        assert wedge.is_inside(x_before, y_before)[0].item() == False
+    
+    def test_immersed_boundary_creates_valid_ghost_cells(self):
+        """Verify ImmersedBoundary computes ghost cells correctly."""
+        from tensornet.cfd.geometry import WedgeGeometry, ImmersedBoundary
+        
+        Nx, Ny = 50, 50
+        Lx, Ly = 1.0, 1.0
+        
+        x = torch.linspace(Lx/(2*Nx), Lx - Lx/(2*Nx), Nx, dtype=torch.float64)
+        y = torch.linspace(Ly/(2*Ny), Ly - Ly/(2*Ny), Ny, dtype=torch.float64)
+        Y, X = torch.meshgrid(y, x, indexing='ij')
+        
+        wedge = WedgeGeometry(
+            x_leading_edge=0.2,
+            y_leading_edge=0.5,
+            half_angle=math.radians(15),
+            length=0.4
+        )
+        
+        ib = ImmersedBoundary(wedge, X, Y)
+        
+        # Should have solid cells
+        assert ib.mask.sum() > 0, "Wedge should occupy some cells"
+        
+        # Ghost cells should be subset of solid cells
+        assert (ib.ghost_mask & ~ib.mask).sum() == 0, "Ghost cells must be inside solid"
+        
+        # Image indices should be valid
+        if len(ib.image_j) > 0:
+            assert ib.image_j.min() >= 0
+            assert ib.image_i.min() >= 0
+            assert ib.image_j.max() < Ny
+            assert ib.image_i.max() < Nx
+    
+    def test_immersed_boundary_preserves_positivity(self):
+        """Verify IB apply method maintains positive density and pressure."""
+        from tensornet.cfd.geometry import WedgeGeometry, ImmersedBoundary
+        
+        Nx, Ny = 40, 40
+        Lx, Ly = 1.0, 1.0
+        gamma = 1.4
+        
+        x = torch.linspace(Lx/(2*Nx), Lx - Lx/(2*Nx), Nx, dtype=torch.float64)
+        y = torch.linspace(Ly/(2*Ny), Ly - Ly/(2*Ny), Ny, dtype=torch.float64)
+        Y, X = torch.meshgrid(y, x, indexing='ij')
+        
+        wedge = WedgeGeometry(
+            x_leading_edge=0.25,
+            y_leading_edge=0.5,
+            half_angle=math.radians(10),
+            length=0.4
+        )
+        
+        ib = ImmersedBoundary(wedge, X, Y)
+        
+        # Create uniform supersonic inflow state
+        rho = 1.0
+        u, v = 2.0, 0.0  # M ≈ 2 for standard conditions
+        p = 1.0 / gamma  # Non-dimensional
+        E = p / (gamma - 1) + 0.5 * rho * (u**2 + v**2)
+        
+        U = torch.zeros(4, Ny, Nx, dtype=torch.float64)
+        U[0] = rho
+        U[1] = rho * u
+        U[2] = rho * v
+        U[3] = E
+        
+        # Apply IB
+        U_ib = ib.apply(U)
+        
+        # Check positivity everywhere (including ghost cells)
+        rho_after = U_ib[0]
+        E_after = U_ib[3]
+        ke_after = 0.5 * (U_ib[1]**2 + U_ib[2]**2) / U_ib[0]
+        p_after = (gamma - 1) * (E_after - ke_after)
+        
+        assert (rho_after > 0).all(), "Density must remain positive"
+        assert (p_after > 0).all(), "Pressure must remain positive"
+    
+    def test_wedge_surface_normal_orientation(self):
+        """Verify surface normals point outward from wedge."""
+        from tensornet.cfd.geometry import WedgeGeometry
+        
+        wedge = WedgeGeometry(
+            x_leading_edge=0.0,
+            y_leading_edge=0.5,
+            half_angle=math.radians(20),
+            length=1.0
+        )
+        
+        # Point above centerline (upper surface)
+        x_up = torch.tensor([0.5])
+        y_up = torch.tensor([0.6])
+        nx_up, ny_up = wedge.surface_normal(x_up, y_up)
+        
+        # Upper surface normal should have positive y-component
+        assert ny_up[0] > 0, "Upper surface normal should point upward"
+        
+        # Point below centerline (lower surface)
+        x_lo = torch.tensor([0.5])
+        y_lo = torch.tensor([0.4])
+        nx_lo, ny_lo = wedge.surface_normal(x_lo, y_lo)
+        
+        # Lower surface normal should have negative y-component
+        assert ny_lo[0] < 0, "Lower surface normal should point downward"
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
