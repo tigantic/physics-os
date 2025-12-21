@@ -159,9 +159,15 @@ None are fundamental flaws; they are areas to watch in an otherwise well-run pro
 
 - [x] **Test Naming Refactor**: ~~Rename tests to Constitutional format~~ — DONE (181 tests renamed)
 
-- [ ] **Document Phase 2 Progress**: Update README to mention Euler1D, shock tube ICs, Riemann solvers.
+- [x] **Document Phase 2 Progress**: ~~Update README to mention Euler1D, shock tube ICs, Riemann solvers~~ — DONE (2025-12-21)
 
-- [ ] **Extend CFD Testing**: Verify Riemann solver functions respect physical bounds (monotonicity) on simple state discontinuity.
+- [x] **Extend CFD Testing**: ~~Verify Riemann solver functions respect physical bounds~~ — DONE (2025-12-21)
+  - Created `tests/integration/test_cfd_physics.py` with 15 physics tests
+  - Tests: Sod, Lax, double-rarefaction shock tubes
+  - Verifies ρ > 0, p > 0 for exact_riemann
+  - Tests HLL, HLLC, Roe flux validity and consistency
+  - Verifies primitive↔conserved roundtrip conversion
+  - Tests Rankine-Hugoniot mass conservation at shocks
 
 - [ ] **Community Visibility**: Consider open-sourcing or announcing to broader audience.
 
