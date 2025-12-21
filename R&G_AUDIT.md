@@ -182,10 +182,13 @@ None are fundamental flaws; they are areas to watch in an otherwise well-run pro
   - Created 4 boundary condition tests in `test_cfd_physics.py`
   - Total: 19 CFD physics tests now passing
 
-- [ ] **Phase 3 – 2D Solver Integration**:
-  - Debug and test Euler2D with small 2D test cases
-  - Supersonic flow over wedge (geometry.py)
-  - Strang dimensional splitting validation
+- [ ] **Phase 3 – 2D Solver Integration**: (In Progress)
+  - [x] Debug and test Euler2D with small 2D test cases (11 tests: 10 pass, 1 xfail)
+  - [x] Created `test_euler2d_physics.py` with physics validation tests
+  - [x] Fixed `double_mach_reflection_ic` shadowed import bug
+  - [ ] Supersonic flow over wedge (geometry.py) — needs investigation
+  - [ ] SUPERSONIC_INFLOW BC has known instability — needs fix
+  - [x] Strang dimensional splitting validation — works correctly
 
 - [ ] **Performance Profiling**:
   - Use PyTorch profiler to identify slow Python loops

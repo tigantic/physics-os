@@ -814,7 +814,6 @@ def double_mach_reflection_ic(
     v_L = 0.0
     
     # Rotate to account for shock angle
-    import math
     cos_a = math.cos(angle)
     sin_a = math.sin(angle)
     u_L_rot = u_L * cos_a
