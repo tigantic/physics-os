@@ -229,7 +229,7 @@ None are fundamental flaws; they are areas to watch in an otherwise well-run pro
   - [x] Created CONTRIBUTING.md with TL;DR of Constitution
   - [x] Added `.github/ISSUE_TEMPLATE/good_first_issue.md` template
   - [x] Added `.github/DISCUSSIONS.md` with category setup guide
-  - [ ] Collaborate with TeNPy or CFD library authors (future)
+  - [x] TeNPy comparison: `scripts/compare_tenpy.py` validates against established library
 
 - [x] **Technical Debt Cleanup**: — DONE (2025-12-21)
   - [x] Reviewed NotImplementedError references — most modules fully implemented
