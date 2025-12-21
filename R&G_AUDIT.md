@@ -197,7 +197,11 @@ None are fundamental flaws; they are areas to watch in an otherwise well-run pro
   - Identified bottlenecks: `einsum` (63% for DMRG), `_linalg_svd` (25% for TEBD)
   - Chrome trace export with `--save` flag
 
-- [ ] **Packaging**: Dry-run of wheel build, consider TestPyPI publish
+- [x] **Packaging**: — DONE (2025-12-21)
+  - Wheel build successful: `tensornet-0.1.0-py3-none-any.whl` (576 KB)
+  - Source dist successful: `tensornet-0.1.0.tar.gz` (503 KB)
+  - `twine check` passed for both packages
+  - Ready for TestPyPI publish
 
 ---
 
