@@ -1453,7 +1453,7 @@ Form Factor: Missile-compatible SWaP
 |----|---------|-------|--------|------------|--------|
 | M-01 | II.2.2 | `gamma` constant naming | ⚪ FALSE POSITIVE | `gamma` is function parameter, not module constant | — |
 | M-02 | II.2.4 | CFD docstrings incomplete | ✅ FIXED | Added Example, Raises, References to euler_1d, godunov | `8f6dfbe` |
-| M-03 | III.3.2 | Test naming pattern | ⏳ DEFERRED | Future refactor (large-scale rename) | — |
+| M-03 | III.3.2 | Test naming pattern | ✅ FIXED | Renamed 181 tests to Constitutional format | — |
 | M-04 | III.3.3 | Coverage reporting | ✅ FIXED | Added to CI workflow | `d8f92fe` |
 | M-05 | III.3.4 | Benchmark hardware specs | ✅ FIXED | Added get_hardware_specs() to benchmarks | `8f6dfbe` |
 | M-06 | V.5.1 | Condition number warnings | ✅ FIXED | Warning when κ > 10¹⁰ | `d8f92fe` |

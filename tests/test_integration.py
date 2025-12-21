@@ -18,32 +18,38 @@ import pytest
 class TestCoreImports:
     """Test that all core components import correctly."""
     
-    def test_import_tensornet(self):
+    def test_tensornet_import_succeeds_when_installed(self):
+        """Test that tensornet imports and has version when installed."""
         import tensornet
         assert hasattr(tensornet, '__version__')
         assert tensornet.__version__ == '0.1.0'
     
-    def test_import_mps(self):
+    def test_mps_import_succeeds_when_installed(self):
+        """Test that MPS imports successfully when installed."""
         from tensornet import MPS
         assert MPS is not None
     
-    def test_import_mpo(self):
+    def test_mpo_import_succeeds_when_installed(self):
+        """Test that MPO imports successfully when installed."""
         from tensornet import MPO
         assert MPO is not None
     
-    def test_import_algorithms(self):
+    def test_algorithms_import_succeeds_when_installed(self):
+        """Test that algorithms import successfully when installed."""
         from tensornet import dmrg, tebd, lanczos_ground_state
         assert dmrg is not None
         assert tebd is not None
         assert lanczos_ground_state is not None
     
-    def test_import_hamiltonians(self):
+    def test_hamiltonians_import_succeeds_when_installed(self):
+        """Test that hamiltonians import successfully when installed."""
         from tensornet import heisenberg_mpo, tfim_mpo, bose_hubbard_mpo
         assert heisenberg_mpo is not None
         assert tfim_mpo is not None
         assert bose_hubbard_mpo is not None
     
-    def test_import_cfd(self):
+    def test_cfd_import_succeeds_when_installed(self):
+        """Test that CFD imports successfully when installed."""
         from tensornet import Euler1D, sod_shock_tube_ic, exact_riemann
         assert Euler1D is not None
         assert sod_shock_tube_ic is not None
@@ -53,7 +59,8 @@ class TestCoreImports:
 class TestMPS:
     """Test MPS operations."""
     
-    def test_random_mps(self):
+    def test_mps_random_creates_valid_structure(self):
+        """Test that MPS.random creates valid tensor structure."""
         from tensornet import MPS
         
         psi = MPS.random(L=10, d=2, chi=8)
@@ -64,14 +71,16 @@ class TestMPS:
         assert psi.tensors[0].shape[1] == 2
         assert psi.tensors[-1].shape[2] == 1
     
-    def test_mps_norm(self):
+    def test_mps_norm_equals_one_when_normalized(self):
+        """Test that MPS norm equals one when normalized."""
         from tensornet import MPS
         
         psi = MPS.random(L=6, d=2, chi=4, normalize=True)
         norm = psi.norm()
         assert abs(norm - 1.0) < 1e-10
     
-    def test_mps_canonicalization(self):
+    def test_mps_canonicalize_produces_orthogonal_tensors(self):
+        """Test that MPS canonicalize produces orthogonal tensors."""
         from tensornet import MPS
         
         psi = MPS.random(L=8, d=2, chi=4)
@@ -86,7 +95,8 @@ class TestMPS:
             eye = torch.eye(chi_R, dtype=should_be_identity.dtype)
             assert torch.allclose(should_be_identity, eye, atol=1e-10)
     
-    def test_ghz_state(self):
+    def test_mps_ghz_has_log2_entropy_at_center(self):
+        """Test that GHZ MPS has log(2) entropy at center bond."""
         from tensornet.core.states import ghz_mps
         
         ghz = ghz_mps(L=5)
@@ -101,20 +111,23 @@ class TestMPS:
 class TestMPO:
     """Test MPO operations."""
     
-    def test_heisenberg_mpo(self):
+    def test_mpo_heisenberg_creates_valid_structure(self):
+        """Test that heisenberg_mpo creates valid MPO structure."""
         from tensornet import heisenberg_mpo
         
         H = heisenberg_mpo(L=6, J=1.0)
         assert H.L == 6
         assert len(H.tensors) == 6
     
-    def test_tfim_mpo(self):
+    def test_mpo_tfim_creates_valid_structure(self):
+        """Test that tfim_mpo creates valid MPO structure."""
         from tensornet import tfim_mpo
         
         H = tfim_mpo(L=8, J=1.0, g=0.5)
         assert H.L == 8
     
-    def test_mpo_hermiticity(self):
+    def test_mpo_heisenberg_is_hermitian(self):
+        """Test that Heisenberg MPO is Hermitian."""
         from tensornet import heisenberg_mpo
         
         H = heisenberg_mpo(L=4, J=1.0)
@@ -124,8 +137,8 @@ class TestMPO:
 class TestDMRG:
     """Test DMRG algorithm."""
     
-    def test_dmrg_runs(self):
-        """Test that DMRG runs without crashing and produces a result."""
+    def test_dmrg_runs_without_error_on_small_chain(self):
+        """Test that DMRG runs without error on small chain."""
         from tensornet import heisenberg_mpo, dmrg
         
         H = heisenberg_mpo(L=4, J=1.0)
@@ -142,7 +155,8 @@ class TestDMRG:
 class TestTEBD:
     """Test TEBD time evolution."""
     
-    def test_tebd_gates(self):
+    def test_tebd_gates_have_correct_shape_for_heisenberg(self):
+        """Test that TEBD gates have correct shape for Heisenberg."""
         from tensornet.algorithms.tebd import build_heisenberg_gates
         
         gates_odd, gates_even = build_heisenberg_gates(L=6, dt=0.01)
@@ -157,14 +171,16 @@ class TestTEBD:
 class TestCFD:
     """Test CFD module."""
     
-    def test_euler_1d_creation(self):
+    def test_euler1d_creates_correct_grid_spacing(self):
+        """Test that Euler1D creates correct grid spacing."""
         from tensornet import Euler1D
         
         solver = Euler1D(N=100, x_min=0.0, x_max=1.0)
         assert solver.N == 100
         assert solver.dx == 0.01
     
-    def test_sod_initial_condition(self):
+    def test_euler1d_sod_ic_has_correct_states(self):
+        """Test that Sod IC has correct left and right states."""
         from tensornet import Euler1D, sod_shock_tube_ic
         
         solver = Euler1D(N=50)
@@ -179,7 +195,8 @@ class TestCFD:
         assert abs(solver.state.rho[-1].item() - 0.125) < 1e-10
         assert abs(solver.state.p[-1].item() - 0.1) < 1e-10
     
-    def test_euler_step(self):
+    def test_euler1d_step_advances_time_positively(self):
+        """Test that Euler1D step advances time positively."""
         from tensornet import Euler1D, sod_shock_tube_ic
         
         solver = Euler1D(N=100)
@@ -194,7 +211,8 @@ class TestCFD:
         assert (solver.state.rho > 0).all()
         assert (solver.state.p > 0).all()
     
-    def test_euler_to_mps(self):
+    def test_euler1d_to_mps_preserves_dimensions(self):
+        """Test that euler_to_mps preserves dimensions."""
         from tensornet import Euler1D, sod_shock_tube_ic, euler_to_mps
         
         N = 50
@@ -205,7 +223,8 @@ class TestCFD:
         # Physical dimension should be 3 (rho, rho*u, E)
         assert mps.tensors[0].shape[1] == 3
     
-    def test_exact_riemann_solver(self):
+    def test_riemann_exact_produces_positive_density(self):
+        """Test that exact Riemann solver produces positive density."""
         from tensornet import exact_riemann
         import torch
         
@@ -224,7 +243,8 @@ class TestCFD:
 class TestLimiters:
     """Test TVD slope limiters."""
     
-    def test_minmod(self):
+    def test_limiter_minmod_clips_to_valid_range(self):
+        """Test that minmod limiter clips to valid range."""
         from tensornet.cfd.limiters import minmod
         
         r = torch.tensor([0.0, 0.5, 1.0, 2.0, -1.0])
@@ -234,7 +254,8 @@ class TestLimiters:
         expected = torch.tensor([0.0, 0.5, 1.0, 1.0, 0.0])
         assert torch.allclose(phi, expected)
     
-    def test_superbee(self):
+    def test_limiter_superbee_is_compressive(self):
+        """Test that superbee limiter is compressive."""
         from tensornet.cfd.limiters import superbee
         
         r = torch.tensor([0.5, 1.0, 2.0])
@@ -248,7 +269,7 @@ class TestLimiters:
 class TestEuler2D:
     """Test 2D Euler solver."""
     
-    def test_euler_2d_creation(self):
+    def test_euler2d_creates_correct_grid_spacing(self):
         from tensornet.cfd.euler_2d import Euler2D
         
         solver = Euler2D(Nx=50, Ny=25, Lx=2.0, Ly=1.0)
@@ -257,7 +278,7 @@ class TestEuler2D:
         assert solver.dx == 2.0 / 50
         assert solver.dy == 1.0 / 25
     
-    def test_euler_2d_state(self):
+    def test_euler2d_state_computes_supersonic_mach(self):
         from tensornet.cfd.euler_2d import Euler2DState
         
         Ny, Nx = 10, 20
@@ -273,7 +294,7 @@ class TestEuler2D:
         # M = 2.0 / 1.183 ≈ 1.69
         assert (state.M > 1.0).all()  # Supersonic
     
-    def test_euler_2d_conservative_conversion(self):
+    def test_euler2d_conservative_roundtrip_preserves_state(self):
         from tensornet.cfd.euler_2d import Euler2DState
         
         Ny, Nx = 5, 5
@@ -292,7 +313,7 @@ class TestEuler2D:
         assert torch.allclose(state.u, state2.u, atol=1e-12)
         assert torch.allclose(state.p, state2.p, atol=1e-12)
     
-    def test_supersonic_wedge_ic(self):
+    def test_euler2d_supersonic_wedge_ic_creates_uniform_flow(self):
         from tensornet.cfd.euler_2d import supersonic_wedge_ic
         
         ic = supersonic_wedge_ic(Nx=50, Ny=25, M_inf=3.0)
@@ -301,7 +322,7 @@ class TestEuler2D:
         assert (ic.M > 2.9).all()
         assert (ic.M < 3.1).all()
     
-    def test_euler_2d_step(self):
+    def test_euler2d_step_maintains_positivity(self):
         from tensornet.cfd.euler_2d import Euler2D, supersonic_wedge_ic
         
         solver = Euler2D(Nx=20, Ny=10, Lx=1.0, Ly=0.5)
@@ -316,7 +337,7 @@ class TestEuler2D:
         assert (solver.state.rho > 0).all()
         assert (solver.state.p > 0).all()
     
-    def test_oblique_shock_exact(self):
+    def test_euler2d_oblique_shock_matches_theory(self):
         from tensornet.cfd.euler_2d import oblique_shock_exact
         import math
         
@@ -333,7 +354,7 @@ class TestEuler2D:
 class TestWedgeGeometry:
     """Test wedge geometry and immersed boundary."""
     
-    def test_wedge_creation(self):
+    def test_wedge_creation_sets_half_angle_correctly(self):
         from tensornet.cfd.geometry import WedgeGeometry
         import math
         
@@ -346,7 +367,7 @@ class TestWedgeGeometry:
         
         assert wedge.half_angle_deg == pytest.approx(15.0)
     
-    def test_wedge_inside(self):
+    def test_wedge_is_inside_detects_centerline_point(self):
         from tensornet.cfd.geometry import WedgeGeometry
         import math
         
@@ -369,7 +390,7 @@ class TestWedgeGeometry:
         inside2 = wedge.is_inside(x2, y2)
         assert inside2[0].item() == False
     
-    def test_immersed_boundary(self):
+    def test_wedge_immersed_boundary_creates_mask(self):
         from tensornet.cfd.geometry import WedgeGeometry, ImmersedBoundary
         import math
         
@@ -398,14 +419,14 @@ class TestWedgeGeometry:
 class TestBoundaryConditions:
     """Test boundary condition module."""
     
-    def test_bc_types(self):
+    def test_bc_types_have_correct_string_values(self):
         from tensornet.cfd.boundaries import BCType
         
         assert BCType.PERIODIC.value == "periodic"
         assert BCType.REFLECTIVE.value == "reflective"
         assert BCType.INFLOW_SUPERSONIC.value == "inflow_supersonic"
     
-    def test_flow_state(self):
+    def test_flowstate_detects_supersonic_conditions(self):
         from tensornet.cfd.boundaries import FlowState
         
         state = FlowState(rho=1.0, u=500.0, v=0.0, p=101325.0)
@@ -419,12 +440,12 @@ class TestBoundaryConditions:
 class TestTDVP:
     """Test TDVP time evolution algorithm."""
     
-    def test_tdvp_import(self):
+    def test_tdvp_import_succeeds_when_installed(self):
         from tensornet import tdvp, tdvp_step, TDVPResult
         assert callable(tdvp)
         assert callable(tdvp_step)
     
-    def test_tdvp_result_structure(self):
+    def test_tdvp_result_has_expected_structure(self):
         """Test TDVPResult dataclass structure."""
         from tensornet.algorithms.tdvp import TDVPResult
         from tensornet import MPS
@@ -442,7 +463,7 @@ class TestTDVP:
         assert result.energies == [-1.0, -1.1]
         assert result.info['dt'] == 0.1
     
-    def test_tdvp_effective_hamiltonian(self):
+    def test_tdvp_step_is_callable_with_dataclass(self):
         """Test TDVP step function exists and can be called with proper args."""
         from tensornet.algorithms.tdvp import tdvp_step, TDVPResult
         from tensornet import MPS
@@ -462,7 +483,7 @@ class TestTDVP:
 class TestPhase4Integration:
     """Test Phase 4 components work together."""
     
-    def test_mach5_validation(self):
+    def test_oblique_shock_matches_mach5_reference(self):
         from tensornet.cfd.euler_2d import oblique_shock_exact
         import math
         
@@ -475,7 +496,7 @@ class TestPhase4Integration:
         assert 3.3 < result['M2'] < 3.7, f"M2={result['M2']} outside expected range"
         assert 4.5 < result['p2_p1'] < 5.1, f"p2/p1={result['p2_p1']} outside expected range"
     
-    def test_double_mach_ic(self):
+    def test_dmr_ic_has_correct_compression_ratio(self):
         """Test DMR initial condition setup."""
         from benchmarks.double_mach_reflection import double_mach_reflection_ic
         
@@ -492,14 +513,14 @@ class TestPhase4Integration:
 class TestQTTCompression:
     """Test Phase 5: QTT compression for TN-CFD coupling."""
     
-    def test_qtt_imports(self):
+    def test_qtt_import_succeeds_when_installed(self):
         from tensornet import field_to_qtt, qtt_to_field, euler_to_qtt, qtt_to_euler
         assert callable(field_to_qtt)
         assert callable(qtt_to_field)
         assert callable(euler_to_qtt)
         assert callable(qtt_to_euler)
     
-    def test_field_to_qtt_basic(self):
+    def test_qtt_field_creates_correct_structure(self):
         from tensornet.cfd.qtt import field_to_qtt, qtt_to_field
         
         # Create simple test field (power of 2 for clean QTT)
@@ -511,7 +532,7 @@ class TestQTTCompression:
         assert result.num_qubits == 10  # log2(32*32) = 10
         assert result.compression_ratio > 0
     
-    def test_qtt_round_trip(self):
+    def test_qtt_roundtrip_preserves_smooth_field(self):
         from tensornet.cfd.qtt import field_to_qtt, qtt_to_field
         
         # Create smooth field (should compress well)
@@ -528,7 +549,7 @@ class TestQTTCompression:
         error = torch.norm(reconstructed - field) / torch.norm(field)
         assert error < 0.01, f"Round-trip error {error:.2e} too high"
     
-    def test_euler_state_compression(self):
+    def test_qtt_euler_state_roundtrip_preserves_uniform(self):
         from tensornet.cfd.euler_2d import supersonic_wedge_ic
         from tensornet.cfd.qtt import euler_to_qtt, qtt_to_euler
         
@@ -551,7 +572,7 @@ class TestQTTCompression:
         rho_err = torch.norm(reconstructed.rho - state.rho) / torch.norm(state.rho)
         assert rho_err < 1e-6, f"Density reconstruction error {rho_err:.2e}"
     
-    def test_compression_ratio(self):
+    def test_qtt_compression_ratio_high_for_constant(self):
         from tensornet.cfd.qtt import field_to_qtt
         
         # Large field should show good compression
@@ -565,7 +586,7 @@ class TestQTTCompression:
 class TestViscousTerms:
     """Test Navier-Stokes viscous terms implementation."""
     
-    def test_sutherland_viscosity_basic(self):
+    def test_sutherland_viscosity_matches_air_at_300k(self):
         from tensornet.cfd.viscous import sutherland_viscosity
         
         # Room temperature: ~300 K
@@ -575,7 +596,7 @@ class TestViscousTerms:
         # Expected ~1.85e-5 Pa·s for air at 300K
         assert 1.7e-5 < mu.item() < 2.0e-5
     
-    def test_sutherland_temperature_scaling(self):
+    def test_sutherland_viscosity_scales_with_temperature(self):
         from tensornet.cfd.viscous import sutherland_viscosity
         
         # Viscosity should increase with temperature
@@ -587,7 +608,7 @@ class TestViscousTerms:
         
         assert mu_high > mu_low
     
-    def test_thermal_conductivity(self):
+    def test_viscous_thermal_conductivity_in_air_range(self):
         from tensornet.cfd.viscous import sutherland_viscosity, thermal_conductivity
         
         T = torch.tensor([300.0])
@@ -597,7 +618,7 @@ class TestViscousTerms:
         # Air at 300K: k ~ 0.026 W/(m·K)
         assert 0.02 < k.item() < 0.04
     
-    def test_velocity_gradients(self):
+    def test_viscous_velocity_gradients_match_linear_profile(self):
         from tensornet.cfd.viscous import velocity_gradients_2d
         
         # Linear velocity profile: u = x, v = 2y
@@ -616,7 +637,7 @@ class TestViscousTerms:
         assert abs(grads['dudx'][Ny//2, Nx//2].item() - 1.0) < 0.1
         assert abs(grads['dvdy'][Ny//2, Nx//2].item() - 2.0) < 0.1
     
-    def test_stress_tensor_shear(self):
+    def test_viscous_stress_tensor_for_pure_shear(self):
         from tensornet.cfd.viscous import velocity_gradients_2d, stress_tensor_2d
         
         # Pure shear: u = y, v = 0
@@ -636,7 +657,7 @@ class TestViscousTerms:
         # τ_xy = μ * du/dy should be ~1
         assert abs(tau['tau_xy'][Ny//2, Nx//2].item() - 1.0) < 0.2
     
-    def test_viscous_rhs_dimensions(self):
+    def test_viscous_rhs_has_correct_dimensions(self):
         from tensornet.cfd.viscous import compute_viscous_rhs_2d
         
         Ny, Nx = 32, 32
@@ -651,7 +672,7 @@ class TestViscousTerms:
         # Mass equation should have zero viscous flux
         assert torch.allclose(rhs[0], torch.zeros_like(rhs[0]))
     
-    def test_recovery_temperature(self):
+    def test_viscous_recovery_temperature_below_stagnation(self):
         from tensornet.cfd.viscous import recovery_temperature, stagnation_temperature
         
         T_inf = 300.0  # K
@@ -667,7 +688,7 @@ class TestViscousTerms:
         assert T_rec < T_stag
         assert T_rec > T_inf
     
-    def test_reynolds_number(self):
+    def test_viscous_reynolds_number_in_expected_range(self):
         from tensornet.cfd.viscous import reynolds_number
         
         # Standard conditions
@@ -685,7 +706,7 @@ class TestViscousTerms:
 class TestNavierStokes2D:
     """Test coupled Navier-Stokes solver."""
     
-    def test_ns2d_config(self):
+    def test_ns2d_config_computes_grid_spacing(self):
         from tensornet.cfd.navier_stokes import NavierStokes2DConfig
         
         config = NavierStokes2DConfig(Nx=64, Ny=32, Lx=1.0, Ly=0.5)
@@ -695,7 +716,7 @@ class TestNavierStokes2D:
         assert abs(config.dx - 1.0/63) < 1e-10
         assert abs(config.dy - 0.5/31) < 1e-10
     
-    def test_ns2d_creation(self):
+    def test_ns2d_creates_euler_solver(self):
         from tensornet.cfd.navier_stokes import NavierStokes2D, NavierStokes2DConfig
         
         config = NavierStokes2DConfig(Nx=32, Ny=16, Lx=0.5, Ly=0.25)
@@ -704,7 +725,7 @@ class TestNavierStokes2D:
         assert ns.config.Nx == 32
         assert ns.euler is not None
     
-    def test_flat_plate_ic(self):
+    def test_ns2d_flat_plate_ic_has_nonzero_velocity(self):
         from tensornet.cfd.navier_stokes import NavierStokes2DConfig, flat_plate_ic
         
         config = NavierStokes2DConfig(Nx=64, Ny=32, Lx=1.0, Ly=0.5)
@@ -713,7 +734,7 @@ class TestNavierStokes2D:
         assert state.rho.shape == (32, 64)
         assert state.u.mean().item() > 0  # Non-zero velocity
     
-    def test_ns2d_timestep(self):
+    def test_ns2d_timestep_positive_and_small(self):
         from tensornet.cfd.navier_stokes import NavierStokes2D, NavierStokes2DConfig, flat_plate_ic
         
         config = NavierStokes2DConfig(Nx=32, Ny=16, Lx=0.1, Ly=0.05)
@@ -729,7 +750,7 @@ class TestNavierStokes2D:
 class TestEuler3D:
     """Test 3D Euler solver."""
     
-    def test_euler3d_state(self):
+    def test_euler3d_state_has_correct_shape(self):
         from tensornet.cfd.euler_3d import Euler3DState
         
         Nz, Ny, Nx = 8, 16, 32
@@ -744,7 +765,7 @@ class TestEuler3D:
         assert state.shape == (8, 16, 32)
         assert state.mach_number().mean().item() > 0
     
-    def test_euler3d_conservative_roundtrip(self):
+    def test_euler3d_conservative_roundtrip_preserves_state(self):
         from tensornet.cfd.euler_3d import Euler3DState
         
         rho = torch.rand(4, 8, 8, dtype=torch.float64) + 0.5
@@ -761,7 +782,7 @@ class TestEuler3D:
         assert torch.allclose(state1.u, state2.u, rtol=1e-10)
         assert torch.allclose(state1.p, state2.p, rtol=1e-10)
     
-    def test_euler3d_solver_creation(self):
+    def test_euler3d_solver_computes_grid_spacing(self):
         from tensornet.cfd.euler_3d import Euler3D
         
         solver = Euler3D(Nx=16, Ny=16, Nz=8, Lx=1.0, Ly=1.0, Lz=0.5)
@@ -770,7 +791,7 @@ class TestEuler3D:
         assert solver.Nz == 8
         assert abs(solver.dz - 0.5/7) < 1e-10
     
-    def test_uniform_flow_3d(self):
+    def test_euler3d_uniform_flow_creates_correct_mach(self):
         from tensornet.cfd.euler_3d import Euler3D, uniform_flow_3d
         
         solver = Euler3D(Nx=8, Ny=8, Nz=8, Lx=1.0, Ly=1.0, Lz=1.0)
@@ -783,7 +804,7 @@ class TestEuler3D:
 class TestRealGas:
     """Test real-gas thermodynamics."""
     
-    def test_gamma_variable(self):
+    def test_realgas_gamma_decreases_at_high_temperature(self):
         from tensornet.cfd.real_gas import gamma_variable
         
         T_low = torch.tensor([300.0])
@@ -796,7 +817,7 @@ class TestRealGas:
         assert gamma_low.item() > gamma_high.item()
         assert abs(gamma_low.item() - 1.4) < 0.05
     
-    def test_equilibrium_gamma(self):
+    def test_realgas_equilibrium_gamma_monotonic_decrease(self):
         from tensornet.cfd.real_gas import equilibrium_gamma_air
         
         T = torch.tensor([300.0, 1000.0, 3000.0, 6000.0])
@@ -810,7 +831,7 @@ class TestRealGas:
         # Check bounds
         assert 1.1 < gamma[-1] < 1.4
     
-    def test_cp_polynomial(self):
+    def test_realgas_cp_increases_with_temperature(self):
         from tensornet.cfd.real_gas import cp_polynomial
         
         T = torch.tensor([300.0, 1000.0])
@@ -821,7 +842,7 @@ class TestRealGas:
         # Should increase with temperature
         assert cp[1] > cp[0]
     
-    def test_enthalpy_sensible(self):
+    def test_realgas_enthalpy_positive_above_reference(self):
         from tensornet.cfd.real_gas import enthalpy_sensible
         
         T = torch.tensor([500.0, 1000.0])
@@ -831,7 +852,7 @@ class TestRealGas:
         assert h[0].item() > 0
         assert h[1] > h[0]
     
-    def test_post_shock_equilibrium(self):
+    def test_realgas_post_shock_subsonic_downstream(self):
         from tensornet.cfd.real_gas import post_shock_equilibrium
         
         result = post_shock_equilibrium(M1=5.0, T1=300.0, p1=101325.0)
@@ -847,14 +868,14 @@ class TestRealGas:
 class TestChemistry:
     """Test multi-species chemistry (Phase 8)."""
     
-    def test_species_enum(self):
+    def test_chemistry_species_enum_has_correct_indices(self):
         from tensornet.cfd.chemistry import Species
         
         assert Species.N2.value == 0
         assert Species.O2.value == 1
         assert Species.O.value == 4
     
-    def test_air_5species_ic(self):
+    def test_chemistry_air_5species_mass_fractions_sum_to_one(self):
         from tensornet.cfd.chemistry import air_5species_ic, Species
         
         state = air_5species_ic(shape=(10, 10), T=300.0, p=101325.0)
@@ -870,7 +891,7 @@ class TestChemistry:
         assert abs(state.Y[Species.N2][0, 0].item() - 0.767) < 1e-6
         assert abs(state.Y[Species.O2][0, 0].item() - 0.233) < 1e-6
     
-    def test_reaction_rates_low_temp(self):
+    def test_chemistry_reaction_rates_negligible_at_low_temp(self):
         from tensornet.cfd.chemistry import (
             air_5species_ic, compute_reaction_rates
         )
@@ -883,7 +904,7 @@ class TestChemistry:
         max_omega = max(w.abs().max().item() for w in omega.values())
         assert max_omega < 1e-10
     
-    def test_reaction_rates_high_temp(self):
+    def test_chemistry_o2_dissociates_at_high_temp(self):
         from tensornet.cfd.chemistry import (
             air_5species_ic, compute_reaction_rates, Species
         )
@@ -897,7 +918,7 @@ class TestChemistry:
         # O should be produced
         assert omega[Species.O].item() > 0
     
-    def test_post_shock_composition(self):
+    def test_chemistry_post_shock_shows_dissociation(self):
         from tensornet.cfd.chemistry import post_shock_composition, Species
         
         Y = post_shock_composition(M=10.0, T1=300.0)
@@ -914,7 +935,7 @@ class TestChemistry:
 class TestImplicit:
     """Test implicit time integration (Phase 8)."""
     
-    def test_newton_solve(self):
+    def test_implicit_newton_converges_to_root(self):
         from tensornet.cfd.implicit import (
             newton_solve, ImplicitConfig, SolverStatus
         )
@@ -932,7 +953,7 @@ class TestImplicit:
         assert result.status == SolverStatus.SUCCESS
         assert abs(result.x.item() - 2.0) < 1e-8
     
-    def test_numerical_jacobian(self):
+    def test_implicit_numerical_jacobian_matches_exact(self):
         from tensornet.cfd.implicit import numerical_jacobian
         
         def f(x):
@@ -945,7 +966,7 @@ class TestImplicit:
         J_exact = torch.tensor([[4.0, 0.0], [3.0, 2.0]], dtype=torch.float64)
         assert torch.allclose(J, J_exact, atol=1e-4)
     
-    def test_backward_euler_scalar(self):
+    def test_implicit_backward_euler_matches_exponential(self):
         from tensornet.cfd.implicit import backward_euler_scalar
         import math
         
@@ -958,7 +979,7 @@ class TestImplicit:
         # y(0.1) = e^(-0.1) ≈ 0.9048
         assert abs(y - math.exp(-0.1)) < 0.01
     
-    def test_adaptive_implicit(self):
+    def test_implicit_adaptive_handles_stiff_ode(self):
         from tensornet.cfd.implicit import AdaptiveImplicit
         
         # Integrate dy/dt = -10*y from y(0) = 1 to t = 0.5
@@ -980,7 +1001,7 @@ class TestImplicit:
 class TestReactiveNS:
     """Test reactive Navier-Stokes solver (Phase 8)."""
     
-    def test_reactive_state_creation(self):
+    def test_reactive_state_has_valid_mass_fractions(self):
         from tensornet.cfd.reactive_ns import (
             ReactiveConfig, reactive_flat_plate_ic, ReactiveState
         )
@@ -998,7 +1019,7 @@ class TestReactiveNS:
         # Check standard air
         assert abs(state.Y[Species.N2][0, 0].item() - 0.767) < 1e-6
     
-    def test_reactive_state_validation(self):
+    def test_reactive_state_passes_validation(self):
         from tensornet.cfd.reactive_ns import ReactiveConfig, reactive_flat_plate_ic
         
         config = ReactiveConfig(Nx=8, Ny=8)
@@ -1007,7 +1028,7 @@ class TestReactiveNS:
         valid, msg = state.validate()
         assert valid, f"State validation failed: {msg}"
     
-    def test_reactive_ns_initialization(self):
+    def test_reactive_ns_creates_euler_solver(self):
         from tensornet.cfd.reactive_ns import ReactiveConfig, ReactiveNS
         
         config = ReactiveConfig(Nx=16, Ny=16)
@@ -1016,7 +1037,7 @@ class TestReactiveNS:
         assert solver.euler is not None
         assert solver.adaptive_integrator is not None
     
-    def test_reactive_ns_timestep(self):
+    def test_reactive_ns_timestep_positive_and_small(self):
         from tensornet.cfd.reactive_ns import (
             ReactiveConfig, ReactiveNS, reactive_flat_plate_ic
         )
@@ -1035,7 +1056,7 @@ class TestReactiveNS:
 class TestTurbulence:
     """Test RANS turbulence modeling (Phase 9)."""
     
-    def test_turbulence_imports(self):
+    def test_turbulence_import_succeeds_when_installed(self):
         from tensornet.cfd.turbulence import (
             TurbulenceModel, TurbulentState,
             k_epsilon_eddy_viscosity, k_omega_sst_eddy_viscosity,
@@ -1045,7 +1066,7 @@ class TestTurbulence:
         assert TurbulenceModel.K_OMEGA_SST is not None
         assert TurbulenceModel.SPALART_ALLMARAS is not None
     
-    def test_turbulent_state(self):
+    def test_turbulent_state_zeros_has_correct_shape(self):
         from tensornet.cfd.turbulence import TurbulentState
         
         shape = (10, 10)
@@ -1056,7 +1077,7 @@ class TestTurbulence:
         assert state.omega.shape == shape
         assert state.mu_t.shape == shape
     
-    def test_k_epsilon_eddy_viscosity(self):
+    def test_turbulence_k_epsilon_computes_correct_viscosity(self):
         from tensornet.cfd.turbulence import k_epsilon_eddy_viscosity
         
         rho = torch.full((10, 10), 1.2, dtype=torch.float64)
@@ -1068,7 +1089,7 @@ class TestTurbulence:
         # mu_t = rho * C_mu * k^2 / epsilon = 1.2 * 0.09 * 1 / 0.1 = 1.08
         assert torch.allclose(mu_t, torch.full_like(mu_t, 1.08), atol=1e-6)
     
-    def test_k_omega_sst(self):
+    def test_turbulence_k_omega_sst_blending_in_bounds(self):
         from tensornet.cfd.turbulence import (
             k_omega_sst_eddy_viscosity, sst_blending_functions
         )
@@ -1090,7 +1111,7 @@ class TestTurbulence:
         assert mu_t.shape == (10, 10)
         assert (mu_t >= 0).all()
     
-    def test_spalart_allmaras(self):
+    def test_turbulence_spalart_allmaras_nonnegative(self):
         from tensornet.cfd.turbulence import spalart_allmaras_eddy_viscosity
         
         rho = torch.full((10, 10), 1.2, dtype=torch.float64)
@@ -1102,7 +1123,7 @@ class TestTurbulence:
         assert mu_t.shape == (10, 10)
         assert (mu_t >= 0).all()
     
-    def test_wall_functions(self):
+    def test_turbulence_log_law_velocity_in_expected_range(self):
         from tensornet.cfd.turbulence import log_law_velocity
         
         y_plus = torch.tensor([30.0, 100.0, 300.0], dtype=torch.float64)
@@ -1112,7 +1133,7 @@ class TestTurbulence:
         assert (u_plus > 10).all()
         assert (u_plus < 25).all()
     
-    def test_compressibility_corrections(self):
+    def test_turbulence_compressibility_corrections_have_shape(self):
         from tensornet.cfd.turbulence import sarkar_correction, wilcox_compressibility
         
         k = torch.full((5, 5), 1000.0, dtype=torch.float64)
@@ -1126,7 +1147,7 @@ class TestTurbulence:
         assert beta_star_mod.shape == (5, 5)
         assert F_Mt.shape == (5, 5)
     
-    def test_turbulence_initialization(self):
+    def test_turbulence_initialization_has_positive_k(self):
         from tensornet.cfd.turbulence import (
             TurbulenceModel, TurbulentState, initialize_turbulence
         )
@@ -1145,7 +1166,7 @@ class TestTurbulence:
 class TestAdjoint:
     """Test adjoint solver framework (Phase 9)."""
     
-    def test_adjoint_imports(self):
+    def test_adjoint_import_succeeds_when_installed(self):
         from tensornet.cfd.adjoint import (
             AdjointMethod, AdjointState, AdjointConfig,
             DragObjective, HeatFluxObjective, AdjointEuler2D
@@ -1153,7 +1174,7 @@ class TestAdjoint:
         assert AdjointMethod.CONTINUOUS is not None
         assert AdjointMethod.DISCRETE is not None
     
-    def test_adjoint_state(self):
+    def test_adjoint_state_zeros_has_correct_shape(self):
         from tensornet.cfd.adjoint import AdjointState
         
         psi = AdjointState.zeros((10, 10))
@@ -1167,7 +1188,7 @@ class TestAdjoint:
         
         assert torch.allclose(psi.psi_rho, psi2.psi_rho)
     
-    def test_drag_objective(self):
+    def test_adjoint_drag_objective_gradient_nonzero_on_surface(self):
         from tensornet.cfd.adjoint import DragObjective
         
         surface_mask = torch.zeros(10, 10, dtype=torch.float64)
@@ -1194,7 +1215,7 @@ class TestAdjoint:
         # Only pressure gradient should be nonzero on surface
         assert (dJ[3][0, :] != 0).any()
     
-    def test_flux_jacobians(self):
+    def test_adjoint_flux_jacobians_no_nan(self):
         from tensornet.cfd.adjoint import AdjointEuler2D
         
         solver = AdjointEuler2D(Nx=10, Ny=10, dx=0.1, dy=0.1)
@@ -1214,7 +1235,7 @@ class TestAdjoint:
         assert not torch.isnan(A).any()
         assert not torch.isnan(B).any()
     
-    def test_adjoint_rhs(self):
+    def test_adjoint_rhs_zero_for_zero_psi(self):
         from tensornet.cfd.adjoint import AdjointEuler2D, AdjointState
         
         solver = AdjointEuler2D(Nx=10, Ny=10, dx=0.1, dy=0.1)
@@ -1232,7 +1253,7 @@ class TestAdjoint:
         # Zero psi and source should give small RHS
         assert rhs.to_tensor().norm().item() < 1e-10
     
-    def test_shape_sensitivity(self):
+    def test_adjoint_shape_sensitivity_has_correct_shape(self):
         from tensornet.cfd.adjoint import AdjointState, compute_shape_sensitivity
         
         psi = AdjointState.zeros((10, 10))
@@ -1258,7 +1279,7 @@ class TestAdjoint:
 class TestOptimization:
     """Test shape optimization framework (Phase 9)."""
     
-    def test_optimization_imports(self):
+    def test_optimization_import_succeeds_when_installed(self):
         from tensornet.cfd.optimization import (
             OptimizerType, OptimizationConfig, ShapeOptimizer,
             BSplineParameterization, FFDParameterization
@@ -1266,7 +1287,7 @@ class TestOptimization:
         assert OptimizerType.LBFGS is not None
         assert OptimizerType.STEEPEST_DESCENT is not None
     
-    def test_bspline_parameterization(self):
+    def test_optimization_bspline_evaluates_curve(self):
         from tensornet.cfd.optimization import BSplineParameterization
         
         n_control = 6
@@ -1287,7 +1308,7 @@ class TestOptimization:
         diff = (middle_pts[:, 1] - middle_pts[:, 0]).abs()
         assert diff.mean() < 0.2  # Allow some deviation due to B-spline smoothing
     
-    def test_bspline_gradient(self):
+    def test_optimization_bspline_gradient_has_correct_shape(self):
         from tensornet.cfd.optimization import BSplineParameterization
         
         n_control = 5
@@ -1300,7 +1321,7 @@ class TestOptimization:
         
         assert jac.shape == (20, 10)  # (n_eval*2, n_control*2)
     
-    def test_ffd_parameterization(self):
+    def test_optimization_ffd_preserves_surface_at_zero(self):
         from tensornet.cfd.optimization import FFDParameterization
         
         # Simple surface
@@ -1321,7 +1342,7 @@ class TestOptimization:
         
         assert torch.allclose(deformed, surface, atol=1e-10)
     
-    def test_wedge_design_problem(self):
+    def test_optimization_wedge_problem_spans_x_range(self):
         from tensornet.cfd.optimization import create_wedge_design_problem
         
         param, alpha0 = create_wedge_design_problem(n_control=8, theta_initial=10.0)
@@ -1341,7 +1362,7 @@ class TestOptimization:
         y_controls = alpha0[1::2]
         assert y_controls[-1].item() > y_controls[0].item()
     
-    def test_gradient_smoothing(self):
+    def test_optimization_gradient_smoothing_reduces_oscillation(self):
         from tensornet.cfd.optimization import (
             OptimizationConfig, ShapeOptimizer, BSplineParameterization
         )
@@ -1375,7 +1396,7 @@ class TestOptimization:
 class TestLES:
     """Test LES subgrid-scale models."""
     
-    def test_les_imports(self):
+    def test_les_import_succeeds_when_installed(self):
         from tensornet.cfd import (
             LESModel, LESState, filter_width, strain_rate_magnitude,
             smagorinsky_viscosity, wale_viscosity, vreman_viscosity,
@@ -1384,7 +1405,7 @@ class TestLES:
         assert LESModel is not None
         assert LESState is not None
     
-    def test_filter_width_2d(self):
+    def test_les_filter_width_2d_computes_geometric_mean(self):
         from tensornet.cfd.les import filter_width
         
         dx = torch.ones(32, 32) * 0.01
@@ -1396,7 +1417,7 @@ class TestLES:
         expected = (0.01 * 0.02) ** 0.5
         assert torch.allclose(delta, torch.ones_like(delta) * expected, rtol=1e-4)
     
-    def test_filter_width_3d(self):
+    def test_les_filter_width_3d_computes_cube_root(self):
         from tensornet.cfd.les import filter_width
         
         dx = torch.ones(16, 16, 16) * 0.01
@@ -1409,7 +1430,7 @@ class TestLES:
         expected = (0.01 * 0.02 * 0.03) ** (1.0/3.0)
         assert torch.allclose(delta, torch.ones_like(delta) * expected, rtol=1e-4)
     
-    def test_strain_rate_magnitude(self):
+    def test_les_strain_rate_magnitude_for_couette_flow(self):
         from tensornet.cfd.les import strain_rate_magnitude
         
         Nx, Ny = 32, 32
@@ -1425,7 +1446,7 @@ class TestLES:
         # For Couette, S_12 = 0.5 * du/dy = 0.5, |S| = sqrt(2 * 2 * S_12^2) = 1
         assert torch.allclose(S_mag, torch.ones_like(S_mag), rtol=1e-4)
     
-    def test_smagorinsky_viscosity(self):
+    def test_les_smagorinsky_viscosity_formula(self):
         from tensornet.cfd.les import smagorinsky_viscosity
         
         S = torch.ones(32, 32) * 100.0
@@ -1439,7 +1460,7 @@ class TestLES:
         expected = (0.17 * 0.01) ** 2 * 100.0
         assert torch.allclose(mu_sgs, torch.ones_like(mu_sgs) * expected, rtol=1e-4)
     
-    def test_van_driest_damping(self):
+    def test_les_van_driest_damping_near_wall_behavior(self):
         from tensornet.cfd.les import van_driest_damping
         
         y_plus = torch.tensor([0.0, 5.0, 25.0, 100.0])
@@ -1450,7 +1471,7 @@ class TestLES:
         assert abs(D[2].item() - (1 - 1/math.e)) < 0.02  # Relaxed tolerance
         assert D[3].item() > 0.9  # Near one far from wall
     
-    def test_wale_viscosity(self):
+    def test_les_wale_viscosity_nonnegative(self):
         from tensornet.cfd.les import wale_viscosity
         
         Nx, Ny = 16, 16
@@ -1469,7 +1490,7 @@ class TestLES:
         assert mu_wale.shape == (Nx, Ny)
         assert (mu_wale >= 0).all()
     
-    def test_compute_sgs_viscosity_dispatch(self):
+    def test_les_compute_sgs_viscosity_dispatches_all_models(self):
         from tensornet.cfd.les import compute_sgs_viscosity, LESModel
         
         Nx, Ny = 16, 16
@@ -1490,7 +1511,7 @@ class TestLES:
 class TestHybridLES:
     """Test hybrid RANS-LES models."""
     
-    def test_hybrid_les_imports(self):
+    def test_hybrid_les_import_succeeds_when_installed(self):
         from tensornet.cfd import (
             HybridModel, HybridLESState, des_length_scale, ddes_delay_function,
             run_hybrid_les, estimate_rans_les_ratio
@@ -1498,7 +1519,7 @@ class TestHybridLES:
         assert HybridModel is not None
         assert HybridLESState is not None
     
-    def test_grid_scale_computation(self):
+    def test_hybrid_les_grid_scale_methods(self):
         from tensornet.cfd.hybrid_les import compute_grid_scale
         
         dx = torch.ones(10, 10) * 0.01
@@ -1511,7 +1532,7 @@ class TestHybridLES:
         expected = (0.01 * 0.02) ** 0.5
         assert torch.allclose(delta_cube, torch.ones_like(delta_cube) * expected, rtol=1e-4)
     
-    def test_des_length_scale(self):
+    def test_hybrid_les_des_length_scale_transition(self):
         from tensornet.cfd.hybrid_les import des_length_scale, compute_wall_distance_scale
         
         d_wall = torch.linspace(0.001, 0.1, 20)
@@ -1530,7 +1551,7 @@ class TestHybridLES:
         expected = torch.minimum(l_rans, l_les)
         assert torch.allclose(l_des, expected)
     
-    def test_ddes_delay_function(self):
+    def test_hybrid_les_ddes_delay_function_bounds(self):
         from tensornet.cfd.hybrid_les import ddes_delay_function
         
         r_d = torch.tensor([0.1, 0.5, 1.0, 2.0, 5.0])
@@ -1542,7 +1563,7 @@ class TestHybridLES:
         assert (f_d >= 0).all()
         assert (f_d <= 1).all()
     
-    def test_run_hybrid_les_ddes(self):
+    def test_hybrid_les_ddes_runs_with_blending(self):
         from tensornet.cfd.hybrid_les import run_hybrid_les, HybridModel
         
         Nx, Ny = 32, 32
@@ -1564,7 +1585,7 @@ class TestHybridLES:
         assert state.blending.shape == (Nx, Ny)
         assert state.f_d is not None
     
-    def test_hybrid_model_comparison(self):
+    def test_hybrid_les_all_models_run(self):
         from tensornet.cfd.hybrid_les import run_hybrid_les, estimate_rans_les_ratio, HybridModel
         
         Nx, Ny = 32, 32
@@ -1591,7 +1612,7 @@ class TestHybridLES:
 class TestMultiObjectiveOptimization:
     """Test multi-objective optimization framework."""
     
-    def test_moo_imports(self):
+    def test_moo_import_succeeds_when_installed(self):
         from tensornet.cfd import (
             MOOAlgorithm, ObjectiveSpec, ParetoSolution, MOOResult, MOOConfig,
             dominates, fast_non_dominated_sort, MultiObjectiveOptimizer
@@ -1599,7 +1620,7 @@ class TestMultiObjectiveOptimization:
         assert MOOAlgorithm is not None
         assert MultiObjectiveOptimizer is not None
     
-    def test_dominance_relation(self):
+    def test_moo_dominance_relation_correct(self):
         from tensornet.cfd.multi_objective import dominates
         
         obj_a = {"f1": 1.0, "f2": 2.0}
@@ -1616,7 +1637,7 @@ class TestMultiObjectiveOptimization:
         # C does not dominate A (A is better in f1)
         assert dominates(obj_c, obj_a, minimize) == False
     
-    def test_non_dominated_sorting(self):
+    def test_moo_non_dominated_sorting_identifies_pareto(self):
         from tensornet.cfd.multi_objective import fast_non_dominated_sort, ParetoSolution
         
         population = [
@@ -1636,7 +1657,7 @@ class TestMultiObjectiveOptimization:
         if len(fronts) > 1:
             assert 3 in fronts[1]
     
-    def test_crowding_distance(self):
+    def test_moo_crowding_distance_boundary_infinite(self):
         from tensornet.cfd.multi_objective import crowding_distance, ParetoSolution
         
         population = [
@@ -1657,7 +1678,7 @@ class TestMultiObjectiveOptimization:
         # Interior point should have finite distance
         assert population[1].crowding_distance < float('inf')
     
-    def test_hypervolume_2d(self):
+    def test_moo_hypervolume_2d_matches_expected(self):
         from tensornet.cfd.multi_objective import hypervolume_2d, ParetoSolution
         
         front = [
@@ -1672,7 +1693,7 @@ class TestMultiObjectiveOptimization:
         # Expected: (4-1)*(4-3) + (4-2)*(3-2) + (4-3)*(2-1) = 3 + 2 + 1 = 6
         assert abs(hv - 6.0) < 0.01
     
-    def test_nsga2_optimization(self):
+    def test_moo_nsga2_produces_pareto_front(self):
         from tensornet.cfd.multi_objective import (
             MultiObjectiveOptimizer, MOOConfig, MOOAlgorithm,
             create_drag_heating_problem
@@ -1698,7 +1719,7 @@ class TestMultiObjectiveOptimization:
 class TestGPUAcceleration:
     """Test GPU acceleration utilities."""
     
-    def test_gpu_imports(self):
+    def test_gpu_import_succeeds_when_installed(self):
         from tensornet.core import (
             DeviceType, GPUConfig, get_device, to_device, MemoryPool,
             roe_flux_gpu, compute_strain_rate_gpu
@@ -1706,7 +1727,7 @@ class TestGPUAcceleration:
         assert DeviceType is not None
         assert GPUConfig is not None
     
-    def test_get_device(self):
+    def test_gpu_get_device_returns_cpu_when_no_cuda(self):
         from tensornet.core.gpu import get_device, GPUConfig, DeviceType
         
         # Should get CPU if CUDA not available
@@ -1714,7 +1735,7 @@ class TestGPUAcceleration:
         device = get_device(config)
         assert device.type == "cpu"
     
-    def test_memory_pool(self):
+    def test_gpu_memory_pool_allocates_tensor(self):
         from tensornet.core.gpu import MemoryPool, get_device
         
         device = get_device()
@@ -1725,7 +1746,7 @@ class TestGPUAcceleration:
         
         pool.reset()
     
-    def test_roe_flux_gpu(self):
+    def test_gpu_roe_flux_produces_nonzero_flux(self):
         from tensornet.core.gpu import roe_flux_gpu, get_device
         
         device = get_device()
@@ -1750,7 +1771,7 @@ class TestGPUAcceleration:
         # Should have non-zero flux
         assert F_rho.abs().max() > 0
     
-    def test_strain_rate_gpu(self):
+    def test_gpu_strain_rate_couette_flow_value(self):
         from tensornet.core.gpu import compute_strain_rate_gpu, get_device
         
         device = get_device()
@@ -1770,7 +1791,7 @@ class TestGPUAcceleration:
         interior = S_mag[2:-2, 2:-2]
         assert 0.5 < interior.mean().item() < 2.0
     
-    def test_benchmark_kernel(self):
+    def test_gpu_benchmark_kernel_runs(self):
         from tensornet.core.gpu import benchmark_kernel, compute_strain_rate_gpu, get_device
         
         device = get_device()
@@ -1794,7 +1815,7 @@ class TestGPUAcceleration:
 class TestDeployment:
     """Test TensorRT export and embedded deployment utilities."""
     
-    def test_tensorrt_imports(self):
+    def test_deployment_tensorrt_import_succeeds(self):
         from tensornet.deployment import (
             ExportConfig, ExportResult, TensorRTExporter,
             export_to_onnx, optimize_for_tensorrt, validate_exported_model,
@@ -1803,7 +1824,7 @@ class TestDeployment:
         assert ExportConfig is not None
         assert TensorRTExporter is not None
     
-    def test_embedded_imports(self):
+    def test_deployment_embedded_import_succeeds(self):
         from tensornet.deployment import (
             JetsonConfig, MemoryProfile, PowerMode, EmbeddedRuntime,
             optimize_memory_layout, configure_jetson_power, create_inference_pipeline
@@ -1811,14 +1832,14 @@ class TestDeployment:
         assert JetsonConfig is not None
         assert EmbeddedRuntime is not None
     
-    def test_precision_modes(self):
+    def test_deployment_precision_modes_have_values(self):
         from tensornet.deployment.tensorrt_export import Precision, OptimizationLevel
         
         assert Precision.FP16.value == "fp16"
         assert Precision.INT8.value == "int8"
         assert OptimizationLevel.O3.value == 3
     
-    def test_export_config(self):
+    def test_deployment_export_config_sets_values(self):
         from tensornet.deployment import ExportConfig
         from tensornet.deployment.tensorrt_export import Precision
         
@@ -1832,7 +1853,7 @@ class TestDeployment:
         assert config.max_batch_size == 4
         assert config.opset_version == 17
     
-    def test_cfd_inference_module(self):
+    def test_deployment_cfd_inference_module_runs(self):
         from tensornet.deployment.tensorrt_export import CFDInferenceModule
         
         model = CFDInferenceModule((64, 64), n_vars=4, gamma=1.4)
@@ -1842,7 +1863,7 @@ class TestDeployment:
         
         assert y.shape == x.shape
     
-    def test_tt_contraction_module(self):
+    def test_deployment_tt_contraction_module_counts_cores(self):
         from tensornet.deployment.tensorrt_export import TTContraction
         
         cores = [
@@ -1854,7 +1875,7 @@ class TestDeployment:
         module = TTContraction(cores)
         assert module.n_cores == 3
     
-    def test_onnx_export(self):
+    def test_deployment_onnx_export_creates_file(self):
         try:
             import onnxscript
         except ImportError:
@@ -1873,7 +1894,7 @@ class TestDeployment:
             assert onnx_path.exists()
             assert onnx_path.stat().st_size > 0
     
-    def test_tensorrt_exporter_class(self):
+    def test_deployment_tensorrt_exporter_exports_model(self):
         try:
             import onnxscript
         except ImportError:
@@ -1893,7 +1914,7 @@ class TestDeployment:
             assert result.export_time_s > 0
             assert result.model_size_mb > 0
     
-    def test_benchmark_result(self):
+    def test_deployment_benchmark_result_stores_metrics(self):
         from tensornet.deployment.tensorrt_export import BenchmarkResult
         
         result = BenchmarkResult(
@@ -1906,14 +1927,14 @@ class TestDeployment:
         assert result.latency_ms == 1.5
         assert result.throughput_samples_per_sec == 666.0
     
-    def test_power_modes(self):
+    def test_deployment_power_modes_have_values(self):
         from tensornet.deployment import PowerMode
         
         assert PowerMode.MAXN.value == "MAXN"
         assert PowerMode.MODE_30W.value == "30W"
         assert PowerMode.MODE_10W.value == "10W"
     
-    def test_jetson_config(self):
+    def test_deployment_jetson_config_sets_defaults(self):
         from tensornet.deployment import JetsonConfig, PowerMode
         
         config = JetsonConfig(
@@ -1926,7 +1947,7 @@ class TestDeployment:
         assert config.enable_dla == True
         assert config.target_fps == 100.0
     
-    def test_memory_profile(self):
+    def test_deployment_memory_profile_computes_availability(self):
         from tensornet.deployment import MemoryProfile
         
         profile = MemoryProfile(
@@ -1938,7 +1959,7 @@ class TestDeployment:
         assert profile.available_mb > 50000
         assert profile.utilization_pct < 20
     
-    def test_memory_pool(self):
+    def test_deployment_memory_pool_allocates_and_resets(self):
         from tensornet.deployment.embedded import MemoryPool
         
         pool = MemoryPool(pool_size_mb=10, device="cpu")
@@ -1953,7 +1974,7 @@ class TestDeployment:
         pool.reset()
         assert pool.get_usage_mb() == 0
     
-    def test_thermal_monitor(self):
+    def test_deployment_thermal_monitor_normal_state(self):
         from tensornet.deployment.embedded import ThermalMonitor, ThermalState
         from tensornet.deployment import JetsonConfig
         
@@ -1967,7 +1988,7 @@ class TestDeployment:
         monitor.update_thermal_state()
         assert monitor.thermal_state == ThermalState.NORMAL
     
-    def test_embedded_runtime(self):
+    def test_deployment_embedded_runtime_initializes(self):
         from tensornet.deployment import EmbeddedRuntime, JetsonConfig
         
         config = JetsonConfig(target_fps=50.0)
@@ -1980,7 +2001,7 @@ class TestDeployment:
         
         runtime.shutdown()
     
-    def test_inference_metrics(self):
+    def test_deployment_inference_metrics_computes_hit_rate(self):
         from tensornet.deployment.embedded import InferenceMetrics
         
         metrics = InferenceMetrics(
@@ -2000,7 +2021,7 @@ class TestDeployment:
 class TestGuidance:
     """Test trajectory and guidance modules."""
     
-    def test_trajectory_imports(self):
+    def test_guidance_trajectory_import_succeeds(self):
         from tensornet.guidance import (
             AtmosphericModel, VehicleState, AeroCoefficients,
             TrajectoryConfig, TrajectorySolver,
@@ -2009,7 +2030,7 @@ class TestGuidance:
         assert VehicleState is not None
         assert TrajectorySolver is not None
     
-    def test_controller_imports(self):
+    def test_guidance_controller_import_succeeds(self):
         from tensornet.guidance import (
             GuidanceMode, ConstraintType, GuidanceCommand,
             TrajectoryConstraint, GuidanceController,
@@ -2018,7 +2039,7 @@ class TestGuidance:
         assert GuidanceController is not None
         assert proportional_navigation is not None
     
-    def test_isa_atmosphere(self):
+    def test_guidance_isa_atmosphere_sea_level_values(self):
         from tensornet.guidance import isa_atmosphere
         
         atm_0 = isa_atmosphere(0)
@@ -2033,7 +2054,7 @@ class TestGuidance:
         assert atm_10k.density_kg_m3 < atm_0.density_kg_m3
         assert atm_30k.density_kg_m3 < atm_10k.density_kg_m3
     
-    def test_exponential_atmosphere(self):
+    def test_guidance_exponential_atmosphere_density_decay(self):
         from tensornet.guidance import exponential_atmosphere
         
         atm_0 = exponential_atmosphere(0)
@@ -2042,7 +2063,7 @@ class TestGuidance:
         assert abs(atm_0.density_kg_m3 - 1.225) < 0.01
         assert atm_20k.density_kg_m3 < atm_0.density_kg_m3
     
-    def test_vehicle_state(self):
+    def test_guidance_vehicle_state_computes_velocity(self):
         from tensornet.guidance import VehicleState
         
         state = VehicleState(
@@ -2058,7 +2079,7 @@ class TestGuidance:
         alpha = state.angle_of_attack
         assert abs(alpha - math.atan2(100, 1000)) < 1e-10
     
-    def test_vehicle_state_tensor_conversion(self):
+    def test_guidance_vehicle_state_tensor_roundtrip(self):
         from tensornet.guidance import VehicleState
         
         state = VehicleState(
@@ -2076,7 +2097,7 @@ class TestGuidance:
         assert abs(state2.latitude_rad - 0.1) < 1e-6
         assert abs(state2.altitude_m - 15000) < 1
     
-    def test_aero_coefficients(self):
+    def test_guidance_aero_coefficients_stores_values(self):
         from tensornet.guidance.trajectory import AeroCoefficients
         
         aero = AeroCoefficients(
@@ -2088,7 +2109,7 @@ class TestGuidance:
         assert aero.CD == 0.02
         assert aero.CL_alpha == 5.7
     
-    def test_trajectory_config(self):
+    def test_guidance_trajectory_config_sets_defaults(self):
         from tensornet.guidance import TrajectoryConfig
         from tensornet.guidance.trajectory import IntegrationMethod
         
@@ -2100,7 +2121,7 @@ class TestGuidance:
         assert config.dt_s == 0.001
         assert config.save_interval == 10
     
-    def test_gravity_model(self):
+    def test_guidance_gravity_model_decreases_with_altitude(self):
         from tensornet.guidance.trajectory import gravity_model
         
         g_0 = gravity_model(0)
@@ -2109,7 +2130,7 @@ class TestGuidance:
         assert abs(g_0 - 9.81) < 0.01
         assert g_100k < g_0  # Gravity decreases with altitude
     
-    def test_trajectory_solver_step(self):
+    def test_guidance_trajectory_solver_single_step_changes_state(self):
         from tensornet.guidance import VehicleState, TrajectorySolver, TrajectoryConfig
         
         config = TrajectoryConfig(dt_s=0.01)
@@ -2126,7 +2147,7 @@ class TestGuidance:
         # State should change
         assert new_state.altitude_m != state.altitude_m or new_state.u_m_s != state.u_m_s
     
-    def test_trajectory_propagation(self):
+    def test_guidance_trajectory_propagation_produces_trajectory(self):
         from tensornet.guidance import VehicleState, TrajectorySolver, TrajectoryConfig
         
         config = TrajectoryConfig(dt_s=0.01, save_interval=100)
@@ -2145,7 +2166,7 @@ class TestGuidance:
         assert trajectory[-1].altitude_m != trajectory[0].altitude_m or \
                trajectory[-1].velocity_magnitude != trajectory[0].velocity_magnitude
     
-    def test_guidance_command(self):
+    def test_guidance_command_to_controls_has_surfaces(self):
         from tensornet.guidance import GuidanceCommand, GuidanceMode
         
         cmd = GuidanceCommand(
@@ -2159,7 +2180,7 @@ class TestGuidance:
         assert 'da' in controls
         assert 'dr' in controls
     
-    def test_trajectory_constraint(self):
+    def test_guidance_trajectory_constraint_computes_margin(self):
         from tensornet.guidance import TrajectoryConstraint, ConstraintType
         
         # Test constraint within active margin (>90% of limit)
@@ -2181,7 +2202,7 @@ class TestGuidance:
         )
         assert not constraint2.is_active  # Not within 10% of limit
     
-    def test_proportional_navigation(self):
+    def test_guidance_proportional_navigation_returns_finite(self):
         from tensornet.guidance import VehicleState, proportional_navigation
         
         vehicle = VehicleState(
@@ -2200,7 +2221,7 @@ class TestGuidance:
         # Should return a finite value
         assert math.isfinite(a_cmd)
     
-    def test_bank_angle_guidance(self):
+    def test_guidance_bank_angle_respects_corridor(self):
         from tensornet.guidance import VehicleState, bank_angle_guidance
         from tensornet.guidance.controller import WaypointTarget, CorridorBounds
         
@@ -2221,7 +2242,7 @@ class TestGuidance:
         assert abs(cmd.bank_angle_rad) <= corridor.max_bank_angle_rad
         assert cmd.mode is not None
     
-    def test_guidance_controller(self):
+    def test_guidance_controller_computes_valid_command(self):
         from tensornet.guidance import VehicleState, GuidanceController
         from tensornet.guidance.controller import WaypointTarget, CorridorBounds
         
@@ -2246,7 +2267,7 @@ class TestGuidance:
         assert cmd.constraint_margin >= 0
         assert cmd.constraint_margin <= 1.1  # Allow small numerical tolerance
     
-    def test_heating_estimate(self):
+    def test_guidance_heating_estimate_positive_at_hypersonic(self):
         from tensornet.guidance import VehicleState, GuidanceController, isa_atmosphere
         from tensornet.guidance.controller import WaypointTarget
         
@@ -2263,7 +2284,7 @@ class TestGuidance:
         # Should have positive heating at hypersonic speeds
         assert q_dot > 0
     
-    def test_aerodynamic_lookup(self):
+    def test_guidance_aerodynamic_lookup_returns_positive(self):
         from tensornet.guidance import GuidanceController
         from tensornet.guidance.controller import WaypointTarget
         
@@ -2275,7 +2296,7 @@ class TestGuidance:
         assert CD > 0  # Positive drag
         assert CL / CD > 0  # Finite L/D
     
-    def test_constraint_limiting(self):
+    def test_guidance_constraint_limiting_enforces_bounds(self):
         from tensornet.guidance import VehicleState, GuidanceCommand, GuidanceController
         from tensornet.guidance.controller import WaypointTarget, CorridorBounds
         
@@ -2296,7 +2317,7 @@ class TestGuidance:
         
         assert abs(limited.bank_angle_rad) <= math.radians(80)
     
-    def test_controller_reset(self):
+    def test_guidance_controller_reset_clears_state(self):
         from tensornet.guidance import GuidanceController
         from tensornet.guidance.controller import WaypointTarget
         
@@ -2313,7 +2334,7 @@ class TestGuidance:
 class TestSimulationHIL:
     """Test Hardware-in-the-Loop simulation components."""
     
-    def test_imu_sensor(self):
+    def test_hil_imu_sensor_measures_with_noise(self):
         from tensornet.simulation import IMUSensor
         import numpy as np
         
@@ -2327,7 +2348,7 @@ class TestSimulationHIL:
         # Measurement should be close to true value
         assert abs(measurement['ax'] - 9.81) < 1.0
     
-    def test_gps_sensor(self):
+    def test_hil_gps_sensor_provides_valid_position(self):
         from tensornet.simulation import GPSSensor
         import numpy as np
         
@@ -2340,7 +2361,7 @@ class TestSimulationHIL:
         assert 'lat' in measurement
         assert 'num_satellites' in measurement
     
-    def test_air_data_sensor(self):
+    def test_hil_air_data_sensor_measures_pressure(self):
         from tensornet.simulation import AirDataSensor
         
         air_data = AirDataSensor()
@@ -2351,7 +2372,7 @@ class TestSimulationHIL:
         assert 'p_static' in measurement
         assert 'alpha_deg' in measurement
     
-    def test_control_surface(self):
+    def test_hil_control_surface_respects_limits(self):
         from tensornet.simulation import ControlSurface
         
         elevator = ControlSurface(name='elevator', rate_limit_deg_s=60, position_limit_deg=30)
@@ -2366,7 +2387,7 @@ class TestSimulationHIL:
         # Should respect limits
         assert all(-30 <= p <= 30 for p in positions)
     
-    def test_thrust_actuator(self):
+    def test_hil_thrust_actuator_approaches_command(self):
         from tensornet.simulation import ThrustActuator
         
         thrust = ThrustActuator(max_thrust_N=100000)
@@ -2381,7 +2402,7 @@ class TestSimulationHIL:
         assert thrusts[-1] > 50000
         assert thrusts[-1] < 100000
     
-    def test_hil_interface(self):
+    def test_hil_interface_steps_sensors_and_actuators(self):
         from tensornet.simulation import HILConfig, HILInterface, IMUSensor, ControlSurface
         
         config = HILConfig(dt_s=0.01)
@@ -2399,7 +2420,7 @@ class TestSimulationHIL:
         assert 'elevator' in actuators
         assert len(hil.telemetry_log) == 1
     
-    def test_vehicle_sensor_suite(self):
+    def test_hil_vehicle_sensor_suite_creates_components(self):
         from tensornet.simulation import create_vehicle_sensors, create_vehicle_actuators
         
         sensors = create_vehicle_sensors('hypersonic')
@@ -2413,7 +2434,7 @@ class TestSimulationHIL:
 class TestSimulationFlightData:
     """Test flight data integration components."""
     
-    def test_telemetry_frame(self):
+    def test_flightdata_telemetry_frame_roundtrips_dict(self):
         from tensornet.simulation import TelemetryFrame
         import numpy as np
         
@@ -2429,7 +2450,7 @@ class TestSimulationFlightData:
         assert frame.timestamp == frame2.timestamp
         assert frame2.position is not None
     
-    def test_flight_record(self):
+    def test_flightdata_record_computes_duration(self):
         from tensornet.simulation import FlightRecord, TelemetryFrame
         import numpy as np
         
@@ -2445,7 +2466,7 @@ class TestSimulationFlightData:
         assert record.duration == pytest.approx(9.9, rel=0.1)
         assert record.sample_rate > 9
     
-    def test_csv_parsing(self):
+    def test_flightdata_csv_parsing_extracts_frames(self):
         from tensornet.simulation import parse_telemetry, TelemetryFormat
         
         csv_data = """time,lat,lon,alt,vn,ve,vd,mach
@@ -2459,7 +2480,7 @@ class TestSimulationFlightData:
         assert len(record.frames) == 3
         assert record.frames[0].air_data['mach'] == 5.0
     
-    def test_trajectory_reconstruction(self):
+    def test_flightdata_trajectory_reconstruction_full_state(self):
         from tensornet.simulation import TrajectoryReconstruction, FlightRecord, TelemetryFrame
         import numpy as np
         
@@ -2483,7 +2504,7 @@ class TestSimulationFlightData:
 class TestSimulationRealTimeCFD:
     """Test real-time CFD coupling components."""
     
-    def test_aero_table_config(self):
+    def test_rtcfd_aero_table_config_stores_dimensions(self):
         from tensornet.simulation import AeroTableConfig
         
         config = AeroTableConfig(
@@ -2496,7 +2517,7 @@ class TestSimulationRealTimeCFD:
         assert config.n_mach == 16
         assert config.n_alpha == 26
     
-    def test_aero_table_population(self):
+    def test_rtcfd_aero_table_populates_from_cfd(self):
         from tensornet.simulation import AeroTable, AeroTableConfig, create_hypersonic_waverider_model
         
         config = AeroTableConfig(n_mach=5, n_alpha=11, n_beta=3)
@@ -2507,7 +2528,7 @@ class TestSimulationRealTimeCFD:
         assert table._is_built
         assert table.CL_table.shape == (5, 11, 3)
     
-    def test_aero_table_lookup(self):
+    def test_rtcfd_aero_table_lookup_returns_coefficients(self):
         from tensornet.simulation import AeroTable, AeroTableConfig, create_hypersonic_waverider_model
         
         config = AeroTableConfig(n_mach=10, n_alpha=21, n_beta=5)
@@ -2520,7 +2541,7 @@ class TestSimulationRealTimeCFD:
         assert aero.CL > 0  # Positive lift at positive alpha
         assert aero.CD > 0  # Positive drag
     
-    def test_realtime_cfd_interface(self):
+    def test_rtcfd_interface_computes_forces(self):
         from tensornet.simulation import RealTimeCFD, AeroTable, AeroTableConfig, create_hypersonic_waverider_model
         
         config = AeroTableConfig(n_mach=8, n_alpha=16, n_beta=5)
@@ -2540,7 +2561,7 @@ class TestSimulationRealTimeCFD:
         assert 'L_D' in aero  # L/D ratio
         assert aero['L'] > 0
     
-    def test_derivative_estimation(self):
+    def test_rtcfd_derivative_estimation_positive_slope(self):
         from tensornet.simulation import RealTimeCFD, AeroTable, AeroTableConfig, create_hypersonic_waverider_model
         
         config = AeroTableConfig(n_mach=8, n_alpha=16, n_beta=5)
@@ -2559,7 +2580,7 @@ class TestSimulationRealTimeCFD:
 class TestSimulationMission:
     """Test mission simulation components."""
     
-    def test_mission_config(self):
+    def test_mission_config_stores_coordinates(self):
         from tensornet.simulation import MissionConfig
         
         config = MissionConfig(
@@ -2572,7 +2593,7 @@ class TestSimulationMission:
         assert config.launch_lat == 34.0
         assert config.max_g_load == 8.0
     
-    def test_uncertainty_model(self):
+    def test_mission_uncertainty_model_samples_near_unity(self):
         from tensornet.simulation import UncertaintyModel
         import numpy as np
         
@@ -2583,7 +2604,7 @@ class TestSimulationMission:
         
         assert 0.8 < np.mean(density_factors) < 1.2
     
-    def test_single_mission_run(self):
+    def test_mission_single_run_produces_result(self):
         from tensornet.simulation import MissionSimulator, MissionConfig, UncertaintyModel
         
         config = MissionConfig(
@@ -2601,7 +2622,7 @@ class TestSimulationMission:
         assert result is not None
         assert isinstance(result.max_mach, float)
     
-    def test_monte_carlo_run(self):
+    def test_mission_monte_carlo_returns_multiple_results(self):
         from tensornet.simulation import run_monte_carlo, MissionConfig, UncertaintyModel, MonteCarloConfig
         
         config = MissionConfig(boost_duration_s=15.0, dt_s=0.5, max_time_s=60.0)
@@ -2612,7 +2633,7 @@ class TestSimulationMission:
         
         assert len(results) == 5
     
-    def test_dispersion_analysis(self):
+    def test_mission_dispersion_analysis_computes_cep(self):
         from tensornet.simulation import (
             run_monte_carlo, analyze_dispersion, 
             MissionConfig, UncertaintyModel, MonteCarloConfig
@@ -2628,7 +2649,7 @@ class TestSimulationMission:
         assert 'cep_m' in analysis
         assert 'success_rate' in analysis
     
-    def test_mission_phases(self):
+    def test_mission_phases_recorded_in_history(self):
         from tensornet.simulation import MissionSimulator, MissionConfig, MissionPhase
         
         config = MissionConfig(
