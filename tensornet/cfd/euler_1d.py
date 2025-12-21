@@ -125,6 +125,35 @@ class Euler1D:
     - Entangled representations for multi-scale features
     - MPO-based flux operators
     - Automatic adaptivity via bond dimension
+    
+    Attributes:
+        N: Number of grid cells
+        x_min, x_max: Domain bounds
+        gamma: Ratio of specific heats
+        cfl: CFL number for time stepping
+        dx: Cell width
+        x_cell: Cell center coordinates
+        x_face: Face coordinates
+        state: Current EulerState
+        t: Current simulation time
+    
+    Example:
+        >>> solver = Euler1D(N=200, x_min=0.0, x_max=1.0)
+        >>> state = sod_shock_tube_ic(solver.x_cell)
+        >>> solver.set_initial_condition(state)
+        >>> for _ in range(100):
+        ...     solver.step()
+        >>> print(f"Final time: {solver.t:.4f}")
+    
+    Raises:
+        ValueError: If state dimensions don't match grid size
+        RuntimeError: If CFL condition is violated
+    
+    References:
+        .. [1] Toro, E.F. "Riemann Solvers and Numerical Methods for 
+               Fluid Dynamics", 3rd ed., Springer, 2009.
+        .. [2] LeVeque, R.J. "Finite Volume Methods for Hyperbolic Problems",
+               Cambridge University Press, 2002.
     """
     
     def __init__(

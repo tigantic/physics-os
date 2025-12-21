@@ -15,6 +15,27 @@ be efficiently diagonalized to approximate eigenvalues and eigenvectors.
 Key property: Extremal eigenvalues converge fastest (Kaniel-Paige theory).
 
 For matrix exponential: exp(A)v ≈ V_m exp(T_m) e_1 ||v||
+
+Degenerate Eigenvalues (Article V.5.3)
+--------------------------------------
+When the ground state is degenerate (multiple eigenvalues with same value),
+the Lanczos algorithm will converge to ONE eigenvector in the degenerate
+subspace. The specific eigenvector depends on the initial vector v0.
+
+Behavior with degenerate spectra:
+- Convergence rate may be slower if gap to first excited state is small
+- The returned eigenvector is a valid ground state but not unique
+- For computing full degenerate subspace, use block Lanczos or run
+  multiple times with orthogonalized initial vectors
+- The residual ||Av - λv|| remains a valid convergence criterion
+
+Warning: Near-degenerate eigenvalues (gap < tol) may cause the algorithm
+to mix states. Increase num_iter or decrease tol if accuracy is critical.
+
+References:
+    .. [1] Golub, G.H., Van Loan, C.F. "Matrix Computations", 4th ed., 2013.
+    .. [2] Saad, Y. "Numerical Methods for Large Eigenvalue Problems", 2011.
+    .. [3] Parlett, B.N. "The Symmetric Eigenvalue Problem", SIAM, 1998.
 """
 
 from dataclasses import dataclass

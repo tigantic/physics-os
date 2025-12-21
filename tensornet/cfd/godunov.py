@@ -9,6 +9,7 @@ Solvers implemented:
 - Roe: Linearized Riemann solver with entropy fix
 - HLL: Harten-Lax-van Leer two-wave approximation
 - HLLC: HLL with contact wave restoration
+- Exact: Newton iteration exact Riemann solver
 
 For the Euler equations, the Riemann problem is:
     ∂U/∂t + ∂F/∂x = 0
@@ -18,6 +19,29 @@ The solution consists of three waves:
 1. Left-going wave (shock or rarefaction)
 2. Contact discontinuity (entropy wave)
 3. Right-going wave (shock or rarefaction)
+
+Example:
+    >>> import torch
+    >>> from tensornet.cfd.godunov import roe_flux, hllc_flux
+    >>> U_L = torch.tensor([[1.0, 0.0, 2.5]])  # Left state
+    >>> U_R = torch.tensor([[0.125, 0.0, 0.25]])  # Right state
+    >>> F = roe_flux(U_L, U_R, gamma=1.4)
+    >>> print(f"Roe flux: {F}")
+
+Raises:
+    ValueError: If input states have incompatible shapes
+    RuntimeError: If Newton iteration fails to converge (exact solver)
+
+References:
+    .. [1] Roe, P.L. "Approximate Riemann solvers, parameter vectors, and
+           difference schemes", J. Comput. Phys. 43, 357-372, 1981.
+    .. [2] Harten, A., Lax, P.D., van Leer, B. "On upstream differencing
+           and Godunov-type schemes for hyperbolic conservation laws",
+           SIAM Review 25, 35-61, 1983.
+    .. [3] Toro, E.F., Spruce, M., Speares, W. "Restoration of the contact
+           surface in the HLL-Riemann solver", Shock Waves 4, 25-34, 1994.
+    .. [4] Toro, E.F. "Riemann Solvers and Numerical Methods for Fluid
+           Dynamics", 3rd ed., Springer, 2009.
 """
 
 from typing import Tuple, Optional
@@ -92,13 +116,26 @@ def roe_flux(
         Ĥ = (√ρ_L H_L + √ρ_R H_R) / (√ρ_L + √ρ_R)
     
     Args:
-        U_L, U_R: Left and right states (batch, 3)
-        gamma: Ratio of specific heats
+        U_L: Left state (batch, 3) - conserved variables [ρ, ρu, E]
+        U_R: Right state (batch, 3) - conserved variables [ρ, ρu, E]
+        gamma: Ratio of specific heats (default 1.4 for air)
         entropy_fix: Apply Harten's entropy fix for expansion shocks
-        epsilon: Entropy fix parameter
+        epsilon: Entropy fix parameter (unused, kept for API compatibility)
         
     Returns:
         Numerical flux (batch, 3)
+    
+    Example:
+        >>> U_L = torch.tensor([[1.0, 0.0, 2.5]])
+        >>> U_R = torch.tensor([[0.125, 0.0, 0.25]])
+        >>> F = roe_flux(U_L, U_R)
+        >>> print(f"Flux shape: {F.shape}")
+    
+    Raises:
+        ValueError: If U_L and U_R have different shapes
+    
+    References:
+        .. [1] Roe, P.L. "Approximate Riemann solvers", J. Comput. Phys. 43, 1981.
     """
     # Extract primitives
     rho_L, u_L, p_L = conserved_to_primitive(U_L, gamma)
