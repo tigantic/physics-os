@@ -212,10 +212,10 @@ None are fundamental flaws; they are areas to watch in an otherwise well-run pro
   - Classic M=5, theta=15 test case matches NACA 1135 within 0.1%
   - ImmersedBoundary + WedgeGeometry working
 
-- [ ] **User Documentation & Outreach**:
-  - Complete auto-generated API Reference
-  - Write tutorial article ("MPS for spin chain physics" or "Compressing CFD simulation")
-  - Consider Zenodo DOI for citation
+- [x] **User Documentation & Outreach**: — IN PROGRESS
+  - [x] Complete auto-generated API Reference (86 markdown files in docs/api/)
+  - [ ] Write tutorial article ("MPS for spin chain physics" or "Compressing CFD simulation")
+  - [ ] Consider Zenodo DOI for citation
 
 - [ ] **Community Engagement**:
   - Set up GitHub Discussions
