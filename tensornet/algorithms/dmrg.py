@@ -61,30 +61,33 @@ def _contract_left_env(
     """
     Contract left environment with site tensor and MPO.
     
-    Left environment L has shape (χ_L, D_L, χ_L') where:
-        - First index contracts with MPS ket
-        - Second index contracts with MPO  
-        - Third index contracts with MPS bra (conjugate)
+    Diagram (top to bottom = left to right in chain):
     
-    L : (χ_L, D_L, χ_L')
+        a ─── A ─── b        (ket)
+              │s
+        w ─── W ─── n        (MPO)
+              │t
+        c ─── A*─── d        (bra)
+    
+    L has open indices (a, w, c) on the left - ket, MPO, bra virtual indices.
+    Result L' has open indices (b, n, d) on the right.
+    
+    L : (χ_L_ket, D_L, χ_L_bra)
     A : (χ_L, d, χ_R)  - MPS site tensor
-    W : (D_L, d_out, d_in, D_R)  - MPO site tensor
+    W : (D_L, d_out, d_in, D_R)  - MPO site tensor where d_out acts on bra, d_in acts on ket
     
-    Returns: L' : (χ_R, D_R, χ_R')
-    
-    Contraction:
-        L'[β, b, β'] = Σ_{α,a,α',σ,σ'} L[α,a,α'] A[α,σ,β] W[a,σ',σ,b] A*[α',σ',β']
+    Returns: L' : (χ_R_ket, D_R, χ_R_bra)
     """
-    # Use unique indices to avoid conflicts
-    # L[i,j,k] A[i,s,m] -> temp[j,k,s,m]
-    temp = torch.einsum('ijk,ism->jksm', L, A)
+    # L[a,w,c] A[a,s,b] -> [w,c,s,b]
+    temp = torch.einsum('awc,asb->wcsb', L, A)
     
-    # temp[j,k,s,m] W[j,t,s,n] -> temp2[k,t,m,n] (contract j and s)
-    temp2 = torch.einsum('jksm,jtsn->ktmn', temp, W)
+    # [w,c,s,b] W[w,t,s,n] -> [c,t,b,n] (contract w and s)
+    # W indices: (D_L, d_bra, d_ket, D_R) = (w, t, s, n)
+    temp2 = torch.einsum('wcsb,wtsn->ctbn', temp, W)
     
-    # temp2[k,t,m,n] A*[k,t,p] -> L'[m,n,p]
+    # [c,t,b,n] A*[c,t,d] -> L'[b,n,d]
     Aconj = A.conj()
-    L_new = torch.einsum('ktmn,ktp->mnp', temp2, Aconj)
+    L_new = torch.einsum('ctbn,ctd->bnd', temp2, Aconj)
     
     return L_new
 
@@ -97,29 +100,31 @@ def _contract_right_env(
     """
     Contract right environment with site tensor and MPO.
     
-    Right environment R has shape (χ_R, D_R, χ_R') where:
-        - First index contracts with MPS ket
-        - Second index contracts with MPO
-        - Third index contracts with MPS bra (conjugate)
+    Diagram:
+        a ─── A ─── b        (ket)
+              │s
+        w ─── W ─── n        (MPO)
+              │t
+        c ─── A*─── d        (bra)
     
-    R : (χ_R, D_R, χ_R')
+    R has open indices (b, n, d) on the right - ket, MPO, bra virtual indices.
+    Result R' has open indices (a, w, c) on the left.
+    
+    R : (χ_R_ket, D_R, χ_R_bra)
     A : (χ_L, d, χ_R)  - MPS site tensor
     W : (D_L, d_out, d_in, D_R)  - MPO site tensor
     
-    Returns: R' : (χ_L, D_L, χ_L')
-    
-    Contraction:
-        R'[α, a, α'] = Σ_{β,b,β',σ,σ'} A[α,σ,β] W[a,σ',σ,b] A*[α',σ',β'] R[β,b,β']
+    Returns: R' : (χ_L_ket, D_L, χ_L_bra)
     """
-    # A[i,s,m] R[m,n,p] -> temp[i,s,n,p]
-    temp = torch.einsum('ism,mnp->isnp', A, R)
+    # A[a,s,b] R[b,n,d] -> [a,s,n,d]
+    temp = torch.einsum('asb,bnd->asnd', A, R)
     
-    # temp[i,s,n,p] W[j,t,s,n] -> temp2[i,p,j,t] (contract s and n)
-    temp2 = torch.einsum('isnp,jtsn->ipjt', temp, W)
+    # [a,s,n,d] W[w,t,s,n] -> [a,d,w,t] (contract s and n)
+    temp2 = torch.einsum('asnd,wtsn->adwt', temp, W)
     
-    # temp2[i,p,j,t] A*[k,t,p] -> R'[i,j,k]
+    # [a,d,w,t] A*[c,t,d] -> R'[a,w,c]
     Aconj = A.conj()
-    R_new = torch.einsum('ipjt,ktp->ijk', temp2, Aconj)
+    R_new = torch.einsum('adwt,ctd->awc', temp2, Aconj)
     
     return R_new
 
@@ -259,29 +264,29 @@ def _two_site_eigensolve(
         theta = v.reshape(chi_L, d1, d2, chi_R)
         
         # H_eff @ theta with proper index contractions
-        # L: (χ_L, D_L, χ_L')  = (a, w, a')
-        # theta: (χ_L, d1, d2, χ_R) = (a, s1, s2, b)
-        # W1: (D_L, d1', d1, D_M) = (w, t1, s1, m)
-        # W2: (D_M, d2', d2, D_R) = (m, t2, s2, n)
-        # R: (χ_R, D_R, χ_R') = (b, n, b')
+        # L: (χ_L_ket, D_L, χ_L_bra) = (a, w, c)
+        # theta: (χ_L, d1, d2, χ_R) = (a, s, u, b) where s=d1, u=d2
+        # W1: (D_L, d_out, d_in, D_M) = (w, t, s, m) - contracts s with theta's d1
+        # W2: (D_M, d_out, d_in, D_R) = (m, v, u, n) - contracts u with theta's d2
+        # R: (χ_R_ket, D_R, χ_R_bra) = (b, n, d)
+        #
+        # Result: H_eff·θ[c, t, v, d] = (χ_L_bra, d1_out, d2_out, χ_R_bra)
         
-        # Step 1: Contract L with theta
-        # L[a,w,c] @ theta[a,s1,s2,b] -> [w,c,s1,s2,b]
-        t1 = torch.einsum('awc,astb->wcstb', L, theta)
+        # Step 1: Contract theta with L
+        # L[a,w,c] theta[a,s,u,b] -> [w,c,s,u,b]
+        t1 = torch.einsum('awc,asub->wcsub', L, theta)
         
-        # Step 2: Contract with W1
-        # [w,c,s1,s2,b] @ W1[w,t1,s1,m] -> [c,t1,s2,b,m]
-        t2 = torch.einsum('wcsub,wtum->ctsbm', t1, W1)
+        # Step 2: Contract with W1 (contract w and s)
+        # [w,c,s,u,b] W1[w,t,s,m] -> [c,t,u,b,m]
+        t2 = torch.einsum('wcsub,wtsm->ctubm', t1, W1)
         
-        # Step 3: Contract with W2
-        # [c,t1,s2,b,m] @ W2[m,t2,s2,n] -> [c,t1,t2,b,n]
-        t3 = torch.einsum('ctsbm,mvsn->ctvbn', t2, W2)
+        # Step 3: Contract with W2 (contract m and u)
+        # [c,t,u,b,m] W2[m,v,u,n] -> [c,t,v,b,n]
+        t3 = torch.einsum('ctubm,mvun->ctvbn', t2, W2)
         
-        # Step 4: Contract with R
-        # [c,t1,t2,b,n] @ R[b,n,d] -> [c,t1,t2,d]
-        result = torch.einsum('ctubn,bnd->ctud', t3, R)
-        
-        return result.reshape(-1)
+        # Step 4: Contract with R (contract b and n)
+        # [c,t,v,b,n] R[b,n,d] -> [c,t,v,d]
+        result = torch.einsum('ctvbn,bnd->ctvd', t3, R)
         
         return result.reshape(-1)
     
@@ -523,7 +528,7 @@ def dmrg(
         
         if verbose:
             print(f"Sweep {sweep + 1}: E = {energy:.12f}, ΔE = {abs(energy - E_old):.2e}, "
-                  f"S = {max(S1, S2):.4f}, χ = {psi.bond_dimensions}")
+                  f"S = {max(S1, S2):.4f}, χ = {psi.bond_dims()}")
         
         # Check convergence
         if abs(energy - E_old) < tol:

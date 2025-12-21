@@ -10,11 +10,19 @@
 
 ### 1. 🚩 Algorithmic Correctness Gaps in New Domains (High)
 
-**Status**: ⚠️ OPEN — DMRG xfail still active (3 tests in `test_dmrg_physics.py`)
+**Status**: ✅ RESOLVED (2025-12-21) — DMRG fixed, CFD pending validation
 
-Some newer modules lack the rigorous validation that the core has. The 1D CFD solver (Euler1D) is implemented and tested for basic sanity (shock tube initial condition), but more complex scenarios (shock capturing accuracy, boundary condition handling, etc.) aren't fully validated. Integration tests indicate known issues: DMRG sometimes not fully converged.
+~~DMRG sometimes not fully converged~~ — Fixed! Root cause was incorrect index ordering in environment contractions (`_contract_left_env`, `_contract_right_env`) and `matvec` function. All 3 xfail tests in `test_dmrg_physics.py` now pass.
 
-**Mitigation**: Continue expanding tests, resolve DMRG convergence issues, add "proof" tests for CFD (conservation laws, exact solutions).
+The 1D CFD solver (Euler1D) is implemented and tested for basic sanity (shock tube initial condition), but more complex scenarios (shock capturing accuracy, boundary condition handling, etc.) aren't fully validated.
+
+**Mitigation**: Add "proof" tests for CFD (conservation laws, exact solutions).
+
+**DMRG Fix Details**:
+- Fixed `_contract_left_env`: Changed einsum from `'awa,asb->wasb'` to `'awc,asb->wcsub'` to maintain separate ket/bra virtual indices
+- Fixed `_contract_right_env`: Changed einsum to correctly contract `(a,s,n,d)` indices  
+- Fixed `matvec` in `_two_site_eigensolve`: Changed W1 contraction from `'wcsub,wtum->ctubm'` to `'wcsub,wtsm->ctubm'` and W2 from `'ctubm,mvsn->ctvbn'` to `'ctubm,mvun->ctvbn'`
+- Fixed `MPO.expectation`: Replaced broken 5-index Greek einsum with correct step-by-step contraction
 
 ---
 
@@ -115,7 +123,7 @@ New developers might be overwhelmed by volume (Constitution 400+ lines, Executio
 
 | Priority | Risk | Status |
 |----------|------|--------|
-| High | Algorithmic correctness (DMRG, CFD) | ⚠️ OPEN |
+| High | Algorithmic correctness (DMRG, CFD) | ✅ DMRG FIXED / CFD pending |
 | Medium-High | Incomplete features | ⚠️ Expected |
 | Medium | Performance at scale | ⚠️ OPEN |
 | Medium | Contribution complexity | ⚠️ OPEN |
@@ -127,8 +135,9 @@ New developers might be overwhelmed by volume (Constitution 400+ lines, Executio
 | Low | Documentation overload | ⚠️ OPEN |
 
 The highest priority items are:
-1. Shore up testing and correctness in newer features (DMRG, CFD)
-2. Keep performance on the radar as complexity grows
+1. ~~Shore up testing and correctness in DMRG~~ ✅ DONE
+2. Add proof tests for CFD (conservation laws, exact solutions)
+3. Keep performance on the radar as complexity grows
 
 None are fundamental flaws; they are areas to watch in an otherwise well-run project.
 
@@ -138,7 +147,11 @@ None are fundamental flaws; they are areas to watch in an otherwise well-run pro
 
 ### Next 30 Days (Immediate) — Stabilize and Fix Known Issues
 
-- [ ] **Resolve DMRG Convergence Issues**: Investigate the 3 `xfail` tests in `test_dmrg_physics.py`. Verify phase factors in `hamiltonians.py` or DMRG normalization.
+- [x] **Resolve DMRG Convergence Issues**: ~~Investigate the 3 `xfail` tests~~ — DONE (2025-12-21)
+  - Fixed `_contract_left_env` and `_contract_right_env` index ordering
+  - Fixed `matvec` in `_two_site_eigensolve` einsum contractions
+  - Fixed `MPO.expectation` method
+  - All 3 tests now pass with machine-precision accuracy
 
 - [x] **Fix CI Benchmark Command**: ~~Correct the module path in the benchmark job~~ — DONE
 

@@ -43,7 +43,6 @@ CONVERGENCE_TOL = 1e-6   # Absolute tolerance for convergence check
 class TestDMRGPhysics:
     """Integration tests for DMRG with physical Hamiltonians."""
     
-    @pytest.mark.xfail(reason="DMRG convergence investigation pending - see Issue #TBD")
     def test_heisenberg_ground_state_energy(self):
         """Test Heisenberg chain ground state is physical (negative, bounded)."""
         torch.manual_seed(42)
@@ -65,7 +64,6 @@ class TestDMRGPhysics:
         rel_error = abs(E - HEISENBERG_L10_E0_APPROX) / abs(HEISENBERG_L10_E0_APPROX)
         assert rel_error < PHYSICS_TOLERANCE, f"Heisenberg E0 relative error: {rel_error:.2%}"
     
-    @pytest.mark.xfail(reason="DMRG convergence investigation pending - see Issue #TBD")
     def test_tfim_critical_ground_state_energy(self):
         """Test TFIM at g=1 (critical point) is physical."""
         torch.manual_seed(42)
@@ -83,7 +81,6 @@ class TestDMRGPhysics:
         E_per_site = E / L
         assert -1.5 < E_per_site < -1.0, f"TFIM E/L={E_per_site:.4f} out of physical range"
     
-    @pytest.mark.xfail(reason="DMRG convergence investigation pending - see Issue #TBD")
     def test_dmrg_convergence(self):
         """Test that DMRG converges (energy stabilizes in final sweeps)."""
         torch.manual_seed(42)

@@ -143,7 +143,8 @@ class MPO:
             Expectation value
         """
         # Contract environments from left
-        # env[i]: (χ, D, χ') represents contracted sites 0..i-1
+        # env[a,w,b]: (χ_ket, D_mpo, χ_bra) represents contracted sites 0..i-1
+        # a = ket left bond, w = mpo left bond, b = bra left bond
         
         chi_l = mps.tensors[0].shape[0]
         D_l = self.tensors[0].shape[0]
@@ -151,17 +152,19 @@ class MPO:
         env[0, 0, 0] = 1.0
         
         for i in range(self.L):
-            A = mps.tensors[i]  # (χ_l, d, χ_r)
-            W = self.tensors[i]  # (D_l, d_out, d_in, D_r)
-            A_conj = A.conj()
+            A = mps.tensors[i]      # (χ_l, d, χ_r) = [a, s, c]
+            W = self.tensors[i]     # (D_l, d_out, d_in, D_r) = [w, t, s, x]
+            A_conj = A.conj()       # [b, t, d]
             
-            # Contract: env @ A @ W @ A*
-            env = torch.einsum(
-                'αβγ,αδε,βδζηθ,γζι->εθι',
-                env, A, W, A_conj
-            )
+            # Contract: env[a,w,b] A[a,s,c] W[w,t,s,x] A*[b,t,d] -> new_env[c,x,d]
+            # Step 1: env[a,w,b] A[a,s,c] -> [w,b,s,c]
+            temp1 = torch.einsum('awb,asc->wbsc', env, A)
+            # Step 2: [w,b,s,c] W[w,t,s,x] -> [b,t,c,x]
+            temp2 = torch.einsum('wbsc,wtsx->btcx', temp1, W)
+            # Step 3: [b,t,c,x] A*[b,t,d] -> [c,x,d]
+            env = torch.einsum('btcx,btd->cxd', temp2, A_conj)
         
-        # Final contraction
+        # Final contraction - env should be (1, 1, 1)
         return env.squeeze()
     
     def is_hermitian(self, tol: float = 1e-10) -> bool:
