@@ -182,13 +182,15 @@ class TestEuler2DBoundaryConditions:
         assert torch.all(solver.state.rho > 0)
         assert torch.all(solver.state.p > 0)
     
-    @pytest.mark.xfail(reason="SUPERSONIC_INFLOW BC has known instability - needs investigation")
     def test_outflow_bc_allows_flow_exit(self):
         """Verify outflow BC allows supersonic flow to exit cleanly."""
         solver = Euler2D(Nx=20, Ny=10, Lx=2.0, Ly=1.0)
         
         ic = supersonic_wedge_ic(Nx=20, Ny=10, M_inf=2.0)
         solver.set_initial_condition(ic)
+        
+        # Set inflow state for SUPERSONIC_INFLOW BC
+        solver.inflow_state = ic
         
         solver.set_boundary_conditions(
             left=BCType.SUPERSONIC_INFLOW,
@@ -197,13 +199,12 @@ class TestEuler2DBoundaryConditions:
             top=BCType.OUTFLOW
         )
         
-        # Run and ensure interior remains valid (ghost cells may have issues)
+        # Run and ensure solution remains valid
         for _ in range(10):
             dt = solver.step(cfl=0.3)
-            # Check interior cells (skip first 2 columns which are ghost-influenced)
-            interior_rho = solver.state.rho[:, 2:]
-            assert torch.all(torch.isfinite(interior_rho)), "Interior has non-finite values"
-            assert torch.all(interior_rho > 0), "Interior has non-positive density"
+            assert torch.all(torch.isfinite(solver.state.rho)), "Non-finite density"
+            assert torch.all(solver.state.rho > 0), "Non-positive density"
+            assert torch.all(solver.state.p > 0), "Non-positive pressure"
 
 
 class TestStrangSplitting:

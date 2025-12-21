@@ -294,11 +294,21 @@ class Euler2D:
             inflow_U = self.inflow_state.to_conservative()
             for i in range(n_ghost):
                 U_ext[:, :, i] = inflow_U[:, :, 0:1].expand(-1, Ny, 1).squeeze(-1)
+        elif self.bc_left == BCType.SUPERSONIC_INFLOW and self.inflow_state is not None:
+            # For supersonic inflow, all characteristics enter the domain
+            inflow_U = self.inflow_state.to_conservative()
+            for i in range(n_ghost):
+                U_ext[:, :, i] = inflow_U[:, :, 0:1].expand(-1, Ny, 1).squeeze(-1)
+        elif self.bc_left == BCType.SUPERSONIC_INFLOW and self.inflow_state is None:
+            # Fallback: copy interior (zero-gradient) if no inflow state set
+            for i in range(n_ghost):
+                U_ext[:, :, i] = U[:, :, 0]
         elif self.bc_left == BCType.PERIODIC:
             U_ext[:, :, :n_ghost] = U[:, :, -n_ghost:]
         
         # Right BC
-        if self.bc_right == BCType.OUTFLOW:
+        if self.bc_right == BCType.OUTFLOW or self.bc_right == BCType.SUPERSONIC_OUTFLOW:
+            # Zero-gradient extrapolation for both outflow types
             for i in range(n_ghost):
                 U_ext[:, :, Nx+n_ghost+i] = U[:, :, -1]
         elif self.bc_right == BCType.REFLECTIVE:
