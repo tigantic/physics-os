@@ -1412,4 +1412,121 @@ Form Factor: Missile-compatible SWaP
 
 ---
 
+## XIII. Constitutional Compliance Audit
+
+**Audit Date**: 2025-12-20  
+**Constitution Version**: 1.0.0  
+**Overall Compliance**: 74% (23 compliant, 9 partial, 7 violations)
+
+### Compliance Summary by Article
+
+| Article | Title | Status | Score |
+|---------|-------|--------|-------|
+| I | Mathematical Proof Standards | ✅ COMPLIANT | 100% |
+| II | Code Architecture Standards | ⚠️ PARTIAL | 75% |
+| III | Testing Protocols | ⚠️ PARTIAL | 50% |
+| IV | Physics Validity Standards | ✅ COMPLIANT | 100% |
+| V | Numerical Stability | ⚠️ PARTIAL | 80% |
+| VI | Documentation Standards | ⚠️ PARTIAL | 75% |
+| VII | Version Control Discipline | ❌ NON-COMPLIANT | 40% |
+| VIII | Performance Standards | ⚠️ NOT AUDITED | — |
+| IX | Security and Reproducibility | ✅ COMPLIANT | 100% |
+
+---
+
+## XIV. Remediation Backlog
+
+### 🔴 Critical Priority (Must Fix Before v1.0)
+
+| ID | Article | Violation | File/Location | Remediation |
+|----|---------|-----------|---------------|-------------|
+| C-01 | II.2.1 | Missing `tensornet/physics/` directory | Repository structure | Create `physics/` or amend Constitution to reflect `mps/hamiltonians.py` |
+| C-02 | III.3.1 | No `proofs/proof_*.py` executable files | `proofs/` | Create `proof_decompositions.py`, `proof_mps.py`, `proof_algorithms.py` |
+| C-03 | III.3.1 | No `tests/integration/` directory | `tests/` | Create directory, move integration tests from root |
+| C-04 | VI.6.1 | No `docs/api/` directory | `docs/` | Generate Sphinx autodocs: `sphinx-apidoc -o docs/api tensornet` |
+| C-05 | VII.7.1 | No `develop` branch | Git branches | `git checkout -b develop && git push -u origin develop` |
+| C-06 | VII.7.2 | Wrong commit message format | Git history | Adopt `<type>(<scope>): <subject>` for all future commits |
+
+### 🟠 Medium Priority (Should Fix)
+
+| ID | Article | Issue | File/Location | Remediation |
+|----|---------|-------|---------------|-------------|
+| M-01 | II.2.2 | Constant `gamma` not SCREAMING_SNAKE | `tensornet/cfd/euler_1d.py:30` | Rename to `GAMMA_DEFAULT` |
+| M-02 | II.2.4 | CFD utility docstrings incomplete | `tensornet/cfd/*.py` | Add Raises, Example, References sections |
+| M-03 | III.3.2 | Test naming doesn't follow 3-part pattern | `tests/test_*.py` | Rename: `test_<component>_<behavior>_<condition>` |
+| M-04 | III.3.3 | No coverage reporting | CI configuration | Add `pytest-cov` to CI, enforce 85%+ threshold |
+| M-05 | III.3.4 | Benchmarks missing hardware specs | `benchmarks/*.py` | Record CPU, RAM, GPU in benchmark output |
+| M-06 | V.5.1 | No condition number warnings | `tensornet/core/decompositions.py` | Add warning when κ > 10¹⁰ |
+| M-07 | VI.6.3 | Notebooks lack References sections | `notebooks/*.ipynb` | Add citations for DMRG, TEBD, physics papers |
+| M-08 | VII.7.3 | No pre-commit hooks configured | Repository root | Create `.pre-commit-config.yaml` with ruff/pytest |
+
+### 🟡 Low Priority (Nice to Have)
+
+| ID | Article | Issue | File/Location | Remediation |
+|----|---------|-------|---------------|-------------|
+| L-01 | V.5.2 | Truncation error not always asserted | Algorithm files | Add `assert info['truncation_error'] < tol` after SVD |
+| L-02 | V.5.3 | No explicit degenerate eigenvalue handling | `lanczos.py` | Document behavior for degenerate spectra |
+| L-03 | VII.7.1 | Branch named `master` not `main` | Git config | Consider renaming for modern convention |
+| L-04 | VIII.8.2 | No `@profile` decorator for memory | Memory-intensive functions | Add optional profiling decorators |
+| L-05 | IX.9.3 | Hardware spec missing CPU/RAM details | `proofs/proof_run.json` | Add processor model, RAM size |
+
+### 🟢 Recently Fixed
+
+| ID | Article | Issue | Resolution | Commit |
+|----|---------|-------|------------|--------|
+| F-01 | IX.9.2 | Missing `requirements-lock.txt` | Generated lockfile | `2964308` |
+
+---
+
+## XV. Constitutional Amendment Proposals
+
+### Amendment A-01: Module Structure Update
+
+**Current (Article II.2.1)**:
+```
+tensornet/
+├── core/
+├── mps/
+├── algorithms/
+└── physics/      ← Required but unused
+```
+
+**Proposed**:
+```
+tensornet/
+├── core/         # Fundamental operations
+├── mps/          # MPS, MPO, Hamiltonians
+├── algorithms/   # DMRG, TEBD, TDVP
+├── cfd/          # Computational Fluid Dynamics
+├── quantum/      # Quantum-classical hybrid
+├── certification/ # DO-178C, hardware deployment
+├── autonomy/     # Mission planning, path planning
+├── neural/       # Neural-enhanced TN
+└── [etc.]        # Additional domain modules
+```
+
+**Rationale**: The actual repository has grown beyond the original scope. Hamiltonians naturally belong with MPS/MPO. The Constitution should reflect the 20-phase implementation reality.
+
+### Amendment A-02: Test Organization Flexibility
+
+**Current (Article III.3.1)**: Requires `tests/integration/` subdirectory
+
+**Proposed**: Allow integration tests in `tests/test_integration.py` OR `tests/integration/` directory
+
+**Rationale**: Single integration test file is appropriate for current project size.
+
+---
+
+## XVI. Compliance Monitoring Schedule
+
+| Frequency | Check | Responsible |
+|-----------|-------|-------------|
+| Per Commit | Commit message format | Pre-commit hook |
+| Per PR | pytest passing, ruff clean | GitHub Actions CI |
+| Weekly | Coverage report review | Manual |
+| Per Release | Full Constitutional audit | Manual |
+| Quarterly | Amendment review | PI approval |
+
+---
+
 *This document is the authoritative execution record for Project HyperTensor. Updates require Constitutional compliance.*
