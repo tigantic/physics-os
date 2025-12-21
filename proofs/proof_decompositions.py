@@ -213,7 +213,7 @@ def run_all_proofs() -> Dict[str, Any]:
         result = proof_func()
         results.append(asdict(result))
         
-        status_icon = "✅" if result.status == "PASS" else "❌"
+        status_icon = "[PASS]" if result.status == "PASS" else "[FAIL]"
         print(f"{status_icon} Proof {result.id}: {result.name}")
         print(f"   Claim: {result.claim}")
         print(f"   Max Error: {result.max_error:.2e} (tol: {result.tolerance:.0e})")
