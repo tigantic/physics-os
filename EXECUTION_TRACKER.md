@@ -1452,23 +1452,23 @@ Form Factor: Missile-compatible SWaP
 | ID | Article | Issue | Status | Resolution | Commit |
 |----|---------|-------|--------|------------|--------|
 | M-01 | II.2.2 | `gamma` constant naming | ⚪ FALSE POSITIVE | `gamma` is function parameter, not module constant | — |
-| M-02 | II.2.4 | CFD docstrings incomplete | ⏳ PENDING | Future enhancement | — |
-| M-03 | III.3.2 | Test naming pattern | ⏳ PENDING | Future refactor | — |
+| M-02 | II.2.4 | CFD docstrings incomplete | ✅ FIXED | Added Example, Raises, References to euler_1d, godunov | `8f6dfbe` |
+| M-03 | III.3.2 | Test naming pattern | ⏳ DEFERRED | Future refactor (large-scale rename) | — |
 | M-04 | III.3.3 | Coverage reporting | ✅ FIXED | Added to CI workflow | `d8f92fe` |
-| M-05 | III.3.4 | Benchmark hardware specs | ⏳ PENDING | Future enhancement | — |
+| M-05 | III.3.4 | Benchmark hardware specs | ✅ FIXED | Added get_hardware_specs() to benchmarks | `8f6dfbe` |
 | M-06 | V.5.1 | Condition number warnings | ✅ FIXED | Warning when κ > 10¹⁰ | `d8f92fe` |
-| M-07 | VI.6.3 | Notebook references | ⏳ PENDING | Future enhancement | — |
+| M-07 | VI.6.3 | Notebook references | ✅ FIXED | Added DMRG/TEBD citations to all 5 notebooks | `8f6dfbe` |
 | M-08 | VII.7.3 | Pre-commit hooks | ✅ FIXED | `.pre-commit-config.yaml` created | `d8f92fe` |
 
 ### 🟡 Low Priority (Nice to Have)
 
-| ID | Article | Issue | Status |
-|----|---------|-------|--------|
-| L-01 | V.5.2 | Truncation error assertions | ⏳ PENDING |
-| L-02 | V.5.3 | Degenerate eigenvalue docs | ⏳ PENDING |
-| L-03 | VII.7.1 | `master` → `main` rename | ⏳ PENDING |
-| L-04 | VIII.8.2 | Memory profiling decorator | ✅ FIXED |
-| L-05 | IX.9.3 | Hardware spec details | ⏳ PENDING |
+| ID | Article | Issue | Status | Resolution | Commit |
+|----|---------|-------|--------|------------|--------|
+| L-01 | V.5.2 | Truncation error assertions | ✅ FIXED | Added warnings in DMRG/TEBD when error > 1e-10 | `249cd19` |
+| L-02 | V.5.3 | Degenerate eigenvalue docs | ✅ FIXED | Documented in lanczos.py | `8f6dfbe` |
+| L-03 | VII.7.1 | `master` → `main` rename | ✅ FIXED | Branch renamed, pushed to origin/main | `249cd19` |
+| L-04 | VIII.8.2 | Memory profiling decorator | ✅ FIXED | `tensornet/core/profiling.py` created | `ded009d` |
+| L-05 | IX.9.3 | Hardware spec details | ✅ FIXED | Added to proof_run.json and benchmarks | `8f6dfbe` |
 
 ### 🟢 Recently Fixed
 
@@ -1480,7 +1480,14 @@ Form Factor: Missile-compatible SWaP
 | F-04 | VII.7.1 | No develop branch | Created and pushed | `d8f92fe` |
 | F-05 | VII.7.3 | No pre-commit config | `.pre-commit-config.yaml` | `d8f92fe` |
 | F-06 | V.5.1 | No condition warnings | κ > 10¹⁰ warning added | `d8f92fe` |
-| F-07 | VIII.8.2 | Memory profiling decorator | `tensornet/core/profiling.py` created | TBD |
+| F-07 | VIII.8.2 | Memory profiling decorator | `tensornet/core/profiling.py` created | `ded009d` |
+| F-08 | II.2.4 | CFD docstrings | Added Example, Raises, References | `8f6dfbe` |
+| F-09 | III.3.4 | Benchmark hardware specs | `get_hardware_specs()` in benchmarks | `8f6dfbe` |
+| F-10 | VI.6.3 | Notebook references | DMRG/TEBD citations in all notebooks | `8f6dfbe` |
+| F-11 | V.5.2 | Truncation error warnings | DMRG/TEBD warn when error > 1e-10 | `249cd19` |
+| F-12 | V.5.3 | Degenerate eigenvalue docs | Documented in lanczos.py | `8f6dfbe` |
+| F-13 | VII.7.1 | master → main rename | Branch renamed, origin/main pushed | `249cd19` |
+| F-14 | IX.9.3 | Hardware spec details | Added to proof_run.json | `8f6dfbe` |
 
 ---
 
