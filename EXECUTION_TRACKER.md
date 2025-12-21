@@ -1217,7 +1217,7 @@ $$S(x) = \frac{c}{6} \log\left(\frac{L}{\pi} \sin\frac{\pi x}{L}\right) + \text{
 | Loss function (drag + heating) | ✅ Done | `DragObjective`, `HeatFluxObjective` |
 | Geometry tensor parameterization | ✅ Done | `BSplineParameterization`, `FFDParameterization` |
 | L-BFGS optimizer integration | ✅ Done | `cfd/optimization.py` |
-| Sears-Haack emergence test | ⏳ Planned | Validation test pending |
+| Sears-Haack emergence test | ✅ Done | 87.7% drag reduction, ρ=0.97 |
 
 ---
 
