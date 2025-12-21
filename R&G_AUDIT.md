@@ -175,10 +175,12 @@ None are fundamental flaws; they are areas to watch in an otherwise well-run pro
 
 ### Next 60 Days (Mid-term) — Enhance Features and Usability
 
-- [ ] **Finalize Phase 2 – 1D CFD**:
-  - Implement missing pieces in `limiters.py` (TVD limiters: Minmod, Superbee)
-  - Test boundary conditions (reflective, outflow) with simulation scenarios
-  - Postpone adjoint/optimization until forward solver is fully validated
+- [x] **Finalize Phase 2 – 1D CFD**: — DONE (2025-12-21)
+  - ~~Implement missing pieces in `limiters.py`~~ — Already complete (Minmod, Superbee, Van Leer, Van Albada, MC)
+  - ~~Test boundary conditions~~ — Added `BCType1D` enum with TRANSMISSIVE, REFLECTIVE, PERIODIC
+  - Added `set_boundary_conditions()` to Euler1D with `_apply_left_bc`/`_apply_right_bc` helpers
+  - Created 4 boundary condition tests in `test_cfd_physics.py`
+  - Total: 19 CFD physics tests now passing
 
 - [ ] **Phase 3 – 2D Solver Integration**:
   - Debug and test Euler2D with small 2D test cases

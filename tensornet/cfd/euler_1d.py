@@ -35,12 +35,20 @@ This module implements the foundation for tensor network CFD.
 """
 
 from dataclasses import dataclass
+from enum import Enum
 from typing import Optional, Tuple, Callable, List, Union
 import torch
 from torch import Tensor
 import math
 
 from tensornet.core.mps import MPS
+
+
+class BCType1D(Enum):
+    """Boundary condition types for 1D Euler equations."""
+    TRANSMISSIVE = "transmissive"  # Zero-gradient (outflow)
+    REFLECTIVE = "reflective"       # Solid wall (u -> -u)
+    PERIODIC = "periodic"           # Wrap-around
 
 
 @dataclass
@@ -203,6 +211,29 @@ class Euler1D:
         # State
         self.state: Optional[EulerState] = None
         self.t = 0.0
+        
+        # Boundary conditions (default: transmissive/outflow)
+        self.bc_left = BCType1D.TRANSMISSIVE
+        self.bc_right = BCType1D.TRANSMISSIVE
+    
+    def set_boundary_conditions(
+        self,
+        left: BCType1D = BCType1D.TRANSMISSIVE,
+        right: BCType1D = BCType1D.TRANSMISSIVE,
+    ) -> 'Euler1D':
+        """
+        Set boundary conditions.
+        
+        Args:
+            left: Left boundary condition type
+            right: Right boundary condition type
+            
+        Returns:
+            self for method chaining
+        """
+        self.bc_left = left
+        self.bc_right = right
+        return self
     
     def set_initial_condition(self, state: EulerState):
         """Set initial condition."""
@@ -303,12 +334,11 @@ class Euler1D:
         
         U = self.state.to_conserved()  # (N, 3)
         
-        # Ghost cells for boundary conditions (transmissive)
-        U_ext = torch.cat([
-            U[0:1],   # Left ghost
-            U,
-            U[-1:],   # Right ghost
-        ], dim=0)
+        # Build ghost cells based on boundary conditions
+        U_left_ghost = self._apply_left_bc(U)
+        U_right_ghost = self._apply_right_bc(U)
+        
+        U_ext = torch.cat([U_left_ghost, U, U_right_ghost], dim=0)
         
         # Compute fluxes at all faces
         U_L = U_ext[:-1]  # (N+1, 3)
@@ -327,6 +357,39 @@ class Euler1D:
         self.t += dt
         
         return dt
+    
+    def _apply_left_bc(self, U: Tensor) -> Tensor:
+        """Apply left boundary condition to create ghost cell."""
+        if self.bc_left == BCType1D.TRANSMISSIVE:
+            # Zero-gradient: copy interior cell
+            return U[0:1].clone()
+        elif self.bc_left == BCType1D.REFLECTIVE:
+            # Solid wall: reflect with reversed velocity
+            ghost = U[0:1].clone()
+            # U = [rho, rho*u, E] -> reverse momentum sign
+            ghost[..., 1] = -ghost[..., 1]
+            return ghost
+        elif self.bc_left == BCType1D.PERIODIC:
+            # Wrap from right boundary
+            return U[-1:].clone()
+        else:
+            raise ValueError(f"Unknown left BC type: {self.bc_left}")
+    
+    def _apply_right_bc(self, U: Tensor) -> Tensor:
+        """Apply right boundary condition to create ghost cell."""
+        if self.bc_right == BCType1D.TRANSMISSIVE:
+            # Zero-gradient: copy interior cell
+            return U[-1:].clone()
+        elif self.bc_right == BCType1D.REFLECTIVE:
+            # Solid wall: reflect with reversed velocity
+            ghost = U[-1:].clone()
+            ghost[..., 1] = -ghost[..., 1]
+            return ghost
+        elif self.bc_right == BCType1D.PERIODIC:
+            # Wrap from left boundary
+            return U[0:1].clone()
+        else:
+            raise ValueError(f"Unknown right BC type: {self.bc_right}")
     
     def solve(
         self,

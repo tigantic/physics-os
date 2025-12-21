@@ -275,5 +275,115 @@ class TestRankineHugoniotConditions:
         assert rel_err < 0.05, f"Mass flux jump error: {rel_err:.2%}"
 
 
+class TestEuler1DBoundaryConditions:
+    """Test boundary condition implementations for 1D Euler solver."""
+    
+    def test_reflective_bc_reverses_momentum(self):
+        """Verify reflective BC creates ghost cell with reversed momentum."""
+        from tensornet.cfd import Euler1D, BCType1D, sod_shock_tube_ic
+        
+        solver = Euler1D(N=100, x_min=0.0, x_max=1.0)
+        solver.set_boundary_conditions(
+            left=BCType1D.REFLECTIVE,
+            right=BCType1D.REFLECTIVE
+        )
+        
+        # Create a state with non-zero velocity
+        state = sod_shock_tube_ic(N=100, x_min=0.0, x_max=1.0, gamma=1.4)
+        solver.set_initial_condition(state)
+        
+        # Manually set a velocity to test reflection
+        solver.state.rho_u[0] = 1.0  # Positive momentum at left
+        solver.state.rho_u[-1] = -1.0  # Negative momentum at right
+        
+        U = solver.state.to_conserved()
+        
+        # Check ghost cells
+        left_ghost = solver._apply_left_bc(U)
+        right_ghost = solver._apply_right_bc(U)
+        
+        # Momentum should be reversed
+        assert left_ghost[0, 1] == -U[0, 1], "Left reflective BC should reverse momentum"
+        assert right_ghost[0, 1] == -U[-1, 1], "Right reflective BC should reverse momentum"
+        
+        # Density and energy should be copied
+        assert left_ghost[0, 0] == U[0, 0], "Left BC should copy density"
+        assert left_ghost[0, 2] == U[0, 2], "Left BC should copy energy"
+    
+    def test_transmissive_bc_copies_state(self):
+        """Verify transmissive BC creates zero-gradient ghost cell."""
+        from tensornet.cfd import Euler1D, BCType1D, sod_shock_tube_ic
+        
+        solver = Euler1D(N=100, x_min=0.0, x_max=1.0)
+        solver.set_boundary_conditions(
+            left=BCType1D.TRANSMISSIVE,
+            right=BCType1D.TRANSMISSIVE
+        )
+        
+        state = sod_shock_tube_ic(N=100, x_min=0.0, x_max=1.0, gamma=1.4)
+        solver.set_initial_condition(state)
+        
+        U = solver.state.to_conserved()
+        
+        left_ghost = solver._apply_left_bc(U)
+        right_ghost = solver._apply_right_bc(U)
+        
+        assert torch.allclose(left_ghost, U[0:1]), "Left transmissive should copy first cell"
+        assert torch.allclose(right_ghost, U[-1:]), "Right transmissive should copy last cell"
+    
+    def test_periodic_bc_wraps_state(self):
+        """Verify periodic BC wraps state from opposite boundary."""
+        from tensornet.cfd import Euler1D, BCType1D, sod_shock_tube_ic
+        
+        solver = Euler1D(N=100, x_min=0.0, x_max=1.0)
+        solver.set_boundary_conditions(
+            left=BCType1D.PERIODIC,
+            right=BCType1D.PERIODIC
+        )
+        
+        state = sod_shock_tube_ic(N=100, x_min=0.0, x_max=1.0, gamma=1.4)
+        solver.set_initial_condition(state)
+        
+        U = solver.state.to_conserved()
+        
+        left_ghost = solver._apply_left_bc(U)
+        right_ghost = solver._apply_right_bc(U)
+        
+        assert torch.allclose(left_ghost, U[-1:]), "Left periodic should wrap from right"
+        assert torch.allclose(right_ghost, U[0:1]), "Right periodic should wrap from left"
+    
+    def test_reflective_bc_conserves_mass(self):
+        """Verify simulation with reflective walls conserves total mass."""
+        from tensornet.cfd import Euler1D, BCType1D
+        from tensornet.cfd.euler_1d import EulerState
+        
+        solver = Euler1D(N=100, x_min=0.0, x_max=1.0, cfl=0.4)
+        solver.set_boundary_conditions(
+            left=BCType1D.REFLECTIVE,
+            right=BCType1D.REFLECTIVE
+        )
+        
+        # Uniform density with velocity pointing right
+        rho = torch.ones(100, dtype=torch.float64)
+        rho_u = torch.ones(100, dtype=torch.float64) * 0.5  # Rightward velocity
+        p = torch.ones(100, dtype=torch.float64)
+        E = p / 0.4 + 0.5 * rho_u**2 / rho
+        
+        state = EulerState(rho=rho, rho_u=rho_u, E=E, gamma=1.4)
+        solver.set_initial_condition(state)
+        
+        initial_mass = solver.state.rho.sum().item()
+        
+        # Run for several steps
+        for _ in range(50):
+            solver.step()
+        
+        final_mass = solver.state.rho.sum().item()
+        
+        # Mass should be conserved (within numerical tolerance)
+        rel_error = abs(final_mass - initial_mass) / initial_mass
+        assert rel_error < 0.01, f"Mass not conserved: {rel_error:.2%} error"
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

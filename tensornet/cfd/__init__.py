@@ -15,6 +15,7 @@ Phase 10: LES turbulence, hybrid RANS-LES, multi-objective optimization.
 """
 
 from tensornet.cfd.euler_1d import (
+    BCType1D,
     Euler1D,
     euler_to_mps,
     mps_to_euler,
@@ -252,6 +253,7 @@ from tensornet.cfd.multi_objective import (
 
 __all__ = [
     # 1D Euler equations
+    'BCType1D',
     'Euler1D',
     'euler_to_mps',
     'mps_to_euler',
