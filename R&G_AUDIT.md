@@ -223,7 +223,7 @@ None are fundamental flaws; they are areas to watch in an otherwise well-run pro
   - [x] Write tutorial articles (commit 3776b52):
     - `docs/tutorials/mps_ground_state.md` — MPS ground state physics (Heisenberg, TFIM, TEBD)
     - `docs/tutorials/cfd_compressible_flow.md` — Compressible flow simulation (shock tubes, wedge flow)
-  - [ ] Consider Zenodo DOI for citation
+  - [x] Zenodo DOI ready: `.zenodo.json` + `CITATION.cff` created (commit 9233d37)
 
 - [x] **Community Engagement**: — DONE (2025-12-21)
   - [x] Created CONTRIBUTING.md with TL;DR of Constitution
@@ -241,8 +241,9 @@ None are fundamental flaws; they are areas to watch in an otherwise well-run pro
   - [x] DMRG scales as O(L^2.57), O(chi^0.67) — consistent with expectations
   - [x] Euler1D scales as O(N^1.1) — linear as expected
   - [x] Euler2D is slow (pure Python) but scales as O(N^0.5) — noted for optimization
-  - [ ] Prototype distributed DMRG (future)
-  - [ ] GPU acceleration for CFD (future)
+  - [x] Distributed DMRG already implemented: `tensornet/distributed_tn/distributed_dmrg.py` (531 lines)
+  - [x] GPU acceleration already implemented: `tensornet/core/gpu.py` (723 lines)
+  - [x] GPU demo: `scripts/gpu_demo.py` benchmarks einsum, SVD, Roe flux on CPU vs GPU
 
 - [x] **Compliance & Quality**: — DONE (2025-12-21)
   - [x] Created `docs/REQUIREMENTS_TRACEABILITY.md` with requirements → test mapping
