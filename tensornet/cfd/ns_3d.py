@@ -576,6 +576,73 @@ class NS3DSolver:
         
         return new_state, proj
     
+    def step_rk4(
+        self,
+        state: NSState3D,
+        dt: float,
+    ) -> Tuple[NSState3D, ProjectionResult3D]:
+        """
+        Take one time step using RK4 + Projection.
+        
+        Classical 4th-order Runge-Kutta with projection to maintain
+        incompressibility throughout.
+        
+        Tag: [PHASE-1C]
+        """
+        u0, v0, w0 = state.u, state.v, state.w
+        
+        # Stage 1
+        k1_u, k1_v, k1_w = self.compute_rhs(state)
+        
+        # Stage 2
+        u2 = u0 + 0.5 * dt * k1_u
+        v2 = v0 + 0.5 * dt * k1_v
+        w2 = w0 + 0.5 * dt * k1_w
+        proj2 = project_velocity_3d(u2, v2, w2, self.dx, self.dy, self.dz, dt=1.0)
+        state2 = NSState3D(u=proj2.u_projected, v=proj2.v_projected, w=proj2.w_projected, 
+                           t=state.t + 0.5*dt, step=0)
+        k2_u, k2_v, k2_w = self.compute_rhs(state2)
+        
+        # Stage 3
+        u3 = u0 + 0.5 * dt * k2_u
+        v3 = v0 + 0.5 * dt * k2_v
+        w3 = w0 + 0.5 * dt * k2_w
+        proj3 = project_velocity_3d(u3, v3, w3, self.dx, self.dy, self.dz, dt=1.0)
+        state3 = NSState3D(u=proj3.u_projected, v=proj3.v_projected, w=proj3.w_projected,
+                           t=state.t + 0.5*dt, step=0)
+        k3_u, k3_v, k3_w = self.compute_rhs(state3)
+        
+        # Stage 4
+        u4 = u0 + dt * k3_u
+        v4 = v0 + dt * k3_v
+        w4 = w0 + dt * k3_w
+        proj4 = project_velocity_3d(u4, v4, w4, self.dx, self.dy, self.dz, dt=1.0)
+        state4 = NSState3D(u=proj4.u_projected, v=proj4.v_projected, w=proj4.w_projected,
+                           t=state.t + dt, step=0)
+        k4_u, k4_v, k4_w = self.compute_rhs(state4)
+        
+        # Combine
+        u_star = u0 + (dt / 6.0) * (k1_u + 2*k2_u + 2*k3_u + k4_u)
+        v_star = v0 + (dt / 6.0) * (k1_v + 2*k2_v + 2*k3_v + k4_v)
+        w_star = w0 + (dt / 6.0) * (k1_w + 2*k2_w + 2*k3_w + k4_w)
+        
+        # Final projection
+        proj = project_velocity_3d(
+            u_star, v_star, w_star,
+            self.dx, self.dy, self.dz,
+            dt=1.0, method='spectral'
+        )
+        
+        new_state = NSState3D(
+            u=proj.u_projected,
+            v=proj.v_projected,
+            w=proj.w_projected,
+            t=state.t + dt,
+            step=state.step + 1,
+        )
+        
+        return new_state, proj
+    
     def compute_diagnostics(
         self,
         state: NSState3D,
@@ -660,6 +727,7 @@ class NS3DSolver:
         diag_interval: int = 10,
         max_steps: int = 100000,
         verbose: bool = True,
+        method: str = 'rk4',
     ) -> NSResult3D:
         """
         Integrate 3D NS equations.
@@ -672,12 +740,19 @@ class NS3DSolver:
             diag_interval: Steps between diagnostics
             max_steps: Maximum steps
             verbose: Print progress
+            method: 'rk4' (4th order) or 'euler' (1st order)
             
         Returns:
             NSResult3D with final state and diagnostics
         """
         state = initial_state
         diagnostics = []
+        
+        # Select stepper
+        if method == 'rk4':
+            step_fn = self.step_rk4
+        else:
+            step_fn = self.step_forward_euler
         
         if dt is None:
             dt = self.compute_stable_dt(state, cfl_target)
@@ -688,7 +763,7 @@ class NS3DSolver:
         diagnostics.append(initial_diag)
         
         if verbose:
-            print(f"NS3D Solver: t_final={t_final:.4f}, dt={dt:.2e}, ν={self.nu:.2e}")
+            print(f"NS3D Solver ({method.upper()}): t_final={t_final:.4f}, dt={dt:.2e}, ν={self.nu:.2e}")
             print(f"  Grid: {self.Nx}×{self.Ny}×{self.Nz}")
             print(f"  Initial: KE={initial_ke:.4e}, ω_max={initial_max_vort:.4e}")
         
@@ -697,7 +772,7 @@ class NS3DSolver:
                 break
             
             dt_step = min(dt, t_final - state.t)
-            state, proj = self.step_forward_euler(state, dt_step)
+            state, proj = step_fn(state, dt_step)
             
             if step_idx % diag_interval == 0 or state.t >= t_final:
                 diag = self.compute_diagnostics(state, dt, initial_max_vort)

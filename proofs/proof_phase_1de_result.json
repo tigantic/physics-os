@@ -1,0 +1,29 @@
+{
+  "chi_estimation": {
+    "chi_smooth": 2,
+    "chi_random": 64,
+    "smooth_is_low": true,
+    "random_is_higher": true,
+    "success": true
+  },
+  "enstrophy_tracking": {
+    "expected": 0.5,
+    "computed": 0.5000000000000001,
+    "rel_error": 2.220446049250313e-16,
+    "success": true
+  },
+  "regularity_assessment": {
+    "smooth_assessment": "smooth",
+    "blowup_assessment": "potential_blowup",
+    "smooth_ok": true,
+    "blowup_ok": true,
+    "success": true
+  },
+  "ns_integration": {
+    "steps": 51,
+    "max_chi": 2,
+    "assessment": "smooth",
+    "had_nan": false,
+    "success": true
+  }
+}

@@ -209,6 +209,73 @@ class NS2DSolver:
         
         return new_state, proj
     
+    def step_rk4(
+        self,
+        state: NSState,
+        dt: float,
+    ) -> Tuple[NSState, ProjectionResult]:
+        """
+        Take one time step using RK4 + Projection.
+        
+        Classical 4th-order Runge-Kutta with projection after each stage
+        to maintain incompressibility throughout.
+        
+        Steps:
+            k1 = RHS(u^n)
+            k2 = RHS(u^n + dt/2 * k1)
+            k3 = RHS(u^n + dt/2 * k2)
+            k4 = RHS(u^n + dt * k3)
+            u* = u^n + dt/6 * (k1 + 2*k2 + 2*k3 + k4)
+            u^{n+1} = project(u*)
+        
+        Tag: [PHASE-1C]
+        """
+        u0, v0 = state.u, state.v
+        
+        # Stage 1: k1 = f(t, y)
+        k1_u, k1_v = self.compute_rhs(state)
+        
+        # Stage 2: k2 = f(t + dt/2, y + dt/2 * k1)
+        u2 = u0 + 0.5 * dt * k1_u
+        v2 = v0 + 0.5 * dt * k1_v
+        # Project intermediate state
+        proj2 = project_velocity_2d(u2, v2, self.dx, self.dy, dt=1.0, method='spectral')
+        state2 = NSState(u=proj2.u_projected, v=proj2.v_projected, t=state.t + 0.5*dt, step=0)
+        k2_u, k2_v = self.compute_rhs(state2)
+        
+        # Stage 3: k3 = f(t + dt/2, y + dt/2 * k2)
+        u3 = u0 + 0.5 * dt * k2_u
+        v3 = v0 + 0.5 * dt * k2_v
+        proj3 = project_velocity_2d(u3, v3, self.dx, self.dy, dt=1.0, method='spectral')
+        state3 = NSState(u=proj3.u_projected, v=proj3.v_projected, t=state.t + 0.5*dt, step=0)
+        k3_u, k3_v = self.compute_rhs(state3)
+        
+        # Stage 4: k4 = f(t + dt, y + dt * k3)
+        u4 = u0 + dt * k3_u
+        v4 = v0 + dt * k3_v
+        proj4 = project_velocity_2d(u4, v4, self.dx, self.dy, dt=1.0, method='spectral')
+        state4 = NSState(u=proj4.u_projected, v=proj4.v_projected, t=state.t + dt, step=0)
+        k4_u, k4_v = self.compute_rhs(state4)
+        
+        # Combine: y_{n+1} = y_n + dt/6 * (k1 + 2*k2 + 2*k3 + k4)
+        u_star = u0 + (dt / 6.0) * (k1_u + 2*k2_u + 2*k3_u + k4_u)
+        v_star = v0 + (dt / 6.0) * (k1_v + 2*k2_v + 2*k3_v + k4_v)
+        
+        # Final projection
+        proj = project_velocity_2d(
+            u_star, v_star, self.dx, self.dy,
+            dt=1.0, method='spectral'
+        )
+        
+        new_state = NSState(
+            u=proj.u_projected,
+            v=proj.v_projected,
+            t=state.t + dt,
+            step=state.step + 1,
+        )
+        
+        return new_state, proj
+    
     def compute_diagnostics(
         self,
         state: NSState,
@@ -281,6 +348,7 @@ class NS2DSolver:
         diag_interval: int = 10,
         max_steps: int = 100000,
         verbose: bool = True,
+        method: str = 'rk4',
     ) -> NSResult:
         """
         Integrate NS equations from initial state to t_final.
@@ -293,12 +361,19 @@ class NS2DSolver:
             diag_interval: Steps between diagnostics
             max_steps: Maximum number of steps
             verbose: Print progress
+            method: 'rk4' (4th order) or 'euler' (1st order)
             
         Returns:
             NSResult with final state and diagnostics
         """
         state = initial_state
         diagnostics = []
+        
+        # Select stepper
+        if method == 'rk4':
+            step_fn = self.step_rk4
+        else:
+            step_fn = self.step_forward_euler
         
         # Initial diagnostics
         if dt is None:
@@ -309,7 +384,7 @@ class NS2DSolver:
         diagnostics.append(initial_diag)
         
         if verbose:
-            print(f"NS2D Solver: t_final={t_final:.4f}, dt={dt:.2e}, ν={self.nu:.2e}")
+            print(f"NS2D Solver ({method.upper()}): t_final={t_final:.4f}, dt={dt:.2e}, ν={self.nu:.2e}")
             print(f"  Initial: KE={initial_diag.kinetic_energy:.4e}, "
                   f"ω_max={initial_diag.max_vorticity:.4e}")
         
@@ -322,7 +397,7 @@ class NS2DSolver:
             dt_step = min(dt, t_final - state.t)
             
             # Take step
-            state, proj = self.step_forward_euler(state, dt_step)
+            state, proj = step_fn(state, dt_step)
             
             # Diagnostics
             if step_idx % diag_interval == 0 or state.t >= t_final:
