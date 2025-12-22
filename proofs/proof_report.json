@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-12-22T12:56:47.739709Z",
+  "generated_at": "2025-12-22T16:34:01.808282Z",
   "summary": {
     "total": 13,
     "passed": 13,
@@ -10,7 +10,7 @@
     {
       "file": "proof_mps.py",
       "passed": true,
-      "duration_sec": 2.24,
+      "duration_sec": 1.97,
       "details": [
         {
           "id": "2.1",
@@ -181,7 +181,7 @@
     {
       "file": "proof_decompositions.py",
       "passed": true,
-      "duration_sec": 2.2,
+      "duration_sec": 1.92,
       "details": [
         {
           "id": "1.1",
@@ -272,7 +272,7 @@
     {
       "file": "proof_algorithms.py",
       "passed": true,
-      "duration_sec": 2.82,
+      "duration_sec": 2.36,
       "details": [
         {
           "id": "3.1",
@@ -393,7 +393,7 @@
     {
       "file": "proof_cfd_conservation.py",
       "passed": true,
-      "duration_sec": 2.21,
+      "duration_sec": 1.87,
       "details": {
         "passed": 5,
         "failed": 0
@@ -402,7 +402,7 @@
     {
       "file": "proof_21_weno_order.py",
       "passed": true,
-      "duration_sec": 2.24,
+      "duration_sec": 1.79,
       "details": {
         "total_tests": 5,
         "passed": 5,
@@ -412,7 +412,7 @@
     {
       "file": "proof_21_weno_shock.py",
       "passed": true,
-      "duration_sec": 2.21,
+      "duration_sec": 1.81,
       "details": {
         "total_tests": 8,
         "passed": 8,
@@ -422,29 +422,29 @@
     {
       "file": "proof_21_tdvp_euler_conservation.py",
       "passed": true,
-      "duration_sec": 2.34
+      "duration_sec": 1.82
     },
     {
       "file": "proof_21_tdvp_euler_sod.py",
       "passed": true,
-      "duration_sec": 2.72
+      "duration_sec": 1.82
     },
     {
       "file": "proof_21_tt_evolution.py",
       "passed": true,
-      "duration_sec": 3.37,
+      "duration_sec": 2.67,
       "details": {}
     },
     {
       "file": "proof_21_dense_audit.py",
       "passed": true,
-      "duration_sec": 5.53,
+      "duration_sec": 3.5,
       "details": {}
     },
     {
       "file": "proof_phase_22.py",
       "passed": true,
-      "duration_sec": 2.31,
+      "duration_sec": 1.98,
       "details": [
         {
           "name": "Saha Ionization Equilibrium",
@@ -553,7 +553,7 @@
     {
       "file": "proof_phase_23.py",
       "passed": true,
-      "duration_sec": 2.24,
+      "duration_sec": 1.87,
       "details": [
         {
           "name": "TMR Bit Flip Correction",
@@ -612,7 +612,7 @@
     {
       "file": "proof_phase_24.py",
       "passed": true,
-      "duration_sec": 2.63,
+      "duration_sec": 1.9,
       "details": [
         {
           "name": "Adjoint Solver",
