@@ -251,6 +251,49 @@ from tensornet.cfd.multi_objective import (
     create_drag_heating_problem,
 )
 
+# Phase 21: WENO/TENO Shock Capturing
+from tensornet.cfd.weno import (
+    smoothness_indicators,
+    optimal_weights_left,
+    optimal_weights_right,
+    nonlinear_weights_js,
+    nonlinear_weights_z,
+    candidate_stencils_left,
+    candidate_stencils_right,
+    weno5_js,
+    weno5_z,
+    teno5,
+    weno_reconstruct_euler,
+)
+
+# Phase 21: WENO-TT Tensorized Reconstruction
+from tensornet.cfd.weno_tt import (
+    tensorize_smoothness_indicators,
+    tensorize_weights,
+    weno_tt_reconstruct,
+    apply_weno_tt_flux,
+    euler_weno_tt_flux,
+    WENOTTConfig,
+)
+
+# Phase 21: TT-CFD Core (TDVP-CFD Integration)
+from tensornet.cfd.tt_cfd import (
+    MPSState,
+    EulerMPO,
+    tdvp_euler_step,
+    TT_Euler1D,
+    TT_Euler2D,
+    check_conservation,
+)
+
+# Phase 21: TT-AMR Adaptive Bonds
+from tensornet.cfd.adaptive_tt import (
+    ShockDetector,
+    BondAdapter,
+    AdaptiveTTEuler,
+    EntanglementMonitor,
+)
+
 __all__ = [
     # 1D Euler equations
     'BCType1D',
@@ -449,4 +492,35 @@ __all__ = [
     'hypervolume_2d',
     'MultiObjectiveOptimizer',
     'create_drag_heating_problem',
+    # WENO/TENO Shock Capturing (Phase 21)
+    'smoothness_indicators',
+    'optimal_weights_left',
+    'optimal_weights_right',
+    'nonlinear_weights_js',
+    'nonlinear_weights_z',
+    'candidate_stencils_left',
+    'candidate_stencils_right',
+    'weno5_js',
+    'weno5_z',
+    'teno5',
+    'weno_reconstruct_euler',
+    # WENO-TT Tensorized Reconstruction (Phase 21)
+    'tensorize_smoothness_indicators',
+    'tensorize_weights',
+    'weno_tt_reconstruct',
+    'apply_weno_tt_flux',
+    'euler_weno_tt_flux',
+    'WENOTTConfig',
+    # TT-CFD Core (Phase 21)
+    'MPSState',
+    'EulerMPO',
+    'tdvp_euler_step',
+    'TT_Euler1D',
+    'TT_Euler2D',
+    'check_conservation',
+    # TT-AMR Adaptive Bonds (Phase 21)
+    'ShockDetector',
+    'BondAdapter',
+    'AdaptiveTTEuler',
+    'EntanglementMonitor',
 ]

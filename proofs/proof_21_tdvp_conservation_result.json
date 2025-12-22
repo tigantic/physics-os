@@ -1,0 +1,61 @@
+{
+  "proof_id": "21.3",
+  "name": "TDVP-Euler Conservation (Simplified)",
+  "timestamp": "2025-12-22T03:34:22.344075",
+  "tests": [
+    {
+      "test": "mps_state_roundtrip",
+      "N": 16,
+      "chi_max": 8,
+      "rho_error": 0.0,
+      "u_error": 5.5521753861143e-11,
+      "p_error": 1.000000082740371e-11,
+      "passed": true
+    },
+    {
+      "test": "conservation_check",
+      "expected_mass": 16.0,
+      "computed_mass": 16.0,
+      "mass_error": 0.0,
+      "expected_momentum": 0.0,
+      "computed_momentum": 0.0,
+      "momentum_error": 0.0,
+      "expected_energy": 40.00000000000001,
+      "computed_energy": 40.00000000000001,
+      "energy_error": 0.0,
+      "passed": true
+    },
+    {
+      "test": "euler_mpo_construction",
+      "N": 8,
+      "has_cores": true,
+      "correct_gamma": true,
+      "correct_dx": true,
+      "correct_n": true,
+      "passed": true
+    },
+    {
+      "test": "tt_euler_1d_init",
+      "N": 8,
+      "chi_max": 4,
+      "has_state": true,
+      "correct_n": true,
+      "roundtrip_ok": true,
+      "passed": true
+    },
+    {
+      "test": "sod_initialization",
+      "N": 16,
+      "chi_max": 8,
+      "has_state": true,
+      "left_density": 1.0,
+      "right_density": 0.125,
+      "density_ratio_ok": true,
+      "mass": 9.0,
+      "expected_mass_approx": 9.0,
+      "mass_reasonable": true,
+      "passed": true
+    }
+  ],
+  "all_passed": true
+}

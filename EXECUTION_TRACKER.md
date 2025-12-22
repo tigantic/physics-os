@@ -1,8 +1,8 @@
 # Project HyperTensor: Execution Tracker
 
-**Document Version**: 2.11.0  
+**Document Version**: 2.12.0  
 **Last Updated**: 2025-12-21  
-**Status**: ACTIVE DEVELOPMENT - CONSTITUTIONAL COMPLIANCE ACHIEVED (100%)
+**Status**: ACTIVE DEVELOPMENT - PHASE 21 TT-CFD CORE COMPLETE
 
 ---
 
@@ -63,7 +63,11 @@ Project HyperTensor/
 │   │   ├── optimization.py       # Shape optimization (Phase 9)
 │   │   ├── les.py                # LES subgrid-scale models (Phase 10)
 │   │   ├── hybrid_les.py         # Hybrid RANS-LES (DES/DDES/IDDES) (Phase 10)
-│   │   └── multi_objective.py    # Multi-objective optimization (Phase 10)
+│   │   ├── multi_objective.py    # Multi-objective optimization (Phase 10)
+│   │   ├── weno.py               # WENO5-JS/Z, TENO5 shock capturing (Phase 21)
+│   │   ├── weno_tt.py            # WENO-TT tensorized reconstruction (Phase 21)
+│   │   ├── tt_cfd.py             # EulerMPO, TDVP-CFD, TT_Euler1D/2D (Phase 21)
+│   │   └── adaptive_tt.py        # TT-AMR, ShockDetector, BondAdapter (Phase 21)
 │   ├── deployment/               # Phase 11: Embedded deployment
 │   │   ├── __init__.py           # Deployment module exports
 │   │   ├── tensorrt_export.py    # TensorRT/ONNX export pipeline
@@ -1049,6 +1053,33 @@ Project HyperTensor/
 | HILValidator | `certification/hardware.py` | ✅ Implemented | HIL validation framework |
 | DeploymentPackage | `certification/hardware.py` | ✅ Implemented | Deployment artifacts |
 
+#### Phase 21: TT-CFD Core (`tensornet/cfd/weno.py`, `weno_tt.py`, `tt_cfd.py`, `adaptive_tt.py`)
+
+| Component | File | Status | Description |
+|-----------|------|--------|-------------|
+| smoothness_indicators | `cfd/weno.py` | ✅ Implemented | β₀, β₁, β₂ smoothness measures |
+| optimal_weights | `cfd/weno.py` | ✅ Implemented | Linear weights d₀, d₁, d₂ |
+| nonlinear_weights_js | `cfd/weno.py` | ✅ Implemented | WENO-JS nonlinear weights |
+| nonlinear_weights_z | `cfd/weno.py` | ✅ Implemented | WENO-Z improved weights |
+| candidate_stencils | `cfd/weno.py` | ✅ Implemented | q₀, q₁, q₂ reconstructions |
+| weno5_js | `cfd/weno.py` | ✅ Implemented | WENO5-JS (Jiang-Shu 1996) |
+| weno5_z | `cfd/weno.py` | ✅ Implemented | WENO5-Z (Borges 2008) |
+| teno5 | `cfd/weno.py` | ✅ Implemented | TENO5 (Fu 2016) sharp cutoff |
+| tensorize_smoothness | `cfd/weno_tt.py` | ✅ Implemented | β in TT format |
+| tensorize_weights | `cfd/weno_tt.py` | ✅ Implemented | ω in TT format |
+| weno_tt_reconstruct | `cfd/weno_tt.py` | ✅ Implemented | WENO-TT face reconstruction |
+| euler_weno_tt_flux | `cfd/weno_tt.py` | ✅ Implemented | Euler fluxes in TT format |
+| MPSState | `cfd/tt_cfd.py` | ✅ Implemented | CFD state [ρ,ρu,E] in MPS |
+| EulerMPO | `cfd/tt_cfd.py` | ✅ Implemented | Euler equations as MPO |
+| tdvp_euler_step | `cfd/tt_cfd.py` | ✅ Implemented | TDVP time evolution |
+| TT_Euler1D | `cfd/tt_cfd.py` | ✅ Implemented | 1D TT Euler solver |
+| TT_Euler2D | `cfd/tt_cfd.py` | ✅ Implemented | 2D TT Euler solver |
+| check_conservation | `cfd/tt_cfd.py` | ✅ Implemented | Conservation verification |
+| ShockDetector | `cfd/adaptive_tt.py` | ✅ Implemented | Gradient/entropy shock detection |
+| BondAdapter | `cfd/adaptive_tt.py` | ✅ Implemented | Adaptive bond refinement |
+| AdaptiveTTEuler | `cfd/adaptive_tt.py` | ✅ Implemented | Full TT-AMR Euler solver |
+| EntanglementMonitor | `cfd/adaptive_tt.py` | ✅ Implemented | Track entropy evolution |
+
 ### C. Hamiltonian Library (`tensornet/mps/hamiltonians.py`)
 
 | Model | Function | Bond Dim | Local Dim | Validation |
@@ -1091,6 +1122,21 @@ Project HyperTensor/
 | 4.2 | MPS Norm Gradient | Autograd | gradcheck | ✅ PASS |
 | 5.1 | Lanczos Eigenvalue | Algorithms | 6.22e-15 | ✅ PASS |
 | 5.2 | MPO Hermiticity | Algorithms | 0.0 | ✅ PASS |
+
+### Phase 21 Proofs (TT-CFD Core)
+
+| ID | Name | Category | Verification | Status |
+|----|------|----------|--------------|--------|
+| 21.1 | WENO5 Order Convergence | WENO/TENO | 5th-order on smooth functions | ⏳ PENDING |
+| 21.2 | WENO ENO Property | WENO/TENO | No oscillation at discontinuities | ⏳ PENDING |
+| 21.3 | TDVP Conservation | TT-CFD | Mass/momentum/energy conserved | ⏳ PENDING |
+| 21.4 | TDVP Sod Validation | TT-CFD | Match exact Riemann solution | ⏳ PENDING |
+
+**Proof Scripts:**
+- `proofs/proof_21_weno_order.py` - Convergence rate verification
+- `proofs/proof_21_weno_shock.py` - ENO property verification
+- `proofs/proof_21_tdvp_euler_conservation.py` - Conservation verification
+- `proofs/proof_21_tdvp_euler_sod.py` - Sod shock tube validation
 
 ### Benchmark Validations
 
