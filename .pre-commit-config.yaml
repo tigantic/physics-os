@@ -1,4 +1,4 @@
-| VIII | Performance Standards | ⚠️ PARTIAL | 80% |# Pre-commit Configuration
+# Pre-commit Configuration
 # Constitutional Compliance: Article VII, Section 7.3
 
 # Install: pip install pre-commit && pre-commit install
