@@ -286,11 +286,12 @@ class DMDModel(ReducedOrderModel):
         # Eigendecomposition of Atilde
         eigenvalues, W = torch.linalg.eig(Atilde)
         
-        # DMD modes
-        modes = Y @ V_r @ torch.diag(1.0 / S_r) @ W
+        # DMD modes - convert to complex for matrix multiply with complex W
+        diag_inv_S = torch.diag(1.0 / S_r).to(W.dtype)
+        modes = Y.to(W.dtype) @ V_r.to(W.dtype) @ diag_inv_S @ W
         
-        # Store real parts (for real-valued systems)
-        self.modes = modes.real
+        # Store complex modes and eigenvalues
+        self.modes = modes
         self.eigenvalues = eigenvalues
         self.singular_values = S
         
