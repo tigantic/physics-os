@@ -1,10 +1,10 @@
 {
   "proof_id": "21.6",
   "name": "Dense Materialization Audit (Hardened)",
-  "timestamp": "2025-12-22T11:33:53.858893",
+  "timestamp": "2025-12-22T15:13:11.213387",
   "claim_scope": {
-    "storage": "O(N\u00b7d\u00b7\u03c7\u00b2) - PROVEN by core counts",
-    "no_dense_grid": "O(N\u00b2), O(N\u00b3) forbidden - ENFORCED by guard",
+    "storage": "O(N\u00b7d\u00b7chi^2) - PROVEN by core counts",
+    "no_dense_grid": "O(N^2), O(N\u00b3) forbidden - ENFORCED by guard",
     "diagnostics_allowed": "O(N\u00b7d) vectors OK (per-site, primitives)",
     "runtime": "Empirically sub-dense - NOT proven here"
   },
@@ -56,11 +56,11 @@
       "total_violations": 0,
       "critical_violations": 0,
       "passed": true,
-      "note": "MPS ops are O(N\u00b7\u03c7\u00b2); O(N\u00b7d) diagnostics allowed, O(N\u00b2+) forbidden"
+      "note": "MPS ops are O(N\u00b7chi^2); O(N\u00b7d) diagnostics allowed, O(N^2+) forbidden"
     },
     {
       "test": "complexity_storage_bound",
-      "claim": "Storage is O(N\u00b7d\u00b7\u03c7\u00b2)",
+      "claim": "Storage is O(N\u00b7d\u00b7chi^2)",
       "results": {
         "N32_chi4": {
           "storage": 828,

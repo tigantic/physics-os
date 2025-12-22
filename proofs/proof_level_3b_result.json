@@ -1,0 +1,37 @@
+{
+  "level": "3B",
+  "name": "Singularity Hunting",
+  "passed": 4,
+  "total": 4,
+  "timestamp": "2025-12-22T15:43:36.100938",
+  "gates": {
+    "gate_1_gradient_ascent": {
+      "passed": true,
+      "initial_enstrophy": 1221.8715486561164,
+      "final_enstrophy": 1229.50361591885,
+      "iterations": 15,
+      "verdict": "BOUNDED"
+    },
+    "gate_2_smooth_ic": {
+      "passed": true,
+      "max_divergence": 1.2545520178264269e-14,
+      "mean_enstrophy": 659.9324005005695,
+      "ic_variance": 30.418815939360684,
+      "n_samples": 5
+    },
+    "gate_3_chi_response": {
+      "passed": true,
+      "chi_min": 48,
+      "chi_max": 48,
+      "chi_variation": 0.0,
+      "n_samples": 20
+    },
+    "gate_4_stability": {
+      "passed": true,
+      "steps_completed": 101,
+      "expected_steps": 101,
+      "completion_ratio": 1.0,
+      "has_nan": false
+    }
+  }
+}
