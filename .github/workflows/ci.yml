@@ -101,8 +101,8 @@ if coverage < 80:
 
     - name: Run benchmarks
       run: |
-        python -m Physics.benchmarks.heisenberg_ground_state || echo "Benchmark completed"
-        python -m Physics.benchmarks.tfim_ground_state || echo "Benchmark completed"
+        python benchmarks/heisenberg_ground_state.py || echo "Benchmark completed"
+        python benchmarks/tfim_ground_state.py || echo "Benchmark completed"
 
     - name: Run CFD validations
       run: |

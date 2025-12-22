@@ -12,7 +12,7 @@ Constitutional Compliance:
 import platform
 import psutil
 import torch
-from tensornet import dmrg, heisenberg_mpo, MPS
+from tensornet import dmrg, heisenberg_mpo
 
 
 def get_hardware_specs() -> dict:
@@ -68,9 +68,9 @@ def main():
     
     for L in [6, 8, 10, 12, 14]:
         H = heisenberg_mpo(L=L, J=1.0, h=0.0)
-        psi = MPS.random(L=L, d=2, chi=32)
         
-        psi_opt, E, info = dmrg(psi, H, num_sweeps=20, chi_max=32, tol=1e-10)
+        result = dmrg(H, chi_max=32, num_sweeps=20, tol=1e-10)
+        E = result.energy
         
         exact = exact_heisenberg_E0(L)
         if exact:
