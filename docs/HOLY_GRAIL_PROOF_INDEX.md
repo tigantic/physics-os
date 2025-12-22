@@ -18,13 +18,15 @@
 ### The Distinction That Matters
 
 ```
-Linear TT (tt_cfd.py):    N sites → O(N · χ²) storage
-QTT (qtt_cfd.py):         log₂N sites → O(log N · χ²) storage
+Linear TT (tt_cfd.py):    N sites → O(N · d · χ²) storage
+QTT (qtt_cfd.py):         log₂N sites → O(log N · d · χ²) storage
 
-For N=256, χ=16:
-  Dense:     768 elements
-  Linear TT: ~1,692 elements (overhead vs dense!)
-  QTT:       ~36 elements (32x smaller than Linear TT)
+For N=256, χ=16, d=3:
+  Dense:     768 elements      (N · d)
+  Linear TT: 196,608 elements  (N · d · χ² = 256 · 3 · 256)
+  QTT:       12,288 elements   (log₂N · d · χ² = 8 · 3 · 256)
+
+QTT is 16x smaller than Linear TT (log₂N / N = 8/256 = 1/32)
 ```
 
 **Bottom Line:**
