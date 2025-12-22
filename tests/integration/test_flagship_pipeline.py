@@ -5,6 +5,7 @@ This test ensures the flagship pipeline runs end-to-end and produces
 verifiable evidence artifacts.
 """
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -21,6 +22,9 @@ class TestFlagshipPipeline:
         self.project_root = Path(__file__).parent.parent.parent
         self.demos_dir = self.project_root / "demos"
         self.evidence_dir = self.project_root / "evidence" / "flagship_pack"
+        # Set UTF-8 encoding for Windows subprocess
+        self.env = os.environ.copy()
+        self.env['PYTHONIOENCODING'] = 'utf-8'
     
     def test_flagship_runs_without_error(self):
         """Flagship pipeline completes without raising exceptions."""
@@ -29,7 +33,8 @@ class TestFlagshipPipeline:
             capture_output=True,
             text=True,
             timeout=300,
-            cwd=self.project_root
+            cwd=self.project_root,
+            env=self.env
         )
         
         # Check for successful completion
@@ -42,7 +47,8 @@ class TestFlagshipPipeline:
             [sys.executable, str(self.demos_dir / "flagship_pipeline.py")],
             capture_output=True,
             timeout=300,
-            cwd=self.project_root
+            cwd=self.project_root,
+            env=self.env
         )
         
         # Check evidence artifacts
@@ -58,7 +64,8 @@ class TestFlagshipPipeline:
             [sys.executable, str(self.demos_dir / "flagship_pipeline.py")],
             capture_output=True,
             timeout=300,
-            cwd=self.project_root
+            cwd=self.project_root,
+            env=self.env
         )
         
         # Run verification
@@ -69,7 +76,8 @@ class TestFlagshipPipeline:
                 capture_output=True,
                 text=True,
                 timeout=60,
-                cwd=self.evidence_dir
+                cwd=self.evidence_dir,
+                env=self.env
             )
             
             assert result.returncode == 0, f"Verification failed:\n{result.stdout}"
@@ -84,7 +92,8 @@ class TestFlagshipPipeline:
             [sys.executable, str(self.demos_dir / "flagship_pipeline.py")],
             capture_output=True,
             timeout=300,
-            cwd=self.project_root
+            cwd=self.project_root,
+            env=self.env
         )
         
         data_dir = self.evidence_dir / "data"
