@@ -11,9 +11,9 @@
 
 | Module | Format | Storage Complexity | Status |
 |--------|--------|-------------------|--------|
-| **qtt_cfd.py** (NEW) | QTT (log₂N sites) | **O(log N · χ²)** | VERIFIED |
+| **qtt_cfd.py** (NEW) | QTT (log₂N sites) | **O(log N · d · χ²)** | VERIFIED |
 | **tt_cfd.py** | Linear TT (N sites) | O(N · d · χ²) | Linear mode |
-| **qtt.py** | QTT compression | O(log N · χ²) | Turbo encoder |
+| **qtt.py** | QTT compression | O(log N · d · χ²) | Turbo encoder |
 
 ### The Distinction That Matters
 
@@ -45,7 +45,7 @@ This document indexes all formal proofs in the HyperTensor framework. The proofs
 | **Linear TT Storage: O(N·d·χ²)** | PROVEN | Core element counts verify bound |
 | **No Dense Grid O(N²+)** | ENFORCED | Dense guard raises on violation |
 | **O(N·d) Diagnostics** | ALLOWED | Per-site values, primitives OK |
-| **QTT Storage: O(log N · χ²)** | IMPLEMENTED | `qtt_cfd.py` uses QTT format |
+| **QTT Storage: O(log N · d · χ²)** | IMPLEMENTED | `qtt_cfd.py` uses QTT format |
 | **Runtime** | EMPIRICAL | No formal proof; no blowups observed |
 
 ---
@@ -56,7 +56,7 @@ This document indexes all formal proofs in the HyperTensor framework. The proofs
 ┌─────────────────────────────────────────────────────────────────────┐
 │                        HYPERTENSOR STACK                            │
 ├─────────────────────────────────────────────────────────────────────┤
-│  qtt_cfd.py    │  QTT_Euler1D  │  O(log N · χ²)  │  TURBO MODE     │
+│  qtt_cfd.py    │  QTT_Euler1D  │  O(log N·d·χ²) │  TURBO MODE     │
 ├─────────────────────────────────────────────────────────────────────┤
 │  tt_cfd.py     │  TT_Euler1D   │  O(N · d · χ²)  │  Linear mode    │
 ├─────────────────────────────────────────────────────────────────────┤
@@ -128,8 +128,11 @@ This document indexes all formal proofs in the HyperTensor framework. The proofs
 **Purpose:** Validates CFD solvers satisfy fundamental conservation laws
 
 **Tests:**
-- `test_euler1d_mass_conservation` — ∫ρ dx = constant
-- `test_euler1d_closed_system_conservation` — Full conservation in periodic domain
+- `test_euler1d_mass_conservation` — Mass integral conserved
+- `test_euler1d_periodic_conservation` — Full conservation in periodic domain
+- `test_rankine_hugoniot_shock_relations` — Shock jump conditions
+- `test_entropy_condition` — Entropy inequality satisfied
+- `test_flux_consistency` — Flux function consistency
 
 **Key Claims Verified:**
 - Mass conservation: ∫ρ dx = constant
@@ -140,17 +143,15 @@ This document indexes all formal proofs in the HyperTensor framework. The proofs
 
 ### 5. [proof_21_weno_order.py](../proofs/proof_21_weno_order.py) — WENO 5th-Order Convergence
 
-**Purpose:** Verifies WENO5-JS and WENO5-Z schemes achieve 5th-order convergence
+**Purpose:** Verifies WENO5 schemes achieve design-order convergence
 
 **Tests:**
-- `test_weno5_js_convergence` — WENO5-JS on smooth data
-- `test_weno5_z_convergence` — WENO5-Z on smooth data
-- `test_smooth_function_sin` — sin(2πx) test
-- `test_smooth_function_polynomial` — x⁵ - x³ + x test
+- `test_weno_convergence` — WENO5 convergence on smooth data
+- `test_smoothness_indicators` — Smoothness indicator correctness
 
 **Key Claims Verified:**
-- Convergence rate ≥ 4.5 (5th order expected)
-- Both JS and Z variants achieve design order
+- Convergence rate approaches 5th order on smooth data
+- Smoothness indicators correctly detect discontinuities
 
 ---
 
@@ -159,11 +160,8 @@ This document indexes all formal proofs in the HyperTensor framework. The proofs
 **Purpose:** Verifies WENO schemes produce no spurious oscillations at discontinuities
 
 **Tests:**
-- `test_pure_discontinuity` — Single shock
-- `test_two_discontinuities` — Multiple shocks
-- `test_sod_shock_tube_density` — Physical problem
-- `test_oscillation_detection` — Spurious oscillation detection
-- `test_undershoot_overshoot` — Bound preservation
+- `test_eno_property` — ENO property (no new extrema at shocks)
+- `test_teno_sharpness` — TENO scheme sharpness preservation
 
 **Key Claims Verified:**
 - No new extrema introduced at discontinuities
@@ -176,8 +174,11 @@ This document indexes all formal proofs in the HyperTensor framework. The proofs
 **Purpose:** Verifies TT-CFD framework data structure correctness
 
 **Tests:**
-- `test_mps_encode_decode` — MPSState correctly encodes/decodes primitives
-- `test_conservation_quantities` — Conservation integrals computed correctly
+- `test_mps_state_roundtrip` — MPSState correctly encodes/decodes primitives
+- `test_conservation_check` — Conservation integrals computed correctly
+- `test_euler_mpo_construction` — Euler MPO correctly formed
+- `test_tt_euler_1d_init` — TT_Euler1D initialization
+- `test_sod_initialization` — Sod IC in TT format
 
 **Key Claims Verified:**
 - MPS format correctly represents CFD state
@@ -190,8 +191,11 @@ This document indexes all formal proofs in the HyperTensor framework. The proofs
 **Purpose:** Verifies TT-native Euler solver initializes correctly
 
 **Tests:**
-- `test_sod_initial_conditions` — Correct IC structure
-- `test_solver_mps_properties` — Correct MPS properties
+- `test_sod_initial_structure` — Correct IC structure
+- `test_solver_state_properties` — Correct MPS properties
+- `test_mpo_state_compatibility` — MPO/state compatibility
+- `test_density_ratio` — Correct density jump ratio
+- `test_energy_consistency` — Energy from EOS
 
 **Key Claims Verified:**
 - Sod shock tube IC correctly initialized
@@ -204,10 +208,10 @@ This document indexes all formal proofs in the HyperTensor framework. The proofs
 **Purpose:** CRITICAL verification that TT_Euler1D performs time evolution in TT format
 
 **Tests:**
-- `test_tt_evolution_produces_dynamics` — Non-trivial state changes
+- `test_tt_euler_time_evolution` — Non-trivial state changes
 - `test_bond_dimension_effect` — χ controls TT representation
 - `test_complexity_scaling` — O(N·χ²) scaling verified
-- `test_mps_compression` — MPS maintains compressed form
+- `test_mps_actually_compressed` — MPS maintains compressed form
 
 **Key Claims Verified:**
 - TT_Euler1D.step() produces non-trivial dynamics
@@ -280,6 +284,8 @@ diagnostic_allowed = N * d * 10 (O(N·d) vectors OK)
 - `proof_23_1` — TMR bit flip correction
 - `proof_23_2` — Conservation watchdog detection
 - `proof_23_3` — Checkpoint rollback recovery
+- `proof_23_4` — Fault injection resilience
+- `proof_23_5` — Graceful degradation
 
 **Key Claims Verified:**
 - Triple Modular Redundancy detects and corrects single bit flips
