@@ -4,8 +4,8 @@ Proof 21.6: Dense Materialization Audit
 ========================================
 
 CLAIM SCOPE (precisely stated for reviewers):
-    ✅ STORAGE: O(N·d·χ²) - verified by core element counts
-    ✅ NO DENSE GRID: O(N²), O(N³), etc. forbidden - enforced by guard
+    ✅ STORAGE: O(N·d·chi^2) - verified by core element counts
+    ✅ NO DENSE GRID: O(N^2), O(N³), etc. forbidden - enforced by guard
     ✅ O(N·d) DIAGNOSTICS: Allowed (per-site values, primitives)
     ⚠️ RUNTIME: "Empirically sub-dense" - not proven here
 
@@ -14,8 +14,8 @@ GUARD ENFORCEMENT:
     - DIAGNOSTIC MODE (forbid=False): Logs and reports
     
     Thresholds:
-        - hard_threshold = N * d * χ² (the O(N·d·χ²) claim)
-        - soft_threshold = 0.1 * N * d * χ² (flags suspicious but not fatal)
+        - hard_threshold = N * d * chi^2 (the O(N·d·chi^2) claim)
+        - soft_threshold = 0.1 * N * d * chi^2 (flags suspicious but not fatal)
         - diagnostic_allowed = N * d * 10 (O(N·d) vectors always OK)
 
 MONITORED OPERATIONS (addressing reviewer concerns):
@@ -31,7 +31,7 @@ KILLER TEST:
 Pass Criteria:
     - All TT operations complete with 0 CRITICAL violations
     - Guard demonstrably catches forced violations (not ceremonial)
-    - TT cores maintain O(N·d·χ²) storage bound
+    - TT cores maintain O(N·d·chi^2) storage bound
 """
 
 import json
@@ -63,7 +63,7 @@ def test_tt_step_no_dense_proof_mode():
     chi_max = 16
     n_steps = 10
     
-    # Thresholds: match O(N·d·χ²) claim EXACTLY
+    # Thresholds: match O(N·d·chi^2) claim EXACTLY
     hard_threshold = N * d * chi_max * chi_max  # 49,152 - the claim
     soft_threshold = int(0.1 * hard_threshold)  # 4,915 - flags for review
     
@@ -303,7 +303,7 @@ def test_mps_operations_no_dense():
     
     CLARIFICATION for reviewers:
         - O(N·d) diagnostic vectors ARE ALLOWED (per-site values, primitives)
-        - O(N²), O(N³) dense grids are FORBIDDEN
+        - O(N^2), O(N³) dense grids are FORBIDDEN
     """
     from tensornet.cfd.tt_cfd import MPSState
     from tensornet.core.dense_guard import DenseMaterializationGuard
@@ -312,7 +312,7 @@ def test_mps_operations_no_dense():
     d = 3  # ρ, u, p
     chi_max = 16
     
-    # Thresholds: O(N·d·χ²) is the bound
+    # Thresholds: O(N·d·chi^2) is the bound
     hard_threshold = N * d * chi_max * chi_max  # 49,152
     soft_threshold = int(0.1 * hard_threshold)
     
@@ -341,14 +341,14 @@ def test_mps_operations_no_dense():
             # (It's a diagnostic, not a dense grid)
             state = mps._extract_site_values()
             
-            # These observables use O(N) sweeps, not O(N²) dense
+            # These observables use O(N) sweeps, not O(N^2) dense
             mass = mps.total_mass()
             energy = mps.total_energy()
             
             # to_primitive returns O(N) vectors per variable - ALLOWED
             rho2, u2, p2 = mps.to_primitive(gamma)
             
-            # Norm is O(N·χ²) contraction
+            # Norm is O(N·chi^2) contraction
             n = mps.norm()
         
         return {
@@ -359,7 +359,7 @@ def test_mps_operations_no_dense():
             'total_violations': guard.violations,
             'critical_violations': guard.critical_violations,
             'passed': guard.critical_violations == 0,
-            'note': 'MPS ops are O(N·χ²); O(N·d) diagnostics allowed, O(N²+) forbidden'
+            'note': 'MPS ops are O(N·chi^2); O(N·d) diagnostics allowed, O(N^2+) forbidden'
         }
         
     except RuntimeError as e:
@@ -368,7 +368,7 @@ def test_mps_operations_no_dense():
                 'test': 'mps_operations_no_dense',
                 'error': str(e),
                 'passed': False,
-                'note': 'CRITICAL: MPS operation violated O(N·d·χ²) bound!'
+                'note': 'CRITICAL: MPS operation violated O(N·d·chi^2) bound!'
             }
         raise
     except Exception as e:
@@ -381,9 +381,9 @@ def test_mps_operations_no_dense():
 
 def test_complexity_storage_bound():
     """
-    Verify that TT storage satisfies O(N·d·χ²) bound.
+    Verify that TT storage satisfies O(N·d·chi^2) bound.
     
-    CLAIM: Storage is O(N·d·χ²)
+    CLAIM: Storage is O(N·d·chi^2)
     This is the ROCK-SOLID part of the complexity claim.
     """
     from tensornet.cfd.tt_cfd import TT_Euler1D
@@ -424,7 +424,7 @@ def test_complexity_storage_bound():
     
     return {
         'test': 'complexity_storage_bound',
-        'claim': 'Storage is O(N·d·χ²)',
+        'claim': 'Storage is O(N·d·chi^2)',
         'results': results,
         'passed': all_passed,
         'note': 'Storage bound is the ROCK-SOLID part of the claim'
@@ -438,8 +438,8 @@ def run_all_proofs():
         'name': 'Dense Materialization Audit (Hardened)',
         'timestamp': datetime.now().isoformat(),
         'claim_scope': {
-            'storage': 'O(N·d·χ²) - PROVEN by core counts',
-            'no_dense_grid': 'O(N²), O(N³) forbidden - ENFORCED by guard',
+            'storage': 'O(N·d·chi^2) - PROVEN by core counts',
+            'no_dense_grid': 'O(N^2), O(N³) forbidden - ENFORCED by guard',
             'diagnostics_allowed': 'O(N·d) vectors OK (per-site, primitives)',
             'runtime': 'Empirically sub-dense - NOT proven here'
         },
@@ -451,8 +451,8 @@ def run_all_proofs():
     print("=" * 70)
     print()
     print("CLAIM SCOPE:")
-    print("  ✅ Storage: O(N·d·χ²) - verified by core element counts")
-    print("  ✅ No Dense Grid: O(N²+) forbidden - enforced by guard")
+    print("  ✅ Storage: O(N·d·chi^2) - verified by core element counts")
+    print("  ✅ No Dense Grid: O(N^2+) forbidden - enforced by guard")
     print("  ✅ O(N·d) Diagnostics: Allowed (per-site values, primitives)")
     print("  ⚠️  Runtime: Empirically sub-dense - not proven here")
     print()
@@ -462,7 +462,7 @@ def run_all_proofs():
         ('🔒 TT Step - PROOF MODE (forbid=True)', test_tt_step_no_dense_proof_mode),
         ('📊 TT Solve - DIAGNOSTIC MODE', test_tt_solve_no_dense),
         ('🔒 MPS Operations - PROOF MODE', test_mps_operations_no_dense),
-        ('📏 Storage Bound O(N·d·χ²)', test_complexity_storage_bound),
+        ('📏 Storage Bound O(N·d·chi^2)', test_complexity_storage_bound),
     ]
     
     all_passed = True
@@ -520,11 +520,11 @@ def run_all_proofs():
         print("PROOF 21.6: ✅ PASSED")
         print()
         print("🏆 CLAIMS PROVEN BEYOND DISPUTE:")
-        print("   • Storage: O(N·d·χ²) verified")
-        print("   • No O(N²+) dense grid materialization")
+        print("   • Storage: O(N·d·chi^2) verified")
+        print("   • No O(N^2+) dense grid materialization")
         print("   • Guard enforcement is REAL (killer test passed)")
         print()
-        print("⚠️  RUNTIME O(N·χ²) is empirical, not proven here")
+        print("⚠️  RUNTIME O(N·chi^2) is empirical, not proven here")
     else:
         print("PROOF 21.6: ❌ FAILED")
         print()

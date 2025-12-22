@@ -4,13 +4,13 @@ PHASE 5: BLOWUP DETECTION & PREVENTION
 =======================================
 
 Mathematical proofs for detecting and preventing finite-time blowup
-through χ monitoring and adaptive resolution control.
+through chi monitoring and adaptive resolution control.
 
 Gate 1: Blowup Indicator Sensitivity
-    - χ growth rate detects approaching singularity
+    - chi growth rate detects approaching singularity
     
 Gate 2: Adaptive Resolution Response
-    - System increases χ_target when needed
+    - System increases chi_target when needed
     
 Gate 3: Prevention via Regularization
     - Increased viscosity/resolution prevents blowup
@@ -36,10 +36,10 @@ def gate_blowup_indicator_sensitivity():
     """
     Gate 1: Blowup Indicator Sensitivity.
     
-    The χ growth rate and spectral radius should increase
+    The chi growth rate and spectral radius should increase
     before enstrophy/energy blowup.
     
-    Test: Create flow with growing gradients, verify χ detects it.
+    Test: Create flow with growing gradients, verify chi detects it.
     """
     from tensornet.cfd.ns_2d import NS2DSolver
     from tensornet.cfd.chi_diagnostic import compute_chi_state_2d, ChiTrajectory
@@ -105,11 +105,11 @@ def gate_blowup_indicator_sensitivity():
     
     sensitivity_detected = spectral_variation > 0.01  # At least 1% variation
     
-    print(f"χ growth rate detected: {chi_growth_detected}")
+    print(f"chi growth rate detected: {chi_growth_detected}")
     print(f"Spectral max at step: {spectral_max_idx}")
     print(f"Gradient max at step: {gradient_max_idx}")
     print(f"Early warning (spectral before gradient): {early_warning}")
-    print(f"χ variation: {chi_variation:.4f}")
+    print(f"chi variation: {chi_variation:.4f}")
     print(f"Spectral variation: {spectral_variation:.4f}")
     print(f"Sensitivity detected: {sensitivity_detected}")
     
@@ -133,8 +133,8 @@ def gate_adaptive_resolution_response():
     """
     Gate 2: Adaptive Resolution Response.
     
-    When χ_actual approaches χ_target, the system should respond.
-    Verify χ_ratio tracking enables adaptive decisions.
+    When chi_actual approaches chi_target, the system should respond.
+    Verify chi_ratio tracking enables adaptive decisions.
     """
     from tensornet.cfd.ns_2d import NS2DSolver
     from tensornet.cfd.chi_diagnostic import compute_chi_state_2d, ChiTrajectory
@@ -206,11 +206,11 @@ def gate_adaptive_resolution_response():
     avg_ratio_high = np.mean([s.chi_ratio for s in trajectory_high.states])
     ratio_higher_at_low = avg_ratio_low > avg_ratio_high
     
-    print(f"χ_target=4: saturation events = {saturation_count_low}")
-    print(f"χ_target=64: saturation events = {saturation_count_high}")
+    print(f"chi_target=4: saturation events = {saturation_count_low}")
+    print(f"chi_target=64: saturation events = {saturation_count_high}")
     print(f"More saturation at low target: {more_saturation_at_low}")
-    print(f"Avg χ_ratio at low target: {avg_ratio_low:.4f}")
-    print(f"Avg χ_ratio at high target: {avg_ratio_high:.4f}")
+    print(f"Avg chi_ratio at low target: {avg_ratio_low:.4f}")
+    print(f"Avg chi_ratio at high target: {avg_ratio_high:.4f}")
     print(f"Higher ratio at low target: {ratio_higher_at_low}")
     
     success = more_saturation_at_low and ratio_higher_at_low
@@ -234,7 +234,7 @@ def gate_prevention_via_regularization():
     Gate 3: Prevention via Regularization.
     
     Increased viscosity prevents gradient blowup.
-    Higher ν → faster decay → bounded gradients.
+    Higher nu -> faster decay -> bounded gradients.
     """
     from tensornet.cfd.ns_2d import NS2DSolver
     from tensornet.cfd.chi_diagnostic import compute_chi_state_2d
@@ -285,7 +285,7 @@ def gate_prevention_via_regularization():
             'decay_ratio': float(decay_ratio)
         }
         
-        print(f"ν={nu:.2f}: grad_final/grad_initial = {decay_ratio:.4f}")
+        print(f"nu={nu:.2f}: grad_final/grad_initial = {decay_ratio:.4f}")
     
     # Higher viscosity should give stronger decay
     nu_values = sorted(results.keys())
@@ -301,8 +301,8 @@ def gate_prevention_via_regularization():
     # High viscosity should strongly damp compared to low viscosity
     high_nu_damps = results[0.1]['decay_ratio'] < results[0.01]['decay_ratio']
     
-    print(f"\nMonotonic decrease with ν (5% tol): {monotonic_decrease}")
-    print(f"High ν (0.1) damps more than low ν (0.01): {high_nu_damps}")
+    print(f"\nMonotonic decrease with nu (5% tol): {monotonic_decrease}")
+    print(f"High nu (0.1) damps more than low nu (0.01): {high_nu_damps}")
     
     success = monotonic_decrease and high_nu_damps
     
@@ -321,8 +321,8 @@ def gate_warning_system_timing():
     """
     Gate 4: Warning System Timing.
     
-    The χ diagnostic should provide early warning of gradient growth.
-    Track when χ_ratio exceeds thresholds vs when enstrophy peaks.
+    The chi diagnostic should provide early warning of gradient growth.
+    Track when chi_ratio exceeds thresholds vs when enstrophy peaks.
     """
     from tensornet.cfd.ns_2d import NS2DSolver
     from tensornet.cfd.chi_diagnostic import compute_chi_state_2d, ChiTrajectory
@@ -395,11 +395,11 @@ def gate_warning_system_timing():
     warning_is_early = (warning_step is None) or (enstrophy_peak_step == 0) or \
                        (warning_step <= enstrophy_peak_step + 10)
     
-    print(f"Warning threshold: χ_ratio > {warning_threshold}")
+    print(f"Warning threshold: chi_ratio > {warning_threshold}")
     print(f"Warning triggered at step: {warning_step}")
     print(f"Enstrophy peak at step: {enstrophy_peak_step}")
     print(f"Spectral warning at step: {spectral_warning_step}")
-    print(f"Max χ_ratio: {chi_ratios.max():.4f}")
+    print(f"Max chi_ratio: {chi_ratios.max():.4f}")
     print(f"Warning is early: {warning_is_early}")
     
     # Success: system has warning capability
@@ -477,11 +477,11 @@ def run_all_proofs():
         }, f, indent=2)
     
     if passed_count == total:
-        print(f"\n✓ PHASE 5 COMPLETE: Blowup detection & prevention validated")
+        print(f"\nPASS PHASE 5 COMPLETE: Blowup detection & prevention validated")
         print("=" * 60)
         return 0
     else:
-        print(f"\n✗ PHASE 5 INCOMPLETE: Some gates failed")
+        print(f"\nFAIL PHASE 5 INCOMPLETE: Some gates failed")
         print("=" * 60)
         return 1
 

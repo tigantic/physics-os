@@ -36,7 +36,7 @@ def record_proof(name: str, passed: bool, details: dict):
         "passed": passed,
         "details": details
     })
-    status = "✓ PASSED" if passed else "✗ FAILED"
+    status = "PASS PASSED" if passed else "FAIL FAILED"
     print(f"  {status}: {name}")
     if not passed:
         print(f"    Details: {details}")
@@ -130,11 +130,11 @@ def proof_23_2_tmr_multiple_flips():
     result, events = voter.vote_with_detection(t1, t2, t3)
     
     # For median voting:
-    # pos 0: [100, 1, 1] -> median = 1 ✓
-    # pos 1: [2, 2, 2] -> median = 2 ✓
-    # pos 2: [3, 200, 3] -> median = 3 ✓
-    # pos 3: [4, 4, 4] -> median = 4 ✓
-    # pos 4: [5, 5, 300] -> median = 5 ✓
+    # pos 0: [100, 1, 1] -> median = 1 PASS
+    # pos 1: [2, 2, 2] -> median = 2 PASS
+    # pos 2: [3, 200, 3] -> median = 3 PASS
+    # pos 3: [4, 4, 4] -> median = 4 PASS
+    # pos 4: [5, 5, 300] -> median = 5 PASS
     
     error = torch.abs(result - correct_value).max().item()
     all_corrected = error < 1e-10

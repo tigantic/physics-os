@@ -25,14 +25,14 @@ PROOF_RESULTS = {}
 
 def gate_velocity_to_qtt():
     """
-    Gate 1: Verify velocity field compresses to QTT with low χ.
+    Gate 1: Verify velocity field compresses to QTT with low chi.
     
-    For smooth Taylor-Green vortex, χ should be small.
+    For smooth Taylor-Green vortex, chi should be small.
     """
     from tensornet.cfd.qtt import field_to_qtt, qtt_to_field
     
     print("\n" + "=" * 60)
-    print("Gate 1: Velocity Field → QTT Compression")
+    print("Gate 1: Velocity Field -> QTT Compression")
     print("=" * 60)
     
     N = 64
@@ -61,8 +61,8 @@ def gate_velocity_to_qtt():
     max_chi_u = max(result_u.bond_dimensions)
     max_chi_v = max(result_v.bond_dimensions)
     
-    print(f"u field: max χ = {max_chi_u}, compression = {result_u.compression_ratio:.1f}x")
-    print(f"v field: max χ = {max_chi_v}, compression = {result_v.compression_ratio:.1f}x")
+    print(f"u field: max chi = {max_chi_u}, compression = {result_u.compression_ratio:.1f}x")
+    print(f"v field: max chi = {max_chi_v}, compression = {result_v.compression_ratio:.1f}x")
     print(f"Reconstruction error u: {error_u:.2e}")
     print(f"Reconstruction error v: {error_v:.2e}")
     
@@ -121,11 +121,11 @@ def gate_compression_ratio():
     u_random = torch.randn(N, N)
     result_random = field_to_qtt(u_random, chi_max=64, tol=1e-10)
     
-    print(f"Single mode: χ_max = {max(result_smooth.bond_dimensions)}, "
+    print(f"Single mode: chi_max = {max(result_smooth.bond_dimensions)}, "
           f"compression = {result_smooth.compression_ratio:.1f}x")
-    print(f"Multi-mode:  χ_max = {max(result_multi.bond_dimensions)}, "
+    print(f"Multi-mode:  chi_max = {max(result_multi.bond_dimensions)}, "
           f"compression = {result_multi.compression_ratio:.1f}x")
-    print(f"Random:      χ_max = {max(result_random.bond_dimensions)}, "
+    print(f"Random:      chi_max = {max(result_random.bond_dimensions)}, "
           f"compression = {result_random.compression_ratio:.1f}x")
     
     # Smooth should compress more
@@ -172,11 +172,11 @@ def gate_laplacian_mpo():
     y = torch.linspace(0, L, N+1)[:-1]
     X, Y = torch.meshgrid(x, y, indexing='ij')
     
-    # Test function: sin(x)sin(y) has eigenvalue -2 for ∇²
-    # ∇²[sin(x)sin(y)] = -sin(x)sin(y) - sin(x)sin(y) = -2 sin(x)sin(y)
+    # Test function: sin(x)sin(y) has eigenvalue -2 for nabla^2
+    # nabla^2[sin(x)sin(y)] = -sin(x)sin(y) - sin(x)sin(y) = -2 sin(x)sin(y)
     f = torch.sin(X) * torch.sin(Y)
     
-    # Expected: ∇²f = -2f
+    # Expected: nabla^2f = -2f
     laplacian_exact = -2.0 * f
     
     # Spectral Laplacian
@@ -186,8 +186,8 @@ def gate_laplacian_mpo():
     error = (laplacian_spectral - laplacian_exact).abs().max().item()
     rel_error = error / laplacian_exact.abs().max().item()
     
-    print(f"Exact ∇²f max: {laplacian_exact.abs().max().item():.4f}")
-    print(f"Spectral ∇²f max: {laplacian_spectral.abs().max().item():.4f}")
+    print(f"Exact nabla^2f max: {laplacian_exact.abs().max().item():.4f}")
+    print(f"Spectral nabla^2f max: {laplacian_spectral.abs().max().item():.4f}")
     print(f"Relative error: {rel_error:.2e}")
     
     # Test multi-mode function
@@ -217,7 +217,7 @@ def gate_tt_poisson():
     """
     Gate 4: Verify FFT Poisson solve accuracy.
     
-    Solve ∇²φ = f for known solution.
+    Solve nabla^2φ = f for known solution.
     """
     from tensornet.cfd.tt_poisson import poisson_solve_fft_2d
     
@@ -236,7 +236,7 @@ def gate_tt_poisson():
     X, Y = torch.meshgrid(x, y, indexing='ij')
     
     # Known solution: φ = sin(x)sin(y)
-    # RHS: f = ∇²φ = -2sin(x)sin(y)
+    # RHS: f = nabla^2φ = -2sin(x)sin(y)
     phi_exact = torch.sin(X) * torch.sin(Y)
     f = -2 * torch.sin(X) * torch.sin(Y)
     
@@ -289,7 +289,7 @@ def run_all_proofs():
     print("=" * 60)
     
     gates = [
-        ("Velocity → QTT", gate_velocity_to_qtt),
+        ("Velocity -> QTT", gate_velocity_to_qtt),
         ("Compression Ratio", gate_compression_ratio),
         ("Laplacian MPO", gate_laplacian_mpo),
         ("TT Poisson", gate_tt_poisson),
@@ -321,9 +321,9 @@ def run_all_proofs():
     print(f"\nTotal: {passed}/{total} gates passed")
     
     if passed == total:
-        print("\n✓ PHASE 2 COMPLETE: TT-NS integration validated")
+        print("\nPASS PHASE 2 COMPLETE: TT-NS integration validated")
     else:
-        print("\n✗ PHASE 2 INCOMPLETE: Some gates failed")
+        print("\nFAIL PHASE 2 INCOMPLETE: Some gates failed")
     
     print("=" * 60)
     

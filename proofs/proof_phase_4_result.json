@@ -2,8 +2,8 @@
   "phase": 4,
   "title": "Global Regularity Framework",
   "summary": {
-    "\u03c7 Boundedness": "PASS",
-    "Enstrophy-\u03c7 Relationship": "PASS",
+    "chi Boundedness": "PASS",
+    "Enstrophy-chi Relationship": "PASS",
     "Spectral Radius Tracking": "PASS",
     "Regularity Consistency": "PASS"
   },

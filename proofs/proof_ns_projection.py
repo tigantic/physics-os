@@ -7,10 +7,10 @@ incompressible Navier-Stokes simulation.
 
 Key Properties Verified:
 ------------------------
-1. POISSON CONVERGENCE: Discrete Laplacian has O(dx²) truncation error
+1. POISSON CONVERGENCE: Discrete Laplacian has O(dx^2) truncation error
 2. SELF-CONSISTENCY: solve(A, A@x) = x to machine precision
 3. PROJECTION GATE: Divergence after projection < 10⁻⁶
-4. SPECTRAL CONSISTENCY: ∇·∇φ = ∇²φ exactly in Fourier space
+4. SPECTRAL CONSISTENCY: nabla·nablaφ = nabla^2φ exactly in Fourier space
 
 Constitution Compliance: Article IV.1 (Verification)
 Tag: [PHASE-1A] [DECISION-005] [RISK-R8]
@@ -40,7 +40,7 @@ from tensornet.cfd.tt_poisson import (
 def prove_spectral_consistency():
     """
     Prove that spectral gradient and Laplacian are consistent:
-        ∇·(∇φ) = ∇²φ exactly in Fourier space.
+        nabla·(nablaφ) = nabla^2φ exactly in Fourier space.
     
     This is the foundation of machine-precision incompressibility.
     """
@@ -62,20 +62,20 @@ def prove_spectral_consistency():
         # Test function: φ = sin(2πkx)sin(2πky)
         phi = torch.sin(2 * math.pi * k * X) * torch.sin(2 * math.pi * k * Y)
         
-        # Compute ∇φ (spectral)
+        # Compute nablaφ (spectral)
         dphi_dx, dphi_dy = compute_gradient_2d(phi, dx, dy, method='spectral')
         
-        # Compute ∇·(∇φ) (spectral)
+        # Compute nabla·(nablaφ) (spectral)
         div_grad = compute_divergence_2d(dphi_dx, dphi_dy, dx, dy, method='spectral')
         
-        # Compute ∇²φ directly (spectral)
+        # Compute nabla^2φ directly (spectral)
         lap = laplacian_spectral_2d(phi, dx, dy)
         
         # They should be identical
         error = torch.abs(div_grad - lap).max().item()
         max_errors.append(error)
         
-        print(f"  k={k}: max|∇·∇φ - ∇²φ| = {error:.2e}")
+        print(f"  k={k}: max|nabla·nablaφ - nabla^2φ| = {error:.2e}")
     
     passed = all(e < 1e-10 for e in max_errors)
     print(f"\nSpectral consistency: {'PASS' if passed else 'FAIL'}")
@@ -84,14 +84,14 @@ def prove_spectral_consistency():
         'proof': 'spectral_consistency',
         'max_errors': max_errors,
         'passed': passed,
-        'explanation': 'Spectral ∇·∇φ = ∇²φ to machine precision',
+        'explanation': 'Spectral nabla·nablaφ = nabla^2φ to machine precision',
     }
 
 
 def prove_poisson_inversion():
     """
     Prove that FFT Poisson solve inverts spectral Laplacian exactly:
-        ∇²(solve(f)) = f to machine precision.
+        nabla^2(solve(f)) = f to machine precision.
     """
     print("\n" + "=" * 60)
     print("PROOF: Poisson Inversion")
@@ -117,7 +117,7 @@ def prove_poisson_inversion():
     # Should recover f
     error = torch.abs(lap_phi - f).max().item()
     
-    print(f"  max|∇²φ - f| = {error:.2e}")
+    print(f"  max|nabla^2φ - f| = {error:.2e}")
     
     passed = error < 1e-10
     print(f"\nPoisson inversion: {'PASS' if passed else 'FAIL'}")
@@ -134,10 +134,10 @@ def prove_helmholtz_decomposition():
     """
     Prove the Helmholtz decomposition:
         Any vector field u = u_div + u_curl where:
-        - u_div is irrotational (curl-free): u_div = ∇φ
-        - u_curl is solenoidal (div-free): ∇·u_curl = 0
+        - u_div is irrotational (curl-free): u_div = nablaφ
+        - u_curl is solenoidal (div-free): nabla·u_curl = 0
     
-    The projection step computes: u_curl = u - ∇φ where φ solves ∇²φ = ∇·u
+    The projection step computes: u_curl = u - nablaφ where φ solves nabla^2φ = nabla·u
     
     Note: For spectral methods, test data MUST be periodic.
     """

@@ -3,16 +3,16 @@
 PHASE 4: GLOBAL REGULARITY FRAMEWORK
 =====================================
 
-Mathematical proofs connecting χ(t) dynamics to NS regularity.
+Mathematical proofs connecting chi(t) dynamics to NS regularity.
 
-Gate 1: χ Boundedness Theorem
-    - If χ(t) ≤ C for all t ∈ [0,T], solution remains regular
+Gate 1: chi Boundedness Theorem
+    - If chi(t) <= C for all t ∈ [0,T], solution remains regular
     
-Gate 2: Enstrophy-χ Relationship  
-    - Verify Ω(t) ~ χ(t)² for NS flows
+Gate 2: Enstrophy-chi Relationship  
+    - Verify Omega(t) ~ chi(t)^2 for NS flows
     
 Gate 3: Spectral Radius Tracking
-    - λ_max tracks high-k mode growth (blowup indicator)
+    - lambda_max tracks high-k mode growth (blowup indicator)
     
 Gate 4: Regularity Assessment Consistency
     - analyze_regularity() produces consistent classifications
@@ -33,19 +33,19 @@ PROOF_RESULTS = {}
 
 def gate_chi_boundedness():
     """
-    Gate 1: χ Boundedness Theorem.
+    Gate 1: chi Boundedness Theorem.
     
-    For viscous NS with ν > 0:
-    - Bounded χ(t) implies bounded gradient norms
+    For viscous NS with nu > 0:
+    - Bounded chi(t) implies bounded gradient norms
     - Bounded gradients imply regularity (no blowup)
     
-    Test: Evolve Taylor-Green, verify χ stays bounded as solution decays.
+    Test: Evolve Taylor-Green, verify chi stays bounded as solution decays.
     """
     from tensornet.cfd.ns_2d import NS2DSolver
     from tensornet.cfd.chi_diagnostic import compute_chi_state_2d, ChiTrajectory
     
     print("\n" + "=" * 60)
-    print("Gate 1: χ Boundedness Theorem")
+    print("Gate 1: chi Boundedness Theorem")
     print("=" * 60)
     
     N = 64
@@ -71,21 +71,21 @@ def gate_chi_boundedness():
         trajectory.add(chi_state)
         chi_max_observed = max(chi_max_observed, chi_state.chi_actual)
     
-    # For Taylor-Green with viscosity, χ should decay (or stay bounded)
+    # For Taylor-Green with viscosity, chi should decay (or stay bounded)
     chi_initial = trajectory.chi_values[0]
     chi_final = trajectory.chi_values[-1]
     
-    # χ should be bounded by a constant times initial value
+    # chi should be bounded by a constant times initial value
     boundedness_ratio = chi_max_observed / chi_initial
     
     # Verify chi decreases (dissipation dominates)
     chi_decreasing = chi_final <= chi_initial * 1.1  # Allow small numerical noise
     
-    print(f"χ(0): {chi_initial:.4f}")
-    print(f"χ(T): {chi_final:.4f}")
-    print(f"χ_max observed: {chi_max_observed:.4f}")
+    print(f"chi(0): {chi_initial:.4f}")
+    print(f"chi(T): {chi_final:.4f}")
+    print(f"chi_max observed: {chi_max_observed:.4f}")
     print(f"Boundedness ratio: {boundedness_ratio:.4f}")
-    print(f"χ decreasing: {chi_decreasing}")
+    print(f"chi decreasing: {chi_decreasing}")
     
     success = chi_decreasing and boundedness_ratio < 2.0
     
@@ -98,24 +98,24 @@ def gate_chi_boundedness():
         'success': bool(success)
     }
     
-    print(f"\nGate (χ boundedness): {'PASS' if success else 'FAIL'}")
+    print(f"\nGate (chi boundedness): {'PASS' if success else 'FAIL'}")
     return success
 
 
 def gate_enstrophy_chi_relationship():
     """
-    Gate 2: Enstrophy-χ Relationship.
+    Gate 2: Enstrophy-chi Relationship.
     
-    For NS: Ω = ∫|ω|² dx ~ χ² at high resolution
-    The χ diagnostic approximates enstrophy via gradient norms.
+    For NS: Omega = int|omega|^2 dx ~ chi^2 at high resolution
+    The chi diagnostic approximates enstrophy via gradient norms.
     
-    Verify: Both Ω(t) and χ(t) track solution complexity consistently.
+    Verify: Both Omega(t) and chi(t) track solution complexity consistently.
     """
     from tensornet.cfd.ns_2d import NS2DSolver
     from tensornet.cfd.chi_diagnostic import compute_chi_state_2d, ChiTrajectory
     
     print("\n" + "=" * 60)
-    print("Gate 2: Enstrophy-χ Relationship")
+    print("Gate 2: Enstrophy-chi Relationship")
     print("=" * 60)
     
     N = 64
@@ -160,10 +160,10 @@ def gate_enstrophy_chi_relationship():
     enstrophy_decay_rate = (enstrophy[0] - enstrophy[-1]) / enstrophy[0]
     gradient_decay_rate = (gradient_norms[0] - gradient_norms[-1]) / gradient_norms[0]
     
-    print(f"Ω(0): {enstrophy_values[0]:.6f}")
-    print(f"Ω(T): {enstrophy_values[-1]:.6f}")
-    print(f"||∇u||(0): {gradient_norms[0]:.6f}")
-    print(f"||∇u||(T): {gradient_norms[-1]:.6f}")
+    print(f"Omega(0): {enstrophy_values[0]:.6f}")
+    print(f"Omega(T): {enstrophy_values[-1]:.6f}")
+    print(f"||nablau||(0): {gradient_norms[0]:.6f}")
+    print(f"||nablau||(T): {gradient_norms[-1]:.6f}")
     print(f"Enstrophy decay rate: {enstrophy_decay_rate:.4f}")
     print(f"Gradient decay rate: {gradient_decay_rate:.4f}")
     print(f"Enstrophy decays: {enstrophy_decays}")
@@ -182,7 +182,7 @@ def gate_enstrophy_chi_relationship():
         'success': bool(success)
     }
     
-    print(f"\nGate (enstrophy-χ): {'PASS' if success else 'FAIL'}")
+    print(f"\nGate (enstrophy-chi): {'PASS' if success else 'FAIL'}")
     return success
 
 
@@ -190,11 +190,11 @@ def gate_spectral_radius_tracking():
     """
     Gate 3: Spectral Radius Tracking.
     
-    λ_max (spectral radius) tracks the largest eigenvalue growth.
-    For regular solutions, λ_max stays bounded.
-    For blowup, λ_max → ∞.
+    lambda_max (spectral radius) tracks the largest eigenvalue growth.
+    For regular solutions, lambda_max stays bounded.
+    For blowup, lambda_max -> inf.
     
-    Test: Taylor-Green → λ_max decays; Perturbed → λ_max grows.
+    Test: Taylor-Green -> lambda_max decays; Perturbed -> lambda_max grows.
     """
     from tensornet.cfd.ns_2d import NS2DSolver
     from tensornet.cfd.chi_diagnostic import compute_chi_state_2d
@@ -247,16 +247,16 @@ def gate_spectral_radius_tracking():
     lambda_smooth = np.array(lambda_smooth)
     lambda_perturbed = np.array(lambda_perturbed)
     
-    # Smooth: λ_max should decay
+    # Smooth: lambda_max should decay
     smooth_decay = lambda_smooth[-1] < lambda_smooth[0]
     
-    # Perturbed: λ_max(0) should be larger due to high-k content
+    # Perturbed: lambda_max(0) should be larger due to high-k content
     perturbed_larger_initially = lambda_perturbed[0] > lambda_smooth[0]
     
-    print(f"Smooth: λ_max(0)={lambda_smooth[0]:.4f}, λ_max(T)={lambda_smooth[-1]:.4f}")
-    print(f"Perturbed: λ_max(0)={lambda_perturbed[0]:.4f}, λ_max(T)={lambda_perturbed[-1]:.4f}")
-    print(f"Smooth λ_max decays: {smooth_decay}")
-    print(f"Perturbed has larger initial λ_max: {perturbed_larger_initially}")
+    print(f"Smooth: lambda_max(0)={lambda_smooth[0]:.4f}, lambda_max(T)={lambda_smooth[-1]:.4f}")
+    print(f"Perturbed: lambda_max(0)={lambda_perturbed[0]:.4f}, lambda_max(T)={lambda_perturbed[-1]:.4f}")
+    print(f"Smooth lambda_max decays: {smooth_decay}")
+    print(f"Perturbed has larger initial lambda_max: {perturbed_larger_initially}")
     
     success = smooth_decay and perturbed_larger_initially
     
@@ -279,8 +279,8 @@ def gate_regularity_assessment_consistency():
     Gate 4: Regularity Assessment Consistency.
     
     analyze_regularity() should produce consistent classifications:
-    - Smooth flow → 'smooth' or 'mild_growth'
-    - High-energy perturbation → initial chi_growth > 0 detected
+    - Smooth flow -> 'smooth' or 'mild_growth'
+    - High-energy perturbation -> initial chi_growth > 0 detected
     
     Test reproducibility and physical consistency.
     """
@@ -378,9 +378,9 @@ def gate_regularity_assessment_consistency():
     # 3. Reproducibility
     reproducible = smooth_class == repeat_class
     
-    print(f"\nSmooth → 'smooth': {smooth_is_smooth}")
-    print(f"Perturbed χ_max > smooth χ_max * 1.5: {perturbed_is_different}")
-    print(f"  (smooth χ_max={smooth_max_chi:.2f}, perturbed χ_max={perturbed_max_chi:.2f})")
+    print(f"\nSmooth -> 'smooth': {smooth_is_smooth}")
+    print(f"Perturbed chi_max > smooth chi_max * 1.5: {perturbed_is_different}")
+    print(f"  (smooth chi_max={smooth_max_chi:.2f}, perturbed chi_max={perturbed_max_chi:.2f})")
     print(f"Reproducible: {reproducible}")
     
     success = smooth_is_smooth and perturbed_is_different and reproducible
@@ -410,8 +410,8 @@ def run_all_proofs():
     print("=" * 60)
     
     gates = [
-        ("χ Boundedness", gate_chi_boundedness),
-        ("Enstrophy-χ Relationship", gate_enstrophy_chi_relationship),
+        ("chi Boundedness", gate_chi_boundedness),
+        ("Enstrophy-chi Relationship", gate_enstrophy_chi_relationship),
         ("Spectral Radius Tracking", gate_spectral_radius_tracking),
         ("Regularity Consistency", gate_regularity_assessment_consistency),
     ]
@@ -454,11 +454,11 @@ def run_all_proofs():
         }, f, indent=2)
     
     if passed_count == total:
-        print(f"\n✓ PHASE 4 COMPLETE: Global regularity framework validated")
+        print(f"\nPASS PHASE 4 COMPLETE: Global regularity framework validated")
         print("=" * 60)
         return 0
     else:
-        print(f"\n✗ PHASE 4 INCOMPLETE: Some gates failed")
+        print(f"\nFAIL PHASE 4 INCOMPLETE: Some gates failed")
         print("=" * 60)
         return 1
 

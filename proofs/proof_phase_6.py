@@ -3,26 +3,26 @@
 PHASE 6: MILLENNIUM CONNECTION
 ===============================
 
-Mathematical proofs connecting the χ framework to the
+Mathematical proofs connecting the chi framework to the
 Navier-Stokes Millennium Prize problem.
 
-The key insight: χ(t) boundedness implies regularity.
-If χ(t) → ∞ in finite time, we have a singularity.
+The key insight: chi(t) boundedness implies regularity.
+If chi(t) -> inf in finite time, we have a singularity.
 
 Gate 1: Beale-Kato-Majda Criterion Analog
-    - BKM: blowup iff ∫₀^T ||ω||_∞ dt = ∞
-    - χ tracks vorticity-like quantities
+    - BKM: blowup iff int₀^T ||omega||_inf dt = inf
+    - chi tracks vorticity-like quantities
     
 Gate 2: Energy-Enstrophy Balance
-    - dE/dt = -ν Ω (energy dissipation)
+    - dE/dt = -nu Omega (energy dissipation)
     - Track and verify this identity
     
 Gate 3: Regularity Certificate
-    - Bounded χ trajectory → solution is regular
+    - Bounded chi trajectory -> solution is regular
     - Produce certificate for smooth initial data
     
 Gate 4: Scaling Law Verification
-    - Verify dimensional scaling of χ with resolution
+    - Verify dimensional scaling of chi with resolution
 """
 
 import sys
@@ -43,10 +43,10 @@ def gate_bkm_analog():
     Gate 1: Beale-Kato-Majda Criterion Analog.
     
     The BKM theorem states that blowup occurs iff:
-        ∫₀^T ||ω||_L∞ dt → ∞
+        int₀^T ||omega||_Linf dt -> inf
     
-    Our χ tracks ||∇u||, which bounds ||ω||.
-    Verify: ∫χ dt remains bounded for smooth viscous flow.
+    Our chi tracks ||nablau||, which bounds ||omega||.
+    Verify: intchi dt remains bounded for smooth viscous flow.
     """
     from tensornet.cfd.ns_2d import NS2DSolver
     from tensornet.cfd.chi_diagnostic import compute_chi_state_2d, ChiTrajectory
@@ -68,7 +68,7 @@ def gate_bkm_analog():
     
     trajectory = ChiTrajectory()
     
-    # Compute ∫₀^T χ(t) dt (trapezoidal rule)
+    # Compute int₀^T chi(t) dt (trapezoidal rule)
     chi_values = []
     times = []
     
@@ -90,22 +90,22 @@ def gate_bkm_analog():
     chi_integral = np.trapz(chi_values, times)
     
     # For smooth flow with viscosity, integral should be bounded
-    # Theoretical bound: χ(0) * T for constant χ
+    # Theoretical bound: chi(0) * T for constant chi
     theoretical_max = chi_values[0] * T_final
     
     is_bounded = chi_integral < 2 * theoretical_max  # Factor of 2 safety
     
-    # Also verify χ doesn't grow unboundedly
+    # Also verify chi doesn't grow unboundedly
     chi_max = chi_values.max()
     chi_stable = chi_max < 2 * chi_values[0]
     
     print(f"T_final: {T_final}")
-    print(f"∫χ dt: {chi_integral:.4f}")
-    print(f"Theoretical max (χ₀·T): {theoretical_max:.4f}")
-    print(f"χ_max: {chi_max:.4f}")
-    print(f"χ₀: {chi_values[0]:.4f}")
+    print(f"intchi dt: {chi_integral:.4f}")
+    print(f"Theoretical max (chi₀·T): {theoretical_max:.4f}")
+    print(f"chi_max: {chi_max:.4f}")
+    print(f"chi₀: {chi_values[0]:.4f}")
     print(f"BKM integral bounded: {is_bounded}")
-    print(f"χ stable: {chi_stable}")
+    print(f"chi stable: {chi_stable}")
     
     success = is_bounded and chi_stable
     
@@ -128,8 +128,8 @@ def gate_energy_enstrophy_balance():
     """
     Gate 2: Energy-Enstrophy Balance.
     
-    For 2D NS: dE/dt = -2νΩ (in mean sense)
-    where E = ½∫|u|²dx and Ω = ∫|ω|²dx
+    For 2D NS: dE/dt = -2nuOmega (in mean sense)
+    where E = ½int|u|^2dx and Omega = int|omega|^2dx
     
     Verify this fundamental identity numerically.
     """
@@ -176,7 +176,7 @@ def gate_energy_enstrophy_balance():
     # Compute dE/dt numerically (central difference where possible)
     dE_dt = np.gradient(energies, dt)
     
-    # Compute -2νΩ
+    # Compute -2nuOmega
     dissipation = -2 * nu * enstrophies
     
     # Compare (should match for exact NS)
@@ -190,11 +190,11 @@ def gate_energy_enstrophy_balance():
     mean_relative_error = relative_errors.mean()
     max_relative_error = relative_errors.max()
     
-    print(f"ν = {nu}")
+    print(f"nu = {nu}")
     print(f"Mean E(t): {energies.mean():.6f}")
-    print(f"Mean Ω(t): {enstrophies.mean():.6f}")
+    print(f"Mean Omega(t): {enstrophies.mean():.6f}")
     print(f"Mean dE/dt: {dE_dt.mean():.6f}")
-    print(f"Mean -2νΩ: {dissipation.mean():.6f}")
+    print(f"Mean -2nuOmega: {dissipation.mean():.6f}")
     print(f"Mean relative error: {mean_relative_error:.4f}")
     print(f"Max relative error: {max_relative_error:.4f}")
     
@@ -221,12 +221,12 @@ def gate_regularity_certificate():
     """
     Gate 3: Regularity Certificate.
     
-    For smooth initial data with ν > 0, produce a certificate
-    that the solution remains regular (χ bounded).
+    For smooth initial data with nu > 0, produce a certificate
+    that the solution remains regular (chi bounded).
     
     Certificate structure:
     - Initial data characterization
-    - χ trajectory summary
+    - chi trajectory summary
     - Bounds verified
     """
     from tensornet.cfd.ns_2d import NS2DSolver
@@ -310,14 +310,14 @@ def gate_regularity_certificate():
     print(f"  Type: Taylor-Green vortex")
     print(f"  Resolution: {N}x{N}")
     print(f"  Viscosity: {nu}")
-    print(f"  χ₀: {initial_chi_state.chi_actual:.4f}")
+    print(f"  chi₀: {initial_chi_state.chi_actual:.4f}")
     
     print(f"\nEvolution:")
     print(f"  T_final: {T_final}")
     print(f"  Steps: {n_steps}")
     
     print(f"\nRegularity Analysis:")
-    print(f"  χ_max: {certificate['regularity_analysis']['chi_max']:.4f}")
+    print(f"  chi_max: {certificate['regularity_analysis']['chi_max']:.4f}")
     print(f"  Assessment: {certificate['regularity_analysis']['assessment']}")
     print(f"  Gradient ratio: {certificate['regularity_analysis']['gradient_ratio']:.4f}")
     
@@ -339,8 +339,8 @@ def gate_scaling_law():
     Gate 4: Scaling Law Verification.
     
     Gradient norms should scale properly with resolution.
-    For smooth data: ||∇u|| ~ O(1) independent of N
-    For rough (high-k) data: ||∇u|| ~ O(k) grows with wavenumber
+    For smooth data: ||nablau|| ~ O(1) independent of N
+    For rough (high-k) data: ||nablau|| ~ O(k) grows with wavenumber
     """
     from tensornet.cfd.ns_2d import NS2DSolver
     from tensornet.cfd.chi_diagnostic import compute_chi_state_2d
@@ -382,7 +382,7 @@ def gate_scaling_law():
         chi_state = compute_chi_state_2d(state.u, state.v, t=0, dx=dx, dy=dy)
         grad_rough.append(chi_state.gradient_norm)
         
-        print(f"N={N:3d}: ||∇u||_smooth={grad_smooth[-1]:.4f}, ||∇u||_rough={grad_rough[-1]:.4f}")
+        print(f"N={N:3d}: ||nablau||_smooth={grad_smooth[-1]:.4f}, ||nablau||_rough={grad_rough[-1]:.4f}")
     
     grad_smooth = np.array(grad_smooth)
     grad_rough = np.array(grad_rough)
@@ -398,10 +398,10 @@ def gate_scaling_law():
     rough_variation = grad_rough.std() / grad_rough.mean()
     rough_converged = rough_variation < 0.2  # Convergence indicator
     
-    print(f"\nSmooth ||∇u|| variation: {smooth_variation:.4f}")
+    print(f"\nSmooth ||nablau|| variation: {smooth_variation:.4f}")
     print(f"Smooth stable (var < 0.1): {smooth_stable}")
-    print(f"Rough ||∇u|| higher than smooth: {rough_higher}")
-    print(f"Rough ||∇u|| converged (var < 0.2): {rough_converged}")
+    print(f"Rough ||nablau|| higher than smooth: {rough_higher}")
+    print(f"Rough ||nablau|| converged (var < 0.2): {rough_converged}")
     
     success = smooth_stable and rough_higher
     
@@ -473,7 +473,7 @@ def run_all_proofs():
         }, f, indent=2)
     
     if passed_count == total:
-        print(f"\n✓ PHASE 6 COMPLETE: Millennium connection validated")
+        print(f"\nPASS PHASE 6 COMPLETE: Millennium connection validated")
         print("=" * 60)
         print("\n" + "=" * 60)
         print("NS-MILLENNIUM PROOF SUITE COMPLETE")
@@ -481,7 +481,7 @@ def run_all_proofs():
         print("=" * 60)
         return 0
     else:
-        print(f"\n✗ PHASE 6 INCOMPLETE: Some gates failed")
+        print(f"\nFAIL PHASE 6 INCOMPLETE: Some gates failed")
         print("=" * 60)
         return 1
 

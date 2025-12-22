@@ -52,7 +52,7 @@ def test_weno_convergence(
     For 5th-order accuracy, we must provide true cell averages, not point values.
     
     For f(x) = sin(2πx), cell average over [x-dx/2, x+dx/2] is:
-    ū = (1/dx) ∫ sin(2πx) dx = (cos(2π(x-dx/2)) - cos(2π(x+dx/2))) / (2πdx)
+    ū = (1/dx) int sin(2πx) dx = (cos(2π(x-dx/2)) - cos(2π(x+dx/2))) / (2πdx)
     
     Returns:
         Dictionary with errors and estimated order
@@ -70,7 +70,7 @@ def test_weno_convergence(
         dx_values.append(dx)
         
         # True cell averages via exact integration of sin(2πx)
-        # ∫sin(2πx)dx = -cos(2πx)/(2π)
+        # intsin(2πx)dx = -cos(2πx)/(2π)
         # Average = [-cos(2π x_right) + cos(2π x_left)] / (2π dx)
         u_avg = (torch.cos(2*np.pi*x_left) - torch.cos(2*np.pi*x_right)) / (2*np.pi*dx)
         
@@ -153,12 +153,12 @@ def main():
         weno5_js, smooth_test_function, N_values, name="WENO5-JS"
     )
     print(f"  L2 Order: {result_js['order_L2']:.3f}")
-    print(f"  L∞ Order: {result_js['order_Linf']:.3f}")
+    print(f"  Linf Order: {result_js['order_Linf']:.3f}")
     
     passed_js = result_js['order_L2'] > 4.5  # Should be ~5
     result_js['passed'] = passed_js
     results['tests'].append(result_js)
-    print(f"  Status: {'✓ PASSED' if passed_js else '✗ FAILED'}")
+    print(f"  Status: {'[OK] PASSED' if passed_js else '[X] FAILED'}")
     
     # Test 2: WENO5-Z convergence on sin(2πx)
     print("\n[Test 2] WENO5-Z on sin(2πx)...")
@@ -166,12 +166,12 @@ def main():
         weno5_z, smooth_test_function, N_values, name="WENO5-Z"
     )
     print(f"  L2 Order: {result_z['order_L2']:.3f}")
-    print(f"  L∞ Order: {result_z['order_Linf']:.3f}")
+    print(f"  Linf Order: {result_z['order_Linf']:.3f}")
     
     passed_z = result_z['order_L2'] > 4.5
     result_z['passed'] = passed_z
     results['tests'].append(result_z)
-    print(f"  Status: {'✓ PASSED' if passed_z else '✗ FAILED'}")
+    print(f"  Status: {'[OK] PASSED' if passed_z else '[X] FAILED'}")
     
     # Test 3: TENO5 convergence
     print("\n[Test 3] TENO5 on sin(2πx)...")
@@ -179,12 +179,12 @@ def main():
         teno5, smooth_test_function, N_values, name="TENO5"
     )
     print(f"  L2 Order: {result_teno['order_L2']:.3f}")
-    print(f"  L∞ Order: {result_teno['order_Linf']:.3f}")
+    print(f"  Linf Order: {result_teno['order_Linf']:.3f}")
     
     passed_teno = result_teno['order_L2'] > 4.0  # Slightly more relaxed for TENO
     result_teno['passed'] = passed_teno
     results['tests'].append(result_teno)
-    print(f"  Status: {'✓ PASSED' if passed_teno else '✗ FAILED'}")
+    print(f"  Status: {'[OK] PASSED' if passed_teno else '[X] FAILED'}")
     
     # Test 4: Smoothness indicators
     print("\n[Test 4] Smoothness indicator behavior...")
@@ -198,7 +198,7 @@ def main():
         'name': 'smoothness_indicators',
         **beta_results
     })
-    print(f"  Status: {'✓ PASSED' if passed_beta else '✗ FAILED'}")
+    print(f"  Status: {'[OK] PASSED' if passed_beta else '[X] FAILED'}")
     
     # Test 5: WENO-Z vs WENO-JS accuracy comparison
     print("\n[Test 5] WENO-Z improvement over WENO-JS...")
@@ -229,7 +229,7 @@ def main():
     print(f"  WENO-JS error: {err_js:.2e}")
     print(f"  WENO-Z error: {err_z:.2e}")
     print(f"  Improvement: {improvement:.2f}x")
-    print(f"  Status: {'✓ PASSED' if passed_improvement else '✗ FAILED'}")
+    print(f"  Status: {'[OK] PASSED' if passed_improvement else '[X] FAILED'}")
     
     # Summary
     print("\n" + "=" * 60)
@@ -241,7 +241,7 @@ def main():
         'failed': sum(1 for t in results['tests'] if not t.get('passed', False)),
     }
     
-    print(f"PROOF RESULT: {'✓ ALL PASSED' if all_passed else '✗ SOME FAILED'}")
+    print(f"PROOF RESULT: {'[OK] ALL PASSED' if all_passed else '[X] SOME FAILED'}")
     print(f"Tests: {results['summary']['passed']}/{results['summary']['total_tests']} passed")
     print("=" * 60)
     

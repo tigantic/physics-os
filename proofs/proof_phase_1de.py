@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Phase 1D/1E Mathematical Proofs: χ(t) Regularity Diagnostics
+Phase 1D/1E Mathematical Proofs: chi(t) Regularity Diagnostics
 ================================================================
 
-Proves that the χ(t) tracking framework correctly identifies
+Proves that the chi(t) tracking framework correctly identifies
 regularity behavior in Navier-Stokes solutions.
 
 Gates:
-1. χ estimation correctness
+1. chi estimation correctness
 2. Enstrophy tracking accuracy
 3. Regularity assessment logic
 4. Integration with NS solver
@@ -23,15 +23,15 @@ PROOF_RESULTS = {}
 
 def gate_chi_estimation():
     """
-    Gate 1: Verify χ estimation gives correct bond dimension.
+    Gate 1: Verify chi estimation gives correct bond dimension.
     
-    For smooth fields, χ should be small.
-    For complex fields, χ should scale with grid.
+    For smooth fields, chi should be small.
+    For complex fields, chi should scale with grid.
     """
     from tensornet.cfd.chi_diagnostic import estimate_required_chi_2d
     
     print("\n" + "=" * 60)
-    print("Gate 1: χ Estimation Correctness")
+    print("Gate 1: chi Estimation Correctness")
     print("=" * 60)
     
     N = 64
@@ -52,10 +52,10 @@ def gate_chi_estimation():
     v_random = torch.randn(N, N)
     chi_random = estimate_required_chi_2d(u_random, v_random, dx, dy)
     
-    print(f"Smooth field χ: {chi_smooth}")
-    print(f"Random field χ: {chi_random}")
+    print(f"Smooth field chi: {chi_smooth}")
+    print(f"Random field chi: {chi_random}")
     
-    # Smooth should have low χ, random should be higher
+    # Smooth should have low chi, random should be higher
     smooth_is_low = chi_smooth < 10
     random_is_higher = chi_random > chi_smooth
     
@@ -69,7 +69,7 @@ def gate_chi_estimation():
         'success': success
     }
     
-    print(f"\nGate (χ estimation): {'PASS' if success else 'FAIL'}")
+    print(f"\nGate (chi estimation): {'PASS' if success else 'FAIL'}")
     return success
 
 
@@ -77,7 +77,7 @@ def gate_enstrophy_tracking():
     """
     Gate 2: Verify enstrophy calculation matches analytical.
     
-    For Taylor-Green: Ω = ∫|ω|² dx
+    For Taylor-Green: Omega = int|omega|^2 dx
     """
     from tensornet.cfd.ns_2d import NS2DSolver
     from tensornet.cfd.chi_diagnostic import compute_chi_state_2d
@@ -99,9 +99,9 @@ def gate_enstrophy_tracking():
     state = compute_chi_state_2d(state_init.u, state_init.v, t=0.0, dx=dx, dy=dy, chi_target=64)
     
     # For discrete: compute expected value
-    # ω = -2cos(x)cos(y), so ω² = 4cos²(x)cos²(y)
-    # Mean value of cos²(x)cos²(y) = 1/4, so mean ω² = 1
-    # Enstrophy = 0.5 * mean(ω²) = 0.5
+    # omega = -2cos(x)cos(y), so omega^2 = 4cos^2(x)cos^2(y)
+    # Mean value of cos^2(x)cos^2(y) = 1/4, so mean omega^2 = 1
+    # Enstrophy = 0.5 * mean(omega^2) = 0.5
     enst_expected = 0.5
     
     enst_computed = state.enstrophy
@@ -130,8 +130,8 @@ def gate_regularity_assessment():
     """
     Gate 3: Verify regularity assessment logic.
     
-    - Decaying flow → 'smooth'
-    - Exploding χ → 'potential_blowup'
+    - Decaying flow -> 'smooth'
+    - Exploding chi -> 'potential_blowup'
     """
     from tensornet.cfd.chi_diagnostic import (
         ChiState, ChiTrajectory, analyze_regularity
@@ -141,13 +141,13 @@ def gate_regularity_assessment():
     print("Gate 3: Regularity Assessment Logic")
     print("=" * 60)
     
-    # Test 1: Smooth decaying flow (χ decreasing)
+    # Test 1: Smooth decaying flow (chi decreasing)
     traj_smooth = ChiTrajectory()
     for i in range(20):
         t = i * 0.1
         state = ChiState(
             time=t,
-            chi_actual=max(1, 10 - i // 2),  # Decreasing χ
+            chi_actual=max(1, 10 - i // 2),  # Decreasing chi
             chi_target=64,
             truncation_error=1e-6,
             gradient_norm=1.0 * np.exp(-0.1 * t),  # Decaying
@@ -158,7 +158,7 @@ def gate_regularity_assessment():
     
     result_smooth = analyze_regularity(traj_smooth)
     
-    # Test 2: Potential blowup (χ exploding rapidly)
+    # Test 2: Potential blowup (chi exploding rapidly)
     traj_blowup = ChiTrajectory()
     for i in range(20):
         t = i * 0.1
@@ -178,11 +178,11 @@ def gate_regularity_assessment():
     result_blowup = analyze_regularity(traj_blowup)
     
     print(f"Smooth trajectory assessment: {result_smooth['regularity_assessment']}")
-    print(f"  χ growth rate: {result_smooth['chi_growth_rate']:.4f}")
+    print(f"  chi growth rate: {result_smooth['chi_growth_rate']:.4f}")
     print(f"  Gradient ratio: {result_smooth['gradient_ratio']:.4f}")
     
     print(f"\nBlowup trajectory assessment: {result_blowup['regularity_assessment']}")
-    print(f"  χ growth rate: {result_blowup['chi_growth_rate']:.4f}")
+    print(f"  chi growth rate: {result_blowup['chi_growth_rate']:.4f}")
     
     # Check assessments
     smooth_ok = result_smooth['regularity_assessment'] == 'smooth'
@@ -204,10 +204,10 @@ def gate_regularity_assessment():
 
 def gate_ns_integration():
     """
-    Gate 4: Verify χ tracking integrates with NS solver.
+    Gate 4: Verify chi tracking integrates with NS solver.
     
     Run Taylor-Green and verify:
-    - χ stays bounded
+    - chi stays bounded
     - Assessment is 'smooth'
     - No NaN/Inf values
     """
@@ -236,7 +236,7 @@ def gate_ns_integration():
     state = compute_chi_state_2d(state_ns.u, state_ns.v, t=0.0, dx=dx, dy=dy, chi_target=64)
     trajectory.add(state)
     
-    # Time stepping with χ tracking
+    # Time stepping with chi tracking
     had_nan = False
     max_chi = 0
     
@@ -257,7 +257,7 @@ def gate_ns_integration():
     analysis = analyze_regularity(trajectory)
     
     print(f"Steps completed: {len(trajectory.states)}")
-    print(f"Max χ observed: {max_chi}")
+    print(f"Max chi observed: {max_chi}")
     print(f"Final assessment: {analysis['regularity_assessment']}")
     print(f"Had NaN: {had_nan}")
     
@@ -282,12 +282,12 @@ def gate_ns_integration():
 def run_all_proofs():
     """Run all Phase 1D/1E proofs."""
     print("\n" + "=" * 60)
-    print("PHASE 1D/1E: χ(t) Regularity Diagnostics")
+    print("PHASE 1D/1E: chi(t) Regularity Diagnostics")
     print("Mathematical Verification Suite")
     print("=" * 60)
     
     gates = [
-        ("χ Estimation", gate_chi_estimation),
+        ("chi Estimation", gate_chi_estimation),
         ("Enstrophy Tracking", gate_enstrophy_tracking),
         ("Regularity Assessment", gate_regularity_assessment),
         ("NS Integration", gate_ns_integration),
@@ -317,9 +317,9 @@ def run_all_proofs():
     print(f"\nTotal: {passed}/{total} gates passed")
     
     if passed == total:
-        print("\n✓ PHASE 1D/1E COMPLETE: χ(t) diagnostics validated")
+        print("\nPASS PHASE 1D/1E COMPLETE: chi(t) diagnostics validated")
     else:
-        print("\n✗ PHASE 1D/1E INCOMPLETE: Some gates failed")
+        print("\nFAIL PHASE 1D/1E INCOMPLETE: Some gates failed")
     
     print("=" * 60)
     

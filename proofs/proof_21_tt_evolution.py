@@ -9,9 +9,9 @@ Claims to verify:
 1. TT_Euler1D.step() produces non-trivial state changes
 2. Conservation laws are maintained in TT format
 3. Bond dimension affects solution accuracy
-4. Complexity scales as O(N·χ²) not O(N³)
+4. Complexity scales as O(N·chi^2) not O(N³)
 
-If this proof FAILS, the O(N·χ²) claim is NOT demonstrated.
+If this proof FAILS, the O(N·chi^2) claim is NOT demonstrated.
 
 Constitution Compliance: Article I.1 (Proof Requirements)
 """
@@ -168,7 +168,7 @@ def test_bond_dimension_effect():
 
 def test_complexity_scaling():
     """
-    Test that TT-CFD scales as O(N·χ²) not O(N³).
+    Test that TT-CFD scales as O(N·chi^2) not O(N³).
     
     Compare runtime for different N at fixed chi.
     """
@@ -271,7 +271,7 @@ def run_all_proofs():
     print("Proof 21.5: TT-CFD True TDVP Evolution Verification")
     print("=" * 70)
     print()
-    print("⚠️  This proof verifies the O(N·χ²) TT-native CFD claim")
+    print("⚠️  This proof verifies the O(N·chi^2) TT-native CFD claim")
     print()
     
     tests = [
@@ -329,7 +329,7 @@ def run_all_proofs():
     else:
         print("PROOF 21.5: ❌ FAILED - TT-CFD evolution NOT proven")
         print(f"\nCritical failures: {critical_failures}")
-        print("\n⚠️  The O(N·χ²) complexity claim is NOT demonstrated.")
+        print("\n⚠️  The O(N·chi^2) complexity claim is NOT demonstrated.")
     print("=" * 70)
     
     return 0 if all_passed else 1

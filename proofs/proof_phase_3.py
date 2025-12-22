@@ -10,13 +10,13 @@ For incompressible NS, we adapt TDVP concepts:
 - Generator: NS RHS = -advection + diffusion
 - Projection: maintain incompressibility (div=0)
 
-Key insight: χ(t) tracking from Phase 1D/1E connects directly
+Key insight: chi(t) tracking from Phase 1D/1E connects directly
 to TDVP manifold dimension control.
 
 Gates:
-1. TDVP-1 (fixed χ) preserves norm
-2. TDVP-2 (adaptive χ) captures dynamics
-3. χ growth rate matches physical complexity
+1. TDVP-1 (fixed chi) preserves norm
+2. TDVP-2 (adaptive chi) captures dynamics
+3. chi growth rate matches physical complexity
 4. Energy conservation in TT format
 
 Tag: [PHASE-3] [TDVP-NS]
@@ -90,14 +90,14 @@ def gate_tdvp1_norm_preservation():
 
 def gate_tdvp2_adaptive_chi():
     """
-    Gate 2: Verify SVD truncation controls χ.
+    Gate 2: Verify SVD truncation controls chi.
     
-    TDVP-2 can adapt χ via SVD. Test that SVD truncation works.
+    TDVP-2 can adapt chi via SVD. Test that SVD truncation works.
     """
     from tensornet.core.decompositions import svd_truncated
     
     print("\n" + "=" * 60)
-    print("Gate 2: SVD χ Control")
+    print("Gate 2: SVD chi Control")
     print("=" * 60)
     
     # Create test matrix with known rank structure
@@ -121,7 +121,7 @@ def gate_tdvp2_adaptive_chi():
         error = (M - M_recon).abs().max().item()
         rel_error = error / M.abs().max().item()
         
-        print(f"χ_max={chi_max:2d}: rank={len(S)}, rel_error={rel_error:.2e}")
+        print(f"chi_max={chi_max:2d}: rank={len(S)}, rel_error={rel_error:.2e}")
     
     # chi_max >= true_rank should give near-exact reconstruction
     U, S, Vh = svd_truncated(M, chi_max=true_rank, cutoff=1e-12)
@@ -136,16 +136,16 @@ def gate_tdvp2_adaptive_chi():
         'success': success
     }
     
-    print(f"\nGate (SVD χ control): {'PASS' if success else 'FAIL'}")
+    print(f"\nGate (SVD chi control): {'PASS' if success else 'FAIL'}")
     return success
 
 
 def gate_chi_growth_physics():
     """
-    Gate 3: Verify χ growth correlates with physical complexity.
+    Gate 3: Verify chi growth correlates with physical complexity.
     
-    Use Taylor-Green NS: smooth flow → stable χ
-    This connects Phase 1D/1E χ tracking to TDVP concepts.
+    Use Taylor-Green NS: smooth flow -> stable chi
+    This connects Phase 1D/1E chi tracking to TDVP concepts.
     """
     from tensornet.cfd.ns_2d import NS2DSolver
     from tensornet.cfd.chi_diagnostic import (
@@ -153,7 +153,7 @@ def gate_chi_growth_physics():
     )
     
     print("\n" + "=" * 60)
-    print("Gate 3: χ Growth Matches Physics")
+    print("Gate 3: chi Growth Matches Physics")
     print("=" * 60)
     
     # Two test cases: smooth vs perturbed flow
@@ -165,7 +165,7 @@ def gate_chi_growth_physics():
     dt = 0.01
     n_steps = 30
     
-    # Case 1: Smooth Taylor-Green (should have stable/decreasing χ)
+    # Case 1: Smooth Taylor-Green (should have stable/decreasing chi)
     solver = NS2DSolver(Nx=N, Ny=N, Lx=L, Ly=L, nu=nu, dtype=torch.float64)
     state_tg = solver.create_taylor_green()
     
@@ -206,12 +206,12 @@ def gate_chi_growth_physics():
     
     analysis_pert = analyze_regularity(trajectory_pert)
     
-    print(f"Smooth flow: χ growth = {analysis_smooth['chi_growth_rate']:.4f}, "
+    print(f"Smooth flow: chi growth = {analysis_smooth['chi_growth_rate']:.4f}, "
           f"assessment = {analysis_smooth['regularity_assessment']}")
-    print(f"Perturbed:   χ growth = {analysis_pert['chi_growth_rate']:.4f}, "
+    print(f"Perturbed:   chi growth = {analysis_pert['chi_growth_rate']:.4f}, "
           f"assessment = {analysis_pert['regularity_assessment']}")
     
-    # Smooth should be "smooth", perturbed should have higher χ growth
+    # Smooth should be "smooth", perturbed should have higher chi growth
     smooth_is_smooth = analysis_smooth['regularity_assessment'] == 'smooth'
     
     success = smooth_is_smooth
@@ -224,7 +224,7 @@ def gate_chi_growth_physics():
         'success': success
     }
     
-    print(f"\nGate (χ growth physics): {'PASS' if success else 'FAIL'}")
+    print(f"\nGate (chi growth physics): {'PASS' if success else 'FAIL'}")
     return success
 
 
@@ -232,8 +232,8 @@ def gate_energy_conservation():
     """
     Gate 4: Verify energy decay matches theory.
     
-    For 2D Taylor-Green: KE(t) = KE(0) exp(-2ν|k|²t) with |k|²=2.
-    So KE(t) = KE(0) exp(-4νt).
+    For 2D Taylor-Green: KE(t) = KE(0) exp(-2nu|k|^2t) with |k|^2=2.
+    So KE(t) = KE(0) exp(-4nut).
     """
     from tensornet.cfd.ns_2d import NS2DSolver
     
@@ -263,8 +263,8 @@ def gate_energy_conservation():
     
     ke_final = ke_history[-1]
     
-    # Analytical: |k|² = 1² + 1² = 2 for Taylor-Green k=(1,1)
-    # Decay rate = 2 * nu * |k|² = 2 * nu * 2 = 4 * nu
+    # Analytical: |k|^2 = 1^2 + 1^2 = 2 for Taylor-Green k=(1,1)
+    # Decay rate = 2 * nu * |k|^2 = 2 * nu * 2 = 4 * nu
     ke_exact = ke_initial * np.exp(-4 * nu * T_final)
     
     rel_error = abs(ke_final - ke_exact) / ke_exact
@@ -273,7 +273,7 @@ def gate_energy_conservation():
     print(f"KE(T):     {ke_final:.6f}")
     print(f"KE exact:  {ke_exact:.6f}")
     print(f"T_final:   {T_final:.2f}")
-    print(f"Decay factor: exp(-4νT) = {np.exp(-4 * nu * T_final):.6f}")
+    print(f"Decay factor: exp(-4nuT) = {np.exp(-4 * nu * T_final):.6f}")
     print(f"Relative error: {rel_error:.2e}")
     
     success = rel_error < 0.01  # 1% tolerance
@@ -299,8 +299,8 @@ def run_all_proofs():
     
     gates = [
         ("TDVP-1 Norm", gate_tdvp1_norm_preservation),
-        ("TDVP-2 Adaptive χ", gate_tdvp2_adaptive_chi),
-        ("χ Growth Physics", gate_chi_growth_physics),
+        ("TDVP-2 Adaptive chi", gate_tdvp2_adaptive_chi),
+        ("chi Growth Physics", gate_chi_growth_physics),
         ("Energy Conservation", gate_energy_conservation),
     ]
     
@@ -330,9 +330,9 @@ def run_all_proofs():
     print(f"\nTotal: {passed}/{total} gates passed")
     
     if passed == total:
-        print("\n✓ PHASE 3 COMPLETE: TDVP-NS time evolution validated")
+        print("\nPASS PHASE 3 COMPLETE: TDVP-NS time evolution validated")
     else:
-        print("\n✗ PHASE 3 INCOMPLETE: Some gates failed")
+        print("\nFAIL PHASE 3 INCOMPLETE: Some gates failed")
     
     print("=" * 60)
     

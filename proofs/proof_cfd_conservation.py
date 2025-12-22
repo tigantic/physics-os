@@ -4,9 +4,9 @@ CFD Conservation Law Proof Tests
 ================================
 
 Validates that the CFD solvers satisfy fundamental conservation laws:
-1. Mass conservation: ∫ρ dx = constant
-2. Momentum conservation: ∫ρu dx = constant (for closed systems)
-3. Energy conservation: ∫E dx = constant (for inviscid, adiabatic flow)
+1. Mass conservation: intρ dx = constant
+2. Momentum conservation: intρu dx = constant (for closed systems)
+3. Energy conservation: intE dx = constant (for inviscid, adiabatic flow)
 
 These are "proof tests" per the Constitution — rigorous validation of
 physical invariants that must hold regardless of numerical scheme.
@@ -246,14 +246,14 @@ def run_all_proofs():
             results["tests"].append(result)
             
             if result["passed"]:
-                print(f"  ✓ PASSED")
+                print(f"  [OK] PASSED")
                 results["summary"]["passed"] += 1
             else:
-                print(f"  ✗ FAILED")
+                print(f"  [X] FAILED")
                 results["summary"]["failed"] += 1
                 
         except Exception as e:
-            print(f"  ✗ ERROR: {e}")
+            print(f"  [X] ERROR: {e}")
             results["tests"].append({
                 "test": test_fn.__name__,
                 "passed": False,

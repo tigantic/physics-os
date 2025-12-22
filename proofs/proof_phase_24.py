@@ -37,7 +37,7 @@ def record_proof(name: str, passed: bool, details: dict):
         "passed": passed,
         "details": details
     })
-    status = "✓ PASSED" if passed else "✗ FAILED"
+    status = "PASS PASSED" if passed else "FAIL FAILED"
     print(f"  {status}: {name}")
     if not passed:
         print(f"    Details: {details}")
@@ -109,7 +109,7 @@ def proof_24_1_adjoint_solver():
     source = torch.zeros(4, 10, 10, dtype=torch.float64)
     rhs = solver.adjoint_rhs(psi, rho, u, v, p, source)
     
-    rhs_ok = rhs.to_tensor().norm().item() < 1e-10  # Zero state → zero RHS
+    rhs_ok = rhs.to_tensor().norm().item() < 1e-10  # Zero state -> zero RHS
     
     passed = all([state_ok, jacobian_ok, objective_ok, rhs_ok])
     
@@ -161,7 +161,7 @@ def proof_24_2_optimization():
     config_ok = config.max_iterations == 100 and config.line_search == True
     
     # Test 3: Simple gradient descent on quadratic
-    # f(x) = x^2 → min at x=0
+    # f(x) = x^2 -> min at x=0
     x = torch.tensor([5.0], dtype=torch.float64, requires_grad=True)
     
     for _ in range(50):

@@ -6,8 +6,8 @@ Comprehensive validation of 3D NS solver implementation.
 
 Gate Criteria:
     1. 3D spectral operators: gradient, divergence, Laplacian < 10⁻¹⁰
-    2. 3D Poisson self-consistency: |φ - solve(∇²φ)| < 10⁻¹⁰
-    3. 3D projection: max|∇·u| < 10⁻¹⁰ after projection
+    2. 3D Poisson self-consistency: |φ - solve(nabla^2φ)| < 10⁻¹⁰
+    3. 3D projection: max|nabla·u| < 10⁻¹⁰ after projection
     4. 3D Taylor-Green: decay error < 5%, divergence < 10⁻⁶
 
 Constitution Compliance: Article IV.1 (Verification), Phase 1b
@@ -27,7 +27,7 @@ def proof_3d_poisson_solver() -> Dict[str, Any]:
     
     Verifies:
         - Laplacian is exact for trigonometric functions
-        - Poisson self-consistency: solve(∇²φ) ≈ φ
+        - Poisson self-consistency: solve(nabla^2φ) ~= φ
     """
     from tensornet.cfd.ns_3d import (
         laplacian_spectral_3d,
@@ -42,16 +42,16 @@ def proof_3d_poisson_solver() -> Dict[str, Any]:
     z = torch.linspace(0, 2*math.pi - dz, N, dtype=torch.float64)
     X, Y, Z = torch.meshgrid(x, y, z, indexing='ij')
     
-    # Test function with k² = 3
+    # Test function with k^2 = 3
     phi = torch.sin(X) * torch.sin(Y) * torch.sin(Z)
     
-    # Exact Laplacian: ∇²φ = -3φ
+    # Exact Laplacian: nabla^2φ = -3φ
     lap = laplacian_spectral_3d(phi, dx, dy, dz)
     exact_lap = -3 * phi
     laplacian_error = (lap - exact_lap).abs().max().item()
     
-    # Poisson self-consistency: solve(∇²φ) ≈ φ
-    rhs = -3 * phi  # ∇²φ
+    # Poisson self-consistency: solve(nabla^2φ) ~= φ
+    rhs = -3 * phi  # nabla^2φ
     phi_solved = poisson_solve_fft_3d(rhs, dx, dy, dz)
     
     # Remove mean for comparison (Poisson has arbitrary constant)
@@ -130,7 +130,7 @@ def proof_3d_projection() -> Dict[str, Any]:
     Proof 1b.3: 3D velocity projection to divergence-free.
     
     Verifies:
-        - Projection enforces ∇·u = 0 to machine precision
+        - Projection enforces nabla·u = 0 to machine precision
     """
     from tensornet.cfd.ns_3d import (
         compute_divergence_3d,
@@ -174,10 +174,10 @@ def proof_3d_taylor_green() -> Dict[str, Any]:
     
     Gate criteria:
         - Energy decay rate error < 5%
-        - max|∇·u| < 10⁻⁶ throughout simulation
+        - max|nabla·u| < 10⁻⁶ throughout simulation
     
-    The 3D Taylor-Green with modes (1,1,1) has |k|² = 3,
-    so kinetic energy decays as exp(-6νt).
+    The 3D Taylor-Green with modes (1,1,1) has |k|^2 = 3,
+    so kinetic energy decays as exp(-6nut).
     """
     from tensornet.cfd.ns_3d import (
         NS3DSolver,
@@ -213,7 +213,7 @@ def proof_3d_taylor_green() -> Dict[str, Any]:
     
     # Decay rate error
     decay_rate_numerical = -math.log(ke_final / ke_init) / t_final
-    decay_rate_exact = 6 * nu  # Correct for 3D TG with |k|²=3
+    decay_rate_exact = 6 * nu  # Correct for 3D TG with |k|^2=3
     decay_error_pct = abs(decay_rate_numerical - decay_rate_exact) / decay_rate_exact * 100
     
     # Max divergence throughout
@@ -277,7 +277,7 @@ def run_all_proofs() -> Dict[str, Any]:
                 if isinstance(v, float):
                     print(f"  {k}: {v:.2e}" if v < 0.01 else f"  {k}: {v:.4f}")
                 elif isinstance(v, bool):
-                    print(f"  {k}: {'✓' if v else '✗'}")
+                    print(f"  {k}: {'PASS' if v else 'FAIL'}")
     
     print("\n" + "=" * 70)
     print(f"SUMMARY: {sum(1 for r in results if r['passed'])}/{len(results)} proofs passed")

@@ -8,7 +8,7 @@ This proof file validates the complete Phase 1a implementation:
 3. 2D NS solver with Taylor-Green benchmark
 
 Phase 1a Gate Criteria:
-- Poisson solver: O(dx²) convergence, self-consistency < 1e-10
+- Poisson solver: O(dx^2) convergence, self-consistency < 1e-10
 - Projection: divergence after < 10⁻⁶
 - Taylor-Green: decay rate error < 5%
 
@@ -105,7 +105,7 @@ def run_phase_1a_proofs():
     results['all_passed'] = all_passed
     
     for test in results['tests']:
-        status = "✓ PASS" if test['passed'] else "✗ FAIL"
+        status = "PASS PASS" if test['passed'] else "FAIL FAIL"
         print(f"  {test['name']:.<40} {status}")
     
     print("-" * 70)

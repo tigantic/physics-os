@@ -1,14 +1,14 @@
 {
   "tdvp1_norm": {
-    "norm_initial": 0.9999999999999988,
-    "norm_after_left": 0.9999999999999989,
-    "norm_after_right": 0.9999999999999989,
-    "norm_change": 1.110223024625158e-16,
+    "norm_initial": 1.0000000000000004,
+    "norm_after_left": 1.0000000000000002,
+    "norm_after_right": 1.0000000000000009,
+    "norm_change": 4.440892098500624e-16,
     "success": "tensor(True)"
   },
   "tdvp2_adaptive": {
     "true_rank": 5,
-    "error_at_rank": 2.7378178266583078e-11,
+    "error_at_rank": 3.569199577141561e-11,
     "success": true
   },
   "chi_growth_physics": {

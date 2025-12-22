@@ -5,7 +5,7 @@ Phase 1c Proof: RK4 Time Integration
 Validates 4th-order Runge-Kutta temporal integration for NS solvers.
 
 Gate Criteria:
-    1. RK4 convergence order ≈ 4 (within tolerance)
+    1. RK4 convergence order ~= 4 (within tolerance)
     2. RK4 more accurate than Euler at same dt
     3. Incompressibility maintained with RK4
 
@@ -34,7 +34,7 @@ def proof_rk4_convergence_2d() -> Dict[str, Any]:
     
     solver = NS2DSolver(Nx=N, Ny=N, nu=nu, dtype=torch.float64)
     
-    # Exact solution: KE decays as exp(-4νt) for 2D TG with k²=2
+    # Exact solution: KE decays as exp(-4nut) for 2D TG with k^2=2
     dV = solver.dx * solver.dy
     state0 = solver.create_taylor_green(A=1.0)
     ke_init = 0.5 * (state0.u**2 + state0.v**2).sum().item() * dV
@@ -259,7 +259,7 @@ def run_all_proofs() -> Dict[str, Any]:
                     else:
                         print(f"  {k}: {v:.4f}")
                 elif isinstance(v, bool):
-                    print(f"  {k}: {'✓' if v else '✗'}")
+                    print(f"  {k}: {'PASS' if v else 'FAIL'}")
                 elif isinstance(v, list) and len(v) <= 5:
                     print(f"  {k}: {[f'{x:.2e}' if isinstance(x, float) else x for x in v]}")
     

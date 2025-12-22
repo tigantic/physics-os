@@ -41,7 +41,7 @@ def record_proof(name: str, passed: bool, details: dict):
         "passed": passed,
         "details": details
     })
-    status = "✓ PASSED" if passed else "✗ FAILED"
+    status = "PASS PASSED" if passed else "FAIL FAILED"
     print(f"  {status}: {name}")
     if not passed:
         print(f"    Details: {details}")
@@ -55,8 +55,8 @@ def proof_22_1_saha_equilibrium():
     """
     Verify Saha ionization equation produces physically correct results.
     
-    At T → ∞, electron density → high
-    At T → 0, electron density → 0
+    At T -> inf, electron density -> high
+    At T -> 0, electron density -> 0
     Proper scaling with temperature and pressure
     """
     print("\nProof 22.1: Saha Ionization Equilibrium")
@@ -102,9 +102,9 @@ def proof_22_2_plasma_frequency():
     """
     Verify plasma frequency formula is physically correct.
     
-    ω_pe = sqrt(n_e * e² / (ε_0 * m_e))
+    omega_pe = sqrt(n_e * e^2 / (ε_0 * m_e))
     
-    For n_e = 10^18 m^-3, ω_pe ≈ 56.4 GHz
+    For n_e = 10^18 m^-3, omega_pe ~= 56.4 GHz
     """
     print("\nProof 22.2: Plasma Frequency Physics")
     
@@ -115,20 +115,20 @@ def proof_22_2_plasma_frequency():
     omega_pe = plasma_frequency(n_e)
     f_pe = omega_pe / (2 * math.pi)  # Hz
     
-    # Expected: f_pe ≈ 9 * sqrt(n_e) Hz ≈ 9e9 * sqrt(10^18/10^18) = 9 GHz for n_e = 10^12
-    # For n_e = 10^18: f_pe ≈ 9 * 10^9 Hz = 9 GHz? Let me recalculate
-    # ω_pe = sqrt(n_e * e^2 / (ε_0 * m_e)) 
+    # Expected: f_pe ~= 9 * sqrt(n_e) Hz ~= 9e9 * sqrt(10^18/10^18) = 9 GHz for n_e = 10^12
+    # For n_e = 10^18: f_pe ~= 9 * 10^9 Hz = 9 GHz? Let me recalculate
+    # omega_pe = sqrt(n_e * e^2 / (ε_0 * m_e)) 
     # = sqrt(10^18 * (1.6e-19)^2 / (8.85e-12 * 9.1e-31))
     # = sqrt(10^18 * 2.56e-38 / 8.05e-42)
-    # = sqrt(2.56e-20 / 8.05e-42) = sqrt(3.18e21) ≈ 5.64e10 rad/s
-    # f_pe = 5.64e10 / (2π) ≈ 8.98 GHz
+    # = sqrt(2.56e-20 / 8.05e-42) = sqrt(3.18e21) ~= 5.64e10 rad/s
+    # f_pe = 5.64e10 / (2π) ~= 8.98 GHz
     
     expected_omega = 5.64e10  # rad/s for n_e = 10^18
     relative_error = abs(omega_pe - expected_omega) / expected_omega
     
     frequency_ok = relative_error < 0.1  # 10% tolerance
     
-    # Test scaling: ω_pe ∝ sqrt(n_e)
+    # Test scaling: omega_pe ∝ sqrt(n_e)
     omega_1 = plasma_frequency(1e17)
     omega_2 = plasma_frequency(4e17)
     scaling_ratio = omega_2 / omega_1
@@ -406,7 +406,7 @@ def proof_22_7_jet_penetration():
     y1 = jet_penetration_height(J1, d_j, x)
     y2 = jet_penetration_height(J2, d_j, x)
     
-    # y2/y1 should be (J2/J1)^0.3 = (20/5)^0.3 = 4^0.3 ≈ 1.52
+    # y2/y1 should be (J2/J1)^0.3 = (20/5)^0.3 = 4^0.3 ~= 1.52
     expected_ratio = (J2 / J1) ** 0.3
     actual_ratio = y2 / y1
     penetration_scaling_ok = abs(actual_ratio - expected_ratio) / expected_ratio < 0.2

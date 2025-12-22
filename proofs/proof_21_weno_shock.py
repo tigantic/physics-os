@@ -251,7 +251,7 @@ def main():
     print(f"  Oscillations: {result1['n_oscillations']}")
     print(f"  Overshoot: {result1['overshoot']:.4f}")
     print(f"  Undershoot: {result1['undershoot']:.4f}")
-    print(f"  Status: {'✓ PASSED' if result1['passed'] else '✗ FAILED'}")
+    print(f"  Status: {'[OK] PASSED' if result1['passed'] else '[X] FAILED'}")
     results['tests'].append(result1)
     
     # Test 2: WENO5-Z on step function
@@ -263,7 +263,7 @@ def main():
     print(f"  Oscillations: {result2['n_oscillations']}")
     print(f"  Overshoot: {result2['overshoot']:.4f}")
     print(f"  Undershoot: {result2['undershoot']:.4f}")
-    print(f"  Status: {'✓ PASSED' if result2['passed'] else '✗ FAILED'}")
+    print(f"  Status: {'[OK] PASSED' if result2['passed'] else '[X] FAILED'}")
     results['tests'].append(result2)
     
     # Test 3: TENO5 on step function
@@ -275,7 +275,7 @@ def main():
     print(f"  Oscillations: {result3['n_oscillations']}")
     print(f"  Overshoot: {result3['overshoot']:.4f}")
     print(f"  Undershoot: {result3['undershoot']:.4f}")
-    print(f"  Status: {'✓ PASSED' if result3['passed'] else '✗ FAILED'}")
+    print(f"  Status: {'[OK] PASSED' if result3['passed'] else '[X] FAILED'}")
     results['tests'].append(result3)
     
     # Test 4: Two-step function (multiple discontinuities)
@@ -285,7 +285,7 @@ def main():
         u_bounds=(1.0, 2.0), name="WENO5-Z two-step"
     )
     print(f"  Oscillations: {result4['n_oscillations']}")
-    print(f"  Status: {'✓ PASSED' if result4['passed'] else '✗ FAILED'}")
+    print(f"  Status: {'[OK] PASSED' if result4['passed'] else '[X] FAILED'}")
     results['tests'].append(result4)
     
     # Test 5: Sod-like profile
@@ -295,7 +295,7 @@ def main():
         u_bounds=(0.1, 1.1), name="WENO5-Z Sod profile"
     )
     print(f"  Oscillations: {result5['n_oscillations']}")
-    print(f"  Status: {'✓ PASSED' if result5['passed'] else '✗ FAILED'}")
+    print(f"  Status: {'[OK] PASSED' if result5['passed'] else '[X] FAILED'}")
     results['tests'].append(result5)
     
     # Test 6: Compare with naive interpolation
@@ -310,7 +310,7 @@ def main():
     comparison['passed'] = passed_comparison
     comparison['name'] = 'weno_vs_linear'
     results['tests'].append(comparison)
-    print(f"  Status: {'✓ PASSED' if passed_comparison else '✗ FAILED'}")
+    print(f"  Status: {'[OK] PASSED' if passed_comparison else '[X] FAILED'}")
     
     # Test 7: TENO sharpness
     print("\n[Test 7] TENO sharpness compared to WENO...")
@@ -321,7 +321,7 @@ def main():
     sharpness['passed'] = sharpness['teno_is_sharper']
     sharpness['name'] = 'teno_sharpness'
     results['tests'].append(sharpness)
-    print(f"  Status: {'✓ PASSED' if sharpness['passed'] else '⚠ INCONCLUSIVE'}")
+    print(f"  Status: {'[OK] PASSED' if sharpness['passed'] else '⚠ INCONCLUSIVE'}")
     
     # Test 8: Grid refinement on discontinuous data
     print("\n[Test 8] Grid refinement on discontinuous data...")
@@ -345,7 +345,7 @@ def main():
         'oscillation_counts': oscillation_counts,
         'passed': passed_refinement
     })
-    print(f"  Status: {'✓ PASSED' if passed_refinement else '✗ FAILED'}")
+    print(f"  Status: {'[OK] PASSED' if passed_refinement else '[X] FAILED'}")
     
     # Summary
     print("\n" + "=" * 60)
@@ -357,7 +357,7 @@ def main():
         'failed': sum(1 for t in results['tests'] if not t.get('passed', False)),
     }
     
-    print(f"PROOF RESULT: {'✓ ALL PASSED' if all_passed else '⚠ SOME TESTS FAILED'}")
+    print(f"PROOF RESULT: {'[OK] ALL PASSED' if all_passed else '⚠ SOME TESTS FAILED'}")
     print(f"Tests: {results['summary']['passed']}/{results['summary']['total_tests']} passed")
     print("=" * 60)
     
