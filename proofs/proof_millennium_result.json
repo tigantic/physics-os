@@ -1,0 +1,20 @@
+{
+  "timestamp": "2025-12-22T16:53:34.124914",
+  "framework_version": "HyperTensor 1.0",
+  "optimization_grid": 32,
+  "verification_grid": 32,
+  "viscosity": 0.001,
+  "optimization_iterations": 30,
+  "initial_enstrophy": 12.9105166650261,
+  "final_enstrophy": 13.061646594010623,
+  "final_max_vorticity": 3.253114561703601,
+  "residual_bound": 2.967306379987937,
+  "jacobian_norm": 95.25203922374214,
+  "inverse_bound": 9.247067378793778e+43,
+  "discriminant": 5.487776405854621e+44,
+  "verification_status": "proof_failure",
+  "error_bound": null,
+  "bkm_integral": 1.910084871545202,
+  "enstrophy_growth_rate": 0.9367671751051372,
+  "total_runtime_seconds": 58.66913199424744
+}
