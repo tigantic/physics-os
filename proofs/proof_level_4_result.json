@@ -1,0 +1,48 @@
+{
+  "level": 4,
+  "name": "Analytical Framework",
+  "passed": 5,
+  "total": 5,
+  "gates": [
+    {
+      "gate_id": "4.1",
+      "claim": "dE/dt = -2\u03bd\u03a9 (Energy-Enstrophy Dissipation)",
+      "verified": true,
+      "bound_lhs": -0.9164500178671773,
+      "bound_rhs": -0.904728481473674,
+      "margin": 0.01279015348898393
+    },
+    {
+      "gate_id": "4.2",
+      "claim": "E(t) \u2264 E(0) for all t \u2265 0 (Energy Decay)",
+      "verified": true,
+      "bound_lhs": 0.9997000447352402,
+      "bound_rhs": 1.0,
+      "margin": 0.00029995526475978807
+    },
+    {
+      "gate_id": "4.3",
+      "claim": "\u2016\u2207u\u2016\u00b2 \u2265 (2\u03c0/L)\u00b2 \u2016u\u2016\u00b2 (Poincar\u00e9 Inequality)",
+      "verified": true,
+      "bound_lhs": 19735.54296875,
+      "bound_rhs": 509.4333190917969,
+      "margin": 37.74018881201952
+    },
+    {
+      "gate_id": "4.4",
+      "claim": "E(t) \u2264 E(0)exp(-2\u03bd\u03bb\u2081t) (Exponential Decay)",
+      "verified": true,
+      "bound_lhs": 16.81835556827805,
+      "bound_rhs": 25.38579225660613,
+      "margin": 8.56743668832808
+    },
+    {
+      "gate_id": "4.5",
+      "claim": "\u03a9(t) bounded (Sobolev Regularity Control)",
+      "verified": true,
+      "bound_lhs": 91.82956855693908,
+      "bound_rhs": 183.65913711387816,
+      "margin": 1.0
+    }
+  ]
+}
