@@ -32,7 +32,7 @@
         "pod_accurate": true,
         "dmd_trained": true,
         "dmd_prediction_ok": true,
-        "dmd_prediction_error": 0.030865638732837077,
+        "dmd_prediction_error": 0.03212196940535938,
         "dmd_accurate": true
       }
     },

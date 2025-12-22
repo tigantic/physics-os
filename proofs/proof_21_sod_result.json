@@ -1,7 +1,7 @@
 {
   "proof_id": "21.4",
   "name": "TDVP-Euler Sod Shock Tube (Simplified)",
-  "timestamp": "2025-12-22T03:35:25.069609",
+  "timestamp": "2025-12-22T04:28:20.051012",
   "tests": [
     {
       "test": "sod_initial_structure",
