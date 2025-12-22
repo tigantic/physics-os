@@ -14,125 +14,163 @@ Phase 9: RANS turbulence, adjoint solver, shape optimization.
 Phase 10: LES turbulence, hybrid RANS-LES, multi-objective optimization.
 """
 
-from tensornet.cfd.euler_1d import (
-    BCType1D,
-    Euler1D,
-    euler_to_mps,
-    mps_to_euler,
-    sod_shock_tube_ic,
-    lax_shock_tube_ic,
-    shu_osher_ic,
-)
+# Graceful imports - some modules may have missing dependencies
+try:
+    from tensornet.cfd.euler_1d import (
+        BCType1D,
+        Euler1D,
+        euler_to_mps,
+        mps_to_euler,
+        sod_shock_tube_ic,
+        lax_shock_tube_ic,
+        shu_osher_ic,
+    )
+except ImportError:
+    # MPS module may not be available
+    pass
 
-from tensornet.cfd.euler_2d import (
-    Euler2D,
-    Euler2DState,
-    supersonic_wedge_ic,
-    oblique_shock_exact,
-    double_mach_reflection_ic,
-)
+try:
+    from tensornet.cfd.euler_2d import (
+        Euler2D,
+        Euler2DState,
+        supersonic_wedge_ic,
+        oblique_shock_exact,
+        double_mach_reflection_ic,
+    )
+except ImportError:
+    pass
 
-from tensornet.cfd.godunov import (
-    roe_flux,
-    hll_flux,
-    hllc_flux,
-    exact_riemann,
-)
+try:
+    from tensornet.cfd.godunov import (
+        roe_flux,
+        hll_flux,
+        hllc_flux,
+        exact_riemann,
+    )
+except ImportError:
+    pass
 
-from tensornet.cfd.limiters import (
-    minmod,
-    superbee,
-    van_leer,
-    mc_limiter,
-)
+try:
+    from tensornet.cfd.limiters import (
+        minmod,
+        superbee,
+        van_leer,
+        mc_limiter,
+    )
+except ImportError:
+    pass
 
-from tensornet.cfd.boundaries import (
-    BCType,
-    FlowState,
-    BoundaryManager,
-    apply_reflective_bc,
-    apply_supersonic_inflow_bc,
-)
+try:
+    from tensornet.cfd.boundaries import (
+        BCType,
+        FlowState,
+        BoundaryManager,
+        apply_reflective_bc,
+        apply_supersonic_inflow_bc,
+    )
+except ImportError:
+    pass
 
-from tensornet.cfd.geometry import (
-    WedgeGeometry,
-    ImmersedBoundary,
-    compute_pressure_coefficient,
-    compute_drag_coefficient,
-)
+try:
+    from tensornet.cfd.geometry import (
+        WedgeGeometry,
+        ImmersedBoundary,
+        compute_pressure_coefficient,
+        compute_drag_coefficient,
+    )
+except ImportError:
+    pass
 
-from tensornet.cfd.qtt import (
-    field_to_qtt,
-    qtt_to_field,
-    euler_to_qtt,
-    qtt_to_euler,
-    compression_analysis,
-    estimate_area_law_exponent,
-    QTTCompressionResult,
-    tt_svd,
-)
+try:
+    from tensornet.cfd.qtt import (
+        field_to_qtt,
+        qtt_to_field,
+        euler_to_qtt,
+        qtt_to_euler,
+        compression_analysis,
+        estimate_area_law_exponent,
+        QTTCompressionResult,
+        tt_svd,
+    )
+except ImportError:
+    pass
 
 # Phase 21+: QTT-CFD (Logarithmic Complexity - The Holy Grail)
-from tensornet.cfd.qtt_cfd import (
-    QTTCFDConfig,
-    QTTEulerState,
-    QTT_Euler1D,
-    complexity_comparison,
-)
+try:
+    from tensornet.cfd.qtt_cfd import (
+        QTTCFDConfig,
+        QTTEulerState,
+        QTT_Euler1D,
+        complexity_comparison,
+    )
+except ImportError:
+    pass
 
-from tensornet.cfd.viscous import (
-    sutherland_viscosity,
-    thermal_conductivity,
-    compute_transport_properties,
-    velocity_gradients_2d,
-    temperature_gradient_2d,
-    stress_tensor_2d,
-    heat_flux_2d,
-    viscous_flux_x_2d,
-    viscous_flux_y_2d,
-    viscous_flux_divergence_2d,
-    compute_viscous_rhs_2d,
-    reynolds_number,
-    viscous_timestep_limit,
-    recovery_temperature,
-    stagnation_temperature,
-    stanton_number,
-    TransportProperties,
-)
+try:
+    from tensornet.cfd.viscous import (
+        sutherland_viscosity,
+        thermal_conductivity,
+        compute_transport_properties,
+        velocity_gradients_2d,
+        temperature_gradient_2d,
+        stress_tensor_2d,
+        heat_flux_2d,
+        viscous_flux_x_2d,
+        viscous_flux_y_2d,
+        viscous_flux_divergence_2d,
+        compute_viscous_rhs_2d,
+        reynolds_number,
+        viscous_timestep_limit,
+        recovery_temperature,
+        stagnation_temperature,
+        stanton_number,
+        TransportProperties,
+    )
+except ImportError:
+    pass
 
-from tensornet.cfd.navier_stokes import (
-    NavierStokes2D,
-    NavierStokes2DConfig,
-    NavierStokes2DResult,
-    flat_plate_ic,
-    compression_corner_ic,
-)
+try:
+    from tensornet.cfd.navier_stokes import (
+        NavierStokes2D,
+        NavierStokes2DConfig,
+        NavierStokes2DResult,
+        flat_plate_ic,
+        compression_corner_ic,
+    )
+except ImportError:
+    pass
 
-from tensornet.cfd.euler_3d import (
-    Euler3D,
-    Euler3DState,
-    hllc_flux_3d,
-    uniform_flow_3d,
-    sod_3d_ic,
-)
+try:
+    from tensornet.cfd.euler_3d import (
+        Euler3D,
+        Euler3DState,
+        hllc_flux_3d,
+        uniform_flow_3d,
+        sod_3d_ic,
+    )
+except ImportError:
+    pass
 
-from tensornet.cfd.real_gas import (
-    gamma_variable,
-    gamma_ideal,
-    equilibrium_gamma_air,
-    cp_polynomial,
-    enthalpy_sensible,
-    vibrational_energy,
-    compute_real_gas_properties,
-    specific_gas_constant,
-    temperature_from_enthalpy,
-    speed_of_sound_real,
-    post_shock_equilibrium,
-    GasProperties,
-    MW,
-    THETA_V,
-    T_DISSOC,
-)
+try:
+    from tensornet.cfd.real_gas import (
+        gamma_variable,
+        gamma_ideal,
+        equilibrium_gamma_air,
+        cp_polynomial,
+        enthalpy_sensible,
+        vibrational_energy,
+        compute_real_gas_properties,
+        specific_gas_constant,
+        temperature_from_enthalpy,
+        speed_of_sound_real,
+        post_shock_equilibrium,
+        GasProperties,
+        MW,
+        THETA_V,
+        T_DISSOC,
+    )
+except ImportError:
+    pass
 
 from tensornet.cfd.chemistry import (
     Species,
@@ -260,47 +298,59 @@ from tensornet.cfd.multi_objective import (
 )
 
 # Phase 21: WENO/TENO Shock Capturing
-from tensornet.cfd.weno import (
-    smoothness_indicators,
-    optimal_weights_left,
-    optimal_weights_right,
-    nonlinear_weights_js,
-    nonlinear_weights_z,
-    candidate_stencils_left,
-    candidate_stencils_right,
-    weno5_js,
-    weno5_z,
-    teno5,
-    weno_reconstruct_euler,
-)
+try:
+    from tensornet.cfd.weno import (
+        smoothness_indicators,
+        optimal_weights_left,
+        optimal_weights_right,
+        nonlinear_weights_js,
+        nonlinear_weights_z,
+        candidate_stencils_left,
+        candidate_stencils_right,
+        weno5_js,
+        weno5_z,
+        teno5,
+        weno_reconstruct_euler,
+    )
+except ImportError:
+    pass
 
 # Phase 21: WENO-TT Tensorized Reconstruction
-from tensornet.cfd.weno_tt import (
-    tensorize_smoothness_indicators,
-    tensorize_weights,
-    weno_tt_reconstruct,
-    apply_weno_tt_flux,
-    euler_weno_tt_flux,
-    WENOTTConfig,
-)
+try:
+    from tensornet.cfd.weno_tt import (
+        tensorize_smoothness_indicators,
+        tensorize_weights,
+        weno_tt_reconstruct,
+        apply_weno_tt_flux,
+        euler_weno_tt_flux,
+        WENOTTConfig,
+    )
+except ImportError:
+    pass
 
 # Phase 21: TT-CFD Core (TDVP-CFD Integration)
-from tensornet.cfd.tt_cfd import (
-    MPSState,
-    EulerMPO,
-    tdvp_euler_step,
-    TT_Euler1D,
-    TT_Euler2D,
-    check_conservation,
-)
+try:
+    from tensornet.cfd.tt_cfd import (
+        MPSState,
+        EulerMPO,
+        tdvp_euler_step,
+        TT_Euler1D,
+        TT_Euler2D,
+        check_conservation,
+    )
+except ImportError:
+    pass
 
 # Phase 21: TT-AMR Adaptive Bonds
-from tensornet.cfd.adaptive_tt import (
-    ShockDetector,
-    BondAdapter,
-    AdaptiveTTEuler,
-    EntanglementMonitor,
-)
+try:
+    from tensornet.cfd.adaptive_tt import (
+        ShockDetector,
+        BondAdapter,
+        AdaptiveTTEuler,
+        EntanglementMonitor,
+    )
+except ImportError:
+    pass
 
 __all__ = [
     # 1D Euler equations

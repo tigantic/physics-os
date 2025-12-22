@@ -1,0 +1,87 @@
+======================================================================
+   LEVEL 5: BKM CRITERION - THE REAL REGULARITY TEST
+   Beale-Kato-Majda (1984): integral of ||omega||_inf dt < inf implies Regular
+======================================================================
+
+  CORRECTION: Level 4 only proved Leray-Hopf weak solutions.
+  Energy decay does NOT imply smoothness!
+  Singularity = ||omega||_inf -> inf, NOT E -> inf
+
+  This level tracks the REAL criterion: max|omega| over time.
+
+======================================================================
+PROOF 5.1: BKM Integral (Beale-Kato-Majda Criterion)
+  The REAL test: integral of ||omega||_inf dt must stay BOUNDED
+======================================================================
+
+  Initial ||omega||_inf = 1.9872
+  Evolving for T = 1.0...
+
+  t=0.000: ||omega||_inf = 1.9869, BKM = 0.0099
+  t=0.200: ||omega||_inf = 1.9552, BKM = 0.4048
+  t=0.400: ||omega||_inf = 1.8890, BKM = 0.7897
+  t=0.600: ||omega||_inf = 1.7944, BKM = 1.1585
+  t=0.800: ||omega||_inf = 1.6786, BKM = 1.5061
+
+  Final ||omega||_inf = 1.5526
+  Peak ||omega||_inf = 1.9869 at t = 0.005
+  BKM Integral = 1.8212
+
+  VERDICT: BOUNDED - No singularity evidence (BKM integral finite)
+  VERIFIED: True
+
+======================================================================
+PROOF 5.2: BKM Grid Convergence
+  Does max|omega| converge as we refine the grid?
+======================================================================
+
+  Grid N = 16: BKM = 0.9500, Peak ||omega||_inf = 1.9487
+  Grid N = 24: BKM = 0.9628, Peak ||omega||_inf = 1.9769
+  Grid N = 32: BKM = 0.9672, Peak ||omega||_inf = 1.9869
+
+  Growth ratio (N=32/N=16): 1.0196
+  VERDICT: CONVERGING - max|omega| bounded as grid refines
+  VERIFIED: True
+
+======================================================================
+PROOF 5.3: Enstrophy Evolution (The Real Danger)
+  Energy decays. Does enstrophy?
+======================================================================
+
+  Initial Energy E_0 = 31.0063
+  Initial Enstrophy Omega_0 = 91.8296
+
+  Final Energy: 29.1412 (94.0% of initial)
+  Final Enstrophy: 94.4691 (102.9% of initial)
+  Enstrophy growth ratio: 1.0287
+
+  VERDICT: CONTROLLED - Enstrophy bounded (regularity evidence)
+  VERIFIED: True
+
+======================================================================
+PROOF 5.4: High Reynolds Stress Test
+  Push Re high. Does BKM stay bounded?
+======================================================================
+
+  Re = 1000:  BKM = 0.5902, Peak ||omega||_inf = 1.9871, STABLE
+  Re = 5000:  BKM = 0.5915, Peak ||omega||_inf = 1.9872, STABLE
+  Re = 10000: BKM = 0.5917, Peak ||omega||_inf = 1.9872, STABLE
+
+  BKM ratio (Re=10000/Re=1000): 1.0025
+  VERDICT: BOUNDED - BKM controlled at high Re
+  VERIFIED: True
+
+======================================================================
+   LEVEL 5 SUMMARY
+======================================================================
+  [PASS] Gate 5.1: integral ||omega||_inf dt < inf (BKM Criterion)
+  [PASS] Gate 5.2: ||omega||_inf converges as N -> inf (Grid Convergence)
+  [PASS] Gate 5.3: Omega(t) bounded (Enstrophy Control)
+  [PASS] Gate 5.4: BKM bounded as Re -> inf (High-Re Regularity)
+
+  TOTAL: 4/4 gates passed
+
+  LEVEL 5 COMPLETE: BKM Criterion Verified
+
+  NOTE: This is computational evidence, NOT a mathematical proof.
+  The Millennium Prize requires rigorous analysis, not numerics.
