@@ -41,6 +41,7 @@ PROOF_FILES = [
 
 def run_proof(proof_path: Path) -> Dict[str, Any]:
     """Run a single proof file and capture results."""
+    import os
     start_time = time.time()
     
     result = {
@@ -52,12 +53,17 @@ def run_proof(proof_path: Path) -> Dict[str, Any]:
     }
     
     try:
+        # Set UTF-8 encoding to handle unicode characters on Windows
+        env = os.environ.copy()
+        env['PYTHONIOENCODING'] = 'utf-8'
+        
         proc = subprocess.run(
             [sys.executable, str(proof_path)],
             capture_output=True,
             text=True,
             timeout=300,  # 5 min timeout per proof
             cwd=proof_path.parent.parent,  # Run from project root
+            env=env,
         )
         
         result['output'] = proc.stdout + proc.stderr
