@@ -107,11 +107,21 @@ class GeometryParameterization:
     
     def evaluate(self, alpha: torch.Tensor) -> torch.Tensor:
         """Map design variables to surface coordinates."""
-        raise NotImplementedError
+        from tensornet.core.phase_deferred import PhaseDeferredError
+        raise PhaseDeferredError(
+            phase="24",
+            reason="GeometryParameterization.evaluate - requires concrete implementation",
+            depends_on=["B-spline or FFD parameterization"]
+        )
     
     def gradient(self, alpha: torch.Tensor) -> torch.Tensor:
         """Compute dX/dα (Jacobian)."""
-        raise NotImplementedError
+        from tensornet.core.phase_deferred import PhaseDeferredError
+        raise PhaseDeferredError(
+            phase="24",
+            reason="GeometryParameterization.gradient - shape sensitivity Jacobian",
+            depends_on=["stable forward solver", "mesh deformation"]
+        )
 
 
 class BSplineParameterization(GeometryParameterization):
@@ -582,7 +592,12 @@ class ShapeOptimizer:
         elif self.config.optimizer == OptimizerType.LBFGS:
             return self.optimize_lbfgs(alpha0)
         else:
-            raise NotImplementedError(f"Optimizer {self.config.optimizer} not implemented")
+            from tensornet.core.phase_deferred import PhaseDeferredError
+            raise PhaseDeferredError(
+                phase="25",
+                reason=f"Optimizer {self.config.optimizer} - advanced optimization algorithm",
+                depends_on=["L-BFGS validated", "trust-region implementation"]
+            )
 
 
 def create_wedge_design_problem(

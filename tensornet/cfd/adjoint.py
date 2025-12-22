@@ -138,7 +138,12 @@ class ObjectiveFunction:
         **kwargs
     ) -> torch.Tensor:
         """Evaluate objective function."""
-        raise NotImplementedError
+        from tensornet.core.phase_deferred import PhaseDeferredError
+        raise PhaseDeferredError(
+            phase="24",
+            reason="ObjectiveFunction.evaluate - requires domain-specific implementation",
+            depends_on=["stable forward solver", "objective definition"]
+        )
     
     def gradient(
         self,
@@ -154,7 +159,12 @@ class ObjectiveFunction:
         Returns:
             Tuple of (∂J/∂ρ, ∂J/∂u, ∂J/∂v, ∂J/∂p)
         """
-        raise NotImplementedError
+        from tensornet.core.phase_deferred import PhaseDeferredError
+        raise PhaseDeferredError(
+            phase="24",
+            reason="ObjectiveFunction.gradient - adjoint gradient computation",
+            depends_on=["stable forward solver", "memory-efficient checkpointing"]
+        )
 
 
 class DragObjective(ObjectiveFunction):

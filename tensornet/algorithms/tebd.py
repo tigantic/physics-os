@@ -151,9 +151,11 @@ def build_gates_from_mpo(
     """
     # This would require knowing the structure of the MPO
     # For now, we require gates to be passed directly
-    raise NotImplementedError(
-        "Automatic gate extraction from MPO not yet implemented. "
-        "Please provide gates directly or use a Hamiltonian class."
+    from tensornet.core.phase_deferred import PhaseDeferredError
+    raise PhaseDeferredError(
+        phase="24",
+        reason="mpo_to_gates - automatic gate extraction from MPO",
+        depends_on=["Hamiltonian class interface", "MPO structure parser"]
     )
 
 

@@ -101,15 +101,30 @@ class ReducedOrderModel(nn.Module):
         Args:
             snapshots: Tensor of shape (n_snapshots, n_dof)
         """
-        raise NotImplementedError
+        from tensornet.core.phase_deferred import PhaseDeferredError
+        raise PhaseDeferredError(
+            phase="25",
+            reason="ROM.train_from_snapshots - POD/autoencoder training",
+            depends_on=["snapshot collection", "SVD implementation"]
+        )
     
     def encode(self, x: torch.Tensor) -> torch.Tensor:
         """Project high-dimensional state to latent space."""
-        raise NotImplementedError
+        from tensornet.core.phase_deferred import PhaseDeferredError
+        raise PhaseDeferredError(
+            phase="25",
+            reason="ROM.encode - projection to latent space",
+            depends_on=["trained basis vectors"]
+        )
     
     def decode(self, z: torch.Tensor) -> torch.Tensor:
         """Reconstruct high-dimensional state from latent representation."""
-        raise NotImplementedError
+        from tensornet.core.phase_deferred import PhaseDeferredError
+        raise PhaseDeferredError(
+            phase="25",
+            reason="ROM.decode - reconstruction from latent space",
+            depends_on=["trained basis vectors"]
+        )
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Encode then decode (reconstruction)."""

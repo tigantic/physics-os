@@ -233,7 +233,12 @@ class FourierNeuralOperator(CFDSurrogate):
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward pass (implemented in subclasses)."""
-        raise NotImplementedError("Use FNO2d or FNO3d")
+        from tensornet.core.phase_deferred import PhaseDeferredError
+        raise PhaseDeferredError(
+            phase="24",
+            reason="FourierNeuralOperator.forward - use FNO2d or FNO3d concrete classes",
+            depends_on=["spectral convolution implementation"]
+        )
 
 
 class FNO2d(FourierNeuralOperator):

@@ -100,7 +100,12 @@ class UncertaintyQuantifier(nn.Module):
         Returns:
             UncertaintyEstimate with mean, std, and bounds
         """
-        raise NotImplementedError
+        from tensornet.core.phase_deferred import PhaseDeferredError
+        raise PhaseDeferredError(
+            phase="25",
+            reason="UncertaintyQuantifier.predict_with_uncertainty - UQ method",
+            depends_on=["ensemble training", "dropout calibration"]
+        )
     
     def calibrate_temperature(self, val_x: torch.Tensor,
                              val_y: torch.Tensor):
@@ -111,7 +116,12 @@ class UncertaintyQuantifier(nn.Module):
             val_x: Validation inputs
             val_y: Validation targets
         """
-        raise NotImplementedError
+        from tensornet.core.phase_deferred import PhaseDeferredError
+        raise PhaseDeferredError(
+            phase="25",
+            reason="UncertaintyQuantifier.calibrate_temperature - temp scaling calibration",
+            depends_on=["validation dataset", "NLL optimization"]
+        )
 
 
 class EnsembleUQ(UncertaintyQuantifier):

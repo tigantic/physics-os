@@ -623,7 +623,12 @@ class MultiObjectiveOptimizer:
         elif self.config.algorithm == MOOAlgorithm.WEIGHTED_SUM:
             return self.run_weighted_sum()
         else:
-            raise NotImplementedError(f"Algorithm {self.config.algorithm} not implemented")
+            from tensornet.core.phase_deferred import PhaseDeferredError
+            raise PhaseDeferredError(
+                phase="25",
+                reason=f"MOO algorithm {self.config.algorithm} - advanced multi-objective solver",
+                depends_on=["NSGA-II validated", "MOEA/D implementation"]
+            )
 
 
 def create_drag_heating_problem(n_vars: int = 10) -> Tuple[List[ObjectiveSpec], Tuple[torch.Tensor, torch.Tensor]]:

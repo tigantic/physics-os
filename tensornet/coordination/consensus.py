@@ -155,7 +155,12 @@ class ConsensusProtocol:
         Returns:
             Updated value
         """
-        raise NotImplementedError
+        from tensornet.core.phase_deferred import PhaseDeferredError
+        raise PhaseDeferredError(
+            phase="25",
+            reason="ConsensusProtocol._compute_update - protocol-specific update rule",
+            depends_on=["average consensus", "max consensus", "formation protocols"]
+        )
     
     def iterate(self) -> float:
         """Perform one consensus iteration.
