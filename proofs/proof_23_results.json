@@ -1,0 +1,60 @@
+{
+  "phase": "23",
+  "title": "Infrastructure Hardening (TMR)",
+  "proofs": [
+    {
+      "name": "TMR Bit Flip Correction",
+      "passed": true,
+      "details": {
+        "seu_detected": true,
+        "value_recovered": true,
+        "max_error": 0.0,
+        "location_correct": true,
+        "n_events": 1
+      }
+    },
+    {
+      "name": "TMR Multiple Bit Flips",
+      "passed": true,
+      "details": {
+        "all_corrected": true,
+        "max_error": 0.0,
+        "flips_detected": 3
+      }
+    },
+    {
+      "name": "Conservation Watchdog Detection",
+      "passed": true,
+      "details": {
+        "normal_evolution_ok": true,
+        "energy_spike_detected": true,
+        "energy_score_bad": 9.999999999999991,
+        "negative_density_detected": true,
+        "nan_detected": true
+      }
+    },
+    {
+      "name": "Checkpoint Rollback Recovery",
+      "passed": true,
+      "details": {
+        "checkpoint_saved": true,
+        "rollback_correct": true,
+        "load_correct": true,
+        "pruning_correct": true,
+        "latest_correct": true
+      }
+    },
+    {
+      "name": "TMR Executor Integration",
+      "passed": true,
+      "details": {
+        "single_output_correct": true,
+        "max_error": 0.0,
+        "stats_ok": true,
+        "multi_output_correct": true
+      }
+    }
+  ],
+  "all_passed": true,
+  "summary": "5/5"
+}
