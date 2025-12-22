@@ -73,20 +73,62 @@ Research outcomes ranked by impact. All levels constitute meaningful contributio
 
 ## Technical Roadmap
 
-### Phase 1: Foundation
+### Phase 1a: 2D Stepping Stone
 
-**Objective:** Build 3D incompressible Navier-Stokes solver in QTT format.
+**Objective:** Build 2D incompressible Navier-Stokes solver in QTT format to validate Poisson infrastructure.
+
+**Rationale:** De-risk the Projection method before committing to 3D. 2D is simpler (streamfunction optional), Poisson is 2D, faster iteration.
+
+**Deliverables:**
+- [ ] 2D QTT state representation (velocity field u, v)
+- [ ] 2D Laplacian MPO construction
+- [ ] 2D Poisson solver in TT format (ALS-based)
+- [ ] Projection step: u ← u - ∇φ in QTT
+- [ ] Advection operator $(u \cdot \nabla)u$ in 2D QTT
+- [ ] Diffusion operator $\nu \nabla^2 u$ in 2D QTT
+- [ ] Time integration (fractional step)
+- [ ] χ(t) monitoring infrastructure
+- [ ] Validation: 2D Taylor-Green vortex decay
+- [ ] Validation: 2D lid-driven cavity
+
+**Gate Criteria:** 
+- TT Poisson solver converges reliably
+- 2D Taylor-Green matches analytic decay rate (< 5% error)
+- Divergence error < 10⁻⁶ after projection
+
+**Tag:** `[PHASE-1A]`
+
+---
+
+### Phase 1b: 3D Extension
+
+**Objective:** Extend to 3D incompressible Navier-Stokes in QTT format.
 
 **Deliverables:**
 - [ ] 3D QTT state representation (velocity field u, v, w)
-- [ ] Incompressibility constraint enforcement in TT format
-- [ ] Pressure Poisson solver in TT format
-- [ ] Advection operator (nonlinear term) in TT format
-- [ ] Diffusion operator (Laplacian) in TT format
-- [ ] Time integration scheme (TDVP or splitting)
-- [ ] χ(t) monitoring infrastructure
+- [ ] 3D Laplacian MPO construction
+- [ ] 3D Poisson solver (extend 2D infrastructure)
+- [ ] 3D Projection step
+- [ ] 3D Advection operator $(\mathbf{u} \cdot \nabla)\mathbf{u}$
+- [ ] 3D Diffusion operator $\nu \nabla^2 \mathbf{u}$
+- [ ] Periodic boundary conditions
+- [ ] χ(t) monitoring for all three components
 
-**Gate Criteria:** Solver converges on Taylor-Green vortex at Re = 100.
+**Gate Criteria:** 3D Taylor-Green vortex converges at Re = 100.
+
+**Tag:** `[PHASE-1B]`
+
+---
+
+### Phase 1 Complete
+
+**Combined Gate:** Both Phase 1a and 1b gates passed.
+
+**Artifacts:**
+- `tensornet/cfd/qtt_ns_2d.py` — 2D incompressible solver
+- `tensornet/cfd/qtt_ns_3d.py` — 3D incompressible solver  
+- `tensornet/cfd/tt_poisson.py` — TT Poisson solver
+- `proofs/proof_ns_projection.py` — Projection method proofs
 
 **Tag:** `[PHASE-1]`
 
@@ -157,7 +199,8 @@ Threats to the χ-regularity hypothesis, ranked by severity.
 | R4 | 3D QTT-NS solver too expensive even with O(log N) | MEDIUM | GPU acceleration; algorithmic improvements | `[OPEN]` |
 | R5 | Cannot reach high enough Re to observe scaling | MEDIUM | Adaptive χ; focus on scaling exponents | `[OPEN]` |
 | R6 | Prior work already explored this angle | LOW | Literature review; differentiate approach | `[OPEN]` |
-| R7 | Incompressibility constraint incompatible with QTT | MEDIUM | Projection methods; penalty methods | `[OPEN]` |
+| R7 | Incompressibility constraint incompatible with QTT | MEDIUM | Projection method selected [DECISION-005] | `[MITIGATING]` |
+| R8 | TT Poisson solver too slow or fails to converge | MEDIUM | 2D validation first; multigrid preconditioner | `[OPEN]` |
 
 ---
 

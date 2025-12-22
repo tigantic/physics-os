@@ -71,7 +71,11 @@ Challenge: Biot-Savart is nonlocal.
 
 Challenge: Stiff system; may require implicit solver.
 
-**Decision Needed:** `[DECISION-TBD]`
+**Decision: `[DECISION-005]` — Projection Method Selected**
+
+Rationale: Penalty method would contaminate χ(t) signal at extreme Re with artificial dissipation. 
+Cannot distinguish physical singularity from numerical artifact. Projection gives clean, 
+interpretable χ(t) growth. See DECISION_LOG.md for full analysis.
 
 ---
 

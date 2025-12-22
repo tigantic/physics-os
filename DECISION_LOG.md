@@ -156,6 +156,93 @@ If significant competitive pressure emerges, may restrict pre-publication access
 
 ---
 
+### [DECISION-005] Projection Method for Incompressibility
+
+**Date:** 2025-12-22  
+**Category:** Architecture  
+**Status:** DECIDED  
+
+**Context:**  
+The 3D incompressible Navier-Stokes equations require enforcing ∇·u = 0. Three approaches were analyzed:
+1. Projection Method (Chorin-Temam) — solve Poisson for pressure, project to div-free
+2. Vorticity-Streamfunction — work with ω = ∇×u, Biot-Savart recovery
+3. Penalty/Artificial Compressibility — add -λ∇(∇·u) term, approximate
+
+**Options Considered:**  
+
+1. **Penalty Method**
+   - Pros: Fast to implement, explicit timestepping, no Poisson solve
+   - Cons: Only approximately incompressible (error ~1/λ), artificial dissipation, stiff at high λ
+   - CRITICAL: At extreme Re, cannot distinguish χ growth from physical singularity vs numerical artifact
+   - Phase 3/4 impact: Ambiguous results, would need to redo with Projection anyway
+
+2. **Vorticity-Streamfunction**
+   - Pros: Automatic incompressibility, natural for vortex dynamics
+   - Cons: Biot-Savart integral is nonlocal O(N⁶), breaks QTT structure
+   - Risk: HIGH — uncharted territory for QTT
+
+3. **Projection Method**
+   - Pros: Exact incompressibility, pressure available, matches literature
+   - Cons: Requires TT Poisson solver (iterative)
+   - Phase 3/4 impact: Clean χ(t) signal, publishable without asterisks
+
+**Decision:**  
+Use **Projection Method** for incompressibility enforcement.
+
+Rationale:
+- Phase 3 (extreme Re exploration) requires unambiguous χ(t) interpretation
+- Penalty would contaminate signal with artificial effects
+- We already have TT linear algebra infrastructure (ALS/DMRG)
+- Poisson solver is tractable; penalty savings are false economy
+- Results directly comparable to literature; publication-ready
+
+**Consequences:**  
+- Phase 1 requires working TT Poisson solver
+- Add Phase 1a (2D stepping stone) to de-risk Poisson implementation
+- Slower initial progress, but cleaner final results
+- Pressure field available for validation benchmarks
+- Exact mass conservation (to truncation tolerance)
+
+**Review Trigger:**  
+If TT Poisson proves intractable after extensive effort, revisit with Penalty as fallback (with documented limitations).
+- Team morale protected by recognizing incremental wins
+
+**Review Trigger:**  
+If levels prove too coarse or too fine, adjust.
+
+---
+
+### [DECISION-004] Open Science Commitment
+
+**Date:** 2025-12-22  
+**Category:** Methodology  
+**Status:** DECIDED  
+
+**Context:**  
+Credibility in mathematics requires reproducibility. Closed research invites skepticism.
+
+**Options Considered:**  
+1. Keep proprietary until publication — protects priority but limits review
+2. Fully open from start — maximum transparency, risk of scoop
+
+**Decision:**  
+Fully open development:
+- All code on GitHub public
+- All data archived
+- Real-time progress visible
+
+Rationale: The χ-regularity angle is novel enough that scooping is unlikely. Transparency builds trust.
+
+**Consequences:**  
+- Anyone can reproduce our results
+- Community can identify errors early
+- Must maintain clean, documented code at all times
+
+**Review Trigger:**  
+If significant competitive pressure emerges, may restrict pre-publication access.
+
+---
+
 ## Pending Decisions
 
 | ID | Topic | Status | Blocking |
