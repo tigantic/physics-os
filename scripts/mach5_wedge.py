@@ -32,10 +32,9 @@ from datetime import datetime
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from tensornet.cfd.euler_2d import (
-    Euler2D, Euler2DState, supersonic_wedge_ic, oblique_shock_exact
+    Euler2D, Euler2DState, BCType, supersonic_wedge_ic, oblique_shock_exact
 )
 from tensornet.cfd.geometry import WedgeGeometry, ImmersedBoundary
-from tensornet.cfd.boundaries import BCType, FlowState
 
 
 def run_mach5_wedge(
@@ -77,10 +76,10 @@ def run_mach5_wedge(
         print(f"Date: {datetime.now().isoformat()}")
         print()
         print("CONFIGURATION:")
-        print(f"  Freestream Mach number: M∞ = {M_inf}")
-        print(f"  Wedge half-angle: θ = {wedge_angle_deg}°")
-        print(f"  Grid resolution: {Nx} × {Ny}")
-        print(f"  Domain: {Lx} × {Ly}")
+        print(f"  Freestream Mach number: M_inf = {M_inf}")
+        print(f"  Wedge half-angle: theta = {wedge_angle_deg} deg")
+        print(f"  Grid resolution: {Nx} x {Ny}")
+        print(f"  Domain: {Lx} x {Ly}")
         print(f"  CFL number: {cfl}")
         print(f"  Final time: {t_final}")
         print()
@@ -89,12 +88,12 @@ def run_mach5_wedge(
     exact = oblique_shock_exact(M_inf, wedge_angle, gamma)
     
     if verbose:
-        print("EXACT OBLIQUE SHOCK RELATIONS (θ-β-M):")
-        print(f"  Shock angle: β = {math.degrees(exact['beta']):.4f}°")
-        print(f"  Downstream Mach: M₂ = {exact['M2']:.4f}")
-        print(f"  Pressure ratio: p₂/p₁ = {exact['p2_p1']:.4f}")
-        print(f"  Density ratio: ρ₂/ρ₁ = {exact['rho2_rho1']:.4f}")
-        print(f"  Temperature ratio: T₂/T₁ = {exact['T2_T1']:.4f}")
+        print("EXACT OBLIQUE SHOCK RELATIONS (theta-beta-M):")
+        print(f"  Shock angle: beta = {math.degrees(exact['beta']):.4f} deg")
+        print(f"  Downstream Mach: M2 = {exact['M2']:.4f}")
+        print(f"  Pressure ratio: p2/p1 = {exact['p2_p1']:.4f}")
+        print(f"  Density ratio: rho2/rho1 = {exact['rho2_rho1']:.4f}")
+        print(f"  Temperature ratio: T2/T1 = {exact['T2_T1']:.4f}")
         print()
     
     # Initialize solver
@@ -111,21 +110,37 @@ def run_mach5_wedge(
     u_inf = M_inf * a_inf
     
     # Boundary conditions
-    solver.bc_left = BCType.INFLOW
+    solver.bc_left = BCType.SUPERSONIC_INFLOW
     solver.bc_right = BCType.OUTFLOW
     solver.bc_bottom = BCType.REFLECTIVE  # Symmetry / wedge surface
     solver.bc_top = BCType.OUTFLOW
     
+    # Set inflow state for supersonic inflow BC
+    solver.inflow_state = ic
+    
     # Create wedge geometry
     wedge = WedgeGeometry(
         x_leading_edge=0.3,
-        y_leading_edge=0.0,
+        y_leading_edge=0.0,  # Bottom of domain
         half_angle=wedge_angle,
         length=1.5
     )
     
-    # Set up immersed boundary (if using full domain with wedge inside)
-    # For this simulation, we use reflective bottom BC as simplified wedge
+    # Create grid for immersed boundary
+    dx = Lx / Nx
+    dy = Ly / Ny
+    x = torch.linspace(dx/2, Lx - dx/2, Nx, dtype=torch.float64)
+    y = torch.linspace(dy/2, Ly - dy/2, Ny, dtype=torch.float64)
+    Y, X = torch.meshgrid(y, x, indexing='ij')
+    
+    # Set up immersed boundary for actual wedge
+    ib = ImmersedBoundary(wedge, X, Y)
+    
+    if verbose:
+        n_solid = ib.mask.sum().item()
+        n_ghost = ib.ghost_mask.sum().item()
+        print(f"  Wedge cells: {n_solid} solid, {n_ghost} ghost")
+        print()
     
     if verbose:
         print("SIMULATION PROGRESS:")
@@ -141,6 +156,12 @@ def run_mach5_wedge(
         dt = min(dt, t_final - solver.time)
         
         solver.step(dt)
+        
+        # Apply immersed boundary condition after each step
+        U = solver.state.to_conservative()
+        U = ib.apply(U)
+        solver.state = Euler2DState.from_conservative(U, gamma)
+        
         steps += 1
         
         if verbose and steps % output_interval == 0:
@@ -156,8 +177,42 @@ def run_mach5_wedge(
     
     # Extract results at measurement location
     # Sample behind the expected shock location
-    x_sample = 1.0
-    y_sample = 0.25  # Above bottom boundary
+    # For wedge at x=0.3 with shock angle beta, shock height at x is:
+    # y_shock = (x - x_le) * tan(beta)
+    # We sample just below the shock to get post-shock values
+    beta = exact['beta']
+    x_sample = 1.2  # Further downstream where shock is developed
+    y_shock = (x_sample - 0.3) * math.tan(beta)
+    y_wedge = (x_sample - 0.3) * math.tan(wedge_angle)
+    y_sample = (y_shock + y_wedge) / 2  # Midpoint between shock and wedge
+    
+    # Find maximum pressure location in post-shock region as alternative sample point
+    state = solver.state
+    # Mask out wedge region (inside solid)
+    p_masked = state.p.clone()
+    p_masked[ib.mask] = 0.0
+    
+    # Find location with significant pressure increase (in post-shock region)
+    p_freestream = 1.0
+    post_shock_mask = p_masked > 1.5 * p_freestream
+    if post_shock_mask.any():
+        # Use average in post-shock region
+        p_ratio_field = p_masked / p_freestream
+        rho_ratio_field = state.rho / 1.0
+        M_field = state.M
+        
+        # Get indices where post-shock conditions exist
+        post_shock_indices = torch.nonzero(post_shock_mask)
+        if len(post_shock_indices) > 0:
+            # Sample from center of post-shock region
+            mid_idx = len(post_shock_indices) // 2
+            j_sample = post_shock_indices[mid_idx, 0].item()
+            i_sample = post_shock_indices[mid_idx, 1].item()
+            x_sample = (i_sample + 0.5) * (Lx / Nx)
+            y_sample = (j_sample + 0.5) * (Ly / Ny)
+    else:
+        # Fallback to geometric calculation
+        pass
     
     i_sample = int(x_sample / (Lx / Nx))
     j_sample = int(y_sample / (Ly / Ny))
@@ -209,9 +264,9 @@ def run_mach5_wedge(
     
     if verbose:
         if passed:
-            print("✓ SIMULATION VALIDATED: Results within 15% of exact oblique shock theory")
+            print("[PASS] SIMULATION VALIDATED: Results within 15% of exact oblique shock theory")
         else:
-            print("⚠ SIMULATION WARNING: Some results exceed 15% tolerance")
+            print("[WARN] SIMULATION WARNING: Some results exceed 15% tolerance")
             print("  (Expected for coarse grid - increase resolution for better accuracy)")
         print("=" * 70)
     
