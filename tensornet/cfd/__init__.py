@@ -72,6 +72,14 @@ from tensornet.cfd.qtt import (
     tt_svd,
 )
 
+# Phase 21+: QTT-CFD (Logarithmic Complexity - The Holy Grail)
+from tensornet.cfd.qtt_cfd import (
+    QTTCFDConfig,
+    QTTEulerState,
+    QTT_Euler1D,
+    complexity_comparison,
+)
+
 from tensornet.cfd.viscous import (
     sutherland_viscosity,
     thermal_conductivity,

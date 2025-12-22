@@ -15,12 +15,18 @@ Pass Criteria:
 """
 
 import json
+import os
 import subprocess
 import sys
 import time
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any
+
+# Force UTF-8 output on Windows
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
 
 # Proof files to run (in order)
@@ -33,6 +39,8 @@ PROOF_FILES = [
     'proof_21_weno_shock.py',
     'proof_21_tdvp_euler_conservation.py',
     'proof_21_tdvp_euler_sod.py',
+    'proof_21_tt_evolution.py',  # TT-CFD O(N·χ²) verification
+    'proof_21_dense_audit.py',   # Dense materialization guard (bulletproof)
     'proof_phase_22.py',
     'proof_phase_23.py',
     'proof_phase_24.py',
@@ -64,9 +72,13 @@ def run_proof(proof_path: Path) -> Dict[str, Any]:
             timeout=300,  # 5 min timeout per proof
             cwd=proof_path.parent.parent,  # Run from project root
             env=env,
+            encoding='utf-8',
+            errors='replace',
         )
         
-        result['output'] = proc.stdout + proc.stderr
+        stdout = proc.stdout or ''
+        stderr = proc.stderr or ''
+        result['output'] = stdout + stderr
         result['return_code'] = proc.returncode
         result['passed'] = proc.returncode == 0
         
@@ -172,9 +184,9 @@ def main():
         results.append(result)
         
         if result['passed']:
-            print(f"✓ PASSED ({result['duration_sec']:.1f}s)")
+            print(f"[PASS] ({result['duration_sec']:.1f}s)")
         else:
-            print(f"✗ FAILED ({result['duration_sec']:.1f}s)")
+            print(f"[FAIL] ({result['duration_sec']:.1f}s)")
             if result['error']:
                 print(f"    Error: {result['error']}")
     
@@ -208,13 +220,13 @@ def main():
     print()
     print("=" * 70)
     if summary['failed'] == 0:
-        print(" ✓ ALL PROOFS PASSED")
+        print(" [SUCCESS] ALL PROOFS PASSED")
     else:
-        print(f" ✗ {summary['failed']} PROOF(S) FAILED")
+        print(f" [FAILURE] {summary['failed']} PROOF(S) FAILED")
     print("=" * 70)
     
     return 0 if summary['failed'] == 0 else 1
 
 
 if __name__ == '__main__':
-    exit(main())
+    sys.exit(main())

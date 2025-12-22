@@ -1,0 +1,125 @@
+{
+  "proof_id": "21.6",
+  "name": "Dense Materialization Audit (Hardened)",
+  "timestamp": "2025-12-22T08:02:24.814318",
+  "claim_scope": {
+    "storage": "O(N\u00b7d\u00b7\u03c7\u00b2) - PROVEN by core counts",
+    "no_dense_grid": "O(N\u00b2), O(N\u00b3) forbidden - ENFORCED by guard",
+    "diagnostics_allowed": "O(N\u00b7d) vectors OK (per-site, primitives)",
+    "runtime": "Empirically sub-dense - NOT proven here"
+  },
+  "tests": [
+    {
+      "test": "guard_catches_forced_violation",
+      "zeros_caught": true,
+      "stack_caught": true,
+      "clone_caught": true,
+      "diagnostic_allowed": true,
+      "passed": true,
+      "note": "KILLER TEST: Guard is NOT ceremonial - violations are enforced!"
+    },
+    {
+      "test": "tt_step_no_dense_proof_mode",
+      "mode": "PROOF (forbid=True)",
+      "N": 64,
+      "d": 3,
+      "chi_max": 16,
+      "n_steps": 10,
+      "hard_threshold": 49152,
+      "soft_threshold": 4915,
+      "total_violations": 0,
+      "critical_violations": 0,
+      "tt_storage_elements": 1692,
+      "tt_expected_max": 49152,
+      "tt_within_bound": true,
+      "actual_vs_theoretical": 0.034423828125,
+      "passed": true,
+      "note": "PROOF MODE: would have raised RuntimeError on critical violation"
+    },
+    {
+      "test": "tt_solve_no_dense",
+      "mode": "DIAGNOSTIC (forbid=False)",
+      "N": 32,
+      "chi_max": 8,
+      "steps_taken": 100,
+      "hard_threshold": 6144,
+      "total_violations": 0,
+      "critical_violations": 0,
+      "passed": true,
+      "note": "Extended solve with 0 critical dense ops"
+    },
+    {
+      "test": "mps_operations_no_dense",
+      "mode": "PROOF (forbid=True)",
+      "N": 64,
+      "chi_max": 16,
+      "total_violations": 0,
+      "critical_violations": 0,
+      "passed": true,
+      "note": "MPS ops are O(N\u00b7\u03c7\u00b2); O(N\u00b7d) diagnostics allowed, O(N\u00b2+) forbidden"
+    },
+    {
+      "test": "complexity_storage_bound",
+      "claim": "Storage is O(N\u00b7d\u00b7\u03c7\u00b2)",
+      "results": {
+        "N32_chi4": {
+          "storage": 828,
+          "expected_max_Ndchi2": 1536,
+          "within_bound": true,
+          "ratio_to_bound": 0.5390625
+        },
+        "N32_chi8": {
+          "storage": 828,
+          "expected_max_Ndchi2": 6144,
+          "within_bound": true,
+          "ratio_to_bound": 0.134765625
+        },
+        "N32_chi16": {
+          "storage": 828,
+          "expected_max_Ndchi2": 24576,
+          "within_bound": true,
+          "ratio_to_bound": 0.03369140625
+        },
+        "N64_chi4": {
+          "storage": 1692,
+          "expected_max_Ndchi2": 3072,
+          "within_bound": true,
+          "ratio_to_bound": 0.55078125
+        },
+        "N64_chi8": {
+          "storage": 1692,
+          "expected_max_Ndchi2": 12288,
+          "within_bound": true,
+          "ratio_to_bound": 0.1376953125
+        },
+        "N64_chi16": {
+          "storage": 1692,
+          "expected_max_Ndchi2": 49152,
+          "within_bound": true,
+          "ratio_to_bound": 0.034423828125
+        },
+        "N128_chi4": {
+          "storage": 3420,
+          "expected_max_Ndchi2": 6144,
+          "within_bound": true,
+          "ratio_to_bound": 0.556640625
+        },
+        "N128_chi8": {
+          "storage": 3420,
+          "expected_max_Ndchi2": 24576,
+          "within_bound": true,
+          "ratio_to_bound": 0.13916015625
+        },
+        "N128_chi16": {
+          "storage": 3420,
+          "expected_max_Ndchi2": 98304,
+          "within_bound": true,
+          "ratio_to_bound": 0.0347900390625
+        }
+      },
+      "passed": true,
+      "note": "Storage bound is the ROCK-SOLID part of the claim"
+    }
+  ],
+  "all_passed": true
+}

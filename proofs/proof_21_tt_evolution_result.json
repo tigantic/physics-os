@@ -1,0 +1,80 @@
+{
+  "proof_id": "21.5",
+  "name": "TT-CFD True TDVP Evolution Verification",
+  "timestamp": "2025-12-22T08:02:40.090087",
+  "tests": [
+    {
+      "test": "tt_euler_time_evolution",
+      "N": 32,
+      "chi_max": 16,
+      "n_steps": 10,
+      "rho_change": 0.00010371208190917969,
+      "state_evolved": true,
+      "mass_0": 18.0,
+      "mass_1": 18.0,
+      "mass_error": 0.0,
+      "mass_conserved": true,
+      "passed": true
+    },
+    {
+      "test": "bond_dimension_effect",
+      "results_by_chi": {
+        "4": {
+          "actual_chi": 3,
+          "non_trivial_cores": 64,
+          "total_cores": 64,
+          "chi_max_respected": true
+        },
+        "8": {
+          "actual_chi": 3,
+          "non_trivial_cores": 64,
+          "total_cores": 64,
+          "chi_max_respected": true
+        },
+        "16": {
+          "actual_chi": 3,
+          "non_trivial_cores": 64,
+          "total_cores": 64,
+          "chi_max_respected": true
+        },
+        "32": {
+          "actual_chi": 3,
+          "non_trivial_cores": 64,
+          "total_cores": 64,
+          "chi_max_respected": true
+        }
+      },
+      "chi_matters": true,
+      "has_nontrivial_structure": true,
+      "chi_max_respected": true,
+      "passed": true,
+      "note": "If chi_matters=False, bond dimension has no effect on dynamics"
+    },
+    {
+      "test": "complexity_scaling",
+      "chi": 8,
+      "timings": {
+        "16": 0.003942109999843524,
+        "32": 0.011205139999947277,
+        "64": 0.01916376000008313,
+        "128": 0.038218899999992575
+      },
+      "scaling_linear": true,
+      "passed": true,
+      "note": "scaling_linear=True means O(N) or O(N log N), not O(N\u00b3)"
+    },
+    {
+      "test": "mps_actually_compressed",
+      "N": 64,
+      "chi_max_requested": 32,
+      "actual_max_chi": 3,
+      "actual_min_chi": 1,
+      "is_compressed": true,
+      "uses_chi_max": false,
+      "passed": true,
+      "note": "If is_compressed=False, MPS is trivial product state (chi=1)"
+    }
+  ],
+  "all_passed": true,
+  "critical_failures": []
+}

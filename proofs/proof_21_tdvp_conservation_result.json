@@ -1,7 +1,7 @@
 {
   "proof_id": "21.3",
   "name": "TDVP-Euler Conservation (Simplified)",
-  "timestamp": "2025-12-22T04:28:40.347216",
+  "timestamp": "2025-12-22T08:03:08.360502",
   "tests": [
     {
       "test": "mps_state_roundtrip",
