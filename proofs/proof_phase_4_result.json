@@ -1,0 +1,50 @@
+{
+  "phase": 4,
+  "title": "Global Regularity Framework",
+  "summary": {
+    "\u03c7 Boundedness": "PASS",
+    "Enstrophy-\u03c7 Relationship": "PASS",
+    "Spectral Radius Tracking": "PASS",
+    "Regularity Consistency": "PASS"
+  },
+  "passed": 4,
+  "total": 4,
+  "details": {
+    "chi_boundedness": {
+      "chi_initial": 2.0,
+      "chi_final": 2.0,
+      "chi_max_observed": 2.0,
+      "boundedness_ratio": 1.0,
+      "chi_decreasing": true,
+      "success": true
+    },
+    "enstrophy_chi": {
+      "initial_enstrophy": 0.5000000000000001,
+      "final_enstrophy": 0.40936537653900196,
+      "enstrophy_decay_rate": 0.18126924692199628,
+      "gradient_decay_rate": 0.09516258196402827,
+      "monotonic_decay": true,
+      "success": true
+    },
+    "spectral_radius": {
+      "smooth_initial": 1.0000000000000093,
+      "smooth_final": 0.941764533584258,
+      "perturbed_initial": 5.036229900938537,
+      "perturbed_final": 0.990708764998274,
+      "smooth_decay": true,
+      "perturbed_larger": true,
+      "success": true
+    },
+    "regularity_consistency": {
+      "smooth_assessment": "smooth",
+      "perturbed_assessment": "complex",
+      "repeat_assessment": "smooth",
+      "smooth_max_chi": 2.0,
+      "perturbed_max_chi": 64.0,
+      "smooth_is_smooth": true,
+      "perturbed_is_different": true,
+      "reproducible": true,
+      "success": true
+    }
+  }
+}
