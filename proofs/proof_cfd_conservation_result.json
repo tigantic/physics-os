@@ -1,0 +1,62 @@
+{
+  "timestamp": "2025-12-21T19:25:36.098983",
+  "description": "CFD Conservation Law Proof Tests",
+  "tests": [
+    {
+      "test": "euler1d_mass_conservation",
+      "initial_mass": 0.5625,
+      "final_mass": 0.5625,
+      "relative_error": 0.0,
+      "passed": true,
+      "tolerance": 1e-10
+    },
+    {
+      "test": "euler1d_periodic_conservation",
+      "initial": {
+        "mass": 1.0000000000002243,
+        "momentum": 0.5000000000001121,
+        "energy": 2.6250000000000284
+      },
+      "final": {
+        "mass": 1.0000000000002243,
+        "momentum": 0.5000000000001121,
+        "energy": 2.6250000000000284
+      },
+      "errors": {
+        "mass": 0.0,
+        "momentum": 0.0,
+        "energy": 0.0
+      },
+      "passed": true,
+      "tolerance": 1e-08
+    },
+    {
+      "test": "rankine_hugoniot_shock_relations",
+      "rho_star": 0.426319420337677,
+      "u_star": 0.9274526238441467,
+      "p_star": 0.303130179643631,
+      "rho_positive": true,
+      "p_positive": true,
+      "passed": true
+    },
+    {
+      "test": "entropy_condition",
+      "s_pre": 1.0,
+      "s_post": 1.0,
+      "entropy_increases": true,
+      "passed": true
+    },
+    {
+      "test": "flux_consistency",
+      "hll_error": 2.220446049250313e-16,
+      "hllc_error": 1.5157364252615935e-10,
+      "roe_error": 0.0,
+      "passed": true,
+      "tolerance": 1e-06
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0
+  }
+}
