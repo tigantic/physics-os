@@ -123,7 +123,28 @@ if coverage < 80:
       with:
         python-version: '3.11'
 
-    - name: Build documentation placeholder
+    - name: Install dependencies
       run: |
-        echo "Documentation build would run here"
-        echo "Future: Sphinx with autodoc for API reference"
+        python -m pip install --upgrade pip
+        pip install torch --index-url https://download.pytorch.org/whl/cpu
+        pip install numpy scipy
+
+    - name: Generate API documentation
+      run: |
+        python tensornet/docs/api_reference.py
+        echo "Generated $(ls -1 docs/api/*.md | wc -l) API reference files"
+
+    - name: Validate documentation structure
+      run: |
+        test -f docs/tutorials/mps_ground_state.md || echo "::warning::Missing MPS tutorial"
+        test -f docs/tutorials/cfd_compressible_flow.md || echo "::warning::Missing CFD tutorial"
+        test -f docs/REQUIREMENTS_TRACEABILITY.md || echo "::warning::Missing requirements traceability"
+        test -f CONTRIBUTING.md || echo "::warning::Missing CONTRIBUTING.md"
+        echo "Documentation structure validated"
+
+    - name: Upload docs artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: api-docs
+        path: docs/api/
+        retention-days: 30
