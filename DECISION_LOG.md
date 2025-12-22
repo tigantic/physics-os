@@ -205,41 +205,14 @@ Rationale:
 
 **Review Trigger:**  
 If TT Poisson proves intractable after extensive effort, revisit with Penalty as fallback (with documented limitations).
-- Team morale protected by recognizing incremental wins
 
-**Review Trigger:**  
-If levels prove too coarse or too fine, adjust.
-
----
-
-### [DECISION-004] Open Science Commitment
-
-**Date:** 2025-12-22  
-**Category:** Methodology  
-**Status:** DECIDED  
-
-**Context:**  
-Credibility in mathematics requires reproducibility. Closed research invites skepticism.
-
-**Options Considered:**  
-1. Keep proprietary until publication — protects priority but limits review
-2. Fully open from start — maximum transparency, risk of scoop
-
-**Decision:**  
-Fully open development:
-- All code on GitHub public
-- All data archived
-- Real-time progress visible
-
-Rationale: The χ-regularity angle is novel enough that scooping is unlikely. Transparency builds trust.
-
-**Consequences:**  
-- Anyone can reproduce our results
-- Community can identify errors early
-- Must maintain clean, documented code at all times
-
-**Review Trigger:**  
-If significant competitive pressure emerges, may restrict pre-publication access.
+**VERIFICATION (2025-12-22):**  
+Decision validated by Phase 1a implementation:
+- FFT Poisson achieves exact solve (machine precision)
+- Projection reduces divergence by 10¹² (to ~10⁻¹²)
+- Taylor-Green benchmark: 0.02% decay error, div < 10⁻¹⁴
+- No penalty artifacts — clean χ(t) tracking confirmed
+- See: `proofs/proof_phase_1a_result.json`
 
 ---
 
@@ -247,5 +220,5 @@ If significant competitive pressure emerges, may restrict pre-publication access
 
 | ID | Topic | Status | Blocking |
 |----|-------|--------|----------|
-| — | — | — | — |
+| 006 | Phase 1b: 3D extension strategy | PENDING | Phase 1a complete |
 
