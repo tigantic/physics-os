@@ -61,6 +61,39 @@ class RefinementResult:
     final_residual: float
 
 
+def apply_spectral_filter(U: torch.Tensor, cutoff_ratio: float = 0.667) -> torch.Tensor:
+    """
+    Fast spectral dealiasing filter (2/3 rule).
+    
+    Much faster than QTT for large grids. Removes aliasing errors
+    that cause numerical instability.
+    
+    Args:
+        U: Velocity field (N, N, N, 3)
+        cutoff_ratio: Keep modes below this fraction of Nyquist
+        
+    Returns:
+        Filtered velocity field
+    """
+    N = U.shape[0]
+    
+    # Spectral grid
+    k = torch.fft.fftfreq(N) * N  # Wavenumbers 0 to N/2, then -N/2 to -1
+    kx, ky, kz = torch.meshgrid(k, k, k, indexing='ij')
+    k_max = torch.abs(torch.stack([kx, ky, kz], dim=-1)).max(dim=-1).values
+    
+    # Sharp cutoff at 2/3 Nyquist
+    cutoff = N * cutoff_ratio / 2
+    mask = (k_max <= cutoff).float().unsqueeze(-1)
+    
+    # Apply filter in spectral space
+    U_hat = torch.fft.fftn(U, dim=(0, 1, 2))
+    U_hat_filtered = U_hat * mask
+    U_filtered = torch.fft.ifftn(U_hat_filtered, dim=(0, 1, 2)).real
+    
+    return U_filtered
+
+
 def apply_qtt_filter_3d(U: torch.Tensor, chi_max: int = 64, tol: float = 1e-8) -> torch.Tensor:
     """
     Apply QTT compression/decompression as a spectral filter for 3D velocity field.
@@ -326,19 +359,26 @@ def stabilized_newton_refinement(config: RefinementConfig = None) -> RefinementR
         
         # ═══════════════════════════════════════════════════════════════
         # LINE SEARCH: Try different step sizes to ensure descent
+        # Use fast spectral filter for large grids, QTT only for small
         # ═══════════════════════════════════════════════════════════════
         
         best_step_f = f_norm
         best_U_step = U.clone()
         found_descent = False
         
+        # Choose filter based on grid size (QTT too slow for N > 64)
+        use_qtt = config.N <= 64
+        
         for step_scale in [1.0, 0.5, 0.25, 0.1]:
             # Gradient descent update: U -= eta * F
             eta_try = current_eta * step_scale
             U_trial = U - eta_try * F
             
-            # Apply QTT filter
-            U_trial_filtered = apply_qtt_filter_3d(U_trial, chi_max=config.chi_max, tol=config.qtt_tol)
+            # Apply filter (spectral for large grids, QTT for small)
+            if use_qtt:
+                U_trial_filtered = apply_qtt_filter_3d(U_trial, chi_max=config.chi_max, tol=config.qtt_tol)
+            else:
+                U_trial_filtered = apply_spectral_filter(U_trial)
             U_trial_sym = enforce_hou_luo_symmetry(U_trial_filtered)
             
             # Evaluate
@@ -406,15 +446,15 @@ def stabilized_newton_refinement(config: RefinementConfig = None) -> RefinementR
 
 if __name__ == "__main__":
     # Run stabilized refinement
-    # Higher resolution gives better approximation of the smooth limit
+    # Push to 128³ - the dense limit for most GPUs (2M points)
     config = RefinementConfig(
-        N=48,           # Higher resolution for better accuracy
+        N=128,          # 128³ = 2M points - max for dense computation
         nu=1e-3,
-        alpha=0.15,     # Start closer to where we found improvement
+        alpha=0.15,     # Start near optimal region
         max_iter=200,
         tol=1e-6,
-        eta=0.02,       # Smaller step for finer control
-        chi_max=48,     # Higher QTT bond dimension for better filtering
+        eta=0.01,       # Smaller step for finer control at high resolution
+        chi_max=64,     # Higher QTT bond dimension for 128³
         alpha_adapt=True,
         verbose=True,
     )
