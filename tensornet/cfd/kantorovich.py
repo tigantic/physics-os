@@ -88,6 +88,7 @@ class NewtonKantorovichVerifier:
         self,
         N: int = 64,
         nu: float = 1e-3,
+        alpha: float = 0.5,
         use_intervals: bool = True,
     ):
         """
@@ -96,10 +97,12 @@ class NewtonKantorovichVerifier:
         Args:
             N: Grid resolution (higher = more precision but slower)
             nu: Viscosity
+            alpha: Self-similar rescaling exponent
             use_intervals: Whether to use interval arithmetic (rigorous)
         """
         self.N = N
         self.nu = nu
+        self.alpha = alpha
         self.use_intervals = use_intervals
         
         self.L = 2 * np.pi
@@ -113,8 +116,8 @@ class NewtonKantorovichVerifier:
         self.k_sq_safe = self.k_sq.clone()
         self.k_sq_safe[0, 0, 0] = 1.0
         
-        # Rescaled NS equations
-        self.scaling = SelfSimilarScaling(alpha=0.5, beta=0.5, T_star=1.0)
+        # Rescaled NS equations with custom alpha
+        self.scaling = SelfSimilarScaling(alpha=alpha, beta=alpha, T_star=1.0)
         self.ns = RescaledNSEquations(self.scaling, nu=nu, N=N)
     
     def compute_residual(

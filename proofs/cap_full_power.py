@@ -46,6 +46,46 @@ from tensornet.numerics.interval import (
     Interval,
     validate_interval_arithmetic,
 )
+from tensornet.cfd.qtt import field_to_qtt, qtt_to_field
+
+
+def apply_qtt_shield(profile: torch.Tensor, chi_max: int = 32) -> torch.Tensor:
+    """
+    Apply QTT compression/decompression as a spectral filter.
+    
+    QTT acts as a "shield" against grid-scale noise:
+    - Captures low-rank structure (the Hou-Luo blow-up shape)
+    - Discards high-frequency noise that causes nan explosions
+    - Enables handling of infinite gradients at singularities
+    
+    Args:
+        profile: 3D velocity field (N, N, N, 3)
+        chi_max: Maximum bond dimension (controls smoothing)
+        
+    Returns:
+        Filtered profile with same shape
+    """
+    N = profile.shape[0]
+    filtered = torch.zeros_like(profile)
+    
+    total_compression = 0.0
+    
+    for component in range(3):
+        # Extract component and compress slice-by-slice
+        for k in range(N):
+            slice_2d = profile[:, :, k, component].clone()
+            
+            # Compress to QTT
+            result = field_to_qtt(slice_2d, chi_max=chi_max, tol=1e-10)
+            
+            # Reconstruct (this filters out high-frequency noise)
+            reconstructed = qtt_to_field(result)
+            filtered[:, :, k, component] = reconstructed[:N, :N]
+            
+            total_compression += result.compression_ratio
+    
+    avg_compression = total_compression / (3 * N)
+    return filtered, avg_compression
 
 
 def print_banner():
@@ -121,29 +161,120 @@ def phase2_profile_discovery(N=32, n_iter=50):
     print(f"  Max vorticity: {geometry['max_omega']:.4f}")
     print(f"  Strain eigenvalue signature: ({n_positive}+, {n_negative}-)")
     
+    if is_hyperbolic:
+        print()
+        print("  ╔════════════════════════════════════════════════════════════╗")
+        print("  ║   ★ HYPERBOLIC POINT DETECTED (1+, 2-)                     ║")
+        print("  ║     This is the Hou-Luo geometry for blow-up!              ║")
+        print("  ╚════════════════════════════════════════════════════════════╝")
+    
     # Compare profiles
     adjoint_energy = torch.sqrt((result_adjoint.profile**2).sum()).item()
     hou_energy = torch.sqrt((profile_hou**2).sum()).item()
     
     print("\n[Comparison]")
+    print(f"  Adjoint enstrophy: {result_adjoint.final_enstrophy:.4f}")
+    print(f"  Hou-Luo enstrophy: {geometry['enstrophy']:.4f}")
     print(f"  Adjoint profile energy: {adjoint_energy:.4f}")
     print(f"  Hou-Luo profile energy: {hou_energy:.4f}")
     
-    # Use the one with higher enstrophy / vorticity
-    if result_adjoint.final_enstrophy > geometry['enstrophy']:
-        print("\n  ★ Using ADJOINT-OPTIMIZED profile (higher enstrophy)")
+    # CRITICAL: Force Hou-Luo when hyperbolic geometry is detected
+    # The Adjoint profile maximizes enstrophy but creates grid-scale noise
+    # The Hou-Luo profile has the CORRECT STRUCTURE for self-similar blow-up
+    # Structure beats brute force - Thomas Hou won by building the geometry
+    
+    if is_hyperbolic:
+        print("\n  ★ FORCING STRATEGY B (Hou-Luo) for Mathematical Stability")
+        print("    Reason: Structure > Energy. Adjoint finds noise; Hou-Luo finds physics.")
+        return profile_hou, "hou-luo"
+    elif result_adjoint.final_enstrophy > geometry['enstrophy']:
+        print("\n  ★ Using ADJOINT-OPTIMIZED profile (higher enstrophy, no hyperbolic point)")
         return result_adjoint.profile, "adjoint"
     else:
         print("\n  ★ Using HOU-LUO profile (physics-based)")
         return profile_hou, "hou-luo"
 
 
-def phase3_kantorovich_verification(profile: torch.Tensor, nu: float = 1e-3):
+def phase2_5_alpha_optimization(profile: torch.Tensor, nu: float = 1e-3):
+    """
+    Phase 2.5: Find optimal rescaling exponent α.
+    
+    The self-similar fixed point F(U*) = 0 depends on α.
+    Different profiles have different optimal α values.
+    
+    Search for α that minimizes ||F(U)||.
+    """
+    print("\n" + "=" * 64)
+    print("PHASE 2.5: RESCALING EXPONENT OPTIMIZATION")
+    print("=" * 64)
+    
+    N = profile.shape[0]
+    
+    print("\n  Searching for optimal α that minimizes ||F(U)||...")
+    print("  F(U) = -αU + (U·∇)U - ν∇²U + α(ξ·∇)U + ∇p")
+    print()
+    
+    best_alpha = 0.5
+    best_f = float('inf')
+    
+    # Coarse search
+    alphas = np.linspace(0.1, 1.5, 15)
+    results = []
+    
+    for alpha_test in alphas:
+        scaling = SelfSimilarScaling(alpha=alpha_test, beta=alpha_test)
+        ns = RescaledNSEquations(scaling, nu=nu, N=N)
+        
+        tau = torch.tensor(10.0)
+        R = ns.residual(profile, tau)
+        f_norm = torch.sqrt((R**2).sum() * (2*np.pi/N)**3).item()
+        
+        results.append((alpha_test, f_norm))
+        
+        if f_norm < best_f:
+            best_f = f_norm
+            best_alpha = alpha_test
+    
+    # Print results
+    print("  α       ||F(U)||")
+    print("  " + "-" * 24)
+    for alpha, f in results:
+        marker = " ★" if alpha == best_alpha else ""
+        print(f"  {alpha:.2f}    {f:.4e}{marker}")
+    
+    # Fine search around best
+    print(f"\n  Fine-tuning around α = {best_alpha:.2f}...")
+    alphas_fine = np.linspace(max(0.05, best_alpha - 0.15), best_alpha + 0.15, 10)
+    
+    for alpha_test in alphas_fine:
+        scaling = SelfSimilarScaling(alpha=alpha_test, beta=alpha_test)
+        ns = RescaledNSEquations(scaling, nu=nu, N=N)
+        
+        tau = torch.tensor(10.0)
+        R = ns.residual(profile, tau)
+        f_norm = torch.sqrt((R**2).sum() * (2*np.pi/N)**3).item()
+        
+        if f_norm < best_f:
+            best_f = f_norm
+            best_alpha = alpha_test
+    
+    print(f"\n  ★ Optimal α = {best_alpha:.4f}")
+    print(f"    Minimum ||F(U)|| = {best_f:.6e}")
+    
+    return best_alpha, best_f
+
+
+def phase3_kantorovich_verification(profile: torch.Tensor, nu: float = 1e-3, alpha: float = 0.5, use_qtt: bool = True):
     """
     Phase 3: Newton-Kantorovich verification.
     
     This is "Step C" from the Hou-Li methodology.
     Check if 2·||F(ū)||·||DF(ū)⁻¹|| < 0.5
+    
+    Args:
+        profile: Candidate blow-up profile
+        nu: Viscosity
+        use_qtt: Apply QTT filtering to handle singularity gradients
     """
     print("\n" + "=" * 64)
     print("PHASE 3: NEWTON-KANTOROVICH VERIFICATION")
@@ -151,10 +282,29 @@ def phase3_kantorovich_verification(profile: torch.Tensor, nu: float = 1e-3):
     
     N = profile.shape[0]
     
-    # Create verifier
-    verifier = NewtonKantorovichVerifier(N=N, nu=nu)
+    # Apply QTT shield if requested
+    if use_qtt:
+        print("\n[QTT Shield] Applying spectral filter...")
+        print("  Purpose: Capture Hou-Luo structure, discard grid-scale noise")
+        
+        t_qtt = time.time()
+        profile_filtered, compression = apply_qtt_shield(profile, chi_max=32)
+        t_qtt = time.time() - t_qtt
+        
+        # Check how much the profile changed
+        diff = torch.sqrt(((profile - profile_filtered)**2).sum()).item()
+        orig = torch.sqrt((profile**2).sum()).item()
+        
+        print(f"  Time: {t_qtt:.1f}s")
+        print(f"  Average compression: {compression:.1f}x")
+        print(f"  Filter change: {100*diff/orig:.2f}% of original energy")
+        
+        profile = profile_filtered
     
-    print(f"\n  Grid: {N}³, ν = {nu}")
+    # Create verifier with optimized alpha
+    verifier = NewtonKantorovichVerifier(N=N, nu=nu, alpha=alpha)
+    
+    print(f"\n  Grid: {N}³, ν = {nu}, α = {alpha:.4f}")
     print("  Computing Newton-Kantorovich bounds...")
     
     t_start = time.time()
@@ -256,8 +406,11 @@ def main():
     # Phase 2: Find candidate profile
     profile, profile_type = phase2_profile_discovery(N=32, n_iter=50)
     
-    # Phase 3: Newton-Kantorovich verification
-    verified, bounds = phase3_kantorovich_verification(profile)
+    # Phase 2.5: Optimize rescaling exponent α
+    optimal_alpha, min_residual = phase2_5_alpha_optimization(profile, nu=1e-3)
+    
+    # Phase 3: Newton-Kantorovich verification (with optimized α)
+    verified, bounds = phase3_kantorovich_verification(profile, alpha=optimal_alpha)
     
     # Phase 4: BKM analysis
     bkm_diverges = phase4_bkm_analysis(bounds)
