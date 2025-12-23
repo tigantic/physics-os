@@ -1,0 +1,13 @@
+{
+  "proof_type": "Navier-Stokes Singularity",
+  "method": "Computer-Assisted Proof (Hou-Li 2022)",
+  "timestamp": "2025-12-22T20:40:41.140858",
+  "verified": false,
+  "profile_type": "adjoint",
+  "discriminant": 4.768160026581248e+44,
+  "residual_bound": 2.967306379987937,
+  "inverse_bound": 8.03449225657755e+43,
+  "threshold": 0.5,
+  "elapsed_seconds": 144.18347930908203,
+  "conclusion": "Profile not sufficiently close to singularity"
+}
