@@ -123,16 +123,20 @@ class NewtonKantorovichVerifier:
     def compute_residual(
         self, 
         U: torch.Tensor,
-        tau: float = 10.0,  # Large tau ≈ steady state
+        tau: float = 0.0,  # Use τ=0 for fixed-point (nu_eff = nu)
     ) -> Tuple[torch.Tensor, float]:
         """
         Compute the fixed-point residual F(U) and its norm.
         
         At the self-similar fixed point: F(U*) = 0
         
+        Note: We use τ=0 for the fixed-point residual computation so that
+        ν_eff = ν (physical viscosity). The self-similar fixed point 
+        equation doesn't depend on τ - it's the time-independent limit.
+        
         Args:
             U: Candidate profile (N, N, N, 3)
-            tau: Rescaled time (large value for steady state)
+            tau: Rescaled time (use 0 for fixed-point)
             
         Returns:
             R: Residual field
@@ -159,7 +163,7 @@ class NewtonKantorovichVerifier:
         self,
         U: torch.Tensor,
         V: torch.Tensor,
-        tau: float = 10.0,
+        tau: float = 0.0,  # Use τ=0 for fixed-point
     ) -> torch.Tensor:
         """
         Compute Jacobian-vector product: DF(U) · V
@@ -171,6 +175,8 @@ class NewtonKantorovichVerifier:
         DF(U)·V = -(V·∇)U - (U·∇)V - αV - β(ξ·∇)V + ν∇²V - ∇q
         
         where q is the pressure perturbation ensuring div(DF·V) = 0.
+        
+        Note: We use τ=0 so that ν_eff = ν (physical viscosity).
         """
         tau_tensor = torch.tensor(tau, dtype=torch.float64)
         nu_eff = self.ns.effective_viscosity(tau_tensor)

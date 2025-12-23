@@ -403,11 +403,35 @@ def main():
     # Phase 1: Validate interval arithmetic
     phase1_ok = phase1_interval_validation()
     
-    # Phase 2: Find candidate profile
-    profile, profile_type = phase2_profile_discovery(N=32, n_iter=50)
+    # Check for refined profile from stabilized Newton refinement
+    refined_path = Path(__file__).parent / "refined_singularity.pt"
     
-    # Phase 2.5: Optimize rescaling exponent α
-    optimal_alpha, min_residual = phase2_5_alpha_optimization(profile, nu=1e-3)
+    if refined_path.exists():
+        print("\n" + "=" * 64)
+        print("LOADING REFINED PROFILE")
+        print("=" * 64)
+        
+        refined_data = torch.load(refined_path)
+        profile = refined_data['profile']
+        optimal_alpha = refined_data['alpha']
+        profile_type = "refined-hou-luo"
+        
+        print(f"\n  ★ Found refined profile: {refined_path.name}")
+        print(f"    Shape: {profile.shape}")
+        print(f"    α: {optimal_alpha:.5f}")
+        print(f"    Iterations: {refined_data['n_iterations']}")
+        print(f"    Final ||F||: {refined_data['final_residual']:.6e}")
+        print(f"    Converged: {refined_data['converged']}")
+        
+        min_residual = refined_data['final_residual']
+        
+        # Skip Phase 2 and 2.5 - use refined profile directly
+    else:
+        # Phase 2: Find candidate profile
+        profile, profile_type = phase2_profile_discovery(N=32, n_iter=50)
+        
+        # Phase 2.5: Optimize rescaling exponent α
+        optimal_alpha, min_residual = phase2_5_alpha_optimization(profile, nu=1e-3)
     
     # Phase 3: Newton-Kantorovich verification (with optimized α)
     verified, bounds = phase3_kantorovich_verification(profile, alpha=optimal_alpha)
