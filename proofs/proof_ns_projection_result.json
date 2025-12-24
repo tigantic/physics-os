@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-22T14:01:59.247013",
+  "timestamp": "2025-12-24T00:14:57.269972",
   "phase": "1a",
   "decision": "DECISION-005",
   "proofs": [
@@ -53,7 +53,7 @@
         1.1823431123048067e-11
       ],
       "passed": true,
-      "explanation": "Spectral \u2207\u00b7\u2207\u03c6 = \u2207\u00b2\u03c6 to machine precision"
+      "explanation": "Spectral nabla\u00b7nabla\u03c6 = nabla^2\u03c6 to machine precision"
     },
     {
       "proof": "poisson_inversion",

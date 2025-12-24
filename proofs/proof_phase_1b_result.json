@@ -1,6 +1,6 @@
 {
   "phase": "1b",
-  "timestamp": "2025-12-22T14:20:35.523732",
+  "timestamp": "2025-12-24T00:15:09.943426",
   "proofs": [
     {
       "name": "proof_3d_poisson_solver",
@@ -30,12 +30,12 @@
       "name": "proof_3d_taylor_green",
       "description": "3D Taylor-Green vortex energy decay and incompressibility",
       "ke_initial": 31.006276680299816,
-      "ke_final": 16.995011347027834,
+      "ke_final": 17.014631510956338,
       "ke_exact": 17.0166054340994,
-      "ke_error_pct": 0.12690008683103227,
-      "decay_rate_numerical": 6.012698067317453,
+      "ke_error_pct": 0.01159998185717153,
+      "decay_rate_numerical": 6.001160065470709,
       "decay_rate_exact": 6.0,
-      "decay_error_pct": 0.21163445529088776,
+      "decay_error_pct": 0.01933442451182247,
       "max_divergence": 7.105427357601002e-15,
       "decay_gate_threshold": 5.0,
       "div_gate_threshold": 1e-06,

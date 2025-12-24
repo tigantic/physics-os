@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-22T14:06:03.947646",
+  "timestamp": "2025-12-24T00:14:58.719922",
   "phase": "1a",
   "tests": [
     {
@@ -26,8 +26,8 @@
       "name": "taylor_green",
       "passed": true,
       "details": {
-        "decay_error": 0.00019263867021344916,
-        "max_velocity_error": 7.886339998608438e-05,
+        "decay_error": 2.9812646304464414e-15,
+        "max_velocity_error": 1.5543122344752192e-15,
         "decay_passed": true,
         "divergence_passed": true
       }
