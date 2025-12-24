@@ -236,7 +236,7 @@ class MPO:
 
 ## Performance Benchmarks
 
-Measured on Intel i7-12700K, 32 GB RAM:
+Measured on Intel i5-12700K, 32 GB RAM:
 
 | Operation | Grid Size | Time | Memory |
 |-----------|-----------|------|--------|
