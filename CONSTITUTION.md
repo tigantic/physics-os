@@ -1,7 +1,7 @@
 # Project HyperTensor: Constitutional Law
 
 **Ratified**: 2025-12-20  
-**Version**: 1.1.0  
+**Version**: 1.2.0  
 **Authority**: Principal Investigator  
 **Enforcement**: Mandatory for all contributions
 
@@ -52,6 +52,17 @@ Every proof MUST generate:
 ```
 Project HyperTensor/
 ├── tensornet/              # Core library (pip-installable)
+│   ├── substrate/          # Layer 0: Field Oracle API (THE SPINE)
+│   │   ├── field.py        # sample(), slice(), step(), stats(), serialize()
+│   │   ├── stats.py        # FieldStats telemetry dashboard
+│   │   ├── bundle.py       # FieldBundle serialization (.htf format)
+│   │   └── bounded.py      # Bounded latency mode, caching
+│   ├── fieldops/           # Layer 1: Physics operators (FieldGraph)
+│   ├── visual/             # Layer 2: HyperVisual rendering
+│   ├── envs/               # Layer 4: HyperEnv AI environments
+│   ├── provenance/         # Layer 5: Attestation, audit, replay
+│   ├── intent/             # Layer 6: Intentional fields, FDL
+│   ├── runtime/            # Layer 7: Field scheduler, QoS
 │   ├── core/               # Fundamental operations (SVD, QR, contractions, GPU)
 │   ├── mps/                # Matrix Product States, Operators, Hamiltonians
 │   ├── algorithms/         # DMRG, TEBD, TDVP, Lanczos, fermionic
@@ -72,21 +83,24 @@ Project HyperTensor/
 │   ├── integration/        # Workflow orchestration
 │   ├── guidance/           # 6-DOF trajectory, GNC
 │   ├── flight_validation/  # Telemetry, flight data
+│   ├── visualization/      # TensorSlicer, QTT rendering
 │   ├── docs/               # API documentation generation
 │   └── benchmarks/         # Internal benchmark utilities
-├── benchmarks/             # Performance and accuracy benchmarks
+├── benchmarks/             # Performance and accuracy benchmarks (Layer 3)
 ├── notebooks/              # Exploratory and demonstration notebooks
 ├── proofs/                 # Mathematical verification artifacts (proof_*.py)
 ├── tests/                  # pytest test suite
 │   └── integration/        # Integration tests
 ├── docs/                   # Documentation and specifications
 │   └── api/                # Auto-generated API reference
+├── ROADMAP.md              # Strategic roadmap (see this document)
 └── results/                # Generated outputs (gitignored except README)
 ```
 
 **Amendment History**:
 - v1.0.0 (2025-12-20): Initial ratification
 - v1.1.0 (2025-12-20): Extended module structure to reflect 20-phase implementation
+- v1.2.0 (2025-12-24): Added Substrate Layer architecture (Layer 0-8), ROADMAP.md reference
 
 ### Section 2.2 — Naming Conventions
 
@@ -245,7 +259,8 @@ Differentiable operations MUST:
 |----------|----------|---------|
 | README.md | Repository root | Installation, quickstart, badges |
 | CONSTITUTION.md | Repository root | This document |
-| EXECUTION_TRACKER.md | Repository root | Project status and roadmap |
+| ROADMAP.md | Repository root | Strategic roadmap, layer definitions, milestones |
+| EXECUTION_TRACKER.md | Repository root | Project status and phase tracking |
 | CHANGELOG.md | Repository root | Version history |
 | API Reference | `docs/api/` | Auto-generated from docstrings |
 
