@@ -195,6 +195,43 @@ class Field:
             device=device,
         )
     
+    @classmethod
+    def zeros(
+        cls,
+        dims: Union[int, List[int]] = 2,
+        bits_per_dim: int = 4,
+        rank: int = 2,
+        field_type: FieldType = FieldType.SCALAR,
+        device: str = 'cuda',
+    ) -> 'Field':
+        """
+        Create a zero-valued field.
+        
+        Args:
+            dims: Number of spatial dimensions, or list of dimension sizes
+            bits_per_dim: Bits per dimension (grid = 2^bits x 2^bits x ...)
+            rank: Bond dimension for QTT cores
+            field_type: SCALAR, VECTOR, or TENSOR
+            device: 'cuda' or 'cpu'
+            
+        Returns:
+            Zero-initialized Field
+        """
+        # Handle dims as list [4, 4] -> dims=2
+        if isinstance(dims, list):
+            n_dims = len(dims)
+        else:
+            n_dims = dims
+        
+        return cls.create(
+            dims=n_dims,
+            bits_per_dim=bits_per_dim,
+            rank=rank,
+            field_type=field_type,
+            device=device,
+            init='zeros',
+        )
+    
     @staticmethod
     def _init_taylor_green_core(i: int, n_cores: int, r_left: int, r_right: int) -> torch.Tensor:
         """Initialize core for Taylor-Green vortex (exact low-rank)."""
