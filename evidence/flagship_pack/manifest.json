@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-12-24T20:12:58.220999Z",
+  "generated_at": "2025-12-25T00:27:24.071688Z",
   "seed": 42,
   "pipeline_version": "1.0.0",
   "results": {
@@ -19,7 +19,7 @@
     },
     "evolution": {
       "n_steps": 171,
-      "elapsed_s": 0.02827620506286621,
+      "elapsed_s": 0.031661272048950195,
       "dt_min": 0.0005637314721252396,
       "dt_max": 0.00211288563664272,
       "mass_initial": 0.5625,
@@ -76,5 +76,5 @@
     "x_grid.npy": "6fb2d7f6477be7dd783ab01bb45f5972df2494ccd6e51ba0715f8dad533b05ed"
   },
   "pass_status": true,
-  "signature": "f61ef25de29c7045190f18efe00a7916e8765c2612dfc6278e4b6d44e0ea8a9e"
+  "signature": "b59b38a6c91ec1aa2baaf616aef80bf824bffdefedd1675e0933b388e1cc53ab"
 }
