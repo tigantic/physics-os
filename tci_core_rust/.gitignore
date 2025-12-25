@@ -1,0 +1,13 @@
+# Rust build artifacts
+/target/
+Cargo.lock
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Compiled extensions
+*.pyd
+*.so
+*.dll

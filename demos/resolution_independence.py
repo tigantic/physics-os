@@ -25,7 +25,7 @@ This demo has TWO modes:
 
     MODE 2: ORACLE (the real "WHOA")
         - Evaluates QTT at arbitrary (x,y) points via partial contraction
-        - NEVER materializes the dense grid
+        - NEVER materializes the dense source grid during sampling
         - Proves: true resolution-independent field oracle
 
 Usage:
@@ -89,7 +89,7 @@ def print_header():
 
     MODE 2: ORACLE (the real demo)
       - Pointwise evaluation via partial contraction
-      - NEVER materializes the dense grid
+      - NEVER materializes the dense source grid during sampling
       - True field oracle behavior
 
   Dense memory shown for comparison; this run uses a 256x256 source field.
@@ -290,9 +290,9 @@ def eval_qtt_at_point(qtt: dict, x: float, y: float) -> float:
     
     Ny, Nx = original_shape
     
-    # Convert normalized coords to grid indices
-    ix = min(int(x * Nx), Nx - 1)
-    iy = min(int(y * Ny), Ny - 1)
+    # Convert normalized coords to grid indices (periodic BC)
+    ix = int(np.floor(x * Nx)) % Nx
+    iy = int(np.floor(y * Ny)) % Ny
     
     # Linear index (row-major: y * Nx + x)
     linear_idx = iy * Nx + ix
@@ -376,11 +376,11 @@ def eval_qtt_at_grid_oracle_loop(qtt: dict, resolution: int) -> np.ndarray:
     # For each output pixel
     for out_iy in range(resolution):
         y = (out_iy + 0.5) / resolution
-        iy = min(int(y * Ny), Ny - 1)
+        iy = int(np.floor(y * Ny)) % Ny
         
         for out_ix in range(resolution):
             x = (out_ix + 0.5) / resolution
-            ix = min(int(x * Nx), Nx - 1)
+            ix = int(np.floor(x * Nx)) % Nx
             
             # Linear index (row-major)
             linear_idx = iy * Nx + ix
@@ -642,9 +642,10 @@ def run_demo(interactive: bool = False, oracle_only: bool = False):
         oracle_val = field.eval_point(x, y)
         
         # Dense value via nearest-neighbor lookup
+        # Note: meshgrid(indexing='ij') means omega[ix, iy]
         ix = int(x * 256) % 256
         iy = int(y * 256) % 256
-        dense_val = verify_dense[iy, ix]
+        dense_val = verify_dense[ix, iy]
         
         err = abs(oracle_val - dense_val)
         max_abs_err = max(max_abs_err, err)
@@ -656,10 +657,13 @@ def run_demo(interactive: bool = False, oracle_only: bool = False):
     print(f"    Max absolute error:  {max_abs_err:.2e}")
     print(f"    Mean absolute error: {mean_abs_err:.2e}")
     
-    if max_abs_err < 1e-10:
-        print("    ✅ Oracle matches dense EXACTLY (within floating-point)")
+    # Threshold: max of 1e-5 or 10x truncation error (self-consistent)
+    error_threshold = max(1e-5, 10 * field.truncation_error)
+    
+    if max_abs_err < error_threshold:
+        print(f"    ✅ Oracle matches dense (within expected truncation/float error)")
     else:
-        print(f"    ⚠️  Small differences exist (likely floating-point)")
+        print(f"    ❌ Mismatch detected: check bit order / indexing")
     
     print()
     
@@ -811,7 +815,7 @@ def run_demo(interactive: bool = False, oracle_only: bool = False):
     → But: materializes dense 256×256 each time.
     
   MODE 2 (Oracle): Pointwise evaluation via partial contraction.
-    → NEVER materializes the dense grid.
+    → NEVER materializes the dense source grid during sampling.
     → True resolution-independent field oracle.
     → This is the "WHOA" moment for hyperscalers.
 
