@@ -257,13 +257,35 @@ class BoundedMode:
     
     def precompile_path(self, name: str, n_cores: int, rank: int) -> ContractionPath:
         """Precompile a contraction path for fast execution."""
-        # Simple linear contraction for now
-        # TODO: Optimize with opt_einsum for complex graphs
-        indices = [(i,) for i in range(n_cores)]
-        
-        # Estimate FLOPS: n_cores * rank^2 per point
-        flops = n_cores * rank * rank
-        memory = n_cores * rank * 2 * 8  # float64
+        # Try opt_einsum for complex graphs, fall back to linear contraction
+        try:
+            import opt_einsum as oe
+            # Build contraction subscripts for QTT chain
+            # Each core has shape (r_left, 2, r_right)
+            subscripts = []
+            for i in range(n_cores):
+                left_idx = chr(ord('a') + i)
+                phys_idx = chr(ord('A') + i)  # Physical index
+                right_idx = chr(ord('a') + i + 1)
+                subscripts.append(f"{left_idx}{phys_idx}{right_idx}")
+            
+            input_str = ",".join(subscripts)
+            output_str = "".join(chr(ord('A') + i) for i in range(n_cores))
+            eq = f"{input_str}->{output_str}"
+            
+            # Get optimal contraction path
+            shapes = [(1 if i == 0 else rank, 2, rank if i < n_cores - 1 else 1) 
+                      for i in range(n_cores)]
+            path, info = oe.contract_path(eq, *[np.ones(s) for s in shapes], optimize='optimal')
+            
+            indices = path
+            flops = int(info.opt_cost)
+            memory = sum(s[0] * s[1] * s[2] * 8 for s in shapes)
+        except ImportError:
+            # Fallback: simple linear contraction
+            indices = [(i,) for i in range(n_cores)]
+            flops = n_cores * rank * rank
+            memory = n_cores * rank * 2 * 8  # float64
         
         path = ContractionPath(
             indices=indices,

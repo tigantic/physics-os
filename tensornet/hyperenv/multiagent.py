@@ -292,8 +292,14 @@ class MultiAgentEnv:
                 # Start with base observation
                 obs = base_obs.copy() if isinstance(base_obs, np.ndarray) else base_obs
             else:
-                # Placeholder observation
-                obs = np.zeros((64, 64, 3), dtype=np.float32)
+                # Dynamic fallback: infer shape from observation space or use sensible default
+                if hasattr(self, 'observation_space') and self.observation_space is not None:
+                    obs = np.zeros(self.observation_space.shape, dtype=np.float32)
+                elif hasattr(self, '_base_env') and hasattr(self._base_env, 'observation_space'):
+                    obs = np.zeros(self._base_env.observation_space.shape, dtype=np.float32)
+                else:
+                    # Minimal default for unknown environments
+                    obs = np.zeros((64, 64, 3), dtype=np.float32)
             
             # Add agent-specific info
             if isinstance(obs, np.ndarray) and obs.ndim == 3:

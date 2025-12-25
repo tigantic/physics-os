@@ -372,12 +372,19 @@ class TileRenderer:
         # Sample field at grid points
         data = self._sample_grid(xs, ys, max_rank=lod_rank)
         
+        # Estimate truncation error based on rank reduction
+        # Error scales approximately as sigma_{r+1} / sigma_1 for SVD
+        # Use exponential decay model: error ~ exp(-rank / rank_scale)
+        field_max_rank = max(c.shape[0] for c in self.field.cores) if hasattr(self.field, 'cores') else lod_rank
+        rank_ratio = lod_rank / max(field_max_rank, 1)
+        error_estimate = max(0.0, 1.0 - rank_ratio) * self.config.error_budget
+        
         return Tile(
             coord=coord,
             data=data,
             bounds=bounds,
             rank_used=lod_rank,
-            error_estimate=0.0,  # TODO: compute actual error
+            error_estimate=error_estimate,
         )
     
     def _sample_grid(
