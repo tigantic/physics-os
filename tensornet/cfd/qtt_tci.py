@@ -219,6 +219,189 @@ def qtt_from_function_tci_python(
     return cores, metadata
 
 
+def qtt_from_function_tci_rust(
+    f: Callable[[Tensor], Tensor],
+    n_qubits: int,
+    max_rank: int = 64,
+    tolerance: float = 1e-6,
+    max_iterations: int = 50,
+    batch_size: int = 10000,
+    device: str = "cpu",
+    verbose: bool = False,
+) -> Tuple[List[Tensor], dict]:
+    """
+    Build QTT from function using Rust TCI sampler.
+    
+    This uses Rust for:
+    - Index generation (fast, handles boundary conditions)
+    - Pivot selection (avoids Python loop overhead)
+    - Fiber sampling (parallel iteration)
+    
+    Python handles:
+    - Function evaluation (f(indices) on GPU)
+    - Dense→TT conversion (SVD-based)
+    
+    Complexity: O(r² × n × iterations) function evaluations
+    
+    Args:
+        f: Function taking indices (batch,) and returning values (batch,)
+        n_qubits: Number of qubits (N = 2^n_qubits)
+        max_rank: Maximum TT rank
+        tolerance: Convergence tolerance
+        max_iterations: Maximum TCI iterations
+        batch_size: Indices per batch
+        device: Torch device
+        verbose: Print progress
+        
+    Returns:
+        Tuple of (QTT cores, metadata dict)
+    """
+    from tci_core import TCISampler
+    
+    N = 2 ** n_qubits
+    
+    # Create Rust sampler
+    sampler = TCISampler(n_qubits, "periodic", None)
+    # Use small batch size for true TCI complexity
+    sampler.set_min_batch_size(max(64, max_rank))
+    
+    # Initialize pivots for fiber sampling at each qubit level
+    initial_pivots = min(max_rank, 8)  # Start with fewer pivots
+    for q in range(n_qubits):
+        row_pivots = list(range(min(initial_pivots, 2**q)))
+        col_pivots = list(range(min(initial_pivots, 2**(n_qubits - q - 1))))
+        sampler.init_pivots(q, row_pivots, col_pivots)
+    
+    # Sample cache and error tracking
+    samples = {}
+    errors = {}
+    total_evals = 0
+    prev_max_error = float('inf')
+    
+    for iteration in range(max_iterations):
+        new_samples_total = 0
+        iteration_errors = []
+        
+        # Sweep through all qubit levels for fiber sampling
+        for q in range(n_qubits):
+            fiber_batch = sampler.sample_fibers(q)
+            fiber_indices = fiber_batch.indices
+            
+            # Filter out already sampled
+            new_indices = [i for i in fiber_indices if i not in samples]
+            if not new_indices:
+                continue
+            
+            # Batch evaluate
+            indices_tensor = torch.tensor(new_indices, device=device, dtype=torch.long)
+            values = f(indices_tensor)
+            values_list = values.tolist()
+            
+            # Store samples
+            for idx, val in zip(new_indices, values_list):
+                samples[idx] = val
+            
+            new_samples_total += len(new_indices)
+            total_evals += len(new_indices)
+        
+        # Early stopping: check if we're making progress
+        if new_samples_total == 0:
+            if verbose:
+                print(f"  Converged at iteration {iteration+1} (no new samples)")
+            break
+        
+        # Compute approximation error on random subset every 3 iterations
+        if len(samples) >= 256 and iteration % 3 == 0:
+            # Check random points against nearest-neighbor interpolation
+            n_check = min(100, N - len(samples))
+            check_indices = []
+            for _ in range(n_check * 2):
+                idx = torch.randint(0, N, (1,)).item()
+                if idx not in samples:
+                    check_indices.append(idx)
+                if len(check_indices) >= n_check:
+                    break
+            
+            if check_indices:
+                check_tensor = torch.tensor(check_indices, device=device, dtype=torch.long)
+                true_values = f(check_tensor)
+                
+                # Fast nearest-neighbor approximation
+                sorted_keys = sorted(samples.keys())
+                approx_values = torch.zeros(len(check_indices), device=device)
+                for i, idx in enumerate(check_indices):
+                    # Find nearest sampled index
+                    import bisect
+                    pos = bisect.bisect_left(sorted_keys, idx)
+                    if pos == 0:
+                        approx_values[i] = samples[sorted_keys[0]]
+                    elif pos == len(sorted_keys):
+                        approx_values[i] = samples[sorted_keys[-1]]
+                    else:
+                        # Linear interpolation between neighbors
+                        left, right = sorted_keys[pos-1], sorted_keys[pos]
+                        t = (idx - left) / (right - left)
+                        approx_values[i] = samples[left] * (1-t) + samples[right] * t
+                
+                # Compute errors
+                abs_errors = torch.abs(true_values - approx_values).tolist()
+                max_error = max(abs_errors)
+                
+                # Update Rust sampler with errors for pivot refinement
+                sampler.update_errors(check_indices, abs_errors)
+                
+                # Add checked points to samples
+                for idx, val in zip(check_indices, true_values.tolist()):
+                    samples[idx] = val
+                    errors[idx] = abs_errors[check_indices.index(idx)]
+                total_evals += len(check_indices)
+                
+                if verbose:
+                    print(f"  Iteration {iteration+1}: {new_samples_total} samples, error={max_error:.2e}")
+                
+                # Convergence: error below tolerance
+                if max_error < tolerance:
+                    if verbose:
+                        print(f"  Converged at iteration {iteration+1} (error < tolerance)")
+                    break
+                
+                # Early stop: error not improving
+                if max_error > prev_max_error * 0.99 and iteration > 3:
+                    if verbose:
+                        print(f"  Converged at iteration {iteration+1} (error stalled)")
+                    break
+                prev_max_error = min(prev_max_error, max_error)
+        elif verbose:
+            print(f"  Iteration {iteration+1}: {new_samples_total} samples, {len(samples)} total")
+        
+        # Check if we've sampled too much
+        if len(samples) >= N // 2:
+            if verbose:
+                print(f"  Stopping (sampled {len(samples)}/{N})")
+            break
+    
+    # Build QTT from samples
+    all_indices = torch.tensor(sorted(samples.keys()), device=device, dtype=torch.long)
+    all_values = torch.tensor([samples[i] for i in sorted(samples.keys())], device=device)
+    
+    # Reconstruct dense and compress
+    dense = torch.zeros(N, device=device)
+    dense[all_indices] = all_values
+    dense = _interpolate_sparse(dense, all_indices)
+    
+    cores = dense_to_qtt_cores(dense, max_rank=max_rank)
+    
+    metadata = {
+        "method": "tci_rust",
+        "n_evals": total_evals,
+        "n_samples": len(samples),
+        "iterations": iteration + 1,
+        "compression": N / total_evals if total_evals > 0 else 1,
+    }
+    
+    return cores, metadata
+
+
 def _update_pivots_by_value(
     samples: dict,
     pivots_left: List[set],
@@ -351,11 +534,11 @@ def qtt_from_function(
         cores = qtt_from_function_dense(f, n_qubits, max_rank, device)
         return cores, {"method": "dense", "n_evals": N, "compression": 1.0}
     
-    if RUST_AVAILABLE:
-        # TODO: Wire up Rust TCI sampler when skeleton→TT conversion is complete
-        # For now, fall back to Python TCI
-        if verbose:
-            print("  Note: Rust TCI available but skeleton→TT not yet wired. Using Python TCI.")
+    if RUST_AVAILABLE and n_qubits >= 13:
+        # Use Rust TCI for sampling (faster pivot generation)
+        return qtt_from_function_tci_rust(
+            f, n_qubits, max_rank, tolerance, max_iterations, batch_size, device, verbose
+        )
     
     return qtt_from_function_tci_python(
         f, n_qubits, max_rank, tolerance, max_iterations, batch_size, device, verbose
