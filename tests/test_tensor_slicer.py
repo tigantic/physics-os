@@ -240,6 +240,7 @@ class TestTensorSlicerHeatmap:
     
     def test_to_heatmap(self):
         """Test heatmap conversion."""
+        pytest.importorskip('matplotlib', reason='matplotlib required for heatmap')
         slicer = create_test_qtt(n_cores=6, rank=2)
         
         data = slicer.render_slice_2d_vectorized(

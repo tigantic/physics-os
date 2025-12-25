@@ -298,10 +298,16 @@ FVector UHyperTensorFieldComponent::WorldToFieldCoords(const FVector& WorldPos) 
     FVector Size = WorldBounds.GetSize();
     FVector Min = WorldBounds.Min;
 
+    // Prevent division by zero
+    if (Size.IsNearlyZero())
+    {
+        return FVector::ZeroVector;
+    }
+
     return FVector(
-        (WorldPos.X - Min.X) / Size.X,
-        (WorldPos.Y - Min.Y) / Size.Y,
-        (WorldPos.Z - Min.Z) / Size.Z
+        Size.X > KINDA_SMALL_NUMBER ? (WorldPos.X - Min.X) / Size.X : 0.0f,
+        Size.Y > KINDA_SMALL_NUMBER ? (WorldPos.Y - Min.Y) / Size.Y : 0.0f,
+        Size.Z > KINDA_SMALL_NUMBER ? (WorldPos.Z - Min.Z) / Size.Z : 0.0f
     );
 }
 

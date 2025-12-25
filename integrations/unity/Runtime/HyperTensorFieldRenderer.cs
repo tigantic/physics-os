@@ -197,7 +197,14 @@ namespace Tigantic.HyperTensor
             }
             else
             {
-                sliceMaterialInstance = new Material(Shader.Find("Unlit/Texture"));
+                // Find shader with fallback for builds
+                var shader = Shader.Find("Unlit/Texture");
+                if (shader == null)
+                {
+                    Debug.LogError("HyperTensorFieldRenderer: 'Unlit/Texture' shader not found. Ensure it's included in Always Included Shaders.");
+                    shader = Shader.Find("Hidden/InternalErrorShader");
+                }
+                sliceMaterialInstance = new Material(shader);
                 sliceRenderer.material = sliceMaterialInstance;
             }
 

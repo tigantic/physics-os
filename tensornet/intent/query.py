@@ -243,8 +243,8 @@ class Selector:
         
         elif self.selector_type == SelectorType.GRADIENT:
             grad = np.gradient(field_data, axis=self.axis)
-            # np.gradient returns list of arrays when axis is None
-            if isinstance(grad, list):
+            # np.gradient returns tuple/list of arrays when axis is None
+            if isinstance(grad, (list, tuple)):
                 # Return magnitude of gradient
                 return np.sqrt(sum(g**2 for g in grad))
             return grad

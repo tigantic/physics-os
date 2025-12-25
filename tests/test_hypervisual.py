@@ -471,27 +471,31 @@ class TestStreamProtocol:
 class TestFrameBuffer:
     """Test frame buffering."""
     
-    @pytest.mark.asyncio
-    async def test_write_read(self):
-        """Write and read frames."""
-        buffer = FrameBuffer(size=3)
+    def test_write_read(self):
+        """Write and read frames (sync wrapper)."""
+        import asyncio
         
-        await buffer.write({'frame': 1})
-        await buffer.write({'frame': 2})
+        async def _test():
+            buffer = FrameBuffer(size=3)
+            await buffer.write({'frame': 1})
+            await buffer.write({'frame': 2})
+            frame1 = await buffer.read()
+            frame2 = await buffer.read()
+            assert frame1['frame'] == 1
+            assert frame2['frame'] == 2
         
-        frame1 = await buffer.read()
-        frame2 = await buffer.read()
-        
-        assert frame1['frame'] == 1
-        assert frame2['frame'] == 2
+        asyncio.run(_test())
     
-    @pytest.mark.asyncio
-    async def test_empty_read(self):
-        """Read from empty buffer."""
-        buffer = FrameBuffer(size=3)
+    def test_empty_read(self):
+        """Read from empty buffer (sync wrapper)."""
+        import asyncio
         
-        frame = await buffer.read()
-        assert frame is None
+        async def _test():
+            buffer = FrameBuffer(size=3)
+            frame = await buffer.read()
+            assert frame is None
+        
+        asyncio.run(_test())
     
     def test_pending_frames(self):
         """Count pending frames."""

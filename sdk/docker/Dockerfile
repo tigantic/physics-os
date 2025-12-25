@@ -131,8 +131,8 @@ COPY --chown=hypertensor:hypertensor notebooks/ /home/hypertensor/notebooks/
 # Expose port
 EXPOSE 8888
 
-# Start Jupyter
-CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--NotebookApp.token=''"]
+# Start Jupyter (token from environment variable, default: empty for dev)
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser"]
 
 # =============================================================================
 # SERVER IMAGE
@@ -154,9 +154,9 @@ COPY --chown=hypertensor:hypertensor sdk/server/ /home/hypertensor/server/
 EXPOSE 8000  # REST API
 EXPOSE 5555  # ZMQ Bridge
 
-# Health check
+# Health check using Python (no curl dependency)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" || exit 1
 
 # Start server
 CMD ["python", "-m", "uvicorn", "server.main:app", "--host", "0.0.0.0", "--port", "8000"]

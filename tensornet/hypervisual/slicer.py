@@ -339,9 +339,9 @@ class VolumeRenderer:
         forward = forward / forward.norm()
         
         up = torch.tensor([0.0, 1.0, 0.0], device=device)
-        right = torch.cross(forward, up)
+        right = torch.linalg.cross(forward, up)
         right = right / right.norm()
-        up = torch.cross(right, forward)
+        up = torch.linalg.cross(right, forward)
         
         # Screen coordinates
         aspect = width / height
