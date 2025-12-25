@@ -10,9 +10,8 @@
 //! By precomputing neighbor indices in Rust and passing both vectors to GPU,
 //! we keep all GPU threads in lockstep.
 
-use ndarray::{Array1, Array2, ArrayView1};
 use pyo3::prelude::*;
-use numpy::{PyArray1, PyReadonlyArray1, ToPyArray};
+use numpy::{PyArray1, IntoPyArray};
 
 /// Boundary condition types
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -40,20 +39,21 @@ impl BoundaryCondition {
 }
 
 /// Batch of indices with their neighbors for CFD flux computation
+/// 
+/// Provides zero-copy access to index arrays via numpy integration.
+/// For true zero-copy to PyTorch, use:
+///   indices_gpu = torch.from_numpy(batch.indices_array()).cuda()
 #[pyclass]
 #[derive(Debug, Clone)]
 pub struct IndexBatch {
-    /// Primary indices (i)
-    #[pyo3(get)]
-    pub indices: Vec<u64>,
+    /// Primary indices (i) - kept as Vec for internal use
+    indices_vec: Vec<i64>,
     
     /// Left neighbor indices (i - 1)
-    #[pyo3(get)]
-    pub left: Vec<u64>,
+    left_vec: Vec<i64>,
     
     /// Right neighbor indices (i + 1)
-    #[pyo3(get)]
-    pub right: Vec<u64>,
+    right_vec: Vec<i64>,
     
     /// Domain size (N = 2^n_qubits)
     #[pyo3(get)]
@@ -67,22 +67,59 @@ impl IndexBatch {
         let bc = BoundaryCondition::from_str(boundary);
         let (left, right) = compute_neighbors(&indices, domain_size, bc);
         
+        // Convert to i64 for numpy/torch compatibility
         IndexBatch {
-            indices,
-            left,
-            right,
+            indices_vec: indices.iter().map(|&x| x as i64).collect(),
+            left_vec: left.iter().map(|&x| x as i64).collect(),
+            right_vec: right.iter().map(|&x| x as i64).collect(),
             domain_size,
         }
     }
     
+    /// Get primary indices as Python list (for backward compat)
+    #[getter]
+    pub fn indices(&self) -> Vec<i64> {
+        self.indices_vec.clone()
+    }
+    
+    /// Get left neighbor indices as Python list
+    #[getter]
+    pub fn left(&self) -> Vec<i64> {
+        self.left_vec.clone()
+    }
+    
+    /// Get right neighbor indices as Python list
+    #[getter]
+    pub fn right(&self) -> Vec<i64> {
+        self.right_vec.clone()
+    }
+    
+    /// Get primary indices as numpy array (zero-copy to torch via .cuda())
+    /// 
+    /// Usage:
+    ///   indices = torch.from_numpy(batch.indices_array()).cuda()
+    pub fn indices_array<'py>(&self, py: Python<'py>) -> Bound<'py, PyArray1<i64>> {
+        self.indices_vec.clone().into_pyarray(py)
+    }
+    
+    /// Get left neighbor indices as numpy array
+    pub fn left_array<'py>(&self, py: Python<'py>) -> Bound<'py, PyArray1<i64>> {
+        self.left_vec.clone().into_pyarray(py)
+    }
+    
+    /// Get right neighbor indices as numpy array
+    pub fn right_array<'py>(&self, py: Python<'py>) -> Bound<'py, PyArray1<i64>> {
+        self.right_vec.clone().into_pyarray(py)
+    }
+    
     /// Get batch size
     pub fn len(&self) -> usize {
-        self.indices.len()
+        self.indices_vec.len()
     }
     
     /// Check if empty
     pub fn is_empty(&self) -> bool {
-        self.indices.is_empty()
+        self.indices_vec.is_empty()
     }
     
     /// Convert indices to QTT multi-indices
@@ -90,9 +127,9 @@ impl IndexBatch {
     /// For a QTT with n qubits, each index i ∈ [0, 2^n) maps to
     /// a tuple (b_0, b_1, ..., b_{n-1}) where b_k = (i >> k) & 1
     pub fn to_qtt_indices(&self, n_qubits: usize) -> Vec<Vec<u8>> {
-        self.indices
+        self.indices_vec
             .iter()
-            .map(|&idx| index_to_qtt(idx, n_qubits))
+            .map(|&idx| index_to_qtt(idx as u64, n_qubits))
             .collect()
     }
     
