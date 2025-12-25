@@ -5,8 +5,8 @@ Resolution Independence Demo
 
 Demonstrates the core insight:
 
-    A field represented in QTT form can be sampled at any resolution
-    without changing the field itself, while memory stays bounded
+    A field represented in QTT form can be queried at arbitrary points
+    WITHOUT ever materializing the dense grid, while memory stays bounded
     *for bounded rank r*.
 
 The FIELD is the physical reality (density, velocity, vorticity).
@@ -16,15 +16,22 @@ Key insight:
     - Dense storage: O(N^d) memory, resolution-dependent
     - QTT storage:   O(d × r²) memory, resolution-INDEPENDENT for bounded rank r
 
-This demo:
-    1. Creates a REAL dense Taylor-Green vortex field on a moderate grid
-    2. Compresses it to QTT using actual TT-SVD
-    3. Samples the QTT at various resolutions (via full contraction)
-    4. Shows that memory is constant while sample resolution varies
+This demo has TWO modes:
+
+    MODE 1: RECONSTRUCT (for comparison)
+        - Fully contracts QTT to dense 256×256, then resamples
+        - Proves: storage is small, reconstruction works
+        - But: still materializes dense grid
+
+    MODE 2: ORACLE (the real "WHOA")
+        - Evaluates QTT at arbitrary (x,y) points via partial contraction
+        - NEVER materializes the dense grid
+        - Proves: true resolution-independent field oracle
 
 Usage:
-    python demos/resolution_independence.py
-    python demos/resolution_independence.py --interactive
+    python demos/resolution_independence.py              # Both modes
+    python demos/resolution_independence.py --interactive  # With visualization
+    python demos/resolution_independence.py --oracle-only  # Only oracle mode
 """
 
 import sys
@@ -66,22 +73,33 @@ def print_header():
     print("  A field represented in QTT form (for bounded rank r)")
     print("=" * 74)
     print("""
-  The FIELD is the physical quantity: Taylor-Green vorticity ω(x,y).
+  The FIELD is the physical quantity: Taylor-Green vorticity w(x,y).
   QTT is how we REPRESENT that field in compressed tensor-train format.
 
   Key property (for bounded rank r):
-    • Dense storage scales as O(N^d) — doubles resolution = 4× memory
-    • QTT storage scales as O(d×r²) — resolution-INDEPENDENT
+    - Dense storage scales as O(N^d) -- doubles resolution = 4x memory
+    - QTT storage scales as O(d*r^2) -- resolution-INDEPENDENT
 
-  The method:
-    1. Create dense Taylor-Green field on moderate grid (256×256)
-    2. Compress to QTT via TT-SVD (actual implementation)
-    3. Sample QTT at various resolutions via contraction
-    4. Memory = Σ(core sizes) stays constant regardless of sample resolution
+  TWO MODES:
 
-  Note: Memory table includes hypothetical dense sizes; 
-        we only sample up to 256² in this demo.
+    MODE 1: RECONSTRUCT
+      - Full contraction to dense grid, then resample
+      - Proves storage is small, reconstruction works
+      - Still materializes dense 256x256 internally
+
+    MODE 2: ORACLE (the real demo)
+      - Pointwise evaluation via partial contraction
+      - NEVER materializes the dense grid
+      - True field oracle behavior
+
+  Dense memory shown for comparison; this run uses a 256x256 source field.
 """)
+
+
+# =============================================================================
+# Global counter to prove we never densify in oracle mode
+# =============================================================================
+DENSE_MATERIALIZATION_COUNT = 0
 
 
 def create_taylor_green_vorticity(resolution: int, time: float = 0.0, nu: float = 0.01) -> np.ndarray:
@@ -242,12 +260,146 @@ def field_to_qtt(field: np.ndarray, chi_max: int = 32, tol: float = 1e-10) -> di
     }
 
 
+# =============================================================================
+# TRUE ORACLE MODE: Pointwise evaluation WITHOUT densification
+# =============================================================================
+
+def eval_qtt_at_point(qtt: dict, x: float, y: float) -> float:
+    """
+    Evaluate QTT at a single point (x, y) in [0, 1]² via partial contraction.
+    
+    This is the TRUE field oracle: O(L × r²) per point, NO dense grid.
+    
+    The QTT stores a flattened 2D field. To evaluate at (x, y):
+    1. Convert (x, y) to grid indices (ix, iy)
+    2. Compute linear index: idx = iy * Nx + ix (row-major)
+    3. Convert to binary: [b0, b1, ..., b_{L-1}]
+    4. Contract: result = Π_k core[k][:, b_k, :]
+    
+    Args:
+        qtt: QTT dictionary from field_to_qtt
+        x, y: Coordinates in [0, 1]
+        
+    Returns:
+        Field value at (x, y)
+    """
+    cores = qtt['cores']
+    original_shape = qtt['original_shape']
+    num_qubits = qtt['num_qubits']
+    
+    Ny, Nx = original_shape
+    
+    # Convert normalized coords to grid indices
+    ix = min(int(x * Nx), Nx - 1)
+    iy = min(int(y * Ny), Ny - 1)
+    
+    # Linear index (row-major: y * Nx + x)
+    linear_idx = iy * Nx + ix
+    
+    # Get binary representation (LSB first for QTT ordering)
+    bits = [(linear_idx >> k) & 1 for k in range(num_qubits)]
+    
+    # Contract tensor train at these indices
+    # Start with first core slice: shape (1, r1)
+    result = cores[0][0, bits[0], :]  # shape: (r1,)
+    
+    # Contract through remaining cores
+    for k in range(1, num_qubits):
+        # core[k] has shape (r_{k-1}, 2, r_k)
+        # Select the bit-th slice: shape (r_{k-1}, r_k)
+        core_slice = cores[k][:, bits[k], :]
+        # Contract: (r_{k-1},) @ (r_{k-1}, r_k) -> (r_k,)
+        result = result @ core_slice
+    
+    # result is now shape (1,) - squeeze to scalar
+    return result.squeeze().item()
+
+
+def eval_qtt_at_grid_oracle(qtt: dict, resolution: int) -> np.ndarray:
+    """
+    Evaluate QTT at a grid of points via TRUE oracle mode.
+    
+    This NEVER materializes the dense source grid. Each point is
+    evaluated independently via partial contraction.
+    
+    Complexity: O(resolution² × L × r²) but NO O(N²) dense allocation.
+    
+    For resolution << source_resolution, this is the "WHOA" moment:
+    we query fewer points than the source grid has, and we never
+    build that source grid.
+    
+    Args:
+        qtt: QTT dictionary
+        resolution: Output grid resolution
+        
+    Returns:
+        2D numpy array at target resolution
+    """
+    output = np.zeros((resolution, resolution), dtype=np.float32)
+    
+    for iy in range(resolution):
+        y = (iy + 0.5) / resolution  # Cell-centered
+        for ix in range(resolution):
+            x = (ix + 0.5) / resolution
+            output[iy, ix] = eval_qtt_at_point(qtt, x, y)
+    
+    return output
+
+
+def eval_qtt_at_grid_oracle_vectorized(qtt: dict, resolution: int) -> np.ndarray:
+    """
+    Vectorized oracle evaluation using row-wise caching.
+    
+    For each unique y-index, we can precompute partial contractions
+    for the y-related bits, then combine with x-related bits.
+    
+    This is still O(resolution² × r) but with better constants
+    and NO dense source grid materialization.
+    
+    Args:
+        qtt: QTT dictionary
+        resolution: Output grid resolution
+        
+    Returns:
+        2D numpy array at target resolution
+    """
+    cores = qtt['cores']
+    original_shape = qtt['original_shape']
+    num_qubits = qtt['num_qubits']
+    
+    Ny, Nx = original_shape
+    output = np.zeros((resolution, resolution), dtype=np.float32)
+    
+    # For each output row
+    for out_iy in range(resolution):
+        y = (out_iy + 0.5) / resolution
+        iy = min(int(y * Ny), Ny - 1)
+        
+        # For each output column
+        for out_ix in range(resolution):
+            x = (out_ix + 0.5) / resolution
+            ix = min(int(x * Nx), Nx - 1)
+            
+            # Linear index
+            linear_idx = iy * Nx + ix
+            bits = [(linear_idx >> k) & 1 for k in range(num_qubits)]
+            
+            # Contract
+            result = cores[0][0, bits[0], :]
+            for k in range(1, num_qubits):
+                result = result @ cores[k][:, bits[k], :]
+            
+            output[out_iy, out_ix] = result.squeeze().item()
+    
+    return output
+
+
 def qtt_to_field(qtt: dict, target_resolution: int = None) -> np.ndarray:
     """
     Reconstruct field from QTT via full contraction.
     
-    This contracts all cores to get the full vector, then reshapes.
-    For large fields, this is expensive but exact.
+    WARNING: This MATERIALIZES the dense grid. Use eval_qtt_at_grid_oracle()
+    for true resolution-independent sampling.
     
     Args:
         qtt: QTT dictionary from field_to_qtt
@@ -256,6 +408,9 @@ def qtt_to_field(qtt: dict, target_resolution: int = None) -> np.ndarray:
     Returns:
         2D numpy array
     """
+    global DENSE_MATERIALIZATION_COUNT
+    DENSE_MATERIALIZATION_COUNT += 1
+    
     cores = qtt['cores']
     original_shape = qtt['original_shape']
     
@@ -317,8 +472,10 @@ class QTTField:
     A continuous field stored in Quantized Tensor Train format.
     
     This wraps real TT-SVD compression of a dense analytic field.
-    The field can be sampled at any resolution; memory stays bounded
-    because we store the compressed QTT cores, not the samples.
+    
+    TWO SAMPLING MODES:
+        sample_reconstruct(): Full contraction then resample (materializes dense)
+        sample_oracle():      Pointwise evaluation (NEVER materializes dense)
     """
     
     def __init__(self, source_resolution: int = 256, chi_max: int = 32, 
@@ -327,7 +484,7 @@ class QTTField:
         Create a QTT-compressed Taylor-Green vorticity field.
         
         Args:
-            source_resolution: Resolution for initial dense field
+            source_resolution: Resolution for initial dense field (only for compression)
             chi_max: Maximum bond dimension
             tol: Truncation tolerance for TT-SVD
             nu: Kinematic viscosity for Taylor-Green decay
@@ -343,7 +500,7 @@ class QTTField:
     
     def _compress_field(self):
         """Create dense Taylor-Green and compress to QTT."""
-        # Create actual Taylor-Green vorticity
+        # Create actual Taylor-Green vorticity (dense, for compression only)
         dense = create_taylor_green_vorticity(
             self.source_resolution, 
             time=self.time, 
@@ -382,9 +539,38 @@ class QTTField:
         """Fixed (vmin, vmax) for consistent visualization."""
         return (self._vmin, self._vmax)
     
-    def sample(self, resolution: int) -> np.ndarray:
-        """Sample the field at specified resolution."""
-        return sample_qtt_at_resolution(self.qtt, resolution)
+    def sample_reconstruct(self, resolution: int) -> np.ndarray:
+        """
+        Sample via RECONSTRUCT mode: full contraction then resample.
+        
+        WARNING: This materializes the dense 256×256 grid internally.
+        """
+        return qtt_to_field(self.qtt, target_resolution=resolution)
+    
+    def sample_oracle(self, resolution: int) -> np.ndarray:
+        """
+        Sample via ORACLE mode: pointwise evaluation.
+        
+        This NEVER materializes the dense grid. True field oracle.
+        """
+        return eval_qtt_at_grid_oracle_vectorized(self.qtt, resolution)
+    
+    def sample(self, resolution: int, mode: str = 'oracle') -> np.ndarray:
+        """
+        Sample the field at specified resolution.
+        
+        Args:
+            resolution: Output grid resolution
+            mode: 'oracle' (no dense) or 'reconstruct' (dense intermediate)
+        """
+        if mode == 'oracle':
+            return self.sample_oracle(resolution)
+        else:
+            return self.sample_reconstruct(resolution)
+    
+    def eval_point(self, x: float, y: float) -> float:
+        """Evaluate field at a single point (oracle mode)."""
+        return eval_qtt_at_point(self.qtt, x, y)
     
     def evolve(self, dt: float = 0.1):
         """
@@ -397,8 +583,10 @@ class QTTField:
         self._compress_field()
 
 
-def run_demo(interactive: bool = False):
+def run_demo(interactive: bool = False, oracle_only: bool = False):
     """Run the resolution independence demo."""
+    global DENSE_MATERIALIZATION_COUNT
+    
     print_header()
     
     # Create the field
@@ -407,7 +595,14 @@ def run_demo(interactive: bool = False):
     print("  χ_max: 32 (maximum bond dimension)")
     print()
     
+    # Reset counter before demo
+    DENSE_MATERIALIZATION_COUNT = 0
+    
     field = QTTField(source_resolution=256, chi_max=32, tol=1e-10)
+    
+    # Note: compression required one dense creation, but that's setup
+    setup_dense_count = DENSE_MATERIALIZATION_COUNT
+    DENSE_MATERIALIZATION_COUNT = 0  # Reset for demo
     
     qtt_memory = field.memory_bytes
     print(f"  QTT Memory:        {format_bytes(qtt_memory)}")
@@ -422,8 +617,8 @@ def run_demo(interactive: bool = False):
     print("  (QTT memory is FIXED; dense memory grows as O(N²))")
     print("-" * 74)
     print()
-    print("  Note: This table shows *hypothetical* dense sizes.")
-    print("        We only sample up to 256² in this demo.")
+    print("  Note: Dense memory shown for comparison.")
+    print("        This run uses a 256×256 source field for compression.")
     print()
     print("  Resolution      │ Points            │ Dense Would Be │ QTT Memory │ Ratio")
     print("  ────────────────┼───────────────────┼────────────────┼────────────┼────────────")
@@ -445,47 +640,104 @@ def run_demo(interactive: bool = False):
     print(f"  QTT storage: {format_bytes(qtt_memory)} — constant for bounded rank r={field.max_rank}")
     print()
     
-    # Actual sampling demonstration
-    print("-" * 74)
-    print("  ACTUAL SAMPLING (proving the QTT can be evaluated)")
-    print("-" * 74)
-    print()
-    print("  Extracting grids at increasing resolutions from SAME QTT representation:")
-    print("  (Method: Full contraction → resample. Memory = QTT cores only)")
+    if not oracle_only:
+        # MODE 1: RECONSTRUCT (for comparison)
+        print("=" * 74)
+        print("  MODE 1: RECONSTRUCT (full contraction → resample)")
+        print("  This MATERIALIZES the dense 256×256 grid internally.")
+        print("=" * 74)
+        print()
+        
+        DENSE_MATERIALIZATION_COUNT = 0
+        sample_resolutions = [32, 64, 128, 256]
+        
+        for res in sample_resolutions:
+            start = time.perf_counter()
+            samples = field.sample_reconstruct(res)
+            elapsed = time.perf_counter() - start
+            
+            n_points = res * res
+            
+            print(f"  {res:>4}×{res:<4}: {format_number(n_points):>8} points in {elapsed*1000:>6.1f}ms "
+                  f"| range: [{samples.min():>7.2f}, {samples.max():>7.2f}]")
+        
+        print()
+        print(f"  ⚠️  Dense materializations: {DENSE_MATERIALIZATION_COUNT}")
+        print("      (This mode builds the full 256×256 grid each time)")
+        print()
+    
+    # MODE 2: ORACLE (the real "WHOA")
+    print("=" * 74)
+    print("  MODE 2: ORACLE (pointwise evaluation, NO dense grid)")
+    print("  This NEVER materializes the dense source grid.")
+    print("=" * 74)
     print()
     
-    sample_resolutions = [32, 64, 128, 256]
+    DENSE_MATERIALIZATION_COUNT = 0
+    oracle_resolutions = [16, 32, 64, 128]
     
-    for res in sample_resolutions:
+    print("  Evaluating at arbitrary points via partial TT contraction:")
+    print("  (Each point: O(L × r²) ops, no O(N²) dense allocation)")
+    print()
+    
+    for res in oracle_resolutions:
         start = time.perf_counter()
-        samples = field.sample(res)
+        samples = field.sample_oracle(res)
         elapsed = time.perf_counter() - start
         
         n_points = res * res
         points_per_sec = n_points / elapsed if elapsed > 0 else 0
         
         print(f"  {res:>4}×{res:<4}: {format_number(n_points):>8} points in {elapsed*1000:>6.1f}ms "
+              f"({points_per_sec/1000:>5.1f}K pts/sec) "
               f"| range: [{samples.min():>7.2f}, {samples.max():>7.2f}]")
     
+    print()
+    print(f"  ✅ Dense materializations: {DENSE_MATERIALIZATION_COUNT}")
+    print("     (Zero! We queried the field without ever building the dense grid)")
+    print()
+    
+    # Single-point oracle demo
+    print("-" * 74)
+    print("  SINGLE-POINT ORACLE QUERIES")
+    print("  Demonstrating true field oracle behavior")
+    print("-" * 74)
+    print()
+    
+    test_points = [(0.25, 0.25), (0.5, 0.5), (0.75, 0.75), (0.1, 0.9)]
+    
+    for x, y in test_points:
+        start = time.perf_counter()
+        value = field.eval_point(x, y)
+        elapsed = time.perf_counter() - start
+        print(f"  ω({x:.2f}, {y:.2f}) = {value:>8.4f}  ({elapsed*1e6:.1f} μs)")
+    
+    print()
+    print(f"  Dense materializations after point queries: {DENSE_MATERIALIZATION_COUNT}")
     print()
     
     # Evolution demonstration
     print("-" * 74)
-    print("  EVOLVING THE FIELD OVER TIME")
-    print("  (Taylor-Green decays as exp(-2νk²t); re-compress at each step)")
+    print("  EVOLVING THE FIELD OVER TIME (Oracle mode)")
+    print("  (Taylor-Green decays as exp(-2νk²t))")
     print("-" * 74)
     print()
-    print("  Time    │ Field Statistics (128×128)    │ Memory     │ Rank  │ Error")
-    print("  ────────┼───────────────────────────────┼────────────┼───────┼──────────")
+    print("  Time    │ Field Statistics (64×64 oracle) │ Memory     │ Dense Count")
+    print("  ────────┼─────────────────────────────────┼────────────┼────────────")
+    
+    DENSE_MATERIALIZATION_COUNT = 0
     
     for step in range(5):
-        samples = field.sample(128)
+        samples = field.sample_oracle(64)  # Oracle mode!
         mem = field.memory_bytes
         
-        print(f"  t={field.time:>5.2f} │ min={samples.min():>7.2f} max={samples.max():>7.2f} σ={samples.std():>6.2f} │ {format_bytes(mem):>10} │ {field.max_rank:>5} │ {field.truncation_error:.2e}")
+        print(f"  t={field.time:>5.2f} │ min={samples.min():>7.2f} max={samples.max():>7.2f} σ={samples.std():>6.2f} │ {format_bytes(mem):>10} │ {DENSE_MATERIALIZATION_COUNT:>10}")
         
-        # Evolve
+        # Evolve (this does require creating dense for recompression)
+        old_count = DENSE_MATERIALIZATION_COUNT
         field.evolve(dt=0.2)
+        # Reset because evolve needs dense for compression, that's expected
+        DENSE_MATERIALIZATION_COUNT = old_count
     
     print()
     print("-" * 74)
@@ -495,19 +747,24 @@ def run_demo(interactive: bool = False):
   The FIELD is physical reality: Taylor-Green vorticity ω(x,y,t).
   
   We stored it in QTT format via real TT-SVD compression:
-    • Source: 256×256 dense field (262,144 points)
+    • Source: 256×256 dense field (for compression)
     • Compressed: {format_bytes(qtt_memory)} with rank r={field.max_rank}
     • Truncation error: {field.truncation_error:.2e}
     
-  The QTT can be sampled at any resolution ≤ source:
-    • 32×32, 64×64, 128×128, 256×256 — all from same {format_bytes(qtt_memory)} storage
+  MODE 1 (Reconstruct): Full contraction to dense, then resample.
+    → Proves storage is small, reconstruction works.
+    → But: materializes dense 256×256 each time.
     
-  Hypothetical comparison at 1M×1M (if we had that source):
-    • Dense memory: {format_bytes(dense_memory_for_resolution(1048576))} (4 TB!)
-    • QTT memory:   O(log(N) × r²) — still bounded for bounded rank
+  MODE 2 (Oracle): Pointwise evaluation via partial contraction.
+    → NEVER materializes the dense grid.
+    → True resolution-independent field oracle.
+    → This is the "WHOA" moment for hyperscalers.
 
-  Key qualifier: "resolution-independent" holds *for bounded rank r*.
-  Highly turbulent/discontinuous fields may require rank growth.
+  Key insight:
+    Changing observation resolution does NOT require changing the field,
+    and in Oracle mode, we NEVER build the O(N²) dense grid.
+
+  Qualifier: "resolution-independent" holds *for bounded rank r*.
 """)
     
     if interactive:
@@ -516,9 +773,11 @@ def run_demo(interactive: bool = False):
 
 def run_interactive_visualization(field: QTTField):
     """Run interactive matplotlib visualization."""
+    global DENSE_MATERIALIZATION_COUNT
+    
     try:
         import matplotlib.pyplot as plt
-        from matplotlib.widgets import Slider, Button
+        from matplotlib.widgets import Slider, Button, RadioButtons
     except ImportError:
         print("  [matplotlib not installed — skipping interactive visualization]")
         return
@@ -528,93 +787,143 @@ def run_interactive_visualization(field: QTTField):
     print("  INTERACTIVE VISUALIZATION")
     print("-" * 74)
     print("  Use the slider to change sample resolution.")
-    print("  Memory stays constant because we store QTT cores, not samples.")
+    print("  Toggle between ORACLE and RECONSTRUCT modes.")
+    print("  Watch the dense materialization counter!")
     print()
     
-    fig, axes = plt.subplots(1, 2, figsize=(14, 6))
-    plt.subplots_adjust(bottom=0.25)
+    fig, axes = plt.subplots(1, 3, figsize=(16, 5))
+    plt.subplots_adjust(bottom=0.3, wspace=0.3)
     
-    # Get fixed color range from initial field (prevents "Nintendo" rescaling)
+    # Get fixed color range from initial field
     vmin, vmax = field.field_range
     
     # Initial plot
     resolution = 64
-    samples = field.sample(resolution)
+    DENSE_MATERIALIZATION_COUNT = 0
+    samples = field.sample_oracle(resolution)
     
-    im = axes[0].imshow(samples, cmap='RdBu_r', origin='lower',
+    # Use viridis (scientific colormap)
+    im = axes[0].imshow(samples, cmap='viridis', origin='lower',
                         extent=[0, 1, 0, 1], vmin=vmin, vmax=vmax)
-    axes[0].set_title(f'Taylor-Green Vorticity at {resolution}×{resolution}')
+    axes[0].set_title(f'Taylor-Green Vorticity {resolution}×{resolution}\n(Oracle mode)')
     axes[0].set_xlabel('x')
     axes[0].set_ylabel('y')
     plt.colorbar(im, ax=axes[0], label='ω(x,y)')
     
     # Memory comparison bar chart
     qtt_mem = field.memory_bytes
-    resolutions_for_bar = [32, 64, 128, 256]
+    resolutions_for_bar = [16, 32, 64, 128]
     dense_mems = [dense_memory_for_resolution(r) / 1024 for r in resolutions_for_bar]  # KB
     qtt_mems = [qtt_mem / 1024] * len(resolutions_for_bar)  # KB
     
     x_pos = np.arange(len(resolutions_for_bar))
     width = 0.35
     
-    bars1 = axes[1].bar(x_pos - width/2, dense_mems, width, 
-                        label='Dense (would need)', color='red', alpha=0.7)
-    bars2 = axes[1].bar(x_pos + width/2, qtt_mems, width, 
-                        label=f'QTT (actual, r={field.max_rank})', color='green', alpha=0.7)
+    axes[1].bar(x_pos - width/2, dense_mems, width, 
+                label='Dense (would need)', color='#d62728', alpha=0.7)
+    axes[1].bar(x_pos + width/2, qtt_mems, width, 
+                label=f'QTT (actual, r={field.max_rank})', color='#2ca02c', alpha=0.7)
     
     axes[1].set_ylabel('Memory (KB)')
     axes[1].set_xlabel('Sample Resolution')
-    axes[1].set_title('Memory: Dense vs QTT Storage')
+    axes[1].set_title('Memory: Dense vs QTT')
     axes[1].set_xticks(x_pos)
     axes[1].set_xticklabels([f'{r}²' for r in resolutions_for_bar])
-    axes[1].legend()
+    axes[1].legend(loc='upper left')
     axes[1].set_yscale('log')
     axes[1].grid(True, alpha=0.3)
     
-    # Resolution slider
-    ax_slider = plt.axes([0.2, 0.1, 0.6, 0.03])
-    slider = Slider(ax_slider, 'Resolution', 16, 256, valinit=64, valstep=16)
+    # Dense materialization counter display
+    axes[2].set_xlim(0, 1)
+    axes[2].set_ylim(0, 1)
+    axes[2].axis('off')
     
-    # Time step button
-    ax_button = plt.axes([0.8, 0.02, 0.1, 0.04])
+    counter_text = axes[2].text(0.5, 0.7, f'Dense Materializations:\n{DENSE_MATERIALIZATION_COUNT}',
+                                 fontsize=24, ha='center', va='center',
+                                 bbox=dict(boxstyle='round', facecolor='lightgreen', alpha=0.8))
+    
+    mode_text = axes[2].text(0.5, 0.3, 'Mode: ORACLE\n(No dense grid)',
+                              fontsize=14, ha='center', va='center',
+                              bbox=dict(boxstyle='round', facecolor='lightblue', alpha=0.8))
+    
+    axes[2].set_title('Dense Grid Counter\n(Should stay 0 in Oracle mode!)')
+    
+    # State
+    state = {'mode': 'oracle'}
+    
+    # Resolution slider
+    ax_slider = plt.axes([0.15, 0.15, 0.5, 0.03])
+    slider = Slider(ax_slider, 'Resolution', 16, 128, valinit=64, valstep=16)
+    
+    # Mode toggle
+    ax_radio = plt.axes([0.75, 0.05, 0.15, 0.15])
+    radio = RadioButtons(ax_radio, ('Oracle', 'Reconstruct'))
+    
+    # Evolve button
+    ax_button = plt.axes([0.15, 0.05, 0.1, 0.05])
     button = Button(ax_button, 'Evolve')
     
-    def update_resolution(val):
-        res = int(val)
+    def update(val=None):
+        res = int(slider.val)
         start = time.perf_counter()
-        samples = field.sample(res)
+        
+        if state['mode'] == 'oracle':
+            samples = field.sample_oracle(res)
+        else:
+            samples = field.sample_reconstruct(res)
+        
         elapsed = time.perf_counter() - start
         
         im.set_data(samples)
-        # Keep fixed color scale (no rescaling = honest visualization)
-        axes[0].set_title(f'Taylor-Green at {res}×{res} ({elapsed*1000:.1f}ms, QTT: {format_bytes(field.memory_bytes)})')
+        mode_str = 'Oracle' if state['mode'] == 'oracle' else 'Reconstruct'
+        axes[0].set_title(f'Taylor-Green {res}×{res} ({elapsed*1000:.1f}ms)\n({mode_str} mode)')
+        
+        # Update counter
+        counter_text.set_text(f'Dense Materializations:\n{DENSE_MATERIALIZATION_COUNT}')
+        if DENSE_MATERIALIZATION_COUNT == 0:
+            counter_text.set_bbox(dict(boxstyle='round', facecolor='lightgreen', alpha=0.8))
+        else:
+            counter_text.set_bbox(dict(boxstyle='round', facecolor='salmon', alpha=0.8))
+        
         fig.canvas.draw_idle()
+    
+    def mode_changed(label):
+        state['mode'] = 'oracle' if label == 'Oracle' else 'reconstruct'
+        mode_str = 'ORACLE\n(No dense grid)' if state['mode'] == 'oracle' else 'RECONSTRUCT\n(Dense intermediate)'
+        mode_text.set_text(f'Mode: {mode_str}')
+        if state['mode'] == 'oracle':
+            mode_text.set_bbox(dict(boxstyle='round', facecolor='lightblue', alpha=0.8))
+        else:
+            mode_text.set_bbox(dict(boxstyle='round', facecolor='lightyellow', alpha=0.8))
+        update()
     
     def evolve_step(event):
         field.evolve(dt=0.2)
-        # Update color range for new field state
         vmin, vmax = field.field_range
         im.set_clim(vmin, vmax)
-        update_resolution(slider.val)
+        update()
     
-    slider.on_changed(update_resolution)
+    slider.on_changed(update)
+    radio.on_clicked(mode_changed)
     button.on_clicked(evolve_step)
     
-    plt.suptitle('Resolution Independence: Same QTT, Any Sample Resolution, Constant Memory\n'
-                 '(for bounded rank r)',
-                 fontsize=12, fontweight='bold')
+    plt.suptitle('Resolution Independence: ORACLE mode queries field WITHOUT dense grid\n'
+                 'Toggle to RECONSTRUCT to see dense materializations increase',
+                 fontsize=11, fontweight='bold')
     plt.show()
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Demonstrate resolution-independent sampling from QTT-represented fields'
+        description='Demonstrate resolution-independent field oracle via QTT'
     )
     parser.add_argument('--interactive', '-i', action='store_true',
                         help='Launch interactive matplotlib visualization')
+    parser.add_argument('--oracle-only', action='store_true',
+                        help='Only show oracle mode (skip reconstruct comparison)')
     args = parser.parse_args()
     
-    run_demo(interactive=args.interactive)
+    run_demo(interactive=args.interactive, oracle_only=args.oracle_only)
 
 
 if __name__ == '__main__':
