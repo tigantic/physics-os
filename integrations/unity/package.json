@@ -1,0 +1,41 @@
+{
+    "name": "com.tigantic.hypertensor",
+    "version": "1.0.0",
+    "displayName": "HyperTensor",
+    "description": "QTT-compressed field visualization and simulation for Unity",
+    "unity": "2021.3",
+    "unityRelease": "0f1",
+    "documentationUrl": "https://github.com/tigantic/HyperTensor/tree/main/integrations/unity",
+    "changelogUrl": "https://github.com/tigantic/HyperTensor/blob/main/CHANGELOG.md",
+    "licensesUrl": "https://github.com/tigantic/HyperTensor/blob/main/LICENSE",
+    "dependencies": {},
+    "keywords": [
+        "tensor",
+        "qtt",
+        "simulation",
+        "fluid",
+        "visualization",
+        "field"
+    ],
+    "author": {
+        "name": "Tigantic Labs",
+        "email": "info@tigantic.com",
+        "url": "https://github.com/tigantic"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tigantic/HyperTensor.git"
+    },
+    "samples": [
+        {
+            "displayName": "Fluid Simulation",
+            "description": "Basic fluid simulation example",
+            "path": "Samples~/FluidSimulation"
+        },
+        {
+            "displayName": "Smoke Rendering",
+            "description": "Volumetric smoke rendering example",
+            "path": "Samples~/SmokeRendering"
+        }
+    ]
+}

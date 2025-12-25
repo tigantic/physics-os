@@ -1,0 +1,38 @@
+{
+    "FileVersion": 3,
+    "Version": 1,
+    "VersionName": "1.0.0",
+    "FriendlyName": "HyperTensor",
+    "Description": "QTT-compressed field visualization and simulation for Unreal Engine",
+    "Category": "Simulation",
+    "CreatedBy": "Tigantic Labs",
+    "CreatedByURL": "https://github.com/tigantic/HyperTensor",
+    "DocsURL": "https://github.com/tigantic/HyperTensor/tree/main/integrations/unreal",
+    "MarketplaceURL": "",
+    "SupportURL": "https://github.com/tigantic/HyperTensor/issues",
+    "CanContainContent": true,
+    "IsBetaVersion": true,
+    "IsExperimentalVersion": false,
+    "Installed": false,
+    "Modules": [
+        {
+            "Name": "HyperTensor",
+            "Type": "Runtime",
+            "LoadingPhase": "Default",
+            "PlatformAllowList": [
+                "Win64",
+                "Linux"
+            ]
+        }
+    ],
+    "Plugins": [
+        {
+            "Name": "ProceduralMeshComponent",
+            "Enabled": true
+        },
+        {
+            "Name": "Niagara",
+            "Enabled": true
+        }
+    ]
+}

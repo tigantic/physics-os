@@ -1,0 +1,124 @@
+version: "3.9"
+
+services:
+  # =============================================================================
+  # HYPERTENSOR BASE
+  # =============================================================================
+  hypertensor:
+    build:
+      context: ../..
+      dockerfile: sdk/docker/Dockerfile
+      target: base
+    image: tigantic/hypertensor:latest
+    container_name: hypertensor
+    volumes:
+      - hypertensor-data:/home/hypertensor/data
+    restart: unless-stopped
+
+  # =============================================================================
+  # HYPERTENSOR GPU
+  # =============================================================================
+  hypertensor-gpu:
+    build:
+      context: ../..
+      dockerfile: sdk/docker/Dockerfile
+      target: cuda
+    image: tigantic/hypertensor:cuda
+    container_name: hypertensor-gpu
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - hypertensor-data:/home/hypertensor/data
+    restart: unless-stopped
+
+  # =============================================================================
+  # JUPYTER NOTEBOOK
+  # =============================================================================
+  jupyter:
+    build:
+      context: ../..
+      dockerfile: sdk/docker/Dockerfile
+      target: jupyter
+    image: tigantic/hypertensor:jupyter
+    container_name: hypertensor-jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - hypertensor-notebooks:/home/hypertensor/notebooks
+      - hypertensor-data:/home/hypertensor/data
+    restart: unless-stopped
+
+  # =============================================================================
+  # API SERVER
+  # =============================================================================
+  server:
+    build:
+      context: ../..
+      dockerfile: sdk/docker/Dockerfile
+      target: server
+    image: tigantic/hypertensor:server
+    container_name: hypertensor-server
+    ports:
+      - "8000:8000"  # REST API
+      - "5555:5555"  # ZMQ Bridge
+    volumes:
+      - hypertensor-data:/home/hypertensor/data
+    environment:
+      - HYPERTENSOR_LOG_LEVEL=INFO
+      - HYPERTENSOR_MAX_WORKERS=4
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  # =============================================================================
+  # PROMETHEUS METRICS
+  # =============================================================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: hypertensor-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    restart: unless-stopped
+
+  # =============================================================================
+  # GRAFANA DASHBOARD
+  # =============================================================================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: hypertensor-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+volumes:
+  hypertensor-data:
+  hypertensor-notebooks:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  default:
+    name: hypertensor-network
