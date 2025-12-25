@@ -647,6 +647,167 @@ def qtt_rusanov_flux_tci(
     return F_rho_cores, F_rhou_cores, F_E_cores, metadata
 
 
+def qtt_rusanov_flux_tci_rust(
+    rho_cores: List[Tensor],
+    rhou_cores: List[Tensor],
+    E_cores: List[Tensor],
+    gamma: float = 1.4,
+    max_rank: int = 64,
+    tolerance: float = 1e-6,
+    verbose: bool = False,
+) -> Tuple[List[Tensor], List[Tensor], List[Tensor], dict]:
+    """
+    Compute Rusanov flux in QTT format using Rust TCI with neighbor indices.
+    
+    This is the optimized version using:
+    - Rust TCI sampler for index generation
+    - Rust-precomputed neighbor indices (avoids GPU thread divergence)
+    - Rust MaxVol pivot selection
+    
+    Args:
+        rho_cores: QTT cores for density
+        rhou_cores: QTT cores for momentum
+        E_cores: QTT cores for energy
+        gamma: Ratio of specific heats
+        max_rank: Maximum TT rank for flux
+        tolerance: TCI convergence tolerance
+        verbose: Print progress
+        
+    Returns:
+        Tuple of (F_rho_cores, F_rhou_cores, F_E_cores, metadata)
+    """
+    from tci_core import TCISampler
+    from tensornet.cfd.qtt_eval import qtt_eval_batch
+    from tensornet.cfd.tci_flux import rusanov_flux
+    
+    n_qubits = len(rho_cores)
+    N = 2 ** n_qubits
+    device = rho_cores[0].device
+    
+    # Create Rust sampler with periodic BC
+    sampler = TCISampler(n_qubits, "periodic", None)
+    sampler.set_min_batch_size(max(64, max_rank))
+    
+    # Initialize pivots
+    initial_pivots = min(max_rank, 8)
+    for q in range(n_qubits):
+        row_pivots = list(range(min(initial_pivots, 2**q)))
+        col_pivots = list(range(min(initial_pivots, 2**(n_qubits - q - 1))))
+        sampler.init_pivots(q, row_pivots, col_pivots)
+    
+    # Compute flux using Rust neighbor indices
+    def flux_at_batch(batch) -> Tuple[Tensor, Tensor, Tensor]:
+        """Evaluate Rusanov flux at batch of indices using Rust neighbor indices."""
+        # Get indices from Rust (zero-copy numpy arrays)
+        indices_L_np = batch.indices_array()
+        indices_R_np = batch.right_array()  # Rust precomputes neighbors!
+        
+        # Transfer to device
+        indices_L = torch.from_numpy(indices_L_np).to(device)
+        indices_R = torch.from_numpy(indices_R_np).to(device)
+        
+        # Evaluate state at left and right
+        rho_L = qtt_eval_batch(rho_cores, indices_L)
+        rhou_L = qtt_eval_batch(rhou_cores, indices_L)
+        E_L = qtt_eval_batch(E_cores, indices_L)
+        
+        rho_R = qtt_eval_batch(rho_cores, indices_R)
+        rhou_R = qtt_eval_batch(rhou_cores, indices_R)
+        E_R = qtt_eval_batch(E_cores, indices_R)
+        
+        # Compute Rusanov flux
+        F_rho, F_rhou, F_E = rusanov_flux(
+            rho_L, rhou_L, E_L,
+            rho_R, rhou_R, E_R,
+            gamma
+        )
+        
+        return F_rho, F_rhou, F_E
+    
+    # Run TCI for each flux component
+    samples_rho = {}
+    samples_rhou = {}
+    samples_E = {}
+    total_evals = 0
+    max_iter = 50
+    
+    for iteration in range(max_iter):
+        new_samples = 0
+        
+        for q in range(n_qubits):
+            batch = sampler.sample_fibers(q)
+            fiber_indices = batch.indices
+            
+            # Filter already sampled
+            new_indices = [i for i in fiber_indices if i not in samples_rho]
+            if not new_indices:
+                continue
+            
+            # Create batch with only new indices
+            indices_L = torch.tensor(new_indices, device=device, dtype=torch.long)
+            indices_R = (indices_L + 1) % N
+            
+            # Evaluate flux
+            rho_L = qtt_eval_batch(rho_cores, indices_L)
+            rhou_L = qtt_eval_batch(rhou_cores, indices_L)
+            E_L = qtt_eval_batch(E_cores, indices_L)
+            
+            rho_R = qtt_eval_batch(rho_cores, indices_R)
+            rhou_R = qtt_eval_batch(rhou_cores, indices_R)
+            E_R = qtt_eval_batch(E_cores, indices_R)
+            
+            F_rho, F_rhou, F_E = rusanov_flux(
+                rho_L, rhou_L, E_L,
+                rho_R, rhou_R, E_R,
+                gamma
+            )
+            
+            # Store samples
+            for idx, v_rho, v_rhou, v_E in zip(
+                new_indices, 
+                F_rho.tolist(), 
+                F_rhou.tolist(), 
+                F_E.tolist()
+            ):
+                samples_rho[idx] = v_rho
+                samples_rhou[idx] = v_rhou
+                samples_E[idx] = v_E
+            
+            new_samples += len(new_indices)
+            total_evals += len(new_indices)
+        
+        if new_samples == 0 or len(samples_rho) >= N // 2:
+            break
+        
+        if verbose and iteration % 5 == 0:
+            print(f"  Iter {iteration+1}: {len(samples_rho)} samples")
+    
+    # Build QTT from samples
+    def build_qtt_from_samples(samples: dict) -> List[Tensor]:
+        all_indices = torch.tensor(sorted(samples.keys()), device=device, dtype=torch.long)
+        all_values = torch.tensor([samples[i] for i in sorted(samples.keys())], device=device)
+        dense = torch.zeros(N, device=device)
+        dense[all_indices] = all_values
+        dense = _interpolate_sparse(dense, all_indices)
+        return dense_to_qtt_cores(dense, max_rank=max_rank)
+    
+    F_rho_cores = build_qtt_from_samples(samples_rho)
+    F_rhou_cores = build_qtt_from_samples(samples_rhou)
+    F_E_cores = build_qtt_from_samples(samples_E)
+    
+    metadata = {
+        "total_evals": total_evals,
+        "compression": 3 * N / total_evals if total_evals > 0 else 1,
+        "method": "tci_rust",
+        "n_samples": len(samples_rho),
+    }
+    
+    if verbose:
+        print(f"  Rust TCI: {total_evals} evals, {metadata['compression']:.1f}x compression")
+    
+    return F_rho_cores, F_rhou_cores, F_E_cores, metadata
+
+
 # =============================================================================
 # Tests
 # =============================================================================

@@ -22,6 +22,13 @@ from tensornet.cfd.tci_flux import rusanov_flux
 from tensornet.cfd.qtt_tci import qtt_rusanov_flux_tci
 import time
 
+# Try to import Rust TCI backend
+try:
+    from tensornet.cfd.qtt_tci import qtt_rusanov_flux_tci_rust
+    from tci_core import RUST_AVAILABLE
+except ImportError:
+    RUST_AVAILABLE = False
+
 
 def sod_initial_condition(N: int, gamma: float = 1.4):
     """Create Sod shock tube initial condition."""
@@ -68,16 +75,23 @@ def euler_step_dense(rho: torch.Tensor, rhou: torch.Tensor, E: torch.Tensor,
 
 def euler_step_qtt(rho_cores, rhou_cores, E_cores,
                    dx: float, dt: float, gamma: float = 1.4,
-                   max_rank: int = 64):
+                   max_rank: int = 64, use_rust: bool = False):
     """Single Euler time step using QTT-TCI Rusanov flux."""
     n_qubits = len(rho_cores)
     N = 2 ** n_qubits
     
-    # Compute flux in QTT format via TCI
-    F_rho_cores, F_rhou_cores, F_E_cores, meta = qtt_rusanov_flux_tci(
-        rho_cores, rhou_cores, E_cores,
-        gamma=gamma, max_rank=max_rank, verbose=False
-    )
+    # Choose TCI backend
+    if use_rust and RUST_AVAILABLE:
+        F_rho_cores, F_rhou_cores, F_E_cores, meta = qtt_rusanov_flux_tci_rust(
+            rho_cores, rhou_cores, E_cores,
+            gamma=gamma, max_rank=max_rank, verbose=False
+        )
+    else:
+        # Compute flux in QTT format via TCI
+        F_rho_cores, F_rhou_cores, F_E_cores, meta = qtt_rusanov_flux_tci(
+            rho_cores, rhou_cores, E_cores,
+            gamma=gamma, max_rank=max_rank, verbose=False
+        )
     
     # For now, decompress to dense for the update
     # (Full QTT arithmetic is Phase 3)
@@ -191,7 +205,7 @@ def validate_sod():
             dt = t_final - t
         
         rho_cores, rhou_cores, E_cores, meta = euler_step_qtt(
-            rho_cores, rhou_cores, E_cores, dx, dt, gamma, max_rank=64
+            rho_cores, rhou_cores, E_cores, dx, dt, gamma, max_rank=64, use_rust=False
         )
         t += dt
         steps += 1
@@ -205,6 +219,62 @@ def validate_sod():
     print()
     
     # =============================================
+    # Method 3: QTT-TCI Rusanov with Rust backend
+    # =============================================
+    qtt_rust_time = None
+    total_evals_rust = 0
+    rho_qtt_rust_final = None
+    
+    if RUST_AVAILABLE:
+        print("Method 3: QTT-TCI Rusanov (Rust TCI)")
+        print("-" * 40)
+        
+        # Convert IC to QTT
+        rho_cores_rust = dense_to_qtt_cores(rho, max_rank=64)
+        rhou_cores_rust = dense_to_qtt_cores(rhou, max_rank=64)
+        E_cores_rust = dense_to_qtt_cores(E, max_rank=64)
+        
+        t = 0.0
+        steps_rust = 0
+        t0 = time.time()
+        
+        while t < t_final:
+            # Decompress for CFL computation
+            all_idx = torch.arange(N)
+            rho_q = qtt_eval_batch(rho_cores_rust, all_idx)
+            rhou_q = qtt_eval_batch(rhou_cores_rust, all_idx)
+            E_q = qtt_eval_batch(E_cores_rust, all_idx)
+            
+            u = rhou_q / rho_q
+            p = (gamma - 1) * (E_q - 0.5 * rho_q * u**2)
+            c = torch.sqrt(gamma * p / rho_q)
+            max_speed = (u.abs() + c).max().item()
+            
+            dt = CFL * dx / max_speed
+            if t + dt > t_final:
+                dt = t_final - t
+            
+            rho_cores_rust, rhou_cores_rust, E_cores_rust, meta = euler_step_qtt(
+                rho_cores_rust, rhou_cores_rust, E_cores_rust, dx, dt, gamma, max_rank=64, use_rust=True
+            )
+            t += dt
+            steps_rust += 1
+            total_evals_rust += meta['total_evals']
+        
+        qtt_rust_time = time.time() - t0
+        print(f"  Steps: {steps_rust}")
+        print(f"  Time: {qtt_rust_time:.3f}s")
+        print(f"  Total flux evals: {total_evals_rust}")
+        print(f"  Avg evals/step: {total_evals_rust / steps_rust:.0f}")
+        
+        # Get final solution
+        rho_qtt_rust_final = qtt_eval_batch(rho_cores_rust, all_idx)
+        print()
+    else:
+        print("Method 3: Skipped (Rust TCI not available)")
+        print()
+    
+    # =============================================
     # Compare results
     # =============================================
     print("Comparison:")
@@ -213,6 +283,11 @@ def validate_sod():
     # Get final QTT solution
     all_idx = torch.arange(N)
     rho_qtt_final = qtt_eval_batch(rho_cores, all_idx)
+    
+    # Compare Python TCI vs Rust TCI if both available
+    if RUST_AVAILABLE and rho_qtt_rust_final is not None:
+        rust_vs_python = (rho_qtt_final - rho_qtt_rust_final).abs()
+        print(f"  Max |Python TCI - Rust TCI|: {rust_vs_python.max():.2e}")
     
     # Compare to dense
     error = (rho_d - rho_qtt_final).abs()
@@ -245,7 +320,7 @@ def validate_sod():
     print("SOD SHOCK TUBE VALIDATION PASSED ✓")
     print("=" * 70)
     
-    return {
+    results = {
         "dense_time": dense_time,
         "qtt_time": qtt_time,
         "max_error": error.max().item(),
@@ -253,6 +328,19 @@ def validate_sod():
         "total_evals": total_evals,
         "steps": steps,
     }
+    
+    if RUST_AVAILABLE and qtt_rust_time is not None:
+        results["qtt_rust_time"] = qtt_rust_time
+        results["total_evals_rust"] = total_evals_rust
+        results["speedup_rust_vs_python"] = qtt_time / qtt_rust_time if qtt_rust_time > 0 else 0
+        results["eval_reduction_rust"] = total_evals / total_evals_rust if total_evals_rust > 0 else 0
+        
+        print()
+        print("Rust TCI Summary:")
+        print(f"  Speedup vs Python TCI: {results['speedup_rust_vs_python']:.2f}x")
+        print(f"  Eval reduction: {results['eval_reduction_rust']:.2f}x fewer")
+    
+    return results
 
 
 if __name__ == "__main__":
