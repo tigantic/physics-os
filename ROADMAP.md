@@ -555,6 +555,17 @@ These are NOT on active roadmap until foundation is solid:
 - 🔲 ZMQ library integration in C++ for live bridge
 - 🔲 Material/shader for field rendering
 
+### Next Priority Items
+
+**Rendering Polish (Priority 1):**
+Stabilize the GPU-accelerated ray marcher for "infinite zoom" demonstrations in Unreal Engine 5.7.
+
+**Benchmark Expansion (Priority 2):**
+Complete the 2D Lid-Driven Cavity and Decaying Turbulence suites to provide 4-way comparison against traditional CFD baselines.
+
+**Collaborator Onboarding (Priority 3):**
+Prepare the FieldBundle replay tool for external verification of the 512³ singularity logs.
+
 ---
 
 ## Changelog
