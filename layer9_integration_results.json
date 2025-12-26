@@ -1,0 +1,15 @@
+{
+  "success": true,
+  "tests": {
+    "PING": true,
+    "INIT": true,
+    "SAMPLE": true,
+    "SLICE": true,
+    "STEP": true,
+    "STATS": true,
+    "MULTI-STEP": true,
+    "SHUTDOWN": true
+  },
+  "passed": 8,
+  "total": 8
+}
