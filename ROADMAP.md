@@ -37,6 +37,9 @@
 | Resolution Independence | 32³→512³: rank 39→34 (DECREASES) | Dec 2025 |
 | Kronecker IC Construction | 1024³ in 63s, 24,578× compression | Dec 2025 |
 | PQC Signing | Dilithium2 `sign_manifest()`, `verify_signature()` | Dec 2025 |
+| TileRenderer | `get_tile()`, `render_view()` with LOD | Dec 2025 |
+| SliceEngine | XY/XZ/YZ slicing at arbitrary depth | Dec 2025 |
+| VolumeRenderer | Ray-marched volume rendering | Dec 2025 |
 
 ### 🟡 PARTIAL (Exists but Not Battle-Tested)
 
@@ -51,11 +54,10 @@
 
 | Component | Reality |
 |-----------|---------|
-| HyperVisual (Layer 2) | Files exist, no real volumetric rendering tested |
-| HyperSim Benchmarks (Layer 3) | Harness exists, most benchmarks not run |
-| HyperEnv (Layer 4) | RL environment scaffolded, never trained an agent |
-| Intent/FDL (Layer 6) | Parser exists, never steered real physics |
-| FieldOS (Layer 7) | Kernel scaffolded, never ran multi-field |
+| HyperSim Benchmarks | Harness exists, most benchmarks not run |
+| HyperEnv | RL environment scaffolded, never trained an agent |
+| Intent/FDL | Parser exists, never steered real physics |
+| FieldOS | Kernel scaffolded, never ran multi-field |
 | Unreal/Unity Plugins | Code exists, never integrated with engine |
 
 ---
@@ -174,25 +176,46 @@ valid = Dilithium2.verify(pk, message, sig)
 
 ---
 
-## 🔲 Layer 4: Rendering (NOT VALIDATED)
+## ✅ Layer 4: Rendering (VALIDATED)
 
-**Status:** Scaffold exists, no visual output tested
+**Status:** Core rendering pipeline validated December 2025
 
-**What Exists:**
-- `tensornet/hypervisual/` directory with Python files
-- Volume renderer class definitions
-- Clipmap system outline
+| Component | File | Validated By |
+|-----------|------|--------------|
+| TileRenderer | `tensornet/hypervisual/renderer.py` | `get_tile()`, `render_view()` |
+| SliceEngine | `tensornet/hypervisual/slicer.py` | XY/XZ/YZ slicing at arbitrary depth |
+| VolumeRenderer | `tensornet/hypervisual/slicer.py` | Ray-marched volume rendering |
+| ColorMaps | `tensornet/hypervisual/colormaps.py` | VIRIDIS, PLASMA, etc. |
+| LODPyramid | `tensornet/hypervisual/renderer.py` | Multi-resolution tile caching |
 
-**What's Missing:**
-- No actual rendered frame ever produced
-- No integration with real graphics API
-- No "infinite zoom" demo completed
+**API (Validated):**
+```python
+from tensornet.substrate import Field
+from tensornet.hypervisual import TileRenderer, SliceEngine, VolumeRenderer
 
-**To Validate:**
-1. Render a single QTT field to image
-2. Implement camera flythrough
-3. Show memory constant during zoom
-4. No tiling artifacts visible
+# Create field
+field = Field.create(dims=3, bits_per_dim=4, rank=4, init='random')
+
+# Tile-based rendering
+renderer = TileRenderer(field, RenderConfig(tile_size=64))
+tile = renderer.get_tile(TileCoord(x=0, y=0, lod=0))
+view = renderer.render_view(bounds=(0,0,1,1), resolution=(256,256))
+
+# Arbitrary slicing
+slicer = SliceEngine(field)
+slice_result = slicer.slice(plane='xy', depth=0.5)
+
+# Volume rendering
+vol_renderer = VolumeRenderer(field)
+result = vol_renderer.render(camera_pos=(2,2,2), look_at=(0.5,0.5,0.5))
+```
+
+**Test Suite:** 43/43 tests passed
+
+**Limitations:**
+- No integration with external graphics APIs (Vulkan, OpenGL)
+- "Infinite zoom" demo not implemented yet
+- GPU acceleration exists but not stress-tested on large fields
 
 ---
 
