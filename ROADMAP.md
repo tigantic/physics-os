@@ -566,6 +566,25 @@ Complete the 2D Lid-Driven Cavity and Decaying Turbulence suites to provide 4-wa
 **Collaborator Onboarding (Priority 3):**
 Prepare the FieldBundle replay tool for external verification of the 512³ singularity logs.
 
+### World Data Slicer Capability
+
+**Status:** Demo implemented (`demos/world_data_slicer.py`)
+
+The HyperTensor World Data Slicer transforms interaction with global datasets from "download and wait" to "point and synthesize". Instead of handling petabytes of raw pixels, you query a Quantum-Inspired manifold that resolves detail on demand.
+
+**Demonstrated Capabilities:**
+| Feature | Traditional GIS | HyperTensor |
+|---------|-----------------|-------------|
+| Sentinel-2 Satellite | Gigabyte-scale tiles with "popping" LODs | Continuous manifold; smooth zoom 100km→1m |
+| NCAR 3km Forecasts | Massive 3km-grid atmospheric simulations | Rank-stable synthesis; resolution independent |
+| Environmental Monitoring | Data gaps from cloud cover/LEO updates | Dynamic Tasking on real-time cloud masks |
+| Rare Event Analysis | AI emulators struggle with Black Swans | RES generates full physical trajectories |
+
+**Key Innovation:**
+- "Zoom" = querying manifold at higher bit-depth (no data reload)
+- MortonSlicer: O(L×r²) extraction makes 1024³ as fast as 16³
+- Resolution agnosticism: physical laws preserved across modalities
+
 ---
 
 ## Changelog

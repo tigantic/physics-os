@@ -1,0 +1,22 @@
+{
+  "demo": "world_data_slicer",
+  "timestamp": "2025-12-26T18:31:09.282066",
+  "statistics": {
+    "manifold_name": "Atlantic_Weather_Q4_2025",
+    "total_queries": 3,
+    "total_samples": 786432,
+    "field_bits_per_dim": 5,
+    "theoretical_points": 32768,
+    "compression_factor": 0.041666666666666664
+  },
+  "capabilities_demonstrated": [
+    "Infinite Zoom (resolution-independent sampling)",
+    "O(L\u00d7r\u00b2) Morton Slicing",
+    "Multi-scale survey without data reload",
+    "Volume rendering from manifold"
+  ],
+  "comparison": {
+    "traditional_gis": "Download tiles, wait for LOD transitions",
+    "hypertensor": "Query manifold at any resolution instantly"
+  }
+}
