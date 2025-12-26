@@ -422,6 +422,9 @@ def apply_mpo(mpo: MPO, qtt: QTTState, max_bond: int = 64) -> QTTState:
     """
     assert mpo.num_sites == qtt.num_qubits, "MPO and QTT must have same number of sites"
     
+    # Determine target dtype (use QTT's dtype, promote to float64 if mixed)
+    target_dtype = qtt.cores[0].dtype
+    
     new_cores = []
     
     for i in range(qtt.num_qubits):
@@ -431,7 +434,7 @@ def apply_mpo(mpo: MPO, qtt: QTTState, max_bond: int = 64) -> QTTState:
         # Contract over b (d_in), output d_out (a)
         # Result: (rLo, rLp, d_out, rRo, rRp)  - indices: o, p, a, r, q
         
-        O = mpo.cores[i]  # (rLo, d_out, d_in, rRo)
+        O = mpo.cores[i].to(target_dtype)  # Convert MPO to match QTT dtype
         P = qtt.cores[i]  # (rLp, d_in, rRp)
         
         rLo, d_out, d_in, rRo = O.shape
@@ -527,9 +530,14 @@ def qtt_add(qtt1: QTTState, qtt2: QTTState, max_bond: int = 64) -> QTTState:
     cores = []
     n = qtt1.num_qubits
     
+    # Determine target dtype (promote to higher precision if mixed)
+    dtype = qtt1.cores[0].dtype
+    if qtt2.cores[0].dtype == torch.float64:
+        dtype = torch.float64
+    
     for i in range(n):
-        c1 = qtt1.cores[i]
-        c2 = qtt2.cores[i]
+        c1 = qtt1.cores[i].to(dtype)
+        c2 = qtt2.cores[i].to(dtype)
         
         r1L, d, r1R = c1.shape
         r2L, _, r2R = c2.shape
@@ -542,7 +550,7 @@ def qtt_add(qtt1: QTTState, qtt2: QTTState, max_bond: int = 64) -> QTTState:
             new_core = torch.cat([c1, c2], dim=0)
         else:
             # Middle cores: block diagonal
-            new_core = torch.zeros(r1L + r2L, d, r1R + r2R)
+            new_core = torch.zeros(r1L + r2L, d, r1R + r2R, dtype=dtype)
             new_core[:r1L, :, :r1R] = c1
             new_core[r1L:, :, r1R:] = c2
             
@@ -557,6 +565,71 @@ def qtt_scale(qtt: QTTState, scalar: float) -> QTTState:
     cores = [c.clone() for c in qtt.cores]
     cores[0] = cores[0] * scalar
     return QTTState(cores=cores, num_qubits=qtt.num_qubits)
+
+
+def qtt_hadamard(qtt1: QTTState, qtt2: QTTState, max_bond: int = 64) -> QTTState:
+    """
+    Element-wise (Hadamard) product of two QTT states: |ψ⟩ = |ψ₁⟩ ⊙ |ψ₂⟩
+    
+    The Hadamard product in TT format is computed by taking the Kronecker
+    product of corresponding cores at each site:
+    
+    C_new[i] = C1[i] ⊗ C2[i]  (in the bond indices)
+    
+    Resulting bond dimension = r1 × r2.
+    
+    Args:
+        qtt1: First QTT state
+        qtt2: Second QTT state
+        max_bond: Maximum bond dimension after truncation
+        
+    Returns:
+        QTT state representing element-wise product
+    """
+    assert qtt1.num_qubits == qtt2.num_qubits, "QTT dimensions must match"
+    
+    cores = []
+    n = qtt1.num_qubits
+    
+    for i in range(n):
+        c1 = qtt1.cores[i]  # (r1L, d, r1R)
+        c2 = qtt2.cores[i]  # (r2L, d, r2R)
+        
+        r1L, d, r1R = c1.shape
+        r2L, _, r2R = c2.shape
+        
+        # For Hadamard product, we need cores that when contracted
+        # give the element-wise product of the two vectors.
+        #
+        # The trick: for each physical index value k, the new core is
+        # the outer product of the slices c1[:, k, :] and c2[:, k, :]
+        #
+        # New core shape: (r1L*r2L, d, r1R*r2R)
+        new_core = torch.zeros(r1L * r2L, d, r1R * r2R, 
+                               dtype=c1.dtype, device=c1.device)
+        
+        for k in range(d):
+            # c1[:, k, :] has shape (r1L, r1R)
+            # c2[:, k, :] has shape (r2L, r2R)
+            # Kronecker product: (r1L, r1R) ⊗ (r2L, r2R) = (r1L*r2L, r1R*r2R)
+            slice1 = c1[:, k, :]  # (r1L, r1R)
+            slice2 = c2[:, k, :]  # (r2L, r2R)
+            
+            # Kronecker product via outer product and reshape
+            # kron(A, B)[i*m+j, k*n+l] = A[i,k] * B[j,l]
+            kron = torch.einsum('ik,jl->ijkl', slice1, slice2)
+            new_core[:, k, :] = kron.reshape(r1L * r2L, r1R * r2R)
+        
+        cores.append(new_core)
+    
+    result = QTTState(cores=cores, num_qubits=n)
+    
+    # Truncate if needed
+    max_current = max(c.shape[0] * c.shape[2] for c in cores)
+    if max_current > max_bond * max_bond:
+        result = truncate_qtt(result, max_bond=max_bond)
+    
+    return result
 
 
 def qtt_inner_product(qtt1: QTTState, qtt2: QTTState) -> float:

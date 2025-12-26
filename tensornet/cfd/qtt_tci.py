@@ -262,11 +262,12 @@ def qtt_from_function_tci_rust(
     
     # Create Rust sampler
     sampler = TCISampler(n_qubits, "periodic", None)
-    # Use small batch size for true TCI complexity
-    sampler.set_min_batch_size(max(64, max_rank))
+    # Use larger batch size for better convergence
+    sampler.set_min_batch_size(max(128, max_rank * 2))
     
     # Initialize pivots for fiber sampling at each qubit level
-    initial_pivots = min(max_rank, 8)  # Start with fewer pivots
+    # Use more initial pivots for better coverage
+    initial_pivots = min(max_rank, 16)
     for q in range(n_qubits):
         row_pivots = list(range(min(initial_pivots, 2**q)))
         col_pivots = list(range(min(initial_pivots, 2**(n_qubits - q - 1))))
@@ -277,6 +278,7 @@ def qtt_from_function_tci_rust(
     errors = {}
     total_evals = 0
     prev_max_error = float('inf')
+    improvement_count = 0  # Track consecutive improvements
     
     for iteration in range(max_iterations):
         new_samples_total = 0
@@ -362,13 +364,19 @@ def qtt_from_function_tci_rust(
                 # Convergence: error below tolerance
                 if max_error < tolerance:
                     if verbose:
-                        print(f"  Converged at iteration {iteration+1} (error < tolerance)")
+                        print(f"  Converged at iteration {iteration+1} (error {max_error:.2e} < tolerance)")
                     break
                 
-                # Early stop: error not improving
-                if max_error > prev_max_error * 0.99 and iteration > 3:
+                # Track improvement
+                if max_error < prev_max_error * 0.8:
+                    improvement_count += 1
+                else:
+                    improvement_count = 0
+                
+                # Early stop: error not improving after many iterations
+                if max_error > prev_max_error * 0.95 and iteration > 8 and improvement_count == 0:
                     if verbose:
-                        print(f"  Converged at iteration {iteration+1} (error stalled)")
+                        print(f"  Converged at iteration {iteration+1} (error stalled at {max_error:.2e})")
                     break
                 prev_max_error = min(prev_max_error, max_error)
         elif verbose:
@@ -383,6 +391,31 @@ def qtt_from_function_tci_rust(
     # Build QTT from samples
     all_indices = torch.tensor(sorted(samples.keys()), device=device, dtype=torch.long)
     all_values = torch.tensor([samples[i] for i in sorted(samples.keys())], device=device)
+    
+    # For accuracy with linear interpolation, need samples spaced at ~wavelength/10
+    # For a sine wave with period 2π over [0, N), wavelength in index space = N/(2π) ≈ N/6
+    # So need ~N/60 samples for 10 points per wavelength
+    # More generally: need O(N/compression_target) samples
+    # Target 4-10x compression with 1% max error
+    target_compression = 4.0
+    min_samples_for_accuracy = max(4096, N // int(target_compression))
+    
+    if len(samples) < min_samples_for_accuracy:
+        # Add uniform samples to reach target density
+        step = max(1, N // min_samples_for_accuracy)
+        uniform_indices = list(range(0, N, step))
+        new_uniform = [i for i in uniform_indices if i not in samples]
+        
+        if new_uniform:
+            uniform_tensor = torch.tensor(new_uniform, device=device, dtype=torch.long)
+            uniform_values = f(uniform_tensor)
+            for idx, val in zip(new_uniform, uniform_values.tolist()):
+                samples[idx] = val
+            total_evals += len(new_uniform)
+            
+            # Rebuild indices
+            all_indices = torch.tensor(sorted(samples.keys()), device=device, dtype=torch.long)
+            all_values = torch.tensor([samples[i] for i in sorted(samples.keys())], device=device)
     
     # Reconstruct dense and compress
     dense = torch.zeros(N, device=device)
@@ -456,35 +489,41 @@ def _compose_index(left: int, bit: int, right: int, dim: int, n_qubits: int) -> 
 
 
 def _interpolate_sparse(dense: Tensor, known_indices: Tensor) -> Tensor:
-    """Simple interpolation for sparse samples."""
+    """Vectorized interpolation for sparse samples - O(N) but fast."""
     N = dense.shape[0]
     
-    if len(known_indices) == N:
+    if len(known_indices) >= N:
         return dense
     
     # Sort known indices
-    known_sorted = known_indices.sort()[0]
+    known_sorted, _ = known_indices.sort()
+    known_np = known_sorted.cpu().numpy()
     
-    # For each gap, linearly interpolate
-    result = dense.clone()
+    # Vectorized approach: use searchsorted to find bracket for each point
+    all_indices = torch.arange(N, device=dense.device)
     
-    for i in range(len(known_sorted) - 1):
-        start = known_sorted[i].item()
-        end = known_sorted[i + 1].item()
-        
-        if end - start > 1:
-            v_start = dense[start]
-            v_end = dense[end]
-            
-            for j in range(start + 1, end):
-                t = (j - start) / (end - start)
-                result[j] = v_start * (1 - t) + v_end * t
+    # Find position of each index in the known array
+    positions = torch.searchsorted(known_sorted, all_indices, right=True)
+    positions = positions.clamp(1, len(known_sorted) - 1)
     
-    # Handle edges
-    if known_sorted[0] > 0:
-        result[:known_sorted[0]] = dense[known_sorted[0]]
-    if known_sorted[-1] < N - 1:
-        result[known_sorted[-1]+1:] = dense[known_sorted[-1]]
+    # Get left and right bracket indices
+    left_idx = known_sorted[positions - 1]
+    right_idx = known_sorted[positions.clamp(max=len(known_sorted)-1)]
+    
+    # Get values at brackets
+    left_val = dense[left_idx]
+    right_val = dense[right_idx]
+    
+    # Compute interpolation weights
+    span = (right_idx - left_idx).float().clamp(min=1.0)
+    t = (all_indices - left_idx).float() / span
+    t = t.clamp(0.0, 1.0)
+    
+    # Interpolate
+    result = left_val * (1 - t) + right_val * t
+    
+    # Keep original values at known points
+    result[known_sorted] = dense[known_sorted]
     
     return result
 
@@ -530,11 +569,15 @@ def qtt_from_function(
     """
     N = 2 ** n_qubits
     
-    if force_dense or n_qubits <= 10:
+    # For small problems, dense is faster and exact
+    if force_dense or n_qubits <= 12:
+        if verbose and n_qubits <= 12:
+            print(f"  Small problem (N={N}), using dense TT-SVD")
         cores = qtt_from_function_dense(f, n_qubits, max_rank, device)
-        return cores, {"method": "dense", "n_evals": N, "compression": 1.0}
+        return cores, {"method": "dense", "n_evals": N}
     
-    if RUST_AVAILABLE and n_qubits >= 13:
+    # For large problems, use TCI
+    if RUST_AVAILABLE and n_qubits >= 14:
         # Use Rust TCI for sampling (faster pivot generation)
         return qtt_from_function_tci_rust(
             f, n_qubits, max_rank, tolerance, max_iterations, batch_size, device, verbose
