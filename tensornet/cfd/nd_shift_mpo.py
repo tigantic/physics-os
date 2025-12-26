@@ -156,45 +156,15 @@ def make_nd_shift_mpo(
         cores.append(core)
 
     # === BOUNDARY CONDITIONS FOR PERIODIC BC ===
-    # 
-    # For periodic boundaries, we need to wrap carry/borrow from MSB back to LSB.
-    # In Morton interleaving, the MSB and LSB for axis_idx are at specific positions:
-    #   - MSB core (for axis_idx): core index where Morton bit is the highest for that axis
-    #   - LSB core (for axis_idx): core index where Morton bit is the lowest for that axis
-    #
-    # For QTT with MSB-first: core 0 = MSB overall, core N-1 = LSB overall
-    # Morton bit (n-1-k) belongs to dimension (n-1-k) % num_dims
-    #
-    # The MSB for axis_idx is the core where (n-1-k) % num_dims == axis_idx AND (n-1-k) is largest
-    # The LSB for axis_idx is the core where (n-1-k) % num_dims == axis_idx AND (n-1-k) is smallest
+    # Core 0 (MSB): For periodic BC, we sum both carry-out states
+    # This allows overflow to wrap around (e.g., N-1 + 1 = 0)
+    # cores[0] shape: (2, 2, 2, 2) -> sum over r_left dimension
+    summed_core0 = cores[0][0:1, :, :, :] + cores[0][1:2, :, :, :]
+    cores[0] = summed_core0  # Shape: (1, 2, 2, 2)
     
-    n_qubits = num_qubits_total
-    
-    # Find the MSB and LSB core indices for this specific axis
-    # MSB for axis: smallest k such that qubit_dim == axis_idx (first core touching this axis)
-    # LSB for axis: largest k such that qubit_dim == axis_idx (last core touching this axis)
-    msb_core_idx = None
-    lsb_core_idx = None
-    
-    for k in range(n_qubits):
-        morton_bit_idx = n_qubits - 1 - k
-        qubit_dim = morton_bit_idx % num_dims
-        if qubit_dim == axis_idx:
-            if msb_core_idx is None:
-                msb_core_idx = k
-            lsb_core_idx = k
-    
-    # PERIODIC BC FIX:
-    # At the MSB core for this axis, sum both carry-out states to allow wrap-around
-    # This means: if overflow happens (carry out = 1), treat it same as no overflow
-    if msb_core_idx is not None:
-        # Sum over the left rank dimension to absorb overflow
-        summed = cores[msb_core_idx][0:1, :, :, :] + cores[msb_core_idx][1:2, :, :, :]
-        cores[msb_core_idx] = summed  # Shape: (1, 2, 2, 2)
-    
-    # At the LSB core for this axis, inject +1/-1 by forcing carry/borrow_in = 1
-    if lsb_core_idx is not None:
-        cores[lsb_core_idx] = cores[lsb_core_idx][:, :, :, 1:2]  # Shape: (r, 2, 2, 1)
+    # Core N-1 (LSB): Inject +1 or -1 by forcing carry/borrow_in = 1
+    # Slice [..., 1:2] forces the input rank to be 1 (Carry/Borrow Active)
+    cores[-1] = cores[-1][:, :, :, 1:2]  # Shape: (2, 2, 2, 1)
     
     return cores
 
@@ -209,8 +179,6 @@ def apply_nd_shift_mpo(
     
     Contraction: new[ml*sl, d_out, mr*sr] = sum_{d_in} mpo[ml,d_out,d_in,mr] * state[sl,d_in,sr]
     
-    Handles variable-rank MPO cores at boundaries (for periodic BC).
-    
     Args:
         cores: Input QTT cores (list of 3D tensors)
         mpo: Shift MPO cores (list of 4D tensors)
@@ -220,9 +188,8 @@ def apply_nd_shift_mpo(
         New QTT cores after shift
     """
     new_cores = []
-    n_cores = len(cores)
     
-    for k in range(n_cores):
+    for k in range(len(cores)):
         s_core = cores[k]  # (sl, d_in, sr)
         m_core = mpo[k]    # (ml, d_out, d_in, mr)
         
@@ -238,33 +205,23 @@ def apply_nd_shift_mpo(
         
         new_cores.append(result)
     
-    # The first and last cores may have special boundary dimensions
-    # Ensure proper QTT format: first core has left rank 1, last has right rank 1
-    
-    # Check first core
-    if new_cores[0].shape[0] != 1:
-        # Sum over left boundary to get rank 1
-        r_l, d, r_r = new_cores[0].shape
-        new_cores[0] = new_cores[0].sum(dim=0, keepdim=True)  # (1, d, r_r)
-    
-    # Check last core
-    if new_cores[-1].shape[2] != 1:
-        # Sum over right boundary to get rank 1
-        r_l, d, r_r = new_cores[-1].shape
-        new_cores[-1] = new_cores[-1].sum(dim=2, keepdim=True)  # (r_l, d, 1)
-    
-    # Truncate via SVD sweep (safe version)
-    new_cores = truncate_cores_safe(new_cores, max_rank)
+    # Truncate via SVD sweep
+    new_cores = truncate_cores(new_cores, max_rank)
     
     return new_cores
 
 
-def truncate_cores_safe(cores: List[torch.Tensor], max_rank: int) -> List[torch.Tensor]:
+def truncate_cores(cores: List[torch.Tensor], max_rank: int, tol: float = 0.0) -> List[torch.Tensor]:
     """
-    Left-to-right SVD truncation sweep with dimension safety.
+    Left-to-right SVD truncation sweep.
     
-    Handles cases where consecutive cores may have mismatched dimensions
-    due to boundary conditions.
+    Args:
+        cores: List of QTT/MPS cores [r_left, d, r_right]
+        max_rank: Maximum bond dimension
+        tol: Truncation tolerance. If > 0, truncate singular values below tol * S_max
+        
+    Returns:
+        Truncated cores with bond dimensions ≤ max_rank
     """
     cores = [c.clone() for c in cores]
     n = len(cores)
@@ -283,10 +240,17 @@ def truncate_cores_safe(cores: List[torch.Tensor], max_rank: int) -> List[torch.
             # Fallback for numerical issues
             continue
         
-        # Truncate to max_rank
-        rank = min(len(S), max_rank, r_right)
-        if rank == 0:
-            rank = 1
+        # Determine rank from tolerance AND max_rank
+        if tol > 0 and len(S) > 0:
+            # Keep singular values above tolerance threshold
+            threshold = tol * S[0]  # Relative to largest singular value
+            rank = int(torch.sum(S > threshold).item())
+            rank = max(rank, 1)  # Keep at least 1
+        else:
+            rank = len(S)
+        
+        # Also enforce max_rank
+        rank = min(rank, max_rank)
         
         U = U[:, :rank]
         S = S[:rank]
@@ -297,30 +261,9 @@ def truncate_cores_safe(cores: List[torch.Tensor], max_rank: int) -> List[torch.
         
         # Absorb S @ Vh into next core
         SVh = torch.diag(S) @ Vh
-        
-        # Check dimension compatibility with next core
-        next_r_left, next_d, next_r_right = cores[k + 1].shape
-        
-        if SVh.shape[1] != next_r_left:
-            # Dimension mismatch - pad or truncate
-            if SVh.shape[1] > next_r_left:
-                # Truncate SVh
-                SVh = SVh[:, :next_r_left]
-            else:
-                # Pad next core (take first few slices)
-                cores[k + 1] = cores[k + 1][:SVh.shape[1], :, :]
-        
         cores[k + 1] = torch.einsum('ij,jkl->ikl', SVh, cores[k + 1])
     
     return cores
-
-
-def truncate_cores(cores: List[torch.Tensor], max_rank: int) -> List[torch.Tensor]:
-    """Alias for truncate_cores_safe for backward compatibility."""
-    return truncate_cores_safe(cores, max_rank)
-
-
-#    return cores
 
 
 # =============================================================================

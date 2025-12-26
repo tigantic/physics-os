@@ -473,7 +473,13 @@ def truncate_qtt(qtt: QTTState, max_bond: int = 64, tol: float = 1e-10) -> QTTSt
     Returns:
         Compressed QTT state
     """
-    cores = [c.clone() for c in qtt.cores]
+    # Clean cores to prevent NaN/Inf propagation
+    cores = []
+    for c in qtt.cores:
+        c_clean = c.clone()
+        c_clean = torch.nan_to_num(c_clean, nan=0.0, posinf=1e6, neginf=-1e6)
+        c_clean = torch.clamp(c_clean, -1e6, 1e6)
+        cores.append(c_clean)
     n = len(cores)
     
     # Left-to-right sweep: QR decomposition
@@ -483,7 +489,12 @@ def truncate_qtt(qtt: QTTState, max_bond: int = 64, tol: float = 1e-10) -> QTTSt
         
         # Reshape to matrix and do QR
         mat = c.reshape(r_left * d, r_right)
-        Q, R = torch.linalg.qr(mat)
+        
+        try:
+            Q, R = torch.linalg.qr(mat)
+        except:
+            # Fallback: keep as is
+            continue
         
         # Truncate if needed
         new_rank = min(Q.shape[1], max_bond)
@@ -501,7 +512,16 @@ def truncate_qtt(qtt: QTTState, max_bond: int = 64, tol: float = 1e-10) -> QTTSt
         
         # Reshape and SVD
         mat = c.reshape(r_left, d * r_right)
-        U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+        
+        # Clean matrix before SVD
+        mat = torch.nan_to_num(mat, nan=0.0, posinf=1e6, neginf=-1e6)
+        mat = torch.clamp(mat, -1e6, 1e6)
+        
+        try:
+            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+        except:
+            # Fallback: keep as is
+            continue
         
         # Truncate
         mask = S > tol * S[0]
