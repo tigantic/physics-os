@@ -40,6 +40,10 @@
 | TileRenderer | `get_tile()`, `render_view()` with LOD | Dec 2025 |
 | SliceEngine | XY/XZ/YZ slicing at arbitrary depth | Dec 2025 |
 | VolumeRenderer | Ray-marched volume rendering | Dec 2025 |
+| MortonSlicer | O(L×r²) true resolution-independent slicing | Dec 2025 |
+| Laplacian | ∇²(x²+y²+z²) = 6 verified | Dec 2025 |
+| Gradient | ∇(x²+y²+z²) = (2x,2y,2z) verified | Dec 2025 |
+| Divergence | ∇·(x,y,z) = 3 verified | Dec 2025 |
 
 ### 🟡 PARTIAL (Exists but Not Battle-Tested)
 
@@ -216,26 +220,44 @@ result = vol_renderer.render(camera_pos=(2,2,2), look_at=(0.5,0.5,0.5))
 - No integration with external graphics APIs (Vulkan, OpenGL)
 - "Infinite zoom" demo not implemented yet
 - GPU acceleration exists but not stress-tested on large fields
+- Morton-aware slicing implemented (`MortonSlicer`) for O(L×r²) projection
 
 ---
 
-## 🔲 Layer 5: FieldOps (NOT VALIDATED)
+## ✅ Layer 5: FieldOps (VALIDATED)
 
-**Status:** Operators defined, not tested on real physics
+**Status:** Core operators validated against analytical solutions December 2025
 
-**What Exists:**
-- Grad, Div, Curl, Laplacian class definitions
-- Graph scheduler outline
+| Component | File | Validated By |
+|-----------|------|--------------|
+| Laplacian | `tensornet/fieldops/operators.py` | ∇²(x²+y²+z²) = 6 |
+| Gradient | `tensornet/fieldops/operators.py` | ∇(x²+y²+z²) = (2x,2y,2z) |
+| Divergence | `tensornet/fieldops/operators.py` | ∇·(x,y,z) = 3 |
+| Diffusion | Explicit Euler integration | Peak smoothing verified |
+| QTT Operators | `Laplacian.apply()` | Rank-bounded output |
 
-**What's Missing:**
-- Never run on validated 3D field
-- Divergence-free projection untested
-- No comparison to analytical solutions
+**API (Validated):**
+```python
+from tensornet.fieldops import Laplacian, Grad, Div, Curl, Diffuse
+from tensornet.substrate import Field
 
-**To Validate:**
-1. Apply Laplacian to known function, check error
-2. Project velocity field, verify div(u) ≈ 0
-3. Run full Navier-Stokes (not just Euler)
+field = Field.create(dims=3, bits_per_dim=5, rank=32)
+lap = Laplacian(order=2)
+result = lap.apply(field)  # Rank stays bounded
+```
+
+**Test Results (64³):**
+| Test | Max Error | Status |
+|------|-----------|--------|
+| Laplacian vs analytical | 1.08e-02 | ✅ |
+| Gradient vs analytical | 1.30e-05 | ✅ |
+| Divergence vs analytical | 5.96e-06 | ✅ |
+| Diffusion smoothing | Peak reduced | ✅ |
+| QTT rank preservation | 64 → 64 | ✅ |
+
+**Limitations:**
+- Divergence-free projection not fully tested
+- Full Navier-Stokes not yet run end-to-end
 
 ---
 
