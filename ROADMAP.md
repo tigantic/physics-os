@@ -542,10 +542,18 @@ These are NOT on active roadmap until foundation is solid:
 |------|---------------|
 | GPU Kernels | Need correct CPU first |
 | Rust TCI Core | Need stable algorithm first |
-| Unreal/Unity | Need rendering first |
+| Unreal/Unity Visual Demo | Plugin compiles, component works, need demo scene with visualization |
 | FieldOS Multi-Field | Need single field working |
 | Enterprise SDK | Need product first |
 | Black Swan Hunts | Different ICs queued, run on separate machine |
+
+### Unreal Engine Integration Status (December 26, 2025)
+- ✅ C++ Plugin compiled for UE 5.7
+- ✅ HyperTensorFieldComponent available in editor
+- ✅ Python bridge socket connection verified
+- 🔲 Demo scene with volumetric field visualization
+- 🔲 ZMQ library integration in C++ for live bridge
+- 🔲 Material/shader for field rendering
 
 ---
 

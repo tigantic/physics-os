@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
+#include "Components/SceneComponent.h"
 #include "HyperTensorTypes.h"
 #include "HyperTensorFieldComponent.generated.h"
 
@@ -23,7 +23,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFieldSampled, const TArray<FVect
  * Connects to HyperTensor Python backend for computation.
  */
 UCLASS(ClassGroup=(HyperTensor), meta=(BlueprintSpawnableComponent))
-class HYPERTENSOR_API UHyperTensorFieldComponent : public UActorComponent
+class HYPERTENSOR_API UHyperTensorFieldComponent : public USceneComponent
 {
     GENERATED_BODY()
 
