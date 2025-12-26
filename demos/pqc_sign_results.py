@@ -41,6 +41,18 @@ def create_results_manifest() -> Dict[str, Any]:
         },
         
         "results": {
+            "black_swan_trap": {
+                "resolution": "512³",
+                "points": 134_217_728,
+                "time_reached": 2.59,
+                "total_steps": 1580,
+                "final_rank": 27,
+                "rank_cap": 1024,
+                "blowup_threshold": 400,
+                "wall_time_seconds": 3960,
+                "result": "ABORTED - Rank stable at 27, no blowup trend, saved compute",
+                "conclusion": "Taylor-Green is a white swan - need different bait"
+            },
             "grid_512": {
                 "resolution": "512³",
                 "points": 134_217_728,
@@ -89,6 +101,8 @@ def create_results_manifest() -> Dict[str, Any]:
         },
         
         "key_findings": [
+            "BLACK SWAN TRAP: Rank capped at 1024, plateaued at 27 — no explosion",
+            "Taylor-Green vortex confirmed as 'white swan' — need different bait for singularity hunt",
             "512³ (134M points): Final rank = 34 — LOWER than 128³ (36)!",
             "QTT rank DECREASES with resolution: 32³→39, 64³→37, 128³→36, 512³→34",
             "Resolution-independence CONFIRMED: rank bounded at ~35 regardless of grid size",
