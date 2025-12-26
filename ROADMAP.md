@@ -1,11 +1,12 @@
 # HyperTensor Strategic Roadmap
 
 **Document ID**: ROADMAP-001  
-**Version**: 3.0.0  
+**Version**: 3.1.0  
 **Revised**: 2025-12-26  
 **Authority**: Principal Investigator  
-**Status**: Foundation Validated — Rebuilding on Solid Ground  
-**Principle**: No Potemkin villages. Only validated truth.
+**Status**: Core Platform Validated — 3/4 Milestones Achieved  
+**Principle**: No Potemkin villages. Only validated truth.  
+**Audit**: See `ROADMAP_AUDIT.md` for integrity verification
 
 ---
 
@@ -129,7 +130,7 @@ cores = truncate_qtt(cores, max_rank=64, tol=1e-8)
 
 **API (Validated):**
 ```python
-mpo = make_nd_shift_mpo(n_qubits, num_dims=3, axis_idx=0, direction=+1, periodic=True)
+mpo = make_nd_shift_mpo(n_qubits, num_dims=3, axis_idx=0, direction=+1)
 shifted_cores = apply_nd_shift_mpo(cores, mpo, max_rank=64)
 ```
 
@@ -300,9 +301,9 @@ result = lap.apply(field)  # Rank stays bounded
 
 ---
 
-## 🔲 Layer 7: AI Environments (NOT VALIDATED)
+## � Layer 7: AI Environments (SCAFFOLD VALIDATED)
 
-**Status:** Scaffold only
+**Status:** Infrastructure validated, no physics training
 
 **What Exists:**
 - `tensornet/hyperenv/` directory
