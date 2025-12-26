@@ -1,0 +1,8 @@
+{
+  "success": true,
+  "episodes_trained": 300,
+  "final_mean_return": 22.23843416494131,
+  "final_mean_deviation": 0.04375,
+  "best_return": 51.920951133221386,
+  "learned_reduction": 0.15625
+}

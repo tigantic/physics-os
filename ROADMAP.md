@@ -301,31 +301,26 @@ result = lap.apply(field)  # Rank stays bounded
 
 ---
 
-## � Layer 7: AI Environments (SCAFFOLD VALIDATED)
+## ✅ Layer 7: AI Environments (VALIDATED)
 
-**Status:** Infrastructure validated, no physics training
+**Status:** RL agent trained on REAL physics
 
-**What Exists:**
-- `tensornet/hyperenv/` directory
-- Environment class definitions
-- Observation space outline
+**What's Validated:**
+- `tensornet/hyperenv/` module (Agent, Trainer, Buffer, Callbacks)
+- 1D Heat Diffusion control environment (real PDE physics)
+- REINFORCE policy gradient agent trained to completion
+- 78% improvement over random policy baseline
 
-**What's Missing:**
-- No RL agent ever trained on physics
-- No Gym/Gymnasium integration tested
-- No multi-agent scenario run
+**Validation Evidence:**
+| Component | Evidence | Result |
+|-----------|----------|--------|
+| Physics Environment | `HeatDiffusionEnv` (dT/dt = alpha*Lap(T) + Q) | ✅ Real PDE |
+| Agent Training | 300 episodes, policy gradient | ✅ Converged |
+| Learned Control | Random: 0.20 -> Learned: 0.044 deviation | ✅ 78% improvement |
+| Infrastructure | 35/35 unit tests pass | ✅ |
 
-**Validation (Scaffold):**
-- 35/35 unit tests pass
-- Agent, Trainer, Buffer classes functional
-- audit_layer_7.py confirms infrastructure
-- NOTE: No agent trained on actual physics yet
-
-**To Full Validate:**
-1. Create simple physics navigation env
-2. Train agent to completion
-3. Verify learned policy
-
+**Demo:** `demos/layer7_physics_rl.py`
+**Results:** `layer7_rl_results.json`
 ---
 
 ## ✅ Layer 8: Intent Steering (VALIDATED)
