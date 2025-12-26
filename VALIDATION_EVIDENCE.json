@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-12-25T17:08:31.382484",
+  "phases": {
+    "phase1": {
+      "error": 0.0003266334533691406,
+      "status": "PASS"
+    },
+    "phase2": {
+      "error": 0,
+      "status": "PASS"
+    },
+    "phase3": {
+      "max_rank": 32,
+      "status": "PASS"
+    }
+  },
+  "sha256": "cdb2ba6c6f1bacbe00226a163abb2814ec366eecdc906bd85b4b6234fb3d93e5"
+}

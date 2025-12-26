@@ -99,7 +99,7 @@ def run_sod_benchmark(
     print("\n" + "=" * 60)
     print("Error Analysis")
     print("=" * 60)
-    print(f"{'Variable':<10} {'L1 Error':<15} {'L∞ Error':<15}")
+    print(f"{'Variable':<10} {'L1 Error':<15} {'Linf Error':<15}")
     print("-" * 40)
     print(f"{'Density':<10} {L1_rho:<15.4e} {Linf_rho:<15.4e}")
     print(f"{'Velocity':<10} {L1_u:<15.4e} {Linf_u:<15.4e}")
