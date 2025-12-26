@@ -1,560 +1,471 @@
 # HyperTensor Strategic Roadmap
 
 **Document ID**: ROADMAP-001  
-**Version**: 2.0.0  
-**Ratified**: 2025-12-24  
+**Version**: 3.0.0  
+**Revised**: 2025-12-26  
 **Authority**: Principal Investigator  
-**Status**: 8-Layer Architecture Complete  
-**Constitution Alignment**: Article VI, Section 6.1
+**Status**: Foundation Validated — Rebuilding on Solid Ground  
+**Principle**: No Potemkin villages. Only validated truth.
 
 ---
 
 ## Executive Summary
 
-This document establishes the strategic roadmap for HyperTensor's evolution from a tensor network library to a **Reality Representation Infrastructure** — a continuous, evolvable, GPU-native Field Substrate whose complexity scales with structure and which can be steered by intent with auditable provenance.
+**Previous roadmap was aspirational, not validated.** We marked layers "complete" based on scaffolding and unit tests, not actual working physics. The December 2025 capability audit exposed this.
+
+**What we actually have:**
+- ✅ QTT core that works (storage, arithmetic, truncation)
+- ✅ N-D shift MPO with Morton ordering (validated through 512³)
+- ✅ 3D incompressible Euler solver (proven resolution-independent)
+- ✅ PQC cryptographic attestation
+
+**This roadmap is rebuilt from validated foundations only.**
 
 ---
 
-## North Star
+## Honest Status Assessment
+
+### ✅ VALIDATED (Proven with Working Code)
+
+| Component | Evidence | Date |
+|-----------|----------|------|
+| QTT Storage | `dense_to_qtt()`, 45× compression at N=1M | Dec 2025 |
+| QTT Arithmetic | `qtt_add()`, `truncate_cores()` | Dec 2025 |
+| Morton N-D Ordering | 3D→1D bit interleaving verified | Dec 2025 |
+| N-D Shift MPO | Axis-specific periodic BC, all dims | Dec 2025 |
+| 3D Euler Advection | Strang splitting, stable to t=10 | Dec 2025 |
+| Resolution Independence | 32³→512³: rank 39→34 (DECREASES) | Dec 2025 |
+| Kronecker IC Construction | 1024³ in 63s, 24,578× compression | Dec 2025 |
+| PQC Signing | Dilithium2 attestation, 2420-byte sigs | Dec 2025 |
+
+### 🟡 PARTIAL (Exists but Not Battle-Tested)
+
+| Component | Status | Gap |
+|-----------|--------|-----|
+| Field Oracle API | `sample()` works | Not stress-tested |
+| 1D/2D Shock Tubes | Sod tube works | Limited validation |
+| TCI Flux Approximation | Prototype exists | Needs full integration |
+| Provenance Signing | Works | Third-party replay untested |
+
+### ❌ SCAFFOLD ONLY (Code Exists, Not Validated)
+
+| Component | Reality |
+|-----------|---------|
+| HyperVisual (Layer 2) | Files exist, no real volumetric rendering tested |
+| HyperSim Benchmarks (Layer 3) | Harness exists, most benchmarks not run |
+| HyperEnv (Layer 4) | RL environment scaffolded, never trained an agent |
+| Intent/FDL (Layer 6) | Parser exists, never steered real physics |
+| FieldOS (Layer 7) | Kernel scaffolded, never ran multi-field |
+| Unreal/Unity Plugins | Code exists, never integrated with engine |
+
+---
+
+## North Star (Unchanged)
 
 > **A continuous, evolvable, GPU-native Field Substrate** whose complexity scales with **structure**, and which can be **steered by intent** with **auditable provenance**.
 
 ---
 
-## Guiding Principles
+## Foundation-First Rebuild
 
-### The One Rule
+### The Lesson Learned
 
-**One substrate. One Oracle API. One Directive layer.**
+We tried to build 8 layers simultaneously. Result: 8 partial layers, zero validated end-to-end paths.
 
-Everything else is a thin skin: render, sim, AI env, provenance.
-
-### Don't-Fragment Rules
-
-| Rule | Rationale |
-|------|-----------|
-| Don't build 4 products separately | Single substrate powers all consumers |
-| Don't optimize before bounded mode | Frame budgets before micro-optimizations |
-| Don't chase DNS-grade accuracy | Optimize for structure + controllability + reproducibility |
-| Don't expose tensor internals | Users see intent + budgets + knobs |
+**New approach:** Each layer must be VALIDATED before moving up. Validation means:
+1. **Works** — Not just compiles, actually runs correctly
+2. **Tested** — Against known analytical solutions or baselines
+3. **Demonstrated** — Visible output that a human can verify
+4. **Documented** — Clear API, limitations, and failure modes
 
 ---
 
-## Architecture Overview
+## Layer 0: QTT Core (✅ VALIDATED)
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           CONSUMERS                                      │
-│    Renderer     Simulator     AI Env     Audit     Training             │
-│   (HyperVisual) (HyperSim)   (HyperEnv)  (Provenance)                   │
-└───────────────────────────────┬─────────────────────────────────────────┘
-                                │
-┌───────────────────────────────▼─────────────────────────────────────────┐
-│                      DIRECTIVE LAYER (Layer 6)                           │
-│   Intent Operators   Field Directive Language   Control Loop            │
-└───────────────────────────────┬─────────────────────────────────────────┘
-                                │
-┌───────────────────────────────▼─────────────────────────────────────────┐
-│                      FIELD ORACLE API (Layer 0)                          │
-│   sample(points)  slice(spec)  step(dt)  stats()  serialize()          │
-└───────────────────────────────┬─────────────────────────────────────────┘
-                                │
-┌───────────────────────────────▼─────────────────────────────────────────┐
-│                      FIELDOPS (Layer 1)                                  │
-│   Grad  Div  Curl  Laplacian  Advect  Diffuse  Project  Forces         │
-└───────────────────────────────┬─────────────────────────────────────────┘
-                                │
-┌───────────────────────────────▼─────────────────────────────────────────┐
-│                      QTT SUBSTRATE                                       │
-│   Cores    Contractions    GPU Runtime    Bounded Mode    Cache         │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+**Status:** Complete and battle-tested
 
----
+| Component | File | Validated By |
+|-----------|------|--------------|
+| QTT State | `tensornet/cfd/pure_qtt_ops.py` | 512³ simulation |
+| Dense→QTT | `dense_to_qtt()` | 1024³ IC construction |
+| QTT Addition | `qtt_add()` | Thousands of timesteps |
+| Truncation | `truncate_cores()` | Rank stayed bounded |
+| Morton Encoding | `morton_encode_3d_vectorized()` | 3D grid verified |
 
-## Layer Definitions
-
-### Layer 0 — Substrate (The Spine)
-
-**Status**: ✅ COMPLETE (2025-12-24)
-
-The undeniable core that everything hangs on.
-
-| Component | File | Status |
-|-----------|------|--------|
-| Field Oracle API | `tensornet/substrate/field.py` | ✅ Complete |
-| FieldStats Telemetry | `tensornet/substrate/stats.py` | ✅ Complete |
-| FieldBundle Format | `tensornet/substrate/bundle.py` | ✅ Complete |
-| Bounded Mode | `tensornet/substrate/bounded.py` | ✅ Complete |
-
-**API Surface**:
+**API (Validated):**
 ```python
-Field.sample(points) -> values      # O(N × d × r²)
-Field.slice(spec) -> buffer         # Rendering interface
-Field.step(dt) -> Field             # Physics evolution
-Field.stats() -> FieldStats         # Telemetry dashboard
-Field.serialize() -> FieldBundle    # Reproducible storage
+qtt = dense_to_qtt(tensor_1d, max_bond=64)
+result = qtt_add(a, b, max_bond=64)
+cores = truncate_cores(cores, max_rank=64, tol=1e-8)
 ```
 
-**Exit Criteria** (Per Constitution Article I):
-- [x] One API powers: sim, rendering, AI envs, auditing
-- [x] Bounded latency mode with rank caps
-- [x] Error dashboard with explicit metrics
-- [x] 19/19 unit tests passing
+**Limitations:**
+- CPU only (no GPU kernels yet)
+- Python loops in some paths (performance ceiling)
+- Rank can still explode for non-smooth functions
 
 ---
 
-### Layer 1 — FieldOps (Physics Primitives)
+## Layer 1: Shift & Derivative MPO (✅ VALIDATED)
 
-**Status**: ✅ COMPLETE (2025-12-24)
+**Status:** Complete and battle-tested
 
-Standard library of field operators.
+| Component | File | Validated By |
+|-----------|------|--------------|
+| N-D Shift MPO | `tensornet/cfd/nd_shift_mpo.py` | 512³ Euler to t=10 |
+| Axis-Specific BC | Morton bit-interleaving | Periodic verified all axes |
+| MPO-QTT Matvec | `apply_nd_shift_mpo()` | 4000+ steps stable |
 
-| Operator | Purpose | Status |
-|----------|---------|--------|
-| `Grad` | Gradient ∇f | ✅ Complete |
-| `Div` | Divergence ∇·F | ✅ Complete |
-| `Curl` | Curl ∇×F | ✅ Complete |
-| `Laplacian` | ∇²f | ✅ Complete |
-| `Advect` | Semi-Lagrangian transport | ✅ Complete |
-| `Diffuse` | Heat equation | ✅ Complete |
-| `Project` | Pressure Poisson + divergence-free | ✅ Complete |
-| `Forces` | Impulses, buoyancy, attractors | ✅ Complete |
-
-**FieldGraph System**:
+**API (Validated):**
 ```python
-graph = FieldGraph()
-graph.add_node('advect', Advect(velocity_field))
-graph.add_node('diffuse', Diffuse(viscosity=0.01))
-graph.add_node('project', Project())
-graph.connect('advect', 'diffuse', 'project')
-graph.execute(field, dt=0.01)
+mpo = make_nd_shift_mpo(n_qubits, num_dims=3, axis_idx=0, direction=+1, periodic=True)
+shifted_cores = apply_nd_shift_mpo(cores, mpo, max_rank=64)
 ```
 
-**Exit Criteria** (Per Constitution Article I):
-- [x] Express "fluids, smoke, EM, diffusion" as compositions
-- [x] Divergence bounded post-projection
-- [x] BCs: periodic + obstacle masks
-- [x] Graph scheduler with caching
-- [x] 41/41 unit tests passing
+**What This Enables:**
+- First-order derivatives: `(f[i+1] - f[i-1]) / 2dx`
+- Second-order derivatives: `(f[i+1] - 2f[i] + f[i-1]) / dx²`
+- N-dimensional advection via operator splitting
 
 ---
 
-### Layer 2 — HyperVisual (Graphics Primitive)
+## Layer 2: 3D Euler Solver (✅ VALIDATED)
 
-**Status**: ✅ COMPLETE (2025-12-24)
+**Status:** Complete — resolution-independence PROVEN
 
-Make the Field a graphics primitive.
+| Component | File | Validated By |
+|-----------|------|--------------|
+| Taylor-Green IC | `build_rank1_3d_qtt()` | Separable construction |
+| Kronecker Construction | `build_rank1_3d_qtt_tensorfree()` | 1024³ in 63s |
+| Strang Splitting | `MillenniumSolver.step()` | t=10 achieved |
+| Lax-Friedrichs Diffusion | Artificial viscosity | Stable evolution |
 
-| Component | File | Status |
-|-----------|------|--------|
-| Volume Renderer | `tensornet/hypervisual/volume.py` | ✅ Complete |
-| Clipmap System | `tensornet/hypervisual/clipmap.py` | ✅ Complete |
-| Artist Controls | `tensornet/hypervisual/controls.py` | ✅ Complete |
-| LOD Manager | `tensornet/hypervisual/lod.py` | ✅ Complete |
-| Brick Cache | `tensornet/hypervisual/brick.py` | ✅ Complete |
-| Transfer Functions | `tensornet/hypervisual/transfer.py` | ✅ Complete |
+**Proven Results (PQC-Signed):**
 
-**Rendering Paths**:
-1. **Slice → 3D Texture → Raymarch** ✅ Implemented
-2. **Direct Raymarch via sample()** ✅ Implemented
+| Grid | Points | t_reached | Final Rank | Wall Time |
+|------|--------|-----------|------------|-----------|
+| 32³ | 32K | 10.0 | 39 | ~minutes |
+| 64³ | 262K | 7.0 | 37 | ~minutes |
+| 128³ | 2M | 10.0 | 36 | 41 min |
+| 512³ | 134M | 10.0 | 34 | 9.4 hours |
 
-**Exit Criteria** (Per Constitution Article I):
-- [x] Real-time volumetric smoke/clouds
-- [x] Zoom forever without memory growth
-- [x] No tiling artifacts
-- [x] Artist can "direct" without PDEs
-- [x] 43/43 unit tests passing
+**Key Finding:** Rank DECREASES with resolution (39→34). This is unprecedented.
 
 ---
 
-### Layer 3 — HyperSim (Benchmark Credibility)
+## Layer 3: Attestation & Provenance (✅ VALIDATED)
 
-**Status**: ✅ COMPLETE (2025-12-24)
+**Status:** PQC signing works, replay needs third-party test
 
-Credibility pack for engineering buyers.
+| Component | File | Validated By |
+|-----------|------|--------------|
+| Dilithium2 Signing | `demos/pqc_sign_results.py` | Signatures verify |
+| Manifest Hashing | SHA-256 | Deterministic |
+| Attestation JSON | `MILLENNIUM_HUNTER_ATTESTATION.json` | Published |
 
-| Benchmark | File | Status |
-|-----------|------|--------|
-| Lid-driven cavity (2D) | `tensornet/hypersim/lid_cavity.py` | ✅ Complete |
-| Taylor-Green vortex | `tensornet/hypersim/taylor_green.py` | ✅ Complete |
-| Passive scalar advection | `tensornet/hypersim/advection.py` | ✅ Complete |
-| Poisson/projection | `tensornet/hypersim/poisson.py` | ✅ Complete |
-| Decaying turbulence | `tensornet/hypersim/turbulence.py` | ✅ Complete |
-| Benchmark Harness | `tensornet/hypersim/harness.py` | ✅ Complete |
-
-**Deliverables**:
-- Error vs rank curves ✅
-- Stability vs dt curves ✅
-- Performance vs baseline charts ✅
-- "Sweet spot map" for buyers ✅
-
-**Exit Criteria** (Per Constitution Article I):
-- [x] 4+ canonical tests with plotted metrics
-- [x] Clear documentation of where HyperTensor wins
-- [x] Comparison against grid-based baselines
-- [x] 40/40 unit tests passing
-
----
-
-### Layer 4 — HyperEnv (AI Environments)
-
-**Status**: 🔲 NOT STARTED
-
-Field-native worlds for AI.
-
-| Feature | File | Status |
-|---------|------|--------|
-| Query Sensors | `tensornet/hyperenv/sensors.py` | ✅ Complete |
-| Bandwidth Budgets | `tensornet/hyperenv/budget.py` | ✅ Complete |
-| Multi-Agent | `tensornet/hyperenv/agents.py` | ✅ Complete |
-| Differentiable | `tensornet/hyperenv/diff.py` | ✅ Complete |
-| Environment Core | `tensornet/hyperenv/env.py` | ✅ Complete |
-| Observation Space | `tensornet/hyperenv/observation.py` | ✅ Complete |
-
-**Exit Criteria** (Per Constitution Article I):
-- [x] RL environment where resolution is agent choice
-- [x] Deterministic multi-agent stepping
-- [x] Optional differentiable hooks
-- [x] 35/35 unit tests passing
-
----
-
-### Layer 5 — Provenance & Attestation
-
-**Status**: ✅ COMPLETE (2025-12-24)  
-**Constitution**: Article IX (Reproducibility)
-**Commit**: 86f8868
-
-Trust layer for defense/science buyers.
-
-| Component | File | Status |
-|-----------|------|--------|
-| Deterministic Replay | `tensornet/provenance/replay.py` | ✅ Complete |
-| Signed FieldBundles | `tensornet/provenance/signing.py` | ✅ Complete |
-| Audit Viewer | `tensornet/provenance/audit.py` | ✅ Complete |
-| SBOM | `tensornet/provenance/sbom.py` | ✅ Complete |
-| Hash Chain | `tensornet/provenance/chain.py` | ✅ Complete |
-| Trace Logger | `tensornet/provenance/trace.py` | ✅ Complete |
-
-**Exit Criteria** (Per Constitution Article IX):
-- [x] Anyone can reproduce "this field evolved from X under Y"
-- [x] Third-party replay produces identical hashes
-- [x] Defense buyers stop flinching
-- [x] 72/72 unit tests passing
-
----
-
-### Layer 6 — Intentional Fields (The Bottom)
-
-**Status**: ✅ COMPLETE (2025-12-24)  
-**Commit**: 038bb42
-
-Steer structure, not pixels. This is the category jump.
-
-#### 6.1 Intent Operators
-
-| Operator | File | Status |
-|----------|------|--------|
-| Rank Bias Fields | `tensornet/intent/operators.py` | ✅ Complete |
-| Constraint Potentials | `tensornet/intent/constraints.py` | ✅ Complete |
-| Energy Shaping | `tensornet/intent/energy.py` | ✅ Complete |
-| Attractors | `tensornet/intent/attractors.py` | ✅ Complete |
-| Budget Governors | `tensornet/intent/budget.py` | ✅ Complete |
-
-#### 6.2 Field Directive Language (FDL)
-
-| Component | File | Status |
-|-----------|------|--------|
-| FDL Parser | `tensornet/intent/parser.py` | ✅ Complete |
-| FDL Compiler | `tensornet/intent/compiler.py` | ✅ Complete |
-
-```
-region A: calm
-region B: turbulent
-detail_budget: 16ms
-no_tiling: true
-preserve_coherence: high
-avoid: obstacle_mask
+**API (Validated):**
+```python
+from dilithium_py.dilithium import Dilithium2
+pk, sk = Dilithium2.keygen()
+sig = Dilithium2.sign(sk, message)
+valid = Dilithium2.verify(pk, message, sig)
 ```
 
-Compiles to: operator weights, rank caps, constraint potentials, schedule rules.
-
-#### 6.3 Optimization-in-the-Loop
-
-Find field evolution satisfying physics + intent + budgets.
-
-**Exit Criteria** (Per Constitution Article I):
-- [x] Intent compiles into dynamics
-- [x] "Make it ominous and heavy" is a field constraint
-- [x] Worlds become solved objects under constraints
-- [x] 71/71 unit tests passing
+**Gap:** Third party has not independently replayed and verified hashes.
 
 ---
 
-### Layer 7 — Field Operating System
+## 🔲 Layer 4: Rendering (NOT VALIDATED)
 
-**Status**: ✅ COMPLETE (2025-12-24)  
-**Commit**: f2778e0
+**Status:** Scaffold exists, no visual output tested
 
-Multi-field, multi-user, multi-process.
+**What Exists:**
+- `tensornet/hypervisual/` directory with Python files
+- Volume renderer class definitions
+- Clipmap system outline
 
-| Component | File | Status |
-|-----------|------|--------|
-| Unified Field | `tensornet/fieldos/field.py` | ✅ Complete |
-| Field OS Kernel | `tensornet/fieldos/kernel.py` | ✅ Complete |
-| Pipeline System | `tensornet/fieldos/pipeline.py` | ✅ Complete |
-| Plugin Manager | `tensornet/fieldos/plugin.py` | ✅ Complete |
-| Session Manager | `tensornet/fieldos/session.py` | ✅ Complete |
-| Observable System | `tensornet/fieldos/observable.py` | ✅ Complete |
+**What's Missing:**
+- No actual rendered frame ever produced
+- No integration with real graphics API
+- No "infinite zoom" demo completed
 
-**Exit Criteria** (Per Constitution Article I):
-- [x] Field Scheduler with QoS
-- [x] Memory Budgeting per field
-- [x] Cross-App Composition
-- [x] 79/79 unit tests passing
+**To Validate:**
+1. Render a single QTT field to image
+2. Implement camera flythrough
+3. Show memory constant during zoom
+4. No tiling artifacts visible
 
 ---
 
-### Layer 8 — Reality Representation Infrastructure
+## 🔲 Layer 5: FieldOps (NOT VALIDATED)
 
-**Status**: ✅ COMPLETE (2025-12-24)
+**Status:** Operators defined, not tested on real physics
 
-The endpoint:
-- Reality modeled as **continuous fields** ✅
-- Fields are **compressed, evolvable, steerable** ✅
-- Everything is **query-based** ✅
-- Everything is **auditable** ✅
-- Renderers, solvers, AI are **clients** of the substrate ✅
+**What Exists:**
+- Grad, Div, Curl, Laplacian class definitions
+- Graph scheduler outline
 
-**Total Tests**: 639 passing across all layers
+**What's Missing:**
+- Never run on validated 3D field
+- Divergence-free projection untested
+- No comparison to analytical solutions
 
-**External Integrations**:
-
-| Component | Location | Status |
-|-----------|----------|--------|
-| Unreal Engine Plugin | `integrations/unreal/` | ✅ Complete |
-| Unity Engine Plugin | `integrations/unity/` | ✅ Complete |
-| Enterprise SDK | `sdk/` | ✅ Complete |
-
-**Unreal Engine Features**:
-- `HyperTensorFieldComponent` - Blueprint-compatible field management
-- `HyperTensorFieldActor` - Ready-to-use field actor with visualization
-- Python Bridge - ZMQ communication for real-time field updates
-- Full type definitions matching Python API
-
-**Unity Features**:
-- `HyperTensorField` MonoBehaviour - Full C# integration
-- `HyperTensorFieldRenderer` - Slice/volume/isosurface visualization
-- Custom Inspector - Editor integration with live stats
-- Native Bridge interface for Python backend
-
-**Enterprise SDK**:
-- Docker images (base, cuda, jupyter, server)
-- Conda package recipe
-- Build script for all distribution formats
-- REST API server with FastAPI
-- License management system
-- Telemetry and monitoring
+**To Validate:**
+1. Apply Laplacian to known function, check error
+2. Project velocity field, verify div(u) ≈ 0
+3. Run full Navier-Stokes (not just Euler)
 
 ---
 
-## Execution Timeline
+## 🔲 Layer 6: Benchmarks (PARTIALLY VALIDATED)
 
-### Phase A: Weeks 1-2 — Substrate Hardening ✅
+**Status:** Millennium Hunter validated, others not
 
-| Task | Status | Definition of Done |
-|------|--------|-------------------|
-| Oracle API finalization | ✅ | sample/slice/step/stats/serialize |
-| Bounded mode | ✅ | Rank caps + budgets |
-| Telemetry dashboard | ✅ | Rank, error, energy, timings |
-| 19 unit tests | ✅ | All passing |
+**Validated:**
+- Taylor-Green vortex (resolution scaling)
+- 1D Sod shock tube (basic)
 
-### Phase B: Weeks 3-4 — FieldOps MVP ✅
+**Not Validated:**
+- Lid-driven cavity
+- Decaying turbulence
+- Passive scalar advection
+- Comparison vs grid-based solver
 
-| Task | Status | Definition of Done |
-|------|--------|-------------------|
-| Advect/Diffuse/Project | ✅ | Stable evolution |
-| Graph scheduler | ✅ | Topological execution with caching |
-| BCs: periodic + obstacles | ✅ | Mask-based boundaries |
-| Divergence tests | ✅ | Bounded post-projection |
-
-### Phase C: Weeks 5-6 — HyperVisual MVP ✅
-
-| Task | Status | Definition of Done |
-|------|--------|-------------------|
-| Slice-to-bricks + raymarch | ✅ | Real-time volumetrics |
-| Clipmap v0 | ✅ | View-dependent LOD |
-| Artist controls v0 | ✅ | Detail/softness/drama knobs |
-
-### Phase D: Weeks 7-8 — Benchmarks ✅
-
-| Task | Status | Definition of Done |
-|------|--------|-------------------|
-| Benchmark harness | ✅ | Automated test runner |
-| 4+ canonical tests | ✅ | With plotted metrics |
-| Sweet spot map | ✅ | Where HyperTensor wins |
-
-### Phase E: Weeks 9-10 — FieldBundle + Replay ✅
-
-| Task | Status | Definition of Done |
-|------|--------|-------------------|
-| Deterministic serialization | ✅ | Reproducible to bit |
-| Replay tool | ✅ | Third-party verification |
-| Hash chain | ✅ | Integrity verification |
-
-### Phase F: Weeks 11-14 — Intent Layer v1 ✅
-
-| Task | Status | Definition of Done |
-|------|--------|-------------------|
-| Intent operators | ✅ | Region-based constraints |
-| FDL compiler v0 | ✅ | Directive → dynamics |
-| Control loop | ✅ | Budget-aware steering |
-
-### Phase G: Weeks 15+ — Scale-Out ✅
-
-| Task | Status | Definition of Done |
-|------|--------|-------------------|
-| Field OS Kernel | ✅ | Multi-field orchestration |
-| Plugin System | ✅ | Extensibility framework |
-| Session Management | ✅ | State persistence |
-| Unreal plugin | ✅ | TensorField Volume actor + Blueprint API |
-| Unity plugin | ✅ | MonoBehaviour + Editor integration |
-| Enterprise packaging | ✅ | Docker, Conda, REST API, License mgmt |
+**To Validate:**
+1. Run each benchmark
+2. Compare to published reference data
+3. Plot error vs rank curves
+4. Document "sweet spot" for each problem type
 
 ---
 
-## Milestone Acceptance Criteria
+## 🔲 Layer 7: AI Environments (NOT VALIDATED)
 
-### Milestone 1: "Killer Visual Demo"
+**Status:** Scaffold only
 
-**Script**:
-1. Start with calm smoke volume
-2. Fly camera through it
-3. Zoom into one filament repeatedly
-4. Show constant memory usage
-5. Increase "detail budget" live (rank rises, detail sharpens)
-6. No tiling, no texture swapping
+**What Exists:**
+- `tensornet/hyperenv/` directory
+- Environment class definitions
+- Observation space outline
 
-**Pass/Fail**: Viewers say "how is it not repeating?"
+**What's Missing:**
+- No RL agent ever trained
+- No Gym/Gymnasium integration tested
+- No multi-agent scenario run
+
+**To Validate:**
+1. Create simple smoke navigation env
+2. Train PPO agent to completion
+3. Verify deterministic replay
+
+---
+
+## 🔲 Layer 8: Intent Steering (NOT VALIDATED)
+
+**Status:** FDL parser exists, never used
+
+**What Exists:**
+- `tensornet/intent/` directory
+- FDL grammar definition
+- Constraint operator stubs
+
+**What's Missing:**
+- Never compiled directive to dynamics
+- Never steered real physics with intent
+- "Calm zone / storm zone" demo not done
+
+**To Validate:**
+1. Parse simple FDL directive
+2. Apply to running simulation
+3. Verify field respects constraints
+4. Show live toggle of regions
+
+---
+
+## 🔲 Layer 9: Engine Integration (NOT VALIDATED)
+
+**Status:** Code exists, never ran in engine
+
+**What Exists:**
+- `integrations/unreal/` and `integrations/unity/` directories
+- Actor/MonoBehaviour definitions
+- Bridge protocol outline
+
+**What's Missing:**
+- Never opened Unreal/Unity with plugin loaded
+- No actual volumetric visible in viewport
+- No performance profiling in engine
+
+**To Validate:**
+1. Load plugin in engine
+2. Create field actor in scene
+3. Render volume in viewport
+4. Profile frame time
+
+---
+
+## Milestone Redefinition
+
+Previous milestones were defined before we had working physics. Redefining based on validated foundation:
+
+### Milestone 1: "The Holy Grail Video" 
+**Status:** 🟡 IN PROGRESS
+
+**Requirements:**
+1. ✅ 3D field evolves stably (Taylor-Green proven)
+2. ✅ Resolution-independence demonstrated (32³→512³)
+3. 🔲 Camera flythrough rendered to video
+4. 🔲 Memory overlay showing constant usage
+5. 🔲 Zoom into filament without tiling
+
+**Current Gap:** Need actual renderer, not just field evolution
 
 ---
 
 ### Milestone 2: "Benchmark Credibility Pack"
+**Status:** 🟡 PARTIAL
 
-**Script**:
-1. Show Taylor-Green vortex error vs rank curves
-2. Show divergence control
-3. Show speed/memory vs baseline at multiple sizes
-4. End with "sweet spot map"
+**Requirements:**
+1. ✅ Taylor-Green rank scaling (done)
+2. 🔲 Error vs rank curves for 3+ problems
+3. 🔲 Speed comparison vs baseline CFD
+4. 🔲 "Sweet spot map" published
+5. ✅ PQC-signed results
 
-**Pass/Fail**: Engineers stop arguing, start asking for access.
+**Current Gap:** Need more benchmarks, need baseline comparison
 
 ---
 
-### Milestone 3: "Audit Replay"
+### Milestone 3: "Third-Party Replay"
+**Status:** 🔲 NOT STARTED
 
-**Script**:
-1. Ship FieldBundle + replay tool
-2. Third party replays, gets identical hashes
+**Requirements:**
+1. 🔲 Publish FieldBundle + replay tool
+2. 🔲 Third party downloads and runs
+3. 🔲 Third party gets identical hash
+4. 🔲 Write-up of reproduction attempt
 
-**Pass/Fail**: Someone else reproduces without you.
+**Current Gap:** Need external collaborator
 
 ---
 
 ### Milestone 4: "Intent Demo"
+**Status:** 🔲 NOT STARTED
 
-**Script**:
-1. Draw two regions: calm zone + storm zone
-2. Toggle directives live
-3. Show field obeys constraints while keeping frame budget
+**Requirements:**
+1. 🔲 FDL directive parsed and applied
+2. 🔲 Live toggle of "calm" vs "turbulent" regions
+3. 🔲 Field visibly responds to constraints
+4. 🔲 Frame budget maintained during steering
 
-**Pass/Fail**: Feels like "directing reality."
-
----
-
-## Definition-of-Done Checklist
-
-Per Constitution Article III (Testing Protocols):
-
-### Substrate ✅
-- [x] Oracle API implemented + used everywhere
-- [x] Bounded latency mode with rank caps
-- [x] Contraction plans cached
-- [x] Telemetry dashboard
-- [x] 19/19 tests passing
-
-### FieldOps ✅
-- [x] advect/diffuse/project stable
-- [x] divergence bounded post-projection
-- [x] BCs: periodic + obstacle mask
-- [x] graph scheduler + caching
-
-### Rendering ✅
-- [x] slice-to-bricks + raymarch
-- [x] clipmap streaming
-- [x] zoom demo without tiling
-- [x] artist control panel
-
-### Benchmarks ✅
-- [x] 4+ tests with plotted metrics
-- [x] sweet spot map
-- [x] performance/memory comparisons
-
-### Provenance ✅
-- [x] FieldBundle schema versioned
-- [x] deterministic replay tool
-- [x] optional signature + hash chain
-
-### Intent ✅
-- [x] region-based constraints
-- [x] directive language compiler
-- [x] budget-aware control loop
-
-### Field OS ✅
-- [x] unified field abstraction
-- [x] pipeline system
-- [x] plugin architecture
-- [x] session management
-- [x] observable reactive system
+**Current Gap:** Need validated rendering first, then intent
 
 ---
 
-## Module Mapping
+## Execution Priority
 
-Per Constitution Article II, Section 2.1:
+Based on validated foundation, here's the honest priority order:
 
-| Layer | Module Location | Tests |
-|-------|-----------------|-------|
-| 0 - Substrate | `tensornet/substrate/` | 19 |
-| 1 - FieldOps | `tensornet/operators/` | 41 |
-| 2 - Rendering | `tensornet/hypervisual/` | 43 |
-| 3 - Benchmarks | `tensornet/hypersim/` | 40 |
-| 4 - AI Envs | `tensornet/hyperenv/` | 35 |
-| 5 - Provenance | `tensornet/provenance/` | 72 |
-| 6 - Intent | `tensornet/intent/` | 71 |
-| 7 - Field OS | `tensornet/fieldos/` | 79 |
-| **Total** | | **639** |
+### Priority 1: Rendering (Critical Path)
 
----
+Without rendering, we can't show anything. All demos blocked on this.
 
-## Risk Register
+**Tasks:**
+1. QTT → dense slice extraction
+2. Slice → 3D texture
+3. Simple ray marcher (even CPU-based)
+4. Camera controls
+5. Video export
 
-| Risk | Mitigation | Owner |
-|------|------------|-------|
-| GPU memory limits | Bounded mode + rank caps | Substrate |
-| Frame budget misses | Adaptive rank controller | Bounded Mode |
-| Accuracy vs speed tradeoff | Sweet spot map documentation | Benchmarks |
-| Adoption friction | Artist control layer | HyperVisual |
-| Defense buyer trust | Provenance + attestation | Layer 5 |
+**Definition of Done:** 512³ Taylor-Green rendered as MP4
 
 ---
 
-## Amendment History
+### Priority 2: More Benchmarks
+
+Credibility requires more than one problem type.
+
+**Tasks:**
+1. 2D lid-driven cavity
+2. 2D/3D decaying turbulence
+3. Comparison vs NumPy/SciPy baseline
+4. Error plots
+
+**Definition of Done:** 4 benchmarks with published comparison
+
+---
+
+### Priority 3: Third-Party Replay
+
+Someone else must verify our results.
+
+**Tasks:**
+1. Clean install instructions
+2. Replay script
+3. Hash verification
+4. Find collaborator to test
+
+**Definition of Done:** External verification blog post
+
+---
+
+### Priority 4: Intent Steering
+
+Only after rendering works.
+
+**Tasks:**
+1. Simple region constraint
+2. FDL → dynamics compiler
+3. Live demo with slider
+
+**Definition of Done:** Video showing constraint toggle
+
+---
+
+## Definition of Done (All Work)
+
+Per Constitution Article III:
+
+- [ ] **Works** — Actually runs, not just compiles
+- [ ] **Tested** — Against known solution or baseline
+- [ ] **Demonstrated** — Visual or numerical output shown
+- [ ] **Documented** — API, limitations, failure modes
+- [ ] **Committed** — In git with clear message
+
+---
+
+## Future Work (Parked)
+
+These are NOT on active roadmap until foundation is solid:
+
+| Item | Reason Parked |
+|------|---------------|
+| GPU Kernels | Need correct CPU first |
+| Rust TCI Core | Need stable algorithm first |
+| Unreal/Unity | Need rendering first |
+| FieldOS Multi-Field | Need single field working |
+| Enterprise SDK | Need product first |
+| Black Swan Hunts | Different ICs queued, run on separate machine |
+
+---
+
+## Changelog
 
 | Version | Date | Changes |
-|---------|------|---------|| 2.0.0 | 2025-12-24 | **8-Layer Architecture Complete**: All layers 0-7 implemented with 639 passing tests. Substrate, FieldOps, HyperVisual, HyperSim, HyperEnv, Provenance, Intent, and Field OS fully operational. || 1.0.0 | 2025-12-24 | Initial ratification |
+|---------|------|---------|
+| 3.0.0 | 2025-12-26 | **Complete rewrite.** Honest assessment based on capability audit. Scaffold layers marked as unvalidated. Foundation-first rebuild. |
+| 2.0.0 | 2025-12-24 | 8-Layer architecture (aspirational, not validated) |
+| 1.0.0 | 2025-12-20 | Initial roadmap |
 
+---
+
+## Appendix: The Lesson
+
+> We tried to build a skyscraper by finishing all floors simultaneously.
+> Result: Every floor was half-built, none was habitable.
+> 
+> **New rule:** Each floor must pass inspection before starting the next.
+> No more Potemkin villages.
 ---
 
 *This roadmap is governed by the HyperTensor Constitution. All development must comply with its provisions.*
