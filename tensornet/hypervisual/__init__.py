@@ -39,6 +39,12 @@ from .slicer import (
     VolumeRenderer,
 )
 
+from .slicing_core import (
+    MortonSlicer,
+    MortonSliceResult,
+    compare_slicing_methods,
+)
+
 from .stream import (
     StreamProtocol,
     StreamConfig,
@@ -74,6 +80,11 @@ __all__ = [
     'SlicePlane',
     'SliceResult',
     'VolumeRenderer',
+    
+    # Morton-Aware Slicer (true resolution-independent)
+    'MortonSlicer',
+    'MortonSliceResult',
+    'compare_slicing_methods',
     
     # Stream
     'StreamProtocol',

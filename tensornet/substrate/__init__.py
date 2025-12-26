@@ -65,6 +65,15 @@ from .bounded import (
     QualityLevel,
     AdaptiveRankController,
 )
+from .morton_ops import (
+    SlicedQTT2D,
+    slice_morton_3d_z_plane,
+    slice_morton_3d_y_plane,
+    slice_morton_3d_x_plane,
+    contract_2d_qtt,
+    morton_encode_3d,
+    morton_decode_3d,
+)
 
 __all__ = [
     # Core Oracle
@@ -91,6 +100,15 @@ __all__ = [
     'ContractionPath',
     'QualityLevel',
     'AdaptiveRankController',
+    
+    # Morton Operations (resolution-independent slicing)
+    'SlicedQTT2D',
+    'slice_morton_3d_z_plane',
+    'slice_morton_3d_y_plane',
+    'slice_morton_3d_x_plane',
+    'contract_2d_qtt',
+    'morton_encode_3d',
+    'morton_decode_3d',
 ]
 
 __version__ = '0.1.0'
