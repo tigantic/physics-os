@@ -30,13 +30,13 @@
 | Component | Evidence | Date |
 |-----------|----------|------|
 | QTT Storage | `dense_to_qtt()`, 45× compression at N=1M | Dec 2025 |
-| QTT Arithmetic | `qtt_add()`, `truncate_cores()` | Dec 2025 |
+| QTT Arithmetic | `qtt_add()`, `truncate_qtt()` | Dec 2025 |
 | Morton N-D Ordering | 3D→1D bit interleaving verified | Dec 2025 |
-| N-D Shift MPO | Axis-specific periodic BC, all dims | Dec 2025 |
+| N-D Shift MPO | `make_nd_shift_mpo()`, `apply_nd_shift_mpo()` | Dec 2025 |
 | 3D Euler Advection | Strang splitting, stable to t=10 | Dec 2025 |
 | Resolution Independence | 32³→512³: rank 39→34 (DECREASES) | Dec 2025 |
 | Kronecker IC Construction | 1024³ in 63s, 24,578× compression | Dec 2025 |
-| PQC Signing | Dilithium2 attestation, 2420-byte sigs | Dec 2025 |
+| PQC Signing | Dilithium2 `sign_manifest()`, `verify_signature()` | Dec 2025 |
 
 ### 🟡 PARTIAL (Exists but Not Battle-Tested)
 
@@ -89,14 +89,13 @@ We tried to build 8 layers simultaneously. Result: 8 partial layers, zero valida
 | QTT State | `tensornet/cfd/pure_qtt_ops.py` | 512³ simulation |
 | Dense→QTT | `dense_to_qtt()` | 1024³ IC construction |
 | QTT Addition | `qtt_add()` | Thousands of timesteps |
-| Truncation | `truncate_cores()` | Rank stayed bounded |
-| Morton Encoding | `morton_encode_3d_vectorized()` | 3D grid verified |
+| Truncation | `truncate_qtt()` | Rank stayed bounded |
 
 **API (Validated):**
 ```python
 qtt = dense_to_qtt(tensor_1d, max_bond=64)
 result = qtt_add(a, b, max_bond=64)
-cores = truncate_cores(cores, max_rank=64, tol=1e-8)
+cores = truncate_qtt(cores, max_rank=64, tol=1e-8)
 ```
 
 **Limitations:**
