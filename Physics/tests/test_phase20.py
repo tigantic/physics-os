@@ -6,14 +6,8 @@ Tests for quantum-classical hybrid algorithms, error mitigation,
 and hardware certification modules.
 """
 
-import sys
 import torch
 import numpy as np
-from pathlib import Path
-
-# Add project root to path (HyperTensor root, not Physics)
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root))
 
 # =============================================================================
 # Test Quantum Module

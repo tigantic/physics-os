@@ -59,6 +59,9 @@ EXCLUDE_PATTERNS: Set[str] = {
     '.secrets*',
     '*.key',
     '*.pem',
+    # Numba cache files
+    '*.nbc',
+    '*.nbi',
 }
 
 # Directories to always exclude
@@ -79,6 +82,8 @@ EXCLUDE_DIRS: Set[str] = {
     'htmlcov',
     '.idea',
     '.vscode',
+    # Rust build artifacts
+    'target',
 }
 
 # File extensions for large files to exclude

@@ -1,0 +1,1400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.singularity_hunter API documentation</title>
+<meta name="description" content="Singularity Hunter: Adjoint-Based Search for Navier-Stokes Blowup
+…">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.singularity_hunter</code></h1>
+</header>
+<section id="section-intro">
+<h1 id="singularity-hunter-adjoint-based-search-for-navier-stokes-blowup">Singularity Hunter: Adjoint-Based Search for Navier-Stokes Blowup</h1>
+<p>The Strategy: "Inverse Design for Destruction"</p>
+<p>Instead of designing a wing to minimize drag, we use gradient-based
+optimization to MAXIMIZE violence (enstrophy/vorticity). We search the
+infinite space of smooth initial conditions to find the "Bad Apple"
+that breaks the equations.</p>
+<p>The Millennium Prize ($1M) Approach:
+1. Objective: Maximize enstrophy Omega = (1/2) int |curl u|^2 dx
+2. Adjoint: Compute dOmega/du_0 via backward integration
+3. Update: u_0 &lt;- u_0 + alpha * dOmega/du_0 (gradient ASCENT)
+4. Iterate until chi -&gt; infinity or convergence</p>
+<p>Success Criteria:
+- If chi(t) -&gt; infinity in finite time: SINGULARITY CANDIDATE
+- If chi(t) stays bounded for all tested ICs: Evidence for regularity</p>
+<p>Key Insight:
+Near singularities, velocity fields become self-similar (Leray solutions).
+Self-similar structures have LOW tensor rank, so QTT can resolve them
+at effectively infinite resolution.</p>
+<h2 id="references">References</h2>
+<p>[1] Hou &amp; Luo (2022) - Computer-assisted proof of Euler blowup
+[2] Tao (2016) - Finite-time blowup for averaged NS
+[3] Beale-Kato-Majda criterion - Vorticity controls blowup</p>
+<p>Tag: [LEVEL-3] [SINGULARITY-HUNTER] [MILLENNIUM]</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.singularity_hunter.test_singularity_hunter"><code class="name flex">
+<span>def <span class="ident">test_singularity_hunter</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def test_singularity_hunter():
+    &#34;&#34;&#34;Test the singularity hunter on a small grid.&#34;&#34;&#34;
+    print(&#34;\n&#34; + &#34;=&#34; * 60)
+    print(&#34;Singularity Hunter Test&#34;)
+    print(&#34;=&#34; * 60)
+    
+    config = HuntingConfig(
+        max_iterations=10,
+        step_size=0.001,
+        T_horizon=0.5,
+        dt=0.02,
+    )
+    
+    # Small grid for testing
+    hunter = SingularityHunter(
+        Nx=16, Ny=16, Nz=16,
+        Lx=2*np.pi, Ly=2*np.pi, Lz=2*np.pi,
+        nu=0.1,
+        config=config,
+    )
+    
+    print(&#34;\nHunting for singularity candidates...&#34;)
+    result = hunter.hunt(use_autodiff=True)
+    
+    print(f&#34;\nResult:&#34;)
+    print(f&#34;  Iterations: {result.iterations}&#34;)
+    print(f&#34;  Final chi: {result.final_chi:.1f}&#34;)
+    print(f&#34;  Final enstrophy: {result.final_enstrophy:.4f}&#34;)
+    print(f&#34;  Blowup detected: {result.blowup_detected}&#34;)
+    print(f&#34;  Verdict: {result.verdict}&#34;)
+    
+    return result</code></pre>
+</details>
+<div class="desc"><p>Test the singularity hunter on a small grid.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.cfd.singularity_hunter.ChiGrowthObjective"><code class="flex name class">
+<span>class <span class="ident">ChiGrowthObjective</span></span>
+<span>(</span><span>dx: float, dy: float, dz: float, chi_target: int = 128)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ChiGrowthObjective:
+    &#34;&#34;&#34;
+    Chi growth rate objective: Maximize d(chi)/dt
+    
+    If chi grows rapidly, we&#39;re approaching a singularity.
+    &#34;&#34;&#34;
+    
+    def __init__(self, dx: float, dy: float, dz: float, chi_target: int = 128):
+        self.dx = dx
+        self.dy = dy
+        self.dz = dz
+        self.chi_target = chi_target
+        
+    def evaluate(self, trajectory) -&gt; float:
+        &#34;&#34;&#34;Compute chi growth rate from trajectory.&#34;&#34;&#34;
+        if len(trajectory.chi_values) &lt; 2:
+            return 0.0
+        return trajectory.growth_rate() or 0.0</code></pre>
+</details>
+<div class="desc"><p>Chi growth rate objective: Maximize d(chi)/dt</p>
+<p>If chi grows rapidly, we're approaching a singularity.</p></div>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.singularity_hunter.ChiGrowthObjective.evaluate"><code class="name flex">
+<span>def <span class="ident">evaluate</span></span>(<span>self, trajectory) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def evaluate(self, trajectory) -&gt; float:
+    &#34;&#34;&#34;Compute chi growth rate from trajectory.&#34;&#34;&#34;
+    if len(trajectory.chi_values) &lt; 2:
+        return 0.0
+    return trajectory.growth_rate() or 0.0</code></pre>
+</details>
+<div class="desc"><p>Compute chi growth rate from trajectory.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.EnstrophyObjective"><code class="flex name class">
+<span>class <span class="ident">EnstrophyObjective</span></span>
+<span>(</span><span>dx: float, dy: float, dz: float)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class EnstrophyObjective:
+    &#34;&#34;&#34;
+    Enstrophy objective: Omega = (1/2) int |curl u|^2 dx
+    
+    For 3D: omega = curl(u) = (dw/dy - dv/dz, du/dz - dw/dx, dv/dx - du/dy)
+    Enstrophy = (1/2) int (omega_x^2 + omega_y^2 + omega_z^2) dV
+    &#34;&#34;&#34;
+    
+    def __init__(self, dx: float, dy: float, dz: float):
+        self.dx = dx
+        self.dy = dy
+        self.dz = dz
+        
+    def evaluate(self, u: Tensor, v: Tensor, w: Tensor) -&gt; Tensor:
+        &#34;&#34;&#34;Compute total enstrophy.&#34;&#34;&#34;
+        from tensornet.cfd.ns_3d import compute_vorticity_3d
+        
+        omega_x, omega_y, omega_z = compute_vorticity_3d(
+            u, v, w, self.dx, self.dy, self.dz, method=&#39;spectral&#39;
+        )
+        
+        enstrophy = 0.5 * (omega_x**2 + omega_y**2 + omega_z**2).sum()
+        return enstrophy * (self.dx * self.dy * self.dz)
+    
+    def gradient(self, u: Tensor, v: Tensor, w: Tensor) -&gt; Tuple[Tensor, Tensor, Tensor]:
+        &#34;&#34;&#34;
+        Compute gradient of enstrophy w.r.t. velocity field.
+        
+        Using chain rule:
+            dOmega/du = dOmega/d(omega) * d(omega)/du
+            
+        Where d(omega)/du involves the curl operator.
+        &#34;&#34;&#34;
+        from tensornet.cfd.ns_3d import (
+            compute_vorticity_3d, compute_gradient_3d,
+            compute_laplacian_3d
+        )
+        
+        # Vorticity
+        omega_x, omega_y, omega_z = compute_vorticity_3d(
+            u, v, w, self.dx, self.dy, self.dz, method=&#39;spectral&#39;
+        )
+        
+        # The gradient of enstrophy w.r.t. velocity is:
+        # dOmega/du = curl(omega) = (domega_z/dy - domega_y/dz, ...)
+        # This is the &#34;curl of curl&#34; = -Laplacian(u) + grad(div(u))
+        # For div-free: curl(curl(u)) = -Laplacian(u)
+        
+        # So dOmega/du_i = -2 * (omega cross e_i component)
+        # More precisely, we use spectral differentiation:
+        
+        # dOmega/domega = omega (the vorticity itself)
+        # d(omega)/d(u) = curl operator
+        # So dOmega/du = curl^T(omega) = -curl(omega)
+        
+        grad_omega_x = compute_gradient_3d(omega_x, self.dx, self.dy, self.dz)
+        grad_omega_y = compute_gradient_3d(omega_y, self.dx, self.dy, self.dz)
+        grad_omega_z = compute_gradient_3d(omega_z, self.dx, self.dy, self.dz)
+        
+        # curl(omega) = nabla x omega
+        curl_omega_x = grad_omega_z[1] - grad_omega_y[2]  # domega_z/dy - domega_y/dz
+        curl_omega_y = grad_omega_x[2] - grad_omega_z[0]  # domega_x/dz - domega_z/dx
+        curl_omega_z = grad_omega_y[0] - grad_omega_x[1]  # domega_y/dx - domega_x/dy
+        
+        # Gradient is -curl(omega) scaled by volume element
+        scale = self.dx * self.dy * self.dz
+        
+        return (
+            -curl_omega_x * scale,
+            -curl_omega_y * scale,
+            -curl_omega_z * scale
+        )</code></pre>
+</details>
+<div class="desc"><p>Enstrophy objective: Omega = (1/2) int |curl u|^2 dx</p>
+<p>For 3D: omega = curl(u) = (dw/dy - dv/dz, du/dz - dw/dx, dv/dx - du/dy)
+Enstrophy = (1/2) int (omega_x^2 + omega_y^2 + omega_z^2) dV</p></div>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.singularity_hunter.EnstrophyObjective.evaluate"><code class="name flex">
+<span>def <span class="ident">evaluate</span></span>(<span>self, u: torch.Tensor, v: torch.Tensor, w: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def evaluate(self, u: Tensor, v: Tensor, w: Tensor) -&gt; Tensor:
+    &#34;&#34;&#34;Compute total enstrophy.&#34;&#34;&#34;
+    from tensornet.cfd.ns_3d import compute_vorticity_3d
+    
+    omega_x, omega_y, omega_z = compute_vorticity_3d(
+        u, v, w, self.dx, self.dy, self.dz, method=&#39;spectral&#39;
+    )
+    
+    enstrophy = 0.5 * (omega_x**2 + omega_y**2 + omega_z**2).sum()
+    return enstrophy * (self.dx * self.dy * self.dz)</code></pre>
+</details>
+<div class="desc"><p>Compute total enstrophy.</p></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.EnstrophyObjective.gradient"><code class="name flex">
+<span>def <span class="ident">gradient</span></span>(<span>self, u: torch.Tensor, v: torch.Tensor, w: torch.Tensor) ‑> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def gradient(self, u: Tensor, v: Tensor, w: Tensor) -&gt; Tuple[Tensor, Tensor, Tensor]:
+    &#34;&#34;&#34;
+    Compute gradient of enstrophy w.r.t. velocity field.
+    
+    Using chain rule:
+        dOmega/du = dOmega/d(omega) * d(omega)/du
+        
+    Where d(omega)/du involves the curl operator.
+    &#34;&#34;&#34;
+    from tensornet.cfd.ns_3d import (
+        compute_vorticity_3d, compute_gradient_3d,
+        compute_laplacian_3d
+    )
+    
+    # Vorticity
+    omega_x, omega_y, omega_z = compute_vorticity_3d(
+        u, v, w, self.dx, self.dy, self.dz, method=&#39;spectral&#39;
+    )
+    
+    # The gradient of enstrophy w.r.t. velocity is:
+    # dOmega/du = curl(omega) = (domega_z/dy - domega_y/dz, ...)
+    # This is the &#34;curl of curl&#34; = -Laplacian(u) + grad(div(u))
+    # For div-free: curl(curl(u)) = -Laplacian(u)
+    
+    # So dOmega/du_i = -2 * (omega cross e_i component)
+    # More precisely, we use spectral differentiation:
+    
+    # dOmega/domega = omega (the vorticity itself)
+    # d(omega)/d(u) = curl operator
+    # So dOmega/du = curl^T(omega) = -curl(omega)
+    
+    grad_omega_x = compute_gradient_3d(omega_x, self.dx, self.dy, self.dz)
+    grad_omega_y = compute_gradient_3d(omega_y, self.dx, self.dy, self.dz)
+    grad_omega_z = compute_gradient_3d(omega_z, self.dx, self.dy, self.dz)
+    
+    # curl(omega) = nabla x omega
+    curl_omega_x = grad_omega_z[1] - grad_omega_y[2]  # domega_z/dy - domega_y/dz
+    curl_omega_y = grad_omega_x[2] - grad_omega_z[0]  # domega_x/dz - domega_z/dx
+    curl_omega_z = grad_omega_y[0] - grad_omega_x[1]  # domega_y/dx - domega_x/dy
+    
+    # Gradient is -curl(omega) scaled by volume element
+    scale = self.dx * self.dy * self.dz
+    
+    return (
+        -curl_omega_x * scale,
+        -curl_omega_y * scale,
+        -curl_omega_z * scale
+    )</code></pre>
+</details>
+<div class="desc"><p>Compute gradient of enstrophy w.r.t. velocity field.</p>
+<p>Using chain rule:
+dOmega/du = dOmega/d(omega) * d(omega)/du</p>
+<p>Where d(omega)/du involves the curl operator.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntResult"><code class="flex name class">
+<span>class <span class="ident">HuntResult</span></span>
+<span>(</span><span>initial_condition: torch.Tensor,<br>final_enstrophy: float,<br>final_chi: float,<br>chi_trajectory: List[float],<br>enstrophy_trajectory: List[float],<br>blowup_detected: bool,<br>convergence_history: List[Dict],<br>iterations: int,<br>verdict: str)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass 
+class HuntResult:
+    &#34;&#34;&#34;Result from singularity hunt.&#34;&#34;&#34;
+    initial_condition: Tensor       # The found IC
+    final_enstrophy: float          # Peak enstrophy achieved
+    final_chi: float                # Peak chi achieved
+    chi_trajectory: List[float]     # chi(t) over time
+    enstrophy_trajectory: List[float]
+    blowup_detected: bool           # Whether chi -&gt; large
+    convergence_history: List[Dict]
+    iterations: int
+    verdict: str                    # &#34;SINGULARITY_CANDIDATE&#34; or &#34;BOUNDED&#34;</code></pre>
+</details>
+<div class="desc"><p>Result from singularity hunt.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.singularity_hunter.HuntResult.blowup_detected"><code class="name">var <span class="ident">blowup_detected</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntResult.chi_trajectory"><code class="name">var <span class="ident">chi_trajectory</span> : List[float]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntResult.convergence_history"><code class="name">var <span class="ident">convergence_history</span> : List[Dict]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntResult.enstrophy_trajectory"><code class="name">var <span class="ident">enstrophy_trajectory</span> : List[float]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntResult.final_chi"><code class="name">var <span class="ident">final_chi</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntResult.final_enstrophy"><code class="name">var <span class="ident">final_enstrophy</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntResult.initial_condition"><code class="name">var <span class="ident">initial_condition</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntResult.iterations"><code class="name">var <span class="ident">iterations</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntResult.verdict"><code class="name">var <span class="ident">verdict</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntingConfig"><code class="flex name class">
+<span>class <span class="ident">HuntingConfig</span></span>
+<span>(</span><span>objective: <a title="tensornet.cfd.singularity_hunter.ObjectiveType" href="#tensornet.cfd.singularity_hunter.ObjectiveType">ObjectiveType</a> = ObjectiveType.COMBINED,<br>max_iterations: int = 100,<br>step_size: float = 0.01,<br>momentum: float = 0.9,<br>T_horizon: float = 1.0,<br>dt: float = 0.01,<br>chi_threshold: float = 1000000.0,<br>grad_clip: float = 1.0,<br>smoothness_penalty: float = 0.1,<br>projection_interval: int = 1)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class HuntingConfig:
+    &#34;&#34;&#34;Configuration for singularity hunt.&#34;&#34;&#34;
+    objective: ObjectiveType = ObjectiveType.COMBINED
+    max_iterations: int = 100
+    step_size: float = 0.01
+    momentum: float = 0.9
+    T_horizon: float = 1.0          # Time to integrate forward
+    dt: float = 0.01                # Time step
+    chi_threshold: float = 1e6     # Declare blowup if chi exceeds
+    grad_clip: float = 1.0          # Gradient clipping
+    smoothness_penalty: float = 0.1 # Penalize high-frequency noise
+    projection_interval: int = 1    # Re-project to div-free every N steps</code></pre>
+</details>
+<div class="desc"><p>Configuration for singularity hunt.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.singularity_hunter.HuntingConfig.T_horizon"><code class="name">var <span class="ident">T_horizon</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntingConfig.chi_threshold"><code class="name">var <span class="ident">chi_threshold</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntingConfig.dt"><code class="name">var <span class="ident">dt</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntingConfig.grad_clip"><code class="name">var <span class="ident">grad_clip</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntingConfig.max_iterations"><code class="name">var <span class="ident">max_iterations</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntingConfig.momentum"><code class="name">var <span class="ident">momentum</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntingConfig.objective"><code class="name">var <span class="ident">objective</span> : <a title="tensornet.cfd.singularity_hunter.ObjectiveType" href="#tensornet.cfd.singularity_hunter.ObjectiveType">ObjectiveType</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntingConfig.projection_interval"><code class="name">var <span class="ident">projection_interval</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntingConfig.smoothness_penalty"><code class="name">var <span class="ident">smoothness_penalty</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.HuntingConfig.step_size"><code class="name">var <span class="ident">step_size</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.ObjectiveType"><code class="flex name class">
+<span>class <span class="ident">ObjectiveType</span></span>
+<span>(</span><span>*args, **kwds)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ObjectiveType(Enum):
+    &#34;&#34;&#34;Objective function for singularity hunting.&#34;&#34;&#34;
+    ENSTROPHY = &#34;enstrophy&#34;              # int |curl u|^2 dx
+    CHI_GROWTH = &#34;chi_growth&#34;            # d(chi)/dt
+    GRADIENT_NORM = &#34;gradient_norm&#34;      # |nabla u|
+    VORTICITY_MAX = &#34;vorticity_max&#34;      # max |omega|
+    COMBINED = &#34;combined&#34;                # Weighted combination</code></pre>
+</details>
+<div class="desc"><p>Objective function for singularity hunting.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="tensornet.cfd.singularity_hunter.ObjectiveType.CHI_GROWTH"><code class="name">var <span class="ident">CHI_GROWTH</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.ObjectiveType.COMBINED"><code class="name">var <span class="ident">COMBINED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.ObjectiveType.ENSTROPHY"><code class="name">var <span class="ident">ENSTROPHY</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.ObjectiveType.GRADIENT_NORM"><code class="name">var <span class="ident">GRADIENT_NORM</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.ObjectiveType.VORTICITY_MAX"><code class="name">var <span class="ident">VORTICITY_MAX</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.SingularityHunter"><code class="flex name class">
+<span>class <span class="ident">SingularityHunter</span></span>
+<span>(</span><span>Nx: int,<br>Ny: int,<br>Nz: int,<br>Lx: float,<br>Ly: float,<br>Lz: float,<br>nu: float,<br>config: <a title="tensornet.cfd.singularity_hunter.HuntingConfig" href="#tensornet.cfd.singularity_hunter.HuntingConfig">HuntingConfig</a> | None = None,<br>dtype=torch.float64)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SingularityHunter:
+    &#34;&#34;&#34;
+    Hunt for Navier-Stokes singularities via adjoint optimization.
+    
+    This is &#34;inverse design for destruction&#34; - we use gradient ascent
+    to find initial conditions that maximize enstrophy/chi growth.
+    &#34;&#34;&#34;
+    
+    def __init__(
+        self,
+        Nx: int,
+        Ny: int,
+        Nz: int,
+        Lx: float,
+        Ly: float,
+        Lz: float,
+        nu: float,
+        config: Optional[HuntingConfig] = None,
+        dtype=torch.float64,
+    ):
+        &#34;&#34;&#34;
+        Initialize the hunter.
+        
+        Args:
+            Nx, Ny, Nz: Grid dimensions
+            Lx, Ly, Lz: Domain sizes
+            nu: Kinematic viscosity
+            config: Hunting configuration
+            dtype: Tensor dtype
+        &#34;&#34;&#34;
+        from tensornet.cfd.ns_3d import NS3DSolver
+        
+        self.Nx, self.Ny, self.Nz = Nx, Ny, Nz
+        self.Lx, self.Ly, self.Lz = Lx, Ly, Lz
+        self.nu = nu
+        self.config = config or HuntingConfig()
+        self.dtype = dtype
+        
+        # Create solver
+        self.solver = NS3DSolver(
+            Nx=Nx, Ny=Ny, Nz=Nz,
+            Lx=Lx, Ly=Ly, Lz=Lz,
+            nu=nu, dtype=dtype
+        )
+        
+        self.dx = Lx / Nx
+        self.dy = Ly / Ny
+        self.dz = Lz / Nz
+        
+        # Objectives
+        self.enstrophy_obj = EnstrophyObjective(self.dx, self.dy, self.dz)
+        
+    def random_smooth_ic(self, n_modes: int = 4, amplitude: float = 1.0) -&gt; Tuple[Tensor, Tensor, Tensor]:
+        &#34;&#34;&#34;
+        Generate random smooth divergence-free initial condition.
+        
+        Uses a random superposition of Fourier modes, then projects
+        to ensure div(u) = 0.
+        &#34;&#34;&#34;
+        from tensornet.cfd.ns_3d import project_velocity_3d
+        
+        device = &#39;cpu&#39;
+        
+        # Random Fourier coefficients for low modes
+        u = torch.zeros(self.Nx, self.Ny, self.Nz, dtype=self.dtype, device=device)
+        v = torch.zeros(self.Nx, self.Ny, self.Nz, dtype=self.dtype, device=device)
+        w = torch.zeros(self.Nx, self.Ny, self.Nz, dtype=self.dtype, device=device)
+        
+        # Grid - for periodic domain, don&#39;t include endpoint
+        x = torch.linspace(0, self.Lx * (1 - 1/self.Nx), self.Nx, dtype=self.dtype, device=device)
+        y = torch.linspace(0, self.Ly * (1 - 1/self.Ny), self.Ny, dtype=self.dtype, device=device)
+        z = torch.linspace(0, self.Lz * (1 - 1/self.Nz), self.Nz, dtype=self.dtype, device=device)
+        X, Y, Z = torch.meshgrid(x, y, z, indexing=&#39;ij&#39;)
+        
+        # Add random smooth modes
+        for _ in range(n_modes):
+            kx = torch.randint(1, 4, (1,)).item()
+            ky = torch.randint(1, 4, (1,)).item()
+            kz = torch.randint(1, 4, (1,)).item()
+            
+            phase_x = torch.rand(1).item() * 2 * math.pi
+            phase_y = torch.rand(1).item() * 2 * math.pi
+            phase_z = torch.rand(1).item() * 2 * math.pi
+            
+            amp = amplitude * (torch.rand(3) - 0.5) * 2
+            
+            mode = torch.cos(kx * X + phase_x) * torch.sin(ky * Y + phase_y) * torch.cos(kz * Z + phase_z)
+            
+            u += amp[0].item() * mode
+            v += amp[1].item() * mode
+            w += amp[2].item() * mode
+        
+        # Project to divergence-free using spectral method
+        proj = project_velocity_3d(u, v, w, self.dx, self.dy, self.dz, dt=1.0, method=&#39;spectral&#39;)
+        
+        return proj.u_projected, proj.v_projected, proj.w_projected
+    
+    def forward_integrate(
+        self,
+        u0: Tensor,
+        v0: Tensor,
+        w0: Tensor,
+    ) -&gt; Tuple[Dict, List[Dict]]:
+        &#34;&#34;&#34;
+        Integrate forward and track chi/enstrophy.
+        
+        Returns:
+            final_metrics: Dict with final chi, enstrophy, etc.
+            trajectory: List of metrics at each timestep
+        &#34;&#34;&#34;
+        from tensornet.cfd.ns_3d import NSState3D
+        from tensornet.cfd.chi_diagnostic import compute_chi_state_3d
+        
+        state = NSState3D(u=u0.clone(), v=v0.clone(), w=w0.clone(), t=0.0, step=0)
+        
+        dt = self.config.dt
+        n_steps = int(self.config.T_horizon / dt)
+        
+        trajectory = []
+        chi_values = []
+        enstrophy_values = []
+        
+        for step in range(n_steps + 1):
+            t = step * dt
+            
+            # Compute metrics
+            enstrophy = self.enstrophy_obj.evaluate(state.u, state.v, state.w).item()
+            
+            chi_state = compute_chi_state_3d(
+                state.u, state.v, state.w,
+                t=t, dx=self.dx, dy=self.dy, dz=self.dz,
+                chi_target=256
+            )
+            
+            chi_values.append(chi_state.chi_actual)
+            enstrophy_values.append(enstrophy)
+            
+            trajectory.append({
+                &#39;t&#39;: t,
+                &#39;chi&#39;: chi_state.chi_actual,
+                &#39;enstrophy&#39;: enstrophy,
+                &#39;gradient_norm&#39;: chi_state.gradient_norm,
+            })
+            
+            # Check for blowup
+            if chi_state.chi_actual &gt; self.config.chi_threshold:
+                break
+                
+            # Check for NaN
+            if torch.isnan(state.u).any():
+                break
+            
+            # Step forward
+            if step &lt; n_steps:
+                state, _ = self.solver.step_rk4(state, dt)
+        
+        final_metrics = {
+            &#39;chi_max&#39;: max(chi_values),
+            &#39;chi_final&#39;: chi_values[-1],
+            &#39;enstrophy_max&#39;: max(enstrophy_values),
+            &#39;enstrophy_final&#39;: enstrophy_values[-1],
+            &#39;chi_trajectory&#39;: chi_values,
+            &#39;enstrophy_trajectory&#39;: enstrophy_values,
+            &#39;steps_completed&#39;: len(trajectory),
+        }
+        
+        return final_metrics, trajectory
+    
+    def compute_gradient_numerical(
+        self,
+        u0: Tensor,
+        v0: Tensor,
+        w0: Tensor,
+        epsilon: float = 1e-4,
+    ) -&gt; Tuple[Tensor, Tensor, Tensor]:
+        &#34;&#34;&#34;
+        Compute gradient of objective w.r.t. initial condition numerically.
+        
+        This is expensive but simple. For production, use adjoint method.
+        &#34;&#34;&#34;
+        # Baseline objective
+        metrics, _ = self.forward_integrate(u0, v0, w0)
+        J0 = metrics[&#39;enstrophy_max&#39;] + 100 * metrics[&#39;chi_max&#39;]
+        
+        grad_u = torch.zeros_like(u0)
+        grad_v = torch.zeros_like(v0)
+        grad_w = torch.zeros_like(w0)
+        
+        # Perturb each low-frequency mode and compute gradient
+        # (Full finite difference would be too expensive)
+        n_samples = min(27, u0.numel())  # Sample a few points
+        
+        indices = torch.randperm(u0.numel())[:n_samples]
+        
+        for idx in indices:
+            i = idx // (self.Ny * self.Nz)
+            j = (idx % (self.Ny * self.Nz)) // self.Nz
+            k = idx % self.Nz
+            
+            # Perturb u
+            u_pert = u0.clone()
+            u_pert[i, j, k] += epsilon
+            metrics_pert, _ = self.forward_integrate(u_pert, v0, w0)
+            J_pert = metrics_pert[&#39;enstrophy_max&#39;] + 100 * metrics_pert[&#39;chi_max&#39;]
+            grad_u[i, j, k] = (J_pert - J0) / epsilon
+            
+        return grad_u, grad_v, grad_w
+    
+    def compute_gradient_autodiff(
+        self,
+        u0: Tensor,
+        v0: Tensor,
+        w0: Tensor,
+    ) -&gt; Tuple[Tensor, Tensor, Tensor]:
+        &#34;&#34;&#34;
+        Compute gradient using PyTorch autograd.
+        
+        Requires differentiable forward pass.
+        &#34;&#34;&#34;
+        u0 = u0.clone().requires_grad_(True)
+        v0 = v0.clone().requires_grad_(True)
+        w0 = w0.clone().requires_grad_(True)
+        
+        from tensornet.cfd.ns_3d import NSState3D
+        
+        state = NSState3D(u=u0, v=v0, w=w0, t=0.0, step=0)
+        
+        dt = self.config.dt
+        n_steps = min(10, int(self.config.T_horizon / dt))  # Shorter for grad
+        
+        total_enstrophy = torch.tensor(0.0, dtype=self.dtype)
+        
+        for step in range(n_steps):
+            enstrophy = self.enstrophy_obj.evaluate(state.u, state.v, state.w)
+            total_enstrophy = total_enstrophy + enstrophy
+            
+            state, _ = self.solver.step_rk4(state, dt)
+        
+        # Final enstrophy bonus
+        final_enstrophy = self.enstrophy_obj.evaluate(state.u, state.v, state.w)
+        objective = total_enstrophy + 10.0 * final_enstrophy
+        
+        # Backprop
+        objective.backward()
+        
+        return u0.grad, v0.grad, w0.grad
+    
+    def hunt(
+        self,
+        u0_init: Optional[Tensor] = None,
+        v0_init: Optional[Tensor] = None,
+        w0_init: Optional[Tensor] = None,
+        use_autodiff: bool = True,
+    ) -&gt; HuntResult:
+        &#34;&#34;&#34;
+        Hunt for singularity candidates.
+        
+        Uses gradient ascent to find initial conditions that maximize
+        enstrophy and chi growth.
+        &#34;&#34;&#34;
+        from tensornet.cfd.ns_3d import project_velocity_3d
+        
+        # Initialize IC
+        if u0_init is None:
+            u0, v0, w0 = self.random_smooth_ic()
+        else:
+            u0, v0, w0 = u0_init.clone(), v0_init.clone(), w0_init.clone()
+        
+        # Momentum buffers
+        mu = torch.zeros_like(u0)
+        mv = torch.zeros_like(v0)
+        mw = torch.zeros_like(w0)
+        
+        convergence_history = []
+        best_chi = 0.0
+        best_enstrophy = 0.0
+        best_ic = (u0.clone(), v0.clone(), w0.clone())
+        
+        for iteration in range(self.config.max_iterations):
+            # Forward integrate
+            metrics, trajectory = self.forward_integrate(u0, v0, w0)
+            
+            chi_max = metrics[&#39;chi_max&#39;]
+            enstrophy_max = metrics[&#39;enstrophy_max&#39;]
+            
+            print(f&#34;  Iter {iteration}: chi_max={chi_max:.1f}, enstrophy_max={enstrophy_max:.4f}&#34;)
+            
+            # Track best
+            if chi_max &gt; best_chi:
+                best_chi = chi_max
+                best_enstrophy = enstrophy_max
+                best_ic = (u0.clone(), v0.clone(), w0.clone())
+            
+            convergence_history.append({
+                &#39;iteration&#39;: iteration,
+                &#39;chi_max&#39;: chi_max,
+                &#39;enstrophy_max&#39;: enstrophy_max,
+            })
+            
+            # Check for blowup
+            if chi_max &gt; self.config.chi_threshold:
+                print(f&#34;  [CANDIDATE FOUND] chi = {chi_max:.1f} &gt; threshold&#34;)
+                return HuntResult(
+                    initial_condition=torch.stack([u0, v0, w0]),
+                    final_enstrophy=enstrophy_max,
+                    final_chi=chi_max,
+                    chi_trajectory=metrics[&#39;chi_trajectory&#39;],
+                    enstrophy_trajectory=metrics[&#39;enstrophy_trajectory&#39;],
+                    blowup_detected=True,
+                    convergence_history=convergence_history,
+                    iterations=iteration + 1,
+                    verdict=&#34;SINGULARITY_CANDIDATE&#34;,
+                )
+            
+            # Compute gradient (ASCENT direction)
+            try:
+                if use_autodiff:
+                    grad_u, grad_v, grad_w = self.compute_gradient_autodiff(u0, v0, w0)
+                else:
+                    grad_u, grad_v, grad_w = self.compute_gradient_numerical(u0, v0, w0)
+            except Exception as e:
+                print(f&#34;  [WARNING] Gradient computation failed: {e}&#34;)
+                # Fall back to random perturbation
+                grad_u = torch.randn_like(u0) * 0.01
+                grad_v = torch.randn_like(v0) * 0.01
+                grad_w = torch.randn_like(w0) * 0.01
+            
+            # Handle None gradients
+            if grad_u is None:
+                grad_u = torch.zeros_like(u0)
+            if grad_v is None:
+                grad_v = torch.zeros_like(v0)
+            if grad_w is None:
+                grad_w = torch.zeros_like(w0)
+            
+            # Gradient clipping
+            grad_norm = torch.sqrt(
+                grad_u.pow(2).sum() + grad_v.pow(2).sum() + grad_w.pow(2).sum()
+            )
+            if grad_norm &gt; self.config.grad_clip:
+                scale = self.config.grad_clip / (grad_norm + 1e-8)
+                grad_u = grad_u * scale
+                grad_v = grad_v * scale
+                grad_w = grad_w * scale
+            
+            # Momentum update
+            mu = self.config.momentum * mu + grad_u
+            mv = self.config.momentum * mv + grad_v
+            mw = self.config.momentum * mw + grad_w
+            
+            # Gradient ASCENT (we want to MAXIMIZE destruction)
+            u0 = u0 + self.config.step_size * mu
+            v0 = v0 + self.config.step_size * mv
+            w0 = w0 + self.config.step_size * mw
+            
+            # Re-project to divergence-free (maintain incompressibility)
+            if iteration % self.config.projection_interval == 0:
+                proj = project_velocity_3d(u0, v0, w0, self.dx, self.dy, self.dz, dt=1.0)
+                u0 = proj.u_projected
+                v0 = proj.v_projected
+                w0 = proj.w_projected
+        
+        # Return best found
+        return HuntResult(
+            initial_condition=torch.stack(best_ic),
+            final_enstrophy=best_enstrophy,
+            final_chi=best_chi,
+            chi_trajectory=metrics[&#39;chi_trajectory&#39;],
+            enstrophy_trajectory=metrics[&#39;enstrophy_trajectory&#39;],
+            blowup_detected=False,
+            convergence_history=convergence_history,
+            iterations=self.config.max_iterations,
+            verdict=&#34;BOUNDED&#34;,
+        )</code></pre>
+</details>
+<div class="desc"><p>Hunt for Navier-Stokes singularities via adjoint optimization.</p>
+<p>This is "inverse design for destruction" - we use gradient ascent
+to find initial conditions that maximize enstrophy/chi growth.</p>
+<p>Initialize the hunter.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt>Nx, Ny, Nz: Grid dimensions</dt>
+<dt>Lx, Ly, Lz: Domain sizes</dt>
+<dt><strong><code>nu</code></strong></dt>
+<dd>Kinematic viscosity</dd>
+<dt><strong><code>config</code></strong></dt>
+<dd>Hunting configuration</dd>
+<dt><strong><code>dtype</code></strong></dt>
+<dd>Tensor dtype</dd>
+</dl></div>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.singularity_hunter.SingularityHunter.compute_gradient_autodiff"><code class="name flex">
+<span>def <span class="ident">compute_gradient_autodiff</span></span>(<span>self, u0: torch.Tensor, v0: torch.Tensor, w0: torch.Tensor) ‑> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_gradient_autodiff(
+    self,
+    u0: Tensor,
+    v0: Tensor,
+    w0: Tensor,
+) -&gt; Tuple[Tensor, Tensor, Tensor]:
+    &#34;&#34;&#34;
+    Compute gradient using PyTorch autograd.
+    
+    Requires differentiable forward pass.
+    &#34;&#34;&#34;
+    u0 = u0.clone().requires_grad_(True)
+    v0 = v0.clone().requires_grad_(True)
+    w0 = w0.clone().requires_grad_(True)
+    
+    from tensornet.cfd.ns_3d import NSState3D
+    
+    state = NSState3D(u=u0, v=v0, w=w0, t=0.0, step=0)
+    
+    dt = self.config.dt
+    n_steps = min(10, int(self.config.T_horizon / dt))  # Shorter for grad
+    
+    total_enstrophy = torch.tensor(0.0, dtype=self.dtype)
+    
+    for step in range(n_steps):
+        enstrophy = self.enstrophy_obj.evaluate(state.u, state.v, state.w)
+        total_enstrophy = total_enstrophy + enstrophy
+        
+        state, _ = self.solver.step_rk4(state, dt)
+    
+    # Final enstrophy bonus
+    final_enstrophy = self.enstrophy_obj.evaluate(state.u, state.v, state.w)
+    objective = total_enstrophy + 10.0 * final_enstrophy
+    
+    # Backprop
+    objective.backward()
+    
+    return u0.grad, v0.grad, w0.grad</code></pre>
+</details>
+<div class="desc"><p>Compute gradient using PyTorch autograd.</p>
+<p>Requires differentiable forward pass.</p></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.SingularityHunter.compute_gradient_numerical"><code class="name flex">
+<span>def <span class="ident">compute_gradient_numerical</span></span>(<span>self, u0: torch.Tensor, v0: torch.Tensor, w0: torch.Tensor, epsilon: float = 0.0001) ‑> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_gradient_numerical(
+    self,
+    u0: Tensor,
+    v0: Tensor,
+    w0: Tensor,
+    epsilon: float = 1e-4,
+) -&gt; Tuple[Tensor, Tensor, Tensor]:
+    &#34;&#34;&#34;
+    Compute gradient of objective w.r.t. initial condition numerically.
+    
+    This is expensive but simple. For production, use adjoint method.
+    &#34;&#34;&#34;
+    # Baseline objective
+    metrics, _ = self.forward_integrate(u0, v0, w0)
+    J0 = metrics[&#39;enstrophy_max&#39;] + 100 * metrics[&#39;chi_max&#39;]
+    
+    grad_u = torch.zeros_like(u0)
+    grad_v = torch.zeros_like(v0)
+    grad_w = torch.zeros_like(w0)
+    
+    # Perturb each low-frequency mode and compute gradient
+    # (Full finite difference would be too expensive)
+    n_samples = min(27, u0.numel())  # Sample a few points
+    
+    indices = torch.randperm(u0.numel())[:n_samples]
+    
+    for idx in indices:
+        i = idx // (self.Ny * self.Nz)
+        j = (idx % (self.Ny * self.Nz)) // self.Nz
+        k = idx % self.Nz
+        
+        # Perturb u
+        u_pert = u0.clone()
+        u_pert[i, j, k] += epsilon
+        metrics_pert, _ = self.forward_integrate(u_pert, v0, w0)
+        J_pert = metrics_pert[&#39;enstrophy_max&#39;] + 100 * metrics_pert[&#39;chi_max&#39;]
+        grad_u[i, j, k] = (J_pert - J0) / epsilon
+        
+    return grad_u, grad_v, grad_w</code></pre>
+</details>
+<div class="desc"><p>Compute gradient of objective w.r.t. initial condition numerically.</p>
+<p>This is expensive but simple. For production, use adjoint method.</p></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.SingularityHunter.forward_integrate"><code class="name flex">
+<span>def <span class="ident">forward_integrate</span></span>(<span>self, u0: torch.Tensor, v0: torch.Tensor, w0: torch.Tensor) ‑> Tuple[Dict, List[Dict]]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def forward_integrate(
+    self,
+    u0: Tensor,
+    v0: Tensor,
+    w0: Tensor,
+) -&gt; Tuple[Dict, List[Dict]]:
+    &#34;&#34;&#34;
+    Integrate forward and track chi/enstrophy.
+    
+    Returns:
+        final_metrics: Dict with final chi, enstrophy, etc.
+        trajectory: List of metrics at each timestep
+    &#34;&#34;&#34;
+    from tensornet.cfd.ns_3d import NSState3D
+    from tensornet.cfd.chi_diagnostic import compute_chi_state_3d
+    
+    state = NSState3D(u=u0.clone(), v=v0.clone(), w=w0.clone(), t=0.0, step=0)
+    
+    dt = self.config.dt
+    n_steps = int(self.config.T_horizon / dt)
+    
+    trajectory = []
+    chi_values = []
+    enstrophy_values = []
+    
+    for step in range(n_steps + 1):
+        t = step * dt
+        
+        # Compute metrics
+        enstrophy = self.enstrophy_obj.evaluate(state.u, state.v, state.w).item()
+        
+        chi_state = compute_chi_state_3d(
+            state.u, state.v, state.w,
+            t=t, dx=self.dx, dy=self.dy, dz=self.dz,
+            chi_target=256
+        )
+        
+        chi_values.append(chi_state.chi_actual)
+        enstrophy_values.append(enstrophy)
+        
+        trajectory.append({
+            &#39;t&#39;: t,
+            &#39;chi&#39;: chi_state.chi_actual,
+            &#39;enstrophy&#39;: enstrophy,
+            &#39;gradient_norm&#39;: chi_state.gradient_norm,
+        })
+        
+        # Check for blowup
+        if chi_state.chi_actual &gt; self.config.chi_threshold:
+            break
+            
+        # Check for NaN
+        if torch.isnan(state.u).any():
+            break
+        
+        # Step forward
+        if step &lt; n_steps:
+            state, _ = self.solver.step_rk4(state, dt)
+    
+    final_metrics = {
+        &#39;chi_max&#39;: max(chi_values),
+        &#39;chi_final&#39;: chi_values[-1],
+        &#39;enstrophy_max&#39;: max(enstrophy_values),
+        &#39;enstrophy_final&#39;: enstrophy_values[-1],
+        &#39;chi_trajectory&#39;: chi_values,
+        &#39;enstrophy_trajectory&#39;: enstrophy_values,
+        &#39;steps_completed&#39;: len(trajectory),
+    }
+    
+    return final_metrics, trajectory</code></pre>
+</details>
+<div class="desc"><p>Integrate forward and track chi/enstrophy.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>final_metrics</code></dt>
+<dd>Dict with final chi, enstrophy, etc.</dd>
+<dt><code>trajectory</code></dt>
+<dd>List of metrics at each timestep</dd>
+</dl></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.SingularityHunter.hunt"><code class="name flex">
+<span>def <span class="ident">hunt</span></span>(<span>self,<br>u0_init: torch.Tensor | None = None,<br>v0_init: torch.Tensor | None = None,<br>w0_init: torch.Tensor | None = None,<br>use_autodiff: bool = True) ‑> <a title="tensornet.cfd.singularity_hunter.HuntResult" href="#tensornet.cfd.singularity_hunter.HuntResult">HuntResult</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hunt(
+    self,
+    u0_init: Optional[Tensor] = None,
+    v0_init: Optional[Tensor] = None,
+    w0_init: Optional[Tensor] = None,
+    use_autodiff: bool = True,
+) -&gt; HuntResult:
+    &#34;&#34;&#34;
+    Hunt for singularity candidates.
+    
+    Uses gradient ascent to find initial conditions that maximize
+    enstrophy and chi growth.
+    &#34;&#34;&#34;
+    from tensornet.cfd.ns_3d import project_velocity_3d
+    
+    # Initialize IC
+    if u0_init is None:
+        u0, v0, w0 = self.random_smooth_ic()
+    else:
+        u0, v0, w0 = u0_init.clone(), v0_init.clone(), w0_init.clone()
+    
+    # Momentum buffers
+    mu = torch.zeros_like(u0)
+    mv = torch.zeros_like(v0)
+    mw = torch.zeros_like(w0)
+    
+    convergence_history = []
+    best_chi = 0.0
+    best_enstrophy = 0.0
+    best_ic = (u0.clone(), v0.clone(), w0.clone())
+    
+    for iteration in range(self.config.max_iterations):
+        # Forward integrate
+        metrics, trajectory = self.forward_integrate(u0, v0, w0)
+        
+        chi_max = metrics[&#39;chi_max&#39;]
+        enstrophy_max = metrics[&#39;enstrophy_max&#39;]
+        
+        print(f&#34;  Iter {iteration}: chi_max={chi_max:.1f}, enstrophy_max={enstrophy_max:.4f}&#34;)
+        
+        # Track best
+        if chi_max &gt; best_chi:
+            best_chi = chi_max
+            best_enstrophy = enstrophy_max
+            best_ic = (u0.clone(), v0.clone(), w0.clone())
+        
+        convergence_history.append({
+            &#39;iteration&#39;: iteration,
+            &#39;chi_max&#39;: chi_max,
+            &#39;enstrophy_max&#39;: enstrophy_max,
+        })
+        
+        # Check for blowup
+        if chi_max &gt; self.config.chi_threshold:
+            print(f&#34;  [CANDIDATE FOUND] chi = {chi_max:.1f} &gt; threshold&#34;)
+            return HuntResult(
+                initial_condition=torch.stack([u0, v0, w0]),
+                final_enstrophy=enstrophy_max,
+                final_chi=chi_max,
+                chi_trajectory=metrics[&#39;chi_trajectory&#39;],
+                enstrophy_trajectory=metrics[&#39;enstrophy_trajectory&#39;],
+                blowup_detected=True,
+                convergence_history=convergence_history,
+                iterations=iteration + 1,
+                verdict=&#34;SINGULARITY_CANDIDATE&#34;,
+            )
+        
+        # Compute gradient (ASCENT direction)
+        try:
+            if use_autodiff:
+                grad_u, grad_v, grad_w = self.compute_gradient_autodiff(u0, v0, w0)
+            else:
+                grad_u, grad_v, grad_w = self.compute_gradient_numerical(u0, v0, w0)
+        except Exception as e:
+            print(f&#34;  [WARNING] Gradient computation failed: {e}&#34;)
+            # Fall back to random perturbation
+            grad_u = torch.randn_like(u0) * 0.01
+            grad_v = torch.randn_like(v0) * 0.01
+            grad_w = torch.randn_like(w0) * 0.01
+        
+        # Handle None gradients
+        if grad_u is None:
+            grad_u = torch.zeros_like(u0)
+        if grad_v is None:
+            grad_v = torch.zeros_like(v0)
+        if grad_w is None:
+            grad_w = torch.zeros_like(w0)
+        
+        # Gradient clipping
+        grad_norm = torch.sqrt(
+            grad_u.pow(2).sum() + grad_v.pow(2).sum() + grad_w.pow(2).sum()
+        )
+        if grad_norm &gt; self.config.grad_clip:
+            scale = self.config.grad_clip / (grad_norm + 1e-8)
+            grad_u = grad_u * scale
+            grad_v = grad_v * scale
+            grad_w = grad_w * scale
+        
+        # Momentum update
+        mu = self.config.momentum * mu + grad_u
+        mv = self.config.momentum * mv + grad_v
+        mw = self.config.momentum * mw + grad_w
+        
+        # Gradient ASCENT (we want to MAXIMIZE destruction)
+        u0 = u0 + self.config.step_size * mu
+        v0 = v0 + self.config.step_size * mv
+        w0 = w0 + self.config.step_size * mw
+        
+        # Re-project to divergence-free (maintain incompressibility)
+        if iteration % self.config.projection_interval == 0:
+            proj = project_velocity_3d(u0, v0, w0, self.dx, self.dy, self.dz, dt=1.0)
+            u0 = proj.u_projected
+            v0 = proj.v_projected
+            w0 = proj.w_projected
+    
+    # Return best found
+    return HuntResult(
+        initial_condition=torch.stack(best_ic),
+        final_enstrophy=best_enstrophy,
+        final_chi=best_chi,
+        chi_trajectory=metrics[&#39;chi_trajectory&#39;],
+        enstrophy_trajectory=metrics[&#39;enstrophy_trajectory&#39;],
+        blowup_detected=False,
+        convergence_history=convergence_history,
+        iterations=self.config.max_iterations,
+        verdict=&#34;BOUNDED&#34;,
+    )</code></pre>
+</details>
+<div class="desc"><p>Hunt for singularity candidates.</p>
+<p>Uses gradient ascent to find initial conditions that maximize
+enstrophy and chi growth.</p></div>
+</dd>
+<dt id="tensornet.cfd.singularity_hunter.SingularityHunter.random_smooth_ic"><code class="name flex">
+<span>def <span class="ident">random_smooth_ic</span></span>(<span>self, n_modes: int = 4, amplitude: float = 1.0) ‑> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def random_smooth_ic(self, n_modes: int = 4, amplitude: float = 1.0) -&gt; Tuple[Tensor, Tensor, Tensor]:
+    &#34;&#34;&#34;
+    Generate random smooth divergence-free initial condition.
+    
+    Uses a random superposition of Fourier modes, then projects
+    to ensure div(u) = 0.
+    &#34;&#34;&#34;
+    from tensornet.cfd.ns_3d import project_velocity_3d
+    
+    device = &#39;cpu&#39;
+    
+    # Random Fourier coefficients for low modes
+    u = torch.zeros(self.Nx, self.Ny, self.Nz, dtype=self.dtype, device=device)
+    v = torch.zeros(self.Nx, self.Ny, self.Nz, dtype=self.dtype, device=device)
+    w = torch.zeros(self.Nx, self.Ny, self.Nz, dtype=self.dtype, device=device)
+    
+    # Grid - for periodic domain, don&#39;t include endpoint
+    x = torch.linspace(0, self.Lx * (1 - 1/self.Nx), self.Nx, dtype=self.dtype, device=device)
+    y = torch.linspace(0, self.Ly * (1 - 1/self.Ny), self.Ny, dtype=self.dtype, device=device)
+    z = torch.linspace(0, self.Lz * (1 - 1/self.Nz), self.Nz, dtype=self.dtype, device=device)
+    X, Y, Z = torch.meshgrid(x, y, z, indexing=&#39;ij&#39;)
+    
+    # Add random smooth modes
+    for _ in range(n_modes):
+        kx = torch.randint(1, 4, (1,)).item()
+        ky = torch.randint(1, 4, (1,)).item()
+        kz = torch.randint(1, 4, (1,)).item()
+        
+        phase_x = torch.rand(1).item() * 2 * math.pi
+        phase_y = torch.rand(1).item() * 2 * math.pi
+        phase_z = torch.rand(1).item() * 2 * math.pi
+        
+        amp = amplitude * (torch.rand(3) - 0.5) * 2
+        
+        mode = torch.cos(kx * X + phase_x) * torch.sin(ky * Y + phase_y) * torch.cos(kz * Z + phase_z)
+        
+        u += amp[0].item() * mode
+        v += amp[1].item() * mode
+        w += amp[2].item() * mode
+    
+    # Project to divergence-free using spectral method
+    proj = project_velocity_3d(u, v, w, self.dx, self.dy, self.dz, dt=1.0, method=&#39;spectral&#39;)
+    
+    return proj.u_projected, proj.v_projected, proj.w_projected</code></pre>
+</details>
+<div class="desc"><p>Generate random smooth divergence-free initial condition.</p>
+<p>Uses a random superposition of Fourier modes, then projects
+to ensure div(u) = 0.</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#singularity-hunter-adjoint-based-search-for-navier-stokes-blowup">Singularity Hunter: Adjoint-Based Search for Navier-Stokes Blowup</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.singularity_hunter.test_singularity_hunter" href="#tensornet.cfd.singularity_hunter.test_singularity_hunter">test_singularity_hunter</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.cfd.singularity_hunter.ChiGrowthObjective" href="#tensornet.cfd.singularity_hunter.ChiGrowthObjective">ChiGrowthObjective</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.singularity_hunter.ChiGrowthObjective.evaluate" href="#tensornet.cfd.singularity_hunter.ChiGrowthObjective.evaluate">evaluate</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.singularity_hunter.EnstrophyObjective" href="#tensornet.cfd.singularity_hunter.EnstrophyObjective">EnstrophyObjective</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.singularity_hunter.EnstrophyObjective.evaluate" href="#tensornet.cfd.singularity_hunter.EnstrophyObjective.evaluate">evaluate</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.EnstrophyObjective.gradient" href="#tensornet.cfd.singularity_hunter.EnstrophyObjective.gradient">gradient</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.singularity_hunter.HuntResult" href="#tensornet.cfd.singularity_hunter.HuntResult">HuntResult</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntResult.blowup_detected" href="#tensornet.cfd.singularity_hunter.HuntResult.blowup_detected">blowup_detected</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntResult.chi_trajectory" href="#tensornet.cfd.singularity_hunter.HuntResult.chi_trajectory">chi_trajectory</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntResult.convergence_history" href="#tensornet.cfd.singularity_hunter.HuntResult.convergence_history">convergence_history</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntResult.enstrophy_trajectory" href="#tensornet.cfd.singularity_hunter.HuntResult.enstrophy_trajectory">enstrophy_trajectory</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntResult.final_chi" href="#tensornet.cfd.singularity_hunter.HuntResult.final_chi">final_chi</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntResult.final_enstrophy" href="#tensornet.cfd.singularity_hunter.HuntResult.final_enstrophy">final_enstrophy</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntResult.initial_condition" href="#tensornet.cfd.singularity_hunter.HuntResult.initial_condition">initial_condition</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntResult.iterations" href="#tensornet.cfd.singularity_hunter.HuntResult.iterations">iterations</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntResult.verdict" href="#tensornet.cfd.singularity_hunter.HuntResult.verdict">verdict</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.singularity_hunter.HuntingConfig" href="#tensornet.cfd.singularity_hunter.HuntingConfig">HuntingConfig</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntingConfig.T_horizon" href="#tensornet.cfd.singularity_hunter.HuntingConfig.T_horizon">T_horizon</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntingConfig.chi_threshold" href="#tensornet.cfd.singularity_hunter.HuntingConfig.chi_threshold">chi_threshold</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntingConfig.dt" href="#tensornet.cfd.singularity_hunter.HuntingConfig.dt">dt</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntingConfig.grad_clip" href="#tensornet.cfd.singularity_hunter.HuntingConfig.grad_clip">grad_clip</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntingConfig.max_iterations" href="#tensornet.cfd.singularity_hunter.HuntingConfig.max_iterations">max_iterations</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntingConfig.momentum" href="#tensornet.cfd.singularity_hunter.HuntingConfig.momentum">momentum</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntingConfig.objective" href="#tensornet.cfd.singularity_hunter.HuntingConfig.objective">objective</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntingConfig.projection_interval" href="#tensornet.cfd.singularity_hunter.HuntingConfig.projection_interval">projection_interval</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntingConfig.smoothness_penalty" href="#tensornet.cfd.singularity_hunter.HuntingConfig.smoothness_penalty">smoothness_penalty</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.HuntingConfig.step_size" href="#tensornet.cfd.singularity_hunter.HuntingConfig.step_size">step_size</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.singularity_hunter.ObjectiveType" href="#tensornet.cfd.singularity_hunter.ObjectiveType">ObjectiveType</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.singularity_hunter.ObjectiveType.CHI_GROWTH" href="#tensornet.cfd.singularity_hunter.ObjectiveType.CHI_GROWTH">CHI_GROWTH</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.ObjectiveType.COMBINED" href="#tensornet.cfd.singularity_hunter.ObjectiveType.COMBINED">COMBINED</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.ObjectiveType.ENSTROPHY" href="#tensornet.cfd.singularity_hunter.ObjectiveType.ENSTROPHY">ENSTROPHY</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.ObjectiveType.GRADIENT_NORM" href="#tensornet.cfd.singularity_hunter.ObjectiveType.GRADIENT_NORM">GRADIENT_NORM</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.ObjectiveType.VORTICITY_MAX" href="#tensornet.cfd.singularity_hunter.ObjectiveType.VORTICITY_MAX">VORTICITY_MAX</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.singularity_hunter.SingularityHunter" href="#tensornet.cfd.singularity_hunter.SingularityHunter">SingularityHunter</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.singularity_hunter.SingularityHunter.compute_gradient_autodiff" href="#tensornet.cfd.singularity_hunter.SingularityHunter.compute_gradient_autodiff">compute_gradient_autodiff</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.SingularityHunter.compute_gradient_numerical" href="#tensornet.cfd.singularity_hunter.SingularityHunter.compute_gradient_numerical">compute_gradient_numerical</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.SingularityHunter.forward_integrate" href="#tensornet.cfd.singularity_hunter.SingularityHunter.forward_integrate">forward_integrate</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.SingularityHunter.hunt" href="#tensornet.cfd.singularity_hunter.SingularityHunter.hunt">hunt</a></code></li>
+<li><code><a title="tensornet.cfd.singularity_hunter.SingularityHunter.random_smooth_ic" href="#tensornet.cfd.singularity_hunter.SingularityHunter.random_smooth_ic">random_smooth_ic</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

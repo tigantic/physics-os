@@ -1,0 +1,68 @@
+# CODEOWNERS for HyperTensor
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# Each line is a file pattern followed by one or more owners.
+# Order matters - the last matching pattern has the highest precedence.
+
+# Default owner for all files
+* @tigantic/core
+
+# ============================================
+# Core Package
+# ============================================
+/tensornet/core/ @tigantic/core
+/tensornet/algorithms/ @tigantic/core
+
+# ============================================
+# CFD Package
+# ============================================
+/tensornet/cfd/ @tigantic/cfd
+/benchmarks/ @tigantic/cfd
+
+# ============================================
+# SDK and Server
+# ============================================
+/sdk/ @tigantic/sdk
+/tensornet/server/ @tigantic/sdk
+
+# ============================================
+# Rust TCI Extension
+# ============================================
+/tci_core_rust/ @tigantic/rust
+
+# ============================================
+# Quantum Extensions
+# ============================================
+/tensornet/quantum/ @tigantic/quantum
+
+# ============================================
+# Documentation
+# ============================================
+/docs/ @tigantic/docs
+/README.md @tigantic/core @tigantic/docs
+/CONTRIBUTING.md @tigantic/core @tigantic/docs
+
+# ============================================
+# Security-Sensitive Files
+# ============================================
+/.github/workflows/ @tigantic/security @tigantic/core
+/pyproject.toml @tigantic/core
+/requirements*.txt @tigantic/core @tigantic/security
+/.secrets.baseline @tigantic/security
+/scripts/security_scan.py @tigantic/security
+
+# ============================================
+# Proofs and Evidence
+# ============================================
+/proofs/ @tigantic/core @tigantic/cfd
+/evidence/ @tigantic/core
+
+# ============================================
+# Integration Tests
+# ============================================
+/tests/integration/ @tigantic/core @tigantic/cfd
+
+# ============================================
+# Physics Module
+# ============================================
+/Physics/ @tigantic/physics

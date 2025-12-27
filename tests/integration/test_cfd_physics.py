@@ -15,6 +15,9 @@ import pytest
 import torch
 import math
 
+# Mark entire module as integration and physics tests
+pytestmark = [pytest.mark.integration, pytest.mark.physics]
+
 from tensornet.cfd.godunov import (
     exact_riemann,
     hll_flux,

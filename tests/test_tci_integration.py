@@ -12,10 +12,6 @@ It tests the Python-side components that integrate with TCI.
 
 import torch
 import math
-import sys
-
-# Add parent to path for imports
-sys.path.insert(0, ".")
 
 from tensornet.cfd.qtt_eval import (
     qtt_eval_batch,

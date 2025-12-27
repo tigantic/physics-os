@@ -117,7 +117,8 @@ class GoldenValue:
         elif isinstance(self.value, np.ndarray):
             data = self.value.tobytes()
         else:
-            data = pickle.dumps(self.value)
+            # Use JSON for non-array types (safer than pickle)
+            data = json.dumps(self.value, sort_keys=True, default=str).encode()
         
         return hashlib.sha256(data).hexdigest()[:16]
     
@@ -201,10 +202,16 @@ class GoldenValueStore:
             metadata=metadata,
         )
         
-        # Save value to disk
-        value_path = self.directory / f"{name}.pkl"
-        with open(value_path, 'wb') as f:
-            pickle.dump(golden, f)
+        # Save value to disk using safe serialization
+        # Use .npz for arrays, .json for other types
+        if isinstance(golden.value, (np.ndarray, torch.Tensor)):
+            value_path = self.directory / f"{name}.npz"
+            arr = golden.value.cpu().numpy() if isinstance(golden.value, torch.Tensor) else golden.value
+            np.savez_compressed(value_path, data=arr)
+        else:
+            value_path = self.directory / f"{name}.json"
+            with open(value_path, 'w') as f:
+                json.dump({'value': golden.value, 'type': type(golden.value).__name__}, f)
         
         # Update index
         self._index[name] = golden.to_dict()
@@ -222,12 +229,38 @@ class GoldenValueStore:
         Returns:
             The GoldenValue or None if not found
         """
-        value_path = self.directory / f"{name}.pkl"
-        if not value_path.exists():
+        # Try .npz first (array data)
+        npz_path = self.directory / f"{name}.npz"
+        json_path = self.directory / f"{name}.json"
+        legacy_path = self.directory / f"{name}.pkl"
+        
+        if npz_path.exists():
+            loaded = np.load(npz_path, allow_pickle=False)
+            value = loaded['data']
+        elif json_path.exists():
+            with open(json_path, 'r') as f:
+                data = json.load(f)
+            value = data['value']
+        elif legacy_path.exists():
+            # Reject legacy pickle files - require migration
+            raise ValueError(
+                f"Legacy pickle file found: {legacy_path}. "
+                "For security reasons, pickle files are no longer supported. "
+                "Please re-save golden values using the new format."
+            )
+        else:
             return None
         
-        with open(value_path, 'rb') as f:
-            return pickle.load(f)
+        # Reconstruct GoldenValue from index metadata
+        meta = self._index.get(name, {})
+        return GoldenValue(
+            name=name,
+            value=value,
+            value_hash=meta.get('value_hash', ''),
+            created_at=meta.get('created_at', time.time()),
+            version=meta.get('version', '1.0'),
+            metadata=meta.get('metadata', {}),
+        )
     
     def exists(self, name: str) -> bool:
         """Check if a golden value exists."""

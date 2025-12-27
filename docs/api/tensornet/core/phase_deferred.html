@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.core.phase_deferred API documentation</title>
+<meta name="description" content="Phase-Deferred Error System
+…">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.core.phase_deferred</code></h1>
+</header>
+<section id="section-intro">
+<h1 id="phase-deferred-error-system">Phase-Deferred Error System</h1>
+<p>Provides explicit marking of intentionally deferred functionality,
+replacing generic NotImplementedError with auditable phase tracking.</p>
+<p>This enables:
+- Clear visibility into what is implemented vs. deferred
+- Explicit dependency tracking between features
+- Automatic documentation of the implementation roadmap
+- Reviewer confidence that stubs are deliberate, not forgotten</p>
+<h2 id="usage">Usage</h2>
+<p>raise PhaseDeferredError(
+phase="24",
+reason="Adjoint gradient support",
+depends_on=["stable TDVP-CFD", "validated WENO-TT"]
+)</p>
+<p>Constitution Compliance: Article I (Transparency), Article III (Honesty)</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.core.phase_deferred.adjoint_not_implemented"><code class="name flex">
+<span>def <span class="ident">adjoint_not_implemented</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def adjoint_not_implemented():
+    &#34;&#34;&#34;Standard deferred error for adjoint gradients.&#34;&#34;&#34;
+    return PhaseDeferredError(
+        phase=&#34;24&#34;,
+        reason=&#34;Adjoint gradient computation&#34;,
+        depends_on=[&#34;stable forward solver&#34;, &#34;memory-efficient checkpointing&#34;],
+        ticket=&#34;HYPER-101&#34;
+    )</code></pre>
+</details>
+<div class="desc"><p>Standard deferred error for adjoint gradients.</p></div>
+</dd>
+<dt id="tensornet.core.phase_deferred.hardware_not_implemented"><code class="name flex">
+<span>def <span class="ident">hardware_not_implemented</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hardware_not_implemented():
+    &#34;&#34;&#34;Standard deferred error for hardware-specific optimization.&#34;&#34;&#34;
+    return PhaseDeferredError(
+        phase=&#34;25&#34;,
+        reason=&#34;Hardware-specific optimization&#34;,
+        depends_on=[&#34;GPU backend validated&#34;, &#34;memory profiling complete&#34;],
+        ticket=&#34;HYPER-103&#34;
+    )</code></pre>
+</details>
+<div class="desc"><p>Standard deferred error for hardware-specific optimization.</p></div>
+</dd>
+<dt id="tensornet.core.phase_deferred.phase_24_deferred"><code class="name flex">
+<span>def <span class="ident">phase_24_deferred</span></span>(<span>feature: str, depends_on: Optional[List[str]] = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phase_24_deferred(feature: str, depends_on: Optional[List[str]] = None):
+    &#34;&#34;&#34;Helper for Phase 24 deferred features.&#34;&#34;&#34;
+    return PhaseDeferredError(
+        phase=&#34;24&#34;,
+        reason=feature,
+        depends_on=depends_on or [&#34;stable TDVP-CFD&#34;, &#34;validated WENO-TT&#34;]
+    )</code></pre>
+</details>
+<div class="desc"><p>Helper for Phase 24 deferred features.</p></div>
+</dd>
+<dt id="tensornet.core.phase_deferred.phase_25_deferred"><code class="name flex">
+<span>def <span class="ident">phase_25_deferred</span></span>(<span>feature: str, depends_on: Optional[List[str]] = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phase_25_deferred(feature: str, depends_on: Optional[List[str]] = None):
+    &#34;&#34;&#34;Helper for Phase 25 deferred features.&#34;&#34;&#34;
+    return PhaseDeferredError(
+        phase=&#34;25&#34;, 
+        reason=feature,
+        depends_on=depends_on or [&#34;Phase 24 complete&#34;, &#34;hardware validation&#34;]
+    )</code></pre>
+</details>
+<div class="desc"><p>Helper for Phase 25 deferred features.</p></div>
+</dd>
+<dt id="tensornet.core.phase_deferred.phase_deferred"><code class="name flex">
+<span>def <span class="ident">phase_deferred</span></span>(<span>phase: str, reason: str, depends_on: Optional[List[str]] = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phase_deferred(phase: str, reason: str, depends_on: Optional[List[str]] = None):
+    &#34;&#34;&#34;
+    Decorator to mark a method as phase-deferred.
+    
+    Usage:
+        @phase_deferred(&#34;24&#34;, &#34;Adjoint gradients&#34;, [&#34;forward solver&#34;])
+        def compute_adjoint(self):
+            ...
+    &#34;&#34;&#34;
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            raise PhaseDeferredError(
+                phase=phase,
+                reason=f&#34;{func.__name__}: {reason}&#34;,
+                depends_on=depends_on or []
+            )
+        wrapper.__name__ = func.__name__
+        wrapper.__doc__ = f&#34;[Phase {phase} Deferred] {reason}\n\n{func.__doc__ or &#39;&#39;}&#34;
+        wrapper._phase_deferred = True
+        wrapper._phase = phase
+        wrapper._reason = reason
+        return wrapper
+    return decorator</code></pre>
+</details>
+<div class="desc"><p>Decorator to mark a method as phase-deferred.</p>
+<h2 id="usage">Usage</h2>
+<p>@phase_deferred("24", "Adjoint gradients", ["forward solver"])
+def compute_adjoint(self):
+&hellip;</p></div>
+</dd>
+<dt id="tensornet.core.phase_deferred.realtime_not_implemented"><code class="name flex">
+<span>def <span class="ident">realtime_not_implemented</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def realtime_not_implemented():
+    &#34;&#34;&#34;Standard deferred error for real-time guarantees.&#34;&#34;&#34;
+    return PhaseDeferredError(
+        phase=&#34;25&#34;,
+        reason=&#34;Real-time execution guarantees&#34;,
+        depends_on=[&#34;Jetson validation&#34;, &#34;WCET analysis&#34;],
+        ticket=&#34;HYPER-102&#34;
+    )</code></pre>
+</details>
+<div class="desc"><p>Standard deferred error for real-time guarantees.</p></div>
+</dd>
+<dt id="tensornet.core.phase_deferred.register_deferred"><code class="name flex">
+<span>def <span class="ident">register_deferred</span></span>(<span>error: <a title="tensornet.core.phase_deferred.PhaseDeferredError" href="#tensornet.core.phase_deferred.PhaseDeferredError">PhaseDeferredError</a>,<br>location: Optional[str] = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def register_deferred(error: PhaseDeferredError, location: Optional[str] = None):
+    &#34;&#34;&#34;
+    Register a deferred feature and raise the error.
+    
+    Usage:
+        register_deferred(
+            PhaseDeferredError(phase=&#34;24&#34;, reason=&#34;Feature X&#34;),
+            location=&#34;tensornet/module.py:123&#34;
+        )
+    &#34;&#34;&#34;
+    if location is None:
+        # Auto-detect location
+        frame = sys._getframe(1)
+        location = f&#34;{frame.f_code.co_filename}:{frame.f_lineno}&#34;
+    
+    DeferredFeatureRegistry.register(error, location)
+    raise error</code></pre>
+</details>
+<div class="desc"><p>Register a deferred feature and raise the error.</p>
+<h2 id="usage">Usage</h2>
+<p>register_deferred(
+PhaseDeferredError(phase="24", reason="Feature X"),
+location="tensornet/module.py:123"
+)</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.core.phase_deferred.DeferredFeatureRegistry"><code class="flex name class">
+<span>class <span class="ident">DeferredFeatureRegistry</span></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DeferredFeatureRegistry:
+    &#34;&#34;&#34;
+    Central registry of all phase-deferred features.
+    
+    Used by generate_truth_boundary.py to auto-document
+    what is implemented vs. deferred.
+    &#34;&#34;&#34;
+    
+    _instance = None
+    _features: List[dict] = []
+    
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._features = []
+        return cls._instance
+    
+    @classmethod
+    def register(cls, error: PhaseDeferredError, location: str):
+        &#34;&#34;&#34;Register a deferred feature.&#34;&#34;&#34;
+        cls._features.append({
+            **error.to_dict(),
+            &#39;location&#39;: location,
+        })
+    
+    @classmethod
+    def get_all(cls) -&gt; List[dict]:
+        &#34;&#34;&#34;Get all registered features.&#34;&#34;&#34;
+        return cls._features.copy()
+    
+    @classmethod
+    def get_by_phase(cls, phase: str) -&gt; List[dict]:
+        &#34;&#34;&#34;Get features for a specific phase.&#34;&#34;&#34;
+        return [f for f in cls._features if f[&#39;phase&#39;] == phase]
+    
+    @classmethod
+    def to_json(cls) -&gt; str:
+        &#34;&#34;&#34;Export registry as JSON.&#34;&#34;&#34;
+        return json.dumps(cls._features, indent=2)
+    
+    @classmethod
+    def clear(cls):
+        &#34;&#34;&#34;Clear registry (for testing).&#34;&#34;&#34;
+        cls._features = []</code></pre>
+</details>
+<div class="desc"><p>Central registry of all phase-deferred features.</p>
+<p>Used by generate_truth_boundary.py to auto-document
+what is implemented vs. deferred.</p></div>
+<h3>Static methods</h3>
+<dl>
+<dt id="tensornet.core.phase_deferred.DeferredFeatureRegistry.clear"><code class="name flex">
+<span>def <span class="ident">clear</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Clear registry (for testing).</p></div>
+</dd>
+<dt id="tensornet.core.phase_deferred.DeferredFeatureRegistry.get_all"><code class="name flex">
+<span>def <span class="ident">get_all</span></span>(<span>) ‑> List[dict]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get all registered features.</p></div>
+</dd>
+<dt id="tensornet.core.phase_deferred.DeferredFeatureRegistry.get_by_phase"><code class="name flex">
+<span>def <span class="ident">get_by_phase</span></span>(<span>phase: str) ‑> List[dict]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get features for a specific phase.</p></div>
+</dd>
+<dt id="tensornet.core.phase_deferred.DeferredFeatureRegistry.register"><code class="name flex">
+<span>def <span class="ident">register</span></span>(<span>error: <a title="tensornet.core.phase_deferred.PhaseDeferredError" href="#tensornet.core.phase_deferred.PhaseDeferredError">PhaseDeferredError</a>,<br>location: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Register a deferred feature.</p></div>
+</dd>
+<dt id="tensornet.core.phase_deferred.DeferredFeatureRegistry.to_json"><code class="name flex">
+<span>def <span class="ident">to_json</span></span>(<span>) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Export registry as JSON.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.core.phase_deferred.PhaseDeferredError"><code class="flex name class">
+<span>class <span class="ident">PhaseDeferredError</span></span>
+<span>(</span><span>phase: str,<br>reason: str,<br>depends_on: List[str] = &lt;factory&gt;,<br>ticket: Optional[str] = None,<br>eta: Optional[str] = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class PhaseDeferredError(Exception):
+    &#34;&#34;&#34;
+    Raised when functionality is intentionally deferred to a future phase.
+    
+    This is NOT a bug or missing implementation - it&#39;s a deliberate
+    architectural decision to defer complexity.
+    
+    Attributes:
+        phase: The phase number where this will be implemented (e.g., &#34;24&#34;, &#34;25&#34;)
+        reason: Human-readable explanation of what is deferred
+        depends_on: List of features that must be complete first
+        ticket: Optional issue/ticket reference
+        eta: Optional estimated completion
+    &#34;&#34;&#34;
+    phase: str
+    reason: str
+    depends_on: List[str] = field(default_factory=list)
+    ticket: Optional[str] = None
+    eta: Optional[str] = None
+    
+    def __post_init__(self):
+        # Build the message
+        msg_parts = [
+            f&#34;Phase {self.phase} deferred: {self.reason}&#34;,
+        ]
+        if self.depends_on:
+            msg_parts.append(f&#34;Dependencies: {&#39;, &#39;.join(self.depends_on)}&#34;)
+        if self.ticket:
+            msg_parts.append(f&#34;Ticket: {self.ticket}&#34;)
+        if self.eta:
+            msg_parts.append(f&#34;ETA: {self.eta}&#34;)
+        
+        super().__init__(&#39;\n&#39;.join(msg_parts))
+    
+    def to_dict(self) -&gt; dict:
+        &#34;&#34;&#34;Convert to dictionary for serialization.&#34;&#34;&#34;
+        return {
+            &#39;phase&#39;: self.phase,
+            &#39;reason&#39;: self.reason,
+            &#39;depends_on&#39;: self.depends_on,
+            &#39;ticket&#39;: self.ticket,
+            &#39;eta&#39;: self.eta,
+        }
+    
+    @classmethod
+    def from_dict(cls, data: dict) -&gt; &#39;PhaseDeferredError&#39;:
+        &#34;&#34;&#34;Create from dictionary.&#34;&#34;&#34;
+        return cls(
+            phase=data[&#39;phase&#39;],
+            reason=data[&#39;reason&#39;],
+            depends_on=data.get(&#39;depends_on&#39;, []),
+            ticket=data.get(&#39;ticket&#39;),
+            eta=data.get(&#39;eta&#39;),
+        )</code></pre>
+</details>
+<div class="desc"><p>Raised when functionality is intentionally deferred to a future phase.</p>
+<p>This is NOT a bug or missing implementation - it's a deliberate
+architectural decision to defer complexity.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>phase</code></strong></dt>
+<dd>The phase number where this will be implemented (e.g., "24", "25")</dd>
+<dt><strong><code>reason</code></strong></dt>
+<dd>Human-readable explanation of what is deferred</dd>
+<dt><strong><code>depends_on</code></strong></dt>
+<dd>List of features that must be complete first</dd>
+<dt><strong><code>ticket</code></strong></dt>
+<dd>Optional issue/ticket reference</dd>
+<dt><strong><code>eta</code></strong></dt>
+<dd>Optional estimated completion</dd>
+</dl></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="tensornet.core.phase_deferred.PhaseDeferredError.from_dict"><code class="name flex">
+<span>def <span class="ident">from_dict</span></span>(<span>data: dict) ‑> <a title="tensornet.core.phase_deferred.PhaseDeferredError" href="#tensornet.core.phase_deferred.PhaseDeferredError">PhaseDeferredError</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create from dictionary.</p></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.core.phase_deferred.PhaseDeferredError.depends_on"><code class="name">var <span class="ident">depends_on</span> : List[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.core.phase_deferred.PhaseDeferredError.eta"><code class="name">var <span class="ident">eta</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.core.phase_deferred.PhaseDeferredError.phase"><code class="name">var <span class="ident">phase</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.core.phase_deferred.PhaseDeferredError.reason"><code class="name">var <span class="ident">reason</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.core.phase_deferred.PhaseDeferredError.ticket"><code class="name">var <span class="ident">ticket</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.core.phase_deferred.PhaseDeferredError.to_dict"><code class="name flex">
+<span>def <span class="ident">to_dict</span></span>(<span>self) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_dict(self) -&gt; dict:
+    &#34;&#34;&#34;Convert to dictionary for serialization.&#34;&#34;&#34;
+    return {
+        &#39;phase&#39;: self.phase,
+        &#39;reason&#39;: self.reason,
+        &#39;depends_on&#39;: self.depends_on,
+        &#39;ticket&#39;: self.ticket,
+        &#39;eta&#39;: self.eta,
+    }</code></pre>
+</details>
+<div class="desc"><p>Convert to dictionary for serialization.</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#phase-deferred-error-system">Phase-Deferred Error System</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.core" href="index.html">tensornet.core</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.core.phase_deferred.adjoint_not_implemented" href="#tensornet.core.phase_deferred.adjoint_not_implemented">adjoint_not_implemented</a></code></li>
+<li><code><a title="tensornet.core.phase_deferred.hardware_not_implemented" href="#tensornet.core.phase_deferred.hardware_not_implemented">hardware_not_implemented</a></code></li>
+<li><code><a title="tensornet.core.phase_deferred.phase_24_deferred" href="#tensornet.core.phase_deferred.phase_24_deferred">phase_24_deferred</a></code></li>
+<li><code><a title="tensornet.core.phase_deferred.phase_25_deferred" href="#tensornet.core.phase_deferred.phase_25_deferred">phase_25_deferred</a></code></li>
+<li><code><a title="tensornet.core.phase_deferred.phase_deferred" href="#tensornet.core.phase_deferred.phase_deferred">phase_deferred</a></code></li>
+<li><code><a title="tensornet.core.phase_deferred.realtime_not_implemented" href="#tensornet.core.phase_deferred.realtime_not_implemented">realtime_not_implemented</a></code></li>
+<li><code><a title="tensornet.core.phase_deferred.register_deferred" href="#tensornet.core.phase_deferred.register_deferred">register_deferred</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.core.phase_deferred.DeferredFeatureRegistry" href="#tensornet.core.phase_deferred.DeferredFeatureRegistry">DeferredFeatureRegistry</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.core.phase_deferred.DeferredFeatureRegistry.clear" href="#tensornet.core.phase_deferred.DeferredFeatureRegistry.clear">clear</a></code></li>
+<li><code><a title="tensornet.core.phase_deferred.DeferredFeatureRegistry.get_all" href="#tensornet.core.phase_deferred.DeferredFeatureRegistry.get_all">get_all</a></code></li>
+<li><code><a title="tensornet.core.phase_deferred.DeferredFeatureRegistry.get_by_phase" href="#tensornet.core.phase_deferred.DeferredFeatureRegistry.get_by_phase">get_by_phase</a></code></li>
+<li><code><a title="tensornet.core.phase_deferred.DeferredFeatureRegistry.register" href="#tensornet.core.phase_deferred.DeferredFeatureRegistry.register">register</a></code></li>
+<li><code><a title="tensornet.core.phase_deferred.DeferredFeatureRegistry.to_json" href="#tensornet.core.phase_deferred.DeferredFeatureRegistry.to_json">to_json</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.core.phase_deferred.PhaseDeferredError" href="#tensornet.core.phase_deferred.PhaseDeferredError">PhaseDeferredError</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.core.phase_deferred.PhaseDeferredError.depends_on" href="#tensornet.core.phase_deferred.PhaseDeferredError.depends_on">depends_on</a></code></li>
+<li><code><a title="tensornet.core.phase_deferred.PhaseDeferredError.eta" href="#tensornet.core.phase_deferred.PhaseDeferredError.eta">eta</a></code></li>
+<li><code><a title="tensornet.core.phase_deferred.PhaseDeferredError.from_dict" href="#tensornet.core.phase_deferred.PhaseDeferredError.from_dict">from_dict</a></code></li>
+<li><code><a title="tensornet.core.phase_deferred.PhaseDeferredError.phase" href="#tensornet.core.phase_deferred.PhaseDeferredError.phase">phase</a></code></li>
+<li><code><a title="tensornet.core.phase_deferred.PhaseDeferredError.reason" href="#tensornet.core.phase_deferred.PhaseDeferredError.reason">reason</a></code></li>
+<li><code><a title="tensornet.core.phase_deferred.PhaseDeferredError.ticket" href="#tensornet.core.phase_deferred.PhaseDeferredError.ticket">ticket</a></code></li>
+<li><code><a title="tensornet.core.phase_deferred.PhaseDeferredError.to_dict" href="#tensornet.core.phase_deferred.PhaseDeferredError.to_dict">to_dict</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

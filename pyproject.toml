@@ -41,6 +41,13 @@ dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
     "ruff>=0.1.0",
+    "mypy>=1.0",
+    "bandit>=1.7",
+    "detect-secrets>=1.4",
+    "twine>=5.0",
+    "build>=1.0",
+    "pdoc>=14.0",
+    "pre-commit>=3.0",
 ]
 viz = [
     "matplotlib>=3.7",
@@ -65,10 +72,20 @@ where = ["."]
 include = ["tensornet*"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "Physics/tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
-addopts = "-v --tb=short"
+pythonpath = ["."]
+addopts = "-v --tb=short -m 'not integration and not slow'"
+markers = [
+    "unit: mark test as a unit test (fast, isolated)",
+    "integration: mark test as an integration test (may be slow)",
+    "slow: mark test as slow (>5 seconds)",
+    "physics: mark test as a physics validation test",
+    "gpu: mark test as requiring GPU",
+    "rust: mark test as requiring Rust TCI extension",
+    "security: mark test as a security validation test",
+]
 filterwarnings = [
     "ignore::DeprecationWarning",
 ]
@@ -86,14 +103,26 @@ select = [
     "B",    # flake8-bugbear
     "C4",   # flake8-comprehensions
     "UP",   # pyupgrade
+    "S",    # flake8-bandit security
 ]
 ignore = [
     "E501",   # line too long (handled by formatter)
     "B008",   # function call in default argument
+    "S101",   # assert usage (allowed in tests)
+    "S311",   # pseudo-random generators (allowed for non-crypto)
 ]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101"]  # asserts OK in tests
+"benchmarks/**/*.py" = ["S101"]
+"proofs/**/*.py" = ["S101"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["tensornet"]
+
+# Security: Flag pickle usage as warning
+[tool.ruff.lint.flake8-bandit]
+check-typed-exception = true
 
 [tool.coverage.run]
 source = ["tensornet"]
@@ -106,3 +135,7 @@ exclude_lines = [
     "raise NotImplementedError",
     "if TYPE_CHECKING:",
 ]
+# Fail if coverage drops below threshold
+fail_under = 70
+show_missing = true
+skip_covered = true

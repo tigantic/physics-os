@@ -14,12 +14,14 @@ repos:
       # Formatting
       - id: ruff-format
 
-  # pytest - Run tests before commit
+  # pytest - Run fast tests before commit
+  # Note: Runs only unit tests to keep commits fast
+  # Full test suite should be run before pushing
   - repo: local
     hooks:
       - id: pytest
-        name: pytest
-        entry: pytest tests/ -q --tb=short
+        name: pytest (fast)
+        entry: pytest tests/ -q --tb=line -x -m "unit and not slow" --ignore=tests/integration
         language: system
         pass_filenames: false
         always_run: true

@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.qtt_2d_shift_native API documentation</title>
+<meta name="description" content="Native 2D Shift MPO - Correct Implementation …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.qtt_2d_shift_native</code></h1>
+</header>
+<section id="section-intro">
+<p>Native 2D Shift MPO - Correct Implementation</p>
+<p>The key insight: In Morton Z-curve, shifting X means adding +1 to the
+integer formed by bits 0, 2, 4&hellip; while Y bits (1, 3, 5&hellip;) pass through.</p>
+<p>MPO Structure (Rank 2):
+- State 0: No carry pending
+- State 1: Carry active</p>
+<p>For shift_x:
+- Even cores (X bits): Binary adder logic
+- Odd cores (Y bits): Wire that transports carry state</p>
+<p>The "+1" is injected via boundary condition on the LAST core (LSB in Little Endian).</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.qtt_2d_shift_native.apply_shift_mpo"><code class="name flex">
+<span>def <span class="ident">apply_shift_mpo</span></span>(<span>state: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>mpo: List[torch.Tensor],<br>max_rank: int = 64) ‑> <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def apply_shift_mpo(state: QTT2DState, mpo: List[torch.Tensor], 
+                    max_rank: int = 64) -&gt; QTT2DState:
+    &#34;&#34;&#34;
+    Apply shift MPO to QTT2D state.
+    
+    Contraction: new[ml*sl, d_out, mr*sr] = sum_{d_in} mpo[ml,d_out,d_in,mr] * state[sl,d_in,sr]
+    &#34;&#34;&#34;
+    new_cores = []
+    
+    for k in range(len(state.cores)):
+        s_core = state.cores[k]  # (sl, d_in, sr)
+        m_core = mpo[k]          # (ml, d_out, d_in, mr)
+        
+        sl, d_in, sr = s_core.shape
+        ml, d_out, d_in_m, mr = m_core.shape
+        
+        # Contract over d_in (physical input index)
+        # mpo[ml, d_out, d_in, mr] × state[sl, d_in, sr]
+        # → result[ml, d_out, mr, sl, sr] after contraction over d_in
+        # → reshape to (ml*sl, d_out, mr*sr)
+        
+        # Using einsum: &#39;aobm,lbr-&gt;alomr&#39; where b is contracted
+        result = torch.einsum(&#39;aobm,lbr-&gt;alomr&#39;, m_core, s_core)
+        
+        # Reshape: (ml, sl, d_out, mr, sr) → (ml*sl, d_out, mr*sr)
+        result = result.reshape(ml * sl, d_out, mr * sr)
+        
+        new_cores.append(result)
+    
+    # Build result state
+    result = QTT2DState(cores=new_cores, nx=state.nx, ny=state.ny)
+    
+    # Truncate via SVD
+    result = truncate_qtt2d(result, max_rank)
+    
+    return result</code></pre>
+</details>
+<div class="desc"><p>Apply shift MPO to QTT2D state.</p>
+<p>Contraction: new[ml<em>sl, d_out, mr</em>sr] = sum_{d_in} mpo[ml,d_out,d_in,mr] * state[sl,d_in,sr]</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d_shift_native.benchmark_native_vs_dense"><code class="name flex">
+<span>def <span class="ident">benchmark_native_vs_dense</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def benchmark_native_vs_dense():
+    &#34;&#34;&#34;Benchmark native shift vs dense round-trip.&#34;&#34;&#34;
+    print(&#34;\n&#34; + &#34;=&#34; * 60)
+    print(&#34;BENCHMARK: Native vs Dense Shift&#34;)
+    print(&#34;=&#34; * 60)
+    
+    import time
+    
+    results = []
+    
+    for n in [5, 6, 7, 8]:
+        nx, ny = n, n
+        Nx, Ny = 2**nx, 2**ny
+        n_qubits = 2 * max(nx, ny)
+        
+        # Simple field
+        field = torch.zeros(Nx, Ny, dtype=torch.float32)
+        field[Nx//4:3*Nx//4, Ny//4:3*Ny//4] = 1.0
+        
+        qtt = dense_to_qtt_2d(field, max_bond=32)
+        shift_x = make_interleaved_shift_mpo(n_qubits, axis=&#39;x&#39;)
+        
+        # Time native shift
+        n_iter = 10
+        start = time.perf_counter()
+        for _ in range(n_iter):
+            qtt_test = apply_shift_mpo(qtt, shift_x, max_rank=32)
+        native_time = (time.perf_counter() - start) / n_iter * 1000
+        
+        # Time dense round-trip
+        start = time.perf_counter()
+        for _ in range(n_iter):
+            dense = qtt_2d_to_dense(qtt)
+            shifted = torch.roll(dense, 1, dims=0)
+            qtt_test = dense_to_qtt_2d(shifted, max_bond=32)
+        dense_time = (time.perf_counter() - start) / n_iter * 1000
+        
+        speedup = dense_time / native_time
+        
+        results.append({
+            &#39;grid&#39;: f&#39;{Nx}×{Ny}&#39;,
+            &#39;points&#39;: Nx * Ny,
+            &#39;native_ms&#39;: native_time,
+            &#39;dense_ms&#39;: dense_time,
+            &#39;speedup&#39;: speedup
+        })
+    
+    print(f&#34;\n{&#39;Grid&#39;:&lt;12} {&#39;Points&#39;:&lt;10} {&#39;Native (ms)&#39;:&lt;12} {&#39;Dense (ms)&#39;:&lt;12} {&#39;Speedup&#39;:&lt;8}&#34;)
+    print(&#34;-&#34; * 60)
+    for r in results:
+        print(f&#34;{r[&#39;grid&#39;]:&lt;12} {r[&#39;points&#39;]:&lt;10,} {r[&#39;native_ms&#39;]:&lt;12.2f} {r[&#39;dense_ms&#39;]:&lt;12.2f} {r[&#39;speedup&#39;]:&lt;8.1f}×&#34;)
+    
+    print(&#34;-&#34; * 60)
+    print(&#34;Native shift avoids O(N) memory explosion!&#34;)</code></pre>
+</details>
+<div class="desc"><p>Benchmark native shift vs dense round-trip.</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d_shift_native.make_interleaved_shift_minus_mpo"><code class="name flex">
+<span>def <span class="ident">make_interleaved_shift_minus_mpo</span></span>(<span>n_qubits: int,<br>axis: str = 'x',<br>device: torch.device = None,<br>dtype: torch.dtype = torch.float32) ‑> List[torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_interleaved_shift_minus_mpo(
+    n_qubits: int, 
+    axis: str = &#39;x&#39;,
+    device: torch.device = None,
+    dtype: torch.dtype = torch.float32
+) -&gt; List[torch.Tensor]:
+    &#34;&#34;&#34;
+    Creates a Rank-2 MPO that shifts a 2D Morton-ordered QTT state by -1.
+    
+    This implements binary subtraction instead of addition.
+    Uses borrow propagation (similar to carry for addition).
+    
+    Binary subtraction (sub 1):
+    - 0 - 1 (with no borrow) = 1, borrow out
+    - 1 - 1 (with no borrow) = 0, no borrow
+    - 0 - 0 (with borrow) = 1, borrow out  
+    - 1 - 0 (with borrow) = 0, no borrow
+    
+    Args:
+        n_qubits: Total number of physical qubits
+        axis: &#39;x&#39; or &#39;y&#39;
+        
+    Returns:
+        List of MPO cores
+    &#34;&#34;&#34;
+    if device is None:
+        device = torch.device(&#39;cpu&#39;)
+    
+    cores = []
+    target_mod = 1 if axis == &#39;x&#39; else 0
+    
+    for k in range(n_qubits):
+        core = torch.zeros(2, 2, 2, 2, device=device, dtype=dtype)
+        
+        is_active = (k % 2 == target_mod)
+        
+        if is_active:
+            # === SUBTRACTION LOGIC ===
+            # Borrow comes in via r_right, goes out via r_left
+            # State 0 = no borrow, State 1 = borrow pending
+            
+            # CASE A: No Borrow In (r_right=0) -&gt; Output same as Input
+            core[0, 0, 0, 0] = 1  # 0 -&gt; 0, no borrow out
+            core[0, 1, 1, 0] = 1  # 1 -&gt; 1, no borrow out
+            
+            # CASE B: Borrow In (r_right=1) -&gt; Subtract 1 from this bit
+            core[0, 0, 1, 1] = 1  # 1 - 1 = 0, borrow stops (r_left=0)
+            core[1, 1, 0, 1] = 1  # 0 - 1 = 1, borrow continues (r_left=1)
+            
+        else:
+            # === PASSTHROUGH LOGIC ===
+            core[0, 0, 0, 0] = 1
+            core[0, 1, 1, 0] = 1
+            core[1, 0, 0, 1] = 1
+            core[1, 1, 1, 1] = 1
+
+        cores.append(core)
+
+    # === BOUNDARY CONDITIONS ===
+    # Core N-1 (LSB): Inject -1 by forcing borrow_in = 1 (r_right = 1)
+    cores[-1] = cores[-1][:, :, :, 1:2]  # Shape: (2, 2, 2, 1)
+    
+    # Core 0 (MSB): Absorb underflow (wraps around for periodic BC)
+    cores[0] = cores[0][0:1, :, :, :]  # Shape: (1, 2, 2, 2)
+    
+    return cores</code></pre>
+</details>
+<div class="desc"><p>Creates a Rank-2 MPO that shifts a 2D Morton-ordered QTT state by -1.</p>
+<p>This implements binary subtraction instead of addition.
+Uses borrow propagation (similar to carry for addition).</p>
+<p>Binary subtraction (sub 1):
+- 0 - 1 (with no borrow) = 1, borrow out
+- 1 - 1 (with no borrow) = 0, no borrow
+- 0 - 0 (with borrow) = 1, borrow out<br>
+- 1 - 0 (with borrow) = 0, no borrow</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>n_qubits</code></strong></dt>
+<dd>Total number of physical qubits</dd>
+<dt><strong><code>axis</code></strong></dt>
+<dd>'x' or 'y'</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>List of MPO cores</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d_shift_native.make_interleaved_shift_mpo"><code class="name flex">
+<span>def <span class="ident">make_interleaved_shift_mpo</span></span>(<span>n_qubits: int,<br>axis: str = 'x',<br>device: torch.device = None,<br>dtype: torch.dtype = torch.float32) ‑> List[torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_interleaved_shift_mpo(
+    n_qubits: int, 
+    axis: str = &#39;x&#39;,
+    device: torch.device = None,
+    dtype: torch.dtype = torch.float32
+) -&gt; List[torch.Tensor]:
+    &#34;&#34;&#34;
+    Creates a Rank-2 MPO that shifts a 2D Morton-ordered QTT state by +1.
+    
+    Our QTT convention: Core 0 = MSB, Core N-1 = LSB
+    Binary addition starts at LSB and carries toward MSB.
+    
+    Since MPO bonds flow left→right (0→N-1) but carry needs to flow right→left (N-1→0),
+    we reverse the indexing: r_right carries the &#34;incoming&#34; carry from the previous 
+    (higher-indexed) core, and r_left outputs to the next (lower-indexed) core.
+    
+    Args:
+        n_qubits: Total number of physical qubits (2 * logical_qubits)
+        axis: &#39;x&#39; (shifts even bits) or &#39;y&#39; (shifts odd bits).
+        
+    Returns:
+        List of MPO cores
+    &#34;&#34;&#34;
+    if device is None:
+        device = torch.device(&#39;cpu&#39;)
+    
+    cores = []
+    
+    # QTT convention: Core 0 = MSB (bit n-1), Core n-1 = LSB (bit 0)
+    # Morton bits: bit 0 = x0, bit 1 = y0, bit 2 = x1, bit 3 = y1, ...
+    # X bits (0, 2, 4...) are stored in cores (n-1, n-3, n-5...) = ODD indices from end
+    # Y bits (1, 3, 5...) are stored in cores (n-2, n-4, n-6...) = EVEN indices from end
+    # 
+    # For n_qubits=4: 
+    #   Core 3 = bit 0 = x0 (odd index from end: 4-1-3=0, but core index 3 is odd)
+    #   Core 2 = bit 1 = y0
+    #   Core 1 = bit 2 = x1
+    #   Core 0 = bit 3 = y1
+    # X bits at cores 3, 1 (odd indices) -&gt; active when k % 2 == 1
+    # Y bits at cores 2, 0 (even indices) -&gt; active when k % 2 == 0
+    
+    # Corrected: x targets ODD cores, y targets EVEN cores
+    target_mod = 1 if axis == &#39;x&#39; else 0
+    
+    for k in range(n_qubits):
+        # MPO Core Shape: [Rank_L, Phys_Out, Phys_In, Rank_R]
+        # But we reverse the carry direction:
+        # Rank_R = carry input (from higher-indexed core / LSB side)
+        # Rank_L = carry output (to lower-indexed core / MSB side)
+        core = torch.zeros(2, 2, 2, 2, device=device, dtype=dtype)
+        
+        is_active = (k % 2 == target_mod)
+        
+        if is_active:
+            # === ACTIVE LOGIC (Binary Adder) ===
+            # Carry comes in via r_right, goes out via r_left
+            
+            # CASE A: No Carry In (r_right=0) -&gt; Output same as Input
+            core[0, 0, 0, 0] = 1  # 0 -&gt; 0, no carry out
+            core[0, 1, 1, 0] = 1  # 1 -&gt; 1, no carry out
+            
+            # CASE B: Carry In (r_right=1) -&gt; Add 1 to this bit
+            core[0, 1, 0, 1] = 1  # 0 + 1 = 1, carry stops (r_left=0)
+            core[1, 0, 1, 1] = 1  # 1 + 1 = 0, carry continues (r_left=1)
+            
+        else:
+            # === PASSTHROUGH LOGIC ===
+            # Pass through value unchanged, propagate carry state
+            core[0, 0, 0, 0] = 1  # no carry in, no carry out
+            core[0, 1, 1, 0] = 1
+            core[1, 0, 0, 1] = 1  # carry in, carry out
+            core[1, 1, 1, 1] = 1
+
+        cores.append(core)
+
+    # === BOUNDARY CONDITIONS ===
+    # Core N-1 (LSB): Inject +1 by forcing carry_in = 1 (r_right = 1)
+    cores[-1] = cores[-1][:, :, :, 1:2]  # Shape: (2, 2, 2, 1)
+    
+    # Core 0 (MSB): Absorb overflow (no external carry out)
+    cores[0] = cores[0][0:1, :, :, :]  # Shape: (1, 2, 2, 2)
+    
+    return cores</code></pre>
+</details>
+<div class="desc"><p>Creates a Rank-2 MPO that shifts a 2D Morton-ordered QTT state by +1.</p>
+<p>Our QTT convention: Core 0 = MSB, Core N-1 = LSB
+Binary addition starts at LSB and carries toward MSB.</p>
+<p>Since MPO bonds flow left→right (0→N-1) but carry needs to flow right→left (N-1→0),
+we reverse the indexing: r_right carries the "incoming" carry from the previous
+(higher-indexed) core, and r_left outputs to the next (lower-indexed) core.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>n_qubits</code></strong></dt>
+<dd>Total number of physical qubits (2 * logical_qubits)</dd>
+<dt><strong><code>axis</code></strong></dt>
+<dd>'x' (shifts even bits) or 'y' (shifts odd bits).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>List of MPO cores</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d_shift_native.test_advection_native"><code class="name flex">
+<span>def <span class="ident">test_advection_native</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def test_advection_native():
+    &#34;&#34;&#34;Test advection using native shift (no dense round-trip in hot path).&#34;&#34;&#34;
+    print(&#34;\n&#34; + &#34;=&#34; * 60)
+    print(&#34;NATIVE ADVECTION TEST: Gaussian Blob&#34;)
+    print(&#34;=&#34; * 60)
+    
+    nx, ny = 6, 6  # 64×64 grid
+    Nx, Ny = 2**nx, 2**ny
+    n_qubits = 2 * max(nx, ny)
+    
+    # Gaussian blob
+    x = torch.linspace(0, 1, Nx, dtype=torch.float32)
+    y = torch.linspace(0, 1, Ny, dtype=torch.float32)
+    X, Y = torch.meshgrid(x, y, indexing=&#39;ij&#39;)
+    
+    x0, y0 = 0.25, 0.25
+    sigma = 0.08
+    gaussian = torch.exp(-((X - x0)**2 + (Y - y0)**2) / (2 * sigma**2))
+    
+    print(f&#34;Grid: {Nx}×{Ny}&#34;)
+    print(f&#34;Initial center: ({x0}, {y0})&#34;)
+    
+    qtt = dense_to_qtt_2d(gaussian, max_bond=32)
+    print(f&#34;Initial rank: {qtt.max_rank}&#34;)
+    
+    # Build MPOs once (cache for reuse)
+    shift_x = make_interleaved_shift_mpo(n_qubits, axis=&#39;x&#39;)
+    shift_y = make_interleaved_shift_mpo(n_qubits, axis=&#39;y&#39;)
+    
+    # Advect: 10 steps of (+X, +Y)
+    n_steps = 10
+    for step in range(n_steps):
+        qtt = apply_shift_mpo(qtt, shift_x, max_rank=48)
+        qtt = apply_shift_mpo(qtt, shift_y, max_rank=48)
+    
+    print(f&#34;After {n_steps} steps, rank: {qtt.max_rank}&#34;)
+    
+    # Check position
+    result = qtt_2d_to_dense(qtt)
+    weights = result / (result.sum() + 1e-10)
+    cx = (weights * X).sum().item()
+    cy = (weights * Y).sum().item()
+    
+    dx = n_steps / Nx
+    expected_cx = x0 + dx
+    expected_cy = y0 + dx
+    
+    print(f&#34;\nCenter: ({cx:.3f}, {cy:.3f})&#34;)
+    print(f&#34;Expected: ({expected_cx:.3f}, {expected_cy:.3f})&#34;)
+    
+    err = abs(cx - expected_cx) + abs(cy - expected_cy)
+    print(f&#34;Position error: {err:.4f}&#34;)
+    
+    success = err &lt; 0.1
+    print(f&#34;Status: {&#39;✅ PASS&#39; if success else &#39;❌ FAIL&#39;}&#34;)
+    
+    return success</code></pre>
+</details>
+<div class="desc"><p>Test advection using native shift (no dense round-trip in hot path).</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d_shift_native.test_shift_single_point"><code class="name flex">
+<span>def <span class="ident">test_shift_single_point</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def test_shift_single_point():
+    &#34;&#34;&#34;Test shift on a single point - the most basic test.&#34;&#34;&#34;
+    print(&#34;=&#34; * 60)
+    print(&#34;NATIVE SHIFT TEST: Single Point&#34;)
+    print(&#34;=&#34; * 60)
+    
+    nx, ny = 3, 3  # 8×8 grid (small for debugging)
+    Nx, Ny = 2**nx, 2**ny
+    n_qubits = 2 * max(nx, ny)
+    
+    # Single point at (2, 3)
+    field = torch.zeros(Nx, Ny, dtype=torch.float32)
+    field[2, 3] = 1.0
+    
+    print(f&#34;Grid: {Nx}×{Ny}, Qubits: {n_qubits}&#34;)
+    print(f&#34;Point at: (2, 3)&#34;)
+    
+    # Compress
+    qtt = dense_to_qtt_2d(field, max_bond=16)
+    print(f&#34;Initial rank: {qtt.max_rank}&#34;)
+    
+    # Build shift-X MPO
+    shift_x = make_interleaved_shift_mpo(n_qubits, axis=&#39;x&#39;)
+    
+    print(f&#34;\nShift-X MPO shapes:&#34;)
+    for i, core in enumerate(shift_x):
+        axis = &#39;X&#39; if i % 2 == 0 else &#39;Y&#39;
+        print(f&#34;  Core {i} ({axis}): {core.shape}&#34;)
+    
+    # Apply shift
+    qtt_shifted = apply_shift_mpo(qtt, shift_x, max_rank=32)
+    
+    # Decompress
+    shifted = qtt_2d_to_dense(qtt_shifted)
+    
+    # Find the point
+    max_idx = shifted.argmax()
+    new_x, new_y = max_idx // Ny, max_idx % Ny
+    
+    print(f&#34;\nAfter shift +X:&#34;)
+    print(f&#34;  Point moved to: ({new_x.item()}, {new_y.item()})&#34;)
+    print(f&#34;  Expected: (3, 3)&#34;)
+    
+    # Check
+    expected_x, expected_y = 3, 3
+    success = (new_x.item() == expected_x and new_y.item() == expected_y)
+    print(f&#34;  Status: {&#39;✅ PASS&#39; if success else &#39;❌ FAIL&#39;}&#34;)
+    
+    return success</code></pre>
+</details>
+<div class="desc"><p>Test shift on a single point - the most basic test.</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d_shift_native.test_shift_square"><code class="name flex">
+<span>def <span class="ident">test_shift_square</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def test_shift_square():
+    &#34;&#34;&#34;Test shift on a square pattern.&#34;&#34;&#34;
+    print(&#34;\n&#34; + &#34;=&#34; * 60)
+    print(&#34;NATIVE SHIFT TEST: Square Pattern&#34;)
+    print(&#34;=&#34; * 60)
+    
+    nx, ny = 4, 4  # 16×16 grid
+    Nx, Ny = 2**nx, 2**ny
+    n_qubits = 2 * max(nx, ny)
+    
+    # Square at (4:8, 4:8)
+    field = torch.zeros(Nx, Ny, dtype=torch.float32)
+    field[4:8, 4:8] = 1.0
+    
+    print(f&#34;Grid: {Nx}×{Ny}&#34;)
+    print(f&#34;Square at x=[4,8), y=[4,8)&#34;)
+    
+    qtt = dense_to_qtt_2d(field, max_bond=16)
+    
+    # Test shift X
+    shift_x = make_interleaved_shift_mpo(n_qubits, axis=&#39;x&#39;)
+    qtt_x = apply_shift_mpo(qtt, shift_x, max_rank=32)
+    shifted_x = qtt_2d_to_dense(qtt_x)
+    
+    expected_x = torch.roll(field, shifts=1, dims=0)
+    err_x = (shifted_x - expected_x).abs().max().item()
+    
+    # Test shift Y
+    shift_y = make_interleaved_shift_mpo(n_qubits, axis=&#39;y&#39;)
+    qtt_y = apply_shift_mpo(qtt, shift_y, max_rank=32)
+    shifted_y = qtt_2d_to_dense(qtt_y)
+    
+    expected_y = torch.roll(field, shifts=1, dims=1)
+    err_y = (shifted_y - expected_y).abs().max().item()
+    
+    print(f&#34;\nShift-X error: {err_x:.2e}&#34;)
+    print(f&#34;Shift-Y error: {err_y:.2e}&#34;)
+    
+    success_x = err_x &lt; 0.1
+    success_y = err_y &lt; 0.1
+    
+    print(f&#34;Shift-X: {&#39;✅ PASS&#39; if success_x else &#39;❌ FAIL&#39;}&#34;)
+    print(f&#34;Shift-Y: {&#39;✅ PASS&#39; if success_y else &#39;❌ FAIL&#39;}&#34;)
+    
+    return success_x and success_y</code></pre>
+</details>
+<div class="desc"><p>Test shift on a square pattern.</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d_shift_native.truncate_qtt2d"><code class="name flex">
+<span>def <span class="ident">truncate_qtt2d</span></span>(<span>state: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>max_rank: int) ‑> <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def truncate_qtt2d(state: QTT2DState, max_rank: int) -&gt; QTT2DState:
+    &#34;&#34;&#34;Left-to-right SVD truncation sweep.&#34;&#34;&#34;
+    cores = [c.clone() for c in state.cores]
+    n = len(cores)
+    
+    for k in range(n - 1):
+        core = cores[k]
+        r_left, d, r_right = core.shape
+        
+        # Reshape to matrix
+        mat = core.reshape(r_left * d, r_right)
+        
+        # SVD
+        try:
+            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+        except:
+            continue
+        
+        # Determine rank
+        rank = min(len(S), max_rank)
+        
+        # Threshold small singular values
+        if len(S) &gt; 0 and S[0] &gt; 0:
+            threshold = 1e-12 * S[0].item()
+            valid = (S &gt; threshold).sum().item()
+            rank = min(rank, max(valid, 1))
+        
+        # Truncate
+        U = U[:, :rank]
+        S = S[:rank]
+        Vh = Vh[:rank, :]
+        
+        # Update current core
+        cores[k] = U.reshape(r_left, d, rank)
+        
+        # Absorb S @ Vh into next core
+        SV = torch.diag(S) @ Vh
+        
+        next_core = cores[k + 1]
+        r_right_old, d_next, r_right_next = next_core.shape
+        
+        next_flat = next_core.reshape(r_right_old, d_next * r_right_next)
+        cores[k + 1] = (SV @ next_flat).reshape(rank, d_next, r_right_next)
+    
+    return QTT2DState(cores=cores, nx=state.nx, ny=state.ny)</code></pre>
+</details>
+<div class="desc"><p>Left-to-right SVD truncation sweep.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.qtt_2d_shift_native.apply_shift_mpo" href="#tensornet.cfd.qtt_2d_shift_native.apply_shift_mpo">apply_shift_mpo</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d_shift_native.benchmark_native_vs_dense" href="#tensornet.cfd.qtt_2d_shift_native.benchmark_native_vs_dense">benchmark_native_vs_dense</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d_shift_native.make_interleaved_shift_minus_mpo" href="#tensornet.cfd.qtt_2d_shift_native.make_interleaved_shift_minus_mpo">make_interleaved_shift_minus_mpo</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d_shift_native.make_interleaved_shift_mpo" href="#tensornet.cfd.qtt_2d_shift_native.make_interleaved_shift_mpo">make_interleaved_shift_mpo</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d_shift_native.test_advection_native" href="#tensornet.cfd.qtt_2d_shift_native.test_advection_native">test_advection_native</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d_shift_native.test_shift_single_point" href="#tensornet.cfd.qtt_2d_shift_native.test_shift_single_point">test_shift_single_point</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d_shift_native.test_shift_square" href="#tensornet.cfd.qtt_2d_shift_native.test_shift_square">test_shift_square</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d_shift_native.truncate_qtt2d" href="#tensornet.cfd.qtt_2d_shift_native.truncate_qtt2d">truncate_qtt2d</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

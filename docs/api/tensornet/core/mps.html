@@ -1,0 +1,1015 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.core.mps API documentation</title>
+<meta name="description" content="Matrix Product State (MPS)
+…">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.core.mps</code></h1>
+</header>
+<section id="section-intro">
+<h1 id="matrix-product-state-mps">Matrix Product State (MPS)</h1>
+<p>Core MPS class for representing 1D quantum states and classical fields.</p>
+<p>Tensor convention:
+A[i] : (χ_left, d, χ_right)</p>
+<pre><code>For a chain of L sites with physical dimension d and bond dimension χ:
+|ψ⟩ = Σ A[0]_{1,σ₀,α₀} A[1]_{α₀,σ₁,α₁} ... A[L-1]_{α_{L-2},σ_{L-1},1} |σ₀σ₁...σ_{L-1}⟩
+</code></pre>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.core.mps.MPS"><code class="flex name class">
+<span>class <span class="ident">MPS</span></span>
+<span>(</span><span>tensors: List[Tensor])</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MPS:
+    &#34;&#34;&#34;
+    Matrix Product State representation.
+    
+    Attributes:
+        tensors: List of tensors A[i] with shape (χ_left, d, χ_right)
+        L: Number of sites
+        d: Physical dimension (assumed uniform)
+        
+    Example:
+        &gt;&gt;&gt; mps = MPS.random(L=10, d=2, chi=32)
+        &gt;&gt;&gt; print(f&#34;Norm: {mps.norm():.6f}&#34;)
+        &gt;&gt;&gt; mps.canonicalize_left_()
+        &gt;&gt;&gt; entropy = mps.entropy(bond=4)
+    &#34;&#34;&#34;
+    
+    def __init__(self, tensors: List[Tensor]):
+        &#34;&#34;&#34;
+        Initialize MPS from list of tensors.
+        
+        Args:
+            tensors: List of tensors with shape (χ_left, d, χ_right)
+        &#34;&#34;&#34;
+        self.tensors = tensors
+        self._canonical_center: Optional[int] = None
+    
+    @property
+    def L(self) -&gt; int:
+        &#34;&#34;&#34;Number of sites.&#34;&#34;&#34;
+        return len(self.tensors)
+    
+    @property
+    def d(self) -&gt; int:
+        &#34;&#34;&#34;Physical dimension (from first site).&#34;&#34;&#34;
+        return self.tensors[0].shape[1]
+    
+    @property
+    def chi(self) -&gt; int:
+        &#34;&#34;&#34;Maximum bond dimension.&#34;&#34;&#34;
+        return max(
+            max(t.shape[0], t.shape[2]) for t in self.tensors
+        )
+    
+    @property
+    def dtype(self) -&gt; torch.dtype:
+        &#34;&#34;&#34;Data type of tensors.&#34;&#34;&#34;
+        return self.tensors[0].dtype
+    
+    @property
+    def device(self) -&gt; torch.device:
+        &#34;&#34;&#34;Device of tensors.&#34;&#34;&#34;
+        return self.tensors[0].device
+    
+    def bond_dims(self) -&gt; List[int]:
+        &#34;&#34;&#34;Return list of bond dimensions [χ₀, χ₁, ..., χ_{L-1}].&#34;&#34;&#34;
+        return [self.tensors[i].shape[2] for i in range(self.L - 1)]
+    
+    @classmethod
+    def random(
+        cls,
+        L: int,
+        d: int,
+        chi: int,
+        dtype: torch.dtype = torch.float64,
+        device: Optional[torch.device] = None,
+        normalize: bool = True,
+    ) -&gt; MPS:
+        &#34;&#34;&#34;
+        Create random MPS with given dimensions.
+        
+        Args:
+            L: Number of sites
+            d: Physical dimension
+            chi: Bond dimension
+            dtype: Data type
+            device: Device
+            normalize: If True, normalize the state
+            
+        Returns:
+            Random MPS
+        &#34;&#34;&#34;
+        if device is None:
+            device = torch.device(&#39;cpu&#39;)
+        
+        tensors = []
+        for i in range(L):
+            chi_left = 1 if i == 0 else min(chi, d**i, d**(L-i))
+            chi_right = 1 if i == L-1 else min(chi, d**(i+1), d**(L-i-1))
+            
+            A = torch.randn(chi_left, d, chi_right, dtype=dtype, device=device)
+            tensors.append(A)
+        
+        mps = cls(tensors)
+        if normalize:
+            mps.normalize_()
+        return mps
+    
+    @classmethod
+    def from_tensor(
+        cls,
+        tensor: Tensor,
+        chi_max: Optional[int] = None,
+        cutoff: float = 1e-14,
+    ) -&gt; MPS:
+        &#34;&#34;&#34;
+        Convert dense tensor to MPS via successive SVD.
+        
+        Args:
+            tensor: Dense tensor of shape (d, d, ..., d)
+            chi_max: Maximum bond dimension
+            cutoff: SVD cutoff
+            
+        Returns:
+            MPS approximation
+        &#34;&#34;&#34;
+        L = tensor.ndim
+        d = tensor.shape[0]
+        dtype = tensor.dtype
+        device = tensor.device
+        
+        tensors = []
+        current = tensor.reshape(d, -1)
+        
+        for i in range(L - 1):
+            U, S, Vh = svd_truncated(current, chi_max=chi_max, cutoff=cutoff)
+            
+            chi = len(S)
+            chi_left = 1 if i == 0 else tensors[-1].shape[2]
+            
+            # Reshape U to (chi_left, d, chi)
+            A = U.reshape(chi_left, d, chi)
+            tensors.append(A)
+            
+            # Prepare next iteration
+            current = torch.diag(S) @ Vh
+            remaining = L - i - 1
+            if remaining &gt; 1:
+                current = current.reshape(chi * d, -1)
+            else:
+                current = current.reshape(chi, d, 1)
+        
+        # Last tensor
+        tensors.append(current)
+        
+        return cls(tensors)
+    
+    def to_tensor(self) -&gt; Tensor:
+        &#34;&#34;&#34;
+        Contract MPS to dense tensor.
+        
+        Warning: Exponential in L. Only use for small systems.
+        
+        Returns:
+            Dense tensor of shape (d, d, ..., d)
+        &#34;&#34;&#34;
+        result = self.tensors[0]  # (1, d, χ)
+        
+        for i in range(1, self.L):
+            # result: (..., χ_prev), A[i]: (χ_prev, d, χ_next)
+            result = torch.einsum(&#39;...i,idj-&gt;...dj&#39;, result, self.tensors[i])
+        
+        # Remove boundary bonds
+        result = result.squeeze(0).squeeze(-1)
+        return result
+    
+    def copy(self) -&gt; MPS:
+        &#34;&#34;&#34;Return deep copy of MPS.&#34;&#34;&#34;
+        return MPS([t.clone() for t in self.tensors])
+    
+    def norm(self) -&gt; Tensor:
+        &#34;&#34;&#34;
+        Compute norm ⟨ψ|ψ⟩^{1/2}.
+        
+        Returns:
+            Scalar tensor with norm
+        &#34;&#34;&#34;
+        # Contract from left
+        env = torch.ones(1, 1, dtype=self.dtype, device=self.device)
+        
+        for A in self.tensors:
+            # env: (χ, χ&#39;), A: (χ, d, χ_next), A*: (χ&#39;, d, χ&#39;_next)
+            env = torch.einsum(&#39;ij,idk,jdl-&gt;kl&#39;, env, A, A.conj())
+        
+        return torch.sqrt(env.squeeze())
+    
+    def normalize_(self) -&gt; MPS:
+        &#34;&#34;&#34;Normalize MPS in-place. Returns self.&#34;&#34;&#34;
+        n = self.norm()
+        if n &gt; 0:
+            # Distribute normalization across all tensors
+            factor = n ** (1.0 / self.L)
+            for i in range(self.L):
+                self.tensors[i] = self.tensors[i] / factor
+        return self
+    
+    def canonicalize_left_(self) -&gt; MPS:
+        &#34;&#34;&#34;
+        Left-canonicalize MPS in-place.
+        
+        After this, A[i]^† @ A[i] = I for all i &lt; L-1.
+        The norm is absorbed into the last tensor.
+        
+        Returns:
+            self
+        &#34;&#34;&#34;
+        for i in range(self.L - 1):
+            A = self.tensors[i]
+            chi_l, d, chi_r = A.shape
+            
+            # Reshape to matrix and QR
+            A_mat = A.reshape(chi_l * d, chi_r)
+            Q, R = qr_positive(A_mat)
+            
+            # Update tensors
+            self.tensors[i] = Q.reshape(chi_l, d, -1)
+            self.tensors[i + 1] = torch.einsum(&#39;ij,jdk-&gt;idk&#39;, R, self.tensors[i + 1])
+        
+        self._canonical_center = self.L - 1
+        return self
+    
+    def canonicalize_right_(self) -&gt; MPS:
+        &#34;&#34;&#34;
+        Right-canonicalize MPS in-place.
+        
+        After this, A[i] @ A[i]^† = I for all i &gt; 0.
+        The norm is absorbed into the first tensor.
+        
+        Returns:
+            self
+        &#34;&#34;&#34;
+        for i in range(self.L - 1, 0, -1):
+            A = self.tensors[i]
+            chi_l, d, chi_r = A.shape
+            
+            # Reshape and QR from right
+            A_mat = A.reshape(chi_l, d * chi_r).T
+            Q, R = qr_positive(A_mat)
+            
+            # Update tensors
+            self.tensors[i] = Q.T.reshape(-1, d, chi_r)
+            self.tensors[i - 1] = torch.einsum(&#39;idk,kj-&gt;idj&#39;, self.tensors[i - 1], R.T)
+        
+        self._canonical_center = 0
+        return self
+    
+    def canonicalize_to_(self, site: int) -&gt; MPS:
+        &#34;&#34;&#34;
+        Mixed-canonical form with orthogonality center at site.
+        
+        Args:
+            site: Orthogonality center (0 to L-1)
+            
+        Returns:
+            self
+        &#34;&#34;&#34;
+        # Left-canonicalize up to site
+        for i in range(site):
+            A = self.tensors[i]
+            chi_l, d, chi_r = A.shape
+            A_mat = A.reshape(chi_l * d, chi_r)
+            Q, R = qr_positive(A_mat)
+            self.tensors[i] = Q.reshape(chi_l, d, -1)
+            self.tensors[i + 1] = torch.einsum(&#39;ij,jdk-&gt;idk&#39;, R, self.tensors[i + 1])
+        
+        # Right-canonicalize from site+1 to end
+        for i in range(self.L - 1, site, -1):
+            A = self.tensors[i]
+            chi_l, d, chi_r = A.shape
+            A_mat = A.reshape(chi_l, d * chi_r).T
+            Q, R = qr_positive(A_mat)
+            self.tensors[i] = Q.T.reshape(-1, d, chi_r)
+            self.tensors[i - 1] = torch.einsum(&#39;idk,kj-&gt;idj&#39;, self.tensors[i - 1], R.T)
+        
+        self._canonical_center = site
+        return self
+    
+    def entropy(self, bond: int) -&gt; Tensor:
+        &#34;&#34;&#34;
+        Compute von Neumann entanglement entropy at bond.
+        
+        S = -Tr(ρ log ρ) where ρ is the reduced density matrix.
+        
+        Args:
+            bond: Bond index (0 to L-2)
+            
+        Returns:
+            Entanglement entropy
+        &#34;&#34;&#34;
+        # Canonicalize to bond+1
+        mps = self.copy()
+        mps.canonicalize_to_(bond + 1)
+        
+        # Get tensor at bond+1 and compute singular values
+        A = mps.tensors[bond + 1]
+        chi_l, d, chi_r = A.shape
+        A_mat = A.reshape(chi_l, d * chi_r)
+        
+        _, S, _ = torch.linalg.svd(A_mat, full_matrices=False)
+        
+        # Normalize singular values
+        S = S / S.norm()
+        
+        # Compute entropy: S = -Σ p log(p) where p = s²
+        p = S ** 2
+        p = p[p &gt; 1e-14]  # Remove zeros
+        entropy = -torch.sum(p * torch.log(p))
+        
+        return entropy
+    
+    def expectation_local(self, op: Tensor, site: int) -&gt; Tensor:
+        &#34;&#34;&#34;
+        Compute ⟨ψ|O_site|ψ⟩ for local operator O.
+        
+        Args:
+            op: Local operator of shape (d, d)
+            site: Site index
+            
+        Returns:
+            Expectation value
+        &#34;&#34;&#34;
+        # Contract from left up to site
+        env_L = torch.ones(1, 1, dtype=self.dtype, device=self.device)
+        for i in range(site):
+            A = self.tensors[i]
+            env_L = torch.einsum(&#39;ij,idk,jdl-&gt;kl&#39;, env_L, A, A.conj())
+        
+        # Contract from right down to site
+        env_R = torch.ones(1, 1, dtype=self.dtype, device=self.device)
+        for i in range(self.L - 1, site, -1):
+            A = self.tensors[i]
+            env_R = torch.einsum(&#39;idk,jdl,kl-&gt;ij&#39;, A, A.conj(), env_R)
+        
+        # Apply operator at site
+        A = self.tensors[site]
+        result = torch.einsum(
+            &#39;ij,idk,de,jel,kl-&gt;&#39;,
+            env_L, A, op, A.conj(), env_R
+        )
+        
+        # Normalize
+        norm_sq = self.norm() ** 2
+        return result / norm_sq
+    
+    def truncate_(self, chi_max: int, cutoff: float = 1e-14) -&gt; MPS:
+        &#34;&#34;&#34;
+        Truncate bond dimension via SVD.
+        
+        Args:
+            chi_max: Maximum bond dimension
+            cutoff: SVD cutoff
+            
+        Returns:
+            self
+        &#34;&#34;&#34;
+        # Left-canonicalize then sweep right with truncation
+        self.canonicalize_left_()
+        
+        for i in range(self.L - 1, 0, -1):
+            A = self.tensors[i]
+            chi_l, d, chi_r = A.shape
+            
+            A_mat = A.reshape(chi_l, d * chi_r)
+            U, S, Vh = svd_truncated(A_mat, chi_max=chi_max, cutoff=cutoff)
+            
+            self.tensors[i] = Vh.reshape(-1, d, chi_r)
+            self.tensors[i - 1] = torch.einsum(
+                &#39;idk,kj,j-&gt;idj&#39;,
+                self.tensors[i - 1], U, S
+            )
+        
+        return self
+    
+    def __repr__(self) -&gt; str:
+        return f&#34;MPS(L={self.L}, d={self.d}, χ={self.chi}, dtype={self.dtype})&#34;</code></pre>
+</details>
+<div class="desc"><p>Matrix Product State representation.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>tensors</code></strong></dt>
+<dd>List of tensors A[i] with shape (χ_left, d, χ_right)</dd>
+<dt><strong><code>L</code></strong></dt>
+<dd>Number of sites</dd>
+<dt><strong><code>d</code></strong></dt>
+<dd>Physical dimension (assumed uniform)</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; mps = MPS.random(L=10, d=2, chi=32)
+&gt;&gt;&gt; print(f&quot;Norm: {mps.norm():.6f}&quot;)
+&gt;&gt;&gt; mps.canonicalize_left_()
+&gt;&gt;&gt; entropy = mps.entropy(bond=4)
+</code></pre>
+<p>Initialize MPS from list of tensors.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tensors</code></strong></dt>
+<dd>List of tensors with shape (χ_left, d, χ_right)</dd>
+</dl></div>
+<h3>Static methods</h3>
+<dl>
+<dt id="tensornet.core.mps.MPS.from_tensor"><code class="name flex">
+<span>def <span class="ident">from_tensor</span></span>(<span>tensor: Tensor, chi_max: Optional[int] = None, cutoff: float = 1e-14) ‑> <a title="tensornet.core.mps.MPS" href="#tensornet.core.mps.MPS">MPS</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Convert dense tensor to MPS via successive SVD.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tensor</code></strong></dt>
+<dd>Dense tensor of shape (d, d, &hellip;, d)</dd>
+<dt><strong><code>chi_max</code></strong></dt>
+<dd>Maximum bond dimension</dd>
+<dt><strong><code>cutoff</code></strong></dt>
+<dd>SVD cutoff</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>MPS approximation</p></div>
+</dd>
+<dt id="tensornet.core.mps.MPS.random"><code class="name flex">
+<span>def <span class="ident">random</span></span>(<span>L: int,<br>d: int,<br>chi: int,<br>dtype: torch.dtype = torch.float64,<br>device: Optional[torch.device] = None,<br>normalize: bool = True) ‑> <a title="tensornet.core.mps.MPS" href="#tensornet.core.mps.MPS">MPS</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create random MPS with given dimensions.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>L</code></strong></dt>
+<dd>Number of sites</dd>
+<dt><strong><code>d</code></strong></dt>
+<dd>Physical dimension</dd>
+<dt><strong><code>chi</code></strong></dt>
+<dd>Bond dimension</dd>
+<dt><strong><code>dtype</code></strong></dt>
+<dd>Data type</dd>
+<dt><strong><code>device</code></strong></dt>
+<dd>Device</dd>
+<dt><strong><code>normalize</code></strong></dt>
+<dd>If True, normalize the state</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Random MPS</p></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.core.mps.MPS.L"><code class="name">prop <span class="ident">L</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def L(self) -&gt; int:
+    &#34;&#34;&#34;Number of sites.&#34;&#34;&#34;
+    return len(self.tensors)</code></pre>
+</details>
+<div class="desc"><p>Number of sites.</p></div>
+</dd>
+<dt id="tensornet.core.mps.MPS.chi"><code class="name">prop <span class="ident">chi</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def chi(self) -&gt; int:
+    &#34;&#34;&#34;Maximum bond dimension.&#34;&#34;&#34;
+    return max(
+        max(t.shape[0], t.shape[2]) for t in self.tensors
+    )</code></pre>
+</details>
+<div class="desc"><p>Maximum bond dimension.</p></div>
+</dd>
+<dt id="tensornet.core.mps.MPS.d"><code class="name">prop <span class="ident">d</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def d(self) -&gt; int:
+    &#34;&#34;&#34;Physical dimension (from first site).&#34;&#34;&#34;
+    return self.tensors[0].shape[1]</code></pre>
+</details>
+<div class="desc"><p>Physical dimension (from first site).</p></div>
+</dd>
+<dt id="tensornet.core.mps.MPS.device"><code class="name">prop <span class="ident">device</span> : torch.device</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def device(self) -&gt; torch.device:
+    &#34;&#34;&#34;Device of tensors.&#34;&#34;&#34;
+    return self.tensors[0].device</code></pre>
+</details>
+<div class="desc"><p>Device of tensors.</p></div>
+</dd>
+<dt id="tensornet.core.mps.MPS.dtype"><code class="name">prop <span class="ident">dtype</span> : torch.dtype</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def dtype(self) -&gt; torch.dtype:
+    &#34;&#34;&#34;Data type of tensors.&#34;&#34;&#34;
+    return self.tensors[0].dtype</code></pre>
+</details>
+<div class="desc"><p>Data type of tensors.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.core.mps.MPS.bond_dims"><code class="name flex">
+<span>def <span class="ident">bond_dims</span></span>(<span>self) ‑> List[int]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bond_dims(self) -&gt; List[int]:
+    &#34;&#34;&#34;Return list of bond dimensions [χ₀, χ₁, ..., χ_{L-1}].&#34;&#34;&#34;
+    return [self.tensors[i].shape[2] for i in range(self.L - 1)]</code></pre>
+</details>
+<div class="desc"><p>Return list of bond dimensions [χ₀, χ₁, &hellip;, χ_{L-1}].</p></div>
+</dd>
+<dt id="tensornet.core.mps.MPS.canonicalize_left_"><code class="name flex">
+<span>def <span class="ident">canonicalize_left_</span></span>(<span>self) ‑> <a title="tensornet.core.mps.MPS" href="#tensornet.core.mps.MPS">MPS</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def canonicalize_left_(self) -&gt; MPS:
+    &#34;&#34;&#34;
+    Left-canonicalize MPS in-place.
+    
+    After this, A[i]^† @ A[i] = I for all i &lt; L-1.
+    The norm is absorbed into the last tensor.
+    
+    Returns:
+        self
+    &#34;&#34;&#34;
+    for i in range(self.L - 1):
+        A = self.tensors[i]
+        chi_l, d, chi_r = A.shape
+        
+        # Reshape to matrix and QR
+        A_mat = A.reshape(chi_l * d, chi_r)
+        Q, R = qr_positive(A_mat)
+        
+        # Update tensors
+        self.tensors[i] = Q.reshape(chi_l, d, -1)
+        self.tensors[i + 1] = torch.einsum(&#39;ij,jdk-&gt;idk&#39;, R, self.tensors[i + 1])
+    
+    self._canonical_center = self.L - 1
+    return self</code></pre>
+</details>
+<div class="desc"><p>Left-canonicalize MPS in-place.</p>
+<p>After this, A[i]^† @ A[i] = I for all i &lt; L-1.
+The norm is absorbed into the last tensor.</p>
+<h2 id="returns">Returns</h2>
+<p>self</p></div>
+</dd>
+<dt id="tensornet.core.mps.MPS.canonicalize_right_"><code class="name flex">
+<span>def <span class="ident">canonicalize_right_</span></span>(<span>self) ‑> <a title="tensornet.core.mps.MPS" href="#tensornet.core.mps.MPS">MPS</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def canonicalize_right_(self) -&gt; MPS:
+    &#34;&#34;&#34;
+    Right-canonicalize MPS in-place.
+    
+    After this, A[i] @ A[i]^† = I for all i &gt; 0.
+    The norm is absorbed into the first tensor.
+    
+    Returns:
+        self
+    &#34;&#34;&#34;
+    for i in range(self.L - 1, 0, -1):
+        A = self.tensors[i]
+        chi_l, d, chi_r = A.shape
+        
+        # Reshape and QR from right
+        A_mat = A.reshape(chi_l, d * chi_r).T
+        Q, R = qr_positive(A_mat)
+        
+        # Update tensors
+        self.tensors[i] = Q.T.reshape(-1, d, chi_r)
+        self.tensors[i - 1] = torch.einsum(&#39;idk,kj-&gt;idj&#39;, self.tensors[i - 1], R.T)
+    
+    self._canonical_center = 0
+    return self</code></pre>
+</details>
+<div class="desc"><p>Right-canonicalize MPS in-place.</p>
+<p>After this, A[i] @ A[i]^† = I for all i &gt; 0.
+The norm is absorbed into the first tensor.</p>
+<h2 id="returns">Returns</h2>
+<p>self</p></div>
+</dd>
+<dt id="tensornet.core.mps.MPS.canonicalize_to_"><code class="name flex">
+<span>def <span class="ident">canonicalize_to_</span></span>(<span>self, site: int) ‑> <a title="tensornet.core.mps.MPS" href="#tensornet.core.mps.MPS">MPS</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def canonicalize_to_(self, site: int) -&gt; MPS:
+    &#34;&#34;&#34;
+    Mixed-canonical form with orthogonality center at site.
+    
+    Args:
+        site: Orthogonality center (0 to L-1)
+        
+    Returns:
+        self
+    &#34;&#34;&#34;
+    # Left-canonicalize up to site
+    for i in range(site):
+        A = self.tensors[i]
+        chi_l, d, chi_r = A.shape
+        A_mat = A.reshape(chi_l * d, chi_r)
+        Q, R = qr_positive(A_mat)
+        self.tensors[i] = Q.reshape(chi_l, d, -1)
+        self.tensors[i + 1] = torch.einsum(&#39;ij,jdk-&gt;idk&#39;, R, self.tensors[i + 1])
+    
+    # Right-canonicalize from site+1 to end
+    for i in range(self.L - 1, site, -1):
+        A = self.tensors[i]
+        chi_l, d, chi_r = A.shape
+        A_mat = A.reshape(chi_l, d * chi_r).T
+        Q, R = qr_positive(A_mat)
+        self.tensors[i] = Q.T.reshape(-1, d, chi_r)
+        self.tensors[i - 1] = torch.einsum(&#39;idk,kj-&gt;idj&#39;, self.tensors[i - 1], R.T)
+    
+    self._canonical_center = site
+    return self</code></pre>
+</details>
+<div class="desc"><p>Mixed-canonical form with orthogonality center at site.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>site</code></strong></dt>
+<dd>Orthogonality center (0 to L-1)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>self</p></div>
+</dd>
+<dt id="tensornet.core.mps.MPS.copy"><code class="name flex">
+<span>def <span class="ident">copy</span></span>(<span>self) ‑> <a title="tensornet.core.mps.MPS" href="#tensornet.core.mps.MPS">MPS</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def copy(self) -&gt; MPS:
+    &#34;&#34;&#34;Return deep copy of MPS.&#34;&#34;&#34;
+    return MPS([t.clone() for t in self.tensors])</code></pre>
+</details>
+<div class="desc"><p>Return deep copy of MPS.</p></div>
+</dd>
+<dt id="tensornet.core.mps.MPS.entropy"><code class="name flex">
+<span>def <span class="ident">entropy</span></span>(<span>self, bond: int) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def entropy(self, bond: int) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Compute von Neumann entanglement entropy at bond.
+    
+    S = -Tr(ρ log ρ) where ρ is the reduced density matrix.
+    
+    Args:
+        bond: Bond index (0 to L-2)
+        
+    Returns:
+        Entanglement entropy
+    &#34;&#34;&#34;
+    # Canonicalize to bond+1
+    mps = self.copy()
+    mps.canonicalize_to_(bond + 1)
+    
+    # Get tensor at bond+1 and compute singular values
+    A = mps.tensors[bond + 1]
+    chi_l, d, chi_r = A.shape
+    A_mat = A.reshape(chi_l, d * chi_r)
+    
+    _, S, _ = torch.linalg.svd(A_mat, full_matrices=False)
+    
+    # Normalize singular values
+    S = S / S.norm()
+    
+    # Compute entropy: S = -Σ p log(p) where p = s²
+    p = S ** 2
+    p = p[p &gt; 1e-14]  # Remove zeros
+    entropy = -torch.sum(p * torch.log(p))
+    
+    return entropy</code></pre>
+</details>
+<div class="desc"><p>Compute von Neumann entanglement entropy at bond.</p>
+<p>S = -Tr(ρ log ρ) where ρ is the reduced density matrix.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>bond</code></strong></dt>
+<dd>Bond index (0 to L-2)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Entanglement entropy</p></div>
+</dd>
+<dt id="tensornet.core.mps.MPS.expectation_local"><code class="name flex">
+<span>def <span class="ident">expectation_local</span></span>(<span>self, op: Tensor, site: int) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def expectation_local(self, op: Tensor, site: int) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Compute ⟨ψ|O_site|ψ⟩ for local operator O.
+    
+    Args:
+        op: Local operator of shape (d, d)
+        site: Site index
+        
+    Returns:
+        Expectation value
+    &#34;&#34;&#34;
+    # Contract from left up to site
+    env_L = torch.ones(1, 1, dtype=self.dtype, device=self.device)
+    for i in range(site):
+        A = self.tensors[i]
+        env_L = torch.einsum(&#39;ij,idk,jdl-&gt;kl&#39;, env_L, A, A.conj())
+    
+    # Contract from right down to site
+    env_R = torch.ones(1, 1, dtype=self.dtype, device=self.device)
+    for i in range(self.L - 1, site, -1):
+        A = self.tensors[i]
+        env_R = torch.einsum(&#39;idk,jdl,kl-&gt;ij&#39;, A, A.conj(), env_R)
+    
+    # Apply operator at site
+    A = self.tensors[site]
+    result = torch.einsum(
+        &#39;ij,idk,de,jel,kl-&gt;&#39;,
+        env_L, A, op, A.conj(), env_R
+    )
+    
+    # Normalize
+    norm_sq = self.norm() ** 2
+    return result / norm_sq</code></pre>
+</details>
+<div class="desc"><p>Compute ⟨ψ|O_site|ψ⟩ for local operator O.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>op</code></strong></dt>
+<dd>Local operator of shape (d, d)</dd>
+<dt><strong><code>site</code></strong></dt>
+<dd>Site index</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Expectation value</p></div>
+</dd>
+<dt id="tensornet.core.mps.MPS.norm"><code class="name flex">
+<span>def <span class="ident">norm</span></span>(<span>self) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def norm(self) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Compute norm ⟨ψ|ψ⟩^{1/2}.
+    
+    Returns:
+        Scalar tensor with norm
+    &#34;&#34;&#34;
+    # Contract from left
+    env = torch.ones(1, 1, dtype=self.dtype, device=self.device)
+    
+    for A in self.tensors:
+        # env: (χ, χ&#39;), A: (χ, d, χ_next), A*: (χ&#39;, d, χ&#39;_next)
+        env = torch.einsum(&#39;ij,idk,jdl-&gt;kl&#39;, env, A, A.conj())
+    
+    return torch.sqrt(env.squeeze())</code></pre>
+</details>
+<div class="desc"><p>Compute norm ⟨ψ|ψ⟩^{1/2}.</p>
+<h2 id="returns">Returns</h2>
+<p>Scalar tensor with norm</p></div>
+</dd>
+<dt id="tensornet.core.mps.MPS.normalize_"><code class="name flex">
+<span>def <span class="ident">normalize_</span></span>(<span>self) ‑> <a title="tensornet.core.mps.MPS" href="#tensornet.core.mps.MPS">MPS</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def normalize_(self) -&gt; MPS:
+    &#34;&#34;&#34;Normalize MPS in-place. Returns self.&#34;&#34;&#34;
+    n = self.norm()
+    if n &gt; 0:
+        # Distribute normalization across all tensors
+        factor = n ** (1.0 / self.L)
+        for i in range(self.L):
+            self.tensors[i] = self.tensors[i] / factor
+    return self</code></pre>
+</details>
+<div class="desc"><p>Normalize MPS in-place. Returns self.</p></div>
+</dd>
+<dt id="tensornet.core.mps.MPS.to_tensor"><code class="name flex">
+<span>def <span class="ident">to_tensor</span></span>(<span>self) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_tensor(self) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Contract MPS to dense tensor.
+    
+    Warning: Exponential in L. Only use for small systems.
+    
+    Returns:
+        Dense tensor of shape (d, d, ..., d)
+    &#34;&#34;&#34;
+    result = self.tensors[0]  # (1, d, χ)
+    
+    for i in range(1, self.L):
+        # result: (..., χ_prev), A[i]: (χ_prev, d, χ_next)
+        result = torch.einsum(&#39;...i,idj-&gt;...dj&#39;, result, self.tensors[i])
+    
+    # Remove boundary bonds
+    result = result.squeeze(0).squeeze(-1)
+    return result</code></pre>
+</details>
+<div class="desc"><p>Contract MPS to dense tensor.</p>
+<p>Warning: Exponential in L. Only use for small systems.</p>
+<h2 id="returns">Returns</h2>
+<p>Dense tensor of shape (d, d, &hellip;, d)</p></div>
+</dd>
+<dt id="tensornet.core.mps.MPS.truncate_"><code class="name flex">
+<span>def <span class="ident">truncate_</span></span>(<span>self, chi_max: int, cutoff: float = 1e-14) ‑> <a title="tensornet.core.mps.MPS" href="#tensornet.core.mps.MPS">MPS</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def truncate_(self, chi_max: int, cutoff: float = 1e-14) -&gt; MPS:
+    &#34;&#34;&#34;
+    Truncate bond dimension via SVD.
+    
+    Args:
+        chi_max: Maximum bond dimension
+        cutoff: SVD cutoff
+        
+    Returns:
+        self
+    &#34;&#34;&#34;
+    # Left-canonicalize then sweep right with truncation
+    self.canonicalize_left_()
+    
+    for i in range(self.L - 1, 0, -1):
+        A = self.tensors[i]
+        chi_l, d, chi_r = A.shape
+        
+        A_mat = A.reshape(chi_l, d * chi_r)
+        U, S, Vh = svd_truncated(A_mat, chi_max=chi_max, cutoff=cutoff)
+        
+        self.tensors[i] = Vh.reshape(-1, d, chi_r)
+        self.tensors[i - 1] = torch.einsum(
+            &#39;idk,kj,j-&gt;idj&#39;,
+            self.tensors[i - 1], U, S
+        )
+    
+    return self</code></pre>
+</details>
+<div class="desc"><p>Truncate bond dimension via SVD.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>chi_max</code></strong></dt>
+<dd>Maximum bond dimension</dd>
+<dt><strong><code>cutoff</code></strong></dt>
+<dd>SVD cutoff</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>self</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#matrix-product-state-mps">Matrix Product State (MPS)</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.core" href="index.html">tensornet.core</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.core.mps.MPS" href="#tensornet.core.mps.MPS">MPS</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.core.mps.MPS.L" href="#tensornet.core.mps.MPS.L">L</a></code></li>
+<li><code><a title="tensornet.core.mps.MPS.bond_dims" href="#tensornet.core.mps.MPS.bond_dims">bond_dims</a></code></li>
+<li><code><a title="tensornet.core.mps.MPS.canonicalize_left_" href="#tensornet.core.mps.MPS.canonicalize_left_">canonicalize_left_</a></code></li>
+<li><code><a title="tensornet.core.mps.MPS.canonicalize_right_" href="#tensornet.core.mps.MPS.canonicalize_right_">canonicalize_right_</a></code></li>
+<li><code><a title="tensornet.core.mps.MPS.canonicalize_to_" href="#tensornet.core.mps.MPS.canonicalize_to_">canonicalize_to_</a></code></li>
+<li><code><a title="tensornet.core.mps.MPS.chi" href="#tensornet.core.mps.MPS.chi">chi</a></code></li>
+<li><code><a title="tensornet.core.mps.MPS.copy" href="#tensornet.core.mps.MPS.copy">copy</a></code></li>
+<li><code><a title="tensornet.core.mps.MPS.d" href="#tensornet.core.mps.MPS.d">d</a></code></li>
+<li><code><a title="tensornet.core.mps.MPS.device" href="#tensornet.core.mps.MPS.device">device</a></code></li>
+<li><code><a title="tensornet.core.mps.MPS.dtype" href="#tensornet.core.mps.MPS.dtype">dtype</a></code></li>
+<li><code><a title="tensornet.core.mps.MPS.entropy" href="#tensornet.core.mps.MPS.entropy">entropy</a></code></li>
+<li><code><a title="tensornet.core.mps.MPS.expectation_local" href="#tensornet.core.mps.MPS.expectation_local">expectation_local</a></code></li>
+<li><code><a title="tensornet.core.mps.MPS.from_tensor" href="#tensornet.core.mps.MPS.from_tensor">from_tensor</a></code></li>
+<li><code><a title="tensornet.core.mps.MPS.norm" href="#tensornet.core.mps.MPS.norm">norm</a></code></li>
+<li><code><a title="tensornet.core.mps.MPS.normalize_" href="#tensornet.core.mps.MPS.normalize_">normalize_</a></code></li>
+<li><code><a title="tensornet.core.mps.MPS.random" href="#tensornet.core.mps.MPS.random">random</a></code></li>
+<li><code><a title="tensornet.core.mps.MPS.to_tensor" href="#tensornet.core.mps.MPS.to_tensor">to_tensor</a></code></li>
+<li><code><a title="tensornet.core.mps.MPS.truncate_" href="#tensornet.core.mps.MPS.truncate_">truncate_</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

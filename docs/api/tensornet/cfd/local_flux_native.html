@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.local_flux_native API documentation</title>
+<meta name="description" content="Native Local Flux for Euler Equations …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.local_flux_native</code></h1>
+</header>
+<section id="section-intro">
+<p>Native Local Flux for Euler Equations</p>
+<p>Instead of using TCI to build a flux QTT from samples (expensive),
+we compute the flux directly using QTT arithmetic and shifted states.</p>
+<p>Rusanov Flux at interface i+1/2:
+F_{i+1/2} = 0.5 * (F(U_L) + F(U_R)) - 0.5 * alpha * (U_R - U_L)</p>
+<p>where:
+U_L = U[i], U_R = U[i+1] = shift_minus(U)[i]
+alpha = max(|u| + c) over both states</p>
+<p>For the Euler equations, F(U) is a nonlinear function of U.
+We approximate using local Lax-Friedrichs:
+F_{i+1/2} ≈ 0.5 * (F_L + F_R) - 0.5 * alpha_max * (U_R - U_L)</p>
+<p>Key insight: All operations can be done in QTT format!
+- Shifted state: U_R = shift(U, -1) via MPO
+- Flux average: 0.5 * (F_L + F_R) via QTT arithmetic
+- Dissipation: 0.5 * alpha * (U_R - U_L) via QTT arithmetic</p>
+<p>Author: HyperTensor Team
+Date: December 2025</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.local_flux_native.apply_shift"><code class="name flex">
+<span>def <span class="ident">apply_shift</span></span>(<span>qtt: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>mpo: list,<br>max_rank: int = 64) ‑> <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def apply_shift(qtt: QTT2DState, mpo: list, max_rank: int = 64) -&gt; QTT2DState:
+    &#34;&#34;&#34;Apply shift MPO.&#34;&#34;&#34;
+    new_cores = apply_nd_shift_mpo(qtt.cores, mpo, max_rank=max_rank)
+    return QTT2DState(new_cores, nx=qtt.nx, ny=qtt.ny)</code></pre>
+</details>
+<div class="desc"><p>Apply shift MPO.</p></div>
+</dd>
+<dt id="tensornet.cfd.local_flux_native.compute_euler_flux_x"><code class="name flex">
+<span>def <span class="ident">compute_euler_flux_x</span></span>(<span>rho: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>rhou: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>rhov: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>E: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>gamma: float,<br>max_rank: int = 64) ‑> Tuple[<a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>, <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>, <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>, <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_euler_flux_x(
+    rho: QTT2DState,
+    rhou: QTT2DState,
+    rhov: QTT2DState,
+    E: QTT2DState,
+    gamma: float,
+    max_rank: int = 64
+) -&gt; Tuple[QTT2DState, QTT2DState, QTT2DState, QTT2DState]:
+    &#34;&#34;&#34;
+    Compute physical x-flux of Euler equations.
+    
+    F_rho = rho * u = rhou
+    F_rhou = rho * u^2 + P = rhou^2/rho + P
+    F_rhov = rho * u * v = rhou * rhov / rho  
+    F_E = (E + P) * u = (E + P) * rhou / rho
+    
+    These are nonlinear and require Hadamard products.
+    For simplicity, we use the conservative flux directly.
+    &#34;&#34;&#34;
+    # F_rho = rhou (this is exact, no computation needed)
+    F_rho = rhou
+    
+    # For the nonlinear terms, we need Hadamard products
+    # This is expensive in TT format, so we use an approximation:
+    # Average the flux at cell centers instead of computing exactly
+    
+    # TODO: Implement proper Hadamard product or TCI for nonlinear terms
+    # For now, return momentum-based flux (first-order approximation)
+    F_rhou = rhou  # Placeholder
+    F_rhov = rhov  # Placeholder  
+    F_E = E        # Placeholder
+    
+    return F_rho, F_rhou, F_rhov, F_E</code></pre>
+</details>
+<div class="desc"><p>Compute physical x-flux of Euler equations.</p>
+<p>F_rho = rho * u = rhou
+F_rhou = rho * u^2 + P = rhou^2/rho + P
+F_rhov = rho * u * v = rhou * rhov / rho<br>
+F_E = (E + P) * u = (E + P) * rhou / rho</p>
+<p>These are nonlinear and require Hadamard products.
+For simplicity, we use the conservative flux directly.</p></div>
+</dd>
+<dt id="tensornet.cfd.local_flux_native.compute_lax_friedrichs_flux_2d"><code class="name flex">
+<span>def <span class="ident">compute_lax_friedrichs_flux_2d</span></span>(<span>rho: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>rhou: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>rhov: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>E: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>axis: int,<br>shift_mpo: list,<br>config: <a title="tensornet.cfd.local_flux_native.LocalFluxConfig" href="#tensornet.cfd.local_flux_native.LocalFluxConfig">LocalFluxConfig</a>) ‑> Tuple[<a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>, <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>, <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>, <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_lax_friedrichs_flux_2d(
+    rho: QTT2DState,
+    rhou: QTT2DState,
+    rhov: QTT2DState,
+    E: QTT2DState,
+    axis: int,
+    shift_mpo: list,
+    config: LocalFluxConfig
+) -&gt; Tuple[QTT2DState, QTT2DState, QTT2DState, QTT2DState]:
+    &#34;&#34;&#34;
+    Compute Lax-Friedrichs numerical flux at cell interfaces.
+    
+    For conservative variable U and physical flux F:
+    F_num = 0.5 * (F(U_L) + F(U_R)) - 0.5 * alpha * (U_R - U_L)
+    
+    where U_L = U[i], U_R = U[i+1], alpha = max wavespeed.
+    
+    This is a diffusive but stable first-order scheme.
+    &#34;&#34;&#34;
+    max_rank = config.max_rank
+    gamma = config.gamma
+    
+    # Get shifted states: U_R[i] = U[i+1] = shift(U, -1)[i]
+    # Our shift MPO with direction=+1 gives: output[i] = input[i-1]
+    # So we need direction=-1 for U_R, but we only built +1.
+    # 
+    # Alternative: use U[i-1] = shift(U, +1)[i] and reformulate.
+    # dF/dx ≈ (F[i] - F[i-1]) / dx
+    # F[i] is flux at interface i-1/2 to i+1/2
+    # 
+    # For Lax-Friedrichs on a staggered grid:
+    # F_{i+1/2} uses U_i and U_{i+1}
+    # F_{i-1/2} uses U_{i-1} and U_i
+    # 
+    # We compute F at cell centers and then difference.
+    # Using local Lax-Friedrichs diffusion.
+    
+    # Estimate max wavespeed
+    axis_momentum = rhou if axis == 0 else rhov
+    alpha = estimate_max_wavespeed(rho, axis_momentum, E, axis, gamma)
+    
+    # Get U[i-1] via shift
+    rho_left = apply_shift(rho, shift_mpo, max_rank)
+    rhou_left = apply_shift(rhou, shift_mpo, max_rank)
+    rhov_left = apply_shift(rhov, shift_mpo, max_rank)
+    E_left = apply_shift(E, shift_mpo, max_rank)
+    
+    # U_avg = 0.5 * (U[i] + U[i-1])
+    # dU = U[i] - U[i-1]
+    
+    # For first-order Lax-Friedrichs on conservative form:
+    # The flux difference for update is computed as:
+    # dF/dx ≈ (F[i+1/2] - F[i-1/2]) / dx
+    # 
+    # Using upwind-biased LF:
+    # F[i+1/2] = 0.5 * (F(U_i) + F(U_{i+1})) - alpha/2 * (U_{i+1} - U_i)
+    # F[i-1/2] = 0.5 * (F(U_{i-1}) + F(U_i)) - alpha/2 * (U_i - U_{i-1})
+    #
+    # dF = F[i+1/2] - F[i-1/2]
+    #    = 0.5 * (F(U_{i+1}) - F(U_{i-1})) - alpha/2 * (U_{i+1} - 2*U_i + U_{i-1})
+    #
+    # This requires U[i+1] which needs the -1 shift MPO.
+    # Let&#39;s use a simpler formulation.
+    
+    # Simpler: Pure Lax-Friedrichs (very diffusive but simple)
+    # U^{n+1} = 0.5 * (U_L + U_R) - dt/dx * (F_R - F_L) / 2
+    # This is equivalent to forward Euler with averaged flux + diffusion
+    
+    # For now, just return the average (central difference base)
+    # The actual update will be: U^{n+1} = U - dt/dx * (U - U_left) * speed
+    # This is first-order upwind when speed &gt; 0
+    
+    # Return &#34;flux&#34; as the conserved quantity times characteristic speed
+    # This gives upwind behavior
+    if axis == 0:
+        # x-direction: use u as advection velocity
+        F_rho = rhou  # Mass flux = rho * u
+        F_rhou = rhou  # Momentum flux (simplified)
+        F_rhov = rhov  # Placeholder
+        F_E = E        # Energy flux (simplified)
+    else:
+        F_rho = rhov
+        F_rhou = rhou
+        F_rhov = rhov
+        F_E = E
+    
+    return F_rho, F_rhou, F_rhov, F_E</code></pre>
+</details>
+<div class="desc"><p>Compute Lax-Friedrichs numerical flux at cell interfaces.</p>
+<p>For conservative variable U and physical flux F:
+F_num = 0.5 * (F(U_L) + F(U_R)) - 0.5 * alpha * (U_R - U_L)</p>
+<p>where U_L = U[i], U_R = U[i+1], alpha = max wavespeed.</p>
+<p>This is a diffusive but stable first-order scheme.</p></div>
+</dd>
+<dt id="tensornet.cfd.local_flux_native.compute_upwind_update_2d"><code class="name flex">
+<span>def <span class="ident">compute_upwind_update_2d</span></span>(<span>rho: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>rhou: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>rhov: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>E: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>axis: int,<br>shift_plus_mpo: list,<br>shift_minus_mpo: list,<br>dt: float,<br>dx: float,<br>config: <a title="tensornet.cfd.local_flux_native.LocalFluxConfig" href="#tensornet.cfd.local_flux_native.LocalFluxConfig">LocalFluxConfig</a>) ‑> Tuple[<a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>, <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>, <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>, <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_upwind_update_2d(
+    rho: QTT2DState,
+    rhou: QTT2DState,
+    rhov: QTT2DState,
+    E: QTT2DState,
+    axis: int,
+    shift_plus_mpo: list,
+    shift_minus_mpo: list,
+    dt: float,
+    dx: float,
+    config: LocalFluxConfig
+) -&gt; Tuple[QTT2DState, QTT2DState, QTT2DState, QTT2DState]:
+    &#34;&#34;&#34;
+    Compute pure upwind update for 2D Euler.
+    
+    For positive wave speed (u &gt; 0):
+      U^{n+1} = U^n - dt/dx * (F(U) - F(U_left))
+    
+    For negative wave speed (u &lt; 0):
+      U^{n+1} = U^n - dt/dx * (F(U_right) - F(U))
+    
+    We use a simple splitting: each wave family uses its own upwind direction.
+    &#34;&#34;&#34;
+    max_rank = config.max_rank
+    gamma = config.gamma
+    
+    # Get left and right neighbors
+    # shift_plus gives: output[i] = input[i-1] (left neighbor)
+    # shift_minus gives: output[i] = input[i+1] (right neighbor)
+    
+    rho_L = apply_shift(rho, shift_plus_mpo, max_rank)
+    
+    # For a simple first-order scheme, use upwind based on sign
+    # Estimate average velocity sign (positive = flow to right)
+    axis_momentum = rhou if axis == 0 else rhov
+    
+    # Simple upwind: assume positive flow for demonstration
+    # dF = F(U) - F(U_left) = U - U_left (for linear advection)
+    # For Euler, F = [rhou, rhou^2/rho + P, ...]
+    
+    # First-order donor cell:
+    # Use momentum as flux of mass
+    if axis == 0:
+        F_rho = rhou
+        F_rho_L = apply_shift(rhou, shift_plus_mpo, max_rank)
+    else:
+        F_rho = rhov
+        F_rho_L = apply_shift(rhov, shift_plus_mpo, max_rank)
+    
+    # Flux difference
+    dF_rho = qtt2d_sub(F_rho, F_rho_L, max_rank)
+    
+    # Update
+    coeff = -dt / dx
+    rho_new = qtt2d_add(rho, qtt2d_scale(dF_rho, coeff), max_rank)
+    
+    # For momentum and energy, similar
+    # (Simplified: just advect with same velocity)
+    dF_rhou = qtt2d_sub(rhou, apply_shift(rhou, shift_plus_mpo, max_rank), max_rank)
+    dF_rhov = qtt2d_sub(rhov, apply_shift(rhov, shift_plus_mpo, max_rank), max_rank)
+    dF_E = qtt2d_sub(E, apply_shift(E, shift_plus_mpo, max_rank), max_rank)
+    
+    rhou_new = qtt2d_add(rhou, qtt2d_scale(dF_rhou, coeff), max_rank)
+    rhov_new = qtt2d_add(rhov, qtt2d_scale(dF_rhov, coeff), max_rank)
+    E_new = qtt2d_add(E, qtt2d_scale(dF_E, coeff), max_rank)
+    
+    return rho_new, rhou_new, rhov_new, E_new</code></pre>
+</details>
+<div class="desc"><p>Compute pure upwind update for 2D Euler.</p>
+<p>For positive wave speed (u &gt; 0):
+U^{n+1} = U^n - dt/dx * (F(U) - F(U_left))</p>
+<p>For negative wave speed (u &lt; 0):
+U^{n+1} = U^n - dt/dx * (F(U_right) - F(U))</p>
+<p>We use a simple splitting: each wave family uses its own upwind direction.</p></div>
+</dd>
+<dt id="tensornet.cfd.local_flux_native.estimate_max_wavespeed"><code class="name flex">
+<span>def <span class="ident">estimate_max_wavespeed</span></span>(<span>rho: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>rhou: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>E: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>axis: int,<br>gamma: float,<br>n_samples: int = 100) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def estimate_max_wavespeed(
+    rho: QTT2DState, 
+    rhou: QTT2DState, 
+    E: QTT2DState,
+    axis: int,
+    gamma: float,
+    n_samples: int = 100
+) -&gt; float:
+    &#34;&#34;&#34;
+    Estimate maximum wavespeed |u| + c by sampling.
+    
+    This is O(n_samples * log N) for sampling from QTT.
+    &#34;&#34;&#34;
+    N_total = 2 ** len(rho.cores)
+    sample_indices = torch.randint(0, N_total, (n_samples,), dtype=torch.long)
+    
+    rho_vals = qtt2d_eval_batch(rho, sample_indices)
+    rhou_vals = qtt2d_eval_batch(rhou, sample_indices)
+    E_vals = qtt2d_eval_batch(E, sample_indices)
+    
+    rho_safe = torch.clamp(rho_vals, min=1e-10)
+    u = rhou_vals / rho_safe
+    
+    # For 2D, we need both momentum components
+    # For now, just use the axis-aligned velocity
+    P = (gamma - 1) * (E_vals - 0.5 * rho_safe * u**2)
+    P = torch.clamp(P, min=1e-10)
+    
+    c = torch.sqrt(gamma * P / rho_safe)
+    
+    # Maximum wavespeed with safety margin
+    return float((torch.abs(u) + c).max()) * 1.5</code></pre>
+</details>
+<div class="desc"><p>Estimate maximum wavespeed |u| + c by sampling.</p>
+<p>This is O(n_samples * log N) for sampling from QTT.</p></div>
+</dd>
+<dt id="tensornet.cfd.local_flux_native.qtt2d_add"><code class="name flex">
+<span>def <span class="ident">qtt2d_add</span></span>(<span>a: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>b: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>max_rank: int = 64) ‑> <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def qtt2d_add(a: QTT2DState, b: QTT2DState, max_rank: int = 64) -&gt; QTT2DState:
+    &#34;&#34;&#34;Add two QTT2D states.&#34;&#34;&#34;
+    a_qtt = QTTState(cores=a.cores, num_qubits=len(a.cores))
+    b_qtt = QTTState(cores=b.cores, num_qubits=len(b.cores))
+    result = qtt_add(a_qtt, b_qtt, max_bond=max_rank)
+    return QTT2DState(result.cores, nx=a.nx, ny=a.ny)</code></pre>
+</details>
+<div class="desc"><p>Add two QTT2D states.</p></div>
+</dd>
+<dt id="tensornet.cfd.local_flux_native.qtt2d_scale"><code class="name flex">
+<span>def <span class="ident">qtt2d_scale</span></span>(<span>a: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>scalar: float) ‑> <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def qtt2d_scale(a: QTT2DState, scalar: float) -&gt; QTT2DState:
+    &#34;&#34;&#34;Scale a QTT2D state.&#34;&#34;&#34;
+    new_cores = [c.clone() for c in a.cores]
+    new_cores[0] = new_cores[0] * scalar
+    return QTT2DState(new_cores, nx=a.nx, ny=a.ny)</code></pre>
+</details>
+<div class="desc"><p>Scale a QTT2D state.</p></div>
+</dd>
+<dt id="tensornet.cfd.local_flux_native.qtt2d_sub"><code class="name flex">
+<span>def <span class="ident">qtt2d_sub</span></span>(<span>a: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>b: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>max_rank: int = 64) ‑> <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def qtt2d_sub(a: QTT2DState, b: QTT2DState, max_rank: int = 64) -&gt; QTT2DState:
+    &#34;&#34;&#34;Subtract: a - b.&#34;&#34;&#34;
+    return qtt2d_add(a, qtt2d_scale(b, -1.0), max_rank=max_rank)</code></pre>
+</details>
+<div class="desc"><p>Subtract: a - b.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.cfd.local_flux_native.LocalFluxConfig"><code class="flex name class">
+<span>class <span class="ident">LocalFluxConfig</span></span>
+<span>(</span><span>gamma: float = 1.4,<br>max_rank: int = 64,<br>device: torch.device = None,<br>dtype: torch.dtype = torch.float32)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass  
+class LocalFluxConfig:
+    &#34;&#34;&#34;Configuration for local flux computation.&#34;&#34;&#34;
+    gamma: float = 1.4
+    max_rank: int = 64
+    device: torch.device = None
+    dtype: torch.dtype = torch.float32
+    
+    def __post_init__(self):
+        if self.device is None:
+            self.device = torch.device(&#39;cpu&#39;)</code></pre>
+</details>
+<div class="desc"><p>Configuration for local flux computation.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.local_flux_native.LocalFluxConfig.device"><code class="name">var <span class="ident">device</span> : torch.device</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.local_flux_native.LocalFluxConfig.dtype"><code class="name">var <span class="ident">dtype</span> : torch.dtype</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.local_flux_native.LocalFluxConfig.gamma"><code class="name">var <span class="ident">gamma</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.local_flux_native.LocalFluxConfig.max_rank"><code class="name">var <span class="ident">max_rank</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.local_flux_native.apply_shift" href="#tensornet.cfd.local_flux_native.apply_shift">apply_shift</a></code></li>
+<li><code><a title="tensornet.cfd.local_flux_native.compute_euler_flux_x" href="#tensornet.cfd.local_flux_native.compute_euler_flux_x">compute_euler_flux_x</a></code></li>
+<li><code><a title="tensornet.cfd.local_flux_native.compute_lax_friedrichs_flux_2d" href="#tensornet.cfd.local_flux_native.compute_lax_friedrichs_flux_2d">compute_lax_friedrichs_flux_2d</a></code></li>
+<li><code><a title="tensornet.cfd.local_flux_native.compute_upwind_update_2d" href="#tensornet.cfd.local_flux_native.compute_upwind_update_2d">compute_upwind_update_2d</a></code></li>
+<li><code><a title="tensornet.cfd.local_flux_native.estimate_max_wavespeed" href="#tensornet.cfd.local_flux_native.estimate_max_wavespeed">estimate_max_wavespeed</a></code></li>
+<li><code><a title="tensornet.cfd.local_flux_native.qtt2d_add" href="#tensornet.cfd.local_flux_native.qtt2d_add">qtt2d_add</a></code></li>
+<li><code><a title="tensornet.cfd.local_flux_native.qtt2d_scale" href="#tensornet.cfd.local_flux_native.qtt2d_scale">qtt2d_scale</a></code></li>
+<li><code><a title="tensornet.cfd.local_flux_native.qtt2d_sub" href="#tensornet.cfd.local_flux_native.qtt2d_sub">qtt2d_sub</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.cfd.local_flux_native.LocalFluxConfig" href="#tensornet.cfd.local_flux_native.LocalFluxConfig">LocalFluxConfig</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.local_flux_native.LocalFluxConfig.device" href="#tensornet.cfd.local_flux_native.LocalFluxConfig.device">device</a></code></li>
+<li><code><a title="tensornet.cfd.local_flux_native.LocalFluxConfig.dtype" href="#tensornet.cfd.local_flux_native.LocalFluxConfig.dtype">dtype</a></code></li>
+<li><code><a title="tensornet.cfd.local_flux_native.LocalFluxConfig.gamma" href="#tensornet.cfd.local_flux_native.LocalFluxConfig.gamma">gamma</a></code></li>
+<li><code><a title="tensornet.cfd.local_flux_native.LocalFluxConfig.max_rank" href="#tensornet.cfd.local_flux_native.LocalFluxConfig.max_rank">max_rank</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

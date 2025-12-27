@@ -551,16 +551,39 @@ class RecordEpisode(Wrapper):
     
     def save(self, path: str):
         """Save episodes to file."""
-        import pickle
-        with open(path, 'wb') as f:
-            pickle.dump(list(self._episodes), f)
+        import json
+        episodes_data = [
+            {
+                'observations': [obs.tolist() if hasattr(obs, 'tolist') else obs for obs in ep.observations],
+                'actions': [act.tolist() if hasattr(act, 'tolist') else act for act in ep.actions],
+                'rewards': ep.rewards,
+                'total_reward': ep.total_reward,
+                'length': ep.length,
+                'info': ep.info,
+            }
+            for ep in self._episodes
+        ]
+        with open(path, 'w') as f:
+            json.dump(episodes_data, f)
     
     def load(self, path: str):
         """Load episodes from file."""
-        import pickle
-        with open(path, 'rb') as f:
-            episodes = pickle.load(f)
-            self._episodes = deque(episodes, maxlen=self.buffer_size)
+        import json
+        import numpy as np
+        with open(path, 'r') as f:
+            episodes_data = json.load(f)
+        episodes = [
+            EpisodeRecord(
+                observations=[np.array(obs) for obs in ep['observations']],
+                actions=[np.array(act) if isinstance(act, list) else act for act in ep['actions']],
+                rewards=ep['rewards'],
+                total_reward=ep['total_reward'],
+                length=ep['length'],
+                info=ep.get('info', {}),
+            )
+            for ep in episodes_data
+        ]
+        self._episodes = deque(episodes, maxlen=self.buffer_size)
 
 
 class LogMetrics(Wrapper):

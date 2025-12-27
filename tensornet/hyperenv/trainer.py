@@ -88,16 +88,40 @@ class TrainingState:
     
     def save(self, path: str):
         """Save training state."""
-        import pickle
-        with open(path, 'wb') as f:
-            pickle.dump(self, f)
+        import json
+        data = {
+            'timestep': self.timestep,
+            'episode': self.episode,
+            'best_mean_reward': self.best_mean_reward,
+            'best_model_path': self.best_model_path,
+            'episode_rewards': self.episode_rewards,
+            'episode_lengths': self.episode_lengths,
+            'start_time': self.start_time,
+            'total_train_time': self.total_train_time,
+            'updates': self.updates,
+            'losses': self.losses,
+        }
+        with open(path, 'w') as f:
+            json.dump(data, f, indent=2)
     
     @classmethod
     def load(cls, path: str) -> 'TrainingState':
         """Load training state."""
-        import pickle
-        with open(path, 'rb') as f:
-            return pickle.load(f)
+        import json
+        with open(path, 'r') as f:
+            data = json.load(f)
+        state = cls()
+        state.timestep = data.get('timestep', 0)
+        state.episode = data.get('episode', 0)
+        state.best_mean_reward = data.get('best_mean_reward', float('-inf'))
+        state.best_model_path = data.get('best_model_path')
+        state.episode_rewards = data.get('episode_rewards', [])
+        state.episode_lengths = data.get('episode_lengths', [])
+        state.start_time = data.get('start_time', 0.0)
+        state.total_train_time = data.get('total_train_time', 0.0)
+        state.updates = data.get('updates', 0)
+        state.losses = data.get('losses', [])
+        return state
 
 
 # =============================================================================

@@ -95,49 +95,78 @@ env: $(ARTIFACTS_DIR)
 # ============================================
 # C) Format & Lint Gates
 # ============================================
+# NOTE: Using ruff for speed. CI also runs black+isort for compatibility.
 format:
 	@echo "=== C) Format & Lint Gates ==="
-	@echo "Running black..."
-	-$(PYTHON) -m black --check tensornet tests benchmarks scripts proofs
-	@echo "Running isort..."
-	-$(PYTHON) -m isort --check-only tensornet tests benchmarks scripts proofs
-	@echo "Running ruff..."
-	-$(PYTHON) -m ruff check tensornet tests benchmarks scripts proofs
-	@echo "✓ Format checks complete"
+	@echo "Running ruff format check..."
+	$(PYTHON) -m ruff format --check tensornet tests benchmarks scripts proofs
+	@echo "Running ruff lint..."
+	$(PYTHON) -m ruff check tensornet tests benchmarks scripts proofs
+	@echo "✓ Format checks passed"
 
 format-fix:
 	@echo "=== Applying Format Fixes ==="
-	$(PYTHON) -m black tensornet tests benchmarks scripts proofs
-	$(PYTHON) -m isort tensornet tests benchmarks scripts proofs
+	$(PYTHON) -m ruff format tensornet tests benchmarks scripts proofs
 	$(PYTHON) -m ruff check --fix tensornet tests benchmarks scripts proofs
 	@echo "✓ Format fixes applied"
+
+# Legacy black+isort target for compatibility
+format-legacy:
+	@echo "=== Legacy Format (black+isort) ==="
+	$(PYTHON) -m black tensornet tests benchmarks scripts proofs
+	$(PYTHON) -m isort tensornet tests benchmarks scripts proofs
+	@echo "✓ Legacy format applied"
 
 # ============================================
 # D) Type Checking
 # ============================================
 typecheck:
 	@echo "=== D) Type Checking ==="
-	$(PYTHON) -m mypy tensornet --ignore-missing-imports --no-error-summary || true
-	@echo "✓ Type check complete (warnings may be present)"
+	$(PYTHON) -m mypy tensornet --ignore-missing-imports
+	@echo "✓ Type check passed"
+
+# Docstring coverage check
+doccheck:
+	@echo "=== Docstring Coverage ==="
+	$(PYTHON) scripts/check_docstrings.py --threshold 70 -v
+	@echo "✓ Docstring coverage passed"
 
 # ============================================
 # E) Unit Tests
 # ============================================
 test-unit:
 	@echo "=== E) Unit Tests ==="
-	$(PYTHON) -m pytest tests/ -v --ignore=tests/integration -x
+	$(PYTHON) -m pytest tests/ -v -m "unit or not (integration or slow)" --ignore=tests/integration -x
 	@echo "✓ Unit tests passed"
+
+# Fast unit tests only (excludes slow tests)
+test-fast:
+	@echo "=== Unit Tests (fast only) ==="
+	$(PYTHON) -m pytest tests/ -v -m "unit and not slow" --ignore=tests/integration -x
+	@echo "✓ Fast unit tests passed"
 
 # ============================================
 # F) Integration Tests
 # ============================================
 test-int:
 	@echo "=== F) Integration Tests ==="
-	$(PYTHON) -m pytest tests/integration/ -v -x
+	$(PYTHON) -m pytest tests/integration/ -v -m "integration or not unit" -x
 	@echo "✓ Integration tests passed"
+
+# Physics validation tests
+test-physics:
+	@echo "=== Physics Validation Tests ==="
+	$(PYTHON) -m pytest tests/ Physics/tests/ -v -m "physics" -x
+	@echo "✓ Physics tests passed"
 
 test: test-unit test-int
 	@echo "✓ All tests passed"
+
+# Test with coverage report
+test-cov:
+	@echo "=== Tests with Coverage ==="
+	$(PYTHON) -m pytest tests/ -v --cov=tensornet --cov-report=term-missing --cov-report=html --cov-report=xml
+	@echo "✓ Coverage report generated (htmlcov/ and coverage.xml)"
 
 # ============================================
 # G) Formal Proofs
@@ -284,8 +313,25 @@ clean:
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 	@echo "✓ Clean complete"
 
-# Install development dependencies
+# Install development dependencies (pinned versions)
 dev-deps:
+	$(PYTHON) -m pip install -r requirements-dev.txt
+	@echo "✓ Dev dependencies installed (pinned versions)"
+
+# Legacy: Install dev deps without pinning (not recommended)
+dev-deps-unpinned:
 	$(PYTHON) -m pip install black isort ruff mypy pytest twine wheel pdoc3
 	$(PYTHON) -m pip install pip-audit bandit detect-secrets
-	@echo "✓ Dev dependencies installed"
+	@echo "✓ Dev dependencies installed (unpinned)"
+# ============================================
+# Lockfile Management
+# ============================================
+lockfile:
+	@echo "=== Generating Lockfiles ==="
+	$(PYTHON) -m pip freeze > requirements-lock.txt
+	@echo "✓ Root lockfile updated: requirements-lock.txt"
+
+lockfile-check:
+	@echo "=== Checking Lockfile Consistency ==="
+	$(PYTHON) -m pip install -r requirements-lock.txt --dry-run
+	@echo "✓ Lockfile is consistent"

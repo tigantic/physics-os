@@ -11,14 +11,10 @@ Tests for:
 import pytest
 import torch
 import numpy as np
-import sys
 import tempfile
 from pathlib import Path
 import time
 import os
-
-# Add project root to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 
 class TestWorkflows:

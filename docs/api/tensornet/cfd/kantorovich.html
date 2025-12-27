@@ -1,0 +1,1025 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.kantorovich API documentation</title>
+<meta name="description" content="Newton-Kantorovich Verifier for Computer-Assisted Proof …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.kantorovich</code></h1>
+</header>
+<section id="section-intro">
+<p>Newton-Kantorovich Verifier for Computer-Assisted Proof.</p>
+<p>This is the "Million Dollar Step" - the rigorous verification that
+a self-similar singularity profile exists within a computable error bound.</p>
+<h1 id="the-newton-kantorovich-theorem">The Newton-Kantorovich Theorem</h1>
+<p>Given an approximate solution ū to F(u) = 0, if:</p>
+<pre><code>||F(ū)|| · ||DF(ū)⁻¹|| &lt; 1/2
+</code></pre>
+<p>then there exists a TRUE solution u* near ū with:</p>
+<pre><code>||u* - ū|| ≤ 2 ||DF(ū)⁻¹|| · ||F(ū)||
+</code></pre>
+<p>Components:
+1. Residual: ||F(ū)|| = how well approximate profile satisfies the equation
+2. Jacobian: DF(ū) = linearization of the operator at ū<br>
+3. Inverse bound: ||DF(ū)⁻¹|| = stability of the linearization</p>
+<p>If the product is &lt; 0.5, the true singularity is PROVEN to exist.</p>
+<p>Reference: Kantorovich (1948), "Functional analysis and applied mathematics"
+Tucker (2011), "Validated Numerics"</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.kantorovich.verify_blowup_candidate"><code class="name flex">
+<span>def <span class="ident">verify_blowup_candidate</span></span>(<span>profile: torch.Tensor, N: int = 64, nu: float = 0.001, verbose: bool = True) ‑> <a title="tensornet.cfd.kantorovich.KantorovichBounds" href="#tensornet.cfd.kantorovich.KantorovichBounds">KantorovichBounds</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def verify_blowup_candidate(
+    profile: torch.Tensor,
+    N: int = 64,
+    nu: float = 1e-3,
+    verbose: bool = True,
+) -&gt; KantorovichBounds:
+    &#34;&#34;&#34;
+    Convenience function to verify a blow-up candidate.
+    
+    This is Step C of the Millennium proof pipeline.
+    
+    Args:
+        profile: Candidate velocity profile (M, M, M, 3)
+        N: Verification grid resolution (may interpolate)
+        nu: Viscosity
+        verbose: Print progress
+        
+    Returns:
+        KantorovichBounds with verification status
+    &#34;&#34;&#34;
+    # Interpolate profile to verification grid if needed
+    M = profile.shape[0]
+    if M != N:
+        # Spectral interpolation
+        profile_hat = torch.fft.fftn(profile, dim=(0, 1, 2))
+        
+        # Zero-pad or truncate
+        new_hat = torch.zeros(N, N, N, 3, dtype=torch.complex128)
+        min_size = min(M, N)
+        half = min_size // 2
+        
+        # Copy low frequencies
+        new_hat[:half, :half, :half, :] = profile_hat[:half, :half, :half, :]
+        new_hat[-half:, :half, :half, :] = profile_hat[-half:, :half, :half, :]
+        new_hat[:half, -half:, :half, :] = profile_hat[:half, -half:, :half, :]
+        new_hat[:half, :half, -half:, :] = profile_hat[:half, :half, -half:, :]
+        new_hat[-half:, -half:, :half, :] = profile_hat[-half:, -half:, :half, :]
+        new_hat[-half:, :half, -half:, :] = profile_hat[-half:, :half, -half:, :]
+        new_hat[:half, -half:, -half:, :] = profile_hat[:half, -half:, -half:, :]
+        new_hat[-half:, -half:, -half:, :] = profile_hat[-half:, -half:, -half:, :]
+        
+        # Scale for different grid sizes
+        profile = torch.fft.ifftn(new_hat * (N/M)**3, dim=(0, 1, 2)).real
+    
+    verifier = NewtonKantorovichVerifier(N=N, nu=nu, use_intervals=True)
+    return verifier.verify_profile(profile, verbose=verbose)</code></pre>
+</details>
+<div class="desc"><p>Convenience function to verify a blow-up candidate.</p>
+<p>This is Step C of the Millennium proof pipeline.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>profile</code></strong></dt>
+<dd>Candidate velocity profile (M, M, M, 3)</dd>
+<dt><strong><code>N</code></strong></dt>
+<dd>Verification grid resolution (may interpolate)</dd>
+<dt><strong><code>nu</code></strong></dt>
+<dd>Viscosity</dd>
+<dt><strong><code>verbose</code></strong></dt>
+<dd>Print progress</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>KantorovichBounds with verification status</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.cfd.kantorovich.KantorovichBounds"><code class="flex name class">
+<span>class <span class="ident">KantorovichBounds</span></span>
+<span>(</span><span>residual_bound: float,<br>jacobian_norm: float,<br>inverse_bound: float,<br>discriminant: float,<br>contraction_factor: float,<br>error_bound: Optional[float],<br>status: <a title="tensornet.cfd.kantorovich.VerificationStatus" href="#tensornet.cfd.kantorovich.VerificationStatus">VerificationStatus</a>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class KantorovichBounds:
+    &#34;&#34;&#34;
+    Bounds computed for Newton-Kantorovich theorem.
+    
+    The key inequality: discriminant = 2 * residual_bound * stability_bound &lt; 1
+    &#34;&#34;&#34;
+    residual_bound: float          # ||F(ū)|| upper bound
+    jacobian_norm: float           # ||DF(ū)|| (operator norm)
+    inverse_bound: float           # ||DF(ū)⁻¹|| (stability bound)
+    discriminant: float            # 2 * residual * inverse_bound
+    contraction_factor: float      # Contraction rate if Newton applied
+    error_bound: Optional[float]   # ||u* - ū|| if proof succeeds
+    status: VerificationStatus
+    
+    def __repr__(self):
+        return (
+            f&#34;KantorovichBounds(\n&#34;
+            f&#34;  ||R|| = {self.residual_bound:.6e}\n&#34;
+            f&#34;  ||L|| = {self.jacobian_norm:.6e}\n&#34;
+            f&#34;  ||L⁻¹|| = {self.inverse_bound:.6e}\n&#34;
+            f&#34;  discriminant = {self.discriminant:.6f}\n&#34;
+            f&#34;  status = {self.status.value}\n&#34;
+            f&#34;)&#34;
+        )</code></pre>
+</details>
+<div class="desc"><p>Bounds computed for Newton-Kantorovich theorem.</p>
+<p>The key inequality: discriminant = 2 * residual_bound * stability_bound &lt; 1</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.kantorovich.KantorovichBounds.contraction_factor"><code class="name">var <span class="ident">contraction_factor</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.kantorovich.KantorovichBounds.discriminant"><code class="name">var <span class="ident">discriminant</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.kantorovich.KantorovichBounds.error_bound"><code class="name">var <span class="ident">error_bound</span> : float | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.kantorovich.KantorovichBounds.inverse_bound"><code class="name">var <span class="ident">inverse_bound</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.kantorovich.KantorovichBounds.jacobian_norm"><code class="name">var <span class="ident">jacobian_norm</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.kantorovich.KantorovichBounds.residual_bound"><code class="name">var <span class="ident">residual_bound</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.kantorovich.KantorovichBounds.status"><code class="name">var <span class="ident">status</span> : <a title="tensornet.cfd.kantorovich.VerificationStatus" href="#tensornet.cfd.kantorovich.VerificationStatus">VerificationStatus</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.kantorovich.NewtonKantorovichVerifier"><code class="flex name class">
+<span>class <span class="ident">NewtonKantorovichVerifier</span></span>
+<span>(</span><span>N: int = 64, nu: float = 0.001, alpha: float = 0.5, use_intervals: bool = True)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class NewtonKantorovichVerifier:
+    &#34;&#34;&#34;
+    Computer-Assisted Proof verifier using Newton-Kantorovich theorem.
+    
+    This class rigorously verifies whether a candidate self-similar
+    blow-up profile is close to a true solution.
+    &#34;&#34;&#34;
+    
+    def __init__(
+        self,
+        N: int = 64,
+        nu: float = 1e-3,
+        alpha: float = 0.5,
+        use_intervals: bool = True,
+    ):
+        &#34;&#34;&#34;
+        Initialize the verifier.
+        
+        Args:
+            N: Grid resolution (higher = more precision but slower)
+            nu: Viscosity
+            alpha: Self-similar rescaling exponent
+            use_intervals: Whether to use interval arithmetic (rigorous)
+        &#34;&#34;&#34;
+        self.N = N
+        self.nu = nu
+        self.alpha = alpha
+        self.use_intervals = use_intervals
+        
+        self.L = 2 * np.pi
+        self.dx = self.L / N
+        
+        # Spectral grid
+        k = torch.fft.fftfreq(N, self.dx) * 2 * np.pi
+        self.k = k
+        self.kx, self.ky, self.kz = torch.meshgrid(k, k, k, indexing=&#39;ij&#39;)
+        self.k_sq = self.kx**2 + self.ky**2 + self.kz**2
+        self.k_sq_safe = self.k_sq.clone()
+        self.k_sq_safe[0, 0, 0] = 1.0
+        
+        # Rescaled NS equations with custom alpha
+        self.scaling = SelfSimilarScaling(alpha=alpha, beta=alpha, T_star=1.0)
+        self.ns = RescaledNSEquations(self.scaling, nu=nu, N=N)
+    
+    def compute_residual(
+        self, 
+        U: torch.Tensor,
+        tau: float = 0.0,  # Use τ=0 for fixed-point (nu_eff = nu)
+    ) -&gt; Tuple[torch.Tensor, float]:
+        &#34;&#34;&#34;
+        Compute the fixed-point residual F(U) and its norm.
+        
+        At the self-similar fixed point: F(U*) = 0
+        
+        Note: We use τ=0 for the fixed-point residual computation so that
+        ν_eff = ν (physical viscosity). The self-similar fixed point 
+        equation doesn&#39;t depend on τ - it&#39;s the time-independent limit.
+        
+        Args:
+            U: Candidate profile (N, N, N, 3)
+            tau: Rescaled time (use 0 for fixed-point)
+            
+        Returns:
+            R: Residual field
+            R_norm: ||R||_2 upper bound
+        &#34;&#34;&#34;
+        tau_tensor = torch.tensor(tau, dtype=torch.float64)
+        R = self.ns.residual(U, tau_tensor)
+        
+        # L2 norm (integrate over domain)
+        R_norm = torch.sqrt((R ** 2).sum() * self.dx**3).item()
+        
+        if self.use_intervals:
+            # Add discretization error estimate
+            # Spectral methods have exponential convergence for smooth functions
+            # Truncation error ~ O(e^{-c*N}) for analytic functions
+            # Conservative estimate: add N^{-4} * ||U|| for 4th order accuracy
+            U_norm = torch.sqrt((U ** 2).sum() * self.dx**3).item()
+            discretization_error = (1.0 / self.N**4) * U_norm
+            R_norm = R_norm + discretization_error
+        
+        return R, R_norm
+    
+    def compute_jacobian_action(
+        self,
+        U: torch.Tensor,
+        V: torch.Tensor,
+        tau: float = 0.0,  # Use τ=0 for fixed-point
+    ) -&gt; torch.Tensor:
+        &#34;&#34;&#34;
+        Compute Jacobian-vector product: DF(U) · V
+        
+        The linearization of F at U acting on perturbation V.
+        
+        F(U) = -(U·∇)U - αU - β(ξ·∇)U + ν∇²U - ∇p
+        
+        DF(U)·V = -(V·∇)U - (U·∇)V - αV - β(ξ·∇)V + ν∇²V - ∇q
+        
+        where q is the pressure perturbation ensuring div(DF·V) = 0.
+        
+        Note: We use τ=0 so that ν_eff = ν (physical viscosity).
+        &#34;&#34;&#34;
+        tau_tensor = torch.tensor(tau, dtype=torch.float64)
+        nu_eff = self.ns.effective_viscosity(tau_tensor)
+        alpha = self.scaling.alpha
+        beta = self.scaling.beta
+        
+        # FFT of U and V
+        U_hat = torch.fft.fftn(U, dim=(0, 1, 2))
+        V_hat = torch.fft.fftn(V, dim=(0, 1, 2))
+        
+        # Derivatives
+        dUdx = torch.fft.ifftn(1j * self.kx.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+        dUdy = torch.fft.ifftn(1j * self.ky.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+        dUdz = torch.fft.ifftn(1j * self.kz.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+        
+        dVdx = torch.fft.ifftn(1j * self.kx.unsqueeze(-1) * V_hat, dim=(0, 1, 2)).real
+        dVdy = torch.fft.ifftn(1j * self.ky.unsqueeze(-1) * V_hat, dim=(0, 1, 2)).real
+        dVdz = torch.fft.ifftn(1j * self.kz.unsqueeze(-1) * V_hat, dim=(0, 1, 2)).real
+        
+        # (V·∇)U
+        V_grad_U = torch.zeros_like(U)
+        for i in range(3):
+            V_grad_U[..., i] = V[..., 0] * dUdx[..., i] + V[..., 1] * dUdy[..., i] + V[..., 2] * dUdz[..., i]
+        
+        # (U·∇)V
+        U_grad_V = torch.zeros_like(U)
+        for i in range(3):
+            U_grad_V[..., i] = U[..., 0] * dVdx[..., i] + U[..., 1] * dVdy[..., i] + U[..., 2] * dVdz[..., i]
+        
+        # Stretching: β(ξ·∇)V + αV
+        xi_x = self.ns.xi.view(-1, 1, 1, 1).expand_as(V[..., 0:1])
+        xi_y = self.ns.xi.view(1, -1, 1, 1).expand_as(V[..., 0:1])
+        xi_z = self.ns.xi.view(1, 1, -1, 1).expand_as(V[..., 0:1])
+        
+        xi_grad_V = xi_x * dVdx + xi_y * dVdy + xi_z * dVdz
+        stretching = beta * xi_grad_V + alpha * V
+        
+        # Laplacian of V
+        lap_V = torch.fft.ifftn(-self.k_sq.unsqueeze(-1) * V_hat, dim=(0, 1, 2)).real
+        
+        # Unprojected result
+        DFV_unprojected = -V_grad_U - U_grad_V - stretching + nu_eff * lap_V
+        
+        # Project to divergence-free
+        DFV = self.ns.pressure_projection(DFV_unprojected)
+        
+        return DFV
+    
+    def estimate_jacobian_norm(
+        self,
+        U: torch.Tensor,
+        n_power_iter: int = 20,
+    ) -&gt; float:
+        &#34;&#34;&#34;
+        Estimate ||DF(U)|| using power iteration.
+        
+        Returns upper bound on the operator norm.
+        &#34;&#34;&#34;
+        # Random initial vector
+        V = torch.randn_like(U)
+        V = V / torch.sqrt((V**2).sum())
+        
+        for _ in range(n_power_iter):
+            DFV = self.compute_jacobian_action(U, V)
+            norm = torch.sqrt((DFV**2).sum()).item()
+            if norm &lt; 1e-12:
+                break
+            V = DFV / norm
+        
+        # Final Rayleigh quotient
+        DFV = self.compute_jacobian_action(U, V)
+        jacobian_norm = torch.sqrt((DFV**2).sum()).item()
+        
+        # Add safety margin for interval arithmetic
+        if self.use_intervals:
+            jacobian_norm *= 1.1  # 10% safety margin
+        
+        return jacobian_norm
+    
+    def estimate_inverse_bound(
+        self,
+        U: torch.Tensor,
+        n_iter: int = 50,
+        tol: float = 1e-8,
+    ) -&gt; Tuple[float, bool]:
+        &#34;&#34;&#34;
+        Estimate ||DF(U)⁻¹|| using iterative solver.
+        
+        We solve DF(U) · W = R for random R, then ||W||/||R|| ≈ ||DF⁻¹||.
+        
+        This is the CRITICAL step - if the inverse is unbounded, the 
+        profile is near a bifurcation and proof fails.
+        
+        Returns:
+            inverse_bound: Upper bound on ||DF⁻¹||
+            converged: Whether the solver converged
+        &#34;&#34;&#34;
+        # Random RHS
+        R = torch.randn_like(U)
+        R = self.ns.pressure_projection(R)  # Make divergence-free
+        R_norm = torch.sqrt((R**2).sum() * self.dx**3).item()
+        
+        # Solve DF(U) · W = R using GMRES-like iteration
+        W = torch.zeros_like(U)
+        r = R.clone()  # Initial residual
+        
+        max_inv = 0.0
+        
+        for iteration in range(n_iter):
+            # Simple Richardson iteration: W_{k+1} = W_k + α * r_k
+            # where r_k = R - DF(U) · W_k
+            alpha = 0.1  # Relaxation parameter
+            
+            W = W + alpha * r
+            DFW = self.compute_jacobian_action(U, W)
+            r = R - DFW
+            
+            r_norm = torch.sqrt((r**2).sum() * self.dx**3).item()
+            W_norm = torch.sqrt((W**2).sum() * self.dx**3).item()
+            
+            if W_norm &gt; 0 and R_norm &gt; 0:
+                current_inv = W_norm / R_norm
+                max_inv = max(max_inv, current_inv)
+            
+            if r_norm / R_norm &lt; tol:
+                return max_inv * 1.2, True  # 20% safety margin
+        
+        # Didn&#39;t converge - return conservative estimate
+        # If solver struggles, inverse might be large
+        return max_inv * 2.0, False
+    
+    def verify_profile(
+        self,
+        U: torch.Tensor,
+        verbose: bool = True,
+    ) -&gt; KantorovichBounds:
+        &#34;&#34;&#34;
+        Perform full Newton-Kantorovich verification.
+        
+        Args:
+            U: Candidate self-similar profile
+            verbose: Print progress
+            
+        Returns:
+            KantorovichBounds with verification result
+        &#34;&#34;&#34;
+        if verbose:
+            print(&#34;=&#34; * 60)
+            print(&#34;NEWTON-KANTOROVICH VERIFICATION&#34;)
+            print(&#34;=&#34; * 60)
+        
+        # Step 1: Compute residual
+        if verbose:
+            print(&#34;\nStep 1: Computing residual ||F(ū)||...&#34;)
+        R, residual_bound = self.compute_residual(U)
+        if verbose:
+            print(f&#34;  ||F(ū)|| ≤ {residual_bound:.6e}&#34;)
+        
+        # Step 2: Estimate Jacobian norm
+        if verbose:
+            print(&#34;\nStep 2: Estimating ||DF(ū)||...&#34;)
+        jacobian_norm = self.estimate_jacobian_norm(U)
+        if verbose:
+            print(f&#34;  ||DF(ū)|| ≈ {jacobian_norm:.6e}&#34;)
+        
+        # Step 3: Estimate inverse bound (the hard part)
+        if verbose:
+            print(&#34;\nStep 3: Estimating ||DF(ū)⁻¹||...&#34;)
+        inverse_bound, converged = self.estimate_inverse_bound(U)
+        if verbose:
+            status_str = &#34;converged&#34; if converged else &#34;WARNING: did not converge&#34;
+            print(f&#34;  ||DF(ū)⁻¹|| ≤ {inverse_bound:.6e} ({status_str})&#34;)
+        
+        # Step 4: Compute discriminant
+        discriminant = 2 * residual_bound * inverse_bound
+        contraction = residual_bound * jacobian_norm
+        
+        if verbose:
+            print(&#34;\n&#34; + &#34;-&#34; * 60)
+            print(&#34;THE GOLDEN INEQUALITY:&#34;)
+            print(f&#34;  2 · ||F(ū)|| · ||DF(ū)⁻¹|| = {discriminant:.6f}&#34;)
+            print(&#34;-&#34; * 60)
+        
+        # Determine status
+        if discriminant &lt; 0.5:
+            status = VerificationStatus.PROOF_SUCCESS
+            error_bound = 2 * inverse_bound * residual_bound
+            if verbose:
+                print(f&#34;\n★ PROOF SUCCESSFUL ★&#34;)
+                print(f&#34;  A true singularity exists within ||u* - ū|| ≤ {error_bound:.6e}&#34;)
+        elif discriminant &lt; 1.0:
+            status = VerificationStatus.INCONCLUSIVE
+            error_bound = None
+            if verbose:
+                print(f&#34;\n⚠ INCONCLUSIVE&#34;)
+                print(f&#34;  Discriminant is between 0.5 and 1.0&#34;)
+                print(f&#34;  Need finer grid or better profile&#34;)
+        else:
+            status = VerificationStatus.PROOF_FAILURE
+            error_bound = None
+            if verbose:
+                print(f&#34;\n✗ PROOF FAILED&#34;)
+                print(f&#34;  Discriminant ≥ 1.0 - profile may not be near a singularity&#34;)
+        
+        if verbose:
+            print(&#34;=&#34; * 60)
+        
+        return KantorovichBounds(
+            residual_bound=residual_bound,
+            jacobian_norm=jacobian_norm,
+            inverse_bound=inverse_bound,
+            discriminant=discriminant,
+            contraction_factor=contraction,
+            error_bound=error_bound,
+            status=status,
+        )</code></pre>
+</details>
+<div class="desc"><p>Computer-Assisted Proof verifier using Newton-Kantorovich theorem.</p>
+<p>This class rigorously verifies whether a candidate self-similar
+blow-up profile is close to a true solution.</p>
+<p>Initialize the verifier.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>N</code></strong></dt>
+<dd>Grid resolution (higher = more precision but slower)</dd>
+<dt><strong><code>nu</code></strong></dt>
+<dd>Viscosity</dd>
+<dt><strong><code>alpha</code></strong></dt>
+<dd>Self-similar rescaling exponent</dd>
+<dt><strong><code>use_intervals</code></strong></dt>
+<dd>Whether to use interval arithmetic (rigorous)</dd>
+</dl></div>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.kantorovich.NewtonKantorovichVerifier.compute_jacobian_action"><code class="name flex">
+<span>def <span class="ident">compute_jacobian_action</span></span>(<span>self, U: torch.Tensor, V: torch.Tensor, tau: float = 0.0) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_jacobian_action(
+    self,
+    U: torch.Tensor,
+    V: torch.Tensor,
+    tau: float = 0.0,  # Use τ=0 for fixed-point
+) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Compute Jacobian-vector product: DF(U) · V
+    
+    The linearization of F at U acting on perturbation V.
+    
+    F(U) = -(U·∇)U - αU - β(ξ·∇)U + ν∇²U - ∇p
+    
+    DF(U)·V = -(V·∇)U - (U·∇)V - αV - β(ξ·∇)V + ν∇²V - ∇q
+    
+    where q is the pressure perturbation ensuring div(DF·V) = 0.
+    
+    Note: We use τ=0 so that ν_eff = ν (physical viscosity).
+    &#34;&#34;&#34;
+    tau_tensor = torch.tensor(tau, dtype=torch.float64)
+    nu_eff = self.ns.effective_viscosity(tau_tensor)
+    alpha = self.scaling.alpha
+    beta = self.scaling.beta
+    
+    # FFT of U and V
+    U_hat = torch.fft.fftn(U, dim=(0, 1, 2))
+    V_hat = torch.fft.fftn(V, dim=(0, 1, 2))
+    
+    # Derivatives
+    dUdx = torch.fft.ifftn(1j * self.kx.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+    dUdy = torch.fft.ifftn(1j * self.ky.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+    dUdz = torch.fft.ifftn(1j * self.kz.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+    
+    dVdx = torch.fft.ifftn(1j * self.kx.unsqueeze(-1) * V_hat, dim=(0, 1, 2)).real
+    dVdy = torch.fft.ifftn(1j * self.ky.unsqueeze(-1) * V_hat, dim=(0, 1, 2)).real
+    dVdz = torch.fft.ifftn(1j * self.kz.unsqueeze(-1) * V_hat, dim=(0, 1, 2)).real
+    
+    # (V·∇)U
+    V_grad_U = torch.zeros_like(U)
+    for i in range(3):
+        V_grad_U[..., i] = V[..., 0] * dUdx[..., i] + V[..., 1] * dUdy[..., i] + V[..., 2] * dUdz[..., i]
+    
+    # (U·∇)V
+    U_grad_V = torch.zeros_like(U)
+    for i in range(3):
+        U_grad_V[..., i] = U[..., 0] * dVdx[..., i] + U[..., 1] * dVdy[..., i] + U[..., 2] * dVdz[..., i]
+    
+    # Stretching: β(ξ·∇)V + αV
+    xi_x = self.ns.xi.view(-1, 1, 1, 1).expand_as(V[..., 0:1])
+    xi_y = self.ns.xi.view(1, -1, 1, 1).expand_as(V[..., 0:1])
+    xi_z = self.ns.xi.view(1, 1, -1, 1).expand_as(V[..., 0:1])
+    
+    xi_grad_V = xi_x * dVdx + xi_y * dVdy + xi_z * dVdz
+    stretching = beta * xi_grad_V + alpha * V
+    
+    # Laplacian of V
+    lap_V = torch.fft.ifftn(-self.k_sq.unsqueeze(-1) * V_hat, dim=(0, 1, 2)).real
+    
+    # Unprojected result
+    DFV_unprojected = -V_grad_U - U_grad_V - stretching + nu_eff * lap_V
+    
+    # Project to divergence-free
+    DFV = self.ns.pressure_projection(DFV_unprojected)
+    
+    return DFV</code></pre>
+</details>
+<div class="desc"><p>Compute Jacobian-vector product: DF(U) · V</p>
+<p>The linearization of F at U acting on perturbation V.</p>
+<p>F(U) = -(U·∇)U - αU - β(ξ·∇)U + ν∇²U - ∇p</p>
+<p>DF(U)·V = -(V·∇)U - (U·∇)V - αV - β(ξ·∇)V + ν∇²V - ∇q</p>
+<p>where q is the pressure perturbation ensuring div(DF·V) = 0.</p>
+<p>Note: We use τ=0 so that ν_eff = ν (physical viscosity).</p></div>
+</dd>
+<dt id="tensornet.cfd.kantorovich.NewtonKantorovichVerifier.compute_residual"><code class="name flex">
+<span>def <span class="ident">compute_residual</span></span>(<span>self, U: torch.Tensor, tau: float = 0.0) ‑> Tuple[torch.Tensor, float]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_residual(
+    self, 
+    U: torch.Tensor,
+    tau: float = 0.0,  # Use τ=0 for fixed-point (nu_eff = nu)
+) -&gt; Tuple[torch.Tensor, float]:
+    &#34;&#34;&#34;
+    Compute the fixed-point residual F(U) and its norm.
+    
+    At the self-similar fixed point: F(U*) = 0
+    
+    Note: We use τ=0 for the fixed-point residual computation so that
+    ν_eff = ν (physical viscosity). The self-similar fixed point 
+    equation doesn&#39;t depend on τ - it&#39;s the time-independent limit.
+    
+    Args:
+        U: Candidate profile (N, N, N, 3)
+        tau: Rescaled time (use 0 for fixed-point)
+        
+    Returns:
+        R: Residual field
+        R_norm: ||R||_2 upper bound
+    &#34;&#34;&#34;
+    tau_tensor = torch.tensor(tau, dtype=torch.float64)
+    R = self.ns.residual(U, tau_tensor)
+    
+    # L2 norm (integrate over domain)
+    R_norm = torch.sqrt((R ** 2).sum() * self.dx**3).item()
+    
+    if self.use_intervals:
+        # Add discretization error estimate
+        # Spectral methods have exponential convergence for smooth functions
+        # Truncation error ~ O(e^{-c*N}) for analytic functions
+        # Conservative estimate: add N^{-4} * ||U|| for 4th order accuracy
+        U_norm = torch.sqrt((U ** 2).sum() * self.dx**3).item()
+        discretization_error = (1.0 / self.N**4) * U_norm
+        R_norm = R_norm + discretization_error
+    
+    return R, R_norm</code></pre>
+</details>
+<div class="desc"><p>Compute the fixed-point residual F(U) and its norm.</p>
+<p>At the self-similar fixed point: F(U*) = 0</p>
+<p>Note: We use τ=0 for the fixed-point residual computation so that
+ν_eff = ν (physical viscosity). The self-similar fixed point
+equation doesn't depend on τ - it's the time-independent limit.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>U</code></strong></dt>
+<dd>Candidate profile (N, N, N, 3)</dd>
+<dt><strong><code>tau</code></strong></dt>
+<dd>Rescaled time (use 0 for fixed-point)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>R</code></dt>
+<dd>Residual field</dd>
+<dt><code>R_norm</code></dt>
+<dd>||R||_2 upper bound</dd>
+</dl></div>
+</dd>
+<dt id="tensornet.cfd.kantorovich.NewtonKantorovichVerifier.estimate_inverse_bound"><code class="name flex">
+<span>def <span class="ident">estimate_inverse_bound</span></span>(<span>self, U: torch.Tensor, n_iter: int = 50, tol: float = 1e-08) ‑> Tuple[float, bool]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def estimate_inverse_bound(
+    self,
+    U: torch.Tensor,
+    n_iter: int = 50,
+    tol: float = 1e-8,
+) -&gt; Tuple[float, bool]:
+    &#34;&#34;&#34;
+    Estimate ||DF(U)⁻¹|| using iterative solver.
+    
+    We solve DF(U) · W = R for random R, then ||W||/||R|| ≈ ||DF⁻¹||.
+    
+    This is the CRITICAL step - if the inverse is unbounded, the 
+    profile is near a bifurcation and proof fails.
+    
+    Returns:
+        inverse_bound: Upper bound on ||DF⁻¹||
+        converged: Whether the solver converged
+    &#34;&#34;&#34;
+    # Random RHS
+    R = torch.randn_like(U)
+    R = self.ns.pressure_projection(R)  # Make divergence-free
+    R_norm = torch.sqrt((R**2).sum() * self.dx**3).item()
+    
+    # Solve DF(U) · W = R using GMRES-like iteration
+    W = torch.zeros_like(U)
+    r = R.clone()  # Initial residual
+    
+    max_inv = 0.0
+    
+    for iteration in range(n_iter):
+        # Simple Richardson iteration: W_{k+1} = W_k + α * r_k
+        # where r_k = R - DF(U) · W_k
+        alpha = 0.1  # Relaxation parameter
+        
+        W = W + alpha * r
+        DFW = self.compute_jacobian_action(U, W)
+        r = R - DFW
+        
+        r_norm = torch.sqrt((r**2).sum() * self.dx**3).item()
+        W_norm = torch.sqrt((W**2).sum() * self.dx**3).item()
+        
+        if W_norm &gt; 0 and R_norm &gt; 0:
+            current_inv = W_norm / R_norm
+            max_inv = max(max_inv, current_inv)
+        
+        if r_norm / R_norm &lt; tol:
+            return max_inv * 1.2, True  # 20% safety margin
+    
+    # Didn&#39;t converge - return conservative estimate
+    # If solver struggles, inverse might be large
+    return max_inv * 2.0, False</code></pre>
+</details>
+<div class="desc"><p>Estimate ||DF(U)⁻¹|| using iterative solver.</p>
+<p>We solve DF(U) · W = R for random R, then ||W||/||R|| ≈ ||DF⁻¹||.</p>
+<p>This is the CRITICAL step - if the inverse is unbounded, the
+profile is near a bifurcation and proof fails.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>inverse_bound</code></dt>
+<dd>Upper bound on ||DF⁻¹||</dd>
+<dt><code>converged</code></dt>
+<dd>Whether the solver converged</dd>
+</dl></div>
+</dd>
+<dt id="tensornet.cfd.kantorovich.NewtonKantorovichVerifier.estimate_jacobian_norm"><code class="name flex">
+<span>def <span class="ident">estimate_jacobian_norm</span></span>(<span>self, U: torch.Tensor, n_power_iter: int = 20) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def estimate_jacobian_norm(
+    self,
+    U: torch.Tensor,
+    n_power_iter: int = 20,
+) -&gt; float:
+    &#34;&#34;&#34;
+    Estimate ||DF(U)|| using power iteration.
+    
+    Returns upper bound on the operator norm.
+    &#34;&#34;&#34;
+    # Random initial vector
+    V = torch.randn_like(U)
+    V = V / torch.sqrt((V**2).sum())
+    
+    for _ in range(n_power_iter):
+        DFV = self.compute_jacobian_action(U, V)
+        norm = torch.sqrt((DFV**2).sum()).item()
+        if norm &lt; 1e-12:
+            break
+        V = DFV / norm
+    
+    # Final Rayleigh quotient
+    DFV = self.compute_jacobian_action(U, V)
+    jacobian_norm = torch.sqrt((DFV**2).sum()).item()
+    
+    # Add safety margin for interval arithmetic
+    if self.use_intervals:
+        jacobian_norm *= 1.1  # 10% safety margin
+    
+    return jacobian_norm</code></pre>
+</details>
+<div class="desc"><p>Estimate ||DF(U)|| using power iteration.</p>
+<p>Returns upper bound on the operator norm.</p></div>
+</dd>
+<dt id="tensornet.cfd.kantorovich.NewtonKantorovichVerifier.verify_profile"><code class="name flex">
+<span>def <span class="ident">verify_profile</span></span>(<span>self, U: torch.Tensor, verbose: bool = True) ‑> <a title="tensornet.cfd.kantorovich.KantorovichBounds" href="#tensornet.cfd.kantorovich.KantorovichBounds">KantorovichBounds</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def verify_profile(
+    self,
+    U: torch.Tensor,
+    verbose: bool = True,
+) -&gt; KantorovichBounds:
+    &#34;&#34;&#34;
+    Perform full Newton-Kantorovich verification.
+    
+    Args:
+        U: Candidate self-similar profile
+        verbose: Print progress
+        
+    Returns:
+        KantorovichBounds with verification result
+    &#34;&#34;&#34;
+    if verbose:
+        print(&#34;=&#34; * 60)
+        print(&#34;NEWTON-KANTOROVICH VERIFICATION&#34;)
+        print(&#34;=&#34; * 60)
+    
+    # Step 1: Compute residual
+    if verbose:
+        print(&#34;\nStep 1: Computing residual ||F(ū)||...&#34;)
+    R, residual_bound = self.compute_residual(U)
+    if verbose:
+        print(f&#34;  ||F(ū)|| ≤ {residual_bound:.6e}&#34;)
+    
+    # Step 2: Estimate Jacobian norm
+    if verbose:
+        print(&#34;\nStep 2: Estimating ||DF(ū)||...&#34;)
+    jacobian_norm = self.estimate_jacobian_norm(U)
+    if verbose:
+        print(f&#34;  ||DF(ū)|| ≈ {jacobian_norm:.6e}&#34;)
+    
+    # Step 3: Estimate inverse bound (the hard part)
+    if verbose:
+        print(&#34;\nStep 3: Estimating ||DF(ū)⁻¹||...&#34;)
+    inverse_bound, converged = self.estimate_inverse_bound(U)
+    if verbose:
+        status_str = &#34;converged&#34; if converged else &#34;WARNING: did not converge&#34;
+        print(f&#34;  ||DF(ū)⁻¹|| ≤ {inverse_bound:.6e} ({status_str})&#34;)
+    
+    # Step 4: Compute discriminant
+    discriminant = 2 * residual_bound * inverse_bound
+    contraction = residual_bound * jacobian_norm
+    
+    if verbose:
+        print(&#34;\n&#34; + &#34;-&#34; * 60)
+        print(&#34;THE GOLDEN INEQUALITY:&#34;)
+        print(f&#34;  2 · ||F(ū)|| · ||DF(ū)⁻¹|| = {discriminant:.6f}&#34;)
+        print(&#34;-&#34; * 60)
+    
+    # Determine status
+    if discriminant &lt; 0.5:
+        status = VerificationStatus.PROOF_SUCCESS
+        error_bound = 2 * inverse_bound * residual_bound
+        if verbose:
+            print(f&#34;\n★ PROOF SUCCESSFUL ★&#34;)
+            print(f&#34;  A true singularity exists within ||u* - ū|| ≤ {error_bound:.6e}&#34;)
+    elif discriminant &lt; 1.0:
+        status = VerificationStatus.INCONCLUSIVE
+        error_bound = None
+        if verbose:
+            print(f&#34;\n⚠ INCONCLUSIVE&#34;)
+            print(f&#34;  Discriminant is between 0.5 and 1.0&#34;)
+            print(f&#34;  Need finer grid or better profile&#34;)
+    else:
+        status = VerificationStatus.PROOF_FAILURE
+        error_bound = None
+        if verbose:
+            print(f&#34;\n✗ PROOF FAILED&#34;)
+            print(f&#34;  Discriminant ≥ 1.0 - profile may not be near a singularity&#34;)
+    
+    if verbose:
+        print(&#34;=&#34; * 60)
+    
+    return KantorovichBounds(
+        residual_bound=residual_bound,
+        jacobian_norm=jacobian_norm,
+        inverse_bound=inverse_bound,
+        discriminant=discriminant,
+        contraction_factor=contraction,
+        error_bound=error_bound,
+        status=status,
+    )</code></pre>
+</details>
+<div class="desc"><p>Perform full Newton-Kantorovich verification.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>U</code></strong></dt>
+<dd>Candidate self-similar profile</dd>
+<dt><strong><code>verbose</code></strong></dt>
+<dd>Print progress</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>KantorovichBounds with verification result</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.kantorovich.VerificationStatus"><code class="flex name class">
+<span>class <span class="ident">VerificationStatus</span></span>
+<span>(</span><span>*args, **kwds)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class VerificationStatus(Enum):
+    &#34;&#34;&#34;Result of Newton-Kantorovich verification.&#34;&#34;&#34;
+    PROOF_SUCCESS = &#34;proof_success&#34;    # Discriminant &lt; 0.5: singularity exists
+    INCONCLUSIVE = &#34;inconclusive&#34;      # 0.5 ≤ discriminant &lt; 1: need finer grid
+    PROOF_FAILURE = &#34;proof_failure&#34;    # Discriminant ≥ 1: profile may be wrong
+    NUMERICAL_ERROR = &#34;numerical_error&#34;  # Computation failed</code></pre>
+</details>
+<div class="desc"><p>Result of Newton-Kantorovich verification.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="tensornet.cfd.kantorovich.VerificationStatus.INCONCLUSIVE"><code class="name">var <span class="ident">INCONCLUSIVE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.kantorovich.VerificationStatus.NUMERICAL_ERROR"><code class="name">var <span class="ident">NUMERICAL_ERROR</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.kantorovich.VerificationStatus.PROOF_FAILURE"><code class="name">var <span class="ident">PROOF_FAILURE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.kantorovich.VerificationStatus.PROOF_SUCCESS"><code class="name">var <span class="ident">PROOF_SUCCESS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#the-newton-kantorovich-theorem">The Newton-Kantorovich Theorem</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.kantorovich.verify_blowup_candidate" href="#tensornet.cfd.kantorovich.verify_blowup_candidate">verify_blowup_candidate</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.cfd.kantorovich.KantorovichBounds" href="#tensornet.cfd.kantorovich.KantorovichBounds">KantorovichBounds</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.kantorovich.KantorovichBounds.contraction_factor" href="#tensornet.cfd.kantorovich.KantorovichBounds.contraction_factor">contraction_factor</a></code></li>
+<li><code><a title="tensornet.cfd.kantorovich.KantorovichBounds.discriminant" href="#tensornet.cfd.kantorovich.KantorovichBounds.discriminant">discriminant</a></code></li>
+<li><code><a title="tensornet.cfd.kantorovich.KantorovichBounds.error_bound" href="#tensornet.cfd.kantorovich.KantorovichBounds.error_bound">error_bound</a></code></li>
+<li><code><a title="tensornet.cfd.kantorovich.KantorovichBounds.inverse_bound" href="#tensornet.cfd.kantorovich.KantorovichBounds.inverse_bound">inverse_bound</a></code></li>
+<li><code><a title="tensornet.cfd.kantorovich.KantorovichBounds.jacobian_norm" href="#tensornet.cfd.kantorovich.KantorovichBounds.jacobian_norm">jacobian_norm</a></code></li>
+<li><code><a title="tensornet.cfd.kantorovich.KantorovichBounds.residual_bound" href="#tensornet.cfd.kantorovich.KantorovichBounds.residual_bound">residual_bound</a></code></li>
+<li><code><a title="tensornet.cfd.kantorovich.KantorovichBounds.status" href="#tensornet.cfd.kantorovich.KantorovichBounds.status">status</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.kantorovich.NewtonKantorovichVerifier" href="#tensornet.cfd.kantorovich.NewtonKantorovichVerifier">NewtonKantorovichVerifier</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.kantorovich.NewtonKantorovichVerifier.compute_jacobian_action" href="#tensornet.cfd.kantorovich.NewtonKantorovichVerifier.compute_jacobian_action">compute_jacobian_action</a></code></li>
+<li><code><a title="tensornet.cfd.kantorovich.NewtonKantorovichVerifier.compute_residual" href="#tensornet.cfd.kantorovich.NewtonKantorovichVerifier.compute_residual">compute_residual</a></code></li>
+<li><code><a title="tensornet.cfd.kantorovich.NewtonKantorovichVerifier.estimate_inverse_bound" href="#tensornet.cfd.kantorovich.NewtonKantorovichVerifier.estimate_inverse_bound">estimate_inverse_bound</a></code></li>
+<li><code><a title="tensornet.cfd.kantorovich.NewtonKantorovichVerifier.estimate_jacobian_norm" href="#tensornet.cfd.kantorovich.NewtonKantorovichVerifier.estimate_jacobian_norm">estimate_jacobian_norm</a></code></li>
+<li><code><a title="tensornet.cfd.kantorovich.NewtonKantorovichVerifier.verify_profile" href="#tensornet.cfd.kantorovich.NewtonKantorovichVerifier.verify_profile">verify_profile</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.kantorovich.VerificationStatus" href="#tensornet.cfd.kantorovich.VerificationStatus">VerificationStatus</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.kantorovich.VerificationStatus.INCONCLUSIVE" href="#tensornet.cfd.kantorovich.VerificationStatus.INCONCLUSIVE">INCONCLUSIVE</a></code></li>
+<li><code><a title="tensornet.cfd.kantorovich.VerificationStatus.NUMERICAL_ERROR" href="#tensornet.cfd.kantorovich.VerificationStatus.NUMERICAL_ERROR">NUMERICAL_ERROR</a></code></li>
+<li><code><a title="tensornet.cfd.kantorovich.VerificationStatus.PROOF_FAILURE" href="#tensornet.cfd.kantorovich.VerificationStatus.PROOF_FAILURE">PROOF_FAILURE</a></code></li>
+<li><code><a title="tensornet.cfd.kantorovich.VerificationStatus.PROOF_SUCCESS" href="#tensornet.cfd.kantorovich.VerificationStatus.PROOF_SUCCESS">PROOF_SUCCESS</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

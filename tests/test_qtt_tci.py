@@ -2,8 +2,6 @@
 Test QTT-TCI construction accuracy.
 """
 import torch
-import sys
-sys.path.insert(0, '.')
 
 from tensornet.cfd.qtt_tci import qtt_from_function, qtt_from_function_dense
 from tensornet.cfd.qtt_eval import qtt_eval_batch

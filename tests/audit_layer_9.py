@@ -11,13 +11,16 @@ import sys
 import os
 import numpy as np
 
+# Project root needed for integrations path
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, PROJECT_ROOT)
 
 
 def test_unreal_bridge_classes():
     """Test Unreal bridge class structure."""
-    sys.path.insert(0, os.path.join(PROJECT_ROOT, "integrations", "unreal"))
+    # Add integrations path for bridge imports
+    unreal_path = os.path.join(PROJECT_ROOT, "integrations", "unreal")
+    if unreal_path not in sys.path:
+        sys.path.insert(0, unreal_path)
     
     from python_bridge import (
         MessageType, 

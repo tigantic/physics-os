@@ -8,12 +8,7 @@ Validates that the Intent Engine can:
 3. Apply constraints to physics
 """
 
-import sys
-import os
 import numpy as np
-
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, PROJECT_ROOT)
 
 
 def test_intent_parser():

@@ -11,10 +11,6 @@ import numpy as np
 import tempfile
 from pathlib import Path
 
-# Import substrate
-import sys
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from tensornet.substrate import (
     Field,
     FieldType,

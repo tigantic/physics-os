@@ -7,9 +7,6 @@ Tests:
 3. MaxVol configuration
 """
 
-import sys
-sys.path.insert(0, ".")
-
 from tci_core import (
     RUST_AVAILABLE,
     TCISampler,

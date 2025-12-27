@@ -16,14 +16,11 @@ Constitutional Compliance:
     - Article IV.4.2: Canonical benchmark validation
 """
 
-import sys
-from pathlib import Path
-
 import pytest
 import torch
 
-# Add parent to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+# Mark entire module as integration and physics tests
+pytestmark = [pytest.mark.integration, pytest.mark.physics]
 
 from tensornet.core.mps import MPS
 from tensornet.mps.hamiltonians import heisenberg_mpo, tfim_mpo

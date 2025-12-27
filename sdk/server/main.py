@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import os
 import time
 from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
@@ -39,6 +40,31 @@ except ImportError:
 # =============================================================================
 # MODELS
 # =============================================================================
+
+class ErrorDetail(BaseModel):
+    """Structured error detail for debugging."""
+    code: str = PydanticField(description="Error code for programmatic handling")
+    message: str = PydanticField(description="Human-readable error message")
+    correlation_id: Optional[str] = PydanticField(None, description="Request correlation ID for log tracing")
+    field: Optional[str] = PydanticField(None, description="Field name if validation error")
+
+
+class ErrorResponse(BaseModel):
+    """Standard error response schema.
+    
+    Used for all HTTP 4xx and 5xx responses for consistent client handling.
+    
+    Example:
+        {
+            "error": {
+                "code": "FIELD_NOT_FOUND",
+                "message": "Field with handle 42 does not exist",
+                "correlation_id": "abc123"
+            }
+        }
+    """
+    error: ErrorDetail
+
 
 class FieldConfig(BaseModel):
     """Field initialization configuration."""
@@ -105,11 +131,44 @@ class FieldHandle(BaseModel):
 
 @dataclass
 class ServerState:
-    """Server state container."""
+    """Server state container with thread-safe access."""
     fields: Dict[int, Any] = field(default_factory=dict)
     next_handle: int = 1
     start_time: float = field(default_factory=time.time)
     request_count: int = 0
+    
+    def __post_init__(self):
+        """Initialize lock for thread-safe state mutations."""
+        import asyncio
+        self._lock = asyncio.Lock()
+    
+    async def allocate_handle(self) -> int:
+        """Thread-safe handle allocation."""
+        async with self._lock:
+            handle = self.next_handle
+            self.next_handle += 1
+            return handle
+    
+    async def add_field(self, handle: int, field_obj: Any):
+        """Thread-safe field addition."""
+        async with self._lock:
+            self.fields[handle] = field_obj
+            self.request_count += 1
+    
+    async def remove_field(self, handle: int) -> bool:
+        """Thread-safe field removal."""
+        async with self._lock:
+            if handle in self.fields:
+                del self.fields[handle]
+                self.request_count += 1
+                return True
+            return False
+    
+    async def get_field(self, handle: int) -> Optional[Any]:
+        """Thread-safe field retrieval."""
+        async with self._lock:
+            self.request_count += 1
+            return self.fields.get(handle)
 
 
 state = ServerState()
@@ -135,14 +194,67 @@ if HAS_FASTAPI:
         lifespan=lifespan,
     )
 
-    # CORS middleware
+    # CORS middleware - configurable via environment
+    # SECURITY: Default to localhost-only in production
+    CORS_ORIGINS = os.environ.get(
+        "HYPERTENSOR_CORS_ORIGINS",
+        "http://localhost:3000,http://localhost:8080,http://127.0.0.1:3000,http://127.0.0.1:8080"
+    ).split(",")
+    
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=CORS_ORIGINS,
         allow_credentials=True,
-        allow_methods=["*"],
+        allow_methods=["GET", "POST", "PUT", "DELETE"],
         allow_headers=["*"],
     )
+    
+    # =========================================================================
+    # ERROR HANDLING
+    # =========================================================================
+    
+    # Error codes for consistent client handling
+    class ErrorCodes:
+        """Error codes for programmatic handling."""
+        INTERNAL_ERROR = "INTERNAL_ERROR"
+        FIELD_NOT_FOUND = "FIELD_NOT_FOUND"
+        HYPERTENSOR_UNAVAILABLE = "HYPERTENSOR_UNAVAILABLE"
+        VALIDATION_ERROR = "VALIDATION_ERROR"
+        OPERATION_FAILED = "OPERATION_FAILED"
+    
+    def _sanitize_error(e: Exception, code: str = ErrorCodes.INTERNAL_ERROR) -> dict:
+        """Sanitize error messages to prevent information leakage.
+        
+        Returns structured error detail for use with HTTPException.
+        """
+        import logging
+        import uuid
+        
+        # Generate correlation ID for log tracing
+        correlation_id = str(uuid.uuid4())[:8]
+        
+        # Log full error internally with correlation ID
+        logging.getLogger(__name__).exception(
+            f"Internal error [correlation_id={correlation_id}]"
+        )
+        
+        # Return generic message to client with correlation ID
+        return {
+            "error": {
+                "code": code,
+                "message": "Internal server error. Check server logs for details.",
+                "correlation_id": correlation_id,
+            }
+        }
+    
+    def _field_not_found_error(handle: int) -> dict:
+        """Create a structured error for field not found."""
+        return {
+            "error": {
+                "code": ErrorCodes.FIELD_NOT_FOUND,
+                "message": f"Field with handle {handle} does not exist",
+            }
+        }
 
     # =========================================================================
     # ENDPOINTS
@@ -161,8 +273,6 @@ if HAS_FASTAPI:
     @app.post("/fields", response_model=FieldHandle)
     async def create_field(config: FieldConfig):
         """Create a new field."""
-        state.request_count += 1
-        
         try:
             from tensornet.substrate import Field, FieldType
             import math
@@ -185,9 +295,9 @@ if HAS_FASTAPI:
                 field_type=field_type_map[config.field_type],
             )
             
-            handle = state.next_handle
-            state.next_handle += 1
-            state.fields[handle] = field
+            # Thread-safe handle allocation and field storage
+            handle = await state.allocate_handle()
+            await state.add_field(handle, field)
             
             stats = field.stats()
             
@@ -208,30 +318,29 @@ if HAS_FASTAPI:
             )
             
         except ImportError:
-            raise HTTPException(500, "HyperTensor not available")
+            raise HTTPException(
+                status_code=500,
+                detail={"error": {"code": ErrorCodes.HYPERTENSOR_UNAVAILABLE, "message": "HyperTensor not available"}}
+            )
         except Exception as e:
-            raise HTTPException(500, str(e))
+            raise HTTPException(status_code=500, detail=_sanitize_error(e))
 
     @app.delete("/fields/{handle}")
     async def delete_field(handle: int):
         """Delete a field."""
-        state.request_count += 1
+        removed = await state.remove_field(handle)
+        if not removed:
+            raise HTTPException(status_code=404, detail=_field_not_found_error(handle))
         
-        if handle not in state.fields:
-            raise HTTPException(404, f"Field {handle} not found")
-        
-        del state.fields[handle]
         return {"status": "deleted", "handle": handle}
 
     @app.get("/fields/{handle}/stats", response_model=FieldStats)
     async def get_stats(handle: int):
         """Get field statistics."""
-        state.request_count += 1
+        field = await state.get_field(handle)
+        if field is None:
+            raise HTTPException(status_code=404, detail=_field_not_found_error(handle))
         
-        if handle not in state.fields:
-            raise HTTPException(404, f"Field {handle} not found")
-        
-        field = state.fields[handle]
         stats = field.stats()
         
         return FieldStats(
@@ -250,12 +359,10 @@ if HAS_FASTAPI:
     @app.post("/fields/{handle}/sample", response_model=SampleResponse)
     async def sample_field(handle: int, request: SampleRequest):
         """Sample field at given points."""
-        state.request_count += 1
+        field = await state.get_field(handle)
+        if field is None:
+            raise HTTPException(status_code=404, detail=_field_not_found_error(handle))
         
-        if handle not in state.fields:
-            raise HTTPException(404, f"Field {handle} not found")
-        
-        field = state.fields[handle]
         points = np.array(request.points, dtype=np.float32)
         
         try:
@@ -267,33 +374,27 @@ if HAS_FASTAPI:
                 error_estimate=0.0,
             )
         except Exception as e:
-            raise HTTPException(500, str(e))
+            raise HTTPException(status_code=500, detail=_sanitize_error(e))
 
     @app.post("/fields/{handle}/step")
     async def step_field(handle: int, dt: float = Query(0.016, ge=0.0, le=1.0)):
         """Step field simulation."""
-        state.request_count += 1
-        
-        if handle not in state.fields:
-            raise HTTPException(404, f"Field {handle} not found")
-        
-        field = state.fields[handle]
+        field = await state.get_field(handle)
+        if field is None:
+            raise HTTPException(status_code=404, detail=_field_not_found_error(handle))
         
         try:
             field.step(dt)
             return {"status": "stepped", "dt": dt}
         except Exception as e:
-            raise HTTPException(500, str(e))
+            raise HTTPException(status_code=500, detail=_sanitize_error(e))
 
     @app.post("/fields/{handle}/impulse")
     async def apply_impulse(handle: int, request: ImpulseRequest):
         """Apply impulse to field."""
-        state.request_count += 1
-        
-        if handle not in state.fields:
-            raise HTTPException(404, f"Field {handle} not found")
-        
-        field = state.fields[handle]
+        field = await state.get_field(handle)
+        if field is None:
+            raise HTTPException(status_code=404, detail=_field_not_found_error(handle))
         
         try:
             from tensornet.operators import Impulse
@@ -305,20 +406,23 @@ if HAS_FASTAPI:
                 radius=request.radius,
             )
             
-            state.fields[handle] = impulse(field)
+            # Update field with impulse applied (thread-safe)
+            new_field = impulse(field)
+            await state.add_field(handle, new_field)
             return {"status": "applied"}
         except Exception as e:
-            raise HTTPException(500, str(e))
+            raise HTTPException(status_code=500, detail=_sanitize_error(e))
 
     @app.get("/fields")
     async def list_fields():
         """List all active fields."""
-        state.request_count += 1
-        
-        return {
-            "fields": list(state.fields.keys()),
-            "count": len(state.fields),
-        }
+        # Read-only access to fields dict - thread-safe for reads
+        async with state._lock:
+            state.request_count += 1
+            return {
+                "fields": list(state.fields.keys()),
+                "count": len(state.fields),
+            }
 
 
 # =============================================================================

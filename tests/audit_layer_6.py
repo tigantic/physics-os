@@ -5,14 +5,12 @@ Layer 6 Audit: Benchmark Suite Validation
 Validates which benchmarks in the benchmarks/ directory actually run.
 """
 
-import sys
 import os
 import subprocess
+from pathlib import Path
 
-# Ensure correct path
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, PROJECT_ROOT)
-os.chdir(PROJECT_ROOT)
+# Get project root for benchmark paths
+PROJECT_ROOT = Path(__file__).parent.parent
 
 BENCHMARKS = [
     ("Sod Shock Tube", "sod_shock_tube_inline"),

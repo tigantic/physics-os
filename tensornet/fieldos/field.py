@@ -384,21 +384,43 @@ class Field:
         }
     
     def save(self, path: str):
-        """Save to file."""
+        """Save to file.
+        
+        Note: Metadata is serialized as JSON string to avoid pickle security risks.
+        """
+        import json
         np.savez(
             path,
             data=self._data,
             id=self._id,
             name=self._name,
             version=self._version,
-            metadata=self._metadata.to_dict(),
+            metadata_json=json.dumps(self._metadata.to_dict()),
         )
     
     @classmethod
     def load(cls, path: str) -> 'Field':
-        """Load from file."""
-        npz = np.load(path, allow_pickle=True)
-        metadata = FieldMetadata.from_dict(npz["metadata"].item())
+        """Load from file.
+        
+        Security: Uses allow_pickle=False to prevent arbitrary code execution.
+        Metadata is loaded from JSON string.
+        """
+        import json
+        npz = np.load(path, allow_pickle=False)
+        
+        # Handle both legacy (pickled) and new (JSON) formats
+        if "metadata_json" in npz.files:
+            metadata_dict = json.loads(str(npz["metadata_json"]))
+        elif "metadata" in npz.files:
+            # Legacy format - reject for security
+            raise ValueError(
+                "Legacy pickle-based format detected. "
+                "Re-save the file with the current version to migrate to safe format."
+            )
+        else:
+            raise ValueError("Invalid field file: missing metadata")
+        
+        metadata = FieldMetadata.from_dict(metadata_dict)
         field = cls(str(npz["name"]), npz["data"], metadata)
         field._id = str(npz["id"])
         field._version = int(npz["version"])

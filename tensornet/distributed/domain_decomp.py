@@ -116,16 +116,14 @@ class DomainDecomposition:
         n_procs = config.n_procs
         
         if config.nz == 1:
-            # 2D decomposition
-            # Find factors close to square root
+            # 2D decomposition - find factors close to square root
             nx_procs = int(np.sqrt(n_procs))
             while n_procs % nx_procs != 0:
                 nx_procs -= 1
             ny_procs = n_procs // nx_procs
             return (nx_procs, ny_procs, 1)
         else:
-            # 3D decomposition
-            # Prefer cubic decomposition
+            # 3D decomposition - prefer cubic decomposition
             nz_procs = int(np.cbrt(n_procs))
             while n_procs % nz_procs != 0:
                 nz_procs -= 1
@@ -138,19 +136,128 @@ class DomainDecomposition:
             
             return (nx_procs, ny_procs, nz_procs)
     
+    def _get_neighbor_rank(
+        self, pi: int, pj: int, pk: int,
+        di: int, dj: int, dk: int
+    ) -> Optional[int]:
+        """
+        Compute neighbor rank with periodic boundary handling.
+        
+        Args:
+            pi, pj, pk: Current processor indices
+            di, dj, dk: Direction offsets (-1, 0, or 1)
+            
+        Returns:
+            Neighbor rank or None if no neighbor
+        """
+        config = self.config
+        px, py, pz = self.proc_dims
+        
+        ni, nj, nk = pi + di, pj + dj, pk + dk
+        
+        # X direction
+        if config.periodic_x:
+            ni = ni % px
+        elif ni < 0 or ni >= px:
+            return None
+        
+        # Y direction  
+        if config.periodic_y:
+            nj = nj % py
+        elif nj < 0 or nj >= py:
+            return None
+        
+        # Z direction
+        if pz > 1:
+            if config.periodic_z:
+                nk = nk % pz
+            elif nk < 0 or nk >= pz:
+                return None
+        
+        return ni * py * pz + nj * pz + nk
+    
+    def _compute_ghost_cells(
+        self, pi: int, pj: int, pk: int
+    ) -> Tuple[int, int, int, int, int, int]:
+        """
+        Compute ghost cell counts for each boundary.
+        
+        Returns:
+            Tuple of (left, right, bottom, top, back, front) ghost counts
+        """
+        config = self.config
+        px, py, pz = self.proc_dims
+        n_ghost = config.n_ghost
+        
+        ghost_left = n_ghost if (pi > 0 or config.periodic_x) else 0
+        ghost_right = n_ghost if (pi < px-1 or config.periodic_x) else 0
+        ghost_bottom = n_ghost if (pj > 0 or config.periodic_y) else 0
+        ghost_top = n_ghost if (pj < py-1 or config.periodic_y) else 0
+        ghost_back = n_ghost if (pk > 0 or config.periodic_z) and pz > 1 else 0
+        ghost_front = n_ghost if (pk < pz-1 or config.periodic_z) and pz > 1 else 0
+        
+        return ghost_left, ghost_right, ghost_bottom, ghost_top, ghost_back, ghost_front
+    
+    def _create_subdomain(
+        self, rank: int,
+        pi: int, pj: int, pk: int,
+        i_offset: int, j_offset: int, k_offset: int,
+        local_nx: int, local_ny: int, local_nz: int,
+    ) -> SubdomainInfo:
+        """Create a single subdomain with all computed properties."""
+        config = self.config
+        px, py, pz = self.proc_dims
+        
+        # Get ghost cell counts
+        ghosts = self._compute_ghost_cells(pi, pj, pk)
+        ghost_left, ghost_right, ghost_bottom, ghost_top, ghost_back, ghost_front = ghosts
+        
+        # Create subdomain
+        subdomain = SubdomainInfo(
+            rank=rank,
+            i_start=i_offset,
+            i_end=i_offset + local_nx,
+            j_start=j_offset,
+            j_end=j_offset + local_ny,
+            k_start=k_offset,
+            k_end=k_offset + local_nz,
+            local_nx=local_nx + ghost_left + ghost_right,
+            local_ny=local_ny + ghost_bottom + ghost_top,
+            local_nz=local_nz + ghost_back + ghost_front if pz > 1 else 1,
+            neighbor_left=self._get_neighbor_rank(pi, pj, pk, -1, 0, 0),
+            neighbor_right=self._get_neighbor_rank(pi, pj, pk, 1, 0, 0),
+            neighbor_bottom=self._get_neighbor_rank(pi, pj, pk, 0, -1, 0),
+            neighbor_top=self._get_neighbor_rank(pi, pj, pk, 0, 1, 0),
+            neighbor_back=self._get_neighbor_rank(pi, pj, pk, 0, 0, -1),
+            neighbor_front=self._get_neighbor_rank(pi, pj, pk, 0, 0, 1),
+        )
+        
+        # Create local coordinates
+        subdomain.x_local = self._create_local_coords(
+            i_offset, local_nx, ghost_left, ghost_right,
+            config.x_min, config.x_max, config.nx
+        )
+        subdomain.y_local = self._create_local_coords(
+            j_offset, local_ny, ghost_bottom, ghost_top,
+            config.y_min, config.y_max, config.ny
+        )
+        if pz > 1:
+            subdomain.z_local = self._create_local_coords(
+                k_offset, local_nz, ghost_back, ghost_front,
+                config.z_min, config.z_max, config.nz
+            )
+        
+        return subdomain
+    
     def _create_subdomains(self):
         """Create subdomain information for all processors."""
         config = self.config
         px, py, pz = self.proc_dims
         
-        # Base sizes
-        base_nx = config.nx // px
-        base_ny = config.ny // py
+        # Compute base sizes and remainders for load balancing
+        base_nx, rem_nx = divmod(config.nx, px)
+        base_ny, rem_ny = divmod(config.ny, py)
         base_nz = config.nz // pz if config.nz > 1 else 1
-        
-        # Remainders for load balancing
-        rem_nx = config.nx % px
-        rem_ny = config.ny % py
         rem_nz = config.nz % pz if config.nz > 1 else 0
         
         rank = 0
@@ -167,74 +274,12 @@ class DomainDecomposition:
                 for pk in range(pz):
                     local_nz = base_nz + (1 if pk < rem_nz else 0)
                     
-                    # Compute neighbors
-                    def get_neighbor(di, dj, dk):
-                        ni = pi + di
-                        nj = pj + dj
-                        nk = pk + dk
-                        
-                        # Handle periodicity
-                        if config.periodic_x:
-                            ni = ni % px
-                        elif ni < 0 or ni >= px:
-                            return None
-                        
-                        if config.periodic_y:
-                            nj = nj % py
-                        elif nj < 0 or nj >= py:
-                            return None
-                        
-                        if pz > 1:
-                            if config.periodic_z:
-                                nk = nk % pz
-                            elif nk < 0 or nk >= pz:
-                                return None
-                        
-                        return ni * py * pz + nj * pz + nk
-                    
-                    # Include ghost cells in local size
-                    ghost_left = config.n_ghost if (pi > 0 or config.periodic_x) else 0
-                    ghost_right = config.n_ghost if (pi < px-1 or config.periodic_x) else 0
-                    ghost_bottom = config.n_ghost if (pj > 0 or config.periodic_y) else 0
-                    ghost_top = config.n_ghost if (pj < py-1 or config.periodic_y) else 0
-                    ghost_back = config.n_ghost if (pk > 0 or config.periodic_z) and pz > 1 else 0
-                    ghost_front = config.n_ghost if (pk < pz-1 or config.periodic_z) and pz > 1 else 0
-                    
-                    subdomain = SubdomainInfo(
-                        rank=rank,
-                        i_start=i_offset,
-                        i_end=i_offset + local_nx,
-                        j_start=j_offset,
-                        j_end=j_offset + local_ny,
-                        k_start=k_offset,
-                        k_end=k_offset + local_nz,
-                        local_nx=local_nx + ghost_left + ghost_right,
-                        local_ny=local_ny + ghost_bottom + ghost_top,
-                        local_nz=local_nz + ghost_back + ghost_front if pz > 1 else 1,
-                        neighbor_left=get_neighbor(-1, 0, 0),
-                        neighbor_right=get_neighbor(1, 0, 0),
-                        neighbor_bottom=get_neighbor(0, -1, 0),
-                        neighbor_top=get_neighbor(0, 1, 0),
-                        neighbor_back=get_neighbor(0, 0, -1),
-                        neighbor_front=get_neighbor(0, 0, 1),
+                    self.subdomains[rank] = self._create_subdomain(
+                        rank, pi, pj, pk,
+                        i_offset, j_offset, k_offset,
+                        local_nx, local_ny, local_nz,
                     )
                     
-                    # Create local coordinates
-                    subdomain.x_local = self._create_local_coords(
-                        i_offset, local_nx, ghost_left, ghost_right,
-                        config.x_min, config.x_max, config.nx
-                    )
-                    subdomain.y_local = self._create_local_coords(
-                        j_offset, local_ny, ghost_bottom, ghost_top,
-                        config.y_min, config.y_max, config.ny
-                    )
-                    if pz > 1:
-                        subdomain.z_local = self._create_local_coords(
-                            k_offset, local_nz, ghost_back, ghost_front,
-                            config.z_min, config.z_max, config.nz
-                        )
-                    
-                    self.subdomains[rank] = subdomain
                     rank += 1
                     k_offset += local_nz
                 

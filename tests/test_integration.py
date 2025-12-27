@@ -6,10 +6,6 @@ Validates that all major components work together.
 Run with: python -m pytest tests/test_integration.py -v
 """
 
-import sys
-import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import math
 import torch
 import pytest

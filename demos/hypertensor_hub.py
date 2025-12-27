@@ -7,24 +7,17 @@ The primary interface for interacting with HyperTensor manifolds.
 A professional desktop application using PySide6 + VisPy for GPU-accelerated
 visualization of QTT-compressed physics fields.
 
+PRODUCTION ARCHITECTURE:
+- Threaded compute: All Field operations run in QThread workers
+- Non-blocking UI: Main thread stays responsive during tensor contractions
+- Signal/slot pattern: Thread-safe communication between compute and UI
+- Cancelable operations: User can change params while compute is running
+
 Features:
 - Direct memory access to QTT cores (no ZMQ bridge latency)
 - Intent-first design with command bar (Layer 8 integration)
 - Forensic 4D navigation with temporal scrubbing
 - Portable standalone app for Third-Party Replay milestone
-
-Architecture:
-┌─────────────────────────────────────────────────────────────┐
-│                     HYPERTENSOR HUB                          │
-├────────┬─────────────────────────────────────────────────────┤
-│ BLADE  │                                                     │
-│ STRIP  │              MANIFOLD VIEWPORT                      │
-│        │         (VisPy OpenGL Canvas)                       │
-│ 🛰 📊 ⌨│                                                     │
-│        │                                                     │
-├────────┴─────────────────────────────────────────────────────┤
-│  > INTENT BAR: "what is the maximum temperature?"            │
-└─────────────────────────────────────────────────────────────┘
 
 Usage:
     python demos/hypertensor_hub.py
@@ -38,12 +31,10 @@ import numpy as np
 from pathlib import Path
 from datetime import datetime
 import re
+import traceback
 
 # Add project root
 sys.path.insert(0, str(Path(__file__).parent.parent))
-
-# Import World Data Slicer components
-from demos.world_data_slicer import GlobalManifoldSlicer, create_synthetic_weather_field
 
 try:
     from PySide6.QtWidgets import (
@@ -52,7 +43,7 @@ try:
         QApplication, QSlider, QTextEdit, QSplitter, QStatusBar,
         QProgressBar, QGroupBox, QComboBox, QSpinBox, QDoubleSpinBox
     )
-    from PySide6.QtCore import Qt, QSize, QTimer, Signal, QThread
+    from PySide6.QtCore import Qt, QSize, QTimer, Signal, QThread, QObject, Slot
     from PySide6.QtGui import QFont, QColor, QPalette
 except ImportError:
     print("ERROR: PySide6 not installed. Run: pip install PySide6")
@@ -75,6 +66,94 @@ try:
 except ImportError:
     TENSORNET_AVAILABLE = False
     print("WARNING: tensornet not fully available. Running in demo mode.")
+
+
+# =============================================================================
+# BACKGROUND WORKER THREADS - Keep UI responsive during tensor operations
+# =============================================================================
+
+class FieldCreationWorker(QObject):
+    """Worker thread for creating Field objects (can take seconds on CPU)."""
+    
+    finished = Signal(object, object, object)  # field, slicer, error
+    progress = Signal(str)  # status message
+    
+    def __init__(self, bits_per_dim: int = 4, rank: int = 8):
+        super().__init__()
+        self.bits_per_dim = bits_per_dim
+        self.rank = rank
+        self._cancelled = False
+        
+    def cancel(self):
+        self._cancelled = True
+        
+    @Slot()
+    def run(self):
+        """Create field in background thread."""
+        try:
+            self.progress.emit(f"Creating {2**self.bits_per_dim}³ field...")
+            
+            if self._cancelled:
+                self.finished.emit(None, None, "Cancelled")
+                return
+                
+            field = Field.create(
+                dims=3,
+                bits_per_dim=self.bits_per_dim,
+                rank=self.rank,
+                init='smooth'
+            )
+            
+            if self._cancelled:
+                self.finished.emit(None, None, "Cancelled")
+                return
+                
+            self.progress.emit("Creating slice engine...")
+            slicer = SliceEngine(field)
+            
+            self.finished.emit(field, slicer, None)
+            
+        except Exception as e:
+            self.finished.emit(None, None, str(e))
+
+
+class SliceWorker(QObject):
+    """Worker thread for slice extraction (O(L×r²) but still needs threading)."""
+    
+    finished = Signal(object, str)  # slice_data, error
+    progress = Signal(str)
+    
+    def __init__(self, slicer, plane: str, depth: float):
+        super().__init__()
+        self.slicer = slicer
+        self.plane = plane
+        self.depth = depth
+        self._cancelled = False
+        
+    def cancel(self):
+        self._cancelled = True
+        
+    @Slot()
+    def run(self):
+        """Extract slice in background thread."""
+        try:
+            if self._cancelled:
+                self.finished.emit(None, "Cancelled")
+                return
+                
+            self.progress.emit(f"Extracting {self.plane.upper()} slice @ {self.depth:.0%}...")
+            
+            result = self.slicer.slice(plane=self.plane, depth=self.depth)
+            slice_data = result.data if hasattr(result, 'data') else result
+            
+            if self._cancelled:
+                self.finished.emit(None, "Cancelled")
+                return
+                
+            self.finished.emit(slice_data, None)
+            
+        except Exception as e:
+            self.finished.emit(None, str(e))
 
 
 # =============================================================================
@@ -215,15 +294,13 @@ QSpinBox, QDoubleSpinBox {
 
 class ManifoldCanvas:
     """
-    VisPy Canvas embedded into Qt for O(L×r²) rendering.
+    VisPy Canvas for manifold visualization.
     
-    This is the "Abyss" - where the manifold lives.
-    Direct GPU rendering without network overhead.
+    Simple 2D slice viewer with text overlays for context.
     """
     
     def __init__(self):
         if not VISPY_AVAILABLE:
-            # Fallback to a simple Qt widget
             self._native = QLabel("VisPy not available - Install with: pip install vispy")
             self._native.setStyleSheet("background: #050505; color: #3E5B81; padding: 20px;")
             self._native.setAlignment(Qt.AlignCenter)
@@ -231,21 +308,21 @@ class ManifoldCanvas:
             
         self.canvas = scene.SceneCanvas(
             keys='interactive', 
-            show=False,  # We'll embed it
-            bgcolor='#050505'
+            show=False,
+            bgcolor='#0A0A0A'
         )
+        
+        # Simple single view
         self.view = self.canvas.central_widget.add_view()
-        self.view.camera = 'turntable'  # Perfect for 3D manifolds
-        self.view.camera.fov = 45
-        self.view.camera.distance = 3
+        self.view.camera = 'panzoom'
+        self.view.camera.aspect = 1
         
-        # Initialize with grid lines
-        self.grid = visuals.GridLines(parent=self.view.scene)
-        
-        # Placeholder for field visualization
-        self.volume_visual = None
         self.slice_visual = None
         self._current_slice = None
+        self._vmin = 0
+        self._vmax = 1
+        self._plane = 'XY'
+        self._depth_pct = 50
         
     @property
     def native(self):
@@ -254,21 +331,37 @@ class ManifoldCanvas:
             return self._native
         return self.canvas.native
     
-    def update_slice(self, slice_data: np.ndarray, colormap: str = 'viridis'):
+    def set_title(self, plane: str, depth_pct: int):
+        """Update the slice title."""
+        self._plane = plane
+        self._depth_pct = depth_pct
+        print(f"[DEBUG] Canvas title: {plane} @ {depth_pct}%")
+    
+    def update_slice(self, slice_data: np.ndarray, colormap: str = 'inferno'):
         """Update the displayed slice from field data."""
         if not VISPY_AVAILABLE:
             return
+        
+        print(f"[DEBUG] Updating canvas with slice shape {slice_data.shape}")
             
         # Remove old visual
         if self.slice_visual is not None:
             self.slice_visual.parent = None
             
-        # Normalize data
-        vmin, vmax = slice_data.min(), slice_data.max()
-        if vmax > vmin:
-            normalized = (slice_data - vmin) / (vmax - vmin)
+        # Store raw data
+        self._current_slice = slice_data.copy()
+        
+        # Get actual min/max
+        self._vmin, self._vmax = float(slice_data.min()), float(slice_data.max())
+        
+        # Normalize data to [0, 1] for display
+        if self._vmax > self._vmin:
+            normalized = (slice_data - self._vmin) / (self._vmax - self._vmin)
         else:
             normalized = np.zeros_like(slice_data)
+        
+        # Convert to float32 to avoid VisPy warning
+        normalized = normalized.astype(np.float32)
         
         # Create image visual
         self.slice_visual = visuals.Image(
@@ -277,20 +370,23 @@ class ManifoldCanvas:
             parent=self.view.scene
         )
         
-        self._current_slice = slice_data
-        self.canvas.update()
+        # Set camera to fit the image
+        h, w = slice_data.shape[:2]
+        self.view.camera.set_range(x=(0, w), y=(0, h), margin=0.05)
         
-    def set_camera_3d(self):
-        """Switch to 3D turntable camera."""
-        if VISPY_AVAILABLE:
-            self.view.camera = 'turntable'
-            
-    def set_camera_2d(self):
-        """Switch to 2D pan/zoom camera."""
-        if VISPY_AVAILABLE:
-            self.view.camera = 'panzoom'
-
-
+        self.canvas.update()
+        print(f"[DEBUG] Canvas updated: {w}x{h}, range [{self._vmin:.3f}, {self._vmax:.3f}]")
+        
+    @property
+    def native(self):
+        """Return the native Qt widget for embedding."""
+        if not VISPY_AVAILABLE:
+            return self._native
+        return self.canvas.native
+    
+    def set_title(self, plane: str, depth_pct: int):
+        """Update the slice title."""
+        self._plane = plane
 # =============================================================================
 # BLADE PANELS
 # =============================================================================
@@ -388,6 +484,7 @@ class ForensicBlade(QWidget):
         planes = ['xy', 'xz', 'yz']
         plane = planes[self.plane_combo.currentIndex()]
         depth = self.depth_slider.value() / 100.0
+        print(f"[DEBUG] ForensicBlade emitting: {plane}, {depth}")  # DEBUG
         self.slice_requested.emit(plane, depth)
         
     def _toggle_ghosting(self, checked):
@@ -550,8 +647,11 @@ class HyperTensorHub(QMainWindow):
     """
     The HyperTensor Hub - Primary interface for manifold interaction.
     
-    Industrial Slate aesthetic with Blade navigation system.
-    Now integrated with GlobalManifoldSlicer for world-scale data queries.
+    PRODUCTION ARCHITECTURE:
+    - All Field/SliceEngine operations run in background QThreads
+    - UI thread stays responsive at all times
+    - Signal/slot pattern for thread-safe updates
+    - Cancelable operations when user changes parameters
     """
     
     def __init__(self):
@@ -559,25 +659,34 @@ class HyperTensorHub(QMainWindow):
         self.setWindowTitle("HYPERTENSOR HUB | 4D FORENSIC SUBSTRATE")
         self.resize(1440, 900)
         
-        # Field state - now connected to World Data Slicer
+        # Field state
         self.field = None
         self.slicer = None
-        self.manifold_slicer = None  # GlobalManifoldSlicer for world-scale queries
+        
+        # Worker thread management
+        self.field_thread = None
+        self.field_worker = None
+        self.slice_thread = None
+        self.slice_worker = None
+        self._pending_slice = None  # Queued slice request while computing
         
         # Time-travel state for Rank-Stable Interpolation
-        self.temporal_cache = {}  # {time_step: core_snapshot}
+        self.temporal_cache = {}
         self.current_time = 0.5
         self.ghosting_enabled = False
         
         # Last query coordinates for zoom operations
-        self.last_coords = {'z': 16, 'eye': (0.5, 0.5, 1.0)}
+        self.last_coords = {'z': 8, 'eye': (0.5, 0.5, 1.0)}
         self.current_zoom_level = 2
         self.current_slice = None
         
+        # Build UI first (instant)
         self.init_ui()
         self.init_connections()
         self.init_update_timer()
-        self.load_atlantic_weather_manifold()
+        
+        # Start field creation in background (non-blocking)
+        self._start_field_creation()
         
     def init_ui(self):
         # Main Layout: Horizontal [Sidebar | Blades | Viewport]
@@ -702,63 +811,146 @@ class HyperTensorHub(QMainWindow):
         self.frame_count = 0
         self.last_fps_time = datetime.now()
         
-    def load_atlantic_weather_manifold(self):
-        """
-        Load the Atlantic Weather manifold - world-scale data ready for investigation.
+    # =========================================================================
+    # THREADED FIELD OPERATIONS - Keep UI responsive
+    # =========================================================================
         
-        This uses the GlobalManifoldSlicer from world_data_slicer.py to enable:
-        - Infinite zoom (resolution-independent sampling)
-        - O(L×r²) slicing
-        - Cyclone investigation workflow
-        """
-        try:
-            # Create the global weather field (5 bits = 32³, rank 32)
-            # In production: Field.load_manifold("world_weather_2025_Q4.qtt")
-            self.field = create_synthetic_weather_field(bits_per_dim=5, rank=32)
-            self.slicer = SliceEngine(self.field)
-            
-            # Initialize the Global Manifold Slicer for world-scale queries
-            self.manifold_slicer = GlobalManifoldSlicer(
-                self.field, 
-                name="Atlantic_Weather_Q4_2025"
-            )
-            
-            # Cache initial time step for ghosting interpolation
-            self._cache_time_step(0.5)
-            
-            # Update status
-            grid_size = self.field.grid_size
-            self.status_bar.showMessage(
-                f"🌀 Atlantic Weather Manifold | {grid_size}³ | Rank: 32 | Ready for Investigation"
-            )
-            
-            # Update telemetry
-            theoretical_points = 2 ** (self.field.bits_per_dim * 3)
-            self.telemetry_blade.update_stats({
-                'resolution': f"{grid_size}³ ({theoretical_points:,} pts)",
-                'max_rank': 32,
-                'compression': theoretical_points / (grid_size ** 2),
-                'memory_mb': 0.8,
-                'fps': 60
-            })
-            
-            # Request initial slice at cyclone center
-            self.last_coords = {'z': grid_size // 2, 'eye': (0.35, 0.55, 1.0)}
-            self._on_slice_requested('xy', 0.5)
-            
-            print(f"✅ Atlantic Weather Manifold loaded: {grid_size}³")
-            print(f"   Ready for cyclone investigation at coords (0.35, 0.55)")
-            
-        except Exception as e:
-            self.status_bar.showMessage(f"Error loading manifold: {e}")
-            print(f"❌ Failed to load Atlantic Weather: {e}")
-            
-    def load_demo_field(self):
-        """Fallback: Load a basic demo field if manifold loading fails."""
+    def _start_field_creation(self):
+        """Start field creation in background thread."""
         if not TENSORNET_AVAILABLE:
             self.status_bar.showMessage("Demo mode - tensornet not available")
             return
-        self.load_atlantic_weather_manifold()
+            
+        self.status_bar.showMessage("⏳ Creating manifold in background...")
+        
+        # Clean up any existing thread
+        if self.field_thread is not None:
+            self.field_worker.cancel()
+            self.field_thread.quit()
+            self.field_thread.wait()
+            
+        # Create worker and thread - SAME as world_data_slicer.py
+        # 32³ field (bits_per_dim=5), rank=32 for weather-like patterns
+        self.field_thread = QThread()
+        self.field_worker = FieldCreationWorker(bits_per_dim=5, rank=32)
+        self.field_worker.moveToThread(self.field_thread)
+        
+        # Connect signals
+        self.field_thread.started.connect(self.field_worker.run)
+        self.field_worker.finished.connect(self._on_field_created)
+        self.field_worker.progress.connect(self._on_field_progress)
+        self.field_worker.finished.connect(self.field_thread.quit)
+        
+        # Start
+        self.field_thread.start()
+        
+    def _on_field_progress(self, message: str):
+        """Handle progress updates from field creation."""
+        self.status_bar.showMessage(f"⏳ {message}")
+        
+    def _on_field_created(self, field, slicer, error):
+        """Handle field creation completion (runs in main thread)."""
+        if error:
+            self.status_bar.showMessage(f"❌ Field error: {error}")
+            print(f"Field creation failed: {error}")
+            return
+            
+        self.field = field
+        self.slicer = slicer
+        
+        grid_size = self.field.grid_size
+        theoretical_points = 2 ** (self.field.bits_per_dim * 3)
+        
+        self.status_bar.showMessage(
+            f"🌀 Atlantic Weather Manifold | {grid_size}³ | Ready"
+        )
+        
+        # Update telemetry
+        self.telemetry_blade.update_stats({
+            'resolution': f"{grid_size}³ ({theoretical_points:,} pts)",
+            'max_rank': self.field.rank,
+            'compression': theoretical_points / (grid_size ** 2),
+            'memory_mb': 0.2,
+            'fps': 60
+        })
+        
+        self.last_coords = {'z': grid_size // 2, 'eye': (0.35, 0.55, 1.0)}
+        
+        print(f"✅ Field created: {grid_size}³")
+        
+        # Request initial slice (also threaded)
+        self._request_slice_async('xy', 0.5)
+        
+    def _request_slice_async(self, plane: str, depth: float):
+        """Request a slice in background thread."""
+        if self.slicer is None:
+            return
+            
+        # If a slice is already computing, queue this request
+        if self.slice_thread is not None and self.slice_thread.isRunning():
+            self._pending_slice = (plane, depth)
+            return
+            
+        self.status_bar.showMessage(f"⏳ Computing {plane.upper()} slice @ {depth:.0%}...")
+        
+        # Create worker and thread
+        self.slice_thread = QThread()
+        self.slice_worker = SliceWorker(self.slicer, plane, depth)
+        self.slice_worker.moveToThread(self.slice_thread)
+        
+        # Connect signals
+        self.slice_thread.started.connect(self.slice_worker.run)
+        self.slice_worker.finished.connect(self._on_slice_complete)
+        self.slice_worker.progress.connect(self._on_slice_progress)
+        self.slice_worker.finished.connect(self.slice_thread.quit)
+        
+        # Store current params for UI update
+        self._current_slice_plane = plane
+        self._current_slice_depth = depth
+        
+        # Start
+        self.slice_thread.start()
+        
+    def _on_slice_progress(self, message: str):
+        """Handle slice progress updates."""
+        self.status_bar.showMessage(f"⏳ {message}")
+        
+    def _on_slice_complete(self, slice_data, error):
+        """Handle slice completion (runs in main thread)."""
+        if error:
+            self.status_bar.showMessage(f"❌ Slice error: {error}")
+            return
+            
+        if slice_data is None:
+            return
+            
+        self.current_slice = slice_data
+        
+        # Update canvas with title showing which slice
+        depth_pct = int(self._current_slice_depth * 100)
+        plane_name = self._current_slice_plane.upper()
+        self.canvas.set_title(plane_name, depth_pct)
+        self.canvas.update_slice(slice_data)
+        
+        # Update last coordinates
+        if self.field:
+            self.last_coords['z'] = int(self._current_slice_depth * self.field.grid_size)
+        
+        # Cache for ghosting
+        self.temporal_cache[self._current_slice_depth] = slice_data.copy()
+        
+        samples = slice_data.shape[0] * slice_data.shape[1] if hasattr(slice_data, 'shape') else 0
+        self.status_bar.showMessage(
+            f"✅ Slice: {self._current_slice_plane.upper()} @ {self._current_slice_depth:.0%} | "
+            f"Samples: {samples:,} | "
+            f"Range: [{slice_data.min():.3f}, {slice_data.max():.3f}]"
+        )
+        
+        # Process any pending slice request
+        if self._pending_slice:
+            plane, depth = self._pending_slice
+            self._pending_slice = None
+            self._request_slice_async(plane, depth)
             
     def _on_intent_submitted(self):
         """Handle intent bar submission."""
@@ -772,7 +964,7 @@ class HyperTensorHub(QMainWindow):
         Process a natural language intent - the Intent Parser.
         
         Connects UI text to the Field Slicer and VisPy Viewport.
-        Supports: zoom, altitude/depth, cyclone investigation, etc.
+        All heavy operations are routed to async workers.
         """
         self.status_bar.showMessage(f"Processing: {intent}")
         query = intent.lower().strip()
@@ -780,34 +972,24 @@ class HyperTensorHub(QMainWindow):
         # Add to history
         self.intent_blade._add_to_history(intent)
         
-        # 1. Action: Zooming (Resolution Independence)
+        # 1. Action: Zooming (sets zoom level, requests new slice)
         if "zoom" in query:
-            # Extract level from string, e.g., "zoom to level 8"
             numbers = re.findall(r'\d+', query)
             level = int(numbers[0]) if numbers else self.current_zoom_level + 1
-            level = max(1, min(level, 12))  # Clamp to valid range
+            level = max(1, min(level, 12))
             
             self.current_zoom_level = level
+            effective_res = 2 ** (4 + level)  # bits_per_dim + zoom
             
-            if self.manifold_slicer:
-                # HyperTensor queries the manifold at higher bit-depth
-                result = self.manifold_slicer.interactive_zoom(self.last_coords, level)
-                slice_data = result.get('slice')
-                if slice_data is not None:
-                    self.current_slice = slice_data
-                    self.canvas.update_slice(slice_data)
-                    
-                effective_res = result.get('effective_resolution', 2 ** level)
-                self.intent_blade.show_result(
-                    f"🔍 Zoom Level: {level}\n"
-                    f"Effective Resolution: {effective_res}³\n"
-                    f"Samples: {slice_data.shape[0] * slice_data.shape[1]:,}"
-                )
-                self.status_bar.showMessage(
-                    f"Zoom: Level {level} | Effective {effective_res}³"
-                )
-            else:
-                self.intent_blade.show_result(f"Zoom to level {level} (manifold not loaded)")
+            self.intent_blade.show_result(
+                f"🔍 Zoom Level: {level}\n"
+                f"Effective Resolution: {effective_res}³\n"
+                f"(Slice requested)"
+            )
+            
+            # Request slice at current depth (async)
+            depth = self.forensic_blade.depth_slider.value() / 100.0
+            self._request_slice_async('xy', depth)
             return
             
         # 2. Action: Slicing (Depth/Altitude Control)
@@ -820,125 +1002,83 @@ class HyperTensorHub(QMainWindow):
                     depth_val = depth_val / 100.0
                 depth_val = max(0.0, min(1.0, depth_val))
                 
-                # O(L × r²) slice extraction
-                self._on_slice_requested('xy', depth_val)
+                # Request slice async
+                self._request_slice_async('xy', depth_val)
                 self.forensic_blade.depth_slider.setValue(int(depth_val * 100))
                 
+                z_idx = int(depth_val * (self.field.grid_size if self.field else 16))
                 self.intent_blade.show_result(
                     f"📍 Slice Depth: {depth_val:.0%}\n"
-                    f"Z-index: {int(depth_val * self.field.grid_size)}"
+                    f"Z-index: {z_idx}"
                 )
             else:
                 self.intent_blade.show_result("Specify depth (e.g., 'depth 50' or 'altitude 0.75')")
             return
             
-        # 3. Action: Cyclone Investigation (Multi-scale Survey)
+        # 3. Action: Cyclone Investigation (requests slices at different depths)
         elif "cyclone" in query or "storm" in query or "investigate" in query:
-            if self.manifold_slicer:
-                self.intent_blade.show_result("🌀 Starting Cyclone Investigation...")
-                
-                # Run multi-scale survey at cyclone center
-                cyclone_center = (0.35, 0.55, 0.5)
-                
-                # Phase 1: Regional
-                result = self.manifold_slicer.interactive_zoom(
-                    {'z': 16, 'eye': (0.35, 0.55, 1.5)}, zoom_level=2
-                )
-                self.canvas.update_slice(result['slice'])
-                
-                stats = self.manifold_slicer.get_statistics()
-                self.intent_blade.show_result(
-                    f"🌀 Cyclone Investigation Complete\n"
-                    f"Queries: {stats['total_queries']}\n"
-                    f"Samples: {stats['total_samples']:,}\n"
-                    f"Compression: {stats['compression_factor']:.1f}×"
-                )
-                self.status_bar.showMessage("Cyclone investigation complete")
-            else:
-                self.intent_blade.show_result("Load Atlantic Weather manifold first")
+            self.intent_blade.show_result("🌀 Cyclone Investigation...\nRequesting regional slice")
+            # Request a slice at cyclone location (0.5 depth)
+            self._request_slice_async('xy', 0.5)
+            self.forensic_blade.depth_slider.setValue(50)
             return
             
         # 4. Action: Time travel (Ghosting)
         elif "ghost" in query or "time travel" in query or "temporal" in query:
             self.ghosting_enabled = not self.ghosting_enabled
             self.forensic_blade.ghost_btn.setChecked(self.ghosting_enabled)
-            self.forensic_blade._toggle_ghosting(self.ghosting_enabled)
+            self._on_ghosting_toggled(self.ghosting_enabled)
             
+            cached_count = len(self.temporal_cache)
             self.intent_blade.show_result(
                 f"👻 Ghosting: {'ENABLED' if self.ghosting_enabled else 'DISABLED'}\n"
-                f"Rank-Stable Interpolation active"
+                f"Cached time-steps: {cached_count}\n"
+                f"Move scrubber to interpolate"
             )
             return
             
         # 5. Action: Statistics
         elif "stats" in query or "statistics" in query or "info" in query:
-            if self.manifold_slicer:
-                stats = self.manifold_slicer.get_statistics()
+            if self.field:
+                grid_size = self.field.grid_size
+                theoretical = 2 ** (self.field.bits_per_dim * 3)
+                cached = len(self.temporal_cache)
                 self.intent_blade.show_result(
-                    f"📊 Manifold: {stats['manifold_name']}\n"
-                    f"Queries: {stats['total_queries']}\n"
-                    f"Samples: {stats['total_samples']:,}\n"
-                    f"Theoretical: {stats['theoretical_points']:,}\n"
-                    f"Compression: {stats['compression_factor']:.1f}×"
+                    f"📊 Field: {grid_size}³\n"
+                    f"Theoretical: {theoretical:,} points\n"
+                    f"Rank: {self.field.rank}\n"
+                    f"Cached slices: {cached}"
                 )
             else:
-                self.intent_blade.show_result("No manifold loaded")
+                self.intent_blade.show_result("No field loaded")
             return
             
-        # 6. Fallback: Try tensornet IntentParser
-        if TENSORNET_AVAILABLE and self.field:
-            try:
-                from tensornet.intent import IntentParser
-                parser = IntentParser()
-                parsed = parser.parse(intent)
-                
-                result = f"Intent: {parsed.intent_type.name}\n"
-                if hasattr(parsed, 'target'):
-                    result += f"Target: {parsed.target}"
-                    
-                self.intent_blade.show_result(result)
-                self.status_bar.showMessage(f"Parsed: {parsed.intent_type.name}")
-                
-            except Exception as e:
-                self.intent_blade.show_result(f"Unknown command: {intent}\n\nTry: zoom, depth, cyclone, ghost, stats")
-        else:
-            self.intent_blade.show_result(
-                f"Unknown: {intent}\n\nAvailable commands:\n"
-                f"• zoom to level N\n"
-                f"• depth/altitude N\n"
-                f"• investigate cyclone\n"
-                f"• toggle ghost\n"
-                f"• show stats"
-            )
+        # 6. Fallback: Unknown command
+        self.intent_blade.show_result(
+            f"Unknown: {intent}\n\nAvailable commands:\n"
+            f"• zoom to level N\n"
+            f"• depth/altitude N\n"
+            f"• investigate cyclone\n"
+            f"• toggle ghost\n"
+            f"• show stats"
+        )
             
     def _on_slice_requested(self, plane: str, depth: float):
-        """Handle slice request from forensic blade - O(L×r²) extraction."""
-        if not TENSORNET_AVAILABLE or not self.slicer:
+        """Handle slice request from forensic blade - routes to async worker."""
+        print(f"[DEBUG] Slice requested: {plane} @ {depth:.0%}")  # DEBUG
+        
+        if not TENSORNET_AVAILABLE:
+            print("[DEBUG] TENSORNET_AVAILABLE = False")
+            self.status_bar.showMessage("tensornet not available")
             return
             
-        try:
-            result = self.slicer.slice(plane=plane, depth=depth)
-            slice_data = result.data if hasattr(result, 'data') else result
+        if not self.slicer:
+            print("[DEBUG] slicer is None - field not created yet")
+            self.status_bar.showMessage("Field not ready yet...")
+            return
             
-            # Store current slice for viewport updates
-            self.current_slice = slice_data
-            
-            # Update canvas
-            self.canvas.update_slice(slice_data)
-            
-            # Update last coordinates for zoom operations
-            self.last_coords['z'] = int(depth * self.field.grid_size)
-            
-            # Update status with manifold slicer stats
-            samples = slice_data.shape[0] * slice_data.shape[1] if hasattr(slice_data, 'shape') else 0
-            self.status_bar.showMessage(
-                f"Slice: {plane.upper()} @ {depth:.0%} | "
-                f"Samples: {samples:,} | "
-                f"Range: [{slice_data.min():.3f}, {slice_data.max():.3f}]"
-            )
-            
-        except Exception as e:
-            self.status_bar.showMessage(f"Slice error: {e}")
+        # Use async slice request to keep UI responsive
+        self._request_slice_async(plane, depth)
             
     def _on_temporal_scrub(self, value: int):
         """
@@ -950,39 +1090,26 @@ class HyperTensorHub(QMainWindow):
         t = value / 1000.0
         self.current_time = t
         
-        if self.ghosting_enabled:
-            # Apply ghosting interpolation between adjacent time steps
+        if self.ghosting_enabled and self.temporal_cache:
+            # Apply ghosting interpolation between cached time steps (instant)
             self._apply_ghosting_interpolation(t)
-        else:
-            # Direct slice at current depth (mapped to time for demo)
+        elif not self.ghosting_enabled:
+            # Direct slice at current depth (async, non-blocking)
             self._on_slice_requested('xy', t)
             
     def _on_ghosting_toggled(self, checked: bool):
         """Toggle Rank-Stable ghosting interpolation."""
         self.ghosting_enabled = checked
         if checked:
-            self.status_bar.showMessage("👻 GHOSTING: Rank-Stable Interpolation enabled")
-            # Cache some time steps for smooth interpolation
-            for t in [0.0, 0.25, 0.5, 0.75, 1.0]:
-                self._cache_time_step(t)
+            self.status_bar.showMessage("👻 GHOSTING: Using cached time-steps for interpolation")
+            # Note: Cache is populated as slices complete
         else:
-            self.status_bar.showMessage("GHOSTING: Disabled")
+            self.status_bar.showMessage("GHOSTING: Disabled - slices computed on demand")
             
-    def _cache_time_step(self, t: float):
-        """
-        Cache a manifold state at time t for interpolation.
-        
-        In production, this would store the QTT cores, not raw data.
-        For CPU demo, we store the slice result.
-        """
-        if not self.slicer:
-            return
-        try:
-            result = self.slicer.slice(plane='xy', depth=t)
-            slice_data = result.data if hasattr(result, 'data') else result
-            self.temporal_cache[t] = slice_data.copy()
-        except:
-            pass
+    def _cache_current_slice(self):
+        """Cache the current slice for ghosting (called after slice completes)."""
+        if self.current_slice is not None:
+            self.temporal_cache[self.current_time] = self.current_slice.copy()
             
     def _apply_ghosting_interpolation(self, t: float):
         """

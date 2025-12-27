@@ -1,8 +1,6 @@
 """Test Rust TCI implementation."""
 import torch
-import sys
 import time
-sys.path.insert(0, '.')
 
 from tensornet.cfd.qtt_tci import qtt_from_function, RUST_AVAILABLE
 from tensornet.cfd.qtt_eval import qtt_eval_batch

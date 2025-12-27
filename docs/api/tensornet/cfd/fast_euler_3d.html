@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.fast_euler_3d API documentation</title>
+<meta name="description" content="Native 3D Euler Solver using N-Dimensional Shift MPO …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.fast_euler_3d</code></h1>
+</header>
+<section id="section-intro">
+<p>Native 3D Euler Solver using N-Dimensional Shift MPO</p>
+<p>This extends the 2D fast solver to 3D using the same generalized
+Morton-interleaved shift MPO infrastructure.</p>
+<p>For 3D:
+- Morton order: bits interleave as x0, y0, z0, x1, y1, z1, &hellip;
+- Shift MPO targets specific axis (0=x, 1=y, 2=z)
+- State has 5 conserved variables: [rho, rhou, rhov, rhow, E]</p>
+<p>Standard 3D benchmark: Taylor-Green Vortex
+- Periodic box [0, 2π]³
+- Initial: u = sin(x)cos(y)cos(z), v = -cos(x)sin(y)cos(z), w = 0
+- Tests: Energy decay, enstrophy growth, vortex stretching</p>
+<p>Author: HyperTensor Team
+Date: December 2025</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.fast_euler_3d.create_taylor_green_state"><code class="name flex">
+<span>def <span class="ident">create_taylor_green_state</span></span>(<span>config: <a title="tensornet.cfd.fast_euler_3d.Euler3DConfig" href="#tensornet.cfd.fast_euler_3d.Euler3DConfig">Euler3DConfig</a>) ‑> <a title="tensornet.cfd.fast_euler_3d.Euler3DState" href="#tensornet.cfd.fast_euler_3d.Euler3DState">Euler3DState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_taylor_green_state(config: Euler3DConfig) -&gt; Euler3DState:
+    &#34;&#34;&#34;
+    Create Taylor-Green vortex initial condition.
+    
+    u = sin(x) cos(y) cos(z)
+    v = -cos(x) sin(y) cos(z)
+    w = 0
+    p = p0 + (cos(2x) + cos(2y))(cos(2z) + 2) / 16
+    &#34;&#34;&#34;
+    N = config.grid_size
+    n = config.qubits_per_dim
+    
+    # [0, 2π]³ domain
+    x = torch.linspace(0, 2*torch.pi, N, dtype=config.dtype, device=config.device)
+    y = torch.linspace(0, 2*torch.pi, N, dtype=config.dtype, device=config.device)
+    z = torch.linspace(0, 2*torch.pi, N, dtype=config.dtype, device=config.device)
+    
+    X, Y, Z = torch.meshgrid(x, y, z, indexing=&#39;ij&#39;)
+    
+    # Velocity field
+    u = torch.sin(X) * torch.cos(Y) * torch.cos(Z)
+    v = -torch.cos(X) * torch.sin(Y) * torch.cos(Z)
+    w = torch.zeros_like(u)
+    
+    # Pressure (isentropic: p = rho^gamma)
+    p0 = 100.0 / config.gamma  # Base pressure
+    p = p0 + (torch.cos(2*X) + torch.cos(2*Y)) * (torch.cos(2*Z) + 2) / 16
+    
+    # Density from pressure (isentropic)
+    rho = (p * config.gamma / p0) ** (1/config.gamma)
+    
+    # Energy
+    E = p / (config.gamma - 1) + 0.5 * rho * (u**2 + v**2 + w**2)
+    
+    # Compress to QTT
+    print(&#34;  Compressing initial condition to QTT3D...&#34;)
+    t0 = time.perf_counter()
+    
+    rho_qtt = dense_to_qtt_3d(rho, max_bond=config.max_rank)
+    rhou_qtt = dense_to_qtt_3d(rho * u, max_bond=config.max_rank)
+    rhov_qtt = dense_to_qtt_3d(rho * v, max_bond=config.max_rank)
+    rhow_qtt = dense_to_qtt_3d(rho * w, max_bond=config.max_rank)
+    E_qtt = dense_to_qtt_3d(E, max_bond=config.max_rank)
+    
+    t1 = time.perf_counter()
+    print(f&#34;  Compression time: {t1-t0:.2f}s&#34;)
+    
+    return Euler3DState(rho_qtt, rhou_qtt, rhov_qtt, rhow_qtt, E_qtt)</code></pre>
+</details>
+<div class="desc"><p>Create Taylor-Green vortex initial condition.</p>
+<p>u = sin(x) cos(y) cos(z)
+v = -cos(x) sin(y) cos(z)
+w = 0
+p = p0 + (cos(2x) + cos(2y))(cos(2z) + 2) / 16</p></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.dense_to_qtt_3d"><code class="name flex">
+<span>def <span class="ident">dense_to_qtt_3d</span></span>(<span>field: torch.Tensor, max_bond: int = 32) ‑> <a title="tensornet.cfd.fast_euler_3d.QTT3DState" href="#tensornet.cfd.fast_euler_3d.QTT3DState">QTT3DState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dense_to_qtt_3d(field: torch.Tensor, max_bond: int = 32) -&gt; QTT3DState:
+    &#34;&#34;&#34;
+    Compress 3D field to QTT with Morton ordering.
+    
+    Args:
+        field: (Nx, Ny, Nz) tensor
+        max_bond: Maximum bond dimension
+        
+    Returns:
+        QTT3DState
+    &#34;&#34;&#34;
+    Nx, Ny, Nz = field.shape
+    nx = int(torch.log2(torch.tensor(Nx)).item())
+    ny = int(torch.log2(torch.tensor(Ny)).item())
+    nz = int(torch.log2(torch.tensor(Nz)).item())
+    
+    assert 2**nx == Nx and 2**ny == Ny and 2**nz == Nz
+    
+    # Flatten to Morton order
+    N_total = Nx * Ny * Nz
+    morton_field = torch.zeros(N_total, dtype=field.dtype, device=field.device)
+    
+    for ix in range(Nx):
+        for iy in range(Ny):
+            for iz in range(Nz):
+                z = morton_encode_3d(ix, iy, iz, nx)
+                morton_field[z] = field[ix, iy, iz]
+    
+    # Compress to 1D QTT
+    qtt = dense_to_qtt(morton_field, max_bond=max_bond)
+    
+    return QTT3DState(cores=qtt.cores, nx=nx, ny=ny, nz=nz)</code></pre>
+</details>
+<div class="desc"><p>Compress 3D field to QTT with Morton ordering.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>field</code></strong></dt>
+<dd>(Nx, Ny, Nz) tensor</dd>
+<dt><strong><code>max_bond</code></strong></dt>
+<dd>Maximum bond dimension</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>QTT3DState</p></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.morton_decode_3d"><code class="name flex">
+<span>def <span class="ident">morton_decode_3d</span></span>(<span>z: int, n_bits: int) ‑> Tuple[int, int, int]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def morton_decode_3d(z: int, n_bits: int) -&gt; Tuple[int, int, int]:
+    &#34;&#34;&#34;Decode Morton index to 3D coordinates.&#34;&#34;&#34;
+    ix, iy, iz = 0, 0, 0
+    for b in range(n_bits):
+        ix |= ((z &gt;&gt; (3 * b)) &amp; 1) &lt;&lt; b
+        iy |= ((z &gt;&gt; (3 * b + 1)) &amp; 1) &lt;&lt; b
+        iz |= ((z &gt;&gt; (3 * b + 2)) &amp; 1) &lt;&lt; b
+    return ix, iy, iz</code></pre>
+</details>
+<div class="desc"><p>Decode Morton index to 3D coordinates.</p></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.morton_encode_3d"><code class="name flex">
+<span>def <span class="ident">morton_encode_3d</span></span>(<span>ix: int, iy: int, iz: int, n_bits: int) ‑> int</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def morton_encode_3d(ix: int, iy: int, iz: int, n_bits: int) -&gt; int:
+    &#34;&#34;&#34;Encode 3D index to Morton (Z-curve) order.&#34;&#34;&#34;
+    z = 0
+    for b in range(n_bits):
+        z |= ((ix &gt;&gt; b) &amp; 1) &lt;&lt; (3 * b)
+        z |= ((iy &gt;&gt; b) &amp; 1) &lt;&lt; (3 * b + 1)
+        z |= ((iz &gt;&gt; b) &amp; 1) &lt;&lt; (3 * b + 2)
+    return z</code></pre>
+</details>
+<div class="desc"><p>Encode 3D index to Morton (Z-curve) order.</p></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.qtt_3d_to_dense"><code class="name flex">
+<span>def <span class="ident">qtt_3d_to_dense</span></span>(<span>state: <a title="tensornet.cfd.fast_euler_3d.QTT3DState" href="#tensornet.cfd.fast_euler_3d.QTT3DState">QTT3DState</a>) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def qtt_3d_to_dense(state: QTT3DState) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Decompress QTT3D to dense 3D array.&#34;&#34;&#34;
+    qtt = QTTState(cores=state.cores, num_qubits=len(state.cores))
+    morton_field = qtt_to_dense(qtt)
+    
+    Nx, Ny, Nz = 2**state.nx, 2**state.ny, 2**state.nz
+    field = torch.zeros(Nx, Ny, Nz, dtype=morton_field.dtype, device=morton_field.device)
+    
+    for z in range(len(morton_field)):
+        ix, iy, iz = morton_decode_3d(z, state.nx)
+        if ix &lt; Nx and iy &lt; Ny and iz &lt; Nz:
+            field[ix, iy, iz] = morton_field[z]
+    
+    return field</code></pre>
+</details>
+<div class="desc"><p>Decompress QTT3D to dense 3D array.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.cfd.fast_euler_3d.Euler3DConfig"><code class="flex name class">
+<span>class <span class="ident">Euler3DConfig</span></span>
+<span>(</span><span>qubits_per_dim: int = 4,<br>gamma: float = 1.4,<br>cfl: float = 0.3,<br>max_rank: int = 32,<br>device: torch.device = None,<br>dtype: torch.dtype = torch.float32)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Euler3DConfig:
+    &#34;&#34;&#34;Configuration for 3D Euler solver.&#34;&#34;&#34;
+    qubits_per_dim: int = 4  # Grid is 2^n per dimension (16^3 = 4096 points)
+    gamma: float = 1.4
+    cfl: float = 0.3
+    max_rank: int = 32
+    device: torch.device = None
+    dtype: torch.dtype = torch.float32
+    
+    def __post_init__(self):
+        if self.device is None:
+            self.device = torch.device(&#39;cpu&#39;)
+    
+    @property
+    def grid_size(self) -&gt; int:
+        return 2 ** self.qubits_per_dim
+    
+    @property
+    def total_qubits(self) -&gt; int:
+        return 3 * self.qubits_per_dim
+    
+    @property 
+    def total_points(self) -&gt; int:
+        return self.grid_size ** 3</code></pre>
+</details>
+<div class="desc"><p>Configuration for 3D Euler solver.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.fast_euler_3d.Euler3DConfig.cfl"><code class="name">var <span class="ident">cfl</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.Euler3DConfig.device"><code class="name">var <span class="ident">device</span> : torch.device</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.Euler3DConfig.dtype"><code class="name">var <span class="ident">dtype</span> : torch.dtype</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.Euler3DConfig.gamma"><code class="name">var <span class="ident">gamma</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.Euler3DConfig.grid_size"><code class="name">prop <span class="ident">grid_size</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def grid_size(self) -&gt; int:
+    return 2 ** self.qubits_per_dim</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.Euler3DConfig.max_rank"><code class="name">var <span class="ident">max_rank</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.Euler3DConfig.qubits_per_dim"><code class="name">var <span class="ident">qubits_per_dim</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.Euler3DConfig.total_points"><code class="name">prop <span class="ident">total_points</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property 
+def total_points(self) -&gt; int:
+    return self.grid_size ** 3</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.Euler3DConfig.total_qubits"><code class="name">prop <span class="ident">total_qubits</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def total_qubits(self) -&gt; int:
+    return 3 * self.qubits_per_dim</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.Euler3DState"><code class="flex name class">
+<span>class <span class="ident">Euler3DState</span></span>
+<span>(</span><span>rho: <a title="tensornet.cfd.fast_euler_3d.QTT3DState" href="#tensornet.cfd.fast_euler_3d.QTT3DState">QTT3DState</a>,<br>rhou: <a title="tensornet.cfd.fast_euler_3d.QTT3DState" href="#tensornet.cfd.fast_euler_3d.QTT3DState">QTT3DState</a>,<br>rhov: <a title="tensornet.cfd.fast_euler_3d.QTT3DState" href="#tensornet.cfd.fast_euler_3d.QTT3DState">QTT3DState</a>,<br>rhow: <a title="tensornet.cfd.fast_euler_3d.QTT3DState" href="#tensornet.cfd.fast_euler_3d.QTT3DState">QTT3DState</a>,<br>E: <a title="tensornet.cfd.fast_euler_3d.QTT3DState" href="#tensornet.cfd.fast_euler_3d.QTT3DState">QTT3DState</a>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Euler3DState:
+    &#34;&#34;&#34;State for 3D compressible Euler equations.&#34;&#34;&#34;
+    rho: QTT3DState   # Density
+    rhou: QTT3DState  # X-momentum
+    rhov: QTT3DState  # Y-momentum  
+    rhow: QTT3DState  # Z-momentum
+    E: QTT3DState     # Total energy
+    
+    def max_rank(self) -&gt; int:
+        return max(
+            self.rho.max_rank,
+            self.rhou.max_rank,
+            self.rhov.max_rank,
+            self.rhow.max_rank,
+            self.E.max_rank
+        )</code></pre>
+</details>
+<div class="desc"><p>State for 3D compressible Euler equations.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.fast_euler_3d.Euler3DState.E"><code class="name">var <span class="ident">E</span> : <a title="tensornet.cfd.fast_euler_3d.QTT3DState" href="#tensornet.cfd.fast_euler_3d.QTT3DState">QTT3DState</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.Euler3DState.rho"><code class="name">var <span class="ident">rho</span> : <a title="tensornet.cfd.fast_euler_3d.QTT3DState" href="#tensornet.cfd.fast_euler_3d.QTT3DState">QTT3DState</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.Euler3DState.rhou"><code class="name">var <span class="ident">rhou</span> : <a title="tensornet.cfd.fast_euler_3d.QTT3DState" href="#tensornet.cfd.fast_euler_3d.QTT3DState">QTT3DState</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.Euler3DState.rhov"><code class="name">var <span class="ident">rhov</span> : <a title="tensornet.cfd.fast_euler_3d.QTT3DState" href="#tensornet.cfd.fast_euler_3d.QTT3DState">QTT3DState</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.Euler3DState.rhow"><code class="name">var <span class="ident">rhow</span> : <a title="tensornet.cfd.fast_euler_3d.QTT3DState" href="#tensornet.cfd.fast_euler_3d.QTT3DState">QTT3DState</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.fast_euler_3d.Euler3DState.max_rank"><code class="name flex">
+<span>def <span class="ident">max_rank</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def max_rank(self) -&gt; int:
+    return max(
+        self.rho.max_rank,
+        self.rhou.max_rank,
+        self.rhov.max_rank,
+        self.rhow.max_rank,
+        self.E.max_rank
+    )</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.FastEuler3D"><code class="flex name class">
+<span>class <span class="ident">FastEuler3D</span></span>
+<span>(</span><span>config: <a title="tensornet.cfd.fast_euler_3d.Euler3DConfig" href="#tensornet.cfd.fast_euler_3d.Euler3DConfig">Euler3DConfig</a>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FastEuler3D:
+    &#34;&#34;&#34;
+    Native 3D Euler solver using N-dimensional shift MPO.
+    
+    Complexity: O(log N × r³) per time step
+    where N = total grid points, r = max rank
+    &#34;&#34;&#34;
+    
+    def __init__(self, config: Euler3DConfig):
+        self.config = config
+        self.n = config.qubits_per_dim
+        self.total_qubits = config.total_qubits
+        self.dx = 2 * torch.pi / config.grid_size  # [0, 2π]³ domain
+        
+        # Pre-build shift MPOs for all three axes
+        self.shift_mpos = []
+        for axis in range(3):
+            mpo = make_nd_shift_mpo(
+                config.total_qubits,
+                num_dims=3,
+                axis_idx=axis,
+                direction=+1,
+                device=config.device,
+                dtype=config.dtype
+            )
+            self.shift_mpos.append(mpo)
+        
+        print(f&#34;FastEuler3D: {config.grid_size}³ ({config.total_points} points)&#34;)
+        print(f&#34;  Total qubits: {config.total_qubits}, Max rank: {config.max_rank}&#34;)
+    
+    def _shift(self, qtt: QTT3DState, axis: int) -&gt; QTT3DState:
+        &#34;&#34;&#34;Apply shift: output[i] = input[i-1] in given axis.&#34;&#34;&#34;
+        cores = apply_nd_shift_mpo(qtt.cores, self.shift_mpos[axis], 
+                                    max_rank=self.config.max_rank)
+        return QTT3DState(cores, nx=qtt.nx, ny=qtt.ny, nz=qtt.nz)
+    
+    def _add(self, a: QTT3DState, b: QTT3DState) -&gt; QTT3DState:
+        &#34;&#34;&#34;QTT addition with truncation.&#34;&#34;&#34;
+        a_qtt = QTTState(cores=a.cores, num_qubits=len(a.cores))
+        b_qtt = QTTState(cores=b.cores, num_qubits=len(b.cores))
+        result = qtt_add(a_qtt, b_qtt, max_bond=self.config.max_rank)
+        return QTT3DState(result.cores, nx=a.nx, ny=a.ny, nz=a.nz)
+    
+    def _scale(self, a: QTT3DState, s: float) -&gt; QTT3DState:
+        &#34;&#34;&#34;Scale QTT.&#34;&#34;&#34;
+        cores = [c.clone() for c in a.cores]
+        cores[0] = cores[0] * s
+        return QTT3DState(cores, nx=a.nx, ny=a.ny, nz=a.nz)
+    
+    def _sub(self, a: QTT3DState, b: QTT3DState) -&gt; QTT3DState:
+        &#34;&#34;&#34;QTT subtraction.&#34;&#34;&#34;
+        return self._add(a, self._scale(b, -1.0))
+    
+    def _evolve_axis(self, state: Euler3DState, dt: float, axis: int) -&gt; Euler3DState:
+        &#34;&#34;&#34;
+        Update state in one axis direction using upwind flux.
+        
+        axis: 0=x, 1=y, 2=z
+        &#34;&#34;&#34;
+        coeff = -dt / self.dx
+        
+        # Get flux for this axis
+        if axis == 0:
+            F_mom = state.rhou  # x-momentum carries mass flux
+        elif axis == 1:
+            F_mom = state.rhov
+        else:
+            F_mom = state.rhow
+        
+        # Mass update: dF/dx ≈ (F - F_left) / dx
+        dF_rho = self._sub(F_mom, self._shift(F_mom, axis))
+        rho_new = self._add(state.rho, self._scale(dF_rho, coeff))
+        
+        # Momentum updates (advection)
+        dF_rhou = self._sub(state.rhou, self._shift(state.rhou, axis))
+        dF_rhov = self._sub(state.rhov, self._shift(state.rhov, axis))
+        dF_rhow = self._sub(state.rhow, self._shift(state.rhow, axis))
+        
+        rhou_new = self._add(state.rhou, self._scale(dF_rhou, coeff))
+        rhov_new = self._add(state.rhov, self._scale(dF_rhov, coeff))
+        rhow_new = self._add(state.rhow, self._scale(dF_rhow, coeff))
+        
+        # Energy
+        dF_E = self._sub(state.E, self._shift(state.E, axis))
+        E_new = self._add(state.E, self._scale(dF_E, coeff))
+        
+        return Euler3DState(rho_new, rhou_new, rhov_new, rhow_new, E_new)
+    
+    def step(self, state: Euler3DState, dt: float) -&gt; Euler3DState:
+        &#34;&#34;&#34;
+        Strang splitting for 3D:
+        L_x(dt/2) L_y(dt/2) L_z(dt) L_y(dt/2) L_x(dt/2)
+        &#34;&#34;&#34;
+        state = self._evolve_axis(state, dt / 2, axis=0)  # X
+        state = self._evolve_axis(state, dt / 2, axis=1)  # Y
+        state = self._evolve_axis(state, dt, axis=2)      # Z
+        state = self._evolve_axis(state, dt / 2, axis=1)  # Y
+        state = self._evolve_axis(state, dt / 2, axis=0)  # X
+        return state
+    
+    def compute_dt(self, state: Euler3DState) -&gt; float:
+        &#34;&#34;&#34;Estimate stable dt.&#34;&#34;&#34;
+        # Use fixed dt for simplicity (proper implementation would sample)
+        max_speed = 2.0  # Rough estimate for incompressible TGV
+        return self.config.cfl * self.dx / max_speed</code></pre>
+</details>
+<div class="desc"><p>Native 3D Euler solver using N-dimensional shift MPO.</p>
+<p>Complexity: O(log N × r³) per time step
+where N = total grid points, r = max rank</p></div>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.fast_euler_3d.FastEuler3D.compute_dt"><code class="name flex">
+<span>def <span class="ident">compute_dt</span></span>(<span>self,<br>state: <a title="tensornet.cfd.fast_euler_3d.Euler3DState" href="#tensornet.cfd.fast_euler_3d.Euler3DState">Euler3DState</a>) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_dt(self, state: Euler3DState) -&gt; float:
+    &#34;&#34;&#34;Estimate stable dt.&#34;&#34;&#34;
+    # Use fixed dt for simplicity (proper implementation would sample)
+    max_speed = 2.0  # Rough estimate for incompressible TGV
+    return self.config.cfl * self.dx / max_speed</code></pre>
+</details>
+<div class="desc"><p>Estimate stable dt.</p></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.FastEuler3D.step"><code class="name flex">
+<span>def <span class="ident">step</span></span>(<span>self,<br>state: <a title="tensornet.cfd.fast_euler_3d.Euler3DState" href="#tensornet.cfd.fast_euler_3d.Euler3DState">Euler3DState</a>,<br>dt: float) ‑> <a title="tensornet.cfd.fast_euler_3d.Euler3DState" href="#tensornet.cfd.fast_euler_3d.Euler3DState">Euler3DState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def step(self, state: Euler3DState, dt: float) -&gt; Euler3DState:
+    &#34;&#34;&#34;
+    Strang splitting for 3D:
+    L_x(dt/2) L_y(dt/2) L_z(dt) L_y(dt/2) L_x(dt/2)
+    &#34;&#34;&#34;
+    state = self._evolve_axis(state, dt / 2, axis=0)  # X
+    state = self._evolve_axis(state, dt / 2, axis=1)  # Y
+    state = self._evolve_axis(state, dt, axis=2)      # Z
+    state = self._evolve_axis(state, dt / 2, axis=1)  # Y
+    state = self._evolve_axis(state, dt / 2, axis=0)  # X
+    return state</code></pre>
+</details>
+<div class="desc"><p>Strang splitting for 3D:
+L_x(dt/2) L_y(dt/2) L_z(dt) L_y(dt/2) L_x(dt/2)</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.QTT3DState"><code class="flex name class">
+<span>class <span class="ident">QTT3DState</span></span>
+<span>(</span><span>cores: List[torch.Tensor], nx: int, ny: int, nz: int)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class QTT3DState:
+    &#34;&#34;&#34;3D field stored in QTT format with Morton ordering.&#34;&#34;&#34;
+    cores: List[torch.Tensor]
+    nx: int  # Qubits for x
+    ny: int  # Qubits for y
+    nz: int  # Qubits for z
+    
+    @property
+    def max_rank(self) -&gt; int:
+        return max(c.shape[0] for c in self.cores)
+    
+    @property
+    def total_qubits(self) -&gt; int:
+        return len(self.cores)</code></pre>
+</details>
+<div class="desc"><p>3D field stored in QTT format with Morton ordering.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.fast_euler_3d.QTT3DState.cores"><code class="name">var <span class="ident">cores</span> : List[torch.Tensor]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.QTT3DState.max_rank"><code class="name">prop <span class="ident">max_rank</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def max_rank(self) -&gt; int:
+    return max(c.shape[0] for c in self.cores)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.QTT3DState.nx"><code class="name">var <span class="ident">nx</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.QTT3DState.ny"><code class="name">var <span class="ident">ny</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.QTT3DState.nz"><code class="name">var <span class="ident">nz</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.fast_euler_3d.QTT3DState.total_qubits"><code class="name">prop <span class="ident">total_qubits</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def total_qubits(self) -&gt; int:
+    return len(self.cores)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.fast_euler_3d.create_taylor_green_state" href="#tensornet.cfd.fast_euler_3d.create_taylor_green_state">create_taylor_green_state</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.dense_to_qtt_3d" href="#tensornet.cfd.fast_euler_3d.dense_to_qtt_3d">dense_to_qtt_3d</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.morton_decode_3d" href="#tensornet.cfd.fast_euler_3d.morton_decode_3d">morton_decode_3d</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.morton_encode_3d" href="#tensornet.cfd.fast_euler_3d.morton_encode_3d">morton_encode_3d</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.qtt_3d_to_dense" href="#tensornet.cfd.fast_euler_3d.qtt_3d_to_dense">qtt_3d_to_dense</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.cfd.fast_euler_3d.Euler3DConfig" href="#tensornet.cfd.fast_euler_3d.Euler3DConfig">Euler3DConfig</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.fast_euler_3d.Euler3DConfig.cfl" href="#tensornet.cfd.fast_euler_3d.Euler3DConfig.cfl">cfl</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.Euler3DConfig.device" href="#tensornet.cfd.fast_euler_3d.Euler3DConfig.device">device</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.Euler3DConfig.dtype" href="#tensornet.cfd.fast_euler_3d.Euler3DConfig.dtype">dtype</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.Euler3DConfig.gamma" href="#tensornet.cfd.fast_euler_3d.Euler3DConfig.gamma">gamma</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.Euler3DConfig.grid_size" href="#tensornet.cfd.fast_euler_3d.Euler3DConfig.grid_size">grid_size</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.Euler3DConfig.max_rank" href="#tensornet.cfd.fast_euler_3d.Euler3DConfig.max_rank">max_rank</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.Euler3DConfig.qubits_per_dim" href="#tensornet.cfd.fast_euler_3d.Euler3DConfig.qubits_per_dim">qubits_per_dim</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.Euler3DConfig.total_points" href="#tensornet.cfd.fast_euler_3d.Euler3DConfig.total_points">total_points</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.Euler3DConfig.total_qubits" href="#tensornet.cfd.fast_euler_3d.Euler3DConfig.total_qubits">total_qubits</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.fast_euler_3d.Euler3DState" href="#tensornet.cfd.fast_euler_3d.Euler3DState">Euler3DState</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.fast_euler_3d.Euler3DState.E" href="#tensornet.cfd.fast_euler_3d.Euler3DState.E">E</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.Euler3DState.max_rank" href="#tensornet.cfd.fast_euler_3d.Euler3DState.max_rank">max_rank</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.Euler3DState.rho" href="#tensornet.cfd.fast_euler_3d.Euler3DState.rho">rho</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.Euler3DState.rhou" href="#tensornet.cfd.fast_euler_3d.Euler3DState.rhou">rhou</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.Euler3DState.rhov" href="#tensornet.cfd.fast_euler_3d.Euler3DState.rhov">rhov</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.Euler3DState.rhow" href="#tensornet.cfd.fast_euler_3d.Euler3DState.rhow">rhow</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.fast_euler_3d.FastEuler3D" href="#tensornet.cfd.fast_euler_3d.FastEuler3D">FastEuler3D</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.fast_euler_3d.FastEuler3D.compute_dt" href="#tensornet.cfd.fast_euler_3d.FastEuler3D.compute_dt">compute_dt</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.FastEuler3D.step" href="#tensornet.cfd.fast_euler_3d.FastEuler3D.step">step</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.fast_euler_3d.QTT3DState" href="#tensornet.cfd.fast_euler_3d.QTT3DState">QTT3DState</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.fast_euler_3d.QTT3DState.cores" href="#tensornet.cfd.fast_euler_3d.QTT3DState.cores">cores</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.QTT3DState.max_rank" href="#tensornet.cfd.fast_euler_3d.QTT3DState.max_rank">max_rank</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.QTT3DState.nx" href="#tensornet.cfd.fast_euler_3d.QTT3DState.nx">nx</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.QTT3DState.ny" href="#tensornet.cfd.fast_euler_3d.QTT3DState.ny">ny</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.QTT3DState.nz" href="#tensornet.cfd.fast_euler_3d.QTT3DState.nz">nz</a></code></li>
+<li><code><a title="tensornet.cfd.fast_euler_3d.QTT3DState.total_qubits" href="#tensornet.cfd.fast_euler_3d.QTT3DState.total_qubits">total_qubits</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,1274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.self_similar API documentation</title>
+<meta name="description" content="Self-Similar Coordinate Transformation for Blow-Up Analysis …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.self_similar</code></h1>
+</header>
+<section id="section-intro">
+<p>Self-Similar Coordinate Transformation for Blow-Up Analysis.</p>
+<p>The key insight: A finite-time singularity in physical time becomes a
+STEADY STATE in rescaled "dynamic" coordinates.</p>
+<h1 id="mathematical-setup">Mathematical Setup</h1>
+<p>In physical coordinates (x, t), the velocity near blow-up at time T:
+u(x, t) ~ (T-t)^(-α) U(ξ)</p>
+<p>where ξ = x / (T-t)^β is the "zoomed-in" coordinate.</p>
+<p>The Rescaled Time:
+τ = -log(T - t)</p>
+<p>As t → T, we have τ → ∞. The blow-up becomes a limit at τ = ∞.</p>
+<p>In these coordinates, the Navier-Stokes equations become:
+∂U/∂τ = F(U)</p>
+<p>A self-similar singularity corresponds to F(U*) = 0 (a steady state).</p>
+<p>Reference: Hou &amp; Huang (2022), "Potential singularity of the 3D Euler equations"</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.self_similar.create_candidate_profile"><code class="name flex">
+<span>def <span class="ident">create_candidate_profile</span></span>(<span>N: int = 64, profile_type: str = 'tornado', strength: float = 1.0) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_candidate_profile(
+    N: int = 64,
+    profile_type: str = &#34;tornado&#34;,
+    strength: float = 1.0,
+) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Create a candidate blow-up profile for optimization.
+    
+    Args:
+        N: Grid resolution
+        profile_type: Type of initial guess
+            - &#34;tornado&#34;: Concentrated vortex tube
+            - &#34;dipole&#34;: Colliding vortex rings
+            - &#34;random&#34;: Smooth random field
+        strength: Amplitude scaling
+        
+    Returns:
+        U: Velocity field (N, N, N, 3)
+    &#34;&#34;&#34;
+    L = 2 * np.pi
+    x = torch.linspace(-L/2, L/2, N, dtype=torch.float64)
+    X, Y, Z = torch.meshgrid(x, x, x, indexing=&#39;ij&#39;)
+    
+    U = torch.zeros(N, N, N, 3, dtype=torch.float64)
+    
+    if profile_type == &#34;tornado&#34;:
+        # Concentrated vortex tube along z-axis
+        r = torch.sqrt(X**2 + Y**2)
+        sigma = L / 10  # Core radius
+        vortex_strength = strength * torch.exp(-r**2 / (2 * sigma**2))
+        
+        # u_θ = Γ/(2πr) * (1 - exp(-r²/σ²)) ≈ Lamb-Oseen vortex
+        # Convert to Cartesian
+        U[..., 0] = -Y * vortex_strength / (r + 1e-10)  # u_x
+        U[..., 1] = X * vortex_strength / (r + 1e-10)   # u_y
+        U[..., 2] = 0.1 * vortex_strength               # Weak axial flow
+        
+    elif profile_type == &#34;dipole&#34;:
+        # Two vortex rings approaching each other
+        z_sep = L / 4
+        
+        for sign, z0 in [(1, z_sep), (-1, -z_sep)]:
+            r_from_axis = torch.sqrt(X**2 + Y**2)
+            r_ring = L / 6  # Ring radius
+            
+            # Distance from ring core
+            dist = torch.sqrt((r_from_axis - r_ring)**2 + (Z - z0)**2)
+            sigma = L / 20  # Core thickness
+            core = torch.exp(-dist**2 / (2 * sigma**2))
+            
+            # Azimuthal velocity around ring
+            U[..., 0] += sign * (-Y / (r_from_axis + 1e-10)) * core
+            U[..., 1] += sign * (X / (r_from_axis + 1e-10)) * core
+            
+        U *= strength
+        
+    elif profile_type == &#34;random&#34;:
+        # Smooth random field (filtered noise)
+        k = torch.fft.fftfreq(N) * N
+        kx, ky, kz = torch.meshgrid(k, k, k, indexing=&#39;ij&#39;)
+        k_mag = torch.sqrt(kx**2 + ky**2 + kz**2)
+        
+        # Filter: emphasize intermediate scales
+        filt = torch.exp(-k_mag**2 / 10) * k_mag**2
+        
+        for i in range(3):
+            noise = torch.randn(N, N, N, dtype=torch.float64)
+            noise_hat = torch.fft.fftn(noise)
+            U[..., i] = torch.fft.ifftn(noise_hat * filt).real
+        
+        U = U / U.abs().max() * strength
+    
+    # Make divergence-free
+    U_hat = torch.fft.fftn(U, dim=(0, 1, 2))
+    k = torch.fft.fftfreq(N, L/N) * 2 * np.pi
+    kx, ky, kz = torch.meshgrid(k, k, k, indexing=&#39;ij&#39;)
+    k_sq = kx**2 + ky**2 + kz**2
+    k_sq[0, 0, 0] = 1.0
+    
+    div_hat = 1j * kx * U_hat[..., 0] + 1j * ky * U_hat[..., 1] + 1j * kz * U_hat[..., 2]
+    P_hat = div_hat / k_sq
+    P_hat[0, 0, 0] = 0
+    
+    U_hat[..., 0] -= 1j * kx * P_hat
+    U_hat[..., 1] -= 1j * ky * P_hat
+    U_hat[..., 2] -= 1j * kz * P_hat
+    
+    U = torch.fft.ifftn(U_hat, dim=(0, 1, 2)).real
+    
+    return U</code></pre>
+</details>
+<div class="desc"><p>Create a candidate blow-up profile for optimization.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>N</code></strong></dt>
+<dd>Grid resolution</dd>
+<dt><strong><code>profile_type</code></strong></dt>
+<dd>Type of initial guess
+- "tornado": Concentrated vortex tube
+- "dipole": Colliding vortex rings
+- "random": Smooth random field</dd>
+<dt><strong><code>strength</code></strong></dt>
+<dd>Amplitude scaling</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>U</code></dt>
+<dd>Velocity field (N, N, N, 3)</dd>
+</dl></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.divergence"><code class="name flex">
+<span>def <span class="ident">divergence</span></span>(<span>U: torch.Tensor, dx: float) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def divergence(U: torch.Tensor, dx: float) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Compute divergence ∇·U.&#34;&#34;&#34;
+    N = U.shape[0]
+    k = torch.fft.fftfreq(N, dx) * 2 * np.pi
+    kx, ky, kz = torch.meshgrid(k, k, k, indexing=&#39;ij&#39;)
+    
+    U_hat = torch.fft.fftn(U, dim=(0, 1, 2))
+    div_hat = (
+        1j * kx * U_hat[..., 0] +
+        1j * ky * U_hat[..., 1] +
+        1j * kz * U_hat[..., 2]
+    )
+    return torch.fft.ifftn(div_hat).real</code></pre>
+</details>
+<div class="desc"><p>Compute divergence ∇·U.</p></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.verify_self_similar_transform"><code class="name flex">
+<span>def <span class="ident">verify_self_similar_transform</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def verify_self_similar_transform():
+    &#34;&#34;&#34;
+    Verify the self-similar transformation is correctly implemented.
+    &#34;&#34;&#34;
+    print(&#34;=&#34; * 60)
+    print(&#34;SELF-SIMILAR TRANSFORM VERIFICATION&#34;)
+    print(&#34;=&#34; * 60)
+    
+    # Test 1: Time coordinate transforms
+    scaling = SelfSimilarScaling(alpha=0.5, beta=0.5, T_star=1.0)
+    t = torch.tensor([0.0, 0.5, 0.9, 0.99])
+    tau = scaling.to_rescaled_time(t)
+    t_back = scaling.from_rescaled_time(tau)
+    
+    assert torch.allclose(t, t_back, atol=1e-10), &#34;Time transform roundtrip failed&#34;
+    print(f&#34;✓ Time transform: t={t.tolist()} → τ={tau.tolist()}&#34;)
+    print(f&#34;  τ → ∞ as t → T*: τ(t=0.99) = {tau[-1]:.2f}&#34;)
+    
+    # Test 2: Residual computation
+    N = 32
+    ns = RescaledNSEquations(scaling, nu=0.01, N=N)
+    U = create_candidate_profile(N, &#34;tornado&#34;, strength=0.5)
+    tau = torch.tensor(1.0)
+    
+    R = ns.residual(U, tau)
+    R_norm = torch.sqrt((R**2).sum()) * ns.dx**1.5
+    print(f&#34;✓ Residual computed: ||R|| = {R_norm:.4e}&#34;)
+    
+    # Test 3: Vorticity and enstrophy
+    omega = ns.vorticity(U)
+    omega_max = ns.max_vorticity(U)
+    enstrophy = ns.enstrophy(U)
+    print(f&#34;✓ Vorticity: ||ω||_∞ = {omega_max:.4f}, Ω = {enstrophy:.4f}&#34;)
+    
+    # Test 4: Profile types
+    for ptype in [&#34;tornado&#34;, &#34;dipole&#34;, &#34;random&#34;]:
+        U = create_candidate_profile(N, ptype)
+        div = divergence(U, ns.dx)
+        div_max = div.abs().max()
+        print(f&#34;✓ Profile &#39;{ptype}&#39;: max|∇·U| = {div_max:.2e} (divergence-free)&#34;)
+    
+    print(&#34;=&#34; * 60)
+    print(&#34;All self-similar transform tests passed!&#34;)
+    print(&#34;=&#34; * 60)</code></pre>
+</details>
+<div class="desc"><p>Verify the self-similar transformation is correctly implemented.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.cfd.self_similar.BlowUpType"><code class="flex name class">
+<span>class <span class="ident">BlowUpType</span></span>
+<span>(</span><span>*args, **kwds)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BlowUpType(Enum):
+    &#34;&#34;&#34;Classification of potential singularity types.&#34;&#34;&#34;
+    VORTEX_SHEET = &#34;vortex_sheet&#34;      # ω concentrated on a surface
+    VORTEX_FILAMENT = &#34;vortex_filament&#34;  # ω concentrated on a curve  
+    POINT_SINGULARITY = &#34;point&#34;        # ω concentrated at a point
+    SELF_SIMILAR = &#34;self_similar&#34;      # Scale-invariant blow-up</code></pre>
+</details>
+<div class="desc"><p>Classification of potential singularity types.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="tensornet.cfd.self_similar.BlowUpType.POINT_SINGULARITY"><code class="name">var <span class="ident">POINT_SINGULARITY</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.BlowUpType.SELF_SIMILAR"><code class="name">var <span class="ident">SELF_SIMILAR</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.BlowUpType.VORTEX_FILAMENT"><code class="name">var <span class="ident">VORTEX_FILAMENT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.BlowUpType.VORTEX_SHEET"><code class="name">var <span class="ident">VORTEX_SHEET</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.self_similar.RescaledNSEquations"><code class="flex name class">
+<span>class <span class="ident">RescaledNSEquations</span></span>
+<span>(</span><span>scaling: <a title="tensornet.cfd.self_similar.SelfSimilarScaling" href="#tensornet.cfd.self_similar.SelfSimilarScaling">SelfSimilarScaling</a>,<br>nu: float = 0.001,<br>L: float = 6.283185307179586,<br>N: int = 64)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass  
+class RescaledNSEquations:
+    &#34;&#34;&#34;
+    Navier-Stokes equations in self-similar coordinates.
+    
+    The rescaled equations for profile U(ξ):
+    
+    ∂U/∂τ + (U·∇)U + α U + β (ξ·∇)U = -∇P + ν_eff ΔU
+    
+    where ν_eff = ν (T* - t)^(1-2β) is the effective (time-dependent) viscosity.
+    
+    At the fixed point (∂U/∂τ = 0):
+        (U·∇)U + α U + β (ξ·∇)U + ∇P - ν_eff ΔU = 0
+        
+    This is the equation we need to solve to prove blow-up.
+    &#34;&#34;&#34;
+    scaling: SelfSimilarScaling
+    nu: float = 1e-3  # Physical viscosity
+    L: float = 2*np.pi  # Domain size (in ξ coordinates)
+    N: int = 64  # Grid resolution
+    
+    def __post_init__(self):
+        &#34;&#34;&#34;Initialize spectral grid.&#34;&#34;&#34;
+        self.dx = self.L / self.N
+        # Rescaled coordinate ξ
+        self.xi = torch.linspace(-self.L/2, self.L/2, self.N, dtype=torch.float64)
+        
+        # Spectral wavenumbers
+        self.k = torch.fft.fftfreq(self.N, self.dx) * 2 * np.pi
+        self.kx, self.ky, self.kz = torch.meshgrid(self.k, self.k, self.k, indexing=&#39;ij&#39;)
+        self.k_sq = self.kx**2 + self.ky**2 + self.kz**2
+        self.k_sq[0, 0, 0] = 1.0  # Avoid division by zero
+    
+    def effective_viscosity(self, tau: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;
+        Effective viscosity in rescaled coordinates.
+        
+        ν_eff(τ) = ν * exp((1 - 2β)τ)
+        
+        For β = 1/2: ν_eff = ν (constant)
+        For β &lt; 1/2: ν_eff → ∞ as τ → ∞ (viscosity dominates)
+        For β &gt; 1/2: ν_eff → 0 as τ → ∞ (Euler-like)
+        &#34;&#34;&#34;
+        exponent = (1 - 2 * self.scaling.beta) * tau
+        return self.nu * torch.exp(exponent)
+    
+    def stretching_term(self, U: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;
+        The self-similar stretching: β(ξ·∇)U + αU
+        
+        This is the term that balances the nonlinearity at the fixed point.
+        
+        Args:
+            U: Velocity field (N, N, N, 3)
+            
+        Returns:
+            Stretching contribution (N, N, N, 3)
+        &#34;&#34;&#34;
+        alpha = self.scaling.alpha
+        beta = self.scaling.beta
+        
+        # Construct ξ grids
+        xi_x = self.xi.view(-1, 1, 1, 1).expand_as(U[..., 0:1])
+        xi_y = self.xi.view(1, -1, 1, 1).expand_as(U[..., 0:1])
+        xi_z = self.xi.view(1, 1, -1, 1).expand_as(U[..., 0:1])
+        
+        # ∇U via spectral derivatives
+        U_hat = torch.fft.fftn(U, dim=(0, 1, 2))
+        
+        dUdx = torch.fft.ifftn(1j * self.kx.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+        dUdy = torch.fft.ifftn(1j * self.ky.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+        dUdz = torch.fft.ifftn(1j * self.kz.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+        
+        # (ξ·∇)U = ξ_x ∂U/∂x + ξ_y ∂U/∂y + ξ_z ∂U/∂z
+        xi_dot_grad_U = xi_x * dUdx + xi_y * dUdy + xi_z * dUdz
+        
+        # β(ξ·∇)U + αU
+        return beta * xi_dot_grad_U + alpha * U
+    
+    def advection_term(self, U: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;
+        Nonlinear advection: (U·∇)U
+        
+        Args:
+            U: Velocity field (N, N, N, 3)
+            
+        Returns:
+            Advection (N, N, N, 3)
+        &#34;&#34;&#34;
+        U_hat = torch.fft.fftn(U, dim=(0, 1, 2))
+        
+        dUdx = torch.fft.ifftn(1j * self.kx.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+        dUdy = torch.fft.ifftn(1j * self.ky.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+        dUdz = torch.fft.ifftn(1j * self.kz.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+        
+        # (U·∇)U component by component
+        advection = torch.zeros_like(U)
+        for i in range(3):
+            advection[..., i] = (
+                U[..., 0] * dUdx[..., i] +
+                U[..., 1] * dUdy[..., i] +
+                U[..., 2] * dUdz[..., i]
+            )
+        
+        return advection
+    
+    def laplacian(self, U: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;
+        Laplacian ΔU via spectral method.
+        
+        Args:
+            U: Velocity field (N, N, N, 3)
+            
+        Returns:
+            ΔU (N, N, N, 3)
+        &#34;&#34;&#34;
+        U_hat = torch.fft.fftn(U, dim=(0, 1, 2))
+        lap_hat = -self.k_sq.unsqueeze(-1) * U_hat
+        return torch.fft.ifftn(lap_hat, dim=(0, 1, 2)).real
+    
+    def pressure_projection(self, F: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;
+        Project out non-divergence-free component: (I - ∇∇^(-1)∇·)F
+        
+        This enforces ∇·U = 0.
+        &#34;&#34;&#34;
+        F_hat = torch.fft.fftn(F, dim=(0, 1, 2))
+        
+        # ∇·F in spectral space
+        div_hat = (
+            1j * self.kx * F_hat[..., 0] +
+            1j * self.ky * F_hat[..., 1] +
+            1j * self.kz * F_hat[..., 2]
+        )
+        
+        # Pressure: P = ∇^(-2) (∇·F)
+        P_hat = div_hat / self.k_sq
+        P_hat[0, 0, 0] = 0  # Zero mean pressure
+        
+        # Subtract ∇P from each component
+        proj_hat = F_hat.clone()
+        proj_hat[..., 0] -= 1j * self.kx * P_hat
+        proj_hat[..., 1] -= 1j * self.ky * P_hat
+        proj_hat[..., 2] -= 1j * self.kz * P_hat
+        
+        return torch.fft.ifftn(proj_hat, dim=(0, 1, 2)).real
+    
+    def residual(self, U: torch.Tensor, tau: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;
+        Compute the fixed-point residual: R(U) = F(U) where ∂U/∂τ = F(U).
+        
+        At the self-similar fixed point, R(U*) = 0.
+        
+        The residual is:
+            R = -(U·∇)U - α U - β(ξ·∇)U + ν_eff ΔU - ∇P
+            
+        where the pressure is determined by ∇·R = 0 (incompressibility).
+        
+        Args:
+            U: Candidate profile (N, N, N, 3)
+            tau: Rescaled time
+            
+        Returns:
+            R(U): Residual (N, N, N, 3) — should be small for good profile
+        &#34;&#34;&#34;
+        nu_eff = self.effective_viscosity(tau)
+        
+        # Assemble unprojected residual
+        R_unprojected = (
+            -self.advection_term(U)
+            - self.stretching_term(U)
+            + nu_eff * self.laplacian(U)
+        )
+        
+        # Project to enforce incompressibility
+        R = self.pressure_projection(R_unprojected)
+        
+        return R
+    
+    def vorticity(self, U: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;
+        Compute vorticity ω = ∇ × U.
+        
+        Args:
+            U: Velocity field (N, N, N, 3)
+            
+        Returns:
+            ω: Vorticity (N, N, N, 3)
+        &#34;&#34;&#34;
+        U_hat = torch.fft.fftn(U, dim=(0, 1, 2))
+        
+        dUdx = 1j * self.kx.unsqueeze(-1) * U_hat
+        dUdy = 1j * self.ky.unsqueeze(-1) * U_hat
+        dUdz = 1j * self.kz.unsqueeze(-1) * U_hat
+        
+        omega_hat = torch.zeros_like(U_hat)
+        omega_hat[..., 0] = dUdy[..., 2] - dUdz[..., 1]  # ∂w/∂y - ∂v/∂z
+        omega_hat[..., 1] = dUdz[..., 0] - dUdx[..., 2]  # ∂u/∂z - ∂w/∂x
+        omega_hat[..., 2] = dUdx[..., 1] - dUdy[..., 0]  # ∂v/∂x - ∂u/∂y
+        
+        return torch.fft.ifftn(omega_hat, dim=(0, 1, 2)).real
+    
+    def enstrophy(self, U: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;
+        Enstrophy: Ω = ∫|ω|² dξ
+        &#34;&#34;&#34;
+        omega = self.vorticity(U)
+        return (omega ** 2).sum() * self.dx**3
+    
+    def max_vorticity(self, U: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;
+        Maximum vorticity magnitude: ||ω||_∞
+        
+        This is the BKM criterion quantity.
+        &#34;&#34;&#34;
+        omega = self.vorticity(U)
+        omega_mag = torch.sqrt((omega ** 2).sum(dim=-1))
+        return omega_mag.max()</code></pre>
+</details>
+<div class="desc"><p>Navier-Stokes equations in self-similar coordinates.</p>
+<p>The rescaled equations for profile U(ξ):</p>
+<p>∂U/∂τ + (U·∇)U + α U + β (ξ·∇)U = -∇P + ν_eff ΔU</p>
+<p>where ν_eff = ν (T* - t)^(1-2β) is the effective (time-dependent) viscosity.</p>
+<p>At the fixed point (∂U/∂τ = 0):
+(U·∇)U + α U + β (ξ·∇)U + ∇P - ν_eff ΔU = 0</p>
+<p>This is the equation we need to solve to prove blow-up.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.self_similar.RescaledNSEquations.L"><code class="name">var <span class="ident">L</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.RescaledNSEquations.N"><code class="name">var <span class="ident">N</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.RescaledNSEquations.nu"><code class="name">var <span class="ident">nu</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.RescaledNSEquations.scaling"><code class="name">var <span class="ident">scaling</span> : <a title="tensornet.cfd.self_similar.SelfSimilarScaling" href="#tensornet.cfd.self_similar.SelfSimilarScaling">SelfSimilarScaling</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.self_similar.RescaledNSEquations.advection_term"><code class="name flex">
+<span>def <span class="ident">advection_term</span></span>(<span>self, U: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advection_term(self, U: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Nonlinear advection: (U·∇)U
+    
+    Args:
+        U: Velocity field (N, N, N, 3)
+        
+    Returns:
+        Advection (N, N, N, 3)
+    &#34;&#34;&#34;
+    U_hat = torch.fft.fftn(U, dim=(0, 1, 2))
+    
+    dUdx = torch.fft.ifftn(1j * self.kx.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+    dUdy = torch.fft.ifftn(1j * self.ky.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+    dUdz = torch.fft.ifftn(1j * self.kz.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+    
+    # (U·∇)U component by component
+    advection = torch.zeros_like(U)
+    for i in range(3):
+        advection[..., i] = (
+            U[..., 0] * dUdx[..., i] +
+            U[..., 1] * dUdy[..., i] +
+            U[..., 2] * dUdz[..., i]
+        )
+    
+    return advection</code></pre>
+</details>
+<div class="desc"><p>Nonlinear advection: (U·∇)U</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>U</code></strong></dt>
+<dd>Velocity field (N, N, N, 3)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Advection (N, N, N, 3)</p></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.RescaledNSEquations.effective_viscosity"><code class="name flex">
+<span>def <span class="ident">effective_viscosity</span></span>(<span>self, tau: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def effective_viscosity(self, tau: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Effective viscosity in rescaled coordinates.
+    
+    ν_eff(τ) = ν * exp((1 - 2β)τ)
+    
+    For β = 1/2: ν_eff = ν (constant)
+    For β &lt; 1/2: ν_eff → ∞ as τ → ∞ (viscosity dominates)
+    For β &gt; 1/2: ν_eff → 0 as τ → ∞ (Euler-like)
+    &#34;&#34;&#34;
+    exponent = (1 - 2 * self.scaling.beta) * tau
+    return self.nu * torch.exp(exponent)</code></pre>
+</details>
+<div class="desc"><p>Effective viscosity in rescaled coordinates.</p>
+<p>ν_eff(τ) = ν * exp((1 - 2β)τ)</p>
+<p>For β = 1/2: ν_eff = ν (constant)
+For β &lt; 1/2: ν_eff → ∞ as τ → ∞ (viscosity dominates)
+For β &gt; 1/2: ν_eff → 0 as τ → ∞ (Euler-like)</p></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.RescaledNSEquations.enstrophy"><code class="name flex">
+<span>def <span class="ident">enstrophy</span></span>(<span>self, U: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def enstrophy(self, U: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Enstrophy: Ω = ∫|ω|² dξ
+    &#34;&#34;&#34;
+    omega = self.vorticity(U)
+    return (omega ** 2).sum() * self.dx**3</code></pre>
+</details>
+<div class="desc"><p>Enstrophy: Ω = ∫|ω|² dξ</p></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.RescaledNSEquations.laplacian"><code class="name flex">
+<span>def <span class="ident">laplacian</span></span>(<span>self, U: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def laplacian(self, U: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Laplacian ΔU via spectral method.
+    
+    Args:
+        U: Velocity field (N, N, N, 3)
+        
+    Returns:
+        ΔU (N, N, N, 3)
+    &#34;&#34;&#34;
+    U_hat = torch.fft.fftn(U, dim=(0, 1, 2))
+    lap_hat = -self.k_sq.unsqueeze(-1) * U_hat
+    return torch.fft.ifftn(lap_hat, dim=(0, 1, 2)).real</code></pre>
+</details>
+<div class="desc"><p>Laplacian ΔU via spectral method.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>U</code></strong></dt>
+<dd>Velocity field (N, N, N, 3)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>ΔU (N, N, N, 3)</p></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.RescaledNSEquations.max_vorticity"><code class="name flex">
+<span>def <span class="ident">max_vorticity</span></span>(<span>self, U: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def max_vorticity(self, U: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Maximum vorticity magnitude: ||ω||_∞
+    
+    This is the BKM criterion quantity.
+    &#34;&#34;&#34;
+    omega = self.vorticity(U)
+    omega_mag = torch.sqrt((omega ** 2).sum(dim=-1))
+    return omega_mag.max()</code></pre>
+</details>
+<div class="desc"><p>Maximum vorticity magnitude: ||ω||_∞</p>
+<p>This is the BKM criterion quantity.</p></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.RescaledNSEquations.pressure_projection"><code class="name flex">
+<span>def <span class="ident">pressure_projection</span></span>(<span>self, F: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pressure_projection(self, F: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Project out non-divergence-free component: (I - ∇∇^(-1)∇·)F
+    
+    This enforces ∇·U = 0.
+    &#34;&#34;&#34;
+    F_hat = torch.fft.fftn(F, dim=(0, 1, 2))
+    
+    # ∇·F in spectral space
+    div_hat = (
+        1j * self.kx * F_hat[..., 0] +
+        1j * self.ky * F_hat[..., 1] +
+        1j * self.kz * F_hat[..., 2]
+    )
+    
+    # Pressure: P = ∇^(-2) (∇·F)
+    P_hat = div_hat / self.k_sq
+    P_hat[0, 0, 0] = 0  # Zero mean pressure
+    
+    # Subtract ∇P from each component
+    proj_hat = F_hat.clone()
+    proj_hat[..., 0] -= 1j * self.kx * P_hat
+    proj_hat[..., 1] -= 1j * self.ky * P_hat
+    proj_hat[..., 2] -= 1j * self.kz * P_hat
+    
+    return torch.fft.ifftn(proj_hat, dim=(0, 1, 2)).real</code></pre>
+</details>
+<div class="desc"><p>Project out non-divergence-free component: (I - ∇∇^(-1)∇·)F</p>
+<p>This enforces ∇·U = 0.</p></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.RescaledNSEquations.residual"><code class="name flex">
+<span>def <span class="ident">residual</span></span>(<span>self, U: torch.Tensor, tau: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def residual(self, U: torch.Tensor, tau: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Compute the fixed-point residual: R(U) = F(U) where ∂U/∂τ = F(U).
+    
+    At the self-similar fixed point, R(U*) = 0.
+    
+    The residual is:
+        R = -(U·∇)U - α U - β(ξ·∇)U + ν_eff ΔU - ∇P
+        
+    where the pressure is determined by ∇·R = 0 (incompressibility).
+    
+    Args:
+        U: Candidate profile (N, N, N, 3)
+        tau: Rescaled time
+        
+    Returns:
+        R(U): Residual (N, N, N, 3) — should be small for good profile
+    &#34;&#34;&#34;
+    nu_eff = self.effective_viscosity(tau)
+    
+    # Assemble unprojected residual
+    R_unprojected = (
+        -self.advection_term(U)
+        - self.stretching_term(U)
+        + nu_eff * self.laplacian(U)
+    )
+    
+    # Project to enforce incompressibility
+    R = self.pressure_projection(R_unprojected)
+    
+    return R</code></pre>
+</details>
+<div class="desc"><p>Compute the fixed-point residual: R(U) = F(U) where ∂U/∂τ = F(U).</p>
+<p>At the self-similar fixed point, R(U*) = 0.</p>
+<p>The residual is:
+R = -(U·∇)U - α U - β(ξ·∇)U + ν_eff ΔU - ∇P</p>
+<p>where the pressure is determined by ∇·R = 0 (incompressibility).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>U</code></strong></dt>
+<dd>Candidate profile (N, N, N, 3)</dd>
+<dt><strong><code>tau</code></strong></dt>
+<dd>Rescaled time</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>R(U): Residual (N, N, N, 3) — should be small for good profile</p></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.RescaledNSEquations.stretching_term"><code class="name flex">
+<span>def <span class="ident">stretching_term</span></span>(<span>self, U: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def stretching_term(self, U: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    The self-similar stretching: β(ξ·∇)U + αU
+    
+    This is the term that balances the nonlinearity at the fixed point.
+    
+    Args:
+        U: Velocity field (N, N, N, 3)
+        
+    Returns:
+        Stretching contribution (N, N, N, 3)
+    &#34;&#34;&#34;
+    alpha = self.scaling.alpha
+    beta = self.scaling.beta
+    
+    # Construct ξ grids
+    xi_x = self.xi.view(-1, 1, 1, 1).expand_as(U[..., 0:1])
+    xi_y = self.xi.view(1, -1, 1, 1).expand_as(U[..., 0:1])
+    xi_z = self.xi.view(1, 1, -1, 1).expand_as(U[..., 0:1])
+    
+    # ∇U via spectral derivatives
+    U_hat = torch.fft.fftn(U, dim=(0, 1, 2))
+    
+    dUdx = torch.fft.ifftn(1j * self.kx.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+    dUdy = torch.fft.ifftn(1j * self.ky.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+    dUdz = torch.fft.ifftn(1j * self.kz.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+    
+    # (ξ·∇)U = ξ_x ∂U/∂x + ξ_y ∂U/∂y + ξ_z ∂U/∂z
+    xi_dot_grad_U = xi_x * dUdx + xi_y * dUdy + xi_z * dUdz
+    
+    # β(ξ·∇)U + αU
+    return beta * xi_dot_grad_U + alpha * U</code></pre>
+</details>
+<div class="desc"><p>The self-similar stretching: β(ξ·∇)U + αU</p>
+<p>This is the term that balances the nonlinearity at the fixed point.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>U</code></strong></dt>
+<dd>Velocity field (N, N, N, 3)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Stretching contribution (N, N, N, 3)</p></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.RescaledNSEquations.vorticity"><code class="name flex">
+<span>def <span class="ident">vorticity</span></span>(<span>self, U: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def vorticity(self, U: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Compute vorticity ω = ∇ × U.
+    
+    Args:
+        U: Velocity field (N, N, N, 3)
+        
+    Returns:
+        ω: Vorticity (N, N, N, 3)
+    &#34;&#34;&#34;
+    U_hat = torch.fft.fftn(U, dim=(0, 1, 2))
+    
+    dUdx = 1j * self.kx.unsqueeze(-1) * U_hat
+    dUdy = 1j * self.ky.unsqueeze(-1) * U_hat
+    dUdz = 1j * self.kz.unsqueeze(-1) * U_hat
+    
+    omega_hat = torch.zeros_like(U_hat)
+    omega_hat[..., 0] = dUdy[..., 2] - dUdz[..., 1]  # ∂w/∂y - ∂v/∂z
+    omega_hat[..., 1] = dUdz[..., 0] - dUdx[..., 2]  # ∂u/∂z - ∂w/∂x
+    omega_hat[..., 2] = dUdx[..., 1] - dUdy[..., 0]  # ∂v/∂x - ∂u/∂y
+    
+    return torch.fft.ifftn(omega_hat, dim=(0, 1, 2)).real</code></pre>
+</details>
+<div class="desc"><p>Compute vorticity ω = ∇ × U.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>U</code></strong></dt>
+<dd>Velocity field (N, N, N, 3)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ω</code></dt>
+<dd>Vorticity (N, N, N, 3)</dd>
+</dl></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.self_similar.SelfSimilarProfile"><code class="flex name class">
+<span>class <span class="ident">SelfSimilarProfile</span></span>
+<span>(</span><span>U: torch.Tensor,<br>scaling: <a title="tensornet.cfd.self_similar.SelfSimilarScaling" href="#tensornet.cfd.self_similar.SelfSimilarScaling">SelfSimilarScaling</a>,<br>residual_norm: Optional[float] = None,<br>max_vorticity: Optional[float] = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class SelfSimilarProfile:
+    &#34;&#34;&#34;
+    A candidate self-similar blow-up profile.
+    
+    This represents U(ξ) that we&#39;re trying to prove satisfies F(U) = 0.
+    &#34;&#34;&#34;
+    U: torch.Tensor  # (N, N, N, 3) velocity profile
+    scaling: SelfSimilarScaling
+    residual_norm: Optional[float] = None
+    max_vorticity: Optional[float] = None
+    
+    def save(self, path: str):
+        &#34;&#34;&#34;Save profile to disk.&#34;&#34;&#34;
+        torch.save({
+            &#39;U&#39;: self.U,
+            &#39;alpha&#39;: self.scaling.alpha,
+            &#39;beta&#39;: self.scaling.beta,
+            &#39;T_star&#39;: self.scaling.T_star,
+            &#39;residual_norm&#39;: self.residual_norm,
+            &#39;max_vorticity&#39;: self.max_vorticity,
+        }, path)
+    
+    @classmethod
+    def load(cls, path: str) -&gt; &#39;SelfSimilarProfile&#39;:
+        &#34;&#34;&#34;Load profile from disk.&#34;&#34;&#34;
+        data = torch.load(path)
+        scaling = SelfSimilarScaling(
+            alpha=data[&#39;alpha&#39;],
+            beta=data[&#39;beta&#39;],
+            T_star=data[&#39;T_star&#39;]
+        )
+        return cls(
+            U=data[&#39;U&#39;],
+            scaling=scaling,
+            residual_norm=data.get(&#39;residual_norm&#39;),
+            max_vorticity=data.get(&#39;max_vorticity&#39;),
+        )</code></pre>
+</details>
+<div class="desc"><p>A candidate self-similar blow-up profile.</p>
+<p>This represents U(ξ) that we're trying to prove satisfies F(U) = 0.</p></div>
+<h3>Static methods</h3>
+<dl>
+<dt id="tensornet.cfd.self_similar.SelfSimilarProfile.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>path: str) ‑> <a title="tensornet.cfd.self_similar.SelfSimilarProfile" href="#tensornet.cfd.self_similar.SelfSimilarProfile">SelfSimilarProfile</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Load profile from disk.</p></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.self_similar.SelfSimilarProfile.U"><code class="name">var <span class="ident">U</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.SelfSimilarProfile.max_vorticity"><code class="name">var <span class="ident">max_vorticity</span> : float | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.SelfSimilarProfile.residual_norm"><code class="name">var <span class="ident">residual_norm</span> : float | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.SelfSimilarProfile.scaling"><code class="name">var <span class="ident">scaling</span> : <a title="tensornet.cfd.self_similar.SelfSimilarScaling" href="#tensornet.cfd.self_similar.SelfSimilarScaling">SelfSimilarScaling</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.self_similar.SelfSimilarProfile.save"><code class="name flex">
+<span>def <span class="ident">save</span></span>(<span>self, path: str)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save(self, path: str):
+    &#34;&#34;&#34;Save profile to disk.&#34;&#34;&#34;
+    torch.save({
+        &#39;U&#39;: self.U,
+        &#39;alpha&#39;: self.scaling.alpha,
+        &#39;beta&#39;: self.scaling.beta,
+        &#39;T_star&#39;: self.scaling.T_star,
+        &#39;residual_norm&#39;: self.residual_norm,
+        &#39;max_vorticity&#39;: self.max_vorticity,
+    }, path)</code></pre>
+</details>
+<div class="desc"><p>Save profile to disk.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.self_similar.SelfSimilarScaling"><code class="flex name class">
+<span>class <span class="ident">SelfSimilarScaling</span></span>
+<span>(</span><span>alpha: float = 0.5, beta: float = 0.5, T_star: float = 1.0)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class SelfSimilarScaling:
+    &#34;&#34;&#34;
+    Self-similar scaling parameters for blow-up.
+    
+    The velocity ansatz:
+        u(x, t) = (T-t)^(-α) U(x / (T-t)^β)
+    
+    Dimensional analysis for Navier-Stokes gives:
+        α = 1/2, β = 1/2 for viscous scaling
+        α = 1,   β = 1   for inviscid (Euler) scaling
+    &#34;&#34;&#34;
+    alpha: float = 0.5  # Velocity exponent
+    beta: float = 0.5   # Spatial exponent
+    T_star: float = 1.0  # Estimated blow-up time
+    
+    def validate(self) -&gt; bool:
+        &#34;&#34;&#34;Check dimensional consistency.&#34;&#34;&#34;
+        # For NS: [u] = L/T, [x] = L, [t] = T
+        # u ~ (T-t)^(-α) U(x/(T-t)^β)
+        # [u] = T^(-α), [ξ] = L / T^β
+        # For consistent [u] = L/T: need -α = -1, i.e., α = 1
+        # But viscosity gives different scaling
+        return self.alpha &gt; 0 and self.beta &gt; 0
+    
+    def to_rescaled_time(self, t: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;
+        Convert physical time to rescaled time.
+        
+        τ = -log(T* - t) → ∞ as t → T*
+        &#34;&#34;&#34;
+        margin = self.T_star - t
+        if torch.any(margin &lt;= 0):
+            raise ValueError(&#34;Time exceeds blow-up time T*&#34;)
+        return -torch.log(margin)
+    
+    def from_rescaled_time(self, tau: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;
+        Convert rescaled time back to physical time.
+        
+        t = T* - exp(-τ)
+        &#34;&#34;&#34;
+        return self.T_star - torch.exp(-tau)
+    
+    def velocity_rescaling(self, t: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;
+        Velocity rescaling factor: (T* - t)^α
+        
+        Physical velocity = rescaled velocity / factor
+        &#34;&#34;&#34;
+        margin = self.T_star - t
+        return torch.pow(margin, self.alpha)
+    
+    def spatial_rescaling(self, t: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;
+        Spatial rescaling factor: (T* - t)^β
+        
+        Physical coordinate = rescaled coordinate * factor
+        &#34;&#34;&#34;
+        margin = self.T_star - t
+        return torch.pow(margin, self.beta)</code></pre>
+</details>
+<div class="desc"><p>Self-similar scaling parameters for blow-up.</p>
+<p>The velocity ansatz:
+u(x, t) = (T-t)^(-α) U(x / (T-t)^β)</p>
+<p>Dimensional analysis for Navier-Stokes gives:
+α = 1/2, β = 1/2 for viscous scaling
+α = 1,
+β = 1
+for inviscid (Euler) scaling</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.self_similar.SelfSimilarScaling.T_star"><code class="name">var <span class="ident">T_star</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.SelfSimilarScaling.alpha"><code class="name">var <span class="ident">alpha</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.SelfSimilarScaling.beta"><code class="name">var <span class="ident">beta</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.self_similar.SelfSimilarScaling.from_rescaled_time"><code class="name flex">
+<span>def <span class="ident">from_rescaled_time</span></span>(<span>self, tau: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def from_rescaled_time(self, tau: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Convert rescaled time back to physical time.
+    
+    t = T* - exp(-τ)
+    &#34;&#34;&#34;
+    return self.T_star - torch.exp(-tau)</code></pre>
+</details>
+<div class="desc"><p>Convert rescaled time back to physical time.</p>
+<p>t = T* - exp(-τ)</p></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.SelfSimilarScaling.spatial_rescaling"><code class="name flex">
+<span>def <span class="ident">spatial_rescaling</span></span>(<span>self, t: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def spatial_rescaling(self, t: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Spatial rescaling factor: (T* - t)^β
+    
+    Physical coordinate = rescaled coordinate * factor
+    &#34;&#34;&#34;
+    margin = self.T_star - t
+    return torch.pow(margin, self.beta)</code></pre>
+</details>
+<div class="desc"><p>Spatial rescaling factor: (T* - t)^β</p>
+<p>Physical coordinate = rescaled coordinate * factor</p></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.SelfSimilarScaling.to_rescaled_time"><code class="name flex">
+<span>def <span class="ident">to_rescaled_time</span></span>(<span>self, t: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_rescaled_time(self, t: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Convert physical time to rescaled time.
+    
+    τ = -log(T* - t) → ∞ as t → T*
+    &#34;&#34;&#34;
+    margin = self.T_star - t
+    if torch.any(margin &lt;= 0):
+        raise ValueError(&#34;Time exceeds blow-up time T*&#34;)
+    return -torch.log(margin)</code></pre>
+</details>
+<div class="desc"><p>Convert physical time to rescaled time.</p>
+<p>τ = -log(T<em> - t) → ∞ as t → T</em></p></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.SelfSimilarScaling.validate"><code class="name flex">
+<span>def <span class="ident">validate</span></span>(<span>self) ‑> bool</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def validate(self) -&gt; bool:
+    &#34;&#34;&#34;Check dimensional consistency.&#34;&#34;&#34;
+    # For NS: [u] = L/T, [x] = L, [t] = T
+    # u ~ (T-t)^(-α) U(x/(T-t)^β)
+    # [u] = T^(-α), [ξ] = L / T^β
+    # For consistent [u] = L/T: need -α = -1, i.e., α = 1
+    # But viscosity gives different scaling
+    return self.alpha &gt; 0 and self.beta &gt; 0</code></pre>
+</details>
+<div class="desc"><p>Check dimensional consistency.</p></div>
+</dd>
+<dt id="tensornet.cfd.self_similar.SelfSimilarScaling.velocity_rescaling"><code class="name flex">
+<span>def <span class="ident">velocity_rescaling</span></span>(<span>self, t: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def velocity_rescaling(self, t: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Velocity rescaling factor: (T* - t)^α
+    
+    Physical velocity = rescaled velocity / factor
+    &#34;&#34;&#34;
+    margin = self.T_star - t
+    return torch.pow(margin, self.alpha)</code></pre>
+</details>
+<div class="desc"><p>Velocity rescaling factor: (T* - t)^α</p>
+<p>Physical velocity = rescaled velocity / factor</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#mathematical-setup">Mathematical Setup</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.self_similar.create_candidate_profile" href="#tensornet.cfd.self_similar.create_candidate_profile">create_candidate_profile</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.divergence" href="#tensornet.cfd.self_similar.divergence">divergence</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.verify_self_similar_transform" href="#tensornet.cfd.self_similar.verify_self_similar_transform">verify_self_similar_transform</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.cfd.self_similar.BlowUpType" href="#tensornet.cfd.self_similar.BlowUpType">BlowUpType</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.self_similar.BlowUpType.POINT_SINGULARITY" href="#tensornet.cfd.self_similar.BlowUpType.POINT_SINGULARITY">POINT_SINGULARITY</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.BlowUpType.SELF_SIMILAR" href="#tensornet.cfd.self_similar.BlowUpType.SELF_SIMILAR">SELF_SIMILAR</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.BlowUpType.VORTEX_FILAMENT" href="#tensornet.cfd.self_similar.BlowUpType.VORTEX_FILAMENT">VORTEX_FILAMENT</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.BlowUpType.VORTEX_SHEET" href="#tensornet.cfd.self_similar.BlowUpType.VORTEX_SHEET">VORTEX_SHEET</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.self_similar.RescaledNSEquations" href="#tensornet.cfd.self_similar.RescaledNSEquations">RescaledNSEquations</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.self_similar.RescaledNSEquations.L" href="#tensornet.cfd.self_similar.RescaledNSEquations.L">L</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.RescaledNSEquations.N" href="#tensornet.cfd.self_similar.RescaledNSEquations.N">N</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.RescaledNSEquations.advection_term" href="#tensornet.cfd.self_similar.RescaledNSEquations.advection_term">advection_term</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.RescaledNSEquations.effective_viscosity" href="#tensornet.cfd.self_similar.RescaledNSEquations.effective_viscosity">effective_viscosity</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.RescaledNSEquations.enstrophy" href="#tensornet.cfd.self_similar.RescaledNSEquations.enstrophy">enstrophy</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.RescaledNSEquations.laplacian" href="#tensornet.cfd.self_similar.RescaledNSEquations.laplacian">laplacian</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.RescaledNSEquations.max_vorticity" href="#tensornet.cfd.self_similar.RescaledNSEquations.max_vorticity">max_vorticity</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.RescaledNSEquations.nu" href="#tensornet.cfd.self_similar.RescaledNSEquations.nu">nu</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.RescaledNSEquations.pressure_projection" href="#tensornet.cfd.self_similar.RescaledNSEquations.pressure_projection">pressure_projection</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.RescaledNSEquations.residual" href="#tensornet.cfd.self_similar.RescaledNSEquations.residual">residual</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.RescaledNSEquations.scaling" href="#tensornet.cfd.self_similar.RescaledNSEquations.scaling">scaling</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.RescaledNSEquations.stretching_term" href="#tensornet.cfd.self_similar.RescaledNSEquations.stretching_term">stretching_term</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.RescaledNSEquations.vorticity" href="#tensornet.cfd.self_similar.RescaledNSEquations.vorticity">vorticity</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.self_similar.SelfSimilarProfile" href="#tensornet.cfd.self_similar.SelfSimilarProfile">SelfSimilarProfile</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.self_similar.SelfSimilarProfile.U" href="#tensornet.cfd.self_similar.SelfSimilarProfile.U">U</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.SelfSimilarProfile.load" href="#tensornet.cfd.self_similar.SelfSimilarProfile.load">load</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.SelfSimilarProfile.max_vorticity" href="#tensornet.cfd.self_similar.SelfSimilarProfile.max_vorticity">max_vorticity</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.SelfSimilarProfile.residual_norm" href="#tensornet.cfd.self_similar.SelfSimilarProfile.residual_norm">residual_norm</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.SelfSimilarProfile.save" href="#tensornet.cfd.self_similar.SelfSimilarProfile.save">save</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.SelfSimilarProfile.scaling" href="#tensornet.cfd.self_similar.SelfSimilarProfile.scaling">scaling</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.self_similar.SelfSimilarScaling" href="#tensornet.cfd.self_similar.SelfSimilarScaling">SelfSimilarScaling</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.self_similar.SelfSimilarScaling.T_star" href="#tensornet.cfd.self_similar.SelfSimilarScaling.T_star">T_star</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.SelfSimilarScaling.alpha" href="#tensornet.cfd.self_similar.SelfSimilarScaling.alpha">alpha</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.SelfSimilarScaling.beta" href="#tensornet.cfd.self_similar.SelfSimilarScaling.beta">beta</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.SelfSimilarScaling.from_rescaled_time" href="#tensornet.cfd.self_similar.SelfSimilarScaling.from_rescaled_time">from_rescaled_time</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.SelfSimilarScaling.spatial_rescaling" href="#tensornet.cfd.self_similar.SelfSimilarScaling.spatial_rescaling">spatial_rescaling</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.SelfSimilarScaling.to_rescaled_time" href="#tensornet.cfd.self_similar.SelfSimilarScaling.to_rescaled_time">to_rescaled_time</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.SelfSimilarScaling.validate" href="#tensornet.cfd.self_similar.SelfSimilarScaling.validate">validate</a></code></li>
+<li><code><a title="tensornet.cfd.self_similar.SelfSimilarScaling.velocity_rescaling" href="#tensornet.cfd.self_similar.SelfSimilarScaling.velocity_rescaling">velocity_rescaling</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

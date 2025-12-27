@@ -29,10 +29,18 @@ VULNERABILITY_ALLOWLIST = {
 }
 
 # Patterns to exclude from secret scanning
+# Be specific - avoid blanket exclusions that hide real secrets
 SECRET_EXCLUSIONS = [
     'requirements-lock.txt',
-    '*.json',  # Result files
     '.secrets.baseline',
+    # Benchmark and evidence result files (no secrets, just metrics)
+    'results/*.json',
+    'evidence/*.json',
+    'demos/evidence/*.json',
+    'benchmarks/*.json',
+    '*_results.json',
+    # Example files with placeholder keys
+    'demos/millennium_hunter_keys.json.example',
 ]
 
 
@@ -59,9 +67,10 @@ def run_pip_audit() -> Tuple[bool, List[Dict[str, Any]]]:
         return False, vulns
         
     except FileNotFoundError:
-        print("  pip-audit not installed, trying pip install...")
-        subprocess.run([sys.executable, '-m', 'pip', 'install', 'pip-audit', '-q'])
-        return run_pip_audit()
+        print("  ERROR: pip-audit not installed.")
+        print("  Install with: pip install -r requirements-dev.txt")
+        print("  Or: pip install pip-audit")
+        return False, [{'error': 'pip-audit not installed'}]
     except Exception as e:
         return False, [{'error': str(e)}]
 
@@ -91,9 +100,10 @@ def run_bandit(project_dir: Path) -> Tuple[bool, List[Dict[str, Any]]]:
         return len(high_issues) == 0, issues
         
     except FileNotFoundError:
-        print("  bandit not installed, trying pip install...")
-        subprocess.run([sys.executable, '-m', 'pip', 'install', 'bandit', '-q'])
-        return run_bandit(project_dir)
+        print("  ERROR: bandit not installed.")
+        print("  Install with: pip install -r requirements-dev.txt")
+        print("  Or: pip install bandit")
+        return False, [{'error': 'bandit not installed'}]
     except Exception as e:
         return False, [{'error': str(e)}]
 

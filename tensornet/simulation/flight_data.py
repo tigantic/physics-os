@@ -449,68 +449,23 @@ def parse_telemetry(
 
 def _parse_csv(source: Union[str, Path]) -> FlightRecord:
     """Parse CSV telemetry file."""
-    frames = []
-    
-    # Handle string or Path
-    if isinstance(source, (str, Path)):
-        path = Path(source)
-        if path.exists():
-            lines = path.read_text().strip().split('\n')
-        else:
-            # Assume it's CSV content as string
-            lines = source.strip().split('\n')
-    else:
-        lines = source.decode().strip().split('\n')
+    lines = _read_csv_lines(source)
     
     if not lines:
         return FlightRecord("unknown", "unknown", "unknown")
     
     # Parse header
-    header = lines[0].split(',')
-    header = [h.strip().lower() for h in header]
+    header = [h.strip().lower() for h in lines[0].split(',')]
     
     # Parse data rows
+    frames = []
     for line in lines[1:]:
         if not line.strip():
             continue
         
         values = line.split(',')
         row = {header[i]: float(values[i]) for i in range(min(len(header), len(values)))}
-        
-        frame = TelemetryFrame(timestamp=row.get('time', row.get('t', 0.0)))
-        
-        # Position
-        if 'lat' in row and 'lon' in row and 'alt' in row:
-            frame.position = np.array([row['lat'], row['lon'], row['alt']])
-        elif 'x' in row and 'y' in row and 'z' in row:
-            frame.position = np.array([row['x'], row['y'], row['z']])
-        
-        # Velocity
-        if 'vn' in row and 've' in row and 'vd' in row:
-            frame.velocity = np.array([row['vn'], row['ve'], row['vd']])
-        elif 'vx' in row and 'vy' in row and 'vz' in row:
-            frame.velocity = np.array([row['vx'], row['vy'], row['vz']])
-        
-        # Attitude
-        if 'roll' in row and 'pitch' in row and 'yaw' in row:
-            frame.attitude = np.array([row['roll'], row['pitch'], row['yaw']])
-        elif 'phi' in row and 'theta' in row and 'psi' in row:
-            frame.attitude = np.array([row['phi'], row['theta'], row['psi']])
-        
-        # Rates
-        if 'p' in row and 'q' in row and 'r' in row:
-            frame.rates = np.array([row['p'], row['q'], row['r']])
-        
-        # Accelerations
-        if 'ax' in row and 'ay' in row and 'az' in row:
-            frame.accelerations = np.array([row['ax'], row['ay'], row['az']])
-        
-        # Air data
-        frame.air_data = {}
-        for key in ['mach', 'alpha', 'beta', 'q_dynamic', 'p_static']:
-            if key in row:
-                frame.air_data[key] = row[key]
-        
+        frame = _row_to_telemetry_frame(row)
         frames.append(frame)
     
     return FlightRecord(
@@ -519,6 +474,70 @@ def _parse_csv(source: Union[str, Path]) -> FlightRecord:
         date="unknown",
         frames=frames
     )
+
+
+def _read_csv_lines(source: Union[str, Path]) -> List[str]:
+    """Read CSV source into lines."""
+    if isinstance(source, (str, Path)):
+        path = Path(source)
+        if path.exists():
+            return path.read_text().strip().split('\n')
+        else:
+            # Assume it's CSV content as string
+            return source.strip().split('\n')
+    else:
+        return source.decode().strip().split('\n')
+
+
+# Field parsers - dispatch table for cleaner parsing
+_POSITION_FIELDS = [
+    (['lat', 'lon', 'alt'], lambda r: np.array([r['lat'], r['lon'], r['alt']])),
+    (['x', 'y', 'z'], lambda r: np.array([r['x'], r['y'], r['z']])),
+]
+
+_VELOCITY_FIELDS = [
+    (['vn', 've', 'vd'], lambda r: np.array([r['vn'], r['ve'], r['vd']])),
+    (['vx', 'vy', 'vz'], lambda r: np.array([r['vx'], r['vy'], r['vz']])),
+]
+
+_ATTITUDE_FIELDS = [
+    (['roll', 'pitch', 'yaw'], lambda r: np.array([r['roll'], r['pitch'], r['yaw']])),
+    (['phi', 'theta', 'psi'], lambda r: np.array([r['phi'], r['theta'], r['psi']])),
+]
+
+_RATES_FIELDS = [
+    (['p', 'q', 'r'], lambda r: np.array([r['p'], r['q'], r['r']])),
+]
+
+_ACCEL_FIELDS = [
+    (['ax', 'ay', 'az'], lambda r: np.array([r['ax'], r['ay'], r['az']])),
+]
+
+
+def _parse_vector_field(row: Dict[str, float], field_specs: List) -> Optional[np.ndarray]:
+    """Parse vector field using dispatch table."""
+    for keys, parser in field_specs:
+        if all(k in row for k in keys):
+            return parser(row)
+    return None
+
+
+def _row_to_telemetry_frame(row: Dict[str, float]) -> "TelemetryFrame":
+    """Convert a parsed row dict to TelemetryFrame."""
+    frame = TelemetryFrame(timestamp=row.get('time', row.get('t', 0.0)))
+    
+    # Parse vector fields using dispatch tables
+    frame.position = _parse_vector_field(row, _POSITION_FIELDS)
+    frame.velocity = _parse_vector_field(row, _VELOCITY_FIELDS)
+    frame.attitude = _parse_vector_field(row, _ATTITUDE_FIELDS)
+    frame.rates = _parse_vector_field(row, _RATES_FIELDS)
+    frame.accelerations = _parse_vector_field(row, _ACCEL_FIELDS)
+    
+    # Air data - extract known keys
+    air_keys = ['mach', 'alpha', 'beta', 'q_dynamic', 'p_static']
+    frame.air_data = {k: row[k] for k in air_keys if k in row}
+    
+    return frame
 
 
 def _parse_json(source: Union[str, Path]) -> FlightRecord:

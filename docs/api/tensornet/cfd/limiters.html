@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.limiters API documentation</title>
+<meta name="description" content="Slope Limiters for High-Resolution Schemes
+…">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.limiters</code></h1>
+</header>
+<section id="section-intro">
+<h1 id="slope-limiters-for-high-resolution-schemes">Slope Limiters for High-Resolution Schemes</h1>
+<p>Limiters prevent spurious oscillations near discontinuities while
+maintaining high-order accuracy in smooth regions.</p>
+<p>TVD (Total Variation Diminishing) limiters satisfy:
+TV(u^{n+1}) ≤ TV(u^n)</p>
+<p>where TV(u) = Σ|u_{i+1} - u_i|.</p>
+<p>For a ratio r = (u_i - u_{i-1}) / (u_{i+1} - u_i):
+- φ(r) = limiter function
+- Limited slope: Δu = φ(r) * (u_{i+1} - u_i)</p>
+<p>Sweby's TVD region: max(0, min(2r, 1)) ≤ φ(r) ≤ max(0, min(r, 2))</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.limiters.apply_limiter"><code class="name flex">
+<span>def <span class="ident">apply_limiter</span></span>(<span>u: torch.Tensor, limiter: str = 'minmod') ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def apply_limiter(
+    u: Tensor,
+    limiter: str = &#39;minmod&#39;,
+) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Apply slope limiter to get limited gradients.
+    
+    Args:
+        u: Cell values (N,) or (N, n_vars)
+        limiter: Limiter name (&#39;minmod&#39;, &#39;superbee&#39;, &#39;van_leer&#39;, &#39;mc&#39;)
+        
+    Returns:
+        Limited slopes for reconstruction
+    &#34;&#34;&#34;
+    limiters = {
+        &#39;minmod&#39;: minmod,
+        &#39;superbee&#39;: superbee,
+        &#39;van_leer&#39;: van_leer,
+        &#39;van_albada&#39;: van_albada,
+        &#39;mc&#39;: mc_limiter,
+        &#39;koren&#39;: koren,
+        &#39;ospre&#39;: ospre,
+    }
+    
+    if limiter not in limiters:
+        raise ValueError(f&#34;Unknown limiter: {limiter}. Options: {list(limiters.keys())}&#34;)
+    
+    phi_func = limiters[limiter]
+    
+    # Handle multi-variable case
+    if u.dim() == 1:
+        u = u.unsqueeze(-1)
+    
+    N, n_vars = u.shape
+    slopes = torch.zeros_like(u)
+    
+    for i in range(1, N - 1):
+        delta_plus = u[i + 1] - u[i]
+        delta_minus = u[i] - u[i - 1]
+        
+        # Slope ratio
+        denom = torch.where(
+            torch.abs(delta_plus) &lt; 1e-10,
+            torch.sign(delta_plus + 1e-20) * 1e-10,
+            delta_plus
+        )
+        r = delta_minus / denom
+        
+        # Limited slope
+        slopes[i] = phi_func(r) * delta_plus
+    
+    # Boundary slopes (first-order)
+    slopes[0] = torch.zeros_like(slopes[0])
+    slopes[-1] = torch.zeros_like(slopes[-1])
+    
+    return slopes.squeeze(-1) if slopes.shape[-1] == 1 else slopes</code></pre>
+</details>
+<div class="desc"><p>Apply slope limiter to get limited gradients.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>u</code></strong></dt>
+<dd>Cell values (N,) or (N, n_vars)</dd>
+<dt><strong><code>limiter</code></strong></dt>
+<dd>Limiter name ('minmod', 'superbee', 'van_leer', 'mc')</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Limited slopes for reconstruction</p></div>
+</dd>
+<dt id="tensornet.cfd.limiters.compute_slope_ratio"><code class="name flex">
+<span>def <span class="ident">compute_slope_ratio</span></span>(<span>u: torch.Tensor, i: int) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_slope_ratio(u: Tensor, i: int) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Compute slope ratio at cell i for limiter application.
+    
+    r_i = (u_i - u_{i-1}) / (u_{i+1} - u_i)
+    
+    Handles boundary cases with one-sided differences.
+    &#34;&#34;&#34;
+    N = u.shape[0]
+    
+    if i &lt;= 0:
+        return torch.ones_like(u[0])  # One-sided
+    if i &gt;= N - 1:
+        return torch.ones_like(u[0])  # One-sided
+    
+    delta_plus = u[i + 1] - u[i]
+    delta_minus = u[i] - u[i - 1]
+    
+    # Avoid division by zero
+    denom = torch.where(
+        torch.abs(delta_plus) &lt; 1e-10,
+        torch.sign(delta_plus) * 1e-10,
+        delta_plus
+    )
+    
+    return delta_minus / denom</code></pre>
+</details>
+<div class="desc"><p>Compute slope ratio at cell i for limiter application.</p>
+<p>r_i = (u_i - u_{i-1}) / (u_{i+1} - u_i)</p>
+<p>Handles boundary cases with one-sided differences.</p></div>
+</dd>
+<dt id="tensornet.cfd.limiters.koren"><code class="name flex">
+<span>def <span class="ident">koren</span></span>(<span>r: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def koren(r: Tensor) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Koren limiter (third-order accurate in smooth regions).
+    
+    φ(r) = max(0, min(2r, (2 + r)/3, 2))
+    
+    Optimized for third-order upstream-biased interpolation.
+    &#34;&#34;&#34;
+    return torch.maximum(
+        torch.zeros_like(r),
+        torch.minimum(
+            torch.minimum(2 * r, (2 + r) / 3),
+            2 * torch.ones_like(r)
+        )
+    )</code></pre>
+</details>
+<div class="desc"><p>Koren limiter (third-order accurate in smooth regions).</p>
+<p>φ(r) = max(0, min(2r, (2 + r)/3, 2))</p>
+<p>Optimized for third-order upstream-biased interpolation.</p></div>
+</dd>
+<dt id="tensornet.cfd.limiters.mc_limiter"><code class="name flex">
+<span>def <span class="ident">mc_limiter</span></span>(<span>r: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mc_limiter(r: Tensor) -&gt; Tensor:
+    &#34;&#34;&#34;
+    MC (Monotonized Central) limiter.
+    
+    φ(r) = max(0, min(2r, (1+r)/2, 2))
+    
+    Symmetric limiter that uses the central difference when possible.
+    Good balance of accuracy and stability.
+    &#34;&#34;&#34;
+    return torch.maximum(
+        torch.zeros_like(r),
+        torch.minimum(
+            torch.minimum(2 * r, (1 + r) / 2),
+            2 * torch.ones_like(r)
+        )
+    )</code></pre>
+</details>
+<div class="desc"><p>MC (Monotonized Central) limiter.</p>
+<p>φ(r) = max(0, min(2r, (1+r)/2, 2))</p>
+<p>Symmetric limiter that uses the central difference when possible.
+Good balance of accuracy and stability.</p></div>
+</dd>
+<dt id="tensornet.cfd.limiters.minmod"><code class="name flex">
+<span>def <span class="ident">minmod</span></span>(<span>r: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def minmod(r: Tensor) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Minmod limiter.
+    
+    φ(r) = max(0, min(1, r))
+    
+    Most diffusive TVD limiter. Very robust but only first-order
+    at smooth extrema.
+    
+    Args:
+        r: Ratio of consecutive gradients
+        
+    Returns:
+        Limiter value
+    &#34;&#34;&#34;
+    return torch.clamp(r, min=0, max=1)</code></pre>
+</details>
+<div class="desc"><p>Minmod limiter.</p>
+<p>φ(r) = max(0, min(1, r))</p>
+<p>Most diffusive TVD limiter. Very robust but only first-order
+at smooth extrema.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>r</code></strong></dt>
+<dd>Ratio of consecutive gradients</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Limiter value</p></div>
+</dd>
+<dt id="tensornet.cfd.limiters.minmod_3"><code class="name flex">
+<span>def <span class="ident">minmod_3</span></span>(<span>a: torch.Tensor, b: torch.Tensor, c: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def minmod_3(a: Tensor, b: Tensor, c: Tensor) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Three-argument minmod function.
+    
+    minmod(a, b, c) = sign(a) * min(|a|, |b|, |c|) if signs agree, else 0
+    
+    Used in higher-order reconstructions.
+    &#34;&#34;&#34;
+    same_sign = (torch.sign(a) == torch.sign(b)) &amp; (torch.sign(b) == torch.sign(c))
+    
+    min_abs = torch.minimum(torch.minimum(torch.abs(a), torch.abs(b)), torch.abs(c))
+    
+    return torch.where(same_sign, torch.sign(a) * min_abs, torch.zeros_like(a))</code></pre>
+</details>
+<div class="desc"><p>Three-argument minmod function.</p>
+<p>minmod(a, b, c) = sign(a) * min(|a|, |b|, |c|) if signs agree, else 0</p>
+<p>Used in higher-order reconstructions.</p></div>
+</dd>
+<dt id="tensornet.cfd.limiters.ospre"><code class="name flex">
+<span>def <span class="ident">ospre</span></span>(<span>r: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ospre(r: Tensor) -&gt; Tensor:
+    &#34;&#34;&#34;
+    OSPRE limiter (Waterson &amp; Deconinck, 2007).
+    
+    φ(r) = 1.5 * (r² + r) / (r² + r + 1)
+    
+    Smooth, symmetric limiter with good convergence properties.
+    &#34;&#34;&#34;
+    r2 = r * r
+    return 1.5 * (r2 + r) / (r2 + r + 1 + 1e-10)</code></pre>
+</details>
+<div class="desc"><p>OSPRE limiter (Waterson &amp; Deconinck, 2007).</p>
+<p>φ(r) = 1.5 * (r² + r) / (r² + r + 1)</p>
+<p>Smooth, symmetric limiter with good convergence properties.</p></div>
+</dd>
+<dt id="tensornet.cfd.limiters.superbee"><code class="name flex">
+<span>def <span class="ident">superbee</span></span>(<span>r: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def superbee(r: Tensor) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Superbee limiter (Roe, 1985).
+    
+    φ(r) = max(0, min(2r, 1), min(r, 2))
+    
+    Most compressive TVD limiter. Excellent for contact discontinuities
+    but can steepen smooth waves too aggressively.
+    &#34;&#34;&#34;
+    return torch.maximum(
+        torch.zeros_like(r),
+        torch.maximum(
+            torch.minimum(2 * r, torch.ones_like(r)),
+            torch.minimum(r, 2 * torch.ones_like(r))
+        )
+    )</code></pre>
+</details>
+<div class="desc"><p>Superbee limiter (Roe, 1985).</p>
+<p>φ(r) = max(0, min(2r, 1), min(r, 2))</p>
+<p>Most compressive TVD limiter. Excellent for contact discontinuities
+but can steepen smooth waves too aggressively.</p></div>
+</dd>
+<dt id="tensornet.cfd.limiters.van_albada"><code class="name flex">
+<span>def <span class="ident">van_albada</span></span>(<span>r: torch.Tensor, epsilon: float = 1e-06) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def van_albada(r: Tensor, epsilon: float = 1e-6) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Van Albada limiter.
+    
+    φ(r) = (r² + r) / (r² + 1)
+    
+    Differentiable limiter, useful for implicit schemes.
+    &#34;&#34;&#34;
+    r2 = r * r
+    return (r2 + r) / (r2 + 1 + epsilon)</code></pre>
+</details>
+<div class="desc"><p>Van Albada limiter.</p>
+<p>φ(r) = (r² + r) / (r² + 1)</p>
+<p>Differentiable limiter, useful for implicit schemes.</p></div>
+</dd>
+<dt id="tensornet.cfd.limiters.van_leer"><code class="name flex">
+<span>def <span class="ident">van_leer</span></span>(<span>r: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def van_leer(r: Tensor) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Van Leer limiter.
+    
+    φ(r) = (r + |r|) / (1 + |r|)
+    
+    Smooth limiter with good balance between accuracy and
+    oscillation suppression.
+    &#34;&#34;&#34;
+    return (r + torch.abs(r)) / (1 + torch.abs(r) + 1e-10)</code></pre>
+</details>
+<div class="desc"><p>Van Leer limiter.</p>
+<p>φ(r) = (r + |r|) / (1 + |r|)</p>
+<p>Smooth limiter with good balance between accuracy and
+oscillation suppression.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.cfd.limiters.MUSCL"><code class="flex name class">
+<span>class <span class="ident">MUSCL</span></span>
+<span>(</span><span>limiter: str = 'van_leer', kappa: float = 0.3333333333333333)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MUSCL:
+    &#34;&#34;&#34;
+    MUSCL (Monotonic Upstream-centered Scheme for Conservation Laws).
+    
+    Provides second-order reconstruction with slope limiting.
+    
+    u_{i+1/2,L} = u_i + (1-κ)/4 * φ(r_i) * (u_{i+1} - u_i) + (1+κ)/4 * φ(1/r_i) * (u_i - u_{i-1})
+    u_{i+1/2,R} = u_{i+1} - (1+κ)/4 * φ(r_{i+1}) * (u_{i+2} - u_{i+1}) - (1-κ)/4 * φ(1/r_{i+1}) * (u_{i+1} - u_i)
+    
+    κ = -1: Fully upwind (second-order upwind)
+    κ = 0: Fromm&#39;s scheme
+    κ = 1/3: Third-order upwind-biased
+    κ = 1: Central
+    &#34;&#34;&#34;
+    
+    def __init__(
+        self,
+        limiter: str = &#39;van_leer&#39;,
+        kappa: float = 1/3,
+    ):
+        &#34;&#34;&#34;
+        Initialize MUSCL reconstruction.
+        
+        Args:
+            limiter: Slope limiter to use
+            kappa: Interpolation parameter
+        &#34;&#34;&#34;
+        self.limiter = limiter
+        self.kappa = kappa
+        
+        self._limiters = {
+            &#39;minmod&#39;: minmod,
+            &#39;superbee&#39;: superbee,
+            &#39;van_leer&#39;: van_leer,
+            &#39;mc&#39;: mc_limiter,
+        }
+    
+    def reconstruct(
+        self,
+        u: Tensor,
+    ) -&gt; tuple:
+        &#34;&#34;&#34;
+        Perform MUSCL reconstruction.
+        
+        Args:
+            u: Cell-centered values (N,) or (N, n_vars)
+            
+        Returns:
+            (u_L, u_R): Left and right interface values at N-1 faces
+        &#34;&#34;&#34;
+        if u.dim() == 1:
+            u = u.unsqueeze(-1)
+        
+        N, n_vars = u.shape
+        phi_func = self._limiters.get(self.limiter, minmod)
+        
+        # Compute slopes with limiter
+        slopes = torch.zeros_like(u)
+        
+        for i in range(1, N - 1):
+            delta_plus = u[i + 1] - u[i]
+            delta_minus = u[i] - u[i - 1]
+            
+            denom = delta_plus.clone()
+            denom[torch.abs(denom) &lt; 1e-10] = 1e-10
+            r = delta_minus / denom
+            
+            slopes[i] = phi_func(r) * delta_plus
+        
+        # Reconstruct at faces
+        u_L = u[:-1] + 0.5 * slopes[:-1]
+        u_R = u[1:] - 0.5 * slopes[1:]
+        
+        return u_L.squeeze(-1), u_R.squeeze(-1)</code></pre>
+</details>
+<div class="desc"><p>MUSCL (Monotonic Upstream-centered Scheme for Conservation Laws).</p>
+<p>Provides second-order reconstruction with slope limiting.</p>
+<p>u_{i+1/2,L} = u_i + (1-κ)/4 * φ(r_i) * (u_{i+1} - u_i) + (1+κ)/4 * φ(1/r_i) * (u_i - u_{i-1})
+u_{i+1/2,R} = u_{i+1} - (1+κ)/4 * φ(r_{i+1}) * (u_{i+2} - u_{i+1}) - (1-κ)/4 * φ(1/r_{i+1}) * (u_{i+1} - u_i)</p>
+<p>κ = -1: Fully upwind (second-order upwind)
+κ = 0: Fromm's scheme
+κ = 1/3: Third-order upwind-biased
+κ = 1: Central</p>
+<p>Initialize MUSCL reconstruction.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>limiter</code></strong></dt>
+<dd>Slope limiter to use</dd>
+<dt><strong><code>kappa</code></strong></dt>
+<dd>Interpolation parameter</dd>
+</dl></div>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.limiters.MUSCL.reconstruct"><code class="name flex">
+<span>def <span class="ident">reconstruct</span></span>(<span>self, u: torch.Tensor) ‑> tuple</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reconstruct(
+    self,
+    u: Tensor,
+) -&gt; tuple:
+    &#34;&#34;&#34;
+    Perform MUSCL reconstruction.
+    
+    Args:
+        u: Cell-centered values (N,) or (N, n_vars)
+        
+    Returns:
+        (u_L, u_R): Left and right interface values at N-1 faces
+    &#34;&#34;&#34;
+    if u.dim() == 1:
+        u = u.unsqueeze(-1)
+    
+    N, n_vars = u.shape
+    phi_func = self._limiters.get(self.limiter, minmod)
+    
+    # Compute slopes with limiter
+    slopes = torch.zeros_like(u)
+    
+    for i in range(1, N - 1):
+        delta_plus = u[i + 1] - u[i]
+        delta_minus = u[i] - u[i - 1]
+        
+        denom = delta_plus.clone()
+        denom[torch.abs(denom) &lt; 1e-10] = 1e-10
+        r = delta_minus / denom
+        
+        slopes[i] = phi_func(r) * delta_plus
+    
+    # Reconstruct at faces
+    u_L = u[:-1] + 0.5 * slopes[:-1]
+    u_R = u[1:] - 0.5 * slopes[1:]
+    
+    return u_L.squeeze(-1), u_R.squeeze(-1)</code></pre>
+</details>
+<div class="desc"><p>Perform MUSCL reconstruction.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>u</code></strong></dt>
+<dd>Cell-centered values (N,) or (N, n_vars)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>(u_L, u_R): Left and right interface values at N-1 faces</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#slope-limiters-for-high-resolution-schemes">Slope Limiters for High-Resolution Schemes</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.limiters.apply_limiter" href="#tensornet.cfd.limiters.apply_limiter">apply_limiter</a></code></li>
+<li><code><a title="tensornet.cfd.limiters.compute_slope_ratio" href="#tensornet.cfd.limiters.compute_slope_ratio">compute_slope_ratio</a></code></li>
+<li><code><a title="tensornet.cfd.limiters.koren" href="#tensornet.cfd.limiters.koren">koren</a></code></li>
+<li><code><a title="tensornet.cfd.limiters.mc_limiter" href="#tensornet.cfd.limiters.mc_limiter">mc_limiter</a></code></li>
+<li><code><a title="tensornet.cfd.limiters.minmod" href="#tensornet.cfd.limiters.minmod">minmod</a></code></li>
+<li><code><a title="tensornet.cfd.limiters.minmod_3" href="#tensornet.cfd.limiters.minmod_3">minmod_3</a></code></li>
+<li><code><a title="tensornet.cfd.limiters.ospre" href="#tensornet.cfd.limiters.ospre">ospre</a></code></li>
+<li><code><a title="tensornet.cfd.limiters.superbee" href="#tensornet.cfd.limiters.superbee">superbee</a></code></li>
+<li><code><a title="tensornet.cfd.limiters.van_albada" href="#tensornet.cfd.limiters.van_albada">van_albada</a></code></li>
+<li><code><a title="tensornet.cfd.limiters.van_leer" href="#tensornet.cfd.limiters.van_leer">van_leer</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.cfd.limiters.MUSCL" href="#tensornet.cfd.limiters.MUSCL">MUSCL</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.limiters.MUSCL.reconstruct" href="#tensornet.cfd.limiters.MUSCL.reconstruct">reconstruct</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

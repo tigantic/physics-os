@@ -11,11 +11,6 @@ Verifies:
 
 import pytest
 import numpy as np
-import sys
-import os
-
-# Add parent to path
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from tensornet.visualization.tensor_slicer import (
     TensorSlicer,

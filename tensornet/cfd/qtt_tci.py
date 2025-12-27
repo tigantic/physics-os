@@ -219,6 +219,172 @@ def qtt_from_function_tci_python(
     return cores, metadata
 
 
+# =============================================================================
+# TCI RUST IMPLEMENTATION - REFACTORED HELPERS
+# =============================================================================
+
+def _init_tci_sampler(n_qubits: int, max_rank: int) -> "TCISampler":
+    """Initialize TCI sampler with proper pivot coverage."""
+    from tci_core import TCISampler
+    
+    sampler = TCISampler(n_qubits, "periodic", None)
+    sampler.set_min_batch_size(max(128, max_rank * 2))
+    
+    # Initialize pivots for fiber sampling at each qubit level
+    initial_pivots = min(max_rank, 16)
+    for q in range(n_qubits):
+        row_pivots = list(range(min(initial_pivots, 2**q)))
+        col_pivots = list(range(min(initial_pivots, 2**(n_qubits - q - 1))))
+        sampler.init_pivots(q, row_pivots, col_pivots)
+    
+    return sampler
+
+
+def _sample_fibers(
+    sampler: "TCISampler",
+    n_qubits: int,
+    samples: dict,
+    f: Callable[[Tensor], Tensor],
+    device: str,
+) -> int:
+    """Sample fibers across all qubit levels. Returns count of new samples."""
+    new_samples_total = 0
+    
+    for q in range(n_qubits):
+        fiber_batch = sampler.sample_fibers(q)
+        fiber_indices = fiber_batch.indices
+        
+        # Filter out already sampled
+        new_indices = [i for i in fiber_indices if i not in samples]
+        if not new_indices:
+            continue
+        
+        # Batch evaluate
+        indices_tensor = torch.tensor(new_indices, device=device, dtype=torch.long)
+        values = f(indices_tensor)
+        
+        # Store samples
+        for idx, val in zip(new_indices, values.tolist()):
+            samples[idx] = val
+        
+        new_samples_total += len(new_indices)
+    
+    return new_samples_total
+
+
+def _compute_approximation_error(
+    samples: dict,
+    N: int,
+    n_check: int,
+    f: Callable[[Tensor], Tensor],
+    device: str,
+) -> Tuple[List[int], List[float], List[float]]:
+    """
+    Compute approximation error on random subset using nearest-neighbor interpolation.
+    
+    Returns:
+        Tuple of (check_indices, true_values, abs_errors)
+    """
+    import bisect
+    
+    # Select random points not in samples
+    check_indices = []
+    for _ in range(n_check * 2):
+        idx = torch.randint(0, N, (1,)).item()
+        if idx not in samples:
+            check_indices.append(idx)
+        if len(check_indices) >= n_check:
+            break
+    
+    if not check_indices:
+        return [], [], []
+    
+    # Evaluate true values
+    check_tensor = torch.tensor(check_indices, device=device, dtype=torch.long)
+    true_values = f(check_tensor)
+    
+    # Fast nearest-neighbor approximation
+    sorted_keys = sorted(samples.keys())
+    approx_values = torch.zeros(len(check_indices), device=device)
+    
+    for i, idx in enumerate(check_indices):
+        pos = bisect.bisect_left(sorted_keys, idx)
+        if pos == 0:
+            approx_values[i] = samples[sorted_keys[0]]
+        elif pos == len(sorted_keys):
+            approx_values[i] = samples[sorted_keys[-1]]
+        else:
+            # Linear interpolation between neighbors
+            left, right = sorted_keys[pos-1], sorted_keys[pos]
+            t = (idx - left) / (right - left)
+            approx_values[i] = samples[left] * (1-t) + samples[right] * t
+    
+    abs_errors = torch.abs(true_values - approx_values).tolist()
+    return check_indices, true_values.tolist(), abs_errors
+
+
+def _check_convergence(
+    max_error: float,
+    prev_max_error: float,
+    tolerance: float,
+    iteration: int,
+    improvement_count: int,
+    verbose: bool,
+) -> Tuple[bool, int, float, str]:
+    """
+    Check if TCI has converged.
+    
+    Returns:
+        Tuple of (converged, new_improvement_count, new_prev_error, reason)
+    """
+    # Below tolerance
+    if max_error < tolerance:
+        return True, improvement_count, max_error, f"error {max_error:.2e} < tolerance"
+    
+    # Track improvement
+    if max_error < prev_max_error * 0.8:
+        improvement_count += 1
+    else:
+        improvement_count = 0
+    
+    # Error stalled
+    if max_error > prev_max_error * 0.95 and iteration > 8 and improvement_count == 0:
+        return True, improvement_count, max_error, f"error stalled at {max_error:.2e}"
+    
+    new_prev = min(prev_max_error, max_error)
+    return False, improvement_count, new_prev, ""
+
+
+def _ensure_sample_density(
+    samples: dict,
+    N: int,
+    f: Callable[[Tensor], Tensor],
+    device: str,
+    target_compression: float = 4.0,
+) -> int:
+    """
+    Add uniform samples if needed for accuracy. Returns count of new samples.
+    """
+    min_samples_for_accuracy = max(4096, N // int(target_compression))
+    
+    if len(samples) >= min_samples_for_accuracy:
+        return 0
+    
+    step = max(1, N // min_samples_for_accuracy)
+    uniform_indices = list(range(0, N, step))
+    new_uniform = [i for i in uniform_indices if i not in samples]
+    
+    if not new_uniform:
+        return 0
+    
+    uniform_tensor = torch.tensor(new_uniform, device=device, dtype=torch.long)
+    uniform_values = f(uniform_tensor)
+    for idx, val in zip(new_uniform, uniform_values.tolist()):
+        samples[idx] = val
+    
+    return len(new_uniform)
+
+
 def qtt_from_function_tci_rust(
     f: Callable[[Tensor], Tensor],
     n_qubits: int,
@@ -256,166 +422,78 @@ def qtt_from_function_tci_rust(
     Returns:
         Tuple of (QTT cores, metadata dict)
     """
-    from tci_core import TCISampler
-    
     N = 2 ** n_qubits
     
-    # Create Rust sampler
-    sampler = TCISampler(n_qubits, "periodic", None)
-    # Use larger batch size for better convergence
-    sampler.set_min_batch_size(max(128, max_rank * 2))
+    # Initialize Rust sampler with pivots
+    sampler = _init_tci_sampler(n_qubits, max_rank)
     
-    # Initialize pivots for fiber sampling at each qubit level
-    # Use more initial pivots for better coverage
-    initial_pivots = min(max_rank, 16)
-    for q in range(n_qubits):
-        row_pivots = list(range(min(initial_pivots, 2**q)))
-        col_pivots = list(range(min(initial_pivots, 2**(n_qubits - q - 1))))
-        sampler.init_pivots(q, row_pivots, col_pivots)
-    
-    # Sample cache and error tracking
+    # Sample cache and convergence tracking
     samples = {}
-    errors = {}
     total_evals = 0
     prev_max_error = float('inf')
-    improvement_count = 0  # Track consecutive improvements
+    improvement_count = 0
+    converge_reason = ""
     
+    # Main TCI iteration loop
     for iteration in range(max_iterations):
-        new_samples_total = 0
-        iteration_errors = []
+        # Sample fibers across all qubit levels
+        new_samples = _sample_fibers(sampler, n_qubits, samples, f, device)
+        total_evals += new_samples
         
-        # Sweep through all qubit levels for fiber sampling
-        for q in range(n_qubits):
-            fiber_batch = sampler.sample_fibers(q)
-            fiber_indices = fiber_batch.indices
-            
-            # Filter out already sampled
-            new_indices = [i for i in fiber_indices if i not in samples]
-            if not new_indices:
-                continue
-            
-            # Batch evaluate
-            indices_tensor = torch.tensor(new_indices, device=device, dtype=torch.long)
-            values = f(indices_tensor)
-            values_list = values.tolist()
-            
-            # Store samples
-            for idx, val in zip(new_indices, values_list):
-                samples[idx] = val
-            
-            new_samples_total += len(new_indices)
-            total_evals += len(new_indices)
-        
-        # Early stopping: check if we're making progress
-        if new_samples_total == 0:
+        # Early stopping: no new samples means convergence
+        if new_samples == 0:
+            converge_reason = "no new samples"
             if verbose:
-                print(f"  Converged at iteration {iteration+1} (no new samples)")
+                print(f"  Converged at iteration {iteration+1} ({converge_reason})")
             break
         
-        # Compute approximation error on random subset every 3 iterations
+        # Check approximation error every 3 iterations (after warmup)
         if len(samples) >= 256 and iteration % 3 == 0:
-            # Check random points against nearest-neighbor interpolation
             n_check = min(100, N - len(samples))
-            check_indices = []
-            for _ in range(n_check * 2):
-                idx = torch.randint(0, N, (1,)).item()
-                if idx not in samples:
-                    check_indices.append(idx)
-                if len(check_indices) >= n_check:
-                    break
+            check_indices, true_vals, abs_errors = _compute_approximation_error(
+                samples, N, n_check, f, device
+            )
             
             if check_indices:
-                check_tensor = torch.tensor(check_indices, device=device, dtype=torch.long)
-                true_values = f(check_tensor)
+                max_error = max(abs_errors) if abs_errors else 0.0
                 
-                # Fast nearest-neighbor approximation
-                sorted_keys = sorted(samples.keys())
-                approx_values = torch.zeros(len(check_indices), device=device)
-                for i, idx in enumerate(check_indices):
-                    # Find nearest sampled index
-                    import bisect
-                    pos = bisect.bisect_left(sorted_keys, idx)
-                    if pos == 0:
-                        approx_values[i] = samples[sorted_keys[0]]
-                    elif pos == len(sorted_keys):
-                        approx_values[i] = samples[sorted_keys[-1]]
-                    else:
-                        # Linear interpolation between neighbors
-                        left, right = sorted_keys[pos-1], sorted_keys[pos]
-                        t = (idx - left) / (right - left)
-                        approx_values[i] = samples[left] * (1-t) + samples[right] * t
-                
-                # Compute errors
-                abs_errors = torch.abs(true_values - approx_values).tolist()
-                max_error = max(abs_errors)
-                
-                # Update Rust sampler with errors for pivot refinement
+                # Update sampler with error information
                 sampler.update_errors(check_indices, abs_errors)
                 
                 # Add checked points to samples
-                for idx, val in zip(check_indices, true_values.tolist()):
+                for idx, val in zip(check_indices, true_vals):
                     samples[idx] = val
-                    errors[idx] = abs_errors[check_indices.index(idx)]
                 total_evals += len(check_indices)
                 
                 if verbose:
-                    print(f"  Iteration {iteration+1}: {new_samples_total} samples, error={max_error:.2e}")
+                    print(f"  Iteration {iteration+1}: {new_samples} samples, error={max_error:.2e}")
                 
-                # Convergence: error below tolerance
-                if max_error < tolerance:
+                # Check convergence
+                converged, improvement_count, prev_max_error, reason = _check_convergence(
+                    max_error, prev_max_error, tolerance, iteration, improvement_count, verbose
+                )
+                if converged:
+                    converge_reason = reason
                     if verbose:
-                        print(f"  Converged at iteration {iteration+1} (error {max_error:.2e} < tolerance)")
+                        print(f"  Converged at iteration {iteration+1} ({reason})")
                     break
-                
-                # Track improvement
-                if max_error < prev_max_error * 0.8:
-                    improvement_count += 1
-                else:
-                    improvement_count = 0
-                
-                # Early stop: error not improving after many iterations
-                if max_error > prev_max_error * 0.95 and iteration > 8 and improvement_count == 0:
-                    if verbose:
-                        print(f"  Converged at iteration {iteration+1} (error stalled at {max_error:.2e})")
-                    break
-                prev_max_error = min(prev_max_error, max_error)
         elif verbose:
-            print(f"  Iteration {iteration+1}: {new_samples_total} samples, {len(samples)} total")
+            print(f"  Iteration {iteration+1}: {new_samples} samples, {len(samples)} total")
         
-        # Check if we've sampled too much
+        # Stop if we've sampled too much of the domain
         if len(samples) >= N // 2:
+            converge_reason = f"sampled {len(samples)}/{N}"
             if verbose:
-                print(f"  Stopping (sampled {len(samples)}/{N})")
+                print(f"  Stopping ({converge_reason})")
             break
+    
+    # Ensure sample density for accuracy
+    density_samples = _ensure_sample_density(samples, N, f, device)
+    total_evals += density_samples
     
     # Build QTT from samples
     all_indices = torch.tensor(sorted(samples.keys()), device=device, dtype=torch.long)
     all_values = torch.tensor([samples[i] for i in sorted(samples.keys())], device=device)
-    
-    # For accuracy with linear interpolation, need samples spaced at ~wavelength/10
-    # For a sine wave with period 2π over [0, N), wavelength in index space = N/(2π) ≈ N/6
-    # So need ~N/60 samples for 10 points per wavelength
-    # More generally: need O(N/compression_target) samples
-    # Target 4-10x compression with 1% max error
-    target_compression = 4.0
-    min_samples_for_accuracy = max(4096, N // int(target_compression))
-    
-    if len(samples) < min_samples_for_accuracy:
-        # Add uniform samples to reach target density
-        step = max(1, N // min_samples_for_accuracy)
-        uniform_indices = list(range(0, N, step))
-        new_uniform = [i for i in uniform_indices if i not in samples]
-        
-        if new_uniform:
-            uniform_tensor = torch.tensor(new_uniform, device=device, dtype=torch.long)
-            uniform_values = f(uniform_tensor)
-            for idx, val in zip(new_uniform, uniform_values.tolist()):
-                samples[idx] = val
-            total_evals += len(new_uniform)
-            
-            # Rebuild indices
-            all_indices = torch.tensor(sorted(samples.keys()), device=device, dtype=torch.long)
-            all_values = torch.tensor([samples[i] for i in sorted(samples.keys())], device=device)
     
     # Reconstruct dense and compress
     dense = torch.zeros(N, device=device)
@@ -430,6 +508,7 @@ def qtt_from_function_tci_rust(
         "n_samples": len(samples),
         "iterations": iteration + 1,
         "compression": N / total_evals if total_evals > 0 else 1,
+        "converge_reason": converge_reason,
     }
     
     return cores, metadata

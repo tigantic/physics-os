@@ -5,12 +5,7 @@ Layer 7 Audit: AI Environment Validation
 Validates that the HyperEnv RL infrastructure works with real physics.
 """
 
-import sys
-import os
 import numpy as np
-
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, PROJECT_ROOT)
 
 
 def test_agent_creation():

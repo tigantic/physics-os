@@ -128,3 +128,5 @@ logs/
 *.key
 *.pem
 credentials.json
+*_keys.json
+!*_keys.json.example

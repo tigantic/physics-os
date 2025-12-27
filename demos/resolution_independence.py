@@ -46,6 +46,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import torch
 import numpy as np
 
+# Import tt_svd from the library (canonical implementation)
+from tensornet.cfd.qtt import tt_svd as _lib_tt_svd
+
 
 def format_bytes(n: int) -> str:
     """Format bytes as human-readable string."""
@@ -133,7 +136,7 @@ def create_taylor_green_vorticity(resolution: int, time: float = 0.0, nu: float 
 
 
 # =============================================================================
-# QTT Implementation (using real TT-SVD)
+# QTT Implementation - Uses library implementation from tensornet.cfd.qtt
 # =============================================================================
 
 def tt_svd(
@@ -150,71 +153,11 @@ def tt_svd(
     
     where each A_k has shape (χ_{k-1}, d_k, χ_k).
     
-    This is the REAL TT-SVD algorithm from tensornet/cfd/qtt.py.
+    This is a wrapper around tensornet.cfd.qtt.tt_svd for API compatibility.
+    See the library module for the canonical implementation.
     """
-    L = len(shape)
-    dtype = tensor.dtype
-    device = tensor.device
-    
-    # Reshape tensor to target shape
-    T = tensor.reshape(shape)
-    
-    cores = []
-    total_error_sq = 0.0
-    frobenius_norm = torch.norm(T).item()
-    
-    # Left-to-right sweep with SVD truncation
-    current = T.reshape(shape[0], -1)
-    chi_left = 1
-    
-    for k in range(L - 1):
-        d_k = shape[k]
-        current = current.reshape(chi_left * d_k, -1)
-        
-        # Truncated SVD
-        U, S, Vh = torch.linalg.svd(current, full_matrices=False)
-        
-        # Determine truncation
-        if tol > 0 and len(S) > 1:
-            cumsum = torch.cumsum(S**2, dim=0)
-            total_sq = cumsum[-1].item()
-            threshold = tol**2 * frobenius_norm**2
-            keep = len(S)
-            for i in range(len(S) - 1, 0, -1):
-                tail_sq = total_sq - cumsum[i - 1].item()
-                if tail_sq > threshold:
-                    keep = i + 1
-                    break
-                keep = i
-            keep = max(1, min(keep, chi_max))
-        else:
-            keep = min(chi_max, len(S))
-        
-        # Truncate
-        U = U[:, :keep]
-        S_kept = S[:keep]
-        Vh = Vh[:keep, :]
-        
-        # Track error
-        if keep < len(S):
-            total_error_sq += torch.sum(S[keep:]**2).item()
-        
-        # Form core tensor
-        core = U.reshape(chi_left, d_k, keep)
-        cores.append(core)
-        
-        # Propagate S @ Vh
-        current = torch.diag(S_kept) @ Vh
-        chi_left = keep
-    
-    # Last core
-    d_last = shape[-1]
-    last_core = current.reshape(chi_left, d_last, 1)
-    cores.append(last_core)
-    
-    total_error = math.sqrt(total_error_sq)
-    
-    return cores, total_error
+    # Use library implementation (normalize=False to match original behavior)
+    return _lib_tt_svd(tensor, shape, chi_max=chi_max, tol=tol, normalize=False)
 
 
 def field_to_qtt(field: np.ndarray, chi_max: int = 32, tol: float = 1e-10) -> dict:

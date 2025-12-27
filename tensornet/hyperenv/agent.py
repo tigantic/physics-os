@@ -73,16 +73,51 @@ class AgentState:
     
     def save(self, path: str):
         """Save state to file."""
-        import pickle
-        with open(path, 'wb') as f:
-            pickle.dump(self, f)
+        import json
+        data = {
+            'step': self.step,
+            'episode': self.episode,
+            'epsilon': self.epsilon,
+            'total_reward': self.total_reward,
+            'best_reward': self.best_reward,
+            # Network weights saved separately via torch.save
+            'policy_state_path': f"{path}.policy.pt" if self.policy_state else None,
+            'optimizer_state_path': f"{path}.optim.pt" if self.optimizer_state else None,
+        }
+        with open(path, 'w') as f:
+            json.dump(data, f, indent=2)
+        # Save torch state dicts separately if present
+        if self.policy_state is not None:
+            import torch
+            torch.save(self.policy_state, f"{path}.policy.pt")
+        if self.optimizer_state is not None:
+            import torch
+            torch.save(self.optimizer_state, f"{path}.optim.pt")
     
     @classmethod
     def load(cls, path: str) -> 'AgentState':
         """Load state from file."""
-        import pickle
-        with open(path, 'rb') as f:
-            return pickle.load(f)
+        import json
+        with open(path, 'r') as f:
+            data = json.load(f)
+        state = cls()
+        state.step = data.get('step', 0)
+        state.episode = data.get('episode', 0)
+        state.epsilon = data.get('epsilon', 1.0)
+        state.total_reward = data.get('total_reward', 0.0)
+        state.best_reward = data.get('best_reward', float('-inf'))
+        # Load torch state dicts if paths exist
+        if data.get('policy_state_path'):
+            import torch
+            import os
+            if os.path.exists(data['policy_state_path']):
+                state.policy_state = torch.load(data['policy_state_path'], weights_only=True)
+        if data.get('optimizer_state_path'):
+            import torch
+            import os
+            if os.path.exists(data['optimizer_state_path']):
+                state.optimizer_state = torch.load(data['optimizer_state_path'], weights_only=True)
+        return state
 
 
 # =============================================================================

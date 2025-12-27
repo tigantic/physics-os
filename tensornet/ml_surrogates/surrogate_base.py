@@ -423,5 +423,5 @@ def test_surrogate_base():
     print("\nSurrogate Base: All tests passed!")
 
 
-if __name__ == "__main__":
-    test_surrogate_base()
+# NOTE: Tests have been moved to tests/test_surrogate_base.py
+# Run with: pytest tests/test_surrogate_base.py -v

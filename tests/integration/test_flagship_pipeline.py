@@ -13,6 +13,10 @@ from pathlib import Path
 import pytest
 
 
+# Mark entire module as integration tests
+pytestmark = [pytest.mark.integration, pytest.mark.slow]
+
+
 class TestFlagshipPipeline:
     """Test the flagship pipeline produces valid evidence."""
     
