@@ -21,8 +21,7 @@ import sys
 import numpy as np
 from pathlib import Path
 from datetime import datetime, timedelta
-from typing import Optional, Tuple, List
-import warnings
+from typing import Tuple
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -165,17 +164,7 @@ class ColorLegendBar(QFrame):
             import matplotlib.pyplot as plt
             cmap = plt.get_cmap(self._colormap)
             
-            # Build gradient stops
-            stops = []
-            for i in range(11):
-                t = i / 10.0
-                rgba = cmap(t)
-                r, g, b = int(rgba[0]*255), int(rgba[1]*255), int(rgba[2]*255)
-                stops.append(f"rgba({r},{g},{b},1) {int(t*100)}%")
-            
-            gradient = f"background: qlineargradient(x1:0, y1:0, x2:1, y2:0, {', '.join(f'stop:{i/10} rgba({int(cmap(i/10)[0]*255)},{int(cmap(i/10)[1]*255)},{int(cmap(i/10)[2]*255)},1)' for i in range(11))});"
-            
-            # Simplified gradient
+            # Build Qt gradient stylesheet
             self.color_bar.setStyleSheet(f"""
                 background: qlineargradient(
                     x1:0, y1:0, x2:1, y2:0,
@@ -828,16 +817,16 @@ class ProfessionalViewport(QWidget):
         head_positions = []
         head_colors = []
         
-        for i, (pos, dir_, mag) in enumerate(zip(positions, directions, magnitudes)):
+        for i, (pos, direction, mag) in enumerate(zip(positions, directions, magnitudes)):
             # Arrow shaft (slightly shortened to make room for head)
-            end = pos + dir_ * 0.7
+            end = pos + direction * 0.7
             all_lines.append([pos[0], pos[1]])
             all_lines.append([end[0], end[1]])
             all_colors.append(colors[i])
             all_colors.append(colors[i])
             
             # Arrow head position (at full length)
-            head_pos = pos + dir_
+            head_pos = pos + direction
             head_positions.append(head_pos)
             head_colors.append(colors[i])
         
