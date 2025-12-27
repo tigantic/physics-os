@@ -585,6 +585,28 @@ The HyperTensor World Data Slicer transforms interaction with global datasets fr
 - MortonSlicer: O(L×r²) extraction makes 1024³ as fast as 16³
 - Resolution agnosticism: physical laws preserved across modalities
 
+### HyperTensor Hub (Primary Demo Interface)
+
+**Status:** Implemented (`demos/hypertensor_hub.py`)
+
+The HyperTensor Hub is the primary interface for demonstrating all validated layers. Built with PySide6 + VisPy for GPU-accelerated visualization.
+
+**Advantages over Unreal Engine integration:**
+- **Low Latency:** Direct memory access to QTT cores (no ZMQ bridge)
+- **Intent First:** Large command bar for Layer 8 Intent Parser
+- **Portability:** Standalone app for Third-Party Replay milestone
+
+**Features:**
+- Blade navigation system (Forensic, Telemetry, Intent)
+- 4D temporal scrubbing for field history
+- Real-time slice visualization with depth control
+- Natural language intent bar integration
+- GPU-accelerated OpenGL viewport via VisPy
+
+**The Pivot:**
+Layer 9 (Engine Integration) is validated via the Unreal bridge. The "hard part" is done.
+Unreal is now a plugin for others to use. The primary demo happens in the clean, professional HyperTensor Hub.
+
 ---
 
 ## Changelog
