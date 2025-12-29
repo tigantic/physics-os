@@ -75,6 +75,31 @@ Our [Constitution](CONSTITUTION.md) outlines coding standards. Key points:
 4. Run linting: `ruff check . && black --check .`
 5. Submit PR with clear description
 
+## ⚠️ REQUIRED READING: Performance-Critical Code
+
+Before modifying ANY performance-critical code, you MUST read:
+
+**[SOVEREIGN_ATTESTATION.md](SOVEREIGN_ATTESTATION.md)**
+
+This document contains:
+- Validated benchmarks (244 FPS @ 4K achieved)
+- Locked optimizations (rSVD threshold, Morton encoding, etc.)
+- Optimization-first mandates
+- Validation commands to run before/after changes
+
+**Files under protection:**
+- `tensornet/sovereign/morton.py` — O(1) Morton encoding
+- `tensornet/adaptive/*.py` — rSVD threshold = 100
+- `tensornet/core/mps.py` — Tensor network core
+
+Changes to these files require:
+1. Reading the attestation document
+2. Running validation benchmarks BEFORE changes
+3. Running validation benchmarks AFTER changes
+4. Proving measurable improvement (not "cleaner" code)
+
+**The Sovereign thesis: You don't need more compute — you need smarter representations.**
+
 ## Development Tips
 
 ### Running Specific Tests

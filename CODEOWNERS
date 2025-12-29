@@ -66,3 +66,15 @@
 # Physics Module
 # ============================================
 /Physics/ @tigantic/physics
+
+# ============================================
+# LOCKED - Performance-Critical (DO NOT MODIFY)
+# ============================================
+# These files contain validated, benchmarked optimizations.
+# Changes require attestation review and benchmark proof.
+/SOVEREIGN_ATTESTATION.md @tigantic/core @tigantic/cfd
+/tensornet/substrate/morton_ops.py @tigantic/core
+/tensornet/adaptive/compression.py @tigantic/core
+/tensornet/adaptive/entanglement.py @tigantic/core
+/tensornet/adaptive/bond_optimizer.py @tigantic/core
+/tensornet/core/mps.py @tigantic/core
