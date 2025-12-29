@@ -21,6 +21,7 @@ mod bridge;
 mod camera;
 mod layout;
 mod overlay;
+mod ram_bridge_v2;
 mod renderer;
 mod telemetry;
 mod tensor_field;
