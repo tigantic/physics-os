@@ -22,11 +22,12 @@
 | **2D CFD** | ✅ Complete | Strang splitting, immersed boundary |
 | **GPU Acceleration** | ✅ Available | `tensornet/core/gpu.py` (723 lines) |
 | **Distributed DMRG** | ✅ Available | `tensornet/distributed_tn/` (531 lines) |
+| **Glass Cockpit (Phase 3)** | ✅ Complete | Real-time tensor viz @ 60 FPS (v0.3.0) |
 | **Documentation** | ✅ Complete | 86 API files, 2 tutorials, traceability |
 | **Proofs** | ✅ 16/16 | Conservation laws, exact solutions |
 | **PyPI Ready** | ✅ Built | `pip install tensornet` (TestPyPI) |
 
-**Quick Links:** [Installation](#quick-start) · [API Docs](docs/api/) · [Tutorials](docs/tutorials/) · [Contributing](CONTRIBUTING.md)
+**Quick Links:** [Installation](#quick-start) · [Phase 3 Demo](#phase-3-glass-cockpit) · [API Docs](docs/api/) · [Tutorials](docs/tutorials/) · [Contributing](CONTRIBUTING.md)
 
 ---
 
@@ -57,6 +58,29 @@ pip install -e .
 # Verify
 python scripts/reproduce.py --quick
 ```
+
+### Phase 3: Glass Cockpit
+
+**Real-time tensor field visualization at 60 FPS**
+
+```bash
+# Terminal 1: Start Python tensor streamer
+python -c "
+from tensornet.sovereign.realtime_tensor_stream import test_realtime_stream
+test_realtime_stream(duration=60, pattern='turbulence', fps=60)
+"
+
+# Terminal 2: Launch Rust visualizer
+cd glass-cockpit && cargo run --release --bin phase3
+```
+
+**Features:**
+- 🎨 5 scientific colormaps (Viridis, Plasma, Turbo, Inferno, Magma)
+- ⚡ <16ms latency (Python → Rust via RAM Bridge v2)
+- 🔄 Zero-copy shared memory (12MB)
+- 📊 Live FPS/latency telemetry
+
+See [PHASE3_QUICKSTART.md](PHASE3_QUICKSTART.md) for details.
 
 ### Minimal Example
 
