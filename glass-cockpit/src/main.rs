@@ -24,6 +24,7 @@ mod overlay;
 mod ram_bridge_v2;
 mod renderer;
 mod telemetry;
+mod tensor_colormap;
 mod tensor_field;
 mod tensor_renderer;
 mod text;
