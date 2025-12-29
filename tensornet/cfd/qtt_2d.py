@@ -26,9 +26,9 @@ from tensornet.cfd.pure_qtt_ops import (
 # Part 1: Morton Z-Curve (Interleaved Bit Layout)
 # =============================================================================
 
-def morton_encode(x: int, y: int, n_bits: int) -> int:
+def morton_encode(x: int, y: int, n_bits: int = 16) -> int:
     """
-    Interleave bits of x and y into Morton code.
+    Interleave bits of x and y into Morton code using magic numbers.
     
     Layout: x₁,y₁,x₂,y₂,x₃,y₃,...
     
@@ -38,39 +38,56 @@ def morton_encode(x: int, y: int, n_bits: int) -> int:
         morton = 0b11_01_10_00 = 0xD8 = 216
         
     This preserves 2D spatial locality in the 1D QTT index.
+    Uses O(1) magic number bit-interleaving instead of O(n_bits) loop.
     """
-    result = 0
-    for i in range(n_bits):
-        x_bit = (x >> i) & 1
-        y_bit = (y >> i) & 1
-        result |= (x_bit << (2 * i))      # Even positions: x bits
-        result |= (y_bit << (2 * i + 1))  # Odd positions: y bits
-    return result
-
-
-def morton_decode(z: int, n_bits: int) -> Tuple[int, int]:
-    """
-    Extract x and y from Morton code.
+    # Spread bits for 2D Morton: insert 1 zero between each bit
+    def spread_bits(v: int) -> int:
+        v = (v | (v << 8))  & 0x00FF00FF
+        v = (v | (v << 4))  & 0x0F0F0F0F
+        v = (v | (v << 2))  & 0x33333333
+        v = (v | (v << 1))  & 0x55555555
+        return v
     
-    Inverse of morton_encode.
+    return spread_bits(x) | (spread_bits(y) << 1)
+
+
+def morton_decode(z: int, n_bits: int = 16) -> Tuple[int, int]:
     """
-    x = 0
-    y = 0
-    for i in range(n_bits):
-        x |= ((z >> (2 * i)) & 1) << i      # Even positions → x
-        y |= ((z >> (2 * i + 1)) & 1) << i  # Odd positions → y
+    Extract x and y from Morton code using magic numbers.
+    
+    Inverse of morton_encode. Uses O(1) magic number extraction.
+    """
+    # Compact bits: extract every 2nd bit
+    def compact_bits(v: int) -> int:
+        v = v & 0x55555555
+        v = (v | (v >> 1))  & 0x33333333
+        v = (v | (v >> 2))  & 0x0F0F0F0F
+        v = (v | (v >> 4))  & 0x00FF00FF
+        v = (v | (v >> 8))  & 0x0000FFFF
+        return v
+    
+    x = compact_bits(z)
+    y = compact_bits(z >> 1)
     return x, y
 
 
 def morton_encode_batch(x: torch.Tensor, y: torch.Tensor, n_bits: int) -> torch.Tensor:
-    """Vectorized Morton encoding for GPU."""
-    result = torch.zeros_like(x)
-    for i in range(n_bits):
-        x_bit = (x >> i) & 1
-        y_bit = (y >> i) & 1
-        result |= (x_bit << (2 * i))
-        result |= (y_bit << (2 * i + 1))
-    return result
+    """
+    Vectorized Morton encoding for GPU using magic number bit-interleaving.
+    
+    L-004 FIX: O(1) complexity instead of O(n_bits) loop.
+    """
+    # Parallel bit-interleave using magic constants for 2D
+    def spread_bits_2d(v: torch.Tensor) -> torch.Tensor:
+        """Spread bits for 2D Morton: insert 1 zero between each bit."""
+        v = v.long()
+        v = (v | (v << 8))  & 0x00FF00FF
+        v = (v | (v << 4))  & 0x0F0F0F0F
+        v = (v | (v << 2))  & 0x33333333
+        v = (v | (v << 1))  & 0x55555555
+        return v
+    
+    return spread_bits_2d(x) | (spread_bits_2d(y) << 1)
 
 
 # =============================================================================
@@ -608,8 +625,13 @@ def truncate_qtt_2d(state: QTT2DState, max_rank: int) -> QTT2DState:
         # Reshape to (r_left * d, r_right)
         mat = core.reshape(r_left * d, r_right)
         
-        # SVD
-        U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+        # rSVD - faster above 100x100
+        m, n = mat.shape
+        if min(m, n) > 100:
+            U, S, V = torch.svd_lowrank(mat, q=min(max_rank + 5, min(m, n)))
+            Vh = V.T
+        else:
+            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
         
         # Truncate
         rank = min(len(S), max_rank)

@@ -317,7 +317,12 @@ class MPS:
         chi_l, d, chi_r = A.shape
         A_mat = A.reshape(chi_l, d * chi_r)
         
-        _, S, _ = torch.linalg.svd(A_mat, full_matrices=False)
+        # rSVD - faster above 100x100
+        m, n = A_mat.shape
+        if min(m, n) > 100:
+            _, S, _ = torch.svd_lowrank(A_mat, q=min(100, min(m, n)))
+        else:
+            _, S, _ = torch.linalg.svd(A_mat, full_matrices=False)
         
         # Normalize singular values
         S = S / S.norm()

@@ -165,16 +165,18 @@ fn vs_main(input: VertexInput) -> VertexOutput {
     let cell_center = grid_origin + vec3<f32>(fx, fy, fz) * grid_size;
     
     // Generate quad vertices (billboarded to camera)
-    let quad_positions = array<vec2<f32>, 6>(
-        vec2<f32>(-0.5, -0.5),
-        vec2<f32>( 0.5, -0.5),
-        vec2<f32>( 0.5,  0.5),
-        vec2<f32>(-0.5, -0.5),
-        vec2<f32>( 0.5,  0.5),
-        vec2<f32>(-0.5,  0.5),
-    );
-    
-    let quad_uv = quad_positions[input.vertex_idx % 6u];
+    // Use switch instead of array indexing for compatibility
+    var quad_uv: vec2<f32>;
+    let vid = input.vertex_idx % 6u;
+    switch vid {
+        case 0u: { quad_uv = vec2<f32>(-0.5, -0.5); }
+        case 1u: { quad_uv = vec2<f32>( 0.5, -0.5); }
+        case 2u: { quad_uv = vec2<f32>( 0.5,  0.5); }
+        case 3u: { quad_uv = vec2<f32>(-0.5, -0.5); }
+        case 4u: { quad_uv = vec2<f32>( 0.5,  0.5); }
+        case 5u: { quad_uv = vec2<f32>(-0.5,  0.5); }
+        default: { quad_uv = vec2<f32>(0.0, 0.0); }
+    }
     
     // Billboard: rotate quad to face camera
     let to_camera = normalize(camera.eye_pos.xyz - cell_center);

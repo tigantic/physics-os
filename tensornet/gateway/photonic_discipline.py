@@ -144,6 +144,7 @@ class PhotonicPalette:
         positions = np.linspace(0, len(colors) - 1, steps)
         gradient = np.zeros((steps, 3))
         
+        # L-021 NOTE: Fixed 3 iterations (RGB) - negligible overhead
         for i in range(3):  # RGB channels
             gradient[:, i] = np.interp(positions, np.arange(len(colors)), colors[:, i])
         

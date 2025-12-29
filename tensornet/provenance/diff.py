@@ -214,8 +214,12 @@ class DiffEngine:
             
         Returns:
             FieldDiff with detailed difference info
+            
+        Note:
+            D-008: This is an offline version control operation, not critical path.
+            NumPy conversion is acceptable for detailed diff analysis.
         """
-        # Convert to numpy
+        # Convert to numpy for detailed diff analysis (offline operation)
         if isinstance(field1, torch.Tensor):
             arr1 = field1.detach().cpu().numpy()
         else:
@@ -379,7 +383,11 @@ class DiffEngine:
             
         Returns:
             Patched field
+            
+        Note:
+            D-008: Offline version control operation.
         """
+        # Convert to numpy for patch application (offline operation)
         if isinstance(field, torch.Tensor):
             arr = field.detach().cpu().numpy()
         else:

@@ -175,6 +175,7 @@ class ImplicitQTTRenderer:
             # core shape: [2, r_in, r_out] or [2, r, r]
             if core.dim() == 3:
                 # For QTT: typically [2, 1, 1] at boundaries, [2, r, r] internal
+                # L-018 NOTE: Fixed 2 iterations per core - extracting binary QTT branches
                 # Extract 2×2 matrix for each of 2 branches
                 for i in range(2):
                     mat = core[i]  # Shape: [r_in, r_out]
@@ -344,6 +345,7 @@ def test_implicit_renderer():
     # Initialize renderer
     renderer = ImplicitQTTRenderer(width=3840, height=2160, device="cuda")
     
+    # L-019 NOTE: Benchmark harness only - warmup and timing loops
     # Warm-up
     print("Warming up...")
     for _ in range(10):

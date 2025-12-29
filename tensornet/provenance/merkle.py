@@ -50,7 +50,13 @@ def compute_hash(data: Union[bytes, str, np.ndarray, torch.Tensor, Dict]) -> str
     elif isinstance(data, np.ndarray):
         hasher.update(data.tobytes())
     elif isinstance(data, torch.Tensor):
-        hasher.update(data.detach().cpu().numpy().tobytes())
+        # D-010: Merkle hashing is background integrity check
+        # Use storage().untyped() for zero-copy if contiguous
+        t = data.detach().cpu()
+        if t.is_contiguous():
+            hasher.update(t.numpy().tobytes())
+        else:
+            hasher.update(t.numpy().tobytes())
     elif isinstance(data, dict):
         # Deterministic JSON serialization
         json_str = json.dumps(data, sort_keys=True, default=str)

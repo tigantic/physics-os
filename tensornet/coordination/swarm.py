@@ -123,12 +123,13 @@ class VehicleState:
         Returns:
             VehicleState instance
         """
-        arr = tensor.detach().cpu().numpy()
+        # D-006 FIX: Use torch slicing directly, numpy only at boundary
+        t = tensor.detach().cpu()
         return cls(
             vehicle_id=vehicle_id,
-            position=arr[:3],
-            velocity=arr[3:6],
-            orientation=arr[6:10],
+            position=t[:3].numpy(),
+            velocity=t[3:6].numpy(),
+            orientation=t[6:10].numpy(),
         )
     
     def to_dict(self) -> Dict[str, Any]:

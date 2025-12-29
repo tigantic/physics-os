@@ -313,6 +313,7 @@ class Trainer:
     
     def _learn(self, callbacks: List['Callback']):
         """Perform learning update."""
+        # L-022 NOTE: Offline RL training loop - gradient_steps is configurable (typically 1-10)
         for _ in range(self.config.gradient_steps):
             if len(self.buffer) >= self.config.batch_size:
                 # Sample batch
@@ -332,6 +333,7 @@ class Trainer:
         episode_rewards = []
         episode_lengths = []
         
+        # L-022 NOTE: Offline RL evaluation - configurable episode count
         for _ in range(self.config.n_eval_episodes):
             obs = self.eval_env.reset()
             if isinstance(obs, tuple):
@@ -410,7 +412,7 @@ class Trainer:
             )
     
     # =========================================================================
-    # CALLBACKS
+    # CALLBACKS - L-023 NOTE: Callback dispatch (typically <10 callbacks each)
     # =========================================================================
     
     def _on_training_start(self, callbacks: List['Callback']):

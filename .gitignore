@@ -131,3 +131,7 @@ credentials.json
 *_keys.json
 !*_keys.json.example
 cuda-keyring_1.1-1_all.deb
+
+# Rust build artifacts
+glass-cockpit/target/
+target/

@@ -6,8 +6,10 @@ use crate::bridge::{Telemetry, SovereignBridge};
 use std::time::{Duration, Instant};
 
 /// Simple performance statistics tracker
+// Phase 2 scaffolding: Frame timing analysis for telemetry overlay
+#[allow(dead_code)]
 #[derive(Debug, Clone)]
-struct PerformanceStats {
+pub struct PerformanceStats {
     frame_times: Vec<f32>,
     frame_index: usize,
     max_samples: usize,
@@ -46,9 +48,12 @@ pub struct TelemetrySnapshot {
     /// E-core usage percentage (0-100)
     pub e_core_usage: f32,
     
+    // Phase 2 scaffolding: Telemetry display fields
+    #[allow(dead_code)]
     /// Current frames per second
     pub fps: f32,
     
+    #[allow(dead_code)]
     /// Frame time in milliseconds
     pub frame_time_ms: f32,
     
@@ -58,6 +63,7 @@ pub struct TelemetrySnapshot {
     /// Stability score (0.0-1.0, higher is better)
     pub stability: f32,
     
+    #[allow(dead_code)]
     /// Timestamp of this snapshot
     pub timestamp: Instant,
 }
@@ -100,6 +106,8 @@ pub struct TelemetryOverlay {
     /// RAM bridge connection (None if not available)
     bridge: Option<SovereignBridge>,
     
+    // Phase 2 scaffolding: Simulated mode tracking for overlay display
+    #[allow(dead_code)]
     /// Whether using simulated data (fallback mode)
     simulated: bool,
 }
@@ -201,11 +209,14 @@ impl TelemetryOverlay {
         self.bridge.as_ref().map(|b| b.read_telemetry())
     }
     
+    // Phase 2 scaffolding: Overlay status methods for telemetry UI
+    #[allow(dead_code)]
     /// Check if using simulated data
     pub fn is_simulated(&self) -> bool {
         self.simulated
     }
     
+    #[allow(dead_code)]
     /// Get bridge connection status
     pub fn bridge_status(&self) -> &str {
         if self.simulated {
@@ -215,37 +226,45 @@ impl TelemetryOverlay {
         }
     }
 
+    #[allow(dead_code)]
     /// Toggle overlay visibility
     pub fn toggle_visibility(&mut self) {
         self.visible = !self.visible;
     }
 
+    #[allow(dead_code)]
     /// Get formatted string for display
     pub fn format_p_core(&self) -> String {
         format!("P-Core: {:.1}%", self.current.p_core_usage)
     }
 
+    #[allow(dead_code)]
     pub fn format_e_core(&self) -> String {
         format!("E-Core: {:.1}%", self.current.e_core_usage)
     }
 
+    #[allow(dead_code)]
     pub fn format_fps(&self) -> String {
         format!("FPS: {:.1}", self.current.fps)
     }
 
+    #[allow(dead_code)]
     pub fn format_frame_time(&self) -> String {
         format!("{:.2}ms", self.current.frame_time_ms)
     }
 
+    #[allow(dead_code)]
     pub fn format_memory(&self) -> String {
         format!("RAM: {:.1}MB", self.current.memory_mb)
     }
 
+    #[allow(dead_code)]
     pub fn format_stability(&self) -> String {
         let percent = self.current.stability * 100.0;
         format!("Stability: {:.1}%", percent)
     }
 
+    #[allow(dead_code)]
     /// Get color for stability display (green=good, yellow=ok, red=bad)
     pub fn stability_color(&self) -> [f32; 3] {
         let s = self.current.stability;
@@ -258,12 +277,14 @@ impl TelemetryOverlay {
         }
     }
 
+    #[allow(dead_code)]
     /// Get color for core usage (blue gradient based on load)
     pub fn core_usage_color(&self, usage: f32) -> [f32; 3] {
         let intensity = (usage / 100.0).clamp(0.0, 1.0);
         [0.2, 0.4 + intensity * 0.4, 0.8] // Blue with varying intensity
     }
 
+    #[allow(dead_code)]
     /// Reset statistics
     pub fn reset_stats(&mut self) {
         self.stats = PerformanceStats::new();
@@ -271,11 +292,13 @@ impl TelemetryOverlay {
         self.frame_time_index = 0;
     }
 
+    #[allow(dead_code)]
     /// Get performance statistics
     pub fn get_stats(&self) -> &PerformanceStats {
         &self.stats
     }
 
+    #[allow(dead_code)]
     /// Set update interval
     pub fn set_update_interval(&mut self, interval: Duration) {
         self.update_interval = interval;
@@ -288,6 +311,8 @@ impl Default for TelemetryOverlay {
     }
 }
 
+// Phase 2 scaffolding: Telemetry card UI layout system
+#[allow(dead_code)]
 /// Telemetry card layout information
 #[derive(Debug, Clone, Copy)]
 pub struct TelemetryCard {
@@ -304,6 +329,8 @@ pub struct TelemetryCard {
     pub color: [f32; 3],
 }
 
+// Phase 2 scaffolding: Predefined card layouts for telemetry visualization
+#[allow(dead_code)]
 /// Predefined telemetry card layouts for left rail
 pub const LEFT_RAIL_CARDS: [TelemetryCard; 3] = [
     TelemetryCard {
@@ -326,6 +353,7 @@ pub const LEFT_RAIL_CARDS: [TelemetryCard; 3] = [
     },
 ];
 
+#[allow(dead_code)]
 /// Predefined telemetry card layouts for right rail
 pub const RIGHT_RAIL_CARDS: [TelemetryCard; 2] = [
     TelemetryCard {

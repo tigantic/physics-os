@@ -762,8 +762,13 @@ class AdaptiveTruncator:
         target_chi = max_chi or self.tracker.current_chi
         target_chi = min(target_chi, self.config.chi_max)
         
-        # Perform SVD
-        U, S, Vh = torch.linalg.svd(tensor, full_matrices=False)
+        # rSVD - randomized is faster above 100x100
+        m, n = tensor.shape[0], tensor.shape[1] if tensor.dim() > 1 else 1
+        if min(m, n) > 100:
+            U, S, V = torch.svd_lowrank(tensor.reshape(m, -1), q=min(target_chi + 10, min(m, n)))
+            Vh = V.T
+        else:
+            U, S, Vh = torch.linalg.svd(tensor, full_matrices=False)
         
         # Update entropy monitor
         self.entropy_monitor.update(bond_index, S)

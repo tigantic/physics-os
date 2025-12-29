@@ -308,8 +308,9 @@ class DigitalTwin:
             # (In practice, this would use a dynamics model)
             pred_tensor = self.rom.decode(z)
             
+            # D-014: Use tolist() for StateVector conversion
             return StateVector.from_vector(
-                pred_tensor.numpy(),
+                pred_tensor.cpu().tolist(),
                 current.timestamp + horizon
             )
         

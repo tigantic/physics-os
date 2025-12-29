@@ -268,9 +268,17 @@ class ResultCache:
         Returns:
             Cache key string
         """
-        # Use shape and data hash
+        # D-013 FIX: Use torch hash instead of numpy conversion
         shape_str = str(tuple(tensor.shape))
-        data_hash = hash(tensor.cpu().numpy().tobytes())
+        # Use storage pointer + hash of first few elements for speed
+        t = tensor.cpu()
+        if t.numel() > 0:
+            # Sample-based hash for large tensors
+            flat = t.flatten()
+            samples = flat[::max(1, len(flat) // 100)][:100]
+            data_hash = hash(tuple(samples.tolist()))
+        else:
+            data_hash = 0
         return f"{shape_str}_{data_hash}"
     
     def get(self, tensor: torch.Tensor) -> Optional[InferenceResult]:

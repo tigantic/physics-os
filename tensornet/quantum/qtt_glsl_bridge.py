@@ -83,13 +83,14 @@ def pack_qtt_for_shader(qtt: QTT2DState) -> QTTShaderParams:
     """
     n_cores = len(qtt.cores)
     
+    # L-005 NOTE: These loops are inherently sequential - each offset depends on prior
     # Extract ranks (bond dimensions)
     ranks = [1]  # Left boundary
     for core in qtt.cores:
         ranks.append(core.shape[2])  # Right rank
     ranks = np.array(ranks, dtype=np.int32)
     
-    # Flatten all cores into single buffer
+    # Flatten all cores into single buffer (sequential: offset accumulation)
     core_arrays = []
     offsets = [0]
     
@@ -163,16 +164,17 @@ def qtt_eval_at_pixel_coords(
     3. Contract cores: result = cores[0][0, b0, :]
     4. Loop: result = result @ cores[k][:, bk, :]
     """
-    from tensornet.cfd.qtt_2d import morton_encode
+    from tensornet.cfd.qtt_2d import morton_encode_batch
     from tensornet.cfd.flux_2d_tci import qtt2d_eval_batch
     
-    batch_size = len(x)
     device = qtt.cores[0].device
     
-    # Morton encode (x, y) pairs
-    morton_indices = torch.zeros(batch_size, dtype=torch.long, device=device)
-    for i in range(batch_size):
-        morton_indices[i] = morton_encode(int(x[i]), int(y[i]))
+    # L-004 FIX: Vectorized Morton encoding (no Python loop)
+    x_tensor = x.long() if isinstance(x, torch.Tensor) else torch.tensor(x, dtype=torch.long, device=device)
+    y_tensor = y.long() if isinstance(y, torch.Tensor) else torch.tensor(y, dtype=torch.long, device=device)
+    
+    n_bits = max(qtt.nx, qtt.ny)
+    morton_indices = morton_encode_batch(x_tensor, y_tensor, n_bits)
     
     # Batch evaluate
     values = qtt2d_eval_batch(qtt, morton_indices)

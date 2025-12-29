@@ -103,6 +103,7 @@ class CallbackList(Callback):
     def __init__(self, callbacks: List[Callback]):
         self.callbacks = callbacks
     
+    # L-024 NOTE: Callback dispatch loops - typically <10 callbacks total (offline RL)
     def on_training_start(self, trainer: 'Trainer'):
         for cb in self.callbacks:
             cb.on_training_start(trainer)
@@ -278,6 +279,7 @@ class EvalCallback(Callback):
         episode_rewards = []
         episode_lengths = []
         
+        # L-024 NOTE: Offline RL evaluation loop - configurable n_eval_episodes
         for _ in range(self.n_eval_episodes):
             obs = env.reset()
             if isinstance(obs, tuple):

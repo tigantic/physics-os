@@ -288,9 +288,14 @@ class TNQuantumSimulator:
         else:
             new_combined = torch.einsum('abcd,idck->ibak', gate, combined)
         
-        # SVD decomposition to split back into two tensors
+        # rSVD decomposition - faster above 100x100
         new_combined = new_combined.reshape(chi_l * 2, 2 * chi_r)
-        U, S, Vh = torch.linalg.svd(new_combined, full_matrices=False)
+        m, n = new_combined.shape
+        if min(m, n) > 100:
+            U, S, V = torch.svd_lowrank(new_combined, q=min(self.chi_max + 10, min(m, n)))
+            Vh = V.T
+        else:
+            U, S, Vh = torch.linalg.svd(new_combined, full_matrices=False)
         
         # Truncate to chi_max
         chi_new = min(len(S), self.chi_max)

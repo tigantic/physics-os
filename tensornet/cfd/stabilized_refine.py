@@ -113,6 +113,8 @@ def apply_qtt_filter_3d(U: torch.Tensor, chi_max: int = 64, tol: float = 1e-8) -
     N = U.shape[0]
     filtered = torch.zeros_like(U)
     
+    # L-015 NOTE: Slice processing could be parallelized with batch QTT ops
+    # Each (component, k) slice is independent - future: batch compression
     for component in range(3):
         for k in range(N):
             # Extract 2D slice
@@ -155,6 +157,7 @@ def enforce_hou_luo_symmetry(U: torch.Tensor) -> torch.Tensor:
     x = torch.linspace(0, 1, N)
     window_1d = torch.ones(N)
     
+    # L-016 NOTE: Small fixed loop (N/16 iterations, vectorizable but negligible impact)
     # Smooth edges using cosine taper
     for i in range(edge_width):
         weight = 0.5 * (1 - np.cos(np.pi * i / edge_width))
@@ -369,6 +372,7 @@ def stabilized_newton_refinement(config: RefinementConfig = None) -> RefinementR
         # Choose filter based on grid size (QTT too slow for N > 64)
         use_qtt = config.N <= 64
         
+        # L-017 NOTE: Line search loops are O(4) iterations each - optimization algorithm
         for step_scale in [1.0, 0.5, 0.25, 0.1]:
             # Gradient descent update: U -= eta * F
             eta_try = current_eta * step_scale

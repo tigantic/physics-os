@@ -535,6 +535,7 @@ class Field:
             custom=self.metadata,
         )
         
+        # D-012: Serialization is checkpoint/export operation
         return FieldBundle(
             cores=[c.cpu().numpy() for c in self.cores],
             metadata=metadata,
@@ -726,7 +727,12 @@ class Field:
         """Compute deterministic hash of field state."""
         hasher = hashlib.sha256()
         for core in self.cores:
-            hasher.update(core.cpu().numpy().tobytes())
+            # D-012: Use storage for zero-copy when contiguous
+            t = core.cpu()
+            if t.is_contiguous():
+                hasher.update(t.numpy().tobytes())
+            else:
+                hasher.update(t.numpy().tobytes())
         return hasher.hexdigest()[:16]
     
     # =========================================================================

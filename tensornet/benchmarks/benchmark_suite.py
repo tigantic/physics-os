@@ -406,23 +406,23 @@ class AccuracyBenchmark:
             ref_output = reference_model(input_tensor)
             opt_output = optimized_model(input_tensor)
         
-        # Convert to numpy for analysis
-        ref = ref_output.cpu().numpy().flatten()
-        opt = opt_output.cpu().numpy().flatten()
+        # D-005 FIX: Use torch ops for analysis (offline benchmark, acceptable)
+        ref = ref_output.cpu().flatten()
+        opt = opt_output.cpu().flatten()
         
-        # Calculate errors
-        abs_error = np.abs(ref - opt)
-        rel_error = abs_error / (np.abs(ref) + 1e-10)
+        # Calculate errors using torch
+        abs_error = torch.abs(ref - opt)
+        rel_error = abs_error / (torch.abs(ref) + 1e-10)
         
-        # Cosine similarity
-        cos_sim = np.dot(ref, opt) / (np.linalg.norm(ref) * np.linalg.norm(opt) + 1e-10)
+        # Cosine similarity using torch
+        cos_sim = torch.dot(ref, opt) / (torch.norm(ref) * torch.norm(opt) + 1e-10)
         
         return AccuracyStats(
-            max_absolute_error=float(np.max(abs_error)),
-            mean_absolute_error=float(np.mean(abs_error)),
-            max_relative_error=float(np.max(rel_error)),
-            mean_relative_error=float(np.mean(rel_error)),
-            cosine_similarity=float(cos_sim),
+            max_absolute_error=float(abs_error.max().item()),
+            mean_absolute_error=float(abs_error.mean().item()),
+            max_relative_error=float(rel_error.max().item()),
+            mean_relative_error=float(rel_error.mean().item()),
+            cosine_similarity=float(cos_sim.item()),
         )
 
 

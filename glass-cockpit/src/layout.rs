@@ -23,26 +23,32 @@ impl ViewportRegion {
         Self { x, y, width, height }
     }
 
+    // Phase 1-2 scaffolding: Used for mouse interaction and coordinate transforms
+    #[allow(dead_code)]
     /// Check if a point (in pixel coordinates) is within this region
     pub fn contains_point(&self, x: f32, y: f32) -> bool {
         x >= self.x && x < self.x + self.width && y >= self.y && y < self.y + self.height
     }
 
+    #[allow(dead_code)]
     /// Convert screen coordinates to region-local coordinates
     pub fn to_local(&self, x: f32, y: f32) -> Vec2 {
         Vec2::new(x - self.x, y - self.y)
     }
 
+    #[allow(dead_code)]
     /// Convert region-local coordinates to screen coordinates
     pub fn to_screen(&self, local_x: f32, local_y: f32) -> Vec2 {
         Vec2::new(self.x + local_x, self.y + local_y)
     }
 
+    #[allow(dead_code)]
     /// Get the center point of this region
     pub fn center(&self) -> Vec2 {
         Vec2::new(self.x + self.width * 0.5, self.y + self.height * 0.5)
     }
 
+    #[allow(dead_code)]
     /// Get as Vec4 (x, y, width, height) for shader uniforms
     pub fn as_vec4(&self) -> Vec4 {
         Vec4::new(self.x, self.y, self.width, self.height)
@@ -111,6 +117,8 @@ impl ViewLayout {
         self.right_rail = ViewportRegion::new(width - rail_width, 0.0, rail_width, height);
     }
 
+    // Phase 1-2 scaffolding: Mouse interaction and region detection
+    #[allow(dead_code)]
     /// Determine which region a point falls into
     pub fn region_at_point(&self, x: f32, y: f32) -> LayoutRegion {
         if self.left_rail.contains_point(x, y) {
@@ -124,23 +132,28 @@ impl ViewLayout {
         }
     }
 
+    #[allow(dead_code)]
     /// Get the canvas aspect ratio (width / height)
     pub fn canvas_aspect_ratio(&self) -> f32 {
         self.canvas.width / self.canvas.height
     }
 
+    #[allow(dead_code)]
     /// Set rail width percentage (e.g., 0.10 for 10%)
     pub fn set_rail_width_percent(&mut self, percent: f32) {
         self.rail_width_percent = percent.clamp(0.05, 0.25); // 5% to 25% range
         self.update_regions();
     }
 
+    #[allow(dead_code)]
     /// Get screen size as Vec2 for shader uniforms
     pub fn screen_size(&self) -> Vec2 {
         Vec2::new(self.window_width as f32, self.window_height as f32)
     }
 }
 
+// Phase 1-2 scaffolding: Layout region detection for UI interactions
+#[allow(dead_code)]
 /// Enum representing which layout region a point belongs to
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LayoutRegion {

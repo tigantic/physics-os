@@ -450,8 +450,13 @@ def dense_to_qtt_cores(
         remaining_size = T.numel() // (r_left * 2)
         M = T.reshape(r_left * 2, remaining_size)
         
-        # SVD
-        U, S, Vh = torch.linalg.svd(M, full_matrices=False)
+        # rSVD - faster above 100x100
+        m, n = M.shape
+        if min(m, n) > 100:
+            U, S, V = torch.svd_lowrank(M, q=min(max_rank + 5, min(m, n)))
+            Vh = V.T
+        else:
+            U, S, Vh = torch.linalg.svd(M, full_matrices=False)
         
         # Truncate
         rank = min(max_rank, (S > tol * S[0]).sum().item())

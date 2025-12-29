@@ -2,6 +2,9 @@
 // Instanced billboarded quads for tensor field visualization
 // Constitutional compliance: Doctrine 3 (GPU compute), Doctrine 1 (procedural)
 
+// Phase 3-5 scaffolding: Tensor field GPU rendering pipeline
+// Will be used for 3D tensor field visualization with QTT data
+
 use wgpu::util::DeviceExt;
 use bytemuck::{Pod, Zeroable};
 
@@ -18,6 +21,7 @@ struct VisualizationParams {
     show_vectors: u32,
 }
 
+#[allow(dead_code)]
 pub struct TensorRenderer {
     pipeline: wgpu::RenderPipeline,
     tensor_buffer: wgpu::Buffer,
@@ -27,6 +31,8 @@ pub struct TensorRenderer {
     instance_count: u32,
 }
 
+// Phase 3-5 scaffolding: TensorRenderer implementation for tensor visualization
+#[allow(dead_code)]
 impl TensorRenderer {
     pub fn new(
         device: &wgpu::Device,

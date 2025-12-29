@@ -189,8 +189,13 @@ class DMRGWorker:
                 combined = torch.einsum('ijk,klm->ijlm', A, B)
                 combined = combined.reshape(chi_left * d, d * chi_right)
                 
-                # SVD truncation
-                U, S, Vh = torch.linalg.svd(combined, full_matrices=False)
+                # rSVD truncation - faster above 100x100
+                m, n = combined.shape
+                if min(m, n) > 100:
+                    U, S, V = torch.svd_lowrank(combined, q=min(self.chi_max + 10, min(m, n)))
+                    Vh = V.T
+                else:
+                    U, S, Vh = torch.linalg.svd(combined, full_matrices=False)
                 
                 # Truncate
                 chi_new = min(self.chi_max, len(S))

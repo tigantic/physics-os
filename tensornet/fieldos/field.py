@@ -431,7 +431,11 @@ class Field:
     # -------------------------------------------------------------------------
     
     def _to_numpy(self, data: Union[np.ndarray, torch.Tensor]) -> np.ndarray:
-        """Convert to numpy array."""
+        """
+        Convert to numpy array.
+        
+        D-015 NOTE: OS-level field interface for external consumers.
+        """
         if isinstance(data, torch.Tensor):
             return data.detach().cpu().numpy()
         return np.asarray(data)

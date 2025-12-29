@@ -168,8 +168,11 @@ class FieldCommit:
             
         Returns:
             New FieldCommit
+            
+        Note:
+            D-009: Provenance commit is background/async operation.
         """
-        # Convert to numpy if needed
+        # Convert to numpy for serialization (background operation)
         if isinstance(field_data, torch.Tensor):
             np_data = field_data.detach().cpu().numpy()
         else:

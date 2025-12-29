@@ -183,6 +183,7 @@ class SliceEngine:
         
         # Sample field
         values = self.field.sample(points)
+        # D-016: Visualization output - numpy required for image display
         data = values.reshape(width, height).cpu().numpy().T  # Transpose for image convention
         
         t_end = time.perf_counter()
@@ -225,6 +226,7 @@ class SliceEngine:
         points = torch.stack([xs, ys], dim=1)
         values = self.field.sample(points)
         
+        # D-016: Visualization output for plotting
         positions = t.cpu().numpy()
         values = values.cpu().numpy()
         
@@ -422,6 +424,7 @@ class VolumeRenderer:
         
         # Convert to RGBA image
         image = torch.cat([color, alpha[:, :, None]], dim=2)
+        # D-016: Visualization output for display
         image = image.cpu().numpy()
         depth = depth.cpu().numpy()
         

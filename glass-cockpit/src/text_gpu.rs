@@ -2,8 +2,12 @@
 // Bitmap atlas with instanced quad rendering for high-performance text display
 // Constitutional compliance: Doctrine 1 (GPU rendering), Doctrine 8 (texture atlas)
 
+// Phase 2 scaffolding: GPU-accelerated text rendering for telemetry overlay
+// Will be used for high-performance text display in Phase 2+
+
 use anyhow::Result;
 
+#[allow(dead_code)]
 /// GPU text rendering system with bitmap atlas
 pub struct GpuTextRenderer {
     /// Atlas texture (256x256, 16x16 grid of 8x8 glyphs)
@@ -45,6 +49,8 @@ impl GlyphInstance {
     }
 }
 
+// Phase 2 scaffolding: GpuTextRenderer implementation for GPU text rendering
+#[allow(dead_code)]
 impl GpuTextRenderer {
     pub fn new(device: &wgpu::Device, queue: &wgpu::Queue, surface_format: wgpu::TextureFormat) -> Result<Self> {
         // Create atlas texture (256x256 R8 format)
@@ -272,6 +278,8 @@ impl GpuTextRenderer {
     }
 }
 
+// Phase 2 scaffolding: Text building helper for GPU text rendering
+#[allow(dead_code)]
 /// Helper to build text rendering instances
 pub struct TextBuilder {
     instances: Vec<GlyphInstance>,
@@ -280,6 +288,8 @@ pub struct TextBuilder {
     color: [f32; 4],
 }
 
+// Phase 2 scaffolding: TextBuilder implementation for GPU text building
+#[allow(dead_code)]
 impl TextBuilder {
     pub fn new() -> Self {
         Self {
@@ -301,7 +311,7 @@ impl TextBuilder {
     
     pub fn add_text(&mut self, text: &str) {
         for ch in text.chars() {
-            if ch.is_ascii() && ch >= ' ' && ch <= '~' {
+            if ch.is_ascii() && (' '..='~').contains(&ch) {
                 self.instances.push(GlyphInstance::new(
                     self.cursor_x,
                     self.cursor_y,

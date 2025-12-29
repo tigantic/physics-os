@@ -11,14 +11,16 @@
 
 use anyhow::Result;
 use winit::{
-    event::{Event, WindowEvent, KeyboardInput, ElementState},
+    event::{Event, WindowEvent, ElementState},
     event_loop::{ControlFlow, EventLoop},
     keyboard::{PhysicalKey, KeyCode},
     window::{Window, WindowBuilder},
 };
 
 mod affinity;
+#[allow(dead_code)]
 mod ram_bridge_v2;
+#[allow(dead_code)]
 mod tensor_colormap;
 
 use ram_bridge_v2::RamBridgeV2;
@@ -44,7 +46,7 @@ fn main() -> Result<()> {
     
     // STEP 2: Connect to RAM Bridge v2
     println!("[2/4] Connecting to RAM Bridge v2...");
-    let mut bridge = RamBridgeV2::connect("/dev/shm/hypertensor_bridge")?;
+    let mut bridge = RamBridgeV2::connect("/dev/shm/hypertensor_bridge".into())?;
     println!("  ✓ RAM Bridge v2 connected");
     
     // STEP 3: Initialize wgpu
@@ -79,7 +81,7 @@ fn main() -> Result<()> {
             label: Some("Phase 3 Device"),
             required_features: wgpu::Features::empty(),
             required_limits: wgpu::Limits::default(),
-            memory_hints: Default::default(),
+
         },
         None,
     ))?;
@@ -97,7 +99,7 @@ fn main() -> Result<()> {
         format: surface_format,
         width: 1920,
         height: 1080,
-        present_mode: wgpu::PresentMode::Fifo,
+        present_mode: wgpu::PresentMode::Mailbox, // 165Hz Sovereign mode
         alpha_mode: surface_caps.alpha_modes[0],
         view_formats: vec![],
         desired_maximum_frame_latency: 2,
@@ -119,38 +121,6 @@ fn main() -> Result<()> {
     let mut frame_count = 0u64;
     let mut last_fps_time = std::time::Instant::now();
     let mut fps_counter = 0u32;
-    let mut current_fps = 0.0f32;
-    
-    // Create textures for tensor data
-    let mut input_texture = device.create_texture(&wgpu::TextureDescriptor {
-        label: Some("Tensor Input Texture"),
-        size: wgpu::Extent3d {
-            width: 1920,
-            height: 1080,
-            depth_or_array_layers: 1,
-        },
-        mip_level_count: 1,
-        sample_count: 1,
-        dimension: wgpu::TextureDimension::D2,
-        format: wgpu::TextureFormat::R32Float,
-        usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
-        view_formats: &[],
-    });
-    
-    let mut output_texture = device.create_texture(&wgpu::TextureDescriptor {
-        label: Some("RGBA Output Texture"),
-        size: wgpu::Extent3d {
-            width: 1920,
-            height: 1080,
-            depth_or_array_layers: 1,
-        },
-        mip_level_count: 1,
-        sample_count: 1,
-        dimension: wgpu::TextureDimension::D2,
-        format: wgpu::TextureFormat::Rgba8Unorm,
-        usage: wgpu::TextureUsages::STORAGE_BINDING | wgpu::TextureUsages::TEXTURE_BINDING,
-        view_formats: &[],
-    });
     
     event_loop.run(move |event, elwt| {
         elwt.set_control_flow(ControlFlow::Poll);
@@ -166,9 +136,9 @@ fn main() -> Result<()> {
                         println!("Frame drops: {}", bridge.frame_drops());
                         elwt.exit();
                     }
-                    WindowEvent::KeyboardInput { event: KeyboardInput { physical_key, state, .. }, .. } => {
-                        if state == ElementState::Pressed {
-                            match physical_key {
+                    WindowEvent::KeyboardInput { event, .. } => {
+                        if event.state == ElementState::Pressed {
+                            match event.physical_key {
                                 PhysicalKey::Code(KeyCode::Escape) => {
                                     elwt.exit();
                                 }
@@ -205,43 +175,10 @@ fn main() -> Result<()> {
                         config.width = size.width.max(1);
                         config.height = size.height.max(1);
                         surface.configure(&device, &config);
-                        
-                        // Recreate textures
-                        input_texture = device.create_texture(&wgpu::TextureDescriptor {
-                            label: Some("Tensor Input Texture"),
-                            size: wgpu::Extent3d {
-                                width: config.width,
-                                height: config.height,
-                                depth_or_array_layers: 1,
-                            },
-                            mip_level_count: 1,
-                            sample_count: 1,
-                            dimension: wgpu::TextureDimension::D2,
-                            format: wgpu::TextureFormat::R32Float,
-                            usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
-                            view_formats: &[],
-                        });
-                        
-                        output_texture = device.create_texture(&wgpu::TextureDescriptor {
-                            label: Some("RGBA Output Texture"),
-                            size: wgpu::Extent3d {
-                                width: config.width,
-                                height: config.height,
-                                depth_or_array_layers: 1,
-                            },
-                            mip_level_count: 1,
-                            sample_count: 1,
-                            dimension: wgpu::TextureDimension::D2,
-                            format: wgpu::TextureFormat::Rgba8Unorm,
-                            usage: wgpu::TextureUsages::STORAGE_BINDING | wgpu::TextureUsages::TEXTURE_BINDING,
-                            view_formats: &[],
-                        });
                     }
                     WindowEvent::RedrawRequested => {
-                        let frame_start = std::time::Instant::now();
-                        
                         // Read tensor data from RAM bridge
-                        if let Some((header, _rgba_data)) = bridge.read_frame() {
+                        if let Ok(Some((header, _rgba_data))) = bridge.read_frame() {
                             // Note: Current bridge sends RGBA8, but for true tensor viz
                             // we'd write the raw f32 data. For now, display RGBA8 directly.
                             
@@ -289,7 +226,7 @@ fn main() -> Result<()> {
                             // FPS reporting
                             let now = std::time::Instant::now();
                             if now.duration_since(last_fps_time).as_secs() >= 1 {
-                                current_fps = fps_counter as f32 / now.duration_since(last_fps_time).as_secs_f32();
+                                let _current_fps = fps_counter as f32 / now.duration_since(last_fps_time).as_secs_f32();
                                 fps_counter = 0;
                                 last_fps_time = now;
                                 
@@ -297,7 +234,7 @@ fn main() -> Result<()> {
                                 println!(
                                     "Frame {} | FPS: {:.1} | Latency: {:.2}ms | Range: [{:.3}, {:.3}] | Drops: {}",
                                     header.frame_number,
-                                    current_fps,
+                                    _current_fps,
                                     latency_us as f32 / 1000.0,
                                     header.tensor_min,
                                     header.tensor_max,

@@ -89,6 +89,7 @@ def shift_mpo_cached(n_qubits: int, direction: int) -> MPO:
         return shift_mpo(n_qubits, direction)
     else:
         # For multi-step shifts, compose shift MPOs
+        # L-011 NOTE: Inherently sequential - each composition depends on prior result
         base = shift_mpo(n_qubits, 1 if direction > 0 else -1)
         result = base
         for _ in range(abs(direction) - 1):
@@ -149,6 +150,7 @@ def _truncate_mpo(mpo: MPO, max_rank: int) -> MPO:
     n = len(cores)
     new_cores = list(cores)
     
+    # L-012/L-013 NOTE: SVD sweep is inherently sequential - each core depends on prior
     # Left-to-right SVD sweep
     for i in range(n - 1):
         core = new_cores[i]
@@ -157,8 +159,13 @@ def _truncate_mpo(mpo: MPO, max_rank: int) -> MPO:
         # Reshape to (r_l * d_o * d_i, r_r)
         mat = core.reshape(r_l * d_o * d_i, r_r)
         
-        # SVD
-        U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+        # rSVD - faster above 100x100
+        m, n = mat.shape
+        if min(m, n) > 100:
+            U, S, V = torch.svd_lowrank(mat, q=min(max_rank + 5, min(m, n)))
+            Vh = V.T
+        else:
+            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
         
         # Truncate
         rank = min(max_rank, len(S), (S > 1e-12).sum().item())
@@ -243,6 +250,7 @@ def _add_mpo(mpo1: MPO, mpo2: MPO, max_rank: int = 64) -> MPO:
     new_cores = []
     n = len(cores1)
     
+    # L-014 NOTE: Core-by-core addition inherently sequential for TT format
     for i in range(n):
         c1 = cores1[i]
         c2 = cores2[i]

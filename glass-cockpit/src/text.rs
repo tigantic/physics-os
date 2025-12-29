@@ -2,6 +2,10 @@
 // Bitmap font rendering for telemetry labels
 // Constitutional compliance: Doctrine 1 (procedural), Doctrine 8 (minimal memory)
 
+// Phase 2 scaffolding: CPU text rendering for telemetry overlay
+// Will be superseded by GPU text rendering in production
+
+#[allow(dead_code)]
 /// Simple 8x8 bitmap font for ASCII characters
 /// Each character is represented by 8 bytes (8 rows of 8 pixels)
 /// Bit 1 = pixel on, Bit 0 = pixel off
@@ -16,6 +20,8 @@ pub struct BitmapFont {
     pub char_height: u32,
 }
 
+// Phase 2 scaffolding: BitmapFont implementation for CPU text rendering
+#[allow(dead_code)]
 impl BitmapFont {
     /// Create a new bitmap font with embedded 8x8 glyphs
     pub fn new() -> Self {
@@ -29,7 +35,7 @@ impl BitmapFont {
     /// Get glyph data for a character
     pub fn get_glyph(&self, c: char) -> Option<&[u8; 8]> {
         let ascii = c as usize;
-        if ascii >= 32 && ascii <= 126 {
+        if (32..=126).contains(&ascii) {
             Some(&self.glyphs[ascii - 32])
         } else {
             None

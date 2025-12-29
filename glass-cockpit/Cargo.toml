@@ -57,6 +57,22 @@ path = "src/main.rs"
 name = "phase3"
 path = "src/main_phase3.rs"
 
+[[bin]]
+name = "phase4"
+path = "src/main_phase4.rs"
+
+[[bin]]
+name = "phase5"
+path = "src/main_phase5.rs"
+
+[[bin]]
+name = "phase6"
+path = "src/main_phase6.rs"
+
+[[bin]]
+name = "phase7"
+path = "src/main_phase7.rs"
+
 [profile.dev]
 opt-level = 1  # Minimal optimization for faster compile times
 

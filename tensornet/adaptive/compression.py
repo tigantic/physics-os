@@ -537,8 +537,13 @@ class TensorCrossInterpolation(CompressionStrategy):
         rank = min(target_rank, min(m, n))
         
         # Use leverage score sampling for column/row selection
-        # Start with SVD to get leverage scores
-        U_svd, S_svd, Vh_svd = torch.linalg.svd(tensor, full_matrices=False)
+        # S-001: rSVD for matrices above 100 (benchmarked crossover)
+        if min(m, n) > 100:
+            # Use svd_lowrank for O(mn·k) instead of O(mn·min(m,n))
+            U_svd, S_svd, Vh_svd = torch.svd_lowrank(tensor, q=min(rank + 10, min(m, n)))
+            Vh_svd = Vh_svd.T  # svd_lowrank returns V, not Vh
+        else:
+            U_svd, S_svd, Vh_svd = torch.linalg.svd(tensor, full_matrices=False)
         
         # Column leverage scores (from right singular vectors)
         col_leverage = torch.sum(Vh_svd[:rank, :] ** 2, dim=0)

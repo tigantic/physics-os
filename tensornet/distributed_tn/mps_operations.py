@@ -240,9 +240,14 @@ class DistributedMPS:
             A = partition.tensors[i]
             chi_left, d, chi_right = A.shape
             
-            # Reshape and SVD
+            # rSVD - faster above 100x100
             A_mat = A.reshape(chi_left * d, chi_right)
-            U, S, Vh = torch.linalg.svd(A_mat, full_matrices=False)
+            m, n = A_mat.shape
+            if min(m, n) > 100:
+                U, S, V = torch.svd_lowrank(A_mat, q=min(self.config.chi_max + 10, min(m, n)))
+                Vh = V.T
+            else:
+                U, S, Vh = torch.linalg.svd(A_mat, full_matrices=False)
             
             # Truncate
             chi_new = min(self.config.chi_max, len(S))

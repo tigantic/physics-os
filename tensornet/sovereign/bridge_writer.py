@@ -60,7 +60,8 @@ class TensorBridgeWriter:
         height: int = DEFAULT_HEIGHT,
         create: bool = True,
     ):
-        self.path = path
+        # Ensure path is a Path object
+        self.path = Path(path) if isinstance(path, str) else path
         self.width = width
         self.height = height
         self.channels = DEFAULT_CHANNELS
@@ -178,14 +179,25 @@ class TensorBridgeWriter:
         if rgba_data.dtype != torch.uint8:
             raise ValueError(f"Expected dtype uint8, got {rgba_data.dtype}")
         
-        # Transfer to CPU if needed (optimized via pinned memory if available)
+        # Handle CUDA vs CPU tensors
         if rgba_data.is_cuda:
+            # For CUDA tensors, must transfer to CPU
             rgba_cpu = rgba_data.cpu()
+        elif rgba_data.is_pinned():
+            # Pinned memory: use directly (already on CPU, DMA-accessible)
+            rgba_cpu = rgba_data
         else:
+            # Regular CPU tensor
             rgba_cpu = rgba_data
         
-        # Convert to numpy (zero-copy)
-        rgba_np = rgba_cpu.numpy()
+        # D-003 FIX: Use contiguous tensor storage directly
+        # Ensure contiguous memory layout for zero-copy access
+        if not rgba_cpu.is_contiguous():
+            rgba_cpu = rgba_cpu.contiguous()
+        
+        # Get raw bytes - use data_ptr for pinned memory, numpy for regular
+        # numpy().tobytes() is reliable for all tensor sizes
+        raw_bytes = rgba_cpu.numpy().tobytes()
         
         # Compute statistics if not provided
         if tensor_min is None:
@@ -207,9 +219,9 @@ class TensorBridgeWriter:
             tensor_std=tensor_std,
         )
         
-        # Write pixel data
+        # Write pixel data using storage bytes directly
         self.mmap.seek(HEADER_SIZE)
-        self.mmap.write(rgba_np.tobytes())
+        self.mmap.write(bytes(raw_bytes))
         
         # Ensure data is flushed (optional, for debugging)
         # self.mmap.flush()  # Usually not needed for /dev/shm
@@ -237,16 +249,19 @@ def test_bridge_write() -> None:
     
     print("Testing RAM Bridge Writer v2...")
     
-    # Create synthetic RGBA8 frame (gradient pattern)
+    # Create synthetic RGBA8 frame (gradient pattern) - VECTORIZED
     height, width = 1080, 1920
-    rgba = torch.zeros((height, width, 4), dtype=torch.uint8)
     
-    for y in range(height):
-        for x in range(width):
-            rgba[y, x, 0] = int((x / width) * 255)  # Red gradient
-            rgba[y, x, 1] = int((y / height) * 255)  # Green gradient
-            rgba[y, x, 2] = 128  # Blue constant
-            rgba[y, x, 3] = 255  # Alpha opaque
+    # L-001 FIX: Use meshgrid instead of nested Python loops
+    x = torch.arange(width, dtype=torch.float32)
+    y = torch.arange(height, dtype=torch.float32)
+    yy, xx = torch.meshgrid(y, x, indexing='ij')
+    
+    rgba = torch.zeros((height, width, 4), dtype=torch.uint8)
+    rgba[..., 0] = ((xx / width) * 255).byte()    # Red gradient
+    rgba[..., 1] = ((yy / height) * 255).byte()   # Green gradient
+    rgba[..., 2] = 128                             # Blue constant
+    rgba[..., 3] = 255                             # Alpha opaque
     
     # Write 60 frames (simulate 1 second at 60 FPS)
     with TensorBridgeWriter() as writer:

@@ -1,0 +1,111 @@
+DEPENDENCY_VERIFICATION.md Update Summary
+Date: 2025-12-28
+Revision: 2.0 (Aligned with Sovereign_UI.md)
+
+CHANGES IMPLEMENTED:
+===================
+
+1. Rust Dependencies (Section 3.2) - COMPLETE
+   ✅ Updated to match actual Cargo.toml (wgpu 0.19, winit 0.29)
+   ✅ Added all missing dependencies: glam, pollster, raw-window-handle
+   ✅ Documented shared_memory + memmap2 dual usage
+   ✅ Added platform-specific Windows/Linux deps
+   ✅ Documented optional features (tracy, tokio, logging)
+
+2. Doctrine 4.1 Compliance (Section 3.3) - NEW
+   ✅ Added conditional UI framework section
+   ✅ Documented egui/iced as Phase 1-2 scaffolding
+   ✅ E-core affinity verification steps
+
+3. Phase Status Updates (Section 4) - COMPLETE
+   ✅ Phase 3: ✅ Complete
+   ✅ Phase 4: ✅ Complete  
+   ✅ Phase 5.2: 🔨 Current Focus (NEW)
+   ✅ Added performance targets and verification commands
+
+4. Performance Monitoring (Section 5) - NEW SECTION
+   ✅ CPU profiling tools (py-spy, flamegraph, perf)
+   ✅ GPU profiling (nsys, ncu, tracy)
+   ✅ CPU affinity tools (taskset, ProcessorAffinity)
+   ✅ Network monitoring (nethogs, lsof, ss)
+   ✅ Frame time measurement techniques
+
+5. BLAS/LAPACK Resolution (Section 9.6) - RESOLVED
+   ✅ Decision: Defer to GPU compute shaders (Phase 6)
+   ✅ Rationale: Eliminates C/Fortran deps, respects Sovereignty
+   ✅ Fallback: ndarray-linalg if GPU insufficient
+
+6. Dependency Decision Log (Section 11) - NEW SECTION
+   ✅ shared_memory vs memmap2 → Use both
+   ✅ wgpu 0.19 version lock → Decided
+   ✅ BLAS/LAPACK → GPU compute shader
+   ✅ Tokio → Approved (minimal, optional)
+   ✅ Logging → Optional, disabled in release
+   ✅ Tracy profiler → Optional feature
+
+7. Compliance Matrix (Section 12) - NEW SECTION
+   ✅ Maps all 10 Sovereign_UI.md doctrines to implementation
+   ✅ Verification commands for each doctrine
+   ✅ Phase-by-phase compliance status
+
+8. Verification Script Improvements
+   ✅ Added GPU driver version check
+   ✅ Fixed Python 3.12 compatibility check
+   ✅ Better error handling (warnings vs failures)
+   ✅ Rust version validation (>= 1.75)
+   ✅ Updated success message with Phase 5.2
+
+ALIGNMENT WITH SOVEREIGN_UI.MD:
+================================
+
+✅ Doctrine 1: Computational Sovereignty - Documented E-core affinity
+✅ Doctrine 2: RAM Bridge Protocol - shared_memory crate documented
+✅ Doctrine 3: Procedural Rendering - No asset verification command
+✅ Doctrine 4: Template Prohibition - Approved stack documented
+✅ Doctrine 4.1: Pragmatic Bootstrap - egui/iced conditional approval
+✅ Doctrine 8: Performance Boundaries - Full monitoring toolchain
+✅ Appendix I.6: BLAS/LAPACK - Resolved (GPU compute shader)
+✅ Appendix I: Decision Points - 7 decisions documented
+
+GAPS ADDRESSED:
+===============
+
+✅ Missing Rust dependencies (glam, pollster, raw-window-handle)
+✅ Version mismatches (wgpu 0.18 → 0.19 documented)
+✅ Performance monitoring tools (entirely new section)
+✅ BLAS/LAPACK decision (deferred with rationale)
+✅ Doctrine 4.1 amendment (egui/iced conditional)
+✅ Phase status outdated (updated to Phase 5.2)
+✅ Decision log missing (7 decisions documented)
+
+VALIDATION STATUS:
+==================
+
+✅ Document structure: 1008 lines (was 656)
+✅ Verification script: Enhanced and tested
+✅ Cross-references: All Sovereign_UI.md sections linked
+✅ Constitutional compliance: Article II (minimal deps) respected
+✅ Phase accuracy: Reflects Phase 5.2 current state
+
+KNOWN ISSUES:
+=============
+
+⚠️ cmake missing on system (verification script notes)
+⚠️ Glass cockpit has compilation errors (need to investigate)
+⚠️ nvcc not found (acceptable - PyTorch works with runtime CUDA)
+
+RECOMMENDATIONS:
+================
+
+1. Install cmake: sudo apt install cmake
+2. Debug glass-cockpit compilation errors (separate task)
+3. Run Phase 5.2 benchmarks to validate performance tools
+4. Consider updating Rust to 1.92 (currently required 1.75+)
+
+VERIFICATION COMMAND:
+=====================
+
+bash verify_dependencies.sh
+
+Expected: "✓ ALL CHECKS PASSED" (with warnings acceptable)
+

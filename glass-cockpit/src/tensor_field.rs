@@ -2,8 +2,12 @@
 // QTT tensor representation and visualization data structures
 // Constitutional compliance: Doctrine 7 (QTT format), Doctrine 8 (compressed storage)
 
+// Phase 3-5 scaffolding: Tensor field data structures for QTT visualization
+// Will be integrated with tensor renderer and colormap pipelines
+
 use glam::{Vec3, Vec4};
 
+#[allow(dead_code)]
 /// Tensor field grid for atmospheric visualization
 #[derive(Debug, Clone)]
 pub struct TensorField {
@@ -28,6 +32,8 @@ pub struct Tensor3x3 {
     pub components: [f32; 6],
 }
 
+// Phase 3-5 scaffolding: Tensor3x3 operations for field visualization
+#[allow(dead_code)]
 impl Tensor3x3 {
     pub fn zero() -> Self {
         Self { components: [0.0; 6] }
@@ -67,13 +73,13 @@ impl Tensor3x3 {
         
         // 5 power iterations (sufficient for visualization)
         for _ in 0..5 {
-            let Ax = Vec3::new(
+            let ax = Vec3::new(
                 self.get(0, 0) * v.x + self.get(0, 1) * v.y + self.get(0, 2) * v.z,
                 self.get(1, 0) * v.x + self.get(1, 1) * v.y + self.get(1, 2) * v.z,
                 self.get(2, 0) * v.x + self.get(2, 1) * v.y + self.get(2, 2) * v.z,
             );
-            let norm = Ax.length();
-            v = if norm > 1e-6 { Ax / norm } else { Vec3::X };
+            let norm = ax.length();
+            v = if norm > 1e-6 { ax / norm } else { Vec3::X };
         }
         
         v
@@ -111,6 +117,8 @@ impl Default for VisualizationParams {
     }
 }
 
+// Phase 3-5 scaffolding: Tensor visualization color modes
+#[allow(dead_code)]
 /// Color mapping modes for tensor visualization
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ColorMode {
@@ -124,6 +132,8 @@ pub enum ColorMode {
     Heatmap,
 }
 
+// Phase 3-5 scaffolding: TensorField methods for QTT visualization integration
+#[allow(dead_code)]
 impl TensorField {
     /// Create empty tensor field with given dimensions
     pub fn new(width: u32, height: u32, depth: u32) -> Self {
@@ -246,6 +256,7 @@ impl TensorField {
     }
 }
 
+#[allow(dead_code)]
 /// Tensor field statistics for display
 #[derive(Debug, Clone, Copy)]
 pub struct FieldStatistics {

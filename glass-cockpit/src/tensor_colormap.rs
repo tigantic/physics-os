@@ -2,8 +2,12 @@
 // Converts raw tensor data to RGB using scientific colormaps
 // Constitutional compliance: Article II (type safety), Article V (performance)
 
+// Phase 3-5 scaffolding: Tensor visualization colormap pipeline
+// This module will be used when tensor field visualization is integrated
+
 use wgpu::util::DeviceExt;
 
+#[allow(dead_code)]
 /// Colormap variants
 #[repr(u32)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -15,6 +19,8 @@ pub enum ColormapType {
     Magma = 4,
 }
 
+// Phase 3-5 scaffolding: Colormap type methods for tensor visualization
+#[allow(dead_code)]
 impl ColormapType {
     /// Get colormap name for UI display
     pub fn name(&self) -> &'static str {
@@ -49,6 +55,7 @@ struct ColormapUniforms {
     _padding: u32,
 }
 
+#[allow(dead_code)]
 /// Tensor colormap GPU pipeline
 pub struct TensorColormap {
     pipeline: wgpu::ComputePipeline,
@@ -57,6 +64,8 @@ pub struct TensorColormap {
     current_colormap: ColormapType,
 }
 
+// Phase 3-5 scaffolding: TensorColormap implementation for tensor visualization
+#[allow(dead_code)]
 impl TensorColormap {
     /// Create new colormap pipeline
     pub fn new(device: &wgpu::Device) -> Self {
@@ -118,9 +127,7 @@ impl TensorColormap {
             label: Some("Tensor Colormap Pipeline"),
             layout: Some(&pipeline_layout),
             module: &shader,
-            entry_point: Some("colormap_main"),
-            compilation_options: Default::default(),
-            cache: None,
+            entry_point: "colormap_main",
         });
 
         // Create uniform buffer
@@ -187,8 +194,8 @@ impl TensorColormap {
 
         // Dispatch compute shader (8x8 workgroups)
         let workgroup_size = 8;
-        let workgroups_x = (width + workgroup_size - 1) / workgroup_size;
-        let workgroups_y = (height + workgroup_size - 1) / workgroup_size;
+        let workgroups_x = width.div_ceil(workgroup_size);
+        let workgroups_y = height.div_ceil(workgroup_size);
 
         let mut compute_pass = encoder.begin_compute_pass(&wgpu::ComputePassDescriptor {
             label: Some("Tensor Colormap Pass"),

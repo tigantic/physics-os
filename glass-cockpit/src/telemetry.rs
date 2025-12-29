@@ -48,6 +48,8 @@ impl FrameTiming {
             .fold(0.0, f32::max)
     }
     
+    // Phase 2 scaffolding: Additional telemetry statistics
+    #[allow(dead_code)]
     pub fn min_ms(&self) -> f32 {
         self.samples
             .iter()
@@ -65,6 +67,7 @@ impl FrameTiming {
         max / mean
     }
     
+    #[allow(dead_code)]
     pub fn variance(&self) -> f32 {
         if self.samples.len() < 2 {
             return 0.0;
@@ -79,6 +82,7 @@ impl FrameTiming {
         sum_squared_diff / (self.samples.len() - 1) as f32
     }
     
+    #[allow(dead_code)]
     pub fn fps(&self) -> f32 {
         let mean = self.mean_ms();
         if mean == 0.0 {

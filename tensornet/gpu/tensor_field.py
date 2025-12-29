@@ -178,7 +178,12 @@ class TensorField:
         self.data[:] = torch.sin(X) * torch.sin(Y) * torch.sin(Z)
     
     def to_numpy(self) -> np.ndarray:
-        """Transfer to CPU as numpy array (blocking operation)."""
+        """
+        Transfer to CPU as numpy array (blocking operation).
+        
+        D-007 NOTE: This is an export/debug interface, not critical path.
+        For GPU pipelines, use self.data directly.
+        """
         return self.data.cpu().numpy()
     
     def from_numpy(self, arr: np.ndarray):

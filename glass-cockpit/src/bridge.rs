@@ -24,12 +24,13 @@ pub struct Telemetry {
     pub p_core_utilization: f32,
     pub e_core_utilization: f32,
     pub memory_usage_gb: f32,
-    pub gpu_utilization: f32,
-    pub mean_frame_time_ms: f32,
-    pub max_frame_time_ms: f32,
-    pub stability_score: f32,
-    pub qtt_compression_ratio: f32,
-    pub mean_tensor_rank: f32,
+    // Phase 2 scaffolding: Telemetry overlay will display these metrics
+    pub _gpu_utilization: f32,
+    pub _mean_frame_time_ms: f32,
+    pub _max_frame_time_ms: f32,
+    pub stability_score: f32,  // Used by overlay.rs
+    pub _qtt_compression_ratio: f32,
+    pub _mean_tensor_rank: f32,
 }
 
 impl Default for Telemetry {
@@ -38,12 +39,12 @@ impl Default for Telemetry {
             p_core_utilization: 0.0,
             e_core_utilization: 0.0,
             memory_usage_gb: 0.0,
-            gpu_utilization: 0.0,
-            mean_frame_time_ms: 0.0,
-            max_frame_time_ms: 0.0,
+            _gpu_utilization: 0.0,
+            _mean_frame_time_ms: 0.0,
+            _max_frame_time_ms: 0.0,
             stability_score: 1.0,
-            qtt_compression_ratio: 1.0,
-            mean_tensor_rank: 0.0,
+            _qtt_compression_ratio: 1.0,
+            _mean_tensor_rank: 0.0,
         }
     }
 }
@@ -51,9 +52,10 @@ impl Default for Telemetry {
 /// RAM bridge reader
 pub struct SovereignBridge {
     mmap: Mmap,
-    grid_width: u32,
-    grid_height: u32,
-    grid_depth: u32,
+    // Phase 2-3 scaffolding: Grid dimensions for tensor field extraction
+    _grid_width: u32,
+    _grid_height: u32,
+    _grid_depth: u32,
 }
 
 impl SovereignBridge {
@@ -72,7 +74,7 @@ impl SovereignBridge {
         
         let file = OpenOptions::new()
             .read(true)
-            .open(&path)
+            .open(path)
             .context(format!("Failed to open RAM bridge at {}", path))?;
         
         let mmap = unsafe { 
@@ -101,9 +103,9 @@ impl SovereignBridge {
         
         Ok(Self {
             mmap,
-            grid_width,
-            grid_height,
-            grid_depth,
+            _grid_width: grid_width,
+            _grid_height: grid_height,
+            _grid_depth: grid_depth,
         })
     }
     
@@ -112,6 +114,8 @@ impl SovereignBridge {
         Self::read_u64(&self.mmap, 0x10)
     }
     
+    // Phase 2 scaffolding: RAM bridge access methods for telemetry overlay and tensor viz
+    #[allow(dead_code)]
     /// Read simulation time in seconds
     pub fn read_simulation_time(&self) -> f32 {
         Self::read_f32(&self.mmap, 0x20)
@@ -122,38 +126,41 @@ impl SovereignBridge {
         let offset = 256; // After header
         
         Telemetry {
-            p_core_utilization: Self::read_f32(&self.mmap, offset + 0x00),
+            p_core_utilization: Self::read_f32(&self.mmap, offset),
             e_core_utilization: Self::read_f32(&self.mmap, offset + 0x04),
             memory_usage_gb: Self::read_f32(&self.mmap, offset + 0x08),
-            gpu_utilization: Self::read_f32(&self.mmap, offset + 0x10),
-            mean_frame_time_ms: Self::read_f32(&self.mmap, offset + 0x20),
-            max_frame_time_ms: Self::read_f32(&self.mmap, offset + 0x24),
+            _gpu_utilization: Self::read_f32(&self.mmap, offset + 0x10),
+            _mean_frame_time_ms: Self::read_f32(&self.mmap, offset + 0x20),
+            _max_frame_time_ms: Self::read_f32(&self.mmap, offset + 0x24),
             stability_score: Self::read_f32(&self.mmap, offset + 0x2C),
-            qtt_compression_ratio: Self::read_f32(&self.mmap, offset + 0x48),
-            mean_tensor_rank: Self::read_f32(&self.mmap, offset + 0x4C),
+            _qtt_compression_ratio: Self::read_f32(&self.mmap, offset + 0x48),
+            _mean_tensor_rank: Self::read_f32(&self.mmap, offset + 0x4C),
         }
     }
     
+    #[allow(dead_code)]
     /// Get grid dimensions
     pub fn grid_dimensions(&self) -> (u32, u32, u32) {
-        (self.grid_width, self.grid_height, self.grid_depth)
+        (self._grid_width, self._grid_height, self._grid_depth)
     }
     
+    #[allow(dead_code)]
     /// Read tensor data as flat array
     pub fn read_tensor_data(&self) -> Vec<f32> {
         let offset = 512; // After header + telemetry
-        let count = (self.grid_width * self.grid_height * self.grid_depth) as usize;
+        let count = (self._grid_width * self._grid_height * self._grid_depth) as usize;
         
         (0..count)
             .map(|i| Self::read_f32(&self.mmap, offset + i * 4))
             .collect()
     }
     
+    #[allow(dead_code)]
     /// Read vector field data as flat array of (x, y, z) tuples
     pub fn read_vector_data(&self) -> Vec<(f32, f32, f32)> {
-        let tensor_size = (self.grid_width * self.grid_height * self.grid_depth * 4) as usize;
+        let tensor_size = (self._grid_width * self._grid_height * self._grid_depth * 4) as usize;
         let offset = 512 + tensor_size;
-        let count = (self.grid_width * self.grid_height * self.grid_depth) as usize;
+        let count = (self._grid_width * self._grid_height * self._grid_depth) as usize;
         
         (0..count)
             .map(|i| {

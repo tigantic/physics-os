@@ -288,9 +288,13 @@ def estimate_required_chi_2d(
     if not torch.isfinite(mat).all():
         return 1  # Conservative fallback
     
-    # SVD
+    # rSVD - faster above 100x100
     try:
-        U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+        m, n = mat.shape
+        if min(m, n) > 100:
+            U, S, V = torch.svd_lowrank(mat, q=min(100, min(m, n)))
+        else:
+            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
     except Exception:
         return 1  # Fallback on failure
     
@@ -325,8 +329,12 @@ def estimate_required_chi_3d(
     # Reshape to matrix (unfold along first spatial dimension)
     mat = uvw.reshape(3 * Nx, Ny * Nz)
     
-    # SVD
-    U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+    # rSVD - faster above 100x100
+    m, n = mat.shape
+    if min(m, n) > 100:
+        _, S, _ = torch.svd_lowrank(mat, q=min(100, min(m, n)))
+    else:
+        _, S, _ = torch.linalg.svd(mat, full_matrices=False)
     
     S_normalized = S / S[0]
     chi = (S_normalized > truncation_tol).sum().item()

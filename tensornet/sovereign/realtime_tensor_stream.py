@@ -173,9 +173,12 @@ class RealtimeTensorStream:
         rgba8[:, :, 2] = rgb_u8  # Blue
         rgba8[:, :, 3] = 255     # Alpha (opaque)
         
-        # Move to CPU and convert to numpy
-        rgba8_cpu = rgba8.cpu().numpy()
+        # D-004 FIX: Use contiguous storage instead of .numpy()
+        rgba8_cpu = rgba8.cpu()
+        if not rgba8_cpu.is_contiguous():
+            rgba8_cpu = rgba8_cpu.contiguous()
         
+        # Return tensor directly; caller uses .untyped_storage() for bytes
         return rgba8_cpu, stats
     
     def stream_synthetic(

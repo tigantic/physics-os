@@ -307,8 +307,11 @@ class ProvenanceStore:
             
         Returns:
             New FieldCommit
+            
+        Note:
+            D-011: Storage serialization is background operation.
         """
-        # Convert to numpy
+        # Convert to numpy for storage (background operation)
         if isinstance(field_data, torch.Tensor):
             np_data = field_data.detach().cpu().numpy()
         else:

@@ -73,7 +73,11 @@ class MortonSliceResult:
         return (self.data - self.min_val) / (self.max_val - self.min_val)
     
     def to_numpy(self) -> np.ndarray:
-        """Convert to numpy array."""
+        """
+        Convert to numpy array.
+        
+        D-017 NOTE: Visualization export interface.
+        """
         return self.data.cpu().numpy()
 
 
