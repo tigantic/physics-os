@@ -53,6 +53,10 @@ debug-logging = ["env_logger", "log"]
 name = "glass-cockpit"
 path = "src/main.rs"
 
+[[bin]]
+name = "phase3"
+path = "src/main_phase3.rs"
+
 [profile.dev]
 opt-level = 1  # Minimal optimization for faster compile times
 
