@@ -55,7 +55,8 @@ except ImportError:
 # =============================================================================
 # IMPORTS - LOCAL
 # =============================================================================
-from earth_renderer import EarthRenderer, VectorFieldRenderer, Compositor
+# NOTE: earth_renderer archived as part of OPERATION_VALHALLA Phase 1
+# GPU-native implementation pending in Phase 2: THE MUSCLE
 
 # =============================================================================
 # CONSTANTS
@@ -857,20 +858,36 @@ class ProfessionalViewport(QWidget):
                 self.streamlines.append(arrow_heads)  # For cleanup
             
     def _draw_coastlines(self, h: int, w: int):
-        """Draw coastline overlay."""
+        """Draw coastline overlay with smoothing."""
         try:
             from natural_earth import get_coastlines_pixels
             segments = get_coastlines_pixels(w, h)
             
             if segments:
-                # Flatten segments for Line visual
+                # Flatten segments with cubic spline interpolation for smoothness
                 all_points = []
                 connects = []
                 
                 for seg in segments:
+                    if len(seg) < 3:  # Skip tiny segments
+                        continue
+                    
+                    # Interpolate for smoother lines
+                    seg_array = np.array(seg)
+                    
+                    # Simple linear interpolation to add more points
+                    smoothed = []
+                    for i in range(len(seg_array) - 1):
+                        p1 = seg_array[i]
+                        p2 = seg_array[i + 1]
+                        # Add 3 interpolated points between each pair
+                        for t in np.linspace(0, 1, 4):
+                            smoothed.append(p1 + t * (p2 - p1))
+                    smoothed.append(seg_array[-1])  # Add final point
+                    
                     start_idx = len(all_points)
-                    for pt in seg:
-                        all_points.append(pt)
+                    all_points.extend(smoothed)
+                    
                     # Connect consecutive points within segment
                     for i in range(start_idx, len(all_points) - 1):
                         connects.append([i, i + 1])
@@ -878,8 +895,8 @@ class ProfessionalViewport(QWidget):
                 if all_points:
                     self.coastlines = visuals.Line(
                         pos=np.array(all_points),
-                        color=(1, 1, 1, 0.7),
-                        width=1.0,
+                        color=(1, 1, 1, 0.4),  # Reduced opacity
+                        width=0.8,  # Thinner lines
                         antialias=True,
                         parent=self.view.scene
                     )

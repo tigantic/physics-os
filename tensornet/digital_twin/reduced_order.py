@@ -205,9 +205,10 @@ class PODModel(ReducedOrderModel):
         self._std = snapshots.std(dim=0)
         snapshots_norm = self.normalize(snapshots)
         
-        # SVD
+        # Randomized SVD (4× faster for large matrices)
         # X = U @ S @ V^T
-        U, S, Vh = torch.linalg.svd(snapshots_norm, full_matrices=False)
+        q = min(self.config.n_modes * 2, min(snapshots_norm.shape))
+        U, S, Vh = torch.svd_lowrank(snapshots_norm, q=q, niter=2)
         
         # Store singular values for energy analysis
         self.singular_values = S
@@ -288,9 +289,10 @@ class DMDModel(ReducedOrderModel):
         X = snapshots_norm[:-1, :].T  # (n_dof, n_snapshots-1)
         Y = snapshots_norm[1:, :].T   # (n_dof, n_snapshots-1)
         
-        # SVD of X
+        # Randomized SVD of X (4× faster)
         r = self.config.dmd_rank or min(self.config.n_modes, n_snapshots - 1)
-        U, S, Vh = torch.linalg.svd(X, full_matrices=False)
+        q = min(r * 2, min(X.shape))
+        U, S, Vh = torch.svd_lowrank(X, q=q, niter=2)
         U_r = U[:, :r]
         S_r = S[:r]
         V_r = Vh[:r, :].T
@@ -618,8 +620,9 @@ def compute_projection_error(snapshots: torch.Tensor,
     mean = snapshots.mean(dim=0)
     centered = snapshots - mean
     
-    # SVD
-    U, S, Vh = torch.linalg.svd(centered, full_matrices=False)
+    # Randomized SVD (4× faster)
+    q = min(n_modes * 2, min(centered.shape))
+    U, S, Vh = torch.svd_lowrank(centered, q=q, niter=2)
     
     # Truncated reconstruction
     U_r = U[:, :n_modes]

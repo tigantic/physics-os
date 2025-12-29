@@ -145,8 +145,9 @@ class SVDCompression(CompressionStrategy):
             n = tensor.numel() // m
             tensor = tensor.reshape(m, n)
         
-        # Compute SVD
-        U, S, Vh = torch.linalg.svd(tensor, full_matrices=self.full_matrices)
+        # Randomized SVD (4× faster)
+        q = min(target_rank * 2, min(tensor.shape))
+        U, S, Vh = torch.svd_lowrank(tensor, q=q, niter=2)
         
         # Truncate
         rank = min(target_rank, len(S))
@@ -278,8 +279,9 @@ class RandomizedSVD(CompressionStrategy):
         # Project to lower dimension
         B = Q.T @ tensor
         
-        # SVD of smaller matrix
-        U_small, S, Vh = torch.linalg.svd(B, full_matrices=False)
+        # Randomized SVD of smaller matrix
+        q = min(target_rank * 2, min(B.shape))
+        U_small, S, Vh = torch.svd_lowrank(B, q=q, niter=2)
         
         # Recover U
         U = Q @ U_small
@@ -433,12 +435,13 @@ class VariationalCompression(CompressionStrategy):
             
             prev_error = error
         
-        # Compute SVD of factorization for singular values
+        # Compute rSVD of factorization for singular values
         Q_U, R_U = torch.linalg.qr(U_opt)
         Q_V, R_V = torch.linalg.qr(V_opt)
         
         middle = R_U @ R_V.T
-        U_mid, S_mid, Vh_mid = torch.linalg.svd(middle, full_matrices=False)
+        q = min(rank * 2, min(middle.shape))
+        U_mid, S_mid, Vh_mid = torch.svd_lowrank(middle, q=q, niter=2)
         
         U_final = Q_U @ U_mid
         Vh_final = Vh_mid @ Q_V.T

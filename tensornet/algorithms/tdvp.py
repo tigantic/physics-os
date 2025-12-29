@@ -286,9 +286,10 @@ def _two_site_tdvp_update(
     )
     theta_evolved = theta_evolved.reshape(theta_shape)
     
-    # SVD split: Θ[a,s1,s2,b] -> A[a,s1,m] · B[m,s2,b]
+    # Randomized SVD split: Θ[a,s1,s2,b] -> A[a,s1,m] · B[m,s2,b]
     theta_mat = theta_evolved.reshape(chi_L * d_i, d_j * chi_R)
-    U, S, Vh = torch.linalg.svd(theta_mat, full_matrices=False)
+    q = min(chi_max, min(theta_mat.shape))
+    U, S, Vh = torch.svd_lowrank(theta_mat, q=q, niter=1)
     
     # Truncate
     chi_new = min(chi_max, len(S), (S > tol * S[0]).sum().item())

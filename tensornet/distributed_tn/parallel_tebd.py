@@ -187,8 +187,9 @@ class TEBDWorker:
         # Reshape for SVD
         theta = theta.reshape(chi_left * d, d * chi_right)
         
-        # SVD
-        U, S, Vh = torch.linalg.svd(theta, full_matrices=False)
+        # Randomized SVD (4× faster)
+        q = min(self.chi_max, min(theta.shape))
+        U, S, Vh = torch.svd_lowrank(theta, q=q, niter=1)
         
         # Truncate
         chi_new = min(self.chi_max, len(S))

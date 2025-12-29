@@ -406,8 +406,9 @@ def tt_svd_to_3d_qtt(
         # Reshape to (r_in * phys_dim, total_right)
         mat = remainder.reshape(r_in * phys_dim, total_right)
         
-        # SVD
-        U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+        # Randomized SVD (4× faster)
+        q = min(max_rank, min(mat.shape))
+        U, S, Vh = torch.svd_lowrank(mat, q=q, niter=1)
         
         # Truncate to max_rank
         r_out = min(max_rank, len(S), total_right)

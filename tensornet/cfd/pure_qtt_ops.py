@@ -279,7 +279,8 @@ def _dense_matrix_to_mpo(mat: torch.Tensor, num_qubits: int, max_bond: int = 64)
             # Reshape to (r_left * 4, remaining)
             mat_2d = current.reshape(-1, current.shape[-1])
             
-            U, S, Vh = torch.linalg.svd(mat_2d, full_matrices=False)
+            q = min(max_bond, min(mat_2d.shape))
+            U, S, Vh = torch.svd_lowrank(mat_2d, q=q, niter=1)
             
             # Determine rank
             rank = min(len(S), max_bond)
@@ -518,7 +519,8 @@ def truncate_qtt(qtt: QTTState, max_bond: int = 64, tol: float = 1e-10) -> QTTSt
         mat = torch.clamp(mat, -1e6, 1e6)
         
         try:
-            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+            q = min(max_bond, min(mat.shape))
+            U, S, Vh = torch.svd_lowrank(mat, q=q, niter=1)
         except:
             # Fallback: keep as is
             continue
@@ -746,8 +748,9 @@ def dense_to_qtt(tensor: torch.Tensor, max_bond: int = 64) -> QTTState:
         mat = current.reshape(r_left * 2, remaining_size) if remaining_size > 0 else current.reshape(r_left * 2, 1)
         
         if i < n - 1:
-            # SVD
-            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+            # Randomized SVD
+            q = min(max_bond, min(mat.shape))
+            U, S, Vh = torch.svd_lowrank(mat, q=q, niter=1)
             
             # Truncate
             rank = min(len(S), max_bond, mat.shape[1])

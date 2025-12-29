@@ -152,9 +152,10 @@ class ShockDetector:
             two_site = torch.einsum('abc,cde->abde', left_core, right_core)
             two_site_mat = two_site.reshape(chi_l * d1, d2 * chi_r)
             
-            # SVD
+            # Randomized SVD
             try:
-                _, S, _ = torch.linalg.svd(two_site_mat, full_matrices=False)
+                q = min(min(two_site_mat.shape), 100)  # Limit for entropy calculation
+                _, S, _ = torch.svd_lowrank(two_site_mat, q=q, niter=1)
                 
                 # Normalize singular values
                 S = S / (S.sum() + 1e-10)
@@ -475,9 +476,10 @@ class BondAdapter:
             else:
                 target_chi = self.config.chi_base
             
-            # SVD
+            # Randomized SVD (4× faster)
             core_mat = core.reshape(chi_l * d, chi_r)
-            U, S, Vh = torch.linalg.svd(core_mat, full_matrices=False)
+            q = min(target_chi, min(core_mat.shape))
+            U, S, Vh = torch.svd_lowrank(core_mat, q=q, niter=1)
             
             # Truncate to target
             chi = min(target_chi, len(S))

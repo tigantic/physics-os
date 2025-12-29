@@ -142,17 +142,20 @@ def dense_to_qtt_2d(
     assert 2**nx == Nx, f"Nx={Nx} must be power of 2"
     assert 2**ny == Ny, f"Ny={Ny} must be power of 2"
     
-    # Reorder to Morton (Z-curve) layout
+    # Reorder to Morton (Z-curve) layout - VECTORIZED
     N_total = Nx * Ny
     n_bits = max(nx, ny)
     
-    # Build Morton-ordered 1D array
-    morton_field = torch.zeros(N_total, dtype=field.dtype, device=field.device)
+    # Create coordinate grids (vectorized)
+    x_coords = torch.arange(Nx, device=field.device).unsqueeze(1).expand(Nx, Ny)
+    y_coords = torch.arange(Ny, device=field.device).unsqueeze(0).expand(Nx, Ny)
     
-    for ix in range(Nx):
-        for iy in range(Ny):
-            z = morton_encode(ix, iy, n_bits)
-            morton_field[z] = field[ix, iy]
+    # Vectorized Morton encoding
+    morton_indices = morton_encode_batch(x_coords.flatten(), y_coords.flatten(), n_bits)
+    
+    # Reorder field values according to Morton indices
+    morton_field = torch.zeros(N_total, dtype=field.dtype, device=field.device)
+    morton_field[morton_indices] = field.flatten()
     
     # Compress 1D Morton array to QTT
     qtt_1d = dense_to_qtt(morton_field, max_bond=max_bond)
