@@ -1,0 +1,78 @@
+[package]
+name = "hypertensor-glass-cockpit"
+version = "0.1.0"
+edition = "2021"
+authors = ["TiganticLabz <dev@tigantic.com>"]
+description = "Sovereign observation layer for HyperTensor atmospheric intelligence"
+license = "MIT"
+rust-version = "1.75"
+
+[dependencies]
+# Graphics Pipeline
+wgpu = "0.19"
+winit = "0.29"
+raw-window-handle = "0.6"
+pollster = "0.3"
+
+# Math and Linear Algebra
+glam = { version = "0.25", features = ["bytemuck"] }
+bytemuck = { version = "1.14", features = ["derive"] }
+
+# Shared Memory IPC
+shared_memory = "0.12"
+memmap2 = "0.9"
+
+# Serialization and Validation
+crc = "3.0"
+
+# Performance and Profiling
+tracy-client = { version = "0.17", optional = true }
+
+# Async Runtime (minimal, for tile fetching only)
+tokio = { version = "1.35", features = ["rt", "sync"], optional = true }
+reqwest = { version = "0.11", optional = true }
+
+# Error Handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Logging (only during development)
+env_logger = { version = "0.11", optional = true }
+log = { version = "0.4", optional = true }
+
+[dev-dependencies]
+criterion = "0.5"
+
+[features]
+default = []
+profiling = ["tracy-client"]
+satellite-tiles = ["tokio", "reqwest"]
+debug-logging = ["env_logger", "log"]
+
+[[bin]]
+name = "glass-cockpit"
+path = "src/main.rs"
+
+[profile.dev]
+opt-level = 1  # Minimal optimization for faster compile times
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = true
+
+[profile.bench]
+inherits = "release"
+
+# Affinity enforcement - Windows-specific
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.52", features = [
+    "Win32_Foundation",
+    "Win32_System_Threading",
+    "Win32_System_SystemInformation",
+] }
+
+# WSL shared memory access - Linux-specific  
+[target.'cfg(target_os = "linux")'.dependencies]
+nix = { version = "0.27", features = ["mman"] }

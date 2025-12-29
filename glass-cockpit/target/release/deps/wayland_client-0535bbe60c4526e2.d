@@ -1,0 +1,10 @@
+/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/glass-cockpit/target/release/deps/wayland_client-0535bbe60c4526e2.d: /home/brad/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-client-0.31.11/src/lib.rs /home/brad/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-client-0.31.11/src/conn.rs /home/brad/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-client-0.31.11/src/event_queue.rs /home/brad/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-client-0.31.11/src/globals.rs
+
+/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/glass-cockpit/target/release/deps/libwayland_client-0535bbe60c4526e2.rlib: /home/brad/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-client-0.31.11/src/lib.rs /home/brad/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-client-0.31.11/src/conn.rs /home/brad/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-client-0.31.11/src/event_queue.rs /home/brad/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-client-0.31.11/src/globals.rs
+
+/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/glass-cockpit/target/release/deps/libwayland_client-0535bbe60c4526e2.rmeta: /home/brad/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-client-0.31.11/src/lib.rs /home/brad/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-client-0.31.11/src/conn.rs /home/brad/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-client-0.31.11/src/event_queue.rs /home/brad/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-client-0.31.11/src/globals.rs
+
+/home/brad/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-client-0.31.11/src/lib.rs:
+/home/brad/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-client-0.31.11/src/conn.rs:
+/home/brad/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-client-0.31.11/src/event_queue.rs:
+/home/brad/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-client-0.31.11/src/globals.rs:
