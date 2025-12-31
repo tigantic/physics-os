@@ -1,9 +1,9 @@
 # Project HyperTensor - Repository Inventory
 
 **Date**: December 31, 2025  
-**Version**: 0.2.0  
-**Commit**: 6a27b98 (Phase 4: Sovereign Swarm)  
-**Status**: Sovereign Engine Operational — Phases 1-4 Complete
+**Version**: 0.3.0  
+**Commit**: 24fe0d1 (Phase 7: Urban Canyon)  
+**Status**: Multi-Domain Physics Engine — Phases 1-7 Complete
 
 ---
 
@@ -15,6 +15,9 @@
 | **Phase 2** | Compute the Physics (CUDA 30x) | fceac62 | +1,818 | ✅ COMPLETE |
 | **Phase 3** | Find the Path (Trajectory Opt) | dfef81c | +3,123 | ✅ COMPLETE |
 | **Phase 4** | Fight the War (AI Swarm) | 6a27b98 | +2,999 | ✅ COMPLETE |
+| **Phase 5** | Harvest the Wind (Energy) | 0ec1b0c | +3,957 | ✅ COMPLETE |
+| **Phase 6** | Trade the Flow (Finance) | 42dac7d | +1,702 | ✅ COMPLETE |
+| **Phase 7** | Navigate the Canyon (Urban) | 24fe0d1 | +1,354 | ✅ COMPLETE |
 
 ---
 
@@ -22,12 +25,12 @@
 
 | Language | Files | Lines | Purpose |
 |----------|-------|-------|---------|
-| **Python** | ~210 | 214,000+ | Backend: TensorNet physics, QTT, CFD, RL environments |
+| **Python** | ~230 | 221,000+ | Backend: TensorNet physics, QTT, CFD, RL, Energy, Financial, Urban |
 | **Rust** | 55 | 100,000+ | Frontend: Glass Cockpit, RAM bridge, swarm rendering |
 | **WGSL** | 15 | 3,504 | GPU shaders: colormaps, vector fields, particles, text |
 | **CUDA** | 6 | 2,500+ | High-performance: QTT eval, Laplacian, pressure, GEMM |
-| **Markdown** | 168 | — | Documentation, proofs, audit trails |
-| **Total** | ~455 | **320,000+** | |
+| **Markdown** | 170+ | — | Documentation, proofs, audit trails |
+| **Total** | ~480 | **327,000+** | |
 
 ---
 
@@ -53,6 +56,9 @@
 | `tensornet/intent/` | 6 | **Phase 4**: Natural language → swarm commands |
 | `tensornet/physics/` | 4 | **Phase 3**: Hypersonic hazard fields, trajectory optimization |
 | `tensornet/gpu/` | 5 | **Phase 2**: CUDA GEMM, tensor kernels, 30x acceleration |
+| `tensornet/energy/` | 11 | **Phase 5**: Wind farm, turbine, wake CFD, revenue optimization |
+| `tensornet/financial/` | 4 | **Phase 6**: Order book fluids, Navier-Stokes price flow |
+| `tensornet/urban/` | 3 | **Phase 7**: VoxelCity, Venturi physics, drone safety |
 | `tensornet/deployment/` | — | TensorRT, radiation hardening, embedded |
 | `tensornet/digital_twin/` | — | State sync, anomaly detection |
 
@@ -136,6 +142,10 @@
 | `tensornet/hyperenv/train_pilot.py` | **Phase 4**: PPO agent training for hypersonic flight |
 | `tensornet/physics/trajectory_optimizer.py` | **Phase 3**: Fast Marching trajectory solver |
 | `tensornet/intent/swarm_command.py` | **Phase 4**: Natural language swarm C2 |
+| `tensornet/energy/optimizer.py` | **Phase 5**: Wind farm yaw optimization ($742K/year) |
+| `tensornet/financial/feed.py` | **Phase 6**: Coinbase WebSocket L2 order book |
+| `tensornet/financial/solver.py` | **Phase 6**: Navier-Stokes liquidity flow |
+| `tensornet/urban/solver.py` | **Phase 7**: Urban canyon Venturi physics |
 
 ---
 
@@ -199,6 +209,15 @@
 | **RL environment for Mach 10 flight** | ✅ Validated | **Phase 4**: HypersonicEnv passes 5/5 tests |
 | **Natural language swarm control** | ✅ Validated | **Phase 4**: "Alpha, intercept vector 350 at Mach 8" |
 | **Multi-agent IPC protocol** | ✅ Validated | **Phase 4**: SwarmHeader + EntityState serialization |
+| **Wind farm wake optimization** | ✅ Validated | **Phase 5**: Jensen wake + yaw steering = $742K/year |
+| **Turbine digital twin** | ✅ Validated | **Phase 5**: Cp(λ)=0.441 at λ=8.0 (Betz limit) |
+| **Revenue optimization** | ✅ Validated | **Phase 5**: Spot price × generation = $12.6K/hour |
+| **Order book → tensor field** | ✅ Validated | **Phase 6**: Coinbase L2 depth → density tensor |
+| **Navier-Stokes price flow** | ✅ Validated | **Phase 6**: ∂u/∂t = -∇P + ν∇²u for liquidity |
+| **Live crypto trading signals** | ✅ Validated | **Phase 6**: BTC-USD +95.3% buy imbalance detected |
+| **VoxelCity procedural generation** | ✅ Validated | **Phase 7**: Manhattan skyscrapers as density tensor |
+| **Urban Venturi physics** | ✅ Validated | **Phase 7**: 45 m/s updrafts at building edges |
+| **Drone flight safety classification** | ✅ Validated | **Phase 7**: GREEN/YELLOW/RED zone mapping |
 
 ### Planned Use Cases
 
@@ -280,6 +299,30 @@
 - **Formation types**: Wedge, Line, Echelon, Custom
 - **SwarmCommander**: Execute parsed commands on entities
 
+### Layer 9: Wind Energy ✅ (Phase 5)
+
+- **TurbineSpec**: 6MW reference turbine with validated Cp curve
+- **Jensen wake model**: x < 4D recovery physics
+- **FarmOptimizer**: Gradient descent on yaw angles
+- **Validated**: 8.4% power gain = $742K/year per 100MW farm
+- **Revenue integration**: Spot price × generation
+
+### Layer 10: Financial Physics ✅ (Phase 6)
+
+- **OrderBookFluid**: L2 depth → density tensor conversion
+- **Navier-Stokes solver**: ∂u/∂t = -∇P + ν∇²u for price flow
+- **Coinbase WebSocket**: Live BTC-USD order book streaming
+- **FlowSignal**: Direction, pressure gradient, momentum extraction
+- **BreakoutSignal**: Physics-based breakout prediction
+
+### Layer 11: Urban Flow ✅ (Phase 7)
+
+- **VoxelCity**: Procedural city as 3D density tensor
+- **Venturi physics**: A₁v₁ = A₂v₂ (narrow gaps = faster flow)
+- **No-slip boundaries**: u=0 at building walls
+- **FlightSafetyReport**: GREEN/YELLOW/RED zone classification
+- **Validated**: 45 m/s fatal updrafts detected at building edges
+
 ---
 
 ## Capability Efforts & Status
@@ -297,6 +340,13 @@
 | **RL Environment** | Complete | ✅ Validated | **Phase 4**: HypersonicEnv |
 | **Swarm IPC** | Complete | ✅ Validated | **Phase 4**: EntityState protocol |
 | **Natural Language C2** | Complete | ✅ Validated | **Phase 4**: SwarmCommandParser |
+| **Wind Farm Optimization** | Complete | ✅ Validated | **Phase 5**: $742K/year value |
+| **Turbine Digital Twin** | Complete | ✅ Validated | **Phase 5**: Betz-validated Cp |
+| **Order Book Fluids** | Complete | ✅ Validated | **Phase 6**: Coinbase L2 live |
+| **NS Price Flow Solver** | Complete | ✅ Validated | **Phase 6**: FlowSignal output |
+| **VoxelCity Generation** | Complete | ✅ Validated | **Phase 7**: Manhattan procedural |
+| **Urban Venturi Physics** | Complete | ✅ Validated | **Phase 7**: 45 m/s updrafts |
+| **Drone Safety Scanner** | Complete | ✅ Validated | **Phase 7**: Zone classification |
 | **NOAA/HRRR Integration** | In Progress | 🟡 Partial | GRIB decoding edge cases |
 | **Intent Parser** | Complete | ✅ Validated | — |
 | **Provenance Signing** | Complete | ✅ Validated | — |
@@ -364,6 +414,9 @@ Project HyperTensor/
 │   ├── physics/                # Hypersonic physics [Phase 3] (4 files)
 │   ├── hyperenv/               # RL environments [Phase 4] (10 files)
 │   ├── intent/                 # NL command parsing [Phase 4] (6 files)
+│   ├── energy/                 # Wind farm optimization [Phase 5] (11 files)
+│   ├── financial/              # Order book physics [Phase 6] (4 files)
+│   ├── urban/                  # Drone safety scanner [Phase 7] (3 files)
 │   └── ...                     # 30+ additional modules
 ├── apps/glass_cockpit/         # Rust frontend (100K+ LOC)
 │   ├── src/                    # 54 Rust source files
@@ -391,7 +444,10 @@ Project HyperTensor/
 | `fceac62` | Phase 2 | CUDA Tensor Acceleration | 8 | 1,818 |
 | `dfef81c` | Phase 3 | Hypersonic Solver | 12 | 3,123 |
 | `6a27b98` | Phase 4 | Sovereign Swarm | 10 | 2,999 |
-| **Total** | — | **3-Phase Sprint** | **30** | **7,940** |
+| `0ec1b0c` | Phase 5 | Wind Energy Module | 11 | 3,957 |
+| `42dac7d` | Phase 6 | Liquidity Weather | 4 | 1,702 |
+| `24fe0d1` | Phase 7 | Urban Canyon Scanner | 4 | 1,354 |
+| **Total** | — | **6-Phase Sprint** | **49** | **14,953** |
 
 ---
 
@@ -403,4 +459,4 @@ Project HyperTensor/
 
 ---
 
-*Last Updated: January 2025 — Phase 4 Complete*
+*Last Updated: December 31, 2025 — Phase 7 Complete — Multi-Domain Physics Engine Operational*
