@@ -579,9 +579,10 @@ Project HyperTensor/
 
 ## Contact
 
-**Organization**: TiganticLabz  
-**Email**: dev@tigantic.com  
-**License**: MIT
+**Owner**: Bradly Biron Baker Adams  
+**Organization**: Tigantic Holdings LLC  
+**Email**: legal@tigantic.com  
+**License**: **PROPRIETARY** — All Rights Reserved
 
 ---
 
