@@ -1,0 +1,51 @@
+[package]
+name = "global_eye"
+version = "0.1.0"
+edition = "2021"
+authors = ["TiganticLabz <dev@tigantic.com>"]
+description = "Global weather observation platform - HyperTensor satellite intelligence"
+license = "MIT"
+rust-version = "1.75"
+
+[dependencies]
+# ─────────────────────────────────────────────────────────────────────────────
+# Workspace Crates (shared physics + IPC)
+# ─────────────────────────────────────────────────────────────────────────────
+hyper_bridge = { path = "../../crates/hyper_bridge" }
+hyper_core = { path = "../../crates/hyper_core" }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Graphics Pipeline
+# ─────────────────────────────────────────────────────────────────────────────
+wgpu.workspace = true
+winit.workspace = true
+glam.workspace = true
+raw-window-handle = "0.6"
+pollster = "0.3"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Shared (inherited from workspace)
+# ─────────────────────────────────────────────────────────────────────────────
+bytemuck.workspace = true
+memmap2.workspace = true
+shared_memory.workspace = true
+crc.workspace = true
+tokio.workspace = true
+thiserror.workspace = true
+anyhow.workspace = true
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Weather Data APIs
+# ─────────────────────────────────────────────────────────────────────────────
+reqwest = { version = "0.11", features = ["rustls-tls", "json"], default-features = false }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+chrono = { version = "0.4", features = ["serde"] }
+
+[features]
+default = []
+profiling = []
+
+[[bin]]
+name = "global-eye"
+path = "src/main.rs"

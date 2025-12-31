@@ -1,0 +1,21 @@
+[package]
+name = "hyper_core"
+version = "0.1.0"
+edition = "2021"
+authors = ["TiganticLabz <dev@tigantic.com>"]
+description = "HyperTensor physics engine core: QTT, MPO, CFD operators"
+license = "MIT"
+rust-version = "1.75"
+
+[dependencies]
+# Math and Linear Algebra  
+bytemuck.workspace = true
+
+# Error Handling
+thiserror.workspace = true
+
+[dev-dependencies]
+criterion = "0.5"
+
+[features]
+default = []

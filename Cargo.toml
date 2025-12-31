@@ -1,0 +1,66 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+#                         HYPERTENSOR WORKSPACE
+#                    Tensor-Compressed Physics at Scale
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# Architecture:
+#   crates/hyper_core     - Physics engine core (QTT, MPO, CFD operators)
+#   crates/hyper_bridge   - RAM bridge IPC protocol (Python ↔ Rust streaming)
+#   apps/glass_cockpit    - Fighter jet cockpit visualization
+#   apps/global_eye       - Global weather observation platform
+#
+# Build: cargo build --workspace --release
+# Test:  cargo test --workspace
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[workspace]
+members = [
+    "crates/hyper_core",
+    "crates/hyper_bridge",
+    "apps/glass_cockpit",
+    "apps/global_eye",
+]
+resolver = "2"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Workspace-wide dependencies (inherited by members)
+# ─────────────────────────────────────────────────────────────────────────────
+[workspace.dependencies]
+# Shared Memory IPC
+memmap2 = "0.9"
+shared_memory = "0.12"
+
+# Serialization
+bytemuck = { version = "1.14", features = ["derive"] }
+crc = "3.0"
+
+# Error Handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Async Runtime
+tokio = { version = "1.35", features = ["rt-multi-thread", "sync", "time", "fs"] }
+
+# Graphics (apps only)
+wgpu = "0.19"
+winit = "0.29"
+glam = { version = "0.25", features = ["bytemuck"] }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Release Profile: Maximum Performance
+# ─────────────────────────────────────────────────────────────────────────────
+[profile.release]
+lto = "thin"
+opt-level = 3
+codegen-units = 1
+strip = true
+
+[profile.release-fat]
+inherits = "release"
+lto = "fat"
+
+[profile.dev]
+opt-level = 1  # Faster compile, reasonable debug perf
+
+[profile.bench]
+inherits = "release"

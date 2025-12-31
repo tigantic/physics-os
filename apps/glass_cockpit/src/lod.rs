@@ -426,7 +426,10 @@ mod tests {
 
     #[test]
     fn test_instance_budget() {
-        let mut budget = InstanceBudget::default();
+        let mut budget = InstanceBudget {
+            max_particles: 10_000, // Set explicit max for test
+            ..InstanceBudget::default()
+        };
         
         // Request within budget
         let granted = budget.allocate_particles(5000);
