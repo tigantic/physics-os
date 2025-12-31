@@ -116,11 +116,13 @@ impl TelemetryOverlay {
     /// Create a new telemetry overlay
     pub fn new() -> Self {
         // Attempt to connect to RAM bridge (graceful fallback if unavailable)
-        let bridge = SovereignBridge::connect("/dev/shm/sovereign_bridge")
-            .inspect_err(|e| {
+        let bridge = match SovereignBridge::connect("/dev/shm/sovereign_bridge") {
+            Ok(b) => Some(b),
+            Err(e) => {
                 eprintln!("[Telemetry] RAM bridge not available: {} - using simulated data", e);
-            })
-            .ok();
+                None
+            }
+        };
         
         let simulated = bridge.is_none();
         if !simulated {

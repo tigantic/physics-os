@@ -88,7 +88,7 @@ class Compositor:
             rgba = colormap(normalized)
             rgba[:, :, 3] = alpha
             return rgba.astype(np.float32)
-        except:
+        except (ImportError, ValueError, RuntimeError):
             # Fallback: return grayscale with alpha
             h, w = data.shape
             result = np.zeros((h, w, 4), dtype=np.float32)

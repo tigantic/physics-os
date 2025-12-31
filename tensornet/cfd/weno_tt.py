@@ -156,7 +156,8 @@ def smoothness_from_cores(
         Scalar smoothness indicator at this site
     """
     n = len(cores)
-    assert 2 <= site < n - 2, f"Site {site} out of bounds for stencil"
+    if not (2 <= site < n - 2):
+        raise ValueError(f"Site {site} out of bounds for stencil (valid range: [2, {n-3}])")
     
     # Extract local values by contracting cores
     # For a properly orthonormalized MPS, this gives the local amplitude

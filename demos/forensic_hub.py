@@ -614,7 +614,7 @@ class AnomalyDetector:
                     
                     local_ranks.append(eff_rank)
                     positions.append((i + ws//2, j + ws//2))
-                except:
+                except (np.linalg.LinAlgError, ValueError):
                     continue
         
         if not local_ranks:
@@ -1241,7 +1241,7 @@ class ForensicHub(QMainWindow):
                             self.viewport.zoom_to_anomaly(a, slice_data.shape, level=level)
                             self._log(f"Zoomed to anomaly {anomaly_id} at level {level}", "success")
                         break
-            except:
+            except (ValueError, IndexError):
                 self._log("Usage: zoom anomaly <id> level <N>", "error")
                 
         elif text == 'toggle ghosting':

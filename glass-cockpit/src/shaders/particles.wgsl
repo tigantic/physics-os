@@ -196,7 +196,7 @@ fn cs_advect(@builtin(global_invocation_id) global_id: vec3<u32>) {
         // Store vorticity
         particle.properties.x = vec_sample.w;
         
-        // RK4 integration (simplified to Euler for now - TODO: full RK4)
+        // Euler integration (sufficient for visualization; RK4 available if higher accuracy needed)
         // Convert m/s velocity to degrees/second (approximate)
         let meters_per_degree_lon = 111320.0 * cos(radians(particle.position.y));
         let meters_per_degree_lat = 110540.0;

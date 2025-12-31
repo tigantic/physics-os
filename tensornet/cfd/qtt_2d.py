@@ -156,8 +156,10 @@ def dense_to_qtt_2d(
     nx = int(torch.log2(torch.tensor(Nx)).item())
     ny = int(torch.log2(torch.tensor(Ny)).item())
     
-    assert 2**nx == Nx, f"Nx={Nx} must be power of 2"
-    assert 2**ny == Ny, f"Ny={Ny} must be power of 2"
+    if 2**nx != Nx:
+        raise ValueError(f"Nx={Nx} must be power of 2")
+    if 2**ny != Ny:
+        raise ValueError(f"Ny={Ny} must be power of 2")
     
     # Reorder to Morton (Z-curve) layout - VECTORIZED
     N_total = Nx * Ny

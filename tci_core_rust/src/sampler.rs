@@ -11,14 +11,12 @@
 //!
 //! CRITICAL: Batch size must be >= 10,000 for GPU efficiency.
 
-use ndarray::{Array1, Array2};
 use pyo3::prelude::*;
 use rand::prelude::*;
 use rand::distributions::Uniform;
 use rustc_hash::FxHashSet;
 
-use crate::types::TCIConfig;
-use crate::indices::{IndexBatch, BoundaryCondition, index_to_qtt, qtt_to_index};
+use crate::indices::{IndexBatch, BoundaryCondition};
 
 /// Sampling strategy enum
 #[pyclass]
@@ -38,6 +36,7 @@ pub enum SamplingStrategy {
 #[pyclass]
 pub struct TCISampler {
     /// Number of qubits (domain size = 2^n_qubits)
+    #[allow(dead_code)]
     n_qubits: usize,
     
     /// Domain size
@@ -199,7 +198,7 @@ impl TCISampler {
             }
             
             // Add neighbors (shock fronts often need neighbor refinement)
-            let bc = BoundaryCondition::from_str(&self.boundary);
+            let bc = BoundaryCondition::parse(&self.boundary);
             let (left, right) = crate::indices::compute_neighbors(&[*idx], self.domain_size, bc);
             
             if !self.sampled_set.contains(&left[0]) {

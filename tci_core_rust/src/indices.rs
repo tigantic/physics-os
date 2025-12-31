@@ -27,7 +27,7 @@ pub enum BoundaryCondition {
 }
 
 impl BoundaryCondition {
-    pub fn from_str(s: &str) -> Self {
+    pub fn parse(s: &str) -> Self {
         match s.to_lowercase().as_str() {
             "periodic" => BoundaryCondition::Periodic,
             "zero_gradient" | "neumann" => BoundaryCondition::ZeroGradient,
@@ -64,7 +64,7 @@ pub struct IndexBatch {
 impl IndexBatch {
     #[new]
     pub fn new(indices: Vec<u64>, domain_size: u64, boundary: &str) -> Self {
-        let bc = BoundaryCondition::from_str(boundary);
+        let bc = BoundaryCondition::parse(boundary);
         let (left, right) = compute_neighbors(&indices, domain_size, bc);
         
         // Convert to i64 for numpy/torch compatibility
@@ -226,7 +226,7 @@ pub fn qtt_to_index(bits: &[u8]) -> u64 {
 pub fn generate_fiber_indices(
     base_index: u64,
     qubit_position: usize,
-    n_qubits: usize,
+    _n_qubits: usize,
 ) -> (u64, u64) {
     // Mask to clear bit at qubit_position
     let mask = !(1u64 << qubit_position);

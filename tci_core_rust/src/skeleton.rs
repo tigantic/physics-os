@@ -9,11 +9,10 @@
 //!
 //! For QTT-TCI, we build skeletons at each qubit level.
 
-use ndarray::{Array1, Array2, ArrayView2, Axis, s};
+use ndarray::{Array1, Array2};
 use nalgebra::{DMatrix, SVD};
-use pyo3::prelude::*;
 
-use crate::maxvol::{maxvol, regularized_pinv, select_rows, MaxVolResult};
+use crate::maxvol::{maxvol, regularized_pinv};
 use crate::types::{MaxVolConfig, TCIError, TruncationPolicy};
 
 /// Skeleton decomposition result
@@ -312,14 +311,13 @@ impl QTTCore {
     }
     
     /// Contract with left vector
-    pub fn contract_left(&self, left: &Array1<f64>, phys_idx: usize) -> Array1<f64> {
+    pub fn contract_left(&self, _left: &Array1<f64>, _phys_idx: usize) -> Array1<f64> {
         // Simplified contraction
         let r_right = self.data.ncols();
-        let mut result = Array1::zeros(r_right);
         
         // This is a placeholder - real implementation depends on
         // how we reshape the skeleton into 3-tensor form
-        result
+        Array1::zeros(r_right)
     }
 }
 

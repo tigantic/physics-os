@@ -151,6 +151,7 @@ impl TensorColormap {
     }
 
     /// Apply colormap to tensor texture
+    #[allow(clippy::too_many_arguments)]  // wgpu operations require these parameters
     pub fn apply(
         &mut self,
         encoder: &mut wgpu::CommandEncoder,

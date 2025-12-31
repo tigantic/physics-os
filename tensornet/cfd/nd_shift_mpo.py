@@ -91,12 +91,13 @@ def make_nd_shift_mpo(
     if device is None:
         device = torch.device('cpu')
     
-    assert num_qubits_total % num_dims == 0, \
-        f"num_qubits_total ({num_qubits_total}) must be divisible by num_dims ({num_dims})"
-    assert 0 <= axis_idx < num_dims, \
-        f"axis_idx ({axis_idx}) must be in [0, {num_dims})"
-    assert direction in [+1, -1], \
-        f"direction must be +1 or -1, got {direction}"
+    if num_qubits_total % num_dims != 0:
+        raise ValueError(
+            f"num_qubits_total ({num_qubits_total}) must be divisible by num_dims ({num_dims})")
+    if not (0 <= axis_idx < num_dims):
+        raise ValueError(f"axis_idx ({axis_idx}) must be in [0, {num_dims})")
+    if direction not in [+1, -1]:
+        raise ValueError(f"direction must be +1 or -1, got {direction}")
     
     cores = []
     

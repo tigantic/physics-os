@@ -84,7 +84,7 @@ def build_with_pydoc(output_dir: Path) -> Tuple[bool, str]:
                     timeout=30,
                     cwd=output_dir
                 )
-            except:
+            except (subprocess.TimeoutExpired, subprocess.SubprocessError, OSError):
                 continue
         
         return True, f"Generated docs for {len(modules)} modules"

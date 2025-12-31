@@ -126,7 +126,8 @@ def dense_to_qtt_3d(field: torch.Tensor, max_bond: int = 32) -> QTT3DState:
     ny = int(torch.log2(torch.tensor(Ny)).item())
     nz = int(torch.log2(torch.tensor(Nz)).item())
     
-    assert 2**nx == Nx and 2**ny == Ny and 2**nz == Nz
+    if not (2**nx == Nx and 2**ny == Ny and 2**nz == Nz):
+        raise ValueError(f"Field dimensions must be powers of 2, got ({Nx}, {Ny}, {Nz})")
     
     # Flatten to Morton order
     N_total = Nx * Ny * Nz

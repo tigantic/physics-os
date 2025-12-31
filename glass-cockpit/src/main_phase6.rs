@@ -108,7 +108,7 @@ fn main() -> Result<()> {
     let field_config = VectorFieldConfig::for_zoom_level(5, 0.0, 35.0);
     let mut vector_field = VectorField::new(field_config);
     vector_field.generate_test_pattern();
-    let stats = vector_field.stats.clone();
+    let stats = vector_field.stats;
     println!("  ✓ Vector field: {}x{} grid", field_config.grid_width, field_config.grid_height);
     println!("  ✓ Max speed: {:.1} m/s, Max vorticity: {:.6}", stats.max_speed, stats.max_vorticity);
     

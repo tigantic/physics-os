@@ -8,7 +8,7 @@
 //!
 //! Reference: Goreinov, Tyrtyshnikov - "The maximal-volume concept in approximation"
 
-use ndarray::{Array1, Array2, ArrayView2, Axis, s};
+use ndarray::Array2;
 use nalgebra::{DMatrix, SVD};
 use rustc_hash::FxHashSet;
 use rand::seq::SliceRandom;
@@ -96,10 +96,10 @@ pub fn maxvol(
 /// Inner MaxVol loop (single run without restarts)
 fn maxvol_inner(
     a: &Array2<f64>,
-    pivots: &mut Vec<usize>,
+    pivots: &mut [usize],
     config: &MaxVolConfig,
 ) -> Result<MaxVolResult, TCIError> {
-    let (m, r) = a.dim();
+    let (_m, _r) = a.dim();
     let mut iterations = 0;
     let mut final_max_c = f64::INFINITY;
     
@@ -124,7 +124,7 @@ fn maxvol_inner(
         // Check convergence
         if max_val < 1.0 + config.tolerance {
             return Ok(MaxVolResult {
-                pivots: pivots.clone(),
+                pivots: pivots.to_vec(),
                 final_max_c,
                 iterations,
                 converged: true,
@@ -136,7 +136,7 @@ fn maxvol_inner(
     }
     
     Ok(MaxVolResult {
-        pivots: pivots.clone(),
+        pivots: pivots.to_vec(),
         final_max_c,
         iterations,
         converged: false,
@@ -161,7 +161,7 @@ pub fn select_rows(a: &Array2<f64>, indices: &[usize]) -> Array2<f64> {
 /// This is more stable than direct inverse when matrix is nearly singular.
 /// Uses truncated SVD: s_inv[i] = 1/s[i] if s[i] > epsilon, else 0
 pub fn regularized_pinv(a: &Array2<f64>, epsilon: f64) -> Result<Array2<f64>, TCIError> {
-    let (m, n) = a.dim();
+    let (_m, _n) = a.dim();
     
     // Convert ndarray to nalgebra DMatrix
     let a_nalgebra = ndarray_to_nalgebra(a);
