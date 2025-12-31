@@ -12,6 +12,9 @@ rust-version = "1.75"
 memmap2.workspace = true
 shared_memory.workspace = true
 
+# Math (for trajectory geometry)
+glam.workspace = true
+
 # Serialization  
 bytemuck.workspace = true
 crc.workspace = true

@@ -19,6 +19,7 @@ use winit::{
 mod affinity;
 mod bridge;
 mod camera;
+mod ghost_plane;
 mod layout;
 mod overlay;
 mod ram_bridge_v2;
@@ -29,6 +30,7 @@ mod tensor_field;
 mod tensor_renderer;
 mod text;
 mod text_gpu;
+mod tube_geometry;
 
 use bridge::SovereignBridge;
 use renderer::Renderer;

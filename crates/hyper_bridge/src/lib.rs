@@ -35,6 +35,7 @@ mod reader;
 mod writer;
 mod sovereign;
 mod weather;
+pub mod trajectory;
 
 pub use protocol::{
     TensorBridgeHeader,
@@ -47,6 +48,20 @@ pub use protocol::{
 pub use reader::RamBridgeReader;
 pub use writer::RamBridgeWriter;
 pub use sovereign::SovereignBridge;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Trajectory Guidance (Phase 3 - Hypersonic Solver)
+// ─────────────────────────────────────────────────────────────────────────────
+
+pub use trajectory::{
+    TrajectoryHeader,
+    TrajectoryData,
+    Waypoint,
+    TRAJECTORY_MAGIC,
+    TRAJECTORY_VERSION,
+    TRAJECTORY_HEADER_SIZE,
+    MAX_WAYPOINTS,
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Weather Bridge (Global Eye)

@@ -1176,6 +1176,7 @@ version = "0.1.0"
 dependencies = [
  "bytemuck",
  "crc",
+ "glam",
  "memmap2",
  "shared_memory",
  "tempfile",
