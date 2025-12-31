@@ -34,6 +34,7 @@ mod protocol;
 mod reader;
 mod writer;
 mod sovereign;
+mod weather;
 
 pub use protocol::{
     TensorBridgeHeader,
@@ -46,6 +47,20 @@ pub use protocol::{
 pub use reader::RamBridgeReader;
 pub use writer::RamBridgeWriter;
 pub use sovereign::SovereignBridge;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Weather Bridge (Global Eye)
+// ─────────────────────────────────────────────────────────────────────────────
+
+pub use weather::{
+    WeatherHeader,
+    WeatherFrame,
+    WeatherReader,
+    WEATHER_MAGIC,
+    WEATHER_VERSION,
+    WEATHER_SHM_PATH,
+    WEATHER_HEADER_SIZE,
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Backward Compatibility Aliases
