@@ -10,6 +10,7 @@
  * - Article V: GPU-rendered procedural graphics
  * - Doctrine 7: User controls time, not just watches it
  */
+#![allow(dead_code)] // Timeline API ready for integration
 
 use wgpu::util::DeviceExt;
 

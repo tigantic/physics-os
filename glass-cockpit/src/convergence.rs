@@ -352,32 +352,42 @@ impl From<&ConvergenceCell> for GpuConvergenceCell {
 }
 
 /// Convergence uniforms for shader
+/// Note: Must match convergence.wgsl struct layout exactly (160 bytes)
+/// WGSL alignment: vec2 requires 8-byte alignment, vec4 requires 16-byte alignment
 #[repr(C)]
 #[derive(Debug, Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
 pub struct ConvergenceUniforms {
-    /// View-projection matrix
+    /// View-projection matrix (64 bytes, offset 0-64)
     pub view_proj: [[f32; 4]; 4],
-    /// Globe radius
+    /// Camera position for RTE transformation (16 bytes, offset 64-80) - w component unused
+    pub camera_pos: [f32; 4],
+    /// Globe radius (4 bytes, offset 80-84)
     pub globe_radius: f32,
-    /// Time for animation
+    /// Time for animation (4 bytes, offset 84-88)
     pub time: f32,
-    /// Visibility threshold
+    /// Visibility threshold (4 bytes, offset 88-92)
     pub visibility_threshold: f32,
-    /// High intensity threshold
+    /// High intensity threshold (4 bytes, offset 92-96)
     pub high_intensity_threshold: f32,
-    /// Pulse frequency
+    /// Pulse frequency (4 bytes, offset 96-100)
     pub pulse_frequency: f32,
-    /// Max intensity for normalization
+    /// Max intensity for normalization (4 bytes, offset 100-104)
     pub max_intensity: f32,
-    /// Phase 8: Appendix D - Hover position (lon, lat in radians)
+    /// Phase 8: Appendix D - Hover position (8 bytes, offset 104-112)
     pub hover_pos: [f32; 2],
-    /// Phase 8: Appendix D - Hover intensity (0 = not hovering, >0 = hovering)
+    /// Padding for alignment (4 bytes, offset 112-116)
+    pub _padding_a: f32,
+    /// Phase 8: Appendix D - Hover intensity (4 bytes, offset 116-120)
     pub hover_intensity: f32,
-    /// Phase 8: Appendix D - Ghost mode (0 = normal, 1 = ghost/causal trace)
+    /// Phase 8: Appendix D - Ghost mode (4 bytes, offset 120-124)
     pub ghost_mode: f32,
-    /// Phase 8: Ghost mode selected node position (lon, lat)
+    /// Explicit padding for vec2 alignment (4 bytes, offset 124-128)
+    pub _pad1: f32,
+    /// Phase 8: Ghost mode selected node position (8 bytes, offset 128-136)
     pub ghost_selected_pos: [f32; 2],
-    /// Padding for 16-byte alignment (total 128 bytes)
+    /// Explicit padding for vec4 alignment (8 bytes, offset 136-144)
+    pub _pad2: [f32; 2],
+    /// Final padding (16 bytes, offset 144-160)
     pub _padding: [f32; 4],
 }
 

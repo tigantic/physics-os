@@ -6,6 +6,7 @@
  * 
  * Constitutional: Article V GPU mandate, Doctrine 3 procedural rendering
  */
+#![allow(dead_code)] // Glass panel API ready for integration
 
 use wgpu::util::DeviceExt;
 

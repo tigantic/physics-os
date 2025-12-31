@@ -223,6 +223,6 @@ mod tests {
     fn test_telemetry_default() {
         let t = Telemetry::default();
         assert_eq!(t.stability_score, 1.0);
-        assert_eq!(t.qtt_compression_ratio, 1.0);
+        assert_eq!(t._qtt_compression_ratio, 1.0);
     }
 }

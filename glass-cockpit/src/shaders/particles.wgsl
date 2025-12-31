@@ -1,6 +1,23 @@
 // Phase 5: Particle System Shader (GPU Compute + Render)
 // Advects particles along vector field, renders as billboarded quads
 // Constitutional compliance: Doctrine 3 (GPU compute offload)
+// Phase 8 Fix: Geodetic → ECEF projection for Google Earth-like globe rendering
+//
+// THE BIG ONE - Phase 5: Infinite Particles
+// ═══════════════════════════════════════════════════════════════════════════
+// Features:
+//   - Distance-based sizing: particles scale with camera distance
+//   - Distance-based alpha: far particles fade to prevent clutter
+//   - View-dependent: backface culling, edge fade, horizon softening
+//   - GPU compute advection: particles follow vector field on GPU
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ============================================================================
+// CONSTANTS
+// ============================================================================
+
+const PI: f32 = 3.14159265359;
+const GLOBE_RADIUS: f32 = 1.0;  // Must match GlobeConfig::default().radius
 
 // ============================================================================
 // TYPES
@@ -19,6 +36,21 @@ struct ParticleUniforms {
     stats: vec4<f32>,      // (max_speed, max_vorticity, particle_count, _)
 }
 
+// Camera uniforms for 3D projection (matches globe pipeline)
+struct CameraUniforms {
+    view_proj: mat4x4<f32>,
+    camera_pos: vec3<f32>,
+    _padding: f32,
+    camera_pos_high: vec3<f32>,
+    _padding1b: f32,
+    camera_pos_low: vec3<f32>,
+    _padding1c: f32,
+    zoom: f32,
+    aspect_ratio: f32,
+    time: f32,
+    _padding2: f32,
+}
+
 struct VertexInput {
     @location(0) position: vec2<f32>,
     @location(1) uv: vec2<f32>,
@@ -29,6 +61,7 @@ struct VertexOutput {
     @location(0) uv: vec2<f32>,
     @location(1) color: vec4<f32>,
     @location(2) age_normalized: f32,
+    @location(3) world_pos: vec3<f32>,  // For backface culling
 }
 
 // ============================================================================
@@ -39,6 +72,29 @@ struct VertexOutput {
 @group(0) @binding(1) var<storage, read_write> particles_out: array<Particle>;
 @group(0) @binding(2) var<uniform> uniforms: ParticleUniforms;
 @group(0) @binding(3) var vector_field: texture_2d<f32>;
+
+// ============================================================================
+// GEODETIC UTILITIES (Appendix F: Coordinate Precision)
+// ============================================================================
+
+// Convert geodetic (lon, lat) to ECEF 3D position on globe surface
+// Y-up convention to match globe_quadtree.rs mesh generation
+fn geodetic_to_ecef(lon_deg: f32, lat_deg: f32, radius: f32) -> vec3<f32> {
+    let lat_rad = lat_deg * PI / 180.0;
+    let lon_rad = lon_deg * PI / 180.0;
+    
+    let cos_lat = cos(lat_rad);
+    let sin_lat = sin(lat_rad);
+    let cos_lon = cos(lon_rad);
+    let sin_lon = sin(lon_rad);
+    
+    // Y-up: Y = sin(lat), XZ plane is equator
+    return vec3<f32>(
+        radius * cos_lat * cos_lon,  // X: toward 0°N 0°E
+        radius * sin_lat,            // Y: toward North Pole (Y-up)
+        radius * cos_lat * sin_lon   // Z: toward 0°N 90°E
+    );
+}
 
 // ============================================================================
 // UTILITIES
@@ -184,8 +240,9 @@ fn cs_advect(@builtin(global_invocation_id) global_id: vec3<u32>) {
 // RENDER SHADER - VERTEX
 // ============================================================================
 
-@group(0) @binding(0) var<storage, read> render_particles: array<Particle>;
-@group(0) @binding(1) var<uniform> render_uniforms: ParticleUniforms;
+@group(0) @binding(0) var<uniform> camera: CameraUniforms;
+@group(1) @binding(0) var<storage, read> render_particles: array<Particle>;
+@group(1) @binding(1) var<uniform> render_uniforms: ParticleUniforms;
 
 @vertex
 fn vs_particle(
@@ -201,27 +258,97 @@ fn vs_particle(
         out.uv = vec2<f32>(0.0);
         out.color = vec4<f32>(0.0);
         out.age_normalized = 1.0;
+        out.world_pos = vec3<f32>(0.0);
         return out;
     }
     
-    let bounds = render_uniforms.bounds;
+    // =========================================================================
+    // PHASE 8 FIX: Geodetic → ECEF → Clip Space (Google Earth-like projection)
+    // =========================================================================
     
-    // Convert lon/lat to normalized screen coordinates (-1 to 1)
-    let u = (particle.position.x - bounds.x) / (bounds.y - bounds.x);
-    let v = (particle.position.y - bounds.z) / (bounds.w - bounds.z);
-    let screen_pos = vec2<f32>(u * 2.0 - 1.0, v * 2.0 - 1.0);
+    let lon = particle.position.x;  // Longitude in degrees
+    let lat = particle.position.y;  // Latitude in degrees
     
-    // Particle size in screen units
-    let size = particle.properties.z * 0.005; // Scale factor for screen
+    // Convert geodetic to 3D position on globe surface
+    // Very slight offset above surface to prevent z-fighting with globe
+    let world_pos = geodetic_to_ecef(lon, lat, GLOBE_RADIUS * 1.0003);
     
-    // Billboard offset
-    let offset = in.position * size;
+    // Backface culling: skip particles on the far side of the globe
+    let to_camera = normalize(camera.camera_pos - world_pos);
+    let surface_normal = normalize(world_pos);  // Normal points outward from globe center
+    let facing = dot(surface_normal, to_camera);
     
+    // If dot product < 0, particle is on back of globe - hide it
+    if facing < 0.0 {
+        var out: VertexOutput;
+        out.clip_position = vec4<f32>(-10.0, -10.0, 0.0, 1.0);
+        out.uv = vec2<f32>(0.0);
+        out.color = vec4<f32>(0.0);
+        out.age_normalized = 1.0;
+        out.world_pos = vec3<f32>(0.0);
+        return out;
+    }
+    
+    // Billboard quad: compute right and up vectors facing camera
+    // Y-up world convention
+    let up = vec3<f32>(0.0, 1.0, 0.0);
+    let right = normalize(cross(up, to_camera));
+    let billboard_up = cross(to_camera, right);
+    
+    // =========================================================================
+    // PHASE 5 (THE BIG ONE): Infinite Particles - Distance-based sizing
+    // Particles scale with distance to maintain consistent screen coverage
+    // Near particles: smaller (more detail visible)
+    // Far particles: larger (still visible at planetary scale)
+    // =========================================================================
+    let camera_dist = length(camera.camera_pos - world_pos);
+    
+    // Reference distance (where particles are "normal" size)
+    let reference_dist = 3.0;  // About 3 globe radii
+    
+    // Distance-based size scaling (sqrt for perceptual balance)
+    let dist_scale = sqrt(max(camera_dist / reference_dist, 0.3));
+    
+    // Particle size in world units
+    // Base size from particle properties, scaled by distance and zoom
+    let base_size = particle.properties.z * 0.008;
+    let size = base_size * dist_scale / max(camera.zoom * 0.3, 0.3);
+    
+    // Phase 5: Distance-based alpha fade (prevent visual clutter at distance)
+    // Near: full alpha, Far: fade out
+    let fade_far = 15.0;  // Distance where particles start fading
+    let fade_end = 25.0;  // Distance where particles are invisible
+    let distance_alpha = 1.0 - smoothstep(fade_far, fade_end, camera_dist);
+    
+    // Apply billboard offset
+    let offset = right * in.position.x * size + billboard_up * in.position.y * size;
+    let final_pos = world_pos + offset;
+    
+    // Phase 8: Apply RTE (Relative-To-Eye) transformation to match globe shader
+    // This ensures particles render at the same coordinates as the globe surface
+    let rte_pos = final_pos - camera.camera_pos_high + (-camera.camera_pos_low);
+    
+    // Project to clip space using camera view-projection matrix
     var out: VertexOutput;
-    out.clip_position = vec4<f32>(screen_pos + offset, 0.0, 1.0);
+    out.clip_position = camera.view_proj * vec4<f32>(rte_pos, 1.0);
     out.uv = in.uv;
-    out.color = velocity_to_color_render(particle.velocity, particle.properties.x, render_uniforms.stats.y, render_uniforms.stats.x);
-    out.color.a = particle.properties.w;
+    out.world_pos = world_pos;
+    
+    // Color from vorticity (unchanged)
+    out.color = velocity_to_color_render(
+        particle.velocity, 
+        particle.properties.x, 
+        render_uniforms.stats.y, 
+        render_uniforms.stats.x
+    );
+    
+    // Phase 5: Combined alpha includes:
+    // - Particle age fade (fade in/out at birth/death)
+    // - Edge facing fade (softer horizon)
+    // - Distance fade (prevent clutter at planetary scale)
+    let edge_fade = smoothstep(0.0, 0.3, facing);
+    out.color.a = particle.properties.w * edge_fade * distance_alpha;
+    
     out.age_normalized = particle.position.w / particle.properties.y;
     
     return out;
@@ -233,10 +360,8 @@ fn vs_particle(
 
 @fragment
 fn fs_particle(in: VertexOutput) -> @location(0) vec4<f32> {
-    // FILTER: Only draw high-energy nodes (kill the snow)
-    // If the particle has low vorticity (calm weather), discard it.
-    // This removes ~90% of visual noise from calm regions
-    if in.color.a < 0.3 {
+    // FILTER: Only draw particles with sufficient alpha (includes backface + edge fade)
+    if in.color.a < 0.05 {
         discard;
     }
     
@@ -244,7 +369,7 @@ fn fs_particle(in: VertexOutput) -> @location(0) vec4<f32> {
     let dist = length(in.uv - vec2<f32>(0.5));
     let edge = smoothstep(0.5, 0.35, dist);
     
-    // Add glow effect
+    // Add glow effect for high-vorticity particles
     let glow = smoothstep(0.6, 0.2, dist) * 0.3;
     
     var color = in.color;

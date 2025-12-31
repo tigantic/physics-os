@@ -10,6 +10,7 @@
  *
  * Uses: src/shaders/grid.wgsl
  */
+#![allow(dead_code)] // Grid API ready for integration
 
 use wgpu::util::DeviceExt;
 

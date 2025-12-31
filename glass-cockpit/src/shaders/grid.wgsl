@@ -99,6 +99,14 @@ fn fs_main(input: VertexOutput) -> @location(0) vec4<f32> {
     // World space position on grid plane
     let world_pos = input.near_point + ray_dir * t;
     
+    // GLOBE OCCLUSION: Don't draw grid inside globe radius
+    // Globe is at origin with radius 1.0 (normalized)
+    let globe_radius = 1.2; // Slightly larger to avoid z-fighting
+    let dist_from_origin = length(world_pos.xz); // Distance in XZ plane
+    if (dist_from_origin < globe_radius) {
+        discard;
+    }
+    
     // Distance-based fade
     let distance = length(world_pos - uniforms.camera_pos);
     let fade_start = 50.0;
@@ -109,11 +117,11 @@ fn fs_main(input: VertexOutput) -> @location(0) vec4<f32> {
         discard;
     }
     
-    // Check for axis lines first
-    let axis_color = axis_pattern(world_pos);
-    if (axis_color.a > 0.0) {
-        return vec4<f32>(axis_color.rgb, axis_color.a * fade);
-    }
+    // DISABLED: Axis lines were too distracting (red/cyan through scene)
+    // let axis_color = axis_pattern(world_pos);
+    // if (axis_color.a > 0.0) {
+    //     return vec4<f32>(axis_color.rgb, axis_color.a * fade);
+    // }
     
     // Major grid (every 10 units)
     let major_grid = grid_pattern(world_pos.xz, 0.1);

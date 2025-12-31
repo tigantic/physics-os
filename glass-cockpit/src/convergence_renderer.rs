@@ -9,6 +9,7 @@
 //! - LOD integration for performance maintenance
 //!
 //! Constitutional: Maintains 60 FPS mandate through budget constraints
+#![allow(dead_code)] // Update and render methods ready for integration
 
 use crate::convergence::{ConvergenceBridge, ConvergenceConfig, ConvergenceUniforms, GpuConvergenceCell};
 use crate::lod::{LodCuller, LodLevel};
@@ -209,10 +210,11 @@ impl ConvergenceRenderer {
         queue: &wgpu::Queue,
         view_proj: Mat4,
         globe_radius: f32,
+        camera_pos: [f32; 3],
         time: f32,
         culler: &mut LodCuller,
     ) {
-        self.update_with_hover(queue, view_proj, globe_radius, time, culler, None);
+        self.update_with_hover(queue, view_proj, globe_radius, camera_pos, time, culler, None);
     }
 
     /// Update with optional hover state for Appendix D visual feedback
@@ -221,6 +223,7 @@ impl ConvergenceRenderer {
         queue: &wgpu::Queue,
         view_proj: Mat4,
         globe_radius: f32,
+        camera_pos: [f32; 3],
         time: f32,
         culler: &mut LodCuller,
         hover_state: Option<(f32, f32, f32)>,  // (lon, lat, intensity)
@@ -269,6 +272,7 @@ impl ConvergenceRenderer {
         
         let uniforms = ConvergenceUniforms {
             view_proj: view_proj.to_cols_array_2d(),
+            camera_pos: [camera_pos[0], camera_pos[1], camera_pos[2], 0.0],
             globe_radius,
             time,
             visibility_threshold: field.config.visibility_threshold,
@@ -276,9 +280,12 @@ impl ConvergenceRenderer {
             pulse_frequency: field.config.pulse_frequency,
             max_intensity: field.max_intensity,
             hover_pos,
+            _padding_a: 0.0,
             hover_intensity,
             ghost_mode: 0.0,  // Normal mode by default
+            _pad1: 0.0,
             ghost_selected_pos: [0.0, 0.0],
+            _pad2: [0.0; 2],
             _padding: [0.0; 4],
         };
 
@@ -293,6 +300,7 @@ impl ConvergenceRenderer {
         queue: &wgpu::Queue,
         view_proj: Mat4,
         globe_radius: f32,
+        camera_pos: [f32; 3],
         time: f32,
         culler: &mut LodCuller,
         ghost_state: Option<(f32, f32)>,  // (selected_lon, selected_lat) if in ghost mode
@@ -328,6 +336,7 @@ impl ConvergenceRenderer {
         
         let uniforms = ConvergenceUniforms {
             view_proj: view_proj.to_cols_array_2d(),
+            camera_pos: [camera_pos[0], camera_pos[1], camera_pos[2], 0.0],
             globe_radius,
             time,
             visibility_threshold: field.config.visibility_threshold,
@@ -335,9 +344,12 @@ impl ConvergenceRenderer {
             pulse_frequency: field.config.pulse_frequency,
             max_intensity: field.max_intensity,
             hover_pos: [0.0, 0.0],  // No hover during ghost mode
+            _padding_a: 0.0,
             hover_intensity: 0.0,
             ghost_mode,
+            _pad1: 0.0,
             ghost_selected_pos,
+            _pad2: [0.0; 2],
             _padding: [0.0; 4],
         };
 

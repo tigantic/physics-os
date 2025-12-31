@@ -1,6 +1,7 @@
 // Phase 5: Streamline Renderer
 // Precomputed streamline curves with magnitude-based thickness
 // Constitutional compliance: Doctrine 3 (GPU-rendered), Doctrine 1 (procedural)
+#![allow(dead_code)] // Render method ready for integration
 
 use glam::Vec2;
 use crate::vector_field::VectorField;
@@ -372,6 +373,7 @@ impl StreamlineRenderer {
         device: &wgpu::Device,
         surface_format: wgpu::TextureFormat,
         config: StreamlineConfig,
+        camera_bind_group_layout: &wgpu::BindGroupLayout,
     ) -> Self {
         let vertex_size = std::mem::size_of::<StreamlineVertex>() as u64;
         
@@ -424,7 +426,7 @@ impl StreamlineRenderer {
         
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label: Some("Streamline Pipeline Layout"),
-            bind_group_layouts: &[&bind_group_layout],
+            bind_group_layouts: &[&bind_group_layout, camera_bind_group_layout],
             push_constant_ranges: &[],
         });
         
@@ -492,6 +494,16 @@ impl StreamlineRenderer {
             index_count: 0,
             config,
         }
+    }
+    
+    /// Get current vertex count
+    pub fn vertex_count(&self) -> u32 {
+        self.vertex_count
+    }
+    
+    /// Get current index count
+    pub fn index_count(&self) -> u32 {
+        self.index_count
     }
     
     /// Upload streamlines to GPU
@@ -574,13 +586,14 @@ impl StreamlineRenderer {
     }
     
     /// Render streamlines
-    pub fn render<'a>(&'a self, render_pass: &mut wgpu::RenderPass<'a>) {
+    pub fn render<'a>(&'a self, render_pass: &mut wgpu::RenderPass<'a>, camera_bind_group: &'a wgpu::BindGroup) {
         if self.vertex_count == 0 {
             return;
         }
         
         render_pass.set_pipeline(&self.pipeline);
         render_pass.set_bind_group(0, &self.bind_group, &[]);
+        render_pass.set_bind_group(1, camera_bind_group, &[]);
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
         render_pass.set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint32);
         render_pass.draw_indexed(0..self.index_count, 0, 0..1);
@@ -590,6 +603,7 @@ impl StreamlineRenderer {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::vector_field::VectorFieldConfig;
     
     #[test]
     fn test_streamline_creation() {

@@ -6,6 +6,7 @@
  * 
  * Constitutional: Article V GPU mandate, zero Python dependency
  */
+#![allow(dead_code)] // Raycast API ready for integration
 
 use glam::{Mat4, Vec3, Vec4, Vec4Swizzles};
 use winit::dpi::PhysicalPosition;

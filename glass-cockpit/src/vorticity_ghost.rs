@@ -201,7 +201,7 @@ impl VorticityGhostRenderer {
             globe_radius,
             vorticity_threshold: 0.2,
             vorticity_max: 1.0,
-            max_opacity: 0.6, // Per Appendix G: max 60% opacity
+            max_opacity: 0.2, // Reduced from 0.6 - less distracting
         };
         queue.write_buffer(&self.uniform_buffer, 0, bytemuck::bytes_of(&uniforms));
 

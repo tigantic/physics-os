@@ -7,6 +7,7 @@
 //!   Python (CUDA) → /dev/shm/hypertensor_bridge → This renderer → Display
 //!
 //! Constitutional: Article V GPU mandate, Doctrine 2 RAM Bridge Protocol
+#![allow(dead_code)] // Bridge renderer ready for Python backend
 
 use std::path::PathBuf;
 

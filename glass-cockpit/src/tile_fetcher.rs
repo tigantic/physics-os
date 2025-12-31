@@ -1,11 +1,24 @@
 // Phase 4: NASA GIBS Tile Fetcher
 // Asynchronous satellite tile loading with LRU cache
 // Constitutional compliance: Doctrine 2 (async, non-blocking), Doctrine 1 (never blocks render)
+#![allow(dead_code)] // Infrastructure for Phase 1 NOAA pipeline
 
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use anyhow::{Result, Context};
+use tokio::sync::mpsc;
+
+/// Tile fetch status
+#[derive(Debug, Clone)]
+pub enum TileStatus {
+    /// Tile is being fetched
+    Pending,
+    /// Tile is ready
+    Ready(Vec<u8>),
+    /// Tile fetch failed
+    Failed(String),
+}
 
 /// WMTS tile coordinates
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -195,35 +208,180 @@ impl Default for GibsConfig {
 }
 
 // Phase 5 scaffolding: NASA GIBS tile fetcher
-#[allow(dead_code)]
 /// NASA GIBS tile fetcher (runs on dedicated thread)
 pub struct TileFetcher {
     /// Configuration
     config: GibsConfig,
-    /// Tile cache
+    /// Tile cache (thread-safe)
     cache: Arc<Mutex<TileCache>>,
     /// Cache directory for persistent storage
     cache_dir: PathBuf,
+    /// Channel to send tile requests to background runtime
+    request_tx: mpsc::UnboundedSender<TileCoord>,
+    /// Channel to receive fetched tiles
+    result_rx: Arc<Mutex<mpsc::UnboundedReceiver<(TileCoord, TileStatus)>>>,
 }
 
-// Phase 5 scaffolding: TileFetcher implementation
-#[allow(dead_code)]
+/// Async tile fetching runtime (runs on background thread)
+struct TileFetcherRuntime {
+    config: GibsConfig,
+    cache: Arc<Mutex<TileCache>>,
+    cache_dir: PathBuf,
+    request_rx: mpsc::UnboundedReceiver<TileCoord>,
+    result_tx: mpsc::UnboundedSender<(TileCoord, TileStatus)>,
+    client: reqwest::Client,
+    pending: std::collections::HashSet<TileCoord>,
+}
+
+impl TileFetcherRuntime {
+    async fn run(mut self) {
+        while let Some(coord) = self.request_rx.recv().await {
+            // Skip if already pending or cached
+            if self.pending.contains(&coord) {
+                continue;
+            }
+            if let Ok(cache) = self.cache.lock() {
+                if cache.tiles.contains_key(&coord) {
+                    continue;
+                }
+            }
+            
+            self.pending.insert(coord);
+            
+            // Check disk cache first
+            let cache_path = self.cache_dir.join(format!(
+                "{}_{}_{}.{}", coord.z, coord.x, coord.y, self.config.format
+            ));
+            
+            if cache_path.exists() {
+                if let Ok(data) = tokio::fs::read(&cache_path).await {
+                    let data: Vec<u8> = data;
+                    if let Ok(mut cache) = self.cache.lock() {
+                        cache.insert(coord, data.clone());
+                    }
+                    let _ = self.result_tx.send((coord, TileStatus::Ready(data)));
+                    self.pending.remove(&coord);
+                    continue;
+                }
+            }
+            
+            // Fetch from NASA GIBS
+            let url = format!(
+                "{base}/{layer}/default/{time}/{matrix_set}/{z}/{y}/{x}.{format}",
+                base = self.config.base_url,
+                layer = self.config.layer,
+                time = self.config.time,
+                matrix_set = self.config.tile_matrix_set,
+                z = coord.z,
+                y = coord.y,
+                x = coord.x,
+                format = self.config.format
+            );
+            
+            match self.client.get(&url).send().await {
+                Ok(response) => {
+                    if response.status().is_success() {
+                        match response.bytes().await {
+                            Ok(bytes) => {
+                                let data = bytes.to_vec();
+                                
+                                // Save to disk cache
+                                let _ = tokio::fs::write(&cache_path, &data).await;
+                                
+                                // Add to memory cache
+                                if let Ok(mut cache) = self.cache.lock() {
+                                    cache.insert(coord, data.clone());
+                                }
+                                
+                                let _ = self.result_tx.send((coord, TileStatus::Ready(data)));
+                            }
+                            Err(e) => {
+                                let _ = self.result_tx.send((coord, TileStatus::Failed(e.to_string())));
+                            }
+                        }
+                    } else {
+                        let _ = self.result_tx.send((coord, TileStatus::Failed(
+                            format!("HTTP {}", response.status())
+                        )));
+                    }
+                }
+                Err(e) => {
+                    let _ = self.result_tx.send((coord, TileStatus::Failed(e.to_string())));
+                }
+            }
+            
+            self.pending.remove(&coord);
+        }
+    }
+}
+
 impl TileFetcher {
-    /// Create new tile fetcher
+    /// Create new tile fetcher with background async runtime
     pub fn new(config: GibsConfig) -> Result<Self> {
         let cache_dir = std::env::temp_dir().join("hypertensor_tiles");
         std::fs::create_dir_all(&cache_dir)
             .context("Failed to create tile cache directory")?;
         
+        let cache = Arc::new(Mutex::new(TileCache::new()));
+        
+        // Create channels for async communication
+        let (request_tx, request_rx) = mpsc::unbounded_channel();
+        let (result_tx, result_rx) = mpsc::unbounded_channel();
+        
+        // Spawn background runtime for async tile fetching
+        let runtime_config = config.clone();
+        let runtime_cache = Arc::clone(&cache);
+        let runtime_cache_dir = cache_dir.clone();
+        
+        std::thread::spawn(move || {
+            let rt = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()
+                .expect("Failed to create tile fetcher runtime");
+            
+            let runtime = TileFetcherRuntime {
+                config: runtime_config,
+                cache: runtime_cache,
+                cache_dir: runtime_cache_dir,
+                request_rx,
+                result_tx,
+                client: reqwest::Client::builder()
+                    .timeout(std::time::Duration::from_secs(10))
+                    .build()
+                    .expect("Failed to create HTTP client"),
+                pending: std::collections::HashSet::new(),
+            };
+            
+            rt.block_on(runtime.run());
+        });
+        
         Ok(Self {
             config,
-            cache: Arc::new(Mutex::new(TileCache::new())),
+            cache,
             cache_dir,
+            request_tx,
+            result_rx: Arc::new(Mutex::new(result_rx)),
         })
     }
     
-    /// Build GIBS URL for tile
-    fn build_url(&self, coord: TileCoord) -> String {
+    /// Request a tile to be fetched asynchronously (non-blocking)
+    pub fn request_tile(&self, coord: TileCoord) {
+        let _ = self.request_tx.send(coord);
+    }
+    
+    /// Poll for fetched tiles (non-blocking)
+    pub fn poll_results(&self) -> Vec<(TileCoord, TileStatus)> {
+        let mut results = Vec::new();
+        if let Ok(mut rx) = self.result_rx.lock() {
+            while let Ok(result) = rx.try_recv() {
+                results.push(result);
+            }
+        }
+        results
+    }
+    
+    /// Build GIBS URL for tile (for debugging)
+    pub fn build_url(&self, coord: TileCoord) -> String {
         format!(
             "{base}/{layer}/default/{time}/{matrix_set}/{z}/{y}/{x}.{format}",
             base = self.config.base_url,
@@ -237,9 +395,9 @@ impl TileFetcher {
         )
     }
     
-    /// Get tile from cache or fetch from network
+    /// Get tile from cache (non-blocking)
     pub fn get_tile(&self, coord: TileCoord) -> Option<Vec<u8>> {
-        // Try cache first
+        // Try memory cache first
         if let Ok(mut cache) = self.cache.lock() {
             if let Some(data) = cache.get(&coord) {
                 return Some(data);
@@ -261,38 +419,34 @@ impl TileFetcher {
         None
     }
     
-    /// Fetch tile asynchronously (stub for now - requires tokio feature)
-    pub fn fetch_tile_async(&self, coord: TileCoord) -> Result<()> {
-        // This is a placeholder for async fetching
-        // Full implementation requires tokio runtime and reqwest
-        // For Phase 4, we'll start with cache-only operation
+    /// Request tiles for visible region based on camera
+    /// Note: VIIRS_SNPP_CorrectedReflectance_TrueColor only supports z=0-2
+    pub fn request_visible_tiles(&self, lat: f64, lon: f64, zoom: u8) {
+        // Clamp zoom to max supported by VIIRS layer (z=0-2)
+        let clamped_zoom = zoom.min(2);
         
-        let _url = self.build_url(coord);
+        // Request center tile and neighbors
+        let center = TileCoord::from_lat_lon(lat, lon, clamped_zoom);
         
-        // TODO: Spawn async task to download tile
-        // tokio::spawn(async move {
-        //     let response = reqwest::get(&url).await?;
-        //     let data = response.bytes().await?.to_vec();
-        //     cache.insert(coord, data);
-        // });
-        
-        Ok(())
+        // Request 3x3 grid around center for smooth panning
+        for dy in -1i32..=1 {
+            for dx in -1i32..=1 {
+                let x = (center.x as i32 + dx).max(0) as u32;
+                let y = (center.y as i32 + dy).max(0) as u32;
+                let max_tile = (1u32 << clamped_zoom) - 1;
+                
+                if x <= max_tile && y <= max_tile {
+                    self.request_tile(TileCoord::new(clamped_zoom, x, y));
+                }
+            }
+        }
     }
     
     /// Get cache file path for tile
     fn cache_path(&self, coord: TileCoord) -> PathBuf {
         self.cache_dir.join(format!(
-            "{}_{}_{}.{}",
-            coord.z, coord.x, coord.y, self.config.format
+            "{}_{}_{}.{}", coord.z, coord.x, coord.y, self.config.format
         ))
-    }
-    
-    /// Save tile to disk cache
-    fn save_to_disk(&self, coord: TileCoord, data: &[u8]) -> Result<()> {
-        let path = self.cache_path(coord);
-        std::fs::write(path, data)
-            .context("Failed to write tile to disk cache")?;
-        Ok(())
     }
     
     /// Get cache statistics

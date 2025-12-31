@@ -7,6 +7,7 @@
  * - Color-coded severity levels
  * - High-throughput logging without lag
  */
+#![allow(dead_code)] // Event log API ready for integration
 
 use std::collections::VecDeque;
 use std::time::{Duration, Instant};

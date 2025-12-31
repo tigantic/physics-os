@@ -348,17 +348,62 @@ def main():
     parser = argparse.ArgumentParser(description="CUDA Heatmap Generator")
     parser.add_argument("--fps", type=float, default=165.0, help="Target FPS")
     parser.add_argument("--duration", type=float, default=None, help="Run duration (seconds)")
-    parser.add_argument("--resolution", type=str, default="128x64", help="Grid resolution (WxH)")
+    parser.add_argument("--resolution", type=str, default="256x128", help="Grid resolution (WxH)")
+    parser.add_argument("--qtt", action="store_true", help="Use QTT backend (2900+ FPS)")
     args = parser.parse_args()
     
     # Parse resolution
     w, h = map(int, args.resolution.split("x"))
     
-    # Create generator
-    gen = CUDAHeatmapGenerator(resolution=(w, h))
-    
-    # Run loop
-    gen.run_loop(target_fps=args.fps, duration=args.duration)
+    if args.qtt:
+        # Use QTT-backed streamer for maximum performance
+        from .qtt_bridge_streamer import QTTBridgeStreamer
+        
+        print("╔══════════════════════════════════════════════════╗")
+        print("║        QTT-ACCELERATED HEATMAP GENERATOR         ║")
+        print("║   Tensor Train evaluation → direct pixel synthesis  ║")
+        print("╚══════════════════════════════════════════════════╝")
+        print()
+        
+        streamer = QTTBridgeStreamer(resolution=(w, h))
+        
+        # Run loop
+        start_time = time_module.perf_counter()
+        frame_count = 0
+        last_report = start_time
+        report_interval = 1.0
+        
+        try:
+            while True:
+                frame_start = time_module.perf_counter()
+                elapsed = frame_start - start_time
+                
+                if args.duration and elapsed > args.duration:
+                    break
+                
+                streamer.update(elapsed)
+                frame_count += 1
+                
+                # Report
+                if frame_start - last_report > report_interval:
+                    fps = frame_count / elapsed
+                    print(f"FPS: {fps:.0f} | Frames: {frame_count}")
+                    last_report = frame_start
+                    
+        except KeyboardInterrupt:
+            print("\n⏹ Stopped")
+        
+        total_time = time_module.perf_counter() - start_time
+        print(f"\n📊 QTT Final Statistics:")
+        print(f"   Total frames: {frame_count}")
+        print(f"   Total time: {total_time:.2f}s")
+        print(f"   Average FPS: {frame_count / total_time:.0f}")
+        
+        streamer.close()
+    else:
+        # Legacy naive generator
+        gen = CUDAHeatmapGenerator(resolution=(w, h))
+        gen.run_loop(target_fps=args.fps, duration=args.duration)
 
 
 if __name__ == "__main__":

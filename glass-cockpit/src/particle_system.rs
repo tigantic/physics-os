@@ -1,12 +1,13 @@
 // Phase 5: GPU-Instanced Particle System
 // Flow particles advected along vector field for visualization
 // Constitutional compliance: Doctrine 3 (GPU compute), Doctrine 1 (procedural)
+#![allow(dead_code)] // Render method ready for integration
 
 use wgpu::util::DeviceExt;
 use crate::vector_field::{VectorField, VectorFieldConfig};
 
 /// Maximum number of particles (GPU buffer size)
-pub const MAX_PARTICLES: u32 = 10_000;
+pub const MAX_PARTICLES: u32 = 100_000;
 
 /// Particle state in GPU buffer
 #[repr(C)]
@@ -143,6 +144,7 @@ pub struct ParticleSystem {
     advect_bind_groups: [wgpu::BindGroup; 2],
     /// Render pipeline
     render_pipeline: wgpu::RenderPipeline,
+    /// Particle data bind group (group 1 in shader)
     render_bind_group: wgpu::BindGroup,
     /// Configuration
     config: ParticleConfig,
@@ -158,11 +160,13 @@ pub struct ParticleSystem {
 
 impl ParticleSystem {
     /// Create new particle system
+    /// Phase 8: Now accepts camera_bind_group_layout for 3D globe projection
     pub fn new(
         device: &wgpu::Device,
         _queue: &wgpu::Queue,
         surface_format: wgpu::TextureFormat,
         field_config: &VectorFieldConfig,
+        camera_bind_group_layout: &wgpu::BindGroupLayout,
     ) -> Self {
         // Create particle buffers (double-buffered)
         let particle_size = std::mem::size_of::<Particle>() as u64;
@@ -311,6 +315,8 @@ impl ParticleSystem {
         ];
         
         // Render pipeline
+        // Group 0: Camera uniforms (shared with globe pipeline)
+        // Group 1: Particle data + uniforms
         let render_bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label: Some("Particle Render Bind Group Layout"),
             entries: &[
@@ -339,9 +345,10 @@ impl ParticleSystem {
             ],
         });
         
+        // Phase 8: Pipeline layout now includes camera at group 0
         let render_pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label: Some("Particle Render Pipeline Layout"),
-            bind_group_layouts: &[&render_bind_group_layout],
+            bind_group_layouts: &[camera_bind_group_layout, &render_bind_group_layout],
             push_constant_ranges: &[],
         });
         
@@ -479,8 +486,8 @@ impl ParticleSystem {
     
     /// Spawn new particles randomly in viewport
     fn spawn_particles(&mut self, queue: &wgpu::Queue, count: u32, field: &VectorField) {
-        // Cap at 10K initial particles - GPU handles respawning dead ones
-        const INITIAL_CAP: u32 = 10_000;
+        // Cap at 100K initial particles - GPU handles respawning dead ones
+        const INITIAL_CAP: u32 = 100_000;
         if self.particle_count >= INITIAL_CAP {
             return; // GPU compute will respawn dead particles
         }
@@ -547,13 +554,15 @@ impl ParticleSystem {
     }
     
     /// Render particles
-    pub fn render<'a>(&'a self, render_pass: &mut wgpu::RenderPass<'a>) {
+    /// Phase 8: Now accepts camera_bind_group for 3D globe projection
+    pub fn render<'a>(&'a self, render_pass: &mut wgpu::RenderPass<'a>, camera_bind_group: &'a wgpu::BindGroup) {
         if self.particle_count == 0 {
             return;
         }
         
         render_pass.set_pipeline(&self.render_pipeline);
-        render_pass.set_bind_group(0, &self.render_bind_group, &[]);
+        render_pass.set_bind_group(0, camera_bind_group, &[]);  // Camera at group 0
+        render_pass.set_bind_group(1, &self.render_bind_group, &[]);  // Particles at group 1
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
         render_pass.draw(0..6, 0..self.particle_count);
     }

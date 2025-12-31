@@ -8,8 +8,18 @@
  * - Doctrine 1: Non-blocking GPU dispatch
  * - Appendix G: Volumetric smoke-like overlay
  */
+#![allow(dead_code)] // Slice plane and render methods ready for integration
 
 use wgpu::util::DeviceExt;
+
+/// Slice mode for volumetric slicing
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SliceMode {
+    Off = 0,
+    Below = 1,
+    Above = 2,
+    Thin = 3,
+}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, bytemuck::Pod, bytemuck::Zeroable)]
@@ -21,6 +31,60 @@ struct VorticityUniforms {
     vorticity_threshold: f32,
     vorticity_max: f32,
     max_opacity: f32,
+    // Phase 8: Volumetric slicing (The Big One Phase 4)
+    slice_plane: [f32; 4],  // xyz = normal, w = distance
+    slice_mode: u32,         // 0 = off, 1 = below, 2 = above, 3 = thin
+    slice_thickness: f32,    // For thin slice mode
+    _padding: [f32; 2],
+}
+
+/// Slice plane state for interactive control
+#[derive(Debug, Clone)]
+pub struct SlicePlane {
+    pub normal: glam::Vec3,
+    pub distance: f32,
+    pub mode: SliceMode,
+    pub thickness: f32,
+}
+
+impl Default for SlicePlane {
+    fn default() -> Self {
+        Self {
+            normal: glam::Vec3::Y, // Horizontal slice by default
+            distance: 0.0,
+            mode: SliceMode::Off,
+            thickness: 0.1,
+        }
+    }
+}
+
+impl SlicePlane {
+    /// Move the slice plane along its normal
+    pub fn move_plane(&mut self, delta: f32) {
+        self.distance += delta;
+    }
+    
+    /// Rotate the slice plane (around X axis for now)
+    pub fn rotate_x(&mut self, radians: f32) {
+        let rotation = glam::Mat3::from_rotation_x(radians);
+        self.normal = rotation * self.normal;
+    }
+    
+    /// Rotate the slice plane (around Z axis)
+    pub fn rotate_z(&mut self, radians: f32) {
+        let rotation = glam::Mat3::from_rotation_z(radians);
+        self.normal = rotation * self.normal;
+    }
+    
+    /// Cycle through slice modes
+    pub fn cycle_mode(&mut self) {
+        self.mode = match self.mode {
+            SliceMode::Off => SliceMode::Below,
+            SliceMode::Below => SliceMode::Above,
+            SliceMode::Above => SliceMode::Thin,
+            SliceMode::Thin => SliceMode::Off,
+        };
+    }
 }
 
 pub struct VorticityRenderer {
@@ -30,6 +94,8 @@ pub struct VorticityRenderer {
     bind_group_layout: wgpu::BindGroupLayout,
     bind_group: wgpu::BindGroup,
     start_time: std::time::Instant,
+    /// Slice plane state
+    pub slice_plane: SlicePlane,
 }
 
 impl VorticityRenderer {
@@ -48,7 +114,11 @@ impl VorticityRenderer {
             globe_radius: 100.0, // Scaled units, adjust to match GlobeRenderer
             vorticity_threshold: 0.2,
             vorticity_max: 5.0,
-            max_opacity: 0.6,
+            max_opacity: 0.2, // Reduced - less distracting
+            slice_plane: [0.0, 1.0, 0.0, 0.0], // Default: horizontal plane at origin
+            slice_mode: 0,                      // Off by default
+            slice_thickness: 0.1,
+            _padding: [0.0, 0.0],
         };
 
         let uniform_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
@@ -155,6 +225,7 @@ impl VorticityRenderer {
             bind_group_layout,
             bind_group,
             start_time,
+            slice_plane: SlicePlane::default(),
         }
     }
 
@@ -168,7 +239,17 @@ impl VorticityRenderer {
             globe_radius: 100.0, // Match your main globe radius
             vorticity_threshold: 0.15, // Sensitivity
             vorticity_max: 2.0,
-            max_opacity: 0.6,
+            max_opacity: 0.2, // Reduced - less distracting
+            // Phase 8: Slice plane uniforms
+            slice_plane: [
+                self.slice_plane.normal.x,
+                self.slice_plane.normal.y,
+                self.slice_plane.normal.z,
+                self.slice_plane.distance,
+            ],
+            slice_mode: self.slice_plane.mode as u32,
+            slice_thickness: self.slice_plane.thickness,
+            _padding: [0.0, 0.0],
         };
 
         queue.write_buffer(&self.uniform_buffer, 0, bytemuck::cast_slice(&[uniforms]));

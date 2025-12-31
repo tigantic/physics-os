@@ -28,9 +28,15 @@ crc = "3.0"
 # Performance and Profiling
 tracy-client = { version = "0.17", optional = true }
 
-# Async Runtime (minimal, for tile fetching only)
-tokio = { version = "1.35", features = ["rt", "sync"], optional = true }
-reqwest = { version = "0.11", optional = true }
+# Async Runtime (for satellite tile fetching)
+tokio = { version = "1.35", features = ["rt-multi-thread", "sync", "time", "fs"] }
+reqwest = { version = "0.11", features = ["rustls-tls"], default-features = false }
+
+# Date/Time for NOAA data paths
+chrono = { version = "0.4", features = ["serde"] }
+
+# Image decoding for satellite tiles
+image = { version = "0.24", default-features = false, features = ["jpeg", "png"] }
 
 # Error Handling
 thiserror = "1.0"
@@ -46,7 +52,6 @@ criterion = "0.5"
 [features]
 default = []
 profiling = ["tracy-client"]
-satellite-tiles = ["tokio", "reqwest"]
 debug-logging = ["env_logger", "log"]
 
 [[bin]]

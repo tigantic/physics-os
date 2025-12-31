@@ -12,6 +12,7 @@
 
 struct ConvergenceUniforms {
     view_proj: mat4x4<f32>,
+    camera_pos: vec4<f32>,      // Camera position for RTE (xyz used, w unused)
     globe_radius: f32,
     time: f32,
     visibility_threshold: f32,
@@ -20,11 +21,14 @@ struct ConvergenceUniforms {
     max_intensity: f32,
     // Phase 8: Appendix D - Hover state
     hover_pos: vec2<f32>,       // lon, lat in radians
+    _padding_a: f32,
     hover_intensity: f32,       // 0 = not hovering, >0 = hovering
     // Phase 8: Appendix D - Ghost mode (causal trace)
     ghost_mode: f32,            // 0 = normal, 1 = ghost/causal trace
+    _pad1: f32,                 // Explicit padding for vec2 alignment
     ghost_selected_pos: vec2<f32>,  // Selected node position for ghost mode
-    _padding: vec4<f32>,        // 16-byte alignment
+    _pad2: vec2<f32>,           // Explicit padding for vec4 alignment
+    _padding: vec4<f32>,        // Padding to 160 bytes total
 };
 
 struct ConvergenceCell {
@@ -156,7 +160,11 @@ fn vs_main(input: VertexInput) -> VertexOutput {
     let elevation = uniforms.globe_radius * 1.002 + intensity * 0.02;
     let world_pos = geo_to_globe(adjusted_lon, adjusted_lat, elevation);
     
-    output.clip_position = uniforms.view_proj * vec4<f32>(world_pos, 1.0);
+    // Apply RTE (Relative-To-Eye) transformation like globe.wgsl
+    // This ensures heatmap renders at same scale as globe
+    let rte_position = world_pos - uniforms.camera_pos.xyz;
+    
+    output.clip_position = uniforms.view_proj * vec4<f32>(rte_position, 1.0);
     output.intensity = intensity;
     output.vorticity = vorticity;
     output.world_pos = world_pos;

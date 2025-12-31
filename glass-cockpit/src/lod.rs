@@ -8,6 +8,7 @@
 //! - Instance budget management to maintain 60 FPS mandate
 //!
 //! All subsequent phases (voxels, particles, streamlines) inherit this infrastructure.
+#![allow(dead_code)] // Stress level and advanced culling ready for integration
 
 use glam::{Mat4, Vec3, Vec4};
 
@@ -210,8 +211,8 @@ pub struct InstanceBudget {
 impl Default for InstanceBudget {
     fn default() -> Self {
         Self {
-            // Conservative budgets for 60 FPS @ RTX 5070
-            max_particles: 10_000,
+            // Particle budget for RTX 5070 - 100k is easily achievable
+            max_particles: 100_000,
             max_streamline_vertices: 50_000,
             max_voxels: 100_000,
             max_heatmap_cells: 65_536, // 256×256 grid
@@ -306,7 +307,7 @@ impl InstanceBudget {
             self.max_streamline_vertices = ((self.max_streamline_vertices as f32 * 0.9) as u32).max(MIN_STREAMLINE_VERTICES);
             self.max_voxels = ((self.max_voxels as f32 * 0.9) as u32).max(MIN_VOXELS);
             self.max_heatmap_cells = ((self.max_heatmap_cells as f32 * 0.9) as u32).max(MIN_HEATMAP_CELLS);
-        } else if ratio > 1.2 && self.max_particles < 20_000 {
+        } else if ratio > 1.2 && self.max_particles < 100_000 {
             // FPS healthy, can increase budgets by 5%
             self.max_particles = (self.max_particles as f32 * 1.05) as u32;
             self.max_streamline_vertices = (self.max_streamline_vertices as f32 * 1.05) as u32;

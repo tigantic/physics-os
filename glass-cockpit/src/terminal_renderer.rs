@@ -4,9 +4,10 @@
  * GPU-accelerated terminal pane for event log display.
  * Renders scrolling text with color-coded severity levels.
  */
+#![allow(dead_code)] // Terminal API ready for integration
 
 use wgpu::util::DeviceExt;
-use crate::event_log::{EventLog, LogEvent, EventLevel};
+use crate::event_log::EventLog;
 
 /// Terminal configuration
 pub struct TerminalConfig {

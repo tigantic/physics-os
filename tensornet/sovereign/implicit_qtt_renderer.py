@@ -31,38 +31,44 @@ def _compile_kernel():
     
     print("Compiling implicit QTT CUDA kernel (this may take 30-60 seconds)...")
     
-    # Get CUDA source
+    # Get CUDA source and append PyTorch wrapper functions
     cuda_source = _get_cuda_kernel_source()
     
-    # Minimal C++ wrapper for Python binding
+    # Append PyTorch C++/CUDA binding directly to the kernel source
+    # This keeps everything in one compilation unit to avoid linker issues
+    cuda_source += """
+
+// ============================================================================
+// PyTorch Bindings (appended by implicit_qtt_renderer.py)
+// ============================================================================
+#include <torch/extension.h>
+#include <c10/cuda/CUDAStream.h>
+
+extern "C" void render_qtt_layer_wrapper(
+    torch::Tensor qtt_cores,
+    torch::Tensor output,
+    int width,
+    int height,
+    float value_min,
+    float value_max,
+    int colormap_type
+) {
+    launch_render_qtt_layer(
+        qtt_cores.data_ptr<float>(),
+        output.data_ptr<float>(),
+        width, height,
+        value_min, value_max,
+        colormap_type,
+        c10::cuda::getCurrentCUDAStream().stream()
+    );
+}
+"""
+    
+    # C++ source with extern declaration so main.cpp can see it
     cpp_source = """
     #include <torch/extension.h>
     
-    // Forward declarations from CUDA kernel
-    void launch_render_qtt_layer(
-        const float* qtt_cores,
-        float* output,
-        int width,
-        int height,
-        float value_min,
-        float value_max,
-        int colormap_type,
-        cudaStream_t stream
-    );
-    
-    void launch_composite_qtt_layers(
-        const float* const* layer_cores,
-        const int* layer_enabled,
-        float* output,
-        int width,
-        int height,
-        float value_min,
-        float value_max,
-        cudaStream_t stream
-    );
-    
-    // Python bindings
-    void render_qtt_layer_wrapper(
+    extern "C" void render_qtt_layer_wrapper(
         torch::Tensor qtt_cores,
         torch::Tensor output,
         int width,
@@ -70,20 +76,7 @@ def _compile_kernel():
         float value_min,
         float value_max,
         int colormap_type
-    ) {
-        launch_render_qtt_layer(
-            qtt_cores.data_ptr<float>(),
-            output.data_ptr<float>(),
-            width, height,
-            value_min, value_max,
-            colormap_type,
-            c10::cuda::getCurrentCUDAStream()
-        );
-    }
-    
-    PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
-        m.def("render_qtt_layer", &render_qtt_layer_wrapper, "Render QTT layer");
-    }
+    );
     """
     
     # Compile with PyTorch's JIT
@@ -91,7 +84,7 @@ def _compile_kernel():
         name='implicit_qtt_kernel',
         cpp_sources=[cpp_source],
         cuda_sources=[cuda_source],
-        functions=['render_qtt_layer'],
+        functions=['render_qtt_layer_wrapper'],
         extra_cuda_cflags=[
             '-O3',
             '-use_fast_math',
@@ -244,7 +237,7 @@ class ImplicitQTTRenderer:
         start_event.record()
         
         # Call CUDA kernel via PyTorch binding
-        _KERNEL_MODULE.render_qtt_layer(
+        _KERNEL_MODULE.render_qtt_layer_wrapper(
             flat_cores,
             self.output_buffer.view(-1),  # Flatten for kernel
             self.width,

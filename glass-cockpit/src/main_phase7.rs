@@ -25,11 +25,15 @@ use winit::{
     keyboard::{PhysicalKey, KeyCode},
     window::{Window, WindowBuilder},
 };
+#[allow(unused_imports)]
 use wgpu::util::DeviceExt;
 
 mod affinity;
 mod globe;
+mod globe_quadtree;     // Phase 8: Dynamic Quadtree Globe
 mod tile_fetcher;
+mod tile_texture_array; // Phase 8: Streaming texture array
+mod satellite_texture;
 mod vector_field;
 mod particle_system;
 mod streamlines;
@@ -55,8 +59,14 @@ mod tensor_renderer;    // Phase 2: GPU tensor voxel cloud
 mod text_gpu;           // Phase 2: GPU text atlas renderer
 mod probe_panel;        // Phase 6b: Tensor inspection probe
 mod timeline_scrubber;  // Phase 6b: Frame timeline navigation
+mod starfield;          // Phase 7: Procedural starfield background
+mod noaa_fetcher;       // Phase 1: NOAA GFS/HRRR S3 fetcher
+mod weather_tensor;     // Phase 1: Multi-channel weather tensor
+mod grib_decoder;       // Phase 1: GRIB2 parser
 
-use globe::{Icosphere, GlobeConfig, GlobeCamera};
+// Phase 8: Use QuadTreeGlobe with legacy compat (GlobeCamera, GlobeConfig)
+use globe_quadtree::{QuadTreeGlobe, GlobeCamera, GlobeConfig, GlobeVertex};
+use tile_texture_array::TileTextureArray;
 use tile_fetcher::{TileFetcher, GibsConfig};
 use vector_field::{VectorField, VectorFieldConfig};
 use particle_system::{ParticleSystem, ParticleConfig};
@@ -67,11 +77,11 @@ use convergence_renderer::ConvergenceRenderer;
 use vorticity_renderer::VorticityRenderer;  // Phase 8 Appendix G
 use bridge_heatmap_renderer::BridgeHeatmapRenderer;
 use grayscale_bridge_renderer::GrayscaleBridgeRenderer;
-use telemetry_rail::{TelemetryRail, SystemMetrics, PhysicsMetrics};
-use event_log::{EventLog, EventCategory, EventLevel};
+use telemetry_rail::TelemetryRail;
+use event_log::{EventLog, EventCategory};
 use system_metrics::MetricsCollector;
-use interaction::{InteractionState, Ray, intersect_sphere, world_to_geo};
-use glass_chrome::{GlassChrome, GlassPanelConfig};
+use interaction::{InteractionState, intersect_sphere, world_to_geo};
+use glass_chrome::GlassChrome;
 use hud_overlay::HudOverlay;
 use terminal_renderer::TerminalRenderer;
 use layout::ViewLayout;
@@ -79,7 +89,14 @@ use grid_renderer::GridRenderer;                                 // Phase 1: Pro
 use tensor_renderer::TensorRenderer;                            // Phase 2: 3D Voxel Cloud
 use probe_panel::ProbePanel;                                    // Phase 6b: Tensor Probe
 use timeline_scrubber::TimelineScrubber;                        // Phase 6b: Timeline
-use text_gpu::{GpuTextRenderer, TextBuilder, GlyphInstance};   // Phase 2: GPU Typography
+use text_gpu::{GpuTextRenderer, TextBuilder};                  // Phase 2: GPU Typography
+use starfield::StarfieldRenderer;                              // Phase 7: Starfield
+#[allow(unused_imports)]  // Phase 1 infrastructure - ready for NOAA integration
+use noaa_fetcher::{NoaaFetcher, ForecastModel, ForecastRequest, WeatherVariable, FetchStatus};
+#[allow(unused_imports)]  // Phase 1 infrastructure
+use weather_tensor::WeatherLodManager;
+#[allow(unused_imports)]  // Phase 1 infrastructure
+use grib_decoder::generate_synthetic_weather;
 
 /// Simple file logger for debugging crashes
 struct CrashLog {
@@ -145,6 +162,15 @@ impl VizMode {
             VizMode::Both => "Both",
         }
     }
+}
+
+/// Debug metrics for HUD display (Phase 1 Integration)
+#[derive(Clone, Copy, Default)]
+struct DebugMetrics {
+    chunk_count: usize,
+    tile_count: usize,
+    particle_count: u32,
+    noaa_mode: bool,
 }
 
 /// Phase 7 Telemetry Rails Visualization
@@ -223,11 +249,28 @@ fn main() -> Result<()> {
     println!("  ✓ Tile cache initialized");
     event_log.debug(EventCategory::System, "GIBS tile fetcher initialized");
     
-    // STEP 4: Generate synthetic vector field
+    // STEP 3b: Initialize NOAA weather fetcher (Phase 1)
+    let noaa_fetcher = match NoaaFetcher::new() {
+        Ok(nf) => {
+            crash_log.log("  ✓ NOAA fetcher OK");
+            println!("  ✓ NOAA fetcher initialized (GFS/HRRR ready)");
+            Some(nf)
+        },
+        Err(e) => {
+            crash_log.log(&format!("  ⚠ NOAA fetcher unavailable: {}", e));
+            println!("  ⚠ NOAA fetcher unavailable: {}", e);
+            None
+        }
+    };
+    let mut weather_lod = WeatherLodManager::new();
+    let mut use_noaa_data = false;  // Toggle with 'N' key
+    
+    // STEP 4: Generate synthetic vector field (fallback until NOAA data loaded)
     crash_log.log("[4/8] Generating vector field...");
     println!("[4/8] Generating vector field...");
-    let field_config = VectorFieldConfig::for_zoom_level(5, 0.0, 35.0);
-    let mut vector_field = VectorField::new(field_config);
+    // Use global coverage for particles to wrap around entire globe
+    let field_config = VectorFieldConfig::default();  // Full globe: -180 to 180, -90 to 90
+    let mut vector_field = VectorField::new(field_config.clone());
     vector_field.generate_test_pattern();
     let stats = vector_field.stats.clone();
     crash_log.log(&format!("  Vector field {}x{}", field_config.grid_width, field_config.grid_height));
@@ -266,15 +309,18 @@ fn main() -> Result<()> {
     event_log.info(EventCategory::Render, "GPU pipeline initialized");
     
     // Initialize globe
-    crash_log.log("  Creating globe mesh...");
+    crash_log.log("  Creating quadtree globe mesh...");
     let globe_config = GlobeConfig::default();
-    let icosphere = Icosphere::new(globe_config.clone());
-    crash_log.log(&format!("  Globe: {} vertices", icosphere.vertex_count()));
-    println!("  ✓ Globe mesh: {} vertices, {} triangles", 
-        icosphere.vertex_count(), icosphere.triangle_count());
+    let mut quadtree_globe = QuadTreeGlobe::new(globe_config.radius);
+    crash_log.log(&format!("  Globe: {} chunks, {} vertices", 
+        quadtree_globe.chunk_count(), quadtree_globe.total_vertices()));
+    println!("  ✓ QuadTree Globe: {} chunks, {} initial vertices", 
+        quadtree_globe.chunk_count(), quadtree_globe.total_vertices());
     
     // Create depth texture for proper layering
     crash_log.log("  Creating depth texture...");
+    // depth_texture kept alive for RAII - view references it
+    #[allow(unused_variables, unused_assignments)]
     let (mut depth_texture, mut depth_view) = create_depth_texture_with_view(&device, &config);
     
     // Create camera
@@ -286,16 +332,49 @@ fn main() -> Result<()> {
     let mut lod_culler = LodCuller::new();
     lod_culler.config = LodConfig::globe_scale();
     
-    // Create globe pipeline
-    crash_log.log("  Creating globe pipeline...");
-    let globe_pipeline = match create_globe_pipeline(&device, &config, &icosphere) {
-        Ok(p) => {
-            crash_log.log("  ✓ Globe pipeline OK");
-            p
+    // Create satellite texture manager FIRST (Sprint 2: NASA GIBS tiles)
+    // Needs to be before globe pipeline so we can pass the bind group layout
+    crash_log.log("  Creating SatelliteTextureManager...");
+    let mut satellite_texture = match satellite_texture::SatelliteTextureManager::new(&device, &queue) {
+        Ok(stm) => {
+            crash_log.log("  ✓ SatelliteTextureManager OK (NASA GIBS tiles enabled)");
+            Some(stm)
         },
         Err(e) => {
-            crash_log.log(&format!("  ✗ Globe pipeline FAILED: {}", e));
-            return Err(e);
+            crash_log.log(&format!("  ⚠ SatelliteTextureManager failed: {} (using procedural)", e));
+            None
+        }
+    };
+    
+    // Phase 8: Create tile texture array for streaming quadtree tiles
+    crash_log.log("  Creating TileTextureArray...");
+    let mut tile_array = match TileTextureArray::new(&device, &queue) {
+        Ok(ta) => {
+            crash_log.log("  ✓ TileTextureArray OK (128-layer texture array)");
+            Some(ta)
+        },
+        Err(e) => {
+            crash_log.log(&format!("  ⚠ TileTextureArray failed: {} (using procedural)", e));
+            None
+        }
+    };
+    
+    // Create globe pipeline (with optional satellite texture)
+    // Phase 8: Pipeline is now mesh-agnostic - chunks uploaded per-frame
+    crash_log.log("  Creating globe pipeline...");
+    let mut globe_pipeline = {
+        let sat_layout = satellite_texture.as_ref().map(|st| &st.bind_group_layout);
+        
+        match create_globe_pipeline(&device, &config, sat_layout) {
+            Ok(p) => {
+                let shader_mode = if satellite_texture.is_some() { "satellite+clouds" } else { "procedural" };
+                crash_log.log(&format!("  ✓ Globe pipeline OK ({})", shader_mode));
+                p
+            },
+            Err(e) => {
+                crash_log.log(&format!("  ✗ Globe pipeline FAILED: {}", e));
+                return Err(e);
+            }
         }
     };
     
@@ -334,7 +413,14 @@ fn main() -> Result<()> {
     crash_log.log("[7/8] Initializing vector visualization...");
     println!("[7/8] Initializing vector visualization...");
     crash_log.log("  Creating particle system...");
-    let mut particle_system = ParticleSystem::new(&device, &queue, config.format, &field_config);
+    // Phase 8: Pass camera bind group layout for 3D globe projection
+    let mut particle_system = ParticleSystem::new(
+        &device, 
+        &queue, 
+        config.format, 
+        &field_config,
+        &globe_pipeline.camera_bind_group_layout,
+    );
     let particle_config = ParticleConfig {
         spawn_rate: 500.0,
         lifetime: 12.0,
@@ -363,7 +449,12 @@ fn main() -> Result<()> {
     println!("  ✓ Streamlines: {} generated", streamlines.len());
     
     crash_log.log("  Creating streamline renderer...");
-    let mut streamline_renderer = StreamlineRenderer::new(&device, config.format, streamline_config);
+    let mut streamline_renderer = StreamlineRenderer::new(
+        &device, 
+        config.format, 
+        streamline_config,
+        &globe_pipeline.camera_bind_group_layout,
+    );
     streamline_renderer.upload(&queue, &streamlines);
     
     // Initialize convergence heatmap
@@ -376,12 +467,12 @@ fn main() -> Result<()> {
     
     // Phase 8 Appendix G: Vorticity Ghost (volumetric overlay)
     crash_log.log("  Creating vorticity ghost renderer (Appendix G)...");
-    let vorticity_renderer = VorticityRenderer::new(
+    let mut vorticity_renderer = VorticityRenderer::new(
         &device,
         config.format,
         convergence_renderer.cell_buffer(),
     );
-    crash_log.log("  ✓ VorticityRenderer OK (32-step ray march)");
+    crash_log.log("  ✓ VorticityRenderer OK (32-step ray march + slicing)");
     println!("  ✓ Vorticity Ghost: Appendix G volumetric layer");
     
     // BRIDGE MODE - these are optional, don't fail if bridge not available
@@ -416,6 +507,11 @@ fn main() -> Result<()> {
     let grid_renderer = GridRenderer::new(&device, config.format);
     crash_log.log("  ✓ GridRenderer OK (grid.wgsl integrated)");
     
+    // Initialize starfield renderer (Phase 7 - space background)
+    crash_log.log("  Creating StarfieldRenderer...");
+    let starfield_renderer = StarfieldRenderer::new(&device, &config);
+    crash_log.log("  ✓ StarfieldRenderer OK (procedural stars)");
+    
     // Initialize interaction state (raycaster)
     let mut interaction_state = InteractionState::new((config.width, config.height));
     crash_log.log("  ✓ InteractionState OK");
@@ -447,15 +543,23 @@ fn main() -> Result<()> {
     crash_log.log("=== ALL INIT COMPLETE - ENTERING EVENT LOOP ===");
     
     // Visualization state
-    let mut viz_mode = VizMode::Both;
+    // CLEAN: Just the globe in space - nothing else
+    let mut viz_mode = VizMode::Particles;  // Keep for toggle, but disabled by default
     let mut show_globe = true;
-    let mut show_grid = true;  // Phase 1 procedural grid background
-    let mut show_heatmap = true;
-    let mut show_telemetry = true;
-    let mut show_tensor = true;  // Phase 2 tensor voxel cloud
+    let mut show_grid = false;  // DISABLED - just space
+    let mut show_heatmap = false;  // DISABLED
+    let mut show_telemetry = false;  // DISABLED - no UI chrome
+    let mut show_tensor = false;  // DISABLED
+    let mut use_satellite = true;  // 'S' key toggles satellite vs procedural globe
     let mut use_bridge = use_grayscale || bridge_heatmap.is_connected();
-    let mut use_grayscale_mode = use_grayscale;
+    let use_grayscale_mode = use_grayscale;
     let start_time = Instant::now();
+    
+    // Session identity for peripheral header (Sprint 1: Doctrine 9/10 compliance)
+    let session_id = format!("HT-{:08X}", std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_secs() as u32);
     
     // Mouse state
     let mut mouse_pressed = false;
@@ -483,6 +587,7 @@ fn main() -> Result<()> {
     println!("  • B: Toggle bridge mode (Python/CUDA backend)");
     println!("  • C: Cycle colormap");
     println!("  • R: Regenerate all data");
+    println!("  • N: Toggle NOAA weather data (Phase 1)");
     println!("  • Page Up/Down: Scroll terminal");
     println!("Phase 6b User Agency:");
     println!("  • Space: Play/Pause timeline");
@@ -490,6 +595,12 @@ fn main() -> Result<()> {
     println!("  • Home: Go to start");
     println!("  • Click: Probe tensor node");
     println!("  • P: Close probe panel");
+    println!("Phase 8 Volumetric Slicing:");
+    println!("  • U: Cycle slice mode (Off/Below/Above/Thin)");
+    println!("  • K/L: Move slice plane up/down");
+    println!("  • J: Rotate slice plane");
+    println!("Globe Texture:");
+    println!("  • S: Toggle satellite/procedural mode");
     println!("  • ESC: Exit");
     println!("═══════════════════════════════════════════════\n");
     
@@ -543,11 +654,26 @@ fn main() -> Result<()> {
                                 PhysicalKey::Code(KeyCode::Escape) => elwt.exit(),
                                 PhysicalKey::Code(KeyCode::KeyV) => {
                                     viz_mode = viz_mode.next();
+                                    println!("🎯 VizMode: {} | Particles: {} | Streamlines: {} verts, {} idx",
+                                        viz_mode.name(),
+                                        particle_system.particle_count(),
+                                        streamline_renderer.vertex_count(),
+                                        streamline_renderer.index_count());
+                                    println!("   Field bounds: lon [{:.1}, {:.1}] lat [{:.1}, {:.1}]",
+                                        vector_field.config.lon_min, vector_field.config.lon_max,
+                                        vector_field.config.lat_min, vector_field.config.lat_max);
+                                    println!("   Globe radius: {:.2}", globe_config.radius);
                                     event_log.debug(EventCategory::Render, format!("Vector mode: {}", viz_mode.name()));
                                 }
                                 PhysicalKey::Code(KeyCode::KeyG) => {
                                     show_globe = !show_globe;
                                     event_log.debug(EventCategory::Render, format!("Globe: {}", if show_globe { "visible" } else { "hidden" }));
+                                }
+                                PhysicalKey::Code(KeyCode::KeyS) => {
+                                    use_satellite = !use_satellite;
+                                    let mode = if use_satellite { "SATELLITE (NASA GIBS)" } else { "PROCEDURAL (Command Center)" };
+                                    println!("🌍 Globe mode: {}", mode);
+                                    event_log.debug(EventCategory::Render, format!("Globe mode: {}", mode));
                                 }
                                 PhysicalKey::Code(KeyCode::KeyX) => {
                                     show_grid = !show_grid;
@@ -612,6 +738,62 @@ fn main() -> Result<()> {
                                     probe_panel.close();
                                     event_log.debug(EventCategory::System, "Probe panel closed");
                                 }
+                                // Phase 8: Volumetric slicing controls (The Big One Phase 4)
+                                PhysicalKey::Code(KeyCode::KeyK) => {
+                                    vorticity_renderer.slice_plane.move_plane(0.05);
+                                    event_log.debug(EventCategory::Render, format!("Slice plane: {:.2}", vorticity_renderer.slice_plane.distance));
+                                }
+                                PhysicalKey::Code(KeyCode::KeyL) => {
+                                    vorticity_renderer.slice_plane.move_plane(-0.05);
+                                    event_log.debug(EventCategory::Render, format!("Slice plane: {:.2}", vorticity_renderer.slice_plane.distance));
+                                }
+                                PhysicalKey::Code(KeyCode::KeyJ) => {
+                                    vorticity_renderer.slice_plane.rotate_x(0.1);
+                                    event_log.debug(EventCategory::Render, "Slice plane rotated");
+                                }
+                                PhysicalKey::Code(KeyCode::KeyU) => {
+                                    vorticity_renderer.slice_plane.cycle_mode();
+                                    let mode_name = match vorticity_renderer.slice_plane.mode {
+                                        vorticity_renderer::SliceMode::Off => "OFF",
+                                        vorticity_renderer::SliceMode::Below => "BELOW",
+                                        vorticity_renderer::SliceMode::Above => "ABOVE",
+                                        vorticity_renderer::SliceMode::Thin => "THIN",
+                                    };
+                                    event_log.info(EventCategory::Render, format!("Slice mode: {}", mode_name));
+                                }
+                                // Phase 1: Toggle NOAA weather data
+                                PhysicalKey::Code(KeyCode::KeyN) => {
+                                    use_noaa_data = !use_noaa_data;
+                                    if use_noaa_data {
+                                        // Request GFS data
+                                        if let Some(ref nf) = noaa_fetcher {
+                                            nf.request_wind_field(ForecastModel::Gfs);
+                                            event_log.info(EventCategory::Physics, "Requesting NOAA GFS wind data...");
+                                            println!("📡 Requesting NOAA GFS wind data from S3...");
+                                        }
+                                        // For now, use synthetic weather that looks realistic
+                                        let synth_weather = generate_synthetic_weather(
+                                            field_config.clone(), 
+                                            ForecastModel::Gfs, 
+                                            850
+                                        );
+                                        weather_lod.gfs = Some(synth_weather);
+                                        // Update vector field from weather tensor
+                                        if let Some(ref tensor) = weather_lod.gfs {
+                                            vector_field = tensor.to_vector_field();
+                                            event_log.info(EventCategory::Physics, 
+                                                format!("Weather tensor loaded: max wind {:.1} m/s", 
+                                                    tensor.stats.max_wind_speed));
+                                            println!("🌍 Synthetic GFS weather loaded: max wind {:.1} m/s", 
+                                                tensor.stats.max_wind_speed);
+                                        }
+                                    } else {
+                                        // Revert to test pattern
+                                        vector_field.generate_test_pattern();
+                                        event_log.info(EventCategory::Physics, "Reverted to test pattern");
+                                        println!("📊 Reverted to synthetic test pattern");
+                                    }
+                                }
                                 _ => {}
                             }
                         }
@@ -656,10 +838,13 @@ fn main() -> Result<()> {
                         
                         if button == MouseButton::Left {
                             mouse_pressed = state == ElementState::Pressed;
-                            if !mouse_pressed {
+                            
+                            // Inertia physics: track drag state
+                            if mouse_pressed {
+                                camera.start_drag();
+                            } else {
+                                camera.stop_drag();
                                 timeline_scrubber.end_drag();
-                            }
-                            if !mouse_pressed {
                                 last_mouse_pos = None;
                             }
                         }
@@ -708,9 +893,9 @@ fn main() -> Result<()> {
                         
                         if mouse_pressed && !timeline_scrubber.hit_test((position.x as f32, position.y as f32), screen_size) {
                             if let Some((last_x, last_y)) = last_mouse_pos {
-                                let delta_x = (position.x - last_x) as f32 * 0.001;
-                                let delta_y = (position.y - last_y) as f32 * 0.001;
-                                camera.pan(-delta_x, delta_y);
+                                let delta_x = (position.x - last_x) as f32;
+                                let delta_y = (position.y - last_y) as f32;
+                                camera.orbit(delta_x, delta_y);  // Phase 9: orbit with momentum
                             }
                             last_mouse_pos = Some((position.x, position.y));
                         }
@@ -735,6 +920,140 @@ fn main() -> Result<()> {
                         
                         // Update camera
                         camera.update(dt);
+                        
+                        // Phase 8: Update quadtree LOD based on camera position
+                        quadtree_globe.update(camera.position);
+                        
+                        // Phase 3: Update tile texture array FIRST
+                        // 1. Request tiles for visible chunks
+                        // 2. Poll for completed fetches
+                        // 3. Apply loaded texture layers to chunks
+                        // 4. THEN upload chunks to GPU (after texture layers are set)
+                        if let Some(ref mut ta) = tile_array {
+                            // Get visible chunks and request their tiles
+                            let visible_chunks: Vec<_> = quadtree_globe.get_render_chunks()
+                                .iter()
+                                .map(|c| c.tile_coord)
+                                .collect();
+                            
+                            for coord in &visible_chunks {
+                                ta.request_tile(*coord);
+                            }
+                            
+                            // Poll for completed tile fetches and upload to GPU
+                            ta.update(&queue);
+                            
+                            // Apply loaded texture layers to chunks
+                            for coord in &visible_chunks {
+                                if let Some(layer) = ta.get_layer(*coord) {
+                                    quadtree_globe.apply_texture_layer(*coord, layer);
+                                }
+                            }
+                        }
+                        
+                        // Phase 8: Upload visible chunks to GPU (AFTER texture layers applied)
+                        let render_chunks = quadtree_globe.get_render_chunks();
+                        globe_pipeline.upload_chunks(&queue, &render_chunks);
+                        
+                        // Phase 1: Poll for NOAA weather data
+                        if use_noaa_data {
+                            if let Some(ref nf) = noaa_fetcher {
+                                for (_req, status) in nf.poll() {
+                                    match status {
+                                        FetchStatus::Ready(data) => {
+                                            event_log.info(EventCategory::Physics, 
+                                                format!("NOAA data received: {} bytes", data.len()));
+                                            println!("✅ NOAA data received: {} bytes", data.len());
+                                            
+                                            // === NOAA DATA HARD-LINK ===
+                                            // Decode GRIB2 and inject into vector field for particle advection
+                                            let decoder = grib_decoder::GribDecoder::new(ForecastModel::Gfs);
+                                            match decoder.decode(&data) {
+                                                Ok(decoded) => {
+                                                    println!("📊 GRIB2 decoded: {} messages", decoded.messages.len());
+                                                    
+                                                    // Extract 850hPa wind components (standard surface analysis level)
+                                                    if let Some((u_msg, v_msg)) = decoded.get_wind(850) {
+                                                        let nx = u_msg.nx as u32;
+                                                        let ny = u_msg.ny as u32;
+                                                        
+                                                        // Rebuild vector field with NOAA dimensions
+                                                        let noaa_config = VectorFieldConfig {
+                                                            grid_width: nx,
+                                                            grid_height: ny,
+                                                            lon_min: -180.0,
+                                                            lon_max: 180.0,
+                                                            lat_min: -90.0,
+                                                            lat_max: 90.0,
+                                                            cell_size_m: 25000.0, // 0.25° ≈ 25km
+                                                        };
+                                                        
+                                                        vector_field = VectorField::new(noaa_config);
+                                                        
+                                                        // Inject wind vectors (GRIB2 is north-to-south, row-major)
+                                                        for y in 0..ny {
+                                                            for x in 0..nx {
+                                                                let grib_idx = (y * nx + x) as usize;
+                                                                // Flip Y: GRIB goes N→S, our grid goes S→N
+                                                                let field_y = ny - 1 - y;
+                                                                if let Some(cell) = vector_field.get_mut(x, field_y) {
+                                                                    cell.u = u_msg.values.get(grib_idx).copied().unwrap_or(0.0);
+                                                                    cell.v = v_msg.values.get(grib_idx).copied().unwrap_or(0.0);
+                                                                }
+                                                            }
+                                                        }
+                                                        
+                                                        // Compute derived fields
+                                                        vector_field.compute_vorticity();
+                                                        vector_field.compute_stats();
+                                                        
+                                                        // Upload to GPU for particle advection
+                                                        particle_system.upload_vector_field(&queue, &vector_field);
+                                                        
+                                                        event_log.info(EventCategory::Physics,
+                                                            format!("NOAA wind field active: {}x{}, max={:.1}m/s",
+                                                                nx, ny, vector_field.stats.max_speed));
+                                                        println!("🌀 NOAA wind field injected: {}x{} grid, max speed {:.1}m/s",
+                                                            nx, ny, vector_field.stats.max_speed);
+                                                    } else {
+                                                        // Fallback: use synthetic weather that looks realistic
+                                                        println!("⚠ GRIB2 missing 850hPa wind - using synthetic");
+                                                        let synth = generate_synthetic_weather(field_config.clone(), ForecastModel::Gfs, 850);
+                                                        vector_field = synth.to_vector_field();
+                                                        particle_system.upload_vector_field(&queue, &vector_field);
+                                                        println!("🌀 Synthetic wind field injected: max speed {:.1}m/s", vector_field.stats.max_speed);
+                                                    }
+                                                }
+                                                Err(e) => {
+                                                    println!("⚠ GRIB2 decode failed: {} - using synthetic", e);
+                                                    // Fallback: use synthetic weather
+                                                    let synth = generate_synthetic_weather(field_config.clone(), ForecastModel::Gfs, 850);
+                                                    vector_field = synth.to_vector_field();
+                                                    particle_system.upload_vector_field(&queue, &vector_field);
+                                                    println!("🌀 Synthetic wind field injected: max speed {:.1}m/s", vector_field.stats.max_speed);
+                                                }
+                                            }
+                                        }
+                                        FetchStatus::Failed(err) => {
+                                            event_log.debug(EventCategory::Physics, 
+                                                format!("NOAA fetch failed: {}", err));
+                                            // Expected for recent model runs - data not yet available
+                                        }
+                                        FetchStatus::Pending => {}
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Update satellite tiles (Sprint 2: NASA GIBS)
+                        if let Some(ref mut sat_tex) = satellite_texture {
+                            // Convert camera position to lat/lon for tile requests
+                            let cam_dir = -camera.position.normalize();
+                            let lat = cam_dir.y.asin().to_degrees() as f64;
+                            let lon = cam_dir.z.atan2(cam_dir.x).to_degrees() as f64;
+                            sat_tex.request_tiles_for_view(lat, lon, camera.radius);
+                            sat_tex.update(&queue);
+                        }
                         
                         // Update LOD culler
                         let view_matrix = camera.view_matrix();
@@ -764,10 +1083,12 @@ fn main() -> Result<()> {
                                 
                                 if cam_moved || anim_tick || hover_state.is_some() {
                                     // Phase 8: Use update_with_hover for Appendix D feedback
+                                    let cam_pos = [camera.position.x, camera.position.y, camera.position.z];
                                     convergence_renderer.update_with_hover(
                                         &queue,
                                         view_proj,
                                         globe_config.radius as f32,
+                                        cam_pos,
                                         time,
                                         &mut lod_culler,
                                         hover_state,
@@ -790,6 +1111,14 @@ fn main() -> Result<()> {
                         probe_panel.update(&queue, screen_size, time, tether_pos);
                         timeline_scrubber.update(&queue, screen_size, dt, time * 3.0);  // Heartbeat synced to time
                         
+                        // Collect debug metrics for HUD
+                        let debug_metrics = DebugMetrics {
+                            chunk_count: quadtree_globe.chunk_count(),
+                            tile_count: tile_array.as_ref().map(|t| t.stats().loaded_tiles).unwrap_or(0),
+                            particle_count: particle_system.particle_count(),
+                            noaa_mode: use_noaa_data,
+                        };
+                        
                         // Render frame
                         match render_frame(
                             &device,
@@ -798,6 +1127,7 @@ fn main() -> Result<()> {
                             &depth_view,
                             &globe_pipeline,
                             &grid_renderer,
+                            &starfield_renderer,  // Phase 7: Starfield
                             &camera,
                             &mut particle_system,
                             &streamline_renderer,
@@ -815,6 +1145,7 @@ fn main() -> Result<()> {
                             &timeline_scrubber,        // Phase 6b: Timeline
                             &event_log,
                             &metrics_collector,
+                            tile_array.as_ref(),         // Phase 8: TileTextureArray (streaming)
                             interaction_state.mouse_pos.map(|p| (p.x as f32, p.y as f32)),
                             show_globe,
                             show_grid,
@@ -826,6 +1157,10 @@ fn main() -> Result<()> {
                             viz_mode,
                             current_fps,
                             frame_time_ms,
+                            start_time,
+                            &session_id,
+                            debug_metrics,
+                            use_satellite,  // Globe texture mode (S key toggle)
                         ) {
                             Ok(_) => {},
                             Err(e) => {
@@ -957,60 +1292,103 @@ fn create_depth_texture_with_view(device: &wgpu::Device, config: &wgpu::SurfaceC
 }
 
 /// Create depth texture (legacy - returns view only)
+#[allow(dead_code)]  // Kept for API compatibility
 fn create_depth_texture(device: &wgpu::Device, config: &wgpu::SurfaceConfiguration) -> wgpu::TextureView {
     create_depth_texture_with_view(device, config).1
 }
 
 /// Globe rendering pipeline
+/// Phase 8: Now mesh-agnostic - supports dynamic quadtree chunk uploads
 struct GlobePipeline {
-    render_pipeline: wgpu::RenderPipeline,
+    render_pipeline: wgpu::RenderPipeline,      // Satellite texture mode (fs_main)
+    procedural_pipeline: wgpu::RenderPipeline,  // Command center mode (fs_procedural)
     vertex_buffer: wgpu::Buffer,
     index_buffer: wgpu::Buffer,
-    index_count: u32,
+    vertex_capacity: usize,       // Max vertices (for bounds checking)
+    index_capacity: usize,        // Max indices (for bounds checking)  
+    index_count: u32,             // Current draw count (updated per frame)
     camera_buffer: wgpu::Buffer,
     camera_bind_group: wgpu::BindGroup,
     camera_bind_group_layout: wgpu::BindGroupLayout,  // Exposed for tensor_renderer
+    /// Does this pipeline use satellite textures?
+    uses_satellite_texture: bool,
+}
+
+impl GlobePipeline {
+    /// Upload quadtree chunks to GPU for rendering
+    /// Returns the number of indices to draw
+    pub fn upload_chunks(&mut self, queue: &wgpu::Queue, chunks: &[&globe_quadtree::GlobeChunk]) -> u32 {
+        // Flatten all chunk vertices and indices
+        let mut all_vertices: Vec<GlobeVertex> = Vec::new();
+        let mut all_indices: Vec<u32> = Vec::new();
+        
+        for chunk in chunks {
+            let base_vertex = all_vertices.len() as u32;
+            all_vertices.extend_from_slice(&chunk.vertices);
+            
+            // Offset indices by base vertex
+            for &idx in &chunk.indices {
+                all_indices.push(idx + base_vertex);
+            }
+        }
+        
+        // Safety check - don't exceed buffer capacity
+        if all_vertices.len() > self.vertex_capacity {
+            eprintln!("Warning: Quadtree has {} vertices, buffer capacity {}", 
+                all_vertices.len(), self.vertex_capacity);
+            // Truncate to capacity
+            all_vertices.truncate(self.vertex_capacity);
+        }
+        
+        if all_indices.len() > self.index_capacity {
+            eprintln!("Warning: Quadtree has {} indices, buffer capacity {}", 
+                all_indices.len(), self.index_capacity);
+            all_indices.truncate(self.index_capacity);
+        }
+        
+        // Upload to GPU
+        if !all_vertices.is_empty() {
+            queue.write_buffer(&self.vertex_buffer, 0, bytemuck::cast_slice(&all_vertices));
+        }
+        if !all_indices.is_empty() {
+            queue.write_buffer(&self.index_buffer, 0, bytemuck::cast_slice(&all_indices));
+        }
+        
+        self.index_count = all_indices.len() as u32;
+        self.index_count
+    }
 }
 
 /// Create globe rendering pipeline
+/// Phase 8: Now mesh-agnostic - creates buffers for dynamic chunk uploads
 fn create_globe_pipeline(
     device: &wgpu::Device,
     config: &wgpu::SurfaceConfiguration,
-    icosphere: &Icosphere,
+    satellite_bind_group_layout: Option<&wgpu::BindGroupLayout>,
 ) -> Result<GlobePipeline> {
     let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
         label: Some("Globe Shader"),
         source: wgpu::ShaderSource::Wgsl(include_str!("shaders/globe.wgsl").into()),
     });
     
-    #[repr(C)]
-    #[derive(Copy, Clone, bytemuck::Pod, bytemuck::Zeroable)]
-    struct Vertex {
-        position: [f32; 3],
-        normal: [f32; 3],
-        uv: [f32; 2],
-        lat_lon: [f32; 2],
-    }
+    // Phase 8: Pre-allocate large buffers for quadtree chunks
+    // With max_depth=12, grid_size=16, actual usage shows ~150K vertices
+    // Increased from 100K to 200K to prevent truncation
+    const MAX_VERTICES: usize = 200_000;
+    const MAX_INDICES: usize = 1_200_000;
     
-    let vertices: Vec<Vertex> = icosphere.vertices.iter().map(|v| {
-        Vertex {
-            position: [v.position.x, v.position.y, v.position.z],
-            normal: [v.normal.x, v.normal.y, v.normal.z],
-            uv: v.uv,
-            lat_lon: [v.lat, v.lon],
-        }
-    }).collect();
-    
-    let vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-        label: Some("Globe Vertex Buffer"),
-        contents: bytemuck::cast_slice(&vertices),
-        usage: wgpu::BufferUsages::VERTEX,
+    let vertex_buffer = device.create_buffer(&wgpu::BufferDescriptor {
+        label: Some("Globe Vertex Buffer (Quadtree)"),
+        size: (MAX_VERTICES * std::mem::size_of::<GlobeVertex>()) as u64,
+        usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST,
+        mapped_at_creation: false,
     });
     
-    let index_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-        label: Some("Globe Index Buffer"),
-        contents: bytemuck::cast_slice(&icosphere.indices),
-        usage: wgpu::BufferUsages::INDEX,
+    let index_buffer = device.create_buffer(&wgpu::BufferDescriptor {
+        label: Some("Globe Index Buffer (Quadtree)"),
+        size: (MAX_INDICES * std::mem::size_of::<u32>()) as u64,
+        usage: wgpu::BufferUsages::INDEX | wgpu::BufferUsages::COPY_DST,
+        mapped_at_creation: false,
     });
     
     // Phase 8: Appendix F - Split precision RTE camera uniforms
@@ -1042,7 +1420,7 @@ fn create_globe_pipeline(
         label: Some("Camera Bind Group Layout"),
         entries: &[wgpu::BindGroupLayoutEntry {
             binding: 0,
-            visibility: wgpu::ShaderStages::VERTEX,
+            visibility: wgpu::ShaderStages::VERTEX | wgpu::ShaderStages::FRAGMENT,  // Fragment needs time for clouds
             ty: wgpu::BindingType::Buffer {
                 ty: wgpu::BufferBindingType::Uniform,
                 has_dynamic_offset: false,
@@ -1061,39 +1439,159 @@ fn create_globe_pipeline(
         }],
     });
     
-    let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
-        label: Some("Globe Pipeline Layout"),
+    // Build pipeline layouts:
+    // - Satellite layout: needs group 0 (camera) + group 1 (textures)
+    // - Procedural layout: only needs group 0 (camera)
+    let satellite_layout = if let Some(sat_layout) = satellite_bind_group_layout {
+        Some(device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+            label: Some("Globe Pipeline Layout (Satellite)"),
+            bind_group_layouts: &[&camera_bind_group_layout, sat_layout],
+            push_constant_ranges: &[],
+        }))
+    } else {
+        None
+    };
+    
+    let procedural_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+        label: Some("Globe Pipeline Layout (Procedural)"),
         bind_group_layouts: &[&camera_bind_group_layout],
         push_constant_ranges: &[],
     });
     
-    let render_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
-        label: Some("Globe Render Pipeline"),
-        layout: Some(&pipeline_layout),
+    // Default to satellite textures (fs_main), fallback is procedural (fs_procedural)
+    // 'S' key toggles between modes at runtime
+    let satellite_entry_point = "fs_main";
+    let procedural_entry_point = "fs_procedural";
+    
+    // Create satellite pipeline (primary) - only if we have satellite textures
+    let render_pipeline = if let Some(ref sat_layout) = satellite_layout {
+        device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+            label: Some("Globe Render Pipeline (Satellite)"),
+            layout: Some(sat_layout),
+            vertex: wgpu::VertexState {
+                module: &shader,
+                entry_point: "vs_main",
+                buffers: &[wgpu::VertexBufferLayout {
+                    array_stride: std::mem::size_of::<GlobeVertex>() as u64,
+                    step_mode: wgpu::VertexStepMode::Vertex,
+                    // Phase 3: Added tile_layer (4) and padding (5) for texture array
+                    attributes: &wgpu::vertex_attr_array![
+                        0 => Float32x3,  // position
+                        1 => Float32x3,  // normal
+                        2 => Float32x2,  // uv
+                        3 => Float32x2,  // lat_lon
+                        4 => Float32,    // tile_layer
+                        5 => Float32x3,  // _padding
+                    ],
+                }],
+            },
+            fragment: Some(wgpu::FragmentState {
+                module: &shader,
+                entry_point: satellite_entry_point,
+                targets: &[Some(wgpu::ColorTargetState {
+                    format: config.format,
+                    blend: Some(wgpu::BlendState::REPLACE),
+                    write_mask: wgpu::ColorWrites::ALL,
+                })],
+            }),
+            primitive: wgpu::PrimitiveState {
+                topology: wgpu::PrimitiveTopology::TriangleList,
+                strip_index_format: None,
+                front_face: wgpu::FrontFace::Ccw,
+                cull_mode: Some(wgpu::Face::Back),
+                polygon_mode: wgpu::PolygonMode::Fill,
+                unclipped_depth: false,
+                conservative: false,
+            },
+            depth_stencil: Some(wgpu::DepthStencilState {
+                format: wgpu::TextureFormat::Depth32Float,
+                depth_write_enabled: true,
+                depth_compare: wgpu::CompareFunction::Less,
+                stencil: wgpu::StencilState::default(),
+                bias: wgpu::DepthBiasState::default(),
+            }),
+            multisample: wgpu::MultisampleState::default(),
+            multiview: None,
+        })
+    } else {
+        // No satellite textures - use procedural for both pipelines
+        device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+            label: Some("Globe Render Pipeline (Fallback Procedural)"),
+            layout: Some(&procedural_layout),
+            vertex: wgpu::VertexState {
+                module: &shader,
+                entry_point: "vs_main",
+                buffers: &[wgpu::VertexBufferLayout {
+                    array_stride: std::mem::size_of::<GlobeVertex>() as u64,
+                    step_mode: wgpu::VertexStepMode::Vertex,
+                    attributes: &wgpu::vertex_attr_array![
+                        0 => Float32x3,  // position
+                        1 => Float32x3,  // normal
+                        2 => Float32x2,  // uv
+                        3 => Float32x2,  // lat_lon
+                        4 => Float32,    // tile_layer
+                        5 => Float32x3,  // _padding
+                    ],
+                }],
+            },
+            fragment: Some(wgpu::FragmentState {
+                module: &shader,
+                entry_point: procedural_entry_point,
+                targets: &[Some(wgpu::ColorTargetState {
+                    format: config.format,
+                    blend: Some(wgpu::BlendState::REPLACE),
+                    write_mask: wgpu::ColorWrites::ALL,
+                })],
+            }),
+            primitive: wgpu::PrimitiveState {
+                topology: wgpu::PrimitiveTopology::TriangleList,
+                strip_index_format: None,
+                front_face: wgpu::FrontFace::Ccw,
+                cull_mode: Some(wgpu::Face::Back),
+                polygon_mode: wgpu::PolygonMode::Fill,
+                unclipped_depth: false,
+                conservative: false,
+            },
+            depth_stencil: Some(wgpu::DepthStencilState {
+                format: wgpu::TextureFormat::Depth32Float,
+                depth_write_enabled: true,
+                depth_compare: wgpu::CompareFunction::Less,
+                stencil: wgpu::StencilState::default(),
+                bias: wgpu::DepthBiasState::default(),
+            }),
+            multisample: wgpu::MultisampleState::default(),
+            multiview: None,
+        })
+    };
+    
+    // Create procedural pipeline (command center mode)
+    let procedural_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+        label: Some("Globe Render Pipeline (Procedural)"),
+        layout: Some(&procedural_layout),
         vertex: wgpu::VertexState {
             module: &shader,
             entry_point: "vs_main",
             buffers: &[wgpu::VertexBufferLayout {
-                array_stride: std::mem::size_of::<Vertex>() as u64,
+                array_stride: std::mem::size_of::<GlobeVertex>() as u64,
                 step_mode: wgpu::VertexStepMode::Vertex,
                 attributes: &wgpu::vertex_attr_array![
-                    0 => Float32x3,
-                    1 => Float32x3,
-                    2 => Float32x2,
-                    3 => Float32x2,
+                    0 => Float32x3,  // position
+                    1 => Float32x3,  // normal
+                    2 => Float32x2,  // uv
+                    3 => Float32x2,  // lat_lon
+                    4 => Float32,    // tile_layer
+                    5 => Float32x3,  // _padding
                 ],
             }],
-            
         },
         fragment: Some(wgpu::FragmentState {
             module: &shader,
-            entry_point: "fs_procedural",
+            entry_point: procedural_entry_point,
             targets: &[Some(wgpu::ColorTargetState {
                 format: config.format,
                 blend: Some(wgpu::BlendState::REPLACE),
                 write_mask: wgpu::ColorWrites::ALL,
             })],
-            
         }),
         primitive: wgpu::PrimitiveState {
             topology: wgpu::PrimitiveTopology::TriangleList,
@@ -1113,17 +1611,20 @@ fn create_globe_pipeline(
         }),
         multisample: wgpu::MultisampleState::default(),
         multiview: None,
-        
     });
     
     Ok(GlobePipeline {
         render_pipeline,
+        procedural_pipeline,
         vertex_buffer,
         index_buffer,
-        index_count: icosphere.indices.len() as u32,
+        vertex_capacity: MAX_VERTICES,
+        index_capacity: MAX_INDICES,
+        index_count: 0,  // Updated per frame via upload_chunks
         camera_buffer,
         camera_bind_group,
         camera_bind_group_layout,
+        uses_satellite_texture: satellite_bind_group_layout.is_some(),
     })
 }
 
@@ -1136,11 +1637,12 @@ fn render_frame(
     depth_view: &wgpu::TextureView,
     globe_pipeline: &GlobePipeline,
     grid_renderer: &GridRenderer,
+    starfield_renderer: &StarfieldRenderer,  // Phase 7: Procedural starfield
     camera: &GlobeCamera,
     particle_system: &mut ParticleSystem,
-    streamline_renderer: &StreamlineRenderer,
+    _streamline_renderer: &StreamlineRenderer,
     convergence_renderer: &ConvergenceRenderer,
-    vorticity_renderer: &VorticityRenderer,  // Phase 8 Appendix G
+    _vorticity_renderer: &VorticityRenderer,  // Phase 8 Appendix G
     bridge_heatmap: &BridgeHeatmapRenderer,
     grayscale_bridge: &GrayscaleBridgeRenderer,
     tensor_renderer: Option<&TensorRenderer>,  // Phase 2: 3D Voxel Cloud
@@ -1149,10 +1651,11 @@ fn render_frame(
     glass_chrome: &GlassChrome,  // Phase 1: SDF Glass Panels (ACTIVE)
     gpu_text_renderer: Option<&GpuTextRenderer>,  // Phase 2: GPU Typography
     hud_overlay: &HudOverlay,
-    probe_panel: &ProbePanel,           // Phase 6b: Tensor Probe Panel
+    _probe_panel: &ProbePanel,           // Phase 6b: Tensor Probe Panel
     timeline_scrubber: &TimelineScrubber,  // Phase 6b: Timeline Scrubber
     event_log: &EventLog,
     metrics_collector: &MetricsCollector,
+    tile_array: Option<&tile_texture_array::TileTextureArray>,  // Phase 8: Streaming tiles
     mouse_pos: Option<(f32, f32)>,  // Mouse position for crosshair
     show_globe: bool,
     show_grid: bool,
@@ -1164,6 +1667,13 @@ fn render_frame(
     viz_mode: VizMode,
     current_fps: f32,
     frame_time_ms: f32,
+    // Sprint 1: Peripheral header data (Doctrine 9/10)
+    start_time: Instant,
+    session_id: &str,
+    // Phase 1 Integration: Debug metrics overlay
+    debug_metrics: DebugMetrics,
+    // Phase 8+: Globe texture mode toggle
+    use_satellite: bool,
 ) -> Result<()> {
     // Update camera uniform buffer
     // Phase 8: Appendix F - Split precision RTE
@@ -1208,11 +1718,19 @@ fn render_frame(
         _padding1c: 0.0,
         zoom: camera.zoom,
         aspect_ratio: 16.0 / 9.0,
-        time: 0.0,
+        time: start_time.elapsed().as_secs_f32(),  // Animated cloud layer
         _padding2: 0.0,
     };
     
     queue.write_buffer(&globe_pipeline.camera_buffer, 0, bytemuck::cast_slice(&[uniforms]));
+    
+    // Update starfield with current camera (for ray direction calculation)
+    starfield_renderer.update(
+        &queue,
+        view_proj,
+        [camera.position.x, camera.position.y, camera.position.z],
+        start_time.elapsed().as_secs_f32(),
+    );
     
     // Get surface texture
     let output = surface.get_current_texture()?;
@@ -1227,6 +1745,33 @@ fn render_frame(
         particle_system.advect(&mut encoder);
     }
     
+    // PASS 0: Starfield (no depth - renders at infinity)
+    // TEMPORARILY DISABLED to debug globe texture
+    {
+        let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+            label: Some("Starfield Pass"),
+            color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                view: &view,
+                resolve_target: None,
+                ops: wgpu::Operations {
+                    // Clear to pure black for starfield
+                    load: wgpu::LoadOp::Clear(wgpu::Color {
+                        r: 0.0,
+                        g: 0.0,
+                        b: 0.0,
+                        a: 1.0,
+                    }),
+                    store: wgpu::StoreOp::Store,
+                },
+            })],
+            depth_stencil_attachment: None,  // No depth for starfield
+            timestamp_writes: None,
+            occlusion_query_set: None,
+        });
+        
+        // starfield_renderer.render(&mut render_pass);  // DISABLED
+    }
+    
     // PASS 1: Globe + Heatmap (with depth buffer)
     {
         let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
@@ -1235,12 +1780,8 @@ fn render_frame(
                 view: &view,
                 resolve_target: None,
                 ops: wgpu::Operations {
-                    load: wgpu::LoadOp::Clear(wgpu::Color {
-                        r: 0.02,
-                        g: 0.02,
-                        b: 0.05,
-                        a: 1.0,
-                    }),
+                    // Load starfield background (rendered in PASS 0)
+                    load: wgpu::LoadOp::Load,
                     store: wgpu::StoreOp::Store,
                 },
             })],
@@ -1263,8 +1804,20 @@ fn render_frame(
         
         // LAYER 1: Globe
         if show_globe {
-            render_pass.set_pipeline(&globe_pipeline.render_pipeline);
+            // Select pipeline based on satellite/procedural mode (S key toggle)
+            let pipeline = if use_satellite {
+                &globe_pipeline.render_pipeline      // NASA GIBS satellite textures
+            } else {
+                &globe_pipeline.procedural_pipeline  // Command center aesthetic
+            };
+            render_pass.set_pipeline(pipeline);
             render_pass.set_bind_group(0, &globe_pipeline.camera_bind_group, &[]);
+            // Set tile texture array bind group if available (Phase 8 streaming)
+            if use_satellite && globe_pipeline.uses_satellite_texture {
+                if let Some(ref ta) = tile_array {
+                    render_pass.set_bind_group(1, &ta.bind_group, &[]);
+                }
+            }
             render_pass.set_vertex_buffer(0, globe_pipeline.vertex_buffer.slice(..));
             render_pass.set_index_buffer(globe_pipeline.index_buffer.slice(..), wgpu::IndexFormat::Uint32);
             render_pass.draw_indexed(0..globe_pipeline.index_count, 0, 0..1);
@@ -1307,17 +1860,17 @@ fn render_frame(
         });
         
         // LAYER 2.5: Vorticity Ghost (Phase 8 Appendix G - Volumetric Smoke)
-        // Renders after globe geometry but before streamlines
-        vorticity_renderer.render(&mut render_pass);
+        // DISABLED: Adds distracting purple overlay, needs opacity tuning
+        // vorticity_renderer.render(&mut render_pass);
         
         // LAYER 3: Streamlines
         if viz_mode == VizMode::Streamlines || viz_mode == VizMode::Both {
-            streamline_renderer.render(&mut render_pass);
+            _streamline_renderer.render(&mut render_pass, &globe_pipeline.camera_bind_group);
         }
         
         // LAYER 4: Particles
         if viz_mode == VizMode::Particles || viz_mode == VizMode::Both {
-            particle_system.render(&mut render_pass);
+            particle_system.render(&mut render_pass, &globe_pipeline.camera_bind_group);
         }
     }
     
@@ -1349,8 +1902,8 @@ fn render_frame(
         // Calculate normalized metrics for HUD
         let cpu_norm = cpu.total.clamp(0.0, 1.0);
         let mem_norm = (mem.used as f32 / mem.total.max(1) as f32).clamp(0.0, 1.0);
-        let fps_norm = (current_fps / 120.0).clamp(0.0, 1.0);
-        let frame_norm = (frame_time_ms / 33.0).clamp(0.0, 1.0);
+        let _fps_norm = (current_fps / 120.0).clamp(0.0, 1.0);
+        let _frame_norm = (frame_time_ms / 33.0).clamp(0.0, 1.0);
         
         // Physics placeholders (normalized)
         let temp_norm = 0.55;  // ~290K in 250-320 range
@@ -1380,10 +1933,56 @@ fn render_frame(
             pres_norm,
         );
         
+        // LAYER 6b: Bottom telemetry bar chart (OPERATION VALHALLA style)
+        // Get elapsed time for animation
+        let anim_time = start_time.elapsed().as_secs_f32();
+        hud_overlay.render_bottom_telemetry(
+            &mut render_pass,
+            queue,
+            width,
+            height,
+            anim_time,
+        );
+        
         // LAYER 7: GPU Text Rendering (Phase 2 - high-fidelity typography)
         if let Some(gtr) = gpu_text_renderer {
             // Build text for HUD display
             let mut builder = TextBuilder::new();
+            
+            // === OPERATION VALHALLA HEADER (Reference: command-center aesthetic) ===
+            builder.set_position(width / 2.0 - 120.0, 8.0);
+            builder.set_color([0.7, 0.75, 0.8, 1.0]);  // Light grey-blue
+            builder.add_text("OPERATION VALHALLA");
+            
+            // === PERIPHERAL HEADER (Sprint 1: Doctrine 9/10 compliance) ===
+            // Right-aligned timestamp format: [TRXX/00:00:17]
+            let elapsed = start_time.elapsed().as_secs();
+            let hours = elapsed / 3600;
+            let minutes = (elapsed % 3600) / 60;
+            let seconds = elapsed % 60;
+            let stability = current_fps / 165.0;  // Stability = FPS ratio to target
+            
+            // Session ID (top-right, reference style)
+            builder.set_position(width - 180.0, 8.0);
+            builder.set_color([0.4, 0.5, 0.6, 1.0]);  // Muted grey (peripheral)
+            builder.add_text(&format!("[{}]", session_id));
+            
+            // Timestamp (below operation name, right side)
+            builder.set_position(width - 120.0, 22.0);
+            builder.set_color([0.5, 0.55, 0.6, 1.0]);
+            builder.add_text(&format!("T+{:02}:{:02}:{:02}", hours, minutes, seconds));
+            
+            // Stability score (top-left corner)
+            let stab_color = if stability > 0.9 {
+                [0.3, 0.8, 0.4, 1.0]  // Green = stable
+            } else if stability > 0.5 {
+                [1.0, 0.8, 0.3, 1.0]  // Yellow = degraded
+            } else {
+                [1.0, 0.3, 0.3, 1.0]  // Red = unstable
+            };
+            builder.set_position(60.0, 8.0);
+            builder.set_color(stab_color);
+            builder.add_text(&format!("STB:{:.0}%", stability * 100.0));
             
             // Left rail text - System Vitality
             builder.set_position(20.0, 30.0);
@@ -1406,6 +2005,26 @@ fn render_frame(
             builder.set_color([1.0, 1.0, 0.5, 1.0]);  // Yellow
             builder.add_text(&format!("FRAME: {:.1}ms", frame_time_ms));
             
+            // === DEBUG METRICS (Phase 1 Integration) ===
+            builder.set_position(20.0, 125.0);
+            builder.set_color([0.5, 0.8, 0.9, 1.0]);  // Muted cyan
+            builder.add_text(&format!("CHUNKS: {}", debug_metrics.chunk_count));
+            
+            builder.set_position(20.0, 140.0);
+            builder.set_color([0.5, 0.8, 0.9, 1.0]);
+            builder.add_text(&format!("TILES: {}", debug_metrics.tile_count));
+            
+            builder.set_position(20.0, 155.0);
+            builder.set_color([0.5, 0.8, 0.9, 1.0]);
+            builder.add_text(&format!("PARTS: {}", debug_metrics.particle_count));
+            
+            // NOAA mode indicator
+            if debug_metrics.noaa_mode {
+                builder.set_position(20.0, 170.0);
+                builder.set_color([0.3, 1.0, 0.6, 1.0]);  // Bright green
+                builder.add_text("NOAA: ACTIVE");
+            }
+            
             // Right rail text - Weather Metrics
             builder.set_position(width - 190.0, 30.0);
             builder.set_color([0.0, 0.8, 1.0, 1.0]);  // Sovereign Blue
@@ -1427,50 +2046,8 @@ fn render_frame(
             builder.set_color([0.7, 0.5, 1.0, 1.0]);  // Purple
             builder.add_text(&format!("PRES: {:.0}hPa", 980.0 + pres_norm * 60.0));
             
-            // Phase 6b: Probe Panel Labels (when visible)
-            if let Some(probe_data) = probe_panel.get_display_data() {
-                let panel_x = width - 320.0 - 30.0;  // Match probe_panel.rs panel_pos
-                let panel_y = 100.0;
-                
-                // Header
-                builder.set_position(panel_x + 15.0, panel_y + 15.0);
-                builder.set_color([0.0, 0.8, 1.0, 1.0]);  // Sovereign Blue
-                builder.add_text("PROBABILITY PROBE");
-                
-                builder.set_position(panel_x + 15.0, panel_y + 30.0);
-                builder.set_color([0.6, 0.7, 0.8, 1.0]);  // Grey
-                builder.add_text(&format!("Node {} ({:.2}, {:.2})", 
-                    probe_data.node_id, probe_data.geo_coords.0, probe_data.geo_coords.1));
-                
-                // Contribution bars with labels (the key insight from Appendix D)
-                let bar_start_y = panel_y + 60.0;
-                let bar_spacing = 35.0;
-                
-                for (i, contrib) in probe_data.contributions.iter().enumerate() {
-                    let bar_y = bar_start_y + (i as f32) * bar_spacing;
-                    
-                    // Variable name on left
-                    builder.set_position(panel_x + 15.0, bar_y + 4.0);
-                    builder.set_color(contrib.color);
-                    builder.add_text(contrib.name);
-                    
-                    // Percentage on right (THE CRITICAL LABEL)
-                    builder.set_position(panel_x + 240.0, bar_y + 4.0);
-                    builder.set_color([1.0, 1.0, 1.0, 1.0]);  // White
-                    builder.add_text(&format!("{:.1}%", contrib.weight * 100.0));
-                }
-                
-                // Temporal curve section header
-                let curve_y = bar_start_y + 4.0 * bar_spacing + 20.0;
-                builder.set_position(panel_x + 15.0, curve_y - 5.0);
-                builder.set_color([0.0, 0.8, 1.0, 1.0]);
-                builder.add_text("TEMPORAL CONFIDENCE");
-                
-                // Frame labels under curve
-                builder.set_position(panel_x + 15.0, curve_y + 85.0);
-                builder.set_color([0.5, 0.6, 0.7, 1.0]);
-                builder.add_text("0      25k     50k     75k    100k");
-            }
+            // Phase 6b: Probe Panel Labels - DISABLED (unwanted floating card)
+            // if let Some(probe_data) = probe_panel.get_display_data() { ... }
             
             // Phase 6b: Timeline frame counter
             let timeline_frame = timeline_scrubber.current_frame();
@@ -1479,6 +2056,74 @@ fn render_frame(
             builder.set_color([0.0, 0.9, 1.0, 1.0]);  // Bright cyan
             builder.add_text(&format!("FRAME {}/{}", timeline_frame, timeline_max));
             
+            // === FLOATING GLOBE LABELS (OPERATION VALHALLA style) ===
+            // Static geographic/weather system labels projected onto screen
+            // These provide command-center context to the globe view
+            
+            // Helper to project geo coords to screen space
+            let project_geo_to_screen = |lon_deg: f32, lat_deg: f32| -> Option<(f32, f32)> {
+                let lat_rad = lat_deg * std::f32::consts::PI / 180.0;
+                let lon_rad = lon_deg * std::f32::consts::PI / 180.0;
+                
+                // Geodetic to ECEF (normalized globe radius = 1.0)
+                let cos_lat = lat_rad.cos();
+                let sin_lat = lat_rad.sin();
+                let cos_lon = lon_rad.cos();
+                let sin_lon = lon_rad.sin();
+                
+                let world_pos = glam::Vec3::new(
+                    cos_lat * cos_lon,
+                    cos_lat * sin_lon,
+                    sin_lat,
+                );
+                
+                // Backface culling - skip if on far side of globe
+                let to_camera = (camera.position - world_pos).normalize();
+                if world_pos.dot(to_camera) < 0.0 {
+                    return None;
+                }
+                
+                // Project to clip space
+                let view_matrix = camera.view_matrix();
+                let proj_matrix = camera.projection_matrix(16.0 / 9.0);
+                let clip = proj_matrix * view_matrix * glam::Vec4::new(world_pos.x, world_pos.y, world_pos.z, 1.0);
+                
+                // Perspective divide and NDC to screen
+                if clip.w <= 0.0 { return None; }
+                let ndc = glam::Vec3::new(clip.x / clip.w, clip.y / clip.w, clip.z / clip.w);
+                
+                // NDC (-1 to 1) → screen coordinates
+                let screen_x = (ndc.x * 0.5 + 0.5) * width;
+                let screen_y = (-ndc.y * 0.5 + 0.5) * height;  // Y flipped
+                
+                // Clip to screen bounds
+                if screen_x < 0.0 || screen_x > width || screen_y < 0.0 || screen_y > height {
+                    return None;
+                }
+                
+                Some((screen_x, screen_y))
+            };
+            
+            // Weather system labels (like the OPERATION VALHALLA reference)
+            let labels: &[(&str, f32, f32, [f32; 4])] = &[
+                ("North Atlantic Storm", -30.0, 55.0, [0.6, 0.8, 1.0, 0.9]),      // Pale blue
+                ("Saharan Air Mass", 15.0, 20.0, [1.0, 0.7, 0.4, 0.9]),           // Orange
+                ("Pacific High", -140.0, 35.0, [0.5, 0.9, 0.5, 0.9]),             // Green
+                ("Antarctic Vortex", 0.0, -75.0, [0.8, 0.8, 1.0, 0.9]),           // Light purple
+                ("Tropical Convergence", -80.0, 5.0, [1.0, 0.5, 0.7, 0.9]),       // Pink
+                ("Siberian High", 100.0, 55.0, [0.7, 0.9, 1.0, 0.9]),             // Cyan
+                ("Indian Monsoon", 75.0, 15.0, [0.4, 0.8, 0.6, 0.9]),             // Teal
+                ("Gulf Stream", -70.0, 35.0, [0.3, 0.6, 1.0, 0.9]),               // Blue
+            ];
+            
+            for (name, lon, lat, color) in labels {
+                if let Some((sx, sy)) = project_geo_to_screen(*lon, *lat) {
+                    builder.set_position(sx - 50.0, sy);
+                    builder.set_color(*color);
+                    builder.add_text(name);
+                }
+            }
+            
             let instances = builder.build();
             gtr.render(queue, &mut render_pass, &instances);
         }
@@ -1486,8 +2131,8 @@ fn render_frame(
         // Phase 6b: Render timeline scrubber (bottom, above terminal)
         timeline_scrubber.render(&mut render_pass);
         
-        // Phase 6b: Render probe panel (right side overlay)
-        probe_panel.render(&mut render_pass);
+        // Phase 6b: Probe panel DISABLED - unwanted floating card UI
+        // probe_panel.render(&mut render_pass);
         
         // Render crosshair at mouse position (Phase 8 interaction)
         if let Some((mx, my)) = mouse_pos {

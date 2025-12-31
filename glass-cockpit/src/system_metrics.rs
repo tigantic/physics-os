@@ -4,6 +4,7 @@
  * Cross-platform CPU, memory, and GPU metrics collection.
  * Designed for minimal overhead (<0.1ms per sample).
  */
+#![allow(dead_code)] // Metrics API ready for integration
 
 use std::time::{Duration, Instant};
 

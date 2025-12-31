@@ -10,6 +10,7 @@
  * - Article V: GPU-rendered procedural graphics
  * - Doctrine 6: Mathematical transparency for users
  */
+#![allow(dead_code)] // Probe panel API ready for integration
 
 use glam::Vec3;
 use wgpu::util::DeviceExt;
@@ -524,7 +525,7 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
     }
 
     /// Transition to anchor state on click
-    pub fn on_click(&mut self, node_id: u32, world_pos: Vec3, screen_pos: (f32, f32)) {
+    pub fn on_click(&mut self, node_id: u32, world_pos: Vec3, _screen_pos: (f32, f32)) {
         match self.state {
             ProbeState::Hover { .. } | ProbeState::Idle => {
                 self.state = ProbeState::Anchor { node_id, world_pos };

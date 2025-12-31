@@ -15,6 +15,11 @@ struct VorticityUniforms {
     vorticity_threshold: f32,
     vorticity_max: f32,
     max_opacity: f32,
+    // Phase 8: Volumetric slicing (The Big One Phase 4)
+    slice_plane: vec4<f32>,  // xyz = normal, w = distance
+    slice_mode: u32,         // 0 = off, 1 = below, 2 = above, 3 = thin
+    slice_thickness: f32,    // For thin slice mode
+    _padding: vec2<f32>,
 };
 
 struct ConvergenceCell {
@@ -42,6 +47,32 @@ fn hash(p: vec3<f32>) -> f32 {
     let q = fract(p * vec3<f32>(443.897, 441.423, 437.195));
     let r = q + dot(q, q.yxz + 19.19);
     return fract((r.x + r.y) * r.z);
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// Phase 8: Slice Plane - X-ray through atmosphere
+// Returns 1.0 if point should be rendered, 0.0 if sliced away
+// ═══════════════════════════════════════════════════════════════════════
+fn apply_slice(world_pos: vec3<f32>) -> f32 {
+    if uniforms.slice_mode == 0u {
+        return 1.0;  // Slicing disabled
+    }
+    
+    // Distance from point to slice plane
+    let dist = dot(world_pos, uniforms.slice_plane.xyz) + uniforms.slice_plane.w;
+    
+    if uniforms.slice_mode == 1u {
+        // Show only below plane
+        return select(0.0, 1.0, dist < 0.0);
+    } else if uniforms.slice_mode == 2u {
+        // Show only above plane  
+        return select(0.0, 1.0, dist > 0.0);
+    } else if uniforms.slice_mode == 3u {
+        // Thin slice mode - show only near plane
+        return smoothstep(uniforms.slice_thickness, 0.0, abs(dist));
+    }
+    
+    return 1.0;
 }
 
 fn noise3d(p: vec3<f32>) -> f32 {
@@ -183,7 +214,13 @@ fn fs_main(input: VertexOutput) -> @location(0) vec4<f32> {
             continue;
         }
         
-        let density = smoke_density(sample_pos);
+        // Phase 8: Apply slice plane culling
+        let slice_mask = apply_slice(sample_pos);
+        if slice_mask < 0.01 {
+            continue;  // This voxel is sliced away
+        }
+        
+        let density = smoke_density(sample_pos) * slice_mask;
         
         if density > 0.001 {
             // Color based on vorticity sign (cyclonic vs anticyclonic)

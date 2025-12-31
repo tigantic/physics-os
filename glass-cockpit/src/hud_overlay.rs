@@ -8,6 +8,7 @@
  * 
  * Constitutional: Article V GPU mandate, Doctrine 1 procedural
  */
+#![allow(dead_code)] // HUD API ready for integration
 
 use wgpu::util::DeviceExt;
 
@@ -540,6 +541,55 @@ impl HudOverlay {
         // Pressure
         self.render_labeled_bar(render_pass, queue, right_x, y, bar_w, bar_h, pressure, 
             [0.6, 0.3, 1.0], "PRES", "1013hPa");
+    }
+    
+    /// Render bottom telemetry bar chart (OPERATION VALHALLA style)
+    /// Displays historical data as vertical bars across the bottom of the screen
+    pub fn render_bottom_telemetry<'a>(
+        &'a self,
+        render_pass: &mut wgpu::RenderPass<'a>,
+        queue: &wgpu::Queue,
+        screen_w: f32,
+        screen_h: f32,
+        time: f32,
+    ) {
+        // Bar chart configuration
+        let bar_count = 48;
+        let chart_x = screen_w * 0.25;           // Start at 25% width
+        let chart_w = screen_w * 0.50;           // 50% of screen width
+        let chart_y = screen_h - 60.0;           // 60px from bottom
+        let max_bar_h = 40.0;
+        let bar_width = chart_w / bar_count as f32 * 0.75;
+        let bar_gap = chart_w / bar_count as f32 * 0.25;
+        
+        // Generate pseudo-random telemetry data (seeded by time for animation)
+        for i in 0..bar_count {
+            let phase = (i as f32 * 0.3 + time * 0.5).sin() * 0.5 + 0.5;
+            let noise = ((i as f32 * 7.3 + time * 2.0).sin() * 0.2).abs();
+            let value = (phase + noise).clamp(0.1, 1.0);
+            
+            let x = chart_x + i as f32 * (bar_width + bar_gap);
+            let bar_h = value * max_bar_h;
+            
+            // Color gradient: low = cyan, high = orange/yellow
+            let color = if value < 0.5 {
+                [0.2, 0.6 + value, 0.9 - value * 0.5]  // Cyan to green
+            } else {
+                [0.5 + value * 0.5, 0.7 - value * 0.3, 0.2]  // Yellow to orange
+            };
+            
+            // Render bar from bottom up
+            self.render_bar(render_pass, queue, 
+                x, chart_y + max_bar_h - bar_h, 
+                bar_width, bar_h, 
+                1.0, color);
+        }
+        
+        // Axis line at bottom
+        self.render_bar(render_pass, queue, 
+            chart_x - 5.0, chart_y + max_bar_h + 2.0, 
+            chart_w + 10.0, 1.0, 
+            1.0, [0.3, 0.4, 0.5]);
     }
     
     /// Render probe panel (shows on hover/selection)

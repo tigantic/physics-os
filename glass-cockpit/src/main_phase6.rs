@@ -49,6 +49,7 @@ use lod::{LodCuller, LodConfig};
 use convergence::ConvergenceConfig;
 use convergence_renderer::ConvergenceRenderer;
 use bridge_heatmap_renderer::BridgeHeatmapRenderer;
+#[allow(unused_imports)]  // Colormap API available for future colormapping features
 use grayscale_bridge_renderer::{GrayscaleBridgeRenderer, Colormap};
 
 /// Visualization mode
@@ -147,7 +148,14 @@ fn main() -> Result<()> {
     
     // STEP 6: Initialize particle system
     println!("[6/7] Initializing vector visualization...");
-    let mut particle_system = ParticleSystem::new(&device, &queue, config.format, &field_config);
+    // Phase 8: Pass camera bind group layout for 3D globe projection
+    let mut particle_system = ParticleSystem::new(
+        &device, 
+        &queue, 
+        config.format, 
+        &field_config,
+        &globe_pipeline.camera_bind_group_layout,
+    );
     let particle_config = ParticleConfig {
         spawn_rate: 500.0,
         lifetime: 12.0,
@@ -172,7 +180,12 @@ fn main() -> Result<()> {
     let streamlines = streamline_gen.generate(&vector_field);
     println!("  ✓ Streamlines: {} generated", streamlines.len());
     
-    let mut streamline_renderer = StreamlineRenderer::new(&device, config.format, streamline_config);
+    let mut streamline_renderer = StreamlineRenderer::new(
+        &device, 
+        config.format, 
+        streamline_config,
+        &globe_pipeline.camera_bind_group_layout,
+    );
     streamline_renderer.upload(&queue, &streamlines);
     
     // STEP 7: Initialize convergence heatmap (Phase 6)
@@ -202,7 +215,7 @@ fn main() -> Result<()> {
     let mut show_globe = true;
     let mut show_heatmap = true;
     let mut use_bridge = use_grayscale || bridge_heatmap.is_connected();
-    let mut use_grayscale_mode = use_grayscale;
+    let use_grayscale_mode = use_grayscale;
     let start_time = Instant::now();
     
     // Mouse state
@@ -412,7 +425,7 @@ fn main() -> Result<()> {
                             
                             // Measure actual render time (not display-blocked)
                             let render_time_ms = dt * 1000.0;
-                            let theoretical_fps = if render_time_ms > 0.0 { 1000.0 / render_time_ms } else { 0.0 };
+                            let _theoretical_fps = if render_time_ms > 0.0 { 1000.0 / render_time_ms } else { 0.0 };
                             
                             // Adjust budgets based on FPS (periodic, Sovereign 165Hz target)
                             lod_culler.budget.adjust_for_fps(current_fps, 165.0);
@@ -537,6 +550,7 @@ struct GlobePipeline {
     index_count: u32,
     camera_buffer: wgpu::Buffer,
     camera_bind_group: wgpu::BindGroup,
+    camera_bind_group_layout: wgpu::BindGroupLayout,  // Phase 8: Exposed for particle system
 }
 
 /// Create globe rendering pipeline
@@ -684,6 +698,7 @@ fn create_globe_pipeline(
         index_count: icosphere.indices.len() as u32,
         camera_buffer,
         camera_bind_group,
+        camera_bind_group_layout,  // Phase 8: Exposed for particle system
     })
 }
 
@@ -818,14 +833,14 @@ fn render_frame(
             occlusion_query_set: None,
         });
         
-        // LAYER 3: Streamlines (alpha blend)
+        // LAYER 3: Streamlines (Phase 8: Now projected onto globe surface)
         if viz_mode == VizMode::Streamlines || viz_mode == VizMode::Both {
-            streamline_renderer.render(&mut render_pass);
+            streamline_renderer.render(&mut render_pass, &globe_pipeline.camera_bind_group);
         }
         
-        // LAYER 4: Particles (alpha blend, on top)
+        // LAYER 4: Particles (Phase 8: Now projected onto globe surface)
         if viz_mode == VizMode::Particles || viz_mode == VizMode::Both {
-            particle_system.render(&mut render_pass);
+            particle_system.render(&mut render_pass, &globe_pipeline.camera_bind_group);
         }
     }
     

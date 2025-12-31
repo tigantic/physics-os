@@ -13,6 +13,7 @@
  * - Pressure reading
  * - Physics field statistics
  */
+#![allow(dead_code)] // Telemetry rails ready for integration
 
 use wgpu::util::DeviceExt;
 use std::collections::VecDeque;

@@ -7,7 +7,7 @@
  * to prevent interference with P-core physics computation.
  */
 
-use anyhow::{Result, Context};
+use anyhow::Result;
 
 // Phase 1-2 scaffolding: E-core affinity enforcement for Windows UI process
 #[cfg(target_os = "windows")]
@@ -95,6 +95,7 @@ pub fn enforce_e_core_affinity() -> Result<()> {
 
 #[cfg(test)]
 mod tests {
+    #[allow(unused_imports)]
     use super::*;
     
     #[test]
