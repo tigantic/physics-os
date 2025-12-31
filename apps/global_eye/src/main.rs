@@ -3,11 +3,11 @@
 //! A global-scale weather visualization system that shares the hyper_bridge IPC
 //! protocol and hyper_core physics transforms with Glass Cockpit.
 //!
-//! # Phase 1 Implementation
+//! # Phase 1C-10: Complete Integration
 //!
 //! - 1A: Python fetches HRRR data → tensors
 //! - 1B: Python writes to /dev/shm/hyper_weather_v1
-//! - 1C: Rust reads and renders on GPU
+//! - 1C: Rust reads and renders on GPU with winit + wgpu
 //!
 //! # Usage
 //!
@@ -19,10 +19,18 @@
 //! cargo run -p global_eye
 //! ```
 
+mod camera;
+mod globe_mesh;
+mod renderer;
 mod wind_texture;
 
 use anyhow::Result;
-use hyper_bridge::{WeatherReader, WeatherFrame};
+use winit::{
+    event::{ElementState, Event, KeyEvent, MouseButton, MouseScrollDelta, WindowEvent},
+    event_loop::{ControlFlow, EventLoop},
+    keyboard::{KeyCode, PhysicalKey},
+    window::{Window, WindowBuilder},
+};
 
 /// Main entry point for Global Eye.
 fn main() -> Result<()> {
@@ -33,7 +41,7 @@ fn main() -> Result<()> {
     println!();
     
     // Check weather bridge status
-    let reader = WeatherReader::new();
+    let reader = hyper_bridge::WeatherReader::new();
     
     if reader.is_available() {
         println!("  ✓ Weather bridge detected at {}", hyper_bridge::WEATHER_SHM_PATH);
@@ -48,36 +56,148 @@ fn main() -> Result<()> {
             }
         }
     } else {
-        println!("  ⊘ Weather bridge not available");
-        println!("    Run: python -m tensornet.sovereign.weather_stream");
+        println!("  ⊘ Weather bridge not available (will show demo pattern)");
+        println!("    To enable live data: python -m tensornet.sovereign.weather_stream");
     }
     
     println!();
-    println!("  Shared Infrastructure:");
-    println!("    • hyper_bridge: Weather protocol v{}", hyper_bridge::WEATHER_VERSION);
-    println!("    • hyper_core:   Morton encoding ready");
+    println!("  Controls:");
+    println!("    • Left mouse drag: Rotate globe");
+    println!("    • Mouse wheel:     Zoom in/out");
+    println!("    • Space:           Toggle auto-rotate");
+    println!("    • R:               Reset camera");
+    println!("    • Escape:          Exit");
     println!();
     
-    // Verify Morton encoding works
-    let morton = hyper_core::transforms::morton::encode_2d(100, 200);
-    let (x, y) = hyper_core::transforms::morton::decode_2d(morton);
-    println!("  Morton test: (100, 200) → {} → ({}, {})", morton, x, y);
+    // Create window and event loop
+    let event_loop = EventLoop::new()?;
+    let window = WindowBuilder::new()
+        .with_title("Global Eye - HyperTensor Weather Visualization")
+        .with_inner_size(winit::dpi::LogicalSize::new(1280, 720))
+        .build(&event_loop)?;
     
-    println!();
-    println!("  Phase 1 Status:");
-    println!("    [✓] 1A: HRRR data pipeline (Python)");
-    println!("    [✓] 1B: Shared memory bridge (IPC)");
-    println!("    [~] 1C: WGPU visualization (in progress)");
-    println!();
+    // Leak window to get 'static lifetime (same pattern as glass_cockpit)
+    let window: &'static Window = Box::leak(Box::new(window));
     
-    // TODO: Add actual rendering loop once windowing is set up
-    println!("  Next: Add winit window + wgpu renderer");
+    // Create renderer
+    println!("  Initializing renderer...");
+    let mut renderer = pollster::block_on(renderer::GlobeRenderer::new(window))?;
+    println!("  ✓ Renderer initialized");
+    
+    // Input state
+    let mut mouse_pressed = false;
+    let mut last_mouse_pos: Option<(f64, f64)> = None;
+    let mut auto_rotate = true;
+    
+    // Run event loop
+    event_loop.run(move |event, elwt| {
+        elwt.set_control_flow(ControlFlow::Poll);
+        
+        match event {
+            Event::WindowEvent { event, .. } => match event {
+                WindowEvent::CloseRequested => {
+                    elwt.exit();
+                }
+                
+                WindowEvent::Resized(size) => {
+                    renderer.resize(size.width, size.height);
+                }
+                
+                WindowEvent::KeyboardInput {
+                    event:
+                        KeyEvent {
+                            physical_key: PhysicalKey::Code(key),
+                            state: ElementState::Pressed,
+                            ..
+                        },
+                    ..
+                } => match key {
+                    KeyCode::Escape => elwt.exit(),
+                    KeyCode::Space => {
+                        auto_rotate = !auto_rotate;
+                        println!(
+                            "  Auto-rotate: {}",
+                            if auto_rotate { "ON" } else { "OFF" }
+                        );
+                    }
+                    KeyCode::KeyR => {
+                        renderer.camera = camera::Camera::default();
+                        println!("  Camera reset");
+                    }
+                    _ => {}
+                },
+                
+                WindowEvent::MouseInput { state, button, .. } => {
+                    if button == MouseButton::Left {
+                        mouse_pressed = state == ElementState::Pressed;
+                        if mouse_pressed {
+                            auto_rotate = false;
+                        }
+                    }
+                }
+                
+                WindowEvent::CursorMoved { position, .. } => {
+                    if mouse_pressed {
+                        if let Some((last_x, last_y)) = last_mouse_pos {
+                            let dx = (position.x - last_x) as f32;
+                            let dy = (position.y - last_y) as f32;
+                            renderer.camera.rotate(dx * 0.005, dy * 0.005);
+                        }
+                    }
+                    last_mouse_pos = Some((position.x, position.y));
+                }
+                
+                WindowEvent::MouseWheel { delta, .. } => {
+                    let zoom = match delta {
+                        MouseScrollDelta::LineDelta(_, y) => y * 0.3,
+                        MouseScrollDelta::PixelDelta(pos) => pos.y as f32 * 0.01,
+                    };
+                    renderer.camera.zoom(-zoom);
+                }
+                
+                WindowEvent::RedrawRequested => {
+                    // Auto-rotate when not interacting
+                    if auto_rotate {
+                        renderer.camera.rotate(0.002, 0.0);
+                    }
+                    
+                    // Check for new weather data
+                    renderer.update_weather();
+                    
+                    // Render frame
+                    match renderer.render() {
+                        Ok(_) => {}
+                        Err(wgpu::SurfaceError::Lost | wgpu::SurfaceError::Outdated) => {
+                            let size = window.inner_size();
+                            renderer.resize(size.width, size.height);
+                        }
+                        Err(wgpu::SurfaceError::OutOfMemory) => {
+                            eprintln!("Out of memory!");
+                            elwt.exit();
+                        }
+                        Err(e) => {
+                            eprintln!("Render error: {:?}", e);
+                        }
+                    }
+                }
+                
+                _ => {}
+            },
+            
+            Event::AboutToWait => {
+                // Request continuous redraws
+                window.request_redraw();
+            }
+            
+            _ => {}
+        }
+    })?;
     
     Ok(())
 }
 
 /// Print information about a weather frame.
-fn print_frame_info(frame: &WeatherFrame) {
+fn print_frame_info(frame: &hyper_bridge::WeatherFrame) {
     let header = frame.header();
     
     // Copy fields from packed struct to avoid unaligned access
