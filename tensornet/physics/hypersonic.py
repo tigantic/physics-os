@@ -453,5 +453,108 @@ def demo_hazard_field():
     return hazard
 
 
+# ═══════════════════════════════════════════════════════════════════════════
+# Atmospheric Model (for RL Environment)
+# ═══════════════════════════════════════════════════════════════════════════
+
+class AtmosphericModel:
+    """
+    Standard atmosphere model for flight simulation.
+    
+    Provides density and temperature as a function of altitude.
+    Based on US Standard Atmosphere 1976.
+    """
+    
+    # Layer boundaries (meters)
+    TROPOSPHERE = 11000
+    STRATOSPHERE1 = 20000
+    STRATOSPHERE2 = 32000
+    STRATOPAUSE = 47000
+    MESOSPHERE1 = 51000
+    MESOSPHERE2 = 71000
+    
+    # Sea level conditions
+    RHO_0 = 1.225       # kg/m³
+    T_0 = 288.15        # K
+    P_0 = 101325.0      # Pa
+    
+    # Temperature lapse rates (K/m)
+    LAPSE_TROPO = -0.0065
+    LAPSE_STRAT2 = 0.001
+    LAPSE_STRAT3 = 0.0028
+    LAPSE_MESO1 = -0.0028
+    LAPSE_MESO2 = -0.002
+    
+    def temperature(self, altitude_m: float) -> float:
+        """
+        Get temperature at altitude.
+        
+        Args:
+            altitude_m: Altitude in meters
+            
+        Returns:
+            Temperature in Kelvin
+        """
+        if altitude_m < self.TROPOSPHERE:
+            return self.T_0 + self.LAPSE_TROPO * altitude_m
+        elif altitude_m < self.STRATOSPHERE1:
+            return 216.65  # Isothermal
+        elif altitude_m < self.STRATOSPHERE2:
+            return 216.65 + self.LAPSE_STRAT2 * (altitude_m - self.STRATOSPHERE1)
+        elif altitude_m < self.STRATOPAUSE:
+            return 228.65 + self.LAPSE_STRAT3 * (altitude_m - self.STRATOSPHERE2)
+        elif altitude_m < self.MESOSPHERE1:
+            return 270.65  # Isothermal
+        elif altitude_m < self.MESOSPHERE2:
+            return 270.65 + self.LAPSE_MESO1 * (altitude_m - self.MESOSPHERE1)
+        else:
+            return 214.65 + self.LAPSE_MESO2 * (altitude_m - self.MESOSPHERE2)
+    
+    def pressure(self, altitude_m: float) -> float:
+        """
+        Get pressure at altitude using barometric formula.
+        
+        Args:
+            altitude_m: Altitude in meters
+            
+        Returns:
+            Pressure in Pascals
+        """
+        # Simplified exponential model
+        scale_height = 8500.0  # meters
+        return self.P_0 * math.exp(-altitude_m / scale_height)
+    
+    def density(self, altitude_m: float) -> float:
+        """
+        Get density at altitude.
+        
+        Uses ideal gas law: ρ = P / (R * T)
+        
+        Args:
+            altitude_m: Altitude in meters
+            
+        Returns:
+            Density in kg/m³
+        """
+        T = self.temperature(altitude_m)
+        P = self.pressure(altitude_m)
+        return P / (GAS_CONSTANT_AIR * T)
+    
+    def speed_of_sound(self, altitude_m: float) -> float:
+        """
+        Get speed of sound at altitude.
+        
+        a = sqrt(γ * R * T)
+        
+        Args:
+            altitude_m: Altitude in meters
+            
+        Returns:
+            Speed of sound in m/s
+        """
+        T = self.temperature(altitude_m)
+        return math.sqrt(GAMMA_AIR * GAS_CONSTANT_AIR * T)
+
+
 if __name__ == "__main__":
     demo_hazard_field()

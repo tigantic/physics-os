@@ -87,6 +87,15 @@ from .buffers import (
     TrajectoryBuffer,
 )
 
+# Phase 4: Hypersonic RL Environment
+from .hypersonic_env import (
+    HypersonicEnv,
+    HypersonicEnvConfig,
+    AircraftState,
+    TrajectoryTube,
+    make_hypersonic_env,
+)
+
 __all__ = [
     # Agents
     'Agent',
@@ -131,6 +140,13 @@ __all__ = [
     'Experience',
     'Batch',
     'TrajectoryBuffer',
+    
+    # Phase 4: Hypersonic RL
+    'HypersonicEnv',
+    'HypersonicEnvConfig',
+    'AircraftState',
+    'TrajectoryTube',
+    'make_hypersonic_env',
 ]
 
 __version__ = '0.1.0'

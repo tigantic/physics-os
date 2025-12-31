@@ -36,6 +36,7 @@ mod writer;
 mod sovereign;
 mod weather;
 pub mod trajectory;
+pub mod swarm;
 
 pub use protocol::{
     TensorBridgeHeader,
