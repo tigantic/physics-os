@@ -166,7 +166,8 @@ class ShockDetector:
                 entropy = -torch.sum(S_sq * torch.log(S_sq))
                 
                 entropies[i] = entropy.item()
-            except:
+            except (RuntimeError, torch.linalg.LinAlgError):
+                # SVD failed - treat as zero entropy (smooth region)
                 entropies[i] = 0.0
         
         # Normalize

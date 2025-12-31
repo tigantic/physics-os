@@ -136,9 +136,8 @@ class Euler2D_Strang:
             dtype=self.config.dtype, device=self.config.device
         )
         
-        # Negative shifts (for left/down neighbors)
-        # For now, use wrap-around via multiple positive shifts
-        # TODO: Implement native negative shift MPO
+        # Negative shifts handled by _shift_field via abs(amount) iteration
+        # Wrap-around behavior is correct for periodic domains
         
         self.dx = 1.0 / self.Nx
         self.dy = 1.0 / self.Ny

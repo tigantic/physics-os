@@ -15,7 +15,6 @@ import time
 from pathlib import Path
 from typing import Optional
 
-import numpy as np
 import torch
 
 # Protocol constants

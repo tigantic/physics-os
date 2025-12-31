@@ -540,7 +540,8 @@ class FADSSensor:
             # Gauss-Newton update
             try:
                 dx = torch.linalg.lstsq(J, residual.unsqueeze(1)).solution.squeeze()
-            except:
+            except (RuntimeError, torch.linalg.LinAlgError):
+                # Least squares failed - iteration cannot proceed
                 break
             
             x = x + 0.5 * dx  # Damped update

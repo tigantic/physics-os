@@ -387,7 +387,7 @@ pub fn generate_synthetic_weather(
 ) -> WeatherTensor {
     use std::f32::consts::PI;
     
-    let mut tensor = WeatherTensor::new(config.clone(), model, level);
+    let mut tensor = WeatherTensor::new(config, model, level);
     let w = config.grid_width;
     let h = config.grid_height;
     

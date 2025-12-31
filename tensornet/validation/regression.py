@@ -20,7 +20,7 @@ from pathlib import Path
 import json
 import hashlib
 import time
-import pickle
+# NOTE: pickle deliberately NOT imported - security risk, use numpy/torch save instead
 
 
 class ComparisonType(Enum):

@@ -270,9 +270,9 @@ fn main() -> Result<()> {
     println!("[4/8] Generating vector field...");
     // Use global coverage for particles to wrap around entire globe
     let field_config = VectorFieldConfig::default();  // Full globe: -180 to 180, -90 to 90
-    let mut vector_field = VectorField::new(field_config.clone());
+    let mut vector_field = VectorField::new(field_config);
     vector_field.generate_test_pattern();
-    let stats = vector_field.stats.clone();
+    let stats = vector_field.stats;
     crash_log.log(&format!("  Vector field {}x{}", field_config.grid_width, field_config.grid_height));
     println!("  ✓ Vector field: {}x{} grid", field_config.grid_width, field_config.grid_height);
     println!("  ✓ Max speed: {:.1} m/s, Max vorticity: {:.6}", stats.max_speed, stats.max_vorticity);
@@ -773,7 +773,7 @@ fn main() -> Result<()> {
                                         }
                                         // For now, use synthetic weather that looks realistic
                                         let synth_weather = generate_synthetic_weather(
-                                            field_config.clone(), 
+                                            field_config, 
                                             ForecastModel::Gfs, 
                                             850
                                         );
@@ -974,8 +974,8 @@ fn main() -> Result<()> {
                                                     
                                                     // Extract 850hPa wind components (standard surface analysis level)
                                                     if let Some((u_msg, v_msg)) = decoded.get_wind(850) {
-                                                        let nx = u_msg.nx as u32;
-                                                        let ny = u_msg.ny as u32;
+                                                        let nx = u_msg.nx;
+                                                        let ny = u_msg.ny;
                                                         
                                                         // Rebuild vector field with NOAA dimensions
                                                         let noaa_config = VectorFieldConfig {
@@ -1018,7 +1018,7 @@ fn main() -> Result<()> {
                                                     } else {
                                                         // Fallback: use synthetic weather that looks realistic
                                                         println!("⚠ GRIB2 missing 850hPa wind - using synthetic");
-                                                        let synth = generate_synthetic_weather(field_config.clone(), ForecastModel::Gfs, 850);
+                                                        let synth = generate_synthetic_weather(field_config, ForecastModel::Gfs, 850);
                                                         vector_field = synth.to_vector_field();
                                                         particle_system.upload_vector_field(&queue, &vector_field);
                                                         println!("🌀 Synthetic wind field injected: max speed {:.1}m/s", vector_field.stats.max_speed);
@@ -1027,7 +1027,7 @@ fn main() -> Result<()> {
                                                 Err(e) => {
                                                     println!("⚠ GRIB2 decode failed: {} - using synthetic", e);
                                                     // Fallback: use synthetic weather
-                                                    let synth = generate_synthetic_weather(field_config.clone(), ForecastModel::Gfs, 850);
+                                                    let synth = generate_synthetic_weather(field_config, ForecastModel::Gfs, 850);
                                                     vector_field = synth.to_vector_field();
                                                     particle_system.upload_vector_field(&queue, &vector_field);
                                                     println!("🌀 Synthetic wind field injected: max speed {:.1}m/s", vector_field.stats.max_speed);
@@ -1312,49 +1312,55 @@ struct GlobePipeline {
     camera_bind_group_layout: wgpu::BindGroupLayout,  // Exposed for tensor_renderer
     /// Does this pipeline use satellite textures?
     uses_satellite_texture: bool,
+    /// Pre-allocated staging vectors for upload_chunks (Article V: no per-frame alloc)
+    staging_vertices: Vec<GlobeVertex>,
+    staging_indices: Vec<u32>,
 }
 
 impl GlobePipeline {
     /// Upload quadtree chunks to GPU for rendering
     /// Returns the number of indices to draw
+    /// 
+    /// Article V Compliant: Uses pre-allocated staging vectors (no per-frame allocation)
     pub fn upload_chunks(&mut self, queue: &wgpu::Queue, chunks: &[&globe_quadtree::GlobeChunk]) -> u32 {
-        // Flatten all chunk vertices and indices
-        let mut all_vertices: Vec<GlobeVertex> = Vec::new();
-        let mut all_indices: Vec<u32> = Vec::new();
+        // Clear staging buffers (no deallocation - capacity preserved)
+        self.staging_vertices.clear();
+        self.staging_indices.clear();
         
+        // Flatten all chunk vertices and indices into staging buffers
         for chunk in chunks {
-            let base_vertex = all_vertices.len() as u32;
-            all_vertices.extend_from_slice(&chunk.vertices);
+            let base_vertex = self.staging_vertices.len() as u32;
+            self.staging_vertices.extend_from_slice(&chunk.vertices);
             
             // Offset indices by base vertex
             for &idx in &chunk.indices {
-                all_indices.push(idx + base_vertex);
+                self.staging_indices.push(idx + base_vertex);
             }
         }
         
         // Safety check - don't exceed buffer capacity
-        if all_vertices.len() > self.vertex_capacity {
+        if self.staging_vertices.len() > self.vertex_capacity {
             eprintln!("Warning: Quadtree has {} vertices, buffer capacity {}", 
-                all_vertices.len(), self.vertex_capacity);
+                self.staging_vertices.len(), self.vertex_capacity);
             // Truncate to capacity
-            all_vertices.truncate(self.vertex_capacity);
+            self.staging_vertices.truncate(self.vertex_capacity);
         }
         
-        if all_indices.len() > self.index_capacity {
+        if self.staging_indices.len() > self.index_capacity {
             eprintln!("Warning: Quadtree has {} indices, buffer capacity {}", 
-                all_indices.len(), self.index_capacity);
-            all_indices.truncate(self.index_capacity);
+                self.staging_indices.len(), self.index_capacity);
+            self.staging_indices.truncate(self.index_capacity);
         }
         
         // Upload to GPU
-        if !all_vertices.is_empty() {
-            queue.write_buffer(&self.vertex_buffer, 0, bytemuck::cast_slice(&all_vertices));
+        if !self.staging_vertices.is_empty() {
+            queue.write_buffer(&self.vertex_buffer, 0, bytemuck::cast_slice(&self.staging_vertices));
         }
-        if !all_indices.is_empty() {
-            queue.write_buffer(&self.index_buffer, 0, bytemuck::cast_slice(&all_indices));
+        if !self.staging_indices.is_empty() {
+            queue.write_buffer(&self.index_buffer, 0, bytemuck::cast_slice(&self.staging_indices));
         }
         
-        self.index_count = all_indices.len() as u32;
+        self.index_count = self.staging_indices.len() as u32;
         self.index_count
     }
 }
@@ -1442,15 +1448,13 @@ fn create_globe_pipeline(
     // Build pipeline layouts:
     // - Satellite layout: needs group 0 (camera) + group 1 (textures)
     // - Procedural layout: only needs group 0 (camera)
-    let satellite_layout = if let Some(sat_layout) = satellite_bind_group_layout {
-        Some(device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+    let satellite_layout = satellite_bind_group_layout.map(|sat_layout| {
+        device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label: Some("Globe Pipeline Layout (Satellite)"),
             bind_group_layouts: &[&camera_bind_group_layout, sat_layout],
             push_constant_ranges: &[],
-        }))
-    } else {
-        None
-    };
+        })
+    });
     
     let procedural_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
         label: Some("Globe Pipeline Layout (Procedural)"),
@@ -1625,6 +1629,9 @@ fn create_globe_pipeline(
         camera_bind_group,
         camera_bind_group_layout,
         uses_satellite_texture: satellite_bind_group_layout.is_some(),
+        // Article V: Pre-allocate staging vectors to avoid per-frame allocation
+        staging_vertices: Vec::with_capacity(MAX_VERTICES),
+        staging_indices: Vec::with_capacity(MAX_INDICES),
     })
 }
 
@@ -1726,7 +1733,7 @@ fn render_frame(
     
     // Update starfield with current camera (for ray direction calculation)
     starfield_renderer.update(
-        &queue,
+        queue,
         view_proj,
         [camera.position.x, camera.position.y, camera.position.z],
         start_time.elapsed().as_secs_f32(),
@@ -1748,7 +1755,7 @@ fn render_frame(
     // PASS 0: Starfield (no depth - renders at infinity)
     // TEMPORARILY DISABLED to debug globe texture
     {
-        let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+        let _render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
             label: Some("Starfield Pass"),
             color_attachments: &[Some(wgpu::RenderPassColorAttachment {
                 view: &view,
@@ -1814,7 +1821,7 @@ fn render_frame(
             render_pass.set_bind_group(0, &globe_pipeline.camera_bind_group, &[]);
             // Set tile texture array bind group if available (Phase 8 streaming)
             if use_satellite && globe_pipeline.uses_satellite_texture {
-                if let Some(ref ta) = tile_array {
+                if let Some(ta) = tile_array.as_ref() {
                     render_pass.set_bind_group(1, &ta.bind_group, &[]);
                 }
             }

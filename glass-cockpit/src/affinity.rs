@@ -46,7 +46,7 @@ pub fn enforce_e_core_affinity() -> Result<()> {
     let cpu_count = match fs::read_to_string("/sys/devices/system/cpu/online") {
         Ok(content) => {
             // Parse "0-31" format
-            if let Some(max) = content.trim().split('-').last() {
+            if let Some(max) = content.trim().split('-').next_back() {
                 max.parse::<usize>().unwrap_or(31) + 1
             } else {
                 32

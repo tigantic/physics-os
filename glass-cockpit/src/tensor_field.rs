@@ -180,7 +180,7 @@ impl TensorField {
                     let fz = (z as f32 / d as f32) * 2.0 - 1.0;
                     
                     let r = (fx * fx + fy * fy).sqrt();
-                    let intensity = (r * 3.14).cos() * 0.5 + 0.5;
+                    let intensity = (r * std::f32::consts::PI).cos() * 0.5 + 0.5;
                     
                     let tensor = Tensor3x3::from_components(
                         intensity,           // xx

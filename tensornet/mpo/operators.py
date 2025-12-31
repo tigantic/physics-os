@@ -177,8 +177,8 @@ class LaplacianMPO:
                 # Reduced iterations: niter=1 instead of 2 (2× speedup on SVD)
                 U, S, Vh = torch.svd_lowrank(mat_left, q=max_rank, niter=1)
                 core = (U @ torch.diag(S) @ Vh).reshape(-1, d, r_right)
-            except:
-                # Fast fallback: simple truncation (no SVD overhead)
+            except (RuntimeError, torch.linalg.LinAlgError):
+                # SVD failed - use simple truncation fallback
                 core = core[:max_rank, :, :]
         
         elif r_right > max_rank:
@@ -187,7 +187,8 @@ class LaplacianMPO:
             try:
                 U, S, Vh = torch.svd_lowrank(mat_right, q=max_rank, niter=1)
                 core = (U @ torch.diag(S) @ Vh).reshape(r_left, d, -1)
-            except:
+            except (RuntimeError, torch.linalg.LinAlgError):
+                # SVD failed - use simple truncation fallback
                 core = core[:, :, :max_rank]
         
         return core

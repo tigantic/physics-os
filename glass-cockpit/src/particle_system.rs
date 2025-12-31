@@ -544,7 +544,7 @@ impl ParticleSystem {
         compute_pass.set_pipeline(&self.advect_pipeline);
         compute_pass.set_bind_group(0, &self.advect_bind_groups[self.read_buffer], &[]);
         
-        let workgroups = (self.particle_count + 63) / 64;
+        let workgroups = self.particle_count.div_ceil(64);
         compute_pass.dispatch_workgroups(workgroups, 1, 1);
         
         drop(compute_pass);

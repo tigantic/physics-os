@@ -51,7 +51,7 @@ impl WeatherCell {
     }
     
     /// Convert to VectorCell (for particle advection)
-    pub fn to_vector_cell(&self) -> VectorCell {
+    pub fn to_vector_cell(self) -> VectorCell {
         VectorCell {
             u: self.u,
             v: self.v,
@@ -95,11 +95,11 @@ impl WeatherCell {
         self.vorticity = dvdx - dudy;
         
         // Convergence zone (negative divergence = convergence)
-        self.convergence = (-self.divergence).max(0.0).min(1.0) / 0.0001; // Normalize
+        self.convergence = (-self.divergence).clamp(0.0, 1.0) / 0.0001; // Normalize
         
         // Cloud potential: high RH + upward motion
         let rh_factor = (self.humidity - 0.7).max(0.0) / 0.3;
-        let w_factor = (self.w).max(0.0) / 0.5;
+        let w_factor = self.w.max(0.0) / 0.5;
         self.cloud_potential = (rh_factor * 0.7 + w_factor * 0.3).min(1.0);
     }
 }
@@ -287,7 +287,7 @@ impl WeatherTensor {
     
     /// Convert to VectorField for particle advection
     pub fn to_vector_field(&self) -> VectorField {
-        let mut vf = VectorField::new(self.config.clone());
+        let mut vf = VectorField::new(self.config);
         
         for (i, cell) in self.data.iter().enumerate() {
             vf.data[i] = cell.to_vector_cell();

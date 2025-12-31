@@ -20,7 +20,7 @@ from typing import Tuple, Optional
 
 import torch
 
-from .bridge_writer import TensorBridgeWriter, HEADER_SIZE, DEFAULT_BRIDGE_PATH
+from .bridge_writer import HEADER_SIZE, DEFAULT_BRIDGE_PATH
 from pathlib import Path
 import mmap
 import os
@@ -356,7 +356,7 @@ class CUDAHeatmapGeneratorV2:
             print(f"\n📊 Final: {self.frame_count / total_time:.0f} FPS avg")
 
 
-def main():
+def main() -> None:
     """Run standalone grayscale generator."""
     import argparse
     

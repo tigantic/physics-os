@@ -26,8 +26,6 @@ Date: December 28, 2025
 """
 
 import torch
-import torch.nn.functional as F
-import numpy as np
 from typing import Tuple, Optional, List
 from dataclasses import dataclass
 import time
@@ -197,7 +195,8 @@ class QTTSliceExtractor:
             result = torch.einsum('ni,inj->nj', result, core_slices)
         
         # Final contraction should yield scalar per point
-        assert result.shape[1] == 1, f"Final rank should be 1, got {result.shape[1]}"
+        if result.shape[1] != 1:
+            raise RuntimeError(f"QTT contraction failed: final rank should be 1, got {result.shape[1]}")
         
         return result.squeeze(1)  # [n_points]
     
@@ -224,8 +223,8 @@ class QTTSliceExtractor:
         if z_index is None:
             z_index = qtt.grid_size // 2  # Middle of domain
         
-        assert 0 <= z_index < qtt.grid_size, \
-            f"z_index {z_index} out of range [0, {qtt.grid_size})"
+        if not (0 <= z_index < qtt.grid_size):
+            raise ValueError(f"z_index {z_index} out of range [0, {qtt.grid_size})")
         
         width, height = output_size
         timings = {}
@@ -295,7 +294,8 @@ class QTTSliceExtractor:
         if y_index is None:
             y_index = qtt.grid_size // 2
         
-        assert 0 <= y_index < qtt.grid_size
+        if not (0 <= y_index < qtt.grid_size):
+            raise ValueError(f"y_index {y_index} out of range [0, {qtt.grid_size})")
         
         width, height = output_size
         timings = {}
@@ -348,7 +348,8 @@ class QTTSliceExtractor:
         if x_index is None:
             x_index = qtt.grid_size // 2
         
-        assert 0 <= x_index < qtt.grid_size
+        if not (0 <= x_index < qtt.grid_size):
+            raise ValueError(f"x_index {x_index} out of range [0, {qtt.grid_size})")
         
         width, height = output_size
         timings = {}
@@ -387,7 +388,7 @@ class QTTSliceExtractor:
         return slice_tensor, timings if return_timings else {}
 
 
-def test_slice_extractor():
+def test_slice_extractor() -> None:
     """Test QTT slice extraction with synthetic 3D field."""
     import torch
     from tensornet.cfd.pure_qtt_ops import dense_to_qtt

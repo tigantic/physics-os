@@ -149,8 +149,9 @@ pub fn verify_no_image_assets() -> Result<(), Vec<String>> {
     // Check shaders directory for any images
     let shader_dir = Path::new("src/shaders");
     if shader_dir.exists() {
-        for entry in std::fs::read_dir(shader_dir).unwrap() {
-            if let Ok(entry) = entry {
+        // Gracefully handle directory read errors
+        if let Ok(entries) = std::fs::read_dir(shader_dir) {
+            for entry in entries.flatten() {
                 let path = entry.path();
                 if let Some(ext) = path.extension() {
                     if asset_extensions.contains(&ext.to_str().unwrap_or("")) {

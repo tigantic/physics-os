@@ -176,14 +176,30 @@ impl StreamlineGenerator {
     }
     
     /// Check if position is valid in density grid
-    fn check_density(&self, _lon: f32, _lat: f32) -> bool {
-        // TODO: bounds check implementation
-        true
+    fn check_density(&self, lon: f32, lat: f32) -> bool {
+        if self.density_grid.is_empty() {
+            return true;
+        }
+        let x = ((lon - self.config.min_separation) / self.config.min_separation) as i32;
+        let y = ((lat - self.config.min_separation) / self.config.min_separation) as i32;
+        if x < 0 || y < 0 || x >= self.density_width as i32 || y >= self.density_height as i32 {
+            return true; // Out of bounds = allowed
+        }
+        let idx = (y as u32 * self.density_width + x as u32) as usize;
+        !self.density_grid[idx]
     }
     
     /// Mark position in density grid
-    fn mark_density(&mut self, _lon: f32, _lat: f32) {
-        // TODO: density marking implementation
+    fn mark_density(&mut self, lon: f32, lat: f32) {
+        if self.density_grid.is_empty() {
+            return;
+        }
+        let x = ((lon - self.config.min_separation) / self.config.min_separation) as i32;
+        let y = ((lat - self.config.min_separation) / self.config.min_separation) as i32;
+        if x >= 0 && y >= 0 && x < self.density_width as i32 && y < self.density_height as i32 {
+            let idx = (y as u32 * self.density_width + x as u32) as usize;
+            self.density_grid[idx] = true;
+        }
     }
     
     /// Generate seed points
@@ -219,10 +235,15 @@ impl StreamlineGenerator {
             }
             StreamlineSpacing::VorticityGuided => {
                 // Prefer high-vorticity regions
-                for cell in &field.data {
+                // Position derived from cell index in flattened grid
+                let width = field.config.grid_width;
+                for (idx, cell) in field.data.iter().enumerate() {
                     if cell.vorticity.abs() > 0.0001 {
-                        // High vorticity - add seed
-                        // TODO: proper position lookup
+                        let ix = idx as u32 % width;
+                        let iy = idx as u32 / width;
+                        let lon = field.config.lon_min + (ix as f32 + 0.5) * (field.config.lon_max - field.config.lon_min) / width as f32;
+                        let lat = field.config.lat_min + (iy as f32 + 0.5) * (field.config.lat_max - field.config.lat_min) / field.config.grid_height as f32;
+                        seeds.push(Vec2::new(lon, lat));
                     }
                 }
                 // Fallback to grid if not enough seeds
@@ -313,7 +334,7 @@ impl StreamlineGenerator {
         }
         
         streamline.arc_length = arc_length;
-        streamline.avg_speed = if streamline.vertices.len() > 0 {
+        streamline.avg_speed = if !streamline.vertices.is_empty() {
             total_speed / streamline.vertices.len() as f32
         } else {
             0.0

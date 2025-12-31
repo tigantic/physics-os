@@ -261,9 +261,7 @@ impl BitmapFont {
         
         // Remaining characters (91-126) - simplified for space
         // Fill remaining with basic patterns or spaces
-        for i in 59..95 {
-            glyphs[i] = [0x00; 8];
-        }
+        glyphs[59..95].fill([0x00; 8]);
         
         glyphs
     }

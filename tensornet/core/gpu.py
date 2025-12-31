@@ -100,13 +100,15 @@ def get_device(config: GPUConfig = None) -> torch.device:
         if torch.cuda.is_available():
             return torch.device(f"cuda:{config.device_id}")
         else:
-            print("Warning: CUDA requested but not available, falling back to CPU")
+            import logging
+            logging.getLogger(__name__).warning("CUDA requested but not available, falling back to CPU")
             return torch.device("cpu")
     elif config.device == DeviceType.MPS:
         if torch.backends.mps.is_available():
             return torch.device("mps")
         else:
-            print("Warning: MPS requested but not available, falling back to CPU")
+            import logging
+            logging.getLogger(__name__).warning("MPS requested but not available, falling back to CPU")
             return torch.device("cpu")
     else:
         return torch.device("cpu")

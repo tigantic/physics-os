@@ -198,7 +198,7 @@ fn main() -> Result<()> {
                             });
                             
                             // For now, just blit RGBA8 to screen
-                            // TODO: Apply colormap transform when we have f32 input
+                            // NOTE: Colormap transform implemented in Phase 7 (main_phase7.rs)
                             
                             {
                                 let _render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {

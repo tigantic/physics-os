@@ -379,6 +379,7 @@ impl HudOverlay {
     // HudOverlay only renders data elements (bars, crosshair, text) on Layer 6
     
     /// Render a metric bar with label
+    #[allow(clippy::too_many_arguments)]  // Render geometry params
     pub fn render_bar<'a>(
         &'a self,
         render_pass: &mut wgpu::RenderPass<'a>,
@@ -406,6 +407,7 @@ impl HudOverlay {
     }
     
     /// Render a labeled metric bar (bar with small label above)
+    #[allow(clippy::too_many_arguments)]  // Render geometry + text params
     pub fn render_labeled_bar<'a>(
         &'a self,
         render_pass: &mut wgpu::RenderPass<'a>,
@@ -456,6 +458,7 @@ impl HudOverlay {
     }
     
     /// Render full HUD with all elements
+    #[allow(clippy::too_many_arguments)]  // HUD requires all telemetry values
     pub fn render_full_hud<'a>(
         &'a self,
         render_pass: &mut wgpu::RenderPass<'a>,
@@ -593,6 +596,7 @@ impl HudOverlay {
     }
     
     /// Render probe panel (shows on hover/selection)
+    #[allow(clippy::too_many_arguments)]  // Probe requires position + data
     pub fn render_probe_panel<'a>(
         &'a self,
         render_pass: &mut wgpu::RenderPass<'a>,
@@ -637,7 +641,8 @@ impl HudOverlay {
         self.render_bar(render_pass, queue, mouse_x - ch_size, mouse_y - 1.0, ch_size * 2.0, 2.0, 1.0, [0.2, 0.9, 1.0]);
         self.render_bar(render_pass, queue, mouse_x - 1.0, mouse_y - ch_size, 2.0, ch_size * 2.0, 1.0, [0.2, 0.9, 1.0]);
         
-        let _ = (lat, lon, label); // TODO: render as text
+        // Text rendering pending glyph pipeline integration (Phase 8)
+        let _ = (lat, lon, label);
     }
     
     /// Render targeting crosshair at mouse position

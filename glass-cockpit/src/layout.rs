@@ -32,13 +32,13 @@ impl ViewportRegion {
 
     #[allow(dead_code)]
     /// Convert screen coordinates to region-local coordinates
-    pub fn to_local(&self, x: f32, y: f32) -> Vec2 {
+    pub fn to_local(self, x: f32, y: f32) -> Vec2 {
         Vec2::new(x - self.x, y - self.y)
     }
 
     #[allow(dead_code)]
     /// Convert region-local coordinates to screen coordinates
-    pub fn to_screen(&self, local_x: f32, local_y: f32) -> Vec2 {
+    pub fn to_screen(self, local_x: f32, local_y: f32) -> Vec2 {
         Vec2::new(self.x + local_x, self.y + local_y)
     }
 

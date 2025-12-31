@@ -237,8 +237,8 @@ def truncate_cores(cores: List[torch.Tensor], max_rank: int, tol: float = 0.0) -
         try:
             q = min(max_rank, min(mat.shape))
             U, S, Vh = torch.svd_lowrank(mat, q=q, niter=1)
-        except:
-            # Fallback for numerical issues
+        except (RuntimeError, torch.linalg.LinAlgError):
+            # Fallback for numerical issues (singular matrix)
             continue
         
         # Determine rank from tolerance AND max_rank

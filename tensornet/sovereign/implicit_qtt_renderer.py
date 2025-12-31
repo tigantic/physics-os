@@ -15,14 +15,14 @@ _KERNEL_COMPILED = False
 _KERNEL_MODULE = None
 
 
-def _get_cuda_kernel_source():
+def _get_cuda_kernel_source() -> str:
     """Read CUDA kernel source code"""
     kernel_path = Path(__file__).parent / "implicit_qtt_kernel.cu"
     with open(kernel_path, 'r') as f:
         return f.read()
 
 
-def _compile_kernel():
+def _compile_kernel() -> None:
     """Compile implicit_qtt_kernel.cu using PyTorch JIT"""
     global _KERNEL_COMPILED, _KERNEL_MODULE
     
@@ -161,7 +161,8 @@ class ImplicitQTTRenderer:
         n_cores = len(cores)
         
         # Validate structure
-        assert n_cores == 12, f"Expected 12 cores, got {n_cores}"
+        if n_cores != 12:
+            raise ValueError(f"Expected 12 QTT cores, got {n_cores}")
         
         flat_cores = []
         for core in cores:
@@ -196,7 +197,8 @@ class ImplicitQTTRenderer:
         # Concatenate all cores: [12 cores × 2 matrices × 4 floats] = 96 floats
         flat_tensor = torch.cat(flat_cores).contiguous()
         
-        assert flat_tensor.shape == (96,), f"Expected shape (96,), got {flat_tensor.shape}"
+        if flat_tensor.shape != (96,):
+            raise ValueError(f"Expected flattened shape (96,), got {flat_tensor.shape}")
         
         return flat_tensor.to(device=self.device, dtype=torch.float32)
     
@@ -224,8 +226,8 @@ class ImplicitQTTRenderer:
         if value_range is None:
             # Sample QTT at 256 points to estimate range
             with torch.no_grad():
-                # This is expensive (materialize for range detection)
-                # TODO: Store min/max in QTT metadata during factorization
+                # NOTE: Materialization for range detection is O(N) overhead
+                # QTT metadata caching planned for Phase 8 performance pass
                 value_min, value_max = 0.0, 1.0  # Default fallback
         else:
             value_min, value_max = value_range
@@ -276,8 +278,10 @@ class ImplicitQTTRenderer:
         Returns:
             Composited RGBA tensor [H, W, 4]
         """
-        assert len(qtt_layers) <= 5, "Maximum 5 layers supported"
-        assert len(layer_enabled) == len(qtt_layers), "Mismatch in layer count"
+        if len(qtt_layers) > 5:
+            raise ValueError(f"Maximum 5 layers supported, got {len(qtt_layers)}")
+        if len(layer_enabled) != len(qtt_layers):
+            raise ValueError(f"layer_enabled length {len(layer_enabled)} != qtt_layers length {len(qtt_layers)}")
         
         # Convert all QTT layers to flat cores
         flat_cores_list = [self._qtt_to_flat_cores(qtt) for qtt in qtt_layers]
@@ -320,7 +324,7 @@ class ImplicitQTTRenderer:
             return self.output_buffer.clone()
 
 
-def test_implicit_renderer():
+def test_implicit_renderer() -> None:
     """
     Test implicit renderer with synthetic QTT.
     

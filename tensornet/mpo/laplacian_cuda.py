@@ -12,6 +12,9 @@ import torch.nn.functional as F
 from typing import List
 import os
 import warnings
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Try to load custom CUDA kernel
 CUDA_KERNEL_AVAILABLE = False
@@ -37,7 +40,7 @@ try:
             verbose=False
         )
         CUDA_KERNEL_AVAILABLE = True
-        print("✓ Laplacian CUDA kernel loaded successfully")
+        logger.info("✓ Laplacian CUDA kernel loaded successfully")
     else:
         warnings.warn(f"CUDA kernel source not found: {kernel_path}")
         
@@ -145,7 +148,8 @@ def compress_core_cuda(
             
             compressed = (U * S.unsqueeze(0)) @ Vh
             return compressed.reshape(-1, d, r_right)
-        except:
+        except (RuntimeError, torch.linalg.LinAlgError):
+            # rSVD failed - use simple truncation
             return core[:max_rank, :, :]
     
     elif side == 'right' and r_right > max_rank:
@@ -158,7 +162,8 @@ def compress_core_cuda(
             
             compressed = U @ (torch.diag(S) @ Vh)
             return compressed.reshape(r_left, d, -1)
-        except:
+        except (RuntimeError, torch.linalg.LinAlgError):
+            # rSVD failed - use simple truncation
             return core[:, :, :max_rank]
     
     return core

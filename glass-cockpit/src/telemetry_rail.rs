@@ -620,6 +620,7 @@ impl TelemetryRail {
         );
     }
     
+    #[allow(clippy::too_many_arguments)]  // Render geometry params
     fn render_bar<'a>(
         &'a self,
         render_pass: &mut wgpu::RenderPass<'a>,
@@ -653,6 +654,7 @@ impl TelemetryRail {
         render_pass.draw(0..4, 0..1);
     }
     
+    #[allow(clippy::too_many_arguments)]  // Render geometry params
     fn render_sparkline<'a>(
         &'a self,
         render_pass: &mut wgpu::RenderPass<'a>,
@@ -705,6 +707,7 @@ impl TelemetryRail {
         render_pass.draw(0..samples.len() as u32, 0..1);
     }
     
+    #[allow(clippy::too_many_arguments)]  // Render geometry params
     fn render_gauge<'a>(
         &'a self,
         render_pass: &mut wgpu::RenderPass<'a>,

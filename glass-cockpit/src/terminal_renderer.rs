@@ -108,9 +108,11 @@ impl TerminalRenderer {
         let screen_width = config.width as f32;
         let screen_height = config.height as f32;
         
-        let mut term_config = TerminalConfig::default();
         // Calculate width to span between rails
-        term_config.width = screen_width - 440.0; // 220px each side
+        let term_config = TerminalConfig {
+            width: screen_width - 440.0, // 220px each side
+            ..TerminalConfig::default()
+        };
         
         let lines_visible = ((term_config.height - term_config.padding * 2.0) 
             / (term_config.font_size * term_config.line_height)) as usize;
@@ -411,7 +413,7 @@ impl TerminalRenderer {
                 
                 // Skip non-printable chars
                 let code = ch as u32;
-                if code < 32 || code > 126 {
+                if !(32..=126).contains(&code) {
                     continue;
                 }
                 
@@ -492,9 +494,9 @@ fn generate_font_atlas() -> Vec<u8> {
         let cell_x = (idx % 16) * 16;
         let cell_y = (idx / 16) * 16;
         
-        for row in 0..8 {
+        for (row, &glyph_row) in glyph.iter().enumerate() {
             for col in 0..8 {
-                let bit = (glyph[row] >> (7 - col)) & 1;
+                let bit = (glyph_row >> (7 - col)) & 1;
                 if bit != 0 {
                     let ax = cell_x + col + 4; // Center in cell
                     let ay = cell_y + row + 4;

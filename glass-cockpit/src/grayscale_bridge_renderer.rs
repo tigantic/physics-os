@@ -101,10 +101,11 @@ impl Colormap {
     }
     
     fn turbo(t: f32) -> (f32, f32, f32) {
+        use std::f32::consts::TAU;
         // Turbo colormap (rainbow-like, high contrast)
-        let r = (0.5 + 0.5 * (6.28 * (t - 0.0)).sin()).clamp(0.0, 1.0);
-        let g = (0.5 + 0.5 * (6.28 * (t - 0.33)).sin()).clamp(0.0, 1.0);
-        let b = (0.5 + 0.5 * (6.28 * (t - 0.67)).sin()).clamp(0.0, 1.0);
+        let r = (0.5 + 0.5 * (TAU * (t - 0.0)).sin()).clamp(0.0, 1.0);
+        let g = (0.5 + 0.5 * (TAU * (t - 0.33)).sin()).clamp(0.0, 1.0);
+        let b = (0.5 + 0.5 * (TAU * (t - 0.67)).sin()).clamp(0.0, 1.0);
         (r, g, b)
     }
 }

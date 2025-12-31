@@ -213,11 +213,9 @@ class CheckpointCallback(Callback):
         # Save training state
         trainer.state.save(os.path.join(path, "training_state.pkl"))
         
-        # Save buffer if requested
+        # Save buffer if requested (use torch.save for tensor-safe serialization)
         if self.save_buffer and hasattr(trainer, 'buffer'):
-            import pickle
-            with open(os.path.join(path, "buffer.pkl"), 'wb') as f:
-                pickle.dump(trainer.buffer, f)
+            torch.save(trainer.buffer, os.path.join(path, "buffer.pt"))
         
         if self.verbose >= 1:
             print(f"Saved checkpoint to {path}")

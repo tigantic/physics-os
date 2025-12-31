@@ -16,9 +16,10 @@ use glam::Vec3;
 use wgpu::util::DeviceExt;
 
 /// Probe state machine (per Appendix D specification)
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Default)]
 pub enum ProbeState {
     /// No interaction - globe rotates freely
+    #[default]
     Idle,
     /// Mouse hovering over convergence zone
     Hover { zone_intensity: f32 },
@@ -28,12 +29,6 @@ pub enum ProbeState {
     Probe { node_id: u32, world_pos: Vec3 },
     /// Causal trace mode - ghost rendering
     CausalTrace { node_id: u32, variable_idx: u32 },
-}
-
-impl Default for ProbeState {
-    fn default() -> Self {
-        ProbeState::Idle
-    }
 }
 
 /// Contribution weight for a single variable
@@ -618,13 +613,13 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
             slide_progress: self.slide_animation,
             time,
             bar_weights: [
-                self.data.contributions.get(0).map(|c| c.weight).unwrap_or(0.0),
+                self.data.contributions.first().map(|c| c.weight).unwrap_or(0.0),
                 self.data.contributions.get(1).map(|c| c.weight).unwrap_or(0.0),
                 self.data.contributions.get(2).map(|c| c.weight).unwrap_or(0.0),
                 self.data.contributions.get(3).map(|c| c.weight).unwrap_or(0.0),
             ],
             bar_colors: [
-                self.data.contributions.get(0).map(|c| c.color).unwrap_or([1.0, 0.4, 0.2, 1.0]),
+                self.data.contributions.first().map(|c| c.color).unwrap_or([1.0, 0.4, 0.2, 1.0]),
                 self.data.contributions.get(1).map(|c| c.color).unwrap_or([0.4, 0.8, 1.0, 1.0]),
                 self.data.contributions.get(2).map(|c| c.color).unwrap_or([0.2, 0.8, 0.4, 1.0]),
                 self.data.contributions.get(3).map(|c| c.color).unwrap_or([0.8, 0.4, 1.0, 1.0]),

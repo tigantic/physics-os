@@ -493,8 +493,8 @@ def truncate_qtt(qtt: QTTState, max_bond: int = 64, tol: float = 1e-10) -> QTTSt
         
         try:
             Q, R = torch.linalg.qr(mat)
-        except:
-            # Fallback: keep as is
+        except (RuntimeError, torch.linalg.LinAlgError):
+            # QR failed - keep core as is
             continue
         
         # Truncate if needed
@@ -521,8 +521,8 @@ def truncate_qtt(qtt: QTTState, max_bond: int = 64, tol: float = 1e-10) -> QTTSt
         try:
             q = min(max_bond, min(mat.shape))
             U, S, Vh = torch.svd_lowrank(mat, q=q, niter=1)
-        except:
-            # Fallback: keep as is
+        except (RuntimeError, torch.linalg.LinAlgError):
+            # SVD failed - keep core as is
             continue
         
         # Truncate

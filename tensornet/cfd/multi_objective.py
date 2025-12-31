@@ -284,6 +284,73 @@ def hypervolume_2d(
     return hv
 
 
+def hypervolume_nd(
+    pareto_front: List[ParetoSolution],
+    reference: Dict[str, float],
+    obj_names: Tuple[str, ...]
+) -> float:
+    """
+    Compute hypervolume indicator for n-D Pareto front using WFG algorithm.
+    
+    For n > 2, uses recursive slicing (Exact algorithm, O(n * N^(n-1)) complexity).
+    Falls back to hypervolume_2d for 2D case.
+    
+    Args:
+        pareto_front: List of Pareto-optimal solutions
+        reference: Reference point (worst acceptable values)
+        obj_names: Tuple of objective names
+        
+    Returns:
+        Hypervolume value
+        
+    Reference:
+        While, Bradstreet, Barone, "A Fast Way of Calculating Exact Hypervolumes", 
+        IEEE Trans. Evol. Comput. 16(1), 2012
+    """
+    n_obj = len(obj_names)
+    
+    if n_obj == 2:
+        return hypervolume_2d(pareto_front, reference, (obj_names[0], obj_names[1]))
+    
+    if not pareto_front:
+        return 0.0
+    
+    # Filter dominated points and those beyond reference
+    filtered = []
+    for sol in pareto_front:
+        dominated = all(sol.objectives[name] < reference[name] for name in obj_names)
+        if dominated:
+            filtered.append(sol)
+    
+    if not filtered:
+        return 0.0
+    
+    # Sort by first objective
+    sorted_front = sorted(filtered, key=lambda s: s.objectives[obj_names[0]])
+    
+    # Recursive slicing: integrate over first dimension
+    hv = 0.0
+    prev_slice = reference[obj_names[0]]
+    
+    for i, sol in enumerate(sorted_front):
+        f0 = sol.objectives[obj_names[0]]
+        slice_width = prev_slice - f0
+        
+        if slice_width > 0:
+            # Project remaining solutions onto (n-1)D subspace
+            remaining = sorted_front[i:]
+            sub_obj_names = obj_names[1:]
+            sub_reference = {name: reference[name] for name in sub_obj_names}
+            
+            # Recursive call for (n-1)D hypervolume
+            sub_hv = hypervolume_nd(remaining, sub_reference, sub_obj_names)
+            hv += slice_width * sub_hv
+        
+        prev_slice = f0
+    
+    return hv
+
+
 class MultiObjectiveOptimizer:
     """
     Multi-objective optimization driver.
@@ -530,12 +597,9 @@ class MultiObjectiveOptimizer:
         utopia = {name: min(s.objectives[name] for s in pareto_front) for name in obj_names}
         nadir = {name: max(s.objectives[name] for s in pareto_front) for name in obj_names}
         
-        # Compute hypervolume (2D only)
-        if len(obj_names) == 2:
-            ref_point = {name: nadir[name] * 1.1 for name in obj_names}
-            hv = hypervolume_2d(pareto_front, ref_point, tuple(obj_names))
-        else:
-            hv = 0.0  # TODO: n-D hypervolume
+        # Compute hypervolume (supports n-D via recursive slicing)
+        ref_point = {name: nadir[name] * 1.1 for name in obj_names}
+        hv = hypervolume_nd(pareto_front, ref_point, tuple(obj_names))
         
         return MOOResult(
             pareto_front=pareto_front,

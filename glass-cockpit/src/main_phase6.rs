@@ -382,6 +382,7 @@ fn main() -> Result<()> {
                                         &queue,
                                         view_proj,
                                         globe_config.radius as f32,
+                                        camera.position.into(),
                                         time,
                                         &mut lod_culler,
                                     );

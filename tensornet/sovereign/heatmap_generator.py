@@ -341,7 +341,7 @@ class CUDAHeatmapGenerator:
 import time as time_module
 
 
-def main():
+def main() -> None:
     """Run standalone heatmap generator."""
     import argparse
     

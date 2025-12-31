@@ -180,8 +180,11 @@ impl TCISampler {
         let mut indices = Vec::new();
         
         // Sort error map by error (descending)
+        // Handle NaN gracefully - treat NaN as less than all valid values
         let mut sorted_errors: Vec<_> = self.error_map.clone();
-        sorted_errors.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+        sorted_errors.sort_by(|a, b| {
+            b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal)
+        });
         
         // Sample around high-error points
         for (idx, err) in sorted_errors.iter() {

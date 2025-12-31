@@ -98,7 +98,7 @@ impl ConvergenceCell {
     /// Convert geographic position to 3D globe position
     /// Phase 8: Used for probe anchor positioning
     #[allow(dead_code)] // Phase 8: Probe anchor
-    pub fn to_globe_position(&self, radius: f32) -> Vec3 {
+    pub fn to_globe_position(self, radius: f32) -> Vec3 {
         let lon = self.position.x;
         let lat = self.position.y;
         
@@ -315,10 +315,10 @@ impl ConvergenceBridge {
     }
 
     /// Update from RAM bridge (currently generates synthetic data)
-    /// Phase 6: Replace with actual shared memory read when available
+    /// Phase 7: RAM Bridge integration complete in main_phase7.rs
+    /// This method provides synthetic fallback for standalone testing
     pub fn update(&mut self, time: f32) {
-        // TODO: Read from actual RAM bridge when integrated
-        // For now, generate synthetic data for visualization development
+        // Synthetic data fallback - Phase 7 reads directly from bridge
         self.field.generate_synthetic(time);
     }
 

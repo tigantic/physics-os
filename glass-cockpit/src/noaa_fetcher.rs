@@ -50,7 +50,7 @@ impl ForecastModel {
             ForecastModel::Gfs => true, // Global
             ForecastModel::Hrrr => {
                 // CONUS bounds (approximate)
-                lat >= 21.0 && lat <= 53.0 && lon >= -134.0 && lon <= -60.0
+                (21.0..=53.0).contains(&lat) && (-134.0..=-60.0).contains(&lon)
             }
         }
     }
@@ -164,10 +164,14 @@ impl ForecastRequest {
         let available = now - Duration::hours(4);
         let run_hour = (available.hour() / freq) * freq;
         
+        // Safe: and_hms_opt only fails for invalid h/m/s, run_hour is always valid (0-23)
         available
             .date_naive()
             .and_hms_opt(run_hour, 0, 0)
-            .unwrap()
+            .unwrap_or_else(|| {
+                // Fallback to midnight if somehow invalid
+                available.date_naive().and_hms_opt(0, 0, 0).expect("midnight is always valid")
+            })
             .and_utc()
     }
 }

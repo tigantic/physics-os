@@ -218,6 +218,7 @@ impl ConvergenceRenderer {
     }
 
     /// Update with optional hover state for Appendix D visual feedback
+    #[allow(clippy::too_many_arguments)]  // Render params require all these
     pub fn update_with_hover(
         &mut self,
         queue: &wgpu::Queue,
@@ -295,6 +296,7 @@ impl ConvergenceRenderer {
     /// Update with ghost mode state for Appendix D causal trace
     /// Phase 8: Enables faded rendering with upstream node highlighting
     #[allow(dead_code)]  // Phase 8: Causal trace mode
+    #[allow(clippy::too_many_arguments)]  // Render params require all these
     pub fn update_with_ghost_mode(
         &mut self,
         queue: &wgpu::Queue,

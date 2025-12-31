@@ -15,7 +15,6 @@ Constitutional Compliance:
     - Doctrine 2: RAM Bridge Protocol
 """
 
-import math
 import time as time_module
 import struct
 import mmap
@@ -362,7 +361,7 @@ class QTTBridgeStreamer:
         os.close(self.fd)
 
 
-def main():
+def main() -> None:
     """Run QTT Bridge Streamer."""
     import argparse
     

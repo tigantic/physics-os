@@ -298,8 +298,8 @@ def truncate_qtt2d_svd(state: QTT2DState, max_rank: int) -> QTT2DState:
         try:
             q = min(max_rank, min(mat.shape))
             U, S, Vh = torch.svd_lowrank(mat, q=q, niter=1)
-        except:
-            # Fallback for numerical issues
+        except (RuntimeError, torch.linalg.LinAlgError):
+            # Fallback for numerical issues (ill-conditioned matrix)
             continue
         
         # Determine rank

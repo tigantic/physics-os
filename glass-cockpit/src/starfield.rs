@@ -19,6 +19,7 @@ pub struct StarfieldUniforms {
 }
 
 /// Starfield renderer - draws procedural stars behind the globe
+#[allow(dead_code)]  // render() disabled for globe texture debugging
 pub struct StarfieldRenderer {
     /// Render pipeline
     pipeline: wgpu::RenderPipeline,
@@ -156,6 +157,7 @@ impl StarfieldRenderer {
     
     /// Render the starfield
     /// Should be called BEFORE the globe pass with depth testing disabled
+    #[allow(dead_code)]  // Disabled for globe texture debugging
     pub fn render<'a>(&'a self, render_pass: &mut wgpu::RenderPass<'a>) {
         render_pass.set_pipeline(&self.pipeline);
         render_pass.set_bind_group(0, &self.bind_group, &[]);

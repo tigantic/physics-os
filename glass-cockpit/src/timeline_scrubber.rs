@@ -32,17 +32,12 @@ pub struct TimelineScrubber {
     bind_group: wgpu::BindGroup,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Default)]
 pub enum PlaybackState {
+    #[default]
     Paused,
     Playing { speed: f32 },  // 1.0 = realtime, 2.0 = 2x, etc.
     Rewinding { speed: f32 },
-}
-
-impl Default for PlaybackState {
-    fn default() -> Self {
-        PlaybackState::Paused
-    }
 }
 
 #[repr(C)]

@@ -234,7 +234,8 @@ def truncate_qtt2d(state: QTT2DState, max_rank: int) -> QTT2DState:
             q = min(self.max_rank if hasattr(self, 'max_rank') else max_rank, min(mat.shape))
             U, S, Vh = torch.svd_lowrank(mat, q=q, niter=1)
             rank = U.shape[1]  # Already truncated
-        except:
+        except (RuntimeError, torch.linalg.LinAlgError):
+            # Numerical instability - skip this core
             continue
         
         # Truncate
