@@ -134,13 +134,18 @@ class LiquiditySolver:
     """
     Navier-Stokes solver for order book liquidity.
     
-    Computes price flow vectors from density fields.
+    Computes price flow vectors from density fields using
+    physics-informed computation of pressure gradients.
     
     Example:
         >>> solver = LiquiditySolver(grid_size=2048)
         >>> signal = solver.compute_flow(density, price_idx)
         >>> if signal.direction == SignalDirection.BULLISH:
         ...     print(f"BUY signal! Confidence: {signal.confidence:.2f}")
+    
+    References:
+        Black, F. & Scholes, M. (1973). J. Political Economy, 81(3), 637-654.
+        Cont, R. & de Larrard, A. (2013). SIAM J. Financial Math., 4(1), 1-25.
     """
     
     def __init__(
@@ -154,10 +159,19 @@ class LiquiditySolver:
         Initialize solver.
         
         Args:
-            grid_size: Number of price levels
-            viscosity: Market friction coefficient (higher = slower moves)
-            lookahead: Grid cells to analyze around price
-            device: PyTorch device
+            grid_size: Number of price levels.
+            viscosity: Market friction coefficient (higher = slower moves).
+            lookahead: Grid cells to analyze around price.
+            device: PyTorch device.
+        
+        Raises:
+            ValueError: If grid_size <= 0 or viscosity < 0.
+        
+        Example:
+            >>> solver = LiquiditySolver(
+            ...     grid_size=4096,
+            ...     viscosity=0.05
+            ... )
         """
         self.grid_size = grid_size
         self.viscosity = viscosity
@@ -183,14 +197,24 @@ class LiquiditySolver:
         """
         Compute complete flow signal from density field.
         
-        This is the main physics computation.
+        This is the main physics computation using Navier-Stokes
+        pressure gradient analysis.
         
         Args:
-            density_field: Log-scaled density tensor (grid_size,)
-            current_price_idx: Index of current price
+            density_field: Log-scaled density tensor (grid_size,).
+            current_price_idx: Index of current price.
             
         Returns:
-            FlowSignal with all trading data
+            FlowSignal with all trading data.
+        
+        Raises:
+            ValueError: If current_price_idx out of bounds.
+            RuntimeError: If density_field has invalid shape.
+        
+        Example:
+            >>> density = torch.randn(2048)
+            >>> signal = solver.compute_flow(density, 1024)
+            >>> print(signal.direction, signal.confidence)
         """
         # Ensure tensor on correct device
         density = density_field.to(self.device)

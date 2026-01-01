@@ -117,6 +117,17 @@ class TokamakReactor:
         - Torus centered at origin
         - Major axis along Z (vertical)
         - Plasma flows in toroidal direction (around the ring)
+    
+    Example:
+        >>> reactor = TokamakReactor(major_radius=2.0, B0=5.0)
+        >>> plasma = reactor.create_plasma(n_particles=10000, seed=42)
+        >>> for _ in range(1000):
+        ...     plasma = reactor.boris_push(plasma, dt=1e-9)
+        >>> report = reactor.analyze_confinement(plasma)
+    
+    References:
+        Boris, J.P. (1970). Proc. 4th Conf. Numerical Simulation of Plasmas.
+        Wesson, J. (2011). Tokamaks. 4th Ed., Oxford University Press.
     """
     
     def __init__(
@@ -131,11 +142,22 @@ class TokamakReactor:
         Initialize tokamak reactor.
         
         Args:
-            major_radius: R₀, distance from torus center to tube center (m)
-            minor_radius: a, radius of the plasma tube (m)
-            B0: Toroidal magnetic field strength at R₀ (Tesla)
-            safety_factor: q, ratio of field line windings
-            device: Torch device (auto-selects CUDA if available)
+            major_radius: R₀, distance from torus center to tube center (m).
+            minor_radius: a, radius of the plasma tube (m).
+            B0: Toroidal magnetic field strength at R₀ (Tesla).
+            safety_factor: q, ratio of field line windings.
+            device: Torch device (auto-selects CUDA if available).
+        
+        Raises:
+            ValueError: If minor_radius >= major_radius.
+            ValueError: If B0 <= 0 or safety_factor <= 0.
+        
+        Example:
+            >>> reactor = TokamakReactor(
+            ...     major_radius=6.2,  # ITER-like
+            ...     minor_radius=2.0,
+            ...     B0=5.3
+            ... )
         """
         self.R0 = major_radius
         self.a = minor_radius

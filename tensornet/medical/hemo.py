@@ -77,8 +77,22 @@ class ArterySimulation:
     approach with non-Newtonian viscosity correction.
     
     Coordinate System:
-    - X: Axial (flow direction)
-    - Y, Z: Radial (cross-section)
+        - X: Axial (flow direction)
+        - Y, Z: Radial (cross-section)
+    
+    Example:
+        >>> sim = ArterySimulation(
+        ...     length=100,
+        ...     radius=10,
+        ...     stenosis_severity=0.7  # 70% blockage
+        ... )
+        >>> sim.run_simulation(n_steps=500)
+        >>> report = sim.get_stenosis_report()
+        >>> print(f"Rupture Risk: {report.rupture_risk}")
+    
+    References:
+        Carreau, P.J. (1972). Trans. Soc. Rheology, 16(1), 99-127.
+        Caro, C.G. et al. (2012). The Mechanics of the Circulation.
     """
     
     def __init__(
@@ -94,12 +108,22 @@ class ArterySimulation:
         Initialize artery simulation.
         
         Args:
-            length: Artery length in grid units (mm)
-            radius: Artery radius in grid units (mm)
-            stenosis_severity: Percent blockage (0-1, where 0.7 = 70%)
-            stenosis_position: Position along length (0-1)
-            stenosis_length: Length of stenosis region (0-1)
-            device: Torch device
+            length: Artery length in grid units (mm).
+            radius: Artery radius in grid units (mm).
+            stenosis_severity: Percent blockage (0-1, where 0.7 = 70%).
+            stenosis_position: Position along length (0-1).
+            stenosis_length: Length of stenosis region (0-1).
+            device: Torch device for computation.
+        
+        Raises:
+            ValueError: If stenosis_severity not in [0, 1].
+            RuntimeError: If CUDA requested but unavailable.
+        
+        Example:
+            >>> sim = ArterySimulation(
+            ...     stenosis_severity=0.8,
+            ...     stenosis_position=0.6
+            ... )
         """
         if device is None:
             self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

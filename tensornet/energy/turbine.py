@@ -73,6 +73,10 @@ class WindFarm:
         >>> field = torch.ones((3, 100, 50, 50)) * 12.0
         >>> farm.apply_wakes(field, grid_resolution=10.0)
         >>> power_mw = farm.calculate_power_output(field, grid_resolution=10.0)
+    
+    References:
+        Jensen, N.O. (1983). Risø Report M-2411.
+        Betz, A. (1919). Zeitschrift für das gesamte Turbinenwesen.
     """
     
     # Wake decay constants (empirical)
@@ -98,9 +102,19 @@ class WindFarm:
         
         Args:
             turbines: List of turbine dicts with keys:
-                      x, y, z (position), radius, yaw
-            environment: 'offshore' or 'land' (affects wake decay)
-            air_density: Override air density (kg/m³)
+                      x, y, z (position), radius, yaw.
+            environment: 'offshore' or 'land' (affects wake decay).
+            air_density: Override air density (kg/m³).
+        
+        Raises:
+            ValueError: If environment not 'offshore' or 'land'.
+            ValueError: If turbine dict missing required keys.
+        
+        Example:
+            >>> farm = WindFarm(
+            ...     turbines=[{'x': 0, 'y': 100, 'z': 0, 'radius': 40, 'yaw': 0}],
+            ...     environment='offshore'
+            ... )
         """
         self.turbines = turbines
         self.environment = environment
