@@ -7,6 +7,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2025-01-XX (Constitutional Compliance Release)
+
+### Added
+
+#### Test Coverage (Article III Compliance)
+- `tests/test_energy.py` — WindFarm wake physics tests
+- `tests/test_financial.py` — LiquiditySolver flow signal tests
+- `tests/test_fusion.py` — TokamakReactor Boris pusher tests
+- `tests/test_medical.py` — ArterySimulation blood flow tests
+- `tests/test_racing.py` — WakeTracker dirty air tests
+- `tests/test_ballistics.py` — BallisticSolver trajectory tests
+- `tests/test_fire.py` — FireSim wildfire spread tests
+- `tests/test_urban.py` — UrbanFlowSolver UAM corridor tests
+- `tests/test_cyber.py` — CyberGrid cascading failure tests
+- `tests/test_agri.py` — VerticalFarm microclimate tests
+
+#### Documentation (Article VI Compliance)
+- `The_Last_Ten_Yards.md` — Constitutional compliance audit (638 lines)
+- Added formal academic references to 10 physics modules
+- Enhanced docstrings with Raises/Example/References sections
+
+### Changed
+
+#### License Compliance (Article IX)
+- Updated LICENSE references from MIT to Proprietary in 15 files
+- Synchronized license declarations across pyproject.toml, Cargo.toml, all Rust crates
+
+#### Numerical Precision (Article V)
+- Converted Phase 11-15 modules to torch.float64 for physics calculations
+- Added deterministic seeding (seed=42) for reproducibility (Article III, Section 3.2)
+
+#### Development Tooling
+- Fixed ruff version mismatch (v0.1.6 → v0.8.4) in pre-commit config
+
+### Academic References Added
+- Jensen (1983) — Wake model
+- Boris (1970) — Particle pusher
+- Erdős-Rényi (1960) — Random graphs
+- Rothermel (1972) — Fire spread
+- Carreau (1972) — Blood rheology
+- Black-Scholes (1973) — Options pricing
+- McCoy (1999) — Exterior ballistics
+- Kozai et al. (2019) — Vertical farming
+
+## [0.2.0] - 2025-01-XX
+
 ### Added
 - **Phase 3: 2D Euler Solver** (`tensornet/cfd/`)
   - `Euler2D` class — 2D compressible Euler solver with Strang dimensional splitting
