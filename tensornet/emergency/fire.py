@@ -22,8 +22,15 @@ Critical Thresholds:
 
 This module predicts fire front position for evacuation planning.
 
-Reference: Rothermel, R.C. (1972). A Mathematical Model for
-Predicting Fire Spread in Wildland Fuels.
+References:
+    Rothermel, R.C. (1972). "A Mathematical Model for Predicting Fire
+    Spread in Wildland Fuels." USDA Forest Service Research Paper INT-115.
+    
+    Finney, M.A. (1998). "FARSITE: Fire Area Simulator - Model Development
+    and Evaluation." USDA Forest Service Research Paper RMRS-RP-4.
+    
+    Byram, G.M. (1959). "Combustion of Forest Fuels." In: Forest Fire:
+    Control and Use (K.P. Davis, Ed.), McGraw-Hill, New York, pp. 61-89.
 """
 
 from dataclasses import dataclass

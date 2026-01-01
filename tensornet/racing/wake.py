@@ -20,8 +20,19 @@ The Strategy:
 
 This module maps the wake in real-time and identifies overtake windows.
 
-Reference: F1 2022 ground effect regulations specifically
-addressed dirty air, reducing downforce loss from 40% to ~15%.
+Note: F1 2022 ground effect regulations specifically addressed dirty air,
+reducing downforce loss from 40% to ~15%.
+
+References:
+    Katz, J. (1995). "Race Car Aerodynamics: Designing for Speed."
+    Bentley Publishers. ISBN 0-8376-0142-8.
+    
+    Zhang, X., Toet, W., & Zerihan, J. (2006). "Ground Effect Aerodynamics
+    of Race Cars." Applied Mechanics Reviews, 59(1), 33-49.
+    DOI: 10.1115/1.2110263
+    
+    Savaş, Ö. (2005). "Experimental investigations in the wake of a wing."
+    AIAA Journal, 43(1), 21-30.
 """
 
 from dataclasses import dataclass

@@ -18,7 +18,7 @@ The Geometry:
 - Minor radius a: Radius of the plasma tube itself
 - Aspect ratio A = R₀/a (typically 2.5-4 for modern tokamaks)
 
-Reference Parameters (ITER-like):
+Example Parameters (ITER-like):
 - R₀ = 6.2m, a = 2.0m
 - B_toroidal = 5.3 T
 - Plasma current = 15 MA
@@ -26,6 +26,17 @@ Reference Parameters (ITER-like):
 
 This simulation uses simplified geometry but correct physics
 for the Boris particle pusher and magnetic field topology.
+
+References:
+    Boris, J.P. (1970). "Relativistic Plasma Simulation - Optimization
+    of a Hybrid Code." Proceedings of the Fourth Conference on Numerical
+    Simulation of Plasmas, pp. 3-67. Naval Research Laboratory.
+    
+    Wesson, J. (2011). "Tokamaks." 4th Edition, Oxford University Press.
+    ISBN 978-0-19-959223-4.
+    
+    ITER Physics Expert Group (1999). "ITER Physics Basis."
+    Nuclear Fusion, 39(12), 2137-2638.
 """
 
 from dataclasses import dataclass

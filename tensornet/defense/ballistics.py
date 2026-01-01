@@ -18,7 +18,16 @@ accounting for:
 The HyperTensor Edge: We sample the wind field at EVERY point along
 the trajectory, not just at the shooter position.
 
-Reference: Applied Ballistics for Long Range Shooting (Litz, 2015)
+References:
+    Litz, B. (2015). "Applied Ballistics for Long Range Shooting."
+    3rd Edition, Applied Ballistics LLC. ISBN 978-0-9909206-0-0.
+    
+    McCoy, R.L. (1999). "Modern Exterior Ballistics: The Launch and
+    Flight Dynamics of Symmetric Projectiles." Schiffer Publishing.
+    ISBN 0-7643-0720-7.
+    
+    STANAG 4355 (2009). "The Modified Point Mass and Five Degrees of
+    Freedom Trajectory Models." NATO Standardization Agreement.
 """
 
 from dataclasses import dataclass

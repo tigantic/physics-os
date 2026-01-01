@@ -24,6 +24,17 @@ Trading Signals:
     - High permeability + force → Fast breakout imminent
     - Low permeability → Price stuck in range
 
+References:
+    Black, F. & Scholes, M. (1973). "The Pricing of Options and Corporate
+    Liabilities." Journal of Political Economy, 81(3), 637-654.
+    
+    Cont, R. & de Larrard, A. (2013). "Price Dynamics in a Markovian
+    Limit Order Market." SIAM Journal on Financial Mathematics, 4(1), 1-25.
+    
+    Bouchaud, J.P., Farmer, J.D., & Lillo, F. (2009). "How Markets Slowly
+    Digest Changes in Supply and Demand." Handbook of Financial Markets:
+    Dynamics and Evolution, Elsevier.
+
 Usage:
     >>> from tensornet.financial.solver import LiquiditySolver
     >>> solver = LiquiditySolver(grid_size=2048)

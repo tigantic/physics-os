@@ -25,8 +25,17 @@ The Physics:
 
 Goal: Maximize yield while minimizing energy and disease risk.
 
-Reference: ASHRAE Handbook - HVAC Applications, Chapter 24:
-Environmental Control for Animals and Plants
+References:
+    Kozai, T., Niu, G., & Takagaki, M. (2019). "Plant Factory: An Indoor
+    Vertical Farming System for Efficient Quality Food Production."
+    2nd Edition, Academic Press. ISBN 978-0-12-816691-8.
+    
+    Penman, H.L. (1948). "Natural Evaporation from Open Water, Bare Soil
+    and Grass." Proceedings of the Royal Society A, 193(1032), 120-145.
+    
+    ASHRAE (2019). "ASHRAE Handbook - HVAC Applications." Chapter 24:
+    Environmental Control for Animals and Plants. American Society of
+    Heating, Refrigerating and Air-Conditioning Engineers.
 """
 
 from dataclasses import dataclass

@@ -19,6 +19,16 @@ Commercial Value:
 - 10-15% power loss from poor layouts
 - $100k-$500k annual revenue recovery per farm
 - Target: Orsted, Shell Energy, Equinor
+
+References:
+    Jensen, N.O. (1983). "A Note on Wind Generator Interaction."
+    Risø National Laboratory Report M-2411. Roskilde, Denmark.
+    
+    Betz, A. (1919). "Das Maximum der theoretisch möglichen Ausnützung
+    des Windes durch Windmotoren." Zeitschrift für das gesamte Turbinenwesen.
+    
+    Katic, I., Højstrup, J., & Jensen, N.O. (1986). "A Simple Model for
+    Cluster Efficiency." Proceedings of EWEC '86, Rome, Italy.
 """
 
 import torch

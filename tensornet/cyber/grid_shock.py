@@ -21,8 +21,19 @@ on graphs - the same math used for thermal diffusion.
 
 ∂u/∂t = α ∇²u  (Diffusion on a graph via the Laplacian)
 
-Reference: Network science meets fluid dynamics in this
-physics-informed approach to cybersecurity visualization.
+References:
+    Erdős, P. & Rényi, A. (1960). "On the Evolution of Random Graphs."
+    Publications of the Mathematical Institute of the Hungarian Academy
+    of Sciences, 5, 17-61.
+    
+    Barabási, A.L. & Albert, R. (1999). "Emergence of Scaling in Random
+    Networks." Science, 286(5439), 509-512. DOI: 10.1126/science.286.5439.509
+    
+    Watts, D.J. & Strogatz, S.H. (1998). "Collective Dynamics of 'Small-World'
+    Networks." Nature, 393(6684), 440-442.
+    
+    Motter, A.E. & Lai, Y.C. (2002). "Cascade-based attacks on complex
+    networks." Physical Review E, 66(6), 065102.
 """
 
 from dataclasses import dataclass

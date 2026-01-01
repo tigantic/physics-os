@@ -17,11 +17,21 @@ Clinical Applications:
 - Aneurysm rupture risk assessment
 - Stent placement optimization
 
-Reference: Blood rheology follows the Carreau model with:
+Blood rheology follows the Carreau model with:
 - μ₀ = 0.056 Pa·s (zero shear viscosity)
 - μ∞ = 0.00345 Pa·s (infinite shear viscosity)
 - λ = 3.313 s (relaxation time)
 - n = 0.3568 (power law index)
+
+References:
+    Carreau, P.J. (1972). "Rheological Equations from Molecular Network
+    Theories." Transactions of the Society of Rheology, 16(1), 99-127.
+    
+    Caro, C.G., Pedley, T.J., Schroter, R.C., & Seed, W.A. (2012).
+    "The Mechanics of the Circulation." 2nd Edition, Cambridge University Press.
+    
+    McCoy, M.G. & Ku, D.N. (1988). "Role of low shear stress and
+    stagnation in atherogenesis." Annals of Biomedical Engineering.
 """
 
 from dataclasses import dataclass

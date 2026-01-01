@@ -20,6 +20,17 @@ Outputs:
 - Turbulence kinetic energy
 - Flight safety classification
 
+References:
+    Oke, T.R. (1988). "Street Design and Urban Canopy Layer Climate."
+    Energy and Buildings, 11(1-3), 103-113.
+    
+    Blocken, B. (2015). "Computational Fluid Dynamics for Urban Physics:
+    Importance, Scales, Possibilities, Limitations and Ten Tips and Tricks
+    towards Accurate and Reliable Simulations." Building and Environment.
+    
+    Franke, J. et al. (2007). "Best Practice Guideline for the CFD
+    Simulation of Flows in the Urban Environment." COST Action 732.
+
 Usage:
     >>> from tensornet.urban.solver import solve_urban_flow
     >>> flow = solve_urban_flow(city_geometry, wind_speed=15.0)
