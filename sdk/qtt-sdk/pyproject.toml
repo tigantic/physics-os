@@ -7,7 +7,7 @@ name = "qtt-sdk"
 version = "1.0.0"
 description = "Billion-Point Tensor Compression for Big Data and Digital Twins"
 readme = "README.md"
-license = {text = "MIT"}
+license = {text = "Proprietary - Tigantic Holdings LLC"}
 requires-python = ">=3.9"
 authors = [
     {name = "HyperTensor Team", email = "support@tigantic.com"}
@@ -29,7 +29,7 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
+    "License :: Other/Proprietary License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",

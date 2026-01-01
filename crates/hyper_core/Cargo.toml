@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 authors = ["TiganticLabz <dev@tigantic.com>"]
 description = "HyperTensor physics engine core: QTT, MPO, CFD operators"
-license = "MIT"
+license = "LicenseRef-Proprietary"
 rust-version = "1.75"
 
 [dependencies]

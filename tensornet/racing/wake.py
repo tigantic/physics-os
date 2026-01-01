@@ -102,7 +102,8 @@ class WakeTracker:
         # Wake intensity field (0 = clean, 1 = dirty)
         self.wake_field = torch.zeros(
             (track_width, height, length),
-            device=self.device
+            device=self.device,
+            dtype=torch.float64
         )
         
         # Turbulence kinetic energy
@@ -154,7 +155,7 @@ class WakeTracker:
             center_x = lead_car_x + shift
             
             # Create Gaussian wake profile
-            x = torch.arange(self.width, device=self.device, dtype=torch.float32)
+            x = torch.arange(self.width, device=self.device, dtype=torch.float64)
             wake_profile = intensity * torch.exp(
                 -((x - center_x)**2) / (2 * (wake_width/2)**2)
             )

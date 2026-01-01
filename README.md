@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/tigantic/HyperTensor/graph/badge.svg)](https://codecov.io/gh/tigantic/HyperTensor)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch 2.0+](https://img.shields.io/badge/pytorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
 [![Proofs: 16/16](https://img.shields.io/badge/proofs-16%2F16-brightgreen.svg)](proofs/PROOF_EVIDENCE.md)
 [![Security: Hardened](https://img.shields.io/badge/security-hardened-green.svg)](.secrets.baseline)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo-blue)](https://zenodo.org/)

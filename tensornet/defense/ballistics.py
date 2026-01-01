@@ -111,7 +111,7 @@ class BallisticSolver:
         
         # Atmospheric conditions
         self.air_density = 1.225  # kg/m³ (sea level standard)
-        self.gravity = torch.tensor([0.0, -9.81, 0.0], device=self.device)
+        self.gravity = torch.tensor([0.0, -9.81, 0.0], device=self.device, dtype=torch.float64)
         
         # Bullet reference area (approximate for .338 caliber)
         self.bullet_diameter = 0.00861  # meters (8.61mm)

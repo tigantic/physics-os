@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 authors = ["TiganticLabz <dev@tigantic.com>"]
 description = "Fighter jet cockpit visualization - HyperTensor atmospheric intelligence"
-license = "MIT"
+license = "LicenseRef-Proprietary"
 rust-version = "1.75"
 
 [dependencies]

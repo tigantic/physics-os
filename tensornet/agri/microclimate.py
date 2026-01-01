@@ -128,20 +128,20 @@ class VerticalFarm:
         
         # State fields
         self.temperature = torch.ones(
-            (self.nx, self.ny, self.nz), device=self.device
+            (self.nx, self.ny, self.nz), device=self.device, dtype=torch.float64
         ) * 22.0  # 22°C baseline
         
         self.humidity = torch.ones(
-            (self.nx, self.ny, self.nz), device=self.device
+            (self.nx, self.ny, self.nz), device=self.device, dtype=torch.float64
         ) * 60.0  # 60% RH baseline
         
         self.co2 = torch.ones(
-            (self.nx, self.ny, self.nz), device=self.device
+            (self.nx, self.ny, self.nz), device=self.device, dtype=torch.float64
         ) * 800.0  # 800 ppm (enriched)
         
         # Airflow velocity field (simplified)
         self.velocity = torch.zeros(
-            (self.nx, self.ny, self.nz, 3), device=self.device
+            (self.nx, self.ny, self.nz, 3), device=self.device, dtype=torch.float64
         )
         
         # Growing tiers (layers where plants are)

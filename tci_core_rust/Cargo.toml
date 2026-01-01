@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 authors = ["HyperTensor Team"]
 description = "TT-Cross Interpolation core algorithms for HyperTensor"
-license = "MIT"
+license = "LicenseRef-Proprietary"
 
 [lib]
 name = "tci_core"

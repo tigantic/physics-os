@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 authors = ["TiganticLabz <dev@tigantic.com>"]
 description = "RAM Bridge IPC protocol for Python ↔ Rust tensor streaming"
-license = "MIT"
+license = "LicenseRef-Proprietary"
 rust-version = "1.75"
 
 [dependencies]

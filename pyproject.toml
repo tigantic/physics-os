@@ -7,7 +7,7 @@ name = "tensornet"
 version = "0.1.0"
 description = "Quantum-inspired tensor networks for real-time computational physics"
 readme = "README.md"
-license = {text = "MIT"}
+license = {text = "Proprietary - Tigantic Holdings LLC"}
 requires-python = ">=3.11"
 authors = [
     {name = "TiganticLabz", email = "dev@tigantic.com"}
@@ -23,7 +23,7 @@ keywords = [
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
+    "License :: Other/Proprietary License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",

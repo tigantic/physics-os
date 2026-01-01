@@ -164,7 +164,7 @@ class SiteConfig:
     # Metadata
     author: str = "HyperTensor Team"
     repository: str = "https://github.com/tigantic/HyperTensor"
-    license: str = "MIT"
+    license: str = "Proprietary - Tigantic Holdings LLC"
     
     # Navigation
     nav_config: Dict[str, Any] = field(default_factory=dict)

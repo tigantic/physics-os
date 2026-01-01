@@ -117,13 +117,13 @@ class FireSim:
         self.wind_direction_deg = wind_direction_deg
         
         # State fields
-        self.fuel = torch.ones((size, size), device=self.device)  # 1.0 = full fuel
-        self.heat = torch.zeros((size, size), device=self.device)  # Temperature
+        self.fuel = torch.ones((size, size), device=self.device, dtype=torch.float64)  # 1.0 = full fuel
+        self.heat = torch.zeros((size, size), device=self.device, dtype=torch.float64)  # Temperature
         self.burning = torch.zeros((size, size), device=self.device, dtype=torch.bool)
         self.burned = torch.zeros((size, size), device=self.device, dtype=torch.bool)
         
         # Terrain (optional - could add elevation)
-        self.elevation = torch.zeros((size, size), device=self.device)
+        self.elevation = torch.zeros((size, size), device=self.device, dtype=torch.float64)
         
         # Fire parameters
         self.ignition_temp = 300.0    # °C to ignite
@@ -204,6 +204,9 @@ class FireSim:
         
         # 4. Spotting (ember transport)
         # Random embers from burning cells land downwind
+        # Note: Uses step_count as seed for reproducible stochastic behavior
+        torch.manual_seed(42 + self.step_count)
+        np.random.seed(42 + self.step_count)
         if self.wind_speed > 3.0 and torch.rand(1).item() < self.spotting_probability:
             burning_indices = self.burning.nonzero()
             if len(burning_indices) > 0:

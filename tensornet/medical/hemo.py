@@ -112,8 +112,8 @@ class ArterySimulation:
         )
         
         # Flow fields
-        self.velocity = torch.zeros((3, *self.shape), device=self.device)
-        self.pressure = torch.zeros(self.shape, device=self.device)
+        self.velocity = torch.zeros((3, *self.shape), device=self.device, dtype=torch.float64)
+        self.pressure = torch.zeros(self.shape, device=self.device, dtype=torch.float64)
         
         # Blood properties (SI units scaled for simulation)
         self.rho = 1060.0  # kg/m³ (blood density)
@@ -143,11 +143,11 @@ class ArterySimulation:
         - 1.0 = Blood (open lumen)
         - 0.0 = Wall / Plaque
         """
-        geometry = torch.ones(self.shape, device=self.device)
+        geometry = torch.ones(self.shape, device=self.device, dtype=torch.float64)
         
         # Create coordinate grids for cross-section
-        y = torch.arange(self.diameter, device=self.device, dtype=torch.float32)
-        z = torch.arange(self.diameter, device=self.device, dtype=torch.float32)
+        y = torch.arange(self.diameter, device=self.device, dtype=torch.float64)
+        z = torch.arange(self.diameter, device=self.device, dtype=torch.float64)
         yy, zz = torch.meshgrid(y, z, indexing='ij')
         
         center = self.R  # Center of cross-section

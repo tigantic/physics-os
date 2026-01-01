@@ -87,7 +87,7 @@ setup(
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: MIT License',
+        'License :: Other/Proprietary License',
         'Programming Language :: Python :: 3',
         'Programming Language :: C++',
         'Topic :: Scientific/Engineering :: Physics',

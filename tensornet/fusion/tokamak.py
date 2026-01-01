@@ -390,6 +390,7 @@ class TokamakReactor:
         num_particles: int = 1000,
         temperature: float = 1.0,
         toroidal_flow: float = 10.0,
+        seed: int = 42,
     ) -> torch.Tensor:
         """
         Initialize plasma particles in the tokamak.
@@ -404,17 +405,23 @@ class TokamakReactor:
             num_particles: Number of particles to create
             temperature: Controls thermal velocity spread
             toroidal_flow: Bulk flow speed around the torus
+            seed: Random seed for reproducibility (default: 42 per Constitution)
             
         Returns:
             Tensor [N, 6] of particle states
         """
+        # Per Article III, Section 3.2: Reproducible seeding
+        torch.manual_seed(seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(seed)
+        
         # Random toroidal angle
-        phi = torch.rand(num_particles, device=self.device) * 2 * np.pi
+        phi = torch.rand(num_particles, device=self.device, dtype=torch.float64) * 2 * np.pi
         
         # Position: On magnetic axis with small random offset
         # r_offset ~ 0.1 * minor_radius (start near the core)
-        r_offset = torch.randn(num_particles, device=self.device) * (0.1 * self.a)
-        z_offset = torch.randn(num_particles, device=self.device) * (0.1 * self.a)
+        r_offset = torch.randn(num_particles, device=self.device, dtype=torch.float64) * (0.1 * self.a)
+        z_offset = torch.randn(num_particles, device=self.device, dtype=torch.float64) * (0.1 * self.a)
         
         # Cylindrical to Cartesian
         R = self.R0 + r_offset
@@ -424,9 +431,9 @@ class TokamakReactor:
         
         # Velocity: Toroidal flow + thermal motion
         # Toroidal direction: (-sin(φ), cos(φ), 0)
-        vx = -torch.sin(phi) * toroidal_flow + torch.randn(num_particles, device=self.device) * temperature
-        vy = torch.cos(phi) * toroidal_flow + torch.randn(num_particles, device=self.device) * temperature
-        vz = torch.randn(num_particles, device=self.device) * temperature
+        vx = -torch.sin(phi) * toroidal_flow + torch.randn(num_particles, device=self.device, dtype=torch.float64) * temperature
+        vy = torch.cos(phi) * toroidal_flow + torch.randn(num_particles, device=self.device, dtype=torch.float64) * temperature
+        vz = torch.randn(num_particles, device=self.device, dtype=torch.float64) * temperature
         
         particles = torch.stack([x, y, z, vx, vy, vz], dim=1)
         

@@ -152,12 +152,14 @@ class CyberGrid:
         )
         
         # State: Pressure (packet load) at each node
-        self.pressure = torch.zeros(num_nodes, device=self.device)
+        self.pressure = torch.zeros(num_nodes, device=self.device, dtype=torch.float64)
         
         # Capacity: Maximum pressure before failure
-        # Add some variation
-        self.capacity = torch.ones(num_nodes, device=self.device) * base_capacity
-        self.capacity += torch.randn(num_nodes, device=self.device) * (base_capacity * 0.2)
+        # Add some variation (seeded for reproducibility)
+        torch.manual_seed(42)  # Per Article III, Section 3.2
+        np.random.seed(42)
+        self.capacity = torch.ones(num_nodes, device=self.device, dtype=torch.float64) * base_capacity
+        self.capacity += torch.randn(num_nodes, device=self.device, dtype=torch.float64) * (base_capacity * 0.2)
         self.capacity = torch.clamp(self.capacity, min=base_capacity * 0.5)
         
         # Node status: 1 = alive, 0 = failed

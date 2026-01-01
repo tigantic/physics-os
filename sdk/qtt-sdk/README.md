@@ -1,7 +1,7 @@
 # QTT-SDK: Billion-Point Tensor Compression for Big Data and Digital Twins
 
 **Version**: 1.0.0  
-**License**: MIT  
+**License**: Proprietary - Tigantic Holdings LLC  
 **Python**: 3.9+
 
 ---
