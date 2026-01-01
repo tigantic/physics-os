@@ -190,6 +190,106 @@ These items are **not blocking** but would improve compliance further:
 
 ---
 
+## 🎯 SPRINT 5: ELITE TEST COVERAGE
+
+### The Mission: 51%+ Test LOC Ratio
+
+> *"We put the work in today, so we don't have to ever again. ELITE!"*
+
+**Current State:**
+| Category | Lines |
+|----------|-------|
+| Source (`tensornet/`) | 146,315 |
+| Tests (`tests/`) | 16,600 |
+| **Current Ratio** | **11.3%** |
+
+**Target State:**
+| Category | Lines |
+|----------|-------|
+| Source (`tensornet/`) | 146,315 |
+| Tests (`tests/`) | **~75,000** |
+| **Target Ratio** | **51%+** |
+
+**Gap:** ~58,400 lines of comprehensive tests
+
+### Philosophy: Depth Over Speed
+
+This is NOT about hitting a number. This is about:
+1. **Long-term maintainability** — Tests that catch regressions for years
+2. **Deepening existing coverage** — Expand the 10 new test files substantially
+3. **Physics validation** — Every formula gets boundary testing
+4. **Edge case hunting** — Find the bugs before users do
+5. **Integration confidence** — Cross-module workflows verified
+
+### Execution Plan
+
+#### Wave 1: Deepen Phase Module Tests (~15,000 lines)
+
+Expand each of the 10 new test files from ~300 lines to ~1,800 lines:
+
+| Test File | Current | Target | Focus Areas |
+|-----------|---------|--------|-------------|
+| test_energy.py | 180 | 1,800 | Wake superposition, Betz limit edge cases |
+| test_financial.py | 220 | 1,800 | Gradient stability, wall detection |
+| test_fusion.py | 304 | 1,800 | Boris pusher accuracy, confinement loss |
+| test_medical.py | 260 | 1,800 | Carreau model limits, stenosis gradients |
+| test_racing.py | 280 | 1,800 | Multi-car wake interactions |
+| test_ballistics.py | 280 | 1,800 | Magnus effect, Coriolis at latitudes |
+| test_fire.py | 335 | 1,800 | Spotting probability, fuel moisture |
+| test_urban.py | 364 | 1,800 | Canyon effects, vertiport safety |
+| test_cyber.py | 420 | 1,800 | Scale-free cascades, N-k contingency |
+| test_agri.py | 492 | 1,800 | Photoperiod response, CO2 depletion |
+
+#### Wave 2: Core Module Tests (~20,000 lines)
+
+| Module | Test File | Lines | Priority |
+|--------|-----------|-------|----------|
+| tensornet/core/mps.py | test_mps_core.py | 3,000 | CRITICAL |
+| tensornet/core/mpo.py | test_mpo_core.py | 2,000 | CRITICAL |
+| tensornet/algorithms/dmrg.py | test_dmrg.py | 2,500 | CRITICAL |
+| tensornet/algorithms/tebd.py | test_tebd.py | 2,000 | HIGH |
+| tensornet/cfd/euler_1d.py | test_euler1d.py | 2,500 | HIGH |
+| tensornet/cfd/euler_2d.py | test_euler2d.py | 3,000 | HIGH |
+| tensornet/gpu/gpu_mps.py | test_gpu_mps.py | 2,500 | HIGH |
+| tensornet/physics/*.py | test_physics.py | 2,500 | HIGH |
+
+#### Wave 3: Infrastructure Tests (~15,000 lines)
+
+| Domain | Test Files | Lines |
+|--------|------------|-------|
+| tensornet/sovereign/ | test_sovereign_*.py | 4,000 |
+| tensornet/gateway/ | test_gateway_*.py | 3,000 |
+| tensornet/ml_surrogates/ | test_surrogates.py | 2,500 |
+| tensornet/visualization/ | test_viz.py | 2,000 |
+| tensornet/deployment/ | test_deployment.py | 2,000 |
+| tensornet/validation/ | test_validation.py | 1,500 |
+
+#### Wave 4: Integration & E2E (~8,000 lines)
+
+| Test Suite | Lines | Scope |
+|------------|-------|-------|
+| test_e2e_wind_to_viz.py | 2,000 | Wind farm → Glass Cockpit |
+| test_e2e_plasma_to_report.py | 2,000 | Tokamak → Confinement Report |
+| test_e2e_market_to_signal.py | 2,000 | Order book → Trade Signal |
+| test_e2e_fire_to_evac.py | 2,000 | Fire sim → Evacuation zones |
+
+### Progress Tracking
+
+```
+Sprint 5 Progress:
+Wave 1: ░░░░░░░░░░░░░░░░░░░░ 0%  (0 / 15,000 lines)
+Wave 2: ░░░░░░░░░░░░░░░░░░░░ 0%  (0 / 20,000 lines)
+Wave 3: ░░░░░░░░░░░░░░░░░░░░ 0%  (0 / 15,000 lines)
+Wave 4: ░░░░░░░░░░░░░░░░░░░░ 0%  (0 /  8,000 lines)
+─────────────────────────────────────────────────
+TOTAL:  ░░░░░░░░░░░░░░░░░░░░ 0%  (0 / 58,000 lines)
+
+Current LOC Ratio: 11.3%
+Target LOC Ratio:  51%+
+```
+
+---
+
 ## 📊 METRICS
 
 ### Test Coverage Ratio
