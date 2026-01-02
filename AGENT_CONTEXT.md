@@ -288,6 +288,77 @@ dtype=torch.float64
 
 ---
 
+## 🚧 Current Pain Points / Known Issues
+
+> **Important**: These are known limitations. Don't waste cycles rediscovering them.
+
+### Technical Debt
+
+| Issue | Impact | Workaround | Priority |
+|-------|--------|------------|:--------:|
+| **CI workflows `continue-on-error`** | Lint/test failures don't block merge | Manual review required | 🟡 |
+| **560 remaining ruff warnings** | Unused variables, minor issues | Non-blocking, fix opportunistically | 🟢 |
+| **Some tests require GPU** | Skip on CPU-only CI runners | `pytest -m "not gpu"` | 🟡 |
+| **Large image files in repo** | Slows clone (~50MB in images/) | Consider Git LFS for future | 🟢 |
+
+### Known Limitations
+
+| Limitation | Details | Planned Fix |
+|------------|---------|-------------|
+| **3D N-S not production-ready** | Phase 6 in progress, basic implementation exists | Q2 2026 |
+| **QTT compression ratio varies** | Depends on flow smoothness; shocks need higher bond dim | Adaptive bonding (research) |
+| **Glass Cockpit Windows-only tested** | Linux/Mac may have shared memory path issues | Cross-platform testing needed |
+| **No cloud deployment yet** | Phase 8 planned | Q4 2026 |
+
+### Performance Bottlenecks
+
+| Bottleneck | Location | Notes |
+|------------|----------|-------|
+| **Tensor contraction** | `tensornet/core/` | GPU helps, but large chi still slow |
+| **DMRG sweeps** | `tensornet/algorithms/dmrg.py` | O(chi³) per site; chi > 256 gets expensive |
+| **QTT 2D shifts** | `tensornet/cfd/qtt_2d_shift.py` | Boundary handling adds overhead |
+| **Shared memory latency** | Python → Rust bridge | ~1-2ms per frame; acceptable for 120 FPS |
+
+### Flaky Tests (Intermittent Failures)
+
+| Test | Reason | Status |
+|------|--------|--------|
+| `test_cuda_kernel.py` | GPU memory contention on shared runners | Skip in CI, run locally |
+| `test_determinism.py` | CUDA non-determinism edge cases | Use `CUBLAS_WORKSPACE_CONFIG` |
+| `test_parallel.py` | Race conditions in MPI tests | Needs refactor |
+
+### Environment Quirks
+
+```bash
+# Windows: Zone.Identifier files from downloads
+# Fix: Delete them or add to .gitignore
+find . -name "*:Zone.Identifier" -delete
+
+# WSL2: Shared memory path differs
+# Glass Cockpit expects /dev/shm on Linux
+
+# Apple Silicon: Some CUDA tests skip automatically
+# Use CPU backend for development
+```
+
+### API Rough Edges
+
+| API | Issue | Recommended Usage |
+|-----|-------|-------------------|
+| `MPS.random()` | Doesn't normalize by default | Call `.normalize()` after |
+| `Euler1D.step()` | CFL not auto-calculated | Manually set `dt` conservatively |
+| `dmrg()` return signature | Returns tuple, order matters | `psi, E, info = dmrg(...)` |
+| `tensornet.cfd` imports | Some modules have lazy imports | Import specific classes directly |
+
+### Documentation Gaps
+
+- [ ] `tensornet/hypersim/` lacks docstrings in some modules
+- [ ] `tensornet/sovereign/` protocol documentation incomplete
+- [ ] Rust crate documentation minimal (use `cargo doc`)
+- [ ] Some `proofs/` scripts reference outdated module paths
+
+---
+
 ## 🖥️ Glass Cockpit (Real-Time Viz)
 
 ### Architecture
