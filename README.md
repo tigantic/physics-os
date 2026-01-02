@@ -9,11 +9,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tigantic/HyperTensor/actions/workflows/ci.yml"><img src="https://github.com/tigantic/HyperTensor/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/tigantic/HyperTensor/actions/workflows/vv-validation.yml"><img src="https://github.com/tigantic/HyperTensor/actions/workflows/vv-validation.yml/badge.svg" alt="V&V"></a>
-  <a href="https://codecov.io/gh/tigantic/HyperTensor"><img src="https://codecov.io/gh/tigantic/HyperTensor/graph/badge.svg" alt="codecov"></a>
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.11+-blue.svg" alt="Python 3.11+"></a>
   <a href="https://pytorch.org/"><img src="https://img.shields.io/badge/pytorch-2.0+-ee4c2c.svg" alt="PyTorch 2.0+"></a>
+  <a href="https://www.rust-lang.org/"><img src="https://img.shields.io/badge/rust-1.70+-orange.svg" alt="Rust 1.70+"></a>
+  <a href="HYPERTENSOR_VV_FRAMEWORK.md"><img src="https://img.shields.io/badge/V%26V-100%25%20Mature-brightgreen.svg" alt="V&V 100%"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Proprietary-red.svg" alt="License: Proprietary"></a>
 </p>
 
