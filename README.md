@@ -73,22 +73,9 @@ OVERALL V&V:           ███████████████████
 
 ## 🧠 The Core Insight
 
-**Turbulent flow fields obey an Area Law.**
-
-Just as quantum many-body entanglement scales with boundary area (not volume), turbulent correlations exhibit similar locality. This enables compression from **O(N³)** to **O(N·D²)** via Tensor Train decomposition—the same mathematics that revolutionized quantum physics.
-
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                                                                        │
-│   Traditional CFD:     O(N³) memory, O(N⁴) compute                     │
-│                                                                        │
-│   Tensor Train CFD:    O(N·D²) memory, O(N·D³) compute                 │
-│                        where D = bond dimension << N                   │
-│                                                                        │
-│   Result: 10,000x compression for real-time hypersonic simulation      │
-│                                                                        │
-└────────────────────────────────────────────────────────────────────────┘
-```
+<p align="center">
+  <img src="images/core_insight.png" alt="Turbulent Flow Obeys an Area Law - 10,000x Compression" width="100%"/>
+</p>
 
 ### Mathematical Foundation
 
@@ -266,6 +253,10 @@ HyperTensor spans **15 physics domains**, each with validated benchmarks:
 ---
 
 ## ✅ V&V Framework
+
+<p align="center">
+  <img src="images/vv_framework.png" alt="HyperTensor V&V Framework v1.5.0" width="100%"/>
+</p>
 
 HyperTensor implements a rigorous Verification & Validation framework aligned with **ASME V&V 10-2019** and **NASA-STD-7009A**.
 
