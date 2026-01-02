@@ -1,11 +1,5 @@
 <p align="center">
-  <img src="images/hypertensor_logo.png" alt="HyperTensor Logo" width="400"/>
-</p>
-
-<h1 align="center">🚀 Project HyperTensor</h1>
-
-<p align="center">
-  <strong>Quantum-Inspired Tensor Networks for Real-Time Computational Physics</strong>
+  <img src="images/hypertensor_banner.png" alt="Project HyperTensor - Quantum-Inspired Tensor Networks for Real-Time Computational Physics" width="100%"/>
 </p>
 
 <p align="center">
@@ -24,24 +18,6 @@
   <a href="#-documentation">Docs</a> •
   <a href="#-contributing">Contributing</a>
 </p>
-
----
-
-```
-╔═══════════════════════════════════════════════════════════════════════════════════╗
-║                                                                                   ║
-║   ██╗  ██╗██╗   ██╗██████╗ ███████╗██████╗ ████████╗███████╗███╗   ██╗███████╗   ║
-║   ██║  ██║╚██╗ ██╔╝██╔══██╗██╔════╝██╔══██╗╚══██╔══╝██╔════╝████╗  ██║██╔════╝   ║
-║   ███████║ ╚████╔╝ ██████╔╝█████╗  ██████╔╝   ██║   █████╗  ██╔██╗ ██║███████╗   ║
-║   ██╔══██║  ╚██╔╝  ██╔═══╝ ██╔══╝  ██╔══██╗   ██║   ██╔══╝  ██║╚██╗██║╚════██║   ║
-║   ██║  ██║   ██║   ██║     ███████╗██║  ██║   ██║   ███████╗██║ ╚████║███████║   ║
-║   ╚═╝  ╚═╝   ╚═╝   ╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═══╝╚══════╝   ║
-║                                                                                   ║
-║                    THE SOVEREIGN PHYSICS ENGINE                                   ║
-║           Real-Time CFD • Tensor Networks • Multi-Domain Physics                  ║
-║                                                                                   ║
-╚═══════════════════════════════════════════════════════════════════════════════════╝
-```
 
 ---
 
