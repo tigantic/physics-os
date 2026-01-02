@@ -65,7 +65,7 @@ OVERALL V&V:           ███████████████████
 | **CFD Solvers** | ✅ | 1D/2D/3D Euler, Navier-Stokes, hypersonic |
 | **GPU Acceleration** | ✅ | CUDA kernels, cuBLAS, PyTorch backend |
 | **Distributed Computing** | ✅ | Multi-node DMRG, domain decomposition |
-| **Real-Time Visualization** | ✅ | 60 FPS Glass Cockpit, Rust/Python bridge |
+| **Real-Time Visualization** | ✅ | 120 FPS Glass Cockpit, Rust/Python bridge |
 | **V&V Framework** | ✅ | ASME V&V 10-2019 aligned, PQC signed |
 | **15 Domain Modules** | ✅ | Hypersonic → Fusion → Urban → Medical |
 
@@ -361,7 +361,7 @@ Project HyperTensor/
 
 ### Glass Cockpit (Real-Time Visualization)
 
-60 FPS tensor field visualization with Rust/Python bridge:
+120 FPS tensor field visualization with Rust/Python bridge:
 
 ```bash
 # Terminal 1: Python tensor streamer
