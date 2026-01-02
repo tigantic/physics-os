@@ -11,7 +11,7 @@ Classes:
     HarvestReport: Crop yield and quality predictions
 """
 
-from .microclimate import VerticalFarm, HarvestReport, optimize_climate
+from .microclimate import HarvestReport, VerticalFarm, optimize_climate
 
 __all__ = [
     "VerticalFarm",

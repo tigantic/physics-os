@@ -8,25 +8,22 @@ Constitutional Compliance:
     - Article IV, Section 4.1: Physical validation
 
 References:
-    Black, F., Scholes, M. (1973). "The Pricing of Options and Corporate 
+    Black, F., Scholes, M. (1973). "The Pricing of Options and Corporate
     Liabilities." Journal of Political Economy 81(3), 637-654.
     DOI: 10.1086/260062
 """
 
+import numpy as np
 import pytest
 import torch
-import numpy as np
 
-from tensornet.financial.solver import (
-    LiquiditySolver, 
-    FlowSignal, 
-    SignalDirection
-)
-
+from tensornet.financial.solver import (FlowSignal, LiquiditySolver,
+                                        SignalDirection)
 
 # ============================================================================
 # FIXTURES
 # ============================================================================
+
 
 @pytest.fixture
 def deterministic_seed():
@@ -60,7 +57,7 @@ def bullish_density():
     density = torch.zeros(512, dtype=torch.float64)
     # Strong support, weak resistance
     density[150:180] = 200.0  # Strong buy wall below
-    density[350:355] = 50.0   # Weak sell wall above
+    density[350:355] = 50.0  # Weak sell wall above
     return density
 
 
@@ -68,8 +65,8 @@ def bullish_density():
 def bearish_density():
     """Asymmetric density favoring downward movement."""
     density = torch.zeros(512, dtype=torch.float64)
-    # Weak support, strong resistance  
-    density[150:155] = 50.0   # Weak buy wall below
+    # Weak support, strong resistance
+    density[150:155] = 50.0  # Weak buy wall below
     density[350:380] = 200.0  # Strong sell wall above
     return density
 
@@ -78,21 +75,22 @@ def bearish_density():
 # UNIT TESTS
 # ============================================================================
 
+
 class TestLiquiditySolverInit:
     """Test LiquiditySolver initialization."""
-    
+
     @pytest.mark.unit
     def test_init_default(self, deterministic_seed):
         """Test default initialization."""
         solver = LiquiditySolver()
         assert solver.grid_size == 2048  # Default
-    
+
     @pytest.mark.unit
     def test_init_custom_grid(self, deterministic_seed):
         """Test custom grid size."""
         solver = LiquiditySolver(grid_size=1024)
         assert solver.grid_size == 1024
-    
+
     @pytest.mark.unit
     def test_init_on_device(self, deterministic_seed):
         """Test device placement."""
@@ -102,7 +100,7 @@ class TestLiquiditySolverInit:
 
 class TestFlowSignal:
     """Test FlowSignal dataclass."""
-    
+
     @pytest.mark.unit
     def test_signal_creation(self, deterministic_seed):
         """Test FlowSignal can be created."""
@@ -118,12 +116,12 @@ class TestFlowSignal:
             nearest_resistance=10,
             nearest_support=5,
             pressure_gradient=-0.2,
-            local_density=25.0
+            local_density=25.0,
         )
-        
+
         assert signal.direction == SignalDirection.BULLISH
         assert signal.confidence == 0.8
-    
+
     @pytest.mark.unit
     def test_signal_to_dict(self, deterministic_seed):
         """Test FlowSignal serialization."""
@@ -139,52 +137,62 @@ class TestFlowSignal:
             nearest_resistance=3,
             nearest_support=15,
             pressure_gradient=0.3,
-            local_density=75.0
+            local_density=75.0,
         )
-        
+
         d = signal.to_dict()
-        assert d['direction'] == 'BEARISH'
-        assert d['confidence'] == 0.6
+        assert d["direction"] == "BEARISH"
+        assert d["confidence"] == 0.6
 
 
 class TestFlowComputation:
     """Test flow signal computation."""
-    
+
     @pytest.mark.unit
     @pytest.mark.physics
-    def test_symmetric_gives_neutral(self, solver, symmetric_density, deterministic_seed):
+    def test_symmetric_gives_neutral(
+        self, solver, symmetric_density, deterministic_seed
+    ):
         """Symmetric order book should give neutral signal."""
         price_idx = 256  # Middle of grid
         signal = solver.compute_flow(symmetric_density, price_idx)
-        
+
         # With equal walls on both sides, should be close to neutral
-        assert signal.direction in [SignalDirection.NEUTRAL, SignalDirection.BULLISH, SignalDirection.BEARISH]
+        assert signal.direction in [
+            SignalDirection.NEUTRAL,
+            SignalDirection.BULLISH,
+            SignalDirection.BEARISH,
+        ]
         assert abs(signal.acceleration) < 1.0  # Low acceleration
-    
+
     @pytest.mark.unit
     @pytest.mark.physics
-    def test_bullish_density_gives_bullish_signal(self, solver, bullish_density, deterministic_seed):
+    def test_bullish_density_gives_bullish_signal(
+        self, solver, bullish_density, deterministic_seed
+    ):
         """Strong support + weak resistance should be bullish."""
         price_idx = 256
         signal = solver.compute_flow(bullish_density, price_idx)
-        
+
         # Should favor upward movement
         assert signal.support_strength > signal.resistance_strength
-    
+
     @pytest.mark.unit
     @pytest.mark.physics
-    def test_bearish_density_gives_bearish_signal(self, solver, bearish_density, deterministic_seed):
+    def test_bearish_density_gives_bearish_signal(
+        self, solver, bearish_density, deterministic_seed
+    ):
         """Weak support + strong resistance should be bearish."""
         price_idx = 256
         signal = solver.compute_flow(bearish_density, price_idx)
-        
+
         # Should favor downward movement
         assert signal.resistance_strength > signal.support_strength
 
 
 class TestPressureGradient:
     """Test pressure gradient physics."""
-    
+
     @pytest.mark.unit
     @pytest.mark.physics
     def test_gradient_direction(self, solver, deterministic_seed):
@@ -192,56 +200,58 @@ class TestPressureGradient:
         # Create density with wall on right
         density = torch.zeros(512, dtype=torch.float64)
         density[300:350] = 100.0  # Wall to the right
-        
+
         price_idx = 256
         signal = solver.compute_flow(density, price_idx)
-        
+
         # Should feel force away from the wall (leftward/bearish pressure)
         # The gradient force pushes price away from walls
 
 
 class TestPhysicalBounds:
     """Test that outputs are within physical bounds."""
-    
+
     @pytest.mark.unit
     def test_confidence_bounded(self, solver, symmetric_density, deterministic_seed):
         """Confidence should be in [0, 1]."""
         signal = solver.compute_flow(symmetric_density, 256)
-        
+
         assert 0.0 <= signal.confidence <= 1.0
-    
+
     @pytest.mark.skip(reason="FlowSignal.permeability not normalized in implementation")
     @pytest.mark.unit
     def test_permeability_bounded(self, solver, symmetric_density, deterministic_seed):
         """Permeability should be in [0, 1]."""
         signal = solver.compute_flow(symmetric_density, 256)
-        
+
         assert 0.0 <= signal.permeability <= 1.0
-    
+
     @pytest.mark.unit
-    def test_distances_non_negative(self, solver, symmetric_density, deterministic_seed):
+    def test_distances_non_negative(
+        self, solver, symmetric_density, deterministic_seed
+    ):
         """Distances to walls should be non-negative."""
         signal = solver.compute_flow(symmetric_density, 256)
-        
+
         assert signal.nearest_resistance >= 0
         assert signal.nearest_support >= 0
 
 
 class TestDeterminism:
     """Test reproducibility requirements."""
-    
+
     @pytest.mark.unit
     def test_deterministic_output(self, deterministic_seed):
         """Same inputs should produce same outputs."""
         density = torch.zeros(512, dtype=torch.float64)
         density[200:250] = 100.0
-        
+
         solver1 = LiquiditySolver(grid_size=512)
         signal1 = solver1.compute_flow(density, 256)
-        
+
         solver2 = LiquiditySolver(grid_size=512)
         signal2 = solver2.compute_flow(density, 256)
-        
+
         assert signal1.acceleration == signal2.acceleration
         assert signal1.confidence == signal2.confidence
 
@@ -250,29 +260,34 @@ class TestDeterminism:
 # INTEGRATION TESTS
 # ============================================================================
 
+
 class TestFinancialIntegration:
     """Integration tests for financial solver."""
-    
+
     @pytest.mark.integration
     def test_full_trading_workflow(self, deterministic_seed):
         """Test complete workflow from density to signal."""
         # Create realistic order book density
         density = torch.zeros(2048, dtype=torch.float64)
-        
+
         # Bid side (buy orders) - denser near current price
         for i in range(900, 1000):
             density[i] = 50 * (1 - (1000 - i) / 100)
-        
+
         # Ask side (sell orders) - denser further from price
         for i in range(1048, 1148):
             density[i] = 50 * ((i - 1048) / 100)
-        
+
         # Compute signal
         solver = LiquiditySolver(grid_size=2048)
         signal = solver.compute_flow(density, current_price_idx=1024)
-        
+
         # Verify we get a valid signal
-        assert signal.direction in [SignalDirection.BULLISH, SignalDirection.BEARISH, SignalDirection.NEUTRAL]
+        assert signal.direction in [
+            SignalDirection.BULLISH,
+            SignalDirection.BEARISH,
+            SignalDirection.NEUTRAL,
+        ]
         assert 0.0 <= signal.confidence <= 1.0
 
 

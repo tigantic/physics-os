@@ -14,20 +14,14 @@ Modules:
     - advection: CUDA-accelerated Semi-Lagrangian advection (30x speedup)
 """
 
+from .advection import advect_2d, advect_3d, advect_velocity_2d, is_cuda_available, print_gpu_status
 from .tensor_field import TensorField
-from .advection import (
-    advect_2d,
-    advect_velocity_2d,
-    advect_3d,
-    is_cuda_available,
-    print_gpu_status,
-)
 
 __all__ = [
-    'TensorField',
-    'advect_2d',
-    'advect_velocity_2d',
-    'advect_3d',
-    'is_cuda_available',
-    'print_gpu_status',
+    "TensorField",
+    "advect_2d",
+    "advect_velocity_2d",
+    "advect_3d",
+    "is_cuda_available",
+    "print_gpu_status",
 ]

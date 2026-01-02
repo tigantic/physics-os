@@ -12,7 +12,7 @@ now running on your GPU.
 F = q(E + v × B) - The Lorentz Force that confines stars.
 """
 
-from .tokamak import TokamakReactor, PlasmaState, ConfinementReport
+from .tokamak import ConfinementReport, PlasmaState, TokamakReactor
 
 __all__ = [
     "TokamakReactor",

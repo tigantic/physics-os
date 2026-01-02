@@ -1,15 +1,17 @@
 """
 Quick GPU utilization test - verify RTX 5070 is actually being used.
 """
-import torch
+
 import time
 
-print("="*60)
+import torch
+
+print("=" * 60)
 print("GPU UTILIZATION TEST")
-print("="*60)
+print("=" * 60)
 
 # Check device
-device = torch.device('cuda:0')
+device = torch.device("cuda:0")
 print(f"\nDevice: {torch.cuda.get_device_name(0)}")
 print(f"CUDA available: {torch.cuda.is_available()}")
 print(f"Current device: {torch.cuda.current_device()}")

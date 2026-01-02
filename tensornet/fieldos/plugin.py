@@ -9,14 +9,13 @@ from __future__ import annotations
 
 import importlib
 import importlib.util
-import os
-from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
-from typing import Optional, Dict, Any, List, Callable, Type
-from enum import Enum
 import logging
+from abc import ABC, abstractmethod
+from collections.abc import Callable
+from dataclasses import dataclass, field
+from enum import Enum
 from pathlib import Path
-
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -25,8 +24,10 @@ logger = logging.getLogger(__name__)
 # PLUGIN INFO
 # =============================================================================
 
+
 class PluginState(Enum):
     """Plugin lifecycle state."""
+
     UNLOADED = "unloaded"
     LOADED = "loaded"
     ENABLED = "enabled"
@@ -39,17 +40,18 @@ class PluginInfo:
     """
     Metadata about a plugin.
     """
+
     id: str
     name: str
     version: str = "0.0.0"
     description: str = ""
     author: str = ""
-    dependencies: List[str] = field(default_factory=list)
+    dependencies: list[str] = field(default_factory=list)
     state: PluginState = PluginState.UNLOADED
-    error: Optional[str] = None
-    path: Optional[str] = None
-    
-    def to_dict(self) -> Dict[str, Any]:
+    error: str | None = None
+    path: str | None = None
+
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.id,
             "name": self.name,
@@ -67,10 +69,11 @@ class PluginInfo:
 # PLUGIN BASE
 # =============================================================================
 
+
 class Plugin(ABC):
     """
     Abstract base for FieldOS plugins.
-    
+
     Example:
         class MyPlugin(Plugin):
             @property
@@ -80,32 +83,32 @@ class Plugin(ABC):
                     name="My Plugin",
                     version="1.0.0",
                 )
-            
+
             def on_enable(self, kernel):
                 kernel.register_pipeline("my_pipe", ...)
-            
+
             def on_disable(self, kernel):
                 pass
     """
-    
+
     @property
     @abstractmethod
     def info(self) -> PluginInfo:
         """Plugin metadata."""
         pass
-    
+
     def on_load(self, kernel: Any):
         """Called when plugin is loaded."""
         pass
-    
+
     def on_enable(self, kernel: Any):
         """Called when plugin is enabled."""
         pass
-    
+
     def on_disable(self, kernel: Any):
         """Called when plugin is disabled."""
         pass
-    
+
     def on_unload(self, kernel: Any):
         """Called when plugin is unloaded."""
         pass
@@ -115,24 +118,25 @@ class Plugin(ABC):
 # PLUGIN HOOKS
 # =============================================================================
 
+
 class PluginHook:
     """
     Hook point for plugin extensions.
     """
-    
+
     def __init__(self, name: str):
         self.name = name
-        self._handlers: List[Callable] = []
-    
+        self._handlers: list[Callable] = []
+
     def register(self, handler: Callable):
         """Register a handler."""
         self._handlers.append(handler)
-    
+
     def unregister(self, handler: Callable):
         """Unregister a handler."""
         self._handlers = [h for h in self._handlers if h != handler]
-    
-    def call(self, *args, **kwargs) -> List[Any]:
+
+    def call(self, *args, **kwargs) -> list[Any]:
         """Call all handlers and collect results."""
         results = []
         for handler in self._handlers:
@@ -142,8 +146,10 @@ class PluginHook:
             except Exception as e:
                 logger.error(f"Hook handler error: {e}")
         return results
-    
-    def call_until(self, predicate: Callable[[Any], bool], *args, **kwargs) -> Optional[Any]:
+
+    def call_until(
+        self, predicate: Callable[[Any], bool], *args, **kwargs
+    ) -> Any | None:
         """Call handlers until predicate returns True."""
         for handler in self._handlers:
             try:
@@ -159,43 +165,44 @@ class PluginHook:
 # PLUGIN MANAGER
 # =============================================================================
 
+
 class PluginManager:
     """
     Manages plugin lifecycle.
-    
+
     Example:
         manager = PluginManager(kernel)
         manager.discover("./plugins")
         manager.enable("my-plugin")
     """
-    
+
     def __init__(self, kernel: Any = None):
         self._kernel = kernel
-        self._plugins: Dict[str, Plugin] = {}
-        self._plugin_info: Dict[str, PluginInfo] = {}
-        self._hooks: Dict[str, PluginHook] = {}
-    
+        self._plugins: dict[str, Plugin] = {}
+        self._plugin_info: dict[str, PluginInfo] = {}
+        self._hooks: dict[str, PluginHook] = {}
+
     # -------------------------------------------------------------------------
     # Discovery
     # -------------------------------------------------------------------------
-    
-    def discover(self, path: str) -> List[PluginInfo]:
+
+    def discover(self, path: str) -> list[PluginInfo]:
         """
         Discover plugins in directory.
-        
+
         Args:
             path: Directory to search
-            
+
         Returns:
             List of discovered plugin info
         """
         discovered = []
         path = Path(path)
-        
+
         if not path.exists():
             logger.warning(f"Plugin directory not found: {path}")
             return discovered
-        
+
         for item in path.iterdir():
             if item.is_dir() and (item / "__init__.py").exists():
                 # Package plugin
@@ -207,10 +214,10 @@ class PluginManager:
                 info = self._discover_file(item)
                 if info:
                     discovered.append(info)
-        
+
         return discovered
-    
-    def _discover_package(self, path: Path) -> Optional[PluginInfo]:
+
+    def _discover_package(self, path: Path) -> PluginInfo | None:
         """Discover plugin from package directory."""
         try:
             spec = importlib.util.spec_from_file_location(
@@ -220,7 +227,7 @@ class PluginManager:
             if spec and spec.loader:
                 module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(module)
-                
+
                 # Look for Plugin subclass
                 plugin_class = self._find_plugin_class(module)
                 if plugin_class:
@@ -233,15 +240,15 @@ class PluginManager:
         except Exception as e:
             logger.error(f"Error discovering plugin at {path}: {e}")
         return None
-    
-    def _discover_file(self, path: Path) -> Optional[PluginInfo]:
+
+    def _discover_file(self, path: Path) -> PluginInfo | None:
         """Discover plugin from single file."""
         try:
             spec = importlib.util.spec_from_file_location(path.stem, path)
             if spec and spec.loader:
                 module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(module)
-                
+
                 plugin_class = self._find_plugin_class(module)
                 if plugin_class:
                     plugin = plugin_class()
@@ -253,30 +260,26 @@ class PluginManager:
         except Exception as e:
             logger.error(f"Error discovering plugin at {path}: {e}")
         return None
-    
-    def _find_plugin_class(self, module) -> Optional[Type[Plugin]]:
+
+    def _find_plugin_class(self, module) -> type[Plugin] | None:
         """Find Plugin subclass in module."""
         for name in dir(module):
             obj = getattr(module, name)
-            if (
-                isinstance(obj, type)
-                and issubclass(obj, Plugin)
-                and obj is not Plugin
-            ):
+            if isinstance(obj, type) and issubclass(obj, Plugin) and obj is not Plugin:
                 return obj
         return None
-    
+
     # -------------------------------------------------------------------------
     # Registration
     # -------------------------------------------------------------------------
-    
+
     def register(self, plugin: Plugin) -> PluginInfo:
         """
         Register a plugin instance.
-        
+
         Args:
             plugin: Plugin to register
-            
+
         Returns:
             Plugin info
         """
@@ -285,7 +288,7 @@ class PluginManager:
         self._plugin_info[info.id] = info
         info.state = PluginState.LOADED
         return info
-    
+
     def unregister(self, plugin_id: str):
         """Unregister a plugin."""
         if plugin_id in self._plugins:
@@ -295,28 +298,28 @@ class PluginManager:
             plugin.on_unload(self._kernel)
             del self._plugins[plugin_id]
             del self._plugin_info[plugin_id]
-    
+
     # -------------------------------------------------------------------------
     # Lifecycle
     # -------------------------------------------------------------------------
-    
+
     def enable(self, plugin_id: str) -> bool:
         """
         Enable a plugin.
-        
+
         Args:
             plugin_id: Plugin ID
-            
+
         Returns:
             True if enabled successfully
         """
         if plugin_id not in self._plugins:
             logger.error(f"Plugin not found: {plugin_id}")
             return False
-        
+
         plugin = self._plugins[plugin_id]
         info = self._plugin_info[plugin_id]
-        
+
         # Check dependencies
         for dep in info.dependencies:
             if dep not in self._plugin_info:
@@ -329,7 +332,7 @@ class PluginManager:
                     info.error = f"Failed to enable dependency: {dep}"
                     info.state = PluginState.ERROR
                     return False
-        
+
         try:
             plugin.on_load(self._kernel)
             plugin.on_enable(self._kernel)
@@ -341,23 +344,23 @@ class PluginManager:
             info.state = PluginState.ERROR
             logger.error(f"Error enabling plugin {plugin_id}: {e}")
             return False
-    
+
     def disable(self, plugin_id: str) -> bool:
         """
         Disable a plugin.
-        
+
         Args:
             plugin_id: Plugin ID
-            
+
         Returns:
             True if disabled successfully
         """
         if plugin_id not in self._plugins:
             return False
-        
+
         plugin = self._plugins[plugin_id]
         info = self._plugin_info[plugin_id]
-        
+
         # Check dependents
         for other_id, other_info in self._plugin_info.items():
             if (
@@ -366,7 +369,7 @@ class PluginManager:
             ):
                 # Disable dependent first
                 self.disable(other_id)
-        
+
         try:
             plugin.on_disable(self._kernel)
             info.state = PluginState.DISABLED
@@ -377,41 +380,42 @@ class PluginManager:
             info.state = PluginState.ERROR
             logger.error(f"Error disabling plugin {plugin_id}: {e}")
             return False
-    
+
     # -------------------------------------------------------------------------
     # Queries
     # -------------------------------------------------------------------------
-    
-    def get(self, plugin_id: str) -> Optional[Plugin]:
+
+    def get(self, plugin_id: str) -> Plugin | None:
         """Get plugin by ID."""
         return self._plugins.get(plugin_id)
-    
-    def get_info(self, plugin_id: str) -> Optional[PluginInfo]:
+
+    def get_info(self, plugin_id: str) -> PluginInfo | None:
         """Get plugin info by ID."""
         return self._plugin_info.get(plugin_id)
-    
-    def list_plugins(self) -> List[PluginInfo]:
+
+    def list_plugins(self) -> list[PluginInfo]:
         """List all registered plugins."""
         return list(self._plugin_info.values())
-    
-    def list_enabled(self) -> List[str]:
+
+    def list_enabled(self) -> list[str]:
         """List enabled plugin IDs."""
         return [
-            pid for pid, info in self._plugin_info.items()
+            pid
+            for pid, info in self._plugin_info.items()
             if info.state == PluginState.ENABLED
         ]
-    
+
     # -------------------------------------------------------------------------
     # Hooks
     # -------------------------------------------------------------------------
-    
+
     def create_hook(self, name: str) -> PluginHook:
         """Create a hook point."""
         if name not in self._hooks:
             self._hooks[name] = PluginHook(name)
         return self._hooks[name]
-    
-    def get_hook(self, name: str) -> Optional[PluginHook]:
+
+    def get_hook(self, name: str) -> PluginHook | None:
         """Get existing hook."""
         return self._hooks.get(name)
 
@@ -420,28 +424,30 @@ class PluginManager:
 # DECORATOR HELPERS
 # =============================================================================
 
+
 def plugin_info(
     id: str,
     name: str,
     version: str = "0.0.0",
     **kwargs,
-) -> Callable[[Type[Plugin]], Type[Plugin]]:
+) -> Callable[[type[Plugin]], type[Plugin]]:
     """
     Decorator to define plugin info.
-    
+
     Example:
         @plugin_info("my-plugin", "My Plugin", version="1.0.0")
         class MyPlugin(Plugin):
             pass
     """
-    def decorator(cls: Type[Plugin]) -> Type[Plugin]:
-        original_info = getattr(cls, 'info', None)
-        
+
+    def decorator(cls: type[Plugin]) -> type[Plugin]:
+        original_info = getattr(cls, "info", None)
+
         @property
         def info(self) -> PluginInfo:
             return PluginInfo(id=id, name=name, version=version, **kwargs)
-        
+
         cls.info = info
         return cls
-    
+
     return decorator

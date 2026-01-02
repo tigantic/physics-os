@@ -19,17 +19,17 @@ Components:
 
 Example:
     from tensornet.provenance import ProvenanceStore, FieldCommit
-    
+
     store = ProvenanceStore("./history")
-    
+
     # Commit field state
     commit = store.commit(field, message="Initial simulation")
-    
+
     # Branch and modify
     branch = store.branch("experiment-1")
     field.step()
     commit2 = store.commit(field, message="After 100 steps")
-    
+
     # View history
     for c in store.log():
         print(f"{c.hash[:8]}: {c.message}")
@@ -37,93 +37,57 @@ Example:
 
 from __future__ import annotations
 
+from .audit import AuditEvent, AuditQuery, AuditTrail, EventSeverity, EventType
+from .commit import CommitMetadata, FieldCommit, make_commit
+from .diff import DiffEngine, DiffSummary, DiffType, FieldDiff, compute_diff
+from .history import Branch, HistoryGraph, RefLog, Tag
+
 # Core provenance
-from .merkle import (
-    MerkleNode,
-    MerkleDAG,
-    MerkleProof,
-    compute_hash,
-    verify_proof,
-)
-
-from .commit import (
-    FieldCommit,
-    CommitMetadata,
-    make_commit,
-)
-
-from .history import (
-    HistoryGraph,
-    Branch,
-    Tag,
-    RefLog,
-)
-
+from .merkle import MerkleDAG, MerkleNode, MerkleProof, compute_hash, verify_proof
 from .store import (
-    ProvenanceStore,
-    StoreConfig,
-    ContentAddress,
-    StorageBackend,
-    MemoryBackend,
-    FileSystemBackend,
-)
-
-from .diff import (
-    FieldDiff,
-    DiffEngine,
-    DiffSummary,
-    DiffType,
-    compute_diff,
-)
-
-from .audit import (
-    AuditTrail,
-    AuditEvent,
-    AuditQuery,
-    EventType,
-    EventSeverity,
+                     ContentAddress,
+                     FileSystemBackend,
+                     MemoryBackend,
+                     ProvenanceStore,
+                     StorageBackend,
+                     StoreConfig,
 )
 
 __all__ = [
     # Merkle
-    'MerkleNode',
-    'MerkleDAG',
-    'MerkleProof',
-    'compute_hash',
-    'verify_proof',
-    
+    "MerkleNode",
+    "MerkleDAG",
+    "MerkleProof",
+    "compute_hash",
+    "verify_proof",
     # Commits
-    'FieldCommit',
-    'CommitMetadata',
-    'make_commit',
-    
+    "FieldCommit",
+    "CommitMetadata",
+    "make_commit",
     # History
-    'HistoryGraph',
-    'Branch',
-    'Tag',
-    'RefLog',
-    
+    "HistoryGraph",
+    "Branch",
+    "Tag",
+    "RefLog",
     # Store
-    'ProvenanceStore',
-    'StoreConfig',
-    'ContentAddress',
-    'StorageBackend',
-    'MemoryBackend',
-    'FileSystemBackend',
-    
+    "ProvenanceStore",
+    "StoreConfig",
+    "ContentAddress",
+    "StorageBackend",
+    "MemoryBackend",
+    "FileSystemBackend",
     # Diff
-    'FieldDiff',
-    'DiffEngine',
-    'DiffSummary',
-    'DiffType',
-    'compute_diff',
-    
+    "FieldDiff",
+    "DiffEngine",
+    "DiffSummary",
+    "DiffType",
+    "compute_diff",
     # Audit
-    'AuditTrail',
-    'AuditEvent',
-    'AuditQuery',
-    'EventType',
-    'EventSeverity',
+    "AuditTrail",
+    "AuditEvent",
+    "AuditQuery",
+    "EventType",
+    "EventSeverity",
 ]
 
-__version__ = '0.1.0'
+__version__ = "0.1.0"

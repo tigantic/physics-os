@@ -15,16 +15,17 @@ Features:
 from __future__ import annotations
 
 import os
-import subprocess
 import shutil
+import subprocess
 from dataclasses import dataclass, field
-from enum import Enum, auto
+from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any
 
 
 class SphinxTheme(Enum):
     """Available Sphinx documentation themes."""
+
     RTD = "sphinx_rtd_theme"
     FURO = "furo"
     PYDATA = "pydata_sphinx_theme"
@@ -35,6 +36,7 @@ class SphinxTheme(Enum):
 
 class OutputFormat(Enum):
     """Documentation output formats."""
+
     HTML = "html"
     PDF = "latexpdf"
     EPUB = "epub"
@@ -45,21 +47,22 @@ class OutputFormat(Enum):
 @dataclass
 class SphinxExtension:
     """A Sphinx extension configuration.
-    
+
     Attributes:
         name: Extension module name.
         config: Extension-specific configuration.
         required: Whether the extension is required.
     """
+
     name: str
-    config: Dict[str, Any] = field(default_factory=dict)
+    config: dict[str, Any] = field(default_factory=dict)
     required: bool = True
 
 
 @dataclass
 class SphinxConfig:
     """Configuration for Sphinx documentation.
-    
+
     Attributes:
         project: Project name.
         author: Author name(s).
@@ -82,51 +85,60 @@ class SphinxConfig:
         napoleon_options: Napoleon docstring options.
         custom_config: Additional custom configuration.
     """
+
     project: str
     author: str = "HyperTensor Team"
     version: str = "1.0"
     release: str = "1.0.0"
     copyright_year: str = "2025"
     theme: SphinxTheme = SphinxTheme.FURO
-    extensions: List[SphinxExtension] = field(default_factory=list)
+    extensions: list[SphinxExtension] = field(default_factory=list)
     templates_path: str = "_templates"
     static_path: str = "_static"
     source_suffix: str = ".rst"
     master_doc: str = "index"
     language: str = "en"
-    exclude_patterns: List[str] = field(default_factory=lambda: ["_build", "Thumbs.db", ".DS_Store"])
-    html_logo: Optional[str] = None
-    html_favicon: Optional[str] = None
+    exclude_patterns: list[str] = field(
+        default_factory=lambda: ["_build", "Thumbs.db", ".DS_Store"]
+    )
+    html_logo: str | None = None
+    html_favicon: str | None = None
     pygments_style: str = "monokai"
-    autodoc_options: Dict[str, Any] = field(default_factory=lambda: {
-        "members": True,
-        "undoc-members": True,
-        "show-inheritance": True,
-        "special-members": "__init__",
-    })
-    intersphinx_mapping: Dict[str, Tuple[str, Optional[str]]] = field(default_factory=lambda: {
-        "python": ("https://docs.python.org/3", None),
-        "numpy": ("https://numpy.org/doc/stable/", None),
-        "torch": ("https://pytorch.org/docs/stable/", None),
-    })
-    napoleon_options: Dict[str, bool] = field(default_factory=lambda: {
-        "google_style": True,
-        "numpy_style": True,
-        "include_init_with_doc": True,
-        "include_private_with_doc": False,
-        "include_special_with_doc": True,
-    })
-    custom_config: Dict[str, Any] = field(default_factory=dict)
-    
+    autodoc_options: dict[str, Any] = field(
+        default_factory=lambda: {
+            "members": True,
+            "undoc-members": True,
+            "show-inheritance": True,
+            "special-members": "__init__",
+        }
+    )
+    intersphinx_mapping: dict[str, tuple[str, str | None]] = field(
+        default_factory=lambda: {
+            "python": ("https://docs.python.org/3", None),
+            "numpy": ("https://numpy.org/doc/stable/", None),
+            "torch": ("https://pytorch.org/docs/stable/", None),
+        }
+    )
+    napoleon_options: dict[str, bool] = field(
+        default_factory=lambda: {
+            "google_style": True,
+            "numpy_style": True,
+            "include_init_with_doc": True,
+            "include_private_with_doc": False,
+            "include_special_with_doc": True,
+        }
+    )
+    custom_config: dict[str, Any] = field(default_factory=dict)
+
     def __post_init__(self):
         """Add default extensions if none specified."""
         if not self.extensions:
             self.extensions = self.get_default_extensions()
-    
+
     @staticmethod
-    def get_default_extensions() -> List[SphinxExtension]:
+    def get_default_extensions() -> list[SphinxExtension]:
         """Get default Sphinx extensions for HyperTensor.
-        
+
         Returns:
             List of default extensions.
         """
@@ -141,60 +153,66 @@ class SphinxConfig:
             SphinxExtension("sphinx.ext.coverage"),
             SphinxExtension("sphinx.ext.graphviz"),
             SphinxExtension("sphinx_copybutton", required=False),
-            SphinxExtension("myst_parser", {"myst_enable_extensions": [
-                "colon_fence",
-                "deflist",
-                "dollarmath",
-                "fieldlist",
-                "html_admonition",
-                "html_image",
-                "replacements",
-                "smartquotes",
-                "strikethrough",
-                "substitution",
-                "tasklist",
-            ]}, required=False),
+            SphinxExtension(
+                "myst_parser",
+                {
+                    "myst_enable_extensions": [
+                        "colon_fence",
+                        "deflist",
+                        "dollarmath",
+                        "fieldlist",
+                        "html_admonition",
+                        "html_image",
+                        "replacements",
+                        "smartquotes",
+                        "strikethrough",
+                        "substitution",
+                        "tasklist",
+                    ]
+                },
+                required=False,
+            ),
         ]
 
 
 def generate_conf_py(
     config: SphinxConfig,
-    output_path: Optional[Path] = None,
+    output_path: Path | None = None,
 ) -> str:
     """Generate Sphinx conf.py content.
-    
+
     Args:
         config: Sphinx configuration.
         output_path: Optional path to write the file.
-        
+
     Returns:
         Generated conf.py content.
     """
     lines = [
         '"""',
-        f'Sphinx configuration for {config.project}.',
-        '',
-        'Auto-generated by HyperTensor documentation module.',
+        f"Sphinx configuration for {config.project}.",
+        "",
+        "Auto-generated by HyperTensor documentation module.",
         '"""',
-        '',
-        'import os',
-        'import sys',
-        '',
-        '# Add project root to path',
+        "",
+        "import os",
+        "import sys",
+        "",
+        "# Add project root to path",
         'sys.path.insert(0, os.path.abspath("../"))',
-        '',
-        '# -- Project information -----------------------------------------------------',
-        '',
+        "",
+        "# -- Project information -----------------------------------------------------",
+        "",
         f'project = "{config.project}"',
         f'copyright = "{config.copyright_year}, {config.author}"',
         f'author = "{config.author}"',
         f'version = "{config.version}"',
         f'release = "{config.release}"',
-        '',
-        '# -- General configuration ---------------------------------------------------',
-        '',
+        "",
+        "# -- General configuration ---------------------------------------------------",
+        "",
     ]
-    
+
     # Extensions
     ext_names = [ext.name for ext in config.extensions]
     lines.append("extensions = [")
@@ -202,38 +220,40 @@ def generate_conf_py(
         lines.append(f'    "{name}",')
     lines.append("]")
     lines.append("")
-    
+
     # Templates and static paths
     lines.append(f'templates_path = ["{config.templates_path}"]')
     lines.append(f'source_suffix = "{config.source_suffix}"')
     lines.append(f'master_doc = "{config.master_doc}"')
     lines.append(f'language = "{config.language}"')
     lines.append("")
-    
+
     # Exclude patterns
     lines.append("exclude_patterns = [")
     for pattern in config.exclude_patterns:
         lines.append(f'    "{pattern}",')
     lines.append("]")
     lines.append("")
-    
+
     # Pygments
     lines.append(f'pygments_style = "{config.pygments_style}"')
     lines.append("")
-    
+
     # HTML configuration
-    lines.append("# -- Options for HTML output -------------------------------------------------")
+    lines.append(
+        "# -- Options for HTML output -------------------------------------------------"
+    )
     lines.append("")
     lines.append(f'html_theme = "{config.theme.value}"')
     lines.append(f'html_static_path = ["{config.static_path}"]')
-    
+
     if config.html_logo:
         lines.append(f'html_logo = "{config.html_logo}"')
     if config.html_favicon:
         lines.append(f'html_favicon = "{config.html_favicon}"')
-    
+
     lines.append("")
-    
+
     # Theme-specific options
     lines.append("html_theme_options = {")
     if config.theme == SphinxTheme.FURO:
@@ -242,7 +262,7 @@ def generate_conf_py(
         lines.append('    "dark_css_variables": {')
         lines.append('        "color-brand-primary": "#6366f1",')
         lines.append('        "color-brand-content": "#6366f1",')
-        lines.append('    },')
+        lines.append("    },")
     elif config.theme == SphinxTheme.RTD:
         lines.append('    "navigation_depth": 4,')
         lines.append('    "collapse_navigation": False,')
@@ -251,9 +271,11 @@ def generate_conf_py(
         lines.append('    "show_prev_next": True,')
     lines.append("}")
     lines.append("")
-    
+
     # Autodoc configuration
-    lines.append("# -- Autodoc configuration ---------------------------------------------------")
+    lines.append(
+        "# -- Autodoc configuration ---------------------------------------------------"
+    )
     lines.append("")
     lines.append("autodoc_default_options = {")
     for key, value in config.autodoc_options.items():
@@ -268,17 +290,21 @@ def generate_conf_py(
     lines.append("autodoc_typehints = 'description'")
     lines.append("autodoc_member_order = 'bysource'")
     lines.append("")
-    
+
     # Napoleon configuration
-    lines.append("# -- Napoleon configuration --------------------------------------------------")
+    lines.append(
+        "# -- Napoleon configuration --------------------------------------------------"
+    )
     lines.append("")
     for key, value in config.napoleon_options.items():
         var_name = f"napoleon_{key}"
         lines.append(f"{var_name} = {str(value)}")
     lines.append("")
-    
+
     # Intersphinx configuration
-    lines.append("# -- Intersphinx configuration -----------------------------------------------")
+    lines.append(
+        "# -- Intersphinx configuration -----------------------------------------------"
+    )
     lines.append("")
     lines.append("intersphinx_mapping = {")
     for name, (url, inv) in config.intersphinx_mapping.items():
@@ -286,7 +312,7 @@ def generate_conf_py(
         lines.append(f'    "{name}": ("{url}", {inv_str}),')
     lines.append("}")
     lines.append("")
-    
+
     # Extension-specific configuration
     for ext in config.extensions:
         if ext.config:
@@ -304,10 +330,12 @@ def generate_conf_py(
                 else:
                     lines.append(f"{key} = {value!r}")
             lines.append("")
-    
+
     # Custom configuration
     if config.custom_config:
-        lines.append("# -- Custom configuration ----------------------------------------------------")
+        lines.append(
+            "# -- Custom configuration ----------------------------------------------------"
+        )
         lines.append("")
         for key, value in config.custom_config.items():
             if isinstance(value, str):
@@ -315,9 +343,11 @@ def generate_conf_py(
             else:
                 lines.append(f"{key} = {value!r}")
         lines.append("")
-    
+
     # LaTeX configuration for PDF
-    lines.append("# -- LaTeX configuration -----------------------------------------------------")
+    lines.append(
+        "# -- LaTeX configuration -----------------------------------------------------"
+    )
     lines.append("")
     lines.append("latex_elements = {")
     lines.append('    "papersize": "letterpaper",')
@@ -329,33 +359,35 @@ def generate_conf_py(
     lines.append("}")
     lines.append("")
     lines.append("latex_documents = [")
-    lines.append(f'    ("{config.master_doc}", "{config.project}.tex", "{config.project} Documentation",')
+    lines.append(
+        f'    ("{config.master_doc}", "{config.project}.tex", "{config.project} Documentation",'
+    )
     lines.append(f'     "{config.author}", "manual"),')
     lines.append("]")
     lines.append("")
-    
+
     content = "\n".join(lines)
-    
+
     if output_path:
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(content)
-    
+
     return content
 
 
 def generate_index_rst(
     config: SphinxConfig,
-    modules: List[str],
-    output_path: Optional[Path] = None,
+    modules: list[str],
+    output_path: Path | None = None,
 ) -> str:
     """Generate index.rst content.
-    
+
     Args:
         config: Sphinx configuration.
         modules: List of module names to document.
         output_path: Optional path to write the file.
-        
+
     Returns:
         Generated index.rst content.
     """
@@ -391,40 +423,42 @@ def generate_index_rst(
         "   :maxdepth: 3",
         "",
     ]
-    
+
     for module in modules:
         lines.append(f"   api/{module}")
-    
-    lines.extend([
-        "",
-        "Indices and tables",
-        "==================",
-        "",
-        "* :ref:`genindex`",
-        "* :ref:`modindex`",
-        "* :ref:`search`",
-    ])
-    
+
+    lines.extend(
+        [
+            "",
+            "Indices and tables",
+            "==================",
+            "",
+            "* :ref:`genindex`",
+            "* :ref:`modindex`",
+            "* :ref:`search`",
+        ]
+    )
+
     content = "\n".join(lines)
-    
+
     if output_path:
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(content)
-    
+
     return content
 
 
 def generate_makefile(
     docs_dir: Path,
-    output_path: Optional[Path] = None,
+    output_path: Path | None = None,
 ) -> str:
     """Generate Makefile for Sphinx.
-    
+
     Args:
         docs_dir: Documentation source directory.
         output_path: Optional path to write the file.
-        
+
     Returns:
         Generated Makefile content.
     """
@@ -454,19 +488,19 @@ livehtml:
 clean:
 \trm -rf $(BUILDDIR)/*
 """
-    
+
     if output_path:
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(content)
-    
+
     return content
 
 
 @dataclass
 class BuildResult:
     """Result of a Sphinx build.
-    
+
     Attributes:
         success: Whether the build succeeded.
         output_dir: Path to the output directory.
@@ -475,34 +509,35 @@ class BuildResult:
         errors: List of error messages.
         duration_seconds: Build duration in seconds.
     """
+
     success: bool
     output_dir: Path
     format: OutputFormat
-    warnings: List[str] = field(default_factory=list)
-    errors: List[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+    errors: list[str] = field(default_factory=list)
     duration_seconds: float = 0.0
 
 
 class SphinxBuilder:
     """Builder class for Sphinx documentation.
-    
+
     This class handles the full documentation build pipeline including
     configuration, generation, and multi-format output.
-    
+
     Attributes:
         config: Sphinx configuration.
         source_dir: Documentation source directory.
         build_dir: Build output directory.
     """
-    
+
     def __init__(
         self,
         config: SphinxConfig,
-        source_dir: Union[str, Path],
-        build_dir: Optional[Union[str, Path]] = None,
+        source_dir: str | Path,
+        build_dir: str | Path | None = None,
     ):
         """Initialize the builder.
-        
+
         Args:
             config: Sphinx configuration.
             source_dir: Documentation source directory.
@@ -511,12 +546,12 @@ class SphinxBuilder:
         self.config = config
         self.source_dir = Path(source_dir)
         self.build_dir = Path(build_dir) if build_dir else self.source_dir / "_build"
-    
-    def setup(self, modules: Optional[List[str]] = None) -> None:
+
+    def setup(self, modules: list[str] | None = None) -> None:
         """Set up the documentation structure.
-        
+
         Creates necessary directories and generates configuration files.
-        
+
         Args:
             modules: List of module names to document.
         """
@@ -528,17 +563,17 @@ class SphinxBuilder:
         (self.source_dir / "guides").mkdir(exist_ok=True)
         (self.source_dir / "tutorials").mkdir(exist_ok=True)
         (self.source_dir / "examples").mkdir(exist_ok=True)
-        
+
         # Generate conf.py
         generate_conf_py(self.config, self.source_dir / "conf.py")
-        
+
         # Generate index.rst
         modules = modules or ["tensornet"]
         generate_index_rst(self.config, modules, self.source_dir / "index.rst")
-        
+
         # Generate Makefile
         generate_makefile(self.source_dir, self.source_dir.parent / "Makefile")
-    
+
     def build(
         self,
         format: OutputFormat = OutputFormat.HTML,
@@ -546,37 +581,38 @@ class SphinxBuilder:
         verbose: bool = False,
     ) -> BuildResult:
         """Build the documentation.
-        
+
         Args:
             format: Output format to build.
             clean: Whether to clean the build directory first.
             verbose: Whether to show verbose output.
-            
+
         Returns:
             BuildResult with success status and metadata.
         """
         import time
-        
+
         output_dir = self.build_dir / format.value
-        
+
         if clean and output_dir.exists():
             shutil.rmtree(output_dir)
-        
+
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Build command
         cmd = [
             "sphinx-build",
-            "-b", format.value,
+            "-b",
+            format.value,
             str(self.source_dir),
             str(output_dir),
         ]
-        
+
         if verbose:
             cmd.append("-v")
-        
+
         start_time = time.time()
-        
+
         try:
             result = subprocess.run(
                 cmd,
@@ -584,9 +620,9 @@ class SphinxBuilder:
                 text=True,
                 check=False,
             )
-            
+
             duration = time.time() - start_time
-            
+
             # Parse warnings and errors
             warnings = []
             errors = []
@@ -595,16 +631,20 @@ class SphinxBuilder:
                     warnings.append(line)
                 elif "ERROR" in line or result.returncode != 0:
                     errors.append(line)
-            
+
             return BuildResult(
                 success=result.returncode == 0,
                 output_dir=output_dir,
                 format=format,
                 warnings=warnings,
-                errors=errors if errors else [result.stderr] if result.returncode != 0 else [],
+                errors=(
+                    errors
+                    if errors
+                    else [result.stderr] if result.returncode != 0 else []
+                ),
                 duration_seconds=duration,
             )
-            
+
         except FileNotFoundError:
             return BuildResult(
                 success=False,
@@ -612,47 +652,47 @@ class SphinxBuilder:
                 format=format,
                 errors=["sphinx-build not found. Install Sphinx: pip install sphinx"],
             )
-    
+
     def build_all(
         self,
-        formats: Optional[List[OutputFormat]] = None,
+        formats: list[OutputFormat] | None = None,
         clean: bool = False,
-    ) -> Dict[OutputFormat, BuildResult]:
+    ) -> dict[OutputFormat, BuildResult]:
         """Build documentation in multiple formats.
-        
+
         Args:
             formats: List of output formats (default: HTML, PDF).
             clean: Whether to clean the build directory first.
-            
+
         Returns:
             Dictionary mapping format to BuildResult.
         """
         formats = formats or [OutputFormat.HTML, OutputFormat.PDF]
         results = {}
-        
+
         for fmt in formats:
             results[fmt] = self.build(fmt, clean=clean)
-        
+
         return results
-    
+
     def serve(self, port: int = 8000) -> None:
         """Serve the HTML documentation locally.
-        
+
         Args:
             port: Port to serve on.
         """
         html_dir = self.build_dir / "html"
-        
+
         if not html_dir.exists():
             result = self.build(OutputFormat.HTML)
             if not result.success:
                 raise RuntimeError(f"Build failed: {result.errors}")
-        
+
         import http.server
         import socketserver
-        
+
         os.chdir(html_dir)
-        
+
         Handler = http.server.SimpleHTTPRequestHandler
         with socketserver.TCPServer(("", port), Handler) as httpd:
             print(f"Serving documentation at http://localhost:{port}")
@@ -664,42 +704,42 @@ class SphinxBuilder:
 
 
 def build_documentation(
-    project_root: Union[str, Path],
+    project_root: str | Path,
     project_name: str = "HyperTensor",
-    output_formats: Optional[List[OutputFormat]] = None,
+    output_formats: list[OutputFormat] | None = None,
     theme: SphinxTheme = SphinxTheme.FURO,
     clean: bool = True,
-) -> Dict[OutputFormat, BuildResult]:
+) -> dict[OutputFormat, BuildResult]:
     """High-level function to build documentation.
-    
+
     Args:
         project_root: Root directory of the project.
         project_name: Name of the project.
         output_formats: Output formats to build.
         theme: Sphinx theme to use.
         clean: Whether to clean build directory.
-        
+
     Returns:
         Dictionary mapping format to BuildResult.
     """
     project_root = Path(project_root)
     docs_dir = project_root / "docs" / "source"
-    
+
     config = SphinxConfig(
         project=project_name,
         theme=theme,
         version="2.2.0",
         release="2.2.0",
     )
-    
+
     builder = SphinxBuilder(
         config=config,
         source_dir=docs_dir,
         build_dir=project_root / "docs" / "_build",
     )
-    
+
     # Setup documentation structure
     builder.setup(modules=["tensornet"])
-    
+
     # Build all formats
     return builder.build_all(formats=output_formats, clean=clean)

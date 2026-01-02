@@ -6,8 +6,10 @@ and the pure-Python fallback implementation.
 """
 
 import time
+
 import numpy as np
 import torch
+
 import tensornet.cfd.qtt_tci as qtt_mod
 from tensornet.cfd.qtt_tci import qtt_from_function
 
@@ -15,7 +17,7 @@ from tensornet.cfd.qtt_tci import qtt_from_function
 def test_fn(idx):
     """Test function: smooth sinusoidal with Gaussian envelope."""
     x = idx.float() / 65536.0
-    return torch.sin(2 * np.pi * x) * torch.exp(-x**2)
+    return torch.sin(2 * np.pi * x) * torch.exp(-(x**2))
 
 
 def benchmark():
@@ -52,15 +54,17 @@ def benchmark():
         print(f"  Speedup: {speedup:.2f}x time, {eval_ratio:.2f}x fewer evals")
         print()
 
-        results.append({
-            "n_qubits": n_qubits,
-            "N": N,
-            "py_time": py_time,
-            "py_evals": py_evals,
-            "rust_time": rust_time,
-            "rust_evals": rust_evals,
-            "speedup": speedup,
-        })
+        results.append(
+            {
+                "n_qubits": n_qubits,
+                "N": N,
+                "py_time": py_time,
+                "py_evals": py_evals,
+                "rust_time": rust_time,
+                "rust_evals": rust_evals,
+                "speedup": speedup,
+            }
+        )
 
     print("=" * 60)
     print("Summary")

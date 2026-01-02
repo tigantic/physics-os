@@ -4,7 +4,7 @@
 import torch
 
 print("CUDA Device Information")
-print("="*70)
+print("=" * 70)
 print(f"CUDA available: {torch.cuda.is_available()}")
 print(f"CUDA device count: {torch.cuda.device_count()}")
 print()
@@ -23,13 +23,13 @@ print()
 
 # Test which device actually gets used
 print("Creating tensor with device='cuda:0'...")
-x = torch.randn(100, 100, device='cuda:0')
+x = torch.randn(100, 100, device="cuda:0")
 print(f"Tensor device: {x.device}")
 print()
 
-print("="*70)
+print("=" * 70)
 print("RECOMMENDATION:")
-print("="*70)
+print("=" * 70)
 if torch.cuda.device_count() > 1:
     print("Multiple GPUs detected. Use device='cuda:1' for RTX 5070")
 else:

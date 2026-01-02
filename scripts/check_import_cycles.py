@@ -21,7 +21,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 def check_imports() -> tuple[list[str], list[str]]:
     """
     Check if all tensornet modules can be imported.
-    
+
     Returns:
         Tuple of (successful_imports, failed_imports)
     """
@@ -56,10 +56,10 @@ def check_imports() -> tuple[list[str], list[str]]:
         # Guidance
         "tensornet.guidance",
     ]
-    
+
     successful = []
     failed = []
-    
+
     for module in modules_to_check:
         try:
             __import__(module)
@@ -68,7 +68,7 @@ def check_imports() -> tuple[list[str], list[str]]:
             failed.append(f"{module}: {e}")
         except Exception as e:
             failed.append(f"{module}: {type(e).__name__}: {e}")
-    
+
     return successful, failed
 
 
@@ -76,17 +76,17 @@ def main() -> int:
     """Run import cycle check."""
     print("Checking tensornet imports for circular import errors...")
     print("-" * 60)
-    
+
     successful, failed = check_imports()
-    
+
     print(f"✅ Successfully imported: {len(successful)} modules")
-    
+
     if failed:
         print(f"\n❌ Failed imports: {len(failed)}")
         for failure in failed:
             print(f"  - {failure}")
         return 1
-    
+
     print("\n✅ No circular import errors detected!")
     return 0
 

@@ -6,6 +6,7 @@ Transverse-field Ising model: H = -J Σ Z_i Z_{i+1} - h Σ X_i
 """
 
 import torch
+
 from tensornet import dmrg, tfim_mpo
 
 
@@ -28,30 +29,30 @@ def exact_tfim_E0(L: int, h: float) -> float:
 
 def main():
     torch.manual_seed(42)
-    
+
     print("TFIM at critical point g=1.0:")
     print("-" * 50)
-    
+
     for L in [6, 8, 10, 12]:
         H = tfim_mpo(L=L, J=1.0, g=1.0)
-        
+
         result = dmrg(H, chi_max=32, num_sweeps=20, tol=1e-10)
         E = result.energy
-        
+
         exact = exact_tfim_E0(L, 1.0)
         if exact:
             error = abs(E - exact)
             print(f"L={L:2d}: E = {E:.10f}, exact = {exact:.10f}, error = {error:.2e}")
         else:
             print(f"L={L:2d}: E = {E:.10f}")
-    
+
     print()
     print("TFIM in ordered phase g=0.5:")
     print("-" * 50)
-    
+
     for L in [6, 8, 10, 12]:
         H = tfim_mpo(L=L, J=1.0, g=0.5)
-        
+
         result = dmrg(H, chi_max=32, num_sweeps=20, tol=1e-10)
         E = result.energy
         print(f"L={L:2d}: E = {E:.10f}")

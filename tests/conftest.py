@@ -28,25 +28,26 @@ DEFAULT_SEED = 42
 def deterministic_seed(request) -> Generator[int, None, None]:
     """
     Automatically seed all random number generators for deterministic tests.
-    
+
     This fixture runs before every test to ensure reproducibility.
     The seed can be overridden via the HYPERTENSOR_TEST_SEED environment variable.
-    
+
     Yields:
         The seed value used for this test.
     """
     # Allow override via environment variable
     seed = int(os.environ.get("HYPERTENSOR_TEST_SEED", DEFAULT_SEED))
-    
+
     # Seed Python's random
     random.seed(seed)
-    
+
     # Seed NumPy
     np.random.seed(seed)
-    
+
     # Seed PyTorch if available
     try:
         import torch
+
         torch.manual_seed(seed)
         if torch.cuda.is_available():
             torch.cuda.manual_seed_all(seed)
@@ -55,9 +56,9 @@ def deterministic_seed(request) -> Generator[int, None, None]:
         torch.backends.cudnn.benchmark = False
     except ImportError:
         pass
-    
+
     yield seed
-    
+
     # No cleanup needed - next test will reseed
 
 
@@ -65,7 +66,7 @@ def deterministic_seed(request) -> Generator[int, None, None]:
 def random_state() -> np.random.RandomState:
     """
     Provide an isolated RandomState for tests that need explicit control.
-    
+
     Returns:
         A seeded numpy RandomState instance.
     """
@@ -77,7 +78,7 @@ def random_state() -> np.random.RandomState:
 # =============================================================================
 def pytest_configure(config):
     """Register custom markers for test categorization.
-    
+
     Aligned with ASME V&V 10-2019 test classification taxonomy.
     """
     # --- Core Test Categories ---
@@ -87,19 +88,19 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "integration: Integration tests - component interaction (<10s)"
     )
-    config.addinivalue_line(
-        "markers", "slow: Long-running tests (>5 seconds)"
-    )
-    
+    config.addinivalue_line("markers", "slow: Long-running tests (>5 seconds)")
+
     # --- V&V Categories (ASME V&V 10-2019) ---
     config.addinivalue_line(
         "markers", "benchmark: Known-solution validation - Tier 1/2 benchmarks (<60s)"
     )
     config.addinivalue_line(
-        "markers", "mms: Method of Manufactured Solutions - discretization verification (<60s)"
+        "markers",
+        "mms: Method of Manufactured Solutions - discretization verification (<60s)",
     )
     config.addinivalue_line(
-        "markers", "conservation: Conservation law verification - mass/momentum/energy (<60s)"
+        "markers",
+        "conservation: Conservation law verification - mass/momentum/energy (<60s)",
     )
     config.addinivalue_line(
         "markers", "convergence: Order of accuracy verification (<5min)"
@@ -107,25 +108,17 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "regression: Regression prevention - catch breakage (<60s)"
     )
-    config.addinivalue_line(
-        "markers", "stress: Large-scale stress tests (>5min)"
-    )
-    
+    config.addinivalue_line("markers", "stress: Large-scale stress tests (>5min)")
+
     # --- Domain-Specific ---
     config.addinivalue_line(
         "markers", "physics: Physics validation test (CFD, quantum, etc.)"
     )
-    config.addinivalue_line(
-        "markers", "performance: Speed/memory benchmarks (<5min)"
-    )
-    
+    config.addinivalue_line("markers", "performance: Speed/memory benchmarks (<5min)")
+
     # --- Hardware Requirements ---
-    config.addinivalue_line(
-        "markers", "gpu: Requires GPU (CUDA)"
-    )
-    config.addinivalue_line(
-        "markers", "rust: Requires Rust TCI extension"
-    )
+    config.addinivalue_line("markers", "gpu: Requires GPU (CUDA)")
+    config.addinivalue_line("markers", "rust: Requires Rust TCI extension")
 
 
 # =============================================================================
@@ -135,9 +128,9 @@ def pytest_configure(config):
 def temp_dir(tmp_path):
     """
     Provide a temporary directory for test file I/O.
-    
+
     The directory is automatically cleaned up after the test.
-    
+
     Returns:
         pathlib.Path to a temporary directory.
     """
@@ -148,7 +141,7 @@ def temp_dir(tmp_path):
 def sample_tensor_2d(random_state) -> np.ndarray:
     """
     Provide a sample 2D tensor for testing.
-    
+
     Returns:
         A (64, 64) float32 array with values in [0, 1].
     """
@@ -159,7 +152,7 @@ def sample_tensor_2d(random_state) -> np.ndarray:
 def sample_tensor_3d(random_state) -> np.ndarray:
     """
     Provide a sample 3D tensor for testing.
-    
+
     Returns:
         A (32, 32, 32) float32 array with values in [0, 1].
     """
@@ -170,7 +163,7 @@ def sample_tensor_3d(random_state) -> np.ndarray:
 def sample_vector_field_2d(random_state) -> tuple:
     """
     Provide a sample 2D vector field (u, v components).
-    
+
     Returns:
         Tuple of (u, v) arrays, each (64, 64) float32.
     """
@@ -188,7 +181,7 @@ def requires_torch():
     pytest.importorskip("torch")
 
 
-@pytest.fixture  
+@pytest.fixture
 def requires_cuda():
     """Skip test if CUDA is not available."""
     torch = pytest.importorskip("torch")

@@ -18,12 +18,12 @@ Components:
 
 Example:
     from tensornet.intent import FieldQuery, IntentEngine
-    
+
     engine = IntentEngine(simulation)
-    
+
     # Natural language steering
     result = engine.execute("increase vorticity near the inlet")
-    
+
     # Structured query
     query = FieldQuery.where("region == 'inlet'").maximize("vorticity")
     result = engine.execute(query)
@@ -31,88 +31,56 @@ Example:
 
 from __future__ import annotations
 
-# Query DSL
-from .query import (
-    FieldQuery,
-    QueryBuilder,
-    QueryResult,
-    Predicate,
-    Selector,
-    Aggregator,
-)
-
-from .parser import (
-    IntentParser,
-    ParseResult,
-    IntentType,
-    EntityExtractor,
-)
-
 from .constraints import (
-    Constraint,
-    ConstraintType,
-    ConstraintSet,
-    ConstraintSolver,
-    BoundConstraint,
-    RelationConstraint,
-    IntegralConstraint,
+                          BoundConstraint,
+                          Constraint,
+                          ConstraintSet,
+                          ConstraintSolver,
+                          ConstraintType,
+                          IntegralConstraint,
+                          RelationConstraint,
 )
+from .engine import ExecutionContext, IntentEngine, IntentResult, ResultStatus
+from .goals import ActionPlan, Goal, GoalCoordinator, GoalDirector, GoalStatus, GoalType, PlanStep
+from .parser import EntityExtractor, IntentParser, IntentType, ParseResult
 
-from .goals import (
-    Goal,
-    GoalType,
-    GoalStatus,
-    GoalDirector,
-    GoalCoordinator,
-    ActionPlan,
-    PlanStep,
-)
-
-from .engine import (
-    IntentEngine,
-    IntentResult,
-    ExecutionContext,
-    ResultStatus,
-)
+# Query DSL
+from .query import Aggregator, FieldQuery, Predicate, QueryBuilder, QueryResult, Selector
 
 __all__ = [
     # Query
-    'FieldQuery',
-    'QueryBuilder',
-    'QueryResult',
-    'Predicate',
-    'Selector',
-    'Aggregator',
-    
+    "FieldQuery",
+    "QueryBuilder",
+    "QueryResult",
+    "Predicate",
+    "Selector",
+    "Aggregator",
     # Parser
-    'IntentParser',
-    'ParseResult',
-    'IntentType',
-    'EntityExtractor',
-    
+    "IntentParser",
+    "ParseResult",
+    "IntentType",
+    "EntityExtractor",
     # Constraints
-    'Constraint',
-    'ConstraintType',
-    'ConstraintSet',
-    'ConstraintSolver',
-    'BoundConstraint',
-    'RelationConstraint',
-    'IntegralConstraint',
-    
+    "Constraint",
+    "ConstraintType",
+    "ConstraintSet",
+    "ConstraintSolver",
+    "BoundConstraint",
+    "RelationConstraint",
+    "IntegralConstraint",
     # Goals
-    'Goal',
-    'GoalType',
-    'GoalStatus',
-    'GoalDirector',
-    'GoalCoordinator',
-    'ActionPlan',
-    'PlanStep',
-    
+    "Goal",
+    "GoalType",
+    "GoalStatus",
+    "GoalDirector",
+    "GoalCoordinator",
+    "ActionPlan",
+    "PlanStep",
     # Engine
-    'IntentEngine',
-    'IntentResult',
-    'ExecutionContext',
-    'ResultStatus',
+    "IntentEngine",
+    "IntentResult",
+    "ExecutionContext",
+    "ResultStatus",
 ]
 
-__version__ = '0.1.0'
+__version__ = "0.1.0"

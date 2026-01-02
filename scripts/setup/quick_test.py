@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Quick performance test of orbital command center with MPO."""
 
-import torch
 import time
+
+import torch
+
 from tensornet.gateway.orbital_command import OrbitalCommandCenter
 
 print("Initializing OrbitalCommandCenter...")
@@ -34,6 +36,7 @@ for i in range(3):
     print(f"  Frame {i+1:2d}: {elapsed:7.2f}ms")
 
 import numpy as np
+
 mean_time = np.mean(timings)
 min_time = np.min(timings)
 max_time = np.max(timings)
@@ -51,4 +54,6 @@ if mean_time <= 16.67:
 elif mean_time <= 25:
     print(f"\n✓ Good: ~{1000/mean_time:.0f} FPS (gap: {mean_time-16.67:.2f}ms)")
 else:
-    print(f"\n⚠ Current: ~{1000/mean_time:.0f} FPS (need: {mean_time-16.67:.2f}ms more)")
+    print(
+        f"\n⚠ Current: ~{1000/mean_time:.0f} FPS (need: {mean_time-16.67:.2f}ms more)"
+    )

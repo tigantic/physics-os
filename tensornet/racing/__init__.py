@@ -9,7 +9,7 @@ Phase 12: The Invisible Wall
 The physics that wins races.
 """
 
-from .wake import WakeTracker, DirtyAirReport, track_dirty_air
+from .wake import DirtyAirReport, WakeTracker, track_dirty_air
 
 __all__ = [
     "WakeTracker",

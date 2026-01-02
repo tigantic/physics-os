@@ -13,10 +13,10 @@ Core Components:
 
 Usage:
     from tensornet.hypersim import FluidEnv, make_env
-    
+
     # Create environment
     env = make_env('fluid-control-v0')
-    
+
     # Standard gym interface
     obs, info = env.reset(seed=42)
     for _ in range(1000):
@@ -24,156 +24,141 @@ Usage:
         obs, reward, terminated, truncated, info = env.step(action)
 """
 
-from .env import (
-    FluidEnv,
-    FluidEnvConfig,
-    EnvState,
-    StepResult,
-)
-
-from .rewards import (
-    RewardFunction,
-    RewardConfig,
-    SparseReward,
-    DenseReward,
-    ShapedReward,
-    CompositeReward,
-    TargetMatchReward,
-    VorticityReward,
-    EnergyReward,
-    DissipationReward,
-    BoundaryPenalty,
-    make_reward,
-)
-
-from .spaces import (
-    FieldObservation,
-    FieldAction,
-    ActionMask,
-    ObservationConfig,
-    ActionConfig,
-    ObservationType,
-    ActionType,
-    ActuatorConfig,
-    build_observation_space,
-    build_action_space,
-)
-
 from .curriculum import (
-    Curriculum,
-    CurriculumStage,
-    AdvancementPolicy,
-    DomainRandomizer,
-    AdaptiveRandomizer,
-    DifficultyScheduler,
-    RandomizationRange,
-    make_fluid_curriculum,
+                         AdaptiveRandomizer,
+                         AdvancementPolicy,
+                         Curriculum,
+                         CurriculumStage,
+                         DifficultyScheduler,
+                         DomainRandomizer,
+                         RandomizationRange,
+                         make_fluid_curriculum,
 )
-
-from .wrappers import (
-    FrameStack,
-    ActionRepeat,
-    RewardScaling,
-    RewardClipping,
-    RewardNormalization,
-    TimeLimit,
-    AutoReset,
-    RecordEpisode,
-    EpisodeRecord,
-    LogMetrics,
-    NormalizeObservation,
-    DownsampleObservation,
-    ClipAction,
-    RescaleAction,
-    StickyAction,
-    make_wrapped_env,
-)
-
+from .env import EnvState, FluidEnv, FluidEnvConfig, StepResult
 from .registry import (
-    make_env,
-    register_env,
-    unregister_env,
-    list_envs,
-    get_env_spec,
-    make_fluid_env,
-    make_vectorized_env,
-    register_with_gymnasium,
-    TaskSpec,
-    TASK_SPECS,
+                         TASK_SPECS,
+                         TaskSpec,
+                         get_env_spec,
+                         list_envs,
+                         make_env,
+                         make_fluid_env,
+                         make_vectorized_env,
+                         register_env,
+                         register_with_gymnasium,
+                         unregister_env,
+)
+from .rewards import (
+                         BoundaryPenalty,
+                         CompositeReward,
+                         DenseReward,
+                         DissipationReward,
+                         EnergyReward,
+                         RewardConfig,
+                         RewardFunction,
+                         ShapedReward,
+                         SparseReward,
+                         TargetMatchReward,
+                         VorticityReward,
+                         make_reward,
+)
+from .spaces import (
+                         ActionConfig,
+                         ActionMask,
+                         ActionType,
+                         ActuatorConfig,
+                         FieldAction,
+                         FieldObservation,
+                         ObservationConfig,
+                         ObservationType,
+                         build_action_space,
+                         build_observation_space,
+)
+from .wrappers import (
+                         ActionRepeat,
+                         AutoReset,
+                         ClipAction,
+                         DownsampleObservation,
+                         EpisodeRecord,
+                         FrameStack,
+                         LogMetrics,
+                         NormalizeObservation,
+                         RecordEpisode,
+                         RescaleAction,
+                         RewardClipping,
+                         RewardNormalization,
+                         RewardScaling,
+                         StickyAction,
+                         TimeLimit,
+                         make_wrapped_env,
 )
 
 __all__ = [
     # Environment
-    'FluidEnv',
-    'FluidEnvConfig',
-    'EnvState',
-    'StepResult',
-    
+    "FluidEnv",
+    "FluidEnvConfig",
+    "EnvState",
+    "StepResult",
     # Rewards
-    'RewardFunction',
-    'RewardConfig',
-    'SparseReward',
-    'DenseReward',
-    'ShapedReward',
-    'CompositeReward',
-    'TargetMatchReward',
-    'VorticityReward',
-    'EnergyReward',
-    'DissipationReward',
-    'BoundaryPenalty',
-    'make_reward',
-    
+    "RewardFunction",
+    "RewardConfig",
+    "SparseReward",
+    "DenseReward",
+    "ShapedReward",
+    "CompositeReward",
+    "TargetMatchReward",
+    "VorticityReward",
+    "EnergyReward",
+    "DissipationReward",
+    "BoundaryPenalty",
+    "make_reward",
     # Spaces
-    'FieldObservation',
-    'FieldAction',
-    'ActionMask',
-    'ObservationConfig',
-    'ActionConfig',
-    'ObservationType',
-    'ActionType',
-    'ActuatorConfig',
-    'build_observation_space',
-    'build_action_space',
-    
+    "FieldObservation",
+    "FieldAction",
+    "ActionMask",
+    "ObservationConfig",
+    "ActionConfig",
+    "ObservationType",
+    "ActionType",
+    "ActuatorConfig",
+    "build_observation_space",
+    "build_action_space",
     # Curriculum
-    'Curriculum',
-    'CurriculumStage',
-    'AdvancementPolicy',
-    'DomainRandomizer',
-    'AdaptiveRandomizer',
-    'DifficultyScheduler',
-    'RandomizationRange',
-    'make_fluid_curriculum',
-    
+    "Curriculum",
+    "CurriculumStage",
+    "AdvancementPolicy",
+    "DomainRandomizer",
+    "AdaptiveRandomizer",
+    "DifficultyScheduler",
+    "RandomizationRange",
+    "make_fluid_curriculum",
     # Wrappers
-    'FrameStack',
-    'ActionRepeat',
-    'RewardScaling',
-    'RewardClipping',
-    'RewardNormalization',
-    'TimeLimit',
-    'AutoReset',
-    'RecordEpisode',
-    'EpisodeRecord',
-    'LogMetrics',
-    'NormalizeObservation',
-    'DownsampleObservation',
-    'ClipAction',
-    'RescaleAction',
-    'StickyAction',
-    'make_wrapped_env',
-    
+    "FrameStack",
+    "ActionRepeat",
+    "RewardScaling",
+    "RewardClipping",
+    "RewardNormalization",
+    "TimeLimit",
+    "AutoReset",
+    "RecordEpisode",
+    "EpisodeRecord",
+    "LogMetrics",
+    "NormalizeObservation",
+    "DownsampleObservation",
+    "ClipAction",
+    "RescaleAction",
+    "StickyAction",
+    "make_wrapped_env",
     # Registry
-    'make_env',
-    'register_env',
-    'unregister_env',
-    'list_envs',
-    'get_env_spec',
-    'make_fluid_env',
-    'make_vectorized_env',
-    'register_with_gymnasium',
-    'TaskSpec',
-    'TASK_SPECS',
+    "make_env",
+    "register_env",
+    "unregister_env",
+    "list_envs",
+    "get_env_spec",
+    "make_fluid_env",
+    "make_vectorized_env",
+    "register_with_gymnasium",
+    "TaskSpec",
+    "TASK_SPECS",
 ]
 
-__version__ = '0.1.0'
+__version__ = "0.1.0"

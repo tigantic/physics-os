@@ -7,38 +7,38 @@ Provides swarm coordination, formation control, task allocation,
 and consensus protocols for distributed autonomous vehicle systems.
 """
 
-from tensornet.coordination.swarm import (
-    VehicleState,
-    SwarmConfig,
-    SwarmTopology,
-    SwarmCoordinator,
-    compute_swarm_centroid,
-    compute_swarm_spread,
+from tensornet.coordination.consensus import (
+                                              AverageConsensus,
+                                              ConsensusConfig,
+                                              ConsensusProtocol,
+                                              ConsensusState,
+                                              MaxConsensus,
+                                              run_consensus,
 )
 from tensornet.coordination.formation import (
-    FormationType,
-    FormationConfig,
-    FormationState,
-    FormationController,
-    compute_formation_positions,
-    validate_formation,
+                                              FormationConfig,
+                                              FormationController,
+                                              FormationState,
+                                              FormationType,
+                                              compute_formation_positions,
+                                              validate_formation,
+)
+from tensornet.coordination.swarm import (
+                                              SwarmConfig,
+                                              SwarmCoordinator,
+                                              SwarmTopology,
+                                              VehicleState,
+                                              compute_swarm_centroid,
+                                              compute_swarm_spread,
 )
 from tensornet.coordination.task_allocation import (
-    TaskPriority,
-    TaskStatus,
-    Task,
-    Assignment,
-    TaskAllocator,
-    AuctionProtocol,
-    allocate_tasks,
-)
-from tensornet.coordination.consensus import (
-    ConsensusState,
-    ConsensusConfig,
-    ConsensusProtocol,
-    AverageConsensus,
-    MaxConsensus,
-    run_consensus,
+                                              Assignment,
+                                              AuctionProtocol,
+                                              Task,
+                                              TaskAllocator,
+                                              TaskPriority,
+                                              TaskStatus,
+                                              allocate_tasks,
 )
 
 __all__ = [

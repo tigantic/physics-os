@@ -9,7 +9,7 @@ Phase 14: The Wildfire Prophet
 The physics that saves communities.
 """
 
-from .fire import FireSim, FireReport
+from .fire import FireReport, FireSim
 
 __all__ = [
     "FireSim",

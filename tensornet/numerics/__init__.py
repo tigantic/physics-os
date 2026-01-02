@@ -6,14 +6,10 @@ Provides rigorous numerical methods for Computer-Assisted Proofs:
 - High-precision operations
 """
 
-from tensornet.numerics.interval import (
-    Interval,
-    IntervalTensor,
-    validate_interval_arithmetic,
-)
+from tensornet.numerics.interval import Interval, IntervalTensor, validate_interval_arithmetic
 
 __all__ = [
-    'Interval',
-    'IntervalTensor', 
-    'validate_interval_arithmetic',
+    "Interval",
+    "IntervalTensor",
+    "validate_interval_arithmetic",
 ]

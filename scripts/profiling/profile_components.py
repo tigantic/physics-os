@@ -5,18 +5,19 @@ Component-Level Performance Profiling
 Isolate and measure each pipeline component to validate audit assumptions.
 """
 
-import torch
 import time
+
 import numpy as np
+import torch
 
 # Setup
-device = torch.device('cuda:0')
+device = torch.device("cuda:0")
 width, height = 3840, 2160
 n_trials = 100
 
-print("="*60)
+print("=" * 60)
 print("COMPONENT PROFILING @ 4K (3840×2160)")
-print("="*60)
+print("=" * 60)
 print(f"Trials: {n_trials}")
 print(f"Device: {torch.cuda.get_device_name(0)}\n")
 
@@ -32,7 +33,9 @@ print("[Test 1] Compositor (5-layer alpha blend)")
 # Create mock layers
 layers = []
 for i in range(5):
-    layer = torch.randn(height, width, 4, dtype=torch.float16, device=device).clamp(0, 1)
+    layer = torch.randn(height, width, 4, dtype=torch.float16, device=device).clamp(
+        0, 1
+    )
     layers.append(layer)
 
 final_buffer = torch.zeros(height, width, 4, dtype=torch.float32, device=device)
@@ -43,18 +46,18 @@ times = []
 for trial in range(n_trials):
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
-    
+
     start.record()
-    
+
     # Copy base layer
     final_buffer.copy_(layers[0])
-    
+
     # Blend remaining layers (ADDITIVE)
     for layer in layers[1:]:
         src = layer
         alpha = src[:, :, 3:4]
         final_buffer[:, :, :3].add_(src[:, :, :3] * alpha).clamp_(0, 1)
-    
+
     end.record()
     torch.cuda.synchronize()
     times.append(start.elapsed_time(end))
@@ -63,7 +66,9 @@ avg_time = np.mean(times)
 std_time = np.std(times)
 print(f"  Average: {avg_time:.2f}ms ± {std_time:.2f}ms")
 print(f"  FPS: {1000/avg_time:.1f}")
-print(f"  Memory traffic: {5*66 + 132:.0f}MB read + {4*132:.0f}MB write = {5*66 + 5*132:.0f}MB")
+print(
+    f"  Memory traffic: {5*66 + 132:.0f}MB read + {4*132:.0f}MB write = {5*66 + 5*132:.0f}MB"
+)
 print()
 
 # ============================================================================
@@ -80,11 +85,11 @@ times = []
 for trial in range(n_trials):
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
-    
+
     start.record()
     grid_buffer.copy_(grid_mask)
     end.record()
-    
+
     torch.cuda.synchronize()
     times.append(start.elapsed_time(end))
 
@@ -109,13 +114,13 @@ times = []
 for trial in range(n_trials):
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
-    
+
     start.record()
-    
+
     # Fill 200×200 rectangle in top-left
     hud_buffer[0:200, 0:200, :3] = color
     hud_buffer[0:200, 0:200, 3] = 0.9
-    
+
     end.record()
     torch.cuda.synchronize()
     times.append(start.elapsed_time(end))
@@ -140,11 +145,11 @@ times = []
 for trial in range(n_trials):
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
-    
+
     start.record()
     dst_f32.copy_(src_f16)
     end.record()
-    
+
     torch.cuda.synchronize()
     times.append(start.elapsed_time(end))
 
@@ -168,11 +173,13 @@ times = []
 for trial in range(n_trials):
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
-    
+
     start.record()
-    dense = torch.nn.functional.interpolate(sparse, size=(height, width), mode='bicubic', align_corners=False)
+    dense = torch.nn.functional.interpolate(
+        sparse, size=(height, width), mode="bicubic", align_corners=False
+    )
     end.record()
-    
+
     torch.cuda.synchronize()
     times.append(start.elapsed_time(end))
 
@@ -196,12 +203,12 @@ times = []
 for trial in range(n_trials):
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
-    
+
     start.record()
-    
+
     indices = (scalar_field * 255).long().clamp(0, 255)
     rgb = lut[indices]
-    
+
     end.record()
     torch.cuda.synchronize()
     times.append(start.elapsed_time(end))
@@ -225,12 +232,12 @@ times = []
 for trial in range(n_trials):
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
-    
+
     start.record()
-    
+
     luminance = rgb_field.mean(dim=-1)
     alpha = torch.pow(luminance, 0.5)  # Simple power curve
-    
+
     end.record()
     torch.cuda.synchronize()
     times.append(start.elapsed_time(end))
@@ -241,6 +248,6 @@ print(f"  Average: {avg_time:.2f}ms ± {std_time:.2f}ms")
 print(f"  FPS: {1000/avg_time:.1f}")
 print()
 
-print("="*60)
+print("=" * 60)
 print("PROFILING COMPLETE")
-print("="*60)
+print("=" * 60)

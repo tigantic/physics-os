@@ -3,8 +3,9 @@
 Quick test for CUDA Laplacian kernel compilation and availability.
 """
 
-import torch
 import sys
+
+import torch
 
 print("=" * 60)
 print("CUDA Kernel Availability Test")
@@ -23,13 +24,14 @@ print("Testing CUDA Laplacian Kernel")
 print("=" * 60)
 
 try:
-    from tensornet.mpo.laplacian_cuda import LaplacianCUDA, CUDA_KERNEL_AVAILABLE
-    
+    from tensornet.mpo.laplacian_cuda import (CUDA_KERNEL_AVAILABLE,
+                                              LaplacianCUDA)
+
     if CUDA_KERNEL_AVAILABLE:
         print("\n✓✓✓ CUDA KERNEL COMPILED SUCCESSFULLY ✓✓✓")
         print("\nExpected performance:")
         print("  Laplacian: 128ms CPU → <0.2ms GPU (640× speedup)")
-        
+
         # Try to instantiate
         if torch.cuda.is_available():
             print("\nInstantiating LaplacianCUDA...")
@@ -40,11 +42,12 @@ try:
     else:
         print("\n⚠ CUDA kernel compilation failed or not available")
         print("Using optimized CPU fallback instead")
-        
+
 except Exception as e:
     print(f"\n✗ Error loading CUDA Laplacian: {e}")
     print("\nThis is expected on first run - kernel will JIT compile (30-60s)")
     import traceback
+
     traceback.print_exc()
 
 print("\n" + "=" * 60)

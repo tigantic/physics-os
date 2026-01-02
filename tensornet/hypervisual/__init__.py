@@ -13,97 +13,68 @@ Core Components:
 
 Usage:
     from tensornet.hypervisual import TileRenderer, SliceEngine
-    
+
     # Render at any resolution
     renderer = TileRenderer(field, tile_size=256)
     tile = renderer.get_tile(x=0, y=0, lod=3)
-    
+
     # Slice any plane
     slicer = SliceEngine(field)
     image = slicer.slice(plane='xy', depth=0.5, resolution=1024)
 """
 
-from .renderer import (
-    TileRenderer,
-    Tile,
-    TileCoord,
-    LODPyramid,
-    RenderConfig,
-    RenderStats,
-)
-
-from .slicer import (
-    SliceEngine,
-    SlicePlane,
-    SliceResult,
-    VolumeRenderer,
-)
-
-from .slicing_core import (
-    MortonSlicer,
-    MortonSliceResult,
-    compare_slicing_methods,
-)
-
-from .stream import (
-    StreamProtocol,
-    StreamConfig,
-    FrameBuffer,
-    StreamStats,
-)
-
 from .colormaps import (
-    ColorMap,
-    TransferFunction,
-    VIRIDIS,
-    PLASMA,
-    INFERNO,
-    MAGMA,
-    TURBO,
-    COOLWARM,
-    JET,
-    GRAYSCALE,
-    apply_colormap,
+                        COOLWARM,
+                        GRAYSCALE,
+                        INFERNO,
+                        JET,
+                        MAGMA,
+                        PLASMA,
+                        TURBO,
+                        VIRIDIS,
+                        ColorMap,
+                        TransferFunction,
+                        apply_colormap,
 )
+from .renderer import LODPyramid, RenderConfig, RenderStats, Tile, TileCoord, TileRenderer
+from .slicer import SliceEngine, SlicePlane, SliceResult, VolumeRenderer
+from .slicing_core import MortonSlicer, MortonSliceResult, compare_slicing_methods
+from .stream import FrameBuffer, StreamConfig, StreamProtocol, StreamStats
 
 __all__ = [
     # Renderer
-    'TileRenderer',
-    'Tile',
-    'TileCoord',
-    'LODPyramid',
-    'RenderConfig',
-    'RenderStats',
-    
+    "TileRenderer",
+    "Tile",
+    "TileCoord",
+    "LODPyramid",
+    "RenderConfig",
+    "RenderStats",
     # Slicer
-    'SliceEngine',
-    'SlicePlane',
-    'SliceResult',
-    'VolumeRenderer',
-    
+    "SliceEngine",
+    "SlicePlane",
+    "SliceResult",
+    "VolumeRenderer",
     # Morton-Aware Slicer (true resolution-independent)
-    'MortonSlicer',
-    'MortonSliceResult',
-    'compare_slicing_methods',
-    
+    "MortonSlicer",
+    "MortonSliceResult",
+    "compare_slicing_methods",
     # Stream
-    'StreamProtocol',
-    'StreamConfig',
-    'FrameBuffer',
-    'StreamStats',
-    
+    "StreamProtocol",
+    "StreamConfig",
+    "FrameBuffer",
+    "StreamStats",
     # Colormaps
-    'ColorMap',
-    'TransferFunction',
-    'VIRIDIS',
-    'PLASMA',
-    'INFERNO',
-    'MAGMA',
-    'TURBO',
-    'COOLWARM',
-    'JET',
-    'GRAYSCALE',
-    'apply_colormap',
+    "ColorMap",
+    "TransferFunction",
+    "VIRIDIS",
+    "PLASMA",
+    "INFERNO",
+    "MAGMA",
+    "TURBO",
+    "COOLWARM",
+    "JET",
+    "GRAYSCALE",
+    "apply_colormap",
 ]
 
-__version__ = '0.1.0'
+__version__ = "0.1.0"

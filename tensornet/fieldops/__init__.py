@@ -15,96 +15,77 @@ Operator Categories:
 
 Usage:
     from tensornet.fieldops import Advect, Diffuse, Project, FieldGraph
-    
+
     # Compose operators
     graph = FieldGraph()
     graph.add('advect', Advect())
     graph.add('diffuse', Diffuse(viscosity=0.01))
     graph.add('project', Project())
     graph.connect('advect', 'diffuse', 'project')
-    
+
     # Execute
     field = graph.execute(field, dt=0.01)
 """
 
-from .operators import (
-    # Base
-    Operator,
-    OperatorStats,
-    FieldGraph,
-    GraphNode,
-    
-    # Differential
-    Grad,
-    Div,
-    Curl,
-    Laplacian,
-    
-    # Transport
+from .operators import (  # Base; Differential; Transport; Projection; Forces; Boundary Conditions; Preset graphs
     Advect,
-    Diffuse,
-    
-    # Projection
-    Project,
-    PoissonSolver,
-    
-    # Forces
-    Impulse,
-    Buoyancy,
     Attractor,
-    Stir,
-    
-    # Boundary Conditions
     BoundaryCondition,
-    PeriodicBC,
+    Buoyancy,
+    Curl,
+    Diffuse,
     DirichletBC,
+    Div,
+    FieldGraph,
+    Grad,
+    GraphNode,
+    Impulse,
+    Laplacian,
     NeumannBC,
     ObstacleMask,
-    
-    # Preset graphs
-    smoke_graph,
+    Operator,
+    OperatorStats,
+    PeriodicBC,
+    PoissonSolver,
+    Project,
+    Stir,
     fluid_graph,
     heat_graph,
+    smoke_graph,
 )
 
 __all__ = [
     # Base
-    'Operator',
-    'OperatorStats',
-    'FieldGraph',
-    'GraphNode',
-    
+    "Operator",
+    "OperatorStats",
+    "FieldGraph",
+    "GraphNode",
     # Differential
-    'Grad',
-    'Div',
-    'Curl',
-    'Laplacian',
-    
+    "Grad",
+    "Div",
+    "Curl",
+    "Laplacian",
     # Transport
-    'Advect',
-    'Diffuse',
-    
+    "Advect",
+    "Diffuse",
     # Projection
-    'Project',
-    'PoissonSolver',
-    
+    "Project",
+    "PoissonSolver",
     # Forces
-    'Impulse',
-    'Buoyancy',
-    'Attractor',
-    'Stir',
-    
+    "Impulse",
+    "Buoyancy",
+    "Attractor",
+    "Stir",
     # Boundary Conditions
-    'BoundaryCondition',
-    'PeriodicBC',
-    'DirichletBC',
-    'NeumannBC',
-    'ObstacleMask',
-    
+    "BoundaryCondition",
+    "PeriodicBC",
+    "DirichletBC",
+    "NeumannBC",
+    "ObstacleMask",
     # Preset graphs
-    'smoke_graph',
-    'fluid_graph',
-    'heat_graph',
+    "smoke_graph",
+    "fluid_graph",
+    "heat_graph",
 ]
 
-__version__ = '0.1.0'
+__version__ = "0.1.0"

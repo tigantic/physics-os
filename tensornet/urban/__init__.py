@@ -25,12 +25,12 @@ Outputs:
 - Wind acceleration maps
 """
 
-from tensornet.urban.city_gen import VoxelCity, BuildingSpec
+from tensornet.urban.city_gen import BuildingSpec, VoxelCity
 from tensornet.urban.solver import (
-    solve_urban_flow,
-    UrbanFlowSolver,
-    analyze_flight_safety,
-    FlightSafetyReport
+                                    FlightSafetyReport,
+                                    UrbanFlowSolver,
+                                    analyze_flight_safety,
+                                    solve_urban_flow,
 )
 
 __all__ = [

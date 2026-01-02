@@ -2,14 +2,16 @@
 Test if operations actually run on GPU by measuring memory bandwidth.
 If operations run on CPU, they won't saturate GPU memory bandwidth.
 """
-import torch
+
 import time
 
-device = 'cuda:0'
+import torch
 
-print("="*60)
+device = "cuda:0"
+
+print("=" * 60)
 print("MEMORY BANDWIDTH TEST")
-print("="*60)
+print("=" * 60)
 
 # Test 1: Large memory copy (should saturate GPU bandwidth ~600 GB/s for RTX 5070)
 size = 1024 * 1024 * 1024 // 4  # 1GB of float32
@@ -71,4 +73,4 @@ if tflops < 5:
 else:
     print("   ✓ High throughput - GPU is working!")
 
-print("\n" + "="*60)
+print("\n" + "=" * 60)

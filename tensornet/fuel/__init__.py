@@ -20,7 +20,8 @@ from .tile_compositor import TileCompositor
 
 try:
     from .s3_fetcher import S3Fetcher
-    __all__ = ['S3Fetcher', 'TileCompositor']
+
+    __all__ = ["S3Fetcher", "TileCompositor"]
 except ImportError:
     # aiohttp not installed - compositor still works
-    __all__ = ['TileCompositor']
+    __all__ = ["TileCompositor"]

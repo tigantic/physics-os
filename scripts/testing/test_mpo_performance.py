@@ -1,19 +1,18 @@
 """
 Quick test to measure MPO solver performance.
 """
-import torch
+
 import time
-from tensornet.mpo import MPOAtmosphericSolver
+
+import torch
+
 from tensornet.cfd.qtt_2d import QTT2DState
+from tensornet.mpo import MPOAtmosphericSolver
 
 # Initialize
-device = torch.device('cuda')
+device = torch.device("cuda")
 solver = MPOAtmosphericSolver(
-    grid_size=(64, 64),
-    viscosity=0.001,
-    dt=0.01,
-    dtype=torch.float32,
-    device=device
+    grid_size=(64, 64), viscosity=0.001, dt=0.01, dtype=torch.float32, device=device
 )
 
 print("Warming up...")
@@ -43,7 +42,7 @@ start = time.perf_counter()
 
 for _ in range(100):
     u_cores, v_cores = solver.get_cores()
-    
+
 torch.cuda.synchronize()
 elapsed = (time.perf_counter() - start) * 1000
 per_call = elapsed / 100

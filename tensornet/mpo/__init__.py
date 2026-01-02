@@ -8,7 +8,7 @@ Target performance: 0.65ms physics update (5× speedup vs 3.33ms dense solver).
 """
 
 from .atmospheric_solver import MPOAtmosphericSolver
-from .operators import LaplacianMPO, AdvectionMPO, ProjectionMPO
+from .operators import AdvectionMPO, LaplacianMPO, ProjectionMPO
 
 __all__ = [
     "MPOAtmosphericSolver",

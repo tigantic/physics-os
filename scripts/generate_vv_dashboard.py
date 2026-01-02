@@ -348,13 +348,13 @@ def create_status_card(title: str, status: str, detail: str) -> str:
     """Create a status card HTML."""
     status_class = status.lower()
     icon_map = {
-        'pass': '✅',
-        'fail': '❌',
-        'warning': '⚠️',
-        'pending': '⏳',
+        "pass": "✅",
+        "fail": "❌",
+        "warning": "⚠️",
+        "pending": "⏳",
     }
-    icon = icon_map.get(status_class, '❓')
-    
+    icon = icon_map.get(status_class, "❓")
+
     return f"""
     <div class="status-card {status_class}">
         <div class="status-icon">{icon}</div>
@@ -367,119 +367,149 @@ def create_status_card(title: str, status: str, detail: str) -> str:
 def parse_junit_xml(xml_path: Path) -> dict:
     """Parse JUnit XML results (simple parser)."""
     import xml.etree.ElementTree as ET
-    
+
     results = {
-        'passed': 0,
-        'failed': 0,
-        'skipped': 0,
-        'errors': 0,
-        'tests': [],
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "tests": [],
     }
-    
+
     try:
         tree = ET.parse(xml_path)
         root = tree.getroot()
-        
-        for testsuite in root.iter('testsuite'):
-            results['passed'] += int(testsuite.get('tests', 0)) - int(testsuite.get('failures', 0)) - int(testsuite.get('errors', 0)) - int(testsuite.get('skipped', 0))
-            results['failed'] += int(testsuite.get('failures', 0))
-            results['errors'] += int(testsuite.get('errors', 0))
-            results['skipped'] += int(testsuite.get('skipped', 0))
-            
-            for testcase in testsuite.iter('testcase'):
+
+        for testsuite in root.iter("testsuite"):
+            results["passed"] += (
+                int(testsuite.get("tests", 0))
+                - int(testsuite.get("failures", 0))
+                - int(testsuite.get("errors", 0))
+                - int(testsuite.get("skipped", 0))
+            )
+            results["failed"] += int(testsuite.get("failures", 0))
+            results["errors"] += int(testsuite.get("errors", 0))
+            results["skipped"] += int(testsuite.get("skipped", 0))
+
+            for testcase in testsuite.iter("testcase"):
                 test = {
-                    'name': testcase.get('name'),
-                    'classname': testcase.get('classname'),
-                    'time': float(testcase.get('time', 0)),
-                    'status': 'pass',
+                    "name": testcase.get("name"),
+                    "classname": testcase.get("classname"),
+                    "time": float(testcase.get("time", 0)),
+                    "status": "pass",
                 }
-                if testcase.find('failure') is not None:
-                    test['status'] = 'fail'
-                elif testcase.find('error') is not None:
-                    test['status'] = 'error'
-                elif testcase.find('skipped') is not None:
-                    test['status'] = 'skip'
-                results['tests'].append(test)
+                if testcase.find("failure") is not None:
+                    test["status"] = "fail"
+                elif testcase.find("error") is not None:
+                    test["status"] = "error"
+                elif testcase.find("skipped") is not None:
+                    test["status"] = "skip"
+                results["tests"].append(test)
     except Exception as e:
         print(f"Warning: Could not parse {xml_path}: {e}")
-    
+
     return results
 
 
 def calculate_maturity(mms: dict, benchmarks: dict, conservation: dict) -> int:
     """Calculate overall V&V maturity percentage."""
     scores = []
-    
+
     # MMS score
-    if mms['passed'] + mms['failed'] > 0:
-        scores.append(mms['passed'] / (mms['passed'] + mms['failed']) * 100)
+    if mms["passed"] + mms["failed"] > 0:
+        scores.append(mms["passed"] / (mms["passed"] + mms["failed"]) * 100)
     else:
         scores.append(100)  # No tests = assumed complete
-    
+
     # Benchmark score
-    if benchmarks['passed'] + benchmarks['failed'] > 0:
-        scores.append(benchmarks['passed'] / (benchmarks['passed'] + benchmarks['failed']) * 100)
+    if benchmarks["passed"] + benchmarks["failed"] > 0:
+        scores.append(
+            benchmarks["passed"] / (benchmarks["passed"] + benchmarks["failed"]) * 100
+        )
     else:
         scores.append(100)
-    
+
     # Conservation score
-    if conservation['passed'] + conservation['failed'] > 0:
-        scores.append(conservation['passed'] / (conservation['passed'] + conservation['failed']) * 100)
+    if conservation["passed"] + conservation["failed"] > 0:
+        scores.append(
+            conservation["passed"]
+            / (conservation["passed"] + conservation["failed"])
+            * 100
+        )
     else:
         scores.append(100)
-    
+
     # Provenance (assumed 100% if we got this far)
     scores.append(100)
-    
+
     return int(sum(scores) / len(scores))
 
 
 def generate_dashboard(artifacts_dir: Path, commit: str, branch: str) -> str:
     """Generate the HTML dashboard."""
-    
+
     # Parse results
-    mms_results = {'passed': 0, 'failed': 0, 'skipped': 0, 'errors': 0, 'tests': []}
-    benchmark_results = {'passed': 0, 'failed': 0, 'skipped': 0, 'errors': 0, 'tests': []}
-    conservation_results = {'passed': 0, 'failed': 0, 'skipped': 0, 'errors': 0, 'tests': []}
-    
+    mms_results = {"passed": 0, "failed": 0, "skipped": 0, "errors": 0, "tests": []}
+    benchmark_results = {
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "tests": [],
+    }
+    conservation_results = {
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "tests": [],
+    }
+
     # Look for result files
     for subdir in artifacts_dir.iterdir():
         if subdir.is_dir():
             for file in subdir.iterdir():
-                if file.name == 'mms_results.xml':
+                if file.name == "mms_results.xml":
                     mms_results = parse_junit_xml(file)
-                elif file.name == 'benchmark_results.xml':
+                elif file.name == "benchmark_results.xml":
                     benchmark_results = parse_junit_xml(file)
-                elif file.name == 'conservation_results.xml':
+                elif file.name == "conservation_results.xml":
                     conservation_results = parse_junit_xml(file)
-    
+
     # Generate status cards
     status_cards = []
-    
-    mms_status = 'pass' if mms_results['failed'] == 0 else 'fail'
+
+    mms_status = "pass" if mms_results["failed"] == 0 else "fail"
     mms_detail = f"{mms_results['passed']} passed, {mms_results['failed']} failed"
-    status_cards.append(create_status_card('MMS Verification', mms_status, mms_detail))
-    
-    bench_status = 'pass' if benchmark_results['failed'] == 0 else 'fail'
-    bench_detail = f"{benchmark_results['passed']} passed, {benchmark_results['failed']} failed"
-    status_cards.append(create_status_card('Benchmarks', bench_status, bench_detail))
-    
-    cons_status = 'pass' if conservation_results['failed'] == 0 else 'fail'
+    status_cards.append(create_status_card("MMS Verification", mms_status, mms_detail))
+
+    bench_status = "pass" if benchmark_results["failed"] == 0 else "fail"
+    bench_detail = (
+        f"{benchmark_results['passed']} passed, {benchmark_results['failed']} failed"
+    )
+    status_cards.append(create_status_card("Benchmarks", bench_status, bench_detail))
+
+    cons_status = "pass" if conservation_results["failed"] == 0 else "fail"
     cons_detail = f"{conservation_results['passed']} passed, {conservation_results['failed']} failed"
-    status_cards.append(create_status_card('Conservation', cons_status, cons_detail))
-    
-    status_cards.append(create_status_card('Provenance', 'pass', 'Manifest signed'))
-    
+    status_cards.append(create_status_card("Conservation", cons_status, cons_detail))
+
+    status_cards.append(create_status_card("Provenance", "pass", "Manifest signed"))
+
     # Calculate maturity
     maturity = calculate_maturity(mms_results, benchmark_results, conservation_results)
-    
+
     # Generate test results rows
     test_rows = []
-    for name, results in [('MMS', mms_results), ('Benchmarks', benchmark_results), ('Conservation', conservation_results)]:
-        total = results['passed'] + results['failed']
-        rate = (results['passed'] / total * 100) if total > 0 else 100
-        badge_class = 'pass' if rate == 100 else 'fail' if rate < 80 else 'warning'
-        test_rows.append(f"""
+    for name, results in [
+        ("MMS", mms_results),
+        ("Benchmarks", benchmark_results),
+        ("Conservation", conservation_results),
+    ]:
+        total = results["passed"] + results["failed"]
+        rate = (results["passed"] / total * 100) if total > 0 else 100
+        badge_class = "pass" if rate == 100 else "fail" if rate < 80 else "warning"
+        test_rows.append(
+            f"""
         <tr>
             <td>{name}</td>
             <td><span class="badge pass">{results['passed']}</span></td>
@@ -487,81 +517,93 @@ def generate_dashboard(artifacts_dir: Path, commit: str, branch: str) -> str:
             <td><span class="badge skip">{results['skipped']}</span></td>
             <td><span class="badge {badge_class}">{rate:.1f}%</span></td>
         </tr>
-        """)
-    
+        """
+        )
+
     # MMS coverage rows
     mms_solvers = [
-        ('2D Euler', 'pass', 'test_euler2d_mms.py'),
-        ('3D Euler', 'pass', 'test_euler3d_mms.py'),
-        ('Advection-Diffusion', 'pass', 'test_advection_mms.py'),
-        ('Pressure Poisson', 'pass', 'test_poisson_mms.py'),
-        ('Navier-Stokes', 'pass', 'Taylor-Green (partial)'),
+        ("2D Euler", "pass", "test_euler2d_mms.py"),
+        ("3D Euler", "pass", "test_euler3d_mms.py"),
+        ("Advection-Diffusion", "pass", "test_advection_mms.py"),
+        ("Pressure Poisson", "pass", "test_poisson_mms.py"),
+        ("Navier-Stokes", "pass", "Taylor-Green (partial)"),
     ]
     mms_rows = []
     for solver, status, test_file in mms_solvers:
-        badge = 'pass' if status == 'pass' else 'fail'
-        mms_rows.append(f"""
+        badge = "pass" if status == "pass" else "fail"
+        mms_rows.append(
+            f"""
         <tr>
             <td>{solver}</td>
             <td><span class="badge {badge}">{'✅ Complete' if status == 'pass' else '❌ Needed'}</span></td>
             <td><code>{test_file}</code></td>
             <td>{datetime.now().strftime('%Y-%m-%d')}</td>
         </tr>
-        """)
-    
+        """
+        )
+
     # Benchmark rows
     benchmarks = [
-        ('Sod Shock Tube', 'pass', 'Sod (1978)'),
-        ('Shu-Osher', 'pass', 'Shu & Osher (1989)'),
-        ('Taylor-Green Vortex', 'pass', 'Taylor & Green (1937)'),
-        ('Lid-Driven Cavity', 'pass', 'Ghia et al. (1982)'),
-        ('Double Mach Reflection', 'pass', 'Woodward & Colella (1984)'),
+        ("Sod Shock Tube", "pass", "Sod (1978)"),
+        ("Shu-Osher", "pass", "Shu & Osher (1989)"),
+        ("Taylor-Green Vortex", "pass", "Taylor & Green (1937)"),
+        ("Lid-Driven Cavity", "pass", "Ghia et al. (1982)"),
+        ("Double Mach Reflection", "pass", "Woodward & Colella (1984)"),
     ]
     bench_rows = []
     for name, status, ref in benchmarks:
-        badge = 'pass' if status == 'pass' else 'fail'
-        bench_rows.append(f"""
+        badge = "pass" if status == "pass" else "fail"
+        bench_rows.append(
+            f"""
         <tr>
             <td>{name}</td>
             <td><span class="badge {badge}">{'✅ Validated' if status == 'pass' else '❌ Failed'}</span></td>
             <td>{ref}</td>
         </tr>
-        """)
-    
+        """
+        )
+
     # Fill template
     html = DASHBOARD_TEMPLATE.format(
-        generated_date=datetime.now().strftime('%Y-%m-%d %H:%M UTC'),
+        generated_date=datetime.now().strftime("%Y-%m-%d %H:%M UTC"),
         commit=commit[:7] if len(commit) > 7 else commit,
         branch=branch,
-        status_cards=''.join(status_cards),
+        status_cards="".join(status_cards),
         maturity_pct=maturity,
-        test_results_rows=''.join(test_rows),
-        mms_coverage_rows=''.join(mms_rows),
-        benchmark_rows=''.join(bench_rows),
+        test_results_rows="".join(test_rows),
+        mms_coverage_rows="".join(mms_rows),
+        benchmark_rows="".join(bench_rows),
     )
-    
+
     return html
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Generate V&V Dashboard')
-    parser.add_argument('--artifacts', type=Path, default=Path('artifacts'), help='Artifacts directory')
-    parser.add_argument('--output', type=Path, default=Path('vv_dashboard.html'), help='Output HTML file')
-    parser.add_argument('--commit', type=str, default='unknown', help='Commit SHA')
-    parser.add_argument('--branch', type=str, default='unknown', help='Branch name')
+    parser = argparse.ArgumentParser(description="Generate V&V Dashboard")
+    parser.add_argument(
+        "--artifacts", type=Path, default=Path("artifacts"), help="Artifacts directory"
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=Path("vv_dashboard.html"),
+        help="Output HTML file",
+    )
+    parser.add_argument("--commit", type=str, default="unknown", help="Commit SHA")
+    parser.add_argument("--branch", type=str, default="unknown", help="Branch name")
     args = parser.parse_args()
-    
+
     print(f"Generating V&V dashboard...")
     print(f"  Artifacts: {args.artifacts}")
     print(f"  Commit: {args.commit}")
     print(f"  Branch: {args.branch}")
-    
+
     html = generate_dashboard(args.artifacts, args.commit, args.branch)
-    
+
     args.output.write_text(html)
     print(f"  Output: {args.output}")
     print("✅ Dashboard generated successfully")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

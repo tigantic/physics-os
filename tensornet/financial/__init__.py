@@ -36,12 +36,12 @@ Target Market:
     - Quantitative Hedge Funds
 """
 
-from tensornet.financial.feed import OrderBookFluid, MarketDataFeed
+from tensornet.financial.feed import MarketDataFeed, OrderBookFluid
 from tensornet.financial.solver import LiquiditySolver, solve_price_flow
 
 __all__ = [
     "OrderBookFluid",
-    "MarketDataFeed", 
+    "MarketDataFeed",
     "LiquiditySolver",
     "solve_price_flow",
 ]

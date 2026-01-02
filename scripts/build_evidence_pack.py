@@ -26,16 +26,15 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-
 # HMAC key for signing (in production, use env var or secure storage)
-SIGNING_KEY = b'hypertensor-evidence-pack-2025'
+SIGNING_KEY = b"hypertensor-evidence-pack-2025"
 
 
 def compute_file_hash(path: Path) -> str:
     """Compute SHA256 hash of a file."""
     hasher = hashlib.sha256()
-    with open(path, 'rb') as f:
-        for chunk in iter(lambda: f.read(8192), b''):
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
             hasher.update(chunk)
     return hasher.hexdigest()
 
@@ -43,7 +42,7 @@ def compute_file_hash(path: Path) -> str:
 def sign_manifest(manifest: Dict[str, Any]) -> str:
     """Create HMAC signature of manifest."""
     # Deterministic JSON serialization
-    manifest_str = json.dumps(manifest, sort_keys=True, separators=(',', ':'))
+    manifest_str = json.dumps(manifest, sort_keys=True, separators=(",", ":"))
     signature = hmac.new(SIGNING_KEY, manifest_str.encode(), hashlib.sha256)
     return signature.hexdigest()
 
@@ -51,112 +50,114 @@ def sign_manifest(manifest: Dict[str, Any]) -> str:
 def run_validation_case(case: str, output_dir: Path) -> Dict[str, Any]:
     """Run a validation case and collect outputs."""
     project_root = Path(__file__).parent.parent
-    
+
     case_info = {
-        'case': case,
-        'run_at': datetime.utcnow().isoformat() + 'Z',
-        'files': {},
+        "case": case,
+        "run_at": datetime.utcnow().isoformat() + "Z",
+        "files": {},
     }
-    
-    if case == 'sod':
+
+    if case == "sod":
         # Run Sod shock tube validation
-        from tensornet.cfd.euler_1d import Euler1D, EulerState
-        import torch
         import numpy as np
-        
+        import torch
+
+        from tensornet.cfd.euler_1d import Euler1D, EulerState
+
         N = 200
         solver = Euler1D(N=N, x_min=0.0, x_max=1.0, gamma=1.4)
-        
+
         x = torch.linspace(0, 1, N, dtype=torch.float64)
         rho = torch.where(x < 0.5, torch.ones_like(x), 0.125 * torch.ones_like(x))
         u = torch.zeros_like(x)
         p = torch.where(x < 0.5, torch.ones_like(x), 0.1 * torch.ones_like(x))
-        
+
         rho_u = rho * u
         E = p / (1.4 - 1) + 0.5 * rho * u**2
-        
+
         state = EulerState(rho=rho, rho_u=rho_u, E=E, gamma=1.4)
         solver.set_initial_condition(state)
-        
+
         # Run to t=0.2
         t_final = 0.2
         dt = 0.0001
         n_steps = int(t_final / dt)
-        
+
         for _ in range(n_steps):
             solver.step(dt)
-        
+
         # Save results
         results = {
-            'case': 'sod',
-            'N': N,
-            't_final': t_final,
-            'x': x.numpy().tolist(),
-            'rho': solver.state.rho.numpy().tolist(),
-            'u': solver.state.u.numpy().tolist(),
-            'p': solver.state.p.numpy().tolist(),
+            "case": "sod",
+            "N": N,
+            "t_final": t_final,
+            "x": x.numpy().tolist(),
+            "rho": solver.state.rho.numpy().tolist(),
+            "u": solver.state.u.numpy().tolist(),
+            "p": solver.state.p.numpy().tolist(),
         }
-        
-        results_file = output_dir / 'sod_results.json'
-        with open(results_file, 'w') as f:
+
+        results_file = output_dir / "sod_results.json"
+        with open(results_file, "w") as f:
             json.dump(results, f, indent=2)
-        
-        case_info['files']['sod_results.json'] = {
-            'sha256': compute_file_hash(results_file),
-            'size': results_file.stat().st_size,
+
+        case_info["files"]["sod_results.json"] = {
+            "sha256": compute_file_hash(results_file),
+            "size": results_file.stat().st_size,
         }
-        
-        case_info['metrics'] = {
-            'n_cells': N,
-            't_final': t_final,
-            'n_steps': n_steps,
+
+        case_info["metrics"] = {
+            "n_cells": N,
+            "t_final": t_final,
+            "n_steps": n_steps,
         }
-        
-    elif case == 'weno':
+
+    elif case == "weno":
         # Run WENO order verification
-        from tensornet.cfd.weno import weno5_js_reconstruct
-        import torch
         import numpy as np
-        
+        import torch
+
+        from tensornet.cfd.weno import weno5_js_reconstruct
+
         errors = []
         Ns = [32, 64, 128, 256, 512]
-        
+
         for N in Ns:
-            x = torch.linspace(0, 2*np.pi, N, dtype=torch.float64)
+            x = torch.linspace(0, 2 * np.pi, N, dtype=torch.float64)
             dx = x[1] - x[0]
             u = torch.sin(x)
             u_exact = torch.cos(x)  # derivative
-            
+
             uL, uR = weno5_js_reconstruct(u)
             # Approximate derivative
             u_approx = (uR[:-1] - uL[1:]) / dx
-            
+
             # L2 error (skip boundaries)
-            error = torch.sqrt(torch.mean((u_approx[2:-2] - u_exact[3:-3])**2)).item()
-            errors.append({'N': N, 'error': error})
-        
+            error = torch.sqrt(torch.mean((u_approx[2:-2] - u_exact[3:-3]) ** 2)).item()
+            errors.append({"N": N, "error": error})
+
         results = {
-            'case': 'weno_order',
-            'errors': errors,
+            "case": "weno_order",
+            "errors": errors,
         }
-        
+
         # Compute order of convergence
         for i in range(1, len(errors)):
-            ratio = np.log(errors[i-1]['error'] / errors[i]['error']) / np.log(2)
-            errors[i]['order'] = round(ratio, 2)
-        
-        results_file = output_dir / 'weno_order_results.json'
-        with open(results_file, 'w') as f:
+            ratio = np.log(errors[i - 1]["error"] / errors[i]["error"]) / np.log(2)
+            errors[i]["order"] = round(ratio, 2)
+
+        results_file = output_dir / "weno_order_results.json"
+        with open(results_file, "w") as f:
             json.dump(results, f, indent=2)
-        
-        case_info['files']['weno_order_results.json'] = {
-            'sha256': compute_file_hash(results_file),
-            'size': results_file.stat().st_size,
+
+        case_info["files"]["weno_order_results.json"] = {
+            "sha256": compute_file_hash(results_file),
+            "size": results_file.stat().st_size,
         }
-        
+
     else:
         raise ValueError(f"Unknown case: {case}")
-    
+
     return case_info
 
 
@@ -255,85 +256,85 @@ def main():
 if __name__ == '__main__':
     sys.exit(main())
 '''
-    
-    verify_path = output_dir / 'verify.py'
-    with open(verify_path, 'w') as f:
+
+    verify_path = output_dir / "verify.py"
+    with open(verify_path, "w") as f:
         f.write(verify_script)
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Build evidence pack for validation case'
+        description="Build evidence pack for validation case"
     )
     parser.add_argument(
-        '--case', '-c',
+        "--case",
+        "-c",
         required=True,
-        choices=['sod', 'weno', 'oblique', 'dmr', 'sbli'],
-        help='Validation case to run'
+        choices=["sod", "weno", "oblique", "dmr", "sbli"],
+        help="Validation case to run",
     )
     parser.add_argument(
-        '--out', '-o',
+        "--out",
+        "-o",
         type=Path,
         required=True,
-        help='Output directory for evidence pack'
+        help="Output directory for evidence pack",
     )
-    
+
     args = parser.parse_args()
     output_dir = args.out.resolve()
-    
+
     print("=" * 60)
     print(" EVIDENCE PACK BUILDER")
     print("=" * 60)
     print(f"Case: {args.case}")
     print(f"Output: {output_dir}")
     print()
-    
+
     # Add project to path
     sys.path.insert(0, str(Path(__file__).parent.parent))
-    
+
     # Create output directory
     if output_dir.exists():
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True)
-    
+
     # Run validation case
     print("Running validation case...")
     case_info = run_validation_case(args.case, output_dir)
-    
+
     # Create manifest
     manifest = {
-        'version': '1.0',
-        'created_at': datetime.utcnow().isoformat() + 'Z',
-        'case': args.case,
-        'files': case_info['files'],
-        'metrics': case_info.get('metrics', {}),
+        "version": "1.0",
+        "created_at": datetime.utcnow().isoformat() + "Z",
+        "case": args.case,
+        "files": case_info["files"],
+        "metrics": case_info.get("metrics", {}),
     }
-    
-    manifest_path = output_dir / 'manifest.json'
-    with open(manifest_path, 'w') as f:
+
+    manifest_path = output_dir / "manifest.json"
+    with open(manifest_path, "w") as f:
         json.dump(manifest, f, indent=2)
-    
+
     # Sign manifest
     signature = sign_manifest(manifest)
-    sig_path = output_dir / 'manifest.sig'
-    with open(sig_path, 'w') as f:
+    sig_path = output_dir / "manifest.sig"
+    with open(sig_path, "w") as f:
         f.write(signature)
-    
+
     print(f"Manifest signed: {signature[:16]}...")
-    
+
     # Create verify script
     create_verify_script(output_dir)
     print("Created verify.py")
-    
+
     # Verify pack
     print()
     print("Verifying pack...")
     result = subprocess.run(
-        [sys.executable, str(output_dir / 'verify.py')],
-        capture_output=True,
-        text=True
+        [sys.executable, str(output_dir / "verify.py")], capture_output=True, text=True
     )
-    
+
     if result.returncode == 0:
         print(result.stdout)
         print()
@@ -351,5 +352,5 @@ def main():
         return 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     exit(main())

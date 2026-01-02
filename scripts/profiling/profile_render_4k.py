@@ -1,15 +1,16 @@
 """
 Profile render operations at 4K to find bottleneck.
 """
+
 import torch
 import torch.nn.functional as F
 
-device = 'cuda:0'
+device = "cuda:0"
 height, width = 2160, 3840
 
-print("="*60)
+print("=" * 60)
 print("4K RENDER PROFILING")
-print("="*60)
+print("=" * 60)
 
 # 1. Interpolation (64x64 → 4K)
 print("\n1. Interpolation (64x64 → 3840x2160)...")
@@ -23,8 +24,8 @@ for _ in range(10):
     resized = F.interpolate(
         scalar.unsqueeze(0).unsqueeze(0),
         size=(height, width),
-        mode='bilinear',
-        align_corners=False
+        mode="bilinear",
+        align_corners=False,
     ).squeeze()
 end.record()
 torch.cuda.synchronize()
@@ -44,7 +45,9 @@ print(f"   Per frame: {start.elapsed_time(end)/10:.2f}ms")
 
 # 3. Layer blending (5 layers)
 print("\n3. Layer compositing (5 layers)...")
-layers = [torch.randn(height, width, 4, device=device, dtype=torch.float16) for _ in range(5)]
+layers = [
+    torch.randn(height, width, 4, device=device, dtype=torch.float16) for _ in range(5)
+]
 
 start.record()
 for _ in range(10):
@@ -80,6 +83,6 @@ end.record()
 torch.cuda.synchronize()
 print(f"   Per frame: {start.elapsed_time(end)/10:.2f}ms")
 
-print("\n" + "="*60)
+print("\n" + "=" * 60)
 print("Total estimated render time: Sum of above operations")
-print("="*60)
+print("=" * 60)

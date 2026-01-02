@@ -16,21 +16,22 @@ Constitution Compliance: Article IV.1 (Verification & Validation)
 Tags: [V&V] [REPORTS] [ASME-VV-10-2019]
 """
 
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Any
-from datetime import datetime
-from pathlib import Path
 import json
 import subprocess
+from dataclasses import dataclass, field
+from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 
 @dataclass
 class BenchmarkResult:
     """Result from a benchmark validation test."""
+
     name: str
     reference: str
     tier: int  # 1-5
-    metrics: Dict[str, float]
+    metrics: dict[str, float]
     passed: bool
     notes: str = ""
 
@@ -38,18 +39,20 @@ class BenchmarkResult:
 @dataclass
 class ConvergenceResult:
     """Result from a convergence study."""
+
     test_name: str
-    grids: List[int]
-    errors: List[float]
-    rates: List[float]
+    grids: list[int]
+    errors: list[float]
+    rates: list[float]
     expected_order: float
     observed_order: float
     passed: bool
 
 
-@dataclass  
+@dataclass
 class ConservationResult:
     """Result from conservation verification."""
+
     quantity: str
     initial: float
     final: float
@@ -62,38 +65,39 @@ class ConservationResult:
 class ValidationReport:
     """
     Formal validation report for a physics domain.
-    
+
     Aligned with ASME V&V 10-2019 and NASA-STD-7009A.
     """
+
     # Module identification
     domain_id: int
     domain_name: str
     description: str
-    governing_equations: List[str]
-    assumptions: List[str]
-    limitations: List[str]
-    
+    governing_equations: list[str]
+    assumptions: list[str]
+    limitations: list[str]
+
     # Code verification
     unit_tests_passed: int
     unit_tests_total: int
     type_coverage: float  # 0.0 - 1.0
     mypy_status: str  # "pass" / "warn" / "fail"
-    
+
     # Solution verification
-    mms_results: Optional[ConvergenceResult] = None
-    conservation_results: List[ConservationResult] = field(default_factory=list)
-    
+    mms_results: ConvergenceResult | None = None
+    conservation_results: list[ConservationResult] = field(default_factory=list)
+
     # Validation
-    benchmark_results: List[BenchmarkResult] = field(default_factory=list)
-    
+    benchmark_results: list[BenchmarkResult] = field(default_factory=list)
+
     # Uncertainty
-    numerical_uncertainty: Optional[str] = None
-    model_uncertainty: Optional[str] = None
-    
+    numerical_uncertainty: str | None = None
+    model_uncertainty: str | None = None
+
     # Provenance
     commit_hash: str = ""
     timestamp: str = ""
-    
+
     @property
     def code_verification_score(self) -> float:
         """Calculate code verification score (0-100)."""
@@ -102,55 +106,59 @@ class ValidationReport:
         else:
             test_score = (self.unit_tests_passed / self.unit_tests_total) * 50
         type_score = self.type_coverage * 30
-        mypy_score = 20 if self.mypy_status == "pass" else (10 if self.mypy_status == "warn" else 0)
+        mypy_score = (
+            20
+            if self.mypy_status == "pass"
+            else (10 if self.mypy_status == "warn" else 0)
+        )
         return test_score + type_score + mypy_score
-    
+
     @property
     def solution_verification_score(self) -> float:
         """Calculate solution verification score (0-100)."""
         score = 0
-        
+
         # MMS (50 points)
         if self.mms_results and self.mms_results.passed:
             score += 50
         elif self.mms_results:
             score += 25  # Partial credit
-        
+
         # Conservation (50 points)
         if self.conservation_results:
             passed = sum(1 for r in self.conservation_results if r.passed)
             total = len(self.conservation_results)
             score += (passed / total) * 50
-        
+
         return score
-    
+
     @property
     def validation_score(self) -> float:
         """Calculate validation score (0-100)."""
         if not self.benchmark_results:
             return 0
-        
+
         # Weight by tier
         total_weight = 0
         weighted_score = 0
-        
+
         for result in self.benchmark_results:
             weight = 6 - result.tier  # Tier 1 = 5, Tier 5 = 1
             total_weight += weight
             if result.passed:
                 weighted_score += weight
-        
+
         return (weighted_score / total_weight) * 100 if total_weight > 0 else 0
-    
+
     @property
     def overall_score(self) -> float:
         """Calculate overall V&V readiness score."""
         return (
-            0.30 * self.code_verification_score +
-            0.35 * self.solution_verification_score +
-            0.35 * self.validation_score
+            0.30 * self.code_verification_score
+            + 0.35 * self.solution_verification_score
+            + 0.35 * self.validation_score
         )
-    
+
     @property
     def status(self) -> str:
         """Get validation status."""
@@ -163,7 +171,7 @@ class ValidationReport:
             return "IN_PROGRESS"
         else:
             return "NOT_VALIDATED"
-    
+
     def to_markdown(self) -> str:
         """Generate markdown validation report."""
         lines = [
@@ -183,90 +191,106 @@ class ValidationReport:
             "### Governing Equations",
             "",
         ]
-        
+
         for eq in self.governing_equations:
             lines.append(f"- {eq}")
-        
-        lines.extend([
-            "",
-            "### Assumptions",
-            "",
-        ])
+
+        lines.extend(
+            [
+                "",
+                "### Assumptions",
+                "",
+            ]
+        )
         for a in self.assumptions:
             lines.append(f"- {a}")
-        
-        lines.extend([
-            "",
-            "### Limitations",
-            "",
-        ])
+
+        lines.extend(
+            [
+                "",
+                "### Limitations",
+                "",
+            ]
+        )
         for lim in self.limitations:
             lines.append(f"- {lim}")
-        
-        lines.extend([
-            "",
-            "---",
-            "",
-            "## 2. Code Verification",
-            "",
-            f"| Metric | Value | Status |",
-            f"|--------|-------|--------|",
-            f"| Unit Tests | {self.unit_tests_passed}/{self.unit_tests_total} | {'✅' if self.unit_tests_passed == self.unit_tests_total else '⚠️'} |",
-            f"| Type Coverage | {self.type_coverage*100:.1f}% | {'✅' if self.type_coverage > 0.9 else '⚠️'} |",
-            f"| mypy Status | {self.mypy_status} | {'✅' if self.mypy_status == 'pass' else '⚠️'} |",
-            f"| **CV Score** | **{self.code_verification_score:.1f}%** | |",
-            "",
-        ])
-        
-        lines.extend([
-            "---",
-            "",
-            "## 3. Solution Verification",
-            "",
-        ])
-        
+
+        lines.extend(
+            [
+                "",
+                "---",
+                "",
+                "## 2. Code Verification",
+                "",
+                "| Metric | Value | Status |",
+                "|--------|-------|--------|",
+                f"| Unit Tests | {self.unit_tests_passed}/{self.unit_tests_total} | {'✅' if self.unit_tests_passed == self.unit_tests_total else '⚠️'} |",
+                f"| Type Coverage | {self.type_coverage*100:.1f}% | {'✅' if self.type_coverage > 0.9 else '⚠️'} |",
+                f"| mypy Status | {self.mypy_status} | {'✅' if self.mypy_status == 'pass' else '⚠️'} |",
+                f"| **CV Score** | **{self.code_verification_score:.1f}%** | |",
+                "",
+            ]
+        )
+
+        lines.extend(
+            [
+                "---",
+                "",
+                "## 3. Solution Verification",
+                "",
+            ]
+        )
+
         if self.mms_results:
             mms = self.mms_results
-            lines.extend([
-                "### MMS Verification",
-                "",
-                f"| Test | Expected Order | Observed Order | Status |",
-                f"|------|----------------|----------------|--------|",
-                f"| {mms.test_name} | {mms.expected_order:.1f} | {mms.observed_order:.2f} | {'✅' if mms.passed else '❌'} |",
-                "",
-            ])
+            lines.extend(
+                [
+                    "### MMS Verification",
+                    "",
+                    "| Test | Expected Order | Observed Order | Status |",
+                    "|------|----------------|----------------|--------|",
+                    f"| {mms.test_name} | {mms.expected_order:.1f} | {mms.observed_order:.2f} | {'✅' if mms.passed else '❌'} |",
+                    "",
+                ]
+            )
         else:
             lines.append("*MMS verification not yet implemented for this domain.*\n")
-        
+
         if self.conservation_results:
-            lines.extend([
-                "### Conservation Verification",
-                "",
-                "| Quantity | Initial | Final | Rel. Error | Tolerance | Status |",
-                "|----------|---------|-------|------------|-----------|--------|",
-            ])
+            lines.extend(
+                [
+                    "### Conservation Verification",
+                    "",
+                    "| Quantity | Initial | Final | Rel. Error | Tolerance | Status |",
+                    "|----------|---------|-------|------------|-----------|--------|",
+                ]
+            )
             for c in self.conservation_results:
                 lines.append(
                     f"| {c.quantity} | {c.initial:.6e} | {c.final:.6e} | {c.relative_error:.2e} | {c.tolerance:.0e} | {'✅' if c.passed else '❌'} |"
                 )
             lines.append("")
-        
-        lines.extend([
-            f"**Solution Verification Score**: **{self.solution_verification_score:.1f}%**",
-            "",
-            "---",
-            "",
-            "## 4. Validation",
-            "",
-        ])
-        
-        if self.benchmark_results:
-            lines.extend([
-                "### Benchmark Results",
+
+        lines.extend(
+            [
+                f"**Solution Verification Score**: **{self.solution_verification_score:.1f}%**",
                 "",
-                "| Benchmark | Tier | Reference | Status |",
-                "|-----------|------|-----------|--------|",
-            ])
+                "---",
+                "",
+                "## 4. Validation",
+                "",
+            ]
+        )
+
+        if self.benchmark_results:
+            lines.extend(
+                [
+                    "### Benchmark Results",
+                    "",
+                    "| Benchmark | Tier | Reference | Status |",
+                    "|-----------|------|-----------|--------|",
+                ]
+            )
             for b in self.benchmark_results:
                 lines.append(
                     f"| {b.name} | {b.tier} | {b.reference} | {'✅' if b.passed else '❌'} |"
@@ -274,39 +298,41 @@ class ValidationReport:
             lines.append("")
         else:
             lines.append("*No benchmarks validated yet.*\n")
-        
-        lines.extend([
-            f"**Validation Score**: **{self.validation_score:.1f}%**",
-            "",
-            "---",
-            "",
-            "## 5. Uncertainty Quantification",
-            "",
-            f"**Numerical Uncertainty**: {self.numerical_uncertainty or 'To be quantified'}",
-            "",
-            f"**Model Uncertainty**: {self.model_uncertainty or 'To be quantified'}",
-            "",
-            "---",
-            "",
-            "## 6. Summary",
-            "",
-            "```",
-            f"╔═══════════════════════════════════════════════════════════════╗",
-            f"║  VALIDATION STATUS: {self.status:15}                        ║",
-            f"╠═══════════════════════════════════════════════════════════════╣",
-            f"║  Code Verification:      {self.code_verification_score:5.1f}%                           ║",
-            f"║  Solution Verification:  {self.solution_verification_score:5.1f}%                           ║",
-            f"║  Validation:             {self.validation_score:5.1f}%                           ║",
-            f"╠═══════════════════════════════════════════════════════════════╣",
-            f"║  OVERALL SCORE:          {self.overall_score:5.1f}%                           ║",
-            f"╚═══════════════════════════════════════════════════════════════╝",
-            "```",
-            "",
-        ])
-        
+
+        lines.extend(
+            [
+                f"**Validation Score**: **{self.validation_score:.1f}%**",
+                "",
+                "---",
+                "",
+                "## 5. Uncertainty Quantification",
+                "",
+                f"**Numerical Uncertainty**: {self.numerical_uncertainty or 'To be quantified'}",
+                "",
+                f"**Model Uncertainty**: {self.model_uncertainty or 'To be quantified'}",
+                "",
+                "---",
+                "",
+                "## 6. Summary",
+                "",
+                "```",
+                "╔═══════════════════════════════════════════════════════════════╗",
+                f"║  VALIDATION STATUS: {self.status:15}                        ║",
+                "╠═══════════════════════════════════════════════════════════════╣",
+                f"║  Code Verification:      {self.code_verification_score:5.1f}%                           ║",
+                f"║  Solution Verification:  {self.solution_verification_score:5.1f}%                           ║",
+                f"║  Validation:             {self.validation_score:5.1f}%                           ║",
+                "╠═══════════════════════════════════════════════════════════════╣",
+                f"║  OVERALL SCORE:          {self.overall_score:5.1f}%                           ║",
+                "╚═══════════════════════════════════════════════════════════════╝",
+                "```",
+                "",
+            ]
+        )
+
         return "\n".join(lines)
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {
             "domain_id": self.domain_id,
@@ -345,14 +371,21 @@ DOMAINS = [
             "∂(ρu)/∂t + ∇·(ρu⊗u) = -∇p + ∇·τ (momentum)",
             "∂E/∂t + ∇·((E+p)u) = ∇·(τ·u) (energy)",
         ],
-        "assumptions": ["Continuum hypothesis", "Newtonian fluid", "Local thermodynamic equilibrium"],
+        "assumptions": [
+            "Continuum hypothesis",
+            "Newtonian fluid",
+            "Local thermodynamic equilibrium",
+        ],
         "limitations": ["No rarefied gas effects", "No multiphase"],
     },
     {
         "id": 2,
         "name": "CUDA Acceleration",
         "description": "GPU-accelerated tensor operations and kernels",
-        "equations": ["Matrix-matrix multiplication: C = αAB + βC", "Element-wise operations"],
+        "equations": [
+            "Matrix-matrix multiplication: C = αAB + βC",
+            "Element-wise operations",
+        ],
         "assumptions": ["CUDA compute capability 7.0+", "Sufficient GPU memory"],
         "limitations": ["Single GPU", "FP32/FP64 precision"],
     },
@@ -523,15 +556,15 @@ def generate_domain_report(
     unit_tests_total: int = 0,
     type_coverage: float = 0.95,
     mypy_status: str = "pass",
-    benchmarks: Optional[List[BenchmarkResult]] = None,
-    mms_result: Optional[ConvergenceResult] = None,
-    conservation: Optional[List[ConservationResult]] = None,
+    benchmarks: list[BenchmarkResult] | None = None,
+    mms_result: ConvergenceResult | None = None,
+    conservation: list[ConservationResult] | None = None,
 ) -> ValidationReport:
     """Generate a validation report for a specific domain."""
     domain = next((d for d in DOMAINS if d["id"] == domain_id), None)
     if not domain:
         raise ValueError(f"Unknown domain ID: {domain_id}")
-    
+
     return ValidationReport(
         domain_id=domain_id,
         domain_name=domain["name"],
@@ -551,11 +584,11 @@ def generate_domain_report(
     )
 
 
-def generate_all_reports(output_dir: Path) -> Dict[int, ValidationReport]:
+def generate_all_reports(output_dir: Path) -> dict[int, ValidationReport]:
     """Generate reports for all 15 domains."""
     output_dir.mkdir(parents=True, exist_ok=True)
     reports = {}
-    
+
     for domain in DOMAINS:
         # Create placeholder report (actual data would come from test runner)
         report = generate_domain_report(
@@ -565,17 +598,20 @@ def generate_all_reports(output_dir: Path) -> Dict[int, ValidationReport]:
             type_coverage=0.95,
             mypy_status="pass",
         )
-        
+
         reports[domain["id"]] = report
-        
+
         # Write markdown report
-        md_path = output_dir / f"domain_{domain['id']:02d}_{domain['name'].lower().replace(' ', '_')}.md"
+        md_path = (
+            output_dir
+            / f"domain_{domain['id']:02d}_{domain['name'].lower().replace(' ', '_')}.md"
+        )
         md_path.write_text(report.to_markdown())
-        
+
         # Write JSON report
         json_path = output_dir / f"domain_{domain['id']:02d}.json"
         json_path.write_text(json.dumps(report.to_dict(), indent=2))
-    
+
     return reports
 
 
@@ -589,17 +625,31 @@ if __name__ == "__main__":
         mypy_status="pass",
         benchmarks=[
             BenchmarkResult("Sod Shock Tube", "Sod (1978)", 1, {"L1_rho": 0.016}, True),
-            BenchmarkResult("Taylor-Green Vortex", "Taylor & Green (1937)", 1, {"L2_decay": 0.02}, True),
-            BenchmarkResult("Lid-Driven Cavity", "Ghia et al. (1982)", 2, {"RMS_u": 0.05}, True),
+            BenchmarkResult(
+                "Taylor-Green Vortex",
+                "Taylor & Green (1937)",
+                1,
+                {"L2_decay": 0.02},
+                True,
+            ),
+            BenchmarkResult(
+                "Lid-Driven Cavity", "Ghia et al. (1982)", 2, {"RMS_u": 0.05}, True
+            ),
         ],
         mms_result=ConvergenceResult(
-            "2D Euler MMS", [16, 32, 64], [1e-2, 2.5e-3, 6.2e-4], [2.0, 2.01], 2.0, 2.01, True
+            "2D Euler MMS",
+            [16, 32, 64],
+            [1e-2, 2.5e-3, 6.2e-4],
+            [2.0, 2.01],
+            2.0,
+            2.01,
+            True,
         ),
         conservation=[
             ConservationResult("Mass", 1.0, 1.0, 2.2e-16, 1e-12, True),
             ConservationResult("Energy", 2.5, 2.5, 4.4e-16, 1e-12, True),
         ],
     )
-    
+
     print(report.to_markdown())
     print(f"\n\nJSON:\n{json.dumps(report.to_dict(), indent=2)}")

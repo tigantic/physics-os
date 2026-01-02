@@ -9,20 +9,22 @@ Academic validation:
 - Dolgov & Savostyanov (2014): Alternating Minimal Energy Methods
 """
 
-import torch
-from typing import List, Tuple, Optional
-import time
 import logging
+import time
+
+import torch
 
 logger = logging.getLogger(__name__)
 
 # Try to use CUDA-accelerated Laplacian, fallback to CPU version
 try:
     from .laplacian_cuda import LaplacianCUDA as LaplacianMPO
+
     CUDA_LAPLACIAN = True
     logger.info("✓ CUDA Laplacian kernel loaded")
 except ImportError:
     from .operators import LaplacianMPO
+
     CUDA_LAPLACIAN = False
     logger.warning("⚠ Using CPU Laplacian (CUDA kernel not available)")
 
@@ -32,19 +34,19 @@ from .operators import AdvectionMPO, ProjectionMPO
 class MPOAtmosphericSolver:
     """
     Atmospheric physics solver using Matrix Product Operators.
-    
+
     Updates QTT cores directly without dense materialization:
     1. Laplacian MPO: Diffusion (∇²u)
     2. Advection MPO: Transport (v·∇u)
     3. Projection MPO: Incompressibility (∇·u = 0)
-    
+
     Complexity: O(d·r³) vs O(N²) for dense solver
     Target performance: <0.65ms per update
     """
-    
+
     def __init__(
         self,
-        grid_size: Tuple[int, int] = (64, 64),
+        grid_size: tuple[int, int] = (64, 64),
         viscosity: float = 1e-4,
         dt: float = 0.01,
         dtype: torch.dtype = torch.float32,
@@ -63,16 +65,16 @@ class MPOAtmosphericSolver:
         self.dt = dt
         self.dtype = dtype
         self.device = device
-        
+
         # Compute number of QTT modes (log₂(N) per dimension)
         Nx, Ny = grid_size
         assert Nx == Ny and (Nx & (Nx - 1)) == 0, "Grid size must be power of 2"
         self.modes_per_dim = int(torch.log2(torch.tensor(Nx)).item())
         self.num_modes = 2 * self.modes_per_dim  # Total modes (x + y)
-        
+
         # Spatial resolution
         self.dx = 1.0 / Nx
-        
+
         # Initialize MPO operators
         self.laplacian = LaplacianMPO(
             num_modes=self.num_modes,
@@ -81,24 +83,24 @@ class MPOAtmosphericSolver:
             dtype=dtype,
             device=device,
         )
-        
+
         self.advection = AdvectionMPO(
             num_modes=self.num_modes,
             dtype=dtype,
             device=device,
         )
-        
+
         self.projection = ProjectionMPO(
             num_modes=self.num_modes,
             dx=self.dx,
             dtype=dtype,
             device=device,
         )
-        
+
         # Initialize QTT state (velocity fields)
         self.u_cores = self._init_velocity_cores()  # X-velocity
         self.v_cores = self._init_velocity_cores()  # Y-velocity
-        
+
         # Performance tracking
         self.timings = {
             "laplacian": [],
@@ -106,11 +108,11 @@ class MPOAtmosphericSolver:
             "projection": [],
             "total": [],
         }
-    
-    def _init_velocity_cores(self) -> List[torch.Tensor]:
+
+    def _init_velocity_cores(self) -> list[torch.Tensor]:
         """
         Initialize velocity field as QTT cores.
-        
+
         Returns:
             List of QTT cores representing zero velocity field
         """
@@ -131,92 +133,92 @@ class MPOAtmosphericSolver:
                 core = torch.zeros(4, 2, 4, dtype=self.dtype, device=self.device)
                 core[0, 0, 0] = 1.0
                 core[1, 1, 1] = 1.0
-            
+
             cores.append(core)
-        
+
         return cores
-    
+
     def step(self) -> None:
         """
         Execute one physics time step using MPO operators.
-        
+
         Performs:
         1. Diffusion: u ← u + dt·ν·∇²u
         2. Advection: u ← u - dt·(v·∇)u
         3. Projection: u ← proj(u) (enforce ∇·u = 0)
         """
         t_start = time.perf_counter()
-        
+
         # 1. Diffusion step (Laplacian MPO)
         t0 = time.perf_counter()
         self.u_cores = self.laplacian.apply(self.u_cores, self.dt)
         self.v_cores = self.laplacian.apply(self.v_cores, self.dt)
         self.timings["laplacian"].append(time.perf_counter() - t0)
-        
+
         # 2. Advection step (semi-Lagrangian)
         t0 = time.perf_counter()
         # Simplified: use mean velocity for advection
         # Full implementation: spatially-varying velocity field
         mean_u = self._get_mean_velocity(self.u_cores)
         mean_v = self._get_mean_velocity(self.v_cores)
-        
+
         self.u_cores = self.advection.apply(self.u_cores, mean_u, mean_v, self.dt)
         self.v_cores = self.advection.apply(self.v_cores, mean_u, mean_v, self.dt)
         self.timings["advection"].append(time.perf_counter() - t0)
-        
+
         # 3. Projection step (incompressibility)
         t0 = time.perf_counter()
         self.u_cores, self.v_cores = self.projection.apply(self.u_cores, self.v_cores)
         self.timings["projection"].append(time.perf_counter() - t0)
-        
+
         self.timings["total"].append(time.perf_counter() - t_start)
-    
-    def _get_mean_velocity(self, cores: List[torch.Tensor]) -> float:
+
+    def _get_mean_velocity(self, cores: list[torch.Tensor]) -> float:
         """
         Compute mean velocity from QTT cores (simplified).
-        
+
         Args:
             cores: QTT velocity cores
-            
+
         Returns:
             Mean velocity value
         """
         # Simplified: return zero (full implementation requires TT summation)
         return 0.0
-    
-    def get_cores(self) -> Tuple[List[torch.Tensor], List[torch.Tensor]]:
+
+    def get_cores(self) -> tuple[list[torch.Tensor], list[torch.Tensor]]:
         """
         Get current velocity field as QTT cores.
-        
+
         Returns:
             (u_cores, v_cores): X and Y velocity QTT cores
         """
         return self.u_cores, self.v_cores
-    
+
     def set_cores(
         self,
-        u_cores: List[torch.Tensor],
-        v_cores: List[torch.Tensor],
+        u_cores: list[torch.Tensor],
+        v_cores: list[torch.Tensor],
     ) -> None:
         """
         Set velocity field from external QTT cores.
-        
+
         Args:
             u_cores: X-velocity QTT cores
             v_cores: Y-velocity QTT cores
         """
         self.u_cores = u_cores
         self.v_cores = v_cores
-    
+
     def add_forcing(
         self,
-        position: Tuple[int, int],
-        velocity: Tuple[float, float],
+        position: tuple[int, int],
+        velocity: tuple[float, float],
         radius: float = 5.0,
     ) -> None:
         """
         Add localized forcing to velocity field.
-        
+
         Args:
             position: (x, y) grid coordinates
             velocity: (vx, vy) velocity impulse
@@ -226,32 +228,32 @@ class MPOAtmosphericSolver:
         # This is expensive but correct for sparse forcing events
         if self.u_cores is None or self.v_cores is None:
             return
-        
+
         x0, y0 = position
         vx, vy = velocity
-        
+
         # Materialize current field (expensive)
         n_qubits = len(self.u_cores)
-        grid_size = 2 ** n_qubits
-        
+        grid_size = 2**n_qubits
+
         # Create Gaussian forcing kernel
         x = torch.arange(grid_size, device=self.u_cores[0].device)
         y = torch.arange(grid_size, device=self.u_cores[0].device)
-        xx, yy = torch.meshgrid(x, y, indexing='ij')
-        
-        gaussian = torch.exp(-((xx - x0)**2 + (yy - y0)**2) / (2 * radius**2))
+        xx, yy = torch.meshgrid(x, y, indexing="ij")
+
+        gaussian = torch.exp(-((xx - x0) ** 2 + (yy - y0) ** 2) / (2 * radius**2))
         gaussian = gaussian / gaussian.max()  # Normalize
-        
+
         # Apply forcing as delta (would need full materialize+refactor for accuracy)
         # For now, log the forcing event for deferred batch processing
-        if not hasattr(self, '_pending_forces'):
+        if not hasattr(self, "_pending_forces"):
             self._pending_forces = []
         self._pending_forces.append((position, velocity, radius, gaussian))
-    
+
     def get_performance_stats(self) -> dict:
         """
         Get performance statistics.
-        
+
         Returns:
             Dictionary with timing statistics (mean ± std in ms)
         """
@@ -267,7 +269,7 @@ class MPOAtmosphericSolver:
                     "count": len(times_ms),
                 }
         return stats
-    
+
     def reset_performance_stats(self) -> None:
         """Reset performance tracking counters."""
         for key in self.timings:

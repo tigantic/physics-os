@@ -11,7 +11,7 @@ The same equations that model pipe networks
 can visualize network attacks.
 """
 
-from .grid_shock import CyberGrid, AttackSimulation, CascadeReport
+from .grid_shock import AttackSimulation, CascadeReport, CyberGrid
 
 __all__ = [
     "CyberGrid",

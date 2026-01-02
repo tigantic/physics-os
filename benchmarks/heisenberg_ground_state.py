@@ -10,8 +10,10 @@ Constitutional Compliance:
 """
 
 import platform
+
 import psutil
 import torch
+
 from tensornet import dmrg, heisenberg_mpo
 
 
@@ -30,7 +32,9 @@ def get_hardware_specs() -> dict:
     }
     if torch.cuda.is_available():
         specs["gpu_name"] = torch.cuda.get_device_name(0)
-        specs["gpu_memory_gb"] = round(torch.cuda.get_device_properties(0).total_memory / (1024**3), 2)
+        specs["gpu_memory_gb"] = round(
+            torch.cuda.get_device_properties(0).total_memory / (1024**3), 2
+        )
     return specs
 
 
@@ -65,13 +69,13 @@ def exact_heisenberg_E0(L: int) -> float:
 def main():
     print_hardware_specs()
     torch.manual_seed(42)
-    
+
     for L in [6, 8, 10, 12, 14]:
         H = heisenberg_mpo(L=L, J=1.0, h=0.0)
-        
+
         result = dmrg(H, chi_max=32, num_sweeps=20, tol=1e-10)
         E = result.energy
-        
+
         exact = exact_heisenberg_E0(L)
         if exact:
             error = abs(E - exact)

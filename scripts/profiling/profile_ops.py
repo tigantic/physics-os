@@ -1,13 +1,15 @@
 """
 Profile individual operations to find CPU/GPU bottleneck.
 """
-import torch
+
 import time
 
-device = 'cuda:0'
-print("="*60)
+import torch
+
+device = "cuda:0"
+print("=" * 60)
 print("OPERATION PROFILING")
-print("="*60)
+print("=" * 60)
 
 # Simulate fluid solver operations
 print("\n1. Testing fluid solver (64³ grid)...")
@@ -23,10 +25,13 @@ start.record()
 for _ in range(100):
     # Laplacian with roll (from PCG solver)
     lap = (
-        torch.roll(u, 1, 0) + torch.roll(u, -1, 0) +
-        torch.roll(u, 1, 1) + torch.roll(u, -1, 1) +
-        torch.roll(u, 1, 2) + torch.roll(u, -1, 2) -
-        6 * u
+        torch.roll(u, 1, 0)
+        + torch.roll(u, -1, 0)
+        + torch.roll(u, 1, 1)
+        + torch.roll(u, -1, 1)
+        + torch.roll(u, 1, 2)
+        + torch.roll(u, -1, 2)
+        - 6 * u
     )
 end.record()
 torch.cuda.synchronize()
@@ -41,8 +46,8 @@ for _ in range(10):
     resized = torch.nn.functional.interpolate(
         scalar.unsqueeze(0).unsqueeze(0),
         size=(3840, 2160),
-        mode='bilinear',
-        align_corners=False
+        mode="bilinear",
+        align_corners=False,
     )
 end.record()
 torch.cuda.synchronize()
@@ -64,7 +69,9 @@ print(f"   Per frame: {start.elapsed_time(end)/10:.2f}ms")
 
 # Test layer compositing
 print("\n4. Testing layer blending (3840x2160)...")
-layers = [torch.randn(3840, 2160, 4, device=device, dtype=torch.float16) for _ in range(5)]
+layers = [
+    torch.randn(3840, 2160, 4, device=device, dtype=torch.float16) for _ in range(5)
+]
 
 start.record()
 for _ in range(10):
@@ -78,5 +85,5 @@ torch.cuda.synchronize()
 print(f"   Layer blend (10 iters): {start.elapsed_time(end):.2f}ms")
 print(f"   Per frame: {start.elapsed_time(end)/10:.2f}ms")
 
-print("\n" + "="*60)
+print("\n" + "=" * 60)
 print("Done. Check if GPU showed any utilization during this.")

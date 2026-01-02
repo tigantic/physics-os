@@ -5,12 +5,12 @@ This module provides theming support for HyperTensor documentation sites.
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Any
 from enum import Enum, auto
 
 
 class ColorScheme(Enum):
     """Color scheme options."""
+
     LIGHT = auto()
     DARK = auto()
     AUTO = auto()
@@ -19,25 +19,26 @@ class ColorScheme(Enum):
 @dataclass
 class ThemeColors:
     """Theme color palette."""
+
     primary: str = "#0066cc"
     secondary: str = "#6c757d"
     success: str = "#28a745"
     warning: str = "#ffc107"
     danger: str = "#dc3545"
     info: str = "#17a2b8"
-    
+
     background: str = "#ffffff"
     surface: str = "#f8f9fa"
     text: str = "#212529"
     text_muted: str = "#6c757d"
     border: str = "#dee2e6"
-    
+
     code_background: str = "#1a1a2e"
     code_text: str = "#f8f8f2"
-    
+
     nav_background: str = "#1a1a2e"
     nav_text: str = "#ffffff"
-    
+
     def to_css_vars(self) -> str:
         """Convert to CSS custom properties."""
         return f"""
@@ -64,18 +65,21 @@ class ThemeColors:
 @dataclass
 class ThemeTypography:
     """Typography configuration."""
-    font_family: str = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+
+    font_family: str = (
+        "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+    )
     font_family_mono: str = "'Fira Code', 'Consolas', 'Monaco', monospace"
-    
+
     font_size_base: str = "16px"
     font_size_sm: str = "14px"
     font_size_lg: str = "18px"
-    
+
     line_height: float = 1.6
     line_height_heading: float = 1.3
-    
+
     heading_weight: int = 600
-    
+
     def to_css(self) -> str:
         """Convert to CSS."""
         return f"""
@@ -99,17 +103,18 @@ h1, h2, h3, h4, h5, h6 {{
 @dataclass
 class ThemeLayout:
     """Layout configuration."""
+
     max_width: str = "1400px"
     content_width: str = "900px"
     sidebar_width: str = "280px"
     toc_width: str = "250px"
-    
+
     nav_height: str = "64px"
     footer_height: str = "auto"
-    
+
     spacing_unit: str = "8px"
     border_radius: str = "8px"
-    
+
     def to_css(self) -> str:
         """Convert to CSS."""
         return f"""
@@ -142,15 +147,16 @@ article {{
 @dataclass
 class ThemeConfig:
     """Complete theme configuration."""
+
     name: str = "default"
     colors: ThemeColors = field(default_factory=ThemeColors)
     typography: ThemeTypography = field(default_factory=ThemeTypography)
     layout: ThemeLayout = field(default_factory=ThemeLayout)
     color_scheme: ColorScheme = ColorScheme.LIGHT
-    
+
     custom_css: str = ""
     custom_js: str = ""
-    
+
     # Feature flags
     enable_dark_mode: bool = True
     enable_search: bool = True
@@ -158,7 +164,7 @@ class ThemeConfig:
     enable_breadcrumbs: bool = True
     enable_edit_link: bool = True
     enable_prev_next: bool = True
-    
+
     def to_css(self) -> str:
         """Generate complete CSS for theme."""
         css_parts = [
@@ -166,43 +172,43 @@ class ThemeConfig:
             self.typography.to_css(),
             self.layout.to_css(),
         ]
-        
+
         if self.custom_css:
             css_parts.append(self.custom_css)
-        
-        return '\n'.join(css_parts)
+
+        return "\n".join(css_parts)
 
 
 class Theme:
     """
     Documentation site theme.
-    
+
     Provides styling and layout for the documentation site.
     """
-    
-    def __init__(self, config: Optional[ThemeConfig] = None):
+
+    def __init__(self, config: ThemeConfig | None = None):
         """
         Initialize theme.
-        
+
         Args:
             config: Theme configuration
         """
         self.config = config or ThemeConfig()
-    
+
     @property
     def name(self) -> str:
         """Get theme name."""
         return self.config.name
-    
+
     def get_css(self) -> str:
         """Get complete CSS for theme."""
         return self.config.to_css() + self._get_base_styles()
-    
+
     def get_dark_mode_css(self) -> str:
         """Get dark mode CSS overrides."""
         if not self.config.enable_dark_mode:
             return ""
-        
+
         return """
 @media (prefers-color-scheme: dark) {
     :root {
@@ -222,7 +228,7 @@ class Theme:
     --color-border: #3a3a5c;
 }
 """
-    
+
     def _get_base_styles(self) -> str:
         """Get base styles that apply to all themes."""
         return """
@@ -334,11 +340,11 @@ img {
 class HyperTensorTheme(Theme):
     """
     Custom theme for HyperTensor documentation.
-    
+
     Features aerospace-inspired design with emphasis on
     technical documentation clarity.
     """
-    
+
     def __init__(self):
         """Initialize HyperTensor theme."""
         config = ThemeConfig(
@@ -376,11 +382,11 @@ class HyperTensorTheme(Theme):
             ),
         )
         super().__init__(config)
-    
+
     def get_css(self) -> str:
         """Get HyperTensor theme CSS."""
         base = super().get_css()
-        
+
         custom = """
 /* HyperTensor Theme Customizations */
 
@@ -490,22 +496,22 @@ h1 {
 
 
 # Theme registry
-_themes: Dict[str, Theme] = {
-    'default': Theme(),
-    'hypertensor': HyperTensorTheme(),
+_themes: dict[str, Theme] = {
+    "default": Theme(),
+    "hypertensor": HyperTensorTheme(),
 }
 
 
 def get_theme(name: str) -> Theme:
     """
     Get theme by name.
-    
+
     Args:
         name: Theme name
-    
+
     Returns:
         Theme instance
-    
+
     Raises:
         KeyError: If theme not found
     """
@@ -514,10 +520,10 @@ def get_theme(name: str) -> Theme:
     return _themes[name]
 
 
-def list_themes() -> List[str]:
+def list_themes() -> list[str]:
     """
     List available theme names.
-    
+
     Returns:
         List of theme names
     """
@@ -527,7 +533,7 @@ def list_themes() -> List[str]:
 def register_theme(name: str, theme: Theme):
     """
     Register a custom theme.
-    
+
     Args:
         name: Theme name
         theme: Theme instance

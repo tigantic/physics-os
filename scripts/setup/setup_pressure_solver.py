@@ -9,38 +9,37 @@ Author: The Architect
 Date: 2025-12-28
 """
 
-from setuptools import setup
-from torch.utils.cpp_extension import BuildExtension, CUDAExtension
 import os
 
+from setuptools import setup
+from torch.utils.cpp_extension import BuildExtension, CUDAExtension
+
 # CUDA paths (adjust if needed)
-cuda_home = os.environ.get('CUDA_HOME', '/usr/local/cuda')
-cusparse_lib = os.path.join(cuda_home, 'lib64')
+cuda_home = os.environ.get("CUDA_HOME", "/usr/local/cuda")
+cusparse_lib = os.path.join(cuda_home, "lib64")
 
 setup(
-    name='pressure_solver_cuda',
+    name="pressure_solver_cuda",
     ext_modules=[
         CUDAExtension(
-            name='pressure_solver_cuda',
-            sources=['tensornet/gpu/csrc/pressure_solver.cu'],
+            name="pressure_solver_cuda",
+            sources=["tensornet/gpu/csrc/pressure_solver.cu"],
             include_dirs=[
-                os.path.join(cuda_home, 'include'),
+                os.path.join(cuda_home, "include"),
             ],
             library_dirs=[cusparse_lib],
-            libraries=['cusparse', 'cublas'],
+            libraries=["cusparse", "cublas"],
             extra_compile_args={
-                'cxx': ['-O3'],
-                'nvcc': [
-                    '-O3',
-                    '--use_fast_math',
-                    '-arch=sm_89',  # RTX 5070 (Ada Lovelace)
-                    '--ptxas-options=-v',
-                    '-lineinfo'
-                ]
-            }
+                "cxx": ["-O3"],
+                "nvcc": [
+                    "-O3",
+                    "--use_fast_math",
+                    "-arch=sm_89",  # RTX 5070 (Ada Lovelace)
+                    "--ptxas-options=-v",
+                    "-lineinfo",
+                ],
+            },
         )
     ],
-    cmdclass={
-        'build_ext': BuildExtension
-    }
+    cmdclass={"build_ext": BuildExtension},
 )

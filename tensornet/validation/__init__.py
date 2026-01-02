@@ -9,149 +9,129 @@ Phase 15: Comprehensive validation and testing framework including:
 
 Components:
     - physical: Physics-based validation tests
-    - benchmarks: Performance benchmarking utilities  
+    - benchmarks: Performance benchmarking utilities
     - regression: Automated regression testing
     - vv: Verification & Validation framework
 """
 
-from .physical import (
-    # Conservation law validators
-    ConservationValidator,
-    MassConservationTest,
-    MomentumConservationTest,
-    EnergyConservationTest,
-    # Analytical solution validators
-    AnalyticalValidator,
-    SodShockValidator,
-    BlasiusValidator,
-    ObliqueShockValidator,
-    IsentropicVortexValidator,
-    # Test result structures
-    ValidationResult,
-    ValidationSeverity,
-    ValidationReport,
-    run_physical_validation,
-)
-
-from .benchmarks import (
-    # Benchmark configuration
+from .benchmarks import (  # Benchmark configuration; Timer utilities; Memory tracking; Scalability tests; Benchmark runners
     BenchmarkConfig,
     BenchmarkResult,
     BenchmarkSuite,
-    # Timer utilities
-    TimerContext,
-    PerformanceTimer,
-    # Memory tracking
-    MemoryTracker,
     MemorySnapshot,
-    # Scalability tests
+    MemoryTracker,
+    PerformanceTimer,
     ScalabilityTest,
-    WeakScalingTest,
     StrongScalingTest,
-    # Benchmark runners
+    TimerContext,
+    WeakScalingTest,
+    compare_benchmarks,
     run_benchmark,
     run_benchmark_suite,
-    compare_benchmarks,
 )
-
-from .regression import (
-    # Regression test framework
-    RegressionTest,
-    RegressionSuite,
-    RegressionResult,
-    # Golden value management
+from .physical import (  # Conservation law validators; Analytical solution validators; Test result structures
+    AnalyticalValidator,
+    BlasiusValidator,
+    ConservationValidator,
+    EnergyConservationTest,
+    IsentropicVortexValidator,
+    MassConservationTest,
+    MomentumConservationTest,
+    ObliqueShockValidator,
+    SodShockValidator,
+    ValidationReport,
+    ValidationResult,
+    ValidationSeverity,
+    run_physical_validation,
+)
+from .regression import (  # Regression test framework; Golden value management; Comparison utilities; Test runners
+    ArrayComparator,
     GoldenValue,
     GoldenValueStore,
-    update_golden_values,
-    # Comparison utilities
-    ArrayComparator,
-    TensorComparator,
+    RegressionResult,
+    RegressionSuite,
+    RegressionTest,
     StateComparator,
-    # Test runners
-    run_regression_tests,
+    TensorComparator,
     run_full_regression,
+    run_regression_tests,
+    update_golden_values,
 )
-
-from .vv import (
-    # V&V Framework
-    VVLevel,
+from .vv import (  # V&V Framework; Verification utilities; Validation utilities; Uncertainty quantification; Execution
+    AnalyticalValidation,
+    CodeVerification,
+    ExperimentalValidation,
+    IntegrationVerification,
+    UncertaintyBand,
+    UnitVerification,
+    ValidationCase,
+    ValidationUncertainty,
     VVCategory,
-    VVTest,
-    VVTestResult,
+    VVLevel,
     VVPlan,
     VVReport,
-    # Verification utilities
-    CodeVerification,
-    UnitVerification,
-    IntegrationVerification,
-    # Validation utilities  
-    ValidationCase,
-    ExperimentalValidation,
-    AnalyticalValidation,
-    # Uncertainty quantification
-    UncertaintyBand,
-    ValidationUncertainty,
-    # Execution
-    run_vv_plan,
+    VVTest,
+    VVTestResult,
     generate_vv_report,
+    run_vv_plan,
 )
 
 __all__ = [
     # Physical validation
-    'ConservationValidator',
-    'MassConservationTest',
-    'MomentumConservationTest', 
-    'EnergyConservationTest',
-    'AnalyticalValidator',
-    'SodShockValidator',
-    'BlasiusValidator',
-    'ObliqueShockValidator',
-    'IsentropicVortexValidator',
-    'ValidationResult',
-    'ValidationSeverity',
-    'ValidationReport',
-    'run_physical_validation',
+    "ConservationValidator",
+    "MassConservationTest",
+    "MomentumConservationTest",
+    "EnergyConservationTest",
+    "AnalyticalValidator",
+    "SodShockValidator",
+    "BlasiusValidator",
+    "ObliqueShockValidator",
+    "IsentropicVortexValidator",
+    "ValidationResult",
+    "ValidationSeverity",
+    "ValidationReport",
+    "run_physical_validation",
     # Benchmarks
-    'BenchmarkConfig',
-    'BenchmarkResult',
-    'BenchmarkSuite',
-    'TimerContext',
-    'PerformanceTimer',
-    'MemoryTracker',
-    'MemorySnapshot',
-    'ScalabilityTest',
-    'WeakScalingTest',
-    'StrongScalingTest',
-    'run_benchmark',
-    'run_benchmark_suite',
-    'compare_benchmarks',
+    "BenchmarkConfig",
+    "BenchmarkResult",
+    "BenchmarkSuite",
+    "TimerContext",
+    "PerformanceTimer",
+    "MemoryTracker",
+    "MemorySnapshot",
+    "ScalabilityTest",
+    "WeakScalingTest",
+    "StrongScalingTest",
+    "run_benchmark",
+    "run_benchmark_suite",
+    "compare_benchmarks",
     # Regression
-    'RegressionTest',
-    'RegressionSuite',
-    'RegressionResult',
-    'GoldenValue',
-    'GoldenValueStore',
-    'update_golden_values',
-    'ArrayComparator',
-    'TensorComparator',
-    'StateComparator',
-    'run_regression_tests',
-    'run_full_regression',
+    "RegressionTest",
+    "RegressionSuite",
+    "RegressionResult",
+    "GoldenValue",
+    "GoldenValueStore",
+    "update_golden_values",
+    "ArrayComparator",
+    "TensorComparator",
+    "StateComparator",
+    "run_regression_tests",
+    "run_full_regression",
     # V&V
-    'VVLevel',
-    'VVCategory',
-    'VVTest',
-    'VVTestResult',
-    'VVPlan',
-    'VVReport',
-    'CodeVerification',
-    'UnitVerification',
-    'IntegrationVerification',
-    'ValidationCase',
-    'ExperimentalValidation',
-    'AnalyticalValidation',
-    'UncertaintyBand',
-    'ValidationUncertainty',
-    'run_vv_plan',
-    'generate_vv_report',
+    "VVLevel",
+    "VVCategory",
+    "VVTest",
+    "VVTestResult",
+    "VVPlan",
+    "VVReport",
+    "CodeVerification",
+    "UnitVerification",
+    "IntegrationVerification",
+    "ValidationCase",
+    "ExperimentalValidation",
+    "AnalyticalValidation",
+    "UncertaintyBand",
+    "ValidationUncertainty",
+    "run_vv_plan",
+    "generate_vv_report",
 ]
