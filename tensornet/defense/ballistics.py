@@ -137,22 +137,72 @@ class BallisticSolver:
         wind: torch.Tensor,
     ) -> torch.Tensor:
         """
-        Compute aerodynamic drag force.
+        Compute aerodynamic drag force using G7 drag model.
         
         F_drag = -0.5 * ρ * Cd * A * |v_rel|² * v̂_rel
         
-        The BC relates to Cd via: Cd = (reference_bullet_Cd) / BC
+        The BC (ballistic coefficient) relates to drag via:
+        - Retardation = (base_retardation) / BC
+        - Where base_retardation uses G7 standard projectile Cd
+        
+        G7 Cd varies with Mach number (McCoy, 1999):
+        - Subsonic (M < 0.9): Cd ≈ 0.12
+        - Transonic (0.9-1.2): Cd ≈ 0.18-0.30 (complex)
+        - Supersonic (1.2-2.5): Cd ≈ 0.18
+        - High supersonic (M > 2.5): Cd ≈ 0.17
+        
+        References:
+            Litz, B. (2015). "Applied Ballistics for Long Range Shooting."
         """
         # Relative velocity (bullet velocity - wind velocity)
         v_rel = velocity - wind
         speed = torch.norm(v_rel)
         
         if speed < 0.1:
-            return torch.zeros(3, device=self.device)
+            return torch.zeros(3, device=self.device, dtype=torch.float64)
         
-        # Simplified drag coefficient from BC
-        # Using G7 reference: Cd_ref ≈ 0.25 for G7 projectile
-        cd = 0.25 / self.bc
+        # Speed of sound (sea level, 15°C)
+        speed_of_sound = 343.0  # m/s
+        mach = speed / speed_of_sound
+        
+        # G7 drag coefficient as function of Mach number
+        # (Simplified from JBM Ballistics drag tables)
+        if mach < 0.9:
+            cd_g7 = 0.12
+        elif mach < 1.0:
+            # Transonic drag rise
+            cd_g7 = 0.12 + (mach - 0.9) * 1.5  # 0.12 to 0.27
+        elif mach < 1.2:
+            # Peak transonic drag
+            cd_g7 = 0.27 - (mach - 1.0) * 0.35  # 0.27 to 0.20
+        elif mach < 2.5:
+            # Supersonic
+            cd_g7 = 0.20 - (mach - 1.2) * 0.023  # 0.20 to 0.17
+        else:
+            # High supersonic
+            cd_g7 = 0.17
+        
+        # Apply form factor (inverse of BC)
+        # BC = sectional_density / form_factor
+        # For a given bullet, Cd_actual = Cd_g7 * form_factor = Cd_g7 / BC
+        # But this overcounts - BC already accounts for sectional density
+        # 
+        # Correct model: The BC relates retardation to the G7 standard
+        # Retardation = (G7_retardation) / BC
+        # 
+        # G7 standard: 1 lb/in² sectional density
+        # Our bullet: SD = mass / (diameter² * π/4) in lb/in²
+        
+        # Convert mass and diameter to imperial for SD calculation
+        mass_lb = self.mass * 2.20462  # kg to lb
+        diameter_in = self.bullet_diameter * 39.37  # m to inches
+        sectional_density = mass_lb / (diameter_in ** 2)
+        
+        # Form factor i = SD / BC
+        form_factor = sectional_density / self.bc
+        
+        # Effective Cd for this bullet
+        cd = cd_g7 * form_factor
         
         # Drag force magnitude
         drag_mag = 0.5 * self.air_density * cd * self.reference_area * speed**2
@@ -215,18 +265,25 @@ class BallisticSolver:
             BallisticSolution with firing corrections
         """
         if verbose:
-            print(f"\n[BALLISTICS] Computing solution for {target_distance}m...")
+            print(f"\n[BALLISTICS] Computing solution for {target_distance}m, elev={target_elevation}m...")
         
-        # Initial state: bullet at origin, firing toward +Z with slight elevation
-        # We'll compute the required elevation angle iteratively
+        # Compute slant range and angle
+        # Target is at (0, target_elevation, target_distance) from shooter
+        slant_range = np.sqrt(target_distance**2 + target_elevation**2)
+        target_angle = np.arctan2(target_elevation, target_distance)  # radians
         
-        # First pass: zero angle to find drop
-        position = torch.tensor([0.0, 2.0, 0.0], device=self.device)
-        velocity = torch.tensor([0.0, 0.0, self.muzzle_velocity], device=self.device)
+        # Initial launch velocity - start with angle toward target
+        # (We'll refine this, but for now use LOS angle)
+        launch_speed = self.muzzle_velocity
+        vz = launch_speed * np.cos(target_angle)
+        vy = launch_speed * np.sin(target_angle)
+        
+        position = torch.tensor([0.0, 2.0, 0.0], device=self.device, dtype=torch.float64)
+        velocity = torch.tensor([0.0, vy, vz], device=self.device, dtype=torch.float64)
         
         trajectory = [position.clone()]
         t = 0.0
-        max_time = 5.0  # Maximum 5 seconds of flight
+        max_time = 10.0  # Maximum flight time
         
         # Record winds
         wind_at_muzzle = self.sample_wind_field(position, wind_field)
@@ -249,22 +306,34 @@ class BallisticSolver:
             trajectory.append(position.clone())
             t += dt
             
-            # Check if past target
+            # Check if past target (horizontal distance)
             if position[2] >= target_distance:
                 wind_at_target = wind.clone()
+                break
+                
+            # Safety: check for excessive flight time or bullet falling below ground
+            if t >= max_time or position[1] < -100:
+                wind_at_target = wind if wind is not None else torch.zeros(3, device=self.device, dtype=torch.float64)
                 break
         
         # Extract impact data
         final_pos = trajectory[-1]
         
         drift = final_pos[0].item()  # Lateral deviation
-        drop = final_pos[1].item() - 2.0  # Vertical drop from bore line
+        
+        # Calculate drop relative to LINE-OF-SIGHT, not horizontal
+        # The LOS goes from (0, 2.0, 0) to (0, 2.0 + target_elevation, target_distance)
+        # At z = final_pos[2], the LOS height would be:
+        los_height_at_impact = 2.0 + (target_elevation * final_pos[2].item() / target_distance) if target_distance > 0 else 2.0
+        drop = final_pos[1].item() - los_height_at_impact  # Deviation from LOS
         
         # Convert to angular corrections
         # MOA = (deviation_inches / range_yards) * 100
         # 1 MOA ≈ 1 inch at 100 yards
         
-        range_yards = target_distance * 1.0936  # meters to yards
+        # Use SLANT range for angular calculations, not horizontal range
+        slant_range_m = np.sqrt(target_distance**2 + target_elevation**2)
+        range_yards = slant_range_m * 1.0936  # meters to yards
         drift_inches = drift * 39.37
         drop_inches = drop * 39.37
         
@@ -280,10 +349,12 @@ class BallisticSolver:
         impact_velocity = torch.norm(velocity).item()
         
         if verbose:
-            print(f"   [IMPACT] Target reached at Z={final_pos[2]:.1f}m")
+            print(f"   [IMPACT] Target reached at Z={final_pos[2]:.1f}m, Y={final_pos[1]:.1f}m")
+            print(f"   Slant range: {slant_range_m:.1f}m, Target angle: {np.degrees(target_angle):.2f}°")
             print(f"   Drift: {drift:+.2f}m (wind effect)")
-            print(f"   Drop: {drop:.2f}m (gravity)")
+            print(f"   Drop from LOS: {drop:.2f}m")
             print(f"   Time of flight: {t:.3f}s")
+            print(f"   Impact velocity: {impact_velocity:.1f} m/s")
         
         # Handle missing wind_at_target
         if wind_at_target is None:

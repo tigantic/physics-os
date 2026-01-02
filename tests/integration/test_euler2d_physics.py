@@ -13,8 +13,14 @@ import pytest
 import torch
 import math
 
-# Mark entire module as integration and physics tests
-pytestmark = [pytest.mark.integration, pytest.mark.physics]
+# Mark entire module with V&V taxonomy markers
+# Per HYPERTENSOR_VV_FRAMEWORK.md Section 7.1
+pytestmark = [
+    pytest.mark.integration,
+    pytest.mark.physics,
+    pytest.mark.benchmark,     # Tier 1/2 benchmarks (DMR, oblique shock)
+    pytest.mark.conservation,  # Mass/momentum/energy conservation tests
+]
 
 from tensornet.cfd.euler_2d import (
     Euler2D,

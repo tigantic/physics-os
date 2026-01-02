@@ -157,12 +157,13 @@ class TestWakeUpdate:
         y = 2
         z = 100
         
+        device = tracker_no_wind.wake_field.device
         no_wind_centroid = (tracker_no_wind.wake_field[:, y, z] * 
-                          torch.arange(50, dtype=torch.float64)).sum() / \
+                          torch.arange(50, dtype=torch.float64, device=device)).sum() / \
                           (tracker_no_wind.wake_field[:, y, z].sum() + 1e-10)
         
         wind_centroid = (tracker_wind.wake_field[:, y, z] * 
-                        torch.arange(50, dtype=torch.float64)).sum() / \
+                        torch.arange(50, dtype=torch.float64, device=device)).sum() / \
                         (tracker_wind.wake_field[:, y, z].sum() + 1e-10)
         
         # Centroids should differ due to wind drift
@@ -215,8 +216,8 @@ class TestPositionAnalysis:
         tracker.update_wake(lead_car_x=25, lead_car_speed_kmh=300)
         report = tracker.analyze_position(follower_x=25, follower_z=50)
         
-        assert hasattr(report, 'downforce_loss_pct')
-        assert hasattr(report, 'overtake_recommendation')
+        assert hasattr(report, 'downforce_loss_percent')
+        assert hasattr(report, 'overtake_window')
         assert hasattr(report, 'tow_benefit_kmh')
     
     @pytest.mark.unit
@@ -230,7 +231,7 @@ class TestPositionAnalysis:
         # Offset to the side
         report_offset = tracker.analyze_position(follower_x=40, follower_z=50)
         
-        assert report_inline.downforce_loss_pct >= report_offset.downforce_loss_pct
+        assert report_inline.downforce_loss_percent >= report_offset.downforce_loss_percent
 
 
 class TestDirtyAirReport:
@@ -296,7 +297,7 @@ class TestRacingIntegration:
             reports.append(report)
         
         # Close position should have highest loss
-        assert reports[0].downforce_loss_pct >= reports[1].downforce_loss_pct
+        assert reports[0].downforce_loss_percent >= reports[1].downforce_loss_percent
 
 
 if __name__ == "__main__":

@@ -1,0 +1,409 @@
+# HyperTensor V&V Validation Pipeline
+# ====================================
+# Implements Phase 3 Automation from HYPERTENSOR_VV_FRAMEWORK.md
+# - CI/CD pipeline integration
+# - Automated validation dashboard
+# - Regression detection alerts
+# - Cryptographic signing automation
+#
+# Constitution Compliance: Article IV (Verification), ASME V&V 10-2019
+
+name: V&V Validation
+
+on:
+  push:
+    branches: [main, develop, master]
+  pull_request:
+    branches: [main, develop, master]
+  schedule:
+    # Run full V&V suite weekly (Sunday 3 AM UTC)
+    - cron: '0 3 * * 0'
+  workflow_dispatch:
+    inputs:
+      full_suite:
+        description: 'Run full V&V suite including convergence tests'
+        required: false
+        default: 'false'
+        type: boolean
+      sign_results:
+        description: 'Sign validation results with PQC'
+        required: false
+        default: 'false'
+        type: boolean
+
+env:
+  PYTHON_VERSION: "3.11"
+  BASELINE_FILE: ".vv_baseline.json"
+
+jobs:
+  # ============================================
+  # Stage 1: MMS Verification Tests
+  # ============================================
+  mms-verification:
+    name: MMS Verification
+    runs-on: ubuntu-latest
+    outputs:
+      mms_passed: ${{ steps.mms.outputs.passed }}
+      mms_results: ${{ steps.mms.outputs.results }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Run MMS tests
+        id: mms
+        run: |
+          echo "Running MMS verification suite..."
+          pytest tests/integration/test_*_mms.py -v --tb=short \
+            --junitxml=mms_results.xml \
+            --json-report --json-report-file=mms_results.json \
+            2>&1 | tee mms_output.log
+          
+          # Check results
+          if [ $? -eq 0 ]; then
+            echo "passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "passed=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Extract summary
+          echo "results=$(cat mms_results.json | jq -c '.summary')" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Upload MMS results
+        uses: actions/upload-artifact@v4
+        with:
+          name: mms-results
+          path: |
+            mms_results.xml
+            mms_results.json
+            mms_output.log
+
+  # ============================================
+  # Stage 2: Benchmark Validation
+  # ============================================
+  benchmark-validation:
+    name: Benchmark Validation
+    runs-on: ubuntu-latest
+    outputs:
+      benchmarks_passed: ${{ steps.benchmarks.outputs.passed }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Run benchmark tests
+        id: benchmarks
+        run: |
+          echo "Running V&V benchmark suite..."
+          pytest tests/integration/ -v -m "benchmark" --tb=short \
+            --junitxml=benchmark_results.xml \
+            2>&1 | tee benchmark_output.log
+          
+          if [ $? -eq 0 ]; then
+            echo "passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "passed=false" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: |
+            benchmark_results.xml
+            benchmark_output.log
+
+  # ============================================
+  # Stage 3: Conservation Verification
+  # ============================================
+  conservation-tests:
+    name: Conservation Tests
+    runs-on: ubuntu-latest
+    outputs:
+      conservation_passed: ${{ steps.conservation.outputs.passed }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Run conservation tests
+        id: conservation
+        run: |
+          echo "Running conservation verification..."
+          pytest tests/ -v -m "conservation" --tb=short \
+            --junitxml=conservation_results.xml \
+            2>&1 | tee conservation_output.log
+          
+          if [ $? -eq 0 ]; then
+            echo "passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "passed=false" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+
+      - name: Upload conservation results
+        uses: actions/upload-artifact@v4
+        with:
+          name: conservation-results
+          path: |
+            conservation_results.xml
+            conservation_output.log
+
+  # ============================================
+  # Stage 4: Convergence Studies (Weekly/Manual)
+  # ============================================
+  convergence-studies:
+    name: Convergence Studies
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event.inputs.full_suite == 'true'
+    outputs:
+      convergence_passed: ${{ steps.convergence.outputs.passed }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Run convergence studies
+        id: convergence
+        run: |
+          echo "Running convergence studies..."
+          pytest tests/ -v -m "convergence" --tb=short \
+            --junitxml=convergence_results.xml \
+            2>&1 | tee convergence_output.log
+          
+          if [ $? -eq 0 ]; then
+            echo "passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "passed=false" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+
+      - name: Upload convergence results
+        uses: actions/upload-artifact@v4
+        with:
+          name: convergence-results
+          path: |
+            convergence_results.xml
+            convergence_output.log
+
+  # ============================================
+  # Stage 5: Regression Detection
+  # ============================================
+  regression-detection:
+    name: Regression Detection
+    runs-on: ubuntu-latest
+    needs: [mms-verification, benchmark-validation, conservation-tests]
+    outputs:
+      regression_detected: ${{ steps.detect.outputs.regression }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install analysis dependencies
+        run: pip install pandas numpy
+
+      - name: Detect regressions
+        id: detect
+        run: |
+          python scripts/detect_vv_regression.py \
+            --baseline ${{ env.BASELINE_FILE }} \
+            --current artifacts/ \
+            --output regression_report.json \
+            2>&1 | tee regression_output.log
+          
+          # Check if regression detected
+          if grep -q '"regression_detected": true' regression_report.json 2>/dev/null; then
+            echo "regression=true" >> $GITHUB_OUTPUT
+            echo "::warning::V&V Regression detected! See regression_report.json"
+          else
+            echo "regression=false" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+
+      - name: Upload regression report
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-report
+          path: |
+            regression_report.json
+            regression_output.log
+
+  # ============================================
+  # Stage 6: Validation Dashboard Generation
+  # ============================================
+  validation-dashboard:
+    name: Generate Validation Dashboard
+    runs-on: ubuntu-latest
+    needs: [mms-verification, benchmark-validation, conservation-tests, regression-detection]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dashboard dependencies
+        run: pip install jinja2 pandas numpy
+
+      - name: Generate dashboard
+        run: |
+          python scripts/generate_vv_dashboard.py \
+            --artifacts artifacts/ \
+            --output vv_dashboard.html \
+            --commit ${{ github.sha }} \
+            --branch ${{ github.ref_name }}
+          
+          echo "Dashboard generated: vv_dashboard.html"
+
+      - name: Upload dashboard
+        uses: actions/upload-artifact@v4
+        with:
+          name: vv-dashboard
+          path: vv_dashboard.html
+
+      - name: Deploy dashboard to Pages (main only)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          destination_dir: vv-reports
+          keep_files: true
+
+  # ============================================
+  # Stage 7: Cryptographic Signing (Release/Manual)
+  # ============================================
+  cryptographic-signing:
+    name: Cryptographic Signing
+    runs-on: ubuntu-latest
+    needs: [mms-verification, benchmark-validation, conservation-tests]
+    if: |
+      github.event_name == 'release' || 
+      github.event.inputs.sign_results == 'true' ||
+      (github.event_name == 'schedule' && needs.mms-verification.outputs.mms_passed == 'true')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install signing dependencies
+        run: |
+          pip install -e ".[dev]"
+          pip install liboqs-python || echo "PQC library not available, using fallback"
+
+      - name: Generate validation manifest
+        run: |
+          python scripts/generate_validation_manifest.py \
+            --artifacts artifacts/ \
+            --commit ${{ github.sha }} \
+            --output validation_manifest.json
+
+      - name: Sign manifest with PQC
+        run: |
+          python scripts/sign_manifest.py \
+            --manifest validation_manifest.json \
+            --algorithm dilithium2 \
+            --output signed_manifest.json \
+            2>&1 | tee signing_output.log
+        continue-on-error: true
+
+      - name: Upload signed manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed-validation
+          path: |
+            validation_manifest.json
+            signed_manifest.json
+            signing_output.log
+
+  # ============================================
+  # Stage 8: Alert on Failures
+  # ============================================
+  alert-on-failure:
+    name: Alert on V&V Failure
+    runs-on: ubuntu-latest
+    needs: [mms-verification, benchmark-validation, conservation-tests, regression-detection]
+    if: |
+      always() && (
+        needs.mms-verification.outputs.mms_passed == 'false' ||
+        needs.benchmark-validation.outputs.benchmarks_passed == 'false' ||
+        needs.conservation-tests.outputs.conservation_passed == 'false' ||
+        needs.regression-detection.outputs.regression_detected == 'true'
+      )
+    steps:
+      - name: Create failure summary
+        run: |
+          echo "## ⚠️ V&V Validation Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| MMS Verification | ${{ needs.mms-verification.outputs.mms_passed && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Benchmark Validation | ${{ needs.benchmark-validation.outputs.benchmarks_passed && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Conservation Tests | ${{ needs.conservation-tests.outputs.conservation_passed && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Regression Detection | ${{ needs.regression-detection.outputs.regression_detected == 'true' && '⚠️ REGRESSION' || '✅' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "See artifacts for detailed reports." >> $GITHUB_STEP_SUMMARY
+
+      - name: Fail workflow
+        if: |
+          needs.mms-verification.outputs.mms_passed == 'false' ||
+          needs.benchmark-validation.outputs.benchmarks_passed == 'false' ||
+          needs.conservation-tests.outputs.conservation_passed == 'false'
+        run: exit 1

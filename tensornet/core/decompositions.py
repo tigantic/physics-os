@@ -66,7 +66,9 @@ def svd_truncated(
     
     # Use randomized SVD (Halko-Martinsson-Tropp algorithm)
     # 4× faster than full SVD for low-rank approximations
-    U, S, Vh = torch.svd_lowrank(A, q=target_rank, niter=2)
+    # Note: torch.svd_lowrank returns (U, S, V) where V is (n, q), NOT Vh
+    U, S, V = torch.svd_lowrank(A, q=target_rank, niter=2)
+    Vh = V.T  # Convert V to Vh: (n, q) -> (q, n)
     
     # Apply cutoff threshold
     rank = target_rank

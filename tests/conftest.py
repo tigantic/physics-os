@@ -73,27 +73,58 @@ def random_state() -> np.random.RandomState:
 
 
 # =============================================================================
-# PYTEST MARKERS
+# PYTEST MARKERS (V&V Taxonomy per HYPERTENSOR_VV_FRAMEWORK.md)
 # =============================================================================
 def pytest_configure(config):
-    """Register custom markers for test categorization."""
+    """Register custom markers for test categorization.
+    
+    Aligned with ASME V&V 10-2019 test classification taxonomy.
+    """
+    # --- Core Test Categories ---
     config.addinivalue_line(
-        "markers", "unit: mark test as a unit test (fast, isolated)"
+        "markers", "unit: Unit tests - function-level correctness (<100ms)"
     )
     config.addinivalue_line(
-        "markers", "integration: mark test as an integration test (may be slow)"
+        "markers", "integration: Integration tests - component interaction (<10s)"
     )
     config.addinivalue_line(
-        "markers", "slow: mark test as slow (>5 seconds)"
+        "markers", "slow: Long-running tests (>5 seconds)"
+    )
+    
+    # --- V&V Categories (ASME V&V 10-2019) ---
+    config.addinivalue_line(
+        "markers", "benchmark: Known-solution validation - Tier 1/2 benchmarks (<60s)"
     )
     config.addinivalue_line(
-        "markers", "physics: mark test as a physics validation test"
+        "markers", "mms: Method of Manufactured Solutions - discretization verification (<60s)"
     )
     config.addinivalue_line(
-        "markers", "gpu: mark test as requiring GPU"
+        "markers", "conservation: Conservation law verification - mass/momentum/energy (<60s)"
     )
     config.addinivalue_line(
-        "markers", "rust: mark test as requiring Rust TCI extension"
+        "markers", "convergence: Order of accuracy verification (<5min)"
+    )
+    config.addinivalue_line(
+        "markers", "regression: Regression prevention - catch breakage (<60s)"
+    )
+    config.addinivalue_line(
+        "markers", "stress: Large-scale stress tests (>5min)"
+    )
+    
+    # --- Domain-Specific ---
+    config.addinivalue_line(
+        "markers", "physics: Physics validation test (CFD, quantum, etc.)"
+    )
+    config.addinivalue_line(
+        "markers", "performance: Speed/memory benchmarks (<5min)"
+    )
+    
+    # --- Hardware Requirements ---
+    config.addinivalue_line(
+        "markers", "gpu: Requires GPU (CUDA)"
+    )
+    config.addinivalue_line(
+        "markers", "rust: Requires Rust TCI extension"
     )
 
 

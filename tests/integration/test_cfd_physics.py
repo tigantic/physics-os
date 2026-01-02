@@ -15,8 +15,13 @@ import pytest
 import torch
 import math
 
-# Mark entire module as integration and physics tests
-pytestmark = [pytest.mark.integration, pytest.mark.physics]
+# Mark entire module with V&V taxonomy markers
+# Per HYPERTENSOR_VV_FRAMEWORK.md Section 7.1
+pytestmark = [
+    pytest.mark.integration,
+    pytest.mark.physics,
+    pytest.mark.benchmark,  # Tier 1 benchmarks (Sod, Lax, etc.)
+]
 
 from tensornet.cfd.godunov import (
     exact_riemann,

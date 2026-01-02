@@ -19,8 +19,14 @@ Constitutional Compliance:
 import pytest
 import torch
 
-# Mark entire module as integration and physics tests
-pytestmark = [pytest.mark.integration, pytest.mark.physics]
+# Mark entire module with V&V taxonomy markers
+# Per HYPERTENSOR_VV_FRAMEWORK.md Section 7.1
+pytestmark = [
+    pytest.mark.integration,
+    pytest.mark.physics,
+    pytest.mark.benchmark,     # Quantum ground state benchmarks
+    pytest.mark.convergence,   # DMRG convergence validation
+]
 
 from tensornet.core.mps import MPS
 from tensornet.mps.hamiltonians import heisenberg_mpo, tfim_mpo

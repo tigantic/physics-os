@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-12-26T17:38:50.287903Z",
+  "generated_at": "2026-01-02T01:57:44.919556Z",
   "seed": 42,
   "pipeline_version": "1.0.0",
   "results": {
@@ -19,7 +19,7 @@
     },
     "evolution": {
       "n_steps": 171,
-      "elapsed_s": 0.039732933044433594,
+      "elapsed_s": 0.01936173439025879,
       "dt_min": 0.0005637314721252396,
       "dt_max": 0.00211288563664272,
       "mass_initial": 0.5625,
@@ -70,11 +70,11 @@
   },
   "file_hashes": {
     "electron_density.npy": "4195c2c5da891a03c0fdc05136344e1838915ecc1bfb6fd29895467d0d22b479",
-    "p_final.npy": "0576fabe78604fb554f6eb9ef56ea7f59b59f42925d9564f35bef6d5ca3f2852",
+    "x_grid.npy": "6fb2d7f6477be7dd783ab01bb45f5972df2494ccd6e51ba0715f8dad533b05ed",
     "rho_final.npy": "57c0a72c8130ca827649b282c7247e00859acc1e48e598daef8c88e4a1d3fdd5",
-    "u_final.npy": "7d9b3f14a766489261cc05091613ddaa8b72cfdca9cc46fbb31011af4283e0de",
-    "x_grid.npy": "6fb2d7f6477be7dd783ab01bb45f5972df2494ccd6e51ba0715f8dad533b05ed"
+    "p_final.npy": "0576fabe78604fb554f6eb9ef56ea7f59b59f42925d9564f35bef6d5ca3f2852",
+    "u_final.npy": "7d9b3f14a766489261cc05091613ddaa8b72cfdca9cc46fbb31011af4283e0de"
   },
   "pass_status": true,
-  "signature": "f370804458883cfcb9306ca697c7ca1f4b56f3989961b44ca99b8e86aa915cfb"
+  "signature": "503f8526c941e65af3b056b4a841e9ce11e79a1bacedc7decf7d44011922cd18"
 }
