@@ -1,0 +1,39 @@
+{
+  "project": "HyperTensor Neuroscience",
+  "module": "QTT Neural Connectome Mapping",
+  "timestamp": "2026-01-05T21:54:01.955878+00:00",
+  "connectome_stats": {
+    "n_regions": 7,
+    "n_neurons_total": 14700000,
+    "n_columns_total": 1470,
+    "n_qtt_cores": 4,
+    "compression_ratio": 3540891736.444525,
+    "memory_mb": 0.488216,
+    "full_matrix_eb": 0.00172872
+  },
+  "dynamics_analysis": {
+    "simulation_duration_ms": 500.0,
+    "mean_firing_rate_hz": 3.444,
+    "synchrony_index": 0.3742834034268803,
+    "criticality_measure": 0.0,
+    "total_spikes": 1722,
+    "energy_joules": 3.7884e-09
+  },
+  "energy_efficiency": {
+    "brain_ops_per_joule": 150500000000000.0,
+    "gpu_ops_per_joule": 2000000000.0,
+    "brain_vs_gpu_ratio": 75250.0,
+    "neuromorphic_target_watts": 100.0
+  },
+  "validation_gates": {
+    "compression": true,
+    "dynamics": true,
+    "efficiency": true
+  },
+  "final_verdict": {
+    "all_gates_passed": true,
+    "confidence_level": "HIGH",
+    "status": "CONNECTOME FRAMEWORK VALIDATED"
+  },
+  "sha256": "febbcbede0521a2bc4794334c20a3fd7476d89f3d717ce035ece832cfb6eb115"
+}
