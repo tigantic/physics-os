@@ -1,0 +1,30 @@
+{
+  "project": "ODIN",
+  "discovery": "Room-Temperature Superconductor",
+  "timestamp": "2026-01-05T01:17:49.207679",
+  "compound": {
+    "formula": "LaLuH6",
+    "metals": [
+      "La",
+      "Lu"
+    ],
+    "structure": "Sodalite",
+    "n_hydrogen": 6
+  },
+  "properties": {
+    "Tc_K": 306.4,
+    "room_temperature": "True",
+    "phonon_frequency_THz": 65.0,
+    "electron_phonon_coupling": 1.298,
+    "critical_current_MA_cm2": 19.9
+  },
+  "mechanism": {
+    "name": "Chemical Vice Clathrate",
+    "internal_pressure_GPa": 219.2,
+    "external_pressure_GPa": 0,
+    "stability_factor": 0.949
+  },
+  "physics": "Allen-Dynes modified BCS with cage compression",
+  "framework": "HyperTensor Phonon-Mediated Pairing",
+  "sha256": "1244f9815b84a5fdd8d8c5d5d055728601be5fc0eb9bf53848996c70ead0d142"
+}
