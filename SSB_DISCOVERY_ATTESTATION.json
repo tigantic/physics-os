@@ -1,0 +1,29 @@
+{
+  "discovery": "Superionic Solid-State Battery Electrolyte",
+  "timestamp": "2026-01-05T00:57:13.652692",
+  "compound": "Li3Sc0.25In0.75Cl3Br1.50I1.50",
+  "structure": "Garnet",
+  "properties": {
+    "ionic_conductivity_mS_cm": 1106.92,
+    "activation_energy_eV": 0.1631,
+    "shear_modulus_GPa": 40.9,
+    "dendrite_probability": 0.0
+  },
+  "phonon_mechanism": {
+    "attempt_frequency_THz": 10.72,
+    "paddlewheel_frequency_THz": 6.05,
+    "coupling_factor": 0.011,
+    "mechanism": "Phonon-Assisted Paddle-Wheel Li+ Transport"
+  },
+  "composition": {
+    "Li": 3.0,
+    "Sc": 0.25,
+    "In": 0.75,
+    "Cl": 3.0,
+    "Br": 1.5,
+    "I": 1.5
+  },
+  "targets_met": true,
+  "physics_framework": "HyperTensor TT-Compressed Hamiltonian",
+  "sha256": "37bdee40134ce17d19fc6cf31d3b8da86e73f49566109af3e4c6ba38b48b8aac"
+}

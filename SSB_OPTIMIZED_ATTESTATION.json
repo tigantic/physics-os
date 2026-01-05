@@ -1,0 +1,43 @@
+{
+  "discovery": "Optimized Superionic Solid-State Electrolyte",
+  "phase": "Resonance Optimization",
+  "timestamp": "2026-01-05T01:01:07.325485",
+  "compound": {
+    "formula": "Li3In1.00Cl4.8Br1.2",
+    "structure": "Anti-Perovskite",
+    "composition": {
+      "Li": 3.0,
+      "Sc": 0.0,
+      "In": 1.0,
+      "Cl": 4.800000000000001,
+      "Br": 1.1999999999999997,
+      "I": 0.0
+    }
+  },
+  "properties": {
+    "ionic_conductivity_mS_cm": 111963.8,
+    "activation_energy_eV": 0.02,
+    "shear_modulus_GPa": 36.7,
+    "dendrite_probability": 0.0
+  },
+  "phonon_physics": {
+    "attempt_frequency_THz": 9.66,
+    "paddlewheel_frequency_THz": 9.63,
+    "detuning_THz": 0.03,
+    "coupling_factor": 0.991,
+    "resonance_achieved": "True"
+  },
+  "thermodynamics": {
+    "n_components": 4,
+    "mixing_entropy_normalized": 0.722,
+    "high_entropy_stabilized": false
+  },
+  "validation": {
+    "sigma_gt_10": "True",
+    "G_gt_20": "True",
+    "dendrite_free": "True",
+    "all_targets_met": "True"
+  },
+  "framework": "HyperTensor Phonon-Assisted Transport Model",
+  "sha256": "1aa493575f753c0a0b484702e4bb95a1ed64356ebab47be91f636397e6608486"
+}
