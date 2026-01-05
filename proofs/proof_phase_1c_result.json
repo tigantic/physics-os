@@ -1,0 +1,76 @@
+{
+  "phase": "1c",
+  "timestamp": "2025-12-22T14:39:52.392076",
+  "proofs": [
+    {
+      "name": "proof_rk4_convergence_2d",
+      "description": "RK4 achieves 4th-order temporal convergence in 2D",
+      "dt_values": [
+        0.01,
+        0.005,
+        0.0025
+      ],
+      "rk4_errors": [
+        5.3290705182007514e-14,
+        3.552713678800501e-15,
+        3.552713678800501e-15
+      ],
+      "euler_errors": [
+        0.00037980335993914593,
+        0.00018977686422694262,
+        9.485726288716023e-05
+      ],
+      "rk4_order": 3.9068905956085187,
+      "euler_order": 1.0009485448264428,
+      "rk4_more_accurate": true,
+      "passed": true
+    },
+    {
+      "name": "proof_rk4_convergence_3d",
+      "description": "RK4 achieves high accuracy in 3D (temporal error < spatial error)",
+      "dt_values": [
+        0.005,
+        0.0025,
+        0.00125
+      ],
+      "rk4_errors": [
+        0.0004447362242778752,
+        0.0004447383037096131,
+        0.00044473843333037166
+      ],
+      "euler_errors": [
+        0.05230379792565287,
+        0.026262050968014705,
+        0.013325532643079896
+      ],
+      "rk4_relative_error_pct": 0.0019361695616938888,
+      "euler_order": 0.9939361186937157,
+      "rk4_more_accurate": true,
+      "rk4_accurate": true,
+      "passed": true
+    },
+    {
+      "name": "proof_rk4_incompressibility",
+      "description": "RK4 maintains machine-precision incompressibility",
+      "max_divergence_throughout": 2.1760371282653068e-14,
+      "threshold": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "proof_rk4_energy_conservation",
+      "description": "RK4 accurately tracks theoretical energy decay",
+      "ke_initial": 9.869604401089358,
+      "ke_final": 8.080548643885713,
+      "ke_exact": 8.080548643885654,
+      "relative_error_pct": 7.25443014869595e-13,
+      "monotonic_decay": true,
+      "passed": true
+    }
+  ],
+  "summary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "all_passed": true
+  }
+}

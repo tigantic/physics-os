@@ -1,0 +1,32 @@
+{
+  "title": "HyperTensor: Quantum-Inspired Tensor Networks for Computational Physics",
+  "description": "A pure PyTorch implementation of Matrix Product States (MPS) and Matrix Product Operators (MPO) for many-body quantum physics and computational fluid dynamics. Features include DMRG ground state search, TEBD/TDVP time evolution, and compressible Euler solvers with shock-capturing schemes.",
+  "upload_type": "software",
+  "creators": [
+    {
+      "name": "TiganticLabz",
+      "affiliation": "TiganticLabz"
+    }
+  ],
+  "keywords": [
+    "tensor networks",
+    "matrix product states",
+    "DMRG",
+    "quantum many-body",
+    "computational fluid dynamics",
+    "PyTorch",
+    "machine learning",
+    "physics simulation"
+  ],
+  "license": "other-closed",
+  "access_right": "restricted",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/TiganticLabz/hypertensor",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ],
+  "notes": "This software implements tensor network algorithms for quantum physics (Heisenberg, TFIM, Bose-Hubbard models) and CFD (1D/2D compressible Euler equations with Riemann solvers).",
+  "version": "0.1.0"
+}

@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.qtt API documentation</title>
+<meta name="description" content="Quantized Tensor Train (QTT) for CFD Field Compression
+…">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.qtt</code></h1>
+</header>
+<section id="section-intro">
+<h1 id="quantized-tensor-train-qtt-for-cfd-field-compression">Quantized Tensor Train (QTT) for CFD Field Compression</h1>
+<p>This module implements the core thesis of Project HyperTensor:</p>
+<pre><code>**Area Law Compression**: Turbulent flow fields satisfy an Area Law 
+analogous to quantum entanglement—correlations scale with boundary 
+area, not volume—enabling compression from O(N³) to O(N·D²) via 
+Tensor Train decomposition.
+</code></pre>
+<p>The QTT format reshapes an N-dimensional vector into a 2×2×&hellip;×2 tensor
+(log₂N indices), then applies TT-SVD. For smooth functions with bounded
+derivatives, QTT achieves exponential compression.</p>
+<p>Key Functions:
+field_to_qtt
+- Compress 2D flow field to QTT/MPS format
+qtt_to_field
+- Reconstruct 2D field from QTT/MPS
+euler_to_qtt
+- Compress full Euler2DState (ρ, ρu, ρv, E)
+qtt_to_euler
+- Reconstruct Euler2DState from QTT list</p>
+<h2 id="theory">Theory</h2>
+<p>For a flow field u(x,y) on an N×N grid, the QTT representation:</p>
+<ol>
+<li>Flatten to vector: u ∈ ℝ^(N²)</li>
+<li>Reshape to tensor: U ∈ ℝ^(2×2×&hellip;×2) with 2log₂N indices</li>
+<li>TT decomposition: U ≈ A₁ · A₂ · &hellip; · A_L with χ_max bonds</li>
+</ol>
+<p>Storage: O(L · χ² · 2) = O(log N · χ²) vs O(N²) classical</p>
+<p>For smooth fields: χ = O(1), giving exponential compression!
+For shocks: χ ~ O(N^ε), still sublinear compression.</p>
+<h2 id="references">References</h2>
+<p>[1] Oseledets, "Tensor-Train Decomposition", SIAM J. Sci. Comput. (2011)
+[2] Khoromskij, "O(d log N)-Quantics Approximation", Constr. Approx. (2011)
+[3] Gourianov et al., "A quantum-inspired approach to exploit turbulence
+structures", arXiv:2305.10784 (2023)</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.qtt.compression_analysis"><code class="name flex">
+<span>def <span class="ident">compression_analysis</span></span>(<span>state, chi_values: list[int] = [4, 8, 16, 32, 64, 128], verbose: bool = True) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compression_analysis(
+    state,
+    chi_values: list[int] = [4, 8, 16, 32, 64, 128],
+    verbose: bool = True
+) -&gt; dict:
+    &#34;&#34;&#34;
+    Analyze compression quality vs bond dimension.
+    
+    Args:
+        state: Euler2DState to analyze
+        chi_values: List of bond dimensions to test
+        verbose: Print results
+        
+    Returns:
+        Dictionary with analysis results
+    &#34;&#34;&#34;
+    results = {
+        &#39;chi&#39;: [],
+        &#39;compression_ratio&#39;: [],
+        &#39;rho_error&#39;: [],
+        &#39;u_error&#39;: [],
+        &#39;p_error&#39;: [],
+    }
+    
+    # Get original fields
+    rho_orig = state.rho.clone()
+    u_orig = state.u.clone()
+    p_orig = state.p.clone()
+    
+    if verbose:
+        print(&#34;=&#34; * 70)
+        print(&#34;QTT COMPRESSION ANALYSIS&#34;)
+        print(&#34;=&#34; * 70)
+        print(f&#34;Field shape: {tuple(rho_orig.shape)}&#34;)
+        print(f&#34;Original size: {rho_orig.numel() * 4} elements (4 fields)&#34;)
+        print()
+        print(f&#34;{&#39;χ&#39;:&gt;6} {&#39;CR&#39;:&gt;10} {&#39;ρ error&#39;:&gt;12} {&#39;u error&#39;:&gt;12} {&#39;p error&#39;:&gt;12}&#34;)
+        print(&#34;-&#34; * 70)
+    
+    for chi in chi_values:
+        compressed = euler_to_qtt(state, chi_max=chi)
+        reconstructed = qtt_to_euler(compressed, gamma=state.gamma)
+        
+        # Compute relative errors
+        rho_err = torch.norm(reconstructed.rho - rho_orig) / torch.norm(rho_orig)
+        u_err = torch.norm(reconstructed.u - u_orig) / (torch.norm(u_orig) + 1e-10)
+        p_err = torch.norm(reconstructed.p - p_orig) / torch.norm(p_orig)
+        
+        # Average compression ratio
+        cr = sum(r.compression_ratio for r in compressed.values()) / 4
+        
+        results[&#39;chi&#39;].append(chi)
+        results[&#39;compression_ratio&#39;].append(cr)
+        results[&#39;rho_error&#39;].append(rho_err.item())
+        results[&#39;u_error&#39;].append(u_err.item())
+        results[&#39;p_error&#39;].append(p_err.item())
+        
+        if verbose:
+            print(f&#34;{chi:&gt;6} {cr:&gt;10.2f}x {rho_err.item():&gt;12.2e} &#34;
+                  f&#34;{u_err.item():&gt;12.2e} {p_err.item():&gt;12.2e}&#34;)
+    
+    if verbose:
+        print(&#34;=&#34; * 70)
+    
+    return results</code></pre>
+</details>
+<div class="desc"><p>Analyze compression quality vs bond dimension.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>state</code></strong></dt>
+<dd>Euler2DState to analyze</dd>
+<dt><strong><code>chi_values</code></strong></dt>
+<dd>List of bond dimensions to test</dd>
+<dt><strong><code>verbose</code></strong></dt>
+<dd>Print results</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Dictionary with analysis results</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt.estimate_area_law_exponent"><code class="name flex">
+<span>def <span class="ident">estimate_area_law_exponent</span></span>(<span>state, chi_values: list[int] = [4, 8, 16, 32, 64]) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def estimate_area_law_exponent(
+    state,
+    chi_values: list[int] = [4, 8, 16, 32, 64],
+) -&gt; dict:
+    &#34;&#34;&#34;
+    Estimate the Area Law exponent from compression scaling.
+    
+    For true Area Law behavior, the error should scale as:
+        ε(χ) ~ exp(-α · χ^β)
+    
+    with β = 1 for exact area law (1D entanglement).
+    For volume law (generic states), β → 0.
+    
+    Args:
+        state: Euler2DState to analyze
+        chi_values: Bond dimensions to test
+        
+    Returns:
+        Dictionary with scaling exponents
+    &#34;&#34;&#34;
+    import math
+    
+    analysis = compression_analysis(state, chi_values, verbose=False)
+    
+    # Fit log-log for power law: log(ε) = -α * χ^β
+    # Approximate: fit log(ε) vs log(χ)
+    log_chi = [math.log(c) for c in chi_values]
+    log_err = [math.log(e + 1e-16) for e in analysis[&#39;rho_error&#39;]]
+    
+    # Simple linear regression
+    n = len(log_chi)
+    mean_x = sum(log_chi) / n
+    mean_y = sum(log_err) / n
+    
+    num = sum((x - mean_x) * (y - mean_y) for x, y in zip(log_chi, log_err))
+    den = sum((x - mean_x)**2 for x in log_chi)
+    
+    slope = num / den if den &gt; 0 else 0
+    intercept = mean_y - slope * mean_x
+    
+    return {
+        &#39;slope&#39;: slope,  # Negative slope indicates compression
+        &#39;intercept&#39;: intercept,
+        &#39;interpretation&#39;: (
+            &#34;Area Law&#34; if slope &lt; -0.5 else 
+            &#34;Volume Law&#34; if slope &gt; -0.1 else 
+            &#34;Intermediate&#34;
+        ),
+        &#39;raw_data&#39;: analysis
+    }</code></pre>
+</details>
+<div class="desc"><p>Estimate the Area Law exponent from compression scaling.</p>
+<p>For true Area Law behavior, the error should scale as:
+ε(χ) ~ exp(-α · χ^β)</p>
+<p>with β = 1 for exact area law (1D entanglement).
+For volume law (generic states), β → 0.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>state</code></strong></dt>
+<dd>Euler2DState to analyze</dd>
+<dt><strong><code>chi_values</code></strong></dt>
+<dd>Bond dimensions to test</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Dictionary with scaling exponents</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt.euler_to_qtt"><code class="name flex">
+<span>def <span class="ident">euler_to_qtt</span></span>(<span>state, chi_max: int = 32, tol: float = 1e-10, compress_together: bool = False) ‑> dict[str, <a title="tensornet.cfd.qtt.QTTCompressionResult" href="#tensornet.cfd.qtt.QTTCompressionResult">QTTCompressionResult</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def euler_to_qtt(
+    state,  # Euler2DState - avoid circular import
+    chi_max: int = 32,
+    tol: float = 1e-10,
+    compress_together: bool = False
+) -&gt; dict[str, QTTCompressionResult]:
+    &#34;&#34;&#34;
+    Compress full Euler2DState to QTT format.
+    
+    Compresses all four conservative variables (ρ, ρu, ρv, E) 
+    to separate QTT representations.
+    
+    Args:
+        state: Euler2DState with flow field data
+        chi_max: Maximum bond dimension per field
+        tol: Truncation tolerance
+        compress_together: If True, stack fields and compress as one
+        
+    Returns:
+        Dictionary mapping field names to QTTCompressionResult
+        
+    Example:
+        &gt;&gt;&gt; from tensornet.cfd.euler_2d import supersonic_wedge_ic
+        &gt;&gt;&gt; state = supersonic_wedge_ic(Nx=128, Ny=64, M_inf=5.0)
+        &gt;&gt;&gt; compressed = euler_to_qtt(state, chi_max=24)
+        &gt;&gt;&gt; for name, result in compressed.items():
+        ...     print(f&#34;{name}: {result.compression_ratio:.1f}x&#34;)
+    &#34;&#34;&#34;
+    # Get conservative variables
+    U = state.to_conservative()
+    
+    field_names = [&#39;rho&#39;, &#39;rho_u&#39;, &#39;rho_v&#39;, &#39;E&#39;]
+    results = {}
+    
+    for i, name in enumerate(field_names):
+        field = U[i]
+        results[name] = field_to_qtt(field, chi_max=chi_max, tol=tol)
+    
+    return results</code></pre>
+</details>
+<div class="desc"><p>Compress full Euler2DState to QTT format.</p>
+<p>Compresses all four conservative variables (ρ, ρu, ρv, E)
+to separate QTT representations.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>state</code></strong></dt>
+<dd>Euler2DState with flow field data</dd>
+<dt><strong><code>chi_max</code></strong></dt>
+<dd>Maximum bond dimension per field</dd>
+<dt><strong><code>tol</code></strong></dt>
+<dd>Truncation tolerance</dd>
+<dt><strong><code>compress_together</code></strong></dt>
+<dd>If True, stack fields and compress as one</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Dictionary mapping field names to QTTCompressionResult</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from tensornet.cfd.euler_2d import supersonic_wedge_ic
+&gt;&gt;&gt; state = supersonic_wedge_ic(Nx=128, Ny=64, M_inf=5.0)
+&gt;&gt;&gt; compressed = euler_to_qtt(state, chi_max=24)
+&gt;&gt;&gt; for name, result in compressed.items():
+...     print(f&quot;{name}: {result.compression_ratio:.1f}x&quot;)
+</code></pre></div>
+</dd>
+<dt id="tensornet.cfd.qtt.field_to_qtt"><code class="name flex">
+<span>def <span class="ident">field_to_qtt</span></span>(<span>field: Tensor, chi_max: int = 32, tol: float = 1e-10, normalize: bool = False) ‑> <a title="tensornet.cfd.qtt.QTTCompressionResult" href="#tensornet.cfd.qtt.QTTCompressionResult">QTTCompressionResult</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def field_to_qtt(
+    field: Tensor,
+    chi_max: int = 32,
+    tol: float = 1e-10,
+    normalize: bool = False  # Default False to preserve amplitude
+) -&gt; QTTCompressionResult:
+    &#34;&#34;&#34;
+    Compress a 2D field to Quantized Tensor Train (QTT) format.
+    
+    The field is reshaped into a tensor with 2×2×...×2 dimensions,
+    then decomposed via TT-SVD. This exploits the hierarchical 
+    structure in smooth fields for exponential compression.
+    
+    Args:
+        field: 2D tensor of shape (Ny, Nx)
+        chi_max: Maximum bond dimension
+        tol: Truncation tolerance
+        normalize: Normalize the MPS
+        
+    Returns:
+        QTTCompressionResult with compressed MPS and metadata
+        
+    Example:
+        &gt;&gt;&gt; field = torch.randn(64, 64)
+        &gt;&gt;&gt; result = field_to_qtt(field, chi_max=16)
+        &gt;&gt;&gt; print(f&#34;Compression: {result.compression_ratio:.1f}x&#34;)
+        &gt;&gt;&gt; reconstructed = qtt_to_field(result)
+    &#34;&#34;&#34;
+    original_shape = tuple(field.shape)
+    dtype = field.dtype
+    device = field.device
+    
+    # Flatten and pad to power of 2
+    flat = field.flatten()
+    N = flat.numel()
+    N_padded = _next_power_of_two(N)
+    
+    if N_padded &gt; N:
+        flat = _pad_to_power_of_two(flat, N_padded)
+    
+    # Determine number of qubits (each index is 2-dimensional)
+    num_qubits = int(math.log2(N_padded))
+    qtt_shape = tuple([2] * num_qubits)
+    
+    # TT-SVD decomposition
+    cores, truncation_error, field_norm = tt_svd(
+        flat, qtt_shape, chi_max=chi_max, tol=tol, normalize=normalize
+    )
+    
+    # Create MPS from cores
+    mps = MPS(cores)
+    
+    # Compute compression ratio
+    original_params = N
+    compressed_params = sum(c.numel() for c in cores)
+    compression_ratio = original_params / compressed_params
+    
+    bond_dims = [cores[0].shape[0]] + [c.shape[2] for c in cores[:-1]]
+    
+    return QTTCompressionResult(
+        mps=mps,
+        original_shape=original_shape,
+        compression_ratio=compression_ratio,
+        truncation_error=truncation_error,
+        num_qubits=num_qubits,
+        bond_dimensions=bond_dims,
+        norm=field_norm
+    )</code></pre>
+</details>
+<div class="desc"><p>Compress a 2D field to Quantized Tensor Train (QTT) format.</p>
+<p>The field is reshaped into a tensor with 2×2×&hellip;×2 dimensions,
+then decomposed via TT-SVD. This exploits the hierarchical
+structure in smooth fields for exponential compression.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>field</code></strong></dt>
+<dd>2D tensor of shape (Ny, Nx)</dd>
+<dt><strong><code>chi_max</code></strong></dt>
+<dd>Maximum bond dimension</dd>
+<dt><strong><code>tol</code></strong></dt>
+<dd>Truncation tolerance</dd>
+<dt><strong><code>normalize</code></strong></dt>
+<dd>Normalize the MPS</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>QTTCompressionResult with compressed MPS and metadata</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; field = torch.randn(64, 64)
+&gt;&gt;&gt; result = field_to_qtt(field, chi_max=16)
+&gt;&gt;&gt; print(f&quot;Compression: {result.compression_ratio:.1f}x&quot;)
+&gt;&gt;&gt; reconstructed = qtt_to_field(result)
+</code></pre></div>
+</dd>
+<dt id="tensornet.cfd.qtt.qtt_to_euler"><code class="name flex">
+<span>def <span class="ident">qtt_to_euler</span></span>(<span>compressed: dict[str, <a title="tensornet.cfd.qtt.QTTCompressionResult" href="#tensornet.cfd.qtt.QTTCompressionResult">QTTCompressionResult</a>],<br>gamma: float = 1.4)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def qtt_to_euler(
+    compressed: dict[str, QTTCompressionResult],
+    gamma: float = 1.4
+):
+    &#34;&#34;&#34;
+    Reconstruct Euler2DState from QTT-compressed fields.
+    
+    Args:
+        compressed: Dictionary from euler_to_qtt
+        gamma: Ratio of specific heats
+        
+    Returns:
+        Euler2DState reconstructed from compressed data
+    &#34;&#34;&#34;
+    # Import here to avoid circular dependency
+    from tensornet.cfd.euler_2d import Euler2DState
+    
+    # Reconstruct conservative variables
+    rho = qtt_to_field(compressed[&#39;rho&#39;])
+    rho_u = qtt_to_field(compressed[&#39;rho_u&#39;])
+    rho_v = qtt_to_field(compressed[&#39;rho_v&#39;])
+    E = qtt_to_field(compressed[&#39;E&#39;])
+    
+    # Convert to primitive
+    u = rho_u / rho
+    v = rho_v / rho
+    ke = 0.5 * rho * (u**2 + v**2)
+    p = (gamma - 1) * (E - ke)
+    
+    return Euler2DState(rho=rho, u=u, v=v, p=p, gamma=gamma)</code></pre>
+</details>
+<div class="desc"><p>Reconstruct Euler2DState from QTT-compressed fields.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>compressed</code></strong></dt>
+<dd>Dictionary from euler_to_qtt</dd>
+<dt><strong><code>gamma</code></strong></dt>
+<dd>Ratio of specific heats</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Euler2DState reconstructed from compressed data</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt.qtt_to_field"><code class="name flex">
+<span>def <span class="ident">qtt_to_field</span></span>(<span>result: <a title="tensornet.cfd.qtt.QTTCompressionResult" href="#tensornet.cfd.qtt.QTTCompressionResult">QTTCompressionResult</a>) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def qtt_to_field(result: QTTCompressionResult) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Reconstruct 2D field from QTT/MPS representation.
+    
+    Args:
+        result: QTTCompressionResult from field_to_qtt
+        
+    Returns:
+        Reconstructed 2D tensor with original shape
+    &#34;&#34;&#34;
+    # Contract MPS to get full tensor
+    mps = result.mps
+    
+    # Contract all cores to get the full vector
+    # Start with first core
+    vec = mps.tensors[0]  # (1, d, chi)
+    
+    for core in mps.tensors[1:]:
+        # vec: (..., chi_left)
+        # core: (chi_left, d, chi_right)
+        # Contract last dim of vec with first dim of core
+        vec = torch.tensordot(vec, core, dims=([-1], [0]))
+    
+    # vec is now (1, d1, d2, ..., dL, 1) - squeeze boundaries
+    vec = vec.squeeze(0).squeeze(-1)
+    
+    # Flatten to 1D
+    vec = vec.flatten()
+    
+    # Rescale by stored norm
+    vec = vec * result.norm
+    
+    # Unpad to original size
+    original_size = math.prod(result.original_shape)
+    vec = vec[:original_size]
+    
+    # Reshape to original dimensions
+    return vec.reshape(result.original_shape)</code></pre>
+</details>
+<div class="desc"><p>Reconstruct 2D field from QTT/MPS representation.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>result</code></strong></dt>
+<dd>QTTCompressionResult from field_to_qtt</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Reconstructed 2D tensor with original shape</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt.tt_svd"><code class="name flex">
+<span>def <span class="ident">tt_svd</span></span>(<span>tensor: Tensor,<br>shape: tuple[int, ...],<br>chi_max: Optional[int] = None,<br>tol: float = 1e-10,<br>normalize: bool = True) ‑> tuple[list[torch.Tensor], float]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def tt_svd(
+    tensor: Tensor,
+    shape: tuple[int, ...],
+    chi_max: Optional[int] = None,
+    tol: float = 1e-10,
+    normalize: bool = True
+) -&gt; tuple[list[Tensor], float]:
+    &#34;&#34;&#34;
+    Tensor Train SVD decomposition.
+    
+    Decomposes a tensor T[i₁,i₂,...,i_L] into a train of tensors:
+    T ≈ A₁[i₁] · A₂[i₂] · ... · A_L[i_L]
+    
+    where each A_k has shape (χ_{k-1}, d_k, χ_k).
+    
+    Args:
+        tensor: Input tensor (will be reshaped to `shape`)
+        shape: Target shape for TT decomposition
+        chi_max: Maximum bond dimension
+        tol: Truncation tolerance (relative to Frobenius norm)
+        normalize: Whether to normalize the result
+        
+    Returns:
+        Tuple of (list of TT cores, total truncation error)
+    &#34;&#34;&#34;
+    L = len(shape)
+    dtype = tensor.dtype
+    device = tensor.device
+    
+    if chi_max is None:
+        chi_max = 2 ** (L // 2)  # Reasonable default
+    
+    # Reshape tensor to target shape
+    T = tensor.reshape(shape)
+    
+    cores = []
+    total_error = 0.0
+    frobenius_norm = torch.norm(T).item()
+    
+    # Left-to-right sweep with SVD truncation
+    current = T.reshape(shape[0], -1)
+    chi_left = 1
+    
+    for k in range(L - 1):
+        # Reshape for SVD: (χ_left * d_k, remaining)
+        d_k = shape[k]
+        current = current.reshape(chi_left * d_k, -1)
+        
+        # Truncated SVD
+        U, S, Vh = torch.linalg.svd(current, full_matrices=False)
+        
+        # Determine truncation
+        if tol &gt; 0 and len(S) &gt; 1:
+            # Keep singular values above tolerance
+            cumsum = torch.cumsum(S**2, dim=0)
+            total_sq = cumsum[-1].item()
+            # Find cutoff where error &lt; tol * ||T||_F
+            threshold = tol**2 * frobenius_norm**2
+            # Simple loop to find cutoff (more robust than searchsorted)
+            keep = len(S)
+            for i in range(len(S) - 1, 0, -1):
+                tail_sq = total_sq - cumsum[i - 1].item()
+                if tail_sq &gt; threshold:
+                    keep = i + 1
+                    break
+                keep = i
+            keep = max(1, min(keep, chi_max))
+        else:
+            keep = min(chi_max, len(S))
+        
+        # Truncate
+        U = U[:, :keep]
+        S_kept = S[:keep]
+        Vh = Vh[:keep, :]
+        
+        # Track error (from truncated singular values)
+        if keep &lt; len(S):
+            error = torch.sqrt(torch.sum(S[keep:]**2)).item()
+            total_error += error**2
+        
+        # Form core tensor: (χ_left, d_k, χ_right)
+        core = U.reshape(chi_left, d_k, keep)
+        cores.append(core)
+        
+        # Propagate S @ Vh for next iteration
+        current = torch.diag(S_kept) @ Vh
+        chi_left = keep
+    
+    # Last core
+    d_last = shape[-1]
+    last_core = current.reshape(chi_left, d_last, 1)
+    cores.append(last_core)
+    
+    total_error = math.sqrt(total_error)
+    
+    # Compute norm for later reconstruction
+    final_norm = torch.norm(cores[-1]).item()
+    
+    # Normalize if requested (but return the norm for rescaling)
+    if normalize and final_norm &gt; 0:
+        cores[-1] = cores[-1] / final_norm
+    else:
+        final_norm = 1.0
+    
+    return cores, total_error, final_norm</code></pre>
+</details>
+<div class="desc"><p>Tensor Train SVD decomposition.</p>
+<p>Decomposes a tensor T[i₁,i₂,&hellip;,i_L] into a train of tensors:
+T ≈ A₁[i₁] · A₂[i₂] · &hellip; · A_L[i_L]</p>
+<p>where each A_k has shape (χ_{k-1}, d_k, χ_k).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tensor</code></strong></dt>
+<dd>Input tensor (will be reshaped to <code>shape</code>)</dd>
+<dt><strong><code>shape</code></strong></dt>
+<dd>Target shape for TT decomposition</dd>
+<dt><strong><code>chi_max</code></strong></dt>
+<dd>Maximum bond dimension</dd>
+<dt><strong><code>tol</code></strong></dt>
+<dd>Truncation tolerance (relative to Frobenius norm)</dd>
+<dt><strong><code>normalize</code></strong></dt>
+<dd>Whether to normalize the result</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Tuple of (list of TT cores, total truncation error)</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.cfd.qtt.QTTCompressionResult"><code class="flex name class">
+<span>class <span class="ident">QTTCompressionResult</span></span>
+<span>(</span><span>mps: MPS,<br>original_shape: tuple[int, ...],<br>compression_ratio: float,<br>truncation_error: float,<br>num_qubits: int,<br>bond_dimensions: list[int],<br>norm: float = 1.0)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class QTTCompressionResult:
+    &#34;&#34;&#34;Result container for QTT compression.&#34;&#34;&#34;
+    mps: MPS
+    original_shape: tuple[int, ...]
+    compression_ratio: float
+    truncation_error: float
+    num_qubits: int
+    bond_dimensions: list[int]
+    norm: float = 1.0  # Store original norm for reconstruction
+    
+    def __repr__(self) -&gt; str:
+        return (f&#34;QTTCompressionResult(shape={self.original_shape}, &#34;
+                f&#34;CR={self.compression_ratio:.2f}x, &#34;
+                f&#34;error={self.truncation_error:.2e}, &#34;
+                f&#34;χ_max={max(self.bond_dimensions)})&#34;)</code></pre>
+</details>
+<div class="desc"><p>Result container for QTT compression.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.qtt.QTTCompressionResult.bond_dimensions"><code class="name">var <span class="ident">bond_dimensions</span> : list[int]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.qtt.QTTCompressionResult.compression_ratio"><code class="name">var <span class="ident">compression_ratio</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.qtt.QTTCompressionResult.mps"><code class="name">var <span class="ident">mps</span> : tensornet.core.mps.MPS</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.qtt.QTTCompressionResult.norm"><code class="name">var <span class="ident">norm</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.qtt.QTTCompressionResult.num_qubits"><code class="name">var <span class="ident">num_qubits</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.qtt.QTTCompressionResult.original_shape"><code class="name">var <span class="ident">original_shape</span> : tuple[int, ...]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.qtt.QTTCompressionResult.truncation_error"><code class="name">var <span class="ident">truncation_error</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#quantized-tensor-train-qtt-for-cfd-field-compression">Quantized Tensor Train (QTT) for CFD Field Compression</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.qtt.compression_analysis" href="#tensornet.cfd.qtt.compression_analysis">compression_analysis</a></code></li>
+<li><code><a title="tensornet.cfd.qtt.estimate_area_law_exponent" href="#tensornet.cfd.qtt.estimate_area_law_exponent">estimate_area_law_exponent</a></code></li>
+<li><code><a title="tensornet.cfd.qtt.euler_to_qtt" href="#tensornet.cfd.qtt.euler_to_qtt">euler_to_qtt</a></code></li>
+<li><code><a title="tensornet.cfd.qtt.field_to_qtt" href="#tensornet.cfd.qtt.field_to_qtt">field_to_qtt</a></code></li>
+<li><code><a title="tensornet.cfd.qtt.qtt_to_euler" href="#tensornet.cfd.qtt.qtt_to_euler">qtt_to_euler</a></code></li>
+<li><code><a title="tensornet.cfd.qtt.qtt_to_field" href="#tensornet.cfd.qtt.qtt_to_field">qtt_to_field</a></code></li>
+<li><code><a title="tensornet.cfd.qtt.tt_svd" href="#tensornet.cfd.qtt.tt_svd">tt_svd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.cfd.qtt.QTTCompressionResult" href="#tensornet.cfd.qtt.QTTCompressionResult">QTTCompressionResult</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.qtt.QTTCompressionResult.bond_dimensions" href="#tensornet.cfd.qtt.QTTCompressionResult.bond_dimensions">bond_dimensions</a></code></li>
+<li><code><a title="tensornet.cfd.qtt.QTTCompressionResult.compression_ratio" href="#tensornet.cfd.qtt.QTTCompressionResult.compression_ratio">compression_ratio</a></code></li>
+<li><code><a title="tensornet.cfd.qtt.QTTCompressionResult.mps" href="#tensornet.cfd.qtt.QTTCompressionResult.mps">mps</a></code></li>
+<li><code><a title="tensornet.cfd.qtt.QTTCompressionResult.norm" href="#tensornet.cfd.qtt.QTTCompressionResult.norm">norm</a></code></li>
+<li><code><a title="tensornet.cfd.qtt.QTTCompressionResult.num_qubits" href="#tensornet.cfd.qtt.QTTCompressionResult.num_qubits">num_qubits</a></code></li>
+<li><code><a title="tensornet.cfd.qtt.QTTCompressionResult.original_shape" href="#tensornet.cfd.qtt.QTTCompressionResult.original_shape">original_shape</a></code></li>
+<li><code><a title="tensornet.cfd.qtt.QTTCompressionResult.truncation_error" href="#tensornet.cfd.qtt.QTTCompressionResult.truncation_error">truncation_error</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

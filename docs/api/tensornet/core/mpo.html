@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.core.mpo API documentation</title>
+<meta name="description" content="Matrix Product Operator (MPO)
+…">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.core.mpo</code></h1>
+</header>
+<section id="section-intro">
+<h1 id="matrix-product-operator-mpo">Matrix Product Operator (MPO)</h1>
+<p>MPO representation for operators on 1D systems (Hamiltonians, time evolution).</p>
+<p>Tensor convention:
+W[i] : (D_left, d_out, d_in, D_right)</p>
+<pre><code>Operator O = Σ W[0]_{1,σ₀,σ'₀,α₀} W[1]_{α₀,σ₁,σ'₁,α₁} ... |σ⟩⟨σ'|
+</code></pre>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.core.mpo.mpo_sum"><code class="name flex">
+<span>def <span class="ident">mpo_sum</span></span>(<span>mpo1: <a title="tensornet.core.mpo.MPO" href="#tensornet.core.mpo.MPO">MPO</a>,<br>mpo2: <a title="tensornet.core.mpo.MPO" href="#tensornet.core.mpo.MPO">MPO</a>) ‑> <a title="tensornet.core.mpo.MPO" href="#tensornet.core.mpo.MPO">MPO</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mpo_sum(mpo1: MPO, mpo2: MPO) -&gt; MPO:
+    &#34;&#34;&#34;
+    Sum two MPOs: O = O1 + O2.
+    
+    Result has bond dimension D1 + D2.
+    
+    Args:
+        mpo1: First MPO
+        mpo2: Second MPO
+        
+    Returns:
+        Sum MPO
+    &#34;&#34;&#34;
+    L = mpo1.L
+    assert mpo2.L == L
+    
+    tensors = []
+    
+    for i in range(L):
+        W1 = mpo1.tensors[i]
+        W2 = mpo2.tensors[i]
+        
+        D1_l, d, _, D1_r = W1.shape
+        D2_l, _, _, D2_r = W2.shape
+        
+        if i == 0:
+            # First site: concatenate along right bond
+            W = torch.cat([W1, W2], dim=3)
+        elif i == L - 1:
+            # Last site: concatenate along left bond
+            W = torch.cat([W1, W2], dim=0)
+        else:
+            # Bulk: block diagonal
+            W = torch.zeros(
+                D1_l + D2_l, d, d, D1_r + D2_r,
+                dtype=W1.dtype, device=W1.device
+            )
+            W[:D1_l, :, :, :D1_r] = W1
+            W[D1_l:, :, :, D1_r:] = W2
+        
+        tensors.append(W)
+    
+    return MPO(tensors)</code></pre>
+</details>
+<div class="desc"><p>Sum two MPOs: O = O1 + O2.</p>
+<p>Result has bond dimension D1 + D2.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mpo1</code></strong></dt>
+<dd>First MPO</dd>
+<dt><strong><code>mpo2</code></strong></dt>
+<dd>Second MPO</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Sum MPO</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.core.mpo.MPO"><code class="flex name class">
+<span>class <span class="ident">MPO</span></span>
+<span>(</span><span>tensors: List[Tensor])</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MPO:
+    &#34;&#34;&#34;
+    Matrix Product Operator representation.
+    
+    Used for Hamiltonians, time evolution operators, and observables.
+    
+    Attributes:
+        tensors: List of tensors W[i] with shape (D_left, d_out, d_in, D_right)
+        L: Number of sites
+        d: Physical dimension
+        D: Maximum MPO bond dimension
+        
+    Example:
+        &gt;&gt;&gt; from tensornet import heisenberg_mpo
+        &gt;&gt;&gt; H = heisenberg_mpo(L=10, J=1.0)
+        &gt;&gt;&gt; print(f&#34;MPO bond dimension: {H.D}&#34;)
+    &#34;&#34;&#34;
+    
+    def __init__(self, tensors: List[Tensor]):
+        &#34;&#34;&#34;
+        Initialize MPO from list of tensors.
+        
+        Args:
+            tensors: List of tensors with shape (D_left, d_out, d_in, D_right)
+        &#34;&#34;&#34;
+        self.tensors = tensors
+    
+    @property
+    def L(self) -&gt; int:
+        &#34;&#34;&#34;Number of sites.&#34;&#34;&#34;
+        return len(self.tensors)
+    
+    @property
+    def d(self) -&gt; int:
+        &#34;&#34;&#34;Physical dimension.&#34;&#34;&#34;
+        return self.tensors[0].shape[1]
+    
+    @property
+    def D(self) -&gt; int:
+        &#34;&#34;&#34;Maximum MPO bond dimension.&#34;&#34;&#34;
+        return max(
+            max(t.shape[0], t.shape[3]) for t in self.tensors
+        )
+    
+    @property
+    def dtype(self) -&gt; torch.dtype:
+        &#34;&#34;&#34;Data type.&#34;&#34;&#34;
+        return self.tensors[0].dtype
+    
+    @property
+    def device(self) -&gt; torch.device:
+        &#34;&#34;&#34;Device.&#34;&#34;&#34;
+        return self.tensors[0].device
+    
+    def to_matrix(self) -&gt; Tensor:
+        &#34;&#34;&#34;
+        Contract MPO to dense matrix.
+        
+        Warning: Exponential in L. Only for small systems.
+        
+        Returns:
+            Dense matrix of shape (d^L, d^L)
+        &#34;&#34;&#34;
+        # Start with first tensor
+        result = self.tensors[0]  # (1, d, d, D)
+        
+        for i in range(1, self.L):
+            # Contract bond indices
+            result = torch.einsum(&#39;...ija,aklb-&gt;...ikjlb&#39;, result, self.tensors[i])
+            # Merge physical indices
+            shape = result.shape
+            result = result.reshape(
+                *shape[:-5],
+                shape[-5] * shape[-4],
+                shape[-3] * shape[-2],
+                shape[-1]
+            )
+        
+        # Remove boundary bonds and reshape
+        result = result.squeeze(0).squeeze(-1)
+        return result
+    
+    def apply(self, mps) -&gt; &#39;MPS&#39;:
+        &#34;&#34;&#34;
+        Apply MPO to MPS: |ψ&#39;⟩ = O|ψ⟩
+        
+        The result has bond dimension χ * D.
+        
+        Args:
+            mps: Input MPS
+            
+        Returns:
+            New MPS with O applied
+        &#34;&#34;&#34;
+        from tensornet.core.mps import MPS
+        
+        new_tensors = []
+        
+        for i in range(self.L):
+            A = mps.tensors[i]  # (χ_l, d, χ_r)
+            W = self.tensors[i]  # (D_l, d_out, d_in, D_r)
+            
+            # Contract physical index
+            # B_{(χ_l,D_l), d_out, (χ_r,D_r)} = Σ_d W_{D_l,d_out,d,D_r} A_{χ_l,d,χ_r}
+            B = torch.einsum(&#39;αβγδ,ιγκ-&gt;ιαβκδ&#39;, W, A)
+            
+            # Reshape to combined bond dimensions
+            chi_l, D_l = A.shape[0], W.shape[0]
+            d_out = W.shape[1]
+            chi_r, D_r = A.shape[2], W.shape[3]
+            
+            B = B.reshape(chi_l * D_l, d_out, chi_r * D_r)
+            new_tensors.append(B)
+        
+        return MPS(new_tensors)
+    
+    def expectation(self, mps) -&gt; Tensor:
+        &#34;&#34;&#34;
+        Compute ⟨ψ|O|ψ⟩.
+        
+        Args:
+            mps: MPS state
+            
+        Returns:
+            Expectation value
+        &#34;&#34;&#34;
+        # Contract environments from left
+        # env[a,w,b]: (χ_ket, D_mpo, χ_bra) represents contracted sites 0..i-1
+        # a = ket left bond, w = mpo left bond, b = bra left bond
+        
+        chi_l = mps.tensors[0].shape[0]
+        D_l = self.tensors[0].shape[0]
+        env = torch.zeros(chi_l, D_l, chi_l, dtype=self.dtype, device=self.device)
+        env[0, 0, 0] = 1.0
+        
+        for i in range(self.L):
+            A = mps.tensors[i]      # (χ_l, d, χ_r) = [a, s, c]
+            W = self.tensors[i]     # (D_l, d_out, d_in, D_r) = [w, t, s, x]
+            A_conj = A.conj()       # [b, t, d]
+            
+            # Contract: env[a,w,b] A[a,s,c] W[w,t,s,x] A*[b,t,d] -&gt; new_env[c,x,d]
+            # Step 1: env[a,w,b] A[a,s,c] -&gt; [w,b,s,c]
+            temp1 = torch.einsum(&#39;awb,asc-&gt;wbsc&#39;, env, A)
+            # Step 2: [w,b,s,c] W[w,t,s,x] -&gt; [b,t,c,x]
+            temp2 = torch.einsum(&#39;wbsc,wtsx-&gt;btcx&#39;, temp1, W)
+            # Step 3: [b,t,c,x] A*[b,t,d] -&gt; [c,x,d]
+            env = torch.einsum(&#39;btcx,btd-&gt;cxd&#39;, temp2, A_conj)
+        
+        # Final contraction - env should be (1, 1, 1)
+        return env.squeeze()
+    
+    def is_hermitian(self, tol: float = 1e-10) -&gt; bool:
+        &#34;&#34;&#34;
+        Check if MPO is Hermitian.
+        
+        Args:
+            tol: Tolerance for comparison
+            
+        Returns:
+            True if H = H†
+        &#34;&#34;&#34;
+        H = self.to_matrix()
+        return torch.allclose(H, H.T.conj(), atol=tol)
+    
+    def copy(self) -&gt; MPO:
+        &#34;&#34;&#34;Return deep copy.&#34;&#34;&#34;
+        return MPO([t.clone() for t in self.tensors])
+    
+    def __repr__(self) -&gt; str:
+        return f&#34;MPO(L={self.L}, d={self.d}, D={self.D}, dtype={self.dtype})&#34;</code></pre>
+</details>
+<div class="desc"><p>Matrix Product Operator representation.</p>
+<p>Used for Hamiltonians, time evolution operators, and observables.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>tensors</code></strong></dt>
+<dd>List of tensors W[i] with shape (D_left, d_out, d_in, D_right)</dd>
+<dt><strong><code>L</code></strong></dt>
+<dd>Number of sites</dd>
+<dt><strong><code>d</code></strong></dt>
+<dd>Physical dimension</dd>
+<dt><strong><code>D</code></strong></dt>
+<dd>Maximum MPO bond dimension</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from tensornet import heisenberg_mpo
+&gt;&gt;&gt; H = heisenberg_mpo(L=10, J=1.0)
+&gt;&gt;&gt; print(f&quot;MPO bond dimension: {H.D}&quot;)
+</code></pre>
+<p>Initialize MPO from list of tensors.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tensors</code></strong></dt>
+<dd>List of tensors with shape (D_left, d_out, d_in, D_right)</dd>
+</dl></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.core.mpo.MPO.D"><code class="name">prop <span class="ident">D</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def D(self) -&gt; int:
+    &#34;&#34;&#34;Maximum MPO bond dimension.&#34;&#34;&#34;
+    return max(
+        max(t.shape[0], t.shape[3]) for t in self.tensors
+    )</code></pre>
+</details>
+<div class="desc"><p>Maximum MPO bond dimension.</p></div>
+</dd>
+<dt id="tensornet.core.mpo.MPO.L"><code class="name">prop <span class="ident">L</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def L(self) -&gt; int:
+    &#34;&#34;&#34;Number of sites.&#34;&#34;&#34;
+    return len(self.tensors)</code></pre>
+</details>
+<div class="desc"><p>Number of sites.</p></div>
+</dd>
+<dt id="tensornet.core.mpo.MPO.d"><code class="name">prop <span class="ident">d</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def d(self) -&gt; int:
+    &#34;&#34;&#34;Physical dimension.&#34;&#34;&#34;
+    return self.tensors[0].shape[1]</code></pre>
+</details>
+<div class="desc"><p>Physical dimension.</p></div>
+</dd>
+<dt id="tensornet.core.mpo.MPO.device"><code class="name">prop <span class="ident">device</span> : torch.device</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def device(self) -&gt; torch.device:
+    &#34;&#34;&#34;Device.&#34;&#34;&#34;
+    return self.tensors[0].device</code></pre>
+</details>
+<div class="desc"><p>Device.</p></div>
+</dd>
+<dt id="tensornet.core.mpo.MPO.dtype"><code class="name">prop <span class="ident">dtype</span> : torch.dtype</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def dtype(self) -&gt; torch.dtype:
+    &#34;&#34;&#34;Data type.&#34;&#34;&#34;
+    return self.tensors[0].dtype</code></pre>
+</details>
+<div class="desc"><p>Data type.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.core.mpo.MPO.apply"><code class="name flex">
+<span>def <span class="ident">apply</span></span>(<span>self, mps) ‑> 'MPS'</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def apply(self, mps) -&gt; &#39;MPS&#39;:
+    &#34;&#34;&#34;
+    Apply MPO to MPS: |ψ&#39;⟩ = O|ψ⟩
+    
+    The result has bond dimension χ * D.
+    
+    Args:
+        mps: Input MPS
+        
+    Returns:
+        New MPS with O applied
+    &#34;&#34;&#34;
+    from tensornet.core.mps import MPS
+    
+    new_tensors = []
+    
+    for i in range(self.L):
+        A = mps.tensors[i]  # (χ_l, d, χ_r)
+        W = self.tensors[i]  # (D_l, d_out, d_in, D_r)
+        
+        # Contract physical index
+        # B_{(χ_l,D_l), d_out, (χ_r,D_r)} = Σ_d W_{D_l,d_out,d,D_r} A_{χ_l,d,χ_r}
+        B = torch.einsum(&#39;αβγδ,ιγκ-&gt;ιαβκδ&#39;, W, A)
+        
+        # Reshape to combined bond dimensions
+        chi_l, D_l = A.shape[0], W.shape[0]
+        d_out = W.shape[1]
+        chi_r, D_r = A.shape[2], W.shape[3]
+        
+        B = B.reshape(chi_l * D_l, d_out, chi_r * D_r)
+        new_tensors.append(B)
+    
+    return MPS(new_tensors)</code></pre>
+</details>
+<div class="desc"><p>Apply MPO to MPS: |ψ'⟩ = O|ψ⟩</p>
+<p>The result has bond dimension χ * D.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mps</code></strong></dt>
+<dd>Input MPS</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>New MPS with O applied</p></div>
+</dd>
+<dt id="tensornet.core.mpo.MPO.copy"><code class="name flex">
+<span>def <span class="ident">copy</span></span>(<span>self) ‑> <a title="tensornet.core.mpo.MPO" href="#tensornet.core.mpo.MPO">MPO</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def copy(self) -&gt; MPO:
+    &#34;&#34;&#34;Return deep copy.&#34;&#34;&#34;
+    return MPO([t.clone() for t in self.tensors])</code></pre>
+</details>
+<div class="desc"><p>Return deep copy.</p></div>
+</dd>
+<dt id="tensornet.core.mpo.MPO.expectation"><code class="name flex">
+<span>def <span class="ident">expectation</span></span>(<span>self, mps) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def expectation(self, mps) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Compute ⟨ψ|O|ψ⟩.
+    
+    Args:
+        mps: MPS state
+        
+    Returns:
+        Expectation value
+    &#34;&#34;&#34;
+    # Contract environments from left
+    # env[a,w,b]: (χ_ket, D_mpo, χ_bra) represents contracted sites 0..i-1
+    # a = ket left bond, w = mpo left bond, b = bra left bond
+    
+    chi_l = mps.tensors[0].shape[0]
+    D_l = self.tensors[0].shape[0]
+    env = torch.zeros(chi_l, D_l, chi_l, dtype=self.dtype, device=self.device)
+    env[0, 0, 0] = 1.0
+    
+    for i in range(self.L):
+        A = mps.tensors[i]      # (χ_l, d, χ_r) = [a, s, c]
+        W = self.tensors[i]     # (D_l, d_out, d_in, D_r) = [w, t, s, x]
+        A_conj = A.conj()       # [b, t, d]
+        
+        # Contract: env[a,w,b] A[a,s,c] W[w,t,s,x] A*[b,t,d] -&gt; new_env[c,x,d]
+        # Step 1: env[a,w,b] A[a,s,c] -&gt; [w,b,s,c]
+        temp1 = torch.einsum(&#39;awb,asc-&gt;wbsc&#39;, env, A)
+        # Step 2: [w,b,s,c] W[w,t,s,x] -&gt; [b,t,c,x]
+        temp2 = torch.einsum(&#39;wbsc,wtsx-&gt;btcx&#39;, temp1, W)
+        # Step 3: [b,t,c,x] A*[b,t,d] -&gt; [c,x,d]
+        env = torch.einsum(&#39;btcx,btd-&gt;cxd&#39;, temp2, A_conj)
+    
+    # Final contraction - env should be (1, 1, 1)
+    return env.squeeze()</code></pre>
+</details>
+<div class="desc"><p>Compute ⟨ψ|O|ψ⟩.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mps</code></strong></dt>
+<dd>MPS state</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Expectation value</p></div>
+</dd>
+<dt id="tensornet.core.mpo.MPO.is_hermitian"><code class="name flex">
+<span>def <span class="ident">is_hermitian</span></span>(<span>self, tol: float = 1e-10) ‑> bool</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_hermitian(self, tol: float = 1e-10) -&gt; bool:
+    &#34;&#34;&#34;
+    Check if MPO is Hermitian.
+    
+    Args:
+        tol: Tolerance for comparison
+        
+    Returns:
+        True if H = H†
+    &#34;&#34;&#34;
+    H = self.to_matrix()
+    return torch.allclose(H, H.T.conj(), atol=tol)</code></pre>
+</details>
+<div class="desc"><p>Check if MPO is Hermitian.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tol</code></strong></dt>
+<dd>Tolerance for comparison</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>True if H = H†</p></div>
+</dd>
+<dt id="tensornet.core.mpo.MPO.to_matrix"><code class="name flex">
+<span>def <span class="ident">to_matrix</span></span>(<span>self) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_matrix(self) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Contract MPO to dense matrix.
+    
+    Warning: Exponential in L. Only for small systems.
+    
+    Returns:
+        Dense matrix of shape (d^L, d^L)
+    &#34;&#34;&#34;
+    # Start with first tensor
+    result = self.tensors[0]  # (1, d, d, D)
+    
+    for i in range(1, self.L):
+        # Contract bond indices
+        result = torch.einsum(&#39;...ija,aklb-&gt;...ikjlb&#39;, result, self.tensors[i])
+        # Merge physical indices
+        shape = result.shape
+        result = result.reshape(
+            *shape[:-5],
+            shape[-5] * shape[-4],
+            shape[-3] * shape[-2],
+            shape[-1]
+        )
+    
+    # Remove boundary bonds and reshape
+    result = result.squeeze(0).squeeze(-1)
+    return result</code></pre>
+</details>
+<div class="desc"><p>Contract MPO to dense matrix.</p>
+<p>Warning: Exponential in L. Only for small systems.</p>
+<h2 id="returns">Returns</h2>
+<p>Dense matrix of shape (d^L, d^L)</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#matrix-product-operator-mpo">Matrix Product Operator (MPO)</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.core" href="index.html">tensornet.core</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.core.mpo.mpo_sum" href="#tensornet.core.mpo.mpo_sum">mpo_sum</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.core.mpo.MPO" href="#tensornet.core.mpo.MPO">MPO</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.core.mpo.MPO.D" href="#tensornet.core.mpo.MPO.D">D</a></code></li>
+<li><code><a title="tensornet.core.mpo.MPO.L" href="#tensornet.core.mpo.MPO.L">L</a></code></li>
+<li><code><a title="tensornet.core.mpo.MPO.apply" href="#tensornet.core.mpo.MPO.apply">apply</a></code></li>
+<li><code><a title="tensornet.core.mpo.MPO.copy" href="#tensornet.core.mpo.MPO.copy">copy</a></code></li>
+<li><code><a title="tensornet.core.mpo.MPO.d" href="#tensornet.core.mpo.MPO.d">d</a></code></li>
+<li><code><a title="tensornet.core.mpo.MPO.device" href="#tensornet.core.mpo.MPO.device">device</a></code></li>
+<li><code><a title="tensornet.core.mpo.MPO.dtype" href="#tensornet.core.mpo.MPO.dtype">dtype</a></code></li>
+<li><code><a title="tensornet.core.mpo.MPO.expectation" href="#tensornet.core.mpo.MPO.expectation">expectation</a></code></li>
+<li><code><a title="tensornet.core.mpo.MPO.is_hermitian" href="#tensornet.core.mpo.MPO.is_hermitian">is_hermitian</a></code></li>
+<li><code><a title="tensornet.core.mpo.MPO.to_matrix" href="#tensornet.core.mpo.MPO.to_matrix">to_matrix</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

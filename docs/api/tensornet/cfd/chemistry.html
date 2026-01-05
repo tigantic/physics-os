@@ -1,0 +1,1061 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.chemistry API documentation</title>
+<meta name="description" content="Multi-Species Chemistry for High-Temperature Air
+…">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.chemistry</code></h1>
+</header>
+<section id="section-intro">
+<h1 id="multi-species-chemistry-for-high-temperature-air">Multi-Species Chemistry for High-Temperature Air</h1>
+<p>Implements finite-rate chemistry for 5-species air model
+used in hypersonic reentry simulations.</p>
+<h2 id="species">Species</h2>
+<p>N₂, O₂, N, O, NO</p>
+<p>Reactions (Park Two-Temperature Model):
+1. O₂ + M ⇌ 2O + M
+(O₂ dissociation)
+2. N₂ + M ⇌ 2N + M
+(N₂ dissociation)
+3. NO + M ⇌ N + O + M
+(NO dissociation)
+4. N₂ + O ⇌ NO + N
+(Zeldovich NO)
+5. NO + O ⇌ O₂ + N
+(Zeldovich NO)</p>
+<p>Key Features:
+- Arrhenius rate coefficients
+- Third-body efficiencies
+- Equilibrium constants from curve fits
+- Species mass production rates</p>
+<h2 id="references">References</h2>
+<p>[1] Park, C., "Review of Chemical-Kinetic Problems of Future
+NASA Missions, I: Earth Entries", JTHT 7(3), 1993
+[2] Gupta et al., "A Review of Reaction Rates and Thermodynamic
+Transport Properties for 11-Species Air", NASA RP-1232, 1990
+[3] Gnoffo et al., "Conservation Equations and Physical Models
+for Hypersonic Air Flows", NASA TP-2867, 1989</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.chemistry.advance_chemistry_explicit"><code class="name flex">
+<span>def <span class="ident">advance_chemistry_explicit</span></span>(<span>state: <a title="tensornet.cfd.chemistry.ChemistryState" href="#tensornet.cfd.chemistry.ChemistryState">ChemistryState</a>,<br>dt: float) ‑> <a title="tensornet.cfd.chemistry.ChemistryState" href="#tensornet.cfd.chemistry.ChemistryState">ChemistryState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance_chemistry_explicit(
+    state: ChemistryState,
+    dt: float
+) -&gt; ChemistryState:
+    &#34;&#34;&#34;
+    Advance chemistry with explicit Euler (for testing only).
+    
+    WARNING: Chemistry is typically stiff and requires implicit methods.
+    This is provided for simple cases only.
+    
+    Args:
+        state: Current state
+        dt: Timestep [s]
+        
+    Returns:
+        Updated state
+    &#34;&#34;&#34;
+    concentrations = state.concentrations()
+    omega, heat_release = compute_reaction_rates(state.T, concentrations)
+    
+    # Update mass fractions
+    Y_new = {}
+    for species in Species:
+        dY_dt = omega[species] / state.rho
+        Y_new[species] = state.Y[species] + dt * dY_dt
+        # Clip to physical bounds
+        Y_new[species] = torch.clamp(Y_new[species], min=0.0)
+    
+    # Renormalize
+    Y_sum = sum(Y_new.values())
+    for species in Species:
+        Y_new[species] = Y_new[species] / Y_sum
+    
+    # Update temperature (adiabatic)
+    # dT/dt = -Σᵢ ω̇ᵢ hᵢ / (ρ cₚ)
+    # Simplified: assume constant cₚ
+    cp_mix = 1000.0  # Approximate [J/(kg·K)]
+    dT_dt = -heat_release / (state.rho * cp_mix)
+    T_new = state.T + dt * dT_dt
+    T_new = torch.clamp(T_new, min=200.0)  # Lower bound
+    
+    # Update pressure from EOS
+    M_mix = 1.0 / sum(Y_new[s] / MW[s] for s in Species)
+    R_mix = R_UNIVERSAL / M_mix
+    p_new = state.rho * R_mix * T_new
+    
+    return ChemistryState(
+        rho=state.rho.clone(),
+        Y=Y_new,
+        T=T_new,
+        p=p_new,
+    )</code></pre>
+</details>
+<div class="desc"><p>Advance chemistry with explicit Euler (for testing only).</p>
+<p>WARNING: Chemistry is typically stiff and requires implicit methods.
+This is provided for simple cases only.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>state</code></strong></dt>
+<dd>Current state</dd>
+<dt><strong><code>dt</code></strong></dt>
+<dd>Timestep [s]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Updated state</p></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.air_5species_ic"><code class="name flex">
+<span>def <span class="ident">air_5species_ic</span></span>(<span>shape: torch.Size,<br>T: float = 300.0,<br>p: float = 101325.0,<br>Y_N2: float = 0.767,<br>Y_O2: float = 0.233) ‑> <a title="tensornet.cfd.chemistry.ChemistryState" href="#tensornet.cfd.chemistry.ChemistryState">ChemistryState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def air_5species_ic(
+    shape: torch.Size,
+    T: float = 300.0,
+    p: float = 101325.0,
+    Y_N2: float = 0.767,
+    Y_O2: float = 0.233,
+) -&gt; ChemistryState:
+    &#34;&#34;&#34;
+    Create initial condition for 5-species air.
+    
+    Default is standard atmospheric composition:
+        N₂: 76.7% by mass
+        O₂: 23.3% by mass
+        N, O, NO: 0%
+    
+    Args:
+        shape: Tensor shape (Ny, Nx)
+        T: Temperature [K]
+        p: Pressure [Pa]
+        Y_N2: Mass fraction of N₂
+        Y_O2: Mass fraction of O₂
+        
+    Returns:
+        ChemistryState initial condition
+    &#34;&#34;&#34;
+    # Mixture molecular weight
+    M_mix = 1.0 / (Y_N2 / MW[Species.N2] + Y_O2 / MW[Species.O2])
+    
+    # Density from ideal gas law
+    R_mix = R_UNIVERSAL / M_mix
+    rho = p / (R_mix * T)
+    
+    return ChemistryState(
+        rho=torch.full(shape, rho, dtype=torch.float64),
+        Y={
+            Species.N2: torch.full(shape, Y_N2, dtype=torch.float64),
+            Species.O2: torch.full(shape, Y_O2, dtype=torch.float64),
+            Species.NO: torch.zeros(shape, dtype=torch.float64),
+            Species.N: torch.zeros(shape, dtype=torch.float64),
+            Species.O: torch.zeros(shape, dtype=torch.float64),
+        },
+        T=torch.full(shape, T, dtype=torch.float64),
+        p=torch.full(shape, p, dtype=torch.float64),
+    )</code></pre>
+</details>
+<div class="desc"><p>Create initial condition for 5-species air.</p>
+<p>Default is standard atmospheric composition:
+N₂: 76.7% by mass
+O₂: 23.3% by mass
+N, O, NO: 0%</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>shape</code></strong></dt>
+<dd>Tensor shape (Ny, Nx)</dd>
+<dt><strong><code>T</code></strong></dt>
+<dd>Temperature [K]</dd>
+<dt><strong><code>p</code></strong></dt>
+<dd>Pressure [Pa]</dd>
+<dt><strong><code>Y_N2</code></strong></dt>
+<dd>Mass fraction of N₂</dd>
+<dt><strong><code>Y_O2</code></strong></dt>
+<dd>Mass fraction of O₂</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>ChemistryState initial condition</p></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.chemistry_timestep"><code class="name flex">
+<span>def <span class="ident">chemistry_timestep</span></span>(<span>state: <a title="tensornet.cfd.chemistry.ChemistryState" href="#tensornet.cfd.chemistry.ChemistryState">ChemistryState</a>,<br>safety_factor: float = 0.1) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def chemistry_timestep(
+    state: ChemistryState,
+    safety_factor: float = 0.1
+) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Compute chemistry timestep based on stiffness.
+    
+    dt_chem = safety * min(ρYᵢ / |ω̇ᵢ|)
+    
+    Args:
+        state: Current chemistry state
+        safety_factor: CFL-like factor for stability
+        
+    Returns:
+        Chemistry timestep [s]
+    &#34;&#34;&#34;
+    concentrations = state.concentrations()
+    omega, _ = compute_reaction_rates(state.T, concentrations)
+    
+    dt_min = torch.full_like(state.rho, 1e10)
+    
+    for species in Species:
+        rho_Y = state.rho * state.Y[species]
+        omega_abs = torch.abs(omega[species]) + 1e-30
+        dt_species = rho_Y / omega_abs
+        dt_min = torch.minimum(dt_min, dt_species)
+    
+    return safety_factor * dt_min.min()</code></pre>
+</details>
+<div class="desc"><p>Compute chemistry timestep based on stiffness.</p>
+<p>dt_chem = safety * min(ρYᵢ / |ω̇ᵢ|)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>state</code></strong></dt>
+<dd>Current chemistry state</dd>
+<dt><strong><code>safety_factor</code></strong></dt>
+<dd>CFL-like factor for stability</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Chemistry timestep [s]</p></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.compute_reaction_rates"><code class="name flex">
+<span>def <span class="ident">compute_reaction_rates</span></span>(<span>T: torch.Tensor,<br>concentrations: Dict[<a title="tensornet.cfd.chemistry.Species" href="#tensornet.cfd.chemistry.Species">Species</a>, torch.Tensor]) ‑> Tuple[Dict[<a title="tensornet.cfd.chemistry.Species" href="#tensornet.cfd.chemistry.Species">Species</a>, torch.Tensor], torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_reaction_rates(
+    T: torch.Tensor,
+    concentrations: Dict[Species, torch.Tensor]
+) -&gt; Tuple[Dict[Species, torch.Tensor], torch.Tensor]:
+    &#34;&#34;&#34;
+    Compute species production rates from finite-rate chemistry.
+    
+    ω̇ᵢ = Mᵢ Σⱼ νᵢⱼ (kf,j ∏ₖ [Xₖ]^νₖⱼ&#39; - kb,j ∏ₖ [Xₖ]^νₖⱼ&#39;&#39;)
+    
+    Args:
+        T: Temperature field [K]
+        concentrations: Species molar concentrations [mol/m³]
+        
+    Returns:
+        Tuple of:
+            - Dict of mass production rates [kg/(m³·s)]
+            - Total heat release rate [W/m³]
+    &#34;&#34;&#34;
+    # Initialize production rates
+    omega = {species: torch.zeros_like(T) for species in Species}
+    heat_release = torch.zeros_like(T)
+    
+    for reaction in REACTIONS:
+        # Forward rate coefficient
+        kf = reaction.forward.compute(T)
+        
+        # Equilibrium constant
+        K_eq = equilibrium_constant(reaction, T)
+        
+        # Backward rate coefficient: kb = kf / K_eq
+        kb = kf / (K_eq + 1e-30)  # Avoid division by zero
+        
+        # Third-body concentration
+        M = third_body_concentration(reaction, concentrations)
+        
+        # Forward rate: Rf = kf * [M] * ∏ [Xₖ]^νₖ&#39;
+        Rf = kf * M
+        for species, nu in reaction.reactants.items():
+            Rf = Rf * (concentrations[species] ** nu)
+        
+        # Backward rate: Rb = kb * [M] * ∏ [Xₖ]^νₖ&#39;&#39;
+        Rb = kb * M
+        for species, nu in reaction.products.items():
+            Rb = Rb * (concentrations[species] ** nu)
+        
+        # Net rate
+        net_rate = Rf - Rb
+        
+        # Update production rates
+        for species, nu in reaction.reactants.items():
+            omega[species] = omega[species] - nu * MW[species] * net_rate
+        
+        for species, nu in reaction.products.items():
+            omega[species] = omega[species] + nu * MW[species] * net_rate
+        
+        # Heat release (exothermic if ΔH &lt; 0)
+        delta_H = 0.0
+        for species, nu in reaction.products.items():
+            delta_H += nu * H_FORM[species]
+        for species, nu in reaction.reactants.items():
+            delta_H -= nu * H_FORM[species]
+        
+        heat_release = heat_release - delta_H * net_rate
+    
+    return omega, heat_release</code></pre>
+</details>
+<div class="desc"><p>Compute species production rates from finite-rate chemistry.</p>
+<p>ω̇ᵢ = Mᵢ Σⱼ νᵢⱼ (kf,j ∏ₖ [Xₖ]^νₖⱼ' - kb,j ∏ₖ [Xₖ]^νₖⱼ'')</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>T</code></strong></dt>
+<dd>Temperature field [K]</dd>
+<dt><strong><code>concentrations</code></strong></dt>
+<dd>Species molar concentrations [mol/m³]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Tuple of:
+- Dict of mass production rates [kg/(m³·s)]
+- Total heat release rate [W/m³]</p></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.equilibrium_constant"><code class="name flex">
+<span>def <span class="ident">equilibrium_constant</span></span>(<span>reaction: <a title="tensornet.cfd.chemistry.Reaction" href="#tensornet.cfd.chemistry.Reaction">Reaction</a>,<br>T: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def equilibrium_constant(reaction: Reaction, T: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Compute equilibrium constant K_eq from Gibbs free energy.
+    
+    K_eq = exp(-ΔG°/RT) = exp(-ΔH°/RT + ΔS°/R)
+    
+    Simplified curve fit approach for 5-species air.
+    
+    Args:
+        reaction: Reaction object
+        T: Temperature [K]
+        
+    Returns:
+        Equilibrium constant K_eq
+    &#34;&#34;&#34;
+    # Sum of formation enthalpies for products - reactants
+    delta_H = 0.0
+    for species, nu in reaction.products.items():
+        delta_H += nu * H_FORM[species]
+    for species, nu in reaction.reactants.items():
+        delta_H -= nu * H_FORM[species]
+    
+    # Sum of molecular weights for entropy approximation
+    delta_n = sum(reaction.products.values()) - sum(reaction.reactants.values())
+    
+    # Simplified equilibrium constant
+    # More accurate: use NASA polynomial for entropy
+    K_eq = torch.exp(-delta_H / (R_UNIVERSAL * T))
+    
+    # Pressure correction for reactions with changing mole count
+    if delta_n != 0:
+        p_ref = 101325.0  # Reference pressure [Pa]
+        K_eq = K_eq * (R_UNIVERSAL * T / p_ref) ** delta_n
+    
+    return K_eq</code></pre>
+</details>
+<div class="desc"><p>Compute equilibrium constant K_eq from Gibbs free energy.</p>
+<p>K_eq = exp(-ΔG°/RT) = exp(-ΔH°/RT + ΔS°/R)</p>
+<p>Simplified curve fit approach for 5-species air.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>reaction</code></strong></dt>
+<dd>Reaction object</dd>
+<dt><strong><code>T</code></strong></dt>
+<dd>Temperature [K]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Equilibrium constant K_eq</p></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.post_shock_composition"><code class="name flex">
+<span>def <span class="ident">post_shock_composition</span></span>(<span>M: float, T1: float = 300.0, p1: float = 101325.0, gamma: float = 1.4) ‑> Dict[<a title="tensornet.cfd.chemistry.Species" href="#tensornet.cfd.chemistry.Species">Species</a>, float]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def post_shock_composition(
+    M: float,
+    T1: float = 300.0,
+    p1: float = 101325.0,
+    gamma: float = 1.4
+) -&gt; Dict[Species, float]:
+    &#34;&#34;&#34;
+    Estimate post-shock composition for strong shocks.
+    
+    Uses equilibrium chemistry to estimate dissociation
+    behind a normal shock.
+    
+    Args:
+        M: Freestream Mach number
+        T1: Pre-shock temperature [K]
+        p1: Pre-shock pressure [Pa]
+        gamma: Ratio of specific heats
+        
+    Returns:
+        Dictionary of mass fractions
+    &#34;&#34;&#34;
+    # Normal shock relations (perfect gas)
+    p2_p1 = 1 + 2*gamma/(gamma+1) * (M**2 - 1)
+    T2_T1 = (1 + (gamma-1)/2 * M**2) * (2*gamma/(gamma-1) * M**2 - 1) / \
+            ((gamma+1)**2 / (2*(gamma-1)) * M**2)
+    
+    T2 = T1 * T2_T1
+    
+    # Estimate dissociation fractions
+    # O₂ starts dissociating around 2500 K
+    # N₂ starts dissociating around 4000 K
+    
+    alpha_O2 = 0.0
+    alpha_N2 = 0.0
+    
+    if T2 &gt; 2500:
+        alpha_O2 = min(1.0, (T2 - 2500) / 3000)
+    if T2 &gt; 4000:
+        alpha_N2 = min(1.0, (T2 - 4000) / 5000)
+    
+    # Original mass fractions
+    Y_N2_0 = 0.767
+    Y_O2_0 = 0.233
+    
+    # Dissociated fractions
+    Y_N2 = Y_N2_0 * (1 - alpha_N2)
+    Y_O2 = Y_O2_0 * (1 - alpha_O2)
+    Y_N = Y_N2_0 * alpha_N2
+    Y_O = Y_O2_0 * alpha_O2
+    
+    # NO formation (simplified)
+    Y_NO = 0.0
+    if T2 &gt; 2000:
+        Y_NO = min(0.1, (T2 - 2000) / 10000)
+        # Take equally from N and O
+        Y_N = max(0, Y_N - Y_NO/2)
+        Y_O = max(0, Y_O - Y_NO/2)
+    
+    return {
+        Species.N2: Y_N2,
+        Species.O2: Y_O2,
+        Species.NO: Y_NO,
+        Species.N: Y_N,
+        Species.O: Y_O,
+    }</code></pre>
+</details>
+<div class="desc"><p>Estimate post-shock composition for strong shocks.</p>
+<p>Uses equilibrium chemistry to estimate dissociation
+behind a normal shock.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>M</code></strong></dt>
+<dd>Freestream Mach number</dd>
+<dt><strong><code>T1</code></strong></dt>
+<dd>Pre-shock temperature [K]</dd>
+<dt><strong><code>p1</code></strong></dt>
+<dd>Pre-shock pressure [Pa]</dd>
+<dt><strong><code>gamma</code></strong></dt>
+<dd>Ratio of specific heats</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Dictionary of mass fractions</p></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.third_body_concentration"><code class="name flex">
+<span>def <span class="ident">third_body_concentration</span></span>(<span>reaction: <a title="tensornet.cfd.chemistry.Reaction" href="#tensornet.cfd.chemistry.Reaction">Reaction</a>,<br>concentrations: Dict[<a title="tensornet.cfd.chemistry.Species" href="#tensornet.cfd.chemistry.Species">Species</a>, torch.Tensor]) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def third_body_concentration(
+    reaction: Reaction,
+    concentrations: Dict[Species, torch.Tensor]
+) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Compute effective third-body concentration [M].
+    
+    [M] = Σᵢ αᵢ [Xᵢ]
+    
+    where αᵢ is the third-body efficiency of species i.
+    
+    Args:
+        reaction: Reaction with third_body=True
+        concentrations: Species molar concentrations [mol/m³]
+        
+    Returns:
+        Effective third-body concentration [mol/m³]
+    &#34;&#34;&#34;
+    if not reaction.third_body:
+        return torch.ones_like(list(concentrations.values())[0])
+    
+    efficiencies = reaction.third_body_efficiencies or {}
+    
+    M = torch.zeros_like(list(concentrations.values())[0])
+    for species, conc in concentrations.items():
+        alpha = efficiencies.get(species, 1.0)
+        M = M + alpha * conc
+    
+    return M</code></pre>
+</details>
+<div class="desc"><p>Compute effective third-body concentration [M].</p>
+<p>[M] = Σᵢ αᵢ [Xᵢ]</p>
+<p>where αᵢ is the third-body efficiency of species i.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>reaction</code></strong></dt>
+<dd>Reaction with third_body=True</dd>
+<dt><strong><code>concentrations</code></strong></dt>
+<dd>Species molar concentrations [mol/m³]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Effective third-body concentration [mol/m³]</p></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.validate_chemistry"><code class="name flex">
+<span>def <span class="ident">validate_chemistry</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def validate_chemistry():
+    &#34;&#34;&#34;
+    Run validation tests for chemistry module.
+    &#34;&#34;&#34;
+    print(&#34;\n&#34; + &#34;=&#34; * 70)
+    print(&#34;MULTI-SPECIES CHEMISTRY VALIDATION&#34;)
+    print(&#34;=&#34; * 70)
+    
+    # Test 1: Mass fraction conservation
+    print(&#34;\n[Test 1] Mass Fraction Conservation&#34;)
+    print(&#34;-&#34; * 40)
+    
+    state = air_5species_ic(shape=(10, 10), T=3000.0, p=101325.0)
+    
+    # Run a few explicit steps
+    dt = 1e-8
+    for i in range(10):
+        state = advance_chemistry_explicit(state, dt)
+    
+    Y_sum = sum(state.Y.values())
+    max_deviation = (Y_sum - 1.0).abs().max().item()
+    
+    print(f&#34;Max deviation from Σ Yᵢ = 1: {max_deviation:.2e}&#34;)
+    
+    if max_deviation &lt; 1e-6:
+        print(&#34;✓ PASS: Mass fractions sum to 1&#34;)
+    else:
+        print(&#34;✗ FAIL: Mass fraction error too large&#34;)
+    
+    # Test 2: Equilibrium at low temperature
+    print(&#34;\n[Test 2] Equilibrium at Low Temperature&#34;)
+    print(&#34;-&#34; * 40)
+    
+    state_low = air_5species_ic(shape=(1, 1), T=300.0)
+    concentrations = state_low.concentrations()
+    omega, _ = compute_reaction_rates(state_low.T, concentrations)
+    
+    max_omega = max(w.abs().max().item() for w in omega.values())
+    print(f&#34;Max production rate at 300 K: {max_omega:.2e} kg/(m³·s)&#34;)
+    
+    if max_omega &lt; 1e-10:
+        print(&#34;✓ PASS: No reactions at low temperature&#34;)
+    else:
+        print(&#34;✗ FAIL: Unexpected reactions at low T&#34;)
+    
+    # Test 3: Dissociation at high temperature
+    print(&#34;\n[Test 3] Dissociation at High Temperature&#34;)
+    print(&#34;-&#34; * 40)
+    
+    state_high = air_5species_ic(shape=(1, 1), T=5000.0)
+    concentrations = state_high.concentrations()
+    omega, _ = compute_reaction_rates(state_high.T, concentrations)
+    
+    # O₂ should be consumed (negative production)
+    omega_O2 = omega[Species.O2].item()
+    # O should be produced (positive production)
+    omega_O = omega[Species.O].item()
+    
+    print(f&#34;O₂ production rate: {omega_O2:.2e} kg/(m³·s)&#34;)
+    print(f&#34;O production rate: {omega_O:.2e} kg/(m³·s)&#34;)
+    
+    if omega_O2 &lt; 0 and omega_O &gt; 0:
+        print(&#34;✓ PASS: O₂ dissociating into O at high T&#34;)
+    else:
+        print(&#34;✗ FAIL: Unexpected dissociation behavior&#34;)
+    
+    # Test 4: Post-shock composition
+    print(&#34;\n[Test 4] Post-Shock Composition (Mach 10)&#34;)
+    print(&#34;-&#34; * 40)
+    
+    Y_post = post_shock_composition(M=10.0, T1=300.0)
+    
+    print(&#34;Mass fractions behind Mach 10 normal shock:&#34;)
+    for species, Y in Y_post.items():
+        print(f&#34;  {species.name}: {Y:.4f}&#34;)
+    
+    Y_sum = sum(Y_post.values())
+    if abs(Y_sum - 1.0) &lt; 1e-6:
+        print(&#34;✓ PASS: Post-shock mass fractions sum to 1&#34;)
+    else:
+        print(&#34;✗ FAIL: Post-shock mass fraction error&#34;)
+    
+    print(&#34;\n&#34; + &#34;=&#34; * 70)
+    print(&#34;CHEMISTRY VALIDATION COMPLETE&#34;)
+    print(&#34;=&#34; * 70)</code></pre>
+</details>
+<div class="desc"><p>Run validation tests for chemistry module.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.cfd.chemistry.ArrheniusCoeffs"><code class="flex name class">
+<span>class <span class="ident">ArrheniusCoeffs</span></span>
+<span>(</span><span>A: float, n: float, E_a: float)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class ArrheniusCoeffs:
+    &#34;&#34;&#34;Arrhenius rate coefficient parameters: k = A * T^n * exp(-E_a / (R*T))&#34;&#34;&#34;
+    A: float       # Pre-exponential factor [units depend on reaction]
+    n: float       # Temperature exponent
+    E_a: float     # Activation energy [J/mol]
+    
+    def compute(self, T: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Compute forward rate coefficient at temperature T.&#34;&#34;&#34;
+        return self.A * T**self.n * torch.exp(-self.E_a / (R_UNIVERSAL * T))</code></pre>
+</details>
+<div class="desc"><p>Arrhenius rate coefficient parameters: k = A * T^n * exp(-E_a / (R*T))</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.chemistry.ArrheniusCoeffs.A"><code class="name">var <span class="ident">A</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.ArrheniusCoeffs.E_a"><code class="name">var <span class="ident">E_a</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.ArrheniusCoeffs.n"><code class="name">var <span class="ident">n</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.chemistry.ArrheniusCoeffs.compute"><code class="name flex">
+<span>def <span class="ident">compute</span></span>(<span>self, T: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute(self, T: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Compute forward rate coefficient at temperature T.&#34;&#34;&#34;
+    return self.A * T**self.n * torch.exp(-self.E_a / (R_UNIVERSAL * T))</code></pre>
+</details>
+<div class="desc"><p>Compute forward rate coefficient at temperature T.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.chemistry.ChemistryState"><code class="flex name class">
+<span>class <span class="ident">ChemistryState</span></span>
+<span>(</span><span>rho: torch.Tensor,<br>Y: Dict[<a title="tensornet.cfd.chemistry.Species" href="#tensornet.cfd.chemistry.Species">Species</a>, torch.Tensor],<br>T: torch.Tensor,<br>p: torch.Tensor)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class ChemistryState:
+    &#34;&#34;&#34;State for multi-species chemistry solver.&#34;&#34;&#34;
+    rho: torch.Tensor           # Total density [kg/m³]
+    Y: Dict[Species, torch.Tensor]  # Mass fractions [-]
+    T: torch.Tensor             # Temperature [K]
+    p: torch.Tensor             # Pressure [Pa]
+    
+    @property
+    def shape(self) -&gt; torch.Size:
+        return self.rho.shape
+    
+    def concentrations(self) -&gt; Dict[Species, torch.Tensor]:
+        &#34;&#34;&#34;Compute molar concentrations [mol/m³].&#34;&#34;&#34;
+        return {
+            species: self.rho * self.Y[species] / MW[species]
+            for species in Species
+        }
+    
+    def mixture_molecular_weight(self) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Compute mixture molecular weight [kg/mol].&#34;&#34;&#34;
+        M_inv = torch.zeros_like(self.rho)
+        for species in Species:
+            M_inv = M_inv + self.Y[species] / MW[species]
+        return 1.0 / (M_inv + 1e-30)
+    
+    def mixture_R(self) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Compute mixture gas constant [J/(kg·K)].&#34;&#34;&#34;
+        M = self.mixture_molecular_weight()
+        return R_UNIVERSAL / M
+    
+    def validate(self) -&gt; bool:
+        &#34;&#34;&#34;Check physical constraints.&#34;&#34;&#34;
+        # Mass fractions sum to 1
+        Y_sum = sum(self.Y.values())
+        sum_valid = torch.allclose(Y_sum, torch.ones_like(Y_sum), atol=1e-6)
+        
+        # All non-negative
+        Y_positive = all((y &gt;= 0).all() for y in self.Y.values())
+        
+        # Physical bounds
+        rho_valid = (self.rho &gt; 0).all()
+        T_valid = (self.T &gt; 0).all()
+        p_valid = (self.p &gt; 0).all()
+        
+        return sum_valid and Y_positive and rho_valid and T_valid and p_valid</code></pre>
+</details>
+<div class="desc"><p>State for multi-species chemistry solver.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.chemistry.ChemistryState.T"><code class="name">var <span class="ident">T</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.ChemistryState.Y"><code class="name">var <span class="ident">Y</span> : Dict[<a title="tensornet.cfd.chemistry.Species" href="#tensornet.cfd.chemistry.Species">Species</a>, torch.Tensor]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.ChemistryState.p"><code class="name">var <span class="ident">p</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.ChemistryState.rho"><code class="name">var <span class="ident">rho</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.ChemistryState.shape"><code class="name">prop <span class="ident">shape</span> : torch.Size</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def shape(self) -&gt; torch.Size:
+    return self.rho.shape</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.chemistry.ChemistryState.concentrations"><code class="name flex">
+<span>def <span class="ident">concentrations</span></span>(<span>self) ‑> Dict[<a title="tensornet.cfd.chemistry.Species" href="#tensornet.cfd.chemistry.Species">Species</a>, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def concentrations(self) -&gt; Dict[Species, torch.Tensor]:
+    &#34;&#34;&#34;Compute molar concentrations [mol/m³].&#34;&#34;&#34;
+    return {
+        species: self.rho * self.Y[species] / MW[species]
+        for species in Species
+    }</code></pre>
+</details>
+<div class="desc"><p>Compute molar concentrations [mol/m³].</p></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.ChemistryState.mixture_R"><code class="name flex">
+<span>def <span class="ident">mixture_R</span></span>(<span>self) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mixture_R(self) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Compute mixture gas constant [J/(kg·K)].&#34;&#34;&#34;
+    M = self.mixture_molecular_weight()
+    return R_UNIVERSAL / M</code></pre>
+</details>
+<div class="desc"><p>Compute mixture gas constant [J/(kg·K)].</p></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.ChemistryState.mixture_molecular_weight"><code class="name flex">
+<span>def <span class="ident">mixture_molecular_weight</span></span>(<span>self) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mixture_molecular_weight(self) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Compute mixture molecular weight [kg/mol].&#34;&#34;&#34;
+    M_inv = torch.zeros_like(self.rho)
+    for species in Species:
+        M_inv = M_inv + self.Y[species] / MW[species]
+    return 1.0 / (M_inv + 1e-30)</code></pre>
+</details>
+<div class="desc"><p>Compute mixture molecular weight [kg/mol].</p></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.ChemistryState.validate"><code class="name flex">
+<span>def <span class="ident">validate</span></span>(<span>self) ‑> bool</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def validate(self) -&gt; bool:
+    &#34;&#34;&#34;Check physical constraints.&#34;&#34;&#34;
+    # Mass fractions sum to 1
+    Y_sum = sum(self.Y.values())
+    sum_valid = torch.allclose(Y_sum, torch.ones_like(Y_sum), atol=1e-6)
+    
+    # All non-negative
+    Y_positive = all((y &gt;= 0).all() for y in self.Y.values())
+    
+    # Physical bounds
+    rho_valid = (self.rho &gt; 0).all()
+    T_valid = (self.T &gt; 0).all()
+    p_valid = (self.p &gt; 0).all()
+    
+    return sum_valid and Y_positive and rho_valid and T_valid and p_valid</code></pre>
+</details>
+<div class="desc"><p>Check physical constraints.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.chemistry.Reaction"><code class="flex name class">
+<span>class <span class="ident">Reaction</span></span>
+<span>(</span><span>name: str,<br>forward: <a title="tensornet.cfd.chemistry.ArrheniusCoeffs" href="#tensornet.cfd.chemistry.ArrheniusCoeffs">ArrheniusCoeffs</a>,<br>reactants: Dict[<a title="tensornet.cfd.chemistry.Species" href="#tensornet.cfd.chemistry.Species">Species</a>, int],<br>products: Dict[<a title="tensornet.cfd.chemistry.Species" href="#tensornet.cfd.chemistry.Species">Species</a>, int],<br>third_body: bool = False,<br>third_body_efficiencies: Dict[<a title="tensornet.cfd.chemistry.Species" href="#tensornet.cfd.chemistry.Species">Species</a>, float] | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Reaction:
+    &#34;&#34;&#34;Chemical reaction with forward/backward rates.&#34;&#34;&#34;
+    name: str
+    forward: ArrheniusCoeffs
+    reactants: Dict[Species, int]  # species -&gt; stoichiometric coefficient
+    products: Dict[Species, int]
+    third_body: bool = False
+    third_body_efficiencies: Optional[Dict[Species, float]] = None</code></pre>
+</details>
+<div class="desc"><p>Chemical reaction with forward/backward rates.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.chemistry.Reaction.forward"><code class="name">var <span class="ident">forward</span> : <a title="tensornet.cfd.chemistry.ArrheniusCoeffs" href="#tensornet.cfd.chemistry.ArrheniusCoeffs">ArrheniusCoeffs</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.Reaction.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.Reaction.products"><code class="name">var <span class="ident">products</span> : Dict[<a title="tensornet.cfd.chemistry.Species" href="#tensornet.cfd.chemistry.Species">Species</a>, int]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.Reaction.reactants"><code class="name">var <span class="ident">reactants</span> : Dict[<a title="tensornet.cfd.chemistry.Species" href="#tensornet.cfd.chemistry.Species">Species</a>, int]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.Reaction.third_body"><code class="name">var <span class="ident">third_body</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.Reaction.third_body_efficiencies"><code class="name">var <span class="ident">third_body_efficiencies</span> : Dict[<a title="tensornet.cfd.chemistry.Species" href="#tensornet.cfd.chemistry.Species">Species</a>, float] | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.chemistry.Species"><code class="flex name class">
+<span>class <span class="ident">Species</span></span>
+<span>(</span><span>*args, **kwds)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Species(IntEnum):
+    &#34;&#34;&#34;Species indices for 5-species air.&#34;&#34;&#34;
+    N2 = 0
+    O2 = 1
+    NO = 2
+    N = 3
+    O = 4</code></pre>
+</details>
+<div class="desc"><p>Species indices for 5-species air.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.IntEnum</li>
+<li>builtins.int</li>
+<li>enum.ReprEnum</li>
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="tensornet.cfd.chemistry.Species.N"><code class="name">var <span class="ident">N</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.Species.N2"><code class="name">var <span class="ident">N2</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.Species.NO"><code class="name">var <span class="ident">NO</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.Species.O"><code class="name">var <span class="ident">O</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.chemistry.Species.O2"><code class="name">var <span class="ident">O2</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#multi-species-chemistry-for-high-temperature-air">Multi-Species Chemistry for High-Temperature Air</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.chemistry.advance_chemistry_explicit" href="#tensornet.cfd.chemistry.advance_chemistry_explicit">advance_chemistry_explicit</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.air_5species_ic" href="#tensornet.cfd.chemistry.air_5species_ic">air_5species_ic</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.chemistry_timestep" href="#tensornet.cfd.chemistry.chemistry_timestep">chemistry_timestep</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.compute_reaction_rates" href="#tensornet.cfd.chemistry.compute_reaction_rates">compute_reaction_rates</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.equilibrium_constant" href="#tensornet.cfd.chemistry.equilibrium_constant">equilibrium_constant</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.post_shock_composition" href="#tensornet.cfd.chemistry.post_shock_composition">post_shock_composition</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.third_body_concentration" href="#tensornet.cfd.chemistry.third_body_concentration">third_body_concentration</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.validate_chemistry" href="#tensornet.cfd.chemistry.validate_chemistry">validate_chemistry</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.cfd.chemistry.ArrheniusCoeffs" href="#tensornet.cfd.chemistry.ArrheniusCoeffs">ArrheniusCoeffs</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.chemistry.ArrheniusCoeffs.A" href="#tensornet.cfd.chemistry.ArrheniusCoeffs.A">A</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.ArrheniusCoeffs.E_a" href="#tensornet.cfd.chemistry.ArrheniusCoeffs.E_a">E_a</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.ArrheniusCoeffs.compute" href="#tensornet.cfd.chemistry.ArrheniusCoeffs.compute">compute</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.ArrheniusCoeffs.n" href="#tensornet.cfd.chemistry.ArrheniusCoeffs.n">n</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.chemistry.ChemistryState" href="#tensornet.cfd.chemistry.ChemistryState">ChemistryState</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.chemistry.ChemistryState.T" href="#tensornet.cfd.chemistry.ChemistryState.T">T</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.ChemistryState.Y" href="#tensornet.cfd.chemistry.ChemistryState.Y">Y</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.ChemistryState.concentrations" href="#tensornet.cfd.chemistry.ChemistryState.concentrations">concentrations</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.ChemistryState.mixture_R" href="#tensornet.cfd.chemistry.ChemistryState.mixture_R">mixture_R</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.ChemistryState.mixture_molecular_weight" href="#tensornet.cfd.chemistry.ChemistryState.mixture_molecular_weight">mixture_molecular_weight</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.ChemistryState.p" href="#tensornet.cfd.chemistry.ChemistryState.p">p</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.ChemistryState.rho" href="#tensornet.cfd.chemistry.ChemistryState.rho">rho</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.ChemistryState.shape" href="#tensornet.cfd.chemistry.ChemistryState.shape">shape</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.ChemistryState.validate" href="#tensornet.cfd.chemistry.ChemistryState.validate">validate</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.chemistry.Reaction" href="#tensornet.cfd.chemistry.Reaction">Reaction</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.chemistry.Reaction.forward" href="#tensornet.cfd.chemistry.Reaction.forward">forward</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.Reaction.name" href="#tensornet.cfd.chemistry.Reaction.name">name</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.Reaction.products" href="#tensornet.cfd.chemistry.Reaction.products">products</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.Reaction.reactants" href="#tensornet.cfd.chemistry.Reaction.reactants">reactants</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.Reaction.third_body" href="#tensornet.cfd.chemistry.Reaction.third_body">third_body</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.Reaction.third_body_efficiencies" href="#tensornet.cfd.chemistry.Reaction.third_body_efficiencies">third_body_efficiencies</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.chemistry.Species" href="#tensornet.cfd.chemistry.Species">Species</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.chemistry.Species.N" href="#tensornet.cfd.chemistry.Species.N">N</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.Species.N2" href="#tensornet.cfd.chemistry.Species.N2">N2</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.Species.NO" href="#tensornet.cfd.chemistry.Species.NO">NO</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.Species.O" href="#tensornet.cfd.chemistry.Species.O">O</a></code></li>
+<li><code><a title="tensornet.cfd.chemistry.Species.O2" href="#tensornet.cfd.chemistry.Species.O2">O2</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

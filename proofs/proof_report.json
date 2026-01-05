@@ -1,0 +1,675 @@
+{
+  "generated_at": "2025-12-24T05:17:24.086179Z",
+  "summary": {
+    "total": 13,
+    "passed": 13,
+    "failed": 0,
+    "pass_rate": 1.0
+  },
+  "proofs": [
+    {
+      "file": "proof_mps.py",
+      "passed": true,
+      "duration_sec": 2.32,
+      "details": [
+        {
+          "id": "2.1",
+          "name": "MPS Round-Trip Fidelity",
+          "category": "MPS Operations",
+          "claim": "tensor -> MPS -> tensor preserves information within bond dimension",
+          "status": "PASS",
+          "measurements": [
+            {
+              "property": "input_shape",
+              "value": [
+                2,
+                2,
+                2,
+                2,
+                2
+              ]
+            },
+            {
+              "property": "bond_dimension",
+              "value": 4
+            },
+            {
+              "property": "||T - T_reconstructed||_F",
+              "value": 4.956821395704106e-15
+            }
+          ],
+          "tolerance": 1e-10,
+          "max_error": 4.956821395704106e-15
+        },
+        {
+          "id": "2.2",
+          "name": "GHZ Entanglement Entropy",
+          "category": "MPS Operations",
+          "claim": "GHZ state has S = ln(2) = 0.693... at every bipartition",
+          "status": "PASS",
+          "measurements": [
+            {
+              "bond": 0,
+              "computed_S": 0.6931471805599452,
+              "theoretical_S": 0.6931471805599453,
+              "error": 1.1102230246251565e-16
+            },
+            {
+              "bond": 1,
+              "computed_S": 0.6931471805599452,
+              "theoretical_S": 0.6931471805599453,
+              "error": 1.1102230246251565e-16
+            },
+            {
+              "bond": 2,
+              "computed_S": 0.6931471805599452,
+              "theoretical_S": 0.6931471805599453,
+              "error": 1.1102230246251565e-16
+            },
+            {
+              "bond": 3,
+              "computed_S": 0.6931471805599452,
+              "theoretical_S": 0.6931471805599453,
+              "error": 1.1102230246251565e-16
+            },
+            {
+              "bond": 4,
+              "computed_S": 0.6931471805599452,
+              "theoretical_S": 0.6931471805599453,
+              "error": 1.1102230246251565e-16
+            }
+          ],
+          "tolerance": 1e-10,
+          "max_error": 1.1102230246251565e-16
+        },
+        {
+          "id": "2.3",
+          "name": "Product State Zero Entropy",
+          "category": "MPS Operations",
+          "claim": "Product state has zero entanglement entropy",
+          "status": "PASS",
+          "measurements": [
+            {
+              "bond": 0,
+              "computed_S": -0.0,
+              "expected": 0.0
+            },
+            {
+              "bond": 1,
+              "computed_S": -0.0,
+              "expected": 0.0
+            },
+            {
+              "bond": 2,
+              "computed_S": -0.0,
+              "expected": 0.0
+            },
+            {
+              "bond": 3,
+              "computed_S": -0.0,
+              "expected": 0.0
+            },
+            {
+              "bond": 4,
+              "computed_S": -0.0,
+              "expected": 0.0
+            }
+          ],
+          "tolerance": 1e-14,
+          "max_error": 0.0
+        },
+        {
+          "id": "2.4",
+          "name": "Norm Preservation Under Canonicalization",
+          "category": "MPS Operations",
+          "claim": "Canonicalization preserves MPS norm",
+          "status": "PASS",
+          "measurements": [
+            {
+              "property": "norm_before",
+              "value": 0.9999999999999998
+            },
+            {
+              "property": "norm_after",
+              "value": 0.9999999999999999
+            },
+            {
+              "property": "difference",
+              "value": 1.1102230246251565e-16
+            }
+          ],
+          "tolerance": 1e-10,
+          "max_error": 1.1102230246251565e-16
+        },
+        {
+          "id": "2.5",
+          "name": "Left-Canonical Orthogonality",
+          "category": "MPS Operations",
+          "claim": "Left-canonical tensors satisfy A^\u2020 @ A = I",
+          "status": "PASS",
+          "measurements": [
+            {
+              "site": 0,
+              "||A^\u2020A - I||_F": 1.3597399555105182e-16
+            },
+            {
+              "site": 1,
+              "||A^\u2020A - I||_F": 6.1721061478217895e-16
+            },
+            {
+              "site": 2,
+              "||A^\u2020A - I||_F": 6.430227211467706e-16
+            },
+            {
+              "site": 3,
+              "||A^\u2020A - I||_F": 9.179469444506744e-16
+            },
+            {
+              "site": 4,
+              "||A^\u2020A - I||_F": 3.513318286776665e-16
+            },
+            {
+              "site": 5,
+              "||A^\u2020A - I||_F": 4.2998752849492583e-16
+            }
+          ],
+          "tolerance": 1e-10,
+          "max_error": 9.179469444506744e-16
+        }
+      ]
+    },
+    {
+      "file": "proof_decompositions.py",
+      "passed": true,
+      "duration_sec": 1.89,
+      "details": [
+        {
+          "id": "1.1",
+          "name": "SVD Truncation Optimality",
+          "category": "Tensor Decompositions",
+          "claim": "svd_truncated(A, k) produces optimal rank-k approximation (Eckart-Young-Mirsky)",
+          "status": "PASS",
+          "measurements": [
+            {
+              "k": 5,
+              "our_error": 80.66251876283839,
+              "ref_error": 80.66251876283839,
+              "diff": 0.0
+            },
+            {
+              "k": 10,
+              "our_error": 72.56998603211332,
+              "ref_error": 72.56998603211332,
+              "diff": 0.0
+            },
+            {
+              "k": 20,
+              "our_error": 58.08995394899879,
+              "ref_error": 58.08995394899879,
+              "diff": 0.0
+            },
+            {
+              "k": 40,
+              "our_error": 33.79407342533207,
+              "ref_error": 33.79407342533207,
+              "diff": 0.0
+            }
+          ],
+          "tolerance": 1e-10,
+          "max_error": 0.0
+        },
+        {
+          "id": "1.2",
+          "name": "SVD Orthogonality",
+          "category": "Tensor Decompositions",
+          "claim": "U and V from SVD are orthogonal matrices",
+          "status": "PASS",
+          "measurements": [
+            {
+              "property": "||U^T @ U - I||_F",
+              "value": 1.070199716920431e-14
+            },
+            {
+              "property": "||V @ V^T - I||_F",
+              "value": 9.860920594766705e-15
+            }
+          ],
+          "tolerance": 1e-10,
+          "max_error": 1.070199716920431e-14
+        },
+        {
+          "id": "1.3",
+          "name": "QR Reconstruction",
+          "category": "Tensor Decompositions",
+          "claim": "QR decomposition satisfies A = Q @ R",
+          "status": "PASS",
+          "measurements": [
+            {
+              "property": "||A - Q @ R||_F",
+              "value": 1.552471594765298e-14
+            }
+          ],
+          "tolerance": 1e-10,
+          "max_error": 1.552471594765298e-14
+        },
+        {
+          "id": "1.4",
+          "name": "QR Orthogonality",
+          "category": "Tensor Decompositions",
+          "claim": "Q from QR is orthogonal",
+          "status": "PASS",
+          "measurements": [
+            {
+              "property": "||Q^T @ Q - I||_F",
+              "value": 2.6156762786245676e-15
+            }
+          ],
+          "tolerance": 1e-10,
+          "max_error": 2.6156762786245676e-15
+        }
+      ]
+    },
+    {
+      "file": "proof_algorithms.py",
+      "passed": true,
+      "duration_sec": 2.79,
+      "details": [
+        {
+          "id": "3.1",
+          "name": "Pauli Algebra Commutators",
+          "category": "Physical Invariants",
+          "claim": "Pauli matrices satisfy SU(2) Lie algebra: [\u03c3_i, \u03c3_j] = 2i \u03b5_ijk \u03c3_k",
+          "status": "PASS",
+          "measurements": [
+            {
+              "relation": "[X,Y] = 2iZ",
+              "error": 0.0
+            },
+            {
+              "relation": "[Y,Z] = 2iX",
+              "error": 0.0
+            },
+            {
+              "relation": "[Z,X] = 2iY",
+              "error": 0.0
+            }
+          ],
+          "tolerance": 1e-14,
+          "max_error": 0.0
+        },
+        {
+          "id": "3.2",
+          "name": "Pauli Algebra Anticommutators",
+          "category": "Physical Invariants",
+          "claim": "Pauli matrices satisfy {\u03c3_i, \u03c3_j} = 2\u03b4_ij I",
+          "status": "PASS",
+          "measurements": [
+            {
+              "relation": "{X,X} = 2I",
+              "error": 0.0
+            },
+            {
+              "relation": "{X,Y} = 0",
+              "error": 0.0
+            },
+            {
+              "relation": "{Y,Z} = 0",
+              "error": 0.0
+            }
+          ],
+          "tolerance": 1e-14,
+          "max_error": 0.0
+        },
+        {
+          "id": "4.1",
+          "name": "SVD Gradient Correctness",
+          "category": "Autograd Correctness",
+          "claim": "Gradients of svd_truncated match finite differences",
+          "status": "PASS",
+          "measurements": [
+            {
+              "test": "torch.autograd.gradcheck",
+              "passed": true
+            }
+          ],
+          "tolerance": 0.0001,
+          "max_error": 0.0
+        },
+        {
+          "id": "4.2",
+          "name": "MPS Norm Gradient",
+          "category": "Autograd Correctness",
+          "claim": "Gradient of MPS norm computation is correct",
+          "status": "PASS",
+          "measurements": [
+            {
+              "test": "torch.autograd.gradcheck",
+              "passed": true
+            }
+          ],
+          "tolerance": 0.0001,
+          "max_error": 0.0
+        },
+        {
+          "id": "5.1",
+          "name": "Lanczos Ground State Energy",
+          "category": "Algorithm Correctness",
+          "claim": "Lanczos finds correct ground state eigenvalue",
+          "status": "PASS",
+          "measurements": [
+            {
+              "property": "exact_E0",
+              "value": -5.4124839706848835
+            },
+            {
+              "property": "lanczos_E0",
+              "value": -5.412483970684888
+            },
+            {
+              "property": "error",
+              "value": 4.440892098500626e-15
+            }
+          ],
+          "tolerance": 1e-08,
+          "max_error": 4.440892098500626e-15
+        },
+        {
+          "id": "5.2",
+          "name": "Heisenberg MPO Hermiticity",
+          "category": "Algorithm Correctness",
+          "claim": "Heisenberg Hamiltonian MPO is Hermitian: H = H\u2020",
+          "status": "PASS",
+          "measurements": [
+            {
+              "property": "||H - H\u2020||_F",
+              "value": 0.0
+            }
+          ],
+          "tolerance": 1e-10,
+          "max_error": 0.0
+        }
+      ]
+    },
+    {
+      "file": "proof_cfd_conservation.py",
+      "passed": true,
+      "duration_sec": 2.41,
+      "details": {
+        "passed": 5,
+        "failed": 0
+      }
+    },
+    {
+      "file": "proof_21_weno_order.py",
+      "passed": true,
+      "duration_sec": 2.28,
+      "details": {
+        "total_tests": 5,
+        "passed": 5,
+        "failed": 0
+      }
+    },
+    {
+      "file": "proof_21_weno_shock.py",
+      "passed": true,
+      "duration_sec": 2.41,
+      "details": {
+        "total_tests": 8,
+        "passed": 8,
+        "failed": 0
+      }
+    },
+    {
+      "file": "proof_21_tdvp_euler_conservation.py",
+      "passed": true,
+      "duration_sec": 2.28
+    },
+    {
+      "file": "proof_21_tdvp_euler_sod.py",
+      "passed": true,
+      "duration_sec": 2.32
+    },
+    {
+      "file": "proof_21_tt_evolution.py",
+      "passed": true,
+      "duration_sec": 3.25,
+      "details": {}
+    },
+    {
+      "file": "proof_21_dense_audit.py",
+      "passed": true,
+      "duration_sec": 3.49,
+      "details": {}
+    },
+    {
+      "file": "proof_phase_22.py",
+      "passed": true,
+      "duration_sec": 2.42,
+      "details": [
+        {
+          "name": "Saha Ionization Equilibrium",
+          "passed": true,
+          "details": {
+            "n_e_15000K": 4.621838089041595e+21,
+            "n_e_3000K": 506065972447.7604,
+            "monotonic_with_T": true,
+            "pressure_effect_correct": "tensor(True)"
+          }
+        },
+        {
+          "name": "Plasma Frequency Physics",
+          "passed": "tensor(True)",
+          "details": {
+            "omega_pe_computed": 56414731698.17582,
+            "omega_pe_expected": 56400000000.0,
+            "relative_error": 0.0002612003222663014,
+            "scaling_ratio": 2.0,
+            "scaling_ok": "tensor(True)"
+          }
+        },
+        {
+          "name": "Blackout Geometry Consistency",
+          "passed": "tensor(True)",
+          "details": {
+            "omega_pe_values": [
+              1783990457.5353434,
+              5641473169.817582,
+              17839904575.353436,
+              56414731698.17582
+            ],
+            "plasma_freq_monotonic": true,
+            "atten_1GHz": 163.42709947037724,
+            "atten_100GHz": 0.46101788619875794,
+            "frequency_cutoff_ok": "tensor(True)"
+          }
+        },
+        {
+          "name": "FADS Sensor Sensitivity",
+          "passed": true,
+          "details": {
+            "jacobian_norm": 57068.406369421835,
+            "pressure_sensitivity": 285.3238657736606,
+            "mach_response": 113101.18863793647,
+            "alpha_response": 43663.57230082668
+          }
+        },
+        {
+          "name": "Differentiable CFD Conservation",
+          "passed": "tensor(True)",
+          "details": {
+            "mass_initial": 1.0,
+            "mass_final": 1.0,
+            "mass_error_percent": 0.0,
+            "gradients_exist": true
+          }
+        },
+        {
+          "name": "Aero-TRN Navigation Drift",
+          "passed": true,
+          "details": {
+            "pressure_pattern_std": 0.2665260173612104,
+            "roughness": 55.99421990272482,
+            "gradient": [
+              -0.0013090987858913649,
+              0.037510623138493085
+            ]
+          }
+        },
+        {
+          "name": "Jet Penetration Correlations",
+          "passed": true,
+          "details": {
+            "penetration_J5": 0.028466265971257648,
+            "penetration_J20": 0.043146790919326425,
+            "expected_ratio": 1.515716566510398,
+            "actual_ratio": 1.515716566510398,
+            "mach_disk_pr5": 0.014981655449248591,
+            "mach_disk_pr20": 0.029963310898497183
+          }
+        },
+        {
+          "name": "Jet Interaction Forces",
+          "passed": true,
+          "details": {
+            "amplification_factor": 1.9797958971132712,
+            "induced_normal_force": 40499.99999999999,
+            "separation_length": 0.19595917942265423,
+            "reattachment_length": 0.4898979485566356
+          }
+        },
+        {
+          "name": "Divert Guidance Accuracy",
+          "passed": true,
+          "details": {
+            "time_to_go": 20.000500000000002,
+            "initial_miss_m": 500.006249960938,
+            "accel_command_mag": 3.7498593793944024,
+            "predicted_miss": 500.006249960938,
+            "thruster_commands": 1
+          }
+        }
+      ]
+    },
+    {
+      "file": "proof_phase_23.py",
+      "passed": true,
+      "duration_sec": 2.76,
+      "details": [
+        {
+          "name": "TMR Bit Flip Correction",
+          "passed": true,
+          "details": {
+            "seu_detected": true,
+            "value_recovered": true,
+            "max_error": 0.0,
+            "location_correct": true,
+            "n_events": 1
+          }
+        },
+        {
+          "name": "TMR Multiple Bit Flips",
+          "passed": true,
+          "details": {
+            "all_corrected": true,
+            "max_error": 0.0,
+            "flips_detected": 3
+          }
+        },
+        {
+          "name": "Conservation Watchdog Detection",
+          "passed": true,
+          "details": {
+            "normal_evolution_ok": true,
+            "energy_spike_detected": true,
+            "energy_score_bad": 9.999999999999991,
+            "negative_density_detected": true,
+            "nan_detected": true
+          }
+        },
+        {
+          "name": "Checkpoint Rollback Recovery",
+          "passed": true,
+          "details": {
+            "checkpoint_saved": true,
+            "rollback_correct": true,
+            "load_correct": true,
+            "pruning_correct": true,
+            "latest_correct": true
+          }
+        },
+        {
+          "name": "TMR Executor Integration",
+          "passed": true,
+          "details": {
+            "single_output_correct": true,
+            "max_error": 0.0,
+            "stats_ok": true,
+            "multi_output_correct": true
+          }
+        }
+      ]
+    },
+    {
+      "file": "proof_phase_24.py",
+      "passed": true,
+      "duration_sec": 1.93,
+      "details": [
+        {
+          "name": "Adjoint Solver",
+          "passed": true,
+          "details": {
+            "state_ok": true,
+            "jacobian_ok": true,
+            "objective_ok": "tensor(True)",
+            "rhs_ok": true
+          }
+        },
+        {
+          "name": "Optimization Suite",
+          "passed": true,
+          "details": {
+            "has_bspline_basis": true,
+            "correct_design_vars": true,
+            "config_ok": true,
+            "gradient_descent_converged": true,
+            "final_x": 7.136238463529802e-05
+          }
+        },
+        {
+          "name": "ROM Methods (POD/DMD)",
+          "passed": true,
+          "details": {
+            "pod_trained": true,
+            "pod_reconstruction_error": 0.005554556177892345,
+            "pod_accurate": true,
+            "dmd_trained": true,
+            "dmd_prediction_ok": true,
+            "dmd_prediction_error": 0.03212196940535938,
+            "dmd_accurate": true
+          }
+        },
+        {
+          "name": "Consensus Protocols",
+          "passed": true,
+          "details": {
+            "average_converged": true,
+            "average_correct": true,
+            "average_iterations": 17,
+            "max_converged": true,
+            "max_correct": true,
+            "weighted_converged": true
+          }
+        },
+        {
+          "name": "Uncertainty Quantification",
+          "passed": true,
+          "details": {
+            "config_ok": true,
+            "estimate_ok": "tensor(True)",
+            "dict_conversion_ok": true
+          }
+        }
+      ]
+    }
+  ]
+}

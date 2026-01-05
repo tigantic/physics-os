@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.euler_nd_native API documentation</title>
+<meta name="description" content="Fully Native N-Dimensional Euler Solver …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.euler_nd_native</code></h1>
+</header>
+<section id="section-intro">
+<p>Fully Native N-Dimensional Euler Solver</p>
+<p>This solver uses the generalized N-dimensional shift MPO for O(log N) operations.
+No dense round-trips anywhere - true tensor train complexity.</p>
+<p>Supports:
+- 2D Euler equations (compressible flow)
+- 3D Euler equations (turbulence, vortex dynamics)
+- Future: 5D Vlasov-Poisson (plasma kinetics)</p>
+<p>Author: HyperTensor Team
+Date: December 2025</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.euler_nd_native.create_kh_initial_condition_2d"><code class="name flex">
+<span>def <span class="ident">create_kh_initial_condition_2d</span></span>(<span>config: <a title="tensornet.cfd.euler_nd_native.EulerNDConfig" href="#tensornet.cfd.euler_nd_native.EulerNDConfig">EulerNDConfig</a>) ‑> <a title="tensornet.cfd.euler_nd_native.EulerNDState" href="#tensornet.cfd.euler_nd_native.EulerNDState">EulerNDState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_kh_initial_condition_2d(config: EulerNDConfig) -&gt; EulerNDState:
+    &#34;&#34;&#34;Create Kelvin-Helmholtz instability initial condition.&#34;&#34;&#34;
+    N = config.grid_size
+    gamma = config.gamma
+    nx = config.qubits_per_dim
+    ny = config.qubits_per_dim
+    
+    x = torch.linspace(0, 1, N, dtype=config.dtype, device=config.device)
+    y = torch.linspace(0, 1, N, dtype=config.dtype, device=config.device)
+    X, Y = torch.meshgrid(x, y, indexing=&#39;ij&#39;)
+    
+    # Shear layer
+    rho = torch.where(torch.abs(Y - 0.5) &lt; 0.25, 
+                      torch.tensor(2.0, dtype=config.dtype),
+                      torch.tensor(1.0, dtype=config.dtype))
+    u = torch.where(torch.abs(Y - 0.5) &lt; 0.25,
+                    torch.tensor(0.5, dtype=config.dtype),
+                    torch.tensor(-0.5, dtype=config.dtype))
+    v = 0.01 * torch.sin(4 * torch.pi * X)
+    P = torch.full_like(rho, 2.5)
+    E = P / (gamma - 1) + 0.5 * rho * (u**2 + v**2)
+    
+    # Compress to QTT
+    rho_qtt = dense_to_qtt_2d(rho, max_bond=config.max_rank)
+    rhou_qtt = dense_to_qtt_2d(rho * u, max_bond=config.max_rank)
+    rhov_qtt = dense_to_qtt_2d(rho * v, max_bond=config.max_rank)
+    E_qtt = dense_to_qtt_2d(E, max_bond=config.max_rank)
+    
+    return EulerNDState(
+        rho=rho_qtt,
+        momentum=[rhou_qtt, rhov_qtt],
+        E=E_qtt
+    )</code></pre>
+</details>
+<div class="desc"><p>Create Kelvin-Helmholtz instability initial condition.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDConfig"><code class="flex name class">
+<span>class <span class="ident">EulerNDConfig</span></span>
+<span>(</span><span>num_dims: int = 2,<br>qubits_per_dim: int = 6,<br>gamma: float = 1.4,<br>cfl: float = 0.5,<br>max_rank: int = 64,<br>tci_tolerance: float = 1e-06,<br>device: torch.device = None,<br>dtype: torch.dtype = torch.float32)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class EulerNDConfig:
+    &#34;&#34;&#34;Configuration for N-dimensional Euler solver.&#34;&#34;&#34;
+    num_dims: int = 2              # Dimensionality (2 or 3)
+    qubits_per_dim: int = 6        # Grid is 2^n per dimension
+    gamma: float = 1.4             # Ratio of specific heats
+    cfl: float = 0.5               # CFL number
+    max_rank: int = 64             # Maximum QTT bond dimension
+    tci_tolerance: float = 1e-6   # TCI truncation tolerance
+    device: torch.device = None
+    dtype: torch.dtype = torch.float32
+    
+    def __post_init__(self):
+        if self.device is None:
+            self.device = torch.device(&#39;cpu&#39;)
+    
+    @property
+    def total_qubits(self) -&gt; int:
+        return self.num_dims * self.qubits_per_dim
+    
+    @property
+    def grid_size(self) -&gt; int:
+        return 2 ** self.qubits_per_dim
+    
+    @property
+    def total_points(self) -&gt; int:
+        return 2 ** self.total_qubits</code></pre>
+</details>
+<div class="desc"><p>Configuration for N-dimensional Euler solver.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDConfig.cfl"><code class="name">var <span class="ident">cfl</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDConfig.device"><code class="name">var <span class="ident">device</span> : torch.device</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDConfig.dtype"><code class="name">var <span class="ident">dtype</span> : torch.dtype</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDConfig.gamma"><code class="name">var <span class="ident">gamma</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDConfig.grid_size"><code class="name">prop <span class="ident">grid_size</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def grid_size(self) -&gt; int:
+    return 2 ** self.qubits_per_dim</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDConfig.max_rank"><code class="name">var <span class="ident">max_rank</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDConfig.num_dims"><code class="name">var <span class="ident">num_dims</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDConfig.qubits_per_dim"><code class="name">var <span class="ident">qubits_per_dim</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDConfig.tci_tolerance"><code class="name">var <span class="ident">tci_tolerance</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDConfig.total_points"><code class="name">prop <span class="ident">total_points</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def total_points(self) -&gt; int:
+    return 2 ** self.total_qubits</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDConfig.total_qubits"><code class="name">prop <span class="ident">total_qubits</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def total_qubits(self) -&gt; int:
+    return self.num_dims * self.qubits_per_dim</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDState"><code class="flex name class">
+<span>class <span class="ident">EulerNDState</span></span>
+<span>(</span><span>rho: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>momentum: List[<a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>],<br>E: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class EulerNDState:
+    &#34;&#34;&#34;
+    State vector for N-dimensional Euler equations.
+    
+    Conservative variables: [rho, rho*u, rho*v, (rho*w), E]
+    Each stored as QTT2DState (or generalized to N-D).
+    &#34;&#34;&#34;
+    rho: QTT2DState        # Density
+    momentum: List[QTT2DState]  # [rho*u, rho*v, ...] for each dimension
+    E: QTT2DState          # Total energy
+    
+    @property
+    def num_dims(self) -&gt; int:
+        return len(self.momentum)
+    
+    def max_rank(self) -&gt; int:
+        &#34;&#34;&#34;Maximum bond rank across all fields.&#34;&#34;&#34;
+        ranks = [self.rho.max_rank, self.E.max_rank]
+        for m in self.momentum:
+            ranks.append(m.max_rank)
+        return max(ranks)</code></pre>
+</details>
+<div class="desc"><p>State vector for N-dimensional Euler equations.</p>
+<p>Conservative variables: [rho, rho<em>u, rho</em>v, (rho*w), E]
+Each stored as QTT2DState (or generalized to N-D).</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDState.E"><code class="name">var <span class="ident">E</span> : <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDState.momentum"><code class="name">var <span class="ident">momentum</span> : List[<a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDState.num_dims"><code class="name">prop <span class="ident">num_dims</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def num_dims(self) -&gt; int:
+    return len(self.momentum)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDState.rho"><code class="name">var <span class="ident">rho</span> : <a title="tensornet.cfd.qtt_2d.QTT2DState" href="qtt_2d.html#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.euler_nd_native.EulerNDState.max_rank"><code class="name flex">
+<span>def <span class="ident">max_rank</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def max_rank(self) -&gt; int:
+    &#34;&#34;&#34;Maximum bond rank across all fields.&#34;&#34;&#34;
+    ranks = [self.rho.max_rank, self.E.max_rank]
+    for m in self.momentum:
+        ranks.append(m.max_rank)
+    return max(ranks)</code></pre>
+</details>
+<div class="desc"><p>Maximum bond rank across all fields.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.euler_nd_native.EulerND_Native"><code class="flex name class">
+<span>class <span class="ident">EulerND_Native</span></span>
+<span>(</span><span>config: <a title="tensornet.cfd.euler_nd_native.EulerNDConfig" href="#tensornet.cfd.euler_nd_native.EulerNDConfig">EulerNDConfig</a>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class EulerND_Native:
+    &#34;&#34;&#34;
+    Fully native N-dimensional Euler solver using Strang splitting.
+    
+    All operations in O(log N) complexity:
+    - Flux computation via TCI sampling
+    - Shift operations via N-dimensional MPO
+    - State updates via QTT arithmetic
+    
+    Strang Splitting for 2D: L_x(dt/2) L_y(dt) L_x(dt/2)
+    Strang Splitting for 3D: L_x(dt/2) L_y(dt/2) L_z(dt) L_y(dt/2) L_x(dt/2)
+    &#34;&#34;&#34;
+    
+    def __init__(self, config: EulerNDConfig):
+        &#34;&#34;&#34;Initialize N-dimensional Euler solver.&#34;&#34;&#34;
+        self.config = config
+        self.num_dims = config.num_dims
+        self.n_qubits = config.qubits_per_dim
+        self.total_qubits = config.total_qubits
+        
+        # Grid spacing (assuming [0,1]^D domain)
+        self.dx = [1.0 / config.grid_size] * config.num_dims
+        
+        # Pre-build shift MPOs for all dimensions (both +1 and -1)
+        # Note: +1 shift gives output[i] = input[i-1] (roll right)
+        self.shift_plus = []
+        for axis in range(config.num_dims):
+            mpo = make_nd_shift_mpo(
+                config.total_qubits, 
+                num_dims=config.num_dims,
+                axis_idx=axis,
+                direction=+1,
+                device=config.device,
+                dtype=config.dtype
+            )
+            self.shift_plus.append(mpo)
+        
+        print(f&#34;EulerND_Native initialized: {config.num_dims}D, {config.grid_size}^{config.num_dims} grid&#34;)
+        print(f&#34;  Total qubits: {config.total_qubits}, Max rank: {config.max_rank}&#34;)
+    
+    def _apply_shift(self, qtt: QTT2DState, axis: int) -&gt; QTT2DState:
+        &#34;&#34;&#34;
+        Apply +1 shift MPO to a QTT field along specified axis.
+        
+        Result: output[i] = input[i-1] (in axis direction)
+        &#34;&#34;&#34;
+        mpo = self.shift_plus[axis]
+        new_cores = apply_nd_shift_mpo(qtt.cores, mpo, max_rank=self.config.max_rank)
+        return QTT2DState(new_cores, nx=qtt.nx, ny=qtt.ny)
+    
+    def _qtt_add(self, a: QTT2DState, b: QTT2DState) -&gt; QTT2DState:
+        &#34;&#34;&#34;Add two QTT states: result = a + b.&#34;&#34;&#34;
+        from tensornet.cfd.pure_qtt_ops import qtt_add
+        a_qtt = QTTState(cores=a.cores, num_qubits=len(a.cores))
+        b_qtt = QTTState(cores=b.cores, num_qubits=len(b.cores))
+        result = qtt_add(a_qtt, b_qtt, max_bond=self.config.max_rank)
+        return QTT2DState(result.cores, nx=a.nx, ny=a.ny)
+    
+    def _qtt_scale(self, a: QTT2DState, scalar: float) -&gt; QTT2DState:
+        &#34;&#34;&#34;Scale a QTT state: result = scalar * a.&#34;&#34;&#34;
+        # Scale first core
+        new_cores = [c.clone() for c in a.cores]
+        new_cores[0] = new_cores[0] * scalar
+        return QTT2DState(new_cores, nx=a.nx, ny=a.ny)
+    
+    def _qtt_sub(self, a: QTT2DState, b: QTT2DState) -&gt; QTT2DState:
+        &#34;&#34;&#34;Subtract two QTT states: result = a - b.&#34;&#34;&#34;
+        return self._qtt_add(a, self._qtt_scale(b, -1.0))
+    
+    def _truncate(self, qtt: QTT2DState) -&gt; QTT2DState:
+        &#34;&#34;&#34;Truncate QTT to max_rank.&#34;&#34;&#34;
+        new_cores = truncate_cores(qtt.cores, self.config.max_rank)
+        return QTT2DState(new_cores, nx=qtt.nx, ny=qtt.ny)
+    
+    def _evolve_axis_2d(self, state: EulerNDState, dt: float, axis: int) -&gt; EulerNDState:
+        &#34;&#34;&#34;
+        Evolve 2D state in one axis direction.
+        
+        Conservative update: U^{n+1} = U^n - dt/dx * (F[i] - F[i-1])
+        Using: shift(F)[i] = F[i-1], so dF = F - shift(F)
+        &#34;&#34;&#34;
+        # Compute flux via TCI (this is O(log N)!)
+        axis_name = &#39;x&#39; if axis == 0 else &#39;y&#39;
+        flux_config = Flux2DConfig(
+            gamma=self.config.gamma,
+            max_rank=self.config.max_rank,
+            tci_tolerance=self.config.tci_tolerance,
+            dtype=self.config.dtype,
+            device=self.config.device
+        )
+        
+        F_rho, F_rhou, F_rhov, F_E = compute_flux_2d_tci(
+            state.rho, state.momentum[0], state.momentum[1], state.E,
+            axis=axis_name, config=flux_config
+        )
+        
+        # Compute flux difference: dF = F - shift(F)
+        # shift(F)[i] = F[i-1], so dF[i] = F[i] - F[i-1]
+        dF_rho = self._qtt_sub(F_rho, self._apply_shift(F_rho, axis))
+        dF_rhou = self._qtt_sub(F_rhou, self._apply_shift(F_rhou, axis))
+        dF_rhov = self._qtt_sub(F_rhov, self._apply_shift(F_rhov, axis))
+        dF_E = self._qtt_sub(F_E, self._apply_shift(F_E, axis))
+        
+        # Update: U^{n+1} = U^n - dt/dx * dF
+        coeff = -dt / self.dx[axis]
+        
+        rho_new = self._qtt_add(state.rho, self._qtt_scale(dF_rho, coeff))
+        rhou_new = self._qtt_add(state.momentum[0], self._qtt_scale(dF_rhou, coeff))
+        rhov_new = self._qtt_add(state.momentum[1], self._qtt_scale(dF_rhov, coeff))
+        E_new = self._qtt_add(state.E, self._qtt_scale(dF_E, coeff))
+        
+        # Truncate to control rank growth
+        new_state = EulerNDState(
+            rho=self._truncate(rho_new),
+            momentum=[self._truncate(rhou_new), self._truncate(rhov_new)],
+            E=self._truncate(E_new)
+        )
+        
+        return new_state
+    
+    def step_2d(self, state: EulerNDState, dt: float) -&gt; EulerNDState:
+        &#34;&#34;&#34;
+        Advance 2D state by one time step using Strang splitting.
+        
+        U^{n+1} = L_x(dt/2) L_y(dt) L_x(dt/2) U^n
+        &#34;&#34;&#34;
+        # X half-step
+        state = self._evolve_axis_2d(state, dt / 2.0, axis=0)
+        
+        # Y full-step
+        state = self._evolve_axis_2d(state, dt, axis=1)
+        
+        # X half-step
+        state = self._evolve_axis_2d(state, dt / 2.0, axis=0)
+        
+        return state
+    
+    def compute_dt(self, state: EulerNDState) -&gt; float:
+        &#34;&#34;&#34;
+        Compute stable time step based on CFL condition.
+        
+        Uses sampling to estimate max wave speed without decompression.
+        &#34;&#34;&#34;
+        gamma = self.config.gamma
+        
+        # Sample at random points to estimate max wave speed
+        n_samples = 200
+        N_total = self.config.total_points
+        sample_indices = torch.randint(0, N_total, (n_samples,), dtype=torch.long)
+        
+        rho = qtt2d_eval_batch(state.rho, sample_indices)
+        rhou = qtt2d_eval_batch(state.momentum[0], sample_indices)
+        rhov = qtt2d_eval_batch(state.momentum[1], sample_indices)
+        E = qtt2d_eval_batch(state.E, sample_indices)
+        
+        rho_safe = torch.clamp(rho, min=1e-10)
+        u = rhou / rho_safe
+        v = rhov / rho_safe
+        P = (gamma - 1) * (E - 0.5 * rho * (u**2 + v**2))
+        P = torch.clamp(P, min=1e-10)
+        
+        c = torch.sqrt(gamma * P / rho_safe)
+        
+        # Max wave speed with safety margin
+        max_speed_x = float((torch.abs(u) + c).max()) * 1.2
+        max_speed_y = float((torch.abs(v) + c).max()) * 1.2
+        
+        # CFL condition
+        dt_x = self.config.cfl * self.dx[0] / (max_speed_x + 1e-10)
+        dt_y = self.config.cfl * self.dx[1] / (max_speed_y + 1e-10)
+        
+        return min(dt_x, dt_y)</code></pre>
+</details>
+<div class="desc"><p>Fully native N-dimensional Euler solver using Strang splitting.</p>
+<p>All operations in O(log N) complexity:
+- Flux computation via TCI sampling
+- Shift operations via N-dimensional MPO
+- State updates via QTT arithmetic</p>
+<p>Strang Splitting for 2D: L_x(dt/2) L_y(dt) L_x(dt/2)
+Strang Splitting for 3D: L_x(dt/2) L_y(dt/2) L_z(dt) L_y(dt/2) L_x(dt/2)</p>
+<p>Initialize N-dimensional Euler solver.</p></div>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.euler_nd_native.EulerND_Native.compute_dt"><code class="name flex">
+<span>def <span class="ident">compute_dt</span></span>(<span>self,<br>state: <a title="tensornet.cfd.euler_nd_native.EulerNDState" href="#tensornet.cfd.euler_nd_native.EulerNDState">EulerNDState</a>) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_dt(self, state: EulerNDState) -&gt; float:
+    &#34;&#34;&#34;
+    Compute stable time step based on CFL condition.
+    
+    Uses sampling to estimate max wave speed without decompression.
+    &#34;&#34;&#34;
+    gamma = self.config.gamma
+    
+    # Sample at random points to estimate max wave speed
+    n_samples = 200
+    N_total = self.config.total_points
+    sample_indices = torch.randint(0, N_total, (n_samples,), dtype=torch.long)
+    
+    rho = qtt2d_eval_batch(state.rho, sample_indices)
+    rhou = qtt2d_eval_batch(state.momentum[0], sample_indices)
+    rhov = qtt2d_eval_batch(state.momentum[1], sample_indices)
+    E = qtt2d_eval_batch(state.E, sample_indices)
+    
+    rho_safe = torch.clamp(rho, min=1e-10)
+    u = rhou / rho_safe
+    v = rhov / rho_safe
+    P = (gamma - 1) * (E - 0.5 * rho * (u**2 + v**2))
+    P = torch.clamp(P, min=1e-10)
+    
+    c = torch.sqrt(gamma * P / rho_safe)
+    
+    # Max wave speed with safety margin
+    max_speed_x = float((torch.abs(u) + c).max()) * 1.2
+    max_speed_y = float((torch.abs(v) + c).max()) * 1.2
+    
+    # CFL condition
+    dt_x = self.config.cfl * self.dx[0] / (max_speed_x + 1e-10)
+    dt_y = self.config.cfl * self.dx[1] / (max_speed_y + 1e-10)
+    
+    return min(dt_x, dt_y)</code></pre>
+</details>
+<div class="desc"><p>Compute stable time step based on CFL condition.</p>
+<p>Uses sampling to estimate max wave speed without decompression.</p></div>
+</dd>
+<dt id="tensornet.cfd.euler_nd_native.EulerND_Native.step_2d"><code class="name flex">
+<span>def <span class="ident">step_2d</span></span>(<span>self,<br>state: <a title="tensornet.cfd.euler_nd_native.EulerNDState" href="#tensornet.cfd.euler_nd_native.EulerNDState">EulerNDState</a>,<br>dt: float) ‑> <a title="tensornet.cfd.euler_nd_native.EulerNDState" href="#tensornet.cfd.euler_nd_native.EulerNDState">EulerNDState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def step_2d(self, state: EulerNDState, dt: float) -&gt; EulerNDState:
+    &#34;&#34;&#34;
+    Advance 2D state by one time step using Strang splitting.
+    
+    U^{n+1} = L_x(dt/2) L_y(dt) L_x(dt/2) U^n
+    &#34;&#34;&#34;
+    # X half-step
+    state = self._evolve_axis_2d(state, dt / 2.0, axis=0)
+    
+    # Y full-step
+    state = self._evolve_axis_2d(state, dt, axis=1)
+    
+    # X half-step
+    state = self._evolve_axis_2d(state, dt / 2.0, axis=0)
+    
+    return state</code></pre>
+</details>
+<div class="desc"><p>Advance 2D state by one time step using Strang splitting.</p>
+<p>U^{n+1} = L_x(dt/2) L_y(dt) L_x(dt/2) U^n</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.euler_nd_native.create_kh_initial_condition_2d" href="#tensornet.cfd.euler_nd_native.create_kh_initial_condition_2d">create_kh_initial_condition_2d</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.cfd.euler_nd_native.EulerNDConfig" href="#tensornet.cfd.euler_nd_native.EulerNDConfig">EulerNDConfig</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerNDConfig.cfl" href="#tensornet.cfd.euler_nd_native.EulerNDConfig.cfl">cfl</a></code></li>
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerNDConfig.device" href="#tensornet.cfd.euler_nd_native.EulerNDConfig.device">device</a></code></li>
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerNDConfig.dtype" href="#tensornet.cfd.euler_nd_native.EulerNDConfig.dtype">dtype</a></code></li>
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerNDConfig.gamma" href="#tensornet.cfd.euler_nd_native.EulerNDConfig.gamma">gamma</a></code></li>
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerNDConfig.grid_size" href="#tensornet.cfd.euler_nd_native.EulerNDConfig.grid_size">grid_size</a></code></li>
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerNDConfig.max_rank" href="#tensornet.cfd.euler_nd_native.EulerNDConfig.max_rank">max_rank</a></code></li>
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerNDConfig.num_dims" href="#tensornet.cfd.euler_nd_native.EulerNDConfig.num_dims">num_dims</a></code></li>
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerNDConfig.qubits_per_dim" href="#tensornet.cfd.euler_nd_native.EulerNDConfig.qubits_per_dim">qubits_per_dim</a></code></li>
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerNDConfig.tci_tolerance" href="#tensornet.cfd.euler_nd_native.EulerNDConfig.tci_tolerance">tci_tolerance</a></code></li>
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerNDConfig.total_points" href="#tensornet.cfd.euler_nd_native.EulerNDConfig.total_points">total_points</a></code></li>
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerNDConfig.total_qubits" href="#tensornet.cfd.euler_nd_native.EulerNDConfig.total_qubits">total_qubits</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.euler_nd_native.EulerNDState" href="#tensornet.cfd.euler_nd_native.EulerNDState">EulerNDState</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerNDState.E" href="#tensornet.cfd.euler_nd_native.EulerNDState.E">E</a></code></li>
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerNDState.max_rank" href="#tensornet.cfd.euler_nd_native.EulerNDState.max_rank">max_rank</a></code></li>
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerNDState.momentum" href="#tensornet.cfd.euler_nd_native.EulerNDState.momentum">momentum</a></code></li>
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerNDState.num_dims" href="#tensornet.cfd.euler_nd_native.EulerNDState.num_dims">num_dims</a></code></li>
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerNDState.rho" href="#tensornet.cfd.euler_nd_native.EulerNDState.rho">rho</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.euler_nd_native.EulerND_Native" href="#tensornet.cfd.euler_nd_native.EulerND_Native">EulerND_Native</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerND_Native.compute_dt" href="#tensornet.cfd.euler_nd_native.EulerND_Native.compute_dt">compute_dt</a></code></li>
+<li><code><a title="tensornet.cfd.euler_nd_native.EulerND_Native.step_2d" href="#tensornet.cfd.euler_nd_native.EulerND_Native.step_2d">step_2d</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

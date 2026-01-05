@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.stabilized_refine API documentation</title>
+<meta name="description" content="Stabilized Newton Refinement for Self-Similar Singularity …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.stabilized_refine</code></h1>
+</header>
+<section id="section-intro">
+<p>Stabilized Newton Refinement for Self-Similar Singularity.</p>
+<p>This module implements the "QTT Shield" strategy: After every Newton step,
+we compress/decompress the profile through QTT to filter out high-frequency
+grid-scale noise that causes nan explosions.</p>
+<p>The key insight: The Hou-Luo blow-up shape is LOW-RANK (smooth).
+Grid-scale noise is HIGH-RANK. QTT truncation keeps the physics, discards the noise.</p>
+<p>Mathematical Goal:
+Find U<em> such that F(U</em>) = 0 where
+F(U) = -αU + (U·∇)U - ν∇²U + α(ξ·∇)U + ∇p</p>
+<h2 id="strategy">Strategy</h2>
+<ol>
+<li>Start with Hou-Luo profile (correct geometry)</li>
+<li>Newton/gradient descent: U ← U - η * F(U)</li>
+<li>QTT filter: U ← QTT_decompress(QTT_compress(U))</li>
+<li>Enforce symmetries to prevent drift</li>
+<li>Repeat until ||F(U)|| &lt; tol</li>
+</ol>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.stabilized_refine.apply_qtt_filter_3d"><code class="name flex">
+<span>def <span class="ident">apply_qtt_filter_3d</span></span>(<span>U: torch.Tensor, chi_max: int = 64, tol: float = 1e-08) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def apply_qtt_filter_3d(U: torch.Tensor, chi_max: int = 64, tol: float = 1e-8) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Apply QTT compression/decompression as a spectral filter for 3D velocity field.
+    
+    This is the &#34;Shield&#34; that prevents nan explosions:
+    - Captures the smooth Hou-Luo structure
+    - Discards high-frequency numerical noise
+    
+    Args:
+        U: Velocity field (N, N, N, 3)
+        chi_max: Maximum QTT bond dimension
+        tol: Truncation tolerance
+        
+    Returns:
+        Filtered velocity field
+    &#34;&#34;&#34;
+    N = U.shape[0]
+    filtered = torch.zeros_like(U)
+    
+    for component in range(3):
+        for k in range(N):
+            # Extract 2D slice
+            slice_2d = U[:, :, k, component].clone()
+            
+            # Skip if slice is all zeros or near-zero
+            if slice_2d.abs().max() &lt; 1e-14:
+                continue
+                
+            try:
+                # Compress to QTT
+                result = field_to_qtt(slice_2d, chi_max=chi_max, tol=tol)
+                # Decompress (filtering step)
+                reconstructed = qtt_to_field(result)
+                filtered[:, :, k, component] = reconstructed[:N, :N]
+            except Exception:
+                # If QTT fails, keep original (shouldn&#39;t happen for smooth data)
+                filtered[:, :, k, component] = slice_2d
+    
+    return filtered</code></pre>
+</details>
+<div class="desc"><p>Apply QTT compression/decompression as a spectral filter for 3D velocity field.</p>
+<p>This is the "Shield" that prevents nan explosions:
+- Captures the smooth Hou-Luo structure
+- Discards high-frequency numerical noise</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>U</code></strong></dt>
+<dd>Velocity field (N, N, N, 3)</dd>
+<dt><strong><code>chi_max</code></strong></dt>
+<dd>Maximum QTT bond dimension</dd>
+<dt><strong><code>tol</code></strong></dt>
+<dd>Truncation tolerance</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Filtered velocity field</p></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.apply_spectral_filter"><code class="name flex">
+<span>def <span class="ident">apply_spectral_filter</span></span>(<span>U: torch.Tensor, cutoff_ratio: float = 0.667) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def apply_spectral_filter(U: torch.Tensor, cutoff_ratio: float = 0.667) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Fast spectral dealiasing filter (2/3 rule).
+    
+    Much faster than QTT for large grids. Removes aliasing errors
+    that cause numerical instability.
+    
+    Args:
+        U: Velocity field (N, N, N, 3)
+        cutoff_ratio: Keep modes below this fraction of Nyquist
+        
+    Returns:
+        Filtered velocity field
+    &#34;&#34;&#34;
+    N = U.shape[0]
+    
+    # Spectral grid
+    k = torch.fft.fftfreq(N) * N  # Wavenumbers 0 to N/2, then -N/2 to -1
+    kx, ky, kz = torch.meshgrid(k, k, k, indexing=&#39;ij&#39;)
+    k_max = torch.abs(torch.stack([kx, ky, kz], dim=-1)).max(dim=-1).values
+    
+    # Sharp cutoff at 2/3 Nyquist
+    cutoff = N * cutoff_ratio / 2
+    mask = (k_max &lt;= cutoff).float().unsqueeze(-1)
+    
+    # Apply filter in spectral space
+    U_hat = torch.fft.fftn(U, dim=(0, 1, 2))
+    U_hat_filtered = U_hat * mask
+    U_filtered = torch.fft.ifftn(U_hat_filtered, dim=(0, 1, 2)).real
+    
+    return U_filtered</code></pre>
+</details>
+<div class="desc"><p>Fast spectral dealiasing filter (2/3 rule).</p>
+<p>Much faster than QTT for large grids. Removes aliasing errors
+that cause numerical instability.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>U</code></strong></dt>
+<dd>Velocity field (N, N, N, 3)</dd>
+<dt><strong><code>cutoff_ratio</code></strong></dt>
+<dd>Keep modes below this fraction of Nyquist</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Filtered velocity field</p></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.compute_residual_direct"><code class="name flex">
+<span>def <span class="ident">compute_residual_direct</span></span>(<span>U: torch.Tensor, alpha: float, nu: float, tau: float = 10.0) ‑> Tuple[torch.Tensor, float]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_residual_direct(
+    U: torch.Tensor, 
+    alpha: float, 
+    nu: float,
+    tau: float = 10.0,
+) -&gt; Tuple[torch.Tensor, float]:
+    &#34;&#34;&#34;
+    Compute the self-similar fixed point residual F(U).
+    
+    Uses the same computation as RescaledNSEquations to ensure consistency
+    with the Kantorovich verifier.
+    
+    F(U) = -(U·∇)U - αU - β(ξ·∇)U + ν_eff∇²U - ∇p
+    
+    At a true singularity: F(U*) = 0
+    &#34;&#34;&#34;
+    N = U.shape[0]
+    L = 2 * np.pi
+    dx = L / N
+    
+    # Same parameters as RescaledNSEquations
+    beta = alpha  # Standard choice: α = β
+    
+    # Effective viscosity (should match RescaledNSEquations)
+    # For τ → ∞ fixed point, we want the steady-state form
+    # Use τ = 0 for the fixed-point equation (nu_eff = nu)
+    nu_eff = nu  # At the fixed point, use physical viscosity
+    
+    # Spectral grid
+    k = torch.fft.fftfreq(N, dx) * 2 * np.pi
+    kx, ky, kz = torch.meshgrid(k, k, k, indexing=&#39;ij&#39;)
+    k_sq = kx**2 + ky**2 + kz**2
+    k_sq_safe = k_sq.clone()
+    k_sq_safe[0, 0, 0] = 1.0
+    
+    # ξ coordinates (rescaled spatial)
+    xi = torch.linspace(-L/2, L/2, N, dtype=U.dtype)
+    
+    # FFT of U
+    U_hat = torch.fft.fftn(U, dim=(0, 1, 2))
+    
+    # Derivatives
+    dUdx = torch.fft.ifftn(1j * kx.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+    dUdy = torch.fft.ifftn(1j * ky.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+    dUdz = torch.fft.ifftn(1j * kz.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+    
+    # Laplacian
+    lap_U = torch.fft.ifftn(-k_sq.unsqueeze(-1) * U_hat, dim=(0, 1, 2)).real
+    
+    # Nonlinear: (U·∇)U
+    advection = torch.zeros_like(U)
+    for i in range(3):
+        advection[..., i] = (
+            U[..., 0] * dUdx[..., i] + 
+            U[..., 1] * dUdy[..., i] + 
+            U[..., 2] * dUdz[..., i]
+        )
+    
+    # Stretching: β(ξ·∇)U + αU
+    xi_x = xi.view(-1, 1, 1, 1).expand_as(U)
+    xi_y = xi.view(1, -1, 1, 1).expand_as(U)
+    xi_z = xi.view(1, 1, -1, 1).expand_as(U)
+    
+    xi_dot_grad_U = xi_x * dUdx + xi_y * dUdy + xi_z * dUdz
+    stretching = beta * xi_dot_grad_U + alpha * U
+    
+    # Residual (before pressure projection):
+    # R = -(U·∇)U - αU - β(ξ·∇)U + ν_eff ΔU
+    R_unprojected = -advection - stretching + nu_eff * lap_U
+    
+    # Pressure projection: R → R - ∇p where p solves ∇²p = ∇·R
+    R_hat = torch.fft.fftn(R_unprojected, dim=(0, 1, 2))
+    
+    # Divergence of R in spectral space
+    div_R = (1j * kx * R_hat[..., 0] + 
+             1j * ky * R_hat[..., 1] + 
+             1j * kz * R_hat[..., 2])
+    
+    # Pressure solve: ∇²p = ∇·R → p_hat = div_R / k²
+    p_hat = div_R / k_sq_safe
+    p_hat[0, 0, 0] = 0  # Zero mean pressure
+    
+    # Gradient of pressure
+    proj_hat = R_hat.clone()
+    proj_hat[..., 0] -= 1j * kx * p_hat
+    proj_hat[..., 1] -= 1j * ky * p_hat
+    proj_hat[..., 2] -= 1j * kz * p_hat
+    
+    # Final residual (divergence-free)
+    F = torch.fft.ifftn(proj_hat, dim=(0, 1, 2)).real
+    
+    # L2 norm
+    f_norm = torch.sqrt((F**2).sum() * dx**3).item()
+    
+    return F, f_norm</code></pre>
+</details>
+<div class="desc"><p>Compute the self-similar fixed point residual F(U).</p>
+<p>Uses the same computation as RescaledNSEquations to ensure consistency
+with the Kantorovich verifier.</p>
+<p>F(U) = -(U·∇)U - αU - β(ξ·∇)U + ν_eff∇²U - ∇p</p>
+<p>At a true singularity: F(U*) = 0</p></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.enforce_hou_luo_symmetry"><code class="name flex">
+<span>def <span class="ident">enforce_hou_luo_symmetry</span></span>(<span>U: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def enforce_hou_luo_symmetry(U: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Enforce the critical symmetries for Hou-Luo axisymmetric blow-up.
+    
+    The Hou-Luo singularity has:
+    1. Axisymmetry about z-axis: u_r(r,z) = u_r(r,-z), u_z(r,z) = -u_z(r,-z)
+    2. Regularity at axis: u_r → 0 as r → 0
+    
+    This prevents the singularity from drifting off-center.
+    &#34;&#34;&#34;
+    N = U.shape[0]
+    
+    # Enforce smoothness at boundaries (periodic damping near edges)
+    # This prevents boundary artifacts from corrupting the interior
+    edge_width = max(2, N // 16)
+    
+    # Create smooth damping window
+    x = torch.linspace(0, 1, N)
+    window_1d = torch.ones(N)
+    
+    # Smooth edges using cosine taper
+    for i in range(edge_width):
+        weight = 0.5 * (1 - np.cos(np.pi * i / edge_width))
+        window_1d[i] = weight
+        window_1d[-(i+1)] = weight
+    
+    window_3d = window_1d.view(-1, 1, 1) * window_1d.view(1, -1, 1) * window_1d.view(1, 1, -1)
+    window_3d = window_3d.unsqueeze(-1).expand_as(U)
+    
+    # Apply windowing
+    U_symmetric = U * window_3d
+    
+    # Enforce zero mean (remove drift)
+    U_symmetric = U_symmetric - U_symmetric.mean(dim=(0, 1, 2), keepdim=True)
+    
+    return U_symmetric</code></pre>
+</details>
+<div class="desc"><p>Enforce the critical symmetries for Hou-Luo axisymmetric blow-up.</p>
+<p>The Hou-Luo singularity has:
+1. Axisymmetry about z-axis: u_r(r,z) = u_r(r,-z), u_z(r,z) = -u_z(r,-z)
+2. Regularity at axis: u_r → 0 as r → 0</p>
+<p>This prevents the singularity from drifting off-center.</p></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.stabilized_newton_refinement"><code class="name flex">
+<span>def <span class="ident">stabilized_newton_refinement</span></span>(<span>config: <a title="tensornet.cfd.stabilized_refine.RefinementConfig" href="#tensornet.cfd.stabilized_refine.RefinementConfig">RefinementConfig</a> = None) ‑> <a title="tensornet.cfd.stabilized_refine.RefinementResult" href="#tensornet.cfd.stabilized_refine.RefinementResult">RefinementResult</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def stabilized_newton_refinement(config: RefinementConfig = None) -&gt; RefinementResult:
+    &#34;&#34;&#34;
+    Stabilized Newton refinement with QTT spectral filtering.
+    
+    This is the key algorithm that makes refinement possible:
+    After every update step, we filter through QTT to remove
+    high-frequency noise that would otherwise cause nan.
+    &#34;&#34;&#34;
+    if config is None:
+        config = RefinementConfig()
+    
+    print(&#34;=&#34; * 70)
+    print(&#34;STABILIZED NEWTON REFINEMENT&#34;)
+    print(&#34;=&#34; * 70)
+    print(f&#34;  Grid: {config.N}³&#34;)
+    print(f&#34;  Viscosity: ν = {config.nu}&#34;)
+    print(f&#34;  Initial α: {config.alpha:.4f}&#34;)
+    print(f&#34;  QTT bond dim: χ = {config.chi_max}&#34;)
+    print(f&#34;  Damping: η = {config.eta}&#34;)
+    print(&#34;-&#34; * 70)
+    
+    # Initialize with Hou-Luo profile
+    hou_config = HouLuoConfig(N=config.N)
+    U = create_hou_luo_profile(hou_config)
+    alpha = config.alpha
+    
+    residual_history = []
+    best_U = U.clone()
+    best_alpha = alpha
+    best_f = float(&#39;inf&#39;)
+    
+    # Adaptive step sizing
+    current_eta = config.eta
+    
+    t_start = time.time()
+    
+    for iteration in range(config.max_iter):
+        # Compute residual
+        F, f_norm = compute_residual_direct(U, alpha, config.nu)
+        
+        # Nan guard - reset to best if explosion detected
+        if np.isnan(f_norm) or np.isinf(f_norm) or f_norm &gt; 1e20:
+            if config.verbose:
+                print(f&#34;  Iter {iteration:3d}: EXPLOSION - resetting to best, η/=2&#34;)
+            U = best_U.clone()
+            alpha = best_alpha
+            current_eta *= 0.5
+            
+            if current_eta &lt; 1e-8:
+                print(&#34;  Step size too small, stopping&#34;)
+                break
+            continue
+        
+        residual_history.append(f_norm)
+        
+        # Track best
+        if f_norm &lt; best_f:
+            best_f = f_norm
+            best_U = U.clone()
+            best_alpha = alpha
+            # Successful improvement - slightly increase step size
+            current_eta = min(config.eta * 2, current_eta * 1.2)
+        else:
+            # No improvement - decrease step size
+            current_eta *= 0.9
+        
+        # Print progress
+        if config.verbose:
+            if iteration % 10 == 0:
+                print(f&#34;  Iter {iteration:3d}: ||F|| = {f_norm:.6e} | α = {alpha:.5f} | η = {current_eta:.2e} | best = {best_f:.2e}&#34;)
+        
+        # Check convergence
+        if f_norm &lt; config.tol:
+            print(&#34;-&#34; * 70)
+            print(f&#34;  ★ CONVERGED in {iteration} iterations!&#34;)
+            print(f&#34;  Final ||F|| = {f_norm:.6e}&#34;)
+            print(&#34;=&#34; * 70)
+            
+            return RefinementResult(
+                profile=U,
+                alpha=alpha,
+                residual_history=residual_history,
+                converged=True,
+                n_iterations=iteration,
+                final_residual=f_norm,
+            )
+        
+        # ═══════════════════════════════════════════════════════════════
+        # LINE SEARCH: Try different step sizes to ensure descent
+        # Use fast spectral filter for large grids, QTT only for small
+        # ═══════════════════════════════════════════════════════════════
+        
+        best_step_f = f_norm
+        best_U_step = U.clone()
+        found_descent = False
+        
+        # Choose filter based on grid size (QTT too slow for N &gt; 64)
+        use_qtt = config.N &lt;= 64
+        
+        for step_scale in [1.0, 0.5, 0.25, 0.1]:
+            # Gradient descent update: U -= eta * F
+            eta_try = current_eta * step_scale
+            U_trial = U - eta_try * F
+            
+            # Apply filter (spectral for large grids, QTT for small)
+            if use_qtt:
+                U_trial_filtered = apply_qtt_filter_3d(U_trial, chi_max=config.chi_max, tol=config.qtt_tol)
+            else:
+                U_trial_filtered = apply_spectral_filter(U_trial)
+            U_trial_sym = enforce_hou_luo_symmetry(U_trial_filtered)
+            
+            # Evaluate
+            _, f_trial = compute_residual_direct(U_trial_sym, alpha, config.nu)
+            
+            if not np.isnan(f_trial) and f_trial &lt; best_step_f:
+                best_step_f = f_trial
+                best_U_step = U_trial_sym.clone()
+                found_descent = True
+        
+        # Accept the best step
+        if found_descent:
+            U = best_U_step
+        else:
+            # No descent found - try alpha adjustment
+            for alpha_delta in [0.02, -0.02, 0.05, -0.05]:
+                alpha_test = max(0.1, min(1.5, alpha + alpha_delta))
+                _, f_test = compute_residual_direct(U, alpha_test, config.nu)
+                
+                if not np.isnan(f_test) and f_test &lt; f_norm:
+                    alpha = alpha_test
+                    break
+        
+        # Periodic alpha optimization
+        if config.alpha_adapt and iteration % 20 == 0 and iteration &gt; 0:
+            # Grid search for better alpha
+            best_alpha_f = f_norm
+            best_alpha_val = alpha
+            
+            for alpha_test in np.linspace(max(0.1, alpha - 0.1), min(1.5, alpha + 0.1), 11):
+                _, f_test = compute_residual_direct(U, alpha_test, config.nu)
+                if not np.isnan(f_test) and f_test &lt; best_alpha_f:
+                    best_alpha_f = f_test
+                    best_alpha_val = alpha_test
+            
+            if best_alpha_val != alpha:
+                alpha = best_alpha_val
+                if config.verbose:
+                    print(f&#34;         ★ α updated to {alpha:.4f} (||F|| = {best_alpha_f:.2e})&#34;)
+        
+        # Early termination if stuck
+        if len(residual_history) &gt;= 20:
+            recent = residual_history[-20:]
+            if max(recent) - min(recent) &lt; 1e-10:
+                print(f&#34;\n  Stagnated at iteration {iteration}&#34;)
+                break
+    
+    elapsed = time.time() - t_start
+    
+    print(&#34;-&#34; * 70)
+    print(f&#34;  Refinement complete ({iteration + 1} iterations, {elapsed:.1f}s)&#34;)
+    print(f&#34;  Best ||F|| = {best_f:.6e}&#34;)
+    print(f&#34;  Best α = {best_alpha:.5f}&#34;)
+    print(&#34;=&#34; * 70)
+    
+    return RefinementResult(
+        profile=best_U,
+        alpha=best_alpha,
+        residual_history=residual_history,
+        converged=False,
+        n_iterations=iteration + 1,
+        final_residual=best_f,
+    )</code></pre>
+</details>
+<div class="desc"><p>Stabilized Newton refinement with QTT spectral filtering.</p>
+<p>This is the key algorithm that makes refinement possible:
+After every update step, we filter through QTT to remove
+high-frequency noise that would otherwise cause nan.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.cfd.stabilized_refine.RefinementConfig"><code class="flex name class">
+<span>class <span class="ident">RefinementConfig</span></span>
+<span>(</span><span>N: int = 64,<br>nu: float = 0.001,<br>alpha: float = 0.2833,<br>max_iter: int = 200,<br>tol: float = 1e-06,<br>eta: float = 0.01,<br>chi_max: int = 64,<br>qtt_tol: float = 1e-08,<br>alpha_adapt: bool = True,<br>verbose: bool = True)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class RefinementConfig:
+    &#34;&#34;&#34;Configuration for stabilized refinement.&#34;&#34;&#34;
+    N: int = 64                    # Grid resolution
+    nu: float = 1e-3               # Viscosity
+    alpha: float = 0.2833          # Initial rescaling exponent
+    max_iter: int = 200            # Maximum iterations
+    tol: float = 1e-6              # Convergence tolerance on ||F||
+    eta: float = 0.01              # Damping factor (step size) - smaller for stability
+    chi_max: int = 64              # QTT bond dimension
+    qtt_tol: float = 1e-8          # QTT truncation tolerance
+    alpha_adapt: bool = True       # Jointly optimize alpha
+    verbose: bool = True</code></pre>
+</details>
+<div class="desc"><p>Configuration for stabilized refinement.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.stabilized_refine.RefinementConfig.N"><code class="name">var <span class="ident">N</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.RefinementConfig.alpha"><code class="name">var <span class="ident">alpha</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.RefinementConfig.alpha_adapt"><code class="name">var <span class="ident">alpha_adapt</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.RefinementConfig.chi_max"><code class="name">var <span class="ident">chi_max</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.RefinementConfig.eta"><code class="name">var <span class="ident">eta</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.RefinementConfig.max_iter"><code class="name">var <span class="ident">max_iter</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.RefinementConfig.nu"><code class="name">var <span class="ident">nu</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.RefinementConfig.qtt_tol"><code class="name">var <span class="ident">qtt_tol</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.RefinementConfig.tol"><code class="name">var <span class="ident">tol</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.RefinementConfig.verbose"><code class="name">var <span class="ident">verbose</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.RefinementResult"><code class="flex name class">
+<span>class <span class="ident">RefinementResult</span></span>
+<span>(</span><span>profile: torch.Tensor,<br>alpha: float,<br>residual_history: list,<br>converged: bool,<br>n_iterations: int,<br>final_residual: float)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class RefinementResult:
+    &#34;&#34;&#34;Result of stabilized refinement.&#34;&#34;&#34;
+    profile: torch.Tensor          # Refined profile
+    alpha: float                   # Final rescaling exponent
+    residual_history: list         # ||F|| at each iteration
+    converged: bool
+    n_iterations: int
+    final_residual: float</code></pre>
+</details>
+<div class="desc"><p>Result of stabilized refinement.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.stabilized_refine.RefinementResult.alpha"><code class="name">var <span class="ident">alpha</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.RefinementResult.converged"><code class="name">var <span class="ident">converged</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.RefinementResult.final_residual"><code class="name">var <span class="ident">final_residual</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.RefinementResult.n_iterations"><code class="name">var <span class="ident">n_iterations</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.RefinementResult.profile"><code class="name">var <span class="ident">profile</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.stabilized_refine.RefinementResult.residual_history"><code class="name">var <span class="ident">residual_history</span> : list</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.stabilized_refine.apply_qtt_filter_3d" href="#tensornet.cfd.stabilized_refine.apply_qtt_filter_3d">apply_qtt_filter_3d</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.apply_spectral_filter" href="#tensornet.cfd.stabilized_refine.apply_spectral_filter">apply_spectral_filter</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.compute_residual_direct" href="#tensornet.cfd.stabilized_refine.compute_residual_direct">compute_residual_direct</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.enforce_hou_luo_symmetry" href="#tensornet.cfd.stabilized_refine.enforce_hou_luo_symmetry">enforce_hou_luo_symmetry</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.stabilized_newton_refinement" href="#tensornet.cfd.stabilized_refine.stabilized_newton_refinement">stabilized_newton_refinement</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.cfd.stabilized_refine.RefinementConfig" href="#tensornet.cfd.stabilized_refine.RefinementConfig">RefinementConfig</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.stabilized_refine.RefinementConfig.N" href="#tensornet.cfd.stabilized_refine.RefinementConfig.N">N</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.RefinementConfig.alpha" href="#tensornet.cfd.stabilized_refine.RefinementConfig.alpha">alpha</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.RefinementConfig.alpha_adapt" href="#tensornet.cfd.stabilized_refine.RefinementConfig.alpha_adapt">alpha_adapt</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.RefinementConfig.chi_max" href="#tensornet.cfd.stabilized_refine.RefinementConfig.chi_max">chi_max</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.RefinementConfig.eta" href="#tensornet.cfd.stabilized_refine.RefinementConfig.eta">eta</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.RefinementConfig.max_iter" href="#tensornet.cfd.stabilized_refine.RefinementConfig.max_iter">max_iter</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.RefinementConfig.nu" href="#tensornet.cfd.stabilized_refine.RefinementConfig.nu">nu</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.RefinementConfig.qtt_tol" href="#tensornet.cfd.stabilized_refine.RefinementConfig.qtt_tol">qtt_tol</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.RefinementConfig.tol" href="#tensornet.cfd.stabilized_refine.RefinementConfig.tol">tol</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.RefinementConfig.verbose" href="#tensornet.cfd.stabilized_refine.RefinementConfig.verbose">verbose</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.stabilized_refine.RefinementResult" href="#tensornet.cfd.stabilized_refine.RefinementResult">RefinementResult</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.stabilized_refine.RefinementResult.alpha" href="#tensornet.cfd.stabilized_refine.RefinementResult.alpha">alpha</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.RefinementResult.converged" href="#tensornet.cfd.stabilized_refine.RefinementResult.converged">converged</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.RefinementResult.final_residual" href="#tensornet.cfd.stabilized_refine.RefinementResult.final_residual">final_residual</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.RefinementResult.n_iterations" href="#tensornet.cfd.stabilized_refine.RefinementResult.n_iterations">n_iterations</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.RefinementResult.profile" href="#tensornet.cfd.stabilized_refine.RefinementResult.profile">profile</a></code></li>
+<li><code><a title="tensornet.cfd.stabilized_refine.RefinementResult.residual_history" href="#tensornet.cfd.stabilized_refine.RefinementResult.residual_history">residual_history</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,97 @@
+[package]
+name = "glass_cockpit"
+version = "0.1.0"
+edition = "2021"
+authors = ["TiganticLabz <dev@tigantic.com>"]
+description = "Fighter jet cockpit visualization - HyperTensor atmospheric intelligence"
+license = "LicenseRef-Proprietary"
+rust-version = "1.75"
+
+[dependencies]
+# ─────────────────────────────────────────────────────────────────────────────
+# Workspace Crates
+# ─────────────────────────────────────────────────────────────────────────────
+hyper_bridge = { path = "../../crates/hyper_bridge" }
+hyper_core = { path = "../../crates/hyper_core" }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Graphics Pipeline
+# ─────────────────────────────────────────────────────────────────────────────
+wgpu.workspace = true
+winit.workspace = true
+glam.workspace = true
+raw-window-handle = "0.6"
+pollster = "0.3"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Shared (inherited from workspace)
+# ─────────────────────────────────────────────────────────────────────────────
+bytemuck.workspace = true
+memmap2.workspace = true
+shared_memory.workspace = true
+crc.workspace = true
+tokio.workspace = true
+thiserror.workspace = true
+anyhow.workspace = true
+
+# ─────────────────────────────────────────────────────────────────────────────
+# App-Specific
+# ─────────────────────────────────────────────────────────────────────────────
+reqwest = { version = "0.11", features = ["rustls-tls"], default-features = false }
+chrono = { version = "0.4", features = ["serde"] }
+image = { version = "0.24", default-features = false, features = ["jpeg", "png"] }
+
+# Performance and Profiling
+tracy-client = { version = "0.17", optional = true }
+
+# Logging (only during development)
+env_logger = { version = "0.11", optional = true }
+log = { version = "0.4", optional = true }
+
+[dev-dependencies]
+criterion = "0.5"
+
+[features]
+default = []
+profiling = ["tracy-client"]
+debug-logging = ["env_logger", "log"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Binary Targets
+# ─────────────────────────────────────────────────────────────────────────────
+[[bin]]
+name = "glass-cockpit"
+path = "src/main.rs"
+
+[[bin]]
+name = "phase3"
+path = "src/main_phase3.rs"
+
+[[bin]]
+name = "phase4"
+path = "src/main_phase4.rs"
+
+[[bin]]
+name = "phase5"
+path = "src/main_phase5.rs"
+
+[[bin]]
+name = "phase6"
+path = "src/main_phase6.rs"
+
+[[bin]]
+name = "phase7"
+path = "src/main_phase7.rs"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Platform-Specific Dependencies
+# ─────────────────────────────────────────────────────────────────────────────
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.52", features = [
+    "Win32_Foundation",
+    "Win32_System_Threading",
+    "Win32_System_SystemInformation",
+] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+nix = { version = "0.27", features = ["mman"] }

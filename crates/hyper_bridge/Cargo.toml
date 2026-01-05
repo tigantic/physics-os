@@ -1,0 +1,29 @@
+[package]
+name = "hyper_bridge"
+version = "0.1.0"
+edition = "2021"
+authors = ["TiganticLabz <dev@tigantic.com>"]
+description = "RAM Bridge IPC protocol for Python ↔ Rust tensor streaming"
+license = "LicenseRef-Proprietary"
+rust-version = "1.75"
+
+[dependencies]
+# Shared Memory IPC
+memmap2.workspace = true
+shared_memory.workspace = true
+
+# Math (for trajectory geometry)
+glam.workspace = true
+
+# Serialization  
+bytemuck.workspace = true
+crc.workspace = true
+
+# Error Handling
+thiserror.workspace = true
+
+[dev-dependencies]
+tempfile = "3.9"
+
+[features]
+default = []

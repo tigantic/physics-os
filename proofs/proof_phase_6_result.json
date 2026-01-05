@@ -1,0 +1,90 @@
+{
+  "phase": 6,
+  "title": "Millennium Connection",
+  "summary": {
+    "BKM Analog": "PASS",
+    "Energy-Enstrophy Balance": "PASS",
+    "Regularity Certificate": "PASS",
+    "Scaling Law": "PASS"
+  },
+  "passed": 4,
+  "total": 4,
+  "details": {
+    "bkm_analog": {
+      "T_final": 2.0,
+      "chi_integral": 4.0,
+      "theoretical_max": 4.0,
+      "chi_max": 2.0,
+      "chi_initial": 2.0,
+      "is_bounded": true,
+      "chi_stable": true,
+      "success": true
+    },
+    "energy_enstrophy": {
+      "nu": 0.1,
+      "mean_energy": 0.2266016545593643,
+      "mean_enstrophy": 0.4532033091187287,
+      "mean_dE_dt": -0.09064019267161867,
+      "mean_dissipation": -0.09064066182374576,
+      "mean_relative_error": 2.6666686635931905e-06,
+      "max_relative_error": 2.6666687269519177e-06,
+      "success": true
+    },
+    "regularity_certificate": {
+      "certificate": {
+        "initial_data": {
+          "type": "Taylor-Green vortex",
+          "resolution": 64,
+          "domain_size": 6.283185307179586,
+          "viscosity": 0.1,
+          "u_max": 1.0,
+          "v_max": 1.0,
+          "chi_initial": 2,
+          "gradient_norm_initial": 1.0,
+          "enstrophy_initial": 0.5000000000000001
+        },
+        "evolution": {
+          "T_final": 1.0,
+          "n_steps": 100,
+          "dt": 0.01
+        },
+        "regularity_analysis": {
+          "chi_max": 2,
+          "chi_final": 2,
+          "chi_growth_rate": 0.0,
+          "gradient_ratio": 0.8187307530780037,
+          "assessment": "smooth"
+        },
+        "certificate_valid": true,
+        "verification": {
+          "chi_bounded": true,
+          "assessment_smooth": true,
+          "gradient_bounded": true
+        }
+      },
+      "success": true
+    },
+    "scaling_law": {
+      "resolutions": [
+        32,
+        64,
+        128
+      ],
+      "grad_smooth": [
+        1.0,
+        1.0,
+        1.0000000000000002
+      ],
+      "grad_rough": [
+        4.195708328451978,
+        4.163959970366965,
+        4.143942008298256
+      ],
+      "smooth_variation": 1.2819751242557092e-16,
+      "smooth_stable": true,
+      "rough_higher": true,
+      "rough_converged": true,
+      "success": true
+    }
+  }
+}

@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+title: HyperTensor
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - name: TiganticLabz
+repository-code: https://github.com/TiganticLabz/hypertensor
+url: https://github.com/TiganticLabz/hypertensor
+abstract: >-
+  A pure PyTorch implementation of Matrix Product States (MPS) and 
+  Matrix Product Operators (MPO) for many-body quantum physics and 
+  computational fluid dynamics. Features DMRG ground state search, 
+  TEBD/TDVP time evolution, and compressible Euler solvers.
+keywords:
+  - tensor networks
+  - matrix product states
+  - DMRG
+  - quantum many-body physics
+  - computational fluid dynamics
+  - PyTorch
+license: LicenseRef-Proprietary
+version: 0.1.0
+date-released: 2025-12-21

@@ -1,0 +1,1909 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.adaptive_tt API documentation</title>
+<meta name="description" content="TT-AMR: Adaptive Bond Dimension for Tensor-Train CFD …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.adaptive_tt</code></h1>
+</header>
+<section id="section-intro">
+<p>TT-AMR: Adaptive Bond Dimension for Tensor-Train CFD.</p>
+<p>This module implements the tensor network equivalent of Adaptive Mesh
+Refinement (AMR). Instead of refining spatial cells, we adaptively
+increase bond dimension χ near discontinuities (shocks, contact surfaces)
+and decrease it in smooth regions.</p>
+<p>Key Components:
+- ShockDetector: Identifies discontinuities from TT core structure
+- BondAdapter: Dynamically adjusts χ allocation
+- AdaptiveTTEuler: Euler solver with TT-AMR</p>
+<p>The entanglement entropy across a bond measures how much information
+flows through that connection. Shocks create localized high-entropy
+regions that require larger χ.</p>
+<p>References:
+- GRAND_VISION.md §3.3 — Adaptive Bond Dimension
+- Bachmayr et al. (2016) "Adaptive low-rank methods for PDE"</p>
+<p>Constitution Compliance: Article I.1 (Proof Requirements)</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.adaptive_tt.compute_compression_ratio_profile"><code class="name flex">
+<span>def <span class="ident">compute_compression_ratio_profile</span></span>(<span>mps: MPSState) ‑> List[float]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_compression_ratio_profile(mps: MPSState) -&gt; List[float]:
+    &#34;&#34;&#34;
+    Compute local compression ratio at each bond.
+    
+    Compares TT storage to what full-rank would require.
+    
+    Returns:
+        List of compression ratios (higher = more compressed)
+    &#34;&#34;&#34;
+    cores = mps.cores
+    n_sites = len(cores)
+    n_vars = mps.n_vars
+    
+    ratios = []
+    
+    for i in range(n_sites - 1):
+        chi_l, d, chi_r = cores[i].shape
+        
+        # Full-rank bond dimension would be d
+        full_rank_chi = d
+        
+        # Actual is chi_r (right bond)
+        actual_chi = chi_r
+        
+        ratio = full_rank_chi / max(actual_chi, 1)
+        ratios.append(ratio)
+    
+    return ratios</code></pre>
+</details>
+<div class="desc"><p>Compute local compression ratio at each bond.</p>
+<p>Compares TT storage to what full-rank would require.</p>
+<h2 id="returns">Returns</h2>
+<p>List of compression ratios (higher = more compressed)</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.estimate_memory_savings"><code class="name flex">
+<span>def <span class="ident">estimate_memory_savings</span></span>(<span>N: int, chi_profile: List[int], n_vars: int = 3) ‑> Dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def estimate_memory_savings(
+    N: int,
+    chi_profile: List[int],
+    n_vars: int = 3
+) -&gt; Dict:
+    &#34;&#34;&#34;
+    Estimate memory savings from TT compression.
+    
+    Args:
+        N: Number of grid points
+        chi_profile: Bond dimensions at each bond
+        n_vars: Number of variables per point
+        
+    Returns:
+        Dictionary with storage estimates
+    &#34;&#34;&#34;
+    # Dense storage
+    dense_storage = N * n_vars
+    
+    # TT storage: sum of chi_l * d * chi_r for each core
+    tt_storage = 0
+    
+    for i, chi in enumerate(chi_profile):
+        chi_l = chi_profile[i-1] if i &gt; 0 else 1
+        chi_r = chi
+        d = n_vars
+        
+        tt_storage += chi_l * d * chi_r
+    
+    # Last core
+    if chi_profile:
+        tt_storage += chi_profile[-1] * n_vars * 1
+    
+    return {
+        &#39;dense_storage&#39;: dense_storage,
+        &#39;tt_storage&#39;: tt_storage,
+        &#39;compression_ratio&#39;: dense_storage / max(tt_storage, 1),
+        &#39;memory_fraction&#39;: tt_storage / max(dense_storage, 1),
+    }</code></pre>
+</details>
+<div class="desc"><p>Estimate memory savings from TT compression.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>N</code></strong></dt>
+<dd>Number of grid points</dd>
+<dt><strong><code>chi_profile</code></strong></dt>
+<dd>Bond dimensions at each bond</dd>
+<dt><strong><code>n_vars</code></strong></dt>
+<dd>Number of variables per point</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Dictionary with storage estimates</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTConfig"><code class="flex name class">
+<span>class <span class="ident">AdaptiveTTConfig</span></span>
+<span>(</span><span>chi_min: int = 4,<br>chi_max: int = 128,<br>chi_base: int = 16,<br>chi_boost: int = 4,<br>gradient_threshold: float = 0.1,<br>entropy_threshold: float = 0.5,<br>adaptation_interval: int = 10,<br>smoothing_window: int = 3,<br>hysteresis: float = 0.1)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class AdaptiveTTConfig:
+    &#34;&#34;&#34;Configuration for adaptive bond dimension.&#34;&#34;&#34;
+    chi_min: int = 4           # Minimum bond dimension
+    chi_max: int = 128         # Maximum bond dimension
+    chi_base: int = 16         # Base bond dimension in smooth regions
+    chi_boost: int = 4         # Multiplier for shock regions
+    
+    # Detection thresholds
+    gradient_threshold: float = 0.1    # |∂u/∂x| threshold for shock
+    entropy_threshold: float = 0.5     # Entanglement entropy threshold
+    
+    # Adaptation parameters
+    adaptation_interval: int = 10      # Steps between adaptations
+    smoothing_window: int = 3          # Smoothing for shock detection
+    hysteresis: float = 0.1            # Prevent oscillation</code></pre>
+</details>
+<div class="desc"><p>Configuration for adaptive bond dimension.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.adaptation_interval"><code class="name">var <span class="ident">adaptation_interval</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.chi_base"><code class="name">var <span class="ident">chi_base</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.chi_boost"><code class="name">var <span class="ident">chi_boost</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.chi_max"><code class="name">var <span class="ident">chi_max</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.chi_min"><code class="name">var <span class="ident">chi_min</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.entropy_threshold"><code class="name">var <span class="ident">entropy_threshold</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.gradient_threshold"><code class="name">var <span class="ident">gradient_threshold</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.hysteresis"><code class="name">var <span class="ident">hysteresis</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.smoothing_window"><code class="name">var <span class="ident">smoothing_window</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTEuler"><code class="flex name class">
+<span>class <span class="ident">AdaptiveTTEuler</span></span>
+<span>(</span><span>N: int,<br>L: float,<br>gamma: float = 1.4,<br>chi_max: int = 64,<br>config: Optional[<a title="tensornet.cfd.adaptive_tt.AdaptiveTTConfig" href="#tensornet.cfd.adaptive_tt.AdaptiveTTConfig">AdaptiveTTConfig</a>] = None,<br>solver_config: Optional[TTCFDConfig] = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AdaptiveTTEuler:
+    &#34;&#34;&#34;
+    1D Euler solver with adaptive bond dimension (TT-AMR).
+    
+    Combines the TT_Euler1D solver with BondAdapter for automatic
+    refinement near shocks and coarsening in smooth regions.
+    
+    This achieves optimal O(N·χ²) complexity where χ is locally
+    adapted: high near shocks, low in smooth flow.
+    
+    Attributes:
+        solver: Underlying TT Euler solver
+        adapter: Bond dimension adapter
+        config: Adaptive configuration
+        adaptation_history: Record of χ over time
+    &#34;&#34;&#34;
+    
+    def __init__(
+        self,
+        N: int,
+        L: float,
+        gamma: float = 1.4,
+        chi_max: int = 64,
+        config: Optional[AdaptiveTTConfig] = None,
+        solver_config: Optional[TTCFDConfig] = None
+    ):
+        self.config = config or AdaptiveTTConfig(chi_max=chi_max)
+        
+        # Create underlying solver
+        solver_cfg = solver_config or TTCFDConfig(chi_max=chi_max, gamma=gamma)
+        self.solver = TT_Euler1D(N, L, gamma, chi_max, solver_cfg)
+        
+        # Create adapter
+        self.adapter = BondAdapter(self.config)
+        
+        # Tracking
+        self.adaptation_history: List[Dict] = []
+        self.step_count = 0
+    
+    def initialize(
+        self,
+        rho: Tensor,
+        u: Tensor,
+        p: Tensor
+    ) -&gt; None:
+        &#34;&#34;&#34;Initialize with primitive variables.&#34;&#34;&#34;
+        self.solver.initialize(rho, u, p)
+        self.adapter.initialize_profile(len(self.solver.state.cores) - 1)
+        self.step_count = 0
+        self.adaptation_history = []
+    
+    def initialize_sod(self) -&gt; None:
+        &#34;&#34;&#34;Initialize with Sod shock tube.&#34;&#34;&#34;
+        self.solver.initialize_sod()
+        self.adapter.initialize_profile(len(self.solver.state.cores) - 1)
+        self.step_count = 0
+        self.adaptation_history = []
+    
+    def step(self, dt: Optional[float] = None) -&gt; None:
+        &#34;&#34;&#34;
+        Advance by one time step with optional adaptation.
+        &#34;&#34;&#34;
+        # Regular time step
+        self.solver.step(dt)
+        self.step_count += 1
+        
+        # Periodic adaptation
+        if self.step_count % self.config.adaptation_interval == 0:
+            self._adapt()
+    
+    def _adapt(self) -&gt; None:
+        &#34;&#34;&#34;Perform bond dimension adaptation.&#34;&#34;&#34;
+        # Adapt the state
+        self.solver.state = self.adapter.adapt(self.solver.state)
+        
+        # Record statistics
+        stats = self.adapter.get_statistics()
+        stats[&#39;time&#39;] = self.solver.time
+        stats[&#39;step&#39;] = self.step_count
+        self.adaptation_history.append(stats)
+    
+    def solve(
+        self,
+        t_final: float,
+        callback=None,
+        callback_interval: int = 10
+    ) -&gt; None:
+        &#34;&#34;&#34;Solve to final time with adaptive refinement.&#34;&#34;&#34;
+        while self.solver.time &lt; t_final:
+            dt = min(self.solver._compute_dt(), t_final - self.solver.time)
+            self.step(dt)
+            
+            if callback is not None and self.step_count % callback_interval == 0:
+                callback(self.solver.time, self.solver.state)
+    
+    def to_dense(self) -&gt; Tuple[Tensor, Tensor, Tensor]:
+        &#34;&#34;&#34;Extract dense primitive variables.&#34;&#34;&#34;
+        return self.solver.to_dense()
+    
+    def get_chi_profile(self) -&gt; List[int]:
+        &#34;&#34;&#34;Get current bond dimension profile.&#34;&#34;&#34;
+        return self.adapter.get_chi_profile()
+    
+    def get_diagnostics(self) -&gt; Dict:
+        &#34;&#34;&#34;Return comprehensive diagnostics.&#34;&#34;&#34;
+        solver_diag = self.solver.get_diagnostics()
+        adapt_stats = self.adapter.get_statistics()
+        
+        return {
+            **solver_diag,
+            **adapt_stats,
+            &#39;adaptation_history&#39;: self.adaptation_history,
+        }</code></pre>
+</details>
+<div class="desc"><p>1D Euler solver with adaptive bond dimension (TT-AMR).</p>
+<p>Combines the TT_Euler1D solver with BondAdapter for automatic
+refinement near shocks and coarsening in smooth regions.</p>
+<p>This achieves optimal O(N·χ²) complexity where χ is locally
+adapted: high near shocks, low in smooth flow.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>solver</code></strong></dt>
+<dd>Underlying TT Euler solver</dd>
+<dt><strong><code>adapter</code></strong></dt>
+<dd>Bond dimension adapter</dd>
+<dt><strong><code>config</code></strong></dt>
+<dd>Adaptive configuration</dd>
+<dt><strong><code>adaptation_history</code></strong></dt>
+<dd>Record of χ over time</dd>
+</dl></div>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTEuler.get_chi_profile"><code class="name flex">
+<span>def <span class="ident">get_chi_profile</span></span>(<span>self) ‑> List[int]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_chi_profile(self) -&gt; List[int]:
+    &#34;&#34;&#34;Get current bond dimension profile.&#34;&#34;&#34;
+    return self.adapter.get_chi_profile()</code></pre>
+</details>
+<div class="desc"><p>Get current bond dimension profile.</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTEuler.get_diagnostics"><code class="name flex">
+<span>def <span class="ident">get_diagnostics</span></span>(<span>self) ‑> Dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_diagnostics(self) -&gt; Dict:
+    &#34;&#34;&#34;Return comprehensive diagnostics.&#34;&#34;&#34;
+    solver_diag = self.solver.get_diagnostics()
+    adapt_stats = self.adapter.get_statistics()
+    
+    return {
+        **solver_diag,
+        **adapt_stats,
+        &#39;adaptation_history&#39;: self.adaptation_history,
+    }</code></pre>
+</details>
+<div class="desc"><p>Return comprehensive diagnostics.</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTEuler.initialize"><code class="name flex">
+<span>def <span class="ident">initialize</span></span>(<span>self, rho: Tensor, u: Tensor, p: Tensor) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def initialize(
+    self,
+    rho: Tensor,
+    u: Tensor,
+    p: Tensor
+) -&gt; None:
+    &#34;&#34;&#34;Initialize with primitive variables.&#34;&#34;&#34;
+    self.solver.initialize(rho, u, p)
+    self.adapter.initialize_profile(len(self.solver.state.cores) - 1)
+    self.step_count = 0
+    self.adaptation_history = []</code></pre>
+</details>
+<div class="desc"><p>Initialize with primitive variables.</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTEuler.initialize_sod"><code class="name flex">
+<span>def <span class="ident">initialize_sod</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def initialize_sod(self) -&gt; None:
+    &#34;&#34;&#34;Initialize with Sod shock tube.&#34;&#34;&#34;
+    self.solver.initialize_sod()
+    self.adapter.initialize_profile(len(self.solver.state.cores) - 1)
+    self.step_count = 0
+    self.adaptation_history = []</code></pre>
+</details>
+<div class="desc"><p>Initialize with Sod shock tube.</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTEuler.solve"><code class="name flex">
+<span>def <span class="ident">solve</span></span>(<span>self, t_final: float, callback=None, callback_interval: int = 10) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def solve(
+    self,
+    t_final: float,
+    callback=None,
+    callback_interval: int = 10
+) -&gt; None:
+    &#34;&#34;&#34;Solve to final time with adaptive refinement.&#34;&#34;&#34;
+    while self.solver.time &lt; t_final:
+        dt = min(self.solver._compute_dt(), t_final - self.solver.time)
+        self.step(dt)
+        
+        if callback is not None and self.step_count % callback_interval == 0:
+            callback(self.solver.time, self.solver.state)</code></pre>
+</details>
+<div class="desc"><p>Solve to final time with adaptive refinement.</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTEuler.step"><code class="name flex">
+<span>def <span class="ident">step</span></span>(<span>self, dt: Optional[float] = None) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def step(self, dt: Optional[float] = None) -&gt; None:
+    &#34;&#34;&#34;
+    Advance by one time step with optional adaptation.
+    &#34;&#34;&#34;
+    # Regular time step
+    self.solver.step(dt)
+    self.step_count += 1
+    
+    # Periodic adaptation
+    if self.step_count % self.config.adaptation_interval == 0:
+        self._adapt()</code></pre>
+</details>
+<div class="desc"><p>Advance by one time step with optional adaptation.</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.AdaptiveTTEuler.to_dense"><code class="name flex">
+<span>def <span class="ident">to_dense</span></span>(<span>self) ‑> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_dense(self) -&gt; Tuple[Tensor, Tensor, Tensor]:
+    &#34;&#34;&#34;Extract dense primitive variables.&#34;&#34;&#34;
+    return self.solver.to_dense()</code></pre>
+</details>
+<div class="desc"><p>Extract dense primitive variables.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.BondAdapter"><code class="flex name class">
+<span>class <span class="ident">BondAdapter</span></span>
+<span>(</span><span>config: Optional[<a title="tensornet.cfd.adaptive_tt.AdaptiveTTConfig" href="#tensornet.cfd.adaptive_tt.AdaptiveTTConfig">AdaptiveTTConfig</a>] = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BondAdapter:
+    &#34;&#34;&#34;
+    Dynamically adjust bond dimensions in MPS based on shock locations.
+    
+    This is the core TT-AMR algorithm:
+    1. Detect shocks using ShockDetector
+    2. Increase χ at shock bonds
+    3. Decrease χ in smooth regions
+    4. Maintain total &#34;bond budget&#34; if desired
+    
+    Attributes:
+        config: Adaptive TT configuration
+        detector: Shock detector instance
+        chi_profile: Current χ allocation at each bond
+    &#34;&#34;&#34;
+    
+    def __init__(self, config: Optional[AdaptiveTTConfig] = None):
+        self.config = config or AdaptiveTTConfig()
+        self.detector = ShockDetector(config)
+        self.chi_profile: Optional[List[int]] = None
+    
+    def initialize_profile(self, n_bonds: int) -&gt; None:
+        &#34;&#34;&#34;Initialize uniform χ profile.&#34;&#34;&#34;
+        self.chi_profile = [self.config.chi_base] * n_bonds
+    
+    def refine_at_shocks(
+        self,
+        mps: MPSState,
+        shock_sites: List[int],
+        chi_boost: Optional[int] = None
+    ) -&gt; MPSState:
+        &#34;&#34;&#34;
+        Increase bond dimension at shock locations.
+        
+        Args:
+            mps: Current MPS state
+            shock_sites: List of bond indices near shocks
+            chi_boost: Factor to multiply χ (default from config)
+            
+        Returns:
+            New MPS with increased bonds at shock sites
+        &#34;&#34;&#34;
+        if chi_boost is None:
+            chi_boost = self.config.chi_boost
+        
+        n_bonds = len(mps.cores) - 1
+        
+        # Update chi profile
+        if self.chi_profile is None:
+            self.initialize_profile(n_bonds)
+        
+        for site in shock_sites:
+            if 0 &lt;= site &lt; n_bonds:
+                new_chi = min(
+                    self.chi_profile[site] * chi_boost,
+                    self.config.chi_max
+                )
+                self.chi_profile[site] = new_chi
+        
+        # Apply new profile by re-compressing
+        new_cores = self._apply_chi_profile(mps)
+        
+        return MPSState(new_cores, mps.n_vars, &#39;none&#39;)
+    
+    def coarsen_smooth(
+        self,
+        mps: MPSState,
+        smooth_sites: List[int],
+        chi_min: Optional[int] = None
+    ) -&gt; MPSState:
+        &#34;&#34;&#34;
+        Decrease bond dimension in smooth regions.
+        
+        Args:
+            mps: Current MPS state
+            smooth_sites: List of bond indices in smooth regions
+            chi_min: Minimum χ to maintain (default from config)
+            
+        Returns:
+            New MPS with decreased bonds in smooth regions
+        &#34;&#34;&#34;
+        if chi_min is None:
+            chi_min = self.config.chi_min
+        
+        n_bonds = len(mps.cores) - 1
+        
+        if self.chi_profile is None:
+            self.initialize_profile(n_bonds)
+        
+        for site in smooth_sites:
+            if 0 &lt;= site &lt; n_bonds:
+                new_chi = max(
+                    self.chi_profile[site] // 2,
+                    chi_min
+                )
+                self.chi_profile[site] = new_chi
+        
+        new_cores = self._apply_chi_profile(mps)
+        
+        return MPSState(new_cores, mps.n_vars, &#39;none&#39;)
+    
+    def balance_bonds(
+        self,
+        mps: MPSState,
+        chi_budget: Optional[int] = None
+    ) -&gt; MPSState:
+        &#34;&#34;&#34;
+        Redistribute bond dimensions within a total budget.
+        
+        Allocates more χ where entropy is high, less where low,
+        while maintaining a total storage budget.
+        
+        Args:
+            mps: Current MPS state
+            chi_budget: Total χ to distribute (sum of all bonds)
+            
+        Returns:
+            New MPS with balanced bond dimensions
+        &#34;&#34;&#34;
+        n_bonds = len(mps.cores) - 1
+        
+        if chi_budget is None:
+            chi_budget = n_bonds * self.config.chi_base
+        
+        # Get entropy profile
+        entropies = self.detector.entropy_indicator(mps)
+        
+        # Allocate proportional to entropy
+        total_entropy = entropies.sum().item() + 1e-10
+        
+        new_profile = []
+        remaining_budget = chi_budget
+        
+        for i in range(n_bonds):
+            # Proportion of budget for this bond
+            weight = (entropies[i].item() + 0.1) / (total_entropy + 0.1 * n_bonds)
+            chi = int(weight * chi_budget)
+            
+            # Clamp to valid range
+            chi = max(self.config.chi_min, min(chi, self.config.chi_max))
+            chi = min(chi, remaining_budget - (n_bonds - i - 1) * self.config.chi_min)
+            
+            new_profile.append(chi)
+            remaining_budget -= chi
+        
+        self.chi_profile = new_profile
+        new_cores = self._apply_chi_profile(mps)
+        
+        return MPSState(new_cores, mps.n_vars, &#39;none&#39;)
+    
+    def _apply_chi_profile(self, mps: MPSState) -&gt; List[Tensor]:
+        &#34;&#34;&#34;
+        Truncate/expand MPS to match current χ profile.
+        
+        Uses SVD at each bond to adjust dimensions.
+        &#34;&#34;&#34;
+        n_sites = len(mps.cores)
+        new_cores = []
+        
+        # Right-to-left sweep for orthogonalization
+        cores = [c.clone() for c in mps.cores]
+        
+        for i in range(n_sites - 1, 0, -1):
+            core = cores[i]
+            chi_l, d, chi_r = core.shape
+            
+            # Target chi for left bond
+            if i - 1 &lt; len(self.chi_profile):
+                target_chi = self.chi_profile[i - 1]
+            else:
+                target_chi = self.config.chi_base
+            
+            # QR from right
+            core_mat = core.reshape(chi_l, d * chi_r)
+            Q, R = torch.linalg.qr(core_mat.T)
+            
+            # Truncate Q to target_chi
+            if Q.shape[1] &gt; target_chi:
+                Q = Q[:, :target_chi]
+                R = R[:target_chi, :]
+            
+            cores[i] = Q.T.reshape(-1, d, chi_r)
+            
+            # Absorb R into left neighbor
+            cores[i-1] = torch.einsum(&#39;abc,cd-&gt;abd&#39;, cores[i-1], R.T)
+        
+        # Left-to-right sweep with SVD truncation
+        for i in range(n_sites - 1):
+            core = cores[i]
+            chi_l, d, chi_r = core.shape
+            
+            # Target chi for right bond
+            if i &lt; len(self.chi_profile):
+                target_chi = self.chi_profile[i]
+            else:
+                target_chi = self.config.chi_base
+            
+            # SVD
+            core_mat = core.reshape(chi_l * d, chi_r)
+            U, S, Vh = torch.linalg.svd(core_mat, full_matrices=False)
+            
+            # Truncate to target
+            chi = min(target_chi, len(S))
+            U = U[:, :chi]
+            S = S[:chi]
+            Vh = Vh[:chi, :]
+            
+            new_cores.append(U.reshape(chi_l, d, chi))
+            
+            # Absorb S*Vh into right neighbor
+            if i + 1 &lt; n_sites:
+                cores[i+1] = torch.einsum(
+                    &#39;ab,bcd-&gt;acd&#39;,
+                    torch.diag(S) @ Vh,
+                    cores[i+1]
+                )
+        
+        # Last core
+        new_cores.append(cores[-1])
+        
+        return new_cores
+    
+    def adapt(
+        self,
+        mps: MPSState,
+        method: ShockIndicator = ShockIndicator.COMBINED
+    ) -&gt; MPSState:
+        &#34;&#34;&#34;
+        Full adaptation cycle: detect shocks, refine, coarsen.
+        
+        Args:
+            mps: Current MPS state
+            method: Shock detection method
+            
+        Returns:
+            Adapted MPS with new bond dimensions
+        &#34;&#34;&#34;
+        # Detect shocks
+        shock_sites, indicator = self.detector.detect_shocks(mps, method)
+        
+        # Determine smooth sites (low indicator)
+        n_bonds = len(indicator)
+        smooth_sites = [i for i in range(n_bonds) 
+                       if indicator[i] &lt; self.config.gradient_threshold / 2]
+        
+        # Refine at shocks
+        mps = self.refine_at_shocks(mps, shock_sites)
+        
+        # Coarsen smooth regions
+        mps = self.coarsen_smooth(mps, smooth_sites)
+        
+        return mps
+    
+    def get_chi_profile(self) -&gt; List[int]:
+        &#34;&#34;&#34;Return current χ profile.&#34;&#34;&#34;
+        return self.chi_profile or []
+    
+    def get_statistics(self) -&gt; Dict:
+        &#34;&#34;&#34;Return adaptation statistics.&#34;&#34;&#34;
+        profile = self.chi_profile or []
+        
+        return {
+            &#39;chi_min&#39;: min(profile) if profile else 0,
+            &#39;chi_max&#39;: max(profile) if profile else 0,
+            &#39;chi_mean&#39;: sum(profile) / len(profile) if profile else 0,
+            &#39;chi_total&#39;: sum(profile),
+            &#39;n_bonds&#39;: len(profile),
+        }</code></pre>
+</details>
+<div class="desc"><p>Dynamically adjust bond dimensions in MPS based on shock locations.</p>
+<p>This is the core TT-AMR algorithm:
+1. Detect shocks using ShockDetector
+2. Increase χ at shock bonds
+3. Decrease χ in smooth regions
+4. Maintain total "bond budget" if desired</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>config</code></strong></dt>
+<dd>Adaptive TT configuration</dd>
+<dt><strong><code>detector</code></strong></dt>
+<dd>Shock detector instance</dd>
+<dt><strong><code>chi_profile</code></strong></dt>
+<dd>Current χ allocation at each bond</dd>
+</dl></div>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.adaptive_tt.BondAdapter.adapt"><code class="name flex">
+<span>def <span class="ident">adapt</span></span>(<span>self,<br>mps: MPSState,<br>method: <a title="tensornet.cfd.adaptive_tt.ShockIndicator" href="#tensornet.cfd.adaptive_tt.ShockIndicator">ShockIndicator</a> = ShockIndicator.COMBINED) ‑> <a title="tensornet.cfd.tt_cfd.MPSState" href="tt_cfd.html#tensornet.cfd.tt_cfd.MPSState">MPSState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def adapt(
+    self,
+    mps: MPSState,
+    method: ShockIndicator = ShockIndicator.COMBINED
+) -&gt; MPSState:
+    &#34;&#34;&#34;
+    Full adaptation cycle: detect shocks, refine, coarsen.
+    
+    Args:
+        mps: Current MPS state
+        method: Shock detection method
+        
+    Returns:
+        Adapted MPS with new bond dimensions
+    &#34;&#34;&#34;
+    # Detect shocks
+    shock_sites, indicator = self.detector.detect_shocks(mps, method)
+    
+    # Determine smooth sites (low indicator)
+    n_bonds = len(indicator)
+    smooth_sites = [i for i in range(n_bonds) 
+                   if indicator[i] &lt; self.config.gradient_threshold / 2]
+    
+    # Refine at shocks
+    mps = self.refine_at_shocks(mps, shock_sites)
+    
+    # Coarsen smooth regions
+    mps = self.coarsen_smooth(mps, smooth_sites)
+    
+    return mps</code></pre>
+</details>
+<div class="desc"><p>Full adaptation cycle: detect shocks, refine, coarsen.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mps</code></strong></dt>
+<dd>Current MPS state</dd>
+<dt><strong><code>method</code></strong></dt>
+<dd>Shock detection method</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Adapted MPS with new bond dimensions</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.BondAdapter.balance_bonds"><code class="name flex">
+<span>def <span class="ident">balance_bonds</span></span>(<span>self, mps: MPSState, chi_budget: Optional[int] = None) ‑> <a title="tensornet.cfd.tt_cfd.MPSState" href="tt_cfd.html#tensornet.cfd.tt_cfd.MPSState">MPSState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def balance_bonds(
+    self,
+    mps: MPSState,
+    chi_budget: Optional[int] = None
+) -&gt; MPSState:
+    &#34;&#34;&#34;
+    Redistribute bond dimensions within a total budget.
+    
+    Allocates more χ where entropy is high, less where low,
+    while maintaining a total storage budget.
+    
+    Args:
+        mps: Current MPS state
+        chi_budget: Total χ to distribute (sum of all bonds)
+        
+    Returns:
+        New MPS with balanced bond dimensions
+    &#34;&#34;&#34;
+    n_bonds = len(mps.cores) - 1
+    
+    if chi_budget is None:
+        chi_budget = n_bonds * self.config.chi_base
+    
+    # Get entropy profile
+    entropies = self.detector.entropy_indicator(mps)
+    
+    # Allocate proportional to entropy
+    total_entropy = entropies.sum().item() + 1e-10
+    
+    new_profile = []
+    remaining_budget = chi_budget
+    
+    for i in range(n_bonds):
+        # Proportion of budget for this bond
+        weight = (entropies[i].item() + 0.1) / (total_entropy + 0.1 * n_bonds)
+        chi = int(weight * chi_budget)
+        
+        # Clamp to valid range
+        chi = max(self.config.chi_min, min(chi, self.config.chi_max))
+        chi = min(chi, remaining_budget - (n_bonds - i - 1) * self.config.chi_min)
+        
+        new_profile.append(chi)
+        remaining_budget -= chi
+    
+    self.chi_profile = new_profile
+    new_cores = self._apply_chi_profile(mps)
+    
+    return MPSState(new_cores, mps.n_vars, &#39;none&#39;)</code></pre>
+</details>
+<div class="desc"><p>Redistribute bond dimensions within a total budget.</p>
+<p>Allocates more χ where entropy is high, less where low,
+while maintaining a total storage budget.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mps</code></strong></dt>
+<dd>Current MPS state</dd>
+<dt><strong><code>chi_budget</code></strong></dt>
+<dd>Total χ to distribute (sum of all bonds)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>New MPS with balanced bond dimensions</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.BondAdapter.coarsen_smooth"><code class="name flex">
+<span>def <span class="ident">coarsen_smooth</span></span>(<span>self, mps: MPSState, smooth_sites: List[int], chi_min: Optional[int] = None) ‑> <a title="tensornet.cfd.tt_cfd.MPSState" href="tt_cfd.html#tensornet.cfd.tt_cfd.MPSState">MPSState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def coarsen_smooth(
+    self,
+    mps: MPSState,
+    smooth_sites: List[int],
+    chi_min: Optional[int] = None
+) -&gt; MPSState:
+    &#34;&#34;&#34;
+    Decrease bond dimension in smooth regions.
+    
+    Args:
+        mps: Current MPS state
+        smooth_sites: List of bond indices in smooth regions
+        chi_min: Minimum χ to maintain (default from config)
+        
+    Returns:
+        New MPS with decreased bonds in smooth regions
+    &#34;&#34;&#34;
+    if chi_min is None:
+        chi_min = self.config.chi_min
+    
+    n_bonds = len(mps.cores) - 1
+    
+    if self.chi_profile is None:
+        self.initialize_profile(n_bonds)
+    
+    for site in smooth_sites:
+        if 0 &lt;= site &lt; n_bonds:
+            new_chi = max(
+                self.chi_profile[site] // 2,
+                chi_min
+            )
+            self.chi_profile[site] = new_chi
+    
+    new_cores = self._apply_chi_profile(mps)
+    
+    return MPSState(new_cores, mps.n_vars, &#39;none&#39;)</code></pre>
+</details>
+<div class="desc"><p>Decrease bond dimension in smooth regions.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mps</code></strong></dt>
+<dd>Current MPS state</dd>
+<dt><strong><code>smooth_sites</code></strong></dt>
+<dd>List of bond indices in smooth regions</dd>
+<dt><strong><code>chi_min</code></strong></dt>
+<dd>Minimum χ to maintain (default from config)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>New MPS with decreased bonds in smooth regions</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.BondAdapter.get_chi_profile"><code class="name flex">
+<span>def <span class="ident">get_chi_profile</span></span>(<span>self) ‑> List[int]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_chi_profile(self) -&gt; List[int]:
+    &#34;&#34;&#34;Return current χ profile.&#34;&#34;&#34;
+    return self.chi_profile or []</code></pre>
+</details>
+<div class="desc"><p>Return current χ profile.</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.BondAdapter.get_statistics"><code class="name flex">
+<span>def <span class="ident">get_statistics</span></span>(<span>self) ‑> Dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_statistics(self) -&gt; Dict:
+    &#34;&#34;&#34;Return adaptation statistics.&#34;&#34;&#34;
+    profile = self.chi_profile or []
+    
+    return {
+        &#39;chi_min&#39;: min(profile) if profile else 0,
+        &#39;chi_max&#39;: max(profile) if profile else 0,
+        &#39;chi_mean&#39;: sum(profile) / len(profile) if profile else 0,
+        &#39;chi_total&#39;: sum(profile),
+        &#39;n_bonds&#39;: len(profile),
+    }</code></pre>
+</details>
+<div class="desc"><p>Return adaptation statistics.</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.BondAdapter.initialize_profile"><code class="name flex">
+<span>def <span class="ident">initialize_profile</span></span>(<span>self, n_bonds: int) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def initialize_profile(self, n_bonds: int) -&gt; None:
+    &#34;&#34;&#34;Initialize uniform χ profile.&#34;&#34;&#34;
+    self.chi_profile = [self.config.chi_base] * n_bonds</code></pre>
+</details>
+<div class="desc"><p>Initialize uniform χ profile.</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.BondAdapter.refine_at_shocks"><code class="name flex">
+<span>def <span class="ident">refine_at_shocks</span></span>(<span>self, mps: MPSState, shock_sites: List[int], chi_boost: Optional[int] = None) ‑> <a title="tensornet.cfd.tt_cfd.MPSState" href="tt_cfd.html#tensornet.cfd.tt_cfd.MPSState">MPSState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def refine_at_shocks(
+    self,
+    mps: MPSState,
+    shock_sites: List[int],
+    chi_boost: Optional[int] = None
+) -&gt; MPSState:
+    &#34;&#34;&#34;
+    Increase bond dimension at shock locations.
+    
+    Args:
+        mps: Current MPS state
+        shock_sites: List of bond indices near shocks
+        chi_boost: Factor to multiply χ (default from config)
+        
+    Returns:
+        New MPS with increased bonds at shock sites
+    &#34;&#34;&#34;
+    if chi_boost is None:
+        chi_boost = self.config.chi_boost
+    
+    n_bonds = len(mps.cores) - 1
+    
+    # Update chi profile
+    if self.chi_profile is None:
+        self.initialize_profile(n_bonds)
+    
+    for site in shock_sites:
+        if 0 &lt;= site &lt; n_bonds:
+            new_chi = min(
+                self.chi_profile[site] * chi_boost,
+                self.config.chi_max
+            )
+            self.chi_profile[site] = new_chi
+    
+    # Apply new profile by re-compressing
+    new_cores = self._apply_chi_profile(mps)
+    
+    return MPSState(new_cores, mps.n_vars, &#39;none&#39;)</code></pre>
+</details>
+<div class="desc"><p>Increase bond dimension at shock locations.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mps</code></strong></dt>
+<dd>Current MPS state</dd>
+<dt><strong><code>shock_sites</code></strong></dt>
+<dd>List of bond indices near shocks</dd>
+<dt><strong><code>chi_boost</code></strong></dt>
+<dd>Factor to multiply χ (default from config)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>New MPS with increased bonds at shock sites</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.EntanglementMonitor"><code class="flex name class">
+<span>class <span class="ident">EntanglementMonitor</span></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class EntanglementMonitor:
+    &#34;&#34;&#34;
+    Monitor entanglement entropy evolution over time.
+    
+    Tracks how the entanglement structure changes as shocks
+    form, propagate, and interact.
+    
+    Useful for:
+    - Understanding shock dynamics in TT representation
+    - Validating that χ is sufficient
+    - Analyzing compression efficiency
+    &#34;&#34;&#34;
+    
+    def __init__(self):
+        self.history: List[Tuple[float, Tensor]] = []
+    
+    def record(self, time: float, mps: MPSState) -&gt; Tensor:
+        &#34;&#34;&#34;Record entanglement profile at given time.&#34;&#34;&#34;
+        detector = ShockDetector()
+        entropy = detector.entropy_indicator(mps)
+        
+        self.history.append((time, entropy.clone()))
+        
+        return entropy
+    
+    def get_max_entropy_history(self) -&gt; List[Tuple[float, float]]:
+        &#34;&#34;&#34;Get maximum entropy at each recorded time.&#34;&#34;&#34;
+        return [(t, ent.max().item()) for t, ent in self.history]
+    
+    def get_total_entropy_history(self) -&gt; List[Tuple[float, float]]:
+        &#34;&#34;&#34;Get total entropy at each recorded time.&#34;&#34;&#34;
+        return [(t, ent.sum().item()) for t, ent in self.history]
+    
+    def find_entropy_peaks(
+        self,
+        time_index: int = -1,
+        threshold: float = 0.5
+    ) -&gt; List[int]:
+        &#34;&#34;&#34;Find locations of high entanglement (likely shocks).&#34;&#34;&#34;
+        if not self.history:
+            return []
+        
+        _, entropy = self.history[time_index]
+        peaks = [i for i in range(len(entropy)) 
+                if entropy[i] &gt; threshold * entropy.max()]
+        
+        return peaks
+    
+    def clear(self) -&gt; None:
+        &#34;&#34;&#34;Clear history.&#34;&#34;&#34;
+        self.history = []</code></pre>
+</details>
+<div class="desc"><p>Monitor entanglement entropy evolution over time.</p>
+<p>Tracks how the entanglement structure changes as shocks
+form, propagate, and interact.</p>
+<p>Useful for:
+- Understanding shock dynamics in TT representation
+- Validating that χ is sufficient
+- Analyzing compression efficiency</p></div>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.adaptive_tt.EntanglementMonitor.clear"><code class="name flex">
+<span>def <span class="ident">clear</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def clear(self) -&gt; None:
+    &#34;&#34;&#34;Clear history.&#34;&#34;&#34;
+    self.history = []</code></pre>
+</details>
+<div class="desc"><p>Clear history.</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.EntanglementMonitor.find_entropy_peaks"><code class="name flex">
+<span>def <span class="ident">find_entropy_peaks</span></span>(<span>self, time_index: int = -1, threshold: float = 0.5) ‑> List[int]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_entropy_peaks(
+    self,
+    time_index: int = -1,
+    threshold: float = 0.5
+) -&gt; List[int]:
+    &#34;&#34;&#34;Find locations of high entanglement (likely shocks).&#34;&#34;&#34;
+    if not self.history:
+        return []
+    
+    _, entropy = self.history[time_index]
+    peaks = [i for i in range(len(entropy)) 
+            if entropy[i] &gt; threshold * entropy.max()]
+    
+    return peaks</code></pre>
+</details>
+<div class="desc"><p>Find locations of high entanglement (likely shocks).</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.EntanglementMonitor.get_max_entropy_history"><code class="name flex">
+<span>def <span class="ident">get_max_entropy_history</span></span>(<span>self) ‑> List[Tuple[float, float]]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_max_entropy_history(self) -&gt; List[Tuple[float, float]]:
+    &#34;&#34;&#34;Get maximum entropy at each recorded time.&#34;&#34;&#34;
+    return [(t, ent.max().item()) for t, ent in self.history]</code></pre>
+</details>
+<div class="desc"><p>Get maximum entropy at each recorded time.</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.EntanglementMonitor.get_total_entropy_history"><code class="name flex">
+<span>def <span class="ident">get_total_entropy_history</span></span>(<span>self) ‑> List[Tuple[float, float]]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_total_entropy_history(self) -&gt; List[Tuple[float, float]]:
+    &#34;&#34;&#34;Get total entropy at each recorded time.&#34;&#34;&#34;
+    return [(t, ent.sum().item()) for t, ent in self.history]</code></pre>
+</details>
+<div class="desc"><p>Get total entropy at each recorded time.</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.EntanglementMonitor.record"><code class="name flex">
+<span>def <span class="ident">record</span></span>(<span>self, time: float, mps: MPSState) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def record(self, time: float, mps: MPSState) -&gt; Tensor:
+    &#34;&#34;&#34;Record entanglement profile at given time.&#34;&#34;&#34;
+    detector = ShockDetector()
+    entropy = detector.entropy_indicator(mps)
+    
+    self.history.append((time, entropy.clone()))
+    
+    return entropy</code></pre>
+</details>
+<div class="desc"><p>Record entanglement profile at given time.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.ShockDetector"><code class="flex name class">
+<span>class <span class="ident">ShockDetector</span></span>
+<span>(</span><span>config: Optional[<a title="tensornet.cfd.adaptive_tt.AdaptiveTTConfig" href="#tensornet.cfd.adaptive_tt.AdaptiveTTConfig">AdaptiveTTConfig</a>] = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ShockDetector:
+    &#34;&#34;&#34;
+    Detect discontinuities in TT-format CFD solutions.
+    
+    Uses multiple indicators to identify shock locations:
+    1. Gradient-based: High |∂u/∂x| indicates discontinuity
+    2. Entropy-based: High entanglement entropy at a bond
+    3. Troubled-cell: WENO-style oscillation detection
+    
+    The detector operates on MPS cores directly, avoiding
+    full dense reconstruction.
+    
+    Attributes:
+        config: Adaptive TT configuration
+        shock_history: History of detected shocks for smoothing
+    &#34;&#34;&#34;
+    
+    def __init__(self, config: Optional[AdaptiveTTConfig] = None):
+        self.config = config or AdaptiveTTConfig()
+        self.shock_history: List[Tensor] = []
+    
+    def gradient_indicator(
+        self,
+        mps: MPSState,
+        variable_index: int = 0
+    ) -&gt; Tensor:
+        &#34;&#34;&#34;
+        Compute gradient-based shock indicator.
+        
+        Uses finite difference approximation of |∂u/∂x| from
+        the MPS representation.
+        
+        Args:
+            mps: MPS state to analyze
+            variable_index: Which variable to check (0=ρ, 1=ρu, 2=E)
+            
+        Returns:
+            Tensor of gradient magnitudes at each bond (n_sites-1,)
+        &#34;&#34;&#34;
+        # Extract dense for gradient computation
+        # Full TT version would use local contractions
+        state = mps._contract_to_dense()  # (N, n_vars)
+        
+        u = state[:, variable_index]
+        n = len(u)
+        
+        # Central difference gradient
+        grad = torch.zeros(n - 1)
+        for i in range(n - 1):
+            grad[i] = abs(u[i + 1] - u[i])
+        
+        # Normalize by maximum
+        grad_max = grad.max()
+        if grad_max &gt; 1e-10:
+            grad = grad / grad_max
+        
+        return grad
+    
+    def entropy_indicator(self, mps: MPSState) -&gt; Tensor:
+        &#34;&#34;&#34;
+        Compute entanglement entropy at each bond.
+        
+        The von Neumann entropy S = -Σ λ² log(λ²) measures
+        entanglement across the bond. High entropy indicates
+        complex correlations (e.g., near shocks).
+        
+        Args:
+            mps: MPS state to analyze
+            
+        Returns:
+            Tensor of entanglement entropies at each bond (n_sites-1,)
+        &#34;&#34;&#34;
+        n_sites = len(mps.cores)
+        entropies = torch.zeros(n_sites - 1)
+        
+        # Compute SVD at each bond
+        for i in range(n_sites - 1):
+            # Merge cores i and i+1
+            left_core = mps.cores[i]
+            right_core = mps.cores[i + 1]
+            
+            chi_l, d1, chi_m = left_core.shape
+            _, d2, chi_r = right_core.shape
+            
+            # Two-site tensor
+            two_site = torch.einsum(&#39;abc,cde-&gt;abde&#39;, left_core, right_core)
+            two_site_mat = two_site.reshape(chi_l * d1, d2 * chi_r)
+            
+            # SVD
+            try:
+                _, S, _ = torch.linalg.svd(two_site_mat, full_matrices=False)
+                
+                # Normalize singular values
+                S = S / (S.sum() + 1e-10)
+                
+                # Von Neumann entropy
+                S_sq = S ** 2
+                S_sq = S_sq[S_sq &gt; 1e-20]  # Avoid log(0)
+                entropy = -torch.sum(S_sq * torch.log(S_sq))
+                
+                entropies[i] = entropy.item()
+            except:
+                entropies[i] = 0.0
+        
+        # Normalize
+        ent_max = entropies.max()
+        if ent_max &gt; 1e-10:
+            entropies = entropies / ent_max
+        
+        return entropies
+    
+    def troubled_cell_indicator(self, mps: MPSState) -&gt; Tensor:
+        &#34;&#34;&#34;
+        WENO-style troubled cell indicator.
+        
+        Based on comparing solution with its projected representation.
+        Large differences indicate non-smooth regions.
+        
+        Args:
+            mps: MPS state to analyze
+            
+        Returns:
+            Tensor of troubled cell indicators (n_sites,)
+        &#34;&#34;&#34;
+        state = mps._contract_to_dense()
+        n = state.shape[0]
+        
+        troubled = torch.zeros(n)
+        
+        for i in range(2, n - 2):
+            # Extract local stencil
+            stencil = state[i-2:i+3, 0]  # Use density
+            
+            # Check for oscillations using WENO-style indicator
+            # Based on smoothness indicators from WENO
+            
+            um2, um1, u0, up1, up2 = stencil
+            
+            # Smoothness indicators
+            beta0 = (13.0/12.0) * (um2 - 2*um1 + u0)**2 + \
+                    (1.0/4.0) * (um2 - 4*um1 + 3*u0)**2
+            
+            beta1 = (13.0/12.0) * (um1 - 2*u0 + up1)**2 + \
+                    (1.0/4.0) * (um1 - up1)**2
+            
+            beta2 = (13.0/12.0) * (u0 - 2*up1 + up2)**2 + \
+                    (1.0/4.0) * (3*u0 - 4*up1 + up2)**2
+            
+            # Troubled if smoothness varies significantly
+            beta_max = max(beta0, beta1, beta2)
+            beta_min = min(beta0, beta1, beta2)
+            
+            if beta_max &gt; 1e-10:
+                troubled[i] = (beta_max - beta_min) / beta_max
+        
+        return troubled
+    
+    def detect_shocks(
+        self,
+        mps: MPSState,
+        method: ShockIndicator = ShockIndicator.COMBINED
+    ) -&gt; Tuple[List[int], Tensor]:
+        &#34;&#34;&#34;
+        Detect shock locations in the MPS state.
+        
+        Args:
+            mps: MPS state to analyze
+            method: Detection method to use
+            
+        Returns:
+            (shock_sites, indicator): List of shock site indices and
+                                      the full indicator array
+        &#34;&#34;&#34;
+        if method == ShockIndicator.GRADIENT:
+            indicator = self.gradient_indicator(mps)
+        elif method == ShockIndicator.ENTROPY:
+            indicator = self.entropy_indicator(mps)
+        elif method == ShockIndicator.TROUBLED_CELL:
+            indicator = self.troubled_cell_indicator(mps)
+        else:  # COMBINED
+            grad = self.gradient_indicator(mps)
+            ent = self.entropy_indicator(mps)
+            
+            # Pad to same length
+            n = min(len(grad), len(ent))
+            indicator = 0.5 * grad[:n] + 0.5 * ent[:n]
+        
+        # Smooth with history
+        self.shock_history.append(indicator)
+        if len(self.shock_history) &gt; self.config.smoothing_window:
+            self.shock_history.pop(0)
+        
+        # Average over history
+        smoothed = torch.stack(self.shock_history).mean(dim=0)
+        
+        # Find peaks above threshold
+        threshold = self.config.gradient_threshold
+        shock_sites = []
+        
+        for i in range(len(smoothed)):
+            if smoothed[i] &gt; threshold:
+                shock_sites.append(i)
+        
+        return shock_sites, smoothed
+    
+    def reset_history(self) -&gt; None:
+        &#34;&#34;&#34;Clear shock detection history.&#34;&#34;&#34;
+        self.shock_history = []</code></pre>
+</details>
+<div class="desc"><p>Detect discontinuities in TT-format CFD solutions.</p>
+<p>Uses multiple indicators to identify shock locations:
+1. Gradient-based: High |∂u/∂x| indicates discontinuity
+2. Entropy-based: High entanglement entropy at a bond
+3. Troubled-cell: WENO-style oscillation detection</p>
+<p>The detector operates on MPS cores directly, avoiding
+full dense reconstruction.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>config</code></strong></dt>
+<dd>Adaptive TT configuration</dd>
+<dt><strong><code>shock_history</code></strong></dt>
+<dd>History of detected shocks for smoothing</dd>
+</dl></div>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.adaptive_tt.ShockDetector.detect_shocks"><code class="name flex">
+<span>def <span class="ident">detect_shocks</span></span>(<span>self,<br>mps: MPSState,<br>method: <a title="tensornet.cfd.adaptive_tt.ShockIndicator" href="#tensornet.cfd.adaptive_tt.ShockIndicator">ShockIndicator</a> = ShockIndicator.COMBINED) ‑> Tuple[List[int], torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def detect_shocks(
+    self,
+    mps: MPSState,
+    method: ShockIndicator = ShockIndicator.COMBINED
+) -&gt; Tuple[List[int], Tensor]:
+    &#34;&#34;&#34;
+    Detect shock locations in the MPS state.
+    
+    Args:
+        mps: MPS state to analyze
+        method: Detection method to use
+        
+    Returns:
+        (shock_sites, indicator): List of shock site indices and
+                                  the full indicator array
+    &#34;&#34;&#34;
+    if method == ShockIndicator.GRADIENT:
+        indicator = self.gradient_indicator(mps)
+    elif method == ShockIndicator.ENTROPY:
+        indicator = self.entropy_indicator(mps)
+    elif method == ShockIndicator.TROUBLED_CELL:
+        indicator = self.troubled_cell_indicator(mps)
+    else:  # COMBINED
+        grad = self.gradient_indicator(mps)
+        ent = self.entropy_indicator(mps)
+        
+        # Pad to same length
+        n = min(len(grad), len(ent))
+        indicator = 0.5 * grad[:n] + 0.5 * ent[:n]
+    
+    # Smooth with history
+    self.shock_history.append(indicator)
+    if len(self.shock_history) &gt; self.config.smoothing_window:
+        self.shock_history.pop(0)
+    
+    # Average over history
+    smoothed = torch.stack(self.shock_history).mean(dim=0)
+    
+    # Find peaks above threshold
+    threshold = self.config.gradient_threshold
+    shock_sites = []
+    
+    for i in range(len(smoothed)):
+        if smoothed[i] &gt; threshold:
+            shock_sites.append(i)
+    
+    return shock_sites, smoothed</code></pre>
+</details>
+<div class="desc"><p>Detect shock locations in the MPS state.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mps</code></strong></dt>
+<dd>MPS state to analyze</dd>
+<dt><strong><code>method</code></strong></dt>
+<dd>Detection method to use</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>(shock_sites, indicator): List of shock site indices and
+the full indicator array</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.ShockDetector.entropy_indicator"><code class="name flex">
+<span>def <span class="ident">entropy_indicator</span></span>(<span>self, mps: MPSState) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def entropy_indicator(self, mps: MPSState) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Compute entanglement entropy at each bond.
+    
+    The von Neumann entropy S = -Σ λ² log(λ²) measures
+    entanglement across the bond. High entropy indicates
+    complex correlations (e.g., near shocks).
+    
+    Args:
+        mps: MPS state to analyze
+        
+    Returns:
+        Tensor of entanglement entropies at each bond (n_sites-1,)
+    &#34;&#34;&#34;
+    n_sites = len(mps.cores)
+    entropies = torch.zeros(n_sites - 1)
+    
+    # Compute SVD at each bond
+    for i in range(n_sites - 1):
+        # Merge cores i and i+1
+        left_core = mps.cores[i]
+        right_core = mps.cores[i + 1]
+        
+        chi_l, d1, chi_m = left_core.shape
+        _, d2, chi_r = right_core.shape
+        
+        # Two-site tensor
+        two_site = torch.einsum(&#39;abc,cde-&gt;abde&#39;, left_core, right_core)
+        two_site_mat = two_site.reshape(chi_l * d1, d2 * chi_r)
+        
+        # SVD
+        try:
+            _, S, _ = torch.linalg.svd(two_site_mat, full_matrices=False)
+            
+            # Normalize singular values
+            S = S / (S.sum() + 1e-10)
+            
+            # Von Neumann entropy
+            S_sq = S ** 2
+            S_sq = S_sq[S_sq &gt; 1e-20]  # Avoid log(0)
+            entropy = -torch.sum(S_sq * torch.log(S_sq))
+            
+            entropies[i] = entropy.item()
+        except:
+            entropies[i] = 0.0
+    
+    # Normalize
+    ent_max = entropies.max()
+    if ent_max &gt; 1e-10:
+        entropies = entropies / ent_max
+    
+    return entropies</code></pre>
+</details>
+<div class="desc"><p>Compute entanglement entropy at each bond.</p>
+<p>The von Neumann entropy S = -Σ λ² log(λ²) measures
+entanglement across the bond. High entropy indicates
+complex correlations (e.g., near shocks).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mps</code></strong></dt>
+<dd>MPS state to analyze</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Tensor of entanglement entropies at each bond (n_sites-1,)</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.ShockDetector.gradient_indicator"><code class="name flex">
+<span>def <span class="ident">gradient_indicator</span></span>(<span>self, mps: MPSState, variable_index: int = 0) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def gradient_indicator(
+    self,
+    mps: MPSState,
+    variable_index: int = 0
+) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Compute gradient-based shock indicator.
+    
+    Uses finite difference approximation of |∂u/∂x| from
+    the MPS representation.
+    
+    Args:
+        mps: MPS state to analyze
+        variable_index: Which variable to check (0=ρ, 1=ρu, 2=E)
+        
+    Returns:
+        Tensor of gradient magnitudes at each bond (n_sites-1,)
+    &#34;&#34;&#34;
+    # Extract dense for gradient computation
+    # Full TT version would use local contractions
+    state = mps._contract_to_dense()  # (N, n_vars)
+    
+    u = state[:, variable_index]
+    n = len(u)
+    
+    # Central difference gradient
+    grad = torch.zeros(n - 1)
+    for i in range(n - 1):
+        grad[i] = abs(u[i + 1] - u[i])
+    
+    # Normalize by maximum
+    grad_max = grad.max()
+    if grad_max &gt; 1e-10:
+        grad = grad / grad_max
+    
+    return grad</code></pre>
+</details>
+<div class="desc"><p>Compute gradient-based shock indicator.</p>
+<p>Uses finite difference approximation of |∂u/∂x| from
+the MPS representation.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mps</code></strong></dt>
+<dd>MPS state to analyze</dd>
+<dt><strong><code>variable_index</code></strong></dt>
+<dd>Which variable to check (0=ρ, 1=ρu, 2=E)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Tensor of gradient magnitudes at each bond (n_sites-1,)</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.ShockDetector.reset_history"><code class="name flex">
+<span>def <span class="ident">reset_history</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reset_history(self) -&gt; None:
+    &#34;&#34;&#34;Clear shock detection history.&#34;&#34;&#34;
+    self.shock_history = []</code></pre>
+</details>
+<div class="desc"><p>Clear shock detection history.</p></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.ShockDetector.troubled_cell_indicator"><code class="name flex">
+<span>def <span class="ident">troubled_cell_indicator</span></span>(<span>self, mps: MPSState) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def troubled_cell_indicator(self, mps: MPSState) -&gt; Tensor:
+    &#34;&#34;&#34;
+    WENO-style troubled cell indicator.
+    
+    Based on comparing solution with its projected representation.
+    Large differences indicate non-smooth regions.
+    
+    Args:
+        mps: MPS state to analyze
+        
+    Returns:
+        Tensor of troubled cell indicators (n_sites,)
+    &#34;&#34;&#34;
+    state = mps._contract_to_dense()
+    n = state.shape[0]
+    
+    troubled = torch.zeros(n)
+    
+    for i in range(2, n - 2):
+        # Extract local stencil
+        stencil = state[i-2:i+3, 0]  # Use density
+        
+        # Check for oscillations using WENO-style indicator
+        # Based on smoothness indicators from WENO
+        
+        um2, um1, u0, up1, up2 = stencil
+        
+        # Smoothness indicators
+        beta0 = (13.0/12.0) * (um2 - 2*um1 + u0)**2 + \
+                (1.0/4.0) * (um2 - 4*um1 + 3*u0)**2
+        
+        beta1 = (13.0/12.0) * (um1 - 2*u0 + up1)**2 + \
+                (1.0/4.0) * (um1 - up1)**2
+        
+        beta2 = (13.0/12.0) * (u0 - 2*up1 + up2)**2 + \
+                (1.0/4.0) * (3*u0 - 4*up1 + up2)**2
+        
+        # Troubled if smoothness varies significantly
+        beta_max = max(beta0, beta1, beta2)
+        beta_min = min(beta0, beta1, beta2)
+        
+        if beta_max &gt; 1e-10:
+            troubled[i] = (beta_max - beta_min) / beta_max
+    
+    return troubled</code></pre>
+</details>
+<div class="desc"><p>WENO-style troubled cell indicator.</p>
+<p>Based on comparing solution with its projected representation.
+Large differences indicate non-smooth regions.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mps</code></strong></dt>
+<dd>MPS state to analyze</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Tensor of troubled cell indicators (n_sites,)</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.ShockIndicator"><code class="flex name class">
+<span>class <span class="ident">ShockIndicator</span></span>
+<span>(</span><span>*args, **kwds)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ShockIndicator(Enum):
+    &#34;&#34;&#34;Types of shock detection methods.&#34;&#34;&#34;
+    GRADIENT = auto()       # Based on solution gradient
+    ENTROPY = auto()        # Based on entanglement entropy
+    COMBINED = auto()       # Both methods together
+    TROUBLED_CELL = auto()  # WENO-style troubled cell indicator</code></pre>
+</details>
+<div class="desc"><p>Types of shock detection methods.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="tensornet.cfd.adaptive_tt.ShockIndicator.COMBINED"><code class="name">var <span class="ident">COMBINED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.ShockIndicator.ENTROPY"><code class="name">var <span class="ident">ENTROPY</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.ShockIndicator.GRADIENT"><code class="name">var <span class="ident">GRADIENT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.adaptive_tt.ShockIndicator.TROUBLED_CELL"><code class="name">var <span class="ident">TROUBLED_CELL</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.adaptive_tt.compute_compression_ratio_profile" href="#tensornet.cfd.adaptive_tt.compute_compression_ratio_profile">compute_compression_ratio_profile</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.estimate_memory_savings" href="#tensornet.cfd.adaptive_tt.estimate_memory_savings">estimate_memory_savings</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTConfig" href="#tensornet.cfd.adaptive_tt.AdaptiveTTConfig">AdaptiveTTConfig</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.adaptation_interval" href="#tensornet.cfd.adaptive_tt.AdaptiveTTConfig.adaptation_interval">adaptation_interval</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.chi_base" href="#tensornet.cfd.adaptive_tt.AdaptiveTTConfig.chi_base">chi_base</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.chi_boost" href="#tensornet.cfd.adaptive_tt.AdaptiveTTConfig.chi_boost">chi_boost</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.chi_max" href="#tensornet.cfd.adaptive_tt.AdaptiveTTConfig.chi_max">chi_max</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.chi_min" href="#tensornet.cfd.adaptive_tt.AdaptiveTTConfig.chi_min">chi_min</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.entropy_threshold" href="#tensornet.cfd.adaptive_tt.AdaptiveTTConfig.entropy_threshold">entropy_threshold</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.gradient_threshold" href="#tensornet.cfd.adaptive_tt.AdaptiveTTConfig.gradient_threshold">gradient_threshold</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.hysteresis" href="#tensornet.cfd.adaptive_tt.AdaptiveTTConfig.hysteresis">hysteresis</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTConfig.smoothing_window" href="#tensornet.cfd.adaptive_tt.AdaptiveTTConfig.smoothing_window">smoothing_window</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTEuler" href="#tensornet.cfd.adaptive_tt.AdaptiveTTEuler">AdaptiveTTEuler</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTEuler.get_chi_profile" href="#tensornet.cfd.adaptive_tt.AdaptiveTTEuler.get_chi_profile">get_chi_profile</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTEuler.get_diagnostics" href="#tensornet.cfd.adaptive_tt.AdaptiveTTEuler.get_diagnostics">get_diagnostics</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTEuler.initialize" href="#tensornet.cfd.adaptive_tt.AdaptiveTTEuler.initialize">initialize</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTEuler.initialize_sod" href="#tensornet.cfd.adaptive_tt.AdaptiveTTEuler.initialize_sod">initialize_sod</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTEuler.solve" href="#tensornet.cfd.adaptive_tt.AdaptiveTTEuler.solve">solve</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTEuler.step" href="#tensornet.cfd.adaptive_tt.AdaptiveTTEuler.step">step</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.AdaptiveTTEuler.to_dense" href="#tensornet.cfd.adaptive_tt.AdaptiveTTEuler.to_dense">to_dense</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.adaptive_tt.BondAdapter" href="#tensornet.cfd.adaptive_tt.BondAdapter">BondAdapter</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.adaptive_tt.BondAdapter.adapt" href="#tensornet.cfd.adaptive_tt.BondAdapter.adapt">adapt</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.BondAdapter.balance_bonds" href="#tensornet.cfd.adaptive_tt.BondAdapter.balance_bonds">balance_bonds</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.BondAdapter.coarsen_smooth" href="#tensornet.cfd.adaptive_tt.BondAdapter.coarsen_smooth">coarsen_smooth</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.BondAdapter.get_chi_profile" href="#tensornet.cfd.adaptive_tt.BondAdapter.get_chi_profile">get_chi_profile</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.BondAdapter.get_statistics" href="#tensornet.cfd.adaptive_tt.BondAdapter.get_statistics">get_statistics</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.BondAdapter.initialize_profile" href="#tensornet.cfd.adaptive_tt.BondAdapter.initialize_profile">initialize_profile</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.BondAdapter.refine_at_shocks" href="#tensornet.cfd.adaptive_tt.BondAdapter.refine_at_shocks">refine_at_shocks</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.adaptive_tt.EntanglementMonitor" href="#tensornet.cfd.adaptive_tt.EntanglementMonitor">EntanglementMonitor</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.adaptive_tt.EntanglementMonitor.clear" href="#tensornet.cfd.adaptive_tt.EntanglementMonitor.clear">clear</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.EntanglementMonitor.find_entropy_peaks" href="#tensornet.cfd.adaptive_tt.EntanglementMonitor.find_entropy_peaks">find_entropy_peaks</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.EntanglementMonitor.get_max_entropy_history" href="#tensornet.cfd.adaptive_tt.EntanglementMonitor.get_max_entropy_history">get_max_entropy_history</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.EntanglementMonitor.get_total_entropy_history" href="#tensornet.cfd.adaptive_tt.EntanglementMonitor.get_total_entropy_history">get_total_entropy_history</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.EntanglementMonitor.record" href="#tensornet.cfd.adaptive_tt.EntanglementMonitor.record">record</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.adaptive_tt.ShockDetector" href="#tensornet.cfd.adaptive_tt.ShockDetector">ShockDetector</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.adaptive_tt.ShockDetector.detect_shocks" href="#tensornet.cfd.adaptive_tt.ShockDetector.detect_shocks">detect_shocks</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.ShockDetector.entropy_indicator" href="#tensornet.cfd.adaptive_tt.ShockDetector.entropy_indicator">entropy_indicator</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.ShockDetector.gradient_indicator" href="#tensornet.cfd.adaptive_tt.ShockDetector.gradient_indicator">gradient_indicator</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.ShockDetector.reset_history" href="#tensornet.cfd.adaptive_tt.ShockDetector.reset_history">reset_history</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.ShockDetector.troubled_cell_indicator" href="#tensornet.cfd.adaptive_tt.ShockDetector.troubled_cell_indicator">troubled_cell_indicator</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.adaptive_tt.ShockIndicator" href="#tensornet.cfd.adaptive_tt.ShockIndicator">ShockIndicator</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.adaptive_tt.ShockIndicator.COMBINED" href="#tensornet.cfd.adaptive_tt.ShockIndicator.COMBINED">COMBINED</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.ShockIndicator.ENTROPY" href="#tensornet.cfd.adaptive_tt.ShockIndicator.ENTROPY">ENTROPY</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.ShockIndicator.GRADIENT" href="#tensornet.cfd.adaptive_tt.ShockIndicator.GRADIENT">GRADIENT</a></code></li>
+<li><code><a title="tensornet.cfd.adaptive_tt.ShockIndicator.TROUBLED_CELL" href="#tensornet.cfd.adaptive_tt.ShockIndicator.TROUBLED_CELL">TROUBLED_CELL</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,130 @@
+{
+  "meta": {
+    "generated_at": "2025-12-24T00:18:17.118778",
+    "category": "Algorithm Correctness",
+    "torch_version": "2.9.1+cpu",
+    "seed": 42
+  },
+  "proofs": [
+    {
+      "id": "3.1",
+      "name": "Pauli Algebra Commutators",
+      "category": "Physical Invariants",
+      "claim": "Pauli matrices satisfy SU(2) Lie algebra: [\u03c3_i, \u03c3_j] = 2i \u03b5_ijk \u03c3_k",
+      "status": "PASS",
+      "measurements": [
+        {
+          "relation": "[X,Y] = 2iZ",
+          "error": 0.0
+        },
+        {
+          "relation": "[Y,Z] = 2iX",
+          "error": 0.0
+        },
+        {
+          "relation": "[Z,X] = 2iY",
+          "error": 0.0
+        }
+      ],
+      "tolerance": 1e-14,
+      "max_error": 0.0
+    },
+    {
+      "id": "3.2",
+      "name": "Pauli Algebra Anticommutators",
+      "category": "Physical Invariants",
+      "claim": "Pauli matrices satisfy {\u03c3_i, \u03c3_j} = 2\u03b4_ij I",
+      "status": "PASS",
+      "measurements": [
+        {
+          "relation": "{X,X} = 2I",
+          "error": 0.0
+        },
+        {
+          "relation": "{X,Y} = 0",
+          "error": 0.0
+        },
+        {
+          "relation": "{Y,Z} = 0",
+          "error": 0.0
+        }
+      ],
+      "tolerance": 1e-14,
+      "max_error": 0.0
+    },
+    {
+      "id": "4.1",
+      "name": "SVD Gradient Correctness",
+      "category": "Autograd Correctness",
+      "claim": "Gradients of svd_truncated match finite differences",
+      "status": "PASS",
+      "measurements": [
+        {
+          "test": "torch.autograd.gradcheck",
+          "passed": true
+        }
+      ],
+      "tolerance": 0.0001,
+      "max_error": 0.0
+    },
+    {
+      "id": "4.2",
+      "name": "MPS Norm Gradient",
+      "category": "Autograd Correctness",
+      "claim": "Gradient of MPS norm computation is correct",
+      "status": "PASS",
+      "measurements": [
+        {
+          "test": "torch.autograd.gradcheck",
+          "passed": true
+        }
+      ],
+      "tolerance": 0.0001,
+      "max_error": 0.0
+    },
+    {
+      "id": "5.1",
+      "name": "Lanczos Ground State Energy",
+      "category": "Algorithm Correctness",
+      "claim": "Lanczos finds correct ground state eigenvalue",
+      "status": "PASS",
+      "measurements": [
+        {
+          "property": "exact_E0",
+          "value": -5.4124839706848835
+        },
+        {
+          "property": "lanczos_E0",
+          "value": -5.412483970684888
+        },
+        {
+          "property": "error",
+          "value": 4.440892098500626e-15
+        }
+      ],
+      "tolerance": 1e-08,
+      "max_error": 4.440892098500626e-15
+    },
+    {
+      "id": "5.2",
+      "name": "Heisenberg MPO Hermiticity",
+      "category": "Algorithm Correctness",
+      "claim": "Heisenberg Hamiltonian MPO is Hermitian: H = H\u2020",
+      "status": "PASS",
+      "measurements": [
+        {
+          "property": "||H - H\u2020||_F",
+          "value": 0.0
+        }
+      ],
+      "tolerance": 1e-10,
+      "max_error": 0.0
+    }
+  ],
+  "summary": {
+    "total": 6,
+    "passed": 6,
+    "failed": 0,
+    "all_passed": true
+  }
+}

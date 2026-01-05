@@ -1,0 +1,37 @@
+{
+  "timestamp": "2025-12-24T00:14:58.719922",
+  "phase": "1a",
+  "tests": [
+    {
+      "name": "poisson_solver",
+      "passed": true,
+      "details": {
+        "self_consistency_passed": true,
+        "order_passed": true
+      }
+    },
+    {
+      "name": "projection",
+      "passed": true,
+      "details": {
+        "divergence_before": 6.283185307179596,
+        "divergence_after": 9.490186414495838e-13
+      }
+    },
+    {
+      "name": "advection",
+      "passed": true
+    },
+    {
+      "name": "taylor_green",
+      "passed": true,
+      "details": {
+        "decay_error": 2.9812646304464414e-15,
+        "max_velocity_error": 1.5543122344752192e-15,
+        "decay_passed": true,
+        "divergence_passed": true
+      }
+    }
+  ],
+  "all_passed": true
+}

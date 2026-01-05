@@ -1,0 +1,110 @@
+{
+  "phase": "22",
+  "title": "Operational Applications",
+  "proofs": [
+    {
+      "name": "Saha Ionization Equilibrium",
+      "passed": true,
+      "details": {
+        "n_e_15000K": 4.621838089041595e+21,
+        "n_e_3000K": 506065972447.7604,
+        "monotonic_with_T": true,
+        "pressure_effect_correct": "tensor(True)"
+      }
+    },
+    {
+      "name": "Plasma Frequency Physics",
+      "passed": "tensor(True)",
+      "details": {
+        "omega_pe_computed": 56414731698.17582,
+        "omega_pe_expected": 56400000000.0,
+        "relative_error": 0.0002612003222663014,
+        "scaling_ratio": 2.0,
+        "scaling_ok": "tensor(True)"
+      }
+    },
+    {
+      "name": "Blackout Geometry Consistency",
+      "passed": "tensor(True)",
+      "details": {
+        "omega_pe_values": [
+          1783990457.5353434,
+          5641473169.817582,
+          17839904575.353436,
+          56414731698.17582
+        ],
+        "plasma_freq_monotonic": true,
+        "atten_1GHz": 163.42709947037724,
+        "atten_100GHz": 0.46101788619875794,
+        "frequency_cutoff_ok": "tensor(True)"
+      }
+    },
+    {
+      "name": "FADS Sensor Sensitivity",
+      "passed": true,
+      "details": {
+        "jacobian_norm": 57068.406369421835,
+        "pressure_sensitivity": 285.3238657736606,
+        "mach_response": 113101.18863793647,
+        "alpha_response": 43663.57230082668
+      }
+    },
+    {
+      "name": "Differentiable CFD Conservation",
+      "passed": "tensor(True)",
+      "details": {
+        "mass_initial": 1.0,
+        "mass_final": 1.0,
+        "mass_error_percent": 0.0,
+        "gradients_exist": true
+      }
+    },
+    {
+      "name": "Aero-TRN Navigation Drift",
+      "passed": true,
+      "details": {
+        "pressure_pattern_std": 0.2665260173612104,
+        "roughness": 55.99421990272482,
+        "gradient": [
+          -0.0013090987858913649,
+          0.037510623138493085
+        ]
+      }
+    },
+    {
+      "name": "Jet Penetration Correlations",
+      "passed": true,
+      "details": {
+        "penetration_J5": 0.028466265971257648,
+        "penetration_J20": 0.043146790919326425,
+        "expected_ratio": 1.515716566510398,
+        "actual_ratio": 1.515716566510398,
+        "mach_disk_pr5": 0.014981655449248591,
+        "mach_disk_pr20": 0.029963310898497183
+      }
+    },
+    {
+      "name": "Jet Interaction Forces",
+      "passed": true,
+      "details": {
+        "amplification_factor": 1.9797958971132712,
+        "induced_normal_force": 40499.99999999999,
+        "separation_length": 0.19595917942265423,
+        "reattachment_length": 0.4898979485566356
+      }
+    },
+    {
+      "name": "Divert Guidance Accuracy",
+      "passed": true,
+      "details": {
+        "time_to_go": 20.000500000000002,
+        "initial_miss_m": 500.006249960938,
+        "accel_command_mag": 3.7498593793944024,
+        "predicted_miss": 500.006249960938,
+        "thruster_commands": 1
+      }
+    }
+  ],
+  "all_passed": "tensor(True)",
+  "summary": "9/9"
+}

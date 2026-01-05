@@ -1,0 +1,1055 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.qtt_2d API documentation</title>
+<meta name="description" content="QTT 2D CFD Infrastructure - Morton Z-Curve with Strang Splitting …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.qtt_2d</code></h1>
+</header>
+<section id="section-intro">
+<p>QTT 2D CFD Infrastructure - Morton Z-Curve with Strang Splitting</p>
+<p>The "Boss Fight" of Tensor CFD:
+- 1D shock = point (low rank)
+- 2D shock = line (rank depends on orientation)
+- Horizontal/Vertical = Rank 1
+- Diagonal = High Rank (the "Diagonal Problem")</p>
+<p>Strategy: Strang Splitting + Interleaved Bits (Morton Z-Curve)</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.qtt_2d.apply_mpo_2d"><code class="name flex">
+<span>def <span class="ident">apply_mpo_2d</span></span>(<span>state: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>mpo: List[torch.Tensor],<br>max_rank: int = 64) ‑> <a title="tensornet.cfd.qtt_2d.QTT2DState" href="#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def apply_mpo_2d(state: QTT2DState, mpo: List[torch.Tensor], max_rank: int = 64) -&gt; QTT2DState:
+    &#34;&#34;&#34;
+    Apply an MPO to a QTT2D state.
+    
+    For the 2D shift MPOs, this computes:
+        |ψ&#39;⟩ = MPO |ψ⟩
+    
+    Each core of the result has shape:
+        (r_mpo_left × r_state_left, 2, r_mpo_right × r_state_right)
+        
+    We then truncate to max_rank using SVD.
+    &#34;&#34;&#34;
+    new_cores = []
+    
+    for k in range(len(state.cores)):
+        state_core = state.cores[k]  # (r_left, 2, r_right)
+        mpo_core = mpo[k]            # (m_left, 2, 2, m_right)
+        
+        r_left, d_in, r_right = state_core.shape
+        m_left, d_out, d_in_mpo, m_right = mpo_core.shape
+        
+        # Contract: sum over input physical index
+        # result[m_l, r_l, d_out, m_r, r_r] = mpo[m_l, d_out, d_in, m_r] * state[r_l, d_in, r_r]
+        # Then reshape to combined bond dims
+        
+        # Einsum: &#39;abcd,edf-&gt;aebcf&#39; where d is contracted
+        result = torch.einsum(&#39;moij,ljr-&gt;mlorir&#39;, mpo_core, state_core)
+        
+        # Reshape to (m_left*r_left, d_out, m_right*r_right)
+        result = result.reshape(m_left * r_left, d_out, m_right * r_right)
+        
+        new_cores.append(result)
+    
+    # Create result state
+    result_state = QTT2DState(cores=new_cores, nx=state.nx, ny=state.ny)
+    
+    # Truncate to max_rank using SVD sweeps
+    result_state = truncate_qtt_2d(result_state, max_rank)
+    
+    return result_state</code></pre>
+</details>
+<div class="desc"><p>Apply an MPO to a QTT2D state.</p>
+<p>For the 2D shift MPOs, this computes:
+|ψ'⟩ = MPO |ψ⟩</p>
+<p>Each core of the result has shape:
+(r_mpo_left × r_state_left, 2, r_mpo_right × r_state_right)</p>
+<p>We then truncate to max_rank using SVD.</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.dense_to_qtt_2d"><code class="name flex">
+<span>def <span class="ident">dense_to_qtt_2d</span></span>(<span>field: torch.Tensor, max_bond: int = 64, tol: float = 1e-10) ‑> <a title="tensornet.cfd.qtt_2d.QTT2DState" href="#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dense_to_qtt_2d(
+    field: torch.Tensor,
+    max_bond: int = 64,
+    tol: float = 1e-10
+) -&gt; QTT2DState:
+    &#34;&#34;&#34;
+    Convert 2D dense field to QTT with Morton ordering.
+    
+    Args:
+        field: (Nx, Ny) tensor where Nx = 2^nx, Ny = 2^ny
+        max_bond: Maximum bond dimension
+        tol: Truncation tolerance
+        
+    Returns:
+        QTT2DState with interleaved x,y bits
+    &#34;&#34;&#34;
+    Nx, Ny = field.shape
+    nx = int(torch.log2(torch.tensor(Nx)).item())
+    ny = int(torch.log2(torch.tensor(Ny)).item())
+    
+    assert 2**nx == Nx, f&#34;Nx={Nx} must be power of 2&#34;
+    assert 2**ny == Ny, f&#34;Ny={Ny} must be power of 2&#34;
+    
+    # Reorder to Morton (Z-curve) layout
+    N_total = Nx * Ny
+    n_bits = max(nx, ny)
+    
+    # Build Morton-ordered 1D array
+    morton_field = torch.zeros(N_total, dtype=field.dtype, device=field.device)
+    
+    for ix in range(Nx):
+        for iy in range(Ny):
+            z = morton_encode(ix, iy, n_bits)
+            morton_field[z] = field[ix, iy]
+    
+    # Compress 1D Morton array to QTT
+    qtt_1d = dense_to_qtt(morton_field, max_bond=max_bond)
+    
+    return QTT2DState(
+        cores=qtt_1d.cores,
+        nx=nx,
+        ny=ny
+    )</code></pre>
+</details>
+<div class="desc"><p>Convert 2D dense field to QTT with Morton ordering.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>field</code></strong></dt>
+<dd>(Nx, Ny) tensor where Nx = 2^nx, Ny = 2^ny</dd>
+<dt><strong><code>max_bond</code></strong></dt>
+<dd>Maximum bond dimension</dd>
+<dt><strong><code>tol</code></strong></dt>
+<dd>Truncation tolerance</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>QTT2DState with interleaved x,y bits</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.morton_decode"><code class="name flex">
+<span>def <span class="ident">morton_decode</span></span>(<span>z: int, n_bits: int) ‑> Tuple[int, int]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def morton_decode(z: int, n_bits: int) -&gt; Tuple[int, int]:
+    &#34;&#34;&#34;
+    Extract x and y from Morton code.
+    
+    Inverse of morton_encode.
+    &#34;&#34;&#34;
+    x = 0
+    y = 0
+    for i in range(n_bits):
+        x |= ((z &gt;&gt; (2 * i)) &amp; 1) &lt;&lt; i      # Even positions → x
+        y |= ((z &gt;&gt; (2 * i + 1)) &amp; 1) &lt;&lt; i  # Odd positions → y
+    return x, y</code></pre>
+</details>
+<div class="desc"><p>Extract x and y from Morton code.</p>
+<p>Inverse of morton_encode.</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.morton_encode"><code class="name flex">
+<span>def <span class="ident">morton_encode</span></span>(<span>x: int, y: int, n_bits: int) ‑> int</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def morton_encode(x: int, y: int, n_bits: int) -&gt; int:
+    &#34;&#34;&#34;
+    Interleave bits of x and y into Morton code.
+    
+    Layout: x₁,y₁,x₂,y₂,x₃,y₃,...
+    
+    Example (4-bit each):
+        x = 0b1010 = 10
+        y = 0b1100 = 12
+        morton = 0b11_01_10_00 = 0xD8 = 216
+        
+    This preserves 2D spatial locality in the 1D QTT index.
+    &#34;&#34;&#34;
+    result = 0
+    for i in range(n_bits):
+        x_bit = (x &gt;&gt; i) &amp; 1
+        y_bit = (y &gt;&gt; i) &amp; 1
+        result |= (x_bit &lt;&lt; (2 * i))      # Even positions: x bits
+        result |= (y_bit &lt;&lt; (2 * i + 1))  # Odd positions: y bits
+    return result</code></pre>
+</details>
+<div class="desc"><p>Interleave bits of x and y into Morton code.</p>
+<p>Layout: x₁,y₁,x₂,y₂,x₃,y₃,&hellip;</p>
+<p>Example (4-bit each):
+x = 0b1010 = 10
+y = 0b1100 = 12
+morton = 0b11_01_10_00 = 0xD8 = 216</p>
+<p>This preserves 2D spatial locality in the 1D QTT index.</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.morton_encode_batch"><code class="name flex">
+<span>def <span class="ident">morton_encode_batch</span></span>(<span>x: torch.Tensor, y: torch.Tensor, n_bits: int) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def morton_encode_batch(x: torch.Tensor, y: torch.Tensor, n_bits: int) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Vectorized Morton encoding for GPU.&#34;&#34;&#34;
+    result = torch.zeros_like(x)
+    for i in range(n_bits):
+        x_bit = (x &gt;&gt; i) &amp; 1
+        y_bit = (y &gt;&gt; i) &amp; 1
+        result |= (x_bit &lt;&lt; (2 * i))
+        result |= (y_bit &lt;&lt; (2 * i + 1))
+    return result</code></pre>
+</details>
+<div class="desc"><p>Vectorized Morton encoding for GPU.</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.primitive_to_conservative_2d"><code class="name flex">
+<span>def <span class="ident">primitive_to_conservative_2d</span></span>(<span>rho: torch.Tensor,<br>u: torch.Tensor,<br>v: torch.Tensor,<br>P: torch.Tensor,<br>gamma: float = 1.4) ‑> Tuple[torch.Tensor, ...]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def primitive_to_conservative_2d(
+    rho: torch.Tensor,
+    u: torch.Tensor,
+    v: torch.Tensor,
+    P: torch.Tensor,
+    gamma: float = 1.4
+) -&gt; Tuple[torch.Tensor, ...]:
+    &#34;&#34;&#34;Convert primitive variables to conservative.&#34;&#34;&#34;
+    rhou = rho * u
+    rhov = rho * v
+    E = P / (gamma - 1) + 0.5 * rho * (u**2 + v**2)
+    return rho, rhou, rhov, E</code></pre>
+</details>
+<div class="desc"><p>Convert primitive variables to conservative.</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.qtt_2d_to_dense"><code class="name flex">
+<span>def <span class="ident">qtt_2d_to_dense</span></span>(<span>state: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def qtt_2d_to_dense(state: QTT2DState) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Decompress QTT2D back to dense 2D array.
+    
+    Returns:
+        (Nx, Ny) tensor
+    &#34;&#34;&#34;
+    # Decompress to Morton-ordered 1D
+    qtt_1d = QTTState(cores=state.cores, num_qubits=len(state.cores))
+    morton_field = qtt_to_dense(qtt_1d)
+    
+    # Reorder from Morton to standard 2D
+    Nx, Ny = state.shape_2d
+    n_bits = max(state.nx, state.ny)
+    
+    field = torch.zeros(Nx, Ny, dtype=morton_field.dtype, device=morton_field.device)
+    
+    for z in range(len(morton_field)):
+        ix, iy = morton_decode(z, n_bits)
+        if ix &lt; Nx and iy &lt; Ny:
+            field[ix, iy] = morton_field[z]
+    
+    return field</code></pre>
+</details>
+<div class="desc"><p>Decompress QTT2D back to dense 2D array.</p>
+<h2 id="returns">Returns</h2>
+<p>(Nx, Ny) tensor</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.riemann_quadrant_ic"><code class="name flex">
+<span>def <span class="ident">riemann_quadrant_ic</span></span>(<span>nx: int, ny: int, config: int = 3) ‑> Tuple[torch.Tensor, ...]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def riemann_quadrant_ic(nx: int, ny: int, config: int = 3) -&gt; Tuple[torch.Tensor, ...]:
+    &#34;&#34;&#34;
+    Initialize 2D Riemann problem with four quadrant states.
+    
+    Configuration 3 (standard test case):
+        Top Right:    ρ=1.5,  P=1.5,  u=0,   v=0
+        Top Left:     ρ=0.5,  P=0.3,  u=0.1, v=0
+        Bottom Left:  ρ=0.1,  P=0.03, u=0.1, v=0.1
+        Bottom Right: ρ=0.5,  P=0.3,  u=0,   v=0.1
+        
+    Returns:
+        (rho, u, v, P) as (Nx, Ny) tensors
+    &#34;&#34;&#34;
+    Nx, Ny = 2**nx, 2**ny
+    gamma = 1.4
+    
+    rho = torch.zeros(Nx, Ny, dtype=torch.float32)
+    u = torch.zeros(Nx, Ny, dtype=torch.float32)
+    v = torch.zeros(Nx, Ny, dtype=torch.float32)
+    P = torch.zeros(Nx, Ny, dtype=torch.float32)
+    
+    # Quadrant boundaries at center
+    mid_x, mid_y = Nx // 2, Ny // 2
+    
+    if config == 3:
+        # Top Right (x &gt;= mid, y &gt;= mid)
+        rho[mid_x:, mid_y:] = 1.5
+        P[mid_x:, mid_y:] = 1.5
+        u[mid_x:, mid_y:] = 0.0
+        v[mid_x:, mid_y:] = 0.0
+        
+        # Top Left (x &lt; mid, y &gt;= mid)
+        rho[:mid_x, mid_y:] = 0.5
+        P[:mid_x, mid_y:] = 0.3
+        u[:mid_x, mid_y:] = 0.1
+        v[:mid_x, mid_y:] = 0.0
+        
+        # Bottom Left (x &lt; mid, y &lt; mid)
+        rho[:mid_x, :mid_y] = 0.1
+        P[:mid_x, :mid_y] = 0.03
+        u[:mid_x, :mid_y] = 0.1
+        v[:mid_x, :mid_y] = 0.1
+        
+        # Bottom Right (x &gt;= mid, y &lt; mid)
+        rho[mid_x:, :mid_y] = 0.5
+        P[mid_x:, :mid_y] = 0.3
+        u[mid_x:, :mid_y] = 0.0
+        v[mid_x:, :mid_y] = 0.1
+    
+    return rho, u, v, P</code></pre>
+</details>
+<div class="desc"><p>Initialize 2D Riemann problem with four quadrant states.</p>
+<p>Configuration 3 (standard test case):
+Top Right:
+ρ=1.5,
+P=1.5,
+u=0,
+v=0
+Top Left:
+ρ=0.5,
+P=0.3,
+u=0.1, v=0
+Bottom Left:
+ρ=0.1,
+P=0.03, u=0.1, v=0.1
+Bottom Right: ρ=0.5,
+P=0.3,
+u=0,
+v=0.1</p>
+<h2 id="returns">Returns</h2>
+<p>(rho, u, v, P) as (Nx, Ny) tensors</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.shift_mpo_x_2d"><code class="name flex">
+<span>def <span class="ident">shift_mpo_x_2d</span></span>(<span>n_qubits: int, device: torch.device = None, dtype: torch.dtype = torch.float32) ‑> List[torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def shift_mpo_x_2d(n_qubits: int, device: torch.device = None, dtype: torch.dtype = torch.float32) -&gt; List[torch.Tensor]:
+    &#34;&#34;&#34;
+    Build MPO that shifts in X direction (even bits only) for Morton-ordered QTT.
+    
+    In Morton layout with n_qubits total:
+    - Even cores (0, 2, 4, ...): X bits
+    - Odd cores (1, 3, 5, ...): Y bits
+    
+    Shift_X applies +1 arithmetic to X bits only, with carry propagating
+    through even cores while odd cores act as identity.
+    
+    Returns:
+        List of MPO cores, each shape (r_left, 2, 2, r_right)
+    &#34;&#34;&#34;
+    if device is None:
+        device = torch.device(&#39;cpu&#39;)
+    
+    mpo = []
+    
+    # The shift carries through ONLY even-indexed cores
+    # Odd cores are pure identity (Y bits unchanged)
+    
+    for k in range(n_qubits):
+        if k % 2 == 1:
+            # Odd core (Y bit): Pure identity MPO
+            # Shape: (1, 2, 2, 1) - identity matrix
+            core = torch.zeros(1, 2, 2, 1, dtype=dtype, device=device)
+            core[0, 0, 0, 0] = 1.0  # |0⟩ → |0⟩
+            core[0, 1, 1, 0] = 1.0  # |1⟩ → |1⟩
+            mpo.append(core)
+        else:
+            # Even core (X bit): Ripple-carry adder
+            # First even core initiates the +1
+            # Subsequent even cores propagate carry
+            x_position = k // 2  # Which X-bit is this?
+            
+            if x_position == 0:
+                # First X bit: Initiate +1
+                # Input: 0 → 1 (no carry), 1 → 0 (carry)
+                core = torch.zeros(1, 2, 2, 2, dtype=dtype, device=device)
+                # State 0: no carry yet
+                # Physical in 0 → out 1, no carry
+                core[0, 0, 1, 0] = 1.0  # 0+1 = 1, state stays 0 (no carry)
+                # Physical in 1 → out 0, generate carry
+                core[0, 1, 0, 1] = 1.0  # 1+1 = 0, state goes to 1 (carry)
+                mpo.append(core)
+            else:
+                # Subsequent X bits: Accept and propagate carry
+                # But carry must &#34;skip&#34; the Y bits in between!
+                # This is the tricky part...
+                
+                # For now: simplified 2-state carry propagation
+                core = torch.zeros(2, 2, 2, 2, dtype=dtype, device=device)
+                
+                # State 0 (no carry): pass through
+                core[0, 0, 0, 0] = 1.0  # 0 + 0 = 0
+                core[0, 1, 1, 0] = 1.0  # 1 + 0 = 1
+                
+                # State 1 (carry): add 1
+                core[1, 0, 1, 0] = 1.0  # 0 + 1 = 1, no new carry
+                core[1, 1, 0, 1] = 1.0  # 1 + 1 = 0, propagate carry
+                
+                mpo.append(core)
+    
+    # Fix the bond dimensions to flow through odd cores
+    # The carry state must persist through Y-bit (identity) cores
+    mpo = _fix_carry_through_identity(mpo)
+    
+    return mpo</code></pre>
+</details>
+<div class="desc"><p>Build MPO that shifts in X direction (even bits only) for Morton-ordered QTT.</p>
+<p>In Morton layout with n_qubits total:
+- Even cores (0, 2, 4, &hellip;): X bits
+- Odd cores (1, 3, 5, &hellip;): Y bits</p>
+<p>Shift_X applies +1 arithmetic to X bits only, with carry propagating
+through even cores while odd cores act as identity.</p>
+<h2 id="returns">Returns</h2>
+<p>List of MPO cores, each shape (r_left, 2, 2, r_right)</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.shift_mpo_y_2d"><code class="name flex">
+<span>def <span class="ident">shift_mpo_y_2d</span></span>(<span>n_qubits: int, device: torch.device = None, dtype: torch.dtype = torch.float32) ‑> List[torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def shift_mpo_y_2d(n_qubits: int, device: torch.device = None, dtype: torch.dtype = torch.float32) -&gt; List[torch.Tensor]:
+    &#34;&#34;&#34;
+    Build MPO that shifts in Y direction (odd bits only) for Morton-ordered QTT.
+    
+    Same as shift_mpo_x_2d but operates on odd cores (Y bits) while
+    even cores (X bits) act as identity.
+    &#34;&#34;&#34;
+    if device is None:
+        device = torch.device(&#39;cpu&#39;)
+    
+    mpo = []
+    
+    for k in range(n_qubits):
+        if k % 2 == 0:
+            # Even core (X bit): Pure identity MPO
+            r_left = 2 if k &gt; 0 else 1
+            r_right = 2 if k &lt; n_qubits - 1 else 1
+            
+            core = torch.zeros(r_left, 2, 2, r_right, dtype=dtype, device=device)
+            for r in range(min(r_left, r_right)):
+                core[r, 0, 0, r] = 1.0
+                core[r, 1, 1, r] = 1.0
+            mpo.append(core)
+        else:
+            # Odd core (Y bit): Ripple-carry adder
+            y_position = k // 2
+            
+            if y_position == 0:
+                # First Y bit: Initiate +1
+                core = torch.zeros(1, 2, 2, 2, dtype=dtype, device=device)
+                core[0, 0, 1, 0] = 1.0  # 0+1 = 1
+                core[0, 1, 0, 1] = 1.0  # 1+1 = 0, carry
+                mpo.append(core)
+            else:
+                # Subsequent Y bits
+                core = torch.zeros(2, 2, 2, 2, dtype=dtype, device=device)
+                core[0, 0, 0, 0] = 1.0
+                core[0, 1, 1, 0] = 1.0
+                core[1, 0, 1, 0] = 1.0
+                core[1, 1, 0, 1] = 1.0
+                mpo.append(core)
+    
+    return mpo</code></pre>
+</details>
+<div class="desc"><p>Build MPO that shifts in Y direction (odd bits only) for Morton-ordered QTT.</p>
+<p>Same as shift_mpo_x_2d but operates on odd cores (Y bits) while
+even cores (X bits) act as identity.</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.strang_split_step"><code class="name flex">
+<span>def <span class="ident">strang_split_step</span></span>(<span>rho: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>rhou: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>rhov: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>E: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>dt: float,<br>solver_1d,<br>max_rank: int = 64) ‑> Tuple[<a title="tensornet.cfd.qtt_2d.QTT2DState" href="#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>, <a title="tensornet.cfd.qtt_2d.QTT2DState" href="#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>, <a title="tensornet.cfd.qtt_2d.QTT2DState" href="#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>, <a title="tensornet.cfd.qtt_2d.QTT2DState" href="#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def strang_split_step(
+    rho: QTT2DState,
+    rhou: QTT2DState,  # x-momentum
+    rhov: QTT2DState,  # y-momentum  
+    E: QTT2DState,
+    dt: float,
+    solver_1d,  # Function that takes 1D states and returns updated states
+    max_rank: int = 64
+) -&gt; Tuple[QTT2DState, QTT2DState, QTT2DState, QTT2DState]:
+    &#34;&#34;&#34;
+    Perform one Strang splitting step for 2D Euler equations.
+    
+    U^{n+1} = L_x(dt/2) L_y(dt) L_x(dt/2) U^n
+    
+    Where L_x freezes Y and solves in X, L_y freezes X and solves in Y.
+    
+    The beauty: With Morton ordering, we don&#39;t transpose data.
+    We just apply different shift MPOs!
+    
+    Args:
+        rho, rhou, rhov, E: Conservative variables in QTT2D format
+        dt: Time step
+        solver_1d: 1D Euler solver function
+        max_rank: Maximum rank for truncation
+        
+    Returns:
+        Updated (rho, rhou, rhov, E) at t + dt
+    &#34;&#34;&#34;
+    # Half step in X
+    rho, rhou, rhov, E = _solve_direction(
+        rho, rhou, rhov, E, 
+        direction=SplitDirection.X,
+        dt=dt/2,
+        solver_1d=solver_1d,
+        max_rank=max_rank
+    )
+    
+    # Full step in Y
+    rho, rhou, rhov, E = _solve_direction(
+        rho, rhou, rhov, E,
+        direction=SplitDirection.Y,
+        dt=dt,
+        solver_1d=solver_1d,
+        max_rank=max_rank
+    )
+    
+    # Half step in X
+    rho, rhou, rhov, E = _solve_direction(
+        rho, rhou, rhov, E,
+        direction=SplitDirection.X,
+        dt=dt/2,
+        solver_1d=solver_1d,
+        max_rank=max_rank
+    )
+    
+    return rho, rhou, rhov, E</code></pre>
+</details>
+<div class="desc"><p>Perform one Strang splitting step for 2D Euler equations.</p>
+<p>U^{n+1} = L_x(dt/2) L_y(dt) L_x(dt/2) U^n</p>
+<p>Where L_x freezes Y and solves in X, L_y freezes X and solves in Y.</p>
+<p>The beauty: With Morton ordering, we don't transpose data.
+We just apply different shift MPOs!</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt>rho, rhou, rhov, E: Conservative variables in QTT2D format</dt>
+<dt><strong><code>dt</code></strong></dt>
+<dd>Time step</dd>
+<dt><strong><code>solver_1d</code></strong></dt>
+<dd>1D Euler solver function</dd>
+<dt><strong><code>max_rank</code></strong></dt>
+<dd>Maximum rank for truncation</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Updated (rho, rhou, rhov, E) at t + dt</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.test_2d_riemann_quadrant"><code class="name flex">
+<span>def <span class="ident">test_2d_riemann_quadrant</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def test_2d_riemann_quadrant():
+    &#34;&#34;&#34;
+    Validate the 2D Riemann quadrant initial condition.
+    &#34;&#34;&#34;
+    print(&#34;=&#34; * 60)
+    print(&#34;2D RIEMANN QUADRANT TEST (Configuration 3)&#34;)
+    print(&#34;=&#34; * 60)
+    
+    nx, ny = 8, 8  # 256×256 grid
+    Nx, Ny = 2**nx, 2**ny
+    
+    # Initialize quadrant states
+    rho, u, v, P = riemann_quadrant_ic(nx, ny, config=3)
+    
+    print(f&#34;Grid: {Nx}×{Ny} = {Nx*Ny:,} points&#34;)
+    print(f&#34;Dense memory: {rho.numel() * 4 / 1024:.1f} KB per field&#34;)
+    
+    # Compress each field to QTT2D
+    rho_qtt = dense_to_qtt_2d(rho, max_bond=32)
+    u_qtt = dense_to_qtt_2d(u, max_bond=32)
+    v_qtt = dense_to_qtt_2d(v, max_bond=32)
+    P_qtt = dense_to_qtt_2d(P, max_bond=32)
+    
+    print(f&#34;\nQTT Compression Results:&#34;)
+    print(f&#34;  ρ: rank={rho_qtt.max_rank}, ratio={rho_qtt.dense_memory_bytes()/rho_qtt.memory_bytes:.1f}×&#34;)
+    print(f&#34;  u: rank={u_qtt.max_rank}, ratio={u_qtt.dense_memory_bytes()/u_qtt.memory_bytes:.1f}×&#34;)
+    print(f&#34;  v: rank={v_qtt.max_rank}, ratio={v_qtt.dense_memory_bytes()/v_qtt.memory_bytes:.1f}×&#34;)
+    print(f&#34;  P: rank={P_qtt.max_rank}, ratio={P_qtt.dense_memory_bytes()/P_qtt.memory_bytes:.1f}×&#34;)
+    
+    # Verify reconstruction
+    rho_rec = qtt_2d_to_dense(rho_qtt)
+    max_err = (rho - rho_rec).abs().max().item()
+    print(f&#34;\nReconstruction error (ρ): {max_err:.2e}&#34;)
+    
+    print(&#34;=&#34; * 60)
+    print(&#34;✅ 2D Riemann quadrant IC validated&#34;)
+    print(&#34;=&#34; * 60)
+    
+    return rho_qtt, u_qtt, v_qtt, P_qtt</code></pre>
+</details>
+<div class="desc"><p>Validate the 2D Riemann quadrant initial condition.</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.test_2d_shift_gaussian"><code class="name flex">
+<span>def <span class="ident">test_2d_shift_gaussian</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def test_2d_shift_gaussian():
+    &#34;&#34;&#34;
+    Test the interleaved shift MPO by shifting a Gaussian blob.
+    
+    If shift_y moves the blob in y-direction without distortion,
+    the 2D infrastructure is working correctly.
+    &#34;&#34;&#34;
+    print(&#34;=&#34; * 60)
+    print(&#34;2D SHIFT VALIDATION: Gaussian Blob Test&#34;)
+    print(&#34;=&#34; * 60)
+    
+    nx, ny = 6, 6  # 64x64 grid
+    Nx, Ny = 2**nx, 2**ny
+    
+    # Create 2D Gaussian centered at (0.3, 0.5)
+    x = torch.linspace(0, 1, Nx, dtype=torch.float32)
+    y = torch.linspace(0, 1, Ny, dtype=torch.float32)
+    X, Y = torch.meshgrid(x, y, indexing=&#39;ij&#39;)
+    
+    sigma = 0.1
+    x0, y0 = 0.3, 0.5
+    gaussian = torch.exp(-((X - x0)**2 + (Y - y0)**2) / (2 * sigma**2))
+    
+    print(f&#34;Grid: {Nx}×{Ny} = {Nx*Ny:,} points&#34;)
+    print(f&#34;Gaussian center: ({x0}, {y0})&#34;)
+    
+    # Compress to QTT2D
+    qtt = dense_to_qtt_2d(gaussian, max_bond=32)
+    print(f&#34;QTT cores: {qtt.n_qubits}&#34;)
+    print(f&#34;Max rank: {qtt.max_rank}&#34;)
+    print(f&#34;Compression: {qtt.dense_memory_bytes() / qtt.memory_bytes:.1f}×&#34;)
+    
+    # Decompress and verify
+    reconstructed = qtt_2d_to_dense(qtt)
+    max_err = (gaussian - reconstructed).abs().max().item()
+    print(f&#34;Compression error: {max_err:.2e}&#34;)
+    
+    print(&#34;=&#34; * 60)
+    print(&#34;✅ Morton encoding/decoding validated&#34;)
+    print(&#34;=&#34; * 60)
+    
+    return qtt, gaussian</code></pre>
+</details>
+<div class="desc"><p>Test the interleaved shift MPO by shifting a Gaussian blob.</p>
+<p>If shift_y moves the blob in y-direction without distortion,
+the 2D infrastructure is working correctly.</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.truncate_qtt_2d"><code class="name flex">
+<span>def <span class="ident">truncate_qtt_2d</span></span>(<span>state: <a title="tensornet.cfd.qtt_2d.QTT2DState" href="#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a>,<br>max_rank: int) ‑> <a title="tensornet.cfd.qtt_2d.QTT2DState" href="#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def truncate_qtt_2d(state: QTT2DState, max_rank: int) -&gt; QTT2DState:
+    &#34;&#34;&#34;
+    Truncate QTT2D state to maximum rank using left-to-right SVD sweep.
+    &#34;&#34;&#34;
+    cores = [c.clone() for c in state.cores]
+    n = len(cores)
+    
+    # Left-to-right sweep
+    for k in range(n - 1):
+        core = cores[k]
+        r_left, d, r_right = core.shape
+        
+        # Reshape to (r_left * d, r_right)
+        mat = core.reshape(r_left * d, r_right)
+        
+        # SVD
+        U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+        
+        # Truncate
+        rank = min(len(S), max_rank)
+        rank = max(rank, 1)  # At least rank 1
+        
+        # Threshold small singular values
+        threshold = 1e-14 * S[0] if len(S) &gt; 0 else 1e-14
+        rank = min(rank, (S &gt; threshold).sum().item())
+        rank = max(rank, 1)
+        
+        U = U[:, :rank]
+        S = S[:rank]
+        Vh = Vh[:rank, :]
+        
+        # Update cores
+        cores[k] = U.reshape(r_left, d, rank)
+        cores[k + 1] = torch.einsum(&#39;r,ri,jdk-&gt;jdk&#39;, S, Vh, cores[k + 1].reshape(r_right, -1, cores[k + 1].shape[2]))
+        
+        # Fix: proper contraction for next core
+        next_core = cores[k + 1]
+        r_left_next, d_next, r_right_next = state.cores[k + 1].shape
+        
+        # Contract S @ Vh with next core&#39;s left index
+        SV = torch.diag(S) @ Vh  # (rank, r_right)
+        next_core = cores[k + 1].reshape(r_right, d_next * r_right_next)
+        cores[k + 1] = (SV @ next_core).reshape(rank, d_next, r_right_next)
+    
+    return QTT2DState(cores=cores, nx=state.nx, ny=state.ny)</code></pre>
+</details>
+<div class="desc"><p>Truncate QTT2D state to maximum rank using left-to-right SVD sweep.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.cfd.qtt_2d.QTT2DState"><code class="flex name class">
+<span>class <span class="ident">QTT2DState</span></span>
+<span>(</span><span>cores: List[torch.Tensor], nx: int, ny: int)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class QTT2DState:
+    &#34;&#34;&#34;
+    2D physical field stored in QTT format with Morton (Z-curve) ordering.
+    
+    For an Nx × Ny grid where Nx = 2^nx, Ny = 2^ny:
+    - Total QTT cores: 2 * max(nx, ny) (interleaved x,y bits)
+    - Core k (even): corresponds to x-bit k//2
+    - Core k (odd): corresponds to y-bit k//2
+    
+    Memory: O(2n × r²) instead of O(2^(2n))
+    &#34;&#34;&#34;
+    cores: List[torch.Tensor]  # List of 3D tensors: (r_left, 2, r_right)
+    nx: int  # Number of x-bits (Nx = 2^nx)
+    ny: int  # Number of y-bits (Ny = 2^ny)
+    
+    @property
+    def n_qubits(self) -&gt; int:
+        &#34;&#34;&#34;Total number of interleaved qubits.&#34;&#34;&#34;
+        return len(self.cores)
+    
+    @property
+    def shape_2d(self) -&gt; Tuple[int, int]:
+        &#34;&#34;&#34;Physical grid shape (Nx, Ny).&#34;&#34;&#34;
+        return (2**self.nx, 2**self.ny)
+    
+    @property
+    def max_rank(self) -&gt; int:
+        &#34;&#34;&#34;Maximum bond dimension across all cores.&#34;&#34;&#34;
+        return max(c.shape[0] for c in self.cores)
+    
+    @property
+    def memory_bytes(self) -&gt; int:
+        &#34;&#34;&#34;Total memory in bytes.&#34;&#34;&#34;
+        return sum(c.numel() * c.element_size() for c in self.cores)
+    
+    def dense_memory_bytes(self) -&gt; int:
+        &#34;&#34;&#34;Memory if stored as dense 2D array.&#34;&#34;&#34;
+        Nx, Ny = self.shape_2d
+        return Nx * Ny * 4  # float32</code></pre>
+</details>
+<div class="desc"><p>2D physical field stored in QTT format with Morton (Z-curve) ordering.</p>
+<p>For an Nx × Ny grid where Nx = 2^nx, Ny = 2^ny:
+- Total QTT cores: 2 * max(nx, ny) (interleaved x,y bits)
+- Core k (even): corresponds to x-bit k//2
+- Core k (odd): corresponds to y-bit k//2</p>
+<p>Memory: O(2n × r²) instead of O(2^(2n))</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.qtt_2d.QTT2DState.cores"><code class="name">var <span class="ident">cores</span> : List[torch.Tensor]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.QTT2DState.max_rank"><code class="name">prop <span class="ident">max_rank</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def max_rank(self) -&gt; int:
+    &#34;&#34;&#34;Maximum bond dimension across all cores.&#34;&#34;&#34;
+    return max(c.shape[0] for c in self.cores)</code></pre>
+</details>
+<div class="desc"><p>Maximum bond dimension across all cores.</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.QTT2DState.memory_bytes"><code class="name">prop <span class="ident">memory_bytes</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def memory_bytes(self) -&gt; int:
+    &#34;&#34;&#34;Total memory in bytes.&#34;&#34;&#34;
+    return sum(c.numel() * c.element_size() for c in self.cores)</code></pre>
+</details>
+<div class="desc"><p>Total memory in bytes.</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.QTT2DState.n_qubits"><code class="name">prop <span class="ident">n_qubits</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def n_qubits(self) -&gt; int:
+    &#34;&#34;&#34;Total number of interleaved qubits.&#34;&#34;&#34;
+    return len(self.cores)</code></pre>
+</details>
+<div class="desc"><p>Total number of interleaved qubits.</p></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.QTT2DState.nx"><code class="name">var <span class="ident">nx</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.QTT2DState.ny"><code class="name">var <span class="ident">ny</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.QTT2DState.shape_2d"><code class="name">prop <span class="ident">shape_2d</span> : Tuple[int, int]</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def shape_2d(self) -&gt; Tuple[int, int]:
+    &#34;&#34;&#34;Physical grid shape (Nx, Ny).&#34;&#34;&#34;
+    return (2**self.nx, 2**self.ny)</code></pre>
+</details>
+<div class="desc"><p>Physical grid shape (Nx, Ny).</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.qtt_2d.QTT2DState.dense_memory_bytes"><code class="name flex">
+<span>def <span class="ident">dense_memory_bytes</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dense_memory_bytes(self) -&gt; int:
+    &#34;&#34;&#34;Memory if stored as dense 2D array.&#34;&#34;&#34;
+    Nx, Ny = self.shape_2d
+    return Nx * Ny * 4  # float32</code></pre>
+</details>
+<div class="desc"><p>Memory if stored as dense 2D array.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.SplitDirection"><code class="flex name class">
+<span>class <span class="ident">SplitDirection</span></span>
+<span>(</span><span>*args, **kwds)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SplitDirection(Enum):
+    X = &#34;x&#34;
+    Y = &#34;y&#34;</code></pre>
+</details>
+<div class="desc"><p>Create a collection of name/value pairs.</p>
+<p>Example enumeration:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; class Color(Enum):
+...     RED = 1
+...     BLUE = 2
+...     GREEN = 3
+</code></pre>
+<p>Access them by:</p>
+<ul>
+<li>attribute access::</li>
+</ul>
+<pre><code class="language-python-repl">&gt;&gt;&gt; Color.RED
+&lt;Color.RED: 1&gt;
+</code></pre>
+<ul>
+<li>value lookup:</li>
+</ul>
+<pre><code class="language-python-repl">&gt;&gt;&gt; Color(1)
+&lt;Color.RED: 1&gt;
+</code></pre>
+<ul>
+<li>name lookup:</li>
+</ul>
+<pre><code class="language-python-repl">&gt;&gt;&gt; Color['RED']
+&lt;Color.RED: 1&gt;
+</code></pre>
+<p>Enumerations can be iterated over, and know how many members they have:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; len(Color)
+3
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; list(Color)
+[&lt;Color.RED: 1&gt;, &lt;Color.BLUE: 2&gt;, &lt;Color.GREEN: 3&gt;]
+</code></pre>
+<p>Methods can be added to enumerations, and members can have their own
+attributes &ndash; see the documentation for details.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="tensornet.cfd.qtt_2d.SplitDirection.X"><code class="name">var <span class="ident">X</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.qtt_2d.SplitDirection.Y"><code class="name">var <span class="ident">Y</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.qtt_2d.apply_mpo_2d" href="#tensornet.cfd.qtt_2d.apply_mpo_2d">apply_mpo_2d</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.dense_to_qtt_2d" href="#tensornet.cfd.qtt_2d.dense_to_qtt_2d">dense_to_qtt_2d</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.morton_decode" href="#tensornet.cfd.qtt_2d.morton_decode">morton_decode</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.morton_encode" href="#tensornet.cfd.qtt_2d.morton_encode">morton_encode</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.morton_encode_batch" href="#tensornet.cfd.qtt_2d.morton_encode_batch">morton_encode_batch</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.primitive_to_conservative_2d" href="#tensornet.cfd.qtt_2d.primitive_to_conservative_2d">primitive_to_conservative_2d</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.qtt_2d_to_dense" href="#tensornet.cfd.qtt_2d.qtt_2d_to_dense">qtt_2d_to_dense</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.riemann_quadrant_ic" href="#tensornet.cfd.qtt_2d.riemann_quadrant_ic">riemann_quadrant_ic</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.shift_mpo_x_2d" href="#tensornet.cfd.qtt_2d.shift_mpo_x_2d">shift_mpo_x_2d</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.shift_mpo_y_2d" href="#tensornet.cfd.qtt_2d.shift_mpo_y_2d">shift_mpo_y_2d</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.strang_split_step" href="#tensornet.cfd.qtt_2d.strang_split_step">strang_split_step</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.test_2d_riemann_quadrant" href="#tensornet.cfd.qtt_2d.test_2d_riemann_quadrant">test_2d_riemann_quadrant</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.test_2d_shift_gaussian" href="#tensornet.cfd.qtt_2d.test_2d_shift_gaussian">test_2d_shift_gaussian</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.truncate_qtt_2d" href="#tensornet.cfd.qtt_2d.truncate_qtt_2d">truncate_qtt_2d</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.cfd.qtt_2d.QTT2DState" href="#tensornet.cfd.qtt_2d.QTT2DState">QTT2DState</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.qtt_2d.QTT2DState.cores" href="#tensornet.cfd.qtt_2d.QTT2DState.cores">cores</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.QTT2DState.dense_memory_bytes" href="#tensornet.cfd.qtt_2d.QTT2DState.dense_memory_bytes">dense_memory_bytes</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.QTT2DState.max_rank" href="#tensornet.cfd.qtt_2d.QTT2DState.max_rank">max_rank</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.QTT2DState.memory_bytes" href="#tensornet.cfd.qtt_2d.QTT2DState.memory_bytes">memory_bytes</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.QTT2DState.n_qubits" href="#tensornet.cfd.qtt_2d.QTT2DState.n_qubits">n_qubits</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.QTT2DState.nx" href="#tensornet.cfd.qtt_2d.QTT2DState.nx">nx</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.QTT2DState.ny" href="#tensornet.cfd.qtt_2d.QTT2DState.ny">ny</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.QTT2DState.shape_2d" href="#tensornet.cfd.qtt_2d.QTT2DState.shape_2d">shape_2d</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.qtt_2d.SplitDirection" href="#tensornet.cfd.qtt_2d.SplitDirection">SplitDirection</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.qtt_2d.SplitDirection.X" href="#tensornet.cfd.qtt_2d.SplitDirection.X">X</a></code></li>
+<li><code><a title="tensornet.cfd.qtt_2d.SplitDirection.Y" href="#tensornet.cfd.qtt_2d.SplitDirection.Y">Y</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

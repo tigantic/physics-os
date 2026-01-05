@@ -1,0 +1,1085 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.viscous API documentation</title>
+<meta name="description" content="Navier-Stokes Viscous Terms
+…">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.viscous</code></h1>
+</header>
+<section id="section-intro">
+<h1 id="navier-stokes-viscous-terms">Navier-Stokes Viscous Terms</h1>
+<p>This module implements the viscous flux contributions for the
+compressible Navier-Stokes equations, extending the inviscid Euler
+solver to handle boundary layers, heat transfer, and viscous dissipation.</p>
+<p>The compressible Navier-Stokes equations:</p>
+<pre><code>∂ρ/∂t + ∇·(ρv) = 0
+∂(ρv)/∂t + ∇·(ρv⊗v + pI) = ∇·τ
+∂E/∂t + ∇·((E+p)v) = ∇·(τ·v) - ∇·q
+</code></pre>
+<p>where:
+τ = μ(∇v + ∇vᵀ - 2/3(∇·v)I)
+(Newtonian stress tensor)
+q = -k∇T
+(Fourier heat conduction)</p>
+<p>Transport Properties:
+μ(T) = Sutherland's law for dynamic viscosity
+k(T) = μ·cₚ/Pr for thermal conductivity (Prandtl number)</p>
+<p>For hypersonic flows, viscous effects create:
+- Boundary layers with significant heating
+- Shock-boundary layer interactions
+- Heat shield thermal loads</p>
+<h2 id="references">References</h2>
+<p>[1] Anderson, "Hypersonic and High-Temperature Gas Dynamics", 2006
+[2] White, "Viscous Fluid Flow", 3rd ed., 2006
+[3] Sutherland, Phil. Mag. 36:507-531, 1893</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.viscous.compute_transport_properties"><code class="name flex">
+<span>def <span class="ident">compute_transport_properties</span></span>(<span>T: Tensor, cp: float = 1004.7030000000002, Pr: float = 0.72) ‑> <a title="tensornet.cfd.viscous.TransportProperties" href="#tensornet.cfd.viscous.TransportProperties">TransportProperties</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_transport_properties(
+    T: Tensor,
+    cp: float = CP_AIR,
+    Pr: float = PR_AIR
+) -&gt; TransportProperties:
+    &#34;&#34;&#34;
+    Compute all transport properties from temperature.
+    
+    Args:
+        T: Temperature field [K]
+        cp: Specific heat at constant pressure
+        Pr: Prandtl number
+        
+    Returns:
+        TransportProperties with μ and k fields
+    &#34;&#34;&#34;
+    mu = sutherland_viscosity(T)
+    k = thermal_conductivity(mu, cp, Pr)
+    return TransportProperties(mu=mu, k=k, Pr=Pr)</code></pre>
+</details>
+<div class="desc"><p>Compute all transport properties from temperature.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>T</code></strong></dt>
+<dd>Temperature field [K]</dd>
+<dt><strong><code>cp</code></strong></dt>
+<dd>Specific heat at constant pressure</dd>
+<dt><strong><code>Pr</code></strong></dt>
+<dd>Prandtl number</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>TransportProperties with μ and k fields</p></div>
+</dd>
+<dt id="tensornet.cfd.viscous.compute_viscous_rhs_2d"><code class="name flex">
+<span>def <span class="ident">compute_viscous_rhs_2d</span></span>(<span>rho: Tensor,<br>u: Tensor,<br>v: Tensor,<br>p: Tensor,<br>dx: float,<br>dy: float,<br>gamma: float = 1.4,<br>R: float = 287.058,<br>Pr: float = 0.72) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_viscous_rhs_2d(
+    rho: Tensor,
+    u: Tensor,
+    v: Tensor,
+    p: Tensor,
+    dx: float,
+    dy: float,
+    gamma: float = GAMMA_AIR,
+    R: float = R_AIR,
+    Pr: float = PR_AIR
+) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Compute complete viscous RHS for 2D Navier-Stokes.
+    
+    This computes ∇·F_v (viscous flux divergence) to be ADDED
+    to the inviscid Euler RHS.
+    
+    Args:
+        rho: Density [kg/m³]
+        u, v: Velocity components [m/s]
+        p: Pressure [Pa]
+        dx, dy: Grid spacing [m]
+        gamma: Ratio of specific heats
+        R: Specific gas constant [J/(kg·K)]
+        Pr: Prandtl number
+        
+    Returns:
+        Viscous source term [4, Ny, Nx] to ADD to RHS
+    &#34;&#34;&#34;
+    # Temperature from ideal gas law: T = p / (ρR)
+    T = p / (rho * R)
+    
+    # Transport properties
+    cp = gamma * R / (gamma - 1)
+    mu = sutherland_viscosity(T)
+    k = thermal_conductivity(mu, cp, Pr)
+    
+    # Velocity gradients
+    grads = velocity_gradients_2d(u, v, dx, dy)
+    
+    # Stress tensor
+    tau = stress_tensor_2d(grads, mu)
+    
+    # Temperature gradients and heat flux
+    dTdx, dTdy = temperature_gradient_2d(T, dx, dy)
+    qx, qy = heat_flux_2d(dTdx, dTdy, k)
+    
+    # Viscous fluxes
+    Fv = viscous_flux_x_2d(u, v, tau, qx)
+    Gv = viscous_flux_y_2d(u, v, tau, qy)
+    
+    # Divergence (this is the RHS contribution)
+    return viscous_flux_divergence_2d(Fv, Gv, dx, dy)</code></pre>
+</details>
+<div class="desc"><p>Compute complete viscous RHS for 2D Navier-Stokes.</p>
+<p>This computes ∇·F_v (viscous flux divergence) to be ADDED
+to the inviscid Euler RHS.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>rho</code></strong></dt>
+<dd>Density [kg/m³]</dd>
+<dt>u, v: Velocity components [m/s]</dt>
+<dt><strong><code>p</code></strong></dt>
+<dd>Pressure [Pa]</dd>
+<dt>dx, dy: Grid spacing [m]</dt>
+<dt><strong><code>gamma</code></strong></dt>
+<dd>Ratio of specific heats</dd>
+<dt><strong><code>R</code></strong></dt>
+<dd>Specific gas constant [J/(kg·K)]</dd>
+<dt><strong><code>Pr</code></strong></dt>
+<dd>Prandtl number</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Viscous source term [4, Ny, Nx] to ADD to RHS</p></div>
+</dd>
+<dt id="tensornet.cfd.viscous.heat_flux_2d"><code class="name flex">
+<span>def <span class="ident">heat_flux_2d</span></span>(<span>dTdx: Tensor, dTdy: Tensor, k: Tensor) ‑> tuple[torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def heat_flux_2d(
+    dTdx: Tensor,
+    dTdy: Tensor,
+    k: Tensor
+) -&gt; tuple[Tensor, Tensor]:
+    &#34;&#34;&#34;
+    Compute heat flux via Fourier&#39;s law.
+    
+    q = -k∇T
+    
+    Args:
+        dTdx, dTdy: Temperature gradients
+        k: Thermal conductivity
+        
+    Returns:
+        Tuple of (qx, qy) heat flux components
+    &#34;&#34;&#34;
+    qx = -k * dTdx
+    qy = -k * dTdy
+    return qx, qy</code></pre>
+</details>
+<div class="desc"><p>Compute heat flux via Fourier's law.</p>
+<p>q = -k∇T</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt>dTdx, dTdy: Temperature gradients</dt>
+<dt><strong><code>k</code></strong></dt>
+<dd>Thermal conductivity</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Tuple of (qx, qy) heat flux components</p></div>
+</dd>
+<dt id="tensornet.cfd.viscous.heat_transfer_coefficient"><code class="name flex">
+<span>def <span class="ident">heat_transfer_coefficient</span></span>(<span>q_wall: float, T_wall: float, T_recovery: float) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def heat_transfer_coefficient(
+    q_wall: float,
+    T_wall: float,
+    T_recovery: float
+) -&gt; float:
+    &#34;&#34;&#34;
+    Compute heat transfer coefficient.
+    
+    h = q_w / (T_r - T_w)
+    
+    Args:
+        q_wall: Wall heat flux [W/m²]
+        T_wall: Wall temperature [K]
+        T_recovery: Recovery temperature [K]
+        
+    Returns:
+        Heat transfer coefficient [W/(m²·K)]
+    &#34;&#34;&#34;
+    return q_wall / (T_recovery - T_wall) if abs(T_recovery - T_wall) &gt; 1e-10 else 0.0</code></pre>
+</details>
+<div class="desc"><p>Compute heat transfer coefficient.</p>
+<p>h = q_w / (T_r - T_w)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>q_wall</code></strong></dt>
+<dd>Wall heat flux [W/m²]</dd>
+<dt><strong><code>T_wall</code></strong></dt>
+<dd>Wall temperature [K]</dd>
+<dt><strong><code>T_recovery</code></strong></dt>
+<dd>Recovery temperature [K]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Heat transfer coefficient [W/(m²·K)]</p></div>
+</dd>
+<dt id="tensornet.cfd.viscous.prandtl_meyer_function"><code class="name flex">
+<span>def <span class="ident">prandtl_meyer_function</span></span>(<span>M: float, gamma: float = 1.4) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prandtl_meyer_function(M: float, gamma: float = 1.4) -&gt; float:
+    &#34;&#34;&#34;
+    Prandtl-Meyer expansion function.
+    
+    ν(M) = sqrt((γ+1)/(γ-1)) * arctan(sqrt((γ-1)/(γ+1)*(M²-1))) - arctan(sqrt(M²-1))
+    
+    Used for expansion fans in supersonic flow.
+    
+    Args:
+        M: Mach number (&gt; 1)
+        gamma: Ratio of specific heats
+        
+    Returns:
+        Prandtl-Meyer angle [radians]
+    &#34;&#34;&#34;
+    if M &lt; 1:
+        return 0.0
+    
+    gr = (gamma - 1) / (gamma + 1)
+    term1 = math.sqrt(1/gr) * math.atan(math.sqrt(gr * (M**2 - 1)))
+    term2 = math.atan(math.sqrt(M**2 - 1))
+    return term1 - term2</code></pre>
+</details>
+<div class="desc"><p>Prandtl-Meyer expansion function.</p>
+<p>ν(M) = sqrt((γ+1)/(γ-1)) * arctan(sqrt((γ-1)/(γ+1)*(M²-1))) - arctan(sqrt(M²-1))</p>
+<p>Used for expansion fans in supersonic flow.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>M</code></strong></dt>
+<dd>Mach number (&gt; 1)</dd>
+<dt><strong><code>gamma</code></strong></dt>
+<dd>Ratio of specific heats</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Prandtl-Meyer angle [radians]</p></div>
+</dd>
+<dt id="tensornet.cfd.viscous.recovery_temperature"><code class="name flex">
+<span>def <span class="ident">recovery_temperature</span></span>(<span>T_inf: float, M: float, r: float = 0.85, gamma: float = 1.4) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def recovery_temperature(T_inf: float, M: float, r: float = 0.85, gamma: float = 1.4) -&gt; float:
+    &#34;&#34;&#34;
+    Compute adiabatic wall (recovery) temperature.
+    
+    T_r/T_∞ = 1 + r * (γ-1)/2 * M²
+    
+    where r is the recovery factor:
+        r ≈ Pr^(1/2) for laminar boundary layers
+        r ≈ Pr^(1/3) for turbulent boundary layers
+    
+    Args:
+        T_inf: Freestream temperature [K]
+        M: Freestream Mach number
+        r: Recovery factor (0.85 typical for Pr=0.72 laminar)
+        gamma: Ratio of specific heats
+        
+    Returns:
+        Recovery temperature [K]
+    &#34;&#34;&#34;
+    return T_inf * (1 + r * (gamma - 1) / 2 * M**2)</code></pre>
+</details>
+<div class="desc"><p>Compute adiabatic wall (recovery) temperature.</p>
+<p>T_r/T_∞ = 1 + r * (γ-1)/2 * M²</p>
+<p>where r is the recovery factor:
+r ≈ Pr^(1/2) for laminar boundary layers
+r ≈ Pr^(1/3) for turbulent boundary layers</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>T_inf</code></strong></dt>
+<dd>Freestream temperature [K]</dd>
+<dt><strong><code>M</code></strong></dt>
+<dd>Freestream Mach number</dd>
+<dt><strong><code>r</code></strong></dt>
+<dd>Recovery factor (0.85 typical for Pr=0.72 laminar)</dd>
+<dt><strong><code>gamma</code></strong></dt>
+<dd>Ratio of specific heats</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Recovery temperature [K]</p></div>
+</dd>
+<dt id="tensornet.cfd.viscous.reynolds_number"><code class="name flex">
+<span>def <span class="ident">reynolds_number</span></span>(<span>rho: float, u: float, L: float, mu: float) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reynolds_number(
+    rho: float,
+    u: float,
+    L: float,
+    mu: float
+) -&gt; float:
+    &#34;&#34;&#34;
+    Compute Reynolds number.
+    
+    Re = ρuL/μ
+    
+    Args:
+        rho: Density [kg/m³]
+        u: Velocity [m/s]
+        L: Characteristic length [m]
+        mu: Dynamic viscosity [Pa·s]
+        
+    Returns:
+        Reynolds number (dimensionless)
+    &#34;&#34;&#34;
+    return rho * u * L / mu</code></pre>
+</details>
+<div class="desc"><p>Compute Reynolds number.</p>
+<p>Re = ρuL/μ</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>rho</code></strong></dt>
+<dd>Density [kg/m³]</dd>
+<dt><strong><code>u</code></strong></dt>
+<dd>Velocity [m/s]</dd>
+<dt><strong><code>L</code></strong></dt>
+<dd>Characteristic length [m]</dd>
+<dt><strong><code>mu</code></strong></dt>
+<dd>Dynamic viscosity [Pa·s]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Reynolds number (dimensionless)</p></div>
+</dd>
+<dt id="tensornet.cfd.viscous.stagnation_temperature"><code class="name flex">
+<span>def <span class="ident">stagnation_temperature</span></span>(<span>T: float, M: float, gamma: float = 1.4) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def stagnation_temperature(T: float, M: float, gamma: float = 1.4) -&gt; float:
+    &#34;&#34;&#34;
+    Compute stagnation (total) temperature.
+    
+    T₀/T = 1 + (γ-1)/2 * M²
+    
+    Args:
+        T: Static temperature [K]
+        M: Mach number
+        gamma: Ratio of specific heats
+        
+    Returns:
+        Stagnation temperature [K]
+    &#34;&#34;&#34;
+    return T * (1 + (gamma - 1) / 2 * M**2)</code></pre>
+</details>
+<div class="desc"><p>Compute stagnation (total) temperature.</p>
+<p>T₀/T = 1 + (γ-1)/2 * M²</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>T</code></strong></dt>
+<dd>Static temperature [K]</dd>
+<dt><strong><code>M</code></strong></dt>
+<dd>Mach number</dd>
+<dt><strong><code>gamma</code></strong></dt>
+<dd>Ratio of specific heats</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Stagnation temperature [K]</p></div>
+</dd>
+<dt id="tensornet.cfd.viscous.stanton_number"><code class="name flex">
+<span>def <span class="ident">stanton_number</span></span>(<span>h: float, rho: float, u: float, cp: float = 1004.7030000000002) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def stanton_number(h: float, rho: float, u: float, cp: float = CP_AIR) -&gt; float:
+    &#34;&#34;&#34;
+    Compute Stanton number.
+    
+    St = h / (ρ u cₚ)
+    
+    Args:
+        h: Heat transfer coefficient [W/(m²·K)]
+        rho: Density [kg/m³]
+        u: Velocity [m/s]
+        cp: Specific heat [J/(kg·K)]
+        
+    Returns:
+        Stanton number (dimensionless)
+    &#34;&#34;&#34;
+    return h / (rho * u * cp) if rho * u &gt; 1e-10 else 0.0</code></pre>
+</details>
+<div class="desc"><p>Compute Stanton number.</p>
+<p>St = h / (ρ u cₚ)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>h</code></strong></dt>
+<dd>Heat transfer coefficient [W/(m²·K)]</dd>
+<dt><strong><code>rho</code></strong></dt>
+<dd>Density [kg/m³]</dd>
+<dt><strong><code>u</code></strong></dt>
+<dd>Velocity [m/s]</dd>
+<dt><strong><code>cp</code></strong></dt>
+<dd>Specific heat [J/(kg·K)]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Stanton number (dimensionless)</p></div>
+</dd>
+<dt id="tensornet.cfd.viscous.stress_tensor_2d"><code class="name flex">
+<span>def <span class="ident">stress_tensor_2d</span></span>(<span>grads: dict[str, Tensor], mu: Tensor) ‑> dict[str, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def stress_tensor_2d(
+    grads: dict[str, Tensor],
+    mu: Tensor
+) -&gt; dict[str, Tensor]:
+    &#34;&#34;&#34;
+    Compute viscous stress tensor components.
+    
+    τ = μ(∇v + ∇vᵀ - 2/3(∇·v)I)
+    
+    For 2D:
+        τ_xx = μ(2∂u/∂x - 2/3(∂u/∂x + ∂v/∂y))
+        τ_yy = μ(2∂v/∂y - 2/3(∂u/∂x + ∂v/∂y))
+        τ_xy = μ(∂u/∂y + ∂v/∂x)
+    
+    Args:
+        grads: Velocity gradients from velocity_gradients_2d
+        mu: Dynamic viscosity field
+        
+    Returns:
+        Dictionary with tau_xx, tau_yy, tau_xy
+    &#34;&#34;&#34;
+    dudx = grads[&#39;dudx&#39;]
+    dudy = grads[&#39;dudy&#39;]
+    dvdx = grads[&#39;dvdx&#39;]
+    dvdy = grads[&#39;dvdy&#39;]
+    
+    # Divergence of velocity
+    div_v = dudx + dvdy
+    
+    # Stress components
+    tau_xx = mu * (2 * dudx - (2/3) * div_v)
+    tau_yy = mu * (2 * dvdy - (2/3) * div_v)
+    tau_xy = mu * (dudy + dvdx)
+    
+    return {
+        &#39;tau_xx&#39;: tau_xx,
+        &#39;tau_yy&#39;: tau_yy,
+        &#39;tau_xy&#39;: tau_xy,
+    }</code></pre>
+</details>
+<div class="desc"><p>Compute viscous stress tensor components.</p>
+<p>τ = μ(∇v + ∇vᵀ - 2/3(∇·v)I)</p>
+<p>For 2D:
+τ_xx = μ(2∂u/∂x - 2/3(∂u/∂x + ∂v/∂y))
+τ_yy = μ(2∂v/∂y - 2/3(∂u/∂x + ∂v/∂y))
+τ_xy = μ(∂u/∂y + ∂v/∂x)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>grads</code></strong></dt>
+<dd>Velocity gradients from velocity_gradients_2d</dd>
+<dt><strong><code>mu</code></strong></dt>
+<dd>Dynamic viscosity field</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Dictionary with tau_xx, tau_yy, tau_xy</p></div>
+</dd>
+<dt id="tensornet.cfd.viscous.sutherland_viscosity"><code class="name flex">
+<span>def <span class="ident">sutherland_viscosity</span></span>(<span>T: Tensor, mu_ref: float = 1.716e-05, T_ref: float = 273.15, S: float = 110.4) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sutherland_viscosity(
+    T: Tensor,
+    mu_ref: float = MU_REF,
+    T_ref: float = T_REF,
+    S: float = S_MU
+) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Compute dynamic viscosity using Sutherland&#39;s law.
+    
+    μ(T) = μ_ref * (T/T_ref)^(3/2) * (T_ref + S) / (T + S)
+    
+    Valid for T &gt; 100 K (breaks down at very low temperatures).
+    
+    Args:
+        T: Temperature field [K]
+        mu_ref: Reference viscosity [Pa·s]
+        T_ref: Reference temperature [K]
+        S: Sutherland temperature [K]
+        
+    Returns:
+        Dynamic viscosity field [Pa·s]
+        
+    Example:
+        &gt;&gt;&gt; T = torch.tensor([300.0, 500.0, 1000.0])
+        &gt;&gt;&gt; mu = sutherland_viscosity(T)
+        &gt;&gt;&gt; print(f&#34;μ(300K) = {mu[0]:.3e} Pa·s&#34;)
+    &#34;&#34;&#34;
+    T_ratio = T / T_ref
+    return mu_ref * T_ratio**1.5 * (T_ref + S) / (T + S)</code></pre>
+</details>
+<div class="desc"><p>Compute dynamic viscosity using Sutherland's law.</p>
+<p>μ(T) = μ_ref * (T/T_ref)^(3/2) * (T_ref + S) / (T + S)</p>
+<p>Valid for T &gt; 100 K (breaks down at very low temperatures).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>T</code></strong></dt>
+<dd>Temperature field [K]</dd>
+<dt><strong><code>mu_ref</code></strong></dt>
+<dd>Reference viscosity [Pa·s]</dd>
+<dt><strong><code>T_ref</code></strong></dt>
+<dd>Reference temperature [K]</dd>
+<dt><strong><code>S</code></strong></dt>
+<dd>Sutherland temperature [K]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Dynamic viscosity field [Pa·s]</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; T = torch.tensor([300.0, 500.0, 1000.0])
+&gt;&gt;&gt; mu = sutherland_viscosity(T)
+&gt;&gt;&gt; print(f&quot;μ(300K) = {mu[0]:.3e} Pa·s&quot;)
+</code></pre></div>
+</dd>
+<dt id="tensornet.cfd.viscous.temperature_gradient_2d"><code class="name flex">
+<span>def <span class="ident">temperature_gradient_2d</span></span>(<span>T: Tensor, dx: float, dy: float) ‑> tuple[torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def temperature_gradient_2d(
+    T: Tensor,
+    dx: float,
+    dy: float
+) -&gt; tuple[Tensor, Tensor]:
+    &#34;&#34;&#34;
+    Compute temperature gradients using central differences.
+    
+    Args:
+        T: Temperature field [Ny, Nx]
+        dx, dy: Grid spacing
+        
+    Returns:
+        Tuple of (dT/dx, dT/dy)
+    &#34;&#34;&#34;
+    dTdx = torch.zeros_like(T)
+    dTdy = torch.zeros_like(T)
+    
+    # Interior: central differences
+    dTdx[:, 1:-1] = (T[:, 2:] - T[:, :-2]) / (2 * dx)
+    dTdy[1:-1, :] = (T[2:, :] - T[:-2, :]) / (2 * dy)
+    
+    # Boundaries: one-sided
+    dTdx[:, 0] = (T[:, 1] - T[:, 0]) / dx
+    dTdx[:, -1] = (T[:, -1] - T[:, -2]) / dx
+    dTdy[0, :] = (T[1, :] - T[0, :]) / dy
+    dTdy[-1, :] = (T[-1, :] - T[-2, :]) / dy
+    
+    return dTdx, dTdy</code></pre>
+</details>
+<div class="desc"><p>Compute temperature gradients using central differences.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>T</code></strong></dt>
+<dd>Temperature field [Ny, Nx]</dd>
+</dl>
+<p>dx, dy: Grid spacing</p>
+<h2 id="returns">Returns</h2>
+<p>Tuple of (dT/dx, dT/dy)</p></div>
+</dd>
+<dt id="tensornet.cfd.viscous.thermal_conductivity"><code class="name flex">
+<span>def <span class="ident">thermal_conductivity</span></span>(<span>mu: Tensor, cp: float = 1004.7030000000002, Pr: float = 0.72) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def thermal_conductivity(
+    mu: Tensor,
+    cp: float = CP_AIR,
+    Pr: float = PR_AIR
+) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Compute thermal conductivity from viscosity via Prandtl number.
+    
+    k = μ * cₚ / Pr
+    
+    Args:
+        mu: Dynamic viscosity [Pa·s]
+        cp: Specific heat at constant pressure [J/(kg·K)]
+        Pr: Prandtl number
+        
+    Returns:
+        Thermal conductivity [W/(m·K)]
+    &#34;&#34;&#34;
+    return mu * cp / Pr</code></pre>
+</details>
+<div class="desc"><p>Compute thermal conductivity from viscosity via Prandtl number.</p>
+<p>k = μ * cₚ / Pr</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mu</code></strong></dt>
+<dd>Dynamic viscosity [Pa·s]</dd>
+<dt><strong><code>cp</code></strong></dt>
+<dd>Specific heat at constant pressure [J/(kg·K)]</dd>
+<dt><strong><code>Pr</code></strong></dt>
+<dd>Prandtl number</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Thermal conductivity [W/(m·K)]</p></div>
+</dd>
+<dt id="tensornet.cfd.viscous.velocity_gradients_2d"><code class="name flex">
+<span>def <span class="ident">velocity_gradients_2d</span></span>(<span>u: Tensor, v: Tensor, dx: float, dy: float) ‑> dict[str, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def velocity_gradients_2d(
+    u: Tensor,
+    v: Tensor,
+    dx: float,
+    dy: float
+) -&gt; dict[str, Tensor]:
+    &#34;&#34;&#34;
+    Compute velocity gradients using central differences.
+    
+    Args:
+        u, v: Velocity components [Ny, Nx]
+        dx, dy: Grid spacing
+        
+    Returns:
+        Dictionary with du/dx, du/dy, dv/dx, dv/dy
+    &#34;&#34;&#34;
+    # Central differences in interior, one-sided at boundaries
+    dudx = torch.zeros_like(u)
+    dudy = torch.zeros_like(u)
+    dvdx = torch.zeros_like(v)
+    dvdy = torch.zeros_like(v)
+    
+    # Interior: central differences
+    dudx[:, 1:-1] = (u[:, 2:] - u[:, :-2]) / (2 * dx)
+    dudy[1:-1, :] = (u[2:, :] - u[:-2, :]) / (2 * dy)
+    dvdx[:, 1:-1] = (v[:, 2:] - v[:, :-2]) / (2 * dx)
+    dvdy[1:-1, :] = (v[2:, :] - v[:-2, :]) / (2 * dy)
+    
+    # Boundaries: one-sided differences
+    dudx[:, 0] = (u[:, 1] - u[:, 0]) / dx
+    dudx[:, -1] = (u[:, -1] - u[:, -2]) / dx
+    dudy[0, :] = (u[1, :] - u[0, :]) / dy
+    dudy[-1, :] = (u[-1, :] - u[-2, :]) / dy
+    
+    dvdx[:, 0] = (v[:, 1] - v[:, 0]) / dx
+    dvdx[:, -1] = (v[:, -1] - v[:, -2]) / dx
+    dvdy[0, :] = (v[1, :] - v[0, :]) / dy
+    dvdy[-1, :] = (v[-1, :] - v[-2, :]) / dy
+    
+    return {
+        &#39;dudx&#39;: dudx,
+        &#39;dudy&#39;: dudy,
+        &#39;dvdx&#39;: dvdx,
+        &#39;dvdy&#39;: dvdy,
+    }</code></pre>
+</details>
+<div class="desc"><p>Compute velocity gradients using central differences.</p>
+<h2 id="args">Args</h2>
+<p>u, v: Velocity components [Ny, Nx]
+dx, dy: Grid spacing</p>
+<h2 id="returns">Returns</h2>
+<p>Dictionary with du/dx, du/dy, dv/dx, dv/dy</p></div>
+</dd>
+<dt id="tensornet.cfd.viscous.viscous_flux_divergence_2d"><code class="name flex">
+<span>def <span class="ident">viscous_flux_divergence_2d</span></span>(<span>Fv: Tensor, Gv: Tensor, dx: float, dy: float) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def viscous_flux_divergence_2d(
+    Fv: Tensor,
+    Gv: Tensor,
+    dx: float,
+    dy: float
+) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Compute divergence of viscous fluxes.
+    
+    ∇·F_v = ∂F_v/∂x + ∂G_v/∂y
+    
+    Uses central differences for second-order accuracy.
+    
+    Args:
+        Fv: x-direction viscous flux [4, Ny, Nx]
+        Gv: y-direction viscous flux [4, Ny, Nx]
+        dx, dy: Grid spacing
+        
+    Returns:
+        Divergence tensor [4, Ny, Nx]
+    &#34;&#34;&#34;
+    div = torch.zeros_like(Fv)
+    
+    # Central differences in interior
+    div[:, :, 1:-1] += (Fv[:, :, 2:] - Fv[:, :, :-2]) / (2 * dx)
+    div[:, 1:-1, :] += (Gv[:, 2:, :] - Gv[:, :-2, :]) / (2 * dy)
+    
+    # One-sided at boundaries
+    div[:, :, 0] += (Fv[:, :, 1] - Fv[:, :, 0]) / dx
+    div[:, :, -1] += (Fv[:, :, -1] - Fv[:, :, -2]) / dx
+    div[:, 0, :] += (Gv[:, 1, :] - Gv[:, 0, :]) / dy
+    div[:, -1, :] += (Gv[:, -1, :] - Gv[:, -2, :]) / dy
+    
+    return div</code></pre>
+</details>
+<div class="desc"><p>Compute divergence of viscous fluxes.</p>
+<p>∇·F_v = ∂F_v/∂x + ∂G_v/∂y</p>
+<p>Uses central differences for second-order accuracy.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>Fv</code></strong></dt>
+<dd>x-direction viscous flux [4, Ny, Nx]</dd>
+<dt><strong><code>Gv</code></strong></dt>
+<dd>y-direction viscous flux [4, Ny, Nx]</dd>
+</dl>
+<p>dx, dy: Grid spacing</p>
+<h2 id="returns">Returns</h2>
+<p>Divergence tensor [4, Ny, Nx]</p></div>
+</dd>
+<dt id="tensornet.cfd.viscous.viscous_flux_x_2d"><code class="name flex">
+<span>def <span class="ident">viscous_flux_x_2d</span></span>(<span>u: Tensor, v: Tensor, tau: dict[str, Tensor], qx: Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def viscous_flux_x_2d(
+    u: Tensor,
+    v: Tensor,
+    tau: dict[str, Tensor],
+    qx: Tensor
+) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Compute x-direction viscous flux vector.
+    
+    F_v = [0, τ_xx, τ_xy, u·τ_xx + v·τ_xy - qx]ᵀ
+    
+    Args:
+        u, v: Velocity components
+        tau: Stress tensor components
+        qx: Heat flux in x-direction
+        
+    Returns:
+        Viscous flux tensor [4, Ny, Nx]
+    &#34;&#34;&#34;
+    Ny, Nx = u.shape
+    F = torch.zeros(4, Ny, Nx, dtype=u.dtype, device=u.device)
+    
+    # Mass: no viscous flux
+    F[0] = 0
+    
+    # x-momentum: τ_xx
+    F[1] = tau[&#39;tau_xx&#39;]
+    
+    # y-momentum: τ_xy
+    F[2] = tau[&#39;tau_xy&#39;]
+    
+    # Energy: viscous work + heat conduction
+    F[3] = u * tau[&#39;tau_xx&#39;] + v * tau[&#39;tau_xy&#39;] - qx
+    
+    return F</code></pre>
+</details>
+<div class="desc"><p>Compute x-direction viscous flux vector.</p>
+<p>F_v = [0, τ_xx, τ_xy, u·τ_xx + v·τ_xy - qx]ᵀ</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt>u, v: Velocity components</dt>
+<dt><strong><code>tau</code></strong></dt>
+<dd>Stress tensor components</dd>
+<dt><strong><code>qx</code></strong></dt>
+<dd>Heat flux in x-direction</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Viscous flux tensor [4, Ny, Nx]</p></div>
+</dd>
+<dt id="tensornet.cfd.viscous.viscous_flux_y_2d"><code class="name flex">
+<span>def <span class="ident">viscous_flux_y_2d</span></span>(<span>u: Tensor, v: Tensor, tau: dict[str, Tensor], qy: Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def viscous_flux_y_2d(
+    u: Tensor,
+    v: Tensor,
+    tau: dict[str, Tensor],
+    qy: Tensor
+) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Compute y-direction viscous flux vector.
+    
+    G_v = [0, τ_xy, τ_yy, u·τ_xy + v·τ_yy - qy]ᵀ
+    
+    Args:
+        u, v: Velocity components
+        tau: Stress tensor components
+        qy: Heat flux in y-direction
+        
+    Returns:
+        Viscous flux tensor [4, Ny, Nx]
+    &#34;&#34;&#34;
+    Ny, Nx = u.shape
+    G = torch.zeros(4, Ny, Nx, dtype=u.dtype, device=u.device)
+    
+    # Mass: no viscous flux
+    G[0] = 0
+    
+    # x-momentum: τ_xy
+    G[1] = tau[&#39;tau_xy&#39;]
+    
+    # y-momentum: τ_yy
+    G[2] = tau[&#39;tau_yy&#39;]
+    
+    # Energy: viscous work + heat conduction
+    G[3] = u * tau[&#39;tau_xy&#39;] + v * tau[&#39;tau_yy&#39;] - qy
+    
+    return G</code></pre>
+</details>
+<div class="desc"><p>Compute y-direction viscous flux vector.</p>
+<p>G_v = [0, τ_xy, τ_yy, u·τ_xy + v·τ_yy - qy]ᵀ</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt>u, v: Velocity components</dt>
+<dt><strong><code>tau</code></strong></dt>
+<dd>Stress tensor components</dd>
+<dt><strong><code>qy</code></strong></dt>
+<dd>Heat flux in y-direction</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Viscous flux tensor [4, Ny, Nx]</p></div>
+</dd>
+<dt id="tensornet.cfd.viscous.viscous_timestep_limit"><code class="name flex">
+<span>def <span class="ident">viscous_timestep_limit</span></span>(<span>dx: float, dy: float, mu_max: float, rho_min: float, safety: float = 0.25) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def viscous_timestep_limit(
+    dx: float,
+    dy: float,
+    mu_max: float,
+    rho_min: float,
+    safety: float = 0.25
+) -&gt; float:
+    &#34;&#34;&#34;
+    Compute viscous stability limit for timestep.
+    
+    For explicit viscous terms:
+        Δt &lt; safety * min(Δx², Δy²) * ρ / (2μ)
+    
+    Args:
+        dx, dy: Grid spacing
+        mu_max: Maximum viscosity in domain
+        rho_min: Minimum density in domain
+        safety: Safety factor
+        
+    Returns:
+        Maximum stable timestep
+    &#34;&#34;&#34;
+    dmin_sq = min(dx**2, dy**2)
+    return safety * dmin_sq * rho_min / (2 * mu_max)</code></pre>
+</details>
+<div class="desc"><p>Compute viscous stability limit for timestep.</p>
+<p>For explicit viscous terms:
+Δt &lt; safety * min(Δx², Δy²) * ρ / (2μ)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt>dx, dy: Grid spacing</dt>
+<dt><strong><code>mu_max</code></strong></dt>
+<dd>Maximum viscosity in domain</dd>
+<dt><strong><code>rho_min</code></strong></dt>
+<dd>Minimum density in domain</dd>
+<dt><strong><code>safety</code></strong></dt>
+<dd>Safety factor</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Maximum stable timestep</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.cfd.viscous.TransportProperties"><code class="flex name class">
+<span>class <span class="ident">TransportProperties</span></span>
+<span>(</span><span>mu: Tensor, k: Tensor, Pr: float = 0.72)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass 
+class TransportProperties:
+    &#34;&#34;&#34;Container for transport properties at a point.&#34;&#34;&#34;
+    mu: Tensor  # Dynamic viscosity [Pa·s]
+    k: Tensor   # Thermal conductivity [W/(m·K)]
+    Pr: float = PR_AIR  # Prandtl number</code></pre>
+</details>
+<div class="desc"><p>Container for transport properties at a point.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.viscous.TransportProperties.Pr"><code class="name">var <span class="ident">Pr</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.viscous.TransportProperties.k"><code class="name">var <span class="ident">k</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.viscous.TransportProperties.mu"><code class="name">var <span class="ident">mu</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#navier-stokes-viscous-terms">Navier-Stokes Viscous Terms</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.viscous.compute_transport_properties" href="#tensornet.cfd.viscous.compute_transport_properties">compute_transport_properties</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.compute_viscous_rhs_2d" href="#tensornet.cfd.viscous.compute_viscous_rhs_2d">compute_viscous_rhs_2d</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.heat_flux_2d" href="#tensornet.cfd.viscous.heat_flux_2d">heat_flux_2d</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.heat_transfer_coefficient" href="#tensornet.cfd.viscous.heat_transfer_coefficient">heat_transfer_coefficient</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.prandtl_meyer_function" href="#tensornet.cfd.viscous.prandtl_meyer_function">prandtl_meyer_function</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.recovery_temperature" href="#tensornet.cfd.viscous.recovery_temperature">recovery_temperature</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.reynolds_number" href="#tensornet.cfd.viscous.reynolds_number">reynolds_number</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.stagnation_temperature" href="#tensornet.cfd.viscous.stagnation_temperature">stagnation_temperature</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.stanton_number" href="#tensornet.cfd.viscous.stanton_number">stanton_number</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.stress_tensor_2d" href="#tensornet.cfd.viscous.stress_tensor_2d">stress_tensor_2d</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.sutherland_viscosity" href="#tensornet.cfd.viscous.sutherland_viscosity">sutherland_viscosity</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.temperature_gradient_2d" href="#tensornet.cfd.viscous.temperature_gradient_2d">temperature_gradient_2d</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.thermal_conductivity" href="#tensornet.cfd.viscous.thermal_conductivity">thermal_conductivity</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.velocity_gradients_2d" href="#tensornet.cfd.viscous.velocity_gradients_2d">velocity_gradients_2d</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.viscous_flux_divergence_2d" href="#tensornet.cfd.viscous.viscous_flux_divergence_2d">viscous_flux_divergence_2d</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.viscous_flux_x_2d" href="#tensornet.cfd.viscous.viscous_flux_x_2d">viscous_flux_x_2d</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.viscous_flux_y_2d" href="#tensornet.cfd.viscous.viscous_flux_y_2d">viscous_flux_y_2d</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.viscous_timestep_limit" href="#tensornet.cfd.viscous.viscous_timestep_limit">viscous_timestep_limit</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.cfd.viscous.TransportProperties" href="#tensornet.cfd.viscous.TransportProperties">TransportProperties</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.viscous.TransportProperties.Pr" href="#tensornet.cfd.viscous.TransportProperties.Pr">Pr</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.TransportProperties.k" href="#tensornet.cfd.viscous.TransportProperties.k">k</a></code></li>
+<li><code><a title="tensornet.cfd.viscous.TransportProperties.mu" href="#tensornet.cfd.viscous.TransportProperties.mu">mu</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

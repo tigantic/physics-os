@@ -1,0 +1,66 @@
+{
+  "system": {
+    "pytorch_version": "2.9.1+cu128",
+    "cuda_available": true,
+    "cuda_device": "NVIDIA GeForce RTX 5070 Laptop GPU"
+  },
+  "results": [
+    {
+      "operation": "Advection (CPU)",
+      "avg_ms": 3.872396249862504,
+      "min_ms": 1.4941139997972641,
+      "max_ms": 14.391192999028135,
+      "std_ms": 1.6457523600241888,
+      "iterations": 100
+    },
+    {
+      "operation": "Advection (GPU PyTorch)",
+      "avg_ms": 0.3435286300009466,
+      "min_ms": 0.27386500005377457,
+      "max_ms": 0.8142769984260667,
+      "std_ms": 0.08561712607078918,
+      "iterations": 100
+    },
+    {
+      "operation": "Gradient (CPU)",
+      "avg_ms": 0.15708768001786666,
+      "min_ms": 0.06518100053654052,
+      "max_ms": 0.5630340019706637,
+      "std_ms": 0.08388629688234871,
+      "iterations": 100
+    },
+    {
+      "operation": "Laplacian (CPU)",
+      "avg_ms": 0.16780313992057927,
+      "min_ms": 0.09055800182977691,
+      "max_ms": 0.4472389991860837,
+      "std_ms": 0.07623782445369094,
+      "iterations": 100
+    },
+    {
+      "operation": "Poisson FFT (CPU)",
+      "avg_ms": 0.4697489999307436,
+      "min_ms": 0.2834799997799564,
+      "max_ms": 1.09608099955949,
+      "std_ms": 0.12566564945636088,
+      "iterations": 100
+    },
+    {
+      "operation": "Tensor Contraction (CPU)",
+      "avg_ms": 4.1405762099748245,
+      "min_ms": 2.7961619998677634,
+      "max_ms": 9.492889999819454,
+      "std_ms": 0.9929159726304995,
+      "iterations": 100
+    },
+    {
+      "operation": "Full NS Step (CPU)",
+      "avg_ms": 0.8218281998415478,
+      "min_ms": 0.7235799967020284,
+      "max_ms": 1.1999689995718654,
+      "std_ms": 0.08269228342258786,
+      "iterations": 50
+    }
+  ],
+  "bottleneck": "Tensor Contraction (CPU)"
+}

@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.core.decompositions API documentation</title>
+<meta name="description" content="Tensor Decompositions
+…">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.core.decompositions</code></h1>
+</header>
+<section id="section-intro">
+<h1 id="tensor-decompositions">Tensor Decompositions</h1>
+<p>SVD and QR decompositions with truncation for tensor networks.</p>
+<p>Constitutional Compliance:
+- Article V.5.1: Condition number warnings when κ &gt; 10¹⁰
+- Article V.5.2: SVD truncation with return_info
+- Article VIII.8.2: Memory profiling decorator</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.core.decompositions.polar_decomposition"><code class="name flex">
+<span>def <span class="ident">polar_decomposition</span></span>(<span>A: torch.Tensor) ‑> Tuple[torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def polar_decomposition(A: Tensor) -&gt; Tuple[Tensor, Tensor]:
+    &#34;&#34;&#34;
+    Polar decomposition A = U @ P where U is unitary and P is positive semidefinite.
+    
+    Args:
+        A: Input matrix (m, n) with m &gt;= n
+        
+    Returns:
+        U: Unitary matrix (m, n)
+        P: Positive semidefinite (n, n)
+    &#34;&#34;&#34;
+    U, S, Vh = torch.linalg.svd(A, full_matrices=False)
+    return U @ Vh, Vh.T.conj() @ torch.diag(S) @ Vh</code></pre>
+</details>
+<div class="desc"><p>Polar decomposition A = U @ P where U is unitary and P is positive semidefinite.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>A</code></strong></dt>
+<dd>Input matrix (m, n) with m &gt;= n</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>U</code></dt>
+<dd>Unitary matrix (m, n)</dd>
+<dt><code>P</code></dt>
+<dd>Positive semidefinite (n, n)</dd>
+</dl></div>
+</dd>
+<dt id="tensornet.core.decompositions.qr_positive"><code class="name flex">
+<span>def <span class="ident">qr_positive</span></span>(<span>A: torch.Tensor) ‑> Tuple[torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def qr_positive(A: Tensor) -&gt; Tuple[Tensor, Tensor]:
+    &#34;&#34;&#34;
+    QR decomposition with positive diagonal R.
+    
+    Standard QR can have arbitrary signs on the diagonal of R.
+    This function ensures R has positive diagonal, which is
+    important for canonical MPS forms.
+    
+    Args:
+        A: Input matrix of shape (m, n)
+        
+    Returns:
+        Q: Orthogonal matrix (m, min(m,n))
+        R: Upper triangular with positive diagonal (min(m,n), n)
+        
+    Example:
+        &gt;&gt;&gt; A = torch.randn(50, 30, dtype=torch.float64)
+        &gt;&gt;&gt; Q, R = qr_positive(A)
+        &gt;&gt;&gt; assert torch.allclose(A, Q @ R)
+        &gt;&gt;&gt; assert (torch.diag(R) &gt;= 0).all()
+    &#34;&#34;&#34;
+    Q, R = torch.linalg.qr(A)
+    
+    # Fix signs
+    signs = torch.sign(torch.diag(R))
+    signs[signs == 0] = 1  # Handle exact zeros
+    
+    # Apply sign correction
+    Q = Q * signs.unsqueeze(0)
+    R = R * signs.unsqueeze(1)
+    
+    return Q, R</code></pre>
+</details>
+<div class="desc"><p>QR decomposition with positive diagonal R.</p>
+<p>Standard QR can have arbitrary signs on the diagonal of R.
+This function ensures R has positive diagonal, which is
+important for canonical MPS forms.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>A</code></strong></dt>
+<dd>Input matrix of shape (m, n)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Q</code></dt>
+<dd>Orthogonal matrix (m, min(m,n))</dd>
+<dt><code>R</code></dt>
+<dd>Upper triangular with positive diagonal (min(m,n), n)</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; A = torch.randn(50, 30, dtype=torch.float64)
+&gt;&gt;&gt; Q, R = qr_positive(A)
+&gt;&gt;&gt; assert torch.allclose(A, Q @ R)
+&gt;&gt;&gt; assert (torch.diag(R) &gt;= 0).all()
+</code></pre></div>
+</dd>
+<dt id="tensornet.core.decompositions.svd_truncated"><code class="name flex">
+<span>def <span class="ident">svd_truncated</span></span>(<span>A: torch.Tensor,<br>chi_max: int | None = None,<br>cutoff: float = 1e-14,<br>return_info: bool = False) ‑> Tuple[torch.Tensor, torch.Tensor, torch.Tensor] | Tuple[torch.Tensor, torch.Tensor, torch.Tensor, dict]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@memory_profile
+def svd_truncated(
+    A: Tensor,
+    chi_max: Optional[int] = None,
+    cutoff: float = 1e-14,
+    return_info: bool = False,
+) -&gt; Tuple[Tensor, Tensor, Tensor] | Tuple[Tensor, Tensor, Tensor, dict]:
+    &#34;&#34;&#34;
+    Truncated SVD with bond dimension control.
+    
+    Computes A ≈ U @ diag(S) @ Vh where rank is limited by chi_max
+    and singular values below cutoff are discarded.
+    
+    This is the optimal rank-k approximation by the Eckart-Young-Mirsky theorem.
+    
+    Args:
+        A: Input matrix of shape (m, n)
+        chi_max: Maximum number of singular values to keep
+        cutoff: Discard singular values below this threshold
+        return_info: If True, return dictionary with truncation info
+        
+    Returns:
+        U: Left singular vectors (m, k)
+        S: Singular values (k,)
+        Vh: Right singular vectors (k, n)
+        info: (optional) Dictionary with truncation_error, rank, etc.
+        
+    Example:
+        &gt;&gt;&gt; A = torch.randn(100, 100, dtype=torch.float64)
+        &gt;&gt;&gt; U, S, Vh = svd_truncated(A, chi_max=20)
+        &gt;&gt;&gt; A_approx = U @ torch.diag(S) @ Vh
+    &#34;&#34;&#34;
+    # Full SVD
+    U, S, Vh = torch.linalg.svd(A, full_matrices=False)
+    
+    # Determine truncation rank
+    rank = len(S)
+    
+    # Apply cutoff
+    mask = S &gt; cutoff
+    if not mask.all():
+        rank = mask.sum().item()
+    
+    # Apply chi_max
+    if chi_max is not None and chi_max &lt; rank:
+        rank = chi_max
+    
+    # Ensure at least rank 1
+    rank = max(rank, 1)
+    
+    # Truncate
+    U = U[:, :rank]
+    S_trunc = S[:rank]
+    Vh = Vh[:rank, :]
+    
+    if return_info:
+        # Truncation error: ||A - A_k||_F / ||A||_F
+        if rank &lt; len(S):
+            trunc_error = torch.sqrt((S[rank:] ** 2).sum()).item()
+        else:
+            trunc_error = 0.0
+        
+        # Compute condition number (Article V, Section 5.1)
+        if S_trunc[-1].item() &gt; 0:
+            condition_number = S[0].item() / S_trunc[-1].item()
+        else:
+            condition_number = float(&#39;inf&#39;)
+        
+        # Warn if condition number exceeds threshold
+        if condition_number &gt; CONDITION_NUMBER_THRESHOLD:
+            warnings.warn(
+                f&#34;High condition number detected: κ = {condition_number:.2e} &gt; 10¹⁰. &#34;
+                f&#34;Numerical stability may be compromised.&#34;,
+                RuntimeWarning
+            )
+            logger.warning(f&#34;Condition number κ = {condition_number:.2e} exceeds threshold&#34;)
+        
+        info = {
+            &#34;truncation_error&#34;: trunc_error,
+            &#34;rank&#34;: rank,
+            &#34;original_rank&#34;: len(S),
+            &#34;max_singular_value&#34;: S[0].item(),
+            &#34;min_singular_value&#34;: S_trunc[-1].item(),
+            &#34;condition_number&#34;: condition_number,
+        }
+        return U, S_trunc, Vh, info
+    
+    return U, S_trunc, Vh</code></pre>
+</details>
+<div class="desc"><p>Truncated SVD with bond dimension control.</p>
+<p>Computes A ≈ U @ diag(S) @ Vh where rank is limited by chi_max
+and singular values below cutoff are discarded.</p>
+<p>This is the optimal rank-k approximation by the Eckart-Young-Mirsky theorem.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>A</code></strong></dt>
+<dd>Input matrix of shape (m, n)</dd>
+<dt><strong><code>chi_max</code></strong></dt>
+<dd>Maximum number of singular values to keep</dd>
+<dt><strong><code>cutoff</code></strong></dt>
+<dd>Discard singular values below this threshold</dd>
+<dt><strong><code>return_info</code></strong></dt>
+<dd>If True, return dictionary with truncation info</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>U</code></dt>
+<dd>Left singular vectors (m, k)</dd>
+<dt><code>S</code></dt>
+<dd>Singular values (k,)</dd>
+<dt><code>Vh</code></dt>
+<dd>Right singular vectors (k, n)</dd>
+<dt><code>info</code></dt>
+<dd>(optional) Dictionary with truncation_error, rank, etc.</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; A = torch.randn(100, 100, dtype=torch.float64)
+&gt;&gt;&gt; U, S, Vh = svd_truncated(A, chi_max=20)
+&gt;&gt;&gt; A_approx = U @ torch.diag(S) @ Vh
+</code></pre></div>
+</dd>
+<dt id="tensornet.core.decompositions.thin_svd"><code class="name flex">
+<span>def <span class="ident">thin_svd</span></span>(<span>A: torch.Tensor) ‑> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def thin_svd(A: Tensor) -&gt; Tuple[Tensor, Tensor, Tensor]:
+    &#34;&#34;&#34;
+    Thin (economy) SVD without truncation.
+    
+    Args:
+        A: Input matrix (m, n)
+        
+    Returns:
+        U: (m, k) where k = min(m, n)
+        S: (k,)
+        Vh: (k, n)
+    &#34;&#34;&#34;
+    return torch.linalg.svd(A, full_matrices=False)</code></pre>
+</details>
+<div class="desc"><p>Thin (economy) SVD without truncation.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>A</code></strong></dt>
+<dd>Input matrix (m, n)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>U</code></dt>
+<dd>(m, k) where k = min(m, n)</dd>
+<dt><code>S</code></dt>
+<dd>(k,)</dd>
+<dt><code>Vh</code></dt>
+<dd>(k, n)</dd>
+</dl></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#tensor-decompositions">Tensor Decompositions</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.core" href="index.html">tensornet.core</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.core.decompositions.polar_decomposition" href="#tensornet.core.decompositions.polar_decomposition">polar_decomposition</a></code></li>
+<li><code><a title="tensornet.core.decompositions.qr_positive" href="#tensornet.core.decompositions.qr_positive">qr_positive</a></code></li>
+<li><code><a title="tensornet.core.decompositions.svd_truncated" href="#tensornet.core.decompositions.svd_truncated">svd_truncated</a></code></li>
+<li><code><a title="tensornet.core.decompositions.thin_svd" href="#tensornet.core.decompositions.thin_svd">thin_svd</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

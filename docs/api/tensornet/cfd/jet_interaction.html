@@ -1,0 +1,1281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.jet_interaction API documentation</title>
+<meta name="description" content="Jet Interaction Model
+…">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.jet_interaction</code></h1>
+</header>
+<section id="section-intro">
+<h1 id="jet-interaction-model">Jet Interaction Model</h1>
+<p>Phase 22: Underexpanded jet modeling for divert thruster interactions.</p>
+<p>Models the aerodynamic interference between:
+- Reaction control system (RCS) jets and external flow
+- Divert thrusters and kill vehicle aerodynamics
+- Jet-induced flow separation and pressure changes</p>
+<p>Key Physics:
+- Underexpanded jet structure (barrel shock, Mach disk)
+- Jet boundary layer interaction
+- Induced pressure fields and forces</p>
+<h2 id="references">References</h2>
+<ul>
+<li>Schetz, "Injection and Mixing in Turbulent Flow" (1980)</li>
+<li>Papamoschou &amp; Hubbard, "Visual Study of Underexpanded Jet" (1993)</li>
+<li>Cassel et al., "Jet Interference at Supersonic Speeds" AIAA J (1968)</li>
+<li>Chenault &amp; Beran, "RCS Jet Interaction CFD" AIAA (1999)</li>
+</ul>
+<p>Constitution Compliance: Article II.1 (Propulsion Integration)</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.jet_interaction.barrel_shock_radius"><code class="name flex">
+<span>def <span class="ident">barrel_shock_radius</span></span>(<span>exit_diameter: float, pressure_ratio: float, gamma: float = 1.4) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def barrel_shock_radius(
+    exit_diameter: float,
+    pressure_ratio: float,
+    gamma: float = 1.4
+) -&gt; float:
+    &#34;&#34;&#34;
+    Estimate barrel shock radius for underexpanded jet.
+    
+    Args:
+        exit_diameter: Nozzle exit diameter (m)
+        pressure_ratio: Exit-to-ambient pressure ratio
+        gamma: Ratio of specific heats
+        
+    Returns:
+        Maximum radius of barrel shock (m)
+    &#34;&#34;&#34;
+    if pressure_ratio &lt;= 1.0:
+        return exit_diameter / 2
+    
+    # Empirical: grows as sqrt(PR)
+    r_barrel = 0.3 * exit_diameter * math.sqrt(pressure_ratio)
+    
+    return r_barrel</code></pre>
+</details>
+<div class="desc"><p>Estimate barrel shock radius for underexpanded jet.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>exit_diameter</code></strong></dt>
+<dd>Nozzle exit diameter (m)</dd>
+<dt><strong><code>pressure_ratio</code></strong></dt>
+<dd>Exit-to-ambient pressure ratio</dd>
+<dt><strong><code>gamma</code></strong></dt>
+<dd>Ratio of specific heats</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Maximum radius of barrel shock (m)</p></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.jet_induced_pressure_coefficient"><code class="name flex">
+<span>def <span class="ident">jet_induced_pressure_coefficient</span></span>(<span>x: float, y: float, jet_diameter: float, momentum_ratio: float, ambient_mach: float) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def jet_induced_pressure_coefficient(
+    x: float,
+    y: float,
+    jet_diameter: float,
+    momentum_ratio: float,
+    ambient_mach: float
+) -&gt; float:
+    &#34;&#34;&#34;
+    Jet-induced pressure coefficient on surface.
+    
+    Models the upstream separation and downstream recovery
+    caused by jet injection into crossflow.
+    
+    Args:
+        x: Distance from jet along surface (m), negative = upstream
+        y: Normal distance from surface (m)
+        jet_diameter: Effective jet diameter (m)
+        momentum_ratio: J = (ρ_j V_j²) / (ρ_∞ V_∞²)
+        ambient_mach: Freestream Mach number
+        
+    Returns:
+        Pressure coefficient Cp
+    &#34;&#34;&#34;
+    # Normalize by jet diameter
+    x_norm = x / jet_diameter
+    
+    if y &gt; 0.5 * jet_diameter:
+        return 0.0  # Away from surface
+    
+    # Upstream separation (x &lt; 0)
+    if x_norm &lt; 0:
+        # Separation causes pressure rise
+        sep_length = 2.0 * math.sqrt(momentum_ratio)  # diameters
+        if abs(x_norm) &lt; sep_length:
+            # Pressure peak near separation
+            Cp = 0.3 * momentum_ratio * math.exp(x_norm / sep_length)
+        else:
+            Cp = 0.0
+    
+    # Downstream recovery
+    else:
+        # Pressure first drops then recovers
+        if x_norm &lt; 1.0:
+            # Low pressure behind jet
+            Cp = -0.2 * momentum_ratio * (1 - x_norm)
+        elif x_norm &lt; 5.0:
+            # Gradual recovery
+            Cp = -0.1 * momentum_ratio * math.exp(-0.5 * (x_norm - 1))
+        else:
+            Cp = 0.0
+    
+    return Cp</code></pre>
+</details>
+<div class="desc"><p>Jet-induced pressure coefficient on surface.</p>
+<p>Models the upstream separation and downstream recovery
+caused by jet injection into crossflow.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>x</code></strong></dt>
+<dd>Distance from jet along surface (m), negative = upstream</dd>
+<dt><strong><code>y</code></strong></dt>
+<dd>Normal distance from surface (m)</dd>
+<dt><strong><code>jet_diameter</code></strong></dt>
+<dd>Effective jet diameter (m)</dd>
+<dt><strong><code>momentum_ratio</code></strong></dt>
+<dd>J = (ρ_j V_j²) / (ρ_∞ V_∞²)</dd>
+<dt><strong><code>ambient_mach</code></strong></dt>
+<dd>Freestream Mach number</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Pressure coefficient Cp</p></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.jet_penetration_height"><code class="name flex">
+<span>def <span class="ident">jet_penetration_height</span></span>(<span>jet_momentum_ratio: float, jet_diameter: float, x_downstream: float) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def jet_penetration_height(
+    jet_momentum_ratio: float,
+    jet_diameter: float,
+    x_downstream: float
+) -&gt; float:
+    &#34;&#34;&#34;
+    Jet penetration into crossflow.
+    
+    Uses Schetz correlation:
+        y/d_j = A * J^B * (x/d_j)^C
+    
+    where J = (ρ_j * V_j²) / (ρ_∞ * V_∞²) is momentum ratio.
+    
+    Args:
+        jet_momentum_ratio: J = (ρ_j V_j²) / (ρ_∞ V_∞²)
+        jet_diameter: Effective jet diameter (m)
+        x_downstream: Distance downstream (m)
+        
+    Returns:
+        Jet centerline height (m)
+    &#34;&#34;&#34;
+    # Schetz correlation coefficients
+    A = 1.0
+    B = 0.3
+    C = 0.35
+    
+    x_norm = x_downstream / jet_diameter
+    x_norm = max(x_norm, 0.1)
+    
+    y = A * jet_diameter * (jet_momentum_ratio ** B) * (x_norm ** C)
+    
+    return y</code></pre>
+</details>
+<div class="desc"><p>Jet penetration into crossflow.</p>
+<p>Uses Schetz correlation:
+y/d_j = A * J^B * (x/d_j)^C</p>
+<p>where J = (ρ_j * V_j²) / (ρ_∞ * V_∞²) is momentum ratio.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>jet_momentum_ratio</code></strong></dt>
+<dd>J = (ρ_j V_j²) / (ρ_∞ V_∞²)</dd>
+<dt><strong><code>jet_diameter</code></strong></dt>
+<dd>Effective jet diameter (m)</dd>
+<dt><strong><code>x_downstream</code></strong></dt>
+<dd>Distance downstream (m)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Jet centerline height (m)</p></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.mach_disk_location"><code class="name flex">
+<span>def <span class="ident">mach_disk_location</span></span>(<span>exit_diameter: float, pressure_ratio: float, gamma: float = 1.4) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mach_disk_location(
+    exit_diameter: float,
+    pressure_ratio: float,
+    gamma: float = 1.4
+) -&gt; float:
+    &#34;&#34;&#34;
+    Estimate Mach disk location for underexpanded jet.
+    
+    Empirical correlation: x_MD/d_e = 0.67 * sqrt(PR)
+    
+    Args:
+        exit_diameter: Nozzle exit diameter (m)
+        pressure_ratio: Exit-to-ambient pressure ratio
+        gamma: Ratio of specific heats
+        
+    Returns:
+        Distance from nozzle to Mach disk (m)
+    &#34;&#34;&#34;
+    if pressure_ratio &lt;= 1.0:
+        return 0.0
+    
+    # Ashkenas-Sherman correlation
+    x_md = 0.67 * exit_diameter * math.sqrt(pressure_ratio)
+    
+    return x_md</code></pre>
+</details>
+<div class="desc"><p>Estimate Mach disk location for underexpanded jet.</p>
+<p>Empirical correlation: x_MD/d_e = 0.67 * sqrt(PR)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>exit_diameter</code></strong></dt>
+<dd>Nozzle exit diameter (m)</dd>
+<dt><strong><code>pressure_ratio</code></strong></dt>
+<dd>Exit-to-ambient pressure ratio</dd>
+<dt><strong><code>gamma</code></strong></dt>
+<dd>Ratio of specific heats</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Distance from nozzle to Mach disk (m)</p></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.prandtl_meyer_expansion"><code class="name flex">
+<span>def <span class="ident">prandtl_meyer_expansion</span></span>(<span>mach: float, gamma: float = 1.4) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prandtl_meyer_expansion(mach: float, gamma: float = 1.4) -&gt; float:
+    &#34;&#34;&#34;
+    Prandtl-Meyer function ν(M).
+    
+    Args:
+        mach: Mach number (must be &gt; 1)
+        gamma: Ratio of specific heats
+        
+    Returns:
+        Prandtl-Meyer angle (radians)
+    &#34;&#34;&#34;
+    if mach &lt;= 1.0:
+        return 0.0
+    
+    gm1 = gamma - 1
+    gp1 = gamma + 1
+    
+    nu = (math.sqrt(gp1/gm1) * math.atan(math.sqrt(gm1/gp1 * (mach**2 - 1))) - 
+          math.atan(math.sqrt(mach**2 - 1)))
+    
+    return nu</code></pre>
+</details>
+<div class="desc"><p>Prandtl-Meyer function ν(M).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mach</code></strong></dt>
+<dd>Mach number (must be &gt; 1)</dd>
+<dt><strong><code>gamma</code></strong></dt>
+<dd>Ratio of specific heats</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Prandtl-Meyer angle (radians)</p></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.pressure_matched_jet_diameter"><code class="name flex">
+<span>def <span class="ident">pressure_matched_jet_diameter</span></span>(<span>exit_diameter: float,<br>exit_mach: float,<br>exit_pressure: float,<br>ambient_pressure: float,<br>gamma: float = 1.4) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pressure_matched_jet_diameter(
+    exit_diameter: float,
+    exit_mach: float,
+    exit_pressure: float,
+    ambient_pressure: float,
+    gamma: float = 1.4
+) -&gt; float:
+    &#34;&#34;&#34;
+    Compute equivalent fully-expanded jet diameter.
+    
+    Uses isentropic relations to find diameter where
+    jet would be pressure-matched with ambient.
+    
+    Args:
+        exit_diameter: Nozzle exit diameter (m)
+        exit_mach: Exit Mach number
+        exit_pressure: Exit static pressure (Pa)
+        ambient_pressure: Ambient pressure (Pa)
+        gamma: Ratio of specific heats
+        
+    Returns:
+        Equivalent diameter (m)
+    &#34;&#34;&#34;
+    # Pressure ratio
+    pr = exit_pressure / ambient_pressure
+    
+    if pr &lt;= 1.0:
+        return exit_diameter
+    
+    # Area ratio for expansion
+    # A/A* = f(M) from isentropic relations
+    gp1 = gamma + 1
+    gm1 = gamma - 1
+    
+    # Exit area ratio
+    M_e = exit_mach
+    Ae_Astar = ((gp1/2)**(-(gp1)/(2*gm1)) * 
+                (1 + gm1/2 * M_e**2)**((gp1)/(2*gm1)) / M_e)
+    
+    # Fully-expanded Mach number
+    # p_e/p_inf = (1 + (γ-1)/2 * M_e²) / (1 + (γ-1)/2 * M_j²)^(γ/(γ-1))
+    # Solve for M_j given pressure ratio
+    M_j_sq = 2/gm1 * (pr**((gamma-1)/gamma) * (1 + gm1/2 * M_e**2) - 1)
+    M_j_sq = max(M_j_sq, M_e**2)
+    M_j = math.sqrt(M_j_sq)
+    
+    # Fully-expanded area ratio
+    Aj_Astar = ((gp1/2)**(-(gp1)/(2*gm1)) * 
+                (1 + gm1/2 * M_j**2)**((gp1)/(2*gm1)) / M_j)
+    
+    # Diameter ratio
+    diameter_ratio = math.sqrt(Aj_Astar / Ae_Astar)
+    
+    return exit_diameter * diameter_ratio</code></pre>
+</details>
+<div class="desc"><p>Compute equivalent fully-expanded jet diameter.</p>
+<p>Uses isentropic relations to find diameter where
+jet would be pressure-matched with ambient.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>exit_diameter</code></strong></dt>
+<dd>Nozzle exit diameter (m)</dd>
+<dt><strong><code>exit_mach</code></strong></dt>
+<dd>Exit Mach number</dd>
+<dt><strong><code>exit_pressure</code></strong></dt>
+<dd>Exit static pressure (Pa)</dd>
+<dt><strong><code>ambient_pressure</code></strong></dt>
+<dd>Ambient pressure (Pa)</dd>
+<dt><strong><code>gamma</code></strong></dt>
+<dd>Ratio of specific heats</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Equivalent diameter (m)</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.cfd.jet_interaction.InteractionForces"><code class="flex name class">
+<span>class <span class="ident">InteractionForces</span></span>
+<span>(</span><span>amplification_factor: float,<br>induced_normal_force: float,<br>induced_moment: float,<br>separation_length: float,<br>reattachment_length: float)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class InteractionForces:
+    &#34;&#34;&#34;
+    Jet-induced aerodynamic forces.
+    
+    Attributes:
+        amplification_factor: Thrust amplification (&gt;1 for favorable)
+        induced_normal_force: Normal force from jet interaction (N)
+        induced_moment: Pitching moment coefficient change
+        separation_length: Upstream separation length (m)
+        reattachment_length: Downstream reattachment length (m)
+    &#34;&#34;&#34;
+    amplification_factor: float
+    induced_normal_force: float
+    induced_moment: float
+    separation_length: float
+    reattachment_length: float</code></pre>
+</details>
+<div class="desc"><p>Jet-induced aerodynamic forces.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>amplification_factor</code></strong></dt>
+<dd>Thrust amplification (&gt;1 for favorable)</dd>
+<dt><strong><code>induced_normal_force</code></strong></dt>
+<dd>Normal force from jet interaction (N)</dd>
+<dt><strong><code>induced_moment</code></strong></dt>
+<dd>Pitching moment coefficient change</dd>
+<dt><strong><code>separation_length</code></strong></dt>
+<dd>Upstream separation length (m)</dd>
+<dt><strong><code>reattachment_length</code></strong></dt>
+<dd>Downstream reattachment length (m)</dd>
+</dl></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.jet_interaction.InteractionForces.amplification_factor"><code class="name">var <span class="ident">amplification_factor</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.InteractionForces.induced_moment"><code class="name">var <span class="ident">induced_moment</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.InteractionForces.induced_normal_force"><code class="name">var <span class="ident">induced_normal_force</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.InteractionForces.reattachment_length"><code class="name">var <span class="ident">reattachment_length</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.InteractionForces.separation_length"><code class="name">var <span class="ident">separation_length</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.JetConfig"><code class="flex name class">
+<span>class <span class="ident">JetConfig</span></span>
+<span>(</span><span>exit_diameter: float,<br>exit_mach: float,<br>exit_pressure: float,<br>exit_temperature: float,<br>gamma: float = 1.2,<br>position: Tuple[float, float, float] = (0.0, 0.0, 0.0),<br>direction: Tuple[float, float, float] = (0.0, 0.0, 1.0))</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class JetConfig:
+    &#34;&#34;&#34;
+    Thruster jet configuration.
+    
+    Attributes:
+        exit_diameter: Nozzle exit diameter (m)
+        exit_mach: Nozzle exit Mach number
+        exit_pressure: Nozzle exit pressure (Pa)
+        exit_temperature: Nozzle exit temperature (K)
+        gamma: Ratio of specific heats for jet gas
+        position: (x, y, z) position on vehicle
+        direction: (nx, ny, nz) thrust direction (unit vector)
+    &#34;&#34;&#34;
+    exit_diameter: float
+    exit_mach: float
+    exit_pressure: float
+    exit_temperature: float
+    gamma: float = 1.2
+    position: Tuple[float, float, float] = (0.0, 0.0, 0.0)
+    direction: Tuple[float, float, float] = (0.0, 0.0, 1.0)</code></pre>
+</details>
+<div class="desc"><p>Thruster jet configuration.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>exit_diameter</code></strong></dt>
+<dd>Nozzle exit diameter (m)</dd>
+<dt><strong><code>exit_mach</code></strong></dt>
+<dd>Nozzle exit Mach number</dd>
+<dt><strong><code>exit_pressure</code></strong></dt>
+<dd>Nozzle exit pressure (Pa)</dd>
+<dt><strong><code>exit_temperature</code></strong></dt>
+<dd>Nozzle exit temperature (K)</dd>
+<dt><strong><code>gamma</code></strong></dt>
+<dd>Ratio of specific heats for jet gas</dd>
+<dt><strong><code>position</code></strong></dt>
+<dd>(x, y, z) position on vehicle</dd>
+<dt><strong><code>direction</code></strong></dt>
+<dd>(nx, ny, nz) thrust direction (unit vector)</dd>
+</dl></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.jet_interaction.JetConfig.direction"><code class="name">var <span class="ident">direction</span> : Tuple[float, float, float]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.JetConfig.exit_diameter"><code class="name">var <span class="ident">exit_diameter</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.JetConfig.exit_mach"><code class="name">var <span class="ident">exit_mach</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.JetConfig.exit_pressure"><code class="name">var <span class="ident">exit_pressure</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.JetConfig.exit_temperature"><code class="name">var <span class="ident">exit_temperature</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.JetConfig.gamma"><code class="name">var <span class="ident">gamma</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.JetConfig.position"><code class="name">var <span class="ident">position</span> : Tuple[float, float, float]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.JetInteractionCorrector"><code class="flex name class">
+<span>class <span class="ident">JetInteractionCorrector</span></span>
+<span>(</span><span>jets: List[<a title="tensornet.cfd.jet_interaction.UnderexpandedJet" href="#tensornet.cfd.jet_interaction.UnderexpandedJet">UnderexpandedJet</a>])</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class JetInteractionCorrector:
+    &#34;&#34;&#34;
+    Corrects aerodynamic forces for jet interaction effects.
+    
+    Models how RCS/divert jets modify the aerodynamic forces
+    on a vehicle in crossflow.
+    &#34;&#34;&#34;
+    
+    def __init__(self, jets: List[UnderexpandedJet]):
+        self.jets = jets
+    
+    def compute_interaction_forces(
+        self,
+        freestream_mach: float,
+        freestream_pressure: float,
+        freestream_density: float,
+        freestream_velocity: float,
+        reference_area: float,
+        active_jets: Optional[List[int]] = None
+    ) -&gt; InteractionForces:
+        &#34;&#34;&#34;
+        Compute jet interaction effects on aerodynamics.
+        
+        Args:
+            freestream_mach: Freestream Mach number
+            freestream_pressure: Freestream pressure (Pa)
+            freestream_density: Freestream density (kg/m³)
+            freestream_velocity: Freestream velocity (m/s)
+            reference_area: Reference area (m²)
+            active_jets: Indices of active jets (all if None)
+            
+        Returns:
+            InteractionForces with thrust amplification and induced loads
+        &#34;&#34;&#34;
+        if active_jets is None:
+            active_jets = list(range(len(self.jets)))
+        
+        if not active_jets:
+            return InteractionForces(
+                amplification_factor=1.0,
+                induced_normal_force=0.0,
+                induced_moment=0.0,
+                separation_length=0.0,
+                reattachment_length=0.0
+            )
+        
+        q_inf = 0.5 * freestream_density * freestream_velocity**2
+        
+        total_amplification = 0.0
+        total_normal_force = 0.0
+        max_separation = 0.0
+        max_reattachment = 0.0
+        
+        for idx in active_jets:
+            jet = self.jets[idx]
+            cfg = jet.config
+            
+            # Jet properties
+            T_exit = cfg.exit_temperature
+            rho_exit = cfg.exit_pressure / (R_GAS * T_exit)
+            c_exit = math.sqrt(cfg.gamma * R_GAS * T_exit)
+            V_exit = cfg.exit_mach * c_exit
+            
+            # Momentum ratio
+            J = (rho_exit * V_exit**2) / (freestream_density * freestream_velocity**2)
+            
+            # Thrust amplification
+            # Favorable interaction increases effective thrust by 10-30%
+            # Depends on jet location and crossflow angle
+            dx, dy, dz = cfg.direction
+            crossflow_alignment = abs(dx)  # x is typically crossflow direction
+            
+            if crossflow_alignment &gt; 0.5:
+                # Jet in crossflow -&gt; adverse interaction
+                K_amp = 1.0 - 0.1 * J
+            else:
+                # Jet normal to crossflow -&gt; favorable interaction
+                K_amp = 1.0 + 0.2 * math.sqrt(J)
+            
+            total_amplification += K_amp
+            
+            # Induced normal force from jet interaction
+            # Integration of jet-induced Cp over vehicle surface
+            C_N_induced = 0.15 * J  # Simplified
+            F_N_induced = C_N_induced * q_inf * reference_area
+            total_normal_force += F_N_induced
+            
+            # Separation and reattachment lengths
+            sep_len = 2.0 * cfg.exit_diameter * math.sqrt(J)
+            reat_len = 5.0 * cfg.exit_diameter * math.sqrt(J)
+            
+            max_separation = max(max_separation, sep_len)
+            max_reattachment = max(max_reattachment, reat_len)
+        
+        n_jets = len(active_jets)
+        avg_amplification = total_amplification / n_jets if n_jets &gt; 0 else 1.0
+        
+        return InteractionForces(
+            amplification_factor=avg_amplification,
+            induced_normal_force=total_normal_force,
+            induced_moment=0.0,  # Would need vehicle geometry
+            separation_length=max_separation,
+            reattachment_length=max_reattachment
+        )
+    
+    def correct_thrust(
+        self,
+        vacuum_thrust: float,
+        freestream_mach: float,
+        freestream_pressure: float,
+        freestream_density: float,
+        freestream_velocity: float,
+        reference_area: float,
+        active_jets: Optional[List[int]] = None
+    ) -&gt; Tuple[float, float, float]:
+        &#34;&#34;&#34;
+        Correct vacuum thrust for jet interaction.
+        
+        Args:
+            vacuum_thrust: Nominal vacuum thrust (N)
+            freestream_*: Flow conditions
+            reference_area: Reference area (m²)
+            active_jets: Active jet indices
+            
+        Returns:
+            (effective_thrust, induced_normal, induced_moment)
+        &#34;&#34;&#34;
+        forces = self.compute_interaction_forces(
+            freestream_mach, freestream_pressure,
+            freestream_density, freestream_velocity,
+            reference_area, active_jets
+        )
+        
+        effective_thrust = vacuum_thrust * forces.amplification_factor
+        
+        return effective_thrust, forces.induced_normal_force, forces.induced_moment</code></pre>
+</details>
+<div class="desc"><p>Corrects aerodynamic forces for jet interaction effects.</p>
+<p>Models how RCS/divert jets modify the aerodynamic forces
+on a vehicle in crossflow.</p></div>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.jet_interaction.JetInteractionCorrector.compute_interaction_forces"><code class="name flex">
+<span>def <span class="ident">compute_interaction_forces</span></span>(<span>self,<br>freestream_mach: float,<br>freestream_pressure: float,<br>freestream_density: float,<br>freestream_velocity: float,<br>reference_area: float,<br>active_jets: List[int] | None = None) ‑> <a title="tensornet.cfd.jet_interaction.InteractionForces" href="#tensornet.cfd.jet_interaction.InteractionForces">InteractionForces</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_interaction_forces(
+    self,
+    freestream_mach: float,
+    freestream_pressure: float,
+    freestream_density: float,
+    freestream_velocity: float,
+    reference_area: float,
+    active_jets: Optional[List[int]] = None
+) -&gt; InteractionForces:
+    &#34;&#34;&#34;
+    Compute jet interaction effects on aerodynamics.
+    
+    Args:
+        freestream_mach: Freestream Mach number
+        freestream_pressure: Freestream pressure (Pa)
+        freestream_density: Freestream density (kg/m³)
+        freestream_velocity: Freestream velocity (m/s)
+        reference_area: Reference area (m²)
+        active_jets: Indices of active jets (all if None)
+        
+    Returns:
+        InteractionForces with thrust amplification and induced loads
+    &#34;&#34;&#34;
+    if active_jets is None:
+        active_jets = list(range(len(self.jets)))
+    
+    if not active_jets:
+        return InteractionForces(
+            amplification_factor=1.0,
+            induced_normal_force=0.0,
+            induced_moment=0.0,
+            separation_length=0.0,
+            reattachment_length=0.0
+        )
+    
+    q_inf = 0.5 * freestream_density * freestream_velocity**2
+    
+    total_amplification = 0.0
+    total_normal_force = 0.0
+    max_separation = 0.0
+    max_reattachment = 0.0
+    
+    for idx in active_jets:
+        jet = self.jets[idx]
+        cfg = jet.config
+        
+        # Jet properties
+        T_exit = cfg.exit_temperature
+        rho_exit = cfg.exit_pressure / (R_GAS * T_exit)
+        c_exit = math.sqrt(cfg.gamma * R_GAS * T_exit)
+        V_exit = cfg.exit_mach * c_exit
+        
+        # Momentum ratio
+        J = (rho_exit * V_exit**2) / (freestream_density * freestream_velocity**2)
+        
+        # Thrust amplification
+        # Favorable interaction increases effective thrust by 10-30%
+        # Depends on jet location and crossflow angle
+        dx, dy, dz = cfg.direction
+        crossflow_alignment = abs(dx)  # x is typically crossflow direction
+        
+        if crossflow_alignment &gt; 0.5:
+            # Jet in crossflow -&gt; adverse interaction
+            K_amp = 1.0 - 0.1 * J
+        else:
+            # Jet normal to crossflow -&gt; favorable interaction
+            K_amp = 1.0 + 0.2 * math.sqrt(J)
+        
+        total_amplification += K_amp
+        
+        # Induced normal force from jet interaction
+        # Integration of jet-induced Cp over vehicle surface
+        C_N_induced = 0.15 * J  # Simplified
+        F_N_induced = C_N_induced * q_inf * reference_area
+        total_normal_force += F_N_induced
+        
+        # Separation and reattachment lengths
+        sep_len = 2.0 * cfg.exit_diameter * math.sqrt(J)
+        reat_len = 5.0 * cfg.exit_diameter * math.sqrt(J)
+        
+        max_separation = max(max_separation, sep_len)
+        max_reattachment = max(max_reattachment, reat_len)
+    
+    n_jets = len(active_jets)
+    avg_amplification = total_amplification / n_jets if n_jets &gt; 0 else 1.0
+    
+    return InteractionForces(
+        amplification_factor=avg_amplification,
+        induced_normal_force=total_normal_force,
+        induced_moment=0.0,  # Would need vehicle geometry
+        separation_length=max_separation,
+        reattachment_length=max_reattachment
+    )</code></pre>
+</details>
+<div class="desc"><p>Compute jet interaction effects on aerodynamics.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>freestream_mach</code></strong></dt>
+<dd>Freestream Mach number</dd>
+<dt><strong><code>freestream_pressure</code></strong></dt>
+<dd>Freestream pressure (Pa)</dd>
+<dt><strong><code>freestream_density</code></strong></dt>
+<dd>Freestream density (kg/m³)</dd>
+<dt><strong><code>freestream_velocity</code></strong></dt>
+<dd>Freestream velocity (m/s)</dd>
+<dt><strong><code>reference_area</code></strong></dt>
+<dd>Reference area (m²)</dd>
+<dt><strong><code>active_jets</code></strong></dt>
+<dd>Indices of active jets (all if None)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>InteractionForces with thrust amplification and induced loads</p></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.JetInteractionCorrector.correct_thrust"><code class="name flex">
+<span>def <span class="ident">correct_thrust</span></span>(<span>self,<br>vacuum_thrust: float,<br>freestream_mach: float,<br>freestream_pressure: float,<br>freestream_density: float,<br>freestream_velocity: float,<br>reference_area: float,<br>active_jets: List[int] | None = None) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def correct_thrust(
+    self,
+    vacuum_thrust: float,
+    freestream_mach: float,
+    freestream_pressure: float,
+    freestream_density: float,
+    freestream_velocity: float,
+    reference_area: float,
+    active_jets: Optional[List[int]] = None
+) -&gt; Tuple[float, float, float]:
+    &#34;&#34;&#34;
+    Correct vacuum thrust for jet interaction.
+    
+    Args:
+        vacuum_thrust: Nominal vacuum thrust (N)
+        freestream_*: Flow conditions
+        reference_area: Reference area (m²)
+        active_jets: Active jet indices
+        
+    Returns:
+        (effective_thrust, induced_normal, induced_moment)
+    &#34;&#34;&#34;
+    forces = self.compute_interaction_forces(
+        freestream_mach, freestream_pressure,
+        freestream_density, freestream_velocity,
+        reference_area, active_jets
+    )
+    
+    effective_thrust = vacuum_thrust * forces.amplification_factor
+    
+    return effective_thrust, forces.induced_normal_force, forces.induced_moment</code></pre>
+</details>
+<div class="desc"><p>Correct vacuum thrust for jet interaction.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>vacuum_thrust</code></strong></dt>
+<dd>Nominal vacuum thrust (N)</dd>
+<dt><strong><code>freestream_*</code></strong></dt>
+<dd>Flow conditions</dd>
+<dt><strong><code>reference_area</code></strong></dt>
+<dd>Reference area (m²)</dd>
+<dt><strong><code>active_jets</code></strong></dt>
+<dd>Active jet indices</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>(effective_thrust, induced_normal, induced_moment)</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.JetPlume"><code class="flex name class">
+<span>class <span class="ident">JetPlume</span></span>
+<span>(</span><span>pressure_ratio: float,<br>penetration_height: float,<br>mach_disk_location: float,<br>barrel_shock_radius: float,<br>expansion_angle: float)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class JetPlume:
+    &#34;&#34;&#34;
+    Underexpanded jet plume structure.
+    
+    Attributes:
+        pressure_ratio: Exit-to-ambient pressure ratio
+        penetration_height: Jet penetration into crossflow (m)
+        mach_disk_location: Distance to Mach disk (m)
+        barrel_shock_radius: Barrel shock radius (m)
+        expansion_angle: Prandtl-Meyer expansion angle (rad)
+    &#34;&#34;&#34;
+    pressure_ratio: float
+    penetration_height: float
+    mach_disk_location: float
+    barrel_shock_radius: float
+    expansion_angle: float</code></pre>
+</details>
+<div class="desc"><p>Underexpanded jet plume structure.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>pressure_ratio</code></strong></dt>
+<dd>Exit-to-ambient pressure ratio</dd>
+<dt><strong><code>penetration_height</code></strong></dt>
+<dd>Jet penetration into crossflow (m)</dd>
+<dt><strong><code>mach_disk_location</code></strong></dt>
+<dd>Distance to Mach disk (m)</dd>
+<dt><strong><code>barrel_shock_radius</code></strong></dt>
+<dd>Barrel shock radius (m)</dd>
+<dt><strong><code>expansion_angle</code></strong></dt>
+<dd>Prandtl-Meyer expansion angle (rad)</dd>
+</dl></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.jet_interaction.JetPlume.barrel_shock_radius"><code class="name">var <span class="ident">barrel_shock_radius</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.JetPlume.expansion_angle"><code class="name">var <span class="ident">expansion_angle</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.JetPlume.mach_disk_location"><code class="name">var <span class="ident">mach_disk_location</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.JetPlume.penetration_height"><code class="name">var <span class="ident">penetration_height</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.JetPlume.pressure_ratio"><code class="name">var <span class="ident">pressure_ratio</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.UnderexpandedJet"><code class="flex name class">
+<span>class <span class="ident">UnderexpandedJet</span></span>
+<span>(</span><span>config: <a title="tensornet.cfd.jet_interaction.JetConfig" href="#tensornet.cfd.jet_interaction.JetConfig">JetConfig</a>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class UnderexpandedJet:
+    &#34;&#34;&#34;
+    Underexpanded jet model for reaction control systems.
+    
+    Models the plume structure and induced flow field
+    for a single thruster jet.
+    &#34;&#34;&#34;
+    
+    def __init__(self, config: JetConfig):
+        self.config = config
+    
+    def compute_plume(self, ambient_pressure: float) -&gt; JetPlume:
+        &#34;&#34;&#34;
+        Compute jet plume structure.
+        
+        Args:
+            ambient_pressure: Ambient static pressure (Pa)
+            
+        Returns:
+            JetPlume with plume geometry
+        &#34;&#34;&#34;
+        cfg = self.config
+        
+        pr = cfg.exit_pressure / ambient_pressure
+        
+        x_md = mach_disk_location(cfg.exit_diameter, pr, cfg.gamma)
+        r_barrel = barrel_shock_radius(cfg.exit_diameter, pr, cfg.gamma)
+        
+        # Expansion angle
+        nu_exit = prandtl_meyer_expansion(cfg.exit_mach, cfg.gamma)
+        expansion_angle = nu_exit  # Initial expansion
+        
+        # Penetration (for quiescent ambient)
+        penetration = pressure_matched_jet_diameter(
+            cfg.exit_diameter, cfg.exit_mach,
+            cfg.exit_pressure, ambient_pressure, cfg.gamma
+        )
+        
+        return JetPlume(
+            pressure_ratio=pr,
+            penetration_height=penetration,
+            mach_disk_location=x_md,
+            barrel_shock_radius=r_barrel,
+            expansion_angle=expansion_angle
+        )
+    
+    def induced_velocity_field(
+        self,
+        x: Tensor,
+        y: Tensor,
+        z: Tensor,
+        ambient_pressure: float
+    ) -&gt; Tuple[Tensor, Tensor, Tensor]:
+        &#34;&#34;&#34;
+        Compute jet-induced velocity perturbations.
+        
+        Simplified potential flow model for far-field.
+        
+        Args:
+            x, y, z: Position grids (m)
+            ambient_pressure: Ambient pressure (Pa)
+            
+        Returns:
+            (u, v, w) velocity perturbations (m/s)
+        &#34;&#34;&#34;
+        cfg = self.config
+        plume = self.compute_plume(ambient_pressure)
+        
+        # Transform to jet-centered coordinates
+        px, py, pz = cfg.position
+        dx, dy, dz = cfg.direction
+        
+        # Distance from jet axis
+        r = torch.sqrt((x - px)**2 + (y - py)**2 + (z - pz)**2)
+        r = torch.clamp(r, min=cfg.exit_diameter)
+        
+        # Jet exit velocity
+        T_exit = cfg.exit_temperature
+        c_exit = math.sqrt(cfg.gamma * R_GAS * T_exit)
+        V_exit = cfg.exit_mach * c_exit
+        
+        # Mass flow rate
+        rho_exit = cfg.exit_pressure / (R_GAS * T_exit)
+        A_exit = math.pi * (cfg.exit_diameter / 2)**2
+        mdot = rho_exit * V_exit * A_exit
+        
+        # Induced velocity (potential flow model)
+        Q = mdot / rho_exit  # Volume flow rate
+        V_induced = Q / (2 * math.pi * r**2)
+        
+        # Direction (radially outward from jet axis)
+        u = V_induced * (x - px) / r * abs(dx)
+        v = V_induced * (y - py) / r * abs(dy)
+        w = V_induced * (z - pz) / r * abs(dz) + V_exit * dz
+        
+        return u, v, w</code></pre>
+</details>
+<div class="desc"><p>Underexpanded jet model for reaction control systems.</p>
+<p>Models the plume structure and induced flow field
+for a single thruster jet.</p></div>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.cfd.jet_interaction.UnderexpandedJet.compute_plume"><code class="name flex">
+<span>def <span class="ident">compute_plume</span></span>(<span>self, ambient_pressure: float) ‑> <a title="tensornet.cfd.jet_interaction.JetPlume" href="#tensornet.cfd.jet_interaction.JetPlume">JetPlume</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_plume(self, ambient_pressure: float) -&gt; JetPlume:
+    &#34;&#34;&#34;
+    Compute jet plume structure.
+    
+    Args:
+        ambient_pressure: Ambient static pressure (Pa)
+        
+    Returns:
+        JetPlume with plume geometry
+    &#34;&#34;&#34;
+    cfg = self.config
+    
+    pr = cfg.exit_pressure / ambient_pressure
+    
+    x_md = mach_disk_location(cfg.exit_diameter, pr, cfg.gamma)
+    r_barrel = barrel_shock_radius(cfg.exit_diameter, pr, cfg.gamma)
+    
+    # Expansion angle
+    nu_exit = prandtl_meyer_expansion(cfg.exit_mach, cfg.gamma)
+    expansion_angle = nu_exit  # Initial expansion
+    
+    # Penetration (for quiescent ambient)
+    penetration = pressure_matched_jet_diameter(
+        cfg.exit_diameter, cfg.exit_mach,
+        cfg.exit_pressure, ambient_pressure, cfg.gamma
+    )
+    
+    return JetPlume(
+        pressure_ratio=pr,
+        penetration_height=penetration,
+        mach_disk_location=x_md,
+        barrel_shock_radius=r_barrel,
+        expansion_angle=expansion_angle
+    )</code></pre>
+</details>
+<div class="desc"><p>Compute jet plume structure.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>ambient_pressure</code></strong></dt>
+<dd>Ambient static pressure (Pa)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>JetPlume with plume geometry</p></div>
+</dd>
+<dt id="tensornet.cfd.jet_interaction.UnderexpandedJet.induced_velocity_field"><code class="name flex">
+<span>def <span class="ident">induced_velocity_field</span></span>(<span>self, x: torch.Tensor, y: torch.Tensor, z: torch.Tensor, ambient_pressure: float) ‑> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def induced_velocity_field(
+    self,
+    x: Tensor,
+    y: Tensor,
+    z: Tensor,
+    ambient_pressure: float
+) -&gt; Tuple[Tensor, Tensor, Tensor]:
+    &#34;&#34;&#34;
+    Compute jet-induced velocity perturbations.
+    
+    Simplified potential flow model for far-field.
+    
+    Args:
+        x, y, z: Position grids (m)
+        ambient_pressure: Ambient pressure (Pa)
+        
+    Returns:
+        (u, v, w) velocity perturbations (m/s)
+    &#34;&#34;&#34;
+    cfg = self.config
+    plume = self.compute_plume(ambient_pressure)
+    
+    # Transform to jet-centered coordinates
+    px, py, pz = cfg.position
+    dx, dy, dz = cfg.direction
+    
+    # Distance from jet axis
+    r = torch.sqrt((x - px)**2 + (y - py)**2 + (z - pz)**2)
+    r = torch.clamp(r, min=cfg.exit_diameter)
+    
+    # Jet exit velocity
+    T_exit = cfg.exit_temperature
+    c_exit = math.sqrt(cfg.gamma * R_GAS * T_exit)
+    V_exit = cfg.exit_mach * c_exit
+    
+    # Mass flow rate
+    rho_exit = cfg.exit_pressure / (R_GAS * T_exit)
+    A_exit = math.pi * (cfg.exit_diameter / 2)**2
+    mdot = rho_exit * V_exit * A_exit
+    
+    # Induced velocity (potential flow model)
+    Q = mdot / rho_exit  # Volume flow rate
+    V_induced = Q / (2 * math.pi * r**2)
+    
+    # Direction (radially outward from jet axis)
+    u = V_induced * (x - px) / r * abs(dx)
+    v = V_induced * (y - py) / r * abs(dy)
+    w = V_induced * (z - pz) / r * abs(dz) + V_exit * dz
+    
+    return u, v, w</code></pre>
+</details>
+<div class="desc"><p>Compute jet-induced velocity perturbations.</p>
+<p>Simplified potential flow model for far-field.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt>x, y, z: Position grids (m)</dt>
+<dt><strong><code>ambient_pressure</code></strong></dt>
+<dd>Ambient pressure (Pa)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>(u, v, w) velocity perturbations (m/s)</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#jet-interaction-model">Jet Interaction Model</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.jet_interaction.barrel_shock_radius" href="#tensornet.cfd.jet_interaction.barrel_shock_radius">barrel_shock_radius</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.jet_induced_pressure_coefficient" href="#tensornet.cfd.jet_interaction.jet_induced_pressure_coefficient">jet_induced_pressure_coefficient</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.jet_penetration_height" href="#tensornet.cfd.jet_interaction.jet_penetration_height">jet_penetration_height</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.mach_disk_location" href="#tensornet.cfd.jet_interaction.mach_disk_location">mach_disk_location</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.prandtl_meyer_expansion" href="#tensornet.cfd.jet_interaction.prandtl_meyer_expansion">prandtl_meyer_expansion</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.pressure_matched_jet_diameter" href="#tensornet.cfd.jet_interaction.pressure_matched_jet_diameter">pressure_matched_jet_diameter</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.cfd.jet_interaction.InteractionForces" href="#tensornet.cfd.jet_interaction.InteractionForces">InteractionForces</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.jet_interaction.InteractionForces.amplification_factor" href="#tensornet.cfd.jet_interaction.InteractionForces.amplification_factor">amplification_factor</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.InteractionForces.induced_moment" href="#tensornet.cfd.jet_interaction.InteractionForces.induced_moment">induced_moment</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.InteractionForces.induced_normal_force" href="#tensornet.cfd.jet_interaction.InteractionForces.induced_normal_force">induced_normal_force</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.InteractionForces.reattachment_length" href="#tensornet.cfd.jet_interaction.InteractionForces.reattachment_length">reattachment_length</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.InteractionForces.separation_length" href="#tensornet.cfd.jet_interaction.InteractionForces.separation_length">separation_length</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.jet_interaction.JetConfig" href="#tensornet.cfd.jet_interaction.JetConfig">JetConfig</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.jet_interaction.JetConfig.direction" href="#tensornet.cfd.jet_interaction.JetConfig.direction">direction</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.JetConfig.exit_diameter" href="#tensornet.cfd.jet_interaction.JetConfig.exit_diameter">exit_diameter</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.JetConfig.exit_mach" href="#tensornet.cfd.jet_interaction.JetConfig.exit_mach">exit_mach</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.JetConfig.exit_pressure" href="#tensornet.cfd.jet_interaction.JetConfig.exit_pressure">exit_pressure</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.JetConfig.exit_temperature" href="#tensornet.cfd.jet_interaction.JetConfig.exit_temperature">exit_temperature</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.JetConfig.gamma" href="#tensornet.cfd.jet_interaction.JetConfig.gamma">gamma</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.JetConfig.position" href="#tensornet.cfd.jet_interaction.JetConfig.position">position</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.jet_interaction.JetInteractionCorrector" href="#tensornet.cfd.jet_interaction.JetInteractionCorrector">JetInteractionCorrector</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.jet_interaction.JetInteractionCorrector.compute_interaction_forces" href="#tensornet.cfd.jet_interaction.JetInteractionCorrector.compute_interaction_forces">compute_interaction_forces</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.JetInteractionCorrector.correct_thrust" href="#tensornet.cfd.jet_interaction.JetInteractionCorrector.correct_thrust">correct_thrust</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.jet_interaction.JetPlume" href="#tensornet.cfd.jet_interaction.JetPlume">JetPlume</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.jet_interaction.JetPlume.barrel_shock_radius" href="#tensornet.cfd.jet_interaction.JetPlume.barrel_shock_radius">barrel_shock_radius</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.JetPlume.expansion_angle" href="#tensornet.cfd.jet_interaction.JetPlume.expansion_angle">expansion_angle</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.JetPlume.mach_disk_location" href="#tensornet.cfd.jet_interaction.JetPlume.mach_disk_location">mach_disk_location</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.JetPlume.penetration_height" href="#tensornet.cfd.jet_interaction.JetPlume.penetration_height">penetration_height</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.JetPlume.pressure_ratio" href="#tensornet.cfd.jet_interaction.JetPlume.pressure_ratio">pressure_ratio</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.jet_interaction.UnderexpandedJet" href="#tensornet.cfd.jet_interaction.UnderexpandedJet">UnderexpandedJet</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.jet_interaction.UnderexpandedJet.compute_plume" href="#tensornet.cfd.jet_interaction.UnderexpandedJet.compute_plume">compute_plume</a></code></li>
+<li><code><a title="tensornet.cfd.jet_interaction.UnderexpandedJet.induced_velocity_field" href="#tensornet.cfd.jet_interaction.UnderexpandedJet.induced_velocity_field">induced_velocity_field</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

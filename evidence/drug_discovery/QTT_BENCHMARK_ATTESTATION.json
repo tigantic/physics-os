@@ -1,0 +1,134 @@
+{
+  "attestation_type": "QTT_DRUG_DISCOVERY_BENCHMARK",
+  "version": "1.0.0",
+  "timestamp_utc": "2026-01-05T03:06:23.452510+00:00",
+  "hashes": {
+    "document": "31e1527d3bd1712173f68dc07e794c3ffe2e04bdf4ed64a0d91b2bbc17f55af6",
+    "egfr_benchmark": "1a8b191e46c1b322ebe8f7bbdc78523a8c61045c5a85dd754226063c1bdc3f46",
+    "herg_benchmark": "8d3ea9d3ac0da642fbd44a903d2c5a0211e09b98af7e9ce358b7edb9a82b99f2",
+    "holy_grail_query": "fc936c1fbccab03fdd20bce9e86d7bbe76ca9c0e5f77026047adf6714221e216",
+    "novel_discovery": "a40f9c5795f59bd9a04317a13256aa88615c6c6f395b0929d32971a4f0161a26"
+  },
+  "results": {
+    "benchmark_date": "2026-01-04",
+    "chembl_version": "36",
+    "data_stats": {
+      "raw_records": 2727101,
+      "unique_pairs": 1955701,
+      "unique_compounds": 1083044,
+      "unique_targets": 6056
+    },
+    "model_params": {
+      "fingerprint": "ECFP4",
+      "fp_bits": 1024,
+      "selected_bits": 18,
+      "n_qubits": 6,
+      "base": 8,
+      "tt_rank": 25,
+      "tensor_size": 262144,
+      "compression_ratio": 218
+    },
+    "egfr_benchmark": {
+      "training_compounds": 14325,
+      "r2_score": 0.44,
+      "pki_range": [
+        3.0,
+        11.5
+      ],
+      "drug_rediscovery": {
+        "gefitinib": {
+          "pki": 7.45,
+          "percentile": 82.2
+        },
+        "lapatinib": {
+          "pki": 7.45,
+          "percentile": 82.2
+        },
+        "erlotinib": {
+          "pki": 7.09,
+          "percentile": 71.8
+        },
+        "afatinib": {
+          "pki": 7.72,
+          "percentile": 88.4
+        },
+        "osimertinib": {
+          "pki": 7.22,
+          "percentile": 76.5
+        }
+      }
+    },
+    "herg_benchmark": {
+      "training_compounds": 15581,
+      "r2_score": 0.289,
+      "pki_range": [
+        3.0,
+        9.9
+      ],
+      "blocker_detection": {
+        "terfenadine": {
+          "pki": 6.51,
+          "percentile": 97.2,
+          "status": "HIGH_RISK"
+        },
+        "astemizole": {
+          "pki": 6.09,
+          "percentile": 94.8,
+          "status": "HIGH_RISK"
+        },
+        "haloperidol": {
+          "pki": 6.51,
+          "percentile": 97.2,
+          "status": "HIGH_RISK"
+        },
+        "sertindole": {
+          "pki": 5.57,
+          "percentile": 83.9,
+          "status": "HIGH_RISK"
+        },
+        "pimozide": {
+          "pki": 5.32,
+          "percentile": 70.9,
+          "status": "MODERATE"
+        }
+      },
+      "detection_rate": "4/5 (80%)"
+    },
+    "holy_grail_query": {
+      "egfr_threshold": 8.0,
+      "herg_threshold": 5.5,
+      "total_coordinates": 262144,
+      "winning_coordinates": 43,
+      "real_molecules_found": 818,
+      "best_candidate": {
+        "measured_egfr": 9.99,
+        "predicted_egfr": 9.34,
+        "predicted_herg": 4.23,
+        "selectivity": 5.11
+      }
+    },
+    "novel_space_discovery": {
+      "occupied_coordinates": 1430,
+      "unexplored_coordinates": 260714,
+      "occupancy_percent": 0.55,
+      "excellent_unexplored": 0,
+      "good_unexplored": 1,
+      "moderate_unexplored": 20,
+      "best_unexplored": {
+        "coords": [
+          6,
+          7,
+          3,
+          0,
+          1,
+          4
+        ],
+        "egfr": 6.59,
+        "herg": 3.09,
+        "selectivity": 3.5,
+        "distance_to_known": 2
+      },
+      "key_finding": "All 43 sweet spots already occupied - pharma has explored high-value regions"
+    }
+  }
+}

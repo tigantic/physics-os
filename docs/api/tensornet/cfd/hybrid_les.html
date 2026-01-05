@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.hybrid_les API documentation</title>
+<meta name="description" content="Hybrid RANS-LES Models
+…">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.hybrid_les</code></h1>
+</header>
+<section id="section-intro">
+<h1 id="hybrid-rans-les-models">Hybrid RANS-LES Models</h1>
+<p>Bridge between RANS and LES approaches for efficient high-fidelity turbulence
+modeling. Key hybrid methodologies:</p>
+<pre><code>DES (Detached Eddy Simulation):
+    - RANS in attached boundary layers
+    - LES in separated regions and wakes
+    - Length scale switching: l_hybrid = min(l_RANS, C_DES * Δ)
+
+DDES (Delayed DES):
+    - Prevents premature LES in boundary layers
+    - Shielding function delays transition to LES
+    - Based on local flow/turbulence ratios
+
+IDDES (Improved Delayed DES):
+    - Wall-modeled LES (WMLES) branch
+    - Seamless RANS-LES interface
+    - Optimized for wall-bounded flows
+</code></pre>
+<h2 id="references">References</h2>
+<p>[1] Spalart et al., "Comments on the feasibility of LES for wings",
+Advances in DNS/LES, 1997
+[2] Spalart et al., "A New Version of Detached-Eddy Simulation",
+Theor. Comp. Fluid Dyn. 20, 2006 (DDES)
+[3] Shur et al., "A hybrid RANS-LES approach with delayed-DES and
+wall-modelled LES capabilities", IJHFF 29, 2008 (IDDES)</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.hybrid_les.compute_grid_scale"><code class="name flex">
+<span>def <span class="ident">compute_grid_scale</span></span>(<span>dx: torch.Tensor,<br>dy: torch.Tensor,<br>dz: torch.Tensor | None = None,<br>method: str = 'max') ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_grid_scale(
+    dx: torch.Tensor,
+    dy: torch.Tensor,
+    dz: Optional[torch.Tensor] = None,
+    method: str = &#34;max&#34;
+) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Compute LES grid/filter scale from mesh spacing.
+    
+    Args:
+        dx, dy, dz: Grid spacing in each direction
+        method: &#34;max&#34; (largest), &#34;cube&#34; (volume^1/3), or &#34;sum&#34; (sum/3)
+        
+    Returns:
+        Grid scale Δ
+    &#34;&#34;&#34;
+    if dz is None:
+        # 2D case
+        if method == &#34;max&#34;:
+            return torch.maximum(dx, dy)
+        elif method == &#34;cube&#34;:
+            return torch.sqrt(dx * dy)
+        else:
+            return 0.5 * (dx + dy)
+    else:
+        # 3D case
+        if method == &#34;max&#34;:
+            return torch.maximum(torch.maximum(dx, dy), dz)
+        elif method == &#34;cube&#34;:
+            return (dx * dy * dz) ** (1.0 / 3.0)
+        else:
+            return (dx + dy + dz) / 3.0</code></pre>
+</details>
+<div class="desc"><p>Compute LES grid/filter scale from mesh spacing.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt>dx, dy, dz: Grid spacing in each direction</dt>
+<dt><strong><code>method</code></strong></dt>
+<dd>"max" (largest), "cube" (volume^1/3), or "sum" (sum/3)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Grid scale Δ</p></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.compute_hybrid_viscosity"><code class="name flex">
+<span>def <span class="ident">compute_hybrid_viscosity</span></span>(<span>nu_rans: torch.Tensor,<br>length_scale: torch.Tensor,<br>strain_rate: torch.Tensor,<br>model: <a title="tensornet.cfd.hybrid_les.HybridModel" href="#tensornet.cfd.hybrid_les.HybridModel">HybridModel</a> = HybridModel.DDES,<br>c_s: float = 0.17) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_hybrid_viscosity(
+    nu_rans: torch.Tensor,
+    length_scale: torch.Tensor,
+    strain_rate: torch.Tensor,
+    model: HybridModel = HybridModel.DDES,
+    c_s: float = 0.17
+) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Compute turbulent viscosity for hybrid model.
+    
+    In RANS regions: use RANS viscosity
+    In LES regions: use Smagorinsky-like model
+    
+    Args:
+        nu_rans: RANS turbulent viscosity
+        length_scale: Hybrid length scale
+        strain_rate: Strain rate magnitude
+        model: Hybrid model type
+        c_s: Smagorinsky constant for LES regions
+        
+    Returns:
+        Turbulent/SGS viscosity
+    &#34;&#34;&#34;
+    # Smagorinsky-like for LES regions
+    nu_sgs = (c_s * length_scale) ** 2 * strain_rate
+    
+    # Use the minimum (avoid excessive viscosity)
+    return torch.minimum(nu_rans, nu_sgs)</code></pre>
+</details>
+<div class="desc"><p>Compute turbulent viscosity for hybrid model.</p>
+<p>In RANS regions: use RANS viscosity
+In LES regions: use Smagorinsky-like model</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>nu_rans</code></strong></dt>
+<dd>RANS turbulent viscosity</dd>
+<dt><strong><code>length_scale</code></strong></dt>
+<dd>Hybrid length scale</dd>
+<dt><strong><code>strain_rate</code></strong></dt>
+<dd>Strain rate magnitude</dd>
+<dt><strong><code>model</code></strong></dt>
+<dd>Hybrid model type</dd>
+<dt><strong><code>c_s</code></strong></dt>
+<dd>Smagorinsky constant for LES regions</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Turbulent/SGS viscosity</p></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.compute_r_d"><code class="name flex">
+<span>def <span class="ident">compute_r_d</span></span>(<span>nu_t: torch.Tensor,<br>nu: float,<br>velocity_gradient: torch.Tensor,<br>d_wall: torch.Tensor,<br>kappa: float = 0.41) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_r_d(
+    nu_t: torch.Tensor,
+    nu: float,
+    velocity_gradient: torch.Tensor,
+    d_wall: torch.Tensor,
+    kappa: float = KAPPA
+) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Compute DDES delay function parameter r_d.
+    
+    r_d = (ν_t + ν) / (|∇u| κ² d²)
+    
+    This measures whether the flow is &#34;RANS-like&#34; (r_d ≈ 1) or
+    resolved turbulence (r_d &lt;&lt; 1).
+    
+    Args:
+        nu_t: Turbulent/SGS viscosity
+        nu: Molecular viscosity
+        velocity_gradient: Velocity gradient magnitude |∇u|
+        d_wall: Wall distance
+        kappa: Von Kármán constant
+        
+    Returns:
+        r_d parameter field
+    &#34;&#34;&#34;
+    denominator = velocity_gradient * (kappa ** 2) * (d_wall ** 2) + 1e-30
+    r_d = (nu_t + nu) / denominator
+    
+    return r_d</code></pre>
+</details>
+<div class="desc"><p>Compute DDES delay function parameter r_d.</p>
+<p>r_d = (ν_t + ν) / (|∇u| κ² d²)</p>
+<p>This measures whether the flow is "RANS-like" (r_d ≈ 1) or
+resolved turbulence (r_d &lt;&lt; 1).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>nu_t</code></strong></dt>
+<dd>Turbulent/SGS viscosity</dd>
+<dt><strong><code>nu</code></strong></dt>
+<dd>Molecular viscosity</dd>
+<dt><strong><code>velocity_gradient</code></strong></dt>
+<dd>Velocity gradient magnitude |∇u|</dd>
+<dt><strong><code>d_wall</code></strong></dt>
+<dd>Wall distance</dd>
+<dt><strong><code>kappa</code></strong></dt>
+<dd>Von Kármán constant</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>r_d parameter field</p></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.compute_wall_distance_scale"><code class="name flex">
+<span>def <span class="ident">compute_wall_distance_scale</span></span>(<span>d_wall: torch.Tensor, kappa: float = 0.41) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_wall_distance_scale(
+    d_wall: torch.Tensor,
+    kappa: float = KAPPA
+) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Compute RANS mixing length scale from wall distance.
+    
+    l_RANS = κ * d_wall (for SA-type models)
+    
+    Args:
+        d_wall: Distance to nearest wall
+        kappa: Von Kármán constant
+        
+    Returns:
+        RANS length scale
+    &#34;&#34;&#34;
+    return kappa * d_wall</code></pre>
+</details>
+<div class="desc"><p>Compute RANS mixing length scale from wall distance.</p>
+<p>l_RANS = κ * d_wall (for SA-type models)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>d_wall</code></strong></dt>
+<dd>Distance to nearest wall</dd>
+<dt><strong><code>kappa</code></strong></dt>
+<dd>Von Kármán constant</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>RANS length scale</p></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.ddes_delay_function"><code class="name flex">
+<span>def <span class="ident">ddes_delay_function</span></span>(<span>r_d: torch.Tensor, c_d1: float = 8.0, c_d2: float = 3.0) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ddes_delay_function(
+    r_d: torch.Tensor,
+    c_d1: float = C_D1,
+    c_d2: float = C_D2
+) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    DDES delay/shielding function f_d.
+    
+    f_d = 1 - tanh([C_d1 * r_d]^C_d2)
+    
+    When f_d ≈ 0 (r_d large), RANS mode is preserved.
+    When f_d ≈ 1 (r_d small), LES mode can activate.
+    
+    Args:
+        r_d: Delay function parameter
+        c_d1, c_d2: Model constants
+        
+    Returns:
+        Delay function f_d
+    &#34;&#34;&#34;
+    return 1.0 - torch.tanh((c_d1 * r_d) ** c_d2)</code></pre>
+</details>
+<div class="desc"><p>DDES delay/shielding function f_d.</p>
+<p>f_d = 1 - tanh([C_d1 * r_d]^C_d2)</p>
+<p>When f_d ≈ 0 (r_d large), RANS mode is preserved.
+When f_d ≈ 1 (r_d small), LES mode can activate.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>r_d</code></strong></dt>
+<dd>Delay function parameter</dd>
+</dl>
+<p>c_d1, c_d2: Model constants</p>
+<h2 id="returns">Returns</h2>
+<p>Delay function f_d</p></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.ddes_length_scale"><code class="name flex">
+<span>def <span class="ident">ddes_length_scale</span></span>(<span>l_rans: torch.Tensor, delta: torch.Tensor, f_d: torch.Tensor, c_des: float = 0.65) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ddes_length_scale(
+    l_rans: torch.Tensor,
+    delta: torch.Tensor,
+    f_d: torch.Tensor,
+    c_des: float = C_DES
+) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    DDES length scale with delay function.
+    
+    l_DDES = l_RANS - f_d * max(0, l_RANS - C_DES * Δ)
+    
+    Args:
+        l_rans: RANS length scale
+        delta: LES grid scale
+        f_d: Delay function
+        c_des: DES coefficient
+        
+    Returns:
+        DDES hybrid length scale
+    &#34;&#34;&#34;
+    l_les = c_des * delta
+    return l_rans - f_d * torch.maximum(torch.zeros_like(l_rans), l_rans - l_les)</code></pre>
+</details>
+<div class="desc"><p>DDES length scale with delay function.</p>
+<p>l_DDES = l_RANS - f_d * max(0, l_RANS - C_DES * Δ)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>l_rans</code></strong></dt>
+<dd>RANS length scale</dd>
+<dt><strong><code>delta</code></strong></dt>
+<dd>LES grid scale</dd>
+<dt><strong><code>f_d</code></strong></dt>
+<dd>Delay function</dd>
+<dt><strong><code>c_des</code></strong></dt>
+<dd>DES coefficient</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>DDES hybrid length scale</p></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.des_length_scale"><code class="name flex">
+<span>def <span class="ident">des_length_scale</span></span>(<span>l_rans: torch.Tensor, delta: torch.Tensor, c_des: float = 0.65) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def des_length_scale(
+    l_rans: torch.Tensor,
+    delta: torch.Tensor,
+    c_des: float = C_DES
+) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Original DES length scale.
+    
+    l_DES = min(l_RANS, C_DES * Δ)
+    
+    When Δ is smaller (in separated regions), LES mode activates.
+    
+    Args:
+        l_rans: RANS length scale (κ * d_wall)
+        delta: LES grid scale
+        c_des: DES coefficient
+        
+    Returns:
+        Hybrid length scale
+    &#34;&#34;&#34;
+    l_les = c_des * delta
+    return torch.minimum(l_rans, l_les)</code></pre>
+</details>
+<div class="desc"><p>Original DES length scale.</p>
+<p>l_DES = min(l_RANS, C_DES * Δ)</p>
+<p>When Δ is smaller (in separated regions), LES mode activates.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>l_rans</code></strong></dt>
+<dd>RANS length scale (κ * d_wall)</dd>
+<dt><strong><code>delta</code></strong></dt>
+<dd>LES grid scale</dd>
+<dt><strong><code>c_des</code></strong></dt>
+<dd>DES coefficient</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Hybrid length scale</p></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.estimate_rans_les_ratio"><code class="name flex">
+<span>def <span class="ident">estimate_rans_les_ratio</span></span>(<span>state: <a title="tensornet.cfd.hybrid_les.HybridLESState" href="#tensornet.cfd.hybrid_les.HybridLESState">HybridLESState</a>) ‑> Dict[str, float]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def estimate_rans_les_ratio(state: HybridLESState) -&gt; Dict[str, float]:
+    &#34;&#34;&#34;
+    Compute statistics on RANS vs LES content.
+    
+    Args:
+        state: Hybrid LES state
+        
+    Returns:
+        Dict with RANS/LES percentages
+    &#34;&#34;&#34;
+    total_cells = state.mode.numel()
+    les_cells = (state.mode &gt; 0.5).sum().item()
+    rans_cells = total_cells - les_cells
+    
+    return {
+        &#34;rans_fraction&#34;: rans_cells / total_cells,
+        &#34;les_fraction&#34;: les_cells / total_cells,
+        &#34;avg_blending&#34;: state.blending.mean().item()
+    }</code></pre>
+</details>
+<div class="desc"><p>Compute statistics on RANS vs LES content.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>state</code></strong></dt>
+<dd>Hybrid LES state</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Dict with RANS/LES percentages</p></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.iddes_blending_function"><code class="name flex">
+<span>def <span class="ident">iddes_blending_function</span></span>(<span>d_wall: torch.Tensor,<br>delta: torch.Tensor,<br>r_d: torch.Tensor,<br>c_t: float = 1.87,<br>c_l: float = 3.55) ‑> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def iddes_blending_function(
+    d_wall: torch.Tensor,
+    delta: torch.Tensor,
+    r_d: torch.Tensor,
+    c_t: float = C_T,
+    c_l: float = C_L
+) -&gt; Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    &#34;&#34;&#34;
+    IDDES blending functions for RANS-LES interface.
+    
+    Args:
+        d_wall: Wall distance
+        delta: Grid scale
+        r_d: Delay function parameter
+        c_t, c_l: Model constants
+        
+    Returns:
+        (f_e, f_b, alpha) - Elevation, blending, and alpha functions
+    &#34;&#34;&#34;
+    # Elevation function (provides LES content in RANS zone)
+    f_e = 2.0 * torch.exp(-9.0 * (torch.abs(r_d - 1.0)))
+    
+    # Step functions
+    f_step = torch.tanh(c_l * (d_wall / delta) ** 6)
+    
+    # Blending (WMLES-RANS switching)
+    f_b = torch.minimum(
+        2.0 * torch.exp(-9.0 * (r_d ** 2)),
+        1.0 - f_step
+    )
+    
+    # Alpha: final blending parameter (0 = RANS, 1 = LES)
+    alpha = torch.maximum(1.0 - ddes_delay_function(r_d), f_e)
+    
+    return f_e, f_b, alpha</code></pre>
+</details>
+<div class="desc"><p>IDDES blending functions for RANS-LES interface.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>d_wall</code></strong></dt>
+<dd>Wall distance</dd>
+<dt><strong><code>delta</code></strong></dt>
+<dd>Grid scale</dd>
+<dt><strong><code>r_d</code></strong></dt>
+<dd>Delay function parameter</dd>
+</dl>
+<p>c_t, c_l: Model constants</p>
+<h2 id="returns">Returns</h2>
+<p>(f_e, f_b, alpha) - Elevation, blending, and alpha functions</p></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.iddes_length_scale"><code class="name flex">
+<span>def <span class="ident">iddes_length_scale</span></span>(<span>l_rans: torch.Tensor,<br>delta: torch.Tensor,<br>d_wall: torch.Tensor,<br>alpha: torch.Tensor,<br>c_des: float = 0.65) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def iddes_length_scale(
+    l_rans: torch.Tensor,
+    delta: torch.Tensor,
+    d_wall: torch.Tensor,
+    alpha: torch.Tensor,
+    c_des: float = C_DES
+) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    IDDES hybrid length scale.
+    
+    l_IDDES = f_d * (1 + f_e) * l_RANS + (1 - f_d) * C_DES * Δ
+    
+    Simplified version using alpha parameter:
+    l_IDDES = (1 - alpha) * l_RANS + alpha * C_DES * Δ
+    
+    Args:
+        l_rans: RANS length scale
+        delta: LES grid scale
+        d_wall: Wall distance
+        alpha: Blending function
+        c_des: DES coefficient
+        
+    Returns:
+        IDDES hybrid length scale
+    &#34;&#34;&#34;
+    l_les = c_des * delta
+    
+    # WMLES mode: use wall distance for near-wall
+    l_wmles = torch.minimum(
+        torch.maximum(KAPPA * d_wall, delta),
+        l_les
+    )
+    
+    # Blend between RANS and WMLES-LES
+    return (1.0 - alpha) * l_rans + alpha * l_wmles</code></pre>
+</details>
+<div class="desc"><p>IDDES hybrid length scale.</p>
+<p>l_IDDES = f_d * (1 + f_e) * l_RANS + (1 - f_d) * C_DES * Δ</p>
+<p>Simplified version using alpha parameter:
+l_IDDES = (1 - alpha) * l_RANS + alpha * C_DES * Δ</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>l_rans</code></strong></dt>
+<dd>RANS length scale</dd>
+<dt><strong><code>delta</code></strong></dt>
+<dd>LES grid scale</dd>
+<dt><strong><code>d_wall</code></strong></dt>
+<dd>Wall distance</dd>
+<dt><strong><code>alpha</code></strong></dt>
+<dd>Blending function</dd>
+<dt><strong><code>c_des</code></strong></dt>
+<dd>DES coefficient</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>IDDES hybrid length scale</p></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.run_hybrid_les"><code class="name flex">
+<span>def <span class="ident">run_hybrid_les</span></span>(<span>rho: torch.Tensor,<br>u: torch.Tensor,<br>d_wall: torch.Tensor,<br>grid_spacing: Tuple[torch.Tensor, ...],<br>nu: float,<br>nu_rans: torch.Tensor,<br>model: <a title="tensornet.cfd.hybrid_les.HybridModel" href="#tensornet.cfd.hybrid_les.HybridModel">HybridModel</a> = HybridModel.DDES) ‑> <a title="tensornet.cfd.hybrid_les.HybridLESState" href="#tensornet.cfd.hybrid_les.HybridLESState">HybridLESState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run_hybrid_les(
+    rho: torch.Tensor,
+    u: torch.Tensor,
+    d_wall: torch.Tensor,
+    grid_spacing: Tuple[torch.Tensor, ...],
+    nu: float,
+    nu_rans: torch.Tensor,
+    model: HybridModel = HybridModel.DDES
+) -&gt; HybridLESState:
+    &#34;&#34;&#34;
+    Main driver for hybrid RANS-LES computation.
+    
+    Args:
+        rho: Density field
+        u: Velocity field (Nd, Nx, Ny, [Nz])
+        d_wall: Wall distance field
+        grid_spacing: Tuple of (dx, dy, [dz]) tensors
+        nu: Molecular viscosity
+        nu_rans: RANS turbulent viscosity field
+        model: Hybrid model to use
+        
+    Returns:
+        HybridLESState with computed quantities
+    &#34;&#34;&#34;
+    is_3d = len(grid_spacing) == 3
+    
+    # Compute grid scale
+    if is_3d:
+        delta = compute_grid_scale(grid_spacing[0], grid_spacing[1], grid_spacing[2])
+    else:
+        delta = compute_grid_scale(grid_spacing[0], grid_spacing[1])
+    
+    # RANS length scale
+    l_rans = compute_wall_distance_scale(d_wall)
+    
+    # Compute velocity gradient magnitude (simplified)
+    if is_3d:
+        dudx = torch.gradient(u[0], spacing=(grid_spacing[0][0, 0, 0].item(),), dim=0)[0]
+        dudy = torch.gradient(u[0], spacing=(grid_spacing[1][0, 0, 0].item(),), dim=1)[0]
+        dudz = torch.gradient(u[0], spacing=(grid_spacing[2][0, 0, 0].item(),), dim=2)[0]
+        vel_grad_mag = torch.sqrt(dudx ** 2 + dudy ** 2 + dudz ** 2 + 1e-30)
+    else:
+        dudx = torch.gradient(u[0], spacing=(grid_spacing[0][0, 0].item(),), dim=0)[0]
+        dudy = torch.gradient(u[0], spacing=(grid_spacing[1][0, 0].item(),), dim=1)[0]
+        vel_grad_mag = torch.sqrt(dudx ** 2 + dudy ** 2 + 1e-30)
+    
+    # Compute delay function parameter
+    r_d = compute_r_d(nu_rans, nu, vel_grad_mag, d_wall)
+    
+    if model == HybridModel.DES:
+        # Original DES
+        length_scale = des_length_scale(l_rans, delta)
+        f_d = None
+        blending = (length_scale &lt; l_rans).float()
+        
+    elif model == HybridModel.DDES:
+        # Delayed DES
+        f_d = ddes_delay_function(r_d)
+        length_scale = ddes_length_scale(l_rans, delta, f_d)
+        blending = f_d
+        
+    elif model == HybridModel.IDDES:
+        # Improved Delayed DES
+        f_e, f_b, alpha = iddes_blending_function(d_wall, delta, r_d)
+        length_scale = iddes_length_scale(l_rans, delta, d_wall, alpha)
+        f_d = ddes_delay_function(r_d)
+        blending = alpha
+        
+    else:
+        raise ValueError(f&#34;Unknown hybrid model: {model}&#34;)
+    
+    # Compute hybrid viscosity
+    nu_sgs = compute_hybrid_viscosity(nu_rans, length_scale, vel_grad_mag, model)
+    
+    # Mode indicator: 0 = RANS, 1 = LES
+    mode = (blending &gt; 0.5).float()
+    
+    return HybridLESState(
+        nu_sgs=nu_sgs,
+        blending=blending,
+        length_scale=length_scale,
+        mode=mode,
+        f_d=f_d if model in [HybridModel.DDES, HybridModel.IDDES] else None
+    )</code></pre>
+</details>
+<div class="desc"><p>Main driver for hybrid RANS-LES computation.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>rho</code></strong></dt>
+<dd>Density field</dd>
+<dt><strong><code>u</code></strong></dt>
+<dd>Velocity field (Nd, Nx, Ny, [Nz])</dd>
+<dt><strong><code>d_wall</code></strong></dt>
+<dd>Wall distance field</dd>
+<dt><strong><code>grid_spacing</code></strong></dt>
+<dd>Tuple of (dx, dy, [dz]) tensors</dd>
+<dt><strong><code>nu</code></strong></dt>
+<dd>Molecular viscosity</dd>
+<dt><strong><code>nu_rans</code></strong></dt>
+<dd>RANS turbulent viscosity field</dd>
+<dt><strong><code>model</code></strong></dt>
+<dd>Hybrid model to use</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>HybridLESState with computed quantities</p></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.sas_length_scale"><code class="name flex">
+<span>def <span class="ident">sas_length_scale</span></span>(<span>k: torch.Tensor,<br>omega: torch.Tensor,<br>velocity_gradient: torch.Tensor,<br>velocity_laplacian: torch.Tensor,<br>c_mu: float = 0.09,<br>kappa: float = 0.41) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sas_length_scale(
+    k: torch.Tensor,
+    omega: torch.Tensor,
+    velocity_gradient: torch.Tensor,
+    velocity_laplacian: torch.Tensor,
+    c_mu: float = C_MU,
+    kappa: float = KAPPA
+) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Scale-Adaptive Simulation (SAS) length scale.
+    
+    The SAS length scale responds to resolved turbulence
+    without explicit grid-based switching.
+    
+    L_vK = κ |S| / |∇²u|  (von Kármán length scale)
+    L_t = √k / (c_μ^0.25 ω)  (turbulent length scale)
+    
+    Args:
+        k: Turbulent kinetic energy
+        omega: Specific dissipation rate
+        velocity_gradient: |S| strain rate magnitude
+        velocity_laplacian: |∇²u| Laplacian of velocity
+        c_mu, kappa: Model constants
+        
+    Returns:
+        SAS length scale
+    &#34;&#34;&#34;
+    # Turbulent length scale
+    L_t = torch.sqrt(k + 1e-30) / ((c_mu ** 0.25) * omega + 1e-30)
+    
+    # Von Kármán length scale
+    L_vK = kappa * velocity_gradient / (torch.abs(velocity_laplacian) + 1e-30)
+    
+    # SAS uses the minimum
+    return torch.minimum(L_t, L_vK)</code></pre>
+</details>
+<div class="desc"><p>Scale-Adaptive Simulation (SAS) length scale.</p>
+<p>The SAS length scale responds to resolved turbulence
+without explicit grid-based switching.</p>
+<p>L_vK = κ |S| / |∇²u|
+(von Kármán length scale)
+L_t = √k / (c_μ^0.25 ω)
+(turbulent length scale)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>k</code></strong></dt>
+<dd>Turbulent kinetic energy</dd>
+<dt><strong><code>omega</code></strong></dt>
+<dd>Specific dissipation rate</dd>
+<dt><strong><code>velocity_gradient</code></strong></dt>
+<dd>|S| strain rate magnitude</dd>
+<dt><strong><code>velocity_laplacian</code></strong></dt>
+<dd>|∇²u| Laplacian of velocity</dd>
+</dl>
+<p>c_mu, kappa: Model constants</p>
+<h2 id="returns">Returns</h2>
+<p>SAS length scale</p></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.validate_hybrid_les"><code class="name flex">
+<span>def <span class="ident">validate_hybrid_les</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def validate_hybrid_les():
+    &#34;&#34;&#34;Run validation tests for hybrid RANS-LES models.&#34;&#34;&#34;
+    print(&#34;\n&#34; + &#34;=&#34; * 70)
+    print(&#34;HYBRID RANS-LES MODEL VALIDATION&#34;)
+    print(&#34;=&#34; * 70)
+    
+    # Test 1: Grid scale computation
+    print(&#34;\n[Test 1] Grid Scale Computation&#34;)
+    print(&#34;-&#34; * 40)
+    
+    dx = torch.ones(10, 10) * 0.01
+    dy = torch.ones(10, 10) * 0.02
+    dz = torch.ones(10, 10) * 0.03
+    
+    delta_2d = compute_grid_scale(dx, dy)
+    delta_3d = compute_grid_scale(dx, dy, dz)
+    
+    print(f&#34;2D grid scale (max): {delta_2d[0, 0]:.4f}&#34;)
+    print(f&#34;3D grid scale (max): {delta_3d[0, 0]:.4f}&#34;)
+    
+    assert torch.allclose(delta_2d, torch.ones_like(delta_2d) * 0.02)
+    assert torch.allclose(delta_3d, torch.ones_like(delta_3d) * 0.03)
+    print(&#34;✓ PASS&#34;)
+    
+    # Test 2: DES length scale switching
+    print(&#34;\n[Test 2] DES Length Scale&#34;)
+    print(&#34;-&#34; * 40)
+    
+    d_wall = torch.linspace(0.001, 0.1, 20)
+    l_rans = compute_wall_distance_scale(d_wall)
+    delta = torch.ones(20) * 0.02
+    
+    l_des = des_length_scale(l_rans, delta)
+    
+    # Near wall: l_RANS &lt; C_DES*Δ → RANS mode
+    # Far from wall: l_RANS &gt; C_DES*Δ → LES mode
+    print(f&#34;Near wall (d=0.001): l_DES = {l_des[0]:.5f}&#34;)
+    print(f&#34;Far wall (d=0.1): l_DES = {l_des[-1]:.5f}&#34;)
+    
+    assert l_des[0] &lt; l_des[-1]
+    print(&#34;✓ PASS&#34;)
+    
+    # Test 3: DDES delay function
+    print(&#34;\n[Test 3] DDES Delay Function&#34;)
+    print(&#34;-&#34; * 40)
+    
+    r_d_values = torch.tensor([0.1, 0.5, 1.0, 2.0, 5.0])
+    f_d = ddes_delay_function(r_d_values)
+    
+    for r, f in zip(r_d_values.tolist(), f_d.tolist()):
+        print(f&#34;r_d = {r:.1f}: f_d = {f:.4f}&#34;)
+    
+    # f_d should decrease as r_d increases
+    assert f_d[0] &gt; f_d[-1]
+    print(&#34;✓ PASS&#34;)
+    
+    # Test 4: Full hybrid computation (2D)
+    print(&#34;\n[Test 4] Full Hybrid DDES (2D)&#34;)
+    print(&#34;-&#34; * 40)
+    
+    Nx, Ny = 32, 32
+    rho = torch.ones(Nx, Ny)
+    u = torch.zeros(2, Nx, Ny)
+    u[0] = torch.linspace(0, 1, Ny).unsqueeze(0).expand(Nx, -1)  # Couette-like
+    
+    d_wall = torch.linspace(0.001, 0.5, Ny).unsqueeze(0).expand(Nx, -1)
+    dx = torch.ones(Nx, Ny) * 0.02
+    dy = torch.ones(Nx, Ny) * 0.02
+    nu_rans = torch.ones(Nx, Ny) * 0.001
+    
+    state = run_hybrid_les(
+        rho=rho,
+        u=u,
+        d_wall=d_wall,
+        grid_spacing=(dx, dy),
+        nu=1e-5,
+        nu_rans=nu_rans,
+        model=HybridModel.DDES
+    )
+    
+    stats = estimate_rans_les_ratio(state)
+    
+    print(f&#34;RANS fraction: {stats[&#39;rans_fraction&#39;]:.2%}&#34;)
+    print(f&#34;LES fraction: {stats[&#39;les_fraction&#39;]:.2%}&#34;)
+    print(f&#34;Average blending: {stats[&#39;avg_blending&#39;]:.4f}&#34;)
+    
+    assert state.nu_sgs.shape == (Nx, Ny)
+    assert state.blending.shape == (Nx, Ny)
+    print(&#34;✓ PASS&#34;)
+    
+    # Test 5: IDDES blending functions
+    print(&#34;\n[Test 5] IDDES Blending Functions&#34;)
+    print(&#34;-&#34; * 40)
+    
+    d_wall_test = torch.tensor([0.001, 0.01, 0.1])
+    delta_test = torch.tensor([0.01, 0.01, 0.01])
+    r_d_test = torch.tensor([0.5, 1.0, 2.0])
+    
+    f_e, f_b, alpha = iddes_blending_function(d_wall_test, delta_test, r_d_test)
+    
+    print(&#34;d_wall | f_e    | f_b    | alpha&#34;)
+    print(&#34;-&#34; * 35)
+    for i in range(3):
+        print(f&#34;{d_wall_test[i]:.3f}  | {f_e[i]:.4f} | {f_b[i]:.4f} | {alpha[i]:.4f}&#34;)
+    
+    print(&#34;✓ PASS&#34;)
+    
+    # Test 6: Multiple models comparison
+    print(&#34;\n[Test 6] Model Comparison&#34;)
+    print(&#34;-&#34; * 40)
+    
+    for model in [HybridModel.DES, HybridModel.DDES, HybridModel.IDDES]:
+        state = run_hybrid_les(
+            rho=rho,
+            u=u,
+            d_wall=d_wall,
+            grid_spacing=(dx, dy),
+            nu=1e-5,
+            nu_rans=nu_rans,
+            model=model
+        )
+        
+        stats = estimate_rans_les_ratio(state)
+        print(f&#34;{model.value}: RANS {stats[&#39;rans_fraction&#39;]:.1%}, LES {stats[&#39;les_fraction&#39;]:.1%}&#34;)
+    
+    print(&#34;✓ PASS&#34;)
+    
+    print(&#34;\n&#34; + &#34;=&#34; * 70)
+    print(&#34;HYBRID RANS-LES VALIDATION COMPLETE&#34;)
+    print(&#34;=&#34; * 70)</code></pre>
+</details>
+<div class="desc"><p>Run validation tests for hybrid RANS-LES models.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.cfd.hybrid_les.HybridLESState"><code class="flex name class">
+<span>class <span class="ident">HybridLESState</span></span>
+<span>(</span><span>nu_sgs: torch.Tensor,<br>blending: torch.Tensor,<br>length_scale: torch.Tensor,<br>mode: torch.Tensor,<br>f_d: torch.Tensor | None = None,<br>f_e: torch.Tensor | None = None,<br>f_b: torch.Tensor | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class HybridLESState:
+    &#34;&#34;&#34;State variables for hybrid RANS-LES models.&#34;&#34;&#34;
+    nu_sgs: torch.Tensor        # Total SGS/turbulent viscosity
+    blending: torch.Tensor      # Blending function (0=RANS, 1=LES)
+    length_scale: torch.Tensor  # Hybrid length scale
+    mode: torch.Tensor          # Operation mode indicator
+    
+    # Optional diagnostics
+    f_d: Optional[torch.Tensor] = None   # DDES delay function
+    f_e: Optional[torch.Tensor] = None   # IDDES elevation function
+    f_b: Optional[torch.Tensor] = None   # IDDES blending function</code></pre>
+</details>
+<div class="desc"><p>State variables for hybrid RANS-LES models.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.hybrid_les.HybridLESState.blending"><code class="name">var <span class="ident">blending</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.HybridLESState.f_b"><code class="name">var <span class="ident">f_b</span> : torch.Tensor | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.HybridLESState.f_d"><code class="name">var <span class="ident">f_d</span> : torch.Tensor | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.HybridLESState.f_e"><code class="name">var <span class="ident">f_e</span> : torch.Tensor | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.HybridLESState.length_scale"><code class="name">var <span class="ident">length_scale</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.HybridLESState.mode"><code class="name">var <span class="ident">mode</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.HybridLESState.nu_sgs"><code class="name">var <span class="ident">nu_sgs</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.HybridModel"><code class="flex name class">
+<span>class <span class="ident">HybridModel</span></span>
+<span>(</span><span>*args, **kwds)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HybridModel(Enum):
+    &#34;&#34;&#34;Available hybrid RANS-LES models.&#34;&#34;&#34;
+    DES = &#34;des&#34;
+    DDES = &#34;ddes&#34;
+    IDDES = &#34;iddes&#34;
+    SAS = &#34;sas&#34;  # Scale-Adaptive Simulation</code></pre>
+</details>
+<div class="desc"><p>Available hybrid RANS-LES models.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="tensornet.cfd.hybrid_les.HybridModel.DDES"><code class="name">var <span class="ident">DDES</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.HybridModel.DES"><code class="name">var <span class="ident">DES</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.HybridModel.IDDES"><code class="name">var <span class="ident">IDDES</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.hybrid_les.HybridModel.SAS"><code class="name">var <span class="ident">SAS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#hybrid-rans-les-models">Hybrid RANS-LES Models</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.hybrid_les.compute_grid_scale" href="#tensornet.cfd.hybrid_les.compute_grid_scale">compute_grid_scale</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.compute_hybrid_viscosity" href="#tensornet.cfd.hybrid_les.compute_hybrid_viscosity">compute_hybrid_viscosity</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.compute_r_d" href="#tensornet.cfd.hybrid_les.compute_r_d">compute_r_d</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.compute_wall_distance_scale" href="#tensornet.cfd.hybrid_les.compute_wall_distance_scale">compute_wall_distance_scale</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.ddes_delay_function" href="#tensornet.cfd.hybrid_les.ddes_delay_function">ddes_delay_function</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.ddes_length_scale" href="#tensornet.cfd.hybrid_les.ddes_length_scale">ddes_length_scale</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.des_length_scale" href="#tensornet.cfd.hybrid_les.des_length_scale">des_length_scale</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.estimate_rans_les_ratio" href="#tensornet.cfd.hybrid_les.estimate_rans_les_ratio">estimate_rans_les_ratio</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.iddes_blending_function" href="#tensornet.cfd.hybrid_les.iddes_blending_function">iddes_blending_function</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.iddes_length_scale" href="#tensornet.cfd.hybrid_les.iddes_length_scale">iddes_length_scale</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.run_hybrid_les" href="#tensornet.cfd.hybrid_les.run_hybrid_les">run_hybrid_les</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.sas_length_scale" href="#tensornet.cfd.hybrid_les.sas_length_scale">sas_length_scale</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.validate_hybrid_les" href="#tensornet.cfd.hybrid_les.validate_hybrid_les">validate_hybrid_les</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.cfd.hybrid_les.HybridLESState" href="#tensornet.cfd.hybrid_les.HybridLESState">HybridLESState</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.hybrid_les.HybridLESState.blending" href="#tensornet.cfd.hybrid_les.HybridLESState.blending">blending</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.HybridLESState.f_b" href="#tensornet.cfd.hybrid_les.HybridLESState.f_b">f_b</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.HybridLESState.f_d" href="#tensornet.cfd.hybrid_les.HybridLESState.f_d">f_d</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.HybridLESState.f_e" href="#tensornet.cfd.hybrid_les.HybridLESState.f_e">f_e</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.HybridLESState.length_scale" href="#tensornet.cfd.hybrid_les.HybridLESState.length_scale">length_scale</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.HybridLESState.mode" href="#tensornet.cfd.hybrid_les.HybridLESState.mode">mode</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.HybridLESState.nu_sgs" href="#tensornet.cfd.hybrid_les.HybridLESState.nu_sgs">nu_sgs</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.hybrid_les.HybridModel" href="#tensornet.cfd.hybrid_les.HybridModel">HybridModel</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.hybrid_les.HybridModel.DDES" href="#tensornet.cfd.hybrid_les.HybridModel.DDES">DDES</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.HybridModel.DES" href="#tensornet.cfd.hybrid_les.HybridModel.DES">DES</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.HybridModel.IDDES" href="#tensornet.cfd.hybrid_les.HybridModel.IDDES">IDDES</a></code></li>
+<li><code><a title="tensornet.cfd.hybrid_les.HybridModel.SAS" href="#tensornet.cfd.hybrid_les.HybridModel.SAS">SAS</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

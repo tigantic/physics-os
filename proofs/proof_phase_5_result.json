@@ -1,0 +1,68 @@
+{
+  "phase": 5,
+  "title": "Blowup Detection & Prevention",
+  "summary": {
+    "Blowup Sensitivity": "PASS",
+    "Adaptive Resolution": "PASS",
+    "Regularization Prevention": "PASS",
+    "Warning Timing": "PASS"
+  },
+  "passed": 4,
+  "total": 4,
+  "details": {
+    "blowup_sensitivity": {
+      "chi_growth_detected": true,
+      "spectral_max_idx": 0,
+      "gradient_max_idx": 0,
+      "early_warning": true,
+      "chi_variation": 1.1986899563278866,
+      "spectral_variation": 0.04029079677734707,
+      "success": true
+    },
+    "adaptive_resolution": {
+      "saturation_low": 31,
+      "saturation_high": 28,
+      "avg_ratio_low": 15.306451612903226,
+      "avg_ratio_high": 0.9566532258064516,
+      "more_saturation_at_low": true,
+      "ratio_higher_at_low": true,
+      "success": true
+    },
+    "regularization": {
+      "results": {
+        "0.01": {
+          "grad_initial": 2.2551941022652007,
+          "grad_final": 2.0663293699447287,
+          "decay_ratio": 0.9162534470399825
+        },
+        "0.02": {
+          "grad_initial": 2.2551941022652007,
+          "grad_final": 1.9167534674479394,
+          "decay_ratio": 0.8499283789021447
+        },
+        "0.05": {
+          "grad_initial": 2.2551941022652007,
+          "grad_final": 1.5635186518809785,
+          "decay_ratio": 0.6932967101636717
+        },
+        "0.1": {
+          "grad_initial": 2.2551941022652007,
+          "grad_final": 1.2068358100049021,
+          "decay_ratio": 0.5351361147994806
+        }
+      },
+      "monotonic_decrease": true,
+      "high_nu_damps": true,
+      "success": true
+    },
+    "warning_timing": {
+      "warning_step": 1,
+      "enstrophy_peak_step": 0,
+      "spectral_warning_step": 0,
+      "max_chi_ratio": 3.25,
+      "warning_is_early": true,
+      "spectral_useful": true,
+      "success": true
+    }
+  }
+}

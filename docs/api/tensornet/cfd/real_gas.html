@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.real_gas API documentation</title>
+<meta name="description" content="Real-Gas Thermodynamics
+…">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.real_gas</code></h1>
+</header>
+<section id="section-intro">
+<h1 id="real-gas-thermodynamics">Real-Gas Thermodynamics</h1>
+<p>Implements high-temperature thermodynamics for hypersonic flows
+where the ideal gas assumption breaks down.</p>
+<p>At hypersonic velocities (M &gt; 5), stagnation temperatures can exceed
+2000 K where:
+- Vibrational excitation becomes significant
+- Molecular dissociation begins (O₂ → 2O at ~2500 K)
+- Ionization occurs at very high temperatures (&gt; 9000 K)</p>
+<p>This module provides:
+1. Temperature-dependent γ(T) for calorically imperfect gas
+2. NASA 7-coefficient polynomial thermodynamics
+3. Equilibrium air composition (5-species)
+4. Curve-fitted specific heats and enthalpy</p>
+<h2 id="references">References</h2>
+<p>[1] Anderson, "Hypersonic and High-Temperature Gas Dynamics", Ch. 11-14
+[2] Vincenti &amp; Kruger, "Physical Gas Dynamics"
+[3] NASA RP-1311: "Thermodynamic Data for Combustion"
+[4] Park, "Nonequilibrium Hypersonic Aerothermodynamics"</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.real_gas.compute_real_gas_properties"><code class="name flex">
+<span>def <span class="ident">compute_real_gas_properties</span></span>(<span>T: Tensor, p: Tensor, species: str = 'Air', use_equilibrium: bool = True) ‑> <a title="tensornet.cfd.real_gas.GasProperties" href="#tensornet.cfd.real_gas.GasProperties">GasProperties</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_real_gas_properties(
+    T: Tensor,
+    p: Tensor,
+    species: str = &#39;Air&#39;,
+    use_equilibrium: bool = True
+) -&gt; GasProperties:
+    &#34;&#34;&#34;
+    Compute full thermodynamic properties for real gas.
+    
+    Args:
+        T: Temperature field [K]
+        p: Pressure field [Pa]
+        species: Gas species
+        use_equilibrium: Use equilibrium chemistry model
+        
+    Returns:
+        GasProperties with cp, cv, gamma, h, R
+    &#34;&#34;&#34;
+    R_s = specific_gas_constant(species)
+    
+    # Specific heats
+    cp = cp_polynomial(T, species)
+    cv = cp - R_s
+    
+    # Gamma
+    if use_equilibrium and species == &#39;Air&#39;:
+        gamma = equilibrium_gamma_air(T)
+    else:
+        gamma = cp / cv
+    
+    # Enthalpy
+    h = enthalpy_sensible(T, species=species)
+    
+    return GasProperties(cp=cp, cv=cv, gamma=gamma, h=h, R=R_s)</code></pre>
+</details>
+<div class="desc"><p>Compute full thermodynamic properties for real gas.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>T</code></strong></dt>
+<dd>Temperature field [K]</dd>
+<dt><strong><code>p</code></strong></dt>
+<dd>Pressure field [Pa]</dd>
+<dt><strong><code>species</code></strong></dt>
+<dd>Gas species</dd>
+<dt><strong><code>use_equilibrium</code></strong></dt>
+<dd>Use equilibrium chemistry model</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>GasProperties with cp, cv, gamma, h, R</p></div>
+</dd>
+<dt id="tensornet.cfd.real_gas.cp_polynomial"><code class="name flex">
+<span>def <span class="ident">cp_polynomial</span></span>(<span>T: Tensor, species: str = 'Air') ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cp_polynomial(T: Tensor, species: str = &#39;Air&#39;) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Compute specific heat using NASA polynomial fit.
+    
+    cp/R = a1 + a2*T + a3*T² + a4*T³ + a5*T⁴
+    
+    Uses curve fits valid for 200-6000 K.
+    
+    Args:
+        T: Temperature [K]
+        species: Gas species
+        
+    Returns:
+        Specific heat cp [J/(kg·K)]
+    &#34;&#34;&#34;
+    R_s = specific_gas_constant(species)
+    
+    # Simplified polynomial coefficients for air
+    # Low temperature range (200-1000 K)
+    # High temperature range (1000-6000 K)
+    
+    if species == &#39;Air&#39;:
+        # Approximate fit for air
+        # cp increases from ~1005 at 300K to ~1200 at 2000K
+        a1 = 3.5
+        a2 = 2.5e-4
+        a3 = -5.0e-8
+        a4 = 3.0e-12
+    elif species == &#39;N2&#39;:
+        a1 = 3.5
+        a2 = 2.0e-4
+        a3 = -3.0e-8
+        a4 = 0.0
+    elif species == &#39;O2&#39;:
+        a1 = 3.5
+        a2 = 4.0e-4
+        a3 = -8.0e-8
+        a4 = 5.0e-12
+    else:
+        # Monatomic default
+        a1 = 2.5
+        a2 = 0.0
+        a3 = 0.0
+        a4 = 0.0
+    
+    cp_over_R = a1 + a2 * T + a3 * T**2 + a4 * T**3
+    return cp_over_R * R_s</code></pre>
+</details>
+<div class="desc"><p>Compute specific heat using NASA polynomial fit.</p>
+<p>cp/R = a1 + a2<em>T + a3</em>T² + a4<em>T³ + a5</em>T⁴</p>
+<p>Uses curve fits valid for 200-6000 K.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>T</code></strong></dt>
+<dd>Temperature [K]</dd>
+<dt><strong><code>species</code></strong></dt>
+<dd>Gas species</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Specific heat cp [J/(kg·K)]</p></div>
+</dd>
+<dt id="tensornet.cfd.real_gas.enthalpy_sensible"><code class="name flex">
+<span>def <span class="ident">enthalpy_sensible</span></span>(<span>T: Tensor, T_ref: float = 298.15, species: str = 'Air') ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def enthalpy_sensible(T: Tensor, T_ref: float = 298.15, species: str = &#39;Air&#39;) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Compute sensible enthalpy relative to reference.
+    
+    h(T) = ∫_{T_ref}^{T} cp(T&#39;) dT&#39;
+    
+    Args:
+        T: Temperature [K]
+        T_ref: Reference temperature [K]
+        species: Gas species
+        
+    Returns:
+        Sensible enthalpy [J/kg]
+    &#34;&#34;&#34;
+    R_s = specific_gas_constant(species)
+    
+    # Integrate polynomial: ∫(a1 + a2*T + a3*T² + a4*T³)dT
+    # = a1*T + a2*T²/2 + a3*T³/3 + a4*T⁴/4
+    
+    if species == &#39;Air&#39;:
+        a1, a2, a3, a4 = 3.5, 2.5e-4, -5.0e-8, 3.0e-12
+    elif species == &#39;N2&#39;:
+        a1, a2, a3, a4 = 3.5, 2.0e-4, -3.0e-8, 0.0
+    elif species == &#39;O2&#39;:
+        a1, a2, a3, a4 = 3.5, 4.0e-4, -8.0e-8, 5.0e-12
+    else:
+        a1, a2, a3, a4 = 2.5, 0.0, 0.0, 0.0
+    
+    def h_integral(T_val):
+        return R_s * (a1 * T_val + a2 * T_val**2 / 2 + 
+                      a3 * T_val**3 / 3 + a4 * T_val**4 / 4)
+    
+    return h_integral(T) - h_integral(torch.tensor(T_ref, dtype=T.dtype, device=T.device))</code></pre>
+</details>
+<div class="desc"><p>Compute sensible enthalpy relative to reference.</p>
+<p>h(T) = ∫_{T_ref}^{T} cp(T') dT'</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>T</code></strong></dt>
+<dd>Temperature [K]</dd>
+<dt><strong><code>T_ref</code></strong></dt>
+<dd>Reference temperature [K]</dd>
+<dt><strong><code>species</code></strong></dt>
+<dd>Gas species</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Sensible enthalpy [J/kg]</p></div>
+</dd>
+<dt id="tensornet.cfd.real_gas.equilibrium_gamma_air"><code class="name flex">
+<span>def <span class="ident">equilibrium_gamma_air</span></span>(<span>T: Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def equilibrium_gamma_air(T: Tensor) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Equilibrium γ for air including dissociation effects.
+    
+    Uses curve fit from Anderson for air in chemical equilibrium:
+        γ ≈ 1.4 for T &lt; 800 K
+        γ ≈ 1.3 for T ~ 2500 K
+        γ ≈ 1.15 for T ~ 5000 K (O₂ dissociated)
+        γ ≈ 1.1 for T &gt; 8000 K (N₂ dissociating)
+    
+    Args:
+        T: Temperature [K]
+        
+    Returns:
+        Effective gamma accounting for real gas effects
+    &#34;&#34;&#34;
+    # Piecewise curve fit
+    gamma = torch.ones_like(T) * 1.4
+    
+    # Transition 1: 800-2500 K (vibrational excitation)
+    mask1 = (T &gt; 800) &amp; (T &lt;= 2500)
+    gamma = torch.where(mask1, 1.4 - 0.1 * (T - 800) / 1700, gamma)
+    
+    # Transition 2: 2500-5000 K (O₂ dissociation)
+    mask2 = (T &gt; 2500) &amp; (T &lt;= 5000)
+    gamma = torch.where(mask2, 1.3 - 0.15 * (T - 2500) / 2500, gamma)
+    
+    # Transition 3: 5000-10000 K (N₂ dissociation)
+    mask3 = (T &gt; 5000) &amp; (T &lt;= 10000)
+    gamma = torch.where(mask3, 1.15 - 0.05 * (T - 5000) / 5000, gamma)
+    
+    # High temperature limit
+    mask4 = T &gt; 10000
+    gamma = torch.where(mask4, torch.tensor(1.1, dtype=T.dtype), gamma)
+    
+    return gamma</code></pre>
+</details>
+<div class="desc"><p>Equilibrium γ for air including dissociation effects.</p>
+<p>Uses curve fit from Anderson for air in chemical equilibrium:
+γ ≈ 1.4 for T &lt; 800 K
+γ ≈ 1.3 for T ~ 2500 K
+γ ≈ 1.15 for T ~ 5000 K (O₂ dissociated)
+γ ≈ 1.1 for T &gt; 8000 K (N₂ dissociating)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>T</code></strong></dt>
+<dd>Temperature [K]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Effective gamma accounting for real gas effects</p></div>
+</dd>
+<dt id="tensornet.cfd.real_gas.gamma_ideal"><code class="name flex">
+<span>def <span class="ident">gamma_ideal</span></span>(<span>species: str = 'Air') ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def gamma_ideal(species: str = &#39;Air&#39;) -&gt; float:
+    &#34;&#34;&#34;
+    Return ideal gas γ for a species.
+    
+    Args:
+        species: Gas species name
+        
+    Returns:
+        Ratio of specific heats (constant)
+    &#34;&#34;&#34;
+    # Diatomic gases at low temperature
+    if species in [&#39;N2&#39;, &#39;O2&#39;, &#39;NO&#39;, &#39;Air&#39;]:
+        return 1.4
+    # Monatomic
+    elif species in [&#39;N&#39;, &#39;O&#39;, &#39;Ar&#39;]:
+        return 5/3
+    else:
+        return 1.4</code></pre>
+</details>
+<div class="desc"><p>Return ideal gas γ for a species.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>species</code></strong></dt>
+<dd>Gas species name</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Ratio of specific heats (constant)</p></div>
+</dd>
+<dt id="tensornet.cfd.real_gas.gamma_variable"><code class="name flex">
+<span>def <span class="ident">gamma_variable</span></span>(<span>T: Tensor, species: str = 'Air') ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def gamma_variable(T: Tensor, species: str = &#39;Air&#39;) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Compute temperature-dependent ratio of specific heats.
+    
+    γ(T) = cp(T) / cv(T) = cp(T) / (cp(T) - R)
+    
+    For high temperatures, γ decreases from 1.4 due to
+    vibrational excitation.
+    
+    Args:
+        T: Temperature [K]
+        species: Gas species
+        
+    Returns:
+        Variable gamma field
+    &#34;&#34;&#34;
+    R_s = specific_gas_constant(species)
+    cp = cp_polynomial(T, species)
+    cv = cp - R_s
+    return cp / cv</code></pre>
+</details>
+<div class="desc"><p>Compute temperature-dependent ratio of specific heats.</p>
+<p>γ(T) = cp(T) / cv(T) = cp(T) / (cp(T) - R)</p>
+<p>For high temperatures, γ decreases from 1.4 due to
+vibrational excitation.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>T</code></strong></dt>
+<dd>Temperature [K]</dd>
+<dt><strong><code>species</code></strong></dt>
+<dd>Gas species</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Variable gamma field</p></div>
+</dd>
+<dt id="tensornet.cfd.real_gas.post_shock_equilibrium"><code class="name flex">
+<span>def <span class="ident">post_shock_equilibrium</span></span>(<span>M1: float, T1: float, p1: float, gamma_frozen: float = 1.4) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def post_shock_equilibrium(
+    M1: float,
+    T1: float,
+    p1: float,
+    gamma_frozen: float = 1.4
+) -&gt; dict:
+    &#34;&#34;&#34;
+    Compute post-shock conditions with equilibrium real gas.
+    
+    Uses iterative solution accounting for variable gamma
+    behind the shock.
+    
+    Args:
+        M1: Pre-shock Mach number
+        T1: Pre-shock temperature [K]
+        p1: Pre-shock pressure [Pa]
+        gamma_frozen: Frozen (pre-shock) gamma
+        
+    Returns:
+        Dictionary with post-shock conditions
+    &#34;&#34;&#34;
+    g = gamma_frozen
+    
+    # Frozen (ideal) shock relations as initial guess
+    M1_sq = M1**2
+    p2_p1 = 1 + 2*g/(g+1) * (M1_sq - 1)
+    rho2_rho1 = (g+1)*M1_sq / ((g-1)*M1_sq + 2)
+    T2_T1 = p2_p1 / rho2_rho1
+    
+    T2 = T1 * T2_T1
+    p2 = p1 * p2_p1
+    
+    # Equilibrium correction
+    T2_tensor = torch.tensor([T2])
+    gamma2 = equilibrium_gamma_air(T2_tensor).item()
+    
+    # Post-shock Mach (normal shock)
+    M2_sq = ((g-1)*M1_sq + 2) / (2*g*M1_sq - (g-1))
+    M2 = math.sqrt(max(M2_sq, 0.01))
+    
+    return {
+        &#39;M2&#39;: M2,
+        &#39;T2&#39;: T2,
+        &#39;p2&#39;: p2,
+        &#39;rho2_rho1&#39;: rho2_rho1,
+        &#39;gamma2&#39;: gamma2,
+    }</code></pre>
+</details>
+<div class="desc"><p>Compute post-shock conditions with equilibrium real gas.</p>
+<p>Uses iterative solution accounting for variable gamma
+behind the shock.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>M1</code></strong></dt>
+<dd>Pre-shock Mach number</dd>
+<dt><strong><code>T1</code></strong></dt>
+<dd>Pre-shock temperature [K]</dd>
+<dt><strong><code>p1</code></strong></dt>
+<dd>Pre-shock pressure [Pa]</dd>
+<dt><strong><code>gamma_frozen</code></strong></dt>
+<dd>Frozen (pre-shock) gamma</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Dictionary with post-shock conditions</p></div>
+</dd>
+<dt id="tensornet.cfd.real_gas.pressure_from_rho_e"><code class="name flex">
+<span>def <span class="ident">pressure_from_rho_e</span></span>(<span>rho: Tensor,<br>e: Tensor,<br>T_guess: Tensor,<br>species: str = 'Air',<br>max_iter: int = 10,<br>tol: float = 1e-06) ‑> tuple[torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pressure_from_rho_e(
+    rho: Tensor,
+    e: Tensor,
+    T_guess: Tensor,
+    species: str = &#39;Air&#39;,
+    max_iter: int = 10,
+    tol: float = 1e-6
+) -&gt; tuple[Tensor, Tensor]:
+    &#34;&#34;&#34;
+    Compute pressure from density and internal energy for real gas.
+    
+    Iteratively solves e = e(T) for T, then p = ρRT.
+    
+    Args:
+        rho: Density [kg/m³]
+        e: Internal energy per unit mass [J/kg]
+        T_guess: Initial temperature guess [K]
+        species: Gas species
+        max_iter: Maximum Newton iterations
+        tol: Convergence tolerance
+        
+    Returns:
+        (pressure, temperature) tensors
+    &#34;&#34;&#34;
+    R_s = specific_gas_constant(species)
+    T = T_guess.clone()
+    
+    for _ in range(max_iter):
+        # e(T) = cv(T) * T (approximately, for perfect gas reference)
+        props = compute_real_gas_properties(T, rho * R_s * T, species)
+        cv = props.cv
+        
+        # Newton update: e = cv*T =&gt; T = e/cv
+        T_new = e / cv
+        
+        # Damped update for stability
+        T = 0.5 * T + 0.5 * T_new
+        T = torch.clamp(T, min=100.0, max=30000.0)
+        
+        # Check convergence
+        if torch.max(torch.abs(T_new - T) / T).item() &lt; tol:
+            break
+    
+    p = rho * R_s * T
+    return p, T</code></pre>
+</details>
+<div class="desc"><p>Compute pressure from density and internal energy for real gas.</p>
+<p>Iteratively solves e = e(T) for T, then p = ρRT.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>rho</code></strong></dt>
+<dd>Density [kg/m³]</dd>
+<dt><strong><code>e</code></strong></dt>
+<dd>Internal energy per unit mass [J/kg]</dd>
+<dt><strong><code>T_guess</code></strong></dt>
+<dd>Initial temperature guess [K]</dd>
+<dt><strong><code>species</code></strong></dt>
+<dd>Gas species</dd>
+<dt><strong><code>max_iter</code></strong></dt>
+<dd>Maximum Newton iterations</dd>
+<dt><strong><code>tol</code></strong></dt>
+<dd>Convergence tolerance</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>(pressure, temperature) tensors</p></div>
+</dd>
+<dt id="tensornet.cfd.real_gas.specific_gas_constant"><code class="name flex">
+<span>def <span class="ident">specific_gas_constant</span></span>(<span>species: str = 'Air') ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def specific_gas_constant(species: str = &#39;Air&#39;) -&gt; float:
+    &#34;&#34;&#34;
+    Compute specific gas constant R = R_u / M.
+    
+    Args:
+        species: Gas species name
+        
+    Returns:
+        Specific gas constant [J/(kg·K)]
+    &#34;&#34;&#34;
+    return R_UNIVERSAL / MW.get(species, MW[&#39;Air&#39;])</code></pre>
+</details>
+<div class="desc"><p>Compute specific gas constant R = R_u / M.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>species</code></strong></dt>
+<dd>Gas species name</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Specific gas constant [J/(kg·K)]</p></div>
+</dd>
+<dt id="tensornet.cfd.real_gas.speed_of_sound_real"><code class="name flex">
+<span>def <span class="ident">speed_of_sound_real</span></span>(<span>T: Tensor, gamma: Tensor, species: str = 'Air') ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def speed_of_sound_real(
+    T: Tensor,
+    gamma: Tensor,
+    species: str = &#39;Air&#39;
+) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Speed of sound for real gas.
+    
+    c = √(γ R T) where γ may be temperature-dependent.
+    
+    Args:
+        T: Temperature [K]
+        gamma: Ratio of specific heats (may vary)
+        species: Gas species
+        
+    Returns:
+        Speed of sound [m/s]
+    &#34;&#34;&#34;
+    R_s = specific_gas_constant(species)
+    return torch.sqrt(gamma * R_s * T)</code></pre>
+</details>
+<div class="desc"><p>Speed of sound for real gas.</p>
+<p>c = √(γ R T) where γ may be temperature-dependent.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>T</code></strong></dt>
+<dd>Temperature [K]</dd>
+<dt><strong><code>gamma</code></strong></dt>
+<dd>Ratio of specific heats (may vary)</dd>
+<dt><strong><code>species</code></strong></dt>
+<dd>Gas species</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Speed of sound [m/s]</p></div>
+</dd>
+<dt id="tensornet.cfd.real_gas.stagnation_enthalpy"><code class="name flex">
+<span>def <span class="ident">stagnation_enthalpy</span></span>(<span>h: float, u: float) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def stagnation_enthalpy(h: float, u: float) -&gt; float:
+    &#34;&#34;&#34;
+    Compute total (stagnation) enthalpy.
+    
+    h₀ = h + u²/2
+    
+    Args:
+        h: Static enthalpy [J/kg]
+        u: Velocity magnitude [m/s]
+        
+    Returns:
+        Total enthalpy [J/kg]
+    &#34;&#34;&#34;
+    return h + 0.5 * u**2</code></pre>
+</details>
+<div class="desc"><p>Compute total (stagnation) enthalpy.</p>
+<p>h₀ = h + u²/2</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>h</code></strong></dt>
+<dd>Static enthalpy [J/kg]</dd>
+<dt><strong><code>u</code></strong></dt>
+<dd>Velocity magnitude [m/s]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Total enthalpy [J/kg]</p></div>
+</dd>
+<dt id="tensornet.cfd.real_gas.temperature_from_enthalpy"><code class="name flex">
+<span>def <span class="ident">temperature_from_enthalpy</span></span>(<span>h: Tensor,<br>species: str = 'Air',<br>T_guess: float = 1000.0,<br>max_iter: int = 20,<br>tol: float = 1.0) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def temperature_from_enthalpy(
+    h: Tensor,
+    species: str = &#39;Air&#39;,
+    T_guess: float = 1000.0,
+    max_iter: int = 20,
+    tol: float = 1.0  # K
+) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Invert h(T) to find T from enthalpy.
+    
+    Uses Newton-Raphson iteration.
+    
+    Args:
+        h: Enthalpy [J/kg]
+        species: Gas species
+        T_guess: Initial temperature guess
+        max_iter: Maximum iterations
+        tol: Temperature tolerance [K]
+        
+    Returns:
+        Temperature [K]
+    &#34;&#34;&#34;
+    T = torch.ones_like(h) * T_guess
+    
+    for _ in range(max_iter):
+        h_current = enthalpy_sensible(T, species=species)
+        cp = cp_polynomial(T, species)
+        
+        # Newton: T_new = T - (h(T) - h_target) / (dh/dT) = T - (h(T) - h) / cp
+        dT = (h_current - h) / cp
+        T = T - dT
+        T = torch.clamp(T, min=100.0, max=30000.0)
+        
+        if torch.max(torch.abs(dT)).item() &lt; tol:
+            break
+    
+    return T</code></pre>
+</details>
+<div class="desc"><p>Invert h(T) to find T from enthalpy.</p>
+<p>Uses Newton-Raphson iteration.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>h</code></strong></dt>
+<dd>Enthalpy [J/kg]</dd>
+<dt><strong><code>species</code></strong></dt>
+<dd>Gas species</dd>
+<dt><strong><code>T_guess</code></strong></dt>
+<dd>Initial temperature guess</dd>
+<dt><strong><code>max_iter</code></strong></dt>
+<dd>Maximum iterations</dd>
+<dt><strong><code>tol</code></strong></dt>
+<dd>Temperature tolerance [K]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Temperature [K]</p></div>
+</dd>
+<dt id="tensornet.cfd.real_gas.vibrational_energy"><code class="name flex">
+<span>def <span class="ident">vibrational_energy</span></span>(<span>T: Tensor, species: str = 'N2') ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def vibrational_energy(T: Tensor, species: str = &#39;N2&#39;) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Compute vibrational energy per unit mass.
+    
+    e_vib = R * Θ_v / (exp(Θ_v/T) - 1)
+    
+    Args:
+        T: Temperature [K]
+        species: Diatomic species with vibrational mode
+        
+    Returns:
+        Vibrational energy [J/kg]
+    &#34;&#34;&#34;
+    theta_v = THETA_V.get(species, 3000.0)
+    R_s = specific_gas_constant(species)
+    
+    # Avoid overflow for low T
+    ratio = theta_v / torch.clamp(T, min=100.0)
+    exp_term = torch.exp(ratio)
+    
+    e_vib = R_s * theta_v / (exp_term - 1)
+    return e_vib</code></pre>
+</details>
+<div class="desc"><p>Compute vibrational energy per unit mass.</p>
+<p>e_vib = R * Θ_v / (exp(Θ_v/T) - 1)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>T</code></strong></dt>
+<dd>Temperature [K]</dd>
+<dt><strong><code>species</code></strong></dt>
+<dd>Diatomic species with vibrational mode</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Vibrational energy [J/kg]</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.cfd.real_gas.GasProperties"><code class="flex name class">
+<span>class <span class="ident">GasProperties</span></span>
+<span>(</span><span>cp: Tensor, cv: Tensor, gamma: Tensor, h: Tensor, R: float)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class GasProperties:
+    &#34;&#34;&#34;Container for gas thermodynamic properties.&#34;&#34;&#34;
+    
+    cp: Tensor      # Specific heat at constant pressure [J/(kg·K)]
+    cv: Tensor      # Specific heat at constant volume [J/(kg·K)]
+    gamma: Tensor   # Ratio of specific heats
+    h: Tensor       # Specific enthalpy [J/kg]
+    R: float        # Specific gas constant [J/(kg·K)]</code></pre>
+</details>
+<div class="desc"><p>Container for gas thermodynamic properties.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.real_gas.GasProperties.R"><code class="name">var <span class="ident">R</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.real_gas.GasProperties.cp"><code class="name">var <span class="ident">cp</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.real_gas.GasProperties.cv"><code class="name">var <span class="ident">cv</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.real_gas.GasProperties.gamma"><code class="name">var <span class="ident">gamma</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.real_gas.GasProperties.h"><code class="name">var <span class="ident">h</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#real-gas-thermodynamics">Real-Gas Thermodynamics</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.real_gas.compute_real_gas_properties" href="#tensornet.cfd.real_gas.compute_real_gas_properties">compute_real_gas_properties</a></code></li>
+<li><code><a title="tensornet.cfd.real_gas.cp_polynomial" href="#tensornet.cfd.real_gas.cp_polynomial">cp_polynomial</a></code></li>
+<li><code><a title="tensornet.cfd.real_gas.enthalpy_sensible" href="#tensornet.cfd.real_gas.enthalpy_sensible">enthalpy_sensible</a></code></li>
+<li><code><a title="tensornet.cfd.real_gas.equilibrium_gamma_air" href="#tensornet.cfd.real_gas.equilibrium_gamma_air">equilibrium_gamma_air</a></code></li>
+<li><code><a title="tensornet.cfd.real_gas.gamma_ideal" href="#tensornet.cfd.real_gas.gamma_ideal">gamma_ideal</a></code></li>
+<li><code><a title="tensornet.cfd.real_gas.gamma_variable" href="#tensornet.cfd.real_gas.gamma_variable">gamma_variable</a></code></li>
+<li><code><a title="tensornet.cfd.real_gas.post_shock_equilibrium" href="#tensornet.cfd.real_gas.post_shock_equilibrium">post_shock_equilibrium</a></code></li>
+<li><code><a title="tensornet.cfd.real_gas.pressure_from_rho_e" href="#tensornet.cfd.real_gas.pressure_from_rho_e">pressure_from_rho_e</a></code></li>
+<li><code><a title="tensornet.cfd.real_gas.specific_gas_constant" href="#tensornet.cfd.real_gas.specific_gas_constant">specific_gas_constant</a></code></li>
+<li><code><a title="tensornet.cfd.real_gas.speed_of_sound_real" href="#tensornet.cfd.real_gas.speed_of_sound_real">speed_of_sound_real</a></code></li>
+<li><code><a title="tensornet.cfd.real_gas.stagnation_enthalpy" href="#tensornet.cfd.real_gas.stagnation_enthalpy">stagnation_enthalpy</a></code></li>
+<li><code><a title="tensornet.cfd.real_gas.temperature_from_enthalpy" href="#tensornet.cfd.real_gas.temperature_from_enthalpy">temperature_from_enthalpy</a></code></li>
+<li><code><a title="tensornet.cfd.real_gas.vibrational_energy" href="#tensornet.cfd.real_gas.vibrational_energy">vibrational_energy</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.cfd.real_gas.GasProperties" href="#tensornet.cfd.real_gas.GasProperties">GasProperties</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.real_gas.GasProperties.R" href="#tensornet.cfd.real_gas.GasProperties.R">R</a></code></li>
+<li><code><a title="tensornet.cfd.real_gas.GasProperties.cp" href="#tensornet.cfd.real_gas.GasProperties.cp">cp</a></code></li>
+<li><code><a title="tensornet.cfd.real_gas.GasProperties.cv" href="#tensornet.cfd.real_gas.GasProperties.cv">cv</a></code></li>
+<li><code><a title="tensornet.cfd.real_gas.GasProperties.gamma" href="#tensornet.cfd.real_gas.GasProperties.gamma">gamma</a></code></li>
+<li><code><a title="tensornet.cfd.real_gas.GasProperties.h" href="#tensornet.cfd.real_gas.GasProperties.h">h</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

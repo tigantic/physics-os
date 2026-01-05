@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.godunov API documentation</title>
+<meta name="description" content="Godunov-Type Riemann Solvers
+…">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.godunov</code></h1>
+</header>
+<section id="section-intro">
+<h1 id="godunov-type-riemann-solvers">Godunov-Type Riemann Solvers</h1>
+<p>Numerical flux functions for the 1D Euler equations based on
+solving the Riemann problem at cell interfaces.</p>
+<p>Solvers implemented:
+- Roe: Linearized Riemann solver with entropy fix
+- HLL: Harten-Lax-van Leer two-wave approximation
+- HLLC: HLL with contact wave restoration
+- Exact: Newton iteration exact Riemann solver</p>
+<p>For the Euler equations, the Riemann problem is:
+∂U/∂t + ∂F/∂x = 0
+with piecewise constant initial data U_L, U_R.</p>
+<p>The solution consists of three waves:
+1. Left-going wave (shock or rarefaction)
+2. Contact discontinuity (entropy wave)
+3. Right-going wave (shock or rarefaction)</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; import torch
+&gt;&gt;&gt; from tensornet.cfd.godunov import roe_flux, hllc_flux
+&gt;&gt;&gt; U_L = torch.tensor([[1.0, 0.0, 2.5]])  # Left state
+&gt;&gt;&gt; U_R = torch.tensor([[0.125, 0.0, 0.25]])  # Right state
+&gt;&gt;&gt; F = roe_flux(U_L, U_R, gamma=1.4)
+&gt;&gt;&gt; print(f&quot;Roe flux: {F}&quot;)
+</code></pre>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If input states have incompatible shapes</dd>
+<dt><code>RuntimeError</code></dt>
+<dd>If Newton iteration fails to converge (exact solver)</dd>
+</dl>
+<h2 id="references">References</h2>
+<p>.. [1] Roe, P.L. "Approximate Riemann solvers, parameter vectors, and
+difference schemes", J. Comput. Phys. 43, 357-372, 1981.
+.. [2] Harten, A., Lax, P.D., van Leer, B. "On upstream differencing
+and Godunov-type schemes for hyperbolic conservation laws",
+SIAM Review 25, 35-61, 1983.
+.. [3] Toro, E.F., Spruce, M., Speares, W. "Restoration of the contact
+surface in the HLL-Riemann solver", Shock Waves 4, 25-34, 1994.
+.. [4] Toro, E.F. "Riemann Solvers and Numerical Methods for Fluid
+Dynamics", 3rd ed., Springer, 2009.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.godunov.conserved_to_primitive"><code class="name flex">
+<span>def <span class="ident">conserved_to_primitive</span></span>(<span>U: torch.Tensor, gamma: float = 1.4) ‑> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def conserved_to_primitive(
+    U: Tensor,
+    gamma: float = 1.4,
+) -&gt; Tuple[Tensor, Tensor, Tensor]:
+    &#34;&#34;&#34;Convert conserved (ρ, ρu, E) to primitive (ρ, u, p).&#34;&#34;&#34;
+    rho = U[..., 0]
+    rho_u = U[..., 1]
+    E = U[..., 2]
+    
+    u = rho_u / rho
+    p = (gamma - 1) * (E - 0.5 * rho * u ** 2)
+    
+    return rho, u, p</code></pre>
+</details>
+<div class="desc"><p>Convert conserved (ρ, ρu, E) to primitive (ρ, u, p).</p></div>
+</dd>
+<dt id="tensornet.cfd.godunov.euler_flux"><code class="name flex">
+<span>def <span class="ident">euler_flux</span></span>(<span>U: torch.Tensor, gamma: float = 1.4) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def euler_flux(U: Tensor, gamma: float = 1.4) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Physical flux for 1D Euler equations.
+    
+    F = [ρu, ρu² + p, (E + p)u]ᵀ
+    &#34;&#34;&#34;
+    rho, u, p = conserved_to_primitive(U, gamma)
+    
+    rho_u = U[..., 1]
+    E = U[..., 2]
+    
+    F = torch.stack([
+        rho_u,
+        rho_u * u + p,
+        (E + p) * u,
+    ], dim=-1)
+    
+    return F</code></pre>
+</details>
+<div class="desc"><p>Physical flux for 1D Euler equations.</p>
+<p>F = [ρu, ρu² + p, (E + p)u]ᵀ</p></div>
+</dd>
+<dt id="tensornet.cfd.godunov.exact_riemann"><code class="name flex">
+<span>def <span class="ident">exact_riemann</span></span>(<span>rho_L: float,<br>u_L: float,<br>p_L: float,<br>rho_R: float,<br>u_R: float,<br>p_R: float,<br>gamma: float = 1.4,<br>x: torch.Tensor | None = None,<br>t: float = 1.0,<br>x0: float = 0.5,<br>tol: float = 1e-08,<br>max_iter: int = 100) ‑> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def exact_riemann(
+    rho_L: float,
+    u_L: float,
+    p_L: float,
+    rho_R: float,
+    u_R: float,
+    p_R: float,
+    gamma: float = 1.4,
+    x: Optional[Tensor] = None,
+    t: float = 1.0,
+    x0: float = 0.5,
+    tol: float = 1e-8,
+    max_iter: int = 100,
+) -&gt; Tuple[Tensor, Tensor, Tensor]:
+    &#34;&#34;&#34;
+    Exact Riemann solver using Newton-Raphson iteration.
+    
+    Solves for the star-state pressure p* at the contact,
+    then constructs the full solution.
+    
+    Args:
+        rho_L, u_L, p_L: Left primitive state
+        rho_R, u_R, p_R: Right primitive state
+        gamma: Ratio of specific heats
+        x: Spatial coordinates for sampling solution
+        t: Time at which to sample solution
+        x0: Initial discontinuity location
+        tol: Newton tolerance
+        max_iter: Maximum Newton iterations
+        
+    Returns:
+        (rho, u, p) sampled at x coordinates
+    &#34;&#34;&#34;
+    if x is None:
+        x = torch.linspace(0, 1, 100)
+    
+    device = x.device
+    dtype = x.dtype
+    
+    # Sound speeds
+    a_L = math.sqrt(gamma * p_L / rho_L)
+    a_R = math.sqrt(gamma * p_R / rho_R)
+    
+    # Pressure functions for Newton iteration
+    def f_K(p, rho_K, p_K, a_K):
+        &#34;&#34;&#34;Pressure function for state K (L or R).&#34;&#34;&#34;
+        if p &gt; p_K:  # Shock
+            A_K = 2 / ((gamma + 1) * rho_K)
+            B_K = (gamma - 1) / (gamma + 1) * p_K
+            return (p - p_K) * math.sqrt(A_K / (p + B_K))
+        else:  # Rarefaction
+            return 2 * a_K / (gamma - 1) * ((p / p_K) ** ((gamma - 1) / (2 * gamma)) - 1)
+    
+    def df_K(p, rho_K, p_K, a_K):
+        &#34;&#34;&#34;Derivative of pressure function.&#34;&#34;&#34;
+        if p &gt; p_K:  # Shock
+            A_K = 2 / ((gamma + 1) * rho_K)
+            B_K = (gamma - 1) / (gamma + 1) * p_K
+            term = math.sqrt(A_K / (p + B_K))
+            return term * (1 - (p - p_K) / (2 * (p + B_K)))
+        else:  # Rarefaction
+            return 1 / (rho_K * a_K) * (p / p_K) ** (-(gamma + 1) / (2 * gamma))
+    
+    # Newton iteration for p*
+    # f(p) = f_L(p) + f_R(p) + u_R - u_L = 0
+    
+    # Initial guess (PVRS)
+    p_star = 0.5 * (p_L + p_R) - 0.125 * (u_R - u_L) * (rho_L + rho_R) * (a_L + a_R)
+    p_star = max(p_star, 1e-10)
+    
+    for _ in range(max_iter):
+        f = f_K(p_star, rho_L, p_L, a_L) + f_K(p_star, rho_R, p_R, a_R) + (u_R - u_L)
+        df = df_K(p_star, rho_L, p_L, a_L) + df_K(p_star, rho_R, p_R, a_R)
+        
+        if abs(df) &lt; 1e-14:
+            break
+        
+        p_new = p_star - f / df
+        p_new = max(p_new, 1e-10)
+        
+        if abs(p_new - p_star) &lt; tol * p_star:
+            p_star = p_new
+            break
+        
+        p_star = p_new
+    
+    # Star velocity
+    u_star = 0.5 * (u_L + u_R) + 0.5 * (f_K(p_star, rho_R, p_R, a_R) - f_K(p_star, rho_L, p_L, a_L))
+    
+    # Sample solution at x, t
+    xi = (x - x0) / t  # Self-similarity variable
+    
+    rho = torch.zeros_like(x)
+    u = torch.zeros_like(x)
+    p = torch.zeros_like(x)
+    
+    for i, s in enumerate(xi.tolist()):
+        # Determine which region we&#39;re in
+        if s &lt; u_star:  # Left of contact
+            if p_star &gt; p_L:  # Left shock
+                # Shock speed
+                S_L = u_L - a_L * math.sqrt((gamma + 1) / (2 * gamma) * p_star / p_L + (gamma - 1) / (2 * gamma))
+                if s &lt; S_L:
+                    rho[i] = rho_L
+                    u[i] = u_L
+                    p[i] = p_L
+                else:
+                    rho_star_L = rho_L * (p_star / p_L + (gamma - 1) / (gamma + 1)) / ((gamma - 1) / (gamma + 1) * p_star / p_L + 1)
+                    rho[i] = rho_star_L
+                    u[i] = u_star
+                    p[i] = p_star
+            else:  # Left rarefaction
+                a_star_L = a_L * (p_star / p_L) ** ((gamma - 1) / (2 * gamma))
+                S_HL = u_L - a_L  # Head
+                S_TL = u_star - a_star_L  # Tail
+                
+                if s &lt; S_HL:
+                    rho[i] = rho_L
+                    u[i] = u_L
+                    p[i] = p_L
+                elif s &lt; S_TL:
+                    # Inside rarefaction fan
+                    u_fan = 2 / (gamma + 1) * (a_L + (gamma - 1) / 2 * u_L + s)
+                    a_fan = u_fan - s
+                    rho_fan = rho_L * (a_fan / a_L) ** (2 / (gamma - 1))
+                    p_fan = p_L * (a_fan / a_L) ** (2 * gamma / (gamma - 1))
+                    rho[i] = rho_fan
+                    u[i] = u_fan
+                    p[i] = p_fan
+                else:
+                    rho_star_L = rho_L * (p_star / p_L) ** (1 / gamma)
+                    rho[i] = rho_star_L
+                    u[i] = u_star
+                    p[i] = p_star
+        else:  # Right of contact
+            if p_star &gt; p_R:  # Right shock
+                S_R = u_R + a_R * math.sqrt((gamma + 1) / (2 * gamma) * p_star / p_R + (gamma - 1) / (2 * gamma))
+                if s &gt; S_R:
+                    rho[i] = rho_R
+                    u[i] = u_R
+                    p[i] = p_R
+                else:
+                    rho_star_R = rho_R * (p_star / p_R + (gamma - 1) / (gamma + 1)) / ((gamma - 1) / (gamma + 1) * p_star / p_R + 1)
+                    rho[i] = rho_star_R
+                    u[i] = u_star
+                    p[i] = p_star
+            else:  # Right rarefaction
+                a_star_R = a_R * (p_star / p_R) ** ((gamma - 1) / (2 * gamma))
+                S_HR = u_R + a_R
+                S_TR = u_star + a_star_R
+                
+                if s &gt; S_HR:
+                    rho[i] = rho_R
+                    u[i] = u_R
+                    p[i] = p_R
+                elif s &gt; S_TR:
+                    u_fan = 2 / (gamma + 1) * (-a_R + (gamma - 1) / 2 * u_R + s)
+                    a_fan = s - u_fan
+                    rho_fan = rho_R * (a_fan / a_R) ** (2 / (gamma - 1))
+                    p_fan = p_R * (a_fan / a_R) ** (2 * gamma / (gamma - 1))
+                    rho[i] = rho_fan
+                    u[i] = u_fan
+                    p[i] = p_fan
+                else:
+                    rho_star_R = rho_R * (p_star / p_R) ** (1 / gamma)
+                    rho[i] = rho_star_R
+                    u[i] = u_star
+                    p[i] = p_star
+    
+    return rho, u, p</code></pre>
+</details>
+<div class="desc"><p>Exact Riemann solver using Newton-Raphson iteration.</p>
+<p>Solves for the star-state pressure p* at the contact,
+then constructs the full solution.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt>rho_L, u_L, p_L: Left primitive state</dt>
+<dt>rho_R, u_R, p_R: Right primitive state</dt>
+<dt><strong><code>gamma</code></strong></dt>
+<dd>Ratio of specific heats</dd>
+<dt><strong><code>x</code></strong></dt>
+<dd>Spatial coordinates for sampling solution</dd>
+<dt><strong><code>t</code></strong></dt>
+<dd>Time at which to sample solution</dd>
+<dt><strong><code>x0</code></strong></dt>
+<dd>Initial discontinuity location</dd>
+<dt><strong><code>tol</code></strong></dt>
+<dd>Newton tolerance</dd>
+<dt><strong><code>max_iter</code></strong></dt>
+<dd>Maximum Newton iterations</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>(rho, u, p) sampled at x coordinates</p></div>
+</dd>
+<dt id="tensornet.cfd.godunov.hll_flux"><code class="name flex">
+<span>def <span class="ident">hll_flux</span></span>(<span>U_L: torch.Tensor, U_R: torch.Tensor, gamma: float = 1.4) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hll_flux(
+    U_L: Tensor,
+    U_R: Tensor,
+    gamma: float = 1.4,
+) -&gt; Tensor:
+    &#34;&#34;&#34;
+    HLL (Harten-Lax-van Leer) approximate Riemann solver.
+    
+    Uses two-wave approximation, ignoring the contact discontinuity.
+    Robust but diffusive for contact waves.
+    
+    Wave speed estimates (Davis):
+        S_L = min(u_L - a_L, u_R - a_R)
+        S_R = max(u_L + a_L, u_R + a_R)
+    &#34;&#34;&#34;
+    rho_L, u_L, p_L = conserved_to_primitive(U_L, gamma)
+    rho_R, u_R, p_R = conserved_to_primitive(U_R, gamma)
+    
+    a_L = torch.sqrt(gamma * p_L / rho_L)
+    a_R = torch.sqrt(gamma * p_R / rho_R)
+    
+    # Wave speed estimates (Davis)
+    S_L = torch.minimum(u_L - a_L, u_R - a_R)
+    S_R = torch.maximum(u_L + a_L, u_R + a_R)
+    
+    # Physical fluxes
+    F_L = euler_flux(U_L, gamma)
+    F_R = euler_flux(U_R, gamma)
+    
+    # HLL flux
+    # F_HLL = (S_R F_L - S_L F_R + S_L S_R (U_R - U_L)) / (S_R - S_L)
+    
+    denom = S_R - S_L
+    denom = torch.where(torch.abs(denom) &lt; 1e-10, 
+                        torch.ones_like(denom) * 1e-10, denom)
+    
+    F_HLL = (S_R.unsqueeze(-1) * F_L - S_L.unsqueeze(-1) * F_R + 
+             (S_L * S_R).unsqueeze(-1) * (U_R - U_L)) / denom.unsqueeze(-1)
+    
+    # Choose flux based on wave speeds
+    flux = torch.where(
+        S_L.unsqueeze(-1) &gt;= 0,
+        F_L,
+        torch.where(
+            S_R.unsqueeze(-1) &lt;= 0,
+            F_R,
+            F_HLL
+        )
+    )
+    
+    return flux</code></pre>
+</details>
+<div class="desc"><p>HLL (Harten-Lax-van Leer) approximate Riemann solver.</p>
+<p>Uses two-wave approximation, ignoring the contact discontinuity.
+Robust but diffusive for contact waves.</p>
+<p>Wave speed estimates (Davis):
+S_L = min(u_L - a_L, u_R - a_R)
+S_R = max(u_L + a_L, u_R + a_R)</p></div>
+</dd>
+<dt id="tensornet.cfd.godunov.hllc_flux"><code class="name flex">
+<span>def <span class="ident">hllc_flux</span></span>(<span>U_L: torch.Tensor, U_R: torch.Tensor, gamma: float = 1.4) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hllc_flux(
+    U_L: Tensor,
+    U_R: Tensor,
+    gamma: float = 1.4,
+) -&gt; Tensor:
+    &#34;&#34;&#34;
+    HLLC (HLL-Contact) approximate Riemann solver.
+    
+    Extends HLL by restoring the contact discontinuity,
+    giving exact resolution of isolated contact waves.
+    
+    Three-wave structure: S_L | S_* | S_R
+    &#34;&#34;&#34;
+    rho_L, u_L, p_L = conserved_to_primitive(U_L, gamma)
+    rho_R, u_R, p_R = conserved_to_primitive(U_R, gamma)
+    
+    E_L, E_R = U_L[..., 2], U_R[..., 2]
+    
+    a_L = torch.sqrt(gamma * p_L / rho_L)
+    a_R = torch.sqrt(gamma * p_R / rho_R)
+    
+    # Wave speed estimates
+    S_L = torch.minimum(u_L - a_L, u_R - a_R)
+    S_R = torch.maximum(u_L + a_L, u_R + a_R)
+    
+    # Contact wave speed
+    # S_* = (p_R - p_L + ρ_L u_L (S_L - u_L) - ρ_R u_R (S_R - u_R)) /
+    #       (ρ_L (S_L - u_L) - ρ_R (S_R - u_R))
+    numer = (p_R - p_L + rho_L * u_L * (S_L - u_L) - rho_R * u_R * (S_R - u_R))
+    denom = rho_L * (S_L - u_L) - rho_R * (S_R - u_R)
+    denom = torch.where(torch.abs(denom) &lt; 1e-10,
+                        torch.sign(denom) * 1e-10, denom)
+    S_star = numer / denom
+    
+    # Star state pressure
+    p_star = p_L + rho_L * (S_L - u_L) * (S_star - u_L)
+    
+    # Physical fluxes
+    F_L = euler_flux(U_L, gamma)
+    F_R = euler_flux(U_R, gamma)
+    
+    # Star states
+    # U*_K = ρ_K (S_K - u_K)/(S_K - S*) [1, S*, E_K/ρ_K + (S* - u_K)(S* + p_K/(ρ_K(S_K - u_K)))]
+    
+    factor_L = rho_L * (S_L - u_L) / (S_L - S_star + 1e-10)
+    factor_R = rho_R * (S_R - u_R) / (S_R - S_star + 1e-10)
+    
+    E_star_L = factor_L * (E_L / rho_L + (S_star - u_L) * (S_star + p_L / (rho_L * (S_L - u_L) + 1e-10)))
+    E_star_R = factor_R * (E_R / rho_R + (S_star - u_R) * (S_star + p_R / (rho_R * (S_R - u_R) + 1e-10)))
+    
+    U_star_L = torch.stack([
+        factor_L,
+        factor_L * S_star,
+        E_star_L,
+    ], dim=-1)
+    
+    U_star_R = torch.stack([
+        factor_R,
+        factor_R * S_star,
+        E_star_R,
+    ], dim=-1)
+    
+    # HLLC flux
+    F_star_L = F_L + S_L.unsqueeze(-1) * (U_star_L - U_L)
+    F_star_R = F_R + S_R.unsqueeze(-1) * (U_star_R - U_R)
+    
+    # Choose appropriate flux
+    flux = torch.where(
+        S_L.unsqueeze(-1) &gt;= 0,
+        F_L,
+        torch.where(
+            S_star.unsqueeze(-1) &gt;= 0,
+            F_star_L,
+            torch.where(
+                S_R.unsqueeze(-1) &gt;= 0,
+                F_star_R,
+                F_R
+            )
+        )
+    )
+    
+    return flux</code></pre>
+</details>
+<div class="desc"><p>HLLC (HLL-Contact) approximate Riemann solver.</p>
+<p>Extends HLL by restoring the contact discontinuity,
+giving exact resolution of isolated contact waves.</p>
+<p>Three-wave structure: S_L | S_* | S_R</p></div>
+</dd>
+<dt id="tensornet.cfd.godunov.primitive_to_conserved"><code class="name flex">
+<span>def <span class="ident">primitive_to_conserved</span></span>(<span>rho: torch.Tensor, u: torch.Tensor, p: torch.Tensor, gamma: float = 1.4) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def primitive_to_conserved(
+    rho: Tensor,
+    u: Tensor,
+    p: Tensor,
+    gamma: float = 1.4,
+) -&gt; Tensor:
+    &#34;&#34;&#34;Convert primitive (ρ, u, p) to conserved (ρ, ρu, E).&#34;&#34;&#34;
+    rho_u = rho * u
+    E = p / (gamma - 1) + 0.5 * rho * u ** 2
+    return torch.stack([rho, rho_u, E], dim=-1)</code></pre>
+</details>
+<div class="desc"><p>Convert primitive (ρ, u, p) to conserved (ρ, ρu, E).</p></div>
+</dd>
+<dt id="tensornet.cfd.godunov.roe_flux"><code class="name flex">
+<span>def <span class="ident">roe_flux</span></span>(<span>U_L: torch.Tensor,<br>U_R: torch.Tensor,<br>gamma: float = 1.4,<br>entropy_fix: bool = True,<br>epsilon: float = 0.1) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def roe_flux(
+    U_L: Tensor,
+    U_R: Tensor,
+    gamma: float = 1.4,
+    entropy_fix: bool = True,
+    epsilon: float = 0.1,
+) -&gt; Tensor:
+    &#34;&#34;&#34;
+    Roe&#39;s linearized Riemann solver.
+    
+    Uses Roe-averaged quantities to construct an approximate
+    Jacobian with exact eigenstructure.
+    
+    Roe averages:
+        ρ̂ = √(ρ_L ρ_R)
+        û = (√ρ_L u_L + √ρ_R u_R) / (√ρ_L + √ρ_R)
+        Ĥ = (√ρ_L H_L + √ρ_R H_R) / (√ρ_L + √ρ_R)
+    
+    Args:
+        U_L: Left state (batch, 3) - conserved variables [ρ, ρu, E]
+        U_R: Right state (batch, 3) - conserved variables [ρ, ρu, E]
+        gamma: Ratio of specific heats (default 1.4 for air)
+        entropy_fix: Apply Harten&#39;s entropy fix for expansion shocks
+        epsilon: Entropy fix parameter (unused, kept for API compatibility)
+        
+    Returns:
+        Numerical flux (batch, 3)
+    
+    Example:
+        &gt;&gt;&gt; U_L = torch.tensor([[1.0, 0.0, 2.5]])
+        &gt;&gt;&gt; U_R = torch.tensor([[0.125, 0.0, 0.25]])
+        &gt;&gt;&gt; F = roe_flux(U_L, U_R)
+        &gt;&gt;&gt; print(f&#34;Flux shape: {F.shape}&#34;)
+    
+    Raises:
+        ValueError: If U_L and U_R have different shapes
+    
+    References:
+        .. [1] Roe, P.L. &#34;Approximate Riemann solvers&#34;, J. Comput. Phys. 43, 1981.
+    &#34;&#34;&#34;
+    # Extract primitives
+    rho_L, u_L, p_L = conserved_to_primitive(U_L, gamma)
+    rho_R, u_R, p_R = conserved_to_primitive(U_R, gamma)
+    
+    E_L, E_R = U_L[..., 2], U_R[..., 2]
+    
+    # Specific enthalpies
+    H_L = (E_L + p_L) / rho_L
+    H_R = (E_R + p_R) / rho_R
+    
+    # Roe averages
+    sqrt_rho_L = torch.sqrt(rho_L)
+    sqrt_rho_R = torch.sqrt(rho_R)
+    denom = sqrt_rho_L + sqrt_rho_R
+    
+    rho_hat = sqrt_rho_L * sqrt_rho_R
+    u_hat = (sqrt_rho_L * u_L + sqrt_rho_R * u_R) / denom
+    H_hat = (sqrt_rho_L * H_L + sqrt_rho_R * H_R) / denom
+    
+    # Sound speed from Roe average
+    a_hat_sq = (gamma - 1) * (H_hat - 0.5 * u_hat ** 2)
+    a_hat_sq = torch.clamp(a_hat_sq, min=1e-10)
+    a_hat = torch.sqrt(a_hat_sq)
+    
+    # Eigenvalues
+    lambda_1 = u_hat - a_hat  # Left acoustic
+    lambda_2 = u_hat          # Entropy
+    lambda_3 = u_hat + a_hat  # Right acoustic
+    
+    # Entropy fix (Harten)
+    if entropy_fix:
+        a_L = torch.sqrt(gamma * p_L / rho_L)
+        a_R = torch.sqrt(gamma * p_R / rho_R)
+        
+        delta_1 = torch.maximum(
+            4 * ((u_R - a_R) - (u_L - a_L)),
+            torch.zeros_like(a_L)
+        )
+        delta_3 = torch.maximum(
+            4 * ((u_R + a_R) - (u_L + a_L)),
+            torch.zeros_like(a_L)
+        )
+        
+        lambda_1 = torch.where(
+            torch.abs(lambda_1) &lt; delta_1 / 2,
+            lambda_1 ** 2 / delta_1 + delta_1 / 4,
+            torch.abs(lambda_1)
+        )
+        lambda_3 = torch.where(
+            torch.abs(lambda_3) &lt; delta_3 / 2,
+            lambda_3 ** 2 / delta_3 + delta_3 / 4,
+            torch.abs(lambda_3)
+        )
+        lambda_2 = torch.abs(lambda_2)
+    else:
+        lambda_1 = torch.abs(lambda_1)
+        lambda_2 = torch.abs(lambda_2)
+        lambda_3 = torch.abs(lambda_3)
+    
+    # Jump in conserved variables
+    dU = U_R - U_L
+    drho = dU[..., 0]
+    drho_u = dU[..., 1]
+    dE = dU[..., 2]
+    
+    du = (drho_u - u_hat * drho) / rho_hat
+    dp = (gamma - 1) * (dE - u_hat * drho_u + (u_hat ** 2 - H_hat) * drho 
+                        + 0.5 * u_hat ** 2 * drho)
+    # Corrected pressure jump
+    dp = (gamma - 1) * (dE - u_hat * du * rho_hat - 0.5 * u_hat ** 2 * drho)
+    
+    # Actually, use standard Roe decomposition
+    # Wave strengths
+    dp_computed = (gamma - 1) * (
+        dE - u_hat * drho_u + 0.5 * u_hat ** 2 * drho
+    )
+    du_computed = (drho_u - u_hat * drho) / rho_hat
+    
+    alpha_2 = drho - dp_computed / a_hat_sq
+    alpha_1 = (dp_computed - rho_hat * a_hat * du_computed) / (2 * a_hat_sq)
+    alpha_3 = (dp_computed + rho_hat * a_hat * du_computed) / (2 * a_hat_sq)
+    
+    # Right eigenvectors (columns)
+    # r_1 = [1, u-a, H-ua]
+    # r_2 = [1, u, u²/2]
+    # r_3 = [1, u+a, H+ua]
+    
+    # Compute |A| ΔU = Σ |λ_i| α_i r_i
+    abs_A_dU_0 = lambda_1 * alpha_1 + lambda_2 * alpha_2 + lambda_3 * alpha_3
+    abs_A_dU_1 = (lambda_1 * alpha_1 * (u_hat - a_hat) + 
+                  lambda_2 * alpha_2 * u_hat + 
+                  lambda_3 * alpha_3 * (u_hat + a_hat))
+    abs_A_dU_2 = (lambda_1 * alpha_1 * (H_hat - u_hat * a_hat) + 
+                  lambda_2 * alpha_2 * 0.5 * u_hat ** 2 + 
+                  lambda_3 * alpha_3 * (H_hat + u_hat * a_hat))
+    
+    abs_A_dU = torch.stack([abs_A_dU_0, abs_A_dU_1, abs_A_dU_2], dim=-1)
+    
+    # Physical fluxes
+    F_L = euler_flux(U_L, gamma)
+    F_R = euler_flux(U_R, gamma)
+    
+    # Roe flux
+    flux = 0.5 * (F_L + F_R) - 0.5 * abs_A_dU
+    
+    return flux</code></pre>
+</details>
+<div class="desc"><p>Roe's linearized Riemann solver.</p>
+<p>Uses Roe-averaged quantities to construct an approximate
+Jacobian with exact eigenstructure.</p>
+<p>Roe averages:
+ρ̂ = √(ρ_L ρ_R)
+û = (√ρ_L u_L + √ρ_R u_R) / (√ρ_L + √ρ_R)
+Ĥ = (√ρ_L H_L + √ρ_R H_R) / (√ρ_L + √ρ_R)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>U_L</code></strong></dt>
+<dd>Left state (batch, 3) - conserved variables [ρ, ρu, E]</dd>
+<dt><strong><code>U_R</code></strong></dt>
+<dd>Right state (batch, 3) - conserved variables [ρ, ρu, E]</dd>
+<dt><strong><code>gamma</code></strong></dt>
+<dd>Ratio of specific heats (default 1.4 for air)</dd>
+<dt><strong><code>entropy_fix</code></strong></dt>
+<dd>Apply Harten's entropy fix for expansion shocks</dd>
+<dt><strong><code>epsilon</code></strong></dt>
+<dd>Entropy fix parameter (unused, kept for API compatibility)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Numerical flux (batch, 3)</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; U_L = torch.tensor([[1.0, 0.0, 2.5]])
+&gt;&gt;&gt; U_R = torch.tensor([[0.125, 0.0, 0.25]])
+&gt;&gt;&gt; F = roe_flux(U_L, U_R)
+&gt;&gt;&gt; print(f&quot;Flux shape: {F.shape}&quot;)
+</code></pre>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If U_L and U_R have different shapes</dd>
+</dl>
+<h2 id="references">References</h2>
+<p>.. [1] Roe, P.L. "Approximate Riemann solvers", J. Comput. Phys. 43, 1981.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#godunov-type-riemann-solvers">Godunov-Type Riemann Solvers</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.godunov.conserved_to_primitive" href="#tensornet.cfd.godunov.conserved_to_primitive">conserved_to_primitive</a></code></li>
+<li><code><a title="tensornet.cfd.godunov.euler_flux" href="#tensornet.cfd.godunov.euler_flux">euler_flux</a></code></li>
+<li><code><a title="tensornet.cfd.godunov.exact_riemann" href="#tensornet.cfd.godunov.exact_riemann">exact_riemann</a></code></li>
+<li><code><a title="tensornet.cfd.godunov.hll_flux" href="#tensornet.cfd.godunov.hll_flux">hll_flux</a></code></li>
+<li><code><a title="tensornet.cfd.godunov.hllc_flux" href="#tensornet.cfd.godunov.hllc_flux">hllc_flux</a></code></li>
+<li><code><a title="tensornet.cfd.godunov.primitive_to_conserved" href="#tensornet.cfd.godunov.primitive_to_conserved">primitive_to_conserved</a></code></li>
+<li><code><a title="tensornet.cfd.godunov.roe_flux" href="#tensornet.cfd.godunov.roe_flux">roe_flux</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

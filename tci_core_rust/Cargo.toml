@@ -1,0 +1,43 @@
+[package]
+name = "tci_core"
+version = "0.1.0"
+edition = "2021"
+authors = ["HyperTensor Team"]
+description = "TT-Cross Interpolation core algorithms for HyperTensor"
+license = "LicenseRef-Proprietary"
+
+[lib]
+name = "tci_core"
+crate-type = ["cdylib"]
+
+[dependencies]
+# Python bindings - version 0.24+ required for Python 3.13 support
+pyo3 = { version = "0.24", features = ["extension-module"] }
+numpy = "0.24"
+
+# Linear algebra - use pure Rust implementation for easier cross-platform build
+ndarray = "0.16"
+# NOTE: For production, consider enabling a BLAS backend for better performance:
+# ndarray-linalg = { version = "0.16", features = ["intel-mkl"] }
+# For now, we implement our own SVD using nalgebra
+nalgebra = "0.33"
+
+# Collections
+indexmap = "2.0"
+rustc-hash = "1.1"
+
+# Error handling
+thiserror = "1.0"
+
+# Random number generation (for initialization)
+rand = "0.8"
+rand_distr = "0.4"
+
+[dev-dependencies]
+criterion = "0.5"
+approx = "0.5"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1

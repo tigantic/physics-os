@@ -1,0 +1,808 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.core.dense_guard API documentation</title>
+<meta name="description" content="Dense Materialization Guard
+…">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.core.dense_guard</code></h1>
+</header>
+<section id="section-intro">
+<h1 id="dense-materialization-guard">Dense Materialization Guard</h1>
+<p>Execution guard that detects and forbids hidden dense tensor materialization.
+This ensures O(N·d·χ²) TT-CFD storage claims are not invalidated by hidden dense ops.</p>
+<p>CLAIM SCOPE:
+✅ Storage: O(N·d·χ²) - provable by core element counts
+✅ No dense GRID materialization: O(N²), O(N³), etc. forbidden
+✅ O(N) or O(N·d) diagnostic vectors: ALLOWED (per-site values, primitives)
+⚠️ Runtime: "empirically sub-dense" - not proven here, but no blowups observed</p>
+<h2 id="usage">Usage</h2>
+<h1 id="proof-mode-strict-enforcement">PROOF MODE (strict enforcement)</h1>
+<p>with DenseMaterializationGuard(hard_threshold=N<em>d</em>chi**2, forbid=True) as guard:
+result = tt_solver.step(dt)</p>
+<h1 id="raises-runtimeerror-immediately-on-violation">Raises RuntimeError immediately on violation</h1>
+<h1 id="diagnostic-mode-observational">DIAGNOSTIC MODE (observational)</h1>
+<p>with DenseMaterializationGuard(hard_threshold=N<em>d</em>chi**2, forbid=False) as guard:
+result = tt_solver.step(dt)
+print(guard.report())</p>
+<p>Monitored Operations:
+- torch.zeros/ones/full/empty and _like variants
+- torch.tensor, stack, cat, arange, linspace
+- Tensor.clone(), contiguous(), numpy(), tolist()
+- Any TT→dense conversion via to_dense()</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.core.dense_guard.assert_no_dense_materialization"><code class="name flex">
+<span>def <span class="ident">assert_no_dense_materialization</span></span>(<span>func: Callable, *args, N: int = 64, d: int = 3, chi_max: int = 16, **kwargs) ‑> Any</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def assert_no_dense_materialization(
+    func: Callable,
+    *args,
+    N: int = 64,
+    d: int = 3,
+    chi_max: int = 16,
+    **kwargs
+) -&gt; Any:
+    &#34;&#34;&#34;
+    Run a function and assert no critical dense materialization occurred.
+    
+    Raises:
+        AssertionError if critical dense materialization detected
+    &#34;&#34;&#34;
+    with forbid_dense(N, d, chi_max, strict=False) as guard:
+        result = func(*args, **kwargs)
+    
+    if guard.critical_violations &gt; 0:
+        raise AssertionError(
+            f&#34;Critical dense materialization detected!\n{guard.report()}&#34;
+        )
+    
+    return result</code></pre>
+</details>
+<div class="desc"><p>Run a function and assert no critical dense materialization occurred.</p>
+<h2 id="raises">Raises</h2>
+<p>AssertionError if critical dense materialization detected</p></div>
+</dd>
+<dt id="tensornet.core.dense_guard.check_tt_complexity"><code class="name flex">
+<span>def <span class="ident">check_tt_complexity</span></span>(<span>cores: list, chi_max: int, N: int, d: int = 3) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def check_tt_complexity(cores: list, chi_max: int, N: int, d: int = 3) -&gt; dict:
+    &#34;&#34;&#34;
+    Verify that TT cores satisfy O(N·d·χ²) storage complexity.
+    
+    Args:
+        cores: List of TT cores
+        chi_max: Maximum bond dimension
+        N: Number of sites
+        d: Physical dimension per site
+    
+    Returns:
+        Dict with complexity analysis
+    &#34;&#34;&#34;
+    total_elements = sum(c.numel() for c in cores)
+    
+    # Theoretical O(N·d·χ²) storage bound
+    expected_max = N * d * chi_max * chi_max
+    
+    # Full dense would be d^N (exponential) - but for CFD it&#39;s N*d (field storage)
+    # For CFD, &#34;dense grid&#34; means O(N²) or O(N³), not exponential
+    dense_grid_size = N * N * d  # O(N²·d) - 2D grid equivalent
+    
+    # Compression ratio vs naive storage
+    naive_storage = N * d  # Just storing the field
+    compression = total_elements / max(naive_storage, 1)
+    
+    return {
+        &#39;total_elements&#39;: total_elements,
+        &#39;expected_max&#39;: expected_max,
+        &#39;within_bound&#39;: total_elements &lt;= expected_max * 1.1,  # 10% tolerance
+        &#39;compression_ratio&#39;: compression,
+        &#39;is_efficient&#39;: total_elements &lt; dense_grid_size,
+        &#39;actual_vs_theoretical&#39;: total_elements / max(expected_max, 1)
+    }</code></pre>
+</details>
+<div class="desc"><p>Verify that TT cores satisfy O(N·d·χ²) storage complexity.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>cores</code></strong></dt>
+<dd>List of TT cores</dd>
+<dt><strong><code>chi_max</code></strong></dt>
+<dd>Maximum bond dimension</dd>
+<dt><strong><code>N</code></strong></dt>
+<dd>Number of sites</dd>
+<dt><strong><code>d</code></strong></dt>
+<dd>Physical dimension per site</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Dict with complexity analysis</p></div>
+</dd>
+<dt id="tensornet.core.dense_guard.forbid_dense"><code class="name flex">
+<span>def <span class="ident">forbid_dense</span></span>(<span>N: int,<br>d: int = 3,<br>chi_max: int = 16,<br>strict: bool = True,<br>c_hard: float = 1.0,<br>c_soft: float = 0.1)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@contextmanager
+def forbid_dense(
+    N: int,
+    d: int = 3,
+    chi_max: int = 16,
+    strict: bool = True,
+    c_hard: float = 1.0,
+    c_soft: float = 0.1
+):
+    &#34;&#34;&#34;
+    Context manager to forbid dense materialization with auto-computed thresholds.
+    
+    Args:
+        N: Grid size
+        d: Physical dimension (default 3 for CFD)
+        chi_max: Maximum bond dimension
+        strict: If True (PROOF MODE), raise on critical. If False, just log.
+        c_hard: Multiplier for hard threshold (default 1.0 = exactly O(N·d·χ²))
+        c_soft: Multiplier for soft threshold (default 0.1)
+    
+    Thresholds:
+        hard = c_hard * N * d * chi_max² 
+        soft = c_soft * N * d * chi_max²
+    &#34;&#34;&#34;
+    hard_threshold = int(c_hard * N * d * chi_max * chi_max)
+    soft_threshold = int(c_soft * N * d * chi_max * chi_max)
+    
+    guard = DenseMaterializationGuard(
+        hard_threshold=hard_threshold,
+        soft_threshold=soft_threshold,
+        forbid=strict,
+        allow_diagnostics=True,
+        N=N,
+        d=d
+    )
+    with guard:
+        yield guard</code></pre>
+</details>
+<div class="desc"><p>Context manager to forbid dense materialization with auto-computed thresholds.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>N</code></strong></dt>
+<dd>Grid size</dd>
+<dt><strong><code>d</code></strong></dt>
+<dd>Physical dimension (default 3 for CFD)</dd>
+<dt><strong><code>chi_max</code></strong></dt>
+<dd>Maximum bond dimension</dd>
+<dt><strong><code>strict</code></strong></dt>
+<dd>If True (PROOF MODE), raise on critical. If False, just log.</dd>
+<dt><strong><code>c_hard</code></strong></dt>
+<dd>Multiplier for hard threshold (default 1.0 = exactly O(N·d·χ²))</dd>
+<dt><strong><code>c_soft</code></strong></dt>
+<dd>Multiplier for soft threshold (default 0.1)</dd>
+</dl>
+<h2 id="thresholds">Thresholds</h2>
+<p>hard = c_hard * N * d * chi_max²
+soft = c_soft * N * d * chi_max²</p></div>
+</dd>
+<dt id="tensornet.core.dense_guard.verify_tt_native_operation"><code class="name flex">
+<span>def <span class="ident">verify_tt_native_operation</span></span>(<span>input_cores: list, output_cores: list, operation_name: str, chi_max: int) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def verify_tt_native_operation(
+    input_cores: list,
+    output_cores: list,
+    operation_name: str,
+    chi_max: int
+) -&gt; dict:
+    &#34;&#34;&#34;
+    Verify that a TT operation maintains TT-native complexity.
+    &#34;&#34;&#34;
+    input_total = sum(c.numel() for c in input_cores)
+    output_total = sum(c.numel() for c in output_cores)
+    
+    ratio = output_total / max(input_total, 1)
+    is_tt_native = ratio &lt;= chi_max * 2
+    
+    return {
+        &#39;operation&#39;: operation_name,
+        &#39;input_elements&#39;: input_total,
+        &#39;output_elements&#39;: output_total,
+        &#39;growth_ratio&#39;: ratio,
+        &#39;is_tt_native&#39;: is_tt_native,
+        &#39;passed&#39;: is_tt_native
+    }</code></pre>
+</details>
+<div class="desc"><p>Verify that a TT operation maintains TT-native complexity.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.core.dense_guard.DenseMaterializationGuard"><code class="flex name class">
+<span>class <span class="ident">DenseMaterializationGuard</span></span>
+<span>(</span><span>hard_threshold: int = 10000,<br>soft_threshold: int = 1000,<br>forbid: bool = True,<br>allow_diagnostics: bool = True,<br>N: int = 64,<br>d: int = 3)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass  
+class DenseMaterializationGuard:
+    &#34;&#34;&#34;
+    Context manager that monitors and optionally forbids dense materialization.
+    
+    Two threshold levels:
+        - soft_threshold: O(N·d·χ) - flags for review, small buffers OK
+        - hard_threshold: O(N·d·χ²) - absolute limit, anything larger is CRITICAL
+    
+    Attributes:
+        hard_threshold: Maximum allowed allocation (elements). Exceeding = critical.
+        soft_threshold: Warning threshold. Between soft and hard = flagged but allowed.
+        forbid: If True, raise exception on CRITICAL violation. If False, just log.
+        allow_diagnostics: If True, O(N·d) allocations are always allowed.
+    &#34;&#34;&#34;
+    hard_threshold: int = 10000  # O(N·d·χ²) scale
+    soft_threshold: int = 1000   # O(N·d·χ) scale  
+    forbid: bool = True          # PROOF MODE by default
+    allow_diagnostics: bool = True  # O(N·d) vectors allowed
+    N: int = 64                  # Grid size for diagnostic threshold
+    d: int = 3                   # Physical dimension
+    
+    # Class-level tracking
+    _active: bool = False
+    _violations: List[DenseViolation] = field(default_factory=list)
+    _original_methods: Dict[str, Callable] = field(default_factory=dict)
+    _total_dense_elements: int = 0
+    _critical_count: int = 0
+    _lock: threading.Lock = field(default_factory=threading.Lock)
+    
+    def __post_init__(self):
+        self._violations = []
+        self._original_methods = {}
+        self._total_dense_elements = 0
+        self._critical_count = 0
+        self._lock = threading.Lock()
+        
+        # Diagnostic threshold: O(N·d) is always OK
+        self._diagnostic_threshold = self.N * self.d * 10  # 10x buffer
+    
+    @property
+    def violations(self) -&gt; int:
+        &#34;&#34;&#34;Number of dense materialization violations detected.&#34;&#34;&#34;
+        return len(self._violations)
+    
+    @property
+    def critical_violations(self) -&gt; int:
+        &#34;&#34;&#34;Number of CRITICAL violations (exceed hard threshold).&#34;&#34;&#34;
+        return self._critical_count
+    
+    @property
+    def total_dense_elements(self) -&gt; int:
+        &#34;&#34;&#34;Total number of dense elements materialized.&#34;&#34;&#34;
+        return self._total_dense_elements
+    
+    def get_violations(self) -&gt; List[DenseViolation]:
+        &#34;&#34;&#34;Get list of all violations.&#34;&#34;&#34;
+        return self._violations.copy()
+    
+    def _is_diagnostic_size(self, size: int) -&gt; bool:
+        &#34;&#34;&#34;Check if size is diagnostic-scale O(N·d), not grid-scale O(N²+).&#34;&#34;&#34;
+        return self.allow_diagnostics and size &lt;= self._diagnostic_threshold
+    
+    def _record_violation(
+        self,
+        operation: str,
+        size: int,
+        shape: Tuple[int, ...],
+        message: str = &#34;&#34;
+    ) -&gt; None:
+        &#34;&#34;&#34;Record a dense materialization violation.&#34;&#34;&#34;
+        import traceback
+        
+        # Skip diagnostic-scale allocations
+        if self._is_diagnostic_size(size):
+            return
+        
+        # Determine severity
+        is_critical = size &gt;= self.hard_threshold
+        
+        # Get call location
+        stack = traceback.extract_stack()
+        location = &#34;unknown&#34;
+        for frame in reversed(stack[:-2]):
+            if &#39;dense_guard.py&#39; not in frame.filename:
+                location = f&#34;{frame.filename}:{frame.lineno} in {frame.name}&#34;
+                break
+        
+        violation = DenseViolation(
+            operation=operation,
+            size=size,
+            shape=shape,
+            location=location,
+            message=message,
+            is_critical=is_critical
+        )
+        
+        with self._lock:
+            self._violations.append(violation)
+            self._total_dense_elements += size
+            if is_critical:
+                self._critical_count += 1
+        
+        severity = &#34;CRITICAL&#34; if is_critical else &#34;WARNING&#34;
+        msg = (f&#34;[{severity}] Dense materialization: {operation} &#34;
+               f&#34;size={size:,} shape={shape} at {location}&#34;)
+        
+        if is_critical and self.forbid:
+            raise RuntimeError(f&#34;FORBIDDEN DENSE MATERIALIZATION: {msg}&#34;)
+        elif is_critical:
+            warnings.warn(f&#34;CRITICAL: {msg}&#34;, stacklevel=4)
+        elif size &gt;= self.soft_threshold:
+            warnings.warn(msg, stacklevel=4)
+    
+    def _wrap_factory(self, name: str, original: Callable) -&gt; Callable:
+        &#34;&#34;&#34;Wrap torch factory functions (zeros, ones, full, empty, tensor, etc.).&#34;&#34;&#34;
+        guard = self
+        
+        @functools.wraps(original)
+        def wrapped(*args, **kwargs):
+            result = original(*args, **kwargs)
+            size = result.numel()
+            if size &gt;= guard.soft_threshold:
+                guard._record_violation(
+                    f&#39;torch.{name}()&#39;,
+                    size,
+                    tuple(result.shape),
+                    f&#34;Dense tensor created via {name}()&#34;
+                )
+            return result
+        
+        return wrapped
+    
+    def _wrap_like_factory(self, name: str, original: Callable) -&gt; Callable:
+        &#34;&#34;&#34;Wrap torch _like factory functions.&#34;&#34;&#34;
+        guard = self
+        
+        @functools.wraps(original)
+        def wrapped(tensor, *args, **kwargs):
+            result = original(tensor, *args, **kwargs)
+            size = result.numel()
+            if size &gt;= guard.soft_threshold:
+                guard._record_violation(
+                    f&#39;torch.{name}()&#39;,
+                    size,
+                    tuple(result.shape),
+                    f&#34;Dense tensor created via {name}()&#34;
+                )
+            return result
+        
+        return wrapped
+    
+    def _wrap_combining(self, name: str, original: Callable) -&gt; Callable:
+        &#34;&#34;&#34;Wrap torch combining functions (stack, cat).&#34;&#34;&#34;
+        guard = self
+        
+        @functools.wraps(original)
+        def wrapped(tensors, *args, **kwargs):
+            result = original(tensors, *args, **kwargs)
+            size = result.numel()
+            if size &gt;= guard.soft_threshold:
+                guard._record_violation(
+                    f&#39;torch.{name}()&#39;,
+                    size,
+                    tuple(result.shape),
+                    f&#34;Dense tensor created via {name}()&#34;
+                )
+            return result
+        
+        return wrapped
+    
+    def _wrap_tensor_method(self, name: str, original: Callable) -&gt; Callable:
+        &#34;&#34;&#34;Wrap Tensor methods (clone, contiguous, numpy, tolist).&#34;&#34;&#34;
+        guard = self
+        
+        @functools.wraps(original)
+        def wrapped(self_tensor, *args, **kwargs):
+            result = original(self_tensor, *args, **kwargs)
+            size = self_tensor.numel()
+            if size &gt;= guard.soft_threshold:
+                guard._record_violation(
+                    f&#39;Tensor.{name}()&#39;,
+                    size,
+                    tuple(self_tensor.shape),
+                    f&#34;Dense operation via {name}()&#34;
+                )
+            return result
+        
+        return wrapped
+    
+    def __enter__(self) -&gt; &#39;DenseMaterializationGuard&#39;:
+        &#34;&#34;&#34;Activate the guard by patching monitored methods.&#34;&#34;&#34;
+        self._active = True
+        self._violations = []
+        self._total_dense_elements = 0
+        self._critical_count = 0
+        
+        # 1. Factory functions
+        for name in [&#39;zeros&#39;, &#39;ones&#39;, &#39;full&#39;, &#39;empty&#39;, &#39;tensor&#39;, &#39;arange&#39;, &#39;linspace&#39;]:
+            if hasattr(torch, name):
+                self._original_methods[f&#39;torch.{name}&#39;] = getattr(torch, name)
+                setattr(torch, name, self._wrap_factory(name, getattr(torch, name)))
+        
+        # 2. _like factory functions
+        for name in [&#39;zeros_like&#39;, &#39;ones_like&#39;, &#39;full_like&#39;, &#39;empty_like&#39;]:
+            if hasattr(torch, name):
+                self._original_methods[f&#39;torch.{name}&#39;] = getattr(torch, name)
+                setattr(torch, name, self._wrap_like_factory(name, getattr(torch, name)))
+        
+        # 3. Combining functions
+        for name in [&#39;stack&#39;, &#39;cat&#39;]:
+            if hasattr(torch, name):
+                self._original_methods[f&#39;torch.{name}&#39;] = getattr(torch, name)
+                setattr(torch, name, self._wrap_combining(name, getattr(torch, name)))
+        
+        # 4. Tensor methods
+        for name in [&#39;numpy&#39;, &#39;tolist&#39;, &#39;clone&#39;, &#39;contiguous&#39;]:
+            if hasattr(torch.Tensor, name):
+                self._original_methods[f&#39;Tensor.{name}&#39;] = getattr(torch.Tensor, name)
+                setattr(torch.Tensor, name, self._wrap_tensor_method(name, getattr(torch.Tensor, name)))
+        
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb) -&gt; bool:
+        &#34;&#34;&#34;Restore original methods.&#34;&#34;&#34;
+        self._active = False
+        
+        # Restore torch functions
+        for name in [&#39;zeros&#39;, &#39;ones&#39;, &#39;full&#39;, &#39;empty&#39;, &#39;tensor&#39;, &#39;arange&#39;, &#39;linspace&#39;,
+                     &#39;zeros_like&#39;, &#39;ones_like&#39;, &#39;full_like&#39;, &#39;empty_like&#39;,
+                     &#39;stack&#39;, &#39;cat&#39;]:
+            key = f&#39;torch.{name}&#39;
+            if key in self._original_methods:
+                setattr(torch, name, self._original_methods[key])
+        
+        # Restore Tensor methods
+        for name in [&#39;numpy&#39;, &#39;tolist&#39;, &#39;clone&#39;, &#39;contiguous&#39;]:
+            key = f&#39;Tensor.{name}&#39;
+            if key in self._original_methods:
+                setattr(torch.Tensor, name, self._original_methods[key])
+        
+        self._original_methods.clear()
+        
+        # Don&#39;t suppress exceptions
+        return False
+    
+    def report(self) -&gt; str:
+        &#34;&#34;&#34;Generate a human-readable report of violations.&#34;&#34;&#34;
+        lines = [
+            &#34;=&#34; * 60,
+            &#34;Dense Materialization Guard Report&#34;,
+            &#34;=&#34; * 60,
+            f&#34;Mode: {&#39;PROOF (forbid=True)&#39; if self.forbid else &#39;DIAGNOSTIC (forbid=False)&#39;}&#34;,
+            f&#34;Soft threshold: {self.soft_threshold:,} elements (O(N·d·χ) scale)&#34;,
+            f&#34;Hard threshold: {self.hard_threshold:,} elements (O(N·d·χ²) scale)&#34;,
+            f&#34;Diagnostic allowed: O(N·d) ≤ {self._diagnostic_threshold:,} elements&#34;,
+            &#34;&#34;,
+            f&#34;Total violations: {len(self._violations)}&#34;,
+            f&#34;Critical violations: {self._critical_count}&#34;,
+            f&#34;Total dense elements: {self._total_dense_elements:,}&#34;,
+            &#34;&#34;
+        ]
+        
+        if self._violations:
+            lines.append(&#34;Violations:&#34;)
+            for i, v in enumerate(self._violations, 1):
+                severity = &#34;🔴 CRITICAL&#34; if v.is_critical else &#34;🟡 WARNING&#34;
+                lines.append(f&#34;  {i}. [{severity}] {v.operation}&#34;)
+                lines.append(f&#34;     Size: {v.size:,} elements, Shape: {v.shape}&#34;)
+                lines.append(f&#34;     Location: {v.location}&#34;)
+                if v.message:
+                    lines.append(f&#34;     Note: {v.message}&#34;)
+                lines.append(&#34;&#34;)
+        else:
+            lines.append(&#34;✅ No dense materializations above threshold!&#34;)
+        
+        lines.append(&#34;=&#34; * 60)
+        return &#34;\n&#34;.join(lines)</code></pre>
+</details>
+<div class="desc"><p>Context manager that monitors and optionally forbids dense materialization.</p>
+<p>Two threshold levels:
+- soft_threshold: O(N·d·χ) - flags for review, small buffers OK
+- hard_threshold: O(N·d·χ²) - absolute limit, anything larger is CRITICAL</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>hard_threshold</code></strong></dt>
+<dd>Maximum allowed allocation (elements). Exceeding = critical.</dd>
+<dt><strong><code>soft_threshold</code></strong></dt>
+<dd>Warning threshold. Between soft and hard = flagged but allowed.</dd>
+<dt><strong><code>forbid</code></strong></dt>
+<dd>If True, raise exception on CRITICAL violation. If False, just log.</dd>
+<dt><strong><code>allow_diagnostics</code></strong></dt>
+<dd>If True, O(N·d) allocations are always allowed.</dd>
+</dl></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.core.dense_guard.DenseMaterializationGuard.N"><code class="name">var <span class="ident">N</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.core.dense_guard.DenseMaterializationGuard.allow_diagnostics"><code class="name">var <span class="ident">allow_diagnostics</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.core.dense_guard.DenseMaterializationGuard.critical_violations"><code class="name">prop <span class="ident">critical_violations</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def critical_violations(self) -&gt; int:
+    &#34;&#34;&#34;Number of CRITICAL violations (exceed hard threshold).&#34;&#34;&#34;
+    return self._critical_count</code></pre>
+</details>
+<div class="desc"><p>Number of CRITICAL violations (exceed hard threshold).</p></div>
+</dd>
+<dt id="tensornet.core.dense_guard.DenseMaterializationGuard.d"><code class="name">var <span class="ident">d</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.core.dense_guard.DenseMaterializationGuard.forbid"><code class="name">var <span class="ident">forbid</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.core.dense_guard.DenseMaterializationGuard.hard_threshold"><code class="name">var <span class="ident">hard_threshold</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.core.dense_guard.DenseMaterializationGuard.soft_threshold"><code class="name">var <span class="ident">soft_threshold</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.core.dense_guard.DenseMaterializationGuard.total_dense_elements"><code class="name">prop <span class="ident">total_dense_elements</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def total_dense_elements(self) -&gt; int:
+    &#34;&#34;&#34;Total number of dense elements materialized.&#34;&#34;&#34;
+    return self._total_dense_elements</code></pre>
+</details>
+<div class="desc"><p>Total number of dense elements materialized.</p></div>
+</dd>
+<dt id="tensornet.core.dense_guard.DenseMaterializationGuard.violations"><code class="name">prop <span class="ident">violations</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def violations(self) -&gt; int:
+    &#34;&#34;&#34;Number of dense materialization violations detected.&#34;&#34;&#34;
+    return len(self._violations)</code></pre>
+</details>
+<div class="desc"><p>Number of dense materialization violations detected.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="tensornet.core.dense_guard.DenseMaterializationGuard.get_violations"><code class="name flex">
+<span>def <span class="ident">get_violations</span></span>(<span>self) ‑> List[<a title="tensornet.core.dense_guard.DenseViolation" href="#tensornet.core.dense_guard.DenseViolation">DenseViolation</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_violations(self) -&gt; List[DenseViolation]:
+    &#34;&#34;&#34;Get list of all violations.&#34;&#34;&#34;
+    return self._violations.copy()</code></pre>
+</details>
+<div class="desc"><p>Get list of all violations.</p></div>
+</dd>
+<dt id="tensornet.core.dense_guard.DenseMaterializationGuard.report"><code class="name flex">
+<span>def <span class="ident">report</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def report(self) -&gt; str:
+    &#34;&#34;&#34;Generate a human-readable report of violations.&#34;&#34;&#34;
+    lines = [
+        &#34;=&#34; * 60,
+        &#34;Dense Materialization Guard Report&#34;,
+        &#34;=&#34; * 60,
+        f&#34;Mode: {&#39;PROOF (forbid=True)&#39; if self.forbid else &#39;DIAGNOSTIC (forbid=False)&#39;}&#34;,
+        f&#34;Soft threshold: {self.soft_threshold:,} elements (O(N·d·χ) scale)&#34;,
+        f&#34;Hard threshold: {self.hard_threshold:,} elements (O(N·d·χ²) scale)&#34;,
+        f&#34;Diagnostic allowed: O(N·d) ≤ {self._diagnostic_threshold:,} elements&#34;,
+        &#34;&#34;,
+        f&#34;Total violations: {len(self._violations)}&#34;,
+        f&#34;Critical violations: {self._critical_count}&#34;,
+        f&#34;Total dense elements: {self._total_dense_elements:,}&#34;,
+        &#34;&#34;
+    ]
+    
+    if self._violations:
+        lines.append(&#34;Violations:&#34;)
+        for i, v in enumerate(self._violations, 1):
+            severity = &#34;🔴 CRITICAL&#34; if v.is_critical else &#34;🟡 WARNING&#34;
+            lines.append(f&#34;  {i}. [{severity}] {v.operation}&#34;)
+            lines.append(f&#34;     Size: {v.size:,} elements, Shape: {v.shape}&#34;)
+            lines.append(f&#34;     Location: {v.location}&#34;)
+            if v.message:
+                lines.append(f&#34;     Note: {v.message}&#34;)
+            lines.append(&#34;&#34;)
+    else:
+        lines.append(&#34;✅ No dense materializations above threshold!&#34;)
+    
+    lines.append(&#34;=&#34; * 60)
+    return &#34;\n&#34;.join(lines)</code></pre>
+</details>
+<div class="desc"><p>Generate a human-readable report of violations.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.core.dense_guard.DenseViolation"><code class="flex name class">
+<span>class <span class="ident">DenseViolation</span></span>
+<span>(</span><span>operation: str,<br>size: int,<br>shape: Tuple[int, ...],<br>location: str,<br>message: str,<br>is_critical: bool)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class DenseViolation:
+    &#34;&#34;&#34;Record of a dense materialization violation.&#34;&#34;&#34;
+    operation: str
+    size: int
+    shape: Tuple[int, ...]
+    location: str
+    message: str
+    is_critical: bool  # True if exceeds hard threshold</code></pre>
+</details>
+<div class="desc"><p>Record of a dense materialization violation.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.core.dense_guard.DenseViolation.is_critical"><code class="name">var <span class="ident">is_critical</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.core.dense_guard.DenseViolation.location"><code class="name">var <span class="ident">location</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.core.dense_guard.DenseViolation.message"><code class="name">var <span class="ident">message</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.core.dense_guard.DenseViolation.operation"><code class="name">var <span class="ident">operation</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.core.dense_guard.DenseViolation.shape"><code class="name">var <span class="ident">shape</span> : Tuple[int, ...]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.core.dense_guard.DenseViolation.size"><code class="name">var <span class="ident">size</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#dense-materialization-guard">Dense Materialization Guard</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.core" href="index.html">tensornet.core</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.core.dense_guard.assert_no_dense_materialization" href="#tensornet.core.dense_guard.assert_no_dense_materialization">assert_no_dense_materialization</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.check_tt_complexity" href="#tensornet.core.dense_guard.check_tt_complexity">check_tt_complexity</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.forbid_dense" href="#tensornet.core.dense_guard.forbid_dense">forbid_dense</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.verify_tt_native_operation" href="#tensornet.core.dense_guard.verify_tt_native_operation">verify_tt_native_operation</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.core.dense_guard.DenseMaterializationGuard" href="#tensornet.core.dense_guard.DenseMaterializationGuard">DenseMaterializationGuard</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.core.dense_guard.DenseMaterializationGuard.N" href="#tensornet.core.dense_guard.DenseMaterializationGuard.N">N</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.DenseMaterializationGuard.allow_diagnostics" href="#tensornet.core.dense_guard.DenseMaterializationGuard.allow_diagnostics">allow_diagnostics</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.DenseMaterializationGuard.critical_violations" href="#tensornet.core.dense_guard.DenseMaterializationGuard.critical_violations">critical_violations</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.DenseMaterializationGuard.d" href="#tensornet.core.dense_guard.DenseMaterializationGuard.d">d</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.DenseMaterializationGuard.forbid" href="#tensornet.core.dense_guard.DenseMaterializationGuard.forbid">forbid</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.DenseMaterializationGuard.get_violations" href="#tensornet.core.dense_guard.DenseMaterializationGuard.get_violations">get_violations</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.DenseMaterializationGuard.hard_threshold" href="#tensornet.core.dense_guard.DenseMaterializationGuard.hard_threshold">hard_threshold</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.DenseMaterializationGuard.report" href="#tensornet.core.dense_guard.DenseMaterializationGuard.report">report</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.DenseMaterializationGuard.soft_threshold" href="#tensornet.core.dense_guard.DenseMaterializationGuard.soft_threshold">soft_threshold</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.DenseMaterializationGuard.total_dense_elements" href="#tensornet.core.dense_guard.DenseMaterializationGuard.total_dense_elements">total_dense_elements</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.DenseMaterializationGuard.violations" href="#tensornet.core.dense_guard.DenseMaterializationGuard.violations">violations</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.core.dense_guard.DenseViolation" href="#tensornet.core.dense_guard.DenseViolation">DenseViolation</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.core.dense_guard.DenseViolation.is_critical" href="#tensornet.core.dense_guard.DenseViolation.is_critical">is_critical</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.DenseViolation.location" href="#tensornet.core.dense_guard.DenseViolation.location">location</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.DenseViolation.message" href="#tensornet.core.dense_guard.DenseViolation.message">message</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.DenseViolation.operation" href="#tensornet.core.dense_guard.DenseViolation.operation">operation</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.DenseViolation.shape" href="#tensornet.core.dense_guard.DenseViolation.shape">shape</a></code></li>
+<li><code><a title="tensornet.core.dense_guard.DenseViolation.size" href="#tensornet.core.dense_guard.DenseViolation.size">size</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

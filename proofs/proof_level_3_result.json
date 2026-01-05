@@ -1,0 +1,67 @@
+{
+  "level": 3,
+  "name": "Computational Discovery",
+  "passed": 3,
+  "total": 4,
+  "timestamp": "2025-12-22T15:36:07.396381",
+  "gates": {
+    "gate_1_re1000": {
+      "passed": true,
+      "Re": 1000,
+      "N": 32,
+      "chi_initial": 2,
+      "chi_max": 49,
+      "chi_final": 49,
+      "chi_growth_rate": 0.6614937140344914,
+      "regularity": "smooth",
+      "n_samples": 51
+    },
+    "gate_2_re10000": {
+      "passed": false,
+      "Re": 10000,
+      "N": 32,
+      "chi_initial": 2,
+      "chi_max": 49,
+      "chi_final": 49,
+      "chi_growth_rate": 1.3798343566859468,
+      "regularity": "potential_blowup",
+      "n_samples": 51
+    },
+    "gate_3_scaling": {
+      "passed": true,
+      "Re_values": [
+        100,
+        500,
+        1000,
+        2000,
+        5000
+      ],
+      "chi_max_values": [
+        20,
+        23,
+        23,
+        23,
+        23
+      ],
+      "alpha": 0.03453677173768594,
+      "r_squared": 0.6684226880912698,
+      "interpretation": "SUBLINEAR: chi grows slowly with Re (favorable for regularity)"
+    },
+    "gate_4_blowup": {
+      "passed": true,
+      "Re": 2000,
+      "chi_max": 49,
+      "chi_ratio": 24.5,
+      "acceleration": -3.4191873814515326,
+      "blowup_indicators": [
+        "large_chi_ratio"
+      ],
+      "bound_indicators": [
+        "decelerating_growth",
+        "growth_rate_decreasing"
+      ],
+      "verdict": "LIKELY_BOUNDED",
+      "n_samples": 108
+    }
+  }
+}

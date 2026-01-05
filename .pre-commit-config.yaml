@@ -1,0 +1,59 @@
+# Pre-commit Configuration
+# Constitutional Compliance: Article VII, Section 7.3
+
+# Install: pip install pre-commit && pre-commit install
+
+repos:
+  # Ruff - Fast Python linter and formatter
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.4
+    hooks:
+      # Linting
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+      # Formatting
+      - id: ruff-format
+
+  # pytest - Run fast tests before commit
+  # Note: Runs only unit tests to keep commits fast
+  # Full test suite should be run before pushing
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest (fast)
+        entry: pytest tests/ -q --tb=line -x -m "unit and not slow" --ignore=tests/integration
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [commit]
+
+  # Check for secrets
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: requirements-lock.txt
+
+  # Notebook output stripping
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.6.1
+    hooks:
+      - id: nbstripout
+        files: '\.ipynb$'
+
+  # Standard pre-commit hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+
+# CI configuration
+ci:
+  autofix_prs: true
+  autoupdate_schedule: weekly

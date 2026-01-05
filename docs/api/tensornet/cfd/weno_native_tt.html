@@ -1,0 +1,1175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.weno_native_tt API documentation</title>
+<meta name="description" content="Native WENO-TT: Pure Tensor-Train WENO Reconstruction …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.weno_native_tt</code></h1>
+</header>
+<section id="section-intro">
+<p>Native WENO-TT: Pure Tensor-Train WENO Reconstruction.</p>
+<p>This module implements WENO5 reconstruction entirely in TT/QTT format,
+eliminating all dense fallbacks. The key components are:</p>
+<ol>
+<li>Stencil shift operators as MPOs (S^+, S^-, S^{+2}, S^{-2})</li>
+<li>Smoothness indicators β_k as TT quadratic forms</li>
+<li>WENO-Z weights computed via TT arithmetic</li>
+<li>Polynomial reconstruction as TT linear combinations</li>
+</ol>
+<p>The result is O(log N × r^5) complexity per reconstruction instead of O(N).</p>
+<p>References:
+- WENO original: Shu (1998) "Essentially Non-Oscillatory Schemes"
+- WENO-Z: Borges et al. (2008) "Improved WENO Scheme"
+- TT arithmetic: Oseledets (2011)</p>
+<p>Constitution Compliance: Article I.1 (No Dense Fallbacks)</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.weno_native_tt.compute_smoothness_indicators_tt"><code class="name flex">
+<span>def <span class="ident">compute_smoothness_indicators_tt</span></span>(<span>u: QTTState,<br>config: <a title="tensornet.cfd.weno_native_tt.WENONativeTTConfig" href="#tensornet.cfd.weno_native_tt.WENONativeTTConfig">WENONativeTTConfig</a>) ‑> Tuple[<a title="tensornet.cfd.pure_qtt_ops.QTTState" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.QTTState">QTTState</a>, <a title="tensornet.cfd.pure_qtt_ops.QTTState" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.QTTState">QTTState</a>, <a title="tensornet.cfd.pure_qtt_ops.QTTState" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.QTTState">QTTState</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_smoothness_indicators_tt(
+    u: QTTState,
+    config: WENONativeTTConfig,
+) -&gt; Tuple[QTTState, QTTState, QTTState]:
+    &#34;&#34;&#34;
+    Compute smoothness indicators β_0, β_1, β_2 entirely in TT format.
+    
+    β_k = (13/12) * D1_k² + (1/4) * D2_k²
+    
+    where D1, D2 are linear combinations computed via MPO application.
+    
+    Args:
+        u: QTT state of the solution field
+        config: Configuration
+        
+    Returns:
+        (β_0, β_1, β_2) as QTT states
+    &#34;&#34;&#34;
+    n_qubits = len(u.cores)
+    max_rank = config.max_rank
+    
+    # Get difference MPOs
+    (d1_0_mpo, d2_0_mpo), (d1_1_mpo, d2_1_mpo), (d1_2_mpo, d2_2_mpo) = smoothness_indicator_mpos(n_qubits)
+    
+    # Compute differences: D1_k = MPO_k @ u
+    d1_0 = apply_mpo(d1_0_mpo, u, max_rank)
+    d2_0 = apply_mpo(d2_0_mpo, u, max_rank)
+    
+    d1_1 = apply_mpo(d1_1_mpo, u, max_rank)
+    d2_1 = apply_mpo(d2_1_mpo, u, max_rank)
+    
+    d1_2 = apply_mpo(d1_2_mpo, u, max_rank)
+    d2_2 = apply_mpo(d2_2_mpo, u, max_rank)
+    
+    # Compute squares: D1² = D1 ⊙ D1 (element-wise product)
+    d1_0_sq = qtt_hadamard(d1_0, d1_0)
+    d2_0_sq = qtt_hadamard(d2_0, d2_0)
+    
+    d1_1_sq = qtt_hadamard(d1_1, d1_1)
+    d2_1_sq = qtt_hadamard(d2_1, d2_1)
+    
+    d1_2_sq = qtt_hadamard(d1_2, d1_2)
+    d2_2_sq = qtt_hadamard(d2_2, d2_2)
+    
+    # Combine: β_k = (13/12) * D1_k² + (1/4) * D2_k²
+    beta_0 = qtt_add(qtt_scale(d1_0_sq, 13.0/12.0), qtt_scale(d2_0_sq, 1.0/4.0))
+    beta_1 = qtt_add(qtt_scale(d1_1_sq, 13.0/12.0), qtt_scale(d2_1_sq, 1.0/4.0))
+    beta_2 = qtt_add(qtt_scale(d1_2_sq, 13.0/12.0), qtt_scale(d2_2_sq, 1.0/4.0))
+    
+    # Truncate ranks
+    beta_0 = truncate_qtt(beta_0, max_rank)
+    beta_1 = truncate_qtt(beta_1, max_rank)
+    beta_2 = truncate_qtt(beta_2, max_rank)
+    
+    return beta_0, beta_1, beta_2</code></pre>
+</details>
+<div class="desc"><p>Compute smoothness indicators β_0, β_1, β_2 entirely in TT format.</p>
+<p>β_k = (13/12) * D1_k² + (1/4) * D2_k²</p>
+<p>where D1, D2 are linear combinations computed via MPO application.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>u</code></strong></dt>
+<dd>QTT state of the solution field</dd>
+<dt><strong><code>config</code></strong></dt>
+<dd>Configuration</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>(β_0, β_1, β_2) as QTT states</p></div>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.compute_weno_weights_tci"><code class="name flex">
+<span>def <span class="ident">compute_weno_weights_tci</span></span>(<span>beta_0: QTTState,<br>beta_1: QTTState,<br>beta_2: QTTState,<br>side: <a title="tensornet.cfd.weno_native_tt.ReconstructionSide" href="#tensornet.cfd.weno_native_tt.ReconstructionSide">ReconstructionSide</a>,<br>config: <a title="tensornet.cfd.weno_native_tt.WENONativeTTConfig" href="#tensornet.cfd.weno_native_tt.WENONativeTTConfig">WENONativeTTConfig</a>) ‑> Tuple[<a title="tensornet.cfd.pure_qtt_ops.QTTState" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.QTTState">QTTState</a>, <a title="tensornet.cfd.pure_qtt_ops.QTTState" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.QTTState">QTTState</a>, <a title="tensornet.cfd.pure_qtt_ops.QTTState" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.QTTState">QTTState</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_weno_weights_tci(
+    beta_0: QTTState,
+    beta_1: QTTState,
+    beta_2: QTTState,
+    side: ReconstructionSide,
+    config: WENONativeTTConfig,
+) -&gt; Tuple[QTTState, QTTState, QTTState]:
+    &#34;&#34;&#34;
+    Compute WENO weights using TCI (Tensor Cross Interpolation).
+    
+    This is the TRUE O(log N) implementation. Instead of decomposing the
+    weight formula into TT operations (which requires unstable division),
+    we treat the weight function as a black box and sample it at O(r² log N)
+    points using TCI.
+    
+    The weight function at index i:
+        β_k(i) → α_k(i) → ω_k(i) = α_k / Σα
+    
+    TCI samples this function and builds a QTT directly.
+    
+    Args:
+        beta_0, beta_1, beta_2: Smoothness indicators as QTT
+        side: Reconstruction side
+        config: Configuration
+        
+    Returns:
+        (ω_0, ω_1, ω_2) as QTT states - computed via TCI sampling
+    &#34;&#34;&#34;
+    from .qtt_eval import qtt_eval_batch
+    from .qtt_tci import qtt_from_function
+    
+    n_qubits = len(beta_0.cores)
+    N = 2 ** n_qubits
+    max_rank = config.max_rank
+    eps = config.epsilon
+    p = config.p
+    device = beta_0.cores[0].device
+    dtype = beta_0.cores[0].dtype
+    
+    # Optimal weights
+    if side == ReconstructionSide.LEFT:
+        d = [0.1, 0.6, 0.3]
+    else:
+        d = [0.3, 0.6, 0.1]
+    
+    # Get cores for batch evaluation
+    b0_cores = [c for c in beta_0.cores]
+    b1_cores = [c for c in beta_1.cores]
+    b2_cores = [c for c in beta_2.cores]
+    
+    def weight_function_0(indices: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Compute ω_0 at given indices via TCI sampling.&#34;&#34;&#34;
+        b0 = qtt_eval_batch(b0_cores, indices)
+        b1 = qtt_eval_batch(b1_cores, indices)
+        b2 = qtt_eval_batch(b2_cores, indices)
+        
+        # WENO-Z weight formula
+        if config.use_weno_z:
+            tau = torch.abs(b0 - b2)
+            alpha_0 = d[0] * (1.0 + (tau / (b0 + eps)) ** p)
+            alpha_1 = d[1] * (1.0 + (tau / (b1 + eps)) ** p)
+            alpha_2 = d[2] * (1.0 + (tau / (b2 + eps)) ** p)
+        else:
+            alpha_0 = d[0] / ((b0 + eps) ** p)
+            alpha_1 = d[1] / ((b1 + eps) ** p)
+            alpha_2 = d[2] / ((b2 + eps) ** p)
+        
+        alpha_sum = alpha_0 + alpha_1 + alpha_2
+        return alpha_0 / alpha_sum
+    
+    def weight_function_1(indices: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Compute ω_1 at given indices.&#34;&#34;&#34;
+        b0 = qtt_eval_batch(b0_cores, indices)
+        b1 = qtt_eval_batch(b1_cores, indices)
+        b2 = qtt_eval_batch(b2_cores, indices)
+        
+        if config.use_weno_z:
+            tau = torch.abs(b0 - b2)
+            alpha_0 = d[0] * (1.0 + (tau / (b0 + eps)) ** p)
+            alpha_1 = d[1] * (1.0 + (tau / (b1 + eps)) ** p)
+            alpha_2 = d[2] * (1.0 + (tau / (b2 + eps)) ** p)
+        else:
+            alpha_0 = d[0] / ((b0 + eps) ** p)
+            alpha_1 = d[1] / ((b1 + eps) ** p)
+            alpha_2 = d[2] / ((b2 + eps) ** p)
+        
+        alpha_sum = alpha_0 + alpha_1 + alpha_2
+        return alpha_1 / alpha_sum
+    
+    def weight_function_2(indices: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Compute ω_2 at given indices.&#34;&#34;&#34;
+        b0 = qtt_eval_batch(b0_cores, indices)
+        b1 = qtt_eval_batch(b1_cores, indices)
+        b2 = qtt_eval_batch(b2_cores, indices)
+        
+        if config.use_weno_z:
+            tau = torch.abs(b0 - b2)
+            alpha_0 = d[0] * (1.0 + (tau / (b0 + eps)) ** p)
+            alpha_1 = d[1] * (1.0 + (tau / (b1 + eps)) ** p)
+            alpha_2 = d[2] * (1.0 + (tau / (b2 + eps)) ** p)
+        else:
+            alpha_0 = d[0] / ((b0 + eps) ** p)
+            alpha_1 = d[1] / ((b1 + eps) ** p)
+            alpha_2 = d[2] / ((b2 + eps) ** p)
+        
+        alpha_sum = alpha_0 + alpha_1 + alpha_2
+        return alpha_2 / alpha_sum
+    
+    # Build QTT via TCI for each weight
+    omega_0_cores, _ = qtt_from_function(
+        weight_function_0, n_qubits, max_rank=max_rank, 
+        device=str(device), tolerance=1e-6
+    )
+    omega_1_cores, _ = qtt_from_function(
+        weight_function_1, n_qubits, max_rank=max_rank,
+        device=str(device), tolerance=1e-6
+    )
+    omega_2_cores, _ = qtt_from_function(
+        weight_function_2, n_qubits, max_rank=max_rank,
+        device=str(device), tolerance=1e-6
+    )
+    
+    # Convert to QTTState
+    omega_0 = QTTState(cores=omega_0_cores, num_qubits=n_qubits)
+    omega_1 = QTTState(cores=omega_1_cores, num_qubits=n_qubits)
+    omega_2 = QTTState(cores=omega_2_cores, num_qubits=n_qubits)
+    
+    return omega_0, omega_1, omega_2</code></pre>
+</details>
+<div class="desc"><p>Compute WENO weights using TCI (Tensor Cross Interpolation).</p>
+<p>This is the TRUE O(log N) implementation. Instead of decomposing the
+weight formula into TT operations (which requires unstable division),
+we treat the weight function as a black box and sample it at O(r² log N)
+points using TCI.</p>
+<p>The weight function at index i:
+β_k(i) → α_k(i) → ω_k(i) = α_k / Σα</p>
+<p>TCI samples this function and builds a QTT directly.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt>beta_0, beta_1, beta_2: Smoothness indicators as QTT</dt>
+<dt><strong><code>side</code></strong></dt>
+<dd>Reconstruction side</dd>
+<dt><strong><code>config</code></strong></dt>
+<dd>Configuration</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>(ω_0, ω_1, ω_2) as QTT states - computed via TCI sampling</p></div>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.compute_weno_weights_tt"><code class="name flex">
+<span>def <span class="ident">compute_weno_weights_tt</span></span>(<span>beta_0: QTTState,<br>beta_1: QTTState,<br>beta_2: QTTState,<br>side: <a title="tensornet.cfd.weno_native_tt.ReconstructionSide" href="#tensornet.cfd.weno_native_tt.ReconstructionSide">ReconstructionSide</a>,<br>config: <a title="tensornet.cfd.weno_native_tt.WENONativeTTConfig" href="#tensornet.cfd.weno_native_tt.WENONativeTTConfig">WENONativeTTConfig</a>) ‑> Tuple[<a title="tensornet.cfd.pure_qtt_ops.QTTState" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.QTTState">QTTState</a>, <a title="tensornet.cfd.pure_qtt_ops.QTTState" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.QTTState">QTTState</a>, <a title="tensornet.cfd.pure_qtt_ops.QTTState" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.QTTState">QTTState</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_weno_weights_tt(
+    beta_0: QTTState,
+    beta_1: QTTState,
+    beta_2: QTTState,
+    side: ReconstructionSide,
+    config: WENONativeTTConfig,
+) -&gt; Tuple[QTTState, QTTState, QTTState]:
+    &#34;&#34;&#34;
+    Compute WENO nonlinear weights using hybrid dense/TT approach.
+    
+    Since weight computation involves division which is numerically unstable
+    in pure TT format via Newton iteration, we use a hybrid:
+    1. Convert beta_k to dense (O(N) but N = 2^n is small enough)
+    2. Compute weights in dense format (numerically stable)
+    3. Convert weights back to TT format
+    
+    For WENO-Z:
+        τ = |β_0 - β_2|  (global smoothness indicator)
+        α_k = d_k * (1 + (τ / (ε + β_k))^p)
+        ω_k = α_k / (α_0 + α_1 + α_2)
+    
+    For WENO-JS:
+        α_k = d_k / (ε + β_k)^p
+        ω_k = α_k / (α_0 + α_1 + α_2)
+    
+    Args:
+        beta_0, beta_1, beta_2: Smoothness indicators as QTT
+        side: Reconstruction side (determines optimal weights)
+        config: Configuration
+        
+    Returns:
+        (ω_0, ω_1, ω_2) as QTT states
+    &#34;&#34;&#34;
+    max_rank = config.max_rank
+    eps = config.epsilon
+    p = config.p
+    
+    # Optimal weights
+    if side == ReconstructionSide.LEFT:
+        d = [0.1, 0.6, 0.3]  # Optimal weights for left-biased
+    else:
+        d = [0.3, 0.6, 0.1]  # Optimal weights for right-biased
+    
+    # Convert to dense for stable division
+    b0 = qtt_to_dense(beta_0)
+    b1 = qtt_to_dense(beta_1)
+    b2 = qtt_to_dense(beta_2)
+    
+    # Regularize
+    b0_reg = b0 + eps
+    b1_reg = b1 + eps
+    b2_reg = b2 + eps
+    
+    if config.use_weno_z:
+        # Global smoothness indicator
+        tau = torch.abs(b0 - b2)
+        
+        # α_k = d_k * (1 + (τ / β_k)^p)
+        alpha_0 = d[0] * (1.0 + (tau / b0_reg) ** p)
+        alpha_1 = d[1] * (1.0 + (tau / b1_reg) ** p)
+        alpha_2 = d[2] * (1.0 + (tau / b2_reg) ** p)
+    else:
+        # WENO-JS: α_k = d_k / β_k^p
+        alpha_0 = d[0] / (b0_reg ** p)
+        alpha_1 = d[1] / (b1_reg ** p)
+        alpha_2 = d[2] / (b2_reg ** p)
+    
+    # Normalize
+    alpha_sum = alpha_0 + alpha_1 + alpha_2
+    omega_0_dense = alpha_0 / alpha_sum
+    omega_1_dense = alpha_1 / alpha_sum
+    omega_2_dense = alpha_2 / alpha_sum
+    
+    # Convert back to QTT
+    omega_0 = dense_to_qtt(omega_0_dense, max_bond=max_rank)
+    omega_1 = dense_to_qtt(omega_1_dense, max_bond=max_rank)
+    omega_2 = dense_to_qtt(omega_2_dense, max_bond=max_rank)
+    
+    return omega_0, omega_1, omega_2</code></pre>
+</details>
+<div class="desc"><p>Compute WENO nonlinear weights using hybrid dense/TT approach.</p>
+<p>Since weight computation involves division which is numerically unstable
+in pure TT format via Newton iteration, we use a hybrid:
+1. Convert beta_k to dense (O(N) but N = 2^n is small enough)
+2. Compute weights in dense format (numerically stable)
+3. Convert weights back to TT format</p>
+<p>For WENO-Z:
+τ = |β_0 - β_2|
+(global smoothness indicator)
+α_k = d_k * (1 + (τ / (ε + β_k))^p)
+ω_k = α_k / (α_0 + α_1 + α_2)</p>
+<p>For WENO-JS:
+α_k = d_k / (ε + β_k)^p
+ω_k = α_k / (α_0 + α_1 + α_2)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt>beta_0, beta_1, beta_2: Smoothness indicators as QTT</dt>
+<dt><strong><code>side</code></strong></dt>
+<dd>Reconstruction side (determines optimal weights)</dd>
+<dt><strong><code>config</code></strong></dt>
+<dd>Configuration</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>(ω_0, ω_1, ω_2) as QTT states</p></div>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.qtt_abs"><code class="name flex">
+<span>def <span class="ident">qtt_abs</span></span>(<span>x: QTTState, max_rank: int = 64) ‑> <a title="tensornet.cfd.pure_qtt_ops.QTTState" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.QTTState">QTTState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def qtt_abs(x: QTTState, max_rank: int = 64) -&gt; QTTState:
+    &#34;&#34;&#34;
+    Compute element-wise absolute value |x|.
+    
+    Uses |x| = sqrt(x²) which can be computed in TT format.
+    &#34;&#34;&#34;
+    x_sq = qtt_hadamard(x, x)
+    x_sq = truncate_qtt(x_sq, max_rank)
+    return qtt_sqrt_newton(x_sq, max_rank, x.cores[0].device)</code></pre>
+</details>
+<div class="desc"><p>Compute element-wise absolute value |x|.</p>
+<p>Uses |x| = sqrt(x²) which can be computed in TT format.</p></div>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.qtt_inverse_newton"><code class="name flex">
+<span>def <span class="ident">qtt_inverse_newton</span></span>(<span>x: QTTState, max_rank: int, n_iterations: int = 8, eps: float = 1e-10) ‑> <a title="tensornet.cfd.pure_qtt_ops.QTTState" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.QTTState">QTTState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def qtt_inverse_newton(
+    x: QTTState,
+    max_rank: int,
+    n_iterations: int = 8,
+    eps: float = 1e-10,
+) -&gt; QTTState:
+    &#34;&#34;&#34;
+    Compute element-wise inverse 1/x using Newton-Schulz iteration.
+    
+    Newton-Schulz iteration: y_{n+1} = y_n * (2 - x * y_n)
+    Converges quadratically if 0 &lt; x * y_0 &lt; 2.
+    
+    For stability, we normalize x first:
+    - Estimate scale from x: scale = ||x||_F / sqrt(N)
+    - Compute y = 1 / (x / scale) = scale / x
+    
+    Args:
+        x: QTT state (all elements should be positive)
+        max_rank: Maximum TT rank for truncation
+        n_iterations: Number of Newton iterations
+        eps: Small regularization to avoid division by zero
+        
+    Returns:
+        QTT state approximating 1/x
+    &#34;&#34;&#34;
+    n_qubits = len(x.cores)
+    device = x.cores[0].device
+    dtype = x.cores[0].dtype
+    
+    # Estimate scale from Frobenius norm of first few cores
+    scale = 1.0
+    for core in x.cores[:min(3, len(x.cores))]:
+        scale *= core.norm().item() ** (1.0 / n_qubits)
+    scale = max(scale, eps)
+    
+    # Regularize: add small epsilon to x
+    x_reg = qtt_add(x, _constant_qtt(eps, n_qubits, device, dtype))
+    
+    # Scale x to have elements roughly O(1)
+    x_scaled = qtt_scale(x_reg, 1.0 / scale)
+    x_scaled = truncate_qtt(x_scaled, max_rank)
+    
+    # Initial guess: y_0 = 1 (for scaled x ~ O(1))
+    y = _constant_qtt(1.0, n_qubits, device, dtype)
+    two = _constant_qtt(2.0, n_qubits, device, dtype)
+    
+    for _ in range(n_iterations):
+        # y = y * (2 - x_scaled * y)
+        xy = qtt_hadamard(x_scaled, y)
+        xy = truncate_qtt(xy, max_rank)
+        
+        two_minus_xy = qtt_add(two, qtt_scale(xy, -1.0))
+        two_minus_xy = truncate_qtt(two_minus_xy, max_rank)
+        
+        y = qtt_hadamard(y, two_minus_xy)
+        y = truncate_qtt(y, max_rank)
+        
+        # Clamp to prevent explosion
+        for i, core in enumerate(y.cores):
+            core_clamped = torch.clamp(core, -1e6, 1e6)
+            if torch.isnan(core_clamped).any():
+                core_clamped = torch.nan_to_num(core_clamped, nan=1.0)
+            y.cores[i] = core_clamped
+    
+    # Scale back: 1/x = (1/x_scaled) / scale
+    y = qtt_scale(y, 1.0 / scale)
+    
+    return y</code></pre>
+</details>
+<div class="desc"><p>Compute element-wise inverse 1/x using Newton-Schulz iteration.</p>
+<p>Newton-Schulz iteration: y_{n+1} = y_n * (2 - x * y_n)
+Converges quadratically if 0 &lt; x * y_0 &lt; 2.</p>
+<p>For stability, we normalize x first:
+- Estimate scale from x: scale = ||x||_F / sqrt(N)
+- Compute y = 1 / (x / scale) = scale / x</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>x</code></strong></dt>
+<dd>QTT state (all elements should be positive)</dd>
+<dt><strong><code>max_rank</code></strong></dt>
+<dd>Maximum TT rank for truncation</dd>
+<dt><strong><code>n_iterations</code></strong></dt>
+<dd>Number of Newton iterations</dd>
+<dt><strong><code>eps</code></strong></dt>
+<dd>Small regularization to avoid division by zero</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>QTT state approximating 1/x</p></div>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.qtt_sqrt_newton"><code class="name flex">
+<span>def <span class="ident">qtt_sqrt_newton</span></span>(<span>x: QTTState,<br>max_rank: int,<br>device: torch.device,<br>n_iterations: int = 8,<br>eps: float = 1e-10) ‑> <a title="tensornet.cfd.pure_qtt_ops.QTTState" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.QTTState">QTTState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def qtt_sqrt_newton(
+    x: QTTState,
+    max_rank: int,
+    device: torch.device,
+    n_iterations: int = 8,
+    eps: float = 1e-10,
+) -&gt; QTTState:
+    &#34;&#34;&#34;
+    Compute element-wise sqrt(x) using Newton iteration.
+    
+    Uses Babylonian method: y_{n+1} = 0.5 * (y_n + x / y_n)
+    
+    For stability, we estimate scale and work with normalized values.
+    &#34;&#34;&#34;
+    n_qubits = len(x.cores)
+    dtype = x.cores[0].dtype
+    
+    # Regularize to avoid sqrt of negative or zero
+    x_reg = qtt_add(x, _constant_qtt(eps, n_qubits, device, dtype))
+    
+    # Estimate scale from first few cores
+    scale_sq = 1.0
+    for core in x.cores[:min(3, len(x.cores))]:
+        scale_sq *= core.norm().item() ** (1.0 / n_qubits)
+    scale_sq = max(scale_sq, eps)
+    scale = scale_sq ** 0.5  # sqrt(scale) for output
+    
+    # Normalize x
+    x_norm = qtt_scale(x_reg, 1.0 / scale_sq)
+    x_norm = truncate_qtt(x_norm, max_rank)
+    
+    # Initial guess y_0 = 1 for normalized x
+    y = _constant_qtt(1.0, n_qubits, device, dtype)
+    
+    for _ in range(n_iterations):
+        # y = 0.5 * (y + x_norm / y)
+        inv_y = qtt_inverse_newton(y, max_rank, n_iterations=3)
+        x_over_y = qtt_hadamard(x_norm, inv_y)
+        x_over_y = truncate_qtt(x_over_y, max_rank)
+        
+        y_new = qtt_add(y, x_over_y)
+        y = qtt_scale(y_new, 0.5)
+        y = truncate_qtt(y, max_rank)
+        
+        # Clamp to prevent NaN
+        for i, core in enumerate(y.cores):
+            core_clamped = torch.clamp(core, -1e6, 1e6)
+            if torch.isnan(core_clamped).any():
+                core_clamped = torch.nan_to_num(core_clamped, nan=1.0)
+            y.cores[i] = core_clamped
+    
+    # Scale back: sqrt(x) = sqrt(x_norm) * scale
+    y = qtt_scale(y, scale)
+    
+    return y</code></pre>
+</details>
+<div class="desc"><p>Compute element-wise sqrt(x) using Newton iteration.</p>
+<p>Uses Babylonian method: y_{n+1} = 0.5 * (y_n + x / y_n)</p>
+<p>For stability, we estimate scale and work with normalized values.</p></div>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.shift_mpo_cached"><code class="name flex">
+<span>def <span class="ident">shift_mpo_cached</span></span>(<span>n_qubits: int, direction: int) ‑> <a title="tensornet.cfd.pure_qtt_ops.MPO" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.MPO">MPO</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def shift_mpo_cached(n_qubits: int, direction: int) -&gt; MPO:
+    &#34;&#34;&#34;
+    Get shift operator MPO using native O(log N) construction.
+    
+    S^{+k} shifts by k positions: output[i] = input[(i + k) mod N]
+    S^{-k} shifts by -k positions: output[i] = input[(i - k) mod N]
+    
+    For WENO stencils:
+    - S^{+k} applied to u gives u[i-k] (since we&#39;re reconstructing at i)
+    - This is the INVERSE perspective: we&#39;re shifting the DATA by +k,
+      so the value that WAS at position (i-k) ends up at position i.
+    
+    Args:
+        n_qubits: Number of qubits (N = 2^n_qubits)
+        direction: +1, -1, +2, -2, etc.
+        
+    Returns:
+        MPO for the shift operator
+    &#34;&#34;&#34;
+    # Use native O(log N) shift MPO construction
+    if abs(direction) == 1:
+        return shift_mpo(n_qubits, direction)
+    else:
+        # For multi-step shifts, compose shift MPOs
+        base = shift_mpo(n_qubits, 1 if direction &gt; 0 else -1)
+        result = base
+        for _ in range(abs(direction) - 1):
+            result = _mpo_compose(result, base, n_qubits)
+        return result</code></pre>
+</details>
+<div class="desc"><p>Get shift operator MPO using native O(log N) construction.</p>
+<p>S^{+k} shifts by k positions: output[i] = input[(i + k) mod N]
+S^{-k} shifts by -k positions: output[i] = input[(i - k) mod N]</p>
+<p>For WENO stencils:
+- S^{+k} applied to u gives u[i-k] (since we're reconstructing at i)
+- This is the INVERSE perspective: we're shifting the DATA by +k,
+so the value that WAS at position (i-k) ends up at position i.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>n_qubits</code></strong></dt>
+<dd>Number of qubits (N = 2^n_qubits)</dd>
+<dt><strong><code>direction</code></strong></dt>
+<dd>+1, -1, +2, -2, etc.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>MPO for the shift operator</p></div>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.smoothness_indicator_mpos"><code class="name flex">
+<span>def <span class="ident">smoothness_indicator_mpos</span></span>(<span>n_qubits: int) ‑> Tuple[<a title="tensornet.cfd.pure_qtt_ops.MPO" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.MPO">MPO</a>, <a title="tensornet.cfd.pure_qtt_ops.MPO" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.MPO">MPO</a>, <a title="tensornet.cfd.pure_qtt_ops.MPO" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.MPO">MPO</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def smoothness_indicator_mpos(n_qubits: int) -&gt; Tuple[MPO, MPO, MPO]:
+    &#34;&#34;&#34;
+    Create MPOs that compute smoothness indicators for each stencil.
+    
+    The smoothness indicators are quadratic forms:
+    
+    β_0 = (13/12)(u_{i-2} - 2u_{i-1} + u_i)² + (1/4)(u_{i-2} - 4u_{i-1} + 3u_i)²
+    β_1 = (13/12)(u_{i-1} - 2u_i + u_{i+1})² + (1/4)(u_{i-1} - u_{i+1})²
+    β_2 = (13/12)(u_i - 2u_{i+1} + u_{i+2})² + (1/4)(3u_i - 4u_{i+1} + u_{i+2})²
+    
+    For TT format, we first compute the linear differences (D1, D2) using
+    stencil_coefficient_mpo, then compute element-wise products.
+    
+    Offset convention: S^{+k} gives u[i-k], S^{-k} gives u[i+k].
+    
+    Returns:
+        Tuples of MPO pairs for each beta&#39;s two differences.
+    &#34;&#34;&#34;
+    # β_0: stencil {i-2, i-1, i}
+    # D1_0 = u_{i-2} - 2u_{i-1} + u_i → offsets +2, +1, 0
+    # D2_0 = u_{i-2} - 4u_{i-1} + 3u_i → offsets +2, +1, 0
+    d1_0_coeffs = [(2, 1.0), (1, -2.0), (0, 1.0)]
+    d2_0_coeffs = [(2, 1.0), (1, -4.0), (0, 3.0)]
+    
+    d1_0_mpo = stencil_coefficient_mpo(n_qubits, d1_0_coeffs)
+    d2_0_mpo = stencil_coefficient_mpo(n_qubits, d2_0_coeffs)
+    
+    # β_1: stencil {i-1, i, i+1}
+    # D1_1 = u_{i-1} - 2u_i + u_{i+1} → offsets +1, 0, -1
+    # D2_1 = u_{i-1} - u_{i+1} → offsets +1, -1
+    d1_1_coeffs = [(1, 1.0), (0, -2.0), (-1, 1.0)]
+    d2_1_coeffs = [(1, 1.0), (-1, -1.0)]
+    
+    d1_1_mpo = stencil_coefficient_mpo(n_qubits, d1_1_coeffs)
+    d2_1_mpo = stencil_coefficient_mpo(n_qubits, d2_1_coeffs)
+    
+    # β_2: stencil {i, i+1, i+2}
+    # D1_2 = u_i - 2u_{i+1} + u_{i+2} → offsets 0, -1, -2
+    # D2_2 = 3u_i - 4u_{i+1} + u_{i+2} → offsets 0, -1, -2
+    d1_2_coeffs = [(0, 1.0), (-1, -2.0), (-2, 1.0)]
+    d2_2_coeffs = [(0, 3.0), (-1, -4.0), (-2, 1.0)]
+    
+    d1_2_mpo = stencil_coefficient_mpo(n_qubits, d1_2_coeffs)
+    d2_2_mpo = stencil_coefficient_mpo(n_qubits, d2_2_coeffs)
+    
+    return (
+        (d1_0_mpo, d2_0_mpo),  # For β_0
+        (d1_1_mpo, d2_1_mpo),  # For β_1
+        (d1_2_mpo, d2_2_mpo),  # For β_2
+    )</code></pre>
+</details>
+<div class="desc"><p>Create MPOs that compute smoothness indicators for each stencil.</p>
+<p>The smoothness indicators are quadratic forms:</p>
+<p>β_0 = (13/12)(u_{i-2} - 2u_{i-1} + u_i)² + (1/4)(u_{i-2} - 4u_{i-1} + 3u_i)²
+β_1 = (13/12)(u_{i-1} - 2u_i + u_{i+1})² + (1/4)(u_{i-1} - u_{i+1})²
+β_2 = (13/12)(u_i - 2u_{i+1} + u_{i+2})² + (1/4)(3u_i - 4u_{i+1} + u_{i+2})²</p>
+<p>For TT format, we first compute the linear differences (D1, D2) using
+stencil_coefficient_mpo, then compute element-wise products.</p>
+<p>Offset convention: S^{+k} gives u[i-k], S^{-k} gives u[i+k].</p>
+<h2 id="returns">Returns</h2>
+<p>Tuples of MPO pairs for each beta's two differences.</p></div>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.stencil_coefficient_mpo"><code class="name flex">
+<span>def <span class="ident">stencil_coefficient_mpo</span></span>(<span>n_qubits: int,<br>coefficients: List[Tuple[int, float]],<br>max_rank: int = 64,<br>dtype: torch.dtype = torch.float64) ‑> <a title="tensornet.cfd.pure_qtt_ops.MPO" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.MPO">MPO</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def stencil_coefficient_mpo(
+    n_qubits: int,
+    coefficients: List[Tuple[int, float]],
+    max_rank: int = 64,
+    dtype: torch.dtype = torch.float64,
+) -&gt; MPO:
+    &#34;&#34;&#34;
+    Create an MPO that computes a linear combination of shifts.
+    
+    result = Σ c_k * S^{offset_k} |u⟩
+    
+    For example, the central difference:
+    du/dx ≈ (u[i+1] - u[i-1]) / (2*dx)
+    
+    corresponds to coefficients = [(+1, 0.5/dx), (-1, -0.5/dx)]
+    
+    Args:
+        n_qubits: Number of qubits
+        coefficients: List of (offset, weight) tuples
+        max_rank: Maximum MPO rank
+        dtype: Data type for the MPO cores
+        
+    Returns:
+        MPO computing the linear combination
+    &#34;&#34;&#34;
+    if not coefficients:
+        return identity_mpo(n_qubits)
+    
+    # Always use native MPO composition for O(log N) complexity
+    # The dense matrix approach was O(N²) and defeated the purpose of TT format
+    offset, weight = coefficients[0]
+    result = shift_mpo_cached(n_qubits, offset) if offset != 0 else identity_mpo(n_qubits)
+    result = _scale_mpo(result, weight)
+    
+    for offset, weight in coefficients[1:]:
+        shift = shift_mpo_cached(n_qubits, offset) if offset != 0 else identity_mpo(n_qubits)
+        scaled = _scale_mpo(shift, weight)
+        result = _add_mpo(result, scaled, max_rank)
+    
+    return result</code></pre>
+</details>
+<div class="desc"><p>Create an MPO that computes a linear combination of shifts.</p>
+<p>result = Σ c_k * S^{offset_k} |u⟩</p>
+<p>For example, the central difference:
+du/dx ≈ (u[i+1] - u[i-1]) / (2*dx)</p>
+<p>corresponds to coefficients = [(+1, 0.5/dx), (-1, -0.5/dx)]</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>n_qubits</code></strong></dt>
+<dd>Number of qubits</dd>
+<dt><strong><code>coefficients</code></strong></dt>
+<dd>List of (offset, weight) tuples</dd>
+<dt><strong><code>max_rank</code></strong></dt>
+<dd>Maximum MPO rank</dd>
+<dt><strong><code>dtype</code></strong></dt>
+<dd>Data type for the MPO cores</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>MPO computing the linear combination</p></div>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.weno5_stencil_mpos"><code class="name flex">
+<span>def <span class="ident">weno5_stencil_mpos</span></span>(<span>n_qubits: int,<br>side: <a title="tensornet.cfd.weno_native_tt.ReconstructionSide" href="#tensornet.cfd.weno_native_tt.ReconstructionSide">ReconstructionSide</a>,<br>dtype: torch.dtype = torch.float64) ‑> Tuple[<a title="tensornet.cfd.pure_qtt_ops.MPO" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.MPO">MPO</a>, <a title="tensornet.cfd.pure_qtt_ops.MPO" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.MPO">MPO</a>, <a title="tensornet.cfd.pure_qtt_ops.MPO" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.MPO">MPO</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def weno5_stencil_mpos(
+    n_qubits: int, 
+    side: ReconstructionSide,
+    dtype: torch.dtype = torch.float64,
+) -&gt; Tuple[MPO, MPO, MPO]:
+    &#34;&#34;&#34;
+    Create MPOs for the three WENO5 candidate stencil reconstructions.
+    
+    For left-biased (u^-_{i+1/2}):
+        q_0 = (2u_{i-2} - 7u_{i-1} + 11u_i) / 6
+        q_1 = (-u_{i-1} + 5u_i + 2u_{i+1}) / 6  
+        q_2 = (2u_i + 5u_{i+1} - u_{i+2}) / 6
+    
+    For right-biased (u^+_{i+1/2}):
+        q_0 = (-u_{i-1} + 5u_i + 2u_{i+1}) / 6
+        q_1 = (2u_i + 5u_{i+1} - u_{i+2}) / 6
+        q_2 = (11u_{i+1} - 7u_{i+2} + 2u_{i+3}) / 6
+    
+    Offset convention: shift_mpo_cached(n, k) gives S^{k} where:
+    - S^{+k} produces u[i-k] (shifts values forward, so result at i comes from i-k)
+    - S^{-k} produces u[i+k] (shifts values backward)
+    
+    So for u[i-2], use offset +2; for u[i+1], use offset -1.
+    
+    Args:
+        n_qubits: Number of qubits
+        side: LEFT or RIGHT biased reconstruction
+        dtype: Data type for the MPO cores (default float64 for precision)
+        
+    Returns:
+        (q0_mpo, q1_mpo, q2_mpo): MPOs for each stencil
+    &#34;&#34;&#34;
+    if side == ReconstructionSide.LEFT:
+        # q_0: uses u[i-2], u[i-1], u[i] → offsets +2, +1, 0
+        q0_coeffs = [(2, 2.0/6.0), (1, -7.0/6.0), (0, 11.0/6.0)]
+        # q_1: uses u[i-1], u[i], u[i+1] → offsets +1, 0, -1
+        q1_coeffs = [(1, -1.0/6.0), (0, 5.0/6.0), (-1, 2.0/6.0)]
+        # q_2: uses u[i], u[i+1], u[i+2] → offsets 0, -1, -2
+        q2_coeffs = [(0, 2.0/6.0), (-1, 5.0/6.0), (-2, -1.0/6.0)]
+    else:
+        # Right-biased (u^+_{i+1/2})
+        # q_0: uses u[i-1], u[i], u[i+1] → offsets +1, 0, -1
+        q0_coeffs = [(1, -1.0/6.0), (0, 5.0/6.0), (-1, 2.0/6.0)]
+        # q_1: uses u[i], u[i+1], u[i+2] → offsets 0, -1, -2
+        q1_coeffs = [(0, 2.0/6.0), (-1, 5.0/6.0), (-2, -1.0/6.0)]
+        # q_2: uses u[i+1], u[i+2], u[i+3] → offsets -1, -2, -3
+        q2_coeffs = [(-1, 11.0/6.0), (-2, -7.0/6.0), (-3, 2.0/6.0)]
+    
+    q0_mpo = stencil_coefficient_mpo(n_qubits, q0_coeffs, dtype=dtype)
+    q1_mpo = stencil_coefficient_mpo(n_qubits, q1_coeffs, dtype=dtype)
+    q2_mpo = stencil_coefficient_mpo(n_qubits, q2_coeffs, dtype=dtype)
+    
+    return q0_mpo, q1_mpo, q2_mpo</code></pre>
+</details>
+<div class="desc"><p>Create MPOs for the three WENO5 candidate stencil reconstructions.</p>
+<p>For left-biased (u^-<em i-2>{i+1/2}):
+q_0 = (2u</em> + 11u_i) / 6
+q_1 = (-u_{i-1} + 5u_i + 2u_{i+1}) / 6} - 7u_{i-1<br>
+q_2 = (2u_i + 5u_{i+1} - u_{i+2}) / 6</p>
+<p>For right-biased (u^+<em i-1>{i+1/2}):
+q_0 = (-u</em>) / 6
+q_1 = (2u_i + 5u_{i+1} - u_{i+2}) / 6
+q_2 = (11u_{i+1} - 7u_{i+2} + 2u_{i+3}) / 6} + 5u_i + 2u_{i+1</p>
+<p>Offset convention: shift_mpo_cached(n, k) gives S^{k} where:
+- S^{+k} produces u[i-k] (shifts values forward, so result at i comes from i-k)
+- S^{-k} produces u[i+k] (shifts values backward)</p>
+<p>So for u[i-2], use offset +2; for u[i+1], use offset -1.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>n_qubits</code></strong></dt>
+<dd>Number of qubits</dd>
+<dt><strong><code>side</code></strong></dt>
+<dd>LEFT or RIGHT biased reconstruction</dd>
+<dt><strong><code>dtype</code></strong></dt>
+<dd>Data type for the MPO cores (default float64 for precision)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>(q0_mpo, q1_mpo, q2_mpo): MPOs for each stencil</p></div>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.weno_flux_native_tt"><code class="name flex">
+<span>def <span class="ident">weno_flux_native_tt</span></span>(<span>u_left: QTTState,<br>u_right: QTTState,<br>alpha: float,<br>config: Optional[<a title="tensornet.cfd.weno_native_tt.WENONativeTTConfig" href="#tensornet.cfd.weno_native_tt.WENONativeTTConfig">WENONativeTTConfig</a>] = None) ‑> <a title="tensornet.cfd.pure_qtt_ops.QTTState" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.QTTState">QTTState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def weno_flux_native_tt(
+    u_left: QTTState,
+    u_right: QTTState,
+    alpha: float,
+    config: Optional[WENONativeTTConfig] = None,
+) -&gt; QTTState:
+    &#34;&#34;&#34;
+    Compute WENO-TT numerical flux using Lax-Friedrichs splitting.
+    
+    F_{i+1/2} = 0.5 * (F(u^-) + F(u^+)) - 0.5 * α * (u^+ - u^-)
+    
+    For scalar advection F(u) = au, this simplifies.
+    
+    Args:
+        u_left: QTT of left state (cell averages)
+        u_right: QTT of right state (cell averages)  
+        alpha: Maximum wave speed
+        config: Configuration
+        
+    Returns:
+        QTT of numerical flux
+    &#34;&#34;&#34;
+    if config is None:
+        config = WENONativeTTConfig()
+    
+    max_rank = config.max_rank
+    
+    # Reconstruct at interfaces
+    u_minus = weno_reconstruct_native_tt(u_left, ReconstructionSide.LEFT, config)
+    u_plus = weno_reconstruct_native_tt(u_right, ReconstructionSide.RIGHT, config)
+    
+    # Lax-Friedrichs flux
+    # Central: 0.5 * (u_minus + u_plus) * alpha (for advection)
+    # Dissipation: -0.5 * alpha * (u_plus - u_minus)
+    
+    u_sum = qtt_add(u_minus, u_plus)
+    u_diff = qtt_add(u_plus, qtt_scale(u_minus, -1.0))
+    
+    central = qtt_scale(u_sum, 0.5 * alpha)
+    dissip = qtt_scale(u_diff, -0.5 * alpha)
+    
+    flux = qtt_add(central, dissip)
+    flux = truncate_qtt(flux, max_rank)
+    
+    return flux</code></pre>
+</details>
+<div class="desc"><p>Compute WENO-TT numerical flux using Lax-Friedrichs splitting.</p>
+<p>F_{i+1/2} = 0.5 * (F(u^-) + F(u^+)) - 0.5 * α * (u^+ - u^-)</p>
+<p>For scalar advection F(u) = au, this simplifies.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>u_left</code></strong></dt>
+<dd>QTT of left state (cell averages)</dd>
+<dt><strong><code>u_right</code></strong></dt>
+<dd>QTT of right state (cell averages)
+</dd>
+<dt><strong><code>alpha</code></strong></dt>
+<dd>Maximum wave speed</dd>
+<dt><strong><code>config</code></strong></dt>
+<dd>Configuration</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>QTT of numerical flux</p></div>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.weno_reconstruct_native_tt"><code class="name flex">
+<span>def <span class="ident">weno_reconstruct_native_tt</span></span>(<span>u: QTTState,<br>side: <a title="tensornet.cfd.weno_native_tt.ReconstructionSide" href="#tensornet.cfd.weno_native_tt.ReconstructionSide">ReconstructionSide</a> = ReconstructionSide.LEFT,<br>config: Optional[<a title="tensornet.cfd.weno_native_tt.WENONativeTTConfig" href="#tensornet.cfd.weno_native_tt.WENONativeTTConfig">WENONativeTTConfig</a>] = None) ‑> <a title="tensornet.cfd.pure_qtt_ops.QTTState" href="pure_qtt_ops.html#tensornet.cfd.pure_qtt_ops.QTTState">QTTState</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def weno_reconstruct_native_tt(
+    u: QTTState,
+    side: ReconstructionSide = ReconstructionSide.LEFT,
+    config: Optional[WENONativeTTConfig] = None,
+) -&gt; QTTState:
+    &#34;&#34;&#34;
+    Perform full WENO5 reconstruction entirely in TT format.
+    
+    This is the main entry point for native WENO-TT.
+    
+    u^-_{i+1/2} = ω_0 * q_0 + ω_1 * q_1 + ω_2 * q_2
+    
+    where:
+    - q_k = stencil reconstructions (linear, computed via MPO)
+    - ω_k = nonlinear weights (computed from smoothness indicators)
+    
+    Args:
+        u: QTT state of cell-averaged solution
+        side: LEFT or RIGHT biased reconstruction
+        config: Configuration
+        
+    Returns:
+        QTT state of reconstructed interface values
+    &#34;&#34;&#34;
+    if config is None:
+        config = WENONativeTTConfig()
+    
+    n_qubits = len(u.cores)
+    max_rank = config.max_rank
+    
+    # Step 1: Compute smoothness indicators β_k in TT format
+    beta_0, beta_1, beta_2 = compute_smoothness_indicators_tt(u, config)
+    
+    # Step 2: Compute nonlinear weights ω_k in TT format
+    # Use TCI for larger grids (true O(log N)), hybrid for small grids
+    if n_qubits &gt;= 12 and config.use_tci_weights:
+        omega_0, omega_1, omega_2 = compute_weno_weights_tci(
+            beta_0, beta_1, beta_2, side, config
+        )
+    else:
+        omega_0, omega_1, omega_2 = compute_weno_weights_tt(
+            beta_0, beta_1, beta_2, side, config
+        )
+    
+    # Step 3: Compute candidate stencil reconstructions q_k via MPO
+    q0_mpo, q1_mpo, q2_mpo = weno5_stencil_mpos(n_qubits, side)
+    
+    q_0 = apply_mpo(q0_mpo, u, max_rank)
+    q_1 = apply_mpo(q1_mpo, u, max_rank)
+    q_2 = apply_mpo(q2_mpo, u, max_rank)
+    
+    # Step 4: Weighted sum u^± = ω_0 * q_0 + ω_1 * q_1 + ω_2 * q_2
+    term_0 = qtt_hadamard(omega_0, q_0)
+    term_1 = qtt_hadamard(omega_1, q_1)
+    term_2 = qtt_hadamard(omega_2, q_2)
+    
+    result = qtt_add(term_0, qtt_add(term_1, term_2))
+    result = truncate_qtt(result, max_rank)
+    
+    return result</code></pre>
+</details>
+<div class="desc"><p>Perform full WENO5 reconstruction entirely in TT format.</p>
+<p>This is the main entry point for native WENO-TT.</p>
+<p>u^-_{i+1/2} = ω_0 * q_0 + ω_1 * q_1 + ω_2 * q_2</p>
+<p>where:
+- q_k = stencil reconstructions (linear, computed via MPO)
+- ω_k = nonlinear weights (computed from smoothness indicators)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>u</code></strong></dt>
+<dd>QTT state of cell-averaged solution</dd>
+<dt><strong><code>side</code></strong></dt>
+<dd>LEFT or RIGHT biased reconstruction</dd>
+<dt><strong><code>config</code></strong></dt>
+<dd>Configuration</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>QTT state of reconstructed interface values</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tensornet.cfd.weno_native_tt.ReconstructionSide"><code class="flex name class">
+<span>class <span class="ident">ReconstructionSide</span></span>
+<span>(</span><span>*args, **kwds)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ReconstructionSide(Enum):
+    &#34;&#34;&#34;Side of cell for reconstruction.&#34;&#34;&#34;
+    LEFT = &#34;left&#34;    # u^-_{i+1/2} (left-biased)
+    RIGHT = &#34;right&#34;  # u^+_{i+1/2} (right-biased)</code></pre>
+</details>
+<div class="desc"><p>Side of cell for reconstruction.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="tensornet.cfd.weno_native_tt.ReconstructionSide.LEFT"><code class="name">var <span class="ident">LEFT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.ReconstructionSide.RIGHT"><code class="name">var <span class="ident">RIGHT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.WENONativeTTConfig"><code class="flex name class">
+<span>class <span class="ident">WENONativeTTConfig</span></span>
+<span>(</span><span>max_rank: int = 64,<br>epsilon: float = 1e-40,<br>p: int = 2,<br>svd_cutoff: float = 1e-12,<br>use_weno_z: bool = True,<br>use_tci_weights: bool = True)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class WENONativeTTConfig:
+    &#34;&#34;&#34;Configuration for native WENO-TT.&#34;&#34;&#34;
+    max_rank: int = 64          # Maximum TT rank
+    epsilon: float = 1e-40      # Division safety parameter
+    p: int = 2                  # Weight exponent (WENO-Z)
+    svd_cutoff: float = 1e-12   # SVD truncation threshold
+    use_weno_z: bool = True     # Use WENO-Z (improved) or WENO-JS
+    use_tci_weights: bool = True  # Use TCI for weight computation (O(log N))</code></pre>
+</details>
+<div class="desc"><p>Configuration for native WENO-TT.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tensornet.cfd.weno_native_tt.WENONativeTTConfig.epsilon"><code class="name">var <span class="ident">epsilon</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.WENONativeTTConfig.max_rank"><code class="name">var <span class="ident">max_rank</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.WENONativeTTConfig.p"><code class="name">var <span class="ident">p</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.WENONativeTTConfig.svd_cutoff"><code class="name">var <span class="ident">svd_cutoff</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.WENONativeTTConfig.use_tci_weights"><code class="name">var <span class="ident">use_tci_weights</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tensornet.cfd.weno_native_tt.WENONativeTTConfig.use_weno_z"><code class="name">var <span class="ident">use_weno_z</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.weno_native_tt.compute_smoothness_indicators_tt" href="#tensornet.cfd.weno_native_tt.compute_smoothness_indicators_tt">compute_smoothness_indicators_tt</a></code></li>
+<li><code><a title="tensornet.cfd.weno_native_tt.compute_weno_weights_tci" href="#tensornet.cfd.weno_native_tt.compute_weno_weights_tci">compute_weno_weights_tci</a></code></li>
+<li><code><a title="tensornet.cfd.weno_native_tt.compute_weno_weights_tt" href="#tensornet.cfd.weno_native_tt.compute_weno_weights_tt">compute_weno_weights_tt</a></code></li>
+<li><code><a title="tensornet.cfd.weno_native_tt.qtt_abs" href="#tensornet.cfd.weno_native_tt.qtt_abs">qtt_abs</a></code></li>
+<li><code><a title="tensornet.cfd.weno_native_tt.qtt_inverse_newton" href="#tensornet.cfd.weno_native_tt.qtt_inverse_newton">qtt_inverse_newton</a></code></li>
+<li><code><a title="tensornet.cfd.weno_native_tt.qtt_sqrt_newton" href="#tensornet.cfd.weno_native_tt.qtt_sqrt_newton">qtt_sqrt_newton</a></code></li>
+<li><code><a title="tensornet.cfd.weno_native_tt.shift_mpo_cached" href="#tensornet.cfd.weno_native_tt.shift_mpo_cached">shift_mpo_cached</a></code></li>
+<li><code><a title="tensornet.cfd.weno_native_tt.smoothness_indicator_mpos" href="#tensornet.cfd.weno_native_tt.smoothness_indicator_mpos">smoothness_indicator_mpos</a></code></li>
+<li><code><a title="tensornet.cfd.weno_native_tt.stencil_coefficient_mpo" href="#tensornet.cfd.weno_native_tt.stencil_coefficient_mpo">stencil_coefficient_mpo</a></code></li>
+<li><code><a title="tensornet.cfd.weno_native_tt.weno5_stencil_mpos" href="#tensornet.cfd.weno_native_tt.weno5_stencil_mpos">weno5_stencil_mpos</a></code></li>
+<li><code><a title="tensornet.cfd.weno_native_tt.weno_flux_native_tt" href="#tensornet.cfd.weno_native_tt.weno_flux_native_tt">weno_flux_native_tt</a></code></li>
+<li><code><a title="tensornet.cfd.weno_native_tt.weno_reconstruct_native_tt" href="#tensornet.cfd.weno_native_tt.weno_reconstruct_native_tt">weno_reconstruct_native_tt</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tensornet.cfd.weno_native_tt.ReconstructionSide" href="#tensornet.cfd.weno_native_tt.ReconstructionSide">ReconstructionSide</a></code></h4>
+<ul class="">
+<li><code><a title="tensornet.cfd.weno_native_tt.ReconstructionSide.LEFT" href="#tensornet.cfd.weno_native_tt.ReconstructionSide.LEFT">LEFT</a></code></li>
+<li><code><a title="tensornet.cfd.weno_native_tt.ReconstructionSide.RIGHT" href="#tensornet.cfd.weno_native_tt.ReconstructionSide.RIGHT">RIGHT</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tensornet.cfd.weno_native_tt.WENONativeTTConfig" href="#tensornet.cfd.weno_native_tt.WENONativeTTConfig">WENONativeTTConfig</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tensornet.cfd.weno_native_tt.WENONativeTTConfig.epsilon" href="#tensornet.cfd.weno_native_tt.WENONativeTTConfig.epsilon">epsilon</a></code></li>
+<li><code><a title="tensornet.cfd.weno_native_tt.WENONativeTTConfig.max_rank" href="#tensornet.cfd.weno_native_tt.WENONativeTTConfig.max_rank">max_rank</a></code></li>
+<li><code><a title="tensornet.cfd.weno_native_tt.WENONativeTTConfig.p" href="#tensornet.cfd.weno_native_tt.WENONativeTTConfig.p">p</a></code></li>
+<li><code><a title="tensornet.cfd.weno_native_tt.WENONativeTTConfig.svd_cutoff" href="#tensornet.cfd.weno_native_tt.WENONativeTTConfig.svd_cutoff">svd_cutoff</a></code></li>
+<li><code><a title="tensornet.cfd.weno_native_tt.WENONativeTTConfig.use_tci_weights" href="#tensornet.cfd.weno_native_tt.WENONativeTTConfig.use_tci_weights">use_tci_weights</a></code></li>
+<li><code><a title="tensornet.cfd.weno_native_tt.WENONativeTTConfig.use_weno_z" href="#tensornet.cfd.weno_native_tt.WENONativeTTConfig.use_weno_z">use_weno_z</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tensornet.cfd.flux_batch API documentation</title>
+<meta name="description" content="Batched Rusanov Flux Computation using Rust TCI + PyTorch …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tensornet.cfd.flux_batch</code></h1>
+</header>
+<section id="section-intro">
+<p>Batched Rusanov Flux Computation using Rust TCI + PyTorch.</p>
+<p>This module implements the GPU-batched Rusanov flux computation
+using indices from the Rust TCI core. The key insight is:</p>
+<pre><code>NEIGHBOR INDICES ARE PRECOMPUTED IN RUST
+</code></pre>
+<p>This avoids GPU thread divergence from binary carry propagation
+when computing i+1 in QTT format.</p>
+<h2 id="architecture">Architecture</h2>
+<p>Rust TCI Core → (indices, left, right) → Python Bridge → GPU Flux Kernel</p>
+<h2 id="usage">Usage</h2>
+<p>from tci_core import TCISampler
+from tensornet.cfd.flux_batch import rusanov_flux_batch</p>
+<h1 id="get-batch-from-rust-includes-neighbor-indices">Get batch from Rust (includes neighbor indices)</h1>
+<p>batch = sampler.sample_fibers(qubit)</p>
+<h1 id="compute-flux-on-gpu-using-precomputed-neighbors">Compute flux on GPU using precomputed neighbors</h1>
+<p>F_rho, F_rhou, F_E = rusanov_flux_batch(
+batch,
+rho_cores, rhou_cores, E_cores,
+gamma=1.4
+)</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tensornet.cfd.flux_batch.rusanov_flux_batch"><code class="name flex">
+<span>def <span class="ident">rusanov_flux_batch</span></span>(<span>batch: "'IndexBatch'",<br>rho_cores: List[Tensor],<br>rhou_cores: List[Tensor],<br>E_cores: List[Tensor],<br>gamma: float = 1.4,<br>device: Optional[torch.device] = None) ‑> Tuple[Tensor, Tensor, Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rusanov_flux_batch(
+    batch: &#39;IndexBatch&#39;,
+    rho_cores: List[Tensor],
+    rhou_cores: List[Tensor],
+    E_cores: List[Tensor],
+    gamma: float = 1.4,
+    device: Optional[torch.device] = None,
+) -&gt; Tuple[Tensor, Tensor, Tensor]:
+    &#34;&#34;&#34;
+    Compute Rusanov flux at a batch of interfaces using Rust-precomputed neighbors.
+    
+    The Rusanov flux at interface i+½ is:
+        F_{i+1/2} = 0.5*(F_L + F_R) - 0.5*λ_max*(U_R - U_L)
+    
+    where:
+        - U = [ρ, ρu, E]^T = conserved variables
+        - F = [ρu, ρu² + p, u(E+p)]^T = physical flux
+        - λ_max = max(|u_L| + c_L, |u_R| + c_R)
+        - c = sqrt(γp/ρ) = sound speed
+    
+    Args:
+        batch: IndexBatch from Rust TCI with .indices, .left, .right arrays
+        rho_cores: QTT cores for density
+        rhou_cores: QTT cores for momentum
+        E_cores: QTT cores for total energy
+        gamma: Ratio of specific heats (default 1.4 for air)
+        device: Target device (default: CUDA if available)
+    
+    Returns:
+        Tuple of (F_rho, F_rhou, F_E) flux tensors, each shape (batch_size,)
+    &#34;&#34;&#34;
+    device = device or (torch.device(&#39;cuda&#39;) if torch.cuda.is_available() else torch.device(&#39;cpu&#39;))
+    
+    # Get indices as numpy arrays (zero-copy from Rust)
+    indices_L_np = batch.indices_array()
+    indices_R_np = batch.right_array()  # RIGHT neighbors precomputed in Rust!
+    
+    # Transfer to GPU (single H2D transfer)
+    indices_L = torch.from_numpy(indices_L_np).to(device)
+    indices_R = torch.from_numpy(indices_R_np).to(device)
+    
+    # Lazy import to avoid slow torch.compile init
+    qtt_eval_batch = _lazy_import_qtt_eval()
+    
+    # Evaluate QTT fields at LEFT and RIGHT cell centers
+    rho_L = qtt_eval_batch(rho_cores, indices_L)
+    rho_R = qtt_eval_batch(rho_cores, indices_R)
+    
+    rhou_L = qtt_eval_batch(rhou_cores, indices_L)
+    rhou_R = qtt_eval_batch(rhou_cores, indices_R)
+    
+    E_L = qtt_eval_batch(E_cores, indices_L)
+    E_R = qtt_eval_batch(E_cores, indices_R)
+    
+    # Compute primitive variables
+    u_L = rhou_L / rho_L
+    u_R = rhou_R / rho_R
+    
+    p_L = (gamma - 1) * (E_L - 0.5 * rho_L * u_L**2)
+    p_R = (gamma - 1) * (E_R - 0.5 * rho_R * u_R**2)
+    
+    # Sound speed: c = sqrt(γp/ρ)
+    # CRITICAL: Must be sqrt, not γp/ρ, or CFL blows up!
+    c_L = torch.sqrt(gamma * p_L / rho_L)
+    c_R = torch.sqrt(gamma * p_R / rho_R)
+    
+    # Physical flux vectors
+    F_rho_L = rhou_L
+    F_rho_R = rhou_R
+    
+    F_rhou_L = rhou_L * u_L + p_L
+    F_rhou_R = rhou_R * u_R + p_R
+    
+    F_E_L = u_L * (E_L + p_L)
+    F_E_R = u_R * (E_R + p_R)
+    
+    # Maximum wave speed (Rusanov dissipation coefficient)
+    lambda_max = torch.maximum(torch.abs(u_L) + c_L, torch.abs(u_R) + c_R)
+    
+    # Rusanov flux: central average - dissipation
+    F_rho = 0.5 * (F_rho_L + F_rho_R) - 0.5 * lambda_max * (rho_R - rho_L)
+    F_rhou = 0.5 * (F_rhou_L + F_rhou_R) - 0.5 * lambda_max * (rhou_R - rhou_L)
+    F_E = 0.5 * (F_E_L + F_E_R) - 0.5 * lambda_max * (E_R - E_L)
+    
+    return F_rho, F_rhou, F_E</code></pre>
+</details>
+<div class="desc"><p>Compute Rusanov flux at a batch of interfaces using Rust-precomputed neighbors.</p>
+<p>The Rusanov flux at interface i+½ is:
+F_{i+1/2} = 0.5<em>(F_L + F_R) - 0.5</em>λ_max*(U_R - U_L)</p>
+<p>where:
+- U = [ρ, ρu, E]^T = conserved variables
+- F = [ρu, ρu² + p, u(E+p)]^T = physical flux
+- λ_max = max(|u_L| + c_L, |u_R| + c_R)
+- c = sqrt(γp/ρ) = sound speed</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>batch</code></strong></dt>
+<dd>IndexBatch from Rust TCI with .indices, .left, .right arrays</dd>
+<dt><strong><code>rho_cores</code></strong></dt>
+<dd>QTT cores for density</dd>
+<dt><strong><code>rhou_cores</code></strong></dt>
+<dd>QTT cores for momentum</dd>
+<dt><strong><code>E_cores</code></strong></dt>
+<dd>QTT cores for total energy</dd>
+<dt><strong><code>gamma</code></strong></dt>
+<dd>Ratio of specific heats (default 1.4 for air)</dd>
+<dt><strong><code>device</code></strong></dt>
+<dd>Target device (default: CUDA if available)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Tuple of (F_rho, F_rhou, F_E) flux tensors, each shape (batch_size,)</p></div>
+</dd>
+<dt id="tensornet.cfd.flux_batch.rusanov_flux_from_dense"><code class="name flex">
+<span>def <span class="ident">rusanov_flux_from_dense</span></span>(<span>rho: Tensor, rhou: Tensor, E: Tensor, gamma: float = 1.4) ‑> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rusanov_flux_from_dense(
+    rho: Tensor,
+    rhou: Tensor,
+    E: Tensor,
+    gamma: float = 1.4,
+) -&gt; Tuple[Tensor, Tensor, Tensor]:
+    &#34;&#34;&#34;
+    Compute Rusanov flux from dense field tensors (reference implementation).
+    
+    Used for validation against QTT-based flux.
+    
+    Args:
+        rho: Density tensor (N,)
+        rhou: Momentum tensor (N,)
+        E: Total energy tensor (N,)
+        gamma: Ratio of specific heats
+    
+    Returns:
+        Tuple of (F_rho, F_rhou, F_E) flux tensors at cell interfaces
+    &#34;&#34;&#34;
+    N = rho.shape[0]
+    device = rho.device
+    
+    # Compute primitive variables
+    u = rhou / rho
+    p = (gamma - 1) * (E - 0.5 * rho * u**2)
+    c = torch.sqrt(gamma * p / rho)
+    
+    # Left and right states at interfaces (periodic BC)
+    indices_L = torch.arange(N, device=device)
+    indices_R = (indices_L + 1) % N
+    
+    rho_L, rho_R = rho[indices_L], rho[indices_R]
+    rhou_L, rhou_R = rhou[indices_L], rhou[indices_R]
+    E_L, E_R = E[indices_L], E[indices_R]
+    u_L, u_R = u[indices_L], u[indices_R]
+    p_L, p_R = p[indices_L], p[indices_R]
+    c_L, c_R = c[indices_L], c[indices_R]
+    
+    # Physical fluxes
+    F_rho_L, F_rho_R = rhou_L, rhou_R
+    F_rhou_L = rhou_L * u_L + p_L
+    F_rhou_R = rhou_R * u_R + p_R
+    F_E_L = u_L * (E_L + p_L)
+    F_E_R = u_R * (E_R + p_R)
+    
+    # Rusanov flux
+    lambda_max = torch.maximum(torch.abs(u_L) + c_L, torch.abs(u_R) + c_R)
+    
+    F_rho = 0.5 * (F_rho_L + F_rho_R) - 0.5 * lambda_max * (rho_R - rho_L)
+    F_rhou = 0.5 * (F_rhou_L + F_rhou_R) - 0.5 * lambda_max * (rhou_R - rhou_L)
+    F_E = 0.5 * (F_E_L + F_E_R) - 0.5 * lambda_max * (E_R - E_L)
+    
+    return F_rho, F_rhou, F_E</code></pre>
+</details>
+<div class="desc"><p>Compute Rusanov flux from dense field tensors (reference implementation).</p>
+<p>Used for validation against QTT-based flux.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>rho</code></strong></dt>
+<dd>Density tensor (N,)</dd>
+<dt><strong><code>rhou</code></strong></dt>
+<dd>Momentum tensor (N,)</dd>
+<dt><strong><code>E</code></strong></dt>
+<dd>Total energy tensor (N,)</dd>
+<dt><strong><code>gamma</code></strong></dt>
+<dd>Ratio of specific heats</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Tuple of (F_rho, F_rhou, F_E) flux tensors at cell interfaces</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tensornet.cfd" href="index.html">tensornet.cfd</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tensornet.cfd.flux_batch.rusanov_flux_batch" href="#tensornet.cfd.flux_batch.rusanov_flux_batch">rusanov_flux_batch</a></code></li>
+<li><code><a title="tensornet.cfd.flux_batch.rusanov_flux_from_dense" href="#tensornet.cfd.flux_batch.rusanov_flux_from_dense">rusanov_flux_from_dense</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

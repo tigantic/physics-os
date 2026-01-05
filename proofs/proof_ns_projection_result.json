@@ -1,0 +1,73 @@
+{
+  "timestamp": "2025-12-24T00:14:57.269972",
+  "phase": "1a",
+  "decision": "DECISION-005",
+  "proofs": [
+    {
+      "name": "poisson_convergence",
+      "passed": true,
+      "details": {
+        "results": [
+          {
+            "N": 16,
+            "dx": 0.06666666666666667,
+            "self_consistency_error": 5.551115123125783e-16,
+            "discretization_error": 0.0036234127441333586,
+            "expected_O_dx2": 0.0044444444444444444
+          },
+          {
+            "N": 32,
+            "dx": 0.03225806451612903,
+            "self_consistency_error": 2.4424906541753444e-15,
+            "discretization_error": 0.000854087989704766,
+            "expected_O_dx2": 0.0010405827263267429
+          },
+          {
+            "N": 64,
+            "dx": 0.015873015873015872,
+            "self_consistency_error": 5.440092820663267e-15,
+            "discretization_error": 0.00020711968874065345,
+            "expected_O_dx2": 0.00025195263290501383
+          }
+        ],
+        "self_consistency_passed": true,
+        "order_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "name": "projection_gate",
+      "passed": true,
+      "details": {
+        "divergence_before": 6.283185307179596,
+        "divergence_after": 9.490186414495838e-13,
+        "gate_passed": true
+      }
+    },
+    {
+      "proof": "spectral_consistency",
+      "max_errors": [
+        1.9042545318370685e-12,
+        2.5579538487363607e-12,
+        6.821210263296962e-12,
+        1.1823431123048067e-11
+      ],
+      "passed": true,
+      "explanation": "Spectral nabla\u00b7nabla\u03c6 = nabla^2\u03c6 to machine precision"
+    },
+    {
+      "proof": "poisson_inversion",
+      "max_error": 7.083222897108499e-14,
+      "passed": true,
+      "explanation": "FFT Poisson inverts spectral Laplacian exactly"
+    },
+    {
+      "proof": "helmholtz_decomposition",
+      "divergence_before": 12.566370614359174,
+      "divergence_after": 6.448175327022909e-13,
+      "passed": true,
+      "explanation": "Projection achieves machine-precision div-free field"
+    }
+  ],
+  "all_passed": true
+}
