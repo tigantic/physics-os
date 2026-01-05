@@ -334,6 +334,21 @@ try:
 except ImportError:
     pass
 
+# Phase 22: TT-Koopman Operator for Turbulence Prediction
+try:
+    from tensornet.cfd.koopman_tt import (
+        TTKoopman,
+        DictionaryType,
+        KoopmanDecomposition,
+        KoopmanMode,
+        TransitionAnalysis,
+        demo_koopman_lorenz,
+        demo_boundary_layer_transition,
+        generate_attestation,
+    )
+except ImportError:
+    pass
+
 __all__ = [
     # 1D Euler equations
     "BCType1D",
@@ -563,4 +578,13 @@ __all__ = [
     "BondAdapter",
     "AdaptiveTTEuler",
     "EntanglementMonitor",
+    # TT-Koopman Turbulence Prediction (Phase 22)
+    "TTKoopman",
+    "DictionaryType",
+    "KoopmanDecomposition",
+    "KoopmanMode",
+    "TransitionAnalysis",
+    "demo_koopman_lorenz",
+    "demo_boundary_layer_transition",
+    "generate_attestation",
 ]
