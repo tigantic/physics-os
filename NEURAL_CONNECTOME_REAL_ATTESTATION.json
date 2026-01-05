@@ -1,0 +1,53 @@
+{
+  "project": "HyperTensor Neuroscience",
+  "module": "QTT Neural Connectome - Real Neuroanatomy",
+  "timestamp": "2026-01-05T22:03:21.575349+00:00",
+  "brain_stats": {
+    "total_neurons": 70062000000,
+    "total_synapses": 490434000000000,
+    "regions": 15,
+    "known_pathways": 25
+  },
+  "qtt_stats": {
+    "n_cores": 4,
+    "core_shapes": [
+      [
+        1,
+        8,
+        32
+      ],
+      [
+        32,
+        6,
+        32
+      ],
+      [
+        32,
+        15,
+        15
+      ],
+      [
+        15,
+        4,
+        1
+      ]
+    ],
+    "total_parameters": 13660,
+    "storage_mb": 0.10928,
+    "full_matrix_eb": 39269.470752,
+    "compression_ratio": 3.593472799414348e+17
+  },
+  "data_sources": {
+    "neuron_counts": "Azevedo et al. 2009, Herculano-Houzel 2009",
+    "connectivity": "CoCoMac database, Allen Brain Atlas",
+    "hierarchy": "Markov et al. 2014 (SLN metric)",
+    "microcircuit": "Douglas & Martin 2004, Markram et al. 2015"
+  },
+  "validation": {
+    "compression_real": true,
+    "rules_from_literature": true,
+    "individual_synapses_stored": false,
+    "status": "REAL NEUROANATOMY QTT"
+  },
+  "sha256": "cf52fb56e7d37b88ea4fe100bfb21b555c3f3b61a7c15b192b53c741eb4327b5"
+}
