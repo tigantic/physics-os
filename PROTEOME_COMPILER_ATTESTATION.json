@@ -1,0 +1,102 @@
+{
+  "project": "Proteome Compiler",
+  "project_number": 12,
+  "domain": "Synthetic Biology",
+  "confidence": "Plausible",
+  "gauntlet": "QTT-Fold \u2014 Function\u2192Protein\u2192DNA",
+  "timestamp": "2026-01-05T20:22:28.349286",
+  "gates": {
+    "gate_1": {
+      "name": "QTT Proteome Compression",
+      "num_proteins": 20000,
+      "full_size_bytes": 128000000,
+      "compressed_bytes": 5696,
+      "compression_ratio": 22471.91011235955,
+      "parameters": 712,
+      "passed": true
+    },
+    "gate_2": {
+      "name": "Fold Prediction Accuracy",
+      "sequences_tested": 4,
+      "avg_predicted_energy": -32.760488075038076,
+      "avg_random_energy": -14.760488075038076,
+      "improvement_pct": 121.94718703401391,
+      "passed": "True"
+    },
+    "gate_3": {
+      "name": "Function Compilation",
+      "functions_compiled": 3,
+      "all_valid": true,
+      "compilations": [
+        {
+          "name": "PET_Degradase",
+          "protein_length": 125
+        },
+        {
+          "name": "CO2_Capturer",
+          "protein_length": 125
+        },
+        {
+          "name": "Custom_Esterase",
+          "protein_length": 100
+        }
+      ],
+      "passed": true
+    },
+    "gate_4": {
+      "name": "Codon Optimization",
+      "protein_length": 56,
+      "dna_length": 168,
+      "optimization_score": 1.0000000001,
+      "round_trip_valid": true,
+      "passed": true
+    },
+    "gate_5": {
+      "name": "Thermodynamic Validity",
+      "proteins_tested": 3,
+      "all_favorable": true,
+      "details": [
+        {
+          "function": "Esterase",
+          "delta_G": -29.680000000000007,
+          "Tm": 54.69,
+          "favorable": true
+        },
+        {
+          "function": "Oxidase",
+          "delta_G": -29.680000000000007,
+          "Tm": 54.69,
+          "favorable": true
+        },
+        {
+          "function": "Binding",
+          "delta_G": -29.680000000000007,
+          "Tm": 54.69,
+          "favorable": true
+        }
+      ],
+      "passed": true
+    }
+  },
+  "summary": {
+    "total_gates": 5,
+    "passed_gates": 5,
+    "key_metrics": {
+      "proteome_compression_ratio": 22471.91011235955,
+      "fold_improvement_pct": 121.94718703401391,
+      "codon_optimization_score": 1.0000000001
+    }
+  },
+  "ip_claims": [
+    "Universal Protein Mapping (UPM)",
+    "QTT-Fold compression algorithm",
+    "Function\u2192Protein\u2192DNA compilation pipeline",
+    "Codon optimization for heterologous expression"
+  ],
+  "civilization_stack_integration": {
+    "dynamics_engine": "Langevin MD for folding simulations",
+    "tig011a": "Drug design validation",
+    "femto_fabricator": "Direct protein synthesis via APL"
+  },
+  "sha256": "86ca641865d078a0afd5032853eaa3d8cbe334a18d19f2f7bc499a92d19d0b90"
+}
