@@ -91,14 +91,18 @@ def tt_svd(
     chi_max: int | None = None,
     tol: float = 1e-10,
     normalize: bool = True,
+    rsvd_threshold: int = 256,
 ) -> tuple[list[Tensor], float, float]:
     """
-    Tensor Train SVD decomposition.
+    Tensor Train SVD decomposition using randomized SVD (rSVD) for large matrices.
 
     Decomposes a tensor T[i₁,i₂,...,i_L] into a train of tensors:
     T ≈ A₁[i₁] · A₂[i₂] · ... · A_L[i_L]
 
     where each A_k has shape (χ_{k-1}, d_k, χ_k).
+
+    Uses rSVD (Halko-Martinsson-Tropp algorithm) for matrices larger than
+    rsvd_threshold, which is O(m·n·k) instead of O(m·n·min(m,n)) for full SVD.
 
     Args:
         tensor: Input tensor (will be reshaped to `shape`)
@@ -106,6 +110,7 @@ def tt_svd(
         chi_max: Maximum bond dimension
         tol: Truncation tolerance (relative to Frobenius norm)
         normalize: Whether to normalize the result
+        rsvd_threshold: Use rSVD for matrices with min dimension > this value
 
     Returns:
         Tuple of (list of TT cores, total truncation error, norm)
@@ -135,28 +140,33 @@ def tt_svd(
         
         # Reshape for SVD: (χ_left * d_k, remaining)
         current = current.reshape(chi_left * d_k, remaining_size)
+        m, n = current.shape
+        
+        # Choose SVD algorithm based on matrix size
+        # rSVD is faster for large matrices when we only need top-k singular values
+        use_rsvd = min(m, n) > rsvd_threshold and chi_max < min(m, n) // 2
+        
+        if use_rsvd:
+            # Randomized SVD (Halko-Martinsson-Tropp): O(m·n·k) instead of O(m·n·min(m,n))
+            # Request slightly more than chi_max for better accuracy
+            q = min(chi_max + 10, min(m, n) - 1)
+            U, S, V = torch.svd_lowrank(current, q=q, niter=2)
+            # svd_lowrank returns V (not Vt), so transpose
+            Vt = V.T
+        else:
+            # Standard SVD for small matrices (more accurate)
+            U, S, Vt = torch.linalg.svd(current, full_matrices=False)
 
-        # Use standard SVD for correctness (svd_lowrank has shape issues)
-        # For small chi_max, this is still fast
-        U, S, Vt = torch.linalg.svd(current, full_matrices=False)
-        # U: (chi_left*d_k, min(rows, cols))
-        # S: (min(rows, cols),)
-        # Vt: (min(rows, cols), remaining_size)
-
-        # Determine truncation
+        # Determine truncation using vectorized operation (no Python loop)
         if tol > 0 and len(S) > 1:
-            # Keep singular values above tolerance
-            cumsum = torch.cumsum(S**2, dim=0)
-            total_sq = cumsum[-1].item()
-            # Find cutoff where error < tol * ||T||_F
-            threshold = tol**2 * frobenius_norm**2
-            keep = len(S)
-            for i in range(len(S) - 1, 0, -1):
-                tail_sq = total_sq - cumsum[i - 1].item()
-                if tail_sq > threshold:
-                    keep = i + 1
-                    break
-                keep = i
+            # Compute cumulative sum of squared singular values from the end
+            S_sq = S ** 2
+            # Reverse cumsum: tail_sq[i] = sum of S[i:]^2
+            tail_sq = torch.flip(torch.cumsum(torch.flip(S_sq, [0]), dim=0), [0])
+            threshold = tol ** 2 * frobenius_norm ** 2
+            # Find first index where tail_sq <= threshold (vectorized)
+            mask = tail_sq > threshold
+            keep = mask.sum().item()  # Count of values above threshold
             keep = max(1, min(keep, chi_max))
         else:
             keep = max(1, min(chi_max, len(S)))
@@ -175,8 +185,7 @@ def tt_svd(
         core = U.reshape(chi_left, d_k, keep)
         cores.append(core)
 
-        # Propagate S @ Vt for next iteration
-        # S_kept is 1D, need to make diagonal
+        # Propagate S @ Vt for next iteration (vectorized, no loop)
         current = (S_kept.unsqueeze(1) * Vt).flatten()
         chi_left = keep
 
