@@ -130,12 +130,12 @@ OVERALL V&V:           ███████████████████
 
 | Metric | Value |
 |--------|-------|
-| **Lines of Code** | 147,000+ |
-| **Test Cases** | 1,124 |
+| **Lines of Code** | 304,000+ |
+| **Test Functions** | 1,195 |
 | **Physics Domains** | 15 |
 | **Civilization Stack** | 13/13 ✅ |
-| **Canonical Benchmarks** | 7/7 ✅ |
-| **API Modules** | 53 |
+| **Attestation Files** | 25 |
+| **API Modules** | 317 |
 
 </td>
 </tr>
