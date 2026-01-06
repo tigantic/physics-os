@@ -1,0 +1,65 @@
+{
+  "project": "HERMES",
+  "project_number": 17,
+  "domain": "Interstellar Communication",
+  "confidence": "Solid Physics",
+  "gauntlet": "Communication Physics & Information Theory",
+  "timestamp": "2026-01-06T03:20:10.193280+00:00",
+  "gates": {
+    "gate_1": {
+      "name": "RF Deep Space Link Budget",
+      "links_validated": 4,
+      "voyager_rate_bps": 3569.5536225585342,
+      "odin_improvement": 4.0,
+      "passed": true
+    },
+    "gate_2": {
+      "name": "Optical Communication",
+      "moon_rate_bps": 139461406871.50827,
+      "mars_rate_bps": 3203849.178435013,
+      "optical_vs_rf_advantage": 0.006870743895791198,
+      "passed": "True"
+    },
+    "gate_3": {
+      "name": "Information Theory Limits",
+      "shannon_capacity_10db": 3.4594316186372973,
+      "qtt_compression_ratio": 100,
+      "effective_throughput_improvement": 100,
+      "passed": "True"
+    },
+    "gate_4": {
+      "name": "Quantum Communication",
+      "fiber_100km_rate_bps": 399370.84229103656,
+      "satellite_rate_bps": 24430.606702257017,
+      "moon_qkd_rate_bps": 90215.8418394643,
+      "passed": "True"
+    },
+    "gate_5": {
+      "name": "Interstellar Beacon",
+      "beacon_power_gw": 1.0,
+      "optical_range_ly": 648092.4464537635,
+      "proxima_photons_per_sec": 5841854091.1108,
+      "proxima_data_rate_bps": 584185409.11108,
+      "passed": "True"
+    }
+  },
+  "summary": {
+    "total_gates": 5,
+    "passed_gates": 5,
+    "key_metrics": {
+      "voyager_rate_bps": 3569.5536225585342,
+      "optical_advantage": 0.006870743895791198,
+      "qtt_compression": 100,
+      "moon_qkd_bps": 90215.8418394643,
+      "interstellar_range_ly": 648092.4464537635
+    }
+  },
+  "civilization_stack_integration": {
+    "star_heart": "GW-scale transmitter power",
+    "odin": "Quantum-limited superconducting receivers",
+    "oracle": "Quantum key distribution",
+    "qtt_brain": "Intelligent compression algorithms",
+    "orbital_forge": "Relay station infrastructure"
+  },
+  "sha256": "cb6eccf628014e01ffa98b458d52264c133853a4a517a35d5b82263ca681bf9b"
+}
