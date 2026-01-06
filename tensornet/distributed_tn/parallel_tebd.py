@@ -178,8 +178,9 @@ class TEBDWorker:
         theta = theta.reshape(chi_left * d, d * chi_right)
 
         # Randomized SVD (4× faster)
+        # Note: svd_lowrank returns (U, S, V) not (U, S, Vh)
         q = min(self.chi_max, min(theta.shape))
-        U, S, Vh = torch.svd_lowrank(theta, q=q, niter=1)
+        U, S, V = torch.svd_lowrank(theta, q=q, niter=1)
 
         # Truncate
         chi_new = min(self.chi_max, len(S))
@@ -195,14 +196,14 @@ class TEBDWorker:
 
         U = U[:, :chi_new]
         S = S[:chi_new]
-        Vh = Vh[:chi_new, :]
+        V = V[:, :chi_new]  # V is (n, k), column slicing
 
         # Split back (symmetric gauge)
         S_sqrt = torch.sqrt(S)
         self.partition.tensors[site] = (U @ torch.diag(S_sqrt)).reshape(
             chi_left, d, chi_new
         )
-        self.partition.tensors[site + 1] = (torch.diag(S_sqrt) @ Vh).reshape(
+        self.partition.tensors[site + 1] = (torch.diag(S_sqrt) @ V.T).reshape(
             chi_new, d, chi_right
         )
 

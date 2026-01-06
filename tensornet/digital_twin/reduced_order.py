@@ -649,15 +649,16 @@ def compute_projection_error(snapshots: torch.Tensor, n_modes: int) -> float:
     centered = snapshots - mean
 
     # Randomized SVD (4× faster)
+    # Note: svd_lowrank returns (U, S, V) not (U, S, Vh)
     q = min(n_modes * 2, min(centered.shape))
-    U, S, Vh = torch.svd_lowrank(centered, q=q, niter=2)
+    U, S, V = torch.svd_lowrank(centered, q=q, niter=2)
 
     # Truncated reconstruction
     U_r = U[:, :n_modes]
     S_r = S[:n_modes]
-    Vh_r = Vh[:n_modes, :]
+    V_r = V[:, :n_modes]  # V is (n, k), column slicing
 
-    reconstructed = U_r @ torch.diag(S_r) @ Vh_r
+    reconstructed = U_r @ torch.diag(S_r) @ V_r.T  # V.T to get Vh
 
     # Error
     error = torch.norm(centered - reconstructed) / torch.norm(centered)

@@ -32,6 +32,7 @@ class QTTCore:
 
 
 @dataclass
+@dataclass
 class QTTState:
     """A full QTT state (MPS with physical dimension 2)."""
 
@@ -46,6 +47,11 @@ class QTTState:
     def ranks(self) -> list[int]:
         """Bond dimensions between cores."""
         return [c.shape[2] for c in self.cores[:-1]]
+
+    @property
+    def max_rank(self) -> int:
+        """Maximum bond dimension."""
+        return max(c.shape[2] for c in self.cores) if self.cores else 1
 
 
 @dataclass
@@ -525,8 +531,9 @@ def truncate_qtt(qtt: QTTState, max_bond: int = 64, tol: float = 1e-10) -> QTTSt
         mat = torch.clamp(mat, -1e6, 1e6)
 
         try:
+            # Note: svd_lowrank returns (U, S, V) not (U, S, Vh)
             q = min(max_bond, min(mat.shape))
-            U, S, Vh = torch.svd_lowrank(mat, q=q, niter=1)
+            U, S, V = torch.svd_lowrank(mat, q=q, niter=1)
         except (RuntimeError, torch.linalg.LinAlgError):
             # SVD failed - keep core as is
             continue
@@ -538,10 +545,10 @@ def truncate_qtt(qtt: QTTState, max_bond: int = 64, tol: float = 1e-10) -> QTTSt
 
         U = U[:, :new_rank]
         S = S[:new_rank]
-        Vh = Vh[:new_rank, :]
+        V = V[:, :new_rank]  # V is (n, k), column slicing
 
         # Update cores
-        cores[i] = Vh.reshape(new_rank, d, r_right)
+        cores[i] = V.T.reshape(new_rank, d, r_right)  # V.T to get Vh shape
         cores[i - 1] = torch.einsum("ijk,kl,l->ijl", cores[i - 1], U, S)
 
     return QTTState(cores=cores, num_qubits=qtt.num_qubits)
@@ -741,10 +748,13 @@ def dense_to_qtt(tensor: torch.Tensor, max_bond: int = 64) -> QTTState:
 
     For a 1D tensor of size 2^n, creates n cores with physical dim 2.
     """
-    n = int(np.log2(tensor.numel()))
-    assert (
-        2**n == tensor.numel()
-    ), f"Tensor size must be power of 2, got {tensor.numel()}"
+    numel = tensor.numel()
+    if numel < 2:
+        raise ValueError(f"Tensor must have at least 2 elements, got {numel}")
+    
+    n = int(np.log2(numel))
+    if 2**n != numel:
+        raise ValueError(f"Tensor size must be power of 2, got {numel}")
 
     # Reshape to [2, 2, ..., 2] (n dimensions)
     reshaped = tensor.reshape([2] * n)
@@ -765,9 +775,9 @@ def dense_to_qtt(tensor: torch.Tensor, max_bond: int = 64) -> QTTState:
         )
 
         if i < n - 1:
-            # Randomized SVD
+            # Randomized SVD - note: svd_lowrank returns (U, S, V) not (U, S, Vh)
             q = min(max_bond, min(mat.shape))
-            U, S, Vh = torch.svd_lowrank(mat, q=q, niter=1)
+            U, S, V = torch.svd_lowrank(mat, q=q, niter=1)
 
             # Truncate
             rank = min(len(S), max_bond, mat.shape[1])
@@ -775,13 +785,13 @@ def dense_to_qtt(tensor: torch.Tensor, max_bond: int = 64) -> QTTState:
 
             U = U[:, :rank]
             S = S[:rank]
-            Vh = Vh[:rank, :]
+            V = V[:, :rank]  # V is (n, k), not Vh
 
             # Store core: (r_left, 2, rank)
             cores.append(U.reshape(r_left, 2, rank))
 
             # Prepare for next iteration
-            current = torch.diag(S) @ Vh  # (rank, remaining)
+            current = torch.diag(S) @ V.T  # V.T to get Vh, (rank, remaining)
         else:
             # Last core: (r_left, 2, 1)
             cores.append(mat.reshape(r_left, 2, 1))

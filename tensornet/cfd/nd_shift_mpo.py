@@ -237,9 +237,10 @@ def truncate_cores(
         mat = core.reshape(r_left * d, r_right)
 
         # Randomized SVD truncation (4× faster)
+        # Note: svd_lowrank returns (U, S, V) not (U, S, Vh)
         try:
             q = min(max_rank, min(mat.shape))
-            U, S, Vh = torch.svd_lowrank(mat, q=q, niter=1)
+            U, S, V = torch.svd_lowrank(mat, q=q, niter=1)
         except (RuntimeError, torch.linalg.LinAlgError):
             # Fallback for numerical issues (singular matrix)
             continue
@@ -258,13 +259,13 @@ def truncate_cores(
 
         U = U[:, :rank]
         S = S[:rank]
-        Vh = Vh[:rank, :]
+        V = V[:, :rank]  # V is (n, k), not Vh
 
         # Update current core
         cores[k] = U.reshape(r_left, d, rank)
 
-        # Absorb S @ Vh into next core
-        SVh = torch.diag(S) @ Vh
+        # Absorb S @ V.T (= S @ Vh) into next core
+        SVh = torch.diag(S) @ V.T
         cores[k + 1] = torch.einsum("ij,jkl->ikl", SVh, cores[k + 1])
 
     return cores

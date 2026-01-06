@@ -1,6 +1,6 @@
 {
   "proof_name": "proof_21_weno_shock",
-  "timestamp": "2026-01-06T05:37:54.237215",
+  "timestamp": "2026-01-06T05:48:34.844293",
   "tests": [
     {
       "name": "WENO5-JS step",

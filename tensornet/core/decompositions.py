@@ -199,6 +199,8 @@ def polar_decomposition(A: Tensor) -> tuple[Tensor, Tensor]:
         P: Positive semidefinite (n, n)
     """
     # Use svd_lowrank for 4× speedup
+    # Note: svd_lowrank returns (U, S, V) not (U, S, Vh)
     min_dim = min(A.shape)
-    U, S, Vh = torch.svd_lowrank(A, q=min_dim, niter=2)
-    return U @ Vh, Vh.T.conj() @ torch.diag(S) @ Vh
+    U, S, V = torch.svd_lowrank(A, q=min_dim, niter=2)
+    # Polar: A = UP where U = U @ Vh, P = V @ S @ Vh
+    return U @ V.T, V @ torch.diag(S) @ V.T

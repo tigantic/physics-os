@@ -144,14 +144,15 @@ class SVDCompression(CompressionStrategy):
             tensor = tensor.reshape(m, n)
 
         # Randomized SVD (4× faster)
+        # Note: svd_lowrank returns (U, S, V) not (U, S, Vh)
         q = min(target_rank * 2, min(tensor.shape))
-        U, S, Vh = torch.svd_lowrank(tensor, q=q, niter=2)
+        U, S, V = torch.svd_lowrank(tensor, q=q, niter=2)
 
         # Truncate
         rank = min(target_rank, len(S))
         U_trunc = U[:, :rank]
         S_trunc = S[:rank]
-        Vh_trunc = Vh[:rank, :]
+        V_trunc = V[:, :rank]  # V is (n, k), column slicing
 
         # Compute truncation error
         if rank < len(S):
@@ -160,15 +161,15 @@ class SVDCompression(CompressionStrategy):
             truncation_error = 0.0
 
         # Compression ratio
-        compressed_size = U_trunc.numel() + rank + Vh_trunc.numel()
+        compressed_size = U_trunc.numel() + rank + V_trunc.numel()
         compression_ratio = (
             original_size / compressed_size if compressed_size > 0 else 1.0
         )
 
         if return_factors:
-            compressed = (U_trunc, S_trunc, Vh_trunc)
+            compressed = (U_trunc, S_trunc, V_trunc.T)  # Return as Vh for API compat
         else:
-            compressed = U_trunc @ torch.diag(S_trunc) @ Vh_trunc
+            compressed = U_trunc @ torch.diag(S_trunc) @ V_trunc.T
 
         return CompressionResult(
             compressed=compressed,
@@ -280,8 +281,9 @@ class RandomizedSVD(CompressionStrategy):
         B = Q.T @ tensor
 
         # Randomized SVD of smaller matrix
+        # Note: svd_lowrank returns (U, S, V) not (U, S, Vh)
         q = min(target_rank * 2, min(B.shape))
-        U_small, S, Vh = torch.svd_lowrank(B, q=q, niter=2)
+        U_small, S, V = torch.svd_lowrank(B, q=q, niter=2)
 
         # Recover U
         U = Q @ U_small
@@ -290,7 +292,7 @@ class RandomizedSVD(CompressionStrategy):
         rank = min(target_rank, len(S))
         U_trunc = U[:, :rank]
         S_trunc = S[:rank]
-        Vh_trunc = Vh[:rank, :]
+        V_trunc = V[:, :rank]  # V is (n, k), column slicing
 
         # Estimate truncation error (approximate)
         if rank < len(S):
@@ -299,15 +301,15 @@ class RandomizedSVD(CompressionStrategy):
             truncation_error = 0.0
 
         # Compression ratio
-        compressed_size = U_trunc.numel() + rank + Vh_trunc.numel()
+        compressed_size = U_trunc.numel() + rank + V_trunc.numel()
         compression_ratio = (
             original_size / compressed_size if compressed_size > 0 else 1.0
         )
 
         if return_factors:
-            compressed = (U_trunc, S_trunc, Vh_trunc)
+            compressed = (U_trunc, S_trunc, V_trunc.T)  # Return as Vh for API compat
         else:
-            compressed = U_trunc @ torch.diag(S_trunc) @ Vh_trunc
+            compressed = U_trunc @ torch.diag(S_trunc) @ V_trunc.T
 
         return CompressionResult(
             compressed=compressed,
@@ -442,22 +444,23 @@ class VariationalCompression(CompressionStrategy):
         Q_V, R_V = torch.linalg.qr(V_opt)
 
         middle = R_U @ R_V.T
+        # Note: svd_lowrank returns (U, S, V) not (U, S, Vh)
         q = min(rank * 2, min(middle.shape))
-        U_mid, S_mid, Vh_mid = torch.svd_lowrank(middle, q=q, niter=2)
+        U_mid, S_mid, V_mid = torch.svd_lowrank(middle, q=q, niter=2)
 
         U_final = Q_U @ U_mid
-        Vh_final = Vh_mid @ Q_V.T
+        V_final = Q_V @ V_mid  # V, not Vh
 
         # Compression ratio
-        compressed_size = U_final.numel() + rank + Vh_final.numel()
+        compressed_size = U_final.numel() + rank + V_final.numel()
         compression_ratio = (
             original_size / compressed_size if compressed_size > 0 else 1.0
         )
 
         if return_factors:
-            compressed = (U_final, S_mid, Vh_final)
+            compressed = (U_final, S_mid, V_final.T)  # Return as Vh for API compat
         else:
-            compressed = U_final @ torch.diag(S_mid) @ Vh_final
+            compressed = U_final @ torch.diag(S_mid) @ V_final.T
 
         return CompressionResult(
             compressed=compressed,
