@@ -230,47 +230,6 @@ The hydrophobic effect actually strengthens in polar environments because water 
 
 ---
 
-## Project #6: STAR-HEART (Fusion Reactor Core)
-
-**Gauntlet**: TBD  
-**Attestation File**: `STARHEART_FUSION_ATTESTATION.json` (preliminary)
-
-### Status
-⏳ AWAITING GAUNTLET DEFINITION
-
-### Preliminary Results
-- Plasma temperature: 150 keV
-- Confinement time τE: 3.2 s
-- Q-factor: 12.5 (net energy positive)
-- Tomahawk CFD integration: APPROVED
-
-### External Audit Notes
-```
-[ PENDING GAUNTLET ]
-```
-
----
-
-## Project #7: LaLuH₆ (High-Tc Superconductor)
-
-**Gauntlet**: TBD  
-**Attestation File**: TBD
-
-### Status
-⏳ AWAITING GAUNTLET DEFINITION
-
-### Preliminary Claims
-- Critical temperature Tc: 294K (room temperature)
-- Critical pressure: <1 GPa (practical)
-- Application: Fusion reactor coils, power transmission
-
-### External Audit Notes
-```
-[ PENDING GAUNTLET ]
-```
-
----
-
 ## Project #8: HELL-SKIN (Thermal Shield)
 
 **Gauntlet**: Arc-Jet Plasma + Thermal Shock + Hypersonic Scramjet  
@@ -338,11 +297,6 @@ Applications Enabled:
 - Hypersonic TIG-011a delivery (anywhere on Earth in 90 min)
 - Atmospheric re-entry heat shields (crewed spacecraft)
 - Scramjet engine liners (Mach 8+ sustained operation)
-```
-
-### External Audit Notes
-```
-[ PENDING GAUNTLET ]
 ```
 
 ---
@@ -455,27 +409,6 @@ Can we achieve "True Resonance" where the lattice itself wiggles lithium ions th
 
 ---
 
-## Project #7: STAR-HEART (Fusion Reactor Core)
-
-**Gauntlet**: TBD  
-**Attestation File**: `STARHEART_FUSION_ATTESTATION.json` (preliminary)
-
-### Status
-⏳ AWAITING GAUNTLET DEFINITION
-
-### Preliminary Results
-- Plasma temperature: 150 keV
-- Confinement time τE: 3.2 s
-- Q-factor: 12.5 (net energy positive)
-- Tomahawk CFD integration: APPROVED
-
-### External Audit Notes
-```
-[ PENDING GAUNTLET ]
-```
-
----
-
 ## Project #7: LaLuH₆ ODIN (Room-Temperature Superconductor)
 
 **Gauntlet**: Meissner Effect + Zero Resistance + Critical Current  
@@ -539,29 +472,9 @@ Room-temperature superconductivity at ambient pressure enables:
 
 ---
 
-## Project #8: STAR-HEART (Fusion Reactor)
+## Project #9: STAR-HEART (Fusion Reactor)
 
-**Gauntlet**: TBD  
-**Attestation File**: `STARHEART_FUSION_ATTESTATION.json` (preliminary)
-
-### Status
-⏳ AWAITING GAUNTLET DEFINITION
-
-### Preliminary Claims
-- Q > 10 (net energy gain)
-- 25T superconducting magnets (via ODIN)
-- Compact design: Shipping container scale
-
-### External Audit Notes
-```
-[ PENDING GAUNTLET ]
-```
-
----
-
-## Project #9: STAR-HEART (Fusion Reactor Core)
-
-**Gauntlet**: TBD  
+**Gauntlet**: Ignition & Stability (Grand Unification)  
 **Attestation File**: `STARHEART_GAUNTLET_ATTESTATION.json`
 
 ### Status
