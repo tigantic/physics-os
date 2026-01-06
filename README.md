@@ -25,6 +25,10 @@
 ## ★ Civilization Stack
 
 <p align="center">
+  <img src="images/civilization_stack_complete.png" alt="The Civilization Stack - 13/13 Gauntlets Complete - Type I Achieved" width="100%"/>
+</p>
+
+<p align="center">
   <b>13 GAUNTLETS PASSED — TYPE I CIVILIZATION ACHIEVED</b>
 </p>
 
