@@ -2,15 +2,15 @@
 
 ## TT-CFD Complexity Claims — Architecture Overview
 
-**Status: 14/14 Proofs PASSING** ✅  
-**Last Verified: December 2025**
+**Status: 13/13 Proofs PASSING** ✅  
+**Last Verified: January 2026**
 
 ---
 
 ## 🏆 HOLY GRAIL VALIDATED — O(log N) CFD EVOLUTION
 
-**NEW in December 2025**: The true Holy Grail — O(log N) per-step CFD evolution — 
-is now validated and passing all tests.
+**Validated January 2026**: The true Holy Grail — O(log N) per-step CFD evolution — 
+is implemented and passing all tests.
 
 ### Implementation: `tensornet/cfd/qtt_tdvp.py`
 
