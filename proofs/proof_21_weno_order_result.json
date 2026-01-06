@@ -1,6 +1,6 @@
 {
   "proof_name": "proof_21_weno_order",
-  "timestamp": "2025-12-24T00:18:22.268950",
+  "timestamp": "2026-01-06T05:37:52.064166",
   "tests": [
     {
       "name": "WENO5-JS",
@@ -100,8 +100,8 @@
         1.484161123927105e-10,
         4.643237183632465e-12
       ],
-      "order_L2": 4.9754878682092,
-      "order_Linf": 4.996612000048032,
+      "order_L2": 4.9754878682092025,
+      "order_Linf": 4.996612000048031,
       "passed": "True"
     },
     {
@@ -114,9 +114,9 @@
     },
     {
       "name": "weno_z_improvement",
-      "error_js": 7.298308914269293e-05,
-      "error_z": 7.298349786607687e-05,
-      "improvement_factor": 0.9999943997835689,
+      "error_js": 7.298308914269049e-05,
+      "error_z": 7.298349786606984e-05,
+      "improvement_factor": 0.9999943997836318,
       "passed": true
     }
   ],

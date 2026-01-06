@@ -1,8 +1,8 @@
 {
   "meta": {
-    "generated_at": "2025-12-24T00:18:14.730934",
+    "generated_at": "2026-01-06T05:37:45.161787",
     "category": "Tensor Decompositions",
-    "torch_version": "2.9.1+cpu",
+    "torch_version": "2.9.1+cu128",
     "seed": 42
   },
   "proofs": [
@@ -15,20 +15,20 @@
       "measurements": [
         {
           "k": 5,
-          "our_error": 80.66251876283839,
-          "ref_error": 80.66251876283839,
+          "our_error": 80.66251876283836,
+          "ref_error": 80.66251876283836,
           "diff": 0.0
         },
         {
           "k": 10,
-          "our_error": 72.56998603211332,
-          "ref_error": 72.56998603211332,
+          "our_error": 72.5699860321133,
+          "ref_error": 72.5699860321133,
           "diff": 0.0
         },
         {
           "k": 20,
-          "our_error": 58.08995394899879,
-          "ref_error": 58.08995394899879,
+          "our_error": 58.08995394899877,
+          "ref_error": 58.08995394899877,
           "diff": 0.0
         },
         {
@@ -50,15 +50,15 @@
       "measurements": [
         {
           "property": "||U^T @ U - I||_F",
-          "value": 1.070199716920431e-14
+          "value": 9.119769049072502e-15
         },
         {
           "property": "||V @ V^T - I||_F",
-          "value": 9.860920594766705e-15
+          "value": 9.933246067656718e-15
         }
       ],
       "tolerance": 1e-10,
-      "max_error": 1.070199716920431e-14
+      "max_error": 9.933246067656718e-15
     },
     {
       "id": "1.3",
@@ -69,11 +69,11 @@
       "measurements": [
         {
           "property": "||A - Q @ R||_F",
-          "value": 1.552471594765298e-14
+          "value": 1.537414500870721e-14
         }
       ],
       "tolerance": 1e-10,
-      "max_error": 1.552471594765298e-14
+      "max_error": 1.537414500870721e-14
     },
     {
       "id": "1.4",
@@ -84,11 +84,11 @@
       "measurements": [
         {
           "property": "||Q^T @ Q - I||_F",
-          "value": 2.6156762786245676e-15
+          "value": 2.6286563656307742e-15
         }
       ],
       "tolerance": 1e-10,
-      "max_error": 2.6156762786245676e-15
+      "max_error": 2.6286563656307742e-15
     }
   ],
   "summary": {

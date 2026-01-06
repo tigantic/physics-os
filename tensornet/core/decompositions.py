@@ -30,6 +30,8 @@ def svd_truncated(
     chi_max: int | None = None,
     cutoff: float = 1e-14,
     return_info: bool = False,
+    use_rsvd: bool | None = None,
+    rsvd_threshold: int = 256,
 ) -> tuple[Tensor, Tensor, Tensor] | tuple[Tensor, Tensor, Tensor, dict]:
     """
     Truncated SVD with bond dimension control.
@@ -44,6 +46,8 @@ def svd_truncated(
         chi_max: Maximum number of singular values to keep
         cutoff: Discard singular values below this threshold
         return_info: If True, return dictionary with truncation info
+        use_rsvd: Force rSVD (True) or exact SVD (False). If None, auto-select.
+        rsvd_threshold: Use rSVD when min(m,n) > threshold (default 256)
 
     Returns:
         U: Left singular vectors (m, k)
@@ -56,25 +60,39 @@ def svd_truncated(
         >>> U, S, Vh = svd_truncated(A, chi_max=20)
         >>> A_approx = U @ torch.diag(S) @ Vh
     """
+    m, n = A.shape
+    min_dim = min(m, n)
+    
     # Determine target rank
-    min_dim = min(A.shape)
     if chi_max is not None:
         target_rank = min(chi_max, min_dim)
     else:
         target_rank = min_dim
 
-    # Use randomized SVD (Halko-Martinsson-Tropp algorithm)
-    # 4× faster than full SVD for low-rank approximations
-    # Note: torch.svd_lowrank returns (U, S, V) where V is (n, q), NOT Vh
-    U, S, V = torch.svd_lowrank(A, q=target_rank, niter=2)
-    Vh = V.T  # Convert V to Vh: (n, q) -> (q, n)
+    # Decide whether to use rSVD or exact SVD
+    # rSVD is faster for large matrices when we only need top-k singular values
+    # But it's approximate, so use exact SVD for small matrices or proofs
+    if use_rsvd is None:
+        # Auto-select: use rSVD for large matrices where we're truncating significantly
+        use_rsvd = (min_dim > rsvd_threshold) and (target_rank < min_dim // 2)
+
+    if use_rsvd:
+        # Randomized SVD (Halko-Martinsson-Tropp algorithm)
+        # O(m·n·k) instead of O(m·n·min(m,n))
+        # Request slightly more for accuracy, then truncate
+        q = min(target_rank + 5, min_dim)
+        U, S, V = torch.svd_lowrank(A, q=q, niter=2)
+        Vh = V.T
+    else:
+        # Exact SVD - needed for mathematical proofs and small matrices
+        U, S, Vh = torch.linalg.svd(A, full_matrices=False)
 
     # Apply cutoff threshold
-    rank = target_rank
+    rank = min(target_rank, len(S))
     if cutoff > 0:
         mask = S > cutoff
         if not mask.all():
-            rank = max(mask.sum().item(), 1)
+            rank = max(min(mask.sum().item(), rank), 1)
 
     # Truncate
     U = U[:, :rank]

@@ -28,11 +28,11 @@
       "passed": true,
       "details": {
         "pod_trained": true,
-        "pod_reconstruction_error": 0.005554556177892345,
+        "pod_reconstruction_error": 0.005554556177892374,
         "pod_accurate": true,
         "dmd_trained": true,
         "dmd_prediction_ok": true,
-        "dmd_prediction_error": 0.03212196940535938,
+        "dmd_prediction_error": 0.025706111036021047,
         "dmd_accurate": true
       }
     },

@@ -1,8 +1,8 @@
 {
   "meta": {
-    "generated_at": "2025-12-24T00:18:17.118778",
+    "generated_at": "2026-01-06T05:37:45.947358",
     "category": "Algorithm Correctness",
-    "torch_version": "2.9.1+cpu",
+    "torch_version": "2.9.1+cu128",
     "seed": 42
   },
   "proofs": [
@@ -91,7 +91,7 @@
       "measurements": [
         {
           "property": "exact_E0",
-          "value": -5.4124839706848835
+          "value": -5.412483970684882
         },
         {
           "property": "lanczos_E0",
@@ -99,11 +99,11 @@
         },
         {
           "property": "error",
-          "value": 4.440892098500626e-15
+          "value": 6.217248937900877e-15
         }
       ],
       "tolerance": 1e-08,
-      "max_error": 4.440892098500626e-15
+      "max_error": 6.217248937900877e-15
     },
     {
       "id": "5.2",

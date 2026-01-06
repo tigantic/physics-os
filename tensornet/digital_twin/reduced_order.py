@@ -212,10 +212,12 @@ class PODModel(ReducedOrderModel):
         self._std = snapshots.std(dim=0)
         snapshots_norm = self.normalize(snapshots)
 
-        # Randomized SVD (4× faster for large matrices)
+        # Randomized SVD (rSVD, Halko-Martinsson-Tropp algorithm)
         # X = U @ S @ V^T
+        # Note: svd_lowrank returns V (not Vh), shape (n_dof, q)
         q = min(self.config.n_modes * 2, min(snapshots_norm.shape))
-        U, S, Vh = torch.svd_lowrank(snapshots_norm, q=q, niter=2)
+        U, S, V = torch.svd_lowrank(snapshots_norm, q=q, niter=2)
+        # V has shape (n_dof, q), we want basis of shape (n_dof, n_modes)
 
         # Store singular values for energy analysis
         self.singular_values = S
@@ -233,8 +235,8 @@ class PODModel(ReducedOrderModel):
 
         self._latent_dim = n_modes
 
-        # Store basis (right singular vectors transposed)
-        self.basis = Vh[:n_modes, :].T  # (n_dof, n_modes)
+        # Store basis: V has shape (n_dof, q), take first n_modes columns
+        self.basis = V[:, :n_modes]  # (n_dof, n_modes)
 
         self.trained = True
 
@@ -300,15 +302,17 @@ class DMDModel(ReducedOrderModel):
         X = snapshots_norm[:-1, :].T  # (n_dof, n_snapshots-1)
         Y = snapshots_norm[1:, :].T  # (n_dof, n_snapshots-1)
 
-        # Randomized SVD of X (4× faster)
+        # Randomized SVD of X (rSVD, Halko-Martinsson-Tropp)
+        # Note: svd_lowrank returns V (not Vh), shape (n_cols, q)
         r = self.config.dmd_rank or min(self.config.n_modes, n_snapshots - 1)
         q = min(r * 2, min(X.shape))
-        U, S, Vh = torch.svd_lowrank(X, q=q, niter=2)
+        U, S, V = torch.svd_lowrank(X, q=q, niter=2)
+        # U: (n_dof, q), S: (q,), V: (n_snapshots-1, q)
         U_r = U[:, :r]
         S_r = S[:r]
-        V_r = Vh[:r, :].T
+        V_r = V[:, :r]  # (n_snapshots-1, r)
 
-        # Build Atilde
+        # Build Atilde = U_r^T @ Y @ V_r @ S_r^{-1}
         Atilde = U_r.T @ Y @ V_r @ torch.diag(1.0 / S_r)
 
         # Eigendecomposition of Atilde
