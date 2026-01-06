@@ -1,623 +1,233 @@
-<p align="center">
-  <img src="images/hypertensor_banner.png" alt="Project HyperTensor - Quantum-Inspired Tensor Networks for Real-Time Computational Physics" width="100%"/>
-</p>
+# Project HyperTensor
 
-<p align="center">
-  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.11+-blue.svg" alt="Python 3.11+"></a>
-  <a href="https://pytorch.org/"><img src="https://img.shields.io/badge/pytorch-2.0+-ee4c2c.svg" alt="PyTorch 2.0+"></a>
-  <a href="https://www.rust-lang.org/"><img src="https://img.shields.io/badge/rust-1.70+-orange.svg" alt="Rust 1.70+"></a>
-  <a href="HYPERTENSOR_VV_FRAMEWORK.md"><img src="https://img.shields.io/badge/V%26V-100%25%20Mature-brightgreen.svg" alt="V&V 100%"></a>
-  <a href="The_Civilization_Stack.md"><img src="https://img.shields.io/badge/Civilization%20Stack-13%2F13%20✓-gold.svg" alt="Civilization Stack 13/13"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Proprietary-red.svg" alt="License: Proprietary"></a>
-</p>
+**Quantum-Inspired Tensor Networks for Computational Physics**
 
-<p align="center">
-  <a href="#-civilization-stack">Civilization Stack</a> •
-  <a href="#-the-core-insight">Core Insight</a> •
-  <a href="#-quick-start">Quick Start</a> •
-  <a href="#-domain-modules">Domains</a> •
-  <a href="#-vv-framework">V&V Framework</a> •
-  <a href="#-documentation">Docs</a>
-</p>
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![PyTorch 2.0+](https://img.shields.io/badge/pytorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
+[![Rust 1.70+](https://img.shields.io/badge/rust-1.70+-orange.svg)](https://www.rust-lang.org/)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
 
 ---
 
-## ★ Civilization Stack
+## Overview
 
-<p align="center">
-  <img src="images/civilization_stack_complete.png" alt="The Civilization Stack - 13/13 Gauntlets Complete - Type I Achieved" width="100%"/>
-</p>
+HyperTensor is a computational physics library that applies tensor network methods (MPS, MPO, QTT) to fluid dynamics, plasma physics, and related domains. The core insight: turbulent flow fields exhibit low-rank structure that can be exploited for significant compression and acceleration.
 
-<p align="center">
-  <b>13 GAUNTLETS PASSED — TYPE I CIVILIZATION ACHIEVED</b>
-</p>
+**What this repository contains:**
+- Tensor network algorithms (DMRG, TEBD, Lanczos)
+- CFD solvers (1D/2D/3D Euler, Navier-Stokes)
+- Physics validation gauntlets with benchmark suites
+- Real-time visualization tools (Rust/Python)
+- V&V framework aligned with ASME V&V 10-2019
 
-The **Civilization Stack** represents 13 breakthrough technologies validated through rigorous physics gauntlets. Each project underwent multi-gate validation with cryptographic attestation.
+**What this repository does NOT contain:**
+- Physical hardware designs
+- Manufacturing specifications
+- Production-ready systems
 
-<table>
-<tr>
-<th>#</th>
-<th>Asset</th>
-<th>Domain</th>
-<th>Key Achievement</th>
-<th>Status</th>
-</tr>
-<tr><td>1</td><td><b>TOMAHAWK</b></td><td>Aerospace</td><td>27,000× CFD compression, MHz plasma control</td><td>✅</td></tr>
-<tr><td>2</td><td><b>TIG-011a</b></td><td>Oncology</td><td>KRAS G12D inhibitor, survives ε=80</td><td>✅</td></tr>
-<tr><td>3</td><td><b>SnHf-F</b></td><td>Compute</td><td>0.42nm EUV blur, 1nm lithography enabled</td><td>✅</td></tr>
-<tr><td>4</td><td><b>Li₃InCl₄.₈Br₁.₂</b></td><td>Energy</td><td>112 S/cm superionic, paddle-wheel resonance</td><td>✅</td></tr>
-<tr><td>5</td><td><b>LaLuH₆ ODIN</b></td><td>Materials</td><td>Tc = 306K superconductor @ ambient P</td><td>✅</td></tr>
-<tr><td>6</td><td><b>HELL-SKIN</b></td><td>Defense</td><td>MP = 4005°C, phonon black hole UHTC</td><td>✅</td></tr>
-<tr><td>7</td><td><b>STAR-HEART</b></td><td>Energy</td><td>Q = 25 compact fusion, steady-state ignition</td><td>✅</td></tr>
-<tr><td>8</td><td><b>Dynamics Engine</b></td><td>Physics</td><td>Langevin/MHD, 10⁻¹² energy conservation</td><td>✅</td></tr>
-<tr><td>9</td><td><b>QTT Brain</b></td><td>Neuro</td><td>490T synapses → 13,660 params (3.59×10¹⁷ compression)</td><td>✅</td></tr>
-<tr><td>10</td><td><b>Neuromorphic Chip</b></td><td>Compute</td><td>70B neurons @ 0.06W (275× brain efficiency)</td><td>✅</td></tr>
-<tr><td>11</td><td><b>Femto-Fabricator</b></td><td>Manufacturing</td><td>0.016Å atomic placement, APL instruction set</td><td>✅</td></tr>
-<tr><td>12</td><td><b>Proteome Compiler</b></td><td>Synth Bio</td><td>712 params → 20K proteins, Function→DNA</td><td>✅</td></tr>
-<tr><td>13</td><td><b>Metric Engine</b></td><td>Propulsion</td><td>Schwinger-limit metric framework (theoretical)</td><td>✅</td></tr>
-</table>
-
-### Stack Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                        THE CIVILIZATION STACK                               │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐   ┌─────────────┐     │
-│  │ STAR-HEART  │──▶│    ODIN     │──▶│  HELL-SKIN  │──▶│  TOMAHAWK   │     │
-│  │   (Power)   │   │  (Magnets)  │   │  (Thermal)  │   │   (Aero)    │     │
-│  │   Q=25      │   │  Tc=306K    │   │  MP=4005°C  │   │  27,000×    │     │
-│  └─────────────┘   └─────────────┘   └─────────────┘   └─────────────┘     │
-│         │                │                                                  │
-│         ▼                ▼                                                  │
-│  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐   ┌─────────────┐     │
-│  │  QTT Brain  │──▶│ Neuromorphic│──▶│   SnHf-F    │──▶│  Dynamics   │     │
-│  │ (Connectome)│   │   (Chip)    │   │   (Litho)   │   │  (Physics)  │     │
-│  │ 3.59×10¹⁷×  │   │   0.06W     │   │   0.42nm    │   │   10⁻¹²     │     │
-│  └─────────────┘   └─────────────┘   └─────────────┘   └─────────────┘     │
-│         │                                    │                              │
-│         ▼                                    ▼                              │
-│  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐   ┌─────────────┐     │
-│  │   Femto-    │──▶│  Proteome   │──▶│  TIG-011a   │   │   Metric    │     │
-│  │ Fabricator  │   │  Compiler   │   │   (Drug)    │   │   Engine    │     │
-│  │  0.016Å     │   │  712 rules  │   │  ΔG=-21.5   │   │  Schwinger  │     │
-│  └─────────────┘   └─────────────┘   └─────────────┘   └─────────────┘     │
-│                                                                             │
-│  ┌─────────────┐                                                            │
-│  │Li₃InCl₄.₈Br₁│   Battery / Energy Storage Layer                          │
-│  │   112 S/cm  │   Paddle-wheel resonance enables instant charging          │
-│  └─────────────┘                                                            │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### Confidence Levels
-
-| Level | Meaning | Projects |
-|-------|---------|----------|
-| **Solid Physics** | Well-established, experimentally validated | TOMAHAWK, HELL-SKIN, Dynamics |
-| **Validated** | Computational validation with literature support | TIG-011a |
-| **Plausible** | Physics-consistent, awaiting experimental proof | SnHf-F, QTT Brain, Neuromorphic, Femto-Fab, Proteome |
-| **Lottery Ticket** | Theoretical framework only, highly speculative | Li₃InCl, ODIN, STAR-HEART, Metric Engine |
-
-📖 **Full Details**: [The_Civilization_Stack.md](The_Civilization_Stack.md)
+This is research-grade computational software.
 
 ---
 
-## 📊 Project Status
-
-<table>
-<tr>
-<td width="50%">
-
-### V&V Maturity
-
-```
-Code Verification:     ████████████████████ 100%
-Solution Verification: ████████████████████ 100%
-Validation:            ████████████████████ 100%
-Provenance:            ████████████████████ 100%
-Reproducibility:       ████████████████████ 100%
-
-OVERALL V&V:           ████████████████████ 100% 🏆
-```
-
-</td>
-<td width="50%">
-
-### Quick Stats
-
-| Metric | Value |
-|--------|-------|
-| **Lines of Code** | 304,000+ |
-| **Test Functions** | 1,195 |
-| **Physics Domains** | 15 |
-| **Civilization Stack** | 13/13 ✅ |
-| **Attestation Files** | 25 |
-| **API Modules** | 317 |
-
-</td>
-</tr>
-</table>
-
-### Capability Matrix
-
-| Capability | Status | Description |
-|:-----------|:------:|:------------|
-| **Civilization Stack** | ✅ | 13/13 gauntlets passed — Type I achieved |
-| **Tensor Network Core** | ✅ | MPS, MPO, DMRG, TEBD, Lanczos — fully validated |
-| **CFD Solvers** | ✅ | 1D/2D/3D Euler, Navier-Stokes, hypersonic |
-| **GPU Acceleration** | ✅ | CUDA kernels, cuBLAS, PyTorch backend |
-| **Distributed Computing** | ✅ | Multi-node DMRG, domain decomposition |
-| **Real-Time Visualization** | ✅ | 120 FPS Glass Cockpit, Rust/Python bridge |
-| **V&V Framework** | ✅ | ASME V&V 10-2019 aligned, PQC signed |
-| **15 Domain Modules** | ✅ | Hypersonic → Fusion → Urban → Medical |
-
----
-
-## 🧠 The Core Insight
-
-<p align="center">
-  <img src="images/core_insight.png" alt="Turbulent Flow Obeys an Area Law - 10,000x Compression" width="100%"/>
-</p>
-
-### Mathematical Foundation
-
-The Navier-Stokes equations on a tensor manifold:
-
-$$\frac{\partial \mathbf{U}}{\partial t} + \nabla \cdot \mathbf{F}(\mathbf{U}) = \nabla \cdot \mathbf{F}_v(\mathbf{U}, \nabla\mathbf{U})$$
-
-where state $\mathbf{U}$ is represented in QTT format:
-
-$$\mathbf{U}(x,y,z) \approx \sum_{\alpha_1...\alpha_n} G_1^{\alpha_1} G_2^{\alpha_1\alpha_2} \cdots G_n^{\alpha_{n-1}}$$
-
----
-
-## ⚡ Quick Start
-
-### Installation
+## Quick Start
 
 ```bash
-# Clone the repository
+# Clone and install
 git clone https://github.com/tigantic/HyperTensor.git
 cd HyperTensor
-
-# Create virtual environment (recommended)
 python -m venv venv && source venv/bin/activate
-
-# Install with all dependencies
-pip install -e ".[dev,cuda]"
+pip install -e ".[dev]"
 
 # Verify installation
-python -c "import tensornet; print(f'✓ tensornet v{tensornet.__version__}')"
+python -c "import tensornet; print(f'tensornet v{tensornet.__version__}')"
+
+# Run tests
+pytest tests/ -v
 ```
 
-### Minimal Example: DMRG Ground State
+### Example: DMRG Ground State
 
 ```python
 import torch
 from tensornet import MPS, heisenberg_mpo, dmrg
 
-# Heisenberg XXZ chain ground state
 L, chi = 20, 64
 H = heisenberg_mpo(L=L, J=1.0, Jz=1.0)
 psi = MPS.random(L=L, d=2, chi=chi, dtype=torch.float64)
-
-# Run DMRG
 psi, E, info = dmrg(psi, H, num_sweeps=15, chi_max=chi)
 
 print(f"Ground state energy: E/L = {E/L:.8f}")
-# → E/L = -0.44314718 (Bethe ansatz exact: -0.44314718) ✓
+# E/L = -0.44314718 (matches Bethe ansatz exact solution)
 ```
 
-### Minimal Example: CFD Shock Tube
+### Example: CFD Shock Tube
 
 ```python
 from tensornet.cfd import Euler1D, sod_shock_tube
 
-# Initialize solver
 solver = Euler1D(nx=400, xmin=0.0, xmax=1.0, gamma=1.4)
 rho, u, p = sod_shock_tube(solver.x)
 solver.initialize(rho, u, p)
 
-# Time integration
 for _ in range(200):
     solver.step(dt=0.0005, method='godunov')
 
-# Validate against exact solution
 error = solver.validate_against_exact(t=0.1)
-print(f"L1 error: {error:.4e}")  # → 1.66e-02 ✓
+print(f"L1 error: {error:.4e}")  # 1.66e-02
 ```
 
 ---
 
-## 🌐 Domain Modules
+## Core Capabilities
 
-HyperTensor spans **15 physics domains**, each with validated benchmarks:
+| Module | Description | Validation |
+|--------|-------------|------------|
+| `tensornet.mps` | Matrix Product States | Heisenberg exact |
+| `tensornet.mpo` | Matrix Product Operators | Operator algebra |
+| `tensornet.algorithms` | DMRG, TEBD, Lanczos | Ground state convergence |
+| `tensornet.cfd` | Euler, Navier-Stokes | 7 canonical benchmarks |
+| `tensornet.cuda` | GPU acceleration | cuBLAS validated |
+| `tensornet.hypersim` | Hypersonic/plasma | Sutton-Graves heat flux |
+| `tensornet.fusion` | Tokamak physics | Boris pusher, MHD |
 
-<table>
-<tr>
-<th>Domain</th>
-<th>Module</th>
-<th>Key Capabilities</th>
-<th>Tier 1 Benchmark</th>
-</tr>
-<tr>
-<td>🛩️ <b>CFD Core</b></td>
-<td><code>tensornet.cfd</code></td>
-<td>Euler, N-S, Riemann solvers, TVD limiters</td>
-<td>✅ Sod shock tube</td>
-</tr>
-<tr>
-<td>🚀 <b>Hypersonic</b></td>
-<td><code>tensornet.hypersim</code></td>
-<td>Ablation, plasma sheath, reentry heating</td>
-<td>✅ Sutton-Graves</td>
-</tr>
-<tr>
-<td>⚡ <b>GPU/CUDA</b></td>
-<td><code>tensornet.cuda</code></td>
-<td>Custom kernels, fused ops, tensor contraction</td>
-<td>✅ cuBLAS validated</td>
-</tr>
-<tr>
-<td>🤖 <b>Swarm AI</b></td>
-<td><code>tensornet.autonomy</code></td>
-<td>Multi-agent consensus, formation control</td>
-<td>✅ Consensus dynamics</td>
-</tr>
-<tr>
-<td>🌬️ <b>Wind Energy</b></td>
-<td><code>tensornet.energy</code></td>
-<td>Turbine wake, Betz limit, LCOE optimization</td>
-<td>✅ Cp ≤ 0.593</td>
-</tr>
-<tr>
-<td>💰 <b>Quantitative Finance</b></td>
-<td><code>tensornet.financial</code></td>
-<td>Flow-based market dynamics, risk metrics</td>
-<td>✅ Conservation laws</td>
-</tr>
-<tr>
-<td>🏙️ <b>Urban Flow</b></td>
-<td><code>tensornet.urban</code></td>
-<td>Street canyon, pedestrian wind comfort</td>
-<td>✅ Venturi analytical</td>
-</tr>
-<tr>
-<td>🌊 <b>Marine/Undersea</b></td>
-<td><code>tensornet.defense</code></td>
-<td>Acoustic propagation, SOFAR channel</td>
-<td>✅ Snell's law</td>
-</tr>
-<tr>
-<td>☢️ <b>Fusion</b></td>
-<td><code>tensornet.fusion</code></td>
-<td>Plasma confinement, Boris pusher, MHD</td>
-<td>✅ Gyration ratio</td>
-</tr>
-<tr>
-<td>🔐 <b>Cyber</b></td>
-<td><code>tensornet.cyber</code></td>
-<td>Network diffusion, threat propagation</td>
-<td>✅ Diffusion analytical</td>
-</tr>
-<tr>
-<td>🏥 <b>Medical</b></td>
-<td><code>tensornet.medical</code></td>
-<td>Blood flow, Carreau-Yasuda viscosity</td>
-<td>✅ Poiseuille flow</td>
-</tr>
-<tr>
-<td>🏎️ <b>Racing</b></td>
-<td><code>tensornet.racing</code></td>
-<td>Aerodynamics, DRS, wake turbulence</td>
-<td>✅ Wake model</td>
-</tr>
-<tr>
-<td>🎯 <b>Ballistics</b></td>
-<td><code>tensornet.physics</code></td>
-<td>G1/G7 drag, wind drift, Coriolis</td>
-<td>✅ G7 validated</td>
-</tr>
-<tr>
-<td>🔥 <b>Wildfire</b></td>
-<td><code>tensornet.emergency</code></td>
-<td>Fire spread, terrain effects, evacuation</td>
-<td>✅ Diffusion model</td>
-</tr>
-<tr>
-<td>🌾 <b>Agriculture</b></td>
-<td><code>tensornet.agri</code></td>
-<td>Microclimate, frost prediction, irrigation</td>
-<td>✅ Heat diffusion</td>
-</tr>
-</table>
+### CFD Benchmarks (7/7 Passing)
+
+| Benchmark | Reference | Status |
+|-----------|-----------|:------:|
+| Sod Shock Tube | Sod (1978) | ✅ |
+| Lax Shock Tube | Lax (1954) | ✅ |
+| Double Rarefaction | Toro (1999) | ✅ |
+| Shu-Osher | Shu & Osher (1989) | ✅ |
+| Double Mach Reflection | Woodward & Colella (1984) | ✅ |
+| Taylor-Green Vortex | Taylor & Green (1937) | ✅ |
+| Lid-Driven Cavity | Ghia et al. (1982) | ✅ |
+
+### Conservation Verification
+
+All CFD solvers verified to conserve mass, momentum, and energy to machine precision (Δ < 10⁻¹⁵).
 
 ---
 
-## ✅ V&V Framework
+## Validation Gauntlets
 
-<p align="center">
-  <img src="images/vv_framework.png" alt="HyperTensor V&V Framework v1.5.0" width="100%"/>
-</p>
+This repository includes physics validation scripts ("gauntlets") that test computational models against known results. Each gauntlet produces a JSON attestation with metrics and SHA256 hash.
 
-HyperTensor implements a rigorous Verification & Validation framework aligned with **ASME V&V 10-2019** and **NASA-STD-7009A**.
+| Gauntlet | Domain | Gates | Status |
+|----------|--------|:-----:|:------:|
+| `tomahawk_gauntlet.py` | MHD/Plasma Control | 5 | ✅ |
+| `hellskin_thermal_solver.py` | Thermal Protection | 4 | ✅ |
+| `odin_superconductor_solver.py` | Superconductor Theory | 5 | ✅ |
+| `starheart_fusion_solver.py` | Fusion Physics | 5 | ✅ |
+| `chronos_gauntlet.py` | Relativistic Physics | 5 | ✅ |
+| ... | ... | ... | ... |
 
-### Canonical CFD Benchmarks (7/7 ✅)
+**Note:** These gauntlets validate *computational models* against physics benchmarks. Passing a gauntlet means the code correctly implements the relevant equations — not that a physical device has been built.
 
-| Benchmark | Type | Reference | Status |
-|-----------|------|-----------|:------:|
-| **Sod Shock Tube** | 1D Euler | Sod (1978) | ✅ |
-| **Lax Shock Tube** | 1D Euler | Lax (1954) | ✅ |
-| **Double Rarefaction** | 1D Euler | Toro (1999) | ✅ |
-| **Shu-Osher** | 1D Euler | Shu & Osher (1989) | ✅ |
-| **Double Mach Reflection** | 2D Euler | Woodward & Colella (1984) | ✅ |
-| **Taylor-Green Vortex** | 3D N-S | Taylor & Green (1937) | ✅ |
-| **Lid-Driven Cavity** | 2D N-S | Ghia et al. (1982) | ✅ |
-
-### Method of Manufactured Solutions (MMS)
-
-Formal MMS verification for all core solvers:
-
-| Solver | Test File | Convergence Order |
-|--------|-----------|:-----------------:|
-| 2D Euler | `test_euler2d_mms.py` | 2.0 ✅ |
-| 3D Euler | `test_euler3d_mms.py` | 2.0 ✅ |
-| Advection-Diffusion | `test_advection_mms.py` | 2.0 ✅ |
-| Pressure Poisson | `test_poisson_mms.py` | 2.0 ✅ |
-
-### Conservation Laws
-
-All CFD solvers verified to conserve mass, momentum, and energy to machine precision:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│ CONSERVATION AUDIT                                          │
-├───────────────┬──────────────┬──────────────┬──────────────┤
-│ Quantity      │ Initial      │ Final        │ Δ (relative) │
-├───────────────┼──────────────┼──────────────┼──────────────┤
-│ Mass          │ 1.000000e+00 │ 1.000000e+00 │ 2.22e-16 ✅  │
-│ Momentum      │ 0.000000e+00 │ 1.23e-15     │ — (zero)  ✅  │
-│ Energy        │ 2.500000e+00 │ 2.500000e+00 │ 4.44e-16 ✅  │
-└───────────────┴──────────────┴──────────────┴──────────────┘
-```
-
-### Provenance & Reproducibility
-
-- **Cryptographic Signing**: Dilithium2 (PQC) with ECDSA fallback
-- **Deterministic Execution**: Seeded RNG across NumPy, PyTorch, CUDA
-- **Merkle DAG Provenance**: Content-addressed storage with audit trails
-- **CI/CD Validation**: 8-stage pipeline with regression detection
-
-📖 **Full Details**: [HYPERTENSOR_VV_FRAMEWORK.md](HYPERTENSOR_VV_FRAMEWORK.md)
+See [The_Civilization_Stack.md](The_Civilization_Stack.md) for complete documentation.
 
 ---
 
-## 🏗️ Architecture
+## Project Structure
 
 ```
-Project HyperTensor/
-├── tensornet/                 # Core library (147,000+ LOC)
-│   ├── algorithms/            # DMRG, TEBD, Lanczos, fermionic
-│   ├── mps/                   # Matrix Product States
-│   ├── mpo/                   # Matrix Product Operators
-│   ├── cfd/                   # Computational Fluid Dynamics
-│   ├── cuda/                  # GPU kernels & acceleration
-│   ├── hypersim/              # Hypersonic simulation
-│   ├── sovereign/             # Sovereign engine core
-│   ├── validation/            # V&V framework
-│   ├── provenance/            # Merkle DAG, audit trails
-│   └── [40+ domain modules]   # Physics domains
-├── tests/                     # Test suite (1,124 tests)
-│   ├── integration/           # MMS, benchmarks, physics
-│   └── unit/                  # Component tests
-├── benchmarks/                # Performance validation
-├── apps/                      # Applications
-│   ├── glass_cockpit/         # Real-time visualization
-│   └── global_eye/            # Global monitoring
-├── docs/                      # Documentation
-│   ├── architecture/          # System design
-│   ├── phases/                # Project phases
-│   ├── api/                   # API reference
-│   └── [INDEX.md]             # Documentation hub
-├── proofs/                    # Mathematical verification
-├── scripts/                   # Utilities & automation
-├── .github/workflows/         # CI/CD pipelines
-├── HYPERTENSOR_VV_FRAMEWORK.md # V&V Framework v1.5.0
-├── CONSTITUTION.md            # Governing standards
-├── CONTRIBUTING.md            # Contribution guidelines
-└── CHANGELOG.md               # Version history
+HyperTensor/
+├── tensornet/              # Core library
+│   ├── algorithms/         # DMRG, TEBD, Lanczos
+│   ├── mps/                # Matrix Product States
+│   ├── mpo/                # Matrix Product Operators
+│   ├── cfd/                # Computational Fluid Dynamics
+│   ├── cuda/               # GPU kernels
+│   ├── hypersim/           # Hypersonic simulation
+│   └── validation/         # V&V framework
+├── tests/                  # Test suite (1,100+ tests)
+├── benchmarks/             # Performance validation
+├── apps/                   # Applications
+│   ├── glass_cockpit/      # Real-time visualization
+│   └── global_eye/         # Monitoring tools
+├── docs/                   # Documentation
+├── proofs/                 # Mathematical verification
+└── scripts/                # Utilities
 ```
 
 ---
 
-## 🖥️ Applications
+## V&V Framework
 
-### Glass Cockpit (Real-Time Visualization)
+HyperTensor implements verification and validation aligned with:
+- **ASME V&V 10-2019** — Computational Solid Mechanics
+- **NASA-STD-7009A** — Models and Simulations
 
-120 FPS tensor field visualization with Rust/Python bridge:
+### Verification Methods
+
+| Method | Description |
+|--------|-------------|
+| MMS | Method of Manufactured Solutions for spatial/temporal order |
+| Conservation | Mass, momentum, energy conservation to machine precision |
+| Symmetry | Verification of expected physical symmetries |
+| Analytical | Comparison to closed-form solutions where available |
+
+### Validation Methods
+
+| Method | Description |
+|--------|-------------|
+| Benchmark | Canonical test cases (Sod, Ghia, Taylor-Green) |
+| Literature | Comparison to published experimental/computational data |
+| Cross-code | Comparison to established codes (when available) |
+
+See [HYPERTENSOR_VV_FRAMEWORK.md](HYPERTENSOR_VV_FRAMEWORK.md) for details.
+
+---
+
+## Testing
 
 ```bash
-# Terminal 1: Python tensor streamer
-python -c "
-from tensornet.sovereign.realtime_tensor_stream import test_realtime_stream
-test_realtime_stream(duration=60, pattern='turbulence', fps=60)
-"
-
-# Terminal 2: Rust visualizer
-cd glass-cockpit && cargo run --release --bin phase3
-```
-
-**Features:**
-- 🎨 5 scientific colormaps (Viridis, Plasma, Turbo, Inferno, Magma)
-- ⚡ <16ms latency via zero-copy shared memory (12MB)
-- 📊 Live FPS/latency telemetry
-
-### Global Eye (Planetary Monitoring)
-
-Multi-scale atmospheric and oceanic simulation:
-
-```bash
-python apps/global_eye/main.py --resolution 4k --timestep 1h
-```
-
----
-
-## 📚 Documentation
-
-| Document | Description |
-|----------|-------------|
-| [The_Civilization_Stack.md](The_Civilization_Stack.md) | **13/13 Civilization Stack** — Complete gauntlet attestations |
-| [HYPERTENSOR_VV_FRAMEWORK.md](HYPERTENSOR_VV_FRAMEWORK.md) | V&V Framework v1.5.0 — Complete V&V methodology |
-| [CONSTITUTION.md](CONSTITUTION.md) | Core principles, coding standards, governance |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute to the project |
-| [CHANGELOG.md](CHANGELOG.md) | Version history and release notes |
-| [docs/INDEX.md](docs/INDEX.md) | Master documentation index |
-| [docs/architecture/](docs/architecture/) | System architecture & design |
-| [docs/api/](docs/api/) | Auto-generated API reference |
-| [docs/tutorials/](docs/tutorials/) | Step-by-step tutorials |
-
-### Tutorials
-
-| Tutorial | Topic |
-|----------|-------|
-| [CFD Compressible Flow](docs/tutorials/cfd_compressible_flow.md) | Shock tubes, Riemann solvers |
-| [MPS Ground State](docs/tutorials/mps_ground_state.md) | DMRG for quantum systems |
-
-### Notebooks
-
-| Notebook | Topic |
-|----------|-------|
-| [demo.ipynb](notebooks/demo.ipynb) | Getting started |
-| [heisenberg_convergence.ipynb](notebooks/heisenberg_convergence.ipynb) | DMRG scaling |
-| [tfim_phase_transition.ipynb](notebooks/tfim_phase_transition.ipynb) | Quantum criticality |
-| [tebd_dynamics.ipynb](notebooks/tebd_dynamics.ipynb) | Real-time evolution |
-
----
-
-## 🧪 Testing
-
-```bash
-# Run full test suite
+# Full test suite
 pytest tests/ -v
 
-# Run by category
-pytest -m unit          # Unit tests (<100ms each)
+# By category
+pytest -m unit          # Unit tests
 pytest -m benchmark     # Known-solution benchmarks
 pytest -m mms           # Method of Manufactured Solutions
 pytest -m conservation  # Conservation law tests
-pytest -m convergence   # Order of accuracy tests
 
-# Run with coverage
+# With coverage
 pytest tests/ --cov=tensornet --cov-report=html
 ```
 
-### Test Categories
-
-| Category | Marker | Count | Purpose |
-|----------|--------|------:|---------|
-| Unit | `@unit` | 338 | Function-level correctness |
-| Physics | `@physics` | 33 | Physics validation |
-| Integration | `@integration` | 24 | Component interaction |
-| MMS | `@mms` | 14 | Manufactured solutions |
-| Benchmark | `@benchmark` | 7 | Known-solution validation |
-| Performance | `@performance` | 3 | Speed/memory targets |
-
 ---
 
-## 🔧 Development
-
-### Prerequisites
+## Requirements
 
 - Python 3.11+
-- PyTorch 2.0+ (with CUDA 12.1+ for GPU)
-- Rust 1.70+ (for Glass Cockpit)
+- PyTorch 2.0+ (CUDA 12.1+ for GPU acceleration)
 - NumPy 1.24+
-
-### Setup Development Environment
-
-```bash
-# Install development dependencies
-pip install -e ".[dev]"
-
-# Install pre-commit hooks
-pre-commit install
-
-# Run type checking
-mypy tensornet --strict
-
-# Run linting
-ruff check tensornet tests
-```
-
-### Code Standards
-
-All contributions must comply with [CONSTITUTION.md](CONSTITUTION.md):
-
-- ✅ Type hints on all public functions
-- ✅ Docstrings with mathematical notation
-- ✅ Proofs for algorithmic claims
-- ✅ 90%+ test coverage for core modules
-- ✅ MMS or benchmark validation for physics
+- Rust 1.70+ (for Glass Cockpit visualization)
 
 ---
 
-## 🗺️ Roadmap
+## Documentation
 
-### Completed Phases
-
-| Phase | Objective | Status |
-|:-----:|-----------|:------:|
-| **1** | Tensor Network Core (MPS, MPO, DMRG) | ✅ Complete |
-| **2** | 1D/2D CFD Solvers | ✅ Complete |
-| **3** | Glass Cockpit Visualization | ✅ Complete |
-| **4** | Multi-Domain Physics | ✅ Complete |
-| **5** | V&V Framework (ASME Aligned) | ✅ Complete |
-
-### In Progress
-
-| Phase | Objective | Target |
-|:-----:|-----------|:------:|
-| **6** | 3D N-S with QTT Compression | Q2 2026 |
-| **7** | Digital Twin Integration | Q3 2026 |
-| **8** | Cloud Deployment (AWS/GCP) | Q4 2026 |
+| Document | Description |
+|----------|-------------|
+| [The_Civilization_Stack.md](The_Civilization_Stack.md) | Validation gauntlet documentation |
+| [HYPERTENSOR_VV_FRAMEWORK.md](HYPERTENSOR_VV_FRAMEWORK.md) | V&V methodology |
+| [CONSTITUTION.md](CONSTITUTION.md) | Coding standards |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution guidelines |
+| [CHANGELOG.md](CHANGELOG.md) | Version history |
+| [docs/INDEX.md](docs/INDEX.md) | Documentation index |
 
 ---
 
-## 📖 References
-
-### Core Papers
+## References
 
 1. Gourianov et al., "A quantum-inspired approach to exploit turbulence structures", [arXiv:2305.10784](https://arxiv.org/abs/2305.10784) (2023)
 2. White, "Density matrix formulation for quantum renormalization groups", Phys. Rev. Lett. 69, 2863 (1992)
 3. Vidal, "Efficient simulation of one-dimensional quantum many-body systems", Phys. Rev. Lett. 93, 040502 (2004)
 4. Oseledets, "Tensor-Train Decomposition", SIAM J. Sci. Comput. 33, 2295 (2011)
 
-### V&V Standards
-
-- ASME V&V 10-2019: Verification and Validation in Computational Solid Mechanics
-- NASA-STD-7009A: Standard for Models and Simulations
-- AIAA G-077-1998: Guide for Verification and Validation of CFD Simulations
-
 ---
 
-## 🤝 Contributing
-
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit with conventional commits (`git commit -m 'feat: Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-All PRs must pass CI/CD gates including V&V validation.
-
----
-
-## 📜 License
+## License
 
 **Proprietary** — © 2025-2026 Tigantic Holdings LLC. All rights reserved.
 
@@ -625,38 +235,17 @@ See [LICENSE](LICENSE) for details.
 
 ---
 
-## 📝 Citation
+## Citation
 
 ```bibtex
 @software{hypertensor2026,
-  title = {Project HyperTensor: Quantum-Inspired Tensor Networks for Real-Time Computational Physics},
+  title = {Project HyperTensor: Quantum-Inspired Tensor Networks for Computational Physics},
   author = {Tigantic Holdings LLC},
   year = {2026},
-  url = {https://github.com/tigantic/HyperTensor},
-  version = {1.5.0}
+  url = {https://github.com/tigantic/HyperTensor}
 }
 ```
 
 ---
 
-<p align="center">
-  <sub>
-    <b>"In God we trust. All others must bring data."</b> — W. Edwards Deming
-  </sub>
-</p>
-
-<p align="center">
-  <sub>
-    HyperTensor: 13/13 Civilization Stack Complete. The data speaks for itself.
-  </sub>
-</p>
-
----
-
-<p align="center">
-  <a href="The_Civilization_Stack.md">Civilization Stack</a> •
-  <a href="HYPERTENSOR_VV_FRAMEWORK.md">V&V Framework</a> •
-  <a href="docs/INDEX.md">Documentation</a> •
-  <a href="CHANGELOG.md">Changelog</a> •
-  <a href="CONTRIBUTING.md">Contributing</a>
-</p>
+*"In God we trust. All others must bring data."* — W. Edwards Deming
