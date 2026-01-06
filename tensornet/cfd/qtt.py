@@ -91,7 +91,7 @@ def tt_svd(
     chi_max: int | None = None,
     tol: float = 1e-10,
     normalize: bool = True,
-) -> tuple[list[Tensor], float]:
+) -> tuple[list[Tensor], float, float]:
     """
     Tensor Train SVD decomposition.
 
@@ -108,7 +108,7 @@ def tt_svd(
         normalize: Whether to normalize the result
 
     Returns:
-        Tuple of (list of TT cores, total truncation error)
+        Tuple of (list of TT cores, total truncation error, norm)
     """
     L = len(shape)
     dtype = tensor.dtype
@@ -117,26 +117,31 @@ def tt_svd(
     if chi_max is None:
         chi_max = 2 ** (L // 2)  # Reasonable default
 
-    # Reshape tensor to target shape
+    # Reshape tensor to target shape then flatten
     T = tensor.reshape(shape)
+    frobenius_norm = torch.norm(T).item()
 
     cores = []
     total_error = 0.0
-    frobenius_norm = torch.norm(T).item()
 
     # Left-to-right sweep with SVD truncation
-    current = T.reshape(shape[0], -1)
+    current = T.flatten()
     chi_left = 1
+    remaining_size = current.numel()
 
     for k in range(L - 1):
-        # Reshape for SVD: (χ_left * d_k, remaining)
         d_k = shape[k]
-        current = current.reshape(chi_left * d_k, -1)
+        remaining_size = remaining_size // d_k
+        
+        # Reshape for SVD: (χ_left * d_k, remaining)
+        current = current.reshape(chi_left * d_k, remaining_size)
 
-        # Randomized SVD for speed (10× faster than full SVD for low ranks)
-        # Use torch.svd_lowrank which implements Halko-Martinsson-Tropp algorithm
-        target_rank = min(chi_max, min(current.shape) - 1)
-        U, S, Vh = torch.svd_lowrank(current, q=target_rank, niter=2)
+        # Use standard SVD for correctness (svd_lowrank has shape issues)
+        # For small chi_max, this is still fast
+        U, S, Vt = torch.linalg.svd(current, full_matrices=False)
+        # U: (chi_left*d_k, min(rows, cols))
+        # S: (min(rows, cols),)
+        # Vt: (min(rows, cols), remaining_size)
 
         # Determine truncation
         if tol > 0 and len(S) > 1:
@@ -145,7 +150,6 @@ def tt_svd(
             total_sq = cumsum[-1].item()
             # Find cutoff where error < tol * ||T||_F
             threshold = tol**2 * frobenius_norm**2
-            # Simple loop to find cutoff (more robust than searchsorted)
             keep = len(S)
             for i in range(len(S) - 1, 0, -1):
                 tail_sq = total_sq - cumsum[i - 1].item()
@@ -155,12 +159,12 @@ def tt_svd(
                 keep = i
             keep = max(1, min(keep, chi_max))
         else:
-            keep = min(chi_max, len(S))
+            keep = max(1, min(chi_max, len(S)))
 
         # Truncate
         U = U[:, :keep]
         S_kept = S[:keep]
-        Vh = Vh[:keep, :]
+        Vt = Vt[:keep, :]
 
         # Track error (from truncated singular values)
         if keep < len(S):
@@ -171,8 +175,9 @@ def tt_svd(
         core = U.reshape(chi_left, d_k, keep)
         cores.append(core)
 
-        # Propagate S @ Vh for next iteration
-        current = torch.diag(S_kept) @ Vh
+        # Propagate S @ Vt for next iteration
+        # S_kept is 1D, need to make diagonal
+        current = (S_kept.unsqueeze(1) * Vt).flatten()
         chi_left = keep
 
     # Last core
