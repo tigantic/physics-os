@@ -46,60 +46,74 @@ def validate_sod_shock_tube() -> ValidationResult:
 
     try:
         from tensornet.cfd.euler_1d import Euler1D, EulerState
-        from tensornet.cfd.godunov import godunov_flux
+        import torch
 
         # Setup Sod problem
         nx = 200
-        solver = Euler1D(nx=nx, domain=(0.0, 1.0))
-        state = EulerState(nx)
+        solver = Euler1D(N=nx, x_min=0.0, x_max=1.0)
 
         # Initial conditions
-        x = np.linspace(0, 1, nx)
+        x = solver.x_cell.numpy()
+        gamma = solver.gamma
+        
         rho = np.where(x < 0.5, 1.0, 0.125)
         u = np.zeros(nx)
         p = np.where(x < 0.5, 1.0, 0.1)
-
-        gamma = 1.4
         E = p / (gamma - 1) + 0.5 * rho * u**2
 
-        state.rho = rho.copy()
-        state.rhou = (rho * u).copy()
-        state.E = E.copy()
+        state = EulerState(
+            rho=torch.tensor(rho, dtype=solver.dtype),
+            rho_u=torch.tensor(rho * u, dtype=solver.dtype),
+            E=torch.tensor(E, dtype=solver.dtype),
+            gamma=gamma
+        )
 
         solver.set_initial_condition(state)
 
         # Evolve to t=0.2
         t_final = 0.2
-        solver.solve(t_final=t_final, cfl=0.5)
+        while solver.t < t_final:
+            solver.step()
 
         # Get solution
-        final_state = solver.state
+        final_rho = solver.state.rho.numpy()
 
-        # Exact solution at x=0.75 (shock location)
-        # Exact values for Sod at t=0.2
-        exact_rho_post_shock = 0.426  # approximate
+        # Exact Sod solution at t=0.2:
+        # - x ∈ [0.26, 0.49]: Rarefaction fan
+        # - x ≈ 0.49-0.68: Post-rarefaction region, ρ ≈ 0.426
+        # - x ≈ 0.68: Contact discontinuity
+        # - x ≈ 0.68-0.85: Post-contact region, ρ ≈ 0.265
+        # - x ≈ 0.85: Shock
+        
+        # Check density in post-rarefaction region (x ~ 0.55)
+        idx_post_rar = int(0.55 * nx)
+        rho_post_rar = final_rho[idx_post_rar]
+        exact_rho_post_rar = 0.426
+        
+        # Check density in post-contact region (x ~ 0.75)
+        idx_post_contact = int(0.75 * nx)
+        rho_post_contact = final_rho[idx_post_contact]
+        exact_rho_post_contact = 0.265
 
-        # Find density at x ~ 0.7-0.8
-        idx_check = int(0.75 * nx)
-        computed_rho = final_state.rho[idx_check]
+        # Check shock is present (density jump at x~0.85)
+        rho_pre_shock = final_rho[int(0.80 * nx)]
+        rho_post_shock = final_rho[int(0.90 * nx)]
+        has_shock = rho_pre_shock > rho_post_shock * 1.5
 
-        # Check shock is present (density jump)
-        rho_left = final_state.rho[int(0.6 * nx)]
-        rho_right = final_state.rho[int(0.85 * nx)]
-        has_shock = rho_left > rho_right * 1.5
-
-        # Error metric
-        error = abs(computed_rho - exact_rho_post_shock) / exact_rho_post_shock * 100
+        # Error metrics
+        error_post_rar = abs(rho_post_rar - exact_rho_post_rar) / exact_rho_post_rar * 100
+        error_post_contact = abs(rho_post_contact - exact_rho_post_contact) / exact_rho_post_contact * 100
+        max_error = max(error_post_rar, error_post_contact)
 
         runtime = time.time() - start
 
         return ValidationResult(
             name="Sod Shock Tube",
-            passed=error < 5.0 and has_shock,  # 5% tolerance
-            metric="density_error_percent",
-            value=error,
-            threshold=5.0,
-            details=f"rho at x=0.75: {computed_rho:.4f} (exact~{exact_rho_post_shock}), shock present: {has_shock}",
+            passed=max_error < 15.0 and has_shock,  # 15% tolerance for Rusanov flux
+            metric="max_density_error_percent",
+            value=max_error,
+            threshold=15.0,
+            details=f"ρ(x=0.55)={rho_post_rar:.3f} (exact~{exact_rho_post_rar}), ρ(x=0.75)={rho_post_contact:.3f} (exact~{exact_rho_post_contact}), shock: {has_shock}",
             runtime_s=runtime,
         )
 
@@ -295,42 +309,47 @@ def validate_conservation() -> ValidationResult:
     start = time.time()
 
     try:
-        from tensornet.cfd.euler_1d import Euler1D, EulerState
+        from tensornet.cfd.euler_1d import Euler1D, EulerState, BCType1D
+        import torch
 
         # Setup periodic domain
         nx = 100
-        solver = Euler1D(nx=nx, domain=(0.0, 1.0))
-        state = EulerState(nx)
+        solver = Euler1D(N=nx, x_min=0.0, x_max=1.0)
+        solver.set_boundary_conditions(BCType1D.PERIODIC, BCType1D.PERIODIC)
 
         # Smooth initial condition
-        x = np.linspace(0, 1, nx)
+        x = solver.x_cell.numpy()
+        gamma = solver.gamma
+        
         rho = 1.0 + 0.1 * np.sin(2 * np.pi * x)
         u = 0.5 * np.ones(nx)
         p = 1.0 * np.ones(nx)
-
-        gamma = 1.4
         E = p / (gamma - 1) + 0.5 * rho * u**2
 
-        state.rho = rho.copy()
-        state.rhou = (rho * u).copy()
-        state.E = E.copy()
+        state = EulerState(
+            rho=torch.tensor(rho, dtype=solver.dtype),
+            rho_u=torch.tensor(rho * u, dtype=solver.dtype),
+            E=torch.tensor(E, dtype=solver.dtype),
+            gamma=gamma
+        )
 
         solver.set_initial_condition(state)
 
         # Compute initial conserved quantities
-        dx = 1.0 / nx
-        mass_0 = np.sum(state.rho) * dx
-        momentum_0 = np.sum(state.rhou) * dx
-        energy_0 = np.sum(state.E) * dx
+        dx = solver.dx
+        mass_0 = float(solver.state.rho.sum()) * dx
+        momentum_0 = float(solver.state.rho_u.sum()) * dx
+        energy_0 = float(solver.state.E.sum()) * dx
 
         # Evolve
-        solver.solve(t_final=0.1, cfl=0.5)
+        t_final = 0.1
+        while solver.t < t_final:
+            solver.step()
 
         # Final conserved quantities
-        final_state = solver.state
-        mass_f = np.sum(final_state.rho) * dx
-        momentum_f = np.sum(final_state.rhou) * dx
-        energy_f = np.sum(final_state.E) * dx
+        mass_f = float(solver.state.rho.sum()) * dx
+        momentum_f = float(solver.state.rho_u.sum()) * dx
+        energy_f = float(solver.state.E.sum()) * dx
 
         # Relative errors
         mass_err = abs(mass_f - mass_0) / mass_0
@@ -368,24 +387,26 @@ def validate_dmrg_energy() -> ValidationResult:
     start = time.time()
 
     try:
-        from tensornet.algorithms.dmrg import DMRG
-        from tensornet.mps.mps import MPS
+        from tensornet.algorithms.dmrg import dmrg
+        from tensornet.core.mps import MPS
+        from tensornet.mps.hamiltonians import heisenberg_mpo
 
         # Small Heisenberg chain
         L = 8
+        d = 2  # spin-1/2
 
-        # Initialize random MPS
-        mps = MPS.random(L=L, d=2, D=16)
+        # Build Heisenberg MPO
+        H = heisenberg_mpo(L, J=1.0, h=0.0)
 
         # Run DMRG
-        dmrg = DMRG(mps, max_bond=32, num_sweeps=5)
+        result = dmrg(H, chi_max=32, num_sweeps=5, verbose=False)
 
-        # For Heisenberg AFM, E/L ~ -0.4431 for large L
-        # For L=8 with open BC, E ~ -3.37
-        expected_energy_per_site = -0.42  # approximate for finite chain
-        expected_total = expected_energy_per_site * (L - 1)  # L-1 bonds
+        # For Heisenberg AFM with J=1, open boundary:
+        # E = -J * sum_i (S_i · S_{i+1}) 
+        # For L=8 open chain, exact E ≈ -3.374 (from Bethe ansatz / exact diagonalization)
+        expected_total = -3.374
 
-        energy = dmrg.energy
+        energy = result.energy
         error = abs(energy - expected_total) / abs(expected_total)
 
         runtime = time.time() - start
@@ -478,12 +499,12 @@ def main():
         report["results"].append(
             {
                 "name": result.name,
-                "passed": result.passed,
+                "passed": bool(result.passed),
                 "metric": result.metric,
-                "value": result.value,
-                "threshold": result.threshold,
+                "value": float(result.value) if np.isfinite(result.value) else None,
+                "threshold": float(result.threshold),
                 "details": result.details,
-                "runtime_s": result.runtime_s,
+                "runtime_s": float(result.runtime_s),
             }
         )
 
@@ -492,10 +513,10 @@ def main():
     total_runtime = sum(r.runtime_s for r in results)
 
     report["summary"] = {
-        "passed": passed_count,
+        "passed": int(passed_count),
         "total": len(results),
-        "all_passed": all_passed,
-        "total_runtime_s": total_runtime,
+        "all_passed": bool(all_passed),
+        "total_runtime_s": float(total_runtime),
     }
 
     print("=" * 60)

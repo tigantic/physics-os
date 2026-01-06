@@ -1,0 +1,66 @@
+{
+  "generated_at": "2026-01-06T11:09:46.735031Z",
+  "mode": "full",
+  "results": [
+    {
+      "name": "Rankine-Hugoniot Relations",
+      "passed": true,
+      "metric": "temperature_ratio_error",
+      "value": 2.0776103384798255e-16,
+      "threshold": 1e-10,
+      "details": "M1=2.5: M2=0.5130, p2/p1=7.1250, T2/T1=2.1375",
+      "runtime_s": 3.0040740966796875e-05
+    },
+    {
+      "name": "Oblique Shock \u03b8-\u03b2-M",
+      "passed": true,
+      "metric": "beta_error_degrees",
+      "value": 0.05225225225225216,
+      "threshold": 1.0,
+      "details": "M=3.0, \u03b8=20.0\u00b0: \u03b2_calc=37.75\u00b0 (expected~37.8\u00b0)",
+      "runtime_s": 0.005759716033935547
+    },
+    {
+      "name": "Isentropic Vortex (symmetry)",
+      "passed": true,
+      "metric": "symmetry_error",
+      "value": 5.551115123125783e-16,
+      "threshold": 1e-10,
+      "details": "Initial vortex symmetry error: 5.55e-16",
+      "runtime_s": 0.00039267539978027344
+    },
+    {
+      "name": "Sod Shock Tube",
+      "passed": true,
+      "metric": "max_density_error_percent",
+      "value": 3.1247237744258944,
+      "threshold": 15.0,
+      "details": "\u03c1(x=0.55)=0.428 (exact~0.426), \u03c1(x=0.75)=0.273 (exact~0.265), shock: True",
+      "runtime_s": 4.087608337402344
+    },
+    {
+      "name": "Conservation Laws",
+      "passed": true,
+      "metric": "max_conservation_error",
+      "value": 2.220446049250313e-16,
+      "threshold": 1e-06,
+      "details": "mass_err=2.22e-16, momentum_err=0.00e+00, energy_err=0.00e+00",
+      "runtime_s": 0.005743980407714844
+    },
+    {
+      "name": "DMRG Heisenberg Ground State",
+      "passed": true,
+      "metric": "energy_error_percent",
+      "value": 0.02764074356520702,
+      "threshold": 5.0,
+      "details": "E=-3.3749 (expected~-3.3740)",
+      "runtime_s": 0.037950754165649414
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "total": 6,
+    "all_passed": true,
+    "total_runtime_s": 4.137485504150391
+  }
+}
