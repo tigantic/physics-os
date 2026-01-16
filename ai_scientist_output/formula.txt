@@ -1,0 +1,4 @@
+Expression: (0.18392994 / ((0.6287899 ^ sin(L / 1.4965844)) * L)) + 1.4987605
+LaTeX: 1.50 + \frac{0.184}{{0.629}^{\sin{\left(\frac{L}{1.50} \right)}} L}
+R²: 0.9052404597802262
+Coefficients: {'infinite_limit': 1.4987605}

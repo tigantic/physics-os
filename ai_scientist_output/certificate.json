@@ -1,0 +1,25 @@
+{
+  "formula": {
+    "expression": "1.5045 + 0.7875 / L^2",
+    "latex": "1.505 + \\frac{0.788}{L^2}",
+    "coefficients": {
+      "a": 1.5045423996882064,
+      "b": 0.787505971719207,
+      "alpha": 2,
+      "infinite_limit": 1.5045423996882064
+    },
+    "complexity": 5,
+    "mse": 5.210513164109467e-05,
+    "r_squared": 0.817440509128234
+  },
+  "certificate": {
+    "verified": false,
+    "obligations_total": 4,
+    "obligations_proved": 4,
+    "remaining_sorry": 11,
+    "code_hash": "abb06809cc2d8b4c",
+    "timestamp": "2026-01-16T01:50:11.846598",
+    "status": "PARTIAL"
+  },
+  "infinite_limit": 1.5045423996882064
+}
