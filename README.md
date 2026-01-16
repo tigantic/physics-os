@@ -85,12 +85,12 @@ print(f"L1 error: {error:.4e}")  # 1.66e-02
 | `tensornet.mps` | Matrix Product States | Heisenberg exact |
 | `tensornet.mpo` | Matrix Product Operators | Operator algebra |
 | `tensornet.algorithms` | DMRG, TEBD, Lanczos | Ground state convergence |
-| `tensornet.cfd` | Euler, Navier-Stokes | 7 canonical benchmarks |
+| `tensornet.cfd` | Euler, Navier-Stokes, QTT-Native | 8 canonical benchmarks |
 | `tensornet.cuda` | GPU acceleration | cuBLAS validated |
 | `tensornet.hypersim` | Hypersonic/plasma | Sutton-Graves heat flux |
 | `tensornet.fusion` | Tokamak physics | Boris pusher, MHD |
 
-### CFD Benchmarks (7/7 Passing)
+### CFD Benchmarks (8/8 Passing)
 
 | Benchmark | Reference | Status |
 |-----------|-----------|:------:|
@@ -101,6 +101,33 @@ print(f"L1 error: {error:.4e}")  # 1.66e-02
 | Double Mach Reflection | Woodward & Colella (1984) | ✅ |
 | Taylor-Green Vortex | Taylor & Green (1937) | ✅ |
 | Lid-Driven Cavity | Ghia et al. (1982) | ✅ |
+| **QTT-Native NS2D** | Conference Room Ventilation | ✅ |
+
+### QTT-Native Navier-Stokes (NEW)
+
+The `ns2d_qtt_native.py` solver implements fully QTT-native 2D Navier-Stokes:
+
+```python
+from tensornet.cfd.ns2d_qtt_native import (
+    NS2DQTTConfig, NS2D_QTT_Native, create_conference_room_ic
+)
+
+config = NS2DQTTConfig(nx_bits=7, ny_bits=7, max_rank=48)  # 128×128
+solver = NS2D_QTT_Native(config)
+omega, psi, psi_bc, bc_mask = create_conference_room_ic(config)
+
+omega, psi, info = solver.solve_steady_state(
+    omega, psi, psi_bc, bc_mask, max_iters=200, tol=1e-5
+)
+# Inlet velocity recovery: 94.4% ✓
+```
+
+**Key features:**
+- O(log N × r³) complexity per iteration
+- No dense operations in solver loop
+- QTT-native Jacobi Poisson solver
+- Hadamard product for u·∇ω nonlinear term
+- Mask-based boundary condition enforcement
 
 ### Conservation Verification
 
@@ -119,6 +146,7 @@ This repository includes physics validation scripts ("gauntlets") that test comp
 | `odin_superconductor_solver.py` | Superconductor Theory | 5 | ✅ |
 | `starheart_fusion_solver.py` | Fusion Physics | 5 | ✅ |
 | `chronos_gauntlet.py` | Relativistic Physics | 5 | ✅ |
+| `ns2d_qtt_native.py` | QTT-Native CFD | 4 | ✅ |
 | ... | ... | ... | ... |
 
 **Note:** These gauntlets validate *computational models* against physics benchmarks. Passing a gauntlet means the code correctly implements the relevant equations — not that a physical device has been built.

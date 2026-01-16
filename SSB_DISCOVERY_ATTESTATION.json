@@ -1,6 +1,6 @@
 {
   "discovery": "Superionic Solid-State Battery Electrolyte",
-  "timestamp": "2026-01-05T00:57:13.652692",
+  "timestamp": "2026-01-06T06:40:34.235688",
   "compound": "Li3Sc0.25In0.75Cl3Br1.50I1.50",
   "structure": "Garnet",
   "properties": {
@@ -25,5 +25,5 @@
   },
   "targets_met": true,
   "physics_framework": "HyperTensor TT-Compressed Hamiltonian",
-  "sha256": "37bdee40134ce17d19fc6cf31d3b8da86e73f49566109af3e4c6ba38b48b8aac"
+  "sha256": "35ff1e03a04e3467cd911c5304a14217f95fe5aaf9d76edc30239374f1c45908"
 }

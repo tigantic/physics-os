@@ -1,0 +1,35 @@
+\contentsline {section}{\numberline {1}Introduction: The Millennium Prize Problem}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Historical Context}{3}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Our Contribution}{3}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Mathematical Framework}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Lattice Yang-Mills Hamiltonian}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Continuum Limit and Asymptotic Freedom}{4}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Dimensional Transmutation}{4}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Quantized Tensor Train Methodology}{5}{section.3}%
+\contentsline {subsection}{\numberline {3.1}The QTT Holy Grail}{5}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}4D Morton Encoding}{5}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}N-Dimensional Shift MPO}{5}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Results: Scaling Window Discovery}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}The Product State Trap}{5}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Large Lattice QTT-DMRG}{6}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Correlation Length Analysis}{6}{subsection.4.3}%
+\contentsline {section}{\numberline {5}Results: Dimensional Transmutation Proof}{7}{section.5}%
+\contentsline {subsection}{\numberline {5.1}The Critical Test}{7}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Physical Interpretation}{7}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Continuum Limit Extrapolation}{8}{subsection.5.3}%
+\contentsline {section}{\numberline {6}Thermodynamic Limit}{8}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Finite-Size Scaling}{8}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Bulk Limit Confirmation}{8}{subsection.6.2}%
+\contentsline {section}{\numberline {7}Error Analysis and Validation}{8}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Systematic Errors}{8}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Consistency Checks}{9}{subsection.7.2}%
+\contentsline {section}{\numberline {8}Cryptographic Attestation}{9}{section.8}%
+\contentsline {subsection}{\numberline {8.1}SHA-512 Hash Chain}{9}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}CRYSTALS-Dilithium Post-Quantum Signature}{9}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Merkle Tree Root}{10}{subsection.8.3}%
+\contentsline {section}{\numberline {9}Conclusion}{10}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Summary of Evidence}{10}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Implications}{11}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Future Work}{11}{subsection.9.3}%
+\contentsline {section}{\numberline {A}Reproduction Instructions}{11}{appendix.A}%
+\contentsline {section}{\numberline {B}Full Attestation Record}{14}{appendix.B}%

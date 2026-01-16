@@ -40,6 +40,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+from typing import Optional, Tuple
 
 import torch
 from torch import Tensor
@@ -826,6 +827,94 @@ class ProjectionResult:
     divergence_before: float  # max|∇·u*|
     divergence_after: float  # max|∇·u| (should be ~0)
     iterations: int  # Poisson solver iterations
+
+
+def poisson_solve_cg_2d(
+    rhs: Tensor,
+    dx: float,
+    dy: float,
+    tol: float = 1e-6,
+    max_iter: int = 500,
+    x0: Optional[Tensor] = None,
+) -> Tuple[Tensor, int, float]:
+    """
+    Solve 2D Poisson equation with Dirichlet BC using Conjugate Gradient.
+
+    Matrix-free implementation - applies Laplacian stencil directly.
+    Works for wall-bounded flows where FFT (periodic BC) fails.
+
+    Solves: ∇²φ = rhs with φ = 0 on boundaries.
+
+    Args:
+        rhs: Right-hand side, shape (Nx, Ny)
+        dx, dy: Grid spacings
+        tol: Convergence tolerance
+        max_iter: Maximum CG iterations
+        x0: Initial guess (optional)
+
+    Returns:
+        (phi, iterations, residual): Solution, iteration count, final residual
+    """
+    Nx, Ny = rhs.shape
+    dtype = rhs.dtype
+    device = rhs.device
+    dx2, dy2 = dx * dx, dy * dy
+    factor = -2.0 / dx2 - 2.0 / dy2
+
+    def laplacian_op(phi: Tensor) -> Tensor:
+        """Apply 5-point Laplacian stencil with Dirichlet BC (zero boundary)."""
+        lap = torch.zeros_like(phi)
+        # Interior points only - boundaries stay zero
+        lap[1:-1, 1:-1] = (
+            (phi[2:, 1:-1] + phi[:-2, 1:-1]) / dx2
+            + (phi[1:-1, 2:] + phi[1:-1, :-2]) / dy2
+            + factor * phi[1:-1, 1:-1]
+        )
+        return lap
+
+    # Work only on interior points
+    # Boundary values of rhs are ignored (Dirichlet BC)
+    rhs_interior = rhs.clone()
+    rhs_interior[0, :] = 0
+    rhs_interior[-1, :] = 0
+    rhs_interior[:, 0] = 0
+    rhs_interior[:, -1] = 0
+
+    # Initialize
+    x = x0.clone() if x0 is not None else torch.zeros_like(rhs)
+    # Enforce zero boundary
+    x[0, :] = 0
+    x[-1, :] = 0
+    x[:, 0] = 0
+    x[:, -1] = 0
+
+    r = rhs_interior - laplacian_op(x)
+    p = r.clone()
+    rs_old = (r * r).sum()
+    rs_new = rs_old  # Initialize for early exit case
+    rhs_norm = (rhs_interior * rhs_interior).sum().sqrt()
+    if rhs_norm < 1e-15:
+        rhs_norm = torch.tensor(1.0, dtype=rhs.dtype, device=rhs.device)
+
+    for i in range(max_iter):
+        Ap = laplacian_op(p)
+        pAp = (p * Ap).sum()
+        if pAp.abs() < 1e-15:
+            break
+        alpha = rs_old / pAp
+        x = x + alpha * p
+        r = r - alpha * Ap
+        rs_new = (r * r).sum()
+
+        rel_residual = rs_new.sqrt().item() / rhs_norm.item()
+        if rel_residual < tol:
+            return x, i + 1, rel_residual
+
+        p = r + (rs_new / rs_old) * p
+        rs_old = rs_new
+
+    final_residual = rs_new.sqrt().item() / rhs_norm.item()
+    return x, max_iter, final_residual
 
 
 def poisson_solve_fft_2d(

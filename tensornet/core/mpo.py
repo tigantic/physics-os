@@ -115,7 +115,8 @@ class MPO:
 
             # Contract physical index
             # B_{(χ_l,D_l), d_out, (χ_r,D_r)} = Σ_d W_{D_l,d_out,d,D_r} A_{χ_l,d,χ_r}
-            B = torch.einsum("αβγδ,ιγκ->ιαβκδ", W, A)
+            # W: (D_l, d_out, d_in, D_r) = abcd, A: (χ_l, d_in, χ_r) = ecf -> (e,a,b,f,d)
+            B = torch.einsum("abcd,ecf->eabfd", W, A)
 
             # Reshape to combined bond dimensions
             chi_l, D_l = A.shape[0], W.shape[0]

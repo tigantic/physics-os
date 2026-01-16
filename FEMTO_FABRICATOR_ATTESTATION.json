@@ -4,13 +4,13 @@
   "domain": "Molecular Assembly",
   "confidence": "Plausible",
   "gauntlet": "Atomic Positional Logic (APL)",
-  "timestamp": "2026-01-05T20:13:26.865044",
+  "timestamp": "2026-01-15T20:51:22.330561",
   "gates": {
     "gate_1": {
       "name": "Single-Atom Placement",
-      "mean_error_angstrom": 0.015921610112074682,
-      "max_error_angstrom": 0.04805678077481594,
-      "std_error_angstrom": 0.006946023990714617,
+      "mean_error_angstrom": 0.0157176334945702,
+      "max_error_angstrom": 0.03990325724064579,
+      "std_error_angstrom": 0.006784036961521411,
       "target": 0.1,
       "passed": "True"
     },
@@ -57,7 +57,7 @@
     "total_gates": 5,
     "passed_gates": 5,
     "key_metrics": {
-      "placement_accuracy_angstrom": 0.015921610112074682,
+      "placement_accuracy_angstrom": 0.0157176334945702,
       "multi_tip_speedup": 90.0,
       "diamond_build_time_ms": 0.021952,
       "defect_density_ppm": 0.0
@@ -75,5 +75,5 @@
     "neuromorphic": "Real-time tip control",
     "star_heart": "Power for industrial assembly"
   },
-  "sha256": "b434c04281bb7af98df3dc061ff01ce4919f90d826d9f251d6e0f479ef9f0cf7"
+  "sha256": "d1b29a0dbb596078f5e582d3ff0f950414c534f1f6e4c65bd5bed09f41a8aa93"
 }

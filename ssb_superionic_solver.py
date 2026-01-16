@@ -62,7 +62,7 @@ ELEMENTS = {
     'Cl': Element('Cl', 35.45, 1.81, -1, 2.18, 3.16),
     'Br': Element('Br', 79.90, 1.96, -1, 3.05, 2.96),
     'I':  Element('I', 126.90, 2.20, -1, 4.70, 2.66),
-}
+
 
 @dataclass
 class CrystalStructure:

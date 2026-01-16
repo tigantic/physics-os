@@ -1,7 +1,7 @@
 {
   "project": "ODIN",
   "discovery": "Room-Temperature Superconductor",
-  "timestamp": "2026-01-05T01:17:49.207679",
+  "timestamp": "2026-01-15T20:50:51.819957",
   "compound": {
     "formula": "LaLuH6",
     "metals": [
@@ -26,5 +26,5 @@
   },
   "physics": "Allen-Dynes modified BCS with cage compression",
   "framework": "HyperTensor Phonon-Mediated Pairing",
-  "sha256": "1244f9815b84a5fdd8d8c5d5d055728601be5fc0eb9bf53848996c70ead0d142"
+  "sha256": "9b303b879cf835154f40c7b43f697dd99d708e368374eab52f2bd2c02c0eb7ac"
 }

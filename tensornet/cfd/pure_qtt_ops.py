@@ -32,7 +32,6 @@ class QTTCore:
 
 
 @dataclass
-@dataclass
 class QTTState:
     """A full QTT state (MPS with physical dimension 2)."""
 
@@ -170,85 +169,28 @@ def _shift_plus_mpo(num_qubits: int) -> MPO:
     """
     Create the forward shift operator S⁺ in MPO form: S⁺|x⟩ = |x+1 mod 2^n⟩
 
-    Uses CORRECT ripple-carry logic with right-to-left carry propagation.
-
-    Since MPO cores are contracted left-to-right (site 0 first), but
-    carry propagates right-to-left (LSB to MSB), we use bond dimension 2
-    with the following semantics:
-
-    Bond state encodes "what will happen from the RIGHT":
-    - State 0: carry will NOT arrive from the right
-    - State 1: carry WILL arrive from the right
-
-    At site i processing bit b with bond_in = "carry from right?":
-    - If bond_in=0 (no carry coming): output b unchanged, bond_out=0
-    - If bond_in=1 (carry coming): output (b XOR carry), bond_out = b (old bit propagates carry left)
-
-    For QTT: site 0 = MSB, site n-1 = LSB
-    The carry starts at LSB (site n-1) with carry_in=1.
-
-    We reverse the logic: process site 0 first, but the LAST site (n-1)
-    is where we know carry=1. So bond_in at site n-1 = 1, and that propagates
-    backward through the chain.
-
-    Actually simpler: at the RIGHT boundary (site n-1), we ADD 1.
-    The bond going LEFT tells the next site (n-2) whether there was a carry.
-
-    For MPO:
-    - Site n-1 (LSB): always adds 1. bit_out = bit_in XOR 1 = ~bit_in. carry_out = bit_in.
-    - Site i (middle/MSB): if carry_in=1, flip bit and propagate; else identity.
-
-    The tricky part: MPO contracts 0→n-1, but carry propagates n-1→0.
-
-    SOLUTION: Use matrix product where:
-    - Each core is indexed by (r_left, d_out, d_in, r_right)
-    - The RIGHT index (r_right) at site n-1 is 1 (boundary)
-    - The LEFT index (r_left) at site 0 is 1 (boundary)
-    - Information flows BOTH ways through the contraction
-
-    Standard construction: Think of the MPO as computing S⁺ in the sense that
-    when fully contracted, (MPO @ QTT)[y] = QTT[y-1].
-
-    For S⁺: map y → y-1, or equivalently, f'[y] = f[y-1 mod N]
-    This is the INVERSE of incrementing the INDEX.
-
-    Let's verify with a 2-site example (N=4):
-    - S⁺|00⟩ = |01⟩ (0→1)
-    - S⁺|01⟩ = |10⟩ (1→2)
-    - S⁺|10⟩ = |11⟩ (2→3)
-    - S⁺|11⟩ = |00⟩ (3→0)
-
-    For 2 sites, we can write S⁺ explicitly and factor it.
-
-    Actually, the cleanest implementation: use DENSE shift and compress to MPO.
+    Uses O(n) ripple-carry construction with bond dimension 2.
+    NO DENSE MATRICES - works for any num_qubits.
+    
+    The ripple-carry adder logic:
+    - LSB (site n-1): always increment, propagate carry if bit was 1
+    - Middle sites: if carry_in, flip bit and propagate; else identity
+    - MSB (site 0): absorb carry (periodic BC)
+    
+    Bond dimension = 2 encodes carry state.
     """
-    if num_qubits <= 14:  # Up to 16K points: can do dense
-        N = 2**num_qubits
-        # Build shift matrix: S[y, x] = 1 if y = (x+1) mod N
-        S = torch.zeros(N, N)
-        for x in range(N):
-            y = (x + 1) % N
-            S[y, x] = 1.0
-
-        # Convert to MPO via SVD
-        return _dense_matrix_to_mpo(S, num_qubits)
-    else:
-        # For huge grids, need the proper O(n) construction
-        # Placeholder: return identity (incorrect, but won't crash)
-        return identity_mpo(num_qubits)
+    # Delegate to the correct O(n) implementation
+    return shift_mpo(num_qubits, direction=+1)
 
 
 def _shift_minus_mpo(num_qubits: int) -> MPO:
-    """Create backward shift S⁻|x⟩ = |x-1 mod N⟩."""
-    if num_qubits <= 14:
-        N = 2**num_qubits
-        S = torch.zeros(N, N)
-        for x in range(N):
-            y = (x - 1) % N
-            S[y, x] = 1.0
-        return _dense_matrix_to_mpo(S, num_qubits)
-    else:
-        return identity_mpo(num_qubits)
+    """
+    Create backward shift S⁻|x⟩ = |x-1 mod N⟩.
+    
+    Uses O(n) ripple-borrow construction with bond dimension 2.
+    NO DENSE MATRICES.
+    """
+    return shift_mpo(num_qubits, direction=-1)
 
 
 def _dense_matrix_to_mpo(mat: torch.Tensor, num_qubits: int, max_bond: int = 64) -> MPO:
@@ -477,6 +419,11 @@ def truncate_qtt(qtt: QTTState, max_bond: int = 64, tol: float = 1e-10) -> QTTSt
     Truncate QTT bond dimensions using SVD.
 
     This is the compression step that keeps the representation efficient.
+    
+    OPTIMIZED (January 2026):
+    - Single right-to-left SVD sweep (no redundant QR pass)
+    - Skips cores that are already within bounds
+    - Uses rSVD (svd_lowrank) for O(r² max_bond) instead of O(r³)
 
     Args:
         qtt: Input QTT state
@@ -486,93 +433,100 @@ def truncate_qtt(qtt: QTTState, max_bond: int = 64, tol: float = 1e-10) -> QTTSt
     Returns:
         Compressed QTT state
     """
-    # Clean cores to prevent NaN/Inf propagation
-    cores = []
-    for c in qtt.cores:
-        c_clean = c.clone()
-        c_clean = torch.nan_to_num(c_clean, nan=0.0, posinf=1e6, neginf=-1e6)
-        c_clean = torch.clamp(c_clean, -1e6, 1e6)
-        cores.append(c_clean)
+    # Fast path: check if truncation is needed at all
+    # Must check BOTH left and right bonds (qtt_add inflates both)
+    max_right_bond = max(c.shape[2] for c in qtt.cores[:-1]) if len(qtt.cores) > 1 else 1
+    max_left_bond = max(c.shape[0] for c in qtt.cores[1:]) if len(qtt.cores) > 1 else 1
+    max_current_bond = max(max_right_bond, max_left_bond)
+    
+    if max_current_bond <= max_bond:
+        # Already within bounds - just clean NaN/Inf
+        cores = [torch.nan_to_num(c, nan=0.0, posinf=1e6, neginf=-1e6) for c in qtt.cores]
+        return QTTState(cores=cores, num_qubits=qtt.num_qubits)
+    
+    # Single right-to-left SVD sweep
+    # This is sufficient and avoids redundant QR pass
+    cores = [c.clone() for c in qtt.cores]
     n = len(cores)
-
-    # Left-to-right sweep: QR decomposition
-    for i in range(n - 1):
-        c = cores[i]
-        r_left, d, r_right = c.shape
-
-        # Reshape to matrix and do QR
-        mat = c.reshape(r_left * d, r_right)
-
-        try:
-            Q, R = torch.linalg.qr(mat)
-        except (RuntimeError, torch.linalg.LinAlgError):
-            # QR failed - keep core as is
-            continue
-
-        # Truncate if needed
-        new_rank = min(Q.shape[1], max_bond)
-        Q = Q[:, :new_rank]
-        R = R[:new_rank, :]
-
-        # Update cores
-        cores[i] = Q.reshape(r_left, d, new_rank)
-        cores[i + 1] = torch.einsum("ij,jkl->ikl", R, cores[i + 1])
-
-    # Right-to-left sweep: SVD truncation
+    
     for i in range(n - 1, 0, -1):
         c = cores[i]
         r_left, d, r_right = c.shape
+        
+        # Skip if left bond already within bounds
+        if r_left <= max_bond:
+            continue
 
-        # Reshape and SVD
+        # Reshape: (r_left, d * r_right) for left-side compression
         mat = c.reshape(r_left, d * r_right)
-
-        # Clean matrix before SVD
+        
+        # Clean matrix
         mat = torch.nan_to_num(mat, nan=0.0, posinf=1e6, neginf=-1e6)
-        mat = torch.clamp(mat, -1e6, 1e6)
 
         try:
-            # Note: svd_lowrank returns (U, S, V) not (U, S, Vh)
+            # rSVD: only compute top max_bond singular values
             q = min(max_bond, min(mat.shape))
             U, S, V = torch.svd_lowrank(mat, q=q, niter=1)
+            
+            # Truncate based on tolerance and max_bond
+            if tol > 0 and len(S) > 0:
+                mask = S > tol * S[0]
+                new_rank = min(mask.sum().item(), max_bond)
+            else:
+                new_rank = min(len(S), max_bond)
+            new_rank = max(1, new_rank)
+
+            U = U[:, :new_rank]
+            S = S[:new_rank]
+            V = V[:, :new_rank]  # V is (n, k), not Vh
+
+            # Update current core: V.T @ original = new core
+            cores[i] = V.T.reshape(new_rank, d, r_right)
+            
+            # Absorb U @ S into previous core
+            US = U * S.unsqueeze(0)  # (r_left, new_rank)
+            cores[i - 1] = torch.einsum("ijk,kl->ijl", cores[i - 1], US)
+            
         except (RuntimeError, torch.linalg.LinAlgError):
             # SVD failed - keep core as is
             continue
 
-        # Truncate
-        mask = S > tol * S[0]
-        new_rank = min(mask.sum().item(), max_bond)
-        new_rank = max(1, new_rank)
-
-        U = U[:, :new_rank]
-        S = S[:new_rank]
-        V = V[:, :new_rank]  # V is (n, k), column slicing
-
-        # Update cores
-        cores[i] = V.T.reshape(new_rank, d, r_right)  # V.T to get Vh shape
-        cores[i - 1] = torch.einsum("ijk,kl,l->ijl", cores[i - 1], U, S)
-
     return QTTState(cores=cores, num_qubits=qtt.num_qubits)
 
 
-def qtt_add(qtt1: QTTState, qtt2: QTTState, max_bond: int = 64) -> QTTState:
+def qtt_add(qtt1: QTTState, qtt2: QTTState, max_bond: int = 64, truncate: bool = True) -> QTTState:
     """
     Add two QTT states: |ψ⟩ = |ψ₁⟩ + |ψ₂⟩
 
-    Bond dimension doubles, then truncate.
+    Bond dimension doubles, then truncate (if truncate=True).
+    
+    Args:
+        qtt1, qtt2: QTT states to add
+        max_bond: Maximum bond dimension after truncation
+        truncate: If False, skip truncation (for batching multiple ops)
+    
+    Optimized:
+    - Skips truncation if combined ranks already ≤ max_bond
+    - Block diagonal assembly is vectorized
+    - Set truncate=False for deferred truncation (batch multiple adds)
     """
     assert qtt1.num_qubits == qtt2.num_qubits
 
     cores = []
     n = qtt1.num_qubits
 
-    # Determine target dtype (promote to higher precision if mixed)
+    # Determine target dtype and device (promote to higher precision if mixed)
     dtype = qtt1.cores[0].dtype
+    device = qtt1.cores[0].device
     if qtt2.cores[0].dtype == torch.float64:
         dtype = torch.float64
 
+    # Check if truncation will be needed
+    max_combined_rank = 0
+    
     for i in range(n):
-        c1 = qtt1.cores[i].to(dtype)
-        c2 = qtt2.cores[i].to(dtype)
+        c1 = qtt1.cores[i].to(dtype=dtype, device=device)
+        c2 = qtt2.cores[i].to(dtype=dtype, device=device)
 
         r1L, d, r1R = c1.shape
         r2L, _, r2R = c2.shape
@@ -580,17 +534,104 @@ def qtt_add(qtt1: QTTState, qtt2: QTTState, max_bond: int = 64) -> QTTState:
         if i == 0:
             # First core: concatenate along right bond
             new_core = torch.cat([c1, c2], dim=2)
+            max_combined_rank = max(max_combined_rank, r1R + r2R)
         elif i == n - 1:
             # Last core: concatenate along left bond
             new_core = torch.cat([c1, c2], dim=0)
+            max_combined_rank = max(max_combined_rank, r1L + r2L)
         else:
             # Middle cores: block diagonal
-            new_core = torch.zeros(r1L + r2L, d, r1R + r2R, dtype=dtype)
+            new_core = torch.zeros(r1L + r2L, d, r1R + r2R, dtype=dtype, device=device)
             new_core[:r1L, :, :r1R] = c1
             new_core[r1L:, :, r1R:] = c2
+            max_combined_rank = max(max_combined_rank, r1L + r2L, r1R + r2R)
 
         cores.append(new_core)
 
+    result = QTTState(cores=cores, num_qubits=n)
+    
+    # Skip truncation if already within bounds OR if deferred
+    if not truncate or max_combined_rank <= max_bond:
+        return result
+    
+    return truncate_qtt(result, max_bond=max_bond)
+
+
+def qtt_sum(states: list[QTTState], max_bond: int = 64, weights: list[float] | None = None) -> QTTState:
+    """
+    Sum multiple QTT states in one fused operation: |ψ⟩ = Σᵢ wᵢ|ψᵢ⟩
+    
+    This is MUCH faster than chaining qtt_add() calls:
+    - Single block-diagonal assembly for all N states
+    - Single truncation sweep at the end
+    - O(N) memory vs O(N²) for pairwise adds
+    
+    Args:
+        states: List of QTT states to sum
+        max_bond: Maximum bond dimension after truncation
+        weights: Optional weights for each state (default: all 1.0)
+    
+    Returns:
+        QTT state representing weighted sum
+        
+    Example:
+        # Jacobi iteration: psi = (psi_xp + psi_xm + psi_yp + psi_ym + rhs) / D
+        psi = qtt_sum([psi_xp, psi_xm, psi_yp, psi_ym, rhs], max_bond=24)
+    """
+    if len(states) == 0:
+        raise ValueError("Need at least one state to sum")
+    if len(states) == 1:
+        return states[0] if weights is None else qtt_scale(states[0], weights[0])
+    
+    n = states[0].num_qubits
+    for s in states[1:]:
+        assert s.num_qubits == n, "All states must have same num_qubits"
+    
+    if weights is None:
+        weights = [1.0] * len(states)
+    
+    # Determine dtype/device
+    dtype = states[0].cores[0].dtype
+    device = states[0].cores[0].device
+    for s in states:
+        if s.cores[0].dtype == torch.float64:
+            dtype = torch.float64
+    
+    # Apply weights to first cores
+    weighted_states = []
+    for s, w in zip(states, weights):
+        if w == 1.0:
+            weighted_states.append(s)
+        else:
+            weighted_states.append(qtt_scale(s, w))
+    
+    # Fused block-diagonal assembly
+    cores = []
+    for i in range(n):
+        all_cores = [s.cores[i].to(dtype=dtype, device=device) for s in weighted_states]
+        
+        if i == 0:
+            # First: concatenate along right bond
+            new_core = torch.cat(all_cores, dim=2)
+        elif i == n - 1:
+            # Last: concatenate along left bond
+            new_core = torch.cat(all_cores, dim=0)
+        else:
+            # Middle: block diagonal
+            total_left = sum(c.shape[0] for c in all_cores)
+            total_right = sum(c.shape[2] for c in all_cores)
+            d = all_cores[0].shape[1]
+            new_core = torch.zeros(total_left, d, total_right, dtype=dtype, device=device)
+            
+            left_offset, right_offset = 0, 0
+            for c in all_cores:
+                rL, _, rR = c.shape
+                new_core[left_offset:left_offset+rL, :, right_offset:right_offset+rR] = c
+                left_offset += rL
+                right_offset += rR
+        
+        cores.append(new_core)
+    
     result = QTTState(cores=cores, num_qubits=n)
     return truncate_qtt(result, max_bond=max_bond)
 
@@ -602,7 +643,7 @@ def qtt_scale(qtt: QTTState, scalar: float) -> QTTState:
     return QTTState(cores=cores, num_qubits=qtt.num_qubits)
 
 
-def qtt_hadamard(qtt1: QTTState, qtt2: QTTState, max_bond: int = 64) -> QTTState:
+def qtt_hadamard(qtt1: QTTState, qtt2: QTTState, max_bond: int = 64, truncate: bool = True) -> QTTState:
     """
     Element-wise (Hadamard) product of two QTT states: |ψ⟩ = |ψ₁⟩ ⊙ |ψ₂⟩
 
@@ -617,54 +658,39 @@ def qtt_hadamard(qtt1: QTTState, qtt2: QTTState, max_bond: int = 64) -> QTTState
         qtt1: First QTT state
         qtt2: Second QTT state
         max_bond: Maximum bond dimension after truncation
+        truncate: If False, skip truncation (for batching multiple ops)
 
     Returns:
         QTT state representing element-wise product
     """
     assert qtt1.num_qubits == qtt2.num_qubits, "QTT dimensions must match"
 
-    cores = []
     n = qtt1.num_qubits
-
+    
+    # Build Kronecker product of all cores
+    cores = []
     for i in range(n):
         c1 = qtt1.cores[i]  # (r1L, d, r1R)
         c2 = qtt2.cores[i]  # (r2L, d, r2R)
-
         r1L, d, r1R = c1.shape
         r2L, _, r2R = c2.shape
-
-        # For Hadamard product, we need cores that when contracted
-        # give the element-wise product of the two vectors.
-        #
-        # The trick: for each physical index value k, the new core is
-        # the outer product of the slices c1[:, k, :] and c2[:, k, :]
-        #
-        # New core shape: (r1L*r2L, d, r1R*r2R)
-        new_core = torch.zeros(
-            r1L * r2L, d, r1R * r2R, dtype=c1.dtype, device=c1.device
-        )
-
-        for k in range(d):
-            # c1[:, k, :] has shape (r1L, r1R)
-            # c2[:, k, :] has shape (r2L, r2R)
-            # Kronecker product: (r1L, r1R) ⊗ (r2L, r2R) = (r1L*r2L, r1R*r2R)
-            slice1 = c1[:, k, :]  # (r1L, r1R)
-            slice2 = c2[:, k, :]  # (r2L, r2R)
-
-            # Kronecker product via outer product and reshape
-            # kron(A, B)[i*m+j, k*n+l] = A[i,k] * B[j,l]
-            kron = torch.einsum("ik,jl->ijkl", slice1, slice2)
-            new_core[:, k, :] = kron.reshape(r1L * r2L, r1R * r2R)
-
-        cores.append(new_core)
-
+        
+        # Kronecker in bond dimensions: (r1L, d, r1R) ⊗ (r2L, d, r2R) -> (r1L*r2L, d, r1R*r2R)
+        kron = torch.einsum("adb,cde->acdbe", c1, c2)
+        cores.append(kron.reshape(r1L * r2L, d, r1R * r2R))
+    
     result = QTTState(cores=cores, num_qubits=n)
-
-    # Truncate if needed
-    max_current = max(c.shape[0] * c.shape[2] for c in cores)
-    if max_current > max_bond * max_bond:
+    
+    # Skip truncation if deferred
+    if not truncate:
+        return result
+    
+    # Truncate if needed (optimized single-sweep rSVD)
+    max_right_bond = max(c.shape[2] for c in cores[:-1]) if n > 1 else 1
+    max_left_bond = max(c.shape[0] for c in cores[1:]) if n > 1 else 1
+    if max(max_right_bond, max_left_bond) > max_bond:
         result = truncate_qtt(result, max_bond=max_bond)
-
+    
     return result
 
 

@@ -1,6 +1,6 @@
 {
   "title": "Pressure Poisson Solver: Irrefutable Proof Certificate",
-  "generated": "2025-12-23 22:55:45 UTC",
+  "generated": "2026-01-06 15:18:20 UTC",
   "summary": {
     "tests_passed": 5,
     "tests_total": 5,
@@ -23,10 +23,10 @@
         "total_points": 256,
         "cg_iterations_dense": 1,
         "cg_iterations_qtt": 1,
-        "residual_dense": 9.530379097933166e-13,
-        "residual_qtt": 4.2809657052003815e-12,
-        "error_vs_exact_dense": 0.002850772794441706,
-        "error_vs_exact_qtt": 0.002850772794441107,
+        "residual_dense": 9.711242708197055e-13,
+        "residual_qtt": 5.0477870303971735e-12,
+        "error_vs_exact_dense": 0.0028507727944413154,
+        "error_vs_exact_qtt": 0.0028507727944400672,
         "max_qtt_rank": 2,
         "rank_history": [
           2
@@ -36,7 +36,7 @@
         "equation": "\u2207\u00b2p = f"
       },
       "physics_validated": "2D Pressure Poisson solve",
-      "timestamp": "2025-12-23 22:55:44 UTC"
+      "timestamp": "2026-01-06 15:18:20 UTC"
     },
     {
       "test_name": "3D Poisson Equation (8\u00d78\u00d78 = 512 points)",
@@ -56,7 +56,7 @@
         "equation": "\u2207\u00b2p = f (3D)"
       },
       "physics_validated": "3D Pressure Poisson solve",
-      "timestamp": "2025-12-23 22:55:44 UTC"
+      "timestamp": "2026-01-06 15:18:20 UTC"
     },
     {
       "test_name": "2D Incompressible Navier-Stokes (16\u00d716, 30 steps)",
@@ -70,7 +70,7 @@
         "dt": 0.0001,
         "initial_divergence_taylor_green": 1.2179274798194157,
         "max_divergence_before_projection": 1.218744180336229,
-        "max_divergence_after_projection": 4.973799150320701e-14,
+        "max_divergence_after_projection": 1.4210854715202004e-14,
         "final_divergence_after_projection": 1.7763568394002505e-15,
         "divergence_is_zero": true,
         "initial_kinetic_energy": 0.25,
@@ -85,7 +85,7 @@
         "critical_check": "Divergence AFTER projection < 1e-10"
       },
       "physics_validated": "2D Incompressible Navier-Stokes with VERIFIED \u2207\u00b7u = 0",
-      "timestamp": "2025-12-23 22:55:45 UTC"
+      "timestamp": "2026-01-06 15:18:20 UTC"
     },
     {
       "test_name": "Scalability Test (16\u00b2 to 64\u00b2)",
@@ -132,7 +132,7 @@
         "compression_improves_with_scale": true
       },
       "physics_validated": "Scalability of QTT Poisson solver",
-      "timestamp": "2025-12-23 22:55:45 UTC"
+      "timestamp": "2026-01-06 15:18:20 UTC"
     },
     {
       "test_name": "Rank Stability (50 time steps)",
@@ -156,7 +156,7 @@
         ]
       },
       "physics_validated": "Rank stability through time evolution",
-      "timestamp": "2025-12-23 22:55:45 UTC"
+      "timestamp": "2026-01-06 15:18:20 UTC"
     }
   ],
   "what_this_proves": {

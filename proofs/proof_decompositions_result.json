@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated_at": "2026-01-06T05:48:21.798363",
+    "generated_at": "2026-01-06T06:10:50.178893",
     "category": "Tensor Decompositions",
     "torch_version": "2.9.1+cu128",
     "seed": 42

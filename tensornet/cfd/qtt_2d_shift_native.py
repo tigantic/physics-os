@@ -225,32 +225,37 @@ def truncate_qtt2d(state: QTT2DState, max_rank: int) -> QTT2DState:
         # Reshape to matrix
         mat = core.reshape(r_left * d, r_right)
 
-        # Use rSVD for 10-15× faster compression
+        # Use rSVD for faster compression
         try:
-            q = min(
-                self.max_rank if hasattr(self, "max_rank") else max_rank, min(mat.shape)
-            )
-            U, S, Vh = torch.svd_lowrank(mat, q=q, niter=1)
-            rank = U.shape[1]  # Already truncated
+            q = min(max_rank, min(mat.shape))
+            # svd_lowrank returns U, S, V (not Vh!) 
+            U, S, V = torch.svd_lowrank(mat, q=q, niter=1)
+            rank = min(U.shape[1], max_rank)
         except (RuntimeError, torch.linalg.LinAlgError):
             # Numerical instability - skip this core
             continue
 
-        # Truncate
+        # Truncate to max_rank
         U = U[:, :rank]
         S = S[:rank]
-        Vh = Vh[:rank, :]
+        V = V[:, :rank]  # V is (r_right, rank)
+        Vh = V.T  # Now (rank, r_right)
 
         # Update current core
         cores[k] = U.reshape(r_left, d, rank)
 
         # Absorb S @ Vh into next core
-        SV = torch.diag(S) @ Vh
+        SV = torch.diag(S) @ Vh  # (rank, r_right)
 
         next_core = cores[k + 1]
-        r_right_old, d_next, r_right_next = next_core.shape
+        r_left_next, d_next, r_right_next = next_core.shape
+        
+        # r_left_next should equal r_right from previous core
+        if r_left_next != r_right:
+            # Shape mismatch - skip
+            continue
 
-        next_flat = next_core.reshape(r_right_old, d_next * r_right_next)
+        next_flat = next_core.reshape(r_left_next, d_next * r_right_next)
         cores[k + 1] = (SV @ next_flat).reshape(rank, d_next, r_right_next)
 
     return QTT2DState(cores=cores, nx=state.nx, ny=state.ny)

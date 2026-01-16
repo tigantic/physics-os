@@ -32,7 +32,7 @@ def get_extensions():
     """Build list of extension modules."""
     extensions = []
 
-    # Main CUDA extension
+    # Main CUDA extension (advection)
     cuda_sources = [
         os.path.join(here, "bindings.cpp"),
         os.path.join(here, "advection_kernel.cu"),
@@ -44,24 +44,51 @@ def get_extensions():
         # We'll compile it separately or include in main extension
         pass
 
+    nvcc_flags = [
+        "-O3",
+        "--use_fast_math",
+        "-gencode=arch=compute_86,code=sm_86",  # RTX 30 series (Ampere)
+        "-gencode=arch=compute_80,code=sm_80",  # A100
+        "-lineinfo",  # For profiling
+    ]
+    
+    # Add Blackwell/Ada support if CUDA version supports it
+    # These require CUDA 12.x+
+    try:
+        import torch
+        cuda_version = torch.version.cuda
+        if cuda_version and int(cuda_version.split('.')[0]) >= 12:
+            nvcc_flags.extend([
+                "-gencode=arch=compute_89,code=sm_89",  # RTX 40 series (Ada)
+                "-gencode=arch=compute_120,code=sm_120",  # RTX 50 series (Blackwell)
+            ])
+    except:
+        pass
+
     extensions.append(
         CUDAExtension(
             name="tensornet_cuda",
             sources=cuda_sources,
             extra_compile_args={
                 "cxx": ["-O3", "-Wall"],
-                "nvcc": [
-                    "-O3",
-                    "--use_fast_math",
-                    "-gencode=arch=compute_120,code=sm_120",  # RTX 50 series (Blackwell)
-                    "-gencode=arch=compute_89,code=sm_89",  # RTX 40 series (Ada)
-                    "-gencode=arch=compute_86,code=sm_86",  # RTX 30 series (Ampere)
-                    "-gencode=arch=compute_80,code=sm_80",  # A100
-                    "-lineinfo",  # For profiling
-                ],
+                "nvcc": nvcc_flags,
             },
         )
     )
+    
+    # QTT Native CUDA extension (new - for CFD solver)
+    qtt_native_kernel = os.path.join(here, "qtt_native_kernels.cu")
+    if os.path.exists(qtt_native_kernel):
+        extensions.append(
+            CUDAExtension(
+                name="qtt_native_cuda",
+                sources=[qtt_native_kernel],
+                extra_compile_args={
+                    "cxx": ["-O3", "-Wall"],
+                    "nvcc": nvcc_flags,
+                },
+            )
+        )
 
     return extensions
 

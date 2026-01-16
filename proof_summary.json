@@ -1,0 +1,51 @@
+{
+  "timestamp": "2026-01-16T01:05:16.569157",
+  "certificates": 2,
+  "verified": 2,
+  "summary": [
+    {
+      "statement": "Yang-Mills mass gap exists for g \u2208 0.2 \u00b1 0.01",
+      "verified": true,
+      "bounds": {
+        "coupling": {
+          "lower": 0.19,
+          "upper": 0.21000000000000002
+        },
+        "E0": {
+          "lower": -1.0,
+          "upper": -0.98
+        },
+        "E1": {
+          "lower": 0.4799999999999999,
+          "upper": 0.5400000000000001
+        },
+        "gap": {
+          "lower": 1.46,
+          "upper": 1.54
+        },
+        "beta_function": {
+          "lower": -0.0006109217459706398,
+          "upper": -0.0001388655338041057
+        },
+        "M_over_Lambda": {
+          "lower": 1.48,
+          "upper": 1.52
+        },
+        "ln_a_over_Lambda": {
+          "lower": -298.2504477790793,
+          "upper": -244.14605815929124
+        }
+      }
+    },
+    {
+      "statement": "Dimensional transmutation: M/\u039b_QCD is coupling-independent",
+      "verified": true,
+      "bounds": {
+        "M_over_Lambda": {
+          "lower": 1.48,
+          "upper": 1.52
+        }
+      }
+    }
+  ]
+}

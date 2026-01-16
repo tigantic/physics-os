@@ -4,7 +4,7 @@
   "domain": "Synthetic Biology",
   "confidence": "Plausible",
   "gauntlet": "QTT-Fold \u2014 Function\u2192Protein\u2192DNA",
-  "timestamp": "2026-01-05T20:22:28.349286",
+  "timestamp": "2026-01-15T20:51:54.233384",
   "gates": {
     "gate_1": {
       "name": "QTT Proteome Compression",
@@ -18,9 +18,9 @@
     "gate_2": {
       "name": "Fold Prediction Accuracy",
       "sequences_tested": 4,
-      "avg_predicted_energy": -32.760488075038076,
-      "avg_random_energy": -14.760488075038076,
-      "improvement_pct": 121.94718703401391,
+      "avg_predicted_energy": -31.109361019439064,
+      "avg_random_energy": -7.484361019439062,
+      "improvement_pct": 315.6582096806796,
       "passed": "True"
     },
     "gate_3": {
@@ -83,7 +83,7 @@
     "passed_gates": 5,
     "key_metrics": {
       "proteome_compression_ratio": 22471.91011235955,
-      "fold_improvement_pct": 121.94718703401391,
+      "fold_improvement_pct": 315.6582096806796,
       "codon_optimization_score": 1.0000000001
     }
   },
@@ -98,5 +98,5 @@
     "tig011a": "Drug design validation",
     "femto_fabricator": "Direct protein synthesis via APL"
   },
-  "sha256": "86ca641865d078a0afd5032853eaa3d8cbe334a18d19f2f7bc499a92d19d0b90"
+  "sha256": "8cb22029f792cd4e14d7738b4d3f70940049dc4afdeb3ec16e374194fb981bb3"
 }

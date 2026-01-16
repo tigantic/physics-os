@@ -19,6 +19,7 @@ members = [
     "crates/hyper_bridge",
     "apps/glass_cockpit",
     "apps/global_eye",
+    "santa_solver_rust",
 ]
 resolver = "2"
 

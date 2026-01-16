@@ -4,7 +4,7 @@
   "domain": "Consciousness / Integrated Information Theory",
   "confidence": "Plausible",
   "gauntlet": "IIT \u03a6 Computation",
-  "timestamp": "2026-01-05T21:30:26.794276",
+  "timestamp": "2026-01-15T20:50:55.467346",
   "disclaimer": "Computing \u03a6 > 0 demonstrates irreducible integrated information, NOT consciousness itself. Integrated Information Theory is a scientific theory of consciousness that remains philosophically contested. This gauntlet validates the mathematical framework.",
   "theoretical_basis": {
     "theory": "Integrated Information Theory (IIT)",
@@ -179,5 +179,5 @@
     "neuromorphic_chip": "Hardware implementation target",
     "dynamics_engine": "State evolution computation"
   },
-  "sha256": "178e640b42d21ae05801d0b5f38afbfea13e7350872cc200a862e1ae345eab2f"
+  "sha256": "d8bbeb0aca76130f075a0dda51408a1ebc2102653642886d37a565167cfcd35a"
 }
