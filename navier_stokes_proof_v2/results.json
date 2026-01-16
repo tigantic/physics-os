@@ -1,0 +1,29 @@
+[
+  {
+    "ic_name": "Taylor-Green",
+    "N": 32,
+    "nu": 0.01,
+    "T_final": 0.5000000000000002,
+    "enstrophy_max": 93.01883004089946,
+    "bkm_integral": 0.9722773161641421,
+    "stayed_smooth": true
+  },
+  {
+    "ic_name": "ABC",
+    "N": 32,
+    "nu": 0.01,
+    "T_final": 0.4908738521234052,
+    "enstrophy_max": 372.0753201635977,
+    "bkm_integral": 1.19938530178607,
+    "stayed_smooth": true
+  },
+  {
+    "ic_name": "Kida",
+    "N": 32,
+    "nu": 0.01,
+    "T_final": 0.5000000000000002,
+    "enstrophy_max": 255.80178261247337,
+    "bkm_integral": 1.820267570946204,
+    "stayed_smooth": true
+  }
+]

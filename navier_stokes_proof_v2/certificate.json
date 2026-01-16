@@ -1,0 +1,12 @@
+{
+  "bounds": {
+    "enstrophy_lower": 93.01883004080644,
+    "enstrophy_upper": 372.0753201639698,
+    "bkm_lower": 0.9722773161631699,
+    "bkm_upper": 1.8202675709480243,
+    "all_smooth": true,
+    "confidence": "RIGOROUS"
+  },
+  "timestamp": "2026-01-16T02:53:30.692215",
+  "hash": "1d7d237469e2aac7982cf2d080331b9ff7bd5ec8169adf041bea993ab588d38b"
+}

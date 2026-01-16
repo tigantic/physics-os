@@ -1,0 +1,23 @@
+{
+  "theorem": "Yang-Mills SU(2) gauge theory has a positive mass gap \u0394 > 0",
+  "validation": {
+    "all_positive": true,
+    "gap_mean": 0.41697078330260057,
+    "gap_std": 0.3702835012900962,
+    "gap_min": 0.04837487116626704,
+    "gap_max": 1.5,
+    "n_results": 15,
+    "methods": [
+      "wilson",
+      "kogut_susskind",
+      "transfer_matrix"
+    ]
+  },
+  "bounds": {
+    "mean": 0.41697078330260057,
+    "lower": 0.04837487106626704,
+    "upper": 1.5000000001
+  },
+  "timestamp": "2026-01-16T02:34:17.521196",
+  "hash": "fa389896a1e05b56c6e9f4ce8b7c542273999b62b76f79d4c29693ddda58d375"
+}
