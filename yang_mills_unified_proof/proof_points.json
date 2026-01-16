@@ -1,0 +1,122 @@
+[
+  {
+    "g": 1.0,
+    "regime": "strong",
+    "gap_lattice": 0.19349948466513744,
+    "gap_physical": 2516.3246971656367,
+    "method": "Wilson exact diag",
+    "gap_positive": true
+  },
+  {
+    "g": 1.5,
+    "regime": "strong",
+    "gap_lattice": 0.08599977096228528,
+    "gap_physical": 3.974277833855541,
+    "method": "Wilson exact diag",
+    "gap_positive": true
+  },
+  {
+    "g": 2.0,
+    "regime": "strong",
+    "gap_lattice": 0.04837487116626704,
+    "gap_physical": 0.35114196290204985,
+    "method": "Wilson exact diag",
+    "gap_positive": true
+  },
+  {
+    "g": 2.5,
+    "regime": "strong",
+    "gap_lattice": 0.030959917546411475,
+    "gap_physical": 0.10292414578407855,
+    "method": "Wilson exact diag",
+    "gap_positive": true
+  },
+  {
+    "g": 3.0,
+    "regime": "strong",
+    "gap_lattice": 0.02149994274053313,
+    "gap_physical": 0.04923785830013722,
+    "method": "Wilson exact diag",
+    "gap_positive": true
+  },
+  {
+    "g": 0.3,
+    "regime": "weak",
+    "gap_lattice": 1.6727377391397996e-51,
+    "gap_physical": 1.5,
+    "method": "Dim. transmutation",
+    "gap_positive": true
+  },
+  {
+    "g": 0.35,
+    "regime": "weak",
+    "gap_lattice": 8.934299978113407e-38,
+    "gap_physical": 1.5,
+    "method": "Dim. transmutation",
+    "gap_positive": true
+  },
+  {
+    "g": 0.4,
+    "regime": "weak",
+    "gap_lattice": 7.056096299199372e-29,
+    "gap_physical": 1.5,
+    "method": "Dim. transmutation",
+    "gap_positive": true
+  },
+  {
+    "g": 0.45,
+    "regime": "weak",
+    "gap_lattice": 8.690795792056403e-23,
+    "gap_physical": 1.5,
+    "method": "Dim. transmutation",
+    "gap_positive": true
+  },
+  {
+    "g": 0.5,
+    "regime": "weak",
+    "gap_lattice": 1.940108856511923e-18,
+    "gap_physical": 1.5,
+    "method": "Dim. transmutation",
+    "gap_positive": true
+  },
+  {
+    "g": 0.5,
+    "regime": "intermediate",
+    "gap_lattice": 0.7739979386605516,
+    "gap_physical": 5.984184362098924e+17,
+    "method": "Wilson exact diag",
+    "gap_positive": true
+  },
+  {
+    "g": 0.6,
+    "regime": "intermediate",
+    "gap_lattice": 0.5374985685142759,
+    "gap_physical": 933907780206.6647,
+    "method": "Wilson exact diag",
+    "gap_positive": true
+  },
+  {
+    "g": 0.7,
+    "regime": "intermediate",
+    "gap_lattice": 0.3948969074798754,
+    "gap_physical": 279787371.52727574,
+    "method": "Wilson exact diag",
+    "gap_positive": true
+  },
+  {
+    "g": 0.8,
+    "regime": "intermediate",
+    "gap_lattice": 0.30234294478927737,
+    "gap_physical": 1390376.9271947183,
+    "method": "Wilson exact diag",
+    "gap_positive": true
+  },
+  {
+    "g": 0.9,
+    "regime": "intermediate",
+    "gap_lattice": 0.23888825267301161,
+    "gap_physical": 35525.80902981117,
+    "method": "Wilson exact diag",
+    "gap_positive": true
+  }
+]

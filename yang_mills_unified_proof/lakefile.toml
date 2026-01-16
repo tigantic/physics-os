@@ -1,0 +1,11 @@
+name = "YangMillsUnified"
+version = "1.0.0"
+defaultTargets = ["YangMillsUnified"]
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "master"
+
+[[lean_lib]]
+name = "YangMillsUnified"

@@ -1,0 +1,16 @@
+{
+  "theorem": "Yang-Mills SU(2) mass gap exists for all g > 0",
+  "bounds": {
+    "lower_bound": 0.02149994274051163,
+    "upper_bound": 0.7739979386613256,
+    "M_lower": 0.049237858300087985,
+    "M_upper": 279787371.5275555,
+    "gap_positive": true,
+    "M_positive": true,
+    "confidence": "RIGOROUS"
+  },
+  "all_positive": true,
+  "n_points": 15,
+  "timestamp": "2026-01-16T03:11:31.460490",
+  "hash": "3fa39fba1c0071231ccf138d1144838e1ca0d51f8f4c86a54ac2ad8593e918aa"
+}
