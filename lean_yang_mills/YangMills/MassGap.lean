@@ -91,7 +91,13 @@ noncomputable def Gap (L : ℝ) : ℝ := Δ_inf + b_finite / L^2
 theorem gap_limit : Filter.Tendsto Gap Filter.atTop (nhds Δ_inf) := by
   -- Gap(L) = Δ_∞ + b/L² → Δ_∞ as L → ∞
   -- because b/L² → 0
-  sorry
+  unfold Gap
+  have h : Filter.Tendsto (fun L => b_finite / L^2) Filter.atTop (nhds 0) := by
+    apply Filter.Tendsto.div_atTop
+    · exact tendsto_const_nhds
+    · exact Filter.tendsto_pow_atTop (by norm_num : 2 ≠ 0)
+  convert Filter.Tendsto.const_add Δ_inf h using 1
+  ring_nf
 
 /-!
 ## Main Theorem: Mass Gap Existence
