@@ -307,12 +307,225 @@ class ORACLE:
     
     def _fetch_source(self, address: str, chain: str) -> str:
         """Fetch contract source from block explorer."""
-        # Placeholder - implement with Etherscan API
-        raise NotImplementedError(
-            f"Source fetching not implemented. "
-            f"Please provide source code directly or use file_path. "
-            f"Address: {address}, Chain: {chain}"
+        from tensornet.oracle.execution import EtherscanClient
+        
+        chain_ids = {
+            "ethereum": 1,
+            "mainnet": 1,
+            "optimism": 10,
+            "arbitrum": 42161,
+            "base": 8453,
+            "polygon": 137,
+        }
+        chain_id = chain_ids.get(chain.lower(), 1)
+        
+        client = EtherscanClient(chain_id=chain_id)
+        source = client.get_source_code(address)
+        
+        if not source:
+            raise ValueError(
+                f"Could not fetch source for {address} on {chain}. "
+                f"Set ETHERSCAN_API_KEY environment variable."
+            )
+        
+        return source
+    
+    def hunt_address(
+        self,
+        address: str,
+        chain: str = "ethereum",
+        fork_verify: bool = True,
+        min_profit_eth: float = 0.1,
+        verbose: bool = True,
+    ) -> HuntResult:
+        """
+        Hunt vulnerabilities at a mainnet address with fork verification.
+        
+        This is the production mode - actually finds money.
+        
+        Args:
+            address: Contract address (0x...)
+            chain: Chain name (ethereum, arbitrum, optimism, base, polygon)
+            fork_verify: Whether to verify exploits on mainnet fork
+            min_profit_eth: Minimum profit threshold to report
+            verbose: Print progress
+            
+        Returns:
+            HuntResult with fork-verified exploits
+        """
+        if not self.eth_rpc:
+            raise ValueError(
+                "ETH_RPC_URL required for mainnet hunting. "
+                "Set environment variable or pass eth_rpc to ORACLE()"
+            )
+        
+        start_time = time.time()
+        
+        if verbose:
+            print("=" * 70)
+            print("ORACLE: Mainnet Bounty Hunt")
+            print("=" * 70)
+            print(f"\n  Target: {address}")
+            print(f"  Chain: {chain}")
+            print(f"  Fork Verify: {fork_verify}")
+            print(f"  Min Profit: {min_profit_eth} ETH")
+        
+        # Fetch source
+        if verbose:
+            print("\n[1/7] Fetching verified source...")
+        
+        source = self._fetch_source(address, chain)
+        if verbose:
+            print(f"  ✓ Source fetched: {len(source):,} chars")
+        
+        # Parse
+        if verbose:
+            print("\n[2/7] Parsing contract...")
+        
+        contracts = self.parser.parse(source)
+        if not contracts:
+            raise ValueError("No contracts found in source")
+        
+        contract = contracts[0]
+        if verbose:
+            print(f"  ✓ {contract.name}: {len(contract.functions)} functions")
+        
+        # Analyze
+        for func in contract.functions:
+            self.parser.analyze_function(func, contract)
+        
+        # Semantic analysis
+        if verbose:
+            print("\n[3/7] Semantic analysis...")
+        
+        intent = self.intent_analyzer.analyze(contract, source)
+        if verbose:
+            print(f"  ✓ Protocol type: {intent.protocol_type}")
+        
+        # Extract assumptions
+        if verbose:
+            print("\n[4/7] Extracting assumptions...")
+        
+        assumptions: list[Assumption] = []
+        assumptions.extend(self.explicit_extractor.extract(contract))
+        assumptions.extend(self.implicit_extractor.extract(contract, intent))
+        assumptions.extend(self.economic_extractor.extract(contract, intent))
+        
+        if verbose:
+            print(f"  ✓ Found {len(assumptions)} assumptions")
+        
+        # Challenge assumptions
+        if verbose:
+            print("\n[5/7] Challenging assumptions...")
+        
+        from tensornet.oracle.challenger import AssumptionChallenger
+        challenger = AssumptionChallenger(contract)
+        challenges = challenger.challenge(assumptions, contract, intent)
+        
+        if verbose:
+            print(f"  ✓ Generated {len(challenges)} challenges")
+        
+        # Generate scenarios
+        if verbose:
+            print("\n[6/7] Generating attack scenarios...")
+        
+        scenarios = self.scenario_generator.generate(contract, challenges, intent)
+        if verbose:
+            print(f"  ✓ Generated {len(scenarios)} scenarios")
+        
+        # Fork verification - THE KEY STEP
+        verified_exploits: list[VerifiedExploit] = []
+        
+        if fork_verify and scenarios:
+            if verbose:
+                print("\n[7/7] Fork verification (MAINNET)...")
+                print(f"  RPC: {self.eth_rpc[:40]}...")
+            
+            from tensornet.oracle.execution import MainnetVerifier
+            
+            verifier = MainnetVerifier(
+                rpc_url=self.eth_rpc,
+                chain_id=self._get_chain_id(chain),
+            )
+            
+            verified_exploits = verifier.verify_all(
+                scenarios=scenarios,
+                contract=contract,
+                target_address=address,
+                verbose=verbose,
+            )
+            
+            # Filter by minimum profit
+            min_profit_wei = int(min_profit_eth * 10**18)
+            verified_exploits = [
+                e for e in verified_exploits
+                if e.verification.proof.profit_wei >= min_profit_wei
+            ]
+        else:
+            # Fallback to interval verification
+            if verbose:
+                print("\n[7/7] Interval verification (simulated)...")
+            
+            from tensornet.oracle.execution import ExploitVerifier
+            verifier = ExploitVerifier()
+            
+            for scenario in scenarios:
+                exploit = verifier.verify(scenario)
+                if exploit:
+                    verified_exploits.append(exploit)
+        
+        # Build result
+        elapsed = time.time() - start_time
+        
+        result = HuntResult(
+            contract=contract,
+            intent=intent,
+            assumptions=assumptions,
+            challenges=challenges,
+            scenarios=scenarios,
+            verified_exploits=verified_exploits,
+            hunt_time_seconds=elapsed,
+            contract_address=address,
+            chain=chain,
         )
+        
+        if verbose:
+            print("\n" + "=" * 70)
+            print("HUNT COMPLETE")
+            print("=" * 70)
+            print(f"  Time: {elapsed:.1f}s")
+            print(f"  Assumptions: {len(assumptions)}")
+            print(f"  Challenges: {len(challenges)}")
+            print(f"  Scenarios: {len(scenarios)}")
+            print(f"  Fork-Verified Exploits: {len(verified_exploits)}")
+            
+            if verified_exploits:
+                total_profit = sum(
+                    e.verification.proof.profit_wei 
+                    for e in verified_exploits
+                    if hasattr(e.verification.proof, 'profit_wei')
+                )
+                print(f"\n  💰 VERIFIED PROFIT: {total_profit / 10**18:.4f} ETH")
+                
+                for e in verified_exploits:
+                    profit = getattr(e.verification.proof, 'profit_wei', 0) / 10**18
+                    print(f"    - {e.scenario.name}: {profit:.4f} ETH")
+            else:
+                print(f"\n  ✓ No profitable exploits found - contract appears secure")
+        
+        return result
+    
+    def _get_chain_id(self, chain: str) -> int:
+        """Get chain ID from chain name."""
+        chain_ids = {
+            "ethereum": 1,
+            "mainnet": 1,
+            "optimism": 10,
+            "arbitrum": 42161,
+            "base": 8453,
+            "polygon": 137,
+        }
+        return chain_ids.get(chain.lower(), 1)
     
     def hunt_file(self, path: str, **kwargs) -> HuntResult:
         """Convenience method to hunt a file."""
