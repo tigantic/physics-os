@@ -256,13 +256,17 @@ class ORACLE:
         verified_exploits: list[VerifiedExploit] = []
         
         if fork_verify and self.eth_rpc:
-            # Use MainnetVerifier for real fork-based verification
+            # Use SmartExploitVerifier for pattern-based vulnerability detection
+            from tensornet.oracle.execution.smart_exploiter import (
+                SmartExploitVerifier,
+                PatternDetector,
+            )
             from tensornet.oracle.execution import MainnetVerifier, AnvilFork, ForkConfig
             
             if verbose:
                 print(f"  🔗 Starting fork: {self.eth_rpc[:50]}...")
             
-            # Start ONE fork for all scenarios
+            # Start ONE fork for all testing
             config = ForkConfig(
                 rpc_url=self.eth_rpc,
                 chain_id=self._get_chain_id(chain),
@@ -273,17 +277,64 @@ class ORACLE:
                 if verbose:
                     print(f"  ✅ Fork ready at block {anvil.block_number}")
                 
+                # Phase 6.5: Smart pattern-based exploitation
+                if verbose:
+                    print(f"\n[Phase 6.5] Smart Exploit Analysis...")
+                
+                smart_verifier = SmartExploitVerifier(self.eth_rpc, anvil_port=anvil.port)
+                exploit_results = smart_verifier.analyze_and_exploit(
+                    source=source,
+                    contract_name=contract.name,
+                    verbose=verbose,
+                    anvil=anvil,  # Pass existing anvil
+                )
+                
+                # Convert successful exploits to VerifiedExploit
+                for vuln, profit in exploit_results:
+                    if profit > 0:
+                        profit_eth = profit / 10**18
+                        if profit_eth >= min_profit_eth:
+                            # Create a scenario for this vulnerability
+                            from tensornet.oracle.core.types import AttackScenario, AttackStep
+                            
+                            scenario = AttackScenario(
+                                name=f"{vuln.vulnerability}: {vuln.name}",
+                                description=vuln.description,
+                                steps=[AttackStep(
+                                    action=f"Call {vuln.name}()",
+                                    target=contract.name,
+                                    description=f"Selector: 0x{vuln.selector}",
+                                )],
+                                required_capital=vuln.value,
+                                expected_profit=profit,
+                                complexity=vuln.severity,
+                            )
+                            
+                            exploit = VerifiedExploit(
+                                scenario=scenario,
+                                verification_method="smart_exploit",
+                                proof=f"Function: {vuln.name}, Selector: 0x{vuln.selector}",
+                                confidence=0.99,
+                                foundry_test="",
+                                fork_profit_wei=profit,
+                                fork_block=anvil.block_number,
+                            )
+                            verified_exploits.append(exploit)
+                            
+                            if verbose:
+                                print(f"  💰 EXPLOIT CONFIRMED: {vuln.name} -> {profit_eth:.4f} ETH")
+                
+                # Phase 6: Scenario-based verification (for remaining scenarios)
                 fork_verifier = MainnetVerifier(
                     rpc_url=self.eth_rpc,
                     chain_id=self._get_chain_id(chain),
                 )
-                fork_verifier.anvil = anvil  # Reuse the fork
+                fork_verifier.anvil = anvil
                 
                 for scenario in scenarios:
                     if verbose:
                         print(f"  Testing: {scenario.name}...")
                     
-                    # Take snapshot before each test
                     snapshot = anvil.snapshot()
                     
                     result = fork_verifier.verify_scenario_with_anvil(
@@ -292,7 +343,6 @@ class ORACLE:
                         anvil=anvil,
                     )
                     
-                    # Revert to clean state
                     anvil.revert(snapshot)
                     
                     if result and result.profit_wei > 0:
@@ -321,7 +371,6 @@ class ORACLE:
             else:
                 if verbose:
                     print(f"  ❌ Could not start fork - falling back to symbolic")
-                # Fall through to symbolic verification
                 fork_verify = False
         
         if not fork_verify or not self.eth_rpc:
