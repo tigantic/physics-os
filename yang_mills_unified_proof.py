@@ -683,9 +683,10 @@ def export_unified_package(package: UnifiedProofPackage, output_dir: str = "yang
     # Certificate
     cert = {
         "theorem": "Yang-Mills SU(2) mass gap exists for all g > 0",
-        "bounds": package.bounds,
-        "all_positive": package.proof_result["all_positive"],
-        "n_points": package.proof_result["n_points"],
+        "bounds": {k: (float(v) if isinstance(v, (int, float, np.floating)) else bool(v) if isinstance(v, (bool, np.bool_)) else v) 
+                   for k, v in package.bounds.items()},
+        "all_positive": bool(package.proof_result["all_positive"]),
+        "n_points": int(package.proof_result["n_points"]),
         "timestamp": package.timestamp,
         "hash": package.hash,
     }

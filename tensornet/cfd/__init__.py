@@ -349,6 +349,102 @@ try:
 except ImportError:
     pass
 
+# QTT Spectral Bridge (Phase 23 - Physics Toolbox)
+try:
+    from tensornet.cfd.qtt_spectral import (
+        qtt_fft_1d,
+        qtt_walsh_hadamard,
+        qtt_energy_spectrum_approx,
+        qtt_enstrophy_spectral,
+        qtt_spectral_filter,
+        qtt_frobenius_norm,
+        ConservationMonitor,
+    )
+except ImportError:
+    pass
+
+# QTT Rank-Preserving Shift (Phase 23 - Physics Toolbox)
+try:
+    from tensornet.cfd.qtt_shift_stable import (
+        qtt_roll_exact,
+        qtt_roll_by_power_of_2,
+        qtt_shift_spectral,
+        qtt_central_diff_stable,
+        qtt_3d_roll_exact,
+        qtt_3d_central_diff_stable,
+        qtt_advection_step_stable,
+    )
+except ImportError:
+    pass
+
+# QTT Hadamard Product (Phase 23 - Physics Toolbox)
+try:
+    from tensornet.cfd.qtt_hadamard import (
+        qtt_hadamard,
+        qtt_power,
+        qtt_polynomial,
+        qtt_nonlinear_advection,
+        qtt_full_advection_3d,
+        qtt_relu_approx,
+    )
+except ImportError:
+    pass
+
+# QTT Regularity Suite (Phase 23 - Physics Toolbox)
+try:
+    from tensornet.cfd.qtt_regularity import (
+        qtt_vorticity_3d,
+        qtt_vorticity_max_3d,
+        qtt_enstrophy_3d,
+        qtt_sobolev_norm_estimate,
+        RegularityMonitor,
+        RegularityState,
+        RegularityTrajectory,
+    )
+except ImportError:
+    pass
+
+# QTT IMEX Time Integration (Phase 24 - Physics Toolbox Extension)
+try:
+    from tensornet.cfd.qtt_imex import (
+        IMEXScheme,
+        IMEXConfig,
+        IMEXState,
+        IMEXIntegrator,
+        QTTNavierStokesIMEX,
+        create_ns_imex,
+    )
+except ImportError:
+    pass
+
+# QTT Multi-Scale Representation (Phase 24 - Physics Toolbox Extension)
+try:
+    from tensornet.cfd.qtt_multiscale import (
+        ScaleProfile,
+        MultiScaleConfig,
+        ScaleInfo,
+        MultiScaleQTT,
+        HierarchicalQTT,
+        create_turbulent_profile,
+        estimate_optimal_ranks,
+    )
+except ImportError:
+    pass
+
+# QTT Streaming Checkpoints (Phase 24 - Physics Toolbox Extension)
+try:
+    from tensornet.cfd.qtt_checkpoint_stream import (
+        CheckpointMetadata,
+        CheckpointConfig,
+        CheckpointWriter,
+        CheckpointReader,
+        SimulationCheckpointer,
+        create_checkpointer,
+        resume_or_start,
+    )
+except ImportError:
+    pass
+
 __all__ = [
     # 1D Euler equations
     "BCType1D",
@@ -587,4 +683,36 @@ __all__ = [
     "demo_koopman_lorenz",
     "demo_boundary_layer_transition",
     "generate_attestation",
+    # QTT Spectral Bridge (Phase 23)
+    "qtt_fft_1d",
+    "qtt_walsh_hadamard",
+    "qtt_energy_spectrum_approx",
+    "qtt_enstrophy_spectral",
+    "qtt_spectral_filter",
+    "qtt_frobenius_norm",
+    "ConservationMonitor",
+    # Phase 24: Physics Toolbox Extension
+    # IMEX Time Integration
+    "IMEXScheme",
+    "IMEXConfig",
+    "IMEXState",
+    "IMEXIntegrator",
+    "QTTNavierStokesIMEX",
+    "create_ns_imex",
+    # Multi-Scale QTT
+    "ScaleProfile",
+    "MultiScaleConfig",
+    "ScaleInfo",
+    "MultiScaleQTT",
+    "HierarchicalQTT",
+    "create_turbulent_profile",
+    "estimate_optimal_ranks",
+    # Streaming Checkpoints
+    "CheckpointMetadata",
+    "CheckpointConfig",
+    "CheckpointWriter",
+    "CheckpointReader",
+    "SimulationCheckpointer",
+    "create_checkpointer",
+    "resume_or_start",
 ]

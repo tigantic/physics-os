@@ -1,0 +1,62 @@
+[
+  {
+    "L": 8,
+    "g": 1.0,
+    "E0": 0.0,
+    "gap": 0.375,
+    "gap_uncertainty": 0.0,
+    "entropy": 0.0,
+    "chi_used": 1,
+    "converged": true,
+    "lattice_spacing": 2.1087266884615515e-05,
+    "physical_mass": 17783.243416603505
+  },
+  {
+    "L": 8,
+    "g": 0.8,
+    "E0": 0.0,
+    "gap": 0.24000000000000005,
+    "gap_uncertainty": 0.0,
+    "entropy": 0.0,
+    "chi_used": 1,
+    "converged": true,
+    "lattice_spacing": 4.940622937279562e-08,
+    "physical_mass": 4857687.037581346
+  },
+  {
+    "L": 8,
+    "g": 0.6,
+    "E0": 0.0,
+    "gap": 0.135,
+    "gap_uncertainty": 0.0,
+    "entropy": 0.0,
+    "chi_used": 1,
+    "converged": true,
+    "lattice_spacing": 1.0260475435415096e-13,
+    "physical_mass": 1315728504490.479
+  },
+  {
+    "L": 8,
+    "g": 0.5,
+    "E0": 0.0,
+    "gap": 0.09375,
+    "gap_uncertainty": 0.0,
+    "entropy": 0.0,
+    "chi_used": 1,
+    "converged": true,
+    "lattice_spacing": 1.9773392099377303e-19,
+    "physical_mass": 4.74121989433226e+17
+  },
+  {
+    "L": 8,
+    "g": 0.4,
+    "E0": 0.0,
+    "gap": 0.06000000000000001,
+    "gap_uncertainty": 0.0,
+    "entropy": 0.0,
+    "chi_used": 1,
+    "converged": true,
+    "lattice_spacing": 5.9583613956878726e-30,
+    "physical_mass": 1.0069882643141222e+28
+  }
+]

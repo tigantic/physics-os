@@ -1,0 +1,56 @@
+[
+  {
+    "ic_type": "taylor_green",
+    "N": 32,
+    "nu": 0.01,
+    "T_final": 0.02000000000000001,
+    "enstrophy_max": 114273232765.20898,
+    "bkm_integral": 144.77861976559905,
+    "verdict": "BLOWUP_CANDIDATE"
+  },
+  {
+    "ic_type": "abc",
+    "N": 32,
+    "nu": 0.01,
+    "T_final": 0.01800000000000001,
+    "enstrophy_max": 31941957720.623726,
+    "bkm_integral": 137.7033986622571,
+    "verdict": "BLOWUP_CANDIDATE"
+  },
+  {
+    "ic_type": "hou_luo",
+    "N": 32,
+    "nu": 0.01,
+    "T_final": 0.008,
+    "enstrophy_max": 2914822533.644526,
+    "bkm_integral": 99.36444129208874,
+    "verdict": "BLOWUP_CANDIDATE"
+  },
+  {
+    "ic_type": "random",
+    "N": 32,
+    "nu": 0.01,
+    "T_final": 0.009000000000000001,
+    "enstrophy_max": 2.7021364130935782e+17,
+    "bkm_integral": 570824.5936528612,
+    "verdict": "BLOWUP_CANDIDATE"
+  },
+  {
+    "ic_type": "random",
+    "N": 32,
+    "nu": 0.01,
+    "T_final": 0.009000000000000001,
+    "enstrophy_max": 347780386916355.6,
+    "bkm_integral": 46365.864587983546,
+    "verdict": "BLOWUP_CANDIDATE"
+  },
+  {
+    "ic_type": "random",
+    "N": 32,
+    "nu": 0.01,
+    "T_final": 0.009000000000000001,
+    "enstrophy_max": 2.128086837953129e+59,
+    "bkm_integral": 1.0899547709887186e+27,
+    "verdict": "BLOWUP_CANDIDATE"
+  }
+]

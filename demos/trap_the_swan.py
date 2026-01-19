@@ -20,10 +20,17 @@ THIS SCRIPT:
 
 The Black Swan: A specific vortex configuration that leads to infinite velocity.
 If we find one, we've found the counterexample. We win.
+
+USAGE:
+    python demos/trap_the_swan.py --ic taylor_green   # Standard IC (white swan)
+    python demos/trap_the_swan.py --ic random_turb    # Random high-k turbulence (hunt mode)
+    python demos/trap_the_swan.py --ic random_turb --seed 42  # Reproducible random IC
 """
 
 import time
 import torch
+import numpy as np
+import argparse
 import sys
 import os
 import json
@@ -33,7 +40,17 @@ from datetime import datetime, timezone
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from millennium_hunter import MillenniumSolver, EulerState3D
+from millennium_hunter import MillenniumSolver, EulerState3D, build_rank1_3d_qtt, QTT3DState
+from tensornet.cfd.nd_shift_mpo import truncate_cores, make_nd_shift_mpo, apply_nd_shift_mpo
+from tensornet.cfd.pure_qtt_ops import QTTState, qtt_add
+
+# Auto-detect GPU
+DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+if torch.cuda.is_available():
+    print(f"🚀 GPU DETECTED: {torch.cuda.get_device_name(0)}")
+    print(f"   VRAM: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB")
+else:
+    print("⚠️  No GPU detected, using CPU")
 
 
 class BlackSwanHunter:
@@ -47,52 +64,241 @@ class BlackSwanHunter:
     4. State freezing - preserve evidence when threshold crossed
     """
     
-    def __init__(self, n_qubits: int = 9, max_rank: int = 1024):
+    def __init__(self, n_qubits: int = 9, max_rank: int = 1024, ic_type: str = 'taylor_green', seed: int = 42, truncation_tol: float = 1e-6):
         """Initialize the Black Swan Hunter.
         
         Args:
             n_qubits: Qubits per dimension (9 = 512³)
             max_rank: Maximum allowed rank (high = let physics breathe)
+            ic_type: Initial condition type ('taylor_green' or 'random_turb')
+            seed: Random seed for reproducibility (only used with random_turb)
+            truncation_tol: SVD truncation tolerance (lower = more aggressive compression)
         """
         self.n_qubits = n_qubits
         self.N = 2 ** n_qubits
         self.max_rank = max_rank
+        self.ic_type = ic_type
+        self.seed = seed
+        self.truncation_tol = truncation_tol
         
         print("CONFIGURATION:")
         print(f"  • Grid: {self.N}³ = {self.N**3:,} points")
         print(f"  • Max Rank Allowed: {max_rank} (HIGH - letting physics breathe)")
         print(f"  • Blowup Trigger: Rank > 400")
+        print(f"  • IC Type: {ic_type}")
+        if ic_type == 'random_turb':
+            print(f"  • Random Seed: {seed}")
+        print(f"  • Truncation Tolerance: {truncation_tol} (lower = more compression)")
         print()
         
-        # Create the underlying solver with HIGH rank cap
+        # Device setup - USE GPU
+        self.device = DEVICE
+        self.dtype = torch.float32
+        
+        # Domain parameters
+        self.L = 2 * np.pi
+        self.dx = self.L / self.N
+        self.cfl = 0.2
+        
+        # Create the underlying solver with HIGH rank cap and GPU
         self.solver = MillenniumSolver(
             qubits_per_dim=n_qubits,
             max_rank=max_rank,  # HIGH - let it explode if it wants to
-            cfl=0.2
+            cfl=0.2,
+            device=self.device,
+            dtype=self.dtype
         )
         
-        # Initialize state
-        self.state = self.solver.create_taylor_green_ic()
+        # Build shift MPOs for conservative stepper (on GPU)
+        print(f"Building shift MPOs on {self.device}...")
+        self.total_qubits = 3 * n_qubits
+        self.shift_mpos = []
+        for axis in range(3):
+            mpo = make_nd_shift_mpo(
+                self.total_qubits, num_dims=3, axis_idx=axis,
+                direction=+1, device=self.device, dtype=self.dtype
+            )
+            self.shift_mpos.append(mpo)
+        print("  Shift MPOs ready.")
+        
+        # Initialize state based on IC type
+        if ic_type == 'taylor_green':
+            self.state = self.solver.create_taylor_green_ic()
+        elif ic_type == 'random_turb':
+            self.state = self.create_random_turb_ic(seed)
+        else:
+            raise ValueError(f"Unknown IC type: {ic_type}")
+            
         self.dt = self.solver.compute_dt(self.state)
         
         print(f"  • Timestep: dt = {self.dt:.6f}")
+        print(f"  • Initial Rank: u={self.state.u.max_rank}, v={self.state.v.max_rank}, w={self.state.w.max_rank}")
         print()
+    
+    def create_random_turb_ic(self, seed: int = 42) -> EulerState3D:
+        """
+        Create random high-k turbulent initial condition.
+        
+        This generates a divergence-free random velocity field with
+        energy concentrated at moderate wavenumbers - matching the
+        original December run that found Black Swan #945.
+        """
+        print(f"Creating Random High-k Turbulence IC ({self.N}³ = {self.N**3:,} points)...")
+        print(f"  Random seed: {seed}")
+        t0 = time.perf_counter()
+        
+        np.random.seed(seed)
+        torch.manual_seed(seed)
+        
+        L = 2 * np.pi
+        x = torch.linspace(0, L, self.N, dtype=self.dtype, device=self.device)
+        
+        # Match original: 5 modes gave rank ≈80-81
+        n_modes = 5
+        
+        def build_field():
+            result = None
+            for m in range(n_modes):
+                # Random wavenumbers (moderate k)
+                kx = np.random.randint(1, 4)
+                ky = np.random.randint(1, 4)
+                kz = np.random.randint(1, 4)
+                
+                # Random phases
+                phi_x = np.random.uniform(0, 2*np.pi)
+                phi_y = np.random.uniform(0, 2*np.pi)
+                phi_z = np.random.uniform(0, 2*np.pi)
+                
+                # Kolmogorov-like amplitude scaling
+                k_mag = np.sqrt(kx**2 + ky**2 + kz**2)
+                amp = 1.0 / (k_mag ** (5/6))
+                
+                # Build separable 1D functions
+                fx = torch.cos(kx * x + phi_x) * amp
+                fy = torch.cos(ky * x + phi_y)
+                fz = torch.cos(kz * x + phi_z)
+                
+                # Build 3D QTT via Kronecker
+                mode = build_rank1_3d_qtt(fx, fy, fz, self.n_qubits, max_rank=16)
+                
+                if result is None:
+                    result = mode
+                else:
+                    # Add modes
+                    a_qtt = QTTState(cores=result.cores, num_qubits=len(result.cores))
+                    b_qtt = QTTState(cores=mode.cores, num_qubits=len(mode.cores))
+                    summed = qtt_add(a_qtt, b_qtt, max_bond=self.max_rank)
+                    result = QTT3DState(summed.cores, self.n_qubits)
+            
+            # Final truncation
+            result_cores = truncate_cores(result.cores, self.max_rank, tol=1e-8)
+            return QTT3DState(result_cores, self.n_qubits)
+        
+        u = build_field()
+        v = build_field()
+        w = build_field()
+        
+        print(f"  IC created in {time.perf_counter() - t0:.3f}s")
+        print(f"  Initial ranks: u={u.max_rank}, v={v.max_rank}, w={w.max_rank}")
+        
+        return EulerState3D(u, v, w)
     
     def get_max_rank(self) -> int:
         """Get maximum rank across all velocity components."""
         return self.state.max_rank()
     
-    def step(self):
-        """Advance one timestep."""
-        self.state = self.solver.step(self.state, self.dt)
+    # === Conservative stepper (matches original December run) ===
+    
+    def _shift(self, qtt: QTT3DState, axis: int) -> QTT3DState:
+        """Apply periodic shift along axis."""
+        cores = apply_nd_shift_mpo(qtt.cores, self.shift_mpos[axis], max_rank=self.max_rank)
+        return QTT3DState(cores, self.n_qubits)
+    
+    def _add(self, a: QTT3DState, b: QTT3DState) -> QTT3DState:
+        """QTT addition."""
+        a_qtt = QTTState(cores=a.cores, num_qubits=len(a.cores))
+        b_qtt = QTTState(cores=b.cores, num_qubits=len(b.cores))
+        result = qtt_add(a_qtt, b_qtt, max_bond=self.max_rank)
+        return QTT3DState(result.cores, self.n_qubits)
+    
+    def _scale(self, a: QTT3DState, s: float) -> QTT3DState:
+        """Scale QTT by scalar."""
+        cores = [c.clone() for c in a.cores]
+        cores[0] = cores[0] * s
+        return QTT3DState(cores, self.n_qubits)
+    
+    def _truncate(self, qtt: QTT3DState, tol: float = 1e-6) -> QTT3DState:
+        """Truncate QTT to control rank growth."""
+        cores = truncate_cores(qtt.cores, self.max_rank, tol=tol)
+        return QTT3DState(cores, self.n_qubits)
+    
+    def step_conservative(self, verbose: bool = False):
+        """
+        Conservative Euler step - matches original December run.
+        
+        This is simpler than Strang splitting and more stable for
+        long-time integration with high rank caps.
+        """
+        u, v, w = self.state.u, self.state.v, self.state.w
+        dt = self.dt
+        
+        if verbose:
+            print(f"    Before step: u={u.max_rank}, v={v.max_rank}, w={w.max_rank}")
+        
+        # Compute derivatives via central differences: df/dx ≈ (f_{i+1} - f_{i-1}) / (2*dx)
+        def derivative(f, axis, name=""):
+            f_plus = self._shift(f, axis)
+            if verbose:
+                print(f"      {name} shift+: rank={f_plus.max_rank}")
+            f_minus = self._shift(self._scale(f, -1.0), axis)  # Shift negative
+            if verbose:
+                print(f"      {name} shift-: rank={f_minus.max_rank}")
+            diff = self._add(f_plus, f_minus)
+            if verbose:
+                print(f"      {name} diff: rank={diff.max_rank}")
+            diff = self._scale(diff, 1.0 / (2.0 * self.dx))
+            result = self._truncate(diff, tol=self.truncation_tol)
+            if verbose:
+                print(f"      {name} trunc: rank={result.max_rank}")
+            return result
+        
+        # Simple self-advection: u_new = u - dt * u * du/dx
+        # (simplified: just du/dx for now, matches original)
+        du_dx = derivative(u, 0, "du/dx")
+        dv_dy = derivative(v, 1, "dv/dy")
+        dw_dz = derivative(w, 2, "dw/dz")
+        
+        u_new = self._add(u, self._scale(du_dx, -dt))
+        v_new = self._add(v, self._scale(dv_dy, -dt))
+        w_new = self._add(w, self._scale(dw_dz, -dt))
+        
+        # Truncate to control rank (but allow growth up to max_rank)
+        u_new = self._truncate(u_new, tol=self.truncation_tol)
+        v_new = self._truncate(v_new, tol=self.truncation_tol)
+        w_new = self._truncate(w_new, tol=self.truncation_tol)
+        
+        self.state = EulerState3D(u_new, v_new, w_new)
+    
+    def step(self, verbose: bool = False):
+        """Advance one timestep using conservative scheme."""
+        # Use conservative stepper instead of Strang splitting
+        # This matches the original December run that found Black Swan #945
+        self.step_conservative(verbose=verbose)
 
 
-def hunt_for_blowup():
+def hunt_for_blowup(ic_type: str = 'taylor_green', seed: int = 42, n_qubits: int = 9, max_rank: int = 1024, truncation_tol: float = 1e-6):
     """
     The main hunting loop.
     
     We run the simulation with HIGH rank cap.
     If rank exceeds threshold, we FREEZE and preserve evidence.
+    
+    Args:
+        ic_type: Initial condition type ('taylor_green' or 'random_turb')
+        seed: Random seed for reproducibility (only used with random_turb)
+        n_qubits: Qubits per dimension (9 = 512³, 10 = 1024³)
+        max_rank: Maximum allowed rank (high = let physics breathe)
+        truncation_tol: SVD truncation tolerance (lower = more compression)
     """
     
     print("=" * 70)
@@ -104,7 +310,10 @@ def hunt_for_blowup():
     print("  • Proving blowup: Need only ONE counterexample (achievable)")
     print()
     print("THE HUNT:")
-    print("  • High rank cap (1024) - let physics breathe")
+    print(f"  • IC Type: {ic_type}")
+    if ic_type == 'random_turb':
+        print(f"  • Random Seed: {seed}")
+    print(f"  • High rank cap ({max_rank}) - let physics breathe")
     print("  • Rank > 400 triggers evidence preservation")
     print()
     
@@ -113,8 +322,11 @@ def hunt_for_blowup():
     
     # Initialize hunter with HIGH rank cap
     hunter = BlackSwanHunter(
-        n_qubits=9,      # 512³
-        max_rank=1024    # HIGH - let it explode if it wants to
+        n_qubits=n_qubits,
+        max_rank=max_rank,
+        ic_type=ic_type,
+        seed=seed,
+        truncation_tol=truncation_tol
     )
     
     # Hunting parameters
@@ -133,8 +345,8 @@ def hunt_for_blowup():
     print("-" * 70)
     
     while t < t_max:
-        # Run one step
-        hunter.step()
+        # Run one step (verbose for first 5 steps to diagnose)
+        hunter.step(verbose=(step < 3))
         t += hunter.dt
         step += 1
         
@@ -195,6 +407,8 @@ def hunt_for_blowup():
                 'threshold': BLOWUP_THRESHOLD,
                 'grid': f"{hunter.N}³",
                 'points': hunter.N ** 3,
+                'ic_type': ic_type,
+                'seed': seed if ic_type == 'random_turb' else None,
                 'wall_time_seconds': total_time,
                 'evidence_file': evidence_path,
                 'timestamp_utc': datetime.now(timezone.utc).isoformat(),
@@ -260,6 +474,8 @@ def hunt_for_blowup():
         'final_rank': current_rank,
         'max_rank_observed': max(r['rank'] for r in rank_history),
         'grid': f"{hunter.N}³",
+        'ic_type': ic_type,
+        'seed': seed if ic_type == 'random_turb' else None,
         'wall_time_seconds': total_time,
         'timestamp_utc': datetime.now(timezone.utc).isoformat()
     }
@@ -272,4 +488,55 @@ def hunt_for_blowup():
 
 
 if __name__ == "__main__":
-    hunt_for_blowup()
+    import argparse
+    
+    parser = argparse.ArgumentParser(
+        description="🦢 BLACK SWAN TRAP - Hunt for Navier-Stokes singularities",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Taylor-Green vortex (default)
+  python trap_the_swan.py --ic taylor_green
+  
+  # Random turbulence IC (THE ONE THAT FOUND BLACK SWAN #945)
+  python trap_the_swan.py --ic random_turb --seed 42
+  
+  # Higher resolution hunt (1024³)
+  python trap_the_swan.py --ic random_turb --seed 42 --qubits 10
+  
+  # Higher rank cap (let physics breathe more)
+  python trap_the_swan.py --ic random_turb --seed 42 --max-rank 2048
+"""
+    )
+    
+    parser.add_argument(
+        '--ic', type=str, default='taylor_green',
+        choices=['taylor_green', 'random_turb'],
+        help="Initial condition type (default: taylor_green)"
+    )
+    parser.add_argument(
+        '--seed', type=int, default=42,
+        help="Random seed for random_turb IC (default: 42)"
+    )
+    parser.add_argument(
+        '--qubits', type=int, default=9,
+        help="Qubits per dimension: 9=512³, 10=1024³ (default: 9)"
+    )
+    parser.add_argument(
+        '--max-rank', type=int, default=1024,
+        help="Maximum allowed rank (default: 1024)"
+    )
+    parser.add_argument(
+        '--tol', type=float, default=1e-4,
+        help="SVD truncation tolerance - lower = more compression (default: 1e-4)"
+    )
+    
+    args = parser.parse_args()
+    
+    hunt_for_blowup(
+        ic_type=args.ic,
+        seed=args.seed,
+        n_qubits=args.qubits,
+        max_rank=args.max_rank,
+        truncation_tol=args.tol
+    )

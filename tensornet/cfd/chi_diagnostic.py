@@ -331,12 +331,8 @@ def estimate_required_chi_3d(
     # Reshape to matrix (unfold along first spatial dimension)
     mat = uvw.reshape(3 * Nx, Ny * Nz)
 
-    # rSVD - faster above 100x100
-    m, n = mat.shape
-    if min(m, n) > 100:
-        _, S, _ = torch.svd_lowrank(mat, q=min(100, min(m, n)))
-    else:
-        _, S, _ = torch.linalg.svd(mat, full_matrices=False)
+    # Full SVD to get accurate rank - don't cap at 100!
+    _, S, _ = torch.linalg.svd(mat, full_matrices=False)
 
     S_normalized = S / S[0]
     chi = (S_normalized > truncation_tol).sum().item()

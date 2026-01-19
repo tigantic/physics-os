@@ -1,7 +1,7 @@
 # Project HyperTensor: Constitutional Law
 
 **Ratified**: 2025-12-20  
-**Version**: 1.2.0  
+**Version**: 1.3.0  
 **Authority**: Principal Investigator  
 **Enforcement**: Mandatory for all contributions
 
@@ -84,6 +84,7 @@ Project HyperTensor/
 │   ├── guidance/           # 6-DOF trajectory, GNC
 │   ├── flight_validation/  # Telemetry, flight data
 │   ├── visualization/      # TensorSlicer, QTT rendering
+│   ├── exploit/            # QTT-based smart contract exploit hunting
 │   ├── docs/               # API documentation generation
 │   └── benchmarks/         # Internal benchmark utilities
 ├── benchmarks/             # Performance and accuracy benchmarks (Layer 3)
@@ -98,6 +99,10 @@ Project HyperTensor/
 ```
 
 **Amendment History**:
+- v1.0.0 (2025-12-20): Initial ratification
+- v1.1.0 (2025-12-20): Extended module structure to reflect 20-phase implementation
+- v1.2.0 (2025-12-24): Added Substrate Layer architecture (Layer 0-8), ROADMAP.md reference
+- v1.3.0 (2026-01-19): Added exploit/ module for QTT-based security analysis
 - v1.0.0 (2025-12-20): Initial ratification
 - v1.1.0 (2025-12-20): Extended module structure to reflect 20-phase implementation
 - v1.2.0 (2025-12-24): Added Substrate Layer architecture (Layer 0-8), ROADMAP.md reference

@@ -193,6 +193,7 @@ class SingularityHunter:
         nu: float,
         config: HuntingConfig | None = None,
         dtype=torch.float64,
+        device: str | None = None,
     ):
         """
         Initialize the hunter.
@@ -203,6 +204,7 @@ class SingularityHunter:
             nu: Kinematic viscosity
             config: Hunting configuration
             dtype: Tensor dtype
+            device: 'cuda' or 'cpu' (auto-detect if None)
         """
         from tensornet.cfd.ns_3d import NS3DSolver
 
@@ -211,6 +213,13 @@ class SingularityHunter:
         self.nu = nu
         self.config = config or HuntingConfig()
         self.dtype = dtype
+        
+        # Auto-detect GPU
+        if device is None:
+            self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        else:
+            self.device = device
+        print(f"SingularityHunter using device: {self.device}")
 
         # Create solver
         self.solver = NS3DSolver(
@@ -235,7 +244,7 @@ class SingularityHunter:
         """
         from tensornet.cfd.ns_3d import project_velocity_3d
 
-        device = "cpu"
+        device = self.device
 
         # Random Fourier coefficients for low modes
         u = torch.zeros(self.Nx, self.Ny, self.Nz, dtype=self.dtype, device=device)

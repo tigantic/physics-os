@@ -134,31 +134,14 @@ def run_hunt(args):
             result = oracle.hunt(
                 file_path=args.source,
                 min_confidence=args.min_confidence,
+                fork_verify=args.fork,
+                min_profit_eth=args.min_profit if hasattr(args, 'min_profit') else 0.0,
                 verbose=args.verbose if hasattr(args, 'verbose') else True,
             )
     except Exception as e:
         print(f"Error during hunt: {e}")
         import traceback
         traceback.print_exc()
-        sys.exit(1)
-    
-    # Run hunt
-    try:
-        if args.source:
-            result = oracle.hunt(
-                file_path=args.source,
-                min_confidence=args.min_confidence,
-                verbose=args.verbose,
-            )
-        else:
-            result = oracle.hunt(
-                address=args.address,
-                chain=args.chain,
-                min_confidence=args.min_confidence,
-                verbose=args.verbose,
-            )
-    except Exception as e:
-        print(f"Error during hunt: {e}")
         sys.exit(1)
     
     # Generate reports if exploits found

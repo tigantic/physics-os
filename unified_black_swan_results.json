@@ -1,0 +1,56 @@
+{
+  "timestamp": "2026-01-16T04:31:43.976684",
+  "config": {
+    "N": 32,
+    "Re": 500,
+    "T_final": 3.0,
+    "max_rank": 64
+  },
+  "results": {
+    "Taylor-Green (baseline)": {
+      "verdict": "\u2713 BOUNDED - evidence for regularity",
+      "blowup": false,
+      "bkm": 0.08000000000000002,
+      "chi_max": 9,
+      "omega_max": 2.0000000000000004,
+      "runtime": 0.7739286422729492
+    },
+    "Kida Vortex": {
+      "verdict": "\u2713 BOUNDED - evidence for regularity",
+      "blowup": false,
+      "bkm": 0.3695041722567269,
+      "chi_max": 36,
+      "omega_max": 9.237604306418172,
+      "runtime": 0.6079115867614746
+    },
+    "Hou-Luo Rings": {
+      "verdict": "\u2713 BOUNDED - evidence for regularity",
+      "blowup": false,
+      "bkm": 0.9212581078889351,
+      "chi_max": 64,
+      "omega_max": 23.03145269722338,
+      "runtime": 0.3478379249572754
+    },
+    "Anti-parallel Tubes": {
+      "verdict": "\u2713 BOUNDED - evidence for regularity",
+      "blowup": false,
+      "bkm": 2.8629694569789312,
+      "chi_max": 64,
+      "omega_max": 71.57423642447328,
+      "runtime": 0.40578532218933105
+    },
+    "Trefoil Knot": {
+      "verdict": "\u2713 BOUNDED - evidence for regularity",
+      "blowup": false,
+      "bkm": 0.6717526402464291,
+      "chi_max": 64,
+      "omega_max": 16.79381600616073,
+      "runtime": 0.34400177001953125
+    }
+  },
+  "summary": {
+    "total_ics": 5,
+    "blowups": 0,
+    "verdict": "ALL_BOUNDED"
+  }
+}

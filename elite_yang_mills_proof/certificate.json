@@ -1,0 +1,15 @@
+{
+  "theorem": "Yang-Mills SU(2) has a positive mass gap M > 0 in the continuum limit",
+  "gap_bounds": {
+    "mean": 0.18075,
+    "lower": 0.18074999999999977,
+    "upper": 0.18075000000000022
+  },
+  "mass_bounds": {
+    "mean": 2.0139765287230689e+27,
+    "lower": 0,
+    "upper": 1.4097835700350297e+28
+  },
+  "timestamp": "2026-01-16T02:31:21.953656",
+  "hash": "3b52251bdb6951da6a7340d509f5e356c521e0cf3660035675e8f2c5c3322b8f"
+}

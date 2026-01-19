@@ -132,6 +132,8 @@ class ORACLE:
         address: Optional[str] = None,
         chain: str = "ethereum",
         min_confidence: float = 0.5,
+        fork_verify: bool = False,
+        min_profit_eth: float = 0.0,
         verbose: bool = True,
     ) -> HuntResult:
         """
@@ -143,6 +145,8 @@ class ORACLE:
             address: Contract address (requires eth_rpc)
             chain: Chain name (default: ethereum)
             min_confidence: Minimum confidence threshold
+            fork_verify: Use mainnet fork for verification (requires ETH_RPC_URL)
+            min_profit_eth: Minimum profit threshold in ETH
             verbose: Print progress
             
         Returns:
@@ -246,21 +250,94 @@ class ORACLE:
         
         # Phase 6: Verify
         if verbose:
-            print("\n[Phase 6] Verifying Exploits...")
-        
-        from tensornet.oracle.execution import ExploitVerifier
-        verifier = ExploitVerifier()
+            mode = "FORK" if fork_verify else "SYMBOLIC"
+            print(f"\n[Phase 6] Verifying Exploits ({mode})...")
         
         verified_exploits: list[VerifiedExploit] = []
-        for scenario in scenarios:
-            exploit = verifier.verify(scenario)
-            if exploit:
-                verified_exploits.append(exploit)
+        
+        if fork_verify and self.eth_rpc:
+            # Use MainnetVerifier for real fork-based verification
+            from tensornet.oracle.execution import MainnetVerifier, AnvilFork, ForkConfig
+            
+            if verbose:
+                print(f"  🔗 Starting fork: {self.eth_rpc[:50]}...")
+            
+            # Start ONE fork for all scenarios
+            config = ForkConfig(
+                rpc_url=self.eth_rpc,
+                chain_id=self._get_chain_id(chain),
+            )
+            anvil = AnvilFork(config)
+            
+            if anvil.start():
                 if verbose:
-                    profit = scenario.expected_profit / 10**18
-                    print(f"  ✓ VERIFIED: {scenario.name}")
-                    print(f"    Profit: ~{profit:.2f} ETH")
-                    print(f"    Confidence: {exploit.confidence * 100:.0f}%")
+                    print(f"  ✅ Fork ready at block {anvil.block_number}")
+                
+                fork_verifier = MainnetVerifier(
+                    rpc_url=self.eth_rpc,
+                    chain_id=self._get_chain_id(chain),
+                )
+                fork_verifier.anvil = anvil  # Reuse the fork
+                
+                for scenario in scenarios:
+                    if verbose:
+                        print(f"  Testing: {scenario.name}...")
+                    
+                    # Take snapshot before each test
+                    snapshot = anvil.snapshot()
+                    
+                    result = fork_verifier.verify_scenario_with_anvil(
+                        scenario=scenario,
+                        source=source,
+                        anvil=anvil,
+                    )
+                    
+                    # Revert to clean state
+                    anvil.revert(snapshot)
+                    
+                    if result and result.profit_wei > 0:
+                        profit_eth = result.profit_wei / 10**18
+                        if profit_eth >= min_profit_eth:
+                            exploit = VerifiedExploit(
+                                scenario=scenario,
+                                verification_method="mainnet_fork",
+                                proof=None,
+                                confidence=0.95,
+                                foundry_test=result.foundry_test if hasattr(result, 'foundry_test') else "",
+                                fork_profit_wei=result.profit_wei,
+                                fork_block=anvil.block_number,
+                            )
+                            verified_exploits.append(exploit)
+                            if verbose:
+                                print(f"    ✅ VERIFIED: {profit_eth:.4f} ETH profit")
+                        else:
+                            if verbose:
+                                print(f"    ⚠️  Below threshold: {profit_eth:.4f} ETH")
+                    else:
+                        if verbose:
+                            print(f"    ❌ Not exploitable")
+                
+                anvil.stop()
+            else:
+                if verbose:
+                    print(f"  ❌ Could not start fork - falling back to symbolic")
+                # Fall through to symbolic verification
+                fork_verify = False
+        
+        if not fork_verify or not self.eth_rpc:
+            # Use symbolic verification (faster but less accurate)
+            from tensornet.oracle.execution import ExploitVerifier
+            verifier = ExploitVerifier()
+            
+            for scenario in scenarios:
+                exploit = verifier.verify(scenario)
+                if exploit:
+                    verified_exploits.append(exploit)
+                    if verbose:
+                        profit = scenario.expected_profit / 10**18
+                        print(f"  ✓ VERIFIED: {scenario.name}")
+                        print(f"    Profit: ~{profit:.2f} ETH (estimated)")
+                        print(f"    Confidence: {exploit.confidence * 100:.0f}%")
         
         # Build result
         elapsed = time.time() - start_time

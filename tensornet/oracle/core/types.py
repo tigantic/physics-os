@@ -431,10 +431,12 @@ class VerifiedExploit:
     """A verified, exploitable vulnerability."""
     
     scenario: AttackScenario
-    verification_method: str  # "interval", "concrete", "kantorovich"
-    proof: Union[IntervalProof, ConcreteProof, KantorovichProof]
-    confidence: float  # 0.0 - 1.0
+    verification_method: str  # "interval", "concrete", "kantorovich", "mainnet_fork"
+    proof: Optional[Union[IntervalProof, ConcreteProof, KantorovichProof]] = None
+    confidence: float = 0.0  # 0.0 - 1.0
     foundry_test: str = ""
+    fork_profit_wei: int = 0  # Actual profit measured on fork
+    fork_block: int = 0  # Block number of fork test
 
 
 # =============================================================================

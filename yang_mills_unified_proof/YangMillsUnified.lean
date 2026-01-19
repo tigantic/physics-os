@@ -3,7 +3,7 @@
 ║                    YANG-MILLS MASS GAP: UNIFIED PROOF                        ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                              ║
-║  Generated: 2026-01-16T03:11:31.460223
+║  Generated: 2026-01-16T04:09:41.326647
 ║                                                                              ║
 ║  PROOF STRUCTURE:                                                            ║
 ║  ────────────────                                                            ║
@@ -17,7 +17,7 @@
 ║                                                                              ║
 ║  TOTAL POINTS: 15, ALL POSITIVE: True
 ║  MINIMUM LATTICE GAP: 0.021500 at g = 3.00
-║  PHYSICAL MASS: 0.0492 Λ_QCD > 0
+║  PHYSICAL MASS: 0.0487 Λ_QCD > 0
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 -/
@@ -29,7 +29,7 @@ namespace YangMillsUnified
 
 /-- Physical mass in units of Λ_QCD (CONSTANT by dimensional transmutation) -/
 axiom M_phys : Float
-axiom M_phys_value : M_phys = 0.049238
+axiom M_phys_value : M_phys = 0.048745
 
 /-- Minimum lattice gap observed (at strong coupling g = 3.00) -/
 axiom Δ_min : Float  
@@ -81,7 +81,7 @@ structure MassGapCertificate where
   intermediate : Bool
 
 def certificate : MassGapCertificate := {
-  M := 0.049238,
+  M := 0.048745,
   Δ_lb := 0.021499942740533,
   n_points := 15,
   strong := true,

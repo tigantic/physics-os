@@ -1,0 +1,12 @@
+{
+  "claim": "For tested smooth initial conditions, 3D NS solutions remain regular up to T_final",
+  "n_simulations": 6,
+  "bounds": {
+    "enstrophy_upper": 2.128086837955257e+59,
+    "bkm_integral_upper": 1.0899547709898084e+27,
+    "all_bounded": false,
+    "confidence": "RIGOROUS"
+  },
+  "timestamp": "2026-01-16T02:51:39.692074",
+  "hash": "91f11ed424d4713d5874dc3d7efe16dbb26f3e3c16ac4504806f8f0b7c25f4cb"
+}

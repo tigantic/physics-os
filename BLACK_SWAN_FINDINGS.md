@@ -1,21 +1,40 @@
 # Navier-Stokes Black Swan Hunt: Results Summary
 
-## Date: 2026-01-16
+## Date: 2026-01-16 (Updated)
 
 ## Executive Summary
 
-**POTENTIAL BLACK SWAN CANDIDATE IDENTIFIED: KIDA VORTEX**
+**STATUS: NO BLACK SWAN FOUND - EVIDENCE SUPPORTS REGULARITY**
 
-The Kida vortex initial condition showed explosive growth in our simulations,
-consistent with potential singularity formation. However, this requires further
-investigation to distinguish between:
-1. True finite-time blowup (Clay Prize-relevant)
-2. Numerical instability
-3. Strong but ultimately bounded growth
+Initial Kida vortex "blowup" was determined to be a **NUMERICAL ARTIFACT** 
+from spectral aliasing. With proper 2/3 dealiasing, all tested initial 
+conditions remain bounded.
 
 ---
 
-## Hunt Results
+## Kida Vortex: False Alarm Analysis
+
+### Initial Finding (WITHOUT dealiasing)
+- Explosive growth at T* ≈ 1.80
+- Appeared consistent across resolutions
+
+### Verification (WITH 2/3 dealiasing)
+
+| N | T* (blowup) | max\|ω\| | E_final/E_0 | Verdict |
+|---|-------------|----------|-------------|---------|
+| 32 | N/A | 16.45 | 0.91 | ✓ BOUNDED |
+| 48 | N/A | 25.03 | 0.91 | ✓ BOUNDED |
+| 64 | N/A | 55.53 | 0.89 | ✓ BOUNDED |
+
+### Diagnosis
+- Energy DECAYS (correct viscous physics)
+- Vorticity grows but stays FINITE
+- Without dealiasing: k=3 Kida modes caused aliasing cascade
+- **CONCLUSION: Previous "blowup" was numerical artifact**
+
+---
+
+## Hunt Results (All Bounded)
 
 ### Initial Condition Survey (Re = 10,000, N = 48)
 
