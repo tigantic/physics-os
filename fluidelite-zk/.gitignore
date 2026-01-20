@@ -1,0 +1,12 @@
+
+# Gevulot keys (NEVER COMMIT)
+gevulot_key.json
+*.key
+*.pem
+
+# gvltctl binary (large, download separately)
+gvltctl
+gvltctl.tar.gz
+gvltctl-*/
+*.img
+*.img.sha256

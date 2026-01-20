@@ -37,11 +37,11 @@ use halo2_axiom::{
 #[cfg(feature = "halo2")]
 use rand::rngs::OsRng;
 
-// Gevulot protocol paths (hardcoded by the network)
-const INPUT_PATH: &str = "/mnt/gevulot/task_input.file";
-const OUTPUT_PATH: &str = "/mnt/gevulot/task_output.file";
+// Gevulot Firestarter protocol paths (v2 - correct mounts)
+const INPUT_PATH: &str = "/mnt/gevulot/input/task_input.json";
+const OUTPUT_PATH: &str = "/mnt/gevulot/output/proof_output.json";
 
-// Model path (baked into the unikernel image)
+// Model path (baked into the container image at root)
 const MODEL_PATH: &str = "/fluidelite_v1.bin";
 
 /// Input format from Gevulot network

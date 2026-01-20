@@ -1,0 +1,51 @@
+# FluidElite V1 - Gevulot Task Definition
+# =========================================
+#
+# This file defines how to submit a proof request to the Gevulot network.
+#
+# Submit with:
+#   gvltctl task create -f task.yaml
+#
+# The network will:
+#   1. Download your input file
+#   2. Run your program in a VM
+#   3. Return the proof output
+
+version: "1.0"
+
+# Your deployed program hash (fill in after `gvltctl program deploy`)
+program: "YOUR_PROGRAM_HASH_HERE"
+
+# Resource requirements
+resources:
+  # Memory in MB (our model is 65MB, need headroom for Halo2)
+  memory: 4096
+  # CPU cores
+  cpus: 4
+  # Timeout in seconds (proof takes ~1.5s, allow extra for startup)
+  timeout: 60
+
+# Input files - these get mounted to /mnt/gevulot/input/
+inputs:
+  - name: task_input.json
+    # Option 1: Inline the input
+    inline: |
+      {
+        "context": "The quick brown fox jumps over the lazy",
+        "include_proof": true
+      }
+    # Option 2: URL to download
+    # url: "https://example.com/my_input.json"
+
+# Output files - program writes to /mnt/gevulot/output/
+outputs:
+  - name: proof_output.json
+
+# Tags for filtering/discovery
+tags:
+  - fluidelite
+  - zk-llm
+  - halo2
+
+# Optional: Callback URL when task completes
+# callback: "https://your-server.com/webhook"
