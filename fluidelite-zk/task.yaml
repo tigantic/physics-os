@@ -1,51 +1,54 @@
-# FluidElite V1 - Gevulot Task Definition
-# =========================================
+# FluidElite V1 - Gevulot Firestarter Task Descriptor
+# =====================================================
 #
-# This file defines how to submit a proof request to the Gevulot network.
+# This is the "Work Order" for the Gevulot network.
+# The network downloads your image, runs it, and returns the proof.
 #
 # Submit with:
+#   export GEVULOT_ENDPOINT="https://rpc.firestarter.gevulot.com"
+#   export GEVULOT_MNEMONIC="your twelve word phrase here"
 #   gvltctl task create -f task.yaml
 #
-# The network will:
-#   1. Download your input file
-#   2. Run your program in a VM
-#   3. Return the proof output
+# Fetch result:
+#   gvltctl task get <TASK_ID>
 
-version: "1.0"
+kind: Task
+version: v0
 
-# Your deployed program hash (fill in after `gvltctl program deploy`)
-program: "YOUR_PROGRAM_HASH_HERE"
+metadata:
+  name: 'FluidElite-Inference'
+  description: 'ZK-LLM Hybrid Proof Generation - 88 TPS'
+  tags:
+    - ai
+    - zkml
+    - halo2
+    - fluidelite
 
-# Resource requirements
-resources:
-  # Memory in MB (our model is 65MB, need headroom for Halo2)
-  memory: 4096
-  # CPU cores
-  cpus: 4
-  # Timeout in seconds (proof takes ~1.5s, allow extra for startup)
-  timeout: 60
+spec:
+  # 1. Your hosted VM image (GitHub Release, S3, etc.)
+  # IMPORTANT: This URL must stay alive as long as tasks run!
+  image: 'https://github.com/tigantic/HyperTensor-VM/releases/download/v1.0.0/fluidelite.img'
+  
+  # 2. Command to run inside the VM
+  command: ['/program']
+  
+  # 3. Input Data - mapped to /mnt/gevulot/input/
+  inputContexts:
+    # Option A: Inline data (for testing)
+    - source: 'data:application/json,{"context":"The quick brown fox jumps over the lazy","include_proof":true}'
+      target: '/mnt/gevulot/input/task_input.json'
+    
+    # Option B: URL to input file (for production)
+    # - source: 'https://your-server.com/inputs/request_123.json'
+    #   target: '/mnt/gevulot/input/task_input.json'
+  
+  # 4. Output - proof written to /mnt/gevulot/output/
+  outputContexts:
+    - source: '/mnt/gevulot/output/proof_output.json'
+      retentionPeriod: 3600  # Keep on Gevulot IPFS for 1 hour
 
-# Input files - these get mounted to /mnt/gevulot/input/
-inputs:
-  - name: task_input.json
-    # Option 1: Inline the input
-    inline: |
-      {
-        "context": "The quick brown fox jumps over the lazy",
-        "include_proof": true
-      }
-    # Option 2: URL to download
-    # url: "https://example.com/my_input.json"
-
-# Output files - program writes to /mnt/gevulot/output/
-outputs:
-  - name: proof_output.json
-
-# Tags for filtering/discovery
-tags:
-  - fluidelite
-  - zk-llm
-  - halo2
-
-# Optional: Callback URL when task completes
-# callback: "https://your-server.com/webhook"
+  # 5. Resource requirements
+  resources:
+    memory: 4096  # MB - model is 65MB, Halo2 needs headroom
+    cpus: 4
+    timeout: 120  # seconds - proof takes ~1.5s but allow startup time

@@ -241,4 +241,85 @@ resources:
 
 ---
 
+## The "No BD" Business Model
+
+Firestarter is **stateless**. You don't register programs — you submit **Tasks**.
+
+### How It Works
+
+1. **Host your image** on any public URL (GitHub Releases, S3, etc.)
+2. **Submit a Task** that references your image URL
+3. **Network downloads** your image, runs it, returns the proof
+4. **You get paid** a portion of task fees as the Program Author
+
+### The Product
+
+Your `fluidelite.img` URL is your product. Anyone can submit tasks using it.
+
+### The Distribution
+
+```yaml
+# Customer's task.yaml
+spec:
+  image: 'https://github.com/tigantic/HyperTensor-VM/releases/download/v1.0.0/fluidelite.img'
+```
+
+### The Income
+
+- Customer pays Gevulot network fee
+- Network routes to a prover node
+- You (Program Author) receive a cut because you're attested by the checksum
+
+---
+
+## Complete Deployment Walkthrough
+
+### 1. Build the Image
+
+```bash
+cd fluidelite-zk
+./build-gevulot.sh
+```
+
+### 2. Upload to GitHub Releases
+
+1. Go to your repo → Releases → Create Release
+2. Tag: `v1.0.0`
+3. Attach `fluidelite.img`
+4. Publish
+5. Copy the download URL
+
+### 3. Submit Your First Task
+
+```bash
+# Set environment
+export GEVULOT_ENDPOINT="https://rpc.firestarter.gevulot.com"
+export GEVULOT_MNEMONIC="clog offer stomach apology pelican craft smile silent galaxy orbit mad aim muscle canal young palace foot annual bullet want assist essay detect outside"
+
+# Update task.yaml with your actual image URL
+# Then submit
+./gvltctl task create -f task.yaml
+```
+
+### 4. Collect Your Proof
+
+```bash
+# Wait a few seconds for execution
+./gvltctl task get <TASK_ID>
+```
+
+The output contains an IPFS URL to your ZK proof.
+
+---
+
+## Important Notes
+
+⚠️ **Image URL must stay alive** as long as tasks run against it.
+
+⚠️ **Checksum attests authorship** — your earnings are tied to it.
+
+⚠️ **Each task downloads fresh** — no persistent state between tasks.
+
+---
+
 *FluidElite V1 - The first viable ZK-LLM for decentralized networks.*
