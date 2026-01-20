@@ -1,9 +1,24 @@
 # FluidElite Gevulot Firestarter Deployment Guide
 
-**Status:** ✅ **DEPLOYED & TESTED**  
+**Status:** ✅ **VM BUILT & TESTED LOCALLY**  
 **VM Image:** [v1.0.0-zk Release](https://github.com/tigantic/HyperTensor-VM/releases/tag/v1.0.0-zk)  
 **Image Size:** 101 MB  
 **SHA256:** `7663e2a5722c7f6f2ade0188d983df28b7dd5314fe41faacca664b211a79c9d4`
+
+---
+
+## ⚠️ Network Status
+
+**Gevulot → Zenith Network (Rebranding)**
+
+The Firestarter network endpoints are currently offline as Gevulot transitions to Zenith Network.
+- `rpc.firestarter.gevulot.com` - DNS not resolving
+- `api.gevulot.com` - DNS not resolving
+
+**When Zenith launches:**
+1. Update endpoint in task.yaml
+2. Get testnet tokens from faucet
+3. Submit tasks
 
 ---
 
