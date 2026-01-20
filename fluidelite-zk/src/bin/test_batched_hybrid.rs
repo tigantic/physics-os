@@ -235,6 +235,59 @@ fn run_batched_test() {
     }
     
     // =========================================================================
+    // Test 5: MIXED BATCH - 63 Lookup + 1 Arithmetic (THE HYBRID TEST)
+    // =========================================================================
+    println!();
+    println!("═══════════════════════════════════════════════════════════════");
+    println!("Test 5: MIXED BATCH (63 Lookup + 1 Arithmetic)");
+    println!("═══════════════════════════════════════════════════════════════");
+    println!("This tests the REAL hybrid path: what happens when a token");
+    println!("is NOT in the lookup table and requires arithmetic fallback.");
+    println!();
+    
+    let mut mixed_batch = Vec::new();
+    
+    // Add 63 lookup tokens
+    for &pos in all_lookups.iter().take(63) {
+        let ctx = &train_data[pos..pos + context_len];
+        let hash = HybridWeights::hash_context(ctx);
+        let pred = weights.lookup_table.get(&hash).copied().unwrap_or(0);
+        mixed_batch.push(TokenWitness::lookup(hash, pred));
+    }
+    
+    // Add 1 arithmetic token (context NOT in table)
+    if !arith_positions.is_empty() {
+        let pos = arith_positions[0];
+        let ctx = &train_data[pos..pos + context_len];
+        
+        // Create sparse features for this context
+        let (feature_indices, feature_values) = create_sparse_features(ctx, config.feature_dim);
+        
+        // Compute prediction via arithmetic (for witness)
+        let arith_pred = compute_arithmetic_prediction(
+            &feature_indices,
+            &feature_values,
+            &weights,
+        );
+        
+        println!("  Arithmetic token: context at position {}", pos);
+        println!("    Sparse features: {} non-zero entries", feature_indices.len());
+        println!("    Computed prediction: {}", arith_pred);
+        
+        mixed_batch.push(TokenWitness::arithmetic(
+            arith_pred,
+            feature_indices,
+            feature_values,
+        ));
+    } else {
+        println!("  ⚠️  No arithmetic contexts found, using dummy");
+        mixed_batch.push(TokenWitness::arithmetic(0, vec![0], vec![1 << 16]));
+    }
+    
+    println!();
+    run_batch_test("Mixed-64", mixed_batch, truncated_table.clone(), &weights);
+    
+    // =========================================================================
     // Throughput Analysis
     // =========================================================================
     println!();
@@ -258,6 +311,101 @@ fn run_batched_test() {
     println!("═══════════════════════════════════════════════════════════════");
     println!("Batched Hybrid Test Complete!");
     println!("═══════════════════════════════════════════════════════════════");
+}
+
+/// Create sparse features from context (byte n-gram encoding)
+#[cfg(feature = "halo2")]
+fn create_sparse_features(context: &[u8], feature_dim: usize) -> (Vec<usize>, Vec<i32>) {
+    let mut indices = Vec::new();
+    let mut values = Vec::new();
+    
+    // Simple unigram + bigram encoding
+    for (i, &byte) in context.iter().enumerate() {
+        // Unigram: byte value maps to index
+        let unigram_idx = byte as usize;
+        if unigram_idx < feature_dim {
+            indices.push(unigram_idx);
+            values.push(1 << 16); // Q16 value of 1.0
+        }
+        
+        // Bigram: combine with previous byte
+        if i > 0 {
+            let prev = context[i - 1] as usize;
+            let bigram_idx = 256 + (prev * 256 + byte as usize) % (feature_dim - 256);
+            if bigram_idx < feature_dim {
+                indices.push(bigram_idx);
+                values.push(1 << 16);
+            }
+        }
+    }
+    
+    // Deduplicate and sum
+    let mut feature_map = std::collections::HashMap::new();
+    for (idx, val) in indices.iter().zip(values.iter()) {
+        *feature_map.entry(*idx).or_insert(0i32) += val;
+    }
+    
+    let mut final_indices: Vec<usize> = feature_map.keys().copied().collect();
+    final_indices.sort();
+    let final_values: Vec<i32> = final_indices.iter().map(|i| feature_map[i]).collect();
+    
+    (final_indices, final_values)
+}
+
+/// Compute arithmetic prediction: sparse_features @ U_r @ S_r @ Vt_r
+#[cfg(feature = "halo2")]
+fn compute_arithmetic_prediction(
+    feature_indices: &[usize],
+    feature_values: &[i32],
+    weights: &HybridWeights,
+) -> u8 {
+    let rank = weights.config.rank;
+    let vocab = weights.config.vocab_size;
+    
+    // Stage 1: h = features @ U_r
+    let mut h = vec![0i64; rank];
+    for (idx_pos, &feat_idx) in feature_indices.iter().enumerate() {
+        let feat_val = feature_values[idx_pos] as i64;
+        for r in 0..rank {
+            if feat_idx < weights.u_r.len() / rank {
+                let u_idx = feat_idx * rank + r;
+                if u_idx < weights.u_r.len() {
+                    h[r] += feat_val * weights.u_r[u_idx].raw as i64;
+                }
+            }
+        }
+    }
+    
+    // Q16 normalize
+    for r in 0..rank {
+        h[r] >>= 16;
+    }
+    
+    // Stage 2: h *= S_r
+    for r in 0..rank {
+        if r < weights.s_r.len() {
+            h[r] *= weights.s_r[r].raw as i64;
+            h[r] >>= 16;
+        }
+    }
+    
+    // Stage 3: logits = h @ Vt_r
+    let mut logits = vec![0i64; vocab];
+    for r in 0..rank {
+        for v in 0..vocab {
+            let vt_idx = r * vocab + v;
+            if vt_idx < weights.vt_r.len() {
+                logits[v] += h[r] * weights.vt_r[vt_idx].raw as i64;
+            }
+        }
+    }
+    
+    // Argmax
+    logits.iter()
+        .enumerate()
+        .max_by_key(|(_, &v)| v)
+        .map(|(i, _)| i as u8)
+        .unwrap_or(0)
 }
 
 #[cfg(feature = "halo2")]

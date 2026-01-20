@@ -508,7 +508,7 @@ impl Circuit<Fr> for BatchedHybridCircuit {
                         
                         // For arithmetic path, we need more rows for MAC gates
                         // Compute matmul: features @ U_r @ S_r @ Vt_r
-                        let (pred_cell, rows_used) = self.synthesize_arithmetic_contiguous(
+                        let (pred_cell, rows_used) = self.synthesize_arithmetic_full(
                             &config,
                             &mut region,
                             token,
