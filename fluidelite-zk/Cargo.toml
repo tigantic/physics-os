@@ -49,6 +49,11 @@ name = "test-batched-hybrid"
 path = "src/bin/test_batched_hybrid.rs"
 required-features = ["halo2"]
 
+[[bin]]
+name = "gevulot-prover"
+path = "src/bin/gevulot_prover.rs"
+required-features = ["halo2"]
+
 [dependencies]
 # Serialization
 serde = { version = "1.0", features = ["derive"] }

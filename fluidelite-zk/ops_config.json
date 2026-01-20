@@ -1,0 +1,19 @@
+{
+  "Program": "release/gevulot-prover",
+  "Dirs": ["release"],
+  "Files": ["release/fluidelite_v1.bin"],
+  "MapDirs": {
+    "release": "/"
+  },
+  "Mounts": {
+    "/mnt/gevulot": {}
+  },
+  "Env": {
+    "RUST_BACKTRACE": "1"
+  },
+  "Memory": "4G",
+  "BaseVolumeSz": "1G",
+  "ManifestPassthrough": {
+    "readonly_rootfs": "false"
+  }
+}
