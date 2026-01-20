@@ -48,6 +48,7 @@ pub mod mps;
 pub mod ops;
 pub mod prover;
 pub mod verifier;
+pub mod weight_crypto;
 pub mod weights;
 
 #[cfg(feature = "halo2")]

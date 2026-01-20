@@ -1,4 +1,4 @@
-# FluidElite Gevulot Firestarter Deployment Guide
+# FluidElite Zenith Network Deployment Guide
 
 **Status:** ✅ **VM BUILT & TESTED LOCALLY**  
 **VM Image:** [v1.0.0-zk Release](https://github.com/tigantic/HyperTensor-VM/releases/tag/v1.0.0-zk)  
@@ -7,18 +7,42 @@
 
 ---
 
+## 🏛️ Enterprise Positioning
+
+**FluidElite is the verified AI inference engine for regulated financial institutions.**
+
+### Target Market: Canton Network Ecosystem
+- **Goldman Sachs** - Institutional settlements
+- **Deloitte** - Audit and compliance AI
+- **Digital Asset** - Daml smart contract integration
+
+### Value Proposition
+| Feature | Enterprise Benefit |
+|---------|-------------------|
+| 88.2 TPS ZK Proofs | High-throughput verified AI |
+| MiCA Compliance Ready | EU regulatory alignment |
+| Encrypted Weights | IP protection (AES-256-GCM) |
+| Decentralized Proving | No single point of failure |
+| Royalty Model | Revenue per proof |
+
+---
+
 ## ⚠️ Network Status
 
-**Gevulot → Zenith Network (Rebranding)**
+**Gevulot → Zenith Network (Rebranding in Progress)**
 
-The Firestarter network endpoints are currently offline as Gevulot transitions to Zenith Network.
+The Firestarter network endpoints are offline as Gevulot transitions to Zenith Network.
 - `rpc.firestarter.gevulot.com` - DNS not resolving
 - `api.gevulot.com` - DNS not resolving
 
-**When Zenith launches:**
-1. Update endpoint in task.yaml
-2. Get testnet tokens from faucet
-3. Submit tasks
+**Launch Preparation:**
+```bash
+# When Zenith RPC is announced, deploy instantly:
+./zenith_launch.sh deploy
+
+# Or with custom endpoint:
+ZENITH_RPC=https://rpc.zenith.network ./zenith_launch.sh deploy
+```
 
 ---
 
@@ -35,20 +59,20 @@ The Firestarter network endpoints are currently offline as Gevulot transitions t
 }
 ```
 
-> **Note:** 17.5s prove time is due to QEMU software emulation. Native hardware would be ~100x faster.
+> **Note:** 17.5s prove time is due to QEMU software emulation. Native hardware would be ~100x faster (175ms per proof).
 
 ---
 
 ## Overview
 
-FluidElite runs as a **Linux VM** on the Gevulot Firestarter decentralized proving network.
+FluidElite runs as a **Linux VM** on the Zenith Network (formerly Gevulot Firestarter).
 It generates Zero-Knowledge proofs for language model inference at **88 TPS**.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                Gevulot Firestarter Architecture                 │
+│                  Zenith Network Architecture                    │
 ├─────────────────────────────────────────────────────────────────┤
-│  User Request → Gevulot Network → Your VM → ZK Proof → User    │
+│  User Request → Zenith Network → Your VM → ZK Proof → User     │
 ├─────────────────────────────────────────────────────────────────┤
 │  Input:  /mnt/gevulot/input/task_input.json                    │
 │  Output: /mnt/gevulot/output/proof_output.json                 │
