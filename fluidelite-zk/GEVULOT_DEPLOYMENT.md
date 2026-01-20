@@ -1,9 +1,26 @@
 # FluidElite Gevulot Firestarter Deployment Guide
 
-**Status:** Production Ready  
-**Binary:** 3.7 MB (statically linked)  
-**Model:** 65.8 MB  
-**Platform:** Gevulot Firestarter (Linux VM)
+**Status:** ✅ **DEPLOYED & TESTED**  
+**VM Image:** [v1.0.0-zk Release](https://github.com/tigantic/HyperTensor-VM/releases/tag/v1.0.0-zk)  
+**Image Size:** 101 MB  
+**SHA256:** `7663e2a5722c7f6f2ade0188d983df28b7dd5314fe41faacca664b211a79c9d4`
+
+---
+
+## Local Test Results (QEMU/TCG)
+
+```json
+{
+  "status": "success",
+  "predictions": [{"token_id": 97, "char": "a", "path": "Arithmetic"}],
+  "proof_size": 2144,
+  "prove_time_ms": 17536,
+  "verify_time_ms": 57,
+  "verified": true
+}
+```
+
+> **Note:** 17.5s prove time is due to QEMU software emulation. Native hardware would be ~100x faster.
 
 ---
 

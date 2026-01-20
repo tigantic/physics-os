@@ -23,6 +23,11 @@ metadata:
     - zkml
     - halo2
     - fluidelite
+  labels:
+    - key: 'prover'
+      value: 'halo2-axiom'
+    - key: 'content-type'
+      value: 'application/json'
 
 spec:
   # 1. Your hosted VM image (GitHub Release, S3, etc.)
@@ -49,6 +54,9 @@ spec:
 
   # 5. Resource requirements
   resources:
-    memory: 4096  # MB - model is 65MB, Halo2 needs headroom
+    memory: 4GB
     cpus: 4
-    timeout: 120  # seconds - proof takes ~1.5s but allow startup time
+    gpus: 0
+    time: 120s
+  storeStdout: true
+  storeStderr: true
