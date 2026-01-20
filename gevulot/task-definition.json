@@ -1,0 +1,148 @@
+{
+  "$schema": "https://gevulot.com/schemas/task-definition-v1.json",
+  "name": "fluidelite-zk",
+  "version": "1.0.0",
+  "description": "World's First ZK-Verifiable Large Language Model - MPS Tensor Network with Halo2 Proofs",
+  
+  "metadata": {
+    "author": "TiganticLabz",
+    "license": "MIT",
+    "repository": "https://github.com/TiganticLabz/HyperTensor-VM",
+    "homepage": "https://fluidelite.ai",
+    "tags": ["zkml", "llm", "tensor-network", "mps", "halo2", "verifiable-ai"]
+  },
+
+  "prover": {
+    "image": "fluidelite/fluidelite-zk:v1.0.0",
+    "entrypoint": "/usr/local/bin/fluidelite-server",
+    "args": [
+      "--production-v1",
+      "--weights", "/data/fluidelite_zk_production_zk_weights.json",
+      "-k", "12"
+    ],
+    "env": {
+      "RUST_LOG": "info",
+      "FLUIDELITE_API_KEY": "${FLUIDELITE_API_KEY}"
+    },
+    "resources": {
+      "cpu": "4",
+      "memory": "8Gi",
+      "gpu": "optional"
+    },
+    "timeout": "300s"
+  },
+
+  "verifier": {
+    "image": "fluidelite/fluidelite-zk:v1.0.0",
+    "entrypoint": "/usr/local/bin/fluidelite-verify",
+    "resources": {
+      "cpu": "1",
+      "memory": "512Mi"
+    },
+    "timeout": "10s"
+  },
+
+  "inputs": {
+    "token_id": {
+      "type": "uint64",
+      "description": "Input token ID (0-255 for ASCII characters)",
+      "required": true,
+      "validation": {
+        "min": 0,
+        "max": 255
+      }
+    },
+    "context": {
+      "type": "bytes",
+      "description": "Optional MPS context state (serialized)",
+      "required": false
+    }
+  },
+
+  "outputs": {
+    "proof": {
+      "type": "bytes",
+      "description": "Halo2 KZG proof (base64 encoded)",
+      "format": "base64"
+    },
+    "public_inputs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "hex256"
+      },
+      "description": "257 BN254 field elements (token_id + 256 logits)"
+    },
+    "logits": {
+      "type": "array",
+      "items": {
+        "type": "float64"
+      },
+      "description": "Model output logits (256 vocabulary)"
+    }
+  },
+
+  "constraints": {
+    "circuit_k": 12,
+    "num_constraints": 98328,
+    "proof_system": "halo2-kzg",
+    "curve": "bn254",
+    "security_bits": 128
+  },
+
+  "model": {
+    "architecture": "MPS-TensorNetwork",
+    "sites": 12,
+    "bond_dimension": 64,
+    "physical_dimension": 2,
+    "vocabulary_size": 256,
+    "parameters": 9001,
+    "training": {
+      "dataset": "WikiText-2",
+      "samples": 100000,
+      "epochs": 2,
+      "perplexity": 28.9,
+      "accuracy": 0.182
+    }
+  },
+
+  "performance": {
+    "proof_time_ms": 400,
+    "verify_time_ms": 1,
+    "proof_size_bytes": 1792,
+    "throughput_proofs_per_sec": 2.5
+  },
+
+  "pricing": {
+    "base_fee": "0.001",
+    "currency": "ETH",
+    "per_proof": "0.0001",
+    "notes": "Pricing TBD based on network conditions"
+  },
+
+  "health_check": {
+    "endpoint": "/health",
+    "interval": "30s",
+    "timeout": "5s"
+  },
+
+  "api": {
+    "prove": {
+      "method": "POST",
+      "path": "/prove",
+      "content_type": "application/json",
+      "auth": "Bearer"
+    },
+    "verify": {
+      "method": "POST", 
+      "path": "/verify",
+      "content_type": "application/json",
+      "auth": "Bearer"
+    },
+    "metrics": {
+      "method": "GET",
+      "path": "/metrics",
+      "content_type": "text/plain"
+    }
+  }
+}

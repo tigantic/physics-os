@@ -1,0 +1,106 @@
+# FluidElite ZK Production Deployment
+#
+# Usage:
+#   docker-compose up -d
+#   docker-compose logs -f prover
+#
+# Monitoring:
+#   curl http://localhost:8080/health
+#   curl http://localhost:8080/stats
+
+version: '3.8'
+
+services:
+  # ========================================
+  # FluidElite ZK Prover API
+  # ========================================
+  prover:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fluidelite-prover
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data/weights:/data/weights:ro
+      - ./data/proofs:/data/proofs
+      - ./data/logs:/data/logs
+    environment:
+      - RUST_LOG=info
+      - FLUIDELITE_NETWORK=mock
+      - FLUIDELITE_GPU=0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+        reservations:
+          cpus: '2.0'
+          memory: 4G
+
+  # ========================================
+  # Prometheus Metrics Exporter
+  # ========================================
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: fluidelite-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    depends_on:
+      - prover
+
+  # ========================================
+  # Grafana Dashboard
+  # ========================================
+  grafana:
+    image: grafana/grafana:10.2.2
+    container_name: fluidelite-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=fluidelite
+      - GF_USERS_ALLOW_SIGN_UP=false
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+
+  # ========================================
+  # Redis Cache (for proof caching)
+  # ========================================
+  redis:
+    image: redis:7-alpine
+    container_name: fluidelite-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+
+volumes:
+  prometheus_data:
+  grafana_data:
+  redis_data:
+
+networks:
+  default:
+    name: fluidelite-network

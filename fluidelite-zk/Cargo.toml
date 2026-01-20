@@ -1,0 +1,127 @@
+[package]
+name = "fluidelite-zk"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.73.0"
+authors = ["TiganticLabz"]
+description = "ZK-provable FluidElite inference using Halo2"
+license = "MIT"
+repository = "https://github.com/TiganticLabz/HyperTensor-VM"
+keywords = ["zk", "halo2", "tensor-network", "machine-learning", "verifiable-ai"]
+categories = ["cryptography", "science"]
+
+[lib]
+name = "fluidelite_zk"
+path = "src/lib.rs"
+crate-type = ["cdylib", "rlib"]
+
+[[bin]]
+name = "prover-node"
+path = "src/bin/prover_node.rs"
+required-features = ["halo2"]
+
+[[bin]]
+name = "fluidelite-cli"
+path = "src/bin/cli.rs"
+required-features = ["halo2"]
+
+[[bin]]
+name = "fluidelite-server"
+path = "src/bin/server.rs"
+required-features = ["server"]
+
+[[bin]]
+name = "gpu-test"
+path = "src/bin/gpu_test.rs"
+required-features = ["gpu"]
+
+[[bin]]
+name = "test-hybrid-zk"
+path = "src/bin/test_hybrid_zk.rs"
+
+[[bin]]
+name = "test-halo2-hybrid"
+path = "src/bin/test_halo2_hybrid.rs"
+required-features = ["halo2"]
+
+[[bin]]
+name = "test-batched-hybrid"
+path = "src/bin/test_batched_hybrid.rs"
+required-features = ["halo2"]
+
+[dependencies]
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+bincode = "1.3"
+base64 = "0.21"
+
+# Numerics (fixed-point for ZK)
+fixed = "1.23"
+num-traits = "0.2"
+
+# Hashing for lookup table
+sha2 = "0.10"
+
+# Async runtime for prover node
+tokio = { version = "1.35", features = ["full"] }
+
+# HTTP server for REST API
+axum = { version = "0.7", optional = true }
+tower = { version = "0.4", optional = true }
+tower-http = { version = "0.5", features = ["cors", "trace", "timeout", "limit"], optional = true }
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+# CLI
+clap = { version = "4.4", features = ["derive", "env"] }
+
+# Random (for testing/benchmarks only)
+rand = "0.8"
+
+# Python bindings
+pyo3 = { version = "0.20", features = ["extension-module"], optional = true }
+
+# Halo2 ZK proving system (Axiom's maintained fork with KZG)
+halo2-axiom = { version = "0.5.1", optional = true }
+
+# Hex encoding for proofs
+hex = "0.4"
+
+# GPU acceleration (Icicle v4 - Ingonyama)
+# Latest from GitHub with full BN254 support for MSM/NTT
+icicle-runtime = { git = "https://github.com/ingonyama-zk/icicle.git", tag = "v4.0.0", optional = true }
+icicle-core = { git = "https://github.com/ingonyama-zk/icicle.git", tag = "v4.0.0", optional = true }
+icicle-bn254 = { git = "https://github.com/ingonyama-zk/icicle.git", tag = "v4.0.0", optional = true }
+
+# Rayon for CPU parallelism
+rayon = "1.8"
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+proptest = "1.4"
+
+[[bench]]
+name = "constraint_bench"
+harness = false
+
+[[bench]]
+name = "proof_bench"
+harness = false
+
+[features]
+default = []
+# Enable Halo2 ZK circuit - requires nightly Rust
+halo2 = ["dep:halo2-axiom"]
+# Enable Python bindings
+python = ["dep:pyo3", "halo2"]
+# Enable REST API server
+server = ["dep:axum", "dep:tower", "dep:tower-http", "halo2"]
+# Enable GPU acceleration via Icicle (requires CUDA 12+)
+gpu = ["dep:icicle-runtime", "dep:icicle-core", "dep:icicle-bn254", "halo2"]
+# Full production build with hardening (metrics built-in, no external deps)
+production = ["halo2", "server"]
+# Full production with GPU acceleration
+production-gpu = ["production", "gpu"]

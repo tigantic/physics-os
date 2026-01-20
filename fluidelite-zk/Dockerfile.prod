@@ -1,0 +1,89 @@
+# =============================================================================
+# FluidElite ZK Production Dockerfile
+# Multi-stage build with CUDA 12.x support for GPU-accelerated ZK proving
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Stage 1: Builder - Compile Rust with CUDA support
+# -----------------------------------------------------------------------------
+FROM nvidia/cuda:12.2.2-devel-ubuntu22.04 AS builder
+
+# Install Rust and build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    build-essential \
+    pkg-config \
+    libssl-dev \
+    cmake \
+    git \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Rust (nightly required for halo2)
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly-2024-01-01
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Set up Icicle backend directory
+RUN mkdir -p /opt/icicle/lib/backend
+
+# Create app directory
+WORKDIR /app
+
+# Copy Cargo files first for layer caching
+COPY Cargo.toml Cargo.lock* ./
+COPY src ./src
+COPY benches ./benches
+
+# Build release binary with GPU support
+ENV ICICLE_BACKEND_INSTALL_DIR=/opt/icicle/lib/backend
+RUN cargo build --release --features production-gpu
+
+# Strip the binary for smaller image
+RUN strip target/release/fluidelite-server
+
+# -----------------------------------------------------------------------------
+# Stage 2: Runtime - Minimal CUDA runtime with the binary
+# -----------------------------------------------------------------------------
+FROM nvidia/cuda:12.2.2-runtime-ubuntu22.04 AS runtime
+
+# Install runtime dependencies only
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    libssl3 \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Create non-root user for security
+RUN groupadd -r fluidelite && useradd -r -g fluidelite fluidelite
+
+# Create directories
+RUN mkdir -p /opt/icicle/lib/backend /app/data && \
+    chown -R fluidelite:fluidelite /app /opt/icicle
+
+# Copy the binary from builder
+COPY --from=builder /app/target/release/fluidelite-server /usr/local/bin/
+
+# Copy Icicle backend libraries (if built)
+COPY --from=builder /opt/icicle/lib/backend/* /opt/icicle/lib/backend/ 2>/dev/null || true
+
+# Set environment variables
+ENV ICICLE_BACKEND_INSTALL_DIR=/opt/icicle/lib/backend
+ENV RUST_LOG=info
+ENV FLUIDELITE_HOST=0.0.0.0
+ENV FLUIDELITE_PORT=8080
+
+# Switch to non-root user
+USER fluidelite
+WORKDIR /app
+
+# Expose ports
+EXPOSE 8080
+EXPOSE 9090
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
+
+# Default command with production settings
+ENTRYPOINT ["fluidelite-server"]
+CMD ["--host", "0.0.0.0", "--port", "8080", "--metrics-port", "9090", "--timeout", "120", "--json-logs"]

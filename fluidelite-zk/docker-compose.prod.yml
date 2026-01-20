@@ -1,0 +1,135 @@
+# =============================================================================
+# FluidElite ZK Production Stack
+# GPU-accelerated ZK prover with monitoring
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # FluidElite ZK Prover API
+  # ---------------------------------------------------------------------------
+  fluidelite:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    image: fluidelite-zk:latest
+    container_name: fluidelite-prover
+    restart: unless-stopped
+    
+    # GPU support
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    
+    # Environment
+    environment:
+      - RUST_LOG=info
+      - FLUIDELITE_API_KEY=${FLUIDELITE_API_KEY:-}
+      - FLUIDELITE_HOST=0.0.0.0
+      - FLUIDELITE_PORT=8080
+    
+    # Ports
+    ports:
+      - "8080:8080"   # API
+      - "9090:9090"   # Metrics
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    # Resource limits
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    
+    # Volumes for persistent data (keys, proofs cache)
+    volumes:
+      - fluidelite-data:/app/data
+    
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+    
+    networks:
+      - fluidelite-net
+
+  # ---------------------------------------------------------------------------
+  # Prometheus (optional - metrics collection)
+  # ---------------------------------------------------------------------------
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: fluidelite-prometheus
+    restart: unless-stopped
+    profiles: ["monitoring"]
+    
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+    
+    ports:
+      - "9091:9090"
+    
+    networks:
+      - fluidelite-net
+    
+    depends_on:
+      fluidelite:
+        condition: service_healthy
+
+  # ---------------------------------------------------------------------------
+  # Grafana (optional - dashboards)
+  # ---------------------------------------------------------------------------
+  grafana:
+    image: grafana/grafana:10.2.2
+    container_name: fluidelite-grafana
+    restart: unless-stopped
+    profiles: ["monitoring"]
+    
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-fluidelite123}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    
+    volumes:
+      - grafana-data:/var/lib/grafana
+    
+    ports:
+      - "3000:3000"
+    
+    networks:
+      - fluidelite-net
+    
+    depends_on:
+      - prometheus
+
+# -----------------------------------------------------------------------------
+# Networks
+# -----------------------------------------------------------------------------
+networks:
+  fluidelite-net:
+    driver: bridge
+
+# -----------------------------------------------------------------------------
+# Volumes
+# -----------------------------------------------------------------------------
+volumes:
+  fluidelite-data:
+  prometheus-data:
+  grafana-data:

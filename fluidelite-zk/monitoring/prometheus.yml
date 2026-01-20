@@ -1,0 +1,25 @@
+# Prometheus configuration for FluidElite monitoring
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+rule_files: []
+
+scrape_configs:
+  # FluidElite Prover metrics
+  - job_name: 'fluidelite-prover'
+    static_configs:
+      - targets: ['prover:8080']
+    metrics_path: '/stats'
+    scrape_interval: 10s
+
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
