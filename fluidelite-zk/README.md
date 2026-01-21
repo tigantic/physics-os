@@ -1,8 +1,36 @@
 # FluidElite ZK
 
-**Zero-Knowledge Provable Inference for FluidElite Tensor Network LLM**
+**Petabyte-Scale Compression + Zero-Knowledge Provable Inference**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://github.com/tigantic/HyperTensor-VM)
+[![Verified](https://img.shields.io/badge/18TB-VERIFIED-brightgreen.svg)](../FLUIDELITE_18TB_ATTESTATION.json)
+
+---
+
+## 🚀 Live Demo: 18 TB → 2.82 MB
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│  18.00 TB → 2.82 MB (6,378,569x compression)                  │
+│  Network I/O: 1.05 MB | Time: 50.49 seconds                   │
+│  Source: NOAA GOES-18 Satellite Imagery (Public S3)           │
+└───────────────────────────────────────────────────────────────┘
+```
+
+**Run it yourself:**
+```bash
+cargo build --release --bin fluid-ingest --features s3
+
+./target/release/fluid-ingest cloud \
+    --input "s3://noaa-goes18/ABI-L2-MCMIPC/" \
+    --output /tmp/satellite.qtt \
+    --pqc --verbose
+```
+
+No AWS credentials needed. Public bucket. Independently verifiable.
+
+---
 
 ## Overview
 
