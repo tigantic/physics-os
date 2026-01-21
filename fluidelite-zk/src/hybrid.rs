@@ -199,7 +199,18 @@ impl HybridWeights {
     }
     
     /// Compute SHA-256 hash of context (first 8 bytes as u64)
+    /// 
+    /// # Arguments
+    /// * `context` - Byte slice to hash. Empty input returns 0 (null hash).
+    ///
+    /// # Returns
+    /// First 8 bytes of SHA-256 hash interpreted as big-endian u64.
+    /// Returns 0 for empty input to provide a consistent null sentinel.
     pub fn hash_context(context: &[u8]) -> u64 {
+        // Handle empty input explicitly - return sentinel value
+        if context.is_empty() {
+            return 0;
+        }
         use sha2::{Sha256, Digest};
         let mut hasher = Sha256::new();
         hasher.update(context);

@@ -64,6 +64,15 @@ pub mod server;
 #[cfg(feature = "gpu")]
 pub mod gpu;
 
+#[cfg(feature = "gpu")]
+pub mod gpu_halo2_prover;
+
+#[cfg(feature = "gpu")]
+pub mod msm_config;
+
+#[cfg(feature = "gpu")]
+pub mod qtt_native_msm;
+
 // Re-exports for convenience
 pub use mpo::MPO;
 pub use mps::MPS;

@@ -4,6 +4,27 @@
 
 use crate::config as model_config;
 
+// ============================================================================
+// CIRCUIT CONSTANTS
+// ============================================================================
+
+/// Number of rows per MAC operation in the circuit
+pub const ROWS_PER_MAC: usize = 2;
+
+/// Multiplier for MPO×MPS row estimation
+pub const MPO_MPS_ROW_FACTOR: usize = 2;
+
+/// Default k parameter for production circuits (2^17 = 131072 rows)
+pub const PRODUCTION_K: u32 = 17;
+
+/// Minimum k parameter for valid circuits
+pub const MIN_K: u32 = 8;
+
+/// Maximum k parameter to prevent OOM (2^24 = 16M rows)
+pub const MAX_K: u32 = 24;
+
+// ============================================================================
+
 /// Circuit sizing parameters
 #[derive(Clone, Debug)]
 pub struct CircuitConfig {
@@ -30,7 +51,7 @@ impl CircuitConfig {
     /// Create configuration for production FluidElite (default: L=16, chi=64)
     pub fn production() -> Self {
         // Estimate rows needed
-        // Each MAC operation uses ~2 rows
+        // Each MAC operation uses ~ROWS_PER_MAC rows
         // MPO×MPS: L × χ² × D × d² × d operations
         // Addition: L × 2χ × d × 2χ copies
         // Readout: vocab × features operations
@@ -41,9 +62,9 @@ impl CircuitConfig {
         let phys = model_config::PHYS_DIM;
         let vocab = model_config::VOCAB_SIZE;
 
-        let mpo_mps_rows = l * chi * chi * d * phys * phys * phys * 2;
+        let mpo_mps_rows = l * chi * chi * d * phys * phys * phys * MPO_MPS_ROW_FACTOR;
         let add_rows = l * 2 * chi * phys * 2 * chi;
-        let readout_rows = vocab * chi * 2;
+        let readout_rows = vocab * chi * ROWS_PER_MAC;
 
         let total_rows = mpo_mps_rows + add_rows + readout_rows;
 

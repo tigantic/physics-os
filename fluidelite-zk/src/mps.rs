@@ -153,8 +153,21 @@ impl MPS {
     }
 
     /// Truncate bond dimensions to chi_max
-    /// This is a simplified truncation that just keeps top-χ elements
-    /// (In full implementation, would use SVD)
+    /// 
+    /// # Algorithm
+    /// This is a **greedy truncation** that keeps the first χ elements
+    /// in each bond dimension. This is NOT optimal - proper SVD-based
+    /// truncation would retain the largest singular values.
+    ///
+    /// # Why Not SVD?
+    /// SVD requires floating-point arithmetic which is expensive in ZK circuits.
+    /// For FluidElite's use case (token embeddings -> logits), greedy truncation
+    /// provides sufficient accuracy while maintaining ZK efficiency.
+    ///
+    /// # Performance Note
+    /// For production use where accuracy matters, consider using full SVD
+    /// truncation on the host side before proving, and only prove the
+    /// already-truncated MPS.
     pub fn truncate(&mut self, chi_max: usize) {
         for i in 0..self.num_sites {
             let core = &self.cores[i];

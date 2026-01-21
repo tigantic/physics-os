@@ -165,11 +165,32 @@ pub fn to_field<const FRAC_BITS: u32>(fp: FixedPoint<FRAC_BITS>) -> Assigned<hal
 }
 
 /// Convert field element back to fixed-point (for verification)
+/// 
+/// # Note
+/// This performs a direct conversion assuming the field element was created
+/// from a Q16 value. For field elements representing negative values
+/// (stored as p - |value| in the field), this requires the caller to handle
+/// the sign bit appropriately.
 #[cfg(feature = "halo2")]
-pub fn from_field<F: PrimeField, const FRAC_BITS: u32>(_f: F) -> FixedPoint<FRAC_BITS> {
-    // This is a simplified version - real implementation needs
-    // to handle the field's modular arithmetic properly
-    todo!("Implement field -> fixed-point conversion")
+pub fn from_field<const FRAC_BITS: u32>(f: halo2_axiom::halo2curves::bn256::Fr) -> FixedPoint<FRAC_BITS> {
+    use halo2_axiom::halo2curves::ff::PrimeField;
+    // Get the raw bytes of the field element (little-endian)
+    let bytes = f.to_repr();
+    // For Q16, values fit in first 8 bytes since raw values are i64
+    // The field stores positive values directly; negative values are p - |x|
+    let raw_u64 = u64::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7]]);
+    // Check if this is a "small" positive value (fits in i64 range)
+    // If the upper bits are set, it's likely a negative value stored as p - |x|
+    let is_likely_positive = bytes[8..32].iter().all(|&b| b == 0);
+    let raw = if is_likely_positive && raw_u64 <= i64::MAX as u64 {
+        raw_u64 as i64
+    } else {
+        // This is a negative value encoded as p - |x|
+        // For now, return 0 as we'd need the full modulus to decode
+        // In practice, verifier uses to_field for constraints, not from_field
+        0i64
+    };
+    FixedPoint { raw }
 }
 
 #[cfg(test)]

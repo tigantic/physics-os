@@ -208,7 +208,17 @@ async fn auth_middleware(
     match auth_header {
         Some(auth) if auth.starts_with("Bearer ") => {
             let token = &auth[7..];
-            if token == expected_key {
+            // Use constant-time comparison to prevent timing attacks
+            use subtle::ConstantTimeEq;
+            let token_bytes = token.as_bytes();
+            let expected_bytes = expected_key.as_bytes();
+            let len_match = token_bytes.len() == expected_bytes.len();
+            let content_match = if len_match {
+                token_bytes.ct_eq(expected_bytes).into()
+            } else {
+                false
+            };
+            if content_match {
                 Ok(next.run(request).await)
             } else {
                 warn!("Invalid API key attempt");
@@ -238,10 +248,26 @@ pub fn create_router(state: Arc<ServerState>) -> Router {
         .route("/stats", get(stats_handler))
         .route("/metrics", get(metrics_handler));
 
+    // Configure CORS based on environment
+    // In production, set CORS_ORIGIN env var to restrict origins
+    let cors_layer = if let Ok(origin) = std::env::var("CORS_ORIGIN") {
+        use tower_http::cors::AllowOrigin;
+        CorsLayer::new()
+            .allow_origin(AllowOrigin::exact(origin.parse().unwrap_or_else(|_| {
+                "*".parse().expect("wildcard always valid")
+            })))
+            .allow_methods([axum::http::Method::GET, axum::http::Method::POST])
+            .allow_headers([axum::http::header::AUTHORIZATION, axum::http::header::CONTENT_TYPE])
+    } else {
+        // Development mode: permissive CORS (logged for awareness)
+        tracing::warn!("CORS_ORIGIN not set, using permissive CORS. Set CORS_ORIGIN in production.");
+        CorsLayer::permissive()
+    };
+
     Router::new()
         .merge(public_routes)
         .merge(protected_routes)
-        .layer(CorsLayer::permissive())
+        .layer(cors_layer)
         .layer(TraceLayer::new_for_http())
         .with_state(state)
 }

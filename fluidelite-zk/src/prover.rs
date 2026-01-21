@@ -377,10 +377,16 @@ mod tests {
         let context = MPS::new(config.num_sites, config.chi_max, config.phys_dim);
         let proof = prover.prove(&context, 42).expect("Proof generation failed");
 
-        assert!(proof.num_constraints > 0);
+        // Halo2Proof has num_constraints() method, FluidEliteProof has it as field
+        #[cfg(feature = "halo2")]
+        let num_constraints = proof.num_constraints();
+        #[cfg(not(feature = "halo2"))]
+        let num_constraints = proof.num_constraints;
+
+        assert!(num_constraints > 0);
         println!(
             "Simulated proof: {} constraints, {} bytes",
-            proof.num_constraints,
+            num_constraints,
             proof.size()
         );
     }

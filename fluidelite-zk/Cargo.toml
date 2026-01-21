@@ -101,14 +101,23 @@ icicle-runtime = { git = "https://github.com/ingonyama-zk/icicle.git", tag = "v4
 icicle-core = { git = "https://github.com/ingonyama-zk/icicle.git", tag = "v4.0.0", optional = true }
 icicle-bn254 = { git = "https://github.com/ingonyama-zk/icicle.git", tag = "v4.0.0", optional = true }
 
+# Constant-time comparison for security-sensitive operations
+subtle = "2.5"
+
 # Encryption for enterprise weight protection (AES-256-GCM)
 aes-gcm = { version = "0.10", optional = true }
 hkdf = { version = "0.12", optional = true }
 # sha2 already defined above, reuse it for encryption feature
 getrandom = { version = "0.2", optional = true }
 
+# DHAT heap profiler (optional, for stress testing)
+dhat = { version = "0.3", optional = true }
+
 # Rayon for CPU parallelism
 rayon = "1.8"
+
+# sysinfo for memory monitoring in stress tests
+sysinfo = "0.30"
 
 [dev-dependencies]
 criterion = { version = "0.5", features = ["html_reports"] }
@@ -122,6 +131,66 @@ harness = false
 name = "proof_bench"
 harness = false
 
+[[bin]]
+name = "vram-stress-test"
+path = "src/bin/vram_stress_test.rs"
+required-features = ["halo2"]
+
+[[bin]]
+name = "gpu-stress-test"
+path = "src/bin/gpu_stress_test.rs"
+required-features = ["gpu"]
+
+[[bin]]
+name = "gpu-sustained-bench"
+path = "src/bin/gpu_sustained_bench.rs"
+required-features = ["gpu"]
+
+[[bin]]
+name = "gpu-max-stress"
+path = "src/bin/gpu_max_stress.rs"
+required-features = ["gpu"]
+
+[[bin]]
+name = "gpu-vram-stress"
+path = "src/bin/gpu_vram_stress.rs"
+required-features = ["gpu"]
+
+[[bin]]
+name = "gpu-realworld-tps"
+path = "src/bin/gpu_realworld_tps.rs"
+required-features = ["gpu"]
+
+[[bin]]
+name = "gpu-production-tps"
+path = "src/bin/gpu_production_tps.rs"
+required-features = ["gpu"]
+
+[[bin]]
+name = "gpu-optimized-tps"
+path = "src/bin/gpu_optimized_tps.rs"
+required-features = ["gpu"]
+
+[[bin]]
+name = "gpu-pipelined-tps"
+path = "src/bin/gpu_pipelined_tps.rs"
+required-features = ["gpu"]
+
+[[bin]]
+name = "gpu-halo2-benchmark"
+path = "src/bin/gpu_halo2_benchmark.rs"
+required-features = ["gpu"]
+
+[[bin]]
+name = "k-ladder-stress"
+path = "src/bin/k_ladder_stress.rs"
+required-features = ["gpu"]
+
+[[bin]]
+name = "single-var-test"
+path = "src/bin/single_var_test.rs"
+required-features = ["gpu"]
+
 [features]
 default = []
 # Enable Halo2 ZK circuit - requires nightly Rust
@@ -134,6 +203,8 @@ server = ["dep:axum", "dep:tower", "dep:tower-http", "halo2"]
 gpu = ["dep:icicle-runtime", "dep:icicle-core", "dep:icicle-bn254", "halo2"]
 # Enable weight encryption for enterprise IP protection (sha2 always available)
 encryption = ["dep:aes-gcm", "dep:hkdf", "dep:getrandom"]
+# Enable DHAT heap profiling for stress tests
+dhat-heap = ["dep:dhat"]
 # Full production build with hardening (metrics built-in, no external deps)
 production = ["halo2", "server"]
 # Full production with GPU acceleration

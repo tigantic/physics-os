@@ -242,6 +242,9 @@ impl Circuit<Fr> for FluidEliteCircuit {
                     region.assign_advice(config.c, row, Value::known(Assigned::from(Fr::zero())));
                     row += 1;
                     
+                    // Track actual accumulated sum for witness generation
+                    let mut acc = Q16::zero();
+                    
                     for p in 0..d_in {
                         // Get sample values from MPS and MPO
                         let mps_val = if p < mps_core.d && mps_core.chi_left > 0 && mps_core.chi_right > 0 {
@@ -256,24 +259,15 @@ impl Circuit<Fr> for FluidEliteCircuit {
                             Q16::zero()
                         };
                         
-                        // Compute MAC: acc' = mpo_val * mps_val + acc
+                        // Compute MAC: acc' = acc + mpo_val * mps_val
                         let product = mpo_val.mul(mps_val);
+                        acc = acc + product;  // Properly accumulate
                         
-                        // Read what we assigned to c at prev row
-                        // For the first iteration, this is zero; for subsequent, it's the running sum
-                        let running_sum = if p == 0 {
-                            Q16::zero()
-                        } else {
-                            // This is a simplification - in practice we track the actual sum
-                            product
-                        };
-                        
-                        let new_acc = running_sum + product;
-                        
-                        // Assign: a = mpo_val, b = mps_val, c = new_acc
+                        // Assign: a = mpo_val, b = mps_val, c = acc
+                        // Constraint checks: a * b + c_prev = c
                         region.assign_advice(config.a, row, Value::known(q16_to_assigned(mpo_val)));
                         region.assign_advice(config.b, row, Value::known(q16_to_assigned(mps_val)));
-                        region.assign_advice(config.c, row, Value::known(q16_to_assigned(new_acc)));
+                        region.assign_advice(config.c, row, Value::known(q16_to_assigned(acc)));
                         
                         // Enable MAC constraint: a * b + c_prev = c
                         config.s_mac.enable(&mut region, row)?;

@@ -11,6 +11,30 @@ use crate::field::Q16;
 use crate::mpo::MPO;
 use crate::mps::{MPSCore, MPS};
 
+/// Error type for tensor operations
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum TensorOpError {
+    /// MPS and MPO have different number of sites
+    SiteMismatch { mps_sites: usize, mpo_sites: usize },
+    /// MPS states have different number of sites
+    MpsSiteMismatch { a_sites: usize, b_sites: usize },
+}
+
+impl std::fmt::Display for TensorOpError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::SiteMismatch { mps_sites, mpo_sites } => {
+                write!(f, "MPS sites ({}) != MPO sites ({})", mps_sites, mpo_sites)
+            }
+            Self::MpsSiteMismatch { a_sites, b_sites } => {
+                write!(f, "MPS A sites ({}) != MPS B sites ({})", a_sites, b_sites)
+            }
+        }
+    }
+}
+
+impl std::error::Error for TensorOpError {}
+
 /// Apply MPO to MPS, producing a new MPS with increased bond dimension
 ///
 /// Input dimensions:
@@ -21,11 +45,16 @@ use crate::mps::{MPSCore, MPS};
 ///   New MPS core: (χ_l × D_l, d_out, χ_r × D_r)
 ///
 /// Contraction: sum over d_in = physical input dimension
-pub fn apply_mpo(mps: &MPS, mpo: &MPO) -> MPS {
-    assert_eq!(
-        mps.num_sites, mpo.num_sites,
-        "MPS and MPO must have same number of sites"
-    );
+///
+/// # Errors
+/// Returns `TensorOpError::SiteMismatch` if MPS and MPO have different number of sites.
+pub fn apply_mpo(mps: &MPS, mpo: &MPO) -> Result<MPS, TensorOpError> {
+    if mps.num_sites != mpo.num_sites {
+        return Err(TensorOpError::SiteMismatch {
+            mps_sites: mps.num_sites,
+            mpo_sites: mpo.num_sites,
+        });
+    }
 
     let num_sites = mps.num_sites;
     let mut new_cores = Vec::with_capacity(num_sites);
@@ -70,10 +99,10 @@ pub fn apply_mpo(mps: &MPS, mpo: &MPO) -> MPS {
         new_cores.push(MPSCore::from_data(new_data, new_chi_left, new_d, new_chi_right));
     }
 
-    MPS {
+    Ok(MPS {
         cores: new_cores,
         num_sites,
-    }
+    })
 }
 
 /// Add two MPS using block-diagonal direct sum
@@ -191,9 +220,9 @@ pub fn fluidelite_step(
     // Embed token
     let token_mps = MPS::embed_token(token_id, num_sites);
 
-    // Apply MPOs
-    let h_term = apply_mpo(context, w_hidden);
-    let x_term = apply_mpo(&token_mps, w_input);
+    // Apply MPOs (unwrap safe: dimensions validated at construction)
+    let h_term = apply_mpo(context, w_hidden).expect("MPS/MPO site mismatch in h_term");
+    let x_term = apply_mpo(&token_mps, w_input).expect("MPS/MPO site mismatch in x_term");
 
     // Add
     let mut combined = add_mps(&h_term, &x_term);
@@ -245,18 +274,29 @@ pub fn readout(mps: &MPS, readout_weights: &[Q16], vocab_size: usize) -> Vec<Q16
     logits
 }
 
-/// Count the number of arithmetic operations for constraint estimation
-pub fn count_ops(mps_chi: usize, mpo_d: usize, d_phys: usize, num_sites: usize) -> usize {
+/// Count the number of arithmetic operations for constraint estimation.
+/// 
+/// Returns `None` if the calculation would overflow `usize`.
+/// Use `count_ops_unchecked` for hot paths where overflow is guaranteed not to occur.
+pub fn count_ops(mps_chi: usize, mpo_d: usize, d_phys: usize, num_sites: usize) -> Option<usize> {
     // MPO × MPS: For each output element, we sum over d_phys
     // Output size per site: (χ × D) × d_phys × (χ × D)
-    let mpo_mps_ops =
-        num_sites * (mps_chi * mpo_d) * d_phys * (mps_chi * mpo_d) * d_phys;
+    let chi_d = mps_chi.checked_mul(mpo_d)?;
+    let chi_d_squared = chi_d.checked_mul(chi_d)?;
+    let d_phys_squared = d_phys.checked_mul(d_phys)?;
+    let per_site = chi_d_squared.checked_mul(d_phys_squared)?;
+    let mpo_mps_ops = num_sites.checked_mul(per_site)?;
 
     // Addition: just copying, no arithmetic
-    let add_ops = 0;
-
     // Total multiplications (each becomes ~1 constraint in Halo2)
-    mpo_mps_ops + add_ops
+    Some(mpo_mps_ops)
+}
+
+/// Count ops without overflow checking (for hot paths with known-safe inputs)
+#[inline]
+pub fn count_ops_unchecked(mps_chi: usize, mpo_d: usize, d_phys: usize, num_sites: usize) -> usize {
+    let chi_d = mps_chi * mpo_d;
+    num_sites * chi_d * chi_d * d_phys * d_phys
 }
 
 #[cfg(test)]
@@ -269,7 +309,7 @@ mod tests {
         let mps = MPS::embed_token(5, 4);
         let identity = MPO::identity(4, 2);
 
-        let result = apply_mpo(&mps, &identity);
+        let result = apply_mpo(&mps, &identity).expect("apply_mpo failed");
 
         // Check dimensions preserved
         assert_eq!(result.num_sites, 4);
@@ -315,7 +355,7 @@ mod tests {
     #[test]
     fn test_op_count() {
         // L=16, χ=64, D=1, d=2
-        let ops = count_ops(64, 1, 2, 16);
+        let ops = count_ops(64, 1, 2, 16).expect("count_ops should not overflow");
         println!("Operations: {}", ops);
 
         // Should be around 131k
