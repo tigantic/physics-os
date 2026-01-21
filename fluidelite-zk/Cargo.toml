@@ -119,6 +119,16 @@ rayon = "1.8"
 # sysinfo for memory monitoring in stress tests
 sysinfo = "0.30"
 
+# AWS SDK for S3 byte-range streaming
+aws-config = { version = "1.5", optional = true }
+aws-sdk-s3 = { version = "1.65", optional = true }
+
+# Chrono for timestamps
+chrono = { version = "0.4", optional = true }
+
+# libc for mmap (Unix)
+libc = "0.2"
+
 [dev-dependencies]
 criterion = { version = "0.5", features = ["html_reports"] }
 proptest = "1.4"
@@ -191,6 +201,15 @@ name = "single-var-test"
 path = "src/bin/single_var_test.rs"
 required-features = ["gpu"]
 
+[[bin]]
+name = "fluid-ingest"
+path = "src/bin/fluid_ingest.rs"
+
+[[bin]]
+name = "fluid-ingest-s3"
+path = "src/bin/fluid_ingest.rs"
+required-features = ["s3"]
+
 [features]
 default = []
 # Enable Halo2 ZK circuit - requires nightly Rust
@@ -211,3 +230,5 @@ production = ["halo2", "server"]
 production-gpu = ["production", "gpu"]
 # Enterprise build with encryption
 enterprise = ["production", "encryption"]
+# S3 byte-range streaming for cloud ingest (zero egress)
+s3 = ["dep:aws-config", "dep:aws-sdk-s3", "dep:chrono"]
