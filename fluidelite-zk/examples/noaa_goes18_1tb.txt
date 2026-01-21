@@ -1,0 +1,10 @@
+
+══════════════════════════════════════════════════════════════════════════
+  FluidElite Streaming Ingest Engine v2.0.0
+  Zero-Expansion Protocol | Petabyte-Scale QTT Compression
+══════════════════════════════════════════════════════════════════════════
+
+  MODE: QTT Verify
+  INPUT: fluidelite-zk/examples/noaa_goes18_1tb.qtt
+
+Error: Custom { kind: InvalidData, error: "Invalid QTT file" }
