@@ -64,6 +64,21 @@ from tensornet.genesis.rmt import (
     resolvent_trace,
 )
 
+# Layer 23: Tropical Geometry
+from tensornet.genesis.tropical import (
+    TropicalSemiring,
+    MinPlusSemiring,
+    MaxPlusSemiring,
+    TropicalMatrix,
+    tropical_matmul,
+    tropical_power,
+    tropical_kleene_star,
+    all_pairs_shortest_path,
+    floyd_warshall_tropical,
+    bellman_ford_tropical,
+    tropical_eigenvalue,
+)
+
 __all__ = [
     # Layer 20: Optimal Transport
     "QTTSinkhorn",
@@ -89,4 +104,16 @@ __all__ = [
     "spectral_density",
     "stieltjes_transform",
     "resolvent_trace",
+    # Layer 23: Tropical Geometry
+    "TropicalSemiring",
+    "MinPlusSemiring",
+    "MaxPlusSemiring",
+    "TropicalMatrix",
+    "tropical_matmul",
+    "tropical_power",
+    "tropical_kleene_star",
+    "all_pairs_shortest_path",
+    "floyd_warshall_tropical",
+    "bellman_ford_tropical",
+    "tropical_eigenvalue",
 ]
