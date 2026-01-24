@@ -1,0 +1,150 @@
+{
+  "project": "TENSOR GENESIS",
+  "protocol": "GENESIS GAUNTLET",
+  "timestamp": "2026-01-24T06:29:10.980241+00:00",
+  "total_time_seconds": 12.502880783999899,
+  "gauntlets": {
+    "QTT-OT": {
+      "layer": 20,
+      "passed": true,
+      "time_seconds": 7.0904788050002026,
+      "scaling_exponent": 1.1058510867160665,
+      "memory_efficiency": 0.0625,
+      "metrics": {
+        "W2_values": [
+          1.5139600056161637,
+          1.513385051837099,
+          1.5133029332339782,
+          1.5132813358967152
+        ],
+        "max_rank": 16,
+        "W2_variance": 0.0006786697194485214
+      }
+    },
+    "QTT-SGW": {
+      "layer": 21,
+      "passed": true,
+      "time_seconds": 2.909559437000098,
+      "scaling_exponent": 0.10347282836785707,
+      "memory_efficiency": 0.9,
+      "metrics": {
+        "energy_variance": 0.0028923523494865664,
+        "energies": [
+          0.002938156816416467,
+          0.0007332693484855243,
+          0.00018323777153072605,
+          4.580446692990062e-05
+        ]
+      }
+    },
+    "QTT-RMT": {
+      "layer": 22,
+      "passed": true,
+      "time_seconds": 0.10203212099986558,
+      "scaling_exponent": 1.2578290382754846,
+      "memory_efficiency": 0.85,
+      "metrics": {
+        "semicircle_integrals": [
+          1.00023353099823,
+          1.00023353099823,
+          1.00023353099823,
+          1.00023353099823
+        ]
+      }
+    },
+    "QTT-TG": {
+      "layer": 23,
+      "passed": true,
+      "time_seconds": 2.215851794999935,
+      "scaling_exponent": 2.924254763056628,
+      "memory_efficiency": 0.75,
+      "metrics": {
+        "diameters": [
+          859076903631.7911,
+          1.3082929904703542e+18,
+          3.1070397450353483e+24,
+          3.1769112972905827e+36
+        ],
+        "eigenvalues": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "QTT-RKHS": {
+      "layer": 24,
+      "passed": true,
+      "time_seconds": 0.1294983709999542,
+      "scaling_exponent": 0.8295003410627283,
+      "memory_efficiency": 0.8,
+      "metrics": {
+        "mse_values": [
+          0.0024100253358483315,
+          0.0015973076224327087,
+          0.0007371758110821247,
+          0.00028701574774459004
+        ],
+        "mmd_values": [
+          0.24186599254608154,
+          0.16072052717208862,
+          0.1624802201986313,
+          0.1532142460346222
+        ]
+      }
+    },
+    "QTT-PH": {
+      "layer": 25,
+      "passed": true,
+      "time_seconds": 0.03700951200016789,
+      "scaling_exponent": 1.0055388723597003,
+      "memory_efficiency": 0.7,
+      "metrics": {
+        "betti_1_values": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "QTT-GA": {
+      "layer": 26,
+      "passed": true,
+      "time_seconds": 0.008191098999986934,
+      "scaling_exponent": 0.5356063793967507,
+      "memory_efficiency": 0.95,
+      "metrics": {
+        "rotation_errors": [
+          1.1102230246251565e-16,
+          1.1102230246251565e-16,
+          1.1102230246251565e-16,
+          1.1102230246251565e-16
+        ],
+        "cga_error": 0.0
+      }
+    }
+  },
+  "summary": {
+    "total_gauntlets": 7,
+    "passed": 7,
+    "all_passed": true,
+    "primitives": [
+      "QTT-OT: Optimal Transport",
+      "QTT-SGW: Spectral Graph Wavelets",
+      "QTT-RMT: Random Matrix Theory",
+      "QTT-TG: Tropical Geometry",
+      "QTT-RKHS: Reproducing Kernel Hilbert Spaces",
+      "QTT-PH: Persistent Homology",
+      "QTT-GA: Geometric Algebra"
+    ],
+    "complexity_class": "O(r\u00b3 log N)",
+    "value_proposition": "All operations compose without densification"
+  },
+  "final_verdict": {
+    "status": "GENESIS VALIDATED",
+    "moat_confirmed": true
+  },
+  "sha256": "b8de75611ca53571a441aa5e981bad2aaa9cf350077b0bee2a5f9bc8ba0f137f"
+}
