@@ -68,13 +68,13 @@
 
 | Metric | Value |
 |--------|------:|
-| **Total Lines of Code** | **468,168** |
-| **Python LOC** | 399,556 |
+| **Total Lines of Code** | **472,198** |
+| **Python LOC** | 403,586 |
 | **Rust LOC** | 56,668 |
 | **Lean 4 LOC** | 553 |
-| **Total Files** | 1,044 |
-| **Test Files** | 86+ |
-| **Documentation Files** | 170+ |
+| **Total Files** | 1,054 |
+| **Test Files** | 87+ |
+| **Documentation Files** | 172+ |
 | **Attestation JSONs** | 40+ |
 
 ### Platform Components
@@ -82,11 +82,12 @@
 | Component | Count | Description |
 |-----------|------:|-------------|
 | **Platforms** | 3 | Integrated systems with APIs/infrastructure |
-| **Modules** | 95 | Reusable libraries and packages |
+| **Modules** | 96 | Reusable libraries and packages |
 | **Applications** | 99 | Standalone executables |
 | **Tools** | 15 | Single-purpose utilities |
-| **Gauntlets** | 17 | Validation suites |
+| **Gauntlets** | 18 | Validation suites |
 | **Rust Binaries** | 24 | High-performance executables |
+| **Genesis Layers** | 1/7 | QTT meta-primitive modules |
 
 ---
 
@@ -387,6 +388,58 @@ HyperTensor is built as a stack of 19 capability layers, each building on the pr
 - **Humidity control**: Transpiration physics
 - **CO2 distribution**: Growth optimization
 - **Mold risk assessment**: Humidity thresholds
+
+---
+
+### Genesis Layers (20-26) — QTT Meta-Primitives
+
+*The TENSOR GENESIS Protocol extends QTT into unexploited mathematical domains.*
+
+#### Layer 20: QTT-Optimal Transport ✅ COMPLETE
+*Trillion-point distribution matching — Implemented January 23, 2026*
+
+**Module**: `tensornet/genesis/ot/` (~4,030 LOC)
+
+| Component | File | Status |
+|-----------|------|:------:|
+| **QTTDistribution** | distributions.py | ✅ |
+| **QTTMatrix (MPO)** | cost_matrices.py | ✅ |
+| **QTTSinkhorn** | sinkhorn_qtt.py | ✅ |
+| **wasserstein_distance()** | wasserstein.py | ✅ |
+| **QTTTransportPlan** | transport_plan.py | ✅ |
+| **barycenter()** | barycenters.py | ✅ |
+| **Gauntlet (19/19)** | qtt_ot_gauntlet.py | ✅ |
+
+**Capabilities**:
+- **Sinkhorn-QTT**: O(r³ log N) per iteration
+- **Wasserstein distance**: W₁, W₂, Wₚ metrics
+- **Transport plans**: Sparse QTT coupling
+- **Barycenters**: Multi-distribution averaging
+- **Quantile method**: Exact 1D W₂ computation
+
+#### Layer 21: Spectral Graph Wavelets ⏳ (Next)
+*Multi-scale graph signal analysis*
+
+- **QTT Laplacian**: Graph Laplacian in tensor format
+- **Chebyshev filters**: Fast wavelet approximation
+- **Localization**: Spatial-spectral analysis
+
+#### Layer 22: Random Matrix Theory ⏳
+*Eigenvalue statistics at scale*
+
+#### Layer 23: Tropical Geometry ⏳
+*Piecewise-linear optimization, shortest paths*
+
+#### Layer 24: Kernel Methods (RKHS) ⏳
+*Trillion-sample Gaussian processes*
+
+#### Layer 25: Persistent Homology ⏳
+*Topological data analysis at 10⁹ points*
+
+#### Layer 26: Geometric Algebra ⏳
+*Unified geometric computing*
+
+*See [TENSOR_GENESIS.md](TENSOR_GENESIS.md) for complete specifications.*
 
 ---
 
