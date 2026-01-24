@@ -99,6 +99,26 @@ from tensornet.genesis.rkhs import (
     mmd_test,
 )
 
+# Layer 25: Persistent Homology
+from tensornet.genesis.topology import (
+    Simplex,
+    SimplicialComplex,
+    RipsComplex,
+    VietorisRipsComplex,
+    CechComplex,
+    boundary_matrix,
+    coboundary_matrix,
+    QTTBoundaryOperator,
+    betti_numbers_from_boundary,
+    PersistencePair,
+    PersistenceDiagram,
+    compute_persistence,
+    bottleneck_distance,
+    wasserstein_distance_diagram,
+    persistence_landscape,
+    persistence_image,
+)
+
 __all__ = [
     # Layer 20: Optimal Transport
     "QTTSinkhorn",
@@ -153,4 +173,21 @@ __all__ = [
     "KernelRidgeRegressor",
     "maximum_mean_discrepancy",
     "mmd_test",
+    # Layer 25: Persistent Homology
+    "Simplex",
+    "SimplicialComplex",
+    "RipsComplex",
+    "VietorisRipsComplex",
+    "CechComplex",
+    "boundary_matrix",
+    "coboundary_matrix",
+    "QTTBoundaryOperator",
+    "betti_numbers_from_boundary",
+    "PersistencePair",
+    "PersistenceDiagram",
+    "compute_persistence",
+    "bottleneck_distance",
+    "wasserstein_distance_diagram",
+    "persistence_landscape",
+    "persistence_image",
 ]
