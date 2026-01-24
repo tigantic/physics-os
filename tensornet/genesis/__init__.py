@@ -51,6 +51,19 @@ from tensornet.genesis.sgw import (
     BandPassFilter,
 )
 
+# Layer 22: Random Matrix Theory
+from tensornet.genesis.rmt import (
+    QTTEnsemble,
+    QTTResolvent,
+    SpectralDensity,
+    WignerSemicircle,
+    MarchenkoPastur,
+    FreeConvolution,
+    spectral_density,
+    stieltjes_transform,
+    resolvent_trace,
+)
+
 __all__ = [
     # Layer 20: Optimal Transport
     "QTTSinkhorn",
@@ -66,4 +79,14 @@ __all__ = [
     "LowPassFilter",
     "HighPassFilter",
     "BandPassFilter",
+    # Layer 22: Random Matrix Theory
+    "QTTEnsemble",
+    "QTTResolvent",
+    "SpectralDensity",
+    "WignerSemicircle",
+    "MarchenkoPastur",
+    "FreeConvolution",
+    "spectral_density",
+    "stieltjes_transform",
+    "resolvent_trace",
 ]
