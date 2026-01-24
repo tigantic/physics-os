@@ -352,7 +352,8 @@ class SolidityParser:
         """Extract functions using regex."""
         functions = []
         
-        func_pattern = r"function\s+(\w+)\s*\(([^)]*)\)\s*(public|external|internal|private)?\s*(pure|view|payable)?\s*([^{;]*)"
+        # Find function signatures first
+        func_pattern = r"function\s+(\w+)\s*\(([^)]*)\)\s*(public|external|internal|private)?\s*(pure|view|payable)?\s*(?:returns\s*\([^)]*\))?\s*(?:[\w\s,()]*)\s*\{"
         
         for match in re.finditer(func_pattern, body):
             name = match.group(1)
@@ -370,12 +371,18 @@ class SolidityParser:
                     elif len(parts) == 1:
                         parameters.append(Parameter(name="", type_name=parts[0]))
             
+            # Find the full function body including braces
+            func_start = match.start()
+            brace_start = match.end() - 1
+            brace_end = self._find_matching_brace(body, brace_start)
+            full_source = body[func_start:brace_end + 1]
+            
             functions.append(Function(
                 name=name,
                 visibility=visibility,
                 mutability=mutability,
                 parameters=parameters,
-                source=match.group(0),
+                source=full_source,
             ))
         
         return functions
@@ -597,13 +604,22 @@ class SolidityParser:
             if re.search(rf"\b{re.escape(var_name)}\s*=[^=]", func.source):
                 func.writes_state.append(var_name)
         
-        # Find external calls
-        external_pattern = r"(\w+)\.(\w+)\s*\("
-        for match in re.finditer(external_pattern, func.source):
-            target = match.group(1)
-            method = match.group(2)
-            if target not in ("abi", "msg", "block", "tx", "type"):
-                func.external_calls.append(f"{target}.{method}")
+        # Find external calls - multiple patterns
+        external_patterns = [
+            r"(\w+)\.(\w+)\s*\(",              # target.method(
+            r"(\w+)\.(\w+)\s*\{[^}]*\}\s*\(",  # target.method{value: x}(
+            r"(\w+)\.(call|delegatecall|staticcall)\s*\{",  # target.call{
+            r"(\w+)\.(call|delegatecall|staticcall)\s*\(",  # target.call(
+        ]
+        
+        for pattern in external_patterns:
+            for match in re.finditer(pattern, func.source):
+                target = match.group(1)
+                method = match.group(2)
+                if target not in ("abi", "msg", "block", "tx", "type", "address"):
+                    call_str = f"{target}.{method}"
+                    if call_str not in func.external_calls:
+                        func.external_calls.append(call_str)
 
 
 # Convenience function

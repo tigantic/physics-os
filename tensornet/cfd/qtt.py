@@ -143,8 +143,14 @@ def tt_svd(
         m, n = current.shape
         
         # Choose SVD algorithm based on matrix size
-        # rSVD is faster for large matrices when we only need top-k singular values
-        use_rsvd = min(m, n) > rsvd_threshold and chi_max < min(m, n) // 2
+        # rSVD is faster when:
+        # 1. Matrix is large enough that rSVD overhead is worth it
+        # 2. One dimension is huge (cuSOLVER limits, memory bandwidth)
+        # 3. We only need top-k singular values (chi_max << min(m,n))
+        # For thin matrices (small m, huge n), rSVD's random projection is efficient
+        large_dimension = max(m, n) > 50_000  # If any dimension > 50K, use rSVD
+        beneficial_ratio = min(m, n) > rsvd_threshold and chi_max < min(m, n) // 2
+        use_rsvd = large_dimension or beneficial_ratio
         
         if use_rsvd:
             # Randomized SVD (Halko-Martinsson-Tropp): O(m·n·k) instead of O(m·n·min(m,n))

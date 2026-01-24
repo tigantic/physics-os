@@ -67,6 +67,16 @@ Examples:
     scan_parser = subparsers.add_parser("scan", help="Quick scan without verification")
     scan_parser.add_argument("source", help="Path to Solidity source file")
     
+    # Circom hunt command (NEW)
+    circom_parser = subparsers.add_parser("circom", help="Hunt Circom ZK circuits for vulnerabilities")
+    circom_parser.add_argument("source", help="Path to .circom file or directory")
+    circom_parser.add_argument("--focus", "-f", default="under-constrained",
+                               choices=["under-constrained", "all"],
+                               help="Vulnerability focus (default: under-constrained)")
+    circom_parser.add_argument("--output", "-o", help="Output file for report")
+    circom_parser.add_argument("--json", action="store_true", help="Output as JSON")
+    circom_parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
+    
     args = parser.parse_args()
     
     if not args.command:
@@ -85,6 +95,8 @@ Examples:
         run_hunt(args)
     elif args.command == "scan":
         run_scan(args)
+    elif args.command == "circom":
+        run_circom_hunt(args)
 
 
 def run_hunt(args):
@@ -212,5 +224,202 @@ def run_scan(args):
         print("\n✓ No obvious high-risk patterns")
 
 
-if __name__ == "__main__":
-    main()
+def run_circom_hunt(args):
+    """Hunt Circom circuits for vulnerabilities."""
+    from tensornet.oracle.parsing.circom_parser import hunt_circom
+    import json
+    
+    print("\n" + "=" * 60)
+    print("🔮 ORACLE: Circom Circuit Vulnerability Hunter")
+    print("=" * 60)
+    print(f"Target: {args.source}")
+    print(f"Focus: {args.focus}")
+    print()
+    
+    # Run the hunt
+    findings = hunt_circom(args.source, focus=args.focus)
+    
+    # Output results
+    if not findings:
+        print("✅ No vulnerabilities found!")
+        print("\nCircuits appear properly constrained.")
+        return
+    
+    # Group by severity
+    critical = [f for f in findings if f["severity"] == "CRITICAL"]
+    high = [f for f in findings if f["severity"] == "HIGH"]
+    medium = [f for f in findings if f["severity"] == "MEDIUM"]
+    low = [f for f in findings if f["severity"] == "LOW"]
+    info = [f for f in findings if f["severity"] == "INFO"]
+    
+    print(f"🔍 Found {len(findings)} potential issues:\n")
+    print(f"   🚨 CRITICAL: {len(critical)}")
+    print(f"   ⚠️  HIGH:     {len(high)}")
+    print(f"   ⚡ MEDIUM:   {len(medium)}")
+    print(f"   ℹ️  LOW:      {len(low)}")
+    print(f"   📝 INFO:     {len(info)}")
+    print()
+    
+    # Print exploitable findings
+    exploitable = [f for f in findings if f.get("exploitable")]
+    if exploitable:
+        print("=" * 60)
+        print("⚡ EXPLOITABLE VULNERABILITIES")
+        print("=" * 60)
+        
+        for finding in exploitable:
+            severity_emoji = {"CRITICAL": "🚨", "HIGH": "⚠️"}.get(finding["severity"], "⚡")
+            print(f"\n{severity_emoji} [{finding['severity']}] {finding['type'].upper()}")
+            print(f"   File: {finding.get('file', 'unknown')}")
+            print(f"   Template: {finding['template']}")
+            print(f"   Signal: {finding['signal']} ({finding.get('signal_type', 'unknown')})")
+            print(f"   Line: {finding['line']}")
+            print(f"   Description: {finding['description']}")
+            
+            # Exploitation guidance
+            if finding["type"] == "under_constrained":
+                print("\n   💀 EXPLOITATION:")
+                print("      The prover can set this signal to ANY value that satisfies")
+                print("      the other constraints. This allows proof forgery if the signal")
+                print("      affects the circuit's output or nullifier computation.")
+            elif finding["type"] == "unconstrained_output":
+                print("\n   💀 EXPLOITATION:")
+                print("      OUTPUT signal has no constraints! The prover can claim ANY output")
+                print("      value. This is a COMPLETE circuit break - proofs are meaningless.")
+        
+        print()
+    
+    # Print all findings if verbose
+    if args.verbose:
+        print("=" * 60)
+        print("ALL FINDINGS")
+        print("=" * 60)
+        
+        for finding in findings:
+            severity_emoji = {
+                "CRITICAL": "🚨",
+                "HIGH": "⚠️",
+                "MEDIUM": "⚡",
+                "LOW": "ℹ️",
+                "INFO": "📝"
+            }.get(finding["severity"], "❓")
+            
+            print(f"\n{severity_emoji} [{finding['severity']}] {finding['type']}")
+            print(f"   Template: {finding['template']}")
+            print(f"   Signal: {finding['signal']}")
+            print(f"   Line: {finding['line']}")
+            print(f"   {finding['description']}")
+    
+    # Output to file if requested
+    if args.output:
+        output_path = Path(args.output)
+        
+        if args.json:
+            with open(output_path, "w") as f:
+                json.dump(findings, f, indent=2)
+            print(f"\n📄 JSON report saved to: {output_path}")
+        else:
+            # Generate markdown report
+            report = _generate_circom_report(findings, args.source)
+            with open(output_path, "w") as f:
+                f.write(report)
+            print(f"\n📄 Report saved to: {output_path}")
+    
+    # JSON to stdout if requested
+    if args.json and not args.output:
+        print("\n" + json.dumps(findings, indent=2))
+    
+    # Summary
+    print("\n" + "=" * 60)
+    if exploitable:
+        print(f"🎯 {len(exploitable)} EXPLOITABLE vulnerabilities found!")
+        print("   These allow proof forgery - submit to bug bounty!")
+    else:
+        print("✓ No directly exploitable issues found")
+        print(f"  ({len(findings)} lower-severity items to review)")
+
+
+def _generate_circom_report(findings: list, source: str) -> str:
+    """Generate a markdown report for Circom findings."""
+    exploitable = [f for f in findings if f.get("exploitable")]
+    
+    report = f"""# ORACLE Circom Circuit Vulnerability Report
+
+**Target:** `{source}`
+**Date:** {__import__('datetime').datetime.now().isoformat()[:10]}
+**Focus:** Under-constrained signals
+
+---
+
+## Executive Summary
+
+ORACLE analyzed the Circom circuits and found **{len(findings)}** potential issues,
+of which **{len(exploitable)}** are exploitable.
+
+| Severity | Count |
+|----------|-------|
+| 🚨 CRITICAL | {len([f for f in findings if f["severity"] == "CRITICAL"])} |
+| ⚠️ HIGH | {len([f for f in findings if f["severity"] == "HIGH"])} |
+| ⚡ MEDIUM | {len([f for f in findings if f["severity"] == "MEDIUM"])} |
+| ℹ️ LOW | {len([f for f in findings if f["severity"] == "LOW"])} |
+| 📝 INFO | {len([f for f in findings if f["severity"] == "INFO"])} |
+
+---
+
+## Exploitable Vulnerabilities
+
+"""
+    
+    for i, finding in enumerate(exploitable, 1):
+        report += f"""
+### {i}. {finding['type'].replace('_', ' ').title()} in `{finding['template']}`
+
+**Severity:** {finding['severity']}
+**Signal:** `{finding['signal']}` ({finding.get('signal_type', 'unknown')})
+**Line:** {finding['line']}
+**File:** `{finding.get('file', 'unknown')}`
+
+**Description:**
+{finding['description']}
+
+**Exploitation:**
+The prover can set `{finding['signal']}` to an arbitrary value because it is not 
+constrained by any `===` statement. This allows:
+- Proof forgery: Generate valid proofs for false statements
+- Double-spending: If used in nullifier computation
+- Identity spoofing: If used in commitment verification
+
+**Remediation:**
+Add explicit constraint: `{finding['signal']} === <expected_computation>;`
+
+---
+"""
+    
+    if not exploitable:
+        report += "\n*No directly exploitable vulnerabilities found.*\n"
+    
+    report += """
+## All Findings
+
+"""
+    
+    for finding in findings:
+        report += f"- **[{finding['severity']}]** `{finding['signal']}` in `{finding['template']}`: {finding['description']}\n"
+    
+    report += """
+
+---
+
+## About ORACLE
+
+ORACLE (Offensive Reasoning and Assumption-Challenging Logic Engine) is an automated
+vulnerability hunter that analyzes smart contracts and ZK circuits for security issues.
+
+For Circom circuits, ORACLE focuses on **under-constrained signals** - the most common
+and dangerous class of ZK circuit vulnerabilities. An under-constrained signal can be
+set to any value by the prover, breaking the soundness of the proof system.
+
+*Report generated by ORACLE v1.0*
+"""
+    
+    return report

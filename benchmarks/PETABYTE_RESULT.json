@@ -1,0 +1,33 @@
+{
+  "benchmark": "FLUID_BLOCK_QTT_ACTUAL_TESTS",
+  "timestamp": "2026-01-22T00:00:00Z",
+  "note": "ONLY real tests with MD5-verified bit-perfect reconstruction",
+  "tests": [
+    {
+      "name": "structured_10mb",
+      "input_bytes": 10485760,
+      "output_bytes": 1633,
+      "compression_ratio": 6421.0,
+      "md5_original": "8b8378787c0925f42ccb829f6cc2fb97",
+      "md5_recovered": "8b8378787c0925f42ccb829f6cc2fb97",
+      "bit_perfect": true,
+      "data_type": "repeating 'A' characters"
+    },
+    {
+      "name": "random_1mb",
+      "input_bytes": 1048576,
+      "output_bytes": 1660833,
+      "compression_ratio": 0.63,
+      "md5_original": "2659493010a2a4c42bd39097923e156a",
+      "md5_recovered": "2659493010a2a4c42bd39097923e156a",
+      "bit_perfect": true,
+      "data_type": "urandom bytes",
+      "honest_note": "Random data EXPANDS - this is correct behavior"
+    }
+  ],
+  "pending_tests": [
+    "150MB multi-block satellite synthetic",
+    "real-world NetCDF/HDF5",
+    "S3 streaming byte-range extraction"
+  ]
+}

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from typing import Optional
 
 from tensornet.oracle.core.types import (
@@ -113,19 +114,96 @@ class ImplicitExtractor:
         # Pattern-based detection (fast, no LLM needed)
         
         # 1. External calls without reentrancy guard
-        if (func.external_calls and 
-            "nonReentrant" not in func.modifiers and
-            "ReentrancyGuard" not in " ".join(contract.inherits)):
+        # Check both func.external_calls and raw .call patterns
+        has_external_call = bool(func.external_calls)
+        has_low_level_call = any(
+            pattern in source.lower() 
+            for pattern in [".call(", ".call{", ".delegatecall(", ".delegatecall{"]
+        )
+        has_reentrancy_guard = (
+            "nonReentrant" in func.modifiers or
+            "ReentrancyGuard" in " ".join(contract.inherits) or
+            "nonreentrant" in source.lower()
+        )
+        
+        if (has_external_call or has_low_level_call) and not has_reentrancy_guard:
             assumptions.append(Assumption(
                 id=self._next_id(),
                 type=AssumptionType.IMPLICIT,
                 source=func.name,
                 statement="No reentrancy during external calls",
                 formal="∀ call ∈ external_calls: no_callback(call)",
-                confidence=0.9,
+                confidence=0.95,  # HIGH confidence - this is a critical assumption
             ))
+            
+            # Additional: Check if state is written AFTER external call (classic reentrancy)
+            if has_low_level_call:
+                # Find the call position
+                patterns = [".call(", ".call{", ".delegatecall(", ".delegatecall{"]
+                positions = [source.find(p) for p in patterns]
+                call_pos = max((p for p in positions if p >= 0), default=-1)
+                
+                if call_pos > 0:
+                    # Skip past the call statement (find next semicolon)
+                    semicolon_pos = source.find(";", call_pos)
+                    if semicolon_pos > 0:
+                        after_call = source[semicolon_pos + 1:]
+                        # Check for state writes (including mapping/array assignments)
+                        state_write_pattern = r"\w+\[.+\]\s*=\s*[^=]|\w+\s*=\s*[^=]"
+                        if re.search(state_write_pattern, after_call):
+                            assumptions.append(Assumption(
+                                id=self._next_id(),
+                                type=AssumptionType.IMPLICIT,
+                                source=func.name,
+                                statement="⚠️ CEI VIOLATION: State updated AFTER external call - REENTRANCY RISK",
+                                formal="⚠️ CRITICAL: external_call() → state_write violates Checks-Effects-Interactions",
+                                confidence=0.99,  # EXTREMELY HIGH - classic reentrancy pattern
+                            ))
         
-        # 2. Token transfers without balance checks
+        # 2. Access control - state-changing functions without auth
+        is_state_changing = (
+            func.writes_state or
+            ".transfer(" in source or
+            ".call{" in source or
+            "selfdestruct" in source.lower()
+        )
+        has_access_control = (
+            "onlyOwner" in " ".join(func.modifiers) or
+            "onlyAdmin" in " ".join(func.modifiers) or
+            "require(msg.sender ==" in source or
+            "require(msg.sender==" in source or
+            "if (msg.sender !=" in source or
+            "_checkOwner" in source or
+            "Ownable" in " ".join(contract.inherits) or
+            "AccessControl" in " ".join(contract.inherits)
+        )
+        
+        if is_state_changing and not has_access_control and func.visibility in ("external", "public"):
+            # Check for sensitive operations
+            sensitive_ops = [
+                ("owner", "owner modification"),
+                ("admin", "admin modification"),
+                ("withdraw", "fund withdrawal"),
+                ("transfer", "token transfer"),
+                ("mint", "token minting"),
+                ("burn", "token burning"),
+                ("pause", "contract pause"),
+                ("upgrade", "contract upgrade"),
+                ("set", "parameter setting"),
+            ]
+            for keyword, desc in sensitive_ops:
+                if keyword in func.name.lower():
+                    assumptions.append(Assumption(
+                        id=self._next_id(),
+                        type=AssumptionType.IMPLICIT,
+                        source=func.name,
+                        statement=f"⚠️ MISSING ACCESS CONTROL: {desc} without authorization check",
+                        formal=f"⚠️ CRITICAL: {func.name}() modifies state without msg.sender verification",
+                        confidence=0.97,
+                    ))
+                    break
+        
+        # 3. Token transfers without balance checks
         if ".transfer(" in source or ".safeTransfer(" in source:
             if "balanceOf" not in source:
                 assumptions.append(Assumption(
@@ -137,7 +215,7 @@ class ImplicitExtractor:
                     confidence=0.8,
                 ))
         
-        # 3. Division without zero check
+        # 4. Division without zero check
         if "/" in source:
             # Check if divisor is checked
             div_pattern = r'/\s*(\w+)'

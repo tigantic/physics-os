@@ -36,6 +36,11 @@ path = "src/bin/gpu_test.rs"
 required-features = ["gpu"]
 
 [[bin]]
+name = "qtt-zero-expansion"
+path = "src/bin/qtt_zero_expansion.rs"
+required-features = ["gpu"]
+
+[[bin]]
 name = "test-hybrid-zk"
 path = "src/bin/test_hybrid_zk.rs"
 
@@ -123,6 +128,9 @@ sysinfo = "0.30"
 aws-config = { version = "1.5", optional = true }
 aws-sdk-s3 = { version = "1.65", optional = true }
 
+# Zstd compression for residual hybrid protocol
+zstd = { version = "0.13", optional = true }
+
 # Chrono for timestamps
 chrono = { version = "0.4", optional = true }
 
@@ -204,10 +212,16 @@ required-features = ["gpu"]
 [[bin]]
 name = "fluid-ingest"
 path = "src/bin/fluid_ingest.rs"
+required-features = ["s3"]
 
 [[bin]]
-name = "fluid-ingest-s3"
-path = "src/bin/fluid_ingest.rs"
+name = "fluid-s3-native"
+path = "src/bin/fluid_s3_native.rs"
+required-features = ["s3"]
+
+[[bin]]
+name = "fluid-block"
+path = "src/bin/fluid_block.rs"
 required-features = ["s3"]
 
 [features]
@@ -231,4 +245,4 @@ production-gpu = ["production", "gpu"]
 # Enterprise build with encryption
 enterprise = ["production", "encryption"]
 # S3 byte-range streaming for cloud ingest (zero egress)
-s3 = ["dep:aws-config", "dep:aws-sdk-s3", "dep:chrono"]
+s3 = ["dep:aws-config", "dep:aws-sdk-s3", "dep:chrono", "dep:zstd"]
