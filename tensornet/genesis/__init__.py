@@ -79,6 +79,26 @@ from tensornet.genesis.tropical import (
     tropical_eigenvalue,
 )
 
+# Layer 24: Kernel Methods (RKHS)
+from tensornet.genesis.rkhs import (
+    Kernel,
+    RBFKernel,
+    MaternKernel,
+    PolynomialKernel,
+    LinearKernel,
+    PeriodicKernel,
+    QTTKernelMatrix,
+    kernel_matrix,
+    GPPrior,
+    GPPosterior,
+    GPRegressor,
+    SparseGP,
+    kernel_ridge_regression,
+    KernelRidgeRegressor,
+    maximum_mean_discrepancy,
+    mmd_test,
+)
+
 __all__ = [
     # Layer 20: Optimal Transport
     "QTTSinkhorn",
@@ -116,4 +136,21 @@ __all__ = [
     "floyd_warshall_tropical",
     "bellman_ford_tropical",
     "tropical_eigenvalue",
+    # Layer 24: Kernel Methods
+    "Kernel",
+    "RBFKernel",
+    "MaternKernel",
+    "PolynomialKernel",
+    "LinearKernel",
+    "PeriodicKernel",
+    "QTTKernelMatrix",
+    "kernel_matrix",
+    "GPPrior",
+    "GPPosterior",
+    "GPRegressor",
+    "SparseGP",
+    "kernel_ridge_regression",
+    "KernelRidgeRegressor",
+    "maximum_mean_discrepancy",
+    "mmd_test",
 ]
