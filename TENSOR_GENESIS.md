@@ -156,7 +156,7 @@ This document establishes the constitutional framework for extending QTT into se
 | Rank | Primitive | Domain | Effort | Dependencies | Moat Level | Status |
 |:----:|-----------|--------|:------:|--------------|:----------:|:------:|
 | 1 | **QTT-OT** | Optimal Transport | 6 weeks | Core only | 🔥🔥🔥🔥🔥 | ✅ **COMPLETE** |
-| 2 | **QTT-SGW** | Spectral Graph Wavelets | 4 weeks | QTT-OT (optional) | 🔥🔥🔥 | ⏳ Ready |
+| 2 | **QTT-SGW** | Spectral Graph Wavelets | 4 weeks | QTT-OT (optional) | 🔥🔥🔥 | ✅ **COMPLETE** |
 | 3 | **QTT-RMT** | Random Matrix Theory | 5 weeks | Core only | 🔥🔥🔥🔥 | ⏳ Ready |
 | 4 | **QTT-TG** | Tropical Geometry | 7 weeks | QTT-RMT | 🔥🔥🔥🔥🔥 | ⏳ Pending |
 | 5 | **QTT-RKHS** | Kernel Methods | 6 weeks | QTT-RMT | 🔥🔥🔥 | ⏳ Pending |
@@ -199,6 +199,36 @@ This document establishes the constitutional framework for extending QTT into se
 - Dense SVD for grid_size ≤ 2^16
 - Dense Sinkhorn for grid_size ≤ 2^14
 - Full QTT compression: Phase 2
+
+---
+
+### Layer 21: QTT-SGW — COMPLETE ✅
+
+**Completed**: January 23, 2026 | **Gauntlet**: 23/23 tests (100%) | **Runtime**: 1.64s
+
+| Component | File | LOC | Status |
+|-----------|------|:---:|:------:|
+| SGW Exports | `tensornet/genesis/sgw/__init__.py` | 90 | ✅ |
+| Graph Laplacian | `tensornet/genesis/sgw/laplacian.py` | 300 | ✅ |
+| Graph Signals | `tensornet/genesis/sgw/graph_signals.py` | 400 | ✅ |
+| Chebyshev Approx | `tensornet/genesis/sgw/chebyshev.py` | 270 | ✅ |
+| Wavelets | `tensornet/genesis/sgw/wavelets.py` | 300 | ✅ |
+| Graph Filters | `tensornet/genesis/sgw/filters.py` | 250 | ✅ |
+| Elite Gauntlet | `tensornet/genesis/sgw/qtt_sgw_gauntlet.py` | 550 | ✅ |
+| Documentation | `tensornet/genesis/sgw/README.md` | 200 | ✅ |
+| **TOTAL** | | **~2,360** | ✅ |
+
+**Key Achievements**:
+- `QTTLaplacian`: Graph Laplacian as QTT-MPO with TT-rank 3 for grids
+- `QTTSignal`: Graph signals in QTT format with operations
+- `ChebyshevApproximator`: Matrix function via Chebyshev polynomials
+- `QTTGraphWavelet`: Multi-scale spectral wavelet transform
+- Kernels: `mexican_hat_kernel`, `heat_kernel`, `meyer_kernel`, `abspline_kernel`
+- Filters: `LowPassFilter`, `HighPassFilter`, `BandPassFilter`, `HeatFilter`
+
+**Complexity**:
+- Traditional eigendecomposition: O(N³)
+- QTT-SGW via Chebyshev: O(r³ K log N) where K = Chebyshev order
 
 ---
 

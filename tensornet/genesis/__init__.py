@@ -40,6 +40,17 @@ from tensornet.genesis.ot import (
     barycenter,
 )
 
+# Layer 21: Spectral Graph Wavelets
+from tensornet.genesis.sgw import (
+    QTTLaplacian,
+    QTTSignal,
+    QTTGraphWavelet,
+    ChebyshevApproximator,
+    LowPassFilter,
+    HighPassFilter,
+    BandPassFilter,
+)
+
 __all__ = [
     # Layer 20: Optimal Transport
     "QTTSinkhorn",
@@ -47,4 +58,12 @@ __all__ = [
     "wasserstein_distance",
     "transport_plan",
     "barycenter",
+    # Layer 21: Spectral Graph Wavelets
+    "QTTLaplacian",
+    "QTTSignal",
+    "QTTGraphWavelet",
+    "ChebyshevApproximator",
+    "LowPassFilter",
+    "HighPassFilter",
+    "BandPassFilter",
 ]
