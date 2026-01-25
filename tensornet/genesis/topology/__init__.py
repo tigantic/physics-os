@@ -52,6 +52,17 @@ from tensornet.genesis.topology.distances import (
     persistence_landscape,
 )
 
+# QTT-Native implementation (true trillion-scale without densification)
+from tensornet.genesis.topology.qtt_native import (
+    QTTVector,
+    QTTMatrix,
+    QTTBoundaryMatrix,
+    QTTPersistenceResult,
+    QTTRipsComplex,
+    qtt_persistence_grid_1d,
+    qtt_betti_numbers_grid,
+)
+
 __all__ = [
     # Simplicial complexes
     "Simplex",
@@ -62,6 +73,14 @@ __all__ = [
     # Boundary operators
     "boundary_matrix",
     "QTTBoundaryOperator",
+    # QTT-Native (true trillion-scale)
+    "QTTVector",
+    "QTTMatrix",
+    "QTTBoundaryMatrix",
+    "QTTPersistenceResult",
+    "QTTRipsComplex",
+    "qtt_persistence_grid_1d",
+    "qtt_betti_numbers_grid",
     "coboundary_matrix",
     # Persistence
     "PersistencePair",

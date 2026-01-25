@@ -67,6 +67,14 @@ from tensornet.genesis.tropical.optimization import (
     tropical_eigenvalue,
 )
 
+# QTT-Native implementation (true trillion-scale without densification)
+from tensornet.genesis.tropical.qtt_native import (
+    QTTCore,
+    QTTTropicalMatrix,
+    qtt_tropical_matmul,
+    qtt_floyd_warshall,
+)
+
 __all__ = [
     # Semiring operations
     "TropicalSemiring",
@@ -98,4 +106,9 @@ __all__ = [
     "tropical_linear_program",
     "tropical_eigenvector",
     "tropical_eigenvalue",
+    # QTT-Native (true trillion-scale)
+    "QTTCore",
+    "QTTTropicalMatrix",
+    "qtt_tropical_matmul",
+    "qtt_floyd_warshall",
 ]
