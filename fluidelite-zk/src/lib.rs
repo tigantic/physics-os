@@ -92,6 +92,11 @@ pub mod genesis_integration;
 #[cfg(all(feature = "gpu", feature = "halo2"))]
 pub mod genesis_prover;
 
+// Semaphore Integration - Zero-Expansion prover for Worldcoin Semaphore
+// Supports tree depths 16-50 with PQC hybrid commitments
+#[cfg(all(feature = "gpu", feature = "halo2"))]
+pub mod semaphore;
+
 // Large-scale benchmarks
 #[cfg(test)]
 mod large_scale_test;

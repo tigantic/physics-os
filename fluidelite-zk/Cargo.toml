@@ -73,6 +73,9 @@ num-traits = "0.2"
 # Hashing for lookup table
 sha2 = "0.10"
 
+# SHA-3 family for PQC-safe hashing (SHAKE256)
+sha3 = "0.10"
+
 # Async runtime for prover node
 tokio = { version = "1.35", features = ["full"] }
 
@@ -208,6 +211,11 @@ required-features = ["gpu"]
 name = "single-var-test"
 path = "src/bin/single_var_test.rs"
 required-features = ["gpu"]
+
+[[bin]]
+name = "semaphore-pqc-bench"
+path = "src/bin/semaphore_pqc_bench.rs"
+required-features = ["gpu", "halo2"]
 
 [[bin]]
 name = "fluid-ingest"

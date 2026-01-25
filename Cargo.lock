@@ -1707,6 +1707,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
+ "sha3",
  "subtle",
  "sysinfo",
  "tokio",
