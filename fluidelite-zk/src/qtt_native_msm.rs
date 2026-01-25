@@ -403,10 +403,10 @@ impl std::fmt::Display for QttMsmStats {
              ├─ Total Params: {} ({:.2} KB)\n\
              ├─ Full Dimension: 2^{} = {}\n\
              ├─ Compression Ratio: {:.0}x\n\
-             ├─ VRAM (bases): {:.2} MB\n\
-             ├─ Traditional PCIe Transfer: {:.2} MB\n\
-             ├─ Zero-Expansion Transfer: {:.2} MB\n\
-             └─ Transfer Reduction: {:.0}x",
+             ├─ VRAM (bases, resident): {:.2} MB\n\
+             ├─ Traditional PCIe/proof: {:.2} MB (EVERY proof!)\n\
+             ├─ Zero-Expansion PCIe/proof: {:.2} MB (scalars only)\n\
+             └─ PCIe Elimination: {:.0}x (bases stay in VRAM)",
             self.n_sites,
             self.max_rank,
             self.total_params,
@@ -472,6 +472,11 @@ impl FlattenedQtt {
         }
         
         Self { scalars, total_size }
+    }
+    
+    /// Alias for from_qtt for backwards compatibility
+    pub fn from_train(qtt: &QttTrain) -> Self {
+        Self::from_qtt(qtt)
     }
 }
 

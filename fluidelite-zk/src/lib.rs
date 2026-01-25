@@ -73,6 +73,29 @@ pub mod msm_config;
 #[cfg(feature = "gpu")]
 pub mod qtt_native_msm;
 
+#[cfg(all(feature = "gpu", feature = "halo2"))]
+pub mod zero_expansion_prover;
+
+// QTT Geometric Algebra - prover-critical for elliptic curve operations
+pub mod qtt_ga;
+
+// QTT Random Matrix Theory - structured Fiat-Shamir challenges
+pub mod qtt_rmt;
+
+// QTT RKHS - kernel methods for lookup table compression
+pub mod qtt_rkhs;
+
+// Genesis Integration - wires together QTT-GA, QTT-RMT, QTT-RKHS for prover
+pub mod genesis_integration;
+
+// Genesis Prover - GPU-accelerated prover with all Genesis primitives
+#[cfg(all(feature = "gpu", feature = "halo2"))]
+pub mod genesis_prover;
+
+// Large-scale benchmarks
+#[cfg(test)]
+mod large_scale_test;
+
 // Re-exports for convenience
 pub use mpo::MPO;
 pub use mps::MPS;

@@ -43,8 +43,8 @@ fn main() {
     println!("╔══════════════════════════════════════════════════════════════════════════════╗");
     println!("║                     ZERO-EXPANSION QTT-NATIVE MSM BENCHMARK                  ║");
     println!("║                                                                              ║");
-    println!("║   Traditional: QTT → EXPAND → 2^N scalars → MSM  (PCIe bottleneck!)         ║");
-    println!("║   Zero-Expansion: QTT cores → MSM directly       (1000x less transfer)      ║");
+    println!("║   Traditional: QTT → EXPAND → 2^N scalars → MSM  (PCIe every proof!)        ║");
+    println!("║   Zero-Expansion: Bases in VRAM, only scalars cross PCIe per proof          ║");
     println!("╠══════════════════════════════════════════════════════════════════════════════╣");
     println!("║  Sites:      {}  (full dimension = 2^{} = {})", n_sites, n_sites, 1usize << n_sites);
     println!("║  Max Rank:   {}", max_rank);
