@@ -16,6 +16,9 @@ Layers 20-26:
     - topology: Persistent Homology (Layer 25)
     - ga: Geometric Algebra (Layer 26)
 
+Core Infrastructure:
+    - core: Logging, exceptions, profiling, validation
+
 Example:
     >>> from tensornet.genesis import QTTSinkhorn, wasserstein_distance
     >>> from tensornet.genesis.ot import QTTDistribution
@@ -30,6 +33,37 @@ Copyright (c) 2026 Tigantic Holdings LLC. All Rights Reserved.
 __version__ = "1.0.0"
 __author__ = "Bradly Biron Baker Adams"
 __constitutional_ref__ = "TENSOR_GENESIS.md"
+
+# Core Infrastructure (Production Hardening)
+from tensornet.genesis.core import (
+    # Logging
+    get_logger,
+    configure_logging,
+    GenesisLogger,
+    LogLevel,
+    # Exceptions
+    GenesisError,
+    QTTRankError,
+    ConvergenceError,
+    DimensionMismatchError,
+    NumericalInstabilityError,
+    MemoryBudgetExceededError,
+    InvalidInputError,
+    CompressionError,
+    # Profiling
+    profile,
+    profile_memory,
+    timed,
+    traced,
+    ProfileResult,
+    PerformanceTracker,
+    # Validation
+    validate_qtt_cores,
+    validate_tensor_shape,
+    validate_positive,
+    validate_probability,
+    check_numerical_stability,
+)
 
 # Layer 20: Optimal Transport
 from tensornet.genesis.ot import (
@@ -143,6 +177,30 @@ from tensornet.genesis.ga import (
 )
 
 __all__ = [
+    # Core Infrastructure
+    "get_logger",
+    "configure_logging",
+    "GenesisLogger",
+    "LogLevel",
+    "GenesisError",
+    "QTTRankError",
+    "ConvergenceError",
+    "DimensionMismatchError",
+    "NumericalInstabilityError",
+    "MemoryBudgetExceededError",
+    "InvalidInputError",
+    "CompressionError",
+    "profile",
+    "profile_memory",
+    "timed",
+    "traced",
+    "ProfileResult",
+    "PerformanceTracker",
+    "validate_qtt_cores",
+    "validate_tensor_shape",
+    "validate_positive",
+    "validate_probability",
+    "check_numerical_stability",
     # Layer 20: Optimal Transport
     "QTTSinkhorn",
     "QTTDistribution", 
