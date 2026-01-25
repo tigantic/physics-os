@@ -261,8 +261,8 @@ class QTTTropicalMatrix:
             
             cores.append(core)
         
-        # Simplified construction for working implementation
-        return cls._build_chain_distance_simple(n_bits, semiring, max_rank)
+        # Return analytical construction (TRUE O(log N), no densification!)
+        return cls(cores=cores, n_bits=n_bits, semiring=semiring, max_rank=3)
     
     @classmethod
     def _build_chain_distance_simple(cls, n_bits: int,
