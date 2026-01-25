@@ -111,11 +111,6 @@ contract ZeroExpansionSemaphoreVerifier {
         }
         if (proofRoot != merkleRoot) return false;
         
-        // Suppress unused variable warnings
-        nullifierHash;
-        signalHash;
-        externalNullifier;
-        
         // In production: Perform BN254 pairing check on QTT commitment
         // The pairing verifies that the prover knows a valid Merkle path
         // without revealing the path itself
