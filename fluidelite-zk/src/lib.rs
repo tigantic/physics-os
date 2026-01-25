@@ -97,6 +97,10 @@ pub mod genesis_prover;
 #[cfg(all(feature = "gpu", feature = "halo2"))]
 pub mod semaphore;
 
+// Groth16 Output Format - Standard 256-byte proof format for ecPairing
+#[cfg(all(feature = "gpu", feature = "halo2"))]
+pub mod groth16_output;
+
 // Large-scale benchmarks
 #[cfg(test)]
 mod large_scale_test;
