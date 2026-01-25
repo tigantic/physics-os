@@ -69,6 +69,7 @@ base64 = "0.21"
 # Numerics (fixed-point for ZK)
 fixed = "1.23"
 num-traits = "0.2"
+num-bigint = "0.4"
 
 # Hashing for lookup table
 sha2 = "0.10"
@@ -139,6 +140,17 @@ chrono = { version = "0.4", optional = true }
 
 # libc for mmap (Unix)
 libc = "0.2"
+
+# Arkworks for REAL Groth16 proving (proper trusted setup)
+ark-ff = { version = "0.4", optional = true }
+ark-ec = { version = "0.4", optional = true }
+ark-bn254 = { version = "0.4", optional = true }
+ark-groth16 = { version = "0.4", optional = true }
+ark-relations = { version = "0.4", optional = true }
+ark-r1cs-std = { version = "0.4", optional = true }
+ark-snark = { version = "0.4", optional = true }
+ark-serialize = { version = "0.4", optional = true }
+ark-std = { version = "0.4", optional = true }
 
 [dev-dependencies]
 criterion = { version = "0.5", features = ["html_reports"] }
@@ -254,3 +266,15 @@ production-gpu = ["production", "gpu"]
 enterprise = ["production", "encryption"]
 # S3 byte-range streaming for cloud ingest (zero egress)
 s3 = ["dep:aws-config", "dep:aws-sdk-s3", "dep:chrono", "dep:zstd"]
+# Arkworks Groth16 for REAL pairing verification
+arkworks = ["dep:ark-ff", "dep:ark-ec", "dep:ark-bn254", "dep:ark-groth16", "dep:ark-relations", "dep:ark-r1cs-std", "dep:ark-snark", "dep:ark-serialize", "dep:ark-std"]
+
+[[bin]]
+name = "worldcoin_production"
+path = "src/bin/worldcoin_production.rs"
+required-features = ["gpu"]
+
+[[bin]]
+name = "groth16_real"
+path = "src/bin/groth16_real.rs"
+required-features = ["arkworks"]
