@@ -1,0 +1,111 @@
+{
+  "pipeline": "CROSS-PRIMITIVE PIPELINE",
+  "project": "TENSOR GENESIS",
+  "timestamp": "2026-01-25T00:58:13.278892+00:00",
+  "scale": 65536,
+  "grid_bits": 16,
+  "total_time_seconds": 7.52576479299978,
+  "stages": [
+    {
+      "name": "Climate Distribution Transport",
+      "primitive": "QTT-OT",
+      "layer": 20,
+      "time_seconds": 6.3591776230000505,
+      "compressed": true,
+      "key_metrics": {
+        "wasserstein_distance": 2.692523480992094,
+        "historical_mean": 15.0,
+        "current_mean": 17.5,
+        "climate_shift": 2.5
+      }
+    },
+    {
+      "name": "Multi-Scale Spectral Analysis",
+      "primitive": "QTT-SGW",
+      "layer": 21,
+      "time_seconds": 1.1160927180001181,
+      "compressed": true,
+      "key_metrics": {
+        "n_scales": 6,
+        "energy_distribution": [
+          0.1444580075764707,
+          0.5312110287589812,
+          0.27143184624810496,
+          0.052276583071768856,
+          0.0006224213922876093,
+          1.1295238680560457e-07
+        ],
+        "anomaly_score": 1085.3347911927794,
+        "fine_scale_energy": 0.6756690363354518,
+        "coarse_scale_energy": 0.0006225343446744149
+      }
+    },
+    {
+      "name": "MMD Anomaly Detection",
+      "primitive": "QTT-RKHS",
+      "layer": 24,
+      "time_seconds": 0.0201138649999848,
+      "compressed": true,
+      "key_metrics": {
+        "mmd": 0.524206280708313,
+        "anomaly_confidence": 1.0,
+        "scale_anomalies": [
+          0.015500989742577076,
+          4.122745513916016,
+          1.4594709873199463,
+          2.999016523361206,
+          1.3529480695724487,
+          1.1915795803070068
+        ],
+        "max_anomaly_scale": 1
+      }
+    },
+    {
+      "name": "Topological Anomaly Structure",
+      "primitive": "QTT-PH",
+      "layer": 25,
+      "time_seconds": 0.028810586999952648,
+      "compressed": true,
+      "key_metrics": {
+        "betti_0": 3,
+        "betti_1": 0,
+        "betti_2": 100,
+        "topological_complexity": 303,
+        "n_points_analyzed": 20
+      }
+    },
+    {
+      "name": "Geometric Anomaly Characterization",
+      "primitive": "QTT-GA",
+      "layer": 26,
+      "time_seconds": 0.0009552779999921768,
+      "compressed": true,
+      "key_metrics": {
+        "anomaly_direction": [
+          0.029986509105671005,
+          0.0,
+          0.9995503035223668
+        ],
+        "deviation_angle_deg": 53.52988962560029,
+        "deviation_metric": 0.29738827569777937,
+        "anomaly_severity": 9.308253029340495
+      }
+    }
+  ],
+  "memory": {
+    "theoretical_dense_bytes": 1310720,
+    "actual_qtt_bytes": 229428,
+    "compression_ratio": 5.712990567846993
+  },
+  "findings": {
+    "climate_shift_celsius": 2.5,
+    "anomaly_severity": 9.308253029340495,
+    "topological_complexity": 303
+  },
+  "moat": {
+    "verified": true,
+    "primitives_chained": 5,
+    "densification_events": 0
+  },
+  "sha256": "2454576d157629f35a51f7864910a87bb9623f04687e8b035ef783141bf9efdd"
+}

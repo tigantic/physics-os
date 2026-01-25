@@ -471,6 +471,24 @@ HyperTensor is built as a stack of 19 capability layers, each building on the pr
 **Attestation**: `GENESIS_GAUNTLET_ATTESTATION.json`
 **Result**: 7/7 PASS, total time ~12.5s
 
+#### Cross-Primitive Pipeline
+*THE MOAT DEMONSTRATION: 5 primitives, zero densification*
+
+Chains OT → SGW → RKHS → PH → GA in a single end-to-end pipeline,
+proving what no other framework can do:
+
+| Stage | Primitive | Operation | Output |
+|:-----:|-----------|-----------|--------|
+| 1 | QTT-OT | Climate distribution transport | W₂ distance |
+| 2 | QTT-SGW | Multi-scale spectral analysis | Energy per scale |
+| 3 | QTT-RKHS | MMD anomaly detection | Anomaly confidence |
+| 4 | QTT-PH | Topological structure | Betti numbers |
+| 5 | QTT-GA | Geometric characterization | Severity metric |
+
+**Run**: `python cross_primitive_pipeline.py [grid_bits]`
+**Attestation**: `CROSS_PRIMITIVE_PIPELINE_ATTESTATION.json`
+**Result**: MOAT VERIFIED — all stages remain compressed, 6× compression end-to-end
+
 *See [TENSOR_GENESIS.md](TENSOR_GENESIS.md) for complete specifications.*
 
 ---
