@@ -1,19 +1,19 @@
 {
   "pipeline": "CROSS-PRIMITIVE PIPELINE",
   "project": "TENSOR GENESIS",
-  "timestamp": "2026-01-25T00:58:13.278892+00:00",
-  "scale": 65536,
-  "grid_bits": 16,
-  "total_time_seconds": 7.52576479299978,
+  "timestamp": "2026-01-25T17:34:26.669009+00:00",
+  "scale": 4096,
+  "grid_bits": 12,
+  "total_time_seconds": 1.0898028099982184,
   "stages": [
     {
       "name": "Climate Distribution Transport",
       "primitive": "QTT-OT",
       "layer": 20,
-      "time_seconds": 6.3591776230000505,
+      "time_seconds": 0.19137054400198394,
       "compressed": true,
       "key_metrics": {
-        "wasserstein_distance": 2.692523480992094,
+        "wasserstein_distance": 2.691853588233994,
         "historical_mean": 15.0,
         "current_mean": 17.5,
         "climate_shift": 2.5
@@ -23,38 +23,38 @@
       "name": "Multi-Scale Spectral Analysis",
       "primitive": "QTT-SGW",
       "layer": 21,
-      "time_seconds": 1.1160927180001181,
+      "time_seconds": 0.8539507009991212,
       "compressed": true,
       "key_metrics": {
         "n_scales": 6,
         "energy_distribution": [
-          0.1444580075764707,
-          0.5312110287589812,
-          0.27143184624810496,
-          0.052276583071768856,
-          0.0006224213922876093,
-          1.1295238680560457e-07
+          0.14441184990824552,
+          0.5312009444066167,
+          0.2714850733181337,
+          0.052279654177664135,
+          0.0006223652471986368,
+          1.1294214127400768e-07
         ],
-        "anomaly_score": 1085.3347911927794,
-        "fine_scale_energy": 0.6756690363354518,
-        "coarse_scale_energy": 0.0006225343446744149
+        "anomaly_score": 1085.3423500794206,
+        "fine_scale_energy": 0.6756127943148622,
+        "coarse_scale_energy": 0.0006224781893399108
       }
     },
     {
       "name": "MMD Anomaly Detection",
       "primitive": "QTT-RKHS",
       "layer": 24,
-      "time_seconds": 0.0201138649999848,
+      "time_seconds": 0.017914168995048385,
       "compressed": true,
       "key_metrics": {
-        "mmd": 0.524206280708313,
+        "mmd": 0.5242106914520264,
         "anomaly_confidence": 1.0,
         "scale_anomalies": [
-          0.015500989742577076,
-          4.122745513916016,
-          1.4594709873199463,
-          2.999016523361206,
-          1.3529480695724487,
+          0.015035123564302921,
+          4.122642993927002,
+          1.4600142240524292,
+          2.9989852905273438,
+          1.3529486656188965,
           1.1915795803070068
         ],
         "max_anomaly_scale": 1
@@ -64,7 +64,7 @@
       "name": "Topological Anomaly Structure",
       "primitive": "QTT-PH",
       "layer": 25,
-      "time_seconds": 0.028810586999952648,
+      "time_seconds": 0.024756972001341637,
       "compressed": true,
       "key_metrics": {
         "betti_0": 3,
@@ -78,7 +78,7 @@
       "name": "Geometric Anomaly Characterization",
       "primitive": "QTT-GA",
       "layer": 26,
-      "time_seconds": 0.0009552779999921768,
+      "time_seconds": 0.0013621529942611232,
       "compressed": true,
       "key_metrics": {
         "anomaly_direction": [
@@ -93,9 +93,9 @@
     }
   ],
   "memory": {
-    "theoretical_dense_bytes": 1310720,
-    "actual_qtt_bytes": 229428,
-    "compression_ratio": 5.712990567846993
+    "theoretical_dense_bytes": 81920,
+    "actual_qtt_bytes": 172084,
+    "compression_ratio": 0.4760465819018619
   },
   "findings": {
     "climate_shift_celsius": 2.5,
@@ -107,5 +107,5 @@
     "primitives_chained": 5,
     "densification_events": 0
   },
-  "sha256": "2454576d157629f35a51f7864910a87bb9623f04687e8b035ef783141bf9efdd"
+  "sha256": "772414948873403593a991ebd905a2eeb69d70a16c08ecb11904af97c8f33617"
 }

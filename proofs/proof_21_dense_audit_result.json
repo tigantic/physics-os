@@ -1,7 +1,7 @@
 {
   "proof_id": "21.6",
   "name": "Dense Materialization Audit (Hardened)",
-  "timestamp": "2026-01-06T06:11:12.697598",
+  "timestamp": "2026-01-25T17:16:44.294255",
   "claim_scope": {
     "storage": "O(N\u00b7d\u00b7chi^2) - PROVEN by core counts",
     "no_dense_grid": "O(N^2), O(N\u00b3) forbidden - ENFORCED by guard",

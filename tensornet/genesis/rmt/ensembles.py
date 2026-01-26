@@ -113,10 +113,144 @@ class QTTEnsemble:
             if len(x) <= 2**14:
                 return self.to_dense() @ x
             else:
-                raise NotImplementedError("Large dense matvec not yet implemented")
+                # Large dense matvec: convert x to QTT, apply MPO, convert back
+                x_qtt = self._dense_to_qtt(x)
+                y_qtt = self._mpo_mps_product(x_qtt)
+                return self._qtt_to_dense(y_qtt)
         
         # QTT matvec - contract MPO with MPS
-        raise NotImplementedError("QTT-QTT matvec pending")
+        return self._mpo_mps_product(x)
+    
+    def _dense_to_qtt(self, x: torch.Tensor) -> list:
+        """Convert dense vector to QTT format via TT-SVD."""
+        num_bits = len(self.cores)
+        N = 2 ** num_bits
+        
+        # Pad if necessary
+        if len(x) < N:
+            x = torch.cat([x, torch.zeros(N - len(x), dtype=x.dtype, device=x.device)])
+        
+        # Reshape to 2x2x...x2
+        tensor = x.reshape([2] * num_bits)
+        
+        cores = []
+        current = tensor
+        
+        for k in range(num_bits - 1):
+            shape = current.shape
+            if k == 0:
+                mat = current.reshape(2, -1)
+            else:
+                r_prev = cores[-1].shape[2]
+                mat = current.reshape(r_prev * 2, -1)
+            
+            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+            
+            # Truncate to reasonable rank
+            rank = min(32, len(S))
+            rank = max(1, int((S > 1e-12 * S[0]).sum().item()))
+            rank = min(rank, 32)
+            
+            U = U[:, :rank]
+            S = S[:rank]
+            Vh = Vh[:rank, :]
+            
+            if k == 0:
+                cores.append(U.reshape(1, 2, rank))
+            else:
+                cores.append(U.reshape(r_prev, 2, rank))
+            
+            SV = torch.diag(S) @ Vh
+            current = SV.reshape(rank, 2, -1) if SV.numel() > rank * 2 else SV
+        
+        # Last core
+        r_prev = cores[-1].shape[2] if cores else 1
+        last = current.reshape(r_prev, 2, 1)
+        cores.append(last)
+        
+        return cores
+    
+    def _qtt_to_dense(self, cores: list) -> torch.Tensor:
+        """Convert QTT to dense vector."""
+        result = cores[0]
+        for core in cores[1:]:
+            r_left_res = result.shape[0]
+            n_res = result.shape[1] 
+            r_right_res = result.shape[2]
+            r_left_core, n_core, r_right_core = core.shape
+            
+            result = result.reshape(-1, r_right_res)
+            core_mat = core.reshape(r_left_core, -1)
+            result = result @ core_mat
+            result = result.reshape(1, -1, r_right_core)
+        
+        return result.squeeze()
+    
+    def _mpo_mps_product(self, x_cores: list) -> list:
+        """Apply MPO (self.cores) to MPS (x_cores).
+        
+        Contract: y[i] = sum_j H[i,j] x[j]
+        
+        In TT format, each core contracts over physical indices.
+        Result has rank = rank(H) * rank(x), then truncated.
+        """
+        num_sites = len(self.cores)
+        result_cores = []
+        
+        for k in range(num_sites):
+            # MPO core: (D_l, d_out, d_in, D_r)
+            H_core = self.cores[k]
+            # MPS core: (r_l, d, r_r)
+            x_core = x_cores[k]
+            
+            D_l, d_out, d_in, D_r = H_core.shape
+            r_l, d_x, r_r = x_core.shape
+            
+            assert d_in == d_x, f"Dimension mismatch at site {k}"
+            
+            # Contract over d_in
+            # H[a,i,j,b] x[c,j,d] -> result[a,c,i,b,d]
+            contracted = torch.einsum('aijb,cjd->acibd', H_core, x_core)
+            
+            # Reshape to (D_l * r_l, d_out, D_r * r_r)
+            result_core = contracted.reshape(D_l * r_l, d_out, D_r * r_r)
+            result_cores.append(result_core)
+        
+        # Truncate ranks
+        result_cores = self._truncate_mps(result_cores, max_rank=64)
+        
+        return result_cores
+    
+    def _truncate_mps(self, cores: list, max_rank: int = 64) -> list:
+        """Truncate MPS bond dimensions via right-to-left SVD."""
+        n = len(cores)
+        cores = [c.clone() for c in cores]
+        
+        for k in range(n - 1, 0, -1):
+            core = cores[k]
+            r_l, d, r_r = core.shape
+            
+            if r_l <= max_rank:
+                continue
+            
+            mat = core.reshape(r_l, d * r_r)
+            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+            
+            r_new = min(max_rank, len(S))
+            U = U[:, :r_new]
+            S = S[:r_new]
+            Vh = Vh[:r_new, :]
+            
+            cores[k] = Vh.reshape(r_new, d, r_r)
+            
+            # Absorb U @ diag(S) into left neighbor
+            left = cores[k - 1]
+            rl, dl, rr = left.shape
+            left_mat = left.reshape(rl * dl, rr)
+            left_mat = left_mat @ (U * S)
+            cores[k - 1] = left_mat.reshape(rl, dl, r_new)
+        
+        return cores
     
     @classmethod
     def goe(cls, size: int, rank: int = 10,

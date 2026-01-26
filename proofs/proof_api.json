@@ -1,0 +1,165 @@
+{
+  "phase": 6,
+  "name": "Unification",
+  "tests_passed": 26,
+  "tests_total": 26,
+  "timestamp": "2026-01-25T22:20:33.898476",
+  "results": [
+    {
+      "name": "API Models: DiscoveryRequest",
+      "passed": true,
+      "time_ms": 3338.874176995887,
+      "result": "Round-trip successful, domain=defi"
+    },
+    {
+      "name": "API Models: DiscoveryResponse",
+      "passed": true,
+      "time_ms": 0.0718139999662526,
+      "result": "Response serialized, 577 bytes"
+    },
+    {
+      "name": "API Models: LiveDataRequest",
+      "passed": true,
+      "time_ms": 0.00840700522530824,
+      "result": "mode=replay, event=flash-crash-2010"
+    },
+    {
+      "name": "API Models: GPUStatus",
+      "passed": true,
+      "time_ms": 0.005232999683357775,
+      "result": "GPU: RTX 4090, 24576MB"
+    },
+    {
+      "name": "API Models: StreamingRequest",
+      "passed": true,
+      "time_ms": 0.005001995305065066,
+      "result": "symbol=ETH-USD, window=50"
+    },
+    {
+      "name": "GPU Backend: Availability Check",
+      "passed": true,
+      "time_ms": 875.6442700032494,
+      "result": "GPU available: True, CUDA: 12.8"
+    },
+    {
+      "name": "GPU Backend: GPUBackend CPU Fallback",
+      "passed": true,
+      "time_ms": 96.43968500313349,
+      "result": "100x100 matmul on cuda"
+    },
+    {
+      "name": "GPU Backend: FFT",
+      "passed": true,
+      "time_ms": 3.4903440027846955,
+      "result": "256-point FFT on cuda"
+    },
+    {
+      "name": "GPU Backend: Eigendecomposition",
+      "passed": true,
+      "time_ms": 54.36741300218273,
+      "result": "50x50 eigendecomposition, cuda"
+    },
+    {
+      "name": "GPU Backend: SVD",
+      "passed": true,
+      "time_ms": 16.884887001651805,
+      "result": "100x50 SVD, singular values: 50"
+    },
+    {
+      "name": "GPU Backend: Metrics Tracking",
+      "passed": true,
+      "time_ms": 5.158289000974037,
+      "result": "3 operations tracked, total: 4.98ms"
+    },
+    {
+      "name": "Icicle: NTT (CPU Fallback)",
+      "passed": true,
+      "time_ms": 0.16114900063257664,
+      "result": "NTT of 8 elements (icicle available: False)"
+    },
+    {
+      "name": "Icicle: Poseidon Hash (CPU Fallback)",
+      "passed": true,
+      "time_ms": 0.22955100575927645,
+      "result": "Poseidon hash: 4740216164..."
+    },
+    {
+      "name": "Distributed: DistributedConfig",
+      "passed": true,
+      "time_ms": 0.007063994416967034,
+      "result": "threads=8, lb=least_loaded"
+    },
+    {
+      "name": "Distributed: WorkerNode",
+      "passed": true,
+      "time_ms": 207.0372639936977,
+      "result": "Task result: 49"
+    },
+    {
+      "name": "Distributed: DistributedCoordinator",
+      "passed": true,
+      "time_ms": 104.0190130006522,
+      "result": "Coordinated task: 10 + 20 = 30"
+    },
+    {
+      "name": "Distributed: Batch Submission",
+      "passed": true,
+      "time_ms": 104.46622200106503,
+      "result": "Batch results: [0, 2, 4, 6, 8]"
+    },
+    {
+      "name": "Distributed: Map Operation",
+      "passed": true,
+      "time_ms": 103.19179600628559,
+      "result": "Map results: [1, 8, 27, 64]"
+    },
+    {
+      "name": "API Server: ServerConfig",
+      "passed": true,
+      "time_ms": 0.02095200034091249,
+      "result": "Config: port=8080, debug=True"
+    },
+    {
+      "name": "API Server: ServerStats",
+      "passed": true,
+      "time_ms": 0.011342002835590392,
+      "result": "Requests: 95/100 success"
+    },
+    {
+      "name": "API Server: DiscoveryAPIServer Creation",
+      "passed": true,
+      "time_ms": 15.029508002044167,
+      "result": "FastAPI app created, routes registered"
+    },
+    {
+      "name": "API Server: create_app Factory",
+      "passed": true,
+      "time_ms": 1.9237160013290122,
+      "result": "App created via factory"
+    },
+    {
+      "name": "Integration: Full Discovery Request Flow",
+      "passed": true,
+      "time_ms": 1.436399994418025,
+      "result": "Flow complete: 551 bytes response"
+    },
+    {
+      "name": "Integration: Live Data API Flow",
+      "passed": true,
+      "time_ms": 0.10165200365008786,
+      "result": "Live flow: 60 bars, 1 alerts"
+    },
+    {
+      "name": "Integration: Distributed Discovery",
+      "passed": true,
+      "time_ms": 104.07023299922002,
+      "result": "Distributed: 9 items, sum=45"
+    },
+    {
+      "name": "Integration: Attestation Hash",
+      "passed": true,
+      "time_ms": 0.07957900379551575,
+      "result": "SHA-256: 64812b7b76f592f5..."
+    }
+  ]
+}

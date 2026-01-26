@@ -1,0 +1,76 @@
+{
+  "phase": "Phase 2: Fusion Plasma",
+  "timestamp": "2026-01-25T22:24:13.259048+00:00",
+  "total_tests": 11,
+  "passed": 11,
+  "failed": 0,
+  "success_rate": 1.0,
+  "tests": [
+    {
+      "name": "plasma_ingester",
+      "passed": true,
+      "message": "Ingested shot with 8 outputs",
+      "duration_ms": 1.2884140014648438
+    },
+    {
+      "name": "elm_analysis",
+      "passed": true,
+      "message": "ELM analysis: 10 events, 10.0 Hz",
+      "duration_ms": 0.08678436279296875
+    },
+    {
+      "name": "mhd_spectrum",
+      "passed": true,
+      "message": "Dominant mode n=5, power=0.801",
+      "duration_ms": 0.42176246643066406
+    },
+    {
+      "name": "q_profile",
+      "passed": true,
+      "message": "q profile: q_core=1.21, q95=14.62",
+      "duration_ms": 0.12731552124023438
+    },
+    {
+      "name": "pressure_gradient",
+      "passed": true,
+      "message": "Gradient: core=39.39, edge=200.79",
+      "duration_ms": 0.12111663818359375
+    },
+    {
+      "name": "pipeline_findings",
+      "passed": true,
+      "message": "4 findings, 3 critical",
+      "duration_ms": 5.960941314697266
+    },
+    {
+      "name": "hypothesis_generation",
+      "passed": true,
+      "message": "1 hypotheses generated",
+      "duration_ms": 7.1582794189453125
+    },
+    {
+      "name": "report_generation",
+      "passed": true,
+      "message": "MD: 1198 chars, JSON: 1670 chars",
+      "duration_ms": 4.6749114990234375
+    },
+    {
+      "name": "demo_integration",
+      "passed": true,
+      "message": "Demo: 11 findings in 8.1ms",
+      "duration_ms": 9.317874908447266
+    },
+    {
+      "name": "confinement_time",
+      "passed": true,
+      "message": "\u03c4_E = 7000 ms (expected ~7000 ms)",
+      "duration_ms": 0.0019073486328125
+    },
+    {
+      "name": "boris_pusher_simulation",
+      "passed": true,
+      "message": "Boris: 100% confined, 1 findings",
+      "duration_ms": 1103.7817001342773
+    }
+  ]
+}

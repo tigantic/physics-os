@@ -1304,12 +1304,6 @@ class MPOConstraintOps:
             return residual < tol, residual
         except Exception:
             return True, 0.0  # Error, assume OK
-            return True  # Can't check in QTT, assume OK
-        
-        # TODO: Implement MPO-MPS contraction for constraint checking
-        # This is the core innovation - checking constraints in O(log N)
-        
-        return True  # Placeholder
 
 
 # =============================================================================

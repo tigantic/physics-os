@@ -494,12 +494,30 @@ class QTTElectronScreeningSolver:
         """
         Compute Debye screening length from QTT-compressed density.
         
-        Uses QTT contraction to compute <n_e> without full reconstruction.
+        Uses pure TT contraction to compute <n_e> in O(d r²) without reconstruction.
+        GPU-accelerated.
         """
-        # For simplicity, reconstruct and compute
-        # TODO: Implement pure TT contraction for <n_e>
-        n_e_3d = self.qtt_to_dense_3d(cores)
-        n_avg = n_e_3d.mean().item()
+        # Pure TT contraction for <n_e> = sum of all elements / N³
+        # Contract each core with all-ones vector
+        device = cores[0].device
+        dtype = cores[0].dtype
+        
+        # Initialize: contract from left with sum over physical index
+        result = torch.ones(1, dtype=dtype, device=device)
+        
+        for core in cores:
+            # core: (r_left, 2, r_right)
+            # Sum over physical index: sum_i core[:, i, :] @ result
+            # This gives: sum_i G_k[:, i, :] which is G_k @ 1_{physical}
+            summed = core.sum(dim=1)  # (r_left, r_right)
+            result = result @ summed  # (r_left,) @ (r_left, r_right) -> (r_right,)
+        
+        # Total sum = result (scalar)
+        total_sum = result.item() if result.numel() == 1 else result.sum().item()
+        
+        # Average = total / N³
+        N = self.N
+        n_avg = total_sum / (N ** 3)
         n_m3 = n_avg * 1e30  # convert Å⁻³ to m⁻³
         
         T = self.lattice.temperature

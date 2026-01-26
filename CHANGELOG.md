@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-01-25 (Production Ready Release)
+
+### Added
+
+#### Phase 10: Placeholder Resolution (GPU + rSVD)
+- `tensornet/cfd/qtt_reciprocal.py` — Newton-Schulz iteration for QTT element-wise reciprocal
+- `_tt_rsvd_1d()` in barycenters.py — 1D TT decomposition via randomized SVD
+- `_vector_to_qtt()` in sinkhorn_qtt.py — Scaling vector reconstruction
+- `_tt_svd_gpu()` in koopman_tt.py — GPU-accelerated TT decomposition
+- `_tt_matvec()` in koopman_tt.py — O(d r² n) TT matrix-vector product
+- `_mpo_mps_contraction()` in kernel_matrix.py — MPO-MPS contraction
+- `_project_onto_halfspace()` in convexity.py — Tropical halfspace projection
+- `_estimate_matrix_rank()` in qtt_native.py — Randomized rank estimation
+
+#### Implementations Completed
+- Sinkhorn cost functions: `_compute_primal_cost`, `_compute_dual_cost`, `_compute_entropy`
+- CFD Euler fluxes: `compute_euler_flux_x`, `compute_lax_friedrichs_flux_2d` with Hadamard products
+- Wasserstein CDF: Prefix-sum MPO construction with rSVD truncation
+- Transport plan: `displacement_variance`, `_safe_divide` with Newton iteration
+- Koopman TT: ALS fitting and TT-matvec for trajectory prediction
+- RKHS matvec: Full MPO-MPS contraction in `QTTKernelMatrix.matvec()`
+- Tropical projection: Iterative Dykstra-like algorithm for halfspace intersection
+- Betti numbers: Rank-based estimation with randomized probing
+- CUDA fallback: Full QTT contraction via einsum on GPU
+- TEBD gates: Proper Hamiltonian exponentiation via `torch.linalg.matrix_exp`
+- Embedded thermal: Real sysfs reading with simulation fallback
+- TensorRT: Full pycuda execution path
+
+### Changed
+- All placeholder returns (0.0, identity matrices) replaced with proper implementations
+- SVD calls converted to `torch.svd_lowrank()` for GPU acceleration
+- Dense fallbacks replaced with pure TT contractions where possible
+
 ## [0.3.0] - 2025-01-XX (Constitutional Compliance Release)
 
 ### Added

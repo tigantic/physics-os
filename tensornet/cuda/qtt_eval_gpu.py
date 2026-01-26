@@ -118,11 +118,62 @@ class GPUQTTEvaluator:
         """
         Fallback: Evaluate using PyTorch einsum operations.
 
-        Slower than custom kernel but still runs on GPU.
+        Uses proper QTT contraction on GPU via einsum.
+        Complexity: O(d * r² * grid_size²) where d = num cores.
         """
-        # This is a placeholder - would need proper QTT contraction
-        # For now, return zeros
-        return torch.zeros(grid_size, grid_size, device=self.device)
+        if not self.cores_gpu:
+            return torch.zeros(grid_size, grid_size, device=self.device)
+        
+        d = len(self.cores_gpu)
+        n_bits_per_dim = d // 2  # Assuming 2D grid
+        
+        # Generate all grid indices as binary
+        indices_x = torch.arange(grid_size, device=self.device)
+        indices_y = torch.arange(grid_size, device=self.device)
+        
+        # Create meshgrid for batch evaluation
+        ix, iy = torch.meshgrid(indices_x, indices_y, indexing='ij')
+        ix_flat = ix.flatten()
+        iy_flat = iy.flatten()
+        
+        # Convert to binary representation
+        result = torch.ones(grid_size * grid_size, 1, 1, device=self.device)
+        
+        for k in range(d):
+            core = self.cores_gpu[k]  # (r_in, n, r_out) where n is mode size
+            n = core.shape[1]
+            
+            # Determine which bit this core corresponds to
+            if k < n_bits_per_dim:
+                # X dimension - extract bit from ix_flat
+                bit_pos = n_bits_per_dim - 1 - k
+                if n == 2:  # Binary mode
+                    idx = (ix_flat >> bit_pos) & 1
+                else:
+                    idx = (ix_flat >> bit_pos) % n
+            else:
+                # Y dimension - extract bit from iy_flat
+                bit_pos = d - 1 - k
+                if n == 2:
+                    idx = (iy_flat >> bit_pos) & 1
+                else:
+                    idx = (iy_flat >> bit_pos) % n
+            
+            # Select core slices for each point
+            # core: (r_in, n, r_out) -> selected: (batch, r_in, r_out)
+            selected = core[:, idx.long(), :].permute(1, 0, 2)  # (batch, r_in, r_out)
+            
+            # Contract with running result
+            # result: (batch, r_prev, 1) @ selected: (batch, r_in, r_out) -> (batch, 1, r_out)
+            if k == 0:
+                result = selected  # (batch, 1, r_out)
+            else:
+                result = torch.bmm(result, selected)  # (batch, 1, r_out)
+        
+        # Final contraction: (batch, 1, 1) -> (batch,)
+        values = result.squeeze(-1).squeeze(-1)
+        
+        return values.reshape(grid_size, grid_size)
 
     def eval_sparse_grid(self, grid_size: int):
         """

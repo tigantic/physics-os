@@ -213,6 +213,22 @@ class GateMatrices:
             dtype=torch.complex128,
         )
 
+    @staticmethod
+    def swap() -> torch.Tensor:
+        """SWAP gate: exchanges two qubits."""
+        return torch.tensor(
+            [[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]],
+            dtype=torch.complex128,
+        )
+
+    @staticmethod
+    def iswap() -> torch.Tensor:
+        """iSWAP gate: SWAP with phase."""
+        return torch.tensor(
+            [[1, 0, 0, 0], [0, 0, 1j, 0], [0, 1j, 0, 0], [0, 0, 0, 1]],
+            dtype=torch.complex128,
+        )
+
 
 # =============================================================================
 # Tensor Network Quantum Simulator
@@ -272,10 +288,13 @@ class TNQuantumSimulator:
         Apply a two-qubit gate using SVD compression.
 
         For adjacent qubits, contract and re-decompose.
+        For non-adjacent qubits, use SWAP network to bring them together.
         """
         if abs(qubit1 - qubit2) != 1:
-            # Non-adjacent qubits require SWAP network
-            raise NotImplementedError("Non-adjacent two-qubit gates not yet supported")
+            # Non-adjacent qubits: use SWAP network
+            # SWAP qubit1 towards qubit2, apply gate, SWAP back
+            self._apply_non_adjacent_gate(gate_matrix, qubit1, qubit2)
+            return
 
         q_left = min(qubit1, qubit2)
         q_right = max(qubit1, qubit2)
@@ -319,6 +338,98 @@ class TNQuantumSimulator:
         # Reshape back to MPS tensors
         self.mps[q_left] = US.reshape(chi_l, 2, chi_new)
         self.mps[q_right] = Vh.reshape(chi_new, 2, chi_r)
+
+    def _apply_non_adjacent_gate(
+        self, gate_matrix: torch.Tensor, qubit1: int, qubit2: int
+    ):
+        """
+        Apply two-qubit gate to non-adjacent qubits using SWAP network.
+        
+        Strategy: SWAP qubit1 towards qubit2 until adjacent, apply gate,
+        then SWAP back to restore qubit ordering.
+        
+        SWAP gate: |00⟩→|00⟩, |01⟩→|10⟩, |10⟩→|01⟩, |11⟩→|11⟩
+        """
+        # Ensure qubit1 < qubit2 for consistent direction
+        if qubit1 > qubit2:
+            qubit1, qubit2 = qubit2, qubit1
+            # Also need to swap the gate indices
+            # For gates like CNOT, this matters
+            gate_matrix = self._swap_gate_qubits(gate_matrix)
+        
+        # Distance between qubits
+        distance = qubit2 - qubit1
+        
+        if distance == 1:
+            # Already adjacent
+            self.apply_two_qubit_gate(gate_matrix, qubit1, qubit2)
+            return
+        
+        # SWAP qubit1 towards qubit2 (move right)
+        # After (distance - 1) SWAPs, qubit1 is at position qubit2 - 1
+        swap = GateMatrices.swap()
+        
+        for i in range(distance - 1):
+            pos = qubit1 + i
+            self._apply_adjacent_swap(pos, pos + 1)
+        
+        # Now the original qubit1 is at position qubit2 - 1
+        # Apply the actual gate
+        self._apply_adjacent_two_qubit_gate(gate_matrix, qubit2 - 1, qubit2)
+        
+        # SWAP back (move left)
+        for i in range(distance - 2, -1, -1):
+            pos = qubit1 + i
+            self._apply_adjacent_swap(pos, pos + 1)
+    
+    def _apply_adjacent_swap(self, q1: int, q2: int):
+        """Apply SWAP gate to adjacent qubits."""
+        swap = GateMatrices.swap()
+        self._apply_adjacent_two_qubit_gate(swap, q1, q2)
+    
+    def _apply_adjacent_two_qubit_gate(
+        self, gate_matrix: torch.Tensor, q_left: int, q_right: int
+    ):
+        """Apply two-qubit gate to adjacent qubits (internal helper)."""
+        left = self.mps[q_left]
+        right = self.mps[q_right]
+
+        combined = torch.einsum("ijk,klm->ijlm", left, right)
+        chi_l, d1, d2, chi_r = combined.shape
+
+        gate = gate_matrix.reshape(2, 2, 2, 2)
+        new_combined = torch.einsum("abcd,icdk->iabk", gate, combined)
+
+        new_combined = new_combined.reshape(chi_l * 2, 2 * chi_r)
+        m, n = new_combined.shape
+        
+        if min(m, n) > 100:
+            U, S, V = torch.svd_lowrank(
+                new_combined, q=min(self.chi_max + 10, min(m, n))
+            )
+            Vh = V.T
+        else:
+            U, S, Vh = torch.linalg.svd(new_combined, full_matrices=False)
+
+        chi_new = min(len(S), self.chi_max)
+        U = U[:, :chi_new]
+        S = S[:chi_new]
+        Vh = Vh[:chi_new, :]
+
+        US = U @ torch.diag(S)
+
+        self.mps[q_left] = US.reshape(chi_l, 2, chi_new)
+        self.mps[q_right] = Vh.reshape(chi_new, 2, chi_r)
+    
+    def _swap_gate_qubits(self, gate_matrix: torch.Tensor) -> torch.Tensor:
+        """Swap the qubit ordering of a two-qubit gate matrix."""
+        # Gate acts on |q1 q2⟩, we want it to act on |q2 q1⟩
+        # Reshape to tensor, permute, reshape back
+        gate = gate_matrix.reshape(2, 2, 2, 2)
+        # Original: gate[i,j,k,l] = ⟨ij|G|kl⟩
+        # Swapped: gate[j,i,l,k] = ⟨ji|G|lk⟩
+        swapped = gate.permute(1, 0, 3, 2)
+        return swapped.reshape(4, 4)
 
     def apply_circuit(self, circuit: QuantumCircuit):
         """Apply a quantum circuit to the state."""

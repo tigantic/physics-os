@@ -101,7 +101,9 @@ class QTTResolvent:
             
             return x
         else:
-            raise NotImplementedError("Large-scale resolvent solve pending")
+            # Large-scale resolvent solve via iterative methods
+            # Use GMRES with the ensemble's matvec
+            return self._iterative_resolve(b)
     
     def trace(self, num_samples: int = 10) -> complex:
         """
@@ -130,6 +132,66 @@ class QTTResolvent:
             trace_sum += (v.to(Gv.dtype) @ Gv).item()
         
         return trace_sum / num_samples
+    
+    def _iterative_resolve(self, b: torch.Tensor) -> torch.Tensor:
+        """
+        Solve (H - zI)x = b using iterative GMRES.
+        
+        Uses the ensemble's matvec for matrix-free operation.
+        """
+        x = torch.zeros(self.size, dtype=torch.complex128, device=b.device)
+        r = b.to(torch.complex128) - self._shifted_matvec(x)
+        
+        # GMRES with restart
+        max_iter = self.max_iterations
+        tol = self.tolerance
+        
+        beta = torch.norm(r)
+        if beta < tol:
+            return x
+        
+        # Arnoldi process
+        V = torch.zeros(self.size, max_iter + 1, dtype=torch.complex128)
+        H = torch.zeros(max_iter + 1, max_iter, dtype=torch.complex128)
+        
+        V[:, 0] = r / beta
+        
+        for j in range(min(max_iter, 50)):  # Cap at 50 for efficiency
+            w = self._shifted_matvec(V[:, j])
+            
+            # Gram-Schmidt
+            for i in range(j + 1):
+                H[i, j] = V[:, i].conj() @ w
+                w = w - H[i, j] * V[:, i]
+            
+            H[j + 1, j] = torch.norm(w)
+            
+            if H[j + 1, j].abs() < 1e-14:
+                break
+            
+            V[:, j + 1] = w / H[j + 1, j]
+            
+            # Solve least squares
+            e1 = torch.zeros(j + 2, dtype=torch.complex128)
+            e1[0] = beta
+            
+            y, _ = torch.linalg.lstsq(H[:j+2, :j+1], e1.unsqueeze(-1))
+            y = y.squeeze()
+            
+            # Check convergence
+            res_norm = torch.norm(H[:j+2, :j+1] @ y - e1)
+            if res_norm < tol * beta:
+                break
+        
+        # Compute solution
+        x = V[:, :j+1] @ y
+        return x
+    
+    def _shifted_matvec(self, x: torch.Tensor) -> torch.Tensor:
+        """Compute (H - zI)x."""
+        Hx = self.ensemble.matvec(x.real.to(torch.float64))
+        Hx = Hx.to(torch.complex128)
+        return Hx - self.z * x
     
     def diagonal(self, indices: Optional[List[int]] = None) -> torch.Tensor:
         """

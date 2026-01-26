@@ -125,20 +125,60 @@ def compute_euler_flux_x(
     F_E = (E + P) * u = (E + P) * rhou / rho
 
     These are nonlinear and require Hadamard products.
-    For simplicity, we use the conservative flux directly.
+    GPU-accelerated via QTT Hadamard with rSVD truncation.
     """
+    from tensornet.cfd.qtt_hadamard import qtt_hadamard
+    from tensornet.cfd.qtt_reciprocal import qtt_reciprocal
+    
+    device = rho.cores[0].device
+    dtype = rho.cores[0].dtype
+    
     # F_rho = rhou (this is exact, no computation needed)
     F_rho = rhou
 
-    # For the nonlinear terms, we need Hadamard products
-    # This is expensive in TT format, so we use an approximation:
-    # Average the flux at cell centers instead of computing exactly
-
-    # NOTE: Full Hadamard product requires TCI decomposition of element-wise products
-    # First-order momentum-based approximation used for stability (validated in Phase 2)
-    F_rhou = rhou  # Placeholder
-    F_rhov = rhov  # Placeholder
-    F_E = E  # Placeholder
+    # Compute 1/rho for division operations
+    # Using Newton iteration for QTT reciprocal: y_{n+1} = y_n * (2 - rho * y_n)
+    rho_recip_cores = qtt_reciprocal(rho.cores, max_rank=max_rank, newton_iters=5)
+    rho_recip = QTT2DState(rho_recip_cores, nx=rho.nx, ny=rho.ny)
+    
+    # F_rhou = rhou^2 / rho + P
+    # Step 1: rhou^2 via Hadamard
+    rhou_sq_cores = qtt_hadamard(rhou.cores, rhou.cores, max_rank=max_rank)
+    rhou_sq = QTT2DState(rhou_sq_cores, nx=rhou.nx, ny=rhou.ny)
+    
+    # Step 2: rhou^2 / rho = rhou^2 * (1/rho)
+    rhou_sq_div_rho_cores = qtt_hadamard(rhou_sq.cores, rho_recip.cores, max_rank=max_rank)
+    rhou_sq_div_rho = QTT2DState(rhou_sq_div_rho_cores, nx=rhou.nx, ny=rhou.ny)
+    
+    # Step 3: Compute pressure P = (gamma - 1) * (E - 0.5 * rho * u^2)
+    # kinetic = 0.5 * (rhou^2 + rhov^2) / rho
+    rhov_sq_cores = qtt_hadamard(rhov.cores, rhov.cores, max_rank=max_rank)
+    rhov_sq = QTT2DState(rhov_sq_cores, nx=rhov.nx, ny=rhov.ny)
+    
+    mom_sq = qtt2d_add(rhou_sq, rhov_sq, max_rank=max_rank)
+    kinetic_cores = qtt_hadamard(mom_sq.cores, rho_recip.cores, max_rank=max_rank)
+    kinetic = QTT2DState(kinetic_cores, nx=rho.nx, ny=rho.ny)
+    kinetic = qtt2d_scale(kinetic, 0.5)
+    
+    # P = (gamma - 1) * (E - kinetic)
+    internal = qtt2d_sub(E, kinetic, max_rank=max_rank)
+    P = qtt2d_scale(internal, gamma - 1)
+    
+    # F_rhou = rhou^2/rho + P
+    F_rhou = qtt2d_add(rhou_sq_div_rho, P, max_rank=max_rank)
+    
+    # F_rhov = rhou * rhov / rho
+    rhou_rhov_cores = qtt_hadamard(rhou.cores, rhov.cores, max_rank=max_rank)
+    rhou_rhov = QTT2DState(rhou_rhov_cores, nx=rhou.nx, ny=rhou.ny)
+    F_rhov_cores = qtt_hadamard(rhou_rhov.cores, rho_recip.cores, max_rank=max_rank)
+    F_rhov = QTT2DState(F_rhov_cores, nx=rhou.nx, ny=rhou.ny)
+    
+    # F_E = (E + P) * u = (E + P) * rhou / rho
+    E_plus_P = qtt2d_add(E, P, max_rank=max_rank)
+    E_plus_P_times_rhou_cores = qtt_hadamard(E_plus_P.cores, rhou.cores, max_rank=max_rank)
+    E_plus_P_times_rhou = QTT2DState(E_plus_P_times_rhou_cores, nx=E.nx, ny=E.ny)
+    F_E_cores = qtt_hadamard(E_plus_P_times_rhou.cores, rho_recip.cores, max_rank=max_rank)
+    F_E = QTT2DState(F_E_cores, nx=E.nx, ny=E.ny)
 
     return F_rho, F_rhou, F_rhov, F_E
 
@@ -215,19 +255,128 @@ def compute_lax_friedrichs_flux_2d(
     # The actual update will be: U^{n+1} = U - dt/dx * (U - U_left) * speed
     # This is first-order upwind when speed > 0
 
-    # Return "flux" as the conserved quantity times characteristic speed
-    # This gives upwind behavior
+    # Compute physical fluxes for both current and left states
+    from tensornet.cfd.qtt_hadamard import qtt_hadamard
+    from tensornet.cfd.qtt_reciprocal import qtt_reciprocal
+    
     if axis == 0:
-        # x-direction: use u as advection velocity
-        F_rho = rhou  # Mass flux = rho * u
-        F_rhou = rhou  # Momentum flux (simplified)
-        F_rhov = rhov  # Placeholder
-        F_E = E  # Energy flux (simplified)
+        # X-direction fluxes
+        # Compute proper Euler fluxes using Hadamard products
+        
+        # 1/rho for current state
+        rho_recip_cores = qtt_reciprocal(rho.cores, max_rank=max_rank)
+        rho_recip = QTT2DState(rho_recip_cores, nx=rho.nx, ny=rho.ny)
+        
+        # 1/rho for left state
+        rho_left_recip_cores = qtt_reciprocal(rho_left.cores, max_rank=max_rank)
+        rho_left_recip = QTT2DState(rho_left_recip_cores, nx=rho.nx, ny=rho.ny)
+        
+        # F_rho = rhou (mass flux)
+        F_rho = rhou
+        F_rho_left = rhou_left
+        
+        # Compute pressure P = (gamma-1)*(E - 0.5*(rhou^2 + rhov^2)/rho)
+        # Current state
+        rhou_sq = QTT2DState(qtt_hadamard(rhou.cores, rhou.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        rhov_sq = QTT2DState(qtt_hadamard(rhov.cores, rhov.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        mom_sq = qtt2d_add(rhou_sq, rhov_sq, max_rank=max_rank)
+        kinetic = QTT2DState(qtt_hadamard(mom_sq.cores, rho_recip.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        kinetic = qtt2d_scale(kinetic, 0.5)
+        P = qtt2d_scale(qtt2d_sub(E, kinetic, max_rank=max_rank), gamma - 1)
+        
+        # Left state pressure
+        rhou_left_sq = QTT2DState(qtt_hadamard(rhou_left.cores, rhou_left.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        rhov_left_sq = QTT2DState(qtt_hadamard(rhov_left.cores, rhov_left.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        mom_left_sq = qtt2d_add(rhou_left_sq, rhov_left_sq, max_rank=max_rank)
+        kinetic_left = QTT2DState(qtt_hadamard(mom_left_sq.cores, rho_left_recip.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        kinetic_left = qtt2d_scale(kinetic_left, 0.5)
+        P_left = qtt2d_scale(qtt2d_sub(E_left, kinetic_left, max_rank=max_rank), gamma - 1)
+        
+        # F_rhou = rhou^2/rho + P
+        rhou_sq_div_rho = QTT2DState(qtt_hadamard(rhou_sq.cores, rho_recip.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        F_rhou = qtt2d_add(rhou_sq_div_rho, P, max_rank=max_rank)
+        
+        rhou_left_sq_div_rho = QTT2DState(qtt_hadamard(rhou_left_sq.cores, rho_left_recip.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        F_rhou_left = qtt2d_add(rhou_left_sq_div_rho, P_left, max_rank=max_rank)
+        
+        # F_rhov = rhou * rhov / rho
+        rhou_rhov = QTT2DState(qtt_hadamard(rhou.cores, rhov.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        F_rhov = QTT2DState(qtt_hadamard(rhou_rhov.cores, rho_recip.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        
+        rhou_left_rhov_left = QTT2DState(qtt_hadamard(rhou_left.cores, rhov_left.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        F_rhov_left = QTT2DState(qtt_hadamard(rhou_left_rhov_left.cores, rho_left_recip.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        
+        # F_E = (E + P) * rhou / rho
+        E_plus_P = qtt2d_add(E, P, max_rank=max_rank)
+        E_plus_P_rhou = QTT2DState(qtt_hadamard(E_plus_P.cores, rhou.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        F_E = QTT2DState(qtt_hadamard(E_plus_P_rhou.cores, rho_recip.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        
+        E_left_plus_P = qtt2d_add(E_left, P_left, max_rank=max_rank)
+        E_left_plus_P_rhou = QTT2DState(qtt_hadamard(E_left_plus_P.cores, rhou_left.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        F_E_left = QTT2DState(qtt_hadamard(E_left_plus_P_rhou.cores, rho_left_recip.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        
+        # Lax-Friedrichs flux: F_LF = 0.5*(F_R + F_L) - 0.5*alpha*(U_R - U_L)
+        # Simplified: return upwind-biased average
+        F_rho = qtt2d_scale(qtt2d_add(F_rho, F_rho_left, max_rank=max_rank), 0.5)
+        F_rhou = qtt2d_scale(qtt2d_add(F_rhou, F_rhou_left, max_rank=max_rank), 0.5)
+        F_rhov = qtt2d_scale(qtt2d_add(F_rhov, F_rhov_left, max_rank=max_rank), 0.5)
+        F_E = qtt2d_scale(qtt2d_add(F_E, F_E_left, max_rank=max_rank), 0.5)
+        
     else:
+        # Y-direction fluxes: swap role of rhou and rhov
+        rho_recip_cores = qtt_reciprocal(rho.cores, max_rank=max_rank)
+        rho_recip = QTT2DState(rho_recip_cores, nx=rho.nx, ny=rho.ny)
+        
+        rho_left_recip_cores = qtt_reciprocal(rho_left.cores, max_rank=max_rank)
+        rho_left_recip = QTT2DState(rho_left_recip_cores, nx=rho.nx, ny=rho.ny)
+        
+        # F_rho = rhov (mass flux in y)
         F_rho = rhov
-        F_rhou = rhou
-        F_rhov = rhov
-        F_E = E
+        F_rho_left = rhov_left
+        
+        # Pressure (same as x-direction)
+        rhou_sq = QTT2DState(qtt_hadamard(rhou.cores, rhou.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        rhov_sq = QTT2DState(qtt_hadamard(rhov.cores, rhov.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        mom_sq = qtt2d_add(rhou_sq, rhov_sq, max_rank=max_rank)
+        kinetic = QTT2DState(qtt_hadamard(mom_sq.cores, rho_recip.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        kinetic = qtt2d_scale(kinetic, 0.5)
+        P = qtt2d_scale(qtt2d_sub(E, kinetic, max_rank=max_rank), gamma - 1)
+        
+        rhou_left_sq = QTT2DState(qtt_hadamard(rhou_left.cores, rhou_left.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        rhov_left_sq = QTT2DState(qtt_hadamard(rhov_left.cores, rhov_left.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        mom_left_sq = qtt2d_add(rhou_left_sq, rhov_left_sq, max_rank=max_rank)
+        kinetic_left = QTT2DState(qtt_hadamard(mom_left_sq.cores, rho_left_recip.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        kinetic_left = qtt2d_scale(kinetic_left, 0.5)
+        P_left = qtt2d_scale(qtt2d_sub(E_left, kinetic_left, max_rank=max_rank), gamma - 1)
+        
+        # F_rhou = rhou * rhov / rho (cross term in y-direction)
+        rhou_rhov = QTT2DState(qtt_hadamard(rhou.cores, rhov.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        F_rhou = QTT2DState(qtt_hadamard(rhou_rhov.cores, rho_recip.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        
+        rhou_left_rhov_left = QTT2DState(qtt_hadamard(rhou_left.cores, rhov_left.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        F_rhou_left = QTT2DState(qtt_hadamard(rhou_left_rhov_left.cores, rho_left_recip.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        
+        # F_rhov = rhov^2/rho + P
+        rhov_sq_div_rho = QTT2DState(qtt_hadamard(rhov_sq.cores, rho_recip.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        F_rhov = qtt2d_add(rhov_sq_div_rho, P, max_rank=max_rank)
+        
+        rhov_left_sq_div_rho = QTT2DState(qtt_hadamard(rhov_left_sq.cores, rho_left_recip.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        F_rhov_left = qtt2d_add(rhov_left_sq_div_rho, P_left, max_rank=max_rank)
+        
+        # F_E = (E + P) * rhov / rho
+        E_plus_P = qtt2d_add(E, P, max_rank=max_rank)
+        E_plus_P_rhov = QTT2DState(qtt_hadamard(E_plus_P.cores, rhov.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        F_E = QTT2DState(qtt_hadamard(E_plus_P_rhov.cores, rho_recip.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        
+        E_left_plus_P = qtt2d_add(E_left, P_left, max_rank=max_rank)
+        E_left_plus_P_rhov = QTT2DState(qtt_hadamard(E_left_plus_P.cores, rhov_left.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        F_E_left = QTT2DState(qtt_hadamard(E_left_plus_P_rhov.cores, rho_left_recip.cores, max_rank=max_rank), nx=rho.nx, ny=rho.ny)
+        
+        # Lax-Friedrichs average
+        F_rho = qtt2d_scale(qtt2d_add(F_rho, F_rho_left, max_rank=max_rank), 0.5)
+        F_rhou = qtt2d_scale(qtt2d_add(F_rhou, F_rhou_left, max_rank=max_rank), 0.5)
+        F_rhov = qtt2d_scale(qtt2d_add(F_rhov, F_rhov_left, max_rank=max_rank), 0.5)
+        F_E = qtt2d_scale(qtt2d_add(F_E, F_E_left, max_rank=max_rank), 0.5)
 
     return F_rho, F_rhou, F_rhov, F_E
 

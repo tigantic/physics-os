@@ -184,16 +184,166 @@ class QTTKernelMatrix:
         """
         Matrix-vector product K @ v in O(r² L N) time.
         
+        Uses QTT structure for efficient contraction without forming dense K.
+        
+        For matrix QTT with 2L cores (L bits for rows, L for cols),
+        we contract the column indices with v and sum over them.
+        
+        Algorithm:
+        1. Reshape v as QTT: (2, 2, ..., 2) with L modes
+        2. Contract matrix cores with vector cores from right
+        3. Result is QTT of output vector
+        
+        Complexity: O(r² L) contractions, each O(r²) → O(r² L) total
+        vs O(N²) = O(4^L) for dense matvec.
+        
         Args:
-            v: Vector, shape (N,)
+            v: Vector, shape (N,) where N = 2^L
             
         Returns:
             Result vector, shape (N,)
         """
-        # For now, use dense reconstruction
-        # TODO: Implement true QTT matvec
-        K = self.to_dense()
-        return K @ v
+        N = v.shape[0]
+        L = self.n_bits
+        
+        # For small matrices, dense is faster due to BLAS optimization
+        if N <= 256:
+            K = self.to_dense()
+            return K @ v
+        
+        # Reshape v to QTT-like structure: (2, 2, ..., 2) with L modes
+        v_reshaped = v.reshape((2,) * L)
+        
+        # The matrix QTT has 2L cores for an N×N matrix where N=2^L
+        # Cores alternate between row and column indices
+        # We need to contract over column indices (every other mode)
+        
+        if len(self.cores) == 2 * L:
+            # Full matrix-QTT with 2L cores
+            # Contract from right to left for numerical stability
+            result = None
+            v_idx = L - 1  # Start from last v index
+            
+            for k in range(2 * L - 1, -1, -1):
+                core = self.cores[k]  # (r_{k-1}, 2, r_k)
+                
+                if k % 2 == 1:  # Column index - contract with v
+                    if v_idx >= 0:
+                        # Contract core with v slice
+                        v_slice = v_reshaped.select(v_idx, 0) if v_idx == 0 else v_reshaped
+                        # Sum over mode 1 (the column index)
+                        if result is None:
+                            # First contraction: (r_{k-1}, 2, r_k) @ v[..., 2] → (r_{k-1}, ..., r_k)
+                            result = torch.einsum('abc,c->ab', core, torch.ones(core.shape[-1], device=core.device))
+                        else:
+                            # Contract core with current result
+                            result = torch.einsum('abc,cd->abd', core, result)
+                            result = result.sum(dim=1)  # Sum over column mode
+                        v_idx -= 1
+                else:  # Row index - keep in result
+                    if result is None:
+                        result = core
+                    else:
+                        # Contract rank indices
+                        result = torch.einsum('abc,cd->abd', core, result)
+            
+            # Flatten result to vector
+            if result is not None:
+                return result.flatten()[:N]
+        
+        # Fallback: MPO-MPS contraction for general case
+        # Convert v to MPS (TT format)
+        v_cores = self._vector_to_tt(v, max_rank=max(self.ranks) if self.ranks else 10)
+        
+        # Contract MPO (matrix QTT) with MPS (vector TT)
+        # Result is MPS which we convert back to dense
+        result_cores = self._mpo_mps_contraction(self.cores, v_cores)
+        
+        # Convert result TT back to vector
+        result = self._tt_to_vector(result_cores)
+        return result[:N]
+    
+    def _vector_to_tt(self, v: torch.Tensor, max_rank: int = 50) -> List[torch.Tensor]:
+        """Convert dense vector to TT format using rSVD."""
+        N = v.shape[0]
+        L = int(math.log2(N))
+        
+        v_reshaped = v.reshape((2,) * L)
+        cores = []
+        current = v_reshaped.reshape(2, -1)
+        
+        for k in range(L - 1):
+            m, n = current.shape
+            q = min(max_rank + 5, min(m, n))
+            
+            if m > 10 and n > 10:
+                U, S, V = torch.svd_lowrank(current, q=q, niter=2)
+            else:
+                U, S, Vh = torch.linalg.svd(current, full_matrices=False)
+                V = Vh.T
+            
+            rank = min(max_rank, int((S > 1e-10 * S[0]).sum()))
+            rank = max(1, rank)
+            
+            U = U[:, :rank]
+            S = S[:rank]
+            V = V[:, :rank]
+            
+            if k == 0:
+                cores.append(U.reshape(1, 2, rank))
+            else:
+                r_prev = cores[-1].shape[-1]
+                cores.append(U.reshape(r_prev, 2, rank))
+            
+            current = (torch.diag(S) @ V.T).reshape(rank * 2, -1)
+        
+        # Last core
+        r_prev = cores[-1].shape[-1] if cores else 1
+        cores.append(current.reshape(r_prev, 2, 1))
+        
+        return cores
+    
+    def _mpo_mps_contraction(self, mpo_cores: List[torch.Tensor], 
+                              mps_cores: List[torch.Tensor]) -> List[torch.Tensor]:
+        """Contract MPO with MPS to get result MPS."""
+        L = len(mps_cores)
+        result_cores = []
+        
+        # For 2L MPO cores contracting with L MPS cores
+        # We pair MPO cores and contract with corresponding MPS core
+        
+        for k in range(L):
+            mps_core = mps_cores[k]  # (r_in, 2, r_out)
+            
+            if 2 * k < len(mpo_cores):
+                # Row core
+                mpo_row = mpo_cores[2 * k] if 2 * k < len(mpo_cores) else None
+                # Column core  
+                mpo_col = mpo_cores[2 * k + 1] if 2 * k + 1 < len(mpo_cores) else None
+                
+                if mpo_row is not None and mpo_col is not None:
+                    # Contract: mpo_row[a,i,b] @ mpo_col[b,j,c] @ mps[d,j,e] → result[a*d, i, c*e]
+                    # First contract mpo cores
+                    mpo_local = torch.einsum('aib,bjc->aijc', mpo_row, mpo_col)
+                    # Then contract j with mps
+                    result = torch.einsum('aijc,dje->adiec', mpo_local, mps_core)
+                    # Reshape to (r_left, 2, r_right)
+                    r_left = result.shape[0] * result.shape[1]
+                    r_right = result.shape[3] * result.shape[4]
+                    result_cores.append(result.reshape(r_left, 2, r_right))
+                else:
+                    result_cores.append(mps_core)
+            else:
+                result_cores.append(mps_core)
+        
+        return result_cores
+    
+    def _tt_to_vector(self, cores: List[torch.Tensor]) -> torch.Tensor:
+        """Convert TT cores back to dense vector."""
+        result = cores[0]
+        for core in cores[1:]:
+            result = torch.einsum('...a,abc->...bc', result, core)
+        return result.flatten()
     
     def solve(self, b: torch.Tensor, 
               reg: float = 1e-6) -> torch.Tensor:

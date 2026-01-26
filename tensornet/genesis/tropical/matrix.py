@@ -381,13 +381,14 @@ def has_negative_cycle(A: TropicalMatrix) -> bool:
 
 def tropical_eigenvalue(A: TropicalMatrix) -> float:
     """
-    Compute the tropical eigenvalue (max cycle mean).
+    Compute the tropical eigenvalue (max cycle mean / min cycle mean).
     
     For min-plus: λ = min over cycles c of (weight(c) / length(c))
+    For max-plus: λ = max over cycles c of (weight(c) / length(c))
     
     This is related to the asymptotic behavior: A^n → n·λ·J + bounded
     
-    Uses Karp's algorithm for the minimum mean cycle.
+    Uses Karp's algorithm for the minimum/maximum mean cycle.
     
     Args:
         A: Square tropical matrix
@@ -397,8 +398,45 @@ def tropical_eigenvalue(A: TropicalMatrix) -> float:
     """
     n = A.size
     
-    if A.semiring.semiring_type != SemiringType.MIN_PLUS:
-        raise NotImplementedError("Max-plus eigenvalue pending")
+    if A.semiring.semiring_type == SemiringType.MAX_PLUS:
+        # Max-plus eigenvalue: maximum cycle mean
+        # Uses dual Karp's algorithm
+        # λ = min_j max_k (D^(n)_0j - D^(k)_0j) / (n - k)
+        
+        D_k = [None] * (n + 1)
+        D_k[0] = torch.full((n, n), A.semiring.zero, dtype=A.data.dtype, device=A.data.device)
+        for i in range(n):
+            D_k[0][i, i] = 0.0
+        
+        for k in range(1, n + 1):
+            D_k[k] = tropical_matmul(
+                TropicalMatrix(D_k[k-1], A.semiring, n), A
+            ).data
+        
+        # For max-plus, we want the maximum mean cycle
+        # λ = min_j max_k (D^n_0j - D^k_0j) / (n - k)
+        lambda_est = float('inf')
+        
+        for j in range(n):
+            d_n = D_k[n][0, j].item()
+            if d_n <= A.semiring.zero + 1:
+                continue  # Unreachable
+            
+            max_avg = -float('inf')
+            for k in range(n):
+                d_k = D_k[k][0, j].item()
+                if d_k <= A.semiring.zero + 1:
+                    continue
+                
+                avg = (d_n - d_k) / (n - k)
+                max_avg = max(max_avg, avg)
+            
+            if max_avg > -float('inf'):
+                lambda_est = min(lambda_est, max_avg)
+        
+        return lambda_est if lambda_est < float('inf') else 0.0
+    
+    # Min-plus eigenvalue (original implementation)
     
     # Karp's algorithm: compute D^(k) for k = 0, ..., n
     # λ = max_j min_k (D^(n)_ij - D^(k)_ij) / (n - k)

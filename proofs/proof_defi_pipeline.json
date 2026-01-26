@@ -1,0 +1,39 @@
+{
+  "proof_type": "defi_discovery_pipeline",
+  "phase": 1,
+  "timestamp": "2026-01-25T22:19:56.601136+00:00",
+  "results": [
+    {
+      "name": "ingester_token_flows",
+      "status": "PASS",
+      "time_ms": 3343.428162006603
+    },
+    {
+      "name": "ingester_call_graph",
+      "status": "PASS",
+      "time_ms": 0.07656299567315727
+    },
+    {
+      "name": "ingester_price_series",
+      "status": "PASS",
+      "time_ms": 0.27365799905965105
+    },
+    {
+      "name": "pool_analysis",
+      "status": "PASS",
+      "time_ms": 1254.481712996494
+    },
+    {
+      "name": "lending_analysis",
+      "status": "PASS",
+      "time_ms": 1136.6980020029587
+    },
+    {
+      "name": "report_generation",
+      "status": "PASS",
+      "time_ms": 1187.6823489947128
+    }
+  ],
+  "all_passed": true,
+  "hash": "29bc1815966496782e5af83d59177d5fc96b4639eea7e99d295fef089b262ccb"
+}

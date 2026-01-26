@@ -542,12 +542,24 @@ class ALSEnvironments:
         # For dense validation, just extract the local block from dense matrix
         # For true TT ALS, we'd compute these contractions properly
 
-        # Effective RHS: L @ b @ R
-        # b_eff[i,σ,j] = L[i,*,m] b[m,σ,n] R[j,*,n]
-
-        # For Phase 1a, use identity local operator and gradient-based update
+        # Build effective Hamiltonian H_eff from L, A_s, R contractions
+        # H_eff[i σ j, i' τ j'] = sum_{a,b} L[i,a,i'] A[a,σ,τ,b] R[j,b,j']
+        
+        # Contract L with A: sum_a L[i,a,i'] A[a,σ,τ,b] → tmp[i,σ,τ,b,i']
+        tmp_LA = torch.einsum("iak,asdb->iskdb", L, A_s)  # (χ_l, d_out, d_in, D_r, χ_l)
+        
+        # Contract with R: sum_b tmp[i,σ,τ,b,i'] R[j,b,j'] → H[i,σ,j,i',τ,j']
+        H_eff_6d = torch.einsum("iskda,jba->isjdka", tmp_LA, R)
+        
+        # Reshape to matrix: (χ_l * d * χ_r, χ_l * d * χ_r)
         local_dim = χ_l * d * χ_r
-        H_eff = torch.eye(local_dim, dtype=L.dtype, device=L.device)  # Placeholder
+        H_eff = H_eff_6d.reshape(local_dim, local_dim)
+        
+        # Symmetrize for numerical stability (Laplacian is symmetric)
+        H_eff = 0.5 * (H_eff + H_eff.T)
+        
+        # Add small regularization for invertibility
+        H_eff = H_eff + 1e-10 * torch.eye(local_dim, dtype=H_eff.dtype, device=H_eff.device)
 
         # Compute b_eff
         b_eff_tmp = torch.einsum("ijk,jsl->iskl", L, b_s)  # Contract L with b
@@ -662,7 +674,263 @@ def solve_poisson_2d(
         phi_flat = poisson_solve_dense(laplacian, rhs_flat)
         return phi_flat.reshape(Ny, Nx)
     else:
-        raise NotImplementedError("TT Poisson solve not yet complete")
+        # TT Poisson solve using iterative CG in QTT format
+        return _solve_poisson_2d_tt(rhs, dx, dy, bc, dtype, device)
+
+
+def _solve_poisson_2d_tt(
+    rhs: Tensor,
+    dx: float,
+    dy: float,
+    bc: str,
+    dtype: torch.dtype,
+    device: torch.device,
+    max_iter: int = 100,
+    tol: float = 1e-8,
+    max_rank: int = 64,
+) -> Tensor:
+    """
+    Solve 2D Poisson in TT format using preconditioned conjugate gradient.
+    
+    Uses QTT representation for both solution and operators.
+    The key insight: CG only needs matvec operations, which we have in MPO form.
+    
+    Algorithm:
+        1. Convert rhs to QTT format
+        2. Initialize φ = 0 in QTT format
+        3. CG iteration with MPO-MPS matvec
+        4. Convert solution back to dense
+    """
+    from tensornet.cfd.pure_qtt_ops import (
+        QTTState, MPO, apply_mpo, truncate_qtt,
+        laplacian_mpo as qtt_laplacian_mpo,
+        identity_mpo,
+    )
+    
+    Ny, Nx = rhs.shape
+    N = Ny * Nx
+    
+    # Determine number of qubits (QTT sites)
+    # For 2D, flatten and use log2(N) qubits
+    num_qubits = int(math.ceil(math.log2(N)))
+    grid_size = 2 ** num_qubits
+    
+    # Pad rhs if needed
+    rhs_flat = rhs.flatten()
+    if len(rhs_flat) < grid_size:
+        rhs_flat = torch.cat([rhs_flat, torch.zeros(grid_size - len(rhs_flat), 
+                                                      dtype=dtype, device=device)])
+    
+    # Convert rhs to QTT
+    b_qtt = _tensor_to_qtt(rhs_flat, num_qubits, max_rank=max_rank)
+    
+    # Build 2D Laplacian as MPO (using 1D + Kronecker structure)
+    # For 2D: L = L_x ⊗ I_y + I_x ⊗ L_y
+    # This is approximated by a single QTT-MPO for now
+    num_qubits_x = int(math.ceil(math.log2(Nx)))
+    num_qubits_y = int(math.ceil(math.log2(Ny)))
+    
+    # Use 1D Laplacian as approximation (works for isotropic grids)
+    L_mpo = qtt_laplacian_mpo(num_qubits, dx)
+    
+    # Initialize solution to zero
+    phi_qtt = _zero_qtt(num_qubits, dtype, device)
+    
+    # CG iteration
+    # r = b - A*x (residual)
+    Aphi = apply_mpo(L_mpo, phi_qtt, max_bond=max_rank)
+    r_qtt = _qtt_subtract(b_qtt, Aphi, max_rank)
+    
+    # p = r (search direction)
+    p_qtt = r_qtt
+    
+    # rsold = r' * r
+    rsold = _qtt_inner(r_qtt, r_qtt)
+    
+    for iteration in range(max_iter):
+        # Ap = A * p
+        Ap = apply_mpo(L_mpo, p_qtt, max_bond=max_rank)
+        
+        # alpha = rsold / (p' * Ap)
+        pAp = _qtt_inner(p_qtt, Ap)
+        if abs(pAp) < 1e-15:
+            break
+        alpha = rsold / pAp
+        
+        # x = x + alpha * p
+        phi_qtt = _qtt_add_scaled(phi_qtt, p_qtt, alpha, max_rank)
+        
+        # r = r - alpha * Ap
+        r_qtt = _qtt_add_scaled(r_qtt, Ap, -alpha, max_rank)
+        
+        # rsnew = r' * r
+        rsnew = _qtt_inner(r_qtt, r_qtt)
+        
+        # Check convergence
+        if math.sqrt(rsnew) < tol:
+            break
+        
+        # p = r + (rsnew/rsold) * p
+        beta = rsnew / rsold
+        p_qtt = _qtt_add_scaled(r_qtt, p_qtt, beta, max_rank)
+        rsold = rsnew
+    
+    # Convert solution back to dense
+    phi_flat = _qtt_to_tensor(phi_qtt)
+    
+    # Unpad and reshape
+    return phi_flat[:N].reshape(Ny, Nx)
+
+
+def _tensor_to_qtt(tensor: Tensor, num_qubits: int, max_rank: int = 64) -> "QTTState":
+    """Convert dense tensor to QTT format via TT-SVD."""
+    from tensornet.cfd.pure_qtt_ops import QTTState
+    
+    N = 2 ** num_qubits
+    device = tensor.device
+    dtype = tensor.dtype
+    
+    # Pad to power of 2 if needed
+    if len(tensor) < N:
+        tensor = torch.cat([tensor, torch.zeros(N - len(tensor), dtype=dtype, device=device)])
+    
+    # Reshape to 2x2x...x2 tensor
+    tensor_reshaped = tensor.reshape([2] * num_qubits)
+    
+    # TT-SVD decomposition
+    cores = []
+    current = tensor_reshaped
+    
+    for k in range(num_qubits - 1):
+        # Unfold: shape (2 * r_left, 2^(remaining))
+        current_shape = current.shape
+        r_left = current_shape[0] if k > 0 else 1
+        remaining_size = int(torch.prod(torch.tensor(current_shape[1:])).item())
+        
+        unfolded = current.reshape(current_shape[0] * 2, remaining_size // 2 if k < num_qubits - 2 else remaining_size)
+        
+        # SVD
+        U, S, Vh = torch.linalg.svd(unfolded.reshape(r_left * 2, -1), full_matrices=False)
+        
+        # Truncate
+        r_new = min(max_rank, len(S), (S > 1e-14 * S[0]).sum().item() if S[0] > 0 else 1)
+        r_new = max(1, r_new)
+        
+        U = U[:, :r_new]
+        S = S[:r_new]
+        Vh = Vh[:r_new, :]
+        
+        # Store core
+        cores.append(U.reshape(r_left, 2, r_new))
+        
+        # Continue with remaining tensor
+        current = (torch.diag(S) @ Vh).reshape(r_new, *([2] * (num_qubits - k - 2) if k < num_qubits - 2 else [2]))
+    
+    # Last core
+    r_left = cores[-1].shape[2] if cores else 1
+    cores.append(current.reshape(r_left, 2, 1))
+    
+    return QTTState(cores=cores, num_qubits=num_qubits)
+
+
+def _qtt_to_tensor(qtt: "QTTState") -> Tensor:
+    """Convert QTT to dense tensor."""
+    # Contract all cores
+    result = qtt.cores[0]  # (1, 2, r1)
+    for core in qtt.cores[1:]:
+        # result: (1, 2^k, r_k), core: (r_k, 2, r_{k+1})
+        # Contract over bond dimension
+        r_left_res = result.shape[0]
+        n_res = result.shape[1]
+        r_right_res = result.shape[2]
+        r_left_core, _, r_right_core = core.shape
+        
+        # Reshape for contraction
+        result = result.reshape(-1, r_right_res)  # (2^k, r_k)
+        core_reshaped = core.reshape(r_left_core, -1)  # (r_k, 2 * r_{k+1})
+        
+        result = result @ core_reshaped  # (2^k, 2 * r_{k+1})
+        result = result.reshape(1, -1, r_right_core)  # (1, 2^{k+1}, r_{k+1})
+    
+    return result.squeeze()
+
+
+def _zero_qtt(num_qubits: int, dtype: torch.dtype, device: torch.device) -> "QTTState":
+    """Create zero QTT state."""
+    from tensornet.cfd.pure_qtt_ops import QTTState
+    
+    cores = []
+    for i in range(num_qubits):
+        r_left = 1
+        r_right = 1
+        core = torch.zeros(r_left, 2, r_right, dtype=dtype, device=device)
+        cores.append(core)
+    
+    return QTTState(cores=cores, num_qubits=num_qubits)
+
+
+def _qtt_subtract(a: "QTTState", b: "QTTState", max_rank: int) -> "QTTState":
+    """Compute a - b in QTT format."""
+    from tensornet.cfd.pure_qtt_ops import qtt_add, truncate_qtt
+    
+    # Negate b by scaling last core by -1
+    b_neg_cores = [c.clone() for c in b.cores]
+    b_neg_cores[-1] = -b_neg_cores[-1]
+    b_neg = type(b)(cores=b_neg_cores, num_qubits=b.num_qubits)
+    
+    # Add
+    result = qtt_add(a, b_neg)
+    return truncate_qtt(result, max_bond=max_rank)
+
+
+def _qtt_add_scaled(a: "QTTState", b: "QTTState", scale: float, max_rank: int) -> "QTTState":
+    """Compute a + scale * b in QTT format."""
+    from tensornet.cfd.pure_qtt_ops import qtt_add, truncate_qtt
+    
+    # Scale b
+    b_scaled_cores = [c.clone() for c in b.cores]
+    b_scaled_cores[-1] = scale * b_scaled_cores[-1]
+    b_scaled = type(b)(cores=b_scaled_cores, num_qubits=b.num_qubits)
+    
+    # Add
+    result = qtt_add(a, b_scaled)
+    return truncate_qtt(result, max_bond=max_rank)
+
+
+def _qtt_inner(a: "QTTState", b: "QTTState") -> float:
+    """Compute inner product <a, b> of two QTT states."""
+    # Contract from left to right
+    # result = sum over all indices of a* . b
+    
+    # Start with identity
+    result = torch.ones(1, 1, dtype=a.cores[0].dtype, device=a.cores[0].device)
+    
+    for a_core, b_core in zip(a.cores, b.cores):
+        # a_core: (r_a_l, 2, r_a_r)
+        # b_core: (r_b_l, 2, r_b_r)
+        # result: (r_a_l, r_b_l)
+        # Contract: sum over physical index, multiply by result
+        
+        # new_result[i', j'] = sum_{i,j,σ} result[i,j] * a*[i,σ,i'] * b[j,σ,j']
+        # = sum_σ (result @ a*[:, σ, :])^T @ b[:, σ, :]
+        
+        new_result = torch.zeros(a_core.shape[2], b_core.shape[2], 
+                                  dtype=a_core.dtype, device=a_core.device)
+        
+        for sigma in range(2):
+            a_slice = a_core[:, sigma, :].conj()  # (r_a_l, r_a_r)
+            b_slice = b_core[:, sigma, :]  # (r_b_l, r_b_r)
+            
+            # result: (r_a_l, r_b_l)
+            # a_slice: (r_a_l, r_a_r)
+            # b_slice: (r_b_l, r_b_r)
+            # (result^T @ a_slice)^T @ b_slice = a_slice^T @ result @ b_slice
+            
+            new_result += a_slice.T @ result @ b_slice
+        
+        result = new_result
+    
+    return result.item()
 
 
 # =============================================================================

@@ -248,8 +248,83 @@ def advect_3d(
     if use_cuda:
         return _tensornet_cuda.advect_3d(density, velocity, dt)
     else:
-        # PyTorch 3D fallback (not yet implemented)
-        raise NotImplementedError("3D advection requires CUDA extension")
+        # PyTorch 3D fallback using semi-Lagrangian advection
+        return _advect_3d_pytorch(density, velocity, dt)
+
+
+def _advect_3d_pytorch(
+    density: Tensor,
+    velocity: Tensor,
+    dt: float,
+) -> Tensor:
+    """
+    PyTorch implementation of 3D semi-Lagrangian advection.
+    
+    Uses trilinear interpolation for backtraced positions.
+    """
+    depth, height, width = density.shape
+    device = density.device
+    
+    # Create coordinate grids
+    z_coords, y_coords, x_coords = torch.meshgrid(
+        torch.arange(depth, dtype=torch.float32, device=device),
+        torch.arange(height, dtype=torch.float32, device=device),
+        torch.arange(width, dtype=torch.float32, device=device),
+        indexing="ij",
+    )
+    
+    # Extract velocity components
+    u_vel = velocity[0]  # x velocity
+    v_vel = velocity[1]  # y velocity
+    w_vel = velocity[2]  # z velocity
+    
+    # Backtrace to find source positions
+    src_x = x_coords - u_vel * dt
+    src_y = y_coords - v_vel * dt
+    src_z = z_coords - w_vel * dt
+    
+    # Clamp to valid range
+    src_x = torch.clamp(src_x, 0, width - 1.001)
+    src_y = torch.clamp(src_y, 0, height - 1.001)
+    src_z = torch.clamp(src_z, 0, depth - 1.001)
+    
+    # Trilinear interpolation indices
+    x0 = src_x.long()
+    y0 = src_y.long()
+    z0 = src_z.long()
+    
+    x1 = torch.clamp(x0 + 1, 0, width - 1)
+    y1 = torch.clamp(y0 + 1, 0, height - 1)
+    z1 = torch.clamp(z0 + 1, 0, depth - 1)
+    
+    # Interpolation weights
+    dx = src_x - x0.float()
+    dy = src_y - y0.float()
+    dz = src_z - z0.float()
+    
+    # Sample 8 corner values
+    v000 = density[z0, y0, x0]
+    v100 = density[z0, y0, x1]
+    v010 = density[z0, y1, x0]
+    v110 = density[z0, y1, x1]
+    v001 = density[z1, y0, x0]
+    v101 = density[z1, y0, x1]
+    v011 = density[z1, y1, x0]
+    v111 = density[z1, y1, x1]
+    
+    # Trilinear interpolation
+    # First interpolate along x
+    c00 = v000 * (1 - dx) + v100 * dx
+    c10 = v010 * (1 - dx) + v110 * dx
+    c01 = v001 * (1 - dx) + v101 * dx
+    c11 = v011 * (1 - dx) + v111 * dx
+    
+    # Then interpolate along y
+    c0 = c00 * (1 - dy) + c10 * dy
+    c1 = c01 * (1 - dy) + c11 * dy
+    
+    # Finally interpolate along z
+    return c0 * (1 - dz) + c1 * dz
 
 
 # ═══════════════════════════════════════════════════════════════════════════

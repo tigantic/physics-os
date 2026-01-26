@@ -1,0 +1,37 @@
+# Prometheus configuration for TensorNet Discovery
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+rule_files: []
+
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # TensorNet Discovery API
+  - job_name: "tensornet-discovery"
+    static_configs:
+      - targets: ["discovery-api:8000"]
+    metrics_path: /metrics
+    scrape_interval: 10s
+
+  # Discovery workers
+  - job_name: "tensornet-workers"
+    static_configs:
+      - targets: ["discovery-worker:8001"]
+    metrics_path: /metrics
+    scrape_interval: 10s
+
+  # Redis exporter (if using redis_exporter)
+  - job_name: "redis"
+    static_configs:
+      - targets: ["redis:6379"]

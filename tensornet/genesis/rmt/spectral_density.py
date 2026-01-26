@@ -139,20 +139,48 @@ class SpectralDensity:
         Returns:
             List of moments [μ_0, μ_1, ..., μ_{max_order}]
         """
-        # Use dense for now
-        if self.ensemble.size > 2**12:
-            raise NotImplementedError("Large-scale moments pending")
-        
-        H = self.ensemble.to_dense()
+        # Use dense for small matrices
+        if self.ensemble.size <= 2**12:
+            H = self.ensemble.to_dense()
+            N = self.ensemble.size
+            
+            moments = []
+            H_power = torch.eye(N, dtype=H.dtype)
+            
+            for k in range(max_order + 1):
+                mu_k = torch.trace(H_power).real / N
+                moments.append(mu_k.item())
+                H_power = H_power @ H
+            
+            return moments
+        else:
+            # Large-scale moments via Hutchinson trace estimation
+            # Tr(H^k) ≈ (1/m) Σ v^T H^k v for random v
+            return self._moments_hutchinson(max_order)
+    
+    def _moments_hutchinson(self, max_order: int, num_samples: int = 20) -> List[float]:
+        """Estimate moments using Hutchinson trace estimator."""
         N = self.ensemble.size
-        
         moments = []
-        H_power = torch.eye(N, dtype=H.dtype)
         
         for k in range(max_order + 1):
-            mu_k = torch.trace(H_power).real / N
-            moments.append(mu_k.item())
-            H_power = H_power @ H
+            trace_sum = 0.0
+            
+            for _ in range(num_samples):
+                # Random Rademacher vector
+                v = 2.0 * torch.randint(0, 2, (N,), dtype=torch.float64) - 1.0
+                
+                # Compute H^k v iteratively
+                Hkv = v
+                for _ in range(k):
+                    Hkv = self.ensemble.matvec(Hkv)
+                
+                # v^T H^k v
+                trace_sum += (v @ Hkv).item()
+            
+            # Normalized moment
+            mu_k = trace_sum / (num_samples * N)
+            moments.append(mu_k)
         
         return moments
 

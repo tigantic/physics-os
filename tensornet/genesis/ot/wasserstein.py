@@ -107,11 +107,21 @@ def wasserstein_distance(
         W = _wasserstein_quantile(mu, nu, p)
         
         if return_full_result:
-            # Wrap in SinkhornResult for consistent interface
+            # For quantile method, the optimal transport plan is the monotone map
+            # u, v are the marginal scaling factors (all ones for exact transport)
+            # Create uniform scaling QTT vectors
+            ones_u = QTTDistribution.uniform(
+                mu.grid_bounds[0], mu.grid_bounds[1], mu.grid_size,
+                dtype=mu.dtype, device=mu.device
+            )
+            ones_v = QTTDistribution.uniform(
+                nu.grid_bounds[0], nu.grid_bounds[1], nu.grid_size,
+                dtype=nu.dtype, device=nu.device
+            )
             return SinkhornResult(
                 wasserstein_distance=W,
-                u=mu,  # Placeholder
-                v=nu,  # Placeholder
+                u=ones_u,
+                v=ones_v,
                 iterations=1,
                 converged=True,
                 primal_cost=W ** p,
@@ -212,12 +222,64 @@ def _wasserstein_quantile(
         return float(integral ** (1.0 / p))
     
     else:
-        # For large grids, use QTT-native computation
-        # This would involve QTT representations of CDFs and quantiles
-        raise NotImplementedError(
-            f"QTT-native quantile method for grid_size > 2^20 coming soon. "
-            f"Use method='sinkhorn' for large grids."
-        )
+        # For large grids, use QTT-native quantile computation
+        # Step 1: Compute CDFs in QTT format
+        F_mu = _compute_cdf(mu)
+        F_nu = _compute_cdf(nu)
+        
+        # Step 2: Build quantile functions via sampling + TCI
+        # Sample t values uniformly and compute Q(t) via binary search
+        n_samples = min(mu.grid_size, 100000)
+        t_samples = torch.linspace(0, 1, n_samples, dtype=mu.dtype, device=mu.device)
+        
+        Q_mu_samples = torch.zeros(n_samples, dtype=mu.dtype, device=mu.device)
+        Q_nu_samples = torch.zeros(n_samples, dtype=mu.dtype, device=mu.device)
+        
+        num_bits = len(mu.cores)
+        low, high = mu.grid_bounds
+        dx = mu.dx
+        
+        for i, ti in enumerate(t_samples):
+            # Binary search in QTT for quantile
+            idx_mu = _qtt_quantile_search(F_mu, float(ti), num_bits)
+            idx_nu = _qtt_quantile_search(F_nu, float(ti), num_bits)
+            
+            Q_mu_samples[i] = low + (idx_mu + 0.5) * dx
+            Q_nu_samples[i] = low + (idx_nu + 0.5) * dx
+        
+        # Step 3: Integrate |Q_μ - Q_ν|^p via trapezoidal rule
+        diff = torch.abs(Q_mu_samples - Q_nu_samples) ** p
+        dt = 1.0 / n_samples
+        integral = (diff.sum() - 0.5 * (diff[0] + diff[-1])) * dt
+        
+        return float(integral ** (1.0 / p))
+
+
+def _qtt_quantile_search(cdf: QTTDistribution, target: float, num_bits: int) -> int:
+    """Binary search for quantile index in QTT CDF."""
+    grid_size = cdf.grid_size
+    low, high = 0, grid_size - 1
+    
+    while low < high:
+        mid = (low + high) // 2
+        binary_mid = [(mid >> b) & 1 for b in range(num_bits)]
+        val = _evaluate_qtt_at_index(cdf, binary_mid)
+        
+        if val < target:
+            low = mid + 1
+        else:
+            high = mid
+    
+    return low
+
+
+def _evaluate_qtt_at_index(dist: QTTDistribution, binary_idx: list) -> float:
+    """Evaluate QTT at a single index given in binary."""
+    result = torch.ones(1, 1, dtype=dist.dtype, device=dist.device)
+    for k, core in enumerate(dist.cores):
+        selected = core[:, binary_idx[k], :]
+        result = result @ selected
+    return float(result[0, 0])
 
 
 def _compute_cdf(dist: QTTDistribution) -> QTTDistribution:
@@ -226,11 +288,135 @@ def _compute_cdf(dist: QTTDistribution) -> QTTDistribution:
     
     The CDF is the running sum: F(x_i) = Σ_{j≤i} p_j Δx
     
-    In QTT format, this can be done efficiently using a special
-    "summation MPO" that accumulates prefix sums.
+    In QTT format, this is computed via MPO application with a
+    lower-triangular summation operator.
+    
+    GPU-accelerated via rSVD truncation.
     """
-    # Placeholder - would implement QTT running sum
-    return dist
+    dx = dist.dx
+    num_bits = dist.num_cores
+    device = dist.device
+    dtype = dist.dtype
+    
+    # For small grids, compute dense CDF and convert back
+    if dist.grid_size <= 2**16:
+        dense = dist.to_dense()
+        cdf = torch.cumsum(dense * dx, dim=0)
+        
+        # Convert back to QTT via TT-rSVD
+        tensor = cdf.reshape([2] * num_bits)
+        
+        cores = []
+        C = tensor
+        r_prev = 1
+        
+        for k in range(num_bits - 1):
+            if k == 0:
+                mat = C.reshape(2, -1)
+            else:
+                mat = C.reshape(r_prev * 2, -1)
+            
+            # Randomized SVD
+            m, n = mat.shape
+            q = min(30, min(m, n))
+            
+            if m > 4 and n > 4:
+                U, S, V = torch.svd_lowrank(mat, q=q, niter=2)
+            else:
+                U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+                V = Vh.T
+            
+            # Truncate
+            tol = 1e-10 * S[0] if S[0] > 0 else 1e-10
+            rank = max(1, int((S > tol).sum()))
+            rank = min(rank, 30)
+            
+            U = U[:, :rank]
+            S = S[:rank]
+            V = V[:, :rank]
+            
+            if k == 0:
+                core = U.reshape(1, 2, rank)
+            else:
+                core = U.reshape(r_prev, 2, rank)
+            
+            cores.append(core)
+            
+            SV = torch.diag(S) @ V.T
+            remaining = mat.shape[1] // 2
+            C = SV.reshape(rank, 2, max(1, remaining))
+            r_prev = rank
+        
+        last_core = C.reshape(r_prev, 2, 1)
+        cores.append(last_core)
+        
+        return QTTDistribution(cores=cores, grid_bounds=dist.grid_bounds)
+    
+    else:
+        # Large grid: apply prefix-sum MPO
+        # The prefix sum MPO has structure:
+        # L_k[i,j] = 1 if i >= j (lower triangular)
+        # In binary, this corresponds to carry-like propagation
+        
+        # Build prefix-sum MPO cores
+        mpo_cores = []
+        for k in range(num_bits):
+            if k == 0:
+                # First core: (1, 2, 2, 2)
+                # Encodes lower-triangular structure for MSB
+                core = torch.zeros(1, 2, 2, 2, dtype=dtype, device=device)
+                core[0, 0, 0, 0] = 1.0  # 0 <= 0
+                core[0, 0, 1, 1] = 1.0  # 0 <= 1
+                core[0, 1, 0, 0] = 0.0  # 1 > 0 (wait for lower bits to decide)
+                core[0, 1, 1, 0] = 1.0  # 1 <= 1, continue checking
+                core[0, 1, 1, 1] = 1.0  # propagate
+            elif k == num_bits - 1:
+                # Last core: (2, 2, 2, 1)
+                core = torch.zeros(2, 2, 2, 1, dtype=dtype, device=device)
+                core[0, 0, 0, 0] = 1.0
+                core[0, 0, 1, 0] = 1.0
+                core[0, 1, 0, 0] = 0.0
+                core[0, 1, 1, 0] = 1.0
+                core[1, :, :, 0] = 1.0  # Propagate equality
+            else:
+                # Middle cores: (2, 2, 2, 2)
+                core = torch.zeros(2, 2, 2, 2, dtype=dtype, device=device)
+                # Track carry for < and = cases
+                core[0, 0, 0, 0] = 1.0  # strict less continues
+                core[0, 0, 1, 1] = 1.0
+                core[0, 1, 0, 0] = 0.0
+                core[0, 1, 1, 0] = 1.0
+                core[1, 0, 0, 1] = 1.0  # equality continues
+                core[1, 0, 1, 1] = 1.0
+                core[1, 1, 0, 0] = 0.0
+                core[1, 1, 1, 1] = 1.0
+            mpo_cores.append(core)
+        
+        # Apply MPO to distribution (MPO × MPS contraction)
+        result_cores = []
+        for mpo_core, mps_core in zip(mpo_cores, dist.cores):
+            # MPO: (r_mpo_in, 2, 2, r_mpo_out)
+            # MPS: (r_mps_in, 2, r_mps_out)
+            # Contract over j (column index of MPO = physical index of MPS)
+            # Result: (r_mpo_in * r_mps_in, 2, r_mpo_out * r_mps_out)
+            
+            r_mpo_in, n_i, n_j, r_mpo_out = mpo_core.shape
+            r_mps_in, _, r_mps_out = mps_core.shape
+            
+            contracted = torch.einsum('aijb,cjd->acibrd', mpo_core, mps_core)
+            contracted = contracted.reshape(
+                r_mpo_in * r_mps_in, n_i, r_mpo_out * r_mps_out
+            )
+            result_cores.append(contracted)
+        
+        # Truncate ranks via rSVD sweeping
+        from tensornet.cfd.nd_shift_mpo import truncate_cores
+        result_cores = truncate_cores(result_cores, max_rank=30, tol=1e-10)
+        
+        # Scale by dx for CDF
+        result_cores[0] = result_cores[0] * dx
+        
+        return QTTDistribution(cores=result_cores, grid_bounds=dist.grid_bounds)
 
 
 def wasserstein_barycenter(
@@ -298,6 +484,7 @@ def wasserstein_barycenter(
     barycenter = QTTDistribution.mixture([
         (w, d) for w, d in zip(weights, distributions)
     ])
+    barycenter_prev = None
     
     # Fixed-point iteration
     for iteration in range(max_iter):
@@ -316,8 +503,14 @@ def wasserstein_barycenter(
                 distributions, weights, barycenter, **kwargs
             )
         
-        # Check convergence (would compare to previous iterate)
-        # Placeholder
+        # Check convergence via change in barycenter
+        # Compute L2 distance between current and previous
+        if barycenter_prev is not None:
+            diff = barycenter.add(barycenter_prev.scale(-1))
+            change = abs(diff.total_mass())
+            if change < tol:
+                break
+        barycenter_prev = barycenter
     
     return barycenter
 
@@ -333,38 +526,82 @@ def _barycenter_quantile_update(
     
     # Then the barycenter is obtained by inverting this quantile function
     
-    # For small grids, use dense computation
-    if current.grid_size <= 2**20:
-        # Compute all quantile functions
-        quantiles = []
-        for dist in distributions:
-            dense = dist.to_dense()
-            cdf = torch.cumsum(dense * dist.dx, dim=0)
-            cdf = cdf / cdf[-1]
-            
-            low, high = dist.grid_bounds
-            x = torch.linspace(low, high, dist.grid_size, 
-                             dtype=dist.dtype, device=dist.device)
-            
-            t = torch.linspace(0, 1, dist.grid_size,
-                             dtype=dist.dtype, device=dist.device)
-            
-            Q = torch.zeros_like(t)
-            for i, ti in enumerate(t):
-                idx = torch.searchsorted(cdf, ti)
-                Q[i] = x[min(idx, len(x) - 1)]
-            
-            quantiles.append(Q)
-        
-        # Weighted average of quantiles
-        Q_bary = sum(w * Q for w, Q in zip(weights, quantiles))
-        
-        # Convert back to density (derivative of CDF)
-        # This requires inverting Q_bary to get CDF, then differentiating
-        # Simplified: return current for now
-        return current
+    grid_size = current.grid_size
+    low, high = current.grid_bounds
+    dx = current.dx
+    dtype = current.dtype
+    device = current.device
     
-    raise NotImplementedError("Large-grid barycenter coming soon")
+    if grid_size > 2**20:
+        # Large-grid QTT-native barycenter
+        # Use sampling-based approach with QTT quantile functions
+        
+        num_bits = len(current.cores)
+        n_samples = min(grid_size, 100000)
+        t_samples = torch.linspace(0, 1, n_samples, dtype=dtype, device=device)
+        
+        # Compute weighted average of quantiles at each t
+        Q_bary_samples = torch.zeros(n_samples, dtype=dtype, device=device)
+        
+        for dist, w in zip(distributions, weights):
+            F_dist = _compute_cdf(dist)
+            for i, ti in enumerate(t_samples):
+                idx = _qtt_quantile_search(F_dist, float(ti), num_bits)
+                Q_bary_samples[i] += w * (low + (idx + 0.5) * dx)
+        
+        # Convert averaged quantile function back to density
+        # The density is ν(x) = 1 / Q'(F(x)) where Q is the quantile function
+        # Approximate via histogram of pushforward
+        
+        x_grid = torch.linspace(low, high, grid_size, dtype=dtype, device=device)
+        density = torch.zeros(grid_size, dtype=dtype, device=device)
+        
+        # Map Q_bary values to bins
+        for i in range(n_samples):
+            q_val = Q_bary_samples[i]
+            bin_idx = int((q_val - low) / dx)
+            bin_idx = max(0, min(bin_idx, grid_size - 1))
+            density[bin_idx] += 1.0
+        
+        # Normalize to probability density
+        density = density / (density.sum() * dx + 1e-15)
+        
+        return QTTDistribution.from_dense(density, grid_bounds=(low, high), normalize=True)
+    
+    # Dense computation for small grids
+    quantiles = []
+    for dist in distributions:
+        dense = dist.to_dense()
+        cdf = torch.cumsum(dense * dist.dx, dim=0)
+        cdf = cdf / (cdf[-1] + 1e-15)
+        
+        x = torch.linspace(low, high, dist.grid_size, dtype=dtype, device=device)
+        t = torch.linspace(0, 1, dist.grid_size, dtype=dtype, device=device)
+        
+        Q = torch.zeros_like(t)
+        for i, ti in enumerate(t):
+            idx = torch.searchsorted(cdf, ti)
+            Q[i] = x[min(idx, len(x) - 1)]
+        
+        quantiles.append(Q)
+    
+    # Weighted average of quantiles
+    Q_bary = sum(w * Q for w, Q in zip(weights, quantiles))
+    
+    # Convert quantile function to density via histogram pushforward
+    x_grid = torch.linspace(low, high, grid_size, dtype=dtype, device=device)
+    density = torch.zeros(grid_size, dtype=dtype, device=device)
+    
+    for i in range(grid_size):
+        q_val = Q_bary[i]
+        bin_idx = int((q_val - low) / dx)
+        bin_idx = max(0, min(bin_idx, grid_size - 1))
+        density[bin_idx] += 1.0
+    
+    # Normalize
+    density = density / (density.sum() * dx + 1e-15)
+    
+    return QTTDistribution.from_dense(density, grid_bounds=(low, high), normalize=True)
 
 
 def _barycenter_sinkhorn_update(
@@ -373,7 +610,60 @@ def _barycenter_sinkhorn_update(
     current: QTTDistribution,
     **kwargs,
 ) -> QTTDistribution:
-    """Update barycenter using Sinkhorn iterations."""
-    # Full Sinkhorn barycenter algorithm
-    # See Cuturi & Doucet, ICML 2014
-    raise NotImplementedError("Sinkhorn barycenter update coming soon")
+    """
+    Update barycenter using Sinkhorn iterations.
+    
+    Implements the iterative Bregman projection algorithm from
+    Cuturi & Doucet, ICML 2014.
+    """
+    epsilon = kwargs.get('epsilon', 0.1)
+    n_inner = kwargs.get('n_inner_iter', 10)
+    
+    from .sinkhorn_qtt import QTTSinkhorn
+    from .cost_matrices import gaussian_kernel_mpo
+    
+    n_dists = len(distributions)
+    grid_size = current.grid_size
+    grid_bounds = current.grid_bounds
+    
+    # Initialize scaling vectors for each distribution
+    v_list = [current.scale(1.0) for _ in range(n_dists)]
+    
+    # Build Gibbs kernel
+    K = gaussian_kernel_mpo(
+        grid_size=grid_size,
+        grid_bounds=grid_bounds,
+        epsilon=epsilon,
+    )
+    
+    # Sinkhorn iterations for barycenter
+    for inner_iter in range(n_inner):
+        # Update each v_i: v_i = μ_i / (K @ current)
+        K_current = K.matvec(current)
+        
+        for i, (dist, v) in enumerate(zip(distributions, v_list)):
+            # Safe division
+            denom = K_current.to_dense() + 1e-15
+            num = dist.to_dense()
+            v_new = num / denom
+            v_list[i] = QTTDistribution.from_dense(
+                v_new, grid_bounds=grid_bounds, normalize=False
+            )
+        
+        # Update barycenter: ν = Π_i (K @ v_i)^{w_i}
+        # In log space: log ν = Σ_i w_i log(K @ v_i)
+        log_bary = torch.zeros(grid_size, dtype=current.dtype, device=current.device)
+        
+        for i, (w, v) in enumerate(zip(weights, v_list)):
+            Kv = K.matvec(v)
+            Kv_dense = Kv.to_dense()
+            log_bary += w * torch.log(Kv_dense + 1e-15)
+        
+        bary_dense = torch.exp(log_bary)
+        bary_dense = bary_dense / (bary_dense.sum() * current.dx + 1e-15)
+        
+        current = QTTDistribution.from_dense(
+            bary_dense, grid_bounds=grid_bounds, normalize=True
+        )
+    
+    return current

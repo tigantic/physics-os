@@ -1,0 +1,231 @@
+@import url('https://rsms.me/inter/inter.css');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	/* Backgrounds */
+	--bg-void: #08080a;
+	--bg-surface: #111114;
+	--bg-elevated: #1a1a1f;
+
+	/* Regimes */
+	--regime-stable: #22c55e;
+	--regime-trending: #3b82f6;
+	--regime-chaos: #ef4444;
+	--regime-transition: #f59e0b;
+
+	/* Primitives */
+	--prim-ot: #8b5cf6;
+	--prim-sgw: #06b6d4;
+	--prim-rmt: #f97316;
+	--prim-tg: #ec4899;
+	--prim-rkhs: #84cc16;
+	--prim-ph: #14b8a6;
+	--prim-ga: #f43f5e;
+
+	/* Text */
+	--text-primary: #fafafa;
+	--text-secondary: #71717a;
+	--text-muted: #3f3f46;
+
+	/* Accents */
+	--accent-glow: rgba(139, 92, 246, 0.15);
+	--accent-glow-strong: rgba(139, 92, 246, 0.25);
+
+	/* Easing */
+	--ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+	--ease-in-out-sine: cubic-bezier(0.37, 0, 0.63, 1);
+
+	/* Durations */
+	--duration-fast: 100ms;
+	--duration-normal: 200ms;
+	--duration-slow: 400ms;
+	--duration-glacial: 800ms;
+
+	/* Spacing */
+	--space-unit: 0.25rem;
+
+	/* Border radius */
+	--radius-sm: 0.25rem;
+	--radius-md: 0.5rem;
+	--radius-lg: 0.75rem;
+	--radius-xl: 1rem;
+}
+
+@layer base {
+	* {
+		@apply border-zinc-800;
+	}
+
+	html {
+		@apply antialiased;
+		font-feature-settings:
+			'cv02',
+			'cv03',
+			'cv04',
+			'cv11';
+	}
+
+	body {
+		@apply bg-void text-zinc-100;
+		font-family: 'Inter Variable', 'SF Pro Display', system-ui, sans-serif;
+	}
+
+	/* Custom scrollbar */
+	::-webkit-scrollbar {
+		width: 6px;
+		height: 6px;
+	}
+
+	::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: var(--text-muted);
+		border-radius: 3px;
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: var(--text-secondary);
+	}
+
+	/* Selection */
+	::selection {
+		background: var(--prim-ot);
+		color: white;
+	}
+}
+
+@layer components {
+	/* Zero chrome cards */
+	.card {
+		@apply relative overflow-hidden rounded-lg bg-surface/50 backdrop-blur-sm;
+	}
+
+	.card-elevated {
+		@apply card bg-elevated/50;
+	}
+
+	/* Regime indicators */
+	.regime-stable {
+		--regime-color: var(--regime-stable);
+	}
+
+	.regime-trending {
+		--regime-color: var(--regime-trending);
+	}
+
+	.regime-chaos {
+		--regime-color: var(--regime-chaos);
+	}
+
+	.regime-transition {
+		--regime-color: var(--regime-transition);
+	}
+
+	/* Primitive color classes */
+	.prim-ot {
+		--prim-color: var(--prim-ot);
+	}
+	.prim-sgw {
+		--prim-color: var(--prim-sgw);
+	}
+	.prim-rmt {
+		--prim-color: var(--prim-rmt);
+	}
+	.prim-tg {
+		--prim-color: var(--prim-tg);
+	}
+	.prim-rkhs {
+		--prim-color: var(--prim-rkhs);
+	}
+	.prim-ph {
+		--prim-color: var(--prim-ph);
+	}
+	.prim-ga {
+		--prim-color: var(--prim-ga);
+	}
+
+	/* Gauge bar */
+	.gauge-track {
+		@apply h-1 w-full overflow-hidden rounded-full bg-zinc-800;
+	}
+
+	.gauge-fill {
+		@apply h-full rounded-full transition-all duration-slow ease-out-expo;
+		background: var(--prim-color, var(--prim-ot));
+	}
+
+	/* Signal dot */
+	.signal-dot {
+		@apply h-2 w-2 rounded-full;
+		background: var(--regime-color, var(--regime-stable));
+		box-shadow: 0 0 8px var(--regime-color, var(--regime-stable));
+	}
+
+	.signal-dot-active {
+		@apply animate-pulse-glow;
+	}
+
+	/* Text utilities */
+	.text-regime {
+		color: var(--regime-color);
+	}
+
+	.text-primitive {
+		color: var(--prim-color);
+	}
+
+	/* Glassmorphism */
+	.glass {
+		@apply bg-surface/30 backdrop-blur-xl;
+		border: 1px solid rgba(255, 255, 255, 0.05);
+	}
+
+	/* Focus ring for accessibility */
+	.focus-ring {
+		@apply outline-none ring-2 ring-prim-ot/50 ring-offset-2 ring-offset-void;
+	}
+}
+
+@layer utilities {
+	/* Gradient text */
+	.text-gradient {
+		@apply bg-clip-text text-transparent;
+		background-image: linear-gradient(135deg, var(--prim-ot), var(--prim-ph));
+	}
+
+	/* Glow effects */
+	.glow {
+		box-shadow: 0 0 20px var(--accent-glow);
+	}
+
+	.glow-regime {
+		box-shadow: 0 0 20px var(--regime-color);
+	}
+
+	/* Fade edges */
+	.fade-bottom {
+		mask-image: linear-gradient(to top, transparent, black 20%);
+	}
+
+	.fade-edges-x {
+		mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+	}
+
+	/* No select */
+	.no-select {
+		-webkit-user-select: none;
+		user-select: none;
+	}
+
+	/* GPU acceleration hint */
+	.gpu {
+		transform: translateZ(0);
+		will-change: transform;
+	}
+}

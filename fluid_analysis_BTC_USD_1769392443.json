@@ -1,0 +1,522 @@
+{
+  "symbol": "BTC-USD",
+  "duration": 47.126108169555664,
+  "updates_received": 35195,
+  "analyses_run": 156,
+  "fields_collected": 100,
+  "findings": [
+    {
+      "timestamp": "2026-01-26T01:53:17.246897+00:00",
+      "mid_price": 87524.965,
+      "spread_bps": 0.0011425311617961015,
+      "imbalance": 0.0,
+      "bid_pressure": {
+        "max_gradient": 0.01747715286910534,
+        "min_gradient": -0.027822570875287056,
+        "gradient_location": 63
+      },
+      "ask_pressure": {
+        "max_gradient": NaN,
+        "min_gradient": NaN,
+        "gradient_location": 0
+      },
+      "liquidity_walls": {
+        "bid_wall_count": 5,
+        "ask_wall_count": 0,
+        "bid_wall_prices": [
+          87449.15625,
+          87462.9375,
+          87476.7265625,
+          87490.5078125,
+          87504.2890625
+        ],
+        "ask_wall_prices": []
+      },
+      "mass_dynamics": {
+        "bid_mass": 16.527297973632812,
+        "ask_mass": NaN,
+        "bid_mass_rate": 43.371273040771484,
+        "ask_mass_rate": NaN,
+        "net_accumulation": NaN
+      },
+      "shocks": {
+        "bid_shock_magnitude": 4.908829212188721,
+        "ask_shock_magnitude": NaN,
+        "bid_shock_detected": false,
+        "ask_shock_detected": false
+      },
+      "compression": {
+        "compression_ratio": 0.735632183908046,
+        "bid_ranks": [
+          1,
+          2,
+          3,
+          5,
+          6,
+          4,
+          2
+        ],
+        "ask_ranks": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "original_size": 256,
+        "compressed_size": 192,
+        "bid_error": 7.716981635590283e-05,
+        "ask_error": 0.0,
+        "num_qubits": 7
+      },
+      "complexity_alert": true,
+      "complexity_reason": "Order book has complex structure (low compressibility)",
+      "anomalies": [
+        {
+          "type": "complexity_spike",
+          "compression_ratio": 0.735632183908046
+        }
+      ],
+      "anomaly_count": 1
+    },
+    {
+      "timestamp": "2026-01-26T01:53:18.700464+00:00",
+      "mid_price": 87547.41500000001,
+      "spread_bps": 0.0011422381797065407,
+      "imbalance": 0.0,
+      "bid_pressure": {
+        "max_gradient": 0.025270316749811172,
+        "min_gradient": -0.03716415539383888,
+        "gradient_location": 62
+      },
+      "ask_pressure": {
+        "max_gradient": NaN,
+        "min_gradient": NaN,
+        "gradient_location": 0
+      },
+      "liquidity_walls": {
+        "bid_wall_count": 4,
+        "ask_wall_count": 0,
+        "bid_wall_prices": [
+          87471.5859375,
+          87485.375,
+          87499.15625,
+          87512.9453125
+        ],
+        "ask_wall_prices": []
+      },
+      "mass_dynamics": {
+        "bid_mass": 22.786645889282227,
+        "ask_mass": NaN,
+        "bid_mass_rate": NaN,
+        "ask_mass_rate": NaN,
+        "net_accumulation": NaN
+      },
+      "shocks": {
+        "bid_shock_magnitude": NaN,
+        "ask_shock_magnitude": NaN,
+        "bid_shock_detected": false,
+        "ask_shock_detected": false
+      },
+      "compression": {
+        "compression_ratio": 0.735632183908046,
+        "bid_ranks": [
+          1,
+          2,
+          3,
+          5,
+          6,
+          4,
+          2
+        ],
+        "ask_ranks": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "original_size": 256,
+        "compressed_size": 192,
+        "bid_error": 0.00036272320589807996,
+        "ask_error": 0.0,
+        "num_qubits": 7
+      },
+      "complexity_alert": true,
+      "complexity_reason": "Order book has complex structure (low compressibility)",
+      "flow": {
+        "mean_velocity": 20.39655629814009,
+        "velocity_std": 15.532062552725689,
+        "acceleration": 23.06255440505411,
+        "momentum": NaN
+      },
+      "anomalies": [
+        {
+          "type": "complexity_spike",
+          "compression_ratio": 0.735632183908046
+        }
+      ],
+      "anomaly_count": 1
+    },
+    {
+      "timestamp": "2026-01-26T01:53:19.559192+00:00",
+      "mid_price": 87560.79000000001,
+      "spread_bps": 0.927355726234299,
+      "imbalance": 0.0,
+      "bid_pressure": {
+        "max_gradient": 0.04034913331270218,
+        "min_gradient": -0.04237893223762512,
+        "gradient_location": 61
+      },
+      "ask_pressure": {
+        "max_gradient": NaN,
+        "min_gradient": NaN,
+        "gradient_location": 0
+      },
+      "liquidity_walls": {
+        "bid_wall_count": 4,
+        "ask_wall_count": 0,
+        "bid_wall_prices": [
+          87471.15625,
+          87484.9453125,
+          87498.734375,
+          87512.5234375
+        ],
+        "ask_wall_prices": []
+      },
+      "mass_dynamics": {
+        "bid_mass": 25.9410343170166,
+        "ask_mass": NaN,
+        "bid_mass_rate": NaN,
+        "ask_mass_rate": NaN,
+        "net_accumulation": NaN
+      },
+      "shocks": {
+        "bid_shock_magnitude": NaN,
+        "ask_shock_magnitude": NaN,
+        "bid_shock_detected": false,
+        "ask_shock_detected": false
+      },
+      "compression": {
+        "compression_ratio": 0.735632183908046,
+        "bid_ranks": [
+          1,
+          2,
+          3,
+          5,
+          6,
+          4,
+          2
+        ],
+        "ask_ranks": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "original_size": 256,
+        "compressed_size": 192,
+        "bid_error": 0.000290883971120778,
+        "ask_error": 0.0,
+        "num_qubits": 7
+      },
+      "complexity_alert": true,
+      "complexity_reason": "Order book has complex structure (low compressibility)",
+      "flow": {
+        "mean_velocity": 19.453245328751372,
+        "velocity_std": 21.28334852346797,
+        "acceleration": 23.334012692017456,
+        "momentum": NaN
+      },
+      "anomalies": [
+        {
+          "type": "complexity_spike",
+          "compression_ratio": 0.735632183908046
+        }
+      ],
+      "anomaly_count": 1
+    },
+    {
+      "timestamp": "2026-01-26T01:53:19.830524+00:00",
+      "mid_price": 87565.54000000001,
+      "spread_bps": 1.1831138139501658,
+      "imbalance": 0.0,
+      "bid_pressure": {
+        "max_gradient": 0.04058973491191864,
+        "min_gradient": -0.04040268436074257,
+        "gradient_location": 54
+      },
+      "ask_pressure": {
+        "max_gradient": NaN,
+        "min_gradient": NaN,
+        "gradient_location": 0
+      },
+      "liquidity_walls": {
+        "bid_wall_count": 7,
+        "ask_wall_count": 0,
+        "bid_wall_prices": [
+          87241.4765625,
+          87255.265625,
+          87448.328125,
+          87475.90625,
+          87489.6953125
+        ],
+        "ask_wall_prices": []
+      },
+      "mass_dynamics": {
+        "bid_mass": 32.73230743408203,
+        "ask_mass": NaN,
+        "bid_mass_rate": 25.02938461303711,
+        "ask_mass_rate": NaN,
+        "net_accumulation": NaN
+      },
+      "shocks": {
+        "bid_shock_magnitude": 3.5410358905792236,
+        "ask_shock_magnitude": NaN,
+        "bid_shock_detected": false,
+        "ask_shock_detected": false
+      },
+      "compression": {
+        "compression_ratio": 0.6666666666666666,
+        "bid_ranks": [
+          1,
+          2,
+          3,
+          5,
+          7,
+          4,
+          2
+        ],
+        "ask_ranks": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "original_size": 256,
+        "compressed_size": 210,
+        "bid_error": 0.00011453269629330415,
+        "ask_error": 0.0,
+        "num_qubits": 7
+      },
+      "complexity_alert": true,
+      "complexity_reason": "Order book has complex structure (low compressibility)",
+      "flow": {
+        "mean_velocity": 16.70002063892206,
+        "velocity_std": 20.12951393211011,
+        "acceleration": 16.129896705729085,
+        "momentum": NaN
+      },
+      "anomalies": [
+        {
+          "type": "complexity_spike",
+          "compression_ratio": 0.6666666666666666
+        }
+      ],
+      "anomaly_count": 1
+    },
+    {
+      "timestamp": "2026-01-26T01:53:21.029948+00:00",
+      "mid_price": 87583.88500000001,
+      "spread_bps": 0.0011417625508118657,
+      "imbalance": 0.0,
+      "bid_pressure": {
+        "max_gradient": 0.04693032056093216,
+        "min_gradient": -0.041343603283166885,
+        "gradient_location": 51
+      },
+      "ask_pressure": {
+        "max_gradient": NaN,
+        "min_gradient": NaN,
+        "gradient_location": 0
+      },
+      "liquidity_walls": {
+        "bid_wall_count": 7,
+        "ask_wall_count": 0,
+        "bid_wall_prices": [
+          87135.625,
+          87149.4140625,
+          87425.2734375,
+          87439.0625,
+          87452.859375
+        ],
+        "ask_wall_prices": []
+      },
+      "mass_dynamics": {
+        "bid_mass": 41.46695327758789,
+        "ask_mass": NaN,
+        "bid_mass_rate": NaN,
+        "ask_mass_rate": NaN,
+        "net_accumulation": NaN
+      },
+      "shocks": {
+        "bid_shock_magnitude": NaN,
+        "ask_shock_magnitude": NaN,
+        "bid_shock_detected": false,
+        "ask_shock_detected": false
+      },
+      "compression": {
+        "compression_ratio": 0.6666666666666666,
+        "bid_ranks": [
+          1,
+          2,
+          3,
+          5,
+          7,
+          4,
+          2
+        ],
+        "ask_ranks": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "original_size": 256,
+        "compressed_size": 210,
+        "bid_error": 0.00028637598901889354,
+        "ask_error": 0.0,
+        "num_qubits": 7
+      },
+      "complexity_alert": true,
+      "complexity_reason": "Order book has complex structure (low compressibility)",
+      "flow": {
+        "mean_velocity": 14.028918920573275,
+        "velocity_std": 27.65701002285707,
+        "acceleration": 22.44491415571787,
+        "momentum": NaN
+      },
+      "anomalies": [
+        {
+          "type": "complexity_spike",
+          "compression_ratio": 0.6666666666666666
+        }
+      ],
+      "anomaly_count": 1
+    },
+    {
+      "timestamp": "2026-01-26T01:53:21.315858+00:00",
+      "mid_price": 87603.375,
+      "spread_bps": 0.400669494755118,
+      "imbalance": 0.0,
+      "bid_pressure": {
+        "max_gradient": 0.04599282518029213,
+        "min_gradient": -0.03665074333548546,
+        "gradient_location": 50
+      },
+      "ask_pressure": {
+        "max_gradient": NaN,
+        "min_gradient": NaN,
+        "gradient_location": 0
+      },
+      "liquidity_walls": {
+        "bid_wall_count": 7,
+        "ask_wall_count": 0,
+        "bid_wall_prices": [
+          87127.421875,
+          87141.21875,
+          87155.015625,
+          87430.9296875,
+          87444.7265625
+        ],
+        "ask_wall_prices": []
+      },
+      "mass_dynamics": {
+        "bid_mass": 45.9586181640625,
+        "ask_mass": NaN,
+        "bid_mass_rate": 15.710074424743652,
+        "ask_mass_rate": NaN,
+        "net_accumulation": NaN
+      },
+      "shocks": {
+        "bid_shock_magnitude": 2.902594566345215,
+        "ask_shock_magnitude": NaN,
+        "bid_shock_detected": false,
+        "ask_shock_detected": false
+      },
+      "compression": {
+        "compression_ratio": 0.6666666666666666,
+        "bid_ranks": [
+          1,
+          2,
+          3,
+          5,
+          7,
+          4,
+          2
+        ],
+        "ask_ranks": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "original_size": 256,
+        "compressed_size": 210,
+        "bid_error": 0.0001117437742438179,
+        "ask_error": 0.0,
+        "num_qubits": 7
+      },
+      "complexity_alert": true,
+      "complexity_reason": "Order book has complex structure (low compressibility)",
+      "flow": {
+        "mean_velocity": 37.60798852786657,
+        "velocity_std": 30.377929039561174,
+        "acceleration": 59.606436213528916,
+        "momentum": NaN
+      },
+      "anomalies": [
+        {
+          "type": "complexity_spike",
+          "compression_ratio": 0.6666666666666666
+        }
+      ],
+      "anomaly_count": 1
+    }
+  ],
+  "spacetime_compression": {
+    "shape": [
+      100,
+      128,
+      2
+    ],
+    "compression_ratio": 853.3333333333334,
+    "ranks": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "original_elements": 25600,
+    "num_qubits": 15,
+    "truncation_error": 0.0
+  },
+  "timestamp": "2026-01-26T01:54:03.263407+00:00"
+}

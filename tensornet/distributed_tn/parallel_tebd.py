@@ -466,15 +466,37 @@ class ParallelTEBD:
         self.partition_mps(mps_tensors)
         self.create_workers()
 
-        # Build gates from Hamiltonian
-        # For now, use identity gates as placeholder
+        # Build gates from Hamiltonian: exp(-i H dt)
+        # For two-site gates, exponentiate each Hamiltonian term
         d = mps_tensors[0].shape[1] if mps_tensors else 2
-        identity_gate = torch.eye(d * d).reshape(d, d, d, d)
-
-        # Simple evolution gate: exp(-i H dt)
-        # Using identity for demonstration
-        gates_even = [identity_gate.clone() for _ in range((len(mps_tensors) + 1) // 2)]
-        gates_odd = [identity_gate.clone() for _ in range(len(mps_tensors) // 2)]
+        
+        gates_even = []
+        gates_odd = []
+        
+        for i, h_term in enumerate(hamiltonian_terms):
+            # Reshape Hamiltonian term if needed: (d*d, d*d) -> (d, d, d, d)
+            if h_term.ndim == 2:
+                h_mat = h_term.reshape(d, d, d, d).permute(0, 2, 1, 3).reshape(d*d, d*d)
+            else:
+                h_mat = h_term.reshape(d, d, d, d).permute(0, 2, 1, 3).reshape(d*d, d*d)
+            
+            # Time evolution gate: exp(-i H dt)
+            # Using matrix exponential for GPU acceleration
+            gate_mat = torch.linalg.matrix_exp(-1j * dt * h_mat)
+            gate = gate_mat.reshape(d, d, d, d).permute(0, 2, 1, 3).real.to(torch.float64)
+            
+            if i % 2 == 0:
+                gates_even.append(gate)
+            else:
+                gates_odd.append(gate)
+        
+        # Handle case with no Hamiltonian terms
+        if not gates_even:
+            identity_gate = torch.eye(d * d, dtype=torch.float64).reshape(d, d, d, d)
+            gates_even = [identity_gate for _ in range((len(mps_tensors) + 1) // 2)]
+        if not gates_odd:
+            identity_gate = torch.eye(d * d, dtype=torch.float64).reshape(d, d, d, d)
+            gates_odd = [identity_gate for _ in range(len(mps_tensors) // 2)]
 
         num_steps = int(total_time / dt)
         truncation_errors = []

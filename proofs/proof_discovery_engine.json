@@ -1,0 +1,41 @@
+{
+  "title": "Autonomous Discovery Engine Proof",
+  "timestamp": "2026-01-25T22:19:48.408485+00:00",
+  "seed": 42,
+  "passed": true,
+  "n_passed": 5,
+  "n_failed": 0,
+  "results": [
+    {
+      "name": "Protocol Compliance",
+      "passed": true,
+      "message": "All 6 primitives comply with GenesisPrimitive protocol",
+      "duration_ms": 4503.49361699773
+    },
+    {
+      "name": "Chain Correctness",
+      "passed": true,
+      "message": "Chain operator works: OT >> SGW >> RKHS",
+      "duration_ms": 0.2607830028864555
+    },
+    {
+      "name": "Finding Integrity",
+      "passed": true,
+      "message": "All 5 finding types have valid hashes",
+      "duration_ms": 0.3730120006366633
+    },
+    {
+      "name": "Attestation Validity",
+      "passed": true,
+      "message": "Attestations create and validate correctly",
+      "duration_ms": 2708.4846180005115
+    },
+    {
+      "name": "Pipeline Completeness",
+      "passed": true,
+      "message": "All pipeline types execute correctly",
+      "duration_ms": 1984.7244650009088
+    }
+  ],
+  "hash": "61b8238cb8fe4298329827c04c4f407ca4c9a3b04eb114b0f73c4b5cce3924ec"
+}

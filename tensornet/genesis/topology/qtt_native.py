@@ -601,22 +601,79 @@ class QTTRipsComplex:
     def betti_numbers(self) -> List[int]:
         """
         Compute Betti numbers using QTT representation.
+        
+        Uses the rank-nullity relation:
+        β_k = dim(ker(∂_k)) - dim(im(∂_{k+1}))
+            = rank(Z_k) - rank(B_k)
+        
+        For TT matrices, we estimate ranks via randomized range finding.
         """
-        # Use QTT boundary rank estimation
         betti = []
         
         for k in range(self.max_dim + 1):
             if k == 0:
                 # β_0 = connected components
-                # Estimate from TT structure of distance matrix
                 beta = self._estimate_components()
             else:
-                # Higher Betti numbers from boundary rank
-                beta = 0  # Placeholder - full implementation would use reduction
+                # Higher Betti numbers from boundary rank difference
+                # β_k = nullity(∂_k) - rank(∂_{k+1})
+                # Use TT ranks as proxy for matrix rank
+                
+                # Get boundary matrix for dimension k
+                if k <= len(self.boundary_matrices):
+                    bnd_k = self.boundary_matrices[k - 1] if k > 0 else None
+                    bnd_kp1 = self.boundary_matrices[k] if k < len(self.boundary_matrices) else None
+                    
+                    # Estimate ranks using randomized probing
+                    if bnd_k is not None:
+                        rank_bk = self._estimate_matrix_rank(bnd_k)
+                        nullity_k = bnd_k.shape[1] - rank_bk if hasattr(bnd_k, 'shape') else self._tt_dim(bnd_k) - rank_bk
+                    else:
+                        nullity_k = 0
+                    
+                    if bnd_kp1 is not None:
+                        rank_bkp1 = self._estimate_matrix_rank(bnd_kp1)
+                    else:
+                        rank_bkp1 = 0
+                    
+                    beta = max(0, nullity_k - rank_bkp1)
+                else:
+                    beta = 0
             
             betti.append(beta)
         
         return betti
+    
+    def _estimate_matrix_rank(self, tt_matrix, n_probes: int = 50) -> int:
+        """
+        Estimate matrix rank via randomized probing.
+        
+        Uses the property that for random vectors v_1, ..., v_k,
+        A @ V spans the column space if k > rank(A).
+        """
+        if isinstance(tt_matrix, torch.Tensor):
+            m, n = tt_matrix.shape
+            device = tt_matrix.device
+            
+            # Random probing vectors
+            V = torch.randn(n, n_probes, device=device)
+            AV = tt_matrix @ V
+            
+            # Estimate rank via SVD of AV
+            U, S, _ = torch.svd_lowrank(AV, q=min(n_probes, m))
+            rank = int((S > 1e-10 * S[0]).sum())
+            return rank
+        elif hasattr(tt_matrix, 'cores'):
+            # TT matrix - use TT ranks as estimate
+            return max(tt_matrix.ranks)
+        else:
+            return 1
+    
+    def _tt_dim(self, tt_matrix) -> int:
+        """Get dimension of TT matrix."""
+        if hasattr(tt_matrix, 'cores'):
+            return int(torch.prod(torch.tensor([c.shape[1] for c in tt_matrix.cores])))
+        return 0
     
     def _estimate_components(self) -> int:
         """Estimate number of connected components."""

@@ -205,23 +205,57 @@ def _barycenter_quantile(
     if verbose:
         print(f"Barycenter (quantile): n={len(distributions)}, N={grid_size}")
     
+    low, high = grid_bounds
+    dx = (high - low) / grid_size
+    
     if grid_size > 2**20:
-        # For large grids, need QTT-native implementation
-        # This would:
-        # 1. Compute CDFs F_μᵢ in QTT format (running sum MPO)
-        # 2. Invert to get quantiles Qᵢ in QTT format
-        # 3. Take weighted sum of QTT vectors
-        # 4. Invert back to get density
+        # Large-grid QTT-native quantile barycenter
+        # Uses QTT CDF computation and binary search for quantile inversion
         
-        raise NotImplementedError(
-            f"QTT-native quantile barycenter for grid_size > 2^20 coming soon. "
-            f"Use grid_size ≤ 2^20 or method='sinkhorn'."
+        num_bits = int(math.log2(grid_size))
+        n_samples = min(grid_size, 100000)
+        t_samples = torch.linspace(0, 1, n_samples, dtype=dtype, device=device)
+        
+        # Compute weighted average of quantiles at each t
+        Q_bary_samples = torch.zeros(n_samples, dtype=dtype, device=device)
+        
+        for dist, w in zip(distributions, weights):
+            # Compute CDF for this distribution
+            F_dist = _compute_qtt_cdf(dist)
+            
+            for i, ti in enumerate(t_samples):
+                # Binary search in QTT for quantile
+                idx = _qtt_quantile_search(F_dist, float(ti), num_bits)
+                Q_bary_samples[i] += w * (low + (idx + 0.5) * dx)
+        
+        # Convert averaged quantile function back to density via histogram
+        x_grid = torch.linspace(low, high, grid_size, dtype=dtype, device=device)
+        density = torch.zeros(grid_size, dtype=dtype, device=device)
+        
+        for i in range(n_samples):
+            q_val = Q_bary_samples[i]
+            bin_idx = int((q_val - low) / dx)
+            bin_idx = max(0, min(bin_idx, grid_size - 1))
+            density[bin_idx] += 1.0
+        
+        # Normalize
+        density = density / (density.sum() * dx + 1e-15)
+        
+        barycenter = QTTDistribution.from_dense(
+            density, grid_bounds=grid_bounds, normalize=True
+        )
+        
+        elapsed = time.perf_counter() - start_time
+        return BarycenterResult(
+            barycenter=barycenter,
+            iterations=1,
+            converged=True,
+            final_error=0.0,
+            time_seconds=elapsed,
         )
     
     # Dense computation for moderate grids
-    low, high = grid_bounds
     x = torch.linspace(low, high, grid_size, dtype=dtype, device=device)
-    dx = (high - low) / grid_size
     t = torch.linspace(0, 1, grid_size, dtype=dtype, device=device)
     
     # Compute all quantile functions
@@ -266,24 +300,64 @@ def _barycenter_quantile(
     # Normalize
     density = density / (density.sum() * dx)
     
-    # Convert to QTT
-    # For now, create approximate QTT via mixture of narrow Gaussians
-    # Full implementation would use TT decomposition
+    # Convert density to QTT via TT-rSVD decomposition (GPU-accelerated)
+    # Reshape to 2x2x...x2 tensor and decompose
+    num_bits = int(math.log2(grid_size))
+    tensor = density.reshape([2] * num_bits)
     
-    # Find peaks and widths of the density
-    # Simplified: return uniform if density is too complex
+    # TT-rSVD decomposition (GPU-accelerated via torch.svd_lowrank)
+    cores = []
+    C = tensor
+    r_prev = 1
     
-    # Placeholder: return mixture that approximates the density
-    mean = (Q_bary * (1.0 / grid_size)).sum().item()
-    std = torch.sqrt(((Q_bary - mean) ** 2).mean()).item()
+    for k in range(num_bits - 1):
+        if k == 0:
+            mat = C.reshape(2, -1)
+        else:
+            mat = C.reshape(r_prev * 2, -1)
+        
+        # Randomized SVD for GPU efficiency
+        m, n = mat.shape
+        q = min(50, min(m, n))  # Rank budget
+        
+        if m > 4 and n > 4:
+            # Use randomized SVD for GPU efficiency
+            U, S, V = torch.svd_lowrank(mat, q=q, niter=2)
+        else:
+            # Small matrix: use full SVD
+            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+            V = Vh.T
+        
+        # Truncate based on tolerance
+        tol_threshold = 1e-10 * S[0] if S[0] > 0 else 1e-10
+        rank = max(1, int((S > tol_threshold).sum()))
+        rank = min(rank, 50)  # Cap rank
+        
+        U = U[:, :rank]
+        S = S[:rank]
+        V = V[:, :rank]
+        
+        if k == 0:
+            core = U.reshape(1, 2, rank)
+        else:
+            core = U.reshape(r_prev, 2, rank)
+        
+        cores.append(core)
+        
+        # Remaining tensor
+        SV = torch.diag(S) @ V.T
+        remaining = mat.shape[1] // 2
+        C = SV.reshape(rank, 2, max(1, remaining))
+        r_prev = rank
     
-    bary = QTTDistribution.gaussian(
-        mean=mean,
-        std=max(std, 0.01),
-        grid_size=grid_size,
+    # Last core
+    last_core = C.reshape(r_prev, 2, 1)
+    cores.append(last_core)
+    
+    bary = QTTDistribution(
+        cores=cores,
         grid_bounds=grid_bounds,
-        dtype=dtype,
-        device=device,
+        is_normalized=True,
     )
     
     runtime = time.perf_counter() - start_time
@@ -497,3 +571,143 @@ def geodesic(
         path.append(rho_t)
     
     return path
+
+
+# =============================================================================
+# QTT Helper Functions for Large-Grid Barycenter
+# =============================================================================
+
+def _compute_qtt_cdf(dist: QTTDistribution) -> QTTDistribution:
+    """
+    Compute CDF (cumulative distribution function) in QTT format.
+    
+    F[i] = Σ_{j≤i} p[j] * dx
+    
+    For efficiency, uses dense computation for grids up to 2^20,
+    and sampling-based approximation for larger grids.
+    """
+    dx = dist.dx
+    
+    if dist.grid_size <= 2**20:
+        dense = dist.to_dense()
+        cdf_dense = torch.cumsum(dense * dx, dim=0)
+        total = cdf_dense[-1]
+        if total > 1e-15:
+            cdf_dense = cdf_dense / total
+        return QTTDistribution.from_dense(
+            cdf_dense, grid_bounds=dist.grid_bounds, normalize=False
+        )
+    
+    # For large grids, build CDF via sampling + interpolation
+    # Sample at logarithmically spaced points
+    num_bits = len(dist.cores)
+    n_samples = min(dist.grid_size, 10000)
+    
+    # Build approximate CDF by evaluating at sample points
+    sample_indices = torch.linspace(0, dist.grid_size - 1, n_samples).long()
+    cdf_samples = torch.zeros(n_samples, dtype=dist.dtype, device=dist.device)
+    
+    # Approximate by assuming smooth distribution
+    running_sum = 0.0
+    prev_idx = 0
+    for i, idx in enumerate(sample_indices):
+        idx = int(idx)
+        # Approximate integral from prev_idx to idx
+        # Evaluate PDF at midpoint and multiply by width
+        if idx > prev_idx:
+            mid_idx = (prev_idx + idx) // 2
+            binary_mid = [(mid_idx >> b) & 1 for b in range(num_bits)]
+            pdf_mid = _evaluate_qtt_at_index(dist, binary_mid)
+            running_sum += pdf_mid * dx * (idx - prev_idx)
+        cdf_samples[i] = running_sum
+        prev_idx = idx
+    
+    # Normalize
+    if cdf_samples[-1] > 1e-15:
+        cdf_samples = cdf_samples / cdf_samples[-1]
+    
+    # Build CDF QTT from samples via rSVD
+    # Create tensor of CDF values and decompose to QTT
+    cdf_full = torch.zeros(grid_size, dtype=dist.dtype, device=dist.device)
+    cdf_full[sample_indices.long()] = cdf_samples
+    
+    # Interpolate missing values
+    for i in range(1, grid_size):
+        if cdf_full[i] < cdf_full[i-1]:
+            cdf_full[i] = cdf_full[i-1]
+    
+    # TT-rSVD decomposition of CDF
+    cores = _tt_rsvd_1d(cdf_full, num_bits, max_rank=max(c.shape[-1] for c in dist.cores))
+    
+    return QTTDistribution(cores=cores, grid_size=grid_size, 
+                           dtype=dist.dtype, device=dist.device)
+
+
+def _tt_rsvd_1d(values: torch.Tensor, num_bits: int, max_rank: int = 20) -> list:
+    """TT-rSVD decomposition for 1D function values."""
+    grid_size = values.shape[0]
+    device = values.device
+    dtype = values.dtype
+    
+    # Reshape to (2, 2, ..., 2) with num_bits modes
+    reshaped = values.reshape((2,) * num_bits)
+    cores = []
+    current = reshaped.reshape(2, -1)
+    
+    for k in range(num_bits - 1):
+        m, n = current.shape
+        q = min(max_rank + 5, min(m, n))
+        
+        if m > 5 and n > 5:
+            U, S, V = torch.svd_lowrank(current.to(torch.float64), q=q, niter=2)
+        else:
+            U, S, Vh = torch.linalg.svd(current.to(torch.float64), full_matrices=False)
+            V = Vh.T
+        
+        rank = min(max_rank, int((S > 1e-12 * S[0]).sum()))
+        rank = max(1, rank)
+        
+        U = U[:, :rank]
+        S = S[:rank]
+        V = V[:, :rank]
+        
+        if k == 0:
+            cores.append(U.reshape(1, 2, rank).to(dtype))
+        else:
+            r_prev = cores[-1].shape[-1]
+            cores.append(U.reshape(r_prev, 2, rank).to(dtype))
+        
+        current = (torch.diag(S) @ V.T).reshape(rank * 2, -1)
+    
+    # Last core
+    r_prev = cores[-1].shape[-1]
+    cores.append(current.reshape(r_prev, 2, 1).to(dtype))
+    
+    return cores
+
+
+def _qtt_quantile_search(cdf: QTTDistribution, target: float, num_bits: int) -> int:
+    """Binary search for quantile index in QTT CDF."""
+    grid_size = cdf.grid_size
+    low_idx, high_idx = 0, grid_size - 1
+    
+    while low_idx < high_idx:
+        mid = (low_idx + high_idx) // 2
+        binary_mid = [(mid >> b) & 1 for b in range(num_bits)]
+        val = _evaluate_qtt_at_index(cdf, binary_mid)
+        
+        if val < target:
+            low_idx = mid + 1
+        else:
+            high_idx = mid
+    
+    return low_idx
+
+
+def _evaluate_qtt_at_index(dist: QTTDistribution, binary_idx: list) -> float:
+    """Evaluate QTT at a single index given in binary representation."""
+    result = torch.ones(1, 1, dtype=dist.dtype, device=dist.device)
+    for k, core in enumerate(dist.cores):
+        selected = core[:, binary_idx[k], :]
+        result = result @ selected
+    return float(result[0, 0])

@@ -356,6 +356,13 @@ def tropical_projection(x: torch.Tensor,
     The tropical projection minimizes the tropical distance
     to the polyhedron.
     
+    For tropical halfspace intersection, we use iterative projection:
+    1. Project onto each halfspace in sequence
+    2. Repeat until convergence
+    
+    The projection onto a single halfspace H = {y : ⊕_i(a_i + y_i) ≤ ⊕_j(b_j + y_j)}
+    is computed by adjusting coordinates to satisfy the inequality.
+    
     Args:
         x: Point to project
         polyhedron: Target polyhedron
@@ -363,38 +370,144 @@ def tropical_projection(x: torch.Tensor,
     Returns:
         Projected point
     """
-    if polyhedron.vertices is None:
-        # No vertices available, return x if in polyhedron
-        if polyhedron.contains(x):
-            return x
-        # TODO: Handle projection to halfspace intersection
-        return x
-    
-    # Find closest vertex in tropical distance
-    vertices = polyhedron.vertices
     semiring = polyhedron.semiring
     
-    best_dist = float('inf')
-    best_vertex = vertices[0]
+    # If already in polyhedron, return x
+    if polyhedron.contains(x):
+        return x.clone()
     
-    for i in range(len(vertices)):
-        v = vertices[i]
+    # If vertices available, find closest vertex
+    if polyhedron.vertices is not None:
+        vertices = polyhedron.vertices
         
-        # Tropical distance (Hilbert projective metric)
-        if semiring.semiring_type == SemiringType.MIN_PLUS:
+        best_dist = float('inf')
+        best_vertex = vertices[0]
+        
+        for i in range(len(vertices)):
+            v = vertices[i]
+            
+            # Tropical Hilbert distance
             diff = x - v
-            dist = diff.max() - diff.min()
+            dist = (diff.max() - diff.min()).item()
+            
+            if dist < best_dist:
+                best_dist = dist
+                best_vertex = v
+        
+        # Project onto tropical segment [x, best_vertex]
+        # The tropical segment consists of points:
+        # min(λ + x, μ + v) for λ, μ with min(λ, μ) = 0
+        # i.e., λ = 0 or μ = 0
+        # This gives points: min(x, μ + v) or min(λ + x, v)
+        
+        # Find λ* that minimizes distance while staying in polyhedron
+        for alpha in torch.linspace(0, 1, 20, device=x.device):
+            # Candidate on tropical segment
+            if semiring.semiring_type == SemiringType.MIN_PLUS:
+                candidate = torch.minimum(x, alpha.item() + best_vertex)
+            else:
+                candidate = torch.maximum(x, alpha.item() + best_vertex)
+            
+            if polyhedron.contains(candidate):
+                return candidate
+        
+        return best_vertex.clone()
+    
+    # Handle projection to halfspace intersection via iterative projection
+    if polyhedron.halfspaces:
+        proj = x.clone()
+        
+        # Dykstra-like iteration for tropical halfspaces
+        max_iters = 100
+        tol = 1e-8
+        
+        for iteration in range(max_iters):
+            proj_old = proj.clone()
+            
+            # Project onto each halfspace in sequence
+            for halfspace in polyhedron.halfspaces:
+                proj = _project_onto_halfspace(proj, halfspace)
+            
+            # Check convergence
+            if (proj - proj_old).abs().max() < tol:
+                break
+        
+        return proj
+    
+    # No constraints - return original point
+    return x.clone()
+
+
+def _project_onto_halfspace(x: torch.Tensor, 
+                            halfspace: TropicalHalfspace) -> torch.Tensor:
+    """
+    Project point x onto a single tropical halfspace.
+    
+    For min-plus halfspace: min_i(a_i + x_i) ≤ min_j(b_j + x_j)
+    
+    If x violates the inequality, we adjust coordinates to satisfy it
+    with minimal change in tropical distance.
+    
+    Algorithm:
+    1. Compute violation δ = min(a + x) - min(b + x)
+    2. If δ > 0, we need to decrease lhs or increase rhs
+    3. Adjust the coordinate achieving the lhs minimum by subtracting δ
+    
+    Args:
+        x: Point to project
+        halfspace: Target halfspace
+        
+    Returns:
+        Projected point
+    """
+    if halfspace.contains(x):
+        return x.clone()
+    
+    proj = x.clone()
+    a, b = halfspace.a, halfspace.b
+    semiring = halfspace.semiring
+    
+    if semiring.semiring_type == SemiringType.MIN_PLUS:
+        # Left side: min_i(a_i + x_i)
+        ax = a + x
+        lhs_val = ax.min().item()
+        lhs_idx = ax.argmin().item()
+        
+        # Right side: min_j(b_j + x_j)
+        bx = b + x
+        # Only consider finite entries
+        finite_mask = bx < semiring.zero - 1
+        if finite_mask.any():
+            rhs_val = bx[finite_mask].min().item()
         else:
-            diff = x - v
-            dist = diff.max() - diff.min()
+            rhs_val = semiring.zero
         
-        if dist < best_dist:
-            best_dist = dist
-            best_vertex = v
+        # Violation amount
+        delta = lhs_val - rhs_val
+        
+        if delta > 1e-10:
+            # Need to decrease lhs by δ
+            # Decrease x at the lhs-achieving index
+            proj[lhs_idx] = proj[lhs_idx] - delta
+    else:
+        # max-plus: max_i(a_i + x_i) ≤ max_j(b_j + x_j)
+        ax = a + x
+        finite_mask_a = ax > semiring.zero + 1
+        if finite_mask_a.any():
+            lhs_val = ax[finite_mask_a].max().item()
+            lhs_idx = ax.argmax().item()
+        else:
+            return proj
+        
+        bx = b + x
+        rhs_val = bx.max().item()
+        
+        delta = lhs_val - rhs_val
+        
+        if delta > 1e-10:
+            proj[lhs_idx] = proj[lhs_idx] - delta
     
-    # Tropical projection is the closest point on segment from x to vertex
-    # Simplified: return the vertex
-    return best_vertex.clone()
+    return proj
 
 
 def tropical_hilbert_distance(x: torch.Tensor, y: torch.Tensor) -> float:
