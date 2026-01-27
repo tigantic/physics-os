@@ -61,12 +61,68 @@ Based on EMA-smoothed entropy (H):
 ## Quick Start
 
 ```bash
-# Run the Trinity System
+# Run the Trinity System (detection only)
 python3 oracle/galaxy_feed_v3.py
+
+# Run the NS Predictor (detection + prediction)
+python3 oracle/ns_predictor.py
 
 # Output format:
 # [HH:MM:SS] BTC:$XX,XXX ETH:$X,XXX SOL:$XXX.X | REGIME H=X.X(raw) Δ=±X.XX | F:BIAS +X.XXX% | L:$X.XM S:$X.XM | Gates:🟢🟢🟢 | XXX/s
 ```
+
+## NS Predictor - Navier-Stokes Market Prediction
+
+The NS Predictor treats the market as a **turbulent fluid** and uses physics-based
+forward integration to predict entropy evolution, regime transitions, and price
+distribution dynamics.
+
+### Physical Model
+
+```
+Market as Turbulent Fluid:
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Price momentum → Velocity field
+• Volume flow → Density field  
+• Entropy → Turbulent kinetic energy
+• Regime transitions → Reynolds number thresholds
+• Liquidation cascades → Energy injection (forcing)
+• Funding rate → Pressure gradient
+
+Governing Equations:
+━━━━━━━━━━━━━━━━━━━━
+1. Vorticity Transport:
+   ∂ω/∂t + (u·∇)ω = ν∇²ω + F_liq + F_funding
+
+2. Stream Function:
+   ∇²ψ = -ω
+
+3. Kolmogorov Cascade:
+   E(k) ~ k^(-5/3)
+```
+
+### Prediction Horizons
+
+| Horizon | Confidence | Use Case |
+|---------|------------|----------|
+| 1 min | 97% | Scalping signals |
+| 5 min | 85% | Short-term positioning |
+| 15 min | 61% | Swing entry timing |
+| 30 min | 37% | Trend confirmation |
+| 60 min | 14% | Regime outlook |
+
+### Trading Signals
+
+| Signal | Condition |
+|--------|-----------|
+| 🟢 LONG MOMENTUM | Rising entropy + negative funding |
+| 🔴 SHORT MOMENTUM | Rising entropy + positive funding |
+| 🔵 LONG REVERSION | Vol fading + shorts overextended |
+| 🔵 SHORT REVERSION | Vol fading + longs overextended |
+| 📈 VOL EXPANSION | Entropy rising through horizons |
+| 📉 VOL CONTRACTION | Entropy falling through horizons |
+| ⚠️ REDUCE EXPOSURE | Cascade probability > 30% |
+| 🛡️ HEDGE | Vol multiplier > 2x in chaotic regime |
 
 ## Performance
 
@@ -116,7 +172,8 @@ python3 oracle/galaxy_feed_v3.py
 
 | File | Purpose |
 |------|---------|
-| `galaxy_feed_v3.py` | **Production** - Trinity System |
+| `galaxy_feed_v3.py` | **Production** - Trinity System (detection) |
+| `ns_predictor.py` | **Production** - NS Predictor (prediction) |
 | `binance_firehose.py` | Standalone Binance perpetuals feed |
 | `coinbase_firehose.py` | Coinbase USD/USDC pairs feed |
 | `triton_slicer.py` | Base Triton kernel implementation |
