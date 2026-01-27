@@ -24,6 +24,7 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Tuple, Callable
 import torch
 
+from tensornet.genesis.core.rsvd import rsvd_gpu
 from tensornet.genesis.tropical.semiring import (
     TropicalSemiring, MinPlusSemiring, MaxPlusSemiring,
     SemiringType
@@ -441,15 +442,12 @@ class QTTTropicalMatrix:
             remaining = C.numel() // (r_prev * n_k)
             C_mat = C.reshape(r_prev * n_k, remaining)
             
-            # SVD
-            U, S, Vh = torch.linalg.svd(C_mat, full_matrices=False)
-            
-            # Truncate to max_rank
-            r = min(max_rank, len(S), (S > 1e-10 * S[0]).sum().item())
-            r = max(1, int(r))
+            # SVD via randomized algorithm
+            U, S, Vh = rsvd_gpu(C_mat, k=max_rank, tol=1e-10)
+            r = S.shape[0]
             
             # Core k: (r_prev, n_k, r)
-            core = U[:, :r].reshape(r_prev, n_k, r)
+            core = U.reshape(r_prev, n_k, r)
             cores.append(core)
             
             # Update C for next iteration
@@ -592,16 +590,13 @@ def _qtt_truncate(M: QTTTropicalMatrix, max_rank: int) -> QTTTropicalMatrix:
         core = cores[k]
         r_left, n1, n2, r_right = core.shape
         
-        # Reshape to matrix and SVD
+        # Reshape to matrix and SVD via randomized algorithm
         mat = core.reshape(r_left * n1 * n2, r_right)
-        U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
-        
-        # Truncate
-        r = min(max_rank, (S > 1e-10 * S[0]).sum().item())
-        r = max(1, r)
+        U, S, Vh = rsvd_gpu(mat, k=max_rank, tol=1e-10)
+        r = S.shape[0]
         
         # Update cores
-        cores[k] = U[:, :r].reshape(r_left, n1, n2, r)
+        cores[k] = U.reshape(r_left, n1, n2, r)
         
         # Absorb into next core
         SV = torch.diag(S[:r]) @ Vh[:r, :]

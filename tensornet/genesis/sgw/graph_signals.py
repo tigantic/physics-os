@@ -15,6 +15,8 @@ from typing import List, Optional
 import torch
 import math
 
+from tensornet.genesis.core.rsvd import rsvd_gpu
+
 
 @dataclass
 class QTTSignal:
@@ -213,12 +215,12 @@ class QTTSignal:
             n = C.shape[1] // 2
             C = C.reshape(m, n)
             
-            # SVD
-            U, S, Vh = torch.linalg.svd(C, full_matrices=False)
+            # GPU-native rSVD
+            U, S, Vh = rsvd_gpu(C, k=max_rank, tol=tol)
             
             # Truncate
-            rank = min(max_rank, len(S), (S > tol * S[0]).sum().item())
-            rank = max(1, rank)
+            rank = max(1, len(S))
+            rank = min(rank, max_rank)
             
             U = U[:, :rank]
             S = S[:rank]
@@ -288,10 +290,17 @@ class QTTSignal:
         if self.num_nodes != other.num_nodes:
             raise ValueError("Signals must have same size")
         
+        # Determine device from first core
+        device = self.cores[0].device if len(self.cores) > 0 else torch.device('cpu')
+        
         # Contract from left to right
-        result = torch.ones(1, 1, dtype=self.cores[0].dtype)
+        result = torch.ones(1, 1, dtype=self.cores[0].dtype, device=device)
         
         for c1, c2 in zip(self.cores, other.cores):
+            # Ensure same device
+            c1 = c1.to(device)
+            c2 = c2.to(device)
+            
             # c1: (r1_l, 2, r1_r), c2: (r2_l, 2, r2_r)
             # Contract physical index
             contracted = torch.einsum('ijk,ljm->ilkm', c1, c2)
@@ -310,8 +319,14 @@ class QTTSignal:
         if self.num_nodes != other.num_nodes:
             raise ValueError("Signals must have same size")
         
+        # Determine device
+        device = self.cores[0].device if len(self.cores) > 0 else torch.device('cpu')
+        
         result_cores = []
         for c1, c2 in zip(self.cores, other.cores):
+            c1 = c1.to(device)
+            c2 = c2.to(device)
+            
             r1_l, d1, r1_r = c1.shape
             r2_l, d2, r2_r = c2.shape
             
@@ -334,8 +349,11 @@ class QTTSignal:
         if max_rank is None:
             max_rank = 1000
         
+        # Determine device from first core
+        device = self.cores[0].device if len(self.cores) > 0 else torch.device('cpu')
+        
         # Right-to-left QR sweep
-        cores = [c.clone() for c in self.cores]
+        cores = [c.clone().to(device) for c in self.cores]
         
         for k in range(len(cores) - 1, 0, -1):
             core = cores[k]
@@ -348,8 +366,8 @@ class QTTSignal:
             new_r = Q.shape[1]
             cores[k] = Q.T.reshape(new_r, d, r_r)
             
-            # Absorb R into previous core
-            prev = cores[k-1]
+            # Absorb R into previous core (ensure same device)
+            prev = cores[k-1].to(device)
             prev = prev.reshape(-1, prev.shape[2])
             cores[k-1] = (prev @ R.T).reshape(cores[k-1].shape[0], 2, new_r)
         
@@ -358,19 +376,12 @@ class QTTSignal:
             core = cores[k]
             r_l, d, r_r = core.shape
             
-            # Reshape to (r_l * d, r_r) and SVD
+            # Reshape to (r_l * d, r_r) and rSVD
             mat = core.reshape(r_l * d, r_r)
-            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+            U, S, Vh = rsvd_gpu(mat, k=max_rank, tol=tol)
             
             # Truncate
-            total_norm = S.norm()
-            if total_norm < 1e-15:
-                rank = 1
-            else:
-                cumsum = torch.cumsum(S ** 2, dim=0)
-                rank = ((cumsum / (total_norm ** 2)) < (1 - tol ** 2)).sum().item() + 1
-            
-            rank = min(rank, max_rank, len(S))
+            rank = min(max_rank, len(S))
             rank = max(1, rank)
             
             U = U[:, :rank]

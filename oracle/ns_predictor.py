@@ -717,8 +717,17 @@ class NSPredictor:
         self.entropy_scale = 2.0
         self.volatility_baseline = 0.01  # 1% daily
         
-        # History for calibration
-        self.prediction_history: List[Tuple[float, PredictionResult, float]] = []
+        # Prediction tracking for validation
+        # Format: {prediction_id: (timestamp_made, horizon_seconds, predicted_entropy, expires_at)}
+        self.pending_predictions: Dict[str, Tuple[float, int, float, float]] = {}
+        self.validated_predictions: List[Dict] = []  # Completed predictions with actuals
+        self.prediction_counter = 0
+        
+        # Accuracy tracking per horizon
+        self.accuracy_stats: Dict[int, Dict] = {
+            h: {"count": 0, "total_error": 0.0, "total_sq_error": 0.0, "correct_direction": 0}
+            for h in (horizons or HORIZONS)
+        }
         
         print(f"[NSPredictor] Initialized on {self.device}")
         print(f"[NSPredictor] Grid: {grid_size}x{grid_size}, Horizons: {horizons}")
@@ -844,8 +853,101 @@ class NSPredictor:
             
             results.append(result)
             
+            # Track this prediction for validation
+            self.prediction_counter += 1
+            pred_id = f"pred_{self.prediction_counter}_{horizon}"
+            now = time.time()
+            self.pending_predictions[pred_id] = (
+                now,                          # when prediction was made
+                horizon,                      # horizon in seconds
+                predicted_entropy,            # what we predicted
+                now + horizon,                # when it expires
+                current_entropy,              # entropy at prediction time
+                current_derivative            # derivative at prediction time
+            )
+            
             # Reset solver for next horizon (fresh integration)
             self.solver.set_initial_condition(omega_init)
+        
+        return results
+    
+    def validate_predictions(self) -> List[Dict]:
+        """
+        Check all pending predictions that have expired and validate against actual entropy.
+        
+        Returns list of newly validated predictions.
+        """
+        now = time.time()
+        current_entropy = self.state.entropy_smooth
+        newly_validated = []
+        expired_ids = []
+        
+        for pred_id, (made_at, horizon, predicted, expires_at, initial_entropy, initial_derivative) in self.pending_predictions.items():
+            if now >= expires_at:
+                # This prediction has expired - validate it
+                actual_entropy = current_entropy
+                error = predicted - actual_entropy
+                abs_error = abs(error)
+                
+                # Direction accuracy: did we correctly predict up/down/stable?
+                predicted_direction = "up" if predicted > initial_entropy + 0.1 else ("down" if predicted < initial_entropy - 0.1 else "stable")
+                actual_direction = "up" if actual_entropy > initial_entropy + 0.1 else ("down" if actual_entropy < initial_entropy - 0.1 else "stable")
+                direction_correct = predicted_direction == actual_direction
+                
+                validation = {
+                    "pred_id": pred_id,
+                    "horizon": horizon,
+                    "made_at": made_at,
+                    "expires_at": expires_at,
+                    "initial_entropy": initial_entropy,
+                    "predicted_entropy": predicted,
+                    "actual_entropy": actual_entropy,
+                    "error": error,
+                    "abs_error": abs_error,
+                    "predicted_direction": predicted_direction,
+                    "actual_direction": actual_direction,
+                    "direction_correct": direction_correct,
+                }
+                
+                self.validated_predictions.append(validation)
+                newly_validated.append(validation)
+                expired_ids.append(pred_id)
+                
+                # Update accuracy stats
+                stats = self.accuracy_stats[horizon]
+                stats["count"] += 1
+                stats["total_error"] += abs_error
+                stats["total_sq_error"] += abs_error ** 2
+                if direction_correct:
+                    stats["correct_direction"] += 1
+        
+        # Remove expired predictions
+        for pred_id in expired_ids:
+            del self.pending_predictions[pred_id]
+        
+        return newly_validated
+    
+    def get_accuracy_report(self) -> Dict:
+        """
+        Get accuracy statistics per horizon.
+        
+        Returns dict with MAE, RMSE, direction accuracy for each horizon.
+        """
+        report = {}
+        for horizon, stats in self.accuracy_stats.items():
+            if stats["count"] > 0:
+                mae = stats["total_error"] / stats["count"]
+                rmse = math.sqrt(stats["total_sq_error"] / stats["count"])
+                direction_acc = stats["correct_direction"] / stats["count"]
+                report[horizon] = {
+                    "count": stats["count"],
+                    "mae": mae,
+                    "rmse": rmse,
+                    "direction_accuracy": direction_acc
+                }
+            else:
+                report[horizon] = {"count": 0, "mae": None, "rmse": None, "direction_accuracy": None}
+        return report
         
         return results
     
@@ -1404,6 +1506,51 @@ class GalaxyPredictor:
                 print(f"  Reason: {signal_meta['reason']}")
             else:
                 print("  SIGNAL: No actionable signal")
+            
+            # Validate expired predictions and show accuracy
+            validated = self.predictor.validate_predictions()
+            accuracy_report = self.predictor.get_accuracy_report()
+            
+            # Show validation results
+            print("-" * 100)
+            print("  VALIDATION (measured accuracy):")
+            print("-" * 100)
+            
+            total_validated = sum(r["count"] for r in accuracy_report.values())
+            pending = len(self.predictor.pending_predictions)
+            
+            if total_validated == 0:
+                print(f"  Pending: {pending} predictions waiting to expire...")
+                print("  (Need to run for at least 1 minute to validate 1m predictions)")
+            else:
+                for horizon in sorted(accuracy_report.keys()):
+                    stats = accuracy_report[horizon]
+                    if stats["count"] > 0:
+                        horizon_label = f"{horizon // 60}m" if horizon >= 60 else f"{horizon}s"
+                        mae = stats["mae"]
+                        dir_acc = stats["direction_accuracy"]
+                        print(
+                            f"  {horizon_label:>4s}: "
+                            f"n={stats['count']:4d} | "
+                            f"MAE={mae:.3f} | "
+                            f"Direction={dir_acc:.1%}"
+                        )
+                
+                print(f"  Total validated: {total_validated} | Pending: {pending}")
+            
+            # Show recent validations
+            if validated:
+                print("-" * 100)
+                print("  JUST VALIDATED:")
+                for v in validated[-3:]:  # Show last 3
+                    horizon_label = f"{v['horizon'] // 60}m"
+                    err_sign = "+" if v["error"] > 0 else ""
+                    dir_icon = "✓" if v["direction_correct"] else "✗"
+                    print(
+                        f"    {horizon_label}: predicted={v['predicted_entropy']:.2f}, "
+                        f"actual={v['actual_entropy']:.2f}, "
+                        f"error={err_sign}{v['error']:.2f} {dir_icon}"
+                    )
             
             print("=" * 100)
             print()

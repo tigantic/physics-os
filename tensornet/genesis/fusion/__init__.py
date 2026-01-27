@@ -17,15 +17,24 @@ COMPOSITION. When combined:
 """
 
 from .genesis_fusion_demo import (
-    GenesisFusionPipeline,
-    GenesisFusionResult,
+    run_genesis_fusion,
     demonstrate_scaling,
-    demonstrate_composition,
+    run_genesis_gauntlet,
+    GauntletResult,
+)
+
+from .cross_primitive_pipeline import (
+    run_pipeline,
+    PipelineResult,
+    StageResult,
 )
 
 __all__ = [
-    "GenesisFusionPipeline",
-    "GenesisFusionResult", 
+    "run_genesis_fusion",
     "demonstrate_scaling",
-    "demonstrate_composition",
+    "run_genesis_gauntlet",
+    "GauntletResult",
+    "run_pipeline",
+    "PipelineResult",
+    "StageResult",
 ]

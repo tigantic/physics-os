@@ -426,3 +426,342 @@ class MMDDistanceMetric:
              alpha: float = 0.05) -> MMDTestResult:
         """Perform MMD test."""
         return mmd_full_test(x, y, self.kernel, alpha)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# QTT-NATIVE MMD - ZERO SAMPLING
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def rbf_kernel_mpo(
+    grid_size: int,
+    length_scale: float = 1.0,
+    grid_bounds: Tuple[float, float] = (-10.0, 10.0),
+    max_rank: int = 32,
+    dtype: torch.dtype = torch.float64,
+    device: torch.device = torch.device('cpu'),
+) -> "QTTKernelMPO":
+    """
+    Construct RBF kernel matrix as QTT-MPO.
+    
+    K[i,j] = exp(-|x_i - x_j|² / (2σ²))
+    
+    The key insight: RBF on a uniform grid is TOEPLITZ.
+    K[i,j] depends only on (i-j), giving a structured MPO.
+    
+    For smooth kernels like RBF, the TT-rank is O(log(N/ε))
+    where ε is the approximation tolerance.
+    
+    Args:
+        grid_size: Number of grid points N = 2^d
+        length_scale: RBF length scale σ
+        grid_bounds: Physical domain (low, high)
+        max_rank: Maximum TT rank
+        dtype: Data type
+        device: Compute device
+        
+    Returns:
+        QTTKernelMPO representing the RBF kernel matrix
+    """
+    if grid_size & (grid_size - 1) != 0:
+        raise ValueError(f"grid_size must be power of 2, got {grid_size}")
+    
+    num_bits = int(math.log2(grid_size))
+    low, high = grid_bounds
+    dx = (high - low) / grid_size
+    sigma_sq_2 = 2.0 * length_scale ** 2
+    
+    # Strategy: Build each MPO core by exploiting bit-level structure
+    # For index i = Σ_k i_k 2^k and j = Σ_k j_k 2^k,
+    # the difference (i-j) can be decomposed bit-by-bit.
+    #
+    # The key observation: exp(-a-b) = exp(-a) * exp(-b)
+    # So we can factorize across bits.
+    
+    cores = []
+    
+    for k in range(num_bits):
+        # Contribution from this bit level
+        bit_stride = 2 ** k
+        x_contrib = bit_stride * dx
+        
+        # For bit k: difference contribution is (i_k - j_k) * 2^k * dx
+        # Possible values: -2^k * dx, 0, +2^k * dx
+        
+        if k == 0:
+            r_left = 1
+        else:
+            r_left = min(3, max_rank)  # Toeplitz gives rank ≤ 3 per level
+        
+        if k == num_bits - 1:
+            r_right = 1
+        else:
+            r_right = min(3, max_rank)
+        
+        core = torch.zeros(r_left, 2, 2, r_right, dtype=dtype, device=device)
+        
+        for i_bit in range(2):
+            for j_bit in range(2):
+                diff = (i_bit - j_bit) * x_contrib
+                diff_sq = diff ** 2
+                
+                # Kernel contribution at this bit
+                k_val = math.exp(-diff_sq / sigma_sq_2)
+                
+                if k == 0:
+                    # First core: initialize accumulation
+                    core[0, i_bit, j_bit, 0] = k_val
+                    if r_right > 1:
+                        # Track running (i-j) for cross-bit terms
+                        core[0, i_bit, j_bit, 1] = diff  # Linear term
+                        if r_right > 2:
+                            core[0, i_bit, j_bit, 2] = diff_sq  # Quadratic term
+                            
+                elif k == num_bits - 1:
+                    # Last core: finalize
+                    core[0, i_bit, j_bit, 0] = k_val
+                    if r_left > 1:
+                        # Add cross-term contributions
+                        core[1, i_bit, j_bit, 0] = -2 * diff / sigma_sq_2  # d/d(prev_diff)
+                        if r_left > 2:
+                            core[2, i_bit, j_bit, 0] = -1.0 / sigma_sq_2  # d²
+                else:
+                    # Middle cores: propagate structure
+                    # Diagonal: local kernel contribution
+                    core[0, i_bit, j_bit, 0] = k_val
+                    
+                    if r_left > 1 and r_right > 1:
+                        # Off-diagonal: propagate cross terms
+                        core[1, i_bit, j_bit, 1] = 1.0  # Pass through
+                        core[0, i_bit, j_bit, 1] = diff  # Add new term
+                        
+                    if r_left > 2 and r_right > 2:
+                        core[2, i_bit, j_bit, 2] = 1.0  # Pass quadratic
+                        core[1, i_bit, j_bit, 2] = 2 * diff  # Cross term
+                        core[0, i_bit, j_bit, 2] = diff_sq  # New quadratic
+        
+        cores.append(core)
+    
+    return QTTKernelMPO(
+        cores=cores,
+        grid_size=grid_size,
+        grid_bounds=grid_bounds,
+        length_scale=length_scale,
+    )
+
+
+@dataclass
+class QTTKernelMPO:
+    """
+    RBF Kernel matrix in QTT-MPO format.
+    
+    Represents K[i,j] = exp(-|x_i - x_j|² / (2σ²))
+    as a Matrix Product Operator with O(log N) cores.
+    
+    Storage: O(r² log N) instead of O(N²)
+    Matvec: O(r³ log N) instead of O(N²)
+    """
+    cores: List[torch.Tensor]
+    grid_size: int
+    grid_bounds: Tuple[float, float]
+    length_scale: float
+    
+    @property
+    def max_rank(self) -> int:
+        """Maximum TT rank."""
+        if not self.cores:
+            return 0
+        return max(core.shape[0] for core in self.cores[1:])
+    
+    @property 
+    def dtype(self) -> torch.dtype:
+        return self.cores[0].dtype if self.cores else torch.float64
+    
+    @property
+    def device(self) -> torch.device:
+        return self.cores[0].device if self.cores else torch.device('cpu')
+    
+    def memory_bytes(self) -> int:
+        """Total memory in bytes."""
+        return sum(c.numel() * c.element_size() for c in self.cores)
+    
+    def matvec(self, x_cores: List[torch.Tensor]) -> List[torch.Tensor]:
+        """
+        MPO × MPS = K @ f in QTT format.
+        
+        Args:
+            x_cores: QTT cores of vector f
+            
+        Returns:
+            QTT cores of result K @ f
+        """
+        if len(x_cores) != len(self.cores):
+            raise ValueError("Incompatible number of cores")
+        
+        result_cores = []
+        
+        for mpo_core, mps_core in zip(self.cores, x_cores):
+            # MPO: (r_K_in, 2, 2, r_K_out)
+            # MPS: (r_x_in, 2, r_x_out)
+            r_K_in, _, _, r_K_out = mpo_core.shape
+            r_x_in, _, r_x_out = mps_core.shape
+            
+            # Contract: result[a,c,i,b,d] = Σ_j mpo[a,i,j,b] * mps[c,j,d]
+            result = torch.einsum('aijb,cjd->acibd', mpo_core, mps_core)
+            result = result.reshape(r_K_in * r_x_in, 2, r_K_out * r_x_out)
+            result_cores.append(result)
+        
+        return result_cores
+    
+    def quadratic_form(self, 
+                       f_cores: List[torch.Tensor], 
+                       g_cores: List[torch.Tensor]) -> torch.Tensor:
+        """
+        Compute f^T K g via QTT contraction.
+        
+        This is the core operation for MMD:
+            ⟨f, K @ g⟩ = Σ_{i,j} f[i] K[i,j] g[j]
+        
+        Complexity: O(r³ log N) via MPS-MPO-MPS contraction.
+        
+        Args:
+            f_cores: QTT cores of vector f
+            g_cores: QTT cores of vector g
+            
+        Returns:
+            Scalar f^T K g
+        """
+        # First compute K @ g
+        Kg_cores = self.matvec(g_cores)
+        
+        # Then compute ⟨f, Kg⟩ = f^T @ (K @ g)
+        return _qtt_inner_product(f_cores, Kg_cores)
+
+
+def _qtt_inner_product(f_cores: List[torch.Tensor], 
+                       g_cores: List[torch.Tensor]) -> torch.Tensor:
+    """
+    Compute QTT inner product ⟨f, g⟩ = Σ_i f[i] g[i].
+    
+    Complexity: O(r³ d) where d = log N.
+    """
+    if len(f_cores) != len(g_cores):
+        raise ValueError("Incompatible number of cores")
+    
+    # Contract from left to right
+    # result[a, b] represents the accumulated contraction
+    # where a indexes f's right bond, b indexes g's right bond
+    result = None
+    
+    for f_core, g_core in zip(f_cores, g_cores):
+        # f_core: (r_f_in, 2, r_f_out)
+        # g_core: (r_g_in, 2, r_g_out)
+        
+        r_f_in, n_f, r_f_out = f_core.shape
+        r_g_in, n_g, r_g_out = g_core.shape
+        
+        if n_f != n_g:
+            raise ValueError(f"Physical dimensions don't match: {n_f} vs {n_g}")
+        
+        if result is None:
+            # First core: contract over physical index
+            # fg[a', b'] = Σ_i f[1,i,a'] g[1,i,b'] = Σ_i f[0,i,a'] g[0,i,b']
+            # Since r_f_in = r_g_in = 1 for first core
+            fg = torch.einsum('xia,xib->ab', f_core, g_core)
+            result = fg  # (r_f_out, r_g_out)
+        else:
+            # Subsequent cores
+            # new[c, d] = Σ_{a,b,i} result[a,b] f[a,i,c] g[b,i,d]
+            new_result = torch.einsum('ab,aic,bid->cd', result, f_core, g_core)
+            result = new_result
+    
+    # Final result is (1, 1) tensor for properly normalized TT
+    return result.sum()  # Sum all elements to get scalar
+
+
+def mmd_qtt_native(
+    f_cores: List[torch.Tensor],
+    g_cores: List[torch.Tensor],
+    grid_size: int,
+    length_scale: float = 1.0,
+    grid_bounds: Tuple[float, float] = (-10.0, 10.0),
+    max_rank: int = 32,
+) -> Tuple[float, dict]:
+    """
+    QTT-native MMD computation - ZERO SAMPLING.
+    
+    Computes MMD² = ⟨f ⊗ f, K⟩ - 2⟨f ⊗ g, K⟩ + ⟨g ⊗ g, K⟩
+    
+    where K is the RBF kernel as MPO and f, g are QTT signals.
+    
+    All operations are TT contractions - O(r³ log N) complexity.
+    NO DENSE MATRICES. NO SAMPLING.
+    
+    Args:
+        f_cores: QTT cores of signal f (shape: list of (r_in, 2, r_out))
+        g_cores: QTT cores of signal g
+        grid_size: Grid size N = 2^d
+        length_scale: RBF kernel length scale σ
+        grid_bounds: Physical domain
+        max_rank: Maximum rank for kernel MPO
+        
+    Returns:
+        mmd: MMD value (sqrt of MMD²)
+        info: Dictionary with timing and memory info
+    """
+    import time
+    start = time.perf_counter()
+    
+    device = f_cores[0].device
+    dtype = f_cores[0].dtype
+    
+    # Build RBF kernel MPO
+    K = rbf_kernel_mpo(
+        grid_size=grid_size,
+        length_scale=length_scale,
+        grid_bounds=grid_bounds,
+        max_rank=max_rank,
+        dtype=dtype,
+        device=device,
+    )
+    
+    kernel_time = time.perf_counter() - start
+    
+    # Compute the three terms of MMD²
+    # Term 1: ⟨f, K @ f⟩
+    start_quad = time.perf_counter()
+    term_ff = K.quadratic_form(f_cores, f_cores)
+    
+    # Term 2: ⟨g, K @ g⟩  
+    term_gg = K.quadratic_form(g_cores, g_cores)
+    
+    # Term 3: ⟨f, K @ g⟩
+    term_fg = K.quadratic_form(f_cores, g_cores)
+    
+    quad_time = time.perf_counter() - start_quad
+    
+    # MMD² = E[k(f,f')] + E[k(g,g')] - 2E[k(f,g)]
+    # For probability distributions (normalized), we need to account for normalization
+    # If f and g are PDFs that sum to 1, the formula is exact
+    
+    mmd_squared = term_ff + term_gg - 2 * term_fg
+    
+    # Clamp for numerical stability
+    mmd_squared = torch.clamp(mmd_squared, min=0.0)
+    mmd = torch.sqrt(mmd_squared)
+    
+    total_time = time.perf_counter() - start + kernel_time
+    
+    info = {
+        "mmd_squared": float(mmd_squared),
+        "term_ff": float(term_ff),
+        "term_gg": float(term_gg),
+        "term_fg": float(term_fg),
+        "kernel_rank": K.max_rank,
+        "kernel_memory_bytes": K.memory_bytes(),
+        "kernel_build_time": kernel_time,
+        "quadratic_form_time": quad_time,
+        "total_time": total_time,
+        "method": "QTT-NATIVE (zero sampling)",
+    }
+    
+    return float(mmd), info

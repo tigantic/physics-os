@@ -46,6 +46,12 @@ from tensornet.genesis.core.validation import (
     check_numerical_stability,
 )
 
+from tensornet.genesis.core.rsvd import (
+    rsvd_gpu,
+    tt_decompose_rsvd,
+    svd_fallback,
+)
+
 __all__ = [
     # Logging
     "get_logger",
@@ -75,4 +81,8 @@ __all__ = [
     "validate_probability",
     "validate_dtype",
     "check_numerical_stability",
+    # rSVD (GPU-native)
+    "rsvd_gpu",
+    "tt_decompose_rsvd",
+    "svd_fallback",
 ]

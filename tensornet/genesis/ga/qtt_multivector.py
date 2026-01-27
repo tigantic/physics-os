@@ -15,6 +15,7 @@ import torch
 from typing import List, Optional, Tuple
 from dataclasses import dataclass, field
 
+from tensornet.genesis.core.rsvd import rsvd_gpu
 from tensornet.genesis.ga.multivector import CliffordAlgebra
 
 
@@ -229,16 +230,9 @@ class QTTMultivector:
             # Reshape to (left_rank * 2, 2^{remaining-1})
             tensor = tensor.reshape(left_rank * 2, 2**(remaining_dims - 1))
             
-            # SVD
-            U, S, Vh = torch.linalg.svd(tensor, full_matrices=False)
-            
-            # Truncate
-            rank = min(max_rank, (S > tol * S[0]).sum().item())
-            rank = max(1, rank)
-            
-            U = U[:, :rank]
-            S = S[:rank]
-            Vh = Vh[:rank, :]
+            # SVD via randomized algorithm
+            U, S, Vh = rsvd_gpu(tensor, k=max_rank, tol=tol)
+            rank = S.shape[0]
             
             # Core k: (r_{k-1}, 2, r_k)
             core = U.reshape(left_rank, 2, rank)
@@ -400,17 +394,10 @@ class QTTMultivector:
             core = self.cores[k]
             r_left, n_k, r_right = core.shape
             
-            # Reshape and SVD
+            # Reshape and SVD via randomized algorithm
             mat = core.reshape(r_left, n_k * r_right)
-            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
-            
-            # Truncate
-            rank = min(max_rank, (S > tol * S[0]).sum().item())
-            rank = max(1, rank)
-            
-            U = U[:, :rank]
-            S = S[:rank]
-            Vh = Vh[:rank, :]
+            U, S, Vh = rsvd_gpu(mat, k=max_rank, tol=tol)
+            rank = S.shape[0]
             
             self.cores[k] = Vh.reshape(rank, n_k, r_right)
             self.cores[k - 1] = torch.einsum('ijk,kl->ijl', 

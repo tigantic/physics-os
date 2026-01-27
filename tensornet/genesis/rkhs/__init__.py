@@ -62,6 +62,9 @@ from tensornet.genesis.rkhs.mmd import (
     maximum_mean_discrepancy,
     mmd_squared,
     mmd_test,
+    mmd_qtt_native,
+    rbf_kernel_mpo,
+    QTTKernelMPO,
 )
 
 __all__ = [
@@ -95,4 +98,8 @@ __all__ = [
     "maximum_mean_discrepancy",
     "mmd_squared",
     "mmd_test",
+    # QTT-native MMD
+    "mmd_qtt_native",
+    "rbf_kernel_mpo",
+    "QTTKernelMPO",
 ]

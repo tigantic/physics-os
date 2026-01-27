@@ -1,0 +1,67 @@
+{
+  "pipeline": "GEOMETRIC TYPES PIPELINE",
+  "timestamp": "2026-01-27T18:57:49.444984+00:00",
+  "types": [
+    "VectorField",
+    "Measure",
+    "Manifold",
+    "Spinor"
+  ],
+  "primitives": [
+    "SGW",
+    "OT",
+    "PH",
+    "GA",
+    "RKHS"
+  ],
+  "total_time_seconds": 1.6939114829947357,
+  "all_constraints_preserved": true,
+  "stages": [
+    {
+      "stage": 1,
+      "type": "VectorField",
+      "primitive": "SGW",
+      "constraint_before": 2.0589562014123242e-12,
+      "constraint_after": 1.0671181977581274e-13,
+      "preserved": true,
+      "time": 0.01654073100507958
+    },
+    {
+      "stage": 2,
+      "type": "Measure",
+      "primitive": "OT",
+      "constraint_before": 0.0,
+      "constraint_after": 0.0,
+      "preserved": true,
+      "time": 0.0008499339965055697
+    },
+    {
+      "stage": 3,
+      "type": "Manifold",
+      "primitive": "PH",
+      "constraint_before": 0.0,
+      "constraint_after": 0.0,
+      "preserved": true,
+      "time": 0.552761126004043
+    },
+    {
+      "stage": 4,
+      "type": "Spinor",
+      "primitive": "GA",
+      "constraint_before": 0.0,
+      "constraint_after": 7.587616579485257e-08,
+      "preserved": true,
+      "time": 0.2836979860003339
+    },
+    {
+      "stage": 5,
+      "type": "Measure",
+      "primitive": "RKHS",
+      "constraint_before": 0.0,
+      "constraint_after": 0.0,
+      "preserved": true,
+      "time": 0.0006420839999918826
+    }
+  ],
+  "sha256": "98e4ec8a6f25843086e42ba3f66697439eadef91101e67a3abe05c58d33abd7c"
+}

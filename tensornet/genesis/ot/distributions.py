@@ -45,6 +45,8 @@ except ImportError:
     # Fallback for standalone testing
     QTT = None
 
+from tensornet.genesis.core.rsvd import rsvd_gpu
+
 
 @dataclass
 class QTTDistribution:
@@ -205,11 +207,11 @@ class QTTDistribution:
             if normalize:
                 density = density / (density.sum() * dx)
             
-            # Convert to QTT using TT-SVD (sequential left-to-right decomposition)
+            # TT decomposition via sequential SVD
             # Reshape to 2x2x...x2 tensor
             tensor = density.reshape([2] * num_bits)
             
-            # TT decomposition via sequential SVD
+            # TT decomposition via rSVD (GPU-native)
             cores = []
             C = tensor
             r_prev = 1
@@ -227,12 +229,11 @@ class QTTDistribution:
                     # C has shape (r_prev, 2, 2, ..., 2)
                     mat = C.reshape(r_prev * 2, -1)
                 
-                # SVD
-                U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+                # GPU-native rSVD
+                U, S, Vh = rsvd_gpu(mat, k=50, tol=1e-12)
                 
-                # Determine rank (truncate small singular values)
-                tol = 1e-12 * S[0] if S[0] > 0 else 1e-12
-                rank = max(1, int((S > tol).sum()))
+                # Determine rank from singular value count
+                rank = max(1, len(S))
                 rank = min(rank, 50)  # Cap rank for stability
                 
                 # Truncate
@@ -475,6 +476,102 @@ class QTTDistribution:
         )
     
     @classmethod
+    def from_dense(
+        cls,
+        values: torch.Tensor,
+        grid_bounds: Tuple[float, float] = (-10.0, 10.0),
+        normalize: bool = True,
+        max_rank: int = 100,
+        tol: float = 1e-10,
+    ) -> "QTTDistribution":
+        """
+        Create a QTTDistribution from dense values using TT-rSVD.
+        
+        Args:
+            values: 1D tensor of grid values (length must be power of 2)
+            grid_bounds: (low, high) domain bounds
+            normalize: Whether to normalize to sum to 1
+            max_rank: Maximum TT rank
+            tol: Truncation tolerance for rSVD
+            
+        Returns:
+            QTTDistribution compressed from dense values
+        """
+        from tensornet.genesis.core.rsvd import rsvd_gpu
+        
+        grid_size = values.shape[0]
+        if grid_size & (grid_size - 1) != 0:
+            raise ValueError(f"grid_size must be power of 2, got {grid_size}")
+        
+        num_bits = int(math.log2(grid_size))
+        dtype = values.dtype
+        device = values.device
+        
+        # Normalize if requested
+        if normalize:
+            low, high = grid_bounds
+            dx = (high - low) / grid_size
+            total = values.sum() * dx
+            if total > 1e-15:
+                values = values / total
+        
+        # Reshape to (2, 2, ..., 2) tensor
+        tensor = values.reshape([2] * num_bits)
+        
+        # TT-rSVD decomposition
+        cores = []
+        C = tensor
+        r_prev = 1
+        
+        for k in range(num_bits - 1):
+            if k == 0:
+                mat = C.reshape(2, -1)
+            else:
+                mat = C.reshape(r_prev * 2, -1)
+            
+            # Use GPU-native rSVD
+            target_rank = min(max_rank + 5, min(mat.shape))
+            U, S, Vh = rsvd_gpu(mat, k=target_rank, tol=tol)
+            V = Vh.T
+            
+            # Truncate based on tolerance
+            if tol > 0 and len(S) > 1:
+                cumsum = torch.cumsum(S**2, dim=0)
+                total_sq = cumsum[-1]
+                cutoff = torch.searchsorted(cumsum, total_sq * (1 - tol**2))
+                rank = max(1, int(cutoff) + 1)
+            else:
+                rank = len(S)
+            rank = min(rank, max_rank)
+            
+            U = U[:, :rank]
+            S = S[:rank]
+            V = V[:, :rank]
+            
+            if k == 0:
+                core = U.reshape(1, 2, rank)
+            else:
+                core = U.reshape(r_prev, 2, rank)
+            
+            cores.append(core)
+            
+            # Remaining tensor
+            SV = torch.diag(S) @ V.T
+            remaining = mat.shape[1] // 2
+            C = SV.reshape(rank, 2, max(1, remaining))
+            r_prev = rank
+        
+        # Last core
+        last_core = C.reshape(r_prev, 2, 1)
+        cores.append(last_core)
+        
+        return cls(
+            cores=cores,
+            grid_bounds=grid_bounds,
+            is_normalized=normalize,
+        )
+    
+    @classmethod
     def from_function(
         cls,
         func: Callable[[torch.Tensor], torch.Tensor],
@@ -698,19 +795,16 @@ class QTTDistribution:
             core = new_cores[k]
             r_in, n, r_out = core.shape
             
-            # Reshape and SVD
+            # Reshape and rSVD
             mat = core.reshape(r_in * n, r_out)
-            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+            target_rank = max_rank if max_rank is not None else 50
+            U, S, Vh = rsvd_gpu(mat, k=target_rank, tol=tol)
             
-            # Truncate based on tolerance
-            total_sq = (S ** 2).sum()
-            cumsum = torch.cumsum(S ** 2, dim=0)
-            keep = ((total_sq - cumsum) > tol * total_sq).sum() + 1
+            # Truncate based on rSVD output
+            keep = max(1, len(S))
             
             if max_rank is not None:
                 keep = min(keep, max_rank)
-            
-            keep = max(1, int(keep))
             
             # Update cores
             new_cores[k] = (U[:, :keep] * S[:keep]).reshape(r_in, n, keep)

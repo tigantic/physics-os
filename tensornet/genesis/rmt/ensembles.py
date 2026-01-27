@@ -23,6 +23,8 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Tuple, Union
 import torch
 
+from tensornet.genesis.core.rsvd import rsvd_gpu
+
 
 @dataclass
 class QTTEnsemble:
@@ -144,16 +146,8 @@ class QTTEnsemble:
                 r_prev = cores[-1].shape[2]
                 mat = current.reshape(r_prev * 2, -1)
             
-            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
-            
-            # Truncate to reasonable rank
-            rank = min(32, len(S))
-            rank = max(1, int((S > 1e-12 * S[0]).sum().item()))
-            rank = min(rank, 32)
-            
-            U = U[:, :rank]
-            S = S[:rank]
-            Vh = Vh[:rank, :]
+            U, S, Vh = rsvd_gpu(mat, k=32, tol=1e-12)
+            rank = S.shape[0]
             
             if k == 0:
                 cores.append(U.reshape(1, 2, rank))
@@ -234,12 +228,8 @@ class QTTEnsemble:
                 continue
             
             mat = core.reshape(r_l, d * r_r)
-            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
-            
-            r_new = min(max_rank, len(S))
-            U = U[:, :r_new]
-            S = S[:r_new]
-            Vh = Vh[:r_new, :]
+            U, S, Vh = rsvd_gpu(mat, k=max_rank, tol=1e-10)
+            r_new = S.shape[0]
             
             cores[k] = Vh.reshape(r_new, d, r_r)
             

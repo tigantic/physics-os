@@ -56,6 +56,7 @@ import numpy as np
 
 from .distributions import QTTDistribution
 from .cost_matrices import QTTMatrix, euclidean_cost_mpo, gaussian_kernel_mpo
+from tensornet.genesis.core.rsvd import rsvd_gpu
 
 
 @dataclass
@@ -415,15 +416,13 @@ class QTTSinkhorn:
         
         for k in range(num_bits - 1):
             m, n = current.shape
-            q = min(max_rank + 5, min(m, n))
+            target_rank = min(max_rank + 5, min(m, n))
             
-            if m > 5 and n > 5:
-                U, S, V = torch.svd_lowrank(current.to(torch.float64), q=q, niter=2)
-            else:
-                U, S, Vh = torch.linalg.svd(current.to(torch.float64), full_matrices=False)
-                V = Vh.T
+            # GPU-native rSVD - handles all matrix sizes correctly
+            U, S, Vh = rsvd_gpu(current, k=target_rank, tol=1e-12)
+            V = Vh.T
             
-            rank = min(max_rank, int((S > 1e-12 * S[0]).sum()))
+            rank = min(max_rank, len(S))
             rank = max(1, rank)
             
             U = U[:, :rank]
@@ -568,8 +567,8 @@ class QTTSinkhorn:
             # Reshape to (r_left * 2 * 2, rest)
             mat = current.reshape(r_left * 4, -1)
             
-            # SVD
-            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+            # GPU-native rSVD
+            U, S, Vh = rsvd_gpu(mat, k=self.max_rank, tol=1e-10)
             
             # Truncate to max_rank
             rank = min(len(S), self.max_rank)
@@ -692,15 +691,13 @@ class QTTSinkhorn:
             
             for k in range(num_bits - 1):
                 m, n = current.shape
-                q = min(max_rank + 5, min(m, n))
+                target_rank = min(max_rank + 5, min(m, n))
                 
-                if m > 5 and n > 5:
-                    U, S, V = torch.svd_lowrank(current.to(torch.float64), q=q, niter=2)
-                else:
-                    U, S, Vh = torch.linalg.svd(current.to(torch.float64), full_matrices=False)
-                    V = Vh.T
+                # GPU-native rSVD
+                U, S, Vh = rsvd_gpu(current, k=target_rank, tol=1e-12)
+                V = Vh.T
                 
-                rank = min(max_rank, int((S > 1e-12 * S[0]).sum()))
+                rank = min(max_rank, len(S))
                 rank = max(1, rank)
                 
                 U = U[:, :rank]
@@ -977,13 +974,12 @@ class QTTSinkhorn:
                 else:
                     mat = C.reshape(r_prev * 2, -1)
                 
-                # Randomized SVD for GPU efficiency
-                q = min(10, min(mat.shape))
-                U, S, V = torch.svd_lowrank(mat, q=q, niter=2)
+                # GPU-native rSVD
+                U, S, Vh = rsvd_gpu(mat, k=10, tol=1e-12)
+                V = Vh.T
                 
                 # Truncate
-                tol = 1e-12 * S[0] if S[0] > 0 else 1e-12
-                rank = max(1, int((S > tol).sum()))
+                rank = max(1, len(S))
                 rank = min(rank, 10)
                 
                 U = U[:, :rank]

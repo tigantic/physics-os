@@ -1,0 +1,55 @@
+{
+  "demonstration": "QUANTUM MECHANICS",
+  "project": "HYPERTENSOR-VM",
+  "timestamp": "2026-01-27T18:12:42.349979+00:00",
+  "tests": [
+    {
+      "name": "Normalization",
+      "passed": true,
+      "key_metric": "residual",
+      "metric_value": 2.220446049250313e-16,
+      "time_seconds": 0.0011760800043703057
+    },
+    {
+      "name": "HO Ground State",
+      "passed": true,
+      "key_metric": "energy_error",
+      "metric_value": 1.0044823750554599e-08,
+      "time_seconds": 0.0003769920003833249
+    },
+    {
+      "name": "Uncertainty Principle",
+      "passed": true,
+      "key_metric": "\u0394x\u0394p",
+      "metric_value": 0.5000000100448238,
+      "time_seconds": 0.00012733099720207974
+    },
+    {
+      "name": "Unitary Evolution",
+      "passed": true,
+      "key_metric": "norm_drift",
+      "metric_value": 9.259260025373806e-14,
+      "time_seconds": 0.032585899003606755
+    },
+    {
+      "name": "Violation Detection",
+      "passed": true,
+      "key_metric": "violation_caught",
+      "metric_value": 1.0,
+      "time_seconds": 4.232100036460906e-05
+    }
+  ],
+  "summary": {
+    "total_tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "all_passed": true
+  },
+  "constraints_verified": [
+    "\u222b|\u03c8|\u00b2dV = 1 (normalization)",
+    "U\u2020U = I (unitary evolution)",
+    "\u0394x\u0394p \u2265 \u210f/2 (uncertainty principle)",
+    "E\u2080 = \u210f\u03c9/2 (ground state energy)"
+  ],
+  "sha256": "df821c69e45d4fdec6291cf71d31d9400a87458de163969bbecbd08f2ac2a82f"
+}

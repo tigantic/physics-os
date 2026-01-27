@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 from typing import Optional, Tuple, List, Union
 import torch
 
+from tensornet.genesis.core.rsvd import rsvd_gpu
 from .kernels import Kernel, RBFKernel
 
 
@@ -76,18 +77,8 @@ class QTTKernelMatrix:
         for k in range(2 * L - 1):
             m, n = current.shape
             
-            # SVD truncation
-            U, S, Vh = torch.linalg.svd(current, full_matrices=False)
-            
-            # Truncate based on tolerance or max_rank
-            s_sum = S.sum()
-            cumsum = torch.cumsum(S, dim=0)
-            rank_tol = ((s_sum - cumsum) > tol * s_sum).sum().item() + 1
-            rank = min(max_rank, max(1, rank_tol), len(S))
-            
-            U = U[:, :rank]
-            S = S[:rank]
-            Vh = Vh[:rank, :]
+            # SVD truncation via randomized SVD
+            U, S, Vh = rsvd_gpu(current, k=max_rank, tol=tol)
             
             # Form core
             if k == 0:
@@ -276,18 +267,10 @@ class QTTKernelMatrix:
             m, n = current.shape
             q = min(max_rank + 5, min(m, n))
             
-            if m > 10 and n > 10:
-                U, S, V = torch.svd_lowrank(current, q=q, niter=2)
-            else:
-                U, S, Vh = torch.linalg.svd(current, full_matrices=False)
-                V = Vh.T
+            U, S, Vh = rsvd_gpu(current, k=max_rank, tol=1e-10)
+            V = Vh.T
             
-            rank = min(max_rank, int((S > 1e-10 * S[0]).sum()))
-            rank = max(1, rank)
-            
-            U = U[:, :rank]
-            S = S[:rank]
-            V = V[:, :rank]
+            rank = S.shape[0]
             
             if k == 0:
                 cores.append(U.reshape(1, 2, rank))

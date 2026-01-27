@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 from typing import List, Tuple, Dict, Optional
 import torch
 
+from tensornet.genesis.core.rsvd import rsvd_gpu
 from .simplicial import Simplex, SimplicialComplex
 
 
@@ -178,17 +179,15 @@ class QTTBoundaryOperator:
         """
         m, n = matrix.shape
         
-        # Simple 2-core TT: matrix as outer product approximation
-        U, S, Vh = torch.linalg.svd(matrix, full_matrices=False)
-        
-        rank = min(max_rank, (S > 1e-10 * S[0]).sum().item())
-        rank = max(1, rank)
+        # Simple 2-core TT: matrix as outer product approximation via randomized SVD
+        U, S, Vh = rsvd_gpu(matrix, k=max_rank, tol=1e-10)
+        rank = S.shape[0]
         
         # Core 1: (1, m, r)
-        core1 = (U[:, :rank] * S[:rank]).unsqueeze(0)
+        core1 = (U * S).unsqueeze(0)
         
         # Core 2: (r, n, 1)  
-        core2 = Vh[:rank, :].unsqueeze(-1)
+        core2 = Vh.unsqueeze(-1)
         
         return [core1, core2]
     

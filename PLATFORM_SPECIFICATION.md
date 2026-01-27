@@ -60,6 +60,7 @@
 10. [Deployment Options](#deployment-options)
 11. [Dependencies](#dependencies)
 12. [Appendices](#appendices)
+13. [Changelog](#changelog)
 
 ---
 
@@ -497,6 +498,82 @@ proving what no other framework can do:
 
 ### System Architecture
 
+<details>
+<summary><strong>📊 Mermaid Diagram (Interactive)</strong></summary>
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#fff', 'primaryBorderColor': '#7c3aed', 'lineColor': '#818cf8', 'secondaryColor': '#16213e', 'tertiaryColor': '#0f3460'}}}%%
+flowchart TB
+    subgraph rust["Rust Layer (317K LOC)"]
+        direction LR
+        gc["🖥️ Glass Cockpit<br/>30K LOC | wgpu"]
+        ge["🌍 Global Eye<br/>1K LOC"]
+        fez["🔐 FluidElite-ZK<br/>21K LOC"]
+    end
+
+    subgraph ipc["IPC Bridge"]
+        hb["Hyper Bridge<br/>mmap + protobuf<br/>132KB shared memory"]
+    end
+
+    subgraph python["tensornet/ (Python 619K LOC)"]
+        direction TB
+        subgraph core_modules["Core Modules"]
+            cfd["cfd/<br/>46K LOC"]
+            exploit["exploit/<br/>26K LOC"]
+            oracle["oracle/<br/>10K LOC"]
+            zk["zk/<br/>10K LOC"]
+        end
+        subgraph domain_modules["Domain Modules"]
+            fusion["fusion/ 5K"]
+            hyperenv["hyperenv/ 5K"]
+            sovereign["sovereign/ 3K"]
+            intent["intent/ 4K"]
+        end
+        subgraph genesis["Genesis Layers (26K LOC)"]
+            ot["QTT-OT"]
+            sgw["QTT-SGW"]
+            rmt["QTT-RMT"]
+            tg["QTT-TG"]
+            rkhs["QTT-RKHS"]
+            ph["QTT-PH"]
+            ga["QTT-GA"]
+        end
+        more["+ 45 more submodules"]
+    end
+
+    subgraph gpu["GPU Compute Layer"]
+        cuda["CUDA Kernels"]
+        triton["Triton JIT"]
+    end
+
+    subgraph external["External Integrations"]
+        direction LR
+        gevulot["Gevulot ZK"]
+        unity["Unity/Unreal"]
+        blockchain["Substrate"]
+    end
+
+    rust --> ipc
+    ipc --> python
+    python --> gpu
+    python --> external
+
+    classDef rustStyle fill:#1a1a2e,stroke:#7c3aed,stroke-width:2px,color:#fff
+    classDef pythonStyle fill:#16213e,stroke:#818cf8,stroke-width:2px,color:#fff
+    classDef ipcStyle fill:#0f3460,stroke:#e94560,stroke-width:2px,color:#fff
+    classDef gpuStyle fill:#0d0d0d,stroke:#00d9ff,stroke-width:2px,color:#00d9ff
+    
+    class gc,ge,fez rustStyle
+    class cfd,exploit,oracle,zk,fusion,hyperenv,sovereign,intent,more pythonStyle
+    class hb ipcStyle
+    class cuda,triton gpuStyle
+```
+
+</details>
+
+<details>
+<summary><strong>📋 ASCII Diagram (Terminal Compatible)</strong></summary>
+
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
 │                            HyperTensor Platform                                  │
@@ -542,6 +619,8 @@ proving what no other framework can do:
 │                                                                                  │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+</details>
 
 ### Design Principles
 
@@ -986,6 +1065,41 @@ from tensornet.core.determinism import set_global_seed
 
 ---
 
+## Changelog
+
+### Version 26.0 (January 27, 2026) — GENESIS COMPLETE
+- ✅ **Genesis Layers 20-26**: All 7 QTT meta-primitives implemented and validated (26,458 LOC)
+- ✅ **Cross-Primitive Pipeline**: OT → SGW → RKHS → PH → GA end-to-end without densification
+- ✅ **Mermaid Architecture Diagrams**: Added interactive GitHub-rendered diagrams
+- ✅ **Component Catalog JSON**: Machine-readable `component-catalog.json` for tooling
+- ✅ **Auto LOC Sync Script**: `scripts/update_loc_counts.py` for automated metrics
+
+### Version 25.0 (January 24, 2026)
+- ✅ Genesis Layer 26 (QTT-GA): Geometric Algebra with Clifford algebras Cl(p,q,r)
+- ✅ Genesis Layer 25 (QTT-PH): Persistent Homology at unprecedented scale
+- ✅ 937K total LOC milestone achieved
+- ✅ 15 industry verticals validated
+
+### Version 24.0 (January 2026)
+- ✅ Genesis Layers 20-24: OT, SGW, RMT, TG, RKHS primitives
+- ✅ FluidElite-ZK Rust prover (21K LOC)
+- ✅ Gevulot integration for decentralized proofs
+
+### Version 23.0 (December 2025)
+- ✅ Glass Cockpit visualization (31K LOC)
+- ✅ Hyper Bridge IPC (132KB shared memory, 9ms latency)
+- ✅ WGSL shader system (17 shaders)
+
+### Version 22.0 (November 2025)
+- ✅ Industry phases 11-15: Medical, Racing, Ballistics, Emergency, Agriculture
+- ✅ Millennium proof pipelines: Yang-Mills and Navier-Stokes
+- ✅ Lean 4 formal verification (553 LOC)
+
+### Earlier Versions
+See [CHANGELOG.md](CHANGELOG.md) for complete history.
+
+---
+
 ## Contact
 
 **Organization**: Tigantic Holdings LLC  
@@ -1002,17 +1116,17 @@ from tensornet.core.determinism import set_global_seed
 ║                                                                                        ║
 ║     O N E   C O D E B A S E   •   O N E   P H Y S I C S   E N G I N E                 ║
 ║                                                                                        ║
-║     4 6 8 , 1 6 8   L I N E S   O F   C O D E                                         ║
+║     9 3 6 , 7 2 3   L I N E S   O F   C O D E                                         ║
 ║                                                                                        ║
 ║     1 5   I N D U S T R I E S   C O N Q U E R E D                                     ║
 ║                                                                                        ║
-║     3   P L A T F O R M S   •   9 5   M O D U L E S   •   9 9   A P P L I C A T I O N S ║
+║     3   P L A T F O R M S   •   9 6   M O D U L E S   •   9 9   A P P L I C A T I O N S ║
 ║                                                                                        ║
 ║                         T H E   P L A N E T A R Y   O S                                ║
 ║                                                                                        ║
 ╚════════════════════════════════════════════════════════════════════════════════════════╝
 ```
 
-*Last Updated: January 23, 2026 — Version 25.0*
+*Last Updated: January 27, 2026 — Version 26.0*
 
 </div>

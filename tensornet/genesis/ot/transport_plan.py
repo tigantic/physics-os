@@ -49,6 +49,8 @@ from typing import Optional, Tuple, List
 import torch
 import numpy as np
 
+from tensornet.genesis.core.rsvd import rsvd_gpu
+
 from .distributions import QTTDistribution
 from .cost_matrices import QTTMatrix
 from .sinkhorn_qtt import SinkhornResult
@@ -677,17 +679,11 @@ class QTTTransportPlan:
                 else:
                     mat = C.reshape(r_prev * 2, -1)
                 
-                m, n = mat.shape
-                q = min(30, min(m, n))
+                # GPU-native rSVD
+                U, S, Vh = rsvd_gpu(mat, k=30, tol=1e-10)
+                V = Vh.T
                 
-                if m > 4 and n > 4:
-                    U, S, V = torch.svd_lowrank(mat, q=q, niter=2)
-                else:
-                    U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
-                    V = Vh.T
-                
-                tol = 1e-10 * S[0] if S[0] > 0 else 1e-10
-                rank = max(1, int((S > tol).sum()))
+                rank = max(1, len(S))
                 rank = min(rank, 30)
                 
                 U = U[:, :rank]

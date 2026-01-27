@@ -38,6 +38,8 @@ from typing import List, Tuple, Optional, Callable
 import torch
 import numpy as np
 
+from tensornet.genesis.core.rsvd import rsvd_gpu
+
 
 @dataclass
 class QTTMatrix:
@@ -653,13 +655,14 @@ def _dense_to_qtt_mpo(
         r_left = current.shape[0]
         current = current.reshape(r_left * 4, -1)
         
-        # SVD
-        U, S, Vh = torch.linalg.svd(current, full_matrices=False)
+        # GPU-native rSVD
+        target_rank = min(max_rank, 4 ** (num_bits - k - 1))
+        if k == num_bits - 1:
+            target_rank = 1
+        U, S, Vh = rsvd_gpu(current, k=target_rank, tol=1e-10)
         
         # Truncate
-        rank = min(len(S), max_rank, 4 ** (num_bits - k - 1))
-        if k == num_bits - 1:
-            rank = 1
+        rank = len(S)
         
         U = U[:, :rank]
         S = S[:rank]

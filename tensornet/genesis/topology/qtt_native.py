@@ -28,6 +28,10 @@ from dataclasses import dataclass, field
 from typing import List, Tuple, Dict, Optional, Callable, Set
 import torch
 
+from tensornet.genesis.core.rsvd import rsvd_gpu
+
+from tensornet.genesis.core.rsvd import rsvd_gpu
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # QTT CORE STRUCTURES
@@ -131,12 +135,10 @@ class QTTVector:
             n_rest = C.numel() // (r_prev * n_k)
             
             mat = C.reshape(r_prev * n_k, n_rest)
-            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+            U, S, Vh = rsvd_gpu(mat, k=max_rank, tol=1e-10)
+            r = S.shape[0]
             
-            r = min(max_rank, (S > 1e-10 * S[0]).sum().item())
-            r = max(1, r)
-            
-            core = U[:, :r].reshape(r_prev, n_k, r)
+            core = U.reshape(r_prev, n_k, r)
             cores.append(core)
             
             C = torch.diag(S[:r]) @ Vh[:r, :]
@@ -659,9 +661,9 @@ class QTTRipsComplex:
             V = torch.randn(n, n_probes, device=device)
             AV = tt_matrix @ V
             
-            # Estimate rank via SVD of AV
-            U, S, _ = torch.svd_lowrank(AV, q=min(n_probes, m))
-            rank = int((S > 1e-10 * S[0]).sum())
+            # Estimate rank via rSVD
+            U, S, Vh = rsvd_gpu(AV, k=min(n_probes, m), tol=1e-10)
+            rank = len(S)
             return rank
         elif hasattr(tt_matrix, 'cores'):
             # TT matrix - use TT ranks as estimate
