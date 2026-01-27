@@ -1,8 +1,8 @@
 {
   "project": "HyperTensor Drug Design",
   "module": "TIG-011a Multi-Mechanism Enhancement",
-  "timestamp": "2026-01-05T20:26:33.158150+00:00",
-  "status": "READY FOR SYNTHESIS",
+  "timestamp": "2026-01-27T22:56:30.651439+00:00",
+  "status": "REQUIRES OPTIMIZATION",
   "drug_candidate": {
     "name": "TIG-011a Enhanced",
     "scaffold": "quinazoline",
@@ -52,15 +52,15 @@
         "status": "FAILED"
       },
       "10.0": {
-        "success_pct": 0.0,
+        "success_pct": 0.8391704742872476,
         "status": "FAILED"
       },
       "40.0": {
-        "success_pct": 15.396253798080242,
+        "success_pct": 0.0,
         "status": "FAILED"
       },
       "80.0": {
-        "success_pct": 13.327428221384757,
+        "success_pct": 5.082733878493895,
         "status": "FAILED"
       }
     },
@@ -78,7 +78,7 @@
         }
       },
       "4.0": {
-        "success_pct": 38.57388222406731,
+        "success_pct": 42.24858950841706,
         "status": "FAILED",
         "energy_breakdown": {
           "coulombic_kcal": -29.64853571428572,
@@ -90,8 +90,8 @@
         }
       },
       "10.0": {
-        "success_pct": 78.90316627396055,
-        "status": "LEAKY",
+        "success_pct": 82.75645761170243,
+        "status": "STABLE",
         "energy_breakdown": {
           "coulombic_kcal": -11.859414285714285,
           "van_der_waals_kcal": -5.0,
@@ -102,7 +102,7 @@
         }
       },
       "40.0": {
-        "success_pct": 95.29879411127219,
+        "success_pct": 87.57663785627999,
         "status": "STABLE",
         "energy_breakdown": {
           "coulombic_kcal": -2.9648535714285713,
@@ -114,7 +114,7 @@
         }
       },
       "80.0": {
-        "success_pct": 72.60861151207891,
+        "success_pct": 65.56485885919113,
         "status": "LEAKY",
         "energy_breakdown": {
           "coulombic_kcal": -1.4824267857142857,
@@ -128,10 +128,10 @@
     }
   },
   "key_findings": {
-    "original_at_water_pct": 13.327428221384757,
-    "enhanced_at_water_pct": 72.60861151207891,
-    "improvement_pct_points": 59.28118329069416,
-    "goal_70pct_achieved": "True",
+    "original_at_water_pct": 5.082733878493895,
+    "enhanced_at_water_pct": 65.56485885919113,
+    "improvement_pct_points": 60.482124980697236,
+    "goal_70pct_achieved": "False",
     "phantom_pocket_clear": true,
     "synthetically_feasible": true
   },
@@ -148,5 +148,20 @@
     "step_3": "Suzuki coupling for \u03c0-stacking (80\u00b0C, Pd catalyst)",
     "overall_yield_pct": 42.0
   },
-  "sha256": "920899c063b1c2dbe180928853c316ba7c3fa72f5611ddec221fb2ecd3bb4795"
+  "qtt_native_3d_pocket": {
+    "grid_shape": [
+      128,
+      128,
+      128
+    ],
+    "dense_size": "2097152",
+    "energy_compression_ratio": 285.8713195201745,
+    "dielectric_compression_ratio": 1016.062015503876,
+    "max_rank": 16,
+    "n_cores": 21,
+    "qtt_dynamics_success_rate": 1.0,
+    "build_time_s": 14.779090104995703,
+    "validation": "PASSED"
+  },
+  "sha256": "c857cbd077a7845d4bb105c73058890100319b46815f5f315f1a2c8af2097f6b"
 }

@@ -1,0 +1,117 @@
+{
+  "attestation": "TENSOR_GENESIS_ORACLE_ATTESTATION",
+  "timestamp": "2026-01-27T23:11:07.717553+00:00",
+  "pipeline_version": "1.0.0",
+  "device": "cuda",
+  "input_sizes": {
+    "distribution_a": 1000,
+    "distribution_b": 1000,
+    "qtt_grid_size": 1024
+  },
+  "stage_1_ot": {
+    "wasserstein_1": 0.0060436140640273694,
+    "wasserstein_2": 0.007040167319330248,
+    "shift_magnitude": 0.007040167319330248,
+    "computation_time_ms": 42.300130997318774,
+    "interpretation": "Distribution shift magnitude"
+  },
+  "stage_2_sgw": {
+    "scales_analyzed": [
+      0.5,
+      1.0,
+      2.0,
+      4.0,
+      8.0
+    ],
+    "scale_energies": [
+      {
+        "scale": 0.5,
+        "energy": 26.079820116974947
+      },
+      {
+        "scale": 1.0,
+        "energy": 16.208392975905763
+      },
+      {
+        "scale": 2.0,
+        "energy": 4.212714084163628
+      },
+      {
+        "scale": 4.0,
+        "energy": 0.26370813405279786
+      },
+      {
+        "scale": 8.0,
+        "energy": 0.00035275437778684406
+      }
+    ],
+    "dominant_scale": 0.5,
+    "is_local": true,
+    "is_global": false,
+    "computation_time_ms": 1246.1068749980768,
+    "interpretation": "Dominant change at scale 0.5 (local)"
+  },
+  "stage_3_rkhs": {
+    "mmd_scores": [
+      {
+        "length_scale": 0.1,
+        "mmd": 0.0
+      },
+      {
+        "length_scale": 0.5,
+        "mmd": 0.0068359375
+      },
+      {
+        "length_scale": 1.0,
+        "mmd": 0.0
+      },
+      {
+        "length_scale": 2.0,
+        "mmd": 0.0
+      }
+    ],
+    "average_mmd": 0.001708984375,
+    "max_mmd": 0.0068359375,
+    "anomaly_level": "NORMAL",
+    "is_anomalous": false,
+    "computation_time_ms": 3579.470525997749,
+    "interpretation": "Anomaly level: NORMAL (MMD=0.0068)"
+  },
+  "stage_4_ph": {
+    "betti_numbers": [
+      1,
+      0
+    ],
+    "connected_components": 44,
+    "topological_holes": 501,
+    "shape_type": "OSCILLATORY",
+    "shape_description": "Multiple peaks and valleys (wave pattern)",
+    "boundary_memory_bytes": 576,
+    "computation_time_ms": 25.27172899863217,
+    "interpretation": "Shape: OSCILLATORY \u2014 Multiple peaks and valleys (wave pattern)"
+  },
+  "stage_5_ga": {
+    "center_of_change": 0.48547246214945167,
+    "average_gradient": -0.0002762335901690797,
+    "magnitude": 14.75925381108198,
+    "spread": 0.2772331311896199,
+    "trend": "STABLE",
+    "trend_description": "No significant directional trend",
+    "geometric_vector": [
+      -0.0002762335901690797,
+      0.2772331311896199
+    ],
+    "computation_time_ms": 0.4151539978920482,
+    "interpretation": "Trend: STABLE \u2014 No significant directional trend"
+  },
+  "total_time_seconds": 5.28502847100026,
+  "interpretation": {
+    "shift": "Distribution shifted by 0.0070 units",
+    "scale": "Change is local (scale=0.5)",
+    "anomaly": "Anomaly level: NORMAL",
+    "shape": "Pattern: OSCILLATORY",
+    "direction": "Trend: STABLE",
+    "domain": "Analysis performed with climate domain context"
+  },
+  "sha256": "a7d85d4feb6d5fcec29f10291047d4f454433fffb7d43426ba61a9af04c84b1d"
+}
