@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" font-family="'Segoe UI', Arial, sans-serif">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    <linearGradient id="pdbGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a90d9"/>
+      <stop offset="100%" style="stop-color:#2d5a8a"/>
+    </linearGradient>
+    <linearGradient id="ljGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e94560"/>
+      <stop offset="100%" style="stop-color:#a31545"/>
+    </linearGradient>
+    <linearGradient id="coulombGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f39c12"/>
+      <stop offset="100%" style="stop-color:#d68910"/>
+    </linearGradient>
+    <linearGradient id="hydrophobicGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#27ae60"/>
+      <stop offset="100%" style="stop-color:#1e8449"/>
+    </linearGradient>
+    <linearGradient id="stackingGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#9b59b6"/>
+      <stop offset="100%" style="stop-color:#6c3483"/>
+    </linearGradient>
+    <linearGradient id="covalentGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e74c3c"/>
+      <stop offset="100%" style="stop-color:#922b21"/>
+    </linearGradient>
+    <linearGradient id="outputGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#00d4aa"/>
+      <stop offset="100%" style="stop-color:#00a884"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="4" stdDeviation="4" flood-opacity="0.3"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="900" fill="#0a0a14"/>
+  
+  <!-- Grid pattern -->
+  <g opacity="0.1" stroke="#4a90d9" stroke-width="0.5">
+    <path d="M0 50 H1200 M0 100 H1200 M0 150 H1200 M0 200 H1200 M0 250 H1200 M0 300 H1200 M0 350 H1200 M0 400 H1200 M0 450 H1200 M0 500 H1200 M0 550 H1200 M0 600 H1200 M0 650 H1200 M0 700 H1200 M0 750 H1200 M0 800 H1200 M0 850 H1200"/>
+    <path d="M50 0 V900 M100 0 V900 M150 0 V900 M200 0 V900 M250 0 V900 M300 0 V900 M350 0 V900 M400 0 V900 M450 0 V900 M500 0 V900 M550 0 V900 M600 0 V900 M650 0 V900 M700 0 V900 M750 0 V900 M800 0 V900 M850 0 V900 M900 0 V900 M950 0 V900 M1000 0 V900 M1050 0 V900 M1100 0 V900 M1150 0 V900"/>
+  </g>
+
+  <!-- Header -->
+  <rect x="0" y="0" width="1200" height="80" fill="url(#headerGrad)"/>
+  <text x="600" y="35" text-anchor="middle" fill="#00d4aa" font-size="28" font-weight="bold" filter="url(#glow)">HYPERTENSOR™ DRUG PHYSICS ENGINE</text>
+  <text x="600" y="60" text-anchor="middle" fill="#888" font-size="14">Multi-Mechanism Binding Energy Computation for KRAS G12D</text>
+
+  <!-- Main equation box -->
+  <rect x="150" y="100" width="900" height="60" rx="8" fill="#1a1a2e" stroke="#00d4aa" stroke-width="2" filter="url(#shadow)"/>
+  <text x="600" y="140" text-anchor="middle" fill="#fff" font-size="20" font-family="'Times New Roman', serif">
+    <tspan font-style="italic">E</tspan><tspan baseline-shift="sub" font-size="14">total</tspan>
+    <tspan> = </tspan>
+    <tspan fill="#f39c12">E<tspan baseline-shift="sub" font-size="14">coulomb</tspan>/ε<tspan baseline-shift="sub" font-size="14">r</tspan></tspan>
+    <tspan> + </tspan>
+    <tspan fill="#e94560">E<tspan baseline-shift="sub" font-size="14">LJ</tspan></tspan>
+    <tspan> + </tspan>
+    <tspan fill="#27ae60">ΔG<tspan baseline-shift="sub" font-size="14">hyd</tspan></tspan>
+    <tspan> + </tspan>
+    <tspan fill="#9b59b6">E<tspan baseline-shift="sub" font-size="14">stack</tspan></tspan>
+    <tspan> + </tspan>
+    <tspan fill="#e74c3c">E<tspan baseline-shift="sub" font-size="14">covalent</tspan></tspan>
+  </text>
+
+  <!-- INPUT: PDB Structure -->
+  <g transform="translate(100, 190)">
+    <rect width="200" height="120" rx="10" fill="url(#pdbGrad)" filter="url(#shadow)"/>
+    <text x="100" y="30" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">PDB STRUCTURE</text>
+    <text x="100" y="55" text-anchor="middle" fill="#ccc" font-size="12">KRAS G12D: 7T24</text>
+    <text x="100" y="75" text-anchor="middle" fill="#ccc" font-size="12">224 pocket atoms</text>
+    <text x="100" y="95" text-anchor="middle" fill="#ccc" font-size="12">Switch II region</text>
+    <!-- Protein icon -->
+    <circle cx="100" cy="105" r="3" fill="#fff" opacity="0.5"/>
+  </g>
+
+  <!-- Arrow from PDB -->
+  <path d="M300 250 L350 250" stroke="#4a90d9" stroke-width="3" marker-end="url(#arrowBlue)"/>
+  <defs>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#4a90d9"/>
+    </marker>
+  </defs>
+
+  <!-- PHYSICS CORE -->
+  <g transform="translate(370, 190)">
+    <rect width="460" height="280" rx="12" fill="#12121a" stroke="#333" stroke-width="2" filter="url(#shadow)"/>
+    <text x="230" y="25" text-anchor="middle" fill="#00d4aa" font-size="14" font-weight="bold">PHYSICS COMPUTATION CORE</text>
+    
+    <!-- Lennard-Jones -->
+    <g transform="translate(20, 40)">
+      <rect width="130" height="100" rx="6" fill="url(#ljGrad)" opacity="0.9"/>
+      <text x="65" y="25" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">VAN DER WAALS</text>
+      <text x="65" y="45" text-anchor="middle" fill="#ffd" font-size="11">Lennard-Jones</text>
+      <text x="65" y="65" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">ε=0.086 kcal/mol</text>
+      <text x="65" y="80" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">σ=3.40 Å</text>
+      <text x="65" y="95" text-anchor="middle" fill="#ffa" font-size="9">ε-independent</text>
+    </g>
+
+    <!-- Coulombic -->
+    <g transform="translate(165, 40)">
+      <rect width="130" height="100" rx="6" fill="url(#coulombGrad)" opacity="0.9"/>
+      <text x="65" y="25" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">COULOMBIC</text>
+      <text x="65" y="45" text-anchor="middle" fill="#ffd" font-size="11">Salt Bridge</text>
+      <text x="65" y="65" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">k=332 kcal·Å/e²</text>
+      <text x="65" y="80" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">ASP12-Guan</text>
+      <text x="65" y="95" text-anchor="middle" fill="#ffa" font-size="9">Screened by ε<tspan baseline-shift="sub" font-size="7">r</tspan></text>
+    </g>
+
+    <!-- Hydrophobic -->
+    <g transform="translate(310, 40)">
+      <rect width="130" height="100" rx="6" fill="url(#hydrophobicGrad)" opacity="0.9"/>
+      <text x="65" y="25" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">HYDROPHOBIC</text>
+      <text x="65" y="45" text-anchor="middle" fill="#ffd" font-size="11">Entropic Burial</text>
+      <text x="65" y="65" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">ΔG = -25 cal/Å²</text>
+      <text x="65" y="80" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">SASA-based</text>
+      <text x="65" y="95" text-anchor="middle" fill="#ffa" font-size="9">STRONGER at high ε</text>
+    </g>
+
+    <!-- π-Stacking -->
+    <g transform="translate(70, 155)">
+      <rect width="130" height="100" rx="6" fill="url(#stackingGrad)" opacity="0.9"/>
+      <text x="65" y="25" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">π-STACKING</text>
+      <text x="65" y="45" text-anchor="middle" fill="#ffd" font-size="11">Aromatic</text>
+      <text x="65" y="65" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">-2.5 kcal/mol</text>
+      <text x="65" y="80" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">Quinazoline</text>
+      <text x="65" y="95" text-anchor="middle" fill="#ffa" font-size="9">Weak ε scaling</text>
+    </g>
+
+    <!-- Covalent -->
+    <g transform="translate(260, 155)">
+      <rect width="130" height="100" rx="6" fill="url(#covalentGrad)" opacity="0.9"/>
+      <text x="65" y="25" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">COVALENT</text>
+      <text x="65" y="45" text-anchor="middle" fill="#ffd" font-size="11">Warhead (opt)</text>
+      <text x="65" y="65" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">-30 kcal/mol</text>
+      <text x="65" y="80" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">Acrylamide</text>
+      <text x="65" y="95" text-anchor="middle" fill="#ffa" font-size="9">Irreversible</text>
+    </g>
+  </g>
+
+  <!-- Arrow from Physics to Output -->
+  <path d="M830 330 L880 330" stroke="#00d4aa" stroke-width="3" marker-end="url(#arrowGreen)"/>
+  <defs>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#00d4aa"/>
+    </marker>
+  </defs>
+
+  <!-- OUTPUT: Drug Candidate -->
+  <g transform="translate(900, 190)">
+    <rect width="200" height="280" rx="10" fill="url(#outputGrad)" filter="url(#shadow)"/>
+    <text x="100" y="30" text-anchor="middle" fill="#000" font-size="16" font-weight="bold">TIG-011a</text>
+    <text x="100" y="50" text-anchor="middle" fill="#003" font-size="11">KRAS G12D Inhibitor</text>
+    
+    <!-- Molecule representation -->
+    <rect x="20" y="60" width="160" height="80" rx="4" fill="#fff" opacity="0.2"/>
+    <text x="100" y="85" text-anchor="middle" fill="#000" font-size="8" font-family="monospace">COc1ccc2ncnc</text>
+    <text x="100" y="100" text-anchor="middle" fill="#000" font-size="8" font-family="monospace">(N3CCN(C)CC3)</text>
+    <text x="100" y="115" text-anchor="middle" fill="#000" font-size="8" font-family="monospace">c2c1</text>
+    <text x="100" y="132" text-anchor="middle" fill="#003" font-size="9" font-style="italic">Quinazoline scaffold</text>
+    
+    <!-- Properties -->
+    <text x="100" y="160" text-anchor="middle" fill="#000" font-size="11" font-weight="bold">Properties</text>
+    <text x="30" y="180" fill="#003" font-size="10">MW: 258.3</text>
+    <text x="30" y="195" fill="#003" font-size="10">LogP: 1.39</text>
+    <text x="30" y="210" fill="#003" font-size="10">TPSA: 41.5</text>
+    <text x="110" y="180" fill="#003" font-size="10">HBD: 0</text>
+    <text x="110" y="195" fill="#003" font-size="10">HBA: 5</text>
+    <text x="110" y="210" fill="#003" font-size="10">Lipinski: ✓</text>
+    
+    <!-- Binding energy -->
+    <rect x="20" y="225" width="160" height="40" rx="4" fill="#000" opacity="0.3"/>
+    <text x="100" y="245" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">ΔG = -3.44 kcal/mol</text>
+    <text x="100" y="260" text-anchor="middle" fill="#cfc" font-size="10">Deeper than EGFR!</text>
+  </g>
+
+  <!-- Dielectric Environment Panel -->
+  <g transform="translate(100, 500)">
+    <rect width="500" height="180" rx="10" fill="#1a1a2e" stroke="#f39c12" stroke-width="2" filter="url(#shadow)"/>
+    <text x="250" y="25" text-anchor="middle" fill="#f39c12" font-size="14" font-weight="bold">DIELECTRIC STRESS TEST</text>
+    
+    <!-- Environment bars -->
+    <g transform="translate(30, 45)">
+      <text x="0" y="15" fill="#888" font-size="11">Vacuum (ε=1)</text>
+      <rect x="120" y="2" width="300" height="18" rx="3" fill="#333"/>
+      <rect x="120" y="2" width="300" height="18" rx="3" fill="#e94560"/>
+      <text x="430" y="15" fill="#fff" font-size="10">100% binding</text>
+    </g>
+    
+    <g transform="translate(30, 75)">
+      <text x="0" y="15" fill="#888" font-size="11">Protein (ε=4)</text>
+      <rect x="120" y="2" width="300" height="18" rx="3" fill="#333"/>
+      <rect x="120" y="2" width="270" height="18" rx="3" fill="#f39c12"/>
+      <text x="430" y="15" fill="#fff" font-size="10">90% binding</text>
+    </g>
+    
+    <g transform="translate(30, 105)">
+      <text x="0" y="15" fill="#888" font-size="11">Membrane (ε=20)</text>
+      <rect x="120" y="2" width="300" height="18" rx="3" fill="#333"/>
+      <rect x="120" y="2" width="225" height="18" rx="3" fill="#27ae60"/>
+      <text x="430" y="15" fill="#fff" font-size="10">75% binding</text>
+    </g>
+    
+    <g transform="translate(30, 135)">
+      <text x="0" y="15" fill="#888" font-size="11">Cytosol (ε=80)</text>
+      <rect x="120" y="2" width="300" height="18" rx="3" fill="#333"/>
+      <rect x="120" y="2" width="210" height="18" rx="3" fill="#00d4aa"/>
+      <text x="430" y="15" fill="#00d4aa" font-size="10" font-weight="bold">70% snap-back ✓</text>
+    </g>
+  </g>
+
+  <!-- Validation Panel -->
+  <g transform="translate(620, 500)">
+    <rect width="480" height="180" rx="10" fill="#1a1a2e" stroke="#27ae60" stroke-width="2" filter="url(#shadow)"/>
+    <text x="240" y="25" text-anchor="middle" fill="#27ae60" font-size="14" font-weight="bold">VALIDATION</text>
+    
+    <g transform="translate(20, 45)">
+      <text x="0" y="0" fill="#4a90d9" font-size="12" font-weight="bold">EGFR Benchmark (1M17)</text>
+      <text x="0" y="20" fill="#ccc" font-size="11">• Predicted: Quinazoline scaffold</text>
+      <text x="0" y="38" fill="#ccc" font-size="11">• Actual (Erlotinib): Quinazoline ✓</text>
+      <text x="0" y="56" fill="#27ae60" font-size="11" font-weight="bold">→ Physics predicts FDA-approved core</text>
+    </g>
+    
+    <g transform="translate(20, 115)">
+      <text x="0" y="0" fill="#e94560" font-size="12" font-weight="bold">KRAS G12D Target (7T24)</text>
+      <text x="0" y="20" fill="#ccc" font-size="11">• Binding energy: -3.44 kcal/mol</text>
+      <text x="0" y="38" fill="#ccc" font-size="11">• Better than EGFR (-2.46)</text>
+      <text x="0" y="56" fill="#f39c12" font-size="11" font-weight="bold">→ Undruggable? Physics says NO.</text>
+    </g>
+  </g>
+
+  <!-- Footer -->
+  <rect x="0" y="700" width="1200" height="200" fill="#0d0d15"/>
+  
+  <!-- Pipeline flow -->
+  <g transform="translate(50, 720)">
+    <text x="0" y="0" fill="#666" font-size="12">PIPELINE FLOW</text>
+    
+    <!-- Steps -->
+    <g transform="translate(0, 20)">
+      <rect width="140" height="50" rx="6" fill="#2d5a8a"/>
+      <text x="70" y="20" text-anchor="middle" fill="#fff" font-size="11">PDB Download</text>
+      <text x="70" y="38" text-anchor="middle" fill="#aaa" font-size="9">rcsb.org</text>
+    </g>
+    <path d="M145 45 L165 45" stroke="#4a90d9" stroke-width="2" marker-end="url(#arrowBlue)"/>
+    
+    <g transform="translate(170, 20)">
+      <rect width="140" height="50" rx="6" fill="#a31545"/>
+      <text x="70" y="20" text-anchor="middle" fill="#fff" font-size="11">Extract Pocket</text>
+      <text x="70" y="38" text-anchor="middle" fill="#aaa" font-size="9">8Å radius</text>
+    </g>
+    <path d="M315 45 L335 45" stroke="#e94560" stroke-width="2"/>
+    
+    <g transform="translate(340, 20)">
+      <rect width="140" height="50" rx="6" fill="#d68910"/>
+      <text x="70" y="20" text-anchor="middle" fill="#fff" font-size="11">LJ Energy Grid</text>
+      <text x="70" y="38" text-anchor="middle" fill="#aaa" font-size="9">25³ points</text>
+    </g>
+    <path d="M485 45 L505 45" stroke="#f39c12" stroke-width="2"/>
+    
+    <g transform="translate(510, 20)">
+      <rect width="140" height="50" rx="6" fill="#1e8449"/>
+      <text x="70" y="20" text-anchor="middle" fill="#fff" font-size="11">Find Minima</text>
+      <text x="70" y="38" text-anchor="middle" fill="#aaa" font-size="9">Cluster analysis</text>
+    </g>
+    <path d="M655 45 L675 45" stroke="#27ae60" stroke-width="2"/>
+    
+    <g transform="translate(680, 20)">
+      <rect width="140" height="50" rx="6" fill="#6c3483"/>
+      <text x="70" y="20" text-anchor="middle" fill="#fff" font-size="11">Map Fragments</text>
+      <text x="70" y="38" text-anchor="middle" fill="#aaa" font-size="9">SMILES generation</text>
+    </g>
+    <path d="M825 45 L845 45" stroke="#9b59b6" stroke-width="2"/>
+    
+    <g transform="translate(850, 20)">
+      <rect width="140" height="50" rx="6" fill="#00a884"/>
+      <text x="70" y="20" text-anchor="middle" fill="#fff" font-size="11">Assemble Drug</text>
+      <text x="70" y="38" text-anchor="middle" fill="#aaa" font-size="9">Lipinski filter</text>
+    </g>
+  </g>
+
+  <!-- Files reference -->
+  <g transform="translate(50, 820)">
+    <text x="0" y="0" fill="#666" font-size="12">SOURCE FILES</text>
+    <text x="0" y="20" fill="#4a90d9" font-size="11" font-family="monospace">tig011a_multimechanism.py</text>
+    <text x="280" y="20" fill="#888" font-size="10">Multi-mechanism energy function</text>
+    <text x="0" y="38" fill="#4a90d9" font-size="11" font-family="monospace">tig011a_dielectric_gauntlet.py</text>
+    <text x="280" y="38" fill="#888" font-size="10">Dielectric stress testing</text>
+    <text x="0" y="56" fill="#4a90d9" font-size="11" font-family="monospace">tig011a_docking_qmmm.py</text>
+    <text x="280" y="56" fill="#888" font-size="10">QM/MM docking simulation</text>
+    <text x="550" y="20" fill="#4a90d9" font-size="11" font-family="monospace">physics_working/drug_discovery.py</text>
+    <text x="550" y="38" fill="#4a90d9" font-size="11" font-family="monospace">TIG011A_BENCH_PROTOCOL.md</text>
+    <text x="550" y="56" fill="#4a90d9" font-size="11" font-family="monospace">TIG011A_SYNTHESIS.md</text>
+  </g>
+
+  <!-- HyperTensor branding -->
+  <text x="1150" y="880" text-anchor="end" fill="#333" font-size="10">© 2026 HyperTensor™</text>
+</svg>
