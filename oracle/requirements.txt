@@ -1,0 +1,12 @@
+# Galaxy Feed Oracle - Dependencies
+# Python 3.10+ required
+
+# Core
+torch>=2.0.0
+triton>=3.0.0
+
+# WebSocket
+websockets>=12.0
+
+# Optional: For testing/development
+numpy>=1.24.0
