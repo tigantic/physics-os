@@ -67,7 +67,25 @@ class ManifoldProber:
         t0 = time.time()
         
         # 1. MMAP Load (RAM Safe)
-        data = np.load(file_path, mmap_mode='r')
+        # Detect if this is an already-compressed QTT archive
+        if file_path.suffix == '.npz':
+            npz_data = np.load(file_path, allow_pickle=True)
+            # Check if it's a QTT archive (has cores and shape)
+            if 'shape' in npz_data and 'arr_0' in npz_data:
+                raise ValueError(
+                    f"'{file_path.name}' is an already-compressed QTT archive.\n"
+                    f"  Use 'universal.py info {file_path}' to inspect it.\n"
+                    f"  The prober analyzes RAW data before compression."
+                )
+            # Otherwise try to extract the array
+            keys = list(npz_data.keys())
+            if len(keys) == 1:
+                data = npz_data[keys[0]]
+            else:
+                raise ValueError(f"Ambiguous .npz with multiple arrays: {keys}")
+        else:
+            data = np.load(file_path, mmap_mode='r')
+        
         original_shape = data.shape
         total_elements = data.size
         dtype = data.dtype
@@ -369,7 +387,11 @@ def probe_and_print(data_path: str, sample_size: int = 1024,
     """Probe data and print/save results."""
     
     prober = ManifoldProber(device=device)
-    result = prober.analyze_manifold(data_path, sample_size=sample_size)
+    try:
+        result = prober.analyze_manifold(data_path, sample_size=sample_size)
+    except ValueError as e:
+        print(f"\n❌ ERROR: {e}")
+        return
     
     # Pretty print
     print("\n" + "=" * 70)
