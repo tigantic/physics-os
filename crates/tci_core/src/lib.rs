@@ -24,6 +24,7 @@
 mod maxvol;
 mod sampler;
 mod skeleton;
+mod block_svd;
 
 use pyo3::prelude::*;
 use pyo3::exceptions::PyValueError;
@@ -431,6 +432,128 @@ fn rust_available() -> bool {
     true
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Block-SVD Reconstruction FFI
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Pre-computed block pointers for O(1) lookup (Python wrapper)
+#[pyclass]
+pub struct BlockPointers {
+    inner: block_svd::BlockPointers,
+}
+
+#[pymethods]
+impl BlockPointers {
+    /// Build pointer arrays from ranks array
+    #[new]
+    fn new(ranks: Vec<u16>, block_size: usize, frame_h: usize, frame_w: usize) -> Self {
+        Self {
+            inner: block_svd::BlockPointers::new(&ranks, block_size, frame_h, frame_w),
+        }
+    }
+    
+    /// Get blocks per frame
+    #[getter]
+    fn blocks_per_frame(&self) -> usize {
+        self.inner.blocks_per_frame
+    }
+    
+    /// Get total number of blocks
+    #[getter]
+    fn n_blocks(&self) -> usize {
+        self.inner.ranks.len()
+    }
+}
+
+/// Reconstruct a single frame using Rust parallel processing
+#[pyfunction]
+fn reconstruct_frame<'py>(
+    py: Python<'py>,
+    u_data: &Bound<'py, PyArray1<f32>>,
+    s_data: &Bound<'py, PyArray1<f32>>,
+    vh_data: &Bound<'py, PyArray1<f32>>,
+    pointers: &BlockPointers,
+    frame_idx: usize,
+    mean: f32,
+    std: f32,
+) -> PyResult<Bound<'py, PyArray2<f32>>> {
+    // Get readonly views
+    let u_slice = unsafe { u_data.as_slice()? };
+    let s_slice = unsafe { s_data.as_slice()? };
+    let vh_slice = unsafe { vh_data.as_slice()? };
+    
+    // Reconstruct frame in parallel
+    let mut frame = block_svd::reconstruct_frame_parallel(
+        u_slice, s_slice, vh_slice, &pointers.inner, frame_idx
+    );
+    
+    // Denormalize: frame = frame * std + mean
+    frame.mapv_inplace(|x| x * std + mean);
+    
+    Ok(frame.into_pyarray(py))
+}
+
+/// Reconstruct multiple frames in parallel
+#[pyfunction]
+fn reconstruct_batch<'py>(
+    py: Python<'py>,
+    u_data: &Bound<'py, PyArray1<f32>>,
+    s_data: &Bound<'py, PyArray1<f32>>,
+    vh_data: &Bound<'py, PyArray1<f32>>,
+    pointers: &BlockPointers,
+    frame_indices: Vec<usize>,
+    mean: f32,
+    std: f32,
+) -> PyResult<Vec<Bound<'py, PyArray2<f32>>>> {
+    let u_slice = unsafe { u_data.as_slice()? };
+    let s_slice = unsafe { s_data.as_slice()? };
+    let vh_slice = unsafe { vh_data.as_slice()? };
+    
+    let mut frames = block_svd::reconstruct_batch_parallel(
+        u_slice, s_slice, vh_slice, &pointers.inner, &frame_indices
+    );
+    
+    // Denormalize all frames
+    for frame in &mut frames {
+        frame.mapv_inplace(|x| x * std + mean);
+    }
+    
+    Ok(frames.into_iter().map(|f| f.into_pyarray(py)).collect())
+}
+
+/// Build cumulative pointer arrays from ranks (pure Rust)
+#[pyfunction]
+fn build_cumsum_pointers<'py>(
+    py: Python<'py>,
+    ranks: &Bound<'py, PyArray1<u16>>,
+    block_size: usize,
+) -> PyResult<(Bound<'py, PyArray1<u64>>, Bound<'py, PyArray1<u64>>)> {
+    let ranks_slice = unsafe { ranks.as_slice()? };
+    let n = ranks_slice.len();
+    
+    let mut cumsum_u = Vec::with_capacity(n + 1);
+    let mut cumsum_s = Vec::with_capacity(n + 1);
+    
+    cumsum_u.push(0u64);
+    cumsum_s.push(0u64);
+    
+    let mut u_ptr = 0u64;
+    let mut s_ptr = 0u64;
+    
+    for &r in ranks_slice {
+        let r = r as u64;
+        u_ptr += r * block_size as u64;
+        s_ptr += r;
+        cumsum_u.push(u_ptr);
+        cumsum_s.push(s_ptr);
+    }
+    
+    Ok((
+        Array1::from(cumsum_u).into_pyarray(py),
+        Array1::from(cumsum_s).into_pyarray(py),
+    ))
+}
+
 /// PyO3 module initialization
 #[pymodule]
 fn tci_core(m: &Bound<'_, PyModule>) -> PyResult<()> {
@@ -440,5 +563,10 @@ fn tci_core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<TCIConfig>()?;
     m.add_class::<TruncationPolicy>()?;
     m.add_class::<TCISampler>()?;
+    // Block-SVD reconstruction
+    m.add_class::<BlockPointers>()?;
+    m.add_function(wrap_pyfunction!(reconstruct_frame, m)?)?;
+    m.add_function(wrap_pyfunction!(reconstruct_batch, m)?)?;
+    m.add_function(wrap_pyfunction!(build_cumsum_pointers, m)?)?;
     Ok(())
 }
