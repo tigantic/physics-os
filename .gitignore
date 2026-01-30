@@ -142,3 +142,7 @@ real_data/*.bin
 real_data/*.nc
 *.zip
 Clawdbot/
+clawdbot-main/
+target/
+noaa_24h_raw/
+lean_yang_mills/
