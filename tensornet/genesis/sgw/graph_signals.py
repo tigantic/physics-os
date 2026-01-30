@@ -7,6 +7,11 @@ A signal f on a graph with N = 2^d nodes is represented as a tensor train:
     f[i] = A₁[i₁] A₂[i₂] ... A_d[i_d]
     
 where i = i₁i₂...i_d in binary.
+
+RULES ENFORCED:
+1. QTT should be Native — NEVER decompress to dense unless debugging
+2. SVD = rSVD (always randomized, never full torch.linalg.svd)
+3. Native dot/norm/add operations without dense materialization
 """
 
 from __future__ import annotations
@@ -16,6 +21,14 @@ import torch
 import math
 
 from tensornet.genesis.core.rsvd import rsvd_gpu
+from tensornet.genesis.core.triton_ops import (
+    qtt_dot_native,
+    qtt_norm_native,
+    qtt_add_native,
+    qtt_sub_native,
+    qtt_round_native,
+    rsvd_native,
+)
 
 
 @dataclass
@@ -59,6 +72,31 @@ class QTTSignal:
     def dtype(self) -> torch.dtype:
         """Data type of cores."""
         return self.cores[0].dtype
+    
+    @classmethod
+    def from_cores(cls, cores: List[torch.Tensor]) -> 'QTTSignal':
+        """
+        Create QTTSignal directly from TT cores.
+        
+        This is the preferred way to convert between QTT representations
+        (e.g., from QTTDistribution) WITHOUT going through dense format.
+        
+        Args:
+            cores: List of TT cores, each shape (r_{k-1}, 2, r_k)
+            
+        Returns:
+            QTTSignal wrapping the cores
+        """
+        if not cores:
+            raise ValueError("Cores list cannot be empty")
+        
+        d = len(cores)
+        num_nodes = 2 ** d
+        
+        # Clone cores to avoid aliasing issues
+        cloned = [c.clone() for c in cores]
+        
+        return cls(cores=cloned, num_nodes=num_nodes)
     
     @classmethod
     def zeros(cls, num_nodes: int, dtype: torch.dtype = torch.float64) -> 'QTTSignal':
@@ -240,9 +278,24 @@ class QTTSignal:
         return cls(cores=cores, num_nodes=N)
     
     def norm(self) -> float:
-        """Compute L2 norm of signal."""
-        # Contract with itself
-        return math.sqrt(max(0, self.dot(self)))
+        """
+        Compute L2 norm of signal WITHOUT dense materialization.
+        
+        Uses native QTT transfer matrix contraction.
+        Complexity: O(d r^4) vs O(2^d) for dense.
+        """
+        return qtt_norm_native(self.cores)
+    
+    def dot(self, other: 'QTTSignal') -> float:
+        """
+        Inner product WITHOUT dense materialization.
+        
+        Uses native QTT transfer matrix contraction.
+        Complexity: O(d r^4) vs O(2^d) for dense.
+        """
+        if self.num_nodes != other.num_nodes:
+            raise ValueError("Signals must have same size")
+        return qtt_dot_native(self.cores, other.cores)
     
     def normalize(self) -> 'QTTSignal':
         """Return signal normalized to unit L2 norm."""
@@ -257,62 +310,31 @@ class QTTSignal:
         new_cores[0] = new_cores[0] * alpha
         return QTTSignal(cores=new_cores, num_nodes=self.num_nodes)
     
-    def add(self, other: 'QTTSignal') -> 'QTTSignal':
-        """Add two signals (rank-additive)."""
+    def add(self, other: 'QTTSignal', max_rank: Optional[int] = None) -> 'QTTSignal':
+        """
+        Add two signals WITHOUT dense materialization.
+        
+        Uses native QTT addition with optional rank truncation.
+        Complexity: O(d (r1+r2)^3) vs O(2^d) for dense.
+        """
         if self.num_nodes != other.num_nodes:
             raise ValueError("Signals must have same size")
         
-        result_cores = []
-        for k, (c1, c2) in enumerate(zip(self.cores, other.cores)):
-            r1_l, d1, r1_r = c1.shape
-            r2_l, d2, r2_r = c2.shape
-            
-            # Block diagonal combination
-            if k == 0:
-                # First core: horizontal concatenation
-                new_core = torch.cat([c1, c2], dim=2)
-            elif k == len(self.cores) - 1:
-                # Last core: vertical concatenation
-                new_core = torch.cat([c1, c2], dim=0)
-            else:
-                # Middle cores: block diagonal
-                new_core = torch.zeros(r1_l + r2_l, d1, r1_r + r2_r, 
-                                       dtype=c1.dtype)
-                new_core[:r1_l, :, :r1_r] = c1
-                new_core[r1_l:, :, r1_r:] = c2
-            
-            result_cores.append(new_core)
-        
+        result_cores = qtt_add_native(self.cores, other.cores, max_rank=max_rank)
         return QTTSignal(cores=result_cores, num_nodes=self.num_nodes)
     
-    def dot(self, other: 'QTTSignal') -> float:
-        """Inner product with another signal."""
+    def sub(self, other: 'QTTSignal', max_rank: Optional[int] = None) -> 'QTTSignal':
+        """
+        Subtract two signals WITHOUT dense materialization.
+        
+        Uses native QTT subtraction (negate + add) with optional rank truncation.
+        Complexity: O(d (r1+r2)^3) vs O(2^d) for dense.
+        """
         if self.num_nodes != other.num_nodes:
             raise ValueError("Signals must have same size")
         
-        # Determine device from first core
-        device = self.cores[0].device if len(self.cores) > 0 else torch.device('cpu')
-        
-        # Contract from left to right
-        result = torch.ones(1, 1, dtype=self.cores[0].dtype, device=device)
-        
-        for c1, c2 in zip(self.cores, other.cores):
-            # Ensure same device
-            c1 = c1.to(device)
-            c2 = c2.to(device)
-            
-            # c1: (r1_l, 2, r1_r), c2: (r2_l, 2, r2_r)
-            # Contract physical index
-            contracted = torch.einsum('ijk,ljm->ilkm', c1, c2)
-            # contracted: (r1_l, r2_l, r1_r, r2_r)
-            
-            # Contract with running result
-            contracted = contracted.reshape(c1.shape[0] * c2.shape[0],
-                                           c1.shape[2] * c2.shape[2])
-            result = result.reshape(1, -1) @ contracted
-            result = result.reshape(c1.shape[2], c2.shape[2])
-        
-        return result.item()
+        result_cores = qtt_sub_native(self.cores, other.cores, max_rank=max_rank)
+        return QTTSignal(cores=result_cores, num_nodes=self.num_nodes)
     
     def hadamard(self, other: 'QTTSignal') -> 'QTTSignal':
         """Element-wise product (rank-multiplicative)."""
@@ -340,72 +362,36 @@ class QTTSignal:
     
     def round(self, tol: float = 1e-10, max_rank: Optional[int] = None) -> 'QTTSignal':
         """
-        Reduce rank via TT-rounding (TT-SVD).
+        Reduce rank via TT-rounding WITHOUT dense materialization.
+        
+        Uses native QTT rounding with rSVD.
+        Complexity: O(d r^3) vs O(2^d) for dense.
         
         Args:
             tol: Relative tolerance for truncation
-            max_rank: Maximum rank (optional)
+            max_rank: Maximum rank (optional, default 50)
         """
         if max_rank is None:
-            max_rank = 1000
+            max_rank = 50
         
-        # Determine device from first core
-        device = self.cores[0].device if len(self.cores) > 0 else torch.device('cpu')
-        
-        # Right-to-left QR sweep
-        cores = [c.clone().to(device) for c in self.cores]
-        
-        for k in range(len(cores) - 1, 0, -1):
-            core = cores[k]
-            r_l, d, r_r = core.shape
-            
-            # Reshape to (r_l, d * r_r) and QR
-            mat = core.reshape(r_l, d * r_r)
-            Q, R = torch.linalg.qr(mat.T)
-            
-            new_r = Q.shape[1]
-            cores[k] = Q.T.reshape(new_r, d, r_r)
-            
-            # Absorb R into previous core (ensure same device)
-            prev = cores[k-1].to(device)
-            prev = prev.reshape(-1, prev.shape[2])
-            cores[k-1] = (prev @ R.T).reshape(cores[k-1].shape[0], 2, new_r)
-        
-        # Left-to-right SVD sweep with truncation
-        for k in range(len(cores) - 1):
-            core = cores[k]
-            r_l, d, r_r = core.shape
-            
-            # Reshape to (r_l * d, r_r) and rSVD
-            mat = core.reshape(r_l * d, r_r)
-            U, S, Vh = rsvd_gpu(mat, k=max_rank, tol=tol)
-            
-            # Truncate
-            rank = min(max_rank, len(S))
-            rank = max(1, rank)
-            
-            U = U[:, :rank]
-            S = S[:rank]
-            Vh = Vh[:rank, :]
-            
-            cores[k] = U.reshape(r_l, d, rank)
-            
-            # Absorb S @ Vh into next core
-            next_core = cores[k+1]
-            next_mat = next_core.reshape(next_core.shape[0], -1)
-            cores[k+1] = (torch.diag(S) @ Vh @ next_mat).reshape(rank, 2, next_core.shape[2])
-        
-        return QTTSignal(cores=cores, num_nodes=self.num_nodes)
+        result_cores = qtt_round_native(self.cores, max_rank=max_rank, tol=tol)
+        return QTTSignal(cores=result_cores, num_nodes=self.num_nodes)
     
     def to_dense(self) -> torch.Tensor:
         """
-        Materialize as dense vector. For debugging only.
+        Materialize as dense vector.
+        
+        WARNING: FOR DEBUGGING ONLY! Violates QTT principles.
+        Use sparingly and only for small grids (N ≤ 2^20).
         
         Returns:
             Dense vector of length num_nodes
         """
         if self.num_nodes > 2**20:
-            raise ValueError(f"Signal too large to materialize: {self.num_nodes}")
+            raise ValueError(
+                f"Signal too large to materialize: {self.num_nodes}. "
+                f"Use native QTT operations instead of to_dense()."
+            )
         
         # Contract all cores
         result = self.cores[0]  # (1, 2, r)

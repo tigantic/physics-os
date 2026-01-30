@@ -17,6 +17,8 @@
 members = [
     "crates/hyper_core",
     "crates/hyper_bridge",
+    "crates/tci_core",
+    "crates/hyper_gpu_py",
     "apps/glass_cockpit",
     "apps/global_eye",
     "fluidelite-zk",

@@ -495,6 +495,10 @@ def compute_weno_weights_tt(
     """
     Compute WENO nonlinear weights using hybrid dense/TT approach.
 
+    ⚠️ COMPLEXITY WARNING: O(N) - uses qtt_to_dense + dense_to_qtt.
+    Only use for small grids (n_qubits < 12, N < 4096).
+    For large grids, use compute_weno_weights_tci() which is O(r² log N).
+
     Since weight computation involves division which is numerically unstable
     in pure TT format via Newton iteration, we use a hybrid:
     1. Convert beta_k to dense (O(N) but N = 2^n is small enough)

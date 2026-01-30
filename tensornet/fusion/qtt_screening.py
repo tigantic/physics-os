@@ -63,6 +63,14 @@ try:
 except ImportError:
     TCI_AVAILABLE = False
 
+# Native rSVD
+try:
+    from tensornet.genesis.core.triton_ops import rsvd_native
+    HAS_RSVD = True
+except ImportError:
+    HAS_RSVD = False
+    rsvd_native = None
+
 # QTT evaluation utilities
 try:
     from tensornet.cfd.qtt_eval import dense_to_qtt_cores
@@ -115,9 +123,12 @@ def _tt_svd_fallback(tensor: Tensor, n_qubits: int, max_rank: int = 64) -> list:
         # Reshape: (chi_left, 2^(n-k)) -> (chi_left * 2, 2^(n-k-1))
         mat = remaining.reshape(chi_left * 2, dim_right)
         
-        # SVD truncation
+        # rSVD truncation (O(mnk) complexity)
         if k < n_qubits - 1:
-            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+            if HAS_RSVD and mat.shape[0] > 4 and mat.shape[1] > 4:
+                U, S, Vh = rsvd_native(mat, k=max_rank)
+            else:
+                U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
             
             # Truncate to max_rank
             chi_new = min(max_rank, len(S), U.shape[1])

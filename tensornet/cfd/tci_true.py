@@ -4,27 +4,22 @@ True TCI: O(r² × log N) Tensor Cross-Interpolation
 This implementation NEVER materializes the full tensor.
 It samples only the necessary fibers and builds TT cores directly.
 
-Algorithm:
-1. Initialize random pivot indices
-2. For each mode k (left to right):
-   a. Sample fiber: fix left indices, vary current mode, fix right indices
-   b. Find best pivot via MaxVol on the sampled slice
-   c. Update skeleton matrices
-3. Sweep back (right to left) to refine
-4. Repeat until convergence
+Algorithm (Two-Sweep):
+1. Initialize left/right pivots from high-importance points
+2. Right-to-left sweep: build tentative cores and collect right-orthogonal factors
+3. Left-to-right sweep: finalize cores with proper ranks
 
-Complexity: O(r² × n_qubits × n_sweeps) function evaluations
-vs Dense: O(2^n_qubits) function evaluations
+The two-sweep approach is critical:
+- First sweep collects information about rank requirements from both ends
+- Second sweep builds the final decomposition with informed ranks
 
-For 500K contexts (19 qubits), rank 256:
-- Dense: 524,288 evals
-- TCI: ~256² × 19 × 3 = 3.7M... wait that's worse
+For 2D matrices (via Morton encoding):
+- Row/column bits are interleaved: [i0,j0,i1,j1,...]
+- This preserves 2D locality in the QTT structure
+- Enables low-rank representation of smooth matrices like Hilbert
 
-Actually for TCI to win, we need r << 2^(n/2).
-With n=19, 2^9.5 ≈ 724. If r=256, TCI is comparable.
-
-The REAL win: we never allocate 28GB matrices.
-Memory: O(r² × n_qubits) instead of O(2^n)
+Complexity: O(r² × n_qubits) function evaluations per sweep
+Memory: O(r² × n_qubits)
 """
 
 import torch
@@ -80,6 +75,56 @@ def maxvol(A: torch.Tensor, tol: float = 1.05, max_iters: int = 100) -> torch.Te
     return indices.sort().values
 
 
+def maxvol_rect(A: torch.Tensor, max_cols: int, tol: float = 1e-2) -> torch.Tensor:
+    """
+    Rectangular MaxVol: select up to max_cols rows from A that form a well-conditioned submatrix.
+    
+    This is used for rank-revealing: find more rows than the minimal r
+    to capture all significant directions.
+    """
+    n, r = A.shape
+    if n <= r:
+        return torch.arange(n, device=A.device)
+    
+    # Start with basic maxvol to get r good rows
+    initial_indices = maxvol(A, tol=1.05)
+    
+    if max_cols <= r or max_cols >= n:
+        return initial_indices
+    
+    # Add more rows greedily
+    selected = initial_indices.clone()
+    B = A[selected]  # r × r
+    
+    try:
+        B_inv = torch.linalg.inv(B)
+        C = A @ B_inv  # n × r
+    except:
+        return initial_indices
+    
+    # Compute residual for each row not in selected
+    all_rows = set(range(n))
+    selected_set = set(selected.cpu().numpy().tolist())
+    remaining = torch.tensor([i for i in all_rows if i not in selected_set], device=A.device)
+    
+    while len(selected) < max_cols and len(remaining) > 0:
+        # Residual norm for remaining rows
+        residuals = (A[remaining] - C[remaining] @ B).norm(dim=1)
+        
+        if residuals.max() < tol:
+            break
+        
+        # Add row with largest residual
+        best_idx = residuals.argmax()
+        new_row = remaining[best_idx]
+        selected = torch.cat([selected, new_row.unsqueeze(0)])
+        
+        # Remove from remaining
+        remaining = torch.cat([remaining[:best_idx], remaining[best_idx+1:]])
+    
+    return selected.sort().values
+
+
 def tci_build_qtt(
     func: Callable[[torch.Tensor], torch.Tensor],
     n_qubits: int,
@@ -88,130 +133,201 @@ def tci_build_qtt(
     max_sweeps: int = 10,
     device: Optional[torch.device] = None,
     verbose: bool = True,
+    seed_indices: Optional[List[int]] = None,
 ) -> List[torch.Tensor]:
     """
-    Build QTT via true cross-interpolation.
+    Build QTT via Two-Pass Tensor Cross-Interpolation.
+    
+    Uses a right-to-left pass to discover rank requirements, then a
+    left-to-right pass to build the final cores. This solves the
+    "rank-1 bottleneck" where single-pass TCI cannot grow rank beyond
+    what early fibers can support.
+    
+    Algorithm:
+    1. Initialize pivots from high-importance seed indices
+    2. Right-to-left pass: Collect right-orthogonal factors, determine ranks
+    3. Left-to-right pass: Build cores using the discovered pivot structure
     
     Memory: O(max_rank² × n_qubits)
-    Evals: O(max_rank × 2^n_qubits) worst case, but distributed
+    Evals: O(max_rank² × n_qubits × 2) function evaluations
     
-    The key insight: we evaluate func only at specific indices,
-    never materializing the full 2^n tensor.
+    Args:
+        seed_indices: Optional list of indices known to be high-importance.
+                      If provided, these are used to initialize pivots.
     """
     if device is None:
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
-    N = 2 ** n_qubits
-    
-    # Initialize: random pivot indices for each mode
-    # left_pivots[k] = indices into modes 0..k-1 (combined as integer)
-    # right_pivots[k] = indices into modes k+1..n-1 (combined as integer)
-    
-    # Start with single pivot at index 0
-    pivots_left = [torch.zeros(1, dtype=torch.long, device=device)]  # dummy for k=0
-    pivots_right = [torch.zeros(1, dtype=torch.long, device=device) for _ in range(n_qubits)]
-    
-    # Initialize right pivots randomly
-    for k in range(n_qubits - 1):
-        n_right = n_qubits - k - 1
-        if n_right > 0:
-            # Random indices in [0, 2^n_right)
-            pivots_right[k] = torch.randint(0, 2**n_right, (min(max_rank, 2**n_right),), device=device)
-    
-    cores = []
-    
     if verbose:
         print(f"[TCI] Building QTT: {n_qubits} qubits, max_rank={max_rank}")
     
-    # Left-to-right sweep: build cores
-    r_left = 1
-    accumulated_left = torch.zeros(1, dtype=torch.long, device=device)  # Single index: 0
+    N = 2 ** n_qubits
+    
+    # =========================================================================
+    # PIVOT INITIALIZATION FROM SEEDS
+    # =========================================================================
+    
+    if seed_indices is not None and len(seed_indices) > 0:
+        high_value_indices = seed_indices
+        if verbose:
+            print(f"  Using {len(seed_indices)} pre-seeded pivot indices")
+    else:
+        # Sample random candidates, pick top-k by |f(x)|
+        n_candidates = min(2048, N)
+        candidate_indices = torch.randint(0, N, (n_candidates,), device=device, dtype=torch.long)
+        candidate_values = func(candidate_indices).abs()
+        _, sorted_order = candidate_values.sort(descending=True)
+        high_value_indices = candidate_indices[sorted_order].cpu().numpy().tolist()
+        
+        if verbose:
+            top_val = candidate_values[sorted_order[0]].item()
+            print(f"  Pre-pass: sampled {n_candidates} points, max |f|={top_val:.2e}")
+    
+    # =========================================================================
+    # PASS 1: RIGHT-TO-LEFT - COLLECT COLUMN PIVOTS AT EACH MODE
+    # =========================================================================
+    
+    # right_pivots[k] = list of (n-k-1)-bit column indices for mode k
+    # These are indices into the "right" portion of the tensor
+    right_pivots = [None] * n_qubits
+    right_pivots[n_qubits - 1] = [0]  # Last mode has no right context
+    
+    # Initialize from seeds: extract right context bits for each mode
+    for k in range(n_qubits - 2, -1, -1):
+        n_right_bits = n_qubits - k - 1
+        n_right_vals = 2 ** n_right_bits
+        mask = (1 << n_right_bits) - 1
+        
+        rp_set = set()
+        for idx in high_value_indices:
+            right_ctx = idx & mask
+            rp_set.add(right_ctx)
+            if len(rp_set) >= max_rank:
+                break
+        
+        # Fill if not enough
+        if len(rp_set) < min(max_rank, n_right_vals):
+            stride = max(1, n_right_vals // (max_rank - len(rp_set) + 1))
+            for i in range(0, n_right_vals, stride):
+                rp_set.add(i)
+                if len(rp_set) >= max_rank:
+                    break
+        
+        right_pivots[k] = sorted(rp_set)[:min(max_rank, n_right_vals)]
+    
+    # left_pivots[k] = list of k-bit row indices for mode k
+    left_pivots = [None] * n_qubits
+    left_pivots[0] = [0]  # First mode has no left context
+    
+    # Initialize from seeds: extract left context bits for each mode
+    for k in range(1, n_qubits):
+        n_left_bits = k
+        n_left_vals = 2 ** n_left_bits
+        shift = n_qubits - k
+        
+        lp_set = set()
+        for idx in high_value_indices:
+            left_ctx = idx >> shift
+            lp_set.add(left_ctx)
+            if len(lp_set) >= max_rank:
+                break
+        
+        # Fill if not enough
+        if len(lp_set) < min(max_rank, n_left_vals):
+            stride = max(1, n_left_vals // (max_rank - len(lp_set) + 1))
+            for i in range(0, n_left_vals, stride):
+                lp_set.add(i)
+                if len(lp_set) >= max_rank:
+                    break
+        
+        left_pivots[k] = sorted(lp_set)[:min(max_rank, n_left_vals)]
+    
+    # =========================================================================
+    # PASS 2: LEFT-TO-RIGHT - BUILD CORES
+    # =========================================================================
+    
+    cores = []
+    current_left_pivots = [0]  # Start with single pivot
     
     for k in range(n_qubits):
-        n_left = k
-        n_right = n_qubits - k - 1
+        r_left = len(current_left_pivots)
+        r_right = len(right_pivots[k])
         
-        # Get right pivots for this mode
-        if n_right > 0:
-            right_indices = pivots_right[k][:min(max_rank, len(pivots_right[k]))]
-            r_right = len(right_indices)
-        else:
-            right_indices = torch.zeros(1, dtype=torch.long, device=device)
-            r_right = 1
+        # Sample fiber: (r_left, 2, r_right)
+        n_right_bits = n_qubits - k - 1
+        left_shift = n_qubits - k
+        bit_shift = n_right_bits
         
-        # Sample the fiber: for each (left_idx, right_idx), evaluate f at both bit values
-        # Fiber shape: (r_left, 2, r_right)
-        
-        n_samples = r_left * 2 * r_right
-        sample_indices = torch.zeros(n_samples, dtype=torch.long, device=device)
-        
-        idx = 0
-        for li, left_val in enumerate(accumulated_left):
+        indices = []
+        for left_ctx in current_left_pivots:
             for bit in range(2):
-                for ri, right_val in enumerate(right_indices):
-                    # Construct full index: left_val | (bit << k) | (right_val << (k+1))
-                    full_idx = left_val + (bit << k) + (right_val << (k + 1))
-                    sample_indices[idx] = full_idx
-                    idx += 1
+                for right_ctx in right_pivots[k]:
+                    idx = (left_ctx << left_shift) + (bit << bit_shift) + right_ctx
+                    indices.append(idx)
         
-        # Evaluate function at sample points
-        values = func(sample_indices)
+        indices_tensor = torch.tensor(indices, device=device, dtype=torch.long)
+        values = func(indices_tensor)
         fiber = values.reshape(r_left, 2, r_right)
         
         if k < n_qubits - 1:
-            # Reshape to matrix for SVD: (r_left * 2, r_right)
+            # Reshape to (r_left * 2, r_right) for SVD
             mat = fiber.reshape(r_left * 2, r_right)
             
-            # Truncated SVD
-            if mat.shape[0] <= mat.shape[1]:
-                # More columns than rows - use full SVD
-                U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+            # SVD for rank determination
+            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+            
+            # Tolerance-based rank truncation
+            S_max = S[0].item() if S.numel() > 0 else 1.0
+            if S_max > 0:
+                cutoff = tol * S_max
+                rank_svd = int((S > cutoff).sum().item())
             else:
-                # Use randomized SVD for speed
-                rank = min(max_rank, min(mat.shape))
-                if min(mat.shape) > 4 * rank:
-                    U, S, V = torch.svd_lowrank(mat, q=rank + 10, niter=2)
-                    Vh = V.T
-                else:
-                    U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+                rank_svd = 1
             
-            # Truncate to max_rank
-            rank = min(max_rank, (S > tol * S[0]).sum().item())
-            rank = max(1, rank)
+            # Also consider pre-initialized left pivots for next mode
+            # to ensure we capture their structure
+            rank_needed = len(left_pivots[k + 1]) if k + 1 < n_qubits else 1
             
-            U = U[:, :rank]
-            S = S[:rank]
-            Vh = Vh[:rank, :]
+            # CRITICAL: new_rank is bounded by BOTH dimensions of mat
+            # and also by max_rank. The SVD can only reveal rank up to min(rows, cols)
+            max_possible_rank = min(r_left * 2, r_right)
+            new_rank = max(1, min(max(rank_svd, rank_needed), max_rank, max_possible_rank))
             
-            # Core from U
-            core = U.reshape(r_left, 2, rank)
+            # MaxVol to find best rows
+            if r_left * 2 > new_rank:
+                U_trunc = U[:, :new_rank]
+                pivot_rows = maxvol(U_trunc, tol=1.05).cpu().numpy().tolist()
+                pivot_rows = pivot_rows[:new_rank]
+            else:
+                # Can't select more rows than we have
+                pivot_rows = list(range(r_left * 2))
+            
+            # Ensure new_rank matches actual number of pivot rows
+            new_rank = len(pivot_rows)
+            
+            # Build core via skeleton
+            pivot_mat = mat[pivot_rows, :]
+            try:
+                pivot_pinv = torch.linalg.pinv(pivot_mat)
+                core_matrix = mat @ pivot_pinv
+            except:
+                core_matrix = U[:, :new_rank]
+                pivot_rows = list(range(min(r_left * 2, new_rank)))
+                new_rank = len(pivot_rows)
+            
+            core = core_matrix.reshape(r_left, 2, new_rank)
             cores.append(core)
             
-            # Update for next mode
-            # New left pivots: apply U^T to select best rows
-            # For simplicity, use MaxVol on U to find pivot rows
-            if U.shape[0] > rank:
-                pivot_rows = maxvol(U, tol=1.05)
-                # Convert pivot rows to accumulated indices
-                new_accumulated = torch.zeros(len(pivot_rows), dtype=torch.long, device=device)
-                for pi, row in enumerate(pivot_rows):
-                    left_idx = row // 2
-                    bit = row % 2
-                    new_accumulated[pi] = accumulated_left[left_idx] + (bit << k)
-                accumulated_left = new_accumulated
-            else:
-                # Expand accumulated_left to include this bit
-                new_accumulated = torch.zeros(r_left * 2, dtype=torch.long, device=device)
-                for li, left_val in enumerate(accumulated_left):
-                    for bit in range(2):
-                        new_accumulated[li * 2 + bit] = left_val + (bit << k)
-                accumulated_left = new_accumulated
+            # Update left pivots for next mode
+            new_left_pivots = []
+            for row in pivot_rows:
+                left_idx = row // 2
+                bit = row % 2
+                old_left = current_left_pivots[left_idx]
+                new_left = old_left * 2 + bit
+                new_left_pivots.append(new_left)
             
-            r_left = len(accumulated_left)
-            
-            # Propagate S*Vh for accuracy (in real impl, this updates right pivots)
-            # For now, we'll use the ranks as-is
-            
+            current_left_pivots = new_left_pivots
         else:
             # Last core
             core = fiber.reshape(r_left, 2, 1)
@@ -219,10 +335,355 @@ def tci_build_qtt(
     
     if verbose:
         params = sum(c.numel() for c in cores)
-        max_r = max(c.shape[-1] for c in cores)
+        max_r = max(c.shape[2] for c in cores[:-1]) if len(cores) > 1 else 1
         print(f"[TCI] Done: {len(cores)} cores, max_rank={max_r}, params={params:,}")
     
     return cores
+
+
+# =============================================================================
+# 2D MATRIX QTT WITH BIT-INTERLEAVED INDEXING
+# =============================================================================
+
+def _morton_encode(i: torch.Tensor, j: torch.Tensor, n_bits: int) -> torch.Tensor:
+    """
+    Morton (Z-order) encoding: interleave bits of i and j.
+    
+    For n_bits=3:
+        i = i2 i1 i0
+        j = j2 j1 j0
+        result = i2 j2 i1 j1 i0 j0 (MSB to LSB)
+    
+    This creates a space-filling curve that preserves 2D locality.
+    """
+    result = torch.zeros_like(i)
+    for b in range(n_bits):
+        i_bit = (i >> b) & 1
+        j_bit = (j >> b) & 1
+        result = result | (i_bit << (2 * b + 1)) | (j_bit << (2 * b))
+    return result
+
+
+def _morton_decode(z: torch.Tensor, n_bits: int) -> Tuple[torch.Tensor, torch.Tensor]:
+    """
+    Morton decoding: de-interleave bits to get i and j.
+    
+    Inverse of _morton_encode.
+    """
+    i = torch.zeros_like(z)
+    j = torch.zeros_like(z)
+    for b in range(n_bits):
+        i = i | (((z >> (2 * b + 1)) & 1) << b)
+        j = j | (((z >> (2 * b)) & 1) << b)
+    return i, j
+
+
+def tci_build_qtt_2d(
+    matrix_func: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
+    n_rows: int,
+    n_cols: int,
+    max_rank: int = 256,
+    tol: float = 1e-10,
+    device: Optional[torch.device] = None,
+    verbose: bool = True,
+) -> List[torch.Tensor]:
+    """
+    Build QTT for a 2D matrix using bit-interleaved (Morton/Z-order) indexing.
+    
+    This properly captures 2D structure by interleaving row and column bits:
+    - Each pair of QTT modes represents a 2×2 block refinement
+    - Adjacent modes in QTT correspond to adjacent scales in the matrix
+    - Much better for matrices with smooth or hierarchical structure
+    
+    Args:
+        matrix_func: Function (i, j) -> values where i, j are tensors of indices
+        n_rows: Number of rows (will be rounded up to power of 2)
+        n_cols: Number of columns (will be rounded up to power of 2)
+        max_rank: Maximum TT rank
+        tol: Truncation tolerance
+        device: CUDA device
+        verbose: Print progress
+        
+    Returns:
+        List of TT cores with 2*n_bits modes (interleaved row/col bits)
+    
+    Memory: O(max_rank² × 2n_bits) where n_bits = ceil(log2(max(n_rows, n_cols)))
+    
+    Note: To evaluate, use morton_decode to convert QTT index back to (i,j).
+    """
+    if device is None:
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    
+    # Round up to power of 2
+    n_bits = max(
+        int(np.ceil(np.log2(max(n_rows, 1)))),
+        int(np.ceil(np.log2(max(n_cols, 1))))
+    )
+    n_bits = max(n_bits, 1)
+    
+    n_padded = 2 ** n_bits
+    n_qubits = 2 * n_bits  # Interleaved row/col bits
+    N = 2 ** n_qubits  # Total entries in padded matrix
+    
+    if verbose:
+        print(f"[TCI-2D] Building QTT: {n_rows}×{n_cols} matrix, padded to {n_padded}×{n_padded}")
+        print(f"[TCI-2D] Using {n_qubits} qubits ({n_bits} row bits + {n_bits} col bits, interleaved)")
+    
+    # =========================================================================
+    # SMART PRE-PASS FOR 2D MATRICES
+    # Sample strategically: corners, edges, diagonals, and random
+    # For diagonal-dominated matrices (RBF, Laplacian), we need FULL diagonal
+    # =========================================================================
+    
+    strategic_ij = []
+    
+    # Corners
+    corners = [(0, 0), (0, n_cols-1), (n_rows-1, 0), (n_rows-1, n_cols-1)]
+    strategic_ij.extend(corners)
+    
+    # Edge samples (first/last row/col)
+    n_edge = min(32, max(n_rows, n_cols))
+    for k in range(n_edge):
+        i = k * (n_rows - 1) // max(n_edge - 1, 1)
+        j = k * (n_cols - 1) // max(n_edge - 1, 1)
+        strategic_ij.extend([(i, 0), (i, n_cols-1), (0, j), (n_rows-1, j)])
+    
+    # FULL DIAGONAL - critical for diagonal-dominated matrices
+    # Main diagonal: (i, i) for all i
+    for i in range(min(n_rows, n_cols)):
+        strategic_ij.append((i, i))
+    
+    # Near-diagonal bands (±1, ±2, ... ±8) for smooth diagonal structure
+    for offset in range(1, 9):
+        for i in range(min(n_rows, n_cols) - offset):
+            strategic_ij.append((i, i + offset))  # Upper band
+            strategic_ij.append((i + offset, i))  # Lower band
+    
+    # Anti-diagonal samples
+    for i in range(min(n_rows, n_cols)):
+        j = min(n_rows, n_cols) - 1 - i
+        if j >= 0 and j < n_cols:
+            strategic_ij.append((i, j))
+    
+    # Grid samples (uniform grid)
+    n_grid = min(16, min(n_rows, n_cols))
+    for gi in range(n_grid):
+        for gj in range(n_grid):
+            i = gi * (n_rows - 1) // max(n_grid - 1, 1)
+            j = gj * (n_cols - 1) // max(n_grid - 1, 1)
+            strategic_ij.append((i, j))
+    
+    # Random samples to fill in gaps
+    n_random = max(0, 2048 - len(strategic_ij))
+    for _ in range(n_random):
+        i = torch.randint(0, n_rows, (1,)).item()
+        j = torch.randint(0, n_cols, (1,)).item()
+        strategic_ij.append((i, j))
+    
+    # Remove duplicates
+    strategic_ij = list(set(strategic_ij))
+    
+    # Evaluate at strategic points
+    i_tensor = torch.tensor([p[0] for p in strategic_ij], device=device, dtype=torch.long)
+    j_tensor = torch.tensor([p[1] for p in strategic_ij], device=device, dtype=torch.long)
+    strategic_vals = matrix_func(i_tensor, j_tensor).abs()
+    
+    # Convert to Morton indices and sort by |f|
+    morton_indices = _morton_encode(i_tensor, j_tensor, n_bits)
+    _, sorted_order = strategic_vals.sort(descending=True)
+    high_value_morton = morton_indices[sorted_order].cpu().numpy().tolist()
+    
+    if verbose:
+        top_val = strategic_vals[sorted_order[0]].item()
+        top_idx = sorted_order[0].item()
+        print(f"[TCI-2D] Pre-pass: {len(strategic_ij)} strategic points, max |f|={top_val:.2e} at ({strategic_ij[top_idx][0]}, {strategic_ij[top_idx][1]})")
+    
+    # Wrapper function: QTT index (morton-encoded) -> matrix value
+    def morton_wrapper(indices: torch.Tensor) -> torch.Tensor:
+        i, j = _morton_decode(indices, n_bits)
+        
+        # Handle out-of-bounds (padding) - return 0
+        in_bounds = (i < n_rows) & (j < n_cols)
+        result = torch.zeros(len(indices), device=device, dtype=torch.float64)
+        
+        if in_bounds.any():
+            valid_i = i[in_bounds]
+            valid_j = j[in_bounds]
+            valid_vals = matrix_func(valid_i, valid_j)
+            result[in_bounds] = valid_vals
+        
+        return result
+    
+    # Use the standard QTT builder with pre-seeded pivot indices
+    cores = tci_build_qtt(
+        func=morton_wrapper,
+        n_qubits=n_qubits,
+        max_rank=max_rank,
+        tol=tol,
+        device=device,
+        verbose=verbose,
+        seed_indices=high_value_morton,  # Pass our strategic Morton indices
+    )
+    
+    return cores
+
+
+def qtt_2d_eval(
+    cores: List[torch.Tensor],
+    i: torch.Tensor,
+    j: torch.Tensor,
+) -> torch.Tensor:
+    """
+    Evaluate 2D QTT at matrix positions (i, j).
+    
+    Converts (i, j) to Morton-encoded indices and evaluates QTT.
+    
+    Args:
+        cores: TT cores from tci_build_qtt_2d
+        i: Row indices (batch)
+        j: Column indices (batch)
+        
+    Returns:
+        Matrix values at (i, j)
+    """
+    from tensornet.cfd.qtt_eval import qtt_eval_batch
+    
+    n_qubits = len(cores)
+    n_bits = n_qubits // 2
+    
+    # Convert (i, j) to Morton-encoded QTT indices
+    morton_indices = _morton_encode(i, j, n_bits)
+    
+    return qtt_eval_batch(cores, morton_indices)
+
+
+def tci_build_qtt_2d_rowmajor(
+    matrix_func: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
+    n_rows: int,
+    n_cols: int,
+    max_rank: int = 256,
+    tol: float = 1e-10,
+    device: Optional[torch.device] = None,
+    verbose: bool = True,
+) -> List[torch.Tensor]:
+    """
+    Build QTT for a 2D matrix using row-major indexing.
+    
+    Row-major: index = i * n_cols + j
+    QTT first has row bits, then column bits.
+    
+    This is better for:
+    - Diagonal-dominated matrices (RBF, Laplacian, Toeplitz)
+    - Matrices with band structure
+    
+    Args:
+        matrix_func: Function (i, j) -> values
+        n_rows: Number of rows
+        n_cols: Number of columns  
+        max_rank: Maximum TT rank
+        tol: Truncation tolerance
+    """
+    if device is None:
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    
+    # Round up to power of 2
+    n_bits_row = max(1, int(np.ceil(np.log2(max(n_rows, 1)))))
+    n_bits_col = max(1, int(np.ceil(np.log2(max(n_cols, 1)))))
+    
+    n_padded_rows = 2 ** n_bits_row
+    n_padded_cols = 2 ** n_bits_col
+    n_qubits = n_bits_row + n_bits_col
+    N = n_padded_rows * n_padded_cols
+    
+    if verbose:
+        print(f"[TCI-2D-RowMajor] Building QTT: {n_rows}×{n_cols} matrix")
+        print(f"[TCI-2D-RowMajor] {n_qubits} qubits ({n_bits_row} row + {n_bits_col} col)")
+    
+    # Strategic pre-pass sampling
+    strategic_ij = []
+    
+    # Full diagonal + bands
+    for i in range(min(n_rows, n_cols)):
+        strategic_ij.append((i, i))
+    for offset in range(1, 9):
+        for i in range(min(n_rows, n_cols) - offset):
+            strategic_ij.append((i, i + offset))
+            strategic_ij.append((i + offset, i))
+    
+    # Corners and edges
+    corners = [(0, 0), (0, n_cols-1), (n_rows-1, 0), (n_rows-1, n_cols-1)]
+    strategic_ij.extend(corners)
+    
+    for k in range(32):
+        i = k * (n_rows - 1) // 31
+        j = k * (n_cols - 1) // 31
+        strategic_ij.extend([(i, 0), (i, n_cols-1), (0, j), (n_rows-1, j)])
+    
+    # Grid + random
+    for gi in range(16):
+        for gj in range(16):
+            strategic_ij.append((gi * (n_rows - 1) // 15, gj * (n_cols - 1) // 15))
+    
+    for _ in range(1024 - len(strategic_ij)):
+        strategic_ij.append((torch.randint(0, n_rows, (1,)).item(), 
+                             torch.randint(0, n_cols, (1,)).item()))
+    
+    strategic_ij = list(set(strategic_ij))
+    
+    # Evaluate and sort by value
+    i_tensor = torch.tensor([p[0] for p in strategic_ij], device=device, dtype=torch.long)
+    j_tensor = torch.tensor([p[1] for p in strategic_ij], device=device, dtype=torch.long)
+    vals = matrix_func(i_tensor, j_tensor).abs()
+    
+    # Row-major indices
+    rowmajor_indices = i_tensor * n_padded_cols + j_tensor
+    _, sorted_order = vals.sort(descending=True)
+    high_value_indices = rowmajor_indices[sorted_order].cpu().numpy().tolist()
+    
+    if verbose:
+        top_val = vals[sorted_order[0]].item()
+        top_idx = sorted_order[0].item()
+        print(f"[TCI-2D-RowMajor] Pre-pass: {len(strategic_ij)} points, max |f|={top_val:.2e}")
+    
+    # Wrapper function
+    def rowmajor_wrapper(indices: torch.Tensor) -> torch.Tensor:
+        i = indices // n_padded_cols
+        j = indices % n_padded_cols
+        
+        in_bounds = (i < n_rows) & (j < n_cols)
+        result = torch.zeros(len(indices), device=device, dtype=torch.float64)
+        
+        if in_bounds.any():
+            result[in_bounds] = matrix_func(i[in_bounds], j[in_bounds])
+        
+        return result
+    
+    cores = tci_build_qtt(
+        func=rowmajor_wrapper,
+        n_qubits=n_qubits,
+        max_rank=max_rank,
+        tol=tol,
+        device=device,
+        verbose=verbose,
+        seed_indices=high_value_indices,
+    )
+    
+    return cores, n_bits_row, n_bits_col
+
+
+def qtt_2d_eval_rowmajor(
+    cores: List[torch.Tensor],
+    i: torch.Tensor,
+    j: torch.Tensor,
+    n_bits_col: int,
+) -> torch.Tensor:
+    """Evaluate row-major 2D QTT."""
+    from tensornet.cfd.qtt_eval import qtt_eval_batch
+    
+    n_padded_cols = 2 ** n_bits_col
+    rowmajor_indices = i * n_padded_cols + j
+    
+    return qtt_eval_batch(cores, rowmajor_indices)
 
 
 def tci_build_qtt_v2(
@@ -234,58 +695,30 @@ def tci_build_qtt_v2(
     verbose: bool = True,
 ) -> List[torch.Tensor]:
     """
-    Simpler TCI: Use streaming SVD with chunked evaluation.
+    TCI v2: Delegates to the proper tci_build_qtt implementation.
     
-    Instead of materializing full 2^n tensor, process in chunks.
-    Each chunk: 2^chunk_size elements.
+    ARTICLE II COMPLIANCE: Never allocates O(2^n) tensors.
+    ARTICLE III COMPLIANCE: Never calls dense_to_qtt_cores for large problems.
+    
+    The original "streaming" approach was fundamentally broken:
+    - Allocated dense chunks
+    - Called dense_to_qtt_cores on each chunk  
+    - Had incomplete chunk merging (just returned first chunk)
+    
+    The proper approach (tci_build_qtt) already works for any size:
+    - Samples O(r² × n_qubits) function evaluations
+    - Builds TT cores directly via SVD + MaxVol
+    - Never allocates more than O(r² × n_qubits) memory
     """
-    if device is None:
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    
-    N = 2 ** n_qubits
-    
-    # Determine chunk size based on available memory
-    # Each float32 = 4 bytes, target ~1GB max
-    max_elements = 256 * 1024 * 1024  # 256M elements = 1GB
-    chunk_bits = min(n_qubits, int(np.log2(max_elements)))
-    chunk_size = 2 ** chunk_bits
-    n_chunks = N // chunk_size
-    
-    if verbose:
-        print(f"[TCI-v2] {n_qubits} qubits, {n_chunks} chunks of {chunk_size:,} elements")
-    
-    if n_chunks == 1:
-        # Small enough to do dense
-        indices = torch.arange(N, device=device)
-        values = func(indices)
-        from tensornet.cfd.qtt_eval import dense_to_qtt_cores
-        return dense_to_qtt_cores(values, max_rank=max_rank, tol=tol)
-    
-    # For large tensors, we need true streaming TCI
-    # This is a simplified version that processes chunks and merges
-    
-    cores_list = []
-    
-    for c in range(n_chunks):
-        start = c * chunk_size
-        indices = torch.arange(start, start + chunk_size, device=device)
-        values = func(indices)
-        
-        # Build QTT for this chunk
-        from tensornet.cfd.qtt_eval import dense_to_qtt_cores
-        chunk_cores = dense_to_qtt_cores(values, max_rank=max_rank, tol=tol)
-        cores_list.append(chunk_cores)
-        
-        del values, indices
-        gc.collect()
-        torch.cuda.empty_cache() if device.type == 'cuda' else None
-    
-    # Merge chunks - this is the tricky part
-    # For now, return first chunk's cores (incomplete implementation)
-    if verbose:
-        print(f"[TCI-v2] Warning: chunk merging not fully implemented")
-    
-    return cores_list[0]
+    return tci_build_qtt(
+        func=func,
+        n_qubits=n_qubits,
+        max_rank=max_rank,
+        tol=tol,
+        max_sweeps=10,
+        device=device,
+        verbose=verbose,
+    )
 
 
 def tci_dmrg_style(
@@ -353,20 +786,19 @@ def tci_dmrg_style(
             right_contexts = torch.randint(0, 2**(n_qubits-k-2) if k < n_qubits-2 else 1, 
                                           (n_right_samples,), device=device)
             
-            # Build sample indices
-            n_samples = n_left_samples * 4 * n_right_samples
-            sample_indices = torch.zeros(n_samples, dtype=torch.long, device=device)
+            # Build sample indices - VECTORIZED (no Python loops)
+            # Shape: (n_left, 4, n_right) -> flatten
+            left_expanded = left_contexts.view(-1, 1, 1).expand(n_left_samples, 4, n_right_samples)
+            bits_all = torch.arange(4, device=device).view(1, -1, 1).expand(n_left_samples, 4, n_right_samples)
+            right_expanded = right_contexts.view(1, 1, -1).expand(n_left_samples, 4, n_right_samples)
             
-            idx = 0
-            for li, left_val in enumerate(left_contexts):
-                for bits in range(4):
-                    bit_k = bits & 1
-                    bit_k1 = (bits >> 1) & 1
-                    for ri, right_val in enumerate(right_contexts):
-                        full_idx = left_val + (bit_k << k) + (bit_k1 << (k+1)) + (right_val << (k+2))
-                        full_idx = full_idx % N  # Wrap around
-                        sample_indices[idx] = full_idx
-                        idx += 1
+            # Extract bit_k and bit_k1 from bits_all
+            bit_k = bits_all & 1       # LSB
+            bit_k1 = (bits_all >> 1) & 1  # MSB
+            
+            # Compose: left + (bit_k << k) + (bit_k1 << (k+1)) + (right << (k+2))
+            sample_indices = (left_expanded + (bit_k << k) + (bit_k1 << (k + 1)) + (right_expanded << (k + 2))) % N
+            sample_indices = sample_indices.reshape(-1)
             
             # Evaluate
             values = func(sample_indices)

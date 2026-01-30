@@ -1,0 +1,30 @@
+{
+  "timestamp": "1769644555",
+  "config": {
+    "num_sites": 16,
+    "physical_dim": 2,
+    "max_bond_dim": 32,
+    "bench_iters": 100,
+    "queries_per_frame": 1000,
+    "description": "Medium: 2^16 grid, χ=32"
+  },
+  "throughput": {
+    "frames_per_sec": 199.7946,
+    "gbps": 0.012400,
+    "elements_per_sec": 199795,
+    "total_frames": 100,
+    "total_duration_ms": 500.51
+  },
+  "latency_us": {
+    "serialize": { "p50": 127.0, "p95": 140.0, "p99": 270.0, "max": 270.0 },
+    "deserialize": { "p50": 0.0, "p95": 0.0, "p99": 1.0, "max": 1.0 },
+    "evaluate": { "p50": 4840.0, "p95": 5151.0, "p99": 5510.0, "max": 5510.0 },
+    "e2e": { "p50": 4968.0, "p95": 5288.0, "p99": 5648.0, "max": 5648.0 }
+  },
+  "memory": {
+    "tt_core_bytes": 62064,
+    "dense_equiv_bytes": 262144,
+    "compression_ratio": 4.22,
+    "memory_saved_bytes": 200080
+  }
+}

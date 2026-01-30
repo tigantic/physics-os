@@ -53,6 +53,14 @@ except ImportError:
     HAS_TENSORNET = False
     print("[QTT-NTT] Warning: tensornet not found, using standalone mode")
 
+# Native rSVD for THE RULES compliance
+try:
+    from tensornet.genesis.core.triton_ops import rsvd_native
+    HAS_RSVD = True
+except ImportError:
+    HAS_RSVD = False
+    rsvd_native = None
+
 # Try to import Numba for accelerated finite field NTT
 try:
     from numba import njit, prange
@@ -596,6 +604,8 @@ class QTTNTT:
             
             if HAS_TENSORNET:
                 U, S, Vh, info = svd_truncated(remainder, chi_max=max_rank, return_info=True)
+            elif HAS_RSVD and remainder.shape[0] > 4 and remainder.shape[1] > 4:
+                U, S, Vh = rsvd_native(remainder.real if remainder.is_complex() else remainder, k=max_rank)
             else:
                 U, S, Vh = torch.linalg.svd(remainder, full_matrices=False)
                 rank = min(max_rank, len(S))
@@ -881,8 +891,11 @@ class QTTNTT:
         for k in range(n_bits - 1):
             remainder = remainder.reshape(r_left * 2, -1)
             
-            # SVD
-            U, S, Vh = torch.linalg.svd(remainder, full_matrices=False)
+            # rSVD for O(mnk) complexity
+            if HAS_RSVD and remainder.shape[0] > 4 and remainder.shape[1] > 4:
+                U, S, Vh = rsvd_native(remainder.real if remainder.is_complex() else remainder, k=max_rank, tol=1e-12)
+            else:
+                U, S, Vh = torch.linalg.svd(remainder, full_matrices=False)
             
             # Truncate
             rank = min(max_rank, len(S), (S > 1e-12 * S[0]).sum().item())
@@ -968,9 +981,12 @@ class QTTNTT:
                 new_cores.append(core)
                 continue
             
-            # SVD truncation
+            # rSVD truncation
             try:
-                U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+                if HAS_RSVD and mat.shape[0] > 4 and mat.shape[1] > 4:
+                    U, S, Vh = rsvd_native(mat.real if mat.is_complex() else mat, k=max_rank)
+                else:
+                    U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
                 
                 rank = min(max_rank, len(S))
                 if len(S) > 0:
@@ -1172,6 +1188,8 @@ class QTTNTT:
                 
                 if HAS_TENSORNET:
                     U, S, Vh, _ = svd_truncated(mat, chi_max=max_rank, return_info=True)
+                elif HAS_RSVD and mat.shape[0] > 4 and mat.shape[1] > 4:
+                    U, S, Vh = rsvd_native(mat.real if mat.is_complex() else mat, k=max_rank)
                 else:
                     U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
                     rank = min(max_rank, len(S))

@@ -1,0 +1,959 @@
+{
+  "date": "2026-01-28T17:34:22.227704",
+  "pytorch": "2.9.1+cu128",
+  "cuda": "12.8",
+  "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+  "results": [
+    {
+      "name": "dense_to_qtt_2^10_r16",
+      "time_ms": 14.336177999211941,
+      "throughput": 0.07142768456532064,
+      "throughput_unit": "Melem/s",
+      "extra": {
+        "compression": 0.6009389671361502,
+        "rank": 16
+      }
+    },
+    {
+      "name": "dense_to_qtt_2^10_r32",
+      "time_ms": 12.091730000975076,
+      "throughput": 0.08468597958418064,
+      "throughput_unit": "Melem/s",
+      "extra": {
+        "compression": 0.375366568914956,
+        "rank": 32
+      }
+    },
+    {
+      "name": "dense_to_qtt_2^14_r16",
+      "time_ms": 12.505321996286511,
+      "throughput": 1.3101621857370225,
+      "throughput_unit": "Melem/s",
+      "extra": {
+        "compression": 4.366737739872068,
+        "rank": 16
+      }
+    },
+    {
+      "name": "dense_to_qtt_2^14_r32",
+      "time_ms": 25.50759299629135,
+      "throughput": 0.6423185442225825,
+      "throughput_unit": "Melem/s",
+      "extra": {
+        "compression": 1.5003663003663004,
+        "rank": 32
+      }
+    },
+    {
+      "name": "dense_to_qtt_2^18_r16",
+      "time_ms": 20.880668998870533,
+      "throughput": 12.55438702726334,
+      "throughput_unit": "Melem/s",
+      "extra": {
+        "compression": 45.19724137931034,
+        "rank": 16
+      }
+    },
+    {
+      "name": "dense_to_qtt_2^18_r32",
+      "time_ms": 32.40592400106834,
+      "throughput": 8.08938513808024,
+      "throughput_unit": "Melem/s",
+      "extra": {
+        "compression": 13.716199246546672,
+        "rank": 32
+      }
+    },
+    {
+      "name": "dense_to_qtt_2^20_r16",
+      "time_ms": 34.44443099579075,
+      "throughput": 30.442540918389394,
+      "throughput_unit": "Melem/s",
+      "extra": {
+        "compression": 153.66002344665884,
+        "rank": 16
+      }
+    },
+    {
+      "name": "dense_to_qtt_2^20_r32",
+      "time_ms": 45.38282700377749,
+      "throughput": 23.10512740673296,
+      "throughput_unit": "Melem/s",
+      "extra": {
+        "compression": 45.18166149603585,
+        "rank": 32
+      }
+    },
+    {
+      "name": "dense_to_qtt_2^22_r16",
+      "time_ms": 93.25719800108345,
+      "throughput": 44.9756596799238,
+      "throughput_unit": "Melem/s",
+      "extra": {
+        "compression": 534.4424057084608,
+        "rank": 16
+      }
+    },
+    {
+      "name": "qtt_to_dense_2^10",
+      "time_ms": 0.29789950349368155,
+      "throughput": 3.437400828100806,
+      "throughput_unit": "Melem/s",
+      "extra": null
+    },
+    {
+      "name": "qtt_to_dense_2^14",
+      "time_ms": 0.44285200056037866,
+      "throughput": 36.99655862289866,
+      "throughput_unit": "Melem/s",
+      "extra": null
+    },
+    {
+      "name": "qtt_to_dense_2^18",
+      "time_ms": 0.755221499275649,
+      "throughput": 347.108762464295,
+      "throughput_unit": "Melem/s",
+      "extra": null
+    },
+    {
+      "name": "qtt_to_dense_2^20",
+      "time_ms": 1.0570464983175043,
+      "throughput": 991.9866360363648,
+      "throughput_unit": "Melem/s",
+      "extra": null
+    },
+    {
+      "name": "truncate_2^16_to_r32",
+      "time_ms": 12.46716749665211,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "truncate_2^16_to_r16",
+      "time_ms": 6.6149974991276395,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "truncate_2^16_to_r8",
+      "time_ms": 7.929205501568504,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "truncate_2^20_to_r32",
+      "time_ms": 20.588377497915644,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "truncate_2^20_to_r16",
+      "time_ms": 10.634240501531167,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "truncate_2^20_to_r8",
+      "time_ms": 10.455999501573388,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "qtt_add_2^18_r32",
+      "time_ms": 21.183103002840653,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "qtt_scale_2^18",
+      "time_ms": 0.1751200034050271,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "qtt_hadamard_2^18_r32",
+      "time_ms": 29.60222900219378,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "qtt_inner_product_2^18",
+      "time_ms": 1.4208749998942949,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "qtt_norm_2^18",
+      "time_ms": 1.4752595052414108,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "identity_mpo_8",
+      "time_ms": 0.011029496818082407,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "shift_mpo_8",
+      "time_ms": 0.09738549852045253,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "identity_mpo_10",
+      "time_ms": 0.01419850013917312,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "shift_mpo_10",
+      "time_ms": 0.11928649837500416,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "identity_mpo_12",
+      "time_ms": 0.016681999113643542,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "shift_mpo_12",
+      "time_ms": 0.15295399862225167,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "identity_mpo_14",
+      "time_ms": 0.0193859996215906,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "shift_mpo_14",
+      "time_ms": 0.18059050125884824,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "apply_shift_2^10_r16",
+      "time_ms": 1.1398120041121729,
+      "throughput": 0.8983937669595069,
+      "throughput_unit": "Melem/s",
+      "extra": null
+    },
+    {
+      "name": "apply_shift_2^10_r32",
+      "time_ms": 0.7329439977183938,
+      "throughput": 1.3971053766558488,
+      "throughput_unit": "Melem/s",
+      "extra": null
+    },
+    {
+      "name": "apply_shift_2^12_r16",
+      "time_ms": 1.193495001643896,
+      "throughput": 3.431937288684286,
+      "throughput_unit": "Melem/s",
+      "extra": null
+    },
+    {
+      "name": "apply_shift_2^12_r32",
+      "time_ms": 1.2469100038288161,
+      "throughput": 3.284920312951732,
+      "throughput_unit": "Melem/s",
+      "extra": null
+    },
+    {
+      "name": "apply_shift_2^14_r16",
+      "time_ms": 1.458621998608578,
+      "throughput": 11.232519470863028,
+      "throughput_unit": "Melem/s",
+      "extra": null
+    },
+    {
+      "name": "apply_shift_2^14_r32",
+      "time_ms": 2.1392229973571375,
+      "throughput": 7.658855584593707,
+      "throughput_unit": "Melem/s",
+      "extra": null
+    },
+    {
+      "name": "morton_encode_256x256",
+      "time_ms": 0.2388480007648468,
+      "throughput": 274.3837075886694,
+      "throughput_unit": "Mpix/s",
+      "extra": null
+    },
+    {
+      "name": "morton_encode_512x512",
+      "time_ms": 0.24796799570322037,
+      "throughput": 1057.1686852433413,
+      "throughput_unit": "Mpix/s",
+      "extra": null
+    },
+    {
+      "name": "morton_encode_1024x1024",
+      "time_ms": 0.44195200502872467,
+      "throughput": 2372.6015224930316,
+      "throughput_unit": "Mpix/s",
+      "extra": null
+    },
+    {
+      "name": "morton_encode_2048x2048",
+      "time_ms": 6.021376132965088,
+      "throughput": 696.569008044115,
+      "throughput_unit": "Mpix/s",
+      "extra": null
+    },
+    {
+      "name": "morton_encode_4096x4096",
+      "time_ms": 24.109904289245605,
+      "throughput": 695.864064772899,
+      "throughput_unit": "Mpix/s",
+      "extra": null
+    },
+    {
+      "name": "dense_to_qtt_2d_128x128_r16",
+      "time_ms": 11.220638996746857,
+      "throughput": 1.4601663955814042,
+      "throughput_unit": "Mpix/s",
+      "extra": {
+        "compression": 4.366737739872068
+      }
+    },
+    {
+      "name": "dense_to_qtt_2d_128x128_r32",
+      "time_ms": 15.684612997574732,
+      "throughput": 1.0445906445083097,
+      "throughput_unit": "Mpix/s",
+      "extra": {
+        "compression": 1.5003663003663004
+      }
+    },
+    {
+      "name": "dense_to_qtt_2d_256x256_r16",
+      "time_ms": 13.527022005291656,
+      "throughput": 4.84482097939686,
+      "throughput_unit": "Mpix/s",
+      "extra": {
+        "compression": 13.721943048576215
+      }
+    },
+    {
+      "name": "dense_to_qtt_2d_256x256_r32",
+      "time_ms": 20.360914997581858,
+      "throughput": 3.2187158586823483,
+      "throughput_unit": "Mpix/s",
+      "extra": {
+        "compression": 4.364411294619073
+      }
+    },
+    {
+      "name": "dense_to_qtt_2d_512x512_r16",
+      "time_ms": 18.254062997584697,
+      "throughput": 14.360857636718238,
+      "throughput_unit": "Mpix/s",
+      "extra": {
+        "compression": 45.19724137931034
+      }
+    },
+    {
+      "name": "dense_to_qtt_2d_512x512_r32",
+      "time_ms": 29.356450999330264,
+      "throughput": 8.929689764133292,
+      "throughput_unit": "Mpix/s",
+      "extra": {
+        "compression": 13.716199246546672
+      }
+    },
+    {
+      "name": "dense_to_qtt_2d_1024x1024_r16",
+      "time_ms": 33.21072599646868,
+      "throughput": 31.57341396606313,
+      "throughput_unit": "Mpix/s",
+      "extra": {
+        "compression": 153.66002344665884
+      }
+    },
+    {
+      "name": "dense_to_qtt_2d_1024x1024_r32",
+      "time_ms": 46.25103100261185,
+      "throughput": 22.671408123654274,
+      "throughput_unit": "Mpix/s",
+      "extra": {
+        "compression": 45.18166149603585
+      }
+    },
+    {
+      "name": "dense_to_qtt_2d_2048x2048_r16",
+      "time_ms": 93.77762600342976,
+      "throughput": 44.72606290808215,
+      "throughput_unit": "Mpix/s",
+      "extra": {
+        "compression": 534.4424057084608
+      }
+    },
+    {
+      "name": "render_256\u00d7256_grid_480p",
+      "time_ms": 0.06446399912238121,
+      "throughput": 15512.53433876414,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 0.608513000770472,
+        "mpix_s": 4765.450548868344,
+        "resolution": "640x480"
+      }
+    },
+    {
+      "name": "render_256\u00d7256_grid_720p",
+      "time_ms": 0.06419199705123901,
+      "throughput": 15578.265919999109,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 0.5106169992359355,
+        "mpix_s": 14356.92987187118,
+        "resolution": "1280x720"
+      }
+    },
+    {
+      "name": "render_256\u00d7256_grid_1080p",
+      "time_ms": 0.07603199779987335,
+      "throughput": 13152.357282944704,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 0.5522850042325445,
+        "mpix_s": 27272.72806191414,
+        "resolution": "1920x1080"
+      }
+    },
+    {
+      "name": "render_256\u00d7256_grid_1440p",
+      "time_ms": 0.09206400066614151,
+      "throughput": 10862.008958597986,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 0.5511010022019036,
+        "mpix_s": 40041.709824975616,
+        "resolution": "2560x1440"
+      }
+    },
+    {
+      "name": "render_256\u00d7256_grid_4K",
+      "time_ms": 0.24355199933052063,
+      "throughput": 4105.899367481338,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 0.6809409969719127,
+        "mpix_s": 34055.97171363721,
+        "resolution": "3840x2160"
+      }
+    },
+    {
+      "name": "render_256\u00d7256_grid_8K",
+      "time_ms": 1.049407958984375,
+      "throughput": 952.9182539913339,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 1.5811109988135286,
+        "mpix_s": 31615.54066362288,
+        "resolution": "7680x4320"
+      }
+    },
+    {
+      "name": "render_1K\u00d71K_grid_480p",
+      "time_ms": 0.06825600191950798,
+      "throughput": 14650.726264032672,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 0.6170069973450154,
+        "mpix_s": 4500.703108310837,
+        "resolution": "640x480"
+      }
+    },
+    {
+      "name": "render_1K\u00d71K_grid_720p",
+      "time_ms": 0.06923200190067291,
+      "throughput": 14444.187262340023,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 0.7749259966658428,
+        "mpix_s": 13311.762980972564,
+        "resolution": "1280x720"
+      }
+    },
+    {
+      "name": "render_1K\u00d71K_grid_1080p",
+      "time_ms": 0.07876800000667572,
+      "throughput": 12695.510866281336,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 0.607066998782102,
+        "mpix_s": 26325.41133232098,
+        "resolution": "1920x1080"
+      }
+    },
+    {
+      "name": "render_1K\u00d71K_grid_1440p",
+      "time_ms": 0.0894399993121624,
+      "throughput": 11180.679871315877,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 0.6580589979421347,
+        "mpix_s": 41216.45827761885,
+        "resolution": "2560x1440"
+      }
+    },
+    {
+      "name": "render_1K\u00d71K_grid_4K",
+      "time_ms": 0.24438399821519852,
+      "throughput": 4091.9209412370146,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 0.7923129960545339,
+        "mpix_s": 33940.029054996296,
+        "resolution": "3840x2160"
+      }
+    },
+    {
+      "name": "render_1K\u00d71K_grid_8K",
+      "time_ms": 1.0483360290527344,
+      "throughput": 953.8926186707421,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 1.6226930019911379,
+        "mpix_s": 31647.867745210417,
+        "resolution": "7680x4320"
+      }
+    },
+    {
+      "name": "render_4K\u00d74K_grid_480p",
+      "time_ms": 0.0642399974167347,
+      "throughput": 15566.625781642657,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 3.2927130014286377,
+        "mpix_s": 4782.067440120623,
+        "resolution": "640x480"
+      }
+    },
+    {
+      "name": "render_4K\u00d74K_grid_720p",
+      "time_ms": 0.06667200103402138,
+      "throughput": 14998.799863374734,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 3.254489005485084,
+        "mpix_s": 13822.893954086156,
+        "resolution": "1280x720"
+      }
+    },
+    {
+      "name": "render_4K\u00d74K_grid_1080p",
+      "time_ms": 0.08822399750351906,
+      "throughput": 11334.784506450325,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 3.2676650007488206,
+        "mpix_s": 23503.809152575395,
+        "resolution": "1920x1080"
+      }
+    },
+    {
+      "name": "render_4K\u00d74K_grid_1440p",
+      "time_ms": 0.0920800007879734,
+      "throughput": 10860.121540426944,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 3.484007000224665,
+        "mpix_s": 40034.75204662989,
+        "resolution": "2560x1440"
+      }
+    },
+    {
+      "name": "render_4K\u00d74K_grid_4K",
+      "time_ms": 0.24553600698709488,
+      "throughput": 4072.7224176638133,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 3.442813002038747,
+        "mpix_s": 33780.78882107073,
+        "resolution": "3840x2160"
+      }
+    },
+    {
+      "name": "render_4K\u00d74K_grid_8K",
+      "time_ms": 1.0481119751930237,
+      "throughput": 954.0965313518499,
+      "throughput_unit": "FPS",
+      "extra": {
+        "cold_ms": 4.640147999452893,
+        "mpix_s": 31654.633078579132,
+        "resolution": "7680x4320"
+      }
+    },
+    {
+      "name": "ns2d_build_1K\u00d71K",
+      "time_ms": 1.1480330067570321,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "ns2d_compress_1K\u00d71K",
+      "time_ms": 58.52063799829921,
+      "throughput": 17.91805482418826,
+      "throughput_unit": "Mpix/s",
+      "extra": null
+    },
+    {
+      "name": "ns2d_step_1K\u00d71K",
+      "time_ms": 2197.1635540030547,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "ns2d_build_2K\u00d72K",
+      "time_ms": 2.4296190022141673,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "ns2d_compress_2K\u00d72K",
+      "time_ms": 402.5404839994735,
+      "throughput": 10.419583040014146,
+      "throughput_unit": "Mpix/s",
+      "extra": null
+    },
+    {
+      "name": "ns2d_step_2K\u00d72K",
+      "time_ms": 2473.985961994913,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "ns2d_build_4K\u00d74K",
+      "time_ms": 1.7135119996964931,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "ns2d_compress_4K\u00d74K",
+      "time_ms": 2008.3338969998294,
+      "throughput": 8.353798153316447,
+      "throughput_unit": "Mpix/s",
+      "extra": null
+    },
+    {
+      "name": "compression_Constant_r32",
+      "time_ms": 0,
+      "throughput": 4559.026086956522,
+      "throughput_unit": "x",
+      "extra": {
+        "actual_rank": 5
+      }
+    },
+    {
+      "name": "compression_Linear_r32",
+      "time_ms": 0,
+      "throughput": 13.714764047295176,
+      "throughput_unit": "x",
+      "extra": {
+        "actual_rank": 64
+      }
+    },
+    {
+      "name": "compression_Smooth_sin_r32",
+      "time_ms": 0,
+      "throughput": 13.714764047295176,
+      "throughput_unit": "x",
+      "extra": {
+        "actual_rank": 64
+      }
+    },
+    {
+      "name": "compression_Multi-freq_r32",
+      "time_ms": 0,
+      "throughput": 13.714764047295176,
+      "throughput_unit": "x",
+      "extra": {
+        "actual_rank": 64
+      }
+    },
+    {
+      "name": "compression_Gaussian_r32",
+      "time_ms": 0,
+      "throughput": 13.714764047295176,
+      "throughput_unit": "x",
+      "extra": {
+        "actual_rank": 64
+      }
+    },
+    {
+      "name": "compression_Step_function_r32",
+      "time_ms": 0,
+      "throughput": 1199.7437070938215,
+      "throughput_unit": "x",
+      "extra": {
+        "actual_rank": 9
+      }
+    },
+    {
+      "name": "compression_Random_r32",
+      "time_ms": 0,
+      "throughput": 13.714764047295176,
+      "throughput_unit": "x",
+      "extra": {
+        "actual_rank": 64
+      }
+    },
+    {
+      "name": "compress_2d_256_Smooth",
+      "time_ms": 0,
+      "throughput": 4.364411294619073,
+      "throughput_unit": "x",
+      "extra": {
+        "qtt_kb": 58.65625,
+        "dense_mb": 0.25
+      }
+    },
+    {
+      "name": "compress_2d_256_Multi-scale",
+      "time_ms": 0,
+      "throughput": 4.364411294619073,
+      "throughput_unit": "x",
+      "extra": {
+        "qtt_kb": 58.65625,
+        "dense_mb": 0.25
+      }
+    },
+    {
+      "name": "compress_2d_256_Gaussian",
+      "time_ms": 0,
+      "throughput": 4.364411294619073,
+      "throughput_unit": "x",
+      "extra": {
+        "qtt_kb": 58.65625,
+        "dense_mb": 0.25
+      }
+    },
+    {
+      "name": "compress_2d_512_Smooth",
+      "time_ms": 0,
+      "throughput": 13.716199246546672,
+      "throughput_unit": "x",
+      "extra": {
+        "qtt_kb": 74.65625,
+        "dense_mb": 1.0
+      }
+    },
+    {
+      "name": "compress_2d_512_Multi-scale",
+      "time_ms": 0,
+      "throughput": 13.716199246546672,
+      "throughput_unit": "x",
+      "extra": {
+        "qtt_kb": 74.65625,
+        "dense_mb": 1.0
+      }
+    },
+    {
+      "name": "compress_2d_512_Gaussian",
+      "time_ms": 0,
+      "throughput": 13.716199246546672,
+      "throughput_unit": "x",
+      "extra": {
+        "qtt_kb": 74.65625,
+        "dense_mb": 1.0
+      }
+    },
+    {
+      "name": "compress_2d_1024_Smooth",
+      "time_ms": 0,
+      "throughput": 45.18166149603585,
+      "throughput_unit": "x",
+      "extra": {
+        "qtt_kb": 90.65625,
+        "dense_mb": 4.0
+      }
+    },
+    {
+      "name": "compress_2d_1024_Multi-scale",
+      "time_ms": 0,
+      "throughput": 45.18166149603585,
+      "throughput_unit": "x",
+      "extra": {
+        "qtt_kb": 90.65625,
+        "dense_mb": 4.0
+      }
+    },
+    {
+      "name": "compress_2d_1024_Gaussian",
+      "time_ms": 0,
+      "throughput": 45.18166149603585,
+      "throughput_unit": "x",
+      "extra": {
+        "qtt_kb": 90.65625,
+        "dense_mb": 4.0
+      }
+    },
+    {
+      "name": "compress_2d_2048_Smooth",
+      "time_ms": 0,
+      "throughput": 153.61500146498682,
+      "throughput_unit": "x",
+      "extra": {
+        "qtt_kb": 106.65625,
+        "dense_mb": 16.0
+      }
+    },
+    {
+      "name": "compress_2d_2048_Multi-scale",
+      "time_ms": 0,
+      "throughput": 153.61500146498682,
+      "throughput_unit": "x",
+      "extra": {
+        "qtt_kb": 106.65625,
+        "dense_mb": 16.0
+      }
+    },
+    {
+      "name": "compress_2d_2048_Gaussian",
+      "time_ms": 0,
+      "throughput": 153.61500146498682,
+      "throughput_unit": "x",
+      "extra": {
+        "qtt_kb": 106.65625,
+        "dense_mb": 16.0
+      }
+    },
+    {
+      "name": "eval_single_2^12",
+      "time_ms": 0.008659502782393247,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "eval_single_2^16",
+      "time_ms": 0.01164700006484054,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "eval_single_2^20",
+      "time_ms": 0.015432498912559822,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "eval_single_2^24",
+      "time_ms": 0.0185370008694008,
+      "throughput": 0,
+      "throughput_unit": "",
+      "extra": null
+    },
+    {
+      "name": "eval_batch_2^16_b100",
+      "time_ms": 0.8477799965476152,
+      "throughput": 0.11795513034894253,
+      "throughput_unit": "Mpts/s",
+      "extra": null
+    },
+    {
+      "name": "eval_batch_2^16_b1000",
+      "time_ms": 0.45343950114329346,
+      "throughput": 2.205365870151629,
+      "throughput_unit": "Mpts/s",
+      "extra": null
+    },
+    {
+      "name": "eval_batch_2^16_b10000",
+      "time_ms": 2.406662501016399,
+      "throughput": 4.155131845772612,
+      "throughput_unit": "Mpts/s",
+      "extra": null
+    },
+    {
+      "name": "eval_batch_2^20_b100",
+      "time_ms": 0.46881499656592496,
+      "throughput": 0.21330375677506289,
+      "throughput_unit": "Mpts/s",
+      "extra": null
+    },
+    {
+      "name": "eval_batch_2^20_b1000",
+      "time_ms": 1.0205655016761739,
+      "throughput": 0.9798489154861719,
+      "throughput_unit": "Mpts/s",
+      "extra": null
+    },
+    {
+      "name": "eval_batch_2^20_b10000",
+      "time_ms": 2.924252003140282,
+      "throughput": 3.419677917382376,
+      "throughput_unit": "Mpts/s",
+      "extra": null
+    },
+    {
+      "name": "eval_batch_2^20_b100000",
+      "time_ms": 28.409869002643973,
+      "throughput": 3.5199035937368617,
+      "throughput_unit": "Mpts/s",
+      "extra": null
+    },
+    {
+      "name": "eval_batch_2^24_b100",
+      "time_ms": 0.616704004642088,
+      "throughput": 0.1621523441509615,
+      "throughput_unit": "Mpts/s",
+      "extra": null
+    },
+    {
+      "name": "eval_batch_2^24_b1000",
+      "time_ms": 0.5510730006790254,
+      "throughput": 1.8146416151178013,
+      "throughput_unit": "Mpts/s",
+      "extra": null
+    },
+    {
+      "name": "eval_batch_2^24_b10000",
+      "time_ms": 3.3530935033923015,
+      "throughput": 2.982320651029585,
+      "throughput_unit": "Mpts/s",
+      "extra": null
+    },
+    {
+      "name": "eval_batch_2^24_b100000",
+      "time_ms": 31.70664700155612,
+      "throughput": 3.153912805573296,
+      "throughput_unit": "Mpts/s",
+      "extra": null
+    }
+  ]
+}

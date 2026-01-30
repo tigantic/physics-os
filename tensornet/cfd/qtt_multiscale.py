@@ -205,15 +205,19 @@ class MultiScaleQTT:
         self,
         tensor: Tensor,
         tol: float = 1e-10,
+        rsvd_threshold: int = 64,
     ) -> List[Tensor]:
         """
         Compress tensor to multi-scale QTT format.
         
-        Uses TT-SVD with scale-dependent truncation.
+        Uses QTT-rSVD (randomized SVD via Halko-Martinsson-Tropp algorithm)
+        with scale-dependent truncation. rSVD is O(m·n·k) instead of 
+        O(m·n·min(m,n)) for full SVD.
         
         Args:
             tensor: 3D tensor to compress (N×N×N)
             tol: Base tolerance for truncation
+            rsvd_threshold: Use rSVD for matrices with min dimension > this value
             
         Returns:
             List of QTT cores with variable ranks
@@ -221,55 +225,80 @@ class MultiScaleQTT:
         N = tensor.shape[0]
         n_levels = int(np.log2(N))
         
-        # Reshape to QTT format: N^3 → 2^(3n) → (2×2×2) × n_levels
-        # For 3D, we interleave the bits
+        if n_levels != self.config.n_levels:
+            raise ValueError(
+                f"Tensor size N={N} implies {n_levels} levels, "
+                f"but config has {self.config.n_levels} levels"
+            )
+        
+        # Flatten 3D tensor to 1D for standard QTT decomposition
+        # QTT treats the flattened array as 2^(3*n_levels) elements
         flat = tensor.flatten()
+        total_qubits = 3 * n_levels  # Each dimension contributes log2(N) qubits
         
-        # Reorder to QTT indexing (bit-interleaved)
-        qtt_shape = [2, 2, 2] * n_levels
-        work = flat.reshape(qtt_shape)
+        assert flat.numel() == 2 ** total_qubits, \
+            f"Expected 2^{total_qubits} elements, got {flat.numel()}"
         
-        # TT-SVD with variable ranks
+        # Track Frobenius norm for relative tolerance
+        frobenius_norm = torch.norm(flat).item()
+        
+        # TT-rSVD with variable ranks per level
+        # We process 3 qubits per "level" (one for each spatial dimension)
         cores = []
-        current = work
+        current = flat
+        chi_left = 1
         
         for level in range(n_levels):
-            # Target rank for this level
+            # Target rank for this level (from scale profile)
             target_rank = self._ranks[level]
             
-            # Reshape for SVD
-            left_size = current.shape[0]
-            right_size = int(current.numel() // left_size)
-            matrix = current.reshape(left_size, right_size)
+            # Each level processes 3 qubits (2×2×2 = 8 indices)
+            d_level = 8  # 2^3
+            remaining_size = current.numel() // (chi_left * d_level)
             
-            # SVD with truncation
-            U, S, Vh = torch.linalg.svd(matrix, full_matrices=False)
+            # Reshape for SVD: (chi_left * 8, remaining)
+            matrix = current.reshape(chi_left * d_level, remaining_size)
+            m, n = matrix.shape
             
-            # Truncate to target rank
-            rank = min(target_rank, len(S), left_size, right_size)
+            # Choose SVD algorithm: rSVD for large matrices
+            use_rsvd = (min(m, n) > rsvd_threshold and target_rank < min(m, n) // 2)
+            
+            if use_rsvd:
+                # Randomized SVD (Halko-Martinsson-Tropp): O(m·n·k)
+                # Request slightly more than target for accuracy
+                q = min(target_rank + 10, min(m, n) - 1)
+                U, S, V = torch.svd_lowrank(matrix, q=q, niter=2)
+                Vh = V.T
+            else:
+                # Standard SVD for small matrices (more accurate)
+                U, S, Vh = torch.linalg.svd(matrix, full_matrices=False)
+            
+            # Determine truncation rank
+            rank = min(target_rank, len(S), m, n)
             
             # Apply tolerance-based truncation
-            cumsum = torch.cumsum(S**2, dim=0)
-            total = cumsum[-1]
-            keep = torch.searchsorted(cumsum, total * (1 - tol**2)) + 1
-            rank = min(rank, keep.item())
+            if tol > 0 and len(S) > 1:
+                S_sq = S ** 2
+                tail_sq = torch.flip(torch.cumsum(torch.flip(S_sq, [0]), dim=0), [0])
+                threshold = tol ** 2 * frobenius_norm ** 2
+                mask = tail_sq > threshold
+                keep = max(1, mask.sum().item())
+                rank = min(rank, keep)
+            
             rank = max(rank, 1)
             
+            # Truncate
             U = U[:, :rank]
-            S = S[:rank]
+            S_kept = S[:rank]
             Vh = Vh[:rank, :]
             
-            # Store core
-            if level == 0:
-                core = U.reshape(1, 2, 2, 2, rank)
-            else:
-                prev_rank = cores[-1].shape[-1]
-                core = U.reshape(prev_rank, 2, 2, 2, rank)
-            
+            # Store core: (chi_left, 2, 2, 2, chi_right)
+            core = U.reshape(chi_left, 2, 2, 2, rank)
             cores.append(core)
             
-            # Prepare for next level
-            current = (torch.diag(S) @ Vh).reshape(rank, -1)
+            # Prepare for next level: S @ Vh (vectorized)
+            current = (S_kept.unsqueeze(1) * Vh).flatten()
+            chi_left = rank
         
         return cores
     

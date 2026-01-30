@@ -12,6 +12,7 @@ This is the HONEST implementation:
 Usage:
     python qtt_gpu_real.py --test-local /tmp/noaa_gb/all_channels_raw.bin
     python qtt_gpu_real.py --s3 s3://noaa-goes18/ABI-L2-MCMIPC/2024/180/18/ --max-files 10
+    python qtt_gpu_real.py --stream-50gb --source goes18  # Stream 50GB from NOAA
 """
 
 import argparse
@@ -565,6 +566,262 @@ def test_s3_streaming(
     print()
 
 
+# ═══════════════════════════════════════════════════════════════════════════════════════
+# 50GB STREAMING MODE - Multi-source NOAA compression
+# ═══════════════════════════════════════════════════════════════════════════════════════
+
+NOAA_SOURCES = {
+    'goes18': {
+        'bucket': 'noaa-goes18',
+        'prefix': 'ABI-L2-MCMIPC/',
+        'description': 'GOES-18 Multi-Channel Cloud/Moisture Imagery',
+    },
+    'goes16': {
+        'bucket': 'noaa-goes16',
+        'prefix': 'ABI-L2-MCMIPC/',
+        'description': 'GOES-16 Multi-Channel Cloud/Moisture Imagery',
+    },
+    'hrrr': {
+        'bucket': 'noaa-hrrr-bdp-pds',
+        'prefix': 'hrrr.',
+        'description': 'High-Resolution Rapid Refresh Weather Model',
+    },
+    'gfs': {
+        'bucket': 'noaa-gfs-bdp-pds',
+        'prefix': 'gfs.',
+        'description': 'Global Forecast System',
+    },
+}
+
+
+def stream_50gb_compress(
+    source: str = 'goes18',
+    target_gb: float = 50.0,
+    max_rank: int = 64,
+    output_path: Optional[str] = None,
+) -> None:
+    """
+    Stream and compress up to 50GB of NOAA data from S3.
+    
+    Uses pipelined prefetch: overlaps network I/O (CPU threads) with GPU compression.
+    Double-buffered architecture eliminates GPU idle time from network latency.
+    """
+    try:
+        import xarray as xr
+        import requests
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+        from queue import Queue
+        import threading
+    except ImportError:
+        print("ERROR: Need xarray and requests")
+        print("  pip install xarray netcdf4 h5netcdf requests")
+        return
+    
+    if source not in NOAA_SOURCES:
+        print(f"ERROR: Unknown source '{source}'. Available: {list(NOAA_SOURCES.keys())}")
+        return
+    
+    src = NOAA_SOURCES[source]
+    bucket = src['bucket']
+    base_prefix = src['prefix']
+    
+    print()
+    print("╔" + "═" * 78 + "╗")
+    print("║" + " " * 78 + "║")
+    print("║    ███████╗██╗     ██╗   ██╗██╗██████╗ ███████╗██╗     ██╗████████╗███████╗  ║")
+    print("║    ██╔════╝██║     ██║   ██║██║██╔══██╗██╔════╝██║     ██║╚══██╔══╝██╔════╝  ║")
+    print("║    █████╗  ██║     ██║   ██║██║██║  ██║█████╗  ██║     ██║   ██║   █████╗    ║")
+    print("║    ██╔══╝  ██║     ██║   ██║██║██║  ██║██╔══╝  ██║     ██║   ██║   ██╔══╝    ║")
+    print("║    ██║     ███████╗╚██████╔╝██║██████╔╝███████╗███████╗██║   ██║   ███████╗  ║")
+    print("║    ╚═╝     ╚══════╝ ╚═════╝ ╚═╝╚═════╝ ╚══════╝╚══════╝╚═╝   ╚═╝   ╚══════╝  ║")
+    print("║" + " " * 78 + "║")
+    print("║         P I P E L I N E D   Q T T   S T R E A M I N G   M O D E             ║")
+    print("║" + " " * 78 + "║")
+    print("╚" + "═" * 78 + "╝")
+    print()
+    print(f"  Source: {src['description']}")
+    print(f"  Bucket: s3://{bucket}/{base_prefix}")
+    print(f"  Target: {target_gb:.1f} GB")
+    print(f"  Max Rank: {max_rank}")
+    print(f"  GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU'}")
+    print(f"  Pipeline: 4-thread prefetch → GPU compression")
+    print()
+    
+    # Discover available date prefixes
+    from datetime import datetime, timedelta
+    today = datetime.now()
+    
+    # ─────────────────────────────────────────────────────────────────────────────
+    # PREFETCH WORKER: Downloads and decodes NetCDF in background threads
+    # ─────────────────────────────────────────────────────────────────────────────
+    def fetch_and_decode(url: str, filename: str) -> Optional[Tuple[str, List[np.ndarray], int, int]]:
+        """Download and decode a single NetCDF file. Returns (filename, arrays, downloaded_bytes, decoded_bytes)."""
+        try:
+            resp = requests.get(url, timeout=60)
+            if resp.status_code != 200:
+                return None
+            
+            downloaded = len(resp.content)
+            ds = xr.open_dataset(io.BytesIO(resp.content), engine='h5netcdf')
+            
+            arrays = []
+            decoded = 0
+            for varname in ds.data_vars:
+                if any(x in varname for x in ['CMI', 'Rad', 'DQF', 'temp', 'pres', 'wind']):
+                    arr = ds[varname].values.astype(np.float32)
+                    if arr.size > 1000:
+                        arrays.append(arr.ravel())
+                        decoded += arr.nbytes
+            
+            ds.close()
+            return (filename, arrays, downloaded, decoded)
+        except Exception:
+            return None
+    
+    # Collect all file URLs to process
+    file_queue: List[Tuple[str, str]] = []  # (url, filename)
+    
+    for day_offset in range(60):  # Look back up to 60 days for 500GB
+        check_date = today - timedelta(days=day_offset)
+        day_of_year = check_date.timetuple().tm_yday
+        year = check_date.year
+        
+        if source in ['goes18', 'goes16']:
+            prefix = f"{base_prefix}{year}/{day_of_year:03d}/"
+        elif source == 'hrrr':
+            prefix = f"{base_prefix}{check_date.strftime('%Y%m%d')}/"
+        else:
+            prefix = f"{base_prefix}{check_date.strftime('%Y%m%d')}/"
+        
+        list_url = f"https://{bucket}.s3.amazonaws.com/?list-type=2&prefix={prefix}&max-keys=200"
+        try:
+            resp = requests.get(list_url, timeout=10)
+            if resp.status_code != 200:
+                continue
+        except Exception:
+            continue
+        
+        import re
+        keys = re.findall(r'<Key>([^<]+)</Key>', resp.text)
+        for key in keys:
+            if key.endswith('.nc'):
+                url = f"https://{bucket}.s3.amazonaws.com/{key}"
+                filename = key.split('/')[-1]
+                file_queue.append((url, filename, check_date.strftime('%Y-%m-%d')))
+    
+    print(f"  Files discovered: {len(file_queue)}")
+    print()
+    
+    # ─────────────────────────────────────────────────────────────────────────────
+    # PIPELINED PROCESSING: Prefetch overlaps with GPU compression
+    # ─────────────────────────────────────────────────────────────────────────────
+    all_cores = []
+    total_downloaded = 0
+    total_decoded = 0
+    total_compressed = 0
+    files_processed = 0
+    start_time = time.time()
+    current_date = None
+    
+    # Use 4 threads for network I/O (overlaps with GPU compute)
+    PREFETCH_THREADS = 4
+    PREFETCH_AHEAD = 8  # Keep 8 files prefetched
+    
+    with ThreadPoolExecutor(max_workers=PREFETCH_THREADS) as executor:
+        # Submit initial batch of prefetch jobs
+        pending_futures = {}
+        file_idx = 0
+        
+        def submit_more():
+            nonlocal file_idx
+            while len(pending_futures) < PREFETCH_AHEAD and file_idx < len(file_queue):
+                url, filename, date_str = file_queue[file_idx]
+                future = executor.submit(fetch_and_decode, url, filename)
+                pending_futures[future] = (filename, date_str)
+                file_idx += 1
+        
+        submit_more()
+        
+        while pending_futures and total_decoded < target_gb * 1e9:
+            # Wait for next completed download
+            done_future = next(as_completed(pending_futures))
+            filename, date_str = pending_futures.pop(done_future)
+            
+            # Submit more to keep pipeline full
+            submit_more()
+            
+            result = done_future.result()
+            if result is None:
+                continue
+            
+            _, arrays, downloaded, decoded = result
+            
+            # Print date header if changed
+            if date_str != current_date:
+                current_date = date_str
+                print(f"  📅 {date_str}: Processing...")
+            
+            # GPU COMPRESSION (runs while prefetch threads download next files)
+            for arr in arrays:
+                tensor = torch.from_numpy(arr).to(DEVICE)
+                cores, error = tt_svd_gpu(tensor, max_rank=max_rank, tol=1e-6)
+                all_cores.extend(cores)
+                total_compressed += sum(c.nbytes() for c in cores)
+            
+            total_downloaded += downloaded
+            total_decoded += decoded
+            files_processed += 1
+            
+            elapsed = time.time() - start_time
+            rate = total_decoded / elapsed / 1e6 if elapsed > 0 else 0
+            ratio = total_decoded / total_compressed if total_compressed > 0 else 1
+            
+            print(f"    ✓ {filename[:50]}... | "
+                  f"{total_decoded/1e9:.2f}/{target_gb:.0f} GB | "
+                  f"{ratio:.1f}x | {rate:.1f} MB/s")
+    
+    # Final stats
+    elapsed = time.time() - start_time
+    
+    if total_decoded == 0:
+        print("\nERROR: No data decoded. Check network connectivity.")
+        return
+    
+    # Save output
+    if output_path is None:
+        output_path = f'/tmp/fluidelite_50gb_{source}.qtt'
+    
+    result = QTTResult(
+        cores=all_cores,
+        original_shape=(int(total_decoded / 4),),  # float32
+        original_size=int(total_decoded),
+        compressed_size=int(total_compressed),
+        reconstruction_error=0.0,  # Aggregate error not tracked
+        max_rank=max_rank,
+        n_sites=len(all_cores),
+    )
+    
+    file_size = serialize_qtt(result, Path(output_path))
+    
+    print()
+    print("╔" + "═" * 78 + "╗")
+    print("║                     5 0 G B   C O M P R E S S I O N   C O M P L E T E        ║")
+    print("╠" + "═" * 78 + "╣")
+    print(f"║  Source:           {src['description']:<55} ║")
+    print(f"║  Files Processed:  {files_processed:<55} ║")
+    print(f"║  Downloaded:       {total_downloaded/1e9:>8.2f} GB (compressed on S3){' '*24} ║")
+    print(f"║  Decoded:          {total_decoded/1e9:>8.2f} GB (raw float arrays){' '*25} ║")
+    print(f"║  QTT Output:       {file_size/1e6:>8.2f} MB{' '*43} ║")
+    print("╠" + "═" * 78 + "╣")
+    print(f"║  Compression Ratio: {total_decoded/file_size:>7.1f}x{' '*47} ║")
+    print(f"║  Throughput:        {total_decoded/elapsed/1e6:>7.1f} MB/s{' '*44} ║")
+    print(f"║  Time:              {elapsed:>7.1f} seconds{' '*42} ║")
+    print("╠" + "═" * 78 + "╣")
+    print(f"║  Output: {output_path:<66} ║")
+    print("╚" + "═" * 78 + "╝")
+    print()
+
+
 def main():
     parser = argparse.ArgumentParser(
         description='FluidElite QTT-GPU: Real Tensor Train Compression'
@@ -573,10 +830,23 @@ def main():
     parser.add_argument('--s3', type=str, help='S3 URI to stream from')
     parser.add_argument('--max-files', type=int, default=10, help='Max files to download from S3')
     parser.add_argument('--max-rank', type=int, default=64, help='Maximum TT bond dimension')
+    parser.add_argument('--stream-50gb', action='store_true', help='Stream and compress 50GB from NOAA')
+    parser.add_argument('--source', type=str, default='goes18', 
+                        choices=list(NOAA_SOURCES.keys()),
+                        help='NOAA data source for 50GB streaming')
+    parser.add_argument('--target-gb', type=float, default=50.0, help='Target GB to compress')
+    parser.add_argument('-o', '--output', type=str, help='Output file path')
     
     args = parser.parse_args()
     
-    if args.test_local:
+    if args.stream_50gb:
+        stream_50gb_compress(
+            source=args.source,
+            target_gb=args.target_gb,
+            max_rank=args.max_rank,
+            output_path=args.output,
+        )
+    elif args.test_local:
         test_local_file(args.test_local, max_rank=args.max_rank)
     elif args.s3:
         test_s3_streaming(args.s3, max_files=args.max_files, max_rank=args.max_rank)
@@ -589,6 +859,7 @@ def main():
             print("Usage:")
             print("  python qtt_gpu_real.py --test-local /path/to/data.bin")
             print("  python qtt_gpu_real.py --s3 s3://noaa-goes18/ABI-L2-MCMIPC/2024/180/18/ --max-files 10")
+            print("  python qtt_gpu_real.py --stream-50gb --source goes18 --target-gb 50")
 
 
 if __name__ == '__main__':

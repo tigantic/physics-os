@@ -34,9 +34,15 @@ mod protocol;
 mod reader;
 mod writer;
 mod sovereign;
+mod sovereign_v2;
 mod weather;
 pub mod trajectory;
 pub mod swarm;
+pub mod qtt;
+pub mod bench_real_data;
+
+#[cfg(test)]
+mod tests;
 
 pub use protocol::{
     TensorBridgeHeader,
@@ -48,7 +54,25 @@ pub use protocol::{
 
 pub use reader::RamBridgeReader;
 pub use writer::RamBridgeWriter;
+
+// Legacy v1 SovereignBridge (deprecated, use sovereign_v2 for new code)
+#[deprecated(since = "0.2.0", note = "Use SovereignBridgeV2 for new code")]
 pub use sovereign::SovereignBridge;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Sovereign Bridge V2 (Refactored with bytemuck structs)
+// ─────────────────────────────────────────────────────────────────────────────
+
+pub use sovereign_v2::{
+    SovereignBridge as SovereignBridgeV2,
+    SovereignHeader,
+    Telemetry,
+    SOVEREIGN_MAGIC,
+    SOVEREIGN_VERSION,
+    SOVEREIGN_HEADER_SIZE,
+    SOVEREIGN_TELEMETRY_SIZE,
+    SOVEREIGN_SHM_PATH,
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Trajectory Guidance (Phase 3 - Hypersonic Solver)
@@ -76,6 +100,31 @@ pub use weather::{
     WEATHER_VERSION,
     WEATHER_SHM_PATH,
     WEATHER_HEADER_SIZE,
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// QTT Bridge (Native Tensor Train - NO DECOMPRESSION)
+// ─────────────────────────────────────────────────────────────────────────────
+
+pub use qtt::{
+    QTTBridgeHeader,
+    QTTFrame,
+    QTTReader,
+    QTTDataType,
+    // Streaming support for large QTT payloads (>1GB)
+    QTTStreamingIterator,
+    QTTBatchIterator,
+    CoreChunk,
+    CoreBatch,
+    QTT_BRIDGE_MAGIC,
+    QTT_BRIDGE_VERSION,
+    QTT_SHM_PATH,
+    QTT_HEADER_SIZE,
+    MAX_QTT_SITES,
+    MIN_COMPRESSION_RATIO,
+    MAX_TRUNCATION_ERROR,
+    STREAM_CHUNK_SIZE,
+    MAX_NON_STREAMING_SIZE,
 };
 
 // ─────────────────────────────────────────────────────────────────────────────

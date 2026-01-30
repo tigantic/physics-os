@@ -14,8 +14,20 @@ bytemuck.workspace = true
 # Error Handling
 thiserror.workspace = true
 
+# GPU Compute - CUDA 12.8 (native NVIDIA support, works in WSL2)
+cudarc = { version = "0.19", features = ["cuda-12080"], optional = true }
+
 [dev-dependencies]
 criterion = "0.5"
 
+[[bench]]
+name = "tt_bench"
+harness = false
+
+[[bin]]
+name = "gpu_bench"
+required-features = ["gpu"]
+
 [features]
 default = []
+gpu = ["dep:cudarc"]

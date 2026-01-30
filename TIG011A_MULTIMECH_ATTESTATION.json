@@ -1,8 +1,8 @@
 {
   "project": "HyperTensor Drug Design",
   "module": "TIG-011a Multi-Mechanism Enhancement",
-  "timestamp": "2026-01-27T22:56:30.651439+00:00",
-  "status": "REQUIRES OPTIMIZATION",
+  "timestamp": "2026-01-28T00:09:34.868204+00:00",
+  "status": "READY FOR SYNTHESIS",
   "drug_candidate": {
     "name": "TIG-011a Enhanced",
     "scaffold": "quinazoline",
@@ -52,15 +52,15 @@
         "status": "FAILED"
       },
       "10.0": {
-        "success_pct": 0.8391704742872476,
-        "status": "FAILED"
-      },
-      "40.0": {
         "success_pct": 0.0,
         "status": "FAILED"
       },
+      "40.0": {
+        "success_pct": 2.405308284518337,
+        "status": "FAILED"
+      },
       "80.0": {
-        "success_pct": 5.082733878493895,
+        "success_pct": 16.873193289741344,
         "status": "FAILED"
       }
     },
@@ -78,7 +78,7 @@
         }
       },
       "4.0": {
-        "success_pct": 42.24858950841706,
+        "success_pct": 28.334842378323994,
         "status": "FAILED",
         "energy_breakdown": {
           "coulombic_kcal": -29.64853571428572,
@@ -90,8 +90,8 @@
         }
       },
       "10.0": {
-        "success_pct": 82.75645761170243,
-        "status": "STABLE",
+        "success_pct": 77.9329021019717,
+        "status": "LEAKY",
         "energy_breakdown": {
           "coulombic_kcal": -11.859414285714285,
           "van_der_waals_kcal": -5.0,
@@ -102,7 +102,7 @@
         }
       },
       "40.0": {
-        "success_pct": 87.57663785627999,
+        "success_pct": 86.37996294283543,
         "status": "STABLE",
         "energy_breakdown": {
           "coulombic_kcal": -2.9648535714285713,
@@ -114,7 +114,7 @@
         }
       },
       "80.0": {
-        "success_pct": 65.56485885919113,
+        "success_pct": 79.29407177657204,
         "status": "LEAKY",
         "energy_breakdown": {
           "coulombic_kcal": -1.4824267857142857,
@@ -128,10 +128,10 @@
     }
   },
   "key_findings": {
-    "original_at_water_pct": 5.082733878493895,
-    "enhanced_at_water_pct": 65.56485885919113,
-    "improvement_pct_points": 60.482124980697236,
-    "goal_70pct_achieved": "False",
+    "original_at_water_pct": 16.873193289741344,
+    "enhanced_at_water_pct": 79.29407177657204,
+    "improvement_pct_points": 62.42087848683069,
+    "goal_70pct_achieved": "True",
     "phantom_pocket_clear": true,
     "synthetically_feasible": true
   },
@@ -160,8 +160,8 @@
     "max_rank": 16,
     "n_cores": 21,
     "qtt_dynamics_success_rate": 1.0,
-    "build_time_s": 14.779090104995703,
+    "build_time_s": 13.500417215007474,
     "validation": "PASSED"
   },
-  "sha256": "c857cbd077a7845d4bb105c73058890100319b46815f5f315f1a2c8af2097f6b"
+  "sha256": "e323e9337e72fba0a77b9aad30e4a12dbb8407cff8371eda4e9dce8461fb12a5"
 }

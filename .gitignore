@@ -135,3 +135,9 @@ cuda-keyring_1.1-1_all.deb
 # Rust build artifacts
 glass-cockpit/target/
 target/
+zk_targets/zk-email-verify
+crypto_data/
+noaa_24h_raw/
+real_data/*.bin
+real_data/*.nc
+*.zip

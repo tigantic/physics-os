@@ -68,14 +68,105 @@ class MPO:
     num_sites: int
 
 
-def identity_mpo(num_qubits: int) -> MPO:
+# =============================================================================
+# MPO ARITHMETIC — O(n_qubits) operations
+# =============================================================================
+
+def mpo_scale(mpo: MPO, scalar: float) -> MPO:
+    """
+    Scale an MPO by a scalar: scalar * O.
+    
+    Complexity: O(1) - only modifies first core.
+    """
+    if len(mpo.cores) == 0:
+        return mpo
+    
+    new_cores = [c.clone() for c in mpo.cores]
+    new_cores[0] = new_cores[0] * scalar
+    return MPO(cores=new_cores, num_sites=mpo.num_sites)
+
+
+def mpo_add(mpo1: MPO, mpo2: MPO) -> MPO:
+    """
+    Add two MPOs: O1 + O2.
+    
+    Result has bond dimension r1 + r2 (block diagonal structure).
+    Complexity: O(n_qubits) - one pass through cores.
+    
+    Args:
+        mpo1: First MPO
+        mpo2: Second MPO (must have same num_sites)
+        
+    Returns:
+        MPO representing mpo1 + mpo2
+    """
+    if mpo1.num_sites != mpo2.num_sites:
+        raise ValueError(f"MPO site count mismatch: {mpo1.num_sites} vs {mpo2.num_sites}")
+    
+    n = mpo1.num_sites
+    new_cores = []
+    
+    for i in range(n):
+        c1 = mpo1.cores[i]  # (r1_left, d_out, d_in, r1_right)
+        c2 = mpo2.cores[i]  # (r2_left, d_out, d_in, r2_right)
+        
+        r1L, d_out, d_in, r1R = c1.shape
+        r2L, _, _, r2R = c2.shape
+        
+        device = c1.device
+        dtype = c1.dtype
+        
+        if i == 0:
+            # First core: concatenate along right bond
+            # Result: (1, d_out, d_in, r1R + r2R)
+            new_core = torch.zeros(1, d_out, d_in, r1R + r2R, device=device, dtype=dtype)
+            new_core[0, :, :, :r1R] = c1[0]
+            new_core[0, :, :, r1R:] = c2[0]
+        elif i == n - 1:
+            # Last core: concatenate along left bond
+            # Result: (r1L + r2L, d_out, d_in, 1)
+            new_core = torch.zeros(r1L + r2L, d_out, d_in, 1, device=device, dtype=dtype)
+            new_core[:r1L, :, :, 0] = c1[:, :, :, 0]
+            new_core[r1L:, :, :, 0] = c2[:, :, :, 0]
+        else:
+            # Middle cores: block diagonal
+            # Result: (r1L + r2L, d_out, d_in, r1R + r2R)
+            new_core = torch.zeros(r1L + r2L, d_out, d_in, r1R + r2R, device=device, dtype=dtype)
+            new_core[:r1L, :, :, :r1R] = c1
+            new_core[r1L:, :, :, r1R:] = c2
+        
+        new_cores.append(new_core)
+    
+    return MPO(cores=new_cores, num_sites=n)
+
+
+def mpo_negate(mpo: MPO) -> MPO:
+    """Negate an MPO: -O."""
+    return mpo_scale(mpo, -1.0)
+
+
+def mpo_subtract(mpo1: MPO, mpo2: MPO) -> MPO:
+    """Subtract two MPOs: O1 - O2."""
+    return mpo_add(mpo1, mpo_negate(mpo2))
+
+
+def identity_mpo(
+    num_qubits: int,
+    dtype: torch.dtype = torch.float32,
+    device: str | torch.device = "cpu"
+) -> MPO:
     """
     Create the identity MPO.
 
     I = ⊗ᵢ [[1, 0], [0, 1]]
+    
+    Args:
+        num_qubits: Number of qubits (grid = 2^n)
+        dtype: Tensor dtype (torch.float32 or torch.float64)
+        device: Device to create tensors on
     """
     cores = []
-    I = torch.eye(2)
+    I = torch.eye(2, dtype=dtype, device=device)
 
     for i in range(num_qubits):
         # Shape: (1, 2, 2, 1) - trivial bond dimensions
@@ -85,82 +176,97 @@ def identity_mpo(num_qubits: int) -> MPO:
     return MPO(cores=cores, num_sites=num_qubits)
 
 
-def shift_mpo(num_qubits: int, direction: int = 1) -> MPO:
+def shift_mpo(
+    num_qubits: int,
+    direction: int = 1,
+    dtype: torch.dtype = torch.float32,
+    device: str | torch.device = "cpu"
+) -> MPO:
     """
     Create the shift operator S in MPO form.
 
-    S|x⟩ = |x+1 mod 2^n⟩
+    S|x⟩ = |x+1 mod 2^n⟩  (forward)
+    S|x⟩ = |x-1 mod 2^n⟩  (backward)
 
     This is a building block for derivative operators.
-    The shift can be written as a product of local operations
-    with bounded bond dimension.
+    The shift uses carry propagation with bounded bond dimension.
+    
+    QTT bit ordering: core[0] = MSB, core[n-1] = LSB
+    For increment: carry propagates from LSB to MSB
 
     Args:
         num_qubits: Number of qubits (grid = 2^n)
         direction: +1 for forward shift, -1 for backward
+        dtype: Tensor dtype (torch.float32 or torch.float64)
+        device: Device to create tensors on
     """
-    # For forward shift: (carry propagation logic)
-    # S = Σ_{x} |x+1⟩⟨x| = product of local increment operators
-
-    # Local matrices for carry propagation
-    # At each site i: if carry_in=0, pass through; if carry_in=1, flip and propagate
-
     cores = []
 
-    # Matrices for increment: acting on qubit with carry in/out
-    # Bond dimension = 2 (carry = 0 or 1)
-
-    # |0⟩ + carry → |carry⟩, new_carry=0
-    # |1⟩ + carry → |1-carry⟩, new_carry=carry
-
-    for i in range(num_qubits):
-        if i == 0:
-            # First site: always increment (carry_in = 1)
-            # r_left=1, d_out=2, d_in=2, r_right=2
-            core = torch.zeros(1, 2, 2, 2)
-            if direction == 1:
-                # |0⟩ → |1⟩, carry_out=0
-                core[0, 1, 0, 0] = 1.0
-                # |1⟩ → |0⟩, carry_out=1
-                core[0, 0, 1, 1] = 1.0
-            else:
-                # Decrement
-                core[0, 0, 0, 1] = 1.0  # |0⟩ → |1⟩ with borrow
-                core[0, 1, 1, 0] = 1.0  # |1⟩ → |0⟩ no borrow
-        elif i == num_qubits - 1:
-            # Last site: no outgoing carry (periodic)
+    # For forward shift (+1):
+    # Start at LSB (rightmost core, i=n-1): increment with carry_in=1
+    # Propagate carry leftward toward MSB
+    #
+    # MPO core layout: (r_left, d_out, d_in, r_right)
+    # Bond carries the "carry" signal: 0 = no carry, 1 = carry
+    
+    # Process from LSB to MSB (i = n-1 down to 0)
+    for i in range(num_qubits - 1, -1, -1):
+        if i == num_qubits - 1:
+            # LSB (rightmost): always increment (carry_in = 1)
             # r_left=2, d_out=2, d_in=2, r_right=1
-            core = torch.zeros(2, 2, 2, 1)
+            core = torch.zeros(2, 2, 2, 1, dtype=dtype, device=device)
+            if direction == 1:
+                # |0⟩ + 1 → |1⟩, carry_out=0
+                core[0, 1, 0, 0] = 1.0
+                # |1⟩ + 1 → |0⟩, carry_out=1
+                core[1, 0, 1, 0] = 1.0
+            else:
+                # Decrement: borrow logic
+                # |0⟩ - 1 → |1⟩, borrow_out=1
+                core[1, 1, 0, 0] = 1.0
+                # |1⟩ - 1 → |0⟩, borrow_out=0
+                core[0, 0, 1, 0] = 1.0
+        elif i == 0:
+            # MSB (leftmost): absorb carry, no outgoing
+            # r_left=1, d_out=2, d_in=2, r_right=2
+            core = torch.zeros(1, 2, 2, 2, dtype=dtype, device=device)
             if direction == 1:
                 # carry_in=0: identity
                 core[0, 0, 0, 0] = 1.0
                 core[0, 1, 1, 0] = 1.0
-                # carry_in=1: increment
-                core[1, 1, 0, 0] = 1.0
-                core[1, 0, 1, 0] = 1.0
+                # carry_in=1: increment (wraps at MSB)
+                core[0, 1, 0, 1] = 1.0  # |0⟩+1 → |1⟩
+                core[0, 0, 1, 1] = 1.0  # |1⟩+1 → |0⟩ (wrap)
             else:
+                # carry_in=0: identity
                 core[0, 0, 0, 0] = 1.0
                 core[0, 1, 1, 0] = 1.0
-                core[1, 1, 0, 0] = 1.0
-                core[1, 0, 1, 0] = 1.0
+                # borrow_in=1: decrement
+                core[0, 1, 0, 1] = 1.0  # |0⟩-1 → |1⟩ (wrap)
+                core[0, 0, 1, 1] = 1.0  # |1⟩-1 → |0⟩
         else:
-            # Middle sites
+            # Middle sites: propagate carry
             # r_left=2, d_out=2, d_in=2, r_right=2
-            core = torch.zeros(2, 2, 2, 2)
+            core = torch.zeros(2, 2, 2, 2, dtype=dtype, device=device)
             if direction == 1:
                 # carry_in=0: identity, carry_out=0
                 core[0, 0, 0, 0] = 1.0
                 core[0, 1, 1, 0] = 1.0
                 # carry_in=1: increment
-                core[1, 1, 0, 0] = 1.0  # |0⟩+1 → |1⟩, carry_out=0
+                core[0, 1, 0, 1] = 1.0  # |0⟩+1 → |1⟩, carry_out=0
                 core[1, 0, 1, 1] = 1.0  # |1⟩+1 → |0⟩, carry_out=1
             else:
+                # borrow_in=0: identity
                 core[0, 0, 0, 0] = 1.0
                 core[0, 1, 1, 0] = 1.0
-                core[1, 0, 0, 1] = 1.0
-                core[1, 1, 1, 0] = 1.0
+                # borrow_in=1: decrement
+                core[1, 1, 0, 1] = 1.0  # |0⟩-1 → |1⟩, borrow_out=1
+                core[0, 0, 1, 1] = 1.0  # |1⟩-1 → |0⟩, borrow_out=0
 
         cores.append(core)
+    
+    # Reverse to get MSB-first order
+    cores = cores[::-1]
 
     return MPO(cores=cores, num_sites=num_qubits)
 
@@ -276,44 +382,60 @@ def _dense_matrix_to_mpo(mat: torch.Tensor, num_qubits: int, max_bond: int = 64)
     return MPO(cores=cores, num_sites=num_qubits)
 
 
-def derivative_mpo(num_qubits: int, dx: float) -> MPO:
+def derivative_mpo(
+    num_qubits: int,
+    dx: float,
+    dtype: torch.dtype = torch.float32,
+    device: str | torch.device = "cpu"
+) -> MPO:
     """
-    Create the first derivative operator D = (S⁺ - S⁻) / (2*dx) in MPO form.
+    Create the first derivative operator D in MPO form (central difference).
 
-    Uses explicit shift matrices converted to MPO, then combined.
+    Central difference: D f[i] = (f[i+1] - f[i-1]) / (2*dx)
+    
+    Operator semantics:
+    - S⁺|x⟩ = |x+1⟩ so (S⁺ f)[i] = f[i-1] (shift values right)
+    - S⁻|x⟩ = |x-1⟩ so (S⁻ f)[i] = f[i+1] (shift values left)
+    
+    Therefore: D = (S⁻ - S⁺) / (2*dx)
+
+    Uses O(n_qubits) MPO arithmetic instead of O(N²) dense matrix.
+    Bond dimension of result: 4 (sum of two rank-2 shift MPOs).
 
     Args:
         num_qubits: log2(grid_size)
         dx: Grid spacing
+        dtype: Tensor dtype (torch.float32 or torch.float64)
+        device: Device to create tensors on
 
     Returns:
         MPO for derivative operator
     """
-    # For small grids, build explicit derivative matrix and convert to MPO
-    if num_qubits <= 14:
-        N = 2**num_qubits
-        scale = 1.0 / (2 * dx)
-
-        # Central difference: df[i] = (f[i+1] - f[i-1]) / (2*dx)
-        # Matrix form: D[i, j] = scale if j = i+1, -scale if j = i-1
-        # (row i depends on columns i+1 and i-1)
-        D = torch.zeros(N, N)
-        for i in range(N):
-            j_plus = (i + 1) % N  # f[i+1] contributes +scale
-            j_minus = (i - 1) % N  # f[i-1] contributes -scale
-            D[i, j_plus] = scale
-            D[i, j_minus] = -scale
-
-        return _dense_matrix_to_mpo(D, num_qubits, max_bond=256)
-    else:
-        # For huge grids, need efficient MPO sum
-        # Placeholder
-        return identity_mpo(num_qubits)
+    # D = (S⁻ - S⁺) / (2*dx)
+    # Because S⁻ f[i] = f[i+1] and S⁺ f[i] = f[i-1]
+    scale = 1.0 / (2 * dx)
+    
+    S_plus = shift_mpo(num_qubits, direction=+1, dtype=dtype, device=device)
+    S_minus = shift_mpo(num_qubits, direction=-1, dtype=dtype, device=device)
+    
+    # S⁻ - S⁺ gives (f[i+1] - f[i-1])
+    diff = mpo_subtract(S_minus, S_plus)
+    
+    # Scale by 1/(2*dx)
+    return mpo_scale(diff, scale)
 
 
-def laplacian_mpo(num_qubits: int, dx: float) -> MPO:
+def laplacian_mpo(
+    num_qubits: int,
+    dx: float,
+    dtype: torch.dtype = torch.float32,
+    device: str | torch.device = "cpu"
+) -> MPO:
     """
     Create the Laplacian operator Δ = (S⁺ - 2I + S⁻) / dx² in MPO form.
+
+    Uses O(n_qubits) MPO arithmetic instead of O(N²) dense matrix.
+    Bond dimension of result: 5 (sum of three MPOs: rank-2 + rank-1 + rank-2).
 
     This is the standard second-order central difference:
     (d²f/dx²)(x) ≈ [f(x+dx) - 2f(x) + f(x-dx)] / dx²
@@ -321,29 +443,29 @@ def laplacian_mpo(num_qubits: int, dx: float) -> MPO:
     Args:
         num_qubits: log2(grid_size)
         dx: Grid spacing
+        dtype: Tensor dtype (torch.float32 or torch.float64)
+        device: Device to create tensors on
 
     Returns:
         MPO for Laplacian operator
     """
-    # For small grids, build explicit Laplacian matrix
-    if num_qubits <= 14:
-        N = 2**num_qubits
-        scale = 1.0 / (dx * dx)
-
-        # Laplacian: d²f[i] = (f[i+1] - 2*f[i] + f[i-1]) / dx²
-        # Matrix: L[i, i+1] = scale, L[i, i] = -2*scale, L[i, i-1] = scale
-        L = torch.zeros(N, N)
-        for i in range(N):
-            j_plus = (i + 1) % N
-            j_minus = (i - 1) % N
-            L[i, j_plus] = scale
-            L[i, i] = -2 * scale
-            L[i, j_minus] = scale
-
-        return _dense_matrix_to_mpo(L, num_qubits, max_bond=256)
-    else:
-        # For huge grids, need efficient MPO construction
-        return identity_mpo(num_qubits)
+    # L = (S⁺ - 2I + S⁻) / dx²
+    # Build using O(n_qubits) MPO arithmetic
+    scale = 1.0 / (dx * dx)
+    
+    S_plus = shift_mpo(num_qubits, direction=+1, dtype=dtype, device=device)
+    S_minus = shift_mpo(num_qubits, direction=-1, dtype=dtype, device=device)
+    I = identity_mpo(num_qubits, dtype=dtype, device=device)
+    
+    # S⁺ + S⁻
+    shifts_sum = mpo_add(S_plus, S_minus)
+    
+    # S⁺ + S⁻ - 2I
+    minus_2I = mpo_scale(I, -2.0)
+    stencil = mpo_add(shifts_sum, minus_2I)
+    
+    # Scale by 1/dx²
+    return mpo_scale(stencil, scale)
 
 
 def apply_mpo(mpo: MPO, qtt: QTTState, max_bond: int = 64) -> QTTState:
@@ -703,8 +825,10 @@ def qtt_inner_product(qtt1: QTTState, qtt2: QTTState) -> float:
     assert qtt1.num_qubits == qtt2.num_qubits
 
     # Contract from left to right
-    # Start with trivial left boundary
-    left = torch.ones(1, 1)
+    # Start with trivial left boundary (on same device as cores)
+    device = qtt1.cores[0].device
+    dtype = qtt1.cores[0].dtype
+    left = torch.ones(1, 1, device=device, dtype=dtype)
 
     for i in range(qtt1.num_qubits):
         c1 = qtt1.cores[i]  # (r1L, d, r1R)

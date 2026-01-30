@@ -1,0 +1,33 @@
+[ USER INPUT ] --> "The sentiment is bullish..." 
+      |
+      v
+[ STEP 1: WITNESS GENERATION (CPU) ]
+|  * QTT Decompression: Tensor cores expanded into Halo2 rows.
+|  * Path Routing: 76% to Lookups, 24% to Arithmetic MACs.
+|  * Result: A large matrix of Scalars (The "Secret" Data).
+      |
+      v
+[ STEP 2: DATA TRANSFER (PCIe Bus) ] <--- [ FRAGMENTATION RISK ]
+|  * Scalars are sent to GPU.
+|  * Bases (Points) SHOULD be pre-locked (PrecomputeBases).
+|  * Current Bottleneck: 1.1GB/8GB usage suggests constant reloading.
+      |
+      v
+[ STEP 3: THE MSM ENGINE (GPU) ]
+|
+|   "c" Windowing (The Tuning Knob)
+|   <--[ c=12 ]----------[ c=16 ]----------[ c=20 ]-->
+|      Low VRAM         Optimal          OOM Crash
+|      Slow TPS        88+ TPS           Fastest
+|
+|  * Bucketing: Scalars sorted into 2^c buckets.
+|  * Point Addition: Massive parallel math on 3072 CUDA cores.
+|  * 56°C -> 47°C Drop: Indicates GPU is idling/waiting for memory.
+      |
+      v
+[ STEP 4: PROOF CONSTRUCTION ]
+|  * KZG Commitment: Final polynomial "hash" created.
+|  * Succinct Proof: 2,144 bytes generated.
+      |
+      v
+[ STEP 5: VERIFICATION ] --> [ VALID ] (5-9ms on Zenith Network)

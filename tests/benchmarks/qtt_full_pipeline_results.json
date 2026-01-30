@@ -1,0 +1,431 @@
+{
+  "timestamp": "2026-01-28T11:47:57.694903",
+  "torch_version": "2.9.1+cu128",
+  "cuda_version": "12.8",
+  "gpu_name": "NVIDIA GeForce RTX 5070 Laptop GPU",
+  "config": {
+    "grid_sizes": [
+      1024,
+      4096,
+      16384,
+      65536,
+      262144,
+      1048576
+    ],
+    "max_rank": 32,
+    "render_resolution": [
+      1920,
+      1080
+    ]
+  },
+  "dense_to_qtt": [
+    {
+      "size": 1024,
+      "n_qubits": 10,
+      "smooth_ms": 7.3536074996809475,
+      "smooth_rank": 32.0,
+      "random_ms": 7.689301994105335,
+      "random_rank": 32.0,
+      "dense_bytes": 4096,
+      "qtt_bytes": 10912,
+      "compression_ratio": 0.375366568914956
+    },
+    {
+      "size": 4096,
+      "n_qubits": 12,
+      "smooth_ms": 11.109642997325864,
+      "smooth_rank": 32.0,
+      "random_ms": 11.360903994500404,
+      "random_rank": 32.0,
+      "dense_bytes": 16384,
+      "qtt_bytes": 27296,
+      "compression_ratio": 0.6002344665885111
+    },
+    {
+      "size": 16384,
+      "n_qubits": 14,
+      "smooth_ms": 14.601900504203513,
+      "smooth_rank": 32.0,
+      "random_ms": 15.948239000863396,
+      "random_rank": 32.0,
+      "dense_bytes": 65536,
+      "qtt_bytes": 43680,
+      "compression_ratio": 1.5003663003663004
+    },
+    {
+      "size": 65536,
+      "n_qubits": 16,
+      "smooth_ms": 19.719044998055324,
+      "smooth_rank": 32.0,
+      "random_ms": 21.79068799887318,
+      "random_rank": 32.0,
+      "dense_bytes": 262144,
+      "qtt_bytes": 60064,
+      "compression_ratio": 4.364411294619073
+    },
+    {
+      "size": 262144,
+      "n_qubits": 18,
+      "smooth_ms": 26.98710249751457,
+      "smooth_rank": 32.0,
+      "random_ms": 31.480463498155586,
+      "random_rank": 32.0,
+      "dense_bytes": 1048576,
+      "qtt_bytes": 76448,
+      "compression_ratio": 13.716199246546672
+    },
+    {
+      "size": 1048576,
+      "n_qubits": 20,
+      "smooth_ms": 49.66498700014199,
+      "smooth_rank": 32.0,
+      "random_ms": 54.039071499573765,
+      "random_rank": 32.0,
+      "dense_bytes": 4194304,
+      "qtt_bytes": 92832,
+      "compression_ratio": 45.18166149603585
+    }
+  ],
+  "qtt_eval": [
+    {
+      "size": 1024,
+      "n_qubits": 10,
+      "single_eval_us": 203.8080021739006,
+      "batch_eval": {
+        "100": {
+          "total_ms": 0.6061440110206604,
+          "per_point_us": 6.061440110206604,
+          "throughput_Mpts_s": 0.16497729612409137
+        },
+        "1000": {
+          "total_ms": 0.5837119817733765,
+          "per_point_us": 0.5837119817733765,
+          "throughput_Mpts_s": 1.7131736733618148
+        }
+      }
+    },
+    {
+      "size": 4096,
+      "n_qubits": 12,
+      "single_eval_us": 240.91199785470963,
+      "batch_eval": {
+        "100": {
+          "total_ms": 0.7348639965057373,
+          "per_point_us": 7.348639965057373,
+          "throughput_Mpts_s": 0.1360796017705288
+        },
+        "1000": {
+          "total_ms": 0.7430079877376556,
+          "per_point_us": 0.7430079877376556,
+          "throughput_Mpts_s": 1.3458805510891547
+        }
+      }
+    },
+    {
+      "size": 16384,
+      "n_qubits": 14,
+      "single_eval_us": 289.42400217056274,
+      "batch_eval": {
+        "100": {
+          "total_ms": 0.809552013874054,
+          "per_point_us": 8.09552013874054,
+          "throughput_Mpts_s": 0.12352510806743235
+        },
+        "1000": {
+          "total_ms": 0.8393119871616364,
+          "per_point_us": 0.8393119871616364,
+          "throughput_Mpts_s": 1.1914520646628368
+        },
+        "10000": {
+          "total_ms": 1.9333760142326355,
+          "per_point_us": 0.19333760142326356,
+          "throughput_Mpts_s": 5.172299607724801
+        }
+      }
+    },
+    {
+      "size": 65536,
+      "n_qubits": 16,
+      "single_eval_us": 340.2400016784668,
+      "batch_eval": {
+        "100": {
+          "total_ms": 0.9136800169944763,
+          "per_point_us": 9.136800169944763,
+          "throughput_Mpts_s": 0.10944750693896871
+        },
+        "1000": {
+          "total_ms": 0.9440959990024567,
+          "per_point_us": 0.9440959990024567,
+          "throughput_Mpts_s": 1.0592143183072613
+        },
+        "10000": {
+          "total_ms": 2.444815993309021,
+          "per_point_us": 0.2444815993309021,
+          "throughput_Mpts_s": 4.090287378423581
+        }
+      }
+    },
+    {
+      "size": 262144,
+      "n_qubits": 18,
+      "single_eval_us": 389.74399864673615,
+      "batch_eval": {
+        "100": {
+          "total_ms": 1.0181439518928528,
+          "per_point_us": 10.181439518928528,
+          "throughput_Mpts_s": 0.0982179384497525
+        },
+        "1000": {
+          "total_ms": 1.081663966178894,
+          "per_point_us": 1.081663966178894,
+          "throughput_Mpts_s": 0.9245015376934653
+        },
+        "10000": {
+          "total_ms": 2.9160640239715576,
+          "per_point_us": 0.29160640239715574,
+          "throughput_Mpts_s": 3.4292799876116633
+        },
+        "100000": {
+          "total_ms": 27.952863693237305,
+          "per_point_us": 0.27952863693237306,
+          "throughput_Mpts_s": 3.57745099383836
+        }
+      }
+    },
+    {
+      "size": 1048576,
+      "n_qubits": 20,
+      "single_eval_us": 456.62400126457214,
+      "batch_eval": {
+        "100": {
+          "total_ms": 1.164896011352539,
+          "per_point_us": 11.64896011352539,
+          "throughput_Mpts_s": 0.08584457241285585
+        },
+        "1000": {
+          "total_ms": 1.145680010318756,
+          "per_point_us": 1.145680010318756,
+          "throughput_Mpts_s": 0.8728440672730038
+        },
+        "10000": {
+          "total_ms": 3.520479917526245,
+          "per_point_us": 0.3520479917526245,
+          "throughput_Mpts_s": 2.8405218135789725
+        },
+        "100000": {
+          "total_ms": 33.926992416381836,
+          "per_point_us": 0.33926992416381835,
+          "throughput_Mpts_s": 2.947505595919385
+        }
+      }
+    }
+  ],
+  "qtt_render": [
+    {
+      "n_cores": 16,
+      "rank": 6,
+      "core_bytes": 4128,
+      "resolutions": {
+        "640x480": {
+          "first_frame_ms": 0.6151760026114061,
+          "cached_ms": 0.06710400059819221,
+          "fps": 14902.241164246474
+        },
+        "1920x1080": {
+          "first_frame_ms": 0.5373460007831454,
+          "cached_ms": 0.0841439999639988,
+          "fps": 11884.38867213173
+        },
+        "3840x2160": {
+          "first_frame_ms": 1.1028090011677705,
+          "cached_ms": 0.1990559995174408,
+          "fps": 5023.71193244232
+        }
+      }
+    },
+    {
+      "n_cores": 20,
+      "rank": 8,
+      "core_bytes": 9344,
+      "resolutions": {
+        "640x480": {
+          "first_frame_ms": 0.6255979969864711,
+          "cached_ms": 0.06401600316166878,
+          "fps": 15621.093954812468
+        },
+        "1920x1080": {
+          "first_frame_ms": 0.6179910051287152,
+          "cached_ms": 0.07659200206398964,
+          "fps": 13056.19350653008
+        },
+        "3840x2160": {
+          "first_frame_ms": 0.896657002158463,
+          "cached_ms": 0.20668799430131912,
+          "fps": 4838.2103826609045
+        }
+      }
+    },
+    {
+      "n_cores": 24,
+      "rank": 8,
+      "core_bytes": 11392,
+      "resolutions": {
+        "640x480": {
+          "first_frame_ms": 1.1877930010086857,
+          "cached_ms": 0.06385600194334984,
+          "fps": 15660.235053349485
+        },
+        "1920x1080": {
+          "first_frame_ms": 1.1374419991625473,
+          "cached_ms": 0.076688002794981,
+          "fps": 13039.84930567845
+        },
+        "3840x2160": {
+          "first_frame_ms": 1.2712590032606386,
+          "cached_ms": 0.19819200038909912,
+          "fps": 5045.612325607273
+        }
+      }
+    },
+    {
+      "n_cores": 20,
+      "rank": 16,
+      "core_bytes": 37120,
+      "resolutions": {
+        "640x480": {
+          "first_frame_ms": 0.6141330013633706,
+          "cached_ms": 0.06867200136184692,
+          "fps": 14561.975480091136
+        },
+        "1920x1080": {
+          "first_frame_ms": 0.7233709984575398,
+          "cached_ms": 0.07417599856853485,
+          "fps": 13481.44978562103
+        },
+        "3840x2160": {
+          "first_frame_ms": 0.7853179995436221,
+          "cached_ms": 0.1958559975028038,
+          "fps": 5105.79207555635
+        }
+      }
+    },
+    {
+      "n_cores": 20,
+      "rank": 32,
+      "core_bytes": 147968,
+      "resolutions": {
+        "640x480": {
+          "first_frame_ms": 0.7136610001907684,
+          "cached_ms": 0.0647680014371872,
+          "fps": 15439.72297755416
+        },
+        "1920x1080": {
+          "first_frame_ms": 0.6907989954925142,
+          "cached_ms": 0.07387199997901917,
+          "fps": 13536.928745451809
+        },
+        "3840x2160": {
+          "first_frame_ms": 0.8772040018811822,
+          "cached_ms": 0.20020800083875656,
+          "fps": 4994.805381456156
+        }
+      }
+    }
+  ],
+  "qtt_to_dense": [
+    {
+      "size": 1024,
+      "n_qubits": 10,
+      "decompress_ms": 0.2942024984804448,
+      "max_error": 2.2530555725097656e-05
+    },
+    {
+      "size": 4096,
+      "n_qubits": 12,
+      "decompress_ms": 0.3964895004173741,
+      "max_error": 3.3855438232421875e-05
+    },
+    {
+      "size": 16384,
+      "n_qubits": 14,
+      "decompress_ms": 0.4737884992209729,
+      "max_error": 9.679794311523438e-05
+    },
+    {
+      "size": 65536,
+      "n_qubits": 16,
+      "decompress_ms": 0.5748504991061054,
+      "max_error": 8.0108642578125e-05
+    },
+    {
+      "size": 262144,
+      "n_qubits": 18,
+      "decompress_ms": 0.6922875036252663,
+      "max_error": 5.9485435485839844e-05
+    },
+    {
+      "size": 1048576,
+      "n_qubits": 20,
+      "decompress_ms": 0.9285080013796687,
+      "max_error": 0.00014269351959228516
+    }
+  ],
+  "end_to_end": [
+    {
+      "grid_size": 64,
+      "n_cores": 12,
+      "max_rank": 32,
+      "compress_ms": 20.085759002540726,
+      "qtt_bytes": 27296,
+      "dense_bytes": 16384,
+      "compression_ratio": 0.6002344665885111,
+      "render_ms": {
+        "64x64": 0.0627519991248846,
+        "1920x1080": 0.07289599999785423
+      },
+      "total_pipeline_ms": 20.15865500253858
+    },
+    {
+      "grid_size": 128,
+      "n_cores": 14,
+      "max_rank": 32,
+      "compress_ms": 18.801767997501884,
+      "qtt_bytes": 43680,
+      "dense_bytes": 65536,
+      "compression_ratio": 1.5003663003663004,
+      "render_ms": {
+        "128x128": 0.06590399891138077,
+        "1920x1080": 0.07355199754238129
+      },
+      "total_pipeline_ms": 18.875319995044265
+    },
+    {
+      "grid_size": 256,
+      "n_cores": 16,
+      "max_rank": 32,
+      "compress_ms": 22.992001999227796,
+      "qtt_bytes": 60064,
+      "dense_bytes": 262144,
+      "compression_ratio": 4.364411294619073,
+      "render_ms": {
+        "256x256": 0.06481600180268288,
+        "1920x1080": 0.07279999926686287
+      },
+      "total_pipeline_ms": 23.06480199849466
+    },
+    {
+      "grid_size": 512,
+      "n_cores": 18,
+      "max_rank": 32,
+      "compress_ms": 27.91161499771988,
+      "qtt_bytes": 76448,
+      "dense_bytes": 1048576,
+      "compression_ratio": 13.716199246546672,
+      "render_ms": {
+        "512x512": 0.06560000032186508,
+        "1920x1080": 0.07283199951052666
+      },
+      "total_pipeline_ms": 27.984446997230407
+    }
+  ]
+}

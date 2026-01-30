@@ -225,6 +225,16 @@ impl EntityState {
     }
 }
 
+// Compile-time size assertions (Constitutional Article VIII)
+// Both SwarmHeader and EntityState are 64 bytes = cache line aligned
+const _: () = {
+    assert!(std::mem::size_of::<SwarmHeader>() == 64);
+    assert!(std::mem::size_of::<EntityState>() == 64);
+    assert!(std::mem::size_of::<SwarmHeader>().is_power_of_two());
+    assert!(std::mem::size_of::<EntityState>().is_power_of_two());
+    assert!(std::mem::size_of::<CommandMessage>().is_power_of_two());
+};
+
 // =============================================================================
 // SWARM DATA
 // =============================================================================
@@ -386,6 +396,9 @@ pub enum SwarmCommand {
 }
 
 /// Command message structure.
+/// 
+/// Fixed size: 64 bytes (cache-line aligned, power-of-2)
+/// Layout: 4 + 4 + 24 + 8 + 24 = 64 bytes
 #[repr(C)]
 #[derive(Debug, Clone, Copy, Pod, Zeroable)]
 pub struct CommandMessage {
@@ -400,6 +413,9 @@ pub struct CommandMessage {
     
     /// Timestamp
     pub timestamp: u64,
+    
+    /// Padding to 64 bytes (power-of-2)
+    pub _padding: [u8; 24],
 }
 
 impl CommandMessage {
@@ -410,6 +426,7 @@ impl CommandMessage {
             target_id,
             params: [0.0; 6],
             timestamp: 0,
+            _padding: [0; 24],
         }
     }
     

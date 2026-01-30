@@ -27,6 +27,13 @@ import torch
 import torch.nn as nn
 from torch.optim.optimizer import Optimizer
 
+try:
+    from tensornet.genesis.core.triton_ops import rsvd_native
+    HAS_RSVD = True
+except ImportError:
+    HAS_RSVD = False
+    rsvd_native = None
+
 
 @dataclass
 class GenesisOptimizerConfig:
@@ -112,8 +119,11 @@ class StiefelManifold:
         More accurate than QR but more expensive.
         """
         Y = X + step * V
-        # Polar decomposition via SVD
-        U, S, Vh = torch.linalg.svd(Y, full_matrices=False)
+        # Polar decomposition via rSVD (O(mnk) complexity)
+        if HAS_RSVD and Y.shape[0] > 4 and Y.shape[1] > 4:
+            U, S, Vh = rsvd_native(Y, k=min(Y.shape))
+        else:
+            U, S, Vh = torch.linalg.svd(Y, full_matrices=False)
         return U @ Vh
     
     @staticmethod
@@ -356,7 +366,11 @@ class GenesisOptimizer(Optimizer):
                             signs = torch.sign(torch.diag(R))
                             Q_qr = Q * signs.unsqueeze(0)
                             
-                            U, S, Vh = torch.linalg.svd(X_new, full_matrices=False)
+                            # Polar via rSVD (O(mnk) complexity)
+                            if HAS_RSVD and X_new.shape[0] > 4 and X_new.shape[1] > 4:
+                                U, S, Vh = rsvd_native(X_new, k=min(X_new.shape))
+                            else:
+                                U, S, Vh = torch.linalg.svd(X_new, full_matrices=False)
                             Q_polar = U @ Vh
                             
                             # Blend: 80% QR (stable), 20% Polar (scale-preserving)

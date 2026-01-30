@@ -397,7 +397,9 @@ def _compute_cdf(dist: QTTDistribution) -> QTTDistribution:
             r_mpo_in, n_i, n_j, r_mpo_out = mpo_core.shape
             r_mps_in, _, r_mps_out = mps_core.shape
             
-            contracted = torch.einsum('aijb,cjd->acibrd', mpo_core, mps_core)
+            # Contract over j (column index of MPO = physical index of MPS)
+            # MPO: (a, i, j, b) and MPS: (c, j, d) → (a, c, i, b, d)
+            contracted = torch.einsum('aijb,cjd->acibd', mpo_core, mps_core)
             contracted = contracted.reshape(
                 r_mpo_in * r_mps_in, n_i, r_mpo_out * r_mps_out
             )

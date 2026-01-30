@@ -1,0 +1,252 @@
+{
+  "exp1_interpolation": [
+    {
+      "function_name": "smooth_sine",
+      "n_points": 65536,
+      "compression_ratio": 360.0879120879121,
+      "grid_error": 0.00014157310943119228,
+      "interp_error": 0.8439667061305277,
+      "error_ratio": 5961.344652798207,
+      "prediction_holds": false
+    },
+    {
+      "function_name": "polynomial",
+      "n_points": 65536,
+      "compression_ratio": 537.1803278688525,
+      "grid_error": 4.453639849089086e-05,
+      "interp_error": 0.18239133441200328,
+      "error_ratio": 4095.3228893096375,
+      "prediction_holds": false
+    },
+    {
+      "function_name": "gaussian",
+      "n_points": 65536,
+      "compression_ratio": 312.0761904761905,
+      "grid_error": 9.436812251806259e-05,
+      "interp_error": 0.3968921385280881,
+      "error_ratio": 4205.781566088517,
+      "prediction_holds": false
+    },
+    {
+      "function_name": "step_function",
+      "n_points": 65536,
+      "compression_ratio": 2048.0,
+      "grid_error": 1.9854501260851976e-06,
+      "interp_error": 0.5000000595852372,
+      "error_ratio": 251819.40351510985,
+      "prediction_holds": true
+    },
+    {
+      "function_name": "sawtooth",
+      "n_points": 65536,
+      "compression_ratio": 642.5098039215686,
+      "grid_error": 3.497115903883241e-05,
+      "interp_error": 0.3085395034242645,
+      "error_ratio": 8822.659737188933,
+      "prediction_holds": true
+    },
+    {
+      "function_name": "random_noise",
+      "n_points": 65536,
+      "compression_ratio": 1.5000915583226515,
+      "grid_error": 0.7223787307739258,
+      "interp_error": 1.1134856237228352,
+      "error_ratio": 1.54141529406589,
+      "prediction_holds": false
+    }
+  ],
+  "exp2_basis": [
+    {
+      "transformation": "identity",
+      "original_compression": 0.6463498826360534,
+      "transformed_compression": 0.6463498826360534,
+      "gain": 1.0,
+      "best_basis": false
+    },
+    {
+      "transformation": "log",
+      "original_compression": 0.6463498826360534,
+      "transformed_compression": 0.6370635352671281,
+      "gain": 0.9856326308422118,
+      "best_basis": false
+    },
+    {
+      "transformation": "diff",
+      "original_compression": 0.6463498826360534,
+      "transformed_compression": 0.6000146487951366,
+      "gain": 0.9283124588002636,
+      "best_basis": false
+    },
+    {
+      "transformation": "log_returns",
+      "original_compression": 0.6463498826360534,
+      "transformed_compression": 0.6000146487951366,
+      "gain": 0.9283124588002636,
+      "best_basis": false
+    },
+    {
+      "transformation": "zscore",
+      "original_compression": 0.6463498826360534,
+      "transformed_compression": 0.6169255389249741,
+      "gain": 0.9544761366845524,
+      "best_basis": false
+    },
+    {
+      "transformation": "cumsum_diff",
+      "original_compression": 0.6463498826360534,
+      "transformed_compression": 0.6898235863753105,
+      "gain": 1.0672603258810156,
+      "best_basis": false
+    },
+    {
+      "transformation": "fft_magnitude",
+      "original_compression": 0.6463498826360534,
+      "transformed_compression": 0.6310761882751714,
+      "gain": 0.9763693089900625,
+      "best_basis": false
+    },
+    {
+      "transformation": "sorted",
+      "original_compression": 0.6463498826360534,
+      "transformed_compression": 123.65283018867925,
+      "gain": 191.30943396226417,
+      "best_basis": true
+    }
+  ],
+  "exp3_smoothness": [
+    {
+      "smoothness_exponent": 0.1,
+      "max_rank": 127,
+      "compression_ratio": 0.3772333763123964,
+      "log_rank": 4.844187086458591,
+      "log_smoothness": -2.3025850929940455
+    },
+    {
+      "smoothness_exponent": 0.2,
+      "max_rank": 125,
+      "compression_ratio": 0.38173345759552657,
+      "log_rank": 4.8283137373023015,
+      "log_smoothness": -1.6094379124341003
+    },
+    {
+      "smoothness_exponent": 0.3,
+      "max_rank": 125,
+      "compression_ratio": 0.38173345759552657,
+      "log_rank": 4.8283137373023015,
+      "log_smoothness": -1.2039728043259361
+    },
+    {
+      "smoothness_exponent": 0.4,
+      "max_rank": 122,
+      "compression_ratio": 0.38868855570316946,
+      "log_rank": 4.804021044733257,
+      "log_smoothness": -0.916290731874155
+    },
+    {
+      "smoothness_exponent": 0.5,
+      "max_rank": 121,
+      "compression_ratio": 0.391063586022532,
+      "log_rank": 4.795790545596741,
+      "log_smoothness": -0.6931471805599453
+    },
+    {
+      "smoothness_exponent": 0.6,
+      "max_rank": 121,
+      "compression_ratio": 0.391063586022532,
+      "log_rank": 4.795790545596741,
+      "log_smoothness": -0.5108256237659907
+    },
+    {
+      "smoothness_exponent": 0.7,
+      "max_rank": 106,
+      "compression_ratio": 0.4446857018781891,
+      "log_rank": 4.663439094112067,
+      "log_smoothness": -0.35667494393873245
+    },
+    {
+      "smoothness_exponent": 0.8,
+      "max_rank": 91,
+      "compression_ratio": 0.5100871731008717,
+      "log_rank": 4.51085950651685,
+      "log_smoothness": -0.2231435513142097
+    },
+    {
+      "smoothness_exponent": 0.9,
+      "max_rank": 91,
+      "compression_ratio": 0.5116801998750781,
+      "log_rank": 4.51085950651685,
+      "log_smoothness": -0.10536051565782628
+    }
+  ],
+  "exp4_coordinates": [
+    {
+      "ordering": "row_major",
+      "compression_ratio": 187.24571428571429,
+      "reconstruction_error": 0.0001416812010575086,
+      "interpolation_error": 0.5969817042350769
+    },
+    {
+      "ordering": "column_major",
+      "compression_ratio": 181.03867403314916,
+      "reconstruction_error": 0.0001312011299887672,
+      "interpolation_error": 0.5443887710571289
+    },
+    {
+      "ordering": "random",
+      "compression_ratio": 0.6000146487951366,
+      "reconstruction_error": 0.171064555644989,
+      "interpolation_error": Infinity
+    }
+  ],
+  "exp5_domains": [
+    {
+      "domain": "weather",
+      "expected_smoothness": "High",
+      "predicted_compression": "50-500x",
+      "actual_compression": 0.6264433738625067,
+      "prediction_accurate": false
+    },
+    {
+      "domain": "audio_sine",
+      "expected_smoothness": "High",
+      "predicted_compression": "20-100x",
+      "actual_compression": 103.04402515723271,
+      "prediction_accurate": true
+    },
+    {
+      "domain": "medical_ct",
+      "expected_smoothness": "Medium",
+      "predicted_compression": "10-50x",
+      "actual_compression": 282.48275862068965,
+      "prediction_accurate": false
+    },
+    {
+      "domain": "turbulence",
+      "expected_smoothness": "Low-Medium",
+      "predicted_compression": "5-20x",
+      "actual_compression": 0.6000146487951366,
+      "prediction_accurate": false
+    },
+    {
+      "domain": "crypto",
+      "expected_smoothness": "Low",
+      "predicted_compression": "1-5x",
+      "actual_compression": 0.6463498826360534,
+      "prediction_accurate": false
+    },
+    {
+      "domain": "encrypted",
+      "expected_smoothness": "None",
+      "predicted_compression": "~1x",
+      "actual_compression": 0.6000146487951366,
+      "prediction_accurate": true
+    }
+  ],
+  "summary": {
+    "exp1_pass": "2/6",
+    "exp2_best_gain": 191.30943396226417,
+    "exp4_structure_ratio": 312.06857142857143,
+    "exp5_pass": "2/6",
+    "hypothesis_supported": false
+  }
+}

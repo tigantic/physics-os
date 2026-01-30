@@ -25,11 +25,19 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
+import sys
 import time
 import traceback
 from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
+
+# Ensure project root is in path for imports
+PROJECT_ROOT = Path(__file__).parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 import numpy as np
 import torch
@@ -46,6 +54,87 @@ import uvicorn
 DEVICE_GPU = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 DEVICE_CPU = torch.device('cpu')
 DTYPE = torch.float64
+
+# Calibration profiles directory
+CALIBRATION_DIR = Path(__file__).parent / "calibration_profiles"
+CALIBRATION_DIR.mkdir(exist_ok=True)
+
+# Global calibration cache
+_calibration_cache: Dict[str, "CalibrationProfile"] = {}
+
+
+def make_json_serializable(obj: Any) -> Any:
+    """Recursively convert numpy/torch types to Python native types for JSON serialization."""
+    if isinstance(obj, dict):
+        return {k: make_json_serializable(v) for k, v in obj.items()}
+    elif isinstance(obj, (list, tuple)):
+        return [make_json_serializable(v) for v in obj]
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, (np.integer,)):
+        return int(obj)
+    elif isinstance(obj, (np.floating,)):
+        return float(obj)
+    elif isinstance(obj, (np.bool_,)):
+        return bool(obj)
+    elif hasattr(obj, 'item'):  # torch scalar tensors
+        return obj.item()
+    else:
+        return obj
+
+
+def load_calibration_profile(domain: str) -> Optional["CalibrationProfile"]:
+    """
+    Load calibration profile for a domain.
+    
+    Returns None if no calibration exists for this domain.
+    """
+    from calibration import CalibrationProfile
+    
+    if domain in _calibration_cache:
+        return _calibration_cache[domain]
+    
+    profile_path = CALIBRATION_DIR / f"calibration_{domain}.json"
+    if profile_path.exists():
+        with open(profile_path, 'r') as f:
+            data = json.load(f)
+        profile = CalibrationProfile.from_dict(data)
+        _calibration_cache[domain] = profile
+        return profile
+    
+    return None
+
+
+def get_threshold(
+    domain: Optional[str],
+    stage_name: str,
+    severity: str,
+    default: float,
+) -> float:
+    """
+    Get calibrated threshold or fall back to default.
+    
+    Args:
+        domain: Domain hint (e.g., "climate", "finance")
+        stage_name: Pipeline stage (e.g., "ot", "rkhs")
+        severity: Severity level (e.g., "mild", "moderate", "severe")
+        default: Default value if no calibration exists
+    
+    Returns:
+        Calibrated threshold or default
+    """
+    if domain is None:
+        return default
+    
+    profile = load_calibration_profile(domain)
+    if profile is None:
+        return default
+    
+    if stage_name not in profile.stage_thresholds:
+        return default
+    
+    thresholds = profile.stage_thresholds[stage_name].thresholds
+    return thresholds.get(severity, default)
 
 app = FastAPI(
     title="Tensor Genesis Oracle Node",
@@ -229,7 +318,11 @@ def stage_2_spectral_wavelets(dist_a: "QTTDistribution", dist_b: "QTTDistributio
 # STAGE 3: RKHS KERNEL METHODS — "Is this normal?"
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def stage_3_rkhs_anomaly(dist_a: "QTTDistribution", dist_b: "QTTDistribution") -> Dict[str, Any]:
+def stage_3_rkhs_anomaly(
+    dist_a: "QTTDistribution",
+    dist_b: "QTTDistribution",
+    domain_hint: Optional[str] = None,
+) -> Dict[str, Any]:
     """
     Anomaly detection using Maximum Mean Discrepancy in RKHS.
     
@@ -237,25 +330,34 @@ def stage_3_rkhs_anomaly(dist_a: "QTTDistribution", dist_b: "QTTDistribution") -
     - Climate: "This heatwave is abnormal"
     - Finance: "This trade volume is suspicious"
     - Medical: "This tissue density is cancerous"
+    
+    Uses stratified subsampling to avoid O(n²) memory explosion.
     """
     from tensornet.genesis.rkhs import RBFKernel, maximum_mean_discrepancy
+    from tensornet.genesis.core.triton_ops import qtt_evaluate_at_indices
     
     start = time.perf_counter()
     
-    # Convert to point clouds for MMD
-    dense_a = dist_a.to_dense().cpu()
-    dense_b = dist_b.to_dense().cpu()
+    n = dist_a.grid_size
     
-    # Create point representations
-    n = len(dense_a)
-    x = torch.linspace(0, 1, n).unsqueeze(1)
+    # Subsample to avoid O(n²) kernel matrix explosion
+    # 2048 points gives 2048² = 4M entries = 32MB (manageable)
+    n_samples = min(2048, n)
+    sample_indices = torch.linspace(0, n - 1, n_samples, dtype=torch.long)
     
-    # Weight points by distribution values
-    points_a = x.repeat(1, 2)
-    points_a[:, 1] = dense_a
+    # Evaluate QTT at sample points (no full dense materialization)
+    from tensornet.genesis.sgw.graph_signals import QTTSignal
+    signal_a = QTTSignal.from_cores(dist_a.cores)
+    signal_b = QTTSignal.from_cores(dist_b.cores)
     
-    points_b = x.repeat(1, 2)
-    points_b[:, 1] = dense_b
+    values_a = qtt_evaluate_at_indices(signal_a.cores, sample_indices)
+    values_b = qtt_evaluate_at_indices(signal_b.cores, sample_indices)
+    
+    # Create point representations: (x_position, pdf_value)
+    x = torch.linspace(0, 1, n_samples).unsqueeze(1)
+    
+    points_a = torch.cat([x, values_a.unsqueeze(1)], dim=1)
+    points_b = torch.cat([x, values_b.unsqueeze(1)], dim=1)
     
     # Multi-scale MMD
     length_scales = [0.1, 0.5, 1.0, 2.0]
@@ -270,26 +372,40 @@ def stage_3_rkhs_anomaly(dist_a: "QTTDistribution", dist_b: "QTTDistribution") -
     avg_mmd = np.mean([s["mmd"] for s in mmd_scores])
     max_mmd = np.max([s["mmd"] for s in mmd_scores])
     
-    # Anomaly classification
-    if max_mmd > 0.5:
+    # Get calibrated thresholds or use defaults
+    threshold_severe = get_threshold(domain_hint, "rkhs", "severe", default=0.5)
+    threshold_moderate = get_threshold(domain_hint, "rkhs", "moderate", default=0.2)
+    threshold_mild = get_threshold(domain_hint, "rkhs", "mild", default=0.05)
+    
+    # Anomaly classification using calibrated thresholds
+    if max_mmd >= threshold_severe:
         anomaly_level = "SEVERE"
-    elif max_mmd > 0.2:
+    elif max_mmd >= threshold_moderate:
         anomaly_level = "MODERATE"
-    elif max_mmd > 0.05:
+    elif max_mmd >= threshold_mild:
         anomaly_level = "MILD"
     else:
         anomaly_level = "NORMAL"
     
     elapsed = time.perf_counter() - start
     
+    # Indicate calibration status
+    calibration_status = "calibrated" if domain_hint and load_calibration_profile(domain_hint) else "default"
+    
     return {
         "mmd_scores": mmd_scores,
         "average_mmd": float(avg_mmd),
         "max_mmd": float(max_mmd),
         "anomaly_level": anomaly_level,
-        "is_anomalous": max_mmd > 0.1,
+        "is_anomalous": max_mmd >= threshold_mild,
+        "thresholds_used": {
+            "mild": threshold_mild,
+            "moderate": threshold_moderate,
+            "severe": threshold_severe,
+        },
+        "calibration_status": calibration_status,
         "computation_time_ms": elapsed * 1000,
-        "interpretation": f"Anomaly level: {anomaly_level} (MMD={max_mmd:.4f})",
+        "interpretation": f"Anomaly level: {anomaly_level} (MMD={max_mmd:.4f}, {calibration_status} thresholds)",
     }
 
 
@@ -297,7 +413,11 @@ def stage_3_rkhs_anomaly(dist_a: "QTTDistribution", dist_b: "QTTDistribution") -
 # STAGE 4: PERSISTENT HOMOLOGY — "What shape is it?"
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def stage_4_topology(dist_a: "QTTDistribution", dist_b: "QTTDistribution") -> Dict[str, Any]:
+def stage_4_topology(
+    dist_a: "QTTDistribution",
+    dist_b: "QTTDistribution",
+    domain_hint: Optional[str] = None,
+) -> Dict[str, Any]:
     """
     Topological analysis using persistent homology.
     
@@ -305,8 +425,11 @@ def stage_4_topology(dist_a: "QTTDistribution", dist_b: "QTTDistribution") -> Di
     - Climate: "The storm has an eye (cyclone)"
     - Finance: "Trades form a loop (wash trading)"
     - Medical: "Tumor has a cavity (necrosis)"
+    
+    Complexity thresholds loaded from calibration if available.
     """
     from tensornet.genesis.topology.qtt_native import qtt_persistence_grid_1d
+    from tensornet.genesis.core.triton_ops import qtt_evaluate_at_indices
     
     start = time.perf_counter()
     
@@ -317,8 +440,12 @@ def stage_4_topology(dist_a: "QTTDistribution", dist_b: "QTTDistribution") -> Di
     result = qtt_persistence_grid_1d(n_bits)
     betti = result.betti_numbers
     
-    # Analyze difference distribution topology
-    diff = (dist_b.to_dense() - dist_a.to_dense()).cpu().numpy()
+    # SUBSAMPLE to avoid O(n) dense allocation — max 2048 points
+    n_samples = min(2048, n)
+    sample_indices = torch.linspace(0, n - 1, n_samples, dtype=torch.long, device=dist_a.device)
+    values_a = qtt_evaluate_at_indices(dist_a.cores, sample_indices)
+    values_b = qtt_evaluate_at_indices(dist_b.cores, sample_indices)
+    diff = (values_b - values_a).cpu().numpy()
     
     # Find connected components (β₀) and loops (β₁) in thresholded difference
     threshold = np.std(diff) * 2
@@ -332,13 +459,20 @@ def stage_4_topology(dist_a: "QTTDistribution", dist_b: "QTTDistribution") -> Di
     sign_changes = np.diff(np.sign(diff))
     n_holes = np.sum(np.abs(sign_changes) == 2)
     
+    # Topological complexity metric
+    complexity = float(n_components + n_holes)
+    
+    # Get calibrated thresholds for complexity classification
+    threshold_oscillatory = get_threshold(domain_hint, "ph", "severe", default=5.0)
+    threshold_fragmented = get_threshold(domain_hint, "ph", "moderate", default=3.0)
+    
     elapsed = time.perf_counter() - start
     
-    # Shape interpretation
-    if n_holes > 2:
+    # Shape interpretation using calibrated thresholds
+    if n_holes > threshold_oscillatory / 2:  # Holes indicate oscillation
         shape_type = "OSCILLATORY"
         shape_desc = "Multiple peaks and valleys (wave pattern)"
-    elif n_components > 3:
+    elif n_components > threshold_fragmented:
         shape_type = "FRAGMENTED"
         shape_desc = "Multiple disconnected change regions"
     elif n_components == 1 and n_holes == 0:
@@ -348,13 +482,18 @@ def stage_4_topology(dist_a: "QTTDistribution", dist_b: "QTTDistribution") -> Di
         shape_type = "COMPLEX"
         shape_desc = "Multi-modal change pattern"
     
+    # Indicate calibration status
+    calibration_status = "calibrated" if domain_hint and load_calibration_profile(domain_hint) else "default"
+    
     return {
         "betti_numbers": betti,
         "connected_components": int(n_components),
         "topological_holes": int(n_holes),
+        "complexity": complexity,
         "shape_type": shape_type,
         "shape_description": shape_desc,
         "boundary_memory_bytes": result.memory_bytes,
+        "calibration_status": calibration_status,
         "computation_time_ms": elapsed * 1000,
         "interpretation": f"Shape: {shape_type} — {shape_desc}",
     }
@@ -364,7 +503,11 @@ def stage_4_topology(dist_a: "QTTDistribution", dist_b: "QTTDistribution") -> Di
 # STAGE 5: GEOMETRIC ALGEBRA — "Which direction?"
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def stage_5_geometric_direction(dist_a: "QTTDistribution", dist_b: "QTTDistribution") -> Dict[str, Any]:
+def stage_5_geometric_direction(
+    dist_a: "QTTDistribution",
+    dist_b: "QTTDistribution",
+    domain_hint: Optional[str] = None,
+) -> Dict[str, Any]:
     """
     Geometric analysis using Clifford algebra.
     
@@ -372,14 +515,21 @@ def stage_5_geometric_direction(dist_a: "QTTDistribution", dist_b: "QTTDistribut
     - Climate: "The front is moving North-East"
     - Finance: "The market is trending Bearish"
     - Medical: "Growth is oriented towards the artery"
+    
+    Gradient thresholds loaded from calibration if available.
     """
     from tensornet.genesis.ga import CliffordAlgebra, Multivector, geometric_product
+    from tensornet.genesis.core.triton_ops import qtt_evaluate_at_indices
     
     start = time.perf_counter()
     
-    # Compute gradient of difference
-    dense_a = dist_a.to_dense().cpu().numpy()
-    dense_b = dist_b.to_dense().cpu().numpy()
+    n = dist_a.grid_size
+    
+    # SUBSAMPLE to avoid O(n) dense allocation — max 2048 points
+    n_samples = min(2048, n)
+    sample_indices = torch.linspace(0, n - 1, n_samples, dtype=torch.long, device=dist_a.device)
+    dense_a = qtt_evaluate_at_indices(dist_a.cores, sample_indices).cpu().numpy()
+    dense_b = qtt_evaluate_at_indices(dist_b.cores, sample_indices).cpu().numpy()
     diff = dense_b - dense_a
     
     # First and second moments
@@ -394,6 +544,7 @@ def stage_5_geometric_direction(dist_a: "QTTDistribution", dist_b: "QTTDistribut
     # Direction (gradient at center)
     gradient = np.gradient(diff)
     avg_gradient = np.mean(gradient)
+    max_gradient = float(np.max(np.abs(gradient)))
     
     # Magnitude and direction encoding
     magnitude = np.sqrt(np.sum(diff ** 2))
@@ -403,7 +554,8 @@ def stage_5_geometric_direction(dist_a: "QTTDistribution", dist_b: "QTTDistribut
     
     # Encode direction as multivector
     # e1 = "positive change", e2 = "spreading"
-    spread = np.std(np.where(np.abs(diff) > np.std(diff))[0]) / len(diff) if len(diff) > 0 else 0
+    significant_idx = np.where(np.abs(diff) > np.std(diff))[0]
+    spread = float(np.std(significant_idx) / len(diff)) if len(significant_idx) > 0 else 0.0
     
     direction_vec = Multivector(algebra, np.array([
         0,              # scalar
@@ -412,11 +564,14 @@ def stage_5_geometric_direction(dist_a: "QTTDistribution", dist_b: "QTTDistribut
         0,              # e12 (rotation)
     ]))
     
-    # Classify trend
-    if avg_gradient > 0.01:
+    # Get calibrated gradient thresholds
+    threshold_increasing = get_threshold(domain_hint, "ga", "mild", default=0.01)
+    
+    # Classify trend using calibrated threshold
+    if avg_gradient > threshold_increasing:
         trend = "INCREASING"
         trend_desc = "Distribution shifting right/up"
-    elif avg_gradient < -0.01:
+    elif avg_gradient < -threshold_increasing:
         trend = "DECREASING"
         trend_desc = "Distribution shifting left/down"
     else:
@@ -425,14 +580,19 @@ def stage_5_geometric_direction(dist_a: "QTTDistribution", dist_b: "QTTDistribut
     
     elapsed = time.perf_counter() - start
     
+    # Indicate calibration status
+    calibration_status = "calibrated" if domain_hint and load_calibration_profile(domain_hint) else "default"
+    
     return {
         "center_of_change": float(center),
         "average_gradient": float(avg_gradient),
+        "max_gradient": max_gradient,
         "magnitude": float(magnitude),
-        "spread": float(spread),
+        "spread": spread,
         "trend": trend,
         "trend_description": trend_desc,
-        "geometric_vector": [float(avg_gradient), float(spread)],
+        "geometric_vector": [float(avg_gradient), spread],
+        "calibration_status": calibration_status,
         "computation_time_ms": elapsed * 1000,
         "interpretation": f"Trend: {trend} — {trend_desc}",
     }
@@ -453,27 +613,34 @@ def run_full_pipeline(
     This is THE UNIVERSAL ENGINE.
     It doesn't know what the numbers represent.
     It just finds the mathematical structure.
+    
+    If a calibration profile exists for the given domain_hint,
+    thresholds will be loaded from it. Otherwise, defaults are used.
     """
     total_start = time.perf_counter()
+    
+    # Check calibration status
+    calibration_profile = load_calibration_profile(domain_hint) if domain_hint else None
+    calibration_status = "calibrated" if calibration_profile else "default"
     
     # ADAPTER: Convert raw numbers to QTT tensors
     dist_a = numbers_to_qtt_distribution(data_a)
     dist_b = numbers_to_qtt_distribution(data_b)
     
-    # STAGE 1: Optimal Transport
+    # STAGE 1: Optimal Transport (no thresholds, just measurement)
     stage_1 = stage_1_optimal_transport(dist_a, dist_b)
     
-    # STAGE 2: Spectral Graph Wavelets
+    # STAGE 2: Spectral Graph Wavelets (no thresholds, just measurement)
     stage_2 = stage_2_spectral_wavelets(dist_a, dist_b)
     
-    # STAGE 3: RKHS Anomaly Detection
-    stage_3 = stage_3_rkhs_anomaly(dist_a, dist_b)
+    # STAGE 3: RKHS Anomaly Detection (uses calibrated thresholds)
+    stage_3 = stage_3_rkhs_anomaly(dist_a, dist_b, domain_hint=domain_hint)
     
-    # STAGE 4: Persistent Homology
-    stage_4 = stage_4_topology(dist_a, dist_b)
+    # STAGE 4: Persistent Homology (uses calibrated thresholds)
+    stage_4 = stage_4_topology(dist_a, dist_b, domain_hint=domain_hint)
     
-    # STAGE 5: Geometric Algebra
-    stage_5 = stage_5_geometric_direction(dist_a, dist_b)
+    # STAGE 5: Geometric Algebra (uses calibrated thresholds)
+    stage_5 = stage_5_geometric_direction(dist_a, dist_b, domain_hint=domain_hint)
     
     total_time = time.perf_counter() - total_start
     
@@ -488,12 +655,14 @@ def run_full_pipeline(
     
     if domain_hint:
         interpretation["domain"] = f"Analysis performed with {domain_hint} domain context"
+        interpretation["calibration"] = calibration_status
     
     # Build attestation
     attestation = {
         "attestation": "TENSOR_GENESIS_ORACLE_ATTESTATION",
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        "pipeline_version": "1.0.0",
+        "pipeline_version": "1.1.0",  # Updated for calibration support
+        "calibration_status": calibration_status,
         "device": str(DEVICE_GPU),
         "input_sizes": {
             "distribution_a": len(data_a),
@@ -508,6 +677,9 @@ def run_full_pipeline(
         "total_time_seconds": total_time,
         "interpretation": interpretation,
     }
+    
+    # Convert all numpy types to Python native types for JSON serialization
+    attestation = make_json_serializable(attestation)
     
     # Cryptographic hash
     content = json.dumps(attestation, sort_keys=True, default=str)
@@ -530,6 +702,9 @@ async def root():
         "device": str(DEVICE_GPU),
         "endpoints": {
             "/analyze": "POST - Compare two distributions",
+            "/analyze/single": "POST - Analyze single distribution against uniform",
+            "/calibration/status": "GET - Check calibration status for a domain",
+            "/calibration/list": "GET - List available calibration profiles",
             "/health": "GET - Health check",
         },
     }
@@ -541,12 +716,67 @@ async def health():
     return {"status": "healthy", "device": str(DEVICE_GPU)}
 
 
+@app.get("/calibration/status/{domain}")
+async def calibration_status(domain: str):
+    """
+    Check calibration status for a specific domain.
+    
+    Returns calibration profile metadata if available.
+    """
+    profile = load_calibration_profile(domain)
+    if profile is None:
+        return {
+            "domain": domain,
+            "calibrated": False,
+            "message": f"No calibration profile found for domain '{domain}'. Using default thresholds.",
+        }
+    
+    return {
+        "domain": domain,
+        "calibrated": True,
+        "version": profile.version,
+        "created_at": profile.created_at,
+        "sample_count": profile.sample_count,
+        "validation_metrics": profile.validation_metrics,
+        "stages_calibrated": list(profile.stage_thresholds.keys()),
+    }
+
+
+@app.get("/calibration/list")
+async def list_calibrations():
+    """
+    List all available calibration profiles.
+    """
+    profiles = []
+    if CALIBRATION_DIR.exists():
+        for path in CALIBRATION_DIR.glob("calibration_*.json"):
+            try:
+                with open(path, 'r') as f:
+                    data = json.load(f)
+                profiles.append({
+                    "domain": data.get("domain"),
+                    "version": data.get("version"),
+                    "created_at": data.get("created_at"),
+                    "sample_count": data.get("sample_count"),
+                    "file": path.name,
+                })
+            except Exception as e:
+                profiles.append({"file": path.name, "error": str(e)})
+    
+    return {
+        "profiles": profiles,
+        "count": len(profiles),
+        "calibration_dir": str(CALIBRATION_DIR),
+    }
+
+
 @app.post("/analyze", response_model=None)
 async def analyze(request: AnalyzeRequest) -> JSONResponse:
     """
     Analyze two distributions using the 5-stage pipeline.
     
     Returns cryptographically signed attestation of structural analysis.
+    If a calibration profile exists for domain_hint, calibrated thresholds are used.
     """
     try:
         attestation = run_full_pipeline(

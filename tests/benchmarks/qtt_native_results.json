@@ -1,0 +1,273 @@
+{
+  "timestamp": "2026-01-28T11:57:59.648640",
+  "torch_version": "2.9.1+cu128",
+  "cuda_version": "12.8",
+  "gpu_name": "NVIDIA GeForce RTX 5070 Laptop GPU",
+  "doctrine": {
+    "native_qtt": true,
+    "rsvd": true,
+    "triton_eval": true,
+    "no_decompression": true,
+    "no_dense": true
+  },
+  "config": {
+    "n_qubits_list": [
+      10,
+      12,
+      14,
+      16,
+      18
+    ],
+    "rank_cap": 64,
+    "batch_sizes": [
+      1000,
+      10000,
+      100000
+    ]
+  },
+  "tci_construction": [
+    {
+      "n_qubits": 10,
+      "grid_size": 1024,
+      "function": "smooth",
+      "tci_ms": 6.1626059978152625,
+      "tci_evals": 1024,
+      "dense_ms": 197.18481699965196,
+      "dense_evals": 1024,
+      "actual_rank": 32,
+      "compression_ratio": 0.375366568914956,
+      "speedup_vs_dense": 31.996985864349753
+    },
+    {
+      "n_qubits": 10,
+      "grid_size": 1024,
+      "function": "shock",
+      "tci_ms": 4.2505439996602945,
+      "tci_evals": 1024,
+      "dense_ms": 6.134180999652017,
+      "dense_evals": 1024,
+      "actual_rank": 3,
+      "compression_ratio": 12.8,
+      "speedup_vs_dense": 1.4431519824620715
+    },
+    {
+      "n_qubits": 12,
+      "grid_size": 4096,
+      "function": "smooth",
+      "tci_ms": 11.404994998883922,
+      "tci_evals": 4096,
+      "dense_ms": 15.206479998596478,
+      "dense_evals": 4096,
+      "actual_rank": 63,
+      "compression_ratio": 0.3795404002965159,
+      "speedup_vs_dense": 1.3333175507823165
+    },
+    {
+      "n_qubits": 12,
+      "grid_size": 4096,
+      "function": "shock",
+      "tci_ms": 5.20728700212203,
+      "tci_evals": 4096,
+      "dense_ms": 5.387162003898993,
+      "dense_evals": 4096,
+      "actual_rank": 3,
+      "compression_ratio": 31.50769230769231,
+      "speedup_vs_dense": 1.0345429398655503
+    },
+    {
+      "n_qubits": 14,
+      "grid_size": 16384,
+      "function": "smooth",
+      "tci_ms": 92.49949600052787,
+      "tci_evals": 13878,
+      "dense_ms": 28.63655700639356,
+      "dense_evals": 16384,
+      "actual_rank": 64,
+      "compression_ratio": 0.6000585994726048,
+      "speedup_vs_dense": 0.30958608689316686
+    },
+    {
+      "n_qubits": 14,
+      "grid_size": 16384,
+      "function": "shock",
+      "tci_ms": 25.042856999789365,
+      "tci_evals": 12178,
+      "dense_ms": 7.218127000669483,
+      "dense_evals": 16384,
+      "actual_rank": 3,
+      "compression_ratio": 146.28571428571428,
+      "speedup_vs_dense": 0.2882309714394885
+    },
+    {
+      "n_qubits": 16,
+      "grid_size": 65536,
+      "function": "smooth",
+      "tci_ms": 119.24986700614681,
+      "tci_evals": 34145,
+      "dense_ms": null,
+      "dense_evals": 65536,
+      "actual_rank": 64,
+      "compression_ratio": 1.5000915583226515,
+      "speedup_vs_dense": null
+    },
+    {
+      "n_qubits": 16,
+      "grid_size": 65536,
+      "function": "shock",
+      "tci_ms": 55.76108999957796,
+      "tci_evals": 20875,
+      "dense_ms": null,
+      "dense_evals": 65536,
+      "actual_rank": 3,
+      "compression_ratio": 512.0,
+      "speedup_vs_dense": null
+    },
+    {
+      "n_qubits": 18,
+      "grid_size": 262144,
+      "function": "smooth",
+      "tci_ms": 295.6320910016075,
+      "tci_evals": 72323,
+      "dense_ms": null,
+      "dense_evals": 262144,
+      "actual_rank": 64,
+      "compression_ratio": 4.363830070581968,
+      "speedup_vs_dense": null
+    },
+    {
+      "n_qubits": 18,
+      "grid_size": 262144,
+      "function": "shock",
+      "tci_ms": 98.76239999721292,
+      "tci_evals": 29115,
+      "dense_ms": null,
+      "dense_evals": 262144,
+      "actual_rank": 64,
+      "compression_ratio": 6.134893517435057,
+      "speedup_vs_dense": null
+    }
+  ],
+  "triton_eval": [
+    {
+      "chi": 4,
+      "n_qubits": 12,
+      "batch_size": 100000,
+      "time_ms": 3.7609440088272095,
+      "us_per_point": 0.03760944008827209,
+      "Mpts_s": 26.589069064919
+    },
+    {
+      "chi": 4,
+      "n_qubits": 16,
+      "batch_size": 100000,
+      "time_ms": 5.010256052017212,
+      "us_per_point": 0.05010256052017212,
+      "Mpts_s": 19.95905976895898
+    },
+    {
+      "chi": 4,
+      "n_qubits": 20,
+      "batch_size": 100000,
+      "time_ms": 6.233855962753296,
+      "us_per_point": 0.06233855962753296,
+      "Mpts_s": 16.04143576583909
+    },
+    {
+      "chi": 8,
+      "n_qubits": 12,
+      "batch_size": 100000,
+      "time_ms": 4.075119972229004,
+      "us_per_point": 0.04075119972229004,
+      "Mpts_s": 24.539154842428385
+    },
+    {
+      "chi": 8,
+      "n_qubits": 16,
+      "batch_size": 100000,
+      "time_ms": 5.490847826004028,
+      "us_per_point": 0.054908478260040285,
+      "Mpts_s": 18.212123731860025
+    },
+    {
+      "chi": 8,
+      "n_qubits": 20,
+      "batch_size": 100000,
+      "time_ms": 6.8135199546813965,
+      "us_per_point": 0.06813519954681396,
+      "Mpts_s": 14.676701714404247
+    },
+    {
+      "chi": 16,
+      "n_qubits": 12,
+      "batch_size": 100000,
+      "time_ms": 13.010064125061035,
+      "us_per_point": 0.13010064125061035,
+      "Mpts_s": 7.686357195378609
+    },
+    {
+      "chi": 16,
+      "n_qubits": 16,
+      "batch_size": 100000,
+      "time_ms": 18.565600395202637,
+      "us_per_point": 0.18565600395202636,
+      "Mpts_s": 5.386305741334391
+    },
+    {
+      "chi": 16,
+      "n_qubits": 20,
+      "batch_size": 100000,
+      "time_ms": 22.893136024475098,
+      "us_per_point": 0.22893136024475097,
+      "Mpts_s": 4.3681215143739935
+    },
+    {
+      "chi": 32,
+      "n_qubits": 12,
+      "batch_size": 100000,
+      "time_ms": 28.564160346984863,
+      "us_per_point": 0.2856416034698486,
+      "Mpts_s": 3.50089058404812
+    },
+    {
+      "chi": 32,
+      "n_qubits": 16,
+      "batch_size": 100000,
+      "time_ms": 39.51047897338867,
+      "us_per_point": 0.39510478973388674,
+      "Mpts_s": 2.530974126316023
+    },
+    {
+      "chi": 32,
+      "n_qubits": 20,
+      "batch_size": 100000,
+      "time_ms": 48.90776062011719,
+      "us_per_point": 0.48907760620117186,
+      "Mpts_s": 2.0446652787219843
+    },
+    {
+      "chi": 64,
+      "n_qubits": 12,
+      "batch_size": 100000,
+      "time_ms": 99.2628173828125,
+      "us_per_point": 0.992628173828125,
+      "Mpts_s": 1.0074265735813694
+    },
+    {
+      "chi": 64,
+      "n_qubits": 16,
+      "batch_size": 100000,
+      "time_ms": 135.33309173583984,
+      "us_per_point": 1.3533309173583985,
+      "Mpts_s": 0.7389175752756213
+    },
+    {
+      "chi": 64,
+      "n_qubits": 20,
+      "batch_size": 100000,
+      "time_ms": 173.9766616821289,
+      "us_per_point": 1.739766616821289,
+      "Mpts_s": 0.5747897392278342
+    }
+  ],
+  "mpo_application": []
+}

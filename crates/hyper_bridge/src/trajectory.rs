@@ -156,6 +156,15 @@ pub struct TrajectoryHeader {
 unsafe impl Pod for TrajectoryHeader {}
 unsafe impl Zeroable for TrajectoryHeader {}
 
+// Compile-time size and alignment assertions (Constitutional Article VIII)
+const _: () = {
+    assert!(std::mem::size_of::<TrajectoryHeader>() == TRAJECTORY_HEADER_SIZE);
+    assert!(TRAJECTORY_HEADER_SIZE == 256);
+    assert!(TRAJECTORY_HEADER_SIZE.is_power_of_two());
+    assert!(std::mem::size_of::<Waypoint>() == 16);
+    assert!(std::mem::size_of::<Waypoint>().is_power_of_two());
+};
+
 impl Default for TrajectoryHeader {
     fn default() -> Self {
         Self {
@@ -293,13 +302,18 @@ impl TrajectoryData {
     }
     
     /// Deserialize from bytes
+    /// 
+    /// Note: This copies data to handle unaligned input buffers.
+    /// For zero-copy access, use memory-mapped files with proper alignment.
     pub fn from_bytes(bytes: &[u8]) -> Result<Self, String> {
         if bytes.len() < TRAJECTORY_HEADER_SIZE {
             return Err("Buffer too small for header".to_string());
         }
         
-        // Read header
-        let header: TrajectoryHeader = *bytemuck::from_bytes(&bytes[..std::mem::size_of::<TrajectoryHeader>()]);
+        // Read header - copy to handle potential misalignment
+        let header_bytes = &bytes[..std::mem::size_of::<TrajectoryHeader>()];
+        let header: TrajectoryHeader = bytemuck::try_pod_read_unaligned(header_bytes)
+            .map_err(|e| format!("Failed to read header: {:?}", e))?;
         header.validate()?;
         
         // Read waypoints
@@ -315,7 +329,8 @@ impl TrajectoryData {
         for i in 0..header.num_waypoints as usize {
             let start = waypoints_start + i * waypoint_size;
             let end = start + waypoint_size;
-            let wp: Waypoint = *bytemuck::from_bytes(&bytes[start..end]);
+            let wp: Waypoint = bytemuck::try_pod_read_unaligned(&bytes[start..end])
+                .map_err(|e| format!("Failed to read waypoint {}: {:?}", i, e))?;
             waypoints.push(wp);
         }
         

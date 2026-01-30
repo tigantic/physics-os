@@ -1,0 +1,6 @@
+GlobusError: v=1 c=INTERNAL_ERROR
+GridFTP-Error: globus_xio_register_open
+globus_xio: Unable to open file /ds131.2/Data-Reduction-Repo/raw-data/Hurricane-ISABEL/100x500x500/CLOUDf48.bin.gz
+globus_xio: System error in open: No such file or directory
+globus_xio: A system call failed: No such file or directory
+

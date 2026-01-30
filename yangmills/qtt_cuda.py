@@ -50,9 +50,11 @@ try:
     from tensornet.core.mpo import MPO
     from tensornet.algorithms.lanczos import lanczos_ground_state, LanczosResult
     from tensornet.algorithms.dmrg import dmrg_ground_state, DMRGResult
+    from tensornet.genesis.core.triton_ops import rsvd_native
     HAS_TENSORNET = True
 except ImportError:
     HAS_TENSORNET = False
+    rsvd_native = None
     print("Warning: tensornet not available, using standalone CUDA implementation")
 
 
@@ -182,12 +184,11 @@ class QTTCuda:
             # Reshape: (r_left * d_k, remaining)
             mat = remaining.reshape(r_left * d_k, remaining_size)
             
-            # GPU-accelerated SVD
-            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+            # GPU-accelerated rSVD (randomized, O(mnk) complexity)
+            U, S, Vh = rsvd_native(mat.real if mat.is_complex() else mat, k=max_rank, tol=cutoff)
             
-            # Truncate based on cutoff and max_rank
-            tol = S[0].abs() * cutoff if len(S) > 0 else 0
-            rank = min(max_rank, len(S), int((S.abs() > tol).sum().item()))
+            # Rank already truncated by rsvd_native
+            rank = len(S)
             rank = max(1, rank)
             
             U = U[:, :rank]
@@ -314,16 +315,16 @@ class QTTCuda:
             # Absorb R into next core
             cores[k+1] = torch.einsum('ij,jdk->idk', R, cores[k+1])
         
-        # Right-to-left SVD truncation
+        # Right-to-left rSVD truncation
         for k in range(self.n_sites - 1, 0, -1):
             r_L, d, r_R = cores[k].shape
             mat = cores[k].reshape(r_L, d * r_R)
             
-            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+            # GPU-accelerated rSVD (randomized, O(mnk) complexity)
+            U, S, Vh = rsvd_native(mat.real if mat.is_complex() else mat, k=max_rank, tol=cutoff)
             
-            # Truncate
-            tol = S[0].abs() * cutoff if len(S) > 0 else 0
-            rank = min(max_rank, len(S), int((S.abs() > tol).sum().item()))
+            # Rank already truncated by rsvd_native
+            rank = len(S)
             rank = max(1, rank)
             
             U = U[:, :rank]
@@ -430,13 +431,11 @@ class MPOCuda:
             
             mat = remaining.reshape(r_left * d_k * d_k, remaining_size)
             
-            U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+            # GPU-accelerated rSVD (randomized, O(mnk) complexity)
+            U, S, Vh = rsvd_native(mat.real if mat.is_complex() else mat, k=max_rank)
             
-            # Truncate
-            rank = min(max_rank, len(S))
-            U = U[:, :rank]
-            S = S[:rank]
-            Vh = Vh[:rank, :]
+            # Already truncated by rsvd_native
+            rank = len(S)
             
             # Core: (r_left, d_out, d_in, rank)
             core = U.reshape(r_left, d_k, d_k, rank)

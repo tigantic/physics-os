@@ -127,6 +127,14 @@ impl Default for TensorBridgeHeader {
 unsafe impl bytemuck::Pod for TensorBridgeHeader {}
 unsafe impl bytemuck::Zeroable for TensorBridgeHeader {}
 
+// Compile-time size and alignment assertions (Constitutional Article VIII)
+const _: () = {
+    assert!(std::mem::size_of::<TensorBridgeHeader>() == HEADER_SIZE);
+    assert!(HEADER_SIZE == 4096);
+    assert!(HEADER_SIZE.is_power_of_two());
+    assert!(std::mem::align_of::<TensorBridgeHeader>() == 4096);
+};
+
 impl TensorBridgeHeader {
     /// Validate the header magic and version
     pub fn validate(&self) -> crate::Result<()> {

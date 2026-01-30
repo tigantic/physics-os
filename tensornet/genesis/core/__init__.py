@@ -52,6 +52,23 @@ from tensornet.genesis.core.rsvd import (
     svd_fallback,
 )
 
+from tensornet.genesis.core.triton_ops import (
+    rsvd_native,
+    qtt_dot_native,
+    qtt_norm_native,
+    qtt_add_native,
+    qtt_sub_native,
+    qtt_hadamard_native,
+    qtt_round_native,
+    triton_matmul,
+    triton_gram,
+    adaptive_rank,
+    qtt_evaluate_at_index,
+    qtt_evaluate_at_indices,
+    HAS_TRITON,
+    HAS_CUDA,
+)
+
 __all__ = [
     # Logging
     "get_logger",
@@ -85,4 +102,19 @@ __all__ = [
     "rsvd_gpu",
     "tt_decompose_rsvd",
     "svd_fallback",
+    # Triton QTT ops (native, no dense)
+    "rsvd_native",
+    "qtt_dot_native",
+    "qtt_norm_native",
+    "qtt_add_native",
+    "qtt_sub_native",
+    "qtt_hadamard_native",
+    "qtt_round_native",
+    "triton_matmul",
+    "triton_gram",
+    "adaptive_rank",
+    "qtt_evaluate_at_index",
+    "qtt_evaluate_at_indices",
+    "HAS_TRITON",
+    "HAS_CUDA",
 ]

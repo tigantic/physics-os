@@ -16,17 +16,23 @@
 //! │  │ GPU tensor    │  │ Laplacian,    │  │ Morton, geo   │       │
 //! │  │ evaluation    │  │ advection     │  │ coordinates   │       │
 //! │  └───────────────┘  └───────────────┘  └───────────────┘       │
+//! │  ┌───────────────┐                                              │
+//! │  │      gpu      │  ← NEW: WGPU compute shaders for TT eval    │
+//! │  │ TTEvaluator   │                                              │
+//! │  └───────────────┘                                              │
 //! └─────────────────────────────────────────────────────────────────┘
 //! ```
 //!
-//! # Future Expansion
+//! # QTT Doctrine
 //!
-//! This crate will eventually contain:
-//! - Rust-native QTT evaluation (currently in tci_core_rust)
-//! - WGPU compute shaders for GPU physics
-//! - Unified field representation
+//! This crate follows strict QTT doctrine:
+//! - **Native QTT**: Tensor train cores transmitted directly, never decompressed
+//! - **No Dense**: Memory usage is O(L·χ²), NEVER O(d^L)
+//! - **GPU-native**: TT evaluation on GPU without decompression
 
 pub mod transforms;
+pub mod gpu;
 
 // Re-export commonly used types
 pub use transforms::morton;
+pub use gpu::{TTEvaluator, TTParams, TTPipeline, PipelineConfig, MemoryStats};

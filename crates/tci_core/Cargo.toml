@@ -1,0 +1,38 @@
+[package]
+name = "tci_core"
+version = "0.1.0"
+edition = "2021"
+authors = ["TiganticLabz <dev@tigantic.com>"]
+description = "Tensor Cross Interpolation (TCI) for native QTT construction via PyO3"
+license = "LicenseRef-Proprietary"
+rust-version = "1.75"
+
+[lib]
+name = "tci_core"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# PyO3 for Python bindings
+pyo3 = { version = "0.24", features = ["extension-module"] }
+
+# Numpy interop
+numpy = "0.24"
+
+# Math
+ndarray = "0.16"
+
+# Error Handling
+thiserror = "1.0"
+
+# Parallel iteration
+rayon = "1.10"
+
+# CUDA integration (optional)
+cudarc = { version = "0.19", features = ["cuda-12080"], optional = true }
+
+[features]
+default = []
+gpu = ["dep:cudarc"]
+
+[dev-dependencies]
+criterion = "0.5"

@@ -44,8 +44,8 @@ pub const WEATHER_VERSION: u32 = 1;
 /// Default shared memory path
 pub const WEATHER_SHM_PATH: &str = "/dev/shm/hyper_weather_v1";
 
-/// Header size in bytes
-pub const WEATHER_HEADER_SIZE: usize = 72;
+/// Header size in bytes (power-of-2 for cache efficiency)
+pub const WEATHER_HEADER_SIZE: usize = 128;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Weather Header Structure
@@ -54,28 +54,35 @@ pub const WEATHER_HEADER_SIZE: usize = 72;
 /// Weather data header for shared memory IPC.
 ///
 /// Must match Python's `WeatherHeader` exactly.
-#[repr(C, packed)]
+/// 
+/// # Memory Layout (128 bytes, cache-aligned)
+/// 
+/// Using `align(128)` instead of `packed` to:
+/// - Prevent unaligned memory access penalties (2-10x on x86)
+/// - Enable SIMD/vectorization
+/// - Avoid undefined behavior on ARM
+#[repr(C, align(128))]
 #[derive(Debug, Clone, Copy)]
 pub struct WeatherHeader {
-    // ─── Identification ──────────────────────────────────────────────────────
+    // ─── Identification (8 bytes) ────────────────────────────────────────────
     /// Magic number: 0x474C4F42 ("GLOB")
     pub magic: u32,
     /// Protocol version
     pub version: u32,
     
-    // ─── Temporal ────────────────────────────────────────────────────────────
+    // ─── Temporal (16 bytes) ─────────────────────────────────────────────────
     /// Unix timestamp when data was written (seconds)
     pub timestamp: u64,
     /// Forecast valid time (Unix seconds)
     pub valid_time: u64,
     
-    // ─── Grid Dimensions ─────────────────────────────────────────────────────
+    // ─── Grid Dimensions (8 bytes) ───────────────────────────────────────────
     /// Width of the wind tensor
     pub grid_w: u32,
     /// Height of the wind tensor
     pub grid_h: u32,
     
-    // ─── Geographic Bounds ───────────────────────────────────────────────────
+    // ─── Geographic Bounds (16 bytes) ────────────────────────────────────────
     /// Southern boundary latitude
     pub lat_min: f32,
     /// Northern boundary latitude
@@ -85,22 +92,44 @@ pub struct WeatherHeader {
     /// Eastern boundary longitude
     pub lon_max: f32,
     
-    // ─── Statistics ──────────────────────────────────────────────────────────
+    // ─── Statistics (8 bytes) ────────────────────────────────────────────────
     /// Maximum wind speed in the grid (m/s)
     pub max_wind_speed: f32,
     /// Mean wind speed in the grid (m/s)
     pub mean_wind_speed: f32,
     
-    // ─── Synchronization ─────────────────────────────────────────────────────
+    // ─── Synchronization (16 bytes) ──────────────────────────────────────────
     /// Monotonic frame counter
     pub frame_number: u64,
     /// Ready flag: 1 = data is valid and ready
     pub is_ready: u32,
     
-    // ─── Padding ─────────────────────────────────────────────────────────────
-    /// Reserved for alignment
-    pub _padding: u32,
+    // ─── Reserved for future expansion (4 bytes) ─────────────────────────────
+    /// Reserved field (QTT compression ratio, future use)
+    pub _reserved0: u32,
+    
+    // ─── Extended Statistics (24 bytes) ──────────────────────────────────────
+    /// Wind direction variance (for QTT rank estimation)
+    pub wind_direction_variance: f32,
+    /// Compression hint: estimated QTT bond dimension
+    pub qtt_bond_hint: u32,
+    /// Data checksum (CRC32 of tensor data)
+    pub data_checksum: u32,
+    /// Reserved expansion
+    pub _reserved1: [u32; 3],
+    
+    // ─── Padding to 128 bytes ────────────────────────────────────────────────
+    /// Explicit padding for 128-byte alignment (power-of-2)
+    pub _padding: [u8; 24],
 }
+
+// Compile-time size and alignment assertions
+const _: () = {
+    assert!(std::mem::size_of::<WeatherHeader>() == WEATHER_HEADER_SIZE);
+    assert!(WEATHER_HEADER_SIZE == 128);
+    assert!(WEATHER_HEADER_SIZE.is_power_of_two());
+    assert!(std::mem::align_of::<WeatherHeader>() == 128);
+};
 
 impl WeatherHeader {
     /// Validate the header magic and version
@@ -171,19 +200,31 @@ impl WeatherFrame {
     }
     
     /// Get U-wind tensor as a slice (east/west component)
+    /// 
+    /// # Safety
+    /// The u_offset is validated to be 4-byte aligned for f32 access.
     pub fn u_field(&self) -> &[f32] {
-        unsafe {
-            let ptr = self.mmap.as_ptr().add(self.u_offset) as *const f32;
-            std::slice::from_raw_parts(ptr, self.pixel_count)
-        }
+        let ptr = self.mmap.as_ptr().wrapping_add(self.u_offset);
+        debug_assert!(
+            ptr as usize % std::mem::align_of::<f32>() == 0,
+            "FATAL: Misaligned f32 access in u_field at offset {}",
+            self.u_offset
+        );
+        unsafe { std::slice::from_raw_parts(ptr as *const f32, self.pixel_count) }
     }
     
     /// Get V-wind tensor as a slice (north/south component)
+    /// 
+    /// # Safety
+    /// The v_offset is validated to be 4-byte aligned for f32 access.
     pub fn v_field(&self) -> &[f32] {
-        unsafe {
-            let ptr = self.mmap.as_ptr().add(self.v_offset) as *const f32;
-            std::slice::from_raw_parts(ptr, self.pixel_count)
-        }
+        let ptr = self.mmap.as_ptr().wrapping_add(self.v_offset);
+        debug_assert!(
+            ptr as usize % std::mem::align_of::<f32>() == 0,
+            "FATAL: Misaligned f32 access in v_field at offset {}",
+            self.v_offset
+        );
+        unsafe { std::slice::from_raw_parts(ptr as *const f32, self.pixel_count) }
     }
     
     /// Get wind magnitude at a specific index
@@ -357,6 +398,17 @@ mod tests {
             std::mem::size_of::<WeatherHeader>(),
             WEATHER_HEADER_SIZE,
             "WeatherHeader size mismatch - must match Python!"
+        );
+        assert_eq!(WEATHER_HEADER_SIZE, 128, "Header must be 128 bytes (power of 2)");
+        assert!(WEATHER_HEADER_SIZE.is_power_of_two(), "Header size must be power of 2");
+    }
+    
+    #[test]
+    fn test_header_alignment() {
+        assert_eq!(
+            std::mem::align_of::<WeatherHeader>(),
+            128,
+            "WeatherHeader must be 128-byte aligned"
         );
     }
     
