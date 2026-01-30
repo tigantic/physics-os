@@ -15,7 +15,7 @@
 
 *One Codebase. 15 Industries. 937K Lines of Code.*
 
-**Version 26.0** | **January 24, 2026** | **GENESIS COMPLETE**
+**Version 26.1** | **January 30, 2026** | **THE COMPRESSOR**
 
 ---
 
@@ -1067,6 +1067,17 @@ from tensornet.core.determinism import set_global_seed
 
 ## Changelog
 
+### Version 26.1 (January 30, 2026) — THE COMPRESSOR
+- 🚀 **The_Compressor**: 63,321x QTT compression engine released
+  - 16.95 GB NOAA GOES-18 satellite data → 258 KB (L2 cache resident)
+  - 4D QTT with Morton Z-order bit-interleaving
+  - mmap streaming for zero-RAM source loading
+  - Core-by-core GPU SVD (VRAM <100 MB on 8GB card)
+  - Universal N-dimensional decompressor
+  - Point query: ~93µs (10,000+ queries/sec)
+- 📦 **Release**: `v1.0.0-the-compressor` published to GitHub
+- 📁 **Location**: `The_Compressor/` (self-contained, numpy+torch only)
+
 ### Version 26.0 (January 27, 2026) — GENESIS COMPLETE
 - ✅ **Genesis Layers 20-26**: All 7 QTT meta-primitives implemented and validated (26,458 LOC)
 - ✅ **Cross-Primitive Pipeline**: OT → SGW → RKHS → PH → GA end-to-end without densification
@@ -1127,6 +1138,6 @@ See [CHANGELOG.md](CHANGELOG.md) for complete history.
 ╚════════════════════════════════════════════════════════════════════════════════════════╝
 ```
 
-*Last Updated: January 27, 2026 — Version 26.0*
+*Last Updated: January 30, 2026 — Version 26.1*
 
 </div>

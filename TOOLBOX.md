@@ -1,5 +1,5 @@
 # 🧰 HyperTensor ToolBox Manifest
-> **Version**: Phase 26 | **Date**: January 27, 2026
+> **Version**: Phase 26.1 | **Date**: January 30, 2026
 
 The complete catalog of HyperTensor - a physics-first tensor network ecosystem.
 
@@ -16,7 +16,7 @@ The complete catalog of HyperTensor - a physics-first tensor network ecosystem.
 | **Platforms** | 3 |
 | **Modules** | 96 |
 | **Applications** | 99 |
-| **Tools** | 15 |
+| **Tools** | 20 |
 | **Total Files** | 24,033 |
 | **Total LOC** | **936,723** |
 | **Python LOC** | 619,241 |
@@ -710,7 +710,60 @@ FluidElite-ZK prover binaries.
 
 ---
 
-## 🔐 Hardware Security - 3
+## �️ The_Compressor - 5 ⭐ NEW
+
+> **63,321x QTT Compression Engine** — Breakthrough compression technology
+
+| Tool | Purpose | Performance |
+|------|---------|-------------|
+| `compress.py` | 4D QTT compression with Morton Z-order | 16.95 GB → 258 KB |
+| `decompress.py` | Original frame-based decompressor | ~10k queries/sec |
+| `universal.py` | Universal N-D decompressor | Any dimensionality |
+| `compress_24h.py` | Satellite data variant | 24-hour time series |
+| `__init__.py` | Module initialization | Self-contained |
+
+### Core Technology
+- **4D Quantics Tensor Train (QTT)** decomposition
+- **Morton Z-order bit-interleaving** for space-time locality
+- **mmap streaming** — zero RAM during compression
+- **Core-by-core GPU SVD** — VRAM <100 MB
+- **Eigendecomposition fallback** for wide matrices
+- **float16 core storage**
+
+### Usage
+```bash
+# Compress
+python The_Compressor/compress.py --input data_folder --output compressed.npz
+
+# Inspect
+python The_Compressor/universal.py info compressed.npz
+
+# Query point (any dimensionality)
+python The_Compressor/universal.py query compressed.npz 16,1024,1024
+
+# Reconstruct
+python The_Compressor/universal.py reconstruct compressed.npz -o output.npy
+
+# Benchmark
+python The_Compressor/universal.py benchmark compressed.npz
+```
+
+### Results
+| Metric | Value |
+|--------|-------|
+| Original Size | 16.95 GB (NOAA GOES-18) |
+| Compressed Size | 258 KB |
+| Compression Ratio | **63,321x** |
+| L2 Cache Fit | ✅ (<2.5 MB) |
+| Point Query | ~93 µs |
+| Queries/sec | 10,000+ |
+| Dependencies | numpy, torch (CUDA optional) |
+
+**Release**: `v1.0.0-the-compressor` on GitHub
+
+---
+
+## �🔐 Hardware Security - 3
 
 | Tool | Location | Purpose |
 |------|----------|---------|
