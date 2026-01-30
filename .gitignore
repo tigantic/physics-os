@@ -141,3 +141,4 @@ noaa_24h_raw/
 real_data/*.bin
 real_data/*.nc
 *.zip
+Clawdbot/
