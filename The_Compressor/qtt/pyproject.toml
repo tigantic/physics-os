@@ -1,0 +1,95 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qtt"
+version = "1.0.0"
+description = "Quantum Tensor Train Compression & Universal Random-Access File System"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "HyperTensor Team", email = "team@hypertensor.io"}
+]
+keywords = [
+    "compression",
+    "tensor-train",
+    "product-quantization",
+    "semantic-search",
+    "random-access",
+    "file-format"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Topic :: System :: Filesystems",
+    "Topic :: Text Processing :: Indexing",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>=1.21.0",
+    "scikit-learn>=1.0.0",
+]
+
+[project.optional-dependencies]
+semantic = [
+    "sentence-transformers>=2.0.0",
+]
+gpu = [
+    "cupy>=11.0.0",
+]
+all = [
+    "sentence-transformers>=2.0.0",
+    "cupy>=11.0.0",
+]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "mypy>=1.0.0",
+    "ruff>=0.1.0",
+]
+
+[project.scripts]
+qtt = "qtt.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/hypertensor/qtt"
+Documentation = "https://qtt.readthedocs.io"
+Repository = "https://github.com/hypertensor/qtt"
+Issues = "https://github.com/hypertensor/qtt/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["qtt*"]
+
+[tool.setuptools.package-data]
+qtt = ["py.typed"]
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["qtt/tests"]
+addopts = "-v --tb=short"
