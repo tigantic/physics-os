@@ -1,0 +1,118 @@
+{
+  "attestation_type": "FRONTIER_06_FUSION_CONTROL_VALIDATION",
+  "version": "1.0.0",
+  "timestamp_utc": "2026-02-01T07:18:03.718650+00:00",
+  "timestamp_unix": 1769930283,
+  "system": {
+    "project": "HyperTensor-VM / QTeneT",
+    "module": "FRONTIER/06_FUSION_CONTROL",
+    "copyright": "(c) 2026 Tigantic Holdings LLC. All Rights Reserved."
+  },
+  "components": {
+    "disruption_predictor": {
+      "description": "Real-time disruption prediction using tensor network state estimation",
+      "scenarios_tested": [
+        "stable",
+        "density_limit",
+        "locked_mode",
+        "vde",
+        "beta_limit"
+      ],
+      "latency": {
+        "mean_us": 71.11806933244225,
+        "p99_us": 106.65478941518813,
+        "target_us": 1000.0
+      },
+      "status": "PASS"
+    },
+    "plasma_controller": {
+      "description": "Integrated feedback control with VDE prevention and mitigation",
+      "controllers": [
+        "vertical",
+        "density",
+        "error_field",
+        "heating",
+        "mitigation"
+      ],
+      "latency": {
+        "mean_us": 105.60839300160296,
+        "p99_us": 278.5738027887418,
+        "target_us": 2000.0
+      },
+      "status": "PASS"
+    },
+    "control_loop": {
+      "description": "Real-time control loop with hardware abstraction",
+      "tests": [
+        "basic_execution",
+        "vde_mitigation",
+        "deadline_compliance",
+        "actuator_commands"
+      ],
+      "deadline_miss_rate": 0.0,
+      "status": "PASS"
+    }
+  },
+  "benchmarks": {
+    "disruption_scenarios": {
+      "stable": {
+        "p_disrupt_100ms": 0.11920292202211755,
+        "predicted_type": "NONE",
+        "correct": "True"
+      },
+      "density_limit": {
+        "p_disrupt_100ms": 0.3260249785028271,
+        "predicted_type": "IMPURITY_INFLUX",
+        "correct": "True"
+      },
+      "locked_mode": {
+        "p_disrupt_100ms": 0.9922637090228218,
+        "predicted_type": "LOCKED_MODE",
+        "correct": "True"
+      },
+      "vde": {
+        "p_disrupt_100ms": 0.8851028697382789,
+        "predicted_type": "VERTICAL_DISPLACEMENT",
+        "correct": "True"
+      },
+      "beta_limit": {
+        "p_disrupt_100ms": 0.6235078799408696,
+        "predicted_type": "BETA_LIMIT",
+        "correct": "True"
+      }
+    },
+    "controller_scenarios": {
+      "stable": {
+        "mitigation_triggered": 0,
+        "pass": true
+      },
+      "vde": {
+        "mitigation_triggered": true,
+        "predicted_type": "VERTICAL_DISPLACEMENT",
+        "p_disrupt_10ms": 0.7337805210564925,
+        "pass": true
+      },
+      "vertical_control": {
+        "initial_z_m": 0.1,
+        "final_z_m": 0.08321794733619407,
+        "correction_ratio": 0.16782052663805933,
+        "pass": "True"
+      }
+    }
+  },
+  "performance": {
+    "predictor_mean_latency_us": 71.11806933244225,
+    "controller_mean_latency_us": 105.60839300160296,
+    "total_cycle_time_us": 176.7264623340452,
+    "real_time_capable": true,
+    "target_cycle_us": 1000.0
+  },
+  "validation_summary": {
+    "all_benchmarks_pass": true,
+    "predictor_pass": "True",
+    "controller_pass": "True",
+    "loop_pass": true
+  },
+  "content_hash": "eaadd712a55334735c3b07742277a39e331eb19cf039f7136529222b2232cf28",
+  "verification_hash": "63ba83c58e482b0a5282ec8a9ee14c032cdbe7aa97b2064c1f8585d37c0ae391"
+}
