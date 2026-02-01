@@ -147,3 +147,5 @@ target/
 noaa_24h_raw/
 lean_yang_mills/
 products/fluidelite-zk/fluidelite.img
+FRONTIER/07_GENOMICS/data/clinvar.vcf.gz
+FRONTIER/07_GENOMICS/data/*.vcf.gz
