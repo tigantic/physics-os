@@ -1,0 +1,47 @@
+{
+  "attestation_type": "FRONTIER_02_SPACE_WEATHER_VALIDATION",
+  "version": "1.0.0",
+  "timestamp_utc": "2026-02-01T04:26:35.132372+00:00",
+  "timestamp_unix": 1769919995,
+  "system": {
+    "project": "HyperTensor-VM / QTeneT",
+    "module": "FRONTIER/02_SPACE_WEATHER",
+    "copyright": "(c) 2026 Tigantic Holdings LLC. All Rights Reserved."
+  },
+  "benchmarks": {
+    "alfven_waves": {
+      "status": "PASS",
+      "phase_error": 0.004549102783203196,
+      "physics": "MHD wave propagation at Alfv\u00e9n velocity",
+      "dispersion_relation": "\u03c9 = k \u00b7 v_A"
+    },
+    "sod_shock_tube": {
+      "status": "PASS",
+      "shock_error": 0.0009524397340700603,
+      "physics": "Compressible Euler equations with Rusanov flux",
+      "rankine_hugoniot": "Validated"
+    },
+    "magnetopause_standoff": {
+      "status": "PASS",
+      "standoff_RE": 9.108922988403167,
+      "physics": "Pressure balance between solar wind and dipole field"
+    }
+  },
+  "performance": {
+    "total_runtime_seconds": 0.098
+  },
+  "validation_summary": {
+    "all_benchmarks_pass": true,
+    "alfven_pass": true,
+    "sod_pass": true,
+    "magnetopause_pass": true
+  },
+  "space_weather_applications": {
+    "bow_shock_prediction": "Sod shock tube validates shock physics",
+    "solar_wind_propagation": "Alfv\u00e9n waves validate MHD transport",
+    "magnetopause_location": "Standoff distance from pressure balance",
+    "storm_forecasting": "Ready for Dst/Kp prediction engine"
+  },
+  "content_hash": "62a6f176e5a717bed2a7289c1fbb5078f4ae72d9d106b7462e9471a0c2bf8b87",
+  "verification_hash": "1c74de4f93b8f941dcb7e61b8df95a6c1706610f75b216f4750e6aba26d4fb36"
+}

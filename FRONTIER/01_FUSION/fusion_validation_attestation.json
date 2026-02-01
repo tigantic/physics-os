@@ -1,0 +1,57 @@
+{
+  "attestation_type": "FRONTIER_01_FUSION_VALIDATION",
+  "version": "1.0.0",
+  "timestamp_utc": "2026-02-01T03:40:10.363605+00:00",
+  "timestamp_unix": 1769917210,
+  "system": {
+    "project": "HyperTensor-VM / QTeneT",
+    "module": "FRONTIER/01_FUSION",
+    "copyright": "(c) 2026 Tigantic Holdings LLC. All Rights Reserved."
+  },
+  "configuration": {
+    "n_qubits_r": 6,
+    "n_qubits_v": 6,
+    "grid_size_r": 64,
+    "grid_size_v": 64,
+    "max_rank": 32,
+    "total_phase_space_points": 4096
+  },
+  "benchmarks": {
+    "tokamak_geometry": {
+      "status": "PASS",
+      "preset": "ITER",
+      "major_radius_m": 6.2,
+      "minor_radius_m": 2.0,
+      "toroidal_field_T": 5.3,
+      "plasma_current_MA": 15.0
+    },
+    "landau_damping": {
+      "status": "PASS",
+      "measured_gamma": -0.15140464901924133,
+      "analytic_gamma": -0.151387230212514,
+      "relative_error": 0.0001150612683968835,
+      "tolerance": 0.1,
+      "physics": "Collisionless damping of Langmuir waves via resonant electrons"
+    },
+    "two_stream_instability": {
+      "status": "PASS",
+      "measured_gamma": 0.12775202095508575,
+      "growth_detected": true,
+      "physics": "Exponential growth from counter-streaming electron beams"
+    }
+  },
+  "performance": {
+    "total_runtime_seconds": 8.284,
+    "memory_mb": 0.03,
+    "complexity": "O(r\u00b2 log N)",
+    "memory_scaling": "O(r log N)"
+  },
+  "validation_summary": {
+    "all_benchmarks_pass": true,
+    "landau_pass": true,
+    "two_stream_pass": true,
+    "geometry_pass": true
+  },
+  "content_hash": "17cf8eb7a5c34a82046840a67725f999f9adeb1cf1fffa7f57287ac50f959dbe",
+  "verification_hash": "38ce3378d9957ee6fb395ea7b03dcffed577a8fe12c1964893cd6adb40537ee0"
+}
