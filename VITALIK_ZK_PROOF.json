@@ -1,0 +1,34 @@
+{
+  "description": "Zero-Knowledge proof of Vitalik Buterin's wallet address membership",
+  "proved_at_utc": "2026-02-02T02:40:00Z",
+  "prover": {
+    "name": "FluidElite ZK Proof API",
+    "version": "v2.0.0",
+    "proof_system": "Halo2-KZG",
+    "curve": "BN254",
+    "gpu": "NVIDIA RTX 5070 Ti"
+  },
+  "input": {
+    "wallet_address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    "owner": "vitalik.eth (Vitalik Buterin)"
+  },
+  "proof": {
+    "proof_id": "prf_18904d8210554380",
+    "proof_type": "full",
+    "generation_time_ms": 111,
+    "proof_size_bytes": 1312,
+    "proof_data_base64": "YKX9F+q7J9fuo2clVoCa4giAsmzYNyFXcIcpqdOW8QQ11DVOIp3dlcf+5zCre9DXOxDx8Ole7C9FIzokgsruEprtkiPFMcIz2TyLc68aum9ap4wOdJ2XpToTTUN5EdZShp/YC70u8Xms4nN6s7ITAiyivLicUAln4+2sPBt8DRmDcdRRGXPQE31CiDIxVkDh4dbYAOYJ69zLQjsPMMYZEyMtxrghdegIGfSYyRiM69lEPjfPjaq+BVxHrabyYAMFjI7lZgMyka9y0lj+waYW6sk2q7GPDR9cqb1XKZCjXkY0MwtQaAi+H5kQu18lXa5ArdEL7v+uwAum6ZdWIaFXa1RGt9PnH0EQhTmk4TyMkVELAsH9zkpFfKeKb1K48XFTl2AF6pFi0UH+0B6pZRAh9gb408m8BQbQcop57qKWHRq12ujkHIyGvYiDcLbrZWalOMd6zj1Jy6lWvlWR+NZ4R6G9oFtpbPnhgItWd6N+qLMJzNGdJenYPGpb/Q0xiicpBVxJiBMDaJlonMedMZyBjEMuWUghI/WdNIp+69KR9VXtKUfUgQWHrOWidzKnv8fOvcVUW39FTOS/1L769MLHHYKlracg2BYJX4y5B3Jem3Vo//XcZBrG7tWFQaMl1fUAxtLI+1NxplSY3anIAXOiFudR1HIHSwJaDs6AiFreNik/xDqcPe0jKVAx5D+V6IyWwk9LY6E3UPtYILg+cTbxIW7aI0w5q7s+f1bQ4pRUGFiCtKwfBOFp7NTJEJ4mKEIWpmg3F9SvjpUvtafiHW4PKZjsF0Te7H+tjti/FXuvqhRM0W4uqF8dK19qT8U73B5SMNkviLzZ/1odsX8r9l5VKaB4O/FY/rxMVJaVjTsuGNdemF3bki3ta5396O7MWAsmzIKi2mebf/DkZW75MEB7FK+qgmzyyXtEbFMMH0STTicgVhnX2aipk7kJMTI+/rhqhNjjacuFrcApG8UZuYe9IfXvK1sqLxFn401uXIUcyRjPHuXVVRT1dcRsOhGz0GclUtf/QEkgLznYsoVmzonv7zKZrm6QtSKmYQW4Qf/5lgKAxRm8xqI3+plD6M+dX34xCT1a7X11uDBm2vHmLxBfGApkNpMnSpM4MTBmiaJWooSc9O67zV15w3W7hb6SvdYnvHUhqtGwj7eiEW2VFrvqZU83pH1atxA5Y35cPPkd3ACA4yPBv+CQrjc1EP+ZWmS9CuEICZqsXQ8y+WTf5IGmCVQLUNDynKNHE/WreVvUFEB5zPH9ofQLaXXLEJeX9FwcuDdPTWkpiBnwVJ9DLswJs/rFDuIy+RWS/HCjJkPP4BD9Sdkib2WOppfk+8L1LdvPv14mFbdIRvlcSD1uXQhMJz/CtNyWYRRDjmgW5FJOMcc/n8nZdg/detD21mytjUQUYvmraRJnlUNzMk0kfbPgK7iW21FwvsFu72FB5/tJrxOnw7ffr5Gg2MrtGEpirA1UiY4Tjo7tXCyiwcJmKfd9DBBAz+bI1aE2cHSEVK5qKXZxxswOxtnx1PUiIXkfoz4BlDPahOLgt1VFa2oPjMFPkxu/6fO4s6Sg6v6Qjvln7hniHKal+sEhClIoD/bvzPabHWWHY5ID5gbxfx5+wHTcXeixf/9zSCLwxD0EQ4ZHox80KH2bD5WCZAKBabyGd+FtUzwZks66ivMe8hKLO6RS3vgOikZ/PWYMvjiFJj6mRQlVar7l5Gy52qtMJq3cTWCro3eSd8jGa0y/BzW5wDayRQ==",
+    "public_inputs": [
+      "0x00000000000000000000000000000000000000000000000015ec7bf0b50732b4",
+      "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "0x0000000000000000000000000000000000000000000000000000000000000000"
+    ],
+    "commitment": {
+      "x": "0x08577420360be64670a6dee0eaac4496b5fa52552bd6d3759ea0e7b2800e0947",
+      "y": "0x063bd658a73dc283349d08a39e5049376fa72d8cca34ea2e10b38aa594dbc2f3",
+      "z": "0x03b9d92b6b1972a41ee15dc810de7c54399f8161116a08b58207bc9fa6b467a8"
+    }
+  },
+  "what_this_proves": "This ZK proof cryptographically demonstrates knowledge of a valid Merkle tree membership path for the wallet address 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045 without revealing the path itself. The proof can be verified on-chain using the Halo2 verifier.",
+  "verification_instructions": "Deploy the Solidity verifier from GET /v1/verifier/solidity, then call verify() with the proof bytes and public inputs."
+}

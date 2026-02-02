@@ -3,10 +3,10 @@ name = "fluidelite-zk"
 version = "0.1.0"
 edition = "2021"
 rust-version = "1.73.0"
-authors = ["TiganticLabz"]
+authors = ["Bradly Biron Baker Adams <brad@tigantic.com>"]
 description = "ZK-provable FluidElite inference using Halo2"
-license = "MIT"
-repository = "https://github.com/TiganticLabz/HyperTensor-VM"
+license = "LicenseRef-Proprietary"
+repository = "https://github.com/tigantic/FluidElite"
 keywords = ["zk", "halo2", "tensor-network", "machine-learning", "verifiable-ai"]
 categories = ["cryptography", "science"]
 
@@ -36,11 +36,6 @@ path = "src/bin/gpu_test.rs"
 required-features = ["gpu"]
 
 [[bin]]
-name = "qtt-zero-expansion"
-path = "src/bin/qtt_zero_expansion.rs"
-required-features = ["gpu"]
-
-[[bin]]
 name = "test-hybrid-zk"
 path = "src/bin/test_hybrid_zk.rs"
 
@@ -60,6 +55,17 @@ path = "src/bin/gevulot_prover.rs"
 required-features = ["halo2"]
 
 [dependencies]
+
+# Groth16 prover (arkworks ecosystem)
+ark-std = { version = "0.4", optional = true }
+ark-ff = { version = "0.4", features = ["std"], optional = true }
+ark-ec = { version = "0.4", optional = true }
+ark-bn254 = { version = "0.4", optional = true }
+ark-groth16 = { version = "0.4", optional = true }
+ark-relations = { version = "0.4", optional = true }
+ark-r1cs-std = { version = "0.4", optional = true }
+ark-serialize = { version = "0.4", optional = true }
+ark-snark = { version = "0.4", optional = true }
 # Serialization
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
@@ -69,13 +75,9 @@ base64 = "0.21"
 # Numerics (fixed-point for ZK)
 fixed = "1.23"
 num-traits = "0.2"
-num-bigint = "0.4"
 
 # Hashing for lookup table
 sha2 = "0.10"
-
-# SHA-3 family for PQC-safe hashing (SHAKE256)
-sha3 = "0.10"
 
 # Async runtime for prover node
 tokio = { version = "1.35", features = ["full"] }
@@ -127,30 +129,9 @@ rayon = "1.8"
 
 # sysinfo for memory monitoring in stress tests
 sysinfo = "0.30"
-
-# AWS SDK for S3 byte-range streaming
-aws-config = { version = "1.5", optional = true }
-aws-sdk-s3 = { version = "1.65", optional = true }
-
-# Zstd compression for residual hybrid protocol
-zstd = { version = "0.13", optional = true }
-
-# Chrono for timestamps
-chrono = { version = "0.4", optional = true }
-
-# libc for mmap (Unix)
-libc = "0.2"
-
-# Arkworks for REAL Groth16 proving (proper trusted setup)
-ark-ff = { version = "0.4", optional = true }
-ark-ec = { version = "0.4", optional = true }
-ark-bn254 = { version = "0.4", optional = true }
-ark-groth16 = { version = "0.4", optional = true }
-ark-relations = { version = "0.4", optional = true }
-ark-r1cs-std = { version = "0.4", optional = true }
-ark-snark = { version = "0.4", optional = true }
-ark-serialize = { version = "0.4", optional = true }
-ark-std = { version = "0.4", optional = true }
+aws-sdk-s3 = "1.24.0"
+aws-config = "1.8.11"
+chrono = "0.4.43"
 
 [dev-dependencies]
 criterion = { version = "0.5", features = ["html_reports"] }
@@ -224,27 +205,9 @@ name = "single-var-test"
 path = "src/bin/single_var_test.rs"
 required-features = ["gpu"]
 
-[[bin]]
-name = "semaphore-pqc-bench"
-path = "src/bin/semaphore_pqc_bench.rs"
-required-features = ["gpu", "halo2"]
-
-[[bin]]
-name = "fluid-ingest"
-path = "src/bin/fluid_ingest.rs"
-required-features = ["s3"]
-
-[[bin]]
-name = "fluid-s3-native"
-path = "src/bin/fluid_s3_native.rs"
-required-features = ["s3"]
-
-[[bin]]
-name = "fluid-block"
-path = "src/bin/fluid_block.rs"
-required-features = ["s3"]
-
 [features]
+# Enable Groth16 prover (arkworks)
+groth16 = ["dep:ark-std", "dep:ark-ff", "dep:ark-ec", "dep:ark-bn254", "dep:ark-groth16", "dep:ark-relations", "dep:ark-r1cs-std", "dep:ark-serialize", "dep:ark-snark"]
 default = []
 # Enable Halo2 ZK circuit - requires nightly Rust
 halo2 = ["dep:halo2-axiom"]
@@ -264,17 +227,17 @@ production = ["halo2", "server"]
 production-gpu = ["production", "gpu"]
 # Enterprise build with encryption
 enterprise = ["production", "encryption"]
-# S3 byte-range streaming for cloud ingest (zero egress)
-s3 = ["dep:aws-config", "dep:aws-sdk-s3", "dep:chrono", "dep:zstd"]
-# Arkworks Groth16 for REAL pairing verification
-arkworks = ["dep:ark-ff", "dep:ark-ec", "dep:ark-bn254", "dep:ark-groth16", "dep:ark-relations", "dep:ark-r1cs-std", "dep:ark-snark", "dep:ark-serialize", "dep:ark-std"]
+[[bin]]
+name = "noaa-demo"
+path = "src/bin/noaa_demo.rs"
+
 
 [[bin]]
-name = "worldcoin_production"
-path = "src/bin/worldcoin_production.rs"
-required-features = ["gpu"]
+name = "zk-proof-api-v2"
+path = "src/bin/zk_proof_api_v2.rs"
+required-features = ["server", "gpu"]
 
 [[bin]]
-name = "groth16_real"
-path = "src/bin/groth16_real.rs"
-required-features = ["arkworks"]
+name = "groth16-api"
+path = "src/bin/groth16_api.rs"
+required-features = ["groth16", "server"]

@@ -1,0 +1,58 @@
+{
+  "attestation": {
+    "type": "FluidElite ZK Proof API Production Benchmark",
+    "version": "v2.0.0",
+    "captured_at_utc": "2026-02-02T02:32:12Z",
+    "provider": "vast.ai",
+    "hardware": {
+      "gpu": "NVIDIA GeForce RTX 5070 Ti",
+      "vram_total_mb": 16303,
+      "driver_version": "570.133.07"
+    },
+    "software": {
+      "proof_system": "Halo2-KZG",
+      "curve": "BN254",
+      "gpu_backend": "ICICLE v4.0.0 CUDA (backend loaded from /opt/icicle/lib/backend)",
+      "api_framework": "Axum async Rust",
+      "rustc": "rustc 1.93.0 (254b59607 2026-01-19)",
+      "cargo": "cargo 1.93.0 (083ac5135 2025-12-15)",
+      "cargo_lock_sha256": "f964765b0dfe21eeac08845bcc1e5a17feaa425ac9ac91795bc4733296a7062d",
+      "git_commit": null,
+      "git_note": "Repository on Vast was deployed without .git metadata (NO_GIT). Pinning is via Cargo.lock hash."
+    },
+    "benchmark_results": {
+      "parallel_throughput_tps": 455.5,
+      "sequential_throughput_tps": 125.0,
+      "average_latency_ms": 19.4358208955,
+      "p99_latency_ms": 144.0,
+      "proofs_success": 335,
+      "proofs_failed": 110,
+      "success_rate": 0.7528089888
+    },
+    "api": {
+      "health": {"gpu": true, "status": "healthy", "version": "0.1.0"},
+      "status_snapshot": {
+        "gpu": {"available": true, "device": "Device { device_type: CUDA, id: 0 }"},
+        "prover": {"batch_size": 32, "max_depth_supported": 50}
+      }
+    },
+    "evidence_bundle": {
+      "path": "/home/brad/clawd/reports/fezk_vast_capture_20260201_213142/",
+      "contains": [
+        "nvidia_smi.txt",
+        "cargolock_sha256.txt",
+        "status.json",
+        "health.json",
+        "metrics.prom",
+        "solidity_verifier.json",
+        "bundle_summary.json",
+        "bundle_summary.sha256"
+      ]
+    },
+    "notes": [
+      "These metrics were observed from the running API instance (metrics endpoint) and a client-side TPS timing loop.",
+      "Some /v1/prove requests return 'batched' with no proof payload until the batch is full. Capture of a full proof payload should be saved separately if needed for on-chain verifier testing.",
+      "If you see: 'bases not allocated on an inactive device', ensure the server is started with consistent CUDA_VISIBLE_DEVICES and that only one GPU device context is used across worker threads."
+    ]
+  }
+}

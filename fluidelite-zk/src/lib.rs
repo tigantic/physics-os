@@ -34,6 +34,18 @@
 //! | **Total (L=16)**   | **~131,000**         |
 //!
 //! Compare to Transformer: ~50,000,000 constraints/token
+// ═══════════════════════════════════════════════════════════════════════════════
+// Copyright © 2025-2026 Bradly Biron Baker Adams / Tigantic Labs
+// All Rights Reserved. Proprietary and Confidential.
+// 
+// This source code is the exclusive property of Bradly Biron Baker Adams and
+// Tigantic Labs. Unauthorized copying, modification, distribution, or use of
+// this software, in whole or in part, is strictly prohibited without prior
+// written consent from the copyright holder.
+// 
+// SPDX-License-Identifier: LicenseRef-Proprietary
+// ═══════════════════════════════════════════════════════════════════════════════
+
 
 #![warn(missing_docs)]
 #![warn(clippy::all)]
@@ -73,37 +85,8 @@ pub mod msm_config;
 #[cfg(feature = "gpu")]
 pub mod qtt_native_msm;
 
-#[cfg(all(feature = "gpu", feature = "halo2"))]
-pub mod zero_expansion_prover;
-
-// QTT Geometric Algebra - prover-critical for elliptic curve operations
-pub mod qtt_ga;
-
-// QTT Random Matrix Theory - structured Fiat-Shamir challenges
-pub mod qtt_rmt;
-
-// QTT RKHS - kernel methods for lookup table compression
-pub mod qtt_rkhs;
-
-// Genesis Integration - wires together QTT-GA, QTT-RMT, QTT-RKHS for prover
-pub mod genesis_integration;
-
-// Genesis Prover - GPU-accelerated prover with all Genesis primitives
-#[cfg(all(feature = "gpu", feature = "halo2"))]
-pub mod genesis_prover;
-
-// Semaphore Integration - Zero-Expansion prover for Worldcoin Semaphore
-// Supports tree depths 16-50 with PQC hybrid commitments
-#[cfg(all(feature = "gpu", feature = "halo2"))]
-pub mod semaphore;
-
-// Groth16 Output Format - Standard 256-byte proof format for ecPairing
-#[cfg(all(feature = "gpu", feature = "halo2"))]
-pub mod groth16_output;
-
-// Large-scale benchmarks
-#[cfg(test)]
-mod large_scale_test;
+#[cfg(feature = "groth16")]
+pub mod groth16_prover;
 
 // Re-exports for convenience
 pub use mpo::MPO;
