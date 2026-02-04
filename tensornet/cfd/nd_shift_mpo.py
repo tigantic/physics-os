@@ -345,11 +345,101 @@ def apply_nd_shift_mpo_batched(
     return apply_nd_shift_mpo(cores, mpo, max_rank)
 
 
+def truncate_cores_adaptive(
+    cores: list[torch.Tensor],
+    max_rank: int,
+    tol: float = 0.0,
+    rank_hint: int | None = None,
+) -> tuple[list[torch.Tensor], int]:
+    """
+    Left-to-right SVD truncation sweep with adaptive rank estimation.
+    
+    This version sizes SVD computations based on rank_hint, giving O(actual_rank²)
+    cost instead of O(max_rank²). Use for time-stepping where rank evolves slowly.
+
+    Args:
+        cores: List of QTT/MPS cores [r_left, d, r_right]
+        max_rank: Maximum bond dimension (hard ceiling)
+        tol: Truncation tolerance. If > 0, truncate singular values below tol * S_max
+        rank_hint: Estimated rank from previous operation (for adaptive SVD sizing)
+
+    Returns:
+        (truncated_cores, max_observed_rank) - cores with bond dims ≤ max_rank,
+        plus the maximum rank observed for feeding into next call
+    """
+    cores = [c.clone() for c in cores]
+    n = len(cores)
+    max_observed_rank = 1
+
+    # Adaptive q estimation: start from hint with headroom
+    q_estimate = min(
+        int((rank_hint or 32) * 1.5) + 16,
+        max_rank,
+    )
+
+    for k in range(n - 1):
+        core = cores[k]
+        r_left, d, r_right = core.shape
+
+        # Reshape to matrix for SVD
+        mat = core.reshape(r_left * d, r_right)
+
+        # Adaptive SVD: start with estimate, grow if needed
+        q = min(q_estimate, min(mat.shape), max_rank)
+        
+        try:
+            U, S, V = torch.svd_lowrank(mat, q=q, niter=1)
+        except (RuntimeError, torch.linalg.LinAlgError):
+            # Fallback for numerical issues
+            continue
+
+        # Determine rank from tolerance
+        if tol > 0 and len(S) > 0:
+            threshold = tol * S[0]
+            rank = int(torch.sum(S > threshold).item())
+            rank = max(rank, 1)
+            
+            # If ALL singular values survived and we're below max_rank,
+            # we might need more - retry with larger q
+            if rank >= q and q < min(mat.shape) and q < max_rank:
+                q_retry = min(q * 2, min(mat.shape), max_rank)
+                try:
+                    U, S, V = torch.svd_lowrank(mat, q=q_retry, niter=1)
+                    rank = int(torch.sum(S > threshold).item())
+                    rank = max(rank, 1)
+                except (RuntimeError, torch.linalg.LinAlgError):
+                    pass  # Keep original result
+        else:
+            rank = len(S)
+
+        # Enforce max_rank ceiling
+        rank = min(rank, max_rank)
+        max_observed_rank = max(max_observed_rank, rank)
+
+        U = U[:, :rank]
+        S = S[:rank]
+        V = V[:, :rank]
+
+        # Update current core
+        cores[k] = U.reshape(r_left, d, rank)
+
+        # Absorb S @ V.T into next core
+        SVh = torch.diag(S) @ V.T
+        cores[k + 1] = torch.einsum("ij,jkl->ikl", SVh, cores[k + 1])
+
+        # Update estimate for next bond (rank changes slowly)
+        q_estimate = min(int(rank * 1.5) + 16, max_rank)
+
+    return cores, max_observed_rank
+
+
 def truncate_cores(
     cores: list[torch.Tensor], max_rank: int, tol: float = 0.0
 ) -> list[torch.Tensor]:
     """
     Left-to-right SVD truncation sweep.
+    
+    For adaptive rank (O(actual_rank²) cost), use truncate_cores_adaptive().
 
     Args:
         cores: List of QTT/MPS cores [r_left, d, r_right]
@@ -359,49 +449,8 @@ def truncate_cores(
     Returns:
         Truncated cores with bond dimensions ≤ max_rank
     """
-    cores = [c.clone() for c in cores]
-    n = len(cores)
-
-    for k in range(n - 1):
-        core = cores[k]
-        r_left, d, r_right = core.shape
-
-        # Reshape to matrix for SVD
-        mat = core.reshape(r_left * d, r_right)
-
-        # Randomized SVD truncation (4× faster)
-        # Note: svd_lowrank returns (U, S, V) not (U, S, Vh)
-        try:
-            q = min(max_rank, min(mat.shape))
-            U, S, V = torch.svd_lowrank(mat, q=q, niter=1)
-        except (RuntimeError, torch.linalg.LinAlgError):
-            # Fallback for numerical issues (singular matrix)
-            continue
-
-        # Determine rank from tolerance AND max_rank
-        if tol > 0 and len(S) > 0:
-            # Keep singular values above tolerance threshold
-            threshold = tol * S[0]  # Relative to largest singular value
-            rank = int(torch.sum(S > threshold).item())
-            rank = max(rank, 1)  # Keep at least 1
-        else:
-            rank = len(S)
-
-        # Also enforce max_rank
-        rank = min(rank, max_rank)
-
-        U = U[:, :rank]
-        S = S[:rank]
-        V = V[:, :rank]  # V is (n, k), not Vh
-
-        # Update current core
-        cores[k] = U.reshape(r_left, d, rank)
-
-        # Absorb S @ V.T (= S @ Vh) into next core
-        SVh = torch.diag(S) @ V.T
-        cores[k + 1] = torch.einsum("ij,jkl->ikl", SVh, cores[k + 1])
-
-    return cores
+    truncated, _ = truncate_cores_adaptive(cores, max_rank, tol, rank_hint=max_rank)
+    return truncated
 
 
 # =============================================================================
