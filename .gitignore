@@ -149,3 +149,12 @@ lean_yang_mills/
 products/fluidelite-zk/fluidelite.img
 FRONTIER/07_GENOMICS/data/clinvar.vcf.gz
 FRONTIER/07_GENOMICS/data/*.vcf.gz
+
+# External submodule directories (managed separately)
+tornado-circuits/
+vendor/circom-ecdsa/
+vendor/semaphore-circuits/
+worldcoin-circuits/
+worldcoin-id/
+yang_mills_unified_proof/.lake/packages/mathlib/
+zk_targets/
