@@ -1,0 +1,70 @@
+{
+  "attestation": {
+    "type": "FRONTIER_07_UCSC_VALIDATION",
+    "version": "1.0.0",
+    "timestamp": "2026-02-02T21:03:44.815535+00:00",
+    "status": "VALIDATED"
+  },
+  "data_source": {
+    "name": "UCSC Genome Browser",
+    "url": "https://genome.ucsc.edu",
+    "tracks": [
+      "phyloP100way",
+      "phastCons100way"
+    ]
+  },
+  "regions": [
+    {
+      "name": "HOXA_cluster",
+      "chrom": "chr7",
+      "start": 27132614,
+      "end": 27209410,
+      "phylop_mean": 2.4732090990731295,
+      "phastcons_mean": 0.7141178653207032
+    },
+    {
+      "name": "TP53_DBD",
+      "chrom": "chr17",
+      "start": 7676520,
+      "end": 7676700,
+      "phylop_mean": 2.4611766542861844,
+      "phastcons_mean": 0.7322106941562558
+    },
+    {
+      "name": "UCE_467",
+      "chrom": "chr2",
+      "start": 235855800,
+      "end": 235856100,
+      "phylop_mean": 4.45713935781165,
+      "phastcons_mean": 0.9103069822292243
+    },
+    {
+      "name": "GAPDH_promoter",
+      "chrom": "chr12",
+      "start": 6534516,
+      "end": 6534816,
+      "phylop_mean": 2.457569042453382,
+      "phastcons_mean": 0.7108758106608651
+    }
+  ],
+  "tests": [
+    {
+      "name": "score_differentiation",
+      "pass": true
+    },
+    {
+      "name": "ultraconserved_detection",
+      "pass": true,
+      "value": 243
+    },
+    {
+      "name": "element_detection",
+      "pass": true,
+      "value": 7504
+    },
+    {
+      "name": "score_distribution",
+      "pass": true
+    }
+  ]
+}

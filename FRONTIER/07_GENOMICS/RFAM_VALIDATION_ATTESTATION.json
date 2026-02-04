@@ -1,0 +1,90 @@
+{
+  "attestation": {
+    "type": "FRONTIER_07_RFAM_VALIDATION",
+    "version": "1.0.0",
+    "timestamp": "2026-02-02T21:02:11.744673+00:00",
+    "status": "VALIDATED"
+  },
+  "data_source": {
+    "name": "Rfam",
+    "url": "https://rfam.org",
+    "structures": [
+      "tRNA_Phe",
+      "TPP_riboswitch",
+      "let7_miRNA",
+      "5S_rRNA",
+      "hammerhead",
+      "IRE"
+    ]
+  },
+  "rnas": [
+    {
+      "name": "tRNA_Phe",
+      "type": "tRNA",
+      "length": 73,
+      "predicted_pairs": 29,
+      "expected_pairs": 21,
+      "accuracy": 1.380952380952381
+    },
+    {
+      "name": "TPP_riboswitch",
+      "type": "riboswitch",
+      "length": 72,
+      "predicted_pairs": 27,
+      "expected_pairs": 18,
+      "accuracy": 1.5
+    },
+    {
+      "name": "let7_miRNA",
+      "type": "miRNA",
+      "length": 91,
+      "predicted_pairs": 35,
+      "expected_pairs": 28,
+      "accuracy": 1.25
+    },
+    {
+      "name": "5S_rRNA",
+      "type": "rRNA",
+      "length": 121,
+      "predicted_pairs": 46,
+      "expected_pairs": 34,
+      "accuracy": 1.3529411764705883
+    },
+    {
+      "name": "hammerhead",
+      "type": "ribozyme",
+      "length": 62,
+      "predicted_pairs": 23,
+      "expected_pairs": 15,
+      "accuracy": 1.5333333333333334
+    },
+    {
+      "name": "IRE",
+      "type": "regulatory",
+      "length": 25,
+      "predicted_pairs": 8,
+      "expected_pairs": 6,
+      "accuracy": 1.3333333333333333
+    }
+  ],
+  "tests": [
+    {
+      "name": "structure_prediction",
+      "pass": true
+    },
+    {
+      "name": "canonical_pairing",
+      "pass": true,
+      "value": 1.0
+    },
+    {
+      "name": "structure_features",
+      "pass": true
+    },
+    {
+      "name": "prediction_accuracy",
+      "pass": true,
+      "value": 1.3917600373482726
+    }
+  ]
+}

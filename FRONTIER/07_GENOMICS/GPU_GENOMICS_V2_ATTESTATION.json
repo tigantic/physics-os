@@ -1,0 +1,177 @@
+{
+  "attestation": {
+    "type": "FRONTIER_07_GPU_GENOMICS_V2",
+    "version": "2.0.0",
+    "timestamp": "2026-02-02T20:51:44.246343+00:00",
+    "status": "VALIDATED"
+  },
+  "device": "cuda",
+  "peak_throughput": {
+    "encode": 2550.235885552641,
+    "gc_windowed": 29969.64143615336,
+    "kmer_count": 5111.995078926353,
+    "motif_scan": 570.8358597165842,
+    "pairwise_sim": 2504669565.379663,
+    "variant_score": 3642442020.2774043
+  },
+  "benchmarks": [
+    {
+      "operation": "encode",
+      "size": 10000,
+      "time_ms": 0.16066990792751312,
+      "throughput": 62.23940829362733
+    },
+    {
+      "operation": "encode",
+      "size": 100000,
+      "time_ms": 0.09566592052578926,
+      "throughput": 1045.304319975078
+    },
+    {
+      "operation": "encode",
+      "size": 1000000,
+      "time_ms": 0.5546931643038988,
+      "throughput": 1802.798491766038
+    },
+    {
+      "operation": "encode",
+      "size": 10000000,
+      "time_ms": 5.662228912115097,
+      "throughput": 1766.0889651782995
+    },
+    {
+      "operation": "encode",
+      "size": 100000000,
+      "time_ms": 39.21205899678171,
+      "throughput": 2550.235885552641
+    },
+    {
+      "operation": "kmer_count",
+      "size": 100000,
+      "time_ms": 29.458824079483747,
+      "throughput": 3.394568626710522
+    },
+    {
+      "operation": "kmer_count",
+      "size": 1000000,
+      "time_ms": 0.32318406738340855,
+      "throughput": 3094.2119396425956
+    },
+    {
+      "operation": "kmer_count",
+      "size": 10000000,
+      "time_ms": 2.0254808478057384,
+      "throughput": 4937.099262544639
+    },
+    {
+      "operation": "kmer_count",
+      "size": 100000000,
+      "time_ms": 19.561834167689085,
+      "throughput": 5111.995078926353
+    },
+    {
+      "operation": "motif_scan",
+      "size": 500000,
+      "time_ms": 76.74483302980661,
+      "throughput": 1.303019318071373
+    },
+    {
+      "operation": "motif_scan",
+      "size": 5000000,
+      "time_ms": 1.7518170643597841,
+      "throughput": 570.8358597165842
+    },
+    {
+      "operation": "motif_scan",
+      "size": 50000000,
+      "time_ms": 18.056262051686645,
+      "throughput": 553.824483238816
+    },
+    {
+      "operation": "motif_scan",
+      "size": 250000000,
+      "time_ms": 90.21263313479722,
+      "throughput": 554.2460990501094
+    },
+    {
+      "operation": "variant_score",
+      "size": 1000,
+      "time_ms": 36.54830693267286,
+      "throughput": 27361.048538914296
+    },
+    {
+      "operation": "variant_score",
+      "size": 10000,
+      "time_ms": 0.15762285329401493,
+      "throughput": 63442576.95517626
+    },
+    {
+      "operation": "variant_score",
+      "size": 100000,
+      "time_ms": 0.16947509720921516,
+      "throughput": 590057192.1581558
+    },
+    {
+      "operation": "variant_score",
+      "size": 1000000,
+      "time_ms": 0.2745410893112421,
+      "throughput": 3642442020.2774043
+    },
+    {
+      "operation": "pairwise_sim",
+      "size": 10000,
+      "time_ms": 49.09562296234071,
+      "throughput": 203684.14527850272
+    },
+    {
+      "operation": "pairwise_sim",
+      "size": 250000,
+      "time_ms": 0.376411946490407,
+      "throughput": 664165955.227915
+    },
+    {
+      "operation": "pairwise_sim",
+      "size": 1000000,
+      "time_ms": 0.4703798331320286,
+      "throughput": 2125941482.953235
+    },
+    {
+      "operation": "pairwise_sim",
+      "size": 4000000,
+      "time_ms": 1.5970170497894287,
+      "throughput": 2504669565.379663
+    },
+    {
+      "operation": "gc_windowed",
+      "size": 1000000,
+      "time_ms": 9.822896914556623,
+      "throughput": 101.80296186536303
+    },
+    {
+      "operation": "gc_windowed",
+      "size": 10000000,
+      "time_ms": 0.3336709924042225,
+      "throughput": 29969.64143615336
+    },
+    {
+      "operation": "gc_windowed",
+      "size": 100000000,
+      "time_ms": 3.989199176430702,
+      "throughput": 25067.687918624822
+    }
+  ],
+  "capabilities": {
+    "encoding": "Vectorized ASCII->index lookup",
+    "kmer_counting": "unfold + scatter_add",
+    "motif_scanning": "conv1d parallel",
+    "variant_scoring": "Batched tensor ops",
+    "pairwise_similarity": "Matrix multiply",
+    "windowed_stats": "unfold + mean"
+  },
+  "optimizations": [
+    "No Python loops in hot paths",
+    "Single GPU kernel per operation",
+    "Minimal CPU-GPU transfers",
+    "Vectorized tensor operations only"
+  ]
+}

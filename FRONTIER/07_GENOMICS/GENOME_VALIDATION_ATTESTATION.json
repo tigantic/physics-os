@@ -1,0 +1,87 @@
+{
+  "attestation": {
+    "type": "FRONTIER_07_GENOME_VALIDATION",
+    "version": "1.0.0",
+    "timestamp": "2026-02-02T20:58:45.197343+00:00",
+    "status": "VALIDATED"
+  },
+  "data_source": {
+    "name": "NCBI Entrez",
+    "database": "nuccore",
+    "organism": "Homo sapiens"
+  },
+  "genes": [
+    {
+      "symbol": "BRCA1",
+      "ncbi_id": "2255456065",
+      "length": 3773,
+      "gc_content": 0.4487145507553671
+    },
+    {
+      "symbol": "BRCA2",
+      "ncbi_id": "2240897268",
+      "length": 11903,
+      "gc_content": 0.36192556498361755
+    },
+    {
+      "symbol": "TP53",
+      "ncbi_id": "1894803100",
+      "length": 2629,
+      "gc_content": 0.5359452263217953
+    },
+    {
+      "symbol": "ATM",
+      "ncbi_id": "2462525414",
+      "length": 12335,
+      "gc_content": 0.3846777462505067
+    },
+    {
+      "symbol": "PTEN",
+      "ncbi_id": "1518767609",
+      "length": 8628,
+      "gc_content": 0.3693787668057487
+    },
+    {
+      "symbol": "APC",
+      "ncbi_id": "1676319661",
+      "length": 10812,
+      "gc_content": 0.3971513133555309
+    },
+    {
+      "symbol": "RB1",
+      "ncbi_id": "2245368021",
+      "length": 4787,
+      "gc_content": 0.370795905577606
+    },
+    {
+      "symbol": "VHL",
+      "ncbi_id": "1677501836",
+      "length": 4550,
+      "gc_content": 0.46901098901098903
+    }
+  ],
+  "tests": [
+    {
+      "name": "gene_lengths",
+      "pass": true,
+      "value": 8
+    },
+    {
+      "name": "gc_content",
+      "pass": true
+    },
+    {
+      "name": "kmer_analysis",
+      "pass": true
+    },
+    {
+      "name": "cpg_islands",
+      "pass": true,
+      "value": 20
+    },
+    {
+      "name": "codon_usage",
+      "pass": true
+    }
+  ]
+}

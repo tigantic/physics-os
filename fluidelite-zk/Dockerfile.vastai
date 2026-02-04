@@ -1,0 +1,147 @@
+# =============================================================================
+# FluidElite ZK Benchmark Dockerfile for Vast.ai Cloud GPU
+# Multi-stage build with CUDA 12.x support for GPU-accelerated ZK proving
+# 
+# Usage on vast.ai:
+#   1. Select an NVIDIA GPU instance (RTX 4090, A100, H100, etc.)
+#   2. Use this Docker image or build from source
+#   3. Run the benchmark suite
+#
+# Build locally:
+#   docker build -f Dockerfile.vastai -t fluidelite-zk-bench:latest .
+#
+# Push to registry (for vast.ai):
+#   docker tag fluidelite-zk-bench:latest your-registry/fluidelite-zk-bench:latest
+#   docker push your-registry/fluidelite-zk-bench:latest
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Stage 1: Builder - Compile Rust with CUDA support
+# -----------------------------------------------------------------------------
+FROM nvidia/cuda:12.2.2-devel-ubuntu22.04 AS builder
+
+# Prevent interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Rust and build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    build-essential \
+    pkg-config \
+    libssl-dev \
+    cmake \
+    git \
+    ca-certificates \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Rust (nightly for halo2 compatibility)
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly-2024-01-01
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Download and install ICICLE CUDA backend v4.0.0
+RUN mkdir -p /opt/icicle/lib/backend && \
+    cd /tmp && \
+    wget -q https://github.com/ingonyama-zk/icicle/releases/download/v4.0.0/icicle_ubuntu22_cuda122_with_bn254_with_bls12-377_with_bls12-381_with_bw6-761_with_grumpkin.tar.gz && \
+    tar -xzf icicle*.tar.gz -C /opt/icicle/lib/backend && \
+    rm -f icicle*.tar.gz
+
+# Set up environment for build
+ENV ICICLE_BACKEND_INSTALL_DIR=/opt/icicle/lib/backend
+
+# Create app directory
+WORKDIR /app
+
+# Copy Cargo manifest first for layer caching
+COPY Cargo.toml Cargo.lock* ./
+
+# Create stub files to cache dependencies
+RUN mkdir -p src/bin benches tests && \
+    echo "fn main() {}" > src/lib.rs && \
+    echo "fn main() {}" > src/bin/gpu_test.rs && \
+    echo "fn main() {}" > src/bin/gpu_sustained_bench.rs && \
+    echo "fn main() {}" > src/bin/gpu_realworld_tps.rs && \
+    echo "fn main() {}" > src/bin/gpu_halo2_benchmark.rs && \
+    echo "fn main() {}" > src/bin/gpu_pipelined_tps.rs && \
+    echo "fn main() {}" > src/bin/k_ladder_stress.rs && \
+    echo "fn main() {}" > src/bin/genesis_benchmark.rs && \
+    cargo build --release --features gpu 2>/dev/null || true
+
+# Now copy actual source and rebuild
+COPY src ./src
+COPY benches ./benches
+COPY tests ./tests
+
+# Build all benchmark binaries with GPU support
+RUN cargo build --release --features gpu && \
+    cargo build --release --features "gpu,halo2" --bin genesis_benchmark 2>/dev/null || true
+
+# Strip binaries for smaller image
+RUN strip target/release/gpu-test 2>/dev/null || true && \
+    strip target/release/gpu-sustained-bench 2>/dev/null || true && \
+    strip target/release/gpu-realworld-tps 2>/dev/null || true && \
+    strip target/release/gpu-halo2-benchmark 2>/dev/null || true && \
+    strip target/release/gpu-pipelined-tps 2>/dev/null || true && \
+    strip target/release/k-ladder-stress 2>/dev/null || true
+
+# -----------------------------------------------------------------------------
+# Stage 2: Runtime - Minimal CUDA runtime with benchmarks
+# -----------------------------------------------------------------------------
+FROM nvidia/cuda:12.2.2-runtime-ubuntu22.04 AS runtime
+
+# Prevent interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    libssl3 \
+    wget \
+    jq \
+    bc \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Create benchmark user
+RUN groupadd -r benchmark && useradd -r -g benchmark -m benchmark
+
+# Create directories
+RUN mkdir -p /opt/icicle/lib/backend /app/results && \
+    chown -R benchmark:benchmark /app /opt/icicle
+
+# Copy ICICLE backend from builder
+COPY --from=builder /opt/icicle/lib/backend /opt/icicle/lib/backend
+
+# Copy benchmark binaries from builder
+COPY --from=builder /app/target/release/gpu-test /usr/local/bin/
+COPY --from=builder /app/target/release/gpu-sustained-bench /usr/local/bin/ 
+COPY --from=builder /app/target/release/gpu-realworld-tps /usr/local/bin/
+COPY --from=builder /app/target/release/gpu-halo2-benchmark /usr/local/bin/
+COPY --from=builder /app/target/release/gpu-pipelined-tps /usr/local/bin/
+COPY --from=builder /app/target/release/k-ladder-stress /usr/local/bin/
+
+# Copy ICICLE shared libraries from build
+COPY --from=builder /app/target/release/build/*icicle*/out/release/*.so* /usr/local/lib/ 2>/dev/null || true
+
+# Set environment variables
+ENV ICICLE_BACKEND_INSTALL_DIR=/opt/icicle/lib/backend
+ENV LD_LIBRARY_PATH=/usr/local/lib:/opt/icicle/lib/backend:${LD_LIBRARY_PATH}
+ENV RUST_LOG=info
+ENV RUST_BACKTRACE=1
+
+# Update library cache
+RUN ldconfig
+
+# Switch to benchmark user
+USER benchmark
+WORKDIR /app
+
+# Copy benchmark runner script
+COPY --chown=benchmark:benchmark scripts/run_vastai_benchmarks.sh /app/
+
+# Ensure script is executable
+RUN chmod +x /app/run_vastai_benchmarks.sh 2>/dev/null || true
+
+# Default command runs full benchmark suite
+ENTRYPOINT ["/bin/bash"]
+CMD ["-c", "echo '🚀 FluidElite ZK Benchmark Suite for Vast.ai' && echo 'Run: /app/run_vastai_benchmarks.sh' && /bin/bash"]

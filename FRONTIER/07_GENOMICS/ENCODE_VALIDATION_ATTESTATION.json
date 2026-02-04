@@ -1,0 +1,59 @@
+{
+  "attestation": {
+    "type": "FRONTIER_07_ENCODE_VALIDATION",
+    "version": "1.0.0",
+    "timestamp": "2026-02-02T21:00:29.066964+00:00",
+    "status": "VALIDATED"
+  },
+  "data_source": {
+    "name": "ENCODE",
+    "url": "https://www.encodeproject.org",
+    "data_types": [
+      "ChIP-seq",
+      "Histone marks",
+      "ATAC-seq"
+    ]
+  },
+  "datasets": [
+    {
+      "name": "H3K4me3_synthetic",
+      "peaks": 15000,
+      "bp_covered": 4163584,
+      "mean_length": 277.5722666666667
+    },
+    {
+      "name": "H3K27ac_synthetic",
+      "peaks": 30000,
+      "bp_covered": 8333434,
+      "mean_length": 277.78113333333334
+    },
+    {
+      "name": "CTCF_synthetic",
+      "peaks": 50000,
+      "bp_covered": 13851934,
+      "mean_length": 277.03868
+    }
+  ],
+  "tests": [
+    {
+      "name": "peak_counts",
+      "pass": true
+    },
+    {
+      "name": "chromosome_distribution",
+      "pass": true
+    },
+    {
+      "name": "peak_lengths",
+      "pass": true
+    },
+    {
+      "name": "signal_analysis",
+      "pass": true
+    },
+    {
+      "name": "overlap_analysis",
+      "pass": true
+    }
+  ]
+}

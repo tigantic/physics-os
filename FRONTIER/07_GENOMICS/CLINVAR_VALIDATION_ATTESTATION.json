@@ -1,0 +1,57 @@
+{
+  "attestation": {
+    "type": "FRONTIER_07_CLINVAR_VALIDATION",
+    "version": "1.0.0",
+    "timestamp": "2026-02-02T20:55:33.928171+00:00",
+    "status": "VALIDATED"
+  },
+  "data_source": {
+    "name": "ClinVar",
+    "url": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/",
+    "build": "GRCh38"
+  },
+  "statistics": {
+    "total_variants": 4281770,
+    "pathogenic": 336413,
+    "likely_pathogenic": 144280,
+    "benign": 207883,
+    "likely_benign": 1082385,
+    "vus": 2254672,
+    "snv_count": 3991475,
+    "indel_count": 290295,
+    "genes": 19315,
+    "ti_tv_ratio": 1.6927433434886676,
+    "parse_time_sec": 20.54530838690698
+  },
+  "tests": [
+    {
+      "name": "variant_count",
+      "pass": true,
+      "value": 4281770,
+      "expected": ">100,000"
+    },
+    {
+      "name": "ti_tv_ratio",
+      "pass": true,
+      "value": 1.6927433434886676,
+      "expected": "1.5-3.0"
+    },
+    {
+      "name": "gene_coverage",
+      "pass": true,
+      "value": 19315,
+      "expected": ">5,000"
+    },
+    {
+      "name": "chromosome_coverage",
+      "pass": true,
+      "value": 32,
+      "expected": ">=22"
+    },
+    {
+      "name": "pathogenic_examples",
+      "pass": true,
+      "value": 5
+    }
+  ]
+}
