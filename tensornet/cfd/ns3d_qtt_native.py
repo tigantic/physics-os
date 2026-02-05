@@ -62,6 +62,15 @@ from tensornet.cfd.qtt_3d_state import (
 from tensornet.cfd.pure_qtt_ops import QTTState, dense_to_qtt, qtt_to_dense, qtt_add
 from tensornet.cfd.nd_shift_mpo import truncate_cores
 
+# Batched operations - O(L) SVDs instead of O(L × N_fields) per step
+from tensornet.cfd.qtt_batched_ops import (
+    batched_truncation_sweep,
+    add_cores_raw,
+    scale_cores,
+    hadamard_cores_raw,
+    batched_cross_product,
+)
+
 
 # ═══════════════════════════════════════════════════════════════════════════════════════
 # SOLVER CONFIGURATION
@@ -492,29 +501,33 @@ class NS3DQTTSolver:
         omega: QTT3DVectorField,
     ) -> QTT3DVectorField:
         """
-        Compute nonlinear term ∇×(u×ω).
+        Compute nonlinear term ∇×(u×ω) using NATIVE QTT operations.
         
         u×ω = (uy*ωz - uz*ωy, uz*ωx - ux*ωz, ux*ωy - uy*ωx)
         
-        Note: Currently uses decompression for Hadamard product.
-        Future: native QTT Hadamard via cross approximation.
+        Uses batched_cross_product for O(L) SVDs instead of O(N³) dense ops.
         """
-        # Decompress
-        ux, uy, uz = u.to_dense()
-        ox, oy, oz = omega.to_dense()
+        # Native QTT cross product with batched truncation
+        u_cores = [u.x.cores, u.y.cores, u.z.cores]
+        omega_cores = [omega.x.cores, omega.y.cores, omega.z.cores]
         
-        # Cross product u × ω
-        cx = uy * oz - uz * oy
-        cy = uz * ox - ux * oz
-        cz = ux * oy - uy * ox
-        
-        # Compress
-        cross = QTT3DVectorField.from_dense(
-            cx, cy, cz,
+        cross_cores = batched_cross_product(
+            u_cores, omega_cores,
             max_rank=self.config.max_rank,
+            tol=self.config.tol_svd,
         )
         
-        # Curl of cross product
+        # Rebuild QTT3DVectorField from cores
+        cross = QTT3DVectorField(
+            x=QTT3DState(cores=cross_cores[0], n_bits=u.x.n_bits,
+                        device=u.x.device, dtype=u.x.dtype),
+            y=QTT3DState(cores=cross_cores[1], n_bits=u.y.n_bits,
+                        device=u.y.device, dtype=u.y.dtype),
+            z=QTT3DState(cores=cross_cores[2], n_bits=u.z.n_bits,
+                        device=u.z.device, dtype=u.z.dtype),
+        )
+        
+        # Curl of cross product (uses native QTT derivatives)
         return self.deriv.curl(cross)
     
     def _viscous_term(
@@ -543,89 +556,158 @@ class NS3DQTTSolver:
         Compute RHS of vorticity equation.
         
         ∂ω/∂t = ∇×(u×ω) + ν∇²ω
+        
+        Uses raw addition (no per-add truncation).
+        Caller is responsible for truncation.
         """
         nonlinear = self._nonlinear_term(u, omega)
         viscous = self._viscous_term(omega)
         
+        # Raw add - no truncation here, let batched_truncation_sweep handle it
+        rhs_cores = [
+            add_cores_raw(nonlinear.x.cores, viscous.x.cores),
+            add_cores_raw(nonlinear.y.cores, viscous.y.cores),
+            add_cores_raw(nonlinear.z.cores, viscous.z.cores),
+        ]
+        
+        # Batched truncation across all 3 components
+        rhs_cores = batched_truncation_sweep(rhs_cores, self.config.max_rank, self.config.tol_svd)
+        
         return QTT3DVectorField(
-            x=qtt3d_add(nonlinear.x, viscous.x, max_rank=self.config.max_rank),
-            y=qtt3d_add(nonlinear.y, viscous.y, max_rank=self.config.max_rank),
-            z=qtt3d_add(nonlinear.z, viscous.z, max_rank=self.config.max_rank),
+            x=QTT3DState(cores=rhs_cores[0], n_bits=omega.x.n_bits,
+                        device=omega.x.device, dtype=omega.x.dtype),
+            y=QTT3DState(cores=rhs_cores[1], n_bits=omega.y.n_bits,
+                        device=omega.y.device, dtype=omega.y.dtype),
+            z=QTT3DState(cores=rhs_cores[2], n_bits=omega.z.n_bits,
+                        device=omega.z.device, dtype=omega.z.dtype),
         )
     
     def _step_euler(self) -> None:
-        """First-order Euler step."""
+        """First-order Euler step with batched truncation."""
         rhs = self._rhs(self.u, self.omega)
         
-        # ω_new = ω + dt * rhs
+        # ω_new = ω + dt * rhs (raw add + batched truncation)
+        omega_raw = [
+            add_cores_raw(self.omega.x.cores, scale_cores(rhs.x.cores, self.dt)),
+            add_cores_raw(self.omega.y.cores, scale_cores(rhs.y.cores, self.dt)),
+            add_cores_raw(self.omega.z.cores, scale_cores(rhs.z.cores, self.dt)),
+        ]
+        omega_cores = batched_truncation_sweep(omega_raw, self.config.max_rank, self.config.tol_svd)
+        
         self.omega = QTT3DVectorField(
-            x=qtt3d_add(self.omega.x, qtt3d_scale(rhs.x, self.dt), max_rank=self.config.max_rank),
-            y=qtt3d_add(self.omega.y, qtt3d_scale(rhs.y, self.dt), max_rank=self.config.max_rank),
-            z=qtt3d_add(self.omega.z, qtt3d_scale(rhs.z, self.dt), max_rank=self.config.max_rank),
+            x=QTT3DState(cores=omega_cores[0], n_bits=self.omega.x.n_bits,
+                        device=self.omega.x.device, dtype=self.omega.x.dtype),
+            y=QTT3DState(cores=omega_cores[1], n_bits=self.omega.y.n_bits,
+                        device=self.omega.y.device, dtype=self.omega.y.dtype),
+            z=QTT3DState(cores=omega_cores[2], n_bits=self.omega.z.n_bits,
+                        device=self.omega.z.device, dtype=self.omega.z.dtype),
         )
+        
+        # Update rank hint
+        self._rank_hint = max(max(c.shape[0] for c in cores) for cores in omega_cores)
         
         # Recover velocity
         self.u = self._velocity_from_vorticity_spectral(self.omega)
     
     def _step_rk4(self) -> None:
-        """Fourth-order Runge-Kutta step."""
+        """
+        Fourth-order Runge-Kutta step with BATCHED truncation.
+        
+        Uses batched SVD operations:
+        - Raw adds (no per-add truncation, rank grows)  
+        - Single batched truncation per stage (all 3 components together)
+        
+        Result: ~4 batched SVD sweeps instead of ~40+ individual ones.
+        """
         dt = self.dt
         max_rank = self.config.max_rank
+        tol = self.config.tol_svd
+        
+        # Extract raw core lists from QTT3DState for batched ops
+        def to_cores_list(vf: QTT3DVectorField) -> list:
+            """Get list of 3 core lists [x_cores, y_cores, z_cores]."""
+            return [vf.x.cores, vf.y.cores, vf.z.cores]
+        
+        def from_cores_list(cores_list: list, template: QTT3DVectorField) -> QTT3DVectorField:
+            """Rebuild QTT3DVectorField from core lists."""
+            return QTT3DVectorField(
+                x=QTT3DState(cores=cores_list[0], n_bits=template.x.n_bits,
+                            device=template.x.device, dtype=template.x.dtype),
+                y=QTT3DState(cores=cores_list[1], n_bits=template.y.n_bits,
+                            device=template.y.device, dtype=template.y.dtype),
+                z=QTT3DState(cores=cores_list[2], n_bits=template.z.n_bits,
+                            device=template.z.device, dtype=template.z.dtype),
+            )
         
         omega_0 = self.omega.clone()
         u_0 = self.u.clone()
+        omega_0_cores = to_cores_list(omega_0)
         
-        # k1 = f(t, omega)
+        # ---------- k1 = f(t, omega_0) ----------
         k1 = self._rhs(u_0, omega_0)
+        k1_cores = to_cores_list(k1)
         
-        # omega_1 = omega_0 + 0.5*dt*k1
-        omega_1 = QTT3DVectorField(
-            x=qtt3d_add(omega_0.x, qtt3d_scale(k1.x, 0.5*dt), max_rank=max_rank),
-            y=qtt3d_add(omega_0.y, qtt3d_scale(k1.y, 0.5*dt), max_rank=max_rank),
-            z=qtt3d_add(omega_0.z, qtt3d_scale(k1.z, 0.5*dt), max_rank=max_rank),
-        )
+        # omega_1 = omega_0 + 0.5*dt*k1 (RAW add, then batched truncate)
+        omega_1_raw = [
+            add_cores_raw(omega_0_cores[i], scale_cores(k1_cores[i], 0.5*dt))
+            for i in range(3)
+        ]
+        omega_1_cores = batched_truncation_sweep(omega_1_raw, max_rank, tol)
+        omega_1 = from_cores_list(omega_1_cores, omega_0)
         u_1 = self._velocity_from_vorticity_spectral(omega_1)
         
-        # k2 = f(t + 0.5*dt, omega_1)
+        # ---------- k2 = f(t + 0.5*dt, omega_1) ----------
         k2 = self._rhs(u_1, omega_1)
+        k2_cores = to_cores_list(k2)
         
         # omega_2 = omega_0 + 0.5*dt*k2
-        omega_2 = QTT3DVectorField(
-            x=qtt3d_add(omega_0.x, qtt3d_scale(k2.x, 0.5*dt), max_rank=max_rank),
-            y=qtt3d_add(omega_0.y, qtt3d_scale(k2.y, 0.5*dt), max_rank=max_rank),
-            z=qtt3d_add(omega_0.z, qtt3d_scale(k2.z, 0.5*dt), max_rank=max_rank),
-        )
+        omega_2_raw = [
+            add_cores_raw(omega_0_cores[i], scale_cores(k2_cores[i], 0.5*dt))
+            for i in range(3)
+        ]
+        omega_2_cores = batched_truncation_sweep(omega_2_raw, max_rank, tol)
+        omega_2 = from_cores_list(omega_2_cores, omega_0)
         u_2 = self._velocity_from_vorticity_spectral(omega_2)
         
-        # k3 = f(t + 0.5*dt, omega_2)
+        # ---------- k3 = f(t + 0.5*dt, omega_2) ----------
         k3 = self._rhs(u_2, omega_2)
+        k3_cores = to_cores_list(k3)
         
         # omega_3 = omega_0 + dt*k3
-        omega_3 = QTT3DVectorField(
-            x=qtt3d_add(omega_0.x, qtt3d_scale(k3.x, dt), max_rank=max_rank),
-            y=qtt3d_add(omega_0.y, qtt3d_scale(k3.y, dt), max_rank=max_rank),
-            z=qtt3d_add(omega_0.z, qtt3d_scale(k3.z, dt), max_rank=max_rank),
-        )
+        omega_3_raw = [
+            add_cores_raw(omega_0_cores[i], scale_cores(k3_cores[i], dt))
+            for i in range(3)
+        ]
+        omega_3_cores = batched_truncation_sweep(omega_3_raw, max_rank, tol)
+        omega_3 = from_cores_list(omega_3_cores, omega_0)
         u_3 = self._velocity_from_vorticity_spectral(omega_3)
         
-        # k4 = f(t + dt, omega_3)
+        # ---------- k4 = f(t + dt, omega_3) ----------
         k4 = self._rhs(u_3, omega_3)
+        k4_cores = to_cores_list(k4)
         
+        # ---------- Final combination ----------
         # omega_new = omega_0 + (dt/6)*(k1 + 2*k2 + 2*k3 + k4)
-        def combine_rk4(o0, k1, k2, k3, k4):
-            """Combine RK4 stages for one component."""
-            # (k1 + 2*k2 + 2*k3 + k4)
-            sum_k = qtt3d_add(k1, qtt3d_scale(k2, 2.0), max_rank=max_rank)
-            sum_k = qtt3d_add(sum_k, qtt3d_scale(k3, 2.0), max_rank=max_rank)
-            sum_k = qtt3d_add(sum_k, k4, max_rank=max_rank)
+        # Do all raw adds first, then ONE batched truncation
+        omega_new_raw = []
+        for i in range(3):
+            # sum_k = k1 + 2*k2 + 2*k3 + k4 (all raw)
+            sum_k = add_cores_raw(k1_cores[i], scale_cores(k2_cores[i], 2.0))
+            sum_k = add_cores_raw(sum_k, scale_cores(k3_cores[i], 2.0))
+            sum_k = add_cores_raw(sum_k, k4_cores[i])
             
-            # omega_0 + (dt/6) * sum_k
-            return qtt3d_add(o0, qtt3d_scale(sum_k, dt/6), max_rank=max_rank)
+            # omega_new = omega_0 + (dt/6) * sum_k
+            omega_new_raw.append(
+                add_cores_raw(omega_0_cores[i], scale_cores(sum_k, dt / 6.0))
+            )
         
-        self.omega = QTT3DVectorField(
-            x=combine_rk4(omega_0.x, k1.x, k2.x, k3.x, k4.x),
-            y=combine_rk4(omega_0.y, k1.y, k2.y, k3.y, k4.y),
-            z=combine_rk4(omega_0.z, k1.z, k2.z, k3.z, k4.z),
+        omega_new_cores = batched_truncation_sweep(omega_new_raw, max_rank, tol)
+        self.omega = from_cores_list(omega_new_cores, omega_0)
+        
+        # Update rank hint from observed ranks
+        self._rank_hint = max(
+            max(c.shape[0] for c in cores) 
+            for cores in omega_new_cores
         )
         
         # Recover velocity
