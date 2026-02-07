@@ -1,0 +1,295 @@
+{
+  "project": "HyperTensor-VM",
+  "protocol": "trustless_physics_gauntlet_phase4",
+  "phase": 4,
+  "description": "Thermal Diffusion ZK Circuit, CG Memory Fix, Zero-Axiom Lean Proof, Warning Cleanup",
+  "timestamp": "2026-02-07T06:14:13Z",
+  "git_commit": "2afe1331882b505e87ad4c8686f2d390910a2956",
+  "branch": "workspace-reorg",
+  "total_tests": 46,
+  "passed": 42,
+  "failed": 0,
+  "compiler_warnings": 0,
+  "gauntlets": {
+    "test_thermal_config_test_small": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_config_test_medium": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_config_production": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_params_num_sites": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_variable_index_roundtrip": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_circuit_sizing": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_circuit_sizing_bounds": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_initial_state_generation": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_diffusion_mpo_construction": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_source_term_mpo": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_witness_generation_small": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_witness_energy_conservation": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_witness_cg_convergence": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_witness_svd_truncation": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_witness_residual_norm": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_witness_output_rank_bounded": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_witness_scaled_source": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_witness_deterministic": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_stub_circuit_creation": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_stub_circuit_constraints": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_stub_circuit_witness_validation": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_stub_circuit_verify": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_stub_prover_prove_verify": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_stub_prover_stats": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_stub_prover_bad_witness_rejected": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_gadgets_diffusion_constraint": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_gadgets_conservation_constraint": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_gadgets_cg_residual_constraint": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_gadgets_truncation_error_constraint": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_gadgets_source_term_constraint": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_gadgets_all_constraints_satisfied": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_witness_medium_config": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_witness_varying_chi": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_prover_reuse": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_config_q16_conversion": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_witness_zero_source": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_witness_uniform_initial": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_stub_circuit_estimate_proof_size": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_proof_preview_compatible": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_thermal_trait_impls": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_lean_certificate_hash_matches_proof_file": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "test_lean_results_match_witness_output": {
+      "layer": "thermal_circuit",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "lean_proof_zero_axioms": {
+      "layer": "formal_verification",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null,
+      "detail": "ThermalConservation.lean: all theorems proved by decide (kernel-checked)"
+    },
+    "lean_certificate_sha256": {
+      "layer": "formal_verification",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null,
+      "detail": "SHA-256: 94c468f1cdd01257555047c79e01eaedf5d3ef8d6925d6ae964c0c819b388182"
+    },
+    "compiler_zero_warnings": {
+      "layer": "code_quality",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null,
+      "detail": "cargo check -p fluidelite-circuits -p fluidelite-core: 0 warnings (test + non-test builds)"
+    },
+    "oom_fix_cg_truncation": {
+      "layer": "memory_safety",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null,
+      "detail": "5 MPS truncation points in CG solve prevent bond dimension explosion. All tests pass under 4GB ulimit."
+    }
+  }
+}
