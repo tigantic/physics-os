@@ -25,6 +25,7 @@ members = [
     "apps/glass_cockpit",
     "apps/global_eye",
     "apps/trustless_verify",
+    "apps/golden_demo",
     "fluidelite-core",
     "fluidelite-circuits",
     "fluidelite-zk",

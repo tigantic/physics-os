@@ -1,0 +1,38 @@
+[package]
+name = "golden-demo"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.73.0"
+authors = ["Bradly Biron Baker Adams <brad@tigantic.com>"]
+description = "Golden Simulation — complete Trustless Physics demo artifact generator"
+license = "LicenseRef-Proprietary"
+
+[[bin]]
+name = "golden-demo"
+path = "src/main.rs"
+
+[dependencies]
+# Core physics
+fluidelite-core = { path = "../../fluidelite-core" }
+fluidelite-circuits = { path = "../../fluidelite-circuits" }
+
+# Certificate writer
+proof-bridge = { path = "../../crates/proof_bridge" }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Hashing
+sha2 = "0.10"
+hex = "0.4"
+
+# Ed25519
+ed25519-dalek = { version = "2.1", features = ["rand_core"] }
+rand = "0.8"
+
+# Time
+chrono = "0.4"
+
+# Zip
+zip = { version = "2.2", default-features = false, features = ["deflate"] }
