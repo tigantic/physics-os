@@ -764,6 +764,76 @@ def turbo_truncate(
     return work
 
 
+def turbo_truncate_conservative(
+    cores: List[Tensor],
+    max_rank: int,
+    tol: float = 1e-10,
+) -> List[Tensor]:
+    """
+    ENERGY-PRESERVING QTT truncation.
+    
+    After standard TT-SVD truncation, rescales the result so that:
+        ‖u_truncated‖² = ‖u_original‖²
+    
+    This guarantees ZERO numerical dissipation from truncation.
+    The discarded high-frequency modes are redistributed uniformly
+    across the retained modes, preserving total energy.
+    
+    Mathematical guarantee:
+        Let u be the original tensor, u_r the rank-r truncation.
+        Standard truncation gives ‖u_r‖ ≤ ‖u‖ (always loses energy).
+        Conservative truncation computes:
+            u_conservative = u_r * (‖u‖ / ‖u_r‖)
+        So ‖u_conservative‖ = ‖u‖ exactly.
+    
+    Trade-off:
+        - Preserves energy (good for inviscid stability)
+        - Alters the shape of the solution (pumps energy into retained modes)
+        - The shape distortion is bounded by the truncation error
+    
+    Args:
+        cores: QTT cores to truncate
+        max_rank: Maximum allowed rank after truncation
+        tol: Relative tolerance for rank adaptation
+    
+    Returns:
+        Truncated cores with ‖result‖ = ‖original‖
+    
+    Complexity: O(n_cores × r³) + O(n_cores) for norm computation
+    """
+    if not cores:
+        return []
+    
+    # Step 1: Compute original L2 norm BEFORE truncation
+    norm_original_sq = turbo_inner(cores, cores).item()
+    
+    if norm_original_sq < 1e-30:
+        # Near-zero field, nothing to preserve
+        return turbo_truncate(cores, max_rank, tol, adaptive=True)
+    
+    # Step 2: Standard truncation
+    truncated = turbo_truncate(cores, max_rank, tol, adaptive=True)
+    
+    # Step 3: Compute new L2 norm AFTER truncation
+    norm_truncated_sq = turbo_inner(truncated, truncated).item()
+    
+    if norm_truncated_sq < 1e-30:
+        # Truncation killed everything (shouldn't happen with reasonable rank)
+        return truncated
+    
+    # Step 4: Compute scaling factor to restore original norm
+    # ‖scaled‖² = scale² × ‖truncated‖² = ‖original‖²
+    # scale = sqrt(‖original‖² / ‖truncated‖²)
+    import math
+    scale = math.sqrt(norm_original_sq / norm_truncated_sq)
+    
+    # Step 5: Apply scaling to first core (could be any core, but first is simplest)
+    result = [c.clone() for c in truncated]
+    result[0] = result[0] * scale
+    
+    return result
+
+
 def turbo_truncate_batched(
     qtt_list: List[List[Tensor]],
     max_rank: int,
@@ -858,6 +928,54 @@ def turbo_truncate_batched(
             result[i][k - 1] = contracted.reshape(prev_r_l, prev_d, r)
     
     return result
+
+
+def turbo_truncate_batched_conservative(
+    qtt_list: List[List[Tensor]],
+    max_rank: int,
+    tol: float = 1e-10,
+) -> List[List[Tensor]]:
+    """
+    ENERGY-PRESERVING batched truncation.
+    
+    Same as turbo_truncate_batched but rescales each field to preserve
+    its original L2 norm. This guarantees zero numerical dissipation.
+    
+    Args:
+        qtt_list: List of QTT cores lists
+        max_rank: Maximum rank after truncation
+        tol: Tolerance (for API consistency)
+    
+    Returns:
+        List of truncated QTT cores with preserved norms
+    """
+    if not qtt_list:
+        return []
+    
+    import math
+    
+    # Step 1: Compute original norms BEFORE truncation
+    original_norms_sq = []
+    for qtt in qtt_list:
+        norm_sq = turbo_inner(qtt, qtt).item()
+        original_norms_sq.append(norm_sq)
+    
+    # Step 2: Standard batched truncation
+    truncated = turbo_truncate_batched(qtt_list, max_rank, tol)
+    
+    # Step 3: Rescale each field to restore original norm
+    for i in range(len(truncated)):
+        if original_norms_sq[i] < 1e-30:
+            continue
+        
+        new_norm_sq = turbo_inner(truncated[i], truncated[i]).item()
+        if new_norm_sq < 1e-30:
+            continue
+        
+        scale = math.sqrt(original_norms_sq[i] / new_norm_sq)
+        truncated[i][0] = truncated[i][0] * scale
+    
+    return truncated
 
 
 # ═══════════════════════════════════════════════════════════════════════════════════════

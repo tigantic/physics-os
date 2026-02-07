@@ -1,0 +1,193 @@
+{
+  "title": "QTeneT Turbulence Capabilities Proof",
+  "version": "1.0.0",
+  "date": "2026-02-05T19:26:08.383944",
+  "author": "Tigantic Holdings LLC",
+  "summary": {
+    "total_demos": 5,
+    "passed": 3,
+    "partial": 1,
+    "failed": 1
+  },
+  "key_insight": {
+    "finding": "\u03c7 ~ Re^0.000",
+    "meaning": "QTT bond dimension is independent of Reynolds number",
+    "implication": "DNS turbulence at any Re on consumer hardware"
+  },
+  "demos": [
+    {
+      "name": "Real-Time DNS on Laptop",
+      "status": "FAIL",
+      "metric": {
+        "value": 0.2539734857382354,
+        "unit": "fps"
+      },
+      "comparison": {
+        "value": 30.0,
+        "unit": "fps"
+      },
+      "improvement_factor": 0.1269867428691177,
+      "details": {
+        "grid": "64\u00b3",
+        "cells": 262144,
+        "step_ms": 3937.4188887995842,
+        "step_std_ms": 63.52745255978137,
+        "target_fps": 60,
+        "traditional_ms": 500.0,
+        "max_rank": 8
+      },
+      "timestamp": "2026-02-05T19:24:24.968193"
+    },
+    {
+      "name": "4096\u00b3 Init (68B Cells)",
+      "status": "PASS",
+      "metric": {
+        "value": 156.14207200269448,
+        "unit": "ms"
+      },
+      "comparison": {
+        "value": "inf",
+        "unit": "ms"
+      },
+      "improvement_factor": 22501197.242911108,
+      "details": {
+        "grid": "4096\u00b3",
+        "cells": 68719476736,
+        "init_ms": 156.14207200269448,
+        "qtt_kb": 73.296875,
+        "dense_gb": 1649.267441664,
+        "compression": 22501197.242911108,
+        "scaling_results": [
+          {
+            "n_bits": 8,
+            "grid": "256\u00b3",
+            "cells": 16777216,
+            "dense_gb": 0.402653184,
+            "qtt_kb": 43.203125,
+            "compression": 9320.001365641952,
+            "init_ms": 94.54737499618204
+          },
+          {
+            "n_bits": 10,
+            "grid": "1024\u00b3",
+            "cells": 1073741824,
+            "dense_gb": 25.769803776,
+            "qtt_kb": 58.25,
+            "compression": 442400.06482403434,
+            "init_ms": 121.13711999700172
+          },
+          {
+            "n_bits": 12,
+            "grid": "4096\u00b3",
+            "cells": 68719476736,
+            "dense_gb": 1649.267441664,
+            "qtt_kb": 73.296875,
+            "compression": 22501197.242911108,
+            "init_ms": 156.14207200269448
+          }
+        ]
+      },
+      "timestamp": "2026-02-05T19:24:25.405960"
+    },
+    {
+      "name": "Portable CFD (Email-Sized)",
+      "status": "PASS",
+      "metric": {
+        "value": 2.2428817749023438,
+        "unit": "MB"
+      },
+      "comparison": {
+        "value": 26388.279066624,
+        "unit": "MB"
+      },
+      "improvement_factor": 11765.345530873092,
+      "details": {
+        "grid": "1024\u00b3",
+        "cells": 1073741824,
+        "qtt_mb": 2.2428817749023438,
+        "dense_gb": 25.769803776,
+        "compression": 11765.345530873092,
+        "fits_email": true,
+        "email_limit_mb": 25,
+        "max_rank": 8
+      },
+      "timestamp": "2026-02-05T19:24:59.821723"
+    },
+    {
+      "name": "Browser Wind Tunnel",
+      "status": "PARTIAL",
+      "metric": {
+        "value": 0.37331814029944627,
+        "unit": "fps"
+      },
+      "comparison": {
+        "value": 0,
+        "unit": "fps"
+      },
+      "improvement_factor": "inf",
+      "details": {
+        "grid": "128\u00b3",
+        "cells": 2097152,
+        "step_ms": 2678.680439150048,
+        "fps": 0.37331814029944627,
+        "memory_mb": 0.02764892578125,
+        "webgpu_compatible": "False",
+        "dtype": "float32"
+      },
+      "timestamp": "2026-02-05T19:25:56.268806"
+    },
+    {
+      "name": "Embedded CFD (Jetson)",
+      "status": "PASS",
+      "metric": {
+        "value": 1073741824,
+        "unit": "cells"
+      },
+      "comparison": {
+        "value": 262144,
+        "unit": "cells"
+      },
+      "improvement_factor": 4096.0,
+      "details": {
+        "max_grid": "1024\u00b3",
+        "max_cells": 1073741824,
+        "memory_mb": 2.2428817749023438,
+        "step_ms": 6305.829565004387,
+        "jetson_memory_gb": 8.0,
+        "all_results": [
+          {
+            "grid": "64\u00b3",
+            "cells": 262144,
+            "qtt_mb": 1.1060714721679688,
+            "dense_gb": 0.006291456,
+            "step_ms": 3228.681640001014,
+            "fits_jetson": true
+          },
+          {
+            "grid": "256\u00b3",
+            "cells": 16777216,
+            "qtt_mb": 1.6744766235351562,
+            "dense_gb": 0.402653184,
+            "step_ms": 4733.039816994278,
+            "fits_jetson": true
+          },
+          {
+            "grid": "1024\u00b3",
+            "cells": 1073741824,
+            "qtt_mb": 2.2428817749023438,
+            "dense_gb": 25.769803776,
+            "step_ms": 6305.829565004387,
+            "fits_jetson": true
+          }
+        ]
+      },
+      "timestamp": "2026-02-05T19:26:08.146169"
+    }
+  ],
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+    "cuda": "12.8",
+    "pytorch": "2.9.1+cu128"
+  },
+  "sha256": "bb076ae77a34b7def0fd84036abe75548eef9219c0c2fd87fa6dd7c3954b717b"
+}

@@ -1,0 +1,53 @@
+[package]
+name = "proof-bridge"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.73.0"
+authors = ["Bradly Biron Baker Adams <brad@tigantic.com>"]
+description = "Bridge between Python computation traces and ZK proof generation"
+license = "LicenseRef-Proprietary"
+keywords = ["zk", "trustless-physics", "tensor-network", "proof"]
+
+[lib]
+name = "proof_bridge"
+path = "src/lib.rs"
+
+[[bin]]
+name = "trace-to-proof"
+path = "src/bin/trace_to_proof.rs"
+
+[dependencies]
+# Workspace dependencies
+thiserror.workspace = true
+anyhow.workspace = true
+tokio.workspace = true
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Cryptographic hashing
+sha2 = "0.10"
+
+# Ed25519 signatures
+ed25519-dalek = { version = "2.1", features = ["rand_core"] }
+
+# UUID parsing
+uuid = { version = "1.7", features = ["v4", "serde"] }
+
+# CLI (for trace-to-proof binary)
+clap = { version = "4.4", features = ["derive"] }
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Byte ordering
+byteorder = "1.5"
+
+# Hex encoding
+hex = "0.4"
+
+[dev-dependencies]
+tempfile = "3.10"
+rand = "0.8"

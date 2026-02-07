@@ -51,17 +51,28 @@
 #![warn(clippy::all)]
 #![deny(unsafe_code)]
 
+// ── Re-exports from fluidelite-core (tensor primitives) ─────────────────────
+pub use fluidelite_core::field;
+pub use fluidelite_core::mps;
+pub use fluidelite_core::mpo;
+pub use fluidelite_core::ops;
+pub use fluidelite_core::weights;
+pub use fluidelite_core::weight_crypto;
+pub use fluidelite_core::physics_traits;
+pub use fluidelite_core::config;
+
+// ── Re-exports from fluidelite-circuits (physics ZK circuits) ───────────────
+pub use fluidelite_circuits::euler3d;
+pub use fluidelite_circuits::ns_imex;
+pub use fluidelite_circuits::thermal;
+pub use fluidelite_circuits::proof_preview;
+
+// ── Local modules (ZK proof infrastructure) ─────────────────────────────────
 pub mod circuit;
-pub mod field;
 pub mod hybrid;
 pub mod hybrid_prover;
-pub mod mpo;
-pub mod mps;
-pub mod ops;
 pub mod prover;
 pub mod verifier;
-pub mod weight_crypto;
-pub mod weights;
 
 #[cfg(feature = "halo2")]
 pub mod halo2_hybrid_prover;
@@ -72,6 +83,9 @@ pub mod python;
 
 #[cfg(feature = "server")]
 pub mod server;
+
+#[cfg(feature = "server")]
+pub mod trustless_api;
 
 #[cfg(feature = "gpu")]
 pub mod gpu;
@@ -89,36 +103,8 @@ pub mod qtt_native_msm;
 pub mod groth16_prover;
 
 // Re-exports for convenience
-pub use mpo::MPO;
-pub use mps::MPS;
-
-/// Configuration constants for FluidElite ZK
-pub mod config {
-    /// Number of sites in the tensor train (determines virtual context fidelity)
-    /// 2^L = maximum distinguishable token positions
-    pub const L: usize = 16;
-
-    /// Bond dimension (memory capacity)
-    /// Higher χ = more expressive but more constraints
-    pub const CHI: usize = 64;
-
-    /// MPO bond dimension
-    pub const D: usize = 1;
-
-    /// Physical dimension (binary embedding)
-    pub const PHYS_DIM: usize = 2;
-
-    /// Vocabulary size
-    pub const VOCAB_SIZE: usize = 256;
-
-    /// Fixed-point precision bits
-    #[allow(dead_code)]
-    pub const PRECISION_BITS: u32 = 32;
-
-    /// Fixed-point scale factor (2^16 for Q16.16 format)
-    #[allow(dead_code)]
-    pub const SCALE: i64 = 1 << 16;
-}
+pub use fluidelite_core::mpo::MPO;
+pub use fluidelite_core::mps::MPS;
 
 #[cfg(test)]
 mod tests {

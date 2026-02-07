@@ -1,0 +1,158 @@
+{
+  "project": "HyperTensor-VM",
+  "protocol": "trustless_physics_gauntlet_phase0",
+  "timestamp": "2026-02-06T14:44:37Z",
+  "total_time_seconds": 3.5759,
+  "gauntlets": {
+    "tpc_constants_integrity": {
+      "layer": "tpc_format",
+      "passed": true,
+      "time_seconds": 0.0096,
+      "error": null
+    },
+    "tpc_header_roundtrip": {
+      "layer": "tpc_format",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "tpc_layer_a_validation": {
+      "layer": "tpc_format",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "tpc_layer_b_validation": {
+      "layer": "tpc_format",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "tpc_layer_c_validation": {
+      "layer": "tpc_format",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "tpc_full_roundtrip": {
+      "layer": "tpc_format",
+      "passed": true,
+      "time_seconds": 3.2922,
+      "error": null
+    },
+    "tpc_file_io": {
+      "layer": "tpc_format",
+      "passed": true,
+      "time_seconds": 0.0025,
+      "error": null
+    },
+    "tpc_verification": {
+      "layer": "tpc_format",
+      "passed": true,
+      "time_seconds": 0.0004,
+      "error": null
+    },
+    "tpc_summary_text": {
+      "layer": "tpc_format",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "trace_session_basic": {
+      "layer": "computation_trace",
+      "passed": true,
+      "time_seconds": 0.2374,
+      "error": null
+    },
+    "trace_tensor_hashing": {
+      "layer": "computation_trace",
+      "passed": true,
+      "time_seconds": 0.0006,
+      "error": null
+    },
+    "trace_svd_recording": {
+      "layer": "computation_trace",
+      "passed": true,
+      "time_seconds": 0.0077,
+      "error": null
+    },
+    "trace_qr_recording": {
+      "layer": "computation_trace",
+      "passed": true,
+      "time_seconds": 0.0011,
+      "error": null
+    },
+    "trace_hooks_install_uninstall": {
+      "layer": "computation_trace",
+      "passed": true,
+      "time_seconds": 0.0002,
+      "error": null
+    },
+    "trace_session_save_load_json": {
+      "layer": "computation_trace",
+      "passed": true,
+      "time_seconds": 0.0048,
+      "error": null
+    },
+    "trace_session_save_load_binary": {
+      "layer": "computation_trace",
+      "passed": true,
+      "time_seconds": 0.0011,
+      "error": null
+    },
+    "trace_digest_determinism": {
+      "layer": "computation_trace",
+      "passed": true,
+      "time_seconds": 0.0008,
+      "error": null
+    },
+    "trace_no_session_passthrough": {
+      "layer": "computation_trace",
+      "passed": true,
+      "time_seconds": 0.0005,
+      "error": null
+    },
+    "generator_basic": {
+      "layer": "certificate_gen",
+      "passed": true,
+      "time_seconds": 0.0028,
+      "error": null
+    },
+    "generator_full_pipeline": {
+      "layer": "certificate_gen",
+      "passed": true,
+      "time_seconds": 0.0023,
+      "error": null
+    },
+    "generator_from_attestation": {
+      "layer": "certificate_gen",
+      "passed": true,
+      "time_seconds": 0.0021,
+      "error": null
+    },
+    "generator_json_export": {
+      "layer": "certificate_gen",
+      "passed": true,
+      "time_seconds": 0.0014,
+      "error": null
+    },
+    "integration_trace_to_certificate": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0045,
+      "error": null
+    },
+    "integration_failed_benchmark": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "integration_tamper_detection": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    }
+  }
+}

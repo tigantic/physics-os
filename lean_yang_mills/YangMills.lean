@@ -1,1 +1,4 @@
 import YangMills.Basic
+import YangMills.EulerConservation
+import YangMills.NavierStokesConservation
+import YangMills.ProverOptimization

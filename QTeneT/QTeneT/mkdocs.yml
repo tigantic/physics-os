@@ -1,0 +1,56 @@
+site_name: QTeneT
+site_description: Proprietary QTT consortium library blueprint (enterprise-grade).
+repo_url: null
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.indexes
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+    - search.highlight
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+
+nav:
+  - Home: README.md
+  - Docs Index: docs/00_INDEX.md
+  - Vision: docs/01_VISION.md
+  - Taxonomy: docs/02_TAXONOMY.md
+  - Reference Architecture: docs/03_REFERENCE_ARCHITECTURE.md
+  - API Spec: docs/04_API_SPEC.md
+  - Algorithm Catalog: docs/05_ALGORITHM_CATALOG.md
+  - Source Inventory: docs/06_SOURCE_INVENTORY.md
+  - Glossary: docs/07_GLOSSARY.md
+  - Roadmap: docs/08_ROADMAP.md
+  - Canonicalization Map: docs/09_CANONICALIZATION_MAP.md
+  - CLI Contract: docs/10_CLI_CONTRACT.md
+  - Capability Map: docs/11_CAPABILITY_MAP.md
+  - Capability Cards: docs/12_CAPABILITY_CARDS_INDEX.md
+  - Specs:
+      - Rank Control: docs/specs/01_RANK_CONTROL.md
+      - Operator Versioning: docs/specs/02_OPERATOR_VERSIONING.md
+      - Provenance & Attestation: docs/specs/03_PROVENANCE_ATTESTATION.md
+      - API Stability: docs/specs/04_API_STABILITY.md
+  - Audit:
+      - External Audit (Phase 0): docs/audit/20260131-external-audit-phase0.md
+  - Security:
+      - Threat Model: docs/security/THREAT_MODEL.md
+  - Release:
+      - Release Gates (0.1.0-dev): docs/13_RELEASE_GATES_0_1_0.md
+      - Phased Roadmap Checklist: docs/13_PHASED_ROADMAP_CHECKLIST.md
+  - Triage:
+      - Other Bucket Triage: docs/14_TAXONOMY_TRIAGE_OTHER.md
+  - ADRs:
+      - docs/adr/README.md
+      - ADR-0001 Never Go Dense: docs/adr/20260130-0001-never-go-dense.md
+      - ADR-0002 Compressor is separate: docs/adr/20260130-0002-compressor-is-separate-product.md

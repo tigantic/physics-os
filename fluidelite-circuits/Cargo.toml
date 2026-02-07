@@ -1,0 +1,36 @@
+[package]
+name = "fluidelite-circuits"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.73.0"
+authors = ["Bradly Biron Baker Adams <brad@tigantic.com>"]
+description = "Physics ZK circuits for FluidElite: Euler 3D, Navier-Stokes IMEX, Thermal diffusion, Proof Preview"
+license = "LicenseRef-Proprietary"
+repository = "https://github.com/tigantic/FluidElite"
+keywords = ["zk", "cfd", "euler", "navier-stokes", "thermal"]
+categories = ["cryptography", "science"]
+
+[lib]
+name = "fluidelite_circuits"
+path = "src/lib.rs"
+crate-type = ["rlib"]
+
+[dependencies]
+# Core tensor primitives
+fluidelite-core = { path = "../fluidelite-core" }
+
+# Numerics
+num-traits = "0.2"
+
+# Hashing
+sha2 = "0.10"
+
+# Random (for testing/witness generation)
+rand = "0.8"
+
+[features]
+default = []
+halo2 = []
+
+[dev-dependencies]
+proptest = "1.4"

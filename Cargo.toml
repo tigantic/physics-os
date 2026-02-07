@@ -6,8 +6,10 @@
 # Architecture:
 #   crates/hyper_core     - Physics engine core (QTT, MPO, CFD operators)
 #   crates/hyper_bridge   - RAM bridge IPC protocol (Python ↔ Rust streaming)
+#   crates/proof_bridge   - Trustless Physics: trace → ZK proof pipeline
 #   apps/glass_cockpit    - Fighter jet cockpit visualization
 #   apps/global_eye       - Global weather observation platform
+#   apps/trustless_verify - Standalone TPC certificate verifier
 #
 # Build: cargo build --workspace --release
 # Test:  cargo test --workspace
@@ -19,9 +21,14 @@ members = [
     "crates/hyper_bridge",
     "crates/tci_core",
     "crates/hyper_gpu_py",
+    "crates/proof_bridge",
     "apps/glass_cockpit",
     "apps/global_eye",
+    "apps/trustless_verify",
+    "fluidelite-core",
+    "fluidelite-circuits",
     "fluidelite-zk",
+    "fluidelite-infra",
 ]
 resolver = "2"
 
@@ -63,7 +70,20 @@ inherits = "release"
 lto = "fat"
 
 [profile.dev]
-opt-level = 1  # Faster compile, reasonable debug perf
+opt-level = 0       # No optimization → much less RAM during codegen
+debug = 0           # No debuginfo → linker uses far less RAM
+codegen-units = 256 # Max split → lowest per-unit RAM peak
+split-debuginfo = "off"
+lto = false          # Explicitly disable LTO for dev builds
+incremental = true   # Smaller incremental artifacts vs monolithic
+
+[profile.test]
+opt-level = 0
+debug = 0
+codegen-units = 256
+split-debuginfo = "off"
+lto = false
+incremental = true
 
 [profile.bench]
 inherits = "release"

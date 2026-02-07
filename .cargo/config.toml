@@ -1,0 +1,7 @@
+# Use mold linker: ~5x less RAM, ~5x faster than GNU ld.
+# Prevents OOM during cargo test linking of large crates.
+[build]
+jobs = 1
+
+[target.x86_64-unknown-linux-gnu]
+rustflags = ["-C", "link-arg=-fuse-ld=mold"]

@@ -1,0 +1,68 @@
+{
+  "attestation": "QTT-Aging Validation Gauntlet",
+  "protocol": "TENSOR GENESIS \u2014 Layer 27",
+  "phase": "Phase 21 \u2014 Civilization Stack",
+  "timestamp": "2026-02-06T10:48:48.477193+00:00",
+  "git_commit": "c9d111deb375168f300263eb490adde9712f3e78",
+  "constitutional_compliance": {
+    "article_I": "Compression Covenant \u2014 QTT format preserved throughout",
+    "article_II": "Verification Doctrine \u2014 This attestation",
+    "article_III": "Integration Mandate \u2014 Layer 27 in tensornet.genesis",
+    "article_IV": "Documentation Standard \u2014 Full docstrings, type hints, LaTeX",
+    "article_V": "Competitive Moat \u2014 First QTT biological aging framework"
+  },
+  "core_thesis": {
+    "statement": "Aging is rank growth. Reversal is rank reduction.",
+    "young_cell_rank": "\u2264 8",
+    "aged_cell_rank": "scales with chronological age",
+    "yamanaka_target_rank": 4,
+    "biological_modes": 8,
+    "total_qtt_sites": 88
+  },
+  "gates": {
+    "Gate 1: TT Core Operations": "PASS",
+    "Gate 2: Cell State Tensor": "PASS",
+    "Gate 3: Aging Dynamics": "PASS",
+    "Gate 4: Epigenetic Clocks": "PASS",
+    "Gate 5: Interventions": "PASS",
+    "Gate 6: Topology": "PASS",
+    "Gate 7: Core Theorem": "PASS",
+    "Gate 8: Numerical Stability": "PASS"
+  },
+  "accuracy": {
+    "tt_svd_reconstruction_error": "<0.01 (relative L2)",
+    "inner_product_symmetry": "<1e-10",
+    "self_distance_tolerance": "<1e-8",
+    "scaling_norm_tolerance": "<1e-8",
+    "rank_monotonicity": "verified (age \u2192 rank)",
+    "yamanaka_rank_reduction": "verified (rank_after < rank_before)",
+    "horvath_clock_consistency": "non-negative ages, correct ordering"
+  },
+  "performance": {
+    "total_time_seconds": 4.253,
+    "total_tests": 127,
+    "tests_passed": 127,
+    "tests_failed": 0,
+    "pass_rate": 1.0
+  },
+  "hardware": {
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "processor": "x86_64",
+    "python_version": "3.12.3",
+    "numpy_version": "2.2.6"
+  },
+  "modules": {
+    "cell_state.py": "CellStateTensor, BiologicalMode enum, 8 modes, 88 QTT sites",
+    "dynamics.py": "AgingOperator, AgingRateModel, AgingTrajectory",
+    "epigenetic_clock.py": "HorvathClock, GrimAgeClock, MethylationState",
+    "interventions.py": "YamanakaOperator, PartialReprogramming, Senolytic, CR",
+    "topology.py": "AgingTopologyAnalyzer, RejuvenationPath, persistent homology"
+  },
+  "references": [
+    "Horvath 2013 \u2014 Epigenetic clock (DNA methylation age)",
+    "Takahashi & Yamanaka 2006 \u2014 iPSC reprogramming (OSKM)",
+    "L\u00f3pez-Ot\u00edn et al. 2023 \u2014 Hallmarks of aging (12 hallmarks)",
+    "Oseledets 2011 \u2014 Tensor-Train decomposition"
+  ],
+  "sha256": "b4907368ab6900a14bf834bff52a86f8f3effe8076539d4f6ac238355a8682fd"
+}

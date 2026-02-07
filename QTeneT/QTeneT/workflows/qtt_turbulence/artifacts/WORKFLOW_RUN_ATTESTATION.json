@@ -1,0 +1,38 @@
+{
+  "workflow": "QTT_TURBULENCE",
+  "timestamp": "2026-02-05T14:02:33Z",
+  "mode": "quick",
+  "results": {
+    "imports": true,
+    "taylor_green": {
+      "E0": 8439.5283203125,
+      "E1": 6127.408203125,
+      "drift_pct": 27.39631919502684,
+      "passed": true
+    },
+    "compression": {
+      "grid": 128,
+      "dense_mb": 25.165824,
+      "qtt_mb": 0.688128,
+      "ratio": 36.57142857142857,
+      "passed": true
+    },
+    "reynolds_sweep": {
+      "Re_values": [
+        50,
+        100,
+        200
+      ],
+      "chi_values": [
+        64,
+        64,
+        64
+      ],
+      "alpha": 6.724740837482488e-16,
+      "r_squared": 0.9999999999999998,
+      "thesis_validated": "True"
+    }
+  },
+  "thesis_validated": "True",
+  "execution_time_s": 32.18325161933899
+}

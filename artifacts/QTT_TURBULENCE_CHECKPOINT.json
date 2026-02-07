@@ -1,0 +1,228 @@
+{
+  "workflow_id": "qtt_turbulence_20260205_004013",
+  "version": "1.0.0",
+  "created_at": "2026-02-05T00:40:13.348462",
+  "updated_at": "2026-02-05T00:47:55.786344",
+  "device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+  "vram_gb": 8.546484224,
+  "git_commit": "c9d111de",
+  "current_phase": "attest",
+  "phases": {
+    "init": {
+      "status": "passed",
+      "started_at": "2026-02-05T00:40:13.350410",
+      "completed_at": "2026-02-05T00:40:16.604109",
+      "duration_s": 3.2534898029989563,
+      "metrics": {
+        "cuda_available": true,
+        "cuda_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+        "vram_gb": 8.546484224,
+        "imports_ok": true,
+        "smoke_test": "passed"
+      },
+      "error": null,
+      "gate_criterion": "CUDA available, imports OK, smoke test passes",
+      "theory": "System validation for turbulence proofs"
+    },
+    "decay": {
+      "status": "passed",
+      "started_at": "2026-02-05T00:40:16.604741",
+      "completed_at": "2026-02-05T00:41:48.476991",
+      "duration_s": 95.37547936299961,
+      "metrics": {
+        "Omega_0": 24575.609375,
+        "Omega_final": 20686.80029296875,
+        "t_final": 0.05,
+        "fractional_decay": 0.15823856176633463,
+        "decay_monotonic": true,
+        "decay_in_range": true
+      },
+      "error": null,
+      "gate_criterion": "Monotonic decay in 5%-50% range for t=0.05, \u03bd=0.01",
+      "theory": "d\u03a9/dt = -2\u03bd\u222b|\u2207\u00d7\u03c9|\u00b2dV < 0 for viscous flow"
+    },
+    "energy": {
+      "status": "passed",
+      "started_at": "2026-02-05T00:41:48.480146",
+      "completed_at": "2026-02-05T00:42:17.232196",
+      "duration_s": 29.93157023599997,
+      "metrics": {
+        "E_0": 24575.609375,
+        "E_final": 24559.737548828125,
+        "energy_drift_percent": 0.06458365255439369,
+        "fluctuation_percent": 0.06458365255439369
+      },
+      "error": null,
+      "gate_criterion": "Energy drift < 0.5% over 20 inviscid steps",
+      "theory": "dE/dt = 0 for Euler equations (\u03bd=0)"
+    },
+    "scaling": {
+      "status": "passed",
+      "started_at": "2026-02-05T00:42:17.232918",
+      "completed_at": "2026-02-05T00:42:55.054745",
+      "duration_s": 38.98861021999983,
+      "metrics": {
+        "16\u00b3_ms": 1118.640375333295,
+        "32\u00b3_ms": 1915.194378333884,
+        "64\u00b3_ms": 2647.6702020002754,
+        "128\u00b3_ms": 3769.537958333482,
+        "ratio_64_to_16": 2.3668645083648188,
+        "ratio_128_to_32": 1.9682273512168393
+      },
+      "error": null,
+      "gate_criterion": "4\u00d7 grid \u2192 <3\u00d7 time (sublinear, not O(N\u00b3))",
+      "theory": "QTT ops are O(d\u00b7r\u00b3) where d = 3\u00b7log\u2082(N)"
+    },
+    "compress": {
+      "status": "passed",
+      "started_at": "2026-02-05T00:42:55.055846",
+      "completed_at": "2026-02-05T00:42:55.932406",
+      "duration_s": 0.874077111000588,
+      "metrics": {
+        "32\u00b3_qtt_params": 12792,
+        "32\u00b3_dense_params": 98304,
+        "32\u00b3_compression": 7.684803001876173,
+        "64\u00b3_qtt_params": 17400,
+        "64\u00b3_dense_params": 786432,
+        "64\u00b3_compression": 45.19724137931034,
+        "128\u00b3_qtt_params": 22008,
+        "128\u00b3_dense_params": 6291456,
+        "128\u00b3_compression": 285.8713195201745
+      },
+      "error": null,
+      "gate_criterion": "Compression > 100\u00d7 at 128\u00b3",
+      "theory": "QTT stores O(d\u00b7r\u00b2) vs O(N\u00b3) dense"
+    },
+    "stability": {
+      "status": "passed",
+      "started_at": "2026-02-05T00:42:55.933193",
+      "completed_at": "2026-02-05T00:47:55.783357",
+      "duration_s": 311.5650284099993,
+      "metrics": {
+        "Omega_0": 196590.3828125,
+        "Omega_final": 77889.5400390625,
+        "steps_completed": 110,
+        "nan_detected": false,
+        "inf_detected": false,
+        "max_enstrophy": 196590.3828125,
+        "enstrophy_bounded": true
+      },
+      "error": null,
+      "gate_criterion": "100 steps @ 64\u00b3, no NaN/Inf, bounded enstrophy",
+      "theory": "Numerical stability requires bounded solutions"
+    },
+    "attest": {
+      "status": "passed",
+      "started_at": "2026-02-05T00:47:55.784108",
+      "completed_at": "2026-02-05T00:47:55.786339",
+      "duration_s": 0.0003182600012223702,
+      "metrics": {
+        "proofs_passed": 5,
+        "proofs_total": 5,
+        "sha256": "f6cbce5b4996ce36d00c2210b39db365118da2d954d5f20610ba4e11cb2ddbaa",
+        "attestation_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/artifacts/QTT_TURBULENCE_PROOF.json"
+      },
+      "error": null,
+      "gate_criterion": "Generate SHA256-attested proof document",
+      "theory": "Constitutional attestation for audit trail"
+    }
+  },
+  "final_attestation": {
+    "timestamp": "2026-02-05T00:47:55.786052",
+    "workflow_id": "qtt_turbulence_20260205_004013",
+    "git_commit": "c9d111de",
+    "device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+    "vram_gb": 8.546484224,
+    "proofs": [
+      {
+        "name": "decay",
+        "passed": true,
+        "duration_s": 95.37547936299961,
+        "metrics": {
+          "Omega_0": 24575.609375,
+          "Omega_final": 20686.80029296875,
+          "t_final": 0.05,
+          "fractional_decay": 0.15823856176633463,
+          "decay_monotonic": true,
+          "decay_in_range": true
+        },
+        "theory": "d\u03a9/dt = -2\u03bd\u222b|\u2207\u00d7\u03c9|\u00b2dV < 0 for viscous flow",
+        "gate_criterion": "Monotonic decay in 5%-50% range for t=0.05, \u03bd=0.01",
+        "error": null
+      },
+      {
+        "name": "energy",
+        "passed": true,
+        "duration_s": 29.93157023599997,
+        "metrics": {
+          "E_0": 24575.609375,
+          "E_final": 24559.737548828125,
+          "energy_drift_percent": 0.06458365255439369,
+          "fluctuation_percent": 0.06458365255439369
+        },
+        "theory": "dE/dt = 0 for Euler equations (\u03bd=0)",
+        "gate_criterion": "Energy drift < 0.5% over 20 inviscid steps",
+        "error": null
+      },
+      {
+        "name": "scaling",
+        "passed": true,
+        "duration_s": 38.98861021999983,
+        "metrics": {
+          "16\u00b3_ms": 1118.640375333295,
+          "32\u00b3_ms": 1915.194378333884,
+          "64\u00b3_ms": 2647.6702020002754,
+          "128\u00b3_ms": 3769.537958333482,
+          "ratio_64_to_16": 2.3668645083648188,
+          "ratio_128_to_32": 1.9682273512168393
+        },
+        "theory": "QTT ops are O(d\u00b7r\u00b3) where d = 3\u00b7log\u2082(N)",
+        "gate_criterion": "4\u00d7 grid \u2192 <3\u00d7 time (sublinear, not O(N\u00b3))",
+        "error": null
+      },
+      {
+        "name": "compress",
+        "passed": true,
+        "duration_s": 0.874077111000588,
+        "metrics": {
+          "32\u00b3_qtt_params": 12792,
+          "32\u00b3_dense_params": 98304,
+          "32\u00b3_compression": 7.684803001876173,
+          "64\u00b3_qtt_params": 17400,
+          "64\u00b3_dense_params": 786432,
+          "64\u00b3_compression": 45.19724137931034,
+          "128\u00b3_qtt_params": 22008,
+          "128\u00b3_dense_params": 6291456,
+          "128\u00b3_compression": 285.8713195201745
+        },
+        "theory": "QTT stores O(d\u00b7r\u00b2) vs O(N\u00b3) dense",
+        "gate_criterion": "Compression > 100\u00d7 at 128\u00b3",
+        "error": null
+      },
+      {
+        "name": "stability",
+        "passed": true,
+        "duration_s": 311.5650284099993,
+        "metrics": {
+          "Omega_0": 196590.3828125,
+          "Omega_final": 77889.5400390625,
+          "steps_completed": 110,
+          "nan_detected": false,
+          "inf_detected": false,
+          "max_enstrophy": 196590.3828125,
+          "enstrophy_bounded": true
+        },
+        "theory": "Numerical stability requires bounded solutions",
+        "gate_criterion": "100 steps @ 64\u00b3, no NaN/Inf, bounded enstrophy",
+        "error": null
+      }
+    ],
+    "summary": {
+      "passed": 5,
+      "total": 5,
+      "all_passed": true,
+      "total_duration_s": 479.98825514299824
+    },
+    "sha256": "f6cbce5b4996ce36d00c2210b39db365118da2d954d5f20610ba4e11cb2ddbaa"
+  }
+}

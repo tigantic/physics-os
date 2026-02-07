@@ -13,7 +13,8 @@ categories = ["cryptography", "science"]
 [lib]
 name = "fluidelite_zk"
 path = "src/lib.rs"
-crate-type = ["cdylib", "rlib"]
+# cdylib only needed with "python" feature; rlib is sufficient for tests/deps
+crate-type = ["rlib"]
 
 [[bin]]
 name = "prover-node"
@@ -55,6 +56,10 @@ path = "src/bin/gevulot_prover.rs"
 required-features = ["halo2"]
 
 [dependencies]
+# Core tensor primitives (Q16, MPS, MPO, ops, physics_traits)
+fluidelite-core = { path = "../fluidelite-core" }
+# Physics ZK circuits (euler3d, ns_imex, thermal, proof_preview)
+fluidelite-circuits = { path = "../fluidelite-circuits" }
 
 # Groth16 prover (arkworks ecosystem)
 ark-std = { version = "0.4", optional = true }

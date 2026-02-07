@@ -1,0 +1,92 @@
+{
+  "phase": "Phase 5: Physics Validation",
+  "timestamp": "2026-02-05T04:45:59.553275+00:00",
+  "status": "PARTIAL_PASS_WITH_KNOWN_LIMITATIONS",
+  "executive_summary": {
+    "verdict": "Solver works but has significant numerical dissipation",
+    "key_findings": [
+      "Diffusion-only mode works correctly",
+      "Full NS has numerical dissipation that scales with N",
+      "Inviscid case shows ~0.1% dissipation per 10 steps (acceptable)",
+      "Viscous case shows 0.13-5.8% dissipation per 10 steps (scales with N)",
+      "Root cause: Advection term introduces numerical diffusion from QTT truncation"
+    ]
+  },
+  "dissipation_analysis": {
+    "16\u00b3": {
+      "inviscid_loss": "0.054%",
+      "viscous_loss": "0.13%",
+      "numerical_loss": "0.13%"
+    },
+    "32\u00b3": {
+      "inviscid_loss": "0.13%",
+      "viscous_loss": "0.50%",
+      "numerical_loss": "0.50%"
+    },
+    "64\u00b3": {
+      "inviscid_loss": "0.11%",
+      "viscous_loss": "1.47%",
+      "numerical_loss": "1.48%"
+    },
+    "128\u00b3": {
+      "inviscid_loss": "0.09%",
+      "viscous_loss": "5.77%",
+      "numerical_loss": "5.77%"
+    },
+    "per_10_steps_dt_0.0001": true,
+    "physical_loss_expected": "0.002%"
+  },
+  "root_cause_diagnosis": {
+    "issue": "Numerical dissipation from advection term scales with grid size",
+    "mechanism": "QTT truncation after Hadamard products loses high-frequency information",
+    "diffusion_term": "Works correctly (diffusion-only mode shows ~0% loss)",
+    "advection_term": "Introduces grid-dependent numerical diffusion",
+    "velocity_reconstruction": "poisson_iterations=0 skips Poisson solve, uses velocity diffusion approx",
+    "impact": "Excessive energy decay at large grids, but solver remains stable"
+  },
+  "physics_slo_compliance": {
+    "stability": {
+      "target": "No NaN/Inf",
+      "achieved": "100% stable",
+      "status": "PASS"
+    },
+    "monotonic_decay": {
+      "target": "Energy decreases",
+      "achieved": "Yes",
+      "status": "PASS"
+    },
+    "inviscid_conservation": {
+      "target": "<1% per 10 steps",
+      "achieved": "~0.1%",
+      "status": "PASS"
+    },
+    "viscous_accuracy": {
+      "target": "<10% drift",
+      "achieved": "0.1-5.8% depending on N",
+      "status": "PARTIAL"
+    },
+    "scaling": {
+      "target": "O(log N) time",
+      "achieved": "Confirmed",
+      "status": "PASS"
+    }
+  },
+  "recommendations": [
+    "For production: Use 32\u00b3-64\u00b3 grids where numerical dissipation is <2%",
+    "For 128\u00b3+: Accept higher dissipation or increase rank to 32",
+    "Future work: Implement spectral Poisson solver for velocity reconstruction",
+    "Future work: Reduce Hadamard truncation aggressiveness in advection terms",
+    "diffusion_only=True mode works well for heat equation / pure diffusion"
+  ],
+  "validation_tests_run": [
+    "Taylor-Green vortex at 16\u00b3-256\u00b3",
+    "Inviscid (nu=0) energy conservation",
+    "Viscous energy decay vs analytic",
+    "Diffusion-only mode validation",
+    "Rank effect on numerical dissipation",
+    "Grid scaling analysis"
+  ],
+  "integrity": {
+    "sha256": "4215119a23ac01a3913d40320ef535ca..."
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "timestamp": "2026-02-05T00:10:08.447291",
+  "git_commit": "c9d111de",
+  "cuda_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+  "cuda_memory_gb": 8.546484224,
+  "tests": [
+    {
+      "name": "imports",
+      "passed": true,
+      "duration_ms": 280.73925399985455,
+      "metrics": {
+        "triton_available": true,
+        "default_max_rank": 16,
+        "default_poisson_iterations": 0
+      },
+      "error": null
+    },
+    {
+      "name": "poisson_zero_stability",
+      "passed": true,
+      "duration_ms": 12246.077879999575,
+      "metrics": {
+        "E0": 3071.6785888671875,
+        "E_final": 3042.8470153808594,
+        "has_nan": false,
+        "has_inf": false,
+        "energy_drift_percent": 0.9386259874592218
+      },
+      "error": null
+    },
+    {
+      "name": "rank16_optimal",
+      "passed": true,
+      "duration_ms": 9145.161413998721,
+      "metrics": {
+        "grid": "32\u00b3",
+        "max_rank": 16,
+        "step_time_ms": 1805.2030843999091,
+        "peak_memory_mb": 60.9423828125,
+        "has_nan": false
+      },
+      "error": null
+    },
+    {
+      "name": "memory_scaling",
+      "passed": true,
+      "duration_ms": 17707.408510999812,
+      "metrics": {
+        "64\u00b3_memory_mb": 146.65380859375,
+        "64\u00b3_has_nan": false,
+        "128\u00b3_memory_mb": 1128.7177734375,
+        "128\u00b3_has_nan": false
+      },
+      "error": null
+    },
+    {
+      "name": "time_scaling",
+      "passed": true,
+      "duration_ms": 24220.392817000175,
+      "metrics": {
+        "16\u00b3_ms": 1286.1901466664374,
+        "32\u00b3_ms": 1842.6870160001272,
+        "64\u00b3_ms": 2627.2240383326184,
+        "ratio_64_to_16": 2.042640464274966
+      },
+      "error": null
+    },
+    {
+      "name": "energy_conservation_inviscid",
+      "passed": true,
+      "duration_ms": 15017.448646998673,
+      "metrics": {
+        "E0": 24575.609375,
+        "E_final": 24566.817138671875,
+        "energy_drift_percent": 0.035776269853430645
+      },
+      "error": null
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "total": 6,
+    "all_passed": true
+  },
+  "sha256": "0a07b5a198e091bbda77d70ab91f53a77bea335b8772f5ea8ca63702fc4238e9"
+}

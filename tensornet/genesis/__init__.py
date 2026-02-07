@@ -2,12 +2,12 @@
 TENSOR GENESIS — QTT Meta-Primitive Expansion Protocol
 
 This module extends Quantized Tensor Train (QTT) compression into seven
-unexploited mathematical domains, creating capabilities that are IMPOSSIBLE
-without QTT compression.
+unexploited mathematical domains plus applied science layers, creating
+capabilities that are IMPOSSIBLE without QTT compression.
 
 Constitutional Reference: TENSOR_GENESIS.md
 
-Layers 20-26:
+Layers 20-26 (Meta-Primitives):
     - ot: Optimal Transport (Layer 20)
     - sgw: Spectral Graph Wavelets (Layer 21)
     - rmt: Random Matrix Theory (Layer 22)
@@ -15,6 +15,9 @@ Layers 20-26:
     - rkhs: Kernel Methods (Layer 24)
     - topology: Persistent Homology (Layer 25)
     - ga: Geometric Algebra (Layer 26)
+
+Layer 27+ (Applied Science):
+    - aging: Biological Aging as Tensor Rank Dynamics (Layer 27)
 
 Core Infrastructure:
     - core: Logging, exceptions, profiling, validation
@@ -27,10 +30,14 @@ Example:
     >>> nu = QTTDistribution.gaussian(mean=1.0, std=1.0, grid_size=2**40)
     >>> W2 = wasserstein_distance(mu, nu, p=2)
 
+    >>> from tensornet.genesis import young_cell, YamanakaOperator
+    >>> cell = young_cell(seed=42)
+    >>> yamanaka = YamanakaOperator(target_rank=4)
+
 Copyright (c) 2026 Tigantic Holdings LLC. All Rights Reserved.
 """
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 __author__ = "Bradly Biron Baker Adams"
 __constitutional_ref__ = "TENSOR_GENESIS.md"
 
@@ -176,6 +183,53 @@ from tensornet.genesis.ga import (
     qtt_geometric_product,
 )
 
+# Layer 27: Biological Aging (QTT-Aging)
+from tensornet.genesis.aging import (
+    # Cell state
+    CellStateTensor,
+    ModeSpec,
+    AgingSignature,
+    CellType,
+    AgingHallmark,
+    BiologicalMode,
+    young_cell,
+    aged_cell,
+    embryonic_stem_cell,
+    YAMANAKA_FACTORS,
+    THOMSON_FACTORS,
+    NUM_PROTEIN_CODING_GENES,
+    NUM_PROTEINS,
+    NUM_CPG_SITES,
+    # Dynamics
+    AgingOperator,
+    AgingRateModel,
+    AgingTrajectory,
+    ModePerturbation,
+    # Epigenetic clocks
+    HorvathClock,
+    GrimAgeClock,
+    MethylationState,
+    extract_methylation,
+    young_methylation,
+    aged_methylation,
+    HORVATH_TOP_SITES,
+    # Interventions
+    InterventionResult,
+    YamanakaOperator,
+    PartialReprogrammingOperator,
+    SenolyticOperator,
+    CalorieRestrictionOperator,
+    CombinationIntervention,
+    find_optimal_intervention,
+    # Topology
+    AgingTopologyAnalyzer,
+    AgingTopology,
+    AgingPhase,
+    TopologicalBarrier,
+    RejuvenationPath,
+    compute_rejuvenation_path,
+)
+
 __all__ = [
     # Core Infrastructure
     "get_logger",
@@ -291,4 +345,43 @@ __all__ = [
     "cga_to_point",
     "QTTMultivector",
     "qtt_geometric_product",
+    # Layer 27: Biological Aging
+    "CellStateTensor",
+    "ModeSpec",
+    "AgingSignature",
+    "CellType",
+    "AgingHallmark",
+    "BiologicalMode",
+    "young_cell",
+    "aged_cell",
+    "embryonic_stem_cell",
+    "YAMANAKA_FACTORS",
+    "THOMSON_FACTORS",
+    "NUM_PROTEIN_CODING_GENES",
+    "NUM_PROTEINS",
+    "NUM_CPG_SITES",
+    "AgingOperator",
+    "AgingRateModel",
+    "AgingTrajectory",
+    "ModePerturbation",
+    "HorvathClock",
+    "GrimAgeClock",
+    "MethylationState",
+    "extract_methylation",
+    "young_methylation",
+    "aged_methylation",
+    "HORVATH_TOP_SITES",
+    "InterventionResult",
+    "YamanakaOperator",
+    "PartialReprogrammingOperator",
+    "SenolyticOperator",
+    "CalorieRestrictionOperator",
+    "CombinationIntervention",
+    "find_optimal_intervention",
+    "AgingTopologyAnalyzer",
+    "AgingTopology",
+    "AgingPhase",
+    "TopologicalBarrier",
+    "RejuvenationPath",
+    "compute_rejuvenation_path",
 ]

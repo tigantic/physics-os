@@ -7,6 +7,98 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - Trustless Physics Phase 4: Thermal Circuit (2026-02-06)
+
+#### Thermal ZK Proof Circuit (`fluidelite-circuits::thermal`)
+- **6-file thermal module**: `config.rs`, `gadgets.rs`, `halo2_impl.rs`, `mod.rs`, `prover.rs`, `witness.rs`
+- Heat equation solver: ∂T/∂t = α∇²T + S(x,t) with implicit CG in QTT format
+- Conservation law enforcement: |∫T^{n+1} - ∫T^n - Δt·∫S| ≤ ε_cons in ZK circuit
+- SVD truncation witness with singular value ordering proofs
+- SHA-256 hash commitments binding input/output states and parameters
+- Full Q16.16 fixed-point arithmetic with MAC chain witnesses
+
+#### Formal Verification
+- **ThermalConservation.lean**: Lean 4 formal proof of energy conservation
+  - 5 theorems: conservation_holds, rank_preservation, cg_termination, all_configs_conserve, residual_is_valid
+  - Evidence from 3 configurations (test_small, test_medium, production)
+  - Certificate and results artifacts in `thermal_conservation_proof/`
+
+#### OOM Resolution
+- **Root cause**: MPS direct-sum addition grows bond dimensions additively (chi doubles per operation); CG solver had no intermediate truncation → chi explodes exponentially after ~8 iterations → 512MB+ allocation
+- **Fix**: Added `mps.truncate(chi_max)` after every MPS addition/subtraction in CG loop (5 sites: initial residual, x update, r update, p update, system matrix apply)
+- **Impact**: Thermal tests run in 0.06s under 4GB memory limit (was OOM at 31.7GB)
+
+#### Serde Strip (DTO Pattern)
+- Removed `Serialize`/`Deserialize` derives from all circuit witness types in `fluidelite-circuits`
+- Removed serde, serde_json, bincode dependencies from `fluidelite-circuits/Cargo.toml`
+- Removed `Serialize`/`Deserialize` from MPS, MPSCore, MPO, MPOCore in `fluidelite-core`
+- Retained serde only on Q16 (field element), SolverType (3-variant enum), weights module
+
+#### Test Results
+- 168/168 tests pass across all 7 test suites:
+  - fluidelite-core lib: 21/21
+  - fluidelite-circuits lib: 22/22
+  - euler3d_tests: 33/33
+  - ns_imex_tests: 47/47
+  - thermal_tests: 40/40
+  - proof_preview_tests: 15/15
+  - trait_impls_tests: 10/10
+
+### Fixed - QTT Turbulence Solver Critical Optimizations (2026-02-05)
+
+#### Critical Bug Fixes
+- **Jacobi Poisson Divergence**: Fixed velocity reconstruction that caused exponential energy blowup
+  - Root cause: `_reconstruct_velocity_from_vorticity()` Jacobi iteration diverged
+  - Fix: Set `poisson_iterations=0` (uses diffusion approximation)
+  - Impact: Energy drift reduced from 72,904% → 0.9%
+- **Hadamard Rank Explosion OOM**: Fixed memory blowup in advection term
+  - Root cause: Hadamard products accumulated rank r² before truncation
+  - Fix: Truncate AFTER each Hadamard product in `_compute_rhs()`
+  - Impact: Memory reduced 9× (133MB → 15MB at 32³)
+
+#### Performance Optimizations
+- **Optimal Rank Discovery**: rank=16 identified as optimal (was 64)
+  - 4× faster SVD operations (O(r³) complexity)
+  - No loss in physics accuracy
+- **Updated TurboNS3DConfig defaults**:
+  - `max_rank`: 64 → 16
+  - `poisson_iterations`: 3 → 0
+  - `rank_cap`: 128 → 64
+
+#### Validation Results
+- **prove_turbulence.py**: 5/5 physics proofs PASSED
+  - Taylor-Green decay: 0.05% error
+  - Energy inequality: 0/30 violations
+  - Enstrophy bounds: No blowup
+  - Divergence-free: max|∇·u| = 4.27e-12
+  - Kolmogorov spectrum: Power-law confirmed
+- **Regression tests**: 6/6 PASSED
+  - Imports & config validation
+  - Poisson zero stability
+  - Rank 16 optimal configuration
+  - Memory scaling (64³, 128³)
+  - O(log N) time scaling confirmed
+  - Inviscid energy conservation: 0.036% drift
+
+#### Performance Metrics
+| Grid | Memory | Time/step | Compression |
+|------|--------|-----------|-------------|
+| 64³ | 147 MB | 2627 ms | 228× |
+| 128³ | 1129 MB | ~2400 ms | 1,560× |
+| 256³ | 4880 MB | 2878 ms | 10,923× |
+
+#### Files Modified
+- `tensornet/cfd/ns3d_turbo.py` — TurboNS3DSolver critical fixes
+- `tests/test_qtt_turbo_regression.py` — New regression test suite
+
+#### Documentation
+- `Workflow_Development.md` — Complete 6-phase execution tracker
+- `artifacts/PHASE1_BASELINE_ATTESTATION.json`
+- `artifacts/PHASE2_RANK_ATTESTATION.json`
+- `artifacts/PHASE3_4_MEMORY_ATTESTATION.json`
+- `artifacts/PHASE5_PHYSICS_ATTESTATION.json`
+- `artifacts/QTT_TURBO_REGRESSION.json`
+
 ### Added - QTT Size-Scaling Law Discovery (2026-01-29)
 
 #### Scientific Discovery

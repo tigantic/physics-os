@@ -1,0 +1,101 @@
+{
+  "timestamp": "2026-02-05T02:08:07.585175",
+  "git_commit": "c9d111de",
+  "device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+  "vram_gb": 8.546484224,
+  "proofs": [
+    {
+      "name": "taylor_green_decay",
+      "passed": true,
+      "duration_s": 127.86217081000359,
+      "metrics": {
+        "Omega_0": 24575.609375,
+        "Omega_final": 20677.158203125,
+        "t_final": 0.05,
+        "lambda_numerical": 3.454496794266029,
+        "lambda_min": 0.5,
+        "lambda_max": 10.0,
+        "decay_physical": true,
+        "decay_monotonic": true,
+        "fractional_decay": 0.15863090564259916,
+        "decay_in_range": true
+      },
+      "theory": "Enstrophy decays monotonically: d\u03a9/dt = -2\u03bd\u222b|\u2207\u00d7\u03c9|\u00b2dV < 0",
+      "gate_criterion": "Monotonic decay in physical range (5%-50% for t=0.05, \u03bd=0.01)",
+      "error": null
+    },
+    {
+      "name": "energy_conservation",
+      "passed": true,
+      "duration_s": 36.74190449999878,
+      "metrics": {
+        "E_0": 24575.609375,
+        "E_final": 24558.327880859375,
+        "energy_drift_percent": 0.07031969737525583,
+        "fluctuation_percent": 0.07031969737525583
+      },
+      "theory": "dE/dt = 0 for inviscid flow (Euler equations)",
+      "gate_criterion": "Energy drift < 0.5% over 20 steps",
+      "error": null
+    },
+    {
+      "name": "o_log_n_scaling",
+      "passed": true,
+      "duration_s": 46.39366723100102,
+      "metrics": {
+        "16\u00b3_ms": 1320.9969646656343,
+        "32\u00b3_ms": 2424.068084332248,
+        "64\u00b3_ms": 3309.3219863330887,
+        "128\u00b3_ms": 4960.979911332591,
+        "ratio_64_to_16": 2.5051700154138747,
+        "ratio_128_to_32": 2.0465513916038294
+      },
+      "theory": "QTT ops are O(d\u00b7r\u00b3) where d = 3\u00b7log\u2082(N)",
+      "gate_criterion": "4\u00d7 grid \u2192 < 3\u00d7 time (not O(N\u00b3))",
+      "error": null
+    },
+    {
+      "name": "compression_ratio",
+      "passed": true,
+      "duration_s": 0.7107245900006092,
+      "metrics": {
+        "32\u00b3_qtt_params": 12792,
+        "32\u00b3_dense_params": 98304,
+        "32\u00b3_compression": 7.684803001876173,
+        "64\u00b3_qtt_params": 17400,
+        "64\u00b3_dense_params": 786432,
+        "64\u00b3_compression": 45.19724137931034,
+        "128\u00b3_qtt_params": 22008,
+        "128\u00b3_dense_params": 6291456,
+        "128\u00b3_compression": 285.8713195201745
+      },
+      "theory": "QTT stores O(d\u00b7r\u00b2) vs O(N\u00b3) dense",
+      "gate_criterion": "Compression > 100\u00d7 at 128\u00b3",
+      "error": null
+    },
+    {
+      "name": "numerical_stability",
+      "passed": true,
+      "duration_s": 404.142300188003,
+      "metrics": {
+        "Omega_0": 196590.3828125,
+        "Omega_final": 78044.6875,
+        "steps_completed": 110,
+        "nan_detected": false,
+        "inf_detected": false,
+        "max_enstrophy": 196590.3828125,
+        "enstrophy_bounded": true
+      },
+      "theory": "Numerical stability requires bounded solutions",
+      "gate_criterion": "100 steps @ 64\u00b3, no NaN/Inf, bounded enstrophy",
+      "error": null
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "total": 5,
+    "all_passed": true,
+    "total_duration_s": 615.850767319007
+  },
+  "sha256": "f08752caa6f8ec90953caaad926dc167cd0234260b4976cbb4810891607b3470"
+}

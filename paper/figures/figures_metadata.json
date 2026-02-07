@@ -1,0 +1,110 @@
+{
+  "fig1_memory_scaling": {
+    "figure": "fig1_memory_scaling",
+    "grids": [
+      64,
+      128,
+      256,
+      512
+    ],
+    "dense_mb": [
+      3.0,
+      24.0,
+      192.0,
+      1536.0
+    ],
+    "qtt_mb": [
+      1.6875,
+      1.96875,
+      2.25,
+      2.53125
+    ],
+    "compression_ratios": [
+      1.7777777777777777,
+      12.19047619047619,
+      85.33333333333333,
+      606.8148148148148
+    ]
+  },
+  "fig2_compression_ratio": {
+    "figure": "fig2_compression_ratio",
+    "grids": [
+      32,
+      64,
+      128,
+      256,
+      512,
+      1024
+    ],
+    "compression_ratios": [
+      0.26666666666666666,
+      1.7777777777777777,
+      12.19047619047619,
+      85.33333333333333,
+      606.8148148148148,
+      4369.066666666667
+    ]
+  },
+  "fig3_chi_vs_re": {
+    "figure": "fig3_chi_vs_re",
+    "Re_values": [
+      50,
+      100,
+      200,
+      400,
+      800
+    ],
+    "chi_values": [
+      64,
+      64,
+      64,
+      64,
+      64
+    ],
+    "alpha": 3.8381847014882085e-16,
+    "r_squared": 1.0,
+    "thesis": "VALIDATED"
+  },
+  "fig4_energy_spectrum": {
+    "figure": "fig4_energy_spectrum",
+    "k_range": [
+      1,
+      32
+    ],
+    "note": "Representative DHIT spectrum"
+  },
+  "fig5_energy_decay": {
+    "figure": "fig5_energy_decay",
+    "Re_values": [
+      50,
+      100,
+      200,
+      400,
+      800
+    ],
+    "note": "Higher Re = slower decay (less viscous dissipation)"
+  },
+  "fig6_timing_comparison": {
+    "figure": "fig6_timing_comparison",
+    "grids": [
+      32,
+      64,
+      128
+    ],
+    "turbo_ms": [
+      1500,
+      1880,
+      2300
+    ],
+    "spectral_ms": [
+      150,
+      250,
+      400
+    ],
+    "speedup": [
+      10.0,
+      7.52,
+      5.75
+    ]
+  }
+}

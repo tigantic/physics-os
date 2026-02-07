@@ -1,0 +1,245 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# Trustless Physics — Deployment Configuration
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# On-premise deployment configuration for the Trustless Physics certificate
+# generation and verification system.
+#
+# All values shown are defaults. Override via environment variables or by
+# mounting a custom configuration file at /opt/trustless/config/deployment.toml.
+#
+# Environment variable override pattern:
+#   [server].host → TRUSTLESS_HOST
+#   [server].api_port → TRUSTLESS_API_PORT
+#   [prover].circuit_mode → TRUSTLESS_CIRCUIT_MODE
+#
+# © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────
+# Server Configuration
+# ─────────────────────────────────────────────────────────────────────────
+[server]
+# Bind address for the API server.
+host = "0.0.0.0"
+
+# TLS-secured API port for certificate generation and verification.
+api_port = 8443
+
+# Prometheus metrics export port.
+metrics_port = 9090
+
+# Maximum number of concurrent proof generation requests.
+# Each proof uses significant CPU and memory; limit based on available resources.
+max_concurrent_proofs = 2
+
+# Request timeout in seconds. Proof generation for large grids can take minutes.
+request_timeout_seconds = 600
+
+# Maximum request body size in bytes (default: 64 MB).
+max_body_size_bytes = 67108864
+
+# Graceful shutdown timeout in seconds.
+shutdown_timeout_seconds = 30
+
+# ─────────────────────────────────────────────────────────────────────────
+# TLS Configuration
+# ─────────────────────────────────────────────────────────────────────────
+[tls]
+# Enable TLS for the API endpoint.
+# In production, set to true and provide cert_path and key_path.
+enabled = false
+
+# Path to the TLS certificate (PEM format).
+cert_path = "/opt/trustless/config/tls/server.crt"
+
+# Path to the TLS private key (PEM format).
+key_path = "/opt/trustless/config/tls/server.key"
+
+# Minimum TLS version (1.2 or 1.3).
+min_version = "1.2"
+
+# ─────────────────────────────────────────────────────────────────────────
+# Authentication
+# ─────────────────────────────────────────────────────────────────────────
+[auth]
+# API key for authenticating requests to the /prove and /verify endpoints.
+# Set via FLUIDELITE_API_KEY environment variable (preferred) or here.
+# If empty, authentication is disabled (not recommended for production).
+api_key = ""
+
+# Endpoints that require authentication (all others are public).
+protected_endpoints = ["/v1/certificates/create", "/v1/certificates/verify", "/prove", "/verify"]
+
+# ─────────────────────────────────────────────────────────────────────────
+# Prover Configuration
+# ─────────────────────────────────────────────────────────────────────────
+[prover]
+# Circuit mode: "test" (small, fast) or "production" (full security).
+circuit_mode = "production"
+
+# Proof system backend: "halo2" (KZG/BN254) or "stub" (for testing).
+proof_system = "halo2"
+
+# Path to the hybrid model weights file.
+weights_path = "/opt/trustless/data/weights/fluidelite_hybrid.bin"
+
+# Maximum grid_bits for proof generation (limits memory usage).
+# grid_bits=20 → 1M points/dimension, grid_bits=24 → 16M points/dimension.
+max_grid_bits = 24
+
+# Maximum bond dimension (χ_max) for QTT operations.
+max_chi = 64
+
+# ─────────────────────────────────────────────────────────────────────────
+# Solver Configuration — Euler 3D
+# ─────────────────────────────────────────────────────────────────────────
+[solver.euler3d]
+# Enable the Euler 3D compressible flow solver.
+enabled = true
+
+# Default grid resolution (2^grid_bits points per dimension).
+default_grid_bits = 16
+
+# Default maximum QTT bond dimension.
+default_chi_max = 32
+
+# Heat capacity ratio γ (1.4 for ideal diatomic gas).
+gamma = 1.4
+
+# CFL safety factor (0 < cfl < 1).
+cfl = 0.8
+
+# Conservation tolerance.
+conservation_tolerance = 1e-10
+
+# SVD truncation tolerance.
+svd_tolerance = 1e-12
+
+# ─────────────────────────────────────────────────────────────────────────
+# Solver Configuration — Navier-Stokes IMEX
+# ─────────────────────────────────────────────────────────────────────────
+[solver.ns_imex]
+# Enable the incompressible Navier-Stokes IMEX solver.
+enabled = true
+
+# Default grid resolution.
+default_grid_bits = 16
+
+# Default maximum QTT bond dimension.
+default_chi_max = 32
+
+# Default kinematic viscosity.
+default_viscosity = 0.01
+
+# CFL safety factor.
+cfl = 0.5
+
+# Conservation tolerance for KE/enstrophy/momentum.
+conservation_tolerance = 1e-8
+
+# Divergence tolerance (max|∇·u|).
+divergence_tolerance = 1e-6
+
+# SVD truncation tolerance.
+svd_tolerance = 1e-12
+
+# Maximum CG iterations for implicit solves.
+max_cg_iterations = 1000
+
+# CG convergence tolerance.
+cg_tolerance = 1e-10
+
+# MPO bond dimension for shift operators.
+mpo_bond_dim = 4
+
+# ─────────────────────────────────────────────────────────────────────────
+# Certificate Storage
+# ─────────────────────────────────────────────────────────────────────────
+[storage]
+# Directory for storing generated certificates (.tpc files).
+certificate_dir = "/opt/trustless/data/certificates"
+
+# Maximum certificate storage size in bytes (default: 10 GB).
+max_storage_bytes = 10737418240
+
+# Certificate retention period in days (0 = forever).
+retention_days = 0
+
+# ─────────────────────────────────────────────────────────────────────────
+# Logging Configuration
+# ─────────────────────────────────────────────────────────────────────────
+[logging]
+# Log level: "trace", "debug", "info", "warn", "error".
+level = "info"
+
+# Output structured JSON logs (recommended for production log aggregation).
+json_format = true
+
+# Log directory (set to "" for stdout-only).
+log_dir = "/opt/trustless/logs"
+
+# Maximum log file size in bytes before rotation (default: 100 MB).
+max_log_file_bytes = 104857600
+
+# Number of rotated log files to retain.
+max_log_files = 10
+
+# ─────────────────────────────────────────────────────────────────────────
+# Metrics Configuration
+# ─────────────────────────────────────────────────────────────────────────
+[metrics]
+# Enable Prometheus metrics endpoint on metrics_port.
+enabled = true
+
+# Metrics path.
+path = "/metrics"
+
+# Include detailed per-solver metrics.
+per_solver_metrics = true
+
+# Include system resource metrics (CPU, memory, disk).
+system_metrics = true
+
+# ─────────────────────────────────────────────────────────────────────────
+# Network Configuration
+# ─────────────────────────────────────────────────────────────────────────
+[network]
+# Air-gap mode: disable all outbound network connections.
+# When true, the container makes zero outbound connections.
+# Suitable for classified/restricted environments.
+air_gap = false
+
+# CORS origin (set to specific origin in production, or "*" for development).
+cors_origin = ""
+
+# Allowed client IP ranges (CIDR notation). Empty = allow all.
+allowed_cidrs = []
+
+# ─────────────────────────────────────────────────────────────────────────
+# Resource Limits
+# ─────────────────────────────────────────────────────────────────────────
+[resources]
+# Maximum memory usage for proof generation (bytes).
+# Prover memory scales with grid_bits and chi_max.
+# Recommended: 16 GB minimum for production workloads.
+max_memory_bytes = 17179869184
+
+# Number of CPU threads for proof generation.
+# 0 = auto-detect (use all available cores).
+num_threads = 0
+
+# ─────────────────────────────────────────────────────────────────────────
+# Lean Proof Library
+# ─────────────────────────────────────────────────────────────────────────
+[lean]
+# Path to compiled Lean 4 proof library (.olean files).
+# These are included in the container at build time.
+library_path = "/opt/trustless/lean"
+
+# Available formal proofs (read-only, for certificate metadata).
+available_proofs = [
+    "EulerConservation",
+    "NavierStokesConservation",
+    "NavierStokesRegularity",
+]

@@ -1,0 +1,263 @@
+//! Unified traits and types for physics provers, verifiers, and proofs.
+//!
+//! Provides a common abstraction over Euler 3D, NS-IMEX, and Thermal proof
+//! systems, enabling generic batch, incremental, and GPU-accelerated proving.
+//!
+//! This module defines the trait interfaces and concrete solver-type
+//! implementations. The heavy generic machinery (BatchProver, IncrementalProver,
+//! ProofCompressor) lives in the separate `fluidelite-infra` crate.
+//!
+//! © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
+
+use serde::{Deserialize, Serialize};
+use std::fmt;
+
+use crate::mpo::MPO;
+use crate::mps::MPS;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Solver Type Enumeration
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// Identifies which physics solver generated a proof.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+pub enum SolverType {
+    /// Compressible Euler 3D (Phase 1).
+    #[serde(rename = "euler3d")]
+    Euler3D,
+    /// Navier-Stokes IMEX (Phase 2).
+    #[serde(rename = "ns_imex")]
+    NsImex,
+    /// Thermal/Heat Equation (Phase 4).
+    #[serde(rename = "thermal")]
+    Thermal,
+}
+
+impl fmt::Display for SolverType {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            SolverType::Euler3D => write!(f, "euler3d"),
+            SolverType::NsImex => write!(f, "ns_imex"),
+            SolverType::Thermal => write!(f, "thermal"),
+        }
+    }
+}
+
+impl SolverType {
+    /// Magic bytes prefix for serialized proofs.
+    pub fn magic(&self) -> &'static [u8; 4] {
+        match self {
+            SolverType::Euler3D => b"E3DP",
+            SolverType::NsImex => b"NSIP",
+            SolverType::Thermal => b"THEP",
+        }
+    }
+
+    /// Human-readable solver name.
+    pub fn name(&self) -> &'static str {
+        match self {
+            SolverType::Euler3D => "Compressible Euler 3D",
+            SolverType::NsImex => "Navier-Stokes IMEX",
+            SolverType::Thermal => "Thermal Diffusion",
+        }
+    }
+
+    /// Lean 4 formal verification files for this solver.
+    pub fn lean_proofs(&self) -> &'static [&'static str] {
+        match self {
+            SolverType::Euler3D => &["EulerConservation.lean"],
+            SolverType::NsImex => &[
+                "NavierStokesConservation.lean",
+                "NavierStokesRegularity.lean",
+            ],
+            SolverType::Thermal => &["ThermalConservation.lean"],
+        }
+    }
+}
+
+impl Default for SolverType {
+    fn default() -> Self {
+        SolverType::Euler3D
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Physics Proof Trait
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// Common interface for all physics proofs (Euler 3D, NS-IMEX, Thermal).
+pub trait PhysicsProof: Clone + Send + Sync + 'static {
+    /// Which solver generated this proof.
+    fn solver_type(&self) -> SolverType;
+
+    /// Raw proof bytes (Halo2/KZG serialized).
+    fn proof_bytes(&self) -> &[u8];
+
+    /// Full serialization including metadata and diagnostics.
+    fn to_serialized_bytes(&self) -> Vec<u8>;
+
+    /// Proof generation time in milliseconds.
+    fn generation_time_ms(&self) -> u64;
+
+    /// Number of constraints in the circuit.
+    fn num_constraints(&self) -> usize;
+
+    /// Circuit k parameter (2^k rows in Halo2 table).
+    fn k(&self) -> u32;
+
+    /// Size of raw proof bytes.
+    fn proof_size(&self) -> usize;
+
+    /// Input state hash (4 × u64 limbs of SHA-256).
+    fn input_hash_limbs(&self) -> &[u64; 4];
+
+    /// Output state hash (4 × u64 limbs of SHA-256).
+    fn output_hash_limbs(&self) -> &[u64; 4];
+
+    /// Parameters hash (4 × u64 limbs of SHA-256).
+    fn params_hash_limbs(&self) -> &[u64; 4];
+
+    /// Grid resolution parameter.
+    fn grid_bits(&self) -> usize;
+
+    /// Maximum bond dimension.
+    fn chi_max(&self) -> usize;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Physics Prover Trait
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// Common interface for all physics provers.
+///
+/// Provers generate ZK proofs that a QTT physics timestep was computed correctly.
+/// Both Halo2 and stub implementations satisfy this trait.
+pub trait PhysicsProver: Send + 'static {
+    /// The proof type produced by this prover.
+    type Proof: PhysicsProof;
+
+    /// Which solver this prover handles.
+    fn solver_type(&self) -> SolverType;
+
+    /// Generate a ZK proof for one physics timestep.
+    ///
+    /// # Arguments
+    /// * `input_states` — MPS states for each physics variable
+    /// * `shift_mpos` — Shift MPOs for each spatial dimension
+    fn prove(
+        &mut self,
+        input_states: &[MPS],
+        shift_mpos: &[MPO],
+    ) -> Result<Self::Proof, String>;
+
+    /// Total number of proofs generated by this prover instance.
+    fn total_proofs(&self) -> usize;
+
+    /// Total proving time in milliseconds.
+    fn total_time_ms(&self) -> u64;
+
+    /// Average proof generation time in milliseconds.
+    fn avg_time_ms(&self) -> f64 {
+        let total = self.total_proofs();
+        if total == 0 {
+            0.0
+        } else {
+            self.total_time_ms() as f64 / total as f64
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Physics Verifier Trait
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// Unified verification result across all solver types.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UnifiedVerificationResult {
+    /// Whether the proof is valid.
+    pub valid: bool,
+
+    /// Verification time in microseconds.
+    pub verification_time_us: u64,
+
+    /// Number of constraints verified.
+    pub num_constraints: usize,
+
+    /// Grid configuration.
+    pub grid_bits: usize,
+
+    /// Bond dimension.
+    pub chi_max: usize,
+
+    /// Which solver produced the proof.
+    pub solver_type: SolverType,
+
+    /// Maximum absolute conservation residual (solver-dependent).
+    pub max_residual: f64,
+}
+
+/// Common interface for all physics verifiers.
+pub trait PhysicsVerifier: Send + Sync + 'static {
+    /// The proof type this verifier accepts.
+    type Proof: PhysicsProof;
+
+    /// Verify a physics proof.
+    fn verify(&self, proof: &Self::Proof) -> Result<UnifiedVerificationResult, String>;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Prover Factory Type
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// Factory function type for creating provers.
+///
+/// Used by the batch prover to create per-thread prover instances.
+pub type ProverFactory<P> = Box<dyn Fn() -> Result<P, String> + Send + Sync>;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Tests (trait definitions only — impl tests in fluidelite-circuits)
+// ═══════════════════════════════════════════════════════════════════════════
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_solver_type_display() {
+        assert_eq!(SolverType::Euler3D.to_string(), "euler3d");
+        assert_eq!(SolverType::NsImex.to_string(), "ns_imex");
+        assert_eq!(SolverType::Thermal.to_string(), "thermal");
+    }
+
+    #[test]
+    fn test_solver_type_magic() {
+        assert_eq!(SolverType::Euler3D.magic(), b"E3DP");
+        assert_eq!(SolverType::NsImex.magic(), b"NSIP");
+        assert_eq!(SolverType::Thermal.magic(), b"THEP");
+    }
+
+    #[test]
+    fn test_solver_type_lean_proofs() {
+        assert_eq!(SolverType::Euler3D.lean_proofs().len(), 1);
+        assert_eq!(SolverType::NsImex.lean_proofs().len(), 2);
+        assert_eq!(SolverType::Thermal.lean_proofs().len(), 1);
+        assert_eq!(
+            SolverType::Thermal.lean_proofs()[0],
+            "ThermalConservation.lean"
+        );
+    }
+
+    #[test]
+    fn test_solver_type_default() {
+        assert_eq!(SolverType::default(), SolverType::Euler3D);
+    }
+
+    #[test]
+    fn test_solver_type_serde_roundtrip() {
+        let s = SolverType::NsImex;
+        let json = serde_json::to_string(&s).unwrap();
+        assert_eq!(json, "\"ns_imex\"");
+        let back: SolverType = serde_json::from_str(&json).unwrap();
+        assert_eq!(back, SolverType::NsImex);
+    }
+}

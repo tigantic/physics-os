@@ -1,0 +1,172 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# Trustless Physics — On-Premise Deployment Container
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Multi-stage build producing a minimal, hardened container for on-premise
+# deployment of the Trustless Physics certificate generation and verification
+# system. Supports air-gapped environments (no outbound network required).
+#
+# Build:
+#   podman build -f deployment/Containerfile \
+#     -t trustless-physics:latest .
+#
+# Run:
+#   podman run -d --name trustless-physics \
+#     -p 8443:8443 -p 9090:9090 \
+#     -v /path/to/config:/opt/trustless/config:ro \
+#     -v /path/to/data:/opt/trustless/data \
+#     trustless-physics:latest
+#
+# © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────
+# Stage 1: Rust Builder
+# ─────────────────────────────────────────────────────────────────────────
+FROM docker.io/library/rust:1.82-bookworm AS rust-builder
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    musl-tools \
+    pkg-config \
+    libssl-dev \
+    cmake \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN rustup target add x86_64-unknown-linux-musl
+
+WORKDIR /build
+
+# Cache dependency builds: copy manifests first
+COPY Cargo.toml Cargo.lock ./
+COPY fluidelite-zk/Cargo.toml fluidelite-zk/Cargo.toml
+COPY apps/trustless_verify/Cargo.toml apps/trustless_verify/Cargo.toml
+
+# Create stub source files so cargo can resolve dependencies
+RUN mkdir -p fluidelite-zk/src && echo "fn main() {}" > fluidelite-zk/src/lib.rs \
+    && mkdir -p fluidelite-zk/src/bin && echo "fn main() {}" > fluidelite-zk/src/bin/server.rs \
+    && mkdir -p apps/trustless_verify/src && echo "fn main() {}" > apps/trustless_verify/src/main.rs
+
+# Pre-build dependencies (cached layer)
+RUN cargo build --release --target x86_64-unknown-linux-musl \
+    -p fluidelite-zk --features server 2>/dev/null || true
+
+# Copy full source
+COPY fluidelite-zk/ fluidelite-zk/
+COPY apps/trustless_verify/ apps/trustless_verify/
+COPY tpc/ tpc/
+
+# Build the server binary (statically linked)
+RUN cargo build --release --target x86_64-unknown-linux-musl \
+    -p fluidelite-zk --features server --bin fluidelite-server
+
+# Build the standalone verifier binary
+RUN cargo build --release --target x86_64-unknown-linux-musl \
+    -p trustless-verify
+
+# ─────────────────────────────────────────────────────────────────────────
+# Stage 2: Python Environment (QTT Solver Engine)
+# ─────────────────────────────────────────────────────────────────────────
+FROM docker.io/library/python:3.12-slim-bookworm AS python-builder
+
+WORKDIR /build
+
+# Install build dependencies
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt ./
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+# Copy the QTT solver engine
+COPY tensornet/ /install/lib/python3.12/site-packages/tensornet/
+COPY tpc/ /install/lib/python3.12/site-packages/tpc/
+
+# ─────────────────────────────────────────────────────────────────────────
+# Stage 3: Production Runtime
+# ─────────────────────────────────────────────────────────────────────────
+FROM docker.io/library/python:3.12-slim-bookworm AS production
+
+# Security: non-root user
+RUN groupadd -r trustless && useradd -r -g trustless -d /opt/trustless -s /sbin/nologin trustless
+
+# Install minimal runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    tini \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create directory structure
+RUN mkdir -p /opt/trustless/bin \
+             /opt/trustless/config \
+             /opt/trustless/data \
+             /opt/trustless/data/certificates \
+             /opt/trustless/data/weights \
+             /opt/trustless/logs \
+             /opt/trustless/solver \
+             /opt/trustless/tpc \
+             /opt/trustless/scripts
+
+# Copy Rust binaries (statically linked)
+COPY --from=rust-builder \
+    /build/target/x86_64-unknown-linux-musl/release/fluidelite-server \
+    /opt/trustless/bin/fluidelite-server
+COPY --from=rust-builder \
+    /build/target/x86_64-unknown-linux-musl/release/trustless-verify \
+    /usr/local/bin/trustless-verify
+
+# Copy Python environment
+COPY --from=python-builder /install /usr/local
+
+# Copy solver engine
+COPY tensornet/ /opt/trustless/solver/tensornet/
+COPY tpc/ /opt/trustless/tpc/
+
+# Copy deployment configuration and scripts
+COPY deployment/config/ /opt/trustless/config/
+COPY deployment/scripts/ /opt/trustless/scripts/
+
+# Copy model weights if present
+COPY fluidelite/data/fluidelite_hybrid.bin* /opt/trustless/data/weights/
+
+# Make scripts executable
+RUN chmod +x /opt/trustless/scripts/*.sh \
+    && chmod +x /opt/trustless/bin/fluidelite-server \
+    && chmod +x /usr/local/bin/trustless-verify
+
+# Set ownership
+RUN chown -R trustless:trustless /opt/trustless
+
+# ─────────────────────────────────────────────────────────────────────────
+# Runtime Configuration
+# ─────────────────────────────────────────────────────────────────────────
+
+# Environment defaults (overridable at runtime)
+ENV TRUSTLESS_CONFIG_PATH="/opt/trustless/config/deployment.toml" \
+    TRUSTLESS_DATA_DIR="/opt/trustless/data" \
+    TRUSTLESS_LOG_DIR="/opt/trustless/logs" \
+    TRUSTLESS_LOG_LEVEL="info" \
+    TRUSTLESS_JSON_LOGS="true" \
+    TRUSTLESS_HOST="0.0.0.0" \
+    TRUSTLESS_API_PORT="8443" \
+    TRUSTLESS_METRICS_PORT="9090" \
+    TRUSTLESS_CERT_DIR="/opt/trustless/data/certificates" \
+    FLUIDELITE_API_KEY="" \
+    PYTHONPATH="/opt/trustless/solver"
+
+# Expose ports
+# 8443: TLS API endpoint
+# 9090: Prometheus metrics endpoint
+EXPOSE 8443
+EXPOSE 9090
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+    CMD curl -sf http://localhost:${TRUSTLESS_API_PORT}/health || exit 1
+
+# Run as non-root
+USER trustless
+WORKDIR /opt/trustless
+
+# Use tini as PID 1 for proper signal handling
+ENTRYPOINT ["tini", "--", "/opt/trustless/scripts/start.sh"]

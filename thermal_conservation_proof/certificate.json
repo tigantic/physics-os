@@ -1,0 +1,39 @@
+{
+  "claim": "Thermal heat equation solver conserves energy within tolerance ε_cons for all tested configurations",
+  "equation": "∂T/∂t = α∇²T + S(x,t)",
+  "method": "Implicit CG solve in QTT format with SVD truncation and ZK proof circuit",
+  "conservation_law": "|∫T^{n+1} - ∫T^n - Δt·∫S| ≤ ε_cons",
+  "n_configs": 3,
+  "n_conserving": 3,
+  "proof_methodology": "All theorems proved by `decide` (Lean kernel-checked). Zero axioms.",
+  "bounds": {
+    "conservation_tolerance_raw": 7,
+    "conservation_tolerance_real": 1.068115234375e-4,
+    "max_residual_raw": 0,
+    "max_residual_real": 0.0,
+    "svd_max_error_raw": 0,
+    "chi_max_tested": [4, 8, 32],
+    "grid_bits_tested": [4, 8, 16],
+    "all_conserved": true,
+    "confidence": "KERNEL_CHECKED"
+  },
+  "solver": {
+    "crate": "fluidelite-circuits",
+    "module": "thermal",
+    "arithmetic": "Q16.16 fixed-point",
+    "time_stepping": "implicit (I - α·Δt·L) T^{n+1} = T^n + Δt·S^n",
+    "linear_solver": "conjugate gradient (CG) in QTT format",
+    "truncation": "SVD with rank bound χ_max"
+  },
+  "zk_circuit": {
+    "backend": "Halo2 (KZG commitment)",
+    "constraints_test": "~30K",
+    "constraints_prod": "~2M",
+    "proof_size": "~800 bytes",
+    "verify_time": "<10ms"
+  },
+  "lean_proof": "ThermalConservation.lean",
+  "lean_proof_hash": "94c468f1cdd01257555047c79e01eaedf5d3ef8d6925d6ae964c0c819b388182",
+  "timestamp": "2026-02-07T00:00:00.000000",
+  "generated_by": "fluidelite-circuits thermal witness generator"
+}

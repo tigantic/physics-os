@@ -1,0 +1,4483 @@
+# Algorithm Catalog
+
+This section lists QTT algorithms/tools as implemented in the monorepo (by file + exported symbols).
+
+
+## archive (6)
+
+- **_archived_dense/tci_als.py**
+  - `function tci_als` (L24) — Build QTT via TCI with Alternating Least Squares refinement.
+- **_archived_dense/tci_greedy.py**
+  - `function tci_greedy` (L17) — Build QTT via greedy TCI (TT-cross approximation).
+  - `function tci_als_simple` (L162) — ALS-style TCI: Initialize randomly, then optimize via alternating least squares.
+  - `function _build_left_env` (L267) — Build left environment for site k: product of cores[0:k] at given indices.
+  - `function _build_right_env` (L291) — Build right environment for site k: product of cores[k+1:] at given indices.
+  - `function _evaluate_qtt_batch` (L314) — Evaluate QTT at batch of indices.
+- **_archived_dense/tci_production.py**
+  - `function maxvol_pivots` (L37) — MaxVol algorithm: find r rows of (n×r) matrix A that maximize determinant.
+  - `function tci_production` (L86) — Production-grade TCI with PROPER skeleton decomposition.
+  - `function validate_tci` (L338) — Validate TCI reconstruction against true function values.
+- **_archived_dense/tci_v2.py**
+  - `function tci_correct` (L21) — Build QTT using correct TCI with SVD-based construction.
+  - `function tci_with_sweeps` (L167) — TCI with forward-backward sweeps for refinement.
+  - `function _evaluate_qtt_at_indices` (L290) — Evaluate QTT at given indices.
+- **archive/rns_qtt_ntt_butterfly_mpo_deprecated.py**
+  - `class RNSPrime` (L51) — NTT-friendly prime for RNS decomposition.
+  - `function find_primitive_root` (L61) — Find smallest primitive root modulo p.
+  - `class RNSContext` (L134) — Context for RNS arithmetic operations.
+  - `function get_rns_context` (L280) — Get default RNS context for Baby Bear field.
+  - `class QTTState` (L292) — Quantized Tensor Train representation of a vector.
+  - `function build_butterfly_mpo` (L542) — Build butterfly MPO for stage k of NTT.
+  - `function apply_mpo_to_qtt` (L623) — Apply MPO to QTT state: |ψ'⟩ = MPO |ψ⟩
+  - `function apply_butterfly_stage` (L671) — Apply one butterfly stage to QTT state.
+  - `class RNSQTTNTT` (L697) — RNS-QTT-NTT: High-performance NTT using Residue Number System + QTT.
+  - `function validate_rns_qtt_ntt` (L1046) — Validate RNS-QTT-NTT against reference implementation.
+  - `function benchmark_compression` (L1083) — Benchmark QTT compression on different input types.
+
+## benchmarks (9)
+
+- **benchmarks/compare_tenpy.py**
+  - `function run_tensornet` (L36) — Run tensornet DMRG, return (energy, time).
+  - `function run_tenpy` (L49) — Run TeNPy DMRG, return (energy, time).
+  - `function main` (L79)
+- **benchmarks/qtt_compression.py**
+  - `function benchmark_uniform_flow` (L43) — Benchmark 1: Uniform supersonic flow (trivial case).
+  - `function benchmark_oblique_shock` (L87) — Benchmark 2: Mach 5 wedge with oblique shock.
+  - `function benchmark_smooth_function` (L169) — Benchmark 3: Smooth analytic function (QTT validation).
+  - `function benchmark_resolution_scaling` (L232) — Benchmark 4: Resolution scaling at fixed χ.
+  - `function run_all_benchmarks` (L303) — Run all QTT compression benchmarks.
+- **benchmarks/rust_vs_python_tci.py**
+  - `function test_fn` (L17) — Test function: smooth sinusoidal with Gaussian envelope.
+  - `function benchmark` (L23)
+- **benchmarks/sod_qtt_tci.py**
+  - `function sod_initial_condition` (L38) — Create Sod shock tube initial condition.
+  - `function euler_step_dense` (L61) — Single Euler time step using dense Rusanov flux.
+  - `function euler_step_qtt` (L91) — Single Euler time step using QTT-TCI Rusanov flux.
+  - `function validate_sod` (L151) — Run Sod shock tube validation.
+- **benchmarks/tci_vs_hybrid.py**
+  - `function benchmark_dense` (L24) — Benchmark dense Rusanov flux.
+  - `function benchmark_hybrid` (L69) — Benchmark hybrid: decompress → flux → recompress.
+  - `function benchmark_tci` (L126) — Benchmark TCI flux construction.
+  - `function main` (L169)
+- **benchmarks/tests/conftest.py**
+  - `function small_grid_size` (L9) — Small grid size for quick benchmark tests.
+  - `function medium_grid_size` (L15) — Medium grid size for moderate benchmark tests.
+  - `function benchmark_tolerance` (L21) — Standard tolerance for benchmark comparisons.
+  - `function max_benchmark_rank` (L27) — Maximum rank allowed in TCI/QTT benchmarks.
+- **benchmarks/tests/test_benchmark_validity.py**
+  - `class TestQTTCompressionBenchmark` (L13) — Test QTT compression benchmark validity.
+  - `class TestSodShockTubeBenchmark` (L67) — Test Sod shock tube benchmark validity.
+  - `class TestTCIBenchmark` (L96) — Test TCI algorithm benchmark validity.
+  - `class TestPerformanceThresholds` (L131) — Performance regression tests with threshold assertions.
+
+## cfd (50)
+
+- **tensornet/cfd/adaptive_tt.py**
+  - `class AdaptiveTTConfig` (L37) — Configuration for adaptive bond dimension.
+  - `class ShockIndicator` (L55) — Types of shock detection methods.
+  - `class ShockDetector` (L69) — Detect discontinuities in TT-format CFD solutions.
+  - `class BondAdapter` (L283) — Dynamically adjust bond dimensions in MPS based on shock locations.
+  - `class AdaptiveTTEuler` (L544) — 1D Euler solver with adaptive bond dimension (TT-AMR).
+  - `class EntanglementMonitor` (L654) — Monitor entanglement entropy evolution over time.
+  - `function compute_compression_ratio_profile` (L711) — Compute local compression ratio at each bond.
+  - `function estimate_memory_savings` (L741) — Estimate memory savings from TT compression.
+- **tensornet/cfd/comfort_metrics.py**
+  - `class ComfortInputs` (L27) — Inputs for PMV/PPD calculation.
+  - `function saturated_vapor_pressure` (L46) — Saturated water vapor pressure [Pa] at temperature T [°C].
+  - `function calculate_pmv` (L54) — Calculate Predicted Mean Vote (PMV) using Fanger's model.
+  - `function calculate_ppd` (L130) — Calculate Percent Persons Dissatisfied (PPD) from PMV.
+  - `function pmv_ppd_vectorized` (L142) — Vectorized PMV/PPD calculation for entire field.
+  - `class StratificationResult` (L227) — Results from vertical temperature stratification analysis.
+  - `function analyze_stratification` (L245) — Analyze vertical temperature stratification.
+  - `class DeadZoneResult` (L289) — Results from dead zone analysis.
+  - `function identify_dead_zones` (L305) — Identify stagnant regions with poor air circulation.
+  - `class ComfortMapResult` (L361) — Results from comfort analysis.
+  - `function analyze_comfort` (L384) — Analyze thermal comfort from QTT fields.
+- **tensornet/cfd/euler2d_native.py**
+  - `class Euler2DNativeConfig` (L38) — Configuration for native 2D Euler solver.
+  - `class Euler2DStateNative` (L53) — 2D Euler state in QTT2D format.
+  - `class Euler2D_Native` (L113) — Native 2D Euler solver using Strang splitting with TCI flux.
+  - `function create_kelvin_helmholtz_native` (L583) — Create Kelvin-Helmholtz initial condition in native QTT2D format.
+- **tensornet/cfd/euler2d_strang.py**
+  - `class Euler2DConfig` (L30) — Configuration for 2D Euler solver.
+  - `class Euler2DState` (L44) — 2D Euler state holding conserved variables in QTT format.
+  - `class Euler2D_Strang` (L103) — 2D Euler solver using Strang splitting with native QTT shift MPOs.
+  - `function create_kelvin_helmholtz_ic` (L381) — Create Kelvin-Helmholtz instability initial conditions.
+- **tensornet/cfd/euler_1d.py**
+  - `class BCType1D` (L47) — Boundary condition types for 1D Euler equations.
+  - `class EulerState` (L56) — Container for Euler equation state variables.
+  - `class Euler1D` (L123) — 1D Euler equation solver using tensor networks.
+  - `function sod_shock_tube_ic` (L537) — Sod shock tube initial condition.
+  - `function lax_shock_tube_ic` (L574) — Lax shock tube initial condition.
+  - `function shu_osher_ic` (L612) — Shu-Osher problem initial condition.
+  - `function euler_to_mps` (L655) — Convert EulerState to MPS representation.
+  - `function mps_to_euler` (L662) — Convert MPS to EulerState.
+- **tensornet/cfd/euler_nd_native.py**
+  - `class EulerNDConfig` (L28) — Configuration for N-dimensional Euler solver.
+  - `class EulerNDState` (L58) — State vector for N-dimensional Euler equations.
+  - `class EulerND_Native` (L82) — Fully native N-dimensional Euler solver using Strang splitting.
+  - `function create_kh_initial_condition_2d` (L270) — Create Kelvin-Helmholtz instability initial condition.
+- **tensornet/cfd/fast_euler_2d.py**
+  - `class FastEulerConfig` (L30) — Configuration for fast Euler solver.
+  - `class FastEulerState` (L54) — State for 2D Euler equations.
+  - `class FastEuler2D` (L68) — Ultra-fast 2D Euler solver using pure QTT operations.
+  - `function create_kh_state` (L208) — Create Kelvin-Helmholtz initial condition.
+- **tensornet/cfd/fast_euler_3d.py**
+  - `class QTT3DState` (L31) — 3D field stored in QTT format with Morton ordering.
+  - `class Euler3DConfig` (L49) — Configuration for 3D Euler solver.
+  - `class Euler3DState` (L77) — State for 3D compressible Euler equations.
+  - `function morton_encode_3d` (L96) — Encode 3D index to Morton (Z-curve) order.
+  - `function morton_decode_3d` (L106) — Decode Morton index to 3D coordinates.
+  - `function dense_to_qtt_3d` (L116) — Compress 3D field to QTT with Morton ordering.
+  - `function qtt_3d_to_dense` (L153) — Decompress QTT3D to dense 3D array.
+  - `class FastEuler3D` (L171) — Native 3D Euler solver using N-dimensional shift MPO.
+  - `function create_taylor_green_state` (L279) — Create Taylor-Green vortex initial condition.
+- **tensornet/cfd/fast_vlasov_5d.py**
+  - `class QTT5DState` (L38) — 5D field stored in QTT format with Morton ordering.
+  - `class Vlasov5DConfig` (L58) — Configuration for 5D Vlasov-Poisson solver.
+  - `function morton_encode_5d` (L97) — Encode 5D index to Morton order.
+  - `function morton_decode_5d` (L106) — Decode Morton index to 5D coordinates.
+  - `function dense_to_qtt_5d` (L115) — Compress 5D field to QTT with Morton ordering.
+  - `function qtt_5d_to_dense` (L158) — Decompress QTT5D to dense 5D array.
+  - `class FastVlasov5D` (L183) — Native 5D Vlasov-Poisson solver using N-dimensional shift MPO.
+  - `function create_two_stream_ic` (L320) — Create two-stream instability initial condition.
+- **tensornet/cfd/flux_2d_tci.py**
+  - `function qtt2d_eval_at_index` (L25) — Evaluate a QTT2D at a single Morton index.
+  - `function qtt2d_eval_batch` (L50) — Evaluate QTT2D at a batch of Morton indices.
+  - `class Flux2DConfig` (L102) — Configuration for 2D flux computation.
+  - `class Flux2DSampler` (L116) — Sampler for 2D Rusanov flux in Morton order.
+  - `function compute_flux_2d_tci` (L292) — Compute 2D Rusanov flux entirely in QTT format using TCI.
+  - `function compute_flux_difference_2d` (L347) — Compute flux difference: F_{i+1/2} - F_{i-1/2} in QTT format.
+- **tensornet/cfd/flux_batch.py**
+  - `function _lazy_import_qtt_eval` (L41) — Lazy import to avoid slow torch.compile initialization at module load.
+  - `function rusanov_flux_batch` (L48) — Compute Rusanov flux at a batch of interfaces using Rust-precomputed neighbors.
+  - `function rusanov_flux_from_dense` (L137) — Compute Rusanov flux from dense field tensors (reference implementation).
+- **tensornet/cfd/kelvin_helmholtz.py**
+  - `class KHConfig` (L30) — Configuration for Kelvin-Helmholtz IC generation.
+  - `function decode_morton_vectorized` (L59) — Decode Morton indices (interleaved bits) to (x, y) coordinates.
+  - `class KelvinHelmholtzSampler` (L99) — Sampler for Kelvin-Helmholtz initial conditions.
+  - `function build_kh_via_dense` (L173) — Build KH IC by creating dense field and compressing.
+  - `function analyze_kh_ranks` (L228) — Analyze the QTT ranks of KH initial conditions.
+  - `function build_kh_via_tci` (L274) — Build KH IC using TCI for sparse sampling.
+- **tensornet/cfd/koopman_tt.py**
+  - `class TTCore` (L57) — A single core in a Tensor Train decomposition.
+  - `class TensorTrain` (L79) — Tensor Train representation of a high-dimensional tensor/operator.
+  - `function tt_svd` (L141) — TT-SVD: Decompose a dense tensor into Tensor Train format.
+  - `function tt_matrix_vector` (L183) — Apply TT-matrix to TT-vector: y = K · x
+  - `function tt_round` (L251) — Truncate TT ranks via SVD to control rank growth.
+  - `class DictionaryType` (L308) — Types of observable dictionaries for Koopman lifting.
+  - `function hermite_1d` (L317) — Physicist's Hermite polynomials H_n(x).
+  - `function build_polynomial_dictionary` (L338) — Build polynomial observables from state vector.
+  - `function build_hermite_dictionary` (L382) — Build Hermite polynomial observables.
+  - `function build_fourier_dictionary` (L412) — Build Fourier observables for periodic systems.
+  - `class KoopmanMode` (L446) — A single Koopman mode (eigenfunction + eigenvalue).
+  - `class KoopmanDecomposition` (L469) — Complete Koopman decomposition of a dynamical system.
+  - `class KoopmanDMD` (L520) — Dynamic Mode Decomposition: Data-driven Koopman approximation.
+  - `class ExtendedDMD` (L614) — Extended Dynamic Mode Decomposition (EDMD).
+  - `class TTKoopman` (L726) — Tensor-Train Koopman Operator.
+  - `class TransitionAnalysis` (L1104) — Analysis of laminar→turbulent transition.
+  - `function analyze_boundary_layer_transition` (L1126) — Analyze boundary layer transition from Koopman modes.
+  - `function lorenz_rhs` (L1205) — Lorenz '63 system - the iconic chaotic attractor.
+  - `function integrate_lorenz` (L1215) — RK4 integration of Lorenz system.
+  - `function demo_koopman_lorenz` (L1236) — Demonstrate TT-Koopman on the Lorenz attractor.
+  - `function generate_boundary_layer_snapshots` (L1331) — Generate synthetic boundary layer velocity profiles.
+  - `function demo_boundary_layer_transition` (L1396) — Demonstrate TT-Koopman for boundary layer transition prediction.
+  - `function generate_koopman_attestation` (L1486) — Generate attestation for TT-Koopman turbulence solver.
+  - `function run_full_koopman_demo` (L1571) — Run complete TT-Koopman demonstration and generate attestation.
+- **tensornet/cfd/local_flux_native.py**
+  - `class LocalFluxConfig` (L38) — Configuration for local flux computation.
+  - `function estimate_max_wavespeed` (L51) — Estimate maximum wavespeed |u| + c by sampling.
+  - `function qtt2d_add` (L85) — Add two QTT2D states.
+  - `function qtt2d_scale` (L93) — Scale a QTT2D state.
+  - `function qtt2d_sub` (L100) — Subtract: a - b.
+  - `function apply_shift` (L105) — Apply shift MPO.
+  - `function compute_euler_flux_x` (L111) — Compute physical x-flux of Euler equations.
+  - `function compute_lax_friedrichs_flux_2d` (L186) — Compute Lax-Friedrichs numerical flux at cell interfaces.
+  - `function compute_upwind_update_2d` (L389) — Compute pure upwind update for 2D Euler.
+- **tensornet/cfd/nd_shift_mpo.py**
+  - `function _check_cuda_available` (L36) — Lazy check for CUDA availability.
+  - `function cuda_shift_available` (L57) — Check if CUDA shift acceleration is available.
+  - `function enable_cuda_shifts` (L62) — Enable CUDA acceleration for shift operations.
+  - `function disable_cuda_shifts` (L74) — Disable CUDA acceleration for shift operations.
+  - `class NDShiftConfig` (L81) — Configuration for N-dimensional shift operations.
+  - `function make_nd_shift_mpo` (L110) — Generate a Native Shift MPO for N-Dimensional Grid using Morton Interleaving.
+  - `function apply_nd_shift_mpo` (L231) — Apply N-dimensional shift MPO to QTT cores.
+  - `function _apply_shift_cuda` (L288) — CUDA-accelerated shift MPO application.
+  - `function _mpo_core_contract` (L319) — Single MPO-state core contraction.
+  - `function apply_nd_shift_mpo_batched` (L327) — Apply N-dimensional shift MPO to QTT cores (CUDA-optimized).
+  - `function truncate_cores` (L348) — Left-to-right SVD truncation sweep.
+  - `function make_2d_shift_operators` (L412) — Create all shift operators for 2D simulations.
+  - `function make_3d_shift_operators` (L447) — Create all shift operators for 3D simulations.
+  - `function make_5d_shift_operators` (L478) — Create all shift operators for 5D phase-space simulations (Vlasov).
+  - `function validate_shift_mpo` (L516) — Validate shift MPO by comparing against dense reference.
+  - `function make_laplacian_mpo` (L564) — Fused 2D Laplacian MPO: ∇²f = (f[i+1] + f[i-1] - 2f)/dx² + (f[j+1] + f[j-1] - 2f)/dy²
+  - `function apply_laplacian_mpo` (L762) — Apply fused Laplacian MPO to QTT state.
+- **tensornet/cfd/ns2d_qtt_native.py**
+  - `class QTT2DNativeState` (L71) — 2D field in QTT format with Morton ordering.
+  - `class NS2DQTTConfig` (L117) — Configuration for QTT-native 2D Navier-Stokes solver.
+  - `function morton_encode_2d` (L180) — Encode 2D index to Morton order (interleaved bits).
+  - `function morton_decode_2d` (L192) — Decode Morton index to 2D coordinates.
+  - `function morton_encode_2d_vectorized` (L204) — Vectorized Morton encoding for 2D indices.
+  - `function dense_to_qtt_2d_native` (L213) — Compress 2D field to QTT with Morton ordering.
+  - `function qtt_2d_native_to_dense` (L254) — Decompress QTT2D to dense 2D array (for visualization only).
+  - `class NS2D_QTT_Native` (L273) — Native 2D Navier-Stokes solver using vorticity-streamfunction.
+  - `function create_conference_room_ic` (L1259) — Create initial condition for conference room ventilation.
+- **tensornet/cfd/pure_qtt_ops.py**
+  - `class QTTCore` (L28) — A single core of a QTT decomposition.
+  - `class QTTState` (L35) — A full QTT state (MPS with physical dimension 2).
+  - `class MPOCore` (L57) — A single core of an MPO (Matrix Product Operator).
+  - `class MPO` (L64) — Matrix Product Operator for QTT operations.
+  - `function mpo_scale` (L75) — Scale an MPO by a scalar: scalar * O.
+  - `function mpo_add` (L89) — Add two MPOs: O1 + O2.
+  - `function mpo_negate` (L143) — Negate an MPO: -O.
+  - `function mpo_subtract` (L148) — Subtract two MPOs: O1 - O2.
+  - `function identity_mpo` (L153) — Create the identity MPO.
+  - `function shift_mpo` (L179) — Create the shift operator S in MPO form.
+  - `function _shift_plus_mpo` (L274) — Create the forward shift operator S⁺ in MPO form: S⁺|x⟩ = |x+1 mod 2^n⟩
+  - `function _shift_minus_mpo` (L292) — Create backward shift S⁻|x⟩ = |x-1 mod N⟩.
+  - `function _dense_matrix_to_mpo` (L302) — Convert a dense 2^n × 2^n matrix to MPO form via SVD.
+  - `function derivative_mpo` (L385) — Create the first derivative operator D in MPO form (central difference).
+  - `function laplacian_mpo` (L428) — Create the Laplacian operator Δ = (S⁺ - 2I + S⁻) / dx² in MPO form.
+  - `function apply_mpo` (L471) — Apply an MPO to a QTT state: |ψ'⟩ = O|ψ⟩
+  - `function truncate_qtt` (L539) — Truncate QTT bond dimensions using SVD.
+  - `function qtt_add` (L619) — Add two QTT states: |ψ⟩ = |ψ₁⟩ + |ψ₂⟩
+  - `function qtt_sum` (L682) — Sum multiple QTT states in one fused operation: |ψ⟩ = Σᵢ wᵢ|ψᵢ⟩
+  - `function qtt_scale` (L761) — Scale a QTT state by a scalar.
+  - `function qtt_hadamard` (L768) — Element-wise (Hadamard) product of two QTT states: |ψ⟩ = |ψ₁⟩ ⊙ |ψ₂⟩
+  - `function qtt_inner_product` (L819) — Compute ⟨ψ₁|ψ₂⟩ in O(n·d²·r³) time.
+  - `function qtt_norm` (L849) — Compute ||ψ|| = sqrt(⟨ψ|ψ⟩).
+  - `function apply_derivative_qtt` (L859) — Apply derivative operator to QTT state along specified axis.
+  - `function apply_laplacian_qtt` (L880) — Apply Laplacian to QTT state (1D version).
+  - `function dense_to_qtt` (L895) — Convert dense tensor to QTT format.
+  - `function qtt_to_dense` (L952) — Convert QTT back to dense tensor.
+- **tensornet/cfd/qtt.py**
+  - `class QTTCompressionResult` (L53) — Result container for QTT compression.
+  - `function _next_power_of_two` (L73) — Return smallest power of 2 >= n.
+  - `function _pad_to_power_of_two` (L78) — Pad tensor to target size with zeros.
+  - `function tt_svd` (L88) — Tensor Train SVD decomposition using randomized SVD (rSVD) for large matrices.
+  - `function field_to_qtt` (L217) — Compress a 2D field to Quantized Tensor Train (QTT) format.
+  - `function qtt_to_field` (L287) — Reconstruct 2D field from QTT/MPS representation.
+  - `function euler_to_qtt` (L327) — Compress full Euler2DState to QTT format.
+  - `function qtt_to_euler` (L368) — Reconstruct Euler2DState from QTT-compressed fields.
+  - `function compression_analysis` (L397) — Analyze compression quality vs bond dimension.
+  - `function estimate_area_law_exponent` (L464) — Estimate the Area Law exponent from compression scaling.
+- **tensornet/cfd/qtt_2d.py**
+  - `function morton_encode` (L30) — Interleave bits of x and y into Morton code using magic numbers.
+  - `function morton_decode` (L56) — Extract x and y from Morton code using magic numbers.
+  - `function morton_encode_batch` (L77) — Vectorized Morton encoding for GPU using magic number bit-interleaving.
+  - `class QTT2DState` (L103) — 2D physical field stored in QTT format with Morton (Z-curve) ordering.
+  - `function dense_to_qtt_2d` (L145) — Convert 2D dense field to QTT with Morton ordering.
+  - `function qtt_2d_to_dense` (L189) — Decompress QTT2D back to dense 2D array.
+  - `function _build_half_adder_core` (L219) — Build 4×2×4 half-adder core for ripple-carry.
+  - `function shift_mpo_x_2d` (L241) — Build MPO that shifts in X direction (even bits only) for Morton-ordered QTT.
+  - `function _fix_carry_through_identity` (L314) — Adjust MPO so carry state flows through identity (Y-bit) cores.
+  - `function shift_mpo_y_2d` (L349) — Build MPO that shifts in Y direction (odd bits only) for Morton-ordered QTT.
+  - `class SplitDirection` (L401)
+  - `function strang_split_step` (L406) — Perform one Strang splitting step for 2D Euler equations.
+  - `function _solve_direction` (L473) — Solve 1D Euler in specified direction using directional shift MPOs.
+  - `function riemann_quadrant_ic` (L520) — Initialize 2D Riemann problem with four quadrant states.
+  - `function primitive_to_conservative_2d` (L572) — Convert primitive variables to conservative.
+  - `function apply_mpo_2d` (L591) — Apply an MPO to a QTT2D state.
+  - `function truncate_qtt_2d` (L635) — Truncate QTT2D state to maximum rank using left-to-right SVD sweep.
+  - `function test_2d_shift_gaussian` (L692) — Test the interleaved shift MPO by shifting a Gaussian blob.
+  - `function test_2d_riemann_quadrant` (L736) — Validate the 2D Riemann quadrant initial condition.
+- **tensornet/cfd/qtt_2d_shift.py**
+  - `function build_shift_x_mpo_native` (L24) — Build native MPO for +1 shift in X direction (even bits) with interleaved layout.
+  - `function build_shift_y_mpo_native` (L138) — Build native MPO for +1 shift in Y direction (odd bits) with interleaved layout.
+  - `function apply_mpo_to_qtt2d` (L235) — Apply MPO to QTT2D state and truncate result.
+  - `function truncate_qtt2d_svd` (L285) — Left-to-right SVD truncation sweep.
+  - `function test_native_shift_x` (L341) — Test native shift-X MPO on a simple pattern.
+  - `function test_native_shift_y` (L398) — Test native shift-Y MPO.
+  - `function test_combined_shift` (L432) — Test X+Y shift sequence.
+- **tensornet/cfd/qtt_2d_shift_native.py**
+  - `function make_interleaved_shift_mpo` (L24) — Creates a Rank-2 MPO that shifts a 2D Morton-ordered QTT state by +1.
+  - `function make_interleaved_shift_minus_mpo` (L109) — Creates a Rank-2 MPO that shifts a 2D Morton-ordered QTT state by -1.
+  - `function apply_shift_mpo` (L177) — Apply shift MPO to QTT2D state.
+  - `function truncate_qtt2d` (L216) — Left-to-right SVD truncation sweep.
+  - `function test_shift_single_point` (L269) — Test shift on a single point - the most basic test.
+  - `function test_shift_square` (L320) — Test shift on a square pattern.
+  - `function test_advection_native` (L367) — Test advection using native shift (no dense round-trip in hot path).
+  - `function benchmark_native_vs_dense` (L426) — Benchmark native shift vs dense round-trip.
+- **tensornet/cfd/qtt_cfd.py**
+  - `class QTTCFDConfig` (L40) — Configuration for QTT-native CFD solver.
+  - `class QTTEulerState` (L51) — QTT representation of Euler state (ρ, ρu, E).
+  - `class QTT_Euler1D` (L172) — QTT-native 1D Euler solver with O(log N · χ²) complexity.
+  - `function complexity_comparison` (L373) — Compare storage complexity between approaches.
+- **tensornet/cfd/qtt_checkpoint_stream.py**
+  - `class CheckpointMetadata` (L45) — Metadata for a checkpoint.
+  - `class CheckpointConfig` (L81) — Configuration for checkpoint system.
+  - `class CheckpointWriter` (L107) — Async checkpoint writer with double buffering.
+  - `class CheckpointReader` (L313) — Checkpoint reader with memory mapping for fast loads.
+  - `class SimulationCheckpointer` (L412) — High-level checkpointer for QTT simulations.
+  - `function create_checkpointer` (L522) — Create a checkpointer for a named run.
+  - `function resume_or_start` (L542) — Resume from checkpoint or initialize fresh.
+- **tensornet/cfd/qtt_eval.py**
+  - `class QTTContiguous` (L35) — QTT state stored as a single contiguous tensor for torch.compile.
+  - `function index_to_bits` (L103) — Convert flat indices to binary representation.
+  - `function qtt_eval_at_index` (L126) — Evaluate QTT at a single index.
+  - `function qtt_eval_batch` (L168) — Evaluate QTT at a batch of indices.
+  - `function qtt_eval_batch_compiled` (L237) — Torch-compiled QTT batch evaluation.
+  - `function qtt_eval_multi_field_batch` (L281) — Evaluate multiple QTT fields at the same indices.
+  - `class QTTEvaluator` (L327) — High-level QTT evaluator with caching and compilation.
+  - `function create_test_qtt` (L386) — Create a test QTT for validation.
+  - `function dense_to_qtt_cores` (L421) — Convert dense 1D tensor to QTT cores via TT-SVD.
+  - `function verify_qtt_evaluation` (L487) — Verify QTT evaluation against dense reconstruction.
+  - `function qtt_to_dense` (L522) — Convert QTT cores back to dense tensor.
+- **tensornet/cfd/qtt_hadamard.py**
+  - `function qtt_hadamard` (L48) — Element-wise (Hadamard) product of two QTTs: C = A ⊙ B.
+  - `function qtt_hadamard_inplace_scale` (L120) — Scale QTT by a scalar (rank-preserving).
+  - `function qtt_power` (L135) — Compute f^n via repeated squaring.
+  - `function _qtt_constant` (L173) — Create QTT representing constant function.
+  - `function qtt_polynomial` (L187) — Evaluate polynomial P(f) = c₀ + c₁f + c₂f² + ...
+  - `function qtt_nonlinear_advection` (L236) — Compute nonlinear advection term: u * ∂u/∂x
+  - `function qtt_full_advection_3d` (L259) — Compute full 3D advection term: (u·∇)u for all three components.
+  - `function qtt_relu_approx` (L316) — Approximate ReLU(f) = max(0, f) using polynomial approximation.
+  - `function test_hadamard` (L359) — Test Hadamard product and nonlinear operations.
+- **tensornet/cfd/qtt_imex.py**
+  - `class IMEXScheme` (L43) — Available IMEX schemes.
+  - `class IMEXConfig` (L52) — Configuration for IMEX integrator.
+  - `class IMEXState` (L77) — State container for multi-step IMEX methods.
+  - `class IMEXIntegrator` (L92) — IMEX time integrator for stiff PDEs.
+  - `class QTTNavierStokesIMEX` (L347) — IMEX integrator specialized for QTT Navier-Stokes.
+  - `function create_ns_imex` (L607) — Create a Navier-Stokes IMEX solver.
+- **tensornet/cfd/qtt_multiscale.py**
+  - `class ScaleProfile` (L42) — Predefined scale-dependent rank profiles.
+  - `class MultiScaleConfig` (L52) — Configuration for multi-scale QTT.
+  - `class ScaleInfo` (L72) — Information about a single scale level.
+  - `class MultiScaleQTT` (L81) — Multi-scale QTT with variable ranks per level.
+  - `class HierarchicalQTT` (L433) — Hierarchical QTT (H-QTT) for extreme compression.
+  - `function create_turbulent_profile` (L571) — Create rank profile optimized for turbulent flows.
+  - `function estimate_optimal_ranks` (L601) — Estimate optimal ranks via SVD analysis.
+- **tensornet/cfd/qtt_reciprocal.py**
+  - `function qtt_reciprocal` (L34) — Compute element-wise reciprocal 1/x in QTT format.
+  - `function _estimate_qtt_scale` (L110) — Estimate typical magnitude of QTT vector from core norms.
+  - `function _constant_qtt_cores` (L119) — Create QTT cores for a constant function f(i) = value.
+  - `function _add_constant` (L144) — Add a constant to all elements of QTT: x + value.
+  - `function _add_qtt` (L150) — Add two QTTs: C = A + B.
+  - `function _clamp_cores` (L192) — Clamp core values to prevent numerical explosion.
+  - `function qtt_safe_divide` (L203) — Safe element-wise division: numerator / (denominator + eps).
+- **tensornet/cfd/qtt_regularity.py**
+  - `function qtt_vorticity_3d` (L46) — Compute 3D vorticity ω = ∇ × u in QTT format.
+  - `function qtt_sample_random` (L119) — Sample QTT at random indices without dense materialization.
+  - `function qtt_max_abs_sample` (L153) — Estimate max |f| via random sampling.
+  - `function qtt_vorticity_max_3d` (L166) — Estimate maximum vorticity magnitude ||ω||_∞ via sampling.
+  - `function qtt_enstrophy_3d` (L203) — Compute enstrophy Ω = (1/2) ∫ |ω|² dx.
+  - `function qtt_sobolev_norm_estimate` (L244) — Estimate Sobolev H^s norm via spectral approximation.
+  - `class RegularityState` (L293) — Snapshot of regularity diagnostics at one time.
+  - `class RegularityTrajectory` (L317) — Full trajectory of regularity diagnostics.
+  - `class RegularityMonitor` (L395) — Real-time regularity monitoring for NS simulations.
+  - `function test_regularity` (L487) — Test regularity diagnostic suite.
+- **tensornet/cfd/qtt_shift_stable.py**
+  - `function qtt_shift_spectral` (L56) — Shift QTT by integer positions using spectral method (rank-preserving).
+  - `function _apply_walsh_phase_shift` (L114) — Apply Walsh-domain phase shift operator.
+  - `function qtt_roll_by_power_of_2` (L152) — Roll QTT by 2^qubit_idx positions (exact, rank-preserving).
+  - `function qtt_roll_exact` (L180) — Exact roll by arbitrary integer (composition of power-of-2 rolls).
+  - `function qtt_central_diff_stable` (L222) — Compute central difference df/dx using rank-preserving shifts.
+  - `function qtt_advection_step_stable` (L279) — One step of advection: du/dt + u * du/dx = 0
+  - `function qtt_3d_roll_exact` (L331) — Roll a 3D interleaved QTT along one axis.
+  - `function qtt_3d_central_diff_stable` (L377) — Compute central difference along one axis of 3D QTT.
+  - `function compare_shift_methods` (L422) — Compare MPO shift vs spectral/roll shift for rank preservation.
+- **tensornet/cfd/qtt_spectral.py**
+  - `function get_f2_matrix` (L52) — The 2×2 DFT matrix (unnormalized):
+  - `function get_f2_inverse` (L64) — The inverse 2×2 DFT matrix (unnormalized):
+  - `function get_twiddle_f2` (L74) — Twiddle-modified F_2 for FFT butterfly at level k.
+  - `function qtt_apply_f2_to_core` (L99) — Apply 2×2 Fourier matrix to a single QTT core.
+  - `function qtt_fft_1d` (L114) — Apply 1D FFT to a QTT representation.
+  - `function qtt_walsh_hadamard` (L150) — Walsh-Hadamard transform of QTT.
+  - `function qtt_spectral_derivative_cores` (L172) — Build QTT cores for the spectral derivative operator ik.
+  - `function qtt_energy_spectrum_approx` (L247) — Compute approximate energy spectrum E(k) from QTT velocity field.
+  - `function qtt_enstrophy_spectral` (L319) — Compute enstrophy from spectral representation.
+  - `class ConservationMonitor` (L348) — Track conservation of energy, enstrophy, and helicity in QTT flows.
+  - `function qtt_spectral_filter` (L428) — Apply spectral filter to QTT via WHT → filter → iWHT.
+  - `function qtt_frobenius_norm` (L482) — Compute Frobenius norm of QTT: ||A||_F = sqrt(sum A_ij²)
+- **tensornet/cfd/qtt_streaming.py**
+  - `function build_qtt_from_function` (L20) — Build QTT from function by streaming evaluation.
+  - `function verify_qtt_accuracy` (L134) — Verify QTT accuracy by sampling random points.
+- **tensornet/cfd/qtt_tci.py**
+  - `function _maxvol_simple` (L36) — MaxVol algorithm: find r rows of (n×r) matrix A that form well-conditioned submatrix.
+  - `function qtt_from_function_dense` (L86) — Build QTT from function by dense sampling + TT-SVD.
+  - `function qtt_from_function_tci_python` (L119) — Build QTT from function using TT-Cross Interpolation (Python implementation).
+  - `function _init_tci_sampler` (L282) — Initialize TCI sampler with proper pivot coverage.
+  - `function _sample_fibers` (L299) — Sample fibers across all qubit levels. Returns count of new samples.
+  - `function _compute_approximation_error` (L331) — Compute approximation error on random subset using nearest-neighbor interpolation.
+  - `function _check_convergence` (L382) — Check if TCI has converged.
+  - `function _ensure_sample_density` (L414) — Add uniform samples if needed for accuracy. Returns count of new samples.
+  - `function qtt_from_function_tci_rust` (L444) — Build QTT from function using Rust TCI sampler.
+  - `function _update_pivots_by_value` (L674) — Update pivots based on sample values - pick diverse high-magnitude samples.
+  - `function _compose_index` (L709) — Compose a full index from left multi-index, current bit, and right multi-index.
+  - `function _interpolate_sparse` (L731) — Vectorized interpolation for sparse samples - O(N) but fast.
+  - `function qtt_from_function` (L771) — Build QTT from black-box function using TT-Cross Interpolation.
+  - `function qtt_rusanov_flux_tci` (L843) — Compute Rusanov flux in QTT format using TCI.
+  - `function qtt_rusanov_flux_tci_rust` (L951) — Compute Rusanov flux in QTT format using Rust TCI with neighbor indices.
+- **tensornet/cfd/qtt_tci_gpu.py**
+  - `function qtt_from_function_gpu` (L21) — Build QTT decomposition of a function using GPU-accelerated randomized SVD.
+  - `function qtt_eval_gpu` (L126) — Evaluate QTT at given indices using GPU.
+  - `function qtt_from_function_dense_gpu` (L180) — Drop-in replacement for qtt_from_function_dense.
+  - `function qtt_eval_batch_gpu` (L189) — Drop-in replacement for qtt_eval_batch.
+- **tensornet/cfd/qtt_tdvp.py**
+  - `class QTTTDVPConfig` (L68) — Configuration for QTT-TDVP solver.
+  - `class QTTTDVPDiagnostics` (L82) — Diagnostics from a TDVP step.
+  - `class QTTState` (L99) — QTT state optimized for TDVP evolution.
+  - `class EulerQTTMPO` (L285) — MPO representation of Euler flux derivative in QTT format.
+  - `function tdvp_sweep` (L451) — Perform one TDVP-style time step for Euler equations in QTT format.
+  - `class QTT_TDVP_Euler1D` (L550) — THE HOLY GRAIL: True O(log N) CFD Solver.
+  - `function run_holy_grail_demo` (L735) — Run the Holy Grail demo: O(log N) CFD evolution.
+- **tensornet/cfd/qtt_triton_kernels.py**
+  - `function morton_encode_kernel` (L51) — Parallel Morton Z-curve encoding.
+  - `function morton_encode_triton` (L83) — Triton Morton encoding wrapper.
+  - `function qtt_batch_eval_kernel` (L103) — Evaluate QTT at N Morton indices in parallel.
+  - `function qtt_matmul_chain_kernel` (L168) — Full matrix chain contraction for batch of points.
+  - `function prepare_cores_flat` (L242) — Flatten cores into contiguous GPU memory with metadata.
+  - `function batch_qtt_render_2d_triton` (L270) — Render QTT 2D field at given resolution using Triton kernels.
+  - `function qtt_batch_contract_kernel` (L338) — Fused Triton kernel for QTT batch evaluation.
+  - `function _triton_batch_contract` (L424) — Pure Triton implementation of batch QTT contraction.
+  - `function _triton_contract_fixed` (L472) — Triton kernel for QTT evaluation using full matrix chain contraction.
+  - `function _triton_contract_small_rank` (L524) — Register-tiled Triton kernel for small ranks (≤8).
+  - `function _triton_contract_medium_rank` (L561) — Shared-memory Triton kernel for medium ranks (≤32).
+  - `function qtt_eval_rank2_kernel` (L595) — Full matrix chain for max_rank=2.
+  - `function qtt_eval_rank4_kernel` (L651) — Full matrix chain for max_rank=4.
+  - `function qtt_eval_rank8_kernel` (L712) — Full matrix chain for max_rank=8.
+  - `function qtt_eval_rank16_kernel` (L801) — Full matrix chain for max_rank=16 using 2D tensor.
+  - `function qtt_eval_rank32_kernel` (L867) — Full matrix chain for max_rank=32 using shared memory.
+  - `function _batch_contract_pytorch` (L921) — Vectorized PyTorch batch contraction (fallback).
+  - `function _batch_contract_simple` (L956) — Batch QTT contraction dispatcher.
+  - `function _batch_contract_full` (L986) — Full matrix chain contraction.
+  - `function truncate_qtt_triton` (L1000) — Truncate QTT to max bond dimension.
+  - `function block_diag_assemble_kernel` (L1071) — Assemble block-diagonal core from multiple QTT cores.
+  - `function qtt_add_triton` (L1109) — Add two QTT states: |ψ₁⟩ + |ψ₂⟩
+  - `function apply_mpo_triton` (L1160) — Apply MPO to QTT state.
+  - `function qtt_inner_product_triton` (L1208) — Compute ⟨ψ₁|ψ₂⟩ without decompression.
+  - `function identity_mpo_triton` (L1241) — Create identity MPO using vectorized construction.
+  - `function shift_mpo_triton` (L1260) — Create shift operator MPO using vectorized construction.
+  - `function dense_to_qtt_triton` (L1322) — Compress dense 1D array to QTT using TT-SVD.
+  - `function dense_to_qtt_2d_triton` (L1388) — Convert 2D dense field to QTT with Morton ordering.
+  - `function render_qtt_2d_triton` (L1423) — Render QTT 2D to dense image using Triton-accelerated evaluation.
+- **tensornet/cfd/qtt_triton_kernels_v2.py**
+  - `class QTTState` (L102) — QTT state with GPU tensor cores.
+  - `class QTT2DState` (L129) — 2D QTT state with Morton ordering.
+  - `class MPO` (L157) — Matrix Product Operator.
+  - `function _spread_bits_kernel` (L169) — Spread bits for Morton encoding: insert 1 zero between each bit.
+  - `function _compact_bits_kernel` (L193) — Compact bits for Morton decoding: extract every 2nd bit.
+  - `function _morton_encode_kernel` (L218) — Morton encode: interleave bits of x and y.
+  - `function _morton_decode_kernel` (L252) — Morton decode: extract x and y from interleaved bits.
+  - `function _gram_matrix_kernel` (L285) — Compute Gram matrix G = A @ A.T using tiled algorithm.
+  - `function _matmul_kernel` (L332) — Tiled matrix multiply C = A @ B.
+  - `function _block_diag_scatter_kernel` (L373) — Scatter a core into block-diagonal position.
+  - `function _kronecker_product_kernel` (L408) — Compute Kronecker product of two QTT cores in bond dimensions.
+  - `function _qtt_contract_kernel` (L446) — Contract left boundary with core: left[r] @ core[r, d, r'].
+  - `function _extract_bits_kernel` (L479) — Extract bit k from each index for core k (MSB ordering for TT-SVD).
+  - `function _batch_evaluate_kernel` (L504) — Batch evaluate QTT at multiple indices using tensor train contraction.
+  - `function _fused_tt_contract_kernel` (L540) — Fully fused TT contraction kernel.
+  - `function _fused_tt_eval_r16_kernel` (L610) — Fused TT evaluation for max rank 16.
+  - `function morton_encode_gpu` (L710) — GPU-accelerated Morton encoding using Triton.
+  - `function morton_decode_gpu` (L732) — GPU-accelerated Morton decoding using Triton.
+  - `function spread_bits_gpu` (L754) — GPU-accelerated bit spreading using Triton.
+  - `function compact_bits_gpu` (L774) — GPU-accelerated bit compaction using Triton.
+  - `function gram_matrix_gpu` (L799) — Compute Gram matrix G = A @ A.T using Triton or cuBLAS.
+  - `function matmul_gpu` (L825) — GPU matrix multiply using Triton or cuBLAS fallback.
+  - `function rsvd_gpu` (L865) — Randomized SVD using GPU operations only (no loops).
+  - `function truncate_qtt_gpu` (L938) — Truncate QTT using right-to-left SVD sweep.
+  - `function qtt_add_gpu` (L1002) — Add two QTT states using vectorized block-diagonal assembly.
+  - `function qtt_sum_gpu` (L1061) — Sum multiple QTT states in one fused operation.
+  - `function qtt_scale_gpu` (L1161) — Scale QTT state by scalar.
+  - `function qtt_hadamard_gpu` (L1173) — Element-wise product using batched Kronecker products.
+  - `function qtt_inner_product_gpu` (L1223) — Compute ⟨ψ₁|ψ₂⟩ using batched contractions.
+  - `function qtt_norm_gpu` (L1247) — Compute ||ψ|| = sqrt(⟨ψ|ψ⟩).
+  - *(+17 more symbols)*
+- **tensornet/cfd/qtt_triton_ops.py**
+  - `function triton_matmul` (L278) — Triton-accelerated matrix multiply.
+  - `function triton_gram` (L303) — Compute Gram matrix A @ A.T using Triton.
+  - `function morton_encode_gpu` (L324) — GPU Morton encoding via Triton kernel.
+  - `function morton_decode_gpu` (L353) — GPU Morton decoding via Triton kernel.
+  - `function rsvd_gpu` (L388) — Randomized SVD — GPU-native, O(mnk) complexity.
+  - `function dense_to_qtt_gpu` (L484) — Convert dense tensor to QTT format using GPU-accelerated rSVD.
+  - `function qtt_to_dense_gpu` (L535) — Convert QTT back to dense tensor using batched contractions.
+  - `function truncate_qtt_gpu` (L551) — Truncate QTT bond dimensions using GPU-accelerated rSVD.
+  - `function qtt_add_gpu` (L608) — Add two QTT states: c = a + b using block-diagonal assembly.
+  - `function qtt_sum_gpu` (L658) — Sum multiple QTT states in one fused operation.
+  - `function qtt_scale_gpu` (L723) — Scale QTT by scalar — just scales first core.
+  - `function qtt_hadamard_gpu` (L730) — Element-wise (Hadamard) product via Kronecker on bonds.
+  - `function qtt_inner_product_gpu` (L766) — Compute ⟨ψ₁|ψ₂⟩ via transfer matrix method.
+  - `function qtt_norm_gpu` (L795) — Compute ||ψ|| = sqrt(⟨ψ|ψ⟩).
+  - `function identity_mpo_gpu` (L804) — Create identity MPO — vectorized construction.
+  - `function shift_mpo_gpu` (L817) — Create shift operator S in MPO form.
+  - `function apply_mpo_gpu` (L860) — Apply MPO to QTT state using batched einsum.
+  - `function derivative_mpo_gpu` (L891) — Create derivative MPO: D = (S⁺ - S⁻) / (2*dx).
+  - `function laplacian_mpo_gpu` (L925) — Create Laplacian MPO: Δ = (S⁺ - 2I + S⁻) / dx².
+  - `function _dense_matrix_to_mpo_gpu` (L955) — Convert dense matrix to MPO via TT-SVD — GPU accelerated.
+  - `function dense_to_qtt_2d_gpu` (L1022) — Convert 2D field to QTT with Morton ordering — GPU accelerated.
+  - `function qtt_2d_to_dense_gpu` (L1062) — Decompress QTT2D to dense — GPU accelerated with Triton Morton decode.
+  - `function shift_mpo_x_2d_gpu` (L1095) — Shift MPO in X direction for Morton-ordered QTT.
+  - `function shift_mpo_y_2d_gpu` (L1141) — Shift MPO in Y direction for Morton-ordered QTT.
+  - `function apply_mpo_2d_gpu` (L1187) — Apply MPO to QTT2D state.
+  - `function qtt_evaluate_batch_gpu` (L1203) — Evaluate QTT at batch of indices using GPU-accelerated contraction.
+  - `function qtt_evaluate_batch_cached` (L1247) — Cached version of batch evaluation.
+  - `function qtt_evaluate_2d_batch_gpu` (L1295) — Evaluate QTT2D at batch of (x, y) coordinates.
+  - `function render_tile_gpu` (L1316) — Render a single tile from QTT — O(tile_size² × r²) not O(full_grid).
+- **tensornet/cfd/singularity_hunter.py**
+  - `class ObjectiveType` (L44) — Objective function for singularity hunting.
+  - `class HuntingConfig` (L55) — Configuration for singularity hunt.
+  - `class HuntResult` (L71) — Result from singularity hunt.
+  - `class EnstrophyObjective` (L85) — Enstrophy objective: Omega = (1/2) int |curl u|^2 dx
+  - `class ChiGrowthObjective` (L157) — Chi growth rate objective: Maximize d(chi)/dt
+  - `class SingularityHunter` (L177) — Hunt for Navier-Stokes singularities via adjoint optimization.
+  - `function test_singularity_hunter` (L587) — Test the singularity hunter on a small grid.
+- **tensornet/cfd/stabilized_refine.py**
+  - `class RefinementConfig` (L38) — Configuration for stabilized refinement.
+  - `class RefinementResult` (L54) — Result of stabilized refinement.
+  - `function apply_spectral_filter` (L65) — Fast spectral dealiasing filter (2/3 rule).
+  - `function apply_qtt_filter_3d` (L98) — Apply QTT compression/decompression as a spectral filter for 3D velocity field.
+  - `function enforce_hou_luo_symmetry` (L143) — Enforce the critical symmetries for Hou-Luo axisymmetric blow-up.
+  - `function compute_residual_direct` (L184) — Compute the self-similar fixed point residual F(U).
+  - `function stabilized_newton_refinement` (L279) — Stabilized Newton refinement with QTT spectral filtering.
+- **tensornet/cfd/tci_benchmark_suite.py**
+  - `class BenchmarkResult` (L28) — Results from a single benchmark run.
+  - `function run_benchmark` (L62) — Run a single TCI benchmark.
+  - `function run_benchmark_2d` (L176) — Run a 2D matrix TCI benchmark with proper bit-interleaved (Morton) indexing.
+  - `function run_full_suite` (L288) — Run the complete TCI benchmark suite.
+- **tensornet/cfd/tci_flux.py**
+  - `class TCIFluxConfig` (L37) — Configuration for TCI flux computation.
+  - `class FluxFunction` (L69) — Protocol for flux functions.
+  - `function rusanov_flux` (L93) — Rusanov (Local Lax-Friedrichs) flux.
+  - `class TCIFlux` (L151) — TCI-based flux computation for QTT-compressed CFD.
+  - `class QTTState` (L588) — QTT representation of conservative variables (rho, rho_u, E).
+  - `class QTTFlux` (L639) — QTT representation of numerical flux (F_rho, F_rho_u, F_E).
+  - `function _dense_to_qtt_cores` (L670) — Convert dense 1D tensor to QTT cores via TT-SVD.
+  - `function _evaluate_qtt_at_indices` (L752) — Evaluate QTT at given integer indices.
+  - `function _indices_to_binary` (L814) — Convert integer indices to binary representation for QTT indexing.
+  - `function verify_sound_speed_formula` (L838) — Verify that sound speed formula is correct.
+- **tensornet/cfd/tci_true.py**
+  - `function maxvol` (L31) — MaxVol algorithm: find r rows of (n×r) matrix A that form well-conditioned submatrix.
+  - `function maxvol_rect` (L78) — Rectangular MaxVol: select up to max_cols rows from A that form a well-conditioned submatrix.
+  - `function tci_build_qtt` (L128) — Build QTT via Two-Pass Tensor Cross-Interpolation.
+  - `function _morton_encode` (L348) — Morton (Z-order) encoding: interleave bits of i and j.
+  - `function _morton_decode` (L367) — Morton decoding: de-interleave bits to get i and j.
+  - `function tci_build_qtt_2d` (L381) — Build QTT for a 2D matrix using bit-interleaved (Morton/Z-order) indexing.
+  - `function qtt_2d_eval` (L531) — Evaluate 2D QTT at matrix positions (i, j).
+  - `function tci_build_qtt_2d_rowmajor` (L560) — Build QTT for a 2D matrix using row-major indexing.
+  - `function qtt_2d_eval_rowmajor` (L674) — Evaluate row-major 2D QTT.
+  - `function tci_build_qtt_v2` (L689) — TCI v2: Delegates to the proper tci_build_qtt implementation.
+  - `function tci_dmrg_style` (L724) — DMRG-style TCI: Alternating optimization of local 2-site tensors.
+- **tensornet/cfd/thermal_qtt.py**
+  - `class ThermalConfig` (L37) — Configuration for thermal transport solver.
+  - `class HeatSource` (L64) — Defines a rectangular heat source region.
+  - `class Diffuser` (L82) — Ceiling diffuser specification.
+  - `class OpenOfficeConfig` (L92) — Configuration for Tier 2 open office scenario.
+  - `class ThermalQTTSolver` (L153) — Temperature transport solver in QTT format.
+  - `function create_open_office_ic` (L268) — Create initial conditions for open office simulation.
+  - `class NS2D_Thermal_QTT` (L385) — Combined NS + Thermal solver for HVAC simulations.
+- **tensornet/cfd/tt_cfd.py**
+  - `class TTCFDConfig` (L40) — Configuration for TT-native CFD solver.
+  - `class TimeIntegrator` (L53) — Time integration schemes.
+  - `class MPSState` (L68) — MPS representation of a CFD state vector.
+  - `class EulerMPO` (L361) — Matrix Product Operator representation of discretized Euler equations.
+  - `function tdvp_euler_step` (L503) — Perform one TDVP time step for Euler equations.
+  - `function _tdvp1_step` (L538) — TT-native Euler time step using local updates.
+  - `function _tdvp2_step` (L608) — Two-site TDVP (TDVP-2) time step.
+  - `function _compute_effective_hamiltonian` (L699) — Compute effective Hamiltonian for single-site TDVP.
+  - `function _compute_two_site_hamiltonian` (L775) — Compute effective Hamiltonian for two-site TDVP.
+  - `class TT_Euler1D` (L800) — Complete 1D Euler solver operating entirely in TT/MPS format.
+  - `class TT_Euler2D` (L975) — 2D Euler solver using TT format with dimensional splitting.
+  - `function check_conservation` (L1175) — Verify conservation of mass, momentum, and energy.
+- **tensornet/cfd/tt_poisson.py**
+  - `class PoissonResult` (L53) — Result container for TT Poisson solve.
+  - `function laplacian_mpo_1d` (L69) — Build 1D discrete Laplacian as MPO.
+  - `function _dense_to_mpo_1d` (L169) — Build 1D Laplacian MPO by converting from dense matrix.
+  - `class _DenseLaplacian` (L209) — Dense Laplacian wrapper for validation.
+  - `function laplacian_mpo_2d` (L236) — Build 2D discrete Laplacian as MPO.
+  - `function poisson_solve_dense` (L309) — Direct Poisson solve for validation.
+  - `function poisson_solve_tt` (L330) — Solve Poisson equation in TT format using ALS.
+  - `class ALSEnvironments` (L411) — Environment tensors for ALS optimization.
+  - `function _optimize_site_poisson` (L571) — Optimize single site of phi to minimize ||A·phi - b||².
+  - `function _compute_residual` (L613) — Compute relative residual ||A·phi - b|| / ||b||.
+  - `function solve_poisson_2d` (L643) — Solve 2D Poisson equation ∇²φ = rhs.
+  - `function _solve_poisson_2d_tt` (L681) — Solve 2D Poisson in TT format using preconditioned conjugate gradient.
+  - `function _tensor_to_qtt` (L785) — Convert dense tensor to QTT format via TT-SVD.
+  - `function _qtt_to_tensor` (L836) — Convert QTT to dense tensor.
+  - `function _zero_qtt` (L858) — Create zero QTT state.
+  - `function _qtt_subtract` (L872) — Compute a - b in QTT format.
+  - `function _qtt_add_scaled` (L886) — Compute a + scale * b in QTT format.
+  - `function _qtt_inner` (L900) — Compute inner product <a, b> of two QTT states.
+  - `function compute_gradient_2d` (L941) — Compute gradient of scalar field: ∇φ = (∂φ/∂x, ∂φ/∂y)
+  - `function compute_divergence_2d` (L1004) — Compute divergence of 2D velocity field: ∇·u = ∂u/∂x + ∂v/∂y
+  - `function laplacian_spectral_2d` (L1058) — Compute Laplacian using spectral method: ∇²φ = -|k|²φ̂
+  - `class ProjectionResult` (L1089) — Result of velocity projection step.
+  - `function poisson_solve_cg_2d` (L1100) — Solve 2D Poisson equation with Dirichlet BC using Conjugate Gradient.
+  - `function poisson_solve_fft_2d` (L1188) — Solve 2D Poisson equation with periodic BC using FFT.
+  - `function project_velocity_2d` (L1246) — Project velocity field to divergence-free space.
+  - `function test_projection` (L1329) — Test velocity projection on known case.
+  - `function compute_advection_2d` (L1396) — Compute advection term: (u·∇)u for 2D velocity field.
+  - `function compute_diffusion_2d` (L1434) — Compute diffusion term: ∇²u for 2D velocity field.
+  - `function compute_vorticity_2d` (L1469) — Compute vorticity: ω = ∂v/∂x - ∂u/∂y (scalar in 2D).
+  - `function test_advection` (L1498) — Test advection operator.
+  - *(+1 more symbols)*
+- **tensornet/cfd/weno_native_tt.py**
+  - `class ReconstructionSide` (L45) — Side of cell for reconstruction.
+  - `class WENONativeTTConfig` (L53) — Configuration for native WENO-TT.
+  - `function shift_mpo_cached` (L69) — Get shift operator MPO using native O(log N) construction.
+  - `function _mpo_compose` (L101) — Compose two MPOs: O_composed = mpo1 @ mpo2, meaning mpo2 acts first on state.
+  - `function _truncate_mpo` (L148) — Truncate MPO bond dimensions via SVD.
+  - `function stencil_coefficient_mpo` (L194) — Create an MPO that computes a linear combination of shifts.
+  - `function _scale_mpo` (L242) — Scale an MPO by a constant: scale * MPO.
+  - `function _add_mpo` (L250) — Add two MPOs: (MPO1 + MPO2)|ψ⟩ = MPO1|ψ⟩ + MPO2|ψ⟩
+  - `function weno5_stencil_mpos` (L312) — Create MPOs for the three WENO5 candidate stencil reconstructions.
+  - `function smoothness_indicator_mpos` (L372) — Create MPOs that compute smoothness indicators for each stencil.
+  - `function compute_smoothness_indicators_tt` (L424) — Compute smoothness indicators β_0, β_1, β_2 entirely in TT format.
+  - `function compute_weno_weights_tt` (L488) — Compute WENO nonlinear weights using hybrid dense/TT approach.
+  - `function compute_weno_weights_tci` (L573) — Compute WENO weights using TCI (Tensor Cross Interpolation).
+  - `function qtt_inverse_newton` (L712) — Compute element-wise inverse 1/x using Newton-Schulz iteration.
+  - `function qtt_abs` (L782) — Compute element-wise absolute value |x|.
+  - `function qtt_sqrt_newton` (L793) — Compute element-wise sqrt(x) using Newton iteration.
+  - `function _constant_qtt` (L850) — Create a QTT representing a constant value at all positions.
+  - `function weno_reconstruct_native_tt` (L884) — Perform full WENO5 reconstruction entirely in TT format.
+  - `function weno_flux_native_tt` (L951) — Compute WENO-TT numerical flux using Lax-Friedrichs splitting.
+- **tensornet/cfd/weno_tt.py**
+  - `class WENOTTConfig` (L37) — Configuration for WENO-TT reconstruction.
+  - `function smoothness_indicator_mpo` (L52) — Construct the MPO for computing smoothness indicators in TT format.
+  - `function tensorize_smoothness_indicators` (L86) — Compute smoothness indicators β₀, β₁, β₂ in TT format.
+  - `function smoothness_from_cores` (L138) — Extract smoothness indicator for a specific site from TT cores.
+  - `function tensorize_weights` (L206) — Compute WENO-Z weights in TT format.
+  - `function candidate_stencils_tt` (L279) — Compute candidate stencil reconstructions in TT format.
+  - `function weno_tt_reconstruct` (L339) — Perform WENO reconstruction entirely in TT format.
+  - `function apply_weno_tt_flux` (L394) — Compute WENO-TT numerical flux using Lax-Friedrichs splitting.
+  - `function _mps_to_vector` (L433) — Convert MPS to dense vector by contracting all cores.
+  - `function _vector_to_mps` (L461) — Compress a dense vector to MPS using TT decomposition.
+  - `function _tt_weighted_sum` (L493) — Compute weighted sum Σ ω_k * q_k in TT format.
+  - `function _tt_add` (L522) — Add two MPS in TT format.
+  - `function euler_weno_tt_flux` (L552) — Compute WENO-TT fluxes for 1D Euler equations.
+  - `function analyze_weno_tt_compression` (L647) — Analyze WENO-TT compression ratio and accuracy.
+
+## compressor (29)
+
+- **The_Compressor/batched_kernel.py**
+  - `function batched_fused_kernel` (L18) — 2D grid: (n_programs, n_frames)
+  - `function precompute_morton` (L79) — Pre-compute Morton curve mappings.
+  - `function benchmark_batched` (L106) — Benchmark batched kernel with scaling frame counts.
+- **The_Compressor/compress.py**
+  - `function morton_interleave_3d` (L23) — Symmetric bit interleaving for 3D Morton Z-order curve.
+  - `function rsvd_gpu_safe` (L47) — Randomized SVD with GPU acceleration.
+  - `function compress_qtt_4d` (L102) — Main compression function: mmap stream -> Morton reorder -> QTT decompose.
+  - `function main` (L281)
+- **The_Compressor/compress_24h.py**
+  - `function morton_order_2d` (L39) — Morton Z-order for 2D spatial locality preservation.
+  - `function morton_to_image` (L64) — Inverse Morton ordering.
+  - `function rsvd_safe` (L70) — Randomized SVD with CPU fallback for numerical stability.
+  - `function compress_frame_qtt` (L98) — Compress a single frame using 2D QTT with Morton ordering.
+  - `function download_frame` (L151) — Download and extract a single frame from S3.
+  - `function temporal_compress_batch` (L164) — Apply temporal SVD across a batch of QTT-compressed frames.
+  - `function reconstruct_frame` (L204) — Reconstruct a single frame from temporally compressed batch.
+  - `function compute_storage` (L233) — Compute storage in bytes for a compressed batch.
+  - `function run_24h_killshot` (L248)
+- **The_Compressor/compress_auto.py**
+  - `class CompressionStrategy` (L33) — Compression strategy selected by manifold analysis.
+  - `class ManifoldProfile` (L42) — Profile of the data manifold from probing.
+  - `function probe_manifold` (L75) — Quick manifold probe on sample frames.
+  - `function compress_with_strategy` (L190) — Execute compression with the selected strategy.
+  - `function compress_auto` (L315) — Automatic compression with manifold-aware routing.
+  - `function main` (L426)
+- **The_Compressor/compress_block_svd.py**
+  - `class CompressionResult` (L32) — Result of Block-SVD compression.
+  - `function svd_compress_block` (L45) — SVD compress a single 2D block.
+  - `function compress_block_svd` (L74) — Block-SVD spatial compression.
+  - `function verify_reconstruction` (L274) — Verify reconstruction quality via PSNR.
+  - `function main` (L382)
+- **The_Compressor/compress_hybrid.py**
+  - `class HybridResult` (L32) — Results from hybrid compression.
+  - `function rsvd_gpu_safe` (L49) — Randomized SVD with GPU acceleration.
+  - `function qtt_compress_residual` (L97) — Compress residual using sparse tile SVD.
+  - `function compress_skeleton` (L176) — Compress frame to low-rank skeleton using Block-SVD.
+  - `function compress_hybrid` (L233) — Two-stage hybrid compression:
+  - `function verify_hybrid_reconstruction` (L468) — Verify reconstruction quality via PSNR.
+  - `function main` (L604)
+- **The_Compressor/compress_universal.py**
+  - `class CompressionResult` (L58) — Result of universal compression.
+  - `class UniversalCompressor` (L72) — Universal data compressor using Block-SVD + QTT hybrid architecture.
+  - `function compress` (L444) — Compress any data file.
+  - `function decompress` (L464) — Decompress a .qtt.npz file.
+  - `function main` (L512)
+- **The_Compressor/decompress.py**
+  - `function compute_bits` (L22) — Compute bit widths from shape (must be powers of 2).
+  - `function load_qtt` (L28) — Load QTT cores and metadata from .npz file.
+  - `function morton_deinterleave_3d` (L58) — Extract t, y, x from Morton index.
+  - `function index_to_bits` (L78) — Convert integer index to list of bits (LSB first).
+  - `function query_point_qtt` (L83) — Query a single point from QTT representation.
+  - `function reconstruct_full` (L101) — Reconstruct full tensor from QTT cores.
+  - `function reconstruct_frame` (L171) — Reconstruct a single frame from QTT representation.
+  - `function benchmark_point_query` (L226) — Benchmark point query speed.
+  - `function main` (L244)
+- **The_Compressor/embed.py**
+  - `class DataType` (L34) — Supported data types for universal compression.
+  - `class EmbeddingResult` (L46) — Result of embedding operation.
+  - `class DataTypeDetector` (L56) — Auto-detect data type from file path or raw data.
+  - `class TextEmbedder` (L256) — Embed text into continuous semantic manifold using sentence transformers.
+  - `class AudioEmbedder` (L451) — Embed audio into mel-spectrogram manifold.
+  - `class GenomicEmbedder` (L544) — Embed genomic sequences using k-mer frequency vectors.
+  - `class FinancialEmbedder` (L682) — Embed financial time series with time-price interleaving.
+  - `class UniversalEmbedder` (L797) — Master embedder that auto-detects data type and routes to appropriate embedder.
+  - `function detect_type` (L957) — Detect data type from file or content.
+  - `function embed` (L962) — Universal embedding function.
+- **The_Compressor/hybrid_triton_kernels.py**
+  - `function morton_2d_kernel` (L45) — Generate Morton indices for a single block on-the-fly.
+  - `function block_svd_kernel` (L102) — Fused Block-SVD: (U @ diag(S)) @ Vh in one kernel.
+  - `function qtt_rank1_eval_kernel` (L158) — Evaluate rank-1 QTT at N points in parallel.
+  - `function qtt_residual_kernel` (L218) — Add QTT residual to skeleton block.
+  - `function fused_ultra_kernel` (L286) — Ultra-optimized fused kernel with pre-multiplied US.
+  - `function fused_mega_kernel` (L388) — MEGA-optimized fused kernel with transposed Vh for coalesced access.
+  - `function fused_ultimate_kernel` (L495) — ULTIMATE Fused Kernel: Pre-computed Morton + Proven Pattern.
+  - `function fused_hyper_kernel` (L579) — HYPER-fused kernel: Row-major processing + FP16 compute.
+  - `function fused_turbo_kernel` (L699) — TURBO-fused kernel: One row of one block per program.
+  - `function fused_block_kernel` (L792) — Block-centric fused kernel: Each program handles one block.
+  - `function fused_hybrid_kernel` (L914) — FUSED kernel: Skeleton + QTT residual in ONE kernel launch.
+  - `function fused_skeleton_kernel` (L1030) — FUSED skeleton-only kernel. No QTT residual.
+  - `class HybridTritonReconstructor` (L1089) — Fused Hybrid Reconstructor using Triton kernels.
+  - `function _morton_encode_triton_batch` (L1951) — Batch Morton encoding using Triton.
+  - `function _evaluate_qtt_triton` (L1983) — Evaluate QTT at Morton indices using Triton kernel.
+  - `function _launch_hybrid_kernel` (L2020) — Placeholder for fused kernel launch with dynamic n_cores.
+- **The_Compressor/probe.py**
+  - `class ManifoldProber` (L30) — Probes the entropy, singular value decay, and locality of any data brick.
+  - `function probe_and_print` (L385) — Probe data and print/save results.
+  - `function main` (L434)
+- **The_Compressor/qtt/cli.py**
+  - `function load_texts` (L31) — Load texts from file (supports .txt, .json, .jsonl).
+  - `function cmd_pack` (L67) — Pack texts into .qtt container.
+  - `function cmd_query` (L86) — Query a .qtt container.
+  - `function cmd_info` (L104) — Show container info.
+  - `function cmd_bench` (L117) — Benchmark container performance.
+  - `function cmd_spatial` (L152) — Create spatial container from numpy file.
+  - `function main` (L176)
+- **The_Compressor/qtt/container.py**
+  - `class QTTHeader` (L92) — Fixed-size header at start of .qtt file.
+  - `class QTTFooter` (L169) — Footer with checksums for integrity verification.
+  - `class SemanticMatch` (L206) — Result from semantic slice operation.
+  - `class SliceResult` (L219) — Universal result from slice operation.
+  - `class QTTContainer` (L233) — Universal Container for .qtt format.
+- **The_Compressor/qtt/semantic.py**
+  - `class SearchMatch` (L43) — Result from semantic search.
+  - `class SearchResult` (L55) — Container for search results.
+  - `class ProductQuantizer` (L65) — Product Quantization for vector compression.
+  - `class SemanticIndex` (L279) — Complete semantic search index with offset-based retrieval.
+- **The_Compressor/qtt/slicer.py**
+  - `class SpatialSliceResult` (L41) — Result from spatial slice.
+  - `class SpatialIndex` (L51) — In-memory spatial index using TT-SVD.
+  - `class QTTSlicer` (L78) — Universal Slicer - The file system driver for .qtt format.
+- **The_Compressor/qtt/spatial.py**
+  - `class CompressionStats` (L42) — Statistics from TT-SVD compression.
+  - `function tt_svd` (L52) — Tensor Train SVD decomposition.
+  - `function tt_reconstruct` (L111) — Reconstruct full tensor from TT cores.
+  - `function tt_reconstruct_element` (L145) — Reconstruct a single element via TT contraction.
+  - `class SpatialCompressor` (L172) — High-level interface for spatial data compression.
+  - `function tt_svd_gpu` (L315) — GPU-accelerated TT-SVD using CuPy.
+  - `function estimate_compression_ratio` (L364) — Estimate compression ratio for given shape and rank.
+  - `function recommend_rank` (L387) — Recommend max_rank for given tensor and targets.
+- **The_Compressor/qtt/tests/test_all.py**
+  - `class TestSpatialCompression` (L20) — Tests for TT-SVD spatial compression.
+  - `class TestSemanticCompression` (L85) — Tests for Product Quantization semantic compression.
+  - `class TestContainer` (L132) — Tests for QTT container format.
+  - `class TestSlicer` (L232) — Tests for QTTSlicer high-level API.
+  - `function run_smoke_test` (L268) — Quick smoke test.
+- **The_Compressor/qtt_container.py**
+  - `class QTTHeader` (L69) — Fixed-size header at start of file.
+  - `class QTTFooter` (L118) — Footer with checksums for integrity verification.
+  - `class SemanticMatch` (L146) — Result from semantic slice.
+  - `class SliceResult` (L156) — Universal slice result.
+  - `class QTTContainer` (L167) — Universal Container for .qtt format.
+  - `function demo` (L741) — Demonstrate the QTT Container with WikiText.
+- **The_Compressor/qtt_slicer.py**
+  - `class QTTHeader` (L61) — Header for .qtt container.
+  - `class SpatialSlice` (L78) — Result of slicing spatial data.
+  - `class SemanticSlice` (L86) — Result of slicing semantic data.
+  - `class SemanticMatch` (L94) — A single match from semantic slice.
+  - `class SpatialIndex` (L107) — Index for spatial/physics data using SVD/QTT cores.
+  - `class SemanticIndex` (L202) — Index for semantic/text data using Product Quantization.
+  - `class QTTSlicer` (L315) — Universal Slicer - The Random-Access Universal File System.
+  - `function demo_spatial` (L596) — Demo spatial slicing on synthetic CFD-like data.
+  - `function demo_semantic` (L655) — Demo semantic slicing on text data.
+  - `function main` (L705) — Run demos.
+- **The_Compressor/tci_triton.py**
+  - `function tci_fiber_indices_kernel` (L34) — Generate all fiber indices for mode k in one fused kernel.
+  - `function maxvol_row_norms_kernel` (L81) — Compute row norms of Q matrix for MaxVol initialization.
+  - `function maxvol_update_kernel` (L111) — Find element with maximum absolute value in C matrix.
+  - `function fiber_to_matrix_kernel` (L156) — Reshape fiber (r_left, 2, r_right) to matrix (r_left*2, r_right).
+  - `function extract_core_kernel` (L197) — Extract TT core from SVD U matrix.
+  - `function morton_2d_batch_kernel` (L227) — Generate Morton Z-curve indices for entire frame.
+  - `function skeleton_l2_tiled_kernel` (L274) — L2-Cache Tiled Skeleton Reconstruction.
+  - `function fused_ultimate_kernel` (L347) — ULTIMATE Fused Kernel: Pre-computed Morton + Proven Ultra-Fused Pattern.
+  - `class TCITritonSampler` (L438) — GPU-Native TCI Sampler using Triton kernels.
+  - `class UltimateReconstructor` (L681) — Ultimate Hybrid Reconstructor with all optimizations.
+- **The_Compressor/test_qtt_text_embeddings.py**
+  - `function load_wikitext_embeddings` (L25) — Load wikitext and compute embeddings.
+  - `function topologize_embeddings` (L55) — Reorder embeddings so similar ones are adjacent.
+  - `function analyze_matrix_structure` (L97) — Analyze SVD structure of embedding matrix.
+  - `function test_qtt_compression` (L125) — Test QTT compression on embedding matrix.
+  - `function test_tt_svd_compression` (L199) — Manual TT-SVD implementation for embedding matrix.
+  - `function test_qtt_slicer` (L294) — Test O(log N) random access via QTT slicer.
+  - `function main` (L354)
+- **The_Compressor/truncate.py**
+  - `class TruncationMode` (L25) — Truncation strategy.
+  - `class TruncationResult` (L36) — Result of truncation analysis.
+  - `class AdaptiveTruncator` (L49) — Adaptive truncation engine for QTT compression.
+  - `function find_optimal_rank` (L331) — Convenience function to find optimal rank for compression.
+  - `function adaptive_truncate_svd` (L361) — Truncate SVD components adaptively.
+  - `function compute_psnr` (L404) — Compute Peak Signal-to-Noise Ratio.
+  - `function compute_ssim` (L415) — Compute Structural Similarity Index.
+  - `function compute_relative_error` (L443) — Compute relative L2 error.
+- **The_Compressor/universal.py**
+  - `class QTTArchive` (L37) — Universal QTT archive reader and reconstructor.
+  - `function cmd_info` (L344) — Info subcommand.
+  - `function cmd_query` (L374) — Query subcommand.
+  - `function cmd_reconstruct` (L387) — Reconstruct subcommand.
+  - `function cmd_slice` (L400) — Slice subcommand.
+  - `function cmd_benchmark` (L413) — Benchmark subcommand.
+  - `function main` (L424)
+
+## core (16)
+
+- **tensornet/core/decompositions.py**
+  - `function svd_truncated` (L28) — Truncated SVD with bond dimension control.
+  - `function qr_positive` (L139) — QR decomposition with positive diagonal R.
+  - `function thin_svd` (L173) — Thin (economy) SVD without truncation.
+  - `function polar_decomposition` (L190) — Polar decomposition A = U @ P where U is unitary and P is positive semidefinite.
+- **tensornet/core/dense_guard.py**
+  - `class DenseViolation` (L44) — Record of a dense materialization violation.
+  - `class DenseMaterializationGuard` (L56) — Context manager that monitors and optionally forbids dense materialization.
+  - `function forbid_dense` (L358) — Context manager to forbid dense materialization with auto-computed thresholds.
+  - `function assert_no_dense_materialization` (L396) — Run a function and assert no critical dense materialization occurred.
+  - `function check_tt_complexity` (L421) — Verify that TT cores satisfy O(N·d·χ²) storage complexity.
+  - `function verify_tt_native_operation` (L457) — Verify that a TT operation maintains TT-native complexity.
+- **tensornet/core/determinism.py**
+  - `function lock_seeds` (L47) — Lock all random number generators to ensure deterministic behavior.
+  - `function get_seed` (L79) — Get the deterministic seed for a specific component.
+  - `class ToleranceSpec` (L98) — Specification for a numerical tolerance.
+  - `function get_tolerance` (L188) — Get the tolerance value for a specific check.
+  - `function document_tolerances` (L208) — Generate markdown documentation of all tolerances.
+  - `function verify_determinism` (L235) — Verify that a function produces deterministic results.
+- **tensornet/core/gpu.py**
+  - `class DeviceType` (L39) — Compute device types.
+  - `class MemoryLayout` (L47) — Memory layout for CFD arrays.
+  - `class GPUConfig` (L56) — Configuration for GPU acceleration.
+  - `class KernelStats` (L69) — Performance statistics for kernel execution.
+  - `function get_device` (L90) — Get the appropriate compute device.
+  - `function to_device` (L127) — Transfer tensor to device with optimal settings.
+  - `class MemoryPool` (L147) — Simple memory pool for temporary GPU allocations.
+  - `function batched_tt_matvec` (L193) — Batched Tensor-Train matrix-vector product.
+  - `function optimized_einsum` (L245) — Optimized Einstein summation with contraction path optimization.
+  - `function roe_flux_gpu` (L268) — GPU-optimized Roe flux computation.
+  - `function compute_strain_rate_gpu` (L393) — GPU-optimized strain rate tensor computation.
+  - `function viscous_flux_gpu` (L459) — GPU-optimized viscous flux computation.
+  - `function benchmark_kernel` (L550) — Benchmark a GPU kernel.
+  - `function validate_gpu` (L598) — Run validation tests for GPU acceleration.
+- **tensornet/core/mpo.py**
+  - `class MPO` (L19) — Matrix Product Operator representation.
+  - `function mpo_sum` (L187) — Sum two MPOs: O = O1 + O2.
+- **tensornet/core/mps.py**
+  - `class MPS` (L22) — Matrix Product State representation.
+- **tensornet/core/phase_deferred.py**
+  - `class PhaseDeferredError` (L32) — Raised when functionality is intentionally deferred to a future phase.
+  - `function phase_24_deferred` (L94) — Helper for Phase 24 deferred features.
+  - `function phase_25_deferred` (L103) — Helper for Phase 25 deferred features.
+  - `function adjoint_not_implemented` (L112) — Standard deferred error for adjoint gradients.
+  - `function realtime_not_implemented` (L122) — Standard deferred error for real-time guarantees.
+  - `function hardware_not_implemented` (L132) — Standard deferred error for hardware-specific optimization.
+  - `class DeferredFeatureRegistry` (L147) — Central registry of all phase-deferred features.
+  - `function register_deferred` (L195) — Register a deferred feature and raise the error.
+  - `function phase_deferred` (L219) — Decorator to mark a method as phase-deferred.
+- **tensornet/core/profiling.py**
+  - `function profile` (L38) — Decorator that profiles function execution time.
+  - `function memory_profile` (L69) — Decorator that profiles function memory usage.
+  - `function profile_block` (L110) — Context manager for profiling code blocks.
+  - `class PerformanceReport` (L143) — Collect and report performance statistics.
+- **tensornet/core/states.py**
+  - `function ghz_mps` (L16) — Create GHZ state: |GHZ⟩ = (|00...0⟩ + |11...1⟩) / √2
+  - `function product_mps` (L61) — Create product state MPS from local states.
+  - `function random_mps` (L91) — Create random MPS.
+  - `function all_up_mps` (L118) — Create |↑↑...↑⟩ state.
+  - `function all_down_mps` (L138) — Create |↓↓...↓⟩ state.
+  - `function neel_mps` (L158) — Create Néel state: |↑↓↑↓...⟩
+  - `function domain_wall_mps` (L180) — Create domain wall state: |↑↑...↑↓↓...↓⟩
+- **tensornet/mpo/atmospheric_solver.py**
+  - `class MPOAtmosphericSolver` (L34) — Atmospheric physics solver using Matrix Product Operators.
+- **tensornet/mpo/laplacian_cuda.py**
+  - `function mpo_tt_contract_cuda` (L50) — GPU-accelerated MPO-TT contraction using custom CUDA kernel.
+  - `function batch_mpo_apply_cuda` (L74) — Batched MPO application with optimal GPU utilization.
+  - `function compress_core_cuda` (L114) — Fast GPU SVD compression using cuSOLVER batched SVD.
+  - `class LaplacianCUDA` (L164) — GPU-accelerated Laplacian MPO operator.
+- **tensornet/mpo/operators.py**
+  - `class LaplacianMPO` (L17) — Laplacian operator in MPO format for diffusion physics.
+  - `class AdvectionMPO` (L197) — Advection operator in MPO format for velocity field transport.
+  - `class ProjectionMPO` (L328) — Projection operator in MPO format for incompressibility constraint.
+- **tensornet/mps/hamiltonians.py**
+  - `function pauli_matrices` (L13) — Return Pauli matrices sigma_x, sigma_y, sigma_z.
+  - `function spin_operators` (L33) — Return spin operators S_x, S_y, S_z for spin S.
+  - `function heisenberg_mpo` (L73) — Heisenberg XXZ chain Hamiltonian as MPO.
+  - `function tfim_mpo` (L168) — Transverse-field Ising model as MPO.
+  - `function xx_mpo` (L230) — XX model as MPO.
+  - `function xyz_mpo` (L258) — XYZ model as MPO.
+  - `function bose_hubbard_mpo` (L336) — Bose-Hubbard model as MPO.
+
+## demos (32)
+
+- **demos/benchmark_credibility_pack.py**
+  - `function benchmark_sod_shock_tube` (L31) — Benchmark 1D Sod shock tube at various resolutions.
+  - `function benchmark_taylor_green` (L84) — Benchmark 3D Taylor-Green at various ranks.
+  - `function benchmark_gaussian_advection_2d` (L146) — Benchmark 2D Gaussian advection at various ranks.
+  - `function benchmark_compression_ratio` (L245) — Benchmark compression ratios across problem types.
+  - `function plot_results` (L298) — Generate credibility pack plot.
+  - `function run_all_benchmarks` (L344) — Run complete benchmark suite.
+- **demos/black_swan_945_forensic.py**
+  - `class QTT3DState` (L36)
+  - `class EulerState3D` (L46)
+  - `function build_rank1_3d_qtt_kronecker` (L55) — Build 3D QTT from separable 1D functions using Kronecker.
+  - `class BlackSwan945Reproducer` (L75) — Reproduce Black Swan #945 with exact parameter matching.
+  - `function main` (L289)
+- **demos/black_swan_reproduce.py**
+  - `class QTT3DState` (L34) — 3D field stored in QTT format.
+  - `class EulerState3D` (L45) — State for 3D Euler equations.
+  - `function create_random_turb_ic` (L55) — Create random turbulent initial condition.
+  - `function build_3d_separable_qtt` (L138) — Build 3D QTT from separable 1D QTTs using Kronecker interleaving.
+  - `function qtt_add_cores` (L159) — Add two QTT decompositions (direct sum of cores).
+  - `class BlackSwanReproducer` (L190) — Solver configured to reproduce Black Swan detection.
+  - `function main` (L359) — Run Black Swan reproduction hunt.
+- **demos/conference_room_cfd.py**
+  - `class RoomConfig` (L36) — Conference Room B specifications.
+  - `class VentilationSolver` (L68) — 2D incompressible Navier-Stokes solver for room ventilation.
+  - `function run_analysis` (L324) — Run the Conference Room B ventilation analysis.
+- **demos/conference_room_native.py**
+  - `function run_conference_room_analysis` (L38) — Run Conference Room B ventilation analysis.
+- **demos/conference_room_qtt.py**
+  - `function create_ventilation_ic` (L33) — Create initial condition for ventilation case.
+  - `function run_conference_room_qtt` (L87) — Run Conference Room B ventilation analysis using QTT solver.
+- **demos/demo_holy_grail.py**
+  - `function create_proper_two_stream_ic` (L33) — Create proper two-stream instability initial condition.
+  - `function build_separable_qtt_5d` (L105) — Build 5D QTT directly from separable 1D profiles.
+  - `function get_phase_space_slice` (L181) — Extract the x-vx phase space by integrating out y, z, vy.
+  - `function build_morton_lut` (L223) — Pre-compute Morton lookup table for fast phase space extraction.
+  - `function get_phase_space_fast` (L245) — Fast approximate phase space extraction.
+  - `function run_holy_grail_demo` (L257) — Run the Holy Grail demo: Two-Stream Instability in 5D Phase Space.
+- **demos/flagship_pipeline.py**
+  - `class NumpyEncoder` (L43) — JSON encoder that handles numpy types.
+  - `class FlagshipConfig` (L88) — Configuration for flagship pipeline.
+  - `function initialize_sod_shock_tube` (L119) — Initialize the Sod shock tube problem.
+  - `function state_to_mps` (L167) — Convert Euler state to MPS representation.
+  - `function apply_weno_tt` (L222) — Apply WENO-TT reconstruction and compare with dense WENO.
+  - `function evolve_tdvp_cfd` (L333) — Evolve the solution using TDVP-inspired CFD scheme.
+  - `function derive_plasma_quantities` (L446) — Compute plasma quantities from the flow solution.
+  - `function validate_physics` (L554) — Comprehensive physics validation.
+  - `function emit_evidence_pack` (L676) — Create a cryptographically verifiable evidence pack.
+  - `function main` (L882) — Execute the complete flagship pipeline.
+- **demos/forensic_hub.py**
+  - `class Anomaly` (L80) — A detected singularity in the field.
+  - `class ForensicFinding` (L105) — A signed forensic finding for audit trail.
+  - `class ForensicViewport` (L214) — The VisPy viewport for forensic investigation.
+  - `class AnomalyDetector` (L575) — Rank-Gradient Anomaly Detection.
+  - `class TemporalMorpher` (L655) — Spatio-Temporal Morphing for "Ghosting" effect.
+  - `class ManifestSigner` (L711) — Creates cryptographically signed forensic manifests.
+  - `class ForensicHub` (L752) — The HyperTensor Forensic Investigation Hub.
+  - `function main` (L1267)
+- **demos/forensic_hub_v2.py**
+  - `class ManifoldSampler` (L124) — Samples the manifold at arbitrary resolution within view bounds.
+  - `class VectorFieldRenderer` (L193) — Renders vector fields as flow barbs instead of blurry heatmaps.
+  - `class ForensicViewportV2` (L293) — Resolution-independent viewport with:
+  - `class ForensicHubV2` (L612) — HyperTensor Forensic Hub v2
+  - `function main` (L895)
+- **demos/forensic_instrument.py**
+  - `class ManifoldEngine` (L129) — The mathematical core - performs contractions at arbitrary resolution.
+  - `class GeodesicCoreInterpolator` (L190) — TRUE Geodesic interpolation between temporal snapshots.
+  - `class WindBarbRenderer` (L330) — Renders wind as barbs/arrows showing actual flow discontinuities.
+  - `class ForensicViewport` (L455) — Resolution-independent forensic viewport.
+  - `class ForensicInstrument` (L1055)
+  - `function main` (L1337)
+- **demos/hypertensor_hub.py**
+  - `class FieldCreationWorker` (L75) — Worker thread for creating Field objects (can take seconds on CPU).
+  - `class SliceWorker` (L120) — Worker thread for slice extraction (O(L×r²) but still needs threading).
+  - `class ManifoldCanvas` (L295) — VisPy Canvas for manifold visualization.
+  - `class ForensicBlade` (L394) — Forensic 4D Blade - Temporal navigation through field history.
+  - `class TelemetryBlade` (L494) — Telemetry Blade - Real-time field statistics and performance metrics.
+  - `class IntentBlade` (L568) — Intent Blade - Natural language query interface (Layer 8).
+  - `class HyperTensorHub` (L646) — The HyperTensor Hub - Primary interface for manifold interaction.
+  - `function main` (L1168) — Launch the HyperTensor Hub.
+- **demos/ingest_noaa_gfs.py**
+  - `function get_latest_gfs_url` (L54) — Get URL for latest available GFS data on AWS.
+  - `function download_gfs_subset` (L88) — Download a subset of GFS data using byte-range requests.
+  - `function create_synthetic_weather_data` (L144) — Create synthetic but physically-plausible weather data.
+  - `function create_temporal_snapshots` (L245) — Create multiple temporal snapshots for ghosting/time-travel.
+  - `function parse_grib_data` (L311) — Parse GRIB2 file and extract 3D atmospheric data.
+  - `function compress_to_qtt` (L363) — Compress 3D atmospheric data to QTT format.
+  - `function save_manifold` (L427) — Save the compressed manifold for the viewer.
+  - `function main` (L476)
+- **demos/kelvin_helmholtz_animation.py**
+  - `function run_kh_simulation` (L34) — Run KH simulation and collect frames for animation.
+  - `function render_kh_instability` (L107) — Render the KH instability animation to video.
+  - `function save_frames` (L198) — Save individual frames as PNG files.
+  - `function render_vorticity` (L216) — Render vorticity field (dv/dx - du/dy) animation.
+  - `function main` (L280)
+- **demos/kelvin_helmholtz_demo.py**
+  - `function run_kh_validation` (L38) — Run Kelvin-Helmholtz instability validation.
+  - `function compute_mass` (L200) — Compute total mass (integral of rho).
+  - `function compute_total_energy` (L206) — Compute total energy (integral of E).
+  - `function max_rank` (L212) — Get maximum rank across all fields.
+  - `function print_diagnostics` (L222) — Print state diagnostics.
+  - `function run_scaling_test` (L247) — Test how the solver scales with grid size.
+- **demos/millennium_hunter.py**
+  - `class QTT3DState` (L46) — 3D field stored in QTT format with Morton ordering.
+  - `class EulerState3D` (L61) — State for 3D Euler equations (velocity only for incompressible).
+  - `function vector_to_qtt` (L71) — Convert 1D vector to QTT format.
+  - `function morton_encode_3d_vectorized` (L76) — Vectorized Morton encoding for 3D indices.
+  - `function build_rank1_3d_qtt` (L86) — Build a 3D QTT from separable functions: f(x,y,z) = fx(x) * fy(y) * fz(z)
+  - `function build_rank1_3d_qtt_tensorfree` (L125) — TENSOR-FREE construction of 3D QTT for separable functions.
+  - `class MillenniumSolver` (L235) — 3D Incompressible Euler Solver for Singularity Hunting.
+  - `class SingularityHunter` (L446) — The Millennium Prize Hunter.
+- **demos/millennium_results.py**
+  - `function summarize_results` (L13) — Summarize the Millennium Hunter results.
+  - `function plot_rank_evolution` (L86) — Plot rank evolution from log file if available.
+- **demos/observer_decoupling.py**
+  - `function create_low_rank_qtt` (L53) — Create a low-rank QTT directly (no dense intermediate).
+  - `function render` (L73)
+  - `function on_scroll` (L155)
+- **demos/physics_first_drug_design.py**
+  - `function parse_pdb` (L31)
+  - `function lennard_jones` (L77) — LJ potential: attractive at medium range, repulsive at close range
+  - `function compute_energy_at_point` (L84) — Compute interaction energy of a probe atom at a point
+  - `function tt_svd_3d` (L172)
+  - `function tt_query` (L187) — Query energy at grid point (i,j,k)
+- **demos/pqc_sign_results.py**
+  - `function create_results_manifest` (L31) — Create a structured manifest of the Millennium Hunter results.
+  - `function hash_manifest` (L137) — Create SHA-256 hash of the manifest.
+  - `function generate_keypair` (L144) — Generate Dilithium2 keypair.
+  - `function sign_manifest` (L151) — Sign the manifest using Dilithium2.
+  - `function verify_signature` (L160) — Verify the Dilithium2 signature.
+  - `function create_attestation` (L169) — Create complete attestation document.
+  - `function main` (L188) — Generate and sign the Millennium Hunter results.
+- **demos/pure_qtt_pde.py**
+  - `function format_bytes` (L53) — Format bytes as human-readable string.
+  - `function print_header` (L62) — Print demo header.
+  - `function run_heat_equation` (L85) — Solve the heat equation: ∂u/∂t = ν ∇²u
+  - `function run_advection` (L202) — Solve the advection equation: ∂u/∂t + c ∂u/∂x = 0
+  - `function run_scaling_demo` (L267) — Demonstrate the scaling advantage of QTT vs dense.
+  - `function main` (L358)
+- **demos/qtt_2d_shift_test.py**
+  - `function naive_shift_x_dense` (L17) — Shift field in X direction by rolling (reference implementation).
+  - `function naive_shift_y_dense` (L22) — Shift field in Y direction by rolling (reference implementation).
+  - `function shift_via_dense` (L27) — Shift by decompressing to dense, rolling, and recompressing.
+  - `function test_shift_via_dense` (L44) — Test the dense-based shift (reference implementation).
+  - `function test_gaussian_advection` (L127) — Advect a Gaussian blob using shifts.
+- **demos/qtt_2d_test.py**
+  - `function test_shift_operators` (L19) — Test X and Y shift operators on a simple pattern.
+  - `function test_riemann_visualization` (L90) — Visualize the 2D Riemann quadrant initial condition.
+  - `function test_scaling` (L142) — Test how rank scales with grid size for 2D Riemann.
+- **demos/qtt_shock_tube.py**
+  - `function format_bytes` (L42) — Format bytes as human-readable string.
+  - `function run_qtt_shock_tube` (L51) — Run Sod shock tube with QTT-native solver.
+  - `function run_scaling_demo` (L197) — Demonstrate memory scaling: O(log N) vs O(N).
+  - `function run_animated_demo` (L261) — Run animated shock tube visualization.
+  - `function compare_with_exact` (L383) — Compare QTT solution to exact Riemann solution.
+  - `function main` (L454)
+- **demos/resolution_independence.py**
+  - `function format_bytes` (L53) — Format bytes as human-readable string.
+  - `function format_number` (L62) — Format large numbers with commas.
+  - `function dense_memory_for_resolution` (L67) — Calculate memory for dense storage at given resolution.
+  - `function print_header` (L72) — Print demo header.
+  - `function create_taylor_green_vorticity` (L109) — Create actual Taylor-Green vorticity field.
+  - `function tt_svd` (L142) — Tensor Train SVD decomposition.
+  - `function field_to_qtt` (L163) — Compress a 2D field to QTT format using real TT-SVD.
+  - `function eval_qtt_at_point` (L211) — Evaluate QTT at a single point (x, y) in [0, 1]² via partial contraction.
+  - `function eval_qtt_at_grid_oracle` (L263) — Evaluate QTT at a grid of points via TRUE oracle mode.
+  - `function eval_qtt_at_grid_oracle_loop` (L294) — Oracle grid evaluation via nested loops (no dense source materialization).
+  - `function qtt_to_field` (L344) — Reconstruct field from QTT via full contraction.
+  - `function sample_qtt_at_resolution` (L396) — Sample QTT at specified resolution.
+  - `class QTTField` (L417) — A continuous field stored in Quantized Tensor Train format.
+  - `function run_demo` (L534) — Run the resolution independence demo.
+  - `function run_interactive_visualization` (L776) — Run interactive matplotlib visualization.
+  - `function main` (L918)
+- **demos/riemann_2d_evolution.py**
+  - `class EulerState2D` (L27) — 2D Euler conservative state in QTT format.
+  - `function shift_qtt2d_x` (L61) — Shift QTT2D in X direction via dense round-trip.
+  - `function shift_qtt2d_y` (L68) — Shift QTT2D in Y direction via dense round-trip.
+  - `function rusanov_flux_x_2d` (L75) — Compute Rusanov numerical flux in X direction.
+  - `function rusanov_flux_y_2d` (L127) — Compute Rusanov numerical flux in Y direction.
+  - `function euler_step_x` (L173) — One Euler step in X direction.
+  - `function euler_step_y` (L193) — One Euler step in Y direction.
+  - `function strang_step` (L213) — One Strang splitting step:
+  - `function run_riemann_2d` (L239) — Run 2D Riemann quadrant problem with QTT compression tracking.
+  - `function analyze_diagonal_shock` (L345) — Analyze rank growth for diagonal vs axis-aligned features.
+- **demos/trap_the_swan.py**
+  - `class BlackSwanHunter` (L56) — A modified Navier-Stokes solver that HUNTS for blowup rather than suppressing it.
+  - `function hunt_for_blowup` (L289) — The main hunting loop.
+- **demos/weather_setup.py**
+  - `function create_synthetic_weather_data` (L30) — Create synthetic but physically-plausible weather data.
+  - `function simple_compression_stats` (L134) — Calculate simple compression statistics without QTT.
+  - `function save_weather_manifold` (L147) — Save the weather data in a format compatible with the viewer.
+  - `function main` (L176)
+- **demos/weather_viewer.py**
+  - `class WeatherCanvas` (L70) — VisPy canvas for weather field visualization.
+  - `class WeatherViewer` (L120) — Main window for weather data visualization.
+  - `function main` (L429)
+- **demos/world_data_slicer.py**
+  - `class GlobalManifoldSlicer` (L30) — The "Optical Nerve" for world-scale data.
+  - `function create_synthetic_weather_field` (L144) — Create a synthetic weather field for demonstration.
+  - `function demo_cyclone_investigation` (L179) — Demonstrate investigating a cyclone singularity.
+  - `function demo_satellite_comparison` (L237) — Compare traditional GIS loading vs HyperTensor sampling.
+  - `function main` (L281) — Main entry point for the World Data Slicer demo.
+
+## fluidelite (71)
+
+- **fluidelite/bench_step.py**
+  - `function extract_features_kernel` (L20)
+  - `function extract_features` (L34)
+  - `class QTTMatrix` (L40)
+- **fluidelite/benchmarks/bench_elite_ops.py**
+  - `class BenchmarkResult` (L34) — Result from a benchmark run.
+  - `function timeit` (L45) — Time a function, return median time in milliseconds.
+  - `function naive_mps_add` (L64) — Naive MPS addition: direct sum + truncate.
+  - `function naive_mps_sum` (L95) — Naive N-ary sum: pairwise addition with truncation after each.
+  - `function naive_linear_combination` (L103) — Naive linear combination: scale each, then pairwise sum.
+  - `function naive_cg_solve` (L113) — Naive CG without preconditioning.
+  - `function bench_fused_laplacian` (L161) — Benchmark #1: Fused Laplacian (mps_sum vs naive pairwise).
+  - `function bench_cg_fusion` (L180) — Benchmark #2: CG Fusion (mps_linear_combination vs naive).
+  - `function bench_multigrid_pcg` (L200) — Benchmark #3: Multigrid-Preconditioned CG vs plain CG.
+  - `function bench_multigrid_vcycle` (L244) — Benchmark #4: Multigrid V-cycle - API verification.
+  - `function bench_cuda_hybrid` (L275) — Benchmark #5: CUDA Hybrid - GPU vs CPU for large MPS operations.
+  - `function bench_rsvd` (L324) — Benchmark #6: rSVD vs exact SVD for truncated decomposition.
+  - `function bench_batched_gpu` (L365) — Benchmark #7: Batched GPU ops vs sequential.
+  - `function print_result` (L409) — Pretty print a benchmark result.
+  - `function run_all_benchmarks` (L421) — Run all benchmarks and report results.
+- **fluidelite/benchmarks/memory_profile.py**
+  - `class MemoryMeasurement` (L37) — Memory measurement result.
+  - `function get_memory_mb` (L47) — Get current GPU memory usage.
+  - `function clear_memory` (L62) — Force GPU memory cleanup.
+  - `function profile_memory` (L70) — Profile memory usage while processing tokens.
+  - `function memory_vs_length` (L143) — Measure memory usage vs number of tokens processed.
+  - `function memory_vs_chi` (L216) — Measure memory usage vs bond dimension.
+  - `function theoretical_memory` (L282) — Compute theoretical memory for MPS state.
+  - `function main` (L304)
+- **fluidelite/benchmarks/phase1_comparison.py**
+  - `class Phase1Config` (L40) — Configuration for Phase 1 benchmarks.
+  - `function count_params` (L62) — Count trainable parameters.
+  - `function measure_memory_mb` (L67) — Get current GPU memory usage in MB.
+  - `class TinyTransformer` (L75) — Minimal Transformer for fair param-count comparison.
+  - `function evaluate_transformer` (L112) — Evaluate Transformer model on random sequences.
+  - `function evaluate_fluidelite` (L178) — Evaluate FluidElite model on random sequences.
+  - `function run_phase1_comparison` (L258) — Run full Phase 1 comparison: FluidElite vs Transformers.
+  - `function main` (L410)
+- **fluidelite/benchmarks/phase1_scaling.py**
+  - `class ScalingResult` (L31) — Result from a scaling benchmark.
+  - `class ScalingSuite` (L42) — Collection of scaling results.
+  - `function get_memory_mb` (L63) — Get current process memory usage in MB.
+  - `function theoretical_mps_memory` (L74) — Theoretical MPS memory: O(L · d · χ²)
+  - `function theoretical_transformer_memory` (L86) — Theoretical Transformer KV-cache memory: O(L² · d) for attention
+  - `function bench_memory_scaling` (L108) — Demonstrate O(L·χ²) memory scaling.
+  - `function bench_chi_scaling` (L173) — Demonstrate O(χ²) memory scaling.
+  - `function bench_throughput` (L231) — Measure throughput (tokens/sec) vs sequence length.
+  - `function bench_mps_vs_transformer` (L312) — Compare theoretical memory: MPS O(L·χ²) vs Transformer O(L²).
+  - `function bench_fluidelite_scaling` (L346) — Benchmark the full FluidElite model at different sequence lengths.
+  - `function run_phase1_benchmarks` (L427) — Run all Phase 1 scaling benchmarks.
+- **fluidelite/benchmarks/throughput.py**
+  - `class ThroughputResult` (L29) — Throughput measurement result.
+  - `function benchmark_throughput` (L39) — Benchmark throughput (tokens/second).
+  - `function throughput_vs_length` (L119) — Measure throughput at different context lengths.
+  - `function throughput_vs_chi` (L235) — Measure throughput vs bond dimension.
+  - `function compare_with_transformer_theoretical` (L304) — Print theoretical comparison with Transformer.
+  - `function main` (L344)
+- **fluidelite/benchmarks/wikitext.py**
+  - `function download_wikitext2` (L39) — Download WikiText-2 dataset.
+  - `function tokenize_text` (L68) — Tokenize text to byte-level tokens.
+  - `function evaluate_perplexity` (L84) — Evaluate perplexity of FluidElite model on text.
+  - `function evaluate_perplexity_batched` (L179) — Evaluate perplexity with fresh context per sequence.
+  - `function run_wikitext_benchmark` (L279) — Run complete WikiText-2 benchmark.
+  - `function chi_sweep` (L344) — Sweep over bond dimensions to study perplexity vs χ.
+  - `function main` (L409)
+- **fluidelite/core/batched_mps.py**
+  - `class BatchedMPS` (L27) — Container for batched MPS operations.
+  - `function benchmark_batched_mps` (L387) — Benchmark BatchedMPS vs individual MPS processing.
+- **fluidelite/core/bounded_training.py**
+  - `function _compute_segment_loss` (L43) — Compute loss for a segment of tokens.
+  - `function bounded_train_step` (L69) — Memory-bounded training step using gradient checkpointing.
+  - `class BoundedTrainer` (L133) — High-level trainer with memory-bounded training.
+  - `function bounded_forward` (L237) — Alias for bounded_train_step.
+- **fluidelite/core/cross.py**
+  - `class ProjectedActivation` (L27) — Applies a non-linearity to an MPS without full decompression.
+  - `function gelu_mps` (L83) — Helper for GELU activation on MPS.
+  - `function relu_mps` (L102) — Helper for ReLU activation on MPS.
+  - `function tanh_mps` (L117) — Helper for tanh activation on MPS.
+- **fluidelite/core/decompositions.py**
+  - `class SafeSVD` (L20) — SVD with Lorentzian Broadening for the gradient.
+  - `function rsvd_truncated` (L77) — Randomized SVD for GPU acceleration.
+  - `function svd_truncated` (L131) — Unified SVD interface with automatic algorithm selection.
+  - `function qr_positive` (L209) — QR decomposition with enforced positive diagonal R.
+- **fluidelite/core/elite_ops.py**
+  - `function mps_sum` (L32) — Fused N-ary MPS addition with single truncation.
+  - `function mps_linear_combination` (L111) — Fused linear combination: Σ c_i * ψ_i with single truncation.
+  - `function pcg_solve` (L147) — Preconditioned Conjugate Gradient solver for MPS linear systems.
+  - `function multigrid_preconditioner` (L247) — Create multigrid V-cycle preconditioner for PCG.
+  - `function multigrid_vcycle` (L293) — Multigrid V-cycle for MPS Poisson solve.
+  - `function _vcycle_recursive` (L342) — Recursive V-cycle implementation.
+  - `function _jacobi_smooth` (L397) — Weighted Jacobi smoothing iteration.
+  - `function _default_restrict` (L412) — Default restriction operator: simple subsampling.
+  - `function _default_prolong` (L467) — Default prolongation operator: duplicate sites.
+  - `class CUDAMixin` (L509) — Mixin class providing seamless .cuda() and .cpu() methods.
+  - `function patch_mps_cuda` (L559) — Monkey-patch MPS class with CUDA methods.
+  - `function _mps_inner` (L578) — Compute MPS inner product ⟨a|b⟩.
+  - `function _mps_norm` (L601) — Compute MPS 2-norm ||a||.
+  - `function batched_truncate_` (L620) — GPU-optimized batched truncation using fused operations.
+  - `function batched_norm` (L720) — GPU-optimized batched norm computation.
+  - `function fused_canonicalize_truncate_` (L757) — Fused canonicalization + truncation in single sweep.
+- **fluidelite/core/fast_ops.py**
+  - `function vectorized_mpo_apply` (L19) — Applies an MPO to an MPS in a single fused kernel.
+  - `function vectorized_mps_add` (L68) — Adds two MPS stacks (Direct Sum) without Python loops.
+  - `function pad_mps_to_uniform` (L114) — Pad a list of MPS tensors to uniform bond dimension and stack.
+  - `function unpad_mps_from_uniform` (L146) — Extract original non-uniform MPS tensors from padded stack.
+- **fluidelite/core/mpo.py**
+  - `class MPO` (L24) — Matrix Product Operator representation.
+  - `function mpo_sum` (L193) — Sum two MPOs: O = O1 + O2.
+- **fluidelite/core/mps.py**
+  - `class TruncateSTE` (L27) — Straight-Through Estimator for shape-changing truncation.
+  - `class MPS` (L81) — Matrix Product State representation.
+- **fluidelite/core/mps_fp16.py**
+  - `class MPS_FP16` (L26) — Half-precision Matrix Product State for production inference.
+  - `function benchmark_fp16_vs_fp32` (L317) — Benchmark FP16 vs FP32 MPS to verify performance gains.
+- **fluidelite/core/triton_kernels.py**
+  - `function _mpo_contract_tiled_kernel` (L24) — Tiled MPO-MPS contraction kernel.
+  - `function triton_mpo_contract` (L118) — Fused MPO-MPS contraction using Triton.
+  - `function _direct_sum_kernel` (L168) — Fused direct sum kernel for MPS addition.
+  - `function triton_direct_sum` (L236) — Fused direct sum of two MPS using Triton.
+  - `class FusedMPOApply` (L272) — Autograd wrapper for fused MPO application.
+  - `function fused_mpo_apply` (L308) — Apply MPO to MPS using fused Triton kernel with autograd support.
+  - `class FusedDirectSum` (L322) — Autograd wrapper for fused direct sum.
+  - `function fused_direct_sum` (L344) — Add two MPS via block-diagonal direct sum using fused Triton kernel.
+- **fluidelite/fe_tci/context_encoder.py**
+  - `class ContextEncoder` (L15) — Encode token sequences as integers for TCI sampling.
+  - `function build_context_oracle` (L143) — Build a lookup table from contexts to next tokens.
+  - `function oracle_to_function` (L170) — Convert oracle dict to a callable function for TCI.
+- **fluidelite/fe_tci/fluidelite_model.py**
+  - `class QTTCore` (L18) — A single QTT core (3D tensor).
+  - `class QTTFunction` (L42) — A function represented as QTT (Quantized Tensor Train).
+  - `function tci_build` (L113) — Build a QTT representation of f using Tensor Cross Interpolation.
+  - `function _tt_svd` (L235) — TT-SVD decomposition of a tensor.
+  - `class FluidEliteModel` (L293) — FluidElite Language Model: End-to-End TCI
+- **fluidelite/hybrid/fluidelite_hybrid.py**
+  - `class HybridConfig` (L62) — Production Configuration for FluidEliteHybrid V1.
+  - `class FluidEliteHybrid` (L110) — Production ZK-LLM combining Lookup + Least Squares.
+  - `function evaluate_model` (L528) — Evaluate model on test data.
+- **fluidelite/kernels/qtt_argmax_kernel.py**
+  - `function qtt_eval_compiled_impl` (L29) — Compiled QTT evaluation.
+  - `function pack_cores_for_triton` (L162) — Pack list of cores into contiguous storage for Triton.
+  - `class QTTArgmaxModel` (L202) — QTT-Argmax model for TCI-LLM inference.
+  - `function run_benchmark` (L362) — Run Phase 6.5 benchmark.
+- **fluidelite/llm/fluid_elite.py**
+  - `class EliteLinear` (L74) — Vectorized MPO Linear Layer.
+  - `class FluidElite` (L216) — The Optimized Fluid Engine for Infinite-Context Language Modeling.
+- **fluidelite/llm/fluid_elite_zk.py**
+  - `class LinearMPO` (L54) — Minimal MPO layer for ZK-optimized inference.
+  - `class FluidEliteZK` (L120) — ZK-Optimized FluidElite: Linear Reservoir for Verifiable Inference.
+  - `class LinearReservoirHead` (L327) — Least-Squares trained readout head for Linear Reservoir.
+  - `function benchmark_zk_costs` (L385) — Print ZK cost breakdown for FluidEliteZK.
+- **fluidelite/noaa_slicer_real.py**
+  - `class RealQTTSlicer` (L29) — Real QTT slicer using actual compressed satellite data.
+  - `function load_qtt_file` (L205) — Load QTT file in QTTG format.
+  - `function demo_real_slicing` (L241) — Demonstrate real slicing on actual NOAA data.
+  - `function compress_and_slice` (L298) — Compress raw binary and then slice it.
+  - `function main` (L332)
+- **fluidelite/optim/riemannian.py**
+  - `class RiemannianAdam` (L38) — Adam Optimizer adapted for Tensor Network Manifolds.
+- **fluidelite/qtt_accuracy_hunt.py**
+  - `function init_qtt_cores` (L30) — Xavier-initialized QTT cores.
+  - `function qtt_to_dense` (L45) — Convert QTT cores to dense vector.
+  - `function qtt_forward` (L56) — QTT forward pass.
+  - `function count_params` (L66)
+  - `function extract_features` (L74) — Extract features with hashing.
+  - `function train_and_eval` (L96) — Train at given rank, return accuracy.
+  - `function find_minimal_rank` (L150) — NS Millennium methodology: Find the MINIMAL rank that achieves target accuracy.
+  - `function run_accuracy_hunt` (L221) — Find minimal rank for each target accuracy level.
+- **fluidelite/qtt_direct_train.py**
+  - `function extract_features_kernel` (L34)
+  - `function extract_features` (L72)
+  - `class QTTMatrix` (L80) — QTT representation of a [2^n, 2^m] matrix.
+  - `function qtt_forward` (L212) — Forward pass: compute QTT(W) @ x.
+  - `function qtt_loss` (L218) — Cross-entropy loss.
+  - `function qtt_train_sgd` (L224) — Train QTT using SGD with gradient descent on cores.
+  - `function qtt_retraction` (L279) — Project back onto TT manifold by truncating ranks via SVD.
+  - `function main` (L309)
+- **fluidelite/qtt_features.py**
+  - `function extract_features_kernel` (L33)
+  - `function extract_features_triton` (L78)
+  - `function qtt_cores_from_matrix` (L86) — Convert matrix to QTT format via TT-SVD.
+  - `function qtt_memory_size` (L133) — Compute memory size of QTT cores in bytes.
+  - `function cg_solve_streaming` (L139) — Solve (X^T X + λI) W = X^T Y using Conjugate Gradient.
+  - `function main` (L222)
+- **fluidelite/qtt_gpu_real.py**
+  - `class TTCore` (L41) — Single TT core tensor.
+  - `class QTTResult` (L54) — Result of QTT compression.
+  - `function tt_svd_gpu` (L75) — GPU-accelerated Tensor Train SVD decomposition.
+  - `function tt_reconstruct_gpu` (L182) — Reconstruct tensor from TT cores on GPU.
+  - `function compress_qtt_gpu` (L210) — Compress numpy array using GPU-accelerated QTT.
+  - `function verify_reconstruction` (L290) — Verify reconstruction by sampling.
+  - `function serialize_qtt` (L324) — Serialize QTT result to binary file.
+  - `function test_local_file` (L363) — Test QTT compression on local binary file.
+  - `function test_s3_streaming` (L418) — Stream from S3, decode NetCDF, compress with real TT-SVD.
+  - `function stream_50gb_compress` (L597) — Stream and compress up to 50GB of NOAA data from S3.
+  - `function main` (L825)
+- **fluidelite/qtt_inference.py**
+  - `function extract_features_kernel` (L36)
+  - `function extract_features` (L69)
+  - `function qtt_matvec_native` (L77) — Compute y = W @ x^T where W is QTT, WITHOUT materializing W.
+  - `function _qtt_matvec_simple` (L149) — QTT matvec: y = x @ W where W is in QTT format.
+  - `function qtt_to_dense` (L231) — Reference: convert QTT to dense matrix.
+  - `function benchmark_inference` (L243) — Compare dense vs QTT inference.
+  - `function main` (L325)
+- **fluidelite/qtt_native_inference.py**
+  - `function extract_features_kernel` (L32)
+  - `function extract_features` (L65)
+  - `function qtt_to_dense` (L73) — Convert QTT cores to dense matrix.
+  - `function qtt_matvec_native` (L85) — Native QTT matvec: y = x @ W without materializing W.
+  - `function qtt_matvec_fused` (L129) — Optimized QTT matvec - process samples in smaller chunks to reduce memory.
+  - `function init_qtt_xavier` (L151) — Initialize QTT cores with Xavier initialization.
+  - `function main` (L165)
+- **fluidelite/qtt_ns_hunt.py**
+  - `function extract_features_kernel` (L35)
+  - `function extract_features` (L73)
+  - `class QTTMatrix` (L84)
+  - `function qtt_forward` (L118)
+  - `function train_at_rank` (L127) — Train QTT at given rank - streaming to handle large datasets.
+  - `function evaluate` (L199) — Evaluate QTT model.
+  - `function main` (L220)
+- **fluidelite/qtt_physics.py**
+  - `function extract_features_kernel` (L39)
+  - `function extract_features` (L77)
+  - `function validate_data` (L88) — Show actual samples to verify data makes sense.
+  - `function build_sampled_oracle` (L148) — Build W matrix from samples: W[i,j] = P(target=j | feature_i active)
+  - `function analyze_spectrum` (L187) — SVD W and see what rank captures 90/95/99% energy.
+  - `class QTTMatrix` (L229)
+  - `function tt_svd_retract` (L264) — TT-SVD decomposition - see what ranks physics chooses.
+  - `function train_and_retract` (L311) — Train with high rank cap, then retract to see natural rank.
+  - `function main` (L421)
+- **fluidelite/qtt_physics_100m.py**
+  - `function extract_features_kernel` (L43)
+  - `function extract_features` (L98)
+  - `function validate_data` (L109) — Show actual samples to verify data makes sense.
+  - `function build_sampled_oracle_sketch` (L169) — Build sketched W matrix - can't materialize full 134M × 256.
+  - `function analyze_spectrum` (L225) — SVD projected W to estimate rank requirements.
+  - `class QTTMatrix` (L267)
+  - `function train_qtt_direct` (L328) — Train QTT WITHOUT materializing dense W.
+  - `function qtt_forward_efficient` (L418) — Efficient QTT forward without materializing full W.
+  - `function main` (L468)
+- **fluidelite/qtt_physics_first.py**
+  - `function validate_data` (L28) — Check WikiText is real text, not garbage.
+  - `function extract_features_kernel` (L85)
+  - `function extract_features` (L123)
+  - `class QTTMatrix` (L130)
+  - `function train_to_target` (L169) — Train until target accuracy or convergence.
+  - `function main` (L287)
+- **fluidelite/qtt_rank_sweep.py**
+  - `function extract_features_16k_kernel` (L31) — 16K = 1024 unigram + 4096 bigram + 4096 trigram + 4096 skip + 3072 gap.
+  - `function extract_features_16k` (L65)
+  - `function qtt_to_dense` (L73) — Convert QTT cores to dense matrix.
+  - `function init_qtt_uniform` (L85) — Initialize QTT cores with uniform max rank and Xavier init.
+  - `function init_qtt_hourglass` (L99) — Initialize QTT cores with hourglass rank structure.
+  - `function get_rank_profile` (L126) — Get the rank at each bond.
+  - `class ExperimentResult` (L132)
+  - `function run_experiment` (L145) — Run a single QTT training experiment.
+  - `function main` (L251)
+- **fluidelite/qtt_scale.py**
+  - `function extract_features_16k_kernel` (L39) — 16,384 features = 2^14 (baseline)
+  - `function extract_features_64k_kernel` (L80) — 65,536 features = 2^16 (4× more hash buckets)
+  - `function extract_features_256k_kernel` (L121) — 262,144 features = 2^18 (16× more hash buckets)
+  - `function extract_features` (L161) — Extract features at given scale.
+  - `class ScaledQTT` (L178) — QTT model with configurable feature dimensions.
+  - `function train_and_evaluate` (L223) — Train and evaluate QTT at given scale.
+  - `function main` (L335)
+- **fluidelite/qtt_scale_sweep.py**
+  - `function init_qtt_cores` (L36) — Xavier-initialized QTT cores.
+  - `function qtt_to_dense` (L51) — Convert QTT cores to dense vector.
+  - `function qtt_forward` (L63) — QTT forward pass: X @ W where W is QTT-compressed.
+  - `function count_params` (L77) — Count parameters in QTT cores.
+  - `function extract_features_chunked` (L86) — Memory-efficient feature extraction.
+  - `function train_qtt_scale` (L116) — Train QTT at given scale and return metrics.
+  - `function run_scale_sweep` (L249) — Run rank sweep at multiple scales.
+- **fluidelite/qtt_tci.py**
+  - `function extract_features_kernel` (L29)
+  - `function extract_features` (L67)
+  - `function build_oracle_matrix` (L78) — Build the oracle by solving least squares: find W that minimizes ||XW - Y||^2
+  - `function analyze_spectrum` (L143) — SVD the oracle matrix. Let the singular values speak.
+  - `function compress_to_rank` (L173) — Compress to given rank: W_approx = U[:,:r] @ diag(S[:r]) @ Vh[:r,:]
+  - `function evaluate_compression` (L181) — Evaluate both original and compressed matrices.
+  - `function main` (L209)
+- **fluidelite/scripts/stress_test.py**
+  - `function get_vram_mb` (L41) — Get current GPU VRAM usage in MB.
+  - `function get_vram_reserved_mb` (L53) — Get reserved GPU memory in MB (includes cached allocations).
+  - `function stress_test` (L65) — Run the 100k token stress test.
+  - `function analyze_memory_profile` (L182) — Detailed memory profiling for debugging.
+- **fluidelite/scripts/train.py**
+  - `class TrainingConfig` (L45) — Configuration for training run.
+  - `class TrainingState` (L84) — Mutable training state.
+  - `function create_model` (L96) — Create FluidElite model from config.
+  - `function create_optimizer` (L121) — Create optimizer.
+  - `function create_scheduler` (L142) — Create learning rate scheduler with warmup.
+  - `function load_data` (L153) — Load training data.
+  - `function detach_mps` (L178) — Detach MPS tensors from computation graph.
+  - `function train_epoch` (L184) — Train for one epoch.
+  - `function evaluate` (L291) — Evaluate model on held-out data.
+  - `function save_checkpoint` (L335) — Save training checkpoint.
+  - `function load_checkpoint` (L356) — Load training checkpoint.
+  - `function train` (L374) — Main training loop.
+  - `function main` (L457) — CLI entry point.
+- **fluidelite/scripts/train_billion.py**
+  - `function format_params` (L45) — Format parameter count nicely.
+  - `function load_wikitext_subword` (L56) — Load WikiText-2 with GPT-2 tokenizer for true 1.65B scale.
+  - `function load_wikitext_chars` (L91) — Load WikiText-2 as character-level tokens.
+  - `function train_epoch` (L121) — Train one epoch.
+  - `function evaluate` (L212) — Evaluate and generate sample.
+  - `function main` (L290)
+- **fluidelite/scripts/train_closedform.py**
+  - `function load_wikitext_chars` (L47) — Load WikiText-2 as character-level tokens with FIXED 256 vocab.
+  - `function collect_reservoir_features` (L80) — Collect reservoir features in one pass.
+  - `function ridge_regression_solve` (L132) — Solve ridge regression: W* = (X^T X + λI)^{-1} X^T Y
+  - `function evaluate_weights` (L168) — Evaluate learned weights on validation data.
+  - `function generate_sample` (L209) — Generate text sample.
+  - `function export_weights` (L241) — Export weights for Rust prover.
+  - `function main` (L291)
+- **fluidelite/scripts/train_elite.py**
+  - `function generate_needle_batch` (L45) — Generates "Needle in a Haystack" training examples.
+  - `function train` (L88) — Main training loop for Needle in a Haystack task.
+- **fluidelite/scripts/train_real.py**
+  - `function create_sample_data` (L41) — Create sample training data if file doesn't exist.
+  - `function train` (L70) — Main training loop for real text language modeling.
+  - `function generate_text` (L180) — Generate text from a trained model.
+- **fluidelite/scripts/train_wikitext.py**
+  - `class WikiTextConfig` (L34)
+  - `function load_wikitext_chars` (L57) — Load WikiText-2 as character-level tokens.
+  - `function load_wikitext_subword` (L81) — Load WikiText-2 with GPT-2 tokenizer.
+  - `function train_epoch` (L100) — Train one epoch on WikiText data.
+  - `function evaluate` (L184) — Evaluate on held-out data.
+  - `function main` (L271)
+- **fluidelite/scripts/train_zk_production.py**
+  - `class TrainingConfig` (L46) — Production training configuration.
+  - `function load_wikitext_chars` (L75) — Load WikiText-2 as character-level tokens.
+  - `function train_epoch` (L108) — Train one epoch.
+  - `function evaluate` (L196) — Evaluate on validation data.
+  - `function generate_sample` (L242) — Generate text sample from the model.
+  - `function save_checkpoint` (L275) — Save model checkpoint in production format.
+  - `function main` (L331)
+- **fluidelite/tests/test_elite_ops.py**
+  - `class TestMPSSum` (L30) — Tests for fused N-ary MPS sum (Optimization #1).
+  - `class TestMPSLinearCombination` (L76) — Tests for linear combination (Optimization #2).
+  - `class TestPCGSolve` (L108) — Tests for Preconditioned Conjugate Gradient (Optimization #2 & #3).
+  - `class TestMultigridPreconditioner` (L143) — Tests for Multigrid preconditioner (Optimization #3).
+  - `class TestMultigridVCycle` (L167) — Tests for Multigrid V-cycle (Optimization #4).
+  - `class TestCUDAHybrid` (L203) — Tests for CUDA hybrid device management (Optimization #5).
+  - `class TestMPSInnerProduct` (L243) — Tests for MPS inner product helper.
+  - `class TestBatchedOperations` (L272) — Tests for batched GPU operations (Optimization #6).
+- **fluidelite/tests/test_fast_ops.py**
+  - `class TestVectorizedMPOApply` (L14) — Test vectorized_mpo_apply function.
+  - `class TestVectorizedMPSAdd` (L60) — Test vectorized_mps_add function.
+- **fluidelite/tests/test_fluid_elite.py**
+  - `class TestEliteLinear` (L15) — Tests for EliteLinear MPO layer.
+  - `class TestFluidElite` (L52) — Tests for FluidElite main model.
+  - `class TestFluidEliteIntegration` (L154) — Integration tests for FluidElite.
+- **fluidelite/tests/test_mpo.py**
+  - `class TestMPOCreation` (L14) — Tests for MPO creation and initialization.
+  - `class TestMPOProperties` (L35) — Tests for MPO property accessors.
+  - `class TestMPOApply` (L61) — Tests for MPO.apply() method.
+  - `class TestMPOExpectation` (L102) — Tests for MPO expectation value computation.
+  - `class TestMPOOperations` (L122) — Tests for MPO operations.
+  - `class TestMPOSum` (L148) — Tests for MPO addition.
+  - `class TestMPORepr` (L175) — Tests for string representation.
+- **fluidelite/tests/test_mps.py**
+  - `class TestMPSCreation` (L15) — Tests for MPS creation and initialization.
+  - `class TestMPSProperties` (L47) — Tests for MPS property accessors.
+  - `class TestMPSNorm` (L74) — Tests for MPS norm computation.
+  - `class TestMPSCanonical` (L99) — Tests for MPS canonicalization.
+  - `class TestMPSOperations` (L130) — Tests for MPS operations.
+  - `class TestMPSEntropy` (L165) — Tests for entanglement entropy.
+  - `class TestMPSExpectation` (L185) — Tests for expectation value computation.
+  - `class TestMPSRepr` (L197) — Tests for string representation.
+- **fluidelite/tests/test_optim.py**
+  - `class TestRiemannianAdamCreation` (L15) — Test RiemannianAdam initialization.
+  - `class TestRiemannianAdamStep` (L50) — Test RiemannianAdam optimization step.
+  - `class TestRiemannianAdamState` (L128) — Test optimizer state management.
+- **fluidelite/tests/test_performance.py**
+  - `class PerformanceBaseline` (L43) — Performance baselines that must be maintained.
+  - `function model` (L86) — Create FluidElite model for testing.
+  - `function memory_baseline` (L118) — Get baseline memory before test.
+  - `class TestThroughput` (L130) — Throughput regression tests.
+  - `class TestLatency` (L195) — Latency regression tests.
+  - `class TestMemory` (L282) — Memory usage regression tests.
+  - `class TestLearning` (L351) — Learning capability regression tests.
+  - `class TestFallback` (L430) — Tests for fallback mechanisms.
+  - `class TestIntegration` (L480) — End-to-end integration tests.
+  - `function print_summary` (L526) — Print performance summary after all tests.
+- **fluidelite/train_hybrid_triton.py**
+  - `function extract_features_kernel_L12` (L37) — Triton kernel for L=12 context feature extraction.
+  - `function extract_features_triton` (L78) — Extract features using Triton kernel.
+  - `function context_hash` (L90) — Hash context for lookup table.
+  - `function build_lookup_table` (L95) — Build lookup table: hash(context) -> next_byte.
+  - `function train_streaming_covariance` (L117) — Train W using streaming covariance (GPU-only).
+  - `function compress_W` (L166) — Compress W to low rank via SVD.
+  - `function evaluate` (L187) — Evaluate accuracy and perplexity.
+  - `function save_binary` (L226) — Export model to binary format for Rust prover.
+  - `function main` (L258)
+- **fluidelite/utils/fallback.py**
+  - `class Backend` (L41) — Available compute backends.
+  - `class BackendCapabilities` (L56) — Detected hardware and software capabilities.
+  - `function detect_capabilities` (L99) — Detect hardware and software capabilities.
+  - `function get_capabilities` (L163) — Get detected capabilities (cached).
+  - `function get_backend` (L179) — Get the recommended backend for the current hardware.
+  - `function print_capabilities` (L189) — Print detected capabilities to console.
+  - `function with_fallback` (L198) — Decorator that provides automatic fallback to alternative backends.
+  - `function batched_svd` (L250) — Batched SVD with automatic fallback.
+  - `function batched_matmul` (L291) — Batched matrix multiplication with automatic fallback.
+  - `function mpo_contract` (L323) — MPO-MPS contraction with automatic fallback.
+  - `function direct_sum` (L364) — MPS direct sum with automatic fallback.
+  - `function truncated_svd` (L405) — Truncated SVD with automatic algorithm selection.
+  - `function to_device` (L447) — Move tensor to device with fallback.
+  - `function ensure_contiguous` (L489) — Ensure tensor is contiguous in memory.
+- **fluidelite/utils/health.py**
+  - `class HealthCheckResult` (L37) — Result of a single health check.
+  - `class HealthReport` (L55) — Complete health check report.
+  - `function _timed_check` (L118) — Run a check function with timing.
+  - `function check_imports` (L142) — Check that all required modules can be imported.
+  - `function check_cuda` (L167) — Check CUDA availability and capabilities.
+  - `function check_triton` (L187) — Check Triton availability.
+  - `function check_model_creation` (L197) — Check that FluidElite model can be created.
+  - `function check_forward_pass` (L218) — Check that forward pass works correctly.
+  - `function check_throughput` (L247) — Check throughput meets baseline.
+  - `function check_memory_bounded` (L296) — Check that memory stays bounded during inference.
+  - `function check_error_handling` (L348) — Check that error handling utilities work.
+  - `function check_fallback_system` (L370) — Check that fallback system works.
+  - `function run_health_check` (L395) — Run comprehensive health check.
+  - `function quick_check` (L442) — Quick health check that returns True if system is healthy.
+- **fluidelite/utils/repo_integration.py**
+  - `function get_vram_manager` (L95) — Get VRAMManager instance if available.
+  - `function mps_inner_product_cuda` (L137) — Compute MPS inner product using CUDA if available.
+  - `function svd_truncated_with_fallback` (L188) — Truncated SVD with tensornet integration.
+  - `function get_integration_status` (L263) — Get status of all integrations with tensornet.
+  - `function print_integration_status` (L281) — Print integration status summary.
+- **fluidelite/verify_linearity.py**
+  - `function contract_mps_to_scalar` (L37) — Contract MPS to a scalar (quantum amplitude).
+  - `function contract_mps_to_vector` (L55) — Contract MPS and extract the middle bond as a feature vector.
+  - `function verify_linearity_via_contraction` (L89) — Test linearity using full MPS contraction (the TRUE linear output).
+  - `function verify_predict_linearity` (L315) — Verify the readout head is linear.
+  - `function summarize_architecture` (L355) — Print the architecture summary.
+- **fluidelite/zk/circuit_analysis.py**
+  - `class CircuitStats` (L30) — Statistics for a ZK arithmetic circuit.
+  - `function count_matrix_vector_mul` (L63) — Count constraints for matrix-vector multiplication in ZK.
+  - `function count_mpo_mps_contraction` (L76) — Count constraints for MPO-MPS contraction.
+  - `function count_direct_sum` (L102) — Count constraints for MPS direct sum.
+  - `function count_gelu_polynomial` (L116) — Count constraints for GELU approximation via polynomial.
+  - `function count_linear_readout` (L144) — Count constraints for linear readout head.
+  - `function count_truncation_verification` (L155) — Count constraints for truncation verification.
+  - `class FluidEliteConfig` (L177) — Configuration for FluidElite model.
+  - `function analyze_fluidelite_step` (L187) — Analyze constraint count for one FluidElite step().
+  - `function analyze_fluidelite_predict` (L226) — Analyze constraint count for FluidElite predict().
+  - `function analyze_fluidelite_inference` (L245) — Analyze total constraint count for full inference (N tokens + predict).
+  - `function analyze_transformer_attention` (L263) — Analyze constraint count for Transformer self-attention (for comparison).
+  - `function analyze_fluidelite_step_optimized` (L301) — Analyze constraint count for OPTIMIZED FluidElite step().
+  - `function analyze_transformer_full_forward` (L334) — Analyze constraint count for FULL Transformer forward pass.
+  - `function compare_architectures` (L384) — Compare FluidElite vs Transformer for ZK proving.
+  - `function detailed_breakdown` (L456) — Print detailed constraint breakdown for FluidElite.
+- **fluidelite/zk/demo.py**
+  - `class ZKFluidEliteDemo` (L33) — Demonstrates ZK proof generation for FluidElite inference.
+  - `function main` (L290) — Run demo with various configurations.
+- **fluidelite/zk/proof_simulation.py**
+  - `class Commitment` (L49) — Simulated commitment to a vector of field elements.
+  - `class ProofTranscript` (L65) — Fiat-Shamir transcript for generating challenges.
+  - `class ZKProof` (L96) — Zero-knowledge proof for FluidElite inference.
+  - `class FluidEliteZKProver` (L122) — Zero-knowledge prover for FluidElite inference.
+  - `class FluidEliteZKVerifier` (L226) — Zero-knowledge verifier for FluidElite inference.
+  - `function run_benchmark` (L281) — Run ZK proof benchmark for FluidElite.
+  - `function estimate_real_performance` (L334) — Estimate real-world ZK performance for FluidElite.
+- **fluidelite/zk/prover_node.py**
+  - `class ProofRequest` (L39) — Incoming proof request from the network.
+  - `class ProofResponse` (L49) — Proof submitted to the network.
+  - `class ProverStats` (L62) — Statistics for prover session.
+  - `class FluidEliteProver` (L82) — Prover node for FluidElite inference on decentralized networks.
+  - `function simulate_prover_session` (L230) — Simulate a prover session with multiple jobs.
+  - `function compare_transformer_costs` (L293) — Compare FluidElite vs Transformer proving costs.
+
+## genesis (79)
+
+- **tensornet/genesis/benchmarks/massacre.py**
+  - `class BenchmarkResult` (L76) — Single benchmark result.
+  - `class BenchmarkSuite` (L97) — Collection of benchmark results.
+  - `function get_memory_usage` (L148) — Get current process memory in bytes.
+  - `function measure_memory` (L154) — Measure peak memory during function execution.
+  - `function benchmark_wasserstein` (L170) — Benchmark Wasserstein distance computation.
+  - `function benchmark_laplacian` (L304) — Benchmark graph Laplacian construction and operations.
+  - `function benchmark_floyd_warshall` (L444) — Benchmark All-Pairs Shortest Path.
+  - `function benchmark_mmd` (L570) — Benchmark MMD computation.
+  - `function benchmark_geometric_algebra` (L720) — Benchmark Geometric/Clifford Algebra operations.
+  - `function mega_scale_demo` (L815) — Demonstrate GENESIS at scales where others can't even start.
+  - `function print_massacre_report` (L917) — Print the final devastating report.
+  - `function main` (L974)
+- **tensornet/genesis/core/exceptions.py**
+  - `class GenesisError` (L20) — Base exception for all Genesis errors.
+  - `class QTTRankError` (L67) — Error related to QTT tensor rank issues.
+  - `class ConvergenceError` (L119) — Error when an iterative algorithm fails to converge.
+  - `class DimensionMismatchError` (L187) — Error when tensor/array dimensions don't match.
+  - `class NumericalInstabilityError` (L239) — Error when numerical instability is detected.
+  - `class MemoryBudgetExceededError` (L303) — Error when memory usage exceeds budget.
+  - `class InvalidInputError` (L362) — Error for invalid input parameters.
+  - `class CompressionError` (L411) — Error related to QTT compression.
+  - `class OTError` (L466) — Error in Optimal Transport (Layer 20) operations.
+  - `class SGWError` (L471) — Error in Spectral Graph Wavelets (Layer 21) operations.
+  - `class TropicalError` (L476) — Error in Tropical Geometry (Layer 23) operations.
+  - `class RKHSError` (L481) — Error in RKHS/Kernel (Layer 24) operations.
+  - `class TopologyError` (L486) — Error in Persistent Homology (Layer 25) operations.
+  - `class GAError` (L491) — Error in Geometric Algebra (Layer 26) operations.
+  - `function _format_bytes` (L498) — Format byte count as human-readable string.
+  - `function check_finite` (L514) — Check array for NaN/Inf values and raise if found.
+  - `function check_shape` (L541) — Check array shape and raise if mismatched.
+- **tensornet/genesis/core/logging.py**
+  - `class LogLevel` (L30) — Log levels for Genesis modules.
+  - `class LogContext` (L48) — Context information attached to log messages.
+  - `class GenesisFormatter` (L76) — Custom formatter with Genesis-specific styling.
+  - `class GenesisLogger` (L141) — Production-grade logger for Genesis primitives.
+  - `function get_logger` (L357) — Get or create a Genesis logger.
+  - `function configure_logging` (L380) — Configure Genesis logging globally.
+  - `function logged` (L413) — Decorator to log function calls.
+- **tensornet/genesis/core/profiling.py**
+  - `class ProfileResult` (L33) — Result of a profiled operation.
+  - `class PerformanceTracker` (L118) — Thread-local performance tracker with hierarchical profiling.
+  - `function get_tracker` (L263) — Get or create global performance tracker.
+  - `function profile` (L279) — Decorator to profile a function.
+  - `function profile_memory` (L318) — Decorator to profile memory usage only.
+  - `function timed` (L348) — Decorator to time a function with minimal overhead.
+  - `function traced` (L381) — Decorator combining profiling with logging.
+  - `function profile_block` (L439) — Profile a code block.
+  - `function timer` (L465) — Simple timing context manager.
+  - `function _get_memory_usage` (L491) — Get current process memory usage in bytes.
+  - `function _format_bytes` (L506) — Format bytes as human-readable string.
+  - `function _summarize_args` (L524) — Summarize function arguments.
+  - `function _summarize_value` (L544) — Summarize a value for logging.
+  - `function benchmark` (L566) — Benchmark a function with multiple runs.
+- **tensornet/genesis/core/rsvd.py**
+  - `function rsvd_gpu` (L28) — Randomized SVD using Gram matrix eigendecomposition.
+  - `function tt_decompose_rsvd` (L165) — TT/QTT decomposition using rSVD with adaptive rank.
+  - `function svd_fallback` (L244) — Unified SVD that always uses rSVD for large matrices.
+- **tensornet/genesis/core/triton_ops.py**
+  - `function triton_matmul` (L222) — Triton-accelerated matrix multiply.
+  - `function triton_gram` (L250) — Compute Gram matrix A @ A.T using Triton.
+  - `function rsvd_native` (L278) — Randomized SVD — GPU-native, O(mnk) complexity.
+  - `function qtt_dot_native` (L400) — Compute dot product <a, b> without dense materialization.
+  - `function qtt_norm_native` (L462) — Compute L2 norm ||x||_2 without dense materialization.
+  - `function qtt_add_native` (L473) — Add two QTT tensors: c = a + b without dense materialization.
+  - `function qtt_sub_native` (L529) — Subtract two QTT tensors: c = a - b without dense materialization.
+  - `function qtt_hadamard_native` (L552) — Element-wise (Hadamard) product: c = a ⊙ b without dense materialization.
+  - `function qtt_round_native` (L609) — Truncate QTT ranks via left-to-right orthogonalization + rSVD.
+  - `function adaptive_rank` (L682) — Compute adaptive rank based on problem scale.
+  - `function qtt_evaluate_at_index` (L713) — Evaluate QTT at a single index without full decompression.
+  - `function qtt_evaluate_at_indices` (L742) — Evaluate QTT at multiple indices without full decompression.
+- **tensornet/genesis/core/validation.py**
+  - `function validate_qtt_cores` (L31) — Validate QTT tensor cores structure.
+  - `function validate_tensor_shape` (L136) — Validate tensor shape.
+  - `function validate_positive` (L186) — Validate that value is positive.
+  - `function validate_probability` (L224) — Validate probability value(s) in [0, 1].
+  - `function validate_distribution` (L261) — Validate probability distribution (sums to 1, non-negative).
+  - `function validate_dtype` (L311) — Validate array dtype.
+  - `function check_numerical_stability` (L347) — Check array for numerical stability issues.
+  - `function coerce_array` (L410) — Convert input to numpy array with specified dtype.
+  - `function validate_power_of_two` (L440) — Validate that value is a power of 2.
+  - `function validate_range` (L468) — Validate value is within specified range.
+- **tensornet/genesis/demos/gpu_qtt_compress.py**
+  - `function format_bytes` (L44)
+  - `function gpu_mem` (L51) — Current GPU memory usage.
+  - `function clear_gpu` (L55) — Clear GPU memory.
+  - `function tt_svd_gpu` (L66) — TT-SVD decomposition on GPU.
+  - `function tt_to_dense_gpu` (L128) — Reconstruct dense tensor from TT-cores on GPU.
+  - `function tt_storage_bytes` (L137) — Calculate storage needed for TT-cores.
+  - `function generate_climate_gpu` (L146) — Generate structured climate data directly on GPU.
+  - `function generate_turbulence_gpu` (L163) — Generate turbulent flow data on GPU with Kolmogorov spectrum.
+  - `class GPUCompressionResult` (L191)
+  - `function compress_gpu` (L201) — Compress data at scale using GPU.
+  - `function main` (L263)
+- **tensornet/genesis/demos/gpu_qtt_proper.py**
+  - `function format_bytes` (L27)
+  - `function svd_wide` (L35) — SVD for wide matrices (m << n) where cusolver fails.
+  - `function tt_svd_gpu` (L85) — TT-SVD on GPU using wide-matrix-safe SVD.
+  - `function compress_test` (L128) — Test compression at scale.
+  - `function main` (L171)
+- **tensornet/genesis/demos/hierarchical_qtt_compress.py**
+  - `function format_bytes` (L63) — Format bytes to human-readable string.
+  - `function generate_climate_signal` (L83) — Generate structured climate-like data.
+  - `function generate_turbulence_signal` (L116) — Generate turbulent flow data with Kolmogorov scaling.
+  - `function generate_quantum_field` (L150) — Generate quantum field configuration.
+  - `class CompressionResult` (L180) — Store compression results.
+  - `function compress_at_scale` (L193) — Compress data at specified scale.
+  - `function demonstrate_scaling` (L272) — Demonstrate that compression ratio INCREASES with data size.
+  - `function hierarchical_stream_compress` (L368) — Stream and compress data at LARGE chunk sizes.
+  - `function main` (L435) — Main entry point.
+- **tensornet/genesis/demos/noaa_petabyte_compression.py**
+  - `class NOAADataset` (L60) — Specification for a NOAA dataset.
+  - `function simulate_climate_field` (L128) — Generate a synthetic climate field with realistic correlation structure.
+  - `function compute_qtt_compression` (L169) — Compress a climate field using QTT and compute statistics.
+  - `function estimate_petabyte_compression` (L228) — Estimate compression for a petabyte-scale NOAA dataset.
+  - `function format_bytes` (L283) — Format bytes to human-readable string.
+  - `function run_compression_demo` (L303) — Run the full NOAA compression demonstration.
+  - `function demonstrate_extreme_scale` (L434) — Show GENESIS at extreme scales where cloud storage becomes intractable.
+  - `function main` (L486) — Main entry point.
+- **tensornet/genesis/demos/rsvd_qtt_compress.py**
+  - `function format_bytes` (L43)
+  - `function gpu_mem` (L50)
+  - `function clear_gpu` (L53)
+  - `function rsvd_gpu` (L63) — Randomized SVD on GPU.
+  - `function tt_rsvd_gpu` (L113) — TT-SVD using randomized SVD for each unfolding.
+  - `function tt_storage` (L184)
+  - `function generate_structured_gpu` (L192) — Generate structured data directly on GPU.
+  - `class Result` (L228)
+  - `function compress_scale` (L238) — Compress at specified scale using rSVD.
+  - `function demo_64gb_chunks` (L279) — Compress 64 GB chunks using rSVD streaming through VRAM.
+  - `function main` (L355)
+- **tensornet/genesis/demos/stream_compress_1tb.py**
+  - `class StreamConfig` (L67) — Configuration for streaming compression.
+  - `class CompressionStats` (L80) — Track compression statistics.
+  - `function generate_climate_chunk` (L113) — Generate realistic climate-like data chunk.
+  - `function stream_synthetic_data` (L158) — Stream synthetic climate data chunks.
+  - `function stream_url_data` (L181) — Stream data from a URL (NOAA S3 or HTTP).
+  - `function create_data_stream` (L231) — Create appropriate data stream based on config.
+  - `function compress_chunk` (L246) — Compress a data chunk using QTT.
+  - `function format_bytes` (L293) — Format bytes to human-readable string.
+  - `function format_time` (L309) — Format time duration.
+  - `function print_progress` (L323) — Print progress bar and stats.
+  - `function stream_compress` (L346) — Stream and compress data from source.
+  - `function run_demo` (L414) — Run the streaming compression demo.
+  - `function main` (L473) — Main entry point.
+- **tensornet/genesis/demos/triton_qtt.py**
+  - `function format_bytes` (L44)
+  - `function matmul_kernel` (L57) — Triton matmul kernel - L2 cache optimized.
+  - `function triton_matmul` (L90) — Triton-accelerated matrix multiply.
+  - `function gram_kernel` (L117) — Compute Gram matrix G = A @ A.T efficiently.
+  - `function triton_gram` (L149) — Compute Gram matrix A @ A.T using Triton.
+  - `function rsvd_triton` (L174) — Randomized SVD using Triton kernels.
+  - `function tt_rsvd` (L275) — TT-SVD using rSVD with ADAPTIVE rank.
+  - `function generate_climate` (L333) — Highly structured climate data - should compress extremely well.
+  - `function generate_turbulence` (L341) — Kolmogorov turbulence - power law spectrum.
+  - `function compress_at_scale` (L357) — Compress at scale with full diagnostics.
+  - `function main` (L419)
+- **tensornet/genesis/fusion/genesis_fusion_demo.py**
+  - `class Timer` (L96)
+  - `function run_genesis_fusion` (L120) — Execute the GENESIS FUSION pipeline.
+  - `function demonstrate_scaling` (L401) — Demonstrate O(log N) scaling.
+  - `class GauntletResult` (L487) — Result of a single gauntlet test.
+  - `function run_gauntlet_ot` (L498) — GAUNTLET 1: OPTIMAL TRANSPORT (Layer 20)
+  - `function run_gauntlet_sgw` (L608) — GAUNTLET 2: SPECTRAL GRAPH WAVELETS (Layer 21)
+  - `function run_gauntlet_rmt` (L715) — GAUNTLET 3: RANDOM MATRIX THEORY (Layer 22)
+  - `function run_gauntlet_tropical` (L816) — GAUNTLET 4: TROPICAL GEOMETRY (Layer 23)
+  - `function run_gauntlet_rkhs` (L923) — GAUNTLET 5: RKHS / KERNEL METHODS (Layer 24)
+  - `function run_gauntlet_ph` (L1034) — GAUNTLET 6: PERSISTENT HOMOLOGY (Layer 25)
+  - `function run_gauntlet_ga` (L1137) — GAUNTLET 7: GEOMETRIC ALGEBRA (Layer 26)
+  - `function run_genesis_gauntlet` (L1263) — Execute the complete GENESIS GAUNTLET.
+  - `function main` (L1405)
+- **tensornet/genesis/fusion/geometric_types_pipeline.py**
+  - `class ConstraintViolation` (L60) — Raised when a geometric invariant is violated.
+  - `class VectorField` (L81) — Divergence-free vector field on a 3D grid.
+  - `class Measure` (L206) — Probability measure on a grid.
+  - `class Manifold` (L263) — Riemannian manifold represented by metric tensor field.
+  - `class Spinor` (L347) — Spinor field (e.g., quantum state, Dirac spinor).
+  - `class TypeStageResult` (L408) — Result from a geometric type stage.
+  - `function stage1_vectorfield_sgw` (L420) — Apply Spectral Graph Wavelets to VectorField.
+  - `function stage2_measure_ot` (L479) — Apply Optimal Transport between two Measures.
+  - `function stage3_manifold_ph` (L532) — Apply Persistent Homology to analyze Manifold structure.
+  - `function stage4_spinor_ga` (L595) — Apply Geometric Algebra rotation to Spinor.
+  - `function stage5_measure_rkhs` (L654) — Compute RKHS divergence (MMD) between Measures.
+  - `function run_geometric_types_pipeline` (L714) — Run the Geometric Types Pipeline.
+- **tensornet/genesis/ga/cga.py**
+  - `class ConformalGA` (L34) — Conformal Geometric Algebra for 3D.
+  - `function point_to_cga` (L93) — Embed a Euclidean point into CGA.
+  - `function cga_to_point` (L126) — Extract Euclidean point from CGA representation.
+  - `function cga_line` (L155) — Create a CGA line through two points.
+  - `function cga_plane` (L174) — Create a CGA plane with given normal and distance from origin.
+  - `function cga_plane_from_points` (L204) — Create a CGA plane through three points.
+  - `function cga_circle` (L223) — Create a CGA circle.
+  - `function cga_sphere` (L251) — Create a CGA sphere.
+  - `function cga_point_pair` (L273) — Create a CGA point pair (0-sphere).
+  - `function meet` (L291) — Compute the meet (intersection) of two geometric objects.
+  - `function join` (L307) — Compute the join (span) of two geometric objects.
+  - `function cga_translator` (L323) — Create a CGA translator (translation motor).
+  - `function apply_translator` (L351) — Apply translator to a CGA object.
+  - `function cga_dilator` (L369) — Create a CGA dilator (scaling versor).
+  - `function cga_reflector` (L400) — Reflect an object in a CGA plane.
+  - `function reflect_in_plane` (L416) — Reflect CGA object X in the given plane.
+  - `function distance_point_to_point` (L434) — Compute Euclidean distance between two CGA points.
+- **tensornet/genesis/ga/multivector.py**
+  - `class CliffordAlgebra` (L21) — Defines a Clifford algebra Cl(p, q, r).
+  - `class Multivector` (L162) — Element of a Clifford algebra.
+  - `function scalar` (L345) — Create scalar multivector.
+  - `function vector` (L350) — Create vector (grade-1) multivector.
+  - `function bivector` (L355) — Create bivector from {(i,j): coefficient} dict.
+  - `function pseudoscalar` (L361) — Create the pseudoscalar (highest grade blade).
+  - `function random_multivector` (L367) — Create random multivector, optionally restricted to certain grades.
+- **tensornet/genesis/ga/operations.py**
+  - `function reverse` (L26) — Compute the reverse ã of a multivector.
+  - `function grade_involution` (L54) — Compute the grade involution â of a multivector.
+  - `function clifford_conjugate` (L80) — Compute the Clifford conjugate a† of a multivector.
+  - `function magnitude_squared` (L107) — Compute the squared magnitude |a|² = <aã>_0.
+  - `function magnitude` (L129) — Compute the magnitude |a| = sqrt(|<aã>_0|).
+  - `function normalize` (L145) — Normalize multivector to unit magnitude.
+  - `function inverse` (L161) — Compute the inverse a^{-1} such that a * a^{-1} = 1.
+  - `function grade_projection` (L182) — Project multivector onto a single grade.
+  - `function even_part` (L198) — Extract the even-grade components.
+  - `function odd_part` (L221) — Extract the odd-grade components.
+  - `function dual` (L244) — Compute the dual a* with respect to the pseudoscalar.
+  - `function undual` (L267) — Compute the undual (inverse of dual).
+  - `function project_onto` (L287) — Project multivector a onto blade b.
+  - `function reject_from` (L307) — Reject multivector a from blade b.
+  - `function reflect_in` (L325) — Reflect multivector a in the hyperplane with normal n.
+  - `function exp` (L349) — Compute the exponential exp(a) using Taylor series.
+  - `function log` (L380) — Compute the logarithm log(a) using series expansion.
+- **tensornet/genesis/ga/products.py**
+  - `function geometric_product` (L25) — Compute the geometric product ab.
+  - `function inner_product` (L58) — Compute the inner (dot) product a·b.
+  - `function outer_product` (L78) — Compute the outer (wedge) product a∧b.
+  - `function left_contraction` (L119) — Compute the left contraction a⌋b.
+  - `function right_contraction` (L163) — Compute the right contraction a⌊b.
+  - `function scalar_product` (L206) — Compute the scalar product <a,b>.
+  - `function commutator_product` (L224) — Compute the commutator product [a,b] = (ab - ba)/2.
+  - `function anticommutator_product` (L243) — Compute the anti-commutator product {a,b} = (ab + ba)/2.
+  - `function regressive_product` (L261) — Compute the regressive (vee) product a∨b.
+  - `function sandwich_product` (L288) — Compute the sandwich product aba^{-1}.
+  - `function versor_sandwich` (L310) — Compute the versor sandwich product abã.
+- **tensornet/genesis/ga/qtt_ga_gauntlet.py**
+  - `function test` (L32) — Record test result.
+  - `function section` (L44) — Print section header.
+  - `function test_multivector_creation` (L53) — Test multivector creation and basic properties.
+  - `function test_geometric_product` (L90) — Test the geometric product.
+  - `function test_inner_outer_products` (L124) — Test inner and outer products.
+  - `function test_operations` (L166) — Test multivector operations.
+  - `function test_rotors` (L219) — Test rotor operations.
+  - `function test_conformal_ga` (L273) — Test conformal geometric algebra.
+  - `function test_qtt_multivector` (L326) — Test QTT-compressed multivectors.
+  - `function test_large_qtt` (L397) — Test QTT with larger algebras.
+  - `function main` (L454) — Run all tests.
+- **tensornet/genesis/ga/qtt_multivector.py**
+  - `class QTTMultivector` (L23) — QTT-compressed multivector for large Clifford algebras.
+  - `function qtt_add` (L408) — Add two QTT multivectors.
+  - `function qtt_scale` (L450) — Scale QTT multivector by a scalar.
+  - `function qtt_geometric_product` (L466) — Compute geometric product of QTT multivectors.
+  - `function qtt_grade_projection` (L590) — Project QTT multivector onto a single grade.
+  - `function qtt_reverse` (L671) — Compute the reverse of a QTT multivector.
+  - `function qtt_inner_product` (L734) — Compute the scalar inner product of two QTT multivectors.
+- **tensornet/genesis/ga/rotors.py**
+  - `function rotor_from_bivector` (L31) — Create a rotor from a bivector and angle.
+  - `function rotor_from_angle_plane` (L63) — Alias for rotor_from_bivector with swapped arguments.
+  - `function rotor_from_vectors` (L79) — Create a rotor that rotates vector a to vector b.
+  - `function apply_rotor` (L123) — Apply rotor R to multivector v.
+  - `function rotor_log` (L143) — Compute the logarithm of a rotor.
+  - `function rotor_sqrt` (L180) — Compute the square root of a rotor.
+  - `function interpolate_rotors` (L200) — Spherical linear interpolation (SLERP) between rotors.
+  - `function compose_rotors` (L233) — Compose multiple rotors.
+  - `function rotor_to_matrix` (L260) — Convert a 3D rotor to a rotation matrix.
+  - `function matrix_to_rotor` (L287) — Convert a 3x3 rotation matrix to a rotor.
+  - `function euler_to_rotor` (L348) — Create rotor from Euler angles (ZYX convention).
+  - `function rotor_to_euler` (L380) — Extract Euler angles from a 3D rotor.
+- **tensornet/genesis/ot/barycenters.py**
+  - `class BarycenterResult` (L61) — Result container for barycenter computation.
+  - `function barycenter` (L88) — Compute the Wasserstein barycenter of multiple distributions.
+  - `function _barycenter_quantile` (L181) — Compute W₂ barycenter using quantile averaging.
+  - `function _barycenter_sinkhorn` (L269) — Compute barycenter using Sinkhorn iterations.
+  - `function interpolate` (L379) — Compute geodesic interpolation between two distributions.
+  - `function geodesic` (L429) — Compute discrete geodesic path from μ to ν.
+  - `function _compute_qtt_cdf_at_samples` (L472) — Compute CDF at sampled points using QTT evaluation.
+  - `function _interpolate_quantile` (L518) — Find quantile index via interpolation in precomputed CDF.
+  - `function _compute_qtt_cdf` (L527) — Placeholder - CDF is computed on-demand via sampling.
+  - `function _tt_rsvd_1d` (L535) — TT-rSVD decomposition for 1D function values.
+  - `function _qtt_quantile_search` (L576) — Binary search for quantile index in QTT CDF.
+  - `function _evaluate_qtt_at_index` (L594) — Evaluate QTT at a single index given in binary representation.
+- **tensornet/genesis/ot/cost_matrices.py**
+  - `class QTTMatrix` (L45) — A matrix represented in QTT-MPO (Matrix Product Operator) format.
+  - `function euclidean_cost_mpo` (L214) — Construct the Euclidean distance cost matrix in QTT-MPO format.
+  - `function toeplitz_cost_mpo` (L341) — Construct a Toeplitz cost matrix in QTT-MPO format.
+  - `function gaussian_kernel_mpo` (L442) — Construct a Gaussian kernel matrix in QTT-MPO format.
+  - `function custom_cost_mpo` (L547) — Construct a custom cost matrix using TT-Cross interpolation.
+  - `function _dense_to_qtt_mpo` (L625) — Convert dense matrix to QTT-MPO format via sequential SVD.
+- **tensornet/genesis/ot/distributions.py**
+  - `class QTTDistribution` (L52) — A probability distribution represented in Quantized Tensor Train format.
+  - `function _qtt_sum` (L896) — Compute the sum of all elements in a QTT tensor.
+- **tensornet/genesis/ot/qtt_ot_gauntlet.py**
+  - `class TestResult` (L64) — Result of a single test.
+  - `class GauntletReport` (L74) — Aggregate report for all tests.
+  - `function timer` (L124) — Context manager for timing.
+  - `class QTTOTGauntlet` (L132) — Elite test suite for QTT-Optimal Transport.
+  - `function main` (L876) — Run the gauntlet.
+- **tensornet/genesis/ot/sinkhorn_qtt.py**
+  - `class SinkhornResult` (L63) — Result container for QTT-Sinkhorn algorithm.
+  - `class QTTSinkhorn` (L101) — QTT-native Sinkhorn algorithm for entropy-regularized optimal transport.
+  - `function sinkhorn_distance` (L1229) — Compute entropy-regularized Wasserstein distance.
+- **tensornet/genesis/ot/transport_plan.py**
+  - `class QTTTransportPlan` (L60) — Optimal transport plan in QTT format.
+  - `function transport_plan` (L756) — Create a transport plan from a Sinkhorn result.
+  - `function monge_map` (L785) — Compute the optimal Monge map T: supp(μ) → supp(ν).
+  - `function _compute_qtt_cdf` (L872) — Compute CDF (cumulative distribution function) in QTT format.
+  - `function _evaluate_qtt_at_index` (L932) — Evaluate QTT at a single index given in binary.
+  - `function _qtt_binary_search` (L941) — Binary search for index j where dist[j] ≈ target.
+  - `function _build_qtt_from_function` (L961) — Build QTT cores from a function via TCI sampling.
+- **tensornet/genesis/ot/wasserstein.py**
+  - `function wasserstein_distance` (L42) — Compute the p-Wasserstein distance between distributions μ and ν.
+  - `function _wasserstein_quantile` (L155) — Compute exact Wasserstein distance using quantile functions.
+  - `function _qtt_quantile_search` (L259) — Binary search for quantile index in QTT CDF.
+  - `function _evaluate_qtt_at_index` (L277) — Evaluate QTT at a single index given in binary.
+  - `function _compute_cdf` (L286) — Compute the CDF (cumulative distribution function) in QTT format.
+  - `function wasserstein_barycenter` (L418) — Compute the Wasserstein barycenter of multiple distributions.
+  - `function _barycenter_quantile_update` (L514) — Update barycenter using quantile averaging for W₂.
+  - `function _barycenter_sinkhorn_update` (L603) — Update barycenter using Sinkhorn iterations.
+- **tensornet/genesis/rkhs/gp.py**
+  - `class GPPrior` (L26) — Gaussian Process prior specification.
+  - `class GPPosterior` (L85) — Gaussian Process posterior after conditioning on data.
+  - `class GPRegressor` (L234) — Gaussian Process Regression model.
+  - `function gp_predict` (L323) — Functional GP prediction.
+  - `function gp_posterior_sample` (L346) — Draw posterior samples at test locations.
+  - `function gp_marginal_likelihood` (L386) — Compute log marginal likelihood for hyperparameter optimization.
+  - `class SparseGP` (L407) — Sparse Gaussian Process using inducing points.
+- **tensornet/genesis/rkhs/kernel_matrix.py**
+  - `class QTTKernelMatrix` (L24) — QTT-compressed kernel matrix.
+  - `function kernel_matrix` (L372) — Compute kernel matrix K[i,j] = k(x_i, y_j).
+  - `function kernel_vector` (L389) — Compute kernel vector k(x_i, x_*) for fixed x_*.
+  - `function nystrom_approximation` (L406) — Nyström low-rank approximation of kernel matrix.
+  - `function random_fourier_features` (L447) — Random Fourier feature approximation for RBF kernel.
+  - `function incomplete_cholesky` (L482) — Incomplete Cholesky decomposition for low-rank approximation.
+- **tensornet/genesis/rkhs/kernels.py**
+  - `class Kernel` (L20) — Abstract base class for kernel functions.
+  - `class RBFKernel` (L98) — Radial Basis Function (Gaussian) kernel.
+  - `class MaternKernel` (L136) — Matérn kernel with smoothness parameter ν.
+  - `class PolynomialKernel` (L189) — Polynomial kernel.
+  - `class LinearKernel` (L221) — Linear kernel (inner product).
+  - `class PeriodicKernel` (L249) — Periodic kernel for cyclic patterns.
+  - `class ScaledKernel` (L289) — Kernel multiplied by a scalar.
+  - `class CompositeKernel` (L302) — Base class for composite kernels.
+  - `class SumKernel` (L309) — Sum of two kernels.
+  - `class ProductKernel` (L324) — Product of two kernels.
+  - `function verify_kernel_properties` (L338) — Verify that a kernel satisfies key properties.
+- **tensornet/genesis/rkhs/mmd.py**
+  - `function mmd_squared` (L23) — Compute squared MMD between two samples.
+  - `function maximum_mean_discrepancy` (L65) — Compute MMD distance between two samples.
+  - `function mmd_test` (L92) — Perform MMD two-sample test with permutation null.
+  - `function mmd_linear_time` (L145) — Linear-time MMD estimator using pairing.
+  - `function mmd_variance` (L180) — Estimate variance of unbiased MMD² estimator.
+  - `class MMDTestResult` (L216) — Result of MMD two-sample test.
+  - `function mmd_full_test` (L234) — Complete MMD two-sample test with full statistics.
+  - `function mmd_witness_function` (L292) — Compute MMD witness function at test points.
+  - `function kernel_mean_embedding` (L320) — Compute kernel mean embedding μ_P at test points.
+  - `function mmd_bandwidth_selection` (L340) — Select optimal RBF bandwidth for MMD test.
+  - `class MMDDistanceMetric` (L386) — MMD as a distance metric between distributions.
+  - `function rbf_kernel_mpo` (L435) — Construct RBF kernel matrix as QTT-MPO.
+  - `class QTTKernelMPO` (L553) — RBF Kernel matrix in QTT-MPO format.
+  - `function _qtt_inner_product` (L640) — Compute QTT inner product ⟨f, g⟩ = Σ_i f[i] g[i].
+  - `function mmd_qtt_native` (L681) — QTT-native MMD computation - ZERO SAMPLING.
+- **tensornet/genesis/rkhs/qtt_rkhs_gauntlet.py**
+  - `class GauntletResult` (L58) — Result of a single gauntlet test.
+  - `class QTTRKHSGauntlet` (L66) — Elite test suite for QTT-RKHS kernel methods.
+  - `function main` (L597) — Run the QTT-RKHS gauntlet.
+- **tensornet/genesis/rkhs/ridge.py**
+  - `class KRRSolution` (L27) — Kernel Ridge Regression solution.
+  - `function solve_krr` (L101) — Solve kernel ridge regression.
+  - `function _solve_cg` (L159) — Conjugate gradient solver.
+  - `function kernel_ridge_regression` (L185) — Fit kernel ridge regression model.
+  - `class KernelRidgeRegressor` (L212) — Kernel Ridge Regression estimator.
+  - `function krr_loo_error` (L296) — Compute leave-one-out cross-validation error for KRR.
+  - `function krr_gcv_score` (L335) — Compute generalized cross-validation score.
+  - `function optimal_regularization` (L376) — Find optimal regularization parameter.
+  - `class QTTKernelRidgeRegressor` (L414) — Kernel Ridge Regression with QTT acceleration.
+- **tensornet/genesis/rmt/ensembles.py**
+  - `class QTTEnsemble` (L30) — Random matrix ensemble in QTT format.
+  - `function goe_matrix` (L532) — Create GOE matrix.
+  - `function gue_matrix` (L537) — Create GUE matrix.
+  - `function wishart_matrix` (L542) — Create Wishart matrix.
+  - `function wigner_matrix` (L548) — Create Wigner matrix.
+- **tensornet/genesis/rmt/free_probability.py**
+  - `class FreeConvolution` (L36) — Free convolution operations on spectral measures.
+  - `function r_transform` (L173) — Compute R-transform of a QTT matrix.
+  - `function s_transform` (L199) — Compute S-transform of a QTT matrix (for positive matrices).
+  - `function free_additive_convolution` (L228) — Compute free additive convolution ρ₁ ⊞ ρ₂.
+  - `function free_multiplicative_convolution` (L246) — Compute free multiplicative convolution ρ₁ ⊠ ρ₂.
+  - `function semicircle_r_transform` (L264) — R-transform for Wigner semicircle.
+  - `function marchenko_pastur_r_transform` (L283) — R-transform for Marchenko-Pastur.
+- **tensornet/genesis/rmt/qtt_rmt_gauntlet.py**
+  - `class TestResult` (L47) — Single test result.
+  - `class GauntletConfig` (L56) — Gauntlet configuration.
+  - `class QTTRMTGauntlet` (L68) — Elite validation gauntlet for QTT-Random Matrix Theory.
+  - `function main` (L777)
+- **tensornet/genesis/rmt/resolvent.py**
+  - `class QTTResolvent` (L31) — Resolvent operator G(z) = (H - zI)^{-1} in QTT format.
+  - `function compute_resolvent` (L221) — Create resolvent operator for given matrix and spectral parameter.
+  - `function resolvent_trace` (L247) — Compute Tr(G(z)) = Tr((H - zI)^{-1}).
+  - `function resolvent_at_points` (L267) — Compute resolvent trace at multiple real points.
+- **tensornet/genesis/rmt/spectral_density.py**
+  - `class SpectralDensity` (L27) — Spectral density estimator for QTT matrices.
+  - `function spectral_density` (L188) — Compute spectral density of a QTT matrix.
+  - `function stieltjes_transform` (L223) — Compute Stieltjes transform m(z) = (1/N) Tr((H - zI)^{-1}).
+  - `function inverse_stieltjes` (L247) — Recover spectral density from Stieltjes transform values.
+  - `function density_from_eigenvalues` (L267) — Compute density from actual eigenvalues using KDE.
+- **tensornet/genesis/rmt/universality.py**
+  - `class WignerSemicircle` (L25) — Wigner semicircle law for GOE/GUE matrices.
+  - `class MarchenkoPastur` (L126) — Marchenko-Pastur law for Wishart matrices.
+  - `function wigner_semicircle` (L188) — Evaluate Wigner semicircle density.
+  - `function marchenko_pastur` (L203) — Evaluate Marchenko-Pastur density.
+  - `class UniversalityResult` (L219) — Result of universality verification.
+  - `function verify_universality` (L229) — Verify if matrix follows expected universality law.
+  - `function verify_with_dense` (L289) — Verify universality using dense eigendecomposition.
+- **tensornet/genesis/sgw/chebyshev.py**
+  - `function chebyshev_coefficients` (L29) — Compute Chebyshev coefficients for a function on [-1, 1].
+  - `function chebyshev_approximation` (L71) — Evaluate Chebyshev approximation at points x.
+  - `class ChebyshevApproximator` (L106) — Chebyshev polynomial approximator for matrix functions.
+  - `function mexican_hat_chebyshev` (L249) — Create Chebyshev approximator for Mexican hat wavelet.
+  - `function heat_kernel_chebyshev` (L265) — Create Chebyshev approximator for heat kernel.
+  - `function lowpass_chebyshev` (L281) — Create Chebyshev approximator for low-pass filter.
+  - `function highpass_chebyshev` (L300) — Create Chebyshev approximator for high-pass filter.
+- **tensornet/genesis/sgw/filters.py**
+  - `class GraphFilter` (L30) — Abstract base class for graph filters.
+  - `class LowPassFilter` (L98) — Low-pass filter for graph signals.
+  - `class HighPassFilter` (L122) — High-pass filter for graph signals.
+  - `class BandPassFilter` (L144) — Band-pass filter for graph signals.
+  - `class IdealLowPassFilter` (L182) — Ideal low-pass filter (sharp cutoff).
+  - `class HeatFilter` (L199) — Heat diffusion filter.
+  - `class InverseLaplacianFilter` (L215) — Inverse Laplacian filter (regularized).
+  - `class CustomFilter` (L231) — Custom filter with user-defined response function.
+  - `function low_pass` (L251) — Create low-pass filter.
+  - `function high_pass` (L257) — Create high-pass filter.
+  - `function band_pass` (L263) — Create band-pass filter.
+  - `function heat_diffusion` (L269) — Create heat diffusion filter.
+- **tensornet/genesis/sgw/graph_signals.py**
+  - `class QTTSignal` (L35) — Signal on a graph in QTT format.
+- **tensornet/genesis/sgw/laplacian.py**
+  - `class QTTLaplacian` (L27) — Graph Laplacian in QTT-MPO format.
+  - `function grid_laplacian_1d` (L355) — Create 1D grid Laplacian.
+  - `function grid_laplacian_2d` (L360) — Create 2D grid Laplacian.
+  - `function grid_laplacian_3d` (L365) — Create 3D grid Laplacian.
+- **tensornet/genesis/sgw/qtt_sgw_gauntlet.py**
+  - `class TestResult` (L46) — Single test result.
+  - `class GauntletConfig` (L55) — Gauntlet configuration.
+  - `class QTTSGWGauntlet` (L67) — Elite validation gauntlet for QTT-Spectral Graph Wavelets.
+  - `function main` (L995)
+- **tensornet/genesis/sgw/wavelets.py**
+  - `function mexican_hat_kernel` (L33) — Mexican hat (Difference of Gaussians) wavelet.
+  - `function heat_kernel` (L45) — Heat/diffusion kernel.
+  - `function meyer_kernel` (L56) — Meyer wavelet kernel (compactly supported).
+  - `function _meyer_aux` (L81) — Auxiliary function for Meyer wavelet.
+  - `function abspline_kernel` (L91) — Abspline wavelet kernel.
+  - `class WaveletResult` (L104) — Result of spectral graph wavelet transform.
+  - `class QTTGraphWavelet` (L130) — Spectral graph wavelet transform in QTT format.
+- **tensornet/genesis/topology/boundary.py**
+  - `function boundary_matrix` (L23) — Construct the k-th boundary matrix ∂_k: C_k → C_{k-1}.
+  - `function boundary_matrix_sparse` (L67) — Construct sparse boundary matrix in COO format.
+  - `function coboundary_matrix` (L104) — Construct the k-th coboundary matrix δ^k: C^k → C^{k+1}.
+  - `class QTTBoundaryOperator` (L121) — QTT-compressed boundary operator.
+  - `function chain_complex_matrices` (L226) — Build all boundary matrices for the chain complex.
+  - `function verify_boundary_squared_zero` (L244) — Verify ∂_{k-1} ∘ ∂_k = 0 for all k.
+  - `function betti_numbers_from_boundary` (L270) — Compute Betti numbers from boundary matrices.
+- **tensornet/genesis/topology/distances.py**
+  - `function _l_infinity_cost` (L19) — L∞ distance between two points.
+  - `function _l_p_cost` (L24) — Lp distance between two points.
+  - `function _diagonal_projection` (L29) — Project point to diagonal.
+  - `function _diagonal_cost` (L35) — Cost of matching a point to its diagonal projection.
+  - `function bottleneck_distance` (L43) — Compute bottleneck distance between persistence diagrams.
+  - `function wasserstein_distance_diagram` (L141) — Compute p-Wasserstein distance between persistence diagrams.
+  - `class PersistenceLandscape` (L215) — Persistence landscape representation.
+  - `function persistence_landscape` (L243) — Compute persistence landscape from diagram.
+  - `function landscape_distance` (L304) — Compute Lp distance between persistence landscapes.
+  - `function persistence_image` (L335) — Compute persistence image from diagram.
+  - `function diagram_entropy` (L395) — Compute persistent entropy of a diagram.
+  - `function silhouette` (L427) — Compute persistence silhouette.
+- **tensornet/genesis/topology/persistence.py**
+  - `class PersistencePair` (L23) — A persistence pair representing a topological feature.
+  - `class PersistenceDiagram` (L65) — Persistence diagram: collection of persistence pairs.
+  - `function reduce_boundary_matrix` (L155) — Standard boundary matrix reduction algorithm.
+  - `function persistence_pairs` (L206) — Compute persistence pairs from a filtered simplicial complex.
+  - `function compute_persistence` (L286) — Compute persistence diagram from a filtered simplicial complex.
+  - `function compute_betti_curve` (L310) — Compute Betti numbers at each filtration value.
+  - `function euler_curve` (L340) — Compute Euler characteristic at each filtration value.
+  - `class VineyardAlgorithm` (L366) — Vineyard algorithm for tracking persistence across a family of filtrations.
+- **tensornet/genesis/topology/qtt_native.py**
+  - `class QTTVector` (L41) — QTT representation of a vector of length N = 2^d.
+  - `class QTTMatrix` (L154) — QTT representation of an N×N matrix where N = 2^d.
+  - `class QTTBoundaryMatrix` (L194) — QTT representation of a boundary operator ∂_k.
+  - `class QTTPersistenceResult` (L397) — Result of QTT persistence computation.
+  - `function qtt_betti_numbers_grid` (L406) — Compute Betti numbers for a d-dimensional grid complex.
+  - `function qtt_betti_from_boundary` (L431) — Compute a single Betti number from QTT boundary operators.
+  - `function qtt_persistence_grid_1d` (L457) — Compute persistence for 1D grid complex in QTT format.
+  - `function qtt_persistence_point_cloud` (L491) — Compute persistent homology for a point cloud using QTT.
+  - `class QTTRipsComplex` (L545) — Implicit Vietoris-Rips complex in QTT format.
+  - `function verify_qtt_boundary_correctness` (L698) — Verify QTT boundary operator against dense ground truth.
+  - `function verify_qtt_persistence_correctness` (L743) — Verify QTT persistence computation.
+- **tensornet/genesis/topology/qtt_ph_gauntlet.py**
+  - `class GauntletResult` (L53) — Result of a single gauntlet test.
+  - `class QTTPHGauntlet` (L61) — Elite test suite for QTT-PH persistent homology.
+  - `function main` (L516) — Run the QTT-PH gauntlet.
+- **tensornet/genesis/topology/simplicial.py**
+  - `class Simplex` (L19) — A k-simplex represented by a sorted tuple of vertices.
+  - `class SimplicialComplex` (L92) — A simplicial complex is a collection of simplices closed under
+  - `function pairwise_distances` (L203) — Compute pairwise distance matrix.
+  - `class RipsComplex` (L217) — Vietoris-Rips complex construction.
+  - `class CechComplex` (L282) — Čech complex construction.
+  - `function alpha_complex_2d` (L355) — Alpha complex for 2D point cloud (simplified).
+- **tensornet/genesis/tropical/convexity.py**
+  - `class TropicalHalfspace` (L28) — A tropical halfspace defined by a tropical linear inequality.
+  - `class TropicalPolyhedron` (L91) — A tropical polyhedron: intersection of tropical halfspaces.
+  - `function tropical_convex_hull` (L191) — Compute the tropical convex hull of a set of points.
+  - `function _in_tropical_segment` (L252) — Check if p is in the tropical segment [q, r].
+  - `function is_tropically_convex` (L296) — Check if a finite set of points is tropically convex.
+  - `function tropical_projection` (L351) — Project a point onto a tropical polyhedron.
+  - `function _project_onto_halfspace` (L441) — Project point x onto a single tropical halfspace.
+  - `function tropical_hilbert_distance` (L513) — Compute the tropical Hilbert distance between two points.
+  - `function tropical_barycenter` (L531) — Compute the tropical barycenter (weighted tropical sum).
+- **tensornet/genesis/tropical/matrix.py**
+  - `class TropicalMatrix` (L26) — A tropical matrix with QTT compression support.
+  - `function tropical_matmul` (L217) — Tropical matrix multiplication.
+  - `function tropical_power` (L257) — Compute A^⊗k using repeated squaring.
+  - `function tropical_kleene_star` (L291) — Compute the Kleene star (closure) of a tropical matrix.
+  - `function tropical_transpose` (L340) — Transpose a tropical matrix.
+  - `function tropical_hadamard` (L349) — Tropical Hadamard product (elementwise tropical multiplication).
+  - `function has_negative_cycle` (L360) — Check if matrix has a negative cycle.
+  - `function tropical_eigenvalue` (L382) — Compute the tropical eigenvalue (max cycle mean / min cycle mean).
+  - `function check_tropical_properties` (L477) — Check various tropical matrix properties.
+- **tensornet/genesis/tropical/optimization.py**
+  - `class TropicalEigenResult` (L31) — Result of tropical eigenvalue computation.
+  - `function tropical_eigenvalue` (L47) — Compute the tropical eigenvalue of a matrix.
+  - `function tropical_eigenvector` (L134) — Compute tropical eigenvector via power iteration.
+  - `function tropical_linear_program` (L206) — Solve a tropical linear program.
+  - `function tropical_least_squares` (L267) — Solve tropical least squares: minimize ||A ⊗ x - b||_∞ in tropical sense.
+  - `function tropical_determinant` (L307) — Compute the tropical determinant (tropical permanent).
+  - `function _tropical_det_hungarian` (L346) — Compute tropical determinant using Hungarian algorithm.
+  - `function solve_tropical_equation` (L383) — Solve the tropical linear equation A ⊗ x = b.
+- **tensornet/genesis/tropical/qtt_native.py**
+  - `class QTTCore` (L39) — A single TT-core in the QTT format.
+  - `class QTTTropicalMatrix` (L64) — TRUE QTT-Native Tropical Matrix.
+  - `function qtt_tropical_matmul` (L510) — Tropical matrix multiplication in QTT format.
+  - `function _qtt_truncate` (L584) — Truncate QTT ranks via successive SVDs.
+  - `function qtt_floyd_warshall` (L619) — Floyd-Warshall all-pairs shortest paths in QTT format.
+  - `function _qtt_tropical_add` (L653) — Tropical addition: elementwise min (or max).
+  - `function qtt_shortest_paths` (L706) — Compute all-pairs shortest paths for a graph.
+  - `function verify_qtt_tropical_correctness` (L724) — Verify QTT tropical operations against dense ground truth.
+- **tensornet/genesis/tropical/qtt_tropical_gauntlet.py**
+  - `class TestResult` (L56) — Result of a single test.
+  - `class GauntletConfig` (L65) — Configuration for gauntlet run.
+  - `class TropicalGauntlet` (L74) — Elite test suite for QTT-Tropical Geometry (Layer 23).
+  - `function main` (L792) — Run the QTT-Tropical gauntlet.
+- **tensornet/genesis/tropical/semiring.py**
+  - `class SemiringType` (L26) — Type of tropical semiring.
+  - `class TropicalSemiring` (L33) — Abstract tropical semiring with smooth approximations.
+  - `function softmin` (L159) — Smooth approximation to elementwise min.
+  - `function softmax` (L180) — Smooth approximation to elementwise max.
+  - `function tropical_min` (L201) — Exact elementwise min (min-plus addition).
+  - `function tropical_max` (L206) — Exact elementwise max (max-plus addition).
+  - `function tropical_add` (L211) — Tropical addition in given semiring.
+  - `function tropical_mul` (L222) — Tropical multiplication in given semiring.
+  - `function tropical_pow` (L232) — Tropical power: a ⊗ a ⊗ ... ⊗ a (n times).
+  - `function tropical_sum` (L251) — Sum (tropical addition) over dimension.
+  - `class TropicalScalar` (L263) — A scalar in the tropical semiring.
+  - `function verify_semiring_axioms` (L308) — Verify that a tropical semiring satisfies the semiring axioms.
+- **tensornet/genesis/tropical/shortest_path.py**
+  - `class ShortestPathResult` (L30) — Result of a shortest path computation.
+  - `function all_pairs_shortest_path` (L82) — Compute all-pairs shortest paths.
+  - `function floyd_warshall_tropical` (L108) — Floyd-Warshall algorithm via tropical algebra.
+  - `function single_source_shortest_path` (L172) — Compute shortest paths from a single source.
+  - `function bellman_ford_tropical` (L195) — Bellman-Ford algorithm via tropical matrix-vector product.
+  - `function dijkstra_tropical` (L289) — Dijkstra's algorithm for non-negative weights.
+  - `function shortest_path_tree` (L359) — Compute shortest path tree from source.
+  - `function path_exists` (L392) — Check if path exists from source to target.
+  - `function shortest_path_length` (L398) — Get shortest path length between two nodes.
+  - `function k_shortest_paths` (L406) — Find k shortest paths between source and target.
+  - `function eccentricity` (L484) — Compute eccentricity of a node (max distance to any other node).
+  - `function graph_diameter` (L495) — Compute graph diameter (max eccentricity).
+  - `function graph_radius` (L506) — Compute graph radius (min eccentricity).
+
+## gpu (6)
+
+- **tensornet/cuda/qtt_eval_gpu.py**
+  - `class GPUQTTEvaluator` (L46) — GPU-accelerated QTT evaluation.
+  - `function hybrid_qtt_eval` (L188) — Smart QTT evaluation: GPU if available, CPU fallback.
+- **tensornet/cuda/qtt_native_ops.py**
+  - `function _try_load_cuda` (L33) — Attempt to load the CUDA extension.
+  - `function is_cuda_available` (L69) — Check if CUDA QTT kernels are available.
+  - `function _flatten_cores` (L78) — Flatten QTT cores into contiguous buffer with offset/shape metadata.
+  - `function _unflatten_cores` (L113) — Unflatten core buffer back to list of tensors.
+  - `function _flatten_mpo_cores` (L132) — Flatten MPO cores (shape: r_left, d_out, d_in, r_right).
+  - `function qtt_inner_cuda` (L164) — Compute QTT inner product <a|b> using CUDA.
+  - `function _qtt_inner_cpu` (L178) — CPU fallback for inner product.
+  - `function qtt_add_cuda` (L191) — Add two QTT states using CUDA block-diagonal concatenation.
+  - `function _qtt_add_cpu` (L254) — CPU fallback for QTT addition.
+  - `function qtt_hadamard_cuda` (L280) — Element-wise (Hadamard) product using CUDA Kronecker core product.
+  - `function _qtt_hadamard_cpu` (L332) — CPU fallback for Hadamard product.
+  - `function apply_mpo_cuda` (L345) — Apply MPO to QTT using CUDA batched contraction.
+  - `function _apply_mpo_cpu` (L397) — CPU fallback for MPO application.
+  - `function enable_cuda_backend` (L413) — Enable CUDA backend for QTT operations in the solver.
+  - `function disable_cuda_backend` (L463) — Restore original CPU implementations.
+  - `function benchmark_cuda_vs_cpu` (L483) — Benchmark CUDA vs CPU for QTT operations.
+- **tensornet/cuda/qtt_ntt.py**
+  - `class FieldParams` (L186) — Parameters for a finite field.
+  - `function find_primitive_root` (L206) — Find primitive n-th root of unity in F_p.
+  - `function montgomery_reduce` (L234) — Montgomery reduction: compute x * R^{-1} mod p.
+  - `function build_butterfly_mpo_ff` (L256) — Build butterfly MPO for stage k of NTT in finite field (DIT variant).
+  - `function build_butterfly_mpo` (L373) — Build butterfly operator as MPO for stage k of FFT.
+  - `function apply_twiddle_factors` (L465) — Apply twiddle factors for butterfly stage.
+  - `class QTTNTT` (L531) — QTT-accelerated NTT for ZK proving.
+  - `function qtt_ntt_forward` (L1226) — Quick forward NTT using QTT.
+  - `function qtt_ntt_inverse` (L1242) — Quick inverse NTT using QTT.
+  - `function qtt_poly_multiply` (L1251) — Polynomial multiplication using QTT-NTT.
+  - `function benchmark_qtt_ntt` (L1281) — Benchmark QTT-NTT against standard FFT.
+- **tensornet/cuda/setup.py**
+  - `function get_extensions` (L31) — Build list of extension modules.
+- **tensornet/cuda/test_qtt_cuda.py**
+  - `function test_cpu_operations` (L17) — Test CPU QTT operations work correctly.
+  - `function test_cuda_availability` (L52) — Test if CUDA is available and QTT kernels can be loaded.
+  - `function test_cuda_correctness` (L81) — Test CUDA operations match CPU results.
+  - `function test_cuda_performance` (L150) — Benchmark CUDA vs CPU performance.
+  - `function test_solver_with_cuda` (L170) — Test NS2D solver with CUDA backend.
+  - `function main` (L220)
+- **tensornet/gpu/kernel_autotune_cache.py**
+  - `class KernelConfig` (L43) — Configuration for a kernel execution.
+  - `class ProfilingResult` (L76) — Result from kernel profiling.
+  - `class CacheEntry` (L89) — Entry in the autotune cache.
+  - `class AutotuneCache` (L102) — Persistent cache for autotuned kernel configurations.
+  - `class KernelAutotuner` (L264) — Automatic kernel tuning with caching.
+  - `class QTTAutotuner` (L536) — Autotuner specialized for QTT operations.
+  - `function get_autotuner` (L621) — Get global autotuner instance.
+  - `function autotune` (L629) — Decorator for auto-tuned kernels using global autotuner.
+  - `function clear_autotune_cache` (L641) — Clear the global autotune cache.
+
+## oracle (9)
+
+- **oracle/coinbase_oracle.py**
+  - `function batched_ingest_kernel` (L44) — Batched ingest kernel - processes entire batch in one launch.
+  - `class CoinbaseOracleConfig` (L99)
+  - `class ZeroLoopSlicer` (L121) — GPU-accelerated slicer with zero Python loops in hot path.
+  - `class CoinbaseOracle` (L263) — Production Coinbase WebSocket Oracle.
+  - `function main` (L503)
+- **oracle/cuda_graph_slicer.py**
+  - `class SlicerConfig` (L37)
+  - `class CUDAGraphOracleSlicer` (L44) — CUDA Graph-Accelerated Oracle Slicer.
+  - `function run_benchmark` (L293) — Benchmark the CUDA Graph-accelerated slicer.
+- **oracle/live_oracle_old.py**
+  - `class OrderBookState` (L29) — Maintains L2 order book state from delta updates
+  - `class Prediction` (L82) — Complete prediction output
+  - `class LiveOracle` (L95) — Production Oracle with real-time Coinbase L2 data.
+  - `function run_live_demo` (L332) — Run live demonstration
+  - `function main` (L370) — Entry point
+- **oracle/oracle_engine.py**
+  - `class MPOCore` (L29) — Single core of Matrix Product Operator
+  - `class MatrixProductOperator` (L57) — MPO representation of time evolution operator.
+  - `class TrainingWindow` (L101) — Sliding window of historical states for training
+  - `class DMRGTrainer` (L120) — DMRG-inspired training for time evolution operator.
+  - `class SimulationResult` (L284) — Result of Monte Carlo simulation
+  - `class OracleEngine` (L294) — The Crystal Ball — Monte Carlo simulation in compressed space.
+  - `function demo_oracle` (L482) — Demonstrate the Oracle engine with synthetic data
+- **oracle/oracle_qtt_slicer.py**
+  - `class SlicerConfig` (L34)
+  - `class OracleQTTSlicer` (L41) — The Hybrid Slicer Engine.
+  - `function run_benchmark` (L283) — Benchmark the Oracle QTT Slicer.
+- **oracle/qtt_encoder.py**
+  - `class FeatureType` (L26) — Microstructure feature categories
+  - `class OrderBook` (L37) — L2 Order Book snapshot
+  - `class FeatureVector` (L65) — Extracted microstructure features for one asset
+  - `class TensorCore` (L87) — Single core in the MPS/TT decomposition
+  - `class TensorTrain` (L109) — Matrix Product State / Tensor Train representation
+  - `class QTTEncoder` (L271) — Order Book → Tensor Train Encoder
+  - `class MarketState` (L556) — Complete market state as a collection of entangled tensor trains.
+  - `function demo_encode` (L649) — Demonstrate encoding with synthetic order book
+- **oracle/qtt_encoder_cuda.py**
+  - `class OrderBook` (L40) — L2 Order Book snapshot
+  - `class TensorTrainCUDA` (L80) — Matrix Product State / Tensor Train on GPU.
+  - `class QTTEncoderCUDA` (L279) — GPU-Accelerated Order Book → Tensor Train Encoder
+  - `class MarketStateCUDA` (L544) — Complete market state on GPU.
+  - `function benchmark` (L586) — Benchmark GPU encoder performance
+- **oracle/triton_slicer.py**
+  - `function fused_core_generation_kernel` (L38) — Fused kernel that:
+  - `function fused_core_generation_v2_kernel` (L102) — Fully parallelized core generation.
+  - `function fast_entropy_kernel` (L155) — Fast entropy approximation using Frobenius norm ratio.
+  - `function batched_slice_kernel` (L202) — Batched asset slicing across all time steps.
+  - `class SlicerConfig` (L261)
+  - `class TritonOracleSlicer` (L268) — Triton-Accelerated Oracle Slicer.
+  - `function run_benchmark` (L491) — Benchmark the Triton-accelerated slicer.
+
+## other (437)
+
+- **Physics/tests/test_phase14.py**
+  - `class TestAPIReferenceExtraction` (L16) — Tests for API documentation extraction.
+  - `class TestUserGuides` (L167) — Tests for user guide generation.
+  - `class TestSphinxConfig` (L321) — Tests for Sphinx configuration generation.
+  - `class TestCodeExamples` (L376) — Tests for runnable code examples.
+  - `class TestDocumentationImports` (L542) — Test that all documentation module exports work.
+- **Physics/tests/test_phase18.py**
+  - `class TestAdaptiveBondOptimizer` (L25) — Tests for adaptive bond dimension optimizer.
+  - `class TestEntanglement` (L137) — Tests for entanglement analysis.
+  - `class TestCompression` (L211) — Tests for tensor compression.
+  - `class TestInferenceEngine` (L285) — Tests for real-time inference engine.
+  - `class TestKernelFusion` (L370) — Tests for kernel fusion.
+  - `class TestMemoryManager` (L457) — Tests for memory management.
+  - `class TestLatencyOptimizer` (L553) — Tests for latency optimization.
+  - `class TestSwarmCoordination` (L659) — Tests for swarm coordination.
+  - `class TestFormationControl` (L815) — Tests for formation control.
+  - `class TestTaskAllocation` (L934) — Tests for task allocation.
+  - `class TestConsensusProtocols` (L1073) — Tests for consensus protocols.
+  - `class TestPhase18Integration` (L1201) — Integration tests across Phase 18 modules.
+- **Physics/tests/test_phase19.py**
+  - `class TestTruncationPolicy` (L28) — Tests for neural truncation policy.
+  - `class TestBondPredictor` (L131) — Tests for bond dimension predictor.
+  - `class TestEntanglementGNN` (L202) — Tests for entanglement GNN.
+  - `class TestAlgorithmSelector` (L302) — Tests for algorithm selector.
+  - `class TestDistributedDMRG` (L385) — Tests for distributed DMRG.
+  - `class TestParallelTEBD` (L459) — Tests for parallel TEBD.
+  - `class TestMPSOperations` (L541) — Tests for distributed MPS operations.
+  - `class TestLoadBalancer` (L604) — Tests for load balancer.
+  - `class TestMissionPlanner` (L693) — Tests for mission planner.
+  - `class TestPathPlanning` (L790) — Tests for path planning.
+  - `class TestObstacleAvoidance` (L877) — Tests for obstacle avoidance.
+  - `class TestDecisionMaking` (L973) — Tests for decision making.
+  - `class TestPhase19Integration` (L1093) — Integration tests for Phase 19.
+- **Physics/tests/test_phase20.py**
+  - `function test_quantum_circuit` (L16) — Test quantum circuit construction and operations.
+  - `function test_tn_quantum_simulator` (L35) — Test tensor network quantum simulator.
+  - `function test_vqe` (L57) — Test Variational Quantum Eigensolver.
+  - `function test_qaoa` (L83) — Test Quantum Approximate Optimization Algorithm.
+  - `function test_born_machine` (L108) — Test Tensor Network Born Machine.
+  - `function test_noise_model` (L135) — Test noise model construction.
+  - `function test_zne` (L157) — Test Zero-Noise Extrapolation.
+  - `function test_qec_codes` (L185) — Test Quantum Error Correction codes.
+  - `function test_requirements_database` (L229) — Test requirements management.
+  - `function test_safety_assessment` (L277) — Test safety assessment framework.
+  - `function test_coverage_analyzer` (L327) — Test coverage analysis.
+  - `function test_hardware_specs` (L359) — Test hardware specifications.
+  - `function test_quantization` (L378) — Test model quantization.
+  - `function test_realtime_scheduler` (L406) — Test real-time schedulability analysis.
+  - `function test_wcet_analyzer` (L437) — Test WCET analysis.
+  - `function test_hil_validator` (L460) — Test hardware-in-the-loop validation.
+  - `function test_deployment_package` (L497) — Test deployment package creation.
+  - `function run_all_tests` (L533) — Run complete Phase 20 test suite.
+- **TURN_THE_KEY.py**
+  - `function slow_print` (L70) — Print text character by character.
+  - `function dramatic_pause` (L78) — Pause for dramatic effect.
+  - `function print_banner` (L82) — Print a banner with the given text.
+  - `function loading_bar` (L90) — Display an animated loading bar.
+  - `function spinning_wait` (L106) — Display a spinning animation.
+  - `function display_key` (L125) — Display the ceremonial key.
+  - `function turn_key_animation` (L149) — Animate the key turning.
+  - `function verify_stack_integrity` (L200) — Verify all 20 projects are present.
+  - `function execute_genesis_sequence` (L216) — Execute the 7-step Genesis Sequence.
+  - `function display_sovereign_status` (L254) — Display the final SOVEREIGN status.
+  - `function display_metrics` (L277) — Display the final metrics.
+  - `function generate_activation_attestation` (L307) — Generate and save the activation attestation.
+  - `function display_final_message` (L346) — Display the final ceremonial message.
+  - `function main` (L420) — Execute the TURN THE KEY ceremony.
+- **ade_gauntlet.py**
+  - `class GauntletResult` (L95) — Result from a single gauntlet test.
+  - `class GauntletReport` (L106) — Complete gauntlet report.
+  - `class L2InferenceTest` (L160) — Validate predictive capability by forecasting next-state market barycenter.
+  - `class GenesisVsAdamTest` (L424) — Compare Genesis Optimizer against Adam on regime switch events.
+  - `class TopologyDiscoveryTest` (L636) — Compare MSE-only vs MSE + Topology loss for cycle discovery.
+  - `class ADEGauntlet` (L895) — Master controller for all ADE validation tests.
+  - `function print_report` (L968) — Pretty-print the gauntlet report.
+  - `function main` (L1033)
+- **ai_mathematician.py**
+  - `class AIProofEngine` (L43) — The AI Mathematician: combines intuition, certification, and formalization.
+  - `function main` (L304) — Run the AI Mathematician.
+- **ai_scientist/conjecturer.py**
+  - `class DiscoveredFormula` (L45) — A formula discovered by symbolic regression.
+  - `class Conjecturer` (L88) — The Conjecturer: Discovers analytic formulas from numerical data.
+- **ai_scientist/formalizer.py**
+  - `class LeanDefinition` (L44) — A definition in Lean 4.
+  - `class LeanTheorem` (L57) — A theorem statement in Lean 4.
+  - `class LeanAxiom` (L70) — An axiom (unproven assumption) in Lean 4.
+  - `class Formalizer` (L82) — The Formalizer: Generates rigorous Lean 4 definitions for physics.
+- **ai_scientist/pipeline.py**
+  - `class ScientificResult` (L71) — The output of the AI Scientist: a verified scientific claim.
+  - `class AIScientist` (L102) — AI Scientist v1.0
+- **build_extensions.py**
+  - `function run` (L22) — Run command and stream output.
+  - `function build_extension` (L29) — Build a single Rust-Python extension.
+  - `function check_maturin` (L56) — Check if maturin is installed.
+  - `function main` (L70)
+- **chronos_gauntlet.py**
+  - `class TimeRegime` (L68) — Classification of temporal physics regimes.
+  - `class TimeDilationResult` (L79) — Result of time dilation calculation.
+  - `class CausalityCheck` (L89) — Result of causality validation.
+  - `class ExoticPhysicsResult` (L101) — Result of exotic temporal physics analysis.
+  - `function lorentz_gamma` (L115) — Calculate Lorentz factor γ = 1/√(1 - v²/c²).
+  - `function special_relativistic_dilation` (L123) — Calculate time dilation for moving observer.
+  - `function validate_gps_special_relativistic` (L145) — Validate GPS special relativistic correction.
+  - `function validate_muon_lifetime` (L168) — Validate cosmic ray muon lifetime extension.
+  - `function validate_particle_accelerator` (L213) — Validate time dilation at LHC energies.
+  - `function gravitational_time_dilation` (L246) — Calculate gravitational time dilation.
+  - `function validate_gps_gravitational` (L281) — Validate GPS gravitational time dilation.
+  - `function validate_gps_net_effect` (L311) — Validate net GPS relativistic correction.
+  - `function validate_pound_rebka` (L338) — Validate Pound-Rebka experiment (1959).
+  - `function validate_gravity_probe_a` (L364) — Validate Gravity Probe A (1976).
+  - `function planck_time_analysis` (L395) — Analyze Planck time as fundamental temporal resolution.
+  - `function best_atomic_clocks` (L413) — Current state-of-the-art atomic clock precision.
+  - `function heisenberg_time_energy` (L441) — Heisenberg uncertainty principle: ΔE·Δt ≥ ℏ/2
+  - `function quantum_zeno_effect` (L469) — Quantum Zeno effect: frequent measurement freezes evolution.
+  - `function spacetime_interval` (L503) — Calculate spacetime interval and check causality.
+  - `function validate_light_cone` (L540) — Validate light cone structure and causality.
+  - `function ftl_causality_violation` (L583) — Demonstrate why FTL would violate causality.
+  - `function tachyon_analysis` (L621) — Analyze hypothetical tachyons (FTL particles).
+  - `function wormhole_traversability` (L652) — Analyze traversable wormhole requirements (Morris-Thorne 1988).
+  - `function alcubierre_warp_drive` (L686) — Analyze Alcubierre warp drive (1994).
+  - `function time_crystals` (L720) — Analyze discrete time crystals (Wilczek 2012, demonstrated 2017).
+  - `function closed_timelike_curves` (L750) — Analyze closed timelike curves (CTCs).
+  - `function quantum_time_reversal` (L800) — Analyze quantum mechanical time reversal.
+  - `class ChronosGauntlet` (L838) — The CHRONOS Gauntlet: Temporal Physics Validation Engine.
+- **compress_crypto_data.py**
+  - `class CompressionStats` (L35) — Statistics for compression operation.
+  - `function parse_market_file` (L50) — Parse a market data file into numerical array.
+  - `function find_all_data_files` (L90) — Find all .txt data files recursively.
+  - `function pad_to_power_of_2` (L100) — Pad array length to nearest power of 2.
+  - `function compress_to_qtt` (L116) — Compress data using QTT tensor train decomposition.
+  - `function compress_all_files` (L174) — Compress all market data files using QTT.
+  - `function verify_compression` (L307) — Verify compressed data can be reconstructed.
+  - `function main` (L374) — Main entry point.
+- **cornucopia_gauntlet.py**
+  - `function kardashev_type` (L92) — Calculate Kardashev type from power consumption.
+  - `function power_for_kardashev` (L105) — Power required for given Kardashev type [W].
+  - `function current_earth_kardashev` (L110) — Current Earth civilization Kardashev type.
+  - `class EnergySource` (L122) — Energy source with economic parameters.
+  - `function energy_cost_trajectory` (L160) — Project energy costs for different sources [$/kWh].
+  - `class MaterialResource` (L202) — Material resource with abundance metrics.
+  - `class AutomationSystem` (L242) — Automation system replacing human labor.
+  - `function planetary_boundaries` (L276) — Planetary boundaries (Rockström et al. 2009).
+  - `function circular_economy_metrics` (L333) — Circular economy performance metrics.
+  - `class PostScarcityMetric` (L349) — Metric for measuring progress toward post-scarcity.
+  - `function basic_needs_per_capita` (L370) — Basic human needs and current global provision.
+  - `function starheart_economics` (L429) — STAR-HEART fusion economics projection.
+  - `function femtofab_economics` (L444) — Femto-Fabricator manufacturing economics.
+  - `function orbital_forge_economics` (L457) — ORBITAL FORGE space manufacturing economics.
+  - `class CornucopiaGauntlet` (L477) — 5-Gate validation for post-scarcity economics.
+- **decompress_crypto_data.py**
+  - `function qtt_to_dense_fast` (L22) — Efficient QTT to dense conversion using einsum contractions.
+  - `function decompress_qtt` (L47) — Decompress a QTT-compressed archive back to original data.
+  - `function main` (L140) — Main entry point.
+- **demo/streamlit_app.py**
+  - `function check_server_health` (L27) — Check if the FluidEliteZK server is running.
+  - `function generate_proof` (L40) — Generate a ZK proof for a token.
+  - `function verify_proof` (L60) — Verify a ZK proof.
+- **docs/generate_attestation.py**
+  - `function compute_sha256` (L86) — Compute SHA-256 hash of JSON-serialized data
+- **elite_yang_mills_proof.py**
+  - `class YangMillsMPO` (L58) — Yang-Mills Hamiltonian in Matrix Product Operator form.
+  - `class EliteResult` (L211) — Results from elite Yang-Mills computation.
+  - `class EliteDMRGSolver` (L230) — Elite-grade DMRG solver for Yang-Mills.
+  - `class RigorousBounds` (L398) — Rigorous bounds using Arb interval arithmetic.
+  - `function export_lean_proof` (L468) — Export results to Lean 4 with fully justified axioms.
+  - `class EliteProofPackage` (L593) — Complete elite proof package.
+  - `function run_elite_pipeline` (L613) — Execute the full elite Yang-Mills proof pipeline.
+  - `function export_package` (L674) — Export the elite proof package.
+- **elite_yang_mills_proof_v2.py**
+  - `class UnifiedResult` (L51) — Result from any physics engine.
+  - `class PhysicsOrchestrator` (L66) — Orchestrates multiple physics engines for cross-validation.
+  - `class RigorousBoundsV2` (L265) — Compute rigorous bounds using Arb ball arithmetic.
+  - `function export_lean_proof_v2` (L313) — Export results to Lean 4 with multi-method attestation.
+  - `class EliteProofPackageV2` (L423) — Complete elite proof package with multi-engine validation.
+  - `function run_elite_pipeline_v2` (L442) — Execute the full multi-engine Yang-Mills proof pipeline.
+  - `function export_package_v2` (L501) — Export the elite proof package.
+- **femto_fabricator_gauntlet.py**
+  - `class PhysicsConstants` (L55) — Atomic-scale physics constants.
+  - `class Element` (L88) — Supported elements for mechanosynthesis.
+  - `class Atom` (L99) — Single atom in the workspace.
+  - `class MorsePotential` (L126) — Morse potential for modeling atomic bonds.
+  - `class AFMTip` (L172) — Atomic Force Microscope tip for mechanosynthesis.
+  - `class DiamondoidLattice` (L259) — Generator for diamond cubic lattice structures.
+  - `class APLInstruction` (L376) — Single instruction in Atomic Positional Logic.
+  - `class APLCompiler` (L392) — Compiler from high-level structure to APL instructions.
+  - `class TipCoordinationEngine` (L479) — Coordinates multiple AFM tips for parallel assembly.
+  - `class DefectDetector` (L630) — Detects and classifies defects in assembled structures.
+  - `class FemtoFabricatorGauntlet` (L720) — The Gauntlet for Project #11: Femto-Fabricator
+  - `function generate_attestation` (L1120) — Generate cryptographic attestation for gauntlet results.
+  - `function main` (L1166) — Run the Femto-Fabricator Gauntlet.
+- **fluidelite_ingest.py**
+  - `class BlockMeta` (L76) — Metadata for a single compressed block.
+  - `class FluidHeader` (L92) — Global header for .fluid container.
+  - `class CompressedBlock` (L105) — A fully compressed block ready for serialization.
+  - `function _optimal_grid_shape` (L116) — Find optimal reshaping of linear bytes to high-dimensional grid.
+  - `function tt_svd_compress` (L156) — TT-SVD decomposition of data tensor.
+  - `function tt_expand` (L245) — Expand TT cores back to full tensor.
+  - `class ZstdCompressor` (L280) — Thread-safe compressor pool (zstd or lzma fallback).
+  - `function _serialize_cores` (L316) — Serialize TT cores to bytes.
+  - `function _deserialize_cores` (L343) — Deserialize TT cores from bytes.
+  - `function compress_block` (L370) — Compress a single 64MB block using TT-SVD + entropy coding.
+  - `function decompress_block` (L464) — Decompress a single block back to original bytes.
+  - `class FluidContainer` (L521) — .fluid container format for Block-Independent QTT storage.
+  - `class FluidIngestEngine` (L736) — Block-Independent QTT Ingest Engine.
+  - `class FluidReader` (L940) — Random-access reader for .fluid files.
+  - `function main` (L1058)
+- **genesis_benchmark_suite.py**
+  - `function setup_gpu` (L51) — Configure GPU for benchmarking.
+  - `class BenchmarkResult` (L70) — Result of a single benchmark run.
+  - `class ScalingAnalysis` (L84) — Analysis of how performance scales with problem size.
+  - `function get_memory_mb` (L102) — Get current memory usage in MB.
+  - `function measure_time` (L107) — Measure execution time with warmup and multiple runs.
+  - `function fit_complexity` (L130) — Fit complexity class to data.
+  - `function print_header` (L167) — Print benchmark suite header.
+  - `function benchmark_qtt_ot` (L198) — Benchmark QTT-Native Optimal Transport.
+  - `function benchmark_qtt_sgw` (L277) — Benchmark QTT-Native Spectral Graph Wavelets.
+  - `function benchmark_qtt_rmt` (L360) — Benchmark QTT-Native Random Matrix Theory.
+  - `function benchmark_qtt_tropical` (L438) — Benchmark QTT-Native Tropical Geometry.
+  - `function benchmark_qtt_rkhs` (L514) — Benchmark QTT-Native RKHS Kernel Methods.
+  - `function benchmark_qtt_ph` (L593) — Benchmark QTT-Native Persistent Homology.
+  - `function benchmark_qtt_ga` (L670) — Benchmark QTT-Native Geometric Algebra.
+  - `function run_all_benchmarks` (L747) — Run all benchmarks and generate attestation.
+- **hermes_gauntlet.py**
+  - `function free_space_path_loss` (L82) — Free space path loss in dB.
+  - `function antenna_gain` (L92) — Parabolic antenna gain in dB.
+  - `function received_power_dbm` (L102) — Link budget: received power in dBm.
+  - `function light_travel_time` (L113) — One-way light travel time in seconds.
+  - `function round_trip_time` (L118) — Round-trip light travel time in seconds.
+  - `function thermal_noise_power` (L127) — Thermal noise power in Watts.
+  - `function thermal_noise_power_dbm` (L135) — Thermal noise power in dBm.
+  - `function noise_figure_to_temperature` (L141) — Convert noise figure to equivalent noise temperature.
+  - `function system_noise_temperature` (L147) — Total system noise temperature.
+  - `function shannon_capacity` (L158) — Shannon channel capacity in bits per second.
+  - `function shannon_limit_eb_n0` (L166) — Shannon limit for Eb/N0 given spectral efficiency.
+  - `function spectral_efficiency` (L177) — Spectral efficiency in bits/s/Hz.
+  - `function photon_information_efficiency` (L182) — Bits per photon (quantum limit approaches).
+  - `class OpticalLink` (L196) — Optical (laser) communication link parameters.
+  - `class QuantumLink` (L252) — Quantum key distribution (QKD) link.
+  - `function doppler_factor` (L331) — Relativistic Doppler factor.
+  - `function time_dilation` (L342) — Time dilation factor (proper time / coordinate time).
+  - `function gravitational_redshift` (L348) — Gravitational redshift factor at distance r from mass M.
+  - `function shapiro_delay` (L356) — Shapiro time delay for signal passing near massive object [s].
+  - `class DeepSpaceLink` (L370) — Complete deep space communication link budget.
+  - `class InterstellarBeacon` (L435) — High-power beacon for interstellar communication.
+  - `class HermesGauntlet` (L483) — 5-Gate validation for interstellar communication systems.
+- **live_market_fluid.py**
+  - `class AssetField` (L98) — Single asset's order book as density field.
+  - `class MarketTensor` (L118) — Full market state as multi-asset tensor.
+  - `class MultiAssetFluidizer` (L165) — Converts multiple L2 feeds into unified tensor field.
+  - `class MarketFluidOperators` (L305) — Differential operators on multi-asset market tensor (GPU accelerated).
+  - `class MarketQTTCompressor` (L369) — Compress full market tensor to TT using rSVD on GPU (blazing fast).
+  - `class MarketFluidAnalyzer` (L539) — Analyze full market fluid dynamics with GPU acceleration.
+  - `class LiveMarketFluidAnalyzer` (L667) — Real-time full market fluid analysis with GPU acceleration.
+  - `function main` (L986)
+- **live_orderbook_fluid.py**
+  - `class OrderBookField` (L40) — Order book as a 2D tensor field.
+  - `class FluidState` (L69) — Time-evolved fluid state with history.
+  - `class OrderBookFluidizer` (L106) — Converts raw L2 data into continuous density fields.
+  - `class FluidOperators` (L194) — Differential operators on the order book field.
+  - `class QTTCompressor` (L253) — Compress order book field to QTT format.
+  - `class FluidAnalyzer` (L337) — Analyze order book fluid dynamics.
+  - `class LiveFluidAnalyzer` (L504) — Real-time order book fluid analysis.
+  - `function main` (L691)
+- **navier_stokes_millennium_pipeline.py**
+  - `class NSSimulationResult` (L58) — Result from a single Navier-Stokes simulation.
+  - `class RegularityBounds` (L95) — Rigorous bounds on regularity indicators.
+  - `class SpectralNS3DSolver` (L108) — 3D Navier-Stokes solver using FFT-based spectral methods.
+  - `class InitialConditionFactory` (L280) — Factory for various initial conditions.
+  - `class NSSimulator` (L430) — Run NS simulations and collect regularity data.
+  - `class RegularityBounder` (L563) — Compute rigorous bounds on regularity indicators using Arb.
+  - `function generate_lean_regularity_proof` (L625) — Generate Lean 4 formalization of regularity results.
+  - `class NSProofPackage` (L735) — Complete Navier-Stokes regularity proof package.
+  - `function run_navier_stokes_pipeline` (L754) — Execute the full Navier-Stokes regularity pipeline.
+  - `function export_ns_package` (L870) — Export the proof package.
+- **ns_unified_black_swan.py**
+  - `class DualMetrics` (L49) — Combined BKM + QTT metrics at a time point.
+  - `class DualTracker` (L65) — Track BOTH BKM criterion AND QTT bond dimension.
+  - `class NS3DWithQTT` (L150) — 3D Navier-Stokes with dual BKM + QTT tracking.
+  - `function taylor_green_3d` (L392) — Taylor-Green vortex - baseline (known regular).
+  - `function kida_vortex_3d` (L404) — Kida vortex - high symmetry blowup candidate.
+  - `function hou_luo_rings` (L420) — Hou-Luo counter-rotating vortex rings.
+  - `function anti_parallel_tubes` (L483) — Anti-parallel vortex tubes - reconnection geometry.
+  - `function trefoil_knot` (L516) — Trefoil vortex knot - topologically nontrivial.
+  - `function run_unified_hunt` (L570) — Run the unified Black Swan hunt with dual tracking.
+- **ns_unified_black_swan_v2.py**
+  - `class DualMetrics` (L44) — Combined BKM + QTT metrics.
+  - `class DualTracker` (L55) — Track both BKM criterion and QTT bond dimension.
+  - `function compute_qtt_metrics` (L112) — Compute QTT compression metrics for a 3D field.
+  - `function compute_vorticity_torch` (L135) — Compute vorticity ω = ∇ × u using spectral method.
+  - `function run_simulation` (L166) — Run simulation with dual BKM + QTT tracking.
+  - `function create_kida_ic` (L244) — Kida vortex - symmetric blowup candidate.
+  - `function create_abc_ic` (L259) — Arnold-Beltrami-Childress flow - exact Euler solution.
+  - `function create_shear_layer_ic` (L270) — Perturbed shear layer - rollup dynamics.
+  - `function create_vortex_collision_ic` (L288) — Two colliding vortex rings.
+  - `function run_unified_hunt_v2` (L324) — Run unified Black Swan hunt using validated NS3DSolver.
+- **oracle_node/calibration.py**
+  - `class Label` (L44) — Ground truth labels for calibration samples.
+  - `class CalibrationSample` (L68) — A single labeled sample for calibration.
+  - `class StageMetrics` (L82) — Computed metrics for a single stage on a single sample.
+  - `class ThresholdConfig` (L91) — Threshold configuration for a single stage.
+  - `class CalibrationProfile` (L103) — Complete calibration profile for a domain.
+  - `class MetricExtractor` (L166) — Extract metrics from distribution pairs for each pipeline stage.
+  - `class ThresholdDerivation` (L484) — Statistical methods for deriving optimal classification thresholds.
+  - `class ValidationMetrics` (L708) — Compute validation metrics for calibration.
+  - `class OracleCalibrator` (L855) — Main calibration engine for Oracle Node.
+  - `class CalibratedClassifier` (L1078) — Classifier using calibrated thresholds.
+  - `function run_calibration_test` (L1152) — Run a full calibration test with synthetic data.
+- **oracle_node/server.py**
+  - `function make_json_serializable` (L66) — Recursively convert numpy/torch types to Python native types for JSON serialization.
+  - `function load_calibration_profile` (L86) — Load calibration profile for a domain.
+  - `function get_threshold` (L108) — Get calibrated threshold or fall back to default.
+  - `class AnalyzeRequest` (L150) — Request to analyze two distributions.
+  - `class SingleDistributionRequest` (L157) — Request to analyze a single distribution's structure.
+  - `class AttestationResponse` (L163) — Cryptographically signed attestation of analysis results.
+  - `function numbers_to_qtt_distribution` (L189) — Convert raw numbers to QTT-compressed distribution.
+  - `function stage_1_optimal_transport` (L235) — Compute Wasserstein distance between distributions.
+  - `function stage_2_spectral_wavelets` (L266) — Multi-scale analysis using spectral graph wavelets.
+  - `function stage_3_rkhs_anomaly` (L321) — Anomaly detection using Maximum Mean Discrepancy in RKHS.
+  - `function stage_4_topology` (L416) — Topological analysis using persistent homology.
+  - `function stage_5_geometric_direction` (L506) — Geometric analysis using Clifford algebra.
+  - `function run_full_pipeline` (L605) — Run the complete 5-stage structure analysis pipeline.
+  - `function root` (L696) — Health check and info.
+  - `function health` (L714) — Health check.
+  - `function calibration_status` (L720) — Check calibration status for a specific domain.
+  - `function list_calibrations` (L746) — List all available calibration profiles.
+  - `function analyze` (L774) — Analyze two distributions using the 5-stage pipeline.
+  - `function analyze_single` (L795) — Analyze a single distribution against uniform baseline.
+- **production_hardening_gauntlet.py**
+  - `class TestResult` (L28)
+  - `function print_header` (L35)
+  - `function test_logging_infrastructure` (L47) — Test 1: Verify logging infrastructure works correctly.
+  - `function test_exception_hierarchy` (L114) — Test 2: Verify exception hierarchy with informative messages.
+  - `function test_profiling_infrastructure` (L246) — Test 3: Verify profiling decorators and utilities.
+  - `function test_validation_utilities` (L344) — Test 4: Verify validation utilities.
+  - `function test_integration_with_genesis_modules` (L481) — Test 5: Verify core integrates with Genesis modules.
+  - `function run_all_tests` (L532) — Run all tests and return (passed, total, time).
+- **prometheus_gauntlet.py**
+  - `function entropy` (L62) — Shannon entropy: H(X) = -Σ p(x) log p(x)
+  - `function conditional_entropy` (L80) — Conditional entropy: H(Y|X) = H(X,Y) - H(X)
+  - `function mutual_information` (L104) — Mutual information: I(X;Y) = H(X) + H(Y) - H(X,Y)
+  - `function kl_divergence` (L129) — Kullback-Leibler divergence: D_KL(P||Q) = Σ p(x) log(p(x)/q(x))
+  - `function earth_movers_distance` (L151) — Earth Mover's Distance (EMD) / Wasserstein-1 distance.
+  - `class TransitionProbabilityMatrix` (L176) — Transition Probability Matrix (TPM) for a discrete dynamical system.
+  - `class CauseEffectRepertoire` (L375) — The Cause-Effect Repertoire captures the causal structure of a mechanism.
+  - `class PhiCalculator` (L509) — Calculator for Integrated Information (Φ) following IIT 3.0.
+  - `class CanonicalArchitectures` (L915) — Canonical examples from IIT literature for validation.
+  - `class PrometheusGauntlet` (L1036) — The Gauntlet for Project #14: PROMETHEUS
+  - `function generate_attestation` (L1611) — Generate cryptographic attestation for gauntlet results.
+  - `function main` (L1671) — Run the PROMETHEUS Gauntlet.
+- **proof_engine/Certified.py**
+  - `class Interval` (L13) — Rigorous Interval Arithmetic implementation.
+  - `class IntervalTensor` (L76)
+  - `class BetaFunction` (L83)
+  - `class DimensionalTransmutation` (L95)
+  - `class Certificate` (L110)
+  - `class MassGapCertificate` (L130)
+  - `class RigorousChecker` (L142)
+  - `class LeanExporter` (L162)
+  - `function run_ai_mathematician` (L180)
+- **proof_engine/Certified_ARB.py**
+  - `class ArbInterval` (L46) — Wrapper around Arb's ball arithmetic.
+  - `class BetaFunction` (L199) — QCD Beta Function using Arb arithmetic.
+  - `class DimensionalTransmutation` (L234) — Dimensional Transmutation Analysis.
+  - `class Certificate` (L256)
+  - `class MassGapCertificate` (L279)
+  - `class RigorousChecker` (L292)
+  - `class LeanExporter` (L322)
+  - `function run_ai_mathematician_arb` (L352) — Run the AI Mathematician with Arb ball arithmetic.
+- **proof_engine/certificate.py**
+  - `class Certificate` (L30) — A mathematical certificate proving a statement.
+  - `class MassGapCertificate` (L96) — Specialized certificate for the Yang-Mills mass gap.
+  - `class WitnessGenerator` (L158) — Generates witnesses for mathematical proofs.
+  - `class RigorousChecker` (L290) — Verifies mathematical certificates.
+- **proof_engine/constructive_qft.py**
+  - `class RGDirection` (L29) — Direction of RG flow.
+  - `class RGStep` (L36) — A single RG transformation step with rigorous error bounds.
+  - `class BetaFunction` (L70) — The QCD beta function with rigorous bounds.
+  - `class RGFlow` (L178) — Rigorous Renormalization Group flow.
+  - `class DimensionalTransmutation` (L327) — Proves dimensional transmutation: the mass scale M emerges
+- **proof_engine/interval.py**
+  - `class RoundingMode` (L23) — IEEE 754 rounding modes for rigorous bounds.
+  - `class Interval` (L32) — A rigorous interval [lower, upper] with guaranteed containment.
+  - `class IntervalTensor` (L311) — Tensor with interval-valued entries.
+  - `function interval` (L467) — Create interval from float or string.
+  - `function itensor` (L474) — Create interval tensor.
+- **proof_engine/lean_export.py**
+  - `class LeanTheorem` (L31) — A theorem statement in Lean 4 format.
+  - `class LeanExporter` (L68) — Exports Python certificates to Lean 4 proofs.
+- **proofs/cap_full_power.py**
+  - `function apply_qtt_shield` (L40) — Apply QTT compression/decompression as a spectral filter.
+  - `function print_banner` (L79) — Print dramatic banner.
+  - `function phase1_interval_validation` (L97) — Phase 1: Validate interval arithmetic foundation.
+  - `function phase2_profile_discovery` (L117) — Phase 2: Find blow-up candidate using adjoint optimization.
+  - `function phase2_5_alpha_optimization` (L196) — Phase 2.5: Find optimal rescaling exponent α.
+  - `function phase3_kantorovich_verification` (L265) — Phase 3: Newton-Kantorovich verification.
+  - `function phase4_bkm_analysis` (L336) — Phase 4: Beale-Kato-Majda analysis.
+  - `function save_results` (L371) — Save proof results to JSON.
+  - `function main` (L398) — Run full-power CAP proof attempt.
+- **proofs/common.py**
+  - `class Tolerances` (L26) — Constitutional tolerance thresholds for proof verification.
+  - `class Measurement` (L56) — Single measurement in a proof.
+  - `class ProofResult` (L67) — Container for proof result.
+  - `function run_proofs` (L132) — Execute a list of proof functions and collect results.
+  - `function save_results` (L179) — Save proof results to JSON file.
+  - `function format_result_table` (L215) — Format proof results as a text table.
+  - `function print_summary` (L244) — Print a summary of proof results.
+  - `function ensure_deterministic` (L254) — Set seeds for reproducible proof execution.
+  - `function get_device` (L270) — Get the best available device.
+  - `function format_scientific` (L277) — Format a number in scientific notation.
+  - `class ProofContext` (L282) — Context manager for proof execution with timing and error handling.
+- **proofs/proof_21_dense_audit.py**
+  - `function test_tt_step_no_dense_proof_mode` (L50) — PROOF MODE: Run TT_Euler1D.step() with forbid=True.
+  - `function test_guard_catches_forced_violation` (L128) — KILLER TEST: Prove the guard is NOT ceremonial.
+  - `function test_tt_solve_no_dense` (L231) — Run extended TT solve and verify no critical violations.
+  - `function test_mps_operations_no_dense` (L287) — Test that MPS state operations don't secretly go dense.
+  - `function test_complexity_storage_bound` (L365) — Verify that TT storage satisfies O(N·d·chi^2) bound.
+  - `function run_all_proofs` (L417) — Run all dense materialization audit tests.
+- **proofs/proof_21_tdvp_euler_conservation.py**
+  - `function test_mps_state_roundtrip` (L27) — Test that MPSState correctly encodes and decodes primitive variables.
+  - `function test_conservation_check` (L67) — Test that conservation quantities are computed correctly.
+  - `function test_euler_mpo_construction` (L117) — Test that EulerMPO can be constructed.
+  - `function test_tt_euler_1d_init` (L146) — Test TT_Euler1D initialization.
+  - `function test_sod_initialization` (L184) — Test Sod shock tube initialization.
+  - `function run_all_proofs` (L229) — Run all conservation proofs.
+- **proofs/proof_21_tdvp_euler_sod.py**
+  - `function test_sod_initial_structure` (L26) — Test Sod shock tube has correct initial structure.
+  - `function test_solver_state_properties` (L76) — Test solver state has correct MPS properties.
+  - `function test_mpo_state_compatibility` (L116) — Test that MPO can be applied to MPS state (shape compatibility).
+  - `function test_density_ratio` (L155) — Test that the density ratio is preserved correctly.
+  - `function test_energy_consistency` (L192) — Test that energy is consistent with pressure and density.
+  - `function run_all_proofs` (L235) — Run all Sod shock tube proofs.
+- **proofs/proof_21_tt_evolution.py**
+  - `function test_tt_euler_time_evolution` (L30) — Test that TT_Euler1D actually evolves the state in time.
+  - `function test_bond_dimension_effect` (L94) — Test that bond dimension controls the TT representation.
+  - `function test_complexity_scaling` (L170) — Test that TT-CFD scales as O(N·chi^2) not O(N³).
+  - `function test_mps_actually_compressed` (L221) — Test that MPS representation is actually compressed (chi < N).
+  - `function run_all_proofs` (L262) — Run all TT-CFD verification tests.
+- **proofs/proof_algorithms.py**
+  - `class ProofResult` (L50) — Container for proof result.
+  - `function _pauli_matrices` (L64) — Return Pauli X, Y, Z matrices.
+  - `function proof_3_1_pauli_commutators` (L73) — Proof 3.1: Pauli Algebra Commutators
+  - `function proof_3_2_pauli_anticommutators` (L120) — Proof 3.2: Pauli Algebra Anticommutators
+  - `function proof_4_1_svd_gradient` (L165) — Proof 4.1: SVD Gradient Correctness
+  - `function proof_4_2_mps_norm_gradient` (L200) — Proof 4.2: MPS Norm Gradient
+  - `function proof_5_1_lanczos_eigenvalue` (L257) — Proof 5.1: Lanczos Ground State Energy
+  - `function proof_5_2_mpo_hermiticity` (L301) — Proof 5.2: Heisenberg MPO Hermiticity
+  - `function run_all_proofs` (L331) — Execute all algorithm proofs and return results.
+- **proofs/proof_exploit_invariants.py**
+  - `class ProofResult` (L79) — Result of a single proof test.
+  - `class ProofReport` (L91) — Complete proof report.
+  - `function proof_drain_invariant_detects_funds_extraction` (L112) — Proof 1: DrainInvariant returns positive loss when attacker extracts funds.
+  - `function proof_drain_invariant_zero_for_no_change` (L159) — Proof 2: DrainInvariant returns zero when no balance change.
+  - `function proof_reentrancy_invariant_scales_with_depth` (L198) — Proof 3: ReentrancyInvariant loss increases with call depth.
+  - `function proof_chi_value_consistency` (L236) — Proof 4: Chi.value returns consistent composite metric.
+  - `function proof_invariants_registry_complete` (L276) — Proof 5: Invariants registry provides all standard invariants.
+  - `function proof_gradient_finite_difference_accuracy` (L309) — Proof 6: Finite difference gradient approximates true gradient accurately.
+  - `function proof_overflow_detection_wraparound` (L342) — Proof 7: OverflowInvariant detects uint256 wraparound.
+  - `function proof_access_control_owner_change` (L396) — Proof 8: AccessControlInvariant detects unauthorized owner slot changes.
+  - `function proof_invariant_type_enum_completeness` (L455) — Proof 9: InvariantType enum contains all required exploit classes.
+  - `function proof_loss_monotonicity_with_profit` (L488) — Proof 10: DrainInvariant loss is monotonic with attacker profit.
+  - `function run_all_proofs` (L548) — Execute all proofs and generate report.
+  - `function generate_markdown_report` (L598) — Generate Markdown report from ProofReport.
+  - `function generate_json_artifact` (L646) — Generate JSON artifact from ProofReport.
+- **proofs/proof_level_3b.py**
+  - `function gate_gradient_ascent_works` (L37) — Gate 1: Verify gradient ascent increases enstrophy.
+  - `function gate_smooth_ic_generation` (L99) — Gate 2: Verify we can generate diverse smooth ICs.
+  - `function gate_chi_responds_to_optimization` (L178) — Gate 3: Verify chi responds to IC changes during optimization.
+  - `function gate_solver_stability` (L241) — Gate 4: Verify solver handles high-enstrophy ICs stably.
+  - `function run_all_gates` (L326) — Run all Level 3B proof gates.
+- **proofs/proof_markets_pipeline.py**
+  - `class TestResult` (L30) — Result of a single test.
+  - `function run_tests` (L38) — Run all markets pipeline tests.
+  - `function main` (L509) — Run markets pipeline proof tests.
+- **proofs/proof_master.py**
+  - `function run_phase` (L25) — Run a single phase and return results.
+  - `function main` (L102) — Run all proof phases.
+- **proofs/proof_millennium.py**
+  - `class MillenniumProofResult` (L93) — Complete result of the Millennium Prize proof attempt.
+  - `function print_banner` (L141) — Print the proof attempt banner.
+  - `function phase_1_validate_framework` (L162) — Phase 1: Validate all framework components.
+  - `function phase_2_find_candidate` (L236) — Phase 2: Find the blow-up candidate profile via adjoint optimization.
+  - `function phase_3_verify_kantorovich` (L268) — Phase 3: Newton-Kantorovich verification.
+  - `function phase_4_bkm_analysis` (L290) — Phase 4: BKM Criterion analysis.
+  - `function run_millennium_proof` (L365) — Run the complete Millennium Prize proof attempt.
+- **proofs/proof_molecular_pipeline.py**
+  - `class TestResult` (L30) — Result of a single test.
+  - `function run_tests` (L38) — Run all molecular pipeline tests.
+  - `function main` (L456) — Run molecular pipeline proof tests.
+- **proofs/proof_mps.py**
+  - `class ProofResult` (L47) — Container for proof result.
+  - `function proof_2_1_mps_round_trip` (L60) — Proof 2.1: MPS Round-Trip Fidelity
+  - `function proof_2_2_ghz_entropy` (L97) — Proof 2.2: GHZ Entanglement Entropy
+  - `function proof_2_3_product_state_entropy` (L136) — Proof 2.3: Product State Zero Entropy
+  - `function proof_2_4_norm_preservation` (L172) — Proof 2.4: Norm Preservation Under Canonicalization
+  - `function proof_2_5_left_canonical_orthogonality` (L205) — Proof 2.5: Left-Canonical Orthogonality
+  - `function run_all_proofs` (L249) — Execute all MPS proofs and return results.
+- **proofs/proof_phase_2.py**
+  - `function gate_velocity_to_qtt` (L27) — Gate 1: Verify velocity field compresses to QTT with low chi.
+  - `function gate_compression_ratio` (L94) — Gate 2: Verify compression ratio scales correctly.
+  - `function gate_laplacian_mpo` (L162) — Gate 3: Verify Laplacian MPO structure.
+  - `function gate_tt_poisson` (L226) — Gate 4: Verify FFT Poisson solve accuracy.
+  - `function run_all_proofs` (L295) — Run all Phase 2 proofs.
+- **proofs/proof_phase_3.py**
+  - `function gate_tdvp1_norm_preservation` (L35) — Gate 1: Verify MPS norm preservation during evolution.
+  - `function gate_tdvp2_adaptive_chi` (L92) — Gate 2: Verify SVD truncation controls chi.
+  - `function gate_chi_growth_physics` (L144) — Gate 3: Verify chi growth correlates with physical complexity.
+  - `function gate_energy_conservation` (L238) — Gate 4: Verify energy decay matches theory.
+  - `function run_all_proofs` (L300) — Run all Phase 3 proofs.
+- **proteome_compiler_gauntlet.py**
+  - `class AminoAcid` (L54) — The 20 standard amino acids.
+  - `class SecondaryStructure` (L98) — Secondary structure types.
+  - `class StructureElement` (L107) — A secondary structure element.
+  - `class ProteinFold` (L131) — Represents a protein's 3D structure.
+  - `class QTTFoldEngine` (L184) — QTT-Fold: Tensor Train compression for protein structure prediction.
+  - `class FunctionSpec` (L349) — Specification of a desired protein function.
+  - `class ProteomeCompiler` (L358) — The Proteome Compiler: Function → Protein → DNA
+  - `class ProteomeCompilerGauntlet` (L626) — The Gauntlet for Project #12: Proteome Compiler
+  - `function generate_attestation` (L1031) — Generate cryptographic attestation for gauntlet results.
+  - `function main` (L1075) — Run the Proteome Compiler Gauntlet.
+- **real_yang_mills_engine.py**
+  - `class SU2` (L46) — SU(2) representation theory for lattice gauge theory.
+  - `class KogutSusskindHamiltonian` (L140) — The Kogut-Susskind Hamiltonian for SU(2) lattice gauge theory.
+  - `class TensorNetworkSolver` (L361) — DMRG-inspired tensor network solver for larger systems.
+  - `class TransferMatrixAnalysis` (L550) — Compute mass gap from transfer matrix spectrum.
+  - `class RealPhysicsResult` (L625) — Results from real physics computation.
+  - `class RealYangMillsEngine` (L651) — The REAL Yang-Mills physics engine.
+- **scripts/benchmark_tt_cfd.py**
+  - `function get_hardware_info` (L26) — Collect hardware information for benchmark reproducibility.
+  - `function benchmark_standard_euler_1d` (L42) — Benchmark standard Euler 1D solver.
+  - `function benchmark_tt_euler_1d` (L85) — Benchmark TT-Euler 1D solver (Phase 21).
+  - `function benchmark_weno_reconstruction` (L126) — Benchmark WENO5-JS vs WENO5-Z vs TENO5 (Phase 21).
+  - `function benchmark_conservation_check` (L160) — Verify conservation properties of TT-Euler solver.
+  - `function print_header` (L202) — Print formatted section header.
+  - `function main` (L209) — Run complete benchmark suite.
+- **scripts/build_docs.py**
+  - `function find_all_modules` (L26) — Find all submodules in a package.
+  - `function build_with_pdoc` (L45) — Build documentation using pdoc.
+  - `function build_with_pydoc` (L75) — Build documentation using pydoc (fallback).
+  - `function generate_readme_index` (L100) — Generate an index README for the docs.
+  - `function main` (L131)
+- **scripts/check_import_cycles.py**
+  - `function check_imports` (L21) — Check if all tensornet modules can be imported.
+  - `function main` (L75) — Run import cycle check.
+- **scripts/compare_tenpy.py**
+  - `function run_hypertensor_dmrg` (L28) — Run DMRG with HyperTensor.
+  - `function run_tenpy_dmrg` (L49) — Run DMRG with TeNPy (if installed).
+  - `function bethe_ansatz_energy` (L99) — Approximate Bethe ansatz energy for Heisenberg chain.
+  - `function main` (L112)
+- **scripts/determinism_check.py**
+  - `function set_all_seeds` (L28) — Set all random seeds for reproducibility.
+  - `function tensor_hash` (L39) — Compute hash of tensor with specified precision.
+  - `function run_mps_test` (L47) — Run MPS canonicalization test.
+  - `function run_euler_test` (L77) — Run Euler solver test.
+  - `function run_weno_test` (L112) — Run WENO reconstruction test.
+  - `function run_dmrg_test` (L136) — Run DMRG ground state test.
+  - `function run_all_tests` (L174) — Run all determinism tests.
+  - `function compare_runs` (L188) — Compare results across runs.
+  - `function main` (L221)
+- **scripts/env_capture.py**
+  - `function get_python_info` (L29) — Get Python version information.
+  - `function get_os_info` (L39) — Get operating system information.
+  - `function get_cpu_info` (L50) — Get CPU information.
+  - `function get_gpu_info` (L71) — Get GPU information via PyTorch.
+  - `function get_torch_info` (L104) — Get PyTorch version information.
+  - `function get_installed_packages` (L125) — Get list of installed packages.
+  - `function compute_packages_hash` (L153) — Compute deterministic hash of installed packages.
+  - `function get_git_info` (L162) — Get git repository information.
+  - `function capture_environment` (L211) — Capture complete environment information.
+  - `function validate_capture` (L229) — Validate that required fields are present.
+  - `function main` (L255)
+- **scripts/full_reproduce.py**
+  - `function run_benchmark` (L28) — Run a benchmark script and return (passed, output, runtime).
+  - `function run_proof` (L55) — Run a proof script and return (passed, output, runtime).
+  - `function quick_smoke_test` (L60) — Run quick smoke tests (~5 min).
+  - `function full_reproduction` (L125) — Run full reproduction (~30+ min).
+  - `function compare_with_reference` (L212) — Compare results with stored reference.
+  - `function main` (L243)
+- **scripts/generate_api_docs.py**
+  - `function main` (L25) — Generate API documentation.
+- **scripts/physics_validation.py**
+  - `class ValidationResult` (L31) — Result of a physics validation test.
+  - `function validate_sod_shock_tube` (L43) — Validate Sod shock tube against exact solution.
+  - `function validate_oblique_shock` (L132) — Validate oblique shock θ-β-M relation.
+  - `function validate_isentropic_vortex` (L196) — Validate isentropic vortex convection (no dissipation).
+  - `function validate_rankine_hugoniot` (L257) — Validate Rankine-Hugoniot jump conditions.
+  - `function validate_conservation` (L307) — Validate mass/momentum/energy conservation.
+  - `function validate_dmrg_energy` (L385) — Validate DMRG ground state energy for Heisenberg model.
+  - `function run_quick_validation` (L436) — Run quick validation tests.
+  - `function run_full_validation` (L445) — Run all validation tests.
+  - `function main` (L457)
+- **scripts/profile_flagship.py**
+  - `function profile_mps_operations` (L35) — Profile MPS creation and manipulation.
+  - `function profile_weno_operations` (L74) — Profile WENO reconstruction.
+  - `function profile_euler_solver` (L105) — Profile Euler 1D solver.
+  - `function profile_svd_operations` (L155) — Profile SVD (core TT operation).
+  - `function profile_full_pipeline` (L183) — Profile the complete flagship pipeline by running it.
+  - `function generate_report` (L218) — Generate human-readable performance report.
+  - `function main` (L289) — Run all profiling benchmarks.
+- **scripts/profile_performance.py**
+  - `function profile_dmrg` (L29) — Profile DMRG ground state search.
+  - `function profile_tebd` (L61) — Profile TEBD time evolution.
+  - `function profile_cfd_1d` (L121) — Profile 1D Euler solver.
+  - `function profile_cfd_2d` (L161) — Profile 2D Euler solver.
+  - `function print_profiler_summary` (L211) — Print profiler summary table.
+  - `function save_trace` (L224) — Save profiler trace to file.
+  - `function main` (L233)
+- **scripts/reproduce.py**
+  - `function run_benchmark` (L51) — Run a single benchmark and return results.
+  - `function main` (L93)
+- **scripts/setup/hypertensor_core.py**
+  - `class FluidState` (L26) — Production fluid state backed by QTT decomposition.
+  - `function create_fluid_state` (L360) — Create a FluidState for rendering.
+- **scripts/setup/realtime_renderer.py**
+  - `function get_real_data` (L49) — Translate "Screen Coordinates" into "Tensor Indices"
+  - `function update` (L135)
+- **scripts/testing/test_implicit_concept.py**
+  - `function morton_encode_torch` (L16) — Morton encoding in PyTorch (for validation, not performance)
+  - `function eval_qtt_at_points_torch` (L32) — Evaluate QTT at (u, v) coordinates using PyTorch ops.
+  - `function test_torch_simulation` (L83) — Test implicit rendering concept using PyTorch simulation.
+- **scripts/testing/test_phase4_integration.py**
+  - `function create_taylor_green_vortex` (L32) — Initialize Taylor-Green vortex initial conditions.
+  - `function test_phase4_integration` (L129) — Test Phase 4 integration: Euler solver → QTT → Slice → RAM Bridge → Glass Cockpit.
+  - `function main` (L221)
+- **scripts/testing/test_phase4_validation.py**
+  - `function test_imports` (L12) — Test that all Phase 4 modules import correctly.
+- **sovereign_daemon.py**
+  - `class AlertSeverity` (L82) — Alert severity levels.
+  - `class MarketRegime` (L89) — Market regime classification.
+  - `class MarketState` (L100) — Current state of a single market/asset.
+  - `class Alert` (L141) — Alert message for dispatch.
+  - `class DaemonConfig` (L167) — Configuration for Sovereign Daemon.
+  - `class OrderBookSnapshot` (L202) — Compressed order book snapshot.
+  - `class PulseEngine` (L241) — Layer 1: The Pulse
+  - `class SentinelEngine` (L380) — Layer 2: The Sentinel
+  - `class AlertHandler` (L524) — Base class for alert handlers.
+  - `class ConsoleAlertHandler` (L533) — Handler that logs alerts to console.
+  - `class WebhookAlertHandler` (L554) — Handler that sends alerts to webhook URLs.
+  - `class DispatcherEngine` (L593) — Layer 3: The Dispatcher
+  - `class StateManager` (L725) — SQLite-backed state persistence for regime history, alerts, and metrics.
+  - `class SimulatedFeed` (L868) — Simulated L2 order book feed for testing.
+  - `class SovereignDaemon` (L943) — Main daemon class coordinating all layers.
+  - `function main` (L1119)
+- **sovereign_genesis_gauntlet.py**
+  - `class StackProject` (L47) — A validated project in the Civilization Stack.
+  - `class GenesisPhase` (L119) — Phases of the Genesis Sequence.
+  - `class SeedState` (L131) — State of the Genesis Seed.
+  - `class ReplicationCycle` (L143) — A single replication cycle of the seed.
+  - `function validate_spark` (L159) — Gate 1: The Spark — First sovereign power node.
+  - `function validate_hand` (L234) — Gate 2: The Hand — Self-replicating fabrication.
+  - `function validate_mind` (L338) — Gate 3: The Mind — Autonomous intelligence.
+  - `function validate_shield` (L442) — Gate 4: The Shield — Self-healing and ethical invariants.
+  - `function validate_genesis` (L545) — Gate 5: The Genesis — Closed-loop replication cycle.
+  - `function execute_genesis_sequence` (L674) — The Genesis Sequence — Master instruction set.
+  - `class SovereignGenesisGauntlet` (L797) — The SOVEREIGN GENESIS Gauntlet: Self-Replicating Seed Validation.
+- **starheart_gauntlet.py**
+  - `class FusionConstants` (L39) — Fundamental constants for fusion physics.
+  - `class ODINSuperconductor` (L62) — LaLuH₆ room-temperature superconductor for magnetic confinement.
+  - `class HELLSKINFirstWall` (L105) — HfTaZrNbC₂ High-Entropy UHTC first wall.
+  - `class PlasmaInstability` (L208) — Base class for MHD plasma instabilities.
+  - `class KinkInstability` (L221) — External kink mode - plasma tries to snake outward.
+  - `class SausageInstability` (L242) — Sausage mode - plasma pinches and bulges like a sausage.
+  - `class BallooningInstability` (L260) — Ballooning mode - plasma bulges on outboard side.
+  - `class TTCompressedFeedbackManifold` (L290) — Tensor Train compressed representation of the feedback control manifold.
+  - `class SphericalTokamak` (L352) — Compact Spherical Tokamak (ST) reactor model.
+  - `class TurbulenceControlSimulator` (L486) — Simulates plasma turbulence and MHz-scale feedback control.
+  - `class EnergyBalanceCalculator` (L643) — Calculate fusion energy balance and Q-factor.
+  - `class STARHEARTGauntlet` (L788) — The Grand Unification Gauntlet.
+  - `function main` (L1143) — Run the STAR-HEART Fusion Gauntlet.
+- **tensornet/adaptive/bond_optimizer.py**
+  - `class TruncationStrategy` (L23) — Truncation strategy selection.
+  - `class AdaptiveBondConfig` (L35) — Configuration for adaptive bond dimension management.
+  - `class TruncationRecord` (L83) — Record of a single truncation event.
+  - `class AdaptationEvent` (L110) — Record of a bond dimension adaptation event.
+  - `class BondDimensionTracker` (L130) — Track bond dimension evolution and statistics.
+  - `class EntropyMonitor` (L308) — Monitor entanglement entropy across the system.
+  - `class TruncationScheduler` (L470) — Schedule adaptive truncation based on various strategies.
+  - `class AdaptiveTruncator` (L699) — Main adaptive truncation engine.
+  - `function estimate_optimal_chi` (L835) — Estimate optimal bond dimension from entropy and error target.
+  - `function adapt_during_evolution` (L868) — Run adaptive truncation during time evolution.
+- **tensornet/adaptive/compression.py**
+  - `class CompressionMethod` (L20) — Available compression methods.
+  - `class CompressionResult` (L31) — Result of tensor compression.
+  - `class CompressionStrategy` (L65) — Abstract base class for compression strategies.
+  - `class SVDCompression` (L105) — Standard truncated SVD compression.
+  - `class RandomizedSVD` (L211) — Randomized SVD for efficient low-rank approximation.
+  - `class VariationalCompression` (L347) — Variational optimization for tensor compression.
+  - `class TensorCrossInterpolation` (L490) — Tensor Cross Interpolation (TCI) / skeleton decomposition.
+  - `function compress_adaptively` (L622) — Compress a tensor using the specified or best method.
+  - `function select_compression_strategy` (L667) — Select the best compression strategy based on tensor properties.
+- **tensornet/adaptive/entanglement.py**
+  - `class ScalingType` (L22) — Type of entanglement scaling.
+  - `class EntanglementSpectrum` (L32) — Entanglement spectrum from Schmidt decomposition.
+  - `class AreaLawScaling` (L140) — Result of area law scaling analysis.
+  - `class AreaLawAnalyzer` (L204) — Analyze area law scaling of entanglement entropy.
+  - `class EntanglementEntropy` (L413) — Entanglement entropy calculator and container.
+  - `class MutualInformation` (L494) — Mutual information between two subsystems.
+  - `function compute_entanglement_entropy` (L574) — Compute Rényi-α entanglement entropy from singular values.
+  - `function compute_mutual_information` (L614) — Compute mutual information between two regions.
+  - `function analyze_area_law` (L633) — Analyze area law scaling.
+  - `function compute_schmidt_spectrum` (L652) — Compute Schmidt spectrum from a tensor.
+- **tensornet/algorithms/dmrg.py**
+  - `class DMRGResult` (L44) — Result container for DMRG.
+  - `function _contract_left_env` (L56) — Contract left environment with site tensor and MPO.
+  - `function _contract_right_env` (L95) — Contract right environment with site tensor and MPO.
+  - `function _build_environments` (L133) — Build left and right environments for DMRG.
+  - `function _apply_heff_two_site` (L168) — Apply two-site effective Hamiltonian.
+  - `function _two_site_eigensolve` (L234) — Solve for ground state of two-site effective Hamiltonian using Lanczos.
+  - `function dmrg_sweep` (L352) — Perform one DMRG sweep.
+  - `function dmrg` (L480) — Run 2-site DMRG to find the ground state.
+- **tensornet/algorithms/fermionic.py**
+  - `function spinless_fermion_mpo` (L32) — Spinless fermion chain Hamiltonian as MPO.
+  - `function hubbard_mpo` (L129) — Hubbard model Hamiltonian as MPO.
+  - `function fermi_sea_mps` (L249) — Create MPS for a Fermi sea (filled lowest modes).
+  - `function half_filled_mps` (L285) — Create half-filled MPS (alternating occupied/empty).
+  - `function compute_density` (L319) — Compute local density ⟨n_i⟩ for each site.
+- **tensornet/algorithms/tdvp.py**
+  - `class TDVPResult` (L41) — Result container for TDVP time evolution.
+  - `function tdvp_step` (L51) — Perform one TDVP-2 sweep (left-to-right or right-to-left).
+  - `function _build_left_environments` (L124) — Build left environment tensors for TDVP.
+  - `function _build_right_environments` (L146) — Build right environment tensors for TDVP.
+  - `function _update_left_env` (L169) — Update left environment by contracting one site.
+  - `function _update_right_env` (L196) — Update right environment by contracting one site.
+  - `function _two_site_tdvp_update` (L222) — Perform two-site TDVP update at sites (site, site+1).
+  - `function tdvp` (L328) — Time evolution using TDVP-2 algorithm.
+  - `function imaginary_time_tdvp` (L423) — Find ground state using imaginary time TDVP.
+- **tensornet/algorithms/tebd.py**
+  - `class TEBDResult` (L42) — Result container for TEBD time evolution.
+  - `function _make_two_site_gate` (L52) — Create two-site time evolution gate.
+  - `function _apply_two_site_gate` (L78) — Apply a two-site gate at position (site, site+1) and truncate.
+  - `function build_gates_from_mpo` (L133) — Build TEBD gates from an MPO Hamiltonian.
+  - `function tebd_step` (L165) — Perform one TEBD step (second-order Trotter).
+  - `function build_heisenberg_gates` (L240) — Build TEBD gates for Heisenberg XXZ model.
+  - `function build_tfim_gates` (L323) — Build TEBD gates for Transverse Field Ising Model.
+  - `function tebd` (L388) — Run TEBD time evolution.
+  - `function imaginary_time_evolution` (L465) — Imaginary time evolution for ground state preparation.
+- **tensornet/autonomy/mission_planner.py**
+  - `class MissionStatus` (L24) — Status of a mission.
+  - `class MissionPhaseType` (L37) — Types of mission phases.
+  - `class MissionConstraints` (L50) — Constraints for mission execution.
+  - `class MissionPhase` (L71) — A phase within a mission.
+  - `class Mission` (L122) — A complete mission specification.
+  - `class MissionResult` (L176) — Result of mission execution.
+  - `class MissionPlanner` (L196) — Autonomous mission planner.
+  - `function plan_mission` (L610) — Convenience function to plan a mission.
+  - `function execute_mission` (L644) — Execute a mission.
+- **tensornet/benchmarks/profile_bottlenecks.py**
+  - `class TimingResult` (L35) — Result from timing a function.
+  - `function time_function` (L46) — Time a function with warmup and statistics.
+  - `function profile_advection_cpu` (L94) — Profile CPU advection (Semi-Lagrangian style).
+  - `function profile_advection_gpu` (L141) — Profile GPU advection (PyTorch CUDA, not custom kernel).
+  - `function profile_gradient_cpu` (L197) — Profile CPU gradient computation.
+  - `function profile_laplacian_cpu` (L215) — Profile CPU Laplacian (diffusion) computation.
+  - `function profile_fft_poisson_cpu` (L234) — Profile CPU FFT-based Poisson solve.
+  - `function profile_tensor_contraction_cpu` (L255) — Profile CPU tensor contraction (simulating TT/QTT operations).
+  - `function profile_full_ns_step` (L277) — Profile a full Navier-Stokes step with advection, diffusion, and projection.
+  - `function run_profiling` (L340) — Run all profiling benchmarks and save results.
+- **tensornet/deployment/tensorrt_export.py**
+  - `class Precision` (L41) — Inference precision modes.
+  - `class OptimizationLevel` (L50) — TensorRT optimization levels.
+  - `class ExportConfig` (L60) — Configuration for model export.
+  - `class ExportResult` (L77) — Result from model export.
+  - `class BenchmarkResult` (L92) — Inference benchmark results.
+  - `class CFDInferenceModule` (L102) — Wrapper module for CFD inference suitable for TensorRT export.
+  - `class TTContraction` (L163) — Tensor Train contraction as a neural network module.
+  - `function export_to_onnx` (L208) — Export PyTorch model to ONNX format.
+  - `function optimize_for_tensorrt` (L260) — Optimize ONNX model for TensorRT inference.
+  - `function validate_exported_model` (L342) — Validate exported model against original PyTorch model.
+  - `function benchmark_inference` (L394) — Benchmark inference latency and throughput.
+  - `class TensorRTExporter` (L478) — High-level interface for exporting models to TensorRT.
+  - `function validate_tensorrt_export` (L571) — Run validation tests for TensorRT export.
+- **tensornet/discovery/__main__.py**
+  - `function cmd_discover` (L22) — Run discovery pipeline.
+  - `function cmd_test` (L260) — Run proof tests.
+  - `function cmd_info` (L307) — Show system information.
+  - `function cmd_serve` (L427) — Start the API server.
+  - `function cmd_live` (L472) — Run live/historical data analysis.
+  - `function main` (L632)
+- **tensornet/discovery/api/gpu.py**
+  - `function gpu_available` (L44) — Check if GPU acceleration is available.
+  - `function icicle_available` (L49) — Check if Icicle GPU library is available.
+  - `function get_gpu_info` (L54) — Get detailed GPU information.
+  - `class AcceleratorType` (L81) — Types of GPU acceleration.
+  - `class AcceleratorConfig` (L89) — Configuration for GPU acceleration.
+  - `class AcceleratorMetrics` (L105) — Metrics from GPU acceleration.
+  - `class GPUBackend` (L126) — GPU backend for tensor operations.
+  - `class IcicleAccelerator` (L461) — Icicle-specific GPU accelerator for ZK and finite field operations.
+- **tensornet/discovery/api/server.py**
+  - `class ServerConfig` (L69) — Server configuration.
+  - `class ServerStats` (L83) — Server statistics.
+  - `class StreamingSession` (L98) — A WebSocket streaming session.
+  - `class DiscoveryAPIServer` (L144) — Main API server for Autonomous Discovery Engine.
+  - `function create_app` (L820) — Create a FastAPI application instance.
+  - `function main` (L835) — Main entry point for API server.
+- **tensornet/discovery/connectors/fusion.py**
+  - `class FusionConfig` (L34) — Configuration for fusion data connector.
+  - `class MHDMode` (L59) — Characterization of an MHD instability mode.
+  - `class ConfinementMetrics` (L94) — Plasma confinement quality metrics.
+  - `class FusionAnalysisResult` (L119) — Complete fusion plasma analysis result.
+  - `class TTCompressedMHDAnalyzer` (L159) — TT-compressed MHD field analyzer from TOMAHAWK CFD gauntlet.
+  - `class FusionConnector` (L323) — Main fusion plasma data connector for discovery engine.
+  - `function main` (L526) — Demo the fusion connector.
+- **tensornet/discovery/engine_v2.py**
+  - `class Finding` (L47) — A discovery finding.
+  - `class DiscoveryResult` (L65) — Results from discovery run.
+  - `class DiscoveryEngineV2` (L73) — Autonomous Discovery Engine using QTT-Native Genesis primitives.
+  - `function main` (L609) — Quick test of full 7-stage pipeline.
+- **tensornet/discovery/ingest/markets.py**
+  - `class OrderBookLevel` (L39) — Single price level in order book.
+  - `class OrderBookSnapshot` (L52) — Point-in-time order book state.
+  - `class OHLCV` (L101) — Single candlestick bar.
+  - `class Trade` (L137) — Single trade execution.
+  - `class MarketSnapshot` (L150) — Complete market state at a point in time.
+  - `class MarketRegime` (L177) — Detected market regime.
+  - `class MarketsIngester` (L186) — Ingests financial market data and converts to QTT tensor formats.
+  - `function create_synthetic_flash_crash` (L927) — Create synthetic flash crash scenario for testing.
+  - `function create_synthetic_market` (L954) — Create synthetic market data for testing.
+- **tensornet/discovery/ingest/molecular.py**
+  - `class Atom` (L58) — Represents an atom in a molecular structure.
+  - `class Residue` (L89) — Represents an amino acid residue.
+  - `class Chain` (L138) — Represents a protein chain.
+  - `class Ligand` (L164) — Represents a small molecule ligand.
+  - `class BindingSite` (L185) — Represents a detected binding site.
+  - `class ProteinStructure` (L205) — Complete protein structure with chains, ligands, and metadata.
+  - `class MolecularIngester` (L257) — Ingests molecular structure data for drug discovery analysis.
+  - `function create_synthetic_protein` (L732) — Create a synthetic protein structure for testing.
+- **tensornet/discovery/ingest/plasma.py**
+  - `class PlasmaShot` (L17) — A single plasma discharge/shot.
+  - `class MagneticField3D` (L35) — 3D magnetic field configuration.
+  - `class PlasmaProfile` (L46) — 1D radial plasma profile.
+  - `class PlasmaIngester` (L54) — Ingest fusion plasma data for discovery analysis.
+  - `function main` (L422) — Test the Plasma ingester.
+- **tensornet/discovery/pipelines/markets_pipeline.py**
+  - `class RegimeChange` (L70) — Detected regime change event.
+  - `class MarketsPipelineResult` (L80) — Results from markets discovery pipeline.
+  - `class MarketsDiscoveryPipeline` (L104) — Discovery pipeline for financial market analysis.
+  - `function run_demo` (L1147) — Run demo analysis on synthetic flash crash.
+- **tensornet/discovery/pipelines/molecular_pipeline.py**
+  - `class MolecularPipelineResult` (L71) — Results from molecular discovery pipeline.
+  - `class MolecularDiscoveryPipeline` (L92) — Discovery pipeline for drug-protein interaction analysis.
+  - `function run_demo` (L999) — Run demo analysis on synthetic protein.
+- **tensornet/discovery/primitives/geometric_algebra.py**
+  - `class GeometricAlgebraPrimitive` (L65) — Geometric Algebra primitive for geometric analysis.
+- **tensornet/discovery/primitives/kernel.py**
+  - `class KernelPrimitive` (L62) — Kernel Methods primitive for RKHS-based analysis.
+- **tensornet/discovery/primitives/optimal_transport.py**
+  - `class OptimalTransportPrimitive` (L65) — Optimal Transport primitive for distribution analysis.
+- **tensornet/discovery/primitives/random_matrix.py**
+  - `class RandomMatrixPrimitive` (L62) — Random Matrix Theory primitive for spectral analysis.
+- **tensornet/discovery/primitives/spectral_wavelets.py**
+  - `class SpectralWaveletPrimitive` (L62) — Spectral Graph Wavelet primitive for multi-scale analysis.
+- **tensornet/discovery/primitives/topology.py**
+  - `class TopologyPrimitive` (L62) — Persistent Homology primitive for topological analysis.
+- **tensornet/discovery/protocol.py**
+  - `class PrimitiveType` (L25) — Genesis primitive identifiers.
+  - `class PrimitiveConfig` (L38) — Configuration for a Genesis primitive.
+  - `class PrimitiveResult` (L82) — Result from a Genesis primitive operation.
+  - `class ChainableInterface` (L132) — Protocol for chainable operations.
+  - `class GenesisPrimitive` (L144) — Abstract base class for all Genesis primitives.
+  - `class PrimitiveChain` (L311) — Chain of Genesis primitives executed in sequence.
+- **tensornet/distributed_tn/distributed_dmrg.py**
+  - `class PartitionStrategy` (L28) — Strategy for partitioning MPS across workers.
+  - `class PartitionConfig` (L38) — Configuration for DMRG partitioning.
+  - `class DMRGPartition` (L57) — A single partition of the DMRG problem.
+  - `class DistributedDMRGResult` (L92) — Result from distributed DMRG.
+  - `class DMRGWorker` (L114) — Worker for DMRG on a single partition.
+  - `class DistributedDMRG` (L253) — Distributed DMRG algorithm.
+  - `function run_distributed_dmrg` (L507) — Convenience function for distributed DMRG.
+- **tensornet/distributed_tn/mps_operations.py**
+  - `class CompressionStrategy` (L26) — Strategy for distributed compression.
+  - `class MPSPartition` (L35) — A partition of an MPS.
+  - `class CrossNodeContraction` (L71) — Handles cross-node tensor contractions.
+  - `class DistributedMPSConfig` (L114) — Configuration for distributed MPS.
+  - `class DistributedMPS` (L132) — Distributed MPS with partition support.
+  - `function merge_partitions` (L438) — Merge partitions into single MPS.
+  - `function split_into_partitions` (L455) — Split MPS into partitions.
+- **tensornet/distributed_tn/parallel_tebd.py**
+  - `class SplittingOrder` (L25) — Order of Trotter-Suzuki splitting.
+  - `class GhostSites` (L34) — Ghost sites for boundary communication.
+  - `class TEBDPartition` (L61) — A partition for parallel TEBD.
+  - `class ParallelTEBDResult` (L101) — Result from parallel TEBD.
+  - `class TEBDWorker` (L121) — Worker for TEBD on a single partition.
+  - `class ParallelTEBD` (L302) — Parallel TEBD implementation.
+  - `function run_parallel_tebd` (L540) — Convenience function for parallel TEBD.
+- **tensornet/docs/user_guides.py**
+  - `class DifficultyLevel` (L22) — Tutorial difficulty level.
+  - `class GuideType` (L31) — Type of user guide.
+  - `class CodeExample` (L42) — A runnable code example.
+  - `class GuideSection` (L117) — A section within a user guide.
+  - `class Tutorial` (L231) — A complete tutorial or user guide.
+  - `class GuideBuilder` (L350) — Builder class for constructing tutorials and guides.
+  - `function create_getting_started` (L590) — Create the Getting Started guide for HyperTensor.
+  - `function create_cfd_tutorial` (L773) — Create the CFD tutorial for HyperTensor.
+  - `function create_tensor_network_primer` (L981) — Create the Tensor Network primer for HyperTensor.
+  - `function create_deployment_guide` (L1187) — Create the Deployment guide for HyperTensor.
+- **tensornet/exploit/bounty_api.py**
+  - `class Platform` (L96) — Supported bounty platforms.
+  - `class SubmissionStatus` (L104) — Status of a bounty submission.
+  - `class BountyProgram` (L116) — A bug bounty program.
+  - `class BountySubmission` (L142) — A bounty submission.
+  - `class BasePlatformClient` (L244) — Abstract base class for platform API clients.
+  - `class ImmunefiFetcher` (L273) — Immunefi bounty program fetcher.
+  - `class Code4renaClient` (L322) — Code4rena client.
+  - `class BountyAPI` (L343) — Unified interface to bounty platforms.
+- **tensornet/exploit/bounty_reporter.py**
+  - `class Severity` (L39) — Bug bounty severity levels following Immunefi classification.
+  - `class ImpactType` (L62) — Categories of vulnerability impact.
+  - `class ExploitEvidence` (L81) — Evidence from a successful exploit hunt.
+  - `class SeverityClassifier` (L139) — Classify exploit severity based on impact and conditions.
+  - `class PoCGenerator` (L224) — Generate Proof of Concept code for exploits.
+  - `class BountyReport` (L378) — Complete bug bounty report ready for submission.
+  - `class BountyReporter` (L505) — Generate professional bug bounty reports from exploit discoveries.
+- **tensornet/exploit/euler_v2_hunt.py**
+  - `class SubAccount` (L101) — Represents an Euler v2 sub-account (address || byte).
+  - `class EulerVault` (L140) — Represents an Euler v2 EVault.
+  - `class BatchItem` (L174) — EVC batch operation item.
+  - `class EulerMockEVM` (L182) — Mock EVM simulating Euler v2 protocol.
+  - `class EulerV2QTTHunter` (L531) — QTT-based exploit hunter for Euler v2.
+  - `function main` (L1012) — Run Euler v2 hunt.
+- **tensornet/exploit/evm_oracle.py**
+  - `class ExecutionResult` (L46) — Result of executing a transaction sequence.
+  - `class EVMOracle` (L87) — Abstract base for EVM execution backends.
+  - `class MockContract` (L118) — Mock contract for testing.
+  - `class MockEVM` (L255) — Mock EVM for fast testing.
+  - `function create_initial_state` (L471) — Create a standard initial state for hunting.
+  - `function compute_profit` (L489) — Compute attacker profit in wei.
+- **tensornet/exploit/exploit_hunter.py**
+  - `class HuntStatus` (L71) — Status of an exploit hunt.
+  - `class HotZone` (L82) — A region of high loss/chi in tx space.
+  - `class HuntResult` (L96) — Result of an exploit hunt.
+  - `class ExploitHunter` (L175) — Main exploit hunting engine.
+  - `function hunt_all_toys` (L511) — Run exploit hunter on all toy contracts.
+- **tensornet/exploit/guided_sampling.py**
+  - `class AttackPattern` (L33) — Common attack sequence patterns.
+  - `class AttackTemplate` (L44) — Template for a specific attack pattern.
+  - `class GuidedSampler` (L149) — Sample transaction space using attack pattern templates.
+  - `class SmartDiscretizer` (L364) — Improved discretizer that uses contract function specs.
+- **tensornet/exploit/historical_validator.py**
+  - `class HistoricalExploit` (L214) — Specification for a known historical exploit.
+  - `class DAOMockEVM` (L312) — Mock EVM that simulates The DAO's vulnerable behavior.
+  - `class HistoricalValidator` (L466) — Validates the exploit engine against known historical exploits.
+  - `class LiveForkValidator` (L974) — Validate against actual mainnet state via fork.
+- **tensornet/exploit/hypergrid.py**
+  - `class Chain` (L74) — Supported blockchain networks.
+  - `class HuntType` (L85) — Types of vulnerability hunts.
+  - `class HunterStatus` (L98) — Hunter worker status.
+  - `class KoopmanPrior` (L112) — Prior knowledge from Koopman eigenanalysis.
+  - `class RPCEndpoint` (L176) — An RPC endpoint with rate limiting.
+  - `class RPCPoolManager` (L197) — Manages a pool of RPC endpoints across chains.
+  - `class Finding` (L302) — A vulnerability finding with Chi scoring.
+  - `class ChiAggregator` (L331) — Aggregates Chi-scored findings from all hunters.
+  - `class HuntTarget` (L519) — A target for hunting.
+  - `class HunterWorker` (L529) — Base class for parallel hunters.
+  - `class CompoundV3LiquidationHunter` (L598) — Hunt for Compound V3 WBTC liquidation MEV opportunities.
+  - `class LiquidationHunter` (L688) — Hunt for liquidation MEV opportunities.
+  - `class OracleHunter` (L745) — Hunt for oracle manipulation vulnerabilities.
+  - `class FirstDepositorHunter` (L809) — Hunt for ERC4626 first depositor attacks.
+  - `class HypergridController` (L950) — Main controller for the Hypergrid parallel hunting framework.
+  - `function get_default_targets` (L1164) — Get default high-value targets for hunting.
+  - `function main` (L1262) — Run the Hypergrid hunting framework.
+- **tensornet/exploit/invariant_hunter.py**
+  - `class InvariantType` (L32) — Categories of DeFi invariants that can be violated.
+  - `class Invariant` (L46) — A formal invariant specification.
+  - `class ViolationPath` (L55) — A sequence of calls that might violate an invariant.
+  - `class ERC4626Vault` (L65) — ERC4626 vault analysis for share inflation attacks.
+  - `class InvariantHunter` (L149) — Hunts for invariant violations in DeFi protocols.
+  - `class RoundingAnalyzer` (L376) — Analyze rounding behavior for profit extraction.
+  - `function main` (L454) — Run invariant hunting demonstration.
+- **tensornet/exploit/invariants.py**
+  - `class AccountState` (L67) — State of a single account.
+  - `class EVMState` (L81) — Complete EVM state snapshot.
+  - `class TransactionContext` (L103) — Context for a transaction or sequence.
+  - `class InvariantType` (L124) — Categories of invariant violations to hunt for.
+  - `class Invariant` (L141) — Base class for invariant checks.
+  - `class DrainInvariant` (L192) — DRAIN: Attacker extracts value from the protocol.
+  - `class ReentrancyInvariant` (L269) — REENTRANCY: State changes during external call.
+  - `class OverflowInvariant` (L335) — OVERFLOW: Arithmetic wraps from max to 0.
+  - `class UnderflowInvariant` (L389) — UNDERFLOW: Arithmetic wraps from 0 to max.
+  - `class AccessControlInvariant` (L433) — ACCESS_CONTROL: Non-privileged user executes privileged function.
+  - `class OracleManipulationInvariant` (L511) — ORACLE_MANIPULATION: Price feed manipulated by attacker action.
+  - `class FlashLoanInvariant` (L569) — FLASH_LOAN: Detect flash loan attack patterns.
+  - `class SolvencyInvariant` (L655) — SOLVENCY: Protocol must remain solvent (assets >= liabilities).
+  - `class CompositeInvariant` (L720) — Combine multiple invariants with weights.
+  - `class Chi` (L762) — χ (chi) — Exploit proximity metric.
+  - `class Invariants` (L819) — Registry of pre-built invariants.
+- **tensornet/exploit/mainnet_targets.py**
+  - `class TargetStatus` (L61) — Status of a mainnet target.
+  - `class ExploitType` (L69) — Type of exploit.
+  - `class MainnetTarget` (L82) — A mainnet contract target for hunting.
+  - `class MainnetTargets` (L268) — Registry of mainnet targets.
+  - `function hunt_historical_target` (L316) — Hunt a historical target to validate the engine.
+- **tensornet/exploit/morpho_blue_hunt.py**
+  - `class MorphoMarket` (L247) — A Morpho Blue market.
+  - `class MorphoPosition` (L265) — User position in a market.
+  - `class MorphoState` (L273) — Simulated Morpho Blue state.
+  - `class MorphoMockEVM` (L302) — Mock EVM simulating Morpho Blue.
+  - `class MorphoDrainInvariant` (L681) — Detect fund extraction from Morpho Blue.
+  - `class OracleManipulationInvariant` (L703) — Detect oracle manipulation attacks.
+  - `class MorphoHuntResult` (L730) — Result of Morpho Blue hunt.
+  - `class MorphoBlueQTTHunter` (L762) — QTT-based exploit hunter for Morpho Blue.
+  - `function main` (L954) — Run Morpho Blue hunt.
+- **tensornet/exploit/real_evm.py**
+  - `class CompiledContract` (L102) — Compiled Solidity contract.
+  - `class StorageTrace` (L141) — Trace of storage operations during execution.
+  - `class RealEVM` (L179) — Real EVM execution using py-evm via eth-tester.
+  - `class ForkEVM` (L667) — EVM with mainnet forking support via Web3.
+  - `function create_evm` (L801) — Factory function to create EVM backend.
+- **tensornet/exploit/state_encoder.py**
+  - `function interleave_bits` (L71) — Interleave bits of x and y to create Morton code.
+  - `function deinterleave_bits` (L88) — Reverse Morton interleaving to get original x, y.
+  - `function slot_to_morton` (L98) — Convert 256-bit storage slot to Morton-ordered index.
+  - `function morton_to_slot` (L113) — Reverse Morton ordering to get original slot.
+  - `class SparseStorage` (L124) — Sparse representation of EVM storage.
+  - `class StorageDiff` (L179) — Difference between two storage states.
+  - `class CompressionMode` (L218) — Compression strategy for storage state.
+  - `class EncodedState` (L226) — Compressed representation of EVM storage state.
+  - `class StateEncoder` (L257) — Encodes EVM storage state into compressed format.
+  - `class StateDiffTracker` (L471) — Track state changes across transaction execution.
+  - `function mapping_slot` (L541) — Compute storage slot for mapping[key] given base slot.
+  - `function array_slot` (L562) — Compute storage slot for array[index] given base slot.
+- **tensornet/exploit/toy_contracts.py**
+  - `class ToyContract` (L41) — A toy contract for testing.
+  - `function create_reentrancy_vault` (L59) — Classic reentrancy vulnerability.
+  - `class OverflowMock` (L132) — Mock with integer overflow vulnerability.
+  - `function create_overflow_token` (L193) — Integer overflow vulnerability.
+  - `function create_access_control_bug` (L245) — Missing access control vulnerability.
+  - `class OracleMock` (L297) — Mock with manipulable price oracle.
+  - `function create_oracle_manipulable` (L363) — Price oracle manipulation vulnerability.
+  - `class FlashLoanMock` (L413) — Mock with flash loan vulnerability.
+  - `function create_flash_loan_victim` (L479) — Flash loan attack vulnerability.
+  - `class ToyContracts` (L532) — Registry of toy contracts for testing.
+- **tensornet/exploit/tx_space.py**
+  - `class FunctionSpec` (L59) — Specification of a contract function.
+  - `class ContractSpec` (L110) — Specification of a contract's interface.
+  - `class CallerType` (L129) — Who is sending the transaction.
+  - `class CallerSpec` (L138) — Specification of transaction callers.
+  - `class ContinuousTx` (L162) — Continuous representation of a transaction.
+  - `class TxSequenceSpace` (L238) — Defines the space of possible transaction sequences.
+  - `class ConcreteTx` (L309) — Concrete, executable transaction.
+  - `class TxCall` (L328) — Transaction call for exploit sequences.
+  - `class TxDiscretizer` (L361) — Convert continuous tx params to concrete transactions.
+  - `class TxSpaceSampler` (L482) — Sample the transaction space for TCI construction.
+  - `function finite_difference_gradient` (L563) — Estimate gradient via finite differences.
+  - `function central_difference_gradient` (L584) — Central difference gradient (more accurate, 2x cost).
+  - `function stochastic_gradient` (L604) — Stochastic gradient estimation via random perturbations.
+- **tensornet/fieldops/operators.py**
+  - `class Operator` (L29) — Base class for all field operators.
+  - `class OperatorStats` (L75) — Statistics from operator application.
+  - `class Grad` (L90) — Gradient operator: ∇f
+  - `class Div` (L161) — Divergence operator: ∇·F
+  - `class Curl` (L186) — Curl operator: ∇×F
+  - `class Laplacian` (L236) — Laplacian operator: ∇²f = ∂²f/∂x² + ∂²f/∂y² + ...
+  - `class Advect` (L288) — Advection operator: ∂f/∂t + u·∇f = 0
+  - `class Diffuse` (L354) — Diffusion operator: ∂f/∂t = ν∇²f
+  - `class PoissonSolver` (L415) — Poisson solver: ∇²p = f
+  - `class Project` (L481) — Pressure projection: make velocity field divergence-free.
+  - `class Impulse` (L549) — Apply localized impulse force.
+  - `class Buoyancy` (L614) — Buoyancy force: F = α(T - T_ambient) * g
+  - `class Attractor` (L670) — Attractor force: pulls field toward target state.
+  - `class Stir` (L723) — Stirring force: adds rotational energy.
+  - `class BoundaryCondition` (L793) — Base class for boundary conditions.
+  - `class PeriodicBC` (L802) — Periodic boundary conditions.
+  - `class DirichletBC` (L814) — Dirichlet boundary conditions: f = f_boundary on boundary.
+  - `class NeumannBC` (L835) — Neumann boundary conditions: ∂f/∂n = g on boundary.
+  - `class ObstacleMask` (L855) — Obstacle mask: set field to zero inside obstacles.
+  - `class GraphNode` (L888) — Node in the operator graph.
+  - `class FieldGraph` (L898) — Graph of operators for complex simulations.
+  - `function smoke_graph` (L1038) — Create a standard smoke simulation graph.
+  - `function fluid_graph` (L1049) — Create a standard fluid simulation graph.
+  - `function heat_graph` (L1059) — Create a heat diffusion graph.
+- **tensornet/fieldos/field.py**
+  - `class FieldType` (L26) — Type of physical field.
+  - `class FieldMetadata` (L42) — Metadata for a field.
+  - `class Field` (L113) — Unified field representation.
+- **tensornet/fieldos/kernel.py**
+  - `class FieldOSConfig` (L32) — Configuration for FieldOS kernel.
+  - `class KernelState` (L81) — State of the FieldOS kernel.
+  - `class KernelStats` (L93) — Runtime statistics for the kernel.
+  - `class FieldOS` (L119) — The FieldOS Kernel - Main orchestrator.
+  - `function get_kernel` (L494) — Get or create the FieldOS kernel.
+  - `function create_field` (L499) — Create field using global kernel.
+  - `function run` (L504) — Run pipeline using global kernel.
+  - `function query` (L509) — Query using global kernel.
+- **tensornet/gateway/onion_renderer.py**
+  - `class BlendMode` (L36) — GPU blending modes for layer composition.
+  - `class LayerType` (L46) — The five onion layers.
+  - `class RenderLayer` (L57) — Single layer in the onion stack.
+  - `class OnionRenderer` (L101) — 5-Layer GPU render pipeline with depth-sorted composition.
+  - `function demo_renderer` (L486) — Demo: Test onion renderer.
+- **tensornet/gateway/orbital_command.py**
+  - `function _draw_grid_lines_jit` (L49) — JIT-compiled grid line drawing for substrate.
+  - `class OrbitalCommandCenter` (L72) — VALHALLA Orbital Command Center.
+  - `function main` (L546) — Main entry point.
+- **tensornet/hw/verilog_elite_analyzer.py**
+  - `class Severity` (L27)
+  - `class VulnType` (L34)
+  - `class Signal` (L45)
+  - `class Finding` (L57)
+  - `class Module` (L67)
+  - `class VerilogEliteAnalyzer` (L75) — QTT-inspired Verilog/SystemVerilog security analyzer
+  - `function print_banner` (L481)
+  - `function main` (L496)
+- **tensornet/hypersim/env.py**
+  - `class FluidEnvConfig` (L31) — Configuration for fluid environment.
+  - `class EnvState` (L71) — Serializable environment state for checkpointing.
+  - `class StepResult` (L98) — Result from environment step.
+  - `class FluidEnv` (L113) — Gymnasium-compatible fluid dynamics environment.
+- **tensornet/hypersim/rewards.py**
+  - `class RewardConfig` (L28) — Configuration for reward computation.
+  - `class RewardFunction` (L38) — Base class for reward functions.
+  - `class SparseReward` (L87) — Sparse reward: +1 when goal achieved, 0 otherwise.
+  - `class DenseReward` (L110) — Dense reward: continuous signal at every step.
+  - `class ShapedReward` (L129) — Potential-based reward shaping.
+  - `class CompositeReward` (L170) — Weighted combination of multiple reward functions.
+  - `class TargetMatchReward` (L201) — Reward for matching a target field.
+  - `class VorticityReward` (L237) — Reward for vorticity magnitude.
+  - `class EnergyReward` (L271) — Reward based on field energy.
+  - `class DissipationReward` (L300) — Reward for energy dissipation rate.
+  - `class BoundaryPenalty` (L337) — Penalty for violating boundary conditions.
+  - `function make_reward` (L375) — Factory for creating reward functions.
+- **tensornet/hypersim/spaces.py**
+  - `class ObservationType` (L27) — Type of observation encoding.
+  - `class ObservationConfig` (L39) — Configuration for observation extraction.
+  - `class FieldObservation` (L54) — Extract observations from QTT fields.
+  - `class ActionType` (L244) — Type of action encoding.
+  - `class ActuatorConfig` (L254) — Configuration for a single actuator.
+  - `class ActionConfig` (L266) — Configuration for action space.
+  - `class FieldAction` (L275) — Convert actions to field forces.
+  - `class ActionMask` (L427) — Mask for valid actions.
+  - `function build_observation_space` (L501) — Build Gymnasium observation space from config.
+  - `function build_action_space` (L527) — Build Gymnasium action space from config.
+- **tensornet/hypervisual/renderer.py**
+  - `class TileCoord` (L30) — Coordinates for a tile in the LOD pyramid.
+  - `class Tile` (L58) — A rendered tile with metadata.
+  - `class RenderConfig` (L91) — Configuration for tile rendering.
+  - `class RenderStats` (L115) — Statistics from rendering.
+  - `class LODPyramid` (L132) — Level-of-detail pyramid for efficient multi-resolution access.
+  - `class TileCache` (L220) — LRU cache for rendered tiles.
+  - `class TileRenderer` (L274) — Tile-based renderer for QTT fields.
+- **tensornet/hypervisual/slicer.py**
+  - `class SlicePlane` (L29) — Standard slice planes.
+  - `class SliceResult` (L39) — Result of a slice operation.
+  - `class VolumeResult` (L70) — Result of volume rendering.
+  - `class SliceEngine` (L91) — Resolution-independent slicing from QTT fields.
+  - `class VolumeRenderer` (L270) — Volume rendering via ray marching through QTT field.
+- **tensornet/hypervisual/slicing_core.py**
+  - `class SlicePlane` (L41) — Standard slice planes for Morton slicing.
+  - `class MortonSliceResult` (L50) — Result of Morton-aware slice operation.
+  - `class MortonSlicer` (L89) — True Morton-aware slicer for 3D QTT fields.
+  - `function compare_slicing_methods` (L318) — Compare Morton projection vs point sampling performance.
+- **tensornet/neural/entanglement_gnn.py**
+  - `class NodeFeatures` (L22) — Features for a node (site) in the entanglement graph.
+  - `class EdgeFeatures` (L60) — Features for an edge (bond) in the entanglement graph.
+  - `class EntanglementGraph` (L93) — Graph representation of entanglement structure.
+  - `class GNNConfig` (L135) — Configuration for entanglement GNN.
+  - `class MessagePassingLayer` (L157) — Single message passing layer.
+  - `class EntanglementGNN` (L267) — Graph neural network for entanglement structure.
+  - `class GNNPrediction` (L352) — Prediction from entanglement GNN.
+  - `function build_entanglement_graph` (L418) — Build entanglement graph from MPS data.
+  - `function predict_entanglement_structure` (L530) — Predict entanglement structure using GNN.
+  - `function train_entanglement_gnn` (L556) — Train entanglement GNN.
+- **tensornet/neural/genesis_optimizer.py**
+  - `class GenesisOptimizerConfig` (L39) — Configuration for Genesis Optimizer.
+  - `class StiefelManifold` (L74) — Operations on the Stiefel manifold St(n, p) = {X ∈ R^{n×p} : X^T X = I_p}.
+  - `class GenesisOptimizer` (L150) — Riemannian optimizer for Tensor Train cores.
+  - `class DifferentiablePersistence` (L430) — Differentiable Persistent Homology via Persistence Landscapes.
+  - `class GeometricRotorLearner` (L692) — Learn geometric transformations between market states using Rotors.
+  - `class TopologyAwareDiscoveryLoss` (L870) — Combined loss function that incorporates:
+  - `function train_with_genesis_optimizer` (L963) — Train a differentiable QTT module using the Genesis Optimizer.
+- **tensornet/physics/trajectory_optimizer.py**
+  - `class Waypoint` (L33) — Single trajectory waypoint.
+  - `class Trajectory` (L50) — Complete flight trajectory.
+  - `function sample_cost_along_path` (L86) — Sample cost field values along a path using trilinear interpolation.
+  - `function compute_path_cost` (L129) — Compute total cost for a path.
+  - `function optimize_trajectory_gradient` (L177) — Optimize trajectory using gradient descent.
+  - `function fast_marching_2d` (L281) — Find shortest path through cost field using Fast Marching.
+  - `function optimize_trajectory_fast_marching` (L373) — Find optimal path using Fast Marching Method.
+  - `function find_optimal_trajectory` (L467) — Find optimal trajectory through hazard field.
+  - `function demo_trajectory_optimizer` (L539) — Demonstrate trajectory optimization through synthetic weather.
+- **tensornet/provenance/commit.py**
+  - `class CommitMetadata` (L31) — Metadata associated with a commit.
+  - `class FieldCommit` (L83) — Immutable snapshot of a field state.
+  - `function make_commit` (L280) — Convenience function to create a commit.
+- **tensornet/quantum/__init__.py**
+  - `function __getattr__` (L104)
+- **tensornet/quantum/hybrid.py**
+  - `class GateType` (L37) — Standard quantum gate types.
+  - `class QuantumGate` (L60) — Representation of a quantum gate.
+  - `class QuantumCircuit` (L89) — Quantum circuit representation.
+  - `class GateMatrices` (L161) — Standard quantum gate matrices.
+  - `class TNQuantumSimulator` (L238) — Tensor network based quantum circuit simulator.
+  - `class AnsatzType` (L543) — Standard variational ansatz types.
+  - `class VQEConfig` (L553) — Configuration for VQE.
+  - `class VQE` (L565) — Variational Quantum Eigensolver.
+  - `class QAOAConfig` (L748) — Configuration for QAOA.
+  - `class QAOA` (L757) — Quantum Approximate Optimization Algorithm.
+  - `class TensorNetworkBornMachine` (L895) — Generative model using tensor network as quantum-inspired ansatz.
+  - `class QuantumInspiredOptimizer` (L1060) — Quantum-inspired classical optimization using tensor network techniques.
+  - `function create_ising_hamiltonian` (L1170) — Create Ising Hamiltonian for VQE.
+  - `function create_maxcut_hamiltonian` (L1195) — Create MaxCut cost Hamiltonian for QAOA.
+- **tensornet/realtime/inference_engine.py**
+  - `class InferencePriority` (L24) — Priority levels for inference requests.
+  - `class InferenceConfig` (L35) — Configuration for the inference engine.
+  - `class InferenceResult` (L73) — Result of an inference request.
+  - `class BatchRequest` (L102) — A batched inference request.
+  - `class RequestQueue` (L126) — Priority queue for inference requests.
+  - `class ResultCache` (L240) — LRU cache for inference results.
+  - `class InferenceEngine` (L346) — High-performance inference engine with dynamic batching.
+  - `function run_inference` (L615) — Run single inference with optional configuration.
+  - `function run_batched_inference` (L634) — Run batched inference.
+- **tensornet/site/themes.py**
+  - `class ColorScheme` (L11) — Color scheme options.
+  - `class ThemeColors` (L20) — Theme color palette.
+  - `class ThemeTypography` (L66) — Typography configuration.
+  - `class ThemeLayout` (L104) — Layout configuration.
+  - `class ThemeConfig` (L148) — Complete theme configuration.
+  - `class Theme` (L182) — Documentation site theme.
+  - `class HyperTensorTheme` (L340) — Custom theme for HyperTensor documentation.
+  - `function get_theme` (L505) — Get theme by name.
+  - `function list_themes` (L523) — List available theme names.
+  - `function register_theme` (L533) — Register a custom theme.
+- **tensornet/sovereign/heatmap_generator.py**
+  - `class CUDAHeatmapGenerator` (L26) — GPU-accelerated convergence heatmap generator.
+  - `function main` (L351) — Run standalone heatmap generator.
+- **tensornet/sovereign/realtime_tensor_stream.py**
+  - `class RealtimeTensorStream` (L23) — Real-time tensor field streaming to Glass Cockpit.
+  - `function test_realtime_stream` (L335) — Test real-time tensor streaming with synthetic patterns.
+- **tensornet/substrate/bounded.py**
+  - `class QualityLevel` (L27) — Quality levels for bounded mode.
+  - `class BudgetConfig` (L38) — Configuration for bounded-latency mode.
+  - `class ContractionPath` (L70) — Precompiled contraction path for efficient execution.
+  - `class ContractionCache` (L81) — Cache for intermediate contraction results.
+  - `class BoundedMode` (L175) — Bounded-latency execution mode.
+  - `class AdaptiveRankController` (L384) — PID-like controller for adaptive rank adjustment.
+- **tensornet/substrate/bundle.py**
+  - `class BundleMetadata` (L35) — Metadata for a FieldBundle.
+  - `class OperatorLog` (L95) — Log of operators applied to the field (for replay).
+  - `class TruncationPolicy` (L125) — Policy for rank truncation.
+  - `class FieldBundle` (L149) — Complete serializable representation of a Field.
+- **tensornet/substrate/field.py**
+  - `class FieldType` (L29) — Type of physical field.
+  - `class SliceSpec` (L38) — Specification for extracting a 2D/3D slice from a field.
+  - `class StepControls` (L63) — Controls for physics stepping.
+  - `class Field` (L88) — The Field Oracle - single interface for all field operations.
+- **tensornet/substrate/morton_ops.py**
+  - `class SlicedQTT2D` (L44) — 2D QTT resulting from slicing a 3D Morton-ordered field.
+  - `function get_bit` (L77) — Extract bit at position from index.
+  - `function slice_morton_3d_z_plane` (L87) — Extract XY plane at fixed Z from 3D Morton-ordered QTT.
+  - `function slice_morton_3d_y_plane` (L143) — Extract XZ plane at fixed Y from 3D Morton-ordered QTT.
+  - `function slice_morton_3d_x_plane` (L185) — Extract YZ plane at fixed X from 3D Morton-ordered QTT.
+  - `function contract_2d_qtt` (L227) — Contract 2D QTT cores to dense (N, N) array with Morton reordering.
+  - `function morton_decode_2d` (L273) — Decode 2D Morton index to (x, y) coordinates.
+  - `function morton_encode_3d` (L287) — Encode (x, y, z) to 3D Morton index.
+  - `function morton_decode_3d` (L304) — Decode 3D Morton index to (x, y, z) coordinates.
+  - `function create_analytical_3d_qtt` (L323) — Create 3D QTT from analytical function.
+  - `function tt_svd_to_3d_qtt` (L390) — TT-SVD decomposition of Morton-ordered 1D array to 3D QTT cores.
+  - `function validate_slice_accuracy` (L450) — Validate Morton slice against ground truth.
+- **tensornet/substrate/stats.py**
+  - `class KernelTiming` (L25) — Timing information for a single kernel/operation.
+  - `class FieldStats` (L62) — Comprehensive telemetry for a Field.
+  - `class TelemetryDashboard` (L268) — Aggregated telemetry over time for visualization.
+- **tensornet/types/fields.py**
+  - `class InvariantViolation` (L58) — Raised when an operation would violate a declared constraint.
+  - `class Field` (L78) — Abstract base class for all fields on a space.
+  - `class ScalarField` (L170) — Scalar field f: M → R
+  - `class VectorField` (L279) — Vector field V: M → TM
+  - `class TensorField` (L512) — Tensor field T: M → T^r_s M
+  - `class SpinorField` (L627) — Spinor field ψ: M → spinor bundle
+  - `class DifferentialForm` (L725) — Differential k-form ω ∈ Ω^k(M)
+  - `function scalar_field` (L889) — Create a scalar field from tensor data.
+  - `function vector_field` (L905) — Create a vector field from tensor data.
+  - `function divergence_free_field` (L921) — Create a divergence-free vector field.
+- **tensornet/types/genesis_integration.py**
+  - `class QTTFieldBase` (L65) — Base class for QTT-backed fields.
+  - `class QTTScalarField` (L199) — QTT-backed scalar field.
+  - `class QTTVectorField` (L280) — QTT-backed vector field for R³.
+  - `class QTTTensorField` (L497) — QTT-backed rank-2 tensor field.
+  - `class QTTSpinorField` (L666) — QTT-backed complex spinor field for quantum mechanics.
+  - `function _tt_svd` (L783) — TT-SVD decomposition of a multi-dimensional tensor.
+  - `function _tt_add` (L828) — Add two TT tensors: A + B.
+  - `function _tt_inner_product` (L864) — Compute TT inner product ⟨A, B⟩ = sum of element-wise products.
+  - `function main` (L899) — Demonstrate Genesis QTT integration with physics types.
+- **tensornet/visualization/benchmark_render_gpu.py**
+  - `function format_ms` (L35) — Format milliseconds with color coding for 60 FPS target.
+  - `function run_benchmark` (L45) — Run comprehensive render benchmark.
+  - `function verify_correctness` (L183) — Verify GPU output matches CPU output.
+- **tensornet/visualization/tensor_slicer.py**
+  - `function _check_torch` (L40) — Check if PyTorch with CUDA is available.
+  - `function _check_triton` (L53) — Check if Triton is available for fused kernels.
+  - `function _get_fused_render_kernel` (L81) — DISABLED: Complex Triton kernels with static_range over 20 cores
+  - `function _get_zero_expansion_render` (L101) — Get the compiled zero-expansion render function.
+  - `function _get_triton_qtt_kernel` (L177) — Get Triton kernel for QTT contraction.
+  - `function _get_triton_qtt_kernel_slow_compile` (L187) — Get or compile the appropriate Triton kernel for given max rank.
+  - `function _get_bits_extraction_kernel` (L407) — Get or compile the bits extraction kernel.
+  - `function _prepare_cores_gpu` (L446) — Prepare cores tensor on GPU - cached to avoid Python loops per frame.
+  - `function _prepare_bits_gpu` (L496) — Prepare bits tensor on GPU - cached to avoid 10ms per frame.
+  - `function _get_compiled_contract` (L578) — Get a compiled contraction function for the specific number of cores.
+  - `function _qtt_contract_compiled` (L616) — Compiled QTT contraction using torch.compile with unrolled loops.
+  - `function _get_cached_xy_vecs` (L654) — Get cached X_vecs and Y_vecs, computing only if needed.
+  - `function invalidate_xy_cache` (L717) — Invalidate X/Y vector cache when cores change.
+  - `function _qtt_contract_separable` (L732) — Separable QTT contraction for disjoint x/y core sets.
+  - `function _validate_separable_invariants` (L836) — Validate that separable rendering can proceed correctly.
+  - `class TensorSlicer` (L883) — Decompression-free renderer for Quantized Tensor Trains.
+  - `function create_slicer_from_qtt` (L2040) — Create a TensorSlicer from a QTT object.
+  - `function create_test_qtt` (L2061) — Create a test QTT with random cores for benchmarking.
+  - `function create_sine_qtt` (L2082) — Create a QTT representing sin(2π * frequency * x).
+- **tensornet/zk/fezk_elite.py**
+  - `class Severity` (L102) — Bug severity levels matching Immunefi tiers.
+  - `class Framework` (L111) — Supported ZK frameworks.
+  - `class Signal` (L128) — Universal signal representation across all frameworks.
+  - `class Constraint` (L149) — Universal constraint representation.
+  - `class Lookup` (L167) — Lookup table constraint.
+  - `class ConstraintSystem` (L177) — Universal constraint system representation.
+  - `class Finding` (L239) — Vulnerability finding.
+  - `class AnalysisResult` (L284) — Complete analysis result.
+  - `class ZKParser` (L323) — Abstract base class for all ZK framework parsers.
+  - `class CircomParser` (L357) — Enhanced Circom parser with full constraint tracing.
+  - `class Halo2Parser` (L693) — Enhanced Halo2 (Rust) parser with full constraint tracing.
+  - `class GnarkParser` (L1673) — gnark (Go) parser for Linea, Consensys circuits.
+  - `class LibsnarkParser` (L1988) — libsnark (C++) parser for Loopring, Degate circuits.
+  - `class NoirParser` (L2228) — Noir parser for Aztec circuits.
+  - `class CairoParser` (L2412) — Cairo parser for StarkNet circuits.
+  - `class FEZKElite` (L2621) — FEZK Elite - Unified ZK Circuit Analyzer
+  - `function main` (L2849) — Command-line interface.
+- **tensornet/zk/fluidelite_circuit_analyzer.py**
+  - `class Severity` (L111) — Bug severity levels matching Immunefi.
+  - `class Signal` (L121) — A signal (wire) in the circuit.
+  - `class Constraint` (L132) — R1CS constraint: A·w ⊙ B·w = C·w
+  - `class R1CS` (L142) — Rank-1 Constraint System representation.
+  - `class Finding` (L166) — A vulnerability finding.
+  - `class AnalysisResult` (L204) — Complete analysis result.
+  - `class R1CSParser` (L228) — Parse R1CS from various formats.
+  - `class QTTRankAnalyzer` (L453) — Analyze constraint matrix rank using QTT decomposition.
+  - `class QTTConstraintMatrix` (L666) — QTT-compressed representation of constraint matrices for circuits
+  - `class MPOConstraintOps` (L1046) — Matrix Product Operator representation of constraint operations.
+  - `class IntervalPropagator` (L1313) — Propagate value intervals through constraint system using RIGOROUS
+  - `class FluidEliteCircuitAnalyzer` (L1638) — Complete FLUIDELITE ZK circuit analyzer.
+  - `class GnarkParser` (L1860) — Parser for gnark (Go) ZK circuits.
+  - `class FEZKAnalyzer` (L2136) — FEZK v2.0 Unified Analyzer.
+  - `function main` (L2222)
+- **tensornet/zk/halo2_constraint_extractor.py**
+  - `class Halo2Signal` (L37) — Represents an advice/fixed column at a specific rotation.
+  - `class Halo2Constraint` (L57) — Represents a constraint expression: selector * (expression) = 0
+  - `class Halo2ConstraintSystem` (L67) — Complete constraint system for a Halo2 circuit.
+  - `class Halo2ConstraintExtractor` (L92) — Extracts constraint matrices from Halo2 Rust circuit code.
+  - `function analyze_scroll_zkevm` (L572) — Full analysis of Scroll zkEVM circuits.
+- **tensornet/zk/polygon_security_report.py**
+  - `class SecurityFinding` (L20) — A security finding from PIL analysis.
+  - `class PolygonSecurityReport` (L32) — Generate comprehensive security report for Polygon zkEVM.
+  - `function main` (L376)
+- **tests/audit_layer_4.py**
+  - `function analytical_sine_3d` (L39) — f(x,y,z) = sin(2πx)sin(2πy)sin(2πz)
+  - `function analytical_sine_z_slice` (L55) — True XY slice of sine function at fixed Z.
+  - `function analytical_gaussian_3d` (L68) — f(x,y,z) = exp(-((x-0.5)² + (y-0.5)² + (z-0.5)²) / σ²)
+  - `function analytical_gaussian_z_slice` (L80) — True XY slice of Gaussian at fixed Z.
+  - `function analytical_linear_3d` (L92) — f(x,y,z) = x + 2y + 3z
+  - `function analytical_linear_z_slice` (L101) — True XY slice of linear function at fixed Z.
+  - `function dense_3d_to_morton_qtt` (L117) — Convert 3D dense field to Morton-ordered QTT.
+  - `function morton_encode_3d` (L198) — Encode (x, y, z) to 3D Morton index.
+  - `function slice_morton_z_plane` (L216) — Extract XY plane at fixed Z from 3D Morton QTT.
+  - `function contract_2d_qtt_to_dense` (L240) — Contract 2D QTT to dense (N, N) with Morton reorder.
+  - `class TestResult` (L285) — Result of a single audit test.
+  - `function run_audit_test` (L296) — Run single audit test.
+  - `function run_full_audit` (L354) — Run complete Layer 4 Morton slicing audit.
+  - `function run_benchmark` (L480) — Benchmark Morton projection vs point sampling.
+- **tests/audit_layer_5.py**
+  - `function create_quadratic_field_dense` (L31) — Create f(x,y,z) = x² + y² + z²
+  - `function create_linear_vector_field_dense` (L44) — Create F(x,y,z) = (x, y, z)
+  - `function analytical_laplacian_of_quadratic` (L58) — True Laplacian of x² + y² + z² = 6 everywhere.
+  - `function analytical_gradient_of_quadratic` (L63) — True gradient of x² + y² + z² = (2x, 2y, 2z).
+  - `function analytical_divergence_of_linear` (L72) — True divergence of (x, y, z) = 3 everywhere.
+  - `function dense_3d_to_qtt_cores` (L82) — Convert 3D dense field to QTT cores with Morton ordering.
+  - `function qtt_cores_to_dense_3d` (L91) — Contract QTT cores back to dense 3D array.
+  - `function fd_laplacian_3d` (L127) — Standard 7-point finite difference Laplacian.
+  - `function fd_gradient_3d` (L149) — Central difference gradient.
+  - `function fd_divergence_3d` (L168) — Central difference divergence.
+  - `class TestResult` (L191) — Result of a single audit test.
+  - `function run_laplacian_test` (L202) — Test: Laplacian of quadratic = 6.
+  - `function run_gradient_test` (L246) — Test: Gradient of quadratic = (2x, 2y, 2z).
+  - `function run_divergence_test` (L286) — Test: Divergence of (x, y, z) = 3.
+  - `function run_diffusion_test` (L323) — Test: Heat diffusion smooths a delta peak.
+  - `function run_qtt_operator_test` (L370) — Test: QTT-based Laplacian operator matches FD Laplacian.
+  - `function run_full_audit` (L423) — Run complete Layer 5 FieldOps audit.
+- **tests/audit_layer_6.py**
+  - `function test_sod_shock_tube` (L22) — Inline test of Sod shock tube.
+  - `function test_qtt_compression` (L55) — Run QTT compression benchmark inline (no plots).
+  - `function test_blasius` (L70) — Run Blasius validation.
+  - `function run_audit` (L92)
+- **tests/benchmarks/optimized_pipeline_benchmark.py**
+  - `class BenchResult` (L30)
+  - `function check_rust_tci` (L39) — Check if Rust TCI is available.
+  - `function check_rust_cuda` (L48) — Check if Rust CUDA pipeline is available.
+  - `function check_triton` (L57) — Check if Triton is available.
+  - `function print_header` (L66)
+  - `function print_availability` (L72) — Print what optimizations are available.
+  - `function benchmark_tci_construction` (L99) — Compare Rust TCI vs Python TCI construction speed.
+  - `function benchmark_point_evaluation` (L203) — Compare Rust CUDA vs Python Triton point evaluation.
+  - `function benchmark_triton_kernels` (L278) — Benchmark pure Triton kernel vs vectorized PyTorch.
+  - `function run_all_benchmarks` (L364) — Run all optimization benchmarks.
+- **tests/conftest.py**
+  - `function deterministic_seed` (L28) — Automatically seed all random number generators for deterministic tests.
+  - `function random_state` (L66) — Provide an isolated RandomState for tests that need explicit control.
+  - `function pytest_configure` (L79) — Register custom markers for test categorization.
+  - `function temp_dir` (L128) — Provide a temporary directory for test file I/O.
+  - `function sample_tensor_2d` (L141) — Provide a sample 2D tensor for testing.
+  - `function sample_tensor_3d` (L152) — Provide a sample 3D tensor for testing.
+  - `function sample_vector_field_2d` (L163) — Provide a sample 2D vector field (u, v components).
+  - `function requires_torch` (L179) — Skip test if PyTorch is not available.
+  - `function requires_cuda` (L185) — Skip test if CUDA is not available.
+  - `function requires_rust_tci` (L193) — Skip test if Rust TCI extension is not available.
+- **tests/integration/test_dmrg_physics.py**
+  - `class TestDMRGPhysics` (L45) — Integration tests for DMRG with physical Hamiltonians.
+- **tests/test_exploit_constants.py**
+  - `class TestReproducibilityConstants` (L61) — Tests for reproducibility constants (Article I, Section 1.1).
+  - `class TestEthereumUnits` (L73) — Tests for Ethereum unit constants.
+  - `class TestEVMLimits` (L93) — Tests for EVM limit constants.
+  - `class TestHuntParameters` (L126) — Tests for hunt parameter defaults.
+  - `class TestChiWeights` (L151) — Tests for chi metric weights.
+  - `class TestInvariantThresholds` (L169) — Tests for invariant threshold constants.
+  - `class TestDocumentation` (L187) — Tests for documentation constants.
+- **tests/test_exploit_hunter.py**
+  - `class TestHuntStatus` (L31) — Tests for HuntStatus enum.
+  - `class TestHotZone` (L49) — Tests for HotZone dataclass.
+  - `class TestHuntResult` (L88) — Tests for HuntResult dataclass.
+  - `class TestHuntAllToys` (L132) — Tests for hunt_all_toys convenience function.
+- **tests/test_exploit_invariants.py**
+  - `class TestAccountState` (L39) — Tests for AccountState dataclass.
+  - `class TestEVMState` (L66) — Tests for EVMState dataclass.
+  - `class TestTransactionContext` (L97) — Tests for TransactionContext dataclass.
+  - `class TestChi` (L126) — Tests for Chi (exploit proximity metric) class.
+  - `class TestDrainInvariant` (L162) — Tests for DrainInvariant loss function.
+  - `class TestReentrancyInvariant` (L219) — Tests for ReentrancyInvariant detection.
+  - `class TestOverflowInvariant` (L263) — Tests for OverflowInvariant detection.
+  - `class TestUnderflowInvariant` (L287) — Tests for UnderflowInvariant detection.
+  - `class TestAccessControlInvariant` (L311) — Tests for AccessControlInvariant detection.
+  - `class TestInvariantsRegistry` (L352) — Tests for Invariants registry.
+  - `class TestInvariantType` (L383) — Tests for InvariantType enum.
+  - `class TestInvariantIntegration` (L402) — Integration tests for invariant system.
+- **tests/test_exploit_real_evm.py**
+  - `class TestCompiledContract` (L36) — Tests for CompiledContract dataclass.
+  - `class TestRealEVM` (L56) — Tests for RealEVM class - requires eth-tester.
+  - `class TestRealEVMContracts` (L107) — Tests for RealEVM contract deployment.
+  - `class TestRealEVMFallback` (L125) — Tests for RealEVM fallback behavior when eth-tester not available.
+  - `class TestChiIntegration` (L134) — Tests for Chi metrics with RealEVM.
+- **tests/test_exploit_state_encoder.py**
+  - `class TestMortonEncoding` (L34) — Tests for Morton/Z-order encoding functions.
+  - `class TestSparseStorage` (L55) — Tests for SparseStorage dataclass.
+  - `class TestStorageDiff` (L107) — Tests for StorageDiff dataclass.
+  - `class TestCompressionMode` (L158) — Tests for CompressionMode enum.
+  - `class TestEncodedState` (L168) — Tests for EncodedState dataclass.
+  - `class TestStateEncoder` (L191) — Tests for StateEncoder class.
+  - `class TestStateDiffTracker` (L237) — Tests for StateDiffTracker class.
+- **tests/test_exploit_tx_space.py**
+  - `class TestFunctionSpec` (L35) — Tests for FunctionSpec dataclass.
+  - `class TestContractSpec` (L58) — Tests for ContractSpec dataclass.
+  - `class TestCallerSpec` (L85) — Tests for CallerSpec dataclass.
+  - `class TestCallerType` (L110) — Tests for CallerType enum.
+  - `class TestContinuousTx` (L120) — Tests for ContinuousTx dataclass.
+  - `class TestTxSequenceSpace` (L145) — Tests for TxSequenceSpace class.
+  - `class TestGradientFunctions` (L177) — Tests for gradient computation functions.
+- **tests/test_fieldops.py**
+  - `function scalar_field` (L32) — Create a simple 2D scalar field.
+  - `function vector_field` (L38) — Create a 2D velocity field.
+  - `function random_field` (L48) — Create a random field for testing.
+  - `class TestGrad` (L61) — Test gradient operator.
+  - `class TestDiv` (L88) — Test divergence operator.
+  - `class TestCurl` (L108) — Test curl operator.
+  - `class TestLaplacian` (L127) — Test Laplacian operator.
+  - `class TestAdvect` (L152) — Test advection operator.
+  - `class TestDiffuse` (L179) — Test diffusion operator.
+  - `class TestProject` (L211) — Test divergence-free projection.
+  - `class TestImpulse` (L252) — Test impulse force.
+  - `class TestBuoyancy` (L275) — Test buoyancy force.
+  - `class TestAttractor` (L286) — Test attractor force.
+  - `class TestStir` (L308) — Test stirring force.
+  - `class TestBoundaryConditions` (L324) — Test boundary condition operators.
+  - `class TestFieldGraph` (L372) — Test operator graph execution.
+  - `class TestPresetGraphs` (L435) — Test preset simulation graphs.
+  - `class TestIntegration` (L468) — Integration tests combining multiple operators.
+- **tests/test_integration.py**
+  - `class TestCoreImports` (L15) — Test that all core components import correctly.
+  - `class TestMPS` (L62) — Test MPS operations.
+  - `class TestMPO` (L114) — Test MPO operations.
+  - `class TestDMRG` (L141) — Test DMRG algorithm.
+  - `class TestTEBD` (L159) — Test TEBD time evolution.
+  - `class TestCFD` (L175) — Test CFD module.
+  - `class TestLimiters` (L253) — Test TVD slope limiters.
+  - `class TestEuler2D` (L279) — Test 2D Euler solver.
+  - `class TestWedgeGeometry` (L365) — Test wedge geometry and immersed boundary.
+  - `class TestBoundaryConditions` (L433) — Test boundary condition module.
+  - `class TestTDVP` (L454) — Test TDVP time evolution algorithm.
+  - `class TestPhase4Integration` (L499) — Test Phase 4 components work together.
+  - `class TestQTTCompression` (L533) — Test Phase 5: QTT compression for TN-CFD coupling.
+  - `class TestViscousTerms` (L614) — Test Navier-Stokes viscous terms implementation.
+  - `class TestNavierStokes2D` (L737) — Test coupled Navier-Stokes solver.
+  - `class TestEuler3D` (L785) — Test 3D Euler solver.
+  - `class TestRealGas` (L839) — Test real-gas thermodynamics.
+  - `class TestChemistry` (L903) — Test multi-species chemistry (Phase 8).
+  - `class TestImplicit` (L968) — Test implicit time integration (Phase 8).
+  - `class TestReactiveNS` (L1035) — Test reactive Navier-Stokes solver (Phase 8).
+  - `class TestTurbulence` (L1089) — Test RANS turbulence modeling (Phase 9).
+  - `class TestAdjoint` (L1202) — Test adjoint solver framework (Phase 9).
+  - `class TestOptimization` (L1316) — Test shape optimization framework (Phase 9).
+  - `class TestLES` (L1437) — Test LES subgrid-scale models.
+  - `class TestHybridLES` (L1554) — Test hybrid RANS-LES models.
+  - `class TestMultiObjectiveOptimization` (L1670) — Test multi-objective optimization framework.
+  - `class TestGPUAcceleration` (L1778) — Test GPU acceleration utilities.
+  - `class TestDeployment` (L1875) — Test TensorRT export and embedded deployment utilities.
+  - `class TestGuidance` (L2082) — Test trajectory and guidance modules.
+  - `class TestSimulationHIL` (L2354) — Test Hardware-in-the-Loop simulation components.
+  - *(+3 more symbols)*
+- **tests/test_marrs_fusion.py**
+  - `function deterministic_seed` (L59) — Per Article III, Section 3.2: Reproducibility.
+  - `function laluh6_lattice` (L69) — LaLuH₆ lattice parameters.
+  - `function room_temp_config` (L81) — Room temperature configuration.
+  - `function trigger_config` (L93) — Phonon trigger configuration.
+  - `class TestLatticeParams` (L110) — Test lattice parameter calculations.
+  - `class TestElectronScreeningSolver` (L134) — Test electron screening calculations.
+  - `class TestLatticeConfig` (L217) — Test lattice configuration.
+  - `class TestSuperionicDynamics` (L234) — Test Langevin dynamics simulations.
+  - `class TestTriggerConfig` (L323) — Test trigger configuration.
+  - `class TestFokkerPlanckSolver` (L342) — Test Fokker-Planck energy distribution solver.
+  - `class TestMARRSSimulator` (L451) — Test unified MARRS simulation suite.
+  - `class TestPhysicalValidation` (L529) — Validate physics against known results.
+  - `class TestFloat64Precision` (L577) — Verify float64 precision per Article V.
+  - `class TestQTTCompression` (L607) — Tests for QTT-compressed electron screening solver.
+  - `class TestQTTSuperionic` (L766) — Tests for QTT-enhanced superionic dynamics.
+- **tests/test_mpo_hamiltonians.py**
+  - `function deterministic_seed` (L31) — Per Article III, Section 3.2: Reproducibility.
+  - `function device` (L41) — Get device.
+  - `function pauli_matrices` (L51) — Return Pauli matrices.
+  - `function spin_operators` (L60) — Return spin operators for spin-S.
+  - `function create_mpo_heisenberg` (L87) — Create MPO for Heisenberg model: H = J * sum(S_i · S_{i+1}) + h * sum(S_z).
+  - `function create_identity_mpo` (L138) — Create identity MPO.
+  - `class TestPauliMatrices` (L160) — Test Pauli matrix construction.
+  - `class TestSpinOperators` (L210) — Test spin operator construction.
+  - `class TestMPOConstruction` (L256) — Test MPO construction.
+  - `class TestMPOMPSApplication` (L296) — Test MPO application to MPS.
+  - `class TestExpectationValues` (L355) — Test expectation value computation.
+  - `class TestHeisenbergModel` (L406) — Test Heisenberg Hamiltonian MPO.
+  - `class TestTransverseFieldIsing` (L451) — Test transverse field Ising model.
+  - `class TestFloat64ComplianceMPO` (L476) — Article V: Float64 precision tests.
+  - `class TestGPUCompatibilityMPO` (L502) — Test GPU execution compatibility.
+  - `class TestNumericalStabilityMPO` (L533) — Test numerical stability.
+  - `class TestReproducibilityMPO` (L551) — Article III, Section 3.2: Reproducibility tests.
+- **tests/test_mpo_solver.py**
+  - `function test_laplacian_operator` (L29) — Test Laplacian MPO against discrete Laplacian.
+  - `function test_advection_operator` (L71) — Test Advection MPO.
+  - `function test_projection_operator` (L105) — Test Projection MPO.
+  - `function test_atmospheric_solver_initialization` (L144) — Test MPOAtmosphericSolver initialization.
+  - `function test_atmospheric_solver_step` (L175) — Test single physics step performance.
+  - `function test_stability_100_frames` (L221) — Test numerical stability over 100 frames.
+  - `function run_all_tests` (L254) — Run complete test suite.
+- **tests/test_rust_tci_integration.py**
+  - `function test_rust_tci` (L11)
+- **tests/test_sovereign.py**
+  - `function deterministic_seed` (L33) — Per Article III, Section 3.2: Reproducibility.
+  - `function device` (L43) — Get device.
+  - `class MockQTT3DState` (L52) — Mock QTT 3D state for testing.
+  - `function create_mock_qtt_state` (L72) — Create a mock QTT state for testing.
+  - `class TestMortonEncoding` (L96) — Test Morton (Z-order) encoding operations.
+  - `class TestQTTState` (L204) — Test QTT state structure.
+  - `class TestSliceExtraction` (L255) — Test 2D slice extraction from 3D fields.
+  - `class TestHeatmapGeneration` (L318) — Test heatmap generation for visualization.
+  - `class TestBridgeStreaming` (L385) — Test tensor bridge streaming.
+  - `class TestWeatherStream` (L435) — Test weather data streaming.
+  - `class TestProtocol` (L485) — Test communication protocol.
+  - `class TestFloat64ComplianceSovereign` (L526) — Article V: Float64 precision tests.
+  - `class TestGPUCompatibilitySovereign` (L559) — Test GPU execution compatibility.
+  - `class TestNumericalStabilitySovereign` (L590) — Test numerical stability.
+  - `class TestReproducibilitySovereign` (L621) — Article III, Section 3.2: Reproducibility tests.
+  - `class TestPerformanceSovereign` (L642) — Test computational performance.
+  - `class TestSovereignIntegration` (L666) — Integration tests for Sovereign engine.
+- **tests/test_tci_integration.py**
+  - `function test_qtt_sine_wave` (L24) — Test QTT evaluation on sine wave.
+  - `function test_qtt_step_function` (L47) — Test QTT evaluation on step function (harder case).
+  - `function test_rusanov_flux_sod` (L70) — Test Rusanov flux on Sod shock tube initial condition.
+  - `function test_batched_flux` (L128) — Test batched flux computation (critical for TCI).
+  - `function test_multi_field_qtt` (L163) — Test evaluating multiple QTT fields at same indices (for CFD).
+  - `function test_neighbor_indices_logic` (L214) — Test the neighbor index logic (what Rust TCI core would do).
+  - `function test_sound_speed_formula` (L241) — Verify sound speed formula (critical bug check).
+  - `function run_all_tests` (L253) — Run all integration tests.
+- **tests/test_tensor_slicer.py**
+  - `class TestTensorSlicerBasic` (L20) — Basic functionality tests.
+  - `class TestTensorSlicerCorrectness` (L60) — Correctness verification tests.
+  - `class TestTensorSlicer2D` (L100) — 2D slice rendering tests.
+  - `class TestTensorSlicerZoom` (L148) — Zoom functionality tests.
+  - `class TestTensorSlicerPerformance` (L192) — Performance and scaling tests.
+  - `class TestTensorSlicerHeatmap` (L231) — Heatmap rendering tests.
+  - `class TestSineQTT` (L251) — Tests for sine wave QTT construction.
+- **tests/test_visualization.py**
+  - `function deterministic_seed` (L33) — Per Article III, Section 3.2: Reproducibility.
+  - `function device` (L43) — Get device.
+  - `class MockQTTCores` (L53) — Mock QTT cores for testing.
+  - `class MockTensorSlicer` (L75) — Mock tensor slicer for testing.
+  - `class TestTensorSlicerConstruction` (L113) — Test TensorSlicer construction.
+  - `class TestElementExtraction` (L156) — Test single element extraction from QTT.
+  - `class TestContractionAlgorithm` (L224) — Test tensor network contraction.
+  - `class TestSlice1DRendering` (L277) — Test 1D slice rendering.
+  - `class Test2DSliceRendering` (L317) — Test 2D cross-section rendering.
+  - `class TestColormapApplication` (L364) — Test colormap application for visualization.
+  - `class TestResolutionHandling` (L414) — Test various output resolutions.
+  - `class TestMemoryEfficiency` (L447) — Test memory-efficient operations.
+  - `class TestFloat64ComplianceVisualization` (L485) — Article V: Float64 precision tests.
+  - `class TestGPUCompatibilityVisualization` (L522) — Test GPU execution compatibility.
+  - `class TestNumericalStabilityVisualization` (L550) — Test numerical stability.
+  - `class TestReproducibilityVisualization` (L582) — Article III, Section 3.2: Reproducibility tests.
+  - `class TestPerformanceVisualization` (L606) — Test computational performance.
+  - `class TestVisualizationIntegration` (L646) — Integration tests for visualization.
+  - `class TestEdgeCases` (L692) — Test edge cases and boundary conditions.
+- **tig011a_docking_qmmm.py**
+  - `class TIG011aEnhanced` (L34) — TIG-011a Enhanced drug candidate for KRAS G12D.
+  - `class DockingPose` (L68) — A single docking pose.
+  - `class DockingResult` (L81) — Results from docking diversification.
+  - `class DockingDiversification` (L94) — Multi-pose docking with ensemble receptor sampling.
+  - `class QMRegion` (L386) — Definition of the QM region for QM/MM calculation.
+  - `class MMRegion` (L400) — Definition of the MM region.
+  - `class QMMMResult` (L408) — Results from QM/MM calculation.
+  - `class QMMM` (L434) — QM/MM calculation for binding site analysis.
+  - `function validate_docking` (L716) — Docking Diversification Gate:
+  - `function validate_qmmm` (L751) — QM/MM Validation Gate:
+  - `function run_full_validation` (L797) — Run complete docking diversification + QM/MM validation.
+- **tig011a_dynamic_validation.py**
+  - `class Atom` (L48) — Single atom in the system.
+  - `class HydrogenBond` (L60) — Hydrogen bond definition.
+  - `class AromaticContact` (L73) — π-π stacking contact definition.
+  - `class MolecularSystem` (L84) — Complete molecular system for MD.
+  - `class MDParameters` (L103) — Molecular dynamics simulation parameters.
+  - `class MDTrajectory` (L121) — Trajectory from MD simulation.
+  - `class LangevinMD` (L135) — Langevin dynamics integrator for molecular simulation.
+  - `class RMSDAnalysis` (L317) — RMSD analysis results.
+  - `class HBondAnalysis` (L329) — Hydrogen bond occupancy analysis.
+  - `class ContactAnalysis` (L339) — Contact persistence analysis.
+  - `function analyze_rmsd` (L349) — Analyze RMSD stability over trajectory.
+  - `function analyze_hbond_occupancy` (L388) — Analyze hydrogen bond persistence.
+  - `class FEPResult` (L425) — Free energy perturbation result.
+  - `function run_fep_calculation` (L435) — Simplified Free Energy Perturbation calculation.
+  - `class WaterSite` (L526) — High-entropy water site in binding pocket.
+  - `class GISTAnalysis` (L535) — Grid Inhomogeneous Solvation Theory results.
+  - `function run_gist_analysis` (L544) — Simplified GIST analysis.
+  - `class DynamicValidationResult` (L638) — Complete dynamic validation results.
+  - `function run_dynamic_validation` (L704) — Run complete dynamic ensemble validation.
+  - `function generate_dynamic_attestation` (L931) — Generate attestation for dynamic validation.
+  - `function main` (L1017) — Run complete dynamic validation.
+- **tig011a_multimechanism.py**
+  - `function morton_encode_3d` (L52) — Morton/Z-order encoding for 3D coordinates.
+  - `function morton_decode_3d` (L74) — Decode Morton index back to 3D coordinates.
+  - `class QTTCore` (L88) — Single core of a Quantized Tensor Train.
+  - `class QTTVector` (L117) — QTT-compressed vector for 3D scalar fields.
+  - `class QTTBindingPocket` (L621) — QTT-Native 3D binding pocket for drug-protein simulation.
+  - `function run_qtt_langevin_dynamics` (L900) — Run Langevin dynamics in QTT-compressed energy landscape.
+  - `class MechanismType` (L1026) — Types of molecular binding mechanisms.
+  - `class BindingMechanism` (L1036) — A single binding interaction.
+  - `class DrugCandidate` (L1049) — A drug candidate with multiple binding mechanisms.
+  - `class EnergyComponents` (L1077) — Breakdown of binding energy by mechanism.
+  - `function compute_coulombic_energy` (L1100) — Coulombic interaction energy.
+  - `function compute_lennard_jones` (L1127) — Lennard-Jones 12-6 potential.
+  - `function compute_hydrophobic_burial` (L1149) — Hydrophobic burial energy.
+  - `function compute_pi_stacking` (L1179) — π-π stacking interaction.
+  - `function compute_covalent_energy` (L1206) — Covalent warhead capture.
+  - `function create_tig011a_enhanced` (L1235) — Create enhanced TIG-011a with multi-mechanism binding.
+  - `function create_tig011a_covalent` (L1306) — TIG-011a variant with covalent warhead for KRAS G12C.
+  - `class CofactorConstraint` (L1329) — Constraint from GCP-Mg²⁺ nucleotide cofactor.
+  - `class PhantomPocketValidator` (L1337) — Validates that binding site includes GCP-Mg²⁺ cofactor.
+  - `class SyntheticRoute` (L1422) — Synthetic route for drug candidate.
+  - `class SyntheticFeasibilityValidator` (L1434) — Validates that drug modifications are synthetically accessible.
+  - `class WiggleTestResult` (L1562) — Result of enhanced wiggle test.
+  - `function enhanced_wiggle_test` (L1584) — Enhanced wiggle test with multi-mechanism physics.
+  - `function compute_total_energy` (L1712) — Compute all energy components at given distance and dielectric.
+  - `function run_dielectric_sweep` (L1805) — Run wiggle test across dielectric range.
+  - `function create_tig011a_original` (L1880) — Original TIG-011a with ONLY salt bridge binding.
+  - `function compare_original_vs_enhanced` (L1901) — Compare original electrostatic-only model vs enhanced multi-mechanism.
+  - `function generate_attestation` (L1946) — Generate SHA256-signed attestation for multi-mechanism results.
+  - `function main` (L2012) — Run full multi-mechanism analysis with validation.
+- **tomahawk_cfd_gauntlet.py**
+  - `class TokamakGeometry` (L51) — ITER-class tokamak geometry.
+  - `class PlasmaState` (L77) — Plasma state variables.
+  - `class TTCore` (L102) — Single TT core for compressed MHD field representation.
+  - `class TTCompressedMHD` (L114) — Tensor Train compressed MHD field representation.
+  - `class InstabilityMode` (L258) — MHD instability mode characterization.
+  - `class InstabilityDetector` (L278) — Real-time instability detection from TT-compressed data.
+  - `class ControlCoil` (L369) — Magnetic control coil for instability suppression.
+  - `class MagneticController` (L385) — 1 MHz magnetic control system for instability suppression.
+  - `class RampdownSimulator` (L474) — Simulate plasma rampdown with instability control.
+  - `function run_tomahawk_gauntlet` (L731) — Execute the full Tomahawk CFD gauntlet.
+- **yang_mills_proof_pipeline.py**
+  - `class QTTResult` (L41) — Results from QTT tensor decomposition.
+  - `class YangMillsQTT` (L53) — Yang-Mills Hamiltonian via Quantum Tensor Train.
+  - `class RigorousBounder` (L149) — Rigorous interval arithmetic using Arb (via python-flint).
+  - `class ProofPackage` (L254) — Complete proof package for submission.
+  - `function run_full_pipeline` (L302) — Execute the complete Yang-Mills mass gap pipeline.
+  - `function export_package` (L424) — Export proof package to files.
+- **yangmills/ground_state.py**
+  - `function compute_energy_dense` (L60) — Compute expectation value ⟨ψ|H|ψ⟩/⟨ψ|ψ⟩ using dense conversion.
+  - `function compute_energy_qtt` (L72) — Compute expectation value ⟨ψ|H|ψ⟩/⟨ψ|ψ⟩ in QTT form.
+  - `class PowerIterationResult` (L89) — Result of power iteration optimization.
+  - `function power_iteration_dense` (L98) — Find ground state via power iteration.
+  - `function lanczos_ground_state` (L197) — Find ground state using Lanczos algorithm.
+  - `function imaginary_time_evolution` (L276) — Find ground state via imaginary time evolution.
+  - `function find_ground_state` (L359) — Find ground state of Hamiltonian H.
+  - `function find_excited_state` (L393) — Find first excited states orthogonal to ground state.
+  - `function verify_ground_state` (L461) — Verify ground state optimizer implementation.
+- **yangmills/ground_state_cuda.py**
+  - `function estimate_memory` (L52) — Estimate memory needed for n×n dense matrix in bytes.
+  - `function fits_in_vram` (L58) — Check if n×n matrix fits in VRAM with safety margin.
+  - `function get_available_vram` (L67) — Get available VRAM in GB.
+  - `function sparse_to_cuda` (L74) — Convert scipy sparse matrix to dense CUDA tensor.
+  - `function sparse_to_cuda_sparse` (L94) — Convert scipy sparse matrix to CUDA sparse tensor.
+  - `function sparse_matvec` (L108) — Sparse matrix-vector product on GPU.
+  - `class GPUGroundStateResult` (L118) — Result container for GPU ground state finding.
+  - `function gpu_lanczos_sparse` (L127) — GPU Lanczos with SPARSE matrix-vector products.
+  - `function gpu_lanczos` (L227) — GPU-native Lanczos algorithm.
+  - `function gpu_ground_state` (L308) — Find ground state on GPU using best available method.
+  - `function gpu_power_iteration` (L368) — GPU power iteration to find ground state.
+  - `function gpu_exact_diagonalization` (L444) — Full exact diagonalization on GPU.
+  - `function gpu_qtt_ground_state` (L473) — Find ground state and convert to QTT form.
+  - `function benchmark_gpu_vs_cpu` (L520) — Benchmark GPU vs CPU eigensolve.
+- **yangmills/lattice.py**
+  - `class LatticeSite` (L40) — A site (vertex) on the lattice.
+  - `class Direction` (L62) — Direction on the lattice.
+  - `class LatticeLink` (L74) — A link (edge) on the lattice.
+  - `class Plaquette` (L93) — An elementary plaquette (square) on the lattice.
+  - `class Lattice` (L116) — Hypercubic lattice with periodic boundary conditions.
+  - `class GaugeConfiguration` (L289) — A configuration of gauge fields on the lattice.
+- **yangmills/multi_plaq_scaling_window.py**
+  - `function create_multi_plaquette_state` (L44) — Create ground state for n_plaq plaquettes at coupling g.
+  - `function compute_entanglement_entropy` (L73) — Compute entanglement entropy at center bond.
+  - `function gap_formula` (L108) — Compute gap for n plaquettes at coupling g.
+  - `function run_multi_plaquette_scaling` (L158) — Test scaling window on multi-plaquette lattices.
+  - `function estimate_required_lattice_size` (L216) — Estimate lattice size needed to see scaling window.
+- **yangmills/tensor_network/dmrg.py**
+  - `class DMRGEnvironment` (L34) — Manages left and right environment tensors for DMRG.
+  - `class DMRG` (L168) — DMRG algorithm for finding ground state.
+  - `function compute_gap_tensor_network` (L383) — Compute mass gap using tensor network methods.
+  - `function scan_coupling_range` (L479) — Scan gap across coupling range to test scaling.
+- **yangmills/tensor_network/mpo.py**
+  - `class MPOHamiltonian` (L26) — Matrix Product Operator representation of Hamiltonian.
+  - `class YangMillsMPO` (L113) — Yang-Mills Hamiltonian in MPO form.
+  - `function build_yang_mills_mpo` (L345) — Build Yang-Mills MPO for lattice with given number of plaquettes.
+- **yangmills/tensor_network/mps.py**
+  - `class MPS` (L24) — Matrix Product State representation.
+  - `class MPSGaugeInvariant` (L355) — MPS constrained to gauge-invariant subspace.
+  - `function mps_add` (L403) — Add two MPS: |ψ⟩ = c1|ψ1⟩ + c2|ψ2⟩
+- **yangmills/tests/test_gate2.py**
+  - `class GateResults` (L53) — Track test results for Gate 2.
+  - `function test_gpu_eigensolve` (L109) — Test 1: GPU eigensolve accuracy.
+  - `function test_gpu_lanczos` (L188) — Test 2: GPU Lanczos convergence.
+  - `function test_qtt_ground_state` (L224) — Test 3: QTT ground state representation.
+  - `function test_variational_principle` (L278) — Test 4: Variational principle E_trial ≥ E_exact.
+  - `function test_larger_system` (L328) — Test 5: Larger system with j_max=1.0 - GPU ONLY.
+  - `function test_mass_gap` (L376) — Test 6: Mass gap extraction (small system only for full spectrum).
+  - `function run_gate2` (L422) — Execute Gate 2: Ground State (CUDA Accelerated).
+- **yangmills/tests/test_gate5.py**
+  - `class GateResults` (L51) — Track test results for Gate 5.
+  - `function state_to_tensor_train` (L100) — Convert a state vector to tensor train (TT) format.
+  - `function compute_tt_ranks` (L168) — Compute TT ranks of a state vector.
+  - `function compute_max_tt_rank` (L174) — Compute maximum TT rank.
+  - `function compute_entanglement_entropy` (L180) — Compute entanglement entropy for bipartition at cut_position.
+  - `function compute_compression_ratio` (L211) — Compute compression ratio: full_size / TT_size.
+  - `function get_physical_ground_state` (L233) — Get the ground state from the physical (gauge-invariant) subspace.
+  - `function test_tt_rank_structure` (L254) — Test 1: Analyze TT rank structure of ground state.
+  - `function test_entanglement_entropy` (L317) — Test 2: Entanglement entropy analysis.
+  - `function test_compression_ratio` (L380) — Test 3: TT compression efficiency.
+  - `function test_rank_vs_truncation` (L439) — Test 4: TT rank behavior as Hilbert space grows.
+  - `function test_truncation_error` (L511) — Test 5: Error from TT rank truncation.
+  - `function test_area_law` (L592) — Test 6: Area law vs volume law for entanglement.
+  - `function test_rank_coupling_independence` (L668) — Test 7: TT rank should be roughly independent of coupling.
+  - `function main` (L716) — Run all Gate 5 tests.
+- **yangmills/tests/test_tensor_network.py**
+  - `class TestTensorNetworkBasics` (L39) — Test basic tensor network infrastructure.
+  - `class TestStrongCoupling` (L97) — Verify tensor networks reproduce strong coupling results.
+  - `class TestWeakCoupling` (L138) — THE CRITICAL TESTS!
+  - `class TestBondDimensionConvergence` (L251) — Test that results converge with bond dimension.
+  - `function run_all_tests` (L286) — Run all tensor network tests.
+- **yangmills/transfer_matrix_final_proof.py**
+  - `class ProofBound` (L37) — All quantities in log space.
+  - `function compute_bound` (L49) — The CORRECT physics for dimensional transmutation:
+  - `function main` (L120)
+- **yangmills/transfer_matrix_log_proof.py**
+  - `class LogarithmicBound` (L30) — All quantities stored in log space for numerical stability.
+  - `function log_lattice_spacing` (L42) — Logarithm of lattice spacing: ln(a) = -1/(2β₀g²) + corrections
+  - `function compute_bounds` (L49) — Compute all bounds in logarithmic form.
+  - `function main` (L99)
+- **yangmills/transfer_matrix_proof.py**
+  - `class SingularValueBound` (L23) — Rigorous bound on singular value decay.
+  - `class TransferMatrixBound` (L45) — Rigorous bound on transfer matrix spectrum.
+  - `function compute_singular_value_decay` (L56) — Fit exponential decay to singular values and compute rigorous bound.
+  - `function construct_transfer_matrix_mpo` (L109) — Construct transfer matrix T = exp(-aH) as MPO.
+  - `function verify_gap_bound` (L148) — Verify that singular value bounds imply transfer matrix gap.
+  - `function generate_mock_singular_values` (L195) — Generate singular values with specified decay rate.
+  - `function main` (L214) — Main proof verification routine.
+- **yangmills/transfer_matrix_rigorous.py**
+  - `class SpectralBound` (L31) — Rigorous bound on transfer matrix spectrum.
+  - `function lattice_spacing` (L43) — Lattice spacing a(g) from asymptotic freedom.
+  - `function physical_mass_bound` (L59) — Physical mass M = Δ_lattice / a(g) in units of Λ_QCD.
+  - `function singular_value_decay_rate` (L67) — Empirical decay rate γ(g) from DMRG simulations.
+  - `function bond_dimension_needed` (L81) — Bond dimension χ needed to capture physics at coupling g.
+  - `function compute_spectral_bound` (L93) — Compute rigorous spectral bound at coupling g.
+  - `function verify_dimensional_transmutation` (L117) — The CRITICAL verification: physical mass M = Δ/a must be constant.
+  - `function main` (L146)
+- **yangmills/weak_coupling_transmutation.py**
+  - `function lattice_spacing` (L68) — Asymptotic freedom formula for lattice spacing.
+  - `function physical_mass_gap` (L82) — Convert lattice gap to physical gap.
+  - `function strong_coupling_gap` (L99) — Strong coupling expansion result.
+  - `function weak_coupling_gap` (L108) — Weak coupling perturbative result.
+  - `function crossover_gap` (L123) — Interpolating formula valid across coupling regimes.
+  - `function run_renormalization_group_analysis` (L141) — Analyze Yang-Mills mass gap across coupling scales.
+  - `function analyze_qtt_scaling` (L248) — Show QTT advantage for probing weak coupling.
+  - `function plot_transmutation` (L311) — Visualize dimensional transmutation.
+  - `function millennium_prize_statement` (L342) — Summarize the Millennium Prize proof path.
+- **yangmills/yangmills_4d_tdvp.py**
+  - `class YM4DTDVPConfig` (L55) — Configuration for 4D Yang-Mills QTT-TDVP solver.
+  - `class YM4DQTTState` (L92) — 4D Yang-Mills state in QTT format with Morton ordering.
+  - `function create_vacuum_state` (L117) — Create strong-coupling vacuum: all links at j=0.
+  - `function create_single_excitation` (L135) — Create state with one link excited: j=1/2 at one link, j=0 elsewhere.
+  - `class YM4DTDVPSolver` (L153) — 4D Yang-Mills solver using QTT-TDVP.
+  - `function run_4d_scaling_test` (L366) — Test 4D Yang-Mills at increasing lattice sizes.
+  - `function validate_against_phase_iii` (L429) — Compare QTT results against Phase III exact diagonalization.
+
+## qtt-misc (77)
+
+- **crypto_qtt_compress.py**
+  - `function download_with_progress` (L40) — Download file with progress indicator.
+  - `function generate_realistic_crypto_data` (L75) — Generate realistic crypto market data when downloads are blocked.
+  - `function try_download_coingecko_data` (L171) — Try to download from CoinGecko (public, no auth needed).
+  - `function compress_to_qtt` (L223) — Compress market data to QTT format.
+  - `function save_compressed` (L292) — Save compressed QTT and metadata.
+  - `function main` (L308) — Main entry point.
+- **ns_qtt_singularity_hunt.py**
+  - `class CompressionMetrics` (L49) — Track QTT compression during simulation.
+  - `class QTTCompressionTracker` (L60) — Track QTT bond dimension as singularity detector.
+  - `class QTTNavierStokes2D` (L163) — 2D Navier-Stokes in vorticity formulation with QTT compression tracking.
+  - `function create_taylor_green_vorticity` (L326) — Taylor-Green vortex in vorticity form.
+  - `function create_kida_vorticity` (L336) — Kida-type vorticity (2D analog).
+  - `function create_shear_layer_vorticity` (L346) — Perturbed shear layer - rollup candidate.
+  - `function run_qtt_singularity_hunt` (L365) — Run singularity hunt with QTT compression tracking.
+- **qtt_50gb_cloud.py**
+  - `function morton_order_3d_gpu` (L37) — Reorder 3D tensor to Morton (Z-order) curve on GPU.
+  - `function rsvd_gpu` (L77) — Randomized SVD for large matrices on GPU. O(mnk) complexity.
+  - `class QTTCores` (L113) — Container for QTT decomposition.
+  - `function tt_svd_gpu` (L126) — GPU-accelerated TT-SVD with randomized SVD for large matrices.
+  - `class NOAAS3Streamer` (L217) — Stream NOAA GOES-18 data directly from S3.
+  - `class GlobalQTTCompressor` (L340) — Global QTT Compressor for multi-GB physics bricks.
+  - `function main` (L503)
+- **qtt_cloud_global.py**
+  - `function morton_order_3d_gpu` (L37) — Reorder 3D tensor to Morton (Z-order) curve on GPU.
+  - `function rsvd_gpu` (L72) — Randomized SVD on GPU.
+  - `class QTTCores` (L101)
+  - `function tt_svd_gpu` (L111) — GPU TT-SVD with randomized SVD for large matrices.
+  - `class S3Streamer` (L181) — Stream NOAA GOES-18 data from S3.
+  - `function main` (L279)
+- **qtt_connectome_real.py**
+  - `class QTTCoreReal` (L108) — A QTT core built directly from neuroanatomical data.
+  - `class RealConnectomeBuilder` (L122) — Build QTT connectome from real neuroanatomical data.
+  - `class PathwayQuery` (L350) — Query effective connectivity between regions WITHOUT materializing full matrix.
+  - `function run_real_connectome` (L406) — Build and validate real QTT connectome.
+- **qtt_fullres_24h.py**
+  - `function morton_order_2d` (L33) — Morton Z-order for 2D spatial locality preservation.
+  - `function rsvd_safe` (L58) — Randomized SVD with CPU fallback for numerical stability.
+  - `function compress_frame_qtt` (L86) — Compress a single frame using 2D QTT with Morton ordering.
+  - `function global_temporal_svd` (L139) — Apply global temporal SVD across ALL frames.
+  - `function run_full_resolution` (L206)
+- **qtt_global_gpu.py**
+  - `function morton_encode_2d` (L92) — Interleave bits of x and y for 2D Morton code.
+  - `function morton_decode_2d` (L104) — Extract x and y from Morton code.
+  - `function morton_order_2d_gpu` (L117) — Reorder 2D tensor to Morton/Z-order on GPU.
+  - `function morton_order_3d_gpu` (L154) — Reorder 3D tensor to Morton/Z-order on GPU.
+  - `class QTTCores` (L197) — QTT cores with metadata.
+  - `function randomized_svd_gpu` (L209) — Randomized SVD for very large matrices.
+  - `function tt_svd_gpu` (L272) — Full TT-SVD decomposition on GPU.
+  - `function tt_expand_gpu` (L410) — Expand QTT cores back to full tensor on GPU.
+  - `function compute_lossless_residual_float` (L443) — Compute exact residual for bit-perfect reconstruction of float data.
+  - `function apply_residual_float` (L480) — Apply float residual for bit-perfect reconstruction.
+  - `function compute_lossless_residual_uint8` (L486) — Compute exact residual for bit-perfect reconstruction of byte data.
+  - `function apply_residual_uint8` (L524) — Apply residual for bit-perfect reconstruction of byte data.
+  - `function entropy_compress` (L537) — Compress with zstd or lzma.
+  - `function entropy_decompress` (L544) — Decompress with zstd or lzma.
+  - `function serialize_qtt` (L551) — Serialize QTT cores to bytes.
+  - `function deserialize_qtt` (L585) — Deserialize QTT cores from bytes.
+  - `class GQTTContainer` (L631) — Global QTT Container Format.
+  - `class GlobalQTTCompressor` (L777) — Global QTT Compressor - The Physics Sees Everything.
+  - `function stream_goes18_to_qtt` (L1166) — Stream GOES-18 data from S3 and compress with global QTT.
+  - `function main` (L1272)
+- **qtt_native_gauntlet.py**
+  - `class GauntletResult` (L57) — Result from a gauntlet test.
+  - `function format_bytes` (L66) — Format bytes in human-readable form.
+  - `function test_qtt_tropical_construction` (L82) — Test QTT tropical matrix construction and basic operations.
+  - `function test_qtt_tropical_operations` (L165) — Test QTT tropical matrix operations (focusing on structure preservation).
+  - `function test_qtt_boundary_operators` (L239) — Test QTT boundary operators for persistent homology.
+  - `function test_qtt_persistence` (L318) — Test QTT persistence computation.
+  - `function test_scaling_analysis` (L384) — Verify O(r² log N) memory scaling.
+  - `function run_qtt_native_gauntlet` (L480) — Run the complete QTT-Native gauntlet.
+- **qtt_neural_connectome.py**
+  - `class BrainRegion` (L69) — Major brain regions for hierarchical modeling.
+  - `class RegionProperties` (L98) — Properties of a brain region.
+  - `class QTTCore` (L114) — A single QTT core representing neural connectivity at one scale.
+  - `class QTTConnectome` (L131) — Quantized Tensor Train representation of brain connectivity.
+  - `class LIFNeuron` (L183) — Leaky Integrate-and-Fire neuron model.
+  - `class SynapticCurrent` (L221) — Exponentially decaying synaptic current.
+  - `class CorticalColumn` (L239) — A cortical column of neurons.
+  - `class ConnectomeBuilder` (L351) — Builds a hierarchical QTT connectome from brain regions.
+  - `class SimulationState` (L509) — State of the neural simulation.
+  - `class NeuralDynamicsSimulator` (L519) — Simulate spiking neural dynamics on the QTT connectome.
+  - `class EnergyComparison` (L707) — Compare biological vs silicon compute efficiency.
+  - `class EnergyAnalyzer` (L729) — Analyze energy efficiency across compute paradigms.
+  - `class InformationFlowAnalyzer` (L791) — Analyze information flow through the connectome.
+  - `function validate_compression` (L842) — Validate QTT compression achieves required ratio.
+  - `function validate_dynamics` (L853) — Validate neural dynamics are biologically plausible.
+  - `function validate_efficiency` (L881) — Validate energy efficiency targets.
+  - `function run_connectome_analysis` (L894) — Run full neural connectome analysis.
+- **qtt_neuromorphic_integration.py**
+  - `class SnHfFDevice` (L40) — Tin-Hafnium-Fluoride ferroelectric memristor.
+  - `class LIFNeuronCircuit` (L80) — Leaky Integrate-and-Fire neuron in CMOS.
+  - `class NeuromorphicTile` (L107) — A single neuromorphic processing tile.
+  - `class QTTHardwareMapping` (L164) — Maps QTT cores to neuromorphic tile configuration.
+  - `class NeuromorphicChip` (L193) — Full neuromorphic chip implementing QTT connectome.
+  - `class BrainScaleProjection` (L255) — Project from QTT chip to full brain scale.
+  - `class SelfAssemblySimulator` (L425) — Simulate how QTT rules "self-assemble" into functional circuits.
+  - `function run_neuromorphic_integration` (L516) — Full integration of QTT connectome with SnHf-F hardware.
+- **qtt_unified_4d.py**
+  - `function morton_encode_3d_symmetric` (L47) — True 3D Morton encoding with symmetric bit interleaving.
+  - `function brick_to_morton_3d` (L64) — Convert 3D tensor (T, H, W) to Morton-ordered 1D vector.
+  - `function rsvd_safe` (L116) — Randomized SVD with CPU fallback.
+  - `function qtt_compress_unified` (L144) — QTT compression on unified 3D flattened vector.
+  - `function download_frame` (L190) — Download and extract a single frame from S3.
+  - `function run_unified_4d` (L207)
+- **tensornet/exploit/compound_v3_qtt_hunt.py**
+  - `function create_compound_v3_spec` (L79) — Create ContractSpec for Compound V3 Comet.
+  - `class CometState` (L151) — Simulated Compound V3 Comet state.
+  - `class CometMockEVM` (L206) — Mock EVM simulating Compound V3 Comet behavior.
+  - `class CometDrainInvariant` (L534) — Invariant: Attacker should not be able to drain protocol.
+  - `class LiquidationMEVInvariant` (L571) — Invariant: Measure MEV extraction potential.
+  - `class CompoundV3HuntResult` (L607) — Result of Compound V3 QTT hunt.
+  - `class CompoundV3QTTHunter` (L645) — QTT-based exploit hunter for Compound V3.
+  - `function main` (L907) — Run Compound V3 QTT hunt.
+- **tensornet/fusion/qtt_screening.py**
+  - `function _tt_svd_fallback` (L99) — Fallback TT-SVD implementation for QTT cores.
+  - `function _dense_to_qtt_cores_fallback` (L153) — Fallback to convert dense values to QTT cores.
+  - `function _qtt_from_function_dense_fallback` (L170) — Fallback dense sampling + TT-SVD.
+  - `function _qtt_from_function_tci_fallback` (L183) — Fallback TCI implementation using random sampling + interpolation.
+  - `class QTTScreeningResult` (L239) — Extended screening result with QTT compression metrics.
+  - `class QTTElectronScreeningSolver` (L267) — Tensor-network compressed solver for electron screening in metal hydrides.
+  - `function compare_qtt_vs_dense` (L677) — Benchmark QTT vs dense computation across grid sizes.
+  - `function demo_qtt_screening` (L733) — Demonstrate QTT-compressed electron screening solver.
+- **tensornet/fusion/qtt_superionic.py**
+  - `class QTTDiffusionResult` (L53) — Diffusion result with QTT compression metrics.
+  - `class QTTSuperionicDynamics` (L83) — QTT-enhanced Langevin dynamics with compressed potential energy surface.
+  - `function demo_qtt_superionic` (L479) — Demonstrate QTT-enhanced superionic dynamics.
+- **tensornet/neural/differentiable_qtt.py**
+  - `class NuclearNormRegularizer` (L41) — Nuclear norm regularizer for QTT cores.
+  - `class DifferentiableQTTCores` (L201) — Wraps TT cores as trainable nn.Parameters.
+  - `class RankAdaptationConfig` (L327) — Configuration for rank adaptation.
+  - `class RankAdaptiveQTT` (L337) — QTT with dynamic rank adaptation.
+  - `class DifferentiableDiscoveryLoss` (L559) — Composite loss function for differentiable discovery.
+  - `function qtt_from_tensor` (L665) — Create differentiable QTT from full tensor via TT-SVD.
+  - `function reconstruct_from_cores` (L732) — Reconstruct full tensor from TT cores using stable contraction.
+  - `function compute_reconstruction_loss` (L776) — Compute reconstruction loss between QTT and target tensor.
+- **tensornet/quantum/cpu_qtt_evaluator.py**
+  - `function morton_encode_fast` (L53) — Numba-JIT compiled Morton encoding.
+  - `function morton_grid_parallel` (L70) — Generate Morton index grid using parallel CPU threads.
+  - `function extract_bit_array` (L86) — Extract bit array from Morton index (MSB first).
+  - `function qtt_contract_single` (L100) — Contract QTT cores at a single Morton index.
+  - `function qtt_eval_batch_numba` (L158) — Parallel batch evaluation of QTT at Morton indices.
+  - `class CPUQTTEvaluator` (L182) — High-performance CPU QTT evaluator for the i9-14900HX.
+  - `function test_cpu_evaluator` (L361) — Test CPU evaluator with synthetic QTT.
+- **tensornet/quantum/hybrid_qtt_renderer.py**
+  - `class HybridQTTRenderer` (L40) — Hybrid CPU-GPU renderer combining sparse QTT evaluation with GPU interpolation.
+  - `function create_test_qtt` (L322) — Create synthetic QTT for testing and validation.
+  - `function test_hybrid_renderer` (L356) — Validation test for hybrid renderer.
+- **tensornet/quantum/qtt_glsl_bridge.py**
+  - `class QTTShaderParams` (L33) — Shader parameters for QTT contraction on GPU.
+  - `function pack_qtt_for_shader` (L65) — Pack QTT cores into contiguous GPU-friendly buffers.
+  - `function generate_shader_header` (L121) — Generate GLSL header with QTT parameters as constants.
+  - `function qtt_eval_at_pixel_coords` (L141) — Evaluate QTT at pixel coordinates (x, y) via core contraction.
+  - `function create_test_qtt` (L190) — Create a synthetic QTT state for testing.
+  - `function validate_shader_contraction` (L214) — Test suite: Compare CPU QTT evaluation vs shader output.
+- **tensornet/quantum/qtt_torch_renderer.py**
+  - `class QTTTorchRenderer` (L33) — GPU-accelerated QTT synthesis for PyTorch rendering pipeline.
+  - `function create_plasma_qtt` (L264) — Create a plasma-like QTT field for testing.
+  - `function test_qtt_torch_renderer` (L292) — Validation: Render QTT to buffer and check output.
+- **tensornet/sovereign/implicit_qtt_renderer.py**
+  - `function _get_cuda_kernel_source` (L18) — Read CUDA kernel source code
+  - `function _compile_kernel` (L25) — Compile implicit_qtt_kernel.cu using PyTorch JIT
+  - `class ImplicitQTTRenderer` (L97) — Render QTT tensors directly in CUDA without materialization.
+  - `function test_implicit_renderer` (L325) — Test implicit renderer with synthetic QTT.
+- **tensornet/sovereign/qtt_bridge_streamer.py**
+  - `class QTTBridgeStreamer` (L30) — Stream QTT-synthesized heatmaps to shared memory bridge.
+  - `function main` (L367) — Run QTT Bridge Streamer.
+- **tensornet/sovereign/qtt_slice_extractor.py**
+  - `class QTT3DState` (L35) — 3D field in QTT format with Morton ordering.
+  - `class QTTSliceExtractor` (L56) — Extract 2D slices from 3D QTT fields with GPU acceleration.
+  - `function test_slice_extractor` (L410) — Test QTT slice extraction with synthetic 3D field.
+- **tensornet_qtt_ntt.py**
+  - `class FieldParams` (L69) — Parameters for a finite field.
+  - `function find_primitive_root` (L89) — Find primitive n-th root of unity in F_p.
+  - `function montgomery_reduce` (L117) — Montgomery reduction: compute x * R^{-1} mod p.
+  - `function build_butterfly_mpo` (L139) — Build butterfly operator as MPO for stage k of FFT.
+  - `function apply_twiddle_factors` (L231) — Apply twiddle factors for butterfly stage.
+  - `class QTTNTT` (L294) — QTT-accelerated NTT for ZK proving.
+  - `function qtt_ntt_forward` (L483) — Quick forward NTT using QTT.
+  - `function qtt_ntt_inverse` (L499) — Quick inverse NTT using QTT.
+  - `function qtt_poly_multiply` (L508) — Polynomial multiplication using QTT-NTT.
+  - `function benchmark_qtt_ntt` (L538) — Benchmark QTT-NTT against standard FFT.
+- **tests/benchmarks/qtt_comprehensive_benchmark.py**
+  - `class BenchmarkResult` (L31)
+  - `function benchmark_fn` (L39) — Benchmark a function, return median time in ms.
+  - `function benchmark_cuda_events` (L60) — Benchmark using CUDA events for GPU-only operations.
+  - `function benchmark_core_qtt_ops` (L84) — Benchmark fundamental QTT operations.
+  - `function benchmark_mpo_ops` (L204) — Benchmark MPO construction and application.
+  - `function benchmark_2d_ops` (L262) — Benchmark 2D QTT operations.
+  - `function benchmark_rendering` (L333) — Benchmark QTT 2D rendering.
+  - `function benchmark_ns2d_components` (L416) — Benchmark Navier-Stokes solver components.
+  - `function benchmark_memory_compression` (L500) — Analyze memory usage and compression ratios.
+  - `function benchmark_point_evaluation` (L599) — Benchmark single and batch point evaluation.
+  - `function run_all_benchmarks` (L678) — Run complete benchmark suite.
+- **tests/benchmarks/qtt_full_pipeline_benchmark.py**
+  - `function check_cuda` (L33) — Check if PyTorch with CUDA is available.
+  - `class PipelineConfig` (L43) — Configuration for pipeline benchmark.
+  - `function create_test_data` (L56) — Create test data with known structure for benchmarking.
+  - `function benchmark_dense_to_qtt` (L93) — Benchmark dense → QTT compression.
+  - `function benchmark_qtt_eval` (L161) — Benchmark QTT point evaluation.
+  - `function benchmark_qtt_render` (L266) — Benchmark QTT 2D rendering using our optimized separable path.
+  - `function benchmark_qtt_to_dense` (L358) — Benchmark QTT → dense decompression.
+  - `function benchmark_end_to_end` (L411) — Benchmark complete end-to-end pipeline.
+  - `function run_full_pipeline_benchmark` (L519) — Run the complete pipeline benchmark suite.
+- **tests/benchmarks/qtt_native_benchmark.py**
+  - `function check_cuda` (L43) — Check if PyTorch with CUDA is available.
+  - `function check_triton` (L51) — Check if Triton is available.
+  - `class NativeConfig` (L61) — Configuration for native pipeline benchmark.
+  - `function benchmark_tci_construction` (L74) — Benchmark QTT construction via TCI (Tensor Cross Interpolation).
+  - `function benchmark_triton_eval` (L183) — Benchmark QTT evaluation using Triton kernels.
+  - `function benchmark_mpo_application` (L280) — Benchmark MPO (Matrix Product Operator) application.
+  - `function run_native_pipeline_benchmark` (L357) — Run the native QTT pipeline benchmark suite.
+- **tests/benchmarks/qtt_render_benchmark.py**
+  - `function check_cuda` (L33) — Check if PyTorch with CUDA is available.
+  - `function create_test_qtt` (L42) — Create a test QTT with specified parameters.
+  - `function eval_qtt_brute_force` (L57) — Brute force QTT evaluation for correctness verification.
+  - `function benchmark_correctness` (L75) — Verify rendering correctness vs brute-force evaluation.
+  - `function benchmark_gpu_tensor` (L130) — Benchmark GPU tensor output path (fastest).
+  - `function benchmark_cpu_output` (L188) — Benchmark CPU numpy output path.
+  - `function benchmark_continuous` (L235) — Benchmark sustained continuous rendering.
+  - `function benchmark_memory` (L273) — Measure peak GPU memory usage.
+  - `function benchmark_resolutions` (L304) — Benchmark at multiple resolutions.
+  - `function run_full_benchmark` (L354) — Run the complete benchmark suite.
+- **tests/test_qtt_tci.py**
+  - `function test_sine_wave` (L11) — Test TCI on sine wave function.
+  - `function test_polynomial` (L46) — Test TCI on polynomial function.
+- **tests/test_qtt_tdvp.py**
+  - `function test_correctness_sod_shock` (L36) — Test 1: Correctness against known Sod shock tube solution.
+  - `function test_scaling_complexity` (L101) — Test 2: Verify O(log N) scaling of per-step time.
+  - `function test_storage_compression` (L190) — Test 3: Verify storage scales as O(log N · χ²).
+  - `function test_energy_conservation` (L240) — Test 4: Verify energy conservation during evolution.
+  - `function test_holy_grail_demo` (L285) — Test 5: Run the full Holy Grail demo.
+  - `function run_all_tests` (L302) — Run all validation tests.
+- **yangmills/qtt.py**
+  - `class QTT` (L51) — Quantized Tensor Train representation.
+  - `function zeros_qtt` (L461) — Create zero QTT.
+  - `function ones_qtt` (L471) — Create QTT for vector of all ones (unnormalized).
+  - `function basis_qtt` (L484) — Create QTT for basis vector e_index.
+  - `function random_qtt` (L514) — Create random QTT with specified maximum rank.
+  - `function product_state_qtt` (L550) — Create QTT for product state |ψ₁⟩ ⊗ |ψ₂⟩ ⊗ ... ⊗ |ψₙ⟩.
+  - `class QTTMPO` (L569) — Matrix Product Operator (MPO) in QTT format.
+  - `function identity_mpo` (L634) — Create identity MPO.
+  - `function diagonal_mpo` (L645) — Create diagonal MPO from QTT vector.
+  - `function verify_qtt` (L669) — Verify QTT implementation with comprehensive tests.
+- **yangmills/qtt_cuda.py**
+  - `function get_cuda_device` (L65) — Get CUDA device if available, else CPU.
+  - `function print_device_info` (L72) — Print GPU device information.
+  - `class QTTCuda` (L90) — QTT (Quantized Tensor Train) with CUDA acceleration.
+  - `class MPOCuda` (L352) — Matrix Product Operator on CUDA.
+  - `class CudaGroundStateResult` (L496) — Result of CUDA ground state computation.
+  - `function lanczos_ground_state_cuda` (L507) — Find ground state using GPU-accelerated Lanczos.
+  - `function _lanczos_gpu` (L606) — Standalone GPU Lanczos implementation.
+  - `function random_qtt_cuda` (L703) — Create random QTT on CUDA.
+  - `function basis_qtt_cuda` (L732) — Create basis state |index⟩ on CUDA.
+- **yangmills/qtt_dmrg_large_lattice.py**
+  - `class LargeLatticeCfg` (L47) — Configuration for large 2D lattice.
+  - `class LargeLatticeQTT` (L81) — QTT representation of 2D Yang-Mills on large lattice.
+  - `function compute_gap_large_lattice` (L294) — Compute mass gap on large lattice.
+  - `function hunt_scaling_window` (L363) — Systematic search for the scaling window.
+  - `function push_to_extreme` (L465) — Push to extreme parameters to find the crossover.
+- **yangmills/tests/test_4d_qtt.py**
+  - `class TestMortonEncoding` (L33) — Test 4D Morton encoding/decoding.
+  - `class TestYM4DConfig` (L62) — Test 4D Yang-Mills configuration.
+  - `class TestYM4DQTT` (L86) — Test 4D Yang-Mills QTT solver.
+  - `class TestYM4DTDVP` (L120) — Test 4D Yang-Mills TDVP solver.
+  - `class TestDimensionalTransmutation` (L157) — Test weak coupling and dimensional transmutation.
+  - `class TestScaling` (L203) — Test O(log N) scaling of QTT approach.
+  - `class TestPhaseIIIConsistency` (L232) — Validate consistency with Phase III exact results.
+  - `function run_all_tests` (L261) — Run all tests and report results.
+- **yangmills/yangmills_4d_qtt.py**
+  - `class YM4DConfig` (L60) — Configuration for 4D Yang-Mills in QTT format.
+  - `function morton_encode_4d` (L102) — Encode 4D coordinates to Morton order.
+  - `function morton_decode_4d` (L113) — Decode Morton index to 4D coordinates.
+  - `class YangMills4DQTT` (L124) — 4D Yang-Mills solver using QTT and N-dimensional shift MPO.
+  - `function test_4d_yangmills_qtt` (L277) — Test 4D Yang-Mills with QTT infrastructure.
+  - `function scaling_comparison` (L328) — Compare scaling of direct vs QTT approaches.
+
+## sdk (18)
+
+- **sdk/qtt-sdk/examples/big_data_analytics.py**
+  - `function simulate_sensor_stream` (L25) — Simulate a stream of sensor data chunks.
+  - `class StreamingStatistics` (L44) — Compute running statistics on streaming data using QTT compression.
+  - `function anomaly_detection_demo` (L112) — Demonstrate anomaly detection on streaming sensor data.
+  - `function correlation_analysis_demo` (L170) — Demonstrate correlation analysis between multiple sensor streams.
+- **sdk/qtt-sdk/examples/billion_point_real.py**
+  - `function binary_digits` (L26) — Convert integer index to binary digits (LSB first).
+  - `function index_to_x` (L31) — Convert grid index to x value in [0, 1).
+  - `function evaluate_qtt_at_index` (L36) — Evaluate QTT at a specific grid index WITHOUT decompressing.
+  - `function build_constant_qtt` (L55) — Build QTT for constant function f(x) = value.
+  - `function build_linear_qtt` (L68) — Build exact QTT for f(x) = x on [0, 1) with 2^n points.
+  - `function build_cosine_qtt_approximate` (L128) — Build approximate QTT for cos(2π * frequency * x) using angle addition.
+  - `function build_sine_qtt_approximate` (L175) — Build approximate QTT for sin(2π * frequency * x) using Chebyshev expansion.
+  - `function build_polynomial_qtt` (L245) — Build QTT for polynomial p(x) = sum_k coeffs[k] * x^k on [0,1).
+  - `function verify_qtt_samples` (L263) — Verify QTT by sampling random points and comparing to true function.
+  - `function main` (L289)
+- **sdk/qtt-sdk/examples/digital_twin.py**
+  - `class TwinState` (L31) — A timestamped digital twin state.
+  - `class DigitalTwinStateManager` (L38) — Manages compressed state history for a digital twin.
+  - `function thermal_digital_twin_demo` (L212) — Demonstrate a thermal simulation digital twin.
+  - `function fleet_digital_twin_demo` (L313) — Demonstrate fleet-level digital twin management.
+- **sdk/qtt-sdk/examples/irrefutable_proof.py**
+  - `class ProofResult` (L56) — A single proof result with all verification data.
+  - `class IrrefutableProof` (L66) — Generates cryptographically verifiable proofs of QTT correctness.
+  - `function main` (L444)
+- **sdk/qtt-sdk/examples/make_pdf.py**
+  - `function draw_header` (L20) — Draw page header with blue line
+  - `function draw_footer` (L29) — Draw page footer
+  - `function create_complete_technical_volume` (L36)
+- **sdk/qtt-sdk/examples/proof_fluid_dynamics.py**
+  - `class TensorEncoder` (L38) — JSON encoder that handles torch tensors and numpy types.
+  - `class FluidProofResult` (L49) — Result of a single fluid dynamics proof.
+  - `class FluidDynamicsProver` (L59) — Generate irrefutable proofs of QTT fluid dynamics capability.
+  - `function main` (L760)
+- **sdk/qtt-sdk/examples/proof_pressure_poisson.py**
+  - `class TensorEncoder` (L50) — JSON encoder that handles torch tensors.
+  - `class PoissonProofResult` (L61) — Result of a pressure Poisson proof.
+  - `class PressurePoissonProver` (L71) — Prove QTT can solve the pressure Poisson equation.
+  - `function main` (L773)
+- **sdk/qtt-sdk/src/qtt_sdk/core.py**
+  - `class QTTState` (L18) — Quantized Tensor-Train representation of a 1D vector.
+  - `class MPO` (L89) — Matrix Product Operator for applying linear operators in QTT format.
+  - `function dense_to_qtt` (L124) — Convert a 1D dense tensor to QTT format.
+  - `function qtt_to_dense` (L230) — Reconstruct dense tensor from QTT format.
+  - `function random_qtt` (L266) — Create a random QTT state (useful for testing).
+- **sdk/qtt-sdk/src/qtt_sdk/operations.py**
+  - `function qtt_add` (L16) — Add two QTT states: result = a + b.
+  - `function qtt_scale` (L84) — Scale a QTT state by a scalar: result = scalar * qtt.
+  - `function qtt_inner_product` (L108) — Compute inner product <a|b> of two QTT states.
+  - `function qtt_norm` (L152) — Compute L2 norm of a QTT state.
+  - `function truncate_qtt` (L171) — Truncate (recompress) a QTT state to lower bond dimension.
+  - `function qtt_elementwise_product` (L256) — Compute element-wise (Hadamard) product of two QTT states.
+  - `function qtt_subtract` (L308) — Subtract two QTT states: result = a - b.
+- **sdk/qtt-sdk/src/qtt_sdk/operators.py**
+  - `function identity_mpo` (L16) — Create identity MPO.
+  - `function shift_mpo` (L38) — Create shift operator MPO.
+  - `function derivative_mpo` (L107) — Create central difference derivative MPO.
+  - `function laplacian_mpo` (L180) — Create Laplacian (second derivative) MPO.
+  - `function _mpo_add` (L201) — Add two MPOs by direct sum of bond spaces.
+  - `function apply_mpo` (L238) — Apply an MPO to a QTT state.
+  - `function mpo_to_matrix` (L304) — Convert MPO to dense matrix (for small systems only).
+- **sdk/qtt-sdk/tests/test_qtt_sdk.py**
+  - `class TestConversion` (L17) — Tests for dense <-> QTT conversion.
+  - `class TestArithmetic` (L62) — Tests for QTT arithmetic operations.
+  - `class TestBillionPointScale` (L134) — Tests at billion-point scale (no dense reconstruction).
+  - `class TestMemoryEfficiency` (L193) — Tests for memory usage.
+
+## tci (18)
+
+- **tci_llm/demo.py**
+  - `function download_shakespeare` (L18) — Download Shakespeare corpus if not present.
+  - `function main` (L28)
+- **tci_llm/examples/demo.py**
+  - `function main` (L24)
+- **tci_llm/generalized_llm.py**
+  - `class GeneralizedSVDLLM` (L37) — Gradient-free language model with true generalization capability.
+  - `function demo` (L378) — Demonstrate the generalized model on WikiText-2.
+- **tci_llm/generalized_tci.py**
+  - `class GeneralizedTCI` (L31) — Gradient-free language model using hashed n-gram features.
+  - `class HybridTCI` (L378) — Hybrid model combining exact TCI lookup with generalized prediction.
+- **tci_llm/qtt.py**
+  - `function dense_to_qtt_cores` (L22) — Convert dense vector to QTT cores via TT-SVD.
+  - `function qtt_from_function_dense` (L86) — Build QTT from function by dense sampling + TT-SVD.
+  - `function index_to_bits` (L112) — Convert flat indices to binary representation.
+  - `function qtt_eval_at_index` (L127) — Evaluate QTT at a single index.
+  - `function qtt_eval_batch` (L159) — Evaluate QTT at a batch of indices.
+  - `function extract_lookup_table` (L198) — Extract dense lookup table from QTT cores.
+- **tci_llm/svd_llm.py**
+  - `class SVDLLM` (L23) — SVD-based Language Model - Gradient Free
+- **tci_llm/tci_llm.py**
+  - `class TCI_LLM` (L28) — Gradient-free language model using Tensor Cross Interpolation.
+- **tci_llm/tests/test_tci_llm.py**
+  - `class TestQTT` (L25) — Test QTT construction and evaluation.
+  - `class TestTCI_LLM` (L77) — Test main TCI_LLM class.
+  - `class TestIntegration` (L154) — Integration tests with realistic data.

@@ -1,0 +1,7491 @@
+{
+  "n_other": 437,
+  "language_breakdown": {
+    "py": 226,
+    "rs": 59,
+    "json": 57,
+    "md": 95
+  },
+  "proposed_category_breakdown": {
+    "tci": 20,
+    "core": 122,
+    "gpu": 7,
+    "cfd": 14,
+    "unresolved": 271,
+    "genesis": 3
+  },
+  "recommendations": {
+    "reclassify": [
+      {
+        "path": "tig011a_multimechanism.py",
+        "lang": "py",
+        "score": 155,
+        "proposed_category": "tci",
+        "keywords": [
+          "QTT",
+          "Quantized Tensor Train",
+          "tensor train",
+          "TT-cross",
+          "TT-SVD"
+        ],
+        "n_symbols": 29
+      },
+      {
+        "path": "tensornet/exploit/state_encoder.py",
+        "lang": "py",
+        "score": 130,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "QTT",
+          "Quantized Tensor Train",
+          "tensor train",
+          "TT-SVD"
+        ],
+        "n_symbols": 12
+      },
+      {
+        "path": "tensornet/zk/fluidelite_circuit_analyzer.py",
+        "lang": "py",
+        "score": 125,
+        "proposed_category": "tci",
+        "keywords": [
+          "MPO",
+          "mpo",
+          "MPS",
+          "QTT",
+          "QTT",
+          "TCI",
+          "TCI",
+          "TT-SVD"
+        ],
+        "n_symbols": 15
+      },
+      {
+        "path": "tensornet/docs/user_guides.py",
+        "lang": "py",
+        "score": 120,
+        "proposed_category": "core",
+        "keywords": [
+          "MPO",
+          "MPS",
+          "mps",
+          "QTT",
+          "QTT",
+          "Quantized Tensor Train"
+        ],
+        "n_symbols": 10
+      },
+      {
+        "path": "yangmills/__init__.py",
+        "lang": "py",
+        "score": 120,
+        "proposed_category": "core",
+        "keywords": [
+          "MPS",
+          "QTT",
+          "Quantized Tensor Train",
+          "Tensor Train"
+        ],
+        "n_symbols": 0
+      },
+      {
+        "path": "crates/hyper_core/src/lib.rs",
+        "lang": "rs",
+        "score": 118,
+        "proposed_category": "core",
+        "keywords": [
+          "MPO",
+          "QTT",
+          "Quantized Tensor Train",
+          "Tensor train"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "compress_crypto_data.py",
+        "lang": "py",
+        "score": 105,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "QTT",
+          "Quantized Tensor Train",
+          "tensor train",
+          "TENSOR TRAIN"
+        ],
+        "n_symbols": 8
+      },
+      {
+        "path": "proofs/proof_millennium.py",
+        "lang": "py",
+        "score": 105,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "Quantized Tensor Train"
+        ],
+        "n_symbols": 7
+      },
+      {
+        "path": "tensornet/visualization/tensor_slicer.py",
+        "lang": "py",
+        "score": 105,
+        "proposed_category": "gpu",
+        "keywords": [
+          "QTT",
+          "QTT",
+          "Quantized Tensor Train",
+          "Tensor Train"
+        ],
+        "n_symbols": 19
+      },
+      {
+        "path": "crates/tci_core/src/lib.rs",
+        "lang": "rs",
+        "score": 98,
+        "proposed_category": "tci",
+        "keywords": [
+          "QTT",
+          "TCI",
+          "TT-Cross",
+          "TT-SVD"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite_ingest.py",
+        "lang": "py",
+        "score": 90,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "Tensor Train",
+          "TT-SVD"
+        ],
+        "n_symbols": 15
+      },
+      {
+        "path": "tensornet/types/genesis_integration.py",
+        "lang": "py",
+        "score": 90,
+        "proposed_category": "core",
+        "keywords": [
+          "MPO",
+          "QTT",
+          "TT-SVD"
+        ],
+        "n_symbols": 9
+      },
+      {
+        "path": "fluidelite-zk/src/bin/fluid_block.rs",
+        "lang": "rs",
+        "score": 88,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "QTT",
+          "Tensor Train",
+          "tensor train",
+          "TT-SVD"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "tensornet/benchmarks/profile_bottlenecks.py",
+        "lang": "py",
+        "score": 80,
+        "proposed_category": "cfd",
+        "keywords": [
+          "MPS",
+          "QTT",
+          "tensor train"
+        ],
+        "n_symbols": 10
+      },
+      {
+        "path": "tensornet/types/__init__.py",
+        "lang": "py",
+        "score": 80,
+        "proposed_category": "core",
+        "keywords": [
+          "MPO",
+          "MPS",
+          "QTT",
+          "tensor train"
+        ],
+        "n_symbols": 0
+      },
+      {
+        "path": "fluidelite-zk/src/lib.rs",
+        "lang": "rs",
+        "score": 78,
+        "proposed_category": "core",
+        "keywords": [
+          "MPO",
+          "mpo",
+          "MPS",
+          "mps",
+          "QTT",
+          "tensor train"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "tensornet/exploit/__init__.py",
+        "lang": "py",
+        "score": 75,
+        "proposed_category": "tci",
+        "keywords": [
+          "QTT",
+          "TCI"
+        ],
+        "n_symbols": 0
+      },
+      {
+        "path": "tensornet/exploit/bounty_api.py",
+        "lang": "py",
+        "score": 75,
+        "proposed_category": "tci",
+        "keywords": [
+          "QTT",
+          "TCI"
+        ],
+        "n_symbols": 8
+      },
+      {
+        "path": "tensornet/exploit/constants.py",
+        "lang": "py",
+        "score": 75,
+        "proposed_category": "tci",
+        "keywords": [
+          "QTT",
+          "TCI",
+          "TT-cross"
+        ],
+        "n_symbols": 0
+      },
+      {
+        "path": "tensornet/exploit/euler_v2_hunt.py",
+        "lang": "py",
+        "score": 75,
+        "proposed_category": "tci",
+        "keywords": [
+          "QTT",
+          "TCI"
+        ],
+        "n_symbols": 6
+      },
+      {
+        "path": "tensornet/exploit/exploit_hunter.py",
+        "lang": "py",
+        "score": 75,
+        "proposed_category": "tci",
+        "keywords": [
+          "QTT",
+          "TCI",
+          "TT-cross"
+        ],
+        "n_symbols": 5
+      },
+      {
+        "path": "tensornet/exploit/morpho_blue_hunt.py",
+        "lang": "py",
+        "score": 75,
+        "proposed_category": "tci",
+        "keywords": [
+          "QTT",
+          "TCI"
+        ],
+        "n_symbols": 9
+      },
+      {
+        "path": "tensornet/exploit/tx_space.py",
+        "lang": "py",
+        "score": 75,
+        "proposed_category": "tci",
+        "keywords": [
+          "QTT",
+          "TCI",
+          "TT-cross"
+        ],
+        "n_symbols": 13
+      },
+      {
+        "path": "tensornet/substrate/morton_ops.py",
+        "lang": "py",
+        "score": 75,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "TT-SVD"
+        ],
+        "n_symbols": 12
+      },
+      {
+        "path": "tests/audit_layer_4.py",
+        "lang": "py",
+        "score": 75,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "TT-SVD"
+        ],
+        "n_symbols": 14
+      },
+      {
+        "path": "tests/benchmarks/optimized_pipeline_benchmark.py",
+        "lang": "py",
+        "score": 75,
+        "proposed_category": "tci",
+        "keywords": [
+          "QTT",
+          "TCI"
+        ],
+        "n_symbols": 10
+      },
+      {
+        "path": "tests/test_tci_integration.py",
+        "lang": "py",
+        "score": 75,
+        "proposed_category": "tci",
+        "keywords": [
+          "QTT",
+          "TCI"
+        ],
+        "n_symbols": 8
+      },
+      {
+        "path": "yangmills/ground_state_cuda.py",
+        "lang": "py",
+        "score": 75,
+        "proposed_category": "gpu",
+        "keywords": [
+          "MPO",
+          "MPS",
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": 14
+      },
+      {
+        "path": "yangmills/tests/test_gate5.py",
+        "lang": "py",
+        "score": 75,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "TENSOR TRAIN",
+          "tensor train"
+        ],
+        "n_symbols": 15
+      },
+      {
+        "path": "fluidelite-zk/src/bin/fluid_s3_native.rs",
+        "lang": "rs",
+        "score": 73,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "TT-SVD"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "decompress_crypto_data.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "QTT",
+          "TENSOR TRAIN"
+        ],
+        "n_symbols": 3
+      },
+      {
+        "path": "elite_yang_mills_proof.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "MPO",
+          "mpo",
+          "MPS",
+          "mps",
+          "QTT"
+        ],
+        "n_symbols": 8
+      },
+      {
+        "path": "femto_fabricator_gauntlet.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "tensor train"
+        ],
+        "n_symbols": 13
+      },
+      {
+        "path": "live_orderbook_fluid.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "QTT",
+          "tensor train"
+        ],
+        "n_symbols": 8
+      },
+      {
+        "path": "proofs/proof_master.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "MPS",
+          "QTT"
+        ],
+        "n_symbols": 2
+      },
+      {
+        "path": "proofs/proof_phase_2.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "cfd",
+        "keywords": [
+          "MPO",
+          "MPS",
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": 5
+      },
+      {
+        "path": "proofs/proof_phase_3.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "MPS",
+          "mps",
+          "QTT"
+        ],
+        "n_symbols": 5
+      },
+      {
+        "path": "proteome_compiler_gauntlet.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "Tensor Train"
+        ],
+        "n_symbols": 10
+      },
+      {
+        "path": "real_yang_mills_engine.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "MPO",
+          "mpo",
+          "MPS",
+          "mps",
+          "QTT"
+        ],
+        "n_symbols": 6
+      },
+      {
+        "path": "scripts/check_import_cycles.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "mpo",
+          "mps",
+          "QTT"
+        ],
+        "n_symbols": 2
+      },
+      {
+        "path": "scripts/full_reproduce.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "MPS",
+          "QTT"
+        ],
+        "n_symbols": 6
+      },
+      {
+        "path": "scripts/setup/hypertensor_core.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "tensor train"
+        ],
+        "n_symbols": 2
+      },
+      {
+        "path": "tensornet/__init__.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "MPO",
+          "mpo",
+          "MPS",
+          "mps",
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": 0
+      },
+      {
+        "path": "tensornet/gateway/orbital_command.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "MPO",
+          "mpo",
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": 3
+      },
+      {
+        "path": "tensornet/neural/genesis_optimizer.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "QTT",
+          "Tensor Train"
+        ],
+        "n_symbols": 7
+      },
+      {
+        "path": "tensornet/sovereign/heatmap_generator.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "gpu",
+        "keywords": [
+          "QTT",
+          "QTT",
+          "Tensor Train"
+        ],
+        "n_symbols": 2
+      },
+      {
+        "path": "tensornet/substrate/field.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "tensor train"
+        ],
+        "n_symbols": 4
+      },
+      {
+        "path": "tests/test_integration.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "cfd",
+        "keywords": [
+          "MPO",
+          "MPS",
+          "mps",
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": 33
+      },
+      {
+        "path": "tests/test_mpo_solver.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "cfd",
+        "keywords": [
+          "MPO",
+          "mpo",
+          "QTT"
+        ],
+        "n_symbols": 7
+      },
+      {
+        "path": "tests/test_visualization.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "QTT",
+          "Tensor Train"
+        ],
+        "n_symbols": 19
+      },
+      {
+        "path": "yang_mills_proof_pipeline.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "QTT",
+          "TENSOR TRAIN",
+          "Tensor Train"
+        ],
+        "n_symbols": 6
+      },
+      {
+        "path": "yangmills/transfer_matrix_proof.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "MPO",
+          "QTT"
+        ],
+        "n_symbols": 7
+      },
+      {
+        "path": "yangmills/weak_coupling_transmutation.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "MPO",
+          "QTT"
+        ],
+        "n_symbols": 9
+      },
+      {
+        "path": "yangmills/yangmills_4d_tdvp.py",
+        "lang": "py",
+        "score": 65,
+        "proposed_category": "core",
+        "keywords": [
+          "MPO",
+          "QTT"
+        ],
+        "n_symbols": 7
+      },
+      {
+        "path": "crates/hyper_bridge/src/lib.rs",
+        "lang": "rs",
+        "score": 63,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "QTT",
+          "QTTS",
+          "Tensor Train"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "crates/hyper_core/benches/tt_bench.rs",
+        "lang": "rs",
+        "score": 63,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "tensor train"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "crates/hyper_core/src/gpu/tt_eval.rs",
+        "lang": "rs",
+        "score": 63,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "Tensor Train"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite-zk/src/bin/fluid_ingest.rs",
+        "lang": "rs",
+        "score": 63,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "QTT",
+          "Tensor Train",
+          "Tensor train",
+          "tensor train"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite-zk/src/bin/vram_stress_test.rs",
+        "lang": "rs",
+        "score": 63,
+        "proposed_category": "core",
+        "keywords": [
+          "MPO",
+          "mpo",
+          "MPS",
+          "mps",
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite-zk/src/genesis_prover.rs",
+        "lang": "rs",
+        "score": 63,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "QTT",
+          "tensor train"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite-zk/src/zero_expansion_prover.rs",
+        "lang": "rs",
+        "score": 63,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "QTT",
+          "tensor train"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "hermes_gauntlet.py",
+        "lang": "py",
+        "score": 60,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 22
+      },
+      {
+        "path": "proof_engine/interval.py",
+        "lang": "py",
+        "score": 60,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 5
+      },
+      {
+        "path": "proofs/proof_exploit_invariants.py",
+        "lang": "py",
+        "score": 60,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 15
+      },
+      {
+        "path": "tensornet/exploit/invariant_hunter.py",
+        "lang": "py",
+        "score": 60,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 7
+      },
+      {
+        "path": "yangmills/ground_state.py",
+        "lang": "py",
+        "score": 60,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": 9
+      },
+      {
+        "path": "yangmills/tests/test_gate2.py",
+        "lang": "py",
+        "score": 60,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": 8
+      }
+    ],
+    "investigate": [
+      {
+        "path": "TURN_THE_KEY.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 14
+      },
+      {
+        "path": "ade_gauntlet.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": 8
+      },
+      {
+        "path": "ai_mathematician.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 2
+      },
+      {
+        "path": "ai_scientist/__init__.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 0
+      },
+      {
+        "path": "ai_scientist/conjecturer.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 2
+      },
+      {
+        "path": "ai_scientist/demo.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 0
+      },
+      {
+        "path": "ai_scientist/formalizer.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 4
+      },
+      {
+        "path": "ai_scientist/pipeline.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 2
+      },
+      {
+        "path": "chronos_gauntlet.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 28
+      },
+      {
+        "path": "cornucopia_gauntlet.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 15
+      },
+      {
+        "path": "docs/generate_attestation.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 1
+      },
+      {
+        "path": "elite_yang_mills_proof_v2.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 7
+      },
+      {
+        "path": "genesis_benchmark_suite.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": "genesis",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 15
+      },
+      {
+        "path": "live_market_fluid.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": 8
+      },
+      {
+        "path": "navier_stokes_millennium_pipeline.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": "cfd",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 10
+      },
+      {
+        "path": "ns_unified_black_swan.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": 9
+      },
+      {
+        "path": "ns_unified_black_swan_v2.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": 10
+      },
+      {
+        "path": "oracle_node/calibration.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 11
+      },
+      {
+        "path": "oracle_node/server.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": "genesis",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 19
+      },
+      {
+        "path": "production_hardening_gauntlet.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 8
+      },
+      {
+        "path": "prometheus_gauntlet.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 12
+      },
+      {
+        "path": "proof_engine/Certified.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 9
+      },
+      {
+        "path": "proof_engine/Certified_ARB.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 8
+      },
+      {
+        "path": "proof_engine/__init__.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 0
+      },
+      {
+        "path": "proof_engine/certificate.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 4
+      },
+      {
+        "path": "proof_engine/constructive_qft.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 5
+      },
+      {
+        "path": "proof_engine/lean_export.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 2
+      },
+      {
+        "path": "proofs/cap_full_power.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": 9
+      },
+      {
+        "path": "proofs/proof_level_3b.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 5
+      },
+      {
+        "path": "proofs/proof_markets_pipeline.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 3
+      },
+      {
+        "path": "proofs/proof_molecular_pipeline.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 3
+      },
+      {
+        "path": "scripts/generate_api_docs.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 1
+      },
+      {
+        "path": "scripts/generate_pipeline_diagram.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 0
+      },
+      {
+        "path": "scripts/setup/realtime_renderer.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 2
+      },
+      {
+        "path": "scripts/testing/test_implicit_concept.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": 3
+      },
+      {
+        "path": "scripts/testing/test_phase4_integration.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 3
+      },
+      {
+        "path": "scripts/testing/test_phase4_validation.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 1
+      },
+      {
+        "path": "sovereign_daemon.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 16
+      },
+      {
+        "path": "sovereign_genesis_gauntlet.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 11
+      },
+      {
+        "path": "tensornet/discovery/__main__.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 6
+      },
+      {
+        "path": "tensornet/discovery/api/gpu.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 8
+      },
+      {
+        "path": "tensornet/discovery/api/server.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 6
+      },
+      {
+        "path": "tensornet/discovery/engine_v2.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 4
+      },
+      {
+        "path": "tensornet/discovery/ingest/markets.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 9
+      },
+      {
+        "path": "tensornet/discovery/ingest/molecular.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 8
+      },
+      {
+        "path": "tensornet/discovery/ingest/plasma.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 5
+      },
+      {
+        "path": "tensornet/discovery/pipelines/markets_pipeline.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 4
+      },
+      {
+        "path": "tensornet/discovery/pipelines/molecular_pipeline.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 3
+      },
+      {
+        "path": "tensornet/discovery/primitives/__init__.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 0
+      },
+      {
+        "path": "tensornet/discovery/primitives/geometric_algebra.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 1
+      },
+      {
+        "path": "tensornet/discovery/primitives/kernel.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": "gpu",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 1
+      },
+      {
+        "path": "tensornet/discovery/primitives/optimal_transport.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 1
+      },
+      {
+        "path": "tensornet/discovery/primitives/random_matrix.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 1
+      },
+      {
+        "path": "tensornet/discovery/primitives/spectral_wavelets.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": "genesis",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 1
+      },
+      {
+        "path": "tensornet/discovery/primitives/topology.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 1
+      },
+      {
+        "path": "tensornet/discovery/protocol.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 6
+      },
+      {
+        "path": "tensornet/exploit/bounty_reporter.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 7
+      },
+      {
+        "path": "tensornet/exploit/evm_oracle.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 6
+      },
+      {
+        "path": "tensornet/exploit/guided_sampling.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 4
+      },
+      {
+        "path": "tensornet/exploit/historical_validator.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 4
+      },
+      {
+        "path": "tensornet/exploit/hypergrid.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 17
+      },
+      {
+        "path": "tensornet/exploit/invariants.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 16
+      },
+      {
+        "path": "tensornet/exploit/mainnet_targets.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 5
+      },
+      {
+        "path": "tensornet/exploit/real_evm.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 5
+      },
+      {
+        "path": "tensornet/exploit/toy_contracts.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 10
+      },
+      {
+        "path": "tensornet/fieldops/__init__.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 0
+      },
+      {
+        "path": "tensornet/fieldops/operators.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": "cfd",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 24
+      },
+      {
+        "path": "tensornet/fieldos/kernel.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": "gpu",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 8
+      },
+      {
+        "path": "tensornet/fusion/__init__.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 0
+      },
+      {
+        "path": "tensornet/gateway/onion_renderer.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 5
+      },
+      {
+        "path": "tensornet/hw/verilog_elite_analyzer.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 8
+      },
+      {
+        "path": "tensornet/hypersim/env.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 4
+      },
+      {
+        "path": "tensornet/hypersim/rewards.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 12
+      },
+      {
+        "path": "tensornet/hypersim/spaces.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 10
+      },
+      {
+        "path": "tensornet/hypervisual/__init__.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 0
+      },
+      {
+        "path": "tensornet/hypervisual/renderer.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 7
+      },
+      {
+        "path": "tensornet/hypervisual/slicer.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 5
+      },
+      {
+        "path": "tensornet/hypervisual/slicing_core.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 4
+      },
+      {
+        "path": "tensornet/provenance/commit.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 3
+      },
+      {
+        "path": "tensornet/quantum/__init__.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 1
+      },
+      {
+        "path": "tensornet/sovereign/__init__.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 0
+      },
+      {
+        "path": "tensornet/sovereign/realtime_tensor_stream.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 2
+      },
+      {
+        "path": "tensornet/substrate/__init__.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 0
+      },
+      {
+        "path": "tensornet/substrate/bundle.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 4
+      },
+      {
+        "path": "tensornet/substrate/stats.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": "gpu",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 3
+      },
+      {
+        "path": "tensornet/types/fields.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 10
+      },
+      {
+        "path": "tensornet/visualization/benchmark_render_gpu.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 3
+      },
+      {
+        "path": "tensornet/zk/fezk_elite.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": 17
+      },
+      {
+        "path": "tensornet/zk/halo2_constraint_extractor.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 5
+      },
+      {
+        "path": "tensornet/zk/polygon_security_report.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 3
+      },
+      {
+        "path": "tests/audit_layer_5.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": "cfd",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 17
+      },
+      {
+        "path": "tests/audit_layer_6.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 4
+      },
+      {
+        "path": "tests/test_exploit_constants.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 7
+      },
+      {
+        "path": "tests/test_exploit_hunter.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 4
+      },
+      {
+        "path": "tests/test_exploit_invariants.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 12
+      },
+      {
+        "path": "tests/test_exploit_real_evm.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 5
+      },
+      {
+        "path": "tests/test_exploit_state_encoder.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 7
+      },
+      {
+        "path": "tests/test_exploit_tx_space.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 7
+      },
+      {
+        "path": "tests/test_fieldops.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": "cfd",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 18
+      },
+      {
+        "path": "tests/test_marrs_fusion.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 15
+      },
+      {
+        "path": "tests/test_sovereign.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 17
+      },
+      {
+        "path": "tests/test_tensor_slicer.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 7
+      },
+      {
+        "path": "tig011a_docking_qmmm.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 11
+      },
+      {
+        "path": "tig011a_dynamic_validation.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 21
+      },
+      {
+        "path": "yangmills/lattice.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 6
+      },
+      {
+        "path": "yangmills/multi_plaq_scaling_window.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 5
+      },
+      {
+        "path": "yangmills/tests/__init__.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 0
+      },
+      {
+        "path": "yangmills/transfer_matrix_final_proof.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 3
+      },
+      {
+        "path": "yangmills/transfer_matrix_log_proof.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 4
+      },
+      {
+        "path": "yangmills/transfer_matrix_rigorous.py",
+        "lang": "py",
+        "score": 40,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": 8
+      },
+      {
+        "path": "crates/hyper_bridge/src/bench_real_data.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "crates/hyper_bridge/src/sovereign_v2.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "crates/hyper_bridge/src/tests/concurrent.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "crates/hyper_bridge/src/tests/constitution.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "crates/hyper_bridge/src/tests/fuzz.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "crates/hyper_bridge/src/weather.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "crates/hyper_core/src/transforms/morton.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "crates/hyper_gpu_py/src/lib.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite-zk/src/bin/genesis_benchmark.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite-zk/src/bin/gpu_pipelined_tps.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite-zk/src/bin/groth16_real.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite-zk/src/bin/worldcoin_demo.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite-zk/src/bin/worldcoin_production.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite-zk/src/bin/zero_expansion_benchmark.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite-zk/src/circuit/config.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": "core",
+        "keywords": [
+          "MPO",
+          "MPS",
+          "tensor train"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite-zk/src/genesis_integration.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite-zk/src/groth16_output.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite-zk/src/semaphore/circuit.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite-zk/src/semaphore/mod.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite-zk/src/semaphore/prover.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "fluidelite-zk/src/semaphore/verifier.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "proofs/proof_21_tdvp_euler_conservation.py",
+        "lang": "py",
+        "score": 35,
+        "proposed_category": "cfd",
+        "keywords": [
+          "MPO",
+          "mpo",
+          "MPS"
+        ],
+        "n_symbols": 6
+      },
+      {
+        "path": "proofs/proof_mps.py",
+        "lang": "py",
+        "score": 35,
+        "proposed_category": "core",
+        "keywords": [
+          "MPS",
+          "mps"
+        ],
+        "n_symbols": 7
+      },
+      {
+        "path": "scripts/physics_validation.py",
+        "lang": "py",
+        "score": 35,
+        "proposed_category": "core",
+        "keywords": [
+          "MPO",
+          "MPS",
+          "mps"
+        ],
+        "n_symbols": 10
+      },
+      {
+        "path": "AI_MATHEMATICIAN_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "CFD_HVAC/Attestations/TIER2_THERMAL_COMFORT_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "CROSS_PRIMITIVE_PIPELINE_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "FEMTO_FABRICATOR_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "FEZK_V2_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "FLUIDELITE_18TB_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "GATE1_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "GENESIS_BENCHMARK_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "GENESIS_GAUNTLET_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "NEURAL_CONNECTOME_REAL_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "NEUROMORPHIC_INTEGRATION_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "PRODUCTION_HARDENING_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "PROMETHEUS_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "PROTEOME_COMPILER_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "SOVEREIGN_ACTIVATION_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "SOVEREIGN_DAEMON_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "component-catalog.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": "core",
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "integrations/unity/package.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "papers/YANGMILLS_MASSGAP_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "papers/YANGMILLS_RIGOROUS_ATTESTATION.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "proofs/proof_exploit_invariants.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "results/conference_room_b_native.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "transfer_matrix_proof_attestation.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "yangmills_mass_gap_proof_final.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/circomlib/package-lock.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/scripts/testEIP4844/NineInOne/blocks-115-155.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/scripts/testEIP4844/NineInOne/blocks-207-228.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/scripts/testEIP4844/NineInOne/blocks-266-305.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/scripts/testEIP4844/NineInOne/blocks-82-114.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/compressedData/blocks-115-155.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/compressedData/blocks-82-114.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/compressedDataEip4844/blocks-115-155.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/compressedDataEip4844/blocks-82-114.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/compressedDataEip4844/test/blocks-115-155.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/compressedDataEip4844/test/blocks-82-114.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000501-1000503-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000513-1000518-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000523-1000528-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000539-1000544-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000555-1000560-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000561-1000563-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000572-1000576-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000577-1000580-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000581-1000586-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000587-1000588-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/scroll-zkvm/crates/integration/testdata/batch-task-phase-1.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/scroll-zkvm/crates/integration/testdata/bundle-task.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/scroll-zkvm/crates/integration/testdata/euclidv1/tasks/batch-task.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/scroll-zkvm/crates/integration/testdata/euclidv2/tasks/batch-task.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/scroll-zkvm/crates/prover/testdata/batch-proof.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/scroll-zkvm/crates/prover/testdata/chunk-proof.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/scroll-zkvm/crates/verifier/testdata/proofs/batch-proof-feynman.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/scroll-zkvm/crates/verifier/testdata/proofs/batch-proof-phase1.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/scroll-zkvm/crates/verifier/testdata/proofs/batch-proof-phase2.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/scroll-zkvm/crates/verifier/testdata/proofs/chunk-proof-feynman.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/scroll-zkvm/crates/verifier/testdata/proofs/chunk-proof-phase1.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "zk_targets/scroll-zkvm/crates/verifier/testdata/proofs/chunk-proof-phase2.json",
+        "lang": "json",
+        "score": 30,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": ".github/ISSUE_TEMPLATE/feature_request.md",
+        "lang": "md",
+        "score": 25,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "AGENT_CONTEXT.md",
+        "lang": "md",
+        "score": 25,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "AUTONOMOUS_DISCOVERY_ENGINE.md",
+        "lang": "md",
+        "score": 25,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "AUTONOMOUS_DISCOVERY_ENGINE_AUDIT.md",
+        "lang": "md",
+        "score": 25,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "BOUNTY_BATTLE_PLAN.md",
+        "lang": "md",
+        "score": 25,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "CFD_HVAC/README.md",
+        "lang": "md",
+        "score": 25,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "CHANGELOG.md",
+        "lang": "md",
+        "score": 25,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "CIVILIZATION_STACK_PHASE_II.md",
+        "lang": "md",
+        "score": 25,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "CIVILIZATION_STACK_PHASE_III_YM.md",
+        "lang": "md",
+        "score": 25,
+        "proposed_category": null,
+        "keywords": [
+          "QTT"
+        ],
+        "n_symbols": null
+      }
+    ],
+    "exclude": []
+  },
+  "all": [
+    {
+      "path": "tig011a_multimechanism.py",
+      "lang": "py",
+      "score": 155,
+      "proposed_category": "tci",
+      "keywords": [
+        "QTT",
+        "Quantized Tensor Train",
+        "tensor train",
+        "TT-cross",
+        "TT-SVD"
+      ],
+      "n_symbols": 29
+    },
+    {
+      "path": "tensornet/exploit/state_encoder.py",
+      "lang": "py",
+      "score": 130,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "QTT",
+        "Quantized Tensor Train",
+        "tensor train",
+        "TT-SVD"
+      ],
+      "n_symbols": 12
+    },
+    {
+      "path": "tensornet/zk/fluidelite_circuit_analyzer.py",
+      "lang": "py",
+      "score": 125,
+      "proposed_category": "tci",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "QTT",
+        "QTT",
+        "TCI",
+        "TCI",
+        "TT-SVD"
+      ],
+      "n_symbols": 15
+    },
+    {
+      "path": "tensornet/docs/user_guides.py",
+      "lang": "py",
+      "score": 120,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "MPS",
+        "mps",
+        "QTT",
+        "QTT",
+        "Quantized Tensor Train"
+      ],
+      "n_symbols": 10
+    },
+    {
+      "path": "yangmills/__init__.py",
+      "lang": "py",
+      "score": 120,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS",
+        "QTT",
+        "Quantized Tensor Train",
+        "Tensor Train"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "crates/hyper_core/src/lib.rs",
+      "lang": "rs",
+      "score": 118,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "QTT",
+        "Quantized Tensor Train",
+        "Tensor train"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "compress_crypto_data.py",
+      "lang": "py",
+      "score": 105,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "QTT",
+        "Quantized Tensor Train",
+        "tensor train",
+        "TENSOR TRAIN"
+      ],
+      "n_symbols": 8
+    },
+    {
+      "path": "proofs/proof_millennium.py",
+      "lang": "py",
+      "score": 105,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "Quantized Tensor Train"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "tensornet/visualization/tensor_slicer.py",
+      "lang": "py",
+      "score": 105,
+      "proposed_category": "gpu",
+      "keywords": [
+        "QTT",
+        "QTT",
+        "Quantized Tensor Train",
+        "Tensor Train"
+      ],
+      "n_symbols": 19
+    },
+    {
+      "path": "crates/tci_core/src/lib.rs",
+      "lang": "rs",
+      "score": 98,
+      "proposed_category": "tci",
+      "keywords": [
+        "QTT",
+        "TCI",
+        "TT-Cross",
+        "TT-SVD"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite_ingest.py",
+      "lang": "py",
+      "score": 90,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "Tensor Train",
+        "TT-SVD"
+      ],
+      "n_symbols": 15
+    },
+    {
+      "path": "tensornet/types/genesis_integration.py",
+      "lang": "py",
+      "score": 90,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "QTT",
+        "TT-SVD"
+      ],
+      "n_symbols": 9
+    },
+    {
+      "path": "fluidelite-zk/src/bin/fluid_block.rs",
+      "lang": "rs",
+      "score": 88,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "QTT",
+        "Tensor Train",
+        "tensor train",
+        "TT-SVD"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "tensornet/benchmarks/profile_bottlenecks.py",
+      "lang": "py",
+      "score": 80,
+      "proposed_category": "cfd",
+      "keywords": [
+        "MPS",
+        "QTT",
+        "tensor train"
+      ],
+      "n_symbols": 10
+    },
+    {
+      "path": "tensornet/types/__init__.py",
+      "lang": "py",
+      "score": 80,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "MPS",
+        "QTT",
+        "tensor train"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "fluidelite-zk/src/lib.rs",
+      "lang": "rs",
+      "score": 78,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps",
+        "QTT",
+        "tensor train"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "tensornet/exploit/__init__.py",
+      "lang": "py",
+      "score": 75,
+      "proposed_category": "tci",
+      "keywords": [
+        "QTT",
+        "TCI"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "tensornet/exploit/bounty_api.py",
+      "lang": "py",
+      "score": 75,
+      "proposed_category": "tci",
+      "keywords": [
+        "QTT",
+        "TCI"
+      ],
+      "n_symbols": 8
+    },
+    {
+      "path": "tensornet/exploit/constants.py",
+      "lang": "py",
+      "score": 75,
+      "proposed_category": "tci",
+      "keywords": [
+        "QTT",
+        "TCI",
+        "TT-cross"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "tensornet/exploit/euler_v2_hunt.py",
+      "lang": "py",
+      "score": 75,
+      "proposed_category": "tci",
+      "keywords": [
+        "QTT",
+        "TCI"
+      ],
+      "n_symbols": 6
+    },
+    {
+      "path": "tensornet/exploit/exploit_hunter.py",
+      "lang": "py",
+      "score": 75,
+      "proposed_category": "tci",
+      "keywords": [
+        "QTT",
+        "TCI",
+        "TT-cross"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "tensornet/exploit/morpho_blue_hunt.py",
+      "lang": "py",
+      "score": 75,
+      "proposed_category": "tci",
+      "keywords": [
+        "QTT",
+        "TCI"
+      ],
+      "n_symbols": 9
+    },
+    {
+      "path": "tensornet/exploit/tx_space.py",
+      "lang": "py",
+      "score": 75,
+      "proposed_category": "tci",
+      "keywords": [
+        "QTT",
+        "TCI",
+        "TT-cross"
+      ],
+      "n_symbols": 13
+    },
+    {
+      "path": "tensornet/substrate/morton_ops.py",
+      "lang": "py",
+      "score": 75,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "TT-SVD"
+      ],
+      "n_symbols": 12
+    },
+    {
+      "path": "tests/audit_layer_4.py",
+      "lang": "py",
+      "score": 75,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "TT-SVD"
+      ],
+      "n_symbols": 14
+    },
+    {
+      "path": "tests/benchmarks/optimized_pipeline_benchmark.py",
+      "lang": "py",
+      "score": 75,
+      "proposed_category": "tci",
+      "keywords": [
+        "QTT",
+        "TCI"
+      ],
+      "n_symbols": 10
+    },
+    {
+      "path": "tests/test_tci_integration.py",
+      "lang": "py",
+      "score": 75,
+      "proposed_category": "tci",
+      "keywords": [
+        "QTT",
+        "TCI"
+      ],
+      "n_symbols": 8
+    },
+    {
+      "path": "yangmills/ground_state_cuda.py",
+      "lang": "py",
+      "score": 75,
+      "proposed_category": "gpu",
+      "keywords": [
+        "MPO",
+        "MPS",
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": 14
+    },
+    {
+      "path": "yangmills/tests/test_gate5.py",
+      "lang": "py",
+      "score": 75,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "TENSOR TRAIN",
+        "tensor train"
+      ],
+      "n_symbols": 15
+    },
+    {
+      "path": "fluidelite-zk/src/bin/fluid_s3_native.rs",
+      "lang": "rs",
+      "score": 73,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "TT-SVD"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "decompress_crypto_data.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "QTT",
+        "TENSOR TRAIN"
+      ],
+      "n_symbols": 3
+    },
+    {
+      "path": "elite_yang_mills_proof.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps",
+        "QTT"
+      ],
+      "n_symbols": 8
+    },
+    {
+      "path": "femto_fabricator_gauntlet.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "tensor train"
+      ],
+      "n_symbols": 13
+    },
+    {
+      "path": "live_orderbook_fluid.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "QTT",
+        "tensor train"
+      ],
+      "n_symbols": 8
+    },
+    {
+      "path": "proofs/proof_master.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS",
+        "QTT"
+      ],
+      "n_symbols": 2
+    },
+    {
+      "path": "proofs/proof_phase_2.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "cfd",
+      "keywords": [
+        "MPO",
+        "MPS",
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "proofs/proof_phase_3.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS",
+        "mps",
+        "QTT"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "proteome_compiler_gauntlet.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "Tensor Train"
+      ],
+      "n_symbols": 10
+    },
+    {
+      "path": "real_yang_mills_engine.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps",
+        "QTT"
+      ],
+      "n_symbols": 6
+    },
+    {
+      "path": "scripts/check_import_cycles.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "mpo",
+        "mps",
+        "QTT"
+      ],
+      "n_symbols": 2
+    },
+    {
+      "path": "scripts/full_reproduce.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS",
+        "QTT"
+      ],
+      "n_symbols": 6
+    },
+    {
+      "path": "scripts/setup/hypertensor_core.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "tensor train"
+      ],
+      "n_symbols": 2
+    },
+    {
+      "path": "tensornet/__init__.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps",
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "tensornet/gateway/orbital_command.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": 3
+    },
+    {
+      "path": "tensornet/neural/genesis_optimizer.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "QTT",
+        "Tensor Train"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "tensornet/sovereign/heatmap_generator.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "gpu",
+      "keywords": [
+        "QTT",
+        "QTT",
+        "Tensor Train"
+      ],
+      "n_symbols": 2
+    },
+    {
+      "path": "tensornet/substrate/field.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "tensor train"
+      ],
+      "n_symbols": 4
+    },
+    {
+      "path": "tests/test_integration.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "cfd",
+      "keywords": [
+        "MPO",
+        "MPS",
+        "mps",
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": 33
+    },
+    {
+      "path": "tests/test_mpo_solver.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "cfd",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "QTT"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "tests/test_visualization.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "QTT",
+        "Tensor Train"
+      ],
+      "n_symbols": 19
+    },
+    {
+      "path": "yang_mills_proof_pipeline.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "QTT",
+        "TENSOR TRAIN",
+        "Tensor Train"
+      ],
+      "n_symbols": 6
+    },
+    {
+      "path": "yangmills/transfer_matrix_proof.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "QTT"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "yangmills/weak_coupling_transmutation.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "QTT"
+      ],
+      "n_symbols": 9
+    },
+    {
+      "path": "yangmills/yangmills_4d_tdvp.py",
+      "lang": "py",
+      "score": 65,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "QTT"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "crates/hyper_bridge/src/lib.rs",
+      "lang": "rs",
+      "score": 63,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "QTT",
+        "QTTS",
+        "Tensor Train"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "crates/hyper_core/benches/tt_bench.rs",
+      "lang": "rs",
+      "score": 63,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "tensor train"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "crates/hyper_core/src/gpu/tt_eval.rs",
+      "lang": "rs",
+      "score": 63,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "Tensor Train"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/bin/fluid_ingest.rs",
+      "lang": "rs",
+      "score": 63,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "QTT",
+        "Tensor Train",
+        "Tensor train",
+        "tensor train"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/bin/vram_stress_test.rs",
+      "lang": "rs",
+      "score": 63,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps",
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/genesis_prover.rs",
+      "lang": "rs",
+      "score": 63,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "QTT",
+        "tensor train"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/zero_expansion_prover.rs",
+      "lang": "rs",
+      "score": 63,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "QTT",
+        "tensor train"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "hermes_gauntlet.py",
+      "lang": "py",
+      "score": 60,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 22
+    },
+    {
+      "path": "proof_engine/interval.py",
+      "lang": "py",
+      "score": 60,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "proofs/proof_exploit_invariants.py",
+      "lang": "py",
+      "score": 60,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 15
+    },
+    {
+      "path": "tensornet/exploit/invariant_hunter.py",
+      "lang": "py",
+      "score": 60,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "tensornet/substrate/bounded.py",
+      "lang": "py",
+      "score": 60,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 6
+    },
+    {
+      "path": "yangmills/ground_state.py",
+      "lang": "py",
+      "score": 60,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": 9
+    },
+    {
+      "path": "yangmills/tests/test_gate2.py",
+      "lang": "py",
+      "score": 60,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": 8
+    },
+    {
+      "path": "TURN_THE_KEY.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 14
+    },
+    {
+      "path": "ade_gauntlet.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": 8
+    },
+    {
+      "path": "ai_mathematician.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 2
+    },
+    {
+      "path": "ai_scientist/__init__.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "ai_scientist/conjecturer.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 2
+    },
+    {
+      "path": "ai_scientist/demo.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "ai_scientist/formalizer.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 4
+    },
+    {
+      "path": "ai_scientist/pipeline.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 2
+    },
+    {
+      "path": "chronos_gauntlet.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 28
+    },
+    {
+      "path": "cornucopia_gauntlet.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 15
+    },
+    {
+      "path": "docs/generate_attestation.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 1
+    },
+    {
+      "path": "elite_yang_mills_proof_v2.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "genesis_benchmark_suite.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": "genesis",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 15
+    },
+    {
+      "path": "live_market_fluid.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": 8
+    },
+    {
+      "path": "navier_stokes_millennium_pipeline.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": "cfd",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 10
+    },
+    {
+      "path": "ns_unified_black_swan.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": 9
+    },
+    {
+      "path": "ns_unified_black_swan_v2.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": 10
+    },
+    {
+      "path": "oracle_node/calibration.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 11
+    },
+    {
+      "path": "oracle_node/server.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": "genesis",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 19
+    },
+    {
+      "path": "production_hardening_gauntlet.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 8
+    },
+    {
+      "path": "prometheus_gauntlet.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 12
+    },
+    {
+      "path": "proof_engine/Certified.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 9
+    },
+    {
+      "path": "proof_engine/Certified_ARB.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 8
+    },
+    {
+      "path": "proof_engine/__init__.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "proof_engine/certificate.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 4
+    },
+    {
+      "path": "proof_engine/constructive_qft.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "proof_engine/lean_export.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 2
+    },
+    {
+      "path": "proofs/cap_full_power.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": 9
+    },
+    {
+      "path": "proofs/proof_level_3b.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "proofs/proof_markets_pipeline.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 3
+    },
+    {
+      "path": "proofs/proof_molecular_pipeline.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 3
+    },
+    {
+      "path": "scripts/generate_api_docs.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 1
+    },
+    {
+      "path": "scripts/generate_pipeline_diagram.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "scripts/setup/realtime_renderer.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 2
+    },
+    {
+      "path": "scripts/testing/test_implicit_concept.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": 3
+    },
+    {
+      "path": "scripts/testing/test_phase4_integration.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 3
+    },
+    {
+      "path": "scripts/testing/test_phase4_validation.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 1
+    },
+    {
+      "path": "sovereign_daemon.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 16
+    },
+    {
+      "path": "sovereign_genesis_gauntlet.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 11
+    },
+    {
+      "path": "tensornet/discovery/__main__.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 6
+    },
+    {
+      "path": "tensornet/discovery/api/gpu.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 8
+    },
+    {
+      "path": "tensornet/discovery/api/server.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 6
+    },
+    {
+      "path": "tensornet/discovery/engine_v2.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 4
+    },
+    {
+      "path": "tensornet/discovery/ingest/markets.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 9
+    },
+    {
+      "path": "tensornet/discovery/ingest/molecular.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 8
+    },
+    {
+      "path": "tensornet/discovery/ingest/plasma.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "tensornet/discovery/pipelines/markets_pipeline.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 4
+    },
+    {
+      "path": "tensornet/discovery/pipelines/molecular_pipeline.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 3
+    },
+    {
+      "path": "tensornet/discovery/primitives/__init__.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "tensornet/discovery/primitives/geometric_algebra.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 1
+    },
+    {
+      "path": "tensornet/discovery/primitives/kernel.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": "gpu",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 1
+    },
+    {
+      "path": "tensornet/discovery/primitives/optimal_transport.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 1
+    },
+    {
+      "path": "tensornet/discovery/primitives/random_matrix.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 1
+    },
+    {
+      "path": "tensornet/discovery/primitives/spectral_wavelets.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": "genesis",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 1
+    },
+    {
+      "path": "tensornet/discovery/primitives/topology.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 1
+    },
+    {
+      "path": "tensornet/discovery/protocol.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 6
+    },
+    {
+      "path": "tensornet/exploit/bounty_reporter.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "tensornet/exploit/evm_oracle.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 6
+    },
+    {
+      "path": "tensornet/exploit/guided_sampling.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 4
+    },
+    {
+      "path": "tensornet/exploit/historical_validator.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 4
+    },
+    {
+      "path": "tensornet/exploit/hypergrid.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 17
+    },
+    {
+      "path": "tensornet/exploit/invariants.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 16
+    },
+    {
+      "path": "tensornet/exploit/mainnet_targets.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "tensornet/exploit/real_evm.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "tensornet/exploit/toy_contracts.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 10
+    },
+    {
+      "path": "tensornet/fieldops/__init__.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "tensornet/fieldops/operators.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": "cfd",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 24
+    },
+    {
+      "path": "tensornet/fieldos/kernel.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": "gpu",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 8
+    },
+    {
+      "path": "tensornet/fusion/__init__.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "tensornet/gateway/onion_renderer.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "tensornet/hw/verilog_elite_analyzer.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 8
+    },
+    {
+      "path": "tensornet/hypersim/env.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 4
+    },
+    {
+      "path": "tensornet/hypersim/rewards.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 12
+    },
+    {
+      "path": "tensornet/hypersim/spaces.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 10
+    },
+    {
+      "path": "tensornet/hypervisual/__init__.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "tensornet/hypervisual/renderer.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "tensornet/hypervisual/slicer.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "tensornet/hypervisual/slicing_core.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 4
+    },
+    {
+      "path": "tensornet/provenance/commit.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 3
+    },
+    {
+      "path": "tensornet/quantum/__init__.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 1
+    },
+    {
+      "path": "tensornet/sovereign/__init__.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "tensornet/sovereign/realtime_tensor_stream.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 2
+    },
+    {
+      "path": "tensornet/substrate/__init__.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "tensornet/substrate/bundle.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 4
+    },
+    {
+      "path": "tensornet/substrate/stats.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": "gpu",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 3
+    },
+    {
+      "path": "tensornet/types/fields.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 10
+    },
+    {
+      "path": "tensornet/visualization/benchmark_render_gpu.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 3
+    },
+    {
+      "path": "tensornet/zk/fezk_elite.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": 17
+    },
+    {
+      "path": "tensornet/zk/halo2_constraint_extractor.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "tensornet/zk/polygon_security_report.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 3
+    },
+    {
+      "path": "tests/audit_layer_5.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": "cfd",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 17
+    },
+    {
+      "path": "tests/audit_layer_6.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 4
+    },
+    {
+      "path": "tests/test_exploit_constants.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "tests/test_exploit_hunter.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 4
+    },
+    {
+      "path": "tests/test_exploit_invariants.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 12
+    },
+    {
+      "path": "tests/test_exploit_real_evm.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "tests/test_exploit_state_encoder.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "tests/test_exploit_tx_space.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "tests/test_fieldops.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": "cfd",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 18
+    },
+    {
+      "path": "tests/test_marrs_fusion.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 15
+    },
+    {
+      "path": "tests/test_sovereign.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 17
+    },
+    {
+      "path": "tests/test_tensor_slicer.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "tig011a_docking_qmmm.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 11
+    },
+    {
+      "path": "tig011a_dynamic_validation.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 21
+    },
+    {
+      "path": "yangmills/lattice.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 6
+    },
+    {
+      "path": "yangmills/multi_plaq_scaling_window.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "yangmills/tests/__init__.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "yangmills/transfer_matrix_final_proof.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 3
+    },
+    {
+      "path": "yangmills/transfer_matrix_log_proof.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 4
+    },
+    {
+      "path": "yangmills/transfer_matrix_rigorous.py",
+      "lang": "py",
+      "score": 40,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": 8
+    },
+    {
+      "path": "crates/hyper_bridge/src/bench_real_data.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "crates/hyper_bridge/src/sovereign_v2.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "crates/hyper_bridge/src/tests/concurrent.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "crates/hyper_bridge/src/tests/constitution.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "crates/hyper_bridge/src/tests/fuzz.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "crates/hyper_bridge/src/weather.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "crates/hyper_core/src/transforms/morton.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "crates/hyper_gpu_py/src/lib.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/bin/genesis_benchmark.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/bin/gpu_pipelined_tps.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/bin/groth16_real.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/bin/worldcoin_demo.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/bin/worldcoin_production.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/bin/zero_expansion_benchmark.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/circuit/config.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "MPS",
+        "tensor train"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/genesis_integration.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/groth16_output.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/semaphore/circuit.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/semaphore/mod.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/semaphore/prover.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/semaphore/verifier.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "proofs/proof_21_tdvp_euler_conservation.py",
+      "lang": "py",
+      "score": 35,
+      "proposed_category": "cfd",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS"
+      ],
+      "n_symbols": 6
+    },
+    {
+      "path": "proofs/proof_mps.py",
+      "lang": "py",
+      "score": 35,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "scripts/physics_validation.py",
+      "lang": "py",
+      "score": 35,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 10
+    },
+    {
+      "path": "AI_MATHEMATICIAN_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "CFD_HVAC/Attestations/TIER2_THERMAL_COMFORT_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "CROSS_PRIMITIVE_PIPELINE_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "FEMTO_FABRICATOR_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "FEZK_V2_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "FLUIDELITE_18TB_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "GATE1_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "GENESIS_BENCHMARK_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "GENESIS_GAUNTLET_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "NEURAL_CONNECTOME_REAL_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "NEUROMORPHIC_INTEGRATION_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "PRODUCTION_HARDENING_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "PROMETHEUS_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "PROTEOME_COMPILER_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "SOVEREIGN_ACTIVATION_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "SOVEREIGN_DAEMON_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "component-catalog.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "integrations/unity/package.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "papers/YANGMILLS_MASSGAP_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "papers/YANGMILLS_RIGOROUS_ATTESTATION.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "proofs/proof_exploit_invariants.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "results/conference_room_b_native.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "transfer_matrix_proof_attestation.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "yangmills_mass_gap_proof_final.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/circomlib/package-lock.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/scripts/testEIP4844/NineInOne/blocks-115-155.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/scripts/testEIP4844/NineInOne/blocks-207-228.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/scripts/testEIP4844/NineInOne/blocks-266-305.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/scripts/testEIP4844/NineInOne/blocks-82-114.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/compressedData/blocks-115-155.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/compressedData/blocks-82-114.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/compressedDataEip4844/blocks-115-155.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/compressedDataEip4844/blocks-82-114.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/compressedDataEip4844/test/blocks-115-155.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/compressedDataEip4844/test/blocks-82-114.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000501-1000503-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000513-1000518-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000523-1000528-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000539-1000544-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000555-1000560-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000561-1000563-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000572-1000576-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000577-1000580-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000581-1000586-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/linea-circuits/contracts/test/hardhat/_testData/integrationWithProver/blobSubmissions/1000587-1000588-bcv0.0.0-ccv0.0.0-getZkBlobCompressionProof.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/scroll-zkvm/crates/integration/testdata/batch-task-phase-1.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/scroll-zkvm/crates/integration/testdata/bundle-task.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/scroll-zkvm/crates/integration/testdata/euclidv1/tasks/batch-task.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/scroll-zkvm/crates/integration/testdata/euclidv2/tasks/batch-task.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/scroll-zkvm/crates/prover/testdata/batch-proof.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/scroll-zkvm/crates/prover/testdata/chunk-proof.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/scroll-zkvm/crates/verifier/testdata/proofs/batch-proof-feynman.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/scroll-zkvm/crates/verifier/testdata/proofs/batch-proof-phase1.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/scroll-zkvm/crates/verifier/testdata/proofs/batch-proof-phase2.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/scroll-zkvm/crates/verifier/testdata/proofs/chunk-proof-feynman.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/scroll-zkvm/crates/verifier/testdata/proofs/chunk-proof-phase1.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "zk_targets/scroll-zkvm/crates/verifier/testdata/proofs/chunk-proof-phase2.json",
+      "lang": "json",
+      "score": 30,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/feature_request.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "AGENT_CONTEXT.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "AUTONOMOUS_DISCOVERY_ENGINE.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "AUTONOMOUS_DISCOVERY_ENGINE_AUDIT.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "BOUNTY_BATTLE_PLAN.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "CFD_HVAC/README.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "CHANGELOG.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "CIVILIZATION_STACK_PHASE_II.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "CIVILIZATION_STACK_PHASE_III_YM.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "CIVILIZATION_STACK_PHASE_IV_YM.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "CONSTITUTION.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "FEZK_PROD.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "FEZK_README.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "FLUIDELITE_18TB_BENCH_PROTOCOL.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "FLUIDELITE_DOCUMENTATION_INDEX.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "FLUIDELITE_FUTURE_ENHANCEMENTS.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "FLUIDELITE_SESSION_REPORT.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "FLUIDELITE_V1.2_UPGRADE_REPORT.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "FLUIDELITE_ZK_EXECUTION_FRAMEWORK.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "HYPERTENSOR_VV_FRAMEWORK.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "HYPER_BRIDGE_ELITE_EXECUTION.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "HyperTensor_CFD_Book.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "PLATFORM_SPECIFICATION.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "POLYGON_ZKEVM_SECURITY_REPORT.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "Physics/tests/test_phase18.py",
+      "lang": "py",
+      "score": 25,
+      "proposed_category": "tci",
+      "keywords": [
+        "TCI"
+      ],
+      "n_symbols": 12
+    },
+    {
+      "path": "README.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "REPO_MAP.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "STRATEGIC_EDGE_ANALYSIS.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "TENSOR_GENESIS.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "TOOLBOX.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "The_Civilization_Stack.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "YANG_MILLS_BATTLE_PLAN.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "build_extensions.py",
+      "lang": "py",
+      "score": 25,
+      "proposed_category": "tci",
+      "keywords": [
+        "TCI"
+      ],
+      "n_symbols": 4
+    },
+    {
+      "path": "docs/HYPERTENSOR_ZK_STACK.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/INDEX.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/ONBOARDING.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/PHYSICS_FIRST_DRUG_DESIGN.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/PHYSICS_PIPELINE_COMPLETE.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/api/OtherCFD/tensornet.cfd.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/api/tensornet.cfd.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/architecture/ARCHITECTURE_GUIDE.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/architecture/CORRECTED_SOVEREIGN_ARCHITECTURE.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/architecture/NS_MILLENNIUM_FRAMEWORK.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/architecture/RAM_BRIDGE_SPEC.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/architecture/SOVEREIGN_ARCHITECTURE.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/architecture/Sovereign_Systems_Topology.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/architecture/Sovereign_UI.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/attestations/SOVEREIGN_ATTESTATION.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/audits/CAPABILITY_AUDIT.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/audits/DEPENDENCY_VERIFICATION.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/audits/PERFORMANCE_AUDIT_FINDINGS.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/audits/PIPELINE_ANALYSIS.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/audits/PIPELINE_OPTIMIZATION_AUDIT.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/audits/REPOSITORY_PERFORMANCE_AUDIT.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/audits/ROADMAP_AUDIT.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/legacy/BREAKTHROUGH_DISCOVERIES.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/legacy/DECISION_LOG.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/legacy/Final_Glass_Cock.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/legacy/HOLY_GRAIL_PROOF_INDEX.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/legacy/HYPOTHESIS_HISTORY.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/legacy/LITERATURE_REVIEW.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/legacy/MPO_INTEGRATION_STATUS.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": "core",
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/legacy/OPERATION_VALHALLA.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/legacy/REPO_INVENTORY.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/legacy/TECHNICAL_NOTES.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/legacy/WEATHER_SYSTEM_STATUS.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/phases/PHASE3_INTEGRATION_COMPLETE.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/phases/PHASE3_QUICKSTART.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/phases/PHASE4_PLAN.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/phases/PHASE_3_PLAN.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/phases/PHASE_4_EVENT_DRIVEN_RESULTS.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/phases/PHASE_5.1_CHECKPOINT_RESULTS.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/phases/PHASE_5.2_IMPLEMENTATION_COMPLETE.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/roadmaps/ROADMAP.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/roadmaps/SOVEREIGN_ENGINE_ROADMAP.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/workflows/COMMIT_CHECKLIST.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/workflows/EXECUTION_TRACKER.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/workflows/GIT_SETUP_COMPLETE.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "docs/workflows/hypertensor_execution_checklist.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "euv_quantum_well_resist.py",
+      "lang": "py",
+      "score": 25,
+      "proposed_category": "core",
+      "keywords": [
+        "TT-SVD"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "evidence/drug_discovery/PHYSICS_FIRST_DRUG_DESIGN.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/FLUIDELITE_ZK_V3_ROADMAP.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/WORLDCOIN_PRODUCTION_README.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/semaphore/README.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "hvac_cfd_validation_guide.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "imfinallygoingtofixthisandnotlie.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "integrations/unity/README.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "integrations/unreal/README.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "models/validation_report_real.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "proofs/proof_exploit_invariants.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "sovereign-ui/README.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "sweep_results/CRITICAL_FINDING.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "tensornet/adaptive/compression.py",
+      "lang": "py",
+      "score": 25,
+      "proposed_category": "tci",
+      "keywords": [
+        "TCI"
+      ],
+      "n_symbols": 9
+    },
+    {
+      "path": "tensornet/exploit/CHANGELOG.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "tensornet/exploit/EXECUTION_LOG.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "tensornet/exploit/FINDINGS.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "tensornet/exploit/README.md",
+      "lang": "md",
+      "score": 25,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "tests/conftest.py",
+      "lang": "py",
+      "score": 25,
+      "proposed_category": "tci",
+      "keywords": [
+        "TCI"
+      ],
+      "n_symbols": 10
+    },
+    {
+      "path": "tests/test_rust_tci_integration.py",
+      "lang": "py",
+      "score": 25,
+      "proposed_category": "tci",
+      "keywords": [
+        "TCI"
+      ],
+      "n_symbols": 1
+    },
+    {
+      "path": "crates/tci_core/src/maxvol.rs",
+      "lang": "rs",
+      "score": 23,
+      "proposed_category": "tci",
+      "keywords": [
+        "TCI"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "crates/tci_core/src/sampler.rs",
+      "lang": "rs",
+      "score": 23,
+      "proposed_category": "tci",
+      "keywords": [
+        "TCI"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "crates/tci_core/src/skeleton.rs",
+      "lang": "rs",
+      "score": 23,
+      "proposed_category": "tci",
+      "keywords": [
+        "TCI"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "apps/glass_cockpit/src/tensor_field.rs",
+      "lang": "rs",
+      "score": 18,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "apps/glass_cockpit/src/tensor_renderer.rs",
+      "lang": "rs",
+      "score": 18,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "apps/glass_cockpit/src/vector_field.rs",
+      "lang": "rs",
+      "score": 18,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "apps/glass_cockpit/src/weather_tensor.rs",
+      "lang": "rs",
+      "score": 18,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "Physics/tests/test_phase14.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "Physics/tests/test_phase19.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS"
+      ],
+      "n_symbols": 13
+    },
+    {
+      "path": "Physics/tests/test_phase20.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 18
+    },
+    {
+      "path": "demo/streamlit_app.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS"
+      ],
+      "n_symbols": 3
+    },
+    {
+      "path": "fluidelite-zk/python/fluidelite_zk/__init__.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "MPS"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "proofs/common.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS"
+      ],
+      "n_symbols": 11
+    },
+    {
+      "path": "proofs/proof_21_dense_audit.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 6
+    },
+    {
+      "path": "proofs/proof_21_tdvp_euler_sod.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "cfd",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS"
+      ],
+      "n_symbols": 6
+    },
+    {
+      "path": "proofs/proof_21_tt_evolution.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "cfd",
+      "keywords": [
+        "MPS"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "proofs/proof_algorithms.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 9
+    },
+    {
+      "path": "scripts/benchmark_tt_cfd.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "cfd",
+      "keywords": [
+        "tensor train"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "scripts/build_docs.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "scripts/compare_tenpy.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 4
+    },
+    {
+      "path": "scripts/determinism_check.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "cfd",
+      "keywords": [
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 9
+    },
+    {
+      "path": "scripts/env_capture.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "mps"
+      ],
+      "n_symbols": 11
+    },
+    {
+      "path": "scripts/profile_flagship.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "cfd",
+      "keywords": [
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "scripts/profile_performance.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "scripts/reproduce.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS"
+      ],
+      "n_symbols": 2
+    },
+    {
+      "path": "scripts/setup/quick_test.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "scripts/test_excited.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "scripts/testing/test_cuda_kernel.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "gpu",
+      "keywords": [
+        "mpo"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "scripts/testing/test_mpo_performance.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "starheart_gauntlet.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "Tensor Train"
+      ],
+      "n_symbols": 13
+    },
+    {
+      "path": "tensornet/adaptive/bond_optimizer.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS"
+      ],
+      "n_symbols": 10
+    },
+    {
+      "path": "tensornet/adaptive/entanglement.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS"
+      ],
+      "n_symbols": 10
+    },
+    {
+      "path": "tensornet/algorithms/dmrg.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 8
+    },
+    {
+      "path": "tensornet/algorithms/fermionic.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "tensornet/algorithms/tdvp.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 9
+    },
+    {
+      "path": "tensornet/algorithms/tebd.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 9
+    },
+    {
+      "path": "tensornet/autonomy/mission_planner.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS"
+      ],
+      "n_symbols": 9
+    },
+    {
+      "path": "tensornet/deployment/tensorrt_export.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "Tensor Train"
+      ],
+      "n_symbols": 13
+    },
+    {
+      "path": "tensornet/discovery/connectors/fusion.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "Tensor Train"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "tensornet/distributed_tn/__init__.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "tensornet/distributed_tn/distributed_dmrg.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "MPS"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "tensornet/distributed_tn/mps_operations.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "MPS"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "tensornet/distributed_tn/parallel_tebd.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS"
+      ],
+      "n_symbols": 7
+    },
+    {
+      "path": "tensornet/fieldos/field.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS"
+      ],
+      "n_symbols": 3
+    },
+    {
+      "path": "tensornet/neural/entanglement_gnn.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS"
+      ],
+      "n_symbols": 10
+    },
+    {
+      "path": "tensornet/physics/trajectory_optimizer.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "Tensor Train"
+      ],
+      "n_symbols": 9
+    },
+    {
+      "path": "tensornet/quantum/hybrid.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 14
+    },
+    {
+      "path": "tensornet/realtime/inference_engine.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "mps"
+      ],
+      "n_symbols": 9
+    },
+    {
+      "path": "tensornet/site/themes.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "mpo",
+        "mps"
+      ],
+      "n_symbols": 10
+    },
+    {
+      "path": "tensornet/visualization/__init__.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "Tensor Train"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "tests/integration/test_dmrg_physics.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 1
+    },
+    {
+      "path": "tests/test_mpo_hamiltonians.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 17
+    },
+    {
+      "path": "tomahawk_cfd_gauntlet.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "Tensor Train"
+      ],
+      "n_symbols": 10
+    },
+    {
+      "path": "yangmills/tensor_network/__init__.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 0
+    },
+    {
+      "path": "yangmills/tensor_network/dmrg.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 4
+    },
+    {
+      "path": "yangmills/tensor_network/mpo.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 3
+    },
+    {
+      "path": "yangmills/tensor_network/mps.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 3
+    },
+    {
+      "path": "yangmills/tests/test_tensor_network.py",
+      "lang": "py",
+      "score": 15,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": 5
+    },
+    {
+      "path": "crates/hyper_core/src/bin/gpu_bench.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "Tensor Train"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "crates/hyper_core/src/gpu/pipeline.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "tensor train"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "crates/hyper_core/src/gpu/wgpu_pipeline.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "tensor train"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/benches/constraint_bench.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/benches/proof_bench.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/bin/cli.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/bin/prover_node.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/bin/server.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/circuit/halo2_impl.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/circuit/mod.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/hybrid_prover.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "MPS"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/mpo.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/mps.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/ops.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/prover.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/python.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/server.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/src/weights.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "fluidelite-zk/tests/integration.rs",
+      "lang": "rs",
+      "score": 13,
+      "proposed_category": "core",
+      "keywords": [
+        "MPO",
+        "mpo",
+        "MPS",
+        "mps"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "apps/glass_cockpit/PHASE_1_COMPLETE.md",
+      "lang": "md",
+      "score": 5,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "apps/glass_cockpit/PHASE_2_COMPLETE.md",
+      "lang": "md",
+      "score": 5,
+      "proposed_category": null,
+      "keywords": [
+        "QTT"
+      ],
+      "n_symbols": null
+    }
+  ]
+}

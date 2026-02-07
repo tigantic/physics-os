@@ -1,0 +1,90 @@
+{
+  "phase": 1,
+  "name": "BASELINE_VALIDATION",
+  "date": "2026-02-04T23:10:30.614220",
+  "status": "COMPLETE_WITH_FINDINGS",
+  "tasks": {
+    "1.1": {
+      "name": "Run turbulence_qtt_benchmark.py",
+      "status": "PARTIAL",
+      "result": "4/7 tests passed before timeout (Morton3D, QTT3DCompression, TaylorGreenInviscid, KidaVortex)",
+      "finding": "TaylorGreenViscous takes 1500+ seconds - performance issue"
+    },
+    "1.2": {
+      "name": "Verify ns3d_turbo.py imports",
+      "status": "PASS",
+      "result": "Imports TurboCores, turbo_truncate, turbo_linear_combination_batched from qtt_turbo"
+    },
+    "1.3": {
+      "name": "Confirm Triton JIT compiles",
+      "status": "PASS",
+      "result": "TRITON_AVAILABLE=True, version 3.5.1"
+    },
+    "1.4": {
+      "name": "Profile RK2 step",
+      "status": "COMPLETE",
+      "result": "Truncation is 59.7% of Hadamard+Trunc cost"
+    },
+    "1.5": {
+      "name": "Record baseline timing",
+      "status": "COMPLETE",
+      "result": "qtt_turbo ops: 44.90ms @ 32\u00b3 rank=64; TurboNS3D diffusion: 285ms @ 16\u00b3 rank=32"
+    },
+    "1.6": {
+      "name": "Record baseline memory",
+      "status": "COMPLETE",
+      "result": "15.3 MB for ops, 19.2 MB for diffusion solver"
+    },
+    "1.7": {
+      "name": "Verify physics validation",
+      "status": "PARTIAL",
+      "result": "Diffusion-only: 0.01% energy drift (PASS). Full NS: OOM on 32\u00b3",
+      "finding": "CRITICAL: Full NS with advection causes OOM on 8GB GPU at 32\u00b3"
+    }
+  },
+  "baseline_metrics": {
+    "turbo_linear_combination_ms": 44.9,
+    "turbo_linear_combination_std": 2.38,
+    "truncation_128_to_64_ms": 39.81,
+    "hadamard_plus_truncate_ms": 66.72,
+    "estimated_rk2_step_ms": 214.14,
+    "diffusion_step_ms": 285.01,
+    "peak_memory_mb": 19.2
+  },
+  "profile_breakdown": {
+    "addition_ms": 0.51,
+    "truncation_ms": 39.81,
+    "hadamard_ms": 1.46,
+    "hadamard_plus_trunc_ms": 66.72,
+    "lincomb_3_terms_ms": 40.34,
+    "norm_ms": 7.78,
+    "truncation_percent_of_hadamard_trunc": 59.7
+  },
+  "physics_validation": {
+    "diffusion_energy_drift_percent": 0.01,
+    "diffusion_slo_pass": true,
+    "full_ns_status": "OOM_32_CUBE"
+  },
+  "critical_findings": [
+    "FINDING-001: Full NS with advection causes OOM on 32\u00b3 with 8GB GPU",
+    "FINDING-002: Truncation (SVD) is 60% of compute cost - confirms rank optimization priority",
+    "FINDING-003: ns3d_qtt_native.py has high divergence (1.59) - not divergence-free",
+    "FINDING-004: TaylorGreenViscous benchmark takes 1500+ seconds - 200 steps too slow",
+    "FINDING-005: Lazy truncation working (1 truncation per step, not per op)"
+  ],
+  "recommendations": [
+    "PRIORITY-1: Reduce max_rank from 64 to 32-40 to fix OOM and accelerate",
+    "PRIORITY-2: Profile memory growth during linear combination (ranks summing)",
+    "PRIORITY-3: Consider truncating BEFORE full rank accumulation in advection",
+    "PRIORITY-4: Fix ns3d_qtt_native.py divergence issue or deprecate"
+  ],
+  "system_info": {
+    "pytorch_version": "2.9.1+cu128",
+    "cuda_available": true,
+    "cuda_version": "12.8",
+    "gpu_name": "NVIDIA GeForce RTX 5070 Laptop GPU",
+    "gpu_memory_gb": 8.546484224
+  },
+  "git_commit": "c9d111deb375168f300263eb490adde9712f3e78",
+  "sha256": "2b3631c0365f73d62d2286482f322ec97a3fe73b8f70271003dd36c113a55dea"
+}

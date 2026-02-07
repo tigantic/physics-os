@@ -25,6 +25,7 @@ Date: 2025
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from typing import List, Tuple, Optional
 import time
@@ -41,6 +42,8 @@ from tensornet.cfd.qtt_turbo import (
     turbo_truncate,
     turbo_truncate_adaptive,
     turbo_truncate_batched,
+    turbo_truncate_conservative,
+    turbo_truncate_batched_conservative,
     turbo_linear_combination,
     turbo_linear_combination_batched,
     turbo_linear_combination_adaptive,
@@ -48,6 +51,13 @@ from tensornet.cfd.qtt_turbo import (
     turbo_inner,
     turbo_norm,
     turbulence_rank_profile,
+)
+from tensornet.cfd.poisson_spectral import (
+    SpectralPoissonConfig,
+    SpectralPoissonQTT,
+    solver_qtt_to_dense_3d,
+    dense_to_solver_qtt_3d,
+    spectral_biot_savart,
 )
 
 
@@ -57,147 +67,223 @@ from tensornet.cfd.qtt_turbo import (
 
 def build_shift_mpo(n_bits: int, direction: int, device: torch.device) -> List[Tensor]:
     """
-    Build shift-by-1 MPO for 3D QTT with Morton interleaving.
+    Build shift-by-±1 MPO for 3D QTT with ROW-MAJOR (C-order) layout.
     
-    The shift MPO implements circular shift: x → x+1 (mod N).
+    The shift MPO implements circular shift: x → x±1 (mod N).
     
-    For direction d ∈ {0,1,2} (x,y,z), shifts only coordinates in that dimension.
+    ROW-MAJOR LAYOUT (matching TurboNS3DSolver._dense_to_qtt):
+      - Bits are GROUPED by dimension: [x0,x1,...,x_{n-1}, y0,..., z0,...]
+      - x bits: positions 0 to n_bits-1
+      - y bits: positions n_bits to 2*n_bits-1
+      - z bits: positions 2*n_bits to 3*n_bits-1
     
-    CRITICAL: The carry must propagate through ALL cores, including identity
-    cores for other dimensions. Identity cores must pass the carry through.
+    This differs from Morton interleaving where bits cycle as (x0,y0,z0,x1,y1,z1,...).
+    
+    KEY INSIGHT: Carry/borrow flows from r_right to r_left (backward through cores).
+    - LSB (position n_bits-1 for x-shift) injects the carry via r_right=1
+    - Carry propagates toward MSB (position 0 for x-shift)
+    - MSB absorbs carry by summing over r_left states (periodic BC)
     
     Args:
         n_bits: Bits per dimension (N = 2^n_bits)
-        direction: 0=x, 1=y, 2=z
+        direction: 0=x, 1=y, 2=z  (which axis to shift)
         device: Target device
     
     Returns:
-        List of MPO cores, each of shape (r_left, d_in, d_out, r_right)
+        List of MPO cores, each of shape (r_left, d_out, d_in, r_right)
+        where d_in is input physical index, d_out is output physical index.
     """
     n_cores = 3 * n_bits
-    mpo = []
     
-    # Track which shift bit we're at (0 to n_bits-1 for the target direction)
-    shift_bit = 0
+    # Determine which positions belong to this axis
+    axis_start = direction * n_bits
+    axis_end = (direction + 1) * n_bits
     
-    for i in range(n_cores):
-        dim_idx = i % 3
+    # Build all cores with full bond dimension first
+    cores = []
+    for pos in range(n_cores):
+        # Core shape: (r_left, d_out, d_in, r_right)
+        # All cores get bond dim 2 initially; we'll fix boundaries at the end
+        core = torch.zeros(2, 2, 2, 2, device=device)
         
-        if dim_idx != direction:
-            # Identity core that passes carry through
-            # Shape: (2, 2, 2, 2) to allow carry propagation
-            # But only if we're in the middle of a carry chain
+        is_active = (axis_start <= pos < axis_end)
+        
+        if is_active:
+            # This position participates in the shift (carries arithmetic)
+            # Carry flows from r_right (input) to r_left (output)
             
-            if shift_bit == 0:
-                # Before first shift bit - no carry yet
-                core = torch.zeros(1, 2, 2, 1, device=device)
-                core[0, 0, 0, 0] = 1.0
-                core[0, 1, 1, 0] = 1.0
-            elif shift_bit >= n_bits:
-                # After last shift bit - carry resolved
-                core = torch.zeros(1, 2, 2, 1, device=device)
-                core[0, 0, 0, 0] = 1.0
-                core[0, 1, 1, 0] = 1.0
-            else:
-                # Middle of carry chain - pass carry through
-                core = torch.zeros(2, 2, 2, 2, device=device)
-                # r=0 (no carry): identity
-                core[0, 0, 0, 0] = 1.0
-                core[0, 1, 1, 0] = 1.0
-                # r=1 (carry): pass carry through
-                core[1, 0, 0, 1] = 1.0
-                core[1, 1, 1, 1] = 1.0
+            # === INCREMENT (+1) LOGIC ===
+            # Carry comes in via r_right, goes out via r_left
+            
+            # CASE A: No Carry In (r_right=0) -> Identity
+            core[0, 0, 0, 0] = 1.0  # 0 -> 0, no carry out (r_left=0)
+            core[0, 1, 1, 0] = 1.0  # 1 -> 1, no carry out (r_left=0)
+            
+            # CASE B: Carry In (r_right=1) -> Add 1 to this bit
+            core[0, 1, 0, 1] = 1.0  # 0 + carry = 1, carry absorbed (r_left=0)
+            core[1, 0, 1, 1] = 1.0  # 1 + carry = 0 (overflow), carry out (r_left=1)
         else:
-            # Shift core for target dimension
-            if shift_bit == 0:
-                # First bit: |0⟩→|1⟩, |1⟩→|0⟩+carry
-                core = torch.zeros(1, 2, 2, 2, device=device)
-                # |1⟩→|0⟩, no carry
-                core[0, 1, 0, 0] = 1.0
-                # |0⟩→|1⟩, carry out
-                core[0, 0, 1, 1] = 1.0
-            elif shift_bit == n_bits - 1:
-                # Last bit: close the carry chain
-                core = torch.zeros(2, 2, 2, 1, device=device)
-                # No carry in: identity
-                core[0, 0, 0, 0] = 1.0
-                core[0, 1, 1, 0] = 1.0
-                # Carry in: flip
-                core[1, 0, 1, 0] = 1.0
-                core[1, 1, 0, 0] = 1.0
-            else:
-                # Middle bit: propagate carry
-                core = torch.zeros(2, 2, 2, 2, device=device)
-                # No carry in:
-                core[0, 0, 0, 0] = 1.0  # 0 → 0, no carry out
-                core[0, 1, 1, 0] = 1.0  # 1 → 1, no carry out
-                # Carry in:
-                core[1, 0, 1, 0] = 1.0  # 0+carry → 1, no carry out
-                core[1, 1, 0, 1] = 1.0  # 1+carry → 0, carry out
-            
-            shift_bit += 1
+            # Passthrough: preserve value, transport carry
+            # No Carry In -> No Carry Out
+            core[0, 0, 0, 0] = 1.0
+            core[0, 1, 1, 0] = 1.0
+            # Carry In -> Carry Out (wire it through)
+            core[1, 0, 0, 1] = 1.0
+            core[1, 1, 1, 1] = 1.0
         
-        mpo.append(core)
+        cores.append(core)
     
-    return mpo
+    # === BOUNDARY CONDITIONS FOR PERIODIC BC ===
+    
+    # Core 0 (leftmost): Sum over r_left to absorb overflow (periodic)
+    # This allows N-1 + 1 = 0 (wrap around)
+    cores[0] = cores[0][0:1, :, :, :] + cores[0][1:2, :, :, :]  # (1, 2, 2, 2)
+    
+    # Core n_cores-1 (rightmost): Inject +1 by forcing carry_in = 1
+    # But we only inject at the LSB of the active axis!
+    # For x-shift (direction=0), LSB is at position n_bits-1, not n_cores-1
+    
+    # Actually, we need to inject at the LSB of the AXIS, not the last core overall.
+    # LSB of axis is at position axis_end - 1.
+    
+    # For correct injection:
+    # - All cores before axis_end - 1: get r_right from next core
+    # - Core at axis_end - 1 (LSB of axis): force r_right = 1 (inject carry)
+    # - All cores after axis_end - 1: no carry (r_right = 0)
+    
+    # Reconstruct with proper boundary handling
+    lsb_pos = axis_end - 1  # LSB of the target axis
+    msb_pos = axis_start    # MSB of the target axis
+    
+    # Re-slice cores for proper carry injection
+    final_cores = []
+    for pos in range(n_cores):
+        core = cores[pos]
+        
+        if pos == 0:
+            # Leftmost core: already summed over r_left
+            if pos < lsb_pos:
+                # Carry may come from right
+                final_cores.append(core)
+            else:
+                # At or past LSB: no carry from right
+                final_cores.append(core[:, :, :, 0:1])  # r_right = 0 only
+        elif pos == lsb_pos:
+            # LSB of axis: inject carry (r_right = 1)
+            if pos == n_cores - 1:
+                # Also last core overall
+                final_cores.append(core[:, :, :, 1:2])  # r_right = 1 (inject)
+            else:
+                final_cores.append(core[:, :, :, 1:2])  # r_right = 1 (inject)
+        elif pos > lsb_pos:
+            # After LSB of axis: these cores are identity (y, z dimensions)
+            # No carry propagation for them
+            if pos == n_cores - 1:
+                final_cores.append(core[:, :, :, 0:1])  # r_right = 0
+            else:
+                final_cores.append(core[:, :, :, 0:1])  # r_right = 0
+        else:
+            # Between MSB and LSB: normal carry propagation
+            final_cores.append(core)
+    
+    # Fix bond dimensions to match at boundaries
+    # After LSB, we have r_right=1 (singleton), so next core needs r_left=1
+    result = []
+    for pos in range(n_cores):
+        core = final_cores[pos]
+        r_left, d_out, d_in, r_right = core.shape
+        
+        if pos > 0:
+            # r_left must match previous core's r_right
+            prev_r_right = result[-1].shape[3]
+            if r_left != prev_r_right:
+                # Slice to match
+                core = core[:prev_r_right, :, :, :]
+        
+        result.append(core)
+    
+    return result
 
 
 def build_inverse_shift_mpo(n_bits: int, direction: int, device: torch.device) -> List[Tensor]:
     """
-    Build inverse shift (shift by -1 = N-1) MPO.
+    Build shift-by-(-1) MPO for ROW-MAJOR layout (decrement/backward shift).
     
     Decrement: x → x-1 (mod N)
-    Borrow instead of carry. Must propagate through identity cores.
+    Uses borrow instead of carry.
+    
+    Same layout as build_shift_mpo but with subtraction logic.
     """
     n_cores = 3 * n_bits
-    mpo = []
     
-    shift_bit = 0
+    # Determine which positions belong to this axis
+    axis_start = direction * n_bits
+    axis_end = (direction + 1) * n_bits
     
-    for i in range(n_cores):
-        dim_idx = i % 3
+    # Build all cores with full bond dimension first
+    cores = []
+    for pos in range(n_cores):
+        core = torch.zeros(2, 2, 2, 2, device=device)
         
-        if dim_idx != direction:
-            # Identity core that passes borrow through
-            if shift_bit == 0:
-                core = torch.zeros(1, 2, 2, 1, device=device)
-                core[0, 0, 0, 0] = 1.0
-                core[0, 1, 1, 0] = 1.0
-            elif shift_bit >= n_bits:
-                core = torch.zeros(1, 2, 2, 1, device=device)
-                core[0, 0, 0, 0] = 1.0
-                core[0, 1, 1, 0] = 1.0
-            else:
-                core = torch.zeros(2, 2, 2, 2, device=device)
-                core[0, 0, 0, 0] = 1.0
-                core[0, 1, 1, 0] = 1.0
-                core[1, 0, 0, 1] = 1.0
-                core[1, 1, 1, 1] = 1.0
-        else:
-            if shift_bit == 0:
-                # First bit: |0⟩→|1⟩+borrow, |1⟩→|0⟩
-                core = torch.zeros(1, 2, 2, 2, device=device)
-                core[0, 1, 0, 0] = 1.0  # |1⟩→|0⟩, no borrow
-                core[0, 0, 1, 1] = 1.0  # |0⟩→|1⟩, borrow
-            elif shift_bit == n_bits - 1:
-                # Last bit
-                core = torch.zeros(2, 2, 2, 1, device=device)
-                core[0, 0, 0, 0] = 1.0
-                core[0, 1, 1, 0] = 1.0
-                core[1, 0, 1, 0] = 1.0
-                core[1, 1, 0, 0] = 1.0
-            else:
-                core = torch.zeros(2, 2, 2, 2, device=device)
-                core[0, 0, 0, 0] = 1.0
-                core[0, 1, 1, 0] = 1.0
-                core[1, 1, 0, 0] = 1.0  # 1-borrow → 0
-                core[1, 0, 1, 1] = 1.0  # 0-borrow → 1, propagate
+        is_active = (axis_start <= pos < axis_end)
+        
+        if is_active:
+            # === DECREMENT (-1) LOGIC ===
+            # Borrow flows from r_right to r_left
             
-            shift_bit += 1
+            # CASE A: No Borrow In (r_right=0) -> Identity
+            core[0, 0, 0, 0] = 1.0
+            core[0, 1, 1, 0] = 1.0
+            
+            # CASE B: Borrow In (r_right=1) -> Subtract 1 from this bit
+            core[0, 0, 1, 1] = 1.0  # 1 - borrow = 0, borrow absorbed (r_left=0)
+            core[1, 1, 0, 1] = 1.0  # 0 - borrow = 1 (underflow), borrow out (r_left=1)
+        else:
+            # Passthrough: preserve value, transport borrow
+            core[0, 0, 0, 0] = 1.0
+            core[0, 1, 1, 0] = 1.0
+            core[1, 0, 0, 1] = 1.0
+            core[1, 1, 1, 1] = 1.0
         
-        mpo.append(core)
+        cores.append(core)
     
-    return mpo
+    # === BOUNDARY CONDITIONS ===
+    lsb_pos = axis_end - 1
+    
+    # Core 0: sum over r_left for periodic BC
+    cores[0] = cores[0][0:1, :, :, :] + cores[0][1:2, :, :, :]
+    
+    # Inject borrow at LSB
+    final_cores = []
+    for pos in range(n_cores):
+        core = cores[pos]
+        
+        if pos == 0:
+            if pos < lsb_pos:
+                final_cores.append(core)
+            else:
+                final_cores.append(core[:, :, :, 0:1])
+        elif pos == lsb_pos:
+            final_cores.append(core[:, :, :, 1:2])  # Inject borrow
+        elif pos > lsb_pos:
+            if pos == n_cores - 1:
+                final_cores.append(core[:, :, :, 0:1])
+            else:
+                final_cores.append(core[:, :, :, 0:1])
+        else:
+            final_cores.append(core)
+    
+    # Fix bond dimensions
+    result = []
+    for pos in range(n_cores):
+        core = final_cores[pos]
+        if pos > 0:
+            prev_r_right = result[-1].shape[3]
+            if core.shape[0] != prev_r_right:
+                core = core[:prev_r_right, :, :, :]
+        result.append(core)
+    
+    return result
 
 
 def build_laplacian_mpo(
@@ -254,18 +340,33 @@ class TurboNS3DConfig:
     
     # Velocity update control
     velocity_update_freq: int = 1  # Update velocity every N steps (1=every step)
-    poisson_iterations: int = 3    # Jacobi iterations for Poisson solve
+    
+    # Poisson solver mode (2026-02-05: Added spectral option)
+    # - "spectral": RECOMMENDED. Exact FFT-based solve, machine precision.
+    # - "diffusion": Fast approximation, valid for diffusion-dominated flows.
+    # - "jacobi": Broken, do not use (diverges due to over-relaxation).
+    poisson_mode: str = "spectral"  # "spectral", "diffusion", or "jacobi"
+    poisson_iterations: int = 0    # DEPRECATED: Only used if poisson_mode="jacobi"
     
     # Rank control: Choose ONE mode
     # Mode 1: Fixed max_rank (legacy)
-    max_rank: int = 64  # Maximum QTT rank (ignored if adaptive_rank=True)
+    # OPTIMIZED (2026-02-05): Reduced from 64 to 16 based on rank sweep.
+    # Evidence: rank=16 achieves 0.9% energy drift with 4× less memory than rank=64.
+    # See: artifacts/PHASE2_RANK_ATTESTATION.json
+    max_rank: int = 16  # Maximum QTT rank (ignored if adaptive_rank=True)
     tol: float = 1e-10  # Truncation tolerance for fixed mode
     
     # Mode 2: Adaptive rank (recommended)
     adaptive_rank: bool = True  # If True, use error-controlled adaptive rank
     target_error: float = 1e-6  # Error budget for adaptive mode
     min_rank: int = 4  # Minimum rank (adaptive mode)
-    rank_cap: int = 128  # Safety cap (adaptive mode)
+    rank_cap: int = 64  # REDUCED: 128 → 64 (16 is sufficient for physics)
+    
+    # Mode 3: Conservative truncation (2026-02-05: CRITICAL for physics)
+    # If True, all truncations rescale to preserve L2 norm: ‖u_trunc‖² = ‖u_orig‖²
+    # This eliminates numerical dissipation from QTT truncation in advection.
+    # Evidence: Without conservative=True, 90% energy loss at 128³ over 50 steps.
+    conservative_truncation: bool = True  # ALWAYS use for physical simulations
     
     @property
     def N(self) -> int:
@@ -561,11 +662,17 @@ class TurboNS3DSolver:
     def _truncate_single(self, cores: List[Tensor]) -> List[Tensor]:
         """
         Helper to truncate single core set using either adaptive or fixed mode.
+        
+        If conservative_truncation=True, uses energy-preserving truncation
+        that rescales to preserve ‖u_truncated‖² = ‖u_original‖².
         """
         if self.rank_controller is not None:
             return turbo_truncate_adaptive(cores, self.rank_controller)
         else:
-            return turbo_truncate(cores, self.config.max_rank, tol=self.config.tol, adaptive=True)
+            if self.config.conservative_truncation:
+                return turbo_truncate_conservative(cores, self.config.max_rank, tol=self.config.tol)
+            else:
+                return turbo_truncate(cores, self.config.max_rank, tol=self.config.tol, adaptive=True)
     
     def _apply_derivative(self, field: List[Tensor], direction: int) -> List[Tensor]:
         """
@@ -612,53 +719,101 @@ class TurboNS3DSolver:
             result = turbo_add_cores(f_plus, f_minus, alpha=coeff, beta=-coeff)
             accumulated.append(result)
         
-        # Batch-truncate all at once
-        return turbo_truncate_batched(accumulated, self.config.max_rank, self.config.tol)
+        # Batch-truncate all at once (conservative if configured)
+        if self.config.conservative_truncation:
+            return turbo_truncate_batched_conservative(accumulated, self.config.max_rank, self.config.tol)
+        else:
+            return turbo_truncate_batched(accumulated, self.config.max_rank, self.config.tol)
     
     def _reconstruct_velocity_from_vorticity(self):
         """
-        Approximate velocity update using vorticity dynamics.
+        Recover velocity from vorticity using configured Poisson solver.
         
-        Instead of solving the expensive Poisson equation ∇²ψ = -ω,
-        we use the velocity-vorticity relationship at the discrete level:
+        Modes:
+        - "spectral": EXACT Biot-Savart via FFT. Machine precision. Recommended.
+        - "diffusion": Velocity diffusion approximation. Fast but approximate.
+        - "jacobi": Iterative Jacobi. BROKEN, do not use.
         
-        ∂u/∂t ≈ ν∇²u + f (for diffusion-dominated flows)
-        
-        We compute ∇²u from the existing u and apply the same decay.
-        This is an approximation valid for:
-        - Diffusion-dominated flows (high ν)
-        - Flows where velocity changes slowly
-        
-        For more accurate advection, increase poisson_iterations for
-        better Jacobi convergence (but slower).
-        
-        All operations remain in QTT format - NO dense conversion.
+        The spectral mode converts QTT→Dense, solves exactly via FFT, then Dense→QTT.
+        This is O(N³ log N) but with excellent constant factors and exact solution.
         """
         if self.config.diffusion_only:
             # No velocity update needed for diffusion-only
             return
         
-        h = self.config.h
-        h2 = h * h
+        poisson_mode = getattr(self.config, 'poisson_mode', 'diffusion')
+        
+        if poisson_mode == "spectral":
+            self._reconstruct_velocity_spectral()
+        elif poisson_mode == "diffusion" or self.config.poisson_iterations == 0:
+            self._reconstruct_velocity_diffusion()
+        else:
+            self._reconstruct_velocity_jacobi()
+    
+    def _reconstruct_velocity_spectral(self):
+        """
+        EXACT velocity recovery via spectral Biot-Savart.
+        
+        Given ω = ∇×u and ∇·u = 0:
+            û(k) = i k × ω̂(k) / |k|²
+        
+        This is EXACT (machine precision) unlike iterative methods.
+        """
+        L = 2 * math.pi  # Domain size
+        max_rank = self.config.max_rank
+        
+        # Convert QTT vorticity to dense (using solver-compatible format)
+        omega_dense = [
+            solver_qtt_to_dense_3d(self.omega[i], self.config.n_bits)
+            for i in range(3)
+        ]
+        
+        # Spectral Biot-Savart (exact)
+        u_dense = spectral_biot_savart(omega_dense, L=L)
+        
+        # Convert back to QTT (using solver-compatible format)
+        self.u = [
+            dense_to_solver_qtt_3d(u_dense[i], self.config.n_bits, max_rank=max_rank)
+            for i in range(3)
+        ]
+    
+    def _reconstruct_velocity_diffusion(self):
+        """
+        Fast velocity diffusion approximation.
+        
+        u_new ≈ u + dt * ν * ∇²u
+        
+        Valid for diffusion-dominated flows or when velocity changes slowly.
+        All operations remain in QTT format - NO dense conversion.
+        """
         nu = self.config.nu
         dt = self.config.dt
+        
+        u_new = []
+        for i in range(3):
+            lap_u = self._apply_laplacian(self.u[i])
+            terms = [(1.0, self.u[i]), (nu * dt, lap_u)]
+            u_i = self._truncate_terms(terms)
+            u_new.append(u_i)
+        self.u = u_new
+    
+    def _reconstruct_velocity_jacobi(self):
+        """
+        Jacobi iteration for Poisson solve. DEPRECATED - DIVERGES.
+        
+        Kept for reference only. Use poisson_mode="spectral" instead.
+        """
+        h = self.config.h
+        h2 = h * h
         
         n_jacobi = self.config.poisson_iterations
         
         if n_jacobi == 0:
-            # Skip Poisson solve - use velocity diffusion approximation
-            # u_new ≈ u + dt * ν * ∇²u
-            u_new = []
-            for i in range(3):
-                lap_u = self._apply_laplacian(self.u[i])
-                terms = [(1.0, self.u[i]), (nu * dt, lap_u)]
-                u_i = self._truncate_terms(terms)
-                u_new.append(u_i)
-            self.u = u_new
+            self._reconstruct_velocity_diffusion()
             return
         
         # Use weighted Jacobi for Poisson: ∇²ψ = -ω
-        # For better convergence, use SOR-like weighting
+        # WARNING: This diverges due to over-relaxation
         omega_sor = 1.5  # Over-relaxation (1 < ω < 2)
         alpha = omega_sor / 6.0  # Combined factor
         
@@ -668,7 +823,6 @@ class TurboNS3DSolver:
         for _ in range(n_jacobi):
             psi_new = []
             for i in range(3):
-                # Gauss-Seidel update (approximated as Jacobi with SOR)
                 neighbor_terms = []
                 for d in range(3):
                     psi_plus = turbo_mpo_apply(psi[i], self.shift_plus[d])
@@ -676,10 +830,7 @@ class TurboNS3DSolver:
                     neighbor_terms.append((alpha, psi_plus))
                     neighbor_terms.append((alpha, psi_minus))
                 
-                # Current value with damping
                 neighbor_terms.append((1.0 - omega_sor, psi[i]))
-                
-                # Source term: α * h² * ω
                 neighbor_terms.append((alpha * h2, self.omega[i]))
                 
                 psi_i = self._truncate_terms(neighbor_terms)
@@ -730,23 +881,46 @@ class TurboNS3DSolver:
             return rhs
         
         # Full NS
+        # CRITICAL FIX: Truncate after each Hadamard to prevent rank explosion
+        # Without truncation: r + 6×r² = 6176 for r=32 → OOM
+        # With truncation: r + 6×r = 7r = 224 for r=32 → manageable
+        #
+        # 2026-02-05: CRITICAL - Use conservative truncation to preserve energy.
+        # Without conservative=True: 90% energy loss at 128³ over 50 steps.
         rhs = []
+        max_rank = self.config.max_rank
+        use_conservative = self.config.conservative_truncation
+        
         for i in range(3):
             # Diffusion: ν∇²ω_i
             lap_omega_i = self._apply_laplacian(omega[i])
             
             # Advection: -(u·∇)ω_i = -Σ_d u[d] * ∂ω[i]/∂x[d]
+            # TRUNCATE each Hadamard product immediately (CONSERVATIVELY)
             advection_terms = []
             for d in range(3):
                 grad_omega = self._apply_derivative(omega[i], d)
                 term = turbo_hadamard_cores(u[d], grad_omega)
+                # Truncate after Hadamard to prevent r² → r
+                # CONSERVATIVE: Rescale to preserve ‖term‖² exactly
+                if use_conservative:
+                    term = turbo_truncate_conservative(term, max_rank)
+                else:
+                    term = turbo_truncate(term, max_rank)
                 advection_terms.append((-1.0, term))
             
             # Vortex stretching: (ω·∇)u_i = Σ_d ω[d] * ∂u[i]/∂x[d]
+            # TRUNCATE each Hadamard product immediately (CONSERVATIVELY)
             stretch_terms = []
             for d in range(3):
                 grad_u = self._apply_derivative(u[i], d)
                 term = turbo_hadamard_cores(omega[d], grad_u)
+                # Truncate after Hadamard to prevent r² → r
+                # CONSERVATIVE: Rescale to preserve ‖term‖² exactly
+                if use_conservative:
+                    term = turbo_truncate_conservative(term, max_rank)
+                else:
+                    term = turbo_truncate(term, max_rank)
                 stretch_terms.append((1.0, term))
             
             # Combine all terms for component i

@@ -1,0 +1,306 @@
+{
+  "project": "HyperTensor-VM",
+  "protocol": "trustless_physics_gauntlet_phase2",
+  "phase": 2,
+  "description": "Multi-Domain & Deployment: NS-IMEX Circuit, Lean Proofs, API, Deployment",
+  "timestamp": "2026-02-06T16:58:57Z",
+  "total_tests": 45,
+  "passed": 45,
+  "failed": 0,
+  "total_time_seconds": 1.963,
+  "gauntlets": {
+    "ns_imex_module_compiles": {
+      "layer": "ns_imex_circuit",
+      "passed": true,
+      "time_seconds": 0.178,
+      "error": null
+    },
+    "ns_imex_config_tests": {
+      "layer": "ns_imex_circuit",
+      "passed": true,
+      "time_seconds": 0.1638,
+      "error": null
+    },
+    "ns_imex_witness_tests": {
+      "layer": "ns_imex_circuit",
+      "passed": true,
+      "time_seconds": 0.1606,
+      "error": null
+    },
+    "ns_imex_gadgets_tests": {
+      "layer": "ns_imex_circuit",
+      "passed": true,
+      "time_seconds": 0.157,
+      "error": null
+    },
+    "ns_imex_circuit_tests": {
+      "layer": "ns_imex_circuit",
+      "passed": true,
+      "time_seconds": 0.1591,
+      "error": null
+    },
+    "ns_imex_prover_tests": {
+      "layer": "ns_imex_circuit",
+      "passed": true,
+      "time_seconds": 0.1803,
+      "error": null
+    },
+    "ns_imex_e2e_stub_test": {
+      "layer": "ns_imex_circuit",
+      "passed": true,
+      "time_seconds": 0.1594,
+      "error": null
+    },
+    "ns_imex_all_48_tests_pass": {
+      "layer": "ns_imex_circuit",
+      "passed": true,
+      "time_seconds": 0.1607,
+      "error": null
+    },
+    "ns_imex_has_six_files": {
+      "layer": "ns_imex_circuit",
+      "passed": true,
+      "time_seconds": 0.0003,
+      "error": null
+    },
+    "ns_imex_config_has_imex_stages": {
+      "layer": "ns_imex_circuit",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "ns_imex_witness_has_imex_structure": {
+      "layer": "ns_imex_circuit",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "ns_imex_gadgets_has_ns_specific": {
+      "layer": "ns_imex_circuit",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "ns_imex_prover_has_from_bytes": {
+      "layer": "ns_imex_circuit",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_ns_conservation_exists": {
+      "layer": "lean_ns_proofs",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "lean_ns_has_namespace": {
+      "layer": "lean_ns_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_ns_has_viscosity_axioms": {
+      "layer": "lean_ns_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_ns_has_imex_axioms": {
+      "layer": "lean_ns_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_ns_has_divergence_axioms": {
+      "layer": "lean_ns_proofs",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "lean_ns_has_theorems": {
+      "layer": "lean_ns_proofs",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "lean_ns_has_certificate": {
+      "layer": "lean_ns_proofs",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "lean_ns_has_mathlib_imports": {
+      "layer": "lean_ns_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_ns_line_count": {
+      "layer": "lean_ns_proofs",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "deployment_dir_exists": {
+      "layer": "deployment",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "deployment_containerfile_valid": {
+      "layer": "deployment",
+      "passed": true,
+      "time_seconds": 0.0017,
+      "error": null
+    },
+    "deployment_config_toml_valid": {
+      "layer": "deployment",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "deployment_scripts_executable": {
+      "layer": "deployment",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "deployment_start_script_valid": {
+      "layer": "deployment",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "deployment_deploy_script_commands": {
+      "layer": "deployment",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "deployment_health_check_comprehensive": {
+      "layer": "deployment",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "api_module_exists": {
+      "layer": "customer_api",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "api_registered_in_lib": {
+      "layer": "customer_api",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "api_has_certificate_endpoints": {
+      "layer": "customer_api",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "api_has_request_types": {
+      "layer": "customer_api",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "api_has_auth_middleware": {
+      "layer": "customer_api",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "api_has_prometheus_metrics": {
+      "layer": "customer_api",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "api_has_solver_list": {
+      "layer": "customer_api",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "api_ns_imex_certificate_generation": {
+      "layer": "customer_api",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "integration_all_116_rust_tests": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.1603,
+      "error": null
+    },
+    "integration_ns_imex_proof_roundtrip": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.1529,
+      "error": null
+    },
+    "integration_lib_rs_has_ns_imex": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "integration_lean_files_consistent": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0027,
+      "error": null
+    },
+    "integration_deployment_config_matches_api": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "regression_euler3d_36_tests": {
+      "layer": "regression",
+      "passed": true,
+      "time_seconds": 0.1642,
+      "error": null
+    },
+    "regression_euler_conservation_lean": {
+      "layer": "regression",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "regression_zero_compile_errors": {
+      "layer": "regression",
+      "passed": true,
+      "time_seconds": 0.1577,
+      "error": null
+    }
+  },
+  "components": {
+    "ns_imex_circuit": {
+      "language": "Rust",
+      "files": 6,
+      "tests": 48,
+      "description": "Halo2 ZK proof circuit for NS-IMEX QTT solver"
+    },
+    "lean_proofs": {
+      "language": "Lean 4",
+      "files": 1,
+      "theorems": 20,
+      "description": "NavierStokesConservation formal verification"
+    },
+    "deployment": {
+      "files": 5,
+      "description": "Containerized on-premise deployment package"
+    },
+    "customer_api": {
+      "language": "Rust",
+      "files": 1,
+      "description": "REST API for certificate generation and verification"
+    }
+  }
+}
