@@ -1,0 +1,91 @@
+{
+  "project": "cem-qtt",
+  "protocol": "CEM_QTT_BUILD_ATTESTATION",
+  "version": "0.1.0",
+  "summary": "Computational Electromagnetics \u2014 FDTD Maxwell Solver in QTT Format",
+  "timestamp": "2026-02-07T18:34:32Z",
+  "author": "Brad McAllister",
+  "description": "3D FDTD Maxwell solver with Q16.16 fixed-point arithmetic, Yee lattice, MPS/MPO tensor network compression, PML absorbing boundaries, and Poynting theorem energy conservation verification.",
+  "governing_equations": [
+    "\u2202B/\u2202t = \u2212\u2207 \u00d7 E",
+    "\u2202E/\u2202t = (1/\u03b5)(\u2207 \u00d7 H \u2212 J \u2212 \u03c3E)"
+  ],
+  "validation": {
+    "total_tests": 28,
+    "passed": 28,
+    "failed": 0,
+    "pass_rate": "28/28 (100%)",
+    "key_results": {
+      "zero_field_stability": "PASS \u2014 50 steps, energy = 0.0",
+      "energy_conservation": "PASS \u2014 30 steps, max drift = 0.032089",
+      "pec_boundary": "PASS \u2014 tangential E = 0 enforced",
+      "field_propagation": "PASS \u2014 193 nonzero H-points after 5 steps",
+      "lossy_medium_decay": "PASS \u2014 energy 0.500 \u2192 0.339 (20 steps)",
+      "determinism": "PASS \u2014 bit-identical across runs (20 steps)",
+      "long_run_stability": "PASS \u2014 100 steps without blowup",
+      "dielectric_coefficients": "PASS \u2014 cb ratio 4:1 (\u03b5r=4)",
+      "pml_damping": "PASS \u2014 monotonic cubic grading",
+      "cfl_condition": "PASS \u2014 Courant number 0.5"
+    }
+  },
+  "architecture": {
+    "solver": "FDTD Yee lattice, leapfrog time integration",
+    "arithmetic": "Q16.16 fixed-point (deterministic, ZK-friendly)",
+    "compression": "MPS/MPO tensor networks with SVD truncation",
+    "field_components": 6,
+    "field_names": [
+      "Ex",
+      "Ey",
+      "Ez",
+      "Hx",
+      "Hy",
+      "Hz"
+    ],
+    "boundaries": [
+      "Periodic",
+      "PEC",
+      "PML (Berenger split-field)"
+    ],
+    "materials": [
+      "Vacuum",
+      "Dielectric",
+      "Conductor",
+      "Lossy dielectric"
+    ],
+    "sources": [
+      "Gaussian pulse",
+      "Sinusoidal (CW)",
+      "Plane wave"
+    ]
+  },
+  "modules": {
+    "q16": "Q16.16 fixed-point arithmetic (src/q16.rs)",
+    "mps": "Matrix Product State field representation (src/mps.rs)",
+    "mpo": "Matrix Product Operator for curl/Laplacian (src/mpo.rs)",
+    "material": "EM material properties \u2014 \u03b5, \u03bc, \u03c3 (src/material.rs)",
+    "fdtd": "Yee lattice FDTD solver (src/fdtd.rs)",
+    "pml": "Perfectly Matched Layer boundaries (src/pml.rs)",
+    "conservation": "Poynting theorem verification (src/conservation.rs)"
+  },
+  "integration_targets": [
+    "HyperTensor (physics engine \u2014 upstream)",
+    "FluideLite (ZK proof framework \u2014 downstream)",
+    "QTT compression (published, Zenodo)",
+    "INVARIAN/Trust Fabric (PQC provenance)"
+  ],
+  "file_hashes": {
+    "Cargo.toml": "9a49bbe5149d37bc3469ad367aa7d770b2b4a099eb892fec223d36dd34549e81",
+    "README.md": "192a21dd69039b24087dee307e3345afee2a2d706c73af7330dcf84a3c36d3f7",
+    "src/q16.rs": "c577049be81ae8ee7f96c00105b3a39aa834de8cc08551d10439adcf56646daf",
+    "src/mps.rs": "eae5b72f198401b6513e6c11dd61b5a5921d7d9ec1f889947665ef1df1a4a72c",
+    "src/mpo.rs": "a862d3e9260d8943c9608b5afa553da8ab12d98394cf7212f9b17dfe6cb1d713",
+    "src/material.rs": "e04fb6eb35078e08a6ee54322abc5d9b4e6f2b75129d6f787c2b8790e951e094",
+    "src/fdtd.rs": "60c4b3e6748230ffc0489299d629d88493d9502e5b623d6043b523af8b796736",
+    "src/pml.rs": "cb25c28c464394ad53d2362aca4694e38bb0706863bd98bb455b01edcbb1f37c",
+    "src/conservation.rs": "1122be299e2ca49832c67d7093dfba8f8cb35f021997c096902a68e1ff290451",
+    "src/lib.rs": "f9f806936923555e029bffa35d03edbd2505d14951d664fc85a9a458bc15f711",
+    "tests/integration.rs": "fba96c3763d29cbafbcedbadcfe6615d600d8773b15152eb4d4e663f6b5bad28",
+    "validate.py": "e32d86b89d821bdc63b9e682a7f235da80d6a08db4c8e8f9912782a3bbe68630"
+  },
+  "self_hash": "a40db241f495d42de0e1bd072bb33363ad3c0c535e704ee54f873e3bc14b2edb"
+}

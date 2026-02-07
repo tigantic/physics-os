@@ -13,15 +13,15 @@
 
 **The Physics-First Tensor Network Engine**
 
-*One Codebase. 16 Industries. 814K Lines of Code. 9 Languages.*
+*One Codebase. 17 Industries. 819K Lines of Code. 9 Languages.*
 
-**Version 31.0** | **February 6, 2026** | **TRUSTLESS PHYSICS PHASE 3**
+**Version 32.0** | **February 7, 2026** | **CEM-QTT MAXWELL INTEGRATION**
 
 ---
 
-[![LOC](https://img.shields.io/badge/LOC-814K-blue)]()
+[![LOC](https://img.shields.io/badge/LOC-819K-blue)]()
 [![Python](https://img.shields.io/badge/Python-608K-green)]()
-[![Rust](https://img.shields.io/badge/Rust-77K-orange)]()
+[![Rust](https://img.shields.io/badge/Rust-80K-orange)]()
 [![Solidity](https://img.shields.io/badge/Solidity-18K-yellow)]()
 [![Genesis](https://img.shields.io/badge/Genesis-7%2F7+Layer_27-gold)]()
 [![Lean](https://img.shields.io/badge/Lean4-Verified-purple)]()
@@ -69,27 +69,28 @@
 
 ### Repository Metrics
 
-> *All metrics validated February 6, 2026 via `find`/`wc -l` against owned source code.*
+> *All metrics validated February 7, 2026 via `find`/`wc -l` against owned source code.*
 > *Excludes vendored dependencies (zk_targets/, vendor/, node_modules/, .lake/, target/).*
+> *Solidity LOC excludes vendored forge-std, OpenZeppelin, and all zk_targets/ protocol forks.*
 
 | Metric | Value |
 |--------|------:|
-| **Total Lines of Code** | **813,599** |
-| Python LOC | 608,041 |
+| **Total Lines of Code** | **818,824** |
+| Python LOC | 608,479 |
 | HTML/Dashboard LOC | 97,215 |
-| Rust LOC | 77,404 |
+| Rust LOC | 80,099 |
 | Solidity LOC | 18,285 |
 | WGSL Shader LOC | 4,265 |
 | CUDA Kernel LOC | 3,721 |
 | TypeScript/JS LOC | 2,942 |
-| Lean 4 LOC | 1,246 |
+| Lean 4 LOC | 3,338 |
 | LaTeX LOC | 480 |
 | **Languages** | **9** |
-| **Total Source Files** | **3,223** |
-| **Test Files** | 182 |
-| **Gauntlet Runners** | 29 |
+| **Total Source Files** | **3,233** |
+| **Test Files** | 184 |
+| **Gauntlet Runners** | 33 |
 | **Documentation Files** | 461 |
-| **Attestation JSONs** | 120 |
+| **Attestation JSONs** | 121 |
 | **JSON Configs/Data** | 341 |
 
 ### Platform Components
@@ -100,7 +101,7 @@
 | **Modules** | 107 | Reusable libraries and packages |
 | **Applications** | 102 | Standalone executables |
 | **Tools** | 15 | Single-purpose utilities |
-| **Gauntlets** | 30 | Validation suites |
+| **Gauntlets** | 33 | Validation suites |
 | **Rust Binaries** | 26 | High-performance executables |
 | **Genesis Layers** | 7/7 + Layer 27 | QTT meta-primitives + applied science (40,836 LOC) |
 | **Tenet-TPhy** | Phase 0 | Trustless Physics Certificates (6,416 LOC) |
@@ -111,7 +112,7 @@
 
 ### The Planetary Operating System
 
-HyperTensor has been validated across 16 industries, each represented as a computational "phase" in the Civilization Stack:
+HyperTensor has been validated across 17 industries, each represented as a computational "phase" in the Civilization Stack:
 
 | Phase | Industry | Domain | Status |
 |:-----:|----------|--------|:------:|
@@ -131,6 +132,9 @@ HyperTensor has been validated across 16 industries, each represented as a compu
 | 14 | 🔥 **Emergency** | Wildfire Prophet | ✅ |
 | 15 | 🌱 **Agriculture** | Vertical Farm Microclimate | ✅ |
 | 21 | 🧬 **Biology** | Biological Aging & Rejuvenation | ✅ |
+| 22 | 📡 **Electromagnetics** | CEM-QTT Maxwell FDTD Solver | ✅ |
+
+> *Phases 16–20 are reserved for Genesis meta-primitive layers (QTT-OT through QTT-GA). Phase 21+ represents applied science built on Genesis primitives.*
 
 ---
 
@@ -161,7 +165,7 @@ HyperTensor has been validated across 16 industries, each represented as a compu
 | `tci_llm/` | 10 | 2,261 | 0.4% | LLM integration |
 | `ai_scientist/` | 6 | 2,080 | 0.3% | Auto-discovery |
 
-#### Rust (195 files | 77,404 LOC)
+#### Rust (204 files | 80,099 LOC)
 
 | Crate | Files | LOC | Purpose |
 |-------|------:|----:|----------|
@@ -169,16 +173,23 @@ HyperTensor has been validated across 16 industries, each represented as a compu
 | `apps/glass_cockpit` | 68 | 30,608 | Flight instrumentation display |
 | `crates/hyper_bridge` | 16 | 5,917 | Python/Rust FFI bridge |
 | `crates/hyper_core` | 10 | 2,638 | Core operations |
+| `QTT-CEM/QTT-CEM` | 9 | 2,695 | Maxwell FDTD solver (Q16.16 + MPS/MPO) |
 | `glass-cockpit` | 4 | 2,194 | Cockpit utilities |
 | `tci_core_rust` | 6 | 1,871 | Tensor Core Interface |
+| `crates/proof_bridge` | 6 | 1,718 | Trace → ZK circuit builder |
 | `crates/tci_core` | 5 | 1,337 | TCI shared library |
 | `apps/global_eye` | 5 | 1,167 | Global monitoring |
+| `apps/trustless_verify` | 3 | 965 | Standalone TPC verifier |
 | `crates/hyper_gpu_py` | 1 | 347 | GPU Python bindings |
 
-#### Lean 4 (14 files | 1,246 LOC)
+#### Lean 4 (18 files | 3,338 LOC)
 
 | File | LOC | Purpose |
 |------|----:|---------|
+| `lean_yang_mills/YangMills/NavierStokesConservation.lean` | 712 | NS conservation formalization (20+ theorems, IMEX proofs) |
+| `lean_yang_mills/YangMills/ProverOptimization.lean` | 594 | Prover optimization (25 theorems: batch, incremental, compression) |
+| `lean_yang_mills/YangMills/EulerConservation.lean` | 502 | Euler conservation formalization (12+ theorems) |
+| `thermal_conservation_proof/ThermalConservation.lean` | 281 | Thermal conservation proofs |
 | `lean_yang_mills/YangMills/MassGap.lean` | 178 | Mass gap theorem formalization |
 | `yang_mills_proof/YangMills.lean` | 118 | Yang-Mills proof structure |
 | `ai_scientist_output/YangMills.lean` | 114 | Auto-discovered proof |
@@ -191,6 +202,8 @@ HyperTensor has been validated across 16 industries, each represented as a compu
 | `lean_yang_mills/YangMills/YangMillsVerified.lean` | 88 | Verified (lean workspace) |
 | `navier_stokes_proof_v2/NavierStokesRegularity.lean` | 78 | NS regularity proofs |
 | `lean_yang_mills/YangMills/NavierStokesRegularity.lean` | 78 | NS regularity (lean workspace) |
+| `lean_yang_mills/YangMills.lean` | 4 | Lean workspace root |
+| `lean_yang_mills/YangMills/Basic.lean` | 1 | Base imports |
 
 #### LaTeX (1 file | 480 LOC)
 
@@ -202,7 +215,7 @@ HyperTensor has been validated across 16 industries, each represented as a compu
 
 | Type | Files | Location |
 |------|------:|----------|
-| **CUDA Kernels** | 11 | `tensornet/cuda/`, `tensornet/gpu/` |
+| **CUDA Kernels** | 11 | `tensornet/cuda/`, `tensornet/gpu/`, `fluidelite/kernels/cuda/` |
 | **Triton Kernels** | 3 | `fluidelite/core/triton_kernels.py` |
 | **WGSL Shaders** | 18 | `apps/glass_cockpit/src/shaders/` |
 
@@ -909,7 +922,7 @@ flowchart TB
 
 ---
 
-### Rust Crates (11)
+### Rust Crates (12)
 
 | Crate | Files | LOC | Purpose |
 |-------|------:|----:|---------|
@@ -917,6 +930,7 @@ flowchart TB
 | `glass_cockpit` | 68 | 30,608 | Flight instrumentation |
 | `hyper_bridge` | 16 | 5,917 | Python/Rust FFI |
 | `hyper_core` | 10 | 2,638 | Core operations |
+| `cem-qtt` | 9 | 2,695 | Maxwell FDTD solver (Q16.16 + MPS/MPO) |
 | `glass-cockpit` | 4 | 2,194 | Cockpit utilities |
 | `tci_core_rust` | 6 | 1,871 | Tensor Core Interface |
 | `proof_bridge` | 6 | 1,718 | Trace → ZK circuit builder |
@@ -929,11 +943,13 @@ flowchart TB
 
 ### Applications (102)
 
-#### Gauntlets (30)
+#### Gauntlets (33)
 *Comprehensive validation suites*
 
 | Gauntlet | Domain | Validates |
 |----------|--------|-----------|
+| `ade_gauntlet.py` | Discovery | Autonomous Discovery Engine V1 |
+| `ade_gauntlet_v2.py` | Discovery | Autonomous Discovery Engine V2 |
 | `test_aging_gauntlet.py` | Biological aging | Cell state QTT, rank dynamics, Yamanaka reversal |
 | `chronos_gauntlet.py` | Time evolution | TDVP accuracy, conservation |
 | `cornucopia_gauntlet.py` | Optimization | Resource allocation |
@@ -945,14 +961,26 @@ flowchart TB
 | `metric_engine_gauntlet.py` | Benchmarks | Performance metrics |
 | `oracle_gauntlet.py` | Prediction | Forecast accuracy |
 | `orbital_forge_gauntlet.py` | Orbital | Trajectory mechanics |
+| `production_hardening_gauntlet.py` | Production | Production hardening validation |
 | `prometheus_gauntlet.py` | Combustion | Fire simulation |
 | `proteome_compiler_gauntlet.py` | Biology | Protein folding |
+| `qtt_native_gauntlet.py` | QTT | Native QTT operations |
+| `qtt_ga_gauntlet.py` | Genesis L26 | Geometric Algebra primitives |
+| `qtt_ot_gauntlet.py` | Genesis L20 | Optimal Transport primitives |
+| `qtt_ph_gauntlet.py` | Genesis L25 | Persistent Homology primitives |
+| `qtt_rkhs_gauntlet.py` | Genesis L24 | RKHS / Kernel Method primitives |
+| `qtt_rmt_gauntlet.py` | Genesis L22 | Random Matrix Theory primitives |
+| `qtt_sgw_gauntlet.py` | Genesis L21 | Spectral Graph Wavelet primitives |
+| `qtt_tropical_gauntlet.py` | Genesis L23 | Tropical Geometry primitives |
 | `snhff_stochastic_gauntlet.py` | Stochastic | NS with noise |
 | `sovereign_genesis_gauntlet.py` | Bootstrap | System init |
 | `starheart_gauntlet.py` | Fusion | Reactor output |
 | `tig011a_dielectric_gauntlet.py` | Materials | Dielectric properties |
 | `tomahawk_cfd_gauntlet.py` | Aerodynamics | Missile CFD |
-| `trustless_physics_gauntlet.py` | Trustless Physics | TPC format, trace, generator, verifier (25 tests) |
+| `trustless_physics_gauntlet.py` | Trustless Physics | TPC Phase 0 (25 tests) |
+| `trustless_physics_phase1_gauntlet.py` | Trustless Physics | TPC Phase 1 — Euler 3D circuit (24 tests) |
+| `trustless_physics_phase2_gauntlet.py` | Trustless Physics | TPC Phase 2 — NS-IMEX + deployment (45 tests) |
+| `trustless_physics_phase3_gauntlet.py` | Trustless Physics | TPC Phase 3 — Prover pool + Gevulot (40 tests) |
 
 #### Proof Pipelines (5)
 *Millennium problem automation*
@@ -1037,16 +1065,16 @@ flowchart TB
 
 | Metric | Value | Target | Status |
 |--------|------:|-------:|:------:|
-| **Test Files** | 175 | — | ✅ |
-| **Gauntlet Runners** | 29 | — | ✅ |
+| **Test Files** | 182 | — | ✅ |
+| **Gauntlet Runners** | 33 | — | ✅ |
 | **Test Coverage** | ~45% | 51%+ | 🟡 |
 | **Clippy Warnings (Rust)** | 0 | 0 | ✅ |
 | **Bare `except:` (Python)** | 0 | 0 | ✅ |
 | **TODOs in Production** | 0 | 0 | ✅ |
 | **Pickle Usage** | 0 | 0 | ✅ |
 | **Type Hints Coverage** | ~95% | 100% | 🟡 |
-| **Documentation Files** | 417 | — | ✅ |
-| **Attestation JSONs** | 115 | — | ✅ |
+| **Documentation Files** | 461 | — | ✅ |
+| **Attestation JSONs** | 120 | — | ✅ |
 | **Industries Validated** | 16 | 16 | ✅ |
 
 ---
@@ -1194,6 +1222,10 @@ HyperTensor/
 │   ├── workflows/              # QTT turbulence pipeline + arXiv paper
 │   ├── docs/                   # 44 documentation files
 │   └── tools/                  # Capability map generators
+├── QTT-CEM/QTT-CEM/           # CEM-QTT: Maxwell FDTD in Rust (2.7K LOC)
+│   ├── src/                    # 7 modules (q16, mps, mpo, material, fdtd, pml, conservation)
+│   ├── tests/                  # 16 integration tests
+│   └── validate.py             # 28-test Python validation harness
 ├── yangmills/                  # Gauge theory (19K LOC)
 ├── lean_yang_mills/            # Lean 4 proofs
 ├── proofs/                     # Mathematical proofs
@@ -1292,6 +1324,21 @@ from qtenet.demos import holy_grail_6d
 ---
 
 ## Changelog
+
+### Version 32.0 (February 2026) — CEM-QTT MAXWELL INTEGRATION
+- 📡 **CEM-QTT v0.1.0**: Maxwell's equations FDTD solver — Yee lattice, Q16.16 fixed-point, MPS/MPO tensor compression
+- ✅ 7 Rust modules: q16, mps, mpo, material, fdtd, pml, conservation (2,695 LOC)
+- ✅ Q16.16 arithmetic: deterministic, ZK-friendly, Newton's sqrt with bit-length initial guess
+- ✅ MPS/MPO tensor network: SVD via power iteration, truncation, direct-sum addition
+- ✅ Yee lattice FDTD: leapfrog time integration, periodic/PEC/PML boundaries
+- ✅ Material system: vacuum, dielectric, conductor, lossy media, sphere/slab insertion
+- ✅ Berenger split-field PML: optimal σ_max, cubic polynomial grading
+- ✅ Poynting theorem conservation verifier with configurable tolerance
+- ✅ 48 tests passing (32 unit + 16 integration), zero warnings
+- ✅ Python validation harness: 28/28 tests passing
+- ✅ Zero external dependencies — pure Rust, edition 2021
+- ✅ Wired into Cargo workspace as 12th Rust crate
+- ✅ Phase 22 Electromagnetics added to Civilization Stack
 
 ### Version 31.0 (February 2026) — TRUSTLESS PHYSICS PHASE 3
 - 🚀 **Tenet-TPhy Phase 3**: Scaling & Decentralization — Prover Pool + Gevulot + Dashboard + Multi-Tenant (~9,500 LOC)
@@ -1428,17 +1475,17 @@ See [CHANGELOG.md](CHANGELOG.md) for complete history.
 ║                                                                                        ║
 ║     O N E   C O D E B A S E   •   O N E   P H Y S I C S   E N G I N E                 ║
 ║                                                                                        ║
-║     8 1 3 , 5 9 9   L I N E S   O F   C O D E                                         ║
+║     8 1 8 , 8 2 4   L I N E S   O F   C O D E                                         ║
 ║                                                                                        ║
-║     1 6   I N D U S T R I E S   C O N Q U E R E D                                     ║
+║     1 7   I N D U S T R I E S   C O N Q U E R E D                                     ║
 ║                                                                                        ║
-║     4   P L A T F O R M S   •   1 0 5   M O D U L E S   •   1 0 0   A P P L I C A T I O N S ║
+║     4   P L A T F O R M S   •   1 0 7   M O D U L E S   •   1 0 2   A P P L I C A T I O N S ║
 ║                                                                                        ║
 ║                         T H E   P L A N E T A R Y   O S                                ║
 ║                                                                                        ║
 ╚════════════════════════════════════════════════════════════════════════════════════════╝
 ```
 
-*Last Updated: February 6, 2026 — Version 31.0*
+*Last Updated: February 7, 2026 — Version 32.0*
 
 </div>

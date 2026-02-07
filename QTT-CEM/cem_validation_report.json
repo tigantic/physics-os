@@ -1,0 +1,152 @@
+{
+  "total": 28,
+  "passed": 28,
+  "failed": 0,
+  "results": [
+    {
+      "test": "Zero field remains zero (50 steps)",
+      "status": "PASS",
+      "detail": "energy=0.0"
+    },
+    {
+      "test": "Initial energy nonzero",
+      "status": "PASS",
+      "detail": "e0=0.125000"
+    },
+    {
+      "test": "Energy conserved (30 steps)",
+      "status": "PASS",
+      "detail": "max_drift=0.032089, tol=0.050003"
+    },
+    {
+      "test": "Source injects energy",
+      "status": "PASS",
+      "detail": "energy=0.430496"
+    },
+    {
+      "test": "PEC: tangential E=0 at x=0",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Default dt satisfies CFL",
+      "status": "PASS",
+      "detail": "dt=0.036085, dt_max=0.072169"
+    },
+    {
+      "test": "Large dt violates CFL",
+      "status": "PASS",
+      "detail": "dt=10.0"
+    },
+    {
+      "test": "Field propagates from source",
+      "status": "PASS",
+      "detail": "nonzero_H_points=193"
+    },
+    {
+      "test": "Energy decays in lossy medium",
+      "status": "PASS",
+      "detail": "e0=0.500000, final=0.338791"
+    },
+    {
+      "test": "Bit-identical across runs (20 steps)",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Poynting flux nonzero for propagating wave",
+      "status": "PASS",
+      "detail": "flux=0.007812"
+    },
+    {
+      "test": "100 steps without blowup",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Dielectric cb < vacuum cb",
+      "status": "PASS",
+      "detail": "vac_cb=0.288696, die_cb=0.072174"
+    },
+    {
+      "test": "PML damping monotonically increases",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "PML \u03c3(0) = 0",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "PML \u03c3(max) = \u03c3_max",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Constant energy \u2192 zero residual",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Energy spike detected",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Addition: 3.5 + 2.0 = 5.5",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Multiplication: 3.5 \u00d7 2.0 = 7.0",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Division: 7.0 / 2.0 = 3.5",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Deterministic encoding",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "3D Yee lattice operational",
+      "status": "PASS",
+      "detail": "N=8, 6 field components"
+    },
+    {
+      "test": "Periodic BC functional",
+      "status": "PASS",
+      "detail": "Verified in energy conservation"
+    },
+    {
+      "test": "PEC BC functional",
+      "status": "PASS",
+      "detail": "Verified in boundary test"
+    },
+    {
+      "test": "Material interface support",
+      "status": "PASS",
+      "detail": "Verified in dielectric test"
+    },
+    {
+      "test": "Q16.16 determinism",
+      "status": "PASS",
+      "detail": "Verified bit-identical runs"
+    },
+    {
+      "test": "Leapfrog time integration",
+      "status": "PASS",
+      "detail": "Verified over 100 steps"
+    }
+  ],
+  "elapsed_seconds": 0.502,
+  "timestamp": "2026-02-07T14:09:09-0500",
+  "grid": "8\u00d78\u00d78 (2^3)",
+  "arithmetic": "Q16.16 fixed-point",
+  "solver": "FDTD Yee lattice, leapfrog"
+}

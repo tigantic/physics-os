@@ -10,6 +10,7 @@
 #   apps/glass_cockpit    - Fighter jet cockpit visualization
 #   apps/global_eye       - Global weather observation platform
 #   apps/trustless_verify - Standalone TPC certificate verifier
+#   QTT-CEM/QTT-CEM      - CEM-QTT: Maxwell FDTD solver (Q16.16 + MPS/MPO)
 #
 # Build: cargo build --workspace --release
 # Test:  cargo test --workspace
@@ -30,6 +31,7 @@ members = [
     "fluidelite-circuits",
     "fluidelite-zk",
     "fluidelite-infra",
+    "QTT-CEM/QTT-CEM",
 ]
 resolver = "2"
 
