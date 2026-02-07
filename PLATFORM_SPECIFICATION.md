@@ -1036,7 +1036,7 @@ flowchart TB
 
 ## Physics Inventory
 
-> **Comprehensive catalog of every physics equation, model, and numerical method implemented across the HyperTensor platform.** Covers 20+ physics domains, 300+ equations, and ~78,000 lines of physics-specific code spanning Python, Rust, Solidity, and Lean 4.
+> **Comprehensive catalog of every physics equation, model, and numerical method implemented across the HyperTensor platform.** Covers 20+ physics domains, 340+ equations, and ~80,000 lines of physics-specific code spanning Python, Rust, Solidity, and Lean 4.
 
 ### Summary by Domain
 
@@ -1057,10 +1057,11 @@ flowchart TB
 | Chemical Kinetics & Catalysis | ~12 | ~2,400 | `tensornet/cfd/chemistry.py`, `tensornet/fusion/resonant_catalysis.py` |
 | Turbulence Modeling (RANS/LES) | ~20 | ~1,800 | `tensornet/cfd/turbulence.py`, `tensornet/cfd/les.py` |
 | Mathematical Physics (Genesis) | ~25 | ~5,500 | `tensornet/genesis/` (8 layers) |
+| Genesis Cross-Primitive Pipeline | ~12 | ~2,700 | `tensornet/genesis/fusion/`, `tensornet/genesis/__init__.py` |
 | Quantum Computing & Error Mitigation | ~15 | ~2,400 | `tensornet/quantum/` |
 | QTeneT Enterprise SDK | ~30 | ~10,400 | `QTeneT/` (8 submodules + workflows) |
 | Formal Verification (Lean 4) | 6 proofs | ~633 | `lean/HyperTensor/` |
-| **Total** | **~330+** | **~78,000** | **120+ files** |
+| **Total** | **~340+** | **~80,000** | **125+ files** |
 
 ---
 
@@ -1563,6 +1564,45 @@ $$\text{MMD}^2(P,Q) = \mathbb{E}[k(x,x')] - 2\mathbb{E}[k(x,y)] + \mathbb{E}[k(y
 $$\text{Cl}(p,q,r): \quad e_i^2 = \begin{cases}+1 & i\leq p \\ -1 & p<i\leq p+q \\ 0 & i>p+q\end{cases}$$
 
 - $2^n$ basis blades, geometric/inner/outer products, rotors $R = e^{-B\theta/2}$
+
+#### 14.8 Cross-Primitive Pipeline (Genesis Fusion)
+
+**Source**: `tensornet/genesis/fusion/geometric_types_pipeline.py` (874 LOC), `tensornet/genesis/fusion/genesis_fusion_demo.py` (1,471 LOC), `tensornet/genesis/__init__.py` (388 LOC)
+
+The Genesis cross-primitive pipeline composes all 7 mathematical primitives into a single end-to-end data flow **without densification** — data remains in QTT format across every stage.
+
+**7-Stage Pipeline Flow:**
+
+| Stage | Primitive | Layer | Operation | Output |
+|:-----:|-----------|:-----:|-----------|--------|
+| 1 | QTT-OT | 20 | Distribution transport | $W_2$ distance |
+| 2 | QTT-SGW | 21 | Multi-scale wavelet analysis | Energy per scale |
+| 3 | QTT-RKHS | 24 | MMD anomaly detection | Divergence scalar |
+| 4 | QTT-RMT | 22 | Spectral density analysis | Eigenvalue spectrum |
+| 5 | QTT-TG | 23 | Tropical shortest paths | Distance matrix |
+| 6 | QTT-PH | 25 | Persistent homology | Betti numbers $\beta_0, \beta_1$ |
+| 7 | QTT-GA | 26 | Geometric classification | Multivector |
+
+**Type-Safe Geometric Pipeline** (5-stage variant with invariant preservation):
+
+| Type | Invariant | Transition |
+|------|-----------|------------|
+| VectorField | $\nabla\cdot\mathbf{v} = 0$ | → SGW wavelet filtering |
+| Measure | $\int d\mu = 1,\; \mu \geq 0$ | → OT Wasserstein barycenter |
+| Manifold | $g_{ij} = g_{ji},\; \det(g) > 0$ | → PH geodesic persistence |
+| Spinor | $|\psi|^2 = 1$ | → GA SU(2) rotation |
+| Measure | $\int d\mu = 1$ | → RKHS kernel MMD |
+
+**Unique equations (composition-specific):**
+
+- Helmholtz projection: $\hat{v}_i^{\text{proj}} = \hat{v}_i - k_i(\mathbf{k}\cdot\hat{\mathbf{v}})/|\mathbf{k}|^2$
+- Solenoidal field via curl: $\mathbf{v} = \nabla\times\boldsymbol{\psi}$
+- Geodesic distance (midpoint metric): $d(i,j) = \sqrt{(\mathbf{x}_j - \mathbf{x}_i)^T g_{\text{mid}} (\mathbf{x}_j - \mathbf{x}_i)}$
+- SU(2) Pauli-Z spinor rotation: $\psi'_0 = e^{-i\theta/2}\psi_0$, $\psi'_1 = e^{i\theta/2}\psi_1$
+
+**7-Gauntlet benchmark suite** validates each primitive at $2^{10}$–$2^{16}$ scale with rank boundedness ($\chi \leq 32$), energy conservation, $O(r^3\log N)$ scaling, and cross-primitive composition correctness.
+
+**Master module** (`tensornet/genesis/__init__.py`) exports ~135 symbols across all 8 layers + core, with 4 documented composition patterns: OT+PH (transport-aware topology), SGW+RKHS (spectral kernels), RMT+GA (uncertainty-quantified transforms), TG+OT (discrete optimal transport).
 
 ---
 
@@ -2112,9 +2152,10 @@ from qtenet.demos import holy_grail_6d
 ### Version 35.0 (February 2026) — COMPREHENSIVE PHYSICS INVENTORY
 - 📋 **Physics Inventory**: New §7 cataloging every physics equation, model, and numerical method across the platform
 - ✅ 21 physics domains inventoried: CFD, quantum many-body, plasma/MHD, fusion, condensed matter, CEM, FEA, topology optimization, aging/longevity, neuroscience, astrodynamics, climate, chemistry, turbulence, mathematical physics, quantum computing, QTT infrastructure, Civilization Stack, ZK verification, Lean 4 proofs, QTeneT Enterprise SDK
-- ✅ 330+ equations documented with LaTeX notation and source file references
-- ✅ ~78,000 LOC of physics-specific code cataloged across 120+ files
+- ✅ 340+ equations documented with LaTeX notation and source file references
+- ✅ ~80,000 LOC of physics-specific code cataloged across 125+ files
 - ✅ Complete Civilization Stack table: 20 projects with physics domains, key equations, and LOC
+- ✅ Genesis cross-primitive pipeline: 7-stage composition (OT→SGW→RKHS→RMT→TG→PH→GA) with type-safe geometric invariants
 - ✅ 7 quantum spin Hamiltonians (Heisenberg XXZ, TFIM, XX, XYZ, Bose-Hubbard, spinless fermion, Fermi-Hubbard)
 - ✅ 5 SGS turbulence models (Smagorinsky, Dynamic, WALE, Vreman, Sigma)
 - ✅ 3 RANS models (k-ε, k-ω SST, Spalart-Allmaras)
