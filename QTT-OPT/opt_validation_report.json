@@ -1,0 +1,188 @@
+{
+  "total": 36,
+  "passed": 36,
+  "failed": 0,
+  "results": [
+    {
+      "test": "powi: 0.5^3 = 0.125",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "powi: 1.0^5 = 1.0",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "clamp(1.5, 0.1, 0.9) = 0.9",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Ke symmetric",
+      "status": "PASS",
+      "detail": "28/28"
+    },
+    {
+      "test": "Ke nonzero",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Ke diagonal positive",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "CG converged",
+      "status": "PASS",
+      "detail": "iters=16"
+    },
+    {
+      "test": "Load point displaces",
+      "status": "PASS",
+      "detail": "uy=-7.550903"
+    },
+    {
+      "test": "Adjoint sensitivity sign matches FD",
+      "status": "PASS",
+      "detail": "adj=-6.0983, fd=-6.2088"
+    },
+    {
+      "test": "Sensitivity magnitude reasonable",
+      "status": "PASS",
+      "detail": "ratio=0.982"
+    },
+    {
+      "test": "Filter has neighbors",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Weight sums positive",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Filtered sensitivities exist",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Filter smooths",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Compliance history nonempty",
+      "status": "PASS",
+      "detail": "len=20"
+    },
+    {
+      "test": "Compliance changes over iterations",
+      "status": "PASS",
+      "detail": "first=167.590866, last=93.707489"
+    },
+    {
+      "test": "Volume near target",
+      "status": "PASS",
+      "detail": "vol=0.5000, target=0.5"
+    },
+    {
+      "test": "All densities \u2265 rho_min",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "All densities \u2264 1.0",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Has solid regions",
+      "status": "PASS",
+      "detail": "n_solid=1"
+    },
+    {
+      "test": "Has void regions",
+      "status": "PASS",
+      "detail": "n_void=1"
+    },
+    {
+      "test": "Inverse converged",
+      "status": "PASS",
+      "detail": "J_init=0.004150, J_final=0.000161"
+    },
+    {
+      "test": "Parameter recovery < 40% error",
+      "status": "PASS",
+      "detail": "RMSE=0.5830, true=2.0, recovered_mean=1.4941"
+    },
+    {
+      "test": "Regularized objective \u2265 unregularized",
+      "status": "PASS",
+      "detail": "reg=0.076396, noreg=0.001141"
+    },
+    {
+      "test": "Bit-identical across runs",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "TopOpt ran 20 iterations",
+      "status": "PASS",
+      "detail": "iters=20"
+    },
+    {
+      "test": "All compliance values finite",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Inverse objective mostly decreasing",
+      "status": "PASS",
+      "detail": "299/299 steps decrease"
+    },
+    {
+      "test": "SIMP interpolation (p=3)",
+      "status": "PASS",
+      "detail": "E(\u03c1) = E_min + \u03c1\u00b3(1-E_min)"
+    },
+    {
+      "test": "Adjoint sensitivity (self-adjoint)",
+      "status": "PASS",
+      "detail": "dC/d\u03c1 = -p\u00b7\u03c1\u1d56\u207b\u00b9\u00b7u\u1d40Ke\u2080u"
+    },
+    {
+      "test": "Optimality Criteria update",
+      "status": "PASS",
+      "detail": "Bisection on Lagrange multiplier"
+    },
+    {
+      "test": "Sensitivity filter (rmin=1.5)",
+      "status": "PASS",
+      "detail": "Weighted average, mesh-independent"
+    },
+    {
+      "test": "Inverse via gradient descent",
+      "status": "PASS",
+      "detail": "FD gradients + backtracking"
+    },
+    {
+      "test": "Tikhonov regularization",
+      "status": "PASS",
+      "detail": "J + \u03bb/2\u2016\u03b8\u2016\u00b2"
+    },
+    {
+      "test": "Q16.16 deterministic",
+      "status": "PASS",
+      "detail": "Fixed-point inner loop"
+    },
+    {
+      "test": "General adjoint framework",
+      "status": "PASS",
+      "detail": "K\u1d40\u03bb = -\u2202J/\u2202u, total derivative"
+    }
+  ],
+  "elapsed_seconds": 1.093
+}

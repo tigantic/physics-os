@@ -1,0 +1,15 @@
+[package]
+name = "opt-qtt"
+version = "0.1.0"
+edition = "2021"
+authors = ["Brad McAllister"]
+description = "PDE-Constrained Optimization via Adjoint Methods — Topology optimization with SIMP in Q16.16 fixed-point"
+license = "Proprietary"
+
+[dependencies]
+
+[dev-dependencies]
+
+[[test]]
+name = "integration"
+path = "tests/integration.rs"

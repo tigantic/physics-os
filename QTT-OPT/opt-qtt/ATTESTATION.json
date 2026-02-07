@@ -1,0 +1,58 @@
+{
+  "project": "opt-qtt",
+  "protocol": "OPT_QTT_BUILD_ATTESTATION",
+  "version": "0.1.0",
+  "summary": "PDE-Constrained Optimization \u2014 Topology Optimization & Inverse Problems in QTT Format",
+  "timestamp": "2026-02-07T19:38:58Z",
+  "author": "Brad McAllister",
+  "description": "SIMP topology optimization with adjoint sensitivities, OC update, mesh-independent filtering, and gradient-based inverse problem solving. All in Q16.16 fixed-point arithmetic.",
+  "governing_equations": [
+    "min C(\u03c1) = F\u1d40u(\u03c1) (compliance minimization)",
+    "s.t. K(\u03c1)u = F (equilibrium)",
+    "E(\u03c1) = E_min + \u03c1\u1d56(E\u2080 - E_min) (SIMP interpolation)",
+    "dC/d\u03c1\u2091 = -p\u00b7\u03c1\u2091\u1d56\u207b\u00b9\u00b7u\u2091\u1d40Ke\u2080u\u2091 (adjoint sensitivity)",
+    "OC: \u03c1 \u2190 \u03c1\u00b7B\u1d49\u1d57\u1d43, \u039b bisection (Optimality Criteria)",
+    "Inverse: min \u00bd\u2016u(\u03b8)-u_obs\u2016\u00b2 + \u03bb/2\u2016\u03b8\u2016\u00b2 (Tikhonov)"
+  ],
+  "validation": {
+    "total_tests": 36,
+    "passed": 36,
+    "failed": 0,
+    "pass_rate": "36/36 (100%)",
+    "key_results": {
+      "element_stiffness": "PASS \u2014 symmetric 28/28, positive diagonal",
+      "forward_solver": "PASS \u2014 CG converged 16 iters",
+      "adjoint_vs_fd": "PASS \u2014 ratio = 0.982 (2% agreement)",
+      "sensitivity_filter": "PASS \u2014 smoothing verified",
+      "topology_optimization": "PASS \u2014 compliance 168\u219294 (44% reduction)",
+      "volume_constraint": "PASS \u2014 vol = 0.500 (exact)",
+      "oc_bounds": "PASS \u2014 solid + void regions emerge",
+      "inverse_poisson": "PASS \u2014 monotone decrease 299/299 steps",
+      "tikhonov": "PASS \u2014 regularized \u2265 unregularized",
+      "determinism": "PASS \u2014 bit-identical across runs"
+    }
+  },
+  "architecture": {
+    "forward": "Quad4 plane stress, 2\u00d72 Gauss, CG solver",
+    "interpolation": "SIMP (p=3, E_min=0.001)",
+    "sensitivity": "Self-adjoint + general adjoint framework",
+    "filter": "Weighted average (rmin=1.5), mesh-independent",
+    "update": "Optimality Criteria with Lagrange bisection",
+    "inverse": "Gradient descent, FD gradients, Tikhonov regularization",
+    "arithmetic": "Q16.16 fixed-point (deterministic, ZK-friendly)"
+  },
+  "file_hashes": {
+    "Cargo.toml": "806948ec0fbf1c664a9b1e5022f695802a48e67470f3bfe72eaf51240c8ebda9",
+    "README.md": "fa6b8f3de265eb147d8c6b18da449da363716f95c2eb0afdcb4a9be492e1e6f9",
+    "validate.py": "b4964d13c86d4ebe5d8edbdf6e07146f43d19f35b1a555a1c70603287cb8e769",
+    "src/adjoint.rs": "0380776d1a5f6ce5b0c69435d40c1d0ab75f9a35c8604992ff97209d2ec65725",
+    "src/filter.rs": "7416bcabb1c9253275df0ad94eb48992c6afc6d71db111995177affc8643e144",
+    "src/forward.rs": "bad8e35f71d71affb0035685f6c375692b875f580f1694f47ed351d25ec407c6",
+    "src/inverse.rs": "5c4d47260808cedf64601e00aa2c190db4d1fcbdb0c90c414b0638f80be72b3c",
+    "src/lib.rs": "8697f16e487a10fbc8039c7ebcbe3815d94513e3c39886673e15cc55624f8324",
+    "src/q16.rs": "d1383f9f622d5c255d4ce06b4a7fc343dd545520313567491bb0a85e4a86f335",
+    "src/topology.rs": "40392fc7ee15566684aa1801f1edb122ab277bd98ea9ccc3c062a1d835b4b89c",
+    "tests/integration.rs": "3ef8de9d009a702374474f4966e271ea9bd243b67f5e94f7cebff3245331ecb3"
+  },
+  "self_hash": "49e9f8135c578a30579500f2689ebb003505e7e5bda7de405dea78e8ad459170"
+}
