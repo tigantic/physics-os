@@ -1036,7 +1036,7 @@ flowchart TB
 
 ## Physics Inventory
 
-> **Comprehensive catalog of every physics equation, model, and numerical method implemented across the HyperTensor platform.** Covers 15+ physics domains, 300+ equations, and ~68,000 lines of physics-specific code spanning Python, Rust, Solidity, and Lean 4.
+> **Comprehensive catalog of every physics equation, model, and numerical method implemented across the HyperTensor platform.** Covers 20+ physics domains, 300+ equations, and ~78,000 lines of physics-specific code spanning Python, Rust, Solidity, and Lean 4.
 
 ### Summary by Domain
 
@@ -1058,8 +1058,9 @@ flowchart TB
 | Turbulence Modeling (RANS/LES) | ~20 | ~1,800 | `tensornet/cfd/turbulence.py`, `tensornet/cfd/les.py` |
 | Mathematical Physics (Genesis) | ~25 | ~5,500 | `tensornet/genesis/` (8 layers) |
 | Quantum Computing & Error Mitigation | ~15 | ~2,400 | `tensornet/quantum/` |
+| QTeneT Enterprise SDK | ~30 | ~10,400 | `QTeneT/` (8 submodules + workflows) |
 | Formal Verification (Lean 4) | 6 proofs | ~633 | `lean/HyperTensor/` |
-| **Total** | **~300+** | **~68,000** | **85+ files** |
+| **Total** | **~330+** | **~78,000** | **120+ files** |
 
 ---
 
@@ -1720,6 +1721,88 @@ $$\text{Morton}_{3D}(x,y,z) = \text{interleave}(x_0 y_0 z_0 x_1 y_1 z_1 \ldots)$
 
 ---
 
+### 21. QTeneT Enterprise SDK
+
+**Source**: `QTeneT/` (~10,408 LOC across 35 files, 8 submodules + turbulence workflow)
+
+The QTeneT SDK packages HyperTensor's QTT physics into a self-contained enterprise toolkit with its own solvers, operators, benchmarks, and publication-grade proof pipeline.
+
+#### 21.1 Vorticity-Form Navier-Stokes 3D DNS
+
+**Source**: `QTeneT/QTeneT/src/qtenet/qtenet/solvers/ns3d.py` (1,049 LOC)
+
+$$\frac{\partial \boldsymbol{\omega}}{\partial t} = \nu\,\nabla^2\boldsymbol{\omega} + (\boldsymbol{\omega}\cdot\nabla)\mathbf{u} - (\mathbf{u}\cdot\nabla)\boldsymbol{\omega}$$
+
+- Taylor-Green vortex IC (analytical, zero dense allocation):
+$$\mathbf{u} = (\sin x\cos y\cos z,\;-\cos x\sin y\cos z,\;0)^T$$
+- Rank-2 sin/cos QTT cores: $G_j = \begin{pmatrix}\cos\phi_j & \sin\phi_j \\ -\sin\phi_j & \cos\phi_j\end{pmatrix}$, $\phi_j = k\Delta x\,2^j$
+- 3D Morton interleaving of separable products
+- RK2 (Heun) time integration, shift-MPO central differences
+- Randomized SVD truncation with adaptive rank selection
+- **Central thesis**: $\chi \sim \text{Re}^0$ (bond dimension independent of Reynolds number)
+
+#### 21.2 Spectral Hybrid NS3D + DHIT Benchmark
+
+**Source**: `QTeneT/QTeneT/workflows/qtt_turbulence/src/spectral_ns3d.py` (412 LOC), `dhit_benchmark.py` (817 LOC)
+
+**Biot-Savart velocity recovery:**
+$$\hat{u}_x = \frac{ik_y\hat{\omega}_z - ik_z\hat{\omega}_y}{|\mathbf{k}|^2}, \quad \hat{u}_y = \frac{ik_z\hat{\omega}_x - ik_x\hat{\omega}_z}{|\mathbf{k}|^2}$$
+
+**von Kármán-Pao energy spectrum:**
+$$E(k) = A\,k^4\exp\!\left(-2\left(\frac{k}{k_p}\right)^2\right)$$
+
+- Kolmogorov K41 scaling: $E(k) \sim \varepsilon^{2/3}\,k^{-5/3}$ validated in inertial range
+- Divergence-free projection: $\hat{\mathbf{u}} \leftarrow \hat{\mathbf{u}} - \mathbf{k}(\mathbf{k}\cdot\hat{\mathbf{u}})/|\mathbf{k}|^2$
+- Shell-averaged energy spectrum analysis
+- Reynolds sweep: $\chi(\text{Re})$ scaling verified with $\alpha < 0.1$
+
+#### 21.3 6D Vlasov-Maxwell ("The Holy Grail")
+
+**Source**: `QTeneT/QTeneT/src/qtenet/qtenet/solvers/vlasov.py` (508 LOC)
+
+$$\frac{\partial f}{\partial t} + \mathbf{v}\cdot\nabla_x f + \frac{q}{m}(\mathbf{E} + \mathbf{v}\times\mathbf{B})\cdot\nabla_v f = 0$$
+
+- 6D phase space: $(x,y,z,v_x,v_y,v_z) \to 32^6 = 1.07\text{B}$ grid points
+- Dense: 4 GB vs QTT: ~100–200 KB → 20,000–50,000× compression
+- Two-stream instability IC with counter-propagating beams
+- Strang splitting: half x-step → full v-step → half x-step
+- Pre-built 30-qubit shift operators for all 12 phase-space directions
+
+#### 21.4 N-D Differential Operators (MPO Calculus)
+
+**Source**: `QTeneT/QTeneT/src/qtenet/qtenet/operators/` (534 LOC)
+
+$$\frac{\partial f}{\partial x_i} = \frac{S_i^+ f - S_i^- f}{2\Delta x_i}, \quad \nabla^2 f = \sum_{i=1}^{d}\frac{S_i^+ - 2I + S_i^-}{\Delta x_i^2}$$
+
+- Rank-2 shift MPO via carry/borrow propagation on Morton-interleaved qubits
+- Fused Laplacian MPO with rank $\leq 4d$
+- MPO arithmetic: `mpo_add`, `mpo_scale`, `mpo_negate` for operator calculus
+
+#### 21.5 TCI Engine + Curse-of-Dimensionality Benchmarks
+
+**Source**: `QTeneT/QTeneT/src/qtenet/qtenet/tci/` (751 LOC), `benchmarks/` (448 LOC)
+
+- Smart TCI with Latin-hypercube value-guided pivot initialization
+- MaxVol pivot selection (maximum-volume submatrix)
+- ALS (Alternating Least Squares) for sparse $(\text{index}, \text{value})$ sample sets
+- Dense TT-SVD fallback for $n \leq 12$
+- Scaling proofs: N-D Gaussian, product-of-sines, polynomial test functions
+- QTT parameters: $O(d \cdot n_{\text{qubits}} \cdot r^2)$ vs dense $O(N^d)$
+
+#### 21.6 Turbulence 5-Point Proof Suite
+
+**Source**: `QTeneT/QTeneT/workflows/qtt_turbulence/src/prove_qtt_turbulence.py` (795 LOC)
+
+| Proof | Physics Gate | Criterion |
+|-------|------------|----------|
+| Taylor-Green decay | $d\Omega/dt < 0$ (viscous dissipation) | Monotonic 5–50% at $t=0.05$ |
+| Inviscid conservation | $dE/dt = 0$ for $\nu=0$ | Energy drift < 0.5% over 20 steps |
+| $O(\log N)$ scaling | $T \sim d \cdot r^3$ | 4× grid → < 3× time |
+| Compression ratio | QTT: $O(d\cdot r^2)$ vs $O(N^3)$ | > 100× at $128^3$ |
+| Numerical stability | Bounded enstrophy, no NaN/Inf | 100 steps at $64^3$ |
+
+---
+
 ## Validated Use Cases
 
 ### 40+ Production-Ready Capabilities
@@ -2028,9 +2111,9 @@ from qtenet.demos import holy_grail_6d
 
 ### Version 35.0 (February 2026) — COMPREHENSIVE PHYSICS INVENTORY
 - 📋 **Physics Inventory**: New §7 cataloging every physics equation, model, and numerical method across the platform
-- ✅ 20 physics domains inventoried: CFD, quantum many-body, plasma/MHD, fusion, condensed matter, CEM, FEA, topology optimization, aging/longevity, neuroscience, astrodynamics, climate, chemistry, turbulence, mathematical physics, quantum computing, QTT infrastructure, Civilization Stack, ZK verification, Lean 4 proofs
-- ✅ 300+ equations documented with LaTeX notation and source file references
-- ✅ ~68,000 LOC of physics-specific code cataloged across 85+ files
+- ✅ 21 physics domains inventoried: CFD, quantum many-body, plasma/MHD, fusion, condensed matter, CEM, FEA, topology optimization, aging/longevity, neuroscience, astrodynamics, climate, chemistry, turbulence, mathematical physics, quantum computing, QTT infrastructure, Civilization Stack, ZK verification, Lean 4 proofs, QTeneT Enterprise SDK
+- ✅ 330+ equations documented with LaTeX notation and source file references
+- ✅ ~78,000 LOC of physics-specific code cataloged across 120+ files
 - ✅ Complete Civilization Stack table: 20 projects with physics domains, key equations, and LOC
 - ✅ 7 quantum spin Hamiltonians (Heisenberg XXZ, TFIM, XX, XYZ, Bose-Hubbard, spinless fermion, Fermi-Hubbard)
 - ✅ 5 SGS turbulence models (Smagorinsky, Dynamic, WALE, Vreman, Sigma)
