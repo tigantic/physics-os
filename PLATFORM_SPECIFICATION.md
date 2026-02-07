@@ -15,7 +15,7 @@
 
 *One Codebase. 19 Industries. 822K Lines of Code. 9 Languages.*
 
-**Version 34.0** | **February 7, 2026** | **OPT-QTT PDE-CONSTRAINED OPTIMIZATION INTEGRATION**
+**Version 35.0** | **February 7, 2026** | **COMPREHENSIVE PHYSICS INVENTORY**
 
 ---
 
@@ -55,13 +55,14 @@
 4. [Capability Stack](#capability-stack)
 5. [Architecture](#architecture)
 6. [Component Catalog](#component-catalog)
-7. [Validated Use Cases](#validated-use-cases)
-8. [Quality Metrics](#quality-metrics)
-9. [Integration Points](#integration-points)
-10. [Deployment Options](#deployment-options)
-11. [Dependencies](#dependencies)
-12. [Appendices](#appendices)
-13. [Changelog](#changelog)
+7. [Physics Inventory](#physics-inventory)
+8. [Validated Use Cases](#validated-use-cases)
+9. [Quality Metrics](#quality-metrics)
+10. [Integration Points](#integration-points)
+11. [Deployment Options](#deployment-options)
+12. [Dependencies](#dependencies)
+13. [Appendices](#appendices)
+14. [Changelog](#changelog)
 
 ---
 
@@ -1033,6 +1034,692 @@ flowchart TB
 
 ---
 
+## Physics Inventory
+
+> **Comprehensive catalog of every physics equation, model, and numerical method implemented across the HyperTensor platform.** Covers 15+ physics domains, 300+ equations, and ~68,000 lines of physics-specific code spanning Python, Rust, Solidity, and Lean 4.
+
+### Summary by Domain
+
+| Domain | Equations | LOC | Primary Sources |
+|--------|-----------|-----|-----------------|
+| Computational Fluid Dynamics | ~60 | ~12,500 | `tensornet/cfd/`, Civilization Stack |
+| Quantum Many-Body Physics | ~35 | ~6,600 | `yangmills/`, `tensornet/algorithms/`, `tensornet/mps/` |
+| Plasma & Magnetohydrodynamics | ~25 | ~3,800 | `tensornet/cfd/plasma.py`, `tensornet/fusion/tokamak.py`, CivStack |
+| Fusion & Nuclear Physics | ~20 | ~3,500 | `tensornet/fusion/`, CivStack |
+| Condensed Matter & Superconductivity | ~15 | ~2,500 | CivStack (LaLuH₆, SSB superionic) |
+| Computational Electromagnetics | ~12 | ~2,700 | `crates/cem-qtt/`, CivStack |
+| Structural Mechanics & FEA | ~10 | ~1,200 | `crates/fea-qtt/` |
+| Topology Optimization | ~8 | ~1,200 | `crates/opt-qtt/` |
+| Biological Aging & Longevity | ~15 | ~5,300 | `tensornet/genesis/aging/`, CivStack |
+| Neuroscience & Connectomics | ~12 | ~2,800 | CivStack (QTT-Connectome, Neuromorphic) |
+| Astrodynamics & Gravitation | ~10 | ~1,600 | CivStack (Orbital Forge) |
+| Atmospheric & Climate Science | ~8 | ~1,400 | CivStack (Hermes), `tensornet/cfd/weather.py` |
+| Chemical Kinetics & Catalysis | ~12 | ~2,400 | `tensornet/cfd/chemistry.py`, `tensornet/fusion/resonant_catalysis.py` |
+| Turbulence Modeling (RANS/LES) | ~20 | ~1,800 | `tensornet/cfd/turbulence.py`, `tensornet/cfd/les.py` |
+| Mathematical Physics (Genesis) | ~25 | ~5,500 | `tensornet/genesis/` (8 layers) |
+| Quantum Computing & Error Mitigation | ~15 | ~2,400 | `tensornet/quantum/` |
+| Formal Verification (Lean 4) | 6 proofs | ~633 | `lean/HyperTensor/` |
+| **Total** | **~300+** | **~68,000** | **85+ files** |
+
+---
+
+### 1. Computational Fluid Dynamics
+
+#### 1.1 Compressible Euler Equations (3D)
+
+**Source**: `tensornet/cfd/euler_3d.py` (660 LOC), CivStack TOMAHAWK
+
+$$\frac{\partial \mathbf{U}}{\partial t} + \frac{\partial \mathbf{F}}{\partial x} + \frac{\partial \mathbf{G}}{\partial y} + \frac{\partial \mathbf{H}}{\partial z} = 0, \quad \mathbf{U} = [\rho,\;\rho u,\;\rho v,\;\rho w,\;E]^T$$
+
+- Ideal gas EOS: $p = (\gamma - 1)(E - \tfrac{1}{2}\rho|\mathbf{v}|^2)$, $\gamma = 1.4$
+- Sound speed: $a = \sqrt{\gamma p / \rho}$
+- HLLC Riemann solver with contact resolution ($S_L, S_R, S^*$ wave speeds)
+- Strang dimensional splitting: $L_x(\Delta t/2)\,L_y(\Delta t/2)\,L_z(\Delta t)\,L_y(\Delta t/2)\,L_x(\Delta t/2)$
+- CFL condition: $\Delta t = C_{\text{CFL}} \cdot \min\!\left(\frac{\Delta x}{|u|+a},\frac{\Delta y}{|v|+a},\frac{\Delta z}{|w|+a}\right)$
+
+#### 1.2 Compressible Navier-Stokes (2D/3D)
+
+**Source**: `tensornet/cfd/navier_stokes.py` (453 LOC), `tensornet/cfd/viscous.py` (547 LOC)
+
+$$\frac{\partial \mathbf{U}}{\partial t} + \nabla \cdot \mathbf{F}_{\text{inv}} = \nabla \cdot \mathbf{F}_{\text{visc}}$$
+
+- Viscous stress tensor: $\boldsymbol{\tau} = \mu\!\left(\nabla\mathbf{v} + (\nabla\mathbf{v})^T - \tfrac{2}{3}(\nabla\cdot\mathbf{v})\mathbf{I}\right)$
+- Fourier heat conduction: $\mathbf{q} = -k\nabla T$
+- Sutherland viscosity: $\mu(T) = \mu_{\text{ref}}\!\left(\frac{T}{T_{\text{ref}}}\right)^{3/2}\!\frac{T_{\text{ref}}+S}{T+S}$
+- Operator splitting: inviscid (HLLC) + viscous (explicit central), $\Delta t = \min(\Delta t_{\text{CFL}}, \Delta x^2/4\nu)$
+
+#### 1.3 Reactive Navier-Stokes with Multi-Species Chemistry
+
+**Source**: `tensornet/cfd/reactive_ns.py` (577 LOC), `tensornet/cfd/chemistry.py` (635 LOC)
+
+$$\frac{\partial(\rho Y_i)}{\partial t} + \nabla\cdot(\rho Y_i\mathbf{u}) = \nabla\cdot(\rho D_i\nabla Y_i) + \dot{\omega}_i$$
+
+- 5-species air (N₂, O₂, N, O, NO) with Park two-temperature model
+- Arrhenius kinetics: $k_f = A\,T^n\exp(-E_a/RT)$ for 5 dissociation/exchange reactions
+- Third-body efficiencies, equilibrium constants from Gibbs free energy
+- Operator splitting: convection (Euler/HLLC) → diffusion (explicit) → chemistry (implicit BDF)
+
+#### 1.4 Real Gas Thermodynamics
+
+**Source**: `tensornet/cfd/real_gas.py` (485 LOC)
+
+$$\frac{c_p}{R} = a_1 + a_2 T + a_3 T^2 + a_4 T^3 + a_5 T^4 \quad\text{(NASA 7-coefficient)}$$
+
+- Vibrational excitation: $e_{\text{vib}} = R\,\Theta_v / (e^{\Theta_v/T} - 1)$
+- Characteristic temperatures: $\Theta_{N_2}=3395\,\text{K}$, $\Theta_{O_2}=2239\,\text{K}$, $\Theta_{NO}=2817\,\text{K}$
+- Temperature-dependent $\gamma(T) = c_p(T)/c_v(T)$
+- Dissociation and ionization contributions at $T > 4000\,\text{K}$
+
+#### 1.5 RANS Turbulence Models
+
+**Source**: `tensornet/cfd/turbulence.py` (820 LOC)
+
+$$\boldsymbol{\tau}_t = \mu_t\!\left(\nabla\mathbf{u} + (\nabla\mathbf{u})^T - \tfrac{2}{3}k\mathbf{I}\right)$$
+
+| Model | Eddy Viscosity | Key Constants |
+|-------|----------------|---------------|
+| $k$-$\varepsilon$ (Standard) | $\mu_t = C_\mu \rho k^2/\varepsilon$ | $C_\mu=0.09$, $C_{\varepsilon 1}=1.44$, $C_{\varepsilon 2}=1.92$ |
+| $k$-$\omega$ SST (Menter) | $\mu_t = \rho k / \max(\omega, SF_2/a_1)$ | $a_1=0.31$, blending $F_1$, $F_2$ |
+| Spalart-Allmaras | $\mu_t = \rho\tilde\nu f_{v1}$ | $c_{b1}=0.1355$, $\sigma=2/3$, $\kappa=0.41$ |
+
+- Wall functions: $u^+ = y^+$ (viscous sublayer), $u^+ = \frac{1}{\kappa}\ln(y^+) + B$ (log law)
+
+#### 1.6 Large Eddy Simulation (LES)
+
+**Source**: `tensornet/cfd/les.py` (1,001 LOC)
+
+$$\frac{\partial(\bar\rho\tilde{u}_i)}{\partial t} + \frac{\partial(\bar\rho\tilde{u}_i\tilde{u}_j)}{\partial x_j} = -\frac{\partial\bar{p}}{\partial x_i} + \frac{\partial(\bar\tau_{ij} - \tau^{\text{sgs}}_{ij})}{\partial x_j}$$
+
+| SGS Model | Formula | Constant |
+|-----------|---------|----------|
+| Smagorinsky | $\nu_t = (C_s\Delta)^2|\bar{S}|$ | $C_s=0.17$ |
+| Dynamic Smagorinsky | $C_s^2 = \langle L_{ij}M_{ij}\rangle / \langle M_{ij}M_{ij}\rangle$ (Germano) | adaptive |
+| WALE | $\nu_t = (C_w\Delta)^2 (S^d_{ij}S^d_{ij})^{3/2} / ((S_{ij}S_{ij})^{5/2} + (S^d_{ij}S^d_{ij})^{5/4})$ | $C_w=0.5$ |
+| Vreman | $\nu_t = C_v\sqrt{B_\beta / \alpha_{ij}\alpha_{ij}}$ | $C_v=0.07$ |
+| Sigma | $\nu_t = (C_\sigma\Delta)^2 \sigma_3(\sigma_1-\sigma_2)(\sigma_2-\sigma_3)/\sigma_1^2$ | $C_\sigma=1.35$ |
+
+#### 1.7 WENO Reconstruction
+
+**Source**: `tensornet/cfd/weno.py` (769 LOC)
+
+$$\hat{f}_{i+1/2} = \sum_{k=0}^{2}\omega_k\hat{f}^{(k)}_{i+1/2}$$
+
+- WENO5-JS: $\omega_k = \bar\omega_k/\sum_j\bar\omega_j$, optimal weights $d_0=1/10$, $d_1=6/10$, $d_2=3/10$
+- WENO5-Z: $\omega_k^Z = d_k(1 + |\tau_5|/(\varepsilon+\beta_k))/\sum$, $\tau_5 = |\beta_0 - \beta_2|$
+- TENO5: Sharp cutoff $\delta_k = \begin{cases}0 & \gamma_k < C_T \\ 1 & \text{otherwise}\end{cases}$
+
+#### 1.8 Hou-Luo Blow-Up Ansatz
+
+**Source**: `tensornet/cfd/hou_luo_ansatz.py` (367 LOC)
+
+$$\omega_\theta(r,z,t) = \frac{1}{(T^*-t)^{\alpha+1}}\,F\!\left(\frac{r}{(T^*-t)^\beta},\;\frac{z}{(T^*-t)^\beta}\right)$$
+
+- Axisymmetric Euler with swirl, counter-rotating vortex rings
+- BKM criterion: $\int_0^T \|\omega(\cdot,t)\|_\infty\,dt = \infty \Rightarrow$ blowup
+- Self-similar collapse candidate for Euler regularity problem
+
+#### 1.9 Vlasov-Poisson (5D Phase Space)
+
+**Source**: `tensornet/cfd/fast_vlasov_5d.py` (461 LOC)
+
+$$\frac{\partial f}{\partial t} + \mathbf{v}\cdot\nabla_{\mathbf{x}} f + \frac{q}{m}\mathbf{E}\cdot\nabla_{\mathbf{v}} f = 0$$
+
+- Phase space: $(x,y,z,v_x,v_y) \to 32^5$ grid → 25-qubit QTT via Morton Z-curve
+- Benchmarks: two-stream instability, bump-on-tail, Landau damping ($\gamma \approx -0.1533$ at $k=0.5$)
+
+#### 1.10 Kelvin-Helmholtz Instability
+
+**Source**: `tensornet/cfd/kelvin_helmholtz.py` (369 LOC)
+
+- Shear flow: $u = U_0\tanh(y/\delta)$, sinusoidal perturbation $v_y = A\sin(k_x x)$
+- QTT/Morton-format initialization via TCI
+
+#### 1.11 MHD / TOMAHAWK
+
+**Source**: CivStack `tomahawk_cfd_gauntlet.py` (823 LOC)
+
+$$\frac{\partial\mathbf{B}}{\partial t} = \nabla\times(\mathbf{v}\times\mathbf{B}) + \eta\nabla^2\mathbf{B}$$
+
+- TT-compressed MHD field tensors (49,091× compression)
+- Instability detection from TT singular values (kink, sausage, ballooning modes)
+- PID magnetic control loop at 1 MHz
+- Ornstein-Uhlenbeck turbulence model: $d\mathbf{v} = -\theta\mathbf{v}\,dt + \sigma\,d\mathbf{W}$
+
+---
+
+### 2. Quantum Many-Body Physics
+
+#### 2.1 SU(2) Lattice Gauge Theory (Yang-Mills)
+
+**Source**: `yangmills/` (~4,300 LOC across 10 files), `yangmills/tensor_network/` (~1,243 LOC)
+
+**Kogut-Susskind Hamiltonian:**
+$$H = \frac{g^2}{2a}\sum_l E^2_l - \frac{1}{g^2 a}\sum_\square \text{Re}\,\text{Tr}(U_\square)$$
+
+- SU(2) algebra: $[\sigma_i, \sigma_j] = 2i\epsilon_{ijk}\sigma_k$; group elements $U = e^{i\theta_a\tau_a}$ (quaternion parameterization)
+- Peter-Weyl decomposition: $\mathcal{H}_l = L^2(\text{SU}(2)) = \bigoplus_j V_j \otimes V_j$, truncation $j \leq j_{\max}$
+- Plaquette operator: $U_\square = U_\mu(x)\,U_\nu(x+\hat\mu)\,U^\dagger_\mu(x+\hat\nu)\,U^\dagger_\nu(x)$
+- Gauss law constraint: $G^a_x = \sum_\mu[E^a_{x,\mu} - E^a_{x-\hat\mu,\mu}] = 0$
+- Continuum limit recovers: $S = \frac{1}{2g^2}\int\text{Tr}(F_{\mu\nu}^2)\,d^4x$
+- Mass gap: $\Delta = E_1 - E_0 > 0$ (computed $\Delta \approx 1.5$ at intermediate coupling)
+- Full DMRG ground-state solver with Lanczos and SVD sweeps
+- YM-specific MPO construction: $H = (g^2/2)\sum E^2 - (1/g^2)\sum\text{Tr}(U_\square)$
+
+#### 2.2 Tensor Network Algorithms
+
+**Source**: `tensornet/algorithms/` (~2,308 LOC)
+
+**DMRG** (`dmrg.py`, 571 LOC):
+$$E_0 = \min_{|\psi\rangle} \frac{\langle\psi|H|\psi\rangle}{\langle\psi|\psi\rangle}$$
+- Two-site effective Hamiltonian + Lanczos eigensolver + SVD truncation, L↔R sweeps
+
+**TEBD** (`tebd.py`, 510 LOC):
+$$e^{-iH\Delta t} \approx \prod_{\text{odd}} e^{-ih_j \Delta t/2} \cdot \prod_{\text{even}} e^{-ih_j \Delta t} \cdot \prod_{\text{odd}} e^{-ih_j \Delta t/2}$$
+- Suzuki-Trotter 1st/2nd/4th order, imaginary-time cooling
+
+**TDVP** (`tdvp.py`, 506 LOC):
+$$i\frac{\partial|\psi\rangle}{\partial t} = P_{\mathcal{T}} H|\psi\rangle$$
+- Tangent-space projector on MPS manifold, Krylov matrix exponential, 1-site (fixed $\chi$) and 2-site (adaptive $\chi$)
+
+**Lanczos** (`lanczos.py`, 360 LOC):
+$$K_m(A,v) = \text{span}\{v, Av, \ldots, A^{m-1}v\}$$
+- Tridiagonal decomposition, full reorthogonalization, Krylov matrix exponential
+
+**Fermionic** (`fermionic.py`, 361 LOC):
+$$c_i = \left(\prod_{j<i}\sigma^z_j\right)\sigma^-_i \quad\text{(Jordan-Wigner)}$$
+- Spinless fermion chain ($D=4$ MPO), Hubbard model ($D=6$ MPO)
+
+#### 2.3 Quantum Spin Hamiltonians
+
+**Source**: `tensornet/mps/hamiltonians.py` (417 LOC)
+
+| Model | Hamiltonian | MPO Bond Dim |
+|-------|-------------|:------------:|
+| Heisenberg XXZ | $H = J\sum_i(S^x_i S^x_{i+1} + S^y_i S^y_{i+1}) + J_z\sum_i S^z_i S^z_{i+1} + h\sum_i S^z_i$ | 5 |
+| TFIM | $H = -J\sum_i Z_i Z_{i+1} - g\sum_i X_i$ (critical $g=1$) | 3 |
+| XX | $H = J\sum_i(X_i X_{i+1} + Y_i Y_{i+1}) + h\sum_i Z_i$ (free fermion) | 3 |
+| XYZ | $H = \sum_i(J_x X_i X_{i+1} + J_y Y_i Y_{i+1} + J_z Z_i Z_{i+1}) + h\sum_i Z_i$ | 5 |
+| Bose-Hubbard | $H = -t\sum_i(b^\dagger_i b_{i+1} + \text{h.c.}) + \frac{U}{2}\sum_i n_i(n_i-1) - \mu\sum_i n_i$ | 4 |
+| Spinless Fermion | $H = -t\sum_i(c^\dagger_i c_{i+1} + \text{h.c.}) + V\sum_i n_i n_{i+1}$ | 4 |
+| Fermi-Hubbard | $H = -t\sum_{i,\sigma}(c^\dagger_{i\sigma}c_{i+1,\sigma} + \text{h.c.}) + U\sum_i n_{i\uparrow}n_{i\downarrow}$ | 6 |
+
+---
+
+### 3. Plasma & Magnetohydrodynamics
+
+#### 3.1 Plasma Ionization
+
+**Source**: `tensornet/cfd/plasma.py` (626 LOC)
+
+$$\frac{n_{i+1}n_e}{n_i} = \frac{2g_{i+1}}{g_i}\!\left(\frac{2\pi m_e k_B T}{h^2}\right)^{3/2}\!\exp\!\left(-\frac{E_{\text{ion},i}}{k_B T}\right) \quad\text{(Saha equation)}$$
+
+- Plasma frequency: $\omega_p = \sqrt{n_e e^2 / m_e\varepsilon_0}$, Debye length: $\lambda_D = \sqrt{\varepsilon_0 k_B T / n_e e^2}$
+- RF attenuation: $\alpha = \omega_p^2 \nu_c / 2c(\omega^2+\nu_c^2)$
+- 8-species ionization (N, O, N₂, O₂, NO, Ar, H, He) up to triply-ionized states
+
+#### 3.2 Tokamak Confinement
+
+**Source**: `tensornet/fusion/tokamak.py` (562 LOC)
+
+$$\mathbf{F} = q(\mathbf{E} + \mathbf{v}\times\mathbf{B})$$
+
+- Boris particle pusher (symplectic velocity Verlet)
+- Toroidal field: $B_\phi = B_0 R_0/R$; safety factor: $q = rB_\phi / RB_\theta$
+- ITER parameters: $R_0=6.2\,\text{m}$, $a=2.0\,\text{m}$, $B_0=5.3\,\text{T}$, $T=10\,\text{keV}$
+
+#### 3.3 Stochastic MHD (Civilization Stack)
+
+**Source**: CivStack `snhff_stochastic_gauntlet.py`, `starheart_fusion_solver.py`
+
+- Stochastic Navier-Stokes: $d\mathbf{u} = [-(\mathbf{u}\cdot\nabla)\mathbf{u} + \nu\nabla^2\mathbf{u} - \nabla p]\,dt + \sigma\,d\mathbf{W}$
+- Grad-Shafranov equilibrium: $\Delta^*\psi = -\mu_0 R^2 p'(\psi) - F(\psi)F'(\psi)$
+- Lawson criterion: $n_i\tau_E T_i > 3 \times 10^{21}\,\text{keV·s/m}^3$
+- D-T fusion power: $P_{\text{fus}} = n_D n_T \langle\sigma v\rangle \times 17.6\,\text{MeV} \times V$
+
+---
+
+### 4. Fusion & Nuclear Physics
+
+#### 4.1 Electron Screening
+
+**Source**: `tensornet/fusion/electron_screening.py` (505 LOC)
+
+$$V_{\text{screened}}(r) = \frac{Z_1 Z_2 e^2}{4\pi\varepsilon_0 r}\exp\!\left(-\frac{r}{\lambda_D}\right)$$
+
+- Effective Gamow energy: $E_{\text{eff}} = E_G - U_e$; tunneling $P \propto \exp(-\sqrt{E_{\text{eff}}/E_G})$
+- Thomas-Fermi electron density in LaLuH₆; $U_e \sim 300$–$800\,\text{eV}$, barrier reduction $10^4$–$10^8$
+
+#### 4.2 Phonon-Triggered Fusion
+
+**Source**: `tensornet/fusion/phonon_trigger.py` (550 LOC)
+
+$$\frac{\partial f}{\partial t} = \frac{\partial}{\partial E}\!\left[D(E)\frac{\partial f}{\partial E} + A(E)f\right] + S(E,t) \quad\text{(Fokker-Planck)}$$
+
+$$R_{\text{fusion}} = n_D^2 \int \sigma(E)\,v(E)\,f(E)\,dE$$
+
+- Gamow cross-section: $\sigma(E) = S(E)/E \cdot \exp(-\sqrt{E_G/E})$
+- Resonant phonon excitation at 40–60 THz
+
+#### 4.3 Resonant Catalysis
+
+**Source**: `tensornet/fusion/resonant_catalysis.py` (891 LOC)
+
+- Selective bond rupture via phonon matching: N≡N ($\tilde\nu = 2330\,\text{cm}^{-1}$, $D=9.79\,\text{eV}$)
+- Lorentzian catalyst phonon spectrum: $g(\omega) = A\gamma/\pi / [(\omega-\omega_0)^2 + \gamma^2]$
+- Anti-bonding orbital overlap integral: $\eta = \int g(\omega)\,\rho_{\text{antibond}}(\omega)\,d\omega$
+- Ru-Fe₃S₃ and nitrogenase biomimetic catalysts
+
+#### 4.4 Superionic Dynamics
+
+**Source**: `tensornet/fusion/superionic_dynamics.py` (585 LOC)
+
+$$m\frac{d\mathbf{v}}{dt} = -\gamma\mathbf{v} + \mathbf{F}_{\text{lattice}} + \sqrt{2\gamma k_B T}\,\boldsymbol{\xi}(t) \quad\text{(Langevin)}$$
+
+- Einstein diffusion: $D = \lim_{t\to\infty}\langle|\mathbf{r}(t)-\mathbf{r}(0)|^2\rangle / 6t$
+- Superionic criterion: $D > 10^{-5}\,\text{cm}^2/\text{s}$
+
+#### 4.5 Integrated Fusion Enhancement (MARRS)
+
+**Source**: `tensornet/fusion/marrs_simulator.py` (444 LOC)
+
+$$\text{Enhancement}_{\text{total}} = \text{Enhancement}_{\text{screen}} \times \text{Enhancement}_{\text{superionic}} \times \text{Enhancement}_{\text{phonon}}$$
+
+---
+
+### 5. Condensed Matter & Superconductivity
+
+**Source**: CivStack `laluh6_odin_gauntlet.py`, `odin_superconductor_solver.py`, `li3incl48br12_superionic_gauntlet.py`, `ssb_superionic_solver.py`
+
+#### 5.1 BCS-Eliashberg Superconductivity
+
+$$T_c = \frac{\omega_{\log}}{1.2}\exp\!\left[-\frac{1.04(1+\lambda)}{\lambda - \mu^*(1+0.62\lambda)}\right] \quad\text{(McMillan-Allen-Dynes)}$$
+
+- Electron-phonon coupling: $\lambda = 2\int_0^{\infty} \alpha^2 F(\omega)/\omega\,d\omega$
+- BCS gap: $\Delta(T) = \Delta_0\tanh\!\left(1.74\sqrt{T_c/T - 1}\right)$
+- Phonon density of states via Debye model: $g(\omega) = 3\omega^2/\omega_D^3$
+
+#### 5.2 Solid-State Battery Superionic Conduction
+
+$$\sigma(T) = \frac{\sigma_0}{T}\exp\!\left(-\frac{E_a}{k_B T}\right) \quad\text{(Arrhenius ionic conductivity)}$$
+
+- Li⁺ migration in Li₃InCl₄₈Br₁₂: activation barrier $E_a \sim 0.2$–$0.4\,\text{eV}$
+- Nudged Elastic Band (NEB) pathway optimization
+- QTT-compressed potential energy surface
+
+---
+
+### 6. Computational Electromagnetics
+
+**Source**: `crates/cem-qtt/` (2,695 LOC Rust)
+
+#### 6.1 Maxwell FDTD (Yee Lattice)
+
+$$\nabla\times\mathbf{E} = -\frac{\partial\mathbf{B}}{\partial t}, \quad \nabla\times\mathbf{H} = \mathbf{J} + \frac{\partial\mathbf{D}}{\partial t}$$
+
+- Yee staggered grid, leapfrog time integration
+- MPS/MPO tensor network compression of EM fields
+- Q16.16 fixed-point arithmetic (deterministic, ZK-friendly)
+- Material system: vacuum, dielectric, conductor, lossy media
+- Berenger split-field PML with cubic polynomial $\sigma$ grading
+- Poynting theorem conservation verifier
+
+---
+
+### 7. Structural Mechanics
+
+**Source**: `crates/fea-qtt/` (1,206 LOC Rust)
+
+#### 7.1 Hex8 Linear Elasticity
+
+$$\nabla\cdot\boldsymbol{\sigma} + \mathbf{f} = 0, \quad \boldsymbol{\sigma} = \mathbf{D}\boldsymbol{\varepsilon}, \quad \boldsymbol{\varepsilon} = \tfrac{1}{2}(\nabla\mathbf{u} + (\nabla\mathbf{u})^T)$$
+
+- Hex8 isoparametric elements: trilinear shape functions, 2×2×2 Gauss quadrature
+- Isotropic constitutive model: 6×6 $\mathbf{D}$ matrix (Voigt notation)
+- Sparse COO assembly + CG solver with penalty Dirichlet BCs
+- Stress recovery: $\boldsymbol{\sigma} = \mathbf{D}\mathbf{B}\mathbf{u}$ at centroids, Von Mises equivalent stress
+- Energy conservation: $U = \tfrac{1}{2}\mathbf{F}^T\mathbf{u}$
+- Q16.16 fixed-point: bit-identical deterministic execution
+
+---
+
+### 8. Topology Optimization & Inverse Problems
+
+**Source**: `crates/opt-qtt/` (1,208 LOC Rust)
+
+#### 8.1 SIMP Topology Optimization
+
+$$\min_{\rho} \; c(\rho) = \mathbf{F}^T\mathbf{u}(\rho) \quad\text{s.t.}\quad \mathbf{K}(\rho)\mathbf{u} = \mathbf{F}, \quad \sum_e \rho_e v_e \leq V^*$$
+
+- SIMP penalization: $E_e(\rho_e) = E_{\min} + \rho_e^p(E_0 - E_{\min})$, $p=3$
+- Optimality Criteria (OC) update with Lagrange bisection
+- Sensitivity filter: weighted-average mesh-independent (prevents checkerboard)
+- Quad4 plane stress, 2×2 Gauss quadrature
+
+#### 8.2 Adjoint Sensitivity Analysis
+
+$$\mathbf{K}^T\boldsymbol{\lambda} = -\frac{\partial J}{\partial\mathbf{u}}, \quad \frac{dJ}{d\rho_e} = \frac{\partial J}{\partial\rho_e} + \boldsymbol{\lambda}^T\frac{\partial\mathbf{K}}{\partial\rho_e}\mathbf{u}$$
+
+- Self-adjoint (compliance) and general adjoint frameworks
+- Adjoint vs finite difference agreement: 2%
+
+#### 8.3 Inverse Problems
+
+- Gradient descent + Tikhonov regularization for parameter recovery
+- 1D Poisson parameter identification: $-\nabla\cdot(k(x)\nabla u) = f$
+
+---
+
+### 9. Biological Aging & Longevity
+
+**Source**: `tensornet/genesis/aging/` (4,288 LOC), CivStack `proteome_compiler_gauntlet.py`
+
+#### 9.1 Aging as Tensor Rank Growth
+
+$$\psi(t+\Delta t) = A(\Delta t)\cdot\psi(t), \quad A = I + \sum_k \varepsilon_k(t)\cdot\Delta_k$$
+
+- `CellStateTensor`: 8 biological modes, 88 QTT sites, left-orthogonal QR
+- Perturbation modes: epigenetic drift, proteostatic collapse, telomere attrition, metabolic dysregulation, genomic instability
+- `HorvathClock` / `GrimAgeClock`: epigenetic age prediction in QTT basis
+
+#### 9.2 Intervention Operators
+
+- `YamanakaOperator`: rank-4 reprogramming via singular value attenuation + TT rounding
+- `PartialReprogrammingOperator`, `SenolyticOperator`, `CalorieRestrictionOperator`
+- `AgingTopologyAnalyzer`: persistent homology of aging trajectories
+
+#### 9.3 Protein Folding & Proteomics (Civilization Stack)
+
+$$\Delta G_{\text{fold}} = \Delta H - T\Delta S, \quad p_{\text{fold}} = \frac{e^{-\Delta G/RT}}{1 + e^{-\Delta G/RT}}$$
+
+- Ramachandran potential: $E(\phi,\psi) = \sum_{n,m} c_{nm}\cos(n\phi)\cos(m\psi)$
+- QTT-compressed amino acid interaction tensor (20×20 Miyazawa-Jernigan)
+- Rosetta scoring via TT decomposition
+
+---
+
+### 10. Neuroscience & Connectomics
+
+**Source**: CivStack `qtt_neural_connectome.py`, `qtt_connectome_real.py`, `qtt_neuromorphic_integration.py`
+
+#### 10.1 Neural Connectome
+
+$$\frac{dV_i}{dt} = -\frac{V_i - V_{\text{rest}}}{\tau_m} + I_{\text{syn},i} + I_{\text{ext}} \quad\text{(leaky integrate-and-fire)}$$
+
+- QTT-compressed 1M×1M connectome: $O(\log N \cdot \chi^2)$ storage
+- Hodgkin-Huxley gating: $\frac{dn}{dt} = \alpha_n(1-n) - \beta_n n$
+- Field potential: $\text{LFP}(t) = \frac{1}{4\pi\sigma} \sum_i \frac{I_i(t)}{r_i}$
+- Small-world metrics: clustering $C$, path length $L$
+
+#### 10.2 Neuromorphic Computing
+
+- Izhikevich neuron: $v' = 0.04v^2 + 5v + 140 - u + I$, $u' = a(bv - u)$
+- STDP plasticity: $\Delta w = A_+\exp(-\Delta t/\tau_+)$ (pre→post), $\Delta w = -A_-\exp(\Delta t/\tau_-)$ (post→pre)
+- Spike-rate encoding/decoding with QTT
+
+---
+
+### 11. Astrodynamics & Gravitation
+
+**Source**: CivStack `orbital_forge_gauntlet.py`
+
+$$\ddot{\mathbf{r}} = -\frac{\mu}{r^3}\mathbf{r} + \mathbf{a}_{\text{pert}} \quad\text{(two-body + perturbations)}$$
+
+- Keplerian elements ↔ Cartesian state vectors (6 elements: $a, e, i, \Omega, \omega, \nu$)
+- $J_2$ oblateness: $a_{J_2} = \frac{3\mu J_2 R_E^2}{2r^4}$
+- Atmospheric drag: $\mathbf{a}_D = -\frac{1}{2}\frac{C_D A}{m}\rho v_{\text{rel}}\mathbf{v}_{\text{rel}}$
+- Solar radiation pressure, third-body lunar/solar perturbations
+- Lambert solver for orbital transfers
+- RK7(8) Dormand-Prince integration
+
+---
+
+### 12. Atmospheric & Climate Science
+
+**Source**: CivStack `hermes_gauntlet.py`, `tensornet/cfd/weather.py`
+
+$$\frac{\partial T}{\partial t} + \mathbf{u}\cdot\nabla T = \kappa\nabla^2 T + \frac{Q}{c_p\rho} \quad\text{(advection-diffusion)}$$
+
+- Shallow water equations: $\partial_t h + \nabla\cdot(h\mathbf{u}) = 0$
+- Coriolis parameter: $f = 2\Omega\sin\phi$
+- Hydrostatic balance: $\partial p/\partial z = -\rho g$
+- QTT-compressed global wind fields (NOAA GOES-18)
+- Real-time weather data ingestion (OpenWeatherMap API)
+
+---
+
+### 13. Chemical Kinetics & Catalysis
+
+**Source**: `tensornet/cfd/chemistry.py` (635 LOC), `tensornet/fusion/resonant_catalysis.py` (891 LOC), CivStack `femto_fabricator_gauntlet.py`
+
+$$k_f = A\,T^n\exp\!\left(-\frac{E_a}{RT}\right) \quad\text{(Arrhenius)}$$
+
+| Reaction | $A$ | $n$ | $E_a/R$ (K) |
+|----------|-----|-----|-------------|
+| N₂ + M → 2N + M | $7.0\times10^{21}$ | $-1.6$ | 113,200 |
+| O₂ + M → 2O + M | $2.0\times10^{21}$ | $-1.5$ | 59,500 |
+| NO + M → N + O + M | $5.0\times10^{15}$ | $0.0$ | 75,500 |
+| N₂ + O → NO + N | $6.7\times10^{13}$ | $0.0$ | 37,500 |
+| NO + O → O₂ + N | $8.4\times10^{12}$ | $0.0$ | 19,450 |
+
+#### 13.1 Femto-Fabrication (Civilization Stack)
+
+- EUV photoresist: Dill ABC model $\frac{d[PAG]}{dt} = -C \cdot I(z,t) \cdot [PAG]$
+- Quantum well band structure: $E_n = \frac{n^2\pi^2\hbar^2}{2m^*L^2}$
+- Shot noise: $\text{SNR} = \sqrt{N_{\text{photon}}}$; LER $\propto 1/\sqrt{\text{dose}}$
+
+---
+
+### 14. Mathematical Physics (Genesis Layers)
+
+**Source**: `tensornet/genesis/` (~5,500 LOC across 8 layers)
+
+#### 14.1 Optimal Transport (Layer 20)
+
+$$W_p(\mu,\nu) = \left(\inf_{\gamma\in\Pi(\mu,\nu)}\int\!\!\int |x-y|^p\,d\gamma\right)^{1/p}$$
+
+- Sinkhorn iterations: $\mathbf{v} \leftarrow \nu/(K^T\mathbf{u})$, $\mathbf{u} \leftarrow \mu/(K\mathbf{v})$
+- QTT-MPO Gibbs kernel: $K = \exp(-C/\varepsilon)$; complexity $O(r^3 \log N)$
+
+#### 14.2 Spectral Graph Wavelets (Layer 21)
+
+$$\psi_{s,n} = g(sL)\delta_n$$
+
+- Mexican hat: $g(\lambda) = \lambda e^{-\lambda}$; heat kernel: $g(\lambda) = e^{-s\lambda}$
+- Chebyshev polynomial filter approximation: $g(L) \approx \sum_{k=0}^K c_k T_k(\tilde{L})$
+
+#### 14.3 Random Matrix Theory (Layer 22)
+
+$$\rho(\lambda) = -\frac{1}{\pi}\lim_{\eta\to 0^+}\text{Im}\,m(\lambda+i\eta)$$
+
+- GOE ($\beta=1$), GUE ($\beta=2$), Wishart ensembles
+- Free probability: $R$-transform (additive), $S$-transform (multiplicative)
+- Marchenko-Pastur law, Wigner semicircle
+
+#### 14.4 Tropical Geometry (Layer 23)
+
+| Semiring | $\oplus$ | $\otimes$ | $\mathbb{0}$ | $\mathbb{1}$ |
+|----------|----------|-----------|:---:|:---:|
+| Min-plus | $\min$ | $+$ | $+\infty$ | $0$ |
+| Max-plus | $\max$ | $+$ | $-\infty$ | $0$ |
+
+- Smooth: $\text{softmin}(a,b;\beta) = -\frac{1}{\beta}\log(e^{-\beta a} + e^{-\beta b})$
+- Tropical matrix eigenvalue = shortest cycle (Floyd-Warshall)
+
+#### 14.5 RKHS & Kernel Methods (Layer 24)
+
+$$\text{MMD}^2(P,Q) = \mathbb{E}[k(x,x')] - 2\mathbb{E}[k(x,y)] + \mathbb{E}[k(y,y')]$$
+
+- RBF, polynomial, Matérn kernels; Kernel Ridge Regression; Gaussian Processes
+
+#### 14.6 Persistent Homology (Layer 25)
+
+- Persistence pairs $\{(\text{birth}_i, \text{death}_i)\}$ for $H_0$ (components), $H_1$ (loops), $H_2$ (voids)
+- Boundary matrix column reduction algorithm
+- Bottleneck and Wasserstein distances between persistence diagrams
+
+#### 14.7 Geometric / Clifford Algebra (Layer 26)
+
+$$\text{Cl}(p,q,r): \quad e_i^2 = \begin{cases}+1 & i\leq p \\ -1 & p<i\leq p+q \\ 0 & i>p+q\end{cases}$$
+
+- $2^n$ basis blades, geometric/inner/outer products, rotors $R = e^{-B\theta/2}$
+
+---
+
+### 15. Quantum Computing & Error Mitigation
+
+**Source**: `tensornet/quantum/error_mitigation.py` (1,181 LOC), `tensornet/quantum/hybrid.py` (1,248 LOC)
+
+#### 15.1 Noise Models (Kraus Channels)
+
+$$\rho \to \mathcal{E}(\rho) = \sum_k K_k\rho K_k^\dagger$$
+
+| Channel | Kraus Operators |
+|---------|-----------------|
+| Depolarizing ($p$) | $K_0=\sqrt{1-3p/4}\,I$, $K_{1,2,3}=\sqrt{p/4}\,\sigma_{x,y,z}$ |
+| Amplitude damping ($\gamma$) | $K_0=\text{diag}(1,\sqrt{1-\gamma})$, $K_1=\sqrt\gamma\,|0\rangle\langle 1|$ |
+| Phase damping ($\lambda$) | $K_0=\text{diag}(1,\sqrt{1-\lambda})$, $K_1=\sqrt\lambda\,|1\rangle\langle 1|$ |
+
+#### 15.2 Error Mitigation Protocols
+
+- **ZNE**: Richardson, exponential, polynomial extrapolation to $\lambda=0$
+- **PEC**: quasi-probability decomposition $\langle O\rangle_{\text{ideal}} = \sum_i \eta_i\langle O\rangle_i$
+- **CDR**: Clifford Data Regression from near-Clifford circuits
+
+#### 15.3 Hybrid Quantum Algorithms
+
+**VQE**: $E(\boldsymbol{\theta}) = \langle 0|U^\dagger(\boldsymbol{\theta})\,H\,U(\boldsymbol{\theta})|0\rangle$
+
+**QAOA**: $|\boldsymbol{\gamma},\boldsymbol{\beta}\rangle = \prod_{p=1}^{P} e^{-i\beta_p H_M}\,e^{-i\gamma_p H_C}|+\rangle^{\otimes n}$
+
+- Full gate set (X, Y, Z, H, S, T, RX, RY, RZ, CNOT, CZ, SWAP, U3, CRZ)
+- Parameter-shift gradient rule
+- Tensor Network Born Machine: parameterized MPS $|\psi_\theta\rangle$
+
+---
+
+### 16. QTT Infrastructure
+
+**Source**: `tensornet/cfd/qtt.py` (514 LOC), `tensornet/cfd/qtt_tci.py` (1,271 LOC), `tensornet/cfd/pure_qtt_ops.py` (1,069 LOC), `tensornet/cfd/nd_shift_mpo.py` (856 LOC)
+
+#### 16.1 Quantized Tensor Train Decomposition
+
+$$v[i_1,\ldots,i_L] = G^1[i_1] \cdot G^2[i_2] \cdots G^L[i_L], \quad \text{storage } O(\log N \cdot \chi^2)$$
+
+- Area-law compression: smooth fields have low TT-rank
+- TT-SVD: sequential SVD of mode-$k$ unfoldings
+
+#### 16.2 TT-Cross Interpolation (TCI)
+
+- $O(r^2 \log N)$ black-box samples to construct QTT (vs $O(2^L)$ dense)
+- MaxVol pivot selection (maximum-volume submatrix)
+- Rust TCI core via PyO3 bridge (`crates/tci_core/`, 807 LOC)
+
+#### 16.3 Pure QTT Arithmetic
+
+- Addition: bond dim $r_1 + r_2$ (direct sum); scalar multiplication
+- MPO application: $O(L \cdot d \cdot \chi^2 \cdot D)$
+- Derivative / Laplacian as MPO operators on QTT
+
+#### 16.4 N-D Shift MPO (Morton Z-curve)
+
+- N-dimensional shift operator as MPO via bit-interleaving
+- 2D (period 2), 3D (period 3), 5D (period 5) interlacing
+- Carry/borrow propagation: 3-state automaton {carry=0, carry=1, done}
+- CUDA-accelerated MPO construction
+
+---
+
+### 17. Civilization Stack (20 Projects)
+
+The Civilization Stack comprises 20 domain-specific applications (~31,400 LOC) built atop QTT infrastructure. Each project validates a different physics domain end-to-end.
+
+| # | Project | Physics Domain | Key Equations | LOC |
+|:-:|---------|----------------|---------------|----:|
+| 1 | TOMAHAWK | MHD / Turbulence | Induction equation, O-U turbulence | 823 |
+| 2 | SIREN | Stochastic NS + Weather | Stochastic PDE, ECS model, epidemiology | 1,648 |
+| 3 | EUV Litho | Quantum Photoresist | Dill ABC, quantum well, Abbe diffraction | 990 |
+| 4 | LaLuH₆-IN | Superionic Conduction | NEB, Arrhenius, Fick/Nernst-Planck | 1,390 |
+| 5 | ODIN Superconductor | Eliashberg SC | McMillan-Allen-Dynes, BCS gap, phonon DOS | 1,547 |
+| 6 | HELLSKIN | Hypersonic TPS | Knudsen rarefied, ablation, radiation | 1,439 |
+| 7 | STARHEART | Tokamak Fusion | Grad-Shafranov, Lawson, D-T cross-section | 1,727 |
+| 8 | Dynamics | Celestial + Fluid | Kepler, Hamiltonian chaos, Lorenz | 1,280 |
+| 9 | Connectome | Neural Connectomics | LIF neurons, Hodgkin-Huxley, LFP | 1,628 |
+| 10 | Connectome-Real | MRI Connectome | DTI tractography, small-world networks | 1,297 |
+| 11 | Neuromorphic | Neuromorphic HW | Izhikevich, STDP plasticity, spike coding | 1,574 |
+| 12 | Femto-Fab | Nano-Fabrication | Shot noise, etching kinetics, quantum well | 2,165 |
+| 13 | Proteome | Protein Engineering | Ramachandran, Lennard-Jones, folding ΔG | 2,037 |
+| 14 | Metric Engine | GR + Fluid Coupling | Schwarzschild, Friedmann, geodesic equation | 1,857 |
+| 15 | Prometheus | Quantum Field Theory | Path integrals, φ⁴ lattice, RG flow | 1,898 |
+| 16 | Oracle | Info Theory + Crypto | Shannon entropy, erasure codes, lattice crypto | 2,047 |
+| 17 | Orbital Forge | Astrodynamics | J₂, drag, SRP, Lambert transfers, TLE | 1,771 |
+| 18 | Hermes | Weather + Climate | Shallow water, Coriolis, advection-diffusion | 1,527 |
+| 19 | Cornucopia | Agricultural Physics | Penman-Monteith, Beer-Lambert, soil hydrology | 1,654 |
+| 20 | Chronos | Time Metrology | Allan variance, relativistic corrections, PLL | 1,510 |
+
+---
+
+### 18. Trustless Physics (ZK Verification)
+
+**Source**: `crates/tenet-tphy/` (~26,000 LOC Rust), `FluidEliteHalo2Verifier.sol` (Solidity)
+
+#### 18.1 ZK Circuit Constraints
+
+- SVD integrity: $U^T U \approx I$, $\sigma_i \geq \sigma_{i+1} \geq 0$, truncation error ≤ declared
+- Conservation laws as circuit gadgets: $|E^{n+1} - E^n| \leq \varepsilon$ (mass, momentum, energy)
+- TPC (Trustless Physics Certificate): Ed25519-signed, SHA-256 hash chain
+- Halo2 proof system with KZG backend
+- Multi-domain: Euler 3D, NS-IMEX, future CEM/FEA/OPT circuits
+
+#### 18.2 Prover Infrastructure
+
+- Batch prover: thread::scope parallelism with round-robin worker pool
+- Incremental prover: LRU cache + FNV-1a hashing, element-wise delta analysis
+- Proof compression: zero-strip + run-length encoding
+- Gevulot decentralized proving network integration
+- Multi-tenant API: 4-tier system (Free/Standard/Professional/Enterprise)
+
+---
+
+### 19. Formal Verification (Lean 4)
+
+**Source**: `lean/HyperTensor/` (~633 LOC across 6 files)
+
+| Proof | Physics Statement | Method |
+|-------|-------------------|--------|
+| `NavierStokes.lean` | Enstrophy bound $\Omega(t) \leq \Omega_{\text{upper}}$; BKM regularity criterion | 6 simulation witnesses |
+| `NavierStokesRegularity.lean` | Spectral NS + Chorin-Temam + RK4; BKM integrals < 1000 | Computational witness |
+| `YangMills.lean` | Mass gap $\Delta = E_1 - E_0 > 0$ (Kogut-Susskind, Wilson plaquette) | $\Delta \approx 1.5$ computed |
+| `YangMillsVerified.lean` | Rigorous interval bounds $\Delta \in [0.0484, 0.7740]$ | Interval arithmetic |
+| `YangMillsUnified.lean` | Dimensional transmutation $M = 1.5\,\Lambda_{\text{QCD}}$; 3 coupling regimes | Strong/weak/intermediate |
+| `ThermalConservation.lean` | $|\int T^{n+1} - \int T^n - \Delta t\int S| \leq \varepsilon_{\text{cons}}$ | `decide` tactic (no axioms) |
+
+---
+
+### 20. GPU & Rust Compute Infrastructure
+
+**Source**: `crates/hyper_core/` (1,096 LOC), `crates/hyper_bridge/` (2,209 LOC), `crates/tci_core/` (807 LOC)
+
+#### 20.1 GPU TT Evaluator
+
+$$f(i_1,\ldots,i_L) = G^1[i_1] \cdot G^2[i_2] \cdots G^L[i_L] \quad\text{(matrix-vector chain on GPU)}$$
+
+- WGPU compute shaders + CUDA native (cudarc 0.19)
+- Double-buffered async pipeline, pinned host memory for DMA
+
+#### 20.2 Morton Z-Order Transforms
+
+$$\text{Morton}_{3D}(x,y,z) = \text{interleave}(x_0 y_0 z_0 x_1 y_1 z_1 \ldots)$$
+
+- 2D/3D bit-interleaving for space-filling curve indexing
+
+#### 20.3 IPC Wire Protocols
+
+- QTT Bridge: 512-byte header, `[QTTB]` magic, shared memory `/dev/shm`, CRC32 integrity
+- Weather Bridge: $(U,V)$ wind tensor with geographic bounding box
+- Trajectory Bridge: streaming geodesic waypoints $(lat, lon, alt, t)$
+
+---
+
 ## Validated Use Cases
 
 ### 40+ Production-Ready Capabilities
@@ -1339,6 +2026,20 @@ from qtenet.demos import holy_grail_6d
 
 ## Changelog
 
+### Version 35.0 (February 2026) — COMPREHENSIVE PHYSICS INVENTORY
+- 📋 **Physics Inventory**: New §7 cataloging every physics equation, model, and numerical method across the platform
+- ✅ 20 physics domains inventoried: CFD, quantum many-body, plasma/MHD, fusion, condensed matter, CEM, FEA, topology optimization, aging/longevity, neuroscience, astrodynamics, climate, chemistry, turbulence, mathematical physics, quantum computing, QTT infrastructure, Civilization Stack, ZK verification, Lean 4 proofs
+- ✅ 300+ equations documented with LaTeX notation and source file references
+- ✅ ~68,000 LOC of physics-specific code cataloged across 85+ files
+- ✅ Complete Civilization Stack table: 20 projects with physics domains, key equations, and LOC
+- ✅ 7 quantum spin Hamiltonians (Heisenberg XXZ, TFIM, XX, XYZ, Bose-Hubbard, spinless fermion, Fermi-Hubbard)
+- ✅ 5 SGS turbulence models (Smagorinsky, Dynamic, WALE, Vreman, Sigma)
+- ✅ 3 RANS models (k-ε, k-ω SST, Spalart-Allmaras)
+- ✅ 5-species reactive chemistry with Arrhenius kinetics
+- ✅ 8 Genesis mathematical physics layers (OT, SGW, RMT, TG, RKHS, PH, GA, Aging)
+- ✅ 6 Lean 4 formal proofs cataloged with physics statements
+- ✅ Table of Contents updated (13 → 14 sections)
+
 ### Version 34.0 (February 2026) — OPT-QTT PDE-CONSTRAINED OPTIMIZATION INTEGRATION
 - 🎯 **OPT-QTT v0.1.0**: PDE-constrained optimization — SIMP topology optimization, adjoint sensitivities, inverse problems in Q16.16 fixed-point
 - ✅ 6 Rust modules: q16, forward, adjoint, filter, topology, inverse (1,208 LOC)
@@ -1539,6 +2240,6 @@ See [CHANGELOG.md](CHANGELOG.md) for complete history.
 ╚════════════════════════════════════════════════════════════════════════════════════════╝
 ```
 
-*Last Updated: February 7, 2026 — Version 34.0*
+*Last Updated: February 7, 2026 — Version 35.0*
 
 </div>
