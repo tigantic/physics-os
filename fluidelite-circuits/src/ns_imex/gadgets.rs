@@ -12,12 +12,12 @@
 //! © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
 
 #[cfg(feature = "halo2")]
+/// Halo2 gadget implementations for the NS-IMEX proof circuit.
 pub mod halo2_gadgets {
     use halo2_axiom::{
         circuit::{Region, Value},
         halo2curves::bn256::Fr,
-        plonk::{Advice, Assigned, Column, Error, Fixed, Selector},
-        poly::Rotation,
+        plonk::{Advice, Assigned, Column, Error, Selector},
     };
 
     use fluidelite_core::field::Q16;

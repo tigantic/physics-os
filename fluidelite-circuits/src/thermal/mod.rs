@@ -130,8 +130,7 @@ pub fn prove_thermal_timestep(
     #[cfg(feature = "halo2")]
     let result = {
         let verifier = ThermalVerifier::from_prover(&prover);
-        let public_inputs = proof.reconstruct_public_inputs();
-        verifier.verify(&proof, &public_inputs)?
+        verifier.verify(&proof)?
     };
 
     Ok((proof, result))

@@ -197,8 +197,10 @@ impl Euler3DProverStats {
 // ═══════════════════════════════════════════════════════════════════════════
 
 #[cfg(feature = "halo2")]
+/// Halo2/KZG prover and verifier for the Euler 3D proof circuit.
 pub mod halo2_prover {
     use super::*;
+    use super::super::config::Euler3DCircuitSizing;
     use halo2_axiom::{
         halo2curves::bn256::{Bn256, Fr, G1Affine},
         plonk::{create_proof, keygen_pk, keygen_vk, verify_proof, ProvingKey, VerifyingKey},
@@ -389,7 +391,19 @@ pub mod halo2_prover {
         }
 
         /// Verify an Euler 3D proof.
+        ///
+        /// Reconstructs public inputs from the proof data and verifies
+        /// the Halo2/KZG proof against them.
         pub fn verify(
+            &self,
+            proof: &Euler3DProof,
+        ) -> Result<Euler3DVerificationResult, String> {
+            let public_inputs = Self::reconstruct_public_inputs(proof);
+            self.verify_with_public_inputs(proof, &public_inputs)
+        }
+
+        /// Verify with explicitly provided public inputs.
+        pub fn verify_with_public_inputs(
             &self,
             proof: &Euler3DProof,
             public_inputs: &[Fr],
@@ -422,6 +436,46 @@ pub mod halo2_prover {
                 grid_bits: proof.params.grid_bits,
                 chi_max: proof.params.chi_max,
             })
+        }
+
+        /// Reconstruct the public inputs vector from proof data.
+        fn reconstruct_public_inputs(proof: &Euler3DProof) -> Vec<Fr> {
+            let mut inputs = Vec::new();
+
+            // Input state hash (4 limbs)
+            for limb in &proof.input_state_hash_limbs {
+                inputs.push(Fr::from(*limb));
+            }
+            // Output state hash (4 limbs)
+            for limb in &proof.output_state_hash_limbs {
+                inputs.push(Fr::from(*limb));
+            }
+            // Params hash (4 limbs)
+            for limb in &proof.params_hash_limbs {
+                inputs.push(Fr::from(*limb));
+            }
+
+            // Conservation residuals (signed Q16)
+            for residual in &proof.conservation_residuals {
+                if residual.raw >= 0 {
+                    inputs.push(Fr::from(residual.raw as u64));
+                } else {
+                    inputs.push(-Fr::from((-residual.raw) as u64));
+                }
+            }
+
+            // dt (signed Q16)
+            if proof.params.dt.raw >= 0 {
+                inputs.push(Fr::from(proof.params.dt.raw as u64));
+            } else {
+                inputs.push(-Fr::from((-proof.params.dt.raw) as u64));
+            }
+
+            // chi_max, grid_bits
+            inputs.push(Fr::from(proof.params.chi_max as u64));
+            inputs.push(Fr::from(proof.params.grid_bits as u64));
+
+            inputs
         }
     }
 }

@@ -12,6 +12,8 @@ use fluidelite_core::mpo::MPO;
 use fluidelite_core::mps::MPS;
 
 use super::config::ThermalParams;
+#[cfg(feature = "halo2")]
+use super::config::ThermalCircuitSizing;
 use super::halo2_impl::ThermalCircuit;
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -307,6 +309,7 @@ impl ThermalProverStats {
 // ═══════════════════════════════════════════════════════════════════════════
 
 #[cfg(feature = "halo2")]
+/// Halo2/KZG prover and verifier for the thermal proof circuit.
 pub mod halo2_prover {
     use super::*;
     use halo2_axiom::{
@@ -488,7 +491,19 @@ pub mod halo2_prover {
         }
 
         /// Verify a thermal proof.
+        ///
+        /// Reconstructs public inputs from the proof data and verifies
+        /// the Halo2/KZG proof against them.
         pub fn verify(
+            &self,
+            proof: &ThermalProof,
+        ) -> Result<ThermalVerificationResult, String> {
+            let public_inputs = Self::reconstruct_public_inputs(proof);
+            self.verify_with_public_inputs(proof, &public_inputs)
+        }
+
+        /// Verify with explicitly provided public inputs.
+        pub fn verify_with_public_inputs(
             &self,
             proof: &ThermalProof,
             public_inputs: &[Fr],
@@ -522,6 +537,52 @@ pub mod halo2_prover {
                 grid_bits: proof.params.grid_bits,
                 chi_max: proof.params.chi_max,
             })
+        }
+
+        /// Reconstruct the public inputs vector from proof data.
+        fn reconstruct_public_inputs(proof: &ThermalProof) -> Vec<Fr> {
+            let mut inputs = Vec::new();
+
+            // Input state hash (4 limbs)
+            for limb in &proof.input_state_hash_limbs {
+                inputs.push(Fr::from(*limb));
+            }
+            // Output state hash (4 limbs)
+            for limb in &proof.output_state_hash_limbs {
+                inputs.push(Fr::from(*limb));
+            }
+            // Params hash (4 limbs)
+            for limb in &proof.params_hash_limbs {
+                inputs.push(Fr::from(*limb));
+            }
+
+            // Conservation residual (signed Q16)
+            let r = proof.conservation_residual;
+            if r.raw >= 0 {
+                inputs.push(Fr::from(r.raw as u64));
+            } else {
+                inputs.push(-Fr::from((-r.raw) as u64));
+            }
+
+            // dt (signed Q16)
+            if proof.params.dt.raw >= 0 {
+                inputs.push(Fr::from(proof.params.dt.raw as u64));
+            } else {
+                inputs.push(-Fr::from((-proof.params.dt.raw) as u64));
+            }
+
+            // alpha (signed Q16)
+            if proof.params.alpha.raw >= 0 {
+                inputs.push(Fr::from(proof.params.alpha.raw as u64));
+            } else {
+                inputs.push(-Fr::from((-proof.params.alpha.raw) as u64));
+            }
+
+            // chi_max, grid_bits
+            inputs.push(Fr::from(proof.params.chi_max as u64));
+            inputs.push(Fr::from(proof.params.grid_bits as u64));
+
+            inputs
         }
     }
 }

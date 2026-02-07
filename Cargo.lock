@@ -1995,6 +1995,7 @@ name = "fluidelite-circuits"
 version = "0.1.0"
 dependencies = [
  "fluidelite-core",
+ "halo2-axiom",
  "num-traits",
  "proptest",
  "rand 0.8.5",

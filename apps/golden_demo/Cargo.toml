@@ -36,3 +36,7 @@ chrono = "0.4"
 
 # Zip
 zip = { version = "2.2", default-features = false, features = ["deflate"] }
+
+[features]
+default = ["halo2"]
+halo2 = ["fluidelite-circuits/halo2"]

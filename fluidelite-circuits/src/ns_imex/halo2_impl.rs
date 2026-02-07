@@ -18,6 +18,7 @@
 //! © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
 
 #[cfg(feature = "halo2")]
+/// Halo2 circuit implementation for the NS-IMEX solver verification.
 pub mod halo2_circuit {
     use halo2_axiom::{
         circuit::{Cell, Layouter, SimpleFloorPlanner, Value},
@@ -34,14 +35,14 @@ pub mod halo2_circuit {
     use fluidelite_core::mps::MPS;
 
     use super::super::config::{
-        IMEXStage, NSIMEXCircuitSizing, NSIMEXParams, NSVariable,
-        NUM_DIMENSIONS, NUM_IMEX_STAGES, NUM_NS_VARIABLES, PHYS_DIM,
+        NSIMEXCircuitSizing, NSIMEXParams,
+        NUM_DIMENSIONS, NUM_NS_VARIABLES, PHYS_DIM,
         Q16_SCALE,
     };
     use super::super::gadgets::{
-        q16_to_assigned, q16_to_fr, i64_to_assigned, scale_fr,
+        q16_to_assigned, q16_to_fr,
         BitDecompositionGadget, ConservationGadget, DiffusionSolveGadget,
-        DivergenceCheckGadget, FixedPointMACGadget, ProjectionGadget,
+        DivergenceCheckGadget, ProjectionGadget,
         PublicInputGadget, SvdOrderingGadget,
     };
     use super::super::witness::{NSIMEXWitness, WitnessGenerator};

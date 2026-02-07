@@ -11,12 +11,12 @@
 //! © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
 
 #[cfg(feature = "halo2")]
+/// Halo2 gadget implementations for the thermal proof circuit.
 pub mod halo2_gadgets {
     use halo2_axiom::{
         circuit::{Region, Value},
         halo2curves::bn256::Fr,
-        plonk::{Advice, Assigned, Column, Error, Fixed, Selector},
-        poly::Rotation,
+        plonk::{Advice, Assigned, Column, Error, Selector},
     };
 
     use fluidelite_core::field::Q16;
@@ -234,7 +234,7 @@ pub mod halo2_gadgets {
             a_col: Column<Advice>,
             b_col: Column<Advice>,
             c_col: Column<Advice>,
-            d_col: Column<Advice>,
+            _d_col: Column<Advice>,
             start_row: usize,
             singular_values: &[Q16],
             ordering_bits: &[Vec<bool>],
@@ -341,7 +341,7 @@ pub mod halo2_gadgets {
             row += 1;
 
             // Row 2..N: Bit decomposition of (tolerance - residual)
-            let bound = tolerance.raw - residual.raw;
+            let _bound = tolerance.raw - residual.raw;
             let bit_val: u64 = bound_bits
                 .iter()
                 .enumerate()
@@ -378,7 +378,7 @@ pub mod halo2_gadgets {
             a_col: Column<Advice>,
             b_col: Column<Advice>,
             c_col: Column<Advice>,
-            d_col: Column<Advice>,
+            _d_col: Column<Advice>,
             start_row: usize,
             residual_norms: &[Q16],
             final_tolerance: Q16,

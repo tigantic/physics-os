@@ -19,6 +19,7 @@
 //! © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
 
 #[cfg(feature = "halo2")]
+/// Halo2 circuit implementation for the Euler 3D QTT solver verification.
 pub mod halo2_circuit {
     use halo2_axiom::{
         circuit::{Cell, Layouter, SimpleFloorPlanner, Value},
@@ -35,12 +36,12 @@ pub mod halo2_circuit {
     use fluidelite_core::mps::MPS;
 
     use super::super::config::{
-        ConservedVariable, Euler3DCircuitSizing, Euler3DParams, StrangStage,
-        NUM_CONSERVED_VARIABLES, NUM_STRANG_STAGES, Q16_SCALE,
+        ConservedVariable, Euler3DCircuitSizing, Euler3DParams,
+        NUM_CONSERVED_VARIABLES, Q16_SCALE,
     };
     use super::super::gadgets::{
-        q16_to_assigned, q16_to_fr, i64_to_assigned, scale_fr,
-        BitDecompositionGadget, ConservationGadget, FixedPointMACGadget,
+        q16_to_assigned, q16_to_fr, i64_to_assigned,
+        BitDecompositionGadget, ConservationGadget,
         PublicInputGadget, SvdOrderingGadget,
     };
     use super::super::witness::{Euler3DWitness, WitnessGenerator};

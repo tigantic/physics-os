@@ -18,9 +18,10 @@
 //! © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
 
 #[cfg(feature = "halo2")]
+/// Halo2 circuit implementation for the thermal QTT solver verification.
 pub mod halo2_circuit {
     use halo2_axiom::{
-        circuit::{Cell, Layouter, SimpleFloorPlanner, Value},
+        circuit::{Layouter, SimpleFloorPlanner, Value},
         halo2curves::bn256::Fr,
         plonk::{
             Advice, Assigned, Circuit, Column, ConstraintSystem, Error, Fixed, Instance,
@@ -34,13 +35,10 @@ pub mod halo2_circuit {
     use fluidelite_core::mps::MPS;
 
     use super::super::config::{
-        ThermalCircuitSizing, ThermalParams, ThermalVariable,
-        NUM_THERMAL_VARIABLES, Q16_SCALE,
+        ThermalCircuitSizing, ThermalParams, Q16_SCALE,
     };
     use super::super::gadgets::{
-        q16_to_assigned, q16_to_fr, i64_to_assigned, scale_fr,
-        BitDecompositionGadget, CgSolveGadget, ConservationGadget,
-        FixedPointMACGadget, PublicInputGadget, SvdOrderingGadget,
+        q16_to_assigned, i64_to_assigned, ConservationGadget, SvdOrderingGadget,
     };
     use super::super::witness::{ThermalWitness, WitnessGenerator};
 
@@ -150,7 +148,7 @@ pub mod halo2_circuit {
                 let a_cur = meta.query_advice(a, Rotation::cur());
                 let b_cur = meta.query_advice(b, Rotation::cur());
                 let c_cur = meta.query_advice(c, Rotation::cur());
-                let d_cur = meta.query_advice(d, Rotation::cur());
+                let _d_cur = meta.query_advice(d, Rotation::cur());
                 // a = integral_before, b = integral_after
                 // c = residual, d = tolerance
                 // Constraint: |b - a| ≤ d  (via c = |b - a| and d - c ≥ 0)
@@ -256,6 +254,7 @@ pub mod halo2_circuit {
     impl Circuit<Fr> for ThermalCircuit {
         type Config = ThermalColumns;
         type FloorPlanner = SimpleFloorPlanner;
+        type Params = ();
 
         fn without_witnesses(&self) -> Self {
             self.clone()

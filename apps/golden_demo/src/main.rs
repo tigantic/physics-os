@@ -2,7 +2,7 @@
 //!
 //! Generates a complete, self-verifiable demo package:
 //!   1. Thermal simulation (heat equation in QTT format)
-//!   2. ZK proof (halo2 stub prover)
+//!   2. ZK proof (Halo2/KZG real prover)
 //!   3. TPC certificate (3-layer binary with Ed25519 signature)
 //!   4. Lean formal proof (copied from thermal_conservation_proof/)
 //!   5. Visualization data (JSON for external rendering)
@@ -183,7 +183,7 @@ fn stage_certificate(
     );
 
     let layer_b = json!({
-        "proof_system": "Halo2-KZG (stub prover)",
+        "proof_system": "Halo2-KZG",
         "circuit": "ThermalCircuit",
         "k": proof.k,
         "constraints": proof.num_constraints,
@@ -827,7 +827,7 @@ fn main() {
             "boundary_condition": format!("{:?}", params.boundary_condition),
         },
         "proof": {
-            "system": "Halo2-KZG (stub prover)",
+            "system": "Halo2-KZG",
             "circuit": "ThermalCircuit",
             "k": proof.k,
             "constraints": proof.num_constraints,

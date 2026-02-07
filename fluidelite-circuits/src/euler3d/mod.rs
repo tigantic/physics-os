@@ -132,8 +132,7 @@ pub fn prove_euler3d_timestep(
     #[cfg(feature = "halo2")]
     let result = {
         let verifier = Euler3DVerifier::from_prover(&prover);
-        let public_inputs = proof.reconstruct_public_inputs();
-        verifier.verify(&proof, &public_inputs)?
+        verifier.verify(&proof)?
     };
 
     Ok((proof, result))

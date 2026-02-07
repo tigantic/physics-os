@@ -315,6 +315,7 @@ impl NSIMEXProverStats {
 // ═══════════════════════════════════════════════════════════════════════════
 
 #[cfg(feature = "halo2")]
+/// Halo2/KZG prover and verifier for the NS-IMEX proof circuit.
 pub mod halo2_prover {
     use super::*;
     use halo2_axiom::{
@@ -332,7 +333,7 @@ pub mod halo2_prover {
     };
     use rand::rngs::OsRng;
 
-    use super::super::config::{NUM_DIMENSIONS, PHYS_DIM};
+    use super::super::config::{NSIMEXCircuitSizing, NUM_DIMENSIONS, NUM_NS_VARIABLES, PHYS_DIM};
 
     /// NS-IMEX ZK Prover using Halo2/KZG.
     pub struct NSIMEXProver {
@@ -491,7 +492,19 @@ pub mod halo2_prover {
         }
 
         /// Verify an NS-IMEX proof.
+        ///
+        /// Reconstructs public inputs from the proof data and verifies
+        /// the Halo2/KZG proof against them.
         pub fn verify(
+            &self,
+            proof: &NSIMEXProof,
+        ) -> Result<NSIMEXVerificationResult, String> {
+            let public_inputs = Self::reconstruct_public_inputs(proof);
+            self.verify_with_public_inputs(proof, &public_inputs)
+        }
+
+        /// Verify with explicitly provided public inputs.
+        pub fn verify_with_public_inputs(
             &self,
             proof: &NSIMEXProof,
             public_inputs: &[Fr],
@@ -527,6 +540,54 @@ pub mod halo2_prover {
                 chi_max: proof.params.chi_max,
                 reynolds_number: proof.params.reynolds_number(),
             })
+        }
+
+        /// Reconstruct the public inputs vector from proof data.
+        fn reconstruct_public_inputs(proof: &NSIMEXProof) -> Vec<Fr> {
+            let mut inputs = Vec::new();
+
+            // Input state hash (4 limbs)
+            for limb in &proof.input_state_hash_limbs {
+                inputs.push(Fr::from(*limb));
+            }
+            // Output state hash (4 limbs)
+            for limb in &proof.output_state_hash_limbs {
+                inputs.push(Fr::from(*limb));
+            }
+            // Params hash (4 limbs)
+            for limb in &proof.params_hash_limbs {
+                inputs.push(Fr::from(*limb));
+            }
+
+            // KE residual (signed Q16)
+            if proof.ke_residual.raw >= 0 {
+                inputs.push(Fr::from(proof.ke_residual.raw as u64));
+            } else {
+                inputs.push(-Fr::from((-proof.ke_residual.raw) as u64));
+            }
+
+            // Enstrophy residual (signed Q16)
+            if proof.enstrophy_residual.raw >= 0 {
+                inputs.push(Fr::from(proof.enstrophy_residual.raw as u64));
+            } else {
+                inputs.push(-Fr::from((-proof.enstrophy_residual.raw) as u64));
+            }
+
+            // Divergence residual (signed Q16)
+            if proof.divergence_residual.raw >= 0 {
+                inputs.push(Fr::from(proof.divergence_residual.raw as u64));
+            } else {
+                inputs.push(-Fr::from((-proof.divergence_residual.raw) as u64));
+            }
+
+            // dt (signed Q16)
+            if proof.params.dt.raw >= 0 {
+                inputs.push(Fr::from(proof.params.dt.raw as u64));
+            } else {
+                inputs.push(-Fr::from((-proof.params.dt.raw) as u64));
+            }
+
+            inputs
         }
     }
 }

@@ -28,9 +28,12 @@ sha2 = "0.10"
 # Random (for testing/witness generation)
 rand = "0.8"
 
+# Halo2 ZK proving backend (Axiom fork, KZG commitment scheme)
+halo2-axiom = { version = "0.5", optional = true }
+
 [features]
 default = []
-halo2 = []
+halo2 = ["dep:halo2-axiom"]
 
 [dev-dependencies]
 proptest = "1.4"
