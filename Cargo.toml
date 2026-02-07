@@ -11,6 +11,7 @@
 #   apps/global_eye       - Global weather observation platform
 #   apps/trustless_verify - Standalone TPC certificate verifier
 #   QTT-CEM/QTT-CEM      - CEM-QTT: Maxwell FDTD solver (Q16.16 + MPS/MPO)
+#   QTT-FEA/fea-qtt       - FEA-QTT: Hex8 static elasticity solver (Q16.16 + CG)
 #
 # Build: cargo build --workspace --release
 # Test:  cargo test --workspace
@@ -32,6 +33,7 @@ members = [
     "fluidelite-zk",
     "fluidelite-infra",
     "QTT-CEM/QTT-CEM",
+    "QTT-FEA/fea-qtt",
 ]
 resolver = "2"
 

@@ -291,7 +291,7 @@ def update_platform_spec(filepath: Path, stats: LOCStats, dry_run: bool = False)
     # Update last updated date (preserve existing version number)
     today = datetime.now().strftime("%B %d, %Y")
     version_match = re.search(r"\*\*Version ([\d.]+)\*\*", content)
-    version_str = version_match.group(1) if version_match else "32.0"
+    version_str = version_match.group(1) if version_match else "33.0"
     content = re.sub(
         r"\*Last Updated:.*?\*",
         f"*Last Updated: {today} — Version {version_str}*",
@@ -354,7 +354,7 @@ def generate_catalog_json(root: Path, stats: LOCStats) -> dict:
     """Generate machine-readable component catalog."""
     return {
         "generated_at": datetime.now().isoformat(),
-        "version": "32.0",
+        "version": "33.0",
         "summary": {
             "total_loc": stats.total_loc,
             "total_files": stats.total_files,

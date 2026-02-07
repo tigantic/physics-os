@@ -1,0 +1,172 @@
+{
+  "total": 32,
+  "passed": 32,
+  "failed": 0,
+  "results": [
+    {
+      "test": "Addition: 3.5+2.0=5.5",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Multiplication: 3.5\u00d72.0=7.0",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Division: 7.0/2.0=3.5",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Partition of unity at GP",
+      "status": "PASS",
+      "detail": "sum=0.999954"
+    },
+    {
+      "test": "Kronecker delta property",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Unit cube det(J) = 0.125",
+      "status": "PASS",
+      "detail": "det(J)=0.125000"
+    },
+    {
+      "test": "J\u00b7J\u207b\u00b9 = I",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "D matrix symmetric",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "D diagonal positive",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "Ke symmetric",
+      "status": "PASS",
+      "detail": "276/276 pairs match"
+    },
+    {
+      "test": "Ke has nonzero entries",
+      "status": "PASS",
+      "detail": "nnz=576/576"
+    },
+    {
+      "test": "Mesh node count",
+      "status": "PASS",
+      "detail": "nodes=27"
+    },
+    {
+      "test": "Mesh element count",
+      "status": "PASS",
+      "detail": "elements=8"
+    },
+    {
+      "test": "Face selection (x=0)",
+      "status": "PASS",
+      "detail": "face_nodes=9"
+    },
+    {
+      "test": "CG converged (1-elem)",
+      "status": "PASS",
+      "detail": "iters=1"
+    },
+    {
+      "test": "Positive x-displacement at loaded face",
+      "status": "PASS",
+      "detail": "ux_max=0.297729"
+    },
+    {
+      "test": "Strain energy > 0",
+      "status": "PASS",
+      "detail": "U=\u00bdF\u1d40u=0.059540"
+    },
+    {
+      "test": "CG converged (beam)",
+      "status": "PASS",
+      "detail": "iters=1"
+    },
+    {
+      "test": "Tip deflects in -y",
+      "status": "PASS",
+      "detail": "uy_tip=-0.543381"
+    },
+    {
+      "test": "Fixed end stays near zero",
+      "status": "PASS",
+      "detail": "max_uy_fixed=0.000000"
+    },
+    {
+      "test": "Bit-identical across runs",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "test": "\u03c3xx is dominant stress",
+      "status": "PASS",
+      "detail": "\u03c3xx=0.4008, \u03c3yy=0.1718"
+    },
+    {
+      "test": "Von Mises stress > 0",
+      "status": "PASS",
+      "detail": "\u03c3_vm=0.2290"
+    },
+    {
+      "test": "Both meshes produce displacement",
+      "status": "PASS",
+      "detail": "ux_coarse=0.297729, ux_fine=0.335907"
+    },
+    {
+      "test": "Hex8 isoparametric elements",
+      "status": "PASS",
+      "detail": "8-node, trilinear"
+    },
+    {
+      "test": "2\u00d72\u00d72 Gauss quadrature",
+      "status": "PASS",
+      "detail": "8 integration points"
+    },
+    {
+      "test": "Isotropic constitutive (D matrix)",
+      "status": "PASS",
+      "detail": "6\u00d76 Voigt"
+    },
+    {
+      "test": "Sparse assembly (COO)",
+      "status": "PASS",
+      "detail": "Element scatter"
+    },
+    {
+      "test": "CG solver operational",
+      "status": "PASS",
+      "detail": "Q16.16 fixed-point"
+    },
+    {
+      "test": "Penalty BCs applied",
+      "status": "PASS",
+      "detail": "Dirichlet via penalty"
+    },
+    {
+      "test": "Q16.16 determinism verified",
+      "status": "PASS",
+      "detail": "Bit-identical"
+    },
+    {
+      "test": "Stress/strain recovery",
+      "status": "PASS",
+      "detail": "\u03c3 = DBu at centroid"
+    }
+  ],
+  "elapsed_seconds": 0.055,
+  "timestamp": "2026-02-07T14:28:24-0500",
+  "grid": "Hex8 structured mesh",
+  "arithmetic": "Q16.16 fixed-point",
+  "solver": "Conjugate Gradient, penalty BCs"
+}

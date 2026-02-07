@@ -1,0 +1,15 @@
+[package]
+name = "fea-qtt"
+version = "0.1.0"
+edition = "2021"
+authors = ["Brad McAllister"]
+description = "Structural Mechanics FEA via Quantized Tensor Train compression — Static linear elasticity in Q16.16 fixed-point with MPS/MPO tensor networks"
+license = "Proprietary"
+
+[dependencies]
+
+[dev-dependencies]
+
+[[test]]
+name = "integration"
+path = "tests/integration.rs"

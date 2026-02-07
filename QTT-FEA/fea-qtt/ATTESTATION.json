@@ -1,0 +1,55 @@
+{
+  "project": "fea-qtt",
+  "protocol": "FEA_QTT_BUILD_ATTESTATION",
+  "version": "0.1.0",
+  "summary": "Structural Mechanics FEA \u2014 Static Linear Elasticity in QTT Format",
+  "timestamp": "2026-02-07T19:20:36Z",
+  "author": "Brad McAllister",
+  "description": "3D static linear elasticity with Hex8 elements, Q16.16 fixed-point, CG solver, strain/stress recovery, and energy conservation.",
+  "governing_equations": [
+    "\u2207\u00b7\u03c3 + f = 0 (equilibrium)",
+    "\u03c3 = D\u00b7\u03b5 (Hooke's law, isotropic)",
+    "\u03b5 = \u00bd(\u2207u + \u2207u\u1d40) (strain-displacement)",
+    "Ku = F (assembled system)"
+  ],
+  "validation": {
+    "total_tests": 32,
+    "passed": 32,
+    "failed": 0,
+    "pass_rate": "32/32 (100%)",
+    "key_results": {
+      "shape_functions": "PASS \u2014 partition of unity, Kronecker delta",
+      "jacobian": "PASS \u2014 det(J) = 0.125 for unit cube",
+      "constitutive": "PASS \u2014 symmetric, positive definite diagonal",
+      "stiffness_symmetry": "PASS \u2014 276/276 pairs match",
+      "uniaxial_tension": "PASS \u2014 CG converged iter 1, ux = 0.298",
+      "energy_conservation": "PASS \u2014 U = \u00bdF\u1d40u = 0.060",
+      "cantilever_beam": "PASS \u2014 tip uy = -0.543, fixed end = 0",
+      "determinism": "PASS \u2014 bit-identical across runs",
+      "stress_recovery": "PASS \u2014 \u03c3xx dominant, Von Mises = 0.229",
+      "mesh_refinement": "PASS \u2014 coarse 0.298, fine 0.336"
+    }
+  },
+  "architecture": {
+    "element": "Hex8 isoparametric, trilinear shape functions",
+    "quadrature": "2\u00d72\u00d72 Gauss (8 points)",
+    "arithmetic": "Q16.16 fixed-point (deterministic, ZK-friendly)",
+    "solver": "Conjugate Gradient, penalty Dirichlet BCs",
+    "assembly": "Sparse COO format",
+    "materials": "Isotropic linear elastic (E, \u03bd \u2192 6\u00d76 D matrix)",
+    "stress": "\u03c3 = DBu at element centroids, Von Mises"
+  },
+  "file_hashes": {
+    "Cargo.toml": "615b8cb7e337bb1779d195e2cc46feda0cd64af86cbd7c1077a47b10b687e6b3",
+    "README.md": "dc64a96367250c12a0af7c844079ed4a8bd330578649bfffc871091486979f5b",
+    "validate.py": "f03b7a4cc0f5cd5f4805779c55947824d8f9f8d0be9b7251c742a59c2693edd0",
+    "tests/integration.rs": "517eb7ad12a297f8da2344651ca32241ace780bec53af3c0fd3a5795c68d2362",
+    "src/element.rs": "66fe65b672d88e366c9f455dccd81d03aad8642fd3055552f8690865a2eee9c7",
+    "src/lib.rs": "509ceb8d09eba9105ac15ca90a8cf239c07fdfa6b7f0f58c9470ae36f23e136b",
+    "src/material.rs": "57a4e419f9d8c64476d4783ab27c943873f1f62ca090542d56ca0eb7c9a4899b",
+    "src/mesh.rs": "9ae957e9681e3d860a93f0978c42a829bbc1c7ac20aeb2a4fe3620c6d6ddf221",
+    "src/q16.rs": "c8e82b52620ef7919ed4b6ad65144703b72178fef05677b497b9d969059ef744",
+    "src/solver.rs": "55f5df7346b8c0197e1de8d916174784e583e5ba6bfcc8160b12265fae1c15ec"
+  },
+  "self_hash": "346f9a8fff01c7f5af518f857c7c4285749ee9a6e1bb35cccdac07552ae476c6"
+}
