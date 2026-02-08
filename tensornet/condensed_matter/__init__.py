@@ -77,6 +77,30 @@ from .ultracold_atoms import (
     FeshbachResonance,
     GrossPitaevskiiSolver as GPESolver,
 )
+from .band_structure import (
+    TightBindingBands,
+    KdotPMethod,
+    DensityOfStates,
+    WannierProjection,
+)
+from .classical_magnetism import (
+    LandauLifshitzGilbert,
+    StonerWohlfarth,
+    DomainWall,
+    HeisenbergModel2D,
+)
+from .surfaces_interfaces import (
+    SurfaceEnergy,
+    AdsorptionIsotherms,
+    SchottkyBarrier,
+    HeterostructureBandAlignment,
+)
+from .ferroelectrics import (
+    LandauDevonshire,
+    PiezoelectricCoupling,
+    DomainSwitching,
+    PyroelectricEffect,
+)
 
 __all__ = [
     # Strongly correlated
@@ -108,4 +132,12 @@ __all__ = [
     "ChiralEFTInteraction", "BetheWeizsacker",
     # Ultracold Atoms (VII.13)
     "BoseHubbardModel", "BECBCSCrossover", "FeshbachResonance", "GPESolver",
+    # Band Structure (IX.2)
+    "TightBindingBands", "KdotPMethod", "DensityOfStates", "WannierProjection",
+    # Classical Magnetism (IX.3)
+    "LandauLifshitzGilbert", "StonerWohlfarth", "DomainWall", "HeisenbergModel2D",
+    # Surfaces & Interfaces (IX.6)
+    "SurfaceEnergy", "AdsorptionIsotherms", "SchottkyBarrier", "HeterostructureBandAlignment",
+    # Ferroelectrics (IX.8)
+    "LandauDevonshire", "PiezoelectricCoupling", "DomainSwitching", "PyroelectricEffect",
 ]

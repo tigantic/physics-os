@@ -23,6 +23,23 @@ from .photochemistry import (
     Photodissociation,
     FluorescenceLifetime,
 )
+from .quantum_reactive import (
+    TransitionStateTheory as QReactiveTST,
+    CollinearReactiveScattering,
+    QuantumBarrierTransmission,
+)
+from .nonadiabatic import (
+    LandauZener,
+    FewestSwitchesSurfaceHopping,
+    SpinBosonModel,
+)
+from .spectroscopy import (
+    VibrationalSpectroscopy,
+    ElectronicSpectroscopy,
+    FranckCondonFactors as FCFactorsSpectro,
+    RotationalSpectroscopy,
+    NMRChemicalShift,
+)
 
 __all__ = [
     "MorsePotential",
@@ -38,4 +55,15 @@ __all__ = [
     "IntersystemCrossing",
     "Photodissociation",
     "FluorescenceLifetime",
+    "QReactiveTST",
+    "CollinearReactiveScattering",
+    "QuantumBarrierTransmission",
+    "LandauZener",
+    "FewestSwitchesSurfaceHopping",
+    "SpinBosonModel",
+    "VibrationalSpectroscopy",
+    "ElectronicSpectroscopy",
+    "FCFactorsSpectro",
+    "RotationalSpectroscopy",
+    "NMRChemicalShift",
 ]

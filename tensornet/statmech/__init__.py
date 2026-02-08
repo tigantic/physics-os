@@ -26,6 +26,13 @@ from tensornet.statmech.non_equilibrium import (
     ChemicalMasterEquation,
 )
 
+from tensornet.statmech.monte_carlo import (
+    SwendsenWangCluster,
+    ParallelTempering,
+    HistogramReweighting,
+    MulticanonicalMC,
+)
+
 __all__ = [
     "MetropolisMC",
     "WolffClusterMC",
@@ -41,4 +48,8 @@ __all__ = [
     "KineticMonteCarlo",
     "GillespieSSA",
     "ChemicalMasterEquation",
+    "SwendsenWangCluster",
+    "ParallelTempering",
+    "HistogramReweighting",
+    "MulticanonicalMC",
 ]
