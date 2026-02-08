@@ -15,7 +15,7 @@
 
 *One Codebase. 19 Industries. 822K Lines of Code. 9 Languages.*
 
-**Version 36.0** | **February 8, 2026** | **100% PHYSICS COVERAGE**
+**Version 40.0** | **February 7, 2026** | **140/140 PHYSICS COVERAGE**
 
 ---
 
@@ -1036,7 +1036,7 @@ flowchart TB
 
 ## Physics Inventory
 
-> **Comprehensive catalog of every physics equation, model, and numerical method implemented across the HyperTensor platform.** Covers 34 physics domains, 529+ equations, and ~177,645 lines of physics-specific code spanning Python, Rust, Solidity, and Lean 4.
+> **Comprehensive catalog of every physics equation, model, and numerical method implemented across the HyperTensor platform.** Covers 50 physics domains (140 capability sub-domains), 826+ equations, and ~227,000 lines of physics-specific code spanning Python, Rust, Solidity, and Lean 4.
 
 ### Summary by Domain
 
@@ -1075,7 +1075,24 @@ flowchart TB
 | Applied Domain Physics | ~20 | ~6,852 | `tensornet/{defense,medical,energy,urban,...}/` |
 | Proof Engine & Constructive QFT | ~8 | ~2,688 | `proof_engine/` |
 | Simulation, Digital Twin & RL | ~12 | ~14,805 | `tensornet/{simulation,digital_twin,hyperenv,coordination}/` |
-| **Total** | **~529+** | **~177,645** | **305+ files** |
+| Classical Mechanics | ~10 | ~3,527 | `tensornet/mechanics/` (6 files) |
+| Quantum Mechanics (Expanded) | ~15 | ~2,780 | `tensornet/qm/`, `tensornet/quantum_mechanics/` |
+| Condensed Matter (Expanded) | ~50 | ~7,074 | `tensornet/condensed_matter/` (18 files) |
+| Electronic Structure | ~25 | ~2,351 | `tensornet/electronic_structure/` (8 files) |
+| Nuclear Physics | ~10 | ~935 | `tensornet/nuclear/` (4 files) |
+| Particle Physics (BSM) | ~5 | ~327 | `tensornet/particle/` |
+| Astrophysics | ~20 | ~2,246 | `tensornet/astro/` (7 files) |
+| Geophysics | ~15 | ~1,984 | `tensornet/geophysics/` (7 files) |
+| Materials Science | ~20 | ~2,046 | `tensornet/materials/` (7 files) |
+| Computational Chemistry | ~18 | ~2,000 | `tensornet/chemistry/` (7 files) |
+| Optics (Expanded) | ~15 | ~1,743 | `tensornet/optics/` (5 files) |
+| Electromagnetism (Expanded) | ~18 | ~2,297 | `tensornet/em/` (7 files) |
+| Statistical Mechanics (Expanded) | ~15 | ~2,967 | `tensornet/statmech/`, `tensornet/md/` |
+| Plasma Physics (Expanded) | ~18 | ~2,218 | `tensornet/plasma/` (7 files) |
+| Relativity | ~8 | ~756 | `tensornet/relativity/` (3 files) |
+| Multi-Physics & Coupling | ~20 | ~4,314 | `tensornet/{coupled,fsi,multiphase,...}/` |
+| Applied Physics (Expanded) | ~15 | ~4,473 | `tensornet/{acoustics,biomedical,biology,...}/` |
+| **Total** | **~826+** | **~227,000** | **724+ files (tensornet/) + 305+ other** |
 
 ---
 
@@ -2386,6 +2403,1078 @@ $$A^{(n+1)} = \text{CoarseGrain}(A^{(n)}) + R^{(n)}$$
 - Swarm coordination algorithms with consensus protocols
 
 ---
+### 36. Classical & Structural Mechanics
+
+**Source**: `tensornet/mechanics/` (~3,527 LOC across 6 files)
+
+#### 36.1 Lagrangian/Hamiltonian Mechanics
+
+**Source**: `tensornet/mechanics/symplectic.py`, `variational.py`, `noether.py` (~1,827 LOC)
+
+$$\frac{d}{dt}\frac{\partial L}{\partial\dot{q}_i} - \frac{\partial L}{\partial q_i} = 0, \quad L = T - V$$
+
+- Symplectic integrators: Störmer-Verlet (2nd), Ruth-4 (4th), Yoshida-6 (6th)
+- Action minimization: $S[q] = \int_{t_0}^{t_1} L(q, \dot{q}, t)\,dt$
+- Noether conservation verifier: continuous symmetry → conservation law
+- Hamiltonian flow: $\dot{q} = \partial H/\partial p$, $\dot{p} = -\partial H/\partial q$
+
+#### 36.2 Continuum Mechanics
+
+**Source**: `tensornet/mechanics/continuum.py` (~1,000 LOC)
+
+$$\mathbf{S} = \frac{\partial W}{\partial \mathbf{E}}, \quad W_{\text{NH}} = \frac{\mu}{2}(I_1 - 3) - \mu\ln J + \frac{\lambda}{2}(\ln J)^2$$
+
+- Neo-Hookean + Mooney-Rivlin hyperelastic models
+- Drucker-Prager plasticity: $f(\boldsymbol{\sigma}) = \alpha I_1 + \sqrt{J_2} - k \leq 0$
+- Cohesive-zone fracture: $T_n = \sigma_{\max}\exp(-\delta_n/\delta_c)$
+- Updated Lagrangian large-deformation framework
+
+#### 36.3 Structural Mechanics
+
+**Source**: `tensornet/mechanics/structural.py` (~700 LOC)
+
+$$EI\frac{d^4 w}{dx^4} = q(x) \quad\text{(Euler-Bernoulli beam)}$$
+
+- Timoshenko beam with shear correction: $GA\kappa(\phi - dw/dx)$
+- Mindlin-Reissner plate theory: thick plate with transverse shear
+- Eigenvalue buckling and modal analysis (Lanczos solver)
+- Composite CLT with Tsai-Wu failure criterion
+
+---
+
+### 37. Quantum Mechanics (Expanded)
+
+**Source**: `tensornet/quantum_mechanics/` (~2,134 LOC), `tensornet/qm/` (~646 LOC)
+
+#### 37.1 Time-Independent Schrödinger Equation
+
+**Source**: `tensornet/quantum_mechanics/stationary.py`
+
+$$\hat{H}\psi = E\psi, \quad \hat{H} = -\frac{\hbar^2}{2m}\nabla^2 + V(\mathbf{r})$$
+
+- DVR (discrete variable representation) solver
+- Shooting method for 1D potentials
+- Spectral solver for hydrogen, harmonic oscillator, particle-in-box
+- WKB tunneling: $T \approx \exp\!\left(-\frac{2}{\hbar}\int_{x_1}^{x_2}\sqrt{2m(V-E)}\,dx\right)$
+
+#### 37.2 Time-Dependent Schrödinger Equation
+
+**Source**: `tensornet/quantum_mechanics/propagator.py`
+
+$$i\hbar\frac{\partial\psi}{\partial t} = \hat{H}\psi$$
+
+- Split-operator FFT: $e^{-i\hat{H}\Delta t} \approx e^{-iV\Delta t/2}\,e^{-iT\Delta t}\,e^{-iV\Delta t/2}$
+- Crank-Nicolson (unconditionally stable)
+- Chebyshev polynomial propagator
+- Wavepacket tunneling dynamics with transmission/reflection coefficients
+
+#### 37.3 Path Integrals
+
+**Source**: `tensornet/quantum_mechanics/path_integrals.py`
+
+$$K(x_f, x_i; T) = \int \mathcal{D}[x]\,\exp\!\left(\frac{i}{\hbar}S[x]\right)$$
+
+- Ring-polymer MD (RPMD) for quantum thermal effects
+- Path-integral Monte Carlo (PIMC) for He-4 superfluidity
+- Instanton tunneling rate computation
+
+#### 37.4 Scattering Theory
+
+**Source**: `tensornet/qm/scattering.py`
+
+$$f(\theta) = \sum_{l=0}^{\infty}(2l+1)f_l\,P_l(\cos\theta), \quad f_l = \frac{e^{2i\delta_l} - 1}{2ik}$$
+
+- Partial-wave T-matrix and phase shift extraction
+- Born approximation for weak potentials
+- Breit-Wigner resonance: $\sigma \propto 1/[(E - E_0)^2 + \Gamma^2/4]$
+- R-matrix method for reactive scattering
+
+#### 37.5 Semiclassical & WKB Methods
+
+**Source**: `tensornet/qm/semiclassical_wkb.py`
+
+$$\psi(x) \approx \frac{A}{\sqrt{p(x)}}\exp\!\left(\pm\frac{i}{\hbar}\int p(x')\,dx'\right)$$
+
+- Eikonal solver for semiclassical propagation
+- Tully fewest-switches surface hopping (FSSH)
+- Herman-Kluk frozen Gaussian propagator
+- Maslov index tracking at classical turning points
+
+---
+
+### 38. Condensed Matter Physics (Expanded)
+
+**Source**: `tensornet/condensed_matter/` (~7,074 LOC across 18 files)
+
+#### 38.1 Phonon Dynamics
+
+**Source**: `tensornet/condensed_matter/phonons.py`
+
+$$\omega^2(\mathbf{q})\,\mathbf{e} = D(\mathbf{q})\,\mathbf{e}, \quad D_{\alpha\beta}(\mathbf{q}) = \frac{1}{\sqrt{M_\alpha M_\beta}}\sum_R \Phi_{\alpha\beta}(R)\,e^{i\mathbf{q}\cdot\mathbf{R}}$$
+
+- Full dynamical matrix from force constants
+- Anharmonic phonon-phonon scattering (3-phonon processes)
+- Phonon BTE for lattice thermal conductivity: $\kappa = \sum_\lambda C_\lambda v_\lambda^2 \tau_\lambda$
+
+#### 38.2 Strongly Correlated Systems
+
+**Source**: `tensornet/condensed_matter/strongly_correlated.py`
+
+$$G(\omega) = \frac{1}{\omega + \mu - \varepsilon_k - \Sigma(\omega)} \quad\text{(DMFT self-consistency)}$$
+
+- DMFT single-site with Hirsch-Fye impurity solver
+- t-J model MPO representation
+- Mott gap tracking via spectral function $A(\omega)$
+
+#### 38.3 Topological Phases
+
+**Source**: `tensornet/condensed_matter/topological_phases.py`
+
+$$A_s = \prod_{j\in\text{star}(s)} Z_j, \quad B_p = \prod_{j\in\partial p} X_j \quad\text{(Toric code)}$$
+
+- Kitaev honeycomb model with Majorana fermions
+- Chern number from Berry phase: $C = \frac{1}{2\pi}\oint_{\text{BZ}} \mathbf{F}\cdot d\mathbf{S}$
+- Topological entanglement entropy (TEE) extraction
+- Anyonic braiding statistics
+
+#### 38.4 Many-Body Localization
+
+**Source**: `tensornet/condensed_matter/mbl_disorder.py`
+
+$$H = J\sum_{\langle i,j\rangle}\mathbf{S}_i\cdot\mathbf{S}_j + \sum_i h_i S_i^z \quad\text{(random-field XXZ)}$$
+
+- Level statistics: Poisson (MBL) ↔ GOE (thermal) transition
+- Participation ratio and entanglement entropy $S \sim \log t$ (MBL) vs $S \sim t$ (thermal)
+- Mobility edge detection via energy-resolved diagnostics
+
+#### 38.5 Kondo & Impurity Physics
+
+**Source**: `tensornet/condensed_matter/kondo_impurity.py`
+
+$$H_{\text{AIM}} = \varepsilon_d n_d + U n_\uparrow n_\downarrow + \sum_k \varepsilon_k c_k^\dagger c_k + \sum_k V_k(c_k^\dagger d + \text{h.c.})$$
+
+- Numerical Renormalization Group (NRG) for Anderson impurity model
+- CT-QMC (continuous-time quantum Monte Carlo) solver
+- Kondo temperature extraction: $T_K \sim D\exp(-1/\rho_0 J)$
+
+#### 38.6 Open Quantum Systems
+
+**Source**: `tensornet/condensed_matter/open_quantum.py`
+
+$$\frac{d\rho}{dt} = -\frac{i}{\hbar}[H,\rho] + \sum_k \gamma_k\!\left(L_k\rho L_k^\dagger - \tfrac{1}{2}\{L_k^\dagger L_k,\rho\}\right)$$
+
+- Full Lindblad master equation (MPO density matrix representation)
+- Quantum trajectories / Monte Carlo wavefunction method
+- Redfield equation for weak system-bath coupling
+
+#### 38.7 Non-Equilibrium Quantum Dynamics
+
+**Source**: `tensornet/condensed_matter/nonequilibrium_qm.py`
+
+$$H_F = \frac{1}{T}\int_0^T H(t)\,dt \quad\text{(Floquet Hamiltonian)}$$
+
+- Floquet engineering: periodic driving → effective Hamiltonians
+- Prethermalization tracking and ETH diagnostics
+- Lieb-Robinson light cone extraction from OTOC
+
+#### 38.8 Bosonic Many-Body Systems
+
+**Source**: `tensornet/condensed_matter/bosonic.py`
+
+$$i\hbar\frac{\partial\Psi}{\partial t} = \left(-\frac{\hbar^2}{2m}\nabla^2 + V_{\text{ext}} + g|\Psi|^2\right)\Psi \quad\text{(Gross-Pitaevskii)}$$
+
+- BEC solver via imaginary-time propagation + real-time dynamics
+- Bogoliubov excitation spectrum: $E(k) = \sqrt{\varepsilon_k(\varepsilon_k + 2gn)}$
+- Tonks-Girardeau strongly-interacting 1D limit
+
+#### 38.9 Fermionic Systems
+
+**Source**: `tensornet/condensed_matter/fermionic.py`
+
+$$\Delta_k = -\sum_{k'} V_{kk'}\frac{\Delta_{k'}}{2E_{k'}} \quad\text{(BCS gap equation)}$$
+
+- BCS mean-field pairing with self-consistent gap
+- FFLO (Fulde-Ferrell-Larkin-Ovchinnikov) finite-momentum pairing
+- Bravyi-Kitaev transform for qubit-fermion mapping
+- Fermi-liquid Landau parameter extraction
+
+#### 38.10 Disordered Systems
+
+**Source**: `tensornet/condensed_matter/disordered.py`
+
+$$H = \sum_i \varepsilon_i c_i^\dagger c_i + t\sum_{\langle i,j\rangle} c_i^\dagger c_j \quad\text{(Anderson tight-binding)}$$
+
+- Kernel polynomial method (KPM) for spectral functions
+- Edwards-Anderson spin glass with Metropolis/parallel tempering
+- Participation ratio and multifractal dimension at Anderson transition
+
+#### 38.11 Nuclear Many-Body
+
+**Source**: `tensornet/condensed_matter/nuclear_many_body.py`
+
+$$(H - E)\mathbf{c} = 0 \quad\text{(Configuration interaction in Slater-det basis)}$$
+
+- Nuclear shell model CI up to sd-shell ($^{28}$Si)
+- Nuclear coupled-cluster singles+doubles (CCSD)
+- Richardson-Gaudin pairing model
+- Chiral EFT 2N+3N interactions
+
+#### 38.12 Ultracold Atoms
+
+**Source**: `tensornet/condensed_matter/ultracold_atoms.py`
+
+$$V(x) = V_0\sin^2(kx) \quad\text{(Optical lattice potential)}$$
+
+- BEC-BCS crossover via Feshbach resonance tuning
+- Quantum gas microscope observables (site-resolved measurements)
+- Synthetic gauge fields and topological band engineering
+
+#### 38.13 Defect Physics
+
+**Source**: `tensornet/condensed_matter/defects.py`
+
+$$E_f^{\text{vac}} = E_{\text{defect}} - (N-1)E_{\text{bulk}}/N$$
+
+- Point defect formation energy calculator
+- Peierls-Nabarro model for dislocation core structure
+- Grain boundary energy from coincidence site lattice (CSL)
+- NEB saddle-point pathway for defect migration
+
+#### 38.14 Electronic Band Structure
+
+**Source**: `tensornet/condensed_matter/band_structure.py`
+
+$$H_{\mathbf{k}}\,u_{n\mathbf{k}} = \varepsilon_{n\mathbf{k}}\,u_{n\mathbf{k}}$$
+
+- Bloch solver with periodic boundary conditions
+- Wannier90-class interpolation: $|w_n(\mathbf{R})\rangle = \frac{V}{(2\pi)^3}\int e^{-i\mathbf{k}\cdot\mathbf{R}}|\psi_{n\mathbf{k}}\rangle\,d^3k$
+- BoltzTraP-class transport: $\sigma_{\alpha\beta} = e^2\int \tau v_\alpha v_\beta (-\partial f_0/\partial\varepsilon)\,g(\varepsilon)\,d\varepsilon$
+- Effective mass tensor extraction at band extrema
+
+#### 38.15 Classical Magnetism
+
+**Source**: `tensornet/condensed_matter/classical_magnetism.py`
+
+$$\frac{\partial\mathbf{M}}{\partial t} = -\gamma\,\mathbf{M}\times\mathbf{H}_{\text{eff}} + \frac{\alpha}{M_s}\,\mathbf{M}\times\frac{\partial\mathbf{M}}{\partial t} \quad\text{(LLG equation)}$$
+
+- LLG micromagnetics with exchange, anisotropy, demagnetization
+- Atomistic spin dynamics: $\mathbf{H}_{\text{eff}} = -\partial\mathcal{H}/\partial\mathbf{S}_i$
+- Skyrmion number: $Q = \frac{1}{4\pi}\int \mathbf{n}\cdot(\partial_x\mathbf{n}\times\partial_y\mathbf{n})\,dA$
+- Domain wall velocity and hysteresis loop computation
+
+#### 38.16 Surfaces & Interfaces
+
+**Source**: `tensornet/condensed_matter/surfaces_interfaces.py`
+
+$$\theta = \frac{Kp}{1 + Kp} \quad\text{(Langmuir adsorption isotherm)}$$
+
+- Work function: $\Phi = V_{\text{vac}} - E_F$
+- Surface energy: $\gamma_s = (E_{\text{slab}} - nE_{\text{bulk}})/(2A)$
+- Tamm/Shockley surface states from semi-infinite chain model
+
+#### 38.17 Ferroelectrics & Piezoelectrics
+
+**Source**: `tensornet/condensed_matter/ferroelectrics.py`
+
+$$F(P) = \alpha P^2 + \beta P^4 + \gamma P^6 \quad\text{(Landau-Devonshire free energy)}$$
+
+- Berry phase polarization: $P_s = \frac{e}{V}\sum_n \int \langle u_{n\mathbf{k}}|i\nabla_\mathbf{k}|u_{n\mathbf{k}}\rangle\,d^3k$
+- Piezoelectric tensor $d_{ij}$ computation
+- Ferroelectric switching kinetics and domain wall structure
+
+---
+
+### 39. Electronic Structure
+
+**Source**: `tensornet/electronic_structure/` (~2,351 LOC across 8 files)
+
+#### 39.1 Density Functional Theory (DFT)
+
+**Source**: `tensornet/electronic_structure/dft.py`
+
+$$\left[-\frac{\hbar^2}{2m}\nabla^2 + V_{\text{eff}}(\mathbf{r})\right]\psi_i(\mathbf{r}) = \varepsilon_i\psi_i(\mathbf{r})$$
+
+- Kohn-Sham SCF on real-space QTT grid
+- xc functionals: LDA ($\varepsilon_{xc}^{\text{LDA}}[\rho]$), PBE ($\varepsilon_{xc}^{\text{GGA}}[\rho,\nabla\rho]$)
+- Norm-conserving pseudopotentials (Troullier-Martins)
+- SCF convergence: Anderson/Pulay density mixing
+
+#### 39.2 Beyond-DFT Methods
+
+**Source**: `tensornet/electronic_structure/beyond_dft.py`
+
+$$E_{\text{corr}}^{(2)} = -\sum_{ijab}\frac{|\langle ij\|ab\rangle|^2}{\varepsilon_a + \varepsilon_b - \varepsilon_i - \varepsilon_j} \quad\text{(MP2)}$$
+
+- Hartree-Fock (restricted + unrestricted)
+- MP2 perturbation theory
+- CCSD: $T = T_1 + T_2$, with amplitude equations
+- CASSCF active space selection
+
+#### 39.3 Semi-Empirical & Tight Binding
+
+**Source**: `tensornet/electronic_structure/tight_binding.py`
+
+$$H_{\mu\nu} = \langle\mu|H_0 + V_{\text{rep}}|\nu\rangle \quad\text{(Slater-Koster integrals)}$$
+
+- DFTB (Density Functional Tight Binding) with Slater-Koster parametrization
+- Extended Hückel theory
+- SCC-DFTB charge self-consistency; TB+U for correlated materials
+
+#### 39.4 Excited States
+
+**Source**: `tensornet/electronic_structure/excited_states.py`
+
+$$\begin{pmatrix} A & B \\ B^* & A^* \end{pmatrix}\begin{pmatrix} X \\ Y \end{pmatrix} = \omega\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}\begin{pmatrix} X \\ Y \end{pmatrix} \quad\text{(Casida TDDFT)}$$
+
+- Linear-response TDDFT and real-time TDDFT
+- GW approximation: $\Sigma = iGW$
+- BSE (Bethe-Salpeter equation) for excitonic effects
+- Optical absorption spectrum computation
+
+#### 39.5 Response Properties
+
+**Source**: `tensornet/electronic_structure/response.py`
+
+$$\chi(\mathbf{q},\omega) = \frac{\chi_0(\mathbf{q},\omega)}{1 - v_c(\mathbf{q})\chi_0(\mathbf{q},\omega)} \quad\text{(RPA dielectric function)}$$
+
+- DFPT (density-functional perturbation theory) for phonons
+- Static/dynamic polarizability
+- NMR GIAO shielding tensors; IR dipole derivatives; Raman tensors
+
+#### 39.6 Relativistic Electronic Structure
+
+**Source**: `tensornet/electronic_structure/relativistic.py`
+
+$$H_{\text{ZORA}} = V + \mathbf{p}\cdot\frac{c^2}{2c^2 - V}\mathbf{p}$$
+
+- Scalar relativistic corrections (ZORA)
+- Spin-orbit coupling: $H_{\text{SOC}} = \xi\,\mathbf{L}\cdot\mathbf{S}$
+- Douglas-Kroll-Hess 2nd-order transformation
+
+#### 39.7 Quantum Embedding
+
+**Source**: `tensornet/electronic_structure/embedding.py`
+
+$$E_{\text{tot}} = E_{\text{QM}} + E_{\text{MM}} + E_{\text{QM/MM}}$$
+
+- QM/MM coupling framework (mechanical + electrostatic embedding)
+- DFT+DMFT interface for correlated materials
+- Projection-based embedding; ONIOM extrapolation
+
+---
+
+### 40. Nuclear & Particle Physics
+
+**Source**: `tensornet/nuclear/` (~935 LOC), `tensornet/particle/` (~327 LOC)
+
+#### 40.1 Nuclear Structure
+
+**Source**: `tensornet/nuclear/structure.py`
+
+$$E[\rho] = \int\mathcal{H}(\rho,\tau,\mathbf{J})\,d^3r \quad\text{(Skyrme nuclear DFT)}$$
+
+- m-scheme shell model CI with NN interactions
+- Collective rotor model: $E = \hbar^2 J(J+1)/(2\mathcal{I})$
+- Skyrme energy density functional for nuclear ground states
+
+#### 40.2 Nuclear Reactions
+
+**Source**: `tensornet/nuclear/reactions.py`
+
+$$\sigma_{a\to b} = \pi\bar\lambda^2\sum_J (2J+1)\frac{T_a^J\,T_b^J}{\sum_c T_c^J} \quad\text{(Hauser-Feshbach)}$$
+
+- Optical model with Woods-Saxon potential: $U(r) = V_{\text{real}}(r) + iW(r)$
+- R-matrix framework for compound nucleus reactions
+- Cross section calculations: elastic, inelastic, and compound
+
+#### 40.3 Nuclear Astrophysics
+
+**Source**: `tensornet/nuclear/astrophysics.py`
+
+$$\frac{dY_i}{dt} = \sum_j \lambda_j Y_j + \sum_{j,k}\langle jk\rangle Y_j Y_k$$
+
+- r-process nucleosynthesis network
+- TOV equation with nuclear EOS for neutron star structure
+- Nuclear beta-decay rates and capture cross sections
+
+#### 40.4 Beyond the Standard Model
+
+**Source**: `tensornet/particle/beyond_sm.py`
+
+$$\Omega h^2 \approx \frac{3\times10^{-27}\,\text{cm}^3\text{s}^{-1}}{\langle\sigma v\rangle} \quad\text{(WIMP relic abundance)}$$
+
+- Neutrino oscillation: $P(\nu_\alpha\to\nu_\beta) = |\sum_i U_{\alpha i}^* U_{\beta i}\,e^{-im_i^2 L/(2E)}|^2$
+- Leptogenesis with Sakharov conditions
+- Dark matter freeze-out computation
+
+---
+
+### 41. Astrophysics
+
+**Source**: `tensornet/astro/` (~2,246 LOC across 7 files)
+
+#### 41.1 Stellar Structure & Evolution
+
+**Source**: `tensornet/astro/stellar_structure.py`
+
+$$\frac{dP}{dr} = -\frac{G\rho m}{r^2}, \quad \frac{dL}{dr} = 4\pi r^2\rho\varepsilon_{\text{nuc}}$$
+
+- Lane-Emden polytrope with nuclear network (pp-chain, CNO, triple-α)
+- Opacity tables and mixing-length convection
+- Hertzsprung-Russell diagram evolution tracks
+
+#### 41.2 Compact Objects
+
+**Source**: `tensornet/astro/compact_objects.py`
+
+$$\frac{dp}{dr} = -\frac{(p + \rho c^2)(m + 4\pi r^3 p/c^2)}{r(r - 2Gm/c^2)} \quad\text{(TOV equation)}$$
+
+- Kerr metric + ISCO calculation
+- Shakura-Sunyaev thin disk accretion: $\dot{M} = L/(η c^2)$, $η \approx 0.057$–$0.42$
+- Neutron star mass-radius relation from nuclear EOS
+
+#### 41.3 Gravitational Waves
+
+**Source**: `tensornet/astro/gravitational_waves.py`
+
+$$h_{+,\times}(t) \quad\text{(EOB inspiral} + \text{BSSN merger} + \text{QNM ringdown)}$$
+
+- Effective-one-body (EOB) inspiral waveforms
+- BSSN evolution: $\partial_t\tilde\gamma_{ij}$, $\partial_t\tilde A_{ij}$, $\partial_t K$
+- Quasi-normal mode ringdown: $\omega_{\text{QNM}} = \omega_R + i\omega_I$
+- Matched filtering and SNR computation
+
+#### 41.4 Cosmological Simulations
+
+**Source**: `tensornet/astro/cosmological_sims.py`
+
+$$\mathbf{a}_i = -G\sum_j m_j\frac{\mathbf{r}_i - \mathbf{r}_j}{|\mathbf{r}_i - \mathbf{r}_j|^3} + \mathbf{a}_{\text{PM}}$$
+
+- Tree-PM N-body with Barnes-Hut tree walk (θ = 0.5)
+- Gadget-class SPH for baryonic physics
+- Halo finder: FOF ($b = 0.2$) + spherical overdensity
+- Merger tree construction for structure formation history
+
+#### 41.5 CMB & Early Universe
+
+**Source**: `tensornet/astro/cmb_early_universe.py`
+
+$$\dot{\Theta}_l + \frac{k}{2l+1}\bigl[(l+1)\Theta_{l+1} - l\Theta_{l-1}\bigr] = -\dot\tau[\Theta_l - \delta_{l0}\Theta_0]$$
+
+- Boltzmann hierarchy for photon, CDM, baryon perturbations
+- Slow-roll inflation: $\varepsilon = -\dot{H}/H^2$, $\eta = \dot\varepsilon/(\varepsilon H)$
+- Recombination (Peebles 3-level atom)
+- CMB angular power spectrum $C_l^{TT}$ computation
+
+#### 41.6 Radiative Transfer
+
+**Source**: `tensornet/astro/radiative_transfer.py`
+
+$$\frac{dI}{ds} = -\kappa I + j$$
+
+- S$_N$ discrete ordinates method
+- Eddington approximation: $F = -c/(3\kappa)\nabla E$
+- Monte Carlo radiative transfer for dusty media
+- Frequency-dependent (multigroup) radiation transport
+
+---
+
+### 42. Geophysics
+
+**Source**: `tensornet/geophysics/` (~1,984 LOC across 7 files)
+
+#### 42.1 Seismology
+
+**Source**: `tensornet/geophysics/seismology.py`
+
+$$\rho\ddot{\mathbf{u}} = \nabla\cdot\boldsymbol{\sigma} + \mathbf{f}$$
+
+- 3D elastic wave propagation on QTT grid
+- P-wave: $c_p = \sqrt{(\lambda + 2\mu)/\rho}$; S-wave: $c_s = \sqrt{\mu/\rho}$
+- Full-waveform inversion (FWI) via adjoint-state gradient
+- Seismogram synthesis and travel-time computation
+
+#### 42.2 Mantle Convection
+
+**Source**: `tensornet/geophysics/mantle_convection.py`
+
+$$\nabla\cdot\boldsymbol{\sigma} + \text{Ra}\,T\hat{z} = 0, \quad \frac{\partial T}{\partial t} + \mathbf{u}\cdot\nabla T = \nabla^2 T$$
+
+- Boussinesq Stokes solver with temperature-dependent viscosity
+- Rayleigh number studies ($\text{Ra} = 10^6$–$10^8$)
+- Slab subduction and plume dynamics
+
+#### 42.3 Geodynamo
+
+**Source**: `tensornet/geophysics/geodynamo.py`
+
+$$\frac{\partial\mathbf{u}}{\partial t} + 2\boldsymbol{\Omega}\times\mathbf{u} = -\nabla p + \text{Ra}\,T\hat{r} + \frac{1}{\mu_0}(\nabla\times\mathbf{B})\times\mathbf{B} + \nu\nabla^2\mathbf{u}$$
+
+- Rotating MHD in spherical shell geometry
+- Magnetic dipole/quadrupole ratio tracking
+- Polarity reversal frequency analysis
+
+#### 42.4 Glaciology
+
+**Source**: `tensornet/geophysics/glaciology.py`
+
+$$\frac{\partial H}{\partial t} = -\nabla\cdot(\bar{\mathbf{u}}\,H) + a_s, \quad \dot\varepsilon = A\tau^n \quad\text{(Glen's flow law, }n\approx 3\text{)}$$
+
+- Shallow ice approximation for ice sheet dynamics
+- Grounding line flux parameterization
+- Calving law for iceberg formation
+
+#### 42.5 Atmospheric Physics
+
+**Source**: `tensornet/geophysics/atmosphere.py`
+
+- Chapman ozone photochemistry cycle
+- Cloud microphysics (Kessler warm-rain scheme)
+- Radiative-convective equilibrium model for climate sensitivity
+
+#### 42.6 Oceanography
+
+**Source**: `tensornet/geophysics/oceanography.py`
+
+$$\frac{\partial u}{\partial t} - fv = -\frac{1}{\rho}\frac{\partial p}{\partial x} + A_H\nabla^2 u \quad\text{(primitive equations on β-plane)}$$
+
+- Thermohaline circulation box model (Stommel 2-box)
+- Internal wave dispersion: $\omega^2 = N^2 k_h^2/(k_h^2 + m^2)$
+- Tidal constituent decomposition (M2, S2, K1, O1)
+
+---
+
+### 43. Materials Science
+
+**Source**: `tensornet/materials/` (~2,046 LOC across 7 files)
+
+#### 43.1 Mechanical Properties
+
+**Source**: `tensornet/materials/mechanical_properties.py`
+
+$$C_{ij} \quad\text{(full elastic tensor)}, \quad \sigma_{\text{Frenkel}} = \frac{G}{2\pi} \quad\text{(ideal shear strength)}$$
+
+- Full $C_{ij}$ elastic tensor extraction
+- Griffith fracture toughness: $K_{Ic} = \sqrt{2E\gamma_s}$
+- Paris fatigue law: $da/dN = C(\Delta K)^m$
+- Power-law creep: $\dot\varepsilon = A\sigma^n\exp(-Q/RT)$
+
+#### 43.2 First-Principles Materials Design
+
+**Source**: `tensornet/materials/first_principles_design.py`
+
+$$\Delta H_f(A_x B_y) \leq 0 \;\wedge\; \text{on convex hull} \quad\text{(thermodynamic stability)}$$
+
+- High-throughput screening workflow (stability + phonon + elastic checks)
+- Convex hull construction for phase stability
+- Pareto-optimal property screening (multi-objective)
+
+#### 43.3 Microstructure Evolution
+
+**Source**: `tensornet/materials/microstructure.py`
+
+$$\Delta E = -J\sum_{\langle ij\rangle}\delta_{s_i s_j} \quad\text{(Potts model grain growth)}$$
+
+- Q-state Potts Monte Carlo for grain evolution
+- KWN (Kampmann-Wagner numerical) precipitate model
+- LSW coarsening: $\bar{r}^3 \sim t$
+
+#### 43.4 Radiation Damage
+
+**Source**: `tensornet/materials/radiation_damage.py`
+
+$$T_{\max} = \frac{4m_1 m_2}{(m_1+m_2)^2}\,E \quad\text{(max energy transfer)}$$
+
+- Binary collision approximation (BCA) cascade simulation
+- Kinchin-Pease NRT dpa (displacements per atom)
+- Void nucleation KMC: $J \propto \exp(-\Delta G_v^*/k_BT)$
+
+#### 43.5 Polymers & Soft Matter
+
+**Source**: `tensornet/materials/polymers_soft_matter.py`
+
+$$\frac{\Delta G_{\text{mix}}}{k_BT} = n_1\ln\phi_1 + n_2\ln\phi_2 + \chi\,n_1\phi_2 \quad\text{(Flory-Huggins)}$$
+
+- SCFT (self-consistent field theory) for block copolymers
+- DPD (dissipative particle dynamics) mesoscale simulation
+- Block copolymer morphology: LAM, HEX, BCC, GYR phase diagram
+
+#### 43.6 Ceramics & High-Temperature Materials
+
+**Source**: `tensornet/materials/ceramics.py`
+
+- Viscous + solid-state sintering model
+- UHTC oxidation kinetics (parabolic rate law)
+- Thermal barrier coating multilayer heat flux analysis
+
+---
+
+### 44. Computational Chemistry
+
+**Source**: `tensornet/chemistry/` (~2,000 LOC across 7 files)
+
+#### 44.1 Potential Energy Surface Construction
+
+**Source**: `tensornet/chemistry/pes.py`
+
+$$E(\mathbf{R}) = E_{\text{BO}}(\mathbf{R}) \quad\text{(Born-Oppenheimer PES)}$$
+
+- NEB (nudged elastic band) saddle-point search
+- IRC (intrinsic reaction coordinate) follower
+- 2D PES contour plotting for reaction visualization
+
+#### 44.2 Reaction Rate Theory
+
+**Source**: `tensornet/chemistry/reaction_rate.py`
+
+$$k_{\text{TST}} = \frac{k_BT}{h}\frac{Q^\ddagger}{Q_R}\exp\!\left(-\frac{E_a}{k_BT}\right)\kappa(T) \quad\text{(harmonic TST + Wigner tunneling)}$$
+
+- Variational TST (minimized dividing surface)
+- RRKM unimolecular decomposition
+- Kramers diffusive barrier crossing rate
+
+#### 44.3 Quantum Reactive Dynamics
+
+**Source**: `tensornet/chemistry/quantum_reactive.py`
+
+$$\Psi = \sum_J A_J \prod_\kappa \varphi_\kappa^{(J)} \quad\text{(MCTDH multiconfigurational)}$$
+
+- H + H₂ reactive scattering benchmark
+- Cumulative reaction probability $N(E) = \text{tr}[\mathbf{T}^\dagger\mathbf{T}]$
+- Time-dependent wavepacket propagation on PES
+
+#### 44.4 Nonadiabatic Dynamics
+
+**Source**: `tensornet/chemistry/nonadiabatic.py`
+
+$$g_{i\to j} = \max\!\left(0,\,-\frac{2\,\text{Re}(a_j^* a_i\,d_{ji}\cdot\dot{\mathbf{R}})\,\Delta t}{|a_i|^2}\right) \quad\text{(FSSH hopping)}$$
+
+- Conical intersection detection and characterization
+- Berry phase accumulation around CI
+- Ethylene photoisomerization benchmark
+
+#### 44.5 Photochemistry
+
+**Source**: `tensornet/chemistry/photochemistry.py`
+
+- Excited-state relaxation pathways: IC and ISC rates
+- Photodissociation on model PES with branching ratios
+- Fluorescence lifetime and quantum yield calculator
+
+#### 44.6 Spectroscopy Simulation
+
+**Source**: `tensornet/chemistry/spectroscopy.py`
+
+$$\alpha(\omega) \propto \text{Im}[\varepsilon(\omega)], \quad I_{\text{IR}} \propto \left|\frac{\partial\mu}{\partial Q}\right|^2, \quad I_{\text{Raman}} \propto \left|\frac{\partial\alpha}{\partial Q}\right|^2$$
+
+- IR spectrum from Hessian and dipole derivatives
+- Raman spectrum from polarizability derivatives
+- UV-Vis from TDDFT transition dipole moments
+- NMR GIAO chemical shielding tensors
+
+---
+
+### 45. Optics (Expanded)
+
+**Source**: `tensornet/optics/` (~1,743 LOC across 5 files)
+
+#### 45.1 Physical Optics
+
+**Source**: `tensornet/optics/physical_optics.py`
+
+$$U(P) = \frac{1}{i\lambda}\iint U_0\,\frac{e^{ikr}}{r}\,\cos\theta\;dS \quad\text{(Huygens-Fresnel)}$$
+
+- Fresnel/Fraunhofer diffraction via QTT
+- Jones and Mueller polarization calculus
+- Angular spectrum propagation: $U(x,y,z) = \mathcal{F}^{-1}\{\tilde{U}_0\,e^{ik_z z}\}$
+
+#### 45.2 Quantum Optics
+
+**Source**: `tensornet/optics/quantum_optics.py`
+
+$$H = \hbar\omega_c\,a^\dagger a + \frac{\hbar\omega_a}{2}\sigma_z + \hbar g(a^\dagger\sigma_- + a\sigma_+) \quad\text{(Jaynes-Cummings)}$$
+
+- Cavity QED: vacuum Rabi splitting, photon blockade
+- Squeezed states: $|\alpha,\xi\rangle = D(\alpha)S(\xi)|0\rangle$
+- Photon statistics: $g^{(2)}(\tau)$ second-order correlation
+
+#### 45.3 Laser Physics
+
+**Source**: `tensornet/optics/laser_physics.py`
+
+$$\frac{dN}{dt} = R_p - \frac{N}{\tau} - g(N)S, \quad \frac{dS}{dt} = [\Gamma g(N) - 1/\tau_p]S + \beta\frac{N}{\tau}$$
+
+- Rate equations with gain saturation
+- Mode-locking: sech² pulse formation
+- Beam propagation method (BPM) for waveguides
+
+#### 45.4 Ultrafast Optics
+
+**Source**: `tensornet/optics/ultrafast_optics.py`
+
+$$i\frac{\partial A}{\partial z} + \frac{\beta_2}{2}\frac{\partial^2 A}{\partial t^2} + \gamma|A|^2 A = 0 \quad\text{(NLSE)}$$
+
+- Split-step Fourier method for pulse propagation
+- SPM, GVD, soliton formation and interaction
+- High-harmonic generation (HHG): cutoff $E_{\max} = I_p + 3.17\,U_p$
+- Kerr lens mode-locking dynamics
+
+---
+
+### 46. Electromagnetism (Expanded)
+
+**Source**: `tensornet/em/` (~2,297 LOC across 7 files)
+
+#### 46.1 Electrostatics
+
+**Source**: `tensornet/em/electrostatics.py`
+
+$$\nabla^2\phi = -\rho/\varepsilon_0 \quad\text{(Poisson equation)}$$
+
+- Poisson-Boltzmann solver for electrolyte screening
+- Capacitance extraction for conductor geometries
+- Multipole expansion: $\phi(\mathbf{r}) = \frac{1}{4\pi\varepsilon_0}\sum_{l,m}\frac{q_{lm}}{r^{l+1}}Y_{lm}(\hat{r})$
+
+#### 46.2 Magnetostatics
+
+**Source**: `tensornet/em/magnetostatics.py`
+
+$$\mathbf{B}(\mathbf{r}) = \frac{\mu_0}{4\pi}\int \frac{\mathbf{J}(\mathbf{r}')\times\hat{r}'}{r'^2}\,dV'$$
+
+- Biot-Savart integral for current distributions
+- Vector potential formulation: $\nabla\times\mathbf{A} = \mathbf{B}$
+- Inductance matrix computation
+- Permanent magnet BH curve modeling
+
+#### 46.3 Frequency-Domain EM
+
+**Source**: `tensornet/em/frequency_domain.py`
+
+$$\nabla^2\mathbf{E} + k^2\mathbf{E} = 0 \quad\text{(Helmholtz equation)}$$
+
+- Rectangular/circular waveguide TE/TM mode solver
+- Cavity Q-factor: $Q = \omega_0 U/(P_{\text{loss}})$
+- Mie scattering: analytic + numerical comparison
+
+#### 46.4 EM Wave Propagation
+
+**Source**: `tensornet/em/wave_propagation.py`
+
+$$|\nabla S|^2 = n^2 \quad\text{(eikonal equation)}$$
+
+- Ray tracing through inhomogeneous media
+- Parabolic equation: $2ik\partial_z u + \nabla_\perp^2 u = 0$
+- Fiber LP mode analysis via BPM
+- Ionospheric refraction modeling
+
+#### 46.5 Computational Photonics
+
+**Source**: `tensornet/em/computational_photonics.py`
+
+$$\nabla\times[\varepsilon^{-1}\nabla\times\mathbf{H}] = (\omega/c)^2\mathbf{H}$$
+
+- Plane-wave expansion (PWE) photonic band structure
+- RCWA (rigorous coupled wave analysis) for gratings
+- Drude metal: $\varepsilon(\omega) = 1 - \omega_p^2/(\omega^2 + i\gamma\omega)$
+- Metamaterial effective medium parameters (negative index)
+
+#### 46.6 Antenna & Microwave Engineering
+
+**Source**: `tensornet/em/antenna_microwave.py`
+
+$$Z_{\text{in}} = Z_0\frac{Z_L + jZ_0\tan(\beta l)}{Z_0 + jZ_L\tan(\beta l)} \quad\text{(transmission line)}$$
+
+- Method of Moments (MoM) integral equation solver
+- Array factor: $AF = \sum_n w_n\,e^{j\mathbf{k}\cdot\mathbf{r}_n}$
+- Patch antenna directivity and radiation pattern
+- Phased array scan angle optimization
+
+---
+
+### 47. Statistical Mechanics (Expanded)
+
+**Source**: `tensornet/statmech/` (~2,000 LOC), `tensornet/md/` (~967 LOC), `tensornet/heat_transfer/` (~978 LOC)
+
+#### 47.1 Equilibrium Statistical Mechanics
+
+**Source**: `tensornet/statmech/equilibrium.py`
+
+$$Z = \sum_{\{s\}} e^{-\beta H(s)}, \quad \langle A\rangle = \frac{1}{Z}\sum_{\{s\}} A(s)\,e^{-\beta H(s)}$$
+
+- Canonical partition function engine
+- Metropolis + Wolff cluster Monte Carlo for Ising/Potts
+- Wang-Landau flat-histogram algorithm: $g(E) \to$ DOS
+- Landau mean-field theory and phase transitions
+
+#### 47.2 Non-Equilibrium Statistical Mechanics
+
+**Source**: `tensornet/statmech/non_equilibrium.py`
+
+$$\langle e^{-\beta W}\rangle = e^{-\beta\Delta F} \quad\text{(Jarzynski equality)}$$
+
+- Crooks fluctuation theorem verification
+- Kubo linear response: $\chi(\omega) = \int_0^\infty C(t)\,e^{i\omega t}\,dt$
+- Kinetic Monte Carlo (KMC) with BKL algorithm
+- Gillespie stochastic simulation algorithm (SSA)
+
+#### 47.3 Molecular Dynamics
+
+**Source**: `tensornet/md/engine.py`
+
+$$\mathbf{r}(t+\Delta t) = 2\mathbf{r}(t) - \mathbf{r}(t-\Delta t) + \frac{\mathbf{F}(t)}{m}\Delta t^2 \quad\text{(Velocity Verlet)}$$
+
+- Nosé-Hoover thermostat + Parrinello-Rahman barostat
+- AMBER/OPLS-AA force field parameters
+- PME (particle mesh Ewald) for long-range electrostatics
+- REMD (replica exchange MD) enhanced sampling
+
+#### 47.4 Advanced Monte Carlo Methods
+
+**Source**: `tensornet/statmech/monte_carlo.py`
+
+$$E[\Psi_T] = \frac{\langle\Psi_T|H|\Psi_T\rangle}{\langle\Psi_T|\Psi_T\rangle} \quad\text{(VMC variational principle)}$$
+
+- Variational Monte Carlo (VMC) with Jastrow-Slater trial wavefunctions
+- Diffusion Monte Carlo (DMC): $\phi(\mathbf{R},\tau) = e^{-\tau(H-E_T)}\phi$
+- Auxiliary-field QMC (AFQMC) for sign problem mitigation
+- Metropolis engine with parallel tempering
+
+#### 47.5 Heat Transfer & Radiation
+
+**Source**: `tensornet/heat_transfer/radiation.py`
+
+$$q = \varepsilon\sigma T^4 \quad\text{(Stefan-Boltzmann)}, \quad F_{ij} = \frac{1}{A_i}\int_{A_i}\int_{A_j}\frac{\cos\theta_i\cos\theta_j}{\pi r^2}\,dA_j\,dA_i$$
+
+- View factor computation via MC ray tracing
+- Radiosity method for enclosure radiation
+- Participating media RTE (radiative transfer equation)
+- Stefan solidification problem; conjugate CHT
+
+---
+
+### 48. Plasma Physics (Expanded)
+
+**Source**: `tensornet/plasma/` (~2,218 LOC across 7 files)
+
+#### 48.1 Extended MHD
+
+**Source**: `tensornet/plasma/extended_mhd.py`
+
+$$\mathbf{E} + \mathbf{v}\times\mathbf{B} = \eta\mathbf{J} + \frac{1}{ne}(\mathbf{J}\times\mathbf{B}) \quad\text{(Hall MHD)}$$
+
+- Two-fluid plasma model with ion and electron dynamics
+- Gyroviscosity corrections
+- Implicit time integration for stiff dispersive terms
+
+#### 48.2 Gyrokinetics
+
+**Source**: `tensornet/plasma/gyrokinetics.py`
+
+$$\frac{\partial f}{\partial t} + \dot{\mathbf{R}}\cdot\nabla f + \dot{v}_\|\frac{\partial f}{\partial v_\|} = C[f]$$
+
+- 5D gyrokinetic Vlasov on QTT-compressed phase space
+- ITG/TEM/ETG instability growth rates
+- Tokamak turbulent transport coefficients
+
+#### 48.3 Magnetic Reconnection
+
+**Source**: `tensornet/plasma/magnetic_reconnection.py`
+
+$$v_{\text{in}}/v_A = S^{-1/2} \quad\text{(Sweet-Parker)}, \quad N_{\text{plasmoid}} \sim S^{3/8}$$
+
+- Sweet-Parker + Petschek reconnection models
+- Collisionless kinetic reconnection
+- Plasmoid instability and X-line geometry
+
+#### 48.4 Laser-Plasma Interaction
+
+**Source**: `tensornet/plasma/laser_plasma.py`
+
+- Stimulated Raman scattering (SRS) growth rate
+- Stimulated Brillouin scattering (SBS) and parametric instabilities
+- Relativistic self-focusing: $P > P_{\text{cr}} = 17(\omega/\omega_p)^2$ GW
+
+#### 48.5 Space & Astrophysical Plasma
+
+**Source**: `tensornet/plasma/space_plasma.py`
+
+$$\frac{\partial f}{\partial t} + v\mu\frac{\partial f}{\partial z} = \frac{\partial}{\partial\mu}\bigl(D_{\mu\mu}\frac{\partial f}{\partial\mu}\bigr) \quad\text{(Parker transport)}$$
+
+- Cosmic ray transport and diffusion
+- Astrophysical jet launching (Blandford-Znajek mechanism)
+- Planetary dynamo seed field model
+
+#### 48.6 Dusty Plasmas
+
+**Source**: `tensornet/plasma/dusty_plasmas.py`
+
+$$V(r) = \frac{Q^2}{4\pi\varepsilon_0 r}\,e^{-r/\lambda_D} \quad\text{(Yukawa/Debye-Hückel)}$$
+
+- Dust-acoustic wave dispersion: $\omega^2 = \omega_{pd}^2 k^2/(k^2 + \lambda_D^{-2})$
+- Dust crystal lattice formation and melting transition
+- Grain charging: OML (orbital motion limited) theory
+
+---
+
+### 49. General & Special Relativity
+
+**Source**: `tensornet/relativity/` (~756 LOC across 3 files)
+
+#### 49.1 Relativistic Mechanics
+
+**Source**: `tensornet/relativity/relativistic_mechanics.py`
+
+$$p^\mu = m\frac{dx^\mu}{d\tau} = (\gamma mc, \gamma m\mathbf{v}) \quad\text{(4-momentum)}$$
+
+- Full Lorentz dynamics with 4-vector formalism
+- Thomas precession for spinning particles
+- Relativistic rocket equation: $v/c = \tanh(a\tau/c)$
+- Velocity addition: $w = (u + v)/(1 + uv/c^2)$
+
+#### 49.2 Numerical General Relativity
+
+**Source**: `tensornet/relativity/numerical_gr.py`
+
+$$\partial_t\tilde\gamma_{ij} = -2\alpha\tilde A_{ij} + \beta^k\partial_k\tilde\gamma_{ij} + \cdots \quad\text{(BSSN)}$$
+
+- BSSN formalism with constraint propagation monitoring
+- Gauge conditions: 1+log slicing, Gamma-driver shift
+- Puncture initial data for binary black hole simulations
+- Constraint violations: Hamiltonian and momentum constraints
+
+---
+
+### 50. Multi-Physics Coupling & Cross-Cutting Methods
+
+**Source**: `tensornet/{coupled,fsi,multiphase,porous_media,free_surface,multiscale,membrane_bio,robotics_physics,ml_physics,mesh_amr}/` (~4,314 LOC)
+
+#### 50.1 Fluid-Structure Interaction
+
+**Source**: `tensornet/fsi/` (~485 LOC)
+
+- Partitioned coupling: fluid traction → solid load → mesh update (ALE)
+- Aeroelastic flutter analysis and vortex-induced vibration
+- Hemodynamic FSI for arterial wall compliance
+
+#### 50.2 Thermo-Mechanical Coupling
+
+**Source**: `tensornet/coupled/thermo_mechanical.py`
+
+$$\boldsymbol{\sigma} = \mathbf{C}(\boldsymbol{\varepsilon} - \alpha\Delta T\,\mathbf{I}) \quad\text{(thermal stress)}$$
+
+- Thermal buckling eigenvalue analysis
+- Casting solidification stress and welding residual stress
+
+#### 50.3 Electro-Mechanical Coupling
+
+**Source**: `tensornet/coupled/electro_mechanical.py`
+
+$$\boldsymbol{\sigma} = \mathbf{C}\boldsymbol{\varepsilon} - \mathbf{e}^T\mathbf{E}, \quad \mathbf{D} = \mathbf{e}\boldsymbol{\varepsilon} + \boldsymbol{\kappa}\mathbf{E} \quad\text{(piezoelectric)}$$
+
+- MEMS cantilever pull-in voltage
+- Electrostatic actuator modeling
+
+#### 50.4 Coupled MHD
+
+**Source**: `tensornet/coupled/coupled_mhd.py`
+
+- Hartmann liquid metal flow with Lorentz braking
+- Crystal growth in magnetic field
+- MHD pump and electromagnetic braking models
+
+#### 50.5 Multiphase Flow
+
+**Source**: `tensornet/multiphase/multiphase_flow.py`
+
+$$\frac{\partial\phi}{\partial t} + \mathbf{u}\cdot\nabla\phi = M\nabla^2(\phi^3 - \phi - \varepsilon^2\nabla^2\phi) \quad\text{(Cahn-Hilliard)}$$
+
+- Phase-field + Navier-Stokes coupling
+- VOF advection; Rayleigh-Taylor instability benchmark
+
+#### 50.6 Porous Media Flow
+
+**Source**: `tensornet/porous_media/` (~390 LOC)
+
+$$\mathbf{u} = -\frac{k}{\mu}\nabla p \quad\text{(Darcy's law)}$$
+
+- Richards unsaturated flow; Brinkman intermediate
+- Buckley-Leverett multiphase; random permeability via TCI
+
+#### 50.7 Free Surface Flow
+
+**Source**: `tensornet/free_surface/` (~264 LOC)
+
+- Level-set method in QTT format with CSF surface tension
+- Thin-film equation and contact angle dynamics
+- Marangoni convection (surface tension gradient)
+
+#### 50.8 Multiscale Methods
+
+**Source**: `tensornet/multiscale/multiscale.py`
+
+- FE² concurrent macro-micro coupling
+- Homogenization engine for effective properties
+- Bridging atomistic-continuum (quasi-continuum method)
+
+#### 50.9 Phase-Field Modeling
+
+**Source**: `tensornet/phase_field/` + `tensornet/materials/microstructure.py`
+
+$$\frac{\partial c}{\partial t} = \nabla\cdot(M\nabla\mu), \quad \mu = f'(c) - \varepsilon^2\nabla^2 c \quad\text{(Cahn-Hilliard)}$$
+
+- Allen-Cahn equation for phase boundaries
+- Dendritic solidification and spinodal decomposition benchmarks
+
+#### 50.10 ML for Physics
+
+**Source**: `tensornet/ml_physics/` (~360 LOC)
+
+$$\mathcal{L}_{\text{PINN}} = \lambda_{\text{PDE}}\|N[u_\theta]\|^2 + \lambda_{\text{data}}\|u_\theta - u_{\text{obs}}\|^2$$
+
+- Physics-informed neural networks (PINNs) on QTT
+- Fourier neural operator (FNO) kernel approximation
+- TT-decomposed neural network weights
+
+#### 50.11 Adaptive Mesh Refinement
+
+**Source**: `tensornet/mesh_amr/` (~390 LOC)
+
+- Octree/quadtree with QTT indexing via Morton Z-curve
+- h-adaptivity: refinement criterion $\|\nabla u\| > \theta_{\text{ref}}$
+- Delaunay triangulation for 2D/3D meshing
+
+#### 50.12 Membrane Biophysics
+
+**Source**: `tensornet/membrane_bio/` (~276 LOC)
+
+$$\Delta G(r) = 2\pi\gamma r - \pi r^2\sigma_e \quad\text{(electroporation pore nucleation)}$$
+
+- Coarse-grained lipid bilayer (MARTINI-class potentials)
+- Ion channel gating and membrane potential dynamics
+
+#### 50.13 Robotics Physics
+
+**Source**: `tensornet/robotics_physics/` (~388 LOC)
+
+$$\boldsymbol{\tau} = \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{g}(\mathbf{q}) \quad\text{(manipulator dynamics)}$$
+
+- Recursive Newton-Euler and Featherstone ABA
+- LCP (linear complementarity) contact/friction solver
+- Cosserat rod model for tendon/cable-driven robots
+
+#### 50.14 Applied Physics Extensions
+
+**Source**: `tensornet/{acoustics,biomedical,biology,environmental}/` (~2,365 LOC)
+
+- **Applied Acoustics** (`acoustics/applied_acoustics.py`): Lighthill aeroacoustics, FW-H surface integral, LEE linearized Euler, jet noise (Tam-Auriault)
+- **Biomedical Engineering** (`biomedical/biomedical.py`): Bidomain cardiac electrophysiology (FitzHugh-Nagumo), drug delivery PK model, Holzapfel-Ogden tissue mechanics
+- **Systems Biology** (`biology/systems_biology.py`): Flux balance analysis (FBA via LP), Boolean gene regulatory networks, Gillespie SSA
+- **Environmental Physics** (`environmental/environmental.py`): Gaussian plume dispersion, SCS curve number rainfall-runoff, coastal storm surge (shallow water)
+- **Energy Systems** (`energy/energy_systems.py`): Drift-diffusion solar cell (Shockley-Queisser), Newman porous electrode battery, Butler-Volmer fuel cell, Boltzmann neutron diffusion
+- **Manufacturing Physics** (`manufacturing/manufacturing.py`): Goldak welding heat source, Scheil solidification, melt pool Marangoni for AM, Merchant machining model
+
+
+---
 
 ## Validated Use Cases
 
@@ -2927,6 +4016,6 @@ See [CHANGELOG.md](CHANGELOG.md) for complete history.
 ╚════════════════════════════════════════════════════════════════════════════════════════╝
 ```
 
-*Last Updated: February 8, 2026 — Version 36.0*
+*Last Updated: February 7, 2026 — Version 40.0*
 
 </div>
