@@ -1,0 +1,111 @@
+{
+  "version": "2.0.0",
+  "timestamp": "2026-01-25T23:14:57.074642",
+  "summary": {
+    "total_tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "pass_rate": 100.0
+  },
+  "tests": [
+    {
+      "name": "Regime Detection Accuracy",
+      "status": "PASS",
+      "score": 57.166666666666664,
+      "threshold": 50.0,
+      "passed": true,
+      "details": {
+        "classification_accuracy": 28.61111111111111,
+        "reset_trigger_rate": 100.0,
+        "total_resets": 164,
+        "regime_transitions": 5,
+        "detected_regimes": 3
+      },
+      "duration_ms": 2708.6453437805176
+    },
+    {
+      "name": "Flash Crash Survival",
+      "status": "PASS",
+      "score": 100.0,
+      "threshold": 50.0,
+      "passed": true,
+      "details": {
+        "crash_detected": true,
+        "crash_detection_rate": 60.0,
+        "reset_during_crash": true,
+        "resets_near_crash": 10,
+        "total_resets": 111,
+        "unique_regimes_detected": 2
+      },
+      "duration_ms": 1319.9563026428223
+    },
+    {
+      "name": "Mean-Reversion Prediction",
+      "status": "PASS",
+      "score": 88.02761705327656,
+      "threshold": 10.0,
+      "passed": true,
+      "details": {
+        "prediction_improvement": -30.359543204380547,
+        "loss_reduction": 88.02761705327656,
+        "initial_loss": 0.008958013996662986,
+        "final_loss": 0.0010724877401015773,
+        "naive_error_mean": 0.21098963103511117,
+        "qtt_error_mean": 0.27504511922597885
+      },
+      "duration_ms": 6450.565338134766
+    },
+    {
+      "name": "Genesis vs Adam Stability",
+      "status": "PASS",
+      "score": 99.4433886945938,
+      "threshold": 10.0,
+      "passed": true,
+      "details": {
+        "genesis_nuclear_std": 0.024031316861510277,
+        "adam_nuclear_std": 4.317432403564453,
+        "stability_ratio": 0.005566113054061976,
+        "stability_improvement": 99.4433886945938,
+        "genesis_mean_norm": 74.07160547658017,
+        "adam_mean_norm": 83.40284426337794
+      },
+      "duration_ms": 1910.5896949768066
+    },
+    {
+      "name": "Topology Discovery Speed",
+      "status": "PASS",
+      "score": 33.47206115722656,
+      "threshold": 0.0,
+      "passed": true,
+      "details": {
+        "gradient_detection_frame": 27,
+        "threshold_detection_frame": 0,
+        "speed_improvement": 0.0,
+        "final_beta_1": 1.1652793884277344,
+        "betti_accuracy": 83.47206115722656
+      },
+      "duration_ms": 1575.636386871338
+    },
+    {
+      "name": "RMT Level Spacing Ratio",
+      "status": "PASS",
+      "score": 46.013327281039665,
+      "threshold": 0.0,
+      "passed": true,
+      "details": {
+        "structured_mean_ratio": 0.36297946646809576,
+        "chaotic_mean_ratio": 0.5299983963370323,
+        "separation": 46.013327281039665,
+        "goe_target": 0.5307,
+        "goe_error": 0.13220344129784736
+      },
+      "duration_ms": 32.01007843017578
+    }
+  ],
+  "performance": {
+    "total_duration_s": 13.997984647750854,
+    "peak_vram_gb": 0.022410752,
+    "device": "cuda"
+  }
+}

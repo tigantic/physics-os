@@ -1,0 +1,2534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sovereign Market Intelligence - Real-time regime detection powered by RMT, RKHS, and Betti primitives">
+  <meta name="theme-color" content="#F8F9FA">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='%230D9488' stroke-width='6'/%3E%3Ccircle cx='50' cy='50' r='15' fill='%230D9488'/%3E%3C/svg%3E">
+  <title>Sovereign Market Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════════════════════════════
+       SOVEREIGN DESIGN SYSTEM v2.0
+       Premium Enterprise SaaS with Sidebar Navigation
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    :root {
+      /* Backgrounds */
+      --bg-page: #F8F9FA;
+      --bg-card: #FFFFFF;
+      --bg-subtle: #F1F3F4;
+      --bg-muted: #E8EAED;
+      --bg-sidebar: #FFFFFF;
+      
+      /* Text */
+      --text-primary: #1A1A1A;
+      --text-secondary: #5F6368;
+      --text-muted: #9AA0A6;
+      --text-inverse: #FFFFFF;
+      
+      /* Borders */
+      --border-default: #E0E0E0;
+      --border-subtle: #F0F0F0;
+      --border-strong: #DADCE0;
+      
+      /* Regime States */
+      --regime-stable: #0D9488;
+      --regime-stable-bg: #CCFBF1;
+      --regime-trending: #2563EB;
+      --regime-trending-bg: #DBEAFE;
+      --regime-transition: #D97706;
+      --regime-transition-bg: #FEF3C7;
+      --regime-chaos: #DC2626;
+      --regime-chaos-bg: #FEE2E2;
+      
+      /* Semantic Colors */
+      --positive: #16A34A;
+      --positive-bg: #DCFCE7;
+      --negative: #DC2626;
+      --negative-bg: #FEE2E2;
+      --warning: #D97706;
+      --warning-bg: #FEF3C7;
+      --info: #2563EB;
+      --info-bg: #DBEAFE;
+      
+      /* Coin Colors */
+      --coin-btc: #F7931A;
+      --coin-eth: #627EEA;
+      --coin-sol: #9945FF;
+      --coin-avax: #E84142;
+      
+      /* Interactive */
+      --hover-overlay: rgba(0, 0, 0, 0.04);
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+      
+      /* Typography */
+      --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', 'Consolas', monospace;
+      
+      /* Spacing */
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      
+      /* Border Radius */
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
+      --radius-full: 9999px;
+      
+      /* Sidebar */
+      --sidebar-collapsed: 64px;
+      --sidebar-expanded: 220px;
+      
+      /* Primitive Colors */
+      --prim-ot: #8B5CF6;
+      --prim-sgw: #0891B2;
+      --prim-rmt: #EA580C;
+      --prim-tg: #DB2777;
+      --prim-rkhs: #65A30D;
+      --prim-ph: #0D9488;
+      --prim-ga: #E11D48;
+    }
+
+    [data-theme="dark"] {
+      --bg-page: #0F0F10;
+      --bg-card: #1A1A1C;
+      --bg-subtle: #242428;
+      --bg-muted: #2E2E32;
+      --bg-sidebar: #141416;
+      
+      --text-primary: #F5F5F5;
+      --text-secondary: #A0A0A0;
+      --text-muted: #6B6B6B;
+      --text-inverse: #1A1A1A;
+      
+      --border-default: #2E2E32;
+      --border-subtle: #242428;
+      --border-strong: #3A3A3E;
+      
+      --hover-overlay: rgba(255, 255, 255, 0.06);
+      
+      --regime-stable-bg: rgba(13, 148, 136, 0.15);
+      --regime-trending-bg: rgba(37, 99, 235, 0.15);
+      --regime-transition-bg: rgba(217, 119, 6, 0.15);
+      --regime-chaos-bg: rgba(220, 38, 38, 0.15);
+      
+      --positive-bg: rgba(22, 163, 74, 0.15);
+      --negative-bg: rgba(220, 38, 38, 0.15);
+      --warning-bg: rgba(217, 119, 6, 0.15);
+      --info-bg: rgba(37, 99, 235, 0.15);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      color: var(--text-primary);
+      background-color: var(--bg-page);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .numeric {
+      font-family: var(--font-mono);
+      font-feature-settings: 'tnum' 1;
+      letter-spacing: -0.02em;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       LAYOUT WITH SIDEBAR
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       SIDEBAR NAVIGATION
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: var(--sidebar-collapsed);
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-default);
+      display: flex;
+      flex-direction: column;
+      z-index: 200;
+      transition: width 200ms ease;
+      overflow: hidden;
+    }
+
+    .sidebar:hover,
+    .sidebar.expanded {
+      width: var(--sidebar-expanded);
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-4);
+      height: 56px;
+      border-bottom: 1px solid var(--border-subtle);
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .sidebar-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 150ms ease;
+    }
+
+    .sidebar:hover .sidebar-title,
+    .sidebar.expanded .sidebar-title {
+      opacity: 1;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: var(--space-3) var(--space-2);
+      overflow-y: auto;
+    }
+
+    .nav-section {
+      margin-bottom: var(--space-4);
+    }
+
+    .nav-section-title {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      padding: var(--space-2) var(--space-3);
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 150ms ease;
+    }
+
+    .sidebar:hover .nav-section-title,
+    .sidebar.expanded .nav-section-title {
+      opacity: 1;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      margin-bottom: var(--space-1);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 100ms ease;
+      text-decoration: none;
+      color: var(--text-secondary);
+      position: relative;
+    }
+
+    .nav-item:hover {
+      background: var(--hover-overlay);
+      color: var(--text-primary);
+    }
+
+    .nav-item.active {
+      background: var(--regime-stable-bg);
+      color: var(--regime-stable);
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 24px;
+      background: var(--regime-stable);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.125rem;
+    }
+
+    .nav-icon.coin-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .nav-icon.btc { background: var(--coin-btc); }
+    .nav-icon.eth { background: var(--coin-eth); }
+    .nav-icon.sol { background: var(--coin-sol); }
+    .nav-icon.avax { background: var(--coin-avax); }
+
+    .nav-text {
+      font-size: 0.875rem;
+      font-weight: 500;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 150ms ease;
+    }
+
+    .sidebar:hover .nav-text,
+    .sidebar.expanded .nav-text {
+      opacity: 1;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--regime-stable);
+      color: white;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      opacity: 0;
+      transition: opacity 150ms ease;
+    }
+
+    .sidebar:hover .nav-badge,
+    .sidebar.expanded .nav-badge {
+      opacity: 1;
+    }
+
+    .nav-badge.warning { background: var(--warning); }
+    .nav-badge.danger { background: var(--negative); }
+
+    .sidebar-footer {
+      padding: var(--space-3) var(--space-2);
+      border-top: 1px solid var(--border-subtle);
+      flex-shrink: 0;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       MAIN CONTENT AREA
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    .app-content {
+      margin-left: var(--sidebar-collapsed);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      transition: margin-left 200ms ease;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-6);
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-default);
+      height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .page-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+
+    .regime-badge {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-1) var(--space-3);
+      background: var(--regime-stable-bg);
+      border-radius: var(--radius-full);
+      font-size: 0.8125rem;
+      font-weight: 500;
+    }
+
+    .regime-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--regime-stable);
+    }
+
+    .regime-label {
+      color: var(--regime-stable);
+    }
+
+    .regime-confidence {
+      color: var(--text-secondary);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .header-time {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+
+    .connection-status {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: 0.8125rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--positive);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .status-label {
+      color: var(--text-secondary);
+    }
+
+    .theme-toggle {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 1.0625rem;
+      cursor: pointer;
+      border-radius: var(--radius-md);
+      transition: background 100ms ease;
+    }
+
+    .theme-toggle:hover {
+      background: var(--hover-overlay);
+    }
+
+    .main {
+      flex: 1;
+      padding: var(--space-6);
+      overflow: auto;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       PAGE VIEWS
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    .page-view {
+      display: none;
+      animation: fadeIn 200ms ease;
+    }
+
+    .page-view.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       OVERVIEW DASHBOARD (3-column)
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: var(--space-6);
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       COIN DETAIL VIEW (2-column)
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    .coin-detail {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--space-6);
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .coin-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+
+    .coin-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .coin-logo.btc { background: var(--coin-btc); }
+    .coin-logo.eth { background: var(--coin-eth); }
+    .coin-logo.sol { background: var(--coin-sol); }
+    .coin-logo.avax { background: var(--coin-avax); }
+
+    .coin-info h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .coin-info .coin-full-name {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .coin-price-section {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-3);
+    }
+
+    .coin-price {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .coin-change {
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+
+    .coin-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+      margin-top: var(--space-6);
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-1);
+    }
+
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .order-book-visual {
+      padding: var(--space-4);
+    }
+
+    .order-side {
+      margin-bottom: var(--space-3);
+    }
+
+    .order-side-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-2);
+    }
+
+    .order-side-label.bid { color: var(--positive); }
+    .order-side-label.ask { color: var(--negative); }
+
+    .order-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-1);
+    }
+
+    .order-bar-fill {
+      height: 20px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 var(--space-2);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: white;
+      min-width: 40px;
+    }
+
+    .order-bar-fill.bid { background: var(--positive); }
+    .order-bar-fill.ask { background: var(--negative); }
+
+    .order-bar-price {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      min-width: 80px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       CARDS
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-default);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-5);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .card-title {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .card-meta {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       MARKET PULSE
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    .timeframe-pills {
+      display: flex;
+      gap: var(--space-1);
+    }
+
+    .pill {
+      padding: var(--space-1) var(--space-2);
+      font-size: 0.75rem;
+      font-weight: 500;
+      border: 1px solid var(--border-default);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 100ms ease;
+    }
+
+    .pill:hover {
+      border-color: var(--border-strong);
+    }
+
+    .pill.active {
+      background: var(--text-primary);
+      color: var(--text-inverse);
+      border-color: var(--text-primary);
+    }
+
+    .chart-container {
+      padding: var(--space-4) var(--space-5);
+      height: 140px;
+    }
+
+    .mini-chart {
+      width: 100%;
+      height: 100%;
+    }
+
+    .asset-list {
+      padding: var(--space-2) var(--space-5) var(--space-4);
+    }
+
+    .asset-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: var(--space-4);
+      align-items: center;
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .asset-row:last-child {
+      border-bottom: none;
+    }
+
+    .asset-info {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .asset-symbol {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .asset-regime-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .asset-price {
+      color: var(--text-primary);
+      font-size: 0.8125rem;
+    }
+
+    .asset-change {
+      font-size: 0.8125rem;
+    }
+
+    .positive { color: var(--positive); }
+    .negative { color: var(--negative); }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       OPPORTUNITIES
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    .opportunity-list {
+      padding: var(--space-4) var(--space-5);
+    }
+
+    .opportunity-row {
+      display: grid;
+      grid-template-columns: 60px 1fr 60px 120px;
+      gap: var(--space-3);
+      align-items: center;
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .opportunity-row:last-child {
+      border-bottom: none;
+    }
+
+    .opp-asset {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .opp-setup {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+
+    .opp-direction {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-align: center;
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-sm);
+    }
+
+    .opp-direction.long {
+      background: var(--positive-bg);
+      color: var(--positive);
+    }
+
+    .opp-direction.short {
+      background: var(--negative-bg);
+      color: var(--negative);
+    }
+
+    .opp-direction.avoid {
+      background: var(--bg-subtle);
+      color: var(--text-muted);
+    }
+
+    .opp-confidence {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .confidence-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--bg-subtle);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .confidence-fill {
+      height: 100%;
+      background: var(--positive);
+      border-radius: var(--radius-full);
+    }
+
+    .confidence-value {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      min-width: 32px;
+      text-align: right;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       CAPITAL FLOW
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    .flow-visualization {
+      padding: var(--space-4) var(--space-5);
+    }
+
+    .flow-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: var(--space-4);
+      align-items: center;
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .flow-row:last-child {
+      border-bottom: none;
+    }
+
+    .flow-from, .flow-to {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .flow-to {
+      align-items: flex-end;
+    }
+
+    .flow-asset {
+      font-weight: 600;
+    }
+
+    .flow-amount {
+      font-size: 0.8125rem;
+    }
+
+    .flow-arrow {
+      color: var(--text-muted);
+      font-size: 1.0625rem;
+    }
+
+    .flow-interpretation {
+      padding: var(--space-3) var(--space-5) var(--space-4);
+      background: var(--bg-subtle);
+      border-top: 1px solid var(--border-subtle);
+      font-size: 0.8125rem;
+    }
+
+    .interpretation-label {
+      color: var(--text-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       PRIMITIVES
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    .primitive-grid {
+      padding: var(--space-4) var(--space-5);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .primitive-item {
+      display: grid;
+      grid-template-columns: 48px 1fr 48px;
+      gap: var(--space-3);
+      align-items: center;
+    }
+
+    .primitive-item.inactive {
+      opacity: 0.4;
+    }
+
+    .primitive-id {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+
+    .primitive-bar {
+      height: 6px;
+      background: var(--bg-subtle);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .primitive-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 400ms ease;
+    }
+
+    .primitive-value {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-align: right;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       ATTENTION
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    .alert-badge {
+      background: var(--negative);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      min-width: 18px;
+      text-align: center;
+    }
+
+    .alert-list {
+      padding: var(--space-3) var(--space-5) var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .alert-item {
+      position: relative;
+      padding: var(--space-3);
+      background: var(--bg-subtle);
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--warning);
+    }
+
+    .alert-item.critical {
+      border-left-color: var(--negative);
+    }
+
+    .alert-item.info {
+      border-left-color: var(--info);
+    }
+
+    .alert-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-1);
+    }
+
+    .alert-icon {
+      font-size: 0.875rem;
+    }
+
+    .alert-icon.warning { color: var(--warning); }
+    .alert-icon.critical { color: var(--negative); }
+    .alert-icon.info { color: var(--info); }
+
+    .alert-headline {
+      font-weight: 500;
+      font-size: 0.8125rem;
+      flex: 1;
+    }
+
+    .alert-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .alert-description {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       RISK
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    .risk-content {
+      padding: var(--space-4) var(--space-5);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+    }
+
+    .stress-meter {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .stress-label {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+
+    .stress-bar {
+      height: 8px;
+      background: var(--bg-subtle);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .stress-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 400ms ease;
+    }
+
+    .stress-fill.low { background: var(--positive); }
+    .stress-fill.medium { background: var(--warning); }
+    .stress-fill.high { background: var(--negative); }
+
+    .stress-value {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      text-align: right;
+    }
+
+    .risk-scenario {
+      padding: var(--space-3);
+      background: var(--bg-subtle);
+      border-radius: var(--radius-md);
+    }
+
+    .scenario-label {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-3);
+    }
+
+    .scenario-metrics {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .metric-label {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+
+    .metric-value {
+      font-size: 0.8125rem;
+      font-weight: 500;
+    }
+
+    .risk-recommendation {
+      padding: var(--space-3);
+      background: var(--warning-bg);
+      border-radius: var(--radius-md);
+      font-size: 0.8125rem;
+    }
+
+    .rec-label {
+      font-weight: 500;
+      color: var(--warning);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    @media (max-width: 1200px) {
+      .dashboard {
+        grid-template-columns: 1fr 1fr;
+      }
+      .column-center {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-6);
+      }
+      .coin-detail {
+        grid-template-columns: 1fr;
+      }
+      .coin-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        bottom: 0;
+        top: auto;
+        left: 0;
+        border-right: none;
+        border-top: 1px solid var(--border-default);
+        flex-direction: row;
+        padding: 0;
+      }
+      .sidebar-header,
+      .sidebar-footer,
+      .nav-section-title {
+        display: none;
+      }
+      .sidebar-nav {
+        display: flex;
+        flex-direction: row;
+        padding: var(--space-2);
+        gap: var(--space-1);
+        overflow-x: auto;
+        justify-content: center;
+        width: 100%;
+      }
+      .nav-item {
+        flex-direction: column;
+        padding: var(--space-2);
+        gap: var(--space-1);
+      }
+      .nav-text {
+        font-size: 0.625rem;
+        opacity: 1;
+      }
+      .nav-badge {
+        display: none;
+      }
+      .app-content {
+        margin-left: 0;
+        margin-bottom: 72px;
+      }
+      .main {
+        padding: var(--space-4);
+      }
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+      .column-center {
+        grid-template-columns: 1fr;
+      }
+      .header {
+        padding: var(--space-3) var(--space-4);
+      }
+      .header-time {
+        display: none;
+      }
+      .coin-stats {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- SIDEBAR NAVIGATION -->
+    <nav class="sidebar" id="sidebar" aria-label="Main navigation">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="var(--regime-stable)" stroke-width="6"/>
+            <circle cx="50" cy="50" r="15" fill="var(--regime-stable)"/>
+          </svg>
+        </div>
+        <span class="sidebar-title">Sovereign</span>
+      </div>
+      
+      <div class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Dashboard</div>
+          <a class="nav-item active" data-page="overview" href="#overview" role="button" tabindex="0">
+            <span class="nav-icon">◉</span>
+            <span class="nav-text">Overview</span>
+          </a>
+        </div>
+        
+        <div class="nav-section">
+          <div class="nav-section-title">Assets</div>
+          <a class="nav-item" data-page="btc" data-coin="BTC-USD" href="#btc" role="button" tabindex="0">
+            <span class="nav-icon coin-icon btc">₿</span>
+            <span class="nav-text">Bitcoin</span>
+            <span class="nav-badge" id="btc-badge">Stable</span>
+          </a>
+          <a class="nav-item" data-page="eth" data-coin="ETH-USD" href="#eth" role="button" tabindex="0">
+            <span class="nav-icon coin-icon eth">Ξ</span>
+            <span class="nav-text">Ethereum</span>
+            <span class="nav-badge warning" id="eth-badge">Trans</span>
+          </a>
+          <a class="nav-item" data-page="sol" data-coin="SOL-USD" href="#sol" role="button" tabindex="0">
+            <span class="nav-icon coin-icon sol">◎</span>
+            <span class="nav-text">Solana</span>
+            <span class="nav-badge" id="sol-badge">Trend</span>
+          </a>
+          <a class="nav-item" data-page="avax" data-coin="AVAX-USD" href="#avax" role="button" tabindex="0">
+            <span class="nav-icon coin-icon avax">▲</span>
+            <span class="nav-text">Avalanche</span>
+            <span class="nav-badge" id="avax-badge">Stable</span>
+          </a>
+        </div>
+      </div>
+      
+      <div class="sidebar-footer">
+        <a class="nav-item" onclick="toggleTheme()" role="button" tabindex="0">
+          <span class="nav-icon" id="theme-icon">◐</span>
+          <span class="nav-text">Theme</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- APP CONTENT -->
+    <div class="app-content">
+      <!-- HEADER -->
+      <header class="header">
+        <div class="header-left">
+          <h1 class="page-title" id="page-title">Overview</h1>
+          <div class="regime-badge">
+            <span class="regime-dot"></span>
+            <span class="regime-label">Stable</span>
+            <span class="regime-confidence numeric">72%</span>
+          </div>
+        </div>
+        <div class="header-right">
+          <time class="header-time" id="current-time">Jan 26, 2:14 PM</time>
+          <div class="connection-status">
+            <span class="status-dot"></span>
+            <span class="status-label">Live</span>
+            <span class="numeric" style="color: var(--text-muted); font-size: 0.75rem;">#847</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- MAIN CONTENT -->
+      <main class="main">
+        
+        <!-- OVERVIEW PAGE -->
+        <div class="page-view active" id="page-overview">
+          <div class="dashboard">
+        
+        <!-- LEFT COLUMN -->
+        <div class="column column-left">
+          
+          <!-- Market Pulse -->
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Market Pulse</h2>
+              <div class="timeframe-pills">
+                <button class="pill active">1H</button>
+                <button class="pill">4H</button>
+                <button class="pill">1D</button>
+              </div>
+            </header>
+            <div class="chart-container">
+              <svg viewBox="0 0 400 100" class="mini-chart">
+                <defs>
+                  <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#0D9488" stop-opacity="0.2"/>
+                    <stop offset="100%" stop-color="#0D9488" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,70 Q50,65 100,55 T200,45 T300,35 T400,30" fill="none" stroke="#0D9488" stroke-width="2"/>
+                <path d="M0,70 Q50,65 100,55 T200,45 T300,35 T400,30 L400,100 L0,100 Z" fill="url(#chartGradient)"/>
+              </svg>
+            </div>
+            <div class="asset-list">
+              <div class="asset-row">
+                <div class="asset-info">
+                  <span class="asset-symbol">BTC</span>
+                  <span class="asset-regime-dot" style="background: var(--regime-stable)"></span>
+                </div>
+                <span class="asset-price numeric">$89,240</span>
+                <span class="asset-change numeric positive">+1.2%</span>
+              </div>
+              <div class="asset-row">
+                <div class="asset-info">
+                  <span class="asset-symbol">ETH</span>
+                  <span class="asset-regime-dot" style="background: var(--regime-transition)"></span>
+                </div>
+                <span class="asset-price numeric">$3,180</span>
+                <span class="asset-change numeric negative">-2.1%</span>
+              </div>
+              <div class="asset-row">
+                <div class="asset-info">
+                  <span class="asset-symbol">SOL</span>
+                  <span class="asset-regime-dot" style="background: var(--regime-trending)"></span>
+                </div>
+                <span class="asset-price numeric">$186.42</span>
+                <span class="asset-change numeric positive">+4.2%</span>
+              </div>
+              <div class="asset-row">
+                <div class="asset-info">
+                  <span class="asset-symbol">AVAX</span>
+                  <span class="asset-regime-dot" style="background: var(--regime-stable)"></span>
+                </div>
+                <span class="asset-price numeric">$42.18</span>
+                <span class="asset-change numeric positive">+0.8%</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Opportunities -->
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Opportunities</h2>
+              <span class="card-meta">By confidence</span>
+            </header>
+            <div class="opportunity-list">
+              <div class="opportunity-row">
+                <span class="opp-asset">BTC</span>
+                <span class="opp-setup">Mean reversion</span>
+                <span class="opp-direction long">LONG</span>
+                <div class="opp-confidence">
+                  <div class="confidence-bar"><div class="confidence-fill" style="width: 78%"></div></div>
+                  <span class="confidence-value numeric">78%</span>
+                </div>
+              </div>
+              <div class="opportunity-row">
+                <span class="opp-asset">SOL</span>
+                <span class="opp-setup">Momentum</span>
+                <span class="opp-direction long">LONG</span>
+                <div class="opp-confidence">
+                  <div class="confidence-bar"><div class="confidence-fill" style="width: 71%"></div></div>
+                  <span class="confidence-value numeric">71%</span>
+                </div>
+              </div>
+              <div class="opportunity-row">
+                <span class="opp-asset">AVAX</span>
+                <span class="opp-setup">Range breakout</span>
+                <span class="opp-direction long">LONG</span>
+                <div class="opp-confidence">
+                  <div class="confidence-bar"><div class="confidence-fill" style="width: 64%"></div></div>
+                  <span class="confidence-value numeric">64%</span>
+                </div>
+              </div>
+              <div class="opportunity-row">
+                <span class="opp-asset">ETH</span>
+                <span class="opp-setup">—</span>
+                <span class="opp-direction avoid">AVOID</span>
+                <div class="opp-confidence">
+                  <div class="confidence-bar"><div class="confidence-fill" style="width: 0%; background: var(--text-muted)"></div></div>
+                  <span class="confidence-value numeric">—</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- CENTER COLUMN -->
+        <div class="column column-center">
+          
+          <!-- Capital Flow -->
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Capital Flow</h2>
+              <span class="card-meta">Last 1 hour</span>
+            </header>
+            <div class="flow-visualization">
+              <div class="flow-row">
+                <div class="flow-from">
+                  <span class="flow-asset">ETH</span>
+                  <span class="flow-amount numeric negative">-$2.4M</span>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-to">
+                  <span class="flow-asset">SOL</span>
+                  <span class="flow-amount numeric positive">+$1.8M</span>
+                </div>
+              </div>
+              <div class="flow-row">
+                <div class="flow-from">
+                  <span class="flow-asset">BTC</span>
+                  <span class="flow-amount numeric negative">-$890K</span>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-to">
+                  <span class="flow-asset">AVAX</span>
+                  <span class="flow-amount numeric positive">+$620K</span>
+                </div>
+              </div>
+            </div>
+            <div class="flow-interpretation">
+              <span class="interpretation-label">Interpretation: </span>
+              <span>Risk-off rotation from majors to alts</span>
+            </div>
+          </section>
+
+          <!-- Primitives -->
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Primitives</h2>
+              <span class="card-meta">5/7 active · avg 68.4%</span>
+            </header>
+            <div class="primitive-grid">
+              <div class="primitive-item">
+                <span class="primitive-id" style="color: var(--prim-ot)">OT</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 72%; background: var(--prim-ot)"></div></div>
+                <span class="primitive-value numeric">72.0%</span>
+              </div>
+              <div class="primitive-item">
+                <span class="primitive-id" style="color: var(--prim-sgw)">SGW</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 94%; background: var(--prim-sgw)"></div></div>
+                <span class="primitive-value numeric">94.0%</span>
+              </div>
+              <div class="primitive-item">
+                <span class="primitive-id" style="color: var(--prim-rmt)">RMT</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 53%; background: var(--prim-rmt)"></div></div>
+                <span class="primitive-value numeric">53.0%</span>
+              </div>
+              <div class="primitive-item inactive">
+                <span class="primitive-id" style="color: var(--prim-tg)">TG</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 0%; background: var(--prim-tg)"></div></div>
+                <span class="primitive-value numeric">0.0%</span>
+              </div>
+              <div class="primitive-item">
+                <span class="primitive-id" style="color: var(--prim-rkhs)">RKHS</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 77%; background: var(--prim-rkhs)"></div></div>
+                <span class="primitive-value numeric">77.0%</span>
+              </div>
+              <div class="primitive-item">
+                <span class="primitive-id" style="color: var(--prim-ph)">PH</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 91%; background: var(--prim-ph)"></div></div>
+                <span class="primitive-value numeric">91.0%</span>
+              </div>
+              <div class="primitive-item inactive">
+                <span class="primitive-id" style="color: var(--prim-ga)">GA</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 0%; background: var(--prim-ga)"></div></div>
+                <span class="primitive-value numeric">0.0%</span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="column column-right">
+          
+          <!-- Attention -->
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">
+                Attention
+                <span class="alert-badge">2</span>
+              </h2>
+            </header>
+            <div class="alert-list">
+              <div class="alert-item critical">
+                <div class="alert-header">
+                  <span class="alert-icon critical">⚠</span>
+                  <span class="alert-headline">ETH-SOL correlation breakdown</span>
+                  <span class="alert-time">2 min</span>
+                </div>
+                <p class="alert-description">Dropped from 0.91 to 0.67. Watch for divergence trades.</p>
+              </div>
+              <div class="alert-item">
+                <div class="alert-header">
+                  <span class="alert-icon warning">●</span>
+                  <span class="alert-headline">BTC order book imbalance</span>
+                  <span class="alert-time">8 min</span>
+                </div>
+                <p class="alert-description">-54% sell pressure. Absorption pattern forming. Reversal likely.</p>
+              </div>
+              <div class="alert-item info">
+                <div class="alert-header">
+                  <span class="alert-icon info">○</span>
+                  <span class="alert-headline">Volatility regime shift forming</span>
+                  <span class="alert-time">12 min</span>
+                </div>
+                <p class="alert-description">RMT ratio: 0.51 → 0.53. Approaching chaos threshold (0.55).</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Risk -->
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Risk Assessment</h2>
+            </header>
+            <div class="risk-content">
+              <div class="stress-meter">
+                <span class="stress-label">System Stress</span>
+                <div class="stress-bar">
+                  <div class="stress-fill high" style="width: 74%"></div>
+                </div>
+                <span class="stress-value numeric">74/100</span>
+              </div>
+              <div class="risk-scenario">
+                <p class="scenario-label">If regime breaks to CHAOS:</p>
+                <div class="scenario-metrics">
+                  <div class="metric">
+                    <span class="metric-label">Est. drawdown</span>
+                    <span class="metric-value numeric negative">-4.2%</span>
+                  </div>
+                  <div class="metric">
+                    <span class="metric-label">Correlation risk</span>
+                    <span class="metric-value" style="color: var(--negative)">HIGH</span>
+                  </div>
+                  <div class="metric">
+                    <span class="metric-label">Liquidity risk</span>
+                    <span class="metric-value" style="color: var(--warning)">MODERATE</span>
+                  </div>
+                </div>
+              </div>
+              <div class="risk-recommendation">
+                <span class="rec-label">Recommendation: </span>
+                <span>Reduce position sizes by 25%</span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+    <!-- END OVERVIEW PAGE -->
+
+    <!-- COIN DETAIL PAGE TEMPLATE (cloned for each coin) -->
+    <div class="page-view" id="page-btc">
+      <div class="coin-header">
+        <div class="coin-logo btc">₿</div>
+        <div class="coin-info">
+          <h2>BTC</h2>
+          <span class="coin-full-name">Bitcoin</span>
+        </div>
+        <div class="regime-badge coin-regime-badge" data-coin="btc">
+          <span class="regime-dot"></span>
+          <span class="regime-label">Stable</span>
+        </div>
+      </div>
+      <div class="coin-price-section">
+        <span class="coin-price numeric" id="btc-price">$89,240</span>
+        <span class="coin-change numeric positive" id="btc-change">+1.2%</span>
+      </div>
+      <div class="coin-stats">
+        <div class="stat-card">
+          <div class="stat-label">24h Volume</div>
+          <div class="stat-value numeric" id="btc-volume">$2.4B</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Bid Depth</div>
+          <div class="stat-value numeric" id="btc-bid-depth">$1.2M</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Ask Depth</div>
+          <div class="stat-value numeric" id="btc-ask-depth">$980K</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Spread</div>
+          <div class="stat-value numeric" id="btc-spread">0.02%</div>
+        </div>
+      </div>
+      <div class="coin-detail">
+        <div class="column">
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Order Book</h2>
+              <span class="card-meta">Top 5 levels</span>
+            </header>
+            <div class="order-book-visual" id="btc-orderbook">
+              <div class="order-side">
+                <div class="order-side-label bid">Bids</div>
+                <div class="order-bar"><div class="order-bar-fill bid" style="width: 80%">12.4</div><span class="order-bar-price numeric">$89,238</span></div>
+                <div class="order-bar"><div class="order-bar-fill bid" style="width: 65%">8.2</div><span class="order-bar-price numeric">$89,235</span></div>
+                <div class="order-bar"><div class="order-bar-fill bid" style="width: 45%">5.1</div><span class="order-bar-price numeric">$89,230</span></div>
+              </div>
+              <div class="order-side">
+                <div class="order-side-label ask">Asks</div>
+                <div class="order-bar"><div class="order-bar-fill ask" style="width: 70%">10.8</div><span class="order-bar-price numeric">$89,242</span></div>
+                <div class="order-bar"><div class="order-bar-fill ask" style="width: 55%">7.2</div><span class="order-bar-price numeric">$89,245</span></div>
+                <div class="order-bar"><div class="order-bar-fill ask" style="width: 40%">4.5</div><span class="order-bar-price numeric">$89,250</span></div>
+              </div>
+            </div>
+          </section>
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Primitives</h2>
+              <span class="card-meta">Signal strength</span>
+            </header>
+            <div class="primitive-grid" id="btc-primitives">
+              <div class="primitive-item">
+                <span class="primitive-id" style="color: var(--prim-rmt)">RMT</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 72%; background: var(--prim-rmt)"></div></div>
+                <span class="primitive-value numeric">72%</span>
+              </div>
+              <div class="primitive-item">
+                <span class="primitive-id" style="color: var(--prim-rkhs)">RKHS</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 68%; background: var(--prim-rkhs)"></div></div>
+                <span class="primitive-value numeric">68%</span>
+              </div>
+              <div class="primitive-item">
+                <span class="primitive-id" style="color: var(--prim-ph)">Betti</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 81%; background: var(--prim-ph)"></div></div>
+                <span class="primitive-value numeric">81%</span>
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="column">
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Alerts</h2>
+            </header>
+            <div class="alert-list" id="btc-alerts">
+              <div class="alert-item info">
+                <div class="alert-header">
+                  <span class="alert-icon info">○</span>
+                  <span class="alert-headline">No active alerts</span>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Opportunity</h2>
+            </header>
+            <div class="opportunity-list" id="btc-opportunity">
+              <div class="opportunity-row">
+                <span class="opp-asset">BTC</span>
+                <span class="opp-setup">Mean reversion</span>
+                <span class="opp-direction long">LONG</span>
+                <div class="opp-confidence">
+                  <div class="confidence-bar"><div class="confidence-fill" style="width: 78%"></div></div>
+                  <span class="confidence-value numeric">78%</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+    <!-- END BTC PAGE -->
+
+    <!-- ETH PAGE -->
+    <div class="page-view" id="page-eth">
+      <div class="coin-header">
+        <div class="coin-logo eth">Ξ</div>
+        <div class="coin-info">
+          <h2>ETH</h2>
+          <span class="coin-full-name">Ethereum</span>
+        </div>
+        <div class="regime-badge coin-regime-badge" data-coin="eth">
+          <span class="regime-dot"></span>
+          <span class="regime-label">Transition</span>
+        </div>
+      </div>
+      <div class="coin-price-section">
+        <span class="coin-price numeric" id="eth-price">$3,180</span>
+        <span class="coin-change numeric negative" id="eth-change">-2.1%</span>
+      </div>
+      <div class="coin-stats">
+        <div class="stat-card">
+          <div class="stat-label">24h Volume</div>
+          <div class="stat-value numeric" id="eth-volume">$1.8B</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Bid Depth</div>
+          <div class="stat-value numeric" id="eth-bid-depth">$850K</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Ask Depth</div>
+          <div class="stat-value numeric" id="eth-ask-depth">$920K</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Spread</div>
+          <div class="stat-value numeric" id="eth-spread">0.03%</div>
+        </div>
+      </div>
+      <div class="coin-detail">
+        <div class="column">
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Order Book</h2>
+              <span class="card-meta">Top 5 levels</span>
+            </header>
+            <div class="order-book-visual" id="eth-orderbook">
+              <div class="order-side">
+                <div class="order-side-label bid">Bids</div>
+                <div class="order-bar"><div class="order-bar-fill bid" style="width: 75%">45.2</div><span class="order-bar-price numeric">$3,178</span></div>
+                <div class="order-bar"><div class="order-bar-fill bid" style="width: 60%">32.1</div><span class="order-bar-price numeric">$3,175</span></div>
+                <div class="order-bar"><div class="order-bar-fill bid" style="width: 40%">18.4</div><span class="order-bar-price numeric">$3,170</span></div>
+              </div>
+              <div class="order-side">
+                <div class="order-side-label ask">Asks</div>
+                <div class="order-bar"><div class="order-bar-fill ask" style="width: 82%">52.1</div><span class="order-bar-price numeric">$3,182</span></div>
+                <div class="order-bar"><div class="order-bar-fill ask" style="width: 68%">38.4</div><span class="order-bar-price numeric">$3,185</span></div>
+                <div class="order-bar"><div class="order-bar-fill ask" style="width: 50%">25.2</div><span class="order-bar-price numeric">$3,190</span></div>
+              </div>
+            </div>
+          </section>
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Primitives</h2>
+              <span class="card-meta">Signal strength</span>
+            </header>
+            <div class="primitive-grid" id="eth-primitives">
+              <div class="primitive-item">
+                <span class="primitive-id" style="color: var(--prim-rmt)">RMT</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 45%; background: var(--prim-rmt)"></div></div>
+                <span class="primitive-value numeric">45%</span>
+              </div>
+              <div class="primitive-item">
+                <span class="primitive-id" style="color: var(--prim-rkhs)">RKHS</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 52%; background: var(--prim-rkhs)"></div></div>
+                <span class="primitive-value numeric">52%</span>
+              </div>
+              <div class="primitive-item">
+                <span class="primitive-id" style="color: var(--prim-ph)">Betti</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 38%; background: var(--prim-ph)"></div></div>
+                <span class="primitive-value numeric">38%</span>
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="column">
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Alerts</h2>
+            </header>
+            <div class="alert-list" id="eth-alerts">
+              <div class="alert-item warning">
+                <div class="alert-header">
+                  <span class="alert-icon warning">●</span>
+                  <span class="alert-headline">Regime transition forming</span>
+                </div>
+                <p class="alert-description">RMT ratio approaching chaos threshold</p>
+              </div>
+            </div>
+          </section>
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Opportunity</h2>
+            </header>
+            <div class="opportunity-list" id="eth-opportunity">
+              <div class="opportunity-row">
+                <span class="opp-asset">ETH</span>
+                <span class="opp-setup">—</span>
+                <span class="opp-direction avoid">AVOID</span>
+                <div class="opp-confidence">
+                  <div class="confidence-bar"><div class="confidence-fill" style="width: 0%; background: var(--text-muted)"></div></div>
+                  <span class="confidence-value numeric">—</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+    <!-- END ETH PAGE -->
+
+    <!-- SOL PAGE -->
+    <div class="page-view" id="page-sol">
+      <div class="coin-header">
+        <div class="coin-logo sol">◎</div>
+        <div class="coin-info">
+          <h2>SOL</h2>
+          <span class="coin-full-name">Solana</span>
+        </div>
+        <div class="regime-badge coin-regime-badge" data-coin="sol">
+          <span class="regime-dot"></span>
+          <span class="regime-label">Trending</span>
+        </div>
+      </div>
+      <div class="coin-price-section">
+        <span class="coin-price numeric" id="sol-price">$186.42</span>
+        <span class="coin-change numeric positive" id="sol-change">+4.2%</span>
+      </div>
+      <div class="coin-stats">
+        <div class="stat-card">
+          <div class="stat-label">24h Volume</div>
+          <div class="stat-value numeric" id="sol-volume">$890M</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Bid Depth</div>
+          <div class="stat-value numeric" id="sol-bid-depth">$420K</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Ask Depth</div>
+          <div class="stat-value numeric" id="sol-ask-depth">$380K</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Spread</div>
+          <div class="stat-value numeric" id="sol-spread">0.04%</div>
+        </div>
+      </div>
+      <div class="coin-detail">
+        <div class="column">
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Order Book</h2>
+              <span class="card-meta">Top 5 levels</span>
+            </header>
+            <div class="order-book-visual" id="sol-orderbook">
+              <div class="order-side">
+                <div class="order-side-label bid">Bids</div>
+                <div class="order-bar"><div class="order-bar-fill bid" style="width: 85%">1,240</div><span class="order-bar-price numeric">$186.40</span></div>
+                <div class="order-bar"><div class="order-bar-fill bid" style="width: 70%">980</div><span class="order-bar-price numeric">$186.35</span></div>
+                <div class="order-bar"><div class="order-bar-fill bid" style="width: 50%">620</div><span class="order-bar-price numeric">$186.30</span></div>
+              </div>
+              <div class="order-side">
+                <div class="order-side-label ask">Asks</div>
+                <div class="order-bar"><div class="order-bar-fill ask" style="width: 60%">720</div><span class="order-bar-price numeric">$186.45</span></div>
+                <div class="order-bar"><div class="order-bar-fill ask" style="width: 45%">540</div><span class="order-bar-price numeric">$186.50</span></div>
+                <div class="order-bar"><div class="order-bar-fill ask" style="width: 35%">380</div><span class="order-bar-price numeric">$186.55</span></div>
+              </div>
+            </div>
+          </section>
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Primitives</h2>
+              <span class="card-meta">Signal strength</span>
+            </header>
+            <div class="primitive-grid" id="sol-primitives">
+              <div class="primitive-item">
+                <span class="primitive-id" style="color: var(--prim-rmt)">RMT</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 88%; background: var(--prim-rmt)"></div></div>
+                <span class="primitive-value numeric">88%</span>
+              </div>
+              <div class="primitive-item">
+                <span class="primitive-id" style="color: var(--prim-rkhs)">RKHS</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 82%; background: var(--prim-rkhs)"></div></div>
+                <span class="primitive-value numeric">82%</span>
+              </div>
+              <div class="primitive-item">
+                <span class="primitive-id" style="color: var(--prim-ph)">Betti</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 91%; background: var(--prim-ph)"></div></div>
+                <span class="primitive-value numeric">91%</span>
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="column">
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Alerts</h2>
+            </header>
+            <div class="alert-list" id="sol-alerts">
+              <div class="alert-item info">
+                <div class="alert-header">
+                  <span class="alert-icon info">○</span>
+                  <span class="alert-headline">Strong momentum detected</span>
+                </div>
+                <p class="alert-description">All primitives aligned bullish</p>
+              </div>
+            </div>
+          </section>
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Opportunity</h2>
+            </header>
+            <div class="opportunity-list" id="sol-opportunity">
+              <div class="opportunity-row">
+                <span class="opp-asset">SOL</span>
+                <span class="opp-setup">Momentum</span>
+                <span class="opp-direction long">LONG</span>
+                <div class="opp-confidence">
+                  <div class="confidence-bar"><div class="confidence-fill" style="width: 71%"></div></div>
+                  <span class="confidence-value numeric">71%</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+    <!-- END SOL PAGE -->
+
+    <!-- AVAX PAGE -->
+    <div class="page-view" id="page-avax">
+      <div class="coin-header">
+        <div class="coin-logo avax">▲</div>
+        <div class="coin-info">
+          <h2>AVAX</h2>
+          <span class="coin-full-name">Avalanche</span>
+        </div>
+        <div class="regime-badge coin-regime-badge" data-coin="avax">
+          <span class="regime-dot"></span>
+          <span class="regime-label">Stable</span>
+        </div>
+      </div>
+      <div class="coin-price-section">
+        <span class="coin-price numeric" id="avax-price">$42.18</span>
+        <span class="coin-change numeric positive" id="avax-change">+0.8%</span>
+      </div>
+      <div class="coin-stats">
+        <div class="stat-card">
+          <div class="stat-label">24h Volume</div>
+          <div class="stat-value numeric" id="avax-volume">$320M</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Bid Depth</div>
+          <div class="stat-value numeric" id="avax-bid-depth">$180K</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Ask Depth</div>
+          <div class="stat-value numeric" id="avax-ask-depth">$165K</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Spread</div>
+          <div class="stat-value numeric" id="avax-spread">0.05%</div>
+        </div>
+      </div>
+      <div class="coin-detail">
+        <div class="column">
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Order Book</h2>
+              <span class="card-meta">Top 5 levels</span>
+            </header>
+            <div class="order-book-visual" id="avax-orderbook">
+              <div class="order-side">
+                <div class="order-side-label bid">Bids</div>
+                <div class="order-bar"><div class="order-bar-fill bid" style="width: 72%">3,420</div><span class="order-bar-price numeric">$42.16</span></div>
+                <div class="order-bar"><div class="order-bar-fill bid" style="width: 58%">2,680</div><span class="order-bar-price numeric">$42.14</span></div>
+                <div class="order-bar"><div class="order-bar-fill bid" style="width: 42%">1,840</div><span class="order-bar-price numeric">$42.12</span></div>
+              </div>
+              <div class="order-side">
+                <div class="order-side-label ask">Asks</div>
+                <div class="order-bar"><div class="order-bar-fill ask" style="width: 68%">3,120</div><span class="order-bar-price numeric">$42.20</span></div>
+                <div class="order-bar"><div class="order-bar-fill ask" style="width: 52%">2,340</div><span class="order-bar-price numeric">$42.22</span></div>
+                <div class="order-bar"><div class="order-bar-fill ask" style="width: 38%">1,620</div><span class="order-bar-price numeric">$42.25</span></div>
+              </div>
+            </div>
+          </section>
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Primitives</h2>
+              <span class="card-meta">Signal strength</span>
+            </header>
+            <div class="primitive-grid" id="avax-primitives">
+              <div class="primitive-item">
+                <span class="primitive-id" style="color: var(--prim-rmt)">RMT</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 65%; background: var(--prim-rmt)"></div></div>
+                <span class="primitive-value numeric">65%</span>
+              </div>
+              <div class="primitive-item">
+                <span class="primitive-id" style="color: var(--prim-rkhs)">RKHS</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 71%; background: var(--prim-rkhs)"></div></div>
+                <span class="primitive-value numeric">71%</span>
+              </div>
+              <div class="primitive-item">
+                <span class="primitive-id" style="color: var(--prim-ph)">Betti</span>
+                <div class="primitive-bar"><div class="primitive-fill" style="width: 68%; background: var(--prim-ph)"></div></div>
+                <span class="primitive-value numeric">68%</span>
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="column">
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Alerts</h2>
+            </header>
+            <div class="alert-list" id="avax-alerts">
+              <div class="alert-item info">
+                <div class="alert-header">
+                  <span class="alert-icon info">○</span>
+                  <span class="alert-headline">No active alerts</span>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="card">
+            <header class="card-header">
+              <h2 class="card-title">Opportunity</h2>
+            </header>
+            <div class="opportunity-list" id="avax-opportunity">
+              <div class="opportunity-row">
+                <span class="opp-asset">AVAX</span>
+                <span class="opp-setup">Range breakout</span>
+                <span class="opp-direction long">LONG</span>
+                <div class="opp-confidence">
+                  <div class="confidence-bar"><div class="confidence-fill" style="width: 64%"></div></div>
+                  <span class="confidence-value numeric">64%</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+    <!-- END AVAX PAGE -->
+
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:8002/api';
+    let tickCount = 0;
+    let consecutiveErrors = 0;
+    let retryDelay = 2000;
+    const MAX_RETRY_DELAY = 30000;
+    let currentPage = 'overview';
+    let assetData = {};
+
+    // XSS Prevention - escape HTML entities
+    function escapeHtml(unsafe) {
+      if (typeof unsafe !== 'string') return String(unsafe);
+      return unsafe
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Safe number formatting
+    function safeNumber(val, fallback = 0) {
+      const num = parseFloat(val);
+      return isNaN(num) || !isFinite(num) ? fallback : num;
+    }
+
+    // Update time
+    function updateTime() {
+      const now = new Date();
+      const options = { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true };
+      document.getElementById('current-time').textContent = now.toLocaleString('en-US', options);
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
+
+    // Theme toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      const icon = document.getElementById('theme-icon');
+      if (icon) icon.textContent = next === 'dark' ? '◑' : '◐';
+    }
+
+    // Page Navigation
+    function navigateTo(page) {
+      currentPage = page;
+      
+      // Update active nav item
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.page === page) {
+          item.classList.add('active');
+        }
+      });
+      
+      // Update page views
+      document.querySelectorAll('.page-view').forEach(view => {
+        view.classList.remove('active');
+      });
+      const targetPage = document.getElementById('page-' + page);
+      if (targetPage) {
+        targetPage.classList.add('active');
+      }
+      
+      // Update page title
+      const pageTitle = document.getElementById('page-title');
+      const pageTitles = {
+        'overview': 'Overview',
+        'btc': 'Bitcoin',
+        'eth': 'Ethereum',
+        'sol': 'Solana',
+        'avax': 'Avalanche'
+      };
+      pageTitle.textContent = pageTitles[page] || 'Overview';
+    }
+
+    // Setup navigation event listeners
+    document.querySelectorAll('.nav-item[data-page]').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        navigateTo(item.dataset.page);
+      });
+      item.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          navigateTo(item.dataset.page);
+        }
+      });
+    });
+
+    // Handle hash navigation
+    function handleHash() {
+      const hash = window.location.hash.slice(1);
+      if (hash && ['overview', 'btc', 'eth', 'sol', 'avax'].includes(hash)) {
+        navigateTo(hash);
+      }
+    }
+    window.addEventListener('hashchange', handleHash);
+    handleHash();
+
+    // Regime state to CSS class mapping
+    const regimeColors = {
+      'STABLE': 'stable',
+      'MEAN_REVERTING': 'stable',
+      'TRENDING': 'trending',
+      'MOMENTUM': 'trending',
+      'TRANSITION': 'transition',
+      'Range-Bound': 'stable',
+      'CHAOTIC': 'chaos',
+      'VOLATILE': 'chaos'
+    };
+
+    // Format price with proper precision
+    function formatPrice(price) {
+      if (price >= 10000) return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+      if (price >= 100) return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    // Format large numbers
+    function formatVolume(value) {
+      if (value >= 1e9) return '$' + (value / 1e9).toFixed(1) + 'B';
+      if (value >= 1e6) return '$' + (value / 1e6).toFixed(1) + 'M';
+      if (value >= 1e3) return '$' + (value / 1e3).toFixed(0) + 'K';
+      return '$' + value.toFixed(0);
+    }
+
+    // Update regime badge in header
+    function updateRegimeBadge(regime, confidence) {
+      const badge = document.querySelector('.header .regime-badge');
+      const label = badge.querySelector('.regime-label');
+      const conf = badge.querySelector('.regime-confidence');
+      const dot = badge.querySelector('.regime-dot');
+      
+      label.textContent = regime;
+      conf.textContent = Math.round(confidence * 100) + '%';
+      
+      const colorClass = regimeColors[regime] || 'stable';
+      dot.style.background = `var(--regime-${colorClass})`;
+      badge.style.background = `var(--regime-${colorClass}-bg)`;
+      label.style.color = `var(--regime-${colorClass})`;
+    }
+
+    // Update asset list on overview
+    function updateAssets(assets) {
+      const assetList = document.querySelector('.asset-list');
+      if (!assets || !assetList) return;
+
+      // Store asset data for coin detail pages
+      assets.forEach(a => {
+        const symbol = (a.symbol || 'N/A').split('-')[0].toLowerCase();
+        assetData[symbol] = a;
+      });
+
+      assetList.innerHTML = assets.map(a => {
+        const symbol = escapeHtml(a.symbol ? a.symbol.split('-')[0] : 'N/A');
+        const price = safeNumber(a.midPrice || a.price || a.lastPrice, 0);
+        const change = safeNumber(a.priceChangePct || a.change24h, 0);
+        const regime = escapeHtml(a.regime || 'STABLE');
+        const colorClass = regimeColors[regime] || 'stable';
+        const changeClass = change >= 0 ? 'positive' : 'negative';
+        const changeSign = change >= 0 ? '+' : '';
+        
+        return `
+          <div class="asset-row" style="cursor: pointer" onclick="navigateTo('${symbol.toLowerCase()}')">
+            <div class="asset-info">
+              <span class="asset-symbol">${symbol}</span>
+              <span class="asset-regime-dot" style="background: var(--regime-${colorClass})"></span>
+            </div>
+            <span class="asset-price numeric">${formatPrice(price)}</span>
+            <span class="asset-change numeric ${changeClass}">${changeSign}${change.toFixed(1)}%</span>
+          </div>
+        `;
+      }).join('');
+
+      // Update coin detail pages
+      updateCoinDetailPages(assets);
+    }
+
+    // Update coin detail pages with live data
+    function updateCoinDetailPages(assets) {
+      assets.forEach(a => {
+        const symbol = (a.symbol || '').split('-')[0].toLowerCase();
+        if (!['btc', 'eth', 'sol', 'avax'].includes(symbol)) return;
+
+        const price = safeNumber(a.midPrice || a.price || a.lastPrice, 0);
+        const change = safeNumber(a.priceChangePct || a.change24h, 0);
+        const regime = a.regime || 'STABLE';
+        const colorClass = regimeColors[regime] || 'stable';
+        
+        // Update price
+        const priceEl = document.getElementById(`${symbol}-price`);
+        if (priceEl) priceEl.textContent = formatPrice(price);
+        
+        // Update change
+        const changeEl = document.getElementById(`${symbol}-change`);
+        if (changeEl) {
+          changeEl.textContent = (change >= 0 ? '+' : '') + change.toFixed(1) + '%';
+          changeEl.className = 'coin-change numeric ' + (change >= 0 ? 'positive' : 'negative');
+        }
+
+        // Update sidebar badge
+        const badgeEl = document.getElementById(`${symbol}-badge`);
+        if (badgeEl) {
+          const shortRegime = regime.length > 6 ? regime.substring(0, 5) : regime;
+          badgeEl.textContent = shortRegime;
+          badgeEl.className = 'nav-badge';
+          if (colorClass === 'transition' || colorClass === 'chaos') {
+            badgeEl.classList.add('warning');
+          }
+          if (colorClass === 'chaos') {
+            badgeEl.classList.add('danger');
+          }
+        }
+
+        // Update coin regime badge
+        const coinBadge = document.querySelector(`.coin-regime-badge[data-coin="${symbol}"]`);
+        if (coinBadge) {
+          const dot = coinBadge.querySelector('.regime-dot');
+          const label = coinBadge.querySelector('.regime-label');
+          if (dot) dot.style.background = `var(--regime-${colorClass})`;
+          if (label) {
+            label.textContent = regime;
+            label.style.color = `var(--regime-${colorClass})`;
+          }
+          coinBadge.style.background = `var(--regime-${colorClass}-bg)`;
+        }
+
+        // Update stats if we have order book data
+        if (a.bidDepth !== undefined) {
+          const bidEl = document.getElementById(`${symbol}-bid-depth`);
+          if (bidEl) bidEl.textContent = formatVolume(a.bidDepth);
+        }
+        if (a.askDepth !== undefined) {
+          const askEl = document.getElementById(`${symbol}-ask-depth`);
+          if (askEl) askEl.textContent = formatVolume(a.askDepth);
+        }
+        if (a.spread !== undefined) {
+          const spreadEl = document.getElementById(`${symbol}-spread`);
+          if (spreadEl) spreadEl.textContent = (a.spread * 100).toFixed(3) + '%';
+        }
+      });
+    }
+
+    // Update alerts
+    function updateAlerts(alerts) {
+      const alertList = document.querySelector('#page-overview .alert-list');
+      const alertBadge = document.querySelector('.alert-badge');
+      if (!alertList) return;
+
+      if (alertBadge) alertBadge.textContent = alerts.length;
+
+      if (alerts.length === 0) {
+        alertList.innerHTML = '<div class="alert-item info"><div class="alert-header"><span class="alert-icon info">○</span><span class="alert-headline">No active alerts</span></div></div>';
+        return;
+      }
+
+      alertList.innerHTML = alerts.slice(0, 5).map(a => {
+        const severity = escapeHtml(a.severity || 'info');
+        const title = escapeHtml(a.title || 'Alert');
+        const description = escapeHtml(a.description || '');
+        const icon = severity === 'critical' ? '⚠' : severity === 'warning' ? '●' : '○';
+        return `
+          <div class="alert-item ${severity}">
+            <div class="alert-header">
+              <span class="alert-icon ${severity}">${icon}</span>
+              <span class="alert-headline">${title}</span>
+              <span class="alert-time">now</span>
+            </div>
+            <p class="alert-description">${description}</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Update opportunities
+    function updateOpportunities(opportunities) {
+      const oppList = document.querySelector('#page-overview .opportunity-list');
+      if (!oppList) return;
+
+      if (!opportunities || opportunities.length === 0) {
+        oppList.innerHTML = '<div class="opportunity-row"><span class="opp-asset">No opportunities detected</span></div>';
+        return;
+      }
+
+      oppList.innerHTML = opportunities.slice(0, 5).map(o => {
+        const asset = escapeHtml(o.asset ? o.asset.split('-')[0] : 'N/A');
+        const direction = escapeHtml((o.direction || 'HOLD').toLowerCase());
+        const directionDisplay = escapeHtml(o.direction || 'HOLD');
+        const signal = escapeHtml(o.signal || o.setup || '');
+        const conviction = safeNumber(o.conviction, 0);
+        return `
+          <div class="opportunity-row">
+            <span class="opp-asset">${asset}</span>
+            <span class="opp-setup">${signal}</span>
+            <span class="opp-direction ${direction}">${directionDisplay}</span>
+            <div class="opp-confidence">
+              <div class="confidence-bar">
+                <div class="confidence-fill" style="width: ${conviction * 100}%"></div>
+              </div>
+              <span class="confidence-value numeric">${Math.round(conviction * 100)}%</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Update flows
+    function updateFlows(flows) {
+      const flowViz = document.querySelector('.flow-visualization');
+      if (!flowViz) return;
+
+      if (!flows || flows.length === 0) {
+        flowViz.innerHTML = '<div class="flow-row"><span>No significant flows detected</span></div>';
+        return;
+      }
+
+      flowViz.innerHTML = flows.slice(0, 4).map(f => {
+        const from = escapeHtml(f.fromAsset ? f.fromAsset.split('-')[0] : '?');
+        const to = escapeHtml(f.toAsset ? f.toAsset.split('-')[0] : '?');
+        return `
+          <div class="flow-row">
+            <div class="flow-from">
+              <span class="flow-asset">${from}</span>
+            </div>
+            <span class="flow-arrow">↔</span>
+            <div class="flow-to">
+              <span class="flow-asset">${to}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Update risk section
+    function updateRisk(risk) {
+      if (!risk) return;
+      
+      const stressValue = document.querySelector('.stress-value');
+      const stressFill = document.querySelector('.stress-fill');
+      const drawdownEl = document.querySelector('.metric-value.negative');
+      const recEl = document.querySelector('.risk-recommendation');
+
+      if (stressValue) {
+        const score = Math.round((risk.stressScore || 0) * 100);
+        stressValue.textContent = score + '/100';
+        if (stressFill) {
+          stressFill.style.width = score + '%';
+          stressFill.className = 'stress-fill ' + (score > 70 ? 'high' : score > 40 ? 'medium' : 'low');
+        }
+      }
+      
+      if (drawdownEl) {
+        drawdownEl.textContent = '-' + (risk.estimatedDrawdown || 0).toFixed(1) + '%';
+      }
+
+      if (recEl) {
+        recEl.innerHTML = `<span class="rec-label">Recommendation: </span><span>${escapeHtml(risk.hedgeRecommendation || 'Normal allocation')}</span>`;
+        const stressScore = risk.stressScore || 0;
+        recEl.style.background = stressScore > 0.6 ? 'var(--negative-bg)' : stressScore > 0.4 ? 'var(--warning-bg)' : 'var(--positive-bg)';
+        const recLabel = recEl.querySelector('.rec-label');
+        if (recLabel) {
+          recLabel.style.color = stressScore > 0.6 ? 'var(--negative)' : stressScore > 0.4 ? 'var(--warning)' : 'var(--positive)';
+        }
+      }
+    }
+
+    // Update primitives (from state API)
+    function updatePrimitives(primitives) {
+      const primGrid = document.querySelector('#page-overview .primitive-grid');
+      if (!primGrid || !primitives) return;
+
+      const primMap = {
+        'rmt': { id: 'RMT', color: 'prim-rmt' },
+        'rkhs': { id: 'RKHS', color: 'prim-rkhs' },
+        'betti': { id: 'PH', color: 'prim-ph' },
+        'spectral_gap': { id: 'SGW', color: 'prim-sgw' },
+        'ot': { id: 'OT', color: 'prim-ot' },
+        'tg': { id: 'TG', color: 'prim-tg' },
+        'ga': { id: 'GA', color: 'prim-ga' }
+      };
+
+      const items = Object.entries(primitives).map(([key, val]) => {
+        const conf = primMap[key] || { id: key.toUpperCase(), color: 'prim-ot' };
+        const value = typeof val === 'object' ? (val.value || val.score || 0) : val;
+        const pct = Math.min(100, Math.max(0, value * 100));
+        const inactive = pct < 5 ? 'inactive' : '';
+        return `
+          <div class="primitive-item ${inactive}">
+            <span class="primitive-id" style="color: var(--${conf.color})">${conf.id}</span>
+            <div class="primitive-bar"><div class="primitive-fill" style="width: ${pct}%; background: var(--${conf.color})"></div></div>
+            <span class="primitive-value numeric">${pct.toFixed(0)}%</span>
+          </div>
+        `;
+      }).join('');
+
+      primGrid.innerHTML = items || '<div class="primitive-item">No primitives data</div>';
+    }
+
+    // Update tick count
+    function updateTickCount() {
+      tickCount++;
+      const tickEl = document.querySelector('.connection-status .numeric');
+      if (tickEl) tickEl.textContent = '#' + tickCount;
+    }
+
+    // Fetch and update all data
+    async function fetchData() {
+      const statusDot = document.querySelector('.status-dot');
+      const statusLabel = document.querySelector('.status-label');
+      
+      try {
+        // Fetch intelligence data (main)
+        const intRes = await fetch(`${API_BASE}/intelligence`, {
+          signal: AbortSignal.timeout(10000)
+        });
+        if (intRes.ok) {
+          const data = await intRes.json();
+          updateRegimeBadge(data.regimeLabel || data.regime, data.confidence || 0.5);
+          updateAlerts(data.alerts || []);
+          updateOpportunities(data.opportunities || []);
+          updateFlows(data.flows || []);
+          updateRisk(data.risk || {});
+        }
+
+        // Fetch state for assets and primitives
+        const stateRes = await fetch(`${API_BASE}/state`, {
+          signal: AbortSignal.timeout(10000)
+        });
+        if (stateRes.ok) {
+          const state = await stateRes.json();
+          // Handle assets as dict or array
+          let assetArr = state.assets;
+          if (assetArr && !Array.isArray(assetArr)) {
+            assetArr = Object.values(assetArr);
+          }
+          updateAssets(assetArr || []);
+          // Handle primitives as array or dict
+          if (state.primitives) {
+            if (Array.isArray(state.primitives)) {
+              // Convert array to dict format
+              const primDict = {};
+              state.primitives.forEach(p => {
+                primDict[p.name.toLowerCase()] = p.score;
+              });
+              updatePrimitives(primDict);
+            } else {
+              updatePrimitives(state.primitives);
+            }
+          }
+        }
+
+        // Update connection indicator - success
+        if (statusDot) statusDot.style.background = 'var(--positive)';
+        if (statusLabel) statusLabel.textContent = 'Live';
+        updateTickCount();
+        
+        // Reset error tracking on success
+        consecutiveErrors = 0;
+        retryDelay = 2000;
+
+      } catch (err) {
+        console.error('Fetch error:', err);
+        consecutiveErrors++;
+        
+        // Update connection indicator
+        if (statusDot) statusDot.style.background = 'var(--negative)';
+        if (statusLabel) {
+          if (err.name === 'TimeoutError') {
+            statusLabel.textContent = 'Timeout';
+          } else if (consecutiveErrors >= 3) {
+            statusLabel.textContent = 'Reconnecting...';
+          } else {
+            statusLabel.textContent = 'Disconnected';
+          }
+        }
+        
+        // Exponential backoff on errors
+        retryDelay = Math.min(retryDelay * 1.5, MAX_RETRY_DELAY);
+      }
+    }
+
+    // Initial fetch and polling with adaptive retry
+    fetchData();
+    
+    function scheduleFetch() {
+      setTimeout(() => {
+        fetchData().finally(() => scheduleFetch());
+      }, retryDelay);
+    }
+    scheduleFetch();
+  </script>
+</body>
+</html>

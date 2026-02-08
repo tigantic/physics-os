@@ -147,10 +147,14 @@ def tt_svd(
         # 1. Matrix is large enough that rSVD overhead is worth it
         # 2. One dimension is huge (cuSOLVER limits, memory bandwidth)
         # 3. We only need top-k singular values (chi_max << min(m,n))
-        # For thin matrices (small m, huge n), rSVD's random projection is efficient
-        large_dimension = max(m, n) > 50_000  # If any dimension > 50K, use rSVD
+        # Standard SVD for thin matrices: when min(m,n) <= chi_max + 10,
+        # standard SVD is exact, fast (O(min² × max)), and we need ALL
+        # singular values anyway. rSVD would clip q to min(m,n)-1 which
+        # can lose significant components (e.g. rank-2 matrix clipped to rank-1).
+        large_dimension = max(m, n) > 50_000
         beneficial_ratio = min(m, n) > rsvd_threshold and chi_max < min(m, n) // 2
-        use_rsvd = large_dimension or beneficial_ratio
+        thin_matrix = min(m, n) <= chi_max + 10
+        use_rsvd = (large_dimension or beneficial_ratio) and not thin_matrix
         
         if use_rsvd:
             # Randomized SVD (Halko-Martinsson-Tropp): O(m·n·k) instead of O(m·n·min(m,n))

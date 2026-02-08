@@ -1,0 +1,167 @@
+{
+  "project": "HyperTensor Drug Design",
+  "module": "TIG-011a Multi-Mechanism Enhancement",
+  "timestamp": "2026-01-28T00:09:34.868204+00:00",
+  "status": "READY FOR SYNTHESIS",
+  "drug_candidate": {
+    "name": "TIG-011a Enhanced",
+    "scaffold": "quinazoline",
+    "n_mechanisms": 5,
+    "mechanism_types": [
+      "coulombic",
+      "van_der_waals",
+      "pi_stacking",
+      "pi_stacking",
+      "hydrophobic"
+    ],
+    "has_covalent_warhead": false
+  },
+  "phantom_pocket_validation": {
+    "cofactor": "GCP-Mg\u00b2\u207a",
+    "cofactor_position_A": [
+      4.5,
+      2.0,
+      1.5
+    ],
+    "exclusion_radius_A": 3.5,
+    "coordinating_residues": [
+      "Ser17",
+      "Thr35",
+      "Gly15"
+    ],
+    "valid": true,
+    "message": "No cofactor clash"
+  },
+  "synthetic_feasibility": {
+    "route": "Quinazoline NAS Route",
+    "key_reaction": "Nucleophilic Aromatic Substitution",
+    "temperature_C": 110.0,
+    "solvent": "DMF",
+    "expected_yield_pct": 75.0,
+    "valid": true,
+    "issues": []
+  },
+  "dielectric_stress_test": {
+    "original_results": {
+      "2.0": {
+        "success_pct": 0.0,
+        "status": "FAILED"
+      },
+      "4.0": {
+        "success_pct": 0.0,
+        "status": "FAILED"
+      },
+      "10.0": {
+        "success_pct": 0.0,
+        "status": "FAILED"
+      },
+      "40.0": {
+        "success_pct": 2.405308284518337,
+        "status": "FAILED"
+      },
+      "80.0": {
+        "success_pct": 16.873193289741344,
+        "status": "FAILED"
+      }
+    },
+    "enhanced_results": {
+      "2.0": {
+        "success_pct": 0.0,
+        "status": "FAILED",
+        "energy_breakdown": {
+          "coulombic_kcal": -59.29707142857144,
+          "van_der_waals_kcal": -5.0,
+          "hydrophobic_kcal": -3.2526328684332007,
+          "pi_stacking_kcal": -5.562976803345338,
+          "covalent_kcal": 0.0,
+          "total_kcal": -73.11268110034997
+        }
+      },
+      "4.0": {
+        "success_pct": 28.334842378323994,
+        "status": "FAILED",
+        "energy_breakdown": {
+          "coulombic_kcal": -29.64853571428572,
+          "van_der_waals_kcal": -5.0,
+          "hydrophobic_kcal": -3.508369663358395,
+          "pi_stacking_kcal": -5.284827963178071,
+          "covalent_kcal": 0.0,
+          "total_kcal": -43.44173334082218
+        }
+      },
+      "10.0": {
+        "success_pct": 77.9329021019717,
+        "status": "LEAKY",
+        "energy_breakdown": {
+          "coulombic_kcal": -11.859414285714285,
+          "van_der_waals_kcal": -5.0,
+          "hydrophobic_kcal": -4.138603940653479,
+          "pi_stacking_kcal": -4.595502576676584,
+          "covalent_kcal": 0.0,
+          "total_kcal": -25.59352080304435
+        }
+      },
+      "40.0": {
+        "success_pct": 86.37996294283543,
+        "status": "STABLE",
+        "energy_breakdown": {
+          "coulombic_kcal": -2.9648535714285713,
+          "van_der_waals_kcal": -5.0,
+          "hydrophobic_kcal": -5.53805420878726,
+          "pi_stacking_kcal": -2.781488401672669,
+          "covalent_kcal": 0.0,
+          "total_kcal": -16.2843961818885
+        }
+      },
+      "80.0": {
+        "success_pct": 79.29407177657204,
+        "status": "LEAKY",
+        "energy_breakdown": {
+          "coulombic_kcal": -1.4824267857142857,
+          "van_der_waals_kcal": -5.0,
+          "hydrophobic_kcal": -5.88560255250046,
+          "pi_stacking_kcal": -1.8223544700614034,
+          "covalent_kcal": 0.0,
+          "total_kcal": -14.19038380827615
+        }
+      }
+    }
+  },
+  "key_findings": {
+    "original_at_water_pct": 16.873193289741344,
+    "enhanced_at_water_pct": 79.29407177657204,
+    "improvement_pct_points": 62.42087848683069,
+    "goal_70pct_achieved": "True",
+    "phantom_pocket_clear": true,
+    "synthetically_feasible": true
+  },
+  "physics_validation": {
+    "coulombic_screened": "Decays as 1/\u03b5_r - VERIFIED",
+    "vdw_independent": "Dielectric-independent - VERIFIED",
+    "hydrophobic_inverted": "Stronger in high-\u03b5_r - VERIFIED",
+    "pi_stacking_weak": "Weak \u03b5_r dependence - VERIFIED",
+    "cofactor_constraint": "GCP-Mg\u00b2\u207a exclusion zone - VERIFIED"
+  },
+  "synthesis_protocol_summary": {
+    "step_1": "4-chloroquinazoline + guanidine \u2192 core (110\u00b0C, DMF)",
+    "step_2": "N-alkylation for hydrophobic tail (RT, THF)",
+    "step_3": "Suzuki coupling for \u03c0-stacking (80\u00b0C, Pd catalyst)",
+    "overall_yield_pct": 42.0
+  },
+  "qtt_native_3d_pocket": {
+    "grid_shape": [
+      128,
+      128,
+      128
+    ],
+    "dense_size": "2097152",
+    "energy_compression_ratio": 285.8713195201745,
+    "dielectric_compression_ratio": 1016.062015503876,
+    "max_rank": 16,
+    "n_cores": 21,
+    "qtt_dynamics_success_rate": 1.0,
+    "build_time_s": 13.500417215007474,
+    "validation": "PASSED"
+  },
+  "sha256": "e323e9337e72fba0a77b9aad30e4a12dbb8407cff8371eda4e9dce8461fb12a5"
+}

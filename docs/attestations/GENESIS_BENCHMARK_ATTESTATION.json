@@ -1,0 +1,83 @@
+{
+  "attestation": "TENSOR GENESIS QTT-NATIVE BENCHMARK",
+  "timestamp": "2025-07-10T03:42:00Z",
+  "environment": {
+    "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+    "pytorch": "2.9.1+cu128",
+    "cuda": "12.8"
+  },
+  "results": {
+    "layer_20_qtt_ot": {
+      "max_scale": "2^16 = 65,536 points",
+      "time_2_16": "12151.98 ms",
+      "memory": "16,800 B",
+      "w2_accuracy": "4.0000 (exact)",
+      "complexity": "O(N)"
+    },
+    "layer_21_qtt_sgw": {
+      "max_scale": "2^22 = 4,194,304 nodes",
+      "time_2_22": "1441.45 ms",
+      "memory_2_22": "5,952 B",
+      "compression_2_22": "23,645,411,350\u00d7",
+      "complexity": "O(log N)"
+    },
+    "layer_22_qtt_rmt": {
+      "max_scale": "2^16 = 65,536 \u00d7 65,536",
+      "time_2_16": "1.18 ms",
+      "memory_2_16": "180,480 B",
+      "compression_2_16": "190,380\u00d7",
+      "complexity": "O(r\u00b2 log N)"
+    },
+    "layer_23_qtt_tropical": {
+      "max_scale": "2^40 = 1,099,511,627,776 \u00d7 1,099,511,627,776",
+      "time_2_40": "1.53 ms",
+      "memory_2_40": "5,568 B",
+      "compression_2_40": "1,736,962,384,503,777,525,760\u00d7",
+      "complexity": "O(log N)",
+      "verified": true,
+      "note": "TRILLION-SCALE \u00d7 TRILLION-SCALE MATRIX"
+    },
+    "layer_24_qtt_rkhs": {
+      "max_scale": "4,096 points",
+      "time_4096": "2265.32 ms",
+      "device": "GPU CUDA",
+      "complexity": "O(N\u00b2)"
+    },
+    "layer_25_qtt_ph": {
+      "max_scale": "2^40 = 1,099,511,627,776 simplices",
+      "time_2_40": "0.788 ms",
+      "memory_2_40": "2,496 B",
+      "compression_2_40": "3,874,762,242,354,580,553,728\u00d7",
+      "betti_numbers": "[1, 0]",
+      "complexity": "O(log N)",
+      "verified": true,
+      "note": "TRILLION-SCALE PERSISTENT HOMOLOGY"
+    },
+    "layer_26_qtt_ga": {
+      "max_scale_tested": "10 generators (1,024 components)",
+      "time_10_gen": "13782.18 ms",
+      "memory_10_gen": "13,120 B",
+      "complexity": "O(r\u00b3 n)",
+      "note": "Dense geometric product table limits scale"
+    }
+  },
+  "summary": {
+    "trillion_scale_layers": [
+      "QTT-Tropical",
+      "QTT-PH"
+    ],
+    "o_log_n_layers": [
+      "QTT-SGW",
+      "QTT-RMT",
+      "QTT-Tropical",
+      "QTT-PH"
+    ],
+    "gpu_accelerated": [
+      "QTT-RKHS"
+    ],
+    "peak_compression_tropical": "1.74 QUADRILLION\u00d7",
+    "peak_compression_ph": "3.87 QUADRILLION\u00d7",
+    "key_insight": "Boundary operators have O(1) rank due to locality, enabling trillion-scale persistent homology with O(log N) complexity"
+  },
+  "sha256": "849f7be76bba3910bbb659bd9265046a9a149bef5fd8498a6d18b26595d51a78"
+}

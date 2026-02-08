@@ -1,0 +1,170 @@
+{
+  "pipeline": "CROSS-PRIMITIVE QTT PIPELINE (7 PRIMITIVES)",
+  "primitives": [
+    "OT",
+    "SGW",
+    "RKHS",
+    "RMT",
+    "TG",
+    "PH",
+    "GA"
+  ],
+  "layers": [
+    20,
+    21,
+    24,
+    22,
+    23,
+    25,
+    26
+  ],
+  "timestamp": "2026-01-27T18:47:20.737238+00:00",
+  "grid_bits": 14,
+  "grid_size": 16384,
+  "total_time_seconds": 31.32449933699536,
+  "stages": [
+    {
+      "name": "Distribution Transport",
+      "primitive": "QTT-OT",
+      "layer": 20,
+      "input_type": "QTT",
+      "output_type": "QTT",
+      "input_memory_bytes": 19568,
+      "output_memory_bytes": 221328,
+      "densification_required": false,
+      "densification_reason": null,
+      "time_seconds": 5.369659684001817,
+      "key_metrics": {
+        "wasserstein_distance": 0.5385214830293436,
+        "ref_mean": 0.0,
+        "obs_mean": 0.5,
+        "shift": 0.5,
+        "barycenter_rank": 78.0
+      }
+    },
+    {
+      "name": "Multi-Scale Wavelet Transform",
+      "primitive": "QTT-SGW",
+      "layer": 21,
+      "input_type": "QTT",
+      "output_type": "QTT",
+      "input_memory_bytes": 86592,
+      "output_memory_bytes": 436800,
+      "densification_required": false,
+      "densification_reason": null,
+      "time_seconds": 25.676491549005732,
+      "key_metrics": {
+        "total_energy": 1572.4532545327252
+      }
+    },
+    {
+      "name": "Scale Divergence Analysis",
+      "primitive": "QTT-RKHS",
+      "layer": 24,
+      "input_type": "QTT",
+      "output_type": "scalar",
+      "input_memory_bytes": 174720,
+      "output_memory_bytes": 8,
+      "densification_required": false,
+      "densification_reason": null,
+      "time_seconds": 0.014234356000088155,
+      "key_metrics": {
+        "mmd_fine_coarse": 114.51783334433372,
+        "mmd_squared": 13114.334153880593,
+        "term_ff": 12504.766480314087,
+        "term_gg": -2.4913193071742707,
+        "term_fg": -306.0294964368391,
+        "fine_scale": 0.5,
+        "coarse_scale": 8.0
+      }
+    },
+    {
+      "name": "Spectral Analysis",
+      "primitive": "QTT-RMT",
+      "layer": 22,
+      "input_type": "scalar",
+      "output_type": "spectrum",
+      "input_memory_bytes": 8,
+      "output_memory_bytes": 3584,
+      "densification_required": false,
+      "densification_reason": null,
+      "time_seconds": 0.022633006003161427,
+      "key_metrics": {
+        "lambda_min": -1.4003693906794246,
+        "lambda_max": 1.3945214305298637,
+        "edge_ratio": 0.6972607152649318,
+        "spacing_variance": 0.4569938614838388,
+        "goe_variance": 0.2732395447351627,
+        "goe_match": "False"
+      }
+    },
+    {
+      "name": "Tropical Distance Analysis",
+      "primitive": "QTT-TG",
+      "layer": 23,
+      "input_type": "spectrum",
+      "output_type": "tropical",
+      "input_memory_bytes": 3584,
+      "output_memory_bytes": 32768,
+      "densification_required": false,
+      "densification_reason": null,
+      "time_seconds": 0.08353457700286526,
+      "key_metrics": {
+        "diameter": 17.85319772038992,
+        "avg_path_length": 7.812461923905613,
+        "tropical_eigenvalue": 1.0
+      }
+    },
+    {
+      "name": "Topological Feature Analysis",
+      "primitive": "QTT-PH",
+      "layer": 25,
+      "input_type": "tropical",
+      "output_type": "persistence",
+      "input_memory_bytes": 32768,
+      "output_memory_bytes": 1040,
+      "densification_required": false,
+      "densification_reason": null,
+      "time_seconds": 0.13781093799480004,
+      "key_metrics": {
+        "beta_0": 1.0,
+        "beta_1": 1.0,
+        "epsilon": 0.5,
+        "loop_birth": 0.10325438342688588
+      }
+    },
+    {
+      "name": "Geometric Transformation",
+      "primitive": "QTT-GA",
+      "layer": 26,
+      "input_type": "persistence",
+      "output_type": "multivector",
+      "input_memory_bytes": 32,
+      "output_memory_bytes": 64,
+      "densification_required": false,
+      "densification_reason": null,
+      "time_seconds": 0.017934521005372517,
+      "key_metrics": {
+        "rotation_angle": 0.7853981633974483,
+        "rotor_norm": 1.0,
+        "rotor_error": 0.0,
+        "rotation_error": 1.5700924586837752e-16,
+        "magnitude_error": 0.0,
+        "rotated_x": 0.7071067811865475,
+        "rotated_y": 0.7071067811865476,
+        "rotated_z": 0.0
+      }
+    }
+  ],
+  "memory": {
+    "dense_equivalent_bytes": 917504,
+    "qtt_total_bytes": 658128,
+    "compression_ratio": 1.3941117837259622
+  },
+  "integrity": {
+    "qtt_stages": 2,
+    "dense_stages": 0,
+    "data_flow_verified": true
+  },
+  "sha256": "9f729c368762348db1bd98351f6b8369b16147a7c0178cda4ea44111ee45fe33"
+}

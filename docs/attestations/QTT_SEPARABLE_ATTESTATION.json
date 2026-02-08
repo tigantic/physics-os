@@ -1,0 +1,127 @@
+{
+  "attestation": "QTT_SEPARABLE_RENDERING_V2",
+  "date": "2026-01-28T07:21:00Z",
+  "status": "VERIFIED",
+  
+  "summary": {
+    "achievement": "1030x speedup for QTT 2D rendering via separable Kronecker contraction",
+    "gpu_tensor_fps": 7628,
+    "gpu_tensor_ms": 0.131,
+    "continuous_fps": 15894,
+    "continuous_ms": 0.063,
+    "vs_60fps_target": "127x faster",
+    "correctness": "1.46e-11 max error vs brute-force"
+  },
+  
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+    "torch_version": "2.9.1+cu128",
+    "cuda_version": "12.8"
+  },
+  
+  "test_config": {
+    "n_cores": 20,
+    "rank": 8,
+    "resolution": [1920, 1080],
+    "pixels": 2073600,
+    "x_cores": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "y_cores": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+  },
+  
+  "benchmarks": {
+    "gpu_tensor": {
+      "description": "CUDA tensor output, no CPU transfer",
+      "first_frame_ms": 1.82,
+      "cached_median_ms": 0.131,
+      "cached_min_ms": 0.062,
+      "fps": 7628,
+      "n_runs": 100
+    },
+    "cpu_output": {
+      "description": "NumPy array output with CPU transfer",
+      "first_frame_ms": 13.08,
+      "cached_median_ms": 2.18,
+      "fps": 459,
+      "n_runs": 20
+    },
+    "continuous": {
+      "description": "Sustained rendering throughput",
+      "n_frames": 1000,
+      "total_ms": 62.92,
+      "per_frame_ms": 0.063,
+      "fps": 15894
+    },
+    "memory": {
+      "peak_gpu_mb": 20.4,
+      "output_size_mb": 7.9,
+      "overhead_mb": 12.5
+    }
+  },
+  
+  "resolution_scaling": [
+    {"resolution": "640x480", "ms": 0.067, "fps": 14952, "mpix_per_ms": 4.6},
+    {"resolution": "1280x720", "ms": 0.062, "fps": 16046, "mpix_per_ms": 14.8},
+    {"resolution": "1920x1080", "ms": 0.069, "fps": 14525, "mpix_per_ms": 30.1},
+    {"resolution": "2560x1440", "ms": 0.097, "fps": 10258, "mpix_per_ms": 37.8}
+  ],
+  
+  "correctness": {
+    "method": "Brute-force QTT contraction comparison",
+    "n_samples": 500,
+    "max_error": 1.46e-11,
+    "mean_error": 1.08e-12,
+    "passed": true
+  },
+  
+  "key_insight": {
+    "title": "Separable Kronecker Structure",
+    "explanation": "When x_cores and y_cores are disjoint, QTT has exact separable structure: value[x,y] = X_vec[x] @ Y_vec[y]. This reduces 2M contractions to 2K + 1 matmul.",
+    "old_complexity": "O(width × height × n_cores × rank²)",
+    "new_complexity": "O(2^n_x × n_x × rank² + 2^n_y × n_y × rank² + 2^n_x × 2^n_y)",
+    "speedup_factor": 1030
+  },
+  
+  "optimizations": {
+    "separable_contraction": {
+      "description": "Exploit Kronecker structure of disjoint x/y cores",
+      "speedup": "168ms → 1.7ms (100x)"
+    },
+    "xy_vector_caching": {
+      "description": "Cache X_vecs and Y_vecs across frames for static viewports",
+      "speedup": "0.6ms → 0ms contraction time"
+    },
+    "fp16_gemm": {
+      "description": "Use half-precision for outer product matmul",
+      "speedup": "~1.5x on tensor cores"
+    },
+    "gpu_tensor_output": {
+      "description": "Return CUDA tensor directly, skip CPU transfer",
+      "speedup": "2.2ms → 0.13ms (17x)"
+    }
+  },
+  
+  "files": {
+    "implementation": "tensornet/visualization/tensor_slicer.py",
+    "documentation": "docs/QTT_SEPARABLE_RENDERING.md",
+    "benchmark": "tests/benchmarks/qtt_render_benchmark.py",
+    "results": "tests/benchmarks/qtt_render_results.json"
+  },
+  
+  "api": {
+    "fast_path": "slicer.render_slice_2d_gpu_tensor(x_cores, y_cores, resolution=(1920,1080))",
+    "numpy_path": "slicer.render_slice_2d_gpu(x_cores, y_cores, resolution=(1920,1080))",
+    "invalidate": "slicer.invalidate_cache()"
+  },
+  
+  "invariants": [
+    "x_cores and y_cores must be disjoint (no overlap)",
+    "Call invalidate_cache() when QTT cores change",
+    "LSB-first bit ordering throughout"
+  ],
+  
+  "warnings": [
+    "DO NOT use torch.compile - makes it 1000x slower",
+    "DO NOT loop over pixels - defeats the entire optimization",
+    "DO NOT call to_dense() on the QTT - will OOM"
+  ]
+}

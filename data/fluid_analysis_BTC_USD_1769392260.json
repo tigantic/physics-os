@@ -1,0 +1,12 @@
+{
+  "symbol": "BTC-USD",
+  "duration": 62.05096387863159,
+  "updates_received": 307,
+  "analyses_run": 27,
+  "fields_collected": 27,
+  "findings": [],
+  "spacetime_compression": {
+    "error": "linalg.svd: The algorithm failed to converge because the input matrix contained non-finite values."
+  },
+  "timestamp": "2026-01-26T01:51:00.000158+00:00"
+}

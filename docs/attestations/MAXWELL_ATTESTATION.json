@@ -1,0 +1,52 @@
+{
+  "demonstration": "MAXWELL EQUATIONS",
+  "project": "HYPERTENSOR-VM",
+  "timestamp": "2026-01-27T18:12:38.431691+00:00",
+  "tests": [
+    {
+      "name": "Plane Wave Propagation",
+      "passed": true,
+      "initial_div_B": 0.0,
+      "final_div_B": 0.0,
+      "energy_conservation": 0.9999999999938285,
+      "time_seconds": 3.403961055999389
+    },
+    {
+      "name": "Gaussian Pulse",
+      "passed": true,
+      "initial_div_B": 4.598264941760715e-13,
+      "final_div_B": 7.247046196031108e-13,
+      "energy_conservation": 0.9999999999768051,
+      "time_seconds": 1.6069670859942562
+    },
+    {
+      "name": "Monopole Rejection",
+      "passed": true,
+      "initial_div_B": 0,
+      "final_div_B": 0,
+      "energy_conservation": 1.0,
+      "time_seconds": 0.001398293999955058
+    },
+    {
+      "name": "Poynting Vector",
+      "passed": true,
+      "initial_div_B": 0,
+      "final_div_B": 0,
+      "energy_conservation": 1.0,
+      "time_seconds": 0.0025369380018673837
+    }
+  ],
+  "summary": {
+    "total_tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "all_passed": true
+  },
+  "constraints_verified": [
+    "\u2207\u00b7B = 0 (no magnetic monopoles)",
+    "\u2207\u00b7E = \u03c1/\u03b5\u2080 (Gauss's law)",
+    "Energy conservation",
+    "Poynting vector direction"
+  ],
+  "sha256": "589af7e6a99030e000652ad75c117420292936914cfc5c0468119826b9dfec1b"
+}

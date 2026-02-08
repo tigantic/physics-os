@@ -161,3 +161,10 @@ zk_targets/
 media/
 video/output/concat.txt
 demo_output/
+
+# Windows Zone.Identifier metadata
+*:Zone.Identifier
+
+# Ephemeral summaries
+.execution_summary.txt
+.github_validation_summary.txt

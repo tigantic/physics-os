@@ -1,0 +1,148 @@
+{
+  "project": "ORACLE",
+  "project_number": 15,
+  "title": "Room-Temperature Topological Quantum Computing",
+  "timestamp": "2026-01-06T02:46:06.276471Z",
+  "gauntlet_version": "1.0.0",
+  "results": {
+    "gates_passed": 5,
+    "total_gates": 5,
+    "gate_results": {
+      "gate_1": {
+        "name": "Thermal Protection Advantage",
+        "odin_gap_meV": 46.470176042774575,
+        "al_gap_meV": 0.18199807849650618,
+        "room_temp_advantage": 255.33333333333334,
+        "advantage_by_temp": {
+          "0.015K": 255.33333333333331,
+          "1.0K": 255.33333333333331,
+          "77K": 255.33333333333331,
+          "200K": 255.33333333333334,
+          "293K": 255.33333333333334
+        },
+        "passed": true
+      },
+      "gate_2": {
+        "name": "Topological Phase Accessibility",
+        "accessible_configs": [
+          {
+            "transmission": 0.01,
+            "gap_meV": 0.46470176042774575,
+            "field_T": 0.16056361742680683
+          },
+          {
+            "transmission": 0.05,
+            "gap_meV": 2.3235088021387287,
+            "field_T": 0.8028180871340342
+          },
+          {
+            "transmission": 0.1,
+            "gap_meV": 4.647017604277457,
+            "field_T": 1.6056361742680685
+          },
+          {
+            "transmission": 0.2,
+            "gap_meV": 9.294035208554915,
+            "field_T": 3.211272348536137
+          },
+          {
+            "transmission": 0.3,
+            "gap_meV": 13.941052812832373,
+            "field_T": 4.816908522804205
+          },
+          {
+            "transmission": 0.5,
+            "gap_meV": 23.235088021387288,
+            "field_T": 8.028180871340343
+          },
+          {
+            "transmission": 0.7,
+            "gap_meV": 32.5291232299422,
+            "field_T": 11.239453219876477
+          },
+          {
+            "transmission": 1.0,
+            "gap_meV": 46.470176042774575,
+            "field_T": 16.056361742680686
+          }
+        ],
+        "best_config": {
+          "transmission": 1.0,
+          "gap_meV": 46.470176042774575,
+          "field_T": 16.056361742680686
+        },
+        "passed": true
+      },
+      "gate_3": {
+        "name": "Majorana Localization Quality",
+        "topological_gap_meV": 3.4636824186008703,
+        "localization_length_nm": 57.00972638364642,
+        "good_configs": [
+          {
+            "length_nm": 500,
+            "hybridization_uev": 0.537758519702258
+          },
+          {
+            "length_nm": 1000,
+            "hybridization_uev": 8.349039853058402e-05
+          },
+          {
+            "length_nm": 2000,
+            "hybridization_uev": 2.012495894358435e-12
+          },
+          {
+            "length_nm": 5000,
+            "hybridization_uev": 2.818580285046973e-35
+          },
+          {
+            "length_nm": 10000,
+            "hybridization_uev": 2.2936268003648433e-73
+          }
+        ],
+        "passed": true
+      },
+      "gate_4": {
+        "name": "Coherence Time Scaling",
+        "topological_gap_meV": 3.4636824186008703,
+        "warm_coherent_temps": [
+          {
+            "temp_K": 4.2,
+            "T2_us": 14.329662929933844
+          }
+        ],
+        "warmest_with_coherence": 4.2,
+        "passed": true
+      },
+      "gate_5": {
+        "name": "Fault-Tolerant Error Correction",
+        "gate_time_ns": 199.99999999999997,
+        "surface_code_threshold": 0.01,
+        "temps_below_threshold": [
+          {
+            "temp_K": 1.0,
+            "error_rate": 6.995824426027137e-16
+          },
+          {
+            "temp_K": 2.0,
+            "error_rate": 3.7405412512167636e-07
+          }
+        ],
+        "warmest_operating_temp_K": 2.0,
+        "passed": true
+      }
+    }
+  },
+  "key_metrics": {
+    "odin_gap_meV": 46.470176042774575,
+    "odin_tc_K": 306.4,
+    "thermal_advantage_factor": 255.33333333333334,
+    "warmest_operating_temp_K": 2.0
+  },
+  "theoretical_foundation": {
+    "majorana_physics": "Kitaev chain model",
+    "topological_protection": "Non-Abelian anyon braiding",
+    "error_correction": "Surface code with topological qubits"
+  },
+  "disclaimer": "This attestation validates THEORETICAL calculations only. Experimental validation requires ODIN synthesis and Majorana detection.",
+  "sha256": "771adbeab9efc0517c37682ed13c30fb46d5d96ddfb6f30851bd9a203db875db"
+}

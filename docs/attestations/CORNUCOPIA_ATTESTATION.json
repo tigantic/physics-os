@@ -1,0 +1,66 @@
+{
+  "project": "CORNUCOPIA",
+  "project_number": 18,
+  "domain": "Post-Scarcity Economics",
+  "confidence": "Plausible",
+  "gauntlet": "Economic Physics & Resource Abundance",
+  "timestamp": "2026-01-16T01:51:05.703489+00:00",
+  "gates": {
+    "gate_1": {
+      "name": "Energy Abundance",
+      "kardashev_current": 0.7255272505103306,
+      "starheart_lcoe": 0.008,
+      "years_to_type1": 319.1479857472877,
+      "solar_potential_tw": 3480.0,
+      "passed": true
+    },
+    "gate_2": {
+      "name": "Material Abundance",
+      "iron_years": 27541602.0,
+      "aluminum_years": 1737159000.0,
+      "silicon_years": 46474250625.0,
+      "energy_limited_iron_cost": 0.05555555555555556,
+      "passed": true
+    },
+    "gate_3": {
+      "name": "Automation Economics",
+      "qtt_break_even_wage": 0.011420325114155251,
+      "cost_advantage_vs_median": 2451.7690801371837,
+      "workforce_transition_billions": 1.75,
+      "passed": true
+    },
+    "gate_4": {
+      "name": "Basic Needs Provision",
+      "current_abundant_count": 0,
+      "total_needs": 7,
+      "annual_abundance_cost_trillion": 2.336,
+      "annual_savings_trillion": 5.664,
+      "passed": true
+    },
+    "gate_5": {
+      "name": "Sustainable Abundance",
+      "boundaries_exceeded": 4,
+      "remediation_plans": 4,
+      "type1_delta_t_k": 36.18476317654795,
+      "passed": true
+    }
+  },
+  "summary": {
+    "total_gates": 5,
+    "passed_gates": 5,
+    "key_metrics": {
+      "kardashev_current": 0.7255272505103306,
+      "fusion_lcoe": 0.008,
+      "qtt_break_even_wage": 0.011420325114155251,
+      "abundance_annual_cost_trillion": 2.336
+    }
+  },
+  "civilization_stack_integration": {
+    "star_heart": "Near-zero marginal cost energy ($0.008/kWh)",
+    "femto_fabricator": "Atomic manufacturing (99.99% material efficiency)",
+    "qtt_brain": "Cognitive automation (0.06W per 100 FTE)",
+    "orbital_forge": "Space resource access",
+    "hermes": "Global information distribution"
+  },
+  "sha256": "9e2ebccf6a695ac5780f7cb1b279fb750d27ce7a40a0284c513faf441c4a93d2"
+}

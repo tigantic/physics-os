@@ -1,0 +1,111 @@
+{
+  "project": "HyperTensor Pharma",
+  "module": "TIG-011a Dielectric Sweep Gauntlet",
+  "timestamp": "2026-01-05T22:36:54.948314+00:00",
+  "target": {
+    "protein": "KRAS G12D",
+    "mechanism": "Multi-target inhibitor",
+    "indication": "KRAS-mutant cancers"
+  },
+  "gauntlet_parameters": {
+    "dielectric_range": [
+      4.0,
+      80.0
+    ],
+    "dielectric_steps": 10,
+    "perturbations_per_step": 1000,
+    "temperature_K": 310.0
+  },
+  "results_at_epsilon_80": {
+    "stability_percent": 91.60000000000001,
+    "binding_energy_kcal_mol": -21.505199485629472,
+    "hydrophobic_burial_kcal_mol": -12.76,
+    "hbond_occupancy_percent": 79.53124999999997
+  },
+  "sweep_data": [
+    {
+      "epsilon": 4.0,
+      "stability": 0.943,
+      "salt_bridge": 1.0,
+      "energy": -50.17954018860758
+    },
+    {
+      "epsilon": 6.0,
+      "stability": 0.936,
+      "salt_bridge": 1.0,
+      "energy": -38.614696294458156
+    },
+    {
+      "epsilon": 8.0,
+      "stability": 0.955,
+      "salt_bridge": 1.0,
+      "energy": -32.8523222560068
+    },
+    {
+      "epsilon": 10.0,
+      "stability": 0.945,
+      "salt_bridge": 1.0,
+      "energy": -29.480130174803307
+    },
+    {
+      "epsilon": 15.0,
+      "stability": 0.916,
+      "salt_bridge": 1.0,
+      "energy": -25.11591535098867
+    },
+    {
+      "epsilon": 20.0,
+      "stability": 0.932,
+      "salt_bridge": 1.0,
+      "energy": -23.072833162402354
+    },
+    {
+      "epsilon": 30.0,
+      "stability": 0.928,
+      "salt_bridge": 0.996,
+      "energy": -21.302301002292065
+    },
+    {
+      "epsilon": 40.0,
+      "stability": 0.922,
+      "salt_bridge": 0.976,
+      "energy": -20.801464481954564
+    },
+    {
+      "epsilon": 60.0,
+      "stability": 0.919,
+      "salt_bridge": 0.937,
+      "energy": -20.870307681229825
+    },
+    {
+      "epsilon": 80.0,
+      "stability": 0.916,
+      "salt_bridge": 0.882,
+      "energy": -21.505199485629472
+    }
+  ],
+  "mechanism_analysis": {
+    "savior_mechanism": "Hydrophobic burial",
+    "hydrophobic_enhancement_at_high_epsilon": true,
+    "salt_bridge_screening": "95% at \u03b5=80",
+    "compensation": "Hydrophobic + \u03c0-stacking compensate for electrostatic loss"
+  },
+  "validation_gates": {
+    "stability": true,
+    "energy": true,
+    "hydrophobic": true,
+    "hbond": true,
+    "all_pass": true
+  },
+  "comparison_to_original": {
+    "original_failure_point": "\u03b5=10 (salt bridge collapse)",
+    "enhanced_stability_at_epsilon_10": 0.945,
+    "enhanced_stability_at_epsilon_80": 0.916
+  },
+  "final_verdict": {
+    "gauntlet_passed": true,
+    "synthesis_ready": true,
+    "status": "TIG-011a GAUNTLET PASSED - READY FOR SYNTHESIS"
+  },
+  "sha256": "3ae4a5d9f9d1f0576ed8f60ef84feead0435345f9d396fb6b625f6604bfcb517"
+}

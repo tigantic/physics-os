@@ -186,8 +186,8 @@ def field_to_qtt(field: np.ndarray, chi_max: int = 32, tol: float = 1e-10) -> di
     num_qubits = int(math.log2(N_padded))
     qtt_shape = tuple([2] * num_qubits)
     
-    # Real TT-SVD
-    cores, truncation_error = tt_svd(tensor, qtt_shape, chi_max=chi_max, tol=tol)
+    # Real TT-SVD (returns cores, truncation_error, norm)
+    cores, truncation_error, _norm = tt_svd(tensor, qtt_shape, chi_max=chi_max, tol=tol)
     
     # Memory calculation
     memory = sum(c.numel() * c.element_size() for c in cores)

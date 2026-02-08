@@ -1,0 +1,51 @@
+{
+  "compound": "TIG-011a",
+  "smiles": "COc1ccc2ncnc(N3CCN(C)CC3)c2c1",
+  "timestamp": "2026-01-05T05:10:13.965705+00:00",
+  "screens": {
+    "PAINS": {
+      "status": "PASS",
+      "alerts": []
+    },
+    "Brenk": {
+      "status": "PASS",
+      "alerts": []
+    },
+    "NIH": {
+      "status": "PASS",
+      "alerts": []
+    },
+    "Lipinski": {
+      "status": "PASS",
+      "violations": 0
+    },
+    "hERG": {
+      "status": "PASS",
+      "alerts": []
+    },
+    "CYP450": {
+      "status": "PASS",
+      "alerts": [],
+      "note": "Likely CYP3A4/2D6 substrate"
+    },
+    "Ames": {
+      "status": "PASS",
+      "alerts": []
+    },
+    "ReactiveMetabolites": {
+      "status": "PASS",
+      "alerts": []
+    }
+  },
+  "properties": {
+    "MW": 258.3,
+    "LogP": 1.39,
+    "HBD": 0,
+    "HBA": 5,
+    "TPSA": 41.5,
+    "RotatableBonds": 2
+  },
+  "verdict": "PASS",
+  "fails": [],
+  "flags": []
+}
