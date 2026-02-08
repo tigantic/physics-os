@@ -1,10 +1,10 @@
 """
-HyperTensor Platform — Core Substrate (Phase 1)
-================================================
+HyperTensor Platform — Phases 1 + 2
+=====================================
 
 Canonical interfaces and infrastructure for the unified simulation + inference
 platform.  Every domain pack, solver, and workflow must conform to these
-protocols.  See ADR-0001 through ADR-0003 for rationale.
+protocols.  See ADR-0001 through ADR-0006 for rationale.
 
 Submodules
 ----------
@@ -14,11 +14,13 @@ data_model  – Mesh, Field, BoundaryCondition, InitialCondition containers
 solvers     – Time integrators, linear solvers, nonlinear solvers (orchestration)
 reproduce   – Deterministic-run context, seed management, artifact hashing
 checkpoint  – Serialization / deserialization to HDF5-like Zarr stores
+vv          – Verification & Validation harness (MMS, convergence, conservation,
+              stability, performance, benchmarks)  [Phase 2]
 
-Platform version: 0.1.0  (Phase 1 — Core Platform Substrate)
+Platform version: 0.2.0  (Phase 2 — V&V Harness + Benchmarks)
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 from tensornet.platform.protocols import (
     ProblemSpec,
