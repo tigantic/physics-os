@@ -1,0 +1,41 @@
+[build-system]
+requires = ["hatchling>=1.21.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "qtenet"
+version = "0.1.0"
+description = "QTenet: Proprietary QTT (Quantized Tensor Train) consortium library blueprint extracted from HyperTensor-VM-main."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "PROPRIETARY" }
+authors = [{ name = "Tigantic Holdings LLC" }]
+keywords = ["QTT", "tensor-train", "PyTorch", "tensor-networks", "PyTenNet", "QTenet"]
+
+dependencies = [
+  "numpy>=1.24",
+  "torch>=2.0",
+  "hypertensor-vm",  # provides tensornet (parent package)
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8",
+  "ruff>=0.5",
+  "mkdocs>=1.6",
+  "mkdocs-material>=9.5",
+  "pymdown-extensions>=10.0",
+]
+
+[project.scripts]
+qtenet = "qtenet.apps.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/qtenet/qtenet"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
+ignore = ["E501"]
