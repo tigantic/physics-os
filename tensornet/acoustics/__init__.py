@@ -1012,10 +1012,22 @@ class FfowcsWilliamsHawkings:
 #  EXPORTS
 # ═══════════════════════════════════════════════════════════════════════════════
 
+from .applied_acoustics import (
+    LinearisedEulerEquations,
+    TamAuriaultJetNoise,
+    DuctAcoustics,
+    AmietTrailingEdgeNoise,
+)
+
 __all__ = [
     "HelmholtzBEM",
     "RoomAcoustics",
     "StructuralAcousticCoupler",
     "LighthillAnalogy",
     "FfowcsWilliamsHawkings",
+    # XX.5 Applied Acoustics
+    "LinearisedEulerEquations",
+    "TamAuriaultJetNoise",
+    "DuctAcoustics",
+    "AmietTrailingEdgeNoise",
 ]

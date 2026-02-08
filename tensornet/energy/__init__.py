@@ -13,7 +13,16 @@ Capabilities:
 """
 
 from tensornet.energy.turbine import WindFarm
+from tensornet.energy.energy_systems import (
+    DriftDiffusionSolarCell,
+    NewmanP2D,
+    NeutronDiffusion,
+)
 
 __all__ = [
     "WindFarm",
+    # XX.8 Energy Systems
+    "DriftDiffusionSolarCell",
+    "NewmanP2D",
+    "NeutronDiffusion",
 ]
