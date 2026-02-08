@@ -1,0 +1,36 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-VI.1
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-VI.1"
+name: "Time-Independent Schrodinger"
+pack: "VI"
+pack_name: "Quantum Mechanics (Single/Few-Body)"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Shooting, spectral, DVR"
+
+source_files:
+  - "tensornet/quantum_mechanics/stationary.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+  physics:
+    - "test_physics_validation"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

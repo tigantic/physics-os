@@ -1,0 +1,36 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-V.5
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-V.5"
+name: "Heat Transfer"
+pack: "V"
+pack_name: "Thermodynamics and Statistical Mechanics"
+owner: "unassigned"
+tier: "A"
+state: "V0.2"
+description: "Conduction, convection, radiation"
+
+source_files:
+  - "tensornet/heat_transfer/radiation.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  - "FVM"
+  - "FEM"
+
+solvers:
+  - "implicit-Euler"
+  - "Crank-Nicolson"
+
+qtt_hooks:
+  - "thermal_field_qtt"
+
+notes: ""

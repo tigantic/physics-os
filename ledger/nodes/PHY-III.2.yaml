@@ -1,0 +1,39 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-III.2
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-III.2"
+name: "Magnetostatics"
+pack: "III"
+pack_name: "Electromagnetism"
+owner: "unassigned"
+tier: "A"
+state: "V0.2"
+description: "Biot-Savart, inductance"
+
+source_files:
+  - "tensornet/em/magnetostatics.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+  cross:
+    - "test_cross_domain_integration"
+  physics:
+    - "test_physics_validation"
+
+benchmarks:
+  []
+
+discretizations:
+  - "FEM"
+
+solvers:
+  - "A-phi"
+  - "T-Omega"
+
+qtt_hooks:
+  []
+
+notes: ""

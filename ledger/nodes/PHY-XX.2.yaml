@@ -1,0 +1,34 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XX.2
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XX.2"
+name: "General Relativity Numerical"
+pack: "XX"
+pack_name: "Special and Applied Domains"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "ADM/BSSN/Z4"
+
+source_files:
+  - "tensornet/relativity/numerical_gr.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

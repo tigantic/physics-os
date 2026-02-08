@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XVI.5
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XVI.5"
+name: "Systems Biology"
+pack: "XVI"
+pack_name: "Biophysics and Computational Biology"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "FBA, ODE, stochastic"
+
+source_files:
+  - "tensornet/biology/systems_biology.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+    - "test_smoke_tests"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-IX.6
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-IX.6"
+name: "Surfaces and Interfaces"
+pack: "IX"
+pack_name: "Solid State / Condensed Matter"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Slab methods, Green's functions"
+
+source_files:
+  - "tensornet/condensed_matter/surfaces_interfaces.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+    - "test_smoke_tests"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

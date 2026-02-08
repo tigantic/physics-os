@@ -1,0 +1,78 @@
+# ============================================================================
+# HyperTensor-VM Capability Ledger — Node Schema
+# ============================================================================
+# Every capability.yaml file in ledger/nodes/ MUST conform to this schema.
+# CI validates all nodes against this schema on every merge to main.
+# ============================================================================
+
+schema_version: "1.0"
+
+required_fields:
+  - id            # str, format: PHY-{PACK}.{NODE} e.g. PHY-II.1
+  - name          # str, human-readable name
+  - pack          # str, pack ID e.g. "II"
+  - pack_name     # str, pack human-readable name e.g. "Fluid Dynamics"
+  - owner         # str, GitHub handle or team e.g. "@fluids-team"
+  - tier          # enum: A | B | C
+  - state         # enum: V0.0 | V0.1 | V0.2 | V0.3 | V0.4 | V0.5 | V0.6 | V1.0
+
+optional_fields:
+  - description   # str, one-line description of the node
+  - interfaces    # list of dicts with field/operator specs
+  - discretizations  # list of str, e.g. [FVM, FEM, spectral]
+  - solvers       # list of str, solver methods
+  - benchmarks    # list of str, benchmark identifiers
+  - tests         # dict with keys: unit, regression, integration, smoke
+  - qtt_hooks     # list of str, QTT acceleration entry points
+  - source_files  # list of str, relative paths to primary source files
+  - artifacts     # dict with keys: docs, ref_outputs, profiling
+  - notes         # str, free-form notes
+
+valid_states:
+  - "V0.0"   # Draft: spec exists, no runnable solver
+  - "V0.1"   # Scaffolded: runs end-to-end on toy case
+  - "V0.2"   # Correctness: numerically correct on canonical cases
+  - "V0.3"   # Verified: deterministic, stable, robust, CI green
+  - "V0.4"   # Validated: matches published benchmark
+  - "V0.5"   # Optimized: performance engineering complete
+  - "V0.6"   # Accelerated: QTT/TN acceleration integrated
+  - "V1.0"   # Stable: API + results stable for external use
+
+valid_tiers:
+  - "A"   # Credibility + platform stress tests — target V0.4+ early
+  - "B"   # Broad coverage — target V0.2 baseline, V0.4 as capacity permits
+  - "C"   # Interfaces first — target V0.1–V0.2 initially
+
+state_exit_criteria:
+  V0.0:
+    - "Problem spec exists"
+    - "API contract defined"
+    - "Benchmark chosen"
+    - "Success metrics defined"
+  V0.1:
+    - "CLI/API runs end-to-end"
+    - "Produces outputs"
+    - "Basic unit tests pass"
+  V0.2:
+    - "Reproduces reference solution within tolerance"
+    - "Regression tests pass"
+  V0.3:
+    - "CI green"
+    - "Determinism policy enforced"
+    - "Error handling and logging complete"
+  V0.4:
+    - "Benchmark match quantified"
+    - "Assumptions documented"
+  V0.5:
+    - "Profiling artifacts generated"
+    - "Scaling tests pass"
+    - "Memory/IO budgets met"
+  V0.6:
+    - "Compression/accel metrics reported"
+    - "Fallback path exists"
+    - "Rank-growth report available"
+    - "Error-vs-rank curve documented"
+  V1.0:
+    - "SemVer contract established"
+    - "Documentation complete"
+    - "Reproducibility package available"

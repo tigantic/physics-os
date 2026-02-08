@@ -1,0 +1,39 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-X.6
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-X.6"
+name: "Beyond Standard Model"
+pack: "X"
+pack_name: "Nuclear and Particle Physics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Boltzmann scans, oscillations"
+
+source_files:
+  - "tensornet/particle/beyond_sm.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+    - "test_smoke_tests"
+  cross:
+    - "test_cross_domain_integration"
+  physics:
+    - "test_physics_validation"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

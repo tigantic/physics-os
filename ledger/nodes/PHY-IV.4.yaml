@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-IV.4
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-IV.4"
+name: "Ultrafast Optics"
+pack: "IV"
+pack_name: "Optics and Photonics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "NLSE split-step, HHG interfaces"
+
+source_files:
+  - "tensornet/optics/ultrafast_optics.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+    - "test_smoke_tests"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

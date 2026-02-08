@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-II.10
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-II.10"
+name: "Free Surface / Interfacial"
+pack: "II"
+pack_name: "Fluid Dynamics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Surface tension, thin film"
+
+source_files:
+  - "tensornet/free_surface/__init__.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  - "FVM"
+
+solvers:
+  - "VOF"
+  - "ALE"
+
+qtt_hooks:
+  []
+
+notes: ""

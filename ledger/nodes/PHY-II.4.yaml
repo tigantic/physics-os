@@ -1,0 +1,36 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-II.4
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-II.4"
+name: "Multiphase Flow"
+pack: "II"
+pack_name: "Fluid Dynamics"
+owner: "unassigned"
+tier: "A"
+state: "V0.2"
+description: "VOF, level set, phase field"
+
+source_files:
+  - "tensornet/multiphase/multiphase_flow.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  - "FVM"
+
+solvers:
+  - "VOF"
+  - "level-set"
+  - "phase-field"
+
+qtt_hooks:
+  []
+
+notes: ""

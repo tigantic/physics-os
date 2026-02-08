@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-I.3
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-I.3"
+name: "Continuum Mechanics"
+pack: "I"
+pack_name: "Classical Mechanics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Elasticity, viscoelasticity, plasticity, fracture, contact, ALE"
+
+source_files:
+  - "tensornet/mechanics/continuum.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  - "FEM"
+
+solvers:
+  - "Newton-Raphson"
+  - "arc-length"
+
+qtt_hooks:
+  []
+
+notes: ""

@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XI.7
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XI.7"
+name: "Dusty Plasmas"
+pack: "XI"
+pack_name: "Plasma Physics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Charged dust dynamics"
+
+source_files:
+  - "tensornet/plasma/dusty_plasmas.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+    - "test_smoke_tests"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

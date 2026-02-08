@@ -1,0 +1,38 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-III.1
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-III.1"
+name: "Electrostatics"
+pack: "III"
+pack_name: "Electromagnetism"
+owner: "unassigned"
+tier: "A"
+state: "V0.2"
+description: "Poisson, capacitance"
+
+source_files:
+  - "tensornet/em/electrostatics.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+  cross:
+    - "test_cross_domain_integration"
+
+benchmarks:
+  []
+
+discretizations:
+  - "FEM"
+  - "BEM"
+
+solvers:
+  - "direct"
+  - "CG-AMG"
+
+qtt_hooks:
+  []
+
+notes: ""

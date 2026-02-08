@@ -1,0 +1,38 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XV.1
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XV.1"
+name: "Potential Energy Surfaces"
+pack: "XV"
+pack_name: "Chemical Physics and Reaction Dynamics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "NEB, ML PES hooks"
+
+source_files:
+  - "tensornet/chemistry/pes.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+  cross:
+    - "test_cross_domain_integration"
+  physics:
+    - "test_physics_validation"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

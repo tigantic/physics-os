@@ -1,0 +1,46 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-II.1
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-II.1"
+name: "Incompressible Navier-Stokes"
+pack: "II"
+pack_name: "Fluid Dynamics"
+owner: "unassigned"
+tier: "A"
+state: "V0.2"
+description: "Projection, SIMPLE, PISO methods"
+
+source_files:
+  - "tensornet/cfd/ns_2d.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+  dedicated:
+    - "test_navier_stokes"
+  integration:
+    - "test_lid_driven_cavity"
+    - "test_taylor_green_benchmark"
+
+benchmarks:
+  - "lid_driven_cavity"
+  - "taylor_green_vortex"
+  - "blasius_validation"
+
+discretizations:
+  - "FVM"
+  - "FEM"
+  - "spectral"
+
+solvers:
+  - "projection"
+  - "SIMPLE"
+  - "PISO"
+
+qtt_hooks:
+  - "velocity_field_qtt"
+  - "poisson_preconditioner_qtt"
+
+notes: ""

@@ -1,0 +1,38 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-I.1
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-I.1"
+name: "Newtonian Particle Dynamics"
+pack: "I"
+pack_name: "Classical Mechanics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "N-body, rigid body, contact, integrators"
+
+source_files:
+  - "tensornet/guidance/trajectory.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+  dedicated:
+    - "test_ballistics"
+
+benchmarks:
+  []
+
+discretizations:
+  - "symplectic"
+  - "RK4"
+
+solvers:
+  - "leapfrog"
+  - "velocity-Verlet"
+
+qtt_hooks:
+  []
+
+notes: ""

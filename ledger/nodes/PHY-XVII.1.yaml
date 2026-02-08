@@ -1,0 +1,36 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XVII.1
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XVII.1"
+name: "Optimization"
+pack: "XVII"
+pack_name: "Cross-Cutting Computational Methods"
+owner: "unassigned"
+tier: "A"
+state: "V0.2"
+description: "Adjoint-ready, topology optimization hooks"
+
+source_files:
+  - "tensornet/cfd/optimization.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  - "L-BFGS"
+  - "gradient-descent"
+  - "SIMP"
+
+qtt_hooks:
+  []
+
+notes: ""

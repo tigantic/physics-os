@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-IV.2
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-IV.2"
+name: "Quantum Optics"
+pack: "IV"
+pack_name: "Optics and Photonics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Master equation, trajectories"
+
+source_files:
+  - "tensornet/optics/quantum_optics.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+    - "test_smoke_tests"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

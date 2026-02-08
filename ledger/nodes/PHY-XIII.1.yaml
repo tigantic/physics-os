@@ -1,0 +1,36 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XIII.1
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XIII.1"
+name: "Seismology"
+pack: "XIII"
+pack_name: "Geophysics and Earth Science"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Elastic waves, FWI interfaces"
+
+source_files:
+  - "tensornet/geophysics/seismology.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+  cross:
+    - "test_cross_domain_integration"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

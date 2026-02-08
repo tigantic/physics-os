@@ -1,0 +1,37 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-III.7
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-III.7"
+name: "Antennas and Microwaves"
+pack: "III"
+pack_name: "Electromagnetism"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "MoM/FDTD/FEM hybrids"
+
+source_files:
+  - "tensornet/em/antenna_microwave.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+    - "test_smoke_tests"
+
+benchmarks:
+  []
+
+discretizations:
+  - "MoM"
+  - "FDTD"
+  - "FEM"
+
+solvers:
+  - "hybrid-MoM-FDTD"
+
+qtt_hooks:
+  []
+
+notes: ""

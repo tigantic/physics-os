@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-II.6
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-II.6"
+name: "Rarefied Gas / Kinetic"
+pack: "II"
+pack_name: "Fluid Dynamics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Boltzmann/BGK, DSMC"
+
+source_files:
+  - "tensornet/cfd/dsmc.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  - "particle"
+
+solvers:
+  - "DSMC"
+  - "BGK"
+
+qtt_hooks:
+  []
+
+notes: ""

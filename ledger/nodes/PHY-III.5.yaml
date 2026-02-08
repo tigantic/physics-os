@@ -1,0 +1,36 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-III.5
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-III.5"
+name: "Wave Propagation"
+pack: "III"
+pack_name: "Electromagnetism"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Ray, parabolic, fibers, atmosphere"
+
+source_files:
+  - "tensornet/em/wave_propagation.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  - "FDTD"
+  - "ray-tracing"
+
+solvers:
+  - "split-step"
+  - "BPM"
+
+qtt_hooks:
+  []
+
+notes: ""

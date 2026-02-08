@@ -1,0 +1,36 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XI.3
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XI.3"
+name: "Kinetic Theory Plasma"
+pack: "XI"
+pack_name: "Plasma Physics"
+owner: "unassigned"
+tier: "A"
+state: "V0.2"
+description: "Vlasov, PIC, continuum"
+
+source_files:
+  - "tensornet/cfd/fast_vlasov_5d.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  - "PIC"
+  - "continuum-Vlasov"
+
+solvers:
+  - "Boris-pusher"
+  - "semi-Lagrangian"
+
+qtt_hooks:
+  - "vlasov_distribution_qtt"
+
+notes: ""

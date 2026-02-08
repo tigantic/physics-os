@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-VIII.1
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-VIII.1"
+name: "DFT"
+pack: "VIII"
+pack_name: "Electronic Structure and Quantum Chemistry"
+owner: "unassigned"
+tier: "A"
+state: "V0.2"
+description: "Kohn-Sham, SCF"
+
+source_files:
+  - "tensornet/electronic_structure/dft.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  - "SCF"
+  - "DIIS"
+
+qtt_hooks:
+  - "density_field_qtt"
+
+notes: ""

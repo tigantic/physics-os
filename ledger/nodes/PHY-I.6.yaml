@@ -1,0 +1,36 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-I.6
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-I.6"
+name: "Acoustics and Vibration"
+pack: "I"
+pack_name: "Classical Mechanics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Wave/Helmholtz, scattering, vibroacoustics"
+
+source_files:
+  - "tensornet/acoustics/applied_acoustics.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  - "FEM"
+  - "BEM"
+
+solvers:
+  - "direct-frequency"
+  - "time-domain"
+
+qtt_hooks:
+  []
+
+notes: ""

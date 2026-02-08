@@ -1,0 +1,36 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XVII.6
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XVII.6"
+name: "High-Performance Computing"
+pack: "XVII"
+pack_name: "Cross-Cutting Computational Methods"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "MPI/OpenMP/GPU, I/O"
+
+source_files:
+  - "tensornet/distributed_tn/distributed_dmrg.py"
+  - "tensornet/distributed_tn/load_balancer.py"
+  - "tensornet/distributed_tn/parallel_tebd.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

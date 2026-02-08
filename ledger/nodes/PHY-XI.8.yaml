@@ -1,0 +1,34 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XI.8
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XI.8"
+name: "Space and Astrophysical Plasma"
+pack: "XI"
+pack_name: "Plasma Physics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Global MHD, cosmic rays"
+
+source_files:
+  - "tensornet/plasma/space_plasma.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

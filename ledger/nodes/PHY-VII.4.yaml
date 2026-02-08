@@ -1,0 +1,36 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-VII.4
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-VII.4"
+name: "Topological Phases"
+pack: "VII"
+pack_name: "Quantum Many-Body Physics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Invariants, entanglement"
+
+source_files:
+  - "tensornet/condensed_matter/topological_phases.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+  cross:
+    - "test_cross_domain_integration"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

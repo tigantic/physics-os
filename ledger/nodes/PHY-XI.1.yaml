@@ -1,0 +1,37 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XI.1
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XI.1"
+name: "Ideal MHD"
+pack: "XI"
+pack_name: "Plasma Physics"
+owner: "unassigned"
+tier: "A"
+state: "V0.2"
+description: "Ideal magnetohydrodynamics"
+
+source_files:
+  - "tensornet/fusion/tokamak.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+  dedicated:
+    - "test_fusion"
+
+benchmarks:
+  []
+
+discretizations:
+  - "FVM"
+
+solvers:
+  - "Roe-MHD"
+  - "HLL-MHD"
+
+qtt_hooks:
+  - "mhd_field_qtt"
+
+notes: ""

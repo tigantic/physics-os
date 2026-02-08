@@ -1,0 +1,44 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-II.2
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-II.2"
+name: "Compressible Flow"
+pack: "II"
+pack_name: "Fluid Dynamics"
+owner: "unassigned"
+tier: "A"
+state: "V0.2"
+description: "Riemann solvers, WENO, DG"
+
+source_files:
+  - "tensornet/cfd/euler_3d.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+  integration:
+    - "test_shu_osher_benchmark"
+    - "test_euler2d_mms"
+    - "test_euler3d_mms"
+
+benchmarks:
+  - "sod_shock_tube"
+  - "oblique_shock"
+  - "double_mach_reflection"
+  - "shu_osher"
+
+discretizations:
+  - "FVM-WENO"
+  - "DG"
+
+solvers:
+  - "Roe"
+  - "HLLC"
+  - "Rusanov"
+
+qtt_hooks:
+  - "euler_field_qtt"
+
+notes: ""

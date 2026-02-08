@@ -1,0 +1,40 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-II.3
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-II.3"
+name: "Turbulence"
+pack: "II"
+pack_name: "Fluid Dynamics"
+owner: "unassigned"
+tier: "A"
+state: "V0.2"
+description: "DNS, LES, RANS, spectra"
+
+source_files:
+  - "tensornet/cfd/turbulence.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+  integration:
+    - "test_taylor_green_benchmark"
+
+benchmarks:
+  - "taylor_green_vortex"
+  - "sbli_benchmark"
+
+discretizations:
+  - "FVM"
+  - "spectral"
+
+solvers:
+  - "Smagorinsky"
+  - "k-epsilon"
+  - "k-omega-SST"
+
+qtt_hooks:
+  []
+
+notes: ""

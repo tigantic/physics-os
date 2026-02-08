@@ -1,0 +1,34 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XII.3
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XII.3"
+name: "Gravitational Waves"
+pack: "XII"
+pack_name: "Astrophysics and Cosmology"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "PN/EOB + NR interfaces"
+
+source_files:
+  - "tensornet/astro/gravitational_waves.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

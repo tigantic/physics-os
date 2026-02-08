@@ -1,0 +1,36 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XVIII.4
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XVIII.4"
+name: "Magnetohydrodynamics Coupled"
+pack: "XVIII"
+pack_name: "Continuum Coupled Physics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Liquid metals, braking"
+
+source_files:
+  - "tensornet/coupled/coupled_mhd.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+  cross:
+    - "test_cross_domain_integration"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

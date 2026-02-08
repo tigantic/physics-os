@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-II.7
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-II.7"
+name: "Shallow Water / Geophysical Fluids"
+pack: "II"
+pack_name: "Fluid Dynamics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Coriolis, quasi-geostrophic"
+
+source_files:
+  - "tensornet/geophysics/oceanography.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  - "FVM"
+
+solvers:
+  - "Roe-shallow"
+  - "central"
+
+qtt_hooks:
+  []
+
+notes: ""

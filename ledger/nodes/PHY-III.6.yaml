@@ -1,0 +1,36 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-III.6
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-III.6"
+name: "Computational Photonics"
+pack: "III"
+pack_name: "Electromagnetism"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "RCWA, PWE, plasmonics"
+
+source_files:
+  - "tensornet/em/computational_photonics.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  - "RCWA"
+  - "PWE"
+
+solvers:
+  - "transfer-matrix"
+  - "FDFD"
+
+qtt_hooks:
+  []
+
+notes: ""

@@ -1,0 +1,106 @@
+# Capability Ledger Validation
+# ============================
+# Validates ledger schema and integrity on every PR that touches ledger files.
+# Also runs nightly to catch drift.
+
+name: Ledger Validation
+
+on:
+  push:
+    branches: [main, develop, master]
+    paths:
+      - 'ledger/**'
+  pull_request:
+    branches: [main, develop, master]
+    paths:
+      - 'ledger/**'
+  schedule:
+    # Nightly at 02:00 UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  validate-ledger:
+    name: Validate Capability Ledger
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Validate ledger schema
+        run: python3 ledger/validate_ledger.py
+
+      - name: Check node count
+        run: |
+          COUNT=$(ls ledger/nodes/*.yaml 2>/dev/null | wc -l)
+          echo "Node files found: $COUNT"
+          if [ "$COUNT" -ne 140 ]; then
+            echo "ERROR: Expected 140 node files, found $COUNT"
+            exit 1
+          fi
+          echo "✓ Node count correct"
+
+      - name: Check index freshness
+        run: |
+          python3 -c "
+          import yaml, pathlib
+          index = yaml.safe_load(pathlib.Path('ledger/index.yaml').read_text())
+          nodes_dir = pathlib.Path('ledger/nodes')
+          node_files = sorted(nodes_dir.glob('*.yaml'))
+
+          # Check every node file has a corresponding index entry
+          index_ids = {n['id'] for n in index['nodes']}
+          file_ids = set()
+          for f in node_files:
+              data = yaml.safe_load(f.read_text())
+              file_ids.add(data['id'])
+
+          if index_ids != file_ids:
+              missing = file_ids - index_ids
+              extra = index_ids - file_ids
+              if missing:
+                  print(f'Missing from index: {sorted(missing)}')
+              if extra:
+                  print(f'Extra in index: {sorted(extra)}')
+              exit(1)
+
+          print(f'✓ Index covers all {len(file_ids)} nodes')
+          "
+
+      - name: Generate ledger summary
+        if: always()
+        run: |
+          python3 -c "
+          import yaml, pathlib
+          nodes_dir = pathlib.Path('ledger/nodes')
+          states = {}
+          tiers = {}
+          for f in sorted(nodes_dir.glob('*.yaml')):
+              data = yaml.safe_load(f.read_text())
+              s = data.get('state', 'unknown')
+              t = data.get('tier', 'unknown')
+              states[s] = states.get(s, 0) + 1
+              tiers[t] = tiers.get(t, 0) + 1
+
+          print('## Ledger Summary')
+          print(f'Total nodes: {sum(states.values())}')
+          print()
+          print('### State Distribution')
+          for s in ['V0.0','V0.1','V0.2','V0.3','V0.4','V0.5','V0.6','V1.0']:
+              bar = '█' * states.get(s, 0)
+              print(f'  {s}: {states.get(s, 0):3d} {bar}')
+          print()
+          print('### Tier Distribution')
+          for t in ['A','B','C']:
+              print(f'  Tier {t}: {tiers.get(t, 0)}')
+          " >> "$GITHUB_STEP_SUMMARY"

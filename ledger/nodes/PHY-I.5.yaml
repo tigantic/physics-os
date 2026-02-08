@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-I.5
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-I.5"
+name: "Nonlinear Dynamics and Chaos"
+pack: "I"
+pack_name: "Classical Mechanics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Lyapunov exponents, bifurcation, maps"
+
+source_files:
+  - "tensornet/cfd/hou_luo_ansatz.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  - "RK45"
+  - "adaptive"
+
+qtt_hooks:
+  []
+
+notes: ""

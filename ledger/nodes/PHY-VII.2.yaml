@@ -1,0 +1,36 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-VII.2
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-VII.2"
+name: "Quantum Spin Systems"
+pack: "VII"
+pack_name: "Quantum Many-Body Physics"
+owner: "unassigned"
+tier: "A"
+state: "V0.2"
+description: "DMRG, QMC, ED"
+
+source_files:
+  - "tensornet/mps/hamiltonians.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+  dedicated:
+    - "test_mpo_hamiltonians"
+
+benchmarks:
+  - "tfim_ground_state"
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  - "spin_hamiltonian_mpo"
+
+notes: ""

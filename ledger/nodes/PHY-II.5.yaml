@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-II.5
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-II.5"
+name: "Reactive Flow / Combustion"
+pack: "II"
+pack_name: "Fluid Dynamics"
+owner: "unassigned"
+tier: "A"
+state: "V0.2"
+description: "Species transport, stiff kinetics"
+
+source_files:
+  - "tensornet/cfd/reactive_ns.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  - "FVM"
+
+solvers:
+  - "operator-split"
+  - "stiff-ODE"
+
+qtt_hooks:
+  []
+
+notes: ""

@@ -1,0 +1,36 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-V.1
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-V.1"
+name: "Equilibrium Statistical Mechanics"
+pack: "V"
+pack_name: "Thermodynamics and Statistical Mechanics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Ising/Potts/XY, Monte Carlo"
+
+source_files:
+  - "tensornet/statmech/equilibrium.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+  physics:
+    - "test_physics_validation"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

@@ -1,0 +1,36 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-II.8
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-II.8"
+name: "Non-Newtonian / Complex Fluids"
+pack: "II"
+pack_name: "Fluid Dynamics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Oldroyd-B, Bingham"
+
+source_files:
+  - "tensornet/cfd/non_newtonian.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  - "FVM"
+  - "FEM"
+
+solvers:
+  - "DEVSS"
+  - "log-conformation"
+
+qtt_hooks:
+  []
+
+notes: ""

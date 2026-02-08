@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-I.4
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-I.4"
+name: "Structural Mechanics"
+pack: "I"
+pack_name: "Classical Mechanics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Beams, plates, shells, buckling, vibration, composites"
+
+source_files:
+  - "tensornet/mechanics/structural.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  - "FEM"
+
+solvers:
+  - "direct"
+  - "modal"
+
+qtt_hooks:
+  []
+
+notes: ""

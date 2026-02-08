@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-V.4
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-V.4"
+name: "Monte Carlo Methods"
+pack: "V"
+pack_name: "Thermodynamics and Statistical Mechanics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "MCMC, PIMC, QMC entrypoints"
+
+source_files:
+  - "tensornet/statmech/monte_carlo.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+    - "test_smoke_tests"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

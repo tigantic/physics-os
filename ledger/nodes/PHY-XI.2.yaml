@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XI.2
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XI.2"
+name: "Resistive/Extended MHD"
+pack: "XI"
+pack_name: "Plasma Physics"
+owner: "unassigned"
+tier: "A"
+state: "V0.2"
+description: "Resistive, Hall MHD"
+
+source_files:
+  - "tensornet/plasma/extended_mhd.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  - "FVM"
+  - "FEM"
+
+solvers:
+  - "implicit-MHD"
+
+qtt_hooks:
+  []
+
+notes: ""

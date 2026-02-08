@@ -1,0 +1,36 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XVII.5
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XVII.5"
+name: "Linear Algebra Large-Scale"
+pack: "XVII"
+pack_name: "Cross-Cutting Computational Methods"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Krylov, AMG, eigensolvers"
+
+source_files:
+  - "tensornet/algorithms/lanczos.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+  dedicated:
+    - "test_linalg"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

@@ -1,0 +1,34 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-VIII.3
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-VIII.3"
+name: "Semi-Empirical and Tight-Binding"
+pack: "VIII"
+pack_name: "Electronic Structure and Quantum Chemistry"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "O(N), Green's functions"
+
+source_files:
+  - "tensornet/electronic_structure/tight_binding.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

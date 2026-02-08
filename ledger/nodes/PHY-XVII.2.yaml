@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XVII.2
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XVII.2"
+name: "Inverse Problems"
+pack: "XVII"
+pack_name: "Cross-Cutting Computational Methods"
+owner: "unassigned"
+tier: "A"
+state: "V0.2"
+description: "Regularization, Bayesian"
+
+source_files:
+  - "tensornet/cfd/adjoint.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  - "Tikhonov"
+  - "adjoint-gradient"
+
+qtt_hooks:
+  []
+
+notes: ""

@@ -1,0 +1,34 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-VI.3
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-VI.3"
+name: "Scattering Theory"
+pack: "VI"
+pack_name: "Quantum Mechanics (Single/Few-Body)"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Partial waves, T-matrix, R-matrix"
+
+source_files:
+  - "tensornet/qm/scattering.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

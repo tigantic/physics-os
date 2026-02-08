@@ -1,0 +1,37 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XIV.2
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XIV.2"
+name: "Mechanical Properties"
+pack: "XIV"
+pack_name: "Materials Science"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Elastic constants, fracture, fatigue"
+
+source_files:
+  - "tensornet/materials/mechanical_properties.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+    - "test_smoke_tests"
+  cross:
+    - "test_cross_domain_integration"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-III.4
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-III.4"
+name: "Frequency-Domain EM"
+pack: "III"
+pack_name: "Electromagnetism"
+owner: "unassigned"
+tier: "A"
+state: "V0.2"
+description: "Helmholtz, modes, scattering"
+
+source_files:
+  - "tensornet/em/frequency_domain.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+
+benchmarks:
+  []
+
+discretizations:
+  - "FEM"
+
+solvers:
+  - "direct"
+  - "iterative"
+
+qtt_hooks:
+  []
+
+notes: ""

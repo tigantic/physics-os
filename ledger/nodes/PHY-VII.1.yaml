@@ -1,0 +1,43 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-VII.1
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-VII.1"
+name: "Tensor Network Methods"
+pack: "VII"
+pack_name: "Quantum Many-Body Physics"
+owner: "unassigned"
+tier: "A"
+state: "V0.2"
+description: "MPS/MPO, PEPS, MERA, iDMRG"
+
+source_files:
+  - "tensornet/algorithms/dmrg.py"
+  - "tensornet/algorithms/tebd.py"
+  - "tensornet/algorithms/tdvp.py"
+  - "tensornet/algorithms/lanczos.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+  integration:
+    - "test_dmrg_physics"
+  dedicated:
+    - "test_qtt_pipeline"
+
+benchmarks:
+  - "compare_tenpy"
+  - "heisenberg_ground_state"
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  - "mps_compression"
+  - "mpo_application"
+
+notes: ""

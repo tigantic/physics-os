@@ -1,0 +1,37 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XIX.4
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XIX.4"
+name: "Quantum Simulation"
+pack: "XIX"
+pack_name: "Quantum Information and Computation"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Digital/analog interfaces"
+
+source_files:
+  - "tensornet/algorithms/tebd.py"
+  - "tensornet/algorithms/tdvp.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+  dedicated:
+    - "test_qtt_pipeline"
+
+benchmarks:
+  - "compare_tenpy"
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

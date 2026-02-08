@@ -1,0 +1,35 @@
+# =============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XX.9
+# Generated: 2026-02-08 | Schema: 1.0
+# =============================================================================
+
+id: "PHY-XX.9"
+name: "Manufacturing Simulation"
+pack: "XX"
+pack_name: "Special and Applied Domains"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "Casting, welding, additive"
+
+source_files:
+  - "tensornet/manufacturing/manufacturing.py"
+
+tests:
+  smoke:
+    - "test_140_domains"
+    - "test_smoke_tests"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""
