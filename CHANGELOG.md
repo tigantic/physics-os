@@ -7,6 +7,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [40.0.0] - 2026-02-08 (140/140 Computational Physics Release)
+
+### Added
+
+#### 140/140 Capability Domain Implementation (49,355 LOC, 152 files)
+- **Phase 0 (Weeks 1-4)**: 26 domain upgrades — 6,410 + 10,332 + 10,941 LOC
+  across elastic continuum, convection, classical waves, antennas, fibre optics,
+  laser physics, critical phenomena, non-equilibrium statmech, Monte Carlo,
+  compressible flow, non-Newtonian, MHD turbulence, DFT, TDDFT, GW/BSE,
+  response properties, quantum chemistry, cluster/many-body, and more
+- **Phase 1**: 22 new domains (7,559 LOC) — 78 → 100/140 coverage
+  including nuclear structure, reactions, nuclear astrophysics, lattice QCD,
+  high-energy collisions, neutrino oscillations, radiation transport, plasma
+  instabilities, laser-plasma, fusion engineering, and more
+- **Phase 2+3**: 40 new domains (14,113 LOC) — 100 → 140/140 complete
+  including quantum reactive dynamics, nonadiabatic dynamics, photochemistry,
+  catalysis, spectroscopy, protein dynamics, drug design, membrane biophysics,
+  nucleic acids, systems biology, neuroscience, optimization/inverse problems,
+  ML-for-physics, adaptive mesh, HPC/distributed, FSI, thermo-mechanical,
+  electro-mechanical, coupled MHD, reacting flows, radiation-hydro, multiscale,
+  quantum circuit simulation, quantum error correction, quantum algorithms,
+  quantum simulation, quantum crypto, relativistic mechanics, numerical GR,
+  astrodynamics, robotics physics, applied acoustics, biomedical engineering,
+  environmental physics, energy systems, manufacturing physics, semiconductor
+  device physics
+
+#### Platform Specification v40.0 (§36–§50)
+- PLATFORM_SPECIFICATION.md expanded from 2,932 → 4,021 lines
+- 15 new sections documenting Classical Mechanics, Nuclear Physics, Particle
+  Physics, Condensed Matter (ext), Geophysics, Chemistry, Biological Physics,
+  Computational Methods, Plasma Physics (ext), Coupled Multi-Physics,
+  Quantum Information, Materials Science (ext), Electronics & Optics (ext),
+  Astrophysics (ext), Multi-Physics Coupling
+- Physics Inventory: 50 domains, 826+ equations, ~227,000 LOC
+
+#### Comprehensive Test Infrastructure
+- **tests/test_140_domains.py** (847 lines, 314 pass / 8 skip):
+  140 DomainSpec entries × 20 categories, 341 key classes tracked,
+  parametrized import + class-exist + smoke + physics-validation tests
+  (Morse, QHO, H-atom, Ising, PMNS, Landau-Devonshire, Biot-Savart)
+- **tests/test_cross_domain_integration.py** (654 lines, 50 pass):
+  15 pairwise domain pipelines + 3 multi-domain chains (3–4 domains each)
+  across 23 physics modules — all <2 s runtime
+
+### Changed
+- Version bumped from 0.1.0 → 40.0.0 across pyproject.toml, CITATION.cff,
+  tensornet/__init__.py, PLATFORM_SPECIFICATION.md
+- Coverage assessment updated to 140/140 COMPLETE
+- Execution plan finalised with all phases marked done
+
 ### Added - Trustless Physics Phase 4: Thermal Circuit (2026-02-06)
 
 #### Thermal ZK Proof Circuit (`fluidelite-circuits::thermal`)

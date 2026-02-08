@@ -25,7 +25,7 @@ Example:
     >>> print(f"Ground state energy: {E:.8f}")
 """
 
-__version__ = "0.1.0"
+__version__ = "40.0.0"
 __author__ = "TiganticLabz"
 
 # Algorithms
