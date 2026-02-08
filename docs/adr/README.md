@@ -56,3 +56,5 @@ Pack-specific decisions should be documented in the pack's own `docs/` directory
 | [0001](20260208-0001-capability-ledger-as-source-of-truth.md) | Capability Ledger as Source of Truth | accepted | 2026-02-08 |
 | [0002](20260208-0002-v-state-gates-not-dates.md) | V-State Gates Not Dates | accepted | 2026-02-08 |
 | [0003](20260208-0003-domain-packs-as-plugins.md) | Domain Packs as Plugins | accepted | 2026-02-08 |
+| [0004](20260208-0004-canonical-platform-protocols.md) | Canonical Platform Protocols | accepted | 2026-02-08 |
+| [0005](20260208-0005-vertical-slices-as-exit-gates.md) | Vertical Slices as Phase Exit Gates | accepted | 2026-02-08 |
