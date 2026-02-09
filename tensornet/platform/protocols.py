@@ -20,7 +20,6 @@ from typing import (
     Any,
     Dict,
     List,
-    Mapping,
     Optional,
     Protocol,
     Sequence,
@@ -28,7 +27,6 @@ from typing import (
     runtime_checkable,
 )
 
-import torch
 from torch import Tensor
 
 

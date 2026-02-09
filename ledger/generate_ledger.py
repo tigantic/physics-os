@@ -12,9 +12,7 @@ Based on the audit of 2026-02-08 against the Commercial Execution Plan taxonomy.
 from __future__ import annotations
 
 import pathlib
-import textwrap
 from dataclasses import dataclass, field
-from typing import Optional
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 LEDGER = ROOT / "ledger"

@@ -37,20 +37,16 @@ import torch
 from torch import Tensor
 
 from tensornet.packs._base import (
-    BaseProblemSpec,
     compute_l2_error,
     compute_linf_error,
     convergence_order,
-    make_1d_state,
-    run_ode_problem,
 )
 from tensornet.platform.data_model import (
     FieldData,
-    Mesh,
     SimulationState,
     StructuredMesh,
 )
-from tensornet.platform.domain_pack import DomainPack, DomainRegistry, get_registry
+from tensornet.platform.domain_pack import DomainPack, get_registry
 from tensornet.platform.protocols import (
     Discretization,
     Observable,
@@ -160,6 +156,8 @@ class AdvDiffOps:
 
 
 class AdvDiffL2Observable:
+    """Observable: L2 norm of the temperature/concentration field."""
+
     @property
     def name(self) -> str:
         return "l2_norm"
@@ -173,6 +171,8 @@ class AdvDiffL2Observable:
 
 
 class AdvDiffIntegralObservable:
+    """Observable: spatial integral of the scalar field (mass/energy)."""
+
     def __init__(self, dx: float) -> None:
         self._dx = dx
 

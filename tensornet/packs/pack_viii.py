@@ -40,8 +40,6 @@ from torch import Tensor
 from tensornet.platform.data_model import FieldData, SimulationState, StructuredMesh
 from tensornet.platform.domain_pack import DomainPack, get_registry
 from tensornet.platform.protocols import (
-    Discretization,
-    Observable,
     ProblemSpec,
     Solver,
     SolveResult,

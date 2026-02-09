@@ -48,70 +48,6 @@ from tensornet.platform.reproduce import ReproducibilityContext
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-def _periodic_interp_shift(f: Tensor, shift: Tensor) -> Tensor:
-    """
-    Shift each row of f by a position-dependent displacement using cubic
-    interpolation with periodic boundary conditions.
-
-    Parameters
-    ----------
-    f : (Nx, Nv) distribution function.
-    shift : (Nx,) or (Nv,) — shift in grid-index units (float).
-
-    Returns
-    -------
-    f_shifted : (Nx, Nv) shifted distribution.
-    """
-    N = f.shape[-1]
-    idx = torch.arange(N, dtype=torch.float64, device=f.device)
-    # For each grid point, compute the departure point
-    # shift has shape matching the axis we're interpolating along
-    if shift.shape[0] == f.shape[0]:
-        # Shift along last axis (v-direction), shift is per-x row
-        origin = idx.unsqueeze(0) - shift.unsqueeze(1)  # (Nx, Nv)
-    else:
-        # Shift along first axis (x-direction), shift is per-v column
-        origin = idx.unsqueeze(1) - shift.unsqueeze(0)  # (Nv, Nx) ← will transpose
-        f = f.T  # work on transposed
-        origin_t = idx.unsqueeze(0) - shift.unsqueeze(1)
-        origin = origin_t
-
-    # Wrap to [0, N) with periodic BC
-    origin = origin % N
-
-    # Floor index and fractional part
-    j0 = origin.floor().long() % N
-    alpha = origin - origin.floor()
-
-    # Four-point cubic interpolation (Catmull-Rom style)
-    jm1 = (j0 - 1) % N
-    j1 = (j0 + 1) % N
-    j2 = (j0 + 2) % N
-
-    # Gather values
-    fm1 = torch.gather(f, -1, jm1)
-    f0 = torch.gather(f, -1, j0)
-    f1 = torch.gather(f, -1, j1)
-    f2 = torch.gather(f, -1, j2)
-
-    # Cubic interpolation weights (Catmull-Rom)
-    a2 = alpha * alpha
-    a3 = a2 * alpha
-    w0 = -0.5 * a3 + a2 - 0.5 * alpha
-    w1 = 1.5 * a3 - 2.5 * a2 + 1.0
-    w2 = -1.5 * a3 + 2.0 * a2 + 0.5 * alpha
-    w3 = 0.5 * a3 - 0.5 * a2
-
-    result = w0 * fm1 + w1 * f0 + w2 * f1 + w3 * f2
-
-    if shift.shape[0] != f.shape[0]:
-        # We transposed f above, transpose result back
-        # Actually this path doesn't use transpose anymore
-        pass
-
-    return result
-
-
 def _advect_x(f: Tensor, v: Tensor, dt: float, dx: float) -> Tensor:
     """
     Semi-Lagrangian x-advection: f(x, v, t+dt) = f(x − v·dt, v, t).
@@ -182,8 +118,8 @@ def _poisson_solve_1d(rho: Tensor, dx: float) -> Tensor:
     N = rho.shape[0]
     rho_hat = torch.fft.rfft(rho)
     k = torch.fft.rfftfreq(N, d=dx / (2.0 * math.pi))
-    # Avoid division by zero at k=0
-    k[0] = 1.0  # placeholder
+    # Avoid division by zero at k=0; value is irrelevant since E_hat[0]=0
+    k[0] = 1.0
     E_hat = rho_hat / (1j * k)
     E_hat[0] = 0.0  # zero mean electric field
     E = torch.fft.irfft(E_hat, n=N)

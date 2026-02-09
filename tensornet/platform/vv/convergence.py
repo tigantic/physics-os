@@ -15,14 +15,12 @@ and compare against the formal order.
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, field as dc_field
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
+from dataclasses import dataclass
+from typing import Callable, List, Sequence, Tuple
 
-import torch
 from torch import Tensor
 
 from tensornet.platform.data_model import (
-    FieldData,
     SimulationState,
     StructuredMesh,
 )

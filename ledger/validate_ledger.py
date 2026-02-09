@@ -152,8 +152,8 @@ def main() -> None:
                 if nid in node_ids:
                     all_errors.append(f"{path.name}: duplicate id '{nid}'")
                 node_ids.add(nid)
-        except Exception:
-            pass
+        except Exception as exc:
+            all_errors.append(f"{path.name}: parse error during duplicate check: {exc}")
 
     # Validate index
     index_errors = validate_index(node_ids)

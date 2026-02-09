@@ -8,7 +8,7 @@ class and wire up toy or full solvers with minimal boilerplate.
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, field as dc_field
+from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 import torch
@@ -16,12 +16,11 @@ from torch import Tensor
 
 from tensornet.platform.data_model import (
     FieldData,
-    Mesh,
     SimulationState,
     StructuredMesh,
 )
 from tensornet.platform.protocols import SolveResult
-from tensornet.platform.solvers import ForwardEuler, RK4, RHSCallable, TimeIntegrator
+from tensornet.platform.solvers import RK4, RHSCallable, TimeIntegrator
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

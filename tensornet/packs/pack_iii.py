@@ -34,13 +34,11 @@ import torch
 from torch import Tensor
 
 from tensornet.packs._base import (
-    BaseProblemSpec,
     compute_linf_error,
     convergence_order,
 )
 from tensornet.platform.data_model import (
     FieldData,
-    Mesh,
     SimulationState,
     StructuredMesh,
 )

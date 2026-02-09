@@ -38,14 +38,12 @@ import torch
 from torch import Tensor
 
 from tensornet.packs._base import (
-    BaseProblemSpec,
     compute_l2_error,
     compute_linf_error,
     convergence_order,
 )
 from tensornet.platform.data_model import (
     FieldData,
-    Mesh,
     SimulationState,
     StructuredMesh,
 )
@@ -176,6 +174,8 @@ class BurgersKEObservable:
 
 
 class BurgersIntegralObservable:
+    """Observable: spatial integral of u (conserved for inviscid Burgers)."""
+
     def __init__(self, dx: float) -> None:
         self._dx = dx
 
@@ -192,6 +192,8 @@ class BurgersIntegralObservable:
 
 
 class BurgersL2Observable:
+    """Observable: L2 norm of the velocity field."""
+
     @property
     def name(self) -> str:
         return "l2_norm"
@@ -598,6 +600,7 @@ def _run_burgers(
     if int_hist:
         initial_int = u0_data.sum().item() * dx
         max_drift = max(abs(v.item() - initial_int) for v in int_hist)
+        # Machine-precision conservation for central flux (no numerical dissipation)
         conservation_ok = max_drift < 1e-10
 
     return {

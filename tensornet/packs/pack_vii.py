@@ -21,7 +21,6 @@ Scaffold nodes (V0.1): PHY-VII.1 through PHY-VII.13
 
 from __future__ import annotations
 
-import itertools
 import math
 import sys
 from dataclasses import dataclass
@@ -46,8 +45,6 @@ from tensornet.platform.reproduce import ReproducibilityContext
 # Spin-1/2 operators
 # ═══════════════════════════════════════════════════════════════════════════════
 
-_SX = 0.5 * torch.tensor([[0, 1], [1, 0]], dtype=torch.float64)
-_SY = 0.5 * torch.tensor([[0, -1], [1, 0]], dtype=torch.float64)  # real part of σ_y/2
 _SZ = 0.5 * torch.tensor([[1, 0], [0, -1]], dtype=torch.float64)
 _ID2 = torch.eye(2, dtype=torch.float64)
 

@@ -16,10 +16,9 @@ on recorded observable histories.
 from __future__ import annotations
 
 import logging
-import math
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field as dc_field
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
+from typing import Callable, Dict, List, Optional, Sequence
 
 import torch
 from torch import Tensor

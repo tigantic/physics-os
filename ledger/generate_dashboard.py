@@ -11,7 +11,7 @@ Usage:
 from __future__ import annotations
 
 import pathlib
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 try:
@@ -66,7 +66,7 @@ def generate_dashboard(nodes: list[dict[str, Any]]) -> str:
     # Header
     lines.append("# Capability Ledger Dashboard")
     lines.append("")
-    lines.append(f"*Auto-generated: {datetime.now().strftime('%Y-%m-%d %H:%M')} UTC*")
+    lines.append(f"*Auto-generated: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M')} UTC*")
     lines.append("")
 
     # Overall summary

@@ -61,7 +61,7 @@ def _make_scaffold_spec(node_id: str, label: str) -> type:
 
         @property
         def governing_equations(self) -> str:
-            return f"{label} — scaffold placeholder"
+            return f"{label} — V0.1 scaffold, pending implementation"
 
         @property
         def field_names(self) -> Sequence[str]:

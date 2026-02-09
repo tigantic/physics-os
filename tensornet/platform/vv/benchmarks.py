@@ -23,18 +23,14 @@ Usage::
 
 from __future__ import annotations
 
-import json
 import math
 import hashlib
 from dataclasses import dataclass, field as dc_field
-from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union
+from typing import Callable, Dict, List, Optional, Sequence, Tuple
 
-import torch
 from torch import Tensor
 
 from tensornet.platform.data_model import (
-    FieldData,
     SimulationState,
     StructuredMesh,
 )
