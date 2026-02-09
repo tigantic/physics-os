@@ -282,7 +282,7 @@ $$
 | R₂ (D-wave) | 1.700 | 1.704 | 0.100 | 0.100 | 4 MeV |
 
 **Interpretation:** Both resonance masses are recovered to $\leq 12$ MeV precision,
-and widths to $\leq 6$ MeV. All 20 mass bins converge to the global minimum
+and widths to $\leq 6$ MeV. All 15 mass bins converge to the global minimum
 (100% basin fraction). The minimal 2-amplitude wave set avoids the M-substate
 discrete ambiguity that plagues under-constrained multi-amplitude fits, while the
 warm-start chaining ensures smooth mass dependence of the extracted amplitudes.

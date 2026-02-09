@@ -1,6 +1,6 @@
 {
   "experiment": "pwa_engine_full_suite",
-  "timestamp": "2026-02-09T19:39:50.886248+00:00",
+  "timestamp": "2026-02-09T19:50:25.162238+00:00",
   "device": "cuda",
   "convention_test": {
     "test_1_err": 0.0,
@@ -23,49 +23,49 @@
       {
         "n_mc": 1000,
         "n_amp": 12,
-        "speedup": 4.61519932198902,
+        "speedup": 4.401243917404285,
         "agreement": 1.2701226689291277e-16
       },
       {
         "n_mc": 5000,
         "n_amp": 12,
-        "speedup": 4.338221664684392,
+        "speedup": 5.488134935834501,
         "agreement": 0.0
       },
       {
         "n_mc": 10000,
         "n_amp": 12,
-        "speedup": 5.013224809058526,
+        "speedup": 6.832054774690481,
         "agreement": 1.1700572547183578e-16
       },
       {
         "n_mc": 50000,
         "n_amp": 12,
-        "speedup": 7.935626410769413,
+        "speedup": 7.6038803541264,
         "agreement": 2.107368409324663e-16
       },
       {
         "n_mc": 100000,
         "n_amp": 12,
-        "speedup": 9.730637047142674,
+        "speedup": 14.452177420509924,
         "agreement": 6.4125746749568735e-16
       },
       {
         "n_mc": 10000,
         "n_amp": 6,
-        "speedup": 6.848882982768422,
+        "speedup": 5.417712023054339,
         "agreement": 0.0
       },
       {
         "n_mc": 10000,
         "n_amp": 20,
-        "speedup": 3.3518961954212583,
+        "speedup": 4.486570137766263,
         "agreement": 2.8217602393493967e-16
       },
       {
         "n_mc": 10000,
         "n_amp": 42,
-        "speedup": 8.023030418013903,
+        "speedup": 4.933926300285547,
         "agreement": 0.0
       }
     ]
@@ -170,7 +170,7 @@
     "converged_fraction": 1.0,
     "mean_yield_sigma": 0.007122853949275049,
     "mean_phase_sigma_deg": 18.43408991277297,
-    "time_s": 20.839761098992312
+    "time_s": 20.8004782749922
   },
   "coupled_channel": {
     "n_channels": 2,
@@ -191,5 +191,5 @@
     "gamma_true_d": 0.1,
     "gamma_fit_d": 0.10021506898423439
   },
-  "total_time_s": 94.18178126800922
+  "total_time_s": 94.25846425301279
 }

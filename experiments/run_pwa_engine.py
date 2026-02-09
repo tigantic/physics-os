@@ -2,17 +2,22 @@
 """PWA Engine — Full Experiment Suite & Publication Figures.
 
 Single command that runs every deliverable:
-    1. Convention reduction test (general → simplified)
-    2. One-bin end-to-end parameter recovery
-    3. Baseline vs Gram-accelerated normalization benchmark
-    4. Wave-set scan with robustness atlas
-    5. QTT compression of Gram matrix at scale
-    6. Publication-quality figures (600 DPI, JCP style)
+    1.  Convention reduction test (general → simplified)
+    2.  One-bin end-to-end parameter recovery
+    3.  Baseline vs Gram-accelerated normalization benchmark
+    4.  Wave-set scan with robustness atlas
+    5.  QTT compression of Gram matrix at scale
+    6.  Angular moment validation (data vs model)
+    7.  Beam asymmetry sensitivity (polarized vs unpolarized)
+    8.  Bootstrap uncertainty quantification
+    9.  Coupled-channel joint fit
+    10. Mass-dependent Breit–Wigner extraction
+    11. Publication-quality figures (600 DPI, JCP style)
 
 Usage:
     python3 experiments/run_pwa_engine.py
 
-Authority: Adams (2026), HyperTensor-VM Platform V2.0.0
+Authority: Adams (2026), HyperTensor-VM Platform V3.0.0
 Hardware:  NVIDIA GeForce RTX 5070 Laptop GPU
 """
 

@@ -3,7 +3,7 @@
 Implements the complete intensity construction from Eq. 5.48 of the
 Badui dissertation with Gram-matrix-accelerated extended likelihood.
 
-Authority: Adams (2026), HyperTensor-VM Platform V2.0.0
+Authority: Adams (2026), HyperTensor-VM Platform V3.0.0
 """
 
 from experiments.pwa_engine.core import (

@@ -1,0 +1,65 @@
+\relax 
+\emailauthor{brad@tigantic.com}{Bradly Biron Baker Adams\corref {cor1}}
+\Newlabel{cor1}{1}
+\citation{pope2000turbulent}
+\Newlabel{tigantic}{a}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{}\protected@file@percent }
+\newlabel{sec:intro}{{1}{1}{}{}{}}
+\citation{oseledets2011tensor}
+\citation{khoromskij2011quantics}
+\citation{dolgov2012fast}
+\citation{bachmayr2016tensor}
+\citation{gourianov2022quantum}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Related Work}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Method}{3}{}\protected@file@percent }
+\newlabel{sec:method}{{2}{3}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Quantized Tensor Train Representation}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Vorticity Formulation}{3}{}\protected@file@percent }
+\newlabel{eq:vorticity}{{3}{3}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}SpectralNS3D: Hybrid QTT-FFT Architecture}{4}{}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces SpectralNS3D Time Step}}{4}{}\protected@file@percent }
+\newlabel{alg:spectral}{{1}{4}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Implementation Details}{4}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Performance comparison: SpectralNS3D vs.\ pure QTT-MPO solver.}}{5}{}\protected@file@percent }
+\newlabel{tab:performance}{{1}{5}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Results}{5}{}\protected@file@percent }
+\newlabel{sec:results}{{3}{5}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Compression Ratio Scaling}{5}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Memory scaling with grid size at fixed $\chi = 64$.}}{5}{}\protected@file@percent }
+\newlabel{tab:scaling}{{2}{5}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Taylor-Green Vortex Validation}{5}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Compression ratio (dense/QTT storage) vs.\ grid size at fixed $\chi = 64$. The QTT storage grows as $\mathcal  {O}(n\chi ^2) = \mathcal  {O}(\log N)$, while dense storage grows as $\mathcal  {O}(N^3)$, producing a compression advantage that grows as $\mathcal  {O}(N^3/\log N)$. At $512^3$ (134 million cells), the compression ratio exceeds $78{,}000\times $.}}{6}{}\protected@file@percent }
+\newlabel{fig:compression_ratio}{{1}{6}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Taylor-Green validation at $t = 1.0$, $\nu = 0.01$.}}{6}{}\protected@file@percent }
+\newlabel{tab:taylor_green}{{3}{6}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Decaying Homogeneous Isotropic Turbulence}{7}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}SVD Spectrum Analysis}{7}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Reynolds Number Sweep: The Central Result}{7}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Compensated energy spectra $k^{5/3}\,E(k)$ from DHIT simulations at $\mathrm  {Re}_\lambda = 50, 200, 800$ on a $64^3$ grid. Higher Reynolds numbers produce a broader range of energetic scales, consistent with the development of an inertial cascade. The spectra are steeper than the asymptotic $-5/3$ at these moderate Re, as expected.}}{8}{}\protected@file@percent }
+\newlabel{fig:compensated_spectra}{{2}{8}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Bond dimension vs.\ Reynolds number.}}{8}{}\protected@file@percent }
+\newlabel{tab:reynolds}{{4}{8}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Normalized singular value spectrum $\sigma _i / \sigma _1$ at the most entangled bond during QTT compression of the $u_x$ velocity component after 20 time steps of DHIT. Three Reynolds numbers are shown: $\mathrm  {Re}_\lambda = 50$ (bond 6), $200$ (bond 6), $800$ (bond 6). The spectra collapse onto a universal curve, dropping 7 orders of magnitude within 60 modes. The vertical dashed line marks the $\chi = 64$ truncation threshold. This rapid decay is the mechanistic explanation for Reynolds-independent compressibility.}}{9}{}\protected@file@percent }
+\newlabel{fig:svd_spectrum}{{3}{9}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Bond dimension $\chi $ vs.\ Reynolds number $\mathrm  {Re}_\lambda $. Data from Table~\ref {tab:reynolds}. The measured values (circles) are constant at $\chi = 64$ across $\mathrm  {Re}_\lambda = 50$--$800$, yielding $\alpha = 0.0000$ in $\chi \sim \mathrm  {Re}^\alpha $ with $R^2 = 1.000$. Dashed lines show hypothetical scalings $\chi \sim \mathrm  {Re}^{1/4}$ and $\chi \sim \mathrm  {Re}^{1/2}$ for comparison. \textbf  {Bond dimension is independent of Reynolds number within the tested range.}}}{10}{}\protected@file@percent }
+\newlabel{fig:chi_vs_re}{{4}{10}{}{}{}}
+\citation{eisert2010colloquium}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Discussion}{11}{}\protected@file@percent }
+\newlabel{sec:discussion}{{4}{11}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Interpretation of Results}{11}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Limitations}{11}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Comparison with Alternative Methods}{12}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Comparison of turbulence simulation approaches.}}{12}{}\protected@file@percent }
+\newlabel{tab:comparison}{{5}{12}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Future Directions}{12}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusion}{12}{}\protected@file@percent }
+\newlabel{sec:conclusion}{{5}{12}{}{}{}}
+\bibstyle{elsarticle-harv}
+\bibcite{bachmayr2016tensor}{{1}{2016}{{Bachmayr et~al.}}{{}}}
+\bibcite{dolgov2012fast}{{2}{2012}{{Dolgov and Khoromskij}}{{}}}
+\bibcite{eisert2010colloquium}{{3}{2010}{{Eisert et~al.}}{{}}}
+\bibcite{gourianov2022quantum}{{4}{2022}{{Gourianov et~al.}}{{}}}
+\bibcite{khoromskij2011quantics}{{5}{2011}{{Khoromskij}}{{}}}
+\bibcite{oseledets2011tensor}{{6}{2011}{{Oseledets}}{{}}}
+\bibcite{pope2000turbulent}{{7}{2000}{{Pope}}{{}}}
+\gdef \@abspage@last{14}

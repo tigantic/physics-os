@@ -520,12 +520,12 @@ class ExtendedLikelihood:
 class SyntheticDataGenerator:
     """Generate synthetic PWA data via accept/reject sampling.
 
-    The acceptance function η(τ) models detector effects. Events are
-    drawn uniformly in (θ, φ) and accepted with probability proportional
-    to η(τ) I(τ; V_true).
-
-    Also produces the MC sample (accepted generated events) needed for
-    normalization.
+    The acceptance function η(τ) models detector effects.  **Data events**
+    are drawn uniformly in (θ, φ) and accepted with probability
+    proportional to η(τ) · I(τ; V_true).  **MC normalization events**
+    are accepted with probability proportional to η(τ) only, so the Monte
+    Carlo integral in the extended likelihood remains unbiased regardless
+    of the production amplitudes V.
     """
 
     def __init__(
