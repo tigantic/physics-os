@@ -52,6 +52,7 @@ jobs:
           python -m pytest \
             tests/test_platform.py \
             tests/test_packs.py \
+            tests/test_vv.py \
             tests/test_qtt_acceleration.py \
             tests/test_advanced_physics.py \
             tests/test_productization.py \

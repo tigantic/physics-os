@@ -34,6 +34,9 @@ security     – SBOM generation, dependency audit, license compliance
 Platform version: 2.0.0  (Phase 7 — Productization & Ecosystem Hardening)
 """
 
+# NOTE: This is the *platform API* version (SemVer for the substrate).
+# The *package* version (pyproject.toml / tensornet.__version__) is 40.0.0,
+# which tracks the full inventory release.  Two separate version namespaces.
 __version__ = "2.0.0"
 
 from tensornet.platform.protocols import (
@@ -88,6 +91,7 @@ from tensornet.platform.checkpoint import (
 # Phase 7 — Productization modules
 from tensornet.platform.export import (
     export_vtu,
+    export_xdmf_hdf5,
     export_csv,
     export_json,
     ExportBundle,
@@ -174,6 +178,7 @@ __all__ = [
     "load_checkpoint",
     # Export
     "export_vtu",
+    "export_xdmf_hdf5",
     "export_csv",
     "export_json",
     "ExportBundle",

@@ -41,7 +41,7 @@
 | **Phase 4** | **COMPLETE** | `25d0b44f` | 167/167 nodes at ≥ V0.2 Correctness, 7 at V0.4 Validated, 0 scaffold solvers remaining, 257 tests passing |
 | **Phase 5** | **COMPLETE** | `ae79ea7c` | QTT bridge, TCI engine, acceleration policy, 4 V0.6 solvers (Burgers, Maxwell, AdvDiff, Vlasov), 28 new tests |  
 | **Phase 6** | **COMPLETE** | `ae79ea7c` | Coupling orchestrator, adjoint/sensitivity (w/ FD fallback), inverse toolkit, UQ (MC/LHS/PCE), optimization (SIMP + augmented-Lagrangian), lineage DAG, 27 new tests |
-| **Phase 7** | **COMPLETE** | *pending* | SDK + WorkflowBuilder, recipes (8 built-in), export (VTU/XDMF/CSV/JSON), mesh import (GMSH v2/v4/raw), post-processing (7 ops), visualization, deprecation policy (SemVer), security (SBOM/audit/license), CI hardening, 55 new tests |
+| **Phase 7** | **COMPLETE** | `2725db6e` | SDK + WorkflowBuilder, recipes (8 built-in), export (VTU/XDMF/CSV/JSON), mesh import (GMSH v2/v4/raw), post-processing (7 ops), visualization, deprecation policy (SemVer), security (SBOM/audit/license), CI hardening, 55 new tests |
 
 **Final state:** 167 taxonomy nodes across 20 packs. 4 at V0.6 (QTT-accelerated anchors), 5 at V0.4 Validated, 158 at V0.2 Correctness. Platform V2.0.0. 268 tests passing (1 skipped). ADR-0011 documents Phase 7 decisions.
 

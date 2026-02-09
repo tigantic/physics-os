@@ -123,6 +123,7 @@ from tensornet.platform.checkpoint import (
 # ── Export / Import ─────────────────────────────────────────────────────────
 from tensornet.platform.export import (
     export_vtu,
+    export_xdmf_hdf5,
     export_csv,
     export_json,
     ExportBundle,
@@ -164,6 +165,14 @@ from tensornet.platform.deprecation import (
     deprecated,
     since,
     check_version_gate,
+)
+
+# ── Recipes ─────────────────────────────────────────────────────────────────
+from tensornet.sdk.recipes import (
+    register_recipe,
+    get_recipe,
+    list_recipes,
+    RecipeInfo,
 )
 
 # ── Security ────────────────────────────────────────────────────────────────
@@ -228,6 +237,7 @@ __all__ = [
     "load_checkpoint",
     # Export
     "export_vtu",
+    "export_xdmf_hdf5",
     "export_csv",
     "export_json",
     "ExportBundle",
@@ -258,6 +268,11 @@ __all__ = [
     "deprecated",
     "since",
     "check_version_gate",
+    # Recipes
+    "register_recipe",
+    "get_recipe",
+    "list_recipes",
+    "RecipeInfo",
     # Security
     "generate_sbom",
     "audit_dependencies",

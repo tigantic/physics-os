@@ -11,13 +11,15 @@
 
 ## Overview
 
-HyperTensor is a computational physics library that applies tensor network methods (MPS, MPO, QTT) to fluid dynamics, plasma physics, and related domains. The core insight: turbulent flow fields exhibit low-rank structure that can be exploited for significant compression and acceleration.
+HyperTensor is a unified computational physics platform that applies tensor network methods (MPS, MPO, QTT) across 20 physics domains (167 taxonomy nodes). The core insight: turbulent flow fields and many-body systems exhibit low-rank structure that can be exploited for significant compression and acceleration.
 
 **What this repository contains:**
+- **Platform substrate** (`tensornet.platform`) — unified data model, solvers, V&V harness, QTT acceleration, coupled physics, inverse/UQ/optimization, export/import, post-processing, visualization
+- **SDK** (`tensornet.sdk`) — stable public API with `WorkflowBuilder` DSL, 8 built-in recipes, curated re-exports
+- **20 domain packs** — 167 taxonomy nodes (I–XX) at V0.2+ maturity, 4 QTT-accelerated anchors at V0.6
 - Tensor network algorithms (DMRG, TEBD, Lanczos)
-- CFD solvers (1D/2D/3D Euler, Navier-Stokes)
+- CFD solvers (1D/2D/3D Euler, Navier-Stokes, QTT-native)
 - Physics validation gauntlets with benchmark suites
-- Real-time visualization tools (Rust/Python)
 - V&V framework aligned with ASME V&V 10-2019
 
 **What this repository does NOT contain:**
@@ -43,6 +45,29 @@ python -c "import tensornet; print(f'tensornet v{tensornet.__version__}')"
 
 # Run tests
 pytest tests/ -v
+```
+
+### Example: SDK Workflow Builder
+
+```python
+from tensornet.sdk import WorkflowBuilder, get_recipe, list_recipes
+
+# Fluent DSL — build + run a 1D Burgers simulation
+result = (
+    WorkflowBuilder("burgers")
+    .domain(shape=(256,), extent=((0.0, 2 * 3.14159),))
+    .field("u", ic="sine")
+    .solver("PHY-II.1")
+    .time(0.0, 1.0, dt=1e-3)
+    .export("vtu", path="out")
+    .build()
+    .run()
+)
+print(f"Wall time: {result.wall_time:.2f}s")
+
+# Or use a pre-built recipe
+wf = get_recipe("sod_shock_tube").build()
+result = wf.run()
 ```
 
 ### Example: DMRG Ground State
@@ -82,6 +107,8 @@ print(f"L1 error: {error:.4e}")  # 1.66e-02
 
 | Module | Description | Validation |
 |--------|-------------|------------|
+| `tensornet.sdk` | Stable public API — WorkflowBuilder, recipes, re-exports | 55 tests |
+| `tensornet.platform` | Unified substrate — data model, solvers, V&V, QTT, coupled physics | 268 tests |
 | `tensornet.mps` | Matrix Product States | Heisenberg exact |
 | `tensornet.mpo` | Matrix Product Operators | Operator algebra |
 | `tensornet.algorithms` | DMRG, TEBD, Lanczos | Ground state convergence |
@@ -160,6 +187,30 @@ See [The_Civilization_Stack.md](The_Civilization_Stack.md) for complete document
 ```
 HyperTensor/
 ├── tensornet/              # Core library
+│   ├── platform/           # Unified substrate (Phases 1–7)
+│   │   ├── data_model.py   # Mesh, Field, BC/IC, SimulationState
+│   │   ├── protocols.py    # ProblemSpec, Solver, Observable, Workflow
+│   │   ├── solvers.py      # Time integrators, linear/nonlinear solvers
+│   │   ├── domain_pack.py  # Plugin architecture + registry
+│   │   ├── reproduce.py    # Deterministic runs, artifact hashing
+│   │   ├── checkpoint.py   # Serialization / restart
+│   │   ├── export.py       # VTU, XDMF+HDF5, CSV, JSON
+│   │   ├── mesh_import.py  # GMSH v2/v4, raw arrays
+│   │   ├── postprocess.py  # probe, slice, integrate, FFT, gradient
+│   │   ├── visualize.py    # matplotlib field/convergence/spectrum plots
+│   │   ├── deprecation.py  # SemVer, @deprecated, @since, version gate
+│   │   ├── security.py     # SBOM, dependency audit, license audit
+│   │   ├── qtt.py          # QTT bridge layer
+│   │   ├── coupled.py      # Coupling orchestrator
+│   │   ├── adjoint.py      # Discrete adjoint + FD fallback
+│   │   ├── inverse.py      # Inverse problem toolkit
+│   │   ├── uq.py           # UQ (MC, LHS, PCE)
+│   │   └── optimization.py # Topology/shape optimization
+│   ├── sdk/                # Stable public API surface
+│   │   ├── __init__.py     # 55+ curated re-exports
+│   │   ├── workflow.py     # WorkflowBuilder DSL
+│   │   └── recipes.py      # 8 built-in per-domain recipes
+│   ├── packs/              # 20 domain packs (I–XX, 167 nodes)
 │   ├── algorithms/         # DMRG, TEBD, Lanczos
 │   ├── mps/                # Matrix Product States
 │   ├── mpo/                # Matrix Product Operators
@@ -167,12 +218,14 @@ HyperTensor/
 │   ├── cuda/               # GPU kernels
 │   ├── hypersim/           # Hypersonic simulation
 │   └── validation/         # V&V framework
-├── tests/                  # Test suite (1,100+ tests)
+├── ledger/                 # Capability ledger (167 YAML nodes)
+├── tests/                  # Test suite (268+ tests)
 ├── benchmarks/             # Performance validation
+├── docs/                   # Documentation
+│   └── adr/                # Architecture Decision Records (ADR-0001–0011)
 ├── apps/                   # Applications
 │   ├── glass_cockpit/      # Real-time visualization
 │   └── global_eye/         # Monitoring tools
-├── docs/                   # Documentation
 ├── proofs/                 # Mathematical verification
 └── scripts/                # Utilities
 ```
@@ -231,6 +284,14 @@ pytest tests/ --cov=tensornet --cov-report=html
 - NumPy 1.24+
 - Rust 1.70+ (for Glass Cockpit visualization)
 
+Optional extras:
+```bash
+pip install -e ".[viz]"        # matplotlib, jupyter
+pip install -e ".[io]"         # h5py (XDMF/HDF5 export)
+pip install -e ".[benchmark]"  # scipy, tenpy
+pip install -e ".[all]"        # everything
+```
+
 ---
 
 ## Documentation
@@ -241,6 +302,7 @@ pytest tests/ --cov=tensornet --cov-report=html
 | [HYPERTENSOR_VV_FRAMEWORK.md](HYPERTENSOR_VV_FRAMEWORK.md) | V&V methodology |
 | [CONSTITUTION.md](CONSTITUTION.md) | Coding standards |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution guidelines |
+| [Commercial_Execution.md](Commercial_Execution.md) | 7-phase roadmap (all COMPLETE) |
 | [CHANGELOG.md](CHANGELOG.md) | Version history |
 | [docs/INDEX.md](docs/INDEX.md) | Documentation index |
 

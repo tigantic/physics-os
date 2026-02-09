@@ -7,6 +7,67 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [40.0.1] - 2026-02-09 (Phase 7: Productization & Ecosystem Hardening)
+
+### Added
+
+#### SDK & Workflow Builder (`tensornet/sdk/`)
+- **WorkflowBuilder** fluent DSL for composable simulation pipelines
+  (`.domain()` → `.field()` → `.solver()` → `.time()` → `.export()` → `.build().run()`)
+- **ExecutedWorkflow** runner with provenance capture, lineage DAG, and wall-time tracking
+- **Recipes**: 8 built-in per-domain recipes (harmonic_oscillator, lorenz_attractor,
+  burgers_1d, sod_shock_tube, maxwell_1d, advection_diffusion_1d, heisenberg_chain,
+  landau_damping, kohn_sham_1d) via `get_recipe()` / `list_recipes()`
+- **SDK public surface** (`tensornet.sdk`): 55+ curated re-exports from platform, stable API
+
+#### Export & Interop (`tensornet/platform/export.py`, `mesh_import.py`)
+- VTK/VTU export (XML + base64 binary, structured → lines/quads/hexes, unstructured pass-through)
+- XDMF + HDF5 export (requires `h5py`, ParaView-compatible)
+- CSV and JSON export for scalar observables and convergence histories
+- `ExportBundle` convenience class (`.vtu()`, `.xdmf()`, `.csv()`, `.json()`, `.all()`)
+- GMSH v2/v4 ASCII mesh import with auto-detection (`import_gmsh()`)
+- Raw-array mesh import (`import_raw()`)
+
+#### Post-Processing & Visualization (`tensornet/platform/postprocess.py`, `visualize.py`)
+- `probe()` — point/multi-point interpolation (fast path for structured grids)
+- `slice_field()` — axis-aligned slice extraction
+- `integrate()` — volume integration with optional region mask
+- `field_statistics()` — min/max/mean/std/percentiles → `FieldStats` dataclass
+- `fft_field()` — FFT with optional power-spectrum output
+- `gradient_field()` — central-difference gradient computation
+- `histogram()` — binned distribution of field values
+- matplotlib-based visualization: `plot_field_1d`, `plot_field_2d`, `plot_convergence`,
+  `plot_observable_history`, `plot_spectrum` (all optional, graceful if matplotlib absent)
+
+#### Deprecation & Security (`tensornet/platform/deprecation.py`, `security.py`)
+- `VersionInfo` frozen dataclass with SemVer `.parse()` and comparison operators
+- `PLATFORM_VERSION = VersionInfo(2, 0, 0)`
+- `@deprecated(removal_version, alternative, reason)` — RuntimeError if overdue, else DeprecationWarning
+- `@since(version)` — sets `__since__` attribute on decorated functions
+- `check_version_gate()` — CI-enforceable scan for overdue deprecations
+- CycloneDX SBOM generation (`generate_sbom()`)
+- Offline dependency audit (`audit_dependencies()`)
+- License compliance audit (`license_audit()` — GPL contamination guard)
+
+#### CI Hardening (`.github/workflows/hardening.yml`)
+- Full test matrix (Python 3.11 + 3.12), determinism gate, supply-chain audit
+- SBOM generation, license audit, and deprecation gate in CI
+
+#### Tests
+- 55 new tests in `tests/test_productization.py`
+- Total: 268 tests passing (1 skipped)
+
+#### Documentation
+- ADR-0011: Phase 7 architecture decisions
+- Commercial_Execution.md updated to V1.3 — all 7 phases COMPLETE
+
+### Changed
+- Platform API version: 1.0.0 → 2.0.0
+- `tensornet/platform/__init__.py`: added all Phase 7 module re-exports
+- `tensornet/sdk/__init__.py`: recipes now re-exported
+- `pyproject.toml`: added `io` optional extra (`h5py>=3.8`)
+- `.github/workflows/hardening.yml`: `test_vv.py` added to CI matrix
+
 ## [40.0.0] - 2026-02-08 (140/140 Computational Physics Release)
 
 ### Added

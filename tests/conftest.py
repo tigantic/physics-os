@@ -116,6 +116,11 @@ def pytest_configure(config):
     )
     config.addinivalue_line("markers", "performance: Speed/memory benchmarks (<5min)")
 
+    # --- Security ---
+    config.addinivalue_line(
+        "markers", "security: Security validation test (SBOM, license, audit)"
+    )
+
     # --- Hardware Requirements ---
     config.addinivalue_line("markers", "gpu: Requires GPU (CUDA)")
     config.addinivalue_line("markers", "rust: Requires Rust TCI extension")
