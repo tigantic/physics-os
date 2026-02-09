@@ -3,10 +3,10 @@
 | Field | Value |
 |-------|-------|
 | **Document** | Commercial Execution Plan |
-| **Version** | 1.2 |
+| **Version** | 1.3 |
 | **Date** | 2026-02-09 |
 | **Owner** | TiganticLabz — HyperTensor-VM Core Team |
-| **Status** | Active — Phase 6 complete, Phase 7 next |
+| **Status** | **COMPLETE** — All 7 phases delivered, platform V2.0.0 |
 
 ---
 
@@ -39,11 +39,11 @@
 | **Phase 3** | **COMPLETE** | `90a79173` | 20 domain packs scaffolded, 6 anchor vertical slices at V0.4 Validated (Burgers, Maxwell, Heisenberg, Heat, Ising, Vlasov-Poisson) |
 | **Phase 3 Audit** | **COMPLETE** | `253b5481` | ~40 unused imports fixed across 33 files, dead code removed, silent excepts fixed, 147 tests green |
 | **Phase 4** | **COMPLETE** | `25d0b44f` | 167/167 nodes at ≥ V0.2 Correctness, 7 at V0.4 Validated, 0 scaffold solvers remaining, 257 tests passing |
-| **Phase 5** | **COMPLETE** | *pending* | QTT bridge, TCI engine, acceleration policy, 4 V0.6 solvers (Burgers, Maxwell, AdvDiff, Vlasov), 28 new tests |  
-| **Phase 6** | **COMPLETE** | *pending* | Coupling orchestrator, adjoint/sensitivity (w/ FD fallback), inverse toolkit, UQ (MC/LHS/PCE), optimization (SIMP + augmented-Lagrangian), lineage DAG, 27 new tests |
-| **Phase 7** | Not started | — | Productization, SDKs, docs |
+| **Phase 5** | **COMPLETE** | `ae79ea7c` | QTT bridge, TCI engine, acceleration policy, 4 V0.6 solvers (Burgers, Maxwell, AdvDiff, Vlasov), 28 new tests |  
+| **Phase 6** | **COMPLETE** | `ae79ea7c` | Coupling orchestrator, adjoint/sensitivity (w/ FD fallback), inverse toolkit, UQ (MC/LHS/PCE), optimization (SIMP + augmented-Lagrangian), lineage DAG, 27 new tests |
+| **Phase 7** | **COMPLETE** | *pending* | SDK + WorkflowBuilder, recipes (8 built-in), export (VTU/XDMF/CSV/JSON), mesh import (GMSH v2/v4/raw), post-processing (7 ops), visualization, deprecation policy (SemVer), security (SBOM/audit/license), CI hardening, 55 new tests |
 
-**Current coverage:** 167 taxonomy nodes across 20 packs. 4 at V0.6 (QTT-accelerated anchors), 5 at V0.4 Validated, 158 at V0.2 Correctness. 55 new tests added in Phase 5+6 (total ~312).
+**Final state:** 167 taxonomy nodes across 20 packs. 4 at V0.6 (QTT-accelerated anchors), 5 at V0.4 Validated, 158 at V0.2 Correctness. Platform V2.0.0. 268 tests passing (1 skipped). ADR-0011 documents Phase 7 decisions.
 
 ---
 
@@ -377,6 +377,8 @@ End-to-end workflows (simulate → infer → optimize) reproduce known reference
 #### Exit Gate
 
 External teams can build on it without internal support, and upgrade versions without breaking workflows.
+
+> **✅ COMPLETE**: SDK surface (`tensornet/sdk/`) with fluent `WorkflowBuilder` DSL and curated re-exports. Recipe book with 8 built-in per-domain recipes. Export layer (VTU, XDMF+HDF5, CSV, JSON) in `tensornet/platform/export.py`. Mesh import (GMSH v2/v4/raw) in `tensornet/platform/mesh_import.py`. Post-processing (probe, slice, integrate, FFT, gradient, histogram, stats) in `tensornet/platform/postprocess.py`. Matplotlib visualization (1D/2D fields, convergence, spectrum) in `tensornet/platform/visualize.py`. SemVer deprecation policy with `@deprecated`/`@since` decorators and CI-enforceable version gate in `tensornet/platform/deprecation.py`. Security posture (SBOM, dependency audit, license audit) in `tensornet/platform/security.py`. CI hardening pipeline (`.github/workflows/hardening.yml`). Platform version 2.0.0. 55 new tests, 268 total passing. ADR-0011 documents decisions.
 
 ---
 
