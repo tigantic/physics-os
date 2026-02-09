@@ -3,7 +3,7 @@
 | Field | Value |
 |-------|-------|
 | **Document** | Commercial Execution Plan |
-| **Version** | 1.3 |
+| **Version** | 1.4 |
 | **Date** | 2026-02-09 |
 | **Owner** | TiganticLabz — HyperTensor-VM Core Team |
 | **Status** | **COMPLETE** — All 7 phases delivered, platform V2.0.0 |
@@ -23,7 +23,7 @@
 
 ### 1.2 Cross-Reference: PLATFORM_SPECIFICATION.md
 
-> **Maturity reconciliation.** `PLATFORM_SPECIFICATION.md` (v40.0) reports 140/140 physics coverage and ~822K LOC. That metric counts *code existence*. This document's version-state model counts *verified, validated, benchmarked maturity*. The two are complementary but not interchangeable. A taxonomy node with running code but no regression tests, no benchmark match, and no documented acceptance threshold is **V0.1 Scaffolded** at best — not "covered" in the commercial sense. The capability ledger (§4, Phase 0) is the single source of truth for maturity state; `PLATFORM_SPECIFICATION.md` is the single source of truth for inventory and LOC metrics.
+> **Maturity reconciliation.** `PLATFORM_SPECIFICATION.md` (v40.1) reports 140/140 physics coverage and ~1,153K LOC. That metric counts *code existence*. This document's version-state model counts *verified, validated, benchmarked maturity*. The two are complementary but not interchangeable. A taxonomy node with running code but no regression tests, no benchmark match, and no documented acceptance threshold is **V0.1 Scaffolded** at best — not "covered" in the commercial sense. The capability ledger (§4, Phase 0) is the single source of truth for maturity state; `PLATFORM_SPECIFICATION.md` is the single source of truth for inventory and LOC metrics.
 >
 > **Post-Phase 4 update (2026-02-09):** The actual taxonomy implementation contains **167 nodes** across 20 packs (some high-level taxonomy categories were decomposed into finer-grained nodes during implementation). All 167 nodes now have real V0.2+ solvers with physics-correct implementations and regression tests. The ledger at `ledger/nodes/` has been synchronized to 167 entries.
 
@@ -43,7 +43,7 @@
 | **Phase 6** | **COMPLETE** | `ae79ea7c` | Coupling orchestrator, adjoint/sensitivity (w/ FD fallback), inverse toolkit, UQ (MC/LHS/PCE), optimization (SIMP + augmented-Lagrangian), lineage DAG, 27 new tests |
 | **Phase 7** | **COMPLETE** | `2725db6e` | SDK + WorkflowBuilder, recipes (8 built-in), export (VTU/XDMF/CSV/JSON), mesh import (GMSH v2/v4/raw), post-processing (7 ops), visualization, deprecation policy (SemVer), security (SBOM/audit/license), CI hardening, 55 new tests |
 
-**Final state:** 167 taxonomy nodes across 20 packs. 4 at V0.6 (QTT-accelerated anchors), 5 at V0.4 Validated, 158 at V0.2 Correctness. Platform V2.0.0. 268 tests passing (1 skipped). ADR-0011 documents Phase 7 decisions.
+**Final state:** 167 taxonomy nodes across 20 packs. 4 at V0.6 (QTT-accelerated anchors), 5 at V0.4 Validated, 158 at V0.2 Correctness. Platform V2.0.0. 295 tests passing (1 skipped). 1,153K first-party LOC across 2,804 source files. ADR-0011 documents Phase 7 decisions. Polish pass committed as `c0a73ba2`.
 
 ---
 
@@ -378,7 +378,7 @@ End-to-end workflows (simulate → infer → optimize) reproduce known reference
 
 External teams can build on it without internal support, and upgrade versions without breaking workflows.
 
-> **✅ COMPLETE**: SDK surface (`tensornet/sdk/`) with fluent `WorkflowBuilder` DSL and curated re-exports. Recipe book with 8 built-in per-domain recipes. Export layer (VTU, XDMF+HDF5, CSV, JSON) in `tensornet/platform/export.py`. Mesh import (GMSH v2/v4/raw) in `tensornet/platform/mesh_import.py`. Post-processing (probe, slice, integrate, FFT, gradient, histogram, stats) in `tensornet/platform/postprocess.py`. Matplotlib visualization (1D/2D fields, convergence, spectrum) in `tensornet/platform/visualize.py`. SemVer deprecation policy with `@deprecated`/`@since` decorators and CI-enforceable version gate in `tensornet/platform/deprecation.py`. Security posture (SBOM, dependency audit, license audit) in `tensornet/platform/security.py`. CI hardening pipeline (`.github/workflows/hardening.yml`). Platform version 2.0.0. 55 new tests, 268 total passing. ADR-0011 documents decisions.
+> **✅ COMPLETE**: SDK surface (`tensornet/sdk/`) with fluent `WorkflowBuilder` DSL and curated re-exports. Recipe book with 8 built-in per-domain recipes. Export layer (VTU, XDMF+HDF5, CSV, JSON) in `tensornet/platform/export.py`. Mesh import (GMSH v2/v4/raw) in `tensornet/platform/mesh_import.py`. Post-processing (probe, slice, integrate, FFT, gradient, histogram, stats) in `tensornet/platform/postprocess.py`. Matplotlib visualization (1D/2D fields, convergence, spectrum) in `tensornet/platform/visualize.py`. SemVer deprecation policy with `@deprecated`/`@since` decorators and CI-enforceable version gate in `tensornet/platform/deprecation.py`. Security posture (SBOM, dependency audit, license audit) in `tensornet/platform/security.py`. CI hardening pipeline (`.github/workflows/hardening.yml`). Platform version 2.0.0. 55 new tests, 295 total passing (1 skipped). Platform Substrate: 33 files, 12,618 LOC. SDK: 3 files, 1,072 LOC. ADR-0011 documents decisions. Polish pass: `c0a73ba2`.
 
 ---
 
