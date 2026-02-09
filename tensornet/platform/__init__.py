@@ -1,10 +1,10 @@
 """
-HyperTensor Platform — Phases 1 + 2
-=====================================
+HyperTensor Platform — Phases 1 + 2 + 3
+=========================================
 
 Canonical interfaces and infrastructure for the unified simulation + inference
 platform.  Every domain pack, solver, and workflow must conform to these
-protocols.  See ADR-0001 through ADR-0006 for rationale.
+protocols.  See ADR-0001 through ADR-0007 for rationale.
 
 Submodules
 ----------
@@ -17,10 +17,10 @@ checkpoint  – Serialization / deserialization to HDF5-like Zarr stores
 vv          – Verification & Validation harness (MMS, convergence, conservation,
               stability, performance, benchmarks)  [Phase 2]
 
-Platform version: 0.2.0  (Phase 2 — V&V Harness + Benchmarks)
+Platform version: 1.0.0  (Phase 3 — Domain-Pack Framework & Anchor Vertical Slices)
 """
 
-__version__ = "0.2.0"
+__version__ = "1.0.0"
 
 from tensornet.platform.protocols import (
     ProblemSpec,

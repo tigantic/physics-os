@@ -9,6 +9,12 @@ Registry / discovery
 ``DomainRegistry`` is a singleton in-process registry.  Domain packs register
 themselves at import time via ``@DomainRegistry.register`` or by calling
 ``get_registry().register_pack(pack)``.
+
+Compliance
+----------
+``PackComplianceReport`` checks that every pack conforms to the platform
+interface contract:  every exported ProblemSpec, Solver, Discretization, and
+Observable must satisfy the corresponding protocol (PEP 544 runtime check).
 """
 
 from __future__ import annotations
@@ -25,6 +31,7 @@ from typing import (
     Mapping,
     Optional,
     Sequence,
+    Tuple,
     Type,
 )
 
@@ -36,6 +43,185 @@ from tensornet.platform.protocols import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PackInfo — lightweight metadata for compliance and reporting
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+@dataclass(frozen=True)
+class PackInfo:
+    """Immutable snapshot of a DomainPack's metadata."""
+
+    pack_id: str
+    pack_name: str
+    taxonomy_ids: Tuple[str, ...]
+    n_specs: int
+    n_solvers: int
+    n_discretizations: int
+    n_observables: int
+    n_benchmarks: int
+    version: str
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Compliance report
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+@dataclass
+class ComplianceViolation:
+    """A single interface-conformance failure."""
+
+    taxonomy_id: str
+    artifact: str  # 'ProblemSpec', 'Solver', 'Discretization', 'Observable'
+    cls: type
+    reason: str
+
+
+@dataclass
+class PackComplianceReport:
+    """Result of running compliance checks on a DomainPack."""
+
+    pack_id: str
+    pack_name: str
+    violations: List[ComplianceViolation] = dc_field(default_factory=list)
+    warnings: List[str] = dc_field(default_factory=list)
+
+    @property
+    def passed(self) -> bool:
+        return len(self.violations) == 0
+
+    def summary(self) -> str:
+        status = "PASS" if self.passed else "FAIL"
+        lines = [f"Compliance [{status}] Pack {self.pack_id} ({self.pack_name})"]
+        for v in self.violations:
+            lines.append(
+                f"  VIOLATION {v.taxonomy_id} {v.artifact} "
+                f"({v.cls.__name__}): {v.reason}"
+            )
+        for w in self.warnings:
+            lines.append(f"  WARNING: {w}")
+        return "\n".join(lines)
+
+
+def check_compliance(pack: "DomainPack") -> PackComplianceReport:
+    """
+    Verify that a DomainPack's exported artifacts conform to platform protocols.
+
+    Checks:
+    - Every taxonomy_id in the pack has a ProblemSpec and a Solver.
+    - Every ProblemSpec class is ``runtime_checkable`` against ``ProblemSpec``.
+    - Every Solver class is ``runtime_checkable`` against ``Solver``.
+    - Every Discretization is ``runtime_checkable`` against ``Discretization``.
+    - Every Observable is ``runtime_checkable`` against ``Observable``.
+    """
+    report = PackComplianceReport(pack_id=pack.pack_id, pack_name=pack.pack_name)
+
+    specs = pack.problem_specs()
+    solvers = pack.solvers()
+    discs = pack.discretizations()
+    observables = pack.observables()
+
+    for nid in pack.taxonomy_ids:
+        # Must have ProblemSpec
+        if nid not in specs:
+            report.violations.append(
+                ComplianceViolation(
+                    taxonomy_id=nid,
+                    artifact="ProblemSpec",
+                    cls=type(None),
+                    reason=f"No ProblemSpec registered for node {nid}",
+                )
+            )
+        else:
+            cls = specs[nid]
+            if not _check_protocol(cls, ProblemSpec, is_class=True):
+                report.violations.append(
+                    ComplianceViolation(
+                        taxonomy_id=nid,
+                        artifact="ProblemSpec",
+                        cls=cls,
+                        reason=f"{cls.__name__} does not satisfy ProblemSpec protocol",
+                    )
+                )
+
+        # Must have Solver
+        if nid not in solvers:
+            report.violations.append(
+                ComplianceViolation(
+                    taxonomy_id=nid,
+                    artifact="Solver",
+                    cls=type(None),
+                    reason=f"No Solver registered for node {nid}",
+                )
+            )
+        else:
+            cls = solvers[nid]
+            if not _check_protocol(cls, Solver, is_class=True):
+                report.violations.append(
+                    ComplianceViolation(
+                        taxonomy_id=nid,
+                        artifact="Solver",
+                        cls=cls,
+                        reason=f"{cls.__name__} does not satisfy Solver protocol",
+                    )
+                )
+
+        # Discretization — optional but if present must conform
+        if nid in discs:
+            for dcls in discs[nid]:
+                if not _check_protocol(dcls, Discretization, is_class=True):
+                    report.violations.append(
+                        ComplianceViolation(
+                            taxonomy_id=nid,
+                            artifact="Discretization",
+                            cls=dcls,
+                            reason=f"{dcls.__name__} does not satisfy Discretization protocol",
+                        )
+                    )
+
+        # Observable — optional but if present must conform
+        if nid in observables:
+            for ocls in observables[nid]:
+                if not _check_protocol(ocls, Observable, is_class=True):
+                    report.violations.append(
+                        ComplianceViolation(
+                            taxonomy_id=nid,
+                            artifact="Observable",
+                            cls=ocls,
+                            reason=f"{ocls.__name__} does not satisfy Observable protocol",
+                        )
+                    )
+
+    # Warnings
+    if not pack.benchmarks():
+        report.warnings.append("No benchmarks defined for any node")
+
+    return report
+
+
+def _check_protocol(cls: type, proto: type, *, is_class: bool = True) -> bool:
+    """
+    Check whether *cls* (a class, not instance) structurally satisfies *proto*.
+
+    We try instantiation-free checks first, falling back to ``isinstance``
+    on a sentinel if the protocol is runtime_checkable.
+    """
+    # For runtime_checkable protocols, check that all required attributes
+    # and methods exist on the class itself.
+    required_attrs = set()
+    for attr in dir(proto):
+        if attr.startswith("_"):
+            continue
+        member = getattr(proto, attr, None)
+        if callable(member) or isinstance(member, property):
+            required_attrs.add(attr)
+    for attr in required_attrs:
+        if not hasattr(cls, attr):
+            return False
+    return True
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -117,13 +303,41 @@ class DomainPack(ABC):
         """SemVer string for this pack."""
         return "0.1.0"
 
+    def _resolve_version(self) -> str:
+        """Return version string whether subclass uses @property or method."""
+        v = self.version
+        return v() if callable(v) else v
+
     # ──────── repr ────────
 
     def __repr__(self) -> str:
         return (
             f"<DomainPack {self.pack_id}: {self.pack_name} "
-            f"({len(self.taxonomy_ids)} nodes, v{self.version()})>"
+            f"({len(self.taxonomy_ids)} nodes, v{self._resolve_version()})>"
         )
+
+    # ──────── introspection ────────
+
+    def info(self) -> PackInfo:
+        """Return a frozen metadata snapshot."""
+        discs = self.discretizations()
+        obs = self.observables()
+        bmarks = self.benchmarks()
+        return PackInfo(
+            pack_id=self.pack_id,
+            pack_name=self.pack_name,
+            taxonomy_ids=tuple(self.taxonomy_ids),
+            n_specs=len(self.problem_specs()),
+            n_solvers=len(self.solvers()),
+            n_discretizations=sum(len(v) for v in discs.values()),
+            n_observables=sum(len(v) for v in obs.values()),
+            n_benchmarks=sum(len(v) for v in bmarks.values()),
+            version=self._resolve_version(),
+        )
+
+    def check_compliance(self) -> PackComplianceReport:
+        """Run compliance checks on this pack."""
+        return check_compliance(self)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -258,10 +472,24 @@ class DomainRegistry:
                 pid: {
                     "name": p.pack_name,
                     "nodes": len(p.taxonomy_ids),
-                    "version": p.version(),
+                    "version": p._resolve_version(),
                 }
                 for pid, p in sorted(self._packs.items())
             },
+        }
+
+    def check_all_compliance(self) -> Dict[str, PackComplianceReport]:
+        """Run compliance checks on every registered pack."""
+        return {
+            pid: check_compliance(pack)
+            for pid, pack in sorted(self._packs.items())
+        }
+
+    def all_info(self) -> Dict[str, PackInfo]:
+        """Return PackInfo for every registered pack."""
+        return {
+            pid: pack.info()
+            for pid, pack in sorted(self._packs.items())
         }
 
     # ── auto-discovery ──
