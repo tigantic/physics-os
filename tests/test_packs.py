@@ -67,10 +67,11 @@ def test_total_node_count(all_packs):
 
 
 ANCHOR_PACKS = {"II", "III", "V", "VII", "VIII", "XI"}
-SCAFFOLD_PACKS = {"I", "IV", "VI", "IX", "X", "XII", "XIII", "XIV",
-                  "XV", "XVI", "XVII", "XVIII", "XIX", "XX"}
+V02_PACKS = {"I", "IV", "VI", "IX", "X", "XII", "XIII", "XIV",
+             "XV", "XVI", "XVII", "XVIII", "XIX", "XX"}
+SCAFFOLD_PACKS: set[str] = set()  # all former scaffolds now at V0.2
 
-ALL_PACK_IDS = ANCHOR_PACKS | SCAFFOLD_PACKS
+ALL_PACK_IDS = ANCHOR_PACKS | V02_PACKS | SCAFFOLD_PACKS
 
 
 @pytest.mark.parametrize("pack_id", sorted(ALL_PACK_IDS))
@@ -108,12 +109,22 @@ def test_anchor_version(all_packs, pack_id):
     assert v == "0.4.0", f"Pack {pack_id} version = {v}"
 
 
-@pytest.mark.parametrize("pack_id", sorted(SCAFFOLD_PACKS))
+@pytest.mark.parametrize("pack_id", sorted(SCAFFOLD_PACKS) if SCAFFOLD_PACKS else ["_skip_"])
 def test_scaffold_version(all_packs, pack_id):
     """Scaffold packs at version 0.1.0."""
+    if pack_id == "_skip_":
+        pytest.skip("No scaffold packs remaining")
     p = all_packs[pack_id]
     v = p.version() if callable(p.version) else p.version
     assert v == "0.1.0", f"Pack {pack_id} version = {v}"
+
+
+@pytest.mark.parametrize("pack_id", sorted(V02_PACKS))
+def test_v02_version(all_packs, pack_id):
+    """V0.2 packs at version 0.2.0."""
+    p = all_packs[pack_id]
+    v = p.version() if callable(p.version) else p.version
+    assert v == "0.2.0", f"Pack {pack_id} version = {v}"
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

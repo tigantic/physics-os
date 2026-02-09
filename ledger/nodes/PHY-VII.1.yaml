@@ -9,7 +9,7 @@ pack: "VII"
 pack_name: "Quantum Many-Body Physics"
 owner: "unassigned"
 tier: "A"
-state: "V0.2"
+state: "V0.4"
 description: "MPS/MPO, PEPS, MERA, iDMRG"
 
 source_files:

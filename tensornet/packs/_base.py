@@ -163,3 +163,180 @@ def make_1d_state(
     field = FieldData(name=field_name, data=data, mesh=mesh)
     state = SimulationState(t=0.0, fields={field_name: field}, mesh=mesh)
     return state, mesh
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# V0.2 Reference Solver Patterns
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class ODEReferenceSolver:
+    """
+    Generic ODE-system solver for V0.2 reference implementations.
+
+    Given dy/dt = f(y, t), integrates with RK4 and validates against
+    an exact/reference solution.
+
+    Parameters
+    ----------
+    name : str
+        Solver name.
+    rhs_fn : Callable[[Tensor, float], Tensor]
+        Right-hand-side f(y, t) returning dy/dt.
+    y0 : Tensor
+        Initial state vector.
+    t_span : (t0, tf)
+        Integration window.
+    dt : float
+        Time step.
+    """
+
+    def __init__(self, name: str) -> None:
+        self._name = name
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    def solve_ode(
+        self,
+        rhs_fn: Callable[[Tensor, float], Tensor],
+        y0: Tensor,
+        t_span: Tuple[float, float],
+        dt: float,
+    ) -> Tuple[Tensor, List[Tensor]]:
+        """
+        Fourth-order Runge-Kutta integration.
+
+        Returns (y_final, trajectory) where trajectory is a list of
+        state snapshots at each time step.
+        """
+        t = t_span[0]
+        y = y0.clone().to(torch.float64)
+        trajectory: List[Tensor] = [y.clone()]
+        while t < t_span[1] - 1e-14:
+            h = min(dt, t_span[1] - t)
+            k1 = rhs_fn(y, t)
+            k2 = rhs_fn(y + 0.5 * h * k1, t + 0.5 * h)
+            k3 = rhs_fn(y + 0.5 * h * k2, t + 0.5 * h)
+            k4 = rhs_fn(y + h * k3, t + h)
+            y = y + (h / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
+            t += h
+            trajectory.append(y.clone())
+        return y, trajectory
+
+
+class PDE1DReferenceSolver:
+    """
+    Generic 1-D PDE solver for V0.2 reference implementations.
+
+    Uses method-of-lines: spatial discretization → ODE system → RK4.
+    Supports periodic and Dirichlet BCs.
+
+    Parameters
+    ----------
+    name : str
+        Solver name.
+    """
+
+    def __init__(self, name: str) -> None:
+        self._name = name
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    def solve_pde(
+        self,
+        rhs_fn: Callable[[Tensor, float, float], Tensor],
+        u0: Tensor,
+        dx: float,
+        t_span: Tuple[float, float],
+        dt: float,
+    ) -> Tuple[Tensor, List[Tensor]]:
+        """
+        RK4 integration of a semi-discrete PDE: du/dt = rhs(u, t, dx).
+
+        Parameters
+        ----------
+        rhs_fn : (u, t, dx) -> du/dt
+        u0 : Tensor — initial field values, shape (N,)
+        dx : float — grid spacing
+        t_span : (t0, tf)
+        dt : float
+
+        Returns (u_final, trajectory).
+        """
+        t = t_span[0]
+        u = u0.clone().to(torch.float64)
+        trajectory: List[Tensor] = [u.clone()]
+        while t < t_span[1] - 1e-14:
+            h = min(dt, t_span[1] - t)
+            k1 = rhs_fn(u, t, dx)
+            k2 = rhs_fn(u + 0.5 * h * k1, t + 0.5 * h, dx)
+            k3 = rhs_fn(u + 0.5 * h * k2, t + 0.5 * h, dx)
+            k4 = rhs_fn(u + h * k3, t + h, dx)
+            u = u + (h / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
+            t += h
+            trajectory.append(u.clone())
+        return u, trajectory
+
+
+class EigenReferenceSolver:
+    """
+    Generic eigenvalue solver for V0.2 reference implementations.
+
+    Solves Hu = Eu (or generalized Ax = λBx).
+    """
+
+    def __init__(self, name: str) -> None:
+        self._name = name
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @staticmethod
+    def solve_eigenproblem(
+        H: Tensor, n_states: int = 5
+    ) -> Tuple[Tensor, Tensor]:
+        """
+        Solve a Hermitian eigenproblem.
+
+        Returns (eigenvalues[:n_states], eigenvectors[:, :n_states]).
+        """
+        H = H.to(torch.float64)
+        vals, vecs = torch.linalg.eigh(H)
+        return vals[:n_states], vecs[:, :n_states]
+
+
+class MonteCarloReferenceSolver:
+    """
+    Generic Monte Carlo solver for V0.2 reference implementations.
+    """
+
+    def __init__(self, name: str) -> None:
+        self._name = name
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+
+def validate_v02(
+    *,
+    error: float,
+    tolerance: float,
+    label: str = "",
+    verbose: bool = False,
+) -> Dict[str, Any]:
+    """
+    Standard V0.2 validation gate: error < tolerance.
+
+    Returns a dict with 'passed', 'error', 'tolerance', 'label'.
+    """
+    passed = error < tolerance
+    if verbose:
+        status = "PASS" if passed else "FAIL"
+        print(f"  [{status}] {label}: error={error:.6e}, tol={tolerance:.6e}")
+    return {"passed": passed, "error": error, "tolerance": tolerance, "label": label}

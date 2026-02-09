@@ -9,7 +9,7 @@ pack: "III"
 pack_name: "Electromagnetism"
 owner: "unassigned"
 tier: "A"
-state: "V0.2"
+state: "V0.4"
 description: "FDTD, PML"
 
 source_files:

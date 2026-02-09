@@ -1,0 +1,34 @@
+# ===============================================================================
+# HyperTensor-VM Capability Ledger — PHY-X.7
+# Generated: 2026-02-09 | Schema: 1.0
+# ===============================================================================
+
+id: "PHY-X.7"
+name: "PHY-X.7_Dark_matter"
+pack: "X"
+pack_name: "Particle Physics"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "PHY-X.7_Dark_matter solver"
+
+source_files:
+  - "tensornet/packs/pack_x.py"
+
+tests:
+  smoke:
+    - "test_packs"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

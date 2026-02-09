@@ -9,7 +9,7 @@ pack: "V"
 pack_name: "Thermodynamics and Statistical Mechanics"
 owner: "unassigned"
 tier: "B"
-state: "V0.2"
+state: "V0.4"
 description: "Ising/Potts/XY, Monte Carlo"
 
 source_files:

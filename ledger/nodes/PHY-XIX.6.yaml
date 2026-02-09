@@ -1,0 +1,34 @@
+# ===============================================================================
+# HyperTensor-VM Capability Ledger — PHY-XIX.6
+# Generated: 2026-02-09 | Schema: 1.0
+# ===============================================================================
+
+id: "PHY-XIX.6"
+name: "PHY-XIX.6_Quantum_sensing"
+pack: "XIX"
+pack_name: "Quantum Computing"
+owner: "unassigned"
+tier: "B"
+state: "V0.2"
+description: "PHY-XIX.6_Quantum_sensing solver"
+
+source_files:
+  - "tensornet/packs/pack_xix.py"
+
+tests:
+  smoke:
+    - "test_packs"
+
+benchmarks:
+  []
+
+discretizations:
+  []
+
+solvers:
+  []
+
+qtt_hooks:
+  []
+
+notes: ""

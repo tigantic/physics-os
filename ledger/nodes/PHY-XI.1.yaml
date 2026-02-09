@@ -9,7 +9,7 @@ pack: "XI"
 pack_name: "Plasma Physics"
 owner: "unassigned"
 tier: "A"
-state: "V0.2"
+state: "V0.4"
 description: "Ideal magnetohydrodynamics"
 
 source_files:

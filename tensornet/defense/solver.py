@@ -28,7 +28,10 @@ The Finite-Difference Time-Domain Method."
 (Same math applies to acoustics!)
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
+from typing import Callable
 
 import numpy as np
 import torch
@@ -133,7 +136,7 @@ def solve_sonar_ping(
     steps: int = 2500,
     source_duration_steps: int = 100,
     absorbing_boundaries: bool = True,
-    callback: callable | None = None,
+    callback: Callable | None = None,
 ) -> AcousticField:
     """
     Simulate a sonar ping propagating through the ocean.
