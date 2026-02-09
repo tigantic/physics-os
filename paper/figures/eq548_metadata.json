@@ -1,0 +1,126 @@
+{
+  "experiment": "eq548_interference_qtt",
+  "timestamp": "2026-02-09T17:29:18.152544+00:00",
+  "N_grid": 256,
+  "n_states": 20,
+  "j_values": [
+    0.5,
+    1.5,
+    2.5,
+    3.5
+  ],
+  "helicity": 0.5,
+  "max_rank": 128,
+  "tol": 1e-12,
+  "chi_max": 71,
+  "chi_mean": 25.4375,
+  "bond_dims": [
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+    71,
+    60,
+    51,
+    40,
+    28,
+    16,
+    8,
+    4,
+    2,
+    1
+  ],
+  "compression_ratio": 1.7835837143479207,
+  "error_rel": 2.766382569054317e-12,
+  "cross_term_fraction": 0.07643834108535597,
+  "dense_storage": 65536,
+  "qtt_storage": 36744,
+  "device": "cuda",
+  "resolution_sweep": [
+    {
+      "n_bits": 5,
+      "N_grid": 32,
+      "chi_max": 32,
+      "dense": 1024,
+      "qtt": 2728,
+      "compression": 0.375366568914956
+    },
+    {
+      "n_bits": 6,
+      "N_grid": 64,
+      "chi_max": 61,
+      "dense": 4096,
+      "qtt": 10536,
+      "compression": 0.38876233864844345
+    },
+    {
+      "n_bits": 7,
+      "N_grid": 128,
+      "chi_max": 69,
+      "dense": 16384,
+      "qtt": 26224,
+      "compression": 0.62477120195241
+    },
+    {
+      "n_bits": 8,
+      "N_grid": 256,
+      "chi_max": 71,
+      "dense": 65536,
+      "qtt": 36744,
+      "compression": 1.7835837143479207
+    },
+    {
+      "n_bits": 9,
+      "N_grid": 512,
+      "chi_max": 72,
+      "dense": 262144,
+      "qtt": 42636,
+      "compression": 6.148419176282953
+    }
+  ],
+  "j_sweep": [
+    {
+      "j_max": 0.5,
+      "n_states": 2,
+      "chi_max": 7,
+      "compression": 61.47842401500938
+    },
+    {
+      "j_max": 1.5,
+      "n_states": 6,
+      "chi_max": 40,
+      "compression": 4.098049024512256
+    },
+    {
+      "j_max": 2.5,
+      "n_states": 12,
+      "chi_max": 60,
+      "compression": 2.340905843691956
+    },
+    {
+      "j_max": 3.5,
+      "n_states": 20,
+      "chi_max": 71,
+      "compression": 1.7835837143479207
+    },
+    {
+      "j_max": 4.5,
+      "n_states": 30,
+      "chi_max": 81,
+      "compression": 1.5246603387306905
+    },
+    {
+      "j_max": 5.5,
+      "n_states": 42,
+      "chi_max": 96,
+      "compression": 1.231277946868072
+    }
+  ],
+  "timings": {
+    "physics_s": 0.2549849410133902,
+    "qtt_s": 0.496750107005937,
+    "reconstruct_s": 0.0007707269978709519
+  }
+}
