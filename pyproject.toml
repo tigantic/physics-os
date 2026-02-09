@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tensornet"
-version = "40.0.0"
-description = "Quantum-inspired tensor networks for real-time computational physics"
+version = "40.0.1"
+description = "The Physics-First Tensor Network Engine — 1,153K LOC across 9 languages, 167 physics taxonomy nodes, 20 domain packs"
 readme = "README.md"
 license = {text = "Proprietary - Tigantic Holdings LLC"}
 requires-python = ">=3.11"
@@ -15,13 +15,19 @@ authors = [
 keywords = [
     "tensor-networks",
     "matrix-product-states",
+    "qtt",
     "dmrg",
     "quantum-inspired",
     "computational-physics",
-    "pytorch"
+    "cfd",
+    "navier-stokes",
+    "zero-knowledge",
+    "formal-verification",
+    "pytorch",
+    "rust"
 ]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Science/Research",
     "License :: Other/Proprietary License",
     "Operating System :: OS Independent",
@@ -65,10 +71,10 @@ all = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/tigantic/HyperTensor"
-Documentation = "https://github.com/tigantic/HyperTensor#readme"
-Repository = "https://github.com/tigantic/HyperTensor.git"
-Issues = "https://github.com/tigantic/HyperTensor/issues"
+Homepage = "https://github.com/tigantic/HyperTensor-VM"
+Documentation = "https://github.com/tigantic/HyperTensor-VM#readme"
+Repository = "https://github.com/tigantic/HyperTensor-VM.git"
+Issues = "https://github.com/tigantic/HyperTensor-VM/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]

@@ -4,9 +4,9 @@
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.5.x   | :white_check_mark: |
-| 1.4.x   | :white_check_mark: |
-| < 1.4   | :x:                |
+| 40.0.x  | :white_check_mark: |
+| 39.x    | :x:                |
+| < 39    | :x:                |
 
 ## Reporting a Vulnerability
 
@@ -118,5 +118,5 @@ Subscribe to security notifications:
 
 ---
 
-**Last Updated**: 2026-01-05  
-**Policy Version**: 1.0
+**Last Updated**: 2026-02-09  
+**Policy Version**: 2.0

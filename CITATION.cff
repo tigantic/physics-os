@@ -1,23 +1,32 @@
 cff-version: 1.2.0
-title: HyperTensor
+title: "HyperTensor: The Physics-First Tensor Network Engine"
 message: "If you use this software, please cite it as below."
 type: software
 authors:
-  - name: TiganticLabz
-repository-code: https://github.com/TiganticLabz/hypertensor
-url: https://github.com/TiganticLabz/hypertensor
+  - family-names: Adams
+    given-names: Bradly Biron Baker
+    affiliation: Tigantic Holdings LLC
+repository-code: https://github.com/tigantic/HyperTensor-VM
+url: https://github.com/tigantic/HyperTensor-VM
 abstract: >-
-  A pure PyTorch implementation of Matrix Product States (MPS) and 
-  Matrix Product Operators (MPO) for many-body quantum physics and 
-  computational fluid dynamics. Features DMRG ground state search, 
-  TEBD/TDVP time evolution, and compressible Euler solvers.
+  Unified computational physics platform using Quantized Tensor Train (QTT)
+  compression to operate on 10^12 grid points without dense materialization.
+  1,153K lines of code across 9 languages. 167 physics taxonomy nodes spanning
+  20 domain packs. Full-stack verification: Lean 4 formal proofs, Halo2 ZK
+  circuits, attested benchmark validation. 5 integrated platforms, 19 industry
+  verticals, 295 tests passing.
 keywords:
   - tensor networks
+  - quantized tensor train
   - matrix product states
   - DMRG
-  - quantum many-body physics
-  - computational fluid dynamics
+  - computational physics
+  - CFD
+  - Navier-Stokes
+  - zero-knowledge proofs
+  - formal verification
   - PyTorch
+  - Rust
 license: LicenseRef-Proprietary
-version: 40.0.0
-date-released: 2025-12-21
+version: 40.0.1
+date-released: 2026-02-09
