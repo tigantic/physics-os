@@ -2881,6 +2881,22 @@ $$\Omega h^2 \approx \frac{3\times10^{-27}\,\text{cm}^3\text{s}^{-1}}{\langle\si
 - Leptogenesis with Sakharov conditions
 - Dark matter freeze-out computation
 
+#### 40.5 Partial Wave Analysis (PWA) — Eq. 5.48 Replication
+
+**Source**: `experiments/pwa_engine/` (~3,700 LOC across 3 files + replication note)
+
+$$I(\tau) = \sum_{\varepsilon,\varepsilon'} \rho_{\varepsilon\varepsilon'} A_\varepsilon(\tau) A^*_{\varepsilon'}(\tau), \quad A_\varepsilon(\tau) = \sum_{b,k} V_{\varepsilon bk}\,\psi_{\varepsilon bk}(\tau)$$
+
+- Full Eq. 5.48 from Badui (2020) dissertation with Wigner-D basis functions $D^J_{M,\lambda}(\phi,\theta,0)$
+- **Gram matrix acceleration**: Precomputes $G_{\alpha\beta} = N_{\text{gen}}^{-1}\sum_j \psi_\alpha(\tau_j)\psi^*_\beta(\tau_j)$ so $\bar{N}(V) = N_{\text{data}}\,V^\dagger G V$, converting $O(N_{\text{MC}})$ normalization to $O(n_{\text{amp}}^2)$ — up to 14× measured speedup
+- **Convention reduction**: Proves general two-reflectivity formalism contains coherent sum as strict special case (< 10⁻¹² error)
+- **Coupled-channel extension**: Multi-channel joint likelihood with shared amplitudes via quantum number matching
+- **Mass-dependent Breit-Wigner**: Binned-mass PWA + fraction-based BW extraction with warm-start chaining
+- **Bootstrap uncertainty**: Resample-and-refit with warm-start initialization, circular phase statistics
+- **Beam asymmetry**: Polarized vs unpolarized fits for reflectivity-separated intensity
+- 10 experiments, 11 publication figures (600 DPI PDF+PNG), ~94s total runtime on RTX 5070
+- Reference: Badui (2020), "Extraction of Spin Density Matrix Elements...", Indiana University
+
 ---
 
 ### 41. Astrophysics
@@ -3581,6 +3597,7 @@ $$\boldsymbol{\tau} = \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\math
 | **Ballistics** | Long-range trajectory | G7 BC match |
 | **Wildfire** | Fire spread prediction | CAL FIRE data |
 | **Cyber** | DDoS amplification | Reflection factor |
+| **Nuclear/Particle** | Partial Wave Analysis (PWA) | Badui (2020) Eq. 5.48 — 10 experiments, Δm₀ ≤ 12 MeV |
 
 ---
 
@@ -3777,6 +3794,11 @@ HyperTensor/
 │   ├── src/                    # 6 modules (q16, forward, adjoint, filter, topology, inverse)
 │   ├── tests/                  # 15 integration tests
 │   └── validate.py             # 36-test Python validation harness
+├── experiments/                # Research experiments & replication studies
+│   ├── pwa_engine/             # PWA Compute Engine V3.0.0 (~2,300 LOC)
+│   │   ├── core.py             # Full Eq. 5.48 physics engine
+│   │   └── __init__.py         # Package re-exports (~25 symbols)
+│   └── run_pwa_engine.py       # 10 experiments + 11 publication figures (~1,400 LOC)
 ├── yangmills/                  # Gauge theory (19K LOC)
 ├── lean_yang_mills/            # Lean 4 proofs
 ├── proofs/                     # Mathematical proofs
@@ -3875,6 +3897,37 @@ from qtenet.demos import holy_grail_6d
 ---
 
 ## Changelog
+
+### Version 40.2 (February 9, 2026) — PWA COMPUTE ENGINE V3.0.0
+- 🎯 **PWA Compute Engine V3.0.0**: Full Eq. 5.48 partial wave analysis from Badui (2020) dissertation
+- ✅ `experiments/pwa_engine/core.py`: Complete physics engine (~2,300 LOC)
+  - Wigner-D matrix elements (small-d + full D, numpy vectorized)
+  - Wave / WaveSet with flat α-indexing, convention reduction
+  - BasisAmplitudes, IntensityModel (full Eq. 5.48 with density matrix)
+  - GramMatrix: $V^\dagger G V$ acceleration — $O(N_{\text{MC}})$ → $O(n_{\text{amp}}^2)$
+  - ExtendedLikelihood: NLL + acceptance-normalized expected yield
+  - SyntheticDataGenerator: accept/reject with η-only MC normalization
+  - LBFGSFitter: scipy L-BFGS-B + torch autograd, multi-start, Hessian covariance
+  - PolarizedIntensityModel: beam asymmetry Σ(τ) with dual-reflectivity
+  - ChannelConfig / CoupledChannelSystem: multi-channel joint likelihood
+  - BreitWigner / mass_dependent_fit: binned-mass PWA + resonance extraction
+  - bootstrap_uncertainty: resample-and-refit with warm-start
+- ✅ `experiments/run_pwa_engine.py`: Driver script (~1,400 LOC) — 10 experiments + 11 publication figures (600 DPI)
+- ✅ `experiments/pwa_engine/__init__.py`: Package re-exports (~25 symbols)
+- ✅ `paper/PWA_REPLICATION_NOTE.md`: V3.0.0 replication note (~390 lines)
+- ✅ `paper/PWA_REPLICATION_NOTE.pdf`: Publication-quality PDF output
+- ✅ **Experiment 1**: Convention reduction test — 3 simplifications at machine precision (< 10⁻¹²)
+- ✅ **Experiment 2**: Parameter recovery — 12-amplitude fit, yield RMSE 0.009, basin fraction 8%
+- ✅ **Experiment 3**: Gram acceleration — up to 14× speedup, agreement < 10⁻¹⁵
+- ✅ **Experiment 4**: Wave-set scan — 6 J_max values, robustness atlas
+- ✅ **Experiment 5**: QTT compression of Gram matrix — infrastructure validated
+- ✅ **Experiment 6**: Angular moment validation — χ²/ndf = 0.04, all pulls < 1σ
+- ✅ **Experiment 7**: Beam asymmetry sensitivity — 85× Σ RMSE improvement with polarization
+- ✅ **Experiment 8**: Bootstrap uncertainty — 200 resamples, 100% convergence, σ(yield) ≈ 0.007
+- ✅ **Experiment 9**: Coupled-channel PWA — 2.0× shared-wave yield improvement
+- ✅ **Experiment 10**: Mass-dependent Breit-Wigner — Δm₀ ≤ 12 MeV, ΔΓ₀ ≤ 6 MeV
+- 📊 **Reference**: Badui (2020), "Extraction of Spin Density Matrix Elements...", Indiana University dissertation (165 pp)
+- 📜 **Commits**: `aea21fa0` (PWA v3 implementation), `cdc1e93b` (final polish)
 
 ### Version 40.1 (February 9, 2026) — PHASE 7 PRODUCTIZATION
 - 🏭 **Platform Substrate V2.0.0**: Unified simulation API — `tensornet.platform` (33 files, 12,618 LOC)

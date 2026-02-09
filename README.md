@@ -19,14 +19,14 @@
 [![Solidity](https://img.shields.io/badge/Solidity-72K-363636?style=for-the-badge&logo=solidity&logoColor=white)]()
 [![Lean4](https://img.shields.io/badge/Lean_4-Verified-purple?style=for-the-badge)]()
 
-[![Platform](https://img.shields.io/badge/Platform-V2.0.0-success?style=flat-square)]()
+[![Platform](https://img.shields.io/badge/Platform-V3.0.0-success?style=flat-square)]()
 [![Physics](https://img.shields.io/badge/Physics-140%2F140-brightgreen?style=flat-square)]()
 [![Tests](https://img.shields.io/badge/Tests-295_passing-brightgreen?style=flat-square)]()
 [![Domains](https://img.shields.io/badge/Taxonomy-167_nodes-blue?style=flat-square)]()
 [![Industries](https://img.shields.io/badge/Industries-19-orange?style=flat-square)]()
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)](LICENSE)
 
-**Platform V2.0.0** · **Package V40.0.1** · **February 2026**
+**Platform V3.0.0** · **Package V40.2** · **February 2026**
 
 </div>
 
@@ -139,7 +139,7 @@ print(f"Inlet velocity recovery: {info['inlet_recovery']:.1f}%")  # 94.4%
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                              HyperTensor Platform V2.0.0                        │
+│                              HyperTensor Platform V3.0.0                        │
 ├─────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                 │
 │   SDK Layer                                                                     │
@@ -208,7 +208,7 @@ print(f"Inlet velocity recovery: {info['inlet_recovery']:.1f}%")  # 94.4%
 | 2 | **FluidElite** | `fluidelite/`, `fluidelite-zk/` | 162 files · 57K LOC | Production tensor engine + ZK prover (24 Rust binaries) |
 | 3 | **Sovereign Compute** | `tensornet/sovereign/`, `gevulot/` | 10 files · 3K LOC | Decentralized physics computation network |
 | 4 | **QTeneT** | `QTeneT/` | 103 files · 10K LOC | Enterprise QTT SDK — TCI, solvers, benchmarks, CLI |
-| 5 | **Platform Substrate** | `tensornet/platform/`, `tensornet/sdk/` | 36 files · 14K LOC | Unified simulation API V2.0.0 + WorkflowBuilder SDK |
+| 5 | **Platform Substrate** | `tensornet/platform/`, `tensornet/sdk/` | 36 files · 14K LOC | Unified simulation API V3.0.0 + WorkflowBuilder SDK |
 
 ---
 
@@ -296,6 +296,24 @@ Cryptographic proof that a physics simulation ran correctly, without revealing t
 | Lid-Driven Cavity | Ghia et al. (1982) | ✅ |
 | QTT-Native NS2D | Conference Room Ventilation | ✅ |
 
+### PWA Benchmarks — Badui (2020) Eq. 5.48 (10/10 Passing)
+
+| Experiment | What It Validates | Status |
+|------------|-------------------|:------:|
+| Convention reduction | General → simplified intensity at machine precision | ✅ |
+| Parameter recovery | 12-amplitude fit: yield RMSE 0.009, phase RMSE 35.7° | ✅ |
+| Gram acceleration | $O(N_{\text{MC}}) → O(n_{\text{amp}}^2)$, up to 14× speedup | ✅ |
+| Wave-set scan | 6 $J_{\max}$ values, robustness atlas | ✅ |
+| QTT Gram compression | TT-SVD infrastructure validated | ✅ |
+| Angular moments | $\chi^2/n_{\text{dof}} = 0.04$, all pulls < 1σ | ✅ |
+| Beam asymmetry | 85× Σ RMSE improvement with polarization | ✅ |
+| Bootstrap uncertainty | 200 resamples, 100% convergence | ✅ |
+| Coupled-channel | 2.0× shared-wave yield improvement | ✅ |
+| Mass-dependent BW | Δm₀ ≤ 12 MeV, ΔΓ₀ ≤ 6 MeV | ✅ |
+
+**Reference:** Badui (2020), *"Extraction of Spin Density Matrix Elements..."*, Indiana University (165 pp).
+**Replication note:** [`paper/PWA_REPLICATION_NOTE.md`](paper/PWA_REPLICATION_NOTE.md) — complete methodology, results, and reproduction instructions.
+
 ### V&V Framework
 
 Aligned with **ASME V&V 10-2019** and **NASA-STD-7009A**:
@@ -357,7 +375,7 @@ Each gauntlet produces a cryptographically signed JSON attestation:
 ```
 HyperTensor-VM/
 ├── tensornet/                    # Core physics engine (784 files, 409K LOC)
-│   ├── platform/                 #   Platform Substrate V2.0.0 (33 files, 13K LOC)
+│   ├── platform/                 #   Platform Substrate V3.0.0 (33 files, 13K LOC)
 │   │   ├── data_model.py         #     Mesh, Field, BC/IC, SimulationState
 │   │   ├── protocols.py          #     SolverProtocol, PostProcessor, Exporter
 │   │   ├── solvers.py            #     7 PDE solvers with QTT acceleration
@@ -396,8 +414,11 @@ HyperTensor-VM/
 │   ├── attestations/             #   Cryptographically signed validation JSONs
 │   ├── reports/                  #   Benchmark & analysis reports
 │   └── research/                 #   Research papers & taxonomy
+├── experiments/                  # Research experiments & replication studies
+│   ├── pwa_engine/               #   PWA Compute Engine V3.0.0 (core.py ~2,300 LOC)
+│   └── run_pwa_engine.py         #   10 experiments + 11 publication figures (~1,400 LOC)
 ├── proofs/                       # Lean 4 formal verification
-├── paper/                        # Research manuscripts (LaTeX)
+├── paper/                        # Research manuscripts, replication notes, figures
 ├── deployment/                   # Container, config, health checks
 ├── PLATFORM_SPECIFICATION.md     # Full platform spec (4,144 lines)
 ├── Commercial_Execution.md       # 7-phase execution plan (all COMPLETE)
@@ -484,7 +505,9 @@ All 7 phases of the [Commercial Execution Plan](Commercial_Execution.md) have be
 | 6 | Coupling, adjoint, inverse, UQ, optimization, lineage | `ae79ea7c` | 27 new tests |
 | 7 | SDK, recipes, export, mesh import, post-processing, security | `2725db6e` | 55 new tests |
 
-**Current state:** Platform V2.0.0 · 295 tests passing · 1,153K LOC · 2,804 files · [Polish `c0a73ba2`](https://github.com/tigantic/HyperTensor-VM/commit/c0a73ba2)
+| PWA | PWA Compute Engine V3.0.0 — Eq. 5.48 replication | `aea21fa0` | 10 experiments, 11 figures, ~3,700 LOC |
+
+**Current state:** Platform V3.0.0 · 295 tests passing · 1,153K LOC · 2,804 files · [PWA polish `cdc1e93b`](https://github.com/tigantic/HyperTensor-VM/commit/cdc1e93b)
 
 ---
 
@@ -492,7 +515,7 @@ All 7 phases of the [Commercial Execution Plan](Commercial_Execution.md) have be
 
 | Document | Description |
 |----------|-------------|
-| [`PLATFORM_SPECIFICATION.md`](PLATFORM_SPECIFICATION.md) | Complete platform specification — LOC matrices, physics inventory, component catalog (4,144 lines) |
+| [`PLATFORM_SPECIFICATION.md`](PLATFORM_SPECIFICATION.md) | Complete platform specification — LOC matrices, physics inventory, component catalog |
 | [`Commercial_Execution.md`](Commercial_Execution.md) | 7-phase execution plan with version-state model (all phases COMPLETE) |
 | [`CHANGELOG.md`](CHANGELOG.md) | Semantic versioning history (V26.0 → V40.0.1) |
 | [`docs/adr/`](docs/adr/) | Architecture Decision Records (ADR-0001 through ADR-0011) |
@@ -500,6 +523,7 @@ All 7 phases of the [Commercial Execution Plan](Commercial_Execution.md) have be
 | [`CONSTITUTION.md`](CONSTITUTION.md) | Coding standards and engineering governance |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution guidelines, PR process, review rules |
 | [`SECURITY.md`](SECURITY.md) | Security policy, vulnerability reporting, cryptographic methods |
+| [`paper/PWA_REPLICATION_NOTE.md`](paper/PWA_REPLICATION_NOTE.md) | PWA Compute Engine V3.0.0 replication note — Eq. 5.48, 10 experiments |
 
 ---
 
@@ -511,6 +535,7 @@ All 7 phases of the [Commercial Execution Plan](Commercial_Execution.md) have be
 4. Oseledets, I. V., "Tensor-Train Decomposition," SIAM J. Sci. Comput. **33**, 2295 (2011)
 5. Sod, G. A., "A survey of several finite difference methods for systems of nonlinear hyperbolic conservation laws," J. Comp. Phys. **27**, 1 (1978)
 6. Ghia, U. et al., "High-Re solutions for incompressible flow using the Navier-Stokes equations and a multigrid method," J. Comp. Phys. **48**, 387 (1982)
+7. Badui, R. T. (2020), "Extraction of Spin Density Matrix Elements for the Reaction γp → pω Using Linearly Polarized Photons," Ph.D. dissertation, Indiana University
 
 ---
 
@@ -529,9 +554,9 @@ This software and all associated intellectual property are the exclusive propert
   title     = {HyperTensor: The Physics-First Tensor Network Engine},
   author    = {Adams, Bradly Biron Baker},
   year      = {2026},
-  version   = {2.0.0},
+  version   = {3.0.0},
   url       = {https://github.com/tigantic/HyperTensor-VM},
-  note      = {1,153K LOC across 9 languages. 167 physics nodes. 20 domain packs. Platform V2.0.0.}
+  note      = {1,153K LOC across 9 languages. 167 physics nodes. 20 domain packs. Platform V3.0.0. PWA Compute Engine with Eq. 5.48 replication.}
 }
 ```
 
@@ -541,6 +566,6 @@ This software and all associated intellectual property are the exclusive propert
 
 *"In God we trust. All others must bring data."* — W. Edwards Deming
 
-**HyperTensor** · Platform V2.0.0 · © 2025–2026 Tigantic Holdings LLC
+**HyperTensor** · Platform V3.0.0 · © 2025–2026 Tigantic Holdings LLC
 
 </div>
