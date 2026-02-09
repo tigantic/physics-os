@@ -76,6 +76,7 @@ DOUBLE_COL = (7.0, 3.5)
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from experiments.pwa_engine.core import (
     BasisAmplitudes,
+    BreitWigner,
     ExtendedLikelihood,
     GramMatrix,
     IntensityModel,
@@ -86,6 +87,8 @@ from experiments.pwa_engine.core import (
     build_wave_set,
     compress_gram_qtt,
     convention_reduction_test,
+    coupled_channel_test,
+    mass_dependent_fit,
     moment_comparison,
     beam_asymmetry_sensitivity_test,
     bootstrap_uncertainty,
@@ -538,6 +541,93 @@ def run_bootstrap(recov_result: Dict[str, Any], device: torch.device) -> Dict[st
 
 
 # ════════════════════════════════════════════════════════════════════════════════
+# EXPERIMENT 9: COUPLED-CHANNEL PWA
+# ════════════════════════════════════════════════════════════════════════════════
+
+def run_coupled_channel(device: torch.device) -> Dict[str, Any]:
+    """Deliverable 9: coupled-channel fitting vs independent channels."""
+    print()
+    print("=" * 70)
+    print("EXPERIMENT 9: Coupled-Channel PWA")
+    print("-" * 70)
+
+    result = coupled_channel_test(
+        n_data_ch1=5000,
+        n_data_ch2=3000,
+        n_generated=200_000,
+        n_starts=20,
+        device=device,
+        seed=42,
+    )
+
+    print(f"  Channels: ηπ  ({result['n_amp_ch1']} amp, {result['n_data_ch1']} events)")
+    print(f"            η'π ({result['n_amp_ch2']} amp, {result['n_data_ch2']} events)")
+    print(f"  Global:   {result['n_amp_global']} shared amplitudes")
+    print()
+    print(f"  {'Metric':<30}  {'Joint':>10}  {'Ch1 alone':>10}  {'Ch2 alone':>10}")
+    print(f"  {'-'*30}  {'-'*10}  {'-'*10}  {'-'*10}")
+    print(f"  {'Yield RMSE (all)':<30}  {result['joint_yield_rmse']:>10.4f}  "
+          f"{result['ch1_yield_rmse']:>10.4f}  {'—':>10}")
+    print(f"  {'Yield RMSE (shared)':<30}  {result['joint_yield_rmse_shared']:>10.4f}  "
+          f"{'—':>10}  {result['ch2_yield_rmse']:>10.4f}")
+    print(f"  {'Phase RMSE (rad, all)':<30}  {result['joint_phase_rmse']:>10.4f}  "
+          f"{result['ch1_phase_rmse']:>10.4f}  {'—':>10}")
+    print(f"  {'Basin fraction':<30}  {result['joint_basin_frac']:>9.0%}  "
+          f"{result['ch1_basin_frac']:>9.0%}  {result['ch2_basin_frac']:>9.0%}")
+    print()
+    print(f"  Yield improvement vs ch1: {result['yield_improvement_vs_ch1']:.2f}×")
+    print(f"  Yield improvement vs ch2: {result['yield_improvement_vs_ch2']:.2f}×")
+
+    return result
+
+
+# ════════════════════════════════════════════════════════════════════════════════
+# EXPERIMENT 10: MASS-DEPENDENT BREIT-WIGNER FIT
+# ════════════════════════════════════════════════════════════════════════════════
+
+def run_mass_dependent(device: torch.device) -> Dict[str, Any]:
+    """Deliverable 10: mass-dependent BW fit across mass bins."""
+    print()
+    print("=" * 70)
+    print("EXPERIMENT 10: Mass-Dependent Breit-Wigner Fit")
+    print("-" * 70)
+
+    result = mass_dependent_fit(
+        n_mass_bins=15,
+        m_range=(0.8, 2.0),
+        n_events_per_bin=2000,
+        n_generated_per_bin=100_000,
+        n_starts=10,
+        device=device,
+        seed=42,
+    )
+
+    print(f"  Mass bins: {result['n_mass_bins']} in "
+          f"[{result['m_range'][0]:.1f}, {result['m_range'][1]:.1f}] GeV")
+    print(f"  Events/bin: {result['n_events_per_bin']}")
+    print(f"  Waves: {result['n_amp']} (S-wave J=0.5 + D-wave J=1.5)")
+    print()
+    print(f"  {'Resonance':<12}  {'m₀ true':>8}  {'m₀ fit':>8}  "
+          f"{'Γ₀ true':>8}  {'Γ₀ fit':>8}")
+    print(f"  {'-'*12}  {'-'*8}  {'-'*8}  {'-'*8}  {'-'*8}")
+    print(f"  {'R₁ (S-wave)':<12}  {result['m0_true_s']:>8.3f}  "
+          f"{result['m0_fit_s']:>8.3f}  {result['gamma_true_s']:>8.3f}  "
+          f"{result['gamma_fit_s']:>8.3f}")
+    print(f"  {'R₂ (D-wave)':<12}  {result['m0_true_d']:>8.3f}  "
+          f"{result['m0_fit_d']:>8.3f}  {result['gamma_true_d']:>8.3f}  "
+          f"{result['gamma_fit_d']:>8.3f}")
+
+    m_err_r1 = abs(result["m0_fit_s"] - result["m0_true_s"]) * 1000
+    m_err_r2 = abs(result["m0_fit_d"] - result["m0_true_d"]) * 1000
+    g_err_r1 = abs(result["gamma_fit_s"] - result["gamma_true_s"]) * 1000
+    g_err_r2 = abs(result["gamma_fit_d"] - result["gamma_true_d"]) * 1000
+    print(f"\n  Mass recovery: R₁ Δm₀={m_err_r1:.0f} MeV, R₂ Δm₀={m_err_r2:.0f} MeV")
+    print(f"  Width recovery: R₁ ΔΓ₀={g_err_r1:.0f} MeV, R₂ ΔΓ₀={g_err_r2:.0f} MeV")
+
+    return result
+
+
+# ════════════════════════════════════════════════════════════════════════════════
 # FIGURE GENERATION
 # ════════════════════════════════════════════════════════════════════════════════
 
@@ -958,6 +1048,172 @@ def fig_bootstrap(boot_result: Dict) -> None:
     print("  Fig 9 saved: pwa_bootstrap.pdf")
 
 
+def fig_coupled_channel(cc_result: Dict) -> None:
+    """Coupled-channel: joint vs independent yield recovery comparison."""
+    fig, axes = plt.subplots(1, 3, figsize=(10.5, 3.0))
+
+    n_global = cc_result["n_amp_global"]
+    n_shared = cc_result["n_amp_ch2"]
+    V_true = cc_result["V_true"]
+    V_joint = cc_result["V_joint"]
+    V_ch1 = cc_result["V_indep_ch1"]
+    V_ch2 = cc_result["V_indep_ch2"]
+
+    # Normalize yields
+    y_true = np.abs(V_true) ** 2
+    y_true = y_true / max(y_true.sum(), 1e-30)
+    y_joint = np.abs(V_joint) ** 2
+    y_joint = y_joint / max(y_joint.sum(), 1e-30)
+    y_ch1 = np.abs(V_ch1) ** 2
+    y_ch1 = y_ch1 / max(y_ch1.sum(), 1e-30)
+
+    # Left: all amplitudes — true vs joint vs ch1-alone
+    ax = axes[0]
+    idx = np.arange(n_global)
+    w = 0.25
+    ax.bar(idx - w, y_true, w, color=C_BLACK, label="True",
+           edgecolor=C_BLACK, linewidth=0.3)
+    ax.bar(idx, y_joint, w, color=C_BLUE, label="Joint",
+           edgecolor=C_BLACK, linewidth=0.3)
+    ax.bar(idx + w, y_ch1, w, color=C_RED, label="Ch1 alone",
+           edgecolor=C_BLACK, linewidth=0.3, alpha=0.7)
+    ax.set_xlabel("Amplitude index")
+    ax.set_ylabel("Relative yield")
+    ax.set_title(f"Full wave set ({n_global} amp)")
+    ax.legend(fontsize=6)
+    ax.tick_params(direction="in")
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+
+    # Center: shared waves — true vs joint vs ch2-alone
+    ax = axes[1]
+    y_ch2 = np.abs(V_ch2) ** 2
+    y_ch2 = y_ch2 / max(y_ch2.sum(), 1e-30)
+    y_true_s = y_true[:n_shared]
+    y_true_s = y_true_s / max(y_true_s.sum(), 1e-30)
+    y_joint_s = y_joint[:n_shared]
+    y_joint_s = y_joint_s / max(y_joint_s.sum(), 1e-30)
+    idx_s = np.arange(n_shared)
+    ax.bar(idx_s - w, y_true_s, w, color=C_BLACK, label="True",
+           edgecolor=C_BLACK, linewidth=0.3)
+    ax.bar(idx_s, y_joint_s, w, color=C_BLUE, label="Joint",
+           edgecolor=C_BLACK, linewidth=0.3)
+    ax.bar(idx_s + w, y_ch2, w, color=C_GREEN, label="Ch2 alone",
+           edgecolor=C_BLACK, linewidth=0.3, alpha=0.7)
+    ax.set_xlabel("Amplitude index")
+    ax.set_ylabel("Relative yield (shared)")
+    ax.set_title(f"Shared waves ({n_shared} amp)")
+    ax.legend(fontsize=6)
+    ax.tick_params(direction="in")
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+
+    # Right: RMSE comparison bar chart
+    ax = axes[2]
+    metrics = ["Yield\n(all)", "Yield\n(shared)", "Phase\n(all)"]
+    joint_vals = [
+        cc_result["joint_yield_rmse"],
+        cc_result["joint_yield_rmse_shared"],
+        cc_result["joint_phase_rmse"],
+    ]
+    indep_vals = [
+        cc_result["ch1_yield_rmse"],
+        cc_result["ch2_yield_rmse"],
+        cc_result["ch1_phase_rmse"],
+    ]
+    x = np.arange(len(metrics))
+    ax.bar(x - 0.18, joint_vals, 0.32, color=C_BLUE, label="Joint",
+           edgecolor=C_BLACK, linewidth=0.3)
+    ax.bar(x + 0.18, indep_vals, 0.32, color=C_RED, label="Independent",
+           edgecolor=C_BLACK, linewidth=0.3)
+    ax.set_xticks(x)
+    ax.set_xticklabels(metrics, fontsize=7)
+    ax.set_ylabel("RMSE")
+    ax.set_title("Joint vs independent")
+    ax.legend(fontsize=7)
+    ax.tick_params(direction="in")
+
+    fig.tight_layout(w_pad=2.0)
+    for fmt in ("pdf", "png"):
+        fig.savefig(OUTPUT_DIR / f"pwa_coupled_channel.{fmt}")
+    plt.close(fig)
+    print("  Fig 10 saved: pwa_coupled_channel.pdf")
+
+
+def fig_mass_dependent(md_result: Dict) -> None:
+    """Mass-dependent fit: wave fractions and BW resonance extraction."""
+    fig, axes = plt.subplots(1, 3, figsize=(10.5, 3.0))
+
+    m = md_result["m_vals"]
+    m_fine = np.linspace(m[0], m[-1], 200)
+
+    # Left: S-wave fraction vs mass (primary observable)
+    ax = axes[0]
+    ax.plot(m, md_result["frac_s_true"], "ko", markersize=5,
+            label="True", zorder=3)
+    ax.plot(m, md_result["frac_s_fit"], "s", color=C_BLUE, markersize=4,
+            label="Fitted", zorder=3)
+    # Overlay BW fraction model
+    if not np.isnan(md_result["m0_fit_s"]):
+        bw1 = BreitWigner(md_result["m0_fit_s"], md_result["gamma_fit_s"])
+        bw2 = BreitWigner(md_result["m0_fit_d"], md_result["gamma_fit_d"])
+        I1 = bw1.intensity(m_fine)
+        I2 = bw2.intensity(m_fine)
+        r = md_result["r_fit"]
+        frac_model = I1 / np.maximum(I1 + r * I2, 1e-30)
+        ax.plot(m_fine, frac_model, "-", color=C_RED, linewidth=1.0,
+                label="BW fit")
+    ax.set_xlabel("Mass (GeV)")
+    ax.set_ylabel(r"$f_S = I_S / (I_S + I_D)$")
+    ax.set_title("S-wave fraction vs mass")
+    ax.set_ylim(-0.05, 1.05)
+    ax.legend(fontsize=6)
+    ax.tick_params(direction="in")
+
+    # Center: per-wave yields across mass bins
+    ax = axes[1]
+    ax.plot(m, md_result["yield_s_true"], "o-", color=C_BLUE,
+            markersize=4, linewidth=0.8, label="S true")
+    ax.plot(m, md_result["yield_s_fit"], "s--", color=C_CYAN,
+            markersize=3, linewidth=0.8, label="S fit")
+    ax.plot(m, md_result["yield_d_true"], "o-", color=C_RED,
+            markersize=4, linewidth=0.8, label="D true")
+    ax.plot(m, md_result["yield_d_fit"], "^--", color=C_ORANGE,
+            markersize=3, linewidth=0.8, label="D fit")
+    ax.set_xlabel("Mass (GeV)")
+    ax.set_ylabel("Per-wave yield")
+    ax.set_title("S/D-wave yields")
+    ax.legend(fontsize=6, ncol=2)
+    ax.tick_params(direction="in")
+
+    # Right: mass/width recovery summary
+    ax = axes[2]
+    params = ["m₀(R₁)", "Γ₀(R₁)", "m₀(R₂)", "Γ₀(R₂)"]
+    true_vals = [md_result["m0_true_s"], md_result["gamma_true_s"],
+                 md_result["m0_true_d"], md_result["gamma_true_d"]]
+    fit_vals = [md_result["m0_fit_s"], md_result["gamma_fit_s"],
+                md_result["m0_fit_d"], md_result["gamma_fit_d"]]
+    fit_errs = [md_result["m0_err_s"], md_result["gamma_err_s"],
+                md_result["m0_err_d"], md_result["gamma_err_d"]]
+    # Replace nan errors with 0 for plotting
+    fit_errs = [0.0 if np.isnan(e) else e for e in fit_errs]
+    x = np.arange(len(params))
+    ax.bar(x - 0.18, true_vals, 0.32, color=C_BLACK, label="True",
+           edgecolor=C_BLACK, linewidth=0.3)
+    ax.bar(x + 0.18, fit_vals, 0.32, color=C_BLUE, label="Fitted",
+           edgecolor=C_BLACK, linewidth=0.3, yerr=fit_errs, capsize=3)
+    ax.set_xticks(x)
+    ax.set_xticklabels(params, fontsize=7)
+    ax.set_ylabel("Value (GeV)")
+    ax.set_title("Resonance parameter recovery")
+    ax.legend(fontsize=7)
+    ax.tick_params(direction="in")
+
+    fig.tight_layout(w_pad=2.0)
+    for fmt in ("pdf", "png"):
+        fig.savefig(OUTPUT_DIR / f"pwa_mass_dependent.{fmt}")
+    plt.close(fig)
+    print("  Fig 11 saved: pwa_mass_dependent.pdf")
+
+
 # ════════════════════════════════════════════════════════════════════════════════
 # MAIN
 # ════════════════════════════════════════════════════════════════════════════════
@@ -988,6 +1244,8 @@ def main() -> None:
     moment_result = run_moment_validation(recov_result, device)
     pol_result = run_beam_asymmetry(device)
     boot_result = run_bootstrap(recov_result, device)
+    cc_result = run_coupled_channel(device)
+    md_result = run_mass_dependent(device)
 
     # Generate figures
     print()
@@ -1004,6 +1262,8 @@ def main() -> None:
     fig_moment_pulls(moment_result)
     fig_beam_asymmetry(pol_result)
     fig_bootstrap(boot_result)
+    fig_coupled_channel(cc_result)
+    fig_mass_dependent(md_result)
 
     t_total = time.perf_counter() - t_total
 
@@ -1081,6 +1341,25 @@ def main() -> None:
             "mean_phase_sigma_deg": float(np.degrees(boot_result["phase_std"].mean())),
             "time_s": boot_result["time_s"],
         },
+        "coupled_channel": {
+            "n_channels": 2,
+            "n_amp_global": cc_result["n_amp_global"],
+            "joint_yield_rmse": cc_result["joint_yield_rmse"],
+            "ch1_yield_rmse": cc_result["ch1_yield_rmse"],
+            "yield_improvement_vs_ch1": cc_result["yield_improvement_vs_ch1"],
+            "joint_basin_frac": cc_result["joint_basin_frac"],
+        },
+        "mass_dependent": {
+            "n_mass_bins": md_result["n_mass_bins"],
+            "m0_true_s": md_result["m0_true_s"],
+            "m0_fit_s": md_result["m0_fit_s"],
+            "gamma_true_s": md_result["gamma_true_s"],
+            "gamma_fit_s": md_result["gamma_fit_s"],
+            "m0_true_d": md_result["m0_true_d"],
+            "m0_fit_d": md_result["m0_fit_d"],
+            "gamma_true_d": md_result["gamma_true_d"],
+            "gamma_fit_d": md_result["gamma_fit_d"],
+        },
         "total_time_s": t_total,
     }
 
@@ -1114,6 +1393,12 @@ def main() -> None:
     print(f"    8. Bootstrap:             {boot_result['n_bootstrap']} resamples, "
           f"σ(yield)={boot_result['yield_std'].mean():.4f}, "
           f"σ(phase)={np.degrees(boot_result['phase_std'].mean()):.1f}°")
+    print(f"    9. Coupled-channel:       yield improvement "
+          f"{cc_result['yield_improvement_vs_ch1']:.1f}× vs ch1 alone")
+    m_err_r1 = abs(md_result["m0_fit_s"] - md_result["m0_true_s"]) * 1000
+    m_err_r2 = abs(md_result["m0_fit_d"] - md_result["m0_true_d"]) * 1000
+    print(f"   10. Mass-dependent BW:     "
+          f"Δm₀(R₁)={m_err_r1:.0f} MeV, Δm₀(R₂)={m_err_r2:.0f} MeV")
 
 
 if __name__ == "__main__":

@@ -38,7 +38,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 import torch
-from scipy.optimize import minimize
+from scipy.optimize import curve_fit, minimize
 from scipy.special import factorial, sph_harm
 from torch import Tensor
 
@@ -558,6 +558,11 @@ class SyntheticDataGenerator:
     ) -> Dict[str, Any]:
         """Generate synthetic data and MC samples.
 
+        Data events are drawn from I(τ;V_true) × η(τ) (physics × acceptance),
+        while MC events are drawn from η(τ) only (acceptance without physics).
+        This separation is essential for unbiased Gram matrix normalisation
+        in the extended likelihood.
+
         Parameters
         ----------
         n_data : int       Target number of data events.
@@ -567,7 +572,7 @@ class SyntheticDataGenerator:
         -------
         dict with keys:
             'theta_data', 'phi_data'    — data event kinematics
-            'theta_mc', 'phi_mc'        — accepted MC kinematics
+            'theta_mc', 'phi_mc'        — accepted MC kinematics (η-only)
             'n_data', 'n_generated', 'n_mc_accepted'
             'V_true'                    — true parameters used
         """
@@ -585,28 +590,36 @@ class SyntheticDataGenerator:
         model_gen = IntensityModel(basis_gen)
         I_gen = model_gen.evaluate(V_torch).detach().cpu().numpy()
 
-        # Acceptance
+        # Acceptance function
         eta_gen = self.acceptance_fn(theta_gen, phi_gen)
-        weights = I_gen * eta_gen
 
-        # Accept/reject for data
-        w_max = weights.max() * 1.05
-        u = rng.uniform(size=n_generated)
-        accepted_mask = u < (weights / w_max)
-        accepted_idx = np.nonzero(accepted_mask)[0]
+        # ── Data events: accept ∝ I(τ) × η(τ) ────────────────────────
+        weights_data = I_gen * eta_gen
+        w_max_data = weights_data.max() * 1.05
+        u_data = rng.uniform(size=n_generated)
+        data_mask = u_data < (weights_data / w_max_data)
+        data_idx_all = np.nonzero(data_mask)[0]
 
-        if len(accepted_idx) < n_data:
-            # If not enough, use all accepted
-            data_idx = accepted_idx
+        if len(data_idx_all) < n_data:
+            data_idx = data_idx_all
         else:
-            data_idx = rng.choice(accepted_idx, size=n_data, replace=False)
+            data_idx = rng.choice(data_idx_all, size=n_data, replace=False)
 
         theta_data = theta_gen[data_idx]
         phi_data = phi_gen[data_idx]
 
-        # MC accepted = all accepted generated events (for normalization)
-        theta_mc = theta_gen[accepted_mask]
-        phi_mc = phi_gen[accepted_mask]
+        # ── MC events: accept ∝ η(τ) only (no physics) ───────────────
+        #   Separate phase-space draw so MC is statistically independent
+        #   of data.  The Gram matrix G = (1/n_gen) Σ_{mc} ψ*ψ then
+        #   correctly estimates ∫ ψ*ψ η(τ) dΩ / Ω_PS.
+        theta_mc_gen = np.arccos(1.0 - 2.0 * rng.uniform(size=n_generated))
+        phi_mc_gen = rng.uniform(0.0, 2.0 * np.pi, size=n_generated)
+        eta_mc = self.acceptance_fn(theta_mc_gen, phi_mc_gen)
+        eta_max = eta_mc.max() * 1.05
+        u_mc = rng.uniform(size=n_generated)
+        mc_mask = u_mc < (eta_mc / eta_max)
+        theta_mc = theta_mc_gen[mc_mask]
+        phi_mc = phi_mc_gen[mc_mask]
 
         return {
             "theta_data": theta_data,
@@ -615,9 +628,9 @@ class SyntheticDataGenerator:
             "phi_mc": phi_mc,
             "n_data": len(data_idx),
             "n_generated": n_generated,
-            "n_mc_accepted": int(accepted_mask.sum()),
+            "n_mc_accepted": int(mc_mask.sum()),
             "V_true": self.V_true.copy(),
-            "acceptance_rate": float(accepted_mask.mean()),
+            "acceptance_rate": float(data_mask.mean()),
         }
 
 
@@ -1674,4 +1687,613 @@ def bootstrap_uncertainty(
         "nll_samples": np.array(nll_samples),
         # Correlation matrix of yields
         "yield_corr": np.corrcoef(yields_rel.T) if n_amp > 1 else np.array([[1.0]]),
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════════
+# COUPLED-CHANNEL PWA
+# ════════════════════════════════════════════════════════════════════════════════
+
+@dataclass
+class ChannelConfig:
+    """Configuration for a single decay channel in coupled-channel analysis.
+
+    Each channel corresponds to a distinct final state (e.g. ηπ, η'π)
+    observed through a different angular distribution but sharing the
+    same resonance content (production amplitudes V).
+
+    Attributes
+    ----------
+    name : str           Channel label (e.g. "ηπ₀", "η'π₀").
+    wave_set : WaveSet   Partial waves accessible in this channel.
+    helicity : float     Decay helicity (determines ψ basis functions).
+    theta_data : ndarray Polar angles of data events.
+    phi_data : ndarray   Azimuthal angles of data events.
+    theta_mc : ndarray   Polar angles of accepted MC events.
+    phi_mc : ndarray     Azimuthal angles of accepted MC events.
+    n_generated : int    Total MC events generated before acceptance.
+    """
+
+    name: str
+    wave_set: WaveSet
+    helicity: float
+    theta_data: np.ndarray
+    phi_data: np.ndarray
+    theta_mc: np.ndarray
+    phi_mc: np.ndarray
+    n_generated: int
+
+
+class CoupledChannelSystem:
+    """Multi-channel PWA system with shared production amplitudes.
+
+    Multiple decay channels observe the same resonance content through
+    different angular distributions (different ψ basis functions due to
+    different helicities and/or different decay kinematics). The
+    production amplitudes V are shared across channels for waves with
+    the same quantum numbers (J, M, ε).
+
+    The joint likelihood is:
+
+        -ln L_total(V) = Σ_c [-ln L_c(V_c)]
+
+    where V_c is the subset of the global V vector relevant to channel c,
+    obtained by matching wave quantum numbers (ε, J, M).
+
+    Parameters
+    ----------
+    channel_configs : list of ChannelConfig
+        One per decay channel.
+    device : torch.device
+        Compute device.
+    """
+
+    def __init__(
+        self,
+        channel_configs: List[ChannelConfig],
+        device: torch.device = torch.device("cpu"),
+    ) -> None:
+        self.device = device
+        self.n_channels = len(channel_configs)
+
+        # Build global wave roster: (ε, J, M) → global index
+        self._global_labels: Dict[Tuple[int, float, float], int] = {}
+        gidx = 0
+        for cfg in channel_configs:
+            for w in cfg.wave_set.waves:
+                key = (w.epsilon, w.j, w.m)
+                if key not in self._global_labels:
+                    self._global_labels[key] = gidx
+                    gidx += 1
+        self.n_amp_global = gidx
+
+        # Per-channel: build basis, model, gram, likelihood, and index map
+        self.channels: List[Dict[str, Any]] = []
+        for cfg in channel_configs:
+            # Map local amplitude α → global V index
+            # With n_components=1, local α coincides with wave index b
+            local_to_global: List[int] = []
+            for b, w in enumerate(cfg.wave_set.waves):
+                for k in range(w.n_components):
+                    key = (w.epsilon, w.j, w.m)
+                    local_to_global.append(self._global_labels[key])
+            local_to_global_arr = np.array(local_to_global, dtype=np.int64)
+            local_to_global_t = torch.tensor(
+                local_to_global_arr, dtype=torch.long, device=device
+            )
+
+            basis_data = BasisAmplitudes(
+                cfg.wave_set, cfg.theta_data, cfg.phi_data, cfg.helicity, device
+            )
+            basis_mc = BasisAmplitudes(
+                cfg.wave_set, cfg.theta_mc, cfg.phi_mc, cfg.helicity, device
+            )
+            model_data = IntensityModel(basis_data)
+            gram = GramMatrix(basis_mc, cfg.n_generated)
+            n_data = len(cfg.theta_data)
+            likelihood = ExtendedLikelihood(
+                model_data, None, gram, n_data, cfg.n_generated
+            )
+
+            self.channels.append({
+                "name": cfg.name,
+                "n_local": cfg.wave_set.n_amplitudes,
+                "local_to_global": local_to_global_arr,
+                "local_to_global_t": local_to_global_t,
+                "likelihood": likelihood,
+                "n_data": n_data,
+                "wave_set": cfg.wave_set,
+            })
+
+    def joint_nll(self, V_global: Tensor) -> Tensor:
+        """Compute total NLL across all channels.
+
+        Parameters
+        ----------
+        V_global : (n_amp_global,) complex128 with requires_grad.
+
+        Returns
+        -------
+        Scalar tensor — sum of per-channel negative log-likelihoods.
+        """
+        total = torch.tensor(0.0, dtype=torch.float64, device=self.device)
+        for ch in self.channels:
+            V_local = V_global[ch["local_to_global_t"]]
+            nll_ch = ch["likelihood"](V_local)
+            total = total + nll_ch
+        return total
+
+    def fit_joint(
+        self,
+        n_starts: int = 20,
+        max_iter: int = 500,
+        seed_base: int = 0,
+    ) -> Dict[str, Any]:
+        """Fit shared V across all channels simultaneously.
+
+        Uses LBFGSFitter with a joint likelihood that sums per-channel
+        NLLs. The global V vector is optimised; each channel sees only
+        the subset of amplitudes for waves it contains.
+
+        Returns
+        -------
+        dict with best_fit, all_fits, stability metrics (same schema
+        as LBFGSFitter.multi_start_fit).
+        """
+        system = self
+
+        class _JointLikelihood:
+            """Duck-typed likelihood for LBFGSFitter compatibility."""
+
+            def __init__(self_inner) -> None:
+                self_inner.device = system.device
+                self_inner._eval_count = 0
+
+            def __call__(self_inner, V: Tensor) -> Tensor:
+                self_inner._eval_count += 1
+                return system.joint_nll(V)
+
+            @property
+            def eval_count(self_inner) -> int:
+                return self_inner._eval_count
+
+            def reset_count(self_inner) -> None:
+                self_inner._eval_count = 0
+
+        joint_like = _JointLikelihood()
+        fitter = LBFGSFitter.__new__(LBFGSFitter)
+        fitter.likelihood = joint_like
+        fitter.max_iter = max_iter
+        fitter.tolerance = 1e-10
+        fitter.n_amp = self.n_amp_global
+        fitter.device = self.device
+
+        return fitter.multi_start_fit(n_starts=n_starts, seed_base=seed_base)
+
+    def fit_independent(
+        self,
+        n_starts: int = 20,
+        max_iter: int = 500,
+        seed_base: int = 0,
+    ) -> List[Dict[str, Any]]:
+        """Fit each channel independently (no parameter sharing).
+
+        Returns
+        -------
+        List of multi_start_fit results, one per channel.
+        """
+        results: List[Dict[str, Any]] = []
+        for i, ch in enumerate(self.channels):
+            fitter = LBFGSFitter(ch["likelihood"], max_iter=max_iter)
+            ms = fitter.multi_start_fit(
+                n_starts=n_starts,
+                seed_base=seed_base + i * 1000,
+            )
+            results.append(ms)
+        return results
+
+
+def coupled_channel_test(
+    n_data_ch1: int = 5000,
+    n_data_ch2: int = 3000,
+    n_generated: int = 200_000,
+    n_starts: int = 20,
+    device: torch.device = torch.device("cpu"),
+    seed: int = 42,
+) -> Dict[str, Any]:
+    """Validate coupled-channel fitting vs independent channel fits.
+
+    Setup:
+        Channel 1 ("ηπ"):  J_max=2.5, helicity=0.5, 5000 events
+        Channel 2 ("η'π"): J_max=1.5, helicity=1.5, 3000 events
+        Shared production amplitudes for overlapping waves (J ≤ 1.5).
+
+    The joint fit uses information from both channels simultaneously to
+    constrain shared parameters, whereas independent fits each see only
+    one channel. The joint fit should recover the shared-wave parameters
+    at least as well as either independent fit.
+
+    Returns
+    -------
+    dict with per-fit metrics, improvement ratios, raw amplitudes.
+    """
+    rng = np.random.default_rng(seed)
+
+    # Channel 1: ηπ — full wave set up to J=2.5
+    ws1 = build_wave_set(j_max=2.5, reflectivities=(+1,), n_components=1)
+    # Channel 2: η'π — restricted to J≤1.5 (phase-space filter)
+    ws2 = build_wave_set(j_max=1.5, reflectivities=(+1,), n_components=1)
+
+    n_amp_global = ws1.n_amplitudes  # ws2 ⊂ ws1
+    n_amp_ch2 = ws2.n_amplitudes
+
+    # True production amplitudes (shared across channels)
+    V_true_np = rng.standard_normal(n_amp_global) + 1j * rng.standard_normal(n_amp_global)
+    V_true_np /= np.linalg.norm(V_true_np)
+
+    # Channel 1 data: full wave set, helicity=0.5
+    gen1 = SyntheticDataGenerator(ws1, V_true_np, helicity=0.5, seed=seed)
+    data1 = gen1.generate(n_data_ch1, n_generated, device=device)
+
+    # Channel 2 data: restricted wave set, helicity=1.5, different acceptance
+    V_true_ch2 = V_true_np[:n_amp_ch2]
+    gen2 = SyntheticDataGenerator(
+        ws2, V_true_ch2, helicity=1.5,
+        acceptance_fn=lambda t, p: 0.6 + 0.1 * np.cos(t) - 0.15 * np.sin(p),
+        seed=seed + 100,
+    )
+    data2 = gen2.generate(n_data_ch2, n_generated, device=device)
+
+    # Build coupled-channel system
+    cfg1 = ChannelConfig(
+        name="ηπ", wave_set=ws1, helicity=0.5,
+        theta_data=data1["theta_data"], phi_data=data1["phi_data"],
+        theta_mc=data1["theta_mc"], phi_mc=data1["phi_mc"],
+        n_generated=data1["n_generated"],
+    )
+    cfg2 = ChannelConfig(
+        name="η'π", wave_set=ws2, helicity=1.5,
+        theta_data=data2["theta_data"], phi_data=data2["phi_data"],
+        theta_mc=data2["theta_mc"], phi_mc=data2["phi_mc"],
+        n_generated=data2["n_generated"],
+    )
+    system = CoupledChannelSystem([cfg1, cfg2], device=device)
+
+    # ── Joint fit (both channels simultaneously) ─────────────────────
+    joint_result = system.fit_joint(n_starts=n_starts, seed_base=500)
+    V_joint = joint_result["best_fit"]["V_best"].detach().cpu().numpy()
+
+    # ── Independent fits (each channel alone) ────────────────────────
+    indep_results = system.fit_independent(n_starts=n_starts, seed_base=600)
+    V_indep_ch1 = indep_results[0]["best_fit"]["V_best"].detach().cpu().numpy()
+    V_indep_ch2 = indep_results[1]["best_fit"]["V_best"].detach().cpu().numpy()
+
+    # ── Compare parameter recovery ───────────────────────────────────
+    def _yield_rmse(V_fit: np.ndarray, V_true: np.ndarray) -> float:
+        y_fit = np.abs(V_fit) ** 2
+        y_true = np.abs(V_true) ** 2
+        y_fit = y_fit / max(y_fit.sum(), 1e-30)
+        y_true = y_true / max(y_true.sum(), 1e-30)
+        return float(np.sqrt(np.mean((y_fit - y_true) ** 2)))
+
+    def _phase_rmse(V_fit: np.ndarray, V_true: np.ndarray) -> float:
+        y_true = np.abs(V_true) ** 2
+        idx = int(np.argmax(y_true))
+        shift = np.exp(1j * (np.angle(V_true[idx]) - np.angle(V_fit[idx])))
+        V_al = V_fit * shift
+        diffs = np.angle(V_true * V_al.conj())
+        return float(np.sqrt(np.mean(diffs ** 2)))
+
+    # Joint: all amplitudes
+    yield_rmse_joint = _yield_rmse(V_joint, V_true_np)
+    phase_rmse_joint = _phase_rmse(V_joint, V_true_np)
+
+    # Joint: shared waves only (first n_amp_ch2)
+    yield_rmse_joint_shared = _yield_rmse(V_joint[:n_amp_ch2], V_true_ch2)
+    phase_rmse_joint_shared = _phase_rmse(V_joint[:n_amp_ch2], V_true_ch2)
+
+    # Independent ch1: all amplitudes
+    yield_rmse_ch1 = _yield_rmse(V_indep_ch1, V_true_np)
+    phase_rmse_ch1 = _phase_rmse(V_indep_ch1, V_true_np)
+
+    # Independent ch2: shared waves only
+    yield_rmse_ch2 = _yield_rmse(V_indep_ch2, V_true_ch2)
+    phase_rmse_ch2 = _phase_rmse(V_indep_ch2, V_true_ch2)
+
+    return {
+        "n_amp_global": n_amp_global,
+        "n_amp_ch1": ws1.n_amplitudes,
+        "n_amp_ch2": ws2.n_amplitudes,
+        "n_data_ch1": data1["n_data"],
+        "n_data_ch2": data2["n_data"],
+        # Joint fit metrics
+        "joint_nll": joint_result["best_nll"],
+        "joint_basin_frac": joint_result["basin_fraction"],
+        "joint_yield_rmse": yield_rmse_joint,
+        "joint_phase_rmse": phase_rmse_joint,
+        "joint_yield_rmse_shared": yield_rmse_joint_shared,
+        "joint_phase_rmse_shared": phase_rmse_joint_shared,
+        # Independent channel 1
+        "ch1_nll": indep_results[0]["best_nll"],
+        "ch1_basin_frac": indep_results[0]["basin_fraction"],
+        "ch1_yield_rmse": yield_rmse_ch1,
+        "ch1_phase_rmse": phase_rmse_ch1,
+        # Independent channel 2
+        "ch2_nll": indep_results[1]["best_nll"],
+        "ch2_basin_frac": indep_results[1]["basin_fraction"],
+        "ch2_yield_rmse": yield_rmse_ch2,
+        "ch2_phase_rmse": phase_rmse_ch2,
+        # Improvement ratios
+        "yield_improvement_vs_ch1": yield_rmse_ch1 / max(yield_rmse_joint, 1e-15),
+        "yield_improvement_vs_ch2": yield_rmse_ch2 / max(yield_rmse_joint_shared, 1e-15),
+        # Raw data for plotting
+        "V_true": V_true_np,
+        "V_joint": V_joint,
+        "V_indep_ch1": V_indep_ch1,
+        "V_indep_ch2": V_indep_ch2,
+        "n_starts": n_starts,
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════════
+# BREIT-WIGNER AMPLITUDE
+# ════════════════════════════════════════════════════════════════════════════════
+
+class BreitWigner:
+    """Non-relativistic Breit-Wigner amplitude.
+
+    BW(m; m₀, Γ₀) = 1 / (m₀² − m² − i·m₀·Γ₀)
+
+    Simplified form without barrier factors, suitable for demonstrating
+    mass-dependent fitting methodology. The phase motion and peak
+    position are physically correct; only the mass-dependent width
+    is omitted (constant Γ approximation).
+
+    Parameters
+    ----------
+    m0 : float      Resonance pole mass (GeV).
+    gamma0 : float  Resonance total width (GeV).
+    """
+
+    def __init__(self, m0: float, gamma0: float) -> None:
+        self.m0 = m0
+        self.gamma0 = gamma0
+
+    def amplitude(self, m: np.ndarray) -> np.ndarray:
+        """Complex BW amplitude at mass values m."""
+        return 1.0 / (self.m0 ** 2 - m ** 2 - 1j * self.m0 * self.gamma0)
+
+    def intensity(self, m: np.ndarray) -> np.ndarray:
+        """|BW(m)|² intensity spectrum."""
+        return np.abs(self.amplitude(m)) ** 2
+
+
+# ════════════════════════════════════════════════════════════════════════════════
+# MASS-DEPENDENT FIT
+# ════════════════════════════════════════════════════════════════════════════════
+
+def mass_dependent_fit(
+    n_mass_bins: int = 20,
+    m_range: Tuple[float, float] = (0.8, 2.0),
+    n_events_per_bin: int = 8000,
+    n_generated_per_bin: int = 300_000,
+    n_starts: int = 25,
+    device: torch.device = torch.device("cpu"),
+    seed: int = 42,
+) -> Dict[str, Any]:
+    """Mass-dependent PWA: fit mass-binned amplitudes, extract BW resonances.
+
+    Two-stage procedure:
+        Stage 1 — Mass-binned fits:
+            At each mass bin, generate synthetic data with mass-dependent
+            V(m) = Σ_r c_{br} BW_r(m), then run standard PWA fit to
+            extract V_fit(m).
+
+        Stage 2 — Resonance extraction:
+            Fit Breit-Wigner |BW(m)|² to the extracted per-wave-family
+            intensity spectra |V(m)|² to recover resonance masses and
+            widths.
+
+    Uses a minimal 2-amplitude wave set (one S-wave, one D-wave) with
+    distinct M projections to maximise angular sensitivity and eliminate
+    the M-substate discrete ambiguity that plagues under-constrained fits.
+
+    Model:
+        S-wave (J=0.5, M=+0.5) ← R₁ at m₀=1.3 GeV, Γ₀=0.35 GeV (broad)
+        D-wave (J=1.5, M=+0.5) ← R₂ at m₀=1.7 GeV, Γ₀=0.10 GeV (narrow)
+
+    Returns
+    -------
+    dict with true/fitted resonance parameters, per-bin results, spectra.
+    """
+    rng = np.random.default_rng(seed)
+
+    # True resonance parameters
+    m0_R1, gamma_R1 = 1.3, 0.35   # broad S-wave resonance
+    m0_R2, gamma_R2 = 1.7, 0.10   # narrow D-wave resonance
+    bw_R1 = BreitWigner(m0_R1, gamma_R1)
+    bw_R2 = BreitWigner(m0_R2, gamma_R2)
+
+    # Minimal wave set: 1 S-wave + 1 D-wave  →  2 complex amplitudes
+    # Avoids M-substate ambiguity inherent in full wave sets without
+    # polarisation constraints.
+    ws = WaveSet([
+        Wave(j=0.5, m=0.5, epsilon=+1, n_components=1, label="S J=0.5 M=+0.5"),
+        Wave(j=1.5, m=0.5, epsilon=+1, n_components=1, label="D J=1.5 M=+0.5"),
+    ])
+    n_amp = ws.n_amplitudes  # 2
+
+    # Coupling matrix: c[wave_idx, resonance_idx]
+    c_coupling_r1 = 1.0 + 0.3j   # S-wave coupling
+    c_coupling_r2 = 0.8 - 0.2j   # D-wave coupling
+    c_matrix = np.zeros((n_amp, 2), dtype=np.complex128)
+    c_matrix[0, 0] = c_coupling_r1   # alpha=0 (S) ← R₁
+    c_matrix[1, 1] = c_coupling_r2   # alpha=1 (D) ← R₂
+
+    # Mass bin centers
+    m_centers = np.linspace(m_range[0], m_range[1], n_mass_bins)
+
+    # ── Stage 1: Per-bin PWA fits with warm-start chaining ──────────
+    # Standard mass-dependent technique: fit the first bin with multi-start,
+    # then use the previous bin's solution as warm-start for the next.
+    # Additional random starts guard against chain-propagated local minima.
+    bin_results: List[Dict[str, Any]] = []
+    V_prev: Optional[Tensor] = None
+
+    for i_bin, m_val in enumerate(m_centers):
+        # True amplitudes at this mass
+        bw_vals = np.array([
+            bw_R1.amplitude(np.array([m_val]))[0],
+            bw_R2.amplitude(np.array([m_val]))[0],
+        ])
+        V_true_m = c_matrix @ bw_vals   # (n_amp,) complex
+        norm = np.linalg.norm(V_true_m)
+        if norm > 1e-30:
+            V_true_m /= norm
+
+        # Generate data at this mass
+        gen = SyntheticDataGenerator(
+            ws, V_true_m, helicity=0.5, seed=seed + i_bin * 100
+        )
+        data = gen.generate(n_events_per_bin, n_generated_per_bin, device=device)
+
+        # Build engine
+        basis_data = BasisAmplitudes(
+            ws, data["theta_data"], data["phi_data"], helicity=0.5, device=device
+        )
+        basis_mc = BasisAmplitudes(
+            ws, data["theta_mc"], data["phi_mc"], helicity=0.5, device=device
+        )
+        model_data = IntensityModel(basis_data)
+        gram = GramMatrix(basis_mc, data["n_generated"])
+        nll_obj = ExtendedLikelihood(
+            model_data, None, gram, data["n_data"], data["n_generated"]
+        )
+        fitter = LBFGSFitter(nll_obj, max_iter=300)
+
+        if V_prev is None:
+            # First bin: full multi-start exploration
+            ms = fitter.multi_start_fit(
+                n_starts=n_starts, seed_base=seed + i_bin * 1000
+            )
+            V_fit_t = ms["best_fit"]["V_best"]
+            best_nll = ms["best_nll"]
+            basin_frac = ms["basin_fraction"]
+        else:
+            # Subsequent bins: warm-start from previous + random guard starts
+            fit_warm = fitter.fit(V_init=V_prev)
+            random_fits = [
+                fitter.fit(seed=seed + i_bin * 1000 + s)
+                for s in range(max(3, n_starts // 3))
+            ]
+            all_fits = [fit_warm] + random_fits
+            best = min(all_fits, key=lambda f: f["nll"])
+            V_fit_t = best["V_best"]
+            best_nll = best["nll"]
+            n_near = sum(
+                1 for f in all_fits if abs(f["nll"] - best_nll) < 1.0
+            )
+            basin_frac = n_near / len(all_fits)
+
+        V_prev = V_fit_t
+        V_fit = V_fit_t.detach().cpu().numpy()
+
+        # Per-wave yields: alpha=0 is S-wave, alpha=1 is D-wave
+        yield_s_fit = float(np.abs(V_fit[0]) ** 2)
+        yield_d_fit = float(np.abs(V_fit[1]) ** 2)
+        yield_s_true = float(np.abs(V_true_m[0]) ** 2)
+        yield_d_true = float(np.abs(V_true_m[1]) ** 2)
+
+        bin_results.append({
+            "m": m_val,
+            "V_true": V_true_m,
+            "V_fit": V_fit,
+            "nll": best_nll,
+            "basin_frac": basin_frac,
+            "yield_s_fit": yield_s_fit,
+            "yield_d_fit": yield_d_fit,
+            "yield_s_true": yield_s_true,
+            "yield_d_true": yield_d_true,
+            "n_data": data["n_data"],
+        })
+
+    # ── Stage 2: Fit BW parameters via wave-fraction model ─────────
+    # The extended likelihood normalises each bin, so absolute yields
+    # don't carry mass-dependent scale.  The correct observable is the
+    # wave *fraction*  f_S(m) = yield_S / (yield_S + yield_D),  which
+    # is independent of per-bin normalisation.
+    m_vals = np.array([r["m"] for r in bin_results])
+    yield_s_fit_arr = np.array([r["yield_s_fit"] for r in bin_results])
+    yield_d_fit_arr = np.array([r["yield_d_fit"] for r in bin_results])
+    yield_s_true_arr = np.array([r["yield_s_true"] for r in bin_results])
+    yield_d_true_arr = np.array([r["yield_d_true"] for r in bin_results])
+
+    total_fit = yield_s_fit_arr + yield_d_fit_arr
+    frac_s_fit = yield_s_fit_arr / np.maximum(total_fit, 1e-30)
+    total_true = yield_s_true_arr + yield_d_true_arr
+    frac_s_true = yield_s_true_arr / np.maximum(total_true, 1e-30)
+
+    def _frac_model(
+        m: np.ndarray, m0_1: float, gamma_1: float,
+        m0_2: float, gamma_2: float, log_r: float,
+    ) -> np.ndarray:
+        """S-wave fraction: |BW₁|² / (|BW₁|² + r·|BW₂|²).
+
+        r = |c₂/c₁|² is the relative coupling strength, parameterised
+        as exp(log_r) to guarantee positivity.
+        """
+        r = np.exp(log_r)
+        bw1 = 1.0 / (m0_1 ** 2 - m ** 2 - 1j * m0_1 * gamma_1)
+        bw2 = 1.0 / (m0_2 ** 2 - m ** 2 - 1j * m0_2 * gamma_2)
+        I1 = np.abs(bw1) ** 2
+        I2 = np.abs(bw2) ** 2
+        return I1 / np.maximum(I1 + r * I2, 1e-30)
+
+    # Simultaneous fit of both resonance parameters
+    try:
+        popt, pcov = curve_fit(
+            _frac_model, m_vals, frac_s_fit,
+            p0=[1.2, 0.30, 1.6, 0.15, 0.0],
+            bounds=([0.5, 0.01, 0.5, 0.01, -5.0],
+                    [3.0, 2.0, 3.0, 2.0, 5.0]),
+            maxfev=20000,
+        )
+        m0_fit_s, gamma_fit_s, m0_fit_d, gamma_fit_d, log_r = popt
+        perr = np.sqrt(np.diag(pcov))
+        r_fit = float(np.exp(log_r))
+    except (RuntimeError, ValueError):
+        m0_fit_s = gamma_fit_s = m0_fit_d = gamma_fit_d = float("nan")
+        perr = np.array([float("nan")] * 5)
+        r_fit = float("nan")
+
+    return {
+        "n_mass_bins": n_mass_bins,
+        "m_range": m_range,
+        "n_events_per_bin": n_events_per_bin,
+        "n_amp": n_amp,
+        # True parameters
+        "m0_true_s": m0_R1,
+        "gamma_true_s": gamma_R1,
+        "m0_true_d": m0_R2,
+        "gamma_true_d": gamma_R2,
+        # Fitted resonance parameters (simultaneous fraction fit)
+        "m0_fit_s": float(m0_fit_s),
+        "gamma_fit_s": float(gamma_fit_s),
+        "m0_err_s": float(perr[0]),
+        "gamma_err_s": float(perr[1]),
+        "m0_fit_d": float(m0_fit_d),
+        "gamma_fit_d": float(gamma_fit_d),
+        "m0_err_d": float(perr[2]),
+        "gamma_err_d": float(perr[3]),
+        "r_fit": r_fit,
+        # Mass spectra for plotting
+        "m_vals": m_vals,
+        "yield_s_fit": yield_s_fit_arr,
+        "yield_d_fit": yield_d_fit_arr,
+        "yield_s_true": yield_s_true_arr,
+        "yield_d_true": yield_d_true_arr,
+        "frac_s_fit": frac_s_fit,
+        "frac_s_true": frac_s_true,
+        # Per-bin details
+        "bin_results": bin_results,
     }

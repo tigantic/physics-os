@@ -1,6 +1,6 @@
 # PWA Compute Engine — Replication Note
 
-**Adams (2026), HyperTensor-VM Platform V2.0.0**
+**Adams (2026), HyperTensor-VM Platform V3.0.0**
 **Date: 2026-02-09**
 
 ---
@@ -84,8 +84,10 @@ n_\text{amp})$ to $O(n_\text{amp}^2)$, independent of event count.
 3. **Non-factorizable acceptance** — $\eta(\theta,\phi) = 0.5 + 0.2\cos\theta
    + 0.15\cos\phi + 0.1\sin\phi$, deliberately asymmetric to enable phase
    sensitivity.
-4. **Accept/reject sampling** — both data and MC generated via standard
-   accept/reject with intensity-weighted acceptance.
+4. **Accept/reject sampling** — data events drawn from $I(\tau; V_{\text{true}}) \times \eta(\tau)$;
+   MC normalization events drawn from $\eta(\tau)$ only (no physics). This
+   separation ensures the Gram matrix correctly estimates the acceptance integral
+   without physics bias.
 5. **Diagonal density matrix** — default $\rho = \text{diag}(1/n_\varepsilon)$;
    full $\rho$ supported and validated.
 6. **Real parameterization for optimization** — complex amplitudes $V_\alpha$
@@ -117,18 +119,18 @@ as a strict special case.
 | True model | $J_{\max}=2.5$, 12 complex amplitudes |
 | Data events | 10,000 |
 | MC generated | 500,000 |
-| MC accepted | 93,111 (18.6% acceptance) |
+| MC accepted | 270,705 (54.1% acceptance) |
 | Multi-start fits | 40 random initializations |
-| Best NLL | $-6798.4$ |
-| Basin fraction | 5% (2/40 near global minimum) |
-| Yield RMSE (relative) | 0.098 |
-| Phase RMSE | 90.6° |
-| $\bar{N}(V^*)$ | 10,000.02 ($\approx N_\text{data}$) |
+| Best NLL | $610.8$ |
+| Basin fraction | 8% (3/40 near global minimum) |
+| Yield RMSE (relative) | 0.009 |
+| Phase RMSE | 35.7° |
+| $\bar{N}(V^*)$ | 10,000.00 ($\approx N_\text{data}$) |
 
-**Interpretation:** Relative yield recovery is accurate at the 10% level.
+**Interpretation:** Relative yield recovery is accurate at the sub-1% level.
 Phase recovery is limited by discrete ambiguities (Barrelet zeros), which is
 a well-known property of PWA likelihoods. The extended likelihood correctly
-enforces $\bar{N}(V^*) = N_\text{data}$ at the minimum. The 5% basin
+enforces $\bar{N}(V^*) = N_\text{data}$ at the minimum. The 8% basin
 fraction reflects the multi-modal nature of the likelihood surface with 24
 real parameters.
 
@@ -148,16 +150,16 @@ $10^6$ MC events, projected speedup is $\sim 100\times$.
 
 | $J_{\max}$ | $n_\text{amp}$ | NLL | Basin % | Gram rank |
 |------|------|------|---------|-----------|
-| 0.5 | 2 | $-3533$ | 100% | 2 |
-| 1.5 | 6 | $-3900$ | 40% | 6 |
-| 2.5 | 12 | $-3935$ | 20% | 12 |
-| 3.5 | 20 | $-3939$ | 10% | 20 |
-| 4.5 | 30 | $-3959$ | 10% | 30 |
-| 5.5 | 42 | $-3928$ | 10% | 42 |
+| 0.5 | 2 | $1407$ | 40% | 2 |
+| 1.5 | 6 | $200$ | 40% | 6 |
+| 2.5 | 12 | $-91$ | 10% | 12 |
+| 3.5 | 20 | $-104$ | 10% | 20 |
+| 4.5 | 30 | $-128$ | 10% | 30 |
+| 5.5 | 42 | $-147$ | 10% | 42 |
 
-NLL improves (decreases) from $J_{\max}=0.5$ to $4.5$, then **degrades**
-at $5.5$ — classical overfitting signature. Basin fraction decreases with
-model complexity, reflecting the increasing number of local minima.
+NLL improves (decreases) from $J_{\max}=0.5$ to $5.5$, monotonically at this
+statistics level. Basin fraction decreases with model complexity, reflecting
+the increasing number of local minima.
 
 ### QTT Compression (Experiment 5)
 
@@ -199,12 +201,12 @@ $\lambda_{\Sigma} \sum_i (\Sigma_{\text{fit}} - \Sigma_{\text{data}})^2$.
 
 | Metric | Unpolarized | Polarized | Improvement |
 |--------|-------------|-----------|-------------|
-| Yield RMSE | 0.1007 | 0.0011 | 91.5× |
-| Phase RMSE | — | — | 0.9× |
-| $\Sigma$ RMSE | 0.575 | 0.006 | 95.9× |
+| Yield RMSE | 0.098 | 0.002 | 65× |
+| Phase RMSE | 1.84 rad | 2.09 rad | 0.9× |
+| $\Sigma$ RMSE | 0.556 | 0.007 | 85× |
 
 **Interpretation:** The beam asymmetry constraint dramatically improves yield
-recovery (91.5×) and $\Sigma$ reproduction (95.9×). Phase improvement is 0.9×
+recovery (65×) and $\Sigma$ reproduction (85×). Phase improvement is 0.9×
 — the two-reflectivity landscape is inherently more complex than single-$\varepsilon$,
 and the $\Sigma$ penalty resolves yield ambiguities more effectively than phase
 ambiguities. This is scientifically honest: polarization data primarily constrains
@@ -219,17 +221,71 @@ warm-start initialization from $V_{\text{best}}$.
 |--------|-------|
 | Resamples | 200 |
 | Converged | 200/200 (100%) |
-| Wall time | 29.2 s |
-| $\sigma(\text{yield})$ range | 0.005–0.027 |
-| $\sigma(\text{phase})$ range | 0°–31° |
-| Mean $\sigma(\text{yield})$ | 0.0147 |
-| Mean $\sigma(\text{phase})$ | 13.3° |
+| Wall time | 20.8 s |
+| $\sigma(\text{yield})$ range | 0.004–0.017 |
+| $\sigma(\text{phase})$ range | 0°–30° |
+| Mean $\sigma(\text{yield})$ | 0.007 |
+| Mean $\sigma(\text{phase})$ | 18.4° |
 
 **Interpretation:** All resamples converge (warm-start prevents divergence).
-Yield uncertainties are $\lesssim 3\%$, consistent with $\sqrt{N}$ counting
+Yield uncertainties are $\lesssim 2\%$, consistent with $\sqrt{N}$ counting
 statistics for 10,000 events. Phase uncertainties have wave-dependent structure:
 strong waves ($J=1.5$) are well-determined, while weak waves ($J=0.5$) have
 larger phase ambiguity. Circular statistics used for phase standard deviations.
+
+### Coupled-Channel PWA (Experiment 9)
+
+Extends the single-channel formalism to multiple final states sharing production
+amplitudes. Two channels with shared waves via quantum number matching:
+
+$$
+-\ln \mathcal{L}_{\text{joint}}(V) = \sum_c -\ln \mathcal{L}_c(V_c)
+$$
+
+where $V_c$ is the projection of the global amplitude vector onto channel $c$'s
+wave set, with shared amplitudes constrained to be identical across channels.
+
+| Metric | Joint fit | Ch1 alone | Ch2 alone |
+|--------|-----------|-----------|----------|
+| Yield RMSE (all) | 0.039 | 0.042 | — |
+| Yield RMSE (shared) | 0.045 | — | 0.089 |
+| Phase RMSE | 0.72 rad | 0.82 rad | — |
+| Basin fraction | 25% | 25% | 100% |
+
+**Interpretation:** Joint coupled-channel fitting improves yield precision on
+shared waves by 2.0× versus channel-2-alone, and 1.07× versus channel-1.
+The improvement is modest for channel-1 (which dominates statistics) but
+substantial for channel-2 where shared-wave constraints from the larger
+channel break local minima. The implementation uses duck-typed likelihood
+objects compatible with `LBFGSFitter` and preserves Gram acceleration.
+
+### Mass-Dependent Breit-Wigner Fit (Experiment 10)
+
+Two-stage mass-dependent procedure:
+
+**Stage 1:** Binned-mass PWA — at each mass bin $m_i$, generate data from
+$V(m_i) = \sum_r c_r \, \text{BW}_r(m_i)$ and fit independently. Uses a
+minimal 2-amplitude wave set (one S-wave, one D-wave) to eliminate M-substate
+discrete ambiguity. Warm-start chaining propagates solutions across adjacent bins.
+
+**Stage 2:** Resonance extraction — fit the S-wave fraction spectrum
+$f_S(m) = |\text{BW}_1|^2 / (|\text{BW}_1|^2 + r|\text{BW}_2|^2)$
+via `scipy.optimize.curve_fit` to recover mass and width parameters.
+
+$$
+\text{BW}(m; m_0, \Gamma_0) = \frac{1}{m_0^2 - m^2 - i m_0 \Gamma_0}
+$$
+
+| Resonance | $m_0$ true | $m_0$ fit | $\Gamma_0$ true | $\Gamma_0$ fit | $\Delta m_0$ |
+|-----------|-----------|----------|---------------|--------------|----------|
+| R₁ (S-wave) | 1.300 | 1.288 | 0.350 | 0.356 | 12 MeV |
+| R₂ (D-wave) | 1.700 | 1.704 | 0.100 | 0.100 | 4 MeV |
+
+**Interpretation:** Both resonance masses are recovered to $\leq 12$ MeV precision,
+and widths to $\leq 6$ MeV. All 20 mass bins converge to the global minimum
+(100% basin fraction). The minimal 2-amplitude wave set avoids the M-substate
+discrete ambiguity that plagues under-constrained multi-amplitude fits, while the
+warm-start chaining ensures smooth mass dependence of the extracted amplitudes.
 
 ---
 
@@ -237,15 +293,15 @@ larger phase ambiguity. Circular statistics used for phase standard deviations.
 
 ```
 experiments/pwa_engine/
-    __init__.py          Package re-exports (~20 symbols)
-    core.py              Complete physics engine (~1,600 lines):
+    __init__.py          Package re-exports (~25 symbols)
+    core.py              Complete physics engine (~2,300 lines):
                            - Wigner-D (small-d + full D, numpy vectorized)
                            - Wave / WaveSet with flat α-indexing
                            - BasisAmplitudes precomputation
                            - IntensityModel (full Eq. 5.48)
                            - GramMatrix (V†GV normalization)
                            - ExtendedLikelihood (NLL + normalization)
-                           - SyntheticDataGenerator (accept/reject)
+                           - SyntheticDataGenerator (accept/reject, η-only MC)
                            - LBFGSFitter (scipy + torch autograd)
                            - convention_reduction_test
                            - wave_set_scan
@@ -256,9 +312,12 @@ experiments/pwa_engine/
                            - PolarizedIntensityModel (Σ beam asymmetry)
                            - beam_asymmetry_sensitivity_test
                            - bootstrap_uncertainty (resample + refit)
+                           - ChannelConfig / CoupledChannelSystem
+                           - coupled_channel_test
+                           - BreitWigner / mass_dependent_fit
 experiments/
-    run_pwa_engine.py    Driver script (~1,000 lines):
-                           8 experiments + 9 publication figures
+    run_pwa_engine.py    Driver script (~1,400 lines):
+                           10 experiments + 11 publication figures
 ```
 
 **Dependencies:** numpy, scipy, torch (GPU optional), matplotlib
@@ -272,21 +331,22 @@ experiments/
 1. **Real data interface** — load ROOT/HDF5 event files from GlueX or CLAS12,
    replacing synthetic generator with actual experimental kinematics.
 
-2. **Coupled-channel extension** — extend $A_\varepsilon(\tau)$ to include
-   multiple final states ($\eta\pi$, $\eta'\pi$, $f_1\pi$) sharing the same
-   production amplitudes $V_{\varepsilon b k}$.
+2. **K-matrix amplitude model** — replace simple Breit-Wigner with K-matrix
+   parameterisation for overlapping resonances, implementing the standard
+   Chung (1995) formalism with proper threshold behaviour.
 
 ### Medium-term
 
-3. **Mass-dependent fit** — parameterize $V(m)$ with Breit-Wigner or K-matrix
-   amplitudes, sweep across mass bins, extract resonance parameters.
-
-4. **GPU-accelerated Gram** — move BasisAmplitudes and GramMatrix to CUDA
+3. **GPU-accelerated Gram** — move BasisAmplitudes and GramMatrix to CUDA
    tensors for $10^6$-event MC with $>100$ amplitudes.
 
-5. **QTT at scale** — for $n_\text{amp} \geq 256$, QTT compression of the Gram
+4. **QTT at scale** — for $n_\text{amp} \geq 256$, QTT compression of the Gram
    matrix becomes favorable; benchmark crossover point and integrate into the
    fitting loop.
+
+5. **Full M-substate fits** — extend mass-dependent analysis to the complete
+   wave set using polarisation constraints (Experiment 7) to break M-substate
+   discrete ambiguities.
 
 ### Long-term
 
@@ -317,11 +377,13 @@ python3 experiments/run_pwa_engine.py
 #   paper/figures/pwa_moment_pulls.{pdf,png}
 #   paper/figures/pwa_beam_asymmetry.{pdf,png}
 #   paper/figures/pwa_bootstrap.{pdf,png}
+#   paper/figures/pwa_coupled_channel.{pdf,png}
+#   paper/figures/pwa_mass_dependent.{pdf,png}
 #   paper/figures/pwa_engine_metadata.json
 ```
 
 **Hardware:** NVIDIA GeForce RTX 5070 Laptop GPU (CUDA)
-**Runtime:** ~86 seconds
+**Runtime:** ~94 seconds
 **Deterministic:** Yes (all RNGs seeded)
 
 ---
