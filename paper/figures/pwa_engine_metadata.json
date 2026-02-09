@@ -1,6 +1,6 @@
 {
   "experiment": "pwa_engine_full_suite",
-  "timestamp": "2026-02-09T18:44:22.217495+00:00",
+  "timestamp": "2026-02-09T18:57:28.693272+00:00",
   "device": "cuda",
   "convention_test": {
     "test_1_err": 0.0,
@@ -23,49 +23,49 @@
       {
         "n_mc": 1000,
         "n_amp": 12,
-        "speedup": 4.680870509574599,
+        "speedup": 4.8016747375821165,
         "agreement": 1.2701226689291277e-16
       },
       {
         "n_mc": 5000,
         "n_amp": 12,
-        "speedup": 5.022284640262341,
+        "speedup": 4.708336720784283,
         "agreement": 0.0
       },
       {
         "n_mc": 10000,
         "n_amp": 12,
-        "speedup": 4.790301951790461,
+        "speedup": 5.041143983405851,
         "agreement": 1.1700572547183578e-16
       },
       {
         "n_mc": 50000,
         "n_amp": 12,
-        "speedup": 5.558097283225052,
+        "speedup": 8.228117822188052,
         "agreement": 2.107368409324663e-16
       },
       {
         "n_mc": 100000,
         "n_amp": 12,
-        "speedup": 14.15827000448136,
+        "speedup": 15.057523619556116,
         "agreement": 6.4125746749568735e-16
       },
       {
         "n_mc": 10000,
         "n_amp": 6,
-        "speedup": 5.190302245729424,
+        "speedup": 6.073059883017141,
         "agreement": 0.0
       },
       {
         "n_mc": 10000,
         "n_amp": 20,
-        "speedup": 5.302586299034021,
+        "speedup": 4.718114681860845,
         "agreement": 2.8217602393493967e-16
       },
       {
         "n_mc": 10000,
         "n_amp": 42,
-        "speedup": 5.020396449604681,
+        "speedup": 5.405162096168534,
         "agreement": 0.0
       }
     ]
@@ -152,5 +152,25 @@
       "compression": 0.32284040995607616
     }
   ],
-  "total_time_s": 32.10386096598813
+  "moment_validation": {
+    "L_max": 6,
+    "chi2_per_ndf": 0.06976873750388275,
+    "n_moments": 49
+  },
+  "beam_asymmetry": {
+    "n_amp": 12,
+    "phase_rmse_unpol": 1.9720171458593823,
+    "phase_rmse_pol": 2.1482626369394233,
+    "phase_improvement": 0.9179590576824751,
+    "sigma_rmse_unpol": 0.5555429579413357,
+    "sigma_rmse_pol": 0.005791138123058308
+  },
+  "bootstrap": {
+    "n_resamples": 200,
+    "converged_fraction": 1.0,
+    "mean_yield_sigma": 0.014678464100865601,
+    "mean_phase_sigma_deg": 13.343358934270263,
+    "time_s": 29.22947304099216
+  },
+  "total_time_s": 85.91321380299632
 }

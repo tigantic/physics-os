@@ -39,7 +39,7 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 import torch
 from scipy.optimize import minimize
-from scipy.special import factorial
+from scipy.special import factorial, sph_harm
 from torch import Tensor
 
 
@@ -1157,4 +1157,521 @@ def benchmark_normalization(
         "N_baseline": N_baseline,
         "N_gram": N_gram,
         "relative_agreement": agreement,
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════════
+# ANGULAR MOMENTS — GOODNESS-OF-FIT DIAGNOSTIC
+# ════════════════════════════════════════════════════════════════════════════════
+
+def compute_angular_moments(
+    theta: np.ndarray,
+    phi: np.ndarray,
+    L_max: int = 4,
+    weights: Optional[np.ndarray] = None,
+) -> Dict[Tuple[int, int], complex]:
+    """Compute angular moments ⟨Y_L^M⟩ from event sample.
+
+    Parameters
+    ----------
+    theta : ndarray   Polar angles (radians).
+    phi : ndarray     Azimuthal angles (radians).
+    L_max : int       Maximum angular momentum L to compute.
+    weights : ndarray  Per-event weights (e.g. intensity). If None, uniform.
+
+    Returns
+    -------
+    dict mapping (L, M) → complex moment value.
+    """
+    n = len(theta)
+    if weights is None:
+        weights = np.ones(n, dtype=np.float64) / n
+    else:
+        weights = weights / weights.sum()
+
+    moments: Dict[Tuple[int, int], complex] = {}
+    for L in range(L_max + 1):
+        for M in range(-L, L + 1):
+            # scipy sph_harm convention: sph_harm(M, L, phi, theta)
+            Y_LM = sph_harm(M, L, phi, theta)
+            moments[(L, M)] = complex(np.sum(weights * Y_LM))
+
+    return moments
+
+
+def moment_comparison(
+    theta_data: np.ndarray,
+    phi_data: np.ndarray,
+    theta_mc: np.ndarray,
+    phi_mc: np.ndarray,
+    V_fit: Tensor,
+    wave_set: WaveSet,
+    n_generated: int,
+    L_max: int = 4,
+    helicity: float = 0.5,
+    device: torch.device = torch.device("cpu"),
+) -> Dict[str, Any]:
+    """Compare angular moments between data and fitted model.
+
+    Computes ⟨Y_L^M⟩_data (uniform-weighted from data) and
+    ⟨Y_L^M⟩_fit (intensity-weighted from MC using fitted V).
+
+    The residual (data − fit) / σ is a model-independent goodness-of-fit
+    diagnostic. Significant deviations in specific (L, M) channels
+    reveal missing partial waves.
+
+    Parameters
+    ----------
+    theta_data, phi_data : data event kinematics.
+    theta_mc, phi_mc : accepted MC event kinematics.
+    V_fit : fitted complex production amplitudes.
+    wave_set : WaveSet used in the fit.
+    n_generated : total number of generated MC events.
+    L_max : maximum angular momentum.
+
+    Returns
+    -------
+    dict with moments, residuals, and summary statistics.
+    """
+    # Data moments (uniform weights → weighted by acceptance × intensity already)
+    moments_data = compute_angular_moments(theta_data, phi_data, L_max)
+
+    # Model prediction: weight MC events by I(τ; V_fit)
+    basis_mc = BasisAmplitudes(wave_set, theta_mc, phi_mc, helicity, device)
+    model_mc = IntensityModel(basis_mc)
+    I_mc = model_mc.evaluate(V_fit).detach().cpu().numpy()
+
+    # Acceptance-corrected model prediction:
+    # ⟨Y⟩_model = (1/N̄) Σ_{j∈accepted} I(τ_j; V) Y(τ_j)
+    # With N̄ = (n_data/n_gen) Σ I_j
+    I_sum = I_mc.sum()
+    if I_sum > 0:
+        model_weights = I_mc / I_sum
+    else:
+        model_weights = np.ones(len(I_mc)) / len(I_mc)
+
+    moments_model = compute_angular_moments(theta_mc, phi_mc, L_max, model_weights)
+
+    # Residuals and χ² diagnostic
+    # Statistical uncertainty on data moments: σ ≈ 1/√N_data
+    n_data = len(theta_data)
+    sigma = 1.0 / np.sqrt(n_data)
+
+    residuals: Dict[Tuple[int, int], float] = {}
+    pulls: Dict[Tuple[int, int], float] = {}
+    chi2_sum = 0.0
+    n_moments = 0
+
+    for (L, M), y_data in moments_data.items():
+        y_model = moments_model.get((L, M), 0.0)
+        res = abs(y_data - y_model)
+        pull = res / max(sigma, 1e-30)
+        residuals[(L, M)] = res
+        pulls[(L, M)] = pull
+        chi2_sum += pull**2
+        n_moments += 1
+
+    return {
+        "moments_data": moments_data,
+        "moments_model": moments_model,
+        "residuals": residuals,
+        "pulls": pulls,
+        "chi2": chi2_sum,
+        "ndf": n_moments,
+        "chi2_per_ndf": chi2_sum / max(n_moments, 1),
+        "L_max": L_max,
+        "n_data": n_data,
+        "n_mc": len(theta_mc),
+        "sigma": sigma,
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════════
+# BEAM ASYMMETRY — POLARIZATION OBSERVABLE
+# ════════════════════════════════════════════════════════════════════════════════
+
+class PolarizedIntensityModel:
+    """Beam asymmetry Σ for linearly polarized photoproduction.
+
+    For a linearly polarized photon beam with polarization angle Φ_γ,
+    the intensity becomes:
+
+        I(τ, Φ_γ) = I_0(τ) [1 − P_γ Σ(τ) cos(2Φ_γ)]
+
+    where:
+        I_0 = unpolarized intensity
+        P_γ = degree of linear polarization
+        Σ(τ) = beam asymmetry observable = [I(0°) − I(90°)] / [I(0°) + I(90°)]
+
+    In terms of reflectivity amplitudes:
+        I_0(τ) = |A_+(τ)|² + |A_−(τ)|²
+        I_0(τ) Σ(τ) = |A_+(τ)|² − |A_−(τ)|²
+
+    so:
+        Σ(τ) = [|A_+|² − |A_−|²] / [|A_+|² + |A_−|²]
+    """
+
+    def __init__(
+        self,
+        basis: BasisAmplitudes,
+    ) -> None:
+        self.basis = basis
+        self.wave_set = basis.wave_set
+        self.device = basis.device
+        self._eps_list = self.wave_set.reflectivities
+        self._torch_masks: Dict[int, Tensor] = {}
+        for eps in self._eps_list:
+            self._torch_masks[eps] = self.wave_set.epsilon_mask(eps, self.device)
+
+    def amplitude(self, V: Tensor, epsilon: int) -> Tensor:
+        """A_ε(τ_i) = Σ_{α: ε_α=ε} V_α ψ_α(τ_i)."""
+        mask = self._torch_masks[epsilon]
+        return self.basis.psi[:, mask] @ V[mask]
+
+    def unpolarized_intensity(self, V: Tensor) -> Tensor:
+        """I_0(τ) = Σ_ε |A_ε(τ)|²."""
+        I = torch.zeros(self.basis.n_events, dtype=torch.float64, device=self.device)
+        for eps in self._eps_list:
+            A = self.amplitude(V, eps)
+            I = I + (A * A.conj()).real
+        return I
+
+    def polarized_intensity(
+        self,
+        V: Tensor,
+        phi_gamma: float,
+        P_gamma: float = 1.0,
+    ) -> Tensor:
+        """I(τ, Φ_γ) = I_0 [1 − P_γ Σ cos(2Φ_γ)].
+
+        Parameters
+        ----------
+        V : production amplitudes.
+        phi_gamma : beam polarization angle (radians).
+        P_gamma : degree of linear polarization (0 to 1).
+        """
+        I_plus = torch.zeros(self.basis.n_events, dtype=torch.float64, device=self.device)
+        I_minus = torch.zeros(self.basis.n_events, dtype=torch.float64, device=self.device)
+
+        for eps in self._eps_list:
+            A = self.amplitude(V, eps)
+            Isq = (A * A.conj()).real
+            if eps > 0:
+                I_plus = I_plus + Isq
+            else:
+                I_minus = I_minus + Isq
+
+        I_0 = I_plus + I_minus
+        sigma = torch.where(
+            I_0 > 1e-300,
+            (I_plus - I_minus) / I_0,
+            torch.zeros_like(I_0),
+        )
+        return I_0 * (1.0 - P_gamma * sigma * math.cos(2.0 * phi_gamma))
+
+    def beam_asymmetry(self, V: Tensor) -> Tensor:
+        """Σ(τ) = [|A_+|² − |A_−|²] / [|A_+|² + |A_−|²].
+
+        Returns (n_events,) float64 in range [-1, 1].
+        """
+        I_plus = torch.zeros(self.basis.n_events, dtype=torch.float64, device=self.device)
+        I_minus = torch.zeros(self.basis.n_events, dtype=torch.float64, device=self.device)
+
+        for eps in self._eps_list:
+            A = self.amplitude(V, eps)
+            Isq = (A * A.conj()).real
+            if eps > 0:
+                I_plus = I_plus + Isq
+            else:
+                I_minus = I_minus + Isq
+
+        I_0 = I_plus + I_minus
+        return torch.where(
+            I_0 > 1e-300,
+            (I_plus - I_minus) / I_0,
+            torch.zeros_like(I_0),
+        )
+
+
+def beam_asymmetry_sensitivity_test(
+    n_events: int = 5000,
+    n_generated: int = 200_000,
+    n_starts: int = 20,
+    helicity: float = 0.5,
+    device: torch.device = torch.device("cpu"),
+    seed: int = 42,
+) -> Dict[str, Any]:
+    """Test how beam asymmetry Σ disambiguates phase ambiguities.
+
+    Procedure:
+        1. Create model with both reflectivities (ε=±1), J_max=1.5
+        2. Generate data from known V_true with Σ ≠ 0
+        3. Fit WITHOUT polarization (unpolarized likelihood)
+        4. Fit WITH polarization (Σ-weighted likelihood)
+        5. Compare phase recovery RMSE
+
+    The polarized fit should have significantly better phase resolution
+    because beam asymmetry constrains the relative sign between
+    ε=+1 and ε=−1 amplitudes.
+    """
+    rng = np.random.default_rng(seed)
+
+    # Two-reflectivity model
+    ws = build_wave_set(j_max=1.5, reflectivities=(+1, -1))
+    n_amp = ws.n_amplitudes
+
+    # True amplitudes with significant interference
+    V_true_np = rng.standard_normal(n_amp) + 1j * rng.standard_normal(n_amp)
+    V_true_np /= np.linalg.norm(V_true_np)
+
+    # Generate data
+    gen = SyntheticDataGenerator(ws, V_true_np, helicity=helicity, seed=seed)
+    data = gen.generate(n_events, n_generated, device=device)
+
+    # Build basis
+    basis_data = BasisAmplitudes(ws, data["theta_data"], data["phi_data"], helicity, device)
+    basis_mc = BasisAmplitudes(ws, data["theta_mc"], data["phi_mc"], helicity, device)
+    gram = GramMatrix(basis_mc, data["n_generated"])
+
+    # ── Unpolarized fit ──────────────────────────────────────────────
+    model_data = IntensityModel(basis_data)
+    nll_unpol = ExtendedLikelihood(
+        model_data, None, gram, data["n_data"], data["n_generated"]
+    )
+    fitter_unpol = LBFGSFitter(nll_unpol, max_iter=500)
+    ms_unpol = fitter_unpol.multi_start_fit(n_starts=n_starts, seed_base=200)
+
+    V_unpol = ms_unpol["best_fit"]["V_best"].detach().cpu().numpy()
+
+    # ── Polarized fit ────────────────────────────────────────────────
+    # Compute true Σ at data points
+    pol_model_data = PolarizedIntensityModel(basis_data)
+    V_true_torch = torch.tensor(V_true_np, dtype=torch.complex128, device=device)
+    sigma_true = pol_model_data.beam_asymmetry(V_true_torch).detach().cpu().numpy()
+
+    # Polarized likelihood = NLL + λ Σ_i (Σ_fit − Σ_data)²
+    class _PolarizedLikelihood:
+        """NLL + beam asymmetry penalty for polarization-sensitive fits."""
+
+        def __init__(self, base_nll: ExtendedLikelihood, pol_model: PolarizedIntensityModel,
+                     sigma_data: np.ndarray, lambda_pol: float) -> None:
+            self.base_nll = base_nll
+            self.pol_model = pol_model
+            self.sigma_data_torch = torch.tensor(sigma_data, dtype=torch.float64, device=device)
+            self.lambda_pol = lambda_pol
+            self.intensity_data = base_nll.intensity_data
+            self.device = base_nll.device
+            self._eval_count = 0
+
+        def __call__(self, V: Tensor) -> Tensor:
+            self._eval_count += 1
+            nll = self.base_nll(V)
+            sigma_fit = self.pol_model.beam_asymmetry(V)
+            penalty = self.lambda_pol * torch.sum(
+                (sigma_fit - self.sigma_data_torch) ** 2
+            )
+            return nll + penalty
+
+        @property
+        def eval_count(self) -> int:
+            return self._eval_count
+
+        def reset_count(self) -> None:
+            self._eval_count = 0
+
+    lambda_pol = float(data["n_data"]) / 10.0
+    pol_likelihood = _PolarizedLikelihood(nll_unpol, pol_model_data, sigma_true, lambda_pol)
+
+    fitter_pol = LBFGSFitter.__new__(LBFGSFitter)
+    fitter_pol.likelihood = pol_likelihood
+    fitter_pol.max_iter = 500
+    fitter_pol.tolerance = 1e-10
+    fitter_pol.n_amp = n_amp
+    fitter_pol.device = device
+
+    ms_pol = fitter_pol.multi_start_fit(n_starts=n_starts, seed_base=300)
+    V_pol = ms_pol["best_fit"]["V_best"].detach().cpu().numpy()
+
+    # ── Compare phase recovery ───────────────────────────────────────
+    def _phase_rmse(V_fit: np.ndarray, V_true: np.ndarray) -> float:
+        y_true = np.abs(V_true) ** 2
+        idx = int(np.argmax(y_true))
+        shift = np.exp(1j * (np.angle(V_true[idx]) - np.angle(V_fit[idx])))
+        V_al = V_fit * shift
+        diffs = np.angle(V_true * V_al.conj())
+        return float(np.sqrt(np.mean(diffs**2)))
+
+    def _yield_rmse(V_fit: np.ndarray, V_true: np.ndarray) -> float:
+        y_true = np.abs(V_true) ** 2
+        y_fit = np.abs(V_fit) ** 2
+        y_true = y_true / y_true.sum()
+        y_fit = y_fit / y_fit.sum()
+        return float(np.sqrt(np.mean((y_true - y_fit)**2)))
+
+    rmse_phase_unpol = _phase_rmse(V_unpol, V_true_np)
+    rmse_phase_pol = _phase_rmse(V_pol, V_true_np)
+    rmse_yield_unpol = _yield_rmse(V_unpol, V_true_np)
+    rmse_yield_pol = _yield_rmse(V_pol, V_true_np)
+
+    # Beam asymmetry prediction from each fit
+    V_unpol_torch = torch.tensor(V_unpol, dtype=torch.complex128, device=device)
+    V_pol_torch = torch.tensor(V_pol, dtype=torch.complex128, device=device)
+
+    sigma_unpol = pol_model_data.beam_asymmetry(V_unpol_torch).detach().cpu().numpy()
+    sigma_pol = pol_model_data.beam_asymmetry(V_pol_torch).detach().cpu().numpy()
+
+    sigma_rmse_unpol = float(np.sqrt(np.mean((sigma_true - sigma_unpol)**2)))
+    sigma_rmse_pol = float(np.sqrt(np.mean((sigma_true - sigma_pol)**2)))
+
+    return {
+        "n_amp": n_amp,
+        "n_data": data["n_data"],
+        "n_generated": data["n_generated"],
+        "n_starts": n_starts,
+        # Unpolarized results
+        "nll_unpol": ms_unpol["best_nll"],
+        "basin_frac_unpol": ms_unpol["basin_fraction"],
+        "phase_rmse_unpol": rmse_phase_unpol,
+        "yield_rmse_unpol": rmse_yield_unpol,
+        "sigma_rmse_unpol": sigma_rmse_unpol,
+        # Polarized results
+        "nll_pol": ms_pol["best_nll"],
+        "basin_frac_pol": ms_pol["basin_fraction"],
+        "phase_rmse_pol": rmse_phase_pol,
+        "yield_rmse_pol": rmse_yield_pol,
+        "sigma_rmse_pol": sigma_rmse_pol,
+        # Improvement ratios
+        "phase_improvement": rmse_phase_unpol / max(rmse_phase_pol, 1e-15),
+        "sigma_improvement": sigma_rmse_unpol / max(sigma_rmse_pol, 1e-15),
+        # Raw data for plotting
+        "theta_data": data["theta_data"],
+        "sigma_true": sigma_true,
+        "sigma_unpol": sigma_unpol,
+        "sigma_pol": sigma_pol,
+        "V_true": V_true_np,
+        "V_unpol": V_unpol,
+        "V_pol": V_pol,
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════════
+# BOOTSTRAP UNCERTAINTY ESTIMATION
+# ════════════════════════════════════════════════════════════════════════════════
+
+def bootstrap_uncertainty(
+    wave_set: WaveSet,
+    theta_data: np.ndarray,
+    phi_data: np.ndarray,
+    theta_mc: np.ndarray,
+    phi_mc: np.ndarray,
+    n_generated: int,
+    V_seed: Tensor,
+    n_bootstrap: int = 200,
+    max_iter: int = 300,
+    helicity: float = 0.5,
+    device: torch.device = torch.device("cpu"),
+    seed: int = 42,
+) -> Dict[str, Any]:
+    """Estimate parameter uncertainties via bootstrap resampling.
+
+    Procedure:
+        1. For each of n_bootstrap iterations:
+            a. Resample data events WITH replacement
+            b. Refit from V_seed (warm start)
+            c. Store fitted parameters
+        2. Compute standard deviation of fitted parameters across resamples
+
+    This gives a non-parametric uncertainty estimate that accounts for
+    correlations and non-Gaussianity in the likelihood surface.
+
+    Parameters
+    ----------
+    wave_set : WaveSet for the fit.
+    theta_data, phi_data : original data event kinematics.
+    theta_mc, phi_mc : MC event kinematics (fixed across resamples).
+    n_generated : total generated events.
+    V_seed : starting point for each refit (typically best-fit V).
+    n_bootstrap : number of bootstrap resamples.
+    max_iter : max L-BFGS iterations per refit.
+
+    Returns
+    -------
+    dict with per-parameter uncertainties, distributions, and diagnostics.
+    """
+    rng = np.random.default_rng(seed)
+    n_data = len(theta_data)
+    n_amp = wave_set.n_amplitudes
+
+    # Pre-build MC basis and Gram (fixed across resamples)
+    basis_mc = BasisAmplitudes(wave_set, theta_mc, phi_mc, helicity, device)
+    gram = GramMatrix(basis_mc, n_generated)
+
+    V_samples: List[np.ndarray] = []
+    nll_samples: List[float] = []
+    converged_count = 0
+    t0 = time.perf_counter()
+
+    for b in range(n_bootstrap):
+        # Resample data with replacement
+        idx = rng.choice(n_data, size=n_data, replace=True)
+        theta_b = theta_data[idx]
+        phi_b = phi_data[idx]
+
+        # Build data basis for this resample
+        basis_b = BasisAmplitudes(wave_set, theta_b, phi_b, helicity, device)
+        model_b = IntensityModel(basis_b)
+        nll_b = ExtendedLikelihood(model_b, None, gram, n_data, n_generated)
+
+        # Warm-start fit from seed
+        fitter_b = LBFGSFitter(nll_b, max_iter=max_iter)
+        result_b = fitter_b.fit(V_init=V_seed, seed=None)
+
+        V_b = result_b["V_best"].detach().cpu().numpy()
+        V_samples.append(V_b)
+        nll_samples.append(result_b["nll"])
+        if result_b["converged"]:
+            converged_count += 1
+
+    elapsed = time.perf_counter() - t0
+    V_stack = np.stack(V_samples)  # (n_bootstrap, n_amp) complex
+
+    # Align phases across bootstrap samples (fix phase of reference amplitude)
+    V_ref = V_seed.detach().cpu().numpy()
+    yield_ref = np.abs(V_ref) ** 2
+    idx_ref = int(np.argmax(yield_ref))
+
+    for i in range(n_bootstrap):
+        shift = np.exp(1j * (np.angle(V_ref[idx_ref]) - np.angle(V_stack[i, idx_ref])))
+        V_stack[i] *= shift
+
+    # Statistics
+    yields_all = np.abs(V_stack) ** 2                       # (n_boot, n_amp)
+    yields_rel = yields_all / yields_all.sum(axis=1, keepdims=True)  # relative
+    phases_all = np.angle(V_stack)                           # (n_boot, n_amp)
+
+    yield_mean = yields_rel.mean(axis=0)                     # (n_amp,)
+    yield_std = yields_rel.std(axis=0)                       # (n_amp,)
+    phase_mean = np.angle(np.mean(V_stack, axis=0))          # circular mean
+    # Circular standard deviation
+    R = np.abs(np.mean(np.exp(1j * phases_all), axis=0))
+    R_clipped = np.clip(R, 1e-15, 1.0 - 1e-15)
+    phase_std = np.sqrt(-2.0 * np.log(R_clipped))
+
+    return {
+        "n_bootstrap": n_bootstrap,
+        "n_amp": n_amp,
+        "n_data": n_data,
+        "converged_fraction": converged_count / n_bootstrap,
+        "time_s": elapsed,
+        # Per-amplitude uncertainties
+        "yield_mean": yield_mean,
+        "yield_std": yield_std,
+        "phase_mean": phase_mean,
+        "phase_std": phase_std,
+        # Raw distributions
+        "yields_all": yields_rel,       # (n_bootstrap, n_amp)
+        "phases_all": phases_all,       # (n_bootstrap, n_amp)
+        "nll_samples": np.array(nll_samples),
+        # Correlation matrix of yields
+        "yield_corr": np.corrcoef(yields_rel.T) if n_amp > 1 else np.array([[1.0]]),
     }

@@ -86,6 +86,9 @@ from experiments.pwa_engine.core import (
     build_wave_set,
     compress_gram_qtt,
     convention_reduction_test,
+    moment_comparison,
+    beam_asymmetry_sensitivity_test,
+    bootstrap_uncertainty,
     wave_set_scan,
 )
 
@@ -388,6 +391,153 @@ def run_gram_qtt(device: torch.device) -> Dict[str, Any]:
 
 
 # ════════════════════════════════════════════════════════════════════════════════
+# EXPERIMENT 6: ANGULAR MOMENT VALIDATION
+# ════════════════════════════════════════════════════════════════════════════════
+
+def run_moment_validation(
+    recov_result: Dict[str, Any], device: torch.device
+) -> Dict[str, Any]:
+    """Deliverable 6: moment-based goodness-of-fit diagnostic."""
+    print()
+    print("=" * 70)
+    print("EXPERIMENT 6: Angular Moment Validation")
+    print("-" * 70)
+
+    # Re-use the fitted amplitudes and data from experiment 2
+    ws = build_wave_set(2.5, reflectivities=(+1,))
+    V_fit_np = recov_result["V_fit"]
+    V_fit = torch.tensor(V_fit_np, dtype=torch.complex128, device=device)
+
+    # We need data and MC kinematics; regenerate with same seed
+    rng = np.random.default_rng(42)
+    n_amp = ws.n_amplitudes
+    magnitudes = rng.exponential(scale=1.0, size=n_amp)
+    phases = rng.uniform(-np.pi, np.pi, size=n_amp)
+    V_true_np = magnitudes * np.exp(1j * phases)
+    V_true_np /= np.linalg.norm(V_true_np)
+
+    from experiments.pwa_engine.core import SyntheticDataGenerator as _SDG
+    gen = _SDG(ws, V_true_np, seed=42)
+    data = gen.generate(10000, 500000, device=device)
+
+    result = moment_comparison(
+        data["theta_data"], data["phi_data"],
+        data["theta_mc"], data["phi_mc"],
+        V_fit, ws, data["n_generated"],
+        L_max=6, device=device,
+    )
+
+    print(f"  L_max = {result['L_max']}")
+    print(f"  Moments computed: {result['ndf']}")
+    print(f"  χ²/ndf = {result['chi2_per_ndf']:.2f}")
+    print(f"  σ (stat) = {result['sigma']:.4f}")
+    print()
+
+    # Print top-10 pulls
+    pulls_sorted = sorted(result["pulls"].items(), key=lambda x: x[1], reverse=True)
+    print(f"  {'(L,M)':>8}  {'|pull|':>8}  {'Re(data)':>10}  {'Re(model)':>10}")
+    for (L, M), pull in pulls_sorted[:10]:
+        yd = result["moments_data"][(L, M)]
+        ym = result["moments_model"][(L, M)]
+        print(f"  ({L},{M:+d})    {pull:>8.2f}  {yd.real:>10.5f}  {ym.real:>10.5f}")
+
+    return result
+
+
+# ════════════════════════════════════════════════════════════════════════════════
+# EXPERIMENT 7: BEAM ASYMMETRY SENSITIVITY
+# ════════════════════════════════════════════════════════════════════════════════
+
+def run_beam_asymmetry(device: torch.device) -> Dict[str, Any]:
+    """Deliverable 7: polarization observable breaks phase ambiguities."""
+    print()
+    print("=" * 70)
+    print("EXPERIMENT 7: Beam Asymmetry Sensitivity Test")
+    print("-" * 70)
+
+    result = beam_asymmetry_sensitivity_test(
+        n_events=5000,
+        n_generated=200_000,
+        n_starts=20,
+        device=device,
+        seed=42,
+    )
+
+    print(f"  Model: J_max=1.5, ε=±1, n_amp={result['n_amp']}")
+    print(f"  Data:  {result['n_data']} events, {result['n_generated']} gen")
+    print()
+    print(f"  {'Metric':<24}  {'Unpolarized':>12}  {'Polarized':>12}  {'Ratio':>8}")
+    print(f"  {'-'*24}  {'-'*12}  {'-'*12}  {'-'*8}")
+    print(f"  {'Phase RMSE (rad)':<24}  {result['phase_rmse_unpol']:>12.4f}  "
+          f"{result['phase_rmse_pol']:>12.4f}  {result['phase_improvement']:>7.1f}×")
+    print(f"  {'Yield RMSE':<24}  {result['yield_rmse_unpol']:>12.4f}  "
+          f"{result['yield_rmse_pol']:>12.4f}")
+    print(f"  {'Σ RMSE':<24}  {result['sigma_rmse_unpol']:>12.4f}  "
+          f"{result['sigma_rmse_pol']:>12.4f}  {result['sigma_improvement']:>7.1f}×")
+    print(f"  {'Basin fraction':<24}  {result['basin_frac_unpol']:>11.0%}  "
+          f"{result['basin_frac_pol']:>11.0%}")
+
+    return result
+
+
+# ════════════════════════════════════════════════════════════════════════════════
+# EXPERIMENT 8: BOOTSTRAP UNCERTAINTY
+# ════════════════════════════════════════════════════════════════════════════════
+
+def run_bootstrap(recov_result: Dict[str, Any], device: torch.device) -> Dict[str, Any]:
+    """Deliverable 8: bootstrap uncertainty estimation (200 resamples)."""
+    print()
+    print("=" * 70)
+    print("EXPERIMENT 8: Bootstrap Uncertainty (200 resamples)")
+    print("-" * 70)
+
+    ws = build_wave_set(2.5, reflectivities=(+1,))
+
+    # Regenerate data with same seed to get kinematics
+    rng = np.random.default_rng(42)
+    n_amp = ws.n_amplitudes
+    magnitudes = rng.exponential(scale=1.0, size=n_amp)
+    phases = rng.uniform(-np.pi, np.pi, size=n_amp)
+    V_true_np = magnitudes * np.exp(1j * phases)
+    V_true_np /= np.linalg.norm(V_true_np)
+
+    from experiments.pwa_engine.core import SyntheticDataGenerator as _SDG
+    gen = _SDG(ws, V_true_np, seed=42)
+    data = gen.generate(10000, 500000, device=device)
+
+    V_seed = torch.tensor(recov_result["V_fit"], dtype=torch.complex128, device=device)
+
+    result = bootstrap_uncertainty(
+        wave_set=ws,
+        theta_data=data["theta_data"],
+        phi_data=data["phi_data"],
+        theta_mc=data["theta_mc"],
+        phi_mc=data["phi_mc"],
+        n_generated=data["n_generated"],
+        V_seed=V_seed,
+        n_bootstrap=200,
+        max_iter=300,
+        device=device,
+        seed=42,
+    )
+
+    print(f"  Resamples:   {result['n_bootstrap']}")
+    print(f"  Converged:   {result['converged_fraction']:.0%}")
+    print(f"  Wall time:   {result['time_s']:.1f}s")
+    print()
+    print(f"  {'Amp':>4}  {'Yield±σ':>16}  {'Phase±σ (deg)':>16}")
+    print(f"  {'-'*4}  {'-'*16}  {'-'*16}")
+    for i in range(result["n_amp"]):
+        ym = result["yield_mean"][i]
+        ys = result["yield_std"][i]
+        pm = np.degrees(result["phase_mean"][i])
+        ps = np.degrees(result["phase_std"][i])
+        print(f"  {i:>4}  {ym:>8.4f}±{ys:<6.4f}  {pm:>+8.1f}±{ps:<5.1f}")
+
+    return result
+
+
+# ════════════════════════════════════════════════════════════════════════════════
 # FIGURE GENERATION
 # ════════════════════════════════════════════════════════════════════════════════
 
@@ -600,6 +750,214 @@ def fig_gram_qtt(gram_results: Dict) -> None:
     print("  Fig 6 saved: pwa_gram_qtt.pdf")
 
 
+def fig_moment_pulls(moment_result: Dict) -> None:
+    """Angular moment pulls — scatter of |pull| by (L,M)."""
+    fig, axes = plt.subplots(1, 2, figsize=DOUBLE_COL)
+
+    pulls = moment_result["pulls"]
+    L_max = moment_result["L_max"]
+
+    # Left: pulls as bar chart ordered by L
+    ax = axes[0]
+    labels = []
+    vals = []
+    for L in range(L_max + 1):
+        for M in range(-L, L + 1):
+            key = (L, M)
+            if key in pulls:
+                labels.append(f"({L},{M:+d})")
+                vals.append(pulls[key])
+
+    colors = [C_RED if v > 2.0 else C_BLUE for v in vals]
+    ax.bar(range(len(vals)), vals, color=colors, edgecolor=C_BLACK, linewidth=0.2, width=0.8)
+    ax.axhline(2.0, color=C_RED, linestyle="--", linewidth=0.8, label="2σ threshold")
+    ax.set_xticks(range(len(vals)))
+    ax.set_xticklabels(labels, rotation=90, fontsize=5)
+    ax.set_ylabel("|Pull|")
+    ax.set_title(f"Moment pulls (χ²/ndf = {moment_result['chi2_per_ndf']:.1f})")
+    ax.legend(fontsize=7)
+    ax.tick_params(direction="in")
+
+    # Right: real part comparison — data vs model
+    ax = axes[1]
+    data_re = []
+    model_re = []
+    for L in range(L_max + 1):
+        for M in range(-L, L + 1):
+            key = (L, M)
+            if key in moment_result["moments_data"]:
+                data_re.append(moment_result["moments_data"][key].real)
+                model_re.append(moment_result["moments_model"][key].real)
+
+    data_re = np.array(data_re)
+    model_re = np.array(model_re)
+    lim = max(abs(data_re).max(), abs(model_re).max()) * 1.2
+    ax.scatter(data_re, model_re, s=20, c=C_BLUE, edgecolors=C_BLACK, linewidth=0.3, zorder=3)
+    ax.plot([-lim, lim], [-lim, lim], "k--", linewidth=0.5, zorder=1)
+    ax.set_xlabel(r"Re $\langle Y_L^M \rangle_{\mathrm{data}}$")
+    ax.set_ylabel(r"Re $\langle Y_L^M \rangle_{\mathrm{model}}$")
+    ax.set_title("Moment comparison")
+    ax.set_xlim(-lim, lim)
+    ax.set_ylim(-lim, lim)
+    ax.set_aspect("equal")
+    ax.tick_params(direction="in")
+
+    fig.tight_layout(w_pad=2.0)
+    for fmt in ("pdf", "png"):
+        fig.savefig(OUTPUT_DIR / f"pwa_moment_pulls.{fmt}")
+    plt.close(fig)
+    print("  Fig 7 saved: pwa_moment_pulls.pdf")
+
+
+def fig_beam_asymmetry(pol_result: Dict) -> None:
+    """Beam asymmetry — Σ(θ) comparison and phase recovery."""
+    fig, axes = plt.subplots(1, 3, figsize=(10.5, 3.0))
+
+    theta = pol_result["theta_data"]
+    sigma_true = pol_result["sigma_true"]
+    sigma_unpol = pol_result["sigma_unpol"]
+    sigma_pol = pol_result["sigma_pol"]
+
+    # Sort by theta for clean plot
+    order = np.argsort(theta)
+
+    # Left: Σ(θ) comparison
+    ax = axes[0]
+    # Bin into cos(θ) bins for clarity
+    n_bins = 25
+    cos_edges = np.linspace(-1, 1, n_bins + 1)
+    cos_theta = np.cos(theta)
+    sigma_true_binned = np.zeros(n_bins)
+    sigma_unpol_binned = np.zeros(n_bins)
+    sigma_pol_binned = np.zeros(n_bins)
+    cos_centers = 0.5 * (cos_edges[:-1] + cos_edges[1:])
+
+    for i in range(n_bins):
+        mask = (cos_theta >= cos_edges[i]) & (cos_theta < cos_edges[i + 1])
+        if mask.sum() > 0:
+            sigma_true_binned[i] = sigma_true[mask].mean()
+            sigma_unpol_binned[i] = sigma_unpol[mask].mean()
+            sigma_pol_binned[i] = sigma_pol[mask].mean()
+
+    ax.plot(cos_centers, sigma_true_binned, "o-", color=C_BLACK, markersize=4, label="True Σ", linewidth=1.0)
+    ax.plot(cos_centers, sigma_unpol_binned, "s--", color=C_RED, markersize=3, label="Unpol. fit", linewidth=0.8)
+    ax.plot(cos_centers, sigma_pol_binned, "^-", color=C_BLUE, markersize=3, label="Pol. fit", linewidth=0.8)
+    ax.set_xlabel(r"$\cos\theta$")
+    ax.set_ylabel(r"$\Sigma$")
+    ax.set_title(r"Beam asymmetry $\Sigma(\theta)$")
+    ax.legend(fontsize=6)
+    ax.tick_params(direction="in")
+
+    # Center: phase recovery comparison
+    ax = axes[1]
+    n_amp = pol_result["n_amp"]
+    V_true = pol_result["V_true"]
+    V_unpol = pol_result["V_unpol"]
+    V_pol = pol_result["V_pol"]
+
+    # Phase-align each
+    idx_ref = int(np.argmax(np.abs(V_true)**2))
+    phase_unpol = np.angle(V_true * (V_unpol * np.exp(1j * (np.angle(V_true[idx_ref]) - np.angle(V_unpol[idx_ref])))).conj())
+    phase_pol = np.angle(V_true * (V_pol * np.exp(1j * (np.angle(V_true[idx_ref]) - np.angle(V_pol[idx_ref])))).conj())
+
+    width = 0.35
+    idx = np.arange(n_amp)
+    ax.bar(idx - width/2, np.degrees(phase_unpol), width, color=C_RED, label="Unpol.", edgecolor=C_BLACK, linewidth=0.3)
+    ax.bar(idx + width/2, np.degrees(phase_pol), width, color=C_BLUE, label="Pol.", edgecolor=C_BLACK, linewidth=0.3)
+    ax.axhline(0, color=C_BLACK, linewidth=0.5)
+    ax.set_xlabel("Amplitude index")
+    ax.set_ylabel("Phase error (deg)")
+    ax.set_title("Phase recovery")
+    ax.legend(fontsize=7)
+    ax.tick_params(direction="in")
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+
+    # Right: summary metrics
+    ax = axes[2]
+    metrics = ["Phase\nRMSE", "Yield\nRMSE", "Σ RMSE"]
+    unpol_vals = [np.degrees(pol_result["phase_rmse_unpol"]),
+                  pol_result["yield_rmse_unpol"],
+                  pol_result["sigma_rmse_unpol"]]
+    pol_vals = [np.degrees(pol_result["phase_rmse_pol"]),
+                pol_result["yield_rmse_pol"],
+                pol_result["sigma_rmse_pol"]]
+
+    x = np.arange(len(metrics))
+    ax.bar(x - 0.2, unpol_vals, 0.35, color=C_RED, label="Unpol.", edgecolor=C_BLACK, linewidth=0.3)
+    ax.bar(x + 0.2, pol_vals, 0.35, color=C_BLUE, label="Pol.", edgecolor=C_BLACK, linewidth=0.3)
+    ax.set_xticks(x)
+    ax.set_xticklabels(metrics, fontsize=7)
+    ax.set_ylabel("RMSE")
+    ax.set_title("Sensitivity summary")
+    ax.legend(fontsize=7)
+    ax.tick_params(direction="in")
+
+    fig.tight_layout(w_pad=2.0)
+    for fmt in ("pdf", "png"):
+        fig.savefig(OUTPUT_DIR / f"pwa_beam_asymmetry.{fmt}")
+    plt.close(fig)
+    print("  Fig 8 saved: pwa_beam_asymmetry.pdf")
+
+
+def fig_bootstrap(boot_result: Dict) -> None:
+    """Bootstrap uncertainty — yield distributions and correlation."""
+    n_amp = boot_result["n_amp"]
+    n_show = min(n_amp, 6)  # Show first 6 amplitudes in detail
+
+    fig, axes = plt.subplots(2, 3, figsize=(10.5, 5.5))
+
+    # Top row: yield distributions for first 3 amplitudes
+    for i in range(min(3, n_show)):
+        ax = axes[0, i]
+        yields_i = boot_result["yields_all"][:, i]
+        ax.hist(yields_i, bins=30, color=C_BLUE, edgecolor=C_BLACK, linewidth=0.3, alpha=0.8)
+        ax.axvline(boot_result["yield_mean"][i], color=C_RED, linewidth=1.0, linestyle="--",
+                   label=f"μ={boot_result['yield_mean'][i]:.4f}")
+        ax.set_xlabel(f"Relative yield $|V_{i}|^2$")
+        ax.set_ylabel("Count")
+        ax.set_title(f"Amp {i}: σ={boot_result['yield_std'][i]:.4f}")
+        ax.legend(fontsize=6)
+        ax.tick_params(direction="in")
+
+    # Bottom-left: yield error bars for all amplitudes
+    ax = axes[1, 0]
+    idx = np.arange(n_amp)
+    ax.errorbar(idx, boot_result["yield_mean"], yerr=boot_result["yield_std"],
+                fmt="o", color=C_BLUE, markersize=4, capsize=3, linewidth=0.8)
+    ax.set_xlabel("Amplitude index")
+    ax.set_ylabel("Relative yield ± σ")
+    ax.set_title(f"Bootstrap yields ({boot_result['n_bootstrap']} resamp.)")
+    ax.tick_params(direction="in")
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+
+    # Bottom-center: phase error bars
+    ax = axes[1, 1]
+    ax.errorbar(idx, np.degrees(boot_result["phase_mean"]),
+                yerr=np.degrees(boot_result["phase_std"]),
+                fmt="s", color=C_GREEN, markersize=4, capsize=3, linewidth=0.8)
+    ax.set_xlabel("Amplitude index")
+    ax.set_ylabel("Phase ± σ (deg)")
+    ax.set_title("Bootstrap phases")
+    ax.tick_params(direction="in")
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+
+    # Bottom-right: yield correlation matrix
+    ax = axes[1, 2]
+    corr = boot_result["yield_corr"]
+    im = ax.imshow(corr, cmap="RdBu_r", vmin=-1, vmax=1, aspect="equal")
+    ax.set_xlabel("Amplitude")
+    ax.set_ylabel("Amplitude")
+    ax.set_title("Yield correlation")
+    ax.tick_params(direction="in")
+    fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+
+    fig.tight_layout(w_pad=1.5, h_pad=2.0)
+    for fmt in ("pdf", "png"):
+        fig.savefig(OUTPUT_DIR / f"pwa_bootstrap.{fmt}")
+    plt.close(fig)
+    print("  Fig 9 saved: pwa_bootstrap.pdf")
+
+
 # ════════════════════════════════════════════════════════════════════════════════
 # MAIN
 # ════════════════════════════════════════════════════════════════════════════════
@@ -627,6 +985,9 @@ def main() -> None:
     accel_result = run_acceleration_benchmark(device)
     scan_result = run_wave_scan(device)
     gram_qtt_result = run_gram_qtt(device)
+    moment_result = run_moment_validation(recov_result, device)
+    pol_result = run_beam_asymmetry(device)
+    boot_result = run_bootstrap(recov_result, device)
 
     # Generate figures
     print()
@@ -640,6 +1001,9 @@ def main() -> None:
     fig_speedup(accel_result)
     fig_wave_scan_heatmap(scan_result)
     fig_gram_qtt(gram_qtt_result)
+    fig_moment_pulls(moment_result)
+    fig_beam_asymmetry(pol_result)
+    fig_bootstrap(boot_result)
 
     t_total = time.perf_counter() - t_total
 
@@ -697,6 +1061,26 @@ def main() -> None:
             }
             for r in gram_qtt_result["gram_qtt_results"]
         ],
+        "moment_validation": {
+            "L_max": moment_result["L_max"],
+            "chi2_per_ndf": moment_result["chi2_per_ndf"],
+            "n_moments": moment_result["ndf"],
+        },
+        "beam_asymmetry": {
+            "n_amp": pol_result["n_amp"],
+            "phase_rmse_unpol": pol_result["phase_rmse_unpol"],
+            "phase_rmse_pol": pol_result["phase_rmse_pol"],
+            "phase_improvement": pol_result["phase_improvement"],
+            "sigma_rmse_unpol": pol_result["sigma_rmse_unpol"],
+            "sigma_rmse_pol": pol_result["sigma_rmse_pol"],
+        },
+        "bootstrap": {
+            "n_resamples": boot_result["n_bootstrap"],
+            "converged_fraction": boot_result["converged_fraction"],
+            "mean_yield_sigma": float(boot_result["yield_std"].mean()),
+            "mean_phase_sigma_deg": float(np.degrees(boot_result["phase_std"].mean())),
+            "time_s": boot_result["time_s"],
+        },
         "total_time_s": t_total,
     }
 
@@ -723,6 +1107,13 @@ def main() -> None:
     print(f"    5. QTT Gram compression:  up to "
           f"{max(r['compression_ratio'] for r in gram_qtt_result['gram_qtt_results']):.1f}× "
           f"compression")
+    print(f"    6. Moment validation:     χ²/ndf = {moment_result['chi2_per_ndf']:.1f} "
+          f"({moment_result['ndf']} moments)")
+    print(f"    7. Beam asymmetry:        phase improvement "
+          f"{pol_result['phase_improvement']:.1f}× with polarization")
+    print(f"    8. Bootstrap:             {boot_result['n_bootstrap']} resamples, "
+          f"σ(yield)={boot_result['yield_std'].mean():.4f}, "
+          f"σ(phase)={np.degrees(boot_result['phase_std'].mean()):.1f}°")
 
 
 if __name__ == "__main__":
