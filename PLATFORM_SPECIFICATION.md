@@ -13,13 +13,13 @@
 
 **The Physics-First Tensor Network Engine**
 
-*One Codebase. 19 Industries. 1,153K Lines of Code. 9 Languages.*
+*One Codebase. 19 Industries. 1,157K Lines of Code. 9 Languages.*
 
 **Version 40.1** | **February 9, 2026** | **140/140 PHYSICS COVERAGE**
 
 ---
 
-[![LOC](https://img.shields.io/badge/LOC-1%2C153K-blue)]()
+[![LOC](https://img.shields.io/badge/LOC-1%2C157K-blue)]()
 [![Python](https://img.shields.io/badge/Python-884K-green)]()
 [![Rust](https://img.shields.io/badge/Rust-112K-orange)]()
 [![Solidity](https://img.shields.io/badge/Solidity-72K-yellow)]()
@@ -76,8 +76,8 @@
 
 | Metric | Value |
 |--------|------:|
-| **Total Lines of Code** | **1,153,189** |
-| Python LOC | 883,913 |
+| **Total Lines of Code** | **1,157,234** |
+| Python LOC | 887,958 |
 | Circom LOC | 77,448 |
 | Rust LOC | 111,635 |
 | Solidity LOC | 71,531 |
@@ -87,7 +87,7 @@
 | TypeScript/JS LOC | 2,942 |
 | LaTeX LOC | 2,223 |
 | **Languages** | **9** |
-| **Total Source Files** | **2,804** |
+| **Total Source Files** | **2,808** |
 | **Test Files** | 185 |
 | **Gauntlet Runners** | 33 |
 | **Documentation Files** | 461 |
@@ -147,7 +147,7 @@ HyperTensor has been validated across 19 industries, each represented as a compu
 
 ### Language Distribution
 
-#### Python (2,224 files | 883,913 LOC)
+#### Python (2,228 files | 887,958 LOC)
 
 | Directory | Files | LOC | % Total | Primary Purpose |
 |-----------|------:|----:|--------:|-----------------|
@@ -169,6 +169,8 @@ HyperTensor has been validated across 19 industries, each represented as a compu
 | `proof_engine/` | 7 | 2,759 | 0.3% | Proof orchestration |
 | `tci_llm/` | 10 | 2,261 | 0.3% | LLM integration |
 | `ai_scientist/` | 6 | 2,080 | 0.2% | Auto-discovery |
+| `experiments/` | 4 | 3,772 | 0.4% | PWA Engine V3.0.0 |
+| `paper/` | 1 | 273 | 0.0% | PDF generation tooling |
 
 #### Rust (276 files | 111,635 LOC)
 

@@ -11,10 +11,10 @@
 
 ### The Physics-First Tensor Network Engine
 
-*One Codebase · 19 Industries · 1,153K Lines of Code · 9 Languages*
+*One Codebase · 19 Industries · 1,157K Lines of Code · 9 Languages*
 
-[![LOC](https://img.shields.io/badge/LOC-1%2C153K-blue?style=for-the-badge)]()
-[![Python](https://img.shields.io/badge/Python-884K-3776AB?style=for-the-badge&logo=python&logoColor=white)]()
+[![LOC](https://img.shields.io/badge/LOC-1%2C157K-blue?style=for-the-badge)]()
+[![Python](https://img.shields.io/badge/Python-888K-3776AB?style=for-the-badge&logo=python&logoColor=white)]()
 [![Rust](https://img.shields.io/badge/Rust-112K-000000?style=for-the-badge&logo=rust&logoColor=white)]()
 [![Solidity](https://img.shields.io/badge/Solidity-72K-363636?style=for-the-badge&logo=solidity&logoColor=white)]()
 [![Lean4](https://img.shields.io/badge/Lean_4-Verified-purple?style=for-the-badge)]()
