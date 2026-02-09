@@ -1,56 +1,62 @@
 # HyperTensor-VM Coverage Dashboard
 
-**Generated:** Phase 4 — Full Taxonomy Baseline Coverage
+**Generated:** Phase 6 — Coupled Physics, Inverse, UQ & Optimization
 **Total Nodes:** 167
 
 ## Summary
 
 | State | Count | Pct |
 |-------|-------|-----|
-| V0.4 | 7 | 4.2% |
-| V0.2 | 160 | 95.8% |
+| V0.6 | 4 | 2.4% |
+| V0.4 | 5 | 3.0% |
+| V0.2 | 158 | 94.6% |
 | V0.1 | 0 | 0.0% |
 | V0.0 | 0 | 0.0% |
 | **Total** | **167** | **100%** |
 
-## Phase 4 Exit Gate
+## Phase 5+6 Exit Gate
 
 - **100% nodes at >= V0.2**: 167/167 = PASS
-- **Tier A at >= V0.4**: 6/18 (partial — anchor nodes only)
+- **QTT-accelerated anchors at V0.6**: 4/4 = PASS (II.1, III.3, V.1, XI.1)
+- **Tier A at >= V0.4**: 8/18 (anchors + cross-cutting)
 - **All Tier A at >= V0.2**: 18/18 = PASS
+- **Platform inverse/optimization modules**: PASS (ADR-0010)
+- **Coupling orchestrator operational**: PASS (monolithic + partitioned)
+- **UQ toolkit (MC, LHS, PCE)**: PASS
+- **Lineage DAG**: PASS
 
 ## By Tier
 
-| Tier | V0.4 | V0.2 | Total |
-|------|------|------|-------|
-| A | 6 | 12 | 18 |
-| B | 1 | 145 | 146 |
-| C | 0 | 3 | 3 |
+| Tier | V0.6 | V0.4 | V0.2 | Total |
+|------|------|------|------|-------|
+| A | 4 | 4 | 10 | 18 |
+| B | 0 | 1 | 145 | 146 |
+| C | 0 | 0 | 3 | 3 |
 
 ## By Pack
 
-| Pack | Name | Nodes | V0.4 | V0.2 |
-|------|------|-------|------|------|
-| I | Classical Mechanics | 8 | 0 | 8 |
-| II | Fluid Dynamics | 10 | 1 | 9 |
-| III | Electromagnetism | 7 | 1 | 6 |
-| IV | Optics and Photonics | 7 | 0 | 7 |
-| V | Thermodynamics and Statistical Mechanics | 6 | 1 | 5 |
-| VI | Quantum Mechanics (Single/Few-Body) | 10 | 0 | 10 |
-| VII | Quantum Many-Body Physics | 13 | 2 | 11 |
-| VIII | Electronic Structure and Quantum Chemistry | 10 | 1 | 9 |
-| IX | Solid State / Condensed Matter | 8 | 0 | 8 |
-| X | Nuclear and Particle Physics | 8 | 0 | 8 |
-| XI | Plasma Physics | 10 | 1 | 9 |
-| XII | Astrophysics and Cosmology | 10 | 0 | 10 |
-| XIII | Geophysics and Earth Science | 8 | 0 | 8 |
-| XIV | Materials Science | 8 | 0 | 8 |
-| XV | Chemical Physics and Reaction Dynamics | 8 | 0 | 8 |
-| XVI | Biophysics and Computational Biology | 8 | 0 | 8 |
-| XVII | Cross-Cutting Computational Methods | 6 | 0 | 6 |
-| XVIII | Continuum Coupled Physics | 8 | 0 | 8 |
-| XIX | Quantum Information and Computation | 8 | 0 | 8 |
-| XX | Special and Applied Domains | 6 | 0 | 6 |
+| Pack | Name | Nodes | V0.6 | V0.4 | V0.2 |
+|------|------|-------|------|------|------|
+| I | Classical Mechanics | 8 | 0 | 0 | 8 |
+| II | Fluid Dynamics | 10 | 1 | 0 | 9 |
+| III | Electromagnetism | 7 | 1 | 0 | 6 |
+| IV | Optics and Photonics | 7 | 0 | 0 | 7 |
+| V | Thermodynamics and Statistical Mechanics | 6 | 1 | 0 | 5 |
+| VI | Quantum Mechanics (Single/Few-Body) | 10 | 0 | 0 | 10 |
+| VII | Quantum Many-Body Physics | 13 | 0 | 2 | 11 |
+| VIII | Electronic Structure and Quantum Chemistry | 10 | 0 | 1 | 9 |
+| IX | Solid State / Condensed Matter | 8 | 0 | 0 | 8 |
+| X | Nuclear and Particle Physics | 8 | 0 | 0 | 8 |
+| XI | Plasma Physics | 10 | 1 | 0 | 9 |
+| XII | Astrophysics and Cosmology | 10 | 0 | 0 | 10 |
+| XIII | Geophysics and Earth Science | 8 | 0 | 0 | 8 |
+| XIV | Materials Science | 8 | 0 | 0 | 8 |
+| XV | Chemical Physics and Reaction Dynamics | 8 | 0 | 0 | 8 |
+| XVI | Biophysics and Computational Biology | 8 | 0 | 0 | 8 |
+| XVII | Cross-Cutting Computational Methods | 6 | 0 | 2 | 4 |
+| XVIII | Continuum Coupled Physics | 8 | 0 | 0 | 8 |
+| XIX | Quantum Information and Computation | 8 | 0 | 0 | 8 |
+| XX | Special and Applied Domains | 6 | 0 | 0 | 6 |
 
 ## Detailed Node List
 
@@ -64,7 +70,7 @@
 | PHY-I.6 | Acoustics and Vibration | I | B | V0.2 |
 | PHY-I.7 | PHY-I.7_Continuum_mechanics | I | B | V0.2 |
 | PHY-I.8 | PHY-I.8_Chaos_theory | I | B | V0.2 |
-| PHY-II.1 | Incompressible Navier-Stokes | II | A | V0.4 |
+| PHY-II.1 | Incompressible Navier-Stokes | II | A | V0.6 |
 | PHY-II.2 | Compressible Flow | II | A | V0.2 |
 | PHY-II.3 | Turbulence | II | A | V0.2 |
 | PHY-II.4 | Multiphase Flow | II | A | V0.2 |
@@ -76,7 +82,7 @@
 | PHY-II.10 | Free Surface / Interfacial | II | B | V0.2 |
 | PHY-III.1 | Electrostatics | III | A | V0.2 |
 | PHY-III.2 | Magnetostatics | III | A | V0.2 |
-| PHY-III.3 | Full Maxwell Time-Domain | III | A | V0.4 |
+| PHY-III.3 | Full Maxwell Time-Domain | III | A | V0.6 |
 | PHY-III.4 | Frequency-Domain EM | III | A | V0.2 |
 | PHY-III.5 | Wave Propagation | III | B | V0.2 |
 | PHY-III.6 | Computational Photonics | III | B | V0.2 |
@@ -88,7 +94,7 @@
 | PHY-IV.5 | PHY-IV.5_Nonlinear_optics | IV | B | V0.2 |
 | PHY-IV.6 | PHY-IV.6_Quantum_optics | IV | B | V0.2 |
 | PHY-IV.7 | PHY-IV.7_Photonic_crystal | IV | B | V0.2 |
-| PHY-V.1 | Equilibrium Statistical Mechanics | V | B | V0.4 |
+| PHY-V.1 | Equilibrium Statistical Mechanics | V | B | V0.6 |
 | PHY-V.2 | Non-Equilibrium Statistical Mechanics | V | B | V0.2 |
 | PHY-V.3 | Molecular Dynamics | V | B | V0.2 |
 | PHY-V.4 | Monte Carlo Methods | V | B | V0.2 |
@@ -143,7 +149,7 @@
 | PHY-X.6 | Beyond Standard Model | X | B | V0.2 |
 | PHY-X.7 | PHY-X.7_Dark_matter | X | B | V0.2 |
 | PHY-X.8 | PHY-X.8_Neutrino_physics | X | B | V0.2 |
-| PHY-XI.1 | Ideal MHD | XI | A | V0.4 |
+| PHY-XI.1 | Ideal MHD | XI | A | V0.6 |
 | PHY-XI.2 | Resistive/Extended MHD | XI | A | V0.2 |
 | PHY-XI.3 | Kinetic Theory Plasma | XI | A | V0.2 |
 | PHY-XI.4 | Gyrokinetics | XI | B | V0.2 |
@@ -195,8 +201,8 @@
 | PHY-XVI.6 | Neuroscience Computational | XVI | B | V0.2 |
 | PHY-XVI.7 | PHY-XVI.7_Metamaterials | XVI | B | V0.2 |
 | PHY-XVI.8 | PHY-XVI.8_Phase-field_modeling | XVI | B | V0.2 |
-| PHY-XVII.1 | Optimization | XVII | A | V0.2 |
-| PHY-XVII.2 | Inverse Problems | XVII | A | V0.2 |
+| PHY-XVII.1 | Optimization | XVII | A | V0.4 |
+| PHY-XVII.2 | Inverse Problems | XVII | A | V0.4 |
 | PHY-XVII.3 | ML for Physics | XVII | B | V0.2 |
 | PHY-XVII.4 | Mesh Generation and Adaptivity | XVII | B | V0.2 |
 | PHY-XVII.5 | Linear Algebra Large-Scale | XVII | B | V0.2 |

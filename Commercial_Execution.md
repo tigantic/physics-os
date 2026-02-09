@@ -3,10 +3,10 @@
 | Field | Value |
 |-------|-------|
 | **Document** | Commercial Execution Plan |
-| **Version** | 1.1 |
+| **Version** | 1.2 |
 | **Date** | 2026-02-09 |
 | **Owner** | TiganticLabz — HyperTensor-VM Core Team |
-| **Status** | Active — Phase 4 complete, Phase 5 next |
+| **Status** | Active — Phase 6 complete, Phase 7 next |
 
 ---
 
@@ -39,11 +39,11 @@
 | **Phase 3** | **COMPLETE** | `90a79173` | 20 domain packs scaffolded, 6 anchor vertical slices at V0.4 Validated (Burgers, Maxwell, Heisenberg, Heat, Ising, Vlasov-Poisson) |
 | **Phase 3 Audit** | **COMPLETE** | `253b5481` | ~40 unused imports fixed across 33 files, dead code removed, silent excepts fixed, 147 tests green |
 | **Phase 4** | **COMPLETE** | `25d0b44f` | 167/167 nodes at ≥ V0.2 Correctness, 7 at V0.4 Validated, 0 scaffold solvers remaining, 257 tests passing |
-| **Phase 5** | Not started | — | QTT/TN acceleration |
-| **Phase 6** | Not started | — | Coupled physics, inverse, UQ, optimization |
+| **Phase 5** | **COMPLETE** | *pending* | QTT bridge, TCI engine, acceleration policy, 4 V0.6 solvers (Burgers, Maxwell, AdvDiff, Vlasov), 28 new tests |  
+| **Phase 6** | **COMPLETE** | *pending* | Coupling orchestrator, adjoint/sensitivity (w/ FD fallback), inverse toolkit, UQ (MC/LHS/PCE), optimization (SIMP + augmented-Lagrangian), lineage DAG, 27 new tests |
 | **Phase 7** | Not started | — | Productization, SDKs, docs |
 
-**Current coverage:** 167 taxonomy nodes across 20 packs. All at ≥ V0.2 with real physics solvers.
+**Current coverage:** 167 taxonomy nodes across 20 packs. 4 at V0.6 (QTT-accelerated anchors), 5 at V0.4 Validated, 158 at V0.2 Correctness. 55 new tests added in Phase 5+6 (total ~312).
 
 ---
 
@@ -334,6 +334,8 @@ Every "Accelerated" solver must provide:
 
 A meaningful subset of PDE/kinetic/quantum cases reach V0.6 Accelerated with published, repeatable metrics.
 
+> **✅ COMPLETE**: 4 anchor-domain QTT-accelerated solvers delivered (Burgers, Maxwell, AdvDiff, Vlasov-Poisson). QTT bridge layer (`tensornet/platform/qtt.py`), TCI engine (`tensornet/platform/tci.py`), acceleration policy (`tensornet/platform/acceleration.py`), and QTT solver wrapper (`tensornet/platform/qtt_solver.py`) all operational. 28 tests passing. ADR-0009 documents decisions. See [COVERAGE_DASHBOARD.md](docs/COVERAGE_DASHBOARD.md) for V0.6 node list.
+
 ---
 
 ### Phase 6: Coupled Physics, Inverse Problems, UQ, Optimization
@@ -354,6 +356,8 @@ This is where the platform becomes a "physics + inference engine," not just solv
 #### Exit Gate
 
 End-to-end workflows (simulate → infer → optimize) reproduce known reference studies on curated problems.
+
+> **✅ COMPLETE**: Coupling orchestrator (monolithic + Gauss-Seidel/Jacobi partitioned) in `tensornet/platform/coupled.py`. Discrete adjoint with finite-difference fallback in `tensornet/platform/adjoint.py`. Inverse problem toolkit (Tikhonov, TV, GD, L-BFGS, Bayesian Laplace) in `tensornet/platform/inverse.py`. UQ toolkit (MC, LHS, PCE) in `tensornet/platform/uq.py`. Optimization toolkit (augmented-Lagrangian, SIMP topology) in `tensornet/platform/optimization.py`. Lineage DAG in `tensornet/platform/lineage.py`. 27 tests passing. ADR-0010 documents decisions.
 
 ---
 
