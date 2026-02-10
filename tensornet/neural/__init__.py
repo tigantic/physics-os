@@ -47,6 +47,20 @@ from tensornet.neural.truncation_policy import (
                                                  train_truncation_policy,
 )
 
+# §5 AI/ML additions
+from tensornet.neural.equivariant import (
+    E3MessagePassing,
+    EquivariantNet,
+    SE3Linear,
+    SO3Convolution,
+)
+from tensornet.neural.rl_mesh import (
+    MeshAction,
+    MeshEnvironment,
+    PPOConfig,
+    RLMeshAgent,
+)
+
 __all__ = [
     # Truncation policy
     "TruncationPolicy",
@@ -81,4 +95,14 @@ __all__ = [
     "ProblemFeatures",
     "select_algorithm",
     "benchmark_algorithms",
+    # §5 — Equivariant nets
+    "SE3Linear",
+    "SO3Convolution",
+    "E3MessagePassing",
+    "EquivariantNet",
+    # §5 — RL mesh adaptation
+    "MeshAction",
+    "MeshEnvironment",
+    "PPOConfig",
+    "RLMeshAgent",
 ]

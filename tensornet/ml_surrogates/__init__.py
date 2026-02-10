@@ -82,6 +82,75 @@ from .uncertainty import (
                         compute_prediction_interval,
 )
 
+# §5 AI/ML Integration modules
+from .foundation_model import (
+    FoundationConfig,
+    FoundationWeights,
+    PhysicsDomain,
+    PhysicsFoundationModel,
+)
+from .pinns_v2 import (
+    CausalPINN,
+    CompetitivePINN,
+    DenseNet,
+    SeparatedPINN,
+)
+from .diffusion_model import (
+    NoiseSchedule,
+    PhysicsDiffusionModel,
+    ScoreNet,
+)
+from .neural_corrector import (
+    AdaptiveCorrector,
+    CorrectorNet,
+    CorrectorTrainer,
+    SpectralCorrector,
+)
+from .multi_fidelity import (
+    CoKrigingSurrogate,
+    FidelityLevel,
+    MultiFidelityEnsemble,
+    MultiFidelityGP,
+    SingleFidelityGP,
+)
+from .transformer_stepper import TransformerTimeStepper
+from .qtt_operator import (
+    QTTField,
+    QTTOperatorLayer,
+    QTTOperatorNet,
+)
+from .self_supervised import (
+    ContrastiveLearner,
+    MaskedFieldAutoencoder,
+    PhysicsAugmentation,
+    PreTrainingPipeline,
+)
+from .physics_rag import (
+    DocType,
+    PhysicsDocument,
+    PhysicsRetriever,
+    RAGPipeline,
+    VectorStore,
+)
+from .hyperparam_tuner import (
+    BayesianOptimiser,
+    GridSearcher,
+    HyperTuner,
+    ParamRange,
+    RandomSearcher,
+    SearchSpace,
+)
+from .neural_closure import (
+    ClosureTrainer,
+    ReynoldsStressClosure,
+    SubgridFluxClosure,
+    TensorBasisClosure,
+)
+from .multimodal import (
+    MultiModalFusion,
+    MultiModalPhysicsAI,
+)
+
 __all__ = [
     # Base
     "SurrogateConfig",
@@ -132,4 +201,61 @@ __all__ = [
     "ActiveLearner",
     "train_surrogate",
     "cross_validate",
+    # §5 — Foundation model
+    "PhysicsDomain",
+    "FoundationConfig",
+    "FoundationWeights",
+    "PhysicsFoundationModel",
+    # §5 — PINNs v2
+    "CausalPINN",
+    "SeparatedPINN",
+    "CompetitivePINN",
+    "DenseNet",
+    # §5 — Diffusion model
+    "NoiseSchedule",
+    "ScoreNet",
+    "PhysicsDiffusionModel",
+    # §5 — Neural correctors
+    "CorrectorNet",
+    "SpectralCorrector",
+    "AdaptiveCorrector",
+    "CorrectorTrainer",
+    # §5 — Multi-fidelity
+    "FidelityLevel",
+    "SingleFidelityGP",
+    "MultiFidelityGP",
+    "CoKrigingSurrogate",
+    "MultiFidelityEnsemble",
+    # §5 — Transformer time-stepper
+    "TransformerTimeStepper",
+    # §5 — QTT operator learning
+    "QTTField",
+    "QTTOperatorLayer",
+    "QTTOperatorNet",
+    # §5 — Self-supervised
+    "PhysicsAugmentation",
+    "MaskedFieldAutoencoder",
+    "ContrastiveLearner",
+    "PreTrainingPipeline",
+    # §5 — Physics RAG
+    "DocType",
+    "PhysicsDocument",
+    "VectorStore",
+    "PhysicsRetriever",
+    "RAGPipeline",
+    # §5 — Hyperparameter tuning
+    "ParamRange",
+    "SearchSpace",
+    "BayesianOptimiser",
+    "GridSearcher",
+    "RandomSearcher",
+    "HyperTuner",
+    # §5 — Neural closure
+    "ReynoldsStressClosure",
+    "SubgridFluxClosure",
+    "TensorBasisClosure",
+    "ClosureTrainer",
+    # §5 — Multi-modal AI
+    "MultiModalFusion",
+    "MultiModalPhysicsAI",
 ]

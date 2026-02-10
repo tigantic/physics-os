@@ -47,6 +47,16 @@ from .parser import EntityExtractor, IntentParser, IntentType, ParseResult
 # Query DSL
 from .query import Aggregator, FieldQuery, Predicate, QueryBuilder, QueryResult, Selector
 
+# §5 — LLM solver pipeline
+from .llm_pipeline import (
+    IntentClassifier,
+    LLMSolverPipeline,
+    MockLLMBackend,
+    ParsedQuery,
+    SolverDispatcher,
+    SolverIntent,
+)
+
 __all__ = [
     # Query
     "FieldQuery",
@@ -81,6 +91,13 @@ __all__ = [
     "IntentResult",
     "ExecutionContext",
     "ResultStatus",
+    # §5 — LLM solver pipeline
+    "SolverIntent",
+    "ParsedQuery",
+    "MockLLMBackend",
+    "IntentClassifier",
+    "SolverDispatcher",
+    "LLMSolverPipeline",
 ]
 
 __version__ = "0.1.0"

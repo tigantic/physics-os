@@ -133,6 +133,66 @@ from tensornet.platform.security import (
     license_audit,
 )
 
+# §6 Data Infrastructure modules
+from tensornet.platform.timeseries_db import (
+    AggregatedPoint,
+    InMemoryTSDB,
+    RetentionPolicy,
+    TSDBBackend,
+    TimeSeriesPoint,
+    TimeSeriesQuery,
+)
+from tensornet.platform.lakehouse import (
+    ArtifactType,
+    ArtifactMetadata,
+    LakehouseCatalog,
+    LakehouseQuery,
+    LakehouseStore,
+    PartitionScheme,
+)
+from tensornet.platform.arrow_export import (
+    ArrowBatch,
+    ColumnSchema,
+    ColumnType,
+    ParquetReader,
+    ParquetWriter,
+    TableSchema,
+    export_to_parquet,
+    import_from_parquet,
+    simulation_state_to_batch,
+)
+from tensornet.platform.experiment_tracker import (
+    Experiment,
+    ExperimentTracker,
+    MetricEntry,
+    Run,
+    RunStatus,
+)
+from tensornet.platform.federation import (
+    ChunkStatus,
+    DataChunk,
+    FederationManager,
+    FederationNode,
+    FederationProtocol,
+    FederationRegistry,
+    NodeRole,
+)
+from tensornet.platform.replay import (
+    EventType,
+    ReplayEngine,
+    ReplayEvent,
+    ReplayLog,
+)
+from tensornet.platform.data_versioning import (
+    ContentStore,
+    DataVersioning,
+    DatasetSnapshot,
+    DiffEntry,
+    VersionGraph,
+    diff_snapshots,
+    merge_snapshots,
+)
+
 __all__ = [
     # Protocols
     "ProblemSpec",
@@ -213,4 +273,55 @@ __all__ = [
     "generate_sbom",
     "audit_dependencies",
     "license_audit",
+    # §6 — Time-series DB
+    "TimeSeriesPoint",
+    "TimeSeriesQuery",
+    "AggregatedPoint",
+    "RetentionPolicy",
+    "TSDBBackend",
+    "InMemoryTSDB",
+    # §6 — Lakehouse
+    "ArtifactType",
+    "ArtifactMetadata",
+    "PartitionScheme",
+    "LakehouseCatalog",
+    "LakehouseStore",
+    "LakehouseQuery",
+    # §6 — Arrow / Parquet
+    "ColumnType",
+    "ColumnSchema",
+    "TableSchema",
+    "ArrowBatch",
+    "ParquetWriter",
+    "ParquetReader",
+    "simulation_state_to_batch",
+    "export_to_parquet",
+    "import_from_parquet",
+    # §6 — Experiment tracker
+    "RunStatus",
+    "MetricEntry",
+    "Run",
+    "Experiment",
+    "ExperimentTracker",
+    # §6 — Federation
+    "NodeRole",
+    "FederationNode",
+    "ChunkStatus",
+    "DataChunk",
+    "FederationRegistry",
+    "FederationProtocol",
+    "FederationManager",
+    # §6 — Replay
+    "EventType",
+    "ReplayEvent",
+    "ReplayLog",
+    "ReplayEngine",
+    # §6 — Data versioning
+    "ContentStore",
+    "DatasetSnapshot",
+    "DiffEntry",
+    "diff_snapshots",
+    "VersionGraph",
+    "merge_snapshots",
+    "DataVersioning",
 ]
