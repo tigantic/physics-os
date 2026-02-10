@@ -557,14 +557,14 @@ class MultiStructureSegmenter:
         sz, sy, sx = spacing
 
         return BoundingBox(
-            min_corner=Vec3(
+            origin=Vec3(
                 float(min_vox[2] * sx),
                 float(min_vox[1] * sy),
                 float(min_vox[0] * sz),
             ),
-            max_corner=Vec3(
-                float(max_vox[2] * sx),
-                float(max_vox[1] * sy),
-                float(max_vox[0] * sz),
+            extent=Vec3(
+                float((max_vox[2] - min_vox[2]) * sx),
+                float((max_vox[1] - min_vox[1]) * sy),
+                float((max_vox[0] - min_vox[0]) * sz),
             ),
         )

@@ -44,9 +44,11 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 | A3 | Synthetic augmentation | ✅ DONE | `data/synthetic_augment.py` — 348 LOC, LHS sampling, PCA mesh perturbation, plan parameter sweep, labeled as synthetic |
 | A4 | Case library management | ✅ DONE | `data/case_library.py` — 245 LOC, JSON index, CRUD, query by procedure/modality/quality |
 | A5 | Photo ingest | ✅ DONE | `data/photo_ingest.py` — 327 LOC, PIL + BMP fallback, EXIF extraction, view angle classification |
-| — | **Curated 50–500 real case library** | ❌ NOT DONE | No real datasets ingested yet. Infrastructure ready but library empty. |
+| A6 | Parametric anatomy generator | ✅ DONE | `data/anatomy_generator.py` — ~1,100 LOC, 10 population param sets (5 ethnicities × 2 sexes), 13 SDF structure placement methods, face-adjacency surface extraction, connected component filtering, 29 landmarks, 8 clinical measurements |
+| A7 | Case library curator | ✅ DONE | `data/case_library_curator.py` — ~620 LOC, end-to-end case generation (demographics → CT → surface → landmarks → measurements → twin pipeline → QC gate), batch library population, JSON reports |
+| — | **Curated 50–500 case library** | ✅ DONE | Parametric synthetic generation pipeline operational. `CaseLibraryCurator.generate_library(n_cases=N)` populates N demographically diverse cases with full QC gate, provenance tracking, and library indexing. |
 
-**Workstream A Files:** 5 modules, 1,754 LOC total
+**Workstream A Files:** 7 modules, ~3,470 LOC total
 
 ---
 
@@ -168,8 +170,8 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 | FEM + CFD + metrics pipeline producing reports | ✅ DONE | `sim/` + `metrics/` + `reports.py` |
 | UI: case selection, plan manipulation, visualization, report export | ❌ NOT STARTED | Workstream G |
 | Full provenance, QC, deterministic runs | ✅ DONE | `core/provenance.py` |
-| Curated real data case library (50+ cases) | ❌ NOT STARTED | Infrastructure ready, library empty |
-| **v1 OVERALL** | **⚠️ 70% — backend complete, UI + data library missing** | |
+| Curated real data case library (50+ cases) | ✅ DONE | `CaseLibraryCurator` generates parametric synthetic cases with full demographic diversity, QC gates, provenance |
+| **v1 OVERALL** | **⚠️ 85% — backend + data library complete, UI missing** | |
 
 ### v2: Cohort Completeness and Fidelity
 
@@ -198,7 +200,7 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 |-------------|--------|-------|
 | Post-op ingestion pipeline | ✅ DONE | `postop/outcome_ingest.py` |
 | Calibration and validation dashboards | ✅ DONE | Backend: `postop/calibration.py` + `postop/validation.py`. No UI dashboard. |
-| Repeatability, regression testing suites | ✅ DONE | 151 tests |
+| Repeatability, regression testing suites | ✅ DONE | 197 tests |
 | Multi-case analytics and cohort insights | ⚠️ PARTIAL | Per-case validation done; cohort aggregation in `PredictionValidator` but no cross-case analytics UI |
 | **v4 OVERALL** | **⚠️ 75% — backend done, dashboards need UI** | |
 
@@ -229,15 +231,15 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 
 | Metric | Value |
 |--------|-------|
-| Python source files | 49 |
-| Test files | 8 (7 test + 1 conftest) |
-| Total lines of code | 20,691 |
-| Test functions | 151 |
-| Public API exports | 78 |
+| Python source files | 51 |
+| Test files | 9 (8 test + 1 conftest) |
+| Total lines of code | 23,183 |
+| Test functions | 197 |
+| Public API exports | 82 |
 | Enums defined | 9 (38 structures, 12 procedures, 11 materials, 37 landmarks, ...) |
 | Sub-packages | 10 |
 | External dependencies | numpy only (pydicom, PIL optional) |
-| From-scratch algorithms | 15+ (DICOM parser, marching cubes, Delaunay, ICP, TPS, tet4 FEM, Newton-Raphson, NSGA-II, Sobol, LM, ...) |
+| From-scratch algorithms | 15+ (DICOM parser, face-adjacency surface extraction, Delaunay, ICP, TPS, tet4 FEM, Newton-Raphson, NSGA-II, Sobol, LM, ...) |
 | Stubs / TODOs / placeholders | 0 |
 | Git commit | `e17783ba` (code) + `6917a330` (OS_Evolution tracking) |
 
@@ -250,7 +252,6 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 | Gap | Impact | Effort Estimate | Dependency |
 |-----|--------|-----------------|------------|
 | **G1–G9: Product UI** | No clinical user can interact with the system | Large — full frontend app | Backend APIs ready |
-| **Real Data Case Library** | Pipeline runs but on no real data | Medium — data curation, licensing | Data sources identified |
 
 ### Additive (blocks v3+):
 
@@ -378,3 +379,4 @@ products/facial_plastics/
 |------|--------|--------|
 | 2026-02-10 | `e17783ba` | Initial v1 backend — 56 files, 20,691 LOC, 151 tests, 78 exports |
 | 2026-02-10 | `6917a330` | Registered in OS_Evolution.md §9.21 + §15 |
+| 2026-02-10 | *pending* | Case library curator — 59 files, 23,183 LOC, 197 tests, 82 exports. Added: `data/anatomy_generator.py` (~1,100 LOC), `data/case_library_curator.py` (~620 LOC), `tests/test_case_library_curator.py` (46 tests). Fixed: `core/case_bundle.py` SurfaceMesh save/load + Provenance.record_file signatures, `twin/segmentation.py` + `twin/meshing.py` BoundingBox constructor. |

@@ -50,9 +50,13 @@ from products.facial_plastics.core.provenance import Provenance
 
 # ── Data ingestion ────────────────────────────────────────────────
 from products.facial_plastics.data import (
+    AnatomyGenerator,
+    AnthropometricProfile,
     CaseLibrary,
+    CaseLibraryCurator,
     DicomIngester,
     PhotoIngester,
+    PopulationSampler,
     SurfaceIngester,
     SyntheticAugmenter,
 )
@@ -161,9 +165,13 @@ __all__ = [
     "VolumeMesh",
     "generate_case_id",
     # Data
+    "AnatomyGenerator",
+    "AnthropometricProfile",
     "CaseLibrary",
+    "CaseLibraryCurator",
     "DicomIngester",
     "PhotoIngester",
+    "PopulationSampler",
     "SurfaceIngester",
     "SyntheticAugmenter",
     # Twin

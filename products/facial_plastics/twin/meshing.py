@@ -511,8 +511,12 @@ class VolumetricMesher:
         factor: float,
     ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Refine elements inside the ROI by splitting long edges."""
-        min_c = np.array([roi.min_corner.x, roi.min_corner.y, roi.min_corner.z])
-        max_c = np.array([roi.max_corner.x, roi.max_corner.y, roi.max_corner.z])
+        min_c = np.array([roi.origin.x, roi.origin.y, roi.origin.z])
+        max_c = np.array([
+            roi.origin.x + roi.extent.x,
+            roi.origin.y + roi.extent.y,
+            roi.origin.z + roi.extent.z,
+        ])
         target_edge = self._config.target_edge_length_mm * factor
 
         nodes_list = nodes.tolist()

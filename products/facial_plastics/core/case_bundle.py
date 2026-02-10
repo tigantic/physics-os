@@ -341,7 +341,7 @@ class CaseBundle:
             notes=notes,
         )
         self._manifest.acquisitions.append(asdict(acq))
-        self._provenance.record_file(str(dest))
+        self._provenance.record_file(f"acquisition_{dest.stem}", dest, "acquisition")
         self._provenance.end_step()
         self.save()
         return dest
@@ -361,7 +361,7 @@ class CaseBundle:
         if step_name:
             self._provenance.begin_step(step_name)
         np.save(dest, array)
-        self._provenance.record_file(str(dest))
+        self._provenance.record_file(name, dest, "array")
         if step_name:
             self._provenance.end_step()
         return dest
@@ -387,7 +387,7 @@ class CaseBundle:
             self._provenance.begin_step(step_name)
         with open(dest, "w") as f:
             json.dump(data, f, indent=2, default=str)
-        self._provenance.record_file(str(dest))
+        self._provenance.record_file(name, dest, "json")
         if step_name:
             self._provenance.end_step()
         return dest
@@ -409,10 +409,10 @@ class CaseBundle:
         np.savez_compressed(
             dest,
             vertices=mesh.vertices,
-            faces=mesh.faces,
+            faces=mesh.triangles,
             normals=mesh.normals if mesh.normals is not None else np.array([]),
         )
-        self._provenance.record_file(str(dest))
+        self._provenance.record_file(f"surface_mesh_{name}", dest, "surface_mesh")
         self._provenance.end_step()
         return dest
 
@@ -425,7 +425,7 @@ class CaseBundle:
         normals = data["normals"] if data["normals"].size > 0 else None
         return SurfaceMesh(
             vertices=data["vertices"],
-            faces=data["faces"],
+            triangles=data["faces"],
             normals=normals,
         )
 
@@ -457,8 +457,8 @@ class CaseBundle:
                 f,
                 indent=2,
             )
-        self._provenance.record_file(str(dest))
-        self._provenance.record_file(str(sidecar))
+        self._provenance.record_file(f"volume_mesh_{name}", dest, "volume_mesh")
+        self._provenance.record_file(f"volume_mesh_{name}_sidecar", sidecar, "volume_mesh_sidecar")
         self._provenance.end_step()
         return dest
 
