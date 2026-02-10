@@ -168,30 +168,30 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 
 ---
 
-## 2. QTT / Tensor Network Breakthroughs
+## 2. QTT / Tensor Network Breakthroughs — ✅ COMPLETE (20/20) — 63-test suite
 
-| # | Enhancement | Impact |
-|---|-------------|--------|
-| 2.1 | **PEPS (Projected Entangled Pair States)** — Native 2D tensor network beyond MPS | 2D quantum systems, frustrated magnets, image compression |
-| 2.2 | **MERA contraction engine** — Full MERA optimization with isometric constraints | Critical phenomena, conformal field theory |
-| 2.3 | **Tree Tensor Networks (TTN)** — Hierarchical decomposition beyond chain topology | Systems with hierarchical entanglement structure |
-| 2.4 | **Tensor Ring decomposition** — Periodic boundary TT, no edge effects | Circular/periodic systems, improved conditioning |
-| 2.5 | **Tensor Network Renormalization (TNR)** — Fixed-point iteration for scale-invariant tensors | Critical exponents, phase transitions |
-| 2.6 | **QTT-FFT** — Fast Fourier Transform entirely in QTT format | Spectral methods without dense materialization |
-| 2.7 | **QTT-Sparse direct solver** — LU/Cholesky factorization in TT format | Exact linear algebra in compressed format |
-| 2.8 | **Continuous TCI** — Function-to-QTT interpolation for arbitrary smooth functions | Direct physics-to-QTT pipeline |
-| 2.9 | **Automatic rank adaptation** — Bayesian rank selection, information-theoretic criteria | Eliminate manual rank tuning |
-| 2.10 | **QTT on unstructured meshes** — Graph-based TT decomposition for FEM/FVM meshes | Break the structured-grid limitation |
-| 2.11 | **Tensor network contraction optimization** — Opt_einsum on steroids for TN contraction order | Exponential speedup on complex network topologies |
-| 2.12 | **QTT eigensolvers** — Native Lanczos/Davidson in TT format | Ground states, excited states without dense matrices |
-| 2.13 | **QTT-Krylov methods** — GMRES/CG entirely in TT format with rank control | Iterative linear algebra at 10¹² scale |
-| 2.14 | **Dynamic rank adaptation during time integration** — Rank grows/shrinks as physics demands | Shocks form → rank increases; smooth → rank decreases |
-| 2.15 | **Differentiable tensor networks** — PyTorch-native autograd through TT operations | End-to-end gradient-based optimization of TT parameters |
-| 2.16 | **QTT-PDE: native PDE solvers in QTT** — Full implicit time-stepping in TT format | True "never go dense" for implicit methods |
-| 2.17 | **Quantics Tensor Cross Interpolation (QTCI) 2.0** — Adaptive pivot selection, parallel cross, error certification | Faster convergence, guaranteed accuracy |
-| 2.18 | **Fermionic tensor networks** — Swap gates, Jordan-Wigner, parity-preserving tensors | Correct 2D fermionic systems |
-| 2.19 | **Symmetric tensor networks** — SU(2), U(1) symmetric MPS/MPO with CGC coefficients | Exploit symmetries for massive speedup |
-| 2.20 | **QTT for time-series** — Compress and analyze temporal sequences as QTT | Financial data, sensor streams, climate records |
+| # | Enhancement | Impact | Status |
+|---|-------------|--------|--------|
+| 2.1 | **PEPS (Projected Entangled Pair States)** — Native 2D tensor network beyond MPS | 2D quantum systems, frustrated magnets, image compression | ✅ `tensornet/algorithms/peps.py` |
+| 2.2 | **MERA contraction engine** — Full MERA optimization with isometric constraints | Critical phenomena, conformal field theory | ✅ `tensornet/algorithms/mera.py` |
+| 2.3 | **Tree Tensor Networks (TTN)** — Hierarchical decomposition beyond chain topology | Systems with hierarchical entanglement structure | ✅ `tensornet/algorithms/ttn.py` |
+| 2.4 | **Tensor Ring decomposition** — Periodic boundary TT, no edge effects | Circular/periodic systems, improved conditioning | ✅ `tensornet/algorithms/tensor_ring.py` |
+| 2.5 | **Tensor Network Renormalization (TNR)** — Fixed-point iteration for scale-invariant tensors | Critical exponents, phase transitions | ✅ `tensornet/algorithms/tnr.py` |
+| 2.6 | **QTT-FFT** — Fast Fourier Transform entirely in QTT format | Spectral methods without dense materialization | ✅ `tensornet/cfd/qtt_fft.py` |
+| 2.7 | **QTT-Sparse direct solver** — LU/Cholesky factorization in TT format | Exact linear algebra in compressed format | ✅ `tensornet/qtt/sparse_direct.py` |
+| 2.8 | **Continuous TCI** — Function-to-QTT interpolation for arbitrary smooth functions | Direct physics-to-QTT pipeline | ✅ `QTeneT/` + `tci_core_rust/` |
+| 2.9 | **Automatic rank adaptation** — Bayesian rank selection, information-theoretic criteria | Eliminate manual rank tuning | ✅ `tensornet/qtt/rank_adaptive.py` |
+| 2.10 | **QTT on unstructured meshes** — Graph-based TT decomposition for FEM/FVM meshes | Break the structured-grid limitation | ✅ `tensornet/qtt/unstructured.py` |
+| 2.11 | **Tensor network contraction optimization** — Opt_einsum on steroids for TN contraction order | Exponential speedup on complex network topologies | ✅ `tensornet/algorithms/contraction_opt.py` |
+| 2.12 | **QTT eigensolvers** — Native Lanczos/Davidson in TT format | Ground states, excited states without dense matrices | ✅ `tensornet/qtt/eigensolvers.py` |
+| 2.13 | **QTT-Krylov methods** — GMRES/CG entirely in TT format with rank control | Iterative linear algebra at 10¹² scale | ✅ `tensornet/qtt/krylov.py` |
+| 2.14 | **Dynamic rank adaptation during time integration** — Rank grows/shrinks as physics demands | Shocks form → rank increases; smooth → rank decreases | ✅ `tensornet/qtt/dynamic_rank.py` |
+| 2.15 | **Differentiable tensor networks** — PyTorch-native autograd through TT operations | End-to-end gradient-based optimization of TT parameters | ✅ `tensornet/qtt/differentiable.py` |
+| 2.16 | **QTT-PDE: native PDE solvers in QTT** — Full implicit time-stepping in TT format | True "never go dense" for implicit methods | ✅ `tensornet/qtt/pde_solvers.py` |
+| 2.17 | **Quantics Tensor Cross Interpolation (QTCI) 2.0** — Adaptive pivot selection, parallel cross, error certification | Faster convergence, guaranteed accuracy | ✅ `tensornet/qtt/qtci_v2.py` |
+| 2.18 | **Fermionic tensor networks** — Swap gates, Jordan-Wigner, parity-preserving tensors | Correct 2D fermionic systems | ✅ `tensornet/algorithms/fermionic.py` (enhanced) |
+| 2.19 | **Symmetric tensor networks** — SU(2), U(1) symmetric MPS/MPO with CGC coefficients | Exploit symmetries for massive speedup | ✅ `tensornet/algorithms/symmetric_tn.py` |
+| 2.20 | **QTT for time-series** — Compress and analyze temporal sequences as QTT | Financial data, sensor streams, climate records | ✅ `tensornet/qtt/time_series.py` |
 
 ---
 

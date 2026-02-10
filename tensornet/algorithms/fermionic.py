@@ -358,3 +358,251 @@ def compute_density(mps: MPS) -> torch.Tensor:
         densities.append(torch.real(density).item())
 
     return torch.tensor(densities, dtype=dtype, device=device)
+
+
+# =====================================================================
+# §2.18 — Fermionic enhancements: swap gates, parity-preserving
+#          tensors, and 2D-PEPS fermionic support
+# =====================================================================
+
+
+def fermionic_swap_gate(
+    d: int = 2,
+    dtype: torch.dtype = torch.float64,
+    device: torch.device | None = None,
+) -> torch.Tensor:
+    """
+    Fermionic SWAP gate for two sites.
+
+    Unlike the bosonic SWAP, the fermionic SWAP picks up a minus sign
+    when two occupied fermions are exchanged:
+
+        FSWAP |a, b⟩ = (-1)^{p(a) p(b)} |b, a⟩
+
+    where p(a) is the fermion parity of state a (0 for even, 1 for odd).
+
+    Args:
+        d: Local Hilbert-space dimension per site (2 for spinless,
+           4 for spin-1/2 with charge).
+        dtype: Data type.
+        device: Device.
+
+    Returns:
+        Tensor of shape (d*d, d*d) = FSWAP matrix.
+    """
+    if device is None:
+        device = torch.device("cpu")
+
+    dim = d * d
+    fswap = torch.zeros(dim, dim, dtype=dtype, device=device)
+
+    for a in range(d):
+        for b in range(d):
+            pa = bin(a).count('1') % 2  # Fermion parity
+            pb = bin(b).count('1') % 2
+            sign = (-1) ** (pa * pb)
+            row = a * d + b
+            col = b * d + a
+            fswap[row, col] = sign
+
+    return fswap
+
+
+def fswap_mpo_gate(
+    site: int,
+    L: int,
+    d: int = 2,
+    dtype: torch.dtype = torch.float64,
+    device: torch.device | None = None,
+) -> MPO:
+    """
+    Two-site fermionic SWAP as an MPO acting on sites ``site`` and
+    ``site + 1``.
+
+    The MPO has bond dimension 1 everywhere except at the swap bond,
+    where it equals d² to encode the full FSWAP.
+
+    Args:
+        site: Left site of the swap (0-indexed).
+        L: Total number of sites.
+        d: Physical dimension.
+        dtype: Data type.
+        device: Device.
+
+    Returns:
+        MPO for the FSWAP gate.
+    """
+    if device is None:
+        device = torch.device("cpu")
+
+    fswap = fermionic_swap_gate(d, dtype, device).reshape(d, d, d, d)
+
+    tensors: list[torch.Tensor] = []
+    for i in range(L):
+        if i == site:
+            # Left half of FSWAP: (1, d, d, d²)
+            core = torch.zeros(1, d, d, d * d, dtype=dtype, device=device)
+            for a in range(d):
+                for b in range(d):
+                    for c in range(d):
+                        for e in range(d):
+                            # FSWAP[a,b; c,e] factored as left[a,c] * right[b,e]
+                            core[0, a, c, b * d + e] += fswap[a, b, c, e]
+            tensors.append(core)
+        elif i == site + 1:
+            # Right half: (d², d, d, 1)
+            core = torch.zeros(d * d, d, d, 1, dtype=dtype, device=device)
+            for b in range(d):
+                for e in range(d):
+                    core[b * d + e, b, e, 0] = 1.0
+            tensors.append(core)
+        else:
+            # Identity: (1, d, d, 1)
+            core = torch.zeros(1, d, d, 1, dtype=dtype, device=device)
+            for a in range(d):
+                core[0, a, a, 0] = 1.0
+            tensors.append(core)
+
+    return MPO(tensors)
+
+
+def parity_projector(
+    target_parity: int,
+    L: int,
+    d: int = 2,
+    dtype: torch.dtype = torch.float64,
+    device: torch.device | None = None,
+) -> MPO:
+    """
+    MPO that projects onto a definite fermion-parity sector.
+
+    Parity = product of (-1)^{n_i} over all sites.
+    ``target_parity`` ∈ {0, 1}: 0 = even sector, 1 = odd sector.
+
+    Uses bond dimension 2 to track cumulative parity through the chain.
+
+    Args:
+        target_parity: 0 (even) or 1 (odd).
+        L: Number of sites.
+        d: Physical dimension.
+        dtype: Data type.
+        device: Device.
+
+    Returns:
+        MPO projector.
+    """
+    if device is None:
+        device = torch.device("cpu")
+
+    if target_parity not in (0, 1):
+        raise ValueError("target_parity must be 0 or 1")
+
+    tensors: list[torch.Tensor] = []
+
+    for i in range(L):
+        if i == 0:
+            # (1, d, d, 2): start tracking parity
+            core = torch.zeros(1, d, d, 2, dtype=dtype, device=device)
+            for a in range(d):
+                pa = bin(a).count('1') % 2
+                core[0, a, a, pa] = 1.0
+            tensors.append(core)
+        elif i == L - 1:
+            # (2, d, d, 1): project onto target parity
+            core = torch.zeros(2, d, d, 1, dtype=dtype, device=device)
+            for a in range(d):
+                pa = bin(a).count('1') % 2
+                for prev_p in range(2):
+                    cumulative = (prev_p + pa) % 2
+                    if cumulative == target_parity:
+                        core[prev_p, a, a, 0] = 1.0
+            tensors.append(core)
+        else:
+            # (2, d, d, 2): propagate parity
+            core = torch.zeros(2, d, d, 2, dtype=dtype, device=device)
+            for a in range(d):
+                pa = bin(a).count('1') % 2
+                for prev_p in range(2):
+                    new_p = (prev_p + pa) % 2
+                    core[prev_p, a, a, new_p] = 1.0
+            tensors.append(core)
+
+    return MPO(tensors)
+
+
+def parity_preserving_tensor(
+    shape: tuple[int, ...],
+    target_parity: int = 0,
+    dtype: torch.dtype = torch.float64,
+    device: torch.device | None = None,
+    seed: int | None = None,
+) -> torch.Tensor:
+    """
+    Random tensor constrained to a definite fermion-parity sector.
+
+    For a tensor T[i₁, i₂, …, iₙ], only elements where
+    ∑ₖ p(iₖ) ≡ target_parity (mod 2) are nonzero,
+    where p(i) = popcount(i) mod 2.
+
+    This is essential for PEPS on fermionic systems: every tensor
+    in the network must preserve fermion parity.
+
+    Args:
+        shape: Dimensions of each index.
+        target_parity: 0 (even) or 1 (odd).
+        dtype: Data type.
+        device: Device.
+        seed: RNG seed.
+
+    Returns:
+        Parity-constrained random tensor.
+    """
+    if device is None:
+        device = torch.device("cpu")
+
+    gen = torch.Generator(device='cpu')
+    if seed is not None:
+        gen.manual_seed(seed)
+
+    T = torch.zeros(shape, dtype=dtype, device=device)
+
+    # Enumerate all multi-indices and keep parity-consistent ones
+    import itertools
+    ranges = [range(s) for s in shape]
+    for idx in itertools.product(*ranges):
+        total_parity = sum(bin(i).count('1') % 2 for i in idx) % 2
+        if total_parity == target_parity:
+            T[idx] = torch.randn(1, dtype=dtype, generator=gen).item()
+
+    return T
+
+
+def fermionic_swap_layer(
+    L: int,
+    even: bool = True,
+    d: int = 2,
+    dtype: torch.dtype = torch.float64,
+    device: torch.device | None = None,
+) -> list[MPO]:
+    """
+    Build a layer of fermionic SWAP gates for 2D-to-1D mapping.
+
+    In 2D fermionic PEPS ↔ MPS conversion, one needs layers of
+    fermionic SWAPs to re-order sites between rows.
+
+    Args:
+        L: Number of sites.
+        even: If True, apply FSWAPs on sites (0,1), (2,3), ...
+              If False, on sites (1,2), (3,4), ...
+        d: Physical dimension.
+        dtype: Data type.
+        device: Device.
+
+    Returns:
+        List of FSWAP MPO gates.
+    """
+    start = 0 if even else 1
+    gates: list[MPO] = []
+    for site in range(start, L - 1, 2):
+        gates.append(fswap_mpo_gate(site, L, d, dtype, device))
+    return gates
