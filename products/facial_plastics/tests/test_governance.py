@@ -35,7 +35,7 @@ from products.facial_plastics.governance.access import (
 class TestAuditEvent:
     """Test audit event construction and verification."""
 
-    def test_event_creation(self):
+    def test_event_creation(self) -> None:
         event = AuditEvent(
             event_type=EventType.CASE_CREATE,
             timestamp_utc=time.time(),
@@ -46,7 +46,7 @@ class TestAuditEvent:
         assert event.event_type == EventType.CASE_CREATE
         assert event.user_id == "user001"
 
-    def test_event_hash(self):
+    def test_event_hash(self) -> None:
         event = AuditEvent(
             event_type=EventType.CASE_CREATE,
             timestamp_utc=time.time(),
@@ -56,7 +56,7 @@ class TestAuditEvent:
         h = event.compute_hash()
         assert len(h) == 64  # SHA-256
 
-    def test_event_verify(self):
+    def test_event_verify(self) -> None:
         event = AuditEvent(
             event_type=EventType.SIM_START,
             timestamp_utc=time.time(),
@@ -66,7 +66,7 @@ class TestAuditEvent:
         event.event_hash = event.compute_hash()
         assert event.verify() is True
 
-    def test_tampered_event_fails_verify(self):
+    def test_tampered_event_fails_verify(self) -> None:
         event = AuditEvent(
             event_type=EventType.SIM_START,
             timestamp_utc=time.time(),
@@ -81,7 +81,7 @@ class TestAuditEvent:
 class TestAuditLog:
     """Test append-only audit log."""
 
-    def test_record_and_query(self):
+    def test_record_and_query(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             log = AuditLog(Path(td) / "audit.jsonl")
             log.record(
@@ -97,7 +97,7 @@ class TestAuditLog:
             events = log.query()
             assert len(events) == 2
 
-    def test_chain_verification(self):
+    def test_chain_verification(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             log = AuditLog(Path(td) / "audit.jsonl")
             for i in range(5):
@@ -108,7 +108,7 @@ class TestAuditLog:
                 )
             assert log.verify_chain() is True
 
-    def test_query_filter_by_case(self):
+    def test_query_filter_by_case(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             log = AuditLog(Path(td) / "audit.jsonl")
             log.record(EventType.CASE_CREATE, user_id="u1", case_id="case_A")
@@ -118,7 +118,7 @@ class TestAuditLog:
             events_a = log.query(case_id="case_A")
             assert len(events_a) == 2
 
-    def test_persistence(self):
+    def test_persistence(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             path = Path(td) / "audit.jsonl"
             log1 = AuditLog(path)
@@ -134,10 +134,10 @@ class TestAuditLog:
 class TestConsentScopes:
     """Test consent scope definitions."""
 
-    def test_standard_disclaimers_populated(self):
+    def test_standard_disclaimers_populated(self) -> None:
         assert len(STANDARD_DISCLAIMERS) >= 5
 
-    def test_scopes_exist(self):
+    def test_scopes_exist(self) -> None:
         assert hasattr(ConsentScope, "DATA_COLLECTION")
         assert hasattr(ConsentScope, "SIMULATION_USE")
         assert hasattr(ConsentScope, "OUTCOME_TRACKING")
@@ -146,7 +146,7 @@ class TestConsentScopes:
 class TestConsentManager:
     """Test consent workflow."""
 
-    def test_record_consent(self):
+    def test_record_consent(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             mgr = ConsentManager(Path(td) / "consent.json")
             record = mgr.record_consent(
@@ -160,7 +160,7 @@ class TestConsentManager:
             )
             assert ok is True
 
-    def test_revoke_consent(self):
+    def test_revoke_consent(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             mgr = ConsentManager(Path(td) / "consent.json")
             record = mgr.record_consent(
@@ -176,7 +176,7 @@ class TestConsentManager:
             )
             assert ok2 is False
 
-    def test_can_simulate_requires_consent(self):
+    def test_can_simulate_requires_consent(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             mgr = ConsentManager(Path(td) / "consent.json")
             ok, _ = mgr.can_simulate("case_no_consent")
@@ -200,16 +200,16 @@ class TestConsentManager:
 class TestRolePermissions:
     """Test role-permission mappings."""
 
-    def test_surgeon_has_plan_permissions(self):
+    def test_surgeon_has_plan_permissions(self) -> None:
         perms = ROLE_PERMISSIONS[Role.SURGEON]
         assert Permission.PLAN_CREATE in perms
         assert Permission.SIM_RUN in perms
 
-    def test_auditor_limited(self):
+    def test_auditor_limited(self) -> None:
         perms = ROLE_PERMISSIONS[Role.AUDITOR]
         assert Permission.PLAN_CREATE not in perms
 
-    def test_administrator_has_manage(self):
+    def test_administrator_has_manage(self) -> None:
         admin_perms = ROLE_PERMISSIONS[Role.ADMINISTRATOR]
         assert Permission.ADMIN_USER_MANAGE in admin_perms
 
@@ -217,7 +217,7 @@ class TestRolePermissions:
 class TestAccessControl:
     """Test access control enforcement."""
 
-    def test_add_user_and_check(self):
+    def test_add_user_and_check(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             ac = AccessControl(Path(td) / "access.json")
             ac.add_user("user001", "Dr. Smith", Role.SURGEON)
@@ -225,21 +225,21 @@ class TestAccessControl:
             assert user is not None
             assert user.role == Role.SURGEON
 
-    def test_check_access_granted(self):
+    def test_check_access_granted(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             ac = AccessControl(Path(td) / "access.json")
             ac.add_user("user001", "Dr. Smith", Role.SURGEON)
             decision = ac.check_access("user001", Permission.PLAN_CREATE)
             assert decision.granted is True
 
-    def test_check_access_denied(self):
+    def test_check_access_denied(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             ac = AccessControl(Path(td) / "access.json")
             ac.add_user("user001", "Auditor", Role.AUDITOR)
             decision = ac.check_access("user001", Permission.PLAN_CREATE)
             assert decision.granted is False
 
-    def test_case_specific_access(self):
+    def test_case_specific_access(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             ac = AccessControl(Path(td) / "access.json")
             ac.add_user("user001", "Dr. Smith", Role.SURGEON)
@@ -249,7 +249,7 @@ class TestAccessControl:
             )
             assert decision.granted is True
 
-    def test_deactivated_user_denied(self):
+    def test_deactivated_user_denied(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             ac = AccessControl(Path(td) / "access.json")
             ac.add_user("user001", "Dr. Smith", Role.SURGEON)

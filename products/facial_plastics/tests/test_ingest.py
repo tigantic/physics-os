@@ -125,7 +125,7 @@ def _build_dicom_bytes(
         if bits_allocated == 16:
             dtype = np.int16 if pixel_representation else np.uint16
         else:
-            dtype = np.int8 if pixel_representation else np.uint8
+            dtype = np.int8 if pixel_representation else np.uint8  # type: ignore[assignment]
         pixel_values = np.arange(rows * cols, dtype=dtype).reshape(rows, cols)
     pixel_raw = pixel_values.tobytes()
     buf.extend(struct.pack("<HH", 0x7FE0, 0x0010))

@@ -659,7 +659,7 @@ class TestFEMEquilibrium:
         balance = bottom_reaction + top_reaction
         norm_balance = np.linalg.norm(balance)
         norm_forces = max(np.linalg.norm(bottom_reaction), 1e-12)
-        assert norm_balance / norm_forces < 0.1, (
+        assert norm_balance / norm_forces < 0.1, (  # type: ignore[call-overload]
             f"Force imbalance {norm_balance:.6f} / {norm_forces:.6f} > 10%"
         )
 

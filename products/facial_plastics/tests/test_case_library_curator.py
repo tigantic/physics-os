@@ -6,7 +6,7 @@ import json
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Generator
 
 import numpy as np
 import pytest
@@ -47,7 +47,7 @@ from products.facial_plastics.data.case_library_curator import (
 # ══════════════════════════════════════════════════════════════════
 
 @pytest.fixture
-def tmp_dir():
+def tmp_dir() -> Generator[Path, None, None]:
     """Create a temporary directory that is cleaned up after the test."""
     d = tempfile.mkdtemp(prefix="fp_test_")
     yield Path(d)

@@ -17,7 +17,7 @@ from products.facial_plastics.reports import (
 class TestReportSection:
     """Test report section data structure."""
 
-    def test_construction(self):
+    def test_construction(self) -> None:
         section = ReportSection(
             title="Patient Demographics",
             content={"name": "John Doe", "age": 35},
@@ -25,7 +25,7 @@ class TestReportSection:
         assert section.title == "Patient Demographics"
         assert section.content["age"] == 35
 
-    def test_to_dict(self):
+    def test_to_dict(self) -> None:
         section = ReportSection(title="Summary", content={"key": "val"})
         d = section.to_dict()
         assert d["title"] == "Summary"
@@ -40,19 +40,19 @@ class TestReportBuilder:
         "Not a substitute for clinical judgement.",
     ]
 
-    def test_empty_report(self):
+    def test_empty_report(self) -> None:
         builder = ReportBuilder(case_id="test001")
         result = builder.build_json()
         assert isinstance(result, dict)
 
-    def test_add_disclaimers(self):
+    def test_add_disclaimers(self) -> None:
         builder = ReportBuilder(case_id="test001")
         builder.add_disclaimers(self._DISCLAIMERS)
         result = builder.build_json()
         raw = str(result)
         assert "Simulation" in raw or "disclaim" in raw.lower()
 
-    def test_json_round_trip(self):
+    def test_json_round_trip(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             builder = ReportBuilder(case_id="test001")
             builder.add_disclaimers(self._DISCLAIMERS)
@@ -61,20 +61,20 @@ class TestReportBuilder:
             assert path.exists()
             assert path.stat().st_size > 0
 
-    def test_markdown_output(self):
+    def test_markdown_output(self) -> None:
         builder = ReportBuilder(case_id="test001")
         builder.add_disclaimers(self._DISCLAIMERS)
         md = builder.build_markdown()
         assert isinstance(md, str)
         assert len(md) > 0
 
-    def test_html_output(self):
+    def test_html_output(self) -> None:
         builder = ReportBuilder(case_id="test001")
         builder.add_disclaimers(self._DISCLAIMERS)
         html = builder.build_html()
         assert "<!doctype" in html.lower() or "<html" in html.lower()
 
-    def test_save_markdown(self):
+    def test_save_markdown(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             builder = ReportBuilder(case_id="test_md")
             builder.add_disclaimers(self._DISCLAIMERS)
@@ -82,7 +82,7 @@ class TestReportBuilder:
             builder.save_markdown(path)
             assert path.exists()
 
-    def test_save_html(self):
+    def test_save_html(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             builder = ReportBuilder(case_id="test_html")
             builder.add_disclaimers(self._DISCLAIMERS)
@@ -90,7 +90,7 @@ class TestReportBuilder:
             builder.save_html(path)
             assert path.exists()
 
-    def test_fluent_api_chaining(self):
+    def test_fluent_api_chaining(self) -> None:
         """ReportBuilder methods should return self for chaining."""
         builder = ReportBuilder(case_id="chain_test")
         result = builder.add_disclaimers(self._DISCLAIMERS)

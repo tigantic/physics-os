@@ -35,7 +35,7 @@ from products.facial_plastics.tests.conftest import make_volume_mesh
 class TestOperatorParam:
     """Test parameter definitions and validation."""
 
-    def test_float_param_in_range(self):
+    def test_float_param_in_range(self) -> None:
         p = OperatorParam(
             name="amount_mm",
             param_type=ParamType.FLOAT,
@@ -45,7 +45,7 @@ class TestOperatorParam:
         val = p.validate(5.0)
         assert val == 5.0
 
-    def test_float_param_out_of_range(self):
+    def test_float_param_out_of_range(self) -> None:
         p = OperatorParam(
             name="amount_mm",
             param_type=ParamType.FLOAT,
@@ -55,7 +55,7 @@ class TestOperatorParam:
         with pytest.raises(PlanValidationError):
             p.validate(15.0)
 
-    def test_bool_param(self):
+    def test_bool_param(self) -> None:
         p = OperatorParam(name="preserve_dorsum", param_type=ParamType.BOOL)
         assert p.validate(True) is True
         assert p.validate(False) is False
@@ -66,27 +66,27 @@ class TestOperatorParam:
 class TestSurgicalOp:
     """Test surgical operation node."""
 
-    def test_construction_from_factory(self):
+    def test_construction_from_factory(self) -> None:
         op = dorsal_reduction(amount_mm=2.5)
         assert op.name == "dorsal_reduction"
         assert op.category == OpCategory.REDUCTION
 
-    def test_validate(self):
+    def test_validate(self) -> None:
         op = dorsal_reduction(amount_mm=2.0)
         errors = op.validate()
         assert errors == []
 
-    def test_content_hash_deterministic(self):
+    def test_content_hash_deterministic(self) -> None:
         op1 = dorsal_reduction(amount_mm=2.0)
         op2 = dorsal_reduction(amount_mm=2.0)
         assert op1.content_hash() == op2.content_hash()
 
-    def test_content_hash_changes_with_params(self):
+    def test_content_hash_changes_with_params(self) -> None:
         op1 = dorsal_reduction(amount_mm=2.0)
         op2 = dorsal_reduction(amount_mm=3.0)
         assert op1.content_hash() != op2.content_hash()
 
-    def test_to_dict(self):
+    def test_to_dict(self) -> None:
         op = dorsal_reduction(amount_mm=2.0)
         d = op.to_dict()
         assert d["name"] == "dorsal_reduction"
@@ -98,29 +98,29 @@ class TestSurgicalOp:
 class TestRhinoplastyOperators:
     """Test rhinoplasty operator functions."""
 
-    def test_operator_registry(self):
+    def test_operator_registry(self) -> None:
         assert "dorsal_reduction" in RHINOPLASTY_OPERATORS
         assert "lateral_osteotomy" in RHINOPLASTY_OPERATORS
         assert "spreader_graft" in RHINOPLASTY_OPERATORS
         assert len(RHINOPLASTY_OPERATORS) >= 10
 
-    def test_dorsal_reduction(self):
+    def test_dorsal_reduction(self) -> None:
         op = dorsal_reduction(amount_mm=2.5)
         assert op.params["amount_mm"] == 2.5
 
-    def test_lateral_osteotomy(self):
+    def test_lateral_osteotomy(self) -> None:
         op = lateral_osteotomy()
         assert op.category == OpCategory.OSTEOTOMY
 
-    def test_spreader_graft(self):
+    def test_spreader_graft(self) -> None:
         op = spreader_graft()
         assert op.category == OpCategory.GRAFT
 
-    def test_tip_suture(self):
+    def test_tip_suture(self) -> None:
         op = tip_suture()
         assert op.category == OpCategory.SUTURE
 
-    def test_cephalic_trim(self):
+    def test_cephalic_trim(self) -> None:
         op = cephalic_trim()
         assert op.category == OpCategory.RESECTION
 
@@ -130,13 +130,13 @@ class TestRhinoplastyOperators:
 class TestSequenceNode:
     """Test sequence node composition."""
 
-    def test_add_steps(self):
+    def test_add_steps(self) -> None:
         seq = SequenceNode(name="primary_rhinoplasty")
         seq.add(dorsal_reduction(amount_mm=2.0))
         seq.add(spreader_graft())
         assert len(seq.steps) == 2
 
-    def test_step_ordering(self):
+    def test_step_ordering(self) -> None:
         seq = SequenceNode(name="test")
         seq.add(dorsal_reduction(amount_mm=2.0))
         seq.add(lateral_osteotomy())
@@ -146,7 +146,7 @@ class TestSequenceNode:
             if isinstance(step, SurgicalOp):
                 assert step.order == i
 
-    def test_validate_sequence(self):
+    def test_validate_sequence(self) -> None:
         seq = SequenceNode(name="test")
         seq.add(dorsal_reduction(amount_mm=2.0))
         seq.add(spreader_graft())
@@ -159,7 +159,7 @@ class TestSequenceNode:
 class TestSurgicalPlan:
     """Test surgical plan construction."""
 
-    def test_create_plan(self):
+    def test_create_plan(self) -> None:
         plan = SurgicalPlan(
             name="Primary rhinoplasty",
             procedure=ProcedureType.RHINOPLASTY,
@@ -170,7 +170,7 @@ class TestSurgicalPlan:
         assert plan.procedure == ProcedureType.RHINOPLASTY
         assert len(plan.root.steps) == 2
 
-    def test_plan_validate(self):
+    def test_plan_validate(self) -> None:
         plan = SurgicalPlan(
             name="test",
             procedure=ProcedureType.RHINOPLASTY,
@@ -185,7 +185,7 @@ class TestSurgicalPlan:
 class TestRhinoplastyPlanBuilder:
     """Test convenience plan builder."""
 
-    def test_builder_creates_plan(self):
+    def test_builder_creates_plan(self) -> None:
         plan = RhinoplastyPlanBuilder.reduction_rhinoplasty(
             dorsal_reduction_mm=2.5,
         )
@@ -200,7 +200,7 @@ class TestRhinoplastyPlanBuilder:
 class TestPlanCompiler:
     """Test plan compilation."""
 
-    def test_compiler_creation(self):
+    def test_compiler_creation(self) -> None:
         mesh = make_volume_mesh()
         compiler = PlanCompiler(mesh)
         assert compiler is not None

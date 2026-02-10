@@ -59,7 +59,7 @@ def _make_handler(
 
     # BaseHTTPRequestHandler calls parse_request in __init__,
     # which reads from rfile. We bypass __init__ and set attributes manually.
-    handler = handler_cls.__new__(handler_cls)
+    handler = handler_cls.__new__(handler_cls)  # type: ignore[call-overload]
     handler.rfile = rfile
     handler.wfile = wfile
     handler.path = path
@@ -74,7 +74,7 @@ def _make_handler(
     handler.close_connection = True
     handler.responses = _RequestHandler.responses
 
-    return handler
+    return handler  # type: ignore[no-any-return]
 
 
 class _FakeHeaders:
@@ -89,7 +89,7 @@ class _FakeHeaders:
 
 def _extract_response(handler: _RequestHandler) -> tuple[int, Dict[str, str], bytes]:
     """Parse the raw HTTP response from wfile into (status, headers, body)."""
-    raw = handler.wfile.getvalue()
+    raw = handler.wfile.getvalue()  # type: ignore[attr-defined]
     # Split header and body
     parts = raw.split(b"\r\n\r\n", 1)
     header_block = parts[0].decode("utf-8", errors="replace")

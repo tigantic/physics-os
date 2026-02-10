@@ -19,18 +19,18 @@ from products.facial_plastics.cli import build_parser, main
 class TestBuildParser:
     """Test top-level parser construction."""
 
-    def test_parser_creates(self):
+    def test_parser_creates(self) -> None:
         parser = build_parser()
         assert parser is not None
         assert parser.prog == "facial_plastics"
 
-    def test_parser_has_subcommands(self):
+    def test_parser_has_subcommands(self) -> None:
         parser = build_parser()
         # Parsing with no args should raise (required subcommand)
         with pytest.raises(SystemExit):
             parser.parse_args([])
 
-    def test_help_flag(self):
+    def test_help_flag(self) -> None:
         parser = build_parser()
         with pytest.raises(SystemExit) as exc_info:
             parser.parse_args(["--help"])
@@ -43,7 +43,7 @@ class TestBuildParser:
 
 
 class TestIngestArgs:
-    def test_ingest_dicom(self):
+    def test_ingest_dicom(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["ingest", "dicom", "/path/to/dicom"])
         assert args.command == "ingest"
@@ -51,25 +51,25 @@ class TestIngestArgs:
         assert args.path == "/path/to/dicom"
         assert args.case_id is None
 
-    def test_ingest_dicom_with_case_id(self):
+    def test_ingest_dicom_with_case_id(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["ingest", "dicom", "/path/to/dicom", "--case-id", "abc123"])
         assert args.case_id == "abc123"
 
-    def test_ingest_photo(self):
+    def test_ingest_photo(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["ingest", "photo", "a.jpg", "b.jpg"])
         assert args.command == "ingest"
         assert args.ingest_type == "photo"
         assert args.paths == ["a.jpg", "b.jpg"]
 
-    def test_ingest_surface(self):
+    def test_ingest_surface(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["ingest", "surface", "scan.stl"])
         assert args.ingest_type == "surface"
         assert args.path == "scan.stl"
 
-    def test_ingest_no_subtype(self):
+    def test_ingest_no_subtype(self) -> None:
         parser = build_parser()
         with pytest.raises(SystemExit):
             parser.parse_args(["ingest"])
@@ -81,7 +81,7 @@ class TestIngestArgs:
 
 
 class TestTwinArgs:
-    def test_twin_build(self):
+    def test_twin_build(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["twin", "build", "case-001"])
         assert args.command == "twin"
@@ -89,12 +89,12 @@ class TestTwinArgs:
         assert args.case_id == "case-001"
         assert args.max_elements is None
 
-    def test_twin_build_with_elements(self):
+    def test_twin_build_with_elements(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["twin", "build", "case-001", "--max-elements", "50000"])
         assert args.max_elements == 50000
 
-    def test_twin_inspect(self):
+    def test_twin_inspect(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["twin", "inspect", "case-001"])
         assert args.twin_action == "inspect"
@@ -106,7 +106,7 @@ class TestTwinArgs:
 
 
 class TestPlanArgs:
-    def test_plan_create(self):
+    def test_plan_create(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["plan", "create", "--template", "rhinoplasty:dorsal_hump_reduction"])
         assert args.command == "plan"
@@ -114,24 +114,24 @@ class TestPlanArgs:
         assert args.template == "rhinoplasty:dorsal_hump_reduction"
         assert args.output is None
 
-    def test_plan_create_with_output(self):
+    def test_plan_create_with_output(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["plan", "create", "--template", "facelift:necklift", "-o", "plan.json"])
         assert args.output == "plan.json"
 
-    def test_plan_compile(self):
+    def test_plan_compile(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["plan", "compile", "--case-id", "abc", "--plan", "p.json"])
         assert args.plan_action == "compile"
         assert args.case_id == "abc"
         assert args.plan == "p.json"
 
-    def test_plan_list_operators(self):
+    def test_plan_list_operators(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["plan", "list-operators"])
         assert args.plan_action == "list-operators"
 
-    def test_plan_list_templates(self):
+    def test_plan_list_templates(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["plan", "list-templates"])
         assert args.plan_action == "list-templates"
@@ -143,7 +143,7 @@ class TestPlanArgs:
 
 
 class TestSimulateArgs:
-    def test_simulate(self):
+    def test_simulate(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["simulate", "case-001", "--plan", "p.json"])
         assert args.command == "simulate"
@@ -151,7 +151,7 @@ class TestSimulateArgs:
         assert args.plan == "p.json"
         assert args.heal_days is None
 
-    def test_simulate_with_heal(self):
+    def test_simulate_with_heal(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["simulate", "case-001", "--plan", "p.json", "--heal-days", "90"])
         assert args.heal_days == 90
@@ -163,14 +163,14 @@ class TestSimulateArgs:
 
 
 class TestReportArgs:
-    def test_report_defaults(self):
+    def test_report_defaults(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["report", "case-001"])
         assert args.command == "report"
         assert args.case_id == "case-001"
         assert args.format == "json"
 
-    def test_report_html(self):
+    def test_report_html(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["report", "case-001", "--format", "html", "-o", "r.html"])
         assert args.format == "html"
@@ -183,14 +183,14 @@ class TestReportArgs:
 
 
 class TestServeArgs:
-    def test_serve_defaults(self):
+    def test_serve_defaults(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["serve"])
         assert args.command == "serve"
         assert args.port == 8420
         assert args.host == "127.0.0.1"
 
-    def test_serve_custom_port(self):
+    def test_serve_custom_port(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["serve", "--port", "9000", "--host", "0.0.0.0"])
         assert args.port == 9000
@@ -203,25 +203,25 @@ class TestServeArgs:
 
 
 class TestLibraryArgs:
-    def test_library_list(self):
+    def test_library_list(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["library", "list"])
         assert args.command == "library"
         assert args.lib_action == "list"
         assert args.limit == 50
 
-    def test_library_list_filtered(self):
+    def test_library_list_filtered(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["library", "list", "--procedure", "facelift", "--limit", "10"])
         assert args.procedure == "facelift"
         assert args.limit == 10
 
-    def test_library_curate(self):
+    def test_library_curate(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["library", "curate"])
         assert args.lib_action == "curate"
 
-    def test_library_augment(self):
+    def test_library_augment(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["library", "augment", "--count", "20", "--procedure", "blepharoplasty"])
         assert args.lib_action == "augment"
@@ -235,7 +235,7 @@ class TestLibraryArgs:
 
 
 class TestInfoArgs:
-    def test_info(self):
+    def test_info(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["info"])
         assert args.command == "info"
@@ -247,17 +247,17 @@ class TestInfoArgs:
 
 
 class TestGlobalOptions:
-    def test_verbose(self):
+    def test_verbose(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["-v", "info"])
         assert args.verbose is True
 
-    def test_config(self):
+    def test_config(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["--config", "/etc/fp.json", "info"])
         assert args.config == "/etc/fp.json"
 
-    def test_data_root(self):
+    def test_data_root(self) -> None:
         parser = build_parser()
         args = parser.parse_args(["--data-root", "/data", "info"])
         assert args.data_root == "/data"

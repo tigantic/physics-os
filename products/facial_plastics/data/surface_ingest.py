@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import struct
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Any, Optional, Tuple
 
 import numpy as np
 
@@ -209,7 +209,7 @@ class SurfaceIngester:
                 raise ValueError(f"Unsupported PLY format: {fmt}")
 
     @staticmethod
-    def _load_ply_ascii(f, n_verts: int, n_faces: int) -> Tuple[np.ndarray, np.ndarray]:
+    def _load_ply_ascii(f: Any, n_verts: int, n_faces: int) -> Tuple[np.ndarray, np.ndarray]:
         """Parse PLY ASCII data section."""
         verts = np.empty((n_verts, 3), dtype=np.float32)
         for i in range(n_verts):
@@ -228,7 +228,7 @@ class SurfaceIngester:
         return verts, np.array(faces, dtype=np.int32) if faces else np.empty((0, 3), dtype=np.int32)
 
     @staticmethod
-    def _load_ply_binary_le(f, n_verts: int, n_faces: int) -> Tuple[np.ndarray, np.ndarray]:
+    def _load_ply_binary_le(f: Any, n_verts: int, n_faces: int) -> Tuple[np.ndarray, np.ndarray]:
         """Parse PLY binary little-endian data section."""
         # Assume vertices are 3 floats (most common case)
         vert_data = f.read(n_verts * 12)

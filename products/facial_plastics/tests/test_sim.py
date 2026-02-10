@@ -47,14 +47,14 @@ from products.facial_plastics.tests.conftest import make_volume_mesh
 class TestTissueParams:
     """Test tissue parameter database."""
 
-    def test_tissue_params_populated(self):
+    def test_tissue_params_populated(self) -> None:
         assert len(TISSUE_PARAMS) >= 10
 
-    def test_tissue_params_keys_are_structure_type(self):
+    def test_tissue_params_keys_are_structure_type(self) -> None:
         for key in TISSUE_PARAMS:
             assert isinstance(key, StructureType)
 
-    def test_tissue_params_values(self):
+    def test_tissue_params_values(self) -> None:
         for st, params in TISSUE_PARAMS.items():
             assert params["mu"] > 0, f"{st}: mu must be positive"
             assert params["kappa"] > 0, f"{st}: kappa must be positive"
@@ -66,19 +66,19 @@ class TestTissueParams:
 class TestCartilageLibrary:
     """Test cartilage material library."""
 
-    def test_library_entries(self):
+    def test_library_entries(self) -> None:
         assert StructureType.CARTILAGE_UPPER_LATERAL in CARTILAGE_LIBRARY
         assert StructureType.CARTILAGE_LOWER_LATERAL in CARTILAGE_LIBRARY
         assert StructureType.CARTILAGE_SEPTUM in CARTILAGE_LIBRARY
 
-    def test_params_valid(self):
+    def test_params_valid(self) -> None:
         for st, params in CARTILAGE_LIBRARY.items():
             assert isinstance(params, CartilageParams)
             assert params.E_fiber > 0
             assert 0 < params.nu < 0.5
             assert params.thickness_mm > 0
 
-    def test_cartilage_params_properties(self):
+    def test_cartilage_params_properties(self) -> None:
         params = CARTILAGE_LIBRARY[StructureType.CARTILAGE_SEPTUM]
         assert params.E_eff > 0
         assert params.mu > 0
@@ -90,7 +90,7 @@ class TestCartilageLibrary:
 class TestSutureElement:
     """Test suture element construction."""
 
-    def test_construction(self):
+    def test_construction(self) -> None:
         elem = SutureElement(
             suture_id="s001",
             node_a=0,
@@ -101,7 +101,7 @@ class TestSutureElement:
         assert elem.material == SutureMaterial.PDS
         assert elem.node_a == 0
 
-    def test_default_material(self):
+    def test_default_material(self) -> None:
         elem = SutureElement(
             suture_id="s002",
             node_a=5,
@@ -113,7 +113,7 @@ class TestSutureElement:
 class TestSutureSystem:
     """Test suture system construction."""
 
-    def test_add_suture(self):
+    def test_add_suture(self) -> None:
         system = SutureSystem()
         elem = SutureElement(
             suture_id="s001",
@@ -124,7 +124,7 @@ class TestSutureSystem:
         system.add_suture(elem)
         assert system.n_sutures == 1
 
-    def test_multiple_sutures(self):
+    def test_multiple_sutures(self) -> None:
         system = SutureSystem()
         for i in range(5):
             elem = SutureElement(
@@ -142,16 +142,16 @@ class TestSutureSystem:
 class TestHealingPhases:
     """Test healing phase definitions."""
 
-    def test_phases_count(self):
+    def test_phases_count(self) -> None:
         phases = NASAL_HEALING_PHASES
         assert len(phases) >= 3
 
-    def test_phases_ordered_by_onset(self):
+    def test_phases_ordered_by_onset(self) -> None:
         phases = NASAL_HEALING_PHASES
         for i in range(len(phases) - 1):
             assert phases[i].onset_days < phases[i + 1].onset_days
 
-    def test_phase_is_frozen_dataclass(self):
+    def test_phase_is_frozen_dataclass(self) -> None:
         phase = NASAL_HEALING_PHASES[0]
         assert isinstance(phase, HealingPhase)
         with pytest.raises(AttributeError):
@@ -161,13 +161,13 @@ class TestHealingPhases:
 class TestHealingModel:
     """Test healing model evolution."""
 
-    def test_compute_state(self):
+    def test_compute_state(self) -> None:
         mesh = make_volume_mesh()
         model = HealingModel(mesh=mesh)
         state = model.compute_state(time_days=0.0)
         assert isinstance(state, HealingState)
 
-    def test_compute_timeline(self):
+    def test_compute_timeline(self) -> None:
         mesh = make_volume_mesh()
         model = HealingModel(mesh=mesh)
         time_points = [0.0, 7.0, 30.0, 90.0, 365.0]
@@ -180,7 +180,7 @@ class TestHealingModel:
 class TestFEMResult:
     """Test FEM result dataclass."""
 
-    def test_basic_result(self):
+    def test_basic_result(self) -> None:
         n_nodes = 10
         result = FEMResult(
             displacements=np.zeros((n_nodes, 3)),
@@ -206,12 +206,12 @@ class TestFEMResult:
 class TestSimulationResult:
     """Test SimulationResult dataclass."""
 
-    def test_default_fields(self):
+    def test_default_fields(self) -> None:
         result = SimulationResult()
         summary = result.summary()
         assert isinstance(summary, str)
 
-    def test_properties(self):
+    def test_properties(self) -> None:
         result = SimulationResult()
         assert isinstance(result.is_valid, bool)
         assert isinstance(result.fem_converged, bool)

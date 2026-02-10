@@ -36,7 +36,7 @@ from typing import Any, Dict, List, Optional
 # Lazy imports — keep startup fast; heavy modules loaded only when needed.
 # ---------------------------------------------------------------------------
 
-def _import_core():
+def _import_core() -> Dict[str, Any]:
     """Import core types and config."""
     from products.facial_plastics.core.types import (
         Modality,
@@ -56,7 +56,7 @@ def _import_core():
     }
 
 
-def _import_data():
+def _import_data() -> Dict[str, Any]:
     """Import data ingestion modules."""
     from products.facial_plastics.data import (
         CaseLibrary,
@@ -76,13 +76,13 @@ def _import_data():
     }
 
 
-def _import_twin():
+def _import_twin() -> Dict[str, Any]:
     """Import twin builder."""
     from products.facial_plastics.twin import TwinBuilder
     return {"TwinBuilder": TwinBuilder}
 
 
-def _import_plan():
+def _import_plan() -> Dict[str, Any]:
     """Import plan modules."""
     from products.facial_plastics.plan import PlanCompiler, SurgicalPlan
     from products.facial_plastics.plan.operators import (
@@ -109,19 +109,19 @@ def _import_plan():
     }
 
 
-def _import_sim():
+def _import_sim() -> Dict[str, Any]:
     """Import simulation orchestrator."""
     from products.facial_plastics.sim import SimOrchestrator
     return {"SimOrchestrator": SimOrchestrator}
 
 
-def _import_reports():
+def _import_reports() -> Dict[str, Any]:
     """Import report builder."""
     from products.facial_plastics.reports import ReportBuilder
     return {"ReportBuilder": ReportBuilder}
 
 
-def _import_ui():
+def _import_ui() -> Dict[str, Any]:
     """Import UI server."""
     from products.facial_plastics.ui.server import start_server
     return {"start_server": start_server}

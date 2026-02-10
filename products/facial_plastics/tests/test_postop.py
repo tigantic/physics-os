@@ -51,7 +51,7 @@ from products.facial_plastics.tests.conftest import (
 class TestOutcomeTimepoint:
     """Test timepoint constants."""
 
-    def test_timepoints(self):
+    def test_timepoints(self) -> None:
         assert OutcomeTimepoint.WEEK_1 == "1_week"
         assert len(OutcomeTimepoint.ALL) >= 5
 
@@ -59,7 +59,7 @@ class TestOutcomeTimepoint:
 class TestPatientReportedOutcome:
     """Test PRO scoring."""
 
-    def test_normalized_score(self):
+    def test_normalized_score(self) -> None:
         pro = PatientReportedOutcome(
             instrument="NOSE",
             score=40.0,
@@ -68,7 +68,7 @@ class TestPatientReportedOutcome:
         )
         assert abs(pro.normalized_score - 40.0) < 1e-10
 
-    def test_zero_max_score(self):
+    def test_zero_max_score(self) -> None:
         pro = PatientReportedOutcome(
             instrument="NOSE",
             score=0.0,
@@ -81,7 +81,7 @@ class TestPatientReportedOutcome:
 class TestOutcomeRecord:
     """Test outcome record serialization."""
 
-    def test_to_dict(self):
+    def test_to_dict(self) -> None:
         record = OutcomeRecord(
             case_id="case001",
             timepoint=OutcomeTimepoint.MONTH_3,
@@ -96,7 +96,7 @@ class TestOutcomeRecord:
 class TestOutcomeIngester:
     """Test outcome data ingestion."""
 
-    def test_record_measurements(self):
+    def test_record_measurements(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             case_dir = Path(td) / "case001"
             case_dir.mkdir()
@@ -109,7 +109,7 @@ class TestOutcomeIngester:
             record = ingester.record_measurements(measurements, OutcomeTimepoint.MONTH_3)
             assert len(record.measurements) == 2
 
-    def test_record_landmarks(self):
+    def test_record_landmarks(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             case_dir = Path(td) / "case002"
             case_dir.mkdir()
@@ -122,7 +122,7 @@ class TestOutcomeIngester:
             record = ingester.record_landmarks(landmarks, OutcomeTimepoint.MONTH_6)
             assert len(record.landmarks) == 2
 
-    def test_record_pro(self):
+    def test_record_pro(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             case_dir = Path(td) / "case003"
             case_dir.mkdir()
@@ -137,7 +137,7 @@ class TestOutcomeIngester:
             assert len(record.pro_scores) == 1
             assert record.pro_scores[0].instrument == "NOSE"
 
-    def test_list_outcomes(self):
+    def test_list_outcomes(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             case_dir = Path(td) / "case004"
             case_dir.mkdir()
@@ -155,7 +155,7 @@ class TestOutcomeIngester:
 class TestAlignmentResult:
     """Test alignment result properties."""
 
-    def test_clinical_acceptable(self):
+    def test_clinical_acceptable(self) -> None:
         result = AlignmentResult(case_id="c1", timepoint="3_months")
         result.rms_distance_mm = 1.5
         assert result.clinical_acceptable is True
@@ -163,7 +163,7 @@ class TestAlignmentResult:
         result.rms_distance_mm = 2.5
         assert result.clinical_acceptable is False
 
-    def test_to_dict(self):
+    def test_to_dict(self) -> None:
         result = AlignmentResult(
             case_id="c1",
             timepoint="3_months",
@@ -177,7 +177,7 @@ class TestAlignmentResult:
 class TestOutcomeAligner:
     """Test mesh alignment pipeline."""
 
-    def test_icp_identity(self):
+    def test_icp_identity(self) -> None:
         """Aligning a mesh to itself should give near-zero error."""
         mesh = make_nose_surface_mesh(n_verts=100)
         aligner = OutcomeAligner(max_icp_iterations=50)
@@ -191,7 +191,7 @@ class TestOutcomeAligner:
         assert result.rms_distance_mm < 0.1
         assert result.icp_converged is True
 
-    def test_icp_with_translation(self):
+    def test_icp_with_translation(self) -> None:
         """Aligning a translated mesh should recover the translation."""
         mesh_a = make_nose_surface_mesh(n_verts=100)
         translated_verts = mesh_a.vertices + np.array([2.0, 1.0, 0.5])
@@ -209,7 +209,7 @@ class TestOutcomeAligner:
         )
         assert result.rms_distance_mm < 2.0
 
-    def test_landmark_alignment(self):
+    def test_landmark_alignment(self) -> None:
         """Test landmark-based initial alignment."""
         mesh = make_nose_surface_mesh(n_verts=100)
 
@@ -235,7 +235,7 @@ class TestOutcomeAligner:
         )
         assert isinstance(result, AlignmentResult)
 
-    def test_regional_deviation(self):
+    def test_regional_deviation(self) -> None:
         """Test that regional analysis produces results."""
         mesh = make_nose_surface_mesh(n_verts=100)
         landmarks = make_rhinoplasty_landmarks()
@@ -257,17 +257,17 @@ class TestOutcomeAligner:
 class TestParameterPrior:
     """Test parameter prior."""
 
-    def test_log_prior_at_mean(self):
+    def test_log_prior_at_mean(self) -> None:
         p = ParameterPrior(
-            name="test", structure=None,
+            name="test", structure=None,  # type: ignore[arg-type]
             mean=50.0, std=10.0,
             lower_bound=0.0, upper_bound=100.0,
         )
         assert abs(p.log_prior(50.0)) < 1e-10
 
-    def test_log_prior_out_of_bounds(self):
+    def test_log_prior_out_of_bounds(self) -> None:
         p = ParameterPrior(
-            name="test", structure=None,
+            name="test", structure=None,  # type: ignore[arg-type]
             mean=50.0, std=10.0,
             lower_bound=20.0, upper_bound=80.0,
         )
@@ -278,10 +278,10 @@ class TestParameterPrior:
 class TestModelCalibrator:
     """Test model calibration machinery."""
 
-    def test_calibration_with_simple_model(self):
+    def test_calibration_with_simple_model(self) -> None:
         """Test calibration with a simple linear simulator."""
 
-        def simple_simulator(**params):
+        def simple_simulator(**params: float) -> dict[str, np.ndarray]:
             E = params.get("E", 50.0)
             nu = params.get("nu", 0.45)
             return {
@@ -294,8 +294,8 @@ class TestModelCalibrator:
         calibrator = ModelCalibrator(
             simulator=simple_simulator,
             priors={
-                "E": ParameterPrior("E", None, 50.0, 15.0, 10.0, 150.0),
-                "nu": ParameterPrior("nu", None, 0.45, 0.03, 0.3, 0.499),
+                "E": ParameterPrior("E", None, 50.0, 15.0, 10.0, 150.0),  # type: ignore[arg-type]
+                "nu": ParameterPrior("nu", None, 0.45, 0.03, 0.3, 0.499),  # type: ignore[arg-type]
             },
             max_iterations=20,
             convergence_tol=1e-6,
@@ -312,12 +312,12 @@ class TestModelCalibrator:
         assert result.n_iterations > 0
         assert abs(result.parameters_after["E"] - 55.0) < 5.0
 
-    def test_no_simulator_raises(self):
+    def test_no_simulator_raises(self) -> None:
         calibrator = ModelCalibrator(simulator=None)
         with pytest.raises(ValueError, match="simulator"):
             calibrator.calibrate({}, {})
 
-    def test_save_load_calibration(self):
+    def test_save_load_calibration(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             result = CalibrationResult(
                 case_ids=["c1"],
@@ -341,7 +341,7 @@ class TestModelCalibrator:
 class TestMetricComparison:
     """Test per-metric comparison."""
 
-    def test_error_computation(self):
+    def test_error_computation(self) -> None:
         c = MetricComparison(
             metric_name="tip_projection",
             unit="mm",
@@ -356,19 +356,19 @@ class TestMetricComparison:
 class TestStatisticalHelpers:
     """Test statistical utility functions."""
 
-    def test_normal_cdf_symmetry(self):
+    def test_normal_cdf_symmetry(self) -> None:
         assert abs(_normal_cdf(0.0) - 0.5) < 0.01
         assert _normal_cdf(3.0) > 0.99
         assert _normal_cdf(-3.0) < 0.01
 
-    def test_rankdata(self):
+    def test_rankdata(self) -> None:
         x = np.array([3.0, 1.0, 2.0])
         ranks = _rankdata(x)
         assert ranks[0] == 3.0
         assert ranks[1] == 1.0
         assert ranks[2] == 2.0
 
-    def test_rankdata_ties(self):
+    def test_rankdata_ties(self) -> None:
         x = np.array([1.0, 1.0, 3.0])
         ranks = _rankdata(x)
         assert ranks[0] == 1.5
@@ -379,7 +379,7 @@ class TestStatisticalHelpers:
 class TestPredictionValidator:
     """Test prediction validation pipeline."""
 
-    def test_add_cases(self):
+    def test_add_cases(self) -> None:
         validator = PredictionValidator()
         validator.add_case(
             "case001",
@@ -388,7 +388,7 @@ class TestPredictionValidator:
         )
         assert validator.n_cases == 1
 
-    def test_generate_report_basic(self):
+    def test_generate_report_basic(self) -> None:
         validator = PredictionValidator()
         rng = np.random.default_rng(42)
         for i in range(10):
@@ -405,7 +405,7 @@ class TestPredictionValidator:
         assert "tip_projection" in report.mae
         assert report.mae["tip_projection"] > 0
 
-    def test_bland_altman(self):
+    def test_bland_altman(self) -> None:
         validator = PredictionValidator()
         rng = np.random.default_rng(42)
         for i in range(20):
@@ -419,7 +419,7 @@ class TestPredictionValidator:
         assert ba.bias > 0
         assert ba.upper_loa > ba.lower_loa
 
-    def test_correlation(self):
+    def test_correlation(self) -> None:
         validator = PredictionValidator()
         rng = np.random.default_rng(42)
         for i in range(30):
@@ -432,7 +432,7 @@ class TestPredictionValidator:
         corr = report.correlations[0]
         assert corr.pearson_r > 0.9
 
-    def test_accuracy_profile(self):
+    def test_accuracy_profile(self) -> None:
         validator = PredictionValidator()
         rng = np.random.default_rng(42)
         for i in range(50):
@@ -445,7 +445,7 @@ class TestPredictionValidator:
         profile = report.accuracy_profiles[0]
         assert profile.pct_within_2mm > 50
 
-    def test_grade_assignment(self):
+    def test_grade_assignment(self) -> None:
         validator = PredictionValidator()
         rng = np.random.default_rng(42)
         for i in range(20):
@@ -456,7 +456,7 @@ class TestPredictionValidator:
         report = validator.generate_report()
         assert report.overall_grade == "A"
 
-    def test_save_load_report(self):
+    def test_save_load_report(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             validator = PredictionValidator()
             validator.add_case("c1", {"x": (10.0, "mm")}, {"x": (10.5, "mm")})

@@ -41,7 +41,7 @@ from products.facial_plastics.metrics.optimizer import (
 class TestAestheticProfileMetrics:
     """Test profile metric computations."""
 
-    def test_profile_metrics_fields(self):
+    def test_profile_metrics_fields(self) -> None:
         pm = ProfileMetrics(
             nasofrontal_angle_deg=130.0,
             nasolabial_angle_deg=100.0,
@@ -59,7 +59,7 @@ class TestAestheticProfileMetrics:
         score = pm.score()
         assert 0 <= score <= 100
 
-    def test_ideal_profile_scores_high(self):
+    def test_ideal_profile_scores_high(self) -> None:
         pm = ProfileMetrics(
             nasofrontal_angle_deg=115.0,
             nasolabial_angle_deg=100.0,
@@ -81,7 +81,7 @@ class TestAestheticProfileMetrics:
 class TestSymmetryMetrics:
     """Test symmetry analysis."""
 
-    def test_perfect_symmetry(self):
+    def test_perfect_symmetry(self) -> None:
         sm = SymmetryMetrics(
             procrustes_distance=0.0,
             max_asymmetry_mm=0.0,
@@ -93,7 +93,7 @@ class TestSymmetryMetrics:
         )
         assert sm.score() == 100.0
 
-    def test_imperfect_symmetry(self):
+    def test_imperfect_symmetry(self) -> None:
         sm = SymmetryMetrics(
             procrustes_distance=0.03,
             max_asymmetry_mm=1.5,
@@ -110,7 +110,7 @@ class TestSymmetryMetrics:
 class TestProportionMetrics:
     """Test proportion scoring."""
 
-    def test_construction(self):
+    def test_construction(self) -> None:
         pm = ProportionMetrics(
             upper_third_mm=30.0,
             middle_third_mm=30.0,
@@ -130,7 +130,7 @@ class TestProportionMetrics:
 class TestAestheticReport:
     """Test composite aesthetic scoring."""
 
-    def test_overall_score(self):
+    def test_overall_score(self) -> None:
         report = AestheticReport(
             profile=ProfileMetrics(
                 nasofrontal_angle_deg=120.0,
@@ -150,12 +150,12 @@ class TestAestheticReport:
 class TestSafetyThresholds:
     """Test safety threshold definitions."""
 
-    def test_thresholds_keyed_by_structure_type(self):
+    def test_thresholds_keyed_by_structure_type(self) -> None:
         assert StructureType.SKIN_ENVELOPE in SAFETY_THRESHOLDS
         assert StructureType.BONE_NASAL in SAFETY_THRESHOLDS
         assert StructureType.CARTILAGE_UPPER_LATERAL in SAFETY_THRESHOLDS
 
-    def test_threshold_values_positive(self):
+    def test_threshold_values_positive(self) -> None:
         for st, thresh in SAFETY_THRESHOLDS.items():
             assert thresh.max_von_mises_pa > 0, f"{st}: max_von_mises_pa"
             assert thresh.max_principal_strain > 0, f"{st}: max_principal_strain"
@@ -166,7 +166,7 @@ class TestSafetyThresholds:
 class TestUncertainParameter:
     """Test uncertain parameter distributions."""
 
-    def test_normal_sample(self):
+    def test_normal_sample(self) -> None:
         p = UncertainParameter(
             name="skin_E",
             nominal=50.0,
@@ -178,7 +178,7 @@ class TestUncertainParameter:
         assert abs(np.mean(samples) - 50.0) < 3.0
         assert abs(np.std(samples) - 10.0) < 3.0
 
-    def test_uniform_sample(self):
+    def test_uniform_sample(self) -> None:
         p = UncertainParameter(
             name="test",
             nominal=15.0,
@@ -191,7 +191,7 @@ class TestUncertainParameter:
         assert np.all(samples >= 10.0)
         assert np.all(samples <= 20.0)
 
-    def test_defaults(self):
+    def test_defaults(self) -> None:
         defaults = default_rhinoplasty_uncertainties()
         assert len(defaults) >= 5
         for p in defaults:
@@ -201,7 +201,7 @@ class TestUncertainParameter:
 class TestLatinHypercube:
     """Test LHS sampling."""
 
-    def test_shape(self):
+    def test_shape(self) -> None:
         params = [
             UncertainParameter(name=f"p{i}", nominal=0.5, distribution="uniform",
                                low=0.0, high=1.0)
@@ -210,7 +210,7 @@ class TestLatinHypercube:
         samples = latin_hypercube_sample(params, n_samples=50, seed=42)
         assert samples.shape == (50, 3)
 
-    def test_uniformity(self):
+    def test_uniformity(self) -> None:
         params = [
             UncertainParameter(name=f"p{i}", nominal=0.5, distribution="uniform",
                                low=0.0, high=1.0)
@@ -228,20 +228,20 @@ class TestLatinHypercube:
 class TestDominance:
     """Test Pareto dominance operations."""
 
-    def test_dominates_clear(self):
+    def test_dominates_clear(self) -> None:
         # Optimizer uses maximization: [2,2] dominates [1,1]
         a = Individual(parameters=np.zeros(1), objectives=np.array([2.0, 2.0]))
         b = Individual(parameters=np.zeros(1), objectives=np.array([1.0, 1.0]))
         assert _dominates(a, b) is True
         assert _dominates(b, a) is False
 
-    def test_non_domination(self):
+    def test_non_domination(self) -> None:
         a = Individual(parameters=np.zeros(1), objectives=np.array([1.0, 3.0]))
         b = Individual(parameters=np.zeros(1), objectives=np.array([3.0, 1.0]))
         assert _dominates(a, b) is False
         assert _dominates(b, a) is False
 
-    def test_feasibility_preferred(self):
+    def test_feasibility_preferred(self) -> None:
         a = Individual(
             parameters=np.zeros(1),
             objectives=np.array([5.0, 5.0]),
@@ -260,7 +260,7 @@ class TestDominance:
 class TestNonDominatedSort:
     """Test fast non-dominated sorting."""
 
-    def test_simple_sort(self):
+    def test_simple_sort(self) -> None:
         # Maximization convention: trade-off front members non-dominated
         pop = [
             Individual(parameters=np.zeros(1), objectives=np.array([1.0, 4.0])),
@@ -280,7 +280,7 @@ class TestNonDominatedSort:
 class TestCrowdingDistance:
     """Test crowding distance computation."""
 
-    def test_boundary_infinite(self):
+    def test_boundary_infinite(self) -> None:
         pop = [
             Individual(parameters=np.zeros(1), objectives=np.array([1.0, 4.0])),
             Individual(parameters=np.zeros(1), objectives=np.array([2.0, 3.0])),
@@ -296,7 +296,7 @@ class TestCrowdingDistance:
 class TestGeneticOperators:
     """Test crossover and mutation operators."""
 
-    def test_sbx_crossover(self):
+    def test_sbx_crossover(self) -> None:
         rng = np.random.default_rng(42)
         p1 = np.array([1.0, 2.0, 3.0])
         p2 = np.array([4.0, 5.0, 6.0])
@@ -309,7 +309,7 @@ class TestGeneticOperators:
             assert bounds[i].low <= c1[i] <= bounds[i].high
             assert bounds[i].low <= c2[i] <= bounds[i].high
 
-    def test_polynomial_mutation(self):
+    def test_polynomial_mutation(self) -> None:
         rng = np.random.default_rng(42)
         x = np.array([5.0, 5.0, 5.0])
         bounds = [

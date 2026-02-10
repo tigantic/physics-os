@@ -27,11 +27,11 @@ def app(tmp_path: pathlib.Path) -> UIApplication:
 class TestUIApplicationInit:
     """Verify UIApplication instantiation."""
 
-    def test_create_default(self, app):
+    def test_create_default(self, app: UIApplication) -> None:
     
         assert app is not None
 
-    def test_has_operators(self, app):
+    def test_has_operators(self, app: UIApplication) -> None:
     
         ops = app.list_operators()
         assert isinstance(ops, dict)
@@ -48,14 +48,14 @@ class TestUIApplicationInit:
 class TestG1CaseLibrary:
     """Test case listing, creation, and curation."""
 
-    def test_list_cases(self, app):
+    def test_list_cases(self, app: UIApplication) -> None:
     
         data = app.list_cases()
         assert isinstance(data, dict)
         assert "cases" in data
         assert "total" in data
 
-    def test_create_case(self, app):
+    def test_create_case(self, app: UIApplication) -> None:
     
         result = app.create_case(
             procedure="rhinoplasty",
@@ -66,14 +66,14 @@ class TestG1CaseLibrary:
         assert isinstance(result, dict)
         assert "case_id" in result
 
-    def test_get_nonexistent_case(self, app):
+    def test_get_nonexistent_case(self, app: UIApplication) -> None:
     
         result = app.get_case("nonexistent-id-12345")
         assert isinstance(result, dict)
         # Should return error or empty
         assert "error" in result or "case" in result
 
-    def test_curate_library(self, app):
+    def test_curate_library(self, app: UIApplication) -> None:
     
         result = app.curate_library()
         assert isinstance(result, dict)
@@ -87,17 +87,17 @@ class TestG1CaseLibrary:
 class TestG2TwinInspect:
     """Test twin summary and mesh data retrieval."""
 
-    def test_get_twin_summary_no_case(self, app):
+    def test_get_twin_summary_no_case(self, app: UIApplication) -> None:
     
         result = app.get_twin_summary("nonexistent-id")
         assert isinstance(result, dict)
 
-    def test_get_mesh_data_no_case(self, app):
+    def test_get_mesh_data_no_case(self, app: UIApplication) -> None:
     
         result = app.get_mesh_data("nonexistent-id")
         assert isinstance(result, dict)
 
-    def test_get_landmarks_no_case(self, app):
+    def test_get_landmarks_no_case(self, app: UIApplication) -> None:
     
         result = app.get_landmarks("nonexistent-id")
         assert isinstance(result, dict)
@@ -111,7 +111,7 @@ class TestG2TwinInspect:
 class TestG3PlanAuthor:
     """Test operator listing, template creation, and plan compilation."""
 
-    def test_list_operators(self, app):
+    def test_list_operators(self, app: UIApplication) -> None:
     
         data = app.list_operators()
         assert isinstance(data, dict)
@@ -124,7 +124,7 @@ class TestG3PlanAuthor:
         assert "upper_lid_skin_excision" in names
         assert "ha_filler_injection" in names
 
-    def test_list_templates(self, app):
+    def test_list_templates(self, app: UIApplication) -> None:
     
         data = app.list_templates()
         assert isinstance(data, dict)
@@ -136,31 +136,31 @@ class TestG3PlanAuthor:
         assert "blepharoplasty" in tmpl
         assert "fillers" in tmpl
 
-    def test_create_plan_from_template(self, app):
+    def test_create_plan_from_template(self, app: UIApplication) -> None:
     
         result = app.create_plan_from_template(category="rhinoplasty", template="reduction_rhinoplasty")
         assert isinstance(result, dict)
         assert "plan" in result or "error" in result
 
-    def test_create_plan_from_facelift_template(self, app):
+    def test_create_plan_from_facelift_template(self, app: UIApplication) -> None:
     
         result = app.create_plan_from_template(category="facelift", template="smas_plication_facelift")
         assert isinstance(result, dict)
         assert "plan" in result or "error" in result
 
-    def test_create_plan_from_bleph_template(self, app):
+    def test_create_plan_from_bleph_template(self, app: UIApplication) -> None:
     
         result = app.create_plan_from_template(category="blepharoplasty", template="upper_blepharoplasty")
         assert isinstance(result, dict)
         assert "plan" in result or "error" in result
 
-    def test_create_plan_from_filler_template(self, app):
+    def test_create_plan_from_filler_template(self, app: UIApplication) -> None:
     
         result = app.create_plan_from_template(category="fillers", template="liquid_facelift")
         assert isinstance(result, dict)
         assert "plan" in result or "error" in result
 
-    def test_create_plan_bad_category(self, app):
+    def test_create_plan_bad_category(self, app: UIApplication) -> None:
     
         result = app.create_plan_from_template(category="nonexistent", template="bad_template")
         assert isinstance(result, dict)
@@ -175,12 +175,12 @@ class TestG3PlanAuthor:
 class TestG4Consult:
     """Test what-if and parameter sweep."""
 
-    def test_run_whatif_no_case(self, app):
+    def test_run_whatif_no_case(self, app: UIApplication) -> None:
     
         result = app.run_whatif("nonexistent-id", {}, {})
         assert isinstance(result, dict)
 
-    def test_parameter_sweep_no_case(self, app):
+    def test_parameter_sweep_no_case(self, app: UIApplication) -> None:
     
         result = app.parameter_sweep("nonexistent-id", {}, "some_op", "amount_mm", [1.0, 2.0, 3.0])
         assert isinstance(result, dict)
@@ -194,7 +194,7 @@ class TestG4Consult:
 class TestG5Report:
     """Test report generation."""
 
-    def test_generate_report_no_case(self, app):
+    def test_generate_report_no_case(self, app: UIApplication) -> None:
     
         result = app.generate_report("nonexistent-id", {})
         assert isinstance(result, dict)
@@ -206,26 +206,26 @@ class TestG5Report:
 
 
 class TestG6Visualization:
-    def test_get_visualization_data_no_case(self, app):
+    def test_get_visualization_data_no_case(self, app: UIApplication) -> None:
     
         result = app.get_visualization_data("nonexistent-id")
         assert isinstance(result, dict)
 
 
 class TestG7Timeline:
-    def test_get_timeline_no_case(self, app):
+    def test_get_timeline_no_case(self, app: UIApplication) -> None:
     
         result = app.get_timeline("nonexistent-id")
         assert isinstance(result, dict)
 
 
 class TestG8Compare:
-    def test_compare_plans_empty(self, app):
+    def test_compare_plans_empty(self, app: UIApplication) -> None:
     
         result = app.compare_plans("nonexistent-id", {}, {})
         assert isinstance(result, dict)
 
-    def test_compare_cases(self, app):
+    def test_compare_cases(self, app: UIApplication) -> None:
     
         result = app.compare_cases("id-a", "id-b")
         assert isinstance(result, dict)
@@ -239,7 +239,7 @@ class TestG8Compare:
 class TestG9Contract:
     """Test the G9 full interaction contract."""
 
-    def test_get_contract(self, app):
+    def test_get_contract(self, app: UIApplication) -> None:
     
         contract = app.get_contract()
         assert isinstance(contract, dict)
@@ -248,20 +248,20 @@ class TestG9Contract:
         assert "procedures" in contract
         assert "operators" in contract
 
-    def test_contract_has_all_modes(self, app):
+    def test_contract_has_all_modes(self, app: UIApplication) -> None:
     
         contract = app.get_contract()
         modes = contract["modes"]
         assert len(modes) >= 8
 
-    def test_contract_procedures(self, app):
+    def test_contract_procedures(self, app: UIApplication) -> None:
     
         contract = app.get_contract()
         procs = contract["procedures"]
         assert isinstance(procs, list)
         assert len(procs) >= 8  # at least 8 ProcedureTypes
 
-    def test_contract_serializable(self, app):
+    def test_contract_serializable(self, app: UIApplication) -> None:
         """The contract must be JSON-serializable."""
     
         contract = app.get_contract()
