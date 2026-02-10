@@ -1023,9 +1023,1002 @@ def _compile_cartilage_scoring(
                 break
 
 
+# ── Facelift / necklift compilers ─────────────────────────────────
+
+
+def _compile_smas_plication(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile SMAS plication → nodal displacement along plication vector."""
+    import math
+
+    vector_deg = op.params.get("vector_deg", 60.0)
+    plication_width_mm = op.params.get("plication_width_mm", 10.0)
+    side = op.params.get("side", "bilateral")
+
+    smas_nodes = _find_nodes_by_structure(mesh, StructureType.SMAS)
+    if len(smas_nodes) == 0:
+        result.warnings.append("smas_plication: no SMAS nodes found")
+        return
+
+    positions = mesh.nodes[smas_nodes]
+    center = positions.mean(axis=0)
+
+    # Plication vector in XZ plane (x=lateral, z=superior)
+    rad = math.radians(vector_deg)
+    direction = np.array([math.cos(rad), 0.0, math.sin(rad)], dtype=np.float64)
+
+    displacement_mm = plication_width_mm * 0.5  # fold brings tissue half-width
+
+    sides = _resolve_sides(side, smas_nodes, positions, center)
+
+    for side_name, nodes, pos in sides:
+        displacements = np.outer(np.ones(len(nodes)), direction) * displacement_mm
+        if side_name == "right":
+            displacements[:, 0] *= -1  # mirror for right side
+
+        result.boundary_conditions.append(BoundaryCondition(
+            bc_type=BCType.NODAL_DISPLACEMENT,
+            node_ids=nodes,
+            values=displacements,
+            direction=direction,
+            magnitude=displacement_mm,
+            source_op=op.name,
+            metadata={"technique": "plication", "side": side_name},
+        ))
+
+
+def _compile_smas_flap(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile SMAS flap / SMASectomy → element removal + displacement."""
+    resection_width_mm = op.params.get("resection_width_mm", 15.0)
+    elevation_extent_mm = op.params.get("elevation_extent_mm", 40.0)
+    side = op.params.get("side", "bilateral")
+
+    smas_elems = _find_elements_by_structure(mesh, StructureType.SMAS)
+    if len(smas_elems) == 0:
+        result.warnings.append("smas_flap: no SMAS elements found")
+        return
+
+    centroids = _compute_element_centroids(mesh, smas_elems)
+    center = centroids.mean(axis=0)
+
+    # The resection strip is a lateral band of specified width
+    x_range = centroids[:, 0].max() - centroids[:, 0].min()
+    if x_range < 1e-6:
+        return
+
+    # Resection strip: fraction of SMAS to remove
+    resect_fraction = min(0.4, resection_width_mm / max(x_range, 1.0))
+
+    for side_name in _get_sides(side):
+        if side_name == "left":
+            mask = centroids[:, 0] > center[0]
+        else:
+            mask = centroids[:, 0] < center[0]
+
+        side_elems = smas_elems[mask]
+        side_centroids = centroids[mask]
+
+        if len(side_elems) == 0:
+            continue
+
+        # Sort by lateral distance from center
+        lateral_dist = np.abs(side_centroids[:, 0] - center[0])
+        sorted_idx = np.argsort(lateral_dist)[::-1]
+
+        n_remove = max(1, int(len(side_elems) * resect_fraction))
+        remove_elems = side_elems[sorted_idx[:n_remove]]
+
+        result.mesh_modifications.append(MeshModification(
+            mod_type="remove",
+            element_ids=remove_elems,
+            source_op=op.name,
+            description=f"SMASectomy {side_name}: remove {len(remove_elems)} SMAS elements",
+        ))
+
+
+def _compile_deep_plane_dissection(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile deep plane dissection → stiffness reduction in sub-SMAS plane."""
+    smas_elems = _find_elements_by_structure(mesh, StructureType.SMAS)
+    fat_elems = _find_elements_by_structure(mesh, StructureType.FAT_MALAR)
+    target_elems = np.union1d(smas_elems, fat_elems) if len(fat_elems) > 0 else smas_elems
+
+    if len(target_elems) == 0:
+        result.warnings.append("deep_plane_dissection: no SMAS/fat elements found")
+        return
+
+    # Deep plane release: drastically reduce stiffness in the sub-SMAS plane
+    # to allow composite flap mobilization
+    stiffness_factor = 0.05  # 95% stiffness reduction simulates dissection
+
+    for rid, props in mesh.region_materials.items():
+        if props.structure_type in (StructureType.SMAS, StructureType.FAT_MALAR):
+            region_elems = target_elems[
+                np.isin(mesh.region_ids[target_elems], [rid])
+            ] if len(target_elems) > 0 else np.array([], dtype=np.int64)
+
+            if len(region_elems) == 0:
+                continue
+
+            result.material_modifications.append(MaterialModification(
+                region_id=rid,
+                element_ids=region_elems,
+                original_model=props.material_model,
+                modified_model=props.material_model,
+                modified_params={
+                    k: v * stiffness_factor
+                    for k, v in props.parameters.items()
+                    if isinstance(v, (int, float))
+                },
+                source_op=op.name,
+                description=f"Deep plane dissection: release region {rid}",
+            ))
+
+
+def _compile_skin_excision_facelift(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile skin excision → element removal of redundant skin."""
+    width_mm = op.params.get("width_mm", 20.0)
+    side = op.params.get("side", "bilateral")
+
+    skin_elems = _find_elements_by_structure(mesh, StructureType.SKIN_ENVELOPE)
+    if len(skin_elems) == 0:
+        result.warnings.append("skin_excision_facelift: no skin elements found")
+        return
+
+    centroids = _compute_element_centroids(mesh, skin_elems)
+    center = centroids.mean(axis=0)
+
+    # Pre-auricular / post-auricular excision: remove lateral skin elements
+    x_range = centroids[:, 0].max() - centroids[:, 0].min()
+    if x_range < 1e-6:
+        return
+
+    removal_fraction = min(0.4, width_mm / max(x_range, 1.0))
+
+    for side_name in _get_sides(side):
+        if side_name == "left":
+            mask = centroids[:, 0] > center[0]
+        else:
+            mask = centroids[:, 0] < center[0]
+
+        side_elems = skin_elems[mask]
+        side_centroids = centroids[mask]
+        if len(side_elems) == 0:
+            continue
+
+        lateral_dist = np.abs(side_centroids[:, 0] - center[0])
+        sorted_idx = np.argsort(lateral_dist)[::-1]
+        n_remove = max(1, int(len(side_elems) * removal_fraction))
+        remove_elems = side_elems[sorted_idx[:n_remove]]
+
+        result.mesh_modifications.append(MeshModification(
+            mod_type="remove",
+            element_ids=remove_elems,
+            source_op=op.name,
+            description=f"Skin excision {side_name}: {len(remove_elems)} elements",
+        ))
+
+
+def _compile_fat_repositioning(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile fat repositioning → nodal displacement of fat compartment."""
+    import math
+
+    compartment = op.params.get("compartment", "malar")
+    vector_deg = op.params.get("vector_deg", 70.0)
+    displacement_mm = op.params.get("displacement_mm", 8.0)
+
+    compartment_map = {
+        "malar": StructureType.FAT_MALAR,
+        "nasolabial": StructureType.FAT_NASOLABIAL,
+        "buccal": StructureType.FAT_BUCCAL,
+        "jowl": StructureType.FAT_SUBCUTANEOUS,
+    }
+    structure = compartment_map.get(compartment, StructureType.FAT_SUBCUTANEOUS)
+
+    nodes = _find_nodes_by_structure(mesh, structure)
+    if len(nodes) == 0:
+        result.warnings.append(f"fat_repositioning: no {compartment} fat nodes found")
+        return
+
+    rad = math.radians(vector_deg)
+    direction = np.array([math.cos(rad), 0.0, math.sin(rad)], dtype=np.float64)
+    displacements = np.outer(np.ones(len(nodes)), direction) * displacement_mm
+
+    result.boundary_conditions.append(BoundaryCondition(
+        bc_type=BCType.NODAL_DISPLACEMENT,
+        node_ids=nodes,
+        values=displacements,
+        direction=direction,
+        magnitude=displacement_mm,
+        source_op=op.name,
+        metadata={"compartment": compartment},
+    ))
+
+
+def _compile_platysma_plication(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile platysma plication → midline nodal forces."""
+    technique = op.params.get("technique", "corset")
+    band_transection = op.params.get("band_transection", False)
+
+    plat_nodes = _find_nodes_by_structure(mesh, StructureType.MUSCLE_PLATYSMA)
+    if len(plat_nodes) == 0:
+        result.warnings.append("platysma_plication: no platysma nodes found")
+        return
+
+    positions = mesh.nodes[plat_nodes]
+    center = positions.mean(axis=0)
+
+    force_n = 2.0  # Newtons suture tension
+
+    if technique in ("corset", "full"):
+        # Midline plication: pull platysma bands toward midline
+        midline_forces = np.zeros((len(plat_nodes), 3), dtype=np.float64)
+        midline_forces[:, 0] = -(positions[:, 0] - center[0]) * force_n * 0.1
+
+        result.boundary_conditions.append(BoundaryCondition(
+            bc_type=BCType.NODAL_FORCE,
+            node_ids=plat_nodes,
+            values=midline_forces,
+            magnitude=force_n,
+            source_op=op.name,
+            metadata={"technique": technique, "component": "midline"},
+        ))
+
+    if technique in ("lateral_pull", "full"):
+        # Lateral pull: displace platysma posterolaterally
+        lat_displacements = np.zeros((len(plat_nodes), 3), dtype=np.float64)
+        lat_displacements[:, 1] = -2.0  # mm posterior
+        lat_displacements[:, 2] = 1.0   # mm superior
+
+        result.boundary_conditions.append(BoundaryCondition(
+            bc_type=BCType.NODAL_DISPLACEMENT,
+            node_ids=plat_nodes,
+            values=lat_displacements,
+            magnitude=2.0,
+            source_op=op.name,
+            metadata={"technique": technique, "component": "lateral"},
+        ))
+
+    if band_transection:
+        # Transect prominent bands by removing midline platysma elements
+        plat_elems = _find_elements_by_structure(mesh, StructureType.MUSCLE_PLATYSMA)
+        if len(plat_elems) > 0:
+            centroids = _compute_element_centroids(mesh, plat_elems)
+            midline_mask = np.abs(centroids[:, 0] - center[0]) < 3.0
+            transect_elems = plat_elems[midline_mask]
+            if len(transect_elems) > 0:
+                result.mesh_modifications.append(MeshModification(
+                    mod_type="remove",
+                    element_ids=transect_elems,
+                    source_op=op.name,
+                    description=f"Platysma band transection: {len(transect_elems)} elements",
+                ))
+
+
+def _compile_submentoplasty(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile submentoplasty → fat element removal (liposuction model)."""
+    liposuction = op.params.get("liposuction", True)
+    liposuction_volume_cc = op.params.get("liposuction_volume_cc", 15.0)
+    direct_excision = op.params.get("direct_excision", False)
+
+    fat_elems = _find_elements_by_structure(mesh, StructureType.FAT_SUBCUTANEOUS)
+    if len(fat_elems) == 0:
+        result.warnings.append("submentoplasty: no subcutaneous fat elements found")
+        return
+
+    centroids = _compute_element_centroids(mesh, fat_elems)
+    center = centroids.mean(axis=0)
+
+    # Submental region: inferior and midline-ish
+    z_range = centroids[:, 2].max() - centroids[:, 2].min()
+    if z_range < 1e-6:
+        return
+
+    # Target inferior third, near midline
+    z_thresh = centroids[:, 2].min() + z_range * 0.33
+    midline_width = 15.0  # mm
+
+    submental_mask = (
+        (centroids[:, 2] < z_thresh) &
+        (np.abs(centroids[:, 0] - center[0]) < midline_width)
+    )
+
+    if liposuction and np.any(submental_mask):
+        # Remove a fraction proportional to target volume
+        target_elems = fat_elems[submental_mask]
+        n_total = len(target_elems)
+        removal_fraction = min(0.8, liposuction_volume_cc / max(n_total * 0.1, 1.0))
+        n_remove = max(1, int(n_total * removal_fraction))
+
+        # Prefer most inferior elements
+        z_order = np.argsort(centroids[submental_mask][:, 2])
+        remove_ids = target_elems[z_order[:n_remove]]
+
+        result.mesh_modifications.append(MeshModification(
+            mod_type="remove",
+            element_ids=remove_ids,
+            source_op=op.name,
+            description=f"Submental liposuction: {len(remove_ids)} elements removed",
+        ))
+
+    if direct_excision and np.any(submental_mask):
+        # Direct excision: additionally remove deeper elements
+        deep_mask = submental_mask & (centroids[:, 1] < center[1])
+        deep_elems = fat_elems[deep_mask]
+        if len(deep_elems) > 0:
+            result.mesh_modifications.append(MeshModification(
+                mod_type="remove",
+                element_ids=deep_elems,
+                source_op=op.name,
+                description=f"Direct subplatysmal excision: {len(deep_elems)} elements",
+            ))
+
+
+def _compile_malar_fat_suspension(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile malar fat pad suspension → upward nodal displacement."""
+    import math
+
+    vector_deg = op.params.get("vector_deg", 80.0)
+    side = op.params.get("side", "bilateral")
+
+    nodes = _find_nodes_by_structure(mesh, StructureType.FAT_MALAR)
+    if len(nodes) == 0:
+        result.warnings.append("malar_fat_suspension: no malar fat nodes found")
+        return
+
+    positions = mesh.nodes[nodes]
+    center = positions.mean(axis=0)
+
+    rad = math.radians(vector_deg)
+    direction = np.array([math.cos(rad), 0.0, math.sin(rad)], dtype=np.float64)
+
+    displacement_mm = 5.0  # typical malar fat pad elevation
+
+    sides = _resolve_sides(side, nodes, positions, center)
+
+    for side_name, side_nodes, side_pos in sides:
+        disps = np.outer(np.ones(len(side_nodes)), direction) * displacement_mm
+        if side_name == "right":
+            disps[:, 0] *= -1
+
+        result.boundary_conditions.append(BoundaryCondition(
+            bc_type=BCType.NODAL_DISPLACEMENT,
+            node_ids=side_nodes,
+            values=disps,
+            direction=direction,
+            magnitude=displacement_mm,
+            source_op=op.name,
+            metadata={"side": side_name},
+        ))
+
+
+# ── Blepharoplasty compilers ─────────────────────────────────────
+
+
+def _compile_upper_lid_skin_excision(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile upper lid skin excision → element removal."""
+    width_mm = op.params.get("width_mm", 12.0)
+    side = op.params.get("side", "bilateral")
+
+    skin_elems = _find_elements_by_structure(mesh, StructureType.SKIN_THIN)
+    if len(skin_elems) == 0:
+        result.warnings.append("upper_lid_skin_excision: no thin skin elements found")
+        return
+
+    centroids = _compute_element_centroids(mesh, skin_elems)
+    center = centroids.mean(axis=0)
+
+    # Periorbital region: superior, near eye level
+    # Select elements in the upper eyelid zone
+    z_range = centroids[:, 2].max() - centroids[:, 2].min()
+    if z_range < 1e-6:
+        return
+
+    # Upper lid ≈ upper 20-35% of face height
+    z_upper = centroids[:, 2].min() + z_range * 0.65
+    z_lid_top = centroids[:, 2].min() + z_range * 0.80
+    lid_mask = (centroids[:, 2] > z_upper) & (centroids[:, 2] < z_lid_top)
+
+    n_excise = max(1, int(np.sum(lid_mask) * min(0.8, width_mm / 20.0)))
+
+    for side_name in _get_sides(side):
+        if side_name == "left":
+            side_mask = lid_mask & (centroids[:, 0] > center[0])
+        else:
+            side_mask = lid_mask & (centroids[:, 0] < center[0])
+
+        side_elems = skin_elems[side_mask]
+        if len(side_elems) == 0:
+            continue
+
+        # Select for removal from center outward
+        n_remove = min(n_excise, len(side_elems))
+        result.mesh_modifications.append(MeshModification(
+            mod_type="remove",
+            element_ids=side_elems[:n_remove],
+            source_op=op.name,
+            description=f"Upper lid skin excision {side_name}: {n_remove} elems",
+        ))
+
+
+def _compile_upper_lid_fat_removal(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile upper lid fat removal → element removal from orbital fat."""
+    side = op.params.get("side", "bilateral")
+    medial_cc = op.params.get("medial_pad_cc", 0.3)
+    central_cc = op.params.get("central_pad_cc", 0.2)
+
+    fat_elems = _find_elements_by_structure(mesh, StructureType.FAT_ORBITAL)
+    if len(fat_elems) == 0:
+        # Fallback to subcutaneous fat
+        fat_elems = _find_elements_by_structure(mesh, StructureType.FAT_SUBCUTANEOUS)
+    if len(fat_elems) == 0:
+        result.warnings.append("upper_lid_fat_removal: no orbital fat elements found")
+        return
+
+    total_volume_cc = medial_cc + central_cc
+    removal_fraction = min(0.6, total_volume_cc / max(len(fat_elems) * 0.005, 0.01))
+    n_remove = max(1, int(len(fat_elems) * removal_fraction))
+
+    centroids = _compute_element_centroids(mesh, fat_elems)
+    center = centroids.mean(axis=0)
+
+    for side_name in _get_sides(side):
+        if side_name == "left":
+            smask = centroids[:, 0] > center[0]
+        else:
+            smask = centroids[:, 0] < center[0]
+
+        sel = fat_elems[smask]
+        n = min(n_remove, len(sel))
+        if n > 0:
+            result.mesh_modifications.append(MeshModification(
+                mod_type="remove",
+                element_ids=sel[:n],
+                source_op=op.name,
+                description=f"Upper lid fat removal {side_name}: {n} elements",
+            ))
+
+
+def _compile_lower_lid_skin_excision(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile lower lid skin excision → element removal."""
+    width_mm = op.params.get("width_mm", 4.0)
+    side = op.params.get("side", "bilateral")
+
+    skin_elems = _find_elements_by_structure(mesh, StructureType.SKIN_THIN)
+    if len(skin_elems) == 0:
+        result.warnings.append("lower_lid_skin_excision: no thin skin elements found")
+        return
+
+    centroids = _compute_element_centroids(mesh, skin_elems)
+    center = centroids.mean(axis=0)
+    z_range = centroids[:, 2].max() - centroids[:, 2].min()
+    if z_range < 1e-6:
+        return
+
+    # Lower lid ≈ 55-65% height zone
+    z_lower = centroids[:, 2].min() + z_range * 0.55
+    z_upper = centroids[:, 2].min() + z_range * 0.65
+    lid_mask = (centroids[:, 2] > z_lower) & (centroids[:, 2] < z_upper)
+
+    n_excise = max(1, int(np.sum(lid_mask) * min(0.5, width_mm / 10.0)))
+
+    for side_name in _get_sides(side):
+        if side_name == "left":
+            side_mask = lid_mask & (centroids[:, 0] > center[0])
+        else:
+            side_mask = lid_mask & (centroids[:, 0] < center[0])
+
+        sel = skin_elems[side_mask]
+        if len(sel) == 0:
+            continue
+        n = min(n_excise, len(sel))
+        result.mesh_modifications.append(MeshModification(
+            mod_type="remove",
+            element_ids=sel[:n],
+            source_op=op.name,
+            description=f"Lower lid skin excision {side_name}: {n} elems",
+        ))
+
+
+def _compile_lower_lid_fat_transposition(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile lower lid fat transposition → nodal displacement over infraorbital rim."""
+    side = op.params.get("side", "bilateral")
+
+    nodes = _find_nodes_by_structure(mesh, StructureType.FAT_ORBITAL)
+    if len(nodes) == 0:
+        nodes = _find_nodes_by_structure(mesh, StructureType.FAT_SUBCUTANEOUS)
+    if len(nodes) == 0:
+        result.warnings.append("lower_lid_fat_transposition: no orbital fat nodes found")
+        return
+
+    positions = mesh.nodes[nodes]
+    center = positions.mean(axis=0)
+
+    # Transpose inferiorly and anteriorly (over rim)
+    direction = np.array([0.0, 1.0, -1.0], dtype=np.float64)
+    direction /= np.linalg.norm(direction)
+    displacement_mm = 4.0
+
+    sides = _resolve_sides(side, nodes, positions, center)
+    for side_name, side_nodes, _ in sides:
+        disps = np.outer(np.ones(len(side_nodes)), direction) * displacement_mm
+        result.boundary_conditions.append(BoundaryCondition(
+            bc_type=BCType.NODAL_DISPLACEMENT,
+            node_ids=side_nodes,
+            values=disps,
+            direction=direction,
+            magnitude=displacement_mm,
+            source_op=op.name,
+            metadata={"side": side_name},
+        ))
+
+
+def _compile_canthopexy(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile canthopexy → fixation boundary condition at lateral canthus."""
+    side = op.params.get("side", "bilateral")
+
+    orbit_nodes = _find_nodes_by_structure(mesh, StructureType.BONE_ORBIT)
+    if len(orbit_nodes) == 0:
+        result.warnings.append("canthopexy: no orbital bone nodes found")
+        return
+
+    positions = mesh.nodes[orbit_nodes]
+    center = positions.mean(axis=0)
+
+    for side_name in _get_sides(side):
+        if side_name == "left":
+            mask = positions[:, 0] > center[0]
+        else:
+            mask = positions[:, 0] < center[0]
+
+        side_nodes = orbit_nodes[mask]
+        # Select most lateral nodes as canthal fixation points
+        if len(side_nodes) > 0:
+            side_pos = positions[mask]
+            lat_dist = np.abs(side_pos[:, 0] - center[0])
+            top_n = max(1, len(side_nodes) // 5)
+            top_idx = np.argsort(lat_dist)[-top_n:]
+            fix_nodes = side_nodes[top_idx]
+
+            result.boundary_conditions.append(BoundaryCondition(
+                bc_type=BCType.FIXED,
+                node_ids=fix_nodes,
+                source_op=op.name,
+                metadata={"technique": "canthopexy", "side": side_name},
+            ))
+
+
+def _compile_orbicularis_tightening(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile orbicularis tightening → stiffness increase."""
+    nodes = _find_nodes_by_structure(mesh, StructureType.MUSCLE_ORBICULARIS)
+    if len(nodes) == 0:
+        nodes = _find_nodes_by_structure(mesh, StructureType.MUSCLE_MIMETIC)
+    if len(nodes) == 0:
+        result.warnings.append("orbicularis_tightening: no orbicularis nodes found")
+        return
+
+    elems = _find_elements_by_structure(mesh, StructureType.MUSCLE_ORBICULARIS)
+    if len(elems) == 0:
+        elems = _find_elements_by_structure(mesh, StructureType.MUSCLE_MIMETIC)
+
+    stiffness_factor = 2.0  # tightening → 2x stiffness
+
+    for rid, props in mesh.region_materials.items():
+        if props.structure_type in (StructureType.MUSCLE_ORBICULARIS, StructureType.MUSCLE_MIMETIC):
+            region_elems = elems[np.isin(mesh.region_ids[elems], [rid])] if len(elems) > 0 else np.array([], dtype=np.int64)
+            if len(region_elems) > 0:
+                result.material_modifications.append(MaterialModification(
+                    region_id=rid,
+                    element_ids=region_elems,
+                    original_model=props.material_model,
+                    modified_model=props.material_model,
+                    modified_params={
+                        k: v * stiffness_factor
+                        for k, v in props.parameters.items()
+                        if isinstance(v, (int, float))
+                    },
+                    source_op=op.name,
+                    description="Orbicularis tightening: 2x stiffness",
+                ))
+
+
+def _compile_skin_pinch(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile skin pinch → conservative element removal."""
+    width_mm = op.params.get("width_mm", 2.0)
+    side = op.params.get("side", "bilateral")
+
+    skin_elems = _find_elements_by_structure(mesh, StructureType.SKIN_THIN)
+    if len(skin_elems) == 0:
+        result.warnings.append("skin_pinch: no thin skin elements found")
+        return
+
+    centroids = _compute_element_centroids(mesh, skin_elems)
+    center = centroids.mean(axis=0)
+
+    # Very conservative: remove 1-3 element layers (skin pinch is ≤5mm)
+    n_remove = max(1, int(len(skin_elems) * 0.02 * width_mm))
+
+    for side_name in _get_sides(side):
+        if side_name == "left":
+            mask = centroids[:, 0] > center[0]
+        else:
+            mask = centroids[:, 0] < center[0]
+
+        sel = skin_elems[mask]
+        n = min(n_remove, len(sel))
+        if n > 0:
+            result.mesh_modifications.append(MeshModification(
+                mod_type="remove",
+                element_ids=sel[:n],
+                source_op=op.name,
+                description=f"Skin pinch {side_name}: {n} elements",
+            ))
+
+
+# ── Filler / fat graft compilers ─────────────────────────────────
+
+
+def _compile_ha_filler_injection(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile HA filler injection → material stiffness modification (volumizing)."""
+    zone = op.params.get("zone", "nasolabial_fold")
+    volume_cc = op.params.get("volume_cc", 0.5)
+    depth = op.params.get("depth", "deep_dermal")
+
+    zone_map = {
+        "nasolabial_fold": StructureType.FAT_NASOLABIAL,
+        "cheek": StructureType.FAT_MALAR,
+        "temple": StructureType.FAT_SUBCUTANEOUS,
+        "jawline": StructureType.FAT_SUBCUTANEOUS,
+        "chin": StructureType.FAT_SUBCUTANEOUS,
+        "lip_body": StructureType.MUCOSA_NASAL,
+        "lip_border": StructureType.SKIN_ENVELOPE,
+        "marionette": StructureType.FAT_NASOLABIAL,
+        "tear_trough": StructureType.FAT_ORBITAL,
+        "nose": StructureType.SKIN_THICK,
+        "perioral": StructureType.SKIN_ENVELOPE,
+    }
+
+    structure = zone_map.get(zone, StructureType.FAT_SUBCUTANEOUS)
+    elems = _find_elements_by_structure(mesh, structure)
+
+    if len(elems) == 0:
+        # Fallback
+        elems = _find_elements_by_structure(mesh, StructureType.FAT_SUBCUTANEOUS)
+    if len(elems) == 0:
+        result.warnings.append(f"ha_filler_injection: no elements for zone '{zone}'")
+        return
+
+    # Filler increases local volume and stiffness
+    # Model as stiffness increase proportional to volume
+    stiffness_factor = 1.0 + volume_cc * 0.5  # 50% stiffer per cc
+
+    for rid, props in mesh.region_materials.items():
+        if props.structure_type == structure:
+            region_elems = elems[np.isin(mesh.region_ids[elems], [rid])] if len(elems) > 0 else np.array([], dtype=np.int64)
+            if len(region_elems) > 0:
+                result.material_modifications.append(MaterialModification(
+                    region_id=rid,
+                    element_ids=region_elems,
+                    original_model=props.material_model,
+                    modified_model=props.material_model,
+                    modified_params={
+                        k: v * stiffness_factor
+                        for k, v in props.parameters.items()
+                        if isinstance(v, (int, float))
+                    },
+                    source_op=op.name,
+                    description=f"HA filler: {zone} +{volume_cc}cc → {stiffness_factor:.1f}x stiffness",
+                ))
+                break
+
+
+def _compile_fat_harvest(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile fat harvest → no mesh changes (donor site not in facial mesh)."""
+    # Fat harvest from donor site (abdomen, thigh, etc.) doesn't affect the
+    # facial mesh. We record it as a metadata-only BC for provenance.
+    result.boundary_conditions.append(BoundaryCondition(
+        bc_type=BCType.ELEMENT_REMOVAL,
+        source_op=op.name,
+        metadata={
+            "donor_site": op.params.get("donor_site", "abdomen"),
+            "volume_cc": op.params.get("volume_cc", 30.0),
+            "note": "Donor site outside facial mesh domain",
+        },
+    ))
+
+
+def _compile_fat_graft_injection(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile fat graft injection → material modification (volume augmentation)."""
+    zone = op.params.get("zone", "cheek")
+    volume_cc = op.params.get("volume_cc", 5.0)
+
+    zone_map = {
+        "cheek": StructureType.FAT_MALAR,
+        "temple": StructureType.FAT_SUBCUTANEOUS,
+        "nasolabial_fold": StructureType.FAT_NASOLABIAL,
+        "jawline": StructureType.FAT_SUBCUTANEOUS,
+        "chin": StructureType.FAT_SUBCUTANEOUS,
+        "lip": StructureType.SKIN_ENVELOPE,
+        "periorbital": StructureType.FAT_ORBITAL,
+        "forehead": StructureType.FAT_SUBCUTANEOUS,
+        "tear_trough": StructureType.FAT_ORBITAL,
+        "buccal_hollow": StructureType.FAT_BUCCAL,
+    }
+
+    structure = zone_map.get(zone, StructureType.FAT_SUBCUTANEOUS)
+    elems = _find_elements_by_structure(mesh, structure)
+    if len(elems) == 0:
+        elems = _find_elements_by_structure(mesh, StructureType.FAT_SUBCUTANEOUS)
+    if len(elems) == 0:
+        result.warnings.append(f"fat_graft_injection: no elements for zone '{zone}'")
+        return
+
+    # Fat graft: increase volume (via expansion BC) and stiffness
+    stiffness_factor = 1.0 + volume_cc * 0.3
+
+    for rid, props in mesh.region_materials.items():
+        if props.structure_type == structure:
+            region_elems = elems[np.isin(mesh.region_ids[elems], [rid])] if len(elems) > 0 else np.array([], dtype=np.int64)
+            if len(region_elems) > 0:
+                result.material_modifications.append(MaterialModification(
+                    region_id=rid,
+                    element_ids=region_elems,
+                    original_model=props.material_model,
+                    modified_model=props.material_model,
+                    modified_params={
+                        k: v * stiffness_factor
+                        for k, v in props.parameters.items()
+                        if isinstance(v, (int, float))
+                    },
+                    source_op=op.name,
+                    description=f"Fat graft: {zone} +{volume_cc}cc",
+                ))
+                break
+
+
+def _compile_biostimulatory_filler(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile bio-stimulatory filler → same model as HA filler."""
+    # Biostimulatory fillers (CaHA, PLLA) work similarly to HA
+    # but with delayed collagen induction. For acute simulation,
+    # treat as same stiffness model.
+    _compile_ha_filler_injection(op, mesh, result)
+
+
+def _compile_thread_lift(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile thread lift → nodal forces along thread trajectory."""
+    zone = op.params.get("zone", "midface")
+    thread_count = op.params.get("thread_count", 4)
+    side = op.params.get("side", "bilateral")
+
+    zone_map = {
+        "midface": StructureType.FAT_MALAR,
+        "jawline": StructureType.FAT_SUBCUTANEOUS,
+        "brow": StructureType.MUSCLE_FRONTALIS,
+        "neck": StructureType.MUSCLE_PLATYSMA,
+        "nasolabial": StructureType.FAT_NASOLABIAL,
+    }
+
+    structure = zone_map.get(zone, StructureType.FAT_SUBCUTANEOUS)
+    nodes = _find_nodes_by_structure(mesh, structure)
+    if len(nodes) == 0:
+        nodes = _find_nodes_by_structure(mesh, StructureType.FAT_SUBCUTANEOUS)
+    if len(nodes) == 0:
+        result.warnings.append(f"thread_lift: no nodes for zone '{zone}'")
+        return
+
+    positions = mesh.nodes[nodes]
+    center = positions.mean(axis=0)
+
+    # Thread lift force: superior traction along barbs
+    force_per_thread_n = 0.5  # Newtons per thread
+    total_force = force_per_thread_n * thread_count
+    direction = np.array([0.0, 0.0, 1.0], dtype=np.float64)  # superior
+
+    sides = _resolve_sides(side, nodes, positions, center)
+    for side_name, side_nodes, _ in sides:
+        forces = np.outer(np.ones(len(side_nodes)), direction) * total_force / max(len(side_nodes), 1)
+        result.boundary_conditions.append(BoundaryCondition(
+            bc_type=BCType.NODAL_FORCE,
+            node_ids=side_nodes,
+            values=forces,
+            direction=direction,
+            magnitude=total_force,
+            source_op=op.name,
+            metadata={"zone": zone, "thread_count": thread_count, "side": side_name},
+        ))
+
+
+def _compile_implant_placement(
+    op: SurgicalOp,
+    mesh: VolumeMesh,
+    result: CompilationResult,
+) -> None:
+    """Compile implant placement → element insertion with rigid material."""
+    zone = op.params.get("zone", "chin")
+    size = op.params.get("size", "medium")
+    side = op.params.get("side", "midline")
+
+    zone_map = {
+        "chin": StructureType.BONE_MANDIBLE,
+        "malar": StructureType.BONE_ZYGOMATIC,
+        "submalar": StructureType.BONE_ZYGOMATIC,
+        "mandible_angle": StructureType.BONE_MANDIBLE,
+        "paranasal": StructureType.BONE_MAXILLA,
+    }
+
+    structure = zone_map.get(zone, StructureType.BONE_MANDIBLE)
+    bone_nodes = _find_nodes_by_structure(mesh, structure)
+
+    if len(bone_nodes) == 0:
+        result.warnings.append(f"implant_placement: no {zone} bone nodes found")
+        return
+
+    positions = mesh.nodes[bone_nodes]
+    center = positions.mean(axis=0)
+
+    # Model implant as stiffness override to rigid on the bone surface
+    bone_elems = _find_elements_by_structure(mesh, structure)
+    if len(bone_elems) == 0:
+        return
+
+    centroids = _compute_element_centroids(mesh, bone_elems)
+
+    # Select elements at the implant site (most anterior for chin)
+    if zone == "chin":
+        y_max = centroids[:, 1].max()
+        anterior_mask = centroids[:, 1] > y_max - 10.0
+    else:
+        anterior_mask = np.ones(len(bone_elems), dtype=bool)
+
+    size_fraction = {"small": 0.1, "medium": 0.15, "large": 0.25, "custom": 0.2}
+    frac = size_fraction.get(size, 0.15)
+    n_implant = max(1, int(np.sum(anterior_mask) * frac))
+
+    implant_elems = bone_elems[anterior_mask][:n_implant]
+
+    for rid, props in mesh.region_materials.items():
+        if props.structure_type == structure:
+            result.material_modifications.append(MaterialModification(
+                region_id=rid,
+                element_ids=implant_elems,
+                original_model=props.material_model,
+                modified_model=MaterialModel.RIGID,
+                modified_params={"density": 1100.0},
+                source_op=op.name,
+                description=f"Implant ({zone}, {size}): rigid material override",
+            ))
+            break
+
+
+# ── Compiler helper utilities ─────────────────────────────────────
+
+
+def _get_sides(side: str) -> List[str]:
+    """Return list of side names from a side specification."""
+    if side == "bilateral":
+        return ["left", "right"]
+    return [side]
+
+
+def _resolve_sides(
+    side: str,
+    nodes: np.ndarray,
+    positions: np.ndarray,
+    center: np.ndarray,
+) -> List[Tuple[str, np.ndarray, np.ndarray]]:
+    """Split nodes into left/right based on side specification.
+
+    Returns list of (side_name, node_ids, positions) tuples.
+    """
+    results: List[Tuple[str, np.ndarray, np.ndarray]] = []
+    for side_name in _get_sides(side):
+        if side_name == "left":
+            mask = positions[:, 0] > center[0]
+        elif side_name == "right":
+            mask = positions[:, 0] < center[0]
+        elif side_name == "midline":
+            mask = np.abs(positions[:, 0] - center[0]) < 5.0
+        else:
+            mask = np.ones(len(nodes), dtype=bool)
+
+        if np.any(mask):
+            results.append((side_name, nodes[mask], positions[mask]))
+    return results
+
+
+def _compute_element_centroids(
+    mesh: VolumeMesh,
+    element_ids: np.ndarray,
+) -> np.ndarray:
+    """Compute centroids for a set of elements."""
+    centroids = np.zeros((len(element_ids), 3), dtype=np.float64)
+    for i, eid in enumerate(element_ids):
+        centroids[i] = mesh.nodes[mesh.elements[eid]].mean(axis=0)
+    return centroids
+
+
 # ── Operator dispatch ─────────────────────────────────────────────
 
 _OP_COMPILERS = {
+    # Rhinoplasty (existing)
     "dorsal_reduction": _compile_dorsal_reduction,
     "lateral_osteotomy": lambda op, mesh, res: _compile_osteotomy(op, mesh, res, lateral=True),
     "medial_osteotomy": lambda op, mesh, res: _compile_osteotomy(op, mesh, res, lateral=False),
@@ -1039,6 +2032,30 @@ _OP_COMPILERS = {
     "tip_suture": _compile_suture,
     "alar_base_reduction": _compile_alar_base_reduction,
     "cartilage_scoring": _compile_cartilage_scoring,
+    # Facelift / Necklift
+    "smas_plication": _compile_smas_plication,
+    "smas_flap": _compile_smas_flap,
+    "deep_plane_dissection": _compile_deep_plane_dissection,
+    "skin_excision_facelift": _compile_skin_excision_facelift,
+    "fat_repositioning": _compile_fat_repositioning,
+    "platysma_plication": _compile_platysma_plication,
+    "submentoplasty": _compile_submentoplasty,
+    "malar_fat_suspension": _compile_malar_fat_suspension,
+    # Blepharoplasty
+    "upper_lid_skin_excision": _compile_upper_lid_skin_excision,
+    "upper_lid_fat_removal": _compile_upper_lid_fat_removal,
+    "lower_lid_skin_excision": _compile_lower_lid_skin_excision,
+    "lower_lid_fat_transposition": _compile_lower_lid_fat_transposition,
+    "canthopexy": _compile_canthopexy,
+    "orbicularis_tightening": _compile_orbicularis_tightening,
+    "skin_pinch": _compile_skin_pinch,
+    # Fillers / Fat Grafting / Implants
+    "ha_filler_injection": _compile_ha_filler_injection,
+    "fat_harvest": _compile_fat_harvest,
+    "fat_graft_injection": _compile_fat_graft_injection,
+    "biostimulatory_filler": _compile_biostimulatory_filler,
+    "thread_lift": _compile_thread_lift,
+    "implant_placement": _compile_implant_placement,
 }
 
 

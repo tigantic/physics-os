@@ -79,8 +79,19 @@ from products.facial_plastics.plan import (
     SurgicalPlan,
 )
 from products.facial_plastics.plan.operators import (
+    BLEPHAROPLASTY_OPERATORS,
+    BlepharoplastyPlanBuilder,
+    FACELIFT_OPERATORS,
+    FaceliftPlanBuilder,
+    FILLER_OPERATORS,
+    FillerPlanBuilder,
+    RHINOPLASTY_OPERATORS,
     RhinoplastyPlanBuilder,
 )
+
+# ── UI ────────────────────────────────────────────────────────────
+from products.facial_plastics.ui.api import UIApplication
+from products.facial_plastics.ui.server import start_server
 
 # ── Simulation ────────────────────────────────────────────────────
 from products.facial_plastics.sim import (
@@ -182,11 +193,21 @@ __all__ = [
     "TwinBuilder",
     "VolumetricMesher",
     # Plan
+    "BLEPHAROPLASTY_OPERATORS",
+    "BlepharoplastyPlanBuilder",
+    "FACELIFT_OPERATORS",
+    "FaceliftPlanBuilder",
+    "FILLER_OPERATORS",
+    "FillerPlanBuilder",
     "PlanCompiler",
+    "RHINOPLASTY_OPERATORS",
     "RhinoplastyPlanBuilder",
     "SequenceNode",
     "SurgicalOp",
     "SurgicalPlan",
+    # UI
+    "UIApplication",
+    "start_server",
     # Sim
     "AirwayCFDResult",
     "AirwayCFDSolver",

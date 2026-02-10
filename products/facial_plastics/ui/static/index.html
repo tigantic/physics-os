@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HyperTensor — Facial Plastics Platform</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ── Header ──────────────────────────────────────────── -->
+  <header id="header">
+    <div class="header-brand">
+      <h1>HyperTensor</h1>
+      <span class="header-subtitle">Facial Plastics Platform</span>
+    </div>
+    <nav id="mode-nav">
+      <button class="nav-btn active" data-mode="case-library">Case Library</button>
+      <button class="nav-btn" data-mode="twin-inspect">Twin Inspect</button>
+      <button class="nav-btn" data-mode="plan-author">Plan Author</button>
+      <button class="nav-btn" data-mode="consult">Consult</button>
+      <button class="nav-btn" data-mode="report">Report</button>
+      <button class="nav-btn" data-mode="visualization">3D View</button>
+      <button class="nav-btn" data-mode="timeline">Timeline</button>
+      <button class="nav-btn" data-mode="compare">Compare</button>
+    </nav>
+    <div class="header-status">
+      <span id="connection-status" class="status-dot status-ok"></span>
+      <span id="case-indicator">No case loaded</span>
+    </div>
+  </header>
+
+  <!-- ── Main content area ───────────────────────────────── -->
+  <main id="main-content">
+
+    <!-- G1: Case Library -->
+    <section id="mode-case-library" class="mode-panel active">
+      <div class="panel-header">
+        <h2>Case Library</h2>
+        <div class="panel-actions">
+          <button id="btn-refresh-cases" class="btn btn-primary">Refresh</button>
+          <button id="btn-create-case" class="btn btn-secondary">New Case</button>
+          <button id="btn-curate" class="btn btn-secondary">Curate</button>
+        </div>
+      </div>
+      <div class="filter-bar">
+        <select id="filter-procedure">
+          <option value="">All Procedures</option>
+        </select>
+        <select id="filter-quality">
+          <option value="">All Quality</option>
+          <option value="clinical">Clinical</option>
+          <option value="research">Research</option>
+          <option value="synthetic">Synthetic</option>
+        </select>
+      </div>
+      <div id="case-list" class="card-grid">
+        <p class="placeholder">Loading cases...</p>
+      </div>
+    </section>
+
+    <!-- G2: Twin Inspect -->
+    <section id="mode-twin-inspect" class="mode-panel">
+      <div class="panel-header">
+        <h2>Twin Inspect</h2>
+      </div>
+      <div class="split-view">
+        <div class="split-left" id="twin-details">
+          <p class="placeholder">Select a case to inspect its digital twin.</p>
+        </div>
+        <div class="split-right" id="twin-3d">
+          <canvas id="twin-canvas"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- G3: Plan Author -->
+    <section id="mode-plan-author" class="mode-panel">
+      <div class="panel-header">
+        <h2>Plan Author</h2>
+        <div class="panel-actions">
+          <select id="template-category">
+            <option value="">Choose template category...</option>
+          </select>
+          <select id="template-name">
+            <option value="">Choose template...</option>
+          </select>
+          <button id="btn-load-template" class="btn btn-primary">Load Template</button>
+        </div>
+      </div>
+      <div class="split-view">
+        <div class="split-left">
+          <h3>Operators</h3>
+          <div id="operator-palette" class="operator-palette"></div>
+        </div>
+        <div class="split-right">
+          <h3>Plan Steps</h3>
+          <div id="plan-steps" class="plan-steps">
+            <p class="placeholder">Load a template or drag operators here.</p>
+          </div>
+          <div class="plan-actions">
+            <button id="btn-compile" class="btn btn-primary" disabled>Compile Plan</button>
+            <button id="btn-clear-plan" class="btn btn-danger">Clear</button>
+          </div>
+          <div id="compile-result" class="result-panel"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- G4: Consult -->
+    <section id="mode-consult" class="mode-panel">
+      <div class="panel-header">
+        <h2>Consult — What-If Explorer</h2>
+      </div>
+      <div class="split-view">
+        <div class="split-left">
+          <h3>Parameter Overrides</h3>
+          <div id="whatif-params" class="param-editor">
+            <p class="placeholder">Load a plan in Plan Author first.</p>
+          </div>
+          <button id="btn-run-whatif" class="btn btn-primary" disabled>Run What-If</button>
+        </div>
+        <div class="split-right">
+          <h3>Results</h3>
+          <div id="whatif-result" class="result-panel"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- G5: Report -->
+    <section id="mode-report" class="mode-panel">
+      <div class="panel-header">
+        <h2>Report</h2>
+        <div class="panel-actions">
+          <select id="report-format">
+            <option value="html">HTML</option>
+            <option value="markdown">Markdown</option>
+            <option value="json">JSON</option>
+          </select>
+          <button id="btn-generate-report" class="btn btn-primary" disabled>Generate</button>
+        </div>
+      </div>
+      <div id="report-output" class="report-output">
+        <p class="placeholder">Compile a plan first, then generate a report.</p>
+      </div>
+    </section>
+
+    <!-- G6: 3D Visualization -->
+    <section id="mode-visualization" class="mode-panel">
+      <div class="panel-header">
+        <h2>3D Visualization</h2>
+        <div class="panel-actions">
+          <label><input type="checkbox" id="viz-landmarks" checked> Landmarks</label>
+          <label><input type="checkbox" id="viz-regions" checked> Regions</label>
+          <label><input type="checkbox" id="viz-wireframe"> Wireframe</label>
+        </div>
+      </div>
+      <div id="viz-container" class="viz-container">
+        <canvas id="viz-canvas"></canvas>
+        <p class="placeholder" id="viz-placeholder">Load a case to view 3D mesh.</p>
+      </div>
+    </section>
+
+    <!-- G7: Timeline -->
+    <section id="mode-timeline" class="mode-panel">
+      <div class="panel-header">
+        <h2>Timeline</h2>
+      </div>
+      <div class="timeline-container">
+        <div id="timeline-events" class="timeline-track">
+          <p class="placeholder">Load a case to view its timeline.</p>
+        </div>
+        <div class="timeline-controls">
+          <input type="range" id="timeline-scrubber" min="0" max="100" value="0" class="scrubber">
+          <span id="timeline-frame">0 / 0</span>
+        </div>
+        <div id="timeline-detail" class="result-panel"></div>
+      </div>
+    </section>
+
+    <!-- G8: Compare -->
+    <section id="mode-compare" class="mode-panel">
+      <div class="panel-header">
+        <h2>Compare</h2>
+        <div class="panel-actions">
+          <select id="compare-type">
+            <option value="plans">Compare Plans</option>
+            <option value="cases">Compare Cases</option>
+          </select>
+          <button id="btn-run-compare" class="btn btn-primary" disabled>Compare</button>
+        </div>
+      </div>
+      <div class="split-view">
+        <div class="split-left" id="compare-a">
+          <h3>A</h3>
+          <div class="result-panel" id="compare-result-a"></div>
+        </div>
+        <div class="split-right" id="compare-b">
+          <h3>B</h3>
+          <div class="result-panel" id="compare-result-b"></div>
+        </div>
+      </div>
+      <div id="compare-diff" class="result-panel"></div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ──────────────────────────────────────────── -->
+  <footer id="footer">
+    <span>HyperTensor Facial Plastics Platform v0.1.0</span>
+    <span id="footer-stats"></span>
+  </footer>
+
+</div>
+
+<!-- ── Toast notification ──────────────────────────────────── -->
+<div id="toast-container"></div>
+
+<!-- ── New Case Modal ──────────────────────────────────────── -->
+<div id="modal-overlay" class="modal-overlay hidden">
+  <div class="modal">
+    <h3 id="modal-title">New Case</h3>
+    <div id="modal-body">
+      <label>Procedure
+        <select id="new-case-procedure"></select>
+      </label>
+      <label>Patient Age
+        <input type="number" id="new-case-age" value="40" min="0" max="120">
+      </label>
+      <label>Patient Sex
+        <select id="new-case-sex">
+          <option value="unknown">Unknown</option>
+          <option value="female">Female</option>
+          <option value="male">Male</option>
+        </select>
+      </label>
+      <label>Notes
+        <textarea id="new-case-notes" rows="3"></textarea>
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button id="modal-cancel" class="btn btn-secondary">Cancel</button>
+      <button id="modal-confirm" class="btn btn-primary">Create</button>
+    </div>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>

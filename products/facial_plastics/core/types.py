@@ -63,6 +63,12 @@ class StructureType(enum.Enum):
     AIRWAY_VALVE_EXTERNAL = "airway_valve_external"
     SKIN_SEBACEOUS = "skin_sebaceous"
     FAT_DEEP = "fat_deep"
+    FAT_ORBITAL = "fat_orbital"
+    FAT_PREAPONEUROTIC = "fat_preaponeurotic"
+    MUSCLE_ORBICULARIS = "muscle_orbicularis"
+    MUSCLE_FRONTALIS = "muscle_frontalis"
+    MUSCLE_CORRUGATOR = "muscle_corrugator"
+    MUSCLE_PROCERUS = "muscle_procerus"
     VESSEL_NASAL = "vessel_nasal"
     NERVE_NASAL = "nerve_nasal"
 

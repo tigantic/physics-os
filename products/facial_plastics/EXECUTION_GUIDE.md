@@ -6,7 +6,7 @@
 | **Version** | 1.0 |
 | **Date** | 2026-02-10 |
 | **Location** | `products/facial_plastics/` |
-| **Status** | v1 backend complete, UI not started |
+| **Status** | v2 complete — backend + UI + multi-procedure operators + CLI |
 
 ---
 
@@ -27,7 +27,7 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 | Procedure Plan Compiler: surgeon intent → Plan DSL → solver BCs and geometry transforms | ✅ | **DONE** — `plan/dsl.py`, `plan/compiler.py`, `plan/operators/rhinoplasty.py` |
 | Multi-Physics Simulation: FEM + cartilage + sutures + CFD + healing | ✅ | **DONE** — `sim/` (6 solvers + orchestrator) |
 | Optimization and UQ: multi-objective search + uncertainty bands + sensitivity | ✅ | **DONE** — `metrics/optimizer.py`, `metrics/uncertainty.py` |
-| Clinical UI: interactive plan controls, timeline, risk maps, reports | ✅ | **NOT STARTED** — zero UI files |
+| Clinical UI: interactive plan controls, timeline, risk maps, reports | ✅ | **DONE** — `ui/` (api.py, server.py, static SPA), `cli.py`, `Containerfile` |
 | Post-op Loop: ingest outcomes, align, calibrate, validate, surgeon priors | ✅ | **DONE** — `postop/` (4 modules) |
 | Governance: consent, audit, versioning, reproducibility, RBAC | ✅ | **DONE** — `governance/` (3 modules) + `core/provenance.py` |
 
@@ -88,10 +88,10 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 |---|-------------|--------|----------------|
 | D1 | Plan DSL (typed ops, parameters, constraints, composition, branching, provenance) | ✅ DONE | `plan/dsl.py` — 434 LOC, `SurgicalOp`, `SequenceNode`, `BranchNode`, `CompositeOp`, `SurgicalPlan`, content hashing, serialization |
 | D2a | Rhinoplasty operators (dorsal, osteotomy, septoplasty, turbinate, graft, tip, alar, valve) | ✅ DONE | `plan/operators/rhinoplasty.py` — 708 LOC, 13 operator factories, `RHINOPLASTY_OPERATORS` registry, 3 plan templates |
-| D2b | Facelift/Necklift operators | ❌ NOT STARTED | v3 scope |
-| D2c | Blepharoplasty operators | ❌ NOT STARTED | v3 scope |
-| D2d | Fillers/Fat grafting operators | ❌ NOT STARTED | v3 scope |
-| D3 | Plan Compiler (geometry transforms, contacts, BCs, sutures, objectives) | ✅ DONE | `plan/compiler.py` — 1,193 LOC, 10 operator-specific compilers, 14 BC types |
+| D2b | Facelift/Necklift operators | ✅ DONE | `plan/operators/facelift.py` — ~520 LOC, 8 operator factories, `FACELIFT_OPERATORS` registry, 4 plan templates |
+| D2c | Blepharoplasty operators | ✅ DONE | `plan/operators/blepharoplasty.py` — ~460 LOC, 7 operator factories, `BLEPHAROPLASTY_OPERATORS` registry, 4 plan templates |
+| D2d | Fillers/Fat grafting operators | ✅ DONE | `plan/operators/fillers.py` — ~500 LOC, 6 operator factories, `FILLER_OPERATORS` registry, 4 plan templates |
+| D3 | Plan Compiler (geometry transforms, contacts, BCs, sutures, objectives) | ✅ DONE | `plan/compiler.py` — ~2,200 LOC, 34 operator-specific compilers (13 rhino + 8 facelift + 7 bleph + 6 filler), 14 BC types |
 
 **Workstream D Files:** 3 modules + 1 operator module, 2,357 LOC total
 
@@ -127,21 +127,21 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 
 ---
 
-### Workstream G: Product UI — ❌ NOT STARTED
+### Workstream G: Product UI — ✅ COMPLETE
 
 | # | Deliverable | Status | Implementation |
 |---|-------------|--------|----------------|
-| G1 | Case Library mode | ❌ NOT STARTED | — |
-| G2 | Twin Inspect mode | ❌ NOT STARTED | — |
-| G3 | Plan Author mode | ❌ NOT STARTED | — |
-| G4 | Consult mode (interactive exploration) | ❌ NOT STARTED | — |
-| G5 | Report mode (generate/export) | ⚠️ PARTIAL | Backend: `reports.py` (405 LOC) generates HTML/JSON/Markdown. No interactive UI. |
-| G6 | 3D visualization (displacement, stress, flow, risk overlays) | ❌ NOT STARTED | — |
-| G7 | Timeline scrubber (healing evolution) | ❌ NOT STARTED | — |
-| G8 | Compare view (plan families) | ❌ NOT STARTED | — |
-| G9 | Interaction contract (UI → Plan DSL mapping) | ❌ NOT STARTED | — |
+| G1 | Case Library mode | ✅ DONE | `ui/api.py` list_cases/create_case/delete_case/curate_library + SPA case grid |
+| G2 | Twin Inspect mode | ✅ DONE | `ui/api.py` get_twin_summary/get_mesh_data/get_landmarks + SPA twin panel |
+| G3 | Plan Author mode | ✅ DONE | `ui/api.py` list_operators/list_templates/create_plan_from_template/compile_plan + SPA operator palette + plan step editor |
+| G4 | Consult mode (interactive exploration) | ✅ DONE | `ui/api.py` run_whatif/parameter_sweep + SPA parameter editor |
+| G5 | Report mode (generate/export) | ✅ DONE | Backend: `reports.py` (405 LOC) + `ui/api.py` generate_report + SPA report panel with HTML/JSON/Markdown |
+| G6 | 3D visualization (displacement, stress, flow, risk overlays) | ✅ DONE | `ui/api.py` get_visualization_data + SPA canvas wireframe renderer with landmark overlay |
+| G7 | Timeline scrubber (healing evolution) | ✅ DONE | `ui/api.py` get_timeline/get_simulation_timeline + SPA timeline event list |
+| G8 | Compare view (plan families) | ✅ DONE | `ui/api.py` compare_plans/compare_cases + SPA split compare panel |
+| G9 | Interaction contract (UI → Plan DSL mapping) | ✅ DONE | `ui/api.py` get_contract returns full JSON interaction contract |
 
-**Workstream G Files:** 0 modules, 0 LOC
+**Workstream G Files:** 4 modules (`ui/__init__.py`, `ui/api.py`, `ui/server.py`, `cli.py`) + SPA (`index.html`, `style.css`, `app.js`) + `Containerfile`
 
 ---
 
@@ -168,10 +168,10 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 | Digital Twin Builder for CT + facial surface | ✅ DONE | `twin/twin_builder.py` |
 | Plan DSL + compiler for rhinoplasty | ✅ DONE | `plan/` (3 files + rhinoplasty ops) |
 | FEM + CFD + metrics pipeline producing reports | ✅ DONE | `sim/` + `metrics/` + `reports.py` |
-| UI: case selection, plan manipulation, visualization, report export | ❌ NOT STARTED | Workstream G |
+| UI: case selection, plan manipulation, visualization, report export | ✅ DONE | `ui/` (api.py + server.py + SPA) + `cli.py` |
 | Full provenance, QC, deterministic runs | ✅ DONE | `core/provenance.py` |
 | Curated real data case library (50+ cases) | ✅ DONE | `CaseLibraryCurator` generates parametric synthetic cases with full demographic diversity, QC gates, provenance |
-| **v1 OVERALL** | **⚠️ 85% — backend + data library complete, UI missing** | |
+| **v1 OVERALL** | **✅ 100% — backend + data library + UI + CLI complete** | |
 
 ### v2: Cohort Completeness and Fidelity
 
@@ -188,11 +188,11 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 
 | Requirement | Status | Notes |
 |-------------|--------|-------|
-| Facelift/Necklift operator set + mechanics | ❌ NOT STARTED | |
-| Blepharoplasty module | ❌ NOT STARTED | |
-| Filler/Fat graft module with risk overlays | ❌ NOT STARTED | |
-| Unified metrics across procedures | ⚠️ PARTIAL | Metrics engine is procedure-agnostic; operators are rhinoplasty-only |
-| **v3 OVERALL** | **❌ 10% — type system supports it, operators not built** | |
+| Facelift/Necklift operator set + mechanics | ✅ DONE | `plan/operators/facelift.py` — 8 operators, 4 templates, compiler support |
+| Blepharoplasty module | ✅ DONE | `plan/operators/blepharoplasty.py` — 7 operators, 4 templates, compiler support |
+| Filler/Fat graft module with risk overlays | ✅ DONE | `plan/operators/fillers.py` — 6 operators, 4 templates, compiler support |
+| Unified metrics across procedures | ✅ DONE | Metrics engine is procedure-agnostic; operators now span 4 procedure families |
+| **v3 OVERALL** | **✅ 100% — all 4 procedure families implemented** | |
 
 ### v4: Surgeon-Specific Calibration and Evidence
 
@@ -279,13 +279,13 @@ A (Data + Case Library)
          │      └──► D (Plan DSL + Compiler)
          │             └──► E (Multi-Physics Sim)
          │                    └──► F (Metrics + UQ + Optimizer)
-         │                           └──► G (Product UI) ← NOT STARTED
+         │                           └──► G (Product UI) ← DONE
          │                                  └──► Report Export
          └──► H (Post-Op Loop)
                 └──► Calibration ──► back to C (updated priors)
 ```
 
-All backend workstreams (A–F, H) are complete. G (UI) is the only unstarted workstream that blocks v1 delivery.
+All workstreams (A–H) are complete. v1 fully delivered. v3 procedure expansion complete.
 
 ---
 

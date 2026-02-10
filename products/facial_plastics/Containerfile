@@ -1,0 +1,60 @@
+# ─────────────────────────────────────────────────────────────────────
+# HyperTensor Facial Plastics Platform — Container Image
+# ─────────────────────────────────────────────────────────────────────
+# Build:
+#   podman build -f products/facial_plastics/Containerfile -t hypertensor-facial-plastics .
+#   docker build -f products/facial_plastics/Containerfile -t hypertensor-facial-plastics .
+#
+# Run (UI server):
+#   docker run --rm -p 8420:8420 hypertensor-facial-plastics serve --host 0.0.0.0
+#
+# Run (CLI):
+#   docker run --rm hypertensor-facial-plastics info
+#   docker run --rm -v $PWD/data:/data hypertensor-facial-plastics library list --data-root /data
+# ─────────────────────────────────────────────────────────────────────
+
+FROM python:3.12-slim AS base
+
+LABEL maintainer="HyperTensor <team@hypertensor.io>"
+LABEL description="HyperTensor Facial Plastics — Surgical Simulation Platform"
+
+# Prevent Python from writing .pyc files and enable unbuffered output
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# System dependencies (minimal — numpy has pre-built wheels)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── Install Python dependencies ──────────────────────────────────
+WORKDIR /app
+
+COPY requirements-lock.txt /app/requirements-lock.txt
+RUN pip install --no-cache-dir numpy && \
+    pip install --no-cache-dir -r requirements-lock.txt 2>/dev/null || true
+
+# ── Copy product source ──────────────────────────────────────────
+# Copy only the products/facial_plastics package and supporting files
+COPY products/__init__.py /app/products/__init__.py
+COPY products/facial_plastics/ /app/products/facial_plastics/
+
+# Ensure products package is importable
+ENV PYTHONPATH=/app
+
+# ── Data volume ───────────────────────────────────────────────────
+RUN mkdir -p /data
+VOLUME ["/data"]
+ENV HYPERTENSOR_DATA_ROOT=/data
+
+# ── Network ───────────────────────────────────────────────────────
+EXPOSE 8420
+
+# ── Health check ──────────────────────────────────────────────────
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8420/api/contract')" || exit 1
+
+# ── Default entrypoint ───────────────────────────────────────────
+ENTRYPOINT ["python", "-m", "products.facial_plastics.cli"]
+CMD ["info"]
