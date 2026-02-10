@@ -1,0 +1,380 @@
+# Facial Plastics Simulation Platform — Execution Guide
+
+| Field | Value |
+|-------|-------|
+| **Document** | Execution Guide — Engineering Plan + Progress Tracker |
+| **Version** | 1.0 |
+| **Date** | 2026-02-10 |
+| **Location** | `products/facial_plastics/` |
+| **Status** | v1 backend complete, UI not started |
+
+---
+
+## 0. Prime Directive
+
+Build the real product architecture end-to-end, with a curated, legally clean Real Data Case Library, so every module runs on real inputs and produces real artifacts. The demo is simply the product running on a case library rather than live clinic intake.
+
+**"Done" at any stage means:** deterministic pipeline, versioned artifacts, QC gates, and complete traceability.
+
+---
+
+## 1. Target End-State Invariants
+
+| Invariant | Required | Status |
+|-----------|----------|--------|
+| Case Ingestion: DICOM CT/CBCT/MRI, 3D surface scans, 2D photos, measurements, annotations | ✅ | **DONE** — `data/dicom_ingest.py`, `data/surface_ingest.py`, `data/photo_ingest.py` |
+| Digital Twin Builder: labeled, meshed, sim-ready model with quantified uncertainty | ✅ | **DONE** — `twin/twin_builder.py` (8-stage pipeline) |
+| Procedure Plan Compiler: surgeon intent → Plan DSL → solver BCs and geometry transforms | ✅ | **DONE** — `plan/dsl.py`, `plan/compiler.py`, `plan/operators/rhinoplasty.py` |
+| Multi-Physics Simulation: FEM + cartilage + sutures + CFD + healing | ✅ | **DONE** — `sim/` (6 solvers + orchestrator) |
+| Optimization and UQ: multi-objective search + uncertainty bands + sensitivity | ✅ | **DONE** — `metrics/optimizer.py`, `metrics/uncertainty.py` |
+| Clinical UI: interactive plan controls, timeline, risk maps, reports | ✅ | **NOT STARTED** — zero UI files |
+| Post-op Loop: ingest outcomes, align, calibrate, validate, surgeon priors | ✅ | **DONE** — `postop/` (4 modules) |
+| Governance: consent, audit, versioning, reproducibility, RBAC | ✅ | **DONE** — `governance/` (3 modules) + `core/provenance.py` |
+
+---
+
+## 2. Workstream Status Matrix
+
+### Workstream A: Data + Case Library — ✅ COMPLETE
+
+| # | Deliverable | Status | Implementation |
+|---|-------------|--------|----------------|
+| A1 | CT/CBCT/MRI ingest | ✅ DONE | `data/dicom_ingest.py` — 537 LOC, built-in binary DICOM parser (explicit+implicit VR), pydicom fallback, trilinear resampling, orientation normalization |
+| A2 | 3D facial surface ingest | ✅ DONE | `data/surface_ingest.py` — 297 LOC, OBJ/STL(binary+ASCII)/PLY(ASCII+binary LE), vertex dedup, normal estimation |
+| A3 | Synthetic augmentation | ✅ DONE | `data/synthetic_augment.py` — 348 LOC, LHS sampling, PCA mesh perturbation, plan parameter sweep, labeled as synthetic |
+| A4 | Case library management | ✅ DONE | `data/case_library.py` — 245 LOC, JSON index, CRUD, query by procedure/modality/quality |
+| A5 | Photo ingest | ✅ DONE | `data/photo_ingest.py` — 327 LOC, PIL + BMP fallback, EXIF extraction, view angle classification |
+| — | **Curated 50–500 real case library** | ❌ NOT DONE | No real datasets ingested yet. Infrastructure ready but library empty. |
+
+**Workstream A Files:** 5 modules, 1,754 LOC total
+
+---
+
+### Workstream B: CaseBundle Standard + Provenance — ✅ COMPLETE
+
+| # | Deliverable | Status | Implementation |
+|---|-------------|--------|----------------|
+| B1 | CaseBundle schema (manifest, inputs, derived, models, mesh, plan, runs, results, metrics, reports, validation) | ✅ DONE | `core/case_bundle.py` — 604 LOC, 10 canonical subdirectories, `BundleManifest` dataclass |
+| B2 | Content-addressed provenance | ✅ DONE | `core/provenance.py` — 262 LOC, SHA-256 hashing (bytes, files, arrays, dicts), `ProvenanceChain` with begin/end step |
+| B3 | Reproducibility invariants (every artifact reproducible, content-addressed, version-pinned) | ✅ DONE | Hash-chained manifests, software version tracking, config digest |
+| B4 | Type system | ✅ DONE | `core/types.py` — 482 LOC, 9 enums (38 structure types, 12 procedures, 11 material models, 37 landmarks), 10+ frozen dataclasses |
+| B5 | Platform configuration | ✅ DONE | `core/config.py` — 240 LOC, sub-configs (solver, mesh, segmentation, CFD, UQ), DEFAULT_TISSUE_LIBRARY (20 tissues with literature-based mechanical properties) |
+
+**Workstream B Files:** 4 modules, 1,608 LOC total
+
+---
+
+### Workstream C: Digital Twin Builder — ✅ COMPLETE
+
+| # | Deliverable | Status | Implementation |
+|---|-------------|--------|----------------|
+| C1 | DICOM pipeline (import, normalize, metadata) | ✅ DONE | `data/dicom_ingest.py` + `twin/twin_builder.py` stage 1 |
+| C2 | Multi-structure segmentation (bone, cartilage, airway, skin, fat, SMAS, vessels, nerves) | ✅ DONE | `twin/segmentation.py` — 570 LOC, 5-phase pipeline, 26-label map, pure-numpy 3D morphological ops (BFS CCA, dilation, erosion, hole-fill) |
+| C3 | Registration (CT ↔ surface ↔ photos, landmarks, nonrigid) | ✅ DONE | `twin/registration.py` — 420 LOC, SVD rigid (Arun), ICP (p2p + p2plane + trimmed outlier), thin-plate spline deformable |
+| C4 | Volumetric meshing (multi-region, adaptive, quality enforcement) | ✅ DONE | `twin/meshing.py` — 745 LOC, marching cubes, Bowyer-Watson Delaunay, ROI refinement, Laplacian smoothing, quality metrics (Jacobian, aspect ratio) |
+| C5 | Material and boundary assignment | ✅ DONE | `twin/materials.py` — 265 LOC, 18-structure material model map, age/Fitzpatrick adjustments, boundary constraint generation |
+| C6 | Landmark detection | ✅ DONE | `twin/landmarks.py` — 473 LOC, 30+ canonical landmarks, cotangent-Laplacian curvature, extremal detection |
+| C7 | TwinBuilder orchestrator | ✅ DONE | `twin/twin_builder.py` — 500 LOC, 8-stage pipeline with QC reports |
+
+**Workstream C Files:** 6 modules, 2,973 LOC total
+
+---
+
+### Workstream D: Plan DSL + Plan Compiler — ✅ COMPLETE (Rhinoplasty)
+
+| # | Deliverable | Status | Implementation |
+|---|-------------|--------|----------------|
+| D1 | Plan DSL (typed ops, parameters, constraints, composition, branching, provenance) | ✅ DONE | `plan/dsl.py` — 434 LOC, `SurgicalOp`, `SequenceNode`, `BranchNode`, `CompositeOp`, `SurgicalPlan`, content hashing, serialization |
+| D2a | Rhinoplasty operators (dorsal, osteotomy, septoplasty, turbinate, graft, tip, alar, valve) | ✅ DONE | `plan/operators/rhinoplasty.py` — 708 LOC, 13 operator factories, `RHINOPLASTY_OPERATORS` registry, 3 plan templates |
+| D2b | Facelift/Necklift operators | ❌ NOT STARTED | v3 scope |
+| D2c | Blepharoplasty operators | ❌ NOT STARTED | v3 scope |
+| D2d | Fillers/Fat grafting operators | ❌ NOT STARTED | v3 scope |
+| D3 | Plan Compiler (geometry transforms, contacts, BCs, sutures, objectives) | ✅ DONE | `plan/compiler.py` — 1,193 LOC, 10 operator-specific compilers, 14 BC types |
+
+**Workstream D Files:** 3 modules + 1 operator module, 2,357 LOC total
+
+---
+
+### Workstream E: Multi-Physics Solver Suite — ✅ COMPLETE
+
+| # | Deliverable | Status | Implementation |
+|---|-------------|--------|----------------|
+| E1 | Nonlinear FEM soft tissue (hyperelastic, viscoelastic, large deformation, contact) | ✅ DONE | `sim/fem_soft_tissue.py` — 834 LOC, tet4 elements, Neo-Hookean + Mooney-Rivlin, Newton-Raphson + backtracking line search, von Mises stress, principal strains |
+| E2 | Cartilage + bone interaction (bending, graft mechanics, attachments) | ✅ DONE | `sim/cartilage.py` — 460 LOC, scoring, grafting, material mapping, bending stiffness |
+| E3 | Sutures and fixation (relaxation, time-dependent tension) | ✅ DONE | `sim/sutures.py` — 417 LOC, 4 material types, creep model, strength decay, transdomal/interdomal creation |
+| E4 | CFD nasal airflow (pressure drop, velocity, turbulence) | ✅ DONE | `sim/cfd_airway.py` — 641 LOC, airway geometry extraction, Graham scan convex hull, resistance classification |
+| E5 | FSI (compliant valve, collapse prediction) | ❌ NOT STARTED | v5 scope |
+| E6 | Healing/time evolution (edema, scar, settling) | ✅ DONE | `sim/healing.py` — 509 LOC, tissue-specific healing rates, timeline computation, mesh evolution prediction |
+| E7 | Solver orchestrator | ✅ DONE | `sim/orchestrator.py` — 382 LOC, coordinates FEM + CFD + cartilage + sutures + healing |
+
+**Workstream E Files:** 6 modules, 3,243 LOC total
+
+---
+
+### Workstream F: Metrics, Scoring, Optimization, UQ — ✅ COMPLETE
+
+| # | Deliverable | Status | Implementation |
+|---|-------------|--------|----------------|
+| F1 | Aesthetic metrics (curvature, landmarks, symmetry, projection, angles) | ✅ DONE | `metrics/aesthetic.py` — 720 LOC, profile/symmetry/proportion metrics, Procrustes, Hausdorff, BTAL, gender-aware scoring |
+| F2 | Functional metrics (resistance, pressure drop, flow, valve stability) | ✅ DONE | `metrics/functional.py` — 601 LOC, Cottle area, valve geometry, flow distribution, WSS analysis, NOSE score prediction |
+| F3 | Safety metrics (stress, tension, ischemia, scar, nerve/vascular risk) | ✅ DONE | `metrics/safety.py` — 705 LOC, per-structure thresholds, vascular/nerve proximity, skin tension, osteotomy stability |
+| F4 | Uncertainty quantification (parameter priors, propagation, sensitivity) | ✅ DONE | `metrics/uncertainty.py` — 635 LOC, LHS, Saltelli sampling, first-order + total Sobol indices, confidence intervals |
+| F5 | Multi-objective optimization (Pareto, constraints) | ✅ DONE | `metrics/optimizer.py` — 708 LOC, NSGA-II with SBX, polynomial mutation, fast non-dominated sort, crowding distance, 2D hypervolume |
+
+**Workstream F Files:** 5 modules, 3,369 LOC total
+
+---
+
+### Workstream G: Product UI — ❌ NOT STARTED
+
+| # | Deliverable | Status | Implementation |
+|---|-------------|--------|----------------|
+| G1 | Case Library mode | ❌ NOT STARTED | — |
+| G2 | Twin Inspect mode | ❌ NOT STARTED | — |
+| G3 | Plan Author mode | ❌ NOT STARTED | — |
+| G4 | Consult mode (interactive exploration) | ❌ NOT STARTED | — |
+| G5 | Report mode (generate/export) | ⚠️ PARTIAL | Backend: `reports.py` (405 LOC) generates HTML/JSON/Markdown. No interactive UI. |
+| G6 | 3D visualization (displacement, stress, flow, risk overlays) | ❌ NOT STARTED | — |
+| G7 | Timeline scrubber (healing evolution) | ❌ NOT STARTED | — |
+| G8 | Compare view (plan families) | ❌ NOT STARTED | — |
+| G9 | Interaction contract (UI → Plan DSL mapping) | ❌ NOT STARTED | — |
+
+**Workstream G Files:** 0 modules, 0 LOC
+
+---
+
+### Workstream H: Post-Op Loop and Calibration — ✅ COMPLETE
+
+| # | Deliverable | Status | Implementation |
+|---|-------------|--------|----------------|
+| H1 | Outcome ingestion (photos, scans, PROMs, complications) | ✅ DONE | `postop/outcome_ingest.py` — 292 LOC, surface scans, photos, landmarks, NOSE/satisfaction PROs |
+| H2 | Alignment and measurement (pre/post registration, deltas) | ✅ DONE | `postop/alignment.py` — 473 LOC, landmark + ICP alignment, signed/unsigned distance maps, regional analysis (dorsum, tip, alar, bridge, columella) |
+| H3 | Calibration (tissue priors, surgeon priors, error tracking) | ✅ DONE | `postop/calibration.py` — 373 LOC, Levenberg-Marquardt with Gaussian priors, Jacobian, bounded optimization |
+| H4 | Validation dashboards (accuracy, drift, OOD) | ✅ DONE | `postop/validation.py` — 556 LOC, Bland-Altman, Pearson/Spearman, accuracy profiling, grade assignment |
+
+**Workstream H Files:** 4 modules, 1,694 LOC total
+
+---
+
+## 3. Delivery Sequencing — Version Tracker
+
+### v1: End-to-End Pipeline on Real Data Case Library
+
+| Requirement | Status | Notes |
+|-------------|--------|-------|
+| CaseBundle standard implemented | ✅ DONE | `core/case_bundle.py` |
+| Digital Twin Builder for CT + facial surface | ✅ DONE | `twin/twin_builder.py` |
+| Plan DSL + compiler for rhinoplasty | ✅ DONE | `plan/` (3 files + rhinoplasty ops) |
+| FEM + CFD + metrics pipeline producing reports | ✅ DONE | `sim/` + `metrics/` + `reports.py` |
+| UI: case selection, plan manipulation, visualization, report export | ❌ NOT STARTED | Workstream G |
+| Full provenance, QC, deterministic runs | ✅ DONE | `core/provenance.py` |
+| Curated real data case library (50+ cases) | ❌ NOT STARTED | Infrastructure ready, library empty |
+| **v1 OVERALL** | **⚠️ 70% — backend complete, UI + data library missing** | |
+
+### v2: Cohort Completeness and Fidelity
+
+| Requirement | Status | Notes |
+|-------------|--------|-------|
+| Curated paired datasets (surface + CT aligned) | ❌ NOT STARTED | |
+| Expand segmentation (fat compartments, SMAS) | ✅ DONE | Already in segmenter (SMAS, FAT_DEEP, FAT_BUCCAL, FAT_SUBCUTANEOUS) |
+| Healing timeline integration | ✅ DONE | `sim/healing.py` |
+| UQ + sensitivity analysis | ✅ DONE | `metrics/uncertainty.py` |
+| Multi-plan compare, Pareto exploration | ✅ DONE | `metrics/optimizer.py` ParetoFront |
+| **v2 OVERALL** | **⚠️ 80% — physics done, paired datasets needed** | |
+
+### v3: Procedure Expansion
+
+| Requirement | Status | Notes |
+|-------------|--------|-------|
+| Facelift/Necklift operator set + mechanics | ❌ NOT STARTED | |
+| Blepharoplasty module | ❌ NOT STARTED | |
+| Filler/Fat graft module with risk overlays | ❌ NOT STARTED | |
+| Unified metrics across procedures | ⚠️ PARTIAL | Metrics engine is procedure-agnostic; operators are rhinoplasty-only |
+| **v3 OVERALL** | **❌ 10% — type system supports it, operators not built** | |
+
+### v4: Surgeon-Specific Calibration and Evidence
+
+| Requirement | Status | Notes |
+|-------------|--------|-------|
+| Post-op ingestion pipeline | ✅ DONE | `postop/outcome_ingest.py` |
+| Calibration and validation dashboards | ✅ DONE | Backend: `postop/calibration.py` + `postop/validation.py`. No UI dashboard. |
+| Repeatability, regression testing suites | ✅ DONE | 151 tests |
+| Multi-case analytics and cohort insights | ⚠️ PARTIAL | Per-case validation done; cohort aggregation in `PredictionValidator` but no cross-case analytics UI |
+| **v4 OVERALL** | **⚠️ 75% — backend done, dashboards need UI** | |
+
+### v5: Full Multi-Physics Ceiling
+
+| Requirement | Status | Notes |
+|-------------|--------|-------|
+| FSI nasal valve modeling | ❌ NOT STARTED | |
+| Advanced anisotropy and expression models | ❌ NOT STARTED | |
+| Long-horizon aging trajectories | ❌ NOT STARTED | |
+| Scale-out optimization and large plan searches | ⚠️ PARTIAL | NSGA-II implemented; no distributed/parallel optimizer |
+| Full multi-tenant productization | ❌ NOT STARTED | |
+| **v5 OVERALL** | **❌ 5%** | |
+
+---
+
+## 4. Three Non-Negotiable Artifacts
+
+| Artifact | Status | Location |
+|----------|--------|----------|
+| **CaseBundle Spec (formal)** | ✅ DONE | `core/case_bundle.py` — schema, folder layout, manifest hashing, version pinning. Documented in module docstring. |
+| **Plan DSL Spec (formal)** | ✅ DONE | `plan/dsl.py` — types, operators, parameters, constraints, compilation outputs. `plan/compiler.py` — formal compilation pipeline. |
+| **Reference Implementation Path** | ✅ DONE | Deterministic pipeline: ingest → twin → plan → FEM+CFD → metrics → report. All backed by `SimOrchestrator`. |
+
+---
+
+## 5. Quantitative Inventory
+
+| Metric | Value |
+|--------|-------|
+| Python source files | 49 |
+| Test files | 8 (7 test + 1 conftest) |
+| Total lines of code | 20,691 |
+| Test functions | 151 |
+| Public API exports | 78 |
+| Enums defined | 9 (38 structures, 12 procedures, 11 materials, 37 landmarks, ...) |
+| Sub-packages | 10 |
+| External dependencies | numpy only (pydicom, PIL optional) |
+| From-scratch algorithms | 15+ (DICOM parser, marching cubes, Delaunay, ICP, TPS, tet4 FEM, Newton-Raphson, NSGA-II, Sobol, LM, ...) |
+| Stubs / TODOs / placeholders | 0 |
+| Git commit | `e17783ba` (code) + `6917a330` (OS_Evolution tracking) |
+
+---
+
+## 6. Gap Analysis — What's Missing for Full Product
+
+### Critical Path (blocks v1 ship):
+
+| Gap | Impact | Effort Estimate | Dependency |
+|-----|--------|-----------------|------------|
+| **G1–G9: Product UI** | No clinical user can interact with the system | Large — full frontend app | Backend APIs ready |
+| **Real Data Case Library** | Pipeline runs but on no real data | Medium — data curation, licensing | Data sources identified |
+
+### Additive (blocks v3+):
+
+| Gap | Impact | Effort Estimate |
+|-----|--------|-----------------|
+| Facelift/Necklift operators | No facelift simulation | Medium — operator set + compiler extensions |
+| Blepharoplasty operators | No blepharoplasty simulation | Medium |
+| Filler/Fat graft operators | No injectable simulation | Medium |
+| FSI nasal valve | No collapse prediction | Large — coupled solver |
+| Expression/anisotropy models | Simplified tissue response | Medium |
+| Aging trajectories | No long-term prediction | Medium |
+| Multi-tenant infrastructure | Single-user only | Large — auth, deployment |
+| CLI entry point | No command-line interface | Small |
+| REST/gRPC API layer | No programmatic access | Medium |
+| Docker/packaging | Manual install only | Small |
+
+---
+
+## 7. Workstream Dependency Graph
+
+```
+A (Data + Case Library)
+  └──► B (CaseBundle Standard)
+         ├──► C (Digital Twin Builder)
+         │      └──► D (Plan DSL + Compiler)
+         │             └──► E (Multi-Physics Sim)
+         │                    └──► F (Metrics + UQ + Optimizer)
+         │                           └──► G (Product UI) ← NOT STARTED
+         │                                  └──► Report Export
+         └──► H (Post-Op Loop)
+                └──► Calibration ──► back to C (updated priors)
+```
+
+All backend workstreams (A–F, H) are complete. G (UI) is the only unstarted workstream that blocks v1 delivery.
+
+---
+
+## 8. Implementation File Index
+
+```
+products/facial_plastics/
+├── __init__.py                           226 LOC  (78 exports)
+├── reports.py                            405 LOC  (ReportBuilder)
+├── EXECUTION_GUIDE.md                    (this document)
+│
+├── core/
+│   ├── __init__.py
+│   ├── types.py                          482 LOC  (9 enums, 10+ dataclasses)
+│   ├── config.py                         240 LOC  (PlatformConfig)
+│   ├── provenance.py                     262 LOC  (Provenance, hashing)
+│   └── case_bundle.py                    604 LOC  (CaseBundle)
+│
+├── data/
+│   ├── __init__.py
+│   ├── dicom_ingest.py                   537 LOC  (DicomIngester)
+│   ├── photo_ingest.py                   327 LOC  (PhotoIngester)
+│   ├── surface_ingest.py                 297 LOC  (SurfaceIngester)
+│   ├── synthetic_augment.py              348 LOC  (SyntheticAugmenter)
+│   └── case_library.py                   245 LOC  (CaseLibrary)
+│
+├── twin/
+│   ├── __init__.py
+│   ├── segmentation.py                   570 LOC  (MultiStructureSegmenter)
+│   ├── landmarks.py                      473 LOC  (LandmarkDetector)
+│   ├── registration.py                   420 LOC  (MultiModalRegistrar)
+│   ├── meshing.py                        745 LOC  (VolumetricMesher)
+│   ├── materials.py                      265 LOC  (MaterialAssigner)
+│   └── twin_builder.py                   500 LOC  (TwinBuilder)
+│
+├── plan/
+│   ├── __init__.py
+│   ├── dsl.py                            434 LOC  (SurgicalPlan, DSL nodes)
+│   ├── compiler.py                     1,193 LOC  (PlanCompiler, 10 op compilers)
+│   └── operators/
+│       ├── __init__.py
+│       └── rhinoplasty.py                708 LOC  (13 operators, 3 templates)
+│
+├── sim/
+│   ├── __init__.py
+│   ├── fem_soft_tissue.py                834 LOC  (SoftTissueFEM)
+│   ├── cartilage.py                      460 LOC  (CartilageSolver)
+│   ├── sutures.py                        417 LOC  (SutureSystem)
+│   ├── cfd_airway.py                     641 LOC  (AirwayCFDSolver)
+│   ├── healing.py                        509 LOC  (HealingModel)
+│   └── orchestrator.py                   382 LOC  (SimOrchestrator)
+│
+├── metrics/
+│   ├── __init__.py
+│   ├── aesthetic.py                      720 LOC  (AestheticMetrics)
+│   ├── functional.py                     601 LOC  (FunctionalMetrics)
+│   ├── safety.py                         705 LOC  (SafetyMetrics)
+│   ├── uncertainty.py                    635 LOC  (UncertaintyQuantifier)
+│   └── optimizer.py                      708 LOC  (PlanOptimizer, NSGA-II)
+│
+├── governance/
+│   ├── __init__.py
+│   ├── audit.py                          251 LOC  (AuditLog)
+│   ├── consent.py                        264 LOC  (ConsentManager)
+│   └── access.py                         345 LOC  (AccessControl, RBAC)
+│
+├── postop/
+│   ├── __init__.py
+│   ├── outcome_ingest.py                 292 LOC  (OutcomeIngester)
+│   ├── alignment.py                      473 LOC  (OutcomeAligner)
+│   ├── calibration.py                    373 LOC  (ModelCalibrator)
+│   └── validation.py                     556 LOC  (PredictionValidator)
+│
+└── tests/
+    ├── __init__.py
+    ├── conftest.py                       204 LOC  (5 fixtures)
+    ├── test_core.py                      280 LOC  (31 tests)
+    ├── test_governance.py                258 LOC  (21 tests)
+    ├── test_metrics.py                   322 LOC  (20 tests)
+    ├── test_plan.py                      206 LOC  (21 tests)
+    ├── test_postop.py                    470 LOC  (30 tests)
+    ├── test_reports.py                    97 LOC  (10 tests)
+    └── test_sim.py                       218 LOC  (18 tests)
+```
+
+---
+
+## 9. Changelog
+
+| Date | Commit | Change |
+|------|--------|--------|
+| 2026-02-10 | `e17783ba` | Initial v1 backend — 56 files, 20,691 LOC, 151 tests, 78 exports |
+| 2026-02-10 | `6917a330` | Registered in OS_Evolution.md §9.21 + §15 |
