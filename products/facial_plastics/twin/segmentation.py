@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
+from scipy import ndimage as _ndi
 
 from ..core.config import SegmentationConfig
 from ..core.types import (
@@ -407,120 +408,27 @@ class MultiStructureSegmenter:
 
     @staticmethod
     def _connected_components_3d(mask: np.ndarray) -> np.ndarray:
-        """6-connected component labeling in 3D (pure numpy BFS)."""
-        labels = np.zeros_like(mask, dtype=np.int32)
-        dz, dy, dx = mask.shape
-        current_label = 0
-
-        visited = np.zeros_like(mask, dtype=bool)
-        # 6-connected neighbors
-        neighbors = [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
-
-        for z in range(dz):
-            for y in range(dy):
-                for x in range(dx):
-                    if mask[z, y, x] and not visited[z, y, x]:
-                        current_label += 1
-                        # BFS
-                        queue = [(z, y, x)]
-                        visited[z, y, x] = True
-                        labels[z, y, x] = current_label
-                        head = 0
-                        while head < len(queue):
-                            cz, cy, cx = queue[head]
-                            head += 1
-                            for dz_, dy_, dx_ in neighbors:
-                                nz, ny, nx = cz + dz_, cy + dy_, cx + dx_
-                                if (
-                                    0 <= nz < dz
-                                    and 0 <= ny < dy
-                                    and 0 <= nx < dx
-                                    and mask[nz, ny, nx]
-                                    and not visited[nz, ny, nx]
-                                ):
-                                    visited[nz, ny, nx] = True
-                                    labels[nz, ny, nx] = current_label
-                                    queue.append((nz, ny, nx))
-
-        return labels
+        """6-connected component labeling in 3D."""
+        struct = _ndi.generate_binary_structure(3, 1)  # 6-connected
+        labels, _ = _ndi.label(mask, structure=struct)
+        return np.asarray(labels)
 
     @staticmethod
     def _dilate_3d(mask: np.ndarray, radius: int = 1) -> np.ndarray:
-        """Binary dilation using box structuring element."""
-        result = mask.copy()
-        for _ in range(radius):
-            dilated = result.copy()
-            dilated[1:] |= result[:-1]
-            dilated[:-1] |= result[1:]
-            dilated[:, 1:] |= result[:, :-1]
-            dilated[:, :-1] |= result[:, 1:]
-            dilated[:, :, 1:] |= result[:, :, :-1]
-            dilated[:, :, :-1] |= result[:, :, 1:]
-            result = dilated
-        return result
+        """Binary dilation using ball structuring element."""
+        struct = _ndi.generate_binary_structure(3, 1)
+        return np.asarray(_ndi.binary_dilation(mask, structure=struct, iterations=radius))
 
     @staticmethod
     def _erode_3d(mask: np.ndarray, radius: int = 1) -> np.ndarray:
-        """Binary erosion using box structuring element."""
-        result = mask.copy()
-        for _ in range(radius):
-            eroded = result.copy()
-            eroded[1:] &= result[:-1]
-            eroded[:-1] &= result[1:]
-            eroded[:, 1:] &= result[:, :-1]
-            eroded[:, :-1] &= result[:, 1:]
-            eroded[:, :, 1:] &= result[:, :, :-1]
-            eroded[:, :, :-1] &= result[:, :, 1:]
-            result = eroded
-        return result
+        """Binary erosion using ball structuring element."""
+        struct = _ndi.generate_binary_structure(3, 1)
+        return np.asarray(_ndi.binary_erosion(mask, structure=struct, iterations=radius))
 
     @staticmethod
     def _fill_holes_3d(mask: np.ndarray) -> np.ndarray:
-        """Fill internal holes using flood-fill from boundary."""
-        dz, dy, dx = mask.shape
-        # Create inverted mask
-        inv = ~mask
-        # Flood-fill from all boundary voxels
-        visited = np.zeros_like(inv, dtype=bool)
-        queue = []
-
-        # Seed from volume boundaries
-        for z in range(dz):
-            for y in range(dy):
-                for x in [0, dx - 1]:
-                    if inv[z, y, x] and not visited[z, y, x]:
-                        visited[z, y, x] = True
-                        queue.append((z, y, x))
-            for x in range(dx):
-                for y in [0, dy - 1]:
-                    if inv[z, y, x] and not visited[z, y, x]:
-                        visited[z, y, x] = True
-                        queue.append((z, y, x))
-        for y in range(dy):
-            for x in range(dx):
-                for z in [0, dz - 1]:
-                    if inv[z, y, x] and not visited[z, y, x]:
-                        visited[z, y, x] = True
-                        queue.append((z, y, x))
-
-        neighbors = [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
-        head = 0
-        while head < len(queue):
-            cz, cy, cx = queue[head]
-            head += 1
-            for dz_, dy_, dx_ in neighbors:
-                nz, ny, nx = cz + dz_, cy + dy_, cx + dx_
-                if (
-                    0 <= nz < dz and 0 <= ny < dy and 0 <= nx < dx
-                    and inv[nz, ny, nx] and not visited[nz, ny, nx]
-                ):
-                    visited[nz, ny, nx] = True
-                    queue.append((nz, ny, nx))
-
-        # Holes = inverted voxels not reachable from boundary
-        filled = mask.copy()
-        filled[~visited & inv] = True
-        return filled
+        """Fill internal holes using scipy binary_fill_holes."""
+        return np.asarray(_ndi.binary_fill_holes(mask), dtype=mask.dtype)
 
     def _compute_quality_score(
         self, mask: np.ndarray, struct_type: StructureType,

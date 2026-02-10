@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
+from scipy.spatial import KDTree as _KDTree
 
 from ..core.types import (
     Landmark,
@@ -375,28 +376,16 @@ class MultiModalRegistrar:
         tgt: np.ndarray,
         threshold: float,
     ) -> Tuple[List[Tuple[int, int]], np.ndarray]:
-        """Find nearest-neighbor correspondences (chunked for memory)."""
-        n_src = len(src)
-        n_tgt = len(tgt)
-        chunk_size = 1000
+        """Find nearest-neighbor correspondences via KDTree."""
+        tree = _KDTree(tgt)
+        dists, indices = tree.query(src)
 
-        correspondences = []
-        distances_list = []
-
-        for start in range(0, n_src, chunk_size):
-            end = min(start + chunk_size, n_src)
-            chunk = src[start:end]
-
-            # Compute pairwise distances
-            diff = chunk[:, None, :] - tgt[None, :, :]
-            dist_sq = (diff ** 2).sum(axis=2)
-            min_idx = dist_sq.argmin(axis=1)
-            min_dist = np.sqrt(dist_sq[np.arange(end - start), min_idx])
-
-            for i, (j, d) in enumerate(zip(min_idx, min_dist)):
-                if d < threshold:
-                    correspondences.append((start + i, int(j)))
-                    distances_list.append(d)
+        correspondences: List[Tuple[int, int]] = []
+        distances_list: List[float] = []
+        for i, (d, j) in enumerate(zip(dists, indices)):
+            if d < threshold:
+                correspondences.append((i, int(j)))
+                distances_list.append(float(d))
 
         return correspondences, np.array(distances_list) if distances_list else np.array([])
 

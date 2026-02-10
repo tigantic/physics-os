@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
+from scipy.special import erfinv as _scipy_erfinv
 
 from ..core.case_bundle import CaseBundle, PatientDemographics
 from ..core.types import (
@@ -335,14 +336,9 @@ class SyntheticAugmenter:
 # ── Utility functions ─────────────────────────────────────────────
 
 def _erfinv(x: float) -> float:
-    """Approximate inverse error function (Winitzki 2008).
+    """Inverse error function via scipy compiled backend.
 
-    Accurate to ~0.01% for |x| < 0.99.
+    Delegates to scipy.special.erfinv for full double-precision
+    accuracy across the entire domain.
     """
-    if abs(x) >= 1.0:
-        return float("inf") if x > 0 else float("-inf")
-    a = 0.147
-    ln_term = np.log(1 - x * x)
-    term1 = 2.0 / (np.pi * a) + ln_term / 2.0
-    sign = 1.0 if x >= 0 else -1.0
-    return float(sign * np.sqrt(np.sqrt(term1 * term1 - ln_term / a) - term1))
+    return float(_scipy_erfinv(x))

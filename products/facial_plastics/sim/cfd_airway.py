@@ -415,14 +415,12 @@ class AirwayCFDSolver:
         # Build wall mask: cells outside the airway cross-section
         wall = np.ones((nx, ny, nz), dtype=bool)
         center_x, center_y = nx // 2, ny // 2
+        ii, jj = np.mgrid[:nx, :ny]
+        dist_2d = np.sqrt((ii - center_x)**2 + (jj - center_y)**2)  # (nx, ny)
+        r_scale = np.sqrt(area_scale)  # (nz,)
+        r_cells = np.maximum(1, (r_scale * min(nx, ny) / 2).astype(int))  # (nz,)
         for k in range(nz):
-            r_scale = np.sqrt(area_scale[k])
-            r_cells = max(1, int(r_scale * min(nx, ny) / 2))
-            for i in range(nx):
-                for j in range(ny):
-                    dist = np.sqrt((i - center_x)**2 + (j - center_y)**2)
-                    if dist < r_cells:
-                        wall[i, j, k] = False
+            wall[:, :, k] = dist_2d >= r_cells[k]
 
         # SIMPLE iteration
         converged = False
@@ -434,63 +432,60 @@ class AirwayCFDSolver:
             # Store old velocity
             w_old = w.copy()
 
-            # Momentum predictor (simplified: only z-momentum for primary flow)
+            # Momentum predictor (vectorized)
             w_star = w.copy()
-            for i in range(1, nx - 1):
-                for j in range(1, ny - 1):
-                    for k in range(1, nz - 1):
-                        if wall[i, j, k]:
-                            w_star[i, j, k] = 0.0
-                            continue
+            # Interior slice indices
+            si = slice(1, nx - 1)
+            sj = slice(1, ny - 1)
+            sk = slice(1, nz - 1)
 
-                        # Convective term: w * dw/dz (upwind)
-                        if w[i, j, k] >= 0:
-                            conv_z = w[i, j, k] * (w[i, j, k] - w[i, j, k - 1]) / dz
-                        else:
-                            conv_z = w[i, j, k] * (w[i, j, k + 1] - w[i, j, k]) / dz
+            w_c = w[si, sj, sk]
+            fluid_interior = ~wall[si, sj, sk]
 
-                        # Diffusive term: μ * ∇²w
-                        d2w_dx2 = (w[i + 1, j, k] - 2 * w[i, j, k] + w[i - 1, j, k]) / dx**2
-                        d2w_dy2 = (w[i, j + 1, k] - 2 * w[i, j, k] + w[i, j - 1, k]) / dy**2
-                        d2w_dz2 = (w[i, j, k + 1] - 2 * w[i, j, k] + w[i, j, k - 1]) / dz**2
-                        diffusion = self._mu * (d2w_dx2 + d2w_dy2 + d2w_dz2)
+            # Convective term (upwind)
+            dw_fwd = (w[si, sj, 2:nz] - w_c) / dz
+            dw_bwd = (w_c - w[si, sj, :nz-2]) / dz
+            conv_z = np.where(w_c >= 0, w_c * dw_bwd, w_c * dw_fwd)
 
-                        # Pressure gradient
-                        dp_dz = (p[i, j, k + 1] - p[i, j, k - 1]) / (2.0 * dz)
+            # Diffusive term: μ * ∇²w
+            d2w_dx2 = (w[2:nx, sj, sk] - 2 * w_c + w[:nx-2, sj, sk]) / dx**2
+            d2w_dy2 = (w[si, 2:ny, sk] - 2 * w_c + w[si, :ny-2, sk]) / dy**2
+            d2w_dz2 = (w[si, sj, 2:nz] - 2 * w_c + w[si, sj, :nz-2]) / dz**2
+            diffusion = self._mu * (d2w_dx2 + d2w_dy2 + d2w_dz2)
 
-                        # Update
-                        rhs = -conv_z + diffusion / self._rho - dp_dz / self._rho
-                        w_star[i, j, k] = w[i, j, k] + self._alpha_u * rhs * (dz / max(abs(w[i, j, k]) + 1e-10, 1e-10))
+            # Pressure gradient
+            dp_dz = (p[si, sj, 2:nz] - p[si, sj, :nz-2]) / (2.0 * dz)
+
+            # Update (masked to fluid cells)
+            rhs = -conv_z + diffusion / self._rho - dp_dz / self._rho
+            dt_local = dz / np.maximum(np.abs(w_c) + 1e-10, 1e-10)
+            w_star[si, sj, sk] = np.where(
+                fluid_interior,
+                w_c + self._alpha_u * rhs * dt_local,
+                0.0,
+            )
 
             # Apply wall BCs
             w_star[wall] = 0.0
 
-            # Inlet BC: prescribed pressure → parabolic profile
+            # Inlet BC: parabolic profile
             if nz > 2:
-                for i in range(nx):
-                    for j in range(ny):
-                        if not wall[i, j, 0]:
-                            r = np.sqrt((i - center_x)**2 + (j - center_y)**2)
-                            r_max = max(1, int(np.sqrt(area_scale[0]) * min(nx, ny) / 2))
-                            # Parabolic profile
-                            w_star[i, j, 0] = max(0, (1.0 - (r / max(r_max, 1))**2)) * \
-                                               np.sqrt(2.0 * dp / max(self._rho, 1e-12)) * 0.5
+                inlet_fluid = ~wall[:, :, 0]
+                r_inlet = np.sqrt((ii - center_x)**2 + (jj - center_y)**2).astype(float)
+                r_max = max(1, int(np.sqrt(area_scale[0]) * min(nx, ny) / 2))
+                parabolic = np.maximum(0, 1.0 - (r_inlet / max(r_max, 1))**2)
+                u_inlet = parabolic * np.sqrt(2.0 * dp / max(self._rho, 1e-12)) * 0.5
+                w_star[:, :, 0] = np.where(inlet_fluid, u_inlet, 0.0)
 
-            # Pressure correction: solve ∇²p' = (ρ/dt) * ∇·u*
-            # Simplified: just enforce pressure BCs
+            # Pressure correction via Jacobi sweeps (vectorized)
             p_prime = np.zeros_like(p)
-
-            # SOR for pressure correction
             for _ in range(20):
-                for i in range(1, nx - 1):
-                    for j in range(1, ny - 1):
-                        for k in range(1, nz - 1):
-                            if wall[i, j, k]:
-                                continue
-                            divergence = (
-                                (w_star[i, j, k] - w_star[i, j, k - 1]) / dz
-                            )
-                            p_prime[i, j, k] = -self._rho * divergence * dz**2 / 2.0
+                div = (w_star[si, sj, sk] - w_star[si, sj, :nz-2]) / dz
+                p_prime[si, sj, sk] = np.where(
+                    ~wall[si, sj, sk],
+                    -self._rho * div * dz**2 / 2.0,
+                    0.0,
+                )
 
             # Update pressure
             p += self._alpha_p * p_prime
@@ -499,14 +494,13 @@ class AirwayCFDSolver:
             p[:, :, 0] = inlet_pressure_pa
             p[:, :, -1] = outlet_pressure_pa
 
-            # Correct velocity
-            for i in range(1, nx - 1):
-                for j in range(1, ny - 1):
-                    for k in range(1, nz - 1):
-                        if not wall[i, j, k]:
-                            dp_corr = (p_prime[i, j, k + 1] - p_prime[i, j, k - 1]) / (2.0 * dz)
-                            w[i, j, k] = w_star[i, j, k] - dp_corr * dz / (self._rho + 1e-12)
-
+            # Correct velocity (vectorized)
+            dp_corr = (p_prime[si, sj, 2:nz] - p_prime[si, sj, :nz-2]) / (2.0 * dz)
+            w[si, sj, sk] = np.where(
+                ~wall[si, sj, sk],
+                w_star[si, sj, sk] - dp_corr * dz / (self._rho + 1e-12),
+                0.0,
+            )
             w[wall] = 0.0
 
             # Check convergence
@@ -561,22 +555,25 @@ class AirwayCFDSolver:
         # Nasal resistance
         resistance = pressure_drop / max(abs(Q_ml_s), 1e-12)
 
-        # Wall shear stress
-        wss_list: List[float] = []
-        for i in range(1, nx - 1):
-            for j in range(1, ny - 1):
-                for k in range(1, nz - 1):
-                    if wall[i, j, k]:
-                        # Check if this is a wall-adjacent cell
-                        if not wall[i - 1, j, k] or not wall[i + 1, j, k] or \
-                           not wall[i, j - 1, k] or not wall[i, j + 1, k]:
-                            # Wall shear: τ = μ * dw/dn at the wall
-                            dw_dx = (w[i + 1, j, k] - w[i - 1, j, k]) / (2.0 * dx)
-                            dw_dy = (w[i, j + 1, k] - w[i, j - 1, k]) / (2.0 * dy)
-                            shear = self._mu * np.sqrt(dw_dx**2 + dw_dy**2)
-                            wss_list.append(float(shear))
+        # Wall shear stress (vectorized)
+        # Wall cells adjacent to at least one fluid cell
+        si = slice(1, nx - 1)
+        sj = slice(1, ny - 1)
+        sk = slice(1, nz - 1)
+        wall_interior = wall[si, sj, sk]
+        has_fluid_neighbor = (
+            ~wall[2:nx, sj, sk] | ~wall[:nx-2, sj, sk] |
+            ~wall[si, 2:ny, sk] | ~wall[si, :ny-2, sk]
+        )
+        wall_adjacent = wall_interior & has_fluid_neighbor
 
-        wss = np.array(wss_list, dtype=np.float64) if wss_list else np.zeros(1)
+        dw_dx = (w[2:nx, sj, sk] - w[:nx-2, sj, sk]) / (2.0 * dx)
+        dw_dy = (w[si, 2:ny, sk] - w[si, :ny-2, sk]) / (2.0 * dy)
+        shear_field = self._mu * np.sqrt(dw_dx**2 + dw_dy**2)
+
+        wss = shear_field[wall_adjacent]
+        if len(wss) == 0:
+            wss = np.zeros(1)
 
         # Reynolds number
         D_h = geometry.mean_hydraulic_diameter * 1e-3  # meters
@@ -595,14 +592,17 @@ class AirwayCFDSolver:
         # Section flow rates and velocities
         section_flow_rates = np.zeros(geometry.n_sections, dtype=np.float64)
         section_velocities = np.zeros(geometry.n_sections, dtype=np.float64)
+        section_indices = np.minimum(
+            (np.arange(geometry.n_sections) * nz // max(geometry.n_sections, 1)),
+            nz - 1,
+        ).astype(int)
         for s in range(geometry.n_sections):
-            k = int(s * nz / max(geometry.n_sections, 1))
-            k = max(0, min(k, nz - 1))
+            k = section_indices[s]
             section_speeds = w[:, :, k][~wall[:, :, k]]
             if len(section_speeds) > 0:
-                area_m2 = geometry.areas[s] * 1e-6  # mm² → m²
+                area_m2 = geometry.areas[s] * 1e-6
                 section_velocities[s] = float(np.mean(section_speeds))
-                section_flow_rates[s] = section_velocities[s] * area_m2 * 1e6  # mL/s
+                section_flow_rates[s] = section_velocities[s] * area_m2 * 1e6
 
         return AirwayCFDResult(
             velocity_x=u,

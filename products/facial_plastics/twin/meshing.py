@@ -14,6 +14,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Set, Tuple
 
 import numpy as np
+from scipy.spatial import Delaunay as _Delaunay
 
 from ..core.config import MeshConfig
 from ..core.types import (
@@ -265,74 +266,109 @@ class VolumetricMesher:
         spacing: Tuple[float, float, float],
         level: float = 0.5,
     ) -> Optional[SurfaceMesh]:
-        """Marching cubes isosurface extraction."""
-        dz, dy, dx = volume.shape
+        """Vectorised binary-surface extraction via face adjacency.
+
+        For every pair of adjacent voxels that straddle *level*, emits
+        two triangles (one quad) on the shared face.  Produces a
+        watertight, consistently-oriented mesh.
+        """
         sz, sy, sx = spacing
+        dz, dy, dx = volume.shape
 
-        verts_list: List[list] = []
-        faces_list: List[list] = []
-        vert_count = 0
+        all_verts: List[np.ndarray] = []
+        all_tris: List[np.ndarray] = []
+        vert_offset = 0
 
-        # Simplified marching cubes — extract surface at threshold
-        # For each cell, check if level crossings exist
-        for z in range(dz - 1):
-            for y in range(dy - 1):
-                for x in range(dx - 1):
-                    # 8 corners of the cube
-                    corners = np.array([
-                        volume[z, y, x], volume[z, y, x+1],
-                        volume[z, y+1, x+1], volume[z, y+1, x],
-                        volume[z+1, y, x], volume[z+1, y, x+1],
-                        volume[z+1, y+1, x+1], volume[z+1, y+1, x],
-                    ])
+        # Helper: for a given axis, find all straddling pairs and emit quads
+        def _emit_axis(
+            axis: int,
+            sp_a: float,  # spacing along axis perpendicular component 1
+            sp_b: float,  # spacing along axis perpendicular component 2
+            sp_n: float,  # spacing along normal axis
+        ) -> None:
+            nonlocal vert_offset
+            a = np.take(volume, range(volume.shape[axis] - 1), axis=axis)
+            b = np.take(volume, range(1, volume.shape[axis]), axis=axis)
+            straddle = (a >= level) != (b >= level)
+            inside_a = a >= level
 
-                    # Check if this cell straddles the isosurface
-                    above = corners >= level
-                    if above.all() or not above.any():
-                        continue
+            zs, ys, xs = np.where(straddle)
 
-                    # Generate triangles for this cell
-                    # Simplified: place vertex at cell center on the boundary side
-                    center = np.array([
-                        x * sx + sx / 2,
-                        y * sy + sy / 2,
-                        z * sz + sz / 2,
-                    ])
+            if len(zs) == 0:
+                return
 
-                    # For each face of the cube that has a crossing, create a triangle
-                    cell_faces = _CUBE_FACES
-                    for face_corners in cell_faces:
-                        face_above = [above[c] for c in face_corners]
-                        if all(face_above) or not any(face_above):
-                            continue
-                        # Interpolate crossing points on face edges
-                        edge_points = []
-                        for ei in range(4):
-                            c0 = face_corners[ei]
-                            c1 = face_corners[(ei + 1) % 4]
-                            if above[c0] != above[c1]:
-                                v0 = corners[c0]
-                                v1 = corners[c1]
-                                t = (level - v0) / max(v1 - v0, 1e-12)
-                                t = max(0, min(1, t))
-                                p0 = _CUBE_VERTICES[c0] * np.array([sx, sy, sz]) + np.array([x * sx, y * sy, z * sz])
-                                p1 = _CUBE_VERTICES[c1] * np.array([sx, sy, sz]) + np.array([x * sx, y * sy, z * sz])
-                                edge_points.append(p0 + t * (p1 - p0))
+            # For each straddling location, compute quad corners
+            # Axis 0 (Z): face at z=(i+1)*sz, quad in XY
+            # Axis 1 (Y): face at y=(j+1)*sy, quad in XZ
+            # Axis 2 (X): face at x=(k+1)*sx, quad in YZ
+            n_faces = len(zs)
 
-                        # Triangulate crossing points
-                        if len(edge_points) >= 3:
-                            base = vert_count
-                            for ep in edge_points:
-                                verts_list.append(ep.tolist())
-                                vert_count += 1
-                            for i in range(1, len(edge_points) - 1):
-                                faces_list.append([base, base + i, base + i + 1])
+            if axis == 0:
+                # Face normal along Z at z_pos = (zs+1)*sz
+                z_pos = (zs + 1).astype(np.float64) * sz
+                x0 = xs.astype(np.float64) * sx
+                x1 = (xs + 1).astype(np.float64) * sx
+                y0 = ys.astype(np.float64) * sy
+                y1 = (ys + 1).astype(np.float64) * sy
+                # 4 corners per quad: (x0,y0,z), (x1,y0,z), (x1,y1,z), (x0,y1,z)
+                p0 = np.column_stack([x0, y0, z_pos])
+                p1 = np.column_stack([x1, y0, z_pos])
+                p2 = np.column_stack([x1, y1, z_pos])
+                p3 = np.column_stack([x0, y1, z_pos])
+            elif axis == 1:
+                y_pos = (ys + 1).astype(np.float64) * sy
+                x0 = xs.astype(np.float64) * sx
+                x1 = (xs + 1).astype(np.float64) * sx
+                z0 = zs.astype(np.float64) * sz
+                z1 = (zs + 1).astype(np.float64) * sz
+                p0 = np.column_stack([x0, y_pos, z0])
+                p1 = np.column_stack([x0, y_pos, z1])
+                p2 = np.column_stack([x1, y_pos, z1])
+                p3 = np.column_stack([x1, y_pos, z0])
+            else:  # axis == 2
+                x_pos = (xs + 1).astype(np.float64) * sx
+                y0 = ys.astype(np.float64) * sy
+                y1 = (ys + 1).astype(np.float64) * sy
+                z0 = zs.astype(np.float64) * sz
+                z1 = (zs + 1).astype(np.float64) * sz
+                p0 = np.column_stack([x_pos, y0, z0])
+                p1 = np.column_stack([x_pos, y1, z0])
+                p2 = np.column_stack([x_pos, y1, z1])
+                p3 = np.column_stack([x_pos, y0, z1])
 
-        if not verts_list:
+            # Flip winding for faces where a < level (outside→inside)
+            flip = ~inside_a[zs, ys, xs]
+
+            # Build vertex array: 4 verts per quad
+            verts = np.empty((n_faces * 4, 3), dtype=np.float64)
+            verts[0::4] = p0
+            verts[1::4] = np.where(flip[:, None], p3, p1)
+            verts[2::4] = p2
+            verts[3::4] = np.where(flip[:, None], p1, p3)
+
+            # Build triangle array: 2 tris per quad
+            base = np.arange(n_faces, dtype=np.int64) * 4 + vert_offset
+            tris = np.empty((n_faces * 2, 3), dtype=np.int64)
+            tris[0::2, 0] = base
+            tris[0::2, 1] = base + 1
+            tris[0::2, 2] = base + 2
+            tris[1::2, 0] = base
+            tris[1::2, 1] = base + 2
+            tris[1::2, 2] = base + 3
+
+            all_verts.append(verts)
+            all_tris.append(tris)
+            vert_offset += len(verts)
+
+        _emit_axis(0, sx, sy, sz)
+        _emit_axis(1, sx, sz, sy)
+        _emit_axis(2, sy, sz, sx)
+
+        if not all_verts:
             return None
 
-        verts = np.array(verts_list, dtype=np.float32)
-        faces = np.array(faces_list, dtype=np.int32)
+        verts = np.concatenate(all_verts).astype(np.float32)
+        faces = np.concatenate(all_tris).astype(np.int32)
 
         # Merge close vertices
         from ..data.surface_ingest import _merge_vertices
@@ -362,11 +398,9 @@ class VolumetricMesher:
         bb_size = bb_max - bb_min
 
         # Generate interior seed points on a regular grid
-        # Cap grid divisions to keep Delaunay tractable (O(n²) in pure Python)
-        _MAX_DIVISIONS = 20
-        nx = min(max(2, int(bb_size[0] / target_edge)), _MAX_DIVISIONS)
-        ny = min(max(2, int(bb_size[1] / target_edge)), _MAX_DIVISIONS)
-        nz = min(max(2, int(bb_size[2] / target_edge)), _MAX_DIVISIONS)
+        nx = min(max(2, int(bb_size[0] / target_edge)), 100)
+        ny = min(max(2, int(bb_size[1] / target_edge)), 100)
+        nz = min(max(2, int(bb_size[2] / target_edge)), 100)
 
         x_coords = np.linspace(bb_min[0] + target_edge / 2, bb_max[0] - target_edge / 2, nx)
         y_coords = np.linspace(bb_min[1] + target_edge / 2, bb_max[1] - target_edge / 2, ny)
@@ -404,104 +438,16 @@ class VolumetricMesher:
         return all_points.astype(np.float32), elements
 
     def _delaunay_3d(self, points: np.ndarray) -> np.ndarray:
-        """3D Delaunay tetrahedralization using incremental insertion.
-
-        This is a production implementation of the Bowyer-Watson algorithm.
-        """
+        """3D Delaunay tetrahedralization via scipy."""
         n = len(points)
         if n < 4:
             return np.empty((0, 4), dtype=np.int32)
-
-        # Create super-tetrahedron enclosing all points
-        p_min = points.min(axis=0) - 1.0
-        p_max = points.max(axis=0) + 1.0
-        d = (p_max - p_min).max() * 10.0
-
-        super_verts = np.array([
-            [p_min[0] - d, p_min[1] - d, p_min[2] - d],
-            [p_max[0] + d * 3, p_min[1] - d, p_min[2] - d],
-            [p_min[0] - d, p_max[1] + d * 3, p_min[2] - d],
-            [p_min[0] - d, p_min[1] - d, p_max[2] + d * 3],
-        ], dtype=np.float64)
-
-        all_pts = np.vstack([super_verts, points])
-
-        # Initial tetrahedron
-        tets = [[0, 1, 2, 3]]
-
-        # Insert points incrementally
-        for pi in range(4, len(all_pts)):
-            p = all_pts[pi]
-            bad_tets = []
-            for ti, tet in enumerate(tets):
-                if self._in_circumsphere(all_pts, tet, p):
-                    bad_tets.append(ti)
-
-            # Find boundary faces of the cavity
-            boundary_faces = []
-            for ti in bad_tets:
-                tet = tets[ti]
-                for face in [(tet[0], tet[1], tet[2]),
-                             (tet[0], tet[1], tet[3]),
-                             (tet[0], tet[2], tet[3]),
-                             (tet[1], tet[2], tet[3])]:
-                    face_sorted = tuple(sorted(face))
-                    shared = False
-                    for tj in bad_tets:
-                        if tj == ti:
-                            continue
-                        other = tets[tj]
-                        other_faces = [
-                            tuple(sorted((other[0], other[1], other[2]))),
-                            tuple(sorted((other[0], other[1], other[3]))),
-                            tuple(sorted((other[0], other[2], other[3]))),
-                            tuple(sorted((other[1], other[2], other[3]))),
-                        ]
-                        if face_sorted in other_faces:
-                            shared = True
-                            break
-                    if not shared:
-                        boundary_faces.append(face)
-
-            # Remove bad tetrahedra (in reverse order to keep indices valid)
-            for ti in sorted(bad_tets, reverse=True):
-                tets.pop(ti)
-
-            # Create new tetrahedra connecting boundary faces to new point
-            for face in boundary_faces:
-                tets.append([face[0], face[1], face[2], pi])
-
-        # Remove tetrahedra referencing super-tetrahedron vertices (0,1,2,3)
-        result = []
-        for tet in tets:
-            if all(v >= 4 for v in tet):
-                # Remap indices: subtract 4 for the super-tetrahedron offset
-                result.append([v - 4 for v in tet])
-
-        return np.array(result, dtype=np.int32) if result else np.empty((0, 4), dtype=np.int32)
-
-    @staticmethod
-    def _in_circumsphere(
-        points: np.ndarray,
-        tet: list,
-        p: np.ndarray,
-    ) -> bool:
-        """Check if point p is inside the circumsphere of tetrahedron."""
-        a, b, c, d = points[tet[0]], points[tet[1]], points[tet[2]], points[tet[3]]
-
-        ax, ay, az = a - p
-        bx, by, bz = b - p
-        cx, cy, cz = c - p
-        dx, dy, dz = d - p
-
-        det = np.linalg.det(np.array([
-            [ax, ay, az, ax ** 2 + ay ** 2 + az ** 2],
-            [bx, by, bz, bx ** 2 + by ** 2 + bz ** 2],
-            [cx, cy, cz, cx ** 2 + cy ** 2 + cz ** 2],
-            [dx, dy, dz, dx ** 2 + dy ** 2 + dz ** 2],
-        ]))
-
-        return bool(det > 0)
+        try:
+            tri = _Delaunay(points)
+            return np.asarray(tri.simplices, dtype=np.int32)
+        except Exception:
+            logger.warning("Delaunay tetrahedralization failed")
+            return np.empty((0, 4), dtype=np.int32)
 
     # ── Region assignment ─────────────────────────────────────
 
@@ -696,18 +642,41 @@ class VolumetricMesher:
         verts: np.ndarray,
         faces: np.ndarray,
     ) -> np.ndarray:
-        """Test if points are inside a closed surface using ray casting."""
+        """Test if points are inside a closed surface using ray casting.
+
+        Vectorised over faces for each query point.
+        """
         n = len(points)
+        if n == 0 or len(faces) == 0:
+            return np.zeros(n, dtype=bool)
+
         inside = np.zeros(n, dtype=bool)
+
+        # Pre-compute triangle data
+        v0 = verts[faces[:, 0]]  # (F,3)
+        v1 = verts[faces[:, 1]]
+        v2 = verts[faces[:, 2]]
+        edge1 = v1 - v0  # (F,3)
+        edge2 = v2 - v0
+
+        ray_dir = np.array([1.0, 0.0, 0.0], dtype=np.float64)
+        h = np.cross(ray_dir, edge2)  # (F,3)
+        a = np.einsum("ij,ij->i", edge1, h)  # (F,)
+
+        valid = np.abs(a) > 1e-10
+        f_inv = np.zeros_like(a)
+        f_inv[valid] = 1.0 / a[valid]
 
         for pi in range(n):
             p = points[pi]
-            # Cast ray along +X direction
-            crossings = 0
-            for face in faces:
-                v0, v1, v2 = verts[face[0]], verts[face[1]], verts[face[2]]
-                if _ray_triangle_intersect(p, np.array([1.0, 0.0, 0.0]), v0, v1, v2):
-                    crossings += 1
+            s = p - v0  # (F,3)
+            u = f_inv * np.einsum("ij,ij->i", s, h)
+            q = np.cross(s, edge1)
+            v_param = f_inv * np.einsum("ij,ij->i", np.broadcast_to(ray_dir, q.shape), q)
+            t = f_inv * np.einsum("ij,ij->i", edge2, q)
+
+            hit = valid & (u >= 0) & (u <= 1) & (v_param >= 0) & (u + v_param <= 1) & (t > 1e-10)
+            crossings = int(np.count_nonzero(hit))
             inside[pi] = crossings % 2 == 1
 
         return inside
@@ -733,50 +702,3 @@ class VolumetricMesher:
 
         boundary_faces = [list(face) for face, counts in face_count.items() if len(counts) == 1]
         return np.array(boundary_faces, dtype=np.int32) if boundary_faces else np.empty((0, 3), dtype=np.int32)
-
-
-# ── Module-level constants ────────────────────────────────────────
-
-_CUBE_VERTICES = np.array([
-    [0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0],
-    [0, 0, 1], [1, 0, 1], [1, 1, 1], [0, 1, 1],
-], dtype=np.float64)
-
-_CUBE_FACES = [
-    [0, 1, 2, 3], [4, 5, 6, 7],  # Z faces
-    [0, 1, 5, 4], [2, 3, 7, 6],  # Y faces
-    [0, 3, 7, 4], [1, 2, 6, 5],  # X faces
-]
-
-
-def _ray_triangle_intersect(
-    origin: np.ndarray,
-    direction: np.ndarray,
-    v0: np.ndarray,
-    v1: np.ndarray,
-    v2: np.ndarray,
-) -> bool:
-    """Möller–Trumbore ray-triangle intersection test."""
-    edge1 = v1 - v0
-    edge2 = v2 - v0
-    h = np.cross(direction, edge2)
-    a = np.dot(edge1, h)
-
-    if abs(a) < 1e-10:
-        return False
-
-    f = 1.0 / a
-    s = origin - v0
-    u = f * np.dot(s, h)
-
-    if u < 0.0 or u > 1.0:
-        return False
-
-    q = np.cross(s, edge1)
-    v = f * np.dot(direction, q)
-
-    if v < 0.0 or u + v > 1.0:
-        return False
-
-    t = f * np.dot(edge2, q)
-    return bool(t > 1e-10)

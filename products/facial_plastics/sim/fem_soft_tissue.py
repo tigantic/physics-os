@@ -26,6 +26,8 @@ from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import numpy as np
+import scipy.sparse as _sp
+from scipy.sparse.linalg import spsolve as _spsolve
 
 from ..core.types import (
     MaterialModel,
@@ -299,6 +301,97 @@ def _compute_mooney_rivlin_stress(
     return S, C_tangent
 
 
+def _compute_ogden_stress(
+    F: np.ndarray,
+    mu_list: List[float],
+    alpha_list: List[float],
+    kappa: float,
+) -> Tuple[np.ndarray, np.ndarray]:
+    """Compute 2nd PK stress and tangent for Ogden model.
+
+    Supports N-term Ogden with principal stretch formulation.
+    W = sum_p (mu_p/alpha_p) * (lam1^alpha_p + lam2^alpha_p + lam3^alpha_p - 3)
+        + kappa/2 * (J-1)^2
+
+    Parameters
+    ----------
+    F : (3,3) deformation gradient
+    mu_list, alpha_list : Ogden parameters (same length)
+    kappa : bulk modulus (Pa)
+
+    Returns
+    -------
+    S : (6,) Voigt-form 2nd PK stress
+    C_tang : (6,6) material tangent
+    """
+    C_tensor = F.T @ F
+    J = np.linalg.det(F)
+    if J < 1e-12:
+        mu_eq = sum(m * a / 2.0 for m, a in zip(mu_list, alpha_list))
+        return np.zeros(6, dtype=np.float64), np.eye(6, dtype=np.float64) * mu_eq
+
+    # Principal stretches from eigenvalues of C
+    eigvals = np.linalg.eigvalsh(C_tensor)
+    eigvals = np.maximum(eigvals, 1e-20)
+    lam = np.sqrt(eigvals)  # principal stretches
+
+    # Isochoric stretches
+    J_13 = J ** (-1.0 / 3.0)
+    lam_bar = lam * J_13
+
+    # Deviatoric principal Kirchhoff stresses
+    # tau_dev_i = sum_p mu_p * (lam_bar_i^alpha_p - (1/3)*sum_j lam_bar_j^alpha_p)
+    n_terms = len(mu_list)
+    tau_dev = np.zeros(3, dtype=np.float64)
+    for p in range(n_terms):
+        mu_p = mu_list[p]
+        alpha_p = alpha_list[p]
+        lb_a = lam_bar ** alpha_p
+        mean_lb_a = lb_a.mean()
+        tau_dev += mu_p * (lb_a - mean_lb_a)
+
+    # Volumetric Kirchhoff stress
+    tau_vol = kappa * (J - 1.0) * J
+
+    # Reconstruct full stress in principal frame
+    # Eigendecomposition of C for principal directions
+    eigvals_c, eigvecs_c = np.linalg.eigh(C_tensor)
+    eigvals_c = np.maximum(eigvals_c, 1e-20)
+
+    # 2nd PK in principal frame: S_i = tau_i / lam_i^2
+    S_princ = np.zeros(3, dtype=np.float64)
+    for i in range(3):
+        S_princ[i] = (tau_dev[i] + tau_vol) / max(eigvals_c[i], 1e-20)
+
+    # Rotate back to reference frame
+    N = eigvecs_c  # (3,3), each column is a principal direction
+    S_mat = np.zeros((3, 3), dtype=np.float64)
+    for i in range(3):
+        S_mat += S_princ[i] * np.outer(N[:, i], N[:, i])
+
+    S = np.array([
+        S_mat[0, 0], S_mat[1, 1], S_mat[2, 2],
+        S_mat[0, 1], S_mat[1, 2], S_mat[0, 2],
+    ], dtype=np.float64)
+
+    # Tangent modulus (simplified — use numerical differentiation approach)
+    # Approximate tangent with isotropic form using effective moduli
+    mu_eff = sum(m * a / 2.0 for m, a in zip(mu_list, alpha_list)) * J ** (-2.0 / 3.0)
+    lam_eff = kappa * J * (2.0 * J - 1.0)
+
+    C_inv = np.linalg.inv(C_tensor)
+    inv_v = np.array([
+        C_inv[0, 0], C_inv[1, 1], C_inv[2, 2],
+        C_inv[0, 1], C_inv[1, 2], C_inv[0, 2],
+    ], dtype=np.float64)
+
+    C_tang = lam_eff * np.outer(inv_v, inv_v)
+    for i in range(6):
+        C_tang[i, i] += 2.0 * mu_eff
+
+    return S, C_tang
+
+
 def _evaluate_constitutive(
     F: np.ndarray,
     model: MaterialModel,
@@ -325,11 +418,21 @@ def _evaluate_constitutive(
             params.get("kappa", 1e5),
         )
     elif model == MaterialModel.OGDEN:
-        # Fall back to NeoHookean with equivalent initial shear modulus
         mu_1 = params.get("mu_1", 1e4)
+        mu_2 = params.get("mu_2", 0.0)
+        mu_3 = params.get("mu_3", 0.0)
         alpha_1 = params.get("alpha_1", 2.0)
-        mu_eq = mu_1 * alpha_1 / 2.0
-        return _compute_neo_hookean_stress(F, mu_eq, params.get("kappa", 1e5))
+        alpha_2 = params.get("alpha_2", -2.0)
+        alpha_3 = params.get("alpha_3", 4.0)
+        mu_list = [mu_1]
+        alpha_list = [alpha_1]
+        if abs(mu_2) > 1e-12:
+            mu_list.append(mu_2)
+            alpha_list.append(alpha_2)
+        if abs(mu_3) > 1e-12:
+            mu_list.append(mu_3)
+            alpha_list.append(alpha_3)
+        return _compute_ogden_stress(F, mu_list, alpha_list, params.get("kappa", 1e5))
     elif model == MaterialModel.RIGID:
         # Extremely stiff material
         return _compute_neo_hookean_stress(F, 1e12, 1e13)
@@ -543,16 +646,18 @@ class SoftTissueFEM:
                     break
 
                 # Solve K * du = residual
-                # Apply Dirichlet BCs to stiffness matrix
+                # Apply Dirichlet BCs to sparse stiffness matrix
+                K_lil = K.tolil()
                 for dof in fixed_dofs:
-                    K[dof, :] = 0.0
-                    K[:, dof] = 0.0
-                    K[dof, dof] = 1.0
+                    K_lil[dof, :] = 0.0
+                    K_lil[:, dof] = 0.0
+                    K_lil[dof, dof] = 1.0
                     residual[dof] = 0.0
+                K_bc = K_lil.tocsr()
 
                 try:
-                    du = np.linalg.solve(K, residual)
-                except np.linalg.LinAlgError:
+                    du = _spsolve(K_bc, residual)
+                except Exception:
                     logger.warning(
                         "Singular stiffness at step %d, iter %d", step, it
                     )
@@ -687,20 +792,23 @@ class SoftTissueFEM:
     def _assemble_system(
         self,
         u: np.ndarray,
-    ) -> Tuple[np.ndarray, np.ndarray]:
-        """Assemble global internal force vector and stiffness matrix.
-
-        Parameters
-        ----------
-        u : (ndof,) current displacement
+    ) -> Tuple[np.ndarray, _sp.csr_matrix]:
+        """Assemble global internal force vector and sparse stiffness matrix.
 
         Returns
         -------
         f_int : (ndof,) internal force
-        K : (ndof, ndof) tangent stiffness
+        K : sparse CSR (ndof, ndof) tangent stiffness
         """
         f_int = np.zeros(self._ndof, dtype=np.float64)
-        K = np.zeros((self._ndof, self._ndof), dtype=np.float64)
+
+        # Pre-allocate COO triplets (12x12 per element)
+        nnz_per_elem = 144  # 12*12
+        max_nnz = self._n_elems * nnz_per_elem
+        rows = np.empty(max_nnz, dtype=np.int64)
+        cols = np.empty(max_nnz, dtype=np.int64)
+        vals = np.empty(max_nnz, dtype=np.float64)
+        nnz = 0
 
         u_3d = u.reshape(-1, 3)
 
@@ -734,12 +842,14 @@ class SoftTissueFEM:
             model, params = self._elem_materials[eid]
             S_voigt, C_mat = _evaluate_constitutive(F, model, params)
 
-            # Element stiffness and internal force
-            n_dof_e = 4 * 3
-            dof_map = np.zeros(n_dof_e, dtype=np.int64)
+            # Element DOF map
+            n_dof_e = 12
+            dof_map = np.empty(n_dof_e, dtype=np.int64)
             for i in range(4):
-                for d in range(3):
-                    dof_map[i * 3 + d] = int(elem_conn[i]) * 3 + d
+                base = int(elem_conn[i]) * 3
+                dof_map[i * 3] = base
+                dof_map[i * 3 + 1] = base + 1
+                dof_map[i * 3 + 2] = base + 2
 
             # f_e = B^T * S * V
             f_e = B_ref.T @ S_voigt * vol_ref
@@ -747,12 +857,24 @@ class SoftTissueFEM:
             # K_e = B^T * C * B * V
             K_e = (B_ref.T @ C_mat @ B_ref) * vol_ref
 
-            # Assemble
+            # Scatter into global force
+            for i in range(n_dof_e):
+                f_int[dof_map[i]] += f_e[i]
+
+            # Scatter into COO triplets
             for i in range(n_dof_e):
                 gi = dof_map[i]
-                f_int[gi] += f_e[i]
                 for j in range(n_dof_e):
-                    K[gi, dof_map[j]] += K_e[i, j]
+                    rows[nnz] = gi
+                    cols[nnz] = dof_map[j]
+                    vals[nnz] = K_e[i, j]
+                    nnz += 1
+
+        # Build sparse CSR matrix
+        K = _sp.coo_matrix(
+            (vals[:nnz], (rows[:nnz], cols[:nnz])),
+            shape=(self._ndof, self._ndof),
+        ).tocsr()
 
         return f_int, K
 

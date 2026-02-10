@@ -21,6 +21,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
+from scipy.spatial import KDTree as _KDTree
 
 from ..core.types import (
     ClinicalMeasurement,
@@ -295,16 +296,9 @@ def _hausdorff_distance(pts_a: np.ndarray, pts_b: np.ndarray) -> float:
     """One-directional Hausdorff distance from A to B."""
     if len(pts_a) == 0 or len(pts_b) == 0:
         return 0.0
-    # Compute pairwise distances in batches to limit memory
-    max_d = 0.0
-    batch = 500
-    for i in range(0, len(pts_a), batch):
-        chunk = pts_a[i:i + batch]
-        diffs = chunk[:, None, :] - pts_b[None, :, :]
-        dists = np.sqrt(np.sum(diffs ** 2, axis=2))
-        min_dists = dists.min(axis=1)
-        max_d = max(max_d, float(min_dists.max()))
-    return max_d
+    tree = _KDTree(pts_b)
+    dists, _ = tree.query(pts_a)
+    return float(np.max(dists))
 
 
 # ── Main aesthetic metrics calculator ────────────────────────────
@@ -507,18 +501,12 @@ class AestheticMetrics:
         reflected = verts.copy()
         reflected[:, 0] = -reflected[:, 0]
 
-        # Compute closest-point distances
-        max_d = 0.0
-        total_d = 0.0
+        # Compute closest-point distances via KDTree
+        tree = _KDTree(verts)
+        dists, _ = tree.query(reflected)
         n = len(verts)
-        batch = 500
-        for i in range(0, n, batch):
-            chunk = reflected[i:i + batch]
-            diffs = chunk[:, None, :] - verts[None, :, :]
-            dists = np.sqrt(np.sum(diffs ** 2, axis=2))
-            min_dists = dists.min(axis=1)
-            max_d = max(max_d, float(min_dists.max()))
-            total_d += float(min_dists.sum())
+        max_d = float(np.max(dists)) if n > 0 else 0.0
+        total_d = float(np.sum(dists))
 
         return max_d, total_d / max(n, 1)
 

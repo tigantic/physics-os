@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
+from scipy.stats import norm as _norm, rankdata as _scipy_rankdata, t as _t_dist
 
 logger = logging.getLogger(__name__)
 
@@ -476,81 +477,16 @@ class PredictionValidator:
 
 
 def _normal_cdf(x: float) -> float:
-    """Standard normal CDF via Abramowitz & Stegun 26.2.17."""
-    t = 1.0 / (1.0 + 0.2316419 * abs(x))
-    d = 0.3989422804014327  # 1/sqrt(2*pi)
-    poly = (
-        1.330274429
-        - 1.821255978 * t
-        + 1.781477937 * t ** 2
-        - 0.356563782 * t ** 3
-        + 0.319381530 * t ** 4
-    )
-    # Note: coefficients are applied in reverse order for Horner form
-    val = d * math.exp(-x * x / 2.0) * t * poly
-    if x >= 0:
-        return 1.0 - val
-    else:
-        return val
+    """Standard normal CDF via scipy compiled backend."""
+    return float(_norm.cdf(x))
 
 
 def _t_distribution_p(t_stat: float, df: int) -> float:
-    """Approximate two-tailed p-value from t-distribution.
-
-    Uses the relationship between t and normal distributions for
-    df > 4, and a cruder fallback for small df.
-    """
+    """Two-tailed p-value from t-distribution via scipy compiled backend."""
     if df <= 0:
         return 1.0
-
-    # For large df, t ≈ normal
-    if df > 30:
-        return 2.0 * (1.0 - _normal_cdf(abs(t_stat)))
-
-    # For moderate df, use Abramowitz & Stegun 26.7.5 approximation
-    x = abs(t_stat)
-    g = math.lgamma((df + 1) / 2.0) - math.lgamma(df / 2.0)
-    a = math.exp(g) / math.sqrt(df * math.pi)
-    val = a * (1.0 + x ** 2 / df) ** (-(df + 1) / 2.0)
-
-    # Integrate tail using Simpson's rule on a finite grid
-    n_steps = 200
-    upper = max(x, 10.0)
-    h = (upper - x) / n_steps
-    integral = val
-
-    for i in range(1, n_steps):
-        ti = x + i * h
-        yi = a * (1.0 + ti ** 2 / df) ** (-(df + 1) / 2.0)
-        if i % 2 == 0:
-            integral += 2.0 * yi
-        else:
-            integral += 4.0 * yi
-
-    t_end = x + n_steps * h
-    y_end = a * (1.0 + t_end ** 2 / df) ** (-(df + 1) / 2.0)
-    integral += y_end
-    integral *= h / 3.0
-
-    # Two-tailed
-    p = 2.0 * integral
-    return float(min(max(p, 0.0), 1.0))
+    return float(2.0 * (1.0 - _t_dist.cdf(abs(t_stat), df)))
 
 def _rankdata(x: np.ndarray) -> np.ndarray:
     """Assign ranks to data, handling ties with average ranks."""
-    n = len(x)
-    order = np.argsort(x)
-    ranks = np.empty(n, dtype=np.float64)
-
-    i = 0
-    while i < n:
-        j = i
-        while j < n - 1 and x[order[j + 1]] == x[order[j]]:
-            j += 1
-        # Average rank for tied values
-        avg_rank = (i + j) / 2.0 + 1.0
-        for k in range(i, j + 1):
-            ranks[order[k]] = avg_rank
-        i = j + 1
-
-    return ranks
+    return np.asarray(_scipy_rankdata(x), dtype=np.float64)

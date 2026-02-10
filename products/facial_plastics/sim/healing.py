@@ -150,6 +150,25 @@ class HealingModel:
         # Build structure map for tissue-specific healing rates
         self._tissue_healing_rates = self._compute_tissue_healing_rates()
 
+        # Pre-build node → element adjacency for O(1) lookup
+        self._node_elem_adj = self._build_node_element_adjacency()
+
+    def _build_node_element_adjacency(self) -> List[np.ndarray]:
+        """Pre-build per-node lists of connected element indices.
+
+        Replaces the O(N*E) inner-loop scans in apply_healing_to_mesh
+        with O(N * avg_degree) lookups.
+        """
+        from collections import defaultdict
+        adj: Dict[int, List[int]] = defaultdict(list)
+        for eid in range(self._n_elems):
+            for nid in self._mesh.elements[eid]:
+                adj[int(nid)].append(eid)
+        return [
+            np.array(adj.get(nid, []), dtype=np.int64)
+            for nid in range(self._n_nodes)
+        ]
+
     def _compute_tissue_healing_rates(self) -> np.ndarray:
         """Compute per-element healing rate multipliers based on tissue type.
 
@@ -327,15 +346,12 @@ class HealingModel:
         # Edema: expand displacements outward from centroid
         centroid = self._mesh.nodes.mean(axis=0)
         for nid in range(self._n_nodes):
-            # Find average edema of elements connected to this node
-            edema_avg = 0.0
-            n_connected = 0
-            for eid in range(self._n_elems):
-                if nid in self._mesh.elements[eid]:
-                    edema_avg += state.edema_fraction[eid]
-                    n_connected += 1
-            if n_connected > 0:
-                edema_avg /= n_connected
+            # Average edema of elements connected to this node
+            connected = self._node_elem_adj[nid]
+            if len(connected) > 0:
+                edema_avg = float(np.mean(state.edema_fraction[connected]))
+            else:
+                edema_avg = 0.0
 
             # Edema expands tissue outward
             direction = self._mesh.nodes[nid] - centroid
@@ -347,15 +363,11 @@ class HealingModel:
         # Scar contraction: reduce displacement magnitude over time
         # Scars pull tissue inward (contract), partially reversing surgical changes
         for nid in range(self._n_nodes):
-            edema_avg = 0.0
-            scar_avg = 0.0
-            n_connected = 0
-            for eid in range(self._n_elems):
-                if nid in self._mesh.elements[eid]:
-                    scar_avg += state.scar_fraction[eid]
-                    n_connected += 1
-            if n_connected > 0:
-                scar_avg /= n_connected
+            connected = self._node_elem_adj[nid]
+            if len(connected) > 0:
+                scar_avg = float(np.mean(state.scar_fraction[connected]))
+            else:
+                scar_avg = 0.0
 
             # Scar contracts: reduce displacement by scar fraction * contraction_factor
             contraction_factor = 0.1  # 10% of scar formation goes to contraction

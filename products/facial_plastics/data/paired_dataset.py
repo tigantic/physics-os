@@ -28,6 +28,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
+from scipy.spatial import KDTree as _KDTree
 
 from ..core.case_bundle import CaseBundle
 from ..core.config import PlatformConfig
@@ -308,30 +309,9 @@ def _compute_alignment_error(
     if len(gt_vertices) == 0 or len(registered_vertices) == 0:
         return float("inf")
 
-    # For each registered vertex, find closest GT vertex
-    # Use chunked computation to limit memory
-    n_reg = len(registered_vertices)
-    chunk_size = min(1000, n_reg)
-    total_dist = 0.0
-
-    for start in range(0, n_reg, chunk_size):
-        end = min(start + chunk_size, n_reg)
-        chunk = registered_vertices[start:end]
-        # Broadcast: (chunk, 1, 3) - (1, gt, 3) → (chunk, gt, 3)
-        if len(gt_vertices) <= 5000:
-            diffs = chunk[:, np.newaxis, :] - gt_vertices[np.newaxis, :, :]
-            dists = np.linalg.norm(diffs, axis=2)
-            min_dists = np.min(dists, axis=1)
-        else:
-            # Subsample GT for large meshes
-            sample_idx = np.linspace(0, len(gt_vertices) - 1, 5000, dtype=int)
-            gt_sample = gt_vertices[sample_idx]
-            diffs = chunk[:, np.newaxis, :] - gt_sample[np.newaxis, :, :]
-            dists = np.linalg.norm(diffs, axis=2)
-            min_dists = np.min(dists, axis=1)
-        total_dist += float(np.sum(min_dists))
-
-    return total_dist / max(n_reg, 1)
+    tree = _KDTree(gt_vertices)
+    dists, _ = tree.query(registered_vertices)
+    return float(np.mean(dists))
 
 
 # ── PairedDatasetBuilder ─────────────────────────────────────────

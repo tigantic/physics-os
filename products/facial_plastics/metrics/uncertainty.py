@@ -21,6 +21,7 @@ from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import numpy as np
+from scipy.stats import norm as _norm, lognorm as _lognorm
 
 logger = logging.getLogger(__name__)
 
@@ -165,22 +166,13 @@ def latin_hypercube_sample(
 
         # Transform to parameter distribution
         if p.distribution == "normal":
-            from scipy.stats import norm as _norm  # type: ignore[import]
-            try:
-                result[:, j] = _norm.ppf(u, loc=p.nominal, scale=max(p.std, 1e-12))
-            except ImportError:
-                # Fallback: Box-Muller approximation of inverse normal CDF
-                result[:, j] = p.nominal + p.std * _approx_norminv(u)
+            result[:, j] = _norm.ppf(u, loc=p.nominal, scale=max(p.std, 1e-12))
         elif p.distribution == "uniform":
             result[:, j] = p.low + u * (p.high - p.low)
         elif p.distribution == "lognormal":
             sigma = np.sqrt(np.log(1 + (p.std / max(p.nominal, 1e-12)) ** 2))
             mu = np.log(max(p.nominal, 1e-12)) - 0.5 * sigma ** 2
-            try:
-                from scipy.stats import lognorm as _lognorm  # type: ignore[import]
-                result[:, j] = _lognorm.ppf(u, s=sigma, scale=np.exp(mu))
-            except ImportError:
-                result[:, j] = np.exp(mu + sigma * _approx_norminv(u))
+            result[:, j] = _lognorm.ppf(u, s=sigma, scale=np.exp(mu))
         elif p.distribution == "triangular":
             # Inverse CDF for triangular
             fc = (p.mode - p.low) / max(p.high - p.low, 1e-12)
@@ -329,7 +321,7 @@ def compute_sobol_indices(
             ci_total[j] += (st - total_effect[j]) ** 2
 
     alpha = 1 - confidence_level
-    z = _approx_norminv(np.array([1 - alpha / 2]))[0]
+    z = float(_norm.ppf(1 - alpha / 2))
     ci_first_out: np.ndarray = np.asarray(z * np.sqrt(ci_first / max(n_bootstrap, 1)))
     ci_total_out: np.ndarray = np.asarray(z * np.sqrt(ci_total / max(n_bootstrap, 1)))
 

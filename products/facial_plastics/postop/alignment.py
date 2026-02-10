@@ -15,6 +15,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
+from scipy.spatial import KDTree as _KDTree
 
 from ..core.types import (
     LandmarkType,
@@ -317,22 +318,11 @@ class OutcomeAligner:
     def _find_nearest(source: np.ndarray, target: np.ndarray) -> np.ndarray:
         """Find index of nearest target point for each source point.
 
-        Uses chunked computation to manage memory for large meshes.
+        Uses scipy KDTree for O(n log m) performance.
         """
-        n_src = source.shape[0]
-        n_tgt = target.shape[0]
-        indices = np.empty(n_src, dtype=np.int64)
-
-        # Process in chunks to avoid O(n_src * n_tgt) memory
-        chunk_size = max(1, min(1000, 500_000_000 // (n_tgt * 8)))
-        for i in range(0, n_src, chunk_size):
-            end = min(i + chunk_size, n_src)
-            # dists: (chunk, n_tgt)
-            diff = source[i:end, np.newaxis, :] - target[np.newaxis, :, :]
-            dists = np.sum(diff ** 2, axis=2)
-            indices[i:end] = np.argmin(dists, axis=1)
-
-        return indices
+        tree = _KDTree(target)
+        _, indices = tree.query(source)
+        return np.asarray(indices, dtype=np.int64)
 
     def _compute_distances(
         self,

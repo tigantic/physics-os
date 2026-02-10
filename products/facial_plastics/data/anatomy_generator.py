@@ -900,7 +900,7 @@ class AnatomyGenerator:
         volume: np.ndarray,
         spacing: Tuple[float, float, float],
     ) -> Tuple[np.ndarray, np.ndarray]:
-        """Binary surface extraction via face adjacency.
+        """Vectorised binary surface extraction via face adjacency.
 
         For every pair of adjacent voxels that differ (one inside,
         one outside), emits a quad (two triangles) on the shared
@@ -920,85 +920,94 @@ class AnatomyGenerator:
         triangles : (F, 3) int64  — face indices.
         """
         sx, sy, sz = spacing
-        dz, dy, dx = volume.shape
+        level = 0.5
 
-        vert_map: Dict[Tuple[float, float, float], int] = {}
-        vertices_list: List[List[float]] = []
-        triangles_list: List[List[int]] = []
+        all_verts: List[np.ndarray] = []
+        all_tris: List[np.ndarray] = []
+        vert_offset = 0
 
-        def _vert(x: float, y: float, z: float) -> int:
-            key = (x, y, z)
-            idx = vert_map.get(key)
-            if idx is not None:
-                return idx
-            idx = len(vertices_list)
-            vertices_list.append([x, y, z])
-            vert_map[key] = idx
-            return idx
+        def _emit_axis(axis: int) -> None:
+            nonlocal vert_offset
+            a = np.take(volume, range(volume.shape[axis] - 1), axis=axis)
+            b = np.take(volume, range(1, volume.shape[axis]), axis=axis)
+            straddle = (a >= level) != (b >= level)
+            inside_a = a >= level
 
-        def _add_quad(
-            p0: Tuple[float, float, float],
-            p1: Tuple[float, float, float],
-            p2: Tuple[float, float, float],
-            p3: Tuple[float, float, float],
-        ) -> None:
-            v0, v1, v2, v3 = _vert(*p0), _vert(*p1), _vert(*p2), _vert(*p3)
-            triangles_list.append([v0, v1, v2])
-            triangles_list.append([v0, v2, v3])
+            zs, ys, xs = np.where(straddle)
+            if len(zs) == 0:
+                return
 
-        v = volume
-        # Scan X-axis faces  (between voxels [i,j,k] and [i,j,k+1])
-        for i in range(dz):
-            for j in range(dy):
-                for k in range(dx - 1):
-                    a, b = v[i, j, k], v[i, j, k + 1]
-                    if (a > 0.5) != (b > 0.5):
-                        fx = (k + 1) * sx
-                        y0, y1 = j * sy, (j + 1) * sy
-                        z0, z1 = i * sz, (i + 1) * sz
-                        if a > 0.5:
-                            _add_quad((fx, y0, z0), (fx, y1, z0),
-                                      (fx, y1, z1), (fx, y0, z1))
-                        else:
-                            _add_quad((fx, y0, z0), (fx, y0, z1),
-                                      (fx, y1, z1), (fx, y1, z0))
+            n_faces = len(zs)
 
-        # Scan Y-axis faces  (between voxels [i,j,k] and [i,j+1,k])
-        for i in range(dz):
-            for j in range(dy - 1):
-                for k in range(dx):
-                    a, b = v[i, j, k], v[i, j + 1, k]
-                    if (a > 0.5) != (b > 0.5):
-                        fy = (j + 1) * sy
-                        x0, x1 = k * sx, (k + 1) * sx
-                        z0, z1 = i * sz, (i + 1) * sz
-                        if a > 0.5:
-                            _add_quad((x0, fy, z0), (x0, fy, z1),
-                                      (x1, fy, z1), (x1, fy, z0))
-                        else:
-                            _add_quad((x0, fy, z0), (x1, fy, z0),
-                                      (x1, fy, z1), (x0, fy, z1))
+            if axis == 0:
+                z_pos = (zs + 1).astype(np.float64) * sz
+                x0 = xs.astype(np.float64) * sx
+                x1 = (xs + 1).astype(np.float64) * sx
+                y0 = ys.astype(np.float64) * sy
+                y1 = (ys + 1).astype(np.float64) * sy
+                p0 = np.column_stack([x0, y0, z_pos])
+                p1 = np.column_stack([x1, y0, z_pos])
+                p2 = np.column_stack([x1, y1, z_pos])
+                p3 = np.column_stack([x0, y1, z_pos])
+            elif axis == 1:
+                y_pos = (ys + 1).astype(np.float64) * sy
+                x0 = xs.astype(np.float64) * sx
+                x1 = (xs + 1).astype(np.float64) * sx
+                z0 = zs.astype(np.float64) * sz
+                z1 = (zs + 1).astype(np.float64) * sz
+                p0 = np.column_stack([x0, y_pos, z0])
+                p1 = np.column_stack([x0, y_pos, z1])
+                p2 = np.column_stack([x1, y_pos, z1])
+                p3 = np.column_stack([x1, y_pos, z0])
+            else:
+                x_pos = (xs + 1).astype(np.float64) * sx
+                y0 = ys.astype(np.float64) * sy
+                y1 = (ys + 1).astype(np.float64) * sy
+                z0 = zs.astype(np.float64) * sz
+                z1 = (zs + 1).astype(np.float64) * sz
+                p0 = np.column_stack([x_pos, y0, z0])
+                p1 = np.column_stack([x_pos, y1, z0])
+                p2 = np.column_stack([x_pos, y1, z1])
+                p3 = np.column_stack([x_pos, y0, z1])
 
-        # Scan Z-axis faces  (between voxels [i,j,k] and [i+1,j,k])
-        for i in range(dz - 1):
-            for j in range(dy):
-                for k in range(dx):
-                    a, b = v[i, j, k], v[i + 1, j, k]
-                    if (a > 0.5) != (b > 0.5):
-                        fz = (i + 1) * sz
-                        x0, x1 = k * sx, (k + 1) * sx
-                        y0, y1 = j * sy, (j + 1) * sy
-                        if a > 0.5:
-                            _add_quad((x0, y0, fz), (x1, y0, fz),
-                                      (x1, y1, fz), (x0, y1, fz))
-                        else:
-                            _add_quad((x0, y0, fz), (x0, y1, fz),
-                                      (x1, y1, fz), (x1, y0, fz))
+            flip = ~inside_a[zs, ys, xs]
 
-        if not vertices_list:
+            verts = np.empty((n_faces * 4, 3), dtype=np.float64)
+            verts[0::4] = p0
+            verts[1::4] = np.where(flip[:, None], p3, p1)
+            verts[2::4] = p2
+            verts[3::4] = np.where(flip[:, None], p1, p3)
+
+            base = np.arange(n_faces, dtype=np.int64) * 4 + vert_offset
+            tris = np.empty((n_faces * 2, 3), dtype=np.int64)
+            tris[0::2, 0] = base
+            tris[0::2, 1] = base + 1
+            tris[0::2, 2] = base + 2
+            tris[1::2, 0] = base
+            tris[1::2, 1] = base + 2
+            tris[1::2, 2] = base + 3
+
+            all_verts.append(verts)
+            all_tris.append(tris)
+            vert_offset += len(verts)
+
+        _emit_axis(0)
+        _emit_axis(1)
+        _emit_axis(2)
+
+        if not all_verts:
             return np.empty((0, 3), np.float64), np.empty((0, 3), np.int64)
 
-        return np.array(vertices_list, np.float64), np.array(triangles_list, np.int64)
+        verts = np.concatenate(all_verts)
+        tris = np.concatenate(all_tris)
+
+        # Merge duplicate vertices that share the same coordinate
+        from ..data.surface_ingest import _merge_vertices
+        verts_f32 = verts.astype(np.float32)
+        tris_i32 = tris.astype(np.int32)
+        verts_f32, tris_i32 = _merge_vertices(verts_f32, tris_i32, tol=min(spacing) * 0.01)
+
+        return verts_f32.astype(np.float64), tris_i32.astype(np.int64)
 
     @staticmethod
     def _largest_component(mesh: SurfaceMesh) -> SurfaceMesh:
