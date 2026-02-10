@@ -299,11 +299,11 @@ def _beam_deflection(
 
     # Cantilever beam deflection under uniform load:
     # w(x) = q/(24EI) * (x⁴ - 4Lx³ + 6L²x²)
-    deflection = q / (24.0 * EI) * (
+    result: np.ndarray = q / (24.0 * EI) * (
         x ** 4 - 4.0 * L * x ** 3 + 6.0 * L ** 2 * x ** 2
     )
 
-    return deflection
+    return result
 
 
 def _compute_reduced_area(

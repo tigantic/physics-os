@@ -152,7 +152,7 @@ class MaterialAssigner:
 
             # Build TissueProperties
             tissue_props = TissueProperties(
-                structure=st,
+                structure_type=st,
                 material_model=model,
                 parameters=params,
             )

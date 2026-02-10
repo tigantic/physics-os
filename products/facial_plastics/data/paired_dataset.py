@@ -133,7 +133,8 @@ def _add_scan_noise(
 ) -> np.ndarray:
     """Add Gaussian noise to surface vertices simulating scanner error."""
     noise = rng.normal(0.0, sigma_mm, size=vertices.shape)
-    return vertices + noise
+    result: np.ndarray = vertices + noise
+    return result
 
 
 def _simulate_partial_coverage(
@@ -402,16 +403,19 @@ class PairedDatasetBuilder:
 
         # 1. Demographics
         if demographics is None:
-            sampler = PopulationSampler(seed=self._rng.integers(0, 2**31))
-            demographics = sampler.sample()
+            sampler = PopulationSampler(seed=int(self._rng.integers(0, 2**31)))
+            demographics = sampler.sample_profile()
 
         # 2. Generate anatomy
         generator = AnatomyGenerator(
-            grid_size=self._grid_size,
-            voxel_spacing_mm=self._spacing,
             seed=int(self._rng.integers(0, 2**31)),
         )
-        volume, landmarks = generator.generate(demographics)
+        volume, _spacing_tuple, _origin = generator.generate_ct_volume(
+            demographics,
+            grid_size=self._grid_size,
+            voxel_spacing_mm=self._spacing,
+        )
+        landmarks: List[Any] = []  # landmarks extracted from volume separately
 
         # 3. Extract ground-truth surface
         gt_verts, gt_faces = _extract_gt_surface(volume, self._spacing)
@@ -471,7 +475,7 @@ class PairedDatasetBuilder:
         # Save GT surface
         gt_surface = SurfaceMesh(
             vertices=gt_verts,
-            faces=gt_faces,
+            triangles=gt_faces,
             normals=np.zeros_like(gt_verts),
         )
         bundle.save_surface_mesh("gt_surface", gt_surface)
@@ -479,7 +483,7 @@ class PairedDatasetBuilder:
         # Save scan surface (degraded)
         scan_surface = SurfaceMesh(
             vertices=scan_verts,
-            faces=scan_faces,
+            triangles=scan_faces,
             normals=np.zeros_like(scan_verts),
         )
         bundle.save_surface_mesh("scan_surface", scan_surface)
@@ -502,7 +506,7 @@ class PairedDatasetBuilder:
             {"position": pos.tolist()}
             for pos in gt_landmark_positions
         ]
-        bundle.save_json("gt_landmarks", lm_data, subdir="derived")
+        bundle.save_json("gt_landmarks", {"landmarks": lm_data}, subdir="derived")
         bundle.save()
 
         elapsed = time.monotonic() - t0

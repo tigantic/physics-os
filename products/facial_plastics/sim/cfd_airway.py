@@ -266,7 +266,7 @@ def _graham_scan(points: np.ndarray) -> np.ndarray:
                 break
         hull.append(i)
 
-    return sorted_pts[hull]
+    return np.asarray(sorted_pts[hull])
 
 
 # ── CFD result ────────────────────────────────────────────────────

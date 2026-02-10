@@ -352,12 +352,17 @@ class SimOrchestrator:
 
         # Record provenance
         if self._provenance is not None:
-            self._provenance.record_step(
+            self._provenance.begin_step("simulation")
+            self._provenance.record_dict(
+                "simulation_result",
+                {
+                    "inputs": {"plan_hash": result.plan_hash, "mesh_hash": result.mesh_hash},
+                    "outputs": {"run_hash": result.run_hash},
+                    "metadata": result.to_dict(),
+                },
                 "simulation",
-                inputs={"plan_hash": result.plan_hash, "mesh_hash": result.mesh_hash},
-                outputs={"run_hash": result.run_hash},
-                metadata=result.to_dict(),
             )
+            self._provenance.end_step()
 
         logger.info("Simulation complete:\n%s", result.summary())
         return result

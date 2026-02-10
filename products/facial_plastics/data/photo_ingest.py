@@ -182,7 +182,7 @@ class PhotoIngester:
         # Extract EXIF
         exif_data = {}
         try:
-            raw_exif = img._getexif()
+            raw_exif = img._getexif()  # type: ignore[attr-defined]
             if raw_exif:
                 for tag_id, value in raw_exif.items():
                     tag_name = ExifTags.TAGS.get(tag_id, str(tag_id))
@@ -220,7 +220,7 @@ class PhotoIngester:
 
         # Convert to RGB numpy array
         if img.mode != "RGB":
-            img = img.convert("RGB")
+            img = img.convert("RGB")  # type: ignore[assignment]
 
         pixels = np.array(img, dtype=np.uint8)
         metadata.channels = pixels.shape[2] if pixels.ndim == 3 else 1
@@ -324,4 +324,4 @@ class PhotoIngester:
             + pixels[y1, x1] * wy * wx
         )
 
-        return result.astype(np.uint8)
+        return np.asarray(result.astype(np.uint8))

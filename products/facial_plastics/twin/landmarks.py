@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, cast
 
 import numpy as np
 
@@ -127,6 +127,7 @@ class LandmarkDetector:
                 )
                 if pos is not None:
                     landmarks.append(Landmark(
+                        landmark_type=defn.landmark_type,
                         name=defn.name,
                         position=pos,
                         confidence=confidence,
@@ -171,6 +172,7 @@ class LandmarkDetector:
                 )
                 if pos is not None:
                     landmarks.append(Landmark(
+                        landmark_type=defn.landmark_type,
                         name=defn.name,
                         position=pos,
                         confidence=confidence,
@@ -414,7 +416,7 @@ class LandmarkDetector:
         Uses cotangent weights for more accurate curvature estimation.
         """
         verts = mesh.vertices.astype(np.float64)
-        faces = mesh.faces
+        faces = mesh.triangles
         n_verts = len(verts)
 
         # Accumulate cotangent Laplacian
@@ -456,7 +458,7 @@ class LandmarkDetector:
             area[k] += face_area / 3
 
         # Normalize by area
-        area = np.maximum(area, 1e-12)
+        area = cast(np.ndarray, np.maximum(area, 1e-12))
         laplacian /= (2 * area[:, None])
 
         # Mean curvature = 0.5 * |Laplacian|
@@ -470,4 +472,4 @@ class LandmarkDetector:
         else:
             curvatures = curvature_magnitude
 
-        return curvatures.astype(np.float32)
+        return cast(np.ndarray, curvatures.astype(np.float32))

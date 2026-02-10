@@ -370,4 +370,5 @@ class ModelCalibrator:
     def load_calibration(path: Path) -> Dict[str, Any]:
         """Load a previously saved calibration result."""
         with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
+            data: Dict[str, Any] = json.load(f)
+            return data

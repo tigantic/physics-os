@@ -255,7 +255,7 @@ class CaseBundle:
         if prov_path.exists():
             provenance = Provenance.load(prov_path)
         else:
-            provenance = Provenance()
+            provenance = Provenance(case_id=manifest.case_id)
 
         return cls(root=bundle_root, manifest=manifest, provenance=provenance)
 
@@ -371,7 +371,8 @@ class CaseBundle:
         path = self.subdir(subdir) / f"{name}.npy"
         if not path.exists():
             raise FileNotFoundError(f"Array not found: {path}")
-        return np.load(path, allow_pickle=False)
+        arr: np.ndarray = np.load(path, allow_pickle=False)
+        return arr
 
     def save_json(
         self,
@@ -398,7 +399,8 @@ class CaseBundle:
         if not path.exists():
             raise FileNotFoundError(f"JSON not found: {path}")
         with open(path) as f:
-            return json.load(f)
+            data: Dict[str, Any] = json.load(f)
+            return data
 
     # ── Mesh I/O ──────────────────────────────────────────────
 
@@ -437,8 +439,8 @@ class CaseBundle:
             "nodes": mesh.nodes,
             "elements": mesh.elements,
         }
-        if mesh.surface_faces is not None:
-            save_dict["surface_faces"] = mesh.surface_faces
+        if mesh.surface_tags:
+            save_dict["surface_tags"] = mesh.surface_tags
         np.savez_compressed(dest, **save_dict)
 
         # Save region materials and surface tags as JSON sidecar

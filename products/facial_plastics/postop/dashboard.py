@@ -318,14 +318,14 @@ class ValidationDashboard:
 
         cr = self._calibration_result
         params = {}
-        if cr.optimized_params is not None:
-            for i, val in enumerate(cr.optimized_params):
-                params[f"param_{i}"] = round(float(val), 6)
+        if cr.parameters_after is not None:
+            for name, val in cr.parameters_after.items():
+                params[name] = round(float(val), 6)
 
         return CalibrationPanel(
             is_calibrated=True,
-            last_calibration_residual=float(cr.final_residual),
-            n_calibration_cases=cr.n_cases,
+            last_calibration_residual=float(cr.residual_after),
+            n_calibration_cases=len(cr.case_ids),
             parameter_count=len(params),
             converged=cr.converged,
             parameter_summary=params,

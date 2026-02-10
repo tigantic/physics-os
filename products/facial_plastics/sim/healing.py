@@ -204,10 +204,10 @@ class HealingModel:
         surgical_displacements : optional (N,3)
             Initial surgical displacement field (from FEM result).
         """
-        edema = np.zeros(self._n_elems, dtype=np.float64)
-        scar = np.zeros(self._n_elems, dtype=np.float64)
-        stiffness = np.ones(self._n_elems, dtype=np.float64)
-        settling = np.zeros((self._n_nodes, 3), dtype=np.float64)
+        edema: np.ndarray = np.zeros(self._n_elems, dtype=np.float64)
+        scar: np.ndarray = np.zeros(self._n_elems, dtype=np.float64)
+        stiffness: np.ndarray = np.ones(self._n_elems, dtype=np.float64)
+        settling: np.ndarray = np.zeros((self._n_nodes, 3), dtype=np.float64)
 
         current_phase = "acute"
 
@@ -242,7 +242,7 @@ class HealingModel:
             if phase.scar_stiffness_multiplier != 1.0:
                 scar_stiff = phase.scar_stiffness_multiplier
                 stiffness_blend = (1.0 - scar) * 1.0 + scar * scar_stiff
-                stiffness = np.maximum(stiffness, stiffness_blend)
+                stiffness = np.asarray(np.maximum(stiffness, stiffness_blend))
 
             # Settling: gravity-driven creep
             if phase.settling_rate_mm_per_day > 0:
@@ -253,23 +253,23 @@ class HealingModel:
                     settle_factor = settling_mag
                     if surgical_displacements is not None:
                         # Settling proportional to surgical displacement magnitude
-                        disp_mag = np.linalg.norm(surgical_displacements[nid])
+                        disp_mag = float(np.linalg.norm(surgical_displacements[nid]))
                         settle_factor *= min(disp_mag / 5.0, 1.0)
 
                     settling[nid] += self._gravity * settle_factor
 
         # Clamp scar fraction
-        scar = np.clip(scar, 0.0, 1.0)
+        scar_clamped: np.ndarray = np.asarray(np.clip(scar, 0.0, 1.0))
 
         # Edema-adjusted stiffness (edemic tissue is softer)
         stiffness *= (1.0 - 0.3 * edema)  # 30% softening per unit edema
-        stiffness = np.maximum(stiffness, 0.1)
+        stiffness_clamped: np.ndarray = np.asarray(np.maximum(stiffness, 0.1))
 
         state = HealingState(
             time_days=time_days,
             edema_fraction=edema,
-            scar_fraction=scar,
-            stiffness_multiplier=stiffness,
+            scar_fraction=scar_clamped,
+            stiffness_multiplier=stiffness_clamped,
             settling_displacement=settling,
             phase_name=current_phase,
         )

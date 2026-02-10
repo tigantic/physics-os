@@ -234,7 +234,7 @@ class SyntheticAugmenter:
             new_verts = mesh.vertices + displacement.astype(np.float32)
             new_mesh = SurfaceMesh(
                 vertices=new_verts,
-                faces=mesh.faces.copy(),
+                triangles=mesh.triangles.copy(),
             )
             new_mesh.compute_normals()
 
@@ -345,4 +345,4 @@ def _erfinv(x: float) -> float:
     ln_term = np.log(1 - x * x)
     term1 = 2.0 / (np.pi * a) + ln_term / 2.0
     sign = 1.0 if x >= 0 else -1.0
-    return sign * np.sqrt(np.sqrt(term1 * term1 - ln_term / a) - term1)
+    return float(sign * np.sqrt(np.sqrt(term1 * term1 - ln_term / a) - term1))

@@ -169,7 +169,7 @@ def build_muscle_fiber_field(
 ) -> FiberField:
     """Build a single-family fiber field for mimetic muscle."""
     d = np.asarray(muscle_direction, dtype=np.float64)
-    d = d / max(np.linalg.norm(d), 1e-12)
+    d = d / max(float(np.linalg.norm(d)), 1e-12)
 
     family = FiberFamily(direction=d, k1=k1, k2=k2, kappa_dispersion=0.05)
 
@@ -194,7 +194,7 @@ def build_smas_fiber_field(
     each with high dispersion.
     """
     n = np.asarray(planar_normal, dtype=np.float64)
-    n = n / max(np.linalg.norm(n), 1e-12)
+    n = n / max(float(np.linalg.norm(n)), 1e-12)
 
     # Find two orthogonal vectors in the plane
     if abs(n[0]) < 0.9:

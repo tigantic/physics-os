@@ -152,8 +152,8 @@ class TestPopulationSampler:
         d = sampler.sample_demographics()
         assert d.sex in ("M", "F")
         assert d.ethnicity is not None
-        assert 18 <= d.age_years <= 75
-        assert 1 <= d.skin_fitzpatrick <= 6
+        assert d.age_years is not None and 18 <= d.age_years <= 75
+        assert d.skin_fitzpatrick is not None and 1 <= d.skin_fitzpatrick <= 6
 
     def test_sample_demographics_reproducible(self) -> None:
         s1 = PopulationSampler(seed=42)
@@ -417,6 +417,7 @@ class TestCaseLibraryCurator:
             run_twin_pipeline=False,
         )
         assert result.success
+        assert result.demographics is not None
         assert result.demographics.sex == "F"
         assert result.demographics.ethnicity == "east_asian"
         assert result.procedure == ProcedureType.RHINOPLASTY
@@ -425,8 +426,8 @@ class TestCaseLibraryCurator:
         curator = CaseLibraryCurator(
             tmp_dir / "library",
             seed=42,
-            grid_size=64,
-            voxel_spacing_mm=1.5,
+            grid_size=32,
+            voxel_spacing_mm=2.0,
         )
         result = curator.generate_case(run_twin_pipeline=True)
         assert result.success

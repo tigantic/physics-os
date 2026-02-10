@@ -214,7 +214,8 @@ def _approx_norminv(u: np.ndarray) -> np.ndarray:
 
     p = c0 + c1 * t + c2 * t ** 2
     q = 1.0 + d1 * t + d2 * t ** 2 + d3 * t ** 3
-    return sign * (t - p / q)
+    result: np.ndarray = sign * (t - p / q)
+    return result
 
 
 # ── Sobol sensitivity indices ────────────────────────────────────
@@ -329,19 +330,19 @@ def compute_sobol_indices(
 
     alpha = 1 - confidence_level
     z = _approx_norminv(np.array([1 - alpha / 2]))[0]
-    ci_first = z * np.sqrt(ci_first / max(n_bootstrap, 1))
-    ci_total = z * np.sqrt(ci_total / max(n_bootstrap, 1))
+    ci_first_out: np.ndarray = np.asarray(z * np.sqrt(ci_first / max(n_bootstrap, 1)))
+    ci_total_out: np.ndarray = np.asarray(z * np.sqrt(ci_total / max(n_bootstrap, 1)))
 
     # Clamp to [0, 1]
-    first_order = np.clip(first_order, 0, 1)
-    total_effect = np.clip(total_effect, 0, 1)
+    first_order_clamped: np.ndarray = np.clip(first_order, 0, 1)
+    total_effect_clamped: np.ndarray = np.clip(total_effect, 0, 1)
 
     return SobolIndices(
         parameter_names=parameter_names,
-        first_order=first_order,
-        total_effect=total_effect,
-        confidence_first=ci_first,
-        confidence_total=ci_total,
+        first_order=first_order_clamped,
+        total_effect=total_effect_clamped,
+        confidence_first=ci_first_out,
+        confidence_total=ci_total_out,
     )
 
 

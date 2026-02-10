@@ -33,8 +33,8 @@ def make_box_surface_mesh(
     Returns a triangulated mesh of a cube [-size/2, size/2]^3.
     """
     half = size / 2.0
-    verts = []
-    tris = []
+    verts: list[list[float]] = []
+    tris: list[list[int]] = []
 
     # Generate a grid on each face of the cube
     faces_def = [

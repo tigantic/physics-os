@@ -456,6 +456,7 @@ def cmd_plan(args: argparse.Namespace) -> None:
                 f"Unknown template '{template_name}' in '{category}'. "
                 f"Available: {', '.join(sorted(methods))}"
             )
+            return  # unreachable but satisfies mypy
         plan_obj = fn()
         plan_dict = {
             "name": plan_obj.name,

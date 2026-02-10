@@ -263,6 +263,7 @@ class TestAgingTrajectoryResult:
         # Should be between year 5 and year 10 snapshots
         s5 = result.at_year(5.0)
         s10 = result.at_year(10.0)
+        assert s5 is not None and s10 is not None
         assert s5.collagen_fraction >= snap.collagen_fraction >= s10.collagen_fraction
 
     def test_at_year_beyond_horizon(self, predictor: AgingTrajectory) -> None:

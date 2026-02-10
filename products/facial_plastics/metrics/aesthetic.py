@@ -467,7 +467,7 @@ class AestheticMetrics:
             sm.alar_base_asymmetry_mm = dist_l - dist_r
 
         # Procrustes distance using bilateral landmark pairs
-        left, right = _reflect_landmarks_bilateral(self._lm_arr)
+        left, right = _reflect_landmarks_bilateral(self._lm)
         if len(left) >= 3 and len(right) >= 3:
             # Match pairs by order
             left_pts = []

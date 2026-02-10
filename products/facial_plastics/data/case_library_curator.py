@@ -562,7 +562,7 @@ class CaseLibraryCurator:
     def _save_report(self, report: LibraryGenerationReport) -> Path:
         """Save the generation report to the library root."""
         report_path = self._library_root / "_generation_report.json"
-        data = {
+        data: Dict[str, Any] = {
             "total_attempted": report.total_attempted,
             "total_succeeded": report.total_succeeded,
             "total_failed": report.total_failed,
@@ -600,7 +600,7 @@ class CaseLibraryCurator:
 
     def summary(self) -> Dict[str, Any]:
         """Return a summary of the current library state."""
-        stats = self._library.statistics()
+        stats: Dict[str, Any] = self._library.statistics()
         stats["library_root"] = str(self._library_root)
         report_path = self._library_root / "_generation_report.json"
         if report_path.exists():

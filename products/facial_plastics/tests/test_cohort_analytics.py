@@ -30,8 +30,8 @@ def _make_case(
     i: int,
     rng: np.random.RandomState,
     *,
-    surgeon_pool: List[str] = ("Dr. A", "Dr. B", "Dr. C"),
-    procedure_pool: List[str] = ("primary_rhinoplasty", "revision_rhinoplasty"),
+    surgeon_pool: List[str] = ["Dr. A", "Dr. B", "Dr. C"],
+    procedure_pool: List[str] = ["primary_rhinoplasty", "revision_rhinoplasty"],
 ) -> Dict[str, Any]:
     """Build a single case dict matching the CohortAnalytics schema."""
     return {

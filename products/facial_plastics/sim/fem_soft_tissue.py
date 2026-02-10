@@ -156,13 +156,15 @@ def _tet4_shape_derivs() -> np.ndarray:
 def _tet4_volume(coords: np.ndarray) -> float:
     """Volume of a tetrahedron given (4,3) nodal coordinates."""
     d = coords[1:] - coords[0]
-    return abs(np.linalg.det(d)) / 6.0
+    det_val = float(np.linalg.det(d))
+    return abs(det_val) / 6.0
 
 
 def _tet4_jacobian(coords: np.ndarray) -> np.ndarray:
     """Jacobian matrix J = dX/dxi, shape (3,3)."""
     dN_dxi = _tet4_shape_derivs()  # (4,3)
-    return coords.T @ dN_dxi  # (3,3)
+    J: np.ndarray = coords.T @ dN_dxi  # (3,3)
+    return J
 
 
 def _tet4_B_matrix(coords: np.ndarray) -> Tuple[np.ndarray, float]:

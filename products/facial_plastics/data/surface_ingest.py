@@ -48,7 +48,7 @@ class SurfaceIngester:
         else:
             raise ValueError(f"Unsupported mesh format: {suffix}")
 
-        mesh = SurfaceMesh(vertices=verts, faces=faces)
+        mesh = SurfaceMesh(vertices=verts, triangles=faces)
         mesh.compute_normals()
 
         logger.info(
@@ -147,8 +147,8 @@ class SurfaceIngester:
     @staticmethod
     def _load_stl_ascii(path: Path) -> Tuple[np.ndarray, np.ndarray]:
         """Parse ASCII STL."""
-        verts = []
-        faces = []
+        verts: list[list[float]] = []
+        faces: list[list[int]] = []
         with open(path, "r") as f:
             tri_verts = []
             for line in f:

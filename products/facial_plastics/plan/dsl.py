@@ -17,7 +17,7 @@ import hashlib
 import json
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional, Sequence, Set, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Sequence, Set, Tuple, Union, cast
 
 import numpy as np
 
@@ -100,12 +100,12 @@ class OperatorParam:
                 return Vec3(float(value[0]), float(value[1]), float(value[2]))
             raise PlanValidationError(f"{self.name}: expected Vec3, got {type(value)}")
         elif self.param_type == ParamType.ENUM:
-            val = str(value)
-            if self.enum_values and val not in self.enum_values:
+            str_val: str = str(value)
+            if self.enum_values and str_val not in self.enum_values:
                 raise PlanValidationError(
-                    f"{self.name}: {val!r} not in {self.enum_values}"
+                    f"{self.name}: {str_val!r} not in {self.enum_values}"
                 )
-            return val
+            return str_val
         elif self.param_type == ParamType.MESH_REGION:
             return str(value)
         return value
@@ -357,7 +357,7 @@ class SurgicalPlan:
             version=data.get("version", "1.0"),
         )
         root_data = data["root"]
-        plan._root = cls._deserialize_node(root_data)
+        plan._root = cast(SequenceNode, cls._deserialize_node(root_data))
         return plan
 
     @classmethod
@@ -391,14 +391,17 @@ class SurgicalPlan:
                 description=data.get("description", ""),
             )
             for label, branch_data in data.get("branches", {}).items():
-                branch.branches[label] = cls._deserialize_node(branch_data)
+                branch.branches[label] = cast(
+                    Union[SurgicalOp, SequenceNode, CompositeOp],
+                    cls._deserialize_node(branch_data),
+                )
             return branch
         elif node_type == "composite":
             seq_data = data.get("sequence", {"type": "sequence", "name": "empty", "steps": []})
             return CompositeOp(
                 name=data["name"],
                 procedure=ProcedureType(data["procedure"]),
-                sequence=cls._deserialize_node(seq_data),
+                sequence=cast(SequenceNode, cls._deserialize_node(seq_data)),
                 description=data.get("description", ""),
             )
         else:

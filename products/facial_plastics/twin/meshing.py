@@ -18,10 +18,12 @@ import numpy as np
 from ..core.config import MeshConfig
 from ..core.types import (
     BoundingBox,
+    MaterialModel,
     MeshElementType,
     MeshQualityReport,
     StructureType,
     SurfaceMesh,
+    TissueProperties,
     Vec3,
     VolumeMesh,
 )
@@ -86,8 +88,8 @@ class VolumetricMesher:
         # Phase 1: Extract boundary surfaces via marching cubes
         all_vertices: List[np.ndarray] = []
         all_tets: List[np.ndarray] = []
-        region_materials: Dict[int, str] = {}
-        surface_tags: Dict[int, str] = {}
+        region_materials: Dict[int, TissueProperties] = {}
+        surface_tags: Dict[str, np.ndarray] = {}
 
         # Find unique non-zero labels
         unique_labels = sorted(set(int(v) for v in np.unique(labels) if v > 0))
@@ -103,8 +105,8 @@ class VolumetricMesher:
         if outer_surface is None:
             raise ValueError("Failed to extract outer isosurface")
 
-        logger.info("Outer surface: %d vertices, %d faces",
-                     len(outer_surface.vertices), len(outer_surface.faces))
+        logger.info("Outer surface: %d vertices, %d triangles",
+                     len(outer_surface.vertices), len(outer_surface.triangles))
 
         # Phase 3: Smooth the surface
         outer_surface = self._laplacian_smooth_surface(outer_surface, iterations=10, alpha=0.3)
@@ -138,23 +140,28 @@ class VolumetricMesher:
         # Build region materials map
         if regions:
             for reg in regions:
-                region_materials[reg.label] = reg.structure.value
+                region_materials[reg.label] = TissueProperties(
+                    structure_type=reg.structure,
+                    material_model=MaterialModel.LINEAR_ELASTIC,
+                    parameters={"E": 1e6, "nu": 0.45},
+                )
 
-        # Compute surface faces
-        surface_faces = self._extract_surface_tets(elements)
+        # Compute boundary surface faces
+        boundary_faces = self._extract_surface_tets(elements)
+        if len(boundary_faces) > 0:
+            surface_tags["boundary"] = boundary_faces
 
         mesh = VolumeMesh(
             nodes=nodes,
             elements=elements,
             element_type=MeshElementType.TET4,
+            region_ids=element_regions,
             region_materials=region_materials,
-            surface_faces=surface_faces,
             surface_tags=surface_tags,
         )
 
-        logger.info("Final mesh: %d nodes, %d elements, %d surface faces",
-                     len(nodes), len(elements),
-                     len(surface_faces) if surface_faces is not None else 0)
+        logger.info("Final mesh: %d nodes, %d elements, %d boundary faces",
+                     len(nodes), len(elements), len(boundary_faces))
 
         return mesh
 
@@ -175,6 +182,7 @@ class VolumetricMesher:
             nodes=nodes,
             elements=elements,
             element_type=MeshElementType.TET4,
+            region_ids=np.zeros(len(elements), dtype=np.int32),
         )
 
     def compute_quality(self, mesh: VolumeMesh) -> MeshQualityReport:
@@ -187,41 +195,64 @@ class VolumetricMesher:
         aspect_ratios = np.zeros(n_elem, dtype=np.float32)
         jacobians = np.zeros(n_elem, dtype=np.float32)
         volumes = np.zeros(n_elem, dtype=np.float32)
+        global_min_edge = float("inf")
+        global_max_edge = 0.0
 
         for i, elem in enumerate(elements):
             v0, v1, v2, v3 = nodes[elem[0]], nodes[elem[1]], nodes[elem[2]], nodes[elem[3]]
 
             # Tet volume
             mat = np.column_stack([v1 - v0, v2 - v0, v3 - v0])
-            vol = abs(np.linalg.det(mat)) / 6.0
+            vol = abs(float(np.linalg.det(mat))) / 6.0
             volumes[i] = vol
 
             # Edge lengths
             edges = [
-                np.linalg.norm(v1 - v0), np.linalg.norm(v2 - v0),
-                np.linalg.norm(v3 - v0), np.linalg.norm(v2 - v1),
-                np.linalg.norm(v3 - v1), np.linalg.norm(v3 - v2),
+                float(np.linalg.norm(v1 - v0)), float(np.linalg.norm(v2 - v0)),
+                float(np.linalg.norm(v3 - v0)), float(np.linalg.norm(v2 - v1)),
+                float(np.linalg.norm(v3 - v1)), float(np.linalg.norm(v3 - v2)),
             ]
             max_edge = max(edges)
             min_edge = max(min(edges), 1e-12)
+            global_min_edge = min(global_min_edge, min_edge)
+            global_max_edge = max(global_max_edge, max_edge)
             aspect_ratios[i] = max_edge / min_edge
 
             # Jacobian (normalized)
-            ideal_vol = (max_edge ** 3) / (6 * np.sqrt(2))
+            ideal_vol = (max_edge ** 3) / (6.0 * float(np.sqrt(2)))
             jacobians[i] = vol / max(ideal_vol, 1e-12)
 
         # Aggregate metrics
         n_inverted = int((volumes <= 0).sum())
+        n_regions = len(set(int(r) for r in mesh.region_ids)) if len(mesh.region_ids) > 0 else 0
+
+        # Compute surface area from boundary faces
+        boundary = self._extract_surface_tets(elements)
+        surface_area = 0.0
+        for face in boundary:
+            vf0, vf1, vf2 = nodes[face[0]], nodes[face[1]], nodes[face[2]]
+            surface_area += 0.5 * float(np.linalg.norm(np.cross(vf1 - vf0, vf2 - vf0)))
+
+        if n_elem == 0:
+            global_min_edge = 0.0
+            global_max_edge = 0.0
 
         report = MeshQualityReport(
-            n_elements=n_elem,
             n_nodes=len(nodes),
+            n_elements=n_elem,
+            element_type=mesh.element_type,
+            min_jacobian=float(jacobians.min()) if n_elem > 0 else 0.0,
+            max_aspect_ratio=float(aspect_ratios.max()) if n_elem > 0 else 0.0,
+            min_edge_length_mm=global_min_edge,
+            max_edge_length_mm=global_max_edge,
+            mean_quality=float(jacobians.mean()) if n_elem > 0 else 0.0,
+            n_inverted=n_inverted,
+            volume_mm3=float(volumes.sum()),
+            surface_area_mm2=surface_area,
+            n_regions=n_regions,
             min_quality=float(jacobians.min()) if n_elem > 0 else 0.0,
             max_quality=float(jacobians.max()) if n_elem > 0 else 0.0,
-            mean_quality=float(jacobians.mean()) if n_elem > 0 else 0.0,
-            min_aspect_ratio=float(aspect_ratios.min()) if n_elem > 0 else 0.0,
-            max_aspect_ratio=float(aspect_ratios.max()) if n_elem > 0 else 0.0,
-            n_inverted=n_inverted,
+            min_aspect_ratio=float(aspect_ratios.min()) if n_elem > 0 else 1.0,
         )
 
         return report
@@ -307,7 +338,7 @@ class VolumetricMesher:
         from ..data.surface_ingest import _merge_vertices
         verts, faces = _merge_vertices(verts, faces, tol=min(spacing) * 0.1)
 
-        mesh = SurfaceMesh(vertices=verts, faces=faces)
+        mesh = SurfaceMesh(vertices=verts, triangles=faces)
         mesh.compute_normals()
         return mesh
 
@@ -323,7 +354,7 @@ class VolumetricMesher:
         Uses constrained Delaunay approach with interior point insertion.
         """
         verts = surface.vertices.astype(np.float64)
-        faces = surface.faces
+        faces = surface.triangles
 
         # Compute bounding box
         bb_min = verts.min(axis=0)
@@ -331,9 +362,11 @@ class VolumetricMesher:
         bb_size = bb_max - bb_min
 
         # Generate interior seed points on a regular grid
-        nx = max(2, int(bb_size[0] / target_edge))
-        ny = max(2, int(bb_size[1] / target_edge))
-        nz = max(2, int(bb_size[2] / target_edge))
+        # Cap grid divisions to keep Delaunay tractable (O(n²) in pure Python)
+        _MAX_DIVISIONS = 20
+        nx = min(max(2, int(bb_size[0] / target_edge)), _MAX_DIVISIONS)
+        ny = min(max(2, int(bb_size[1] / target_edge)), _MAX_DIVISIONS)
+        nz = min(max(2, int(bb_size[2] / target_edge)), _MAX_DIVISIONS)
 
         x_coords = np.linspace(bb_min[0] + target_edge / 2, bb_max[0] - target_edge / 2, nx)
         y_coords = np.linspace(bb_min[1] + target_edge / 2, bb_max[1] - target_edge / 2, ny)
@@ -468,7 +501,7 @@ class VolumetricMesher:
             [dx, dy, dz, dx ** 2 + dy ** 2 + dz ** 2],
         ]))
 
-        return det > 0
+        return bool(det > 0)
 
     # ── Region assignment ─────────────────────────────────────
 
@@ -539,9 +572,9 @@ class VolumetricMesher:
                 ]
                 max_edge_len = 0.0
                 for a, b in edge_pairs:
-                    d = np.linalg.norm(
+                    d = float(np.linalg.norm(
                         np.array(nodes_list[a]) - np.array(nodes_list[b])
-                    )
+                    ))
                     max_edge_len = max(max_edge_len, d)
 
                 if max_edge_len > target_edge:
@@ -584,7 +617,7 @@ class VolumetricMesher:
     ) -> SurfaceMesh:
         """Laplacian smoothing of surface mesh."""
         verts = mesh.vertices.copy()
-        faces = mesh.faces
+        faces = mesh.triangles
         n = len(verts)
 
         # Build adjacency
@@ -604,7 +637,7 @@ class VolumetricMesher:
                     new_verts[i] = verts[i] + alpha * (avg - verts[i])
             verts = new_verts
 
-        result = SurfaceMesh(vertices=verts, faces=mesh.faces.copy())
+        result = SurfaceMesh(vertices=verts, triangles=mesh.triangles.copy())
         result.compute_normals()
         return result
 
@@ -635,12 +668,12 @@ class VolumetricMesher:
                          (elem[0], elem[1], elem[3]),
                          (elem[0], elem[2], elem[3]),
                          (elem[1], elem[2], elem[3])]:
-                key = tuple(sorted(face))
+                key: Tuple[int, ...] = tuple(int(x) for x in sorted(face))
                 face_count[key] = face_count.get(key, 0) + 1
 
-        for face, count in face_count.items():
+        for face_key, count in face_count.items():
             if count == 1:  # boundary face
-                boundary.update(face)
+                boundary.update(face_key)
 
         for _ in range(iterations):
             new_nodes = nodes.copy()
@@ -692,7 +725,7 @@ class VolumetricMesher:
                          (elem[0], elem[1], elem[3]),
                          (elem[0], elem[2], elem[3]),
                          (elem[1], elem[2], elem[3])]:
-                key = tuple(sorted(face))
+                key = tuple(int(x) for x in sorted(face))
                 if key in face_count:
                     face_count[key].append(1)
                 else:
@@ -746,4 +779,4 @@ def _ray_triangle_intersect(
         return False
 
     t = f * np.dot(edge2, q)
-    return t > 1e-10
+    return bool(t > 1e-10)

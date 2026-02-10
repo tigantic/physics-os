@@ -104,7 +104,7 @@ class TwinBuilder:
 
         # Stage 1: Load CT volume
         volume_hu, voxel_spacing = self._load_ct_volume(bundle, report)
-        if volume_hu is None:
+        if volume_hu is None or voxel_spacing is None:
             return report
 
         # Stage 2: Segmentation
@@ -128,7 +128,7 @@ class TwinBuilder:
         volume_mesh, element_regions = self._generate_mesh(
             bundle, seg_result, report
         )
-        if volume_mesh is None:
+        if volume_mesh is None or element_regions is None:
             return report
 
         # Stage 7: Material assignment
@@ -176,8 +176,8 @@ class TwinBuilder:
         """Load CT volume from bundle inputs."""
         try:
             volume_hu = bundle.load_array("ct_volume", subdir="inputs")
-            metadata = bundle.load_json("ct_metadata", subdir="inputs")
-            spacing = tuple(metadata["voxel_spacing_mm"])
+            cached_meta = bundle.load_json("ct_metadata", subdir="inputs")
+            spacing = tuple(cached_meta["voxel_spacing_mm"])
             report.stages_completed.append("ct_load")
             return volume_hu, spacing
         except FileNotFoundError:

@@ -119,7 +119,7 @@ class AgingRiskProfile:
         product = 1.0
         for f in factors:
             product *= max(f, 0.01)
-        return product ** (1.0 / len(factors))
+        return float(product ** (1.0 / len(factors)))
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -288,7 +288,7 @@ def _skin_stiffness_evolution(
     collagen_effect = collagen_frac ** 1.5  # nonlinear weakening
     elastin_effect = 0.8 + 0.2 * elastin_frac  # minor contribution
 
-    return collagen_effect * elastin_effect
+    return float(collagen_effect * elastin_effect)
 
 
 def _skin_thickness_evolution(

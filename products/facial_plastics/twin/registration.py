@@ -14,6 +14,7 @@ import numpy as np
 
 from ..core.types import (
     Landmark,
+    Modality,
     RegistrationResult,
     SurfaceMesh,
     Vec3,
@@ -52,6 +53,9 @@ class MultiModalRegistrar:
         self,
         source_landmarks: List[Landmark],
         target_landmarks: List[Landmark],
+        *,
+        source_modality: Modality = Modality.CT,
+        target_modality: Modality = Modality.SURFACE_SCAN,
     ) -> RegistrationResult:
         """Compute rigid transform aligning source landmarks to target.
 
@@ -97,10 +101,15 @@ class MultiModalRegistrar:
         )
 
         return RegistrationResult(
-            rigid_transform=rigid_transform,
-            nonrigid_field=None,
-            rms_error_mm=rms_error,
+            source_modality=source_modality,
+            target_modality=target_modality,
+            rotation=rotation,
+            translation=translation,
+            scale=1.0,
+            residual_mm=rms_error,
             n_correspondences=len(src_pts),
+            confidence=max(0.0, 1.0 - rms_error / 10.0),
+            method="svd_landmarks",
         )
 
     # ── Surface ICP registration ──────────────────────────────
@@ -111,6 +120,8 @@ class MultiModalRegistrar:
         target: SurfaceMesh,
         *,
         initial_transform: Optional[np.ndarray] = None,
+        source_modality: Modality = Modality.CT,
+        target_modality: Modality = Modality.SURFACE_SCAN,
     ) -> RegistrationResult:
         """Register source surface to target using ICP.
 
@@ -199,11 +210,19 @@ class MultiModalRegistrar:
         )
         rms_error = float(np.sqrt(np.mean(final_distances ** 2))) if len(final_distances) > 0 else float("inf")
 
+        final_R: np.ndarray = rigid_transform[:3, :3]
+        final_t: np.ndarray = rigid_transform[:3, 3]
+
         return RegistrationResult(
-            rigid_transform=rigid_transform,
-            nonrigid_field=None,
-            rms_error_mm=rms_error,
+            source_modality=source_modality,
+            target_modality=target_modality,
+            rotation=final_R,
+            translation=final_t,
+            scale=1.0,
+            residual_mm=rms_error,
             n_correspondences=len(final_correspondences),
+            confidence=max(0.0, 1.0 - rms_error / 10.0),
+            method="icp",
         )
 
     # ── Combined pipeline ─────────────────────────────────────
@@ -219,12 +238,19 @@ class MultiModalRegistrar:
         initial_transform = None
 
         if ct_landmarks and scan_landmarks:
-            lm_result = self.register_landmarks(ct_landmarks, scan_landmarks)
+            lm_result = self.register_landmarks(
+                ct_landmarks, scan_landmarks,
+                source_modality=Modality.CT,
+                target_modality=Modality.SURFACE_SCAN,
+            )
             initial_transform = lm_result.rigid_transform
             logger.info("Landmark pre-alignment: RMS=%.3f mm", lm_result.rms_error_mm)
 
         result = self.register_surfaces(
-            ct_surface, scan_surface, initial_transform=initial_transform
+            ct_surface, scan_surface,
+            initial_transform=initial_transform,
+            source_modality=Modality.CT,
+            target_modality=Modality.SURFACE_SCAN,
         )
         logger.info("Final registration: RMS=%.3f mm, %d correspondences",
                      result.rms_error_mm, result.n_correspondences)
@@ -264,7 +290,8 @@ class MultiModalRegistrar:
         # U(r) = r^2 * log(r) for 3D TPS
         def tps_kernel(r: np.ndarray) -> np.ndarray:
             r = np.maximum(r, 1e-10)
-            return r ** 2 * np.log(r)
+            result: np.ndarray = r ** 2 * np.log(r)
+            return result
 
         # Distance matrix between control points
         diff = source_landmarks[:, None, :] - source_landmarks[None, :, :]
@@ -305,7 +332,7 @@ class MultiModalRegistrar:
 
         warped_mesh = SurfaceMesh(
             vertices=warped.astype(np.float32),
-            faces=source_mesh.faces.copy(),
+            triangles=source_mesh.triangles.copy(),
         )
         warped_mesh.compute_normals()
 

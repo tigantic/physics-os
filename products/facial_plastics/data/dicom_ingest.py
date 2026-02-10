@@ -11,7 +11,7 @@ import logging
 import struct
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
 
@@ -177,19 +177,19 @@ class DicomIngester:
         file_hashes = [hash_file(s.path) for s in slices]
 
         metadata = DicomMetadata(
-            modality=Modality.CT,
+            modality=Modality.CT.value,
             voxel_spacing_mm=voxel_spacing,
-            volume_shape=volume_hu.shape,
+            volume_shape=(int(volume_hu.shape[0]), int(volume_hu.shape[1]), int(volume_hu.shape[2])),
             origin_mm=(
                 slices[0].image_position[0],
                 slices[0].image_position[1],
                 slices[0].image_position[2],
             ),
-            orientation=slices[0].image_orientation,
+            orientation=np.array(slices[0].image_orientation),
             hu_range=(float(volume_hu.min()), float(volume_hu.max())),
             n_slices=len(slices),
-            window_center=None,
-            window_width=None,
+            window_center=0.0,
+            window_width=0.0,
         )
 
         logger.info(
@@ -315,7 +315,7 @@ class DicomIngester:
         def _int(tag: Tuple[int, int], default: int = 0) -> int:
             v = tags.get(tag, b"")
             if len(v) >= 2:
-                return struct.unpack_from("<H", v)[0]
+                return int(struct.unpack_from("<H", v)[0])
             return default
 
         def _floats(tag: Tuple[int, int]) -> Tuple[float, ...]:
@@ -354,7 +354,7 @@ class DicomIngester:
             return None
 
         if bits_alloc == 16:
-            dtype = np.int16 if pixel_rep else np.uint16
+            dtype: Any = np.int16 if pixel_rep else np.uint16
         elif bits_alloc == 8:
             dtype = np.int8 if pixel_rep else np.uint8
         else:
@@ -397,10 +397,10 @@ class DicomIngester:
                 if series_uid and getattr(ds, "SeriesInstanceUID", "") != series_uid:
                     continue
 
-                pixel_spacing = tuple(float(x) for x in getattr(ds, "PixelSpacing", [1.0, 1.0]))
-                image_position = tuple(
-                    float(x) for x in getattr(ds, "ImagePositionPatient", [0.0, 0.0, 0.0])
-                )
+                _ps_raw = getattr(ds, "PixelSpacing", [1.0, 1.0])
+                pixel_spacing = (float(_ps_raw[0]), float(_ps_raw[1]))
+                _ip_raw = getattr(ds, "ImagePositionPatient", [0.0, 0.0, 0.0])
+                image_position = (float(_ip_raw[0]), float(_ip_raw[1]), float(_ip_raw[2]))
                 image_orientation = tuple(
                     float(x)
                     for x in getattr(

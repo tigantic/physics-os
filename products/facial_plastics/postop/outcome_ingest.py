@@ -164,7 +164,7 @@ class OutcomeIngester:
         if suffix in (".obj", ".stl", ".ply"):
             from ..data.surface_ingest import SurfaceIngester
             ingester = SurfaceIngester()
-            mesh = ingester.load(scan_path)
+            mesh = ingester.ingest(scan_path)
             record.surface_mesh = mesh
 
         self._save_record(record)

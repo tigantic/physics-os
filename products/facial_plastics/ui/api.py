@@ -132,8 +132,8 @@ def _plan_to_dict(plan: SurgicalPlan) -> Dict[str, Any]:
     return {
         "name": plan.name,
         "procedure": plan.procedure.value,
-        "description": plan.description,
-        "n_steps": len(plan.steps),
+        "description": plan._description,
+        "n_steps": len(plan.root.steps),
         "steps": [_op_to_dict(op) for op in plan.all_ops()],
         "content_hash": plan.content_hash(),
     }
@@ -184,14 +184,14 @@ class UIApplication:
         # Check the instance attribute (set by TwinBuilder in-memory)
         mesh = getattr(bundle, "volume_mesh", None)
         if mesh is not None:
-            return mesh
+            return mesh  # type: ignore[no-any-return]
         # Try persisted twin data via conventional names
         for loader_name in ("load_volume_mesh",):
             loader = getattr(bundle, loader_name, None)
             if loader is not None:
                 for name in ("volume_mesh", "twin_mesh", "mesh"):
                     try:
-                        return loader(name)
+                        return loader(name)  # type: ignore[no-any-return]
                     except Exception:
                         continue
         return None
@@ -294,7 +294,8 @@ class UIApplication:
         """Run the case library curator (QC, stats, dedup)."""
         curator = CaseLibraryCurator(self._library_root)
         report = curator.summary()
-        return _ndarray_to_list(report)
+        result: Dict[str, Any] = _ndarray_to_list(report)
+        return result
 
     # ── G2: Twin Inspect ──────────────────────────────────────────
 
@@ -521,7 +522,8 @@ class UIApplication:
             },
         )
 
-        return _ndarray_to_list(result.to_dict())
+        compiled_result: Dict[str, Any] = _ndarray_to_list(result.to_dict())
+        return compiled_result
 
     # ── G4: Consult (What-if exploration) ─────────────────────────
 

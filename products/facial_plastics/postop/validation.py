@@ -468,7 +468,8 @@ class PredictionValidator:
     def load_report(path: Path) -> Dict[str, Any]:
         """Load a previously saved validation report."""
         with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
+            data: Dict[str, Any] = json.load(f)
+            return data
 
 
 # ── Statistical helper functions ────────────────────────────────────────────
@@ -533,8 +534,7 @@ def _t_distribution_p(t_stat: float, df: int) -> float:
 
     # Two-tailed
     p = 2.0 * integral
-    return min(max(p, 0.0), 1.0)
-
+    return float(min(max(p, 0.0), 1.0))
 
 def _rankdata(x: np.ndarray) -> np.ndarray:
     """Assign ranks to data, handling ties with average ranks."""

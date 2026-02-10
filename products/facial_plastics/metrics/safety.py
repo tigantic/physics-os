@@ -531,8 +531,11 @@ class SafetyMetrics:
         high_stress_eids = []
         for eid in range(min(self._n_elems, len(fem.stresses))):
             vm = _von_mises(fem.stresses[eid])
-            struct = self._elem_struct.get(eid)
-            threshold = SAFETY_THRESHOLDS.get(struct, DEFAULT_THRESHOLD) if struct else DEFAULT_THRESHOLD
+            elem_struct = self._elem_struct.get(eid)
+            if elem_struct is None:
+                threshold = DEFAULT_THRESHOLD
+            else:
+                threshold = SAFETY_THRESHOLDS.get(elem_struct, DEFAULT_THRESHOLD)
             if vm > 0.5 * threshold.max_von_mises_pa:
                 high_stress_eids.append(eid)
 
@@ -665,8 +668,8 @@ class SafetyMetrics:
                             max_vm = vm
                             max_eid = eid
                 if max_eid >= 0:
-                    struct = self._elem_struct.get(max_eid)
-                    sta.critical_region = struct.value if struct else "unknown"
+                    struct_found = self._elem_struct.get(max_eid)
+                    sta.critical_region = struct_found.value if struct_found else "unknown"
 
         report.skin_tension = sta
 

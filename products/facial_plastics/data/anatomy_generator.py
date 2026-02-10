@@ -454,7 +454,8 @@ def _ellipsoid_sdf(
     normalised = (coords - center) / radii
     dist_unit = np.linalg.norm(normalised, axis=1) - 1.0
     # Scale back to physical space (approximate)
-    return dist_unit * np.min(radii)
+    result: np.ndarray = dist_unit * np.min(radii)
+    return result
 
 
 def _box_sdf(
@@ -466,7 +467,8 @@ def _box_sdf(
     d = np.abs(coords - center) - half_extents
     outside = np.linalg.norm(np.maximum(d, 0.0), axis=1)
     inside = np.minimum(np.max(d, axis=1), 0.0)
-    return outside + inside
+    result: np.ndarray = outside + inside
+    return result
 
 
 def _cylinder_sdf(
@@ -488,7 +490,8 @@ def _cylinder_sdf(
     cap_dist_low = -proj
     cap_dist_high = proj - length
     cap_dist = np.maximum(cap_dist_low, cap_dist_high)
-    return np.maximum(radial, cap_dist)
+    result: np.ndarray = np.maximum(radial, cap_dist)
+    return result
 
 
 class AnatomyGenerator:

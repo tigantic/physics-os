@@ -231,6 +231,7 @@ class Landmark:
     confidence: float = 1.0
     source: str = ""
     is_synthetic: bool = False
+    name: str = ""
 
 
 @dataclass
@@ -271,7 +272,7 @@ class TissueProperties:
             errors.append(f"density must be positive, got {self.density_kg_m3}")
         if self.is_anisotropic and self.fiber_direction is None:
             errors.append("anisotropic material requires fiber_direction")
-        required = _REQUIRED_PARAMS.get(self.material_model, set())
+        required: FrozenSet[str] = _REQUIRED_PARAMS.get(self.material_model, frozenset())
         missing = required - set(self.parameters.keys())
         if missing:
             errors.append(f"missing parameters for {self.material_model.value}: {missing}")
@@ -309,7 +310,10 @@ class MeshQualityReport:
     volume_mm3: float
     surface_area_mm2: float
     n_regions: int
-    is_valid: bool
+    min_quality: float = 0.0
+    max_quality: float = 1.0
+    min_aspect_ratio: float = 1.0
+    is_valid: bool = True
 
     def summary(self) -> str:
         status = "PASS" if self.is_valid else "FAIL"
@@ -343,9 +347,20 @@ class RegistrationResult:
         T[:3, 3] = self.translation
         return T
 
+    @property
+    def rigid_transform(self) -> np.ndarray:
+        """Alias for transform_4x4 — 4×4 homogeneous rigid transform."""
+        return self.transform_4x4
+
+    @property
+    def rms_error_mm(self) -> float:
+        """Alias for residual_mm — RMS registration error."""
+        return self.residual_mm
+
     def apply(self, points: np.ndarray) -> np.ndarray:
         """Apply rigid transform to (N,3) point cloud."""
-        return (self.rotation @ (self.scale * points.T)).T + self.translation
+        result: np.ndarray = (self.rotation @ (self.scale * points.T)).T + self.translation
+        return result
 
 
 @dataclass
@@ -360,13 +375,15 @@ class SegmentationMask:
 
     @property
     def shape(self) -> Tuple[int, int, int]:
-        return self.data.shape  # type: ignore[return-value]
+        s = self.data.shape
+        return (int(s[0]), int(s[1]), int(s[2]))
 
     def extract_structure(self, structure: StructureType) -> np.ndarray:
         """Return binary mask for a single structure."""
         for label_id, st in self.structure_labels.items():
             if st == structure:
-                return (self.data == label_id).astype(np.uint8)
+                result: np.ndarray = (self.data == label_id).astype(np.uint8)
+                return result
         raise KeyError(f"Structure {structure.value} not found in segmentation")
 
     def volume_mm3(self, structure: StructureType) -> float:
@@ -389,11 +406,16 @@ class SurfaceMesh:
 
     @property
     def n_vertices(self) -> int:
-        return self.vertices.shape[0]
+        return int(self.vertices.shape[0])
 
     @property
     def n_faces(self) -> int:
-        return self.triangles.shape[0]
+        return int(self.triangles.shape[0])
+
+    @property
+    def faces(self) -> np.ndarray:
+        """Alias for triangles (common mesh convention)."""
+        return self.triangles
 
     def compute_normals(self) -> None:
         """Compute per-vertex normals via area-weighted face normals."""
@@ -444,11 +466,11 @@ class VolumeMesh:
 
     @property
     def n_nodes(self) -> int:
-        return self.nodes.shape[0]
+        return int(self.nodes.shape[0])
 
     @property
     def n_elements(self) -> int:
-        return self.elements.shape[0]
+        return int(self.elements.shape[0])
 
 
 @dataclass
@@ -469,6 +491,13 @@ class DicomMetadata:
     series_description: str = ""
     study_uid: str = ""
     series_uid: str = ""
+    voxel_spacing_mm: Tuple[float, float, float] = (0.0, 0.0, 0.0)
+    volume_shape: Tuple[int, int, int] = (0, 0, 0)
+    origin_mm: Tuple[float, float, float] = (0.0, 0.0, 0.0)
+    orientation: np.ndarray = field(default_factory=lambda: np.eye(3))
+    hu_range: Tuple[float, float] = (-1024.0, 3071.0)
+    window_center: float = 40.0
+    window_width: float = 400.0
     extra: Dict[str, Any] = field(default_factory=dict)
 
 

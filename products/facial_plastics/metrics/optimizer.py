@@ -360,8 +360,8 @@ def _tournament_select(
     rng: np.random.Generator,
 ) -> Individual:
     """Binary tournament selection."""
-    i, j = rng.integers(0, len(population), size=2)
-    a, b = population[i], population[j]
+    indices = rng.integers(0, len(population), size=2)
+    a, b = population[int(indices[0])], population[int(indices[1])]
     if a.rank < b.rank:
         return a
     if b.rank < a.rank:
