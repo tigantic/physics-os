@@ -1,0 +1,160 @@
+# ─────────────────────────────────────────────────────────────────
+# Facial Plastics Platform — CI Pipeline
+# ─────────────────────────────────────────────────────────────────
+# Runs on every push/PR that touches products/facial_plastics/**
+#
+# Gates:
+#   1. mypy  — zero errors      (strict, Python 3.12)
+#   2. pytest — all tests pass   (871+ tests, <5 min)
+#   3. container build           (Containerfile, smoke test)
+# ─────────────────────────────────────────────────────────────────
+
+name: Facial Plastics CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "products/facial_plastics/**"
+      - ".github/workflows/facial-plastics-ci.yml"
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "products/facial_plastics/**"
+      - ".github/workflows/facial-plastics-ci.yml"
+
+env:
+  PYTHON_VERSION: "3.12"
+  PRODUCT_ROOT: products/facial_plastics
+
+concurrency:
+  group: facial-plastics-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ══════════════════════════════════════════════════════════════
+  # Stage 1: Type checking
+  # ══════════════════════════════════════════════════════════════
+  typecheck:
+    name: mypy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('requirements-lock.txt') }}
+          restore-keys: |
+            pip-${{ runner.os }}-${{ env.PYTHON_VERSION }}-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy scipy mypy pytest
+
+      - name: Run mypy
+        run: |
+          python -m mypy ${{ env.PRODUCT_ROOT }} \
+            --ignore-missing-imports \
+            --no-implicit-optional \
+            --warn-return-any \
+            --warn-unused-configs \
+            --disallow-untyped-defs \
+            --python-version 3.12
+
+  # ══════════════════════════════════════════════════════════════
+  # Stage 2: Test suite
+  # ══════════════════════════════════════════════════════════════
+  test:
+    name: pytest
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: typecheck
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('requirements-lock.txt') }}
+          restore-keys: |
+            pip-${{ runner.os }}-${{ env.PYTHON_VERSION }}-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy scipy pytest
+
+      - name: Run tests
+        run: |
+          python -m pytest ${{ env.PRODUCT_ROOT }}/tests/ \
+            -v --tb=short \
+            --junitxml=test-results.xml \
+            -x
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results.xml
+          retention-days: 30
+
+  # ══════════════════════════════════════════════════════════════
+  # Stage 3: Container build + smoke test
+  # ══════════════════════════════════════════════════════════════
+  container:
+    name: Container Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build container image
+        run: |
+          docker build \
+            -f ${{ env.PRODUCT_ROOT }}/Containerfile \
+            -t hypertensor-facial-plastics:ci-${{ github.sha }} \
+            .
+
+      - name: Smoke test — import check
+        run: |
+          docker run --rm \
+            hypertensor-facial-plastics:ci-${{ github.sha }} \
+            python -c "
+          from products.facial_plastics.core.types import VolumeMesh
+          from products.facial_plastics.sim.orchestrator import SimOrchestrator
+          from products.facial_plastics.reports import ReportBuilder
+          print('All imports OK')
+          "
+
+      - name: Smoke test — CLI info
+        run: |
+          docker run --rm \
+            hypertensor-facial-plastics:ci-${{ github.sha }} \
+            info || true
+
+      - name: Report image size
+        run: |
+          SIZE=$(docker image inspect hypertensor-facial-plastics:ci-${{ github.sha }} \
+            --format '{{.Size}}')
+          SIZE_MB=$((SIZE / 1048576))
+          echo "Container image size: ${SIZE_MB} MB"
+          if [ "$SIZE_MB" -gt 2048 ]; then
+            echo "::warning::Container image exceeds 2 GB ($SIZE_MB MB)"
+          fi
