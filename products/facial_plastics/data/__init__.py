@@ -10,6 +10,12 @@ from .case_library_curator import CaseLibraryCurator
 from .dicom_ingest import DicomIngester
 from .photo_ingest import PhotoIngester
 from .surface_ingest import SurfaceIngester
+from .paired_dataset import (
+    PairedDatasetBuilder,
+    PairedDatasetReport,
+    PairedQCThresholds,
+    PairedSample,
+)
 from .synthetic_augment import SyntheticAugmenter
 
 __all__ = [
@@ -18,6 +24,10 @@ __all__ = [
     "CaseLibrary",
     "CaseLibraryCurator",
     "DicomIngester",
+    "PairedDatasetBuilder",
+    "PairedDatasetReport",
+    "PairedQCThresholds",
+    "PairedSample",
     "PhotoIngester",
     "PopulationSampler",
     "SurfaceIngester",

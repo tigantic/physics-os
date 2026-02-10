@@ -12,19 +12,37 @@ from .aesthetic import AestheticMetrics, AestheticReport
 from .functional import FunctionalMetrics, FunctionalReport
 from .safety import SafetyMetrics, SafetyReport
 from .uncertainty import UncertaintyQuantifier, UQResult, SobolIndices
+from .cohort_analytics import (
+    CohortAnalytics,
+    CohortReport,
+    DistributionStats,
+    EffectSize,
+    RiskFactor,
+    SubgroupAnalysis,
+    SurgeonProfile,
+    TrendPoint,
+)
 from .optimizer import PlanOptimizer, OptimizationResult, ParetoFront
 
 __all__ = [
     "AestheticMetrics",
     "AestheticReport",
+    "CohortAnalytics",
+    "CohortReport",
+    "DistributionStats",
+    "EffectSize",
     "FunctionalMetrics",
     "FunctionalReport",
-    "SafetyMetrics",
-    "SafetyReport",
-    "UncertaintyQuantifier",
-    "UQResult",
-    "SobolIndices",
-    "PlanOptimizer",
     "OptimizationResult",
     "ParetoFront",
+    "PlanOptimizer",
+    "RiskFactor",
+    "SafetyMetrics",
+    "SafetyReport",
+    "SobolIndices",
+    "SubgroupAnalysis",
+    "SurgeonProfile",
+    "TrendPoint",
+    "UncertaintyQuantifier",
+    "UQResult",
 ]

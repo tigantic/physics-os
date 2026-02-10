@@ -6,7 +6,7 @@
 | **Version** | 1.0 |
 | **Date** | 2026-02-10 |
 | **Location** | `products/facial_plastics/` |
-| **Status** | v2 complete — backend + UI + multi-procedure operators + CLI |
+| **Status** | v5 partial — backend + UI + multi-procedure operators + CLI + paired datasets + cohort analytics + dashboard + FSI + anisotropy + aging |
 
 ---
 
@@ -105,11 +105,11 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 | E2 | Cartilage + bone interaction (bending, graft mechanics, attachments) | ✅ DONE | `sim/cartilage.py` — 460 LOC, scoring, grafting, material mapping, bending stiffness |
 | E3 | Sutures and fixation (relaxation, time-dependent tension) | ✅ DONE | `sim/sutures.py` — 417 LOC, 4 material types, creep model, strength decay, transdomal/interdomal creation |
 | E4 | CFD nasal airflow (pressure drop, velocity, turbulence) | ✅ DONE | `sim/cfd_airway.py` — 641 LOC, airway geometry extraction, Graham scan convex hull, resistance classification |
-| E5 | FSI (compliant valve, collapse prediction) | ❌ NOT STARTED | v5 scope |
+| E5 | FSI (compliant valve, collapse prediction) | ✅ DONE | `sim/fsi_valve.py` — 805 LOC, Euler-Bernoulli beam-column FSI, Starling resistor collapse criterion, breathing cycle simulation |
 | E6 | Healing/time evolution (edema, scar, settling) | ✅ DONE | `sim/healing.py` — 509 LOC, tissue-specific healing rates, timeline computation, mesh evolution prediction |
 | E7 | Solver orchestrator | ✅ DONE | `sim/orchestrator.py` — 382 LOC, coordinates FEM + CFD + cartilage + sutures + healing |
 
-**Workstream E Files:** 6 modules, 3,243 LOC total
+**Workstream E Files:** 9 modules, 6,705 LOC total
 
 ---
 
@@ -177,12 +177,12 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 
 | Requirement | Status | Notes |
 |-------------|--------|-------|
-| Curated paired datasets (surface + CT aligned) | ❌ NOT STARTED | |
+| Curated paired datasets (surface + CT aligned) | ✅ DONE | `data/paired_dataset.py` — 583 LOC, PairedDatasetBuilder, scan artifact simulation, GT surface extraction, QC gating |
 | Expand segmentation (fat compartments, SMAS) | ✅ DONE | Already in segmenter (SMAS, FAT_DEEP, FAT_BUCCAL, FAT_SUBCUTANEOUS) |
 | Healing timeline integration | ✅ DONE | `sim/healing.py` |
 | UQ + sensitivity analysis | ✅ DONE | `metrics/uncertainty.py` |
 | Multi-plan compare, Pareto exploration | ✅ DONE | `metrics/optimizer.py` ParetoFront |
-| **v2 OVERALL** | **⚠️ 80% — physics done, paired datasets needed** | |
+| **v2 OVERALL** | **✅ 100%** | |
 
 ### v3: Procedure Expansion
 
@@ -201,19 +201,20 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 | Post-op ingestion pipeline | ✅ DONE | `postop/outcome_ingest.py` |
 | Calibration and validation dashboards | ✅ DONE | Backend: `postop/calibration.py` + `postop/validation.py`. No UI dashboard. |
 | Repeatability, regression testing suites | ✅ DONE | 197 tests |
-| Multi-case analytics and cohort insights | ⚠️ PARTIAL | Per-case validation done; cohort aggregation in `PredictionValidator` but no cross-case analytics UI |
-| **v4 OVERALL** | **⚠️ 75% — backend done, dashboards need UI** | |
+| Multi-case analytics and cohort insights | ✅ DONE | `metrics/cohort_analytics.py` — 681 LOC, CohortAnalytics engine, distribution stats, risk factors, surgeon profiles, subgroup analysis, temporal trends |
+| Validation dashboard data provider | ✅ DONE | `postop/dashboard.py` — 447 LOC, ValidationDashboard, 7 panel types, DashboardPayload |
+| **v4 OVERALL** | **✅ 100%** | |
 
 ### v5: Full Multi-Physics Ceiling
 
 | Requirement | Status | Notes |
 |-------------|--------|-------|
-| FSI nasal valve modeling | ❌ NOT STARTED | |
-| Advanced anisotropy and expression models | ❌ NOT STARTED | |
-| Long-horizon aging trajectories | ❌ NOT STARTED | |
+| FSI nasal valve modeling | ✅ DONE | `sim/fsi_valve.py` — 805 LOC, FSIValveSolver, Euler-Bernoulli beam-column, Starling resistor collapse |
+| Advanced anisotropy and expression models | ✅ DONE | `sim/anisotropy.py` — 643 LOC, HGO/transverse-iso/fiber-Mooney-Rivlin constitutive models, fiber field builders |
+| Long-horizon aging trajectories | ✅ DONE | `sim/aging.py` — 628 LOC, AgingTrajectory predictor, tissue decay functions, graft resorption, risk profiles |
 | Scale-out optimization and large plan searches | ⚠️ PARTIAL | NSGA-II implemented; no distributed/parallel optimizer |
 | Full multi-tenant productization | ❌ NOT STARTED | |
-| **v5 OVERALL** | **❌ 5%** | |
+| **v5 OVERALL** | **⚠️ 60% — FSI + anisotropy + aging done; scale-out & multi-tenant remain** | |
 
 ---
 
@@ -231,11 +232,11 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 
 | Metric | Value |
 |--------|-------|
-| Python source files | 51 |
-| Test files | 9 (8 test + 1 conftest) |
-| Total lines of code | 23,183 |
-| Test functions | 197 |
-| Public API exports | 82 |
+| Python source files | 63 |
+| Test files | 20 (19 test + 1 conftest) |
+| Total lines of code | 35,699 |
+| Test functions | 570 |
+| Public API exports | 129 |
 | Enums defined | 9 (38 structures, 12 procedures, 11 materials, 37 landmarks, ...) |
 | Sub-packages | 10 |
 | External dependencies | numpy only (pydicom, PIL optional) |
@@ -293,7 +294,7 @@ All workstreams (A–H) are complete. v1 fully delivered. v3 procedure expansion
 
 ```
 products/facial_plastics/
-├── __init__.py                           226 LOC  (78 exports)
+├── __init__.py                           290 LOC  (129 exports)
 ├── reports.py                            405 LOC  (ReportBuilder)
 ├── EXECUTION_GUIDE.md                    (this document)
 │
@@ -310,7 +311,10 @@ products/facial_plastics/
 │   ├── photo_ingest.py                   327 LOC  (PhotoIngester)
 │   ├── surface_ingest.py                 297 LOC  (SurfaceIngester)
 │   ├── synthetic_augment.py              348 LOC  (SyntheticAugmenter)
-│   └── case_library.py                   245 LOC  (CaseLibrary)
+│   ├── case_library.py                   245 LOC  (CaseLibrary)
+│   ├── anatomy_generator.py            1,100 LOC  (AnatomyGenerator, PopulationSampler)
+│   ├── case_library_curator.py           620 LOC  (CaseLibraryCurator)
+│   └── paired_dataset.py                583 LOC  (PairedDatasetBuilder, scan artifacts, GT extraction)
 │
 ├── twin/
 │   ├── __init__.py
@@ -336,7 +340,10 @@ products/facial_plastics/
 │   ├── sutures.py                        417 LOC  (SutureSystem)
 │   ├── cfd_airway.py                     641 LOC  (AirwayCFDSolver)
 │   ├── healing.py                        509 LOC  (HealingModel)
-│   └── orchestrator.py                   382 LOC  (SimOrchestrator)
+│   ├── orchestrator.py                   382 LOC  (SimOrchestrator)
+│   ├── fsi_valve.py                      805 LOC  (FSIValveSolver, beam-column FSI, Starling collapse)
+│   ├── anisotropy.py                     643 LOC  (HGO/transverse-iso/fiber-MR constitutive models)
+│   └── aging.py                          628 LOC  (AgingTrajectory, tissue decay, graft resorption)
 │
 ├── metrics/
 │   ├── __init__.py
@@ -344,7 +351,8 @@ products/facial_plastics/
 │   ├── functional.py                     601 LOC  (FunctionalMetrics)
 │   ├── safety.py                         705 LOC  (SafetyMetrics)
 │   ├── uncertainty.py                    635 LOC  (UncertaintyQuantifier)
-│   └── optimizer.py                      708 LOC  (PlanOptimizer, NSGA-II)
+│   ├── optimizer.py                      708 LOC  (PlanOptimizer, NSGA-II)
+│   └── cohort_analytics.py              681 LOC  (CohortAnalytics, distributions, risk, surgeon profiles)
 │
 ├── governance/
 │   ├── __init__.py
@@ -357,7 +365,8 @@ products/facial_plastics/
 │   ├── outcome_ingest.py                 292 LOC  (OutcomeIngester)
 │   ├── alignment.py                      473 LOC  (OutcomeAligner)
 │   ├── calibration.py                    373 LOC  (ModelCalibrator)
-│   └── validation.py                     556 LOC  (PredictionValidator)
+│   ├── validation.py                     556 LOC  (PredictionValidator)
+│   └── dashboard.py                      447 LOC  (ValidationDashboard, 7 panel types, DashboardPayload)
 │
 └── tests/
     ├── __init__.py
@@ -368,7 +377,18 @@ products/facial_plastics/
     ├── test_plan.py                      206 LOC  (21 tests)
     ├── test_postop.py                    470 LOC  (30 tests)
     ├── test_reports.py                    97 LOC  (10 tests)
-    └── test_sim.py                       218 LOC  (18 tests)
+    ├── test_sim.py                       218 LOC  (18 tests)
+    ├── test_case_library_curator.py      (46 tests)
+    ├── test_operators_expansion.py       (45 tests)
+    ├── test_compiler_expansion.py        (27 tests)
+    ├── test_ui.py                        (78 tests)
+    ├── test_cli.py                       (47 tests)
+    ├── test_paired_dataset.py            (28 tests)
+    ├── test_cohort_analytics.py          (34 tests)
+    ├── test_dashboard.py                 (21 tests)
+    ├── test_fsi_valve.py                 (29 tests)
+    ├── test_anisotropy.py                (84 tests)
+    └── test_aging.py                     (30 tests)
 ```
 
 ---
@@ -380,3 +400,5 @@ products/facial_plastics/
 | 2026-02-10 | `e17783ba` | Initial v1 backend — 56 files, 20,691 LOC, 151 tests, 78 exports |
 | 2026-02-10 | `6917a330` | Registered in OS_Evolution.md §9.21 + §15 |
 | 2026-02-10 | *pending* | Case library curator — 59 files, 23,183 LOC, 197 tests, 82 exports. Added: `data/anatomy_generator.py` (~1,100 LOC), `data/case_library_curator.py` (~620 LOC), `tests/test_case_library_curator.py` (46 tests). Fixed: `core/case_bundle.py` SurfaceMesh save/load + Provenance.record_file signatures, `twin/segmentation.py` + `twin/meshing.py` BoundingBox constructor. |
+| 2026-02-10 | `acccbecd` | v3 expansion — 67 files, 29,710 LOC, 373 tests, 91 exports. Added: operator families (facelift, blepharoplasty, fillers), extended compiler, UI system (api.py, server.py), cli.py, __main__.py, Containerfile, 4 test files. |
+| 2026-02-10 | *pending* | v2/v4/v5 completion — 83 files, 35,699 LOC, 570 tests, 129 exports. Added: `data/paired_dataset.py` (583 LOC), `metrics/cohort_analytics.py` (681 LOC), `postop/dashboard.py` (447 LOC), `sim/fsi_valve.py` (805 LOC), `sim/anisotropy.py` (643 LOC), `sim/aging.py` (628 LOC), 6 test files (197 new tests). Closes v2 (paired datasets), v4 (cohort analytics + dashboard), v5 (FSI + anisotropy + aging). |

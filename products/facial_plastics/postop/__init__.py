@@ -10,15 +10,37 @@ Submodules:
 from .outcome_ingest import OutcomeIngester, OutcomeRecord
 from .alignment import OutcomeAligner, AlignmentResult
 from .calibration import ModelCalibrator, CalibrationResult
+from .dashboard import (
+    AccuracyPanel,
+    CalibrationPanel,
+    CohortPanel,
+    DashboardPayload,
+    OutlierCase,
+    OutlierPanel,
+    RiskPanel,
+    SurgeonPanel,
+    TrendPanel,
+    ValidationDashboard,
+)
 from .validation import PredictionValidator, ValidationReport
 
 __all__ = [
+    "AccuracyPanel",
+    "AlignmentResult",
+    "CalibrationPanel",
+    "CalibrationResult",
+    "CohortPanel",
+    "DashboardPayload",
+    "ModelCalibrator",
+    "OutcomeAligner",
     "OutcomeIngester",
     "OutcomeRecord",
-    "OutcomeAligner",
-    "AlignmentResult",
-    "ModelCalibrator",
-    "CalibrationResult",
+    "OutlierCase",
+    "OutlierPanel",
     "PredictionValidator",
+    "RiskPanel",
+    "SurgeonPanel",
+    "TrendPanel",
+    "ValidationDashboard",
     "ValidationReport",
 ]
