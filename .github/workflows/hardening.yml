@@ -56,6 +56,7 @@ jobs:
             tests/test_qtt_acceleration.py \
             tests/test_advanced_physics.py \
             tests/test_productization.py \
+            tests/test_pwa_engine.py \
             -v --timeout=300 --tb=short
 
   # ──────────────────────────────────────────────────────────────────────────

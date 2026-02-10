@@ -1,8 +1,8 @@
 """
-Domain Pack X — Particle / High-Energy Physics (V0.2)
-=====================================================
+Domain Pack X — Nuclear & Particle Physics (V0.4)
+==================================================
 
-Production-grade V0.2 implementations for all eight taxonomy nodes:
+Production-grade implementations for all nine taxonomy nodes:
 
   PHY-X.1  QCD                  — Running coupling αs via 1-loop beta function
   PHY-X.2  Electroweak theory   — Weinberg angle, W/Z mass ratio, Fermi constant
@@ -12,10 +12,16 @@ Production-grade V0.2 implementations for all eight taxonomy nodes:
   PHY-X.6  Collider simulation  — QED e⁺e⁻ → μ⁺μ⁻ cross-section
   PHY-X.7  Dark matter          — WIMP relic abundance via Boltzmann equation
   PHY-X.8  Neutrino physics     — 2-flavor vacuum oscillation (exact + ODE)
+  PHY-X.9  Partial Wave Analysis— Eq. 5.48 (Badui 2020), Gram acceleration,
+                                    coupled-channel, mass-dependent BW (V0.4)
 
 Every solver integrates the *actual* governing equations or evaluates the
 *exact* analytical formula, then validates the numerical result against
 a known reference solution via :func:`validate_v02`.
+
+PHY-X.9 (PWA Engine V3.0.0) is the pack's first V0.4 Validated node
+with 10 experiments, 37 regression tests, and 16-gate CI regression
+checking.  Full implementation in ``experiments/pwa_engine/``.
 """
 
 from __future__ import annotations
@@ -1284,12 +1290,151 @@ _SOLVERS: Dict[str, type] = {
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# PHY-X.9  Partial Wave Analysis — Eq. 5.48 (Badui 2020), V0.4 Validated
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+@dataclass(frozen=True)
+class PWASpec:
+    """Partial Wave Analysis via Eq. 5.48 of Badui (2020).
+
+    Full coherent-sum intensity with spin-density matrix ρ,
+    reflectivity ε, and Wigner-D angular basis functions.
+
+    Likelihood accelerated via Gram matrix (V†GV normalization).
+    Extensions: coupled-channel joint fit, mass-dependent
+    Breit-Wigner resonance extraction.
+
+    Reference: Badui, Bannon, et al. (2020), PhD Dissertation, Indiana U.
+    """
+
+    @property
+    def name(self) -> str:
+        return "PHY-X.9_Partial_Wave_Analysis"
+
+    @property
+    def ndim(self) -> int:
+        return 2  # (θ, φ) angular space
+
+    @property
+    def parameters(self) -> Dict[str, Any]:
+        return {
+            "j_max": 2.5,
+            "reflectivities": [+1],
+            "n_components": 1,
+            "n_events": 200,
+            "seed": 42,
+            "node": "PHY-X.9",
+        }
+
+    @property
+    def governing_equations(self) -> str:
+        return (
+            "I(τ; V, ρ) = Σ_{ε,ε'} ρ_{εε'} "
+            "[Σ_α V_α^ε ψ_α^ε(τ)]* [Σ_β V_β^{ε'} ψ_β^{ε'}(τ)];  "
+            "ψ_α(τ) = D^{J_α}_{M_α, λ}(φ,θ,0);  "
+            "-ln L = -Σ_i ln I(τ_i) + N V†GV"
+        )
+
+    @property
+    def field_names(self) -> Sequence[str]:
+        return ("intensity", "production_amplitudes")
+
+    @property
+    def observable_names(self) -> Sequence[str]:
+        return (
+            "nll",
+            "yield_rmse",
+            "phase_rmse",
+            "gram_speedup",
+            "convention_all_pass",
+        )
+
+
+class PWASolver(ODEReferenceSolver):
+    """V0.4 Validated solver wrapping the PWA Engine convention reduction test.
+
+    Delegates to :func:`experiments.pwa_engine.core.convention_reduction_test`
+    which verifies three mathematical identities at machine precision:
+
+        1. Full Eq. 5.48 reduces to single-reflectivity coherent sum
+        2. IntensityModel.evaluate matches manual matrix product
+        3. Full ρ-matrix formulation with diagonal ρ matches scalar model
+
+    All three tests must pass with errors < 1e-12 for V0.4 gate.
+    """
+
+    def __init__(self) -> None:
+        super().__init__("PWA_ConventionReduction_Eq548")
+
+    def step(self, state: Any, dt: float, **kwargs: Any) -> Any:
+        return state
+
+    def solve(
+        self,
+        state: Any,
+        t_span: Tuple[float, float],
+        dt: float,
+        *,
+        observables: Optional[Sequence[Any]] = None,
+        callback: Optional[Any] = None,
+        max_steps: Optional[int] = None,
+    ) -> SolveResult:
+        """Run convention reduction test and validate at machine precision."""
+        from experiments.pwa_engine.core import convention_reduction_test
+
+        result = convention_reduction_test(n_events=200, seed=42)
+
+        max_error: float = max(
+            result["test_1_full_vs_single_eps"],
+            result["test_2_model_vs_manual"],
+            result["test_3_full_rho_vs_diagonal"],
+        )
+
+        validation = validate_v02(
+            error=max_error,
+            tolerance=1e-12,
+            label="PHY-X.9 PWA (convention reduction, Eq. 5.48 identities)",
+        )
+
+        return SolveResult(
+            final_state=torch.tensor(
+                [
+                    result["test_1_full_vs_single_eps"],
+                    result["test_2_model_vs_manual"],
+                    result["test_3_full_rho_vs_diagonal"],
+                ],
+                dtype=torch.float64,
+            ),
+            t_final=t_span[1],
+            steps_taken=3,
+            metadata={
+                "error": max_error,
+                "test_1_full_vs_single_eps": result["test_1_full_vs_single_eps"],
+                "test_2_model_vs_manual": result["test_2_model_vs_manual"],
+                "test_3_full_rho_vs_diagonal": result["test_3_full_rho_vs_diagonal"],
+                "all_pass": result["all_pass"],
+                "node": "PHY-X.9",
+                "validation": validation,
+                "engine_version": "3.0.0",
+                "reference": "Badui (2020), Eq. 5.48",
+                "source": "experiments/pwa_engine/core.py",
+            },
+        )
+
+
+# Update spec/solver tables with PWA
+_SPECS["PHY-X.9"] = PWASpec  # type: ignore[assignment]
+_SOLVERS["PHY-X.9"] = PWASolver  # type: ignore[assignment]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # Pack registration
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
 class ParticlePhysicsPack(DomainPack):
-    """Pack X: Particle / High-Energy Physics — V0.2 production solvers."""
+    """Pack X: Nuclear & Particle Physics — V0.4 (PWA Engine validated)."""
 
     @property
     def pack_id(self) -> str:
@@ -1297,7 +1442,7 @@ class ParticlePhysicsPack(DomainPack):
 
     @property
     def pack_name(self) -> str:
-        return "Particle Physics"
+        return "Nuclear and Particle Physics"
 
     @property
     def taxonomy_ids(self) -> Sequence[str]:
@@ -1317,7 +1462,7 @@ class ParticlePhysicsPack(DomainPack):
 
     @property
     def version(self) -> str:
-        return "0.2.0"
+        return "0.4.0"
 
 
 get_registry().register_pack(ParticlePhysicsPack())

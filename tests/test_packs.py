@@ -67,11 +67,12 @@ def test_total_node_count(all_packs):
 
 
 ANCHOR_PACKS = {"II", "III", "V", "VII", "VIII", "XI"}
-V02_PACKS = {"I", "IV", "VI", "IX", "X", "XII", "XIII", "XIV",
+V02_PACKS = {"I", "IV", "VI", "IX", "XII", "XIII", "XIV",
              "XV", "XVI", "XVII", "XVIII", "XIX", "XX"}
+V04_PACKS = {"X"}  # Pack X upgraded to V0.4 (PHY-X.9 PWA)
 SCAFFOLD_PACKS: set[str] = set()  # all former scaffolds now at V0.2
 
-ALL_PACK_IDS = ANCHOR_PACKS | V02_PACKS | SCAFFOLD_PACKS
+ALL_PACK_IDS = ANCHOR_PACKS | V02_PACKS | V04_PACKS | SCAFFOLD_PACKS
 
 
 @pytest.mark.parametrize("pack_id", sorted(ALL_PACK_IDS))
@@ -125,6 +126,14 @@ def test_v02_version(all_packs, pack_id):
     p = all_packs[pack_id]
     v = p.version() if callable(p.version) else p.version
     assert v == "0.2.0", f"Pack {pack_id} version = {v}"
+
+
+@pytest.mark.parametrize("pack_id", sorted(V04_PACKS))
+def test_v04_version(all_packs, pack_id):
+    """V0.4 packs at version 0.4.0 (PWA-validated)."""
+    p = all_packs[pack_id]
+    v = p.version() if callable(p.version) else p.version
+    assert v == "0.4.0", f"Pack {pack_id} version = {v}"
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

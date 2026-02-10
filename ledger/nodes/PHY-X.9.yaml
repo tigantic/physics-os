@@ -1,0 +1,68 @@
+# ===============================================================================
+# HyperTensor-VM Capability Ledger — PHY-X.9
+# Generated: 2026-02-09 | Schema: 1.0
+# ===============================================================================
+
+id: "PHY-X.9"
+name: "Partial Wave Analysis"
+pack: "X"
+pack_name: "Nuclear and Particle Physics"
+owner: "@hypertensor-core"
+tier: "B"
+state: "V0.4"
+description: >
+  Full Eq. 5.48 (Badui 2020) coherent-sum intensity with spin-density
+  matrix, reflectivity, and Wigner-D angular basis.  Gram-matrix-
+  accelerated extended likelihood (14× speedup).  Coupled-channel
+  joint fit and mass-dependent Breit-Wigner resonance extraction.
+  PWA Engine V3.0.0, 3,772 LOC, 10 experiments, 11 publication figures.
+
+source_files:
+  - "experiments/pwa_engine/__init__.py"
+  - "experiments/pwa_engine/core.py"
+  - "experiments/run_pwa_engine.py"
+  - "tensornet/packs/pack_x.py"
+
+tests:
+  smoke:
+    - "test_pwa_engine"
+  regression:
+    - "test_pwa_engine::TestConventionReduction"
+    - "test_pwa_engine::TestExtendedLikelihood"
+    - "test_pwa_engine::TestFitterConvergence"
+    - "test_pwa_engine::TestEndToEndSmoke"
+  ci_gate:
+    - "scripts/check_pwa_regression.py"
+
+benchmarks:
+  - "convention_reduction_test (3 identities at machine precision)"
+  - "parameter_recovery (yield RMSE < 0.15, phase RMSE < 1.5 rad)"
+  - "gram_acceleration (14× speedup, agreement < 1e-14)"
+  - "moment_validation (chi2/ndf < 5.0)"
+  - "coupled_channel_joint_fit"
+  - "mass_dependent_bw_extraction"
+
+discretizations:
+  - "angular_basis (Wigner-D functions)"
+  - "gram_matrix (MC integral approximation)"
+
+solvers:
+  - "LBFGSFitter"
+  - "ExtendedLikelihood (Gram-accelerated)"
+  - "SyntheticDataGenerator (accept/reject MC)"
+  - "BreitWigner (constant-width)"
+
+qtt_hooks:
+  - "compress_gram_qtt"
+
+artifacts:
+  docs: "paper/PWA_REPLICATION_NOTE.md"
+  ref_outputs: "paper/figures/pwa_engine_metadata.json"
+  figures: "paper/figures/pwa_*.pdf"
+
+notes: >
+  V0.4 Validated via PWA Engine V3.0.0.  Reference: Badui, Bannon,
+  et al. (2020), PhD Dissertation, Indiana University.  Implements
+  the complete coherent-sum intensity formalism for amplitude analysis
+  in meson photoproduction.  37 pytest tests + 16-gate CI regression
+  checking.  94s full experiment suite on CPU.

@@ -22,7 +22,7 @@
 [![Platform](https://img.shields.io/badge/Platform-V3.0.0-success?style=flat-square)]()
 [![Physics](https://img.shields.io/badge/Physics-140%2F140-brightgreen?style=flat-square)]()
 [![Tests](https://img.shields.io/badge/Tests-295_passing-brightgreen?style=flat-square)]()
-[![Domains](https://img.shields.io/badge/Taxonomy-167_nodes-blue?style=flat-square)]()
+[![Domains](https://img.shields.io/badge/Taxonomy-168_nodes-blue?style=flat-square)]()
 [![Industries](https://img.shields.io/badge/Industries-19-orange?style=flat-square)]()
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)](LICENSE)
 
@@ -45,7 +45,7 @@ HyperTensor is a unified computational physics platform that uses Quantized Tens
 | **Formal Verification** | None | **Lean 4 proofs** |
 | **ZK Proof Generation** | None | **Halo2 circuits** |
 
-The platform spans **5 integrated systems**, **112 reusable modules**, **167 physics taxonomy nodes** across **20 domain packs**, verified against published benchmarks and validated through 33 dedicated gauntlets.
+The platform spans **5 integrated systems**, **112 reusable modules**, **168 physics taxonomy nodes** across **20 domain packs**, verified against published benchmarks and validated through 33 dedicated gauntlets.
 
 ---
 
@@ -57,7 +57,7 @@ The platform spans **5 integrated systems**, **112 reusable modules**, **167 phy
 
 **Full-Stack Verification.** Three layers: Lean 4 formal proofs of governing equations → Halo2 ZK circuits for computational integrity → attested benchmark validation for physical fidelity.
 
-**167 Physics Nodes, One API.** From incompressible Navier-Stokes to lattice QCD, from DFT to biomechanics — one canonical `ProblemSpec` → `Solver` → `Observable` pipeline with a single V&V harness.
+**168 Physics Nodes, One API.** From incompressible Navier-Stokes to lattice QCD, from DFT to biomechanics — one canonical `ProblemSpec` → `Solver` → `Observable` pipeline with a single V&V harness.
 
 ---
 
@@ -212,7 +212,7 @@ print(f"Inlet velocity recovery: {info['inlet_recovery']:.1f}%")  # 94.4%
 
 ---
 
-## 167 Physics Taxonomy Nodes · 20 Domain Packs
+## 168 Physics Taxonomy Nodes · 20 Domain Packs
 
 Every physics domain is implemented as a **Domain Pack** with real solvers, regression tests, and benchmark validation — not scaffolds.
 
@@ -396,7 +396,7 @@ HyperTensor-VM/
 │   ├── sdk/                      #   Stable API surface (3 files, 1K LOC)
 │   │   ├── workflow.py           #     WorkflowBuilder fluent DSL
 │   │   └── recipes.py            #     8 built-in simulation recipes
-│   ├── packs/                    #   20 domain packs (167 taxonomy nodes)
+│   ├── packs/                    #   20 domain packs (168 taxonomy nodes)
 │   ├── cfd/                      #   CFD solvers (103 files, 70K LOC)
 │   ├── genesis/                  #   QTT meta-primitives (80 files, 41K LOC)
 │   ├── core/                     #   TT/QTT operations
@@ -406,7 +406,7 @@ HyperTensor-VM/
 ├── apps/glass_cockpit/           # Real-time flight visualization (Rust/wgpu, 31K LOC)
 ├── crates/                       # Rust crates — bridge, core, GPU bindings
 ├── QTeneT/                       # Enterprise QTT SDK (10K LOC)
-├── ledger/                       # Capability ledger (167 YAML nodes + schema)
+├── ledger/                       # Capability ledger (168 YAML nodes + schema)
 ├── tests/                        # Test suite (295 tests passing)
 ├── scripts/                      # Gauntlets, research scripts, tools
 ├── docs/                         # Documentation
@@ -484,8 +484,8 @@ make release          # Full release preparation
 | [`ci.yml`](.github/workflows/ci.yml) | Push / PR | Lint, type-check, test matrix (Python 3.11 + 3.12) |
 | [`hardening.yml`](.github/workflows/hardening.yml) | Push / PR | Full test suite, determinism gate, SBOM, license audit, deprecation gate |
 | [`vv-validation.yml`](.github/workflows/vv-validation.yml) | Push / PR | V&V harness — MMS, conservation, convergence verification |
-| [`ledger-validation.yml`](.github/workflows/ledger-validation.yml) | Push / PR | Capability ledger schema validation (167 nodes) |
-| [`nightly.yml`](.github/workflows/nightly.yml) | Cron | Full 167-node test matrix, golden output diff |
+| [`ledger-validation.yml`](.github/workflows/ledger-validation.yml) | Push / PR | Capability ledger schema validation (168 nodes) |
+| [`nightly.yml`](.github/workflows/nightly.yml) | Cron | Full 168-node test matrix, golden output diff, PWA regression gate |
 | [`exploit-engine.yml`](.github/workflows/exploit-engine.yml) | Push / PR | Smart contract vulnerability analysis |
 
 ---
@@ -556,7 +556,7 @@ This software and all associated intellectual property are the exclusive propert
   year      = {2026},
   version   = {3.0.0},
   url       = {https://github.com/tigantic/HyperTensor-VM},
-  note      = {1,153K LOC across 9 languages. 167 physics nodes. 20 domain packs. Platform V3.0.0. PWA Compute Engine with Eq. 5.48 replication.}
+  note      = {1,157K LOC across 9 languages. 168 physics nodes. 20 domain packs. Platform V3.0.0. PWA Compute Engine with Eq. 5.48 replication.}
 }
 ```
 

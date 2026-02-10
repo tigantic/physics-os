@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "tensornet"
 version = "40.0.1"
-description = "The Physics-First Tensor Network Engine — 1,153K LOC across 9 languages, 167 physics taxonomy nodes, 20 domain packs"
+description = "The Physics-First Tensor Network Engine — 1,157K LOC across 9 languages, 168 physics taxonomy nodes, 20 domain packs"
 readme = "README.md"
 license = {text = "Proprietary - Tigantic Holdings LLC"}
 requires-python = ">=3.11"

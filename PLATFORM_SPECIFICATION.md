@@ -237,7 +237,7 @@ The core engine contains 80+ submodules spanning 784 files and 408,628 LOC:
 |-----------|------:|----:|--------|
 | `cfd/` | 103 | 70,467 | Computational Fluid Dynamics |
 | `genesis/` | 80 | 40,836 | QTT Meta-Primitives + Applied Science |
-| `packs/` | 23 | 26,094 | Domain Packs (20 verticals, 167 taxonomy nodes) |
+| `packs/` | 23 | 26,094 | Domain Packs (20 verticals, 168 taxonomy nodes) |
 | `exploit/` | 38 | 25,986 | Smart Contract Vulnerability Analysis |
 | `discovery/` | 44 | 24,602 | Autonomous Discovery Engine |
 | `platform/` | 33 | 12,618 | **Platform Substrate V2.0.0** (Phase 1-7) |
@@ -958,7 +958,7 @@ flowchart TB
 - Gmsh / STL / OBJ mesh import with automatic topology repair
 - Full computation lineage with cryptographic hashing
 - SBOM generation and CVE scanning via `security.py`
-- Domain Pack system: 20 packs, 167 taxonomy nodes across all verticals
+- Domain Pack system: 20 packs, 168 taxonomy nodes across all verticals
 - 295 tests passing (1 skipped), zero bare `except:`, zero TODOs
 
 ---
@@ -3620,7 +3620,7 @@ $$\boldsymbol{\tau} = \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\math
 | **Attestation JSONs** | 121 | — | ✅ |
 | **Industries Validated** | 19 | 19 | ✅ |
 | **Domain Packs** | 20 | — | ✅ |
-| **Taxonomy Nodes** | 167 | — | ✅ |
+| **Taxonomy Nodes** | 168 | — | ✅ |
 
 ---
 
@@ -3934,7 +3934,7 @@ from qtenet.demos import holy_grail_6d
 ### Version 40.1 (February 9, 2026) — PHASE 7 PRODUCTIZATION
 - 🏭 **Platform Substrate V2.0.0**: Unified simulation API — `tensornet.platform` (33 files, 12,618 LOC)
 - 🛠 **Platform SDK V2.0.0**: `WorkflowBuilder` fluent API + recipe system — `tensornet.sdk` (3 files, 1,072 LOC)
-- 📦 **Domain Pack System**: 20 packs, 167 taxonomy nodes spanning all 19 industry verticals (26,094 LOC)
+- 📦 **Domain Pack System**: 20 packs, 168 taxonomy nodes spanning all 19 industry verticals (26,094 LOC)
 - ✅ `data_model.py`: Typed `DomainSpec`, `FieldSpec`, `SolverConfig`, `SimulationResult` hierarchy with validation
 - ✅ `protocols.py`: `SolverProtocol`, `PostProcessor`, `Exporter` as `runtime_checkable` Protocol classes
 - ✅ `solvers.py`: Poisson, advection-diffusion, Stokes, Helmholtz, wave, Euler, coupled PDE solvers

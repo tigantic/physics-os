@@ -88,3 +88,47 @@ jobs:
             rust_benchmark.log
             rust_vs_python.log
           retention-days: 30
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # PWA Engine Regression Gate (~94s on CPU)
+  # ──────────────────────────────────────────────────────────────────────────
+  pwa-regression:
+    name: PWA Engine Regression
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install numpy scipy matplotlib
+
+      - name: Run PWA experiments (10 experiments + 11 figures)
+        run: |
+          python3 experiments/run_pwa_engine.py 2>&1 | tee pwa_engine.log
+        timeout-minutes: 10
+
+      - name: Check regression thresholds
+        run: python3 scripts/check_pwa_regression.py
+
+      - name: Run PWA pytest suite
+        run: |
+          pip install pytest
+          python -m pytest tests/test_pwa_engine.py -v --tb=short
+
+      - name: Upload PWA artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pwa-results-${{ github.run_number }}
+          path: |
+            paper/figures/pwa_engine_metadata.json
+            paper/figures/pwa_*.png
+            pwa_engine.log
+          retention-days: 30

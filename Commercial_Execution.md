@@ -25,7 +25,7 @@
 
 > **Maturity reconciliation.** `PLATFORM_SPECIFICATION.md` (v40.2) reports 140/140 physics coverage and ~1,157K LOC. That metric counts *code existence*. This document's version-state model counts *verified, validated, benchmarked maturity*. The two are complementary but not interchangeable. A taxonomy node with running code but no regression tests, no benchmark match, and no documented acceptance threshold is **V0.1 Scaffolded** at best — not "covered" in the commercial sense. The capability ledger (§4, Phase 0) is the single source of truth for maturity state; `PLATFORM_SPECIFICATION.md` is the single source of truth for inventory and LOC metrics.
 >
-> **Post-Phase 4 update (2026-02-09):** The actual taxonomy implementation contains **167 nodes** across 20 packs (some high-level taxonomy categories were decomposed into finer-grained nodes during implementation). All 167 nodes now have real V0.2+ solvers with physics-correct implementations and regression tests. The ledger at `ledger/nodes/` has been synchronized to 167 entries.
+> **Post-Phase 4 update (2026-02-09):** The actual taxonomy implementation contains **168 nodes** across 20 packs (some high-level taxonomy categories were decomposed into finer-grained nodes during implementation; PHY-X.9 added for PWA Engine). All 168 nodes now have real V0.2+ solvers with physics-correct implementations and regression tests. The ledger at `ledger/nodes/` has been synchronized to 168 entries.
 
 ---
 
@@ -44,7 +44,7 @@
 | **Phase 7** | **COMPLETE** | `2725db6e` | SDK + WorkflowBuilder, recipes (8 built-in), export (VTU/XDMF/CSV/JSON), mesh import (GMSH v2/v4/raw), post-processing (7 ops), visualization, deprecation policy (SemVer), security (SBOM/audit/license), CI hardening, 55 new tests |
 | **PWA Engine** | **COMPLETE** | `aea21fa0` | PWA Compute Engine V3.0.0 — Eq. 5.48 (Badui 2020), 10/10 experiments, 11 publication figures, Gram 14× speedup, coupled-channel, mass-dependent BW, 3,772 LOC |
 
-**Final state:** 167 taxonomy nodes across 20 packs. 4 at V0.6 (QTT-accelerated anchors), 5 at V0.4 Validated, 158 at V0.2 Correctness. Platform V3.0.0. 295 tests passing (1 skipped). 1,157K first-party LOC across 2,808 source files. ADR-0011 documents Phase 7 decisions. PWA Engine commits: `aea21fa0` (implementation), `cdc1e93b` (polish), `e0e0a6e3` (docs), `bf61c206` (LOC metrics).
+**Final state:** 168 taxonomy nodes across 20 packs. 4 at V0.6 (QTT-accelerated anchors), 6 at V0.4 Validated (including PHY-X.9 PWA), 158 at V0.2 Correctness. Platform V3.0.0. 295 tests passing (1 skipped) + 37 PWA tests + 16 regression gates. 1,157K first-party LOC across 2,808 source files. ADR-0011 documents Phase 7 decisions. PWA Engine commits: `aea21fa0` (implementation), `cdc1e93b` (polish), `e0e0a6e3` (docs), `bf61c206` (LOC metrics).
 
 ---
 
@@ -426,7 +426,7 @@ External teams can build on it without internal support, and upgrade versions wi
 
 - GitHub Actions (or equivalent) CI pipeline enforcing V-state gates on every PR
 - Per-pack test matrix: unit → regression → benchmark (gated)
-- Nightly full-matrix run across all 167 nodes (report failures to ledger)
+- Nightly full-matrix run across all 168 nodes (report failures to ledger)
 - Release pipeline: tag → build → test → package → publish (tied to Platform V-states)
 - Determinism enforcement: bit-reproducible checks on reference outputs
 - Dependency scanning (Dependabot / Trivy) integrated into merge gates
@@ -566,7 +566,9 @@ Each pack below is an **Epic**. The sub-items are **Features** that map 1:1 to t
 - PHY-X.4 Lattice QCD (HMC, multigrid interfaces)
 - PHY-X.5 Perturbative QFT (diagram eval, sector decomposition hooks)
 - PHY-X.6 Beyond Standard Model computations (Boltzmann scans, oscillations)
-- PHY-X.7 Partial Wave Analysis (Eq. 5.48 intensity, Gram acceleration, coupled-channel, mass-dependent BW) — **V0.4 Validated** via PWA Engine V3.0.0
+- PHY-X.7 Dark matter (WIMP relic abundance via Boltzmann equation)
+- PHY-X.8 Neutrino physics (2-flavor vacuum oscillation)
+- PHY-X.9 Partial Wave Analysis (Eq. 5.48 intensity, Gram acceleration, coupled-channel, mass-dependent BW) — **V0.4 Validated** via PWA Engine V3.0.0
 
 ### Pack XI: Plasma Physics (Epic PHY-XI)
 
@@ -825,7 +827,7 @@ Top-level platform progression, aligned to the phases:
 | **V0.1** | Runnable Kernel | One PDE + one ODE vertical slice, full artifact flow |
 | **V0.4** | Verified Core | V&V harness operational, deterministic runs, benchmarks integrated |
 | **V1.0** | Stable Physics OS | Plugin packs, stable APIs, documentation, reproducibility bundles |
-| **V1.5** | Full Baseline Coverage | All 167 nodes at ≥ V0.2, Tier A nodes mostly ≥ V0.4 — **ACHIEVED (Phase 4)** |
+| **V1.5** | Full Baseline Coverage | All 168 nodes at ≥ V0.2, Tier A nodes mostly ≥ V0.4 — **ACHIEVED (Phase 4)** |
 | **V2.0** | Acceleration-Native | QTT/TN acceleration patterns standardized, many Tier A nodes at V0.6 — **ACHIEVED (Phase 5–7)** |
 | **V3.0** | PWA + Applied Physics | PWA Compute Engine (Eq. 5.48 Badui 2020), coupled-channel, mass-dependent BW, Gram acceleration — **ACHIEVED** |
 
