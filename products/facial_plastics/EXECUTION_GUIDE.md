@@ -3,7 +3,7 @@
 | Field | Value |
 |-------|-------|
 | **Document** | Execution Guide — Engineering Plan + Progress Tracker |
-| **Version** | 1.0 |
+| **Version** | 1.1 |
 | **Date** | 2026-02-10 |
 | **Location** | `products/facial_plastics/` |
 | **Status** | v5 partial — backend + UI + multi-procedure operators + CLI + paired datasets + cohort analytics + dashboard + FSI + anisotropy + aging |
@@ -200,7 +200,7 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 |-------------|--------|-------|
 | Post-op ingestion pipeline | ✅ DONE | `postop/outcome_ingest.py` |
 | Calibration and validation dashboards | ✅ DONE | Backend: `postop/calibration.py` + `postop/validation.py`. No UI dashboard. |
-| Repeatability, regression testing suites | ✅ DONE | 197 tests |
+| Repeatability, regression testing suites | ✅ DONE | 871 tests, mypy strict clean, CI pipeline |
 | Multi-case analytics and cohort insights | ✅ DONE | `metrics/cohort_analytics.py` — 681 LOC, CohortAnalytics engine, distribution stats, risk factors, surgeon profiles, subgroup analysis, temporal trends |
 | Validation dashboard data provider | ✅ DONE | `postop/dashboard.py` — 447 LOC, ValidationDashboard, 7 panel types, DashboardPayload |
 | **v4 OVERALL** | **✅ 100%** | |
@@ -233,41 +233,43 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 | Metric | Value |
 |--------|-------|
 | Python source files | 63 |
-| Test files | 20 (19 test + 1 conftest) |
-| Total lines of code | 35,699 |
-| Test functions | 570 |
+| Test files | 27 (25 test + 1 conftest + 1 __init__) |
+| Total lines of code | 40,900 (29,401 source + 11,499 test) |
+| Test functions | 871 |
 | Public API exports | 129 |
 | Enums defined | 9 (38 structures, 12 procedures, 11 materials, 37 landmarks, ...) |
 | Sub-packages | 10 |
-| External dependencies | numpy only (pydicom, PIL optional) |
+| External dependencies | numpy, scipy (pydicom, PIL optional) |
 | From-scratch algorithms | 15+ (DICOM parser, face-adjacency surface extraction, Delaunay, ICP, TPS, tet4 FEM, Newton-Raphson, NSGA-II, Sobol, LM, ...) |
 | Stubs / TODOs / placeholders | 0 |
-| Git commit | `e17783ba` (code) + `6917a330` (OS_Evolution tracking) |
+| mypy --disallow-untyped-defs | 0 errors (strict mode clean) |
+| CI pipeline | GitHub Actions 3-stage (mypy → pytest → container build) |
+| Git commit | `35006e14` |
 
 ---
 
-## 6. Gap Analysis — What's Missing for Full Product
+## 6. Gap Analysis — Remaining Items
 
-### Critical Path (blocks v1 ship):
+### All Critical Path items resolved:
 
-| Gap | Impact | Effort Estimate | Dependency |
-|-----|--------|-----------------|------------|
-| **G1–G9: Product UI** | No clinical user can interact with the system | Large — full frontend app | Backend APIs ready |
+| Item | Status |
+|------|--------|
+| G1–G9: Product UI | ✅ DONE — `ui/api.py`, `ui/server.py`, SPA, `cli.py`, `Containerfile` |
+| Facelift/Necklift operators | ✅ DONE — `plan/operators/facelift.py` |
+| Blepharoplasty operators | ✅ DONE — `plan/operators/blepharoplasty.py` |
+| Filler/Fat graft operators | ✅ DONE — `plan/operators/fillers.py` |
+| FSI nasal valve | ✅ DONE — `sim/fsi_valve.py` |
+| Expression/anisotropy models | ✅ DONE — `sim/anisotropy.py` |
+| Aging trajectories | ✅ DONE — `sim/aging.py` |
+| CLI entry point | ✅ DONE — `cli.py` + `__main__.py` |
+| Docker/packaging | ✅ DONE — `Containerfile` |
 
-### Additive (blocks v3+):
+### Additive (v5 remaining):
 
 | Gap | Impact | Effort Estimate |
 |-----|--------|-----------------|
-| Facelift/Necklift operators | No facelift simulation | Medium — operator set + compiler extensions |
-| Blepharoplasty operators | No blepharoplasty simulation | Medium |
-| Filler/Fat graft operators | No injectable simulation | Medium |
-| FSI nasal valve | No collapse prediction | Large — coupled solver |
-| Expression/anisotropy models | Simplified tissue response | Medium |
-| Aging trajectories | No long-term prediction | Medium |
-| Multi-tenant infrastructure | Single-user only | Large — auth, deployment |
-| CLI entry point | No command-line interface | Small |
-| REST/gRPC API layer | No programmatic access | Medium |
-| Docker/packaging | Manual install only | Small |
+| Distributed optimizer | Scale-limited to single-node NSGA-II | Medium — Dask/Ray parallel evaluator |
+| Multi-tenant infrastructure | Single-user only | Large — auth, deployment, tenant isolation |
 
 ---
 
@@ -375,20 +377,28 @@ products/facial_plastics/
     ├── test_governance.py                258 LOC  (21 tests)
     ├── test_metrics.py                   322 LOC  (20 tests)
     ├── test_plan.py                      206 LOC  (21 tests)
-    ├── test_postop.py                    470 LOC  (30 tests)
+    ├── test_postop.py                    471 LOC  (30 tests)
     ├── test_reports.py                    97 LOC  (10 tests)
     ├── test_sim.py                       218 LOC  (18 tests)
-    ├── test_case_library_curator.py      (46 tests)
-    ├── test_operators_expansion.py       (45 tests)
-    ├── test_compiler_expansion.py        (27 tests)
-    ├── test_ui.py                        (78 tests)
-    ├── test_cli.py                       (47 tests)
-    ├── test_paired_dataset.py            (28 tests)
-    ├── test_cohort_analytics.py          (34 tests)
-    ├── test_dashboard.py                 (21 tests)
-    ├── test_fsi_valve.py                 (29 tests)
-    ├── test_anisotropy.py                (84 tests)
-    └── test_aging.py                     (30 tests)
+    ├── test_twin.py                    1,046 LOC  (76 tests)
+    ├── test_ingest.py                    920 LOC  (55 tests)
+    ├── test_cfd_solver.py                428 LOC  (24 tests)
+    ├── test_functional.py                537 LOC  (34 tests)
+    ├── test_server.py                    437 LOC  (29 tests)
+    ├── test_mms_validation.py            973 LOC  (48 tests)
+    ├── test_integration.py               896 LOC  (35 tests)
+    ├── test_ui_api.py                    271 LOC  (27 tests)
+    ├── test_case_library_curator.py      678 LOC  (46 tests)
+    ├── test_operators_expansion.py       567 LOC  (45 tests)
+    ├── test_compiler_expansion.py        394 LOC  (27 tests)
+    ├── test_ui.py                                 (78 tests)
+    ├── test_cli.py                                (47 tests)
+    ├── test_paired_dataset.py                     (28 tests)
+    ├── test_cohort_analytics.py                   (34 tests)
+    ├── test_dashboard.py                          (21 tests)
+    ├── test_fsi_valve.py                          (29 tests)
+    ├── test_anisotropy.py                         (84 tests)
+    └── test_aging.py                              (30 tests)
 ```
 
 ---
@@ -402,3 +412,9 @@ products/facial_plastics/
 | 2026-02-10 | *pending* | Case library curator — 59 files, 23,183 LOC, 197 tests, 82 exports. Added: `data/anatomy_generator.py` (~1,100 LOC), `data/case_library_curator.py` (~620 LOC), `tests/test_case_library_curator.py` (46 tests). Fixed: `core/case_bundle.py` SurfaceMesh save/load + Provenance.record_file signatures, `twin/segmentation.py` + `twin/meshing.py` BoundingBox constructor. |
 | 2026-02-10 | `acccbecd` | v3 expansion — 67 files, 29,710 LOC, 373 tests, 91 exports. Added: operator families (facelift, blepharoplasty, fillers), extended compiler, UI system (api.py, server.py), cli.py, __main__.py, Containerfile, 4 test files. |
 | 2026-02-10 | *pending* | v2/v4/v5 completion — 83 files, 35,699 LOC, 570 tests, 129 exports. Added: `data/paired_dataset.py` (583 LOC), `metrics/cohort_analytics.py` (681 LOC), `postop/dashboard.py` (447 LOC), `sim/fsi_valve.py` (805 LOC), `sim/anisotropy.py` (643 LOC), `sim/aging.py` (628 LOC), 6 test files (197 new tests). Closes v2 (paired datasets), v4 (cohort analytics + dashboard), v5 (FSI + anisotropy + aging). |
+| 2026-02-10 | `1cb745fd` | scipy backends — sparse FEM assembly, Delaunay meshing, KDTree spatial queries, ndimage morphology, chi-squared stats. Performance hardening across solvers. |
+| 2026-02-10 | `4f6523af` | Add 218 tests covering all untested modules — twin/, ingest, CFD solver, functional metrics, server, UI API. |
+| 2026-02-10 | `34697162` | Add 48 MMS validation tests for FEM and CFD solvers — method of manufactured solutions, patch tests, convergence verification. |
+| 2026-02-10 | `f82edc10` | Add 35 integration tests wiring full pipeline — end-to-end ingest→twin→plan→sim→metrics→report flows. |
+| 2026-02-10 | `d2c4ca16` | CI: GitHub Actions 3-stage workflow (mypy strict → pytest → container build) for `products/facial_plastics/`. |
+| 2026-02-10 | `35006e14` | Fix all mypy strict errors across 90 source files — 348 annotations added (9 prod + 339 test). Zero errors under `--disallow-untyped-defs`. |
