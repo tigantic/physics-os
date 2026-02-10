@@ -22,6 +22,9 @@ Models Implemented:
     3. WALE (Nicoud & Ducros, 1999) - Wall-Adapting Local Eddy-viscosity
     4. Vreman (2004) - Minimal model for anisotropic grids
     5. Sigma (Nicoud et al., 2011) - Based on singular values of ∇u
+    6. ILES (Implicit LES) - No explicit SGS model; relies on numerical
+       dissipation of the spatial scheme (e.g. upwind-biased, MUSCL,
+       WENO flux reconstruction) to drain energy from unresolved scales.
 
 References:
     [1] Smagorinsky, "General Circulation Experiments with the
@@ -48,6 +51,7 @@ class LESModel(Enum):
     WALE = "wale"
     VREMAN = "vreman"
     SIGMA = "sigma"
+    ILES = "iles"
 
 
 # ============================================================================
@@ -885,6 +889,12 @@ def compute_sgs_viscosity(
             kwargs.get("dw_dy"),
             kwargs.get("dw_dz"),
         )
+
+    elif model == LESModel.ILES:
+        # Implicit LES: no explicit SGS model.  Return zero eddy
+        # viscosity — all sub-grid dissipation comes from the
+        # numerical scheme (upwind, MUSCL, WENO, etc.).
+        return torch.zeros_like(du_dx)
 
     else:
         raise ValueError(f"Unknown LES model: {model}")

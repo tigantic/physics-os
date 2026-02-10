@@ -528,3 +528,234 @@ class HadronCorrelator:
             else:
                 m_eff[t] = float('nan')
         return m_eff
+
+
+# ---------------------------------------------------------------------------
+#  HMC with Dynamical Fermions
+# ---------------------------------------------------------------------------
+
+class DynamicalHMC:
+    r"""
+    Hybrid Monte Carlo (HMC) for full QCD with dynamical Wilson fermions.
+
+    The fermion determinant is incorporated via pseudofermions:
+
+    .. math::
+        \det(D^\dagger D) \to \text{stochastic estimation via }
+        e^{-\phi^\dagger (D^\dagger D)^{-1} \phi}
+
+    Molecular dynamics uses the leapfrog integrator with
+    the pseudofermion force:
+
+    .. math::
+        F_\mu^a(x) = -\frac{\partial S_G}{\partial A_\mu^a(x)}
+            - \frac{\partial S_F}{\partial A_\mu^a(x)}
+
+    where the fermion force requires :math:`(D^\dagger D)^{-1}`.
+
+    References:
+        [1] Duane, Kennedy, Pendleton & Roweth, PLB 195, 216 (1987).
+        [2] Gottlieb et al., PRD 35, 2531 (1987).
+    """
+
+    def __init__(
+        self,
+        gauge: WilsonGaugeAction,
+        kappa: float = 0.125,
+        n_steps: int = 10,
+        step_size: float = 0.02,
+    ) -> None:
+        self.gauge = gauge
+        self.kappa = kappa
+        self.n_steps = n_steps
+        self.step_size = step_size
+
+    def _generate_momenta(self) -> NDArray:
+        """Sample conjugate momenta from su(3) Lie algebra (Gaussian)."""
+        N = self.gauge.N_sites
+        dim = self.gauge.dim
+        gens = SU3Group.generators()
+        P = np.zeros((N, dim, 3, 3), dtype=complex)
+        for s in range(N):
+            for mu in range(dim):
+                # Sum over 8 generators with Gaussian coefficients
+                coeffs = np.random.randn(8)
+                H = sum(c * g for c, g in zip(coeffs, gens))
+                P[s, mu] = H  # anti-Hermitian traceless
+        return P
+
+    def _generate_pseudofermion(self) -> NDArray:
+        """Generate pseudofermion field φ ~ N(0,1) then χ = D†φ."""
+        ndof = self.gauge.N_sites * 12  # 4 Dirac × 3 colour per site
+        eta = (np.random.randn(ndof) + 1j * np.random.randn(ndof)) / np.sqrt(2)
+        return eta
+
+    def _kinetic_energy(self, P: NDArray) -> float:
+        """T = ½ Σ Tr(P²) (P is anti-Hermitian → Tr(P²) < 0)."""
+        total = 0.0
+        for s in range(P.shape[0]):
+            for mu in range(P.shape[1]):
+                total -= 0.5 * np.real(np.trace(P[s, mu] @ P[s, mu]))
+        return total
+
+    def _gauge_force(self, site: int, mu: int) -> NDArray:
+        """Gauge part of the molecular-dynamics force: -∂S_G/∂U."""
+        A = self.gauge.staple(site, mu)
+        V = self.gauge.links[site, mu] @ A
+        # Project to traceless anti-Hermitian part
+        F = (self.gauge.beta / 3.0) * (V - V.T.conj())
+        F -= np.trace(F) / 3.0 * np.eye(3, dtype=complex)
+        return F
+
+    def _fermion_force(self, site: int, mu: int, X: NDArray) -> NDArray:
+        """
+        Fermion force from pseudofermion contribution.
+
+        Uses the previously computed X = (D†D)⁻¹ φ.
+        Approximate: shift-based numerical derivative.
+        """
+        eps_fd = 1e-4
+        gens = SU3Group.generators()
+        F = np.zeros((3, 3), dtype=complex)
+
+        U_orig = self.gauge.links[site, mu].copy()
+        for a, Ta in enumerate(gens):
+            # Perturb link
+            self.gauge.links[site, mu] = _matrix_exp(1j * eps_fd * Ta) @ U_orig
+            D_p = WilsonFermion.wilson_dirac_matrix(self.gauge, self.kappa)
+            S_p = np.real(X.conj() @ D_p.T.conj() @ D_p @ X)
+
+            self.gauge.links[site, mu] = _matrix_exp(-1j * eps_fd * Ta) @ U_orig
+            D_m = WilsonFermion.wilson_dirac_matrix(self.gauge, self.kappa)
+            S_m = np.real(X.conj() @ D_m.T.conj() @ D_m @ X)
+
+            dS_dA = (S_p - S_m) / (2.0 * eps_fd)
+            F += dS_dA * Ta
+
+        self.gauge.links[site, mu] = U_orig
+        # Project to traceless anti-Hermitian
+        F = (F - F.T.conj()) / 2.0
+        F -= np.trace(F) / 3.0 * np.eye(3, dtype=complex)
+        return -F
+
+    def _leapfrog(
+        self,
+        P: NDArray,
+        phi: NDArray,
+        use_fermion_force: bool = True,
+    ) -> NDArray:
+        """Leapfrog molecular-dynamics integration."""
+        eps = self.step_size
+        N = self.gauge.N_sites
+        dim = self.gauge.dim
+
+        # Compute X = (D†D)⁻¹ φ once per trajectory (frozen pseudofermion)
+        X: Optional[NDArray] = None
+        if use_fermion_force:
+            D = WilsonFermion.wilson_dirac_matrix(self.gauge, self.kappa)
+            DdD = D.T.conj() @ D
+            X = np.linalg.solve(DdD + 1e-8 * np.eye(DdD.shape[0]), phi)
+
+        # Half-step P
+        for s in range(N):
+            for mu in range(dim):
+                F = self._gauge_force(s, mu)
+                if use_fermion_force and X is not None:
+                    F += self._fermion_force(s, mu, X)
+                P[s, mu] += 0.5 * eps * F
+
+        for step in range(self.n_steps):
+            # Full step U
+            for s in range(N):
+                for mu in range(dim):
+                    self.gauge.links[s, mu] = _matrix_exp(eps * P[s, mu]) @ self.gauge.links[s, mu]
+                    self.gauge.links[s, mu] = SU3Group.project_su3(self.gauge.links[s, mu])
+
+            # Full step P (except at last step, where half-step)
+            if step < self.n_steps - 1:
+                if use_fermion_force and X is not None:
+                    D = WilsonFermion.wilson_dirac_matrix(self.gauge, self.kappa)
+                    DdD = D.T.conj() @ D
+                    X = np.linalg.solve(DdD + 1e-8 * np.eye(DdD.shape[0]), phi)
+
+                for s in range(N):
+                    for mu in range(dim):
+                        F = self._gauge_force(s, mu)
+                        if use_fermion_force and X is not None:
+                            F += self._fermion_force(s, mu, X)
+                        P[s, mu] += eps * F
+
+        # Final half-step P
+        if use_fermion_force and X is not None:
+            D = WilsonFermion.wilson_dirac_matrix(self.gauge, self.kappa)
+            DdD = D.T.conj() @ D
+            X = np.linalg.solve(DdD + 1e-8 * np.eye(DdD.shape[0]), phi)
+
+        for s in range(N):
+            for mu in range(dim):
+                F = self._gauge_force(s, mu)
+                if use_fermion_force and X is not None:
+                    F += self._fermion_force(s, mu, X)
+                P[s, mu] += 0.5 * eps * F
+
+        return P
+
+    def _total_action(self, P: NDArray, phi: NDArray) -> float:
+        """H = T(P) + S_G(U) + S_F(U, φ)."""
+        T = self._kinetic_energy(P)
+        S_G = 0.0
+        for s in range(self.gauge.N_sites):
+            for mu in range(self.gauge.dim):
+                for nu in range(mu + 1, self.gauge.dim):
+                    S_G += self.gauge.beta / 3.0 * (
+                        3.0 - SU3Group.trace_real(self.gauge.plaquette(s, mu, nu))
+                    )
+        # Fermion action: φ† (D†D)⁻¹ φ
+        D = WilsonFermion.wilson_dirac_matrix(self.gauge, self.kappa)
+        DdD = D.T.conj() @ D
+        X = np.linalg.solve(DdD + 1e-8 * np.eye(DdD.shape[0]), phi)
+        S_F = np.real(phi.conj() @ X)
+
+        return T + S_G + S_F
+
+    def trajectory(self, use_fermion_force: bool = True) -> Tuple[bool, float]:
+        """
+        Run one HMC trajectory.
+
+        Returns:
+            (accepted, delta_H).
+        """
+        import copy
+        links_old = copy.deepcopy(self.gauge.links)
+
+        P = self._generate_momenta()
+        phi = self._generate_pseudofermion()
+        H_old = self._total_action(P, phi)
+
+        P = self._leapfrog(P, phi, use_fermion_force)
+
+        H_new = self._total_action(P, phi)
+        dH = H_new - H_old
+
+        if dH < 0.0 or np.random.random() < np.exp(-dH):
+            return True, dH
+        else:
+            # Reject: restore old configuration
+            self.gauge.links = links_old
+            return False, dH
+
+    def thermalize(
+        self,
+        n_therm: int = 50,
+        use_fermion_force: bool = False,
+    ) -> List[float]:
+        """
+        Run thermalisation trajectories.
+
+        Returns list of ΔH per trajectory.
+        """
+        dH_list = []
+        for _ in range(n_therm):
+            acc, dH = self.trajectory(use_fermion_force)
+            dH_list.append(dH)
+        return dH_list

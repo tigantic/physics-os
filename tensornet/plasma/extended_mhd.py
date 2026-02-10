@@ -6,6 +6,7 @@ Upgrades domain XI.2 from ideal MHD to full resistive/extended MHD.
 
 from __future__ import annotations
 
+import enum
 import math
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
@@ -448,3 +449,213 @@ def _levi_civita(i: int, j: int, k: int) -> int:
     if (i, j, k) in ((2, 1, 0), (1, 0, 2), (0, 2, 1)):
         return -1
     return 0
+
+
+# ---------------------------------------------------------------------------
+#  Radiation MHD
+# ---------------------------------------------------------------------------
+
+STEFAN_BOLTZMANN: float = 5.670374419e-8  # W/(m² K⁴)
+SPEED_OF_LIGHT: float = 2.998e8           # m/s
+
+
+class RadiationTransport(enum.Enum):
+    """Radiation-MHD coupling regime."""
+    OPTICALLY_THIN = "optically_thin"
+    FLUX_LIMITED_DIFFUSION = "fld"
+    M1_CLOSURE = "m1"
+
+
+@dataclass
+class RadiationState:
+    """
+    Radiation energy density and flux on a 1D grid.
+
+    Attributes:
+        E_r: Radiation energy density [J/m³].
+        F_r: Radiation flux [W/m²].
+    """
+    E_r: NDArray
+    F_r: NDArray
+
+
+class RadiationMHD:
+    r"""
+    Radiation-MHD coupling for astrophysical plasmas.
+
+    Adds radiative source terms to the MHD energy equation:
+
+    .. math::
+        \frac{\partial e}{\partial t} + \nabla\cdot[(e+p)\mathbf{v}] =
+            -\kappa_P(4\pi B_P - cE_r) + \ldots
+
+    where :math:`B_P = \sigma_B T^4 / \pi` is the Planck function and
+    :math:`\kappa_P` is the Planck-mean opacity.
+
+    Radiation energy evolves via:
+
+    .. math::
+        \frac{\partial E_r}{\partial t} + \nabla\cdot\mathbf{F}_r =
+            \kappa_P(4\pi B_P - cE_r)
+
+    Flux-limited diffusion (FLD) closure:
+
+    .. math::
+        \mathbf{F}_r = -\frac{c\lambda}{\kappa_R}\nabla E_r
+
+    where :math:`\lambda(R)` is the flux limiter and :math:`R = |\nabla E_r|/(\kappa_R E_r)`.
+
+    References:
+        [1] Turner & Stone, ApJS 135, 95 (2001).
+        [2] Jiang, Stone & Davis, ApJ 784, 169 (2014).
+        [3] Mihalas & Mihalas, *Foundations of Radiation Hydrodynamics*, 1984.
+    """
+
+    def __init__(
+        self,
+        nx: int,
+        dx: float,
+        kappa_P: float = 1.0,
+        kappa_R: float = 1.0,
+        regime: RadiationTransport = RadiationTransport.FLUX_LIMITED_DIFFUSION,
+    ) -> None:
+        """
+        Parameters:
+            nx: Number of grid points.
+            dx: Grid spacing [m].
+            kappa_P: Planck-mean opacity [1/m].
+            kappa_R: Rosseland-mean opacity [1/m].
+            regime: Radiation transport model.
+        """
+        self.nx = nx
+        self.dx = dx
+        self.kappa_P = kappa_P
+        self.kappa_R = kappa_R
+        self.regime = regime
+        self.rad = RadiationState(
+            E_r=np.zeros(nx),
+            F_r=np.zeros(nx),
+        )
+
+    def planck_function(self, T: NDArray) -> NDArray:
+        """Planck function integrated over frequency: B_P = σ T⁴ / π."""
+        return STEFAN_BOLTZMANN * T ** 4 / math.pi
+
+    def _flux_limiter(self, R: NDArray) -> NDArray:
+        """
+        Levermore-Pomraning flux limiter:
+        λ(R) = (2 + R) / (6 + 3R + R²)
+        """
+        return (2.0 + R) / (6.0 + 3.0 * R + R ** 2 + 1e-30)
+
+    def fld_flux(self, E_r: NDArray) -> NDArray:
+        """
+        Flux-limited diffusion radiative flux.
+
+        F_r = -c λ / κ_R ∇E_r
+        """
+        grad_E = np.gradient(E_r, self.dx)
+        R = np.abs(grad_E) / (self.kappa_R * E_r + 1e-30)
+        lam = self._flux_limiter(R)
+        D = SPEED_OF_LIGHT * lam / (self.kappa_R + 1e-30)
+        return -D * grad_E
+
+    def optically_thin_cooling(self, rho: NDArray, T: NDArray) -> NDArray:
+        """
+        Optically-thin radiative cooling rate [W/m³].
+
+        Q_rad = κ_P ρ (4σ T⁴ - c E_r)
+        """
+        B_P = self.planck_function(T)
+        return self.kappa_P * rho * (4.0 * math.pi * B_P - SPEED_OF_LIGHT * self.rad.E_r)
+
+    def radiation_energy_rhs(self, T: NDArray) -> NDArray:
+        """
+        RHS for radiation energy density evolution.
+
+        ∂E_r/∂t = -∇·F_r + κ_P(4π B_P - c E_r)
+        """
+        B_P = self.planck_function(T)
+        source = self.kappa_P * (4.0 * math.pi * B_P - SPEED_OF_LIGHT * self.rad.E_r)
+
+        if self.regime == RadiationTransport.OPTICALLY_THIN:
+            return source
+
+        elif self.regime == RadiationTransport.FLUX_LIMITED_DIFFUSION:
+            F = self.fld_flux(self.rad.E_r)
+            div_F = np.gradient(F, self.dx)
+            return -div_F + source
+
+        elif self.regime == RadiationTransport.M1_CLOSURE:
+            # M1: hyperbolic transport with Eddington tensor
+            return self._m1_energy_rhs(T)
+
+        raise ValueError(f"Unknown regime: {self.regime}")
+
+    def _m1_energy_rhs(self, T: NDArray) -> NDArray:
+        """M1 closure radiation transport."""
+        c = SPEED_OF_LIGHT
+        E_r = self.rad.E_r
+        F_r = self.rad.F_r
+        B_P = self.planck_function(T)
+
+        # Reduced flux
+        f = np.abs(F_r) / (c * E_r + 1e-30)
+        f = np.clip(f, 0.0, 1.0)
+
+        # Eddington factor (Minerbo closure)
+        chi = (3.0 + 4.0 * f ** 2) / (5.0 + 2.0 * np.sqrt(4.0 - 3.0 * f ** 2) + 1e-30)
+
+        # Radiation pressure P_r = chi * E_r
+        P_r = chi * E_r
+
+        # ∂E_r/∂t + ∂F_r/∂x = source
+        dF_dx = np.gradient(F_r, self.dx)
+        source = self.kappa_P * (4.0 * math.pi * B_P - c * E_r)
+        dE_dt = -dF_dx + source
+
+        # ∂F_r/∂t + c² ∂P_r/∂x = -κ_P c F_r (absorption)
+        dP_dx = np.gradient(P_r, self.dx)
+        dF_dt = -c ** 2 * dP_dx - self.kappa_P * c * F_r
+
+        # Store flux RHS for external integrator
+        self._dF_dt = dF_dt
+
+        return dE_dt
+
+    def step_implicit(self, T: NDArray, dt: float) -> None:
+        """
+        Advance radiation fields one step (implicit backward Euler for stability).
+
+        The implicit update avoids the light-crossing CFL restriction.
+        """
+        if self.regime == RadiationTransport.FLUX_LIMITED_DIFFUSION:
+            # Backward Euler: (I + dt κ_P c) E_r^{n+1} = E_r^n + dt(...)
+            B_P = self.planck_function(T)
+            F = self.fld_flux(self.rad.E_r)
+            div_F = np.gradient(F, self.dx)
+            rhs = self.rad.E_r + dt * (-div_F + self.kappa_P * 4.0 * math.pi * B_P)
+            diag = 1.0 + dt * self.kappa_P * SPEED_OF_LIGHT
+            self.rad.E_r = rhs / diag
+            self.rad.F_r = self.fld_flux(self.rad.E_r)
+        else:
+            # Explicit Euler fallback
+            dE = self.radiation_energy_rhs(T)
+            self.rad.E_r += dt * dE
+            self.rad.E_r = np.maximum(self.rad.E_r, 0.0)
+            if hasattr(self, '_dF_dt'):
+                self.rad.F_r += dt * self._dF_dt
+
+    def radiation_pressure(self) -> NDArray:
+        """Radiation pressure: P_rad = E_r / 3 (isotropic limit)."""
+        return self.rad.E_r / 3.0
+
+    def coupling_source_term(self, rho: NDArray, T: NDArray) -> NDArray:
+        """
+        Net radiation ↔ gas energy exchange rate [W/m³].
+
+        Positive = gas gains energy (radiation absorbed).
+        Negative = gas loses energy (radiation emitted).
+        """
+        B_P = self.planck_function(T)
+        return self.kappa_P * (SPEED_OF_LIGHT * self.rad.E_r - 4.0 * math.pi * B_P)
