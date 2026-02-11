@@ -108,7 +108,7 @@ const CaseLibrary = (() => {
                 <td class="mono">${_esc(_truncate(c.case_id, 20))}</td>
                 <td><span class="tag tag-${_esc(c.procedure_type || "")}">${_esc(c.procedure_type || "—")}</span></td>
                 <td><span class="tag tag-quality">${_esc(c.quality_level || "—")}</span></td>
-                <td class="mono">${_esc(_fmtDate(c.created_at))}</td>
+                <td class="mono">${_esc(_fmtDate(c.created_utc || c.created_at))}</td>
               </tr>
             `).join("")}
           </tbody>

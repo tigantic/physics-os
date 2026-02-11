@@ -41,13 +41,16 @@ const Sidebar = (() => {
     const landmarks = twin.landmarks || {};
     const seg = twin.segmentation;
     const lmCount = Object.keys(landmarks).length;
+    // summary() returns "procedure" / "quality"; CaseIndex returns "procedure_type" / "quality_level"
+    const procLabel = meta.procedure_type || meta.procedure || "";
+    const qualLabel = meta.quality_level || meta.quality || "";
 
     _el.innerHTML = `
       <div class="sidebar-section">
         <h3>Selected Case</h3>
         <div class="sidebar-field"><span class="label">Case ID</span><span class="value" title="${_esc(sc.id)}">${_esc(_truncate(sc.id, 16))}</span></div>
-        ${meta.procedure_type ? `<div class="sidebar-field"><span class="label">Procedure</span><span class="tag tag-${_esc(meta.procedure_type)}">${_esc(meta.procedure_type)}</span></div>` : ""}
-        ${meta.quality_level ? `<div class="sidebar-field"><span class="label">Quality</span><span class="tag tag-quality">${_esc(meta.quality_level)}</span></div>` : ""}
+        ${procLabel ? `<div class="sidebar-field"><span class="label">Procedure</span><span class="tag tag-${_esc(procLabel)}">${_esc(procLabel)}</span></div>` : ""}
+        ${qualLabel ? `<div class="sidebar-field"><span class="label">Quality</span><span class="tag tag-quality">${_esc(qualLabel)}</span></div>` : ""}
       </div>
       <div class="sidebar-section">
         <h3>Twin Status</h3>

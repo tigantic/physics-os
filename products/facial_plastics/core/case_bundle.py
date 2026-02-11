@@ -35,6 +35,7 @@ from .provenance import Provenance, hash_bytes, hash_dict, hash_file
 from .types import (
     ClinicalMeasurement,
     DicomMetadata,
+    MeshElementType,
     Modality,
     ProcedureType,
     QualityLevel,
@@ -439,8 +440,11 @@ class CaseBundle:
             "nodes": mesh.nodes,
             "elements": mesh.elements,
         }
+        # Store each surface tag as a separate named array to avoid
+        # object-array pickle issues with np.savez_compressed.
         if mesh.surface_tags:
-            save_dict["surface_tags"] = mesh.surface_tags
+            for tag_name, tag_arr in mesh.surface_tags.items():
+                save_dict[f"st_{tag_name}"] = tag_arr
         np.savez_compressed(dest, **save_dict)
 
         # Save region materials and surface tags as JSON sidecar
@@ -450,10 +454,13 @@ class CaseBundle:
                 {
                     "element_type": mesh.element_type.value,
                     "region_materials": {
-                        str(k): v for k, v in (mesh.region_materials or {}).items()
+                        str(k): (v if isinstance(v, (str, int, float, bool, dict, list, type(None)))
+                                 else str(v))
+                        for k, v in (mesh.region_materials or {}).items()
                     },
                     "surface_tags": {
-                        str(k): v for k, v in (mesh.surface_tags or {}).items()
+                        str(k): (v.tolist() if hasattr(v, "tolist") else v)
+                        for k, v in (mesh.surface_tags or {}).items()
                     },
                 },
                 f,
@@ -463,6 +470,65 @@ class CaseBundle:
         self._provenance.record_file(f"volume_mesh_{name}_sidecar", sidecar, "volume_mesh_sidecar")
         self._provenance.end_step()
         return dest
+
+    def load_volume_mesh(self, name: str) -> VolumeMesh:
+        """Load a VolumeMesh previously saved to the mesh/ subdirectory.
+
+        Reads ``mesh/{name}_volume.npz`` (nodes, elements) and the
+        companion ``.json`` sidecar (element_type, region_materials,
+        surface_tags).  Raises ``FileNotFoundError`` when the archive
+        does not exist.
+        """
+        npz_path = self.subdir("mesh") / f"{name}_volume.npz"
+        if not npz_path.exists():
+            raise FileNotFoundError(f"Volume mesh '{name}' not found at {npz_path}")
+
+        data = np.load(npz_path, allow_pickle=False)
+        nodes: np.ndarray = data["nodes"]
+        elements: np.ndarray = data["elements"]
+
+        # Sidecar carries element_type, region_materials, surface_tags
+        sidecar_path = npz_path.with_suffix(".json")
+        element_type = MeshElementType.TET4
+        region_materials: Dict[int, Any] = {}
+        surface_tags_meta: Dict[str, Any] = {}
+
+        if sidecar_path.exists():
+            try:
+                with open(sidecar_path, "r") as f:
+                    sc = json.load(f)
+                element_type = MeshElementType(sc.get("element_type", "tet4"))
+                region_materials = {
+                    int(k): v for k, v in sc.get("region_materials", {}).items()
+                }
+                surface_tags_meta = sc.get("surface_tags", {})
+            except (json.JSONDecodeError, ValueError):
+                pass  # Corrupt sidecar — use defaults
+
+        # Reconstruct surface_tags from npz (st_{name} keys) and sidecar
+        surface_tags: Dict[str, np.ndarray] = {}
+        for key in data.files:
+            if key.startswith("st_"):
+                tag_name = key[3:]
+                surface_tags[tag_name] = data[key]
+
+        # Legacy: check sidecar-listed names in npz
+        if not surface_tags:
+            for tag_name in surface_tags_meta:
+                candidate_key = f"surface_tags_{tag_name}"
+                if candidate_key in data:
+                    surface_tags[tag_name] = data[candidate_key]
+                elif tag_name in data and tag_name not in ("nodes", "elements"):
+                    surface_tags[tag_name] = data[tag_name]
+
+        return VolumeMesh(
+            nodes=nodes,
+            elements=elements,
+            element_type=element_type,
+            region_ids=np.zeros(elements.shape[0], dtype=np.int32),
+            region_materials=region_materials,
+            surface_tags=surface_tags,
+        )
 
     # ── Pipeline stage markers ────────────────────────────────
 

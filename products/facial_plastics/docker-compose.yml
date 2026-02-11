@@ -31,6 +31,8 @@ services:
       - fp-keys:/etc/fp
     expose:
       - "8420"
+    ports:
+      - "8420:8420"
     healthcheck:
       test:
         - CMD

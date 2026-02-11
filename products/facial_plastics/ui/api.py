@@ -177,23 +177,21 @@ class UIApplication:
     def _bundle_mesh(bundle: CaseBundle) -> Optional[VolumeMesh]:
         """Attempt to retrieve the volume mesh from a bundle.
 
-        The twin pipeline saves the mesh via
-        ``bundle.save_volume_mesh("volume_mesh", mesh)``.  This helper
-        tries to load it back; returns *None* if unavailable.
+        Both the curator and twin builder save via
+        ``bundle.save_volume_mesh("fem_mesh", mesh)``.  This helper
+        tries the canonical name first, then common alternatives.
+        Returns *None* if unavailable.
         """
         # Check the instance attribute (set by TwinBuilder in-memory)
         mesh = getattr(bundle, "volume_mesh", None)
         if mesh is not None:
             return mesh  # type: ignore[no-any-return]
-        # Try persisted twin data via conventional names
-        for loader_name in ("load_volume_mesh",):
-            loader = getattr(bundle, loader_name, None)
-            if loader is not None:
-                for name in ("volume_mesh", "twin_mesh", "mesh"):
-                    try:
-                        return loader(name)  # type: ignore[no-any-return]
-                    except Exception:
-                        continue
+        # Try persisted mesh via load_volume_mesh (canonical name first)
+        for name in ("fem_mesh", "volume_mesh", "twin_mesh", "mesh"):
+            try:
+                return bundle.load_volume_mesh(name)
+            except (FileNotFoundError, KeyError):
+                continue
         return None
 
     @staticmethod
@@ -202,12 +200,17 @@ class UIApplication:
         lm = getattr(bundle, "landmarks", None)
         if lm:
             return list(lm)
-        try:
-            raw = bundle.load_json("landmarks", subdir="twin")
-            if isinstance(raw, list):
-                return raw  # type: ignore[return-value]
-        except Exception:
-            pass
+        # Curator saves landmarks under subdir="derived"; also check "twin"
+        # for backwards compatibility.
+        for subdir in ("derived", "twin"):
+            try:
+                raw = bundle.load_json("landmarks", subdir=subdir)
+                if isinstance(raw, dict) and "landmarks" in raw:
+                    return raw["landmarks"]  # type: ignore[return-value]
+                if isinstance(raw, list):
+                    return raw  # type: ignore[return-value]
+            except Exception:
+                continue
         return []
 
     @staticmethod
@@ -291,10 +294,51 @@ class UIApplication:
             return {"error": f"Case '{case_id}' not found"}
 
     def curate_library(self) -> Dict[str, Any]:
-        """Run the case library curator (QC, stats, dedup)."""
-        curator = CaseLibraryCurator(self._library_root)
+        """Run the case library curator.
+
+        If no twin-complete cases exist, generate a synthetic case with
+        full twin data so the platform is immediately usable.  Uses a
+        small grid (32^3) so generation completes within a few seconds.
+        """
+        curator = CaseLibraryCurator(
+            self._library_root,
+            grid_size=32,
+            voxel_spacing_mm=2.0,
+        )
         report = curator.summary()
+        twin_complete = report.get("twin_complete", 0)
+
+        generated: Optional[Dict[str, Any]] = None
+        if twin_complete == 0:
+            try:
+                gen_result = curator.generate_case(
+                    run_twin_pipeline=True,
+                )
+                if gen_result.success:
+                    generated = {
+                        "case_id": gen_result.case_id,
+                        "procedure": gen_result.procedure.value if gen_result.procedure else None,
+                        "n_landmarks": gen_result.n_landmarks,
+                        "n_structures": gen_result.n_structures,
+                        "qc_passed": gen_result.qc_passed,
+                        "generation_time_s": round(gen_result.generation_time_s, 2),
+                    }
+                else:
+                    generated = {
+                        "error": gen_result.error or "generation failed",
+                        "case_id": gen_result.case_id,
+                    }
+            except Exception as exc:
+                generated = {"error": str(exc)}
+
+            # Refresh the library so the new case appears
+            self._library = CaseLibrary(self._library_root)
+            # Refresh statistics
+            report = curator.summary()
+
         result: Dict[str, Any] = _ndarray_to_list(report)
+        if generated:
+            result["generated_case"] = generated
         return result
 
     # ── G2: Twin Inspect ──────────────────────────────────────────
@@ -327,11 +371,15 @@ class UIApplication:
 
         landmarks = self._bundle_landmarks(bundle)
         if landmarks:
-            summary["landmarks"] = {
-                lm.landmark_type.value: _ndarray_to_list(lm.position)
-                for lm in landmarks
-                if isinstance(lm, Landmark)
-            }
+            lm_dict: Dict[str, Any] = {}
+            for lm in landmarks:
+                if isinstance(lm, Landmark):
+                    lm_dict[lm.landmark_type.value] = _ndarray_to_list(lm.position)
+                elif isinstance(lm, dict):
+                    name = lm.get("name", lm.get("type", "unknown"))
+                    pos = lm.get("position", lm.get("coords", [0, 0, 0]))
+                    lm_dict[name] = _ndarray_to_list(pos)
+            summary["landmarks"] = lm_dict
         else:
             summary["landmarks"] = {}
 
@@ -379,18 +427,21 @@ class UIApplication:
             return {"error": f"Case '{case_id}' not found"}
 
         landmarks = self._bundle_landmarks(bundle)
-        return {
-            "case_id": case_id,
-            "landmarks": [
-                {
+        result_lms: List[Dict[str, Any]] = []
+        for lm in landmarks:
+            if isinstance(lm, Landmark):
+                result_lms.append({
                     "type": lm.landmark_type.value,
                     "position": _ndarray_to_list(lm.position),
                     "confidence": getattr(lm, "confidence", 1.0),
-                }
-                for lm in landmarks
-                if isinstance(lm, Landmark)
-            ],
-        }
+                })
+            elif isinstance(lm, dict):
+                result_lms.append({
+                    "type": lm.get("name", lm.get("type", "unknown")),
+                    "position": _ndarray_to_list(lm.get("position", lm.get("coords", [0, 0, 0]))),
+                    "confidence": lm.get("confidence", 1.0),
+                })
+        return {"case_id": case_id, "landmarks": result_lms}
 
     # ── G3: Plan Author ──────────────────────────────────────────
 
