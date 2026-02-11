@@ -1,0 +1,104 @@
+# Facial Plastics Production Stack
+#
+# Start:   docker compose -f products/facial_plastics/docker-compose.yml up -d
+# Stop:    docker compose -f products/facial_plastics/docker-compose.yml down
+# Logs:    docker compose -f products/facial_plastics/docker-compose.yml logs -f
+#
+# Required env-vars (set in .env or export):
+#   FP_DOMAIN       — public domain for TLS (e.g. fp.example.com)
+#   FP_KEY_FILE     — path inside container to API key store (default /etc/fp/keys.json)
+#   FP_CORS_ORIGINS — comma-separated allowed origins
+
+services:
+
+  # ── App (gunicorn + WSGI) ────────────────────────────────────
+  app:
+    build:
+      context: ../..
+      dockerfile: products/facial_plastics/Containerfile
+    container_name: fp-app
+    restart: unless-stopped
+    environment:
+      - HYPERTENSOR_DATA_ROOT=/data
+      - FP_BIND=0.0.0.0:8420
+      - FP_WORKERS=${FP_WORKERS:-4}
+      - FP_TIMEOUT=${FP_TIMEOUT:-300}
+      - FP_LOG_LEVEL=${FP_LOG_LEVEL:-info}
+      - FP_KEY_FILE=/etc/fp/keys.json
+      - FP_CORS_ORIGINS=${FP_CORS_ORIGINS:-*}
+    volumes:
+      - fp-data:/data
+      - fp-keys:/etc/fp
+    expose:
+      - "8420"
+    healthcheck:
+      test:
+        - CMD
+        - python3
+        - -c
+        - |
+          import urllib.request
+          urllib.request.urlopen("http://127.0.0.1:8420/api/contract", timeout=5)
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: "4"
+          memory: 4G
+        reservations:
+          cpus: "1"
+          memory: 1G
+
+  # ── Caddy (TLS reverse proxy) ───────────────────────────────
+  caddy:
+    image: caddy:2-alpine
+    container_name: fp-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      - FP_DOMAIN=${FP_DOMAIN:-localhost}
+
+  # ── Backup (daily tarball of /data) ─────────────────────────
+  backup:
+    image: alpine:3.19
+    container_name: fp-backup
+    restart: unless-stopped
+    volumes:
+      - fp-data:/data:ro
+      - fp-backups:/backups
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - |
+        while true; do
+          STAMP=$$(date +%Y%m%d_%H%M%S)
+          tar czf "/backups/fp_data_$${STAMP}.tar.gz" -C /data .
+          echo "[backup] Created /backups/fp_data_$${STAMP}.tar.gz"
+          # Prune backups older than 30 days
+          find /backups -name "fp_data_*.tar.gz" -mtime +30 -delete
+          sleep 86400
+        done
+
+volumes:
+  fp-data:
+    driver: local
+  fp-keys:
+    driver: local
+  fp-backups:
+    driver: local
+  caddy-data:
+    driver: local
+  caddy-config:
+    driver: local

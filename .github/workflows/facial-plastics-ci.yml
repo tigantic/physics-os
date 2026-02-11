@@ -236,3 +236,47 @@ jobs:
           if [ "$SIZE_MB" -gt 2048 ]; then
             echo "::warning::Container image exceeds 2 GB ($SIZE_MB MB)"
           fi
+
+  # ══════════════════════════════════════════════════════════════
+  # Stage 5: Push to GHCR (main branch only)
+  # ══════════════════════════════════════════════════════════════
+  registry-push:
+    name: Push to GHCR
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: container
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    permissions:
+      packages: write
+      contents: read
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository_owner }}/hypertensor-facial-plastics
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and tag
+        run: |
+          docker build \
+            -f ${{ env.PRODUCT_ROOT }}/Containerfile \
+            -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
+            .
+
+      - name: Push to GHCR
+        run: |
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Summary
+        run: |
+          echo "### Container pushed :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "- \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest\`" >> $GITHUB_STEP_SUMMARY

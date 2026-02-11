@@ -5,12 +5,16 @@
 #   podman build -f products/facial_plastics/Containerfile -t hypertensor-facial-plastics .
 #   docker build -f products/facial_plastics/Containerfile -t hypertensor-facial-plastics .
 #
-# Run (UI server):
-#   docker run --rm -p 8420:8420 hypertensor-facial-plastics serve --host 0.0.0.0
+# Run (production via gunicorn):
+#   docker run --rm -p 8420:8420 hypertensor-facial-plastics
+#
+# Run (dev — stdlib server):
+#   docker run --rm -p 8420:8420 --entrypoint python hypertensor-facial-plastics \
+#     -m products.facial_plastics.cli serve --host 0.0.0.0
 #
 # Run (CLI):
-#   docker run --rm hypertensor-facial-plastics info
-#   docker run --rm -v $PWD/data:/data hypertensor-facial-plastics library list --data-root /data
+#   docker run --rm --entrypoint python hypertensor-facial-plastics \
+#     -m products.facial_plastics.cli info
 # ─────────────────────────────────────────────────────────────────────
 
 FROM python:3.12-slim AS base
@@ -32,7 +36,7 @@ RUN apt-get update && \
 WORKDIR /app
 
 COPY requirements-lock.txt /app/requirements-lock.txt
-RUN pip install --no-cache-dir numpy && \
+RUN pip install --no-cache-dir numpy gunicorn && \
     pip install --no-cache-dir -r requirements-lock.txt 2>/dev/null || true
 
 # ── Copy product source ──────────────────────────────────────────
@@ -44,7 +48,7 @@ COPY products/facial_plastics/ /app/products/facial_plastics/
 ENV PYTHONPATH=/app
 
 # ── Data volume ───────────────────────────────────────────────────
-RUN mkdir -p /data
+RUN mkdir -p /data /etc/fp
 VOLUME ["/data"]
 ENV HYPERTENSOR_DATA_ROOT=/data
 
@@ -55,6 +59,8 @@ EXPOSE 8420
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8420/api/contract')" || exit 1
 
-# ── Default entrypoint ───────────────────────────────────────────
-ENTRYPOINT ["python", "-m", "products.facial_plastics.cli"]
-CMD ["info"]
+# ── Default entrypoint: gunicorn with WSGI adapter ───────────────
+ENTRYPOINT ["gunicorn", \
+    "products.facial_plastics.ui.wsgi:create_app()", \
+    "--config", "products/facial_plastics/gunicorn.conf.py"]
+CMD []

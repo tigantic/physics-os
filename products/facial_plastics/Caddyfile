@@ -1,0 +1,56 @@
+# Caddy reverse-proxy configuration for Facial Plastics
+#
+# In production: replace {$FP_DOMAIN} with your domain or set env var.
+# Caddy will auto-obtain TLS from Let's Encrypt.
+#
+# For local dev with self-signed certs:
+#   FP_DOMAIN=localhost docker compose up
+
+{$FP_DOMAIN:localhost} {
+
+    # ── TLS ───────────────────────────────────────────────────
+    # Caddy auto-provisions Let's Encrypt certs in production.
+    # For localhost, it issues a self-signed certificate.
+
+    # ── Security headers ──────────────────────────────────────
+    header {
+        X-Content-Type-Options    "nosniff"
+        X-Frame-Options           "DENY"
+        Referrer-Policy           "strict-origin-when-cross-origin"
+        Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+        X-XSS-Protection          "1; mode=block"
+        -Server
+    }
+
+    # ── API routes → gunicorn ─────────────────────────────────
+    handle /api/* {
+        reverse_proxy app:8420 {
+            header_up X-Forwarded-Proto {scheme}
+            header_up X-Real-IP        {remote_host}
+            transport http {
+                read_timeout  310s
+                write_timeout 310s
+            }
+        }
+    }
+
+    # ── Metrics (internal only, restrict by IP in production) ─
+    handle /metrics {
+        reverse_proxy app:8420
+    }
+
+    # ── Static + SPA fallback ─────────────────────────────────
+    handle {
+        reverse_proxy app:8420 {
+            header_up X-Forwarded-Proto {scheme}
+            header_up X-Real-IP        {remote_host}
+        }
+    }
+
+    # ── Logging ───────────────────────────────────────────────
+    log {
+        output stdout
+        format json
+        level INFO
+    }
+}

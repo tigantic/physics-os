@@ -15,5 +15,6 @@ G9  Contract         – Interaction contract (UI ↔ Plan DSL mapping)
 
 from .api import UIApplication
 from .server import start_server
+from .wsgi import WSGIApplication, create_app
 
-__all__ = ["UIApplication", "start_server"]
+__all__ = ["UIApplication", "WSGIApplication", "create_app", "start_server"]

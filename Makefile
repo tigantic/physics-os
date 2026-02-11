@@ -75,6 +75,15 @@ help:
 	@echo "  make env            Capture environment"
 	@echo "  make package        Packaging gate (wheel build)"
 	@echo "  make clean          Remove artifacts"
+	@echo ""
+	@echo "Facial Plastics:"
+	@echo "  make fp-test        Run facial plastics tests"
+	@echo "  make fp-typecheck   Run mypy on facial plastics"
+	@echo "  make fp-build       Build container image"
+	@echo "  make fp-up          Start production stack (docker compose)"
+	@echo "  make fp-down        Stop production stack"
+	@echo "  make fp-logs        Tail docker compose logs"
+	@echo "  make fp-keys        Generate API key (TENANT= ROLE=)"
 
 # ============================================
 # A) Hygiene - Clean release export
@@ -335,3 +344,62 @@ lockfile-check:
 	@echo "=== Checking Lockfile Consistency ==="
 	$(PYTHON) -m pip install -r requirements-lock.txt --dry-run
 	@echo "✓ Lockfile is consistent"
+
+# ============================================
+# Facial Plastics Product Targets
+# ============================================
+.PHONY: fp-test fp-typecheck fp-build fp-up fp-down fp-logs fp-keys
+
+FP_ROOT    = products/facial_plastics
+FP_IMAGE   = hypertensor-facial-plastics
+FP_COMPOSE = $(FP_ROOT)/docker-compose.yml
+
+fp-test:
+	@echo "=== Facial Plastics: Test Suite ==="
+	$(PYTHON) -m pytest $(FP_ROOT)/tests/ -v --tb=short -x
+	@echo "✓ All tests passed"
+
+fp-typecheck:
+	@echo "=== Facial Plastics: mypy ==="
+	$(PYTHON) -m mypy $(FP_ROOT) \
+		--ignore-missing-imports \
+		--no-implicit-optional \
+		--warn-return-any \
+		--disallow-untyped-defs \
+		--python-version 3.12
+	@echo "✓ Type check passed"
+
+fp-build:
+	@echo "=== Facial Plastics: Container Build ==="
+	docker build -f $(FP_ROOT)/Containerfile -t $(FP_IMAGE):latest .
+	@echo "✓ Image built: $(FP_IMAGE):latest"
+
+fp-up:
+	@echo "=== Facial Plastics: Starting Stack ==="
+	docker compose -f $(FP_COMPOSE) up -d
+	@echo "✓ Stack started — https://$${FP_DOMAIN:-localhost}"
+
+fp-down:
+	@echo "=== Facial Plastics: Stopping Stack ==="
+	docker compose -f $(FP_COMPOSE) down
+	@echo "✓ Stack stopped"
+
+fp-logs:
+	docker compose -f $(FP_COMPOSE) logs -f
+
+fp-keys:
+	@echo "=== Facial Plastics: Generate API Key ==="
+	@$(PYTHON) -c " \
+from products.facial_plastics.ui.auth import KeyStore; \
+from pathlib import Path; \
+import sys; \
+store = KeyStore(Path('fp_keys.json')); \
+tenant = sys.argv[1] if len(sys.argv) > 1 else 'default'; \
+role = sys.argv[2] if len(sys.argv) > 2 else 'surgeon'; \
+key, rec = store.generate_key(tenant, role, 'cli-generated'); \
+print(f'Tenant: {rec.tenant_id}'); \
+print(f'Role:   {rec.role}'); \
+print(f'Key:    {key}'); \
+print(f'Hash:   {rec.key_hash[:16]}...'); \
+print(f'Saved to fp_keys.json'); \
+" $(TENANT) $(ROLE)

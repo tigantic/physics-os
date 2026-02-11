@@ -427,3 +427,112 @@ products/facial_plastics/
 | 2026-02-10 | `35006e14` | Fix all mypy strict errors across 90 source files — 348 annotations added (9 prod + 339 test). Zero errors under `--disallow-untyped-defs`. |
 | 2026-02-10 | `5b9465ff` | EXECUTION_GUIDE.md update — metrics, gap analysis, file index, changelog. |
 | 2026-02-12 | `0e41b786` | Distributed optimizer + multi-tenant infrastructure + CI coverage/benchmark — `distributed_optimizer.py` (537 LOC, island-model parallel NSGA-II), `tenant.py` (650 LOC, multi-tenant isolation), CI 4-stage pipeline (mypy → pytest+coverage@85% → benchmark → container), 70 new tests, 941 total passing, 0 mypy errors across 94 files. |
+
+---
+
+## 10. Deployment
+
+### 10.1 Architecture
+
+```
+Internet ─▶ Caddy (TLS/443) ─▶ Gunicorn (WSGI/8420) ─▶ WSGIApplication
+                                    ├── Worker 1 ──▶ UIApplication
+                                    ├── Worker 2 ──▶ UIApplication
+                                    ├── Worker N ──▶ UIApplication
+                                    └── /metrics (Prometheus)
+```
+
+### 10.2 Quick Start (Docker Compose)
+
+```bash
+# 1. Build the container image
+make fp-build
+
+# 2. Generate an API key
+make fp-keys TENANT=clinic-1 ROLE=surgeon
+# → Save the printed key
+
+# 3. Configure environment
+export FP_DOMAIN=fp.yourorg.com      # your public domain
+export FP_CORS_ORIGINS=https://fp.yourorg.com
+
+# 4. Start the stack
+make fp-up
+# → Caddy auto-provisions Let's Encrypt TLS
+
+# 5. Test
+curl -H "X-API-Key: fp_..." https://fp.yourorg.com/api/contract
+```
+
+### 10.3 Stack Components
+
+| Service | Image | Port | Purpose |
+|---------|-------|------|---------|
+| `app` | `hypertensor-facial-plastics` | 8420 (internal) | Gunicorn WSGI server |
+| `caddy` | `caddy:2-alpine` | 80, 443 | TLS termination, reverse proxy |
+| `backup` | `alpine:3.19` | — | Daily `/data` tarball + 30-day retention |
+
+### 10.4 Configuration
+
+| Env Var | Default | Description |
+|---------|---------|-------------|
+| `FP_DOMAIN` | `localhost` | Public domain for Caddy TLS |
+| `FP_BIND` | `0.0.0.0:8420` | Gunicorn bind address |
+| `FP_WORKERS` | `min(2*CPU+1, 8)` | Gunicorn worker count |
+| `FP_TIMEOUT` | `300` | Request timeout (seconds) |
+| `FP_LOG_LEVEL` | `info` | Log level |
+| `FP_KEY_FILE` | `/etc/fp/keys.json` | API key store path |
+| `FP_CORS_ORIGINS` | `*` | Comma-separated allowed origins |
+| `HYPERTENSOR_DATA_ROOT` | `/data` | Case library root |
+
+### 10.5 Authentication
+
+All `/api/*` requests require an API key via:
+- `X-API-Key: fp_...` header, or
+- `Authorization: Bearer fp_...` header
+
+Exempt paths: `/metrics`, `/health`, static assets, `OPTIONS`.
+
+Rate limiting: 120 requests/minute per client IP (fixed-window).
+
+### 10.6 Monitoring
+
+- **Metrics endpoint**: `GET /metrics` returns Prometheus-compatible text
+  - `fp_requests_total` — counter
+  - `fp_errors_total` — counter
+  - `fp_avg_latency_ms` — gauge
+- **Health check**: `GET /api/contract` — returns 200 with interaction contract
+- **Gunicorn access logs**: stdout, JSON-parseable
+
+### 10.7 CI/CD Pipeline
+
+```
+Push to main → mypy → pytest (85% coverage) → benchmark → container build → GHCR push
+                                                                                ↓
+                                                                    ghcr.io/<owner>/hypertensor-facial-plastics:latest
+                                                                    ghcr.io/<owner>/hypertensor-facial-plastics:<sha>
+```
+
+### 10.8 Makefile Targets
+
+| Target | Description |
+|--------|-------------|
+| `make fp-test` | Run all 970+ tests |
+| `make fp-typecheck` | mypy strict check |
+| `make fp-build` | Build container image |
+| `make fp-up` | Start production stack |
+| `make fp-down` | Stop production stack |
+| `make fp-logs` | Tail compose logs |
+| `make fp-keys` | Generate API key |
+
+### 10.9 Files Added for Deployment
+
+| File | LOC | Purpose |
+|------|-----|---------|
+| `ui/wsgi.py` | ~340 | WSGI adapter wrapping UIApplication |
+| `ui/auth.py` | ~400 | API key auth middleware + rate limiter |
+| `gunicorn.conf.py` | ~75 | Gunicorn production configuration |
+| `docker-compose.yml` | ~100 | Full production stack definition |
+| `Caddyfile` | ~55 | TLS reverse proxy configuration |
+| `tests/test_wsgi.py` | ~175 | 12 WSGI adapter tests |
+| `tests/test_auth.py` | ~250 | 17 auth + rate limit tests |
