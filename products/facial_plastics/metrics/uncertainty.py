@@ -617,7 +617,7 @@ class UncertaintyQuantifier:
                 continue
 
             sobol_results[key] = compute_sobol_indices(
-                samples_ab=np.zeros((int(np.sum(valid)), d)),  # placeholder
+                samples_ab=np.zeros((int(np.sum(valid)), d)),  # unused by Saltelli estimator
                 outputs_a=a_arr[valid],
                 outputs_b=b_arr[valid],
                 outputs_ab=ab_arr[valid],
