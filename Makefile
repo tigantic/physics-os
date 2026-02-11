@@ -389,17 +389,26 @@ fp-logs:
 
 fp-keys:
 	@echo "=== Facial Plastics: Generate API Key ==="
+	@if [ -z "$(TENANT)" ]; then \
+		echo "Usage: make fp-keys TENANT=<tenant-id> ROLE=<role>"; \
+		echo "  TENANT  (required) tenant identifier, e.g. clinic-1"; \
+		echo "  ROLE    (optional) surgeon|resident|researcher|administrator|auditor (default: surgeon)"; \
+		exit 1; \
+	fi
 	@$(PYTHON) -c " \
+import sys; \
 from products.facial_plastics.ui.auth import KeyStore; \
 from pathlib import Path; \
-import sys; \
 store = KeyStore(Path('fp_keys.json')); \
-tenant = sys.argv[1] if len(sys.argv) > 1 else 'default'; \
+tenant = sys.argv[1]; \
 role = sys.argv[2] if len(sys.argv) > 2 else 'surgeon'; \
 key, rec = store.generate_key(tenant, role, 'cli-generated'); \
 print(f'Tenant: {rec.tenant_id}'); \
 print(f'Role:   {rec.role}'); \
 print(f'Key:    {key}'); \
 print(f'Hash:   {rec.key_hash[:16]}...'); \
-print(f'Saved to fp_keys.json'); \
+print(); \
+print('Saved to fp_keys.json'); \
+print('To use in Docker: copy fp_keys.json into the fp-keys volume'); \
+print('  docker cp fp_keys.json fp-app:/etc/fp/keys.json'); \
 " $(TENANT) $(ROLE)

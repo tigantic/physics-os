@@ -435,11 +435,20 @@ products/facial_plastics/
 ### 10.1 Architecture
 
 ```
-Internet ─▶ Caddy (TLS/443) ─▶ Gunicorn (WSGI/8420) ─▶ WSGIApplication
-                                    ├── Worker 1 ──▶ UIApplication
-                                    ├── Worker 2 ──▶ UIApplication
-                                    ├── Worker N ──▶ UIApplication
-                                    └── /metrics (Prometheus)
+Internet ─▶ Caddy (TLS/443) ─▶ Gunicorn (WSGI/8420)
+                                    │
+                                    ▼
+                              RateLimitMiddleware  (120 rpm / IP)
+                                    │
+                                    ▼
+                              AuthMiddleware       (API-key gate)
+                                    │  exempt: /metrics, /health, static, OPTIONS
+                                    ▼
+                              WSGIApplication
+                                    ├── /health   → 200 JSON health probe
+                                    ├── /metrics  → Prometheus text
+                                    ├── /api/*    → UIApplication
+                                    └── /static/* → file server
 ```
 
 ### 10.2 Quick Start (Docker Compose)
@@ -483,6 +492,9 @@ curl -H "X-API-Key: fp_..." https://fp.yourorg.com/api/contract
 | `FP_LOG_LEVEL` | `info` | Log level |
 | `FP_KEY_FILE` | `/etc/fp/keys.json` | API key store path |
 | `FP_CORS_ORIGINS` | `*` | Comma-separated allowed origins |
+| `FP_AUTH_ENABLED` | `true` | Enable API-key authentication |
+| `FP_RATE_LIMIT_ENABLED` | `true` | Enable per-IP rate limiting |
+| `FP_RATE_LIMIT_RPM` | `120` | Requests per minute per IP |
 | `HYPERTENSOR_DATA_ROOT` | `/data` | Case library root |
 
 ### 10.5 Authentication
@@ -501,7 +513,8 @@ Rate limiting: 120 requests/minute per client IP (fixed-window).
   - `fp_requests_total` — counter
   - `fp_errors_total` — counter
   - `fp_avg_latency_ms` — gauge
-- **Health check**: `GET /api/contract` — returns 200 with interaction contract
+- **Health check**: `GET /health` — returns 200 JSON `{"status":"healthy","version":"...","requests":N,"errors":N}`
+  - Auth-exempt; used by Docker and Caddy healthchecks
 - **Gunicorn access logs**: stdout, JSON-parseable
 
 ### 10.7 CI/CD Pipeline
@@ -529,7 +542,7 @@ Push to main → mypy → pytest (85% coverage) → benchmark → container buil
 
 | File | LOC | Purpose |
 |------|-----|---------|
-| `ui/wsgi.py` | ~340 | WSGI adapter wrapping UIApplication |
+| `ui/wsgi.py` | ~580 | WSGI adapter with /health + /metrics + middleware composition |
 | `ui/auth.py` | ~400 | API key auth middleware + rate limiter |
 | `gunicorn.conf.py` | ~75 | Gunicorn production configuration |
 | `docker-compose.yml` | ~100 | Full production stack definition |

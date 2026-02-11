@@ -121,12 +121,6 @@ def _import_reports() -> Dict[str, Any]:
     return {"ReportBuilder": ReportBuilder}
 
 
-def _import_ui() -> Dict[str, Any]:
-    """Import UI server."""
-    from products.facial_plastics.ui.server import start_server
-    return {"start_server": start_server}
-
-
 # ---------------------------------------------------------------------------
 # CLI: top-level
 # ---------------------------------------------------------------------------
@@ -236,6 +230,8 @@ def build_parser() -> argparse.ArgumentParser:
     p_serve = sub.add_parser("serve", help="Launch interactive UI server.")
     p_serve.add_argument("--port", type=int, default=8420, help="Server port (default: 8420).")
     p_serve.add_argument("--host", type=str, default="127.0.0.1", help="Bind address.")
+    p_serve.add_argument("--no-auth", action="store_true", help="Disable API-key auth (dev only).")
+    p_serve.add_argument("--no-rate-limit", action="store_true", help="Disable rate limiting (dev only).")
 
     # ── library ───────────────────────────────────────────────────
     p_lib = sub.add_parser("library", help="Manage the case library.")
@@ -580,10 +576,32 @@ def cmd_report(args: argparse.Namespace) -> None:
 # ── serve ─────────────────────────────────────────────────────────
 
 def cmd_serve(args: argparse.Namespace) -> None:
-    """Launch the UI server."""
-    ui_mod = _import_ui()
-    print(f"Starting HyperTensor Facial Plastics UI on {args.host}:{args.port}")
-    ui_mod["start_server"](host=args.host, port=args.port)
+    """Launch the UI server using the WSGI stack."""
+    from wsgiref.simple_server import make_server
+
+    from products.facial_plastics.ui.wsgi import create_app
+
+    enable_auth = not getattr(args, "no_auth", False)
+    enable_rate_limit = not getattr(args, "no_rate_limit", False)
+
+    app = create_app(
+        enable_auth=enable_auth,
+        enable_rate_limit=enable_rate_limit,
+    )
+
+    mode = "production" if enable_auth else "development (auth disabled)"
+    print(
+        f"Starting HyperTensor Facial Plastics UI on "
+        f"http://{args.host}:{args.port}  [{mode}]"
+    )
+    print("Press Ctrl+C to stop.")
+
+    httpd = make_server(args.host, args.port, app)
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        print("\nShutting down.")
+        httpd.shutdown()
 
 
 # ── library ───────────────────────────────────────────────────────

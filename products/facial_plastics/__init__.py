@@ -19,7 +19,7 @@ governance  – Audit trail, informed consent, RBAC
 postop      – Outcome ingest, alignment, calibration, validation
 """
 
-__version__ = "0.1.0"
+__version__ = "1.0.0"
 
 # ── Core ──────────────────────────────────────────────────────────
 from products.facial_plastics.core.types import (

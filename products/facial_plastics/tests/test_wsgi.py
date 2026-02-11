@@ -69,6 +69,33 @@ def wsgi_app(tmp_path: Path) -> WSGIApplication:
     return WSGIApplication(library_root=tmp_path)
 
 
+# ── Health endpoint ────────────────────────────────────────────────
+
+
+class TestWSGIHealth:
+    def test_health_returns_200_json(self, wsgi_app: WSGIApplication) -> None:
+        resp = _CapturedResponse()
+        environ = _make_environ("GET", "/health")
+        body_parts = wsgi_app(environ, resp)
+        assert resp.status.startswith("200")
+        assert resp.header("Content-Type").startswith("application/json")
+        data = json.loads(b"".join(body_parts))
+        assert data["status"] == "healthy"
+        assert "version" in data
+        assert "requests" in data
+        assert "errors" in data
+
+    def test_health_reflects_counters(self, wsgi_app: WSGIApplication) -> None:
+        # Generate some traffic first
+        for _ in range(5):
+            wsgi_app(_make_environ("GET", "/api/contract"), _CapturedResponse())
+        resp = _CapturedResponse()
+        body_parts = wsgi_app(_make_environ("GET", "/health"), resp)
+        data = json.loads(b"".join(body_parts))
+        assert data["requests"] == 5  # /health itself shouldn't count as a request
+        assert isinstance(data["errors"], int)
+
+
 # ── Contract route ────────────────────────────────────────────────
 
 

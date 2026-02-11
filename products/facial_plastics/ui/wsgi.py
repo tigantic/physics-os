@@ -1,20 +1,34 @@
-"""WSGI adapter — wraps the stdlib _RequestHandler into a WSGI callable.
+"""WSGI application for the Facial Plastics platform.
 
-This module bridges the existing ``http.server``-based handlers to any
-WSGI server (gunicorn, uWSGI, waitress) without rewriting the routing
-layer.
+``create_app()`` returns a fully composed middleware stack::
 
-Usage with gunicorn::
+    RateLimitMiddleware → AuthMiddleware → WSGIApplication
+
+Usage with gunicorn (production)::
 
     gunicorn "products.facial_plastics.ui.wsgi:create_app()" \\
-        --bind 0.0.0.0:8420 \\
-        --workers 4 \\
-        --timeout 300 \\
-        --access-logfile -
+        --config products/facial_plastics/gunicorn.conf.py
 
 Or create the app programmatically::
 
+    # Production (auth + rate limiting on by default)
     app = create_app(library_root=Path("/data"))
+
+    # Development (no auth)
+    app = create_app(
+        library_root=Path("/data"),
+        enable_auth=False,
+        enable_rate_limit=False,
+    )
+
+Environment variables consumed by ``create_app()``:
+
+    HYPERTENSOR_DATA_ROOT   Case library root (default: ./cases)
+    FP_CORS_ORIGINS         Comma-separated CORS origins (default: *)
+    FP_AUTH_ENABLED          true/false (default: true)
+    FP_RATE_LIMIT_ENABLED    true/false (default: true)
+    FP_RATE_LIMIT_RPM        Requests/min per IP (default: 120)
+    FP_KEY_FILE              Path to API key store JSON
 """
 
 from __future__ import annotations
@@ -41,6 +55,15 @@ _WSGIApp = Callable[[_Environ, _StartResponse], Iterable[bytes]]
 
 # Static asset directory
 _STATIC_DIR = Path(__file__).parent / "static"
+
+
+def _get_version() -> str:
+    """Return the package version string."""
+    try:
+        from products.facial_plastics import __version__
+        return str(__version__)
+    except ImportError:
+        return "unknown"
 
 
 class WSGIApplication:
@@ -88,6 +111,13 @@ class WSGIApplication:
         query_string = environ.get("QUERY_STRING", "")
         query = parse_qs(query_string)
 
+        # Operational endpoints — exempt from request counters so
+        # infrastructure healthchecks don't inflate business metrics.
+        if path_info == "/health":
+            return self._health_response(start_response)
+        if path_info == "/metrics":
+            return self._metrics_response(start_response)
+
         self._request_count += 1
 
         try:
@@ -109,9 +139,6 @@ class WSGIApplication:
                     start_response,
                     status=405,
                 )
-
-            if path_info == "/metrics":
-                return self._metrics_response(start_response)
 
             # Static / SPA fallback
             return self._serve_static(path_info, start_response)
@@ -383,6 +410,19 @@ class WSGIApplication:
             return self._json_response(
                 {"error": "Read error"}, start_response, status=500,
             )
+
+    def _health_response(
+        self,
+        start_response: _StartResponse,
+    ) -> Iterable[bytes]:
+        """Lightweight health check — no auth required."""
+        data = {
+            "status": "healthy",
+            "version": _get_version(),
+            "requests": self._request_count,
+            "errors": self._error_count,
+        }
+        return self._json_response(data, start_response)
 
     def _metrics_response(
         self,

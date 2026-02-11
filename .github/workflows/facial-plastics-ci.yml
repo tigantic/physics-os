@@ -212,20 +212,22 @@ jobs:
 
       - name: Smoke test — import check
         run: |
-          docker run --rm \
+          docker run --rm --entrypoint python \
             hypertensor-facial-plastics:ci-${{ github.sha }} \
-            python -c "
+            -c "
           from products.facial_plastics.core.types import VolumeMesh
           from products.facial_plastics.sim.orchestrator import SimOrchestrator
           from products.facial_plastics.reports import ReportBuilder
+          from products.facial_plastics.ui.wsgi import create_app
+          from products.facial_plastics.ui.auth import AuthMiddleware, RateLimitMiddleware
           print('All imports OK')
           "
 
       - name: Smoke test — CLI info
         run: |
-          docker run --rm \
+          docker run --rm --entrypoint python \
             hypertensor-facial-plastics:ci-${{ github.sha }} \
-            info || true
+            -m products.facial_plastics.cli info || true
 
       - name: Report image size
         run: |
