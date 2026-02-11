@@ -1,0 +1,58 @@
+/* ═══════════════════════════════════════════════════════════════
+   HyperTensor Facial Plastics — Print Stylesheet
+   Clean A4 output for surgical reports
+   ═══════════════════════════════════════════════════════════════ */
+
+@media print {
+  *, *::before, *::after { color: #000 !important; background: #fff !important; }
+
+  #command-bar,
+  #sidebar,
+  #inspector,
+  #status-bar,
+  #toast-container,
+  .modal-overlay,
+  .command-palette-overlay,
+  .panel-actions,
+  .filter-bar,
+  .btn,
+  .nav-btn { display: none !important; }
+
+  #app {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  #main-content {
+    position: static !important;
+    overflow: visible !important;
+  }
+
+  .mode-panel {
+    display: none !important;
+    position: static !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  #mode-report { display: block !important; }
+
+  .report-output {
+    overflow: visible !important;
+  }
+
+  .report-output iframe {
+    border: none !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  a { text-decoration: underline; }
+
+  @page {
+    margin: 20mm;
+    size: A4;
+  }
+}

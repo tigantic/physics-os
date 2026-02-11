@@ -3,249 +3,230 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HyperTensor — Facial Plastics Platform</title>
-<link rel="stylesheet" href="/style.css">
+<title>HyperTensor — Facial Plastics Surgical Cockpit</title>
+
+<!-- ── Design Tokens & Layout ──────────────────────────── -->
+<link rel="stylesheet" href="/css/tokens.css">
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/modes.css">
+<link rel="stylesheet" href="/css/three-viewer.css">
+<link rel="stylesheet" href="/css/print.css">
+
+<!-- ── Three.js from CDN (r162) ────────────────────────── -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.min.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+  import * as THREE from "three";
+  import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+  window.THREE = THREE;
+  THREE.OrbitControls = OrbitControls;
+  window.dispatchEvent(new Event("three-ready"));
+</script>
 </head>
 <body>
-<div id="app">
+<div id="app-shell">
 
-  <!-- ── Header ──────────────────────────────────────────── -->
-  <header id="header">
-    <div class="header-brand">
-      <h1>HyperTensor</h1>
-      <span class="header-subtitle">Facial Plastics Platform</span>
+  <!-- ══════════════════════════════════════════════════════
+       COMMAND BAR (48 px fixed top)
+       ══════════════════════════════════════════════════════ -->
+  <header id="command-bar" class="command-bar">
+    <div class="command-bar-left">
+      <button id="btn-toggle-sidebar" class="btn btn-icon" title="Toggle sidebar (Ctrl+B)" aria-label="Toggle sidebar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+      <span class="brand-mark">HyperTensor</span>
+      <span class="brand-sub">Facial Plastics</span>
     </div>
-    <nav id="mode-nav">
-      <button class="nav-btn active" data-mode="case-library">Case Library</button>
-      <button class="nav-btn" data-mode="twin-inspect">Twin Inspect</button>
-      <button class="nav-btn" data-mode="plan-author">Plan Author</button>
-      <button class="nav-btn" data-mode="consult">Consult</button>
-      <button class="nav-btn" data-mode="report">Report</button>
-      <button class="nav-btn" data-mode="visualization">3D View</button>
-      <button class="nav-btn" data-mode="timeline">Timeline</button>
-      <button class="nav-btn" data-mode="compare">Compare</button>
+
+    <nav id="mode-nav" class="command-bar-center">
+      <button class="nav-item active" data-mode="case-library" title="Ctrl+1">Cases</button>
+      <button class="nav-item" data-mode="twin-inspect" title="Ctrl+2">Twin</button>
+      <button class="nav-item" data-mode="plan-author" title="Ctrl+3">Plan</button>
+      <button class="nav-item" data-mode="consult" title="Ctrl+4">Consult</button>
+      <button class="nav-item" data-mode="sweep" title="Ctrl+5">Sweep</button>
+      <button class="nav-item" data-mode="report" title="Ctrl+6">Report</button>
+      <button class="nav-item" data-mode="viewer3d" title="Ctrl+7">3D</button>
+      <button class="nav-item" data-mode="timeline" title="Ctrl+8">Timeline</button>
+      <button class="nav-item" data-mode="compare" title="">Compare</button>
     </nav>
-    <div class="header-status">
-      <span id="connection-status" class="status-dot status-ok"></span>
-      <span id="case-indicator">No case loaded</span>
+
+    <div class="command-bar-right">
+      <span id="connection-dot" class="connection-dot disconnected" title="Disconnected"></span>
+      <button id="btn-command-palette" class="btn btn-ghost btn-sm" title="Command palette ( / )">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
     </div>
   </header>
 
-  <!-- ── Main content area ───────────────────────────────── -->
-  <main id="main-content">
-
-    <!-- G1: Case Library -->
-    <section id="mode-case-library" class="mode-panel active">
-      <div class="panel-header">
-        <h2>Case Library</h2>
-        <div class="panel-actions">
-          <button id="btn-refresh-cases" class="btn btn-primary">Refresh</button>
-          <button id="btn-create-case" class="btn btn-secondary">New Case</button>
-          <button id="btn-curate" class="btn btn-secondary">Curate</button>
+  <!-- ══════════════════════════════════════════════════════
+       SIDEBAR (280 px left)
+       ══════════════════════════════════════════════════════ -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-content" id="sidebar-content">
+      <!-- Populated reactively by Sidebar module -->
+      <div class="sidebar-section">
+        <div class="sidebar-field">
+          <span class="sidebar-label">No case selected</span>
+          <span class="sidebar-value" style="color:var(--text-muted)">Select from Case Library</span>
         </div>
       </div>
-      <div class="filter-bar">
-        <select id="filter-procedure">
-          <option value="">All Procedures</option>
-        </select>
-        <select id="filter-quality">
-          <option value="">All Quality</option>
-          <option value="clinical">Clinical</option>
-          <option value="research">Research</option>
-          <option value="synthetic">Synthetic</option>
-        </select>
-      </div>
-      <div id="case-list" class="card-grid">
-        <p class="placeholder">Loading cases...</p>
-      </div>
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════════════════════════════
+       PRIMARY WORKSPACE — Mode Panels
+       ══════════════════════════════════════════════════════ -->
+  <main id="workspace" class="workspace">
+
+    <!-- G1: Case Library -->
+    <section id="mode-case-library" class="mode-panel" style="display:block">
+      <div class="placeholder">Loading Case Library...</div>
     </section>
 
     <!-- G2: Twin Inspect -->
-    <section id="mode-twin-inspect" class="mode-panel">
-      <div class="panel-header">
-        <h2>Twin Inspect</h2>
-      </div>
-      <div class="split-view">
-        <div class="split-left" id="twin-details">
-          <p class="placeholder">Select a case to inspect its digital twin.</p>
-        </div>
-        <div class="split-right" id="twin-3d">
-          <canvas id="twin-canvas"></canvas>
-        </div>
-      </div>
+    <section id="mode-twin-inspect" class="mode-panel" style="display:none">
+      <div class="placeholder">Select a case to inspect its digital twin.</div>
     </section>
 
     <!-- G3: Plan Author -->
-    <section id="mode-plan-author" class="mode-panel">
-      <div class="panel-header">
-        <h2>Plan Author</h2>
-        <div class="panel-actions">
-          <select id="template-category">
-            <option value="">Choose template category...</option>
-          </select>
-          <select id="template-name">
-            <option value="">Choose template...</option>
-          </select>
-          <button id="btn-load-template" class="btn btn-primary">Load Template</button>
-        </div>
-      </div>
-      <div class="split-view">
-        <div class="split-left">
-          <h3>Operators</h3>
-          <div id="operator-palette" class="operator-palette"></div>
-        </div>
-        <div class="split-right">
-          <h3>Plan Steps</h3>
-          <div id="plan-steps" class="plan-steps">
-            <p class="placeholder">Load a template or drag operators here.</p>
-          </div>
-          <div class="plan-actions">
-            <button id="btn-compile" class="btn btn-primary" disabled>Compile Plan</button>
-            <button id="btn-clear-plan" class="btn btn-danger">Clear</button>
-          </div>
-          <div id="compile-result" class="result-panel"></div>
-        </div>
-      </div>
+    <section id="mode-plan-author" class="mode-panel" style="display:none">
+      <div class="placeholder">Select a case to author a surgical plan.</div>
     </section>
 
-    <!-- G4: Consult -->
-    <section id="mode-consult" class="mode-panel">
-      <div class="panel-header">
-        <h2>Consult — What-If Explorer</h2>
-      </div>
-      <div class="split-view">
-        <div class="split-left">
-          <h3>Parameter Overrides</h3>
-          <div id="whatif-params" class="param-editor">
-            <p class="placeholder">Load a plan in Plan Author first.</p>
-          </div>
-          <button id="btn-run-whatif" class="btn btn-primary" disabled>Run What-If</button>
-        </div>
-        <div class="split-right">
-          <h3>Results</h3>
-          <div id="whatif-result" class="result-panel"></div>
-        </div>
-      </div>
+    <!-- G4: What-If / Consult -->
+    <section id="mode-consult" class="mode-panel" style="display:none">
+      <div class="placeholder">Compile a plan to explore what-if scenarios.</div>
+    </section>
+
+    <!-- G4.5: Parameter Sweep -->
+    <section id="mode-sweep" class="mode-panel" style="display:none">
+      <div class="placeholder">Compile a plan to configure parameter sweeps.</div>
     </section>
 
     <!-- G5: Report -->
-    <section id="mode-report" class="mode-panel">
-      <div class="panel-header">
-        <h2>Report</h2>
-        <div class="panel-actions">
-          <select id="report-format">
-            <option value="html">HTML</option>
-            <option value="markdown">Markdown</option>
-            <option value="json">JSON</option>
-          </select>
-          <button id="btn-generate-report" class="btn btn-primary" disabled>Generate</button>
-        </div>
-      </div>
-      <div id="report-output" class="report-output">
-        <p class="placeholder">Compile a plan first, then generate a report.</p>
-      </div>
+    <section id="mode-report" class="mode-panel" style="display:none">
+      <div class="placeholder">Select a case and compile a plan to generate reports.</div>
     </section>
 
-    <!-- G6: 3D Visualization -->
-    <section id="mode-visualization" class="mode-panel">
-      <div class="panel-header">
-        <h2>3D Visualization</h2>
-        <div class="panel-actions">
-          <label><input type="checkbox" id="viz-landmarks" checked> Landmarks</label>
-          <label><input type="checkbox" id="viz-regions" checked> Regions</label>
-          <label><input type="checkbox" id="viz-wireframe"> Wireframe</label>
-        </div>
-      </div>
-      <div id="viz-container" class="viz-container">
-        <canvas id="viz-canvas"></canvas>
-        <p class="placeholder" id="viz-placeholder">Load a case to view 3D mesh.</p>
-      </div>
+    <!-- G6: 3D Viewer -->
+    <section id="mode-viewer3d" class="mode-panel" style="display:none">
+      <div class="placeholder">Select a case to view the 3D model.</div>
     </section>
 
     <!-- G7: Timeline -->
-    <section id="mode-timeline" class="mode-panel">
-      <div class="panel-header">
-        <h2>Timeline</h2>
-      </div>
-      <div class="timeline-container">
-        <div id="timeline-events" class="timeline-track">
-          <p class="placeholder">Load a case to view its timeline.</p>
-        </div>
-        <div class="timeline-controls">
-          <input type="range" id="timeline-scrubber" min="0" max="100" value="0" class="scrubber">
-          <span id="timeline-frame">0 / 0</span>
-        </div>
-        <div id="timeline-detail" class="result-panel"></div>
-      </div>
+    <section id="mode-timeline" class="mode-panel" style="display:none">
+      <div class="placeholder">Select a case to view its timeline.</div>
     </section>
 
     <!-- G8: Compare -->
-    <section id="mode-compare" class="mode-panel">
-      <div class="panel-header">
-        <h2>Compare</h2>
-        <div class="panel-actions">
-          <select id="compare-type">
-            <option value="plans">Compare Plans</option>
-            <option value="cases">Compare Cases</option>
-          </select>
-          <button id="btn-run-compare" class="btn btn-primary" disabled>Compare</button>
-        </div>
-      </div>
-      <div class="split-view">
-        <div class="split-left" id="compare-a">
-          <h3>A</h3>
-          <div class="result-panel" id="compare-result-a"></div>
-        </div>
-        <div class="split-right" id="compare-b">
-          <h3>B</h3>
-          <div class="result-panel" id="compare-result-b"></div>
-        </div>
-      </div>
-      <div id="compare-diff" class="result-panel"></div>
+    <section id="mode-compare" class="mode-panel" style="display:none">
+      <div class="placeholder">Compare plans or cases side by side.</div>
     </section>
 
   </main>
 
-  <!-- ── Footer ──────────────────────────────────────────── -->
-  <footer id="footer">
-    <span>HyperTensor Facial Plastics Platform v0.1.0</span>
-    <span id="footer-stats"></span>
+  <!-- ══════════════════════════════════════════════════════
+       INSPECTOR DRAWER (bottom, collapsible)
+       ══════════════════════════════════════════════════════ -->
+  <section id="inspector" class="inspector collapsed">
+    <div class="inspector-header" id="inspector-header">
+      <span class="inspector-title" id="inspector-title">Inspector</span>
+      <div class="inspector-tabs">
+        <button class="inspector-tab active" data-tab="json">JSON</button>
+        <button class="inspector-tab" data-tab="raw">Raw</button>
+      </div>
+      <button class="btn btn-icon btn-sm" id="inspector-close" title="Close (Ctrl+J)">✕</button>
+    </div>
+    <div class="inspector-body" id="inspector-body"></div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       STATUS BAR (28 px bottom)
+       ══════════════════════════════════════════════════════ -->
+  <footer id="status-bar" class="status-bar">
+    <div class="status-bar-left">
+      <span id="status-version">v—</span>
+      <span class="status-sep">|</span>
+      <span id="status-connection">—</span>
+    </div>
+    <div class="status-bar-right">
+      <span id="status-requests">Req: —</span>
+      <span class="status-sep">|</span>
+      <span id="status-errors">Err: —</span>
+      <span class="status-sep">|</span>
+      <span id="status-workers">W: —</span>
+      <span class="status-sep">|</span>
+      <span id="status-auth">Auth: —</span>
+    </div>
   </footer>
 
-</div>
+</div><!-- #app-shell -->
 
-<!-- ── Toast notification ──────────────────────────────────── -->
-<div id="toast-container"></div>
+<!-- ══════════════════════════════════════════════════════
+     OVERLAYS
+     ══════════════════════════════════════════════════════ -->
 
-<!-- ── New Case Modal ──────────────────────────────────────── -->
-<div id="modal-overlay" class="modal-overlay hidden">
-  <div class="modal">
-    <h3 id="modal-title">New Case</h3>
-    <div id="modal-body">
-      <label>Procedure
-        <select id="new-case-procedure"></select>
-      </label>
-      <label>Patient Age
-        <input type="number" id="new-case-age" value="40" min="0" max="120">
-      </label>
-      <label>Patient Sex
-        <select id="new-case-sex">
-          <option value="unknown">Unknown</option>
-          <option value="female">Female</option>
-          <option value="male">Male</option>
-        </select>
-      </label>
-      <label>Notes
-        <textarea id="new-case-notes" rows="3"></textarea>
-      </label>
-    </div>
-    <div class="modal-actions">
-      <button id="modal-cancel" class="btn btn-secondary">Cancel</button>
-      <button id="modal-confirm" class="btn btn-primary">Create</button>
-    </div>
+<!-- Command Palette -->
+<div id="command-palette" class="command-palette" style="display:none">
+  <div class="command-palette-dialog">
+    <input type="text" class="command-palette-input" id="command-palette-input" placeholder="Type a command or mode…" autocomplete="off">
+    <ul class="command-palette-list" id="command-palette-list"></ul>
   </div>
 </div>
 
-<script src="/app.js"></script>
+<!-- Modal -->
+<div id="modal-overlay" class="modal-overlay" style="display:none">
+  <div class="modal-dialog" id="modal-dialog">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-title"></h3>
+      <button class="btn btn-icon btn-sm" id="modal-close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-actions" id="modal-actions"></div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container" class="toast-container"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SCRIPTS — load order matters (no build step)
+     ══════════════════════════════════════════════════════ -->
+
+<!-- Core -->
+<script src="/js/state.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/router.js"></script>
+
+<!-- Components -->
+<script src="/js/components/toast.js"></script>
+<script src="/js/components/modal.js"></script>
+<script src="/js/components/sidebar.js"></script>
+<script src="/js/components/command-bar.js"></script>
+<script src="/js/components/inspector.js"></script>
+<script src="/js/components/status-bar.js"></script>
+
+<!-- Modes -->
+<script src="/js/modes/case-library.js"></script>
+<script src="/js/modes/twin-inspect.js"></script>
+<script src="/js/modes/plan-author.js"></script>
+<script src="/js/modes/simulation.js"></script>
+<script src="/js/modes/whatif.js"></script>
+<script src="/js/modes/sweep.js"></script>
+<script src="/js/modes/report.js"></script>
+<script src="/js/modes/viewer3d.js"></script>
+<script src="/js/modes/timeline.js"></script>
+<script src="/js/modes/compare.js"></script>
+
+<!-- Bootstrap -->
+<script src="/js/app.js"></script>
+
 </body>
 </html>

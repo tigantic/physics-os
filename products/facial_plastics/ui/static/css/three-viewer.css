@@ -1,0 +1,168 @@
+/* ═══════════════════════════════════════════════════════════════
+   HyperTensor Facial Plastics — 3D Viewer Styles
+   Canvas overlays, HUD, axis gizmo
+   ═══════════════════════════════════════════════════════════════ */
+
+.viewer3d-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--surface-0);
+  border-radius: var(--radius-md);
+}
+
+.viewer3d-wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* ── HUD Overlay: Top-Left Controls ──────────────────────────── */
+.viewer-hud {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: var(--z-hud);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  pointer-events: auto;
+}
+
+.hud-panel {
+  background: rgba(14,17,23,0.85);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  backdrop-filter: blur(8px);
+}
+
+.hud-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 2px 0;
+}
+
+.hud-row label {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.hud-row input[type="range"] {
+  width: 100px;
+}
+
+.hud-row .hud-value {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  min-width: 30px;
+  text-align: right;
+}
+
+.hud-buttons {
+  display: flex;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+
+/* ── HUD Overlay: Bottom-Right Info ──────────────────────────── */
+.viewer-info {
+  position: absolute;
+  bottom: var(--space-3);
+  right: var(--space-3);
+  z-index: var(--z-hud);
+  background: rgba(14,17,23,0.85);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-1) var(--space-3);
+  backdrop-filter: blur(8px);
+  display: flex;
+  gap: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+/* ── Measurement Overlay ─────────────────────────────────────── */
+.measurement-label {
+  position: absolute;
+  z-index: var(--z-hud);
+  background: rgba(14,17,23,0.9);
+  border: 1px solid var(--accent-blue);
+  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--accent-blue);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ── Annotation Pin ──────────────────────────────────────────── */
+.annotation-label {
+  position: absolute;
+  z-index: var(--z-hud);
+  background: rgba(14,17,23,0.9);
+  border: 1px solid var(--accent-yellow);
+  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+  font-size: var(--font-size-xs);
+  color: var(--accent-yellow);
+  pointer-events: none;
+  white-space: nowrap;
+  transform: translate(-50%, -100%) translateY(-8px);
+}
+
+/* ── Tool Mode Indicator ─────────────────────────────────────── */
+.viewer-tool-badge {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  z-index: var(--z-hud);
+  background: rgba(88,166,255,0.2);
+  border: 1px solid var(--accent-blue);
+  border-radius: var(--radius-md);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-size-xs);
+  color: var(--accent-blue);
+  font-weight: var(--font-weight-semibold);
+  display: none;
+}
+
+.viewer-tool-badge.active { display: block; }
+
+/* ── Region Legend (sidebar when in 3D mode) ─────────────────── */
+.region-legend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.region-legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.region-legend-item:hover { background: var(--surface-2); }
+
+.region-legend-item .rl-swatch {
+  width: 12px; height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.region-legend-item .rl-name { flex: 1; color: var(--text-secondary); }
+.region-legend-item .rl-material {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
