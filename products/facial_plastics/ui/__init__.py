@@ -14,7 +14,17 @@ G9  Contract         – Interaction contract (UI ↔ Plan DSL mapping)
 """
 
 from .api import UIApplication
+from .auth import APIKeyRecord, AuthMiddleware, KeyStore, RateLimitMiddleware
 from .server import start_server
 from .wsgi import WSGIApplication, create_app
 
-__all__ = ["UIApplication", "WSGIApplication", "create_app", "start_server"]
+__all__ = [
+    "APIKeyRecord",
+    "AuthMiddleware",
+    "KeyStore",
+    "RateLimitMiddleware",
+    "UIApplication",
+    "WSGIApplication",
+    "create_app",
+    "start_server",
+]

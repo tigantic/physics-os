@@ -183,22 +183,46 @@ class TestWSGICounters:
 
 
 class TestCreateApp:
-    def test_create_app_default(self, tmp_path: Path) -> None:
+    def test_create_app_default_has_auth(self, tmp_path: Path) -> None:
         os.environ["HYPERTENSOR_DATA_ROOT"] = str(tmp_path)
         try:
             app = create_app()
-            assert isinstance(app, WSGIApplication)
+            # With auth enabled (default), outermost layer is RateLimitMiddleware
+            from products.facial_plastics.ui.auth import RateLimitMiddleware
+            assert isinstance(app, RateLimitMiddleware)
         finally:
             del os.environ["HYPERTENSOR_DATA_ROOT"]
 
+    def test_create_app_auth_disabled(self, tmp_path: Path) -> None:
+        app = create_app(library_root=tmp_path, enable_auth=False, enable_rate_limit=False)
+        assert isinstance(app, WSGIApplication)
+
     def test_create_app_with_explicit_root(self, tmp_path: Path) -> None:
-        app = create_app(library_root=tmp_path)
+        app = create_app(library_root=tmp_path, enable_auth=False, enable_rate_limit=False)
         assert isinstance(app, WSGIApplication)
 
     def test_create_app_with_cors_env(self, tmp_path: Path) -> None:
         os.environ["FP_CORS_ORIGINS"] = "https://a.com, https://b.com"
         try:
-            app = create_app(library_root=tmp_path)
+            app = create_app(library_root=tmp_path, enable_auth=False, enable_rate_limit=False)
             assert isinstance(app, WSGIApplication)
         finally:
             del os.environ["FP_CORS_ORIGINS"]
+
+    def test_create_app_auth_requires_key_for_api(self, tmp_path: Path) -> None:
+        """Verify that create_app with auth enabled rejects unauthenticated API calls."""
+        app = create_app(library_root=tmp_path, enable_auth=True, enable_rate_limit=False)
+        resp = _CapturedResponse()
+        environ = _make_environ("GET", "/api/contract")
+        body_parts = app(environ, resp)
+        assert resp.status.startswith("401")
+
+    def test_create_app_env_bool_disable(self, tmp_path: Path) -> None:
+        os.environ["FP_AUTH_ENABLED"] = "false"
+        os.environ["FP_RATE_LIMIT_ENABLED"] = "0"
+        try:
+            app = create_app(library_root=tmp_path)
+            assert isinstance(app, WSGIApplication)
+        finally:
+            del os.environ["FP_AUTH_ENABLED"]
+            del os.environ["FP_RATE_LIMIT_ENABLED"]

@@ -451,8 +451,16 @@ _STATUS_PHRASES: Dict[int, str] = {
 def create_app(
     library_root: Optional[Path] = None,
     allowed_origins: Optional[Tuple[str, ...]] = None,
-) -> WSGIApplication:
-    """Create the WSGI application.
+    *,
+    enable_auth: Optional[bool] = None,
+    enable_rate_limit: Optional[bool] = None,
+    rate_limit_rpm: int = 120,
+) -> _WSGIApp:
+    """Create the production WSGI application.
+
+    Composes the middleware stack::
+
+        RateLimitMiddleware → AuthMiddleware → WSGIApplication
 
     Parameters
     ----------
@@ -462,11 +470,22 @@ def create_app(
     allowed_origins : tuple[str, ...] | None
         CORS origins.  Falls back to ``$FP_CORS_ORIGINS`` (comma-separated)
         then ``("*",)``.
+    enable_auth : bool | None
+        Enable API-key authentication.  Falls back to
+        ``$FP_AUTH_ENABLED`` ("0" / "false" to disable), default **True**.
+    enable_rate_limit : bool | None
+        Enable per-IP rate limiting.  Falls back to
+        ``$FP_RATE_LIMIT_ENABLED`` ("0" / "false" to disable), default **True**.
+    rate_limit_rpm : int
+        Requests per minute per IP.  Falls back to ``$FP_RATE_LIMIT_RPM``,
+        default 120.
 
     Returns
     -------
-    WSGIApplication
+    WSGI application (may be WSGIApplication or a middleware wrapper)
     """
+    from .auth import AuthMiddleware, RateLimitMiddleware
+
     if library_root is None:
         env_root = os.environ.get("HYPERTENSOR_DATA_ROOT")
         library_root = Path(env_root) if env_root else Path("cases")
@@ -478,7 +497,50 @@ def create_app(
         else:
             allowed_origins = ("*",)
 
-    return WSGIApplication(
+    def _env_bool(key: str, default: bool) -> bool:
+        val = os.environ.get(key, "").strip().lower()
+        if val in ("0", "false", "no", "off"):
+            return False
+        if val in ("1", "true", "yes", "on"):
+            return True
+        return default
+
+    if enable_auth is None:
+        enable_auth = _env_bool("FP_AUTH_ENABLED", True)
+    if enable_rate_limit is None:
+        enable_rate_limit = _env_bool("FP_RATE_LIMIT_ENABLED", True)
+
+    env_rpm = os.environ.get("FP_RATE_LIMIT_RPM")
+    if env_rpm:
+        try:
+            rate_limit_rpm = int(env_rpm)
+        except ValueError:
+            pass
+
+    # Core app
+    app: _WSGIApp = WSGIApplication(
         library_root=library_root,
         allowed_origins=allowed_origins,
     )
+
+    # Auth layer
+    if enable_auth:
+        key_file_str = os.environ.get("FP_KEY_FILE")
+        key_file = Path(key_file_str) if key_file_str else None
+        auth_mw = AuthMiddleware(app, key_file=key_file)
+        app = auth_mw
+        logger.info(
+            "Auth middleware enabled — key_file=%s",
+            key_file or "(in-memory)",
+        )
+    else:
+        logger.warning("Auth middleware DISABLED — API is unauthenticated")
+
+    # Rate-limit layer (outermost)
+    if enable_rate_limit:
+        app = RateLimitMiddleware(app, rpm=rate_limit_rpm)
+        logger.info("Rate limiting enabled — %d rpm/IP", rate_limit_rpm)
+    else:
+        logger.warning("Rate limiting DISABLED")
+
+    return app

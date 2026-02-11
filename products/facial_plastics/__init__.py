@@ -95,7 +95,14 @@ from products.facial_plastics.plan.operators import (
 
 # ── UI ────────────────────────────────────────────────────────────
 from products.facial_plastics.ui.api import UIApplication
+from products.facial_plastics.ui.auth import (
+    APIKeyRecord,
+    AuthMiddleware,
+    KeyStore,
+    RateLimitMiddleware,
+)
 from products.facial_plastics.ui.server import start_server
+from products.facial_plastics.ui.wsgi import WSGIApplication, create_app
 
 # ── Simulation ────────────────────────────────────────────────────
 from products.facial_plastics.sim import (
@@ -264,7 +271,13 @@ __all__ = [
     "SurgicalOp",
     "SurgicalPlan",
     # UI
+    "APIKeyRecord",
+    "AuthMiddleware",
+    "KeyStore",
+    "RateLimitMiddleware",
     "UIApplication",
+    "WSGIApplication",
+    "create_app",
     "start_server",
     # Sim
     "AgingRiskProfile",
