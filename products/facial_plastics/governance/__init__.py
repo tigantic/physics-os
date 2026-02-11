@@ -18,6 +18,20 @@ Post-operative loop:
 from .audit import AuditLog, AuditEvent
 from .consent import ConsentManager, ConsentRecord
 from .access import AccessControl, Role, Permission
+from .tenant import (
+    CrossTenantAccessError,
+    ResourceQuota,
+    TenantConfig,
+    TenantContext,
+    TenantError,
+    TenantManager,
+    TenantNotFoundError,
+    TenantQuotaExceededError,
+    TenantRecord,
+    TenantStatus,
+    TenantSuspendedError,
+    TenantTier,
+)
 
 __all__ = [
     "AuditLog",
@@ -27,4 +41,17 @@ __all__ = [
     "AccessControl",
     "Role",
     "Permission",
+    # Tenant
+    "CrossTenantAccessError",
+    "ResourceQuota",
+    "TenantConfig",
+    "TenantContext",
+    "TenantError",
+    "TenantManager",
+    "TenantNotFoundError",
+    "TenantQuotaExceededError",
+    "TenantRecord",
+    "TenantStatus",
+    "TenantSuspendedError",
+    "TenantTier",
 ]

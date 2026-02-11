@@ -23,6 +23,12 @@ from .cohort_analytics import (
     TrendPoint,
 )
 from .optimizer import PlanOptimizer, OptimizationResult, ParetoFront
+from .distributed_optimizer import (
+    DistributedOptimizationResult,
+    DistributedOptimizer,
+    IslandConfig,
+    PoolBackend,
+)
 
 __all__ = [
     "AestheticMetrics",
@@ -45,4 +51,9 @@ __all__ = [
     "TrendPoint",
     "UncertaintyQuantifier",
     "UQResult",
+    # Distributed optimizer
+    "DistributedOptimizationResult",
+    "DistributedOptimizer",
+    "IslandConfig",
+    "PoolBackend",
 ]
