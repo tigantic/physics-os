@@ -1,0 +1,5 @@
+# Runtime dependencies for HyperTensor Facial Plastics container.
+# Pinned to versions tested in CI.
+numpy==2.2.6
+scipy==1.16.3
+gunicorn==25.0.3

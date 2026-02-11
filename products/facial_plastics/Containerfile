@@ -35,9 +35,8 @@ RUN apt-get update && \
 # ── Install Python dependencies ──────────────────────────────────
 WORKDIR /app
 
-COPY requirements-lock.txt /app/requirements-lock.txt
-RUN pip install --no-cache-dir numpy gunicorn && \
-    pip install --no-cache-dir -r requirements-lock.txt
+COPY products/facial_plastics/requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # ── Copy product source ──────────────────────────────────────────
 # Copy only the products/facial_plastics package and supporting files

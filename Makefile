@@ -395,20 +395,4 @@ fp-keys:
 		echo "  ROLE    (optional) surgeon|resident|researcher|administrator|auditor (default: surgeon)"; \
 		exit 1; \
 	fi
-	@$(PYTHON) -c " \
-import sys; \
-from products.facial_plastics.ui.auth import KeyStore; \
-from pathlib import Path; \
-store = KeyStore(Path('fp_keys.json')); \
-tenant = sys.argv[1]; \
-role = sys.argv[2] if len(sys.argv) > 2 else 'surgeon'; \
-key, rec = store.generate_key(tenant, role, 'cli-generated'); \
-print(f'Tenant: {rec.tenant_id}'); \
-print(f'Role:   {rec.role}'); \
-print(f'Key:    {key}'); \
-print(f'Hash:   {rec.key_hash[:16]}...'); \
-print(); \
-print('Saved to fp_keys.json'); \
-print('To use in Docker: copy fp_keys.json into the fp-keys volume'); \
-print('  docker cp fp_keys.json fp-app:/etc/fp/keys.json'); \
-" $(TENANT) $(ROLE)
+	@$(PYTHON) -c "import sys; from products.facial_plastics.ui.auth import KeyStore; from pathlib import Path; store = KeyStore(Path('fp_keys.json')); t = sys.argv[1]; r = sys.argv[2] if len(sys.argv) > 2 else 'surgeon'; key, rec = store.generate_key(t, r, 'cli-generated'); print(f'Tenant: {rec.tenant_id}'); print(f'Role:   {rec.role}'); print(f'Key:    {key}'); print(f'Hash:   {rec.key_hash[:16]}...'); print(); print('Saved to fp_keys.json'); print('To use in Docker: copy fp_keys.json into the fp-keys volume'); print('  docker cp fp_keys.json fp-app:/etc/fp/keys.json')" $(TENANT) $(ROLE)
