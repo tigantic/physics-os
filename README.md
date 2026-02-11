@@ -11,7 +11,7 @@
 
 ### The Physics-First Tensor Network Engine
 
-*One Codebase · 19 Industries · 1,157K Lines of Code · 9 Languages*
+*One Codebase · 20 Industries · 1,157K Lines of Code · 9 Languages*
 
 [![LOC](https://img.shields.io/badge/LOC-1%2C157K-blue?style=for-the-badge)]()
 [![Python](https://img.shields.io/badge/Python-888K-3776AB?style=for-the-badge&logo=python&logoColor=white)]()
@@ -23,7 +23,7 @@
 [![Physics](https://img.shields.io/badge/Physics-140%2F140-brightgreen?style=flat-square)]()
 [![Tests](https://img.shields.io/badge/Tests-295_passing-brightgreen?style=flat-square)]()
 [![Domains](https://img.shields.io/badge/Taxonomy-168_nodes-blue?style=flat-square)]()
-[![Industries](https://img.shields.io/badge/Industries-19-orange?style=flat-square)]()
+[![Industries](https://img.shields.io/badge/Industries-20-orange?style=flat-square)]()
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)](LICENSE)
 
 **Platform V3.0.0** · **Package V40.2** · **February 2026**
@@ -353,7 +353,7 @@ Each gauntlet produces a cryptographically signed JSON attestation:
 
 ---
 
-## 19 Industry Verticals — The Civilization Stack
+## 20 Industry Verticals — The Civilization Stack
 
 | # | Industry | Application | # | Industry | Application |
 |:-:|----------|-------------|:-:|----------|-------------|
@@ -366,7 +366,7 @@ Each gauntlet produces a cryptographically signed JSON attestation:
 | 7 | Urban | Drone canyon Venturi | 22 | EM | CEM-QTT Maxwell FDTD |
 | 8 | Defense | Sub hydroacoustics | 23 | Structural | FEA-QTT elasticity |
 | 9 | Fusion | Tokamak confinement | 24 | Optimization | SIMP topology + inverse |
-| 10 | Cyber | DDoS grid shock | | | |
+| 10 | Cyber | DDoS grid shock | **25** | **Facial Plastics** | **Surgical simulation platform** |
 
 ---
 
@@ -418,6 +418,17 @@ HyperTensor-VM/
 │   ├── pwa_engine/               #   PWA Compute Engine V3.0.0 (core.py ~2,300 LOC)
 │   └── run_pwa_engine.py         #   10 experiments + 11 publication figures (~1,400 LOC)
 ├── proofs/                       # Lean 4 formal verification
+├── products/                     # Shipped vertical products
+│   └── facial_plastics/           #   Facial plastics surgical simulation (94 files, 43K LOC, 941 tests)
+│       ├── core/                  #     Types, config, CaseBundle, provenance
+│       ├── data/                  #     DICOM/surface/photo ingest, anatomy gen, case library
+│       ├── twin/                  #     Segmentation, meshing, registration, landmarks
+│       ├── plan/                  #     DSL, compiler, 4 procedure operator sets
+│       ├── sim/                   #     FEM, CFD, FSI, cartilage, sutures, healing, anisotropy, aging
+│       ├── metrics/               #     Aesthetic, functional, safety, UQ, NSGA-II, distributed optimizer
+│       ├── governance/            #     Audit, consent, RBAC, multi-tenant
+│       ├── postop/                #     Outcome ingest, alignment, calibration, validation, dashboard
+│       └── tests/                 #     29 test files, 941 tests passing
 ├── paper/                        # Research manuscripts, replication notes, figures
 ├── deployment/                   # Container, config, health checks
 ├── PLATFORM_SPECIFICATION.md     # Full platform spec (4,144 lines)
@@ -487,6 +498,7 @@ make release          # Full release preparation
 | [`ledger-validation.yml`](.github/workflows/ledger-validation.yml) | Push / PR | Capability ledger schema validation (168 nodes) |
 | [`nightly.yml`](.github/workflows/nightly.yml) | Cron | Full 168-node test matrix, golden output diff, PWA regression gate |
 | [`exploit-engine.yml`](.github/workflows/exploit-engine.yml) | Push / PR | Smart contract vulnerability analysis |
+| [`facial-plastics-ci.yml`](.github/workflows/facial-plastics-ci.yml) | Push / PR | Facial plastics 4-stage: mypy strict → pytest+coverage@85% → benchmark → container |
 
 ---
 
@@ -506,6 +518,7 @@ All 7 phases of the [Commercial Execution Plan](Commercial_Execution.md) have be
 | 7 | SDK, recipes, export, mesh import, post-processing, security | `2725db6e` | 55 new tests |
 
 | PWA | PWA Compute Engine V3.0.0 — Eq. 5.48 replication | `aea21fa0` | 10 experiments, 11 figures, ~3,700 LOC |
+| **FP** | **Facial Plastics Simulation Platform — v5 complete** | **`0e41b786`** | **94 files, 43K LOC, 941 tests, 145 exports** |
 
 **Current state:** Platform V3.0.0 · 295 tests passing · 1,153K LOC · 2,804 files · [PWA polish `cdc1e93b`](https://github.com/tigantic/HyperTensor-VM/commit/cdc1e93b)
 

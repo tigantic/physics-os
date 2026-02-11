@@ -358,7 +358,7 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 | 9.18 | **Supply chain** | Network flow optimization with physics constraints | Logistics under real-world physics |
 | 9.19 | **Additive manufacturing** | Laser powder bed fusion, DED, binder jetting process simulation | Print-right-first-time |
 | 9.20 | **Quantum computing hardware** | Qubit design, decoherence modeling, cryogenic systems | Next-gen quantum computer design |
-| 9.21 | ✅ **Facial plastic surgery** | Full surgical simulation platform — digital twin, plan DSL, FEM/CFD/cartilage/suture/healing sim, aesthetic/functional/safety metrics, UQ, NSGA-II optimizer, governance (audit/consent/RBAC), post-op feedback loop | First shipped HyperTensor vertical product. 56 files, 20.7K LOC, 151 tests. `products/facial_plastics/` |
+| 9.21 | ✅ **Facial plastic surgery** | Full surgical simulation platform — digital twin, plan DSL, FEM/CFD/FSI/cartilage/suture/healing/anisotropy/aging sim, aesthetic/functional/safety metrics, UQ, NSGA-II + distributed island-model optimizer, multi-tenant governance (audit/consent/RBAC/tenant isolation), cohort analytics, validation dashboard, post-op calibration loop | First shipped HyperTensor vertical product. v5 complete — 94 files, 43K LOC, 941 tests, 145 exports, 4 procedure families, CI 4-stage pipeline (mypy strict + pytest@85% coverage + benchmark + container). `products/facial_plastics/` |
 
 ---
 
@@ -475,11 +475,14 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 
 > **First Product Shipped: ✅ Facial Plastics Simulation Platform**
 >
-> `products/facial_plastics/` — v0.1.0 — commit `e17783ba`
+> `products/facial_plastics/` — v5 complete — latest commit `0e41b786`
 >
 > 8 workstreams (core, data, twin, plan, sim, metrics, governance, postop),
-> 56 files, 20,691 LOC, 78 public exports, 151 tests passing.
-> Pure Python + numpy; optional pydicom, PIL, scipy.
+> 94 files (65 source + 29 test), 43,066 LOC, 145 public exports, 941 tests passing.
+> 4 procedure families (rhinoplasty, facelift, blepharoplasty, fillers).
+> Distributed island-model NSGA-II optimizer, multi-tenant infrastructure (FREE/STANDARD/ENTERPRISE tiers).
+> CI: 4-stage GitHub Actions pipeline (mypy strict → pytest+coverage@85% → benchmark regression → container build).
+> Pure Python + numpy + scipy; optional pydicom, PIL.
 
 | # | Enhancement | Impact |
 |---|-------------|--------|
