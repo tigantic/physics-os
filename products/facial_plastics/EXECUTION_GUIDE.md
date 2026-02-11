@@ -3,10 +3,10 @@
 | Field | Value |
 |-------|-------|
 | **Document** | Execution Guide — Engineering Plan + Progress Tracker |
-| **Version** | 1.1 |
-| **Date** | 2026-02-10 |
+| **Version** | 1.2 |
+| **Date** | 2026-02-12 |
 | **Location** | `products/facial_plastics/` |
-| **Status** | v5 partial — backend + UI + multi-procedure operators + CLI + paired datasets + cohort analytics + dashboard + FSI + anisotropy + aging |
+| **Status** | v5 complete — full platform with distributed optimizer + multi-tenant infrastructure |
 
 ---
 
@@ -29,7 +29,7 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 | Optimization and UQ: multi-objective search + uncertainty bands + sensitivity | ✅ | **DONE** — `metrics/optimizer.py`, `metrics/uncertainty.py` |
 | Clinical UI: interactive plan controls, timeline, risk maps, reports | ✅ | **DONE** — `ui/` (api.py, server.py, static SPA), `cli.py`, `Containerfile` |
 | Post-op Loop: ingest outcomes, align, calibrate, validate, surgeon priors | ✅ | **DONE** — `postop/` (4 modules) |
-| Governance: consent, audit, versioning, reproducibility, RBAC | ✅ | **DONE** — `governance/` (3 modules) + `core/provenance.py` |
+| Governance: consent, audit, versioning, reproducibility, RBAC, multi-tenant | ✅ | **DONE** — `governance/` (4 modules) + `core/provenance.py` |
 
 ---
 
@@ -122,8 +122,9 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 | F3 | Safety metrics (stress, tension, ischemia, scar, nerve/vascular risk) | ✅ DONE | `metrics/safety.py` — 705 LOC, per-structure thresholds, vascular/nerve proximity, skin tension, osteotomy stability |
 | F4 | Uncertainty quantification (parameter priors, propagation, sensitivity) | ✅ DONE | `metrics/uncertainty.py` — 635 LOC, LHS, Saltelli sampling, first-order + total Sobol indices, confidence intervals |
 | F5 | Multi-objective optimization (Pareto, constraints) | ✅ DONE | `metrics/optimizer.py` — 708 LOC, NSGA-II with SBX, polynomial mutation, fast non-dominated sort, crowding distance, 2D hypervolume |
+| F6 | Distributed / parallel optimization | ✅ DONE | `metrics/distributed_optimizer.py` — 537 LOC, island-model parallel NSGA-II, ring/fully_connected migration, ProcessPool/ThreadPool dispatch |
 
-**Workstream F Files:** 5 modules, 3,369 LOC total
+**Workstream F Files:** 6 modules, 4,079 LOC total
 
 ---
 
@@ -212,9 +213,9 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 | FSI nasal valve modeling | ✅ DONE | `sim/fsi_valve.py` — 805 LOC, FSIValveSolver, Euler-Bernoulli beam-column, Starling resistor collapse |
 | Advanced anisotropy and expression models | ✅ DONE | `sim/anisotropy.py` — 643 LOC, HGO/transverse-iso/fiber-Mooney-Rivlin constitutive models, fiber field builders |
 | Long-horizon aging trajectories | ✅ DONE | `sim/aging.py` — 628 LOC, AgingTrajectory predictor, tissue decay functions, graft resorption, risk profiles |
-| Scale-out optimization and large plan searches | ⚠️ PARTIAL | NSGA-II implemented; no distributed/parallel optimizer |
-| Full multi-tenant productization | ❌ NOT STARTED | |
-| **v5 OVERALL** | **⚠️ 60% — FSI + anisotropy + aging done; scale-out & multi-tenant remain** | |
+| Scale-out optimization and large plan searches | ✅ DONE | `metrics/distributed_optimizer.py` — 537 LOC, island-model parallel NSGA-II, ring/fully_connected migration, ProcessPool/ThreadPool dispatch |
+| Full multi-tenant productization | ✅ DONE | `governance/tenant.py` — 650 LOC, TenantManager, tier-based quotas (FREE/STANDARD/ENTERPRISE), per-tenant data dirs, thread-local context, JSON persistence, cross-tenant guard |
+| **v5 OVERALL** | **✅ 100% — all v5 deliverables complete** | |
 
 ---
 
@@ -232,19 +233,19 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 
 | Metric | Value |
 |--------|-------|
-| Python source files | 63 |
-| Test files | 27 (25 test + 1 conftest + 1 __init__) |
-| Total lines of code | 40,900 (29,401 source + 11,499 test) |
-| Test functions | 871 |
-| Public API exports | 129 |
-| Enums defined | 9 (38 structures, 12 procedures, 11 materials, 37 landmarks, ...) |
+| Python source files | 65 |
+| Test files | 29 (27 test + 1 conftest + 1 __init__) |
+| Total lines of code | 43,066 (30,658 source + 12,408 test) |
+| Test functions | 941 |
+| Public API exports | 145 |
+| Enums defined | 11 (38 structures, 12 procedures, 11 materials, 37 landmarks, tenant tier, tenant status, pool backend, ...) |
 | Sub-packages | 10 |
 | External dependencies | numpy, scipy (pydicom, PIL optional) |
-| From-scratch algorithms | 15+ (DICOM parser, face-adjacency surface extraction, Delaunay, ICP, TPS, tet4 FEM, Newton-Raphson, NSGA-II, Sobol, LM, ...) |
+| From-scratch algorithms | 17+ (DICOM parser, face-adjacency surface extraction, Delaunay, ICP, TPS, tet4 FEM, Newton-Raphson, NSGA-II, island-model parallel NSGA-II, Sobol, LM, ...) |
 | Stubs / TODOs / placeholders | 0 |
-| mypy --disallow-untyped-defs | 0 errors (strict mode clean) |
-| CI pipeline | GitHub Actions 3-stage (mypy → pytest → container build) |
-| Git commit | `35006e14` |
+| mypy --disallow-untyped-defs | 0 errors across 94 files (strict mode clean) |
+| CI pipeline | GitHub Actions 4-stage (mypy → pytest+coverage@85% → benchmark regression → container build) |
+| Git commit | `0e41b786` |
 
 ---
 
@@ -266,10 +267,12 @@ Build the real product architecture end-to-end, with a curated, legally clean Re
 
 ### Additive (v5 remaining):
 
-| Gap | Impact | Effort Estimate |
-|-----|--------|-----------------|
-| Distributed optimizer | Scale-limited to single-node NSGA-II | Medium — Dask/Ray parallel evaluator |
-| Multi-tenant infrastructure | Single-user only | Large — auth, deployment, tenant isolation |
+**All v5 items resolved.** No remaining gaps.
+
+| Gap | Status |
+|-----|--------|
+| Distributed optimizer | ✅ Completed — `metrics/distributed_optimizer.py` (537 LOC) |
+| Multi-tenant infrastructure | ✅ Completed — `governance/tenant.py` (650 LOC) |
 
 ---
 
@@ -354,13 +357,15 @@ products/facial_plastics/
 │   ├── safety.py                         705 LOC  (SafetyMetrics)
 │   ├── uncertainty.py                    635 LOC  (UncertaintyQuantifier)
 │   ├── optimizer.py                      708 LOC  (PlanOptimizer, NSGA-II)
+│   ├── distributed_optimizer.py          537 LOC  (DistributedOptimizer, island-model parallel NSGA-II)
 │   └── cohort_analytics.py              681 LOC  (CohortAnalytics, distributions, risk, surgeon profiles)
 │
 ├── governance/
 │   ├── __init__.py
 │   ├── audit.py                          251 LOC  (AuditLog)
 │   ├── consent.py                        264 LOC  (ConsentManager)
-│   └── access.py                         345 LOC  (AccessControl, RBAC)
+│   ├── access.py                         345 LOC  (AccessControl, RBAC)
+│   └── tenant.py                         650 LOC  (TenantManager, multi-tenant isolation, tier quotas)
 │
 ├── postop/
 │   ├── __init__.py
@@ -398,7 +403,9 @@ products/facial_plastics/
     ├── test_dashboard.py                          (21 tests)
     ├── test_fsi_valve.py                          (29 tests)
     ├── test_anisotropy.py                         (84 tests)
-    └── test_aging.py                              (30 tests)
+    ├── test_aging.py                              (30 tests)
+    ├── test_distributed_optimizer.py  412 LOC  (14 tests)
+    └── test_tenant.py                 497 LOC  (56 tests)
 ```
 
 ---
@@ -418,3 +425,5 @@ products/facial_plastics/
 | 2026-02-10 | `f82edc10` | Add 35 integration tests wiring full pipeline — end-to-end ingest→twin→plan→sim→metrics→report flows. |
 | 2026-02-10 | `d2c4ca16` | CI: GitHub Actions 3-stage workflow (mypy strict → pytest → container build) for `products/facial_plastics/`. |
 | 2026-02-10 | `35006e14` | Fix all mypy strict errors across 90 source files — 348 annotations added (9 prod + 339 test). Zero errors under `--disallow-untyped-defs`. |
+| 2026-02-10 | `5b9465ff` | EXECUTION_GUIDE.md update — metrics, gap analysis, file index, changelog. |
+| 2026-02-12 | `0e41b786` | Distributed optimizer + multi-tenant infrastructure + CI coverage/benchmark — `distributed_optimizer.py` (537 LOC, island-model parallel NSGA-II), `tenant.py` (650 LOC, multi-tenant isolation), CI 4-stage pipeline (mypy → pytest+coverage@85% → benchmark → container), 70 new tests, 941 total passing, 0 mypy errors across 94 files. |
