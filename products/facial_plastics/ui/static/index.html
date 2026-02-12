@@ -25,8 +25,11 @@
 <script type="module">
   import * as THREE from "three";
   import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-  window.THREE = THREE;
-  THREE.OrbitControls = OrbitControls;
+  // ES module namespace objects are sealed — cannot add properties.
+  // Create a mutable proxy that extensions (OrbitControls) attach to.
+  const proxy = Object.assign({}, THREE);
+  proxy.OrbitControls = OrbitControls;
+  window.THREE = proxy;
   window.dispatchEvent(new Event("three-ready"));
 </script>
 </head>

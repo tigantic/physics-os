@@ -71,10 +71,6 @@ const API = (() => {
         const resp = await fetch(finalUrl, fetchOpts);
         if (resp.status === 401) {
           Store.set("auth.connected", false);
-          // Trigger global auth prompt if available
-          if (typeof App !== "undefined" && App.showAuthPrompt) {
-            App.showAuthPrompt();
-          }
           throw { status: 401, message: "Authentication failed — check API key" };
         }
         if (!resp.ok) {

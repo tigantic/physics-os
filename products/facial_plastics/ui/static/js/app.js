@@ -52,21 +52,35 @@ const App = (() => {
     _updateConnectionDot();
     Store.subscribe("auth.connected", _updateConnectionDot);
 
-    // 8. Auth gate — require API key before loading data
-    const apiKey = Store.get("auth.apiKey");
-    if (!apiKey) {
-      showAuthPrompt(async () => {
-        await _initData();
-      });
+    // 8. Auth gate — validate stored key or prompt for one
+    const storedKey = Store.get("auth.apiKey");
+    if (storedKey) {
+      // Validate the stored key before trusting it
+      try {
+        const contract = await API.getContract();
+        Store.set("auth.connected", true);
+        Store.set("system.contract", contract);
+        Store.set("system.version", contract.version || "unknown");
+        await _loadCases();
+        const hash = window.location.hash.replace("#", "");
+        Router.navigate(MODES[hash] ? hash : "case-library");
+      } catch {
+        // Stored key is invalid — clear it and prompt
+        Store.set("auth.apiKey", "");
+        Store.set("auth.connected", false);
+        Store.savePrefs();
+        showAuthPrompt();
+      }
     } else {
-      await _initData();
+      showAuthPrompt();
     }
 
     console.info("[FP] Application boot complete");
   }
 
   async function _initData() {
-    await _loadContract();
+    // Contract may already be loaded during auth validation;
+    // reload cases to ensure fresh data and navigate to the default mode.
     await _loadCases();
 
     // Navigate to initial mode (from URL hash or default)
@@ -75,7 +89,11 @@ const App = (() => {
     Router.navigate(initialMode);
   }
 
-  function showAuthPrompt(onSuccess) {
+  function showAuthPrompt() {
+    // Prevent duplicate prompts
+    if (showAuthPrompt._open) return;
+    showAuthPrompt._open = true;
+
     const body = document.createElement("div");
     body.innerHTML = `
       <p style="color:var(--text-secondary);font-size:var(--font-size-sm);margin-bottom:var(--space-3);">
@@ -83,8 +101,8 @@ const App = (() => {
       </p>
       <div class="modal-field">
         <label for="auth-key-input">API Key</label>
-        <input type="password" id="auth-key-input" placeholder="fp_..." autocomplete="off"
-               value="${_escAttr(Store.get("auth.apiKey") || "")}">
+        <input type="text" id="auth-key-input" placeholder="fp_..." autocomplete="off"
+               value="${_escAttr(Store.get("auth.apiKey") || "")}" spellcheck="false">
       </div>
       <p id="auth-status-msg" style="font-size:var(--font-size-xs);color:var(--text-muted);min-height:1.2em;"></p>
     `;
@@ -93,6 +111,8 @@ const App = (() => {
       title: "Authentication Required",
       body: body,
       confirmText: "Connect",
+      cancelText: "Cancel",
+      onCancel: () => { showAuthPrompt._open = false; },
       onConfirm: async () => {
         const input = document.getElementById("auth-key-input");
         const statusEl = document.getElementById("auth-status-msg");
@@ -104,14 +124,18 @@ const App = (() => {
         if (statusEl) { statusEl.textContent = "Connecting..."; statusEl.style.color = "var(--text-muted)"; }
         Store.set("auth.apiKey", key);
         Store.savePrefs();
-        // Test the key
+        // Validate the key against the contract endpoint
         try {
+          API.clearCache();
           const contract = await API.getContract();
           Store.set("auth.connected", true);
           Store.set("system.contract", contract);
+          Store.set("system.version", contract.version || "unknown");
           Toast.success("Connected successfully");
-          if (onSuccess) onSuccess();
-          // Return undefined (truthy-ish) → modal will close
+          showAuthPrompt._open = false;
+          // Always load data after successful auth
+          _initData();
+          // modal will close (return undefined)
         } catch (err) {
           Store.set("auth.connected", false);
           Store.set("auth.apiKey", "");
@@ -137,6 +161,7 @@ const App = (() => {
       }
     }, 100);
   }
+  showAuthPrompt._open = false;
 
   function _escAttr(s) {
     return (s || "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
