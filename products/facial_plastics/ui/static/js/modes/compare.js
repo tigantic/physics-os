@@ -97,7 +97,7 @@ const Compare = (() => {
   /* ── Case comparison ─────────────────────────────────────── */
 
   function _renderCasesTab(result, running) {
-    const cases = Store.get("cases") || [];
+    const cases = Store.get("cases.items") || [];
     const caseA = Store.get("compare.caseA") || "";
     const caseB = Store.get("compare.caseB") || "";
 

@@ -33,12 +33,21 @@ const App = (() => {
     if (typeof CommandBar  !== "undefined") CommandBar.init();
     if (typeof Inspector  !== "undefined") Inspector.init();
     if (typeof StatusBar  !== "undefined") StatusBar.init();
+    if (typeof Router     !== "undefined") Router.init();
 
     // 3. Initialize all mode modules
     Object.values(MODES).forEach(m => { if (m.module && m.module.init) m.module.init(); });
 
     // 4. Wire router mode transitions
     Router.onModeChange(_onModeChange);
+
+    // 5. Wire nav button click handlers
+    document.querySelectorAll(".nav-item[data-mode]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const mode = btn.dataset.mode;
+        if (mode) Router.navigate(mode);
+      });
+    });
 
     // 5. Global sidebar toggle
     document.getElementById("btn-toggle-sidebar")?.addEventListener("click", _toggleSidebar);

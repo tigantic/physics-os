@@ -11,7 +11,7 @@ const Store = (() => {
   const _initial = {
     auth: { apiKey: "", connected: false },
     ui: {
-      mode: "case-library",
+      mode: "",
       sidebarOpen: true,
       inspectorOpen: false,
       inspectorTab: "json",

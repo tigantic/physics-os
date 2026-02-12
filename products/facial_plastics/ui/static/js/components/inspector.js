@@ -66,7 +66,7 @@ const Inspector = (() => {
     if (!_body) return;
     const data = Store.get("inspector");
     const tab = Store.get("ui.inspectorTab");
-    const titleEl = _el.querySelector(".inspector-title-text");
+    const titleEl = _el.querySelector(".inspector-title");
     if (titleEl) titleEl.textContent = data.title || "Inspector";
 
     if (tab === "json") {

@@ -57,7 +57,7 @@
       <button class="nav-item" data-mode="report" title="Ctrl+6">Report</button>
       <button class="nav-item" data-mode="viewer3d" title="Ctrl+7">3D</button>
       <button class="nav-item" data-mode="timeline" title="Ctrl+8">Timeline</button>
-      <button class="nav-item" data-mode="compare" title="">Compare</button>
+      <button class="nav-item" data-mode="compare" title="Ctrl+9">Compare</button>
     </nav>
 
     <div class="command-bar-right">
@@ -177,10 +177,10 @@
      ══════════════════════════════════════════════════════ -->
 
 <!-- Command Palette -->
-<div id="command-palette" class="command-palette" style="display:none">
-  <div class="command-palette-dialog">
+<div id="command-palette" class="command-palette-overlay">
+  <div class="command-palette">
     <input type="text" class="command-palette-input" id="command-palette-input" placeholder="Type a command or mode…" autocomplete="off">
-    <ul class="command-palette-list" id="command-palette-list"></ul>
+    <div class="command-palette-results" id="command-palette-list"></div>
   </div>
 </div>
 

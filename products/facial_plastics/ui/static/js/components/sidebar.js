@@ -16,12 +16,12 @@ const Sidebar = (() => {
 
     Store.subscribe("selectedCase", _render);
     Store.subscribe("ui.sidebarOpen", (open) => {
-      document.getElementById("app").classList.toggle("sidebar-collapsed", !open);
+      document.getElementById("app-shell")?.classList.toggle("sidebar-collapsed", !open);
     });
 
     // Apply initial sidebar state
     if (!Store.get("ui.sidebarOpen")) {
-      document.getElementById("app").classList.add("sidebar-collapsed");
+      document.getElementById("app-shell")?.classList.add("sidebar-collapsed");
     }
 
     _render();
@@ -64,7 +64,7 @@ const Sidebar = (() => {
         <div class="sidebar-actions">
           <button class="sidebar-action-btn" data-action="twin-inspect">Inspect Twin</button>
           <button class="sidebar-action-btn" data-action="plan-author">Author Plan</button>
-          <button class="sidebar-action-btn" data-action="visualization">3D View</button>
+          <button class="sidebar-action-btn" data-action="viewer3d">3D View</button>
           <button class="sidebar-action-btn" data-action="timeline">Timeline</button>
         </div>
       </div>

@@ -11,6 +11,7 @@ const Modal = (() => {
   let _onConfirm = null;
   let _onCancel = null;
   let _prevFocus = null;
+  let _confirmed = false;
 
   function init() {
     _overlay = document.getElementById("modal-overlay");
@@ -48,6 +49,7 @@ const Modal = (() => {
 
     _onConfirm = opts.onConfirm || null;
     _onCancel = opts.onCancel || null;
+    _confirmed = false;
 
     if (confirmBtn) {
       confirmBtn.onclick = async () => {
@@ -56,6 +58,7 @@ const Modal = (() => {
           const result = await Promise.resolve(_onConfirm());
           if (result === false) return;
         }
+        _confirmed = true;
         close();
       };
     }
@@ -75,9 +78,10 @@ const Modal = (() => {
     if (!_overlay) return;
     _overlay.classList.remove("visible");
     _overlay.classList.add("hidden");
-    if (_onCancel && !_overlay.classList.contains("confirmed")) _onCancel();
+    if (_onCancel && !_confirmed) _onCancel();
     _onConfirm = null;
     _onCancel = null;
+    _confirmed = false;
     if (_prevFocus) { try { _prevFocus.focus(); } catch (_) {} }
   }
 

@@ -534,5 +534,5 @@ const Viewer3D = (() => {
     ];
   }
 
-  return { init, load, render, activate, deactivate, renderPreview };
+  return { init, load, render, activate, deactivate, renderPreview, _resize };
 })();

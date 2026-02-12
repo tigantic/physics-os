@@ -13,10 +13,11 @@ const Router = (() => {
     { id: "twin-inspect", label: "Twin Inspect", shortcut: "2", key: "Ctrl+2" },
     { id: "plan-author", label: "Plan Author", shortcut: "3", key: "Ctrl+3" },
     { id: "consult", label: "Consult", shortcut: "4", key: "Ctrl+4" },
-    { id: "report", label: "Report", shortcut: "5", key: "Ctrl+5" },
-    { id: "visualization", label: "3D View", shortcut: "6", key: "Ctrl+6" },
-    { id: "timeline", label: "Timeline", shortcut: "7", key: "Ctrl+7" },
-    { id: "compare", label: "Compare", shortcut: "8", key: "Ctrl+8" },
+    { id: "sweep", label: "Sweep", shortcut: "5", key: "Ctrl+5" },
+    { id: "report", label: "Report", shortcut: "6", key: "Ctrl+6" },
+    { id: "viewer3d", label: "3D View", shortcut: "7", key: "Ctrl+7" },
+    { id: "timeline", label: "Timeline", shortcut: "8", key: "Ctrl+8" },
+    { id: "compare", label: "Compare", shortcut: "9", key: "Ctrl+9" },
   ];
 
   const _shortcuts = new Map();
