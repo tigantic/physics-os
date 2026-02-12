@@ -290,6 +290,17 @@ label {
   overflow-y: auto;
 }
 
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.modal-header h3 {
+  margin: 0;
+}
+
 .modal h3 {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);

@@ -103,7 +103,8 @@ const Store = (() => {
   // Persist UI prefs to localStorage
   function _loadPrefs() {
     try {
-      const raw = localStorage.getItem("ht_fp_prefs");
+      // Check both legacy key names for backwards compatibility
+      const raw = localStorage.getItem("fp_prefs") || localStorage.getItem("ht_fp_prefs");
       if (raw) {
         const prefs = JSON.parse(raw);
         if (prefs.apiKey) _state.auth.apiKey = prefs.apiKey;
@@ -114,7 +115,7 @@ const Store = (() => {
 
   function savePrefs() {
     try {
-      localStorage.setItem("ht_fp_prefs", JSON.stringify({
+      localStorage.setItem("fp_prefs", JSON.stringify({
         apiKey: _state.auth.apiKey,
         sidebarOpen: _state.ui.sidebarOpen,
       }));

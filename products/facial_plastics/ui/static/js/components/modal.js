@@ -18,6 +18,9 @@ const Modal = (() => {
     _overlay.addEventListener("click", (e) => {
       if (e.target === _overlay) close();
     });
+    // Wire the static close button
+    const closeBtn = _overlay.querySelector("#modal-close");
+    if (closeBtn) closeBtn.addEventListener("click", () => close());
   }
 
   function open(opts) {
@@ -47,8 +50,12 @@ const Modal = (() => {
     _onCancel = opts.onCancel || null;
 
     if (confirmBtn) {
-      confirmBtn.onclick = () => {
-        if (_onConfirm) _onConfirm();
+      confirmBtn.onclick = async () => {
+        if (_onConfirm) {
+          // Await async handlers; if handler returns false, keep modal open
+          const result = await Promise.resolve(_onConfirm());
+          if (result === false) return;
+        }
         close();
       };
     }

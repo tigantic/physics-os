@@ -75,9 +75,17 @@ const StatusBar = (() => {
         <span class="status-item">Requests: ${_fmtNum(requests)}</span>
         <span class="status-item">Errors: ${_fmtNum(errors)}</span>
         ${health && health.workers ? `<span class="status-item">Workers: ${health.workers}</span>` : ""}
-        <span class="status-item">${apiKey ? "🔑 Auth" : "⚠ No Key"}</span>
+        <span class="status-item status-auth-btn" id="status-auth-toggle" style="cursor:pointer;" title="Click to ${apiKey ? 'change' : 'set'} API key">${apiKey ? "🔑 Auth" : "⚠ No Key"}</span>
       </div>
     `;
+
+    // Wire click on auth indicator
+    const authBtn = document.getElementById("status-auth-toggle");
+    if (authBtn) {
+      authBtn.addEventListener("click", () => {
+        if (typeof App !== "undefined" && App.showAuthPrompt) App.showAuthPrompt();
+      });
+    }
   }
 
   function _esc(s) { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; }

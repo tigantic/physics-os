@@ -40,28 +40,106 @@ const App = (() => {
     // 4. Wire router mode transitions
     Router.onModeChange(_onModeChange);
 
-    // 5. Load contract + initial data
-    await _loadContract();
-    await _loadCases();
-
-    // 6. Navigate to initial mode (from URL hash or default)
-    const hash = window.location.hash.replace("#", "");
-    const initialMode = MODES[hash] ? hash : "case-library";
-    Router.navigate(initialMode);
-
-    // 7. Global sidebar toggle
+    // 5. Global sidebar toggle
     document.getElementById("btn-toggle-sidebar")?.addEventListener("click", _toggleSidebar);
 
-    // 8. Apply initial sidebar state
+    // 6. Apply initial sidebar state
     if (!Store.get("ui.sidebarOpen")) {
       document.getElementById("app-shell")?.classList.add("sidebar-collapsed");
     }
 
-    // 9. Connect status indicator
+    // 7. Connect status indicator
     _updateConnectionDot();
     Store.subscribe("auth.connected", _updateConnectionDot);
 
+    // 8. Auth gate — require API key before loading data
+    const apiKey = Store.get("auth.apiKey");
+    if (!apiKey) {
+      showAuthPrompt(async () => {
+        await _initData();
+      });
+    } else {
+      await _initData();
+    }
+
     console.info("[FP] Application boot complete");
+  }
+
+  async function _initData() {
+    await _loadContract();
+    await _loadCases();
+
+    // Navigate to initial mode (from URL hash or default)
+    const hash = window.location.hash.replace("#", "");
+    const initialMode = MODES[hash] ? hash : "case-library";
+    Router.navigate(initialMode);
+  }
+
+  function showAuthPrompt(onSuccess) {
+    const body = document.createElement("div");
+    body.innerHTML = `
+      <p style="color:var(--text-secondary);font-size:var(--font-size-sm);margin-bottom:var(--space-3);">
+        Enter your API key to connect to the HyperTensor Facial Plastics platform.
+      </p>
+      <div class="modal-field">
+        <label for="auth-key-input">API Key</label>
+        <input type="password" id="auth-key-input" placeholder="fp_..." autocomplete="off"
+               value="${_escAttr(Store.get("auth.apiKey") || "")}">
+      </div>
+      <p id="auth-status-msg" style="font-size:var(--font-size-xs);color:var(--text-muted);min-height:1.2em;"></p>
+    `;
+
+    Modal.open({
+      title: "Authentication Required",
+      body: body,
+      confirmText: "Connect",
+      onConfirm: async () => {
+        const input = document.getElementById("auth-key-input");
+        const statusEl = document.getElementById("auth-status-msg");
+        const key = input ? input.value.trim() : "";
+        if (!key) {
+          if (statusEl) { statusEl.textContent = "Please enter an API key."; statusEl.style.color = "var(--accent-orange, #e6a700)"; }
+          return false;  // Keep modal open
+        }
+        if (statusEl) { statusEl.textContent = "Connecting..."; statusEl.style.color = "var(--text-muted)"; }
+        Store.set("auth.apiKey", key);
+        Store.savePrefs();
+        // Test the key
+        try {
+          const contract = await API.getContract();
+          Store.set("auth.connected", true);
+          Store.set("system.contract", contract);
+          Toast.success("Connected successfully");
+          if (onSuccess) onSuccess();
+          // Return undefined (truthy-ish) → modal will close
+        } catch (err) {
+          Store.set("auth.connected", false);
+          Store.set("auth.apiKey", "");
+          if (statusEl) { statusEl.textContent = "Authentication failed — check your API key."; statusEl.style.color = "var(--accent-red, #f44)"; }
+          return false;  // Keep modal open
+        }
+      },
+    });
+
+    // Allow Enter key to submit
+    setTimeout(() => {
+      const input = document.getElementById("auth-key-input");
+      if (input) {
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const confirmBtn = document.getElementById("modal-confirm");
+            if (confirmBtn) confirmBtn.click();
+          }
+        });
+        input.focus();
+        input.select();
+      }
+    }, 100);
+  }
+
+  function _escAttr(s) {
+    return (s || "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
   }
 
   /* ── Mode switching ────────────────────────────────────── */
@@ -111,7 +189,8 @@ const App = (() => {
   async function _loadCases() {
     try {
       const data = await API.listCases();
-      Store.set("cases", data.cases || []);
+      Store.set("cases.items", data.cases || []);
+      Store.set("cases.total", data.total || 0);
     } catch (err) {
       console.warn("[FP] Cases load failed:", err.message || err);
     }
@@ -161,7 +240,7 @@ const App = (() => {
     dot.title = connected ? "Connected" : "Disconnected";
   }
 
-  return { boot };
+  return { boot, showAuthPrompt };
 })();
 
 /* ── DOM Ready ───────────────────────────────────────────── */
