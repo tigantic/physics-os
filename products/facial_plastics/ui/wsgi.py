@@ -358,20 +358,16 @@ class WSGIApplication:
         return [b""]
 
     def _security_headers(self) -> List[Tuple[str, str]]:
-        """Security headers applied to every response."""
+        """Security headers applied to every response.
+
+        CSP is intentionally omitted here — it is enforced at the
+        reverse-proxy layer (Caddyfile) for production.  Emitting a
+        CSP from the application creates a second policy that the
+        browser intersects with any extension-injected policy (e.g.
+        MetaMask SES lockdown), producing false-positive console
+        warnings about ``eval`` that cannot be silenced.
+        """
         return [
-            (
-                "Content-Security-Policy",
-                "default-src 'self'; "
-                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; "
-                "style-src 'self' 'unsafe-inline'; "
-                "img-src 'self' data: blob:; "
-                "connect-src 'self'; "
-                "font-src 'self'; "
-                "object-src 'none'; "
-                "base-uri 'self'; "
-                "form-action 'self'",
-            ),
             ("X-Content-Type-Options", "nosniff"),
             ("X-Frame-Options", "DENY"),
             ("Referrer-Policy", "strict-origin-when-cross-origin"),

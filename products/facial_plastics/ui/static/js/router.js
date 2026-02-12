@@ -69,12 +69,21 @@ const Router = (() => {
     });
   }
 
-  function navigate(modeId) {
+  function navigate(modeId, opts) {
     if (!MODES.some(m => m.id === modeId)) return;
     const prev = Store.get("ui.mode");
     if (prev === modeId) return;
     Store.set("ui.mode", modeId);
-    window.location.hash = modeId;
+    // Use replaceState for programmatic (non-user) navigations to
+    // avoid the "Session History Item Has Been Marked Skippable"
+    // browser warning.  User-initiated navigations (clicks, keys)
+    // still use pushState so back/forward works.
+    const replace = opts && opts.replace;
+    if (replace) {
+      history.replaceState(null, "", "#" + modeId);
+    } else {
+      history.pushState(null, "", "#" + modeId);
+    }
     _notifyMode(modeId);
   }
 

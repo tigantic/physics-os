@@ -300,18 +300,10 @@ class _RequestHandler(BaseHTTPRequestHandler):
         self._set_security_headers()
 
     def _set_security_headers(self) -> None:
-        self.send_header(
-            "Content-Security-Policy",
-            "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; "
-            "style-src 'self' 'unsafe-inline'; "
-            "img-src 'self' data: blob:; "
-            "connect-src 'self'; "
-            "font-src 'self'; "
-            "object-src 'none'; "
-            "base-uri 'self'; "
-            "form-action 'self'",
-        )
+        # CSP is enforced at the reverse-proxy layer (Caddyfile).
+        # Emitting it here creates a second policy that browsers
+        # intersect with extension-injected policies (MetaMask SES),
+        # producing false-positive eval warnings.
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("X-Frame-Options", "DENY")
         self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")

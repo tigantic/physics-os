@@ -72,7 +72,7 @@ const App = (() => {
         Store.set("system.version", contract.version || "unknown");
         await _loadCases();
         const hash = window.location.hash.replace("#", "");
-        Router.navigate(MODES[hash] ? hash : "case-library");
+        Router.navigate(MODES[hash] ? hash : "case-library", { replace: true });
       } catch {
         // Stored key is invalid — clear it and prompt
         Store.set("auth.apiKey", "");
@@ -95,7 +95,7 @@ const App = (() => {
     // Navigate to initial mode (from URL hash or default)
     const hash = window.location.hash.replace("#", "");
     const initialMode = MODES[hash] ? hash : "case-library";
-    Router.navigate(initialMode);
+    Router.navigate(initialMode, { replace: true });
   }
 
   function showAuthPrompt() {
