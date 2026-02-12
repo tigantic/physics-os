@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self';
+               script-src  'self' 'unsafe-inline' 'unsafe-eval';
+               style-src   'self' 'unsafe-inline';
+               img-src     'self' data: blob:;
+               connect-src 'self';
+               font-src    'self';
+               worker-src  'self' blob:;">
 <title>HyperTensor — Facial Plastics Surgical Cockpit</title>
 
 <!-- ── Design Tokens & Layout ──────────────────────────── -->
@@ -13,12 +21,12 @@
 <link rel="stylesheet" href="/css/three-viewer.css">
 <link rel="stylesheet" href="/css/print.css">
 
-<!-- ── Three.js from CDN (r162) ────────────────────────── -->
+<!-- ── Three.js (r162, self-hosted) ────────────────────── -->
 <script type="importmap">
 {
   "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.min.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/"
+    "three": "/vendor/three/three.module.min.js",
+    "three/addons/": "/vendor/three/"
   }
 }
 </script>

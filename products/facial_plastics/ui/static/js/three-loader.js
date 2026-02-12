@@ -1,7 +1,7 @@
 /**
  * HyperTensor Facial Plastics — Three.js Loader
  *
- * Loads Three.js and OrbitControls from the CDN importmap,
+ * Loads Three.js and OrbitControls from the self-hosted importmap,
  * creates a mutable proxy (ES module namespaces are sealed),
  * and exposes window.THREE for non-module scripts.
  */

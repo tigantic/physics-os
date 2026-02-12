@@ -416,10 +416,14 @@ class WSGIApplication:
         content_type = mimetypes.guess_type(str(file_path))[0] or "application/octet-stream"
         try:
             data = file_path.read_bytes()
+            # HTML pages: no-cache so browser always revalidates (picks up
+            # header changes immediately).  Static assets: cache 1 hour.
+            is_html = content_type.startswith("text/html")
+            cache_val = "no-cache, no-store, must-revalidate" if is_html else "public, max-age=3600"
             headers = [
                 ("Content-Type", content_type),
                 ("Content-Length", str(len(data))),
-                ("Cache-Control", "public, max-age=3600"),
+                ("Cache-Control", cache_val),
             ]
             headers.extend(self._cors_headers())
             start_response("200 OK", headers)
