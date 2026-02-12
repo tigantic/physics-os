@@ -16,12 +16,12 @@ const Sidebar = (() => {
 
     Store.subscribe("selectedCase", _render);
     Store.subscribe("ui.sidebarOpen", (open) => {
-      document.getElementById("app-shell")?.classList.toggle("sidebar-collapsed", !open);
+      document.getElementById("app")?.classList.toggle("sidebar-collapsed", !open);
     });
 
     // Apply initial sidebar state
     if (!Store.get("ui.sidebarOpen")) {
-      document.getElementById("app-shell")?.classList.add("sidebar-collapsed");
+      document.getElementById("app")?.classList.add("sidebar-collapsed");
     }
 
     _render();

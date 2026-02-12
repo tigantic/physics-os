@@ -54,7 +54,7 @@ const App = (() => {
 
     // 6. Apply initial sidebar state
     if (!Store.get("ui.sidebarOpen")) {
-      document.getElementById("app-shell")?.classList.add("sidebar-collapsed");
+      document.getElementById("app")?.classList.add("sidebar-collapsed");
     }
 
     // 7. Connect status indicator
@@ -250,7 +250,7 @@ const App = (() => {
   /* ── Sidebar ───────────────────────────────────────────── */
 
   function _toggleSidebar() {
-    const shell = document.getElementById("app-shell");
+    const shell = document.getElementById("app");
     if (!shell) return;
     shell.classList.toggle("sidebar-collapsed");
     const open = !shell.classList.contains("sidebar-collapsed");
