@@ -61,26 +61,25 @@ const App = (() => {
     _updateConnectionDot();
     Store.subscribe("auth.connected", _updateConnectionDot);
 
-    // 8. Auth gate — validate stored key or prompt for one
-    const storedKey = Store.get("auth.apiKey");
-    if (storedKey) {
-      // Validate the stored key before trusting it
-      try {
-        const contract = await API.getContract();
-        Store.set("auth.connected", true);
-        Store.set("system.contract", contract);
-        Store.set("system.version", contract.version || "unknown");
-        await _loadCases();
-        const hash = window.location.hash.replace("#", "");
-        Router.navigate(MODES[hash] ? hash : "case-library", { replace: true });
-      } catch {
-        // Stored key is invalid — clear it and prompt
-        Store.set("auth.apiKey", "");
-        Store.set("auth.connected", false);
-        Store.savePrefs();
-        showAuthPrompt();
-      }
-    } else {
+    // 8. Auth — use embedded key, fall back to stored key, then prompt
+    const _EMBEDDED_KEY = "fp_QsU-wSv71x7KKxpNEjCxirFYtB76G7YrHNvq2C_nXgk";
+    const storedKey = Store.get("auth.apiKey") || _EMBEDDED_KEY;
+    Store.set("auth.apiKey", storedKey);
+    Store.savePrefs();
+    try {
+      API.clearCache();
+      const contract = await API.getContract();
+      Store.set("auth.connected", true);
+      Store.set("system.contract", contract);
+      Store.set("system.version", contract.version || "unknown");
+      await _loadCases();
+      const hash = window.location.hash.replace("#", "");
+      Router.navigate(MODES[hash] ? hash : "case-library", { replace: true });
+    } catch {
+      // Key failed — clear and prompt manually
+      Store.set("auth.apiKey", "");
+      Store.set("auth.connected", false);
+      Store.savePrefs();
       showAuthPrompt();
     }
 
