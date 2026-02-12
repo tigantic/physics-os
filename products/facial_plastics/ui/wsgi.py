@@ -357,14 +357,36 @@ class WSGIApplication:
         start_response("204 No Content", headers)
         return [b""]
 
+    def _security_headers(self) -> List[Tuple[str, str]]:
+        """Security headers applied to every response."""
+        return [
+            (
+                "Content-Security-Policy",
+                "default-src 'self'; "
+                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; "
+                "style-src 'self' 'unsafe-inline'; "
+                "img-src 'self' data: blob:; "
+                "connect-src 'self'; "
+                "font-src 'self'; "
+                "object-src 'none'; "
+                "base-uri 'self'; "
+                "form-action 'self'",
+            ),
+            ("X-Content-Type-Options", "nosniff"),
+            ("X-Frame-Options", "DENY"),
+            ("Referrer-Policy", "strict-origin-when-cross-origin"),
+        ]
+
     def _cors_headers(self) -> List[Tuple[str, str]]:
         origin = self._allowed_origins[0] if self._allowed_origins else "*"
-        return [
+        headers = [
             ("Access-Control-Allow-Origin", origin),
             ("Access-Control-Allow-Methods", "GET, POST, OPTIONS"),
             ("Access-Control-Allow-Headers", "Content-Type, Authorization, X-API-Key"),
             ("Access-Control-Max-Age", "86400"),
         ]
+        headers.extend(self._security_headers())
+        return headers
 
     def _serve_static(
         self,
@@ -448,6 +470,7 @@ class WSGIApplication:
             ("Content-Type", "text/plain; version=0.0.4; charset=utf-8"),
             ("Content-Length", str(len(body))),
         ]
+        headers.extend(self._security_headers())
         start_response("200 OK", headers)
         return [body]
 
