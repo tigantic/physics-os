@@ -201,9 +201,9 @@ const App = (() => {
       if (entry.module.activate) entry.module.activate();
       if (entry.hasLoad && entry.module.load) {
         await entry.module.load();
-      } else if (entry.module.render) {
-        entry.module.render();
       }
+      // Always render after load (load fetches data, render paints it)
+      if (entry.module.render) entry.module.render();
     }
   }
 
