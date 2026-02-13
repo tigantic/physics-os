@@ -1,0 +1,24 @@
+{
+  "case_id": "68a62a34e19a",
+  "created_at": "2026-02-13T00:07:09.795220",
+  "records": [
+    {
+      "artifact_id": "manifest",
+      "content_hash": "bdfdcb34d35136263a9581d7f39fff142bb3b5938afa4f7c475e34cecb2d71b9",
+      "artifact_type": "bundle_manifest",
+      "created_at": "2026-02-13T00:07:09.796036",
+      "producer_step": "bundle_create",
+      "input_hashes": [],
+      "software_versions": {
+        "python": "3.12.3",
+        "numpy": "2.2.6",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "facial_plastics": "1.0.0"
+      },
+      "config_hash": "",
+      "size_bytes": 665,
+      "path": "",
+      "metadata": {}
+    }
+  ]
+}

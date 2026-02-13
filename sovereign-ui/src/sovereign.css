@@ -3,7 +3,51 @@
    HyperTensor Facial Plastics Platform
    ================================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+/* ── Self-hosted fonts (no external CDN dependency) ─────────── */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 300 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url('/fonts/ibm-plex-sans-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 300 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url('/fonts/ibm-plex-sans-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F,
+    U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F,
+    U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
 
 /* ── Design Tokens ──────────────────────────────────────────── */
 :root {
@@ -24,7 +68,7 @@
   --sov-text-primary: #E8E8EC;
   --sov-text-secondary: #9CA3AF;
   --sov-text-tertiary: #6B7280;
-  --sov-text-muted: #4B5563;
+  --sov-text-muted: #7B8494; /* A4: raised from #4B5563 for ≥4.5:1 contrast on bg-card */
 
   /* Accent */
   --sov-accent: #3B82F6;
@@ -97,6 +141,41 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--sov-text-muted);
+}
+
+/* ── A5: Skip-to-content link ──────────────────────────────── */
+.sov-skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 9999;
+  padding: 8px 16px;
+  background: var(--sov-accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 0 0 6px 6px;
+  text-decoration: none;
+  transition: top 120ms ease-out;
+}
+.sov-skip-link:focus {
+  top: 0;
+  outline: none;
+}
+
+/* ── A7: Focus indicators ──────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--sov-accent);
+  outline-offset: 2px;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--sov-accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
 }
 
 /* ── Layout Shell ───────────────────────────────────────────── */
@@ -568,6 +647,8 @@ body {
   gap: var(--space-md);
   margin-bottom: var(--space-lg);
   flex-wrap: wrap;
+  position: relative;
+  z-index: 10;
 }
 
 .sov-toolbar-spacer {
@@ -748,4 +829,159 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* ── Responsive Layout ──────────────────────────────────────── */
+
+/* Tablet — collapse sidebar to icon-only rail */
+@media (max-width: 1024px) {
+  .sov-shell {
+    grid-template-columns: 56px 1fr;
+  }
+
+  .sov-sidebar {
+    overflow: visible;
+  }
+
+  .sov-logo-text,
+  .sov-nav-label,
+  .sov-nav-item span:not(.sov-nav-icon),
+  .sov-sidebar .sov-connection span:not(.sov-connection-dot) {
+    display: none;
+  }
+
+  .sov-logo {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .sov-nav-item {
+    justify-content: center;
+    padding: var(--space-sm) 0;
+    border-left: none;
+    border-bottom: 2px solid transparent;
+  }
+
+  .sov-nav-item.active {
+    border-left-color: transparent;
+    border-bottom-color: var(--sov-accent);
+  }
+
+  .sov-nav-icon {
+    font-size: 18px;
+  }
+
+  .sov-main {
+    padding: var(--space-lg);
+  }
+
+  .sov-header {
+    padding: 0 var(--space-lg);
+  }
+
+  /* Toolbar wrapping */
+  .sov-toolbar {
+    flex-wrap: wrap;
+  }
+
+  /* Stat row wrapping */
+  .sov-stat-row {
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+}
+
+/* Mobile — stack layout, sidebar becomes top nav */
+@media (max-width: 640px) {
+  .sov-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 44px 1fr;
+    grid-template-areas:
+      "header"
+      "sidebar"
+      "main";
+  }
+
+  .sov-sidebar {
+    flex-direction: row;
+    height: auto;
+    position: sticky;
+    top: 52px;
+    z-index: 40;
+    border-right: none;
+    border-bottom: 1px solid var(--sov-border-subtle);
+    padding: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .sov-sidebar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sov-logo,
+  .sov-nav-section,
+  .sov-nav-label,
+  .sov-sidebar .sov-connection {
+    display: none;
+  }
+
+  .sov-nav-item {
+    flex-shrink: 0;
+    padding: var(--space-sm) var(--space-md);
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .sov-nav-item.active {
+    border-left-color: transparent;
+    border-bottom-color: var(--sov-accent);
+  }
+
+  .sov-main {
+    padding: var(--space-md);
+  }
+
+  .sov-header {
+    padding: 0 var(--space-md);
+  }
+
+  .sov-page-title {
+    font-size: 18px;
+  }
+
+  .sov-page-subtitle {
+    font-size: 11px;
+  }
+
+  /* Tables scroll horizontally on mobile */
+  .sov-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sov-table {
+    min-width: 500px;
+  }
+
+  /* Modals take full width on mobile */
+  .sov-modal {
+    max-width: calc(100vw - 24px) !important;
+    margin: 12px;
+  }
+
+  /* Toolbar stacks vertically */
+  .sov-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-sm);
+  }
+
+  .sov-toolbar-spacer {
+    display: none;
+  }
 }

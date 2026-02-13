@@ -168,3 +168,7 @@ demo_output/
 # Ephemeral summaries
 .execution_summary.txt
 .github_validation_summary.txt
+
+# SvelteKit project — override Python lib/ rule for src/lib/
+!sovereign-ui/src/lib/
+!sovereign-ui/src/lib/**

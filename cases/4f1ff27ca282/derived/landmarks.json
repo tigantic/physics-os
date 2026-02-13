@@ -1,0 +1,229 @@
+{
+  "landmarks": [
+    {
+      "type": "pronasale",
+      "position": [
+        3.93478626451561e-15,
+        7.790045582213921,
+        113.81328735377105
+      ],
+      "confidence": 0.95
+    },
+    {
+      "type": "subnasale",
+      "position": [
+        3.9750584865775355e-15,
+        -0.7222050345226645,
+        111.64478782499476
+      ],
+      "confidence": 0.95
+    },
+    {
+      "type": "rhinion",
+      "position": [
+        3.735461055822525e-15,
+        24.34088347404424,
+        98.25593387930013
+      ],
+      "confidence": 0.92
+    },
+    {
+      "type": "nasion",
+      "position": [
+        3.5784274782375795e-15,
+        32.21179044427167,
+        95.42506291920542
+      ],
+      "confidence": 0.9
+    },
+    {
+      "type": "glabella",
+      "position": [
+        3.1575569729257267e-15,
+        46.746678569388706,
+        82.22592777972591
+      ],
+      "confidence": 0.88
+    },
+    {
+      "type": "sellion",
+      "position": [
+        3.5784274782375795e-15,
+        32.21179044427167,
+        95.42506291920542
+      ],
+      "confidence": 0.88
+    },
+    {
+      "type": "pogonion",
+      "position": [
+        3.3851400375905695e-15,
+        -49.70569629787307,
+        75.60227614222838
+      ],
+      "confidence": 0.9
+    },
+    {
+      "type": "menton",
+      "position": [
+        0.0,
+        -84.99575003541655,
+        0.0
+      ],
+      "confidence": 0.85
+    },
+    {
+      "type": "stomion",
+      "position": [
+        3.93478626451561e-15,
+        -17.790045582213963,
+        94.98083014636046
+      ],
+      "confidence": 0.9
+    },
+    {
+      "type": "labrale_superius",
+      "position": [
+        3.93478626451561e-15,
+        -17.790045582213963,
+        94.98083014636046
+      ],
+      "confidence": 0.88
+    },
+    {
+      "type": "labrale_inferius",
+      "position": [
+        3.854649827437512e-15,
+        -26.172717336750576,
+        87.68699845781373
+      ],
+      "confidence": 0.88
+    },
+    {
+      "type": "supratip_breakpoint",
+      "position": [
+        4.089699362514316e-15,
+        10.879538002562942,
+        79.24995368606909
+      ],
+      "confidence": 0.85
+    },
+    {
+      "type": "columella_breakpoint",
+      "position": [
+        3.9750584865775355e-15,
+        -0.7222050345226645,
+        111.64478782499476
+      ],
+      "confidence": 0.82
+    },
+    {
+      "type": "alar_rim_left",
+      "position": [
+        -16.801919417728815,
+        -0.7222050345226645,
+        90.7145975820293
+      ],
+      "confidence": 0.88
+    },
+    {
+      "type": "alar_rim_right",
+      "position": [
+        16.801919417728882,
+        -0.7222050345226645,
+        90.71459758202917
+      ],
+      "confidence": 0.88
+    },
+    {
+      "type": "alar_crease_left",
+      "position": [
+        -16.0,
+        0.0,
+        87.7145975820293
+      ],
+      "confidence": 0.82
+    },
+    {
+      "type": "alar_crease_right",
+      "position": [
+        16.0,
+        0.0,
+        87.71459758202917
+      ],
+      "confidence": 0.82
+    },
+    {
+      "type": "tip_defining_point_left",
+      "position": [
+        -4.0,
+        3.0,
+        110.64478782499476
+      ],
+      "confidence": 0.8
+    },
+    {
+      "type": "tip_defining_point_right",
+      "position": [
+        4.0,
+        3.0,
+        110.64478782499476
+      ],
+      "confidence": 0.8
+    },
+    {
+      "type": "endocanthion_left",
+      "position": [
+        -15.0,
+        30.0,
+        76.47409904240664
+      ],
+      "confidence": 0.85
+    },
+    {
+      "type": "endocanthion_right",
+      "position": [
+        15.0,
+        30.0,
+        76.47409904240652
+      ],
+      "confidence": 0.85
+    },
+    {
+      "type": "exocanthion_left",
+      "position": [
+        -15.125425282308381,
+        32.21179044427167,
+        76.47409904240664
+      ],
+      "confidence": 0.82
+    },
+    {
+      "type": "exocanthion_right",
+      "position": [
+        15.12542528230844,
+        32.21179044427167,
+        76.47409904240652
+      ],
+      "confidence": 0.82
+    },
+    {
+      "type": "cheilion_left",
+      "position": [
+        -15.0,
+        -20.0,
+        66.37445671272312
+      ],
+      "confidence": 0.82
+    },
+    {
+      "type": "cheilion_right",
+      "position": [
+        15.0,
+        -20.0,
+        66.37445671272312
+      ],
+      "confidence": 0.82
+    }
+  ]
+}

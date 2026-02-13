@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from 'svelte';
   import { contractStore, casesStore } from '$lib/stores';
 
   // ── Governance data (read from contract + derived) ─────────
@@ -88,6 +87,17 @@
 <div class="sov-page-header">
   <h1 class="sov-page-title">Governance</h1>
   <p class="sov-page-subtitle">Access control, audit compliance, and data classification</p>
+</div>
+
+<!-- M8: Design preview banner — governance logic is aspirational until backend RBAC lands -->
+<div class="sov-card" style="border-color: var(--sov-accent-blue); border-style: dashed; margin-bottom: 16px;">
+  <div class="sov-card-body" style="display: flex; align-items: center; gap: 10px; padding: 10px 14px;">
+    <span style="font-size: 16px;">🏗</span>
+    <div>
+      <strong style="color: var(--sov-text-primary); font-size: 12px;">Design Preview</strong>
+      <p style="color: var(--sov-text-tertiary); font-size: 11px; margin: 2px 0 0;">Governance roles, consent, and audit schemas shown here reflect the target platform design. Enforcement requires backend RBAC integration (Phase 2).</p>
+    </div>
+  </div>
 </div>
 
 <!-- Platform stats -->

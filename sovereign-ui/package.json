@@ -14,7 +14,7 @@
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "^3.3.1",
+    "@sveltejs/adapter-static": "^3.0.0",
     "@sveltejs/kit": "^2.8.0",
     "@sveltejs/vite-plugin-svelte": "^4.0.0",
     "@types/three": "^0.170.0",
@@ -32,7 +32,6 @@
   },
   "dependencies": {
     "@tweenjs/tween.js": "^25.0.0",
-    "three": "^0.170.0",
-    "zod": "^3.23.8"
+    "three": "^0.170.0"
   }
 }

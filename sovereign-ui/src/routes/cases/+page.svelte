@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import {
     casesStore,
@@ -9,10 +8,12 @@
     removeCase,
     runCuration,
   } from '$lib/stores';
+  import { focusTrap } from '$lib/actions/focus-trap.js';
 
   // ── Filter state ───────────────────────────────────────────
   let filterProcedure = '';
   let filterQuality = '';
+  let searchQuery = '';
   let currentPage = 0;
   const pageSize = 20;
 
@@ -33,11 +34,14 @@
   // ── Curation state ─────────────────────────────────────────
   let curateLoading = false;
   let curateResult = null;
+  let actionError = '';
+  let mounted = true;
+  let loadDebounce = null;
 
   // ── Derived from contract ──────────────────────────────────
   $: procedures = $contractStore.data?.procedures ?? [];
 
-  // ── Load cases when filters change ─────────────────────────
+  // ── Load cases when filters change (skip initial — initApp already loaded) ─
   $: {
     const opts = {
       limit: pageSize,
@@ -45,14 +49,22 @@
     };
     if (filterProcedure) opts.procedure = filterProcedure;
     if (filterQuality) opts.quality = filterQuality;
-    loadCases(opts);
+    if (mounted) {
+      clearTimeout(loadDebounce);
+      loadDebounce = setTimeout(() => loadCases(opts), 120);
+    }
   }
 
   // ── Actions ────────────────────────────────────────────────
   async function handleCreate() {
-    await createNewCase(newCase);
-    showCreateModal = false;
-    newCase = { patient_age: 35, patient_sex: 'female', procedure: 'rhinoplasty', notes: '' };
+    actionError = '';
+    try {
+      await createNewCase(newCase);
+      showCreateModal = false;
+      newCase = { patient_age: 35, patient_sex: 'female', procedure: 'rhinoplasty', notes: '' };
+    } catch (err) {
+      actionError = err instanceof Error ? err.message : String(err);
+    }
   }
 
   function confirmDelete(caseId) {
@@ -62,9 +74,15 @@
   }
 
   async function handleDelete() {
-    await removeCase(deleteTargetId);
-    showDeleteModal = false;
-    deleteTargetId = '';
+    actionError = '';
+    try {
+      await removeCase(deleteTargetId);
+      showDeleteModal = false;
+      deleteTargetId = '';
+    } catch (err) {
+      actionError = err instanceof Error ? err.message : String(err);
+      showDeleteModal = false;
+    }
   }
 
   async function handleCurate() {
@@ -84,7 +102,24 @@
   // ── Pagination ─────────────────────────────────────────────
   $: totalCases = $casesStore.data?.total ?? 0;
   $: totalPages = Math.ceil(totalCases / pageSize);
-  $: cases = $casesStore.data?.cases ?? [];
+  $: rawCases = $casesStore.data?.cases ?? [];
+
+  // Client-side search filter (backend has no search endpoint)
+  $: filteredCases = searchQuery.trim()
+    ? rawCases.filter((c) => {
+        const q = searchQuery.trim().toLowerCase();
+        return (
+          (c.case_id && c.case_id.toLowerCase().includes(q)) ||
+          (c.procedure_type && c.procedure_type.toLowerCase().includes(q)) ||
+          (c.quality_level && c.quality_level.toLowerCase().includes(q)) ||
+          (c.notes && String(c.notes).toLowerCase().includes(q)) ||
+          (c.patient_id && String(c.patient_id).toLowerCase().includes(q))
+        );
+      })
+    : rawCases;
+
+  $: cases = filteredCases;
+  $: displayTotal = searchQuery.trim() ? filteredCases.length : totalCases;
 
   function prevPage() {
     if (currentPage > 0) currentPage--;
@@ -104,6 +139,14 @@
     if (!id) return '';
     return id.length > 16 ? id.substring(0, 8) + '…' + id.substring(id.length - 4) : id;
   }
+
+  /** Derive a human-readable status + badge class from case metadata. */
+  function caseStatusInfo(c) {
+    if (c.twin_complete) return { label: 'Twin Ready', cls: 'sov-badge-success' };
+    if (c.modalities && c.modalities.length > 0) return { label: 'Data Loaded', cls: 'sov-badge-accent' };
+    if (c.quality_level === 'draft') return { label: 'Draft', cls: 'sov-badge-default' };
+    return { label: 'Created', cls: 'sov-badge-default' };
+  }
 </script>
 
 <!-- Page Header -->
@@ -115,7 +158,7 @@
 <!-- Stats Row -->
 <div class="sov-stat-row">
   <div class="sov-stat">
-    <span class="sov-stat-value accent">{totalCases}</span>
+    <span class="sov-stat-value accent">{displayTotal}</span>
     <span class="sov-stat-label">Total Cases</span>
   </div>
   <div class="sov-stat">
@@ -140,6 +183,15 @@
   </div>
 {/if}
 
+{#if actionError}
+  <div class="sov-error-banner" style="margin-bottom: 12px;">
+    <span>⚠</span>
+    <span>{actionError}</span>
+    <button class="sov-btn sov-btn-ghost sov-btn-sm" style="margin-left: auto;"
+      on:click={() => actionError = ''}>✕</button>
+  </div>
+{/if}
+
 <!-- Curate Result -->
 {#if curateResult}
   <div class="sov-error-banner" style="border-color: var(--sov-accent)30; background: var(--sov-accent)08; color: var(--sov-accent);">
@@ -150,8 +202,12 @@
   </div>
 {/if}
 
-<!-- Toolbar: Filters + Actions -->
+<!-- Toolbar: Search + Filters + Actions -->
 <div class="sov-toolbar">
+  <input class="sov-input" type="text" placeholder="Search cases..."
+    style="width: 220px; height: 32px; font-size: 12px;"
+    bind:value={searchQuery} />
+
   <select class="sov-select" style="width: 180px;"
     bind:value={filterProcedure}>
     <option value="">All Procedures</option>
@@ -163,10 +219,9 @@
   <select class="sov-select" style="width: 160px;"
     bind:value={filterQuality}>
     <option value="">All Quality</option>
-    <option value="clinical">Clinical</option>
-    <option value="research">Research</option>
-    <option value="training">Training</option>
-    <option value="synthetic">Synthetic</option>
+    {#each ['clinical', 'research', 'training', 'synthetic'] as qual}
+      <option value={qual}>{procedureLabel(qual)}</option>
+    {/each}
   </select>
 
   <div class="sov-toolbar-spacer"></div>
@@ -230,7 +285,7 @@
                 </span>
               </td>
               <td>
-                <span class="sov-badge sov-badge-success">Ready</span>
+                <span class="sov-badge {caseStatusInfo(c).cls}">{caseStatusInfo(c).label}</span>
               </td>
               <td style="text-align: right;">
                 <button class="sov-btn sov-btn-ghost sov-btn-sm"
@@ -253,8 +308,8 @@
     <!-- Pagination -->
     <div class="sov-pagination">
       <span class="sov-pagination-info">
-        {currentPage * pageSize + 1}–{Math.min((currentPage + 1) * pageSize, totalCases)}
-        of {totalCases}
+        {currentPage * pageSize + 1}–{Math.min((currentPage + 1) * pageSize, displayTotal)}
+        of {displayTotal}
       </span>
       <div class="sov-pagination-controls">
         <button class="sov-btn sov-btn-ghost sov-btn-sm"
@@ -278,8 +333,9 @@
 <!-- Create Case Modal -->
 {#if showCreateModal}
   <div class="sov-modal-overlay" on:click|self={() => showCreateModal = false}
-    role="dialog" aria-modal="true">
-    <div class="sov-modal">
+    on:keydown={(e) => { if (e.key === 'Escape') showCreateModal = false; }}
+    role="dialog" aria-modal="true" tabindex="-1">
+    <div class="sov-modal" use:focusTrap={{ onClose: () => showCreateModal = false }}>
       <div class="sov-modal-header">
         <span class="sov-modal-title">New Case</span>
         <button class="sov-btn sov-btn-ghost sov-btn-sm"
@@ -287,8 +343,8 @@
       </div>
       <div class="sov-modal-body">
         <div>
-          <label class="sov-label">Procedure</label>
-          <select class="sov-select" style="width: 100%;"
+          <label class="sov-label" for="create-procedure">Procedure</label>
+          <select class="sov-select" style="width: 100%;" id="create-procedure"
             bind:value={newCase.procedure}>
             {#each procedures as proc}
               <option value={proc}>{procedureLabel(proc)}</option>
@@ -297,13 +353,13 @@
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
           <div>
-            <label class="sov-label">Patient Age</label>
-            <input class="sov-input" type="number" min="0" max="120"
+            <label class="sov-label" for="create-age">Patient Age</label>
+            <input class="sov-input" type="number" min="0" max="120" id="create-age"
               bind:value={newCase.patient_age} />
           </div>
           <div>
-            <label class="sov-label">Patient Sex</label>
-            <select class="sov-select" style="width: 100%;"
+            <label class="sov-label" for="create-sex">Patient Sex</label>
+            <select class="sov-select" style="width: 100%;" id="create-sex"
               bind:value={newCase.patient_sex}>
               <option value="female">Female</option>
               <option value="male">Male</option>
@@ -312,8 +368,8 @@
           </div>
         </div>
         <div>
-          <label class="sov-label">Notes</label>
-          <input class="sov-input" type="text"
+          <label class="sov-label" for="create-notes">Notes</label>
+          <input class="sov-input" type="text" id="create-notes"
             placeholder="Optional notes..."
             bind:value={newCase.notes} />
         </div>
@@ -322,6 +378,7 @@
         <button class="sov-btn sov-btn-secondary"
           on:click={() => showCreateModal = false}>Cancel</button>
         <button class="sov-btn sov-btn-primary"
+          disabled={!newCase.procedure || newCase.patient_age < 0 || newCase.patient_age > 120}
           on:click={handleCreate}>Create Case</button>
       </div>
     </div>
@@ -331,8 +388,9 @@
 <!-- Delete Confirmation Modal -->
 {#if showDeleteModal}
   <div class="sov-modal-overlay" on:click|self={() => showDeleteModal = false}
-    role="dialog" aria-modal="true">
-    <div class="sov-modal">
+    on:keydown={(e) => { if (e.key === 'Escape') showDeleteModal = false; }}
+    role="dialog" aria-modal="true" tabindex="-1">
+    <div class="sov-modal" use:focusTrap={{ onClose: () => showDeleteModal = false }}>
       <div class="sov-modal-header">
         <span class="sov-modal-title">Delete Case</span>
         <button class="sov-btn sov-btn-ghost sov-btn-sm"

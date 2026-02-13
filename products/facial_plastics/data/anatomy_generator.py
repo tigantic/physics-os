@@ -25,9 +25,16 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 import numpy as np
+from scipy.sparse import lil_matrix
+
+try:
+    from skimage.measure import marching_cubes as _skimage_marching_cubes
+    _HAS_SKIMAGE = True
+except ImportError:
+    _HAS_SKIMAGE = False
 
 from ..core.case_bundle import CaseBundle, PatientDemographics
 from ..core.types import (
@@ -440,6 +447,11 @@ def _ellipsoid_sdf(
 ) -> np.ndarray:
     """Signed distance to an axis-aligned ellipsoid (negative inside).
 
+    Uses the Inigo Quilez approximation which is exact on the surface
+    and along all principal axes, and a close approximation elsewhere.
+    Much more accurate than the naive normalised-sphere approach for
+    non-spherical ellipsoids.
+
     Parameters
     ----------
     coords : (N, 3) array
@@ -449,12 +461,17 @@ def _ellipsoid_sdf(
 
     Returns
     -------
-    (N,) signed distance values (approximate; exact for spheres).
+    (N,) signed distance values.
     """
-    normalised = (coords - center) / radii
-    dist_unit = np.linalg.norm(normalised, axis=1) - 1.0
-    # Scale back to physical space (approximate)
-    result: np.ndarray = dist_unit * np.min(radii)
+    p = coords - center
+    # k0 = ||p/r||, k1 = ||p/r²||
+    pr = p / radii
+    pr2 = p / (radii * radii)
+    k0 = np.linalg.norm(pr, axis=1)
+    k1 = np.linalg.norm(pr2, axis=1)
+    k0 = np.maximum(k0, 1e-10)
+    k1 = np.maximum(k1, 1e-10)
+    result: np.ndarray = k0 * (k0 - 1.0) / k1
     return result
 
 
@@ -491,6 +508,63 @@ def _cylinder_sdf(
     cap_dist_high = proj - length
     cap_dist = np.maximum(cap_dist_low, cap_dist_high)
     result: np.ndarray = np.maximum(radial, cap_dist)
+    return result
+
+
+def _torus_sdf(
+    coords: np.ndarray,
+    center: np.ndarray,
+    axis: np.ndarray,
+    major_radius: float,
+    minor_radius: float,
+) -> np.ndarray:
+    """Signed distance to a torus centred at ``center`` with given axis.
+
+    Parameters
+    ----------
+    coords : (N, 3) array
+    center : (3,) array — torus centre.
+    axis : (3,) array — torus rotation axis (unit vector).
+    major_radius : float — distance from centre to tube centre.
+    minor_radius : float — tube radius.
+
+    Returns
+    -------
+    (N,) signed distance (negative inside).
+    """
+    ax = axis / (np.linalg.norm(axis) + 1e-12)
+    p = coords - center
+    # Project onto torus plane
+    proj_along = (p @ ax)[:, None] * ax  # component along axis
+    proj_plane = p - proj_along  # component in the torus plane
+    dist_plane = np.linalg.norm(proj_plane, axis=1)
+    dist_plane = np.maximum(dist_plane, 1e-10)
+    # Distance from the tube centre ring
+    ring_dist = np.sqrt(
+        (dist_plane - major_radius) ** 2
+        + np.sum(proj_along ** 2, axis=1)
+    )
+    result: np.ndarray = ring_dist - minor_radius
+    return result
+
+
+def _smooth_union(d1: np.ndarray, d2: np.ndarray, k: float = 4.0) -> np.ndarray:
+    """Smooth (polynomial) union of two distance fields.
+
+    Produces blended transitions between shapes instead of hard edges.
+    Smaller *k* = tighter blend; larger *k* = softer blend.
+    """
+    h = np.clip(0.5 + 0.5 * (d2 - d1) / k, 0.0, 1.0)
+    result: np.ndarray = d2 * (1.0 - h) + d1 * h - k * h * (1.0 - h)
+    return result
+
+
+def _smooth_subtraction(
+    d_cut: np.ndarray, d_base: np.ndarray, k: float = 4.0,
+) -> np.ndarray:
+    """Smooth subtraction: subtract *d_cut* from *d_base*."""
+    h = np.clip(0.5 - 0.5 * (d_base + d_cut) / k, 0.0, 1.0)
+    result: np.ndarray = d_base * (1.0 - h) + (-d_cut) * h + k * h * (1.0 - h)
     return result
 
 
@@ -593,6 +667,27 @@ class AnatomyGenerator:
 
         # 13. Mucosa lining airway
         self._place_mucosa(hu, coords_flat, profile)
+
+        # 14. Orbital cavities (eye sockets)
+        self._place_orbits(hu, coords_flat, profile)
+
+        # 15. Zygomatic arches (cheekbones)
+        self._place_zygomatic(hu, coords_flat, profile)
+
+        # 16. Pyriform aperture (bony nasal opening)
+        self._place_pyriform(hu, coords_flat, profile)
+
+        # 17. Lip structures
+        self._place_lips(hu, coords_flat, profile)
+
+        # 18. Enhanced nasal tip and alar detail
+        self._place_nasal_tip_detail(hu, coords_flat, profile)
+
+        # 19. Forehead and brow ridge
+        self._place_forehead(hu, coords_flat, profile)
+
+        # 20. Chin projection
+        self._place_chin(hu, coords_flat, profile)
 
         # Add realistic noise (scanner noise ~ N(0, 15) HU)
         noise_sigma = 12.0 + self._rng.uniform(0, 8)
@@ -836,6 +931,559 @@ class AnatomyGenerator:
             place = mask & (hu > HU_AIR + 100)
             hu[place] = HU_MUCOSA + self._rng.uniform(-5, 10, int(place.sum())).astype(np.float32)
 
+    # ── Additional anatomical structures ──────────────────────
+
+    def _place_orbits(
+        self, hu: np.ndarray, coords: np.ndarray, p: AnthropometricProfile,
+    ) -> None:
+        """Bilateral orbital cavities — air-filled eye sockets carved into skull."""
+        for side in [-1, 1]:
+            center = np.array([
+                side * p.interpupillary_distance * 0.5,
+                p.face_height_upper * 0.5,
+                p.skull_depth * 0.05,
+            ])
+            radii = np.array([
+                p.orbit_width / 2.0,
+                p.orbit_height / 2.0,
+                p.orbit_width / 2.5,
+            ])
+            sdf = _ellipsoid_sdf(coords, center, radii)
+            # Carve orbital cavity (fill with soft tissue, not air — globe)
+            mask = sdf < 0
+            # Inner core = globe (vitreous humor ≈ water ≈ 0 HU)
+            inner_radii = radii * 0.6
+            sdf_inner = _ellipsoid_sdf(coords, center, inner_radii)
+            globe = sdf_inner < 0
+            hu[globe] = HU_SOFT_TISSUE + self._rng.uniform(-5, 5, int(globe.sum())).astype(np.float32)
+            # Periorbital fat fills the rest of the orbit
+            orbital_fat = mask & (~globe)
+            hu[orbital_fat] = HU_FAT + self._rng.uniform(-20, 20, int(orbital_fat.sum())).astype(np.float32)
+
+    def _place_zygomatic(
+        self, hu: np.ndarray, coords: np.ndarray, p: AnthropometricProfile,
+    ) -> None:
+        """Bilateral zygomatic arches — bony cheekbone projections."""
+        for side in [-1, 1]:
+            # Main body of zygoma
+            center = np.array([
+                side * p.skull_width * 0.35,
+                p.face_height_upper * 0.25,
+                -p.skull_depth * 0.02,
+            ])
+            half = np.array([8.0, 7.0, 10.0])
+            sdf = _box_sdf(coords, center, half)
+            mask = sdf < 0
+            hu[mask] = HU_BONE_CORTICAL + self._rng.uniform(-150, 50, int(mask.sum())).astype(np.float32)
+
+            # Zygomatic arch (thin bar connecting to temporal bone)
+            arch_p0 = center + np.array([side * 5.0, 3.0, -5.0])
+            arch_p1 = np.array([
+                side * p.skull_width * 0.42,
+                p.face_height_upper * 0.35,
+                -p.skull_depth * 0.15,
+            ])
+            sdf_arch = _cylinder_sdf(coords, arch_p0, arch_p1, 3.5)
+            mask_arch = sdf_arch < 0
+            hu[mask_arch] = HU_BONE_CORTICAL + self._rng.uniform(-100, 50, int(mask_arch.sum())).astype(np.float32)
+
+    def _place_pyriform(
+        self, hu: np.ndarray, coords: np.ndarray, p: AnthropometricProfile,
+    ) -> None:
+        """Pyriform aperture — the bony nasal opening carved into the maxilla."""
+        center = np.array([0.0, p.nasal_bone_length * 0.1, p.nasal_dorsal_height * 0.3])
+        # Pear-shaped opening: wider at bottom
+        radii_top = np.array([p.alar_width * 0.22, p.nasal_bone_length * 0.35, 3.0])
+        radii_bot = np.array([p.alar_width * 0.28, p.nasal_bone_length * 0.3, 3.5])
+
+        center_top = center + np.array([0.0, p.nasal_bone_length * 0.2, 0.0])
+        center_bot = center - np.array([0.0, p.nasal_bone_length * 0.15, 0.0])
+
+        sdf_top = _ellipsoid_sdf(coords, center_top, radii_top)
+        sdf_bot = _ellipsoid_sdf(coords, center_bot, radii_bot)
+        # Smooth union of the two to get the pear shape
+        sdf_pyriform = _smooth_union(sdf_top, sdf_bot, k=5.0)
+        mask = sdf_pyriform < 0
+        # Carve air through bone at the aperture
+        place = mask & (hu > HU_CARTILAGE)
+        hu[place] = HU_AIR + self._rng.uniform(0, 50, int(place.sum())).astype(np.float32)
+
+    def _place_lips(
+        self, hu: np.ndarray, coords: np.ndarray, p: AnthropometricProfile,
+    ) -> None:
+        """Lips — soft tissue projection at the lower face.
+
+        Creates upper and lower lip as ellipsoidal soft tissue masses
+        with a smooth blend to the surrounding skin.
+        """
+        # Upper lip (labrale superius area)
+        upper_center = np.array([0.0, -p.face_height_lower * 0.08, 14.0])
+        upper_radii = np.array([13.0, 4.5, 5.0])
+        sdf_upper = _ellipsoid_sdf(coords, upper_center, upper_radii)
+        mask_upper = sdf_upper < 0
+        place = mask_upper & (hu < HU_SOFT_TISSUE - 20)
+        hu[place] = HU_SOFT_TISSUE + self._rng.uniform(5, 20, int(place.sum())).astype(np.float32)
+
+        # Lower lip
+        lower_center = np.array([0.0, -p.face_height_lower * 0.22, 12.0])
+        lower_radii = np.array([14.0, 5.0, 5.5])
+        sdf_lower = _ellipsoid_sdf(coords, lower_center, lower_radii)
+        mask_lower = sdf_lower < 0
+        place = mask_lower & (hu < HU_SOFT_TISSUE - 20)
+        hu[place] = HU_SOFT_TISSUE + self._rng.uniform(5, 20, int(place.sum())).astype(np.float32)
+
+        # Oral fissure (thin air gap between lips)
+        oral_center = np.array([0.0, -p.face_height_lower * 0.15, 13.0])
+        oral_half = np.array([12.0, 1.0, 3.0])
+        sdf_oral = _box_sdf(coords, oral_center, oral_half)
+        mask_oral = sdf_oral < 0
+        hu[mask_oral] = HU_AIR
+
+    def _place_nasal_tip_detail(
+        self, hu: np.ndarray, coords: np.ndarray, p: AnthropometricProfile,
+    ) -> None:
+        """Enhanced nasal tip and alar detail using smooth blending.
+
+        Produces more anatomically correct tip with:
+        - Dome highlight
+        - Alar lobule thickening
+        - Columella definition
+        """
+        tip_z = p.tip_projection * 0.8
+
+        # Tip dome — small prominent sphere at nasal tip
+        dome_center = np.array([0.0, 4.0, tip_z])
+        dome_radius = np.array([4.0, 3.0, 4.0])
+        sdf_dome = _ellipsoid_sdf(coords, dome_center, dome_radius)
+        mask = sdf_dome < 0
+        place = mask & (hu > HU_AIR + 100) & (hu < HU_BONE_CANCELLOUS)
+        hu[place] = HU_CARTILAGE + self._rng.uniform(-10, 10, int(place.sum())).astype(np.float32)
+
+        # Alar lobules — thickened soft tissue alongside the nostrils
+        for side in [-1, 1]:
+            alar_center = np.array([
+                side * p.alar_width * 0.38,
+                0.0,
+                p.tip_projection * 0.35,
+            ])
+            alar_radii = np.array([5.0, 5.0, 6.0])
+            sdf_alar = _ellipsoid_sdf(coords, alar_center, alar_radii)
+            mask_alar = sdf_alar < 0
+            place = mask_alar & (hu < HU_SOFT_TISSUE - 10)
+            hu[place] = HU_SOFT_TISSUE + self._rng.uniform(5, 25, int(place.sum())).astype(np.float32)
+
+        # Columella — midline strut between nostrils
+        col_p0 = np.array([0.0, -2.0, p.tip_projection * 0.15])
+        col_p1 = np.array([0.0, 3.0, tip_z * 0.7])
+        sdf_col = _cylinder_sdf(coords, col_p0, col_p1, 2.5)
+        mask_col = sdf_col < 0
+        place = mask_col & (hu > HU_AIR + 100)
+        hu[place] = np.where(
+            hu[place] < HU_CARTILAGE - 50,
+            HU_CARTILAGE + self._rng.uniform(-20, 10, int(place.sum())).astype(np.float32),
+            hu[place],
+        )
+
+    def _place_forehead(
+        self, hu: np.ndarray, coords: np.ndarray, p: AnthropometricProfile,
+    ) -> None:
+        """Frontal bone contour — superiorly convex forehead.
+
+        Adds prominence to the frontal bone region of the skull
+        for more realistic head silhouette.
+        """
+        center = np.array([0.0, p.skull_height * 0.38, p.skull_depth * 0.12])
+        radii = np.array([
+            p.skull_width * 0.32,
+            p.skull_height * 0.12,
+            p.skull_depth * 0.15,
+        ])
+        sdf = _ellipsoid_sdf(coords, center, radii)
+        mask = sdf < 0
+        # Only place where not already dense bone
+        place = mask & (hu < HU_BONE_CANCELLOUS)
+        hu[place] = HU_BONE_CORTICAL + self._rng.uniform(-100, 50, int(place.sum())).astype(np.float32)
+
+        # Supraorbital ridge — brow prominence
+        for side in [-1, 1]:
+            ridge_center = np.array([
+                side * p.intercanthal_distance * 0.55,
+                p.face_height_upper * 0.55,
+                p.skull_depth * 0.08,
+            ])
+            ridge_radii = np.array([8.0, 4.0, 6.0])
+            sdf_ridge = _ellipsoid_sdf(coords, ridge_center, ridge_radii)
+            mask_ridge = sdf_ridge < 0
+            hu[mask_ridge] = HU_BONE_CORTICAL + self._rng.uniform(-80, 30, int(mask_ridge.sum())).astype(np.float32)
+
+    def _place_chin(
+        self, hu: np.ndarray, coords: np.ndarray, p: AnthropometricProfile,
+    ) -> None:
+        """Mentum (chin point) — anterior bony prominence at the mandible.
+
+        Adds a pogonion projection for realistic profile contour.
+        """
+        sex_scale = 1.1 if p.sex == "M" else 0.9
+        chin_center = np.array([
+            0.0,
+            -p.face_height_lower * 0.55,
+            8.0 * sex_scale,
+        ])
+        chin_radii = np.array([10.0 * sex_scale, 8.0, 7.0 * sex_scale])
+        sdf = _ellipsoid_sdf(coords, chin_center, chin_radii)
+        mask = sdf < 0
+        # Bone core
+        inner_radii = chin_radii - 4.0
+        sdf_inner = _ellipsoid_sdf(coords, chin_center, inner_radii)
+        bone_shell = mask & (sdf_inner >= 0)
+        hu[bone_shell] = HU_BONE_CORTICAL + self._rng.uniform(-100, 50, int(bone_shell.sum())).astype(np.float32)
+        # Soft tissue covering
+        soft = mask & (sdf_inner < 0) & (hu < HU_SOFT_TISSUE - 20)
+        hu[soft] = HU_SOFT_TISSUE + self._rng.uniform(-5, 15, int(soft.sum())).astype(np.float32)
+
+    # ── Parametric face mesh ──────────────────────────────────
+
+    def generate_parametric_face_mesh(
+        self,
+        profile: AnthropometricProfile,
+        *,
+        n_lat: int = 200,
+        n_lon: int = 300,
+    ) -> SurfaceMesh:
+        """Generate a high-fidelity parametric face surface mesh.
+
+        Builds a recognisable human face from an asymmetric ellipsoidal
+        base (shallow anterior face, deep posterior cranium) with
+        height-varying half-widths for jaw narrowing and ~35 Gaussian
+        displacement bumps positioned per craniofacial anthropometry
+        (Farkas 1994).
+
+        Displacement is applied along the **ellipsoid surface normal**
+        (gradient of the implicit function) rather than along the
+        radial direction, ensuring that anterior features (nose, lips,
+        chin) protrude in +Z and lateral features (cheekbones)
+        protrude in +/-X regardless of the oblate base geometry.
+
+        Coordinate system (matching CT volume):
+            X -- right (+), left (-)
+            Y -- superior (+), inferior (-)
+            Z -- anterior (+), posterior (-)
+            Origin at subnasale.
+
+        Parameters
+        ----------
+        profile : AnthropometricProfile
+            Facial measurement set (used for proportional scaling).
+        n_lat : int
+            Polar resolution (top to bottom).
+        n_lon : int
+            Azimuthal resolution.
+
+        Returns
+        -------
+        SurfaceMesh
+        """
+        # ── 0.  Anthropometric scale factors ─────────────────
+        nose_length: float = getattr(profile, "nose_length", 48.0)
+        nose_protrusion: float = getattr(profile, "nose_protrusion", 21.0)
+        nose_width: float = getattr(profile, "nasal_width", 35.0)
+        face_height: float = getattr(profile, "face_height", 120.0)
+        bizyg_width: float = getattr(profile, "bizygomatic_breadth", 140.0)
+
+        s_vert = face_height / 120.0
+        s_lat = bizyg_width / 140.0
+        s_nose_p = nose_protrusion / 21.0
+        s_nose_w = nose_width / 35.0
+        s_nose_l = nose_length / 48.0
+
+        # ── 1.  Parameter grid ───────────────────────────────
+        theta = np.linspace(0.0, np.pi, n_lat)
+        phi = np.linspace(-np.pi, np.pi, n_lon, endpoint=False)
+        TH, PH = np.meshgrid(theta, phi, indexing="ij")
+
+        st, ct = np.sin(TH), np.cos(TH)
+        sp, cp = np.sin(PH), np.cos(PH)
+        t = ct  # +1 top, -1 bottom
+
+        # ── 2.  Asymmetric base ellipsoid ────────────────────
+        # Half-width (X) -- with height-dependent jaw narrowing.
+        RX = np.full_like(t, 62.0 * s_lat)
+        RX = np.where(
+            t > 0.4,
+            62.0 * s_lat - 18.0 * np.abs((t - 0.4) / 0.6) ** 1.6,
+            RX,
+        )
+        RX = np.where(
+            (t <= -0.05) & (t > -0.5),
+            62.0 * s_lat - 28.0 * s_lat * np.abs((-0.05 - t) / 0.45) ** 1.2,
+            RX,
+        )
+        RX = np.where(
+            t <= -0.5,
+            np.maximum(6.0, 34.0 * s_lat + 50.0 * s_lat * (t + 1.0) / 0.5),
+            RX,
+        )
+
+        # Half-height (Y).
+        RY = 55.0 * s_vert
+
+        # Half-depth (Z) -- ASYMMETRIC: shallow face, deep cranium.
+        # Smooth blend: cp=+1 (face front) -> RZ_front,
+        #               cp=-1 (back)       -> RZ_back.
+        blend_front = np.clip(0.5 * (1.0 + cp), 0.0, 1.0)
+        RZ_FRONT = 8.0
+        RZ_BACK = 45.0
+        RZ = RZ_FRONT * blend_front + RZ_BACK * (1.0 - blend_front)
+        # Slight jaw-depth reduction
+        RZ = np.where(t < -0.3, RZ - 6.0 * np.abs((-0.3 - t) / 0.7) ** 2, RZ)
+        RZ = np.maximum(RZ, 4.0)
+
+        # ── 3.  Base vertex positions ────────────────────────
+        # phi=0 -> face front (+Z),  phi=pi/2 -> right (+X)
+        X = RX * st * sp
+        Y = RY * ct
+        Z = RZ * st * cp
+
+        # ── 4.  Face weight ──────────────────────────────────
+        face_w = np.clip(cp, 0.0, 1.0) ** 1.4
+
+        # ── 5.  Displacement field  D(X, Y)  ─────────────────
+        eps = 1e-8
+
+        def G(u0: float, v0: float, su: float, sv: float) -> np.ndarray:
+            return np.exp(-0.5 * ((X - u0) / su) ** 2
+                         - 0.5 * ((Y - v0) / sv) ** 2)
+
+        def G_rot(
+            u0: float, v0: float,
+            s_major: float, s_minor: float,
+            angle_deg: float,
+        ) -> np.ndarray:
+            a = np.radians(angle_deg)
+            ca, sa = np.cos(a), np.sin(a)
+            du, dv = X - u0, Y - v0
+            d1 = du * ca + dv * sa
+            d2 = -du * sa + dv * ca
+            return np.exp(-0.5 * (d1 / s_major) ** 2
+                         - 0.5 * (d2 / s_minor) ** 2)
+
+        D = np.zeros_like(TH)
+
+        # ── 5a. Face flattening ──────────────────────────────
+        D -= face_w * 5.0
+
+        # ── 5b. Occipital prominence ─────────────────────────
+        back_w = np.clip(-cp, 0.0, 1.0) ** 2
+        D += back_w * G(0, 15, 40, 30) * 6.0
+
+        # ── 5c. Forehead ─────────────────────────────────────
+        D += G(0, 48, 36, 12) * face_w * 4.0
+        D += G(18, 48, 14, 10) * face_w * 1.5
+        D += G(-18, 48, 14, 10) * face_w * 1.5
+
+        # ── 5d. Brow ridge ───────────────────────────────────
+        D += G(0, 35, 30, 4.5) * face_w * 3.5
+        D += G(0, 38, 8, 5) * face_w * 2.0
+
+        # ── 5e. Supraorbital ridge ───────────────────────────
+        D += G(24, 37, 12, 3.0) * face_w * 2.5
+        D += G(-24, 37, 12, 3.0) * face_w * 2.5
+
+        # ── 5f. Eye sockets ──────────────────────────────────
+        D -= G(30, 32, 11, 8) * face_w * 12.0
+        D -= G(-30, 32, 11, 8) * face_w * 12.0
+        D -= G(17, 33, 6, 7) * face_w * 5.0
+        D -= G(-17, 33, 6, 7) * face_w * 5.0
+
+        # ── 5g. Infraorbital rim ─────────────────────────────
+        D += G(30, 25, 13, 3) * face_w * 3.0
+        D += G(-30, 25, 13, 3) * face_w * 3.0
+
+        # ── 5h. Nose root / nasion ───────────────────────────
+        D += G(0, 33, 5, 6) * face_w * 5.0 * s_nose_p
+
+        # ── 5i. Nose bridge (dorsum) ─────────────────────────
+        nose_len = 28.0 * s_nose_l
+        D += G(0, 15, 5.0, nose_len * 0.45) * face_w * 12.0 * s_nose_p
+        D += G(0, 12, 4.0, 5) * face_w * 2.0 * s_nose_p
+
+        # ── 5j. Nose tip (pronasale) ─────────────────────────
+        D += G(0, 3, 7.0, 5.0) * face_w * 18.0 * s_nose_p
+        D += G(3.5, 3, 2.8, 2.8) * face_w * 3.0 * s_nose_p
+        D += G(-3.5, 3, 2.8, 2.8) * face_w * 3.0 * s_nose_p
+
+        # ── 5k. Columella ────────────────────────────────────
+        D += G(0, -1, 2.5, 3) * face_w * 5.0 * s_nose_p
+
+        # ── 5l. Nasal alae ───────────────────────────────────
+        ala_x = 14.0 * s_nose_w
+        D += G(ala_x, 1, 5.5, 4.0) * face_w * 5.5
+        D += G(-ala_x, 1, 5.5, 4.0) * face_w * 5.5
+        D -= G(ala_x + 3, -1, 2.5, 2.5) * face_w * 2.0
+        D -= G(-ala_x - 3, -1, 2.5, 2.5) * face_w * 2.0
+
+        # ── 5m. Nostrils (pyriform concavity) ────────────────
+        D -= G(7, -3, 3.5, 3.0) * face_w * 4.0
+        D -= G(-7, -3, 3.5, 3.0) * face_w * 4.0
+
+        # ── 5n. Nasal sidewalls ──────────────────────────────
+        D += G(10, 12, 5.0, 10.0) * face_w * 3.5
+        D += G(-10, 12, 5.0, 10.0) * face_w * 3.5
+
+        # ── 5o. Cheekbones (zygomatic) ───────────────────────
+        D += G(48 * s_lat, 10, 13, 9) * face_w * 7.0
+        D += G(-48 * s_lat, 10, 13, 9) * face_w * 7.0
+        D += G(55 * s_lat, 15, 10, 6) * 3.5
+        D += G(-55 * s_lat, 15, 10, 6) * 3.5
+
+        # ── 5p. Malar hollow ─────────────────────────────────
+        D -= G(38 * s_lat, -2, 10, 8) * face_w * 3.0
+        D -= G(-38 * s_lat, -2, 10, 8) * face_w * 3.0
+
+        # ── 5q. Nasolabial folds ─────────────────────────────
+        for sign in (1.0, -1.0):
+            for k in range(6):
+                frac = k / 5.0
+                fu = sign * (ala_x - 2 + frac * 14.0)
+                fv = -2.0 - frac * 16.0
+                D -= G_rot(fu, fv, 4.0, 2.0,
+                           sign * (10 + frac * 25)) * face_w * 1.8
+
+        # ── 5r. Philtrum ─────────────────────────────────────
+        D -= G(0, -5, 2.8, 4.5) * face_w * 2.5
+        D += G(3.5, -5, 1.5, 4.5) * face_w * 1.2
+        D += G(-3.5, -5, 1.5, 4.5) * face_w * 1.2
+
+        # ── 5s. Upper lip ────────────────────────────────────
+        D += G(0, -10, 12, 3.5) * face_w * 5.0
+        D += G(4, -9, 3.0, 2.0) * face_w * 1.8
+        D += G(-4, -9, 3.0, 2.0) * face_w * 1.8
+        D += G(0, -11, 5, 2.5) * face_w * 2.0
+
+        # ── 5t. Lower lip ────────────────────────────────────
+        D += G(0, -17, 12, 3.5) * face_w * 4.5
+        D += G(0, -16, 8, 2.5) * face_w * 1.8
+
+        # ── 5u. Oral fissure ─────────────────────────────────
+        D -= G(0, -13, 13, 1.2) * face_w * 2.0
+        D -= G(15, -13, 3, 2) * face_w * 1.2
+        D -= G(-15, -13, 3, 2) * face_w * 1.2
+
+        # ── 5v. Labiomental groove ───────────────────────────
+        D -= G(0, -24, 12, 3.5) * face_w * 3.0
+
+        # ── 5w. Chin (mentum) ────────────────────────────────
+        D += G(0, -38, 14, 8) * face_w * 8.0
+        D += G(0, -39, 5, 3) * face_w * 3.5
+        D += G(0, -40, 7, 4) * face_w * 2.5
+
+        # ── 5x. Temple hollowing ─────────────────────────────
+        D -= G(52 * s_lat, 35, 10, 12) * 4.0
+        D -= G(-52 * s_lat, 35, 10, 12) * 4.0
+
+        # ── 5y. Jaw angle / masseteric ───────────────────────
+        D += G(48 * s_lat, -18, 10, 8) * 4.5
+        D += G(-48 * s_lat, -18, 10, 8) * 4.5
+        D += G(35 * s_lat, -32, 12, 4) * face_w * 2.5
+        D += G(-35 * s_lat, -32, 12, 4) * face_w * 2.5
+
+        # ── 5z. Neck transition ──────────────────────────────
+        neck_drop = np.clip(-ct - 0.55, 0.0, 0.45) / 0.45
+        neck_back = np.clip(-cp, 0.0, 1.0)
+        D -= neck_drop * neck_back * 6.0
+
+        # ── 6.  Displace along ellipsoid surface normal ──────
+        # Gradient of implicit x^2/RX^2 + y^2/RY^2 + z^2/RZ^2 = 1
+        # gives the outward normal direction.  This ensures that
+        # anterior features push in +Z and lateral features push
+        # in +/-X, regardless of the oblate front geometry.
+        RX_sq = RX ** 2 + eps
+        RY_sq = RY ** 2 + eps
+        RZ_sq = RZ ** 2 + eps
+
+        nx = X / RX_sq
+        ny = Y / RY_sq
+        nz = Z / RZ_sq
+        n_mag = np.sqrt(nx ** 2 + ny ** 2 + nz ** 2)
+        n_mag = np.maximum(n_mag, eps)
+        nx /= n_mag
+        ny /= n_mag
+        nz /= n_mag
+
+        X = X + D * nx
+        Y = Y + D * ny
+        Z = Z + D * nz
+
+        # ── 7.  Origin alignment ─────────────────────────────
+        # The CT coordinate system origin is at subnasale (base
+        # of nose at Y = 0).  The parametric sphere equator
+        # (Y = 0) aligns with the subnasale region already.  A
+        # small vertical tweak centres the landmarks correctly.
+        Y -= 1.0
+
+        # ── 8.  Build triangle mesh ──────────────────────────
+        verts = np.stack([X, Y, Z], axis=-1).reshape(-1, 3).astype(np.float64)
+
+        faces_list: list[np.ndarray] = []
+        for i in range(n_lat - 1):
+            for j in range(n_lon):
+                jn = (j + 1) % n_lon
+                v0 = i * n_lon + j
+                v1 = i * n_lon + jn
+                v2 = (i + 1) * n_lon + j
+                v3 = (i + 1) * n_lon + jn
+                faces_list.append([v0, v2, v1])
+                faces_list.append([v1, v2, v3])
+        triangles = np.array(faces_list, dtype=np.int64)
+
+        # ── 9.  Light Laplacian smoothing (3 passes) ─────────
+        verts = self._laplacian_smooth(
+            verts, triangles, iterations=3, lamb=0.4,
+        )
+
+        # ── 10. Region labelling ─────────────────────────────
+        labels = np.zeros(len(verts), dtype=np.int8)
+        vx, vy, vz = verts[:, 0], verts[:, 1], verts[:, 2]
+        front = vz > 0
+        labels[:] = 0                                                # cranium
+        labels[front & (vy > 38)] = 1                                # forehead
+        labels[front & (np.abs(vx) > 15) & (np.abs(vx) < 42)
+               & (vy > 24) & (vy < 42)] = 2                         # orbit
+        labels[front & (np.abs(vx) < 15) & (vy > -8)
+               & (vy < 35)] = 3                                      # nose
+        labels[front & (np.abs(vx) > 25)
+               & (vy > -15) & (vy < 25)] = 4                        # cheek
+        labels[front & (np.abs(vx) < 18)
+               & (vy >= -15) & (vy < -8)] = 5                       # upper lip
+        labels[front & (np.abs(vx) < 18)
+               & (vy >= -22) & (vy < -15)] = 6                      # lower lip
+        labels[front & (vy < -30) & (vy > -50)] = 7                 # chin
+        labels[front & (np.abs(vx) > 30)
+               & (vy < -15) & (vy > -40)] = 8                       # jaw
+
+        # ── 11. Assemble SurfaceMesh ─────────────────────────
+        mesh = SurfaceMesh(
+            vertices=verts,
+            triangles=triangles,
+            vertex_labels=labels,
+            metadata={
+                "generator": "parametric_face_v2",
+                "n_lat": n_lat,
+                "n_lon": n_lon,
+            },
+        )
+        mesh.compute_normals()
+
+        logger.info(
+            "Generated parametric face mesh: %d verts, %d tris, "
+            "X=[%.1f,%.1f] Y=[%.1f,%.1f] Z=[%.1f,%.1f]",
+            mesh.n_vertices, mesh.n_faces,
+            verts[:, 0].min(), verts[:, 0].max(),
+            verts[:, 1].min(), verts[:, 1].max(),
+            verts[:, 2].min(), verts[:, 2].max(),
+        )
+        return mesh
+
     # ── Surface extraction ────────────────────────────────────
 
     def extract_facial_surface(
@@ -848,17 +1496,18 @@ class AnatomyGenerator:
     ) -> SurfaceMesh:
         """Extract the outer facial skin surface from a CT volume.
 
-        Uses a marching-cubes-style isosurface extraction at the
-        air/tissue boundary.
+        Uses scikit-image ``marching_cubes`` for smooth, interpolated
+        isosurface extraction when available.  Falls back to binary
+        face-adjacency extraction otherwise.
 
         Parameters
         ----------
         volume_hu : (D, H, W) array
             CT volume.
         voxel_spacing_mm : tuple
-            Voxel spacing.
+            Voxel spacing (z, y, x).
         origin_mm : (3,) array
-            Physical origin of [0, 0, 0].
+            Physical origin of voxel [0, 0, 0].
         threshold_hu : float
             HU threshold for surface extraction.
 
@@ -867,22 +1516,47 @@ class AnatomyGenerator:
         SurfaceMesh of the outer skin surface.
         """
         sz, sy, sx = voxel_spacing_mm
-        binary = (volume_hu > threshold_hu).astype(np.float32)
 
-        # Simple marching-cubes extraction (pure numpy)
-        vertices, triangles = self._marching_cubes_simple(binary, (sx, sy, sz))
+        if _HAS_SKIMAGE:
+            # Real marching cubes with proper edge interpolation.
+            # Volume is indexed [dim0=z, dim1=y, dim2=x]; spacing
+            # must match that axis order.
+            verts, faces, normals_mc, _ = _skimage_marching_cubes(
+                volume_hu,
+                level=threshold_hu,
+                spacing=(sz, sy, sx),
+                step_size=1,
+                allow_degenerate=False,
+            )
+
+            # Convert from array-index order (z, y, x) to world order
+            # (x, y, z).  The column swap is a single transposition
+            # (changes handedness), so flip face winding to compensate.
+            vertices = verts[:, [2, 1, 0]].copy().astype(np.float64)
+            triangles = faces[:, [0, 2, 1]].copy().astype(np.int64)
+        else:
+            # Fallback: binary face-adjacency extraction (staircase mesh)
+            binary = (volume_hu > threshold_hu).astype(np.float32)
+            vertices, triangles = self._marching_cubes_simple(binary, (sx, sy, sz))
+            vertices = vertices.astype(np.float64)
+            triangles = triangles.astype(np.int64)
 
         if len(vertices) == 0:
             raise ValueError("No surface extracted — check volume and threshold")
 
         # Offset to physical coordinates
-        vertices[:, 0] = vertices[:, 0] + origin_mm[0]
-        vertices[:, 1] = vertices[:, 1] + origin_mm[1]
-        vertices[:, 2] = vertices[:, 2] + origin_mm[2]
+        vertices[:, 0] += origin_mm[0]
+        vertices[:, 1] += origin_mm[1]
+        vertices[:, 2] += origin_mm[2]
+
+        # Taubin λ|μ Laplacian smoothing for clean surface
+        vertices = self._laplacian_smooth(
+            vertices, triangles, iterations=8, lamb=0.5,
+        )
 
         mesh = SurfaceMesh(
-            vertices=vertices.astype(np.float64),
-            triangles=triangles.astype(np.int64),
+            vertices=vertices,
+            triangles=triangles,
         )
         mesh.compute_normals()
 
@@ -890,10 +1564,68 @@ class AnatomyGenerator:
         mesh = self._largest_component(mesh)
 
         logger.info(
-            "Extracted facial surface: %d vertices, %d triangles",
+            "Extracted facial surface: %d vertices, %d triangles (method=%s)",
             mesh.n_vertices, mesh.n_faces,
+            "skimage_mc" if _HAS_SKIMAGE else "binary_face_adjacency",
         )
         return mesh
+
+    @staticmethod
+    def _laplacian_smooth(
+        vertices: np.ndarray,
+        triangles: np.ndarray,
+        iterations: int = 8,
+        lamb: float = 0.5,
+    ) -> np.ndarray:
+        """Taubin λ|μ Laplacian smoothing (vectorised via sparse matrix).
+
+        Alternates positive (λ) and negative (μ) steps to smooth the
+        mesh without the uniform shrinkage that plain Laplacian
+        smoothing produces.
+
+        Parameters
+        ----------
+        vertices : (V, 3)
+        triangles : (F, 3)
+        iterations : int
+            Number of smoothing passes (even number recommended).
+        lamb : float
+            Positive smoothing weight (0 < λ < 1).
+
+        Returns
+        -------
+        (V, 3) smoothed vertex positions.
+        """
+        n = len(vertices)
+        if n == 0 or len(triangles) == 0:
+            return vertices
+
+        # Build sparse adjacency matrix
+        rows: List[int] = []
+        cols: List[int] = []
+        for tri in triangles:
+            i, j, k = int(tri[0]), int(tri[1]), int(tri[2])
+            rows.extend([i, j, i, k, j, k])
+            cols.extend([j, i, k, i, k, j])
+
+        data = np.ones(len(rows), dtype=np.float64)
+        adj = lil_matrix((n, n), dtype=np.float64)
+        for r, c in zip(rows, cols):
+            adj[r, c] = 1.0
+        adj = adj.tocsr()
+
+        degree = np.array(adj.sum(axis=1)).flatten()
+        degree[degree == 0] = 1.0  # prevent division by zero
+
+        mu = -lamb - 0.02  # Taubin's μ — slightly stronger than -λ
+
+        verts = vertices.astype(np.float64).copy()
+        for it in range(iterations):
+            weight = lamb if it % 2 == 0 else mu
+            neighbour_mean = (adj @ verts) / degree[:, None]
+            verts += weight * (neighbour_mean - verts)
+
+        return verts
 
     def _marching_cubes_simple(
         self,

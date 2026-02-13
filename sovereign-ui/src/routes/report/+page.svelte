@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from 'svelte';
   import {
     casesStore,
     activePlan,
@@ -13,12 +12,12 @@
   let includeImages = false;
   let includeMeasurements = true;
   let includeTimeline = true;
+  let createError = '';
 
-  onMount(() => {
-    if ($casesStore.data?.cases?.[0]) {
-      selectedCaseId = $casesStore.data.cases[0].case_id;
-    }
-  });
+  // ── Set defaults (SSR off — safe at top level) ────────────
+  if ($casesStore.data?.cases?.[0]) {
+    selectedCaseId = $casesStore.data.cases[0].case_id;
+  }
 
   $: plan = $activePlan;
   $: cases = $casesStore.data?.cases ?? [];
@@ -27,12 +26,25 @@
 
   async function handleGenerate() {
     if (!selectedCaseId) return;
-    await generateReport(selectedCaseId, {
-      format: reportFormat,
-      include_images: includeImages,
-      include_measurements: includeMeasurements,
-      include_timeline: includeTimeline,
-    });
+    createError = '';
+    try {
+      await generateReport(selectedCaseId, reportFormat, {
+        includeImages,
+        includeMeasurements,
+        includeTimeline,
+      });
+    } catch (err) {
+      createError = err instanceof Error ? err.message : String(err);
+    }
+  }
+
+  /** Sanitize HTML to prevent XSS — strips script tags and event handlers */
+  function sanitizeHtml(html) {
+    if (!html) return '';
+    return html
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '')
+      .replace(/on\w+\s*=\s*\S+/gi, '');
   }
 
   function downloadReport() {
@@ -75,8 +87,8 @@
     <div class="sov-card-body">
       <div class="config-grid">
         <div>
-          <label class="sov-label">Case</label>
-          <select class="sov-select" style="width: 100%;" bind:value={selectedCaseId}>
+          <label class="sov-label" for="report-case">Case</label>
+          <select class="sov-select" style="width: 100%;" id="report-case" bind:value={selectedCaseId}>
             <option value="">Select case...</option>
             {#each cases as c}
               <option value={c.case_id}>
@@ -87,11 +99,11 @@
         </div>
 
         <div>
-          <label class="sov-label">Format</label>
-          <select class="sov-select" style="width: 100%;" bind:value={reportFormat}>
-            <option value="markdown">Markdown</option>
-            <option value="html">HTML</option>
-            <option value="json">JSON</option>
+          <label class="sov-label" for="report-format">Format</label>
+          <select class="sov-select" style="width: 100%;" id="report-format" bind:value={reportFormat}>
+            <option value="markdown">Markdown — readable text with headers</option>
+            <option value="html">HTML — styled for browser preview / print</option>
+            <option value="json">JSON — structured data for integration</option>
           </select>
         </div>
 
@@ -110,6 +122,12 @@
           </label>
         </div>
       </div>
+
+      {#if createError}
+        <div class="sov-error-banner" style="margin-top: 8px;">
+          <span>⚠</span><span>{createError}</span>
+        </div>
+      {/if}
 
       {#if plan}
         <div class="plan-summary">
@@ -174,7 +192,7 @@
         <div class="report-content">
           {#if reportFormat === 'html'}
             <div class="report-html-frame">
-              {@html report.content}
+              {@html sanitizeHtml(report.content)}
             </div>
           {:else if reportFormat === 'json'}
             <pre class="report-pre font-data">{JSON.stringify(JSON.parse(report.content || '{}'), null, 2)}</pre>

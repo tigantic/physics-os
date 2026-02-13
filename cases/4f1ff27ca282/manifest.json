@@ -1,0 +1,51 @@
+{
+  "case_id": "4f1ff27ca282",
+  "bundle_version": "1.0.0",
+  "created_utc": "2026-02-12T21:06:12.128314+00:00",
+  "updated_utc": "2026-02-12T21:06:38.504887+00:00",
+  "procedure_type": "septoplasty",
+  "demographics": {
+    "age_years": 55,
+    "sex": "M",
+    "ethnicity": "hispanic",
+    "skin_fitzpatrick": 3
+  },
+  "acquisitions": [
+    {
+      "modality": "ct",
+      "acquisition_date": null,
+      "device": "synthetic_parametric_generator",
+      "resolution_mm": [
+        2.0,
+        2.0,
+        2.0
+      ],
+      "n_slices": 32,
+      "file_count": 1,
+      "content_hash": "0344db0966cbdc0a466894b4da943484dfbfdb7896507f33ec83873d32e802ea",
+      "notes": "Synthetically generated CT from parametric anatomy model"
+    },
+    {
+      "modality": "surface_scan",
+      "device": "synthetic_surface_extraction",
+      "file_count": 1,
+      "content_hash": "14afbcb7ae3a937ae56c9ff0ca0b614d20a0352630b2a231e13c8959fb3dca14",
+      "notes": "Surface extracted from synthetic CT"
+    }
+  ],
+  "segmentation_complete": true,
+  "registration_complete": false,
+  "landmarks_complete": false,
+  "mesh_complete": true,
+  "materials_complete": true,
+  "twin_complete": true,
+  "active_plan_hash": "",
+  "runs": [],
+  "quality_level": "synthetic",
+  "qc_checks_passed": 11,
+  "qc_checks_total": 11,
+  "consent_hash": "",
+  "access_log_hash": "",
+  "provenance_hash": "87203f757a32c7fc11e6a951b3d2d1c446e6a57a6cfcd40653f61b524120e26d",
+  "metadata": {}
+}

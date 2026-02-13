@@ -35,11 +35,14 @@ from .provenance import Provenance, hash_bytes, hash_dict, hash_file
 from .types import (
     ClinicalMeasurement,
     DicomMetadata,
+    MaterialModel,
     MeshElementType,
     Modality,
     ProcedureType,
     QualityLevel,
+    StructureType,
     SurfaceMesh,
+    TissueProperties,
     VolumeMesh,
 )
 
@@ -406,30 +409,62 @@ class CaseBundle:
     # ── Mesh I/O ──────────────────────────────────────────────
 
     def save_surface_mesh(self, name: str, mesh: SurfaceMesh) -> Path:
-        """Save a SurfaceMesh to the mesh/ subdirectory in NPZ format."""
+        """Save a SurfaceMesh to the mesh/ subdirectory in NPZ format.
+
+        Preserves all optional fields (vertex_colors, texture_coords,
+        vertex_labels) alongside the required geometry data.
+        """
         dest = self.subdir("mesh") / f"{name}_surface.npz"
         self._provenance.begin_step(f"save_surface_mesh_{name}")
-        np.savez_compressed(
-            dest,
-            vertices=mesh.vertices,
-            faces=mesh.triangles,
-            normals=mesh.normals if mesh.normals is not None else np.array([]),
-        )
+        save_dict: Dict[str, Any] = {
+            "vertices": mesh.vertices,
+            "faces": mesh.triangles,
+            "normals": mesh.normals if mesh.normals is not None else np.array([]),
+        }
+        if mesh.vertex_colors is not None:
+            save_dict["vertex_colors"] = mesh.vertex_colors
+        if mesh.texture_coords is not None:
+            save_dict["texture_coords"] = mesh.texture_coords
+        if mesh.vertex_labels is not None:
+            save_dict["vertex_labels"] = mesh.vertex_labels
+        np.savez_compressed(dest, **save_dict)
+        # Save metadata as sidecar JSON if present
+        if mesh.metadata:
+            import json as _json
+            meta_path = dest.with_suffix(".meta.json")
+            with open(meta_path, "w") as _mf:
+                _json.dump(mesh.metadata, _mf, indent=2, default=str)
         self._provenance.record_file(f"surface_mesh_{name}", dest, "surface_mesh")
         self._provenance.end_step()
         return dest
 
     def load_surface_mesh(self, name: str) -> SurfaceMesh:
-        """Load a SurfaceMesh from the mesh/ subdirectory."""
+        """Load a SurfaceMesh from the mesh/ subdirectory.
+
+        Restores all optional fields that were saved alongside geometry.
+        """
         path = self.subdir("mesh") / f"{name}_surface.npz"
         if not path.exists():
             raise FileNotFoundError(f"Surface mesh not found: {path}")
         data = np.load(path, allow_pickle=False)
         normals = data["normals"] if data["normals"].size > 0 else None
+        vertex_colors = data["vertex_colors"] if "vertex_colors" in data else None
+        texture_coords = data["texture_coords"] if "texture_coords" in data else None
+        vertex_labels = data["vertex_labels"] if "vertex_labels" in data else None
+        metadata: Dict[str, Any] = {}
+        meta_path = path.with_suffix(".meta.json")
+        if meta_path.exists():
+            import json as _json
+            with open(meta_path) as _mf:
+                metadata = _json.load(_mf)
         return SurfaceMesh(
             vertices=data["vertices"],
             triangles=data["faces"],
             normals=normals,
+            vertex_colors=vertex_colors,
+            texture_coords=texture_coords,
+            vertex_labels=vertex_labels,
+            metadata=metadata,
         )
 
     def save_volume_mesh(self, name: str, mesh: VolumeMesh) -> Path:
@@ -439,6 +474,7 @@ class CaseBundle:
         save_dict: Dict[str, Any] = {
             "nodes": mesh.nodes,
             "elements": mesh.elements,
+            "region_ids": mesh.region_ids,
         }
         # Store each surface tag as a separate named array to avoid
         # object-array pickle issues with np.savez_compressed.
@@ -447,6 +483,26 @@ class CaseBundle:
                 save_dict[f"st_{tag_name}"] = tag_arr
         np.savez_compressed(dest, **save_dict)
 
+        # Serialize region_materials as proper JSON-safe dicts preserving
+        # TissueProperties fields so they can be reconstructed on load.
+        def _serialize_tissue_props(v: Any) -> Any:
+            if isinstance(v, TissueProperties):
+                return {
+                    "structure_type": v.structure_type.value,
+                    "material_model": v.material_model.value,
+                    "parameters": dict(v.parameters),
+                    "density_kg_m3": v.density_kg_m3,
+                    "is_anisotropic": v.is_anisotropic,
+                    "fiber_direction": (
+                        list(v.fiber_direction) if v.fiber_direction is not None else None
+                    ),
+                    "source": v.source,
+                    "confidence": v.confidence,
+                }
+            if isinstance(v, (str, int, float, bool, dict, list, type(None))):
+                return v
+            return str(v)
+
         # Save region materials and surface tags as JSON sidecar
         sidecar = dest.with_suffix(".json")
         with open(sidecar, "w") as f:
@@ -454,8 +510,7 @@ class CaseBundle:
                 {
                     "element_type": mesh.element_type.value,
                     "region_materials": {
-                        str(k): (v if isinstance(v, (str, int, float, bool, dict, list, type(None)))
-                                 else str(v))
+                        str(k): _serialize_tissue_props(v)
                         for k, v in (mesh.region_materials or {}).items()
                     },
                     "surface_tags": {
@@ -474,8 +529,8 @@ class CaseBundle:
     def load_volume_mesh(self, name: str) -> VolumeMesh:
         """Load a VolumeMesh previously saved to the mesh/ subdirectory.
 
-        Reads ``mesh/{name}_volume.npz`` (nodes, elements) and the
-        companion ``.json`` sidecar (element_type, region_materials,
+        Reads ``mesh/{name}_volume.npz`` (nodes, elements, region_ids) and
+        the companion ``.json`` sidecar (element_type, region_materials,
         surface_tags).  Raises ``FileNotFoundError`` when the archive
         does not exist.
         """
@@ -486,6 +541,12 @@ class CaseBundle:
         data = np.load(npz_path, allow_pickle=False)
         nodes: np.ndarray = data["nodes"]
         elements: np.ndarray = data["elements"]
+
+        # Load region_ids from npz if present; fall back to all-zeros.
+        if "region_ids" in data:
+            region_ids: np.ndarray = data["region_ids"]
+        else:
+            region_ids = np.zeros(elements.shape[0], dtype=np.int32)
 
         # Sidecar carries element_type, region_materials, surface_tags
         sidecar_path = npz_path.with_suffix(".json")
@@ -498,9 +559,27 @@ class CaseBundle:
                 with open(sidecar_path, "r") as f:
                     sc = json.load(f)
                 element_type = MeshElementType(sc.get("element_type", "tet4"))
-                region_materials = {
-                    int(k): v for k, v in sc.get("region_materials", {}).items()
-                }
+                raw_rm = sc.get("region_materials", {})
+                for k, v in raw_rm.items():
+                    rid = int(k)
+                    if isinstance(v, dict) and "structure_type" in v:
+                        # Reconstruct TissueProperties from serialized dict
+                        fiber_dir = v.get("fiber_direction")
+                        region_materials[rid] = TissueProperties(
+                            structure_type=StructureType(v["structure_type"]),
+                            material_model=MaterialModel(v["material_model"]),
+                            parameters=dict(v.get("parameters", {})),
+                            density_kg_m3=float(v.get("density_kg_m3", 1000.0)),
+                            is_anisotropic=bool(v.get("is_anisotropic", False)),
+                            fiber_direction=(
+                                tuple(fiber_dir) if fiber_dir is not None else None
+                            ),
+                            source=str(v.get("source", "literature")),
+                            confidence=float(v.get("confidence", 0.8)),
+                        )
+                    else:
+                        # Legacy: keep raw value
+                        region_materials[rid] = v
                 surface_tags_meta = sc.get("surface_tags", {})
             except (json.JSONDecodeError, ValueError):
                 pass  # Corrupt sidecar — use defaults
@@ -525,7 +604,7 @@ class CaseBundle:
             nodes=nodes,
             elements=elements,
             element_type=element_type,
-            region_ids=np.zeros(elements.shape[0], dtype=np.int32),
+            region_ids=region_ids,
             region_materials=region_materials,
             surface_tags=surface_tags,
         )

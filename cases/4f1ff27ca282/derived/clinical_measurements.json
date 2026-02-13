@@ -1,0 +1,81 @@
+{
+  "measurements": [
+    {
+      "name": "nasal_dorsal_length",
+      "value": 35.824630652048405,
+      "unit": "mm",
+      "landmark_pair": [
+        "LandmarkType.NASION",
+        "LandmarkType.PRONASALE"
+      ],
+      "method": "synthetic_parametric",
+      "confidence": 1.0
+    },
+    {
+      "name": "tip_projection",
+      "value": 18.72651989000817,
+      "unit": "mm",
+      "landmark_pair": [
+        "LandmarkType.SUBNASALE",
+        "LandmarkType.PRONASALE"
+      ],
+      "method": "synthetic_parametric",
+      "confidence": 1.0
+    },
+    {
+      "name": "alar_width",
+      "value": 39.603018005593974,
+      "unit": "mm",
+      "landmark_pair": [
+        "LandmarkType.ALAR_RIM_LEFT",
+        "LandmarkType.ALAR_RIM_RIGHT"
+      ],
+      "method": "synthetic_parametric",
+      "confidence": 1.0
+    },
+    {
+      "name": "intercanthal_distance",
+      "value": 34.2342246635454,
+      "unit": "mm",
+      "landmark_pair": [
+        "LandmarkType.ENDOCANTHION_LEFT",
+        "LandmarkType.ENDOCANTHION_RIGHT"
+      ],
+      "method": "synthetic_parametric",
+      "confidence": 1.0
+    },
+    {
+      "name": "nasolabial_angle",
+      "value": 94.3305537989041,
+      "unit": "deg",
+      "landmark_pair": null,
+      "method": "synthetic_parametric",
+      "confidence": 1.0
+    },
+    {
+      "name": "face_height_upper",
+      "value": 70.0,
+      "unit": "mm",
+      "landmark_pair": null,
+      "method": "synthetic_parametric",
+      "confidence": 1.0
+    },
+    {
+      "name": "face_height_lower",
+      "value": 65.0,
+      "unit": "mm",
+      "landmark_pair": null,
+      "method": "synthetic_parametric",
+      "confidence": 1.0
+    },
+    {
+      "name": "nasal_bone_length",
+      "value": 19.405984561060002,
+      "unit": "mm",
+      "landmark_pair": null,
+      "method": "synthetic_parametric",
+      "confidence": 1.0
+    }
+  ],
+  "source": "synthetic_parametric"
+}

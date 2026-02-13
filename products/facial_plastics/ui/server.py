@@ -156,6 +156,18 @@ class _RequestHandler(BaseHTTPRequestHandler):
                     return app.get_visualization_data(case_id)
                 if sub == "timeline":
                     return app.get_timeline(case_id)
+                # ── Phase 7 endpoints ─────────────────────
+                if sub == "layers":
+                    return app.get_tissue_layers(case_id)
+                if sub == "cfd":
+                    return app.get_cfd_results(case_id, plan_hash=_q("plan_hash"))
+                if sub == "fem":
+                    return app.get_fem_results(case_id, plan_hash=_q("plan_hash"))
+                if sub == "dicom":
+                    return app.get_dicom_data(case_id)
+                if sub == "prediction":
+                    plan_hash = _q("plan_hash")
+                    return app.get_post_op_prediction(case_id, plan_hash)
 
         if path == "/api/operators":
             return app.list_operators(procedure=_q("procedure"))
@@ -212,10 +224,15 @@ class _RequestHandler(BaseHTTPRequestHandler):
             )
 
         if path == "/api/report":
+            include = body.get("include", {})
             return app.generate_report(
                 case_id=body["case_id"],
-                plan_dict=body["plan"],
+                plan_dict=body.get("plan"),
+                plan_hash=body.get("plan_hash"),
                 format=body.get("format", "html"),
+                include_images=include.get("includeImages", False),
+                include_measurements=include.get("includeMeasurements", True),
+                include_timeline=include.get("includeTimeline", True),
             )
 
         if path == "/api/compare/plans":
@@ -229,6 +246,102 @@ class _RequestHandler(BaseHTTPRequestHandler):
             return app.compare_cases(
                 case_id_a=body["case_id_a"],
                 case_id_b=body["case_id_b"],
+            )
+
+        # ── Phase 7 simulation endpoints ──────────────────────
+        if path == "/api/simulate/cfd":
+            return app.run_cfd_simulation(
+                case_id=body["case_id"],
+                plan_hash=body.get("plan_hash"),
+            )
+
+        if path == "/api/simulate/fem":
+            return app.run_fem_simulation(
+                case_id=body["case_id"],
+                plan_hash=body.get("plan_hash"),
+            )
+
+        if path == "/api/simulate/incision":
+            return app.execute_incision(
+                case_id=body["case_id"],
+                points=body["points"],
+                depth=body.get("depth", 5.0),
+                layers=body.get("layers"),
+            )
+
+        if path == "/api/simulate/osteotomy":
+            return app.execute_osteotomy(
+                case_id=body["case_id"],
+                plane=body["plane"],
+                movement=body.get("movement", {}),
+            )
+
+        if path == "/api/simulate/graft":
+            return app.place_graft(
+                case_id=body["case_id"],
+                position=body["position"],
+                normal=body["normal"],
+                graft_type=body.get("graft_type", "septal"),
+                dimensions=body.get("dimensions", {}),
+            )
+
+        if path == "/api/predict/postop":
+            return app.predict_post_op(
+                case_id=body["case_id"],
+                plan_hash=body.get("plan_hash"),
+            )
+
+        if path == "/api/dicom/upload":
+            return app.upload_dicom(
+                case_id=body["case_id"],
+                data=body.get("data"),
+            )
+
+        # ── Phase 8 analytics endpoints ───────────────────────
+        if path == "/api/evaluate/safety":
+            return app.evaluate_safety(
+                case_id=body["case_id"],
+                plan_hash=body.get("plan_hash"),
+            )
+
+        if path == "/api/evaluate/aesthetics":
+            return app.evaluate_aesthetics(
+                case_id=body["case_id"],
+                postop_landmarks=body.get("postop_landmarks"),
+            )
+
+        if path == "/api/evaluate/functional":
+            return app.evaluate_functional(
+                case_id=body["case_id"],
+                plan_hash=body.get("plan_hash"),
+            )
+
+        if path == "/api/predict/healing":
+            return app.get_healing_timeline(
+                case_id=body["case_id"],
+                plan_hash=body.get("plan_hash"),
+            )
+
+        # ── Phase 9 UQ + optimization endpoints ──────────────
+        if path == "/api/uncertainty":
+            return app.quantify_uncertainty(
+                case_id=body["case_id"],
+                plan_hash=body.get("plan_hash"),
+                n_samples=body.get("n_samples", 32),
+                n_sobol_base=body.get("n_sobol_base", 16),
+                compute_sobol=body.get("compute_sobol", True),
+                confidence_level=body.get("confidence_level", 0.95),
+            )
+
+        if path == "/api/optimize":
+            return app.optimize_plan(
+                case_id=body["case_id"],
+                template=body.get("template", "reduction_rhinoplasty"),
+                population_size=body.get("population_size", 20),
+                n_generations=body.get("n_generations", 20),
+                objectives=body.get("objectives"),
+                constraints=body.get("constraints"),
+                parameter_bounds=body.get("parameter_bounds"),
             )
 
         return {"error": f"Unknown POST route: {path}"}

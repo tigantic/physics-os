@@ -1,29 +1,54 @@
 <script>
-  import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
-  import { initApp, contractStore, casesStore } from '$lib/stores';
+  import { initApp, contractStore, casesStore, loadContract, loadCases } from '$lib/stores';
+  import { connectWs, disconnectWs, wsStatus, onWsMessage } from '$lib/ws-client';
   import PageTransition from '$lib/components/PageTransition.svelte';
   import '../sovereign.css';
 
   let connected = false;
-  let initError = '';
-  let bootPhase = 'contract'; // 'contract' | 'cases' | 'done'
+  let unsubWs = null;
 
-  onMount(async () => {
-    try {
-      bootPhase = 'contract';
-      await initApp();
-      bootPhase = 'done';
+  /**
+   * Boot the platform.
+   * SSR is disabled so top-level async is safe.
+   * The returned promise drives the {#await} template block,
+   * which the compiler cannot tree-shake.
+   */
+  async function runBoot() {
+    await initApp();
+
+    if ($contractStore.data) {
       connected = true;
-    } catch (err) {
-      initError = err instanceof Error ? err.message : 'Connection failed';
-      connected = false;
+    } else if ($contractStore.error) {
+      // Retry once
+      await loadContract();
+      if ($contractStore.data) {
+        connected = true;
+      } else {
+        throw new Error($contractStore.error || 'Contract load failed');
+      }
+    } else {
+      connected = true;
     }
-  });
 
-  $: if ($contractStore.error) { connected = false; initError = $contractStore.error; }
-  $: if ($contractStore.data) { connected = true; initError = ''; }
+    if (connected) {
+      connectWs();
+      unsubWs = onWsMessage('case_updated', () => loadCases());
+    }
+  }
+
+  /** Drives the {#await} block — reassigned on retry. */
+  let bootPromise = runBoot();
+
+  function retry() {
+    contractStore.reset();
+    connected = false;
+    bootPromise = runBoot();
+  }
+
+  $: if ($contractStore.error) { connected = false; }
+  $: if ($contractStore.data && !$contractStore.loading) { connected = true; }
 
   const navSections = [
     {
@@ -75,40 +100,41 @@
 
 <svelte:window on:keydown={handleKeydown} />
 
-{#if $contractStore.loading}
+{#await bootPromise}
   <div class="sov-boot">
     <div class="sov-boot-inner">
       <div class="sov-boot-mark">FPS</div>
       <div class="sov-boot-title">Sovereign</div>
-      <div class="sov-boot-sub">
-        {bootPhase === 'contract' ? 'Loading platform contract...' : 'Loading case library...'}
-      </div>
+      <div class="sov-boot-sub" aria-live="polite">Initializing platform...</div>
       <div class="sov-boot-progress">
-        <div class="sov-boot-bar" style="width: {bootPhase === 'contract' ? '30' : '70'}%;"></div>
+        <div class="sov-boot-bar" style="width: 30%;"></div>
       </div>
     </div>
   </div>
 
-{:else if !connected && initError}
+{:catch error}
   <div class="sov-boot">
     <div class="sov-boot-inner">
       <div class="sov-boot-mark" style="background: var(--sov-error);">!</div>
       <div class="sov-boot-title">Connection Failed</div>
-      <div class="sov-boot-sub">{initError}</div>
+      <div class="sov-boot-sub">{error.message || 'Unknown error'}</div>
       <div class="sov-boot-hint">
         Backend not running. Start with:<br />
         <code>python -m products.facial_plastics.ui.server --port 8420</code>
       </div>
       <button class="sov-btn sov-btn-primary" style="margin-top: 16px;"
-        on:click={() => { $contractStore.loading = true; initApp(); }}>
+        on:click={retry}>
         Retry
       </button>
     </div>
   </div>
 
-{:else}
+{:then}
   <div class="sov-shell">
-    <nav class="sov-sidebar">
+    <!-- A5: Skip-to-content link -->
+    <a href="#sov-main-content" class="sov-skip-link">Skip to content</a>
+
+    <nav class="sov-sidebar" aria-label="Main navigation">
       <div class="sov-logo">
         <div class="sov-logo-mark">FPS</div>
         <span class="sov-logo-text">Sovereign</span>
@@ -130,11 +156,17 @@
       <div style="margin-top: auto; padding: 12px 16px;">
         <div class="sov-connection">
           <span class="sov-connection-dot" class:offline={!connected}></span>
-          {connected ? 'Connected' : 'Offline'}
+          <span>{connected ? 'Connected' : 'Offline'}</span>
           {#if connected && $contractStore.data}
             <span style="margin-left: auto;">v{$contractStore.data.version}</span>
           {/if}
         </div>
+        {#if connected && $wsStatus === 'connected'}
+          <div class="sov-connection" style="margin-top: 4px; font-size: 9px;">
+            <span class="sov-connection-dot" style="width: 5px; height: 5px;"></span>
+            <span>Live</span>
+          </div>
+        {/if}
       </div>
     </nav>
 
@@ -160,13 +192,13 @@
       </div>
     </header>
 
-    <main class="sov-main">
+    <main class="sov-main" id="sov-main-content" aria-live="polite">
       <PageTransition key={currentPath}>
         <slot />
       </PageTransition>
     </main>
   </div>
-{/if}
+{/await}
 
 <style>
   .sov-boot {

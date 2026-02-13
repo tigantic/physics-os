@@ -1,0 +1,222 @@
+{
+  "case_id": "4f1ff27ca282",
+  "created_at": "2026-02-12T21:06:12.128353",
+  "records": [
+    {
+      "artifact_id": "manifest",
+      "content_hash": "133e9de4e66b0c21b661fe8fe77a557631f7b1741043deadf5ffb29585690562",
+      "artifact_type": "bundle_manifest",
+      "created_at": "2026-02-12T21:06:12.128444",
+      "producer_step": "bundle_create",
+      "input_hashes": [],
+      "software_versions": {
+        "python": "3.12.3",
+        "numpy": "2.2.6",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "facial_plastics": "1.0.0"
+      },
+      "config_hash": "",
+      "size_bytes": 665,
+      "path": "",
+      "metadata": {}
+    },
+    {
+      "artifact_id": "ct_volume",
+      "content_hash": "7cf9d8303a8ccaf13465824e627612eb46758087c62217270d237cb4346e3ba8",
+      "artifact_type": "array",
+      "created_at": "2026-02-12T21:06:12.175577",
+      "producer_step": "synthetic_ct",
+      "input_hashes": [],
+      "software_versions": {
+        "python": "3.12.3",
+        "numpy": "2.2.6",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "facial_plastics": "1.0.0"
+      },
+      "config_hash": "",
+      "size_bytes": 131200,
+      "path": "cases/4f1ff27ca282/inputs/ct_volume.npy",
+      "metadata": {}
+    },
+    {
+      "artifact_id": "ct_metadata",
+      "content_hash": "39402d0fa8126b07261a2d3d31d9dff79b589f8fa9efd936e555c4e0263b6b28",
+      "artifact_type": "json",
+      "created_at": "2026-02-12T21:06:12.175807",
+      "producer_step": "synthetic_ct_metadata",
+      "input_hashes": [],
+      "software_versions": {
+        "python": "3.12.3",
+        "numpy": "2.2.6",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "facial_plastics": "1.0.0"
+      },
+      "config_hash": "",
+      "size_bytes": 249,
+      "path": "cases/4f1ff27ca282/inputs/ct_metadata.json",
+      "metadata": {}
+    },
+    {
+      "artifact_id": "surface_mesh_facial_surface",
+      "content_hash": "eb6190498704cfc7a6cc54b204718e7f1335bef8585896effada6fce181762c9",
+      "artifact_type": "surface_mesh",
+      "created_at": "2026-02-12T21:06:12.206228",
+      "producer_step": "save_surface_mesh_facial_surface",
+      "input_hashes": [],
+      "software_versions": {
+        "python": "3.12.3",
+        "numpy": "2.2.6",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "facial_plastics": "1.0.0"
+      },
+      "config_hash": "",
+      "size_bytes": 45709,
+      "path": "cases/4f1ff27ca282/mesh/facial_surface_surface.npz",
+      "metadata": {}
+    },
+    {
+      "artifact_id": "landmarks",
+      "content_hash": "1b3e6ba390577745f3484f981a17f8928f3f314fad87b9a5628d645139bcaa80",
+      "artifact_type": "json",
+      "created_at": "2026-02-12T21:06:12.206638",
+      "producer_step": "synthetic_landmarks",
+      "input_hashes": [],
+      "software_versions": {
+        "python": "3.12.3",
+        "numpy": "2.2.6",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "facial_plastics": "1.0.0"
+      },
+      "config_hash": "",
+      "size_bytes": 5620,
+      "path": "cases/4f1ff27ca282/derived/landmarks.json",
+      "metadata": {}
+    },
+    {
+      "artifact_id": "clinical_measurements",
+      "content_hash": "fec224b0282b3cbdea0dabf84a685070cd0186fdb4a23e387800a9035f8b90d8",
+      "artifact_type": "json",
+      "created_at": "2026-02-12T21:06:12.206896",
+      "producer_step": "synthetic_measurements",
+      "input_hashes": [],
+      "software_versions": {
+        "python": "3.12.3",
+        "numpy": "2.2.6",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "facial_plastics": "1.0.0"
+      },
+      "config_hash": "",
+      "size_bytes": 1904,
+      "path": "cases/4f1ff27ca282/derived/clinical_measurements.json",
+      "metadata": {}
+    },
+    {
+      "artifact_id": "anthropometric_profile",
+      "content_hash": "939d42e693e3c193ad6575a45974f0fc3191ea19f4214d07243c0a9c4e198dd8",
+      "artifact_type": "json",
+      "created_at": "2026-02-12T21:06:12.207029",
+      "producer_step": "synthetic_profile",
+      "input_hashes": [],
+      "software_versions": {
+        "python": "3.12.3",
+        "numpy": "2.2.6",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "facial_plastics": "1.0.0"
+      },
+      "config_hash": "",
+      "size_bytes": 1491,
+      "path": "cases/4f1ff27ca282/derived/anthropometric_profile.json",
+      "metadata": {}
+    },
+    {
+      "artifact_id": "segmentation_labels",
+      "content_hash": "6ae188a469c920d9811b4d86a1ac133b015fb03cd31bb886dbf56df216753a46",
+      "artifact_type": "array",
+      "created_at": "2026-02-12T21:06:12.217050",
+      "producer_step": "segmentation",
+      "input_hashes": [],
+      "software_versions": {
+        "python": "3.12.3",
+        "numpy": "2.2.6",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "facial_plastics": "1.0.0"
+      },
+      "config_hash": "",
+      "size_bytes": 65664,
+      "path": "cases/4f1ff27ca282/derived/segmentation_labels.npy",
+      "metadata": {}
+    },
+    {
+      "artifact_id": "segmentation_summary",
+      "content_hash": "156224a1ee742aae6b2b807979f05b1e7c1eb8fd6e87a7a6ac8c961d8e541387",
+      "artifact_type": "json",
+      "created_at": "2026-02-12T21:06:12.217192",
+      "producer_step": "segmentation_summary",
+      "input_hashes": [],
+      "software_versions": {
+        "python": "3.12.3",
+        "numpy": "2.2.6",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "facial_plastics": "1.0.0"
+      },
+      "config_hash": "",
+      "size_bytes": 345,
+      "path": "cases/4f1ff27ca282/derived/segmentation_summary.json",
+      "metadata": {}
+    },
+    {
+      "artifact_id": "volume_mesh_fem_mesh",
+      "content_hash": "124d9b6b6abb582b76676b3bf03420167ec89654d9405acf23f7c246eee74cad",
+      "artifact_type": "volume_mesh",
+      "created_at": "2026-02-12T21:06:38.496691",
+      "producer_step": "save_volume_mesh_fem_mesh",
+      "input_hashes": [],
+      "software_versions": {
+        "python": "3.12.3",
+        "numpy": "2.2.6",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "facial_plastics": "1.0.0"
+      },
+      "config_hash": "",
+      "size_bytes": 1042378,
+      "path": "cases/4f1ff27ca282/mesh/fem_mesh_volume.npz",
+      "metadata": {}
+    },
+    {
+      "artifact_id": "volume_mesh_fem_mesh_sidecar",
+      "content_hash": "a6a1702f84c02c51af8cd8765e31e79b68299d4a2ca939e0d389ff3408f7b78b",
+      "artifact_type": "volume_mesh_sidecar",
+      "created_at": "2026-02-12T21:06:38.496737",
+      "producer_step": "save_volume_mesh_fem_mesh",
+      "input_hashes": [],
+      "software_versions": {
+        "python": "3.12.3",
+        "numpy": "2.2.6",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "facial_plastics": "1.0.0"
+      },
+      "config_hash": "",
+      "size_bytes": 18035,
+      "path": "cases/4f1ff27ca282/mesh/fem_mesh_volume.json",
+      "metadata": {}
+    },
+    {
+      "artifact_id": "materials",
+      "content_hash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "artifact_type": "json",
+      "created_at": "2026-02-12T21:06:38.503493",
+      "producer_step": "material_assignment",
+      "input_hashes": [],
+      "software_versions": {
+        "python": "3.12.3",
+        "numpy": "2.2.6",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "facial_plastics": "1.0.0"
+      },
+      "config_hash": "",
+      "size_bytes": 2,
+      "path": "cases/4f1ff27ca282/models/materials.json",
+      "metadata": {}
+    }
+  ]
+}

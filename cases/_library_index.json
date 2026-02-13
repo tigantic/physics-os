@@ -1,0 +1,38 @@
+{
+  "4f1ff27ca282": {
+    "case_id": "4f1ff27ca282",
+    "procedure_type": "septoplasty",
+    "modalities": [
+      "ct",
+      "surface_scan"
+    ],
+    "twin_complete": true,
+    "n_runs": 0,
+    "quality_level": "synthetic",
+    "created_utc": "2026-02-12T21:06:12.128314+00:00",
+    "updated_utc": "2026-02-12T21:06:38.504887+00:00",
+    "root": "cases/4f1ff27ca282"
+  },
+  "68a62a34e19a": {
+    "case_id": "68a62a34e19a",
+    "procedure_type": "rhinoplasty",
+    "modalities": [],
+    "twin_complete": false,
+    "n_runs": 0,
+    "quality_level": "draft",
+    "created_utc": "2026-02-13T00:07:09.795176+00:00",
+    "updated_utc": "2026-02-13T00:07:09.798339+00:00",
+    "root": "cases/68a62a34e19a"
+  },
+  "3a1496246d5d": {
+    "case_id": "3a1496246d5d",
+    "procedure_type": "rhinoplasty",
+    "modalities": [],
+    "twin_complete": false,
+    "n_runs": 0,
+    "quality_level": "draft",
+    "created_utc": "2026-02-13T00:07:16.013185+00:00",
+    "updated_utc": "2026-02-13T00:07:16.013332+00:00",
+    "root": "cases/3a1496246d5d"
+  }
+}

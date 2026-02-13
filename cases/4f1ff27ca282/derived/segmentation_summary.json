@@ -1,0 +1,18 @@
+{
+  "structures_found": [
+    "bone_nasal",
+    "cartilage_lower_lateral",
+    "cartilage_ear",
+    "skin_thick",
+    "smas",
+    "muscle_mimetic"
+  ],
+  "volumes_mm3": {
+    "bone_nasal": 99296.0,
+    "cartilage_lower_lateral": 192.0,
+    "cartilage_ear": 1448.0,
+    "skin_thick": 1320.0,
+    "smas": 968.0,
+    "muscle_mimetic": 79336.0
+  }
+}

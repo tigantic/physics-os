@@ -7,12 +7,15 @@ export default defineConfig({
 		port: 5173,
 		proxy: {
 			'/api': {
-				target: 'http://localhost:8002',
+				target: 'http://127.0.0.1:8421',
 				changeOrigin: true,
-				secure: false
+				secure: false,
+				headers: {
+					'X-API-Key': 'fp_QsU-wSv71x7KKxpNEjCxirFYtB76G7YrHNvq2C_nXgk'
+				}
 			},
 			'/ws': {
-				target: 'http://localhost:8002',
+				target: 'http://127.0.0.1:8421',
 				changeOrigin: true,
 				ws: true,
 				secure: false
@@ -20,6 +23,6 @@ export default defineConfig({
 		}
 	},
 	optimizeDeps: {
-		include: ['three', 'zod']
+		include: ['three']
 	}
 });

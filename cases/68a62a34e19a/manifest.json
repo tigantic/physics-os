@@ -1,0 +1,29 @@
+{
+  "case_id": "68a62a34e19a",
+  "bundle_version": "1.0.0",
+  "created_utc": "2026-02-13T00:07:09.795176+00:00",
+  "updated_utc": "2026-02-13T00:07:09.798339+00:00",
+  "procedure_type": "rhinoplasty",
+  "demographics": {
+    "age_years": null,
+    "sex": null,
+    "ethnicity": null,
+    "skin_fitzpatrick": null
+  },
+  "acquisitions": [],
+  "segmentation_complete": false,
+  "registration_complete": false,
+  "landmarks_complete": false,
+  "mesh_complete": false,
+  "materials_complete": false,
+  "twin_complete": false,
+  "active_plan_hash": "",
+  "runs": [],
+  "quality_level": "unknown",
+  "qc_checks_passed": 0,
+  "qc_checks_total": 0,
+  "consent_hash": "",
+  "access_log_hash": "",
+  "provenance_hash": "",
+  "metadata": {}
+}

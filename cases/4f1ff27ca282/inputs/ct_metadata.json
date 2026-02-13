@@ -1,0 +1,19 @@
+{
+  "voxel_spacing_mm": [
+    2.0,
+    2.0,
+    2.0
+  ],
+  "volume_shape": [
+    32,
+    32,
+    32
+  ],
+  "hu_range": [
+    -1024.0,
+    1342.8797607421875
+  ],
+  "source": "synthetic_parametric",
+  "grid_size": 32,
+  "generator_seed": 1405681632
+}

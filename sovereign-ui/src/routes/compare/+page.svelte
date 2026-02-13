@@ -1,24 +1,26 @@
 <script>
-  import { onMount } from 'svelte';
   import {
     casesStore,
     compareStore,
-    comparePlans,
+    activePlan,
+    compareTwoPlans,
     compareCases,
   } from '$lib/stores';
+  import { listSavedPlans, loadSavedPlan } from '$lib/plan-storage';
 
   // ── State ──────────────────────────────────────────────────
   let activeMode = 'plans';  // 'plans' | 'cases'
 
-  // Plan compare
-  let planIdA = '';
-  let planIdB = '';
+  // Plan compare — use saved plan pickers instead of free-text
+  let planSourceA = 'active'; // 'active' | saved plan id
+  let planSourceB = '';        // saved plan id
 
   // Case compare
   let caseIdA = '';
   let caseIdB = '';
 
-  onMount(() => {
+  // ── Set defaults (SSR off — safe at top level) ────────────
+  {
     const c = $casesStore.data?.cases ?? [];
     if (c.length >= 2) {
       caseIdA = c[0].case_id;
@@ -26,14 +28,28 @@
     } else if (c.length === 1) {
       caseIdA = c[0].case_id;
     }
-  });
+  }
 
   $: cases = $casesStore.data?.cases ?? [];
   $: result = $compareStore.data;
+  $: savedPlans = listSavedPlans();
+  $: currentPlan = $activePlan;
+
+  /** Resolve a plan source (active or saved ID) to a PlanDict */
+  function resolvePlan(source) {
+    if (source === 'active') return currentPlan;
+    const saved = loadSavedPlan(source);
+    return saved?.plan ?? null;
+  }
+
+  $: planA = resolvePlan(planSourceA);
+  $: planB = resolvePlan(planSourceB);
+  $: canComparePlans = planA && planB && planSourceA !== planSourceB;
 
   async function handleComparePlans() {
-    if (!planIdA || !planIdB) return;
-    await comparePlans(planIdA, planIdB);
+    if (!planA || !planB) return;
+    const caseId = cases.length > 0 ? cases[0].case_id : 'default';
+    await compareTwoPlans(caseId, planA, planB);
   }
 
   async function handleCompareCases() {
@@ -50,14 +66,14 @@
     return id ? id.substring(0, 10) + '...' : '';
   }
 
-  // Flatten comparison result for display
-  function flattenResult(obj, prefix = '') {
+  // Flatten comparison result for display (max 5 levels to prevent stack overflow)
+  function flattenResult(obj, prefix = '', depth = 0) {
     const items = [];
-    if (!obj || typeof obj !== 'object') return items;
+    if (!obj || typeof obj !== 'object' || depth > 5) return items;
     for (const [key, val] of Object.entries(obj)) {
       const fullKey = prefix ? `${prefix}.${key}` : key;
       if (val && typeof val === 'object' && !Array.isArray(val)) {
-        items.push(...flattenResult(val, fullKey));
+        items.push(...flattenResult(val, fullKey, depth + 1));
       } else {
         items.push({ key: fullKey, value: val });
       }
@@ -97,13 +113,27 @@
         <span class="sov-card-title" style="color: var(--sov-accent);">Plan A</span>
       </div>
       <div class="sov-card-body">
-        <label class="sov-label">Plan ID or Content Hash</label>
-        <input class="sov-input" type="text"
-          placeholder="Enter plan ID..."
-          bind:value={planIdA} />
-        <p class="text-muted" style="font-size: 10px; margin-top: 6px;">
-          Use content hash from Plan Editor compilation
-        </p>
+        <label class="sov-label" for="plan-source-a">Select Plan</label>
+        <select class="sov-select" style="width: 100%;" id="plan-source-a" bind:value={planSourceA}>
+          {#if currentPlan}
+            <option value="active">Active Plan — {currentPlan.name || 'Untitled'}</option>
+          {/if}
+          {#each savedPlans as sp}
+            <option value={sp.id}>
+              {sp.plan.name || 'Untitled'} — {new Date(sp.savedAt).toLocaleDateString()}
+            </option>
+          {/each}
+        </select>
+        {#if planA}
+          <p class="text-muted" style="font-size: 10px; margin-top: 6px;">
+            {planA.procedure} · {planA.n_steps} step{planA.n_steps !== 1 ? 's' : ''}
+            {#if planA.content_hash}· {planA.content_hash.substring(0, 10)}…{/if}
+          </p>
+        {:else}
+          <p class="text-muted" style="font-size: 10px; margin-top: 6px; color: var(--sov-warning);">
+            No plan selected
+          </p>
+        {/if}
       </div>
     </div>
 
@@ -116,17 +146,36 @@
         <span class="sov-card-title" style="color: var(--sov-warning);">Plan B</span>
       </div>
       <div class="sov-card-body">
-        <label class="sov-label">Plan ID or Content Hash</label>
-        <input class="sov-input" type="text"
-          placeholder="Enter plan ID..."
-          bind:value={planIdB} />
+        <label class="sov-label" for="plan-source-b">Select Plan</label>
+        <select class="sov-select" style="width: 100%;" id="plan-source-b" bind:value={planSourceB}>
+          <option value="">Select a saved plan...</option>
+          {#if currentPlan && planSourceA !== 'active'}
+            <option value="active">Active Plan — {currentPlan.name || 'Untitled'}</option>
+          {/if}
+          {#each savedPlans as sp}
+            {#if sp.id !== planSourceA}
+              <option value={sp.id}>
+                {sp.plan.name || 'Untitled'} — {new Date(sp.savedAt).toLocaleDateString()}
+              </option>
+            {/if}
+          {/each}
+        </select>
+        {#if planB}
+          <p class="text-muted" style="font-size: 10px; margin-top: 6px;">
+            {planB.procedure} · {planB.n_steps} step{planB.n_steps !== 1 ? 's' : ''}
+          </p>
+        {:else if savedPlans.length === 0}
+          <p class="text-muted" style="font-size: 10px; margin-top: 6px; color: var(--sov-warning);">
+            No saved plans — save plans from the Plan Editor first
+          </p>
+        {/if}
       </div>
     </div>
   </div>
 
   <div style="text-align: center; margin: 16px 0;">
     <button class="sov-btn sov-btn-primary"
-      disabled={!planIdA || !planIdB || $compareStore.loading}
+      disabled={!canComparePlans || $compareStore.loading}
       on:click={handleComparePlans}>
       {$compareStore.loading ? 'Comparing...' : '⟺ Compare Plans'}
     </button>
@@ -140,8 +189,8 @@
         <span class="sov-card-title" style="color: var(--sov-accent);">Case A</span>
       </div>
       <div class="sov-card-body">
-        <label class="sov-label">Case</label>
-        <select class="sov-select" style="width: 100%;" bind:value={caseIdA}>
+        <label class="sov-label" for="case-id-a">Case</label>
+        <select class="sov-select" style="width: 100%;" id="case-id-a" bind:value={caseIdA}>
           <option value="">Select case...</option>
           {#each cases as c}
             <option value={c.case_id}>
@@ -161,8 +210,8 @@
         <span class="sov-card-title" style="color: var(--sov-warning);">Case B</span>
       </div>
       <div class="sov-card-body">
-        <label class="sov-label">Case</label>
-        <select class="sov-select" style="width: 100%;" bind:value={caseIdB}>
+        <label class="sov-label" for="case-id-b">Case</label>
+        <select class="sov-select" style="width: 100%;" id="case-id-b" bind:value={caseIdB}>
           <option value="">Select case...</option>
           {#each cases.filter(c => c.case_id !== caseIdA) as c}
             <option value={c.case_id}>

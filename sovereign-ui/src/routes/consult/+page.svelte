@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from 'svelte';
   import {
     casesStore,
     activePlan,
@@ -28,12 +27,14 @@
   let sweepMax = 10;
   let sweepSteps = 5;
 
-  onMount(async () => {
-    await loadOperators();
-    if ($casesStore.data?.cases?.[0]) {
-      selectedCaseId = $casesStore.data.cases[0].case_id;
-    }
-  });
+  // ── Init (SSR off — safe at top level) ─────────────────────
+  loadOperators()
+    .then(() => {
+      if ($casesStore.data?.cases?.[0]) {
+        selectedCaseId = $casesStore.data.cases[0].case_id;
+      }
+    })
+    .catch((err) => console.error('[consult] init error:', err));
 
   // ── Derived ────────────────────────────────────────────────
   $: plan = $activePlan;
@@ -155,8 +156,8 @@
       </div>
       <div class="sov-card-body">
         <div style="margin-bottom: 12px;">
-          <label class="sov-label">Operator to modify</label>
-          <select class="sov-select" style="width: 100%;" bind:value={selectedOp}>
+          <label class="sov-label" for="whatif-operator">Operator to modify</label>
+          <select class="sov-select" style="width: 100%;" id="whatif-operator" bind:value={selectedOp}>
             <option value="">Choose operator...</option>
             {#each planSteps as step}
               <option value={step}>{formatName(step)}</option>
@@ -237,8 +238,8 @@
       </div>
       <div class="sov-card-body">
         <div style="margin-bottom: 12px;">
-          <label class="sov-label">Operator</label>
-          <select class="sov-select" style="width: 100%;" bind:value={sweepOp}>
+          <label class="sov-label" for="sweep-operator">Operator</label>
+          <select class="sov-select" style="width: 100%;" id="sweep-operator" bind:value={sweepOp}>
             <option value="">Choose operator...</option>
             {#each planSteps as step}
               <option value={step}>{formatName(step)}</option>
@@ -248,8 +249,8 @@
 
         {#if sweepOp && sweepableParams.length > 0}
           <div style="margin-bottom: 12px;">
-            <label class="sov-label">Parameter to sweep</label>
-            <select class="sov-select" style="width: 100%;" bind:value={sweepParam}>
+            <label class="sov-label" for="sweep-param">Parameter to sweep</label>
+            <select class="sov-select" style="width: 100%;" id="sweep-param" bind:value={sweepParam}>
               <option value="">Choose parameter...</option>
               {#each sweepableParams as { key, def }}
                 <option value={key}>{formatName(def.name || key)} ({def.unit || '—'})</option>
@@ -260,16 +261,16 @@
           {#if sweepParam}
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px;">
               <div>
-                <label class="sov-label">Min</label>
-                <input class="sov-input" type="number" step="0.1" bind:value={sweepMin} />
+                <label class="sov-label" for="sweep-min">Min</label>
+                <input class="sov-input" type="number" step="0.1" id="sweep-min" bind:value={sweepMin} />
               </div>
               <div>
-                <label class="sov-label">Max</label>
-                <input class="sov-input" type="number" step="0.1" bind:value={sweepMax} />
+                <label class="sov-label" for="sweep-max">Max</label>
+                <input class="sov-input" type="number" step="0.1" id="sweep-max" bind:value={sweepMax} />
               </div>
               <div>
-                <label class="sov-label">Steps</label>
-                <input class="sov-input" type="number" min="2" max="20" bind:value={sweepSteps} />
+                <label class="sov-label" for="sweep-steps">Steps</label>
+                <input class="sov-input" type="number" min="2" max="20" id="sweep-steps" bind:value={sweepSteps} />
               </div>
             </div>
           {/if}
@@ -302,20 +303,23 @@
         {:else if sweepData && chartPoints.length > 0}
           <!-- SVG Chart -->
           <div class="sweep-chart-wrap">
-            <svg viewBox="0 0 500 200" class="sweep-chart">
+            <svg viewBox="0 0 500 220" class="sweep-chart">
               <!-- Grid lines -->
               {#each [0, 25, 50, 75, 100] as pct}
                 <line x1="40" y1={pct * 1.8 + 10} x2="500" y2={pct * 1.8 + 10}
                   stroke="#1F2937" stroke-width="0.5" />
               {/each}
 
-              <!-- Axis labels -->
+              <!-- Y axis labels -->
               <text x="4" y="14" fill="#4B5563" font-size="8" font-family="JetBrains Mono">
                 {chartYMax.toFixed(1)}
               </text>
               <text x="4" y="192" fill="#4B5563" font-size="8" font-family="JetBrains Mono">
                 {chartYMin.toFixed(1)}
               </text>
+              <!-- Y axis title -->
+              <text x="2" y="105" fill="#6B7280" font-size="7" font-family="JetBrains Mono"
+                transform="rotate(-90, 2, 105)" text-anchor="middle">Result</text>
 
               <!-- Line -->
               {#if svgPath}
@@ -338,6 +342,10 @@
                   </text>
                 {/if}
               {/each}
+
+              <!-- X axis title -->
+              <text x="270" y="214" fill="#6B7280" font-size="7" font-family="JetBrains Mono"
+                text-anchor="middle">Parameter Value</text>
             </svg>
           </div>
 

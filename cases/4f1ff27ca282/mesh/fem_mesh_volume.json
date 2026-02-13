@@ -1,0 +1,191 @@
+{
+  "element_type": "tet4",
+  "region_materials": {
+    "0": {
+      "structure_type": "bone_nasal",
+      "material_model": "linear_elastic",
+      "parameters": {
+        "E": 15000.0,
+        "nu": 0.3
+      },
+      "density_kg_m3": 1000.0,
+      "is_anisotropic": false,
+      "fiber_direction": null,
+      "source": "literature",
+      "confidence": 0.8
+    },
+    "1": {
+      "structure_type": "bone_maxilla",
+      "material_model": "linear_elastic",
+      "parameters": {
+        "E": 13000.0,
+        "nu": 0.3
+      },
+      "density_kg_m3": 1000.0,
+      "is_anisotropic": false,
+      "fiber_direction": null,
+      "source": "literature",
+      "confidence": 0.8
+    },
+    "2": {
+      "structure_type": "cartilage_septum",
+      "material_model": "neo_hookean",
+      "parameters": {
+        "mu": 4.0,
+        "kappa": 40.0
+      },
+      "density_kg_m3": 1000.0,
+      "is_anisotropic": false,
+      "fiber_direction": null,
+      "source": "literature",
+      "confidence": 0.8
+    },
+    "3": {
+      "structure_type": "cartilage_upper_lateral",
+      "material_model": "neo_hookean",
+      "parameters": {
+        "mu": 3.5,
+        "kappa": 35.0
+      },
+      "density_kg_m3": 1000.0,
+      "is_anisotropic": false,
+      "fiber_direction": null,
+      "source": "literature",
+      "confidence": 0.8
+    },
+    "4": {
+      "structure_type": "cartilage_lower_lateral",
+      "material_model": "neo_hookean",
+      "parameters": {
+        "mu": 3.0,
+        "kappa": 30.0
+      },
+      "density_kg_m3": 1000.0,
+      "is_anisotropic": false,
+      "fiber_direction": null,
+      "source": "literature",
+      "confidence": 0.8
+    },
+    "5": {
+      "structure_type": "cartilage_alar",
+      "material_model": "neo_hookean",
+      "parameters": {
+        "mu": 2.5,
+        "kappa": 25.0
+      },
+      "density_kg_m3": 1000.0,
+      "is_anisotropic": false,
+      "fiber_direction": null,
+      "source": "literature",
+      "confidence": 0.8
+    },
+    "6": {
+      "structure_type": "skin_envelope",
+      "material_model": "ogden",
+      "parameters": {
+        "mu_1": 0.6,
+        "alpha_1": 6.0,
+        "kappa": 60.0
+      },
+      "density_kg_m3": 1000.0,
+      "is_anisotropic": false,
+      "fiber_direction": null,
+      "source": "literature",
+      "confidence": 0.8
+    },
+    "7": {
+      "structure_type": "skin_thick",
+      "material_model": "ogden",
+      "parameters": {
+        "mu_1": 0.8,
+        "alpha_1": 8.0,
+        "kappa": 80.0
+      },
+      "density_kg_m3": 1000.0,
+      "is_anisotropic": false,
+      "fiber_direction": null,
+      "source": "literature",
+      "confidence": 0.8
+    },
+    "8": {
+      "structure_type": "fat_subcutaneous",
+      "material_model": "neo_hookean",
+      "parameters": {
+        "mu": 0.3,
+        "kappa": 3.0
+      },
+      "density_kg_m3": 1000.0,
+      "is_anisotropic": false,
+      "fiber_direction": null,
+      "source": "literature",
+      "confidence": 0.8
+    },
+    "9": {
+      "structure_type": "fat_malar",
+      "material_model": "neo_hookean",
+      "parameters": {
+        "mu": 0.25,
+        "kappa": 2.5
+      },
+      "density_kg_m3": 1000.0,
+      "is_anisotropic": false,
+      "fiber_direction": null,
+      "source": "literature",
+      "confidence": 0.8
+    },
+    "10": {
+      "structure_type": "smas",
+      "material_model": "mooney_rivlin",
+      "parameters": {
+        "C1": 1.0,
+        "C2": 0.5,
+        "kappa": 50.0
+      },
+      "density_kg_m3": 1000.0,
+      "is_anisotropic": false,
+      "fiber_direction": null,
+      "source": "literature",
+      "confidence": 0.8
+    },
+    "11": {
+      "structure_type": "turbinate_inferior",
+      "material_model": "neo_hookean",
+      "parameters": {
+        "mu": 0.5,
+        "kappa": 5.0
+      },
+      "density_kg_m3": 1000.0,
+      "is_anisotropic": false,
+      "fiber_direction": null,
+      "source": "literature",
+      "confidence": 0.8
+    },
+    "12": {
+      "structure_type": "airway_nasal",
+      "material_model": "neo_hookean",
+      "parameters": {
+        "mu": 0.01,
+        "kappa": 0.1
+      },
+      "density_kg_m3": 1000.0,
+      "is_anisotropic": false,
+      "fiber_direction": null,
+      "source": "literature",
+      "confidence": 0.8
+    },
+    "13": {
+      "structure_type": "airway_nasopharynx",
+      "material_model": "neo_hookean",
+      "parameters": {
+        "mu": 0.01,
+        "kappa": 0.1
+      },
+      "density_kg_m3": 1000.0,
+      "is_anisotropic": false,
+      "fiber_direction": null,
+      "source": "literature",
+      "confidence": 0.8
+    }
+  },
+  "surface_tags": {}
+}
