@@ -21,10 +21,10 @@
 /// Halo2 circuit implementation for the thermal QTT solver verification.
 pub mod halo2_circuit {
     use halo2_axiom::{
-        circuit::{Layouter, SimpleFloorPlanner, Value},
+        circuit::{Cell, Layouter, SimpleFloorPlanner, Value},
         halo2curves::bn256::Fr,
         plonk::{
-            Advice, Assigned, Circuit, Column, ConstraintSystem, Error, Fixed, Instance,
+            Advice, Circuit, Column, ConstraintSystem, Error, Fixed, Instance,
             Selector,
         },
         poly::Rotation,
@@ -38,7 +38,7 @@ pub mod halo2_circuit {
         ThermalCircuitSizing, ThermalParams, Q16_SCALE,
     };
     use super::super::gadgets::{
-        q16_to_assigned, i64_to_assigned, ConservationGadget, SvdOrderingGadget,
+        q16_to_assigned, i64_to_assigned, ConservationGadget, PublicInputGadget, SvdOrderingGadget,
     };
     use super::super::witness::{ThermalWitness, WitnessGenerator};
 
@@ -269,6 +269,8 @@ pub mod halo2_circuit {
             config: Self::Config,
             mut layouter: impl Layouter<Fr>,
         ) -> Result<(), Error> {
+            let mut public_cells: Vec<Cell> = Vec::new();
+
             layouter.assign_region(
                 || "thermal_circuit",
                 |mut region| {
@@ -351,18 +353,26 @@ pub mod halo2_circuit {
                     )?;
 
                     // Phase 5: Public inputs
-                    let public_inputs = self.public_inputs();
-                    for (i, pi) in public_inputs.iter().enumerate() {
-                        region.assign_advice(
-                            config.a,
-                            row + i,
-                            Value::known(Assigned::from(*pi)),
-                        );
+                    let public_values = self.public_inputs();
+                    for val in &public_values {
+                        let cell = PublicInputGadget::assign_public_input(
+                            &mut region,
+                            config.c,
+                            row,
+                            *val,
+                        )?;
+                        public_cells.push(cell);
+                        row += 1;
                     }
 
                     Ok(())
                 },
             )?;
+
+            // Bind public cells to instance column
+            for (i, cell) in public_cells.into_iter().enumerate() {
+                layouter.constrain_instance(cell, config.public, i);
+            }
 
             Ok(())
         }

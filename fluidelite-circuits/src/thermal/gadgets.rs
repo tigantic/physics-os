@@ -14,7 +14,7 @@
 /// Halo2 gadget implementations for the thermal proof circuit.
 pub mod halo2_gadgets {
     use halo2_axiom::{
-        circuit::{Region, Value},
+        circuit::{Cell, Region, Value},
         halo2curves::bn256::Fr,
         plonk::{Advice, Assigned, Column, Error, Selector},
     };
@@ -423,34 +423,24 @@ pub mod halo2_gadgets {
     pub struct PublicInputGadget;
 
     impl PublicInputGadget {
-        /// Bind a single Q16 witness value to a public input instance cell.
-        pub fn bind_public_input(
+        /// Assign a public input value and return its cell for instance binding.
+        ///
+        /// The returned `Cell` **must** be passed to `layouter.constrain_instance()`
+        /// after the region closure to enforce that the witness value matches
+        /// the public statement.  Without that binding the verifier cannot
+        /// detect tampered public inputs — see Task 2.1 soundness audit.
+        pub fn assign_public_input(
             region: &mut Region<'_, Fr>,
-            advice_col: Column<Advice>,
+            c_col: Column<Advice>,
             row: usize,
-            value: Q16,
-        ) -> Result<usize, Error> {
-            region.assign_advice(
-                advice_col,
+            value: Fr,
+        ) -> Result<Cell, Error> {
+            let cell = region.assign_advice(
+                c_col,
                 row,
-                Value::known(q16_to_assigned(value)),
+                Value::known(Assigned::from(value)),
             );
-            Ok(row + 1)
-        }
-
-        /// Bind a 64-bit limb to a public input instance cell.
-        pub fn bind_hash_limb(
-            region: &mut Region<'_, Fr>,
-            advice_col: Column<Advice>,
-            row: usize,
-            limb: u64,
-        ) -> Result<usize, Error> {
-            region.assign_advice(
-                advice_col,
-                row,
-                Value::known(Assigned::from(Fr::from(limb))),
-            );
-            Ok(row + 1)
+            Ok(cell.cell())
         }
     }
 }
