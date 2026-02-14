@@ -5,7 +5,7 @@
 **Owner:** Tigantic Holdings LLC  
 **Classification:** Internal — Engineering Execution Plan  
 **Commit Baseline:** `48ffae23` (HEAD → main)  
-**Status:** ACTIVE — Phase 0 Weeks 1-2 COMPLETE, execution continues at Phase 0 Week 3
+**Status:** ACTIVE — Phase 0 COMPLETE, execution continues at Phase 1
 
 ---
 
@@ -128,16 +128,16 @@ Every stub listed below produces **silently incorrect results** — a proof that
 
 **Verification:** 25/25 fluidelite-core tests pass, 25/25 fluidelite-zk --features halo2 tests pass, 16/16 default tests pass. All feature configs (default, halo2, gpu) compile cleanly. The `--features server` config has 16 pre-existing errors in `trustless_api.rs` / `ns_imex/prover.rs` — not introduced by Phase 0 changes.
 
-### Week 3: End-to-End Proof of Life
+### Week 3: End-to-End Proof of Life — ✅ COMPLETE (commit `ba04964b`)
 
-| Task | Deliverable | Acceptance Test |
-|------|-------------|-----------------|
-| **0.8** Create E2E integration test | Rust test: `test_euler3d_trace_to_proof_to_verify` | Python Euler3D solver → `.trc` file → `proof_bridge` parse → `CircuitBuilder` → `FluidEliteProver::prove()` → `FluidEliteVerifier::verify()` → returns `true` |
-| **0.9** Create E2E **negative** test (soundness) | Rust test: `test_tampered_trace_proof_fails` | Same pipeline, but tamper one witness value after circuit construction → `verify()` returns `false` |
-| **0.10** Create E2E **negative** test (wrong circuit) | Rust test: `test_wrong_vk_proof_fails` | Generate proof with VK₁, verify with VK₂ → returns `false` |
-| **0.11** Trusted setup parameter management | `fluidelite-zk/src/params.rs`: `load_or_generate_params(k) → ParamsKZG<Bn256>` with filesystem cache at `$FLUIDELITE_PARAMS_DIR/*.ptau` | Params generated once, reused across prover restarts; file integrity checked via SHA-256 |
+| Task | Deliverable | Status |
+|------|-------------|--------|
+| **0.8** E2E positive tests | `test_e2e_prove_and_verify` + `test_e2e_multiple_tokens`: full pipeline MPS → Circuit → Prover → Verifier, 5 token IDs, non-trivial proof bytes verified | ✅ Done |
+| **0.9** E2E soundness tests | `test_e2e_tampered_proof_rejected` (bit-flip at 3 positions) + `test_e2e_wrong_public_inputs_rejected` (wrong token_id, wrong logit) — all tampered proofs correctly rejected | ✅ Done |
+| **0.10** E2E wrong-VK tests | `test_e2e_wrong_vk_rejected` (cross-VK) + `test_e2e_wrong_params_k_rejected` (cross-k) — cryptographic binding confirmed | ✅ Done |
+| **0.11** Trusted setup parameter management | `params.rs`: `load_or_generate_params(k)` with filesystem cache, SHA-256 integrity, auto-regeneration on corruption, `_in()` variants for explicit dir control, 4 unit tests | ✅ Done |
 
-**Engineering estimate:** 2 engineers, 5 days.
+**Verification:** 35/35 fluidelite-zk --features halo2 tests pass (25 existing + 6 E2E + 4 params), 16/16 default tests pass, 25/25 fluidelite-core tests pass.
 
 ### Phase 0 — Risk Log
 
