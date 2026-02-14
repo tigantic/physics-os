@@ -6,10 +6,11 @@ Run with:
     streamlit run demo/streamlit_app.py
 
 Requires server running:
-    FLUIDELITE_API_KEY="prodkey123" ./target/release/fluidelite-server \
+    FLUIDELITE_API_KEY="$FLUIDELITE_API_KEY" ./target/release/fluidelite-server \
         --production-v1 --weights fluidelite-zk/data/fluidelite_zk_production_zk_weights.json -k 12
 """
 
+import os
 import streamlit as st
 import requests
 import time
@@ -17,8 +18,13 @@ import json
 from typing import Optional, Tuple
 
 # Configuration
-API_URL = "http://localhost:8080"
-API_KEY = "prodkey123"
+API_URL = os.environ.get("FLUIDELITE_API_URL", "http://localhost:8080")
+API_KEY = os.environ.get("FLUIDELITE_API_KEY", "")
+if not API_KEY:
+    raise RuntimeError(
+        "FLUIDELITE_API_KEY environment variable is required. "
+        "Set it before running: export FLUIDELITE_API_KEY=<your-key>"
+    )
 
 # Character mapping (matches training)
 CHAR_TO_IDX = {chr(i): i for i in range(256)}
@@ -102,7 +108,7 @@ with st.sidebar:
         st.error(f"❌ {status_msg}")
         st.code("""
 # Start the server:
-FLUIDELITE_API_KEY="prodkey123" \\
+export FLUIDELITE_API_KEY=<your-api-key>
 ./target/release/fluidelite-server \\
   --production-v1 \\
   --weights fluidelite-zk/data/fluidelite_zk_production_zk_weights.json \\

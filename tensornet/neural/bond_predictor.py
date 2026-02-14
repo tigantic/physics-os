@@ -549,11 +549,7 @@ class BondDimensionPredictor:
     ) -> BondDimensionPredictor:
         """Load predictor from file."""
         path = Path(path)
-        checkpoint = torch.load(path, map_location=device)
-
-        predictor = cls(
-            config=checkpoint["config"],
-            chi_min=checkpoint["chi_min"],
+        checkpoint = torch.load(path, map_location=device, weights_only=True)
             chi_max=checkpoint["chi_max"],
             device=device,
         )

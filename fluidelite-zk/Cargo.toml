@@ -120,6 +120,18 @@ icicle-bn254 = { git = "https://github.com/ingonyama-zk/icicle.git", tag = "v4.0
 # Constant-time comparison for security-sensitive operations
 subtle = "2.5"
 
+# Ed25519 digital signatures for TPC certificate authority
+ed25519-dalek = { version = "2.1", features = ["std", "rand_core"] }
+
+# UUID generation for certificate IDs
+uuid = { version = "1.8", features = ["v4", "serde"] }
+
+# HTTP client for upstream prover validation
+reqwest = { version = "0.12", features = ["json"], optional = true }
+
+# Temporary directories for tests
+tempfile = "3.10"
+
 # Lock-free concurrent hash map for rate limiting
 dashmap = { version = "6.1", optional = true }
 
@@ -228,7 +240,7 @@ halo2 = ["dep:halo2-axiom", "fluidelite-circuits/halo2"]
 # Enable Python bindings
 python = ["dep:pyo3", "halo2"]
 # Enable REST API server
-server = ["dep:axum", "dep:tower", "dep:tower-http", "dep:dashmap", "halo2"]
+server = ["dep:axum", "dep:tower", "dep:tower-http", "dep:dashmap", "dep:reqwest", "halo2"]
 # Enable GPU acceleration via Icicle (requires CUDA 12+)
 gpu = ["dep:icicle-runtime", "dep:icicle-core", "dep:icicle-bn254", "halo2"]
 # Enable weight encryption for enterprise IP protection (sha2 always available)
@@ -257,3 +269,8 @@ required-features = ["server", "gpu"]
 name = "groth16-api"
 path = "src/bin/groth16_api.rs"
 required-features = ["groth16", "server"]
+
+[[bin]]
+name = "certificate-authority"
+path = "src/bin/certificate_authority.rs"
+required-features = ["server"]

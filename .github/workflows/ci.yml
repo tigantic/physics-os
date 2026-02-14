@@ -134,7 +134,6 @@ jobs:
 
       - name: Run mypy
         run: python -m mypy tensornet --ignore-missing-imports
-        continue-on-error: true
 
   # ============================================
   # Stage 3: Security Scan
@@ -157,11 +156,9 @@ jobs:
 
       - name: Run Bandit
         run: bandit -r tensornet -ll -ii
-        continue-on-error: true
 
       - name: Check for secrets
         run: detect-secrets scan --baseline .secrets.baseline
-        continue-on-error: true
 
   # ============================================
   # Stage 4: Unit Tests
@@ -185,7 +182,6 @@ jobs:
 
       - name: Run unit tests with coverage
         run: pytest tests/ -v --ignore=tests/integration -x --tb=short --cov=tensornet --cov-report=xml --cov-report=term-missing
-        continue-on-error: true
       
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4

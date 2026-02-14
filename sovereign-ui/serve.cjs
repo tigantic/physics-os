@@ -12,7 +12,11 @@ const fs = require('fs');
 const path = require('path');
 
 const BACKEND = 'http://127.0.0.1:8421';
-const API_KEY = process.env.FPS_API_KEY || 'fp_QsU-wSv71x7KKxpNEjCxirFYtB76G7YrHNvq2C_nXgk';
+const API_KEY = process.env.FPS_API_KEY;
+if (!API_KEY) {
+  console.error('FATAL: FPS_API_KEY environment variable is required.\n  Export it before starting: export FPS_API_KEY=<your-key>');
+  process.exit(1);
+}
 const BUILD_DIR = path.resolve(__dirname, 'build');
 const PORT = parseInt(process.argv.find((_, i, a) => a[i - 1] === '--port') || '4000', 10);
 

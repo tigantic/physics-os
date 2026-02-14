@@ -361,7 +361,7 @@ def load_checkpoint(
 ) -> TrainingState:
     """Load training checkpoint."""
     
-    checkpoint = torch.load(path, map_location=device)
+    checkpoint = torch.load(path, map_location=device, weights_only=True)
     model.load_state_dict(checkpoint["model_state_dict"])
     optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
     

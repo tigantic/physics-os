@@ -625,9 +625,7 @@ class AlgorithmSelector:
     def load(cls, path: str | Path, device: str = "cpu") -> AlgorithmSelector:
         """Load selector from file."""
         path = Path(path)
-        checkpoint = torch.load(path, map_location=device)
-
-        selector = cls(hidden_dim=checkpoint["hidden_dim"], device=device)
+        checkpoint = torch.load(path, map_location=device, weights_only=True)
         selector.network.load_state_dict(checkpoint["network_state"])
 
         return selector

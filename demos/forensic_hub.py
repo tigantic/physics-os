@@ -973,7 +973,7 @@ class ForensicHub(QMainWindow):
             
         self._log("Loading weather manifold...")
         
-        data = torch.load(data_path, weights_only=False)
+        data = torch.load(data_path, weights_only=True)
         
         self.field_data = {
             'u': data['u'],

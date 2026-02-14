@@ -367,7 +367,7 @@ from pathlib import Path
 
 # Load results
 results_dir = Path(__file__).parent.parent / 'results'
-field = torch.load(results_dir / 'mach5_wedge_field.pt')
+field = torch.load(results_dir / 'mach5_wedge_field.pt', weights_only=True)
 
 # Extract data
 rho = field['rho'].numpy()

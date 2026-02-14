@@ -139,7 +139,7 @@ class CFDViewer(QMainWindow):
             print("Run a CFD benchmark first: python scripts/mach5_wedge.py")
             sys.exit(1)
             
-        data = torch.load(data_path, weights_only=False)
+        data = torch.load(data_path, weights_only=True)
         
         # Convert to numpy
         result = {}

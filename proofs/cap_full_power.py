@@ -412,7 +412,7 @@ def main():
         print("LOADING REFINED PROFILE")
         print("=" * 64)
 
-        refined_data = torch.load(refined_path)
+        refined_data = torch.load(refined_path, weights_only=True)
         profile = refined_data["profile"]
         optimal_alpha = refined_data["alpha"]
         profile_type = "refined-hou-luo"

@@ -360,8 +360,7 @@ class SelfSimilarProfile:
     @classmethod
     def load(cls, path: str) -> SelfSimilarProfile:
         """Load profile from disk."""
-        data = torch.load(path)
-        scaling = SelfSimilarScaling(
+        data = torch.load(path, weights_only=True)
             alpha=data["alpha"], beta=data["beta"], T_star=data["T_star"]
         )
         return cls(

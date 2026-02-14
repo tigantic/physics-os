@@ -573,7 +573,7 @@ class CheckpointManager:
             raise KeyError(f"No checkpoint at step {step}")
 
         filepath = self._checkpoints[step]
-        data = torch.load(filepath)
+        data = torch.load(filepath, weights_only=True)
 
         return data["state"], data["metadata"]
 

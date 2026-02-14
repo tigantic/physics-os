@@ -178,7 +178,7 @@ def load_checkpoint(path: Union[str, Path]) -> SimulationState:
         )
 
     # ── mesh ──
-    mesh_dict = torch.load(ckpt_dir / "mesh.pt", weights_only=False)
+    mesh_dict = torch.load(ckpt_dir / "mesh.pt", weights_only=True)
     mesh = _deserialize_mesh(mesh_dict)
 
     # ── fields ──
@@ -186,7 +186,7 @@ def load_checkpoint(path: Union[str, Path]) -> SimulationState:
     field_meta = meta.get("field_meta", {})
     fields_dir = ckpt_dir / "fields"
     for fname, fmeta in field_meta.items():
-        data = torch.load(fields_dir / f"{fname}.pt", weights_only=False)
+        data = torch.load(fields_dir / f"{fname}.pt", weights_only=True)
         fields[fname] = FieldData(
             name=fname,
             data=data,

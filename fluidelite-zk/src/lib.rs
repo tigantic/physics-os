@@ -104,6 +104,9 @@ pub mod server;
 #[cfg(feature = "server")]
 pub mod trustless_api;
 
+#[cfg(feature = "server")]
+pub mod certificate_authority;
+
 #[cfg(feature = "gpu")]
 pub mod gpu;
 

@@ -1190,7 +1190,7 @@ class ForensicInstrument(QMainWindow):
             return
         
         self._log("Loading manifold...")
-        data = torch.load(path, weights_only=False)
+        data = torch.load(path, weights_only=True)
         
         self.field_data = {
             'u': data['u'],

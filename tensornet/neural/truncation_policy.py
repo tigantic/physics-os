@@ -377,9 +377,7 @@ class TruncationPolicy:
     def load(cls, path: str | Path, device: str = "cpu") -> TruncationPolicy:
         """Load policy from file."""
         path = Path(path)
-        checkpoint = torch.load(path, map_location=device)
-
-        network = PolicyNetwork(
+        checkpoint = torch.load(path, map_location=device, weights_only=True)
             state_dim=checkpoint["state_dim"],
             action_dim=checkpoint["action_dim"],
             hidden_dim=checkpoint["hidden_dim"],

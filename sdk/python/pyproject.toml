@@ -1,0 +1,55 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "fluidelite-verify"
+version = "1.0.0"
+description = "TPC Certificate Verification SDK — verify Trustless Physics Certificates locally and on-chain"
+readme = "README.md"
+license = { text = "LicenseRef-Proprietary" }
+requires-python = ">=3.10"
+authors = [
+    { name = "Bradly Biron Baker Adams", email = "brad@tigantic.com" },
+]
+keywords = ["zk", "verification", "tpc", "physics", "certificate"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security :: Cryptography",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    "PyNaCl>=1.5.0",
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+web3 = ["web3>=6.0.0"]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.23",
+    "mypy>=1.0",
+    "ruff>=0.3",
+]
+
+[project.urls]
+Homepage = "https://github.com/tigantic/FluidElite"
+Documentation = "https://docs.fluidelite.io/sdk/python"
+Repository = "https://github.com/tigantic/FluidElite"
+
+[tool.hatch.build.targets.wheel]
+packages = ["fluidelite_verify"]
+
+[tool.mypy]
+strict = true
+python_version = "3.10"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

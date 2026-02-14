@@ -216,7 +216,7 @@ def main():
    Or use the weather data in your own scripts:
    
    import torch
-   data = torch.load('{output_path}')
+   data = torch.load('{output_path}', weights_only=True)
    u_wind = data['u']  # Shape: (31, 90, 180)
    # Access any pressure level:
    surface_winds = u_wind[0]  # 1000 hPa (surface)

@@ -316,7 +316,7 @@ def main():
     print("=" * 60)
     
     # Load best model
-    checkpoint = torch.load(save_dir / "fluidelite_zk_extended_best.pt")
+    checkpoint = torch.load(save_dir / "fluidelite_zk_extended_best.pt", weights_only=True)
     model.load_state_dict(checkpoint['model_state_dict'])
     
     # Export to ZK format

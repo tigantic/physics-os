@@ -153,7 +153,7 @@ class WeatherViewer(QMainWindow):
                 print("ERROR: Ingestion failed")
                 sys.exit(1)
         
-        data = torch.load(data_path, weights_only=False)
+        data = torch.load(data_path, weights_only=True)
         
         print(f"✅ Loaded weather manifold")
         print(f"   Shape: {data['u'].shape} (levels × lat × lon)")

@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TPC Certificate Explorer — FluidElite</title>
+  <style>
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #21262d;
+      --border: #30363d;
+      --text-primary: #e6edf3;
+      --text-secondary: #8b949e;
+      --accent: #58a6ff;
+      --accent-hover: #79c0ff;
+      --success: #3fb950;
+      --danger: #f85149;
+      --warning: #d29922;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    /* ── Header ──────────────────────────────────────────────── */
+
+    .header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .header .badge {
+      background: var(--bg-tertiary);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+
+    /* ── Controls ─────────────────────────────────────────────── */
+
+    .controls {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .controls input, .controls select {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 8px 12px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .controls input:focus, .controls select:focus {
+      border-color: var(--accent);
+    }
+
+    .controls input[type="text"] { flex: 1; min-width: 200px; }
+
+    .controls button {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .controls button:hover { background: var(--accent-hover); }
+    .controls button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .controls .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .controls .btn-secondary:hover { border-color: var(--accent); }
+
+    /* ── Layout ───────────────────────────────────────────────── */
+
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      height: calc(100vh - 108px);
+    }
+
+    @media (max-width: 1024px) {
+      .main { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+    }
+
+    .panel:last-child { border-right: none; }
+
+    .panel-header {
+      position: sticky;
+      top: 0;
+      background: var(--bg-secondary);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      z-index: 10;
+    }
+
+    /* ── Certificate List ─────────────────────────────────────── */
+
+    .cert-list { padding: 8px; }
+
+    .cert-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .cert-item:hover { border-color: var(--accent); }
+    .cert-item.selected { border-color: var(--accent); background: rgba(88,166,255,0.05); }
+
+    .cert-item .cert-id {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .cert-item .cert-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .cert-item .cert-meta .domain {
+      background: var(--bg-tertiary);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: var(--font-mono);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-valid { background: rgba(63,185,80,0.15); color: var(--success); }
+    .status-revoked { background: rgba(248,81,73,0.15); color: var(--danger); }
+    .status-superseded { background: rgba(210,153,34,0.15); color: var(--warning); }
+    .status-unverified { background: var(--bg-tertiary); color: var(--text-secondary); }
+
+    /* ── Detail Panel ─────────────────────────────────────────── */
+
+    .detail { padding: 16px; }
+
+    .detail-empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .detail-section {
+      margin-bottom: 24px;
+    }
+
+    .detail-section h3 {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 6px 0;
+      font-size: 13px;
+    }
+
+    .detail-row .label {
+      color: var(--text-secondary);
+      min-width: 140px;
+    }
+
+    .detail-row .value {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      word-break: break-all;
+      text-align: right;
+      max-width: 60%;
+    }
+
+    .detail-row .value a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .detail-row .value a:hover { text-decoration: underline; }
+
+    /* ── Layers ───────────────────────────────────────────────── */
+
+    .layer-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+
+    .layer-card summary {
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .layer-card pre {
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    /* ── File Drop Zone ───────────────────────────────────────── */
+
+    .drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      text-align: center;
+      color: var(--text-secondary);
+      margin: 16px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .drop-zone.drag-over {
+      border-color: var(--accent);
+      background: rgba(88,166,255,0.05);
+    }
+
+    .drop-zone p { margin-bottom: 8px; }
+    .drop-zone .hint { font-size: 12px; }
+
+    /* ── Stats Bar ────────────────────────────────────────────── */
+
+    .stats-bar {
+      display: flex;
+      gap: 24px;
+      padding: 8px 24px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .stats-bar .stat-value {
+      font-family: var(--font-mono);
+      color: var(--text-primary);
+      margin-left: 4px;
+    }
+
+    /* ── Spinner ──────────────────────────────────────────────── */
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Toast ────────────────────────────────────────────────── */
+
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+    }
+
+    .toast {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      margin-top: 8px;
+      font-size: 13px;
+      animation: slideIn 0.3s ease;
+      max-width: 400px;
+    }
+
+    .toast.success { border-color: var(--success); }
+    .toast.error { border-color: var(--danger); }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ──────────────────────────────────────────── -->
+  <div class="header">
+    <h1>TPC Certificate Explorer</h1>
+    <span class="badge">FluidElite v1.0</span>
+    <span class="badge" id="network-badge">Offline</span>
+  </div>
+
+  <!-- ── Controls ─────────────────────────────────────────── -->
+  <div class="controls">
+    <input type="text" id="search-input" placeholder="Search by certificate ID, content hash, or domain..." />
+    <select id="domain-filter">
+      <option value="">All Domains</option>
+      <option value="thermal">Thermal</option>
+      <option value="euler3d">Euler3D</option>
+      <option value="ns_imex">NS-IMEX</option>
+      <option value="fluidelite">FluidElite</option>
+    </select>
+    <select id="status-filter">
+      <option value="">All Statuses</option>
+      <option value="valid">Valid</option>
+      <option value="revoked">Revoked</option>
+      <option value="superseded">Superseded</option>
+    </select>
+    <button id="btn-load-file" class="btn-secondary">Load .tpc File</button>
+    <input type="file" id="file-input" accept=".tpc" style="display:none" />
+    <button id="btn-connect-ca" class="btn-secondary">Connect to CA</button>
+  </div>
+
+  <!-- ── Stats Bar ────────────────────────────────────────── -->
+  <div class="stats-bar">
+    <span>Total: <span class="stat-value" id="stat-total">0</span></span>
+    <span>Valid: <span class="stat-value" id="stat-valid">0</span></span>
+    <span>Thermal: <span class="stat-value" id="stat-thermal">0</span></span>
+    <span>Euler3D: <span class="stat-value" id="stat-euler3d">0</span></span>
+    <span>NS-IMEX: <span class="stat-value" id="stat-ns_imex">0</span></span>
+    <span>FluidElite: <span class="stat-value" id="stat-fluidelite">0</span></span>
+  </div>
+
+  <!-- ── Main Layout ──────────────────────────────────────── -->
+  <div class="main">
+    <!-- Left: Certificate List -->
+    <div class="panel">
+      <div class="panel-header">Certificates</div>
+      <div id="cert-list" class="cert-list">
+        <div class="drop-zone" id="drop-zone">
+          <p>Drop .tpc files here to inspect</p>
+          <p class="hint">or connect to a Certificate Authority</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Detail View -->
+    <div class="panel">
+      <div class="panel-header">Certificate Detail</div>
+      <div id="detail-view">
+        <div class="detail-empty">Select a certificate to view details</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Toast Container ──────────────────────────────────── -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ── CA Connection Modal ──────────────────────────────── -->
+  <dialog id="ca-modal" style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;color:var(--text-primary);padding:24px;width:400px;">
+    <h3 style="margin-bottom:16px;">Connect to Certificate Authority</h3>
+    <label style="display:block;margin-bottom:8px;font-size:13px;color:var(--text-secondary);">CA URL</label>
+    <input type="text" id="ca-url-input" value="http://localhost:8444" style="width:100%;background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-primary);padding:8px;border-radius:6px;margin-bottom:12px;font-size:14px;" />
+    <label style="display:block;margin-bottom:8px;font-size:13px;color:var(--text-secondary);">API Key (optional)</label>
+    <input type="password" id="ca-key-input" style="width:100%;background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-primary);padding:8px;border-radius:6px;margin-bottom:16px;font-size:14px;" />
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button onclick="document.getElementById('ca-modal').close()" style="background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border);padding:8px 16px;border-radius:6px;cursor:pointer;">Cancel</button>
+      <button id="btn-connect-confirm" style="background:var(--accent);color:#000;border:none;padding:8px 16px;border-radius:6px;font-weight:600;cursor:pointer;">Connect</button>
+    </div>
+  </dialog>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════════
+    // TPC Certificate Explorer — Client-Side Logic
+    // ═══════════════════════════════════════════════════════════════════
+
+    const TPC_MAGIC = [0x54, 0x50, 0x43, 0x01];
+    const HEADER_SIZE = 64;
+    const SIG_SECTION_SIZE = 128;
+
+    // State
+    let certificates = [];
+    let selectedCertId = null;
+    let caUrl = null;
+    let caApiKey = null;
+
+    // ── Utility ─────────────────────────────────────────────
+
+    function toHex(bytes) {
+      return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function readU32LE(data, offset) {
+      return (data[offset] | (data[offset+1]<<8) | (data[offset+2]<<16) | (data[offset+3]<<24)) >>> 0;
+    }
+
+    function readU16LE(data, offset) {
+      return data[offset] | (data[offset+1]<<8);
+    }
+
+    function uuidFromBytes(bytes) {
+      const h = toHex(bytes);
+      return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20,32)}`;
+    }
+
+    async function sha256(data) {
+      const hashBuf = await crypto.subtle.digest('SHA-256', data);
+      return toHex(new Uint8Array(hashBuf));
+    }
+
+    function toast(msg, type='success') {
+      const container = document.getElementById('toast-container');
+      const el = document.createElement('div');
+      el.className = `toast ${type}`;
+      el.textContent = msg;
+      container.appendChild(el);
+      setTimeout(() => el.remove(), 5000);
+    }
+
+    // ── Parse TPC ───────────────────────────────────────────
+
+    async function parseTPC(data) {
+      const bytes = new Uint8Array(data);
+
+      if (bytes.length < HEADER_SIZE + SIG_SECTION_SIZE) {
+        throw new Error('Certificate too short');
+      }
+
+      // Check magic
+      for (let i = 0; i < 4; i++) {
+        if (bytes[i] !== TPC_MAGIC[i]) throw new Error('Invalid TPC magic');
+      }
+
+      // Header
+      const version = readU32LE(bytes, 4);
+      const certId = uuidFromBytes(bytes.slice(8, 24));
+      const view = new DataView(bytes.buffer, bytes.byteOffset);
+      const timestampNs = view.getBigInt64(24, true);
+      const solverHash = toHex(bytes.slice(32, 64));
+
+      // Signature section
+      const sigStart = bytes.length - SIG_SECTION_SIZE;
+      const pubkey = toHex(bytes.slice(sigStart, sigStart + 32));
+      const signature = toHex(bytes.slice(sigStart + 32, sigStart + 96));
+      const storedHash = toHex(bytes.slice(sigStart + 96, sigStart + 128));
+
+      // Content hash
+      const contentHash = await sha256(bytes.slice(0, sigStart));
+      const hashValid = contentHash === storedHash;
+
+      // Parse layers
+      const layers = [];
+      let offset = HEADER_SIZE;
+      const decoder = new TextDecoder();
+
+      while (offset < sigStart) {
+        if (offset + 4 > sigStart) break;
+        const jsonLen = readU32LE(bytes, offset);
+        offset += 4;
+        if (offset + jsonLen > sigStart) break;
+
+        let metadata;
+        try {
+          metadata = JSON.parse(decoder.decode(bytes.slice(offset, offset + jsonLen)));
+        } catch { metadata = { raw: toHex(bytes.slice(offset, offset + jsonLen)) }; }
+        offset += jsonLen;
+
+        if (offset + 4 > sigStart) { layers.push({ metadata, blobs: [] }); break; }
+        const blobCount = readU32LE(bytes, offset);
+        offset += 4;
+
+        const blobs = [];
+        for (let i = 0; i < blobCount; i++) {
+          if (offset + 2 > sigStart) break;
+          const nameLen = readU16LE(bytes, offset); offset += 2;
+          if (offset + nameLen > sigStart) break;
+          const name = decoder.decode(bytes.slice(offset, offset + nameLen)); offset += nameLen;
+          if (offset + 4 > sigStart) break;
+          const blobLen = readU32LE(bytes, offset); offset += 4;
+          if (offset + blobLen > sigStart) break;
+          blobs.push({ name, size: blobLen });
+          offset += blobLen;
+        }
+
+        layers.push({ metadata, blobs });
+      }
+
+      // Extract domain
+      let domain = 'unknown';
+      for (const l of layers) {
+        if (l.metadata && l.metadata.domain) { domain = l.metadata.domain; break; }
+      }
+
+      return {
+        certificateId: certId,
+        version,
+        timestampNs: timestampNs.toString(),
+        timestamp: new Date(Number(timestampNs / 1000000n)).toISOString(),
+        solverHash,
+        domain,
+        contentHash,
+        hashValid,
+        pubkey,
+        signature,
+        storedHash,
+        layers,
+        sizeBytes: bytes.length,
+        raw: bytes,
+      };
+    }
+
+    // ── Render ──────────────────────────────────────────────
+
+    function renderCertList() {
+      const container = document.getElementById('cert-list');
+      const search = document.getElementById('search-input').value.toLowerCase();
+      const domainFilter = document.getElementById('domain-filter').value;
+      const statusFilter = document.getElementById('status-filter').value;
+
+      let filtered = certificates.filter(c => {
+        if (search && !c.certificateId.includes(search) && !c.contentHash.includes(search) && !c.domain.includes(search)) return false;
+        if (domainFilter && c.domain !== domainFilter) return false;
+        if (statusFilter === 'valid' && !c.hashValid) return false;
+        return true;
+      });
+
+      if (filtered.length === 0 && certificates.length === 0) {
+        container.innerHTML = `
+          <div class="drop-zone" id="drop-zone">
+            <p>Drop .tpc files here to inspect</p>
+            <p class="hint">or connect to a Certificate Authority</p>
+          </div>`;
+        setupDropZone();
+        return;
+      }
+
+      container.innerHTML = filtered.map(c => `
+        <div class="cert-item ${c.certificateId === selectedCertId ? 'selected' : ''}"
+             onclick="selectCert('${c.certificateId}')">
+          <div class="cert-id">${c.certificateId}</div>
+          <div class="cert-meta">
+            <span class="domain">${c.domain}</span>
+            <span class="status-badge ${c.hashValid ? 'status-valid' : 'status-revoked'}">
+              ${c.hashValid ? 'HASH OK' : 'HASH FAIL'}
+            </span>
+            <span>${c.timestamp}</span>
+            <span>${(c.sizeBytes / 1024).toFixed(1)} KB</span>
+          </div>
+        </div>
+      `).join('');
+
+      // Update stats
+      document.getElementById('stat-total').textContent = certificates.length;
+      document.getElementById('stat-valid').textContent = certificates.filter(c => c.hashValid).length;
+      for (const d of ['thermal', 'euler3d', 'ns_imex', 'fluidelite']) {
+        const el = document.getElementById(`stat-${d}`);
+        if (el) el.textContent = certificates.filter(c => c.domain === d).length;
+      }
+    }
+
+    function selectCert(id) {
+      selectedCertId = id;
+      renderCertList();
+      renderDetail();
+    }
+
+    function renderDetail() {
+      const container = document.getElementById('detail-view');
+      const cert = certificates.find(c => c.certificateId === selectedCertId);
+
+      if (!cert) {
+        container.innerHTML = '<div class="detail-empty">Select a certificate to view details</div>';
+        return;
+      }
+
+      const etherscanBase = 'https://sepolia.etherscan.io';
+
+      container.innerHTML = `
+        <div class="detail">
+          <!-- Identity -->
+          <div class="detail-section">
+            <h3>Identity</h3>
+            <div class="detail-row"><span class="label">Certificate ID</span><span class="value">${cert.certificateId}</span></div>
+            <div class="detail-row"><span class="label">Version</span><span class="value">${cert.version}</span></div>
+            <div class="detail-row"><span class="label">Domain</span><span class="value">${cert.domain}</span></div>
+            <div class="detail-row"><span class="label">Timestamp</span><span class="value">${cert.timestamp}</span></div>
+            <div class="detail-row"><span class="label">Size</span><span class="value">${cert.sizeBytes.toLocaleString()} bytes</span></div>
+          </div>
+
+          <!-- Hashes -->
+          <div class="detail-section">
+            <h3>Cryptographic Binding</h3>
+            <div class="detail-row"><span class="label">Content Hash</span><span class="value">${cert.contentHash}</span></div>
+            <div class="detail-row"><span class="label">Stored Hash</span><span class="value">${cert.storedHash}</span></div>
+            <div class="detail-row"><span class="label">Hash Valid</span><span class="value">
+              <span class="status-badge ${cert.hashValid ? 'status-valid' : 'status-revoked'}">${cert.hashValid ? 'VALID' : 'MISMATCH'}</span>
+            </span></div>
+            <div class="detail-row"><span class="label">Solver Hash</span><span class="value">${cert.solverHash}</span></div>
+          </div>
+
+          <!-- Signature -->
+          <div class="detail-section">
+            <h3>Ed25519 Signature</h3>
+            <div class="detail-row"><span class="label">Signer Pubkey</span><span class="value">${cert.pubkey}</span></div>
+            <div class="detail-row"><span class="label">Signature</span><span class="value" style="font-size:10px;">${cert.signature}</span></div>
+          </div>
+
+          <!-- Layers -->
+          <div class="detail-section">
+            <h3>Layers (${cert.layers.length})</h3>
+            ${cert.layers.map((l, i) => `
+              <details class="layer-card">
+                <summary>Layer ${i}: ${l.metadata.type || 'Unknown'}</summary>
+                <pre>${JSON.stringify(l.metadata, null, 2)}</pre>
+                ${l.blobs.length > 0 ? `<p style="margin-top:8px;font-size:12px;color:var(--text-secondary);">Blobs: ${l.blobs.map(b => `${b.name} (${b.size}B)`).join(', ')}</p>` : ''}
+              </details>
+            `).join('')}
+          </div>
+
+          <!-- On-Chain -->
+          <div class="detail-section">
+            <h3>On-Chain Status</h3>
+            <div class="detail-row">
+              <span class="label">Registry Lookup</span>
+              <span class="value">
+                <a href="${etherscanBase}/address/" target="_blank" rel="noopener">View on Etherscan</a>
+              </span>
+            </div>
+            <div class="detail-row"><span class="label">Hash (for lookup)</span><span class="value">0x${cert.contentHash}</span></div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ── File Handling ───────────────────────────────────────
+
+    async function loadFile(file) {
+      try {
+        const data = await file.arrayBuffer();
+        const cert = await parseTPC(data);
+        certificates.push(cert);
+        selectedCertId = cert.certificateId;
+        renderCertList();
+        renderDetail();
+        toast(`Loaded certificate ${cert.certificateId.slice(0, 8)}...`);
+      } catch (e) {
+        toast(`Failed to parse: ${e.message}`, 'error');
+      }
+    }
+
+    function setupDropZone() {
+      const dz = document.getElementById('drop-zone');
+      if (!dz) return;
+
+      dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.classList.add('drag-over'); });
+      dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+      dz.addEventListener('drop', async (e) => {
+        e.preventDefault();
+        dz.classList.remove('drag-over');
+        for (const file of e.dataTransfer.files) {
+          await loadFile(file);
+        }
+      });
+    }
+
+    // ── CA Connection ───────────────────────────────────────
+
+    async function connectToCA() {
+      const url = document.getElementById('ca-url-input').value;
+      const key = document.getElementById('ca-key-input').value;
+
+      try {
+        const headers = { 'Content-Type': 'application/json' };
+        if (key) headers['Authorization'] = `Bearer ${key}`;
+
+        const resp = await fetch(`${url}/health`, { headers });
+        const health = await resp.json();
+
+        caUrl = url;
+        caApiKey = key;
+        document.getElementById('network-badge').textContent = `Connected: ${health.signer_pubkey?.slice(0, 12)}...`;
+        document.getElementById('ca-modal').close();
+        toast(`Connected to CA at ${url}`);
+
+        // Fetch stats
+        const statsResp = await fetch(`${url}/v1/certificates/stats`, { headers });
+        if (statsResp.ok) {
+          const stats = await statsResp.json();
+          document.getElementById('stat-total').textContent = stats.total_issued || 0;
+        }
+      } catch (e) {
+        toast(`Connection failed: ${e.message}`, 'error');
+      }
+    }
+
+    // ── Event Listeners ─────────────────────────────────────
+
+    document.getElementById('search-input').addEventListener('input', renderCertList);
+    document.getElementById('domain-filter').addEventListener('change', renderCertList);
+    document.getElementById('status-filter').addEventListener('change', renderCertList);
+
+    document.getElementById('btn-load-file').addEventListener('click', () => {
+      document.getElementById('file-input').click();
+    });
+
+    document.getElementById('file-input').addEventListener('change', async (e) => {
+      for (const file of e.target.files) {
+        await loadFile(file);
+      }
+      e.target.value = '';
+    });
+
+    document.getElementById('btn-connect-ca').addEventListener('click', () => {
+      document.getElementById('ca-modal').showModal();
+    });
+
+    document.getElementById('btn-connect-confirm').addEventListener('click', connectToCA);
+
+    // ── Keyboard shortcuts ──────────────────────────────────
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('ca-modal');
+        if (modal.open) modal.close();
+      }
+    });
+
+    // ── Init ────────────────────────────────────────────────
+
+    setupDropZone();
+    renderCertList();
+  </script>
+</body>
+</html>

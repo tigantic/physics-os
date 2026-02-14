@@ -233,7 +233,7 @@ def cmd_discover(args):
         print("[Raw Mode] Running core engine...")
         
         if args.input:
-            data = torch.load(args.input)
+            data = torch.load(args.input, weights_only=True)
         else:
             print("Using random data (specify --input for real data)")
             torch.manual_seed(42)
