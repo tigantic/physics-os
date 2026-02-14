@@ -37,6 +37,9 @@ members = [
     "QTT-FEA/fea-qtt",
     "QTT-OPT/opt-qtt",
 ]
+exclude = [
+    "crates/proof_bridge/fuzz",
+]
 resolver = "2"
 
 # ─────────────────────────────────────────────────────────────────────────────

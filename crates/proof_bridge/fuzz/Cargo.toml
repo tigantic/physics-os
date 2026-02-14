@@ -1,0 +1,36 @@
+[package]
+name = "proof-bridge-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+
+[dependencies.proof-bridge]
+path = ".."
+
+# Fuzz crate is its own workspace root so that proof_bridge's
+# `thiserror.workspace = true` / `anyhow.workspace = true` resolve correctly.
+[workspace]
+members = ["."]
+
+[workspace.dependencies]
+thiserror = "1.0"
+anyhow = "1.0"
+tokio = { version = "1.35", features = ["rt-multi-thread", "sync", "time", "fs"] }
+
+[[bin]]
+name = "fuzz_trace_binary"
+path = "fuzz_targets/fuzz_trace_binary.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_trace_json"
+path = "fuzz_targets/fuzz_trace_json.rs"
+test = false
+doc = false

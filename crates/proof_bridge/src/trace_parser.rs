@@ -18,6 +18,14 @@ use uuid::Uuid;
 const TRACE_MAGIC: &[u8; 4] = b"TRCV";
 const TRACE_VERSION: u32 = 1;
 
+/// Maximum allowed byte length for a single JSON-encoded trace entry.
+/// Prevents OOM from malicious inputs claiming multi-GB payloads.
+const MAX_ENTRY_JSON_BYTES: u32 = 16 * 1024 * 1024; // 16 MiB
+
+/// Maximum allowed number of entries in a single trace record.
+/// Prevents allocation bombs from absurd entry counts.
+const MAX_ENTRY_COUNT: u64 = 10_000_000;
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Operation Types (mirrors Python OpType enum)
 // ═══════════════════════════════════════════════════════════════════════════
@@ -310,15 +318,31 @@ impl TraceParser {
         // Entry count
         let entry_count = cursor
             .read_u64::<LittleEndian>()
-            .context("Failed to read entry count")? as usize;
+            .context("Failed to read entry count")?;
+        if entry_count > MAX_ENTRY_COUNT {
+            bail!(
+                "Entry count {} exceeds maximum {} — refusing to allocate",
+                entry_count,
+                MAX_ENTRY_COUNT,
+            );
+        }
+        let entry_count = entry_count as usize;
 
         // Entries
         let mut entries = Vec::with_capacity(entry_count);
         for i in 0..entry_count {
             let json_len = cursor
                 .read_u32::<LittleEndian>()
-                .with_context(|| format!("Failed to read JSON length for entry {i}"))?
-                as usize;
+                .with_context(|| format!("Failed to read JSON length for entry {i}"))?;
+            if json_len > MAX_ENTRY_JSON_BYTES {
+                bail!(
+                    "Entry {} JSON length {} exceeds maximum {} bytes",
+                    i,
+                    json_len,
+                    MAX_ENTRY_JSON_BYTES,
+                );
+            }
+            let json_len = json_len as usize;
 
             let mut json_buf = vec![0u8; json_len];
             cursor

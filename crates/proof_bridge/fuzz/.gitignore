@@ -1,0 +1,5 @@
+# Fuzzer-generated artifacts — rebuild with `cargo +nightly fuzz run`
+corpus/
+artifacts/
+Cargo.lock
+target/
