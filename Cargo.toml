@@ -33,6 +33,7 @@ members = [
     "fluidelite-circuits",
     "fluidelite-zk",
     "fluidelite-infra",
+    "tests/integration_suite",
     "QTT-CEM/QTT-CEM",
     "QTT-FEA/fea-qtt",
     "QTT-OPT/opt-qtt",
