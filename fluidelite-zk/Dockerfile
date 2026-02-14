@@ -27,8 +27,8 @@ COPY src ./src
 COPY benches ./benches
 COPY tests ./tests
 
-# Build release binary with production features
-RUN cargo build --release --features production
+# Build release binary with production-cpu features (no CUDA required)
+RUN cargo build --release --features production-cpu
 
 # ============================================
 # Stage 2: Runtime

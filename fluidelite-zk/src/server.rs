@@ -63,6 +63,45 @@ use crate::verifier::FluidEliteVerifier;
 #[cfg(feature = "server")]
 use crate::prover::Halo2Proof;
 
+// Physics domain types (lazily initialized per domain)
+#[cfg(feature = "server")]
+use crate::euler3d;
+#[cfg(feature = "server")]
+use crate::ns_imex;
+#[cfg(feature = "server")]
+use crate::thermal;
+
+/// Magic byte prefixes for physics domain proofs.
+#[cfg(feature = "server")]
+const EULER3D_MAGIC: &[u8; 4] = b"E3DP";
+#[cfg(feature = "server")]
+const NS_IMEX_MAGIC: &[u8; 4] = b"NSIP";
+#[cfg(feature = "server")]
+const THERMAL_MAGIC: &[u8; 4] = b"THEP";
+
+/// Lazily-initialized physics domain provers and verifiers.
+///
+/// Each domain is initialized on its first `/prove` request.
+/// Keygen is expensive (~seconds) and happens once per domain.
+/// After initialization, the prover/verifier pair is reused for all subsequent requests.
+#[cfg(feature = "server")]
+pub struct PhysicsDomainRouter {
+    euler3d: Mutex<Option<(euler3d::Euler3DProver, euler3d::Euler3DVerifier)>>,
+    ns_imex: Mutex<Option<(ns_imex::NSIMEXProver, ns_imex::NSIMEXVerifier)>>,
+    thermal: Mutex<Option<(thermal::ThermalProver, thermal::ThermalVerifier)>>,
+}
+
+#[cfg(feature = "server")]
+impl PhysicsDomainRouter {
+    fn new() -> Self {
+        Self {
+            euler3d: Mutex::new(None),
+            ns_imex: Mutex::new(None),
+            thermal: Mutex::new(None),
+        }
+    }
+}
+
 /// Server state shared across requests
 #[cfg(feature = "server")]
 pub struct ServerState {
@@ -74,6 +113,8 @@ pub struct ServerState {
     start_time: Instant,
     /// Optional API key for authentication
     pub api_key: Option<String>,
+    /// Physics domain provers (Euler3D, NS-IMEX, Thermal) — lazily initialized
+    physics: PhysicsDomainRouter,
 }
 
 #[cfg(feature = "server")]
@@ -92,6 +133,7 @@ impl ServerState {
             config,
             start_time: Instant::now(),
             api_key: None,
+            physics: PhysicsDomainRouter::new(),
         }
     }
 
@@ -108,6 +150,7 @@ impl ServerState {
             config,
             start_time: Instant::now(),
             api_key,
+            physics: PhysicsDomainRouter::new(),
         }
     }
 }
@@ -128,7 +171,8 @@ pub struct ServerStats {
 #[cfg(feature = "server")]
 #[derive(Debug, Deserialize)]
 pub struct ProveRequest {
-    /// Token ID to prove
+    /// Token ID to prove (FluidElite inference domain)
+    #[serde(default)]
     pub token_id: u64,
 
     /// Context MPS as base64-encoded bytes (optional)
@@ -139,6 +183,10 @@ pub struct ProveRequest {
 
     /// Chi max (if creating default context)
     pub chi_max: Option<usize>,
+
+    /// Physics domain: "euler3d", "ns_imex", or "thermal".
+    /// When absent, defaults to FluidElite inference circuit.
+    pub domain: Option<String>,
 }
 
 /// Response from proof generation
@@ -151,6 +199,9 @@ pub struct ProveResponse {
     pub public_inputs: Vec<String>,
     pub generation_time_ms: u64,
     pub error: Option<String>,
+    /// Physics domain (present for domain proofs, absent for FluidElite inference)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub domain: Option<String>,
 }
 
 /// Request to verify a proof
@@ -407,10 +458,47 @@ async fn prove_handler(
     State(state): State<Arc<ServerState>>,
     Json(request): Json<ProveRequest>,
 ) -> Result<Json<ProveResponse>, (StatusCode, String)> {
-    info!("Proof request: token_id={}", request.token_id);
-
     // Update request count (atomic)
     state.stats.requests_total.fetch_add(1, Ordering::Relaxed);
+
+    // Dispatch based on physics domain
+    match request.domain.as_deref() {
+        None => {
+            // Default path: FluidElite inference circuit
+            info!("Proof request: token_id={}", request.token_id);
+            prove_fluidelite(&state, &request).await
+        }
+        Some("euler3d") => {
+            info!("Proof request: domain=euler3d");
+            prove_physics_domain(&state, "euler3d").await
+        }
+        Some("ns_imex") => {
+            info!("Proof request: domain=ns_imex");
+            prove_physics_domain(&state, "ns_imex").await
+        }
+        Some("thermal") => {
+            info!("Proof request: domain=thermal");
+            prove_physics_domain(&state, "thermal").await
+        }
+        Some(unknown) => {
+            Err((
+                StatusCode::BAD_REQUEST,
+                format!(
+                    "Unknown domain: '{}'. Valid domains: euler3d, ns_imex, thermal",
+                    unknown
+                ),
+            ))
+        }
+    }
+}
+
+/// FluidElite inference proof generation (existing path).
+#[cfg(feature = "server")]
+async fn prove_fluidelite(
+    state: &Arc<ServerState>,
+    request: &ProveRequest,
+) -> Result<Json<ProveResponse>, (StatusCode, String)> {
+    use halo2_axiom::halo2curves::ff::PrimeField;
 
     // Parse or create context
     let context = if let Some(bytes_b64) = &request.context_bytes {
@@ -434,7 +522,7 @@ async fn prove_handler(
             // Update stats (atomic)
             state.stats.proofs_generated.fetch_add(1, Ordering::Relaxed);
             state.stats.total_proof_time_ms.fetch_add(elapsed, Ordering::Relaxed);
-            
+
             // Update min/max (best-effort, not perfectly atomic but good enough for metrics)
             let current_min = state.stats.min_proof_time_ms.load(Ordering::Relaxed);
             if current_min == 0 || elapsed < current_min {
@@ -460,13 +548,11 @@ async fn prove_handler(
                 public_inputs: proof
                     .public_inputs
                     .iter()
-                    .map(|x| {
-                        use halo2_axiom::halo2curves::ff::PrimeField;
-                        hex::encode(x.to_repr())
-                    })
+                    .map(|x| hex::encode(x.to_repr()))
                     .collect(),
                 generation_time_ms: elapsed,
                 error: None,
+                domain: None,
             }))
         }
         Err(e) => {
@@ -480,20 +566,169 @@ async fn prove_handler(
                 public_inputs: vec![],
                 generation_time_ms: 0,
                 error: Some(e),
+                domain: None,
+            }))
+        }
+    }
+}
+
+/// Physics domain proof generation (Euler3D, NS-IMEX, Thermal).
+///
+/// Lazily initializes the domain prover on first call (one-time keygen).
+/// Creates canonical test inputs from domain parameters and generates a real proof.
+#[cfg(feature = "server")]
+async fn prove_physics_domain(
+    state: &Arc<ServerState>,
+    domain: &str,
+) -> Result<Json<ProveResponse>, (StatusCode, String)> {
+    use halo2_axiom::halo2curves::bn256::Fr;
+    use halo2_axiom::halo2curves::ff::PrimeField;
+
+    let start = Instant::now();
+
+    // Each match arm is wrapped in a closure so that `?` returns String errors
+    // to the `result` binding rather than propagating to the outer function.
+    let result: Result<(Vec<u8>, Vec<Fr>), String> = match domain {
+        "euler3d" => (|| -> Result<(Vec<u8>, Vec<Fr>), String> {
+            let mut guard = state.physics.euler3d.lock().unwrap();
+
+            // Lazy initialization: keygen on first request
+            if guard.is_none() {
+                info!("Initializing Euler3D prover (one-time keygen)...");
+                let params = euler3d::Euler3DParams::default();
+                let prover = euler3d::Euler3DProver::new(params)
+                    .map_err(|e| format!("Euler3D keygen failed: {}", e))?;
+                let verifier = euler3d::Euler3DVerifier::from_prover(&prover);
+                *guard = Some((prover, verifier));
+                info!("Euler3D prover initialized");
+            }
+
+            let (prover, _) = guard.as_mut().unwrap();
+
+            // Create canonical test inputs
+            let params = euler3d::Euler3DParams::default();
+            let states = euler3d::make_test_states(&params);
+            let mpos = euler3d::make_test_shift_mpos(&params);
+
+            // Generate real proof
+            let proof = prover.prove(&states, &mpos)?;
+            let proof_bytes = proof.to_bytes();
+            let public_inputs = proof.reconstruct_public_inputs();
+            Ok((proof_bytes, public_inputs))
+        })(),
+        "ns_imex" => (|| -> Result<(Vec<u8>, Vec<Fr>), String> {
+            let mut guard = state.physics.ns_imex.lock().unwrap();
+
+            if guard.is_none() {
+                info!("Initializing NS-IMEX prover (one-time keygen)...");
+                let params = ns_imex::NSIMEXParams::test_small();
+                let prover = ns_imex::NSIMEXProver::new(params)
+                    .map_err(|e| format!("NS-IMEX keygen failed: {}", e))?;
+                let verifier = ns_imex::NSIMEXVerifier::from_prover(&prover);
+                *guard = Some((prover, verifier));
+                info!("NS-IMEX prover initialized");
+            }
+
+            let (prover, _) = guard.as_mut().unwrap();
+
+            let params = ns_imex::NSIMEXParams::test_small();
+            let states = ns_imex::make_test_states(&params);
+            let mpos = ns_imex::make_test_shift_mpos(&params);
+
+            let proof = prover.prove(&states, &mpos)?;
+            let proof_bytes = proof.to_bytes();
+            let public_inputs = proof.reconstruct_public_inputs();
+            Ok((proof_bytes, public_inputs))
+        })(),
+        "thermal" => (|| -> Result<(Vec<u8>, Vec<Fr>), String> {
+            let mut guard = state.physics.thermal.lock().unwrap();
+
+            if guard.is_none() {
+                info!("Initializing Thermal prover (one-time keygen)...");
+                let params = thermal::ThermalParams::test_small();
+                let prover = thermal::ThermalProver::new(params)
+                    .map_err(|e| format!("Thermal keygen failed: {}", e))?;
+                let verifier = thermal::ThermalVerifier::from_prover(&prover);
+                *guard = Some((prover, verifier));
+                info!("Thermal prover initialized");
+            }
+
+            let (prover, _) = guard.as_mut().unwrap();
+
+            let params = thermal::ThermalParams::test_small();
+            let states = thermal::make_test_states(&params);
+            let mpos = thermal::make_test_laplacian_mpos(&params);
+
+            let proof = prover.prove(&states, &mpos)?;
+            let proof_bytes = proof.to_bytes();
+            let public_inputs = proof.reconstruct_public_inputs();
+            Ok((proof_bytes, public_inputs))
+        })(),
+        _ => unreachable!("domain already validated"),
+    };
+
+    match result {
+        Ok((proof_bytes, public_inputs)) => {
+            let elapsed = start.elapsed().as_millis() as u64;
+
+            state.stats.proofs_generated.fetch_add(1, Ordering::Relaxed);
+            state.stats.total_proof_time_ms.fetch_add(elapsed, Ordering::Relaxed);
+
+            let current_min = state.stats.min_proof_time_ms.load(Ordering::Relaxed);
+            if current_min == 0 || elapsed < current_min {
+                state.stats.min_proof_time_ms.store(elapsed, Ordering::Relaxed);
+            }
+            let current_max = state.stats.max_proof_time_ms.load(Ordering::Relaxed);
+            if elapsed > current_max {
+                state.stats.max_proof_time_ms.store(elapsed, Ordering::Relaxed);
+            }
+
+            info!(
+                "Physics proof generated: domain={}, time={}ms, proof_size={}",
+                domain, elapsed, proof_bytes.len()
+            );
+
+            Ok(Json(ProveResponse {
+                success: true,
+                token_id: 0,
+                proof_bytes: base64::Engine::encode(
+                    &base64::engine::general_purpose::STANDARD,
+                    &proof_bytes,
+                ),
+                public_inputs: public_inputs
+                    .iter()
+                    .map(|x| hex::encode(x.to_repr()))
+                    .collect(),
+                generation_time_ms: elapsed,
+                error: None,
+                domain: Some(domain.to_string()),
+            }))
+        }
+        Err(e) => {
+            state.stats.proofs_failed.fetch_add(1, Ordering::Relaxed);
+            warn!("Physics proof failed: domain={}, error={}", domain, e);
+            Ok(Json(ProveResponse {
+                success: false,
+                token_id: 0,
+                proof_bytes: String::new(),
+                public_inputs: vec![],
+                generation_time_ms: 0,
+                error: Some(e),
+                domain: Some(domain.to_string()),
             }))
         }
     }
 }
 
 /// Verification endpoint
+///
+/// Auto-detects physics domain proofs from magic bytes (E3DP, NSIP, THEP).
+/// Falls through to FluidElite inference verification if no magic is recognized.
 #[cfg(feature = "server")]
 async fn verify_handler(
     State(state): State<Arc<ServerState>>,
     Json(request): Json<VerifyRequest>,
 ) -> Json<VerifyResponse> {
-    use halo2_axiom::halo2curves::bn256::Fr;
-    use halo2_axiom::halo2curves::ff::PrimeField;
-
     info!("Verify request: proof_size={}", request.proof_bytes.len());
 
     // Update verification count
@@ -522,43 +757,25 @@ async fn verify_handler(
     }
 
     // Parse public inputs from hex-encoded little-endian Fr repr bytes
-    let mut public_inputs: Vec<Fr> = Vec::with_capacity(request.public_inputs.len());
-    for (i, hex_str) in request.public_inputs.iter().enumerate() {
-        let hex_clean = hex_str.strip_prefix("0x").unwrap_or(hex_str);
-        let bytes = match hex::decode(hex_clean) {
-            Ok(b) => b,
-            Err(e) => {
-                return Json(VerifyResponse {
-                    valid: false,
-                    error: Some(format!("Invalid hex in public_inputs[{}]: {}", i, e)),
-                });
-            }
-        };
-        if bytes.len() != 32 {
+    let public_inputs = match parse_public_inputs(&request.public_inputs) {
+        Ok(inputs) => inputs,
+        Err(e) => {
             return Json(VerifyResponse {
                 valid: false,
-                error: Some(format!(
-                    "public_inputs[{}]: expected 32 bytes, got {}",
-                    i,
-                    bytes.len()
-                )),
+                error: Some(e),
             });
         }
-        let repr: [u8; 32] = bytes.try_into().unwrap();
-        let fr_opt: subtle::CtOption<Fr> = Fr::from_repr(repr);
-        if bool::from(fr_opt.is_none()) {
-            return Json(VerifyResponse {
-                valid: false,
-                error: Some(format!(
-                    "public_inputs[{}]: not a valid BN254 Fr element",
-                    i
-                )),
-            });
+    };
+
+    // Auto-detect physics domain from magic bytes
+    if proof_bytes.len() >= 4 {
+        let magic = &proof_bytes[0..4];
+        if magic == EULER3D_MAGIC || magic == NS_IMEX_MAGIC || magic == THERMAL_MAGIC {
+            return verify_physics_domain(&state, &proof_bytes, &public_inputs);
         }
-        public_inputs.push(fr_opt.unwrap());
     }
 
-    // Reconstruct Halo2Proof for the verifier
+    // Default: FluidElite inference verification
     let proof = Halo2Proof {
         inner: crate::prover::FluidEliteProof {
             proof_bytes,
@@ -568,7 +785,6 @@ async fn verify_handler(
         public_inputs,
     };
 
-    // Perform real cryptographic verification
     match state.verifier.verify(&proof) {
         Ok(result) => {
             info!(
@@ -585,6 +801,213 @@ async fn verify_handler(
             Json(VerifyResponse {
                 valid: false,
                 error: Some(format!("Verification error: {}", e)),
+            })
+        }
+    }
+}
+
+/// Parse hex-encoded public inputs into Fr elements.
+#[cfg(feature = "server")]
+fn parse_public_inputs(hex_inputs: &[String]) -> Result<Vec<halo2_axiom::halo2curves::bn256::Fr>, String> {
+    use halo2_axiom::halo2curves::bn256::Fr;
+    use halo2_axiom::halo2curves::ff::PrimeField;
+
+    let mut public_inputs: Vec<Fr> = Vec::with_capacity(hex_inputs.len());
+    for (i, hex_str) in hex_inputs.iter().enumerate() {
+        let hex_clean = hex_str.strip_prefix("0x").unwrap_or(hex_str);
+        let bytes = hex::decode(hex_clean)
+            .map_err(|e| format!("Invalid hex in public_inputs[{}]: {}", i, e))?;
+        if bytes.len() != 32 {
+            return Err(format!(
+                "public_inputs[{}]: expected 32 bytes, got {}",
+                i,
+                bytes.len()
+            ));
+        }
+        let repr: [u8; 32] = bytes.try_into().unwrap();
+        let fr_opt: subtle::CtOption<Fr> = Fr::from_repr(repr);
+        if bool::from(fr_opt.is_none()) {
+            return Err(format!(
+                "public_inputs[{}]: not a valid BN254 Fr element",
+                i
+            ));
+        }
+        public_inputs.push(fr_opt.unwrap());
+    }
+    Ok(public_inputs)
+}
+
+/// Extract raw Halo2 proof bytes from a domain-serialized proof.
+///
+/// Domain proof wire format (shared by all domains):
+///   bytes 0-3:   magic (E3DP | NSIP | THEP)
+///   bytes 4-7:   version (u32 LE)
+///   bytes 8-11:  proof_bytes_len (u32 LE)
+///   bytes 12..:  raw Halo2/KZG proof bytes
+#[cfg(feature = "server")]
+fn extract_halo2_proof_from_domain(domain_bytes: &[u8]) -> Result<Vec<u8>, String> {
+    if domain_bytes.len() < 12 {
+        return Err(format!(
+            "Domain proof too short: {} bytes, need at least 12",
+            domain_bytes.len()
+        ));
+    }
+    let proof_len = u32::from_le_bytes(
+        domain_bytes[8..12]
+            .try_into()
+            .map_err(|_| "Failed to parse proof length")?,
+    ) as usize;
+
+    if domain_bytes.len() < 12 + proof_len {
+        return Err(format!(
+            "Domain proof truncated: header says {} proof bytes, but only {} bytes remain",
+            proof_len,
+            domain_bytes.len() - 12
+        ));
+    }
+
+    Ok(domain_bytes[12..12 + proof_len].to_vec())
+}
+
+/// Verify a physics domain proof using the appropriate domain verifier.
+///
+/// Detects domain from magic bytes, extracts the raw Halo2 proof,
+/// constructs a minimal domain proof struct, and verifies using
+/// the lazily-initialized domain verifier.
+#[cfg(feature = "server")]
+fn verify_physics_domain(
+    state: &Arc<ServerState>,
+    domain_bytes: &[u8],
+    public_inputs: &[halo2_axiom::halo2curves::bn256::Fr],
+) -> Json<VerifyResponse> {
+    let magic = &domain_bytes[0..4];
+
+    // Extract the raw Halo2 proof bytes from the domain wire format
+    let raw_proof = match extract_halo2_proof_from_domain(domain_bytes) {
+        Ok(p) => p,
+        Err(e) => {
+            return Json(VerifyResponse {
+                valid: false,
+                error: Some(format!("Failed to parse domain proof: {}", e)),
+            });
+        }
+    };
+
+    let domain_name = if magic == EULER3D_MAGIC {
+        "euler3d"
+    } else if magic == NS_IMEX_MAGIC {
+        "ns_imex"
+    } else if magic == THERMAL_MAGIC {
+        "thermal"
+    } else {
+        return Json(VerifyResponse {
+            valid: false,
+            error: Some("Unknown domain magic bytes".to_string()),
+        });
+    };
+
+    info!("Verifying physics domain proof: domain={}", domain_name);
+
+    let verify_result: Result<bool, String> = match domain_name {
+        "euler3d" => {
+            let guard = state.physics.euler3d.lock().unwrap();
+            match guard.as_ref() {
+                Some((_, verifier)) => {
+                    // Construct minimal Euler3DProof with raw Halo2 bytes
+                    let proof = euler3d::Euler3DProof {
+                        proof_bytes: raw_proof,
+                        generation_time_ms: 0,
+                        num_constraints: 0,
+                        k: 0,
+                        params: euler3d::Euler3DParams::default(),
+                        conservation_residuals: vec![],
+                        input_state_hash_limbs: [0; 4],
+                        output_state_hash_limbs: [0; 4],
+                        params_hash_limbs: [0; 4],
+                    };
+                    verifier
+                        .verify_with_public_inputs(&proof, public_inputs)
+                        .map(|r| r.valid)
+                }
+                None => Err(
+                    "Euler3D verifier not initialized. Generate a proof first.".to_string(),
+                ),
+            }
+        }
+        "ns_imex" => {
+            let guard = state.physics.ns_imex.lock().unwrap();
+            match guard.as_ref() {
+                Some((_, verifier)) => {
+                    let proof = ns_imex::NSIMEXProof {
+                        proof_bytes: raw_proof,
+                        generation_time_ms: 0,
+                        num_constraints: 0,
+                        k: 0,
+                        params: ns_imex::NSIMEXParams::test_small(),
+                        ke_residual: Q16::from_raw(0),
+                        enstrophy_residual: Q16::from_raw(0),
+                        divergence_residual: Q16::from_raw(0),
+                        input_state_hash_limbs: [0; 4],
+                        output_state_hash_limbs: [0; 4],
+                        params_hash_limbs: [0; 4],
+                    };
+                    verifier
+                        .verify_with_public_inputs(&proof, public_inputs)
+                        .map(|r| r.valid)
+                }
+                None => Err(
+                    "NS-IMEX verifier not initialized. Generate a proof first.".to_string(),
+                ),
+            }
+        }
+        "thermal" => {
+            let guard = state.physics.thermal.lock().unwrap();
+            match guard.as_ref() {
+                Some((_, verifier)) => {
+                    let proof = thermal::ThermalProof {
+                        proof_bytes: raw_proof,
+                        generation_time_ms: 0,
+                        num_constraints: 0,
+                        k: 0,
+                        params: thermal::ThermalParams::test_small(),
+                        conservation_residual: Q16::from_raw(0),
+                        cg_residual_norm: Q16::from_raw(0),
+                        cg_iterations: 0,
+                        input_state_hash_limbs: [0; 4],
+                        output_state_hash_limbs: [0; 4],
+                        params_hash_limbs: [0; 4],
+                    };
+                    verifier
+                        .verify_with_public_inputs(&proof, public_inputs)
+                        .map(|r| r.valid)
+                }
+                None => Err(
+                    "Thermal verifier not initialized. Generate a proof first.".to_string(),
+                ),
+            }
+        }
+        _ => unreachable!(),
+    };
+
+    match verify_result {
+        Ok(valid) => {
+            info!(
+                "Physics verification complete: domain={}, valid={}",
+                domain_name, valid
+            );
+            Json(VerifyResponse {
+                valid,
+                error: None,
+            })
+        }
+        Err(e) => {
+            warn!(
+                "Physics verification error: domain={}, error={}",
+                domain_name, e
+            );
+            Json(VerifyResponse {
+                valid: false,
+                error: Some(format!("Verification error ({}): {}", domain_name, e)),
             })
         }
     }

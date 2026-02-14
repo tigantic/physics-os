@@ -107,6 +107,7 @@ impl QttCore {
 /// QTT tensor train for ZK commitment.
 ///
 /// Represents a vector v ∈ ℂ^(d^N) with O(N × d × r²) parameters.
+#[derive(Clone)]
 pub struct QttTrain {
     /// Ordered list of cores
     pub cores: Vec<QttCore>,

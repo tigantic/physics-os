@@ -215,7 +215,8 @@ required-features = ["gpu"]
 groth16 = ["dep:ark-std", "dep:ark-ff", "dep:ark-ec", "dep:ark-bn254", "dep:ark-groth16", "dep:ark-relations", "dep:ark-r1cs-std", "dep:ark-serialize", "dep:ark-snark"]
 default = []
 # Enable Halo2 ZK circuit - requires nightly Rust
-halo2 = ["dep:halo2-axiom"]
+# Also propagates halo2 to fluidelite-circuits for real physics domain provers
+halo2 = ["dep:halo2-axiom", "fluidelite-circuits/halo2"]
 # Enable Python bindings
 python = ["dep:pyo3", "halo2"]
 # Enable REST API server
@@ -226,10 +227,12 @@ gpu = ["dep:icicle-runtime", "dep:icicle-core", "dep:icicle-bn254", "halo2"]
 encryption = ["dep:aes-gcm", "dep:hkdf", "dep:getrandom"]
 # Enable DHAT heap profiling for stress tests
 dhat-heap = ["dep:dhat"]
-# Full production build with hardening (metrics built-in, no external deps)
-production = ["halo2", "server"]
-# Full production with GPU acceleration
-production-gpu = ["production", "gpu"]
+# Full production build — GPU + server + halo2 (requires CUDA 12+)
+production = ["halo2", "server", "gpu"]
+# Production without GPU (CI, ARM, non-CUDA environments)
+production-cpu = ["halo2", "server"]
+# Full production with GPU acceleration (alias for clarity)
+production-gpu = ["production"]
 # Enterprise build with encryption
 enterprise = ["production", "encryption"]
 [[bin]]

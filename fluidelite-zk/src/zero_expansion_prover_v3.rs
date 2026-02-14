@@ -409,6 +409,8 @@ impl StreamingZeroExpansionProver {
 pub struct DeferredCommitment {
     /// QTT commitment
     pub commitment: G1Projective,
+    /// The committed QTT (retained for deferred structure proof generation)
+    pub qtt: QttTrain,
     /// Context for structure proof
     pub context: Vec<u8>,
     /// Prediction
@@ -462,6 +464,7 @@ impl DeferredStructureProver {
 
         let deferred = DeferredCommitment {
             commitment,
+            qtt: qtt.clone(),
             context,
             prediction,
             commit_time_ms,
@@ -478,26 +481,21 @@ impl DeferredStructureProver {
     }
 
     /// Generate structure proofs for all pending commitments (batched)
+    ///
+    /// Consumes all pending commitments, using the stored QTTs that were
+    /// retained at commit time to produce verifiable structure proofs.
     pub fn finalize_all(&mut self) -> Result<Vec<BatchedZeroExpansionProof>, String> {
         if self.pending.is_empty() {
             return Ok(vec![]);
         }
 
-        // In deferred mode, we don't have the original QTTs
-        // Structure proof is based on context/prediction only
-        // This is a placeholder - real implementation would store QTTs or use merkle proofs
-        
         let mut proofs = Vec::new();
-        
-        // Batch pending into groups
+
+        // Batch pending into groups of 32 for GPU-efficient proving
         for chunk in self.pending.chunks(32) {
+            let qtts: Vec<QttTrain> = chunk.iter().map(|c| c.qtt.clone()).collect();
             let contexts: Vec<Vec<u8>> = chunk.iter().map(|c| c.context.clone()).collect();
             let predictions: Vec<u8> = chunk.iter().map(|c| c.prediction).collect();
-            
-            // Create dummy QTTs for structure proof (in production, use merkle proof)
-            let qtts: Vec<QttTrain> = (0..chunk.len())
-                .map(|_| QttTrain::random(self.prover.n_sites, 2, self.prover.max_rank))
-                .collect();
 
             let proof = self.prover.prove_batch(&qtts, &contexts, &predictions)?;
             proofs.push(proof);
