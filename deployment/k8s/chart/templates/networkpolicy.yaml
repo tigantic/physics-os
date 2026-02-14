@@ -1,0 +1,60 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "fluidelite.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "fluidelite.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "fluidelite.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow traffic from ingress controllers
+    {{- range .Values.networkPolicy.ingressNamespaces }}
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ . }}
+      ports:
+        - port: {{ $.Values.service.apiPort }}
+          protocol: TCP
+    {{- end }}
+    # Allow Prometheus scraping from monitoring namespace
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: {{ .Values.service.metricsPort }}
+          protocol: TCP
+    # Allow intra-namespace (pod-to-pod) communication
+    - from:
+        - podSelector: {}
+      ports:
+        - port: {{ .Values.service.apiPort }}
+          protocol: TCP
+  egress:
+    # Allow DNS resolution
+    - to: []
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    {{- if .Values.networkPolicy.egressCidrs }}
+    # Allow egress to configured CIDRs
+    {{- range .Values.networkPolicy.egressCidrs }}
+    - to:
+        - ipBlock:
+            cidr: {{ . }}
+    {{- end }}
+    {{- else }}
+    # Allow all egress (no CIDR restrictions)
+    - to: []
+    {{- end }}
+{{- end }}

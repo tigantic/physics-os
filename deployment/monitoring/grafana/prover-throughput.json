@@ -1,0 +1,239 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "FluidElite ZK Prover — Proof throughput, latency, queue depth, and error rates.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "title": "Proofs Generated (rate/sec)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "lineWidth": 2, "fillOpacity": 15, "pointSize": 5 },
+          "unit": "ops"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(fluidelite_proofs_total{namespace=~\"$namespace\"}[5m])",
+          "legendFormat": "{{ pod }}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Proof Failure Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "fixedColor": "red", "mode": "fixed" },
+          "custom": { "lineWidth": 2, "fillOpacity": 30 },
+          "unit": "percentunit",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.005 },
+              { "color": "red", "value": 0.01 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(fluidelite_proofs_failed_total{namespace=~\"$namespace\"}[5m]) / (rate(fluidelite_proofs_total{namespace=~\"$namespace\"}[5m]) + rate(fluidelite_proofs_failed_total{namespace=~\"$namespace\"}[5m]))",
+          "legendFormat": "{{ pod }}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Proof Latency (p50 / p99)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": { "lineWidth": 2 }
+        }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, rate(fluidelite_proof_duration_seconds_bucket{namespace=~\"$namespace\"}[5m]))",
+          "legendFormat": "p50",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.99, rate(fluidelite_proof_duration_seconds_bucket{namespace=~\"$namespace\"}[5m]))",
+          "legendFormat": "p99",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "title": "Total Requests / Verifications",
+      "type": "stat",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": { "unit": "short" }
+      },
+      "targets": [
+        {
+          "expr": "sum(fluidelite_requests_total{namespace=~\"$namespace\"})",
+          "legendFormat": "Total Requests",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(fluidelite_proofs_total{namespace=~\"$namespace\"})",
+          "legendFormat": "Total Proofs",
+          "refId": "B"
+        },
+        {
+          "expr": "sum(fluidelite_verifications_total{namespace=~\"$namespace\"})",
+          "legendFormat": "Total Verifications",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "title": "Uptime",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": { "unit": "s" }
+      },
+      "targets": [
+        {
+          "expr": "fluidelite_uptime_seconds{namespace=~\"$namespace\"}",
+          "legendFormat": "{{ pod }}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Cumulative Proof Time",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": { "unit": "ms" }
+      },
+      "targets": [
+        {
+          "expr": "sum(fluidelite_proof_time_ms_total{namespace=~\"$namespace\"})",
+          "legendFormat": "Total Proof Time",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "HTTP 429 Rate Limited (rate/sec)",
+      "type": "timeseries",
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "fixedColor": "orange", "mode": "fixed" },
+          "unit": "ops"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(fluidelite_http_responses_total{namespace=~\"$namespace\", status=\"429\"}[5m])",
+          "legendFormat": "{{ pod }}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "HTTP 5xx Errors (rate/sec)",
+      "type": "timeseries",
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "fixedColor": "dark-red", "mode": "fixed" },
+          "unit": "ops"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(fluidelite_http_responses_total{namespace=~\"$namespace\", status=~\"5..\"}[5m])",
+          "legendFormat": "{{ pod }}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Circuit Parameters",
+      "type": "table",
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 20 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "fluidelite_circuit_k{namespace=~\"$namespace\"}",
+          "legendFormat": "{{ pod }}",
+          "refId": "A",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "fluidelite_circuit_chi_max{namespace=~\"$namespace\"}",
+          "legendFormat": "{{ pod }}",
+          "refId": "B",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "fluidelite_circuit_sites{namespace=~\"$namespace\"}",
+          "legendFormat": "{{ pod }}",
+          "refId": "C",
+          "format": "table",
+          "instant": true
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["fluidelite", "prover", "zk"],
+  "templating": {
+    "list": [
+      {
+        "current": { "selected": false, "text": "All", "value": "$__all" },
+        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "definition": "label_values(fluidelite_uptime_seconds, namespace)",
+        "name": "namespace",
+        "query": "label_values(fluidelite_uptime_seconds, namespace)",
+        "refresh": 2,
+        "type": "query"
+      }
+    ]
+  },
+  "time": { "from": "now-1h", "to": "now" },
+  "title": "FluidElite — Prover Throughput & Latency",
+  "uid": "fluidelite-prover",
+  "version": 1
+}

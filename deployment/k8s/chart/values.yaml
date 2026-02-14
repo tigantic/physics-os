@@ -1,0 +1,344 @@
+# ════════════════════════════════════════════════════════════════════════
+# FluidElite Helm Chart — Default Values (CPU Tier)
+# ════════════════════════════════════════════════════════════════════════
+# Override with -f values-gpu.yaml or -f values-enterprise.yaml for
+# GPU-accelerated or enterprise tiers respectively.
+# ════════════════════════════════════════════════════════════════════════
+
+nameOverride: ""
+fullnameOverride: ""
+
+# ──────────────────────────────────────────────────────────────────────
+# Container Image
+# ──────────────────────────────────────────────────────────────────────
+image:
+  repository: ghcr.io/tiganticlabz/trustless-physics
+  tag: ""  # Defaults to Chart.appVersion
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+# ──────────────────────────────────────────────────────────────────────
+# Replica & Update Strategy
+# ──────────────────────────────────────────────────────────────────────
+replicaCount: 2
+
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
+
+# ──────────────────────────────────────────────────────────────────────
+# Service Account
+# ──────────────────────────────────────────────────────────────────────
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+
+# ──────────────────────────────────────────────────────────────────────
+# Pod Configuration
+# ──────────────────────────────────────────────────────────────────────
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+# ──────────────────────────────────────────────────────────────────────
+# Resource Limits — CPU Tier
+# ──────────────────────────────────────────────────────────────────────
+resources:
+  requests:
+    cpu: "2"
+    memory: 8Gi
+  limits:
+    cpu: "8"
+    memory: 16Gi
+
+# ──────────────────────────────────────────────────────────────────────
+# GPU Configuration (disabled in CPU tier)
+# ──────────────────────────────────────────────────────────────────────
+gpu:
+  enabled: false
+  # NVIDIA GPU resources (set in values-gpu.yaml)
+  count: 0
+  # GPU memory limit for OOM prevention
+  memoryLimit: ""
+
+# ──────────────────────────────────────────────────────────────────────
+# Prover Configuration
+# ──────────────────────────────────────────────────────────────────────
+prover:
+  # "production" or "test"
+  circuitMode: production
+  # "halo2" or "stub"
+  proofSystem: halo2
+  # Maximum bond dimension
+  maxChi: 64
+  # Maximum grid bits (log2 points/dimension)
+  maxGridBits: 24
+  # Request timeout seconds
+  timeoutSeconds: 600
+  # Maximum concurrent proofs
+  maxConcurrentProofs: 2
+  # JSON structured logging
+  jsonLogs: true
+  # Rate limit (requests/min/API-key)
+  rateLimit: 60
+
+# ──────────────────────────────────────────────────────────────────────
+# Service
+# ──────────────────────────────────────────────────────────────────────
+service:
+  type: ClusterIP
+  apiPort: 8443
+  metricsPort: 9090
+  annotations: {}
+
+# ──────────────────────────────────────────────────────────────────────
+# Ingress — TLS Termination (Task 3.2)
+# ──────────────────────────────────────────────────────────────────────
+ingress:
+  enabled: false
+  className: nginx
+  annotations:
+    # cert-manager automatic TLS
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    # Force HTTPS
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # Rate limiting at ingress level (backup to app-level)
+    nginx.ingress.kubernetes.io/limit-rps: "10"
+    nginx.ingress.kubernetes.io/limit-burst-multiplier: "5"
+    # Proxy timeouts aligned with prover
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    # Max body size for proof payloads
+    nginx.ingress.kubernetes.io/proxy-body-size: 64m
+  hosts:
+    - host: prover.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: fluidelite-tls
+      hosts:
+        - prover.example.com
+
+# ──────────────────────────────────────────────────────────────────────
+# cert-manager ClusterIssuer (Task 3.2)
+# ──────────────────────────────────────────────────────────────────────
+certManager:
+  enabled: false
+  issuer:
+    email: ops@tigantic.com
+    # "letsencrypt-staging" for testing, "letsencrypt-prod" for production
+    server: https://acme-v02.api.letsencrypt.org/directory
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+
+# ──────────────────────────────────────────────────────────────────────
+# Secrets Management (Task 3.3)
+# ──────────────────────────────────────────────────────────────────────
+secrets:
+  # Method: "kubernetes" | "sealed-secrets" | "external-secrets"
+  method: kubernetes
+  # API key for prover authentication
+  apiKey: ""
+  # Ed25519 signing key (base64-encoded 64-byte key)
+  signingKey: ""
+  # TLS certificate and key (if not using cert-manager)
+  tlsCert: ""
+  tlsKey: ""
+  # KZG trusted setup parameters path (mounted from PVC)
+  kzgParamsPath: /opt/trustless/data/kzg-params
+
+  # sealed-secrets configuration
+  sealedSecrets:
+    enabled: false
+    # Sealed values (encrypted with kubeseal)
+    encryptedApiKey: ""
+    encryptedSigningKey: ""
+
+  # external-secrets configuration (HashiCorp Vault)
+  externalSecrets:
+    enabled: false
+    secretStore:
+      name: vault-backend
+      kind: ClusterSecretStore
+    refreshInterval: 1h
+    # Vault paths
+    vaultApiKeyPath: secret/data/fluidelite/api-key
+    vaultSigningKeyPath: secret/data/fluidelite/signing-key
+    vaultTlsPath: secret/data/fluidelite/tls
+
+# ──────────────────────────────────────────────────────────────────────
+# Horizontal Pod Autoscaler
+# ──────────────────────────────────────────────────────────────────────
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+  # Custom metrics (proof queue depth)
+  customMetrics: []
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Pods
+          value: 2
+          periodSeconds: 60
+
+# ──────────────────────────────────────────────────────────────────────
+# Pod Disruption Budget
+# ──────────────────────────────────────────────────────────────────────
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+  # Or use maxUnavailable instead:
+  # maxUnavailable: 1
+
+# ──────────────────────────────────────────────────────────────────────
+# Probes
+# ──────────────────────────────────────────────────────────────────────
+livenessProbe:
+  httpGet:
+    path: /health
+    port: api
+  initialDelaySeconds: 15
+  periodSeconds: 30
+  timeoutSeconds: 10
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: api
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+startupProbe:
+  httpGet:
+    path: /health
+    port: api
+  # Halo2 key generation can take 60-120s on production circuits
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  failureThreshold: 30
+
+# ──────────────────────────────────────────────────────────────────────
+# Persistence
+# ──────────────────────────────────────────────────────────────────────
+persistence:
+  certificates:
+    enabled: true
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    size: 10Gi
+    mountPath: /opt/trustless/data/certificates
+  weights:
+    enabled: false
+    storageClass: ""
+    accessMode: ReadOnlyMany
+    size: 5Gi
+    mountPath: /opt/trustless/data/weights
+  kzgParams:
+    enabled: false
+    storageClass: ""
+    accessMode: ReadOnlyMany
+    size: 2Gi
+    mountPath: /opt/trustless/data/kzg-params
+
+# ──────────────────────────────────────────────────────────────────────
+# Monitoring — Prometheus (Task 3.6)
+# ──────────────────────────────────────────────────────────────────────
+serviceMonitor:
+  enabled: false
+  interval: 15s
+  scrapeTimeout: 10s
+  labels: {}
+
+prometheusRules:
+  enabled: false
+  labels: {}
+
+# ──────────────────────────────────────────────────────────────────────
+# Logging — Vector Sidecar (Task 3.8)
+# ──────────────────────────────────────────────────────────────────────
+logging:
+  vectorSidecar:
+    enabled: false
+    image: timberio/vector:0.40.0-alpine
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 128Mi
+    sink:
+      # "elasticsearch" | "loki" | "s3" | "datadog"
+      type: elasticsearch
+      endpoint: http://elasticsearch:9200
+      index: fluidelite-logs
+
+# ──────────────────────────────────────────────────────────────────────
+# Node Scheduling
+# ──────────────────────────────────────────────────────────────────────
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: DoNotSchedule
+    labelSelector:
+      matchLabels: {}  # Filled by template
+
+# ──────────────────────────────────────────────────────────────────────
+# Network Policy
+# ──────────────────────────────────────────────────────────────────────
+networkPolicy:
+  enabled: false
+  # Allow ingress only from these namespaces
+  ingressNamespaces:
+    - ingress-nginx
+  # Allow egress only to these (empty = allow all)
+  egressCidrs: []
+
+# ──────────────────────────────────────────────────────────────────────
+# Optional sub-chart toggles
+# ──────────────────────────────────────────────────────────────────────
+prometheus:
+  enabled: false
+
+grafana:
+  enabled: false

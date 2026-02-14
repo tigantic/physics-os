@@ -1,0 +1,173 @@
+# ════════════════════════════════════════════════════════════════════════
+# FluidElite Helm Chart — Enterprise Tier Overrides
+# ════════════════════════════════════════════════════════════════════════
+# Usage: helm install fluidelite ./chart -f values-enterprise.yaml
+#
+# Enterprise tier: multi-GPU, HA, strict network policies, Vault secrets,
+# full observability stack, PQC-ready.
+# ════════════════════════════════════════════════════════════════════════
+
+replicaCount: 3
+
+gpu:
+  enabled: true
+  count: 2
+  memoryLimit: 40Gi
+
+resources:
+  requests:
+    cpu: "8"
+    memory: 32Gi
+    nvidia.com/gpu: "2"
+  limits:
+    cpu: "32"
+    memory: 64Gi
+    nvidia.com/gpu: "2"
+
+prover:
+  circuitMode: production
+  proofSystem: halo2
+  maxChi: 64
+  maxGridBits: 24
+  maxConcurrentProofs: 8
+  timeoutSeconds: 600
+  rateLimit: 300
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/limit-rps: "50"
+    nginx.ingress.kubernetes.io/limit-burst-multiplier: "3"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-body-size: 64m
+  hosts:
+    - host: prover.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: fluidelite-tls
+      hosts:
+        - prover.example.com
+
+certManager:
+  enabled: true
+  issuer:
+    email: ops@tigantic.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+
+secrets:
+  method: external-secrets
+  externalSecrets:
+    enabled: true
+    secretStore:
+      name: vault-backend
+      kind: ClusterSecretStore
+    refreshInterval: 30m
+    vaultApiKeyPath: secret/data/fluidelite/production/api-key
+    vaultSigningKeyPath: secret/data/fluidelite/production/signing-key
+    vaultTlsPath: secret/data/fluidelite/production/tls
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 70
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 600
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 120
+    scaleUp:
+      stabilizationWindowSeconds: 30
+      policies:
+        - type: Pods
+          value: 4
+          periodSeconds: 60
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 2
+
+serviceMonitor:
+  enabled: true
+  interval: 10s
+  scrapeTimeout: 5s
+
+prometheusRules:
+  enabled: true
+
+logging:
+  vectorSidecar:
+    enabled: true
+    image: timberio/vector:0.40.0-alpine
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+    sink:
+      type: elasticsearch
+      endpoint: http://elasticsearch.logging.svc:9200
+      index: fluidelite-prod-logs
+
+networkPolicy:
+  enabled: true
+  ingressNamespaces:
+    - ingress-nginx
+    - monitoring
+  egressCidrs:
+    - 10.0.0.0/8
+
+nodeSelector:
+  nvidia.com/gpu.present: "true"
+  node-role.kubernetes.io/gpu-prover: ""
+
+tolerations:
+  - key: nvidia.com/gpu
+    operator: Exists
+    effect: NoSchedule
+  - key: node-role.kubernetes.io/gpu-prover
+    operator: Exists
+    effect: NoSchedule
+
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - fluidelite
+        topologyKey: kubernetes.io/hostname
+
+persistence:
+  certificates:
+    enabled: true
+    storageClass: gp3-encrypted
+    accessMode: ReadWriteOnce
+    size: 50Gi
+  weights:
+    enabled: true
+    storageClass: gp3-encrypted
+    accessMode: ReadOnlyMany
+    size: 10Gi
+  kzgParams:
+    enabled: true
+    storageClass: gp3-encrypted
+    accessMode: ReadOnlyMany
+    size: 5Gi

@@ -1,0 +1,303 @@
+# ════════════════════════════════════════════════════════════════════════
+# FluidElite — Blue-Green Deployment via Argo Rollouts
+# ════════════════════════════════════════════════════════════════════════
+#
+# Prerequisites:
+#   kubectl apply -n argo-rollouts -f \
+#     https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+#
+# This Rollout manages zero-downtime updates by maintaining two ReplicaSets
+# (blue and green). Traffic shifts atomically once the new version passes
+# all health checks. Automatic rollback on probe failure.
+#
+# Usage:
+#   kubectl apply -f rollout.yaml
+#   kubectl argo rollouts set image fluidelite-prover \
+#     prover=ghcr.io/tiganticlabz/trustless-physics:v1.1.0
+#
+# Monitor:
+#   kubectl argo rollouts get rollout fluidelite-prover -w
+# ════════════════════════════════════════════════════════════════════════
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: fluidelite-prover
+  labels:
+    app.kubernetes.io/name: fluidelite
+    app.kubernetes.io/component: prover
+    app.kubernetes.io/part-of: trustless-physics
+spec:
+  replicas: 3
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fluidelite
+      app.kubernetes.io/component: prover
+  strategy:
+    blueGreen:
+      # The active service routes production traffic.
+      activeService: fluidelite-prover-active
+      # The preview service routes to the new (green) version for testing.
+      previewService: fluidelite-prover-preview
+      # Automatically promote after the preview passes health checks.
+      # Set to false for manual promotion (safer for critical deployments).
+      autoPromotionEnabled: true
+      # Seconds to wait after the preview is healthy before auto-promoting.
+      autoPromotionSeconds: 120
+      # Scale down the old (blue) ReplicaSet after this delay.
+      scaleDownDelaySeconds: 300
+      # Keep N old ReplicaSets around for quick rollback.
+      scaleDownDelayRevisionLimit: 2
+      # Anti-affinity between blue and green pods.
+      antiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution: {}
+      # Pre-promotion analysis: run health checks on the preview before traffic shifts.
+      prePromotionAnalysis:
+        templates:
+          - templateName: fluidelite-health-check
+        args:
+          - name: service-name
+            value: fluidelite-prover-preview
+      # Post-promotion analysis: verify the new active version is healthy.
+      postPromotionAnalysis:
+        templates:
+          - templateName: fluidelite-smoke-test
+        args:
+          - name: service-name
+            value: fluidelite-prover-active
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: fluidelite
+        app.kubernetes.io/component: prover
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: fluidelite
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: prover
+          image: ghcr.io/tiganticlabz/trustless-physics:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: api
+              containerPort: 8443
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          env:
+            - name: TRUSTLESS_CONFIG_PATH
+              value: /opt/trustless/config/deployment.toml
+            - name: TRUSTLESS_HOST
+              value: "0.0.0.0"
+            - name: TRUSTLESS_API_PORT
+              value: "8443"
+            - name: TRUSTLESS_METRICS_PORT
+              value: "9090"
+            - name: TRUSTLESS_JSON_LOGS
+              value: "true"
+            - name: FLUIDELITE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: fluidelite-secrets
+                  key: api-key
+                  optional: true
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          # Liveness: is the process alive?
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: api
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          # Readiness: can the pod accept traffic?
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: api
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          # Startup: allow time for Halo2 key generation (up to 5 min).
+          startupProbe:
+            httpGet:
+              path: /health
+              port: api
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 30
+          resources:
+            requests:
+              cpu: "4"
+              memory: 16Gi
+            limits:
+              cpu: "16"
+              memory: 32Gi
+          volumeMounts:
+            - name: config
+              mountPath: /opt/trustless/config
+              readOnly: true
+            - name: certificates
+              mountPath: /opt/trustless/data/certificates
+            - name: tmp
+              mountPath: /tmp
+            - name: logs
+              mountPath: /opt/trustless/logs
+      volumes:
+        - name: config
+          configMap:
+            name: fluidelite-config
+        - name: certificates
+          persistentVolumeClaim:
+            claimName: fluidelite-certificates
+        - name: tmp
+          emptyDir:
+            medium: Memory
+            sizeLimit: 512Mi
+        - name: logs
+          emptyDir:
+            sizeLimit: 1Gi
+---
+# Active service — receives production traffic.
+apiVersion: v1
+kind: Service
+metadata:
+  name: fluidelite-prover-active
+  labels:
+    app.kubernetes.io/name: fluidelite
+    app.kubernetes.io/component: prover
+spec:
+  type: ClusterIP
+  ports:
+    - name: api
+      port: 8443
+      targetPort: api
+    - name: metrics
+      port: 9090
+      targetPort: metrics
+  selector:
+    app.kubernetes.io/name: fluidelite
+    app.kubernetes.io/component: prover
+---
+# Preview service — routes to the new (green) version for pre-promotion testing.
+apiVersion: v1
+kind: Service
+metadata:
+  name: fluidelite-prover-preview
+  labels:
+    app.kubernetes.io/name: fluidelite
+    app.kubernetes.io/component: prover
+spec:
+  type: ClusterIP
+  ports:
+    - name: api
+      port: 8443
+      targetPort: api
+    - name: metrics
+      port: 9090
+      targetPort: metrics
+  selector:
+    app.kubernetes.io/name: fluidelite
+    app.kubernetes.io/component: prover
+---
+# Pre-promotion health check: /health and /ready must both return 200.
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: fluidelite-health-check
+spec:
+  args:
+    - name: service-name
+  metrics:
+    - name: health-check
+      interval: 10s
+      count: 6
+      successCondition: result == "healthy"
+      failureLimit: 1
+      provider:
+        job:
+          spec:
+            backoffLimit: 0
+            template:
+              spec:
+                restartPolicy: Never
+                containers:
+                  - name: health
+                    image: curlimages/curl:8.5.0
+                    command:
+                      - sh
+                      - -c
+                      - |
+                        set -e
+                        # Check /health
+                        status=$(curl -so /dev/null -w '%{http_code}' \
+                          "http://{{args.service-name}}:8443/health")
+                        if [ "$status" != "200" ]; then
+                          echo "FAIL: /health returned $status"
+                          exit 1
+                        fi
+                        # Check /ready
+                        status=$(curl -so /dev/null -w '%{http_code}' \
+                          "http://{{args.service-name}}:8443/ready")
+                        if [ "$status" != "200" ]; then
+                          echo "FAIL: /ready returned $status"
+                          exit 1
+                        fi
+                        echo "healthy"
+---
+# Post-promotion smoke test: verify /stats returns valid JSON.
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: fluidelite-smoke-test
+spec:
+  args:
+    - name: service-name
+  metrics:
+    - name: smoke-test
+      interval: 30s
+      count: 3
+      successCondition: result == "ok"
+      failureLimit: 1
+      provider:
+        job:
+          spec:
+            backoffLimit: 0
+            template:
+              spec:
+                restartPolicy: Never
+                containers:
+                  - name: smoke
+                    image: curlimages/curl:8.5.0
+                    command:
+                      - sh
+                      - -c
+                      - |
+                        set -e
+                        # Verify /health
+                        curl -sf "http://{{args.service-name}}:8443/health" > /dev/null
+                        # Verify /stats returns JSON
+                        curl -sf "http://{{args.service-name}}:8443/stats" \
+                          | grep -q "proofs_generated"
+                        # Verify /metrics returns Prometheus format
+                        curl -sf "http://{{args.service-name}}:9090/metrics" \
+                          | grep -q "fluidelite_proofs_total"
+                        echo "ok"

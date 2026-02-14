@@ -1,0 +1,41 @@
+FluidElite ZK Prover — Trustless Physics Certificate System
+═══════════════════════════════════════════════════════════════
+
+Chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+Release: {{ .Release.Name }}
+Namespace: {{ .Release.Namespace }}
+
+1. Get the API endpoint:
+{{- if .Values.ingress.enabled }}
+  The prover is accessible at:
+  {{- range .Values.ingress.hosts }}
+    https://{{ .host }}
+  {{- end }}
+{{- else if contains "ClusterIP" .Values.service.type }}
+  kubectl port-forward svc/{{ include "fluidelite.fullname" . }} {{ .Values.service.apiPort }}:{{ .Values.service.apiPort }} -n {{ .Release.Namespace }}
+  Then access: http://localhost:{{ .Values.service.apiPort }}
+{{- end }}
+
+2. Check health:
+  curl http://localhost:{{ .Values.service.apiPort }}/health
+
+3. Generate a proof (with API key):
+  curl -X POST http://localhost:{{ .Values.service.apiPort }}/prove \
+    -H "Authorization: Bearer $API_KEY" \
+    -H "Content-Type: application/json" \
+    -d '{"token_id": 42}'
+
+4. View Prometheus metrics:
+  curl http://localhost:{{ .Values.service.metricsPort }}/metrics
+
+5. Verify a certificate:
+  kubectl exec -it deploy/{{ include "fluidelite.fullname" . }} -n {{ .Release.Namespace }} -- \
+    trustless-verify /opt/trustless/data/certificates/<cert>.tpc
+
+{{- if .Values.gpu.enabled }}
+
+GPU ACCELERATION ENABLED
+  GPU count: {{ .Values.gpu.count }}
+  Ensure NVIDIA device plugin is installed:
+    kubectl get pods -n kube-system -l app=nvidia-device-plugin-daemonset
+{{- end }}

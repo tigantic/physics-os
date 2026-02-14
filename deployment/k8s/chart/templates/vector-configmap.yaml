@@ -1,0 +1,158 @@
+{{- if .Values.logging.vectorSidecar.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "fluidelite.fullname" . }}-vector
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "fluidelite.labels" . | nindent 4 }}
+data:
+  vector.toml: |
+    # ═══════════════════════════════════════════════════════════════
+    # Vector — FluidElite Structured Log Aggregation
+    # ═══════════════════════════════════════════════════════════════
+    # Sidecar configuration: reads JSON logs from the prover container's
+    # shared log volume, enriches with Kubernetes metadata, and forwards
+    # to the configured sink (Elasticsearch, Loki, S3, Datadog).
+    # ═══════════════════════════════════════════════════════════════
+
+    [api]
+    enabled = true
+    address = "0.0.0.0:8686"
+
+    # ── Sources ─────────────────────────────────────────────────
+    [sources.prover_logs]
+    type = "file"
+    include = ["/opt/trustless/logs/*.log"]
+    read_from = "beginning"
+    fingerprint.strategy = "device_and_inode"
+
+    [sources.prover_stdout]
+    type = "file"
+    include = ["/opt/trustless/logs/stdout.log"]
+    read_from = "end"
+
+    # ── Transforms ──────────────────────────────────────────────
+
+    # Parse the JSON structured log lines emitted by the prover.
+    [transforms.parse_json]
+    type = "remap"
+    inputs = ["prover_logs", "prover_stdout"]
+    source = '''
+      # Parse JSON log line.
+      parsed, err = parse_json(.message)
+      if err == null {
+        . = merge(., parsed)
+      }
+
+      # Ensure required fields exist.
+      .service = "fluidelite-prover"
+      .environment = get_env_var("VECTOR_ENVIRONMENT") ?? "production"
+      .pod_name = get_env_var("POD_NAME") ?? "unknown"
+      .pod_namespace = get_env_var("POD_NAMESPACE") ?? "unknown"
+      .node_name = get_env_var("NODE_NAME") ?? "unknown"
+
+      # Add correlation ID if present in the log line.
+      if exists(.correlation_id) {
+        .trace_id = .correlation_id
+      }
+
+      # Normalize log level.
+      if exists(.level) {
+        .level = downcase(to_string(.level))
+      }
+
+      # Add processing timestamp.
+      .processed_at = now()
+    '''
+
+    # Filter out health check noise (liveness/readiness probes).
+    [transforms.filter_noise]
+    type = "filter"
+    inputs = ["parse_json"]
+    condition = '''
+      # Drop health check logs to reduce volume.
+      path = to_string(.target) ?? ""
+      !(contains(path, "/health") || contains(path, "/ready"))
+    '''
+
+    # Add proof-specific metadata enrichment.
+    [transforms.enrich_proof]
+    type = "remap"
+    inputs = ["filter_noise"]
+    source = '''
+      # Tag proof-related log entries for easy filtering.
+      msg = to_string(.message) ?? to_string(.msg) ?? ""
+      if contains(msg, "proof") || contains(msg, "Proof") {
+        .log_category = "proof"
+      } else if contains(msg, "certificate") || contains(msg, "Certificate") {
+        .log_category = "certificate"
+      } else if contains(msg, "verify") || contains(msg, "Verify") {
+        .log_category = "verification"
+      } else {
+        .log_category = "general"
+      }
+    '''
+
+    # ── Sinks ───────────────────────────────────────────────────
+    {{- if eq .Values.logging.vectorSidecar.sink.type "elasticsearch" }}
+    [sinks.elasticsearch]
+    type = "elasticsearch"
+    inputs = ["enrich_proof"]
+    endpoints = ["{{ .Values.logging.vectorSidecar.sink.endpoint }}"]
+    bulk.index = "{{ .Values.logging.vectorSidecar.sink.index }}-%Y.%m.%d"
+    encoding.codec = "json"
+    healthcheck.enabled = true
+    buffer.type = "disk"
+    buffer.max_size = 268435488
+    buffer.when_full = "block"
+    batch.max_events = 500
+    batch.timeout_secs = 5
+    {{- else if eq .Values.logging.vectorSidecar.sink.type "loki" }}
+    [sinks.loki]
+    type = "loki"
+    inputs = ["enrich_proof"]
+    endpoint = "{{ .Values.logging.vectorSidecar.sink.endpoint }}"
+    encoding.codec = "json"
+    labels.service = "fluidelite-prover"
+    labels.namespace = "{{ "{{ pod_namespace }}" }}"
+    labels.pod = "{{ "{{ pod_name }}" }}"
+    labels.level = "{{ "{{ level }}" }}"
+    labels.category = "{{ "{{ log_category }}" }}"
+    healthcheck.enabled = true
+    buffer.type = "disk"
+    buffer.max_size = 268435488
+    buffer.when_full = "block"
+    {{- else if eq .Values.logging.vectorSidecar.sink.type "s3" }}
+    [sinks.s3]
+    type = "aws_s3"
+    inputs = ["enrich_proof"]
+    bucket = "{{ .Values.logging.vectorSidecar.sink.bucket | default "fluidelite-logs" }}"
+    region = "{{ .Values.logging.vectorSidecar.sink.region | default "us-east-1" }}"
+    key_prefix = "logs/%Y/%m/%d/"
+    encoding.codec = "json"
+    compression = "gzip"
+    batch.max_bytes = 10485760
+    batch.timeout_secs = 300
+    buffer.type = "disk"
+    buffer.max_size = 536870912
+    buffer.when_full = "block"
+    {{- else if eq .Values.logging.vectorSidecar.sink.type "datadog" }}
+    [sinks.datadog]
+    type = "datadog_logs"
+    inputs = ["enrich_proof"]
+    default_api_key = "${DATADOG_API_KEY}"
+    site = "{{ .Values.logging.vectorSidecar.sink.site | default "datadoghq.com" }}"
+    encoding.codec = "json"
+    buffer.type = "disk"
+    buffer.max_size = 268435488
+    buffer.when_full = "block"
+    {{- end }}
+
+    # Always output to stdout for debugging (can be disabled in prod).
+    [sinks.console]
+    type = "console"
+    inputs = ["enrich_proof"]
+    encoding.codec = "json"
+    target = "stdout"
+{{- end }}

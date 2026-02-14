@@ -3078,6 +3078,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "integration-suite"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "ed25519-dalek",
+ "fluidelite-circuits",
+ "fluidelite-core",
+ "hex",
+ "proof-bridge",
+ "rand 0.8.5",
+ "serde",
+ "serde_json",
+ "sha2",
+ "tempfile",
+ "uuid",
+]
+
+[[package]]
 name = "ipnet"
 version = "2.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

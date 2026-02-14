@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "fluidelite.fullname" . }}-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "fluidelite.labels" . | nindent 4 }}
+data:
+  deployment.toml: |
+    # ═══════════════════════════════════════════════════════════════════
+    # Trustless Physics — Deployment Configuration (Helm-managed)
+    # ═══════════════════════════════════════════════════════════════════
+
+    [server]
+    host = "0.0.0.0"
+    api_port = {{ .Values.service.apiPort }}
+    metrics_port = {{ .Values.service.metricsPort }}
+    max_concurrent_proofs = {{ .Values.prover.maxConcurrentProofs }}
+    request_timeout_seconds = {{ .Values.prover.timeoutSeconds }}
+    max_body_size_bytes = 67108864
+    shutdown_timeout_seconds = 30
+
+    [tls]
+    enabled = false  # TLS terminated at ingress
+
+    [auth]
+    api_key = ""  # Injected via FLUIDELITE_API_KEY env from Secret
+    protected_endpoints = ["/v1/certificates/create", "/v1/certificates/verify", "/prove", "/verify"]
+
+    [prover]
+    circuit_mode = "{{ .Values.prover.circuitMode }}"
+    proof_system = "{{ .Values.prover.proofSystem }}"
+    weights_path = "/opt/trustless/data/weights/fluidelite_hybrid.bin"
+    max_grid_bits = {{ .Values.prover.maxGridBits }}
+    max_chi = {{ .Values.prover.maxChi }}
+
+    [solver.euler3d]
+    enabled = true
+    default_grid_bits = 16
+    default_chi_max = 32
+    gamma = 1.4
+    cfl = 0.8
+    conservation_tolerance = 1e-10
+    svd_tolerance = 1e-12
+
+    [solver.ns_imex]
+    enabled = true
+    default_grid_bits = 16
+    default_chi_max = 32
+    default_viscosity = 0.01
+    cfl = 0.5
+    conservation_tolerance = 1e-8
+    divergence_tolerance = 1e-6
+    svd_tolerance = 1e-12
+    max_cg_iterations = 1000
+    cg_tolerance = 1e-10
+    mpo_bond_dim = 4
+
+    [storage]
+    certificate_dir = "{{ .Values.persistence.certificates.mountPath }}"
+    max_storage_bytes = 10737418240
+    retention_days = 0
+
+    [logging]
+    level = "info"
+    json_format = {{ .Values.prover.jsonLogs }}
+    log_dir = ""  # stdout in Kubernetes
+    max_log_file_bytes = 104857600
+    max_log_files = 10
+
+    [metrics]
+    enabled = true
+    path = "/metrics"
+    per_solver_metrics = true
+    system_metrics = true
+
+    [network]
+    air_gap = false
+    cors_origin = ""
+    allowed_cidrs = []
+
+    [resources]
+    max_memory_bytes = {{ mul (int (trimSuffix "Gi" (.Values.resources.limits.memory | default "16Gi"))) 1073741824 }}
+    num_threads = 0
+
+    [lean]
+    library_path = "/opt/trustless/lean"
+    available_proofs = [
+        "EulerConservation",
+        "NavierStokesConservation",
+        "NavierStokesRegularity",
+    ]

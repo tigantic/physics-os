@@ -1,0 +1,279 @@
+{{- if .Values.prometheusRules.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "fluidelite.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "fluidelite.labels" . | nindent 4 }}
+    {{- with .Values.prometheusRules.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  groups:
+    # ── Prover Health ─────────────────────────────────────────────────
+    - name: fluidelite.prover
+      rules:
+        # CRITICAL: Proof failure rate > 1% over 5 minutes.
+        - alert: ProofFailureRateHigh
+          expr: |
+            (
+              rate(fluidelite_proofs_failed_total[5m])
+              /
+              (rate(fluidelite_proofs_total[5m]) + rate(fluidelite_proofs_failed_total[5m]))
+            ) > 0.01
+          for: 2m
+          labels:
+            severity: critical
+            team: prover
+          annotations:
+            summary: "Proof failure rate exceeds 1%"
+            description: >-
+              Proof failure rate is {{ "{{ $value | humanizePercentage }}" }} over the
+              last 5 minutes on {{ "{{ $labels.pod }}" }}. Immediate investigation required.
+            runbook_url: https://docs.tigantic.com/runbooks/proof-failure
+
+        # WARNING: Proof generation latency p99 > 2 seconds.
+        - alert: ProofLatencyP99High
+          expr: |
+            histogram_quantile(0.99,
+              rate(fluidelite_proof_duration_seconds_bucket[5m])
+            ) > 2
+          for: 5m
+          labels:
+            severity: warning
+            team: prover
+          annotations:
+            summary: "Proof generation p99 latency exceeds 2s"
+            description: >-
+              p99 proof latency is {{ "{{ $value | humanizeDuration }}" }} on
+              {{ "{{ $labels.pod }}" }}. Consider scaling up or investigating resource contention.
+            runbook_url: https://docs.tigantic.com/runbooks/proof-latency
+
+        # CRITICAL: Proof latency p99 > 10 seconds (severe degradation).
+        - alert: ProofLatencyP99Critical
+          expr: |
+            histogram_quantile(0.99,
+              rate(fluidelite_proof_duration_seconds_bucket[5m])
+            ) > 10
+          for: 2m
+          labels:
+            severity: critical
+            team: prover
+          annotations:
+            summary: "Proof generation p99 latency exceeds 10s"
+            description: >-
+              p99 proof latency is {{ "{{ $value | humanizeDuration }}" }} on
+              {{ "{{ $labels.pod }}" }}. System is severely degraded.
+            runbook_url: https://docs.tigantic.com/runbooks/proof-latency
+
+        # WARNING: No proofs generated in 15 minutes (possible stall).
+        - alert: ProverStalled
+          expr: |
+            increase(fluidelite_proofs_total[15m]) == 0
+            and
+            increase(fluidelite_requests_total[15m]) > 0
+          for: 5m
+          labels:
+            severity: warning
+            team: prover
+          annotations:
+            summary: "Prover has not generated any proofs in 15 minutes despite incoming requests"
+            description: >-
+              Pod {{ "{{ $labels.pod }}" }} received requests but generated zero proofs
+              in the last 15 minutes. The prover may be deadlocked or starved.
+            runbook_url: https://docs.tigantic.com/runbooks/prover-restart
+
+    # ── Resource Utilization ──────────────────────────────────────────
+    - name: fluidelite.resources
+      rules:
+        # WARNING: VRAM utilization > 90%.
+        - alert: VRAMUsageHigh
+          expr: |
+            (nvidia_gpu_memory_used_bytes / nvidia_gpu_memory_total_bytes) > 0.9
+          for: 5m
+          labels:
+            severity: warning
+            team: infrastructure
+          annotations:
+            summary: "GPU VRAM utilization exceeds 90%"
+            description: >-
+              GPU {{ "{{ $labels.gpu }}" }} on {{ "{{ $labels.instance }}" }} is at
+              {{ "{{ $value | humanizePercentage }}" }} VRAM utilization. Risk of OOM.
+            runbook_url: https://docs.tigantic.com/runbooks/gpu-failure-recovery
+
+        # CRITICAL: VRAM > 95% (imminent OOM).
+        - alert: VRAMUsageCritical
+          expr: |
+            (nvidia_gpu_memory_used_bytes / nvidia_gpu_memory_total_bytes) > 0.95
+          for: 1m
+          labels:
+            severity: critical
+            team: infrastructure
+          annotations:
+            summary: "GPU VRAM utilization exceeds 95% — imminent OOM"
+            description: >-
+              GPU {{ "{{ $labels.gpu }}" }} on {{ "{{ $labels.instance }}" }} is at
+              {{ "{{ $value | humanizePercentage }}" }} VRAM. OOM crash is imminent.
+            runbook_url: https://docs.tigantic.com/runbooks/gpu-failure-recovery
+
+        # WARNING: Disk usage > 80%.
+        - alert: DiskUsageHigh
+          expr: |
+            (
+              node_filesystem_size_bytes{mountpoint="/opt/trustless/data"}
+              - node_filesystem_avail_bytes{mountpoint="/opt/trustless/data"}
+            )
+            / node_filesystem_size_bytes{mountpoint="/opt/trustless/data"}
+            > 0.8
+          for: 10m
+          labels:
+            severity: warning
+            team: infrastructure
+          annotations:
+            summary: "Certificate storage disk usage exceeds 80%"
+            description: >-
+              Disk at {{ "{{ $value | humanizePercentage }}" }} on {{ "{{ $labels.instance }}" }}.
+              Purge old certificates or expand storage.
+            runbook_url: https://docs.tigantic.com/runbooks/disk-cleanup
+
+        # WARNING: Container memory > 85% of limit.
+        - alert: ContainerMemoryHigh
+          expr: |
+            (
+              container_memory_working_set_bytes{container="prover"}
+              / container_spec_memory_limit_bytes{container="prover"}
+            ) > 0.85
+          for: 5m
+          labels:
+            severity: warning
+            team: prover
+          annotations:
+            summary: "Prover container memory usage exceeds 85% of limit"
+            description: >-
+              Pod {{ "{{ $labels.pod }}" }} is using {{ "{{ $value | humanizePercentage }}" }} of its
+              memory limit. Risk of OOMKill.
+            runbook_url: https://docs.tigantic.com/runbooks/prover-restart
+
+    # ── API Health ────────────────────────────────────────────────────
+    - name: fluidelite.api
+      rules:
+        # WARNING: API 5xx error rate > 0.1%.
+        - alert: API5xxRateHigh
+          expr: |
+            (
+              rate(fluidelite_http_responses_total{status=~"5.."}[5m])
+              /
+              rate(fluidelite_http_responses_total[5m])
+            ) > 0.001
+          for: 5m
+          labels:
+            severity: warning
+            team: prover
+          annotations:
+            summary: "API 5xx error rate exceeds 0.1%"
+            description: >-
+              5xx rate is {{ "{{ $value | humanizePercentage }}" }} on {{ "{{ $labels.pod }}" }}.
+              Check prover logs for errors.
+            runbook_url: https://docs.tigantic.com/runbooks/incident-response
+
+        # CRITICAL: API 5xx rate > 5%.
+        - alert: API5xxRateCritical
+          expr: |
+            (
+              rate(fluidelite_http_responses_total{status=~"5.."}[5m])
+              /
+              rate(fluidelite_http_responses_total[5m])
+            ) > 0.05
+          for: 2m
+          labels:
+            severity: critical
+            team: prover
+          annotations:
+            summary: "API 5xx error rate exceeds 5%"
+            description: >-
+              5xx rate is {{ "{{ $value | humanizePercentage }}" }} on {{ "{{ $labels.pod }}" }}.
+              Service is severely degraded.
+            runbook_url: https://docs.tigantic.com/runbooks/incident-response
+
+        # WARNING: Rate limiting triggered frequently.
+        - alert: RateLimitTriggered
+          expr: |
+            rate(fluidelite_http_responses_total{status="429"}[5m]) > 1
+          for: 10m
+          labels:
+            severity: warning
+            team: prover
+          annotations:
+            summary: "Sustained rate limiting (>1 429/sec for 10min)"
+            description: >-
+              Clients are being rate-limited on {{ "{{ $labels.pod }}" }}. Consider
+              increasing rate limits or scaling out.
+
+    # ── Certificate Integrity ─────────────────────────────────────────
+    - name: fluidelite.certificates
+      rules:
+        # WARNING: Certificate verification failure rate > 0.
+        - alert: CertificateVerificationFailure
+          expr: |
+            increase(fluidelite_verifications_failed_total[5m]) > 0
+          for: 0m
+          labels:
+            severity: warning
+            team: prover
+          annotations:
+            summary: "Certificate verification failure detected"
+            description: >-
+              {{ "{{ $value }}" }} verification failures in the last 5 minutes on
+              {{ "{{ $labels.pod }}" }}. Possible proof corruption or key mismatch.
+            runbook_url: https://docs.tigantic.com/runbooks/signing-key-rotation
+
+        # CRITICAL: Certificate storage almost full.
+        - alert: CertificateStorageFull
+          expr: |
+            fluidelite_certificate_storage_bytes
+            / fluidelite_certificate_storage_limit_bytes
+            > 0.9
+          for: 10m
+          labels:
+            severity: critical
+            team: infrastructure
+          annotations:
+            summary: "Certificate storage is >90% full"
+            description: >-
+              Certificate storage at {{ "{{ $value | humanizePercentage }}" }}. New certificates
+              may fail to write. Purge old certificates or expand storage.
+
+    # ── Pod Availability ──────────────────────────────────────────────
+    - name: fluidelite.availability
+      rules:
+        # CRITICAL: No ready pods for 2 minutes.
+        - alert: NoReadyPods
+          expr: |
+            kube_deployment_status_replicas_ready{deployment=~".*fluidelite.*"} == 0
+          for: 2m
+          labels:
+            severity: critical
+            team: infrastructure
+          annotations:
+            summary: "Zero ready FluidElite prover pods"
+            description: >-
+              Deployment {{ "{{ $labels.deployment }}" }} has zero ready replicas. Service
+              is completely unavailable.
+            runbook_url: https://docs.tigantic.com/runbooks/prover-restart
+
+        # WARNING: Pod restart count increasing.
+        - alert: PodRestartLooping
+          expr: |
+            increase(kube_pod_container_status_restarts_total{container="prover"}[1h]) > 3
+          for: 0m
+          labels:
+            severity: warning
+            team: prover
+          annotations:
+            summary: "Prover pod restarting frequently"
+            description: >-
+              Pod {{ "{{ $labels.pod }}" }} has restarted {{ "{{ $value }}" }} times in the
+              last hour. CrashLoopBackOff may be imminent.
+            runbook_url: https://docs.tigantic.com/runbooks/prover-restart
+{{- end }}

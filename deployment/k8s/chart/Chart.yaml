@@ -1,0 +1,30 @@
+apiVersion: v2
+name: fluidelite
+description: >-
+  Trustless Physics — Production Helm chart for the FluidElite ZK prover
+  and TPC certificate authority. Supports CPU, GPU, and enterprise tiers.
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - zk-proofs
+  - physics-simulation
+  - trustless-computing
+  - halo2
+  - groth16
+  - tensor-network
+maintainers:
+  - name: Tigantic Holdings LLC
+    url: https://tigantic.com
+home: https://github.com/TiganticLabz/HyperTensor-VM
+sources:
+  - https://github.com/TiganticLabz/HyperTensor-VM
+dependencies:
+  - name: prometheus
+    version: "25.x"
+    repository: https://prometheus-community.github.io/helm-charts
+    condition: prometheus.enabled
+  - name: grafana
+    version: "8.x"
+    repository: https://grafana.github.io/helm-charts
+    condition: grafana.enabled

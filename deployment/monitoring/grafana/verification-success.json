@@ -1,0 +1,324 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "FluidElite ZK Prover — Proof verification success rates, certificate generation, chain integrity, and domain-level verification metrics.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "title": "Overall Verification Success Rate",
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 0.95 },
+              { "color": "green", "value": 0.99 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "1 - (sum(rate(fluidelite_verifications_failed_total{namespace=~\"$namespace\"}[5m])) / sum(rate(fluidelite_verifications_total{namespace=~\"$namespace\"}[5m])))",
+          "legendFormat": "Success Rate",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Verifications (rate/sec)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 16, "x": 8, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops",
+          "custom": { "lineWidth": 2, "fillOpacity": 15 }
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(fluidelite_verifications_total{namespace=~\"$namespace\"}[5m])",
+          "legendFormat": "{{ pod }} — Success",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(fluidelite_verifications_failed_total{namespace=~\"$namespace\"}[5m])",
+          "legendFormat": "{{ pod }} — Failed",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "title": "Certificates Generated (cumulative)",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": null }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(fluidelite_certificates_created_total{namespace=~\"$namespace\"})",
+          "legendFormat": "Certificates",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Certificate Size Distribution",
+      "type": "timeseries",
+      "gridPos": { "h": 6, "w": 9, "x": 6, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "custom": { "lineWidth": 2 }
+        }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, rate(fluidelite_certificate_size_bytes_bucket{namespace=~\"$namespace\"}[5m]))",
+          "legendFormat": "p50",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.99, rate(fluidelite_certificate_size_bytes_bucket{namespace=~\"$namespace\"}[5m]))",
+          "legendFormat": "p99",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "title": "Certificate Storage Usage",
+      "type": "gauge",
+      "gridPos": { "h": 6, "w": 9, "x": 15, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.7 },
+              { "color": "red", "value": 0.9 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "fluidelite_certificate_storage_bytes{namespace=~\"$namespace\"} / fluidelite_certificate_storage_limit_bytes{namespace=~\"$namespace\"}",
+          "legendFormat": "{{ pod }}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Verification Success Rate by Domain",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "custom": { "lineWidth": 2, "fillOpacity": 10 },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 0.95 },
+              { "color": "green", "value": 0.99 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "1 - (rate(fluidelite_verifications_failed_total{namespace=~\"$namespace\", domain=\"thermal\"}[5m]) / rate(fluidelite_verifications_total{namespace=~\"$namespace\", domain=\"thermal\"}[5m]))",
+          "legendFormat": "Thermal",
+          "refId": "A"
+        },
+        {
+          "expr": "1 - (rate(fluidelite_verifications_failed_total{namespace=~\"$namespace\", domain=\"euler3d\"}[5m]) / rate(fluidelite_verifications_total{namespace=~\"$namespace\", domain=\"euler3d\"}[5m]))",
+          "legendFormat": "Euler 3D",
+          "refId": "B"
+        },
+        {
+          "expr": "1 - (rate(fluidelite_verifications_failed_total{namespace=~\"$namespace\", domain=\"ns_imex\"}[5m]) / rate(fluidelite_verifications_total{namespace=~\"$namespace\", domain=\"ns_imex\"}[5m]))",
+          "legendFormat": "Navier-Stokes IMEX",
+          "refId": "C"
+        },
+        {
+          "expr": "1 - (rate(fluidelite_verifications_failed_total{namespace=~\"$namespace\", domain=\"fluidelite\"}[5m]) / rate(fluidelite_verifications_total{namespace=~\"$namespace\", domain=\"fluidelite\"}[5m]))",
+          "legendFormat": "FluidElite MPS",
+          "refId": "D"
+        }
+      ]
+    },
+    {
+      "title": "Proof Generation by Domain (rate/sec)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops",
+          "custom": { "lineWidth": 2, "fillOpacity": 15 }
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(fluidelite_proofs_total{namespace=~\"$namespace\", domain=\"thermal\"}[5m])",
+          "legendFormat": "Thermal",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(fluidelite_proofs_total{namespace=~\"$namespace\", domain=\"euler3d\"}[5m])",
+          "legendFormat": "Euler 3D",
+          "refId": "B"
+        },
+        {
+          "expr": "rate(fluidelite_proofs_total{namespace=~\"$namespace\", domain=\"ns_imex\"}[5m])",
+          "legendFormat": "Navier-Stokes IMEX",
+          "refId": "C"
+        },
+        {
+          "expr": "rate(fluidelite_proofs_total{namespace=~\"$namespace\", domain=\"fluidelite\"}[5m])",
+          "legendFormat": "FluidElite MPS",
+          "refId": "D"
+        }
+      ]
+    },
+    {
+      "title": "Certificate Chain Integrity",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 22 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(fluidelite_certificate_chain_breaks_total{namespace=~\"$namespace\"})",
+          "legendFormat": "Chain Breaks",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "textMode": "value_and_name",
+        "colorMode": "background"
+      }
+    },
+    {
+      "title": "Ed25519 Signature Verifications",
+      "type": "timeseries",
+      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 22 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops",
+          "custom": { "lineWidth": 2, "fillOpacity": 10 }
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(fluidelite_signature_verifications_total{namespace=~\"$namespace\", result=\"success\"}[5m])",
+          "legendFormat": "Success",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(fluidelite_signature_verifications_total{namespace=~\"$namespace\", result=\"failure\"}[5m])",
+          "legendFormat": "Failure",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "title": "On-Chain Verification Status",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 22 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": { "unit": "short" }
+      },
+      "targets": [
+        {
+          "expr": "sum(fluidelite_onchain_verifications_total{namespace=~\"$namespace\", result=\"success\"})",
+          "legendFormat": "On-Chain Verified",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(fluidelite_onchain_verifications_total{namespace=~\"$namespace\", result=\"failure\"})",
+          "legendFormat": "On-Chain Failed",
+          "refId": "B"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["fluidelite", "verification", "certificates"],
+  "templating": {
+    "list": [
+      {
+        "current": { "selected": false, "text": "All", "value": "$__all" },
+        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "definition": "label_values(fluidelite_verifications_total, namespace)",
+        "name": "namespace",
+        "query": "label_values(fluidelite_verifications_total, namespace)",
+        "refresh": 2,
+        "type": "query"
+      }
+    ]
+  },
+  "time": { "from": "now-1h", "to": "now" },
+  "title": "FluidElite — Proof Verification Success Rate",
+  "uid": "fluidelite-verification",
+  "version": 1
+}

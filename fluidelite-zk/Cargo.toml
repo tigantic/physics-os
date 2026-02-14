@@ -120,6 +120,9 @@ icicle-bn254 = { git = "https://github.com/ingonyama-zk/icicle.git", tag = "v4.0
 # Constant-time comparison for security-sensitive operations
 subtle = "2.5"
 
+# Lock-free concurrent hash map for rate limiting
+dashmap = { version = "6.1", optional = true }
+
 # Encryption for enterprise weight protection (AES-256-GCM)
 aes-gcm = { version = "0.10", optional = true }
 hkdf = { version = "0.12", optional = true }
@@ -225,7 +228,7 @@ halo2 = ["dep:halo2-axiom", "fluidelite-circuits/halo2"]
 # Enable Python bindings
 python = ["dep:pyo3", "halo2"]
 # Enable REST API server
-server = ["dep:axum", "dep:tower", "dep:tower-http", "halo2"]
+server = ["dep:axum", "dep:tower", "dep:tower-http", "dep:dashmap", "halo2"]
 # Enable GPU acceleration via Icicle (requires CUDA 12+)
 gpu = ["dep:icicle-runtime", "dep:icicle-core", "dep:icicle-bn254", "halo2"]
 # Enable weight encryption for enterprise IP protection (sha2 always available)

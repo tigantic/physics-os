@@ -1,0 +1,233 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "FluidElite ZK Prover — GPU utilization, VRAM, temperature, and power for NVIDIA GPUs.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "title": "GPU Utilization %",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "custom": { "lineWidth": 2, "fillOpacity": 20 },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 70 },
+              { "color": "red", "value": 90 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "nvidia_gpu_utilization{namespace=~\"$namespace\"}",
+          "legendFormat": "{{ pod }} / GPU {{ gpu }}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "VRAM Usage",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "custom": { "lineWidth": 2, "fillOpacity": 20 },
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 80 },
+              { "color": "red", "value": 90 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "nvidia_gpu_memory_used_bytes{namespace=~\"$namespace\"}",
+          "legendFormat": "{{ pod }} / GPU {{ gpu }} — Used",
+          "refId": "A"
+        },
+        {
+          "expr": "nvidia_gpu_memory_total_bytes{namespace=~\"$namespace\"}",
+          "legendFormat": "{{ pod }} / GPU {{ gpu }} — Total",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "title": "VRAM Utilization %",
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.8 },
+              { "color": "red", "value": 0.9 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "nvidia_gpu_memory_used_bytes{namespace=~\"$namespace\"} / nvidia_gpu_memory_total_bytes{namespace=~\"$namespace\"}",
+          "legendFormat": "{{ pod }} / GPU {{ gpu }}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "GPU Temperature (°C)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "custom": { "lineWidth": 2 },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 75 },
+              { "color": "red", "value": 85 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "nvidia_gpu_temperature_celsius{namespace=~\"$namespace\"}",
+          "legendFormat": "{{ pod }} / GPU {{ gpu }}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "GPU Power Draw (W)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "watt",
+          "custom": { "lineWidth": 2, "fillOpacity": 10 }
+        }
+      },
+      "targets": [
+        {
+          "expr": "nvidia_gpu_power_draw_watts{namespace=~\"$namespace\"}",
+          "legendFormat": "{{ pod }} / GPU {{ gpu }}",
+          "refId": "A"
+        },
+        {
+          "expr": "nvidia_gpu_power_limit_watts{namespace=~\"$namespace\"}",
+          "legendFormat": "{{ pod }} / GPU {{ gpu }} — Limit",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "title": "Container CPU Usage",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "lineWidth": 2, "fillOpacity": 15 }
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(container_cpu_usage_seconds_total{container=\"prover\", namespace=~\"$namespace\"}[5m])",
+          "legendFormat": "{{ pod }}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Container Memory (Working Set)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "custom": { "lineWidth": 2, "fillOpacity": 15 },
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 70 },
+              { "color": "red", "value": 85 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "container_memory_working_set_bytes{container=\"prover\", namespace=~\"$namespace\"}",
+          "legendFormat": "{{ pod }}",
+          "refId": "A"
+        },
+        {
+          "expr": "container_spec_memory_limit_bytes{container=\"prover\", namespace=~\"$namespace\"}",
+          "legendFormat": "{{ pod }} — Limit",
+          "refId": "B"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["fluidelite", "gpu", "nvidia"],
+  "templating": {
+    "list": [
+      {
+        "current": { "selected": false, "text": "All", "value": "$__all" },
+        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "definition": "label_values(nvidia_gpu_utilization, namespace)",
+        "name": "namespace",
+        "query": "label_values(nvidia_gpu_utilization, namespace)",
+        "refresh": 2,
+        "type": "query"
+      }
+    ]
+  },
+  "time": { "from": "now-1h", "to": "now" },
+  "title": "FluidElite — GPU Utilization & VRAM",
+  "uid": "fluidelite-gpu",
+  "version": 1
+}

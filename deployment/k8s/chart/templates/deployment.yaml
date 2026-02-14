@@ -1,0 +1,213 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fluidelite.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "fluidelite.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  {{- with .Values.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "fluidelite.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- include "fluidelite.configChecksum" . | nindent 8 }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "fluidelite.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "fluidelite.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: 60
+      containers:
+        # ── Prover Container ──────────────────────────────────────────
+        - name: prover
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ include "fluidelite.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: api
+              containerPort: {{ .Values.service.apiPort }}
+              protocol: TCP
+            - name: metrics
+              containerPort: {{ .Values.service.metricsPort }}
+              protocol: TCP
+          env:
+            - name: TRUSTLESS_CONFIG_PATH
+              value: /opt/trustless/config/deployment.toml
+            - name: TRUSTLESS_HOST
+              value: "0.0.0.0"
+            - name: TRUSTLESS_API_PORT
+              value: {{ .Values.service.apiPort | quote }}
+            - name: TRUSTLESS_METRICS_PORT
+              value: {{ .Values.service.metricsPort | quote }}
+            - name: TRUSTLESS_JSON_LOGS
+              value: {{ .Values.prover.jsonLogs | quote }}
+            - name: TRUSTLESS_LOG_LEVEL
+              value: info
+            - name: TRUSTLESS_CERT_DIR
+              value: {{ .Values.persistence.certificates.mountPath }}
+            - name: FLUIDELITE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "fluidelite.fullname" . }}-secrets
+                  key: api-key
+                  optional: true
+            - name: FLUIDELITE_SIGNING_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "fluidelite.fullname" . }}-secrets
+                  key: signing-key
+                  optional: true
+            {{- if .Values.gpu.enabled }}
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: all
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: compute,utility
+            {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /opt/trustless/config
+              readOnly: true
+            - name: certificates
+              mountPath: {{ .Values.persistence.certificates.mountPath }}
+            {{- if .Values.persistence.weights.enabled }}
+            - name: weights
+              mountPath: {{ .Values.persistence.weights.mountPath }}
+              readOnly: true
+            {{- end }}
+            {{- if .Values.persistence.kzgParams.enabled }}
+            - name: kzg-params
+              mountPath: {{ .Values.persistence.kzgParams.mountPath }}
+              readOnly: true
+            {{- end }}
+            # Writable tmpfs for read-only root filesystem
+            - name: tmp
+              mountPath: /tmp
+            - name: logs
+              mountPath: /opt/trustless/logs
+        {{- if .Values.logging.vectorSidecar.enabled }}
+        # ── Vector Log Aggregation Sidecar ────────────────────────────
+        - name: vector
+          image: {{ .Values.logging.vectorSidecar.image }}
+          args:
+            - --config
+            - /etc/vector/vector.toml
+          ports:
+            - name: vector-api
+              containerPort: 8686
+              protocol: TCP
+          env:
+            - name: VECTOR_LOG
+              value: warn
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          resources:
+            {{- toYaml .Values.logging.vectorSidecar.resources | nindent 12 }}
+          volumeMounts:
+            - name: vector-config
+              mountPath: /etc/vector
+              readOnly: true
+            - name: logs
+              mountPath: /opt/trustless/logs
+              readOnly: true
+        {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "fluidelite.fullname" . }}-config
+        - name: tmp
+          emptyDir:
+            medium: Memory
+            sizeLimit: 512Mi
+        - name: logs
+          emptyDir:
+            sizeLimit: 1Gi
+        {{- if .Values.logging.vectorSidecar.enabled }}
+        - name: vector-config
+          configMap:
+            name: {{ include "fluidelite.fullname" . }}-vector
+        {{- end }}
+        {{- if .Values.persistence.certificates.enabled }}
+        - name: certificates
+          persistentVolumeClaim:
+            claimName: {{ include "fluidelite.fullname" . }}-certificates
+        {{- else }}
+        - name: certificates
+          emptyDir:
+            sizeLimit: 10Gi
+        {{- end }}
+        {{- if .Values.persistence.weights.enabled }}
+        - name: weights
+          persistentVolumeClaim:
+            claimName: {{ include "fluidelite.fullname" . }}-weights
+        {{- end }}
+        {{- if .Values.persistence.kzgParams.enabled }}
+        - name: kzg-params
+          persistentVolumeClaim:
+            claimName: {{ include "fluidelite.fullname" . }}-kzg-params
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- range .Values.topologySpreadConstraints }}
+        - maxSkew: {{ .maxSkew }}
+          topologyKey: {{ .topologyKey }}
+          whenUnsatisfiable: {{ .whenUnsatisfiable }}
+          labelSelector:
+            matchLabels:
+              {{- include "fluidelite.selectorLabels" $ | nindent 14 }}
+        {{- end }}
+      {{- end }}

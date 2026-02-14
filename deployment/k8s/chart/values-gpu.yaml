@@ -1,0 +1,45 @@
+# ════════════════════════════════════════════════════════════════════════
+# FluidElite Helm Chart — GPU Tier Overrides
+# ════════════════════════════════════════════════════════════════════════
+# Usage: helm install fluidelite ./chart -f values-gpu.yaml
+# ════════════════════════════════════════════════════════════════════════
+
+replicaCount: 2
+
+gpu:
+  enabled: true
+  count: 1
+  memoryLimit: 16Gi
+
+resources:
+  requests:
+    cpu: "4"
+    memory: 16Gi
+    nvidia.com/gpu: "1"
+  limits:
+    cpu: "16"
+    memory: 32Gi
+    nvidia.com/gpu: "1"
+
+prover:
+  circuitMode: production
+  proofSystem: halo2
+  maxChi: 64
+  maxGridBits: 24
+  maxConcurrentProofs: 4
+  timeoutSeconds: 300
+  rateLimit: 120
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 60
+
+nodeSelector:
+  nvidia.com/gpu.present: "true"
+
+tolerations:
+  - key: nvidia.com/gpu
+    operator: Exists
+    effect: NoSchedule

@@ -96,6 +96,9 @@ pub mod params;
 pub mod python;
 
 #[cfg(feature = "server")]
+pub mod rate_limit;
+
+#[cfg(feature = "server")]
 pub mod server;
 
 #[cfg(feature = "server")]
