@@ -1,0 +1,326 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# FluidElite Production Monitoring & Alerting
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# Prometheus alerting rules and Grafana dashboard configuration for the
+# trustless physics platform.
+#
+# Deploy: kubectl apply -f monitoring.yaml
+# ═══════════════════════════════════════════════════════════════════════════════
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-alerts
+  namespace: fluidelite
+  labels:
+    app: prometheus
+data:
+  fluidelite-alerts.yml: |
+    groups:
+      # ── Proof Pipeline Alerts ──────────────────────────────────────────────
+      - name: proof_pipeline
+        rules:
+          # TPS dropped below minimum threshold
+          - alert: ProofThroughputLow
+            expr: rate(fluidelite_proofs_generated_total[5m]) < 10
+            for: 10m
+            labels:
+              severity: warning
+            annotations:
+              summary: "Proof throughput below 10 TPS"
+              description: "GPU prover {{ $labels.pod }} generating {{ $value | printf \"%.1f\" }} proofs/s (target: ≥88 TPS)"
+              runbook_url: "https://docs.tigantic.com/runbooks/low-throughput"
+
+          # TPS critically low — potential GPU failure
+          - alert: ProofThroughputCritical
+            expr: rate(fluidelite_proofs_generated_total[5m]) < 1
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: "Proof generation nearly stopped"
+              description: "GPU prover {{ $labels.pod }} at {{ $value | printf \"%.2f\" }} proofs/s — possible GPU failure"
+              runbook_url: "https://docs.tigantic.com/runbooks/gpu-failure"
+
+          # Proof verification failure rate too high
+          - alert: VerificationFailureRate
+            expr: rate(fluidelite_proofs_failed_total[5m]) / rate(fluidelite_proofs_generated_total[5m]) > 0.01
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: "Proof verification failure rate >1%"
+              description: "{{ $value | printf \"%.2f\" }}% of proofs failing verification — potential soundness issue"
+              runbook_url: "https://docs.tigantic.com/runbooks/verification-failure"
+
+          # Proof latency p99 exceeded SLA
+          - alert: ProofLatencyHigh
+            expr: histogram_quantile(0.99, rate(fluidelite_proof_latency_seconds_bucket[5m])) > 5
+            for: 10m
+            labels:
+              severity: warning
+            annotations:
+              summary: "Proof p99 latency >5s"
+              description: "p99 latency at {{ $value | printf \"%.1f\" }}s on {{ $labels.pod }}"
+
+          # Certificate issuance rate
+          - alert: CertificateIssuanceStalled
+            expr: increase(fluidelite_certificates_issued_total[30m]) < 1
+            for: 30m
+            labels:
+              severity: warning
+            annotations:
+              summary: "No TPC certificates issued in 30 minutes"
+              description: "Certificate authority may be down or queue empty"
+
+      # ── GPU Health Alerts ──────────────────────────────────────────────────
+      - name: gpu_health
+        rules:
+          # GPU utilization too low (underutilized cluster)
+          - alert: GpuUtilizationLow
+            expr: DCGM_FI_DEV_GPU_UTIL < 10
+            for: 15m
+            labels:
+              severity: info
+            annotations:
+              summary: "GPU {{ $labels.gpu }} underutilized (<10%)"
+              description: "Consider scaling down or routing more work"
+
+          # GPU memory almost full
+          - alert: GpuMemoryHigh
+            expr: DCGM_FI_DEV_FB_USED / DCGM_FI_DEV_FB_FREE > 0.9
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "GPU {{ $labels.gpu }} VRAM >90% used"
+              description: "VRAM pressure may cause OOM — check memory pool"
+              runbook_url: "https://docs.tigantic.com/runbooks/vram-pressure"
+
+          # GPU temperature critical
+          - alert: GpuTemperatureCritical
+            expr: DCGM_FI_DEV_GPU_TEMP > 90
+            for: 2m
+            labels:
+              severity: critical
+            annotations:
+              summary: "GPU {{ $labels.gpu }} temperature >90°C"
+              description: "GPU may thermal throttle or shut down — check cooling"
+
+          # GPU ECC errors
+          - alert: GpuEccErrors
+            expr: increase(DCGM_FI_DEV_ECC_DBE_VOL_TOTAL[1h]) > 0
+            labels:
+              severity: critical
+            annotations:
+              summary: "GPU {{ $labels.gpu }} double-bit ECC errors detected"
+              description: "Hardware failure likely — drain node and replace GPU"
+
+      # ── Infrastructure Alerts ──────────────────────────────────────────────
+      - name: infrastructure
+        rules:
+          # Pod restarts
+          - alert: ProverPodRestarting
+            expr: increase(kube_pod_container_status_restarts_total{container="prover"}[1h]) > 3
+            labels:
+              severity: warning
+            annotations:
+              summary: "Prover pod {{ $labels.pod }} restarted {{ $value }} times in 1h"
+              description: "Check for OOM kills or crash loops"
+
+          # Certificate authority down
+          - alert: CertificateAuthorityDown
+            expr: up{job="certificate-authority"} == 0
+            for: 2m
+            labels:
+              severity: critical
+            annotations:
+              summary: "Certificate Authority is DOWN"
+              description: "CA service not responding — certificates cannot be issued"
+              runbook_url: "https://docs.tigantic.com/runbooks/ca-down"
+
+          # Proof queue backing up
+          - alert: ProofQueueBacklog
+            expr: fluidelite_proof_queue_depth > 100
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "Proof queue depth >100"
+              description: "Queue at {{ $value }} — consider scaling up GPU provers"
+
+          # Disk space for params cache
+          - alert: ParamsCacheDiskFull
+            expr: kubelet_volume_stats_available_bytes{persistentvolumeclaim="prover-params-pvc"} / kubelet_volume_stats_capacity_bytes{persistentvolumeclaim="prover-params-pvc"} < 0.1
+            for: 10m
+            labels:
+              severity: warning
+            annotations:
+              summary: "Params cache PVC <10% free"
+
+      # ── SLA Alerts ─────────────────────────────────────────────────────────
+      - name: sla
+        rules:
+          # 99.9% uptime SLA check (4.32 min/month budget)
+          - alert: SlaUptimeBreach
+            expr: avg_over_time(up{job="gpu-prover"}[24h]) < 0.999
+            labels:
+              severity: critical
+            annotations:
+              summary: "SLA uptime below 99.9% over 24h"
+              description: "Prover availability at {{ $value | printf \"%.3f\" }} — SLA breach imminent"
+
+          # Aggregate TPS SLA
+          - alert: SlaTpsBreach
+            expr: sum(rate(fluidelite_proofs_generated_total[1h])) < 88
+            for: 1h
+            labels:
+              severity: critical
+            annotations:
+              summary: "Aggregate TPS below 88 for 1 hour"
+              description: "Total cluster TPS at {{ $value | printf \"%.1f\" }} — target is ≥88"
+
+---
+# ── Grafana Dashboard ConfigMap ──────────────────────────────────────────────
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+  namespace: fluidelite
+  labels:
+    grafana_dashboard: "1"
+data:
+  fluidelite-overview.json: |
+    {
+      "dashboard": {
+        "title": "FluidElite Trustless Physics — Overview",
+        "uid": "fluidelite-overview",
+        "tags": ["fluidelite", "zk", "gpu"],
+        "timezone": "utc",
+        "refresh": "10s",
+        "panels": [
+          {
+            "title": "Proof Throughput (TPS)",
+            "type": "stat",
+            "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0},
+            "targets": [{"expr": "sum(rate(fluidelite_proofs_generated_total[5m]))"}],
+            "fieldConfig": {
+              "defaults": {
+                "thresholds": {"steps": [
+                  {"color": "red", "value": 0},
+                  {"color": "yellow", "value": 50},
+                  {"color": "green", "value": 88}
+                ]},
+                "unit": "proofs/s"
+              }
+            }
+          },
+          {
+            "title": "Proof Latency (p50/p95/p99)",
+            "type": "timeseries",
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+            "targets": [
+              {"expr": "histogram_quantile(0.5, rate(fluidelite_proof_latency_seconds_bucket[5m]))", "legendFormat": "p50"},
+              {"expr": "histogram_quantile(0.95, rate(fluidelite_proof_latency_seconds_bucket[5m]))", "legendFormat": "p95"},
+              {"expr": "histogram_quantile(0.99, rate(fluidelite_proof_latency_seconds_bucket[5m]))", "legendFormat": "p99"}
+            ]
+          },
+          {
+            "title": "GPU Utilization",
+            "type": "gauge",
+            "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0},
+            "targets": [{"expr": "avg(DCGM_FI_DEV_GPU_UTIL)"}],
+            "fieldConfig": {
+              "defaults": {
+                "max": 100,
+                "thresholds": {"steps": [
+                  {"color": "green", "value": 0},
+                  {"color": "yellow", "value": 70},
+                  {"color": "red", "value": 90}
+                ]},
+                "unit": "percent"
+              }
+            }
+          },
+          {
+            "title": "VRAM Usage",
+            "type": "timeseries",
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
+            "targets": [
+              {"expr": "DCGM_FI_DEV_FB_USED", "legendFormat": "{{ gpu }} used"},
+              {"expr": "DCGM_FI_DEV_FB_FREE", "legendFormat": "{{ gpu }} free"}
+            ]
+          },
+          {
+            "title": "Certificates Issued",
+            "type": "stat",
+            "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0},
+            "targets": [{"expr": "increase(fluidelite_certificates_issued_total[24h])"}]
+          },
+          {
+            "title": "Verification Failure Rate",
+            "type": "stat",
+            "gridPos": {"h": 4, "w": 6, "x": 18, "y": 0},
+            "targets": [{"expr": "rate(fluidelite_proofs_failed_total[5m]) / rate(fluidelite_proofs_generated_total[5m]) * 100"}],
+            "fieldConfig": {
+              "defaults": {
+                "thresholds": {"steps": [
+                  {"color": "green", "value": 0},
+                  {"color": "yellow", "value": 0.1},
+                  {"color": "red", "value": 1}
+                ]},
+                "unit": "percent"
+              }
+            }
+          },
+          {
+            "title": "Proof Queue Depth",
+            "type": "timeseries",
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12},
+            "targets": [{"expr": "fluidelite_proof_queue_depth", "legendFormat": "{{ pod }}"}]
+          },
+          {
+            "title": "GPU Temperature",
+            "type": "timeseries",
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12},
+            "targets": [{"expr": "DCGM_FI_DEV_GPU_TEMP", "legendFormat": "{{ gpu }}"}],
+            "fieldConfig": {"defaults": {"unit": "celsius"}}
+          }
+        ]
+      }
+    }
+
+---
+# ── ServiceMonitor for Prometheus Operator ───────────────────────────────────
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: gpu-prover-monitor
+  namespace: fluidelite
+  labels:
+    app: gpu-prover
+spec:
+  selector:
+    matchLabels:
+      app: gpu-prover
+  endpoints:
+    - port: metrics
+      interval: 15s
+      path: /metrics
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: certificate-authority-monitor
+  namespace: fluidelite
+spec:
+  selector:
+    matchLabels:
+      app: certificate-authority
+  endpoints:
+    - port: http
+      interval: 15s
+      path: /metrics

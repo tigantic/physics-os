@@ -1,0 +1,394 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# FluidElite GPU Prover Cluster — Kubernetes Manifests
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# Production GPU prover deployment with auto-scaling HPA.
+# Target: ≥88 TPS under real workload.
+#
+# Prerequisites:
+#   - NVIDIA GPU Operator installed
+#   - nvidia.com/gpu resource available on nodes
+#   - Container image built with CUDA 12.8 support
+#
+# Deploy:
+#   kubectl apply -f gpu_prover_cluster.yaml
+#
+# ═══════════════════════════════════════════════════════════════════════════════
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fluidelite
+  labels:
+    app.kubernetes.io/part-of: fluidelite
+    app.kubernetes.io/managed-by: kubectl
+
+---
+# ── ConfigMap: Prover Configuration ──────────────────────────────────────────
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prover-config
+  namespace: fluidelite
+data:
+  RUST_LOG: "info,fluidelite_zk=debug"
+  PROVER_PORT: "8080"
+  PROVER_WORKERS: "4"
+  PROVER_MAX_BATCH_SIZE: "32"
+  PROVER_PIPELINE_SLOTS: "3"
+  PROVER_MSM_C: "16"
+  PROVER_PRECOMPUTE_FACTOR: "8"
+  PROVER_K: "18"
+  PROVER_DOMAIN: "euler3d"
+  # Multi-GPU: all GPUs visible within the pod
+  CUDA_VISIBLE_DEVICES: "all"
+  # ICICLE backend
+  ICICLE_BACKEND_DIR: "/usr/local/lib/icicle"
+
+---
+# ── Secret: Signing Keys ────────────────────────────────────────────────────
+apiVersion: v1
+kind: Secret
+metadata:
+  name: prover-signing-key
+  namespace: fluidelite
+type: Opaque
+data:
+  # Base64-encoded Ed25519 signing key (32 bytes)
+  # Generate: openssl rand -base64 32
+  # PLACEHOLDER — replace with actual key before deployment
+  SIGNING_KEY: "REPLACE_WITH_BASE64_ENCODED_ED25519_KEY"
+
+---
+# ── Deployment: GPU Prover ───────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gpu-prover
+  namespace: fluidelite
+  labels:
+    app: gpu-prover
+    app.kubernetes.io/name: gpu-prover
+    app.kubernetes.io/component: prover
+    app.kubernetes.io/part-of: fluidelite
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gpu-prover
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: gpu-prover
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+    spec:
+      # Node affinity: schedule on GPU nodes only
+      nodeSelector:
+        nvidia.com/gpu.present: "true"
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: Exists
+          effect: NoSchedule
+
+      containers:
+        - name: prover
+          image: ghcr.io/tigantic/fluidelite-prover:latest
+          imagePullPolicy: Always
+
+          command: ["fluidelite-server"]
+          args:
+            - "--port=$(PROVER_PORT)"
+            - "--workers=$(PROVER_WORKERS)"
+            - "--gpu"
+
+          envFrom:
+            - configMapRef:
+                name: prover-config
+            - secretRef:
+                name: prover-signing-key
+
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+
+          resources:
+            requests:
+              cpu: "4"
+              memory: "16Gi"
+              nvidia.com/gpu: "1"
+            limits:
+              cpu: "8"
+              memory: "32Gi"
+              nvidia.com/gpu: "1"
+
+          # Health checks
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 30  # Allow 5 min for GPU init + keygen
+
+          # Volume mounts
+          volumeMounts:
+            - name: params-cache
+              mountPath: /data/params
+            - name: proof-cache
+              mountPath: /data/proofs
+            - name: shm
+              mountPath: /dev/shm
+
+      volumes:
+        - name: params-cache
+          persistentVolumeClaim:
+            claimName: prover-params-pvc
+        - name: proof-cache
+          emptyDir:
+            sizeLimit: 10Gi
+        # Shared memory for GPU IPC
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 8Gi
+
+      terminationGracePeriodSeconds: 120
+
+---
+# ── PVC: KZG Parameters Cache ───────────────────────────────────────────────
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prover-params-pvc
+  namespace: fluidelite
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: gp3
+
+---
+# ── Service: Internal Load Balancer ──────────────────────────────────────────
+apiVersion: v1
+kind: Service
+metadata:
+  name: gpu-prover-svc
+  namespace: fluidelite
+  labels:
+    app: gpu-prover
+spec:
+  type: ClusterIP
+  selector:
+    app: gpu-prover
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
+    - name: metrics
+      port: 9090
+      targetPort: metrics
+      protocol: TCP
+
+---
+# ── HPA: Horizontal Pod Autoscaler ──────────────────────────────────────────
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: gpu-prover-hpa
+  namespace: fluidelite
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: gpu-prover
+  minReplicas: 2
+  maxReplicas: 8
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Pods
+          value: 2
+          periodSeconds: 120
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 300
+  metrics:
+    # Scale on custom metric: proof queue depth
+    - type: Pods
+      pods:
+        metric:
+          name: proof_queue_depth
+        target:
+          type: AverageValue
+          averageValue: "10"
+    # Scale on GPU utilization (via DCGM exporter)
+    - type: Pods
+      pods:
+        metric:
+          name: DCGM_FI_DEV_GPU_UTIL
+        target:
+          type: AverageValue
+          averageValue: "80"
+    # Scale on CPU (fallback)
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+
+---
+# ── PodDisruptionBudget ──────────────────────────────────────────────────────
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: gpu-prover-pdb
+  namespace: fluidelite
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: gpu-prover
+
+---
+# ── Certificate Authority Deployment ─────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: certificate-authority
+  namespace: fluidelite
+  labels:
+    app: certificate-authority
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: certificate-authority
+  template:
+    metadata:
+      labels:
+        app: certificate-authority
+    spec:
+      containers:
+        - name: ca
+          image: ghcr.io/tigantic/fluidelite-ca:latest
+          command: ["certificate-authority"]
+          args: ["--port=8081"]
+          ports:
+            - name: http
+              containerPort: 8081
+          resources:
+            requests:
+              cpu: "1"
+              memory: "2Gi"
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            periodSeconds: 10
+          envFrom:
+            - secretRef:
+                name: prover-signing-key
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: certificate-authority-svc
+  namespace: fluidelite
+spec:
+  type: ClusterIP
+  selector:
+    app: certificate-authority
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+
+---
+# ── NetworkPolicy: Restrict prover access ────────────────────────────────────
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: gpu-prover-netpol
+  namespace: fluidelite
+spec:
+  podSelector:
+    matchLabels:
+      app: gpu-prover
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow traffic from certificate-authority and ingress controller
+    - from:
+        - podSelector:
+            matchLabels:
+              app: certificate-authority
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - port: http
+  egress:
+    # Allow DNS
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    # Allow outbound to RPC nodes (for on-chain verification)
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - port: 443
+          protocol: TCP

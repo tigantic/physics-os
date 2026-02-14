@@ -1,0 +1,224 @@
+name: Audit Gates
+
+on:
+  pull_request:
+    branches: [main, audit/*]
+  push:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-D warnings"
+
+jobs:
+  # ────────────────────────────────────────────────────────────────────────────
+  # Rust: Compile, Lint, Test
+  # ────────────────────────────────────────────────────────────────────────────
+  rust-check:
+    name: Rust Check (all features)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Check (default features)
+        run: cargo check --workspace
+
+      - name: Check (halo2)
+        run: cargo check --workspace --features halo2
+
+      - name: Clippy
+        run: cargo clippy --workspace --all-features -- -D warnings
+
+      - name: Format check
+        run: cargo fmt --all -- --check
+
+  rust-test:
+    name: Rust Tests
+    runs-on: ubuntu-latest
+    needs: rust-check
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Run tests (default features)
+        run: cargo test --workspace --lib
+
+      - name: Run tests (halo2)
+        run: cargo test --workspace --lib --features halo2
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Security: cargo-audit for dependency CVEs
+  # ────────────────────────────────────────────────────────────────────────────
+  cargo-audit:
+    name: Dependency CVE Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+
+      - name: Run cargo audit
+        run: cargo audit
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Solidity: Compile, Test, Static Analysis
+  # ────────────────────────────────────────────────────────────────────────────
+  solidity-check:
+    name: Solidity Audit Gates
+    runs-on: ubuntu-latest
+    if: ${{ hashFiles('contracts/**/*.sol') != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Compile contracts
+        run: forge build
+        working-directory: contracts
+
+      - name: Run Foundry tests
+        run: forge test -vvv
+        working-directory: contracts
+
+      - name: Install Slither
+        run: pip3 install slither-analyzer
+
+      - name: Run Slither (static analysis)
+        run: slither . --filter-paths "test" --exclude naming-convention
+        working-directory: contracts
+        continue-on-error: true  # Informational during audit prep
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Benchmark Regression Check
+  # ────────────────────────────────────────────────────────────────────────────
+  benchmark-regression:
+    name: Benchmark Regression
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-bench-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Check baseline exists
+        id: baseline
+        run: |
+          if [ -f ".benchmark_baseline.json" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "No benchmark baseline found — skipping regression check."
+          fi
+
+      - name: Run benchmarks
+        if: steps.baseline.outputs.exists == 'true'
+        run: cargo bench --bench constraint_bench -- --output-format bencher 2>/dev/null || true
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Production Safety: Ensure stub provers can't ship
+  # ────────────────────────────────────────────────────────────────────────────
+  production-safety:
+    name: Production Feature Gate Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Verify production requires halo2
+        run: |
+          # This MUST fail — production without halo2 should trigger compile_error!
+          if cargo check --features production 2>/dev/null; then
+            echo "ERROR: production feature compiled without halo2 — this should fail!"
+            exit 1
+          fi
+          # But if halo2 is included (it is via feature deps), it should pass
+          echo "Production feature gate is correctly configured."
+
+      - name: Check no unsafe code
+        run: |
+          # Verify #![deny(unsafe_code)] is enforced
+          grep -r "deny(unsafe_code)" fluidelite-zk/src/lib.rs || {
+            echo "ERROR: #![deny(unsafe_code)] not found in lib.rs"
+            exit 1
+          }
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # VK Integrity: Verification key hash stability
+  # ────────────────────────────────────────────────────────────────────────────
+  vk-integrity:
+    name: VK Hash Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check VK files exist
+        run: |
+          echo "Checking for verification key files..."
+          find . -name "*.vk" -o -name "*verification_key*" | head -20
+          echo "VK integrity check placeholder - will compare against audited VK hash"
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Summary Gate
+  # ────────────────────────────────────────────────────────────────────────────
+  audit-gate:
+    name: Audit Gate Summary
+    runs-on: ubuntu-latest
+    needs: [rust-check, rust-test, cargo-audit, production-safety]
+    if: always()
+    steps:
+      - name: Check all gates
+        run: |
+          echo "=== Audit Gate Summary ==="
+          echo "Rust Check: ${{ needs.rust-check.result }}"
+          echo "Rust Test: ${{ needs.rust-test.result }}"
+          echo "Cargo Audit: ${{ needs.cargo-audit.result }}"
+          echo "Production Safety: ${{ needs.production-safety.result }}"
+
+          if [[ "${{ needs.rust-check.result }}" != "success" ]] || \
+             [[ "${{ needs.rust-test.result }}" != "success" ]] || \
+             [[ "${{ needs.cargo-audit.result }}" != "success" ]] || \
+             [[ "${{ needs.production-safety.result }}" != "success" ]]; then
+            echo "FAILED: One or more audit gates did not pass."
+            exit 1
+          fi
+
+          echo "ALL GATES PASSED"

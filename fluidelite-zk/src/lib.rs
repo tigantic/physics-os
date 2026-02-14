@@ -79,9 +79,14 @@ pub use fluidelite_circuits::thermal;
 pub use fluidelite_circuits::proof_preview;
 
 // ── Local modules (ZK proof infrastructure) ─────────────────────────────────
+pub mod benchmark_baseline;
 pub mod circuit;
+pub mod cuda_memory_pool;
 pub mod hybrid;
 pub mod hybrid_prover;
+pub mod multi_gpu;
+pub mod multi_timestep;
+pub mod proof_profiler;
 pub mod prover;
 pub mod verifier;
 
