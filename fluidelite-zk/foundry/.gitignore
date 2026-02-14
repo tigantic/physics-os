@@ -1,0 +1,10 @@
+# Foundry build artifacts
+/out/
+/cache/
+
+# Dependencies (installed via forge install)
+/lib/forge-std/
+/lib/openzeppelin-contracts/
+
+# Broadcast artifacts
+/broadcast/

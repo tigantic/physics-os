@@ -210,6 +210,11 @@ name = "single-var-test"
 path = "src/bin/single_var_test.rs"
 required-features = ["gpu"]
 
+[[bin]]
+name = "generate-vk"
+path = "src/bin/generate_vk.rs"
+required-features = ["groth16"]
+
 [features]
 # Enable Groth16 prover (arkworks)
 groth16 = ["dep:ark-std", "dep:ark-ff", "dep:ark-ec", "dep:ark-bn254", "dep:ark-groth16", "dep:ark-relations", "dep:ark-r1cs-std", "dep:ark-serialize", "dep:ark-snark"]
