@@ -47,6 +47,7 @@ use icicle_bn254::curve::{G1Affine, G1Projective, ScalarField};
 use icicle_core::msm::{msm, precompute_bases, MSMConfig};
 use icicle_core::ntt::{ntt, NTTConfig, NTTDir};
 use icicle_core::traits::GenerateRandom;
+use icicle_core::projective::Projective as ProjectiveTrait;
 use icicle_runtime::memory::{DeviceSlice, DeviceVec, HostSlice};
 use icicle_runtime::stream::IcicleStream;
 use std::sync::atomic::{AtomicU64, AtomicUsize, Ordering};
@@ -59,6 +60,7 @@ use halo2_axiom::{
     plonk::{
         create_proof, keygen_pk, keygen_vk, Circuit, ProvingKey, VerifyingKey,
     },
+    poly::commitment::Params as HaloParams,
     poly::kzg::{
         commitment::{KZGCommitmentScheme, ParamsKZG},
         multiopen::ProverGWC,
