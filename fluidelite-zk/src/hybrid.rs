@@ -34,7 +34,7 @@ impl Default for HybridConfig {
 }
 
 /// Hybrid model weights: Lookup + Compressed W
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct HybridWeights {
     /// Configuration
     pub config: HybridConfig,

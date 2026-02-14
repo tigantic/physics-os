@@ -165,30 +165,50 @@ pub fn to_field<const FRAC_BITS: u32>(fp: FixedPoint<FRAC_BITS>) -> Assigned<hal
 }
 
 /// Convert field element back to fixed-point (for verification)
-/// 
-/// # Note
-/// This performs a direct conversion assuming the field element was created
-/// from a Q16 value. For field elements representing negative values
-/// (stored as p - |value| in the field), this requires the caller to handle
-/// the sign bit appropriately.
+///
+/// BN254 Fr encodes negative values as `p - |x|`. This function correctly
+/// decodes both positive and negative encodings by using field negation:
+/// if the element has upper bytes set (i.e. it is large, meaning it is
+/// `p - |x|`), we negate in the field to recover `|x|` and return `-|x|`.
 #[cfg(feature = "halo2")]
 pub fn from_field<const FRAC_BITS: u32>(f: halo2_axiom::halo2curves::bn256::Fr) -> FixedPoint<FRAC_BITS> {
-    use halo2_axiom::halo2curves::ff::PrimeField;
-    // Get the raw bytes of the field element (little-endian)
+    use halo2_axiom::halo2curves::bn256::Fr;
+
+    // Zero is a special case — avoids negation producing p
+    if f == Fr::zero() {
+        return FixedPoint { raw: 0 };
+    }
+
+    // Little-endian representation of the field element
     let bytes = f.to_repr();
-    // For Q16, values fit in first 8 bytes since raw values are i64
-    // The field stores positive values directly; negative values are p - |x|
-    let raw_u64 = u64::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7]]);
-    // Check if this is a "small" positive value (fits in i64 range)
-    // If the upper bits are set, it's likely a negative value stored as p - |x|
-    let is_likely_positive = bytes[8..32].iter().all(|&b| b == 0);
-    let raw = if is_likely_positive && raw_u64 <= i64::MAX as u64 {
+
+    // Extract the low 64 bits
+    let raw_u64 = u64::from_le_bytes([
+        bytes[0], bytes[1], bytes[2], bytes[3],
+        bytes[4], bytes[5], bytes[6], bytes[7],
+    ]);
+
+    // A "small" positive value has all upper bytes zero and fits in i64
+    let is_positive = bytes[8..32].iter().all(|&b| b == 0)
+        && raw_u64 <= i64::MAX as u64;
+
+    let raw = if is_positive {
         raw_u64 as i64
     } else {
-        // This is a negative value encoded as p - |x|
-        // For now, return 0 as we'd need the full modulus to decode
-        // In practice, verifier uses to_field for constraints, not from_field
-        0i64
+        // Negative value: f = p - |x| in the field.
+        // Field negation gives -f = |x|, a small positive integer.
+        let neg_f = -f;
+        let neg_bytes = neg_f.to_repr();
+        let magnitude = u64::from_le_bytes([
+            neg_bytes[0], neg_bytes[1], neg_bytes[2], neg_bytes[3],
+            neg_bytes[4], neg_bytes[5], neg_bytes[6], neg_bytes[7],
+        ]);
+        debug_assert!(
+            neg_bytes[8..32].iter().all(|&b| b == 0),
+            "from_field: negated value exceeds i64 range — not a valid FixedPoint<{}> encoding",
+            FRAC_BITS,
+        );
+        -(magnitude as i64)
     };
     FixedPoint { raw }
 }
@@ -243,5 +263,72 @@ mod tests {
         let json = serde_json::to_string(&val).unwrap();
         let recovered: Q16 = serde_json::from_str(&json).unwrap();
         assert_eq!(val, recovered);
+    }
+
+    #[cfg(feature = "halo2")]
+    mod halo2_field_tests {
+        use super::super::*;
+        use halo2_axiom::halo2curves::bn256::Fr;
+
+        /// Helper: roundtrip a Q16 value through to_field → Assigned → Fr → from_field
+        fn roundtrip(val: f64) -> Q16 {
+            let original = Q16::from_f64(val);
+            let assigned = to_field::<16>(original);
+            // Evaluate the Assigned to get the Fr value
+            let fr: Fr = match assigned {
+                halo2_axiom::plonk::Assigned::Zero => Fr::zero(),
+                halo2_axiom::plonk::Assigned::Trivial(v) => v,
+                halo2_axiom::plonk::Assigned::Rational(n, d) => n * d.invert().unwrap(),
+            };
+            from_field::<16>(fr)
+        }
+
+        #[test]
+        fn test_roundtrip_positive() {
+            let cases = [0.0, 1.0, 3.14159, 100.5, 1000.25, 32767.0];
+            for val in cases {
+                let recovered = roundtrip(val);
+                let original = Q16::from_f64(val);
+                assert_eq!(
+                    recovered, original,
+                    "roundtrip failed for {val}: got {:?}, expected {:?}",
+                    recovered, original
+                );
+            }
+        }
+
+        #[test]
+        fn test_roundtrip_negative() {
+            let cases = [-1.0, -3.14159, -100.5, -1000.25, -32768.0];
+            for val in cases {
+                let recovered = roundtrip(val);
+                let original = Q16::from_f64(val);
+                assert_eq!(
+                    recovered, original,
+                    "roundtrip failed for {val}: got {:?}, expected {:?}",
+                    recovered, original
+                );
+            }
+        }
+
+        #[test]
+        fn test_roundtrip_zero() {
+            let recovered = roundtrip(0.0);
+            assert_eq!(recovered, Q16::zero());
+        }
+
+        #[test]
+        fn test_roundtrip_small_negative() {
+            // Smallest representable negative value (1 LSB below zero)
+            let fp = Q16::from_raw(-1);
+            let assigned = to_field::<16>(fp);
+            let fr: Fr = match assigned {
+                halo2_axiom::plonk::Assigned::Zero => Fr::zero(),
+                halo2_axiom::plonk::Assigned::Trivial(v) => v,
+                halo2_axiom::plonk::Assigned::Rational(n, d) => n * d.invert().unwrap(),
+            };
+            let recovered = from_field::<16>(fr);
+            assert_eq!(recovered, fp, "roundtrip failed for raw=-1");
+        }
     }
 }

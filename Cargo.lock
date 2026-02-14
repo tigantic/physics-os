@@ -2018,6 +2018,7 @@ dependencies = [
  "bincode",
  "fixed",
  "getrandom 0.2.17",
+ "halo2-axiom",
  "hkdf",
  "num-traits",
  "proptest",

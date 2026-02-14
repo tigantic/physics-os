@@ -32,7 +32,7 @@ mod halo2_impl;
 pub use halo2_impl::*;
 
 #[cfg(feature = "halo2")]
-pub use hybrid_lookup::{HybridLookupCircuit, HybridLookupConfig, FallbackConfig};
+pub use hybrid_lookup::{HybridLookupCircuit, HybridLookupConfig, FallbackConfig, FallbackCircuit};
 
 #[cfg(feature = "halo2")]
 pub use hybrid_unified::{

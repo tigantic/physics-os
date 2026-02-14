@@ -51,6 +51,17 @@
 #![warn(clippy::all)]
 #![deny(unsafe_code)]
 
+// ── Compile-time safety: prevent stub prover/verifier in production builds ──
+#[cfg(all(
+    not(feature = "halo2"),
+    any(feature = "production", feature = "production-gpu", feature = "enterprise")
+))]
+compile_error!(
+    "production/enterprise features require the 'halo2' feature. \
+     Stub prover/verifier (which return fake proofs) must never ship. \
+     Add 'halo2' to your feature list or use a non-production profile."
+);
+
 // ── Re-exports from fluidelite-core (tensor primitives) ─────────────────────
 pub use fluidelite_core::field;
 pub use fluidelite_core::mps;
@@ -98,6 +109,9 @@ pub mod msm_config;
 
 #[cfg(feature = "gpu")]
 pub mod qtt_native_msm;
+
+#[cfg(feature = "gpu")]
+pub mod groth16_output;
 
 #[cfg(feature = "groth16")]
 pub mod groth16_prover;

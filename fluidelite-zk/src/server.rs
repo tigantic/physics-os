@@ -58,11 +58,16 @@ use crate::mpo::MPO;
 use crate::mps::MPS;
 #[cfg(feature = "server")]
 use crate::prover::FluidEliteProver;
+#[cfg(feature = "server")]
+use crate::verifier::FluidEliteVerifier;
+#[cfg(feature = "server")]
+use crate::prover::Halo2Proof;
 
 /// Server state shared across requests
 #[cfg(feature = "server")]
 pub struct ServerState {
     prover: Mutex<FluidEliteProver>,
+    verifier: FluidEliteVerifier,
     stats: ServerStats,
     /// Circuit configuration
     pub config: CircuitConfig,
@@ -73,10 +78,16 @@ pub struct ServerState {
 
 #[cfg(feature = "server")]
 impl ServerState {
-    /// Create new server state with prover and config
+    /// Create new server state with prover and config.
+    /// The verifier is initialized from the prover's KZG params and verifying key.
     pub fn new(prover: FluidEliteProver, config: CircuitConfig) -> Self {
+        let verifier = FluidEliteVerifier::new(
+            prover.params().clone(),
+            prover.verifying_key().clone(),
+        );
         Self {
             prover: Mutex::new(prover),
+            verifier,
             stats: ServerStats::default(),
             config,
             start_time: Instant::now(),
@@ -86,8 +97,13 @@ impl ServerState {
 
     /// Create new server state with prover, config, and API key
     pub fn with_api_key(prover: FluidEliteProver, config: CircuitConfig, api_key: Option<String>) -> Self {
+        let verifier = FluidEliteVerifier::new(
+            prover.params().clone(),
+            prover.verifying_key().clone(),
+        );
         Self {
             prover: Mutex::new(prover),
+            verifier,
             stats: ServerStats::default(),
             config,
             start_time: Instant::now(),
@@ -444,7 +460,10 @@ async fn prove_handler(
                 public_inputs: proof
                     .public_inputs
                     .iter()
-                    .map(|x| format!("{:?}", x))
+                    .map(|x| {
+                        use halo2_axiom::halo2curves::ff::PrimeField;
+                        hex::encode(x.to_repr())
+                    })
                     .collect(),
                 generation_time_ms: elapsed,
                 error: None,
@@ -472,23 +491,29 @@ async fn verify_handler(
     State(state): State<Arc<ServerState>>,
     Json(request): Json<VerifyRequest>,
 ) -> Json<VerifyResponse> {
+    use halo2_axiom::halo2curves::bn256::Fr;
+    use halo2_axiom::halo2curves::ff::PrimeField;
+
     info!("Verify request: proof_size={}", request.proof_bytes.len());
 
     // Update verification count
     state.stats.verifications_total.fetch_add(1, Ordering::Relaxed);
 
-    // Decode proof
-    let proof_bytes = match base64::Engine::decode(&base64::engine::general_purpose::STANDARD, &request.proof_bytes) {
+    // Decode proof bytes from base64
+    let proof_bytes = match base64::Engine::decode(
+        &base64::engine::general_purpose::STANDARD,
+        &request.proof_bytes,
+    ) {
         Ok(bytes) => bytes,
         Err(e) => {
             return Json(VerifyResponse {
                 valid: false,
-                error: Some(format!("Invalid base64: {}", e)),
+                error: Some(format!("Invalid base64 proof: {}", e)),
             });
         }
     };
 
-    // Basic validation: check proof size is reasonable (Halo2 proofs are typically 1-2KB)
+    // Basic size validation (Halo2/KZG proofs are typically 400-2000 bytes)
     if proof_bytes.len() < 100 || proof_bytes.len() > 100_000 {
         return Json(VerifyResponse {
             valid: false,
@@ -496,12 +521,73 @@ async fn verify_handler(
         });
     }
 
-    // TODO: Implement full Halo2 verification
-    // For now, return valid for properly formatted proofs
-    Json(VerifyResponse {
-        valid: true,
-        error: None,
-    })
+    // Parse public inputs from hex-encoded little-endian Fr repr bytes
+    let mut public_inputs: Vec<Fr> = Vec::with_capacity(request.public_inputs.len());
+    for (i, hex_str) in request.public_inputs.iter().enumerate() {
+        let hex_clean = hex_str.strip_prefix("0x").unwrap_or(hex_str);
+        let bytes = match hex::decode(hex_clean) {
+            Ok(b) => b,
+            Err(e) => {
+                return Json(VerifyResponse {
+                    valid: false,
+                    error: Some(format!("Invalid hex in public_inputs[{}]: {}", i, e)),
+                });
+            }
+        };
+        if bytes.len() != 32 {
+            return Json(VerifyResponse {
+                valid: false,
+                error: Some(format!(
+                    "public_inputs[{}]: expected 32 bytes, got {}",
+                    i,
+                    bytes.len()
+                )),
+            });
+        }
+        let repr: [u8; 32] = bytes.try_into().unwrap();
+        let fr_opt: subtle::CtOption<Fr> = Fr::from_repr(repr);
+        if bool::from(fr_opt.is_none()) {
+            return Json(VerifyResponse {
+                valid: false,
+                error: Some(format!(
+                    "public_inputs[{}]: not a valid BN254 Fr element",
+                    i
+                )),
+            });
+        }
+        public_inputs.push(fr_opt.unwrap());
+    }
+
+    // Reconstruct Halo2Proof for the verifier
+    let proof = Halo2Proof {
+        inner: crate::prover::FluidEliteProof {
+            proof_bytes,
+            generation_time_ms: 0,
+            num_constraints: 0,
+        },
+        public_inputs,
+    };
+
+    // Perform real cryptographic verification
+    match state.verifier.verify(&proof) {
+        Ok(result) => {
+            info!(
+                "Verification complete: valid={}, time={}μs",
+                result.valid, result.verification_time_us
+            );
+            Json(VerifyResponse {
+                valid: result.valid,
+                error: None,
+            })
+        }
+        Err(e) => {
+            warn!("Verification error: {}", e);
+            Json(VerifyResponse {
+                valid: false,
+                error: Some(format!("Verification error: {}", e)),
+            })
+        }
+    }
 }
 
 /// Start the HTTP server (legacy function, use server binary instead)

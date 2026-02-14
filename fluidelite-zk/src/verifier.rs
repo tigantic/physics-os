@@ -148,7 +148,11 @@ mod halo2_verifier {
 pub use halo2_verifier::*;
 
 // ============================================================================
-// Stub verifier (when halo2 is not enabled)
+// Stub verifier (development-only fallback when halo2 is not enabled)
+//
+// WARNING: This stub ALWAYS RETURNS valid=true regardless of input.
+// It provides no cryptographic verification whatsoever. A compile_error!
+// in lib.rs prevents this from being included in production/enterprise builds.
 // ============================================================================
 
 #[cfg(not(feature = "halo2"))]

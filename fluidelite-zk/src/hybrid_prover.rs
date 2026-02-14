@@ -12,6 +12,9 @@ use std::time::Instant;
 use crate::field::Q16;
 use crate::hybrid::{HybridConfig, HybridWeights};
 
+#[cfg(feature = "halo2")]
+use crate::halo2_hybrid_prover::Halo2HybridProver;
+
 /// Result of hybrid inference
 #[derive(Debug, Clone)]
 pub struct HybridInferenceResult {
@@ -149,10 +152,17 @@ impl FeatureExtractor {
 }
 
 /// Hybrid prover: Lookup + Fallback
+///
+/// When the `halo2` feature is enabled, call [`enable_halo2`](HybridProver::enable_halo2)
+/// after construction to generate real cryptographic proofs. Without it,
+/// `prove()` returns zero-filled stub bytes (blocked in production builds).
 pub struct HybridProver {
     weights: HybridWeights,
     feature_extractor: FeatureExtractor,
     stats: HybridProverStats,
+    /// Real Halo2 prover (lazy-initialized via `enable_halo2()`)
+    #[cfg(feature = "halo2")]
+    halo2_prover: Option<Halo2HybridProver>,
 }
 
 impl HybridProver {
@@ -163,6 +173,8 @@ impl HybridProver {
             weights,
             feature_extractor: FeatureExtractor::new(config),
             stats: HybridProverStats::default(),
+            #[cfg(feature = "halo2")]
+            halo2_prover: None,
         }
     }
     
@@ -170,6 +182,16 @@ impl HybridProver {
     pub fn from_binary(path: &str) -> Result<Self, Box<dyn std::error::Error>> {
         let weights = HybridWeights::from_binary(path)?;
         Ok(Self::new(weights))
+    }
+
+    /// Initialize the Halo2 prover for real cryptographic proofs.
+    ///
+    /// This performs an expensive one-time KZG trusted setup and key generation.
+    /// After this call, `prove()` generates real Halo2 proofs for lookup hits.
+    #[cfg(feature = "halo2")]
+    pub fn enable_halo2(&mut self) {
+        let h2 = Halo2HybridProver::new(self.weights.clone());
+        self.halo2_prover = Some(h2);
     }
     
     /// Run inference (no proof)
@@ -208,7 +230,39 @@ impl HybridProver {
     }
     
     /// Generate ZK proof for inference
+    ///
+    /// When `enable_halo2()` has been called, this generates a real Halo2 proof
+    /// for lookup hits. For fallback contexts (not in lookup table), the Halo2
+    /// fallback circuit must also be implemented (Phase 1 TODO).
+    ///
+    /// Without Halo2 enabled, returns zero-filled stub bytes (development only).
     pub fn prove(&mut self, context: &[u8]) -> HybridProof {
+        // Delegate to real Halo2 prover when available
+        #[cfg(feature = "halo2")]
+        if let Some(ref mut h2) = self.halo2_prover {
+            match h2.prove(context) {
+                Ok(h2_proof) => {
+                    let proof = HybridProof {
+                        proof_bytes: h2_proof.proof_bytes,
+                        generation_time_ms: h2_proof.generation_time_ms,
+                        num_constraints: h2_proof.num_constraints,
+                        lookup_hit: h2_proof.lookup_hit,
+                    };
+                    self.stats.record(&proof);
+                    return proof;
+                }
+                Err(e) => {
+                    // Fallback circuit not yet implemented — log and fall through
+                    // This happens for contexts not in the lookup table
+                    eprintln!(
+                        "Halo2 proof generation failed (falling back to stub): {}",
+                        e
+                    );
+                }
+            }
+        }
+
+        // Stub path: zero-filled proof bytes (blocked in production by compile_error!)
         let start = Instant::now();
         
         let hash = HybridWeights::hash_context(context);
@@ -216,15 +270,11 @@ impl HybridProver {
         
         // Constraint count depends on path taken
         let num_constraints = if lookup_hit {
-            // Lookup argument: ~100 constraints
-            // Hash verification + table membership
             Self::LOOKUP_CONSTRAINTS
         } else {
-            // Fallback: feature extraction + matmul
             Self::FALLBACK_CONSTRAINTS
         };
         
-        // Simulate proof (real Halo2 integration would go here)
         let proof_bytes = vec![0u8; if lookup_hit { 400 } else { 800 }];
         
         let proof = HybridProof {

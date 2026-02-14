@@ -39,9 +39,12 @@ getrandom = { version = "0.2", optional = true }
 # Constant-time comparison
 subtle = "2.5"
 
+# Halo2 support for field conversions (optional)
+halo2-axiom = { version = "0.5.1", optional = true }
+
 [features]
 default = []
-halo2 = []
+halo2 = ["dep:halo2-axiom"]
 encryption = ["dep:aes-gcm", "dep:hkdf", "dep:getrandom"]
 
 [dev-dependencies]

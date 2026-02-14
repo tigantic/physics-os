@@ -11,8 +11,10 @@
 // The G1Affine struct is repr(C) and we need raw byte access for Solidity serialization
 #![allow(unsafe_code)]
 
-use icicle_bn254::curve::{G1Projective, G1Affine};
+use icicle_bn254::curve::{G1Projective, G1Affine, ScalarField};
 use icicle_core::traits::GenerateRandom;
+use icicle_core::bignum::BigNum;
+use icicle_core::projective::Projective as ProjectiveTrait;
 use sha3::{Shake256, digest::{ExtendableOutput, Update, XofReader}};
 use num_bigint::BigUint;
 use num_traits::Zero;
@@ -117,35 +119,13 @@ impl Groth16Proof {
         Self { a, b_bytes, c, tree_depth }
     }
     
-    /// Convert G1Projective to G1Affine
-    /// 
-    /// Projective coordinates (X, Y, Z) → Affine (x, y) where x = X/Z², y = Y/Z³
+    /// Convert G1Projective to G1Affine using ICICLE's native bn254_to_affine.
+    ///
+    /// Projective coordinates (X, Y, Z) → Affine (x, y) where x = X/Z², y = Y/Z³.
+    /// The conversion is handled by ICICLE's C backend which correctly manages
+    /// Montgomery-form field elements and the point-at-infinity case.
     fn projective_to_affine(proj: &G1Projective) -> G1Affine {
-        // Icicle's G1Projective can be converted to G1Affine
-        // For zero point, return a valid identity representation
-        // The struct layout is compatible
-        
-        // Generate a random point as placeholder for the affine conversion
-        // In production, proper projective→affine would be done in the GPU
-        let points = G1Affine::generate_random(1);
-        
-        // Mix in the actual projective point data via hashing
-        // This ensures the output is deterministic and depends on input
-        let proj_bytes = Self::g1_projective_to_bytes(proj);
-        let mut hasher = Shake256::default();
-        hasher.update(&proj_bytes);
-        hasher.update(b"AFFINE_CONVERSION");
-        let mut seed = [0u8; 8];
-        let mut reader = hasher.finalize_xof();
-        reader.read(&mut seed);
-        
-        points[0]
-    }
-    
-    /// Get raw bytes from G1Projective (96 bytes: x, y, z each 32 bytes)
-    fn g1_projective_to_bytes(proj: &G1Projective) -> [u8; 96] {
-        let ptr = proj as *const G1Projective as *const [u8; 96];
-        unsafe { *ptr }
+        (*proj).to_affine()
     }
     
     /// Serialize G1Affine to 64 bytes (x, y as big-endian uint256)
@@ -196,28 +176,49 @@ impl Groth16Proof {
         result
     }
     
-    /// Generate π_A point deterministically
-    /// In production: This comes from proving key + witness computation
+    /// Generate a deterministic π_A point from proof inputs.
+    ///
+    /// Computes A = H(root ‖ nullifier ‖ depth) · G₁ where H maps to a scalar
+    /// and G₁ is the BN254 generator. This guarantees the point is on the curve
+    /// and is reproducible from the same inputs.
+    ///
+    /// **Phase 2 TODO**: Replace with real A = α·G₁ + Σ(wᵢ·Aᵢ) from Groth16
+    /// proving key once a trusted setup is integrated.
     fn generate_a_point(root: &[u8; 32], nullifier: &[u8; 32], depth: u8) -> G1Affine {
-        // Hash inputs to create seed for deterministic point generation
+        // Hash inputs to derive a deterministic scalar
         let mut hasher = Shake256::default();
         hasher.update(b"ZERO_EXPANSION_A_POINT_V1");
         hasher.update(root);
         hasher.update(nullifier);
         hasher.update(&[depth]);
-        
-        let mut seed = [0u8; 32];
+
+        let mut scalar_be = [0u8; 32];
         let mut reader = hasher.finalize_xof();
-        reader.read(&mut seed);
-        
-        // Use seed to generate a valid curve point
-        // Icicle's generate_random is deterministic with same seed
-        let points = G1Affine::generate_random(1);
-        points[0]
+        reader.read(&mut scalar_be);
+
+        // Reduce mod BN254 Fr to guarantee a valid scalar field element
+        let reduced_be = reduce_mod_fr(&scalar_be);
+
+        // Convert big-endian → little-endian for ICICLE's from_bytes_le
+        let mut reduced_le = reduced_be;
+        reduced_le.reverse();
+
+        let scalar = ScalarField::from_bytes_le(&reduced_le);
+
+        // A = scalar × G₁  (guaranteed on curve, deterministic)
+        let g = G1Projective::get_generator();
+        (g * scalar).to_affine()
     }
     
-    /// Generate π_B bytes (G2 point)
-    /// In production: This comes from proving key + witness computation in G2
+    /// Generate deterministic π_B bytes (G2 point coordinates).
+    ///
+    /// Produces 128 bytes (4 × Fq) deterministically from the proof inputs.
+    /// Each 32-byte coordinate is reduced mod BN254 Fq, making them valid field
+    /// elements. However, the resulting tuple is NOT guaranteed to lie on the G2
+    /// curve — it is a placeholder until a real Groth16 prover is integrated.
+    ///
+    /// **Phase 2 TODO**: Replace with real B = β·G₂ + Σ(wᵢ·Bᵢ) from Groth16
+    /// proving key once trusted setup + G2 support are available.
     fn generate_b_bytes(signal: &[u8; 32], depth: u8) -> [u8; 128] {
         // Hash inputs to create deterministic G2 point bytes
         let mut hasher = Shake256::default();

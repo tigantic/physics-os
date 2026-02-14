@@ -369,17 +369,282 @@ pub struct FallbackCircuit {
 
 #[cfg(feature = "halo2")]
 impl FallbackCircuit {
+    /// Maximum number of non-zero sparse features (padded to this size).
+    /// With 12-byte contexts: ~35 features from unigrams + bigrams + trigrams + skipgrams.
+    /// Using 64 gives 2× headroom.
+    pub const MAX_NNZ: usize = 64;
+
     pub fn estimate_constraints(&self) -> usize {
-        // Sparse feature lookup: O(nnz)
-        let nnz = self.feature_indices.len();
-        // U_r matmul: nnz * rank MACs
+        let nnz = self.feature_indices.len().min(Self::MAX_NNZ);
         let u_macs = nnz * self.rank;
-        // S_r scaling: rank multiplications
         let s_muls = self.rank;
-        // Vt_r matmul: rank * vocab MACs  
         let vt_macs = self.rank * self.vocab;
-        
         u_macs + s_muls + vt_macs
+    }
+
+    /// Get public inputs (logits as field elements).
+    ///
+    /// The logits are computed in field arithmetic (not Q16-shifted), so they
+    /// match the circuit's internal accumulation. The verifier compares against
+    /// these field-level logits. Phase 1 will add Q16 shift corrections.
+    pub fn public_inputs(&self) -> Vec<Fr> {
+        self.logits.iter().map(|&v| Self::q16_to_fr(v)).collect()
+    }
+
+    /// Convert a Q16 raw value to BN254 Fr.
+    fn q16_to_fr(val: Q16) -> Fr {
+        if val.raw >= 0 {
+            Fr::from(val.raw as u64)
+        } else {
+            -Fr::from((-val.raw) as u64)
+        }
+    }
+
+    /// Minimum k for this circuit (2^k ≥ total rows needed).
+    pub fn min_k(&self) -> u32 {
+        let nnz = Self::MAX_NNZ;
+        // Phase 1 rows: rank * (1 + nnz)
+        // Phase 2 rows: rank * 2
+        // Phase 3 rows: vocab * (1 + rank)
+        let total = self.rank * (1 + nnz) + self.rank * 2 + self.vocab * (1 + self.rank);
+        let k = (total as f64).log2().ceil() as u32 + 1;
+        k.max(10)
+    }
+}
+
+#[cfg(feature = "halo2")]
+impl Circuit<Fr> for FallbackCircuit {
+    type Config = FallbackConfig;
+    type FloorPlanner = SimpleFloorPlanner;
+    type Params = ();
+
+    fn without_witnesses(&self) -> Self {
+        Self {
+            feature_indices: vec![],
+            feature_values: vec![],
+            u_r: self.u_r.clone(),
+            s_r: self.s_r.clone(),
+            vt_r: self.vt_r.clone(),
+            logits: vec![Q16::ZERO; self.vocab],
+            feature_dim: self.feature_dim,
+            rank: self.rank,
+            vocab: self.vocab,
+        }
+    }
+
+    fn configure(meta: &mut ConstraintSystem<Fr>) -> Self::Config {
+        FallbackConfig::configure(meta)
+    }
+
+    fn synthesize(
+        &self,
+        config: Self::Config,
+        mut layouter: impl Layouter<Fr>,
+    ) -> Result<(), Error> {
+        let max_nnz = Self::MAX_NNZ;
+        let rank = self.rank;
+        let vocab = self.vocab;
+
+        // Collect sparse features, padding to MAX_NNZ
+        let mut feat_fr: Vec<Fr> = self
+            .feature_values
+            .iter()
+            .take(max_nnz)
+            .map(|&v| Self::q16_to_fr(v))
+            .collect();
+        feat_fr.resize(max_nnz, Fr::zero());
+
+        let mut feat_idx: Vec<usize> = self
+            .feature_indices
+            .iter()
+            .copied()
+            .take(max_nnz)
+            .collect();
+        feat_idx.resize(max_nnz, 0);
+
+        // Pre-convert weights to Fr
+        let u_r_fr: Vec<Fr> = self.u_r.iter().map(|&v| Self::q16_to_fr(v)).collect();
+        let s_r_fr: Vec<Fr> = self.s_r.iter().map(|&v| Self::q16_to_fr(v)).collect();
+        let vt_r_fr: Vec<Fr> = self.vt_r.iter().map(|&v| Self::q16_to_fr(v)).collect();
+
+        let logit_cells = layouter.assign_region(
+            || "fallback_matmul",
+            |mut region| {
+                let mut row: usize = 0;
+                let mut hidden = vec![Fr::zero(); rank];
+
+                // ── Phase 1: hidden[r] = Σ_j feat[j] * U_r[ idx[j], r ] ────
+                for r in 0..rank {
+                    // Init row: acc = 0, s_mac disabled
+                    region.assign_advice(
+                        config.features,
+                        row,
+                        Value::known(Fr::zero()),
+                    );
+                    region.assign_advice(
+                        config.weights,
+                        row,
+                        Value::known(Fr::zero()),
+                    );
+                    region.assign_advice(
+                        config.acc,
+                        row,
+                        Value::known(Fr::zero()),
+                    );
+                    row += 1;
+
+                    let mut acc = Fr::zero();
+                    for j in 0..max_nnz {
+                        let f_val = feat_fr[j];
+                        let idx = feat_idx[j];
+                        let w_idx = idx * rank + r;
+                        let w_val = if w_idx < u_r_fr.len() {
+                            u_r_fr[w_idx]
+                        } else {
+                            Fr::zero()
+                        };
+
+                        acc = f_val * w_val + acc;
+
+                        region.assign_advice(
+                            config.features,
+                            row,
+                            Value::known(f_val),
+                        );
+                        region.assign_advice(
+                            config.weights,
+                            row,
+                            Value::known(w_val),
+                        );
+                        region.assign_advice(
+                            config.acc,
+                            row,
+                            Value::known(acc),
+                        );
+                        config.s_mac.enable(&mut region, row)?;
+                        row += 1;
+                    }
+
+                    hidden[r] = acc;
+                }
+
+                // ── Phase 2: scaled[r] = hidden[r] * S_r[r] ────────────────
+                let mut scaled = vec![Fr::zero(); rank];
+                for r in 0..rank {
+                    let s_val = if r < s_r_fr.len() {
+                        s_r_fr[r]
+                    } else {
+                        Fr::zero()
+                    };
+
+                    // Init row: acc = 0
+                    region.assign_advice(
+                        config.features,
+                        row,
+                        Value::known(Fr::zero()),
+                    );
+                    region.assign_advice(
+                        config.weights,
+                        row,
+                        Value::known(Fr::zero()),
+                    );
+                    region.assign_advice(
+                        config.acc,
+                        row,
+                        Value::known(Fr::zero()),
+                    );
+                    row += 1;
+
+                    // MAC row: hidden[r] * S_r[r] + 0
+                    let prod = hidden[r] * s_val;
+                    region.assign_advice(
+                        config.features,
+                        row,
+                        Value::known(hidden[r]),
+                    );
+                    region.assign_advice(
+                        config.weights,
+                        row,
+                        Value::known(s_val),
+                    );
+                    region.assign_advice(
+                        config.acc,
+                        row,
+                        Value::known(prod),
+                    );
+                    config.s_mac.enable(&mut region, row)?;
+                    row += 1;
+
+                    scaled[r] = prod;
+                }
+
+                // ── Phase 3: logits[v] = Σ_r scaled[r] * Vt_r[r, v] ────────
+                let mut logit_cells_inner = Vec::with_capacity(vocab);
+                for v in 0..vocab {
+                    // Init row: acc = 0
+                    region.assign_advice(
+                        config.features,
+                        row,
+                        Value::known(Fr::zero()),
+                    );
+                    region.assign_advice(
+                        config.weights,
+                        row,
+                        Value::known(Fr::zero()),
+                    );
+                    region.assign_advice(
+                        config.acc,
+                        row,
+                        Value::known(Fr::zero()),
+                    );
+                    row += 1;
+
+                    let mut acc = Fr::zero();
+                    for r in 0..rank {
+                        let vt_idx = r * vocab + v;
+                        let vt_val = if vt_idx < vt_r_fr.len() {
+                            vt_r_fr[vt_idx]
+                        } else {
+                            Fr::zero()
+                        };
+
+                        acc = scaled[r] * vt_val + acc;
+
+                        region.assign_advice(
+                            config.features,
+                            row,
+                            Value::known(scaled[r]),
+                        );
+                        region.assign_advice(
+                            config.weights,
+                            row,
+                            Value::known(vt_val),
+                        );
+                        let cell = region.assign_advice(
+                            config.acc,
+                            row,
+                            Value::known(acc),
+                        );
+                        config.s_mac.enable(&mut region, row)?;
+
+                        // Save the last acc cell for each vocab entry as the logit
+                        if r == rank - 1 {
+                            logit_cells_inner.push(cell);
+                        }
+                        row += 1;
+                    }
+                }
+
+                Ok(logit_cells_inner)
+            },
+        )?;
+
+        // Constrain logit cells to public instance column
+        for (i, cell) in logit_cells.into_iter().enumerate() {
+            layouter.constrain_instance(cell.cell(), config.public, i);
+        }
+
+        Ok(())
     }
 }
 

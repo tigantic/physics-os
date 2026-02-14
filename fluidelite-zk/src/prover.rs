@@ -244,6 +244,11 @@ mod halo2_prover {
         pub fn verifying_key(&self) -> &VerifyingKey<G1Affine> {
             &self.vk
         }
+
+        /// Get the KZG parameters (needed by the verifier)
+        pub fn params(&self) -> &ParamsKZG<Bn256> {
+            &self.params
+        }
     }
 }
 
@@ -251,7 +256,12 @@ mod halo2_prover {
 pub use halo2_prover::*;
 
 // ============================================================================
-// Stub prover (when halo2 is not enabled)
+// Stub prover (development-only fallback when halo2 is not enabled)
+//
+// WARNING: This stub runs the real computation but returns ZERO-FILLED
+// proof bytes (vec![0u8; 800]). These are not cryptographic proofs and
+// will not verify. A compile_error! in lib.rs prevents this from being
+// included in production/enterprise builds.
 // ============================================================================
 
 #[cfg(not(feature = "halo2"))]

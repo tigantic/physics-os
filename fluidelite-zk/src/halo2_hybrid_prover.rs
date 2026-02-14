@@ -21,7 +21,11 @@ use std::time::Instant;
 
 #[cfg(feature = "halo2")]
 use crate::circuit::HybridLookupCircuit;
-use crate::hybrid::{HybridConfig, HybridWeights};
+#[cfg(feature = "halo2")]
+use crate::circuit::FallbackCircuit;
+use crate::hybrid::HybridWeights;
+#[cfg(feature = "halo2")]
+use crate::hybrid_prover::FeatureExtractor;
 
 /// Cryptographic proof from Halo2
 #[cfg(feature = "halo2")]
@@ -50,14 +54,22 @@ impl Halo2HybridProof {
 /// Halo2 Prover for Hybrid Model
 #[cfg(feature = "halo2")]
 pub struct Halo2HybridProver {
-    /// KZG parameters
-    params: ParamsKZG<Bn256>,
+    /// KZG parameters for lookup circuit
+    params_lookup: ParamsKZG<Bn256>,
     /// Proving key for lookup circuit
     pk_lookup: ProvingKey<G1Affine>,
     /// Verifying key for lookup circuit
     vk_lookup: VerifyingKey<G1Affine>,
+    /// KZG parameters for fallback circuit
+    params_fallback: ParamsKZG<Bn256>,
+    /// Proving key for fallback circuit
+    pk_fallback: ProvingKey<G1Affine>,
+    /// Verifying key for fallback circuit
+    vk_fallback: VerifyingKey<G1Affine>,
     /// Model weights
     weights: HybridWeights,
+    /// Feature extractor for fallback path
+    feature_extractor: FeatureExtractor,
     /// Lookup table in circuit format: (hash_lo, hash_hi, prediction)
     circuit_table: Vec<(u64, u64, u8)>,
     /// Statistics
@@ -77,36 +89,30 @@ pub struct Halo2HybridProverStats {
 impl Halo2HybridProver {
     /// Create a new prover with the given weights
     /// 
-    /// This performs trusted setup (one-time, expensive operation).
+    /// This performs trusted setup (one-time, expensive operation) for both
+    /// the lookup circuit and the fallback matmul circuit.
     pub fn new(weights: HybridWeights) -> Self {
         println!("Initializing Halo2 prover...");
         let start = Instant::now();
         
         // Convert lookup table to circuit format
-        // Split 128-bit hash into two 64-bit parts
         let circuit_table: Vec<(u64, u64, u8)> = weights
             .lookup_table
             .iter()
-            .map(|(&hash, &pred)| {
-                // Our hash is 64-bit, so hash_hi = 0
-                (hash, 0u64, pred)
-            })
+            .map(|(&hash, &pred)| (hash, 0u64, pred))
             .collect();
         
         println!("  Lookup table: {} entries", circuit_table.len());
         
-        // Determine k (circuit size) based on table size
-        // 2^k must be >= table_size
-        let k = (circuit_table.len() as f64).log2().ceil() as u32 + 2;
-        let k = k.max(10); // Minimum k=10
-        println!("  Circuit k: {} (2^{} = {} rows)", k, k, 1 << k);
+        // ── Lookup circuit setup ───────────────────────────────────────────
+        let k_lookup = (circuit_table.len() as f64).log2().ceil() as u32 + 2;
+        let k_lookup = k_lookup.max(10);
+        println!("  Lookup circuit k: {} (2^{} = {} rows)", k_lookup, k_lookup, 1 << k_lookup);
         
-        // Generate KZG parameters
-        println!("  Generating KZG parameters...");
-        let params = ParamsKZG::<Bn256>::setup(k, OsRng);
+        println!("  Generating lookup KZG parameters...");
+        let params_lookup = ParamsKZG::<Bn256>::setup(k_lookup, OsRng);
         
-        // Create empty circuit for key generation
-        let empty_circuit = HybridLookupCircuit {
+        let empty_lookup = HybridLookupCircuit {
             context: vec![0u8; 12],
             hash_lo: 0,
             hash_hi: 0,
@@ -114,20 +120,48 @@ impl Halo2HybridProver {
             table: circuit_table.clone(),
         };
         
-        // Generate keys
-        println!("  Generating proving/verifying keys...");
-        let vk_lookup = keygen_vk(&params, &empty_circuit)
-            .expect("keygen_vk failed");
-        let pk_lookup = keygen_pk(&params, vk_lookup.clone(), &empty_circuit)
-            .expect("keygen_pk failed");
+        println!("  Generating lookup proving/verifying keys...");
+        let vk_lookup = keygen_vk(&params_lookup, &empty_lookup)
+            .expect("keygen_vk (lookup) failed");
+        let pk_lookup = keygen_pk(&params_lookup, vk_lookup.clone(), &empty_lookup)
+            .expect("keygen_pk (lookup) failed");
         
+        // ── Fallback circuit setup ─────────────────────────────────────────
+        let empty_fallback = FallbackCircuit {
+            feature_indices: vec![],
+            feature_values: vec![],
+            u_r: weights.u_r.clone(),
+            s_r: weights.s_r.clone(),
+            vt_r: weights.vt_r.clone(),
+            logits: vec![crate::field::Q16::ZERO; weights.config.vocab_size],
+            feature_dim: weights.config.feature_dim,
+            rank: weights.config.rank,
+            vocab: weights.config.vocab_size,
+        };
+        let k_fallback = empty_fallback.min_k();
+        println!("  Fallback circuit k: {} (2^{} = {} rows)", k_fallback, k_fallback, 1 << k_fallback);
+        
+        println!("  Generating fallback KZG parameters...");
+        let params_fallback = ParamsKZG::<Bn256>::setup(k_fallback, OsRng);
+        
+        println!("  Generating fallback proving/verifying keys...");
+        let vk_fallback = keygen_vk(&params_fallback, &empty_fallback)
+            .expect("keygen_vk (fallback) failed");
+        let pk_fallback = keygen_pk(&params_fallback, vk_fallback.clone(), &empty_fallback)
+            .expect("keygen_pk (fallback) failed");
+        
+        let feature_extractor = FeatureExtractor::new(weights.config.clone());
         println!("  Setup complete in {:?}", start.elapsed());
         
         Self {
-            params,
+            params_lookup,
             pk_lookup,
             vk_lookup,
+            params_fallback,
+            pk_fallback,
+            vk_fallback,
             weights,
+            feature_extractor,
             circuit_table,
             stats: Halo2HybridProverStats::default(),
         }
@@ -141,7 +175,7 @@ impl Halo2HybridProver {
         let hash = crate::hybrid::HybridWeights::hash_context(context);
         
         if let Some(&prediction) = self.weights.lookup_table.get(&hash) {
-            // Lookup path - generate proof
+            // ── Lookup path ────────────────────────────────────────────────
             let circuit = HybridLookupCircuit::new(
                 context.to_vec(),
                 prediction,
@@ -153,14 +187,14 @@ impl Halo2HybridProver {
             let mut transcript = Blake2bWrite::<_, G1Affine, Challenge255<_>>::init(vec![]);
             
             create_proof::<KZGCommitmentScheme<Bn256>, ProverGWC<_>, _, _, _, _>(
-                &self.params,
+                &self.params_lookup,
                 &self.pk_lookup,
                 &[circuit],
                 &[&[&public_inputs]],
                 OsRng,
                 &mut transcript,
             )
-            .map_err(|e| format!("Proof generation failed: {:?}", e))?;
+            .map_err(|e| format!("Lookup proof generation failed: {:?}", e))?;
             
             let proof_bytes = transcript.finalize();
             let generation_time_ms = start.elapsed().as_millis() as u64;
@@ -173,27 +207,88 @@ impl Halo2HybridProver {
                 proof_bytes,
                 public_inputs,
                 generation_time_ms,
-                num_constraints: 80, // Lookup is ~80 constraints
+                num_constraints: 80,
                 lookup_hit: true,
             })
         } else {
-            // Fallback path - would use FallbackCircuit
-            // For now, return a simulated proof
+            // ── Fallback path: sparse features → matmul → logits ───────────
+            let features = self.feature_extractor.extract(context);
+
+            // Collect non-zero features
+            let mut indices = Vec::new();
+            let mut values = Vec::new();
+            for (i, &val) in features.iter().enumerate() {
+                if val != crate::field::Q16::ZERO {
+                    indices.push(i);
+                    values.push(val);
+                }
+            }
+
+            // Compute logits on CPU
+            let logits = self.weights.matmul(&features);
+
+            let circuit = FallbackCircuit {
+                feature_indices: indices,
+                feature_values: values,
+                u_r: self.weights.u_r.clone(),
+                s_r: self.weights.s_r.clone(),
+                vt_r: self.weights.vt_r.clone(),
+                logits,
+                feature_dim: self.weights.config.feature_dim,
+                rank: self.weights.config.rank,
+                vocab: self.weights.config.vocab_size,
+            };
+
+            let public_inputs = circuit.public_inputs();
+            let num_constraints = circuit.estimate_constraints();
+
+            let mut transcript = Blake2bWrite::<_, G1Affine, Challenge255<_>>::init(vec![]);
+
+            create_proof::<KZGCommitmentScheme<Bn256>, ProverGWC<_>, _, _, _, _>(
+                &self.params_fallback,
+                &self.pk_fallback,
+                &[circuit],
+                &[&[&public_inputs]],
+                OsRng,
+                &mut transcript,
+            )
+            .map_err(|e| format!("Fallback proof generation failed: {:?}", e))?;
+
+            let proof_bytes = transcript.finalize();
+            let generation_time_ms = start.elapsed().as_millis() as u64;
+
             self.stats.total_proofs += 1;
             self.stats.fallback_proofs += 1;
-            
-            Err("Fallback circuit not yet implemented - context not in lookup table".to_string())
+            self.stats.total_time_ms += generation_time_ms;
+
+            Ok(Halo2HybridProof {
+                proof_bytes,
+                public_inputs,
+                generation_time_ms,
+                num_constraints,
+                lookup_hit: false,
+            })
         }
     }
     
-    /// Get the verifying key for deployment
-    pub fn verifying_key(&self) -> &VerifyingKey<G1Affine> {
+    /// Get the verifying key for lookup circuit deployment
+    pub fn verifying_key_lookup(&self) -> &VerifyingKey<G1Affine> {
         &self.vk_lookup
     }
+
+    /// Get the verifying key for fallback circuit deployment
+    pub fn verifying_key_fallback(&self) -> &VerifyingKey<G1Affine> {
+        &self.vk_fallback
+    }
     
-    /// Get the KZG parameters for verification
-    pub fn params(&self) -> &ParamsKZG<Bn256> {
-        &self.params
+    /// Get the KZG parameters for lookup verification
+    pub fn params_lookup(&self) -> &ParamsKZG<Bn256> {
+        &self.params_lookup
+    }
+
+    /// Get the KZG parameters for fallback verification
+    pub fn params_fallback(&self) -> &ParamsKZG<Bn256> {
+        &self.params_fallback
     }
     
     /// Get statistics
@@ -217,6 +312,10 @@ use halo2_axiom::{
 };
 
 /// Verify a Halo2 hybrid proof
+///
+/// The caller must provide the correct params and vk for the proof type:
+/// - Lookup proofs: use `params_lookup()` and `verifying_key_lookup()`
+/// - Fallback proofs: use `params_fallback()` and `verifying_key_fallback()`
 #[cfg(feature = "halo2")]
 pub fn verify_hybrid_proof(
     params: &ParamsKZG<Bn256>,
