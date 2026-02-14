@@ -1,0 +1,63 @@
+{
+  "aggregate_ms": 1,
+  "architectural_invariant": "Never Go Dense (ADR-0001)",
+  "architecture": "zero_expansion_qtt_native_msm",
+  "certificate_id": "0ba1a84d-3087-4c9c-a929-382fa87a3d32",
+  "certificate_size_bytes": 35519,
+  "domain": "Thermal",
+  "generation_time_ms": 0,
+  "gpu_device": "CUDA:0",
+  "gpu_enabled": true,
+  "keygen_ms": 47891,
+  "merkle_root": "ac9e4fe2c4b4cfa2d2b42b3998d027d1d946531c12f3f42cd0400b09a61e63b6",
+  "params": "production",
+  "proof_hashes": [
+    "955fde43390f00dc79962b6d08249c47afb7536ee91ed39316ffb1207ba34f25",
+    "c53dc4eacc850a4051e42a03a213692bf50c9e3f78168c0054ee8193ed3eb6be",
+    "e4bb0250146c6fee641036af47f9aa8b46514d47cc1dbdf6ca5801ce2d538eb1",
+    "04fde56b589117ac83aac07b2572cbccc354dc322522006fb4995c4aee35c87b",
+    "eb91e8b1d2687d5f0be340ef97dcf3f9eb086fc2f13136a45ca07e4386aff86a",
+    "20813f40e25949fc7f584e9e2b6c5c7fb835c45302c8d8b2493b26b4fa07ac64",
+    "96349861e8b91e362d97b64e3852157f86ab0c0c158d768ff04655c92b4ae3a8",
+    "8a42ecad9d6e8a57f5b90c021bddfd1460628aab37886b1d1ff1ac0bf89719a9",
+    "6bbc4316169667521f8f60d5647b9bba3b4a7a643cd9178ad020d02079751e74",
+    "362b5d34e7df9bdc3ad08127ccce52d22b127b19c27e10d49895ec77fad6319b",
+    "87aaec9dcc54388ed91fb8799adba0b335cac563897147ecdbbcdd62f7278b97",
+    "17f74dec47d23a1d8a550c2969a7f17b91f476fc0e3137e9b2a83fbd6b32ea04",
+    "89eee98a368eab1286bdbe26f72722a4483a10234a7e2299a0fd90080d2721e7",
+    "bb0925eddfa3a05713b044fd8bd3523b57e282759734f3d3238bab9ffd8166d4",
+    "33ffff8f68508d74d1b4a489dc4e2246e744f381fdd28d1d9fef02a1e7570f56",
+    "3a2e62d354d5d44a9d150bce683d8e7857eb7c22b797536654321273775d6429",
+    "a047d8219ac0e3c45641f56eb17cbf7eea32b9fa603c1e391f8c2d416b14dba9",
+    "a74465f1f98609dd5d69d8319646e8c3be9bb38767ed4ffb2d1957f6cd633852",
+    "184474fbad25c794b2847578f06fce66e96c19f49a664d4212d881c5b00e35ce",
+    "ed4b7c0c4d68aad1223202980a1eace7ea6289cbbb604f5f6ea99df5926d3d16"
+  ],
+  "prove_ms": 433076,
+  "qtt_config": {
+    "full_dimension": "2^24",
+    "max_rank": 16,
+    "msm_c": 16,
+    "n_sites": 24,
+    "precompute_factor": 8,
+    "total_params": 10100,
+    "vram_bases_mb": 5.548095703125
+  },
+  "qtt_performance": {
+    "avg_commit_ms": 20.549049999999998,
+    "avg_compression_ratio": 1661.1104950495057,
+    "commit_tps": 48.66405016290291,
+    "pcie_per_proof_kb": 315.625,
+    "total_commits": 20,
+    "traditional_per_proof": "512.0 MB"
+  },
+  "residual_stats": {
+    "max_abs": 0.0,
+    "nonzero_count": 0,
+    "rms": 0.0
+  },
+  "timestep_count": 20,
+  "total_constraints": 15089060,
+  "total_proof_bytes": 33280,
+  "verification_time_us": 117
+}

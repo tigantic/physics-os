@@ -124,6 +124,12 @@ pub mod msm_config;
 #[cfg(feature = "gpu")]
 pub mod qtt_native_msm;
 
+#[cfg(all(feature = "gpu", feature = "halo2"))]
+pub mod zero_expansion_prover;
+
+#[cfg(all(feature = "gpu", feature = "halo2"))]
+pub mod zero_expansion_prover_v3;
+
 #[cfg(feature = "gpu")]
 pub mod groth16_output;
 
