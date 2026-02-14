@@ -88,6 +88,9 @@ pub mod verifier;
 #[cfg(feature = "halo2")]
 pub mod halo2_hybrid_prover;
 
+#[cfg(feature = "halo2")]
+pub mod params;
+
 // Optional modules based on features
 #[cfg(feature = "python")]
 pub mod python;
@@ -119,6 +122,9 @@ pub mod groth16_prover;
 // Re-exports for convenience
 pub use fluidelite_core::mpo::MPO;
 pub use fluidelite_core::mps::MPS;
+
+#[cfg(test)]
+mod e2e_tests;
 
 #[cfg(test)]
 mod tests {
