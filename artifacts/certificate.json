@@ -1,0 +1,42 @@
+{
+  "aggregate_ms": 1,
+  "certificate_id": "afd585ad-5181-46e5-b03a-e927b2dfe302",
+  "certificate_size_bytes": 35519,
+  "domain": "Thermal",
+  "generation_time_ms": 1,
+  "keygen_ms": 2938,
+  "merkle_root": "23a073e9e0c47e2374214b758c862d3d0491debfa4b8bb0462efadb01d6b1f16",
+  "params": "test_small",
+  "proof_hashes": [
+    "80c08617dc5bdb0739f61afb9e77588d023f4e12c211beac9a0eaa35f4806e9a",
+    "63c2ce562806f7019c899d594080a820f6386d452ca0110801dbc77edd6d1c83",
+    "37f75229bf741640f6690fc755540fb89bad56feb9f719118ad8d87d39e72b83",
+    "e873688b7fb48a8d2f3011ab97352610bf03bc61e5ed40a0b333cf3d312aeb25",
+    "e36972cc4e9ca0ff4c4c926358038e25b55cb0c4d9e7d235a3e16eef89f89fd6",
+    "3e096d75e9d6d81c48b2c3ee307d4c9eed117b2083957716d3514ca671cec9fe",
+    "2a70aeafb90d8606b8fa7addf01ed975da85d401553d76dd757e405bdd5a9a3f",
+    "8f2614c29c44e088d7fd71bbd6ec14603e1e45ff66422458490cbe3ecf2b0acb",
+    "691d07ea41e543ecca842a63173ebdabd2e62a61d23e4f5017d41375c4bd8267",
+    "7f66f553f40ffde979d7853406aaf87e1a681321b22c751ef245c70a44a5a492",
+    "a6c89d45459ee7e79f3e7fe0f89f79cadc0a4886ac14792d6437d92840b11bc7",
+    "01a08ecb9d6ef46acc3a15be9f113fc3bb769fae1d59c19cae9196f52ae8e25c",
+    "ca7bfb401049d058079fb11cac4838f381ccff25438f403488b99cbfc914b10b",
+    "5ccf7b4ba4aabbb9e3c068e32639935eb111a688b5616b774e211b265f8dbaa0",
+    "91327a0322ac0e050e5289952c9ab5a9ae0654076814ea9d280e29c584c43b8f",
+    "4d4ec6cb110c699a4a2538d2f343347685b3f145c1413630eb462e532ad08a4f",
+    "b253966a0a377585477802b65a7e9bb3465e546d3c071173254dd21068595dd7",
+    "623c4cfa4200bbd7a161263fc40fa30d97980bb4886f8b15908aa1f18faabac2",
+    "80055fb166ab60d407869d32e0fb44d20749a0fb600e91121ccaa2b638317e0e",
+    "6fbe40c14e994db64bf581d586f87d38184a618d24c6fcaf99654c14cd9a531e"
+  ],
+  "prove_ms": 33373,
+  "residual_stats": {
+    "max_abs": 0.0,
+    "nonzero_count": 0,
+    "rms": 0.0
+  },
+  "timestep_count": 20,
+  "total_constraints": 1123460,
+  "total_proof_bytes": 33280,
+  "verification_time_us": 158
+}

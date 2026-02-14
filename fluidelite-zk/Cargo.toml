@@ -275,6 +275,11 @@ path = "src/bin/groth16_api.rs"
 required-features = ["groth16", "server"]
 
 [[bin]]
+name = "generate-certificate"
+path = "src/bin/generate_certificate.rs"
+required-features = ["halo2"]
+
+[[bin]]
 name = "certificate-authority"
 path = "src/bin/certificate_authority.rs"
 required-features = ["server"]
