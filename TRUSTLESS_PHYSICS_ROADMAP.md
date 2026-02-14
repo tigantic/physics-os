@@ -5,7 +5,7 @@
 **Owner:** Tigantic Holdings LLC  
 **Classification:** Internal — Engineering Execution Plan  
 **Commit Baseline:** `48ffae23` (HEAD → main)  
-**Status:** ACTIVE — Phase 0 COMPLETE, execution continues at Phase 1
+**Status:** ACTIVE — Phase 0 COMPLETE, Phase 1 partially complete (1.4, 1.5–1.8 done; 1.1–1.3 blocked on GPU hardware)
 
 ---
 
@@ -173,24 +173,24 @@ Every stub listed below produces **silently incorrect results** — a proof that
 
 ### Weeks 4–5: GPU Prover Implementation
 
-| Task | Stub | Deliverable | Acceptance Test |
-|------|------|-------------|-----------------|
-| **1.1** Implement `GpuHalo2Prover` | S-03 | Fork `halo2-axiom`'s `best_multiexp` to delegate to ICICLE `msm_bn254()`. Integrate into `create_proof` pipeline. Re-use existing triple-buffered stream architecture from `zero_expansion_prover_v3.rs`. | GPU prover produces identical proof bytes to CPU prover for same circuit+witness |
-| **1.2** Implement `BatchedGpuProver` | S-03 | Batch $N$ proofs sharing KZG params into pipelined GPU execution. Pre-allocate `DeviceVec` scalars per the validated WORKFLOW_ARCHITECTURE pattern. | Batch of 16 proofs completes in ≤ $16 / 88$ seconds (≤182ms) |
-| **1.3** ICICLE stream lifecycle management | S-14(partial) | Explicit `IcicleStream::destroy()` in `Drop` impl. Stream pool with bounded size ($\leq$ 8 concurrent). | 10,000 sequential prove calls with no CUDA OOM |
-| **1.4** Fix `production` feature definition | S-14 | Change `production = ["halo2", "server"]` to `production = ["halo2", "server", "gpu"]`. Add `production-cpu = ["halo2", "server"]` for CPU-only deployments. | `cargo build --features production` enables GPU; `Dockerfile.prod` uses `production`; `Dockerfile` uses `production-cpu` |
+| Task | Stub | Deliverable | Acceptance Test | Status |
+|------|------|-------------|-----------------|--------|
+| **1.1** Implement `GpuHalo2Prover` | S-03 | Fork `halo2-axiom`'s `best_multiexp` to delegate to ICICLE `msm_bn254()`. Integrate into `create_proof` pipeline. Re-use existing triple-buffered stream architecture from `zero_expansion_prover_v3.rs`. | GPU prover produces identical proof bytes to CPU prover for same circuit+witness | ⏳ Blocked (GPU) |
+| **1.2** Implement `BatchedGpuProver` | S-03 | Batch $N$ proofs sharing KZG params into pipelined GPU execution. Pre-allocate `DeviceVec` scalars per the validated WORKFLOW_ARCHITECTURE pattern. | Batch of 16 proofs completes in ≤ $16 / 88$ seconds (≤182ms) | ⏳ Blocked (GPU) |
+| **1.3** ICICLE stream lifecycle management | S-14(partial) | Explicit `IcicleStream::destroy()` in `Drop` impl. Stream pool with bounded size ($\leq$ 8 concurrent). | 10,000 sequential prove calls with no CUDA OOM | ⏳ Blocked (GPU) |
+| **1.4** Fix `production` feature definition | S-14 | Change `production = ["halo2", "server"]` to `production = ["halo2", "server", "gpu"]`. Add `production-cpu = ["halo2", "server"]` for CPU-only deployments. | `cargo build --features production` enables GPU; `Dockerfile.prod` uses `production`; `Dockerfile` uses `production-cpu` | ✅ `f16be792` |
 
 **Engineering estimate:** 2 engineers, 10 days. The MSM/NTT GPU path already works at 113.3 TPS — the work is integrating it into the Halo2 proof pipeline.
 
 ### Weeks 6–7: Multi-Domain Proof Generation
 
-| Task | Deliverable | Acceptance Test |
-|------|-------------|-----------------|
-| **1.5** Wire Euler3D circuit into production pipeline | `ProveRequest` with `domain: "euler3d"` dispatches to `Euler3DCircuit` | `/prove` with Euler3D trace → real proof → `/verify` → `valid: true` |
-| **1.6** Wire NS-IMEX circuit into production pipeline | `ProveRequest` with `domain: "ns_imex"` dispatches to `NsImexCircuit` | `/prove` with NS-IMEX trace → real proof → `/verify` → `valid: true` |
-| **1.7** Wire Thermal circuit into production pipeline | `ProveRequest` with `domain: "thermal"` dispatches to `ThermalCircuit` | `/prove` with Thermal trace → real proof → `/verify` → `valid: true` |
-| **1.8** Zero-expansion prover v3 production hardening | Fix `finalize_all()` (S-13) to use real QTTs from committed batch, not `QttTrain::random()` | Structure proof verifies actual committed QTTs, not dummy data |
-| **1.9** Multi-timestep proof batching | Certificate covers $T$ timesteps with one aggregate proof | 100-timestep Euler simulation → single TPC certificate → verify in <10ms |
+| Task | Deliverable | Acceptance Test | Status |
+|------|-------------|-----------------|--------|
+| **1.5** Wire Euler3D circuit into production pipeline | `ProveRequest` with `domain: "euler3d"` dispatches to `Euler3DCircuit` | `/prove` with Euler3D trace → real proof → `/verify` → `valid: true` | ✅ `f16be792` |
+| **1.6** Wire NS-IMEX circuit into production pipeline | `ProveRequest` with `domain: "ns_imex"` dispatches to `NsImexCircuit` | `/prove` with NS-IMEX trace → real proof → `/verify` → `valid: true` | ✅ `f16be792` |
+| **1.7** Wire Thermal circuit into production pipeline | `ProveRequest` with `domain: "thermal"` dispatches to `ThermalCircuit` | `/prove` with Thermal trace → real proof → `/verify` → `valid: true` | ✅ `f16be792` |
+| **1.8** Zero-expansion prover v3 production hardening | Fix `finalize_all()` (S-13) to use real QTTs from committed batch, not `QttTrain::random()` | Structure proof verifies actual committed QTTs, not dummy data | ✅ `f16be792` |
+| **1.9** Multi-timestep proof batching | Certificate covers $T$ timesteps with one aggregate proof | 100-timestep Euler simulation → single TPC certificate → verify in <10ms | ⏳ Not started |
 
 **Engineering estimate:** 2 engineers, 10 days.
 
