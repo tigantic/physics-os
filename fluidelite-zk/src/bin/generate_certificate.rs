@@ -421,20 +421,49 @@ fn main() {
             "commitment": "FRI + Blake3 Merkle",
             "trusted_setup": false,
             "post_quantum": true,
+            // Chain STARK: 8 transition × 8 rows = 64 per step.
             "constraints_per_step": 64,
             "trace_columns": 20,
             "transition_constraints": 8,
             "boundary_assertions": 13,
-            "operator_bond_dim": 5,
+            "laplacian_bond_dim": 5,
+            "system_matrix_bond_dim": 6,
             "mps_bond_dim": thermal_params.chi_max,
             "qtt_sites": thermal_params.num_sites(),
-            "constraints_proven": [
-                "mpo_contraction",
-                "operator_pinning",
-                "state_commitment",
-                "residual_bound",
-                "svd_truncation",
-                "conservation"
+            // Chain STARK proves these 8 degree-1 constraints per transition:
+            "chain_stark_constraints": [
+                "energy_conservation",
+                "dt_constancy",
+                "alpha_constancy",
+                "step_monotonicity",
+                "state_chain_hash_0",
+                "state_chain_hash_1",
+                "state_chain_hash_2",
+                "state_chain_hash_3"
+            ],
+            // Contraction STARK (21 degree-2 constraints) is available
+            // in fluidelite-circuits but not yet integrated into the
+            // certificate pipeline. Listed here for completeness.
+            "contraction_stark": {
+                "status": "available_not_integrated",
+                "transition_constraints": 21,
+                "constraint_degree": 2,
+                "constraints": [
+                    "mac_validity_with_bit_recomposition",
+                    "accumulator_start",
+                    "chain_continuity",
+                    "output_capture",
+                    "remainder_bit_boolean_x16",
+                    "inner_index_binary"
+                ]
+            },
+            // What the certificate's witness generation validates (but
+            // the chain STARK does not cryptographically prove):
+            "witness_validated": [
+                "mpo_contraction_correctness",
+                "cg_solver_convergence",
+                "svd_truncation_bounds",
+                "poseidon_state_commitment"
             ],
         }));
     }
@@ -527,19 +556,75 @@ fn main() {
                 "trace_columns": 20,
                 "transition_constraints": 8,
                 "boundary_assertions": 13,
-                "operator_bond_dim": 5,
+                "laplacian_bond_dim": 5,
+                "system_matrix_bond_dim": 6,
                 "mps_bond_dim": thermal_params.chi_max,
                 "qtt_sites": thermal_params.num_sites(),
                 "residual_bound": thermal_params.cg_tolerance.to_f64(),
                 "truncation_error_bound": thermal_params.tolerance.to_f64(),
-                "constraints_proven": [
-                    "mpo_contraction",
-                    "operator_pinning",
-                    "state_commitment",
-                    "residual_bound",
-                    "svd_truncation",
-                    "conservation"
+                "chain_stark_constraints": [
+                    "energy_conservation",
+                    "dt_constancy",
+                    "alpha_constancy",
+                    "step_monotonicity",
+                    "state_chain_hash_0",
+                    "state_chain_hash_1",
+                    "state_chain_hash_2",
+                    "state_chain_hash_3"
                 ],
+                "contraction_stark": {
+                    "status": "available_not_integrated",
+                    "transition_constraints": 21,
+                    "constraint_degree": 2,
+                },
+                "witness_validated": [
+                    "mpo_contraction_correctness",
+                    "cg_solver_convergence",
+                    "svd_truncation_bounds",
+                    "poseidon_state_commitment"
+                ],
+            });
+        }
+
+        // QTT configuration — always emitted from thermal params.
+        // These describe the QTT topology of the simulation, independent
+        // of whether GPU commitment was used.
+        let qtt_n_sites = thermal_params.num_sites();
+        let qtt_chi = thermal_params.chi_max;
+        let qtt_d_phys = 2usize; // binary QTT modes
+        // MPS parameter count: sum over all bonds of d × χ_l × χ_r.
+        // For uniform rank χ on L sites with d=2: ≈ 2Lχ² (interior)
+        // plus 2×2χ boundary cores.
+        let qtt_total_params = qtt_n_sites * qtt_d_phys * qtt_chi * qtt_chi;
+        let qtt_full_dim = 1u64 << qtt_n_sites;
+        let qtt_compression = qtt_full_dim as f64 / qtt_total_params.max(1) as f64;
+        // STARK prove throughput (steps/sec from actual timing).
+        let prove_tps = if prove_ms > 0 {
+            cli.timesteps as f64 * 1000.0 / prove_ms as f64
+        } else {
+            0.0
+        };
+
+        // Always write qtt_config (overwritten by GPU block if enabled).
+        if sidecar.get("qtt_config").is_none() {
+            sidecar["qtt_config"] = serde_json::json!({
+                "n_sites": qtt_n_sites,
+                "max_rank": qtt_chi,
+                "d_phys": qtt_d_phys,
+                "full_dimension": format!("2^{}", qtt_n_sites),
+                "total_params": qtt_total_params,
+                "compression_ratio": qtt_compression,
+            });
+        }
+
+        // Always write prove performance (overwritten by GPU block if enabled).
+        if sidecar.get("qtt_performance").is_none() {
+            sidecar["qtt_performance"] = serde_json::json!({
+                "prove_tps": prove_tps,
+                "avg_prove_ms": if cli.timesteps > 0 { prove_ms as f64 / cli.timesteps as f64 } else { 0.0 },
+                "avg_compression_ratio": qtt_compression,
+                "total_params": qtt_total_params,
+                "gpu_accelerated": false,
             });
         }
 

@@ -118,16 +118,24 @@ pub struct CertificateData {
     pub transition_constraints: u64,
     /// Number of boundary assertions in the AIR.
     pub boundary_assertions: u64,
-    /// MPO bond dimension (operator rank).
-    pub operator_bond_dim: u64,
+    /// Laplacian MPO bond dimension (direct-sum: D=5).
+    pub laplacian_bond_dim: u64,
+    /// System matrix (I − αΔtL) bond dimension (direct-sum: D=6).
+    pub system_matrix_bond_dim: u64,
     /// MPS bond dimension (state rank).
     pub mps_bond_dim: u64,
     /// CG solver residual tolerance bound.
     pub residual_bound: f64,
     /// SVD truncation error tolerance bound.
     pub truncation_error_bound: f64,
-    /// List of constraint labels proven by the circuit.
-    pub constraints_proven: Vec<String>,
+    /// What the chain STARK’s 8 AIR constraints actually prove.
+    pub chain_stark_constraints: Vec<String>,
+    /// What the witness generation validates (not AIR-proven).
+    pub witness_validated: Vec<String>,
+    /// Contraction STARK status ("available_not_integrated" etc.).
+    pub contraction_stark_status: String,
+    /// Contraction STARK transition constraint count (21).
+    pub contraction_stark_constraints: u64,
 
     // ── Architecture ──
     pub architecture: String,
@@ -151,6 +159,10 @@ pub struct CertificateData {
     pub pcie_per_proof_kb: f64,
     pub traditional_per_proof: String,
     pub gpu_device: String,
+    /// Whether Layer B was GPU-accelerated.
+    pub gpu_accelerated: bool,
+    /// STARK prove throughput (steps/sec).
+    pub prove_tps: f64,
 
     // ── Timing ──
     pub keygen_ms: u64,
@@ -212,14 +224,41 @@ impl CertificateData {
             data.trace_columns = json_u64(la, "trace_columns");
             data.transition_constraints = json_u64(la, "transition_constraints");
             data.boundary_assertions = json_u64(la, "boundary_assertions");
-            data.operator_bond_dim = json_u64(la, "operator_bond_dim");
+            // Support both old "operator_bond_dim" and new "laplacian_bond_dim" keys.
+            data.laplacian_bond_dim = if la.get("laplacian_bond_dim").is_some() {
+                json_u64(la, "laplacian_bond_dim")
+            } else {
+                json_u64(la, "operator_bond_dim")
+            };
+            data.system_matrix_bond_dim = json_u64(la, "system_matrix_bond_dim");
             data.mps_bond_dim = json_u64(la, "mps_bond_dim");
             data.residual_bound = json_f64(la, "residual_bound");
             data.truncation_error_bound = json_f64(la, "truncation_error_bound");
-            if let Some(cp) = la.get("constraints_proven").and_then(|v| v.as_array()) {
-                data.constraints_proven = cp.iter()
+
+            // Chain STARK constraints (what the AIR actually proves).
+            if let Some(csc) = la.get("chain_stark_constraints").and_then(|v| v.as_array()) {
+                data.chain_stark_constraints = csc.iter()
                     .filter_map(|v| v.as_str().map(String::from))
                     .collect();
+            }
+            // Backward compat: old "constraints_proven" → chain_stark_constraints.
+            if data.chain_stark_constraints.is_empty() {
+                if let Some(cp) = la.get("constraints_proven").and_then(|v| v.as_array()) {
+                    data.chain_stark_constraints = cp.iter()
+                        .filter_map(|v| v.as_str().map(String::from))
+                        .collect();
+                }
+            }
+            // Witness-validated items (not AIR-proven).
+            if let Some(wv) = la.get("witness_validated").and_then(|v| v.as_array()) {
+                data.witness_validated = wv.iter()
+                    .filter_map(|v| v.as_str().map(String::from))
+                    .collect();
+            }
+            // Contraction STARK metadata.
+            if let Some(cs) = la.get("contraction_stark") {
+                data.contraction_stark_status = json_str(cs, "status");
+                data.contraction_stark_constraints = json_u64(cs, "transition_constraints");
             }
         }
 
@@ -230,15 +269,26 @@ impl CertificateData {
             data.qtt_params = json_u64(qtt, "total_params") as usize;
             data.full_dimension = json_str(qtt, "full_dimension");
             data.vram_mb = json_f64(qtt, "vram_bases_mb");
+            data.compression_ratio = json_f64(qtt, "compression_ratio");
             data.precompute_factor = json_u64(qtt, "precompute_factor") as i32;
             data.msm_c = json_u64(qtt, "msm_c") as i32;
         }
 
         // QTT performance
         if let Some(perf) = json.get("qtt_performance") {
-            data.avg_commit_ms = json_f64(perf, "avg_commit_ms");
-            data.commit_tps = json_f64(perf, "commit_tps");
-            data.compression_ratio = json_f64(perf, "avg_compression_ratio");
+            data.gpu_accelerated = perf.get("gpu_accelerated")
+                .and_then(|v| v.as_bool()).unwrap_or(false);
+            data.prove_tps = json_f64(perf, "prove_tps");
+            // GPU-specific fields (overwrite non-GPU defaults).
+            if json_f64(perf, "avg_commit_ms") > 0.0 {
+                data.avg_commit_ms = json_f64(perf, "avg_commit_ms");
+            }
+            if json_f64(perf, "commit_tps") > 0.0 {
+                data.commit_tps = json_f64(perf, "commit_tps");
+            }
+            if json_f64(perf, "avg_compression_ratio") > 0.0 {
+                data.compression_ratio = json_f64(perf, "avg_compression_ratio");
+            }
             data.pcie_per_proof_kb = json_f64(perf, "pcie_per_proof_kb");
             data.traditional_per_proof = json_str(perf, "traditional_per_proof");
         }
@@ -664,10 +714,21 @@ mod pdf {
             y,
             &ctx.helvetica,
         );
-        if !data.constraints_proven.is_empty() {
+        if !data.chain_stark_constraints.is_empty() {
             y -= 4.0;
             ctx.text(
-                &format!("Constraints proven: {}", data.constraints_proven.join(", ")),
+                &format!("AIR constraints: {}", data.chain_stark_constraints.join(", ")),
+                7.5, CONTENT_L + 22.0, y, &ctx.helvetica,
+            );
+        }
+        if data.contraction_stark_constraints > 0 {
+            y -= 4.0;
+            ctx.text(
+                &format!(
+                    "Contraction STARK: {} degree-2 constraints ({})",
+                    data.contraction_stark_constraints,
+                    data.contraction_stark_status,
+                ),
                 7.5, CONTENT_L + 22.0, y, &ctx.helvetica,
             );
         }
@@ -686,28 +747,27 @@ mod pdf {
         );
         y -= 5.0;
         ctx.set_color(MID.0, MID.1, MID.2);
-        ctx.text(
-            "Zero-Expansion QTT-Native MSM on GPU",
-            8.5,
-            CONTENT_L + 22.0,
-            y,
-            &ctx.helvetica,
-        );
+        let layer_b_subtitle = if data.gpu_accelerated {
+            "Zero-Expansion QTT-Native MSM on GPU".to_string()
+        } else {
+            "QTT-Native PDE (STARK witness integrity)".to_string()
+        };
+        ctx.text(&layer_b_subtitle, 8.5, CONTENT_L + 22.0, y, &ctx.helvetica);
         y -= 4.0;
-        ctx.text(
-            &format!(
+        let layer_b_detail = if data.gpu_accelerated {
+            format!(
                 "{} dimension, rank {}, {:.0}x compression, {:.1} TPS, {:.2} MB VRAM",
-                data.full_dimension,
-                data.qtt_rank,
-                data.compression_ratio,
-                data.commit_tps,
-                data.vram_mb,
-            ),
-            8.0,
-            CONTENT_L + 22.0,
-            y,
-            &ctx.helvetica,
-        );
+                data.full_dimension, data.qtt_rank, data.compression_ratio,
+                data.commit_tps, data.vram_mb,
+            )
+        } else {
+            format!(
+                "{} dimension, rank {}, {:.0}x compression, {:.1} prove TPS",
+                data.full_dimension, data.qtt_rank, data.compression_ratio,
+                data.prove_tps,
+            )
+        };
+        ctx.text(&layer_b_detail, 8.0, CONTENT_L + 22.0, y, &ctx.helvetica);
 
         // Layer C
         y -= 8.0;
@@ -762,16 +822,29 @@ mod pdf {
         y -= 5.0;
         ctx.label_value("Invariant", &data.architectural_invariant, y);
         y -= 5.0;
-        ctx.label_value("GPU", &data.gpu_device, y);
-        y -= 5.0;
-        ctx.label_value(
-            "VRAM",
-            &format!(
-                "{:.2} MB (traditional: {} ELIMINATED)",
-                data.vram_mb, data.traditional_per_proof,
-            ),
-            y,
-        );
+        if data.gpu_accelerated {
+            ctx.label_value("GPU", &data.gpu_device, y);
+            y -= 5.0;
+            ctx.label_value(
+                "VRAM",
+                &format!(
+                    "{:.2} MB (traditional: {} ELIMINATED)",
+                    data.vram_mb, data.traditional_per_proof,
+                ),
+                y,
+            );
+        } else {
+            ctx.label_value("Compute", "CPU STARK prover (no GPU required)", y);
+            y -= 5.0;
+            ctx.label_value(
+                "QTT Topology",
+                &format!(
+                    "{} sites, rank {}, {} params, {} dimension",
+                    data.qtt_sites, data.qtt_rank, data.qtt_params, data.full_dimension,
+                ),
+                y,
+            );
+        }
 
         // QR code — positioned at right side of architecture section
         let qr_url = &data.verification_url;
@@ -795,11 +868,19 @@ mod pdf {
         ctx.hline(y, 0.3);
 
         y -= 6.0;
-        ctx.label_value(
-            "GPU Commit",
-            &format!("{:.2} ms avg ({:.0} TPS)", data.avg_commit_ms, data.commit_tps),
-            y,
-        );
+        if data.gpu_accelerated {
+            ctx.label_value(
+                "GPU Commit",
+                &format!("{:.2} ms avg ({:.0} TPS)", data.avg_commit_ms, data.commit_tps),
+                y,
+            );
+        } else {
+            ctx.label_value(
+                "STARK Prove",
+                &format!("{} ms total ({:.1} TPS)", data.prove_ms, data.prove_tps),
+                y,
+            );
+        }
         y -= 5.0;
         ctx.label_value(
             "Compression",
@@ -1065,8 +1146,8 @@ details li {{ font-family: var(--mono); font-size: 11px; color: var(--text2); pa
   <div class="layer">
     <div class="icon ok">&#10003;</div>
     <div><h3>Layer B — Computational Integrity</h3>
-      <p>Zero-Expansion QTT-Native MSM on GPU</p>
-      <p>{full_dim} dimension, rank {rank}, {compression:.0}&times; compression, {tps:.1} TPS, {vram:.2} MB VRAM</p></div>
+      <p>{layer_b_subtitle}</p>
+      <p>{layer_b_detail}</p></div>
   </div>
   <div class="layer">
     <div class="icon ok">&#10003;</div>
@@ -1091,12 +1172,15 @@ details li {{ font-family: var(--mono); font-size: 11px; color: var(--text2); pa
     <div class="metric"><div class="mv">{trace_columns}</div><div class="ml">Trace Columns</div></div>
     <div class="metric"><div class="mv">{transition_constraints}</div><div class="ml">Transition</div></div>
     <div class="metric"><div class="mv">{boundary_assertions}</div><div class="ml">Boundary</div></div>
-    <div class="metric"><div class="mv">{operator_bond_dim}</div><div class="ml">MPO Bond Dim</div></div>
-    <div class="metric"><div class="mv">{mps_bond_dim_val}</div><div class="ml">MPS Bond Dim</div></div>
+    <div class="metric"><div class="mv">{laplacian_bond_dim}</div><div class="ml">Laplacian D</div></div>
+    <div class="metric"><div class="mv">{system_matrix_bond_dim}</div><div class="ml">System D</div></div>
+    <div class="metric"><div class="mv">{mps_bond_dim_val}</div><div class="ml">MPS χ</div></div>
     <div class="metric"><div class="mv">{constraints_per_step}</div><div class="ml">Per Step</div></div>
   </div>
   <div style="margin-top:12px">
-    <div class="field"><span class="label">Constraints Proven</span><span class="value">{constraints_proven_str}</span></div>
+    <div class="field"><span class="label">Chain STARK Constraints</span><span class="value">{chain_stark_str}</span></div>
+    <div class="field"><span class="label">Witness Validated</span><span class="value">{witness_validated_str}</span></div>
+    <div class="field"><span class="label">Contraction STARK</span><span class="value">{contraction_stark_constraints} degree-2 constraints ({contraction_stark_status})</span></div>
     <div class="field"><span class="label">Residual Bound</span><span class="value">{residual_bound:.6e}</span></div>
     <div class="field"><span class="label">Truncation Error Bound</span><span class="value">{truncation_error_bound:.6e}</span></div>
   </div>
@@ -1120,23 +1204,21 @@ details li {{ font-family: var(--mono); font-size: 11px; color: var(--text2); pa
   <h2>Architecture</h2>
   <div class="field"><span class="label">Protocol</span><span class="value">{architecture}</span></div>
   <div class="field"><span class="label">Invariant</span><span class="value">{invariant}</span></div>
-  <div class="field"><span class="label">GPU</span><span class="value">{gpu}</span></div>
+  <div class="field"><span class="label">Compute</span><span class="value">{compute_label}</span></div>
   <div class="field"><span class="label">QTT Sites</span><span class="value">{qtt_sites} ({full_dim})</span></div>
   <div class="field"><span class="label">QTT Rank</span><span class="value">{rank}</span></div>
   <div class="field"><span class="label">QTT Parameters</span><span class="value">{qtt_params}</span></div>
-  <div class="field"><span class="label">VRAM Usage</span><span class="value">{vram:.2} MB (traditional: {traditional} ELIMINATED)</span></div>
+  {vram_line}
 </div>
 
 <!-- Performance -->
 <div class="section">
   <h2>Performance Metrics</h2>
   <div class="metrics">
-    <div class="metric"><div class="mv">{tps:.1}</div><div class="ml">TPS (GPU MSM Commit)</div></div>
-    <div class="metric"><div class="mv">{commit_ms:.1}ms</div><div class="ml">Avg Commit Latency</div></div>
+    <div class="metric"><div class="mv">{prove_tps:.1}</div><div class="ml">Prove TPS</div></div>
     <div class="metric"><div class="mv">{compression:.0}&times;</div><div class="ml">QTT Compression</div></div>
-    <div class="metric"><div class="mv">{vram:.1}MB</div><div class="ml">VRAM Usage</div></div>
     <div class="metric"><div class="mv">{total_constraints}</div><div class="ml">Total Constraints</div></div>
-    <div class="metric"><div class="mv">{pcie:.1}KB</div><div class="ml">PCIe / Proof</div></div>
+    {gpu_perf_metrics}
   </div>
   <div style="margin-top:16px">
     <div class="field"><span class="label">Keygen</span><span class="value">{keygen_ms} ms</span></div>
@@ -1299,9 +1381,31 @@ async function autoVerify() {{
             full_dim = html_escape(&data.full_dimension),
             rank = data.qtt_rank,
             compression = data.compression_ratio,
-            tps = data.commit_tps,
-            vram = data.vram_mb,
             inclusions = data.inclusions_verified,
+            // Layer B: build subtitle + detail dynamically
+            layer_b_subtitle = html_escape(if data.gpu_accelerated {
+                "Zero-Expansion QTT-Native MSM on GPU"
+            } else {
+                "QTT-Native PDE (STARK witness integrity)"
+            }),
+            layer_b_detail = if data.gpu_accelerated {
+                format!(
+                    "{dim} dimension, rank {rank}, {comp:.0}&times; compression, {tps:.1} TPS, {vram:.2} MB VRAM",
+                    dim = html_escape(&data.full_dimension),
+                    rank = data.qtt_rank,
+                    comp = data.compression_ratio,
+                    tps = data.commit_tps,
+                    vram = data.vram_mb,
+                )
+            } else {
+                format!(
+                    "{dim} dimension, rank {rank}, {comp:.0}&times; compression, {tps:.1} prove TPS",
+                    dim = html_escape(&data.full_dimension),
+                    rank = data.qtt_rank,
+                    comp = data.compression_ratio,
+                    tps = data.prove_tps,
+                )
+            },
             // Layer A proof system
             layer_a_backend = html_escape(if data.layer_a_backend.is_empty() { "Physics circuit" } else { &data.layer_a_backend }),
             proof_system_version = html_escape(&data.proof_system_version),
@@ -1317,9 +1421,13 @@ async function autoVerify() {{
             trace_columns = data.trace_columns,
             transition_constraints = data.transition_constraints,
             boundary_assertions = data.boundary_assertions,
-            operator_bond_dim = data.operator_bond_dim,
+            laplacian_bond_dim = data.laplacian_bond_dim,
+            system_matrix_bond_dim = data.system_matrix_bond_dim,
             mps_bond_dim_val = data.mps_bond_dim,
-            constraints_proven_str = if data.constraints_proven.is_empty() { "—".to_string() } else { data.constraints_proven.join(", ") },
+            chain_stark_str = if data.chain_stark_constraints.is_empty() { "—".to_string() } else { html_escape(&data.chain_stark_constraints.join(", ")) },
+            witness_validated_str = if data.witness_validated.is_empty() { "—".to_string() } else { html_escape(&data.witness_validated.join(", ")) },
+            contraction_stark_constraints = data.contraction_stark_constraints,
+            contraction_stark_status = html_escape(if data.contraction_stark_status.is_empty() { "—" } else { &data.contraction_stark_status }),
             residual_bound = data.residual_bound,
             truncation_error_bound = data.truncation_error_bound,
             // Crypto
@@ -1333,12 +1441,35 @@ async function autoVerify() {{
             proof_hashes_json = proof_hashes_json,
             architecture = html_escape(&data.architecture),
             invariant = html_escape(&data.architectural_invariant),
-            gpu = html_escape(&data.gpu_device),
+            compute_label = html_escape(if data.gpu_accelerated { &data.gpu_device } else { "CPU STARK prover (no GPU required)" }),
             qtt_sites = data.qtt_sites,
             qtt_params = data.qtt_params,
-            traditional = html_escape(&data.traditional_per_proof),
-            commit_ms = data.avg_commit_ms,
-            pcie = data.pcie_per_proof_kb,
+            vram_line = if data.gpu_accelerated {
+                format!(
+                    "<div class=\"field\"><span class=\"label\">VRAM Usage</span><span class=\"value\">{:.2} MB (traditional: {} ELIMINATED)</span></div>",
+                    data.vram_mb, html_escape(&data.traditional_per_proof),
+                )
+            } else {
+                String::new()
+            },
+            // Performance
+            prove_tps = data.prove_tps,
+            gpu_perf_metrics = if data.gpu_accelerated {
+                format!(
+                    "<div class=\"metric\"><div class=\"mv\">{:.1}</div><div class=\"ml\">GPU TPS</div></div>\
+                     <div class=\"metric\"><div class=\"mv\">{:.1}ms</div><div class=\"ml\">Commit Latency</div></div>\
+                     <div class=\"metric\"><div class=\"mv\">{:.1}MB</div><div class=\"ml\">VRAM</div></div>\
+                     <div class=\"metric\"><div class=\"mv\">{:.1}KB</div><div class=\"ml\">PCIe / Proof</div></div>",
+                    data.commit_tps, data.avg_commit_ms, data.vram_mb, data.pcie_per_proof_kb,
+                )
+            } else {
+                format!(
+                    "<div class=\"metric\"><div class=\"mv\">{} ms</div><div class=\"ml\">Avg Step</div></div>\
+                     <div class=\"metric\"><div class=\"mv\">{}</div><div class=\"ml\">Proof Bytes</div></div>",
+                    if data.timestep_count > 0 { data.prove_ms / data.timestep_count as u64 } else { 0 },
+                    format_number_html(data.total_proof_bytes as u64),
+                )
+            },
             keygen_ms = data.keygen_ms,
             prove_ms = data.prove_ms,
             aggregate_ms = data.aggregate_ms,

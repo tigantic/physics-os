@@ -7,8 +7,8 @@
 //! # Operators
 //!
 //! - **Shift S±**: `|x⟩ → |x±1 mod 2^L⟩`, bond dimension 2 (ripple-carry)
-//! - **Laplacian ∇²**: `(S⁺ - 2I + S⁻)/Δx²`, bond dimension 3 (fused)
-//! - **System matrix**: `(I - α·Δt·∇²)`, bond dimension 4 (direct-sum I + L)
+//! - **Laplacian ∇²**: `(S⁺ + S⁻ − 2I)/Δx²`, bond dimension 5 (direct-sum)
+//! - **System matrix**: `(I − α·Δt·∇²)`, bond dimension 6 (direct-sum I + L)
 //!
 //! # QTT Bit Ordering
 //!
@@ -408,13 +408,13 @@ pub fn mpo_subtract(a: &MPO, b: &MPO) -> MPO {
 }
 
 // ──────────────────────────────────────────────────────────────────────
-// System Matrix (I − α·Δt·∇²) — Exact, Bond Dimension 4
+// System Matrix (I − α·Δt·∇²) — Exact, Bond Dimension 6
 // ──────────────────────────────────────────────────────────────────────
 
 /// Build the implicit time-stepping system matrix `(I − α·Δt·L)`.
 ///
-/// This is formed by direct-sum of `I` (rank 1) and `−α·Δt·L` (rank 3):
-/// - Bond dimension = 1 + 3 = 4
+/// This is formed by direct-sum of `I` (rank 1) and `−α·Δt·L` (rank 5):
+/// - Bond dimension = 1 + 5 = 6
 /// - All core values are analytically known
 ///
 /// The resulting MPO can be applied to an MPS to compute the LHS of
