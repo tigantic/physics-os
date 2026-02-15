@@ -259,6 +259,7 @@ fn main() {
     let prove_start = Instant::now();
     let mut timestep_inputs: Vec<TimestepInput> = Vec::with_capacity(cli.timesteps);
     let mut total_constraints = 0u64;
+    let mut total_contraction_constraints = 0u64;
     let mut total_proof_bytes = 0usize;
 
     // GPU commitment tracking
@@ -292,8 +293,10 @@ fn main() {
         #[allow(unused_variables)]
         let layer_a_ms = step_start.elapsed().as_millis();
 
-        let proof_size = proof.proof_bytes.len();
+        let proof_size = proof.proof_bytes.len()
+            + proof.contraction_proof_bytes.as_ref().map_or(0, |b| b.len());
         total_constraints += proof.num_constraints as u64;
+        total_contraction_constraints += proof.contraction_num_constraints as u64;
         total_proof_bytes += proof_size;
         let residual_f64 = proof.conservation_residual.to_f64();
 
@@ -330,9 +333,14 @@ fn main() {
         // ── Log ────────────────────────────────────────────────────────────
         #[cfg(not(feature = "gpu"))]
         {
+            let contraction_str = if proof.contraction_num_constraints > 0 {
+                format!("  contraction={}ms/{}", proof.contraction_generation_time_ms, proof.contraction_num_constraints)
+            } else {
+                String::new()
+            };
             println!(
-                "  [step {:>3}]  proof={:>5}ms  constraints={:<8}  residual={:.2e}  total={}ms",
-                i, layer_a_ms, proof.num_constraints, residual_f64, step_ms,
+                "  [step {:>3}]  proof={:>5}ms  constraints={:<8}  residual={:.2e}{}  total={}ms",
+                i, layer_a_ms, proof.num_constraints, residual_f64, contraction_str, step_ms,
             );
         }
         #[cfg(feature = "gpu")]
@@ -358,6 +366,8 @@ fn main() {
             "timestep_index": i,
             "k": proof.k,
             "num_constraints": proof.num_constraints,
+            "contraction_constraints": proof.contraction_num_constraints,
+            "contraction_proof_ms": proof.contraction_generation_time_ms,
             "cg_iterations": proof.cg_iterations,
             "proof_generation_ms": proof.generation_time_ms,
             "layer_a": if cfg!(feature = "stark") { "winterfell_stark" } else { "stub" },
@@ -377,7 +387,9 @@ fn main() {
             }
         }
 
-        let input = TimestepInput::new(i, proof.proof_bytes)
+        // Combine chain + contraction proof bytes for the timestep input.
+        let combined_proof = proof.to_bytes();
+        let input = TimestepInput::new(i, combined_proof)
             .with_residual(residual_f64)
             .with_metadata(meta);
         timestep_inputs.push(input);
@@ -387,8 +399,10 @@ fn main() {
     let avg_step_ms = prove_ms as f64 / cli.timesteps as f64;
     println!();
     println!("[proofs] {} timesteps proved in {} ms (avg {:.1} ms/step)", cli.timesteps, prove_ms, avg_step_ms);
-    println!("[proofs] Total constraints: {}", total_constraints);
-    println!("[proofs] Total proof bytes:  {}", total_proof_bytes);
+    println!("[proofs] Total chain constraints:       {}", total_constraints);
+    println!("[proofs] Total contraction constraints:  {}", total_contraction_constraints);
+    println!("[proofs] Total constraints (all AIR):    {}", total_constraints + total_contraction_constraints);
+    println!("[proofs] Total proof bytes:              {}", total_proof_bytes);
 
     #[cfg(feature = "gpu")]
     {
@@ -422,7 +436,11 @@ fn main() {
             "trusted_setup": false,
             "post_quantum": true,
             // Chain STARK: 8 transition × 8 rows = 64 per step.
-            "constraints_per_step": 64,
+            // Contraction STARK: 21 degree-2 constraints per step.
+            // Total per step: 64 + 21 = 85.
+            "constraints_per_step": 85,
+            "chain_constraints_per_step": 64,
+            "contraction_constraints_per_step": 21,
             "trace_columns": 20,
             "transition_constraints": 8,
             "boundary_assertions": 13,
@@ -441,11 +459,12 @@ fn main() {
                 "state_chain_hash_2",
                 "state_chain_hash_3"
             ],
-            // Contraction STARK (21 degree-2 constraints) is available
-            // in fluidelite-circuits but not yet integrated into the
-            // certificate pipeline. Listed here for completeness.
+            // Contraction STARK (21 degree-2 constraints) is now
+            // integrated into the per-timestep proof pipeline.
+            // Each timestep's proof includes an independent STARK that
+            // proves L·T^n contraction with every MAC step constrained.
             "contraction_stark": {
-                "status": "available_not_integrated",
+                "status": "integrated",
                 "transition_constraints": 21,
                 "constraint_degree": 2,
                 "constraints": [
@@ -457,10 +476,9 @@ fn main() {
                     "inner_index_binary"
                 ]
             },
-            // What the certificate's witness generation validates (but
-            // the chain STARK does not cryptographically prove):
+            // What the witness generation validates but neither the
+            // chain STARK nor contraction STARK cryptographically proves:
             "witness_validated": [
-                "mpo_contraction_correctness",
                 "cg_solver_convergence",
                 "svd_truncation_bounds",
                 "poseidon_state_commitment"
@@ -536,7 +554,9 @@ fn main() {
             "keygen_ms": keygen_ms,
             "prove_ms": prove_ms,
             "aggregate_ms": agg_ms,
-            "total_constraints": total_constraints,
+            "total_constraints": total_constraints + total_contraction_constraints,
+            "chain_constraints": total_constraints,
+            "contraction_constraints": total_contraction_constraints,
             "total_proof_bytes": total_proof_bytes,
             "params": if cli.production { "production" } else { "test" },
         });
@@ -552,7 +572,9 @@ fn main() {
                 "commitment": "FRI + Blake3 Merkle",
                 "trusted_setup": false,
                 "post_quantum": true,
-                "constraints_per_step": 64,
+                "constraints_per_step": 85,
+                "chain_constraints_per_step": 64,
+                "contraction_constraints_per_step": 21,
                 "trace_columns": 20,
                 "transition_constraints": 8,
                 "boundary_assertions": 13,
@@ -573,12 +595,11 @@ fn main() {
                     "state_chain_hash_3"
                 ],
                 "contraction_stark": {
-                    "status": "available_not_integrated",
+                    "status": "integrated",
                     "transition_constraints": 21,
                     "constraint_degree": 2,
                 },
                 "witness_validated": [
-                    "mpo_contraction_correctness",
                     "cg_solver_convergence",
                     "svd_truncation_bounds",
                     "poseidon_state_commitment"

@@ -286,13 +286,9 @@ fn test_thermal_svd_truncation_witness() {
 // ═══════════════════════════════════════════════════════════════════════════
 
 fn make_thermal_prover_test_data() -> (ThermalParams, Vec<MPS>, Vec<MPO>) {
-    let params = ThermalParams::test_small();
-    let num_sites = params.num_sites();
-    let chi = params.chi_max;
-
-    let input_states = vec![MPS::new(num_sites, chi, 2)];
-    let laplacian_mpos = vec![MPO::identity(num_sites, 2)];
-
+    let params = test_config();
+    let input_states = make_test_states(&params);
+    let laplacian_mpos = make_test_laplacian_mpos(&params);
     (params, input_states, laplacian_mpos)
 }
 

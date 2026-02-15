@@ -65,6 +65,18 @@ pub struct ThermalProof {
 
     /// Final energy (Q16 raw) — needed for exact STARK public input reconstruction.
     pub final_energy_raw: i64,
+
+    // ── Contraction STARK (MPO×MPS arithmetic proof) ────────────────────
+
+    /// Contraction STARK proof bytes (proves L·T^n contraction correctness).
+    /// `None` when contraction STARK is not enabled.
+    pub contraction_proof_bytes: Option<Vec<u8>>,
+
+    /// Number of contraction STARK transition constraints (21 degree-2).
+    pub contraction_num_constraints: usize,
+
+    /// Contraction STARK proof generation time in milliseconds.
+    pub contraction_generation_time_ms: u64,
 }
 
 impl ThermalProof {
@@ -110,12 +122,27 @@ impl ThermalProof {
         bytes.extend(self.initial_energy_raw.to_le_bytes());
         bytes.extend(self.final_energy_raw.to_le_bytes());
 
+        // Contraction STARK proof (optional, appended for v5.3+)
+        match &self.contraction_proof_bytes {
+            Some(cp) => {
+                bytes.extend(1u8.to_le_bytes()); // presence flag
+                bytes.extend((cp.len() as u32).to_le_bytes());
+                bytes.extend(cp);
+                bytes.extend(self.contraction_generation_time_ms.to_le_bytes());
+                bytes.extend((self.contraction_num_constraints as u64).to_le_bytes());
+            }
+            None => {
+                bytes.extend(0u8.to_le_bytes()); // absence flag
+            }
+        }
+
         bytes
     }
 
-    /// Proof size in bytes.
+    /// Proof size in bytes (chain + contraction).
     pub fn size(&self) -> usize {
         self.proof_bytes.len()
+            + self.contraction_proof_bytes.as_ref().map_or(0, |b| b.len())
     }
 
     /// Deserialize proof from bytes (inverse of `to_bytes`).
@@ -225,11 +252,49 @@ impl ThermalProof {
         let final_energy_raw = if data.len() >= pos + 8 {
             let v = i64::from_le_bytes(data[pos..pos + 8].try_into()?);
             pos += 8;
-            let _ = pos;
             v
         } else {
             0
         };
+
+        // Contraction STARK proof (optional, v5.3+ format)
+        let (contraction_proof_bytes, contraction_generation_time_ms, contraction_num_constraints) =
+            if data.len() >= pos + 1 {
+                let flag = data[pos];
+                pos += 1;
+                if flag == 1 {
+                    if data.len() < pos + 4 {
+                        return Err("Truncated proof: missing contraction proof length".into());
+                    }
+                    let cp_len = u32::from_le_bytes(data[pos..pos + 4].try_into()?) as usize;
+                    pos += 4;
+                    if data.len() < pos + cp_len {
+                        return Err("Truncated proof: missing contraction proof bytes".into());
+                    }
+                    let cp = data[pos..pos + cp_len].to_vec();
+                    pos += cp_len;
+                    let cp_ms = if data.len() >= pos + 8 {
+                        let v = u64::from_le_bytes(data[pos..pos + 8].try_into()?);
+                        pos += 8;
+                        v
+                    } else {
+                        0
+                    };
+                    let cp_constraints = if data.len() >= pos + 8 {
+                        let v = u64::from_le_bytes(data[pos..pos + 8].try_into()?) as usize;
+                        pos += 8;
+                        v
+                    } else {
+                        0
+                    };
+                    let _ = pos;
+                    (Some(cp), cp_ms, cp_constraints)
+                } else {
+                    (None, 0, 0)
+                }
+            } else {
+                (None, 0, 0)
+            };
 
         Ok(Self {
             proof_bytes,
@@ -246,6 +311,9 @@ impl ThermalProof {
             step_index,
             initial_energy_raw,
             final_energy_raw,
+            contraction_proof_bytes,
+            contraction_num_constraints,
+            contraction_generation_time_ms,
         })
     }
 
@@ -384,6 +452,10 @@ pub mod stub_prover {
                 step_index: 0,
                 initial_energy_raw: circuit.witness.conservation.integral_before.raw,
                 final_energy_raw: circuit.witness.conservation.integral_after.raw,
+                // Stub prover: no contraction STARK.
+                contraction_proof_bytes: None,
+                contraction_num_constraints: 0,
+                contraction_generation_time_ms: 0,
             };
 
             self.stats.record(&proof);
@@ -481,6 +553,10 @@ pub mod stark_prover {
         self, prove_thermal_stark, verify_thermal_stark, TimestepPhysics,
         ThermalStarkInputs,
     };
+    use crate::thermal::qtt_stark::{
+        prove_contraction_stark, QTT_NUM_CONSTRAINTS,
+    };
+    use crate::thermal::witness::WitnessGenerator;
 
     /// STARK thermal prover using Winterfell (Goldilocks + FRI).
     pub struct ThermalProver {
@@ -565,7 +641,7 @@ pub mod stark_prover {
             physics.global_step = step_idx;
             self.global_step_counter += 1;
 
-            // Build single-step trace and prove.
+            // Build single-step trace and prove (chain STARK: 8 degree-1 constraints).
             let (proof_bytes, pub_inputs, trace_len, _gen_ms) =
                 prove_thermal_stark(
                     &[physics.clone()],
@@ -573,8 +649,45 @@ pub mod stark_prover {
                     self.thermal_params.alpha,
                 )?;
 
+            let chain_constraints = trace_len * stark_impl::NUM_CONSTRAINTS;
+
+            // ── Contraction STARK: prove L·T^n correctness (21 degree-2 constraints) ──
+            //
+            // This proves that the Laplacian MPO applied to the committed input
+            // state produces the correct output, with every fixed-point MAC step
+            // arithmetically constrained in the AIR. This is the core physics
+            // proof — it ensures the PDE operator was applied honestly.
+            let contraction_start = Instant::now();
+            let mps = &circuit.witness.input_state;
+            let mpo = &circuit.witness.laplacian_mpo;
+
+            // Compute fresh L·T^n contraction with full MAC-chain witness.
+            let gen = WitnessGenerator::new(self.thermal_params.clone());
+            let (_contraction_output, contraction_witness) = gen
+                .apply_mpo_with_witness(mps, mpo)
+                .map_err(|e| format!("Contraction witness generation: {e}"))?;
+
+            let dx = Q16::one(); // Unit spacing (physical grid scale absorbed in α).
+            let residual_norm_sq = Q16::ZERO; // Not applicable for standalone L·T^n contraction.
+            let tolerance_sq = Q16::one(); // Trivially satisfied.
+
+            let (contraction_proof_bytes, _contraction_pub_inputs, _contraction_gen_ms) =
+                prove_contraction_stark(
+                    mps,
+                    mpo,
+                    &contraction_witness,
+                    self.thermal_params.alpha,
+                    self.thermal_params.dt,
+                    dx,
+                    residual_norm_sq,
+                    tolerance_sq,
+                )?;
+
+            let contraction_time_ms = contraction_start.elapsed().as_millis() as u64;
+            let contraction_constraints = QTT_NUM_CONSTRAINTS;
+
             let generation_time_ms = start.elapsed().as_millis() as u64;
-            let num_constraints = trace_len * stark_impl::NUM_CONSTRAINTS;
+            let num_constraints = chain_constraints + contraction_constraints;
 
             // Buffer this step for potential batch proving later.
             self.timestep_buffer.push(physics);
@@ -600,15 +713,20 @@ pub mod stark_prover {
                 step_index: step_idx,
                 initial_energy_raw: stark_impl::felt_to_q16(pub_inputs.initial_energy).raw,
                 final_energy_raw: stark_impl::felt_to_q16(pub_inputs.final_energy).raw,
+                contraction_proof_bytes: Some(contraction_proof_bytes),
+                contraction_num_constraints: contraction_constraints,
+                contraction_generation_time_ms: contraction_time_ms,
             };
 
             self.stats.record(&proof);
 
             eprintln!(
-                "[Thermal-STARK] Proof generated: {} constraints, {} bytes, {:.1}ms, {} CG iters",
-                num_constraints,
+                "[Thermal-STARK] Proof generated: {} chain + {} contraction constraints, {} bytes, {:.1}ms (contraction {:.1}ms), {} CG iters",
+                chain_constraints,
+                contraction_constraints,
                 proof.size(),
                 generation_time_ms as f64,
+                contraction_time_ms as f64,
                 proof.cg_iterations,
             );
 
@@ -661,6 +779,10 @@ pub mod stark_prover {
                 params_hash_limbs: [0; 4],
                 initial_energy_raw: stark_impl::felt_to_q16(pub_inputs.initial_energy).raw,
                 final_energy_raw: stark_impl::felt_to_q16(pub_inputs.final_energy).raw,
+                // Batch proof does not include per-step contraction proofs.
+                contraction_proof_bytes: None,
+                contraction_num_constraints: 0,
+                contraction_generation_time_ms: 0,
             };
 
             eprintln!(

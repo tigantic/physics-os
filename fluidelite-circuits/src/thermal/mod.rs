@@ -104,6 +104,12 @@ pub use e2e::{
     prove_qtt_native, verify_qtt_native,
 };
 
+#[cfg(feature = "stark")]
+pub use qtt_stark::{
+    ContractionStarkInputs, QTT_NUM_CONSTRAINTS, QTT_TRACE_WIDTH,
+    prove_contraction_stark, verify_contraction_stark,
+};
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Module-level convenience functions
 // ═══════════════════════════════════════════════════════════════════════════
@@ -169,13 +175,17 @@ pub fn production_config() -> ThermalParams {
 }
 
 /// Create test input states (1 MPS for temperature).
+///
+/// Every core element is filled with a deterministic non-zero value so
+/// that the contraction STARK produces non-trivial constraint evaluations
+/// (the MAC accumulator chain must not be identically zero).
 pub fn make_test_states(params: &ThermalParams) -> Vec<MPS> {
     vec![{
         let mut mps = MPS::new(params.num_sites(), params.chi_max, 2);
-        // Give the state a small non-zero value so conservation has
-        // something to check.
-        if !mps.cores.is_empty() && !mps.cores[0].data.is_empty() {
-            mps.cores[0].data[0] = Q16::from_f64(0.5);
+        for (i, core) in mps.cores.iter_mut().enumerate() {
+            for (j, val) in core.data.iter_mut().enumerate() {
+                *val = Q16::from_f64(((i * 7 + j * 3) % 10) as f64 * 0.05 + 0.1);
+            }
         }
         mps
     }]
