@@ -149,6 +149,10 @@ getrandom = { version = "0.2", optional = true }
 # DHAT heap profiler (optional, for stress testing)
 dhat = { version = "0.3", optional = true }
 
+# Certificate rendering (PDF + HTML + QR)
+printpdf = { version = "0.5", optional = true }
+qrcode = { version = "0.14", optional = true }
+
 # Rayon for CPU parallelism
 rayon = "1.8"
 
@@ -246,6 +250,9 @@ default = []
 # Enable Halo2 ZK circuit - requires nightly Rust
 # Also propagates halo2 to fluidelite-circuits for real physics domain provers
 halo2 = ["dep:halo2-axiom", "fluidelite-circuits/halo2"]
+# Enable Winterfell STARK prover (Goldilocks field, FRI, post-quantum)
+# Propagates stark to fluidelite-circuits for transparent physics proofs
+stark = ["fluidelite-circuits/stark"]
 # Enable Python bindings
 python = ["dep:pyo3", "halo2"]
 # Enable REST API server
@@ -256,6 +263,8 @@ gpu = ["dep:icicle-runtime", "dep:icicle-core", "dep:icicle-bn254", "dep:sha3", 
 encryption = ["dep:aes-gcm", "dep:hkdf", "dep:getrandom"]
 # Enable DHAT heap profiling for stress tests
 dhat-heap = ["dep:dhat"]
+# Certificate rendering: PDF, HTML, QR code generation
+certificate-render = ["dep:printpdf", "dep:qrcode"]
 # Full production build — GPU + server + halo2 (requires CUDA 12+)
 production = ["halo2", "server", "gpu"]
 # Production without GPU (CI, ARM, non-CUDA environments)
@@ -282,9 +291,14 @@ required-features = ["groth16", "server"]
 [[bin]]
 name = "generate-certificate"
 path = "src/bin/generate_certificate.rs"
-required-features = ["halo2"]
+required-features = []
 
 [[bin]]
 name = "certificate-authority"
 path = "src/bin/certificate_authority.rs"
 required-features = ["server"]
+
+[[bin]]
+name = "emit-certificate"
+path = "src/bin/emit_certificate.rs"
+required-features = ["certificate-render"]

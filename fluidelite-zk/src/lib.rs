@@ -133,6 +133,11 @@ pub mod zero_expansion_prover_v3;
 #[cfg(feature = "gpu")]
 pub mod groth16_output;
 
+/// Elite certificate rendering: PDF, HTML, QR bridge.
+/// Gated behind the `certificate-render` feature.
+#[cfg(feature = "certificate-render")]
+pub mod certificate_render;
+
 #[cfg(feature = "groth16")]
 pub mod groth16_prover;
 

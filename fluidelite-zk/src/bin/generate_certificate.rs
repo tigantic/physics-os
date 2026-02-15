@@ -1,7 +1,7 @@
 //! Production-Grade TPC Certificate Generator — Zero-Expansion Architecture
 //!
 //! Three-layer Trustless Physics Certificate:
-//!   Layer A — Physics correctness: Halo2 thermal circuit with interval arithmetic
+//!   Layer A — Physics correctness: Thermal circuit (STARK or Halo2)
 //!   Layer B — Computational integrity: Zero-Expansion QTT-Native MSM on GPU
 //!   Layer C — Provenance chain: Merkle aggregation + Ed25519 signatures
 //!
@@ -106,7 +106,12 @@ fn main() {
     println!("║     TRUSTLESS PHYSICS CERTIFICATE — Zero-Expansion Architecture              ║");
     println!("║     © 2026 Tigantic Holdings LLC. All rights reserved.                       ║");
     println!("║                                                                              ║");
+    #[cfg(feature = "stark")]
+    println!("║     Layer A: Physics correctness (Winterfell STARK — post-quantum)            ║");
+    #[cfg(all(feature = "halo2", not(feature = "stark")))]
     println!("║     Layer A: Physics correctness (Halo2 thermal circuit)                     ║");
+    #[cfg(not(any(feature = "halo2", feature = "stark")))]
+    println!("║     Layer A: Physics correctness (witness-only stub)                         ║");
     println!("║     Layer B: Computational integrity (QTT-Native GPU MSM)                    ║");
     println!("║     Layer C: Provenance chain (Merkle + Ed25519)                             ║");
     println!("║                                                                              ║");
@@ -218,13 +223,18 @@ fn main() {
 
     #[cfg(not(feature = "gpu"))]
     {
-        error!("This certificate generator requires GPU support.");
-        error!("Build with: cargo build --release --features gpu");
-        std::process::exit(1);
+        eprintln!("[warn] GPU support not enabled — Layer B (QTT-Native MSM) will be skipped.");
+        eprintln!("[warn] Build with --features gpu for full three-layer certificate.");
+        println!();
     }
 
-    // ── Phase 1: Halo2 keygen (thermal circuit — Layer A) ─────────────────
+    // ── Phase 1: Thermal prover setup (Layer A) ───────────────────────────
+    #[cfg(feature = "stark")]
+    println!("──── Phase 1: STARK Setup (Layer A — No Trusted Setup) ───────");
+    #[cfg(all(feature = "halo2", not(feature = "stark")))]
     println!("──── Phase 1: Halo2 Keygen (Layer A — Physics Circuit) ───────");
+    #[cfg(not(any(feature = "halo2", feature = "stark")))]
+    println!("──── Phase 1: Stub Prover (Layer A — Witness Only) ───────────");
     let keygen_start = Instant::now();
     let mut thermal_prover = match ThermalProver::new(thermal_params.clone()) {
         Ok(p) => p,
@@ -243,7 +253,12 @@ fn main() {
 
     // ── Phase 2: Prove timesteps (Layer A + Layer B) ───────────────────────
     println!("──── Phase 2: Prove {} Timesteps ─────────────────────────────", cli.timesteps);
+    #[cfg(feature = "stark")]
+    println!("  Layer A: Winterfell STARK (post-quantum transparent physics proof)");
+    #[cfg(all(feature = "halo2", not(feature = "stark")))]
     println!("  Layer A: Halo2 thermal circuit (physics correctness)");
+    #[cfg(not(any(feature = "halo2", feature = "stark")))]
+    println!("  Layer A: Stub prover (witness-only, no ZK proof)");
     println!("  Layer B: QTT-Native MSM commitment (computational integrity)");
     println!();
 
@@ -263,7 +278,7 @@ fn main() {
     for i in 0..cli.timesteps {
         let step_start = Instant::now();
 
-        // ── Layer A: Halo2 thermal proof ───────────────────────────────────
+        // ── Layer A: Thermal proof ──────────────────────────────────────────
         let proof = match thermal_prover.prove(&states, &mpos) {
             Ok(p) => p,
             Err(e) => {
@@ -271,7 +286,8 @@ fn main() {
                 std::process::exit(1);
             }
         };
-        let halo2_ms = step_start.elapsed().as_millis();
+        #[allow(unused_variables)]
+        let layer_a_ms = step_start.elapsed().as_millis();
 
         let proof_size = proof.proof_bytes.len();
         total_constraints += proof.num_constraints as u64;
@@ -305,9 +321,17 @@ fn main() {
             }
         };
 
+        #[allow(unused_variables)]
         let step_ms = step_start.elapsed().as_millis();
 
         // ── Log ────────────────────────────────────────────────────────────
+        #[cfg(not(feature = "gpu"))]
+        {
+            println!(
+                "  [step {:>3}]  proof={:>5}ms  constraints={:<8}  residual={:.2e}  total={}ms",
+                i, layer_a_ms, proof.num_constraints, residual_f64, step_ms,
+            );
+        }
         #[cfg(feature = "gpu")]
         {
             let commit_str = match qtt_commit_ms {
@@ -319,20 +343,21 @@ fn main() {
                 None => "—".to_string(),
             };
             println!(
-                "  [step {:>3}]  halo2={:>5}ms  qtt_commit={:<8}  compression={:<8}  constraints={:<8}  residual={:.2e}  total={}ms",
-                i, halo2_ms, commit_str, comp_str,
+                "  [step {:>3}]  proof={:>5}ms  qtt_commit={:<8}  compression={:<8}  constraints={:<8}  residual={:.2e}  total={}ms",
+                i, layer_a_ms, commit_str, comp_str,
                 proof.num_constraints, residual_f64, step_ms,
             );
         }
 
         // ── Build timestep input ───────────────────────────────────────────
+        #[allow(unused_mut)]
         let mut meta = serde_json::json!({
             "timestep_index": i,
             "k": proof.k,
             "num_constraints": proof.num_constraints,
             "cg_iterations": proof.cg_iterations,
             "proof_generation_ms": proof.generation_time_ms,
-            "layer_a": "halo2_thermal",
+            "layer_a": if cfg!(feature = "stark") { "winterfell_stark" } else if cfg!(feature = "halo2") { "halo2_thermal" } else { "stub" },
         });
 
         #[cfg(feature = "gpu")]
@@ -426,6 +451,7 @@ fn main() {
     // Optional JSON sidecar
     if cli.json {
         let json_path = cli.output.with_extension("json");
+        #[allow(unused_mut)]
         let mut sidecar = serde_json::json!({
             "certificate_id": aggregate.certificate_id.to_string(),
             "domain": format!("{:?}", aggregate.domain),

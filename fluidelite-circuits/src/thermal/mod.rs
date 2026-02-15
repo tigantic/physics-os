@@ -55,6 +55,8 @@ pub mod config;
 pub mod gadgets;
 pub mod halo2_impl;
 pub mod prover;
+#[cfg(feature = "stark")]
+pub mod stark_impl;
 pub mod witness;
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -80,6 +82,13 @@ pub use halo2_impl::ThermalCircuit;
 pub use prover::{
     ThermalProof, ThermalProver, ThermalProverStats, ThermalVerificationResult,
     ThermalVerifier,
+};
+
+#[cfg(feature = "stark")]
+pub use stark_impl::{
+    ThermalAir, ThermalStarkInputs, TimestepPhysics,
+    prove_thermal_stark, verify_thermal_stark,
+    build_trace as build_stark_trace,
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
