@@ -89,6 +89,7 @@ pub use stark_impl::{
     ThermalAir, ThermalStarkInputs, TimestepPhysics,
     prove_thermal_stark, verify_thermal_stark,
     build_trace as build_stark_trace,
+    HASH_LIMBS,
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -130,15 +131,22 @@ pub fn prove_thermal_timestep(
     let proof = prover.prove(input_states, laplacian_mpos)?;
 
     // Verify proof
-    #[cfg(not(feature = "halo2"))]
+    // Priority: stark > halo2 > stub (matches prover.rs re-export order).
+    #[cfg(feature = "stark")]
     let result = {
         let verifier = ThermalVerifier::new();
         verifier.verify(&proof)?
     };
 
-    #[cfg(feature = "halo2")]
+    #[cfg(all(feature = "halo2", not(feature = "stark")))]
     let result = {
         let verifier = ThermalVerifier::from_prover(&prover);
+        verifier.verify(&proof)?
+    };
+
+    #[cfg(not(any(feature = "halo2", feature = "stark")))]
+    let result = {
+        let verifier = ThermalVerifier::new();
         verifier.verify(&proof)?
     };
 

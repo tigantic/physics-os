@@ -249,6 +249,37 @@ pub mod halo2_circuit {
 
             inputs
         }
+
+        /// Validate the witness (checks conservation and SVD ordering).
+        pub fn validate_witness(&self) -> Result<(), String> {
+            // Check conservation residual is within tolerance
+            let residual = self.witness.conservation.residual;
+            let tol = self.witness.params.conservation_tol;
+
+            if residual.raw.abs() > tol.raw {
+                return Err(format!(
+                    "Conservation violation: |{}| > {}",
+                    residual.to_f64(),
+                    tol.to_f64(),
+                ));
+            }
+
+            // Check SVD ordering
+            for bond in &self.witness.truncation.bond_data {
+                for pair in bond.singular_values.windows(2) {
+                    if pair[0].raw < pair[1].raw {
+                        return Err(format!(
+                            "SVD ordering violation at bond {}: {} < {}",
+                            bond.bond_index,
+                            pair[0].to_f64(),
+                            pair[1].to_f64(),
+                        ));
+                    }
+                }
+            }
+
+            Ok(())
+        }
     }
 
     impl Circuit<Fr> for ThermalCircuit {

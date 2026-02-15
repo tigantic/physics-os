@@ -5,13 +5,24 @@
 //!
 //! # Architecture
 //!
-//! The STARK proves that a sequence of thermal timesteps preserves
-//! physical conservation laws. Each row of the execution trace captures
-//! the physics summary of one solver timestep. Transition constraints
-//! enforce energy conservation, parameter consistency, and sequential
-//! execution across all rows.
+//! The STARK proves that a sequence of thermal timesteps forms a valid
+//! state-transition chain with correct physics. Each row of the execution
+//! trace captures the full physics summary **and cryptographic state
+//! commitment** of one solver timestep. Transition constraints enforce:
 //!
-//! # Trace Layout (12 columns × N rows)
+//! 1. **State chain continuity**: The output state hash of row N must
+//!    equal the input state hash of row N+1. This proves the prover
+//!    actually evolved the state rather than fabricating unrelated proofs.
+//!
+//! 2. **Energy conservation**: The energy balance equation holds at every
+//!    timestep, with the conservation residual absorbing source terms and
+//!    solver truncation error.
+//!
+//! 3. **Parameter consistency**: dt and α are constant across all rows.
+//!
+//! 4. **Sequential execution**: Step indices increment by exactly 1.
+//!
+//! # Trace Layout (20 columns × N rows)
 //!
 //! | Col | Name             | Description                              |
 //! |-----|------------------|------------------------------------------|
@@ -27,17 +38,36 @@
 //! |  9  | sv_max           | Largest singular value (QTT health)      |
 //! | 10  | rank             | Effective QTT rank                       |
 //! | 11  | cons_residual    | Conservation residual                    |
+//! | 12  | in_hash_0        | Input state SHA-256 hash limb 0          |
+//! | 13  | in_hash_1        | Input state SHA-256 hash limb 1          |
+//! | 14  | in_hash_2        | Input state SHA-256 hash limb 2          |
+//! | 15  | in_hash_3        | Input state SHA-256 hash limb 3          |
+//! | 16  | out_hash_0       | Output state SHA-256 hash limb 0         |
+//! | 17  | out_hash_1       | Output state SHA-256 hash limb 1         |
+//! | 18  | out_hash_2       | Output state SHA-256 hash limb 2         |
+//! | 19  | out_hash_3       | Output state SHA-256 hash limb 3         |
 //!
-//! # Transition Constraints (degree 1, all linear)
+//! # Transition Constraints (degree 1, all linear — 8 total)
 //!
 //! 1. Energy conservation: `energy[n+1] - energy[n] - cons_residual[n+1] = 0`
-//!    Conservation residual absorbs both source contributions and solver
-//!    truncation error. The `dt·source` product is folded in at witness
-//!    generation time, keeping the AIR strictly degree 1 and avoiding a
-//!    degree mismatch when dt is constant across all rows.
 //! 2. dt constant: `dt[n+1] - dt[n] = 0`
 //! 3. α constant: `alpha[n+1] - alpha[n] = 0`
 //! 4. Step increment: `step[n+1] - step[n] - 1 = 0`
+//! 5–8. State chain continuity (4 limbs):
+//!    `out_hash_k[n] - in_hash_k[n+1] = 0` for k = 0..3
+//!
+//!    This is the critical constraint that transforms the STARK from a
+//!    "conservation checksum" into a "verified state transition chain".
+//!    A dishonest prover cannot fabricate unrelated timestep data because
+//!    the output hash of each row is cryptographically bound to the input
+//!    hash of the next row.
+//!
+//! # Boundary Assertions (13 total)
+//!
+//! - Initial energy, dt, α, step_idx at row 0
+//! - Final energy at last row
+//! - Initial input state hash (4 limbs) at row 0
+//! - Final output state hash (4 limbs) at last row
 //!
 //! # Advantages over Halo2/KZG
 //!
@@ -45,6 +75,7 @@
 //! - **Post-quantum secure**: Hash commitments, no discrete log assumption
 //! - **GPU-parallelizable**: FFT + Merkle hashing (not sequential polynomial arguments)
 //! - **Multi-step proof**: One proof covers the entire simulation sequence
+//! - **State chaining**: Output→input hash binding proves faithful state evolution
 //! - **Proof size**: ~15–50 KB (vs 800 B for Halo2, but irrelevant for regulated industries)
 //!
 //! © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
@@ -82,12 +113,12 @@ type VC = MerkleTree<H>;
 // ═══════════════════════════════════════════════════════════════════════════
 
 /// Number of columns in the execution trace.
-pub const TRACE_WIDTH: usize = 12;
+pub const TRACE_WIDTH: usize = 20;
 
 /// Number of transition constraints.
-pub const NUM_CONSTRAINTS: usize = 4;
+pub const NUM_CONSTRAINTS: usize = 8;
 
-// Column indices.
+// Column indices — physics summary (0..11).
 /// Total thermal energy column.
 pub const COL_ENERGY: usize = 0;
 /// L2 norm (energy squared) column.
@@ -112,6 +143,27 @@ pub const COL_SV_MAX: usize = 9;
 pub const COL_RANK: usize = 10;
 /// Conservation residual column.
 pub const COL_CONS_RESIDUAL: usize = 11;
+
+// Column indices — state hash commitments (12..19).
+/// Input state SHA-256 hash limb 0.
+pub const COL_IN_HASH_0: usize = 12;
+/// Input state SHA-256 hash limb 1.
+pub const COL_IN_HASH_1: usize = 13;
+/// Input state SHA-256 hash limb 2.
+pub const COL_IN_HASH_2: usize = 14;
+/// Input state SHA-256 hash limb 3.
+pub const COL_IN_HASH_3: usize = 15;
+/// Output state SHA-256 hash limb 0.
+pub const COL_OUT_HASH_0: usize = 16;
+/// Output state SHA-256 hash limb 1.
+pub const COL_OUT_HASH_1: usize = 17;
+/// Output state SHA-256 hash limb 2.
+pub const COL_OUT_HASH_2: usize = 18;
+/// Output state SHA-256 hash limb 3.
+pub const COL_OUT_HASH_3: usize = 19;
+
+/// Number of hash limbs per state (SHA-256 = 256 bits = 4 × 64-bit limbs).
+pub const HASH_LIMBS: usize = 4;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Field Conversion Helpers
@@ -181,17 +233,30 @@ pub struct ThermalStarkInputs {
 
     /// Trace length (next power of 2 ≥ num_steps + 1, minimum 8).
     pub trace_length: usize,
+
+    /// Initial step index (global timestep counter).
+    pub initial_step: Felt,
+
+    /// Input state hash at row 0 (4 × 64-bit limbs of SHA-256).
+    pub initial_input_hash: [Felt; HASH_LIMBS],
+
+    /// Output state hash at the final row (4 × 64-bit limbs of SHA-256).
+    pub final_output_hash: [Felt; HASH_LIMBS],
 }
 
 impl ToElements<Felt> for ThermalStarkInputs {
     fn to_elements(&self) -> Vec<Felt> {
-        vec![
+        let mut elems = vec![
             self.initial_energy,
             self.final_energy,
             self.dt,
             self.alpha,
             Felt::new(self.num_steps as u64),
-        ]
+            self.initial_step,
+        ];
+        elems.extend_from_slice(&self.initial_input_hash);
+        elems.extend_from_slice(&self.final_output_hash);
+        elems
     }
 }
 
@@ -231,6 +296,18 @@ pub struct TimestepPhysics {
 
     /// Conservation residual: |∫T_{n+1} − ∫T_n − Δt·∫S|.
     pub conservation_residual: Q16,
+
+    /// SHA-256 of the input state, split into 4 × 64-bit limbs.
+    pub input_hash_limbs: [u64; HASH_LIMBS],
+
+    /// SHA-256 of the output state, split into 4 × 64-bit limbs.
+    pub output_hash_limbs: [u64; HASH_LIMBS],
+
+    /// Global timestep index (monotonically increasing across the full
+    /// simulation). Embedded in the step_idx column so that each per-step
+    /// STARK trace is unique even if the physical state has converged to
+    /// a fixed point (e.g., with identity Laplacian test data).
+    pub global_step: u64,
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -259,19 +336,21 @@ impl Air for ThermalAir {
         options: ProofOptions,
     ) -> Self {
         // All transition constraints are degree 1 (linear in trace columns).
-        // The energy conservation constraint uses cons_residual to absorb
-        // the dt·source product, which would otherwise require degree 2 and
-        // create a degree mismatch when dt is constant (degree-2 product
-        // collapses to degree-1, violating Winterfell's debug assertion).
+        // Constraints 0–3: physics + bookkeeping.
+        // Constraints 4–7: state chain continuity (output_hash[N] = input_hash[N+1]).
         let degrees = vec![
-            TransitionConstraintDegree::new(1), // energy conservation
-            TransitionConstraintDegree::new(1), // dt constant
-            TransitionConstraintDegree::new(1), // alpha constant
-            TransitionConstraintDegree::new(1), // step increment
+            TransitionConstraintDegree::new(1), // 0: energy conservation
+            TransitionConstraintDegree::new(1), // 1: dt constant
+            TransitionConstraintDegree::new(1), // 2: alpha constant
+            TransitionConstraintDegree::new(1), // 3: step increment
+            TransitionConstraintDegree::new(1), // 4: state chain limb 0
+            TransitionConstraintDegree::new(1), // 5: state chain limb 1
+            TransitionConstraintDegree::new(1), // 6: state chain limb 2
+            TransitionConstraintDegree::new(1), // 7: state chain limb 3
         ];
 
-        // Number of boundary assertions.
-        let num_assertions = 5;
+        // Boundary assertions: 5 original + 4 initial input hash + 4 final output hash = 13.
+        let num_assertions = 13;
 
         let context = AirContext::new(trace_info, degrees, num_assertions, options);
 
@@ -309,6 +388,20 @@ impl Air for ThermalAir {
 
         // Constraint 3: Step index increments by exactly 1.
         result[3] = next[COL_STEP_IDX] - current[COL_STEP_IDX] - E::ONE;
+
+        // Constraints 4–7: State chain continuity.
+        //
+        // The output state hash of row N must equal the input state hash of
+        // row N+1. This is the critical constraint that binds consecutive
+        // timesteps into an unforgeable chain: a dishonest prover cannot
+        // substitute unrelated state data because the SHA-256 preimage
+        // (the full QTT state) is fixed by the simulation.
+        //
+        //   out_hash_k[n] - in_hash_k[n+1] = 0    for k = 0..3
+        result[4] = current[COL_OUT_HASH_0] - next[COL_IN_HASH_0];
+        result[5] = current[COL_OUT_HASH_1] - next[COL_IN_HASH_1];
+        result[6] = current[COL_OUT_HASH_2] - next[COL_IN_HASH_2];
+        result[7] = current[COL_OUT_HASH_3] - next[COL_IN_HASH_3];
     }
 
     fn get_assertions(&self) -> Vec<Assertion<Felt>> {
@@ -323,8 +416,20 @@ impl Air for ThermalAir {
             Assertion::single(COL_DT, 0, self.inputs.dt),
             // alpha at row 0 (constant propagated by constraint 2).
             Assertion::single(COL_ALPHA, 0, self.inputs.alpha),
-            // Step index starts at 0 (incremented by constraint 3).
-            Assertion::single(COL_STEP_IDX, 0, Felt::ZERO),
+            // Step index starts at the global timestep counter.
+            Assertion::single(COL_STEP_IDX, 0, self.inputs.initial_step),
+            // Initial input state hash (4 limbs) — binds the proof to a specific
+            // initial condition that the verifier can independently check.
+            Assertion::single(COL_IN_HASH_0, 0, self.inputs.initial_input_hash[0]),
+            Assertion::single(COL_IN_HASH_1, 0, self.inputs.initial_input_hash[1]),
+            Assertion::single(COL_IN_HASH_2, 0, self.inputs.initial_input_hash[2]),
+            Assertion::single(COL_IN_HASH_3, 0, self.inputs.initial_input_hash[3]),
+            // Final output state hash (4 limbs) — binds the proof to a specific
+            // final state that the verifier can independently check.
+            Assertion::single(COL_OUT_HASH_0, last_step, self.inputs.final_output_hash[0]),
+            Assertion::single(COL_OUT_HASH_1, last_step, self.inputs.final_output_hash[1]),
+            Assertion::single(COL_OUT_HASH_2, last_step, self.inputs.final_output_hash[2]),
+            Assertion::single(COL_OUT_HASH_3, last_step, self.inputs.final_output_hash[3]),
         ]
     }
 
@@ -372,6 +477,19 @@ impl Prover for InternalProver {
             alpha: trace.get(COL_ALPHA, 0),
             num_steps: last, // last row index = number of transitions
             trace_length: trace.length(),
+            initial_step: trace.get(COL_STEP_IDX, 0),
+            initial_input_hash: [
+                trace.get(COL_IN_HASH_0, 0),
+                trace.get(COL_IN_HASH_1, 0),
+                trace.get(COL_IN_HASH_2, 0),
+                trace.get(COL_IN_HASH_3, 0),
+            ],
+            final_output_hash: [
+                trace.get(COL_OUT_HASH_0, last),
+                trace.get(COL_OUT_HASH_1, last),
+                trace.get(COL_OUT_HASH_2, last),
+                trace.get(COL_OUT_HASH_3, last),
+            ],
         }
     }
 
@@ -420,9 +538,12 @@ impl Prover for InternalProver {
 
 /// Build the execution trace from a sequence of timestep physics summaries.
 ///
-/// The trace has `TRACE_WIDTH` columns and is padded to the next power of two.
+/// The trace has `TRACE_WIDTH` columns (20) and is padded to the next power of two.
 /// Padding rows replicate the final physics state with incrementing step indices
 /// and zero source/conservation residuals (satisfying all transition constraints).
+///
+/// For hash columns, padding rows carry forward the final output hash as both
+/// input and output, satisfying the chain constraint `out_hash[N] = in_hash[N+1]`.
 pub fn build_trace(
     steps: &[TimestepPhysics],
     dt: Q16,
@@ -439,6 +560,17 @@ pub fn build_trace(
     let dt_felt = q16_to_felt(dt);
     let alpha_felt = q16_to_felt(alpha);
 
+    // Pre-compute the final output hash for padding rows.
+    let final_out_hash: [Felt; HASH_LIMBS] = {
+        let last = &steps[raw_len - 1];
+        [
+            u64_to_felt(last.output_hash_limbs[0]),
+            u64_to_felt(last.output_hash_limbs[1]),
+            u64_to_felt(last.output_hash_limbs[2]),
+            u64_to_felt(last.output_hash_limbs[3]),
+        ]
+    };
+
     let mut trace = TraceTable::new(TRACE_WIDTH, trace_len);
     trace.fill(
         |state| {
@@ -451,11 +583,20 @@ pub fn build_trace(
             state[COL_SOURCE_ENERGY] = q16_to_felt(s.source_energy);
             state[COL_DT] = dt_felt;
             state[COL_ALPHA] = alpha_felt;
-            state[COL_STEP_IDX] = Felt::ZERO;
+            state[COL_STEP_IDX] = Felt::new(s.global_step);
             state[COL_CG_RESIDUAL] = q16_to_felt(s.cg_residual);
             state[COL_SV_MAX] = q16_to_felt(s.sv_max);
             state[COL_RANK] = Felt::new(s.rank as u64);
             state[COL_CONS_RESIDUAL] = q16_to_felt(s.conservation_residual);
+            // Input/output state hash columns.
+            state[COL_IN_HASH_0] = u64_to_felt(s.input_hash_limbs[0]);
+            state[COL_IN_HASH_1] = u64_to_felt(s.input_hash_limbs[1]);
+            state[COL_IN_HASH_2] = u64_to_felt(s.input_hash_limbs[2]);
+            state[COL_IN_HASH_3] = u64_to_felt(s.input_hash_limbs[3]);
+            state[COL_OUT_HASH_0] = u64_to_felt(s.output_hash_limbs[0]);
+            state[COL_OUT_HASH_1] = u64_to_felt(s.output_hash_limbs[1]);
+            state[COL_OUT_HASH_2] = u64_to_felt(s.output_hash_limbs[2]);
+            state[COL_OUT_HASH_3] = u64_to_felt(s.output_hash_limbs[3]);
         },
         |step, state| {
             let row_idx = step + 1; // `step` is 0-based transition index → row = step+1.
@@ -472,6 +613,15 @@ pub fn build_trace(
                 state[COL_SV_MAX] = q16_to_felt(s.sv_max);
                 state[COL_RANK] = Felt::new(s.rank as u64);
                 state[COL_CONS_RESIDUAL] = q16_to_felt(s.conservation_residual);
+                // Hash columns — real per-step commitments.
+                state[COL_IN_HASH_0] = u64_to_felt(s.input_hash_limbs[0]);
+                state[COL_IN_HASH_1] = u64_to_felt(s.input_hash_limbs[1]);
+                state[COL_IN_HASH_2] = u64_to_felt(s.input_hash_limbs[2]);
+                state[COL_IN_HASH_3] = u64_to_felt(s.input_hash_limbs[3]);
+                state[COL_OUT_HASH_0] = u64_to_felt(s.output_hash_limbs[0]);
+                state[COL_OUT_HASH_1] = u64_to_felt(s.output_hash_limbs[1]);
+                state[COL_OUT_HASH_2] = u64_to_felt(s.output_hash_limbs[2]);
+                state[COL_OUT_HASH_3] = u64_to_felt(s.output_hash_limbs[3]);
             } else {
                 // Padding row: replicate final state with zero source/residual.
                 // This satisfies transition constraints:
@@ -482,6 +632,18 @@ pub fn build_trace(
                 state[COL_CONS_RESIDUAL] = Felt::ZERO;
                 // energy, energy_sq, max_temp, min_temp, cg_residual,
                 // sv_max, rank carry forward from previous row (already in state).
+
+                // Hash columns: padding rows use the final output hash as both
+                // input and output. This satisfies chain constraints:
+                //   out_hash[N] = in_hash[N+1] holds because both are the same hash.
+                state[COL_IN_HASH_0] = final_out_hash[0];
+                state[COL_IN_HASH_1] = final_out_hash[1];
+                state[COL_IN_HASH_2] = final_out_hash[2];
+                state[COL_IN_HASH_3] = final_out_hash[3];
+                state[COL_OUT_HASH_0] = final_out_hash[0];
+                state[COL_OUT_HASH_1] = final_out_hash[1];
+                state[COL_OUT_HASH_2] = final_out_hash[2];
+                state[COL_OUT_HASH_3] = final_out_hash[3];
             }
 
             // Constants and step index always advance.
@@ -604,10 +766,53 @@ mod tests {
     /// Source energy is non-zero (10.0) — its contribution is folded into
     /// `conservation_residual` by the witness generator. The dt·source
     /// product does NOT appear in the AIR constraint; it is absorbed.
+    ///
+    /// Hash limbs form a valid state chain:
+    ///   `steps[i].output_hash_limbs == steps[i+1].input_hash_limbs`
+    /// Each step has unique hash values so proofs are distinguishable.
     fn make_test_steps(n: usize) -> Vec<TimestepPhysics> {
+        use sha2::{Digest, Sha256};
+
         let mut steps = Vec::with_capacity(n);
         let base_energy = Q16::from_f64(1000.0);
         let per_step_drift = Q16::from_f64(0.005);
+
+        // Generate a chain of hashes: hash_0 → hash_1 → ... → hash_n
+        // where hash_{i+1} = SHA256(hash_i || step_index).
+        // steps[i].input_hash = hash_i, steps[i].output_hash = hash_{i+1}.
+        let mut hashes: Vec<[u64; HASH_LIMBS]> = Vec::with_capacity(n + 1);
+        let mut current_hash = {
+            let mut h = Sha256::new();
+            h.update(b"TEST_INITIAL_STATE_V2");
+            let result = h.finalize();
+            let mut limbs = [0u64; HASH_LIMBS];
+            for (k, limb) in limbs.iter_mut().enumerate() {
+                let offset = k * 8;
+                *limb = u64::from_le_bytes(
+                    result[offset..offset + 8].try_into().unwrap(),
+                );
+            }
+            limbs
+        };
+        hashes.push(current_hash);
+
+        for i in 0..n {
+            let mut h = Sha256::new();
+            for limb in &current_hash {
+                h.update(limb.to_le_bytes());
+            }
+            h.update((i as u64).to_le_bytes());
+            let result = h.finalize();
+            let mut limbs = [0u64; HASH_LIMBS];
+            for (k, limb) in limbs.iter_mut().enumerate() {
+                let offset = k * 8;
+                *limb = u64::from_le_bytes(
+                    result[offset..offset + 8].try_into().unwrap(),
+                );
+            }
+            current_hash = limbs;
+            hashes.push(current_hash);
+        }
 
         for i in 0..n {
             let energy = Q16::from_raw(base_energy.raw + (i as i64) * per_step_drift.raw);
@@ -626,6 +831,9 @@ mod tests {
                 sv_max: Q16::from_f64(0.99),
                 rank: 8,
                 conservation_residual: cons_residual,
+                input_hash_limbs: hashes[i],
+                global_step: i as u64,
+                output_hash_limbs: hashes[i + 1],
             });
         }
         steps
@@ -649,6 +857,27 @@ mod tests {
         assert_eq!(trace.get(COL_STEP_IDX, 0), Felt::ZERO);
         assert_eq!(trace.get(COL_STEP_IDX, 1), Felt::new(1));
         assert_eq!(trace.get(COL_STEP_IDX, 7), Felt::new(7));
+
+        // Check hash chain continuity: out_hash[i] == in_hash[i+1] for real rows.
+        for i in 0..4 {
+            // Row 0 → Row 1 chain.
+            assert_eq!(
+                trace.get(COL_OUT_HASH_0 + i, 0),
+                trace.get(COL_IN_HASH_0 + i, 1),
+                "Hash chain broken at row 0→1, limb {i}"
+            );
+        }
+
+        // Check padding rows: in_hash == out_hash == final output hash.
+        for row in 5..8 {
+            for k in 0..4 {
+                assert_eq!(
+                    trace.get(COL_IN_HASH_0 + k, row),
+                    trace.get(COL_OUT_HASH_0 + k, row),
+                    "Padding row {row} limb {k}: in_hash != out_hash"
+                );
+            }
+        }
     }
 
     #[test]

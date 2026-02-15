@@ -55,6 +55,9 @@ pub struct ThermalProof {
 
     /// Parameters hash limbs (public input).
     pub params_hash_limbs: [u64; 4],
+
+    /// Global step index for this proof (used as STARK public input).
+    pub step_index: u64,
 }
 
 impl ThermalProof {
@@ -92,6 +95,9 @@ impl ThermalProof {
         for limb in &self.params_hash_limbs {
             bytes.extend(limb.to_le_bytes());
         }
+
+        // Step index
+        bytes.extend(self.step_index.to_le_bytes());
 
         bytes
     }
@@ -188,6 +194,16 @@ impl ThermalProof {
             pos += 8;
         }
 
+        // Step index (optional for backward compat)
+        let step_index = if data.len() >= pos + 8 {
+            let v = u64::from_le_bytes(data[pos..pos + 8].try_into()?);
+            pos += 8;
+            let _ = pos; // suppress unused warning
+            v
+        } else {
+            0
+        };
+
         Ok(Self {
             proof_bytes,
             generation_time_ms,
@@ -200,6 +216,7 @@ impl ThermalProof {
             input_state_hash_limbs,
             output_state_hash_limbs,
             params_hash_limbs,
+            step_index,
         })
     }
 
@@ -436,6 +453,7 @@ pub mod halo2_prover {
                 input_state_hash_limbs: circuit.witness.hashes.input_state_hash_limbs,
                 output_state_hash_limbs: circuit.witness.hashes.output_state_hash_limbs,
                 params_hash_limbs: circuit.witness.hashes.params_hash_limbs,
+                step_index: 0,
             };
 
             self.stats.record(&proof);
@@ -587,8 +605,11 @@ pub mod halo2_prover {
     }
 }
 
-#[cfg(feature = "halo2")]
-pub use halo2_prover::*;
+// NOTE: Do NOT re-export halo2_prover here unconditionally.
+// The priority re-exports are at the bottom of this file:
+//   stark > halo2 > stub.
+// Having a second `pub use halo2_prover::*` here would cause ambiguity
+// when both `halo2` and `stark` features are enabled.
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Stub Prover/Verifier (without Halo2)
@@ -667,6 +688,7 @@ pub mod stub_prover {
                     .hashes
                     .output_state_hash_limbs,
                 params_hash_limbs: circuit.witness.hashes.params_hash_limbs,
+                step_index: 0,
             };
 
             self.stats.record(&proof);
@@ -762,7 +784,7 @@ pub mod stark_prover {
     use super::*;
     use crate::thermal::stark_impl::{
         self, prove_thermal_stark, verify_thermal_stark, TimestepPhysics,
-        ThermalStarkInputs,
+        ThermalStarkInputs, HASH_LIMBS,
     };
 
     /// STARK thermal prover using Winterfell (Goldilocks + FRI).
@@ -781,6 +803,14 @@ pub mod stark_prover {
 
         /// Cached public inputs (from most recent batch prove).
         cached_pub_inputs: Option<ThermalStarkInputs>,
+
+        /// Output state from the most recent `prove()` call.
+        /// Used for state chaining: output of step N → input of step N+1.
+        last_output_state: Option<Vec<MPS>>,
+
+        /// Global step counter for the simulation sequence.
+        /// Monotonically increasing, ensures each per-step trace is unique.
+        global_step_counter: u64,
     }
 
     impl ThermalProver {
@@ -801,10 +831,12 @@ pub mod stark_prover {
 
             Ok(Self {
                 thermal_params,
+                last_output_state: None,
                 stats: ThermalProverStats::default(),
                 timestep_buffer: Vec::new(),
                 cached_stark_proof: None,
                 cached_pub_inputs: None,
+                global_step_counter: 0,
             })
         }
 
@@ -827,8 +859,16 @@ pub mod stark_prover {
             )?;
             circuit.validate_witness()?;
 
-            // Extract physics summary from witness.
-            let physics = extract_physics_from_witness(&circuit);
+            // Capture the evolved output state for state chaining.
+            // The thin `Mps` type is converted back to full `MPS` so the
+            // caller can feed it as input to the next timestep.
+            self.last_output_state = Some(vec![circuit.witness.output_state.to_full()]);
+
+            // Extract physics summary from witness and stamp with global step.
+            let mut physics = extract_physics_from_witness(&circuit);
+            let step_idx = self.global_step_counter;
+            physics.global_step = step_idx;
+            self.global_step_counter += 1;
 
             // Build single-step trace and prove.
             let (proof_bytes, _pub_inputs, trace_len, _gen_ms) =
@@ -862,6 +902,7 @@ pub mod stark_prover {
                     .hashes
                     .output_state_hash_limbs,
                 params_hash_limbs: circuit.witness.hashes.params_hash_limbs,
+                step_index: step_idx,
             };
 
             self.stats.record(&proof);
@@ -905,7 +946,7 @@ pub mod stark_prover {
             self.cached_pub_inputs = Some(pub_inputs);
 
             // Use first/last timestep for the proof metadata.
-            let _first = &self.timestep_buffer[0];
+            let first = &self.timestep_buffer[0];
             let last = &self.timestep_buffer[num_steps - 1];
 
             let proof = ThermalProof {
@@ -914,11 +955,12 @@ pub mod stark_prover {
                 num_constraints,
                 k: (trace_len as f64).log2().ceil() as u32,
                 params: self.thermal_params.clone(),
+                step_index: first.global_step,
                 conservation_residual: last.conservation_residual,
                 cg_residual_norm: last.cg_residual,
                 cg_iterations: 0, // batch proof — individual CG iters not tracked
-                input_state_hash_limbs: [0; 4],  // batch proof uses STARK public inputs
-                output_state_hash_limbs: [0; 4],
+                input_state_hash_limbs: first.input_hash_limbs,
+                output_state_hash_limbs: last.output_hash_limbs,
                 params_hash_limbs: [0; 4],
             };
 
@@ -931,6 +973,16 @@ pub mod stark_prover {
             );
 
             Ok(proof)
+        }
+
+        /// Get the output state from the most recent `prove()` call.
+        ///
+        /// Returns the evolved temperature state T^{n+1} as a full `MPS`,
+        /// ready to be used as the input state for the next timestep.
+        /// This enables state chaining: each proof's output becomes the
+        /// next proof's input, producing unique proofs per timestep.
+        pub fn last_output_state(&self) -> Option<&Vec<MPS>> {
+            self.last_output_state.as_ref()
         }
 
         /// Get accumulated statistics.
@@ -997,6 +1049,19 @@ pub mod stark_prover {
                 alpha: stark_impl::q16_to_felt(proof.params.alpha),
                 num_steps: 0,
                 trace_length: 1 << proof.k,
+                initial_input_hash: [
+                    stark_impl::u64_to_felt(proof.input_state_hash_limbs[0]),
+                    stark_impl::u64_to_felt(proof.input_state_hash_limbs[1]),
+                    stark_impl::u64_to_felt(proof.input_state_hash_limbs[2]),
+                    stark_impl::u64_to_felt(proof.input_state_hash_limbs[3]),
+                ],
+                initial_step: stark_impl::u64_to_felt(proof.step_index),
+                final_output_hash: [
+                    stark_impl::u64_to_felt(proof.output_state_hash_limbs[0]),
+                    stark_impl::u64_to_felt(proof.output_state_hash_limbs[1]),
+                    stark_impl::u64_to_felt(proof.output_state_hash_limbs[2]),
+                    stark_impl::u64_to_felt(proof.output_state_hash_limbs[3]),
+                ],
             };
 
             // Attempt STARK verification.
@@ -1099,8 +1164,11 @@ pub mod stark_prover {
             source_energy: Q16::ZERO, // Source = 0 for default thermal config.
             cg_residual: w.implicit_solve.final_residual_norm,
             sv_max,
+            global_step: 0, // Overwritten by caller with monotonic counter.
             rank,
             conservation_residual: w.conservation.residual,
+            input_hash_limbs: w.hashes.input_state_hash_limbs,
+            output_hash_limbs: w.hashes.output_state_hash_limbs,
         }
     }
 }

@@ -248,7 +248,7 @@ fn main() {
     println!();
 
     // ── Prepare test inputs ────────────────────────────────────────────────
-    let states = make_test_states(&thermal_params);
+    let mut states = make_test_states(&thermal_params);
     let mpos = make_test_laplacian_mpos(&thermal_params);
 
     // ── Phase 2: Prove timesteps (Layer A + Layer B) ───────────────────────
@@ -286,6 +286,15 @@ fn main() {
                 std::process::exit(1);
             }
         };
+
+        // ── State chaining: output of step N → input of step N+1 ──────────
+        // The prover captures the evolved output state T^{n+1} after each
+        // prove() call. We feed it back as the input for the next timestep,
+        // ensuring every proof operates on genuinely evolved state data.
+        if let Some(evolved_states) = thermal_prover.last_output_state() {
+            states = evolved_states.clone();
+        }
+
         #[allow(unused_variables)]
         let layer_a_ms = step_start.elapsed().as_millis();
 
