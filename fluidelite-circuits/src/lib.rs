@@ -24,6 +24,7 @@
 #![deny(unsafe_code)]
 
 pub mod tensor;
+pub mod gadgets;
 pub mod euler3d;
 pub mod ns_imex;
 pub mod thermal;

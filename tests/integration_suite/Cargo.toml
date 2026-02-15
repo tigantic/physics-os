@@ -17,7 +17,7 @@ path = "src/lib.rs"
 # Pipeline crates
 proof-bridge = { path = "../../crates/proof_bridge" }
 fluidelite-core = { path = "../../fluidelite-core" }
-fluidelite-circuits = { path = "../../fluidelite-circuits", features = ["halo2"] }
+fluidelite-circuits = { path = "../../fluidelite-circuits", features = ["stark"] }
 
 # Crypto
 sha2 = "0.10"

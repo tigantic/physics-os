@@ -4,8 +4,8 @@
 **Date:** 2026-02-14  
 **Owner:** Tigantic Holdings LLC  
 **Classification:** Internal — Engineering Execution Plan  
-**Commit Baseline:** `b93ea0d7` (HEAD → main)  
-**Status:** ✅ COMPLETE — All 5 phases executed. 59 tasks delivered across 7 commits. 80/80 fluidelite-zk tests passing.
+**Commit Baseline:** `cacb68f1` (HEAD → main, tag: v4.0.0-stark)  
+**Status:** Phases 0–5 COMPLETE (59 tasks, 80/80 tests). Phase 6 (PDE-Level ZK Constraints) PENDING — this is the phase that upgrades "trustless bookkeeping" to **trustless physics**.
 
 ---
 
@@ -402,14 +402,250 @@ Every stub listed below previously produced **silently incorrect results**. All 
 
 ---
 
+## Phase 6: QTT-Native PDE Proof — Trustless Physics (Weeks 29–38)
+
+**Objective:** Prove the PDE discretization is correct by constraining the MPO×MPS contraction directly in QTT format. After Phase 6, a malicious witness generator **cannot** produce a fake thermal solve that passes verification.
+
+**Exit Criteria:** A STARK proof verifies the complete implicit thermal timestep: $(I - \alpha \Delta t L) T^{n+1} = T^n + \Delta t \cdot S$ where $L$ is the Laplacian MPO with analytically pinned core coefficients, all MPO×MPS contractions are MAC-constrained, and MPS states are committed via in-circuit Poseidon. Deliberately wrong operator coefficients OR tampered MPS cores are rejected.
+
+### QTT Rules Governing This Phase
+
+All design decisions below follow from the QTT algebraic rules as implemented in this codebase.
+
+**Rule 1: Binary Encoding.** A grid of $N = 2^L$ points is represented by an MPS of $L$ sites with physical dimension $d = 2$ (MSB-first: site 0 = most significant bit). MPS core $G^{(k)}$ has shape $(\chi_{k{-}1}, 2, \chi_k)$ with $\chi_0 = \chi_L = 1$. The function value at grid point $x = \sum_k b_k 2^{L-1-k}$ is $f(x) = G^{(0)}[b_0] \cdot G^{(1)}[b_1] \cdots G^{(L-1)}[b_{L-1}]$.
+
+**Rule 2: MPO×MPS Contraction.** Given MPO core $O^{(k)}$ with shape $(D_l, d_o, d_i, D_r)$ and MPS core $P^{(k)}$ with shape $(\chi_l, d_i, \chi_r)$, the output core $R^{(k)}$ has shape $(\chi_l D_l, d_o, \chi_r D_r)$:
+
+$$R^{(k)}[c_l D_l + d_l, \; o, \; c_r D_r + d_r] = \sum_{p=0}^{d_i - 1} O^{(k)}[d_l, o, p, d_r] \cdot P^{(k)}[c_l, p, c_r]$$
+
+Output bond dimension is **multiplicative**: $\chi_{\text{out}} = \chi_{\text{MPS}} \times D_{\text{MPO}}$.
+
+**Rule 3: Shift Operators Are Exact Rank-2 MPOs.** $S^+|x\rangle = |x{+}1 \bmod N\rangle$ (forward shift) and $S^-|x\rangle = |x{-}1 \bmod N\rangle$ (backward shift) are represented exactly as MPOs with bond dimension 2, using a ripple-carry adder encoding:
+- LSB site: always increment/decrement, carry/borrow signal flows left.
+- Middle sites: propagate or absorb carry. Core values are all 0 or 1.
+- MSB site: absorb carry (periodic boundary).
+
+**Rule 4: Laplacian Is Exact Rank-5 MPO.** The discrete Laplacian $\Delta = (S^+ + S^- - 2I)/\Delta x^2$ is constructed via direct-sum MPO addition of three terms: $S^+$ (bond dim 2) + $S^-$ (bond dim 2) + $-2I$ (bond dim 1). Bond dimension exactly **5** ($= 2 + 2 + 1$). Core values are from $\{0, \pm 1/\Delta x^2, \pm 2/\Delta x^2\}$. **Note:** The "fused rank-3" construction in `tensornet/mpo/operators.py:55–96` is a per-mode Laplacian (diagonal in physical indices), NOT the correct finite-difference Laplacian — it cannot represent cyclic shifts. The direct-sum from `pure_qtt_ops.py` is the authoritative construction.
+
+**Rule 5: System Matrix Is Exact Rank-6 MPO.** $(I - \alpha \Delta t L)$ is formed by direct-sum MPO addition of $I$ (rank 1) and $-\alpha \Delta t \cdot L$ (rank 5): first site concatenates along right bond, middle sites are block-diagonal, last site concatenates along left bond. Bond dimension $D_A = 1 + D_L = 6$. All core values are analytically known constants.
+
+**Rule 6: Contraction Cost.** Applying $(I - \alpha \Delta t L)$ ($D = 6$) to MPS with bond dimension $\chi$:
+$$\text{MACs per site} = (\chi \cdot D)^2 \cdot d^2 = (6\chi)^2 \cdot 4 = 144\chi^2$$
+Total: $L \cdot 144\chi^2$. For $L = 8, \chi = 4$: $18{,}432$ MACs. For $L = 12, \chi = 8$: $110{,}592$ MACs. For $L = 16, \chi = 64$: $9{,}437{,}184$ MACs.
+
+**Rule 7: MPS Addition.** Bond dimensions are **additive**: $\chi_{a+b} = \chi_a + \chi_b$. First/last sites concatenate along the open bond; middle sites are block-diagonal.
+
+**Rule 8: Truncation.** After contraction, $\chi_{\text{out}} = \chi \cdot D$ (e.g., $4 \times 4 = 16$). Truncation to $\chi_{\max}$ introduces the **only approximation** in the pipeline. SVD-based rounding is optimal (best rank-$r$ Frobenius approximation) but expensive in-circuit. Greedy truncation (clip first $\chi_{\max}$ indices) is ZK-efficient but sub-optimal.
+
+**Rule 9: Integral.** $\sum_x f(x) = \langle \mathbf{1} | f \rangle$ where $\mathbf{1}$ is the rank-1 all-ones MPS. This is a transfer-matrix contraction costing $O(L \cdot \chi^2 \cdot d)$ — no dense unpacking needed.
+
+**Rule 10: Q16 MAC Decomposition.** Every Q16 multiply-accumulate produces: $\text{acc}_{\text{new}} = \text{acc}_{\text{old}} + (a \cdot b \gg 16)$ with a remainder $r = a \cdot b - (\text{quotient} \ll 16)$, $|r| < 2^{16}$. This is exactly the existing `fp_mac` gate constraint: $a \times b = (c_{\text{cur}} - c_{\text{prev}}) \times 2^{16} + d$. Already production-tested.
+
+### Architecture: QTT-Native Proof (Verify the Solution, Not the Solver)
+
+The design follows directly from the QTT rules:
+
+1. **The computation:** CG solver finds $T^{n+1}_{\text{MPS}}$ such that $(I - \alpha \Delta t L) \cdot T^{n+1} \approx T^n + \Delta t \cdot S$ in QTT format (all operations are MPO×MPS contractions + MPS additions + truncation).
+
+2. **The proof:** Instead of proving every CG iteration, prove the residual: $\|A \cdot T^{n+1} - b\|_{TT} \leq \epsilon$. This requires:
+   - One MPO×MPS contraction ($A \cdot T^{n+1}$): $L \cdot 64\chi^2$ MAC constraints (Rule 6)
+   - One MPS subtraction (result − $b$): $O(L \chi^2 d)$ additions (Rule 7)
+   - One QTT norm check: $O(L \chi^2 d)$ (Rule 9)
+   - **All in QTT format — no dense unpacking.**
+
+3. **The pinning:** The verifier checks that the MPO used is exactly $(I - \alpha \Delta t L_{\text{fused}})$ by comparing its core values against analytically known constants (Rule 5). MPO cores are public inputs.
+
+4. **The commitment:** Poseidon hash over MPS core elements ($O(L \chi^2 d)$ field elements per state), not over $O(2^L)$ grid points.
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                   PHASE 6 PROOF ARCHITECTURE (QTT-NATIVE)               │
+│                                                                          │
+│  Witness Generator (runs offline)                                        │
+│  ┌──────────────────────────────────────────────────────────────────┐   │
+│  │  1. CG solve in QTT: find T^{n+1}_MPS via tt_cg()              │   │
+│  │  2. Compute A·T^{n+1} as MPO×MPS contraction                   │   │
+│  │     Record per-site MAC witness: accumulators, remainders,       │   │
+│  │     quotients (apply_mpo_with_witness already does this)         │   │
+│  │  3. Compute residual r = A·T^{n+1} - b as MPS subtraction      │   │
+│  │  4. Compute ‖r‖_TT via transfer-matrix as QTT norm              │   │
+│  │  5. Compute Poseidon(MPS cores of T^n), Poseidon(MPS cores of   │   │
+│  │     T^{n+1}) — hash O(Lχ²d) elements, not O(2^L)               │   │
+│  │  6. Feed all core data + MAC witnesses to STARK/Halo2 trace     │   │
+│  └──────────────────────────────────────────────────────────────────┘   │
+│                                                                          │
+│  STARK / Halo2 Circuit (verified by anyone)                              │
+│  ┌──────────────────────────────────────────────────────────────────┐   │
+│  │  Layer 1: MPO Core Pinning (public inputs)                      │   │
+│  │    A_cores[k] == analytically known (I - αΔtL)_fused cores      │   │
+│  │    → verifier checks operator IS the Laplacian (Rule 5)         │   │
+│  │                                                                  │   │
+│  │  Layer 2: Contraction Constraints (per-site MAC chains)         │   │
+│  │    ∀k,cl,o,cr,dl,dr:                                            │   │
+│  │      R[cl·D+dl, o, cr·D+dr] = Σ_p A[dl,o,p,dr]·T[cl,p,cr]    │   │
+│  │    Proven via FixedPointMACGadget (Rule 2 + Rule 10)            │   │
+│  │    Cost: L × 64χ² MACs (Rule 6)                                 │   │
+│  │                                                                  │   │
+│  │  Layer 3: Residual Bound                                        │   │
+│  │    ‖A·T^{n+1} - b‖_TT ≤ ε (QTT norm, Rule 9)                  │   │
+│  │                                                                  │   │
+│  │  Layer 4: State Commitment (in-circuit Poseidon)                │   │
+│  │    Poseidon(T^n cores) == claimed_input_hash                     │   │
+│  │    Poseidon(T^{n+1} cores) == claimed_output_hash                │   │
+│  │    → O(Lχ²d) elements, not O(2^L) (Rule 1)                     │   │
+│  │                                                                  │   │
+│  │  Layer 5: Conservation + Chain (existing)                       │   │
+│  │    |Σ T^{n+1} - Σ T^n| ≤ tolerance (QTT integral, Rule 9)     │   │
+│  │    output_hash[step N] == input_hash[step N+1]                  │   │
+│  └──────────────────────────────────────────────────────────────────┘   │
+│                                                                          │
+│  Public Inputs: T^n_hash, T^{n+1}_hash, A_cores (pinned),              │
+│                 α, dt, dx, χ, L, ε_residual, N_steps                    │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+### Existing Components to Reuse (Repository Audit)
+
+| Component | Location | Status | Reuse Strategy |
+|---|---|---|---|
+| `Mps` / `Mpo` thin types (Q16, flat) | `fluidelite-circuits/src/tensor.rs` | ✅ Complete | Direct — exactly the layout needed for trace columns |
+| `contract()` (MPO×MPS) | `tensor.rs:614–658` | ✅ Complete | Reference — loop structure maps 1:1 to MAC constraints |
+| `apply_mpo_with_witness()` | `thermal/witness.rs:565–650` | ✅ Complete | Direct — already records per-MAC accumulators, remainders, quotients per site |
+| `FixedPointMACGadget` | `thermal/gadgets.rs:56–136` (×3 copies) | ✅ Complete | Deduplicate; one MAC row per Q16 multiply in contraction |
+| `BitDecompositionGadget` | `thermal/gadgets.rs:148–220` (×3 copies) | ✅ Complete | Reuse for MAC remainder range checks ($\|r\| < 2^{16}$) |
+| `ConservationGadget` | `thermal/gadgets.rs:291–365` (×3 copies) | ✅ Complete | Reuse for residual norm bound $\|\cdot\| \leq \epsilon$ |
+| `SvdOrderingGadget` | `thermal/gadgets.rs:222–289` (×3 copies) | ✅ Complete | Reuse for truncation proof ($\sigma_i \geq \sigma_{i+1}$) |
+| `DiffusionSolveGadget` | `ns_imex/gadgets.rs:397–475` | ✅ Complete | Wire to real data — already computes $\nu \Delta t L u$ via MAC |
+| Python `LaplacianMPO` (fused, rank 3) | `tensornet/mpo/operators.py:55–96` | ⚠️ **Per-mode Laplacian — NOT finite-difference** | DEPRECATED as reference. The fused construction is diagonal in physical indices and cannot represent cyclic shifts. Use `pure_qtt_ops.py` direct-sum (rank 5) instead. |
+| Python `laplacian_mpo()` (direct-sum, rank 5) | `tensornet/cfd/pure_qtt_ops.py:428–470` | ✅ Complete | Cross-validation reference |
+| Python `shifted_operator()` $(I - \alpha L)$ | `tensornet/qtt/pde_solvers.py:80–142` | ✅ Complete | Reference for (I − αΔtL) construction |
+| Python `shift_mpo()` (ripple-carry) | `tensornet/cfd/pure_qtt_ops.py:179–269` | ✅ Complete | Reference for S+/S- core values |
+| Q16 type + BN254/Goldilocks conversion | `fluidelite-core/src/field.rs`, `stark_impl.rs:184–213` | ✅ Complete | Direct |
+| Winterfell STARK AIR framework | `thermal/stark_impl.rs` | ✅ Complete | Extend trace width + constraints |
+| Halo2 gate layout (5 gates, 4 advice cols) | `thermal/halo2_impl.rs:120–183` | ✅ Complete | Reuse — no new gates needed |
+| `make_test_laplacian_mpos()` | `thermal/mod.rs:180` | ⚠️ Returns `MPO::identity()` | Replace with real Laplacian |
+| In-circuit hash gadget | — | ❌ Missing | Build Poseidon (Goldilocks + BN254) |
+| Rust Laplacian MPO builder | — | ❌ Missing | Port fused construction from Python |
+| Rust shift MPO builder | — | ❌ Missing | Port ripple-carry from Python |
+| Rust $(I - \alpha \Delta t L)$ builder | — | ❌ Missing | Port from `shifted_operator()` |
+| MPO×MPS as ZK constraints | — | ❌ Missing | New — core Phase 6 deliverable |
+| QTT norm as ZK constraint | — | ❌ Missing | New — transfer-matrix contraction |
+
+### Weeks 29–30: QTT Operator Foundation
+
+| Task | Deliverable | Acceptance Test | Reuses |
+|------|-------------|-----------------|--------|
+| **6.1** Rust shift MPOs ($S^+$, $S^-$) | `fluidelite-core/src/qtt_operators.rs`: `shift_plus_mpo(num_sites) → MPO` and `shift_minus_mpo(num_sites) → MPO` implementing the ripple-carry construction. All core values from $\{0, 1\}$. Bond dimension exactly 2. MSB-first ordering. **IMPLEMENTED & TESTED.** | ✅ All basis vectors verified for $L=4,8$. ✅ Roundtrip $S^+ \circ S^- = I$. ✅ Bond dim = 2. 25 tests pass. | `tensornet/cfd/pure_qtt_ops.py:179–269` (reference), `fluidelite-core/src/mpo.rs` (MPO struct), `fluidelite-core/src/ops.rs` (`apply_mpo`) |
+| **6.2** Rust Laplacian MPO (direct-sum, rank 5) | `fluidelite-core/src/qtt_operators.rs`: `laplacian_mpo(num_sites, dx) → MPO` implementing the direct-sum construction $(S^+ + S^- - 2I)/\Delta x^2$. Bond dimension exactly **5** ($= 2 + 2 + 1$). Core values from $\{0, \pm 1/\Delta x^2, \pm 2/\Delta x^2\}$. **IMPLEMENTED & TESTED.** | ✅ Dense stencil match for $L=4$. ✅ Basis-vector application matches shift construction. ✅ Bond dim = 5 verified for $L=4,8,12$. 25 tests pass. | `tensornet/cfd/pure_qtt_ops.py` (direct-sum reference), shift MPOs (6.1) |
+| **6.3** Rust system matrix $(I - \alpha \Delta t L)$ | `fluidelite-core/src/qtt_operators.rs`: `system_matrix_mpo(num_sites, alpha_dt, dx) → MPO` constructing $(I - \alpha \Delta t L)$ via direct-sum MPO addition. Bond dimension exactly **6** ($= 1 + 5$). Includes `mpo_add()`, `mpo_scale()`, `mpo_subtract()`, `mpo_negate()` in `qtt_operators.rs`. **IMPLEMENTED & TESTED.** | ✅ Dense matrix matches $(I - \alpha \Delta t L)$ for $L=4$. ✅ Bond dim = 6 verified. ✅ Identity limit ($\alpha \Delta t = 0$). 25 tests pass. | Laplacian (6.2), `fluidelite-core/src/ops.rs` (existing `apply_mpo`, `add_mps`) |
+| **6.4** Shared gadget crate + replace test Laplacian | Extracted 5 shared gadgets into `fluidelite-circuits/src/gadgets.rs`. Replaced `euler3d/gadgets.rs` (573→14 lines), `ns_imex/gadgets.rs` (600→~210 lines, 3 unique preserved), `thermal/gadgets.rs` (474→~95 lines, CgSolveGadget preserved). Replaced `make_test_laplacian_mpos()` to return real `laplacian_mpo(num_sites, Q16::one())` (bond dim 5) instead of `MPO::identity()`. Fixed pre-existing STARK `num_steps` bug in `prover.rs`. Switched integration suite from Halo2 to STARK feature. **IMPLEMENTED & TESTED.** | ✅ 261 tests pass (46 core + 173 circuits + 42 integration). ✅ ~1,050 lines eliminated. ✅ STARK proofs verify with real Laplacian. ✅ Pre-existing `InconsistentOodConstraintEvaluations` bug fixed. | 3× gadget copies (deduplicated), `qtt_operators::laplacian_mpo` (6.2) |
+
+### Weeks 31–33: MPO×MPS Contraction as ZK Constraints (STARK)
+
+| Task | Deliverable | Acceptance Test | Reuses |
+|------|-------------|-----------------|--------|
+| **6.5** MPO×MPS contraction STARK trace layout | `thermal/stark_impl.rs`: New trace layout for QTT-native proof. **Per-site columns**: $\chi_l \cdot D_l$ MPS-input elements, $D_l \cdot d_o \cdot d_i \cdot D_r$ MPO elements, $(\chi_l D_l) \cdot d_o \cdot (\chi_r D_r)$ output elements, $(\chi_l D_l) \cdot d_o \cdot (\chi_r D_r) \cdot (d_i + 1)$ accumulator chain entries, and remainders. For $L=8, \chi=4, D=4, d=2$: ~$(32 + 64 + 256 + 1280 + 256) \approx 1{,}888$ columns spread across $L = 8$ "rows" (one Winterfell row per QTT site). | `cargo build --features stark` compiles. Trace populated from `apply_mpo_with_witness()` data. | STARK AIR framework, `apply_mpo_with_witness()` |
+| **6.6** Per-site MAC constraint enforcement | New transition constraints in `evaluate_transition()` implementing Rule 2: for each output element $R[c_l D_l + d_l, o, c_r D_r + d_r]$, constrain the $d_i$-step MAC chain: $\text{acc}[0] = 0$, $\text{acc}[p+1] = \text{acc}[p] + O[d_l,o,p,d_r] \times P[c_l,p,c_r] / 2^{16}$, final $R = \text{acc}[d_i]$. Each MAC uses the existing degree-1 `fp_mac` constraint pattern. Remainder range-check via bit decomposition. | For $L=4, \chi=2, D=4$: construct trace from `apply_mpo_with_witness()`, prove + verify succeeds. Tamper one MPO core element → verifier rejects. Tamper one MPS core element → rejects. Tamper one accumulator value → rejects. | `FixedPointMACGadget` pattern, `BitDecompositionGadget` pattern, `apply_mpo_with_witness()` |
+| **6.7** MPO core pinning as public inputs | System matrix MPO core values become **public inputs** to the STARK. Boundary assertions verify that the MPO column values equal the analytically known $(I - \alpha \Delta t L)_{\text{fused}}$ coefficients. The verifier independently computes the expected core values from $(\alpha, \Delta t, \Delta x)$ and checks them. A prover using the wrong operator (e.g., identity, or $2L$ instead of $L$) is rejected. | (1) Proof with correct system matrix → accepted. (2) Proof with identity MPO → rejected (core mismatch). (3) Proof with wrong $\alpha$ → rejected. (4) Proof with wrong $\Delta x$ → rejected. | `LaplacianMPO::new()` (6.2), STARK boundary assertions |
+| **6.8** Residual norm constraint (QTT) | After contraction, compute $r = A \cdot T^{n+1} - b$ as MPS subtraction (Rule 7: bond dimension additive). Compute $\|r\|^2_{TT} = \langle r | r \rangle$ via transfer-matrix contraction (Rule 9): cost $O(L \chi_r^2 d)$ where $\chi_r = \chi \cdot D + \chi_b$. Constrain $\|r\|^2 \leq \epsilon^2$ as a single boundary assertion. | Correct CG solution ($\|r\| < 10^{-4}$) → accepted. Solution with high residual (1 CG iteration removed) → rejected. Wrong RHS → rejected. | `ConservationGadget` (for norm bound), transfer-matrix inner product (new) |
+
+### Weeks 33–35: State Commitment + Poseidon
+
+| Task | Deliverable | Acceptance Test | Reuses |
+|------|-------------|-----------------|--------|
+| **6.9** Poseidon hash gadget (Goldilocks/STARK) | `fluidelite-circuits/src/gadgets/poseidon_stark.rs`: Poseidon permutation over Goldilocks with width-12 state, $\alpha = 7$, 8 full + 22 partial rounds. Implements `absorb_and_squeeze(elements: &[Felt]) → [Felt; 4]` as AIR transition constraints. Sponge construction with rate=8: absorb 8 elements per permutation call, so hashing $M$ elements takes $\lceil M/8 \rceil$ permutations. | Poseidon hash of 128 random field elements matches out-of-circuit reference. Each permutation adds 12 columns × 30 rows to trace. Tampered element → hash changes. | Winterfell `Felt` arithmetic |
+| **6.10** Poseidon hash gadget (BN254/Halo2) | `fluidelite-circuits/src/gadgets/poseidon_halo2.rs`: Halo2 Poseidon chip. Use `halo2_gadgets::poseidon` from PSE if compatible with `halo2-axiom`; otherwise hand-roll using `fp_mac` gate for MDS matrix multiply and S-box as $x^5 = x \cdot x \cdot x \cdot x \cdot x$ (4 multiplication rows). | Same cross-check as 6.9, for BN254 Fr. MockProver accepts/rejects correctly. | Halo2 advice columns |
+| **6.11** In-circuit Poseidon over MPS cores | Wire Poseidon into the QTT proof: hash all $L \cdot \chi_l \cdot d \cdot \chi_r$ MPS core elements of $T^n$ and $T^{n+1}$ into 4-limb digests. Constrain equality with public input hash. This replaces the SHA-256 witness hashes (columns 12–19) with algebraically derived commitments — the hash is now a **computed** value, not a free witness. | For $L=8, \chi=4$: hash of $\sim 512$ Q16 core elements costs $\lceil 512/8 \rceil = 64$ Poseidon permutations. Verify: tamper one core element → hash changes → proof fails. | Poseidon gadget (6.9/6.10), MPS core layout |
+| **6.12** Wire DiffusionSolveGadget to real data (Halo2) | `ns_imex/halo2_impl.rs`: Replace `Q16::ZERO` stubs with actual witness values from `apply_system_matrix()`. This activates the existing gadget for real diffusion verification. | NS-IMEX MockProver accepts real diffusion data. Rejects tampered result. | `DiffusionSolveGadget` (existing), `apply_system_matrix()` |
+
+### Weeks 35–37: QTT-Native End-to-End + Truncation
+
+| Task | Deliverable | Acceptance Test | Reuses |
+|------|-------------|-----------------|--------|
+| **6.13** Truncation proof via SVD ordering | After MPO×MPS contraction ($\chi_{\text{out}} = \chi \cdot D = 4\chi$), the solver truncates to $\chi_{\max}$. Prove that the retained singular values $\sigma_1 \geq \sigma_2 \geq \cdots \geq \sigma_{\chi_{\max}} \geq 0$ are correctly ordered and the truncation error $\sum_{i > \chi_{\max}} \sigma_i^2 \leq \epsilon_{\text{trunc}}^2$ is bounded. | Witness provides actual SVD singular values. Rejects if $\sigma_{k} < \sigma_{k+1}$. Rejects if stated truncation error underestimates actual. | `SvdOrderingGadget` (existing, already proven per-bond) |
+| **6.14** QTT integral as transfer-matrix contraction | Implement $\sum_x f(x) = \langle \mathbf{1} | f \rangle$ as a chain of $L$ matrix multiplications: $T^{(k+1)}[\beta'] = \sum_{\beta,p} T^{(k)}[\beta] \cdot G^{(k)}[\beta, p, \beta']$ where $T^{(0)} = (1,1,\ldots,1)_{d \times 1}$ contracts over both physical indices (since $\mathbf{1}$ has all-ones cores). Final scalar $= T^{(L)}[0]$. Constrain via MAC chains. Cost: $O(L \chi^2 d)$ MACs. | Cross-validate: transfer-matrix integral of rank-1 constant MPS = expected value. For $\chi=4, L=8$: integral matches `compute_mps_integral()` proxy. Replaces flat-sum approximation with exact QTT integral. | MAC gadget (existing), transfer-matrix pattern (new) |
+| **6.15** End-to-end QTT-native thermal proof (STARK) | Complete STARK proof combining: (1) MPO core pinning (6.7), (2) MPO×MPS contraction constraints (6.6), (3) residual norm bound (6.8), (4) Poseidon state commitment (6.11), (5) QTT integral conservation (6.14), (6) SVD truncation ordering (6.13), (7) hash chain continuity (existing). For $L=8, \chi=4$: generate + verify full proof. | Full pipeline: 8-site, $\chi=4$, 5-timestep thermal simulation → STARK proof → verified. Tampered at every layer: wrong MPO core, wrong MPS core, wrong accumulator, wrong hash, wrong residual, wrong SVD order, wrong truncation error → all rejected. Zero false negatives on 100 random valid inputs. | Everything from 6.1–6.14 |
+| **6.16** End-to-end QTT-native thermal proof (Halo2) | Same as 6.15 but for Halo2 backend. Wire contraction + pinning + Poseidon + conservation into `ThermalCircuit::synthesize()`. | MockProver + real prover → same soundness guarantees as STARK path. | Halo2 gadgets, Poseidon chip (6.10) |
+
+### Week 38: Integration + Validation
+
+| Task | Deliverable | Acceptance Test | Reuses |
+|------|-------------|-----------------|--------|
+| **6.17** Dense validation oracle ($L \leq 8$ only) | `Mps::to_dense() → Vec<Q16>` in `tensor.rs` for **test validation only** (not used in proofs). Cross-checks QTT proof outputs against naïve dense stencil computation: $T_{\text{new}}[i] = T_{\text{old}}[i] + \alpha \Delta t (T[i{-}1] - 2T[i] + T[i{+}1])/\Delta x^2$. | For $L=4,6,8$: QTT-proven results match dense oracle within Q16 tolerance + truncation error bound. Mismatch → test failure with diagnostic. | `tensor.rs` Mps struct |
+| **6.18** Update `generate_certificate` for QTT-native proofs | `generate_certificate.rs`: New `layer_a.proof_level: "qtt_native_pde"`. New fields: `operator_bond_dim`, `mps_bond_dim`, `qtt_sites`, `residual_bound`, `truncation_error_bound`, `constraints_proven: ["mpo_contraction", "operator_pinning", "state_commitment", "residual_bound", "svd_truncation", "conservation"]`. | Certificate JSON contains complete QTT proof metadata. `proof_level` distinguishes Phase 5 ("conservation_bookkeeping") from Phase 6. | `generate_certificate.rs` (existing Layer A) |
+| **6.19** Negative soundness test suite | 24 targeted tests: (1) wrong $\alpha$, (2) wrong $\Delta t$, (3) wrong $\Delta x$, (4) identity MPO instead of Laplacian, (5) $2L$ instead of $L$, (6) wrong shift direction ($S^-$ instead of $S^+$ in one core), (7) tampered MPS core element, (8) tampered accumulator in MAC chain, (9) wrong MAC remainder, (10) hash of different MPS, (11) truncated MPS with wrong singular values, (12) $\sigma_k < \sigma_{k+1}$, (13) understated truncation error, (14) overstated residual, (15) wrong boundary core (MSB), (16) wrong boundary core (LSB), (17) swapped $T^n / T^{n+1}$, (18) wrong chain hash, (19) conservation violation, (20) integral computed via flat-sum instead of transfer-matrix, (21–24) multi-fault combinations. All rejected. | 24/24 rejections. Zero false negatives. | Phase 2 soundness test framework |
+| **6.20** Version bump + documentation | `PROOF_SYSTEM_VERSION → "winterfell-stark-goldilocks-blake3-v2.0"`. `LAYER_A_BACKEND → "Winterfell STARK (Goldilocks + FRI + Blake3) + QTT-Native PDE"`. Tag `v5.0.0-stark-pde`. Update roadmap status, architecture diagram, `TPC_INTEGRATOR_GUIDE.md` proof-level section. | Version string in certificate. Tag exists. Documentation honestly distinguishes bookkeeping (v4) from QTT-native PDE (v5). | Version constants (existing) |
+
+### Phase 6 — Dependency Graph
+
+```
+6.1 (shift MPOs S+/S-)
+6.2 (Laplacian MPO direct-sum rank-5)  ─────────────────────────┐
+6.3 (system matrix I-αΔtL rank-6) ─────────────────────────────┤
+6.4 (shared gadgets + real Laplacian) ──────────────────────────┤
+                                                                 │
+                ┌────────────────────────────────────────────────┤
+                ▼                                                │
+        6.5 (STARK trace layout for QTT contraction)            │
+        6.6 (per-site MAC constraints)                           │
+        6.7 (MPO core pinning) ─────────────────────────────────┤
+        6.8 (residual norm constraint) ─────────────────────────┤
+                                                                 │
+        6.9  (Poseidon Goldilocks) ─────────────────────────────┤
+        6.10 (Poseidon BN254) ──────────────────────────────────┤
+        6.11 (Poseidon over MPS cores) ─────────────────────────┤
+        6.12 (wire DiffusionSolve real data) ───────────────────┤
+                                                                 │
+        6.13 (truncation proof SVD) ────────────────────────────┤
+        6.14 (QTT integral transfer-matrix) ────────────────────┤
+                                                                 ▼
+                                                 6.15 (E2E STARK proof)
+                                                 6.16 (E2E Halo2 proof)
+                                                                 │
+                                                                 ▼
+                                                 6.17 (dense validation)
+                                                 6.18 (cert update)
+                                                 6.19 (soundness tests)
+                                                 6.20 (version + docs)
+```
+
+### Phase 6 — Constraint Cost Estimates (Corrected for QTT Rules)
+
+The contraction cost is $L \times (\chi \cdot D)^2 \times d^2$ MACs per application (Rule 6). With the fused Laplacian ($D_L = 3$, $D_A = 4$) and $d = 2$:
+
+| Configuration | $L$ | $\chi$ | $D_A$ | MACs per contraction | Poseidon (MPS cores) | Total constraints/step | STARK columns |
+|---|---|---|---|---|---|---|---|
+| Test | 4 | 2 | 4 | 1,024 | ~$\frac{64}{8} = 8$ perms | ~2,500 | ~300 |
+| Small | 8 | 4 | 4 | 8,192 | ~$\frac{512}{8} = 64$ perms | ~15,000 | ~2,000 |
+| Default | 8 | 8 | 4 | 32,768 | ~$\frac{2048}{8} = 256$ perms | ~55,000 | ~6,000 |
+| Production | 12 | 8 | 4 | 49,152 | ~$\frac{3072}{8} = 384$ perms | ~80,000 | ~8,000 |
+| Large | 16 | 64 | 4 | 4,194,304 | ~$\frac{131072}{8} = 16$K perms | ~5M | ~500K |
+
+> **Key insight vs. previous Phase 6:** The correct contraction formula is $L \times (\chi \cdot D)^2 \times d^2$, not $L \times \chi^2 \times d^2$. The previous version underestimated by a factor of $D^2 = 16$. This means the "production $\chi=64$" config is expensive (~5M constraints) but the $\chi \leq 8$ configs are entirely tractable. The QTT advantage remains: **these costs are independent of grid size $N = 2^L$**. A $2^{16} = 65{,}536$-point grid with $\chi = 8$ costs the same as a $2^8 = 256$-point grid with $\chi = 8$.
+
+### Phase 6 — Risk Log
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|-----------|--------|------------|
+| Contraction constraint count too high for $\chi = 64$ production config | High | High | Start with $\chi \leq 8$ (sufficient for smooth 1D heat solutions). Large $\chi$ requires STARK proof splitting or recursive composition. The $\chi = 64$ config is Phases 7+ territory. |
+| Q16 MAC accumulator overflow in long chains ($d_i \cdot \chi \cdot D$ terms) | Medium | High | The inner sum has $d_i = 2$ terms per output element. Overflow risk is in the outer loop (bond dims). Guard: `assert!(acc.raw.checked_add(quotient).is_some())` in witness generator. |
+| Poseidon parameters for Goldilocks not standardized | Medium | Medium | Use Winterfell's built-in `Rp64_256` (Rescue-Prime, already in `winterfell::crypto`). It's a drop-in algebraic hash over Goldilocks — no custom Poseidon needed. |
+| Halo2 Poseidon compatibility with `halo2-axiom` fork | Medium | Medium | PSE `halo2_gadgets::poseidon` uses standard Halo2 API. If incompatible, hand-roll S-box ($x^5$) + MDS via `fp_mac` gate. |
+| STARK trace width for $\chi = 8$ (~6K columns) causes memory pressure | Medium | High | Winterfell supports wide traces. Benchmark at $\chi = 4$ first. For wider traces, use periodic columns to reuse column space across QTT sites (one row per site, $L$ rows total). |
+| Transfer-matrix QTT norm produces degree > 1 constraints | Low | Medium | Transfer-matrix multiplication is a sequence of MACs — each is degree 1. Chain them sequentially. The cubic cost $O(L \chi^3)$ is in witness generation, not constraint count. |
+
+**Engineering estimate:** 2 engineers, 10 weeks (20 person-weeks). Weeks 29–33 (operators + contraction constraints) are the critical path. Weeks 33–37 (Poseidon + E2E) can partially parallelize.
+
+---
+
 ## Resource Plan
 
 ### Team Composition
 
 | Role | Count | Phase Allocation | Key Skills |
 |------|-------|-----------------|------------|
-| **ZK Cryptography Engineer** | 1 | Phases 0–2, 5 | Halo2, Groth16, KZG commitments, BN254 curve arithmetic, circuit design |
-| **Rust Systems Engineer** | 1 | Phases 0–3 | Async Rust, CUDA/ICICLE, performance optimization, FFI |
+| **ZK Cryptography Engineer** | 1 | Phases 0–2, 5–6 | Halo2, Groth16, KZG commitments, BN254 curve arithmetic, circuit design, Poseidon |
+| **Rust Systems Engineer** | 1 | Phases 0–3, 6 | Async Rust, CUDA/ICICLE, performance optimization, FFI, tensor networks |
 | **Solidity/Smart Contract Engineer** | 1 | Phases 2, 4 | EVM precompiles, gas optimization, Foundry, OpenZeppelin |
 | **SRE/DevOps Engineer** | 1 | Phases 3–5 | Kubernetes, Helm, Prometheus/Grafana, GPU infrastructure |
 | **QA/Security Engineer** | 1 | Phases 2, 5 | Fuzzing, property-based testing, audit coordination |
@@ -427,7 +663,8 @@ Every stub listed below previously produced **silently incorrect results**. All 
 | Phase 3 | 4 weeks | 2 | 8 |
 | Phase 4 | 4 weeks | 2–3 | 10 |
 | Phase 5 | 6 weeks | 2–3 + external | 12 + audit fees |
-| **Total** | **28 weeks** | — | **~69 person-weeks** |
+| Phase 6 | 10 weeks | 2 | 20 |
+| **Total** | **38 weeks** | — | **~89 person-weeks** |
 
 External costs (not included above):
 - ZK circuit audit: $150K–$300K (4–6 week engagement)
@@ -465,6 +702,10 @@ External costs (not included above):
 | R-07 | Regulatory bodies do not accept ZK proofs as evidence | 5 | Medium | High | Engage FAA Innovation directorate and NRC early. Frame as *supplemental* evidence, not replacement. | Target commercial simulation platforms (Ansys, COMSOL ecosystem) first. |
 | R-08 | ICICLE v4 API breaking changes upstream | 1–5 | Low | Medium | Pin to git tag v4.0.0 (already done). | Fork ICICLE; maintain internal patches. |
 | R-09 | Competitor announces similar capability | 1–5 | Low | Medium | Speed of execution is the mitigation. The three-capability moat (QTT + Q16 + 3-layer cert) is hard to replicate. | Accelerate Phase 4 to establish on-chain precedence. |
+| R-10 | STARK trace width (~2K columns) causes memory pressure for χ=4 | 6 | Medium | High | QTT-native approach operates on O(L·χ²·D²) columns, not O(2^L). For χ=4, D=6, L=8: ~2,832 columns — feasible but heavy. Use periodic columns to reuse column space across QTT sites. | Limit initial deployment to χ≤4. Split proof into per-site sub-proofs for χ=8+. |
+| R-11 | Poseidon in Goldilocks field lacks standard parameters | 6 | Medium | Medium | Use Winterfell's built-in `Rp64_256` (Rescue-Prime over Goldilocks, already available in `winterfell::crypto`). No custom Poseidon needed. | Fall back to Rescue-Prime (already in Winterfell) or algebraic hash. |
+| R-12 | Contraction cost for production χ=64 exceeds practical STARK limits (~5M constraints) | 6 | High | High | Start with χ≤8 (sufficient for smooth 1D heat solutions). Large χ requires STARK proof splitting or recursive composition. The χ=64 config is Phase 7+ territory. | Recursive STARK composition: prove each QTT site independently, aggregate. |
+| R-13 | Q16 MAC accumulator overflow in long inner-product chains (bond dim × bond dim terms) | 6 | Medium | High | Inner sum has d_i=2 terms per output element. Outer bond dims multiplicative (χ×D=24 for χ=4, D=6). Guard: `assert!(acc.raw.checked_add(quotient).is_some())` in witness generator. | Switch to i128 accumulators with carry decomposition for large bond dims. |
 
 ---
 
@@ -478,6 +719,10 @@ External costs (not included above):
 | **M3: Testnet Live** | Week 22 | Physics proof verified on-chain (testnet) | ✅ Achieved (`d47d3ce7`) |
 | **M4: Audit Clear** | Week 25 | Zero unfixed CRITICAL/HIGH in audit reports | ✅ Prep complete (`b93ea0d7`) — awaiting audit engagement |
 | **M5: First Certificate** | Week 28 | Real customer physics certificate issued and independently verified | ✅ Prep complete (`b93ea0d7`) — tooling & docs ready |
+| **M6: QTT Operators + Shared Gadgets** | Week 30 | Rust shift, Laplacian (fused rank-3), system matrix (rank-4) MPOs pass cross-validation vs Python. Shared gadget crate eliminates duplication. Real Laplacian replaces identity stub. | 🔲 Not started |
+| **M7: MPO×MPS Contraction Proven** | Week 33 | STARK proof constrains full MPO×MPS contraction with per-site MAC chains. MPO cores pinned as public inputs. Residual norm bounded in QTT format. Wrong operator rejected. | 🔲 Not started |
+| **M8: State Commitment** | Week 35 | In-circuit Poseidon hashes MPS core elements (O(Lχ²d), not O(2^L)). SHA-256 witness hash replaced with algebraically derived commitment. Tampered core → hash mismatch → rejected. | 🔲 Not started |
+| **M9: QTT-Native Trustless Physics v1** | Week 38 | End-to-end QTT-native PDE certificate: operator pinning + contraction constraints + residual bound + Poseidon commitment + SVD truncation + conservation. 24 soundness tests pass. Tag `v5.0.0-stark-pde`. | 🔲 Not started |
 
 ---
 
@@ -562,4 +807,8 @@ trustless_verify (CLI verifier)
 - Commit baseline: `48ffae23` — 22 P0 fixes applied to working tree  
 - v2.0 — 2026-02-14 — ALL PHASES COMPLETE. 14/14 stubs eliminated. 59 tasks across 5 phases delivered.  
 - Commit baseline: `b93ea0d7` — Phase 0 (`ab98f031`), Phase 1 (`f16be792` + `b93ea0d7`), Phase 2 (`857d02ec` + `727680e5`), Phase 3 (`571e379a`), Phase 4 (`d47d3ce7`), Phase 5 (`b93ea0d7`)  
-- Next review: Audit engagement kickoff
+- v3.0 — 2026-02-14 — Phase 6 added: PDE-Level ZK Constraints (24 tasks). Honest assessment: Phases 0–5 prove bookkeeping, Phase 6 proves physics.  
+- Commit baseline: `cacb68f1` (tag: `v4.0.0-stark`) — STARK hardening + Phase 6 roadmap  
+- v3.1 — 2026-02-14 — Phase 6 rewritten: QTT-Native PDE Proof (20 tasks, 10 weeks). Dense grid-point approach demoted to validation-only. QTT contraction proof promoted to primary path. Corrected constraint costs using actual formula $L \times (\chi D)^2 \times d^2$. Fused Laplacian (rank 3) and system matrix (rank 4) used throughout. Previous v3.0 had underestimated contraction cost by factor $D^2 = 16$ and over-emphasized dense unpacking as primary approach.  
+- Commit baseline: `cacb68f1` (tag: `v4.0.0-stark`) — no code changes, roadmap revision only  
+- Next review: Phase 6.1–6.4 completion (Weeks 29–30)

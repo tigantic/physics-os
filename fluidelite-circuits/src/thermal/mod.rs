@@ -176,9 +176,20 @@ pub fn make_test_states(params: &ThermalParams) -> Vec<MPS> {
     }]
 }
 
-/// Create test Laplacian MPOs (1, identity for testing).
+/// Create Laplacian MPOs for the thermal circuit.
+///
+/// Returns a single MPO representing the 1D second-difference Laplacian
+/// `(S⁺ + S⁻ − 2I) / Δx²` on `num_sites` QTT sites using unit grid
+/// spacing (`Δx = 1`).  This means the physical `1/Δx²` is absorbed into
+/// the thermal diffusivity `α` set in [`ThermalParams`].
+///
+/// Bond dimension: **5** (direct-sum of shift-plus, shift-minus, −2·identity).
 pub fn make_test_laplacian_mpos(params: &ThermalParams) -> Vec<MPO> {
-    vec![MPO::identity(params.num_sites(), 2)]
+    let dx = Q16::one(); // unit spacing — physical grid scale absorbed into α
+    vec![fluidelite_core::qtt_operators::laplacian_mpo(
+        params.num_sites(),
+        dx,
+    )]
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

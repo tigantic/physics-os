@@ -28,6 +28,7 @@ pub mod field;
 pub mod mps;
 pub mod mpo;
 pub mod ops;
+pub mod qtt_operators;
 pub mod weights;
 pub mod weight_crypto;
 pub mod physics_traits;

@@ -1078,6 +1078,7 @@ pub mod stark_prover {
             }
 
             // Reconstruct public inputs from proof data for STARK verification.
+            let trace_length = 1usize << proof.k;
             let pub_inputs = ThermalStarkInputs {
                 initial_energy: stark_impl::q16_to_felt(
                     Q16::from_raw(proof.initial_energy_raw),
@@ -1087,8 +1088,8 @@ pub mod stark_prover {
                 ),
                 dt: stark_impl::q16_to_felt(proof.params.dt),
                 alpha: stark_impl::q16_to_felt(proof.params.alpha),
-                num_steps: 0,
-                trace_length: 1 << proof.k,
+                num_steps: trace_length - 1,
+                trace_length,
                 initial_input_hash: [
                     stark_impl::u64_to_felt(proof.input_state_hash_limbs[0]),
                     stark_impl::u64_to_felt(proof.input_state_hash_limbs[1]),
