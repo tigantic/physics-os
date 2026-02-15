@@ -2136,10 +2136,15 @@ name = "fluidelite-circuits"
 version = "0.1.0"
 dependencies = [
  "fluidelite-core",
+ "icicle-core",
+ "icicle-goldilocks",
+ "icicle-runtime",
  "num-traits",
  "proptest",
  "rand 0.8.5",
  "sha2",
+ "tracing",
+ "winter-air",
  "winterfell",
 ]
 
@@ -3074,6 +3079,18 @@ dependencies = [
  "once_cell",
  "rand 0.8.5",
  "rayon",
+ "serde",
+]
+
+[[package]]
+name = "icicle-goldilocks"
+version = "4.0.0"
+source = "git+https://github.com/ingonyama-zk/icicle.git?tag=v4.0.0#6c77775961b0e4dc2be359feec1ac11536c18043"
+dependencies = [
+ "cmake",
+ "icicle-core",
+ "icicle-hash",
+ "icicle-runtime",
  "serde",
 ]
 

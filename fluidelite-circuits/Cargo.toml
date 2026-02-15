@@ -31,9 +31,21 @@ rand = "0.8"
 # Winterfell STARK proving backend (Goldilocks field, FRI commitment, no trusted setup)
 winterfell = { version = "0.13.1", optional = true, features = ["concurrent"] }
 
+# winter-air for proof::Queries (used by GPU TraceLde implementation)
+winter-air = { version = "0.13", optional = true }
+
+# GPU acceleration (ICICLE v4 — Ingonyama) for STARK NTT on Goldilocks field
+icicle-runtime = { git = "https://github.com/ingonyama-zk/icicle.git", tag = "v4.0.0", optional = true }
+icicle-core = { git = "https://github.com/ingonyama-zk/icicle.git", tag = "v4.0.0", optional = true }
+icicle-goldilocks = { git = "https://github.com/ingonyama-zk/icicle.git", tag = "v4.0.0", optional = true }
+
+# Logging
+tracing = { version = "0.1", optional = true }
+
 [features]
 default = []
 stark = ["dep:winterfell"]
+gpu-stark = ["stark", "dep:winter-air", "dep:icicle-runtime", "dep:icicle-core", "dep:icicle-goldilocks", "dep:tracing"]
 
 [dev-dependencies]
 proptest = "1.4"

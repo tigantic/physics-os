@@ -59,6 +59,8 @@ pub mod prover;
 pub mod stark_impl;
 #[cfg(feature = "stark")]
 pub mod qtt_stark;
+#[cfg(feature = "gpu-stark")]
+pub mod gpu_trace_lde;
 #[cfg(feature = "stark")]
 pub mod poseidon_hash;
 #[cfg(feature = "stark")]

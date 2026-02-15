@@ -70,7 +70,7 @@ use winterfell::{
     math::{FieldElement, ToElements},
     Air, AirContext, Assertion, AuxRandElements, BatchingMethod,
     CompositionPoly, CompositionPolyTrace, ConstraintCompositionCoefficients,
-    DefaultConstraintCommitment, DefaultConstraintEvaluator, DefaultTraceLde,
+    DefaultConstraintCommitment, DefaultConstraintEvaluator,
     EvaluationFrame, FieldExtension, PartitionOptions, Proof, ProofOptions,
     Prover, StarkDomain, TraceInfo, TraceTable,
     TracePolyTable, TransitionConstraintDegree,
@@ -78,6 +78,8 @@ use winterfell::{
     crypto::{hashers::Blake3_256, DefaultRandomCoin, MerkleTree},
     matrix::ColMatrix,
 };
+#[cfg(not(feature = "gpu-stark"))]
+use winterfell::DefaultTraceLde;
 
 use fluidelite_core::field::Q16;
 
@@ -681,8 +683,12 @@ impl Prover for ContractionProver {
     type HashFn = Blake3_256<Felt>;
     type VC = MerkleTree<Self::HashFn>;
     type RandomCoin = DefaultRandomCoin<Self::HashFn>;
+    #[cfg(not(feature = "gpu-stark"))]
     type TraceLde<E: FieldElement<BaseField = Felt>> =
         DefaultTraceLde<E, Self::HashFn, Self::VC>;
+    #[cfg(feature = "gpu-stark")]
+    type TraceLde<E: FieldElement<BaseField = Felt>> =
+        super::gpu_trace_lde::GpuTraceLde<E, Self::HashFn, Self::VC>;
     type ConstraintEvaluator<'a, E: FieldElement<BaseField = Felt>> =
         DefaultConstraintEvaluator<'a, Self::Air, E>;
     type ConstraintCommitment<E: FieldElement<BaseField = Self::BaseField>> =
@@ -701,9 +707,26 @@ impl Prover for ContractionProver {
         trace_info: &TraceInfo,
         main_trace: &ColMatrix<Felt>,
         domain: &StarkDomain<Felt>,
-        partition_options: PartitionOptions,
+        _partition_options: PartitionOptions,
     ) -> (Self::TraceLde<E>, TracePolyTable<E>) {
-        DefaultTraceLde::new(trace_info, main_trace, domain, partition_options)
+        #[cfg(feature = "gpu-stark")]
+        {
+            match super::gpu_trace_lde::try_gpu_trace_lde::<E, Self::HashFn, Self::VC>(
+                trace_info, main_trace, domain,
+            ) {
+                Ok(result) => return result,
+                Err(reason) => {
+                    eprintln!("[GPU STARK] falling back to CPU: {reason}");
+                    return super::gpu_trace_lde::GpuTraceLde::new_cpu_fallback(
+                        trace_info, main_trace, domain,
+                    );
+                }
+            }
+        }
+        #[cfg(not(feature = "gpu-stark"))]
+        {
+            DefaultTraceLde::new(trace_info, main_trace, domain, _partition_options)
+        }
     }
 
     fn new_evaluator<'a, E: FieldElement<BaseField = Felt>>(
