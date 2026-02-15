@@ -2,8 +2,8 @@
   "aggregate_ms": 1,
   "architectural_invariant": "Never Go Dense (ADR-0001)",
   "architecture": "zero_expansion_qtt_native_msm",
-  "certificate_id": "18585c7e-fed1-4320-b678-dca1efa65394",
-  "certificate_size_bytes": 160421,
+  "certificate_id": "aaa72274-79c9-43f0-8315-38dd3dd36a6e",
+  "certificate_size_bytes": 159685,
   "domain": "Thermal",
   "generation_time_ms": 1,
   "keygen_ms": 0,
@@ -48,31 +48,31 @@
       "poseidon_state_commitment"
     ]
   },
-  "merkle_root": "887a6afaffa0480c99a05a3ddbc44f19a4a3dd71ecb64f94cf6c6f6bd9ac782d",
+  "merkle_root": "8ba802eb7a1002c7c5d8bbe63c01236f8aaaf2d242403e2c562f6e18664687db",
   "params": "production",
   "proof_hashes": [
     "7e0cb54707dbfd82f5bf6a4acba3ad0f675564cd344d4a96ea8af0d246383cae",
-    "43e0744e6cbdc7a3c014448a9b2dc87d0616dfbba67c2d6307bb89b285167188",
-    "da52acabbfebfeface257f1c14837856e0a8a3e64f259c46481f6eac97c2cb5f",
-    "8a97a622e4d27e05b04f70ef76620e2116eaae5ae7104e97090740b92a7c041f",
+    "104566dcc3f606c9c3c00acb3af9c9166900f3b97c15ca573d00dfe1ba96175d",
+    "34322fd238022607ef9bacd86ea93aab5bcda780b592938c39653d3175c83202",
+    "329226be24f77c37bf67db5bc78faf227751e1afd3f0080f287eb50e69a217cf",
     "d9d051b4f9793f8ac7108d34cb7c910048c4b9f16e700354c2b8242bba99ddbd",
-    "37342c8b6d356c3edf8554e6e5445da7a66b4790f5d4b2eb01d038a6c999c67b",
-    "fef11a717da6454c5e1163fe0d74fb7db9b521ae1ae4c1649f0d0de34fc856f8",
-    "b1e59a8a51cd488f6aa011aac88428f5ec37aa9e8d6a1a37292b52e648f57cda",
+    "ae2174dcfa39dba313b152a0795e94c8b8101461d999930c5925569fc296ae94",
+    "38aeb0daa44f7ab6e2f3f4bbd310a77e187fc9be8fb8963484141740b39af87f",
+    "280f0f1d017bfbff9a32ae892f9443bef83f9ac29a154a19d7ea9feabced03f4",
     "1fa8c833146e3cd9128d56473414911a4bfeea65352c84343ee1835fbab20f26",
-    "dd28523af555cab427138a55a10ae9a0410a6dc1cd29968432dbb888d21acd0b",
-    "6b26f165b485a756a1287525c9cea4fa1fca483323d27ba251b09c5a2374fdf0",
-    "9eddf077944cd521c4cfcd91098b14b026c27f7b4096beabbb768b05b2ff71cb",
-    "a39ae9eb0aab6da1138ef0e3182222ab086d63f4930f77ef8a00c3e56ca9d4e0",
-    "4d7d96ff4703a68649e0f2be3e6b41054fee18b8947e7ad9239edc664d85f834",
+    "5fdcf83ab209741d735b54ddfcd5833d7607c7f9853e38b64e1fb5f34695fa4c",
+    "f8a741a144a93fef8e09cc3aa9982c76e92628f5e9c64bd6c83abf5acf58e35d",
+    "74b2fef5346ef889a5d7469f23ecc65cfef0f73dc72fbc9b531edab309af6c8a",
+    "6e62b069ed8a8e08d764154b62ec1c9f129844f228ed248553c9f24a0566f39f",
+    "9ef63a560a2a0b8cad28023027523ccad69a839bd93d90d5416978812342613a",
     "6ddb87e6026a80c96b093318b2721b1a865cc0b30987bdc91e125e24f4402b7c",
     "ee248533b8a119d010814ba0b73e2dfc4a14f618143529aeddbf577d28b74012",
-    "61ad8320fdff6e935820c949e11c6d565f72f469cf9f59e01442dfb37866df87",
-    "4f6e19d72ccc2ca50e632db464e962189b40043b9c0e4fdc4d23a5bd5eca5909",
-    "44e0a2d2997cd8b4892483c7aa4c8b573c1b9a4ce92561cd623c2abe933cca80",
-    "8d02ac3456f7708d5ee4e2e3d67e9fe7818a6667aa4e55beae51c8e2a11ba22d"
+    "8812aeb39a022dd3bb4e223bdeb81176176770afd5ca364f3311d810391f6751",
+    "3ef963ed07bc861bebb14a561a109c67abc70cc6fa96a33021dbbbce6eea50d5",
+    "8377e493ddee000fb76e937286eacaeda95e54037e4acf5cf44028e7e4fb5031",
+    "b86f44fc5a4e73f97e6dcf2c327067e030cdf29a9269262e9bc4d6211583eb7c"
   ],
-  "prove_ms": 6178,
+  "prove_ms": 6271,
   "qtt_config": {
     "compression_ratio": 5461.333333333333,
     "d_phys": 2,
@@ -83,9 +83,9 @@
   },
   "qtt_performance": {
     "avg_compression_ratio": 5461.333333333333,
-    "avg_prove_ms": 308.9,
+    "avg_prove_ms": 313.55,
     "gpu_accelerated": false,
-    "prove_tps": 3.237293622531564,
+    "prove_tps": 3.1892840057407112,
     "total_params": 3072
   },
   "residual_stats": {
@@ -95,6 +95,6 @@
   },
   "timestep_count": 20,
   "total_constraints": 1280,
-  "total_proof_bytes": 157068,
-  "verification_time_us": 280
+  "total_proof_bytes": 156332,
+  "verification_time_us": 289
 }
