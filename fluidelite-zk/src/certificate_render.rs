@@ -93,6 +93,42 @@ pub struct CertificateData {
     pub ed25519_signature: String,
     pub proof_hashes: Vec<String>,
 
+    // ── Layer A — Proof System ──
+    /// Layer A proving backend name (e.g. "Winterfell STARK ...").
+    pub layer_a_backend: String,
+    /// Proof system version tag (e.g. "winterfell-stark-goldilocks-blake3-v2.0").
+    pub proof_system_version: String,
+    /// Security level string (e.g. "127-bit ...").
+    pub security_level: String,
+    /// Proof level identifier (e.g. "qtt_native_pde").
+    pub proof_level: String,
+    /// Finite field name.
+    pub field_name: String,
+    /// Commitment scheme (e.g. "FRI + Blake3 Merkle").
+    pub commitment_scheme: String,
+    /// Whether a trusted setup ceremony was required.
+    pub trusted_setup: bool,
+    /// Whether the proof system is post-quantum secure.
+    pub post_quantum: bool,
+    /// Constraints enforced per timestep.
+    pub constraints_per_step: u64,
+    /// Number of execution trace columns.
+    pub trace_columns: u64,
+    /// Number of transition constraints in the AIR.
+    pub transition_constraints: u64,
+    /// Number of boundary assertions in the AIR.
+    pub boundary_assertions: u64,
+    /// MPO bond dimension (operator rank).
+    pub operator_bond_dim: u64,
+    /// MPS bond dimension (state rank).
+    pub mps_bond_dim: u64,
+    /// CG solver residual tolerance bound.
+    pub residual_bound: f64,
+    /// SVD truncation error tolerance bound.
+    pub truncation_error_bound: f64,
+    /// List of constraint labels proven by the circuit.
+    pub constraints_proven: Vec<String>,
+
     // ── Architecture ──
     pub architecture: String,
     pub architectural_invariant: String,
@@ -160,6 +196,31 @@ impl CertificateData {
                 .iter()
                 .filter_map(|v| v.as_str().map(String::from))
                 .collect();
+        }
+
+        // Layer A: Proof system metadata
+        if let Some(la) = json.get("layer_a") {
+            data.layer_a_backend = json_str(la, "backend");
+            data.proof_system_version = json_str(la, "proof_system_version");
+            data.security_level = json_str(la, "security_level");
+            data.proof_level = json_str(la, "proof_level");
+            data.field_name = json_str(la, "field");
+            data.commitment_scheme = json_str(la, "commitment");
+            data.trusted_setup = la.get("trusted_setup").and_then(|v| v.as_bool()).unwrap_or(false);
+            data.post_quantum = la.get("post_quantum").and_then(|v| v.as_bool()).unwrap_or(false);
+            data.constraints_per_step = json_u64(la, "constraints_per_step");
+            data.trace_columns = json_u64(la, "trace_columns");
+            data.transition_constraints = json_u64(la, "transition_constraints");
+            data.boundary_assertions = json_u64(la, "boundary_assertions");
+            data.operator_bond_dim = json_u64(la, "operator_bond_dim");
+            data.mps_bond_dim = json_u64(la, "mps_bond_dim");
+            data.residual_bound = json_f64(la, "residual_bound");
+            data.truncation_error_bound = json_f64(la, "truncation_error_bound");
+            if let Some(cp) = la.get("constraints_proven").and_then(|v| v.as_array()) {
+                data.constraints_proven = cp.iter()
+                    .filter_map(|v| v.as_str().map(String::from))
+                    .collect();
+            }
         }
 
         // QTT config
@@ -568,16 +629,28 @@ mod pdf {
         ctx.set_color(SUCCESS.0, SUCCESS.1, SUCCESS.2);
         ctx.text("VERIFIED", 8.0, CONTENT_L, y, &ctx.helvetica_bold);
         ctx.set_color(DARK.0, DARK.1, DARK.2);
-        ctx.text("Layer A — Physics Correctness", 10.0, CONTENT_L + 22.0, y, &ctx.helvetica_bold);
+        ctx.text("Layer A \u{2014} Physics Correctness", 10.0, CONTENT_L + 22.0, y, &ctx.helvetica_bold);
         y -= 5.0;
         ctx.set_color(MID.0, MID.1, MID.2);
-        ctx.text(
-            "Halo2 thermal circuit with interval arithmetic",
-            8.5,
-            CONTENT_L + 22.0,
-            y,
-            &ctx.helvetica,
-        );
+        let layer_a_desc = if data.layer_a_backend.is_empty() {
+            "Physics circuit (backend not specified)".to_string()
+        } else {
+            data.layer_a_backend.clone()
+        };
+        ctx.text(&layer_a_desc, 8.5, CONTENT_L + 22.0, y, &ctx.helvetica);
+        if !data.security_level.is_empty() {
+            y -= 4.0;
+            ctx.text(
+                &format!("Security: {} | Field: {}", data.security_level, data.field_name),
+                7.5, CONTENT_L + 22.0, y, &ctx.helvetica,
+            );
+        }
+        if data.post_quantum {
+            y -= 4.0;
+            ctx.set_color(SUCCESS.0, SUCCESS.1, SUCCESS.2);
+            ctx.text("POST-QUANTUM  |  NO TRUSTED SETUP", 7.5, CONTENT_L + 22.0, y, &ctx.helvetica_bold);
+            ctx.set_color(MID.0, MID.1, MID.2);
+        }
         y -= 4.0;
         ctx.text(
             &format!(
@@ -591,6 +664,13 @@ mod pdf {
             y,
             &ctx.helvetica,
         );
+        if !data.constraints_proven.is_empty() {
+            y -= 4.0;
+            ctx.text(
+                &format!("Constraints proven: {}", data.constraints_proven.join(", ")),
+                7.5, CONTENT_L + 22.0, y, &ctx.helvetica,
+            );
+        }
 
         // Layer B
         y -= 8.0;
@@ -977,8 +1057,10 @@ details li {{ font-family: var(--mono); font-size: 11px; color: var(--text2); pa
   <div class="layer">
     <div class="icon ok">&#10003;</div>
     <div><h3>Layer A — Physics Correctness</h3>
-      <p>Halo2 thermal circuit with interval arithmetic</p>
-      <p>{constraints_per_step} constraints &times; {timesteps} timesteps = {total_constraints} total</p></div>
+      <p>{layer_a_backend}</p>
+      <p>{constraints_per_step} constraints &times; {timesteps} timesteps = {total_constraints} total</p>
+      <p style="font-size:11px;color:var(--text2)">{security_level} | {field_name}</p>
+      {post_quantum_badge}</div>
   </div>
   <div class="layer">
     <div class="icon ok">&#10003;</div>
@@ -991,6 +1073,32 @@ details li {{ font-family: var(--mono); font-size: 11px; color: var(--text2); pa
     <div><h3>Layer C — Provenance Chain</h3>
       <p>Ed25519 digital signature VERIFIED</p>
       <p>{inclusions}/{timesteps} Merkle inclusions VERIFIED</p></div>
+  </div>
+</div>
+
+<!-- Proof System (Layer A Detail) -->
+<div class="section">
+  <h2>Proof System</h2>
+  <div class="field"><span class="label">Backend</span><span class="value">{layer_a_backend}</span></div>
+  <div class="field"><span class="label">Version</span><span class="value mono">{proof_system_version}</span></div>
+  <div class="field"><span class="label">Proof Level</span><span class="value">{proof_level}</span></div>
+  <div class="field"><span class="label">Security</span><span class="value">{security_level}</span></div>
+  <div class="field"><span class="label">Field</span><span class="value">{field_name}</span></div>
+  <div class="field"><span class="label">Commitment</span><span class="value">{commitment_scheme}</span></div>
+  <div class="field"><span class="label">Trusted Setup</span><span class="value">{trusted_setup_label}</span></div>
+  <div class="field"><span class="label">Post-Quantum</span><span class="value">{post_quantum_label}</span></div>
+  <div class="metrics" style="margin-top:12px">
+    <div class="metric"><div class="mv">{trace_columns}</div><div class="ml">Trace Columns</div></div>
+    <div class="metric"><div class="mv">{transition_constraints}</div><div class="ml">Transition</div></div>
+    <div class="metric"><div class="mv">{boundary_assertions}</div><div class="ml">Boundary</div></div>
+    <div class="metric"><div class="mv">{operator_bond_dim}</div><div class="ml">MPO Bond Dim</div></div>
+    <div class="metric"><div class="mv">{mps_bond_dim_val}</div><div class="ml">MPS Bond Dim</div></div>
+    <div class="metric"><div class="mv">{constraints_per_step}</div><div class="ml">Per Step</div></div>
+  </div>
+  <div style="margin-top:12px">
+    <div class="field"><span class="label">Constraints Proven</span><span class="value">{constraints_proven_str}</span></div>
+    <div class="field"><span class="label">Residual Bound</span><span class="value">{residual_bound:.6e}</span></div>
+    <div class="field"><span class="label">Truncation Error Bound</span><span class="value">{truncation_error_bound:.6e}</span></div>
   </div>
 </div>
 
@@ -1194,6 +1302,27 @@ async function autoVerify() {{
             tps = data.commit_tps,
             vram = data.vram_mb,
             inclusions = data.inclusions_verified,
+            // Layer A proof system
+            layer_a_backend = html_escape(if data.layer_a_backend.is_empty() { "Physics circuit" } else { &data.layer_a_backend }),
+            proof_system_version = html_escape(&data.proof_system_version),
+            proof_level = html_escape(&data.proof_level),
+            security_level = html_escape(if data.security_level.is_empty() { "—" } else { &data.security_level }),
+            field_name = html_escape(if data.field_name.is_empty() { "—" } else { &data.field_name }),
+            commitment_scheme = html_escape(if data.commitment_scheme.is_empty() { "—" } else { &data.commitment_scheme }),
+            trusted_setup_label = if data.trusted_setup { "Yes" } else { "None required" },
+            post_quantum_label = if data.post_quantum { "Yes" } else { "No" },
+            post_quantum_badge = if data.post_quantum {
+                "<p style=\"margin-top:4px\"><span style=\"background:#0d3a1e;color:#3fb950;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;border:1px solid #1a5e2e\">POST-QUANTUM</span> <span style=\"background:#0d3a1e;color:#3fb950;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;border:1px solid #1a5e2e\">NO TRUSTED SETUP</span></p>"
+            } else { "" },
+            trace_columns = data.trace_columns,
+            transition_constraints = data.transition_constraints,
+            boundary_assertions = data.boundary_assertions,
+            operator_bond_dim = data.operator_bond_dim,
+            mps_bond_dim_val = data.mps_bond_dim,
+            constraints_proven_str = if data.constraints_proven.is_empty() { "—".to_string() } else { data.constraints_proven.join(", ") },
+            residual_bound = data.residual_bound,
+            truncation_error_bound = data.truncation_error_bound,
+            // Crypto
             merkle_root = html_escape(&data.merkle_root),
             content_hash = html_escape(&data.content_hash),
             pubkey = html_escape(&data.ed25519_pubkey),

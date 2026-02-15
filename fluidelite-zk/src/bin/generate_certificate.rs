@@ -1,7 +1,7 @@
 //! Production-Grade TPC Certificate Generator — Zero-Expansion Architecture
 //!
 //! Three-layer Trustless Physics Certificate:
-//!   Layer A — Physics correctness: Thermal circuit (STARK or Halo2)
+//!   Layer A — Physics correctness: Thermal circuit (Winterfell STARK)
 //!   Layer B — Computational integrity: Zero-Expansion QTT-Native MSM on GPU
 //!   Layer C — Provenance chain: Merkle aggregation + Ed25519 signatures
 //!
@@ -108,9 +108,7 @@ fn main() {
     println!("║                                                                              ║");
     #[cfg(feature = "stark")]
     println!("║     Layer A: Physics correctness (Winterfell STARK — post-quantum)            ║");
-    #[cfg(all(feature = "halo2", not(feature = "stark")))]
-    println!("║     Layer A: Physics correctness (Halo2 thermal circuit)                     ║");
-    #[cfg(not(any(feature = "halo2", feature = "stark")))]
+    #[cfg(not(feature = "stark"))]
     println!("║     Layer A: Physics correctness (witness-only stub)                         ║");
     println!("║     Layer B: Computational integrity (QTT-Native GPU MSM)                    ║");
     println!("║     Layer C: Provenance chain (Merkle + Ed25519)                             ║");
@@ -231,9 +229,7 @@ fn main() {
     // ── Phase 1: Thermal prover setup (Layer A) ───────────────────────────
     #[cfg(feature = "stark")]
     println!("──── Phase 1: STARK Setup (Layer A — No Trusted Setup) ───────");
-    #[cfg(all(feature = "halo2", not(feature = "stark")))]
-    println!("──── Phase 1: Halo2 Keygen (Layer A — Physics Circuit) ───────");
-    #[cfg(not(any(feature = "halo2", feature = "stark")))]
+    #[cfg(not(feature = "stark"))]
     println!("──── Phase 1: Stub Prover (Layer A — Witness Only) ───────────");
     let keygen_start = Instant::now();
     let mut thermal_prover = match ThermalProver::new(thermal_params.clone()) {
@@ -255,9 +251,7 @@ fn main() {
     println!("──── Phase 2: Prove {} Timesteps ─────────────────────────────", cli.timesteps);
     #[cfg(feature = "stark")]
     println!("  Layer A: Winterfell STARK (post-quantum transparent physics proof)");
-    #[cfg(all(feature = "halo2", not(feature = "stark")))]
-    println!("  Layer A: Halo2 thermal circuit (physics correctness)");
-    #[cfg(not(any(feature = "halo2", feature = "stark")))]
+    #[cfg(not(feature = "stark"))]
     println!("  Layer A: Stub prover (witness-only, no ZK proof)");
     println!("  Layer B: QTT-Native MSM commitment (computational integrity)");
     println!();
@@ -366,7 +360,7 @@ fn main() {
             "num_constraints": proof.num_constraints,
             "cg_iterations": proof.cg_iterations,
             "proof_generation_ms": proof.generation_time_ms,
-            "layer_a": if cfg!(feature = "stark") { "winterfell_stark" } else if cfg!(feature = "halo2") { "halo2_thermal" } else { "stub" },
+            "layer_a": if cfg!(feature = "stark") { "winterfell_stark" } else { "stub" },
         });
 
         #[cfg(feature = "gpu")]
@@ -413,9 +407,42 @@ fn main() {
     println!("──── Phase 3: Aggregate → TPC Certificate (Layer C) ──────────");
     let agg_start = Instant::now();
 
+    // Build Layer A metadata to embed in the TPC binary.
+    #[allow(unused_mut, unused_assignments)]
+    let mut layer_a_meta: Option<serde_json::Value> = None;
+    #[cfg(feature = "stark")]
+    {
+        layer_a_meta = Some(serde_json::json!({
+            "backend": fluidelite_zk::thermal::LAYER_A_BACKEND,
+            "proof_system_version": fluidelite_zk::thermal::PROOF_SYSTEM_VERSION,
+            "security_level": fluidelite_zk::thermal::SECURITY_LEVEL,
+            "proof_level": "qtt_native_pde",
+            "field": "Goldilocks (p = 2^64 - 2^32 + 1)",
+            "commitment": "FRI + Blake3 Merkle",
+            "trusted_setup": false,
+            "post_quantum": true,
+            "constraints_per_step": 64,
+            "trace_columns": 20,
+            "transition_constraints": 8,
+            "boundary_assertions": 13,
+            "operator_bond_dim": 5,
+            "mps_bond_dim": thermal_params.chi_max,
+            "qtt_sites": thermal_params.num_sites(),
+            "constraints_proven": [
+                "mpo_contraction",
+                "operator_pinning",
+                "state_commitment",
+                "residual_bound",
+                "svd_truncation",
+                "conservation"
+            ],
+        }));
+    }
+
     let config = MultiTimestepConfig {
         domain: SimulationDomain::Thermal,
         embed_proofs: !cli.no_embed,
+        layer_a_metadata: layer_a_meta,
         ..MultiTimestepConfig::default()
     };
 
@@ -485,7 +512,6 @@ fn main() {
             "params": if cli.production { "production" } else { "test" },
         });
 
-        // Inject Layer A backend metadata.
         #[cfg(feature = "stark")]
         {
             sidecar["layer_a"] = serde_json::json!({
@@ -514,14 +540,6 @@ fn main() {
                     "svd_truncation",
                     "conservation"
                 ],
-            });
-        }
-        #[cfg(all(feature = "halo2", not(feature = "stark")))]
-        {
-            sidecar["layer_a"] = serde_json::json!({
-                "backend": "Halo2 (KZG/BN254)",
-                "trusted_setup": true,
-                "post_quantum": false,
             });
         }
 

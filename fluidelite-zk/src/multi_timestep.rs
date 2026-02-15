@@ -291,6 +291,9 @@ pub struct MultiTimestepConfig {
     pub embed_proofs: bool,
     /// Maximum number of timesteps per certificate.
     pub max_timesteps: usize,
+    /// Optional Layer A proof-system metadata to embed in the TPC binary.
+    /// When present, merges into the LAYA section alongside residual stats.
+    pub layer_a_metadata: Option<serde_json::Value>,
 }
 
 impl Default for MultiTimestepConfig {
@@ -302,6 +305,7 @@ impl Default for MultiTimestepConfig {
             solver_version: env!("CARGO_PKG_VERSION").to_string(),
             embed_proofs: true,
             max_timesteps: 10_000,
+            layer_a_metadata: None,
         }
     }
 }
@@ -530,7 +534,7 @@ impl MultiTimestepProver {
         debug_assert_eq!(cert.len(), 64);
 
         // ── Layer A: Mathematical Truth ────────────────────────────────────
-        let layer_a = serde_json::json!({
+        let mut layer_a = serde_json::json!({
             "type": "multi_timestep_conservation",
             "domain": self.config.domain.label(),
             "timestep_count": timesteps.len(),
@@ -538,6 +542,14 @@ impl MultiTimestepProver {
             "residual_rms": residual_stats.rms,
             "residual_nonzero_count": residual_stats.nonzero_count,
         });
+        // Merge in Layer A proof-system metadata if configured.
+        if let Some(la_meta) = &self.config.layer_a_metadata {
+            if let (Some(base), Some(extra)) = (layer_a.as_object_mut(), la_meta.as_object()) {
+                for (k, v) in extra {
+                    base.insert(k.clone(), v.clone());
+                }
+            }
+        }
         let layer_a_json = serde_json::to_vec(&layer_a)
             .map_err(|e| format!("layer A serialization failed: {}", e))?;
         encode_section(&mut cert, b"LAYA", &layer_a_json, &[]);

@@ -2,6 +2,7 @@
 //!
 //! These gadgets encapsulate common patterns for efficient constraint generation.
 
+#[cfg(feature = "halo2")]
 use crate::field::Q16;
 
 // ============================================================================
