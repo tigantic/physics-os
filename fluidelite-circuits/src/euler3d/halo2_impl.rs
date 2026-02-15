@@ -571,6 +571,7 @@ pub mod halo2_circuit {
     #[cfg(test)]
     mod tests {
         use super::*;
+        use crate::euler3d::NUM_STRANG_STAGES;
         use halo2_axiom::dev::MockProver;
 
         fn make_test_circuit() -> Euler3DCircuit {

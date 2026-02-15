@@ -356,6 +356,8 @@ pub mod halo2_circuit {
                         row = SvdOrderingGadget::assign_sv_ordering(
                             &mut region,
                             config.s_sv_order,
+                            config.s_bool4,
+                            config.s_recompose,
                             config.a,
                             config.b,
                             config.c,
@@ -368,9 +370,11 @@ pub mod halo2_circuit {
                     }
 
                     // Phase 4: Conservation constraint
-                    row = ConservationGadget::assign_conservation(
+                    row = ConservationGadget::assign_conservation_check(
                         &mut region,
                         config.s_conservation,
+                        config.s_bool4,
+                        config.s_recompose,
                         config.a,
                         config.b,
                         config.c,
@@ -378,9 +382,7 @@ pub mod halo2_circuit {
                         row,
                         self.witness.conservation.integral_before,
                         self.witness.conservation.integral_after,
-                        self.witness.conservation.residual,
                         self.witness.params.conservation_tol,
-                        &self.witness.conservation.residual_bound_bits,
                     )?;
 
                     // Phase 5: Public inputs

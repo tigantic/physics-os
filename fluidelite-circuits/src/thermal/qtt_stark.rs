@@ -528,48 +528,30 @@ impl Air for ContractionAir {
         pub_inputs: Self::PublicInputs,
         options: ProofOptions,
     ) -> Self {
-        // 21 degree-2 constraints (see evaluate_transition for details).
-        let mut degrees = vec![
-            TransitionConstraintDegree::new(2), // 0: MAC + bit recomposition
-            TransitionConstraintDegree::new(2), // 1: accumulator start
-            TransitionConstraintDegree::new(2), // 2: chain continuity
-            TransitionConstraintDegree::new(2), // 3: output capture
-        ];
-        for _ in 0..REM_BITS {
-            degrees.push(TransitionConstraintDegree::new(2));
-        }
-        degrees.push(TransitionConstraintDegree::new(2)); // 20: inner binary
-        assert_eq!(degrees.len(), QTT_NUM_CONSTRAINTS);
-
-        let num_mpo_assertions = pub_inputs.expected_mpo_vals.len();
-        let num_mps_assertions = pub_inputs.expected_mps_vals.len();
-        let num_output_assertions = pub_inputs.expected_output_vals.len();
-        let num_assertions = 2 + num_mpo_assertions + num_mps_assertions + num_output_assertions;
- (21 total, all degree 2):
+        // 21 degree-2 constraints (see evaluate_transition for details):
         //
         //  0: MAC validity with embedded bit recomposition
         //  1: Accumulator start
         //  2: Chain continuity
         //  3: Output capture
-        //  4–19: 16 remainder-bit booleans
+        //  4-19: 16 remainder-bit booleans
         //  20: inner_idx binary
         //
         // NOTE: We fold the remainder recomposition into the MAC constraint
-        // (replacing `remainder` with `Σ bit[k]·2^k`) to avoid a degree-1
+        // (replacing `remainder` with the sum of bit[k]*2^k) to avoid a degree-1
         // constraint whose polynomial is algebraically tautological (always
-        // the zero polynomial for any consistent trace — violating
+        // the zero polynomial for any consistent trace -- violating
         // Winterfell's strict degree validation).
         let mut degrees = vec![
-            TransitionConstraintDegree::new(2), // 0: MAC validity
+            TransitionConstraintDegree::new(2), // 0: MAC validity + bit recomp
             TransitionConstraintDegree::new(2), // 1: accumulator start
             TransitionConstraintDegree::new(2), // 2: chain continuity
             TransitionConstraintDegree::new(2), // 3: output capture
         ];
         for _ in 0..REM_BITS {
-            degrees.push(TransitionConstraintDegree::new(2)); // 4–19: bit booleans
+            degrees.push(TransitionConstraintDegree::new(2)); // 4-19: bit booleans
         }
         degrees.push(TransitionConstraintDegree::new(2)); // 20: inner binary
-
         assert_eq!(degrees.len(), QTT_NUM_CONSTRAINTS);
 
         // Boundary assertions: row 0 (2) + MPO pinning + MPS pinning + output pinning.
@@ -579,8 +561,37 @@ impl Air for ContractionAir {
         let num_assertions = 2 + num_mpo_assertions + num_mps_assertions + num_output_assertions;
 
         let context = AirContext::new(trace_info, degrees, num_assertions, options);
-        // Constraint 0: MAC validity (degree 2)
-        // mpo * mps = (acc_after - acc_before) * SCALE + bit_sum
+
+        Self { context, inputs: pub_inputs }
+    }
+
+    fn evaluate_transition<E: FieldElement<BaseField = Felt>>(
+        &self,
+        frame: &EvaluationFrame<E>,
+        _periodic_values: &[E],
+        result: &mut [E],
+    ) {
+        let current = frame.current();
+        let next = frame.next();
+
+        let mpo_val = current[COL_MPO_VAL];
+        let mps_val = current[COL_MPS_VAL];
+        let acc_before = current[COL_ACC_BEFORE];
+        let acc_after = current[COL_ACC_AFTER];
+        let inner_idx = current[COL_INNER_IDX];
+        let output_val = current[COL_OUTPUT_VAL];
+
+        let scale = E::from(Felt::new(SCALE));
+
+        // Recompose remainder from bits: sum of bit[k] * 2^k
+        let mut rem_recomposed = E::ZERO;
+        for k in 0..REM_BITS {
+            let bit = current[COL_REM_BITS_START + k];
+            rem_recomposed += bit * E::from(Felt::new(1u64 << k));
+        }
+
+        // Constraint 0: MAC validity with folded bit recomposition (degree 2)
+        // mpo * mps = (acc_after - acc_before) * SCALE + sum(bit[k]*2^k)
         result[0] = mpo_val * mps_val - (acc_after - acc_before) * scale - rem_recomposed;
 
         // Constraint 1: Accumulator start (degree 2)

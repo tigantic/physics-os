@@ -441,9 +441,9 @@ pub mod halo2_circuit {
                                     config.c,
                                     config.d,
                                     row,
-                                    Q16::ZERO,  // RHS (stubbed)
-                                    Q16::ZERO,  // Solution (stubbed)
-                                    Q16::ZERO,  // Laplacian result (stubbed)
+                                    var_witness.rhs,
+                                    var_witness.solution,
+                                    var_witness.laplacian_result,
                                     nu_dt,
                                     self.params.tolerance,
                                 )?;
@@ -629,7 +629,7 @@ pub mod halo2_circuit {
             let circuit = make_test_circuit();
             assert_eq!(circuit.params.grid_bits, 4);
             assert_eq!(circuit.params.chi_max, 4);
-            assert_eq!(circuit.witness.stages.len(), NUM_IMEX_STAGES);
+            assert_eq!(circuit.witness.stages.len(), crate::ns_imex::NUM_IMEX_STAGES);
         }
 
         #[test]

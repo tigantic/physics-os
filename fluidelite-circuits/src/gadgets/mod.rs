@@ -18,7 +18,18 @@
 //! - `ns_imex::gadgets::ProjectionGadget`
 //! - `ns_imex::gadgets::DivergenceCheckGadget`
 //!
+//! ## Algebraic Hash Gadgets
+//!
+//! - **poseidon_stark**: Poseidon permutation + sponge over Goldilocks (STARK AIR)
+//! - **poseidon_halo2**: Poseidon permutation + sponge over BN254 Fr (Halo2 chip)
+//!
 //! © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
+
+#[cfg(feature = "stark")]
+pub mod poseidon_stark;
+
+#[cfg(feature = "halo2")]
+pub mod poseidon_halo2;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Halo2 Implementations

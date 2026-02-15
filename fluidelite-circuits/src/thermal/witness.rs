@@ -286,7 +286,13 @@ impl WitnessGenerator {
         // Record input conservation integral
         let integral_before = Self::compute_mps_integral(&input_state);
 
-        // Compute hashes
+        // Compute hashes — use Poseidon (algebraic, in-circuit verifiable)
+        // when the stark feature is active; fall back to SHA-256 otherwise.
+        #[cfg(feature = "stark")]
+        let input_hash_limbs = {
+            crate::thermal::poseidon_hash::hash_mps_to_limbs_poseidon(&[&input_state])
+        };
+        #[cfg(not(feature = "stark"))]
         let input_hash_limbs = Self::hash_mps_to_limbs(&[&input_state]);
         let params_hash_limbs = Self::hash_to_limbs(&self.params.hash());
 
@@ -327,6 +333,11 @@ impl WitnessGenerator {
             residual_bound_bits,
         };
 
+        #[cfg(feature = "stark")]
+        let output_hash_limbs = {
+            crate::thermal::poseidon_hash::hash_mps_to_limbs_poseidon(&[&solution])
+        };
+        #[cfg(not(feature = "stark"))]
         let output_hash_limbs = Self::hash_mps_to_limbs(&[&solution]);
 
         let hashes = HashWitness {
