@@ -485,6 +485,32 @@ fn main() {
             "params": if cli.production { "production" } else { "test" },
         });
 
+        // Inject Layer A backend metadata.
+        #[cfg(feature = "stark")]
+        {
+            sidecar["layer_a"] = serde_json::json!({
+                "backend": fluidelite_zk::thermal::LAYER_A_BACKEND,
+                "proof_system_version": fluidelite_zk::thermal::PROOF_SYSTEM_VERSION,
+                "security_level": fluidelite_zk::thermal::SECURITY_LEVEL,
+                "field": "Goldilocks (p = 2^64 - 2^32 + 1)",
+                "commitment": "FRI + Blake3 Merkle",
+                "trusted_setup": false,
+                "post_quantum": true,
+                "constraints_per_step": 64,
+                "trace_columns": 20,
+                "transition_constraints": 8,
+                "boundary_assertions": 13,
+            });
+        }
+        #[cfg(all(feature = "halo2", not(feature = "stark")))]
+        {
+            sidecar["layer_a"] = serde_json::json!({
+                "backend": "Halo2 (KZG/BN254)",
+                "trusted_setup": true,
+                "post_quantum": false,
+            });
+        }
+
         #[cfg(feature = "gpu")]
         {
             sidecar["gpu_enabled"] = serde_json::json!(true);

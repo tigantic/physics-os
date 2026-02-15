@@ -165,6 +165,19 @@ pub const COL_OUT_HASH_3: usize = 19;
 /// Number of hash limbs per state (SHA-256 = 256 bits = 4 × 64-bit limbs).
 pub const HASH_LIMBS: usize = 4;
 
+/// STARK proof system version string for certificate metadata.
+///
+/// Encodes: backend, field, hash, and constraint layout version.
+/// Bump the minor version for constraint changes, major for breaking
+/// proof format changes.
+pub const PROOF_SYSTEM_VERSION: &str = "winterfell-stark-goldilocks-blake3-v1.0";
+
+/// Human-readable Layer A backend descriptor for certificate JSON.
+pub const LAYER_A_BACKEND: &str = "Winterfell STARK (Goldilocks + FRI + Blake3)";
+
+/// Security level string.
+pub const SECURITY_LEVEL: &str = "127-bit (quadratic extension, 40-query FRI)";
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Field Conversion Helpers
 // ═══════════════════════════════════════════════════════════════════════════
@@ -182,7 +195,7 @@ pub fn q16_to_felt(q: Q16) -> Felt {
     } else {
         // Field negation: p - |raw|
         let abs_val = (-q.raw) as u64;
-        debug_assert!(abs_val < GOLDILOCKS_P, "Q16 magnitude exceeds Goldilocks modulus");
+        assert!(abs_val < GOLDILOCKS_P, "Q16 magnitude {} exceeds Goldilocks modulus", abs_val);
         Felt::new(GOLDILOCKS_P - abs_val)
     }
 }

@@ -89,7 +89,7 @@ pub use stark_impl::{
     ThermalAir, ThermalStarkInputs, TimestepPhysics,
     prove_thermal_stark, verify_thermal_stark,
     build_trace as build_stark_trace,
-    HASH_LIMBS,
+    HASH_LIMBS, PROOF_SYSTEM_VERSION, LAYER_A_BACKEND, SECURITY_LEVEL,
 };
 
 // ═══════════════════════════════════════════════════════════════════════════

@@ -1,7 +1,11 @@
 //! Prover and verifier for the Thermal/Heat Equation proof circuit.
 //!
-//! Wraps the Halo2 proving/verification API for the thermal circuit.
-//! Provides both Halo2 and stub implementations.
+//! Three-backend implementation (selected at compile time via features):
+//!   - **`stark`** (default): Winterfell STARK — transparent, post-quantum, no trusted setup
+//!   - **`halo2`**: Halo2/KZG (BN254) — compact proofs, requires trusted setup
+//!   - **stub**: Structural validation only (no cryptographic proof)
+//!
+//! Priority: stark > halo2 > stub.
 //!
 //! © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
 
@@ -58,6 +62,12 @@ pub struct ThermalProof {
 
     /// Global step index for this proof (used as STARK public input).
     pub step_index: u64,
+
+    /// Initial energy (Q16 raw) — needed for exact STARK public input reconstruction.
+    pub initial_energy_raw: i64,
+
+    /// Final energy (Q16 raw) — needed for exact STARK public input reconstruction.
+    pub final_energy_raw: i64,
 }
 
 impl ThermalProof {
@@ -98,6 +108,10 @@ impl ThermalProof {
 
         // Step index
         bytes.extend(self.step_index.to_le_bytes());
+
+        // Energy (exact values for STARK public input reconstruction)
+        bytes.extend(self.initial_energy_raw.to_le_bytes());
+        bytes.extend(self.final_energy_raw.to_le_bytes());
 
         bytes
     }
@@ -198,7 +212,23 @@ impl ThermalProof {
         let step_index = if data.len() >= pos + 8 {
             let v = u64::from_le_bytes(data[pos..pos + 8].try_into()?);
             pos += 8;
-            let _ = pos; // suppress unused warning
+            v
+        } else {
+            0
+        };
+
+        // Energy (optional for backward compat)
+        let initial_energy_raw = if data.len() >= pos + 8 {
+            let v = i64::from_le_bytes(data[pos..pos + 8].try_into()?);
+            pos += 8;
+            v
+        } else {
+            0
+        };
+        let final_energy_raw = if data.len() >= pos + 8 {
+            let v = i64::from_le_bytes(data[pos..pos + 8].try_into()?);
+            pos += 8;
+            let _ = pos;
             v
         } else {
             0
@@ -217,6 +247,8 @@ impl ThermalProof {
             output_state_hash_limbs,
             params_hash_limbs,
             step_index,
+            initial_energy_raw,
+            final_energy_raw,
         })
     }
 
@@ -365,7 +397,7 @@ pub mod halo2_prover {
     impl ThermalProver {
         /// Create a new prover. Performs one-time key generation.
         pub fn new(thermal_params: ThermalParams) -> Result<Self, String> {
-            println!("[Thermal] Generating proving keys (one-time setup)...");
+            eprintln!("[Thermal] Generating proving keys (one-time setup)...");
             let start = Instant::now();
 
             let sizing = ThermalCircuitSizing::from_params(&thermal_params);
@@ -392,7 +424,7 @@ pub mod halo2_prover {
             let pk = keygen_pk(&params_kzg, vk.clone(), &empty_circuit)
                 .expect("keygen_pk failed");
 
-            println!(
+            eprintln!(
                 "[Thermal] Key generation complete in {:?} (k={})",
                 start.elapsed(),
                 k
@@ -454,11 +486,13 @@ pub mod halo2_prover {
                 output_state_hash_limbs: circuit.witness.hashes.output_state_hash_limbs,
                 params_hash_limbs: circuit.witness.hashes.params_hash_limbs,
                 step_index: 0,
+                initial_energy_raw: circuit.witness.conservation.integral_before.raw,
+                final_energy_raw: circuit.witness.conservation.integral_after.raw,
             };
 
             self.stats.record(&proof);
 
-            println!(
+            eprintln!(
                 "[Thermal] Proof generated: {} constraints, {} bytes, {:.1}ms, {} CG iters",
                 num_constraints,
                 proof.size(),
@@ -689,6 +723,8 @@ pub mod stub_prover {
                     .output_state_hash_limbs,
                 params_hash_limbs: circuit.witness.hashes.params_hash_limbs,
                 step_index: 0,
+                initial_energy_raw: circuit.witness.conservation.integral_before.raw,
+                final_energy_raw: circuit.witness.conservation.integral_after.raw,
             };
 
             self.stats.record(&proof);
@@ -816,12 +852,12 @@ pub mod stark_prover {
     impl ThermalProver {
         /// Create a new STARK prover. No key generation needed (transparent setup).
         pub fn new(thermal_params: ThermalParams) -> Result<Self, String> {
-            println!("[Thermal-STARK] Prover initialized (no trusted setup)");
-            println!(
+            eprintln!("[Thermal-STARK] Prover initialized (no trusted setup)");
+            eprintln!(
                 "  Field: Goldilocks (p = 2^64 - 2^32 + 1)");
-            println!(
+            eprintln!(
                 "  Commitment: FRI + Blake3 Merkle (post-quantum)");
-            println!(
+            eprintln!(
                 "  Params: grid_bits={}, chi_max={}, dt={:.6}, alpha={:.6}",
                 thermal_params.grid_bits,
                 thermal_params.chi_max,
@@ -871,7 +907,7 @@ pub mod stark_prover {
             self.global_step_counter += 1;
 
             // Build single-step trace and prove.
-            let (proof_bytes, _pub_inputs, trace_len, _gen_ms) =
+            let (proof_bytes, pub_inputs, trace_len, _gen_ms) =
                 prove_thermal_stark(
                     &[physics.clone()],
                     self.thermal_params.dt,
@@ -903,11 +939,13 @@ pub mod stark_prover {
                     .output_state_hash_limbs,
                 params_hash_limbs: circuit.witness.hashes.params_hash_limbs,
                 step_index: step_idx,
+                initial_energy_raw: stark_impl::felt_to_q16(pub_inputs.initial_energy).raw,
+                final_energy_raw: stark_impl::felt_to_q16(pub_inputs.final_energy).raw,
             };
 
             self.stats.record(&proof);
 
-            println!(
+            eprintln!(
                 "[Thermal-STARK] Proof generated: {} constraints, {} bytes, {:.1}ms, {} CG iters",
                 num_constraints,
                 proof.size(),
@@ -943,7 +981,7 @@ pub mod stark_prover {
 
             // Cache for verification.
             self.cached_stark_proof = Some(proof_bytes.clone());
-            self.cached_pub_inputs = Some(pub_inputs);
+            self.cached_pub_inputs = Some(pub_inputs.clone());
 
             // Use first/last timestep for the proof metadata.
             let first = &self.timestep_buffer[0];
@@ -962,9 +1000,11 @@ pub mod stark_prover {
                 input_state_hash_limbs: first.input_hash_limbs,
                 output_state_hash_limbs: last.output_hash_limbs,
                 params_hash_limbs: [0; 4],
+                initial_energy_raw: stark_impl::felt_to_q16(pub_inputs.initial_energy).raw,
+                final_energy_raw: stark_impl::felt_to_q16(pub_inputs.final_energy).raw,
             };
 
-            println!(
+            eprintln!(
                 "[Thermal-STARK] Batch proof: {} steps → {} constraints, {} bytes, {:.1}ms",
                 num_steps,
                 num_constraints,
@@ -1037,14 +1077,14 @@ pub mod stark_prover {
                 ));
             }
 
-            // Reconstruct public inputs from proof data for single-step verification.
+            // Reconstruct public inputs from proof data for STARK verification.
             let pub_inputs = ThermalStarkInputs {
-                // For single-step proofs, the energy values don't change much.
-                // The real verification happens inside `verify_thermal_stark`.
                 initial_energy: stark_impl::q16_to_felt(
-                    Q16::from_raw(proof.conservation_residual.raw + proof.conservation_residual.raw),
+                    Q16::from_raw(proof.initial_energy_raw),
                 ),
-                final_energy: stark_impl::q16_to_felt(proof.conservation_residual),
+                final_energy: stark_impl::q16_to_felt(
+                    Q16::from_raw(proof.final_energy_raw),
+                ),
                 dt: stark_impl::q16_to_felt(proof.params.dt),
                 alpha: stark_impl::q16_to_felt(proof.params.alpha),
                 num_steps: 0,
@@ -1064,18 +1104,9 @@ pub mod stark_prover {
                 ],
             };
 
-            // Attempt STARK verification.
-            // Note: For production use, the caller should provide the exact public
-            // inputs. This fallback reconstructs approximate inputs for API compat.
-            let valid = match verify_thermal_stark(&proof.proof_bytes, pub_inputs) {
-                Ok(v) => v,
-                Err(_) => {
-                    // Fallback: structural validation passed, STARK may fail due
-                    // to approximate public input reconstruction.
-                    // In production, use verify_with_pub_inputs().
-                    true
-                }
-            };
+            // STARK verification — no fallback. Failure is failure.
+            let valid = verify_thermal_stark(&proof.proof_bytes, pub_inputs)
+                .map_err(|e| format!("STARK verification failed: {e}"))?;
 
             let verification_time_us = start.elapsed().as_micros() as u64;
 
