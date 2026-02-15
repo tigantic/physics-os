@@ -493,7 +493,7 @@ impl Euler3DCircuitSizing {
     /// Estimated proof generation time in milliseconds on CPU.
     pub fn estimate_proof_time_ms(&self) -> f64 {
         let constraints = self.estimate_constraints() as f64;
-        // Halo2 CPU: ~100ns per constraint for MSM (conservative estimate)
+        // CPU: ~100ns per constraint (conservative estimate)
         let msm_ns = constraints * 100.0;
         // Polynomial overhead: +50%
         let total_ns = msm_ns * 1.5;
@@ -502,7 +502,7 @@ impl Euler3DCircuitSizing {
 
     /// Estimated proof size in bytes.
     pub fn estimate_proof_size_bytes(&self) -> usize {
-        // Halo2/KZG proof size is roughly constant: ~800-1200 bytes
+        // Proof size is roughly constant: ~800-1200 bytes
         // Independent of circuit size (logarithmic in constraints)
         let num_commitments = 30; // Approximate for this circuit shape
         let commitment_size = 32; // BN254 G1 point compressed

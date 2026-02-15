@@ -51,9 +51,9 @@
 //!
 //! © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
 
+pub mod circuit;
 pub mod config;
 pub mod gadgets;
-pub mod halo2_impl;
 pub mod prover;
 #[cfg(feature = "stark")]
 pub mod stark_impl;
@@ -61,6 +61,8 @@ pub mod stark_impl;
 pub mod qtt_stark;
 #[cfg(feature = "stark")]
 pub mod poseidon_hash;
+#[cfg(feature = "stark")]
+pub mod e2e;
 pub mod witness;
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -81,7 +83,7 @@ pub use witness::{
     SvdTruncationWitness, ThermalWitness, WitnessError, WitnessGenerator,
 };
 
-pub use halo2_impl::ThermalCircuit;
+pub use circuit::ThermalCircuit;
 
 pub use prover::{
     ThermalProof, ThermalProver, ThermalProverStats, ThermalVerificationResult,
@@ -94,6 +96,12 @@ pub use stark_impl::{
     prove_thermal_stark, verify_thermal_stark,
     build_trace as build_stark_trace,
     HASH_LIMBS, PROOF_SYSTEM_VERSION, LAYER_A_BACKEND, SECURITY_LEVEL,
+};
+
+#[cfg(feature = "stark")]
+pub use e2e::{
+    QttNativeProof, QttNativeVerification,
+    prove_qtt_native, verify_qtt_native,
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -135,20 +143,13 @@ pub fn prove_thermal_timestep(
     let proof = prover.prove(input_states, laplacian_mpos)?;
 
     // Verify proof
-    // Priority: stark > halo2 > stub (matches prover.rs re-export order).
     #[cfg(feature = "stark")]
     let result = {
         let verifier = ThermalVerifier::new();
         verifier.verify(&proof)?
     };
 
-    #[cfg(all(feature = "halo2", not(feature = "stark")))]
-    let result = {
-        let verifier = ThermalVerifier::from_prover(&prover);
-        verifier.verify(&proof)?
-    };
-
-    #[cfg(not(any(feature = "halo2", feature = "stark")))]
+    #[cfg(not(feature = "stark"))]
     let result = {
         let verifier = ThermalVerifier::new();
         verifier.verify(&proof)?

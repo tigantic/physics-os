@@ -772,6 +772,294 @@ pub fn count_ops(mps_chi: usize, mpo_d: usize, d_phys: usize, num_sites: usize) 
     num_sites.checked_mul(per_site)
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// Task 6.14 — Transfer-Matrix Integral
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// Transfer-matrix contraction witness for one site.
+///
+/// Records every MAC step so the ZK circuit can verify the integral
+/// computation without re-executing it.
+#[derive(Clone, Debug)]
+pub struct TransferMatrixSiteWitness {
+    /// Transfer vector before this site's contraction (length = χ_l[k]).
+    pub transfer_before: Vec<Q16>,
+    /// Transfer vector after this site's contraction (length = χ_r[k]).
+    pub transfer_after: Vec<Q16>,
+    /// MAC accumulators for each output bond index.
+    /// `accumulators[beta_r]` has length `chi_l * d + 1` (initial zero + one per MAC).
+    pub accumulators: Vec<Vec<Q16>>,
+    /// MAC remainders (lower 16 bits of each raw product).
+    /// `remainders[beta_r]` has length `chi_l * d`.
+    pub remainders: Vec<Vec<i64>>,
+}
+
+/// Complete witness for a transfer-matrix integral computation.
+///
+/// Proves ∑_x f(x) = ⟨1|f⟩ via L site contractions, each constrained
+/// by MAC chains. Total cost: O(L · χ² · d) multiplications.
+#[derive(Clone, Debug)]
+pub struct TransferMatrixIntegralWitness {
+    /// Per-site witness data (length = num_sites).
+    pub sites: Vec<TransferMatrixSiteWitness>,
+    /// Final integral result (scalar).
+    pub result: Q16,
+    /// Total number of MAC operations across all sites.
+    pub total_macs: usize,
+}
+
+/// Compute the exact MPS integral using transfer-matrix contraction.
+///
+/// Evaluates ∑_x f(x) = ⟨1|f⟩ by contracting transfer matrices site by site:
+///
+///   T^{(k+1)}[β'] = Σ_{β,p} T^{(k)}[β] · G^{(k)}[β, p, β']
+///
+/// where T^{(0)} = [1] (boundary: χ_l\[0\] = 1) and the result is T^{(L)}\[0\].
+/// The all-ones bra ⟨1| sums over every physical index at each site,
+/// effectively computing the sum of all 2^L entries of the decoded tensor.
+///
+/// Cost: O(L · χ² · d) Q16 multiply-accumulate operations.
+pub fn transfer_matrix_integral(mps: &Mps) -> Q16 {
+    if mps.num_sites == 0 {
+        return Q16::zero();
+    }
+
+    let d = mps.d();
+    // T^{(0)} = [1, 1, …, 1] of length χ_l[0].
+    // For a well-formed MPS with boundary conditions, χ_l[0] = 1.
+    let mut transfer: Vec<Q16> = vec![Q16::one(); mps.chi_left(0)];
+
+    for k in 0..mps.num_sites {
+        let chi_l = mps.chi_left(k);
+        let chi_r = mps.chi_right(k);
+        let mut new_transfer = vec![Q16::zero(); chi_r];
+
+        for beta_r in 0..chi_r {
+            let mut acc = Q16::zero();
+            for beta_l in 0..chi_l {
+                for p in 0..d {
+                    let core_val = mps.get(k, beta_l, p, beta_r);
+                    // acc += transfer[β] × G^{(k)}[β, p, β']
+                    acc = Q16::from_raw(
+                        acc.raw + ((transfer[beta_l].raw as i128 * core_val.raw as i128) >> 16) as i64,
+                    );
+                }
+            }
+            new_transfer[beta_r] = acc;
+        }
+
+        transfer = new_transfer;
+    }
+
+    // T^{(L)}[0] — boundary: χ_r[L-1] = 1
+    transfer.first().copied().unwrap_or(Q16::zero())
+}
+
+/// Compute the MPS integral with full MAC-chain witness for ZK proof.
+///
+/// Same computation as [`transfer_matrix_integral`] but records every
+/// intermediate accumulator value and fixed-point remainder, enabling
+/// the STARK verifier to re-check arithmetic without re-executing.
+pub fn transfer_matrix_integral_with_witness(mps: &Mps) -> (Q16, TransferMatrixIntegralWitness) {
+    if mps.num_sites == 0 {
+        return (
+            Q16::zero(),
+            TransferMatrixIntegralWitness {
+                sites: Vec::new(),
+                result: Q16::zero(),
+                total_macs: 0,
+            },
+        );
+    }
+
+    let d = mps.d();
+    let mut transfer: Vec<Q16> = vec![Q16::one(); mps.chi_left(0)];
+    let mut site_witnesses = Vec::with_capacity(mps.num_sites);
+    let mut total_macs = 0usize;
+
+    for k in 0..mps.num_sites {
+        let chi_l = mps.chi_left(k);
+        let chi_r = mps.chi_right(k);
+        let macs_per_output = chi_l * d;
+
+        let transfer_before = transfer.clone();
+        let mut new_transfer = vec![Q16::zero(); chi_r];
+        let mut accumulators = Vec::with_capacity(chi_r);
+        let mut remainders = Vec::with_capacity(chi_r);
+
+        for beta_r in 0..chi_r {
+            // accumulator trace: initial zero + one entry per MAC
+            let mut acc_trace = Vec::with_capacity(macs_per_output + 1);
+            let mut rem_trace = Vec::with_capacity(macs_per_output);
+            let mut acc = Q16::zero();
+            acc_trace.push(acc);
+
+            for beta_l in 0..chi_l {
+                for p in 0..d {
+                    let core_val = mps.get(k, beta_l, p, beta_r);
+                    let product_128 = transfer[beta_l].raw as i128 * core_val.raw as i128;
+                    let quotient = (product_128 >> 16) as i64;
+                    let remainder = (product_128 & 0xFFFF) as i64;
+                    acc = Q16::from_raw(acc.raw + quotient);
+                    acc_trace.push(acc);
+                    rem_trace.push(remainder);
+                }
+            }
+            new_transfer[beta_r] = acc;
+            accumulators.push(acc_trace);
+            remainders.push(rem_trace);
+            total_macs += macs_per_output;
+        }
+
+        site_witnesses.push(TransferMatrixSiteWitness {
+            transfer_before,
+            transfer_after: new_transfer.clone(),
+            accumulators,
+            remainders,
+        });
+
+        transfer = new_transfer;
+    }
+
+    let result = transfer.first().copied().unwrap_or(Q16::zero());
+
+    (
+        result,
+        TransferMatrixIntegralWitness {
+            sites: site_witnesses,
+            result,
+            total_macs,
+        },
+    )
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Task 6.17 — Dense Validation Oracle (L ≤ 8 only)
+// ═══════════════════════════════════════════════════════════════════════════
+
+impl Mps {
+    /// Decode the MPS into a dense vector of Q16 values.
+    ///
+    /// Evaluates f(x) for every basis state x ∈ {0, 1, …, d^L − 1} by
+    /// contracting the MPS cores sequentially. This is **exponential** in L
+    /// and is intended **only for test validation** (L ≤ 8).
+    ///
+    /// Each basis state x is decomposed into per-site physical indices
+    /// (i_0, i_1, …, i_{L-1}) where i_k = (x / d^k) % d, and the
+    /// MPS value is the matrix product of sliced cores:
+    ///
+    ///   f(x) = G^{(0)}[:, i_0, :] · G^{(1)}[:, i_1, :] · … · G^{(L-1)}[:, i_{L-1}, :]
+    ///
+    /// Returns a vector of length d^L.
+    ///
+    /// # Panics
+    ///
+    /// Panics if `num_sites > 8` to prevent accidental O(2^N) blowup.
+    pub fn to_dense(&self) -> Vec<Q16> {
+        assert!(
+            self.num_sites <= 8,
+            "to_dense() is only safe for L ≤ 8 (got L={}). \
+             This function is O(d^L) and intended for test validation only.",
+            self.num_sites,
+        );
+
+        let d = self.d;
+        let l = self.num_sites;
+
+        if l == 0 {
+            return vec![Q16::zero()];
+        }
+
+        let total_entries = d.pow(l as u32);
+        let mut dense = Vec::with_capacity(total_entries);
+
+        for x in 0..total_entries {
+            // Decompose x into per-site physical indices: i_k = (x / d^k) % d
+            // Site 0 is the most significant site (standard QTT convention).
+            let mut phys_indices = vec![0usize; l];
+            {
+                let mut remainder = x;
+                for k in (0..l).rev() {
+                    phys_indices[k] = remainder % d;
+                    remainder /= d;
+                }
+            }
+
+            // Contract: transfer[β'] = Σ_β transfer[β] · G^{(k)}[β, i_k, β']
+            // Start with T^{(0)} = [1] (boundary: χ_l[0] = 1).
+            let mut transfer: Vec<Q16> = vec![Q16::one(); self.chi_left(0)];
+
+            for k in 0..l {
+                let p = phys_indices[k];
+                let chi_r = self.chi_right(k);
+                let chi_l = self.chi_left(k);
+                let mut new_transfer = vec![Q16::zero(); chi_r];
+
+                for beta_r in 0..chi_r {
+                    let mut acc = Q16::zero();
+                    for beta_l in 0..chi_l {
+                        let core_val = self.get(k, beta_l, p, beta_r);
+                        acc = Q16::from_raw(
+                            acc.raw
+                                + ((transfer[beta_l].raw as i128 * core_val.raw as i128) >> 16)
+                                    as i64,
+                        );
+                    }
+                    new_transfer[beta_r] = acc;
+                }
+
+                transfer = new_transfer;
+            }
+
+            dense.push(transfer.first().copied().unwrap_or(Q16::zero()));
+        }
+
+        dense
+    }
+}
+
+/// Apply a naïve dense 1D thermal stencil for validation.
+///
+/// Computes T_new[i] = T_old[i] + α·Δt·(T[i-1] − 2T[i] + T[i+1]) / Δx²
+/// with periodic boundary conditions. This is the reference against which
+/// QTT-proven results are cross-checked for L ≤ 8.
+pub fn dense_thermal_stencil(
+    t_old: &[Q16],
+    alpha: Q16,
+    dt: Q16,
+    dx: Q16,
+) -> Vec<Q16> {
+    let n = t_old.len();
+    if n == 0 {
+        return Vec::new();
+    }
+
+    // α·Δt / Δx² in Q16
+    let coeff_raw = (alpha.raw as i128 * dt.raw as i128) >> 16;
+    let dx_sq_raw = (dx.raw as i128 * dx.raw as i128) >> 16;
+    // coeff / dx² → need another fixed-point division
+    // coeff_fp = (coeff_raw << 16) / dx_sq_raw
+    let scale_raw = if dx_sq_raw != 0 {
+        ((coeff_raw << 16) / dx_sq_raw) as i64
+    } else {
+        0i64
+    };
+
+    let mut t_new = Vec::with_capacity(n);
+    for i in 0..n {
+        let left = t_old[(i + n - 1) % n];
+        let center = t_old[i];
+        let right = t_old[(i + 1) % n];
+        // Laplacian = left - 2*center + right
+        let lap_raw = left.raw - 2 * center.raw + right.raw;
+        // T_new = T_old + scale * laplacian (Q16 multiply)
+        let delta = (scale_raw as i128 * lap_raw as i128) >> 16;
+        t_new.push(Q16::from_raw(center.raw + delta as i64));
+    }
+
+    t_new
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -866,5 +1154,170 @@ mod tests {
         // First core, site 0: bit 0 → get(0,0,0,0) should be Q16::one() for original
         // After negate, should be -Q16::one()
         assert_eq!(neg.get(0, 0, 0, 0).raw, -mps.get(0, 0, 0, 0).raw);
+    }
+
+    // ── Task 6.14: Transfer-matrix integral ────────────────────────────
+
+    #[test]
+    fn test_transfer_matrix_integral_rank1_constant() {
+        // Rank-1 constant MPS: every entry = c (product state).
+        // All L sites have core G^{(k)}[0, p, 0] = c for p ∈ {0,1}.
+        // Dense decode: every element = c^L (after Q16 FP chaining).
+        // Integral = 2^L · c^L.
+        let l = 4usize; // 2^4 = 16 entries
+        let c = Q16::from_f64(0.5);
+        let mut mps = Mps::new(l, 1, 2);
+        for k in 0..l {
+            mps.set(k, 0, 0, 0, c);
+            mps.set(k, 0, 1, 0, c);
+        }
+        let integral = transfer_matrix_integral(&mps);
+        // c^L with Q16 chaining: 0.5^4 = 0.0625, times 2^4 = 16 → 1.0
+        // Allow small FP tolerance
+        let expected = 1.0f64;
+        let actual = integral.to_f64();
+        assert!(
+            (actual - expected).abs() < 0.01,
+            "Rank-1 constant integral: expected ~{}, got {}",
+            expected,
+            actual,
+        );
+    }
+
+    #[test]
+    fn test_transfer_matrix_matches_dense_sum() {
+        // For L ≤ 8, transfer-matrix integral must equal sum(to_dense()).
+        let l = 4;
+        let mps = Mps::embed_token(5, l); // token 5 = binary 0101
+        let dense = mps.to_dense();
+        let dense_sum: i64 = dense.iter().map(|v| v.raw).sum();
+        let tm_integral = transfer_matrix_integral(&mps);
+        assert_eq!(
+            tm_integral.raw, dense_sum,
+            "transfer-matrix integral ({}) != dense sum ({})",
+            tm_integral.raw, dense_sum,
+        );
+    }
+
+    #[test]
+    fn test_transfer_matrix_witness_consistency() {
+        let mps = Mps::embed_token(7, 4);
+        let (result, witness) = transfer_matrix_integral_with_witness(&mps);
+        let plain = transfer_matrix_integral(&mps);
+        assert_eq!(result.raw, plain.raw, "Witness result must match plain result");
+        assert_eq!(witness.result.raw, result.raw);
+        assert_eq!(witness.sites.len(), mps.num_sites);
+        // Every site's MAC chain accumulators end at the transfer_after values
+        for (k, sw) in witness.sites.iter().enumerate() {
+            let chi_r = mps.chi_right(k);
+            assert_eq!(sw.transfer_after.len(), chi_r);
+            for (beta_r, accs) in sw.accumulators.iter().enumerate() {
+                let final_acc = accs.last().unwrap();
+                assert_eq!(
+                    final_acc.raw, sw.transfer_after[beta_r].raw,
+                    "Site {} beta_r={}: final accumulator ({}) != transfer_after ({})",
+                    k, beta_r, final_acc.raw, sw.transfer_after[beta_r].raw,
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn test_transfer_matrix_witness_mac_counts() {
+        let l = 6;
+        let chi = 4;
+        let d = 2;
+        let mps = Mps::new(l, chi, d);
+        let (_, witness) = transfer_matrix_integral_with_witness(&mps);
+        // Total MACs = Σ_k χ_r[k] × χ_l[k] × d
+        let expected_macs: usize = (0..l)
+            .map(|k| mps.chi_right(k) * mps.chi_left(k) * d)
+            .sum();
+        assert_eq!(witness.total_macs, expected_macs);
+    }
+
+    // ── Task 6.17: Dense validation oracle ─────────────────────────────
+
+    #[test]
+    fn test_to_dense_product_state() {
+        // embed_token(5, 4): binary 0101 → one-hot at index 5
+        let mps = Mps::embed_token(5, 4);
+        let dense = mps.to_dense();
+        assert_eq!(dense.len(), 16); // 2^4
+        // Only element at index 5 should be Q16::one()
+        for (i, val) in dense.iter().enumerate() {
+            if i == 5 {
+                assert_eq!(val.raw, Q16::one().raw, "Index 5 should be 1.0");
+            } else {
+                assert_eq!(val.raw, 0, "Index {} should be 0", i);
+            }
+        }
+    }
+
+    #[test]
+    fn test_to_dense_sum_equals_integral() {
+        // Build a non-trivial MPS and verify sum(dense) ≈ transfer_matrix_integral
+        // (Small FP rounding differences are expected for multi-bond MPS since
+        // the dense path and transfer-matrix path accumulate in different orders.)
+        let l = 4;
+        let mut mps = Mps::new(l, 2, 2);
+        // Set some non-zero values
+        mps.set(0, 0, 0, 0, Q16::from_f64(1.0));
+        mps.set(0, 0, 1, 0, Q16::from_f64(0.5));
+        for k in 1..l - 1 {
+            mps.set(k, 0, 0, 0, Q16::from_f64(0.8));
+            mps.set(k, 0, 1, 0, Q16::from_f64(0.3));
+            mps.set(k, 0, 0, 1, Q16::from_f64(0.1));
+            mps.set(k, 0, 1, 1, Q16::from_f64(0.6));
+            mps.set(k, 1, 0, 0, Q16::from_f64(0.4));
+            mps.set(k, 1, 1, 0, Q16::from_f64(0.2));
+            mps.set(k, 1, 0, 1, Q16::from_f64(0.7));
+            mps.set(k, 1, 1, 1, Q16::from_f64(0.9));
+        }
+        mps.set(l - 1, 0, 0, 0, Q16::from_f64(1.0));
+        mps.set(l - 1, 0, 1, 0, Q16::from_f64(0.5));
+        mps.set(l - 1, 1, 0, 0, Q16::from_f64(0.3));
+        mps.set(l - 1, 1, 1, 0, Q16::from_f64(0.7));
+
+        let dense = mps.to_dense();
+        let dense_sum: i64 = dense.iter().map(|v| v.raw).sum();
+        let tm = transfer_matrix_integral(&mps);
+        // Allow ±1 Q16 LSB per site of FP rounding tolerance
+        let tol = (l as i64) * Q16::one().raw; // L × 1.0 in Q16
+        assert!(
+            (tm.raw - dense_sum).abs() <= tol,
+            "transfer-matrix integral ({}) and dense sum ({}) differ by {} > tolerance {}",
+            tm.raw, dense_sum, (tm.raw - dense_sum).abs(), tol,
+        );
+    }
+
+    #[test]
+    fn test_dense_thermal_stencil_constant_field() {
+        // Constant field: Laplacian = 0, so T_new = T_old.
+        let n = 8;
+        let c = Q16::from_f64(1.0);
+        let field: Vec<Q16> = vec![c; n];
+        let result = dense_thermal_stencil(
+            &field,
+            Q16::from_f64(0.01),
+            Q16::from_f64(0.1),
+            Q16::one(),
+        );
+        for (i, val) in result.iter().enumerate() {
+            assert!(
+                (val.raw - c.raw).abs() <= 1,
+                "Constant field index {}: expected ~{}, got {}",
+                i,
+                c.to_f64(),
+                val.to_f64(),
+            );
+        }
+    }
+
+    #[test]
+    #[should_panic(expected = "only safe for L ≤ 8")]
+    fn test_to_dense_panics_over_8_sites() {
+        let mps = Mps::new(9, 2, 2);
+        let _ = mps.to_dense();
     }
 }

@@ -518,11 +518,10 @@ fn test_ns_proof_diagnostics() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// halo2_impl.rs stub tests
+// circuit.rs tests
 // ═══════════════════════════════════════════════════════════════════════════
 
-#[cfg(not(feature = "halo2"))]
-mod ns_halo2_stub {
+mod circuit_tests {
     use super::*;
 
     fn make_test_circuit() -> NSIMEXCircuit {

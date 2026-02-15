@@ -1,7 +1,6 @@
 //! Prover and verifier for the NS-IMEX proof circuit.
 //!
-//! Wraps the Halo2 proving/verification API for the NS-IMEX circuit.
-//! Provides both Halo2 and stub implementations.
+//! Provides stub prover/verifier implementation.
 //!
 //! © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
 
@@ -11,8 +10,8 @@ use fluidelite_core::field::Q16;
 use fluidelite_core::mpo::MPO;
 use fluidelite_core::mps::MPS;
 
+use super::circuit::NSIMEXCircuit;
 use super::config::NSIMEXParams;
-use super::halo2_impl::NSIMEXCircuit;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Proof Data Structure
@@ -21,7 +20,7 @@ use super::halo2_impl::NSIMEXCircuit;
 /// A ZK proof for one NS-IMEX timestep.
 #[derive(Clone, Debug)]
 pub struct NSIMEXProof {
-    /// Raw proof bytes (Halo2/KZG serialized proof).
+    /// Raw proof bytes (serialized proof).
     pub proof_bytes: Vec<u8>,
 
     /// Proof generation time in milliseconds.
@@ -200,53 +199,6 @@ impl NSIMEXProof {
         })
     }
 
-    /// Reconstruct the public inputs vector from proof data.
-    #[cfg(feature = "halo2")]
-    pub fn reconstruct_public_inputs(&self) -> Vec<halo2_axiom::halo2curves::bn256::Fr> {
-        use halo2_axiom::halo2curves::bn256::Fr;
-
-        let mut inputs = Vec::new();
-
-        for limb in &self.input_state_hash_limbs {
-            inputs.push(Fr::from(*limb));
-        }
-        for limb in &self.output_state_hash_limbs {
-            inputs.push(Fr::from(*limb));
-        }
-        for limb in &self.params_hash_limbs {
-            inputs.push(Fr::from(*limb));
-        }
-
-        // KE residual
-        if self.ke_residual.raw >= 0 {
-            inputs.push(Fr::from(self.ke_residual.raw as u64));
-        } else {
-            inputs.push(-Fr::from((-self.ke_residual.raw) as u64));
-        }
-
-        // Enstrophy residual
-        if self.enstrophy_residual.raw >= 0 {
-            inputs.push(Fr::from(self.enstrophy_residual.raw as u64));
-        } else {
-            inputs.push(-Fr::from((-self.enstrophy_residual.raw) as u64));
-        }
-
-        // Divergence residual
-        if self.divergence_residual.raw >= 0 {
-            inputs.push(Fr::from(self.divergence_residual.raw as u64));
-        } else {
-            inputs.push(-Fr::from((-self.divergence_residual.raw) as u64));
-        }
-
-        // dt
-        if self.params.dt.raw >= 0 {
-            inputs.push(Fr::from(self.params.dt.raw as u64));
-        } else {
-            inputs.push(-Fr::from((-self.params.dt.raw) as u64));
-        }
-
-        inputs
-    }
 }
 
 /// Verification result for an NS-IMEX proof.
@@ -311,300 +263,14 @@ impl NSIMEXProverStats {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Halo2 Prover/Verifier
+// Prover/Verifier
 // ═══════════════════════════════════════════════════════════════════════════
 
-#[cfg(feature = "halo2")]
-/// Halo2/KZG prover and verifier for the NS-IMEX proof circuit.
-pub mod halo2_prover {
-    use super::*;
-    use halo2_axiom::{
-        halo2curves::bn256::{Bn256, Fr, G1Affine},
-        plonk::{create_proof, keygen_pk, keygen_vk, verify_proof, ProvingKey, VerifyingKey},
-        poly::kzg::{
-            commitment::{KZGCommitmentScheme, ParamsKZG},
-            multiopen::{ProverGWC, VerifierGWC},
-            strategy::SingleStrategy,
-        },
-        transcript::{
-            Blake2bRead, Blake2bWrite, Challenge255, TranscriptReadBuffer,
-            TranscriptWriterBuffer,
-        },
-    };
-    use rand::rngs::OsRng;
-
-    use super::super::config::{NSIMEXCircuitSizing, NUM_DIMENSIONS, NUM_NS_VARIABLES, PHYS_DIM};
-
-    /// NS-IMEX ZK Prover using Halo2/KZG.
-    pub struct NSIMEXProver {
-        params_kzg: ParamsKZG<Bn256>,
-        pk: ProvingKey<G1Affine>,
-        vk: VerifyingKey<G1Affine>,
-        ns_params: NSIMEXParams,
-        stats: NSIMEXProverStats,
-    }
-
-    impl NSIMEXProver {
-        /// Create a new prover. Performs one-time key generation.
-        pub fn new(ns_params: NSIMEXParams) -> Result<Self, String> {
-            println!("[NS-IMEX] Generating proving keys (one-time setup)...");
-            let start = Instant::now();
-
-            let sizing = NSIMEXCircuitSizing::from_params(&ns_params);
-            let k = (sizing.k as u32).max(14);
-
-            let params_kzg = ParamsKZG::<Bn256>::setup(k, OsRng);
-
-            let empty_states: Vec<MPS> = (0..NUM_NS_VARIABLES)
-                .map(|_| MPS::new(ns_params.num_sites(), ns_params.chi_max, PHYS_DIM))
-                .collect();
-            let empty_mpos: Vec<MPO> = (0..NUM_DIMENSIONS)
-                .map(|_| MPO::identity(ns_params.num_sites(), PHYS_DIM))
-                .collect();
-
-            let empty_circuit =
-                NSIMEXCircuit::new(ns_params.clone(), &empty_states, &empty_mpos)
-                    .map_err(|e| format!("Empty circuit creation failed: {}", e))?;
-
-            let vk = keygen_vk(&params_kzg, &empty_circuit)
-                .expect("keygen_vk failed");
-            let pk = keygen_pk(&params_kzg, vk.clone(), &empty_circuit)
-                .expect("keygen_pk failed");
-
-            println!(
-                "[NS-IMEX] Key generation complete in {:?} (k={})",
-                start.elapsed(),
-                k,
-            );
-
-            Ok(Self {
-                params_kzg,
-                pk,
-                vk,
-                ns_params,
-                stats: NSIMEXProverStats::default(),
-            })
-        }
-
-        /// Generate a proof for one NS-IMEX timestep.
-        pub fn prove(
-            &mut self,
-            input_states: &[MPS],
-            shift_mpos: &[MPO],
-        ) -> Result<NSIMEXProof, String> {
-            let start = Instant::now();
-
-            let circuit = NSIMEXCircuit::new(
-                self.ns_params.clone(),
-                input_states,
-                shift_mpos,
-            )?;
-
-            let public_inputs = circuit.public_inputs();
-            let num_constraints = circuit.sizing.total_constraints;
-            let k = circuit.k().max(14);
-
-            let mut transcript =
-                Blake2bWrite::<_, G1Affine, Challenge255<_>>::init(vec![]);
-
-            create_proof::<KZGCommitmentScheme<Bn256>, ProverGWC<_>, _, _, _, _>(
-                &self.params_kzg,
-                &self.pk,
-                &[circuit.clone()],
-                &[&[&public_inputs]],
-                OsRng,
-                &mut transcript,
-            )
-            .map_err(|e| format!("Proof generation failed: {:?}", e))?;
-
-            let proof_bytes = transcript.finalize();
-            let generation_time_ms = start.elapsed().as_millis() as u64;
-
-            let ke_residual = Q16::from_raw(
-                circuit.witness.kinetic_energy_after.raw
-                    - circuit.witness.kinetic_energy_before.raw,
-            );
-            let ens_residual = Q16::from_raw(
-                circuit.witness.enstrophy_after.raw
-                    - circuit.witness.enstrophy_before.raw,
-            );
-
-            let proof = NSIMEXProof {
-                proof_bytes,
-                generation_time_ms,
-                num_constraints,
-                k,
-                params: self.ns_params.clone(),
-                ke_residual,
-                enstrophy_residual: ens_residual,
-                divergence_residual: circuit.witness.divergence_residual,
-                input_state_hash_limbs: circuit.witness.input_hash_limbs,
-                output_state_hash_limbs: circuit.witness.output_hash_limbs,
-                params_hash_limbs: circuit.witness.params_hash_limbs,
-            };
-
-            self.stats.record(&proof);
-
-            println!(
-                "[NS-IMEX] Proof generated: {} constraints, {} bytes, {:.1}ms",
-                num_constraints,
-                proof.size(),
-                generation_time_ms as f64,
-            );
-
-            Ok(proof)
-        }
-
-        /// Get accumulated statistics.
-        pub fn stats(&self) -> &NSIMEXProverStats {
-            &self.stats
-        }
-
-        /// Get the verifying key for deployment.
-        pub fn verifying_key(&self) -> &VerifyingKey<G1Affine> {
-            &self.vk
-        }
-
-        /// Get the KZG parameters for deployment.
-        pub fn kzg_params(&self) -> &ParamsKZG<Bn256> {
-            &self.params_kzg
-        }
-    }
-
-    /// NS-IMEX ZK Verifier using Halo2/KZG.
-    pub struct NSIMEXVerifier {
-        params_kzg: ParamsKZG<Bn256>,
-        vk: VerifyingKey<G1Affine>,
-    }
-
-    impl NSIMEXVerifier {
-        /// Create a verifier from KZG parameters and verifying key.
-        pub fn new(params_kzg: ParamsKZG<Bn256>, vk: VerifyingKey<G1Affine>) -> Self {
-            Self { params_kzg, vk }
-        }
-
-        /// Create a verifier from a prover (extracts the verifying key).
-        pub fn from_prover(prover: &NSIMEXProver) -> Self {
-            Self {
-                params_kzg: prover.params_kzg.clone(),
-                vk: prover.vk.clone(),
-            }
-        }
-
-        /// Verify an NS-IMEX proof.
-        ///
-        /// Reconstructs public inputs from the proof data and verifies
-        /// the Halo2/KZG proof against them.
-        pub fn verify(
-            &self,
-            proof: &NSIMEXProof,
-        ) -> Result<NSIMEXVerificationResult, String> {
-            let public_inputs = Self::reconstruct_public_inputs(proof);
-            self.verify_with_public_inputs(proof, &public_inputs)
-        }
-
-        /// Verify with explicitly provided public inputs.
-        pub fn verify_with_public_inputs(
-            &self,
-            proof: &NSIMEXProof,
-            public_inputs: &[Fr],
-        ) -> Result<NSIMEXVerificationResult, String> {
-            let start = Instant::now();
-
-            let mut transcript = Blake2bRead::<_, G1Affine, Challenge255<_>>::init(
-                &proof.proof_bytes[..],
-            );
-
-            let strategy = SingleStrategy::new(&self.params_kzg);
-
-            let valid =
-                verify_proof::<KZGCommitmentScheme<Bn256>, VerifierGWC<_>, _, _, _>(
-                    &self.params_kzg,
-                    &self.vk,
-                    strategy,
-                    &[&[public_inputs]],
-                    &mut transcript,
-                )
-                .is_ok();
-
-            let verification_time_us = start.elapsed().as_micros() as u64;
-
-            Ok(NSIMEXVerificationResult {
-                valid,
-                verification_time_us,
-                num_constraints: proof.num_constraints,
-                ke_residual: proof.ke_residual,
-                enstrophy_residual: proof.enstrophy_residual,
-                divergence_residual: proof.divergence_residual,
-                grid_bits: proof.params.grid_bits,
-                chi_max: proof.params.chi_max,
-                reynolds_number: proof.params.reynolds_number(),
-            })
-        }
-
-        /// Reconstruct the public inputs vector from proof data.
-        fn reconstruct_public_inputs(proof: &NSIMEXProof) -> Vec<Fr> {
-            let mut inputs = Vec::new();
-
-            // Input state hash (4 limbs)
-            for limb in &proof.input_state_hash_limbs {
-                inputs.push(Fr::from(*limb));
-            }
-            // Output state hash (4 limbs)
-            for limb in &proof.output_state_hash_limbs {
-                inputs.push(Fr::from(*limb));
-            }
-            // Params hash (4 limbs)
-            for limb in &proof.params_hash_limbs {
-                inputs.push(Fr::from(*limb));
-            }
-
-            // KE residual (signed Q16)
-            if proof.ke_residual.raw >= 0 {
-                inputs.push(Fr::from(proof.ke_residual.raw as u64));
-            } else {
-                inputs.push(-Fr::from((-proof.ke_residual.raw) as u64));
-            }
-
-            // Enstrophy residual (signed Q16)
-            if proof.enstrophy_residual.raw >= 0 {
-                inputs.push(Fr::from(proof.enstrophy_residual.raw as u64));
-            } else {
-                inputs.push(-Fr::from((-proof.enstrophy_residual.raw) as u64));
-            }
-
-            // Divergence residual (signed Q16)
-            if proof.divergence_residual.raw >= 0 {
-                inputs.push(Fr::from(proof.divergence_residual.raw as u64));
-            } else {
-                inputs.push(-Fr::from((-proof.divergence_residual.raw) as u64));
-            }
-
-            // dt (signed Q16)
-            if proof.params.dt.raw >= 0 {
-                inputs.push(Fr::from(proof.params.dt.raw as u64));
-            } else {
-                inputs.push(-Fr::from((-proof.params.dt.raw) as u64));
-            }
-
-            inputs
-        }
-    }
-}
-
-#[cfg(feature = "halo2")]
-pub use halo2_prover::*;
-
-// ═══════════════════════════════════════════════════════════════════════════
-// Stub Prover/Verifier (without Halo2)
-// ═══════════════════════════════════════════════════════════════════════════
-
-#[cfg(not(feature = "halo2"))]
 pub mod stub_prover {
-    //! Stub NS-IMEX prover/verifier for builds without the Halo2 backend.
+    //! NS-IMEX prover/verifier (structural validation, no cryptographic proof).
     use super::*;
 
-    /// Stub NS-IMEX prover for builds without Halo2.
+    /// NS-IMEX prover (structural validation, no cryptographic proof).
     pub struct NSIMEXProver {
         ns_params: NSIMEXParams,
         stats: NSIMEXProverStats,
@@ -649,7 +315,7 @@ pub mod stub_prover {
             );
 
             let proof = NSIMEXProof {
-                proof_bytes: vec![0u8; 800], // Simulated KZG proof
+                proof_bytes: vec![0u8; 800],
                 generation_time_ms,
                 num_constraints,
                 k: circuit.k(),
@@ -673,7 +339,7 @@ pub mod stub_prover {
         }
     }
 
-    /// Stub NS-IMEX verifier for builds without Halo2.
+    /// NS-IMEX verifier (structural validation, no cryptographic proof).
     pub struct NSIMEXVerifier {
         /// Simulated verification delay in microseconds.
         pub simulated_delay_us: u64,
@@ -688,12 +354,12 @@ pub mod stub_prover {
     }
 
     impl NSIMEXVerifier {
-        /// Create a new stub verifier.
+        /// Create a new verifier.
         pub fn new() -> Self {
             Self::default()
         }
 
-        /// Verify a proof (stub: checks proof structure, returns valid).
+        /// Verify a proof (checks proof structure and conservation bounds).
         pub fn verify(
             &self,
             proof: &NSIMEXProof,
@@ -749,7 +415,6 @@ pub mod stub_prover {
     }
 }
 
-#[cfg(not(feature = "halo2"))]
 pub use stub_prover::*;
 
 // ═══════════════════════════════════════════════════════════════════════════

@@ -456,6 +456,35 @@ const [exists, status, index] = await client.readContract({
 | C | `physical_fidelity` | Domain-specific physics metadata |
 | D | (metadata) | CA version, issuance metadata |
 
+### Proof Levels (Layer A)
+
+The `proof_level` field in Layer A indicates the depth of mathematical
+verification. Higher levels provide strictly stronger soundness guarantees:
+
+| Level | `proof_level` value | Version | What is proven | What is NOT proven |
+|-------|---------------------|---------|----------------|---------------------|
+| v4 | `"conservation_bookkeeping"` | `v1.0` | Energy conservation via hash-chain STARK. State commitments via SHA-256. SVD ordering. Residual norm bound. | MPO×MPS contraction arithmetic. Operator correctness. State commitment binding to Poseidon-provable data. |
+| v5 | `"qtt_native_pde"` | `v2.0` | **All of v4**, plus: MPO×MPS contraction arithmetic (MAC-per-row STARK). Operator pinning (Laplacian cores as public inputs). Poseidon state commitment binding. Transfer-matrix integral conservation. Params consistency (α/dt cross-checked against STARK public inputs). | Recursive proof composition. Multi-timestep aggregation beyond hash chains. |
+
+**v5 field additions** (in `layer_a` JSON sidecar when `proof_level = "qtt_native_pde"`):
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `operator_bond_dim` | integer | MPO bond dimension (5 for Laplacian) |
+| `mps_bond_dim` | integer | MPS bond dimension χ |
+| `qtt_sites` | integer | Number of QTT sites (L × 3 for 3D) |
+| `residual_bound` | float | CG solver residual tolerance |
+| `truncation_error_bound` | float | SVD truncation error tolerance |
+| `constraints_proven` | string[] | List of proven constraint types |
+
+**`constraints_proven` values for v5:**
+- `"mpo_contraction"` — MPO×MPS multiply-accumulate correctness
+- `"operator_pinning"` — Laplacian core values committed as public inputs
+- `"state_commitment"` — Poseidon hash binding input/output states
+- `"residual_bound"` — ‖Ax−b‖² ≤ ε² verified in contraction STARK
+- `"svd_truncation"` — Singular values ordered, error bounded
+- `"conservation"` — |∫T^{n+1} − ∫T^n| ≤ tolerance
+
 ### Domains
 
 | ID | Name | Description |

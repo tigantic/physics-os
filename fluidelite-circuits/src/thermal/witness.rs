@@ -21,7 +21,7 @@ use std::fmt;
 
 use fluidelite_core::field::Q16;
 
-use crate::tensor::{Mps, Mpo};
+use crate::tensor::{Mps, Mpo, TransferMatrixIntegralWitness};
 
 use super::config::{
     ThermalCircuitSizing, ThermalParams,
@@ -173,6 +173,30 @@ pub struct SvdTruncationWitness {
 
     /// Output rank after truncation.
     pub output_rank: usize,
+
+    // ── Truncation error bound witness (Task 6.13) ──
+
+    /// All truncated singular values concatenated across bonds (in bond order).
+    /// These are σ_{χ_max+1}, σ_{χ_max+2}, ... for each bond.
+    pub all_truncated_svs: Vec<Q16>,
+
+    /// MAC accumulators for computing total Σ σᵢ² over all truncated SVs.
+    /// Length = all_truncated_svs.len() + 1 (initial zero + one per MAC step).
+    pub error_sq_accumulators: Vec<Q16>,
+
+    /// MAC remainders for σᵢ × σᵢ multiplications.
+    /// Length = all_truncated_svs.len().
+    pub error_sq_remainders: Vec<i64>,
+
+    /// Computed total truncation error squared: Σ_bonds Σ_{i>χ} σᵢ² (Q16).
+    pub total_error_sq: Q16,
+
+    /// Stated truncation error bound squared (must be ≥ total_error_sq).
+    /// The honest prover sets this equal to total_error_sq.
+    pub stated_error_sq_bound: Q16,
+
+    /// Bit decomposition proving stated_error_sq_bound - total_error_sq ≥ 0.
+    pub error_sq_bound_bits: Vec<bool>,
 }
 
 /// SVD data for a single bond in the MPS.
@@ -211,6 +235,12 @@ pub struct ConservationWitness {
 
     /// Bit decomposition of (tolerance - residual) proving residual ≤ tolerance.
     pub residual_bound_bits: Vec<bool>,
+
+    /// Transfer-matrix integral witness for input state (Task 6.14).
+    pub integral_before_witness: Option<TransferMatrixIntegralWitness>,
+
+    /// Transfer-matrix integral witness for output state (Task 6.14).
+    pub integral_after_witness: Option<TransferMatrixIntegralWitness>,
 }
 
 /// Hash commitments that become public inputs.
@@ -283,8 +313,9 @@ impl WitnessGenerator {
         let input_state = Mps::from_full(&input_states[0]);
         let laplacian_mpo = Mpo::from_full(&laplacian_mpos[0]);
 
-        // Record input conservation integral
-        let integral_before = Self::compute_mps_integral(&input_state);
+        // Record input conservation integral via transfer-matrix contraction (Task 6.14)
+        let (integral_before, integral_before_witness) =
+            Self::compute_mps_integral_with_witness(&input_state);
 
         // Compute hashes — use Poseidon (algebraic, in-circuit verifiable)
         // when the stark feature is active; fall back to SHA-256 otherwise.
@@ -311,8 +342,9 @@ impl WitnessGenerator {
         // Step 3: SVD truncation
         let truncation = self.truncate_with_witness(&mut solution, self.params.chi_max);
 
-        // Step 4: Conservation check
-        let integral_after = Self::compute_mps_integral(&solution);
+        // Step 4: Conservation check via transfer-matrix contraction (Task 6.14)
+        let (integral_after, integral_after_witness) =
+            Self::compute_mps_integral_with_witness(&solution);
 
         // Residual accounts for source contribution
         let source_integral = Q16::from_raw(
@@ -331,6 +363,8 @@ impl WitnessGenerator {
             integral_after,
             residual,
             residual_bound_bits,
+            integral_before_witness: Some(integral_before_witness),
+            integral_after_witness: Some(integral_after_witness),
         };
 
         #[cfg(feature = "stark")]
@@ -573,7 +607,7 @@ impl WitnessGenerator {
     }
 
     /// Apply MPO to MPS, recording contraction witness data.
-    fn apply_mpo_with_witness(
+    pub(crate) fn apply_mpo_with_witness(
         &self,
         mps: &Mps,
         mpo: &Mpo,
@@ -724,6 +758,28 @@ impl WitnessGenerator {
 
         mps.truncate(chi_max);
 
+        // ── Truncation error bound witness (Task 6.13) ──
+        // Collect all truncated SVs across all bonds and build
+        // a single MAC chain computing Σ σᵢ² for the total error bound.
+        let mut all_truncated_svs = Vec::new();
+        for bond in &bond_data {
+            all_truncated_svs.extend_from_slice(
+                &bond.singular_values[bond.truncated_rank..],
+            );
+        }
+
+        let (error_sq_accumulators, error_sq_remainders) =
+            Self::compute_sq_sum_mac_witnesses(&all_truncated_svs);
+
+        let computed_total_error_sq = *error_sq_accumulators
+            .last()
+            .unwrap_or(&Q16::zero());
+
+        // Honest prover: stated bound = exact computed value.
+        let stated_error_sq_bound = computed_total_error_sq;
+        let bound_diff = stated_error_sq_bound.raw - computed_total_error_sq.raw;
+        let error_sq_bound_bits = Self::decompose_nonneg_to_bits(bound_diff, 32);
+
         let total_truncation_error = Self::q16_sqrt_approx(total_error_sq);
         let output_rank = mps.max_chi();
 
@@ -732,12 +788,47 @@ impl WitnessGenerator {
             bond_data,
             total_truncation_error,
             output_rank,
+            all_truncated_svs,
+            error_sq_accumulators,
+            error_sq_remainders,
+            total_error_sq: computed_total_error_sq,
+            stated_error_sq_bound,
+            error_sq_bound_bits,
         }
     }
 
     // ═══════════════════════════════════════════════════════════════════════
     // MPS Arithmetic Helpers
     // ═══════════════════════════════════════════════════════════════════════
+
+    /// Compute MAC chain witnesses for Σ vᵢ² (sum of squares).
+    ///
+    /// Returns (accumulators, remainders) suitable for `FixedPointMACGadget::assign_mac_chain`.
+    /// The MAC chain computes: acc[i+1] = acc[i] + floor(vᵢ × vᵢ / SCALE).
+    ///
+    /// Constraint per step: vᵢ × vᵢ = (acc[i+1] - acc[i]) × SCALE + remainder[i]
+    /// with remainder[i] ∈ [0, SCALE).
+    fn compute_sq_sum_mac_witnesses(values: &[Q16]) -> (Vec<Q16>, Vec<i64>) {
+        let n = values.len();
+        let mut accumulators = Vec::with_capacity(n + 1);
+        let mut remainders = Vec::with_capacity(n);
+
+        accumulators.push(Q16::zero()); // initial accumulator
+
+        let mut acc_raw: i128 = 0;
+        let scale = Q16_FRAC_BITS as u32;
+
+        for v in values {
+            let product = v.raw as i128 * v.raw as i128;
+            let quotient = product >> scale;
+            let remainder = (product - (quotient << scale)) as i64;
+            acc_raw += quotient;
+            accumulators.push(Q16::from_raw(acc_raw as i64));
+            remainders.push(remainder);
+        }
+
+        (accumulators, remainders)
+    }
 
     /// MPS subtraction: a - b (negate first core of b, then add).
     fn mps_subtract(a: &Mps, b: &Mps) -> Mps {
@@ -798,13 +889,23 @@ impl WitnessGenerator {
     // Helper Methods
     // ═══════════════════════════════════════════════════════════════════════
 
-    /// Compute a proxy for the integral of an MPS state.
+    /// Compute the exact integral of an MPS state via transfer-matrix contraction.
+    ///
+    /// Evaluates ∑_x f(x) = ⟨1|f⟩ by contracting transfer matrices site-by-site.
+    /// Replaces the previous flat-sum proxy with the mathematically correct
+    /// transfer-matrix contraction (Task 6.14).
     pub fn compute_mps_integral(mps: &Mps) -> Q16 {
-        let mut sum = Q16::zero();
-        for val in mps.flat_data() {
-            sum = sum + *val;
-        }
-        sum
+        crate::tensor::transfer_matrix_integral(mps)
+    }
+
+    /// Compute the MPS integral with full MAC-chain witness for ZK proof.
+    ///
+    /// Returns (integral_value, witness) where the witness records every
+    /// MAC accumulator and remainder for STARK constraint verification.
+    pub fn compute_mps_integral_with_witness(
+        mps: &Mps,
+    ) -> (Q16, TransferMatrixIntegralWitness) {
+        crate::tensor::transfer_matrix_integral_with_witness(mps)
     }
 
     /// Estimate singular values from an MPS core's Frobenius norms.
@@ -873,6 +974,9 @@ impl WitnessGenerator {
     ///
     /// Uses thin `Mps` types — iterates per-site to produce
     /// the same hash as the original MPS-based hashing.
+    ///
+    /// Used in the non-`stark` build path (Poseidon replaces this when stark is active).
+    #[cfg_attr(feature = "stark", allow(dead_code))]
     fn hash_mps_to_limbs(states: &[&Mps]) -> [u64; 4] {
         use sha2::{Digest, Sha256};
         let mut hasher = Sha256::new();

@@ -52,9 +52,9 @@
 //!
 //! © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
 
+pub mod circuit;
 pub mod config;
 pub mod gadgets;
-pub mod halo2_impl;
 pub mod prover;
 pub mod witness;
 
@@ -74,7 +74,7 @@ pub use witness::{
     WitnessError, WitnessGenerator,
 };
 
-pub use halo2_impl::Euler3DCircuit;
+pub use circuit::Euler3DCircuit;
 
 pub use prover::{
     Euler3DProof, Euler3DProver, Euler3DProverStats, Euler3DVerificationResult,
@@ -123,15 +123,8 @@ pub fn prove_euler3d_timestep(
     let proof = prover.prove(input_states, shift_mpos)?;
 
     // Verify proof
-    #[cfg(not(feature = "halo2"))]
     let result = {
         let verifier = Euler3DVerifier::new();
-        verifier.verify(&proof)?
-    };
-
-    #[cfg(feature = "halo2")]
-    let result = {
-        let verifier = Euler3DVerifier::from_prover(&prover);
         verifier.verify(&proof)?
     };
 

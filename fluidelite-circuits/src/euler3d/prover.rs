@@ -1,7 +1,6 @@
 //! Prover and verifier for the Euler 3D proof circuit.
 //!
-//! Wraps the Halo2 proving/verification API for the Euler 3D circuit.
-//! Provides both Halo2 and stub implementations.
+//! Provides stub prover/verifier implementation.
 //!
 //! © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
 
@@ -11,8 +10,8 @@ use fluidelite_core::field::Q16;
 use fluidelite_core::mpo::MPO;
 use fluidelite_core::mps::MPS;
 
+use super::circuit::Euler3DCircuit;
 use super::config::{Euler3DParams, NUM_CONSERVED_VARIABLES};
-use super::halo2_impl::Euler3DCircuit;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Proof Data Structure
@@ -21,7 +20,7 @@ use super::halo2_impl::Euler3DCircuit;
 /// A ZK proof for one Euler 3D timestep.
 #[derive(Clone, Debug)]
 pub struct Euler3DProof {
-    /// Raw proof bytes (Halo2/KZG serialized proof).
+    /// Raw proof bytes (serialized proof).
     pub proof_bytes: Vec<u8>,
 
     /// Proof generation time in milliseconds.
@@ -93,52 +92,6 @@ impl Euler3DProof {
     pub fn size(&self) -> usize {
         self.proof_bytes.len()
     }
-
-    /// Reconstruct the public inputs vector from proof data.
-    ///
-    /// Used by the verifier to recover the public inputs without
-    /// needing the original circuit.
-    #[cfg(feature = "halo2")]
-    pub fn reconstruct_public_inputs(&self) -> Vec<halo2_axiom::halo2curves::bn256::Fr> {
-        use halo2_axiom::halo2curves::bn256::Fr;
-
-        let mut inputs = Vec::new();
-
-        // Input state hash (4 limbs)
-        for limb in &self.input_state_hash_limbs {
-            inputs.push(Fr::from(*limb));
-        }
-
-        // Output state hash (4 limbs)
-        for limb in &self.output_state_hash_limbs {
-            inputs.push(Fr::from(*limb));
-        }
-
-        // Params hash (4 limbs)
-        for limb in &self.params_hash_limbs {
-            inputs.push(Fr::from(*limb));
-        }
-
-        // Conservation residuals
-        for residual in &self.conservation_residuals {
-            if residual.raw >= 0 {
-                inputs.push(Fr::from(residual.raw as u64));
-            } else {
-                inputs.push(-Fr::from((-residual.raw) as u64));
-            }
-        }
-
-        // dt, chi_max, grid_bits
-        if self.params.dt.raw >= 0 {
-            inputs.push(Fr::from(self.params.dt.raw as u64));
-        } else {
-            inputs.push(-Fr::from((-self.params.dt.raw) as u64));
-        }
-        inputs.push(Fr::from(self.params.chi_max as u64));
-        inputs.push(Fr::from(self.params.grid_bits as u64));
-
-        inputs
-    }
 }
 
 /// Verification result for an Euler 3D proof.
@@ -193,306 +146,14 @@ impl Euler3DProverStats {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Halo2 Prover/Verifier
+// Prover/Verifier
 // ═══════════════════════════════════════════════════════════════════════════
 
-#[cfg(feature = "halo2")]
-/// Halo2/KZG prover and verifier for the Euler 3D proof circuit.
-pub mod halo2_prover {
-    use super::*;
-    use super::super::config::Euler3DCircuitSizing;
-    use halo2_axiom::{
-        halo2curves::bn256::{Bn256, Fr, G1Affine},
-        plonk::{create_proof, keygen_pk, keygen_vk, verify_proof, ProvingKey, VerifyingKey},
-        poly::kzg::{
-            commitment::{KZGCommitmentScheme, ParamsKZG},
-            multiopen::{ProverGWC, VerifierGWC},
-            strategy::SingleStrategy,
-        },
-        transcript::{
-            Blake2bRead, Blake2bWrite, Challenge255, TranscriptReadBuffer,
-            TranscriptWriterBuffer,
-        },
-    };
-    use rand::rngs::OsRng;
-
-    /// Euler 3D ZK Prover using Halo2/KZG.
-    pub struct Euler3DProver {
-        /// KZG parameters.
-        params_kzg: ParamsKZG<Bn256>,
-
-        /// Proving key.
-        pk: ProvingKey<G1Affine>,
-
-        /// Verifying key.
-        vk: VerifyingKey<G1Affine>,
-
-        /// Physics parameters.
-        euler_params: Euler3DParams,
-
-        /// Accumulated statistics.
-        stats: Euler3DProverStats,
-    }
-
-    impl Euler3DProver {
-        /// Create a new prover. Performs one-time key generation.
-        pub fn new(euler_params: Euler3DParams) -> Result<Self, String> {
-            println!("[Euler3D] Generating proving keys (one-time setup)...");
-            let start = Instant::now();
-
-            let sizing = Euler3DCircuitSizing::from_params(&euler_params);
-            let k = sizing.k.max(14); // Minimum k for meaningful circuits
-
-            // Generate KZG parameters
-            let params_kzg = ParamsKZG::<Bn256>::setup(k, OsRng);
-
-            // Create empty circuit for key generation
-            let empty_states: Vec<MPS> = (0..NUM_CONSERVED_VARIABLES)
-                .map(|_| {
-                    MPS::new(euler_params.num_sites(), euler_params.chi_max, 2)
-                })
-                .collect();
-            let empty_mpos: Vec<MPO> = (0..3)
-                .map(|_| MPO::identity(euler_params.num_sites(), 2))
-                .collect();
-
-            let empty_circuit = Euler3DCircuit::new(
-                euler_params.clone(),
-                &empty_states,
-                &empty_mpos,
-            )
-            .map_err(|e| format!("Empty circuit creation failed: {}", e))?;
-
-            let vk = keygen_vk(&params_kzg, &empty_circuit)
-                .expect("keygen_vk failed");
-            let pk = keygen_pk(&params_kzg, vk.clone(), &empty_circuit)
-                .expect("keygen_pk failed");
-
-            println!(
-                "[Euler3D] Key generation complete in {:?} (k={})",
-                start.elapsed(),
-                k
-            );
-
-            Ok(Self {
-                params_kzg,
-                pk,
-                vk,
-                euler_params,
-                stats: Euler3DProverStats::default(),
-            })
-        }
-
-        /// Generate a proof for one timestep.
-        pub fn prove(
-            &mut self,
-            input_states: &[MPS],
-            shift_mpos: &[MPO],
-        ) -> Result<Euler3DProof, String> {
-            let start = Instant::now();
-
-            let circuit = Euler3DCircuit::new(
-                self.euler_params.clone(),
-                input_states,
-                shift_mpos,
-            )?;
-
-            let public_inputs = circuit.public_inputs();
-            let num_constraints = circuit.sizing.estimate_constraints();
-            let k = circuit.k().max(14);
-
-            let mut transcript =
-                Blake2bWrite::<_, G1Affine, Challenge255<_>>::init(vec![]);
-
-            create_proof::<KZGCommitmentScheme<Bn256>, ProverGWC<_>, _, _, _, _>(
-                &self.params_kzg,
-                &self.pk,
-                &[circuit.clone()],
-                &[&[&public_inputs]],
-                OsRng,
-                &mut transcript,
-            )
-            .map_err(|e| format!("Proof generation failed: {:?}", e))?;
-
-            let proof_bytes = transcript.finalize();
-            let generation_time_ms = start.elapsed().as_millis() as u64;
-
-            let proof = Euler3DProof {
-                proof_bytes,
-                generation_time_ms,
-                num_constraints,
-                k,
-                params: self.euler_params.clone(),
-                conservation_residuals: circuit
-                    .witness
-                    .conservation
-                    .residuals
-                    .clone(),
-                input_state_hash_limbs: circuit
-                    .witness
-                    .hashes
-                    .input_state_hash_limbs,
-                output_state_hash_limbs: circuit
-                    .witness
-                    .hashes
-                    .output_state_hash_limbs,
-                params_hash_limbs: circuit.witness.hashes.params_hash_limbs,
-            };
-
-            self.stats.record(&proof);
-
-            println!(
-                "[Euler3D] Proof generated: {} constraints, {} bytes, {:.1}ms",
-                num_constraints,
-                proof.size(),
-                generation_time_ms as f64,
-            );
-
-            Ok(proof)
-        }
-
-        /// Get accumulated statistics.
-        pub fn stats(&self) -> &Euler3DProverStats {
-            &self.stats
-        }
-
-        /// Get the verifying key for deployment.
-        pub fn verifying_key(&self) -> &VerifyingKey<G1Affine> {
-            &self.vk
-        }
-
-        /// Get the KZG parameters for deployment.
-        pub fn kzg_params(&self) -> &ParamsKZG<Bn256> {
-            &self.params_kzg
-        }
-    }
-
-    /// Euler 3D ZK Verifier using Halo2/KZG.
-    pub struct Euler3DVerifier {
-        /// KZG parameters.
-        params_kzg: ParamsKZG<Bn256>,
-
-        /// Verifying key.
-        vk: VerifyingKey<G1Affine>,
-    }
-
-    impl Euler3DVerifier {
-        /// Create a verifier from KZG parameters and verifying key.
-        pub fn new(params_kzg: ParamsKZG<Bn256>, vk: VerifyingKey<G1Affine>) -> Self {
-            Self { params_kzg, vk }
-        }
-
-        /// Create a verifier from a prover (extracts the verifying key).
-        pub fn from_prover(prover: &Euler3DProver) -> Self {
-            Self {
-                params_kzg: prover.params_kzg.clone(),
-                vk: prover.vk.clone(),
-            }
-        }
-
-        /// Verify an Euler 3D proof.
-        ///
-        /// Reconstructs public inputs from the proof data and verifies
-        /// the Halo2/KZG proof against them.
-        pub fn verify(
-            &self,
-            proof: &Euler3DProof,
-        ) -> Result<Euler3DVerificationResult, String> {
-            let public_inputs = Self::reconstruct_public_inputs(proof);
-            self.verify_with_public_inputs(proof, &public_inputs)
-        }
-
-        /// Verify with explicitly provided public inputs.
-        pub fn verify_with_public_inputs(
-            &self,
-            proof: &Euler3DProof,
-            public_inputs: &[Fr],
-        ) -> Result<Euler3DVerificationResult, String> {
-            let start = Instant::now();
-
-            let mut transcript = Blake2bRead::<_, G1Affine, Challenge255<_>>::init(
-                &proof.proof_bytes[..],
-            );
-
-            let strategy = SingleStrategy::new(&self.params_kzg);
-
-            let valid =
-                verify_proof::<KZGCommitmentScheme<Bn256>, VerifierGWC<_>, _, _, _>(
-                    &self.params_kzg,
-                    &self.vk,
-                    strategy,
-                    &[&[public_inputs]],
-                    &mut transcript,
-                )
-                .is_ok();
-
-            let verification_time_us = start.elapsed().as_micros() as u64;
-
-            Ok(Euler3DVerificationResult {
-                valid,
-                verification_time_us,
-                num_constraints: proof.num_constraints,
-                conservation_residuals: proof.conservation_residuals.clone(),
-                grid_bits: proof.params.grid_bits,
-                chi_max: proof.params.chi_max,
-            })
-        }
-
-        /// Reconstruct the public inputs vector from proof data.
-        fn reconstruct_public_inputs(proof: &Euler3DProof) -> Vec<Fr> {
-            let mut inputs = Vec::new();
-
-            // Input state hash (4 limbs)
-            for limb in &proof.input_state_hash_limbs {
-                inputs.push(Fr::from(*limb));
-            }
-            // Output state hash (4 limbs)
-            for limb in &proof.output_state_hash_limbs {
-                inputs.push(Fr::from(*limb));
-            }
-            // Params hash (4 limbs)
-            for limb in &proof.params_hash_limbs {
-                inputs.push(Fr::from(*limb));
-            }
-
-            // Conservation residuals (signed Q16)
-            for residual in &proof.conservation_residuals {
-                if residual.raw >= 0 {
-                    inputs.push(Fr::from(residual.raw as u64));
-                } else {
-                    inputs.push(-Fr::from((-residual.raw) as u64));
-                }
-            }
-
-            // dt (signed Q16)
-            if proof.params.dt.raw >= 0 {
-                inputs.push(Fr::from(proof.params.dt.raw as u64));
-            } else {
-                inputs.push(-Fr::from((-proof.params.dt.raw) as u64));
-            }
-
-            // chi_max, grid_bits
-            inputs.push(Fr::from(proof.params.chi_max as u64));
-            inputs.push(Fr::from(proof.params.grid_bits as u64));
-
-            inputs
-        }
-    }
-}
-
-#[cfg(feature = "halo2")]
-pub use halo2_prover::*;
-
-// ═══════════════════════════════════════════════════════════════════════════
-// Stub Prover/Verifier (without Halo2)
-// ═══════════════════════════════════════════════════════════════════════════
-
-#[cfg(not(feature = "halo2"))]
 pub mod stub_prover {
-    //! Stub Euler 3D prover/verifier for builds without the Halo2 backend.
+    //! Euler 3D prover/verifier (structural validation, no cryptographic proof).
     use super::*;
 
-    /// Stub Euler 3D prover for builds without Halo2.
+    /// Euler 3D prover (structural validation, no cryptographic proof).
     pub struct Euler3DProver {
         /// Physics parameters.
         euler_params: Euler3DParams,
@@ -564,7 +225,7 @@ pub mod stub_prover {
         }
     }
 
-    /// Stub Euler 3D verifier for builds without Halo2.
+    /// Euler 3D verifier (structural validation, no cryptographic proof).
     pub struct Euler3DVerifier {
         /// Simulated verification delay in microseconds.
         pub simulated_delay_us: u64,
@@ -634,7 +295,6 @@ pub mod stub_prover {
     }
 }
 
-#[cfg(not(feature = "halo2"))]
 pub use stub_prover::*;
 
 // ═══════════════════════════════════════════════════════════════════════════

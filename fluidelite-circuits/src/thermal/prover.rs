@@ -1,11 +1,10 @@
 //! Prover and verifier for the Thermal/Heat Equation proof circuit.
 //!
-//! Three-backend implementation (selected at compile time via features):
+//! Two-backend implementation (selected at compile time via features):
 //!   - **`stark`** (default): Winterfell STARK — transparent, post-quantum, no trusted setup
-//!   - **`halo2`**: Halo2/KZG (BN254) — compact proofs, requires trusted setup
 //!   - **stub**: Structural validation only (no cryptographic proof)
 //!
-//! Priority: stark > halo2 > stub.
+//! Priority: stark > stub.
 //!
 //! © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
 
@@ -15,10 +14,8 @@ use fluidelite_core::field::Q16;
 use fluidelite_core::mpo::MPO;
 use fluidelite_core::mps::MPS;
 
+use super::circuit::ThermalCircuit;
 use super::config::ThermalParams;
-#[cfg(feature = "halo2")]
-use super::config::ThermalCircuitSizing;
-use super::halo2_impl::ThermalCircuit;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Proof Data Structure
@@ -27,7 +24,7 @@ use super::halo2_impl::ThermalCircuit;
 /// A ZK proof for one thermal timestep.
 #[derive(Clone, Debug)]
 pub struct ThermalProof {
-    /// Raw proof bytes (Halo2/KZG serialized proof).
+    /// Raw proof bytes (serialized proof).
     pub proof_bytes: Vec<u8>,
 
     /// Proof generation time in milliseconds.
@@ -252,51 +249,6 @@ impl ThermalProof {
         })
     }
 
-    /// Reconstruct the public inputs vector from proof data.
-    #[cfg(feature = "halo2")]
-    pub fn reconstruct_public_inputs(&self) -> Vec<halo2_axiom::halo2curves::bn256::Fr> {
-        use halo2_axiom::halo2curves::bn256::Fr;
-
-        let mut inputs = Vec::new();
-
-        // Input state hash (4 limbs)
-        for limb in &self.input_state_hash_limbs {
-            inputs.push(Fr::from(*limb));
-        }
-
-        // Output state hash (4 limbs)
-        for limb in &self.output_state_hash_limbs {
-            inputs.push(Fr::from(*limb));
-        }
-
-        // Params hash (4 limbs)
-        for limb in &self.params_hash_limbs {
-            inputs.push(Fr::from(*limb));
-        }
-
-        // Conservation residual
-        if self.conservation_residual.raw >= 0 {
-            inputs.push(Fr::from(self.conservation_residual.raw as u64));
-        } else {
-            inputs.push(-Fr::from((-self.conservation_residual.raw) as u64));
-        }
-
-        // dt, alpha, chi_max, grid_bits
-        if self.params.dt.raw >= 0 {
-            inputs.push(Fr::from(self.params.dt.raw as u64));
-        } else {
-            inputs.push(-Fr::from((-self.params.dt.raw) as u64));
-        }
-        if self.params.alpha.raw >= 0 {
-            inputs.push(Fr::from(self.params.alpha.raw as u64));
-        } else {
-            inputs.push(-Fr::from((-self.params.alpha.raw) as u64));
-        }
-        inputs.push(Fr::from(self.params.chi_max as u64));
-        inputs.push(Fr::from(self.params.grid_bits as u64));
-
-        inputs
-    }
 }
 
 /// Verification result for a thermal proof.
@@ -354,307 +306,14 @@ impl ThermalProverStats {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Halo2 Prover/Verifier
+// Stub Prover/Verifier (without STARK)
 // ═══════════════════════════════════════════════════════════════════════════
 
-#[cfg(feature = "halo2")]
-/// Halo2/KZG prover and verifier for the thermal proof circuit.
-pub mod halo2_prover {
-    use super::*;
-    use halo2_axiom::{
-        halo2curves::bn256::{Bn256, Fr, G1Affine},
-        plonk::{create_proof, keygen_pk, keygen_vk, verify_proof, ProvingKey, VerifyingKey},
-        poly::kzg::{
-            commitment::{KZGCommitmentScheme, ParamsKZG},
-            multiopen::{ProverGWC, VerifierGWC},
-            strategy::SingleStrategy,
-        },
-        transcript::{
-            Blake2bRead, Blake2bWrite, Challenge255, TranscriptReadBuffer,
-            TranscriptWriterBuffer,
-        },
-    };
-    use rand::rngs::OsRng;
-
-    /// Thermal ZK Prover using Halo2/KZG.
-    pub struct ThermalProver {
-        /// KZG parameters.
-        params_kzg: ParamsKZG<Bn256>,
-
-        /// Proving key.
-        pk: ProvingKey<G1Affine>,
-
-        /// Verifying key.
-        vk: VerifyingKey<G1Affine>,
-
-        /// Physics parameters.
-        thermal_params: ThermalParams,
-
-        /// Accumulated statistics.
-        stats: ThermalProverStats,
-    }
-
-    impl ThermalProver {
-        /// Create a new prover. Performs one-time key generation.
-        pub fn new(thermal_params: ThermalParams) -> Result<Self, String> {
-            eprintln!("[Thermal] Generating proving keys (one-time setup)...");
-            let start = Instant::now();
-
-            let sizing = ThermalCircuitSizing::from_params(&thermal_params);
-            let k = sizing.k.max(14);
-
-            let params_kzg = ParamsKZG::<Bn256>::setup(k, OsRng);
-
-            let empty_states: Vec<MPS> = vec![
-                MPS::new(thermal_params.num_sites(), thermal_params.chi_max, 2),
-            ];
-            let empty_mpos: Vec<MPO> = vec![
-                MPO::identity(thermal_params.num_sites(), 2),
-            ];
-
-            let empty_circuit = ThermalCircuit::new(
-                thermal_params.clone(),
-                &empty_states,
-                &empty_mpos,
-            )
-            .map_err(|e| format!("Empty circuit creation failed: {}", e))?;
-
-            let vk = keygen_vk(&params_kzg, &empty_circuit)
-                .expect("keygen_vk failed");
-            let pk = keygen_pk(&params_kzg, vk.clone(), &empty_circuit)
-                .expect("keygen_pk failed");
-
-            eprintln!(
-                "[Thermal] Key generation complete in {:?} (k={})",
-                start.elapsed(),
-                k
-            );
-
-            Ok(Self {
-                params_kzg,
-                pk,
-                vk,
-                thermal_params,
-                stats: ThermalProverStats::default(),
-            })
-        }
-
-        /// Generate a proof for one timestep.
-        pub fn prove(
-            &mut self,
-            input_states: &[MPS],
-            laplacian_mpos: &[MPO],
-        ) -> Result<ThermalProof, String> {
-            let start = Instant::now();
-
-            let circuit = ThermalCircuit::new(
-                self.thermal_params.clone(),
-                input_states,
-                laplacian_mpos,
-            )?;
-
-            let public_inputs = circuit.public_inputs();
-            let num_constraints = circuit.sizing.estimate_constraints();
-            let k = circuit.k().max(14);
-
-            let mut transcript =
-                Blake2bWrite::<_, G1Affine, Challenge255<_>>::init(vec![]);
-
-            create_proof::<KZGCommitmentScheme<Bn256>, ProverGWC<_>, _, _, _, _>(
-                &self.params_kzg,
-                &self.pk,
-                &[circuit.clone()],
-                &[&[&public_inputs]],
-                OsRng,
-                &mut transcript,
-            )
-            .map_err(|e| format!("Proof generation failed: {:?}", e))?;
-
-            let proof_bytes = transcript.finalize();
-            let generation_time_ms = start.elapsed().as_millis() as u64;
-
-            let proof = ThermalProof {
-                proof_bytes,
-                generation_time_ms,
-                num_constraints,
-                k,
-                params: self.thermal_params.clone(),
-                conservation_residual: circuit.witness.conservation.residual,
-                cg_residual_norm: circuit.witness.implicit_solve.final_residual_norm,
-                cg_iterations: circuit.witness.implicit_solve.num_iterations,
-                input_state_hash_limbs: circuit.witness.hashes.input_state_hash_limbs,
-                output_state_hash_limbs: circuit.witness.hashes.output_state_hash_limbs,
-                params_hash_limbs: circuit.witness.hashes.params_hash_limbs,
-                step_index: 0,
-                initial_energy_raw: circuit.witness.conservation.integral_before.raw,
-                final_energy_raw: circuit.witness.conservation.integral_after.raw,
-            };
-
-            self.stats.record(&proof);
-
-            eprintln!(
-                "[Thermal] Proof generated: {} constraints, {} bytes, {:.1}ms, {} CG iters",
-                num_constraints,
-                proof.size(),
-                generation_time_ms as f64,
-                proof.cg_iterations,
-            );
-
-            Ok(proof)
-        }
-
-        /// Get accumulated statistics.
-        pub fn stats(&self) -> &ThermalProverStats {
-            &self.stats
-        }
-
-        /// Get the verifying key for deployment.
-        pub fn verifying_key(&self) -> &VerifyingKey<G1Affine> {
-            &self.vk
-        }
-
-        /// Get the KZG parameters for deployment.
-        pub fn kzg_params(&self) -> &ParamsKZG<Bn256> {
-            &self.params_kzg
-        }
-    }
-
-    /// Thermal ZK Verifier using Halo2/KZG.
-    pub struct ThermalVerifier {
-        /// KZG parameters.
-        params_kzg: ParamsKZG<Bn256>,
-
-        /// Verifying key.
-        vk: VerifyingKey<G1Affine>,
-    }
-
-    impl ThermalVerifier {
-        /// Create a verifier from KZG parameters and verifying key.
-        pub fn new(params_kzg: ParamsKZG<Bn256>, vk: VerifyingKey<G1Affine>) -> Self {
-            Self { params_kzg, vk }
-        }
-
-        /// Create a verifier from a prover (extracts the verifying key).
-        pub fn from_prover(prover: &ThermalProver) -> Self {
-            Self {
-                params_kzg: prover.params_kzg.clone(),
-                vk: prover.vk.clone(),
-            }
-        }
-
-        /// Verify a thermal proof.
-        ///
-        /// Reconstructs public inputs from the proof data and verifies
-        /// the Halo2/KZG proof against them.
-        pub fn verify(
-            &self,
-            proof: &ThermalProof,
-        ) -> Result<ThermalVerificationResult, String> {
-            let public_inputs = Self::reconstruct_public_inputs(proof);
-            self.verify_with_public_inputs(proof, &public_inputs)
-        }
-
-        /// Verify with explicitly provided public inputs.
-        pub fn verify_with_public_inputs(
-            &self,
-            proof: &ThermalProof,
-            public_inputs: &[Fr],
-        ) -> Result<ThermalVerificationResult, String> {
-            let start = Instant::now();
-
-            let mut transcript = Blake2bRead::<_, G1Affine, Challenge255<_>>::init(
-                &proof.proof_bytes[..],
-            );
-
-            let strategy = SingleStrategy::new(&self.params_kzg);
-
-            let valid =
-                verify_proof::<KZGCommitmentScheme<Bn256>, VerifierGWC<_>, _, _, _>(
-                    &self.params_kzg,
-                    &self.vk,
-                    strategy,
-                    &[&[public_inputs]],
-                    &mut transcript,
-                )
-                .is_ok();
-
-            let verification_time_us = start.elapsed().as_micros() as u64;
-
-            Ok(ThermalVerificationResult {
-                valid,
-                verification_time_us,
-                num_constraints: proof.num_constraints,
-                conservation_residual: proof.conservation_residual,
-                cg_iterations: proof.cg_iterations,
-                grid_bits: proof.params.grid_bits,
-                chi_max: proof.params.chi_max,
-            })
-        }
-
-        /// Reconstruct the public inputs vector from proof data.
-        fn reconstruct_public_inputs(proof: &ThermalProof) -> Vec<Fr> {
-            let mut inputs = Vec::new();
-
-            // Input state hash (4 limbs)
-            for limb in &proof.input_state_hash_limbs {
-                inputs.push(Fr::from(*limb));
-            }
-            // Output state hash (4 limbs)
-            for limb in &proof.output_state_hash_limbs {
-                inputs.push(Fr::from(*limb));
-            }
-            // Params hash (4 limbs)
-            for limb in &proof.params_hash_limbs {
-                inputs.push(Fr::from(*limb));
-            }
-
-            // Conservation residual (signed Q16)
-            let r = proof.conservation_residual;
-            if r.raw >= 0 {
-                inputs.push(Fr::from(r.raw as u64));
-            } else {
-                inputs.push(-Fr::from((-r.raw) as u64));
-            }
-
-            // dt (signed Q16)
-            if proof.params.dt.raw >= 0 {
-                inputs.push(Fr::from(proof.params.dt.raw as u64));
-            } else {
-                inputs.push(-Fr::from((-proof.params.dt.raw) as u64));
-            }
-
-            // alpha (signed Q16)
-            if proof.params.alpha.raw >= 0 {
-                inputs.push(Fr::from(proof.params.alpha.raw as u64));
-            } else {
-                inputs.push(-Fr::from((-proof.params.alpha.raw) as u64));
-            }
-
-            // chi_max, grid_bits
-            inputs.push(Fr::from(proof.params.chi_max as u64));
-            inputs.push(Fr::from(proof.params.grid_bits as u64));
-
-            inputs
-        }
-    }
-}
-
-// NOTE: Do NOT re-export halo2_prover here unconditionally.
-// The priority re-exports are at the bottom of this file:
-//   stark > halo2 > stub.
-// Having a second `pub use halo2_prover::*` here would cause ambiguity
-// when both `halo2` and `stark` features are enabled.
-
-// ═══════════════════════════════════════════════════════════════════════════
-// Stub Prover/Verifier (without Halo2)
-// ═══════════════════════════════════════════════════════════════════════════
-
-#[cfg(not(feature = "halo2"))]
 pub mod stub_prover {
-    //! Stub thermal prover/verifier for builds without the Halo2 backend.
+    //! Thermal prover/verifier (structural validation, no cryptographic proof).
     use super::*;
 
-    /// Stub thermal prover for builds without Halo2.
+    /// Thermal prover (structural validation, no cryptographic proof).
     pub struct ThermalProver {
         /// Physics parameters.
         thermal_params: ThermalParams,
@@ -738,7 +397,7 @@ pub mod stub_prover {
         }
     }
 
-    /// Stub thermal verifier for builds without Halo2.
+    /// Thermal verifier (structural validation, no cryptographic proof).
     pub struct ThermalVerifier {
         /// Simulated verification delay in microseconds.
         pub simulated_delay_us: u64,
@@ -801,7 +460,7 @@ pub mod stub_prover {
     }
 }
 
-#[cfg(all(not(feature = "halo2"), not(feature = "stark")))]
+#[cfg(not(feature = "stark"))]
 pub use stub_prover::*;
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -812,7 +471,7 @@ pub use stub_prover::*;
 pub mod stark_prover {
     //! STARK-based thermal prover/verifier using Winterfell.
     //!
-    //! Replaces Halo2/KZG with a transparent STARK:
+    //! Uses a transparent STARK:
     //! - No trusted setup (hash-based commitment)
     //! - Post-quantum secure (no discrete log)
     //! - GPU-parallelizable (FFT + Merkle hashing)
@@ -820,7 +479,7 @@ pub mod stark_prover {
     use super::*;
     use crate::thermal::stark_impl::{
         self, prove_thermal_stark, verify_thermal_stark, TimestepPhysics,
-        ThermalStarkInputs, HASH_LIMBS,
+        ThermalStarkInputs,
     };
 
     /// STARK thermal prover using Winterfell (Goldilocks + FRI).
@@ -876,7 +535,7 @@ pub mod stark_prover {
             })
         }
 
-        /// Generate a proof for one timestep (API-compatible with Halo2 prover).
+        /// Generate a proof for one timestep.
         ///
         /// Internally generates the witness via `ThermalCircuit`, extracts physics
         /// summary data, and produces a per-step STARK proof.
@@ -1205,12 +864,9 @@ pub mod stark_prover {
     }
 }
 
-/// Priority: stark > halo2 > stub.
+/// Priority: stark > stub.
 #[cfg(feature = "stark")]
 pub use stark_prover::*;
-
-#[cfg(all(feature = "halo2", not(feature = "stark")))]
-pub use halo2_prover::*;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Tests

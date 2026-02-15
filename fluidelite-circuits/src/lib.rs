@@ -10,9 +10,8 @@
 //! Each physics module provides:
 //! - Configuration (grid parameters, solver constants)
 //! - Witness generation (from solver state to circuit inputs)
-//! - Gadgets (reusable ZK constraint sub-circuits)
-//! - Halo2 circuit implementation
-//! - Prover/Verifier with serializable proofs
+//! - Circuit definition (witness generation + structural validation)
+//! - Prover/Verifier with serializable proofs (STARK for thermal, stub for others)
 //!
 //! All modules operate on `fluidelite_core` primitives (Q16, MPS, MPO).
 //!

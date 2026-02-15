@@ -46,10 +46,10 @@ pub const NUM_DIMENSIONS: usize = 3;
 /// Physical dimension of QTT site tensors.
 pub const PHYS_DIM: usize = 2;
 
-/// Minimum Halo2 circuit degree k for NS-IMEX.
+/// Minimum circuit degree k for NS-IMEX.
 pub const MIN_NS_IMEX_K: usize = 11;
 
-/// Maximum Halo2 circuit degree k for NS-IMEX.
+/// Maximum circuit degree k for NS-IMEX.
 pub const MAX_NS_IMEX_K: usize = 27;
 
 /// Rows per fixed-point MAC operation (same as Euler 3D).
@@ -266,6 +266,13 @@ pub struct NSIMEXParams {
     pub max_cg_iterations: usize,
     /// CG convergence tolerance in Q16.16.
     pub cg_tolerance: Q16,
+    /// Diffusion solve residual tolerance in Q16.16.
+    ///
+    /// Controls the maximum acceptable CG residual norm after the implicit
+    /// diffusion solve. Must be set higher than `tolerance` for small χ
+    /// configs because MPS truncation at each CG step creates a convergence
+    /// floor proportional to the truncation error.
+    pub diffusion_solve_tolerance: Q16,
 }
 
 impl NSIMEXParams {
@@ -298,8 +305,9 @@ impl NSIMEXParams {
             cfl: Q16::from_f64(0.5),
             dt: Q16::from_f64(0.001),
             dx: Q16::from_f64(0.0625), // 1.0 / 16
-            max_cg_iterations: 10,
+            max_cg_iterations: 50,
             cg_tolerance: Q16::from_f64(0.001),
+            diffusion_solve_tolerance: Q16::from_f64(0.5),
         }
     }
 
@@ -318,6 +326,7 @@ impl NSIMEXParams {
             dx: Q16::from_f64(0.0),  // Auto-compute from grid_bits
             max_cg_iterations: 200,
             cg_tolerance: Q16::from_f64(1e-8),
+            diffusion_solve_tolerance: Q16::from_f64(0.001),
         }
     }
 
@@ -338,6 +347,7 @@ impl NSIMEXParams {
         hasher.update(self.dx.raw.to_le_bytes());
         hasher.update(self.max_cg_iterations.to_le_bytes());
         hasher.update(self.cg_tolerance.raw.to_le_bytes());
+        hasher.update(self.diffusion_solve_tolerance.raw.to_le_bytes());
         let result = hasher.finalize();
         let mut hash = [0u8; 32];
         hash.copy_from_slice(&result);
@@ -359,6 +369,7 @@ impl PartialEq for NSIMEXParams {
             && self.dx == other.dx
             && self.max_cg_iterations == other.max_cg_iterations
             && self.cg_tolerance == other.cg_tolerance
+            && self.diffusion_solve_tolerance == other.diffusion_solve_tolerance
     }
 }
 
@@ -379,7 +390,7 @@ pub struct NSIMEXCircuitSizing {
     pub total_variable_sites: usize,
     /// Estimated total constraints.
     pub total_constraints: usize,
-    /// Halo2 circuit degree k (rows = 2^k).
+    /// Circuit degree k (rows = 2^k).
     pub k: usize,
     /// Number of public input cells.
     pub num_public_inputs: usize,
@@ -452,7 +463,7 @@ impl NSIMEXCircuitSizing {
             + public_inputs
     }
 
-    /// Compute minimum Halo2 k such that 2^k ≥ constraints + margin.
+    /// Compute minimum k such that 2^k ≥ constraints + margin.
     pub fn compute_k(total_constraints: usize) -> usize {
         let with_margin = (total_constraints as f64 * 1.1).ceil() as usize + 256;
         let mut k = MIN_NS_IMEX_K;

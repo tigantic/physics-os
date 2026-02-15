@@ -377,11 +377,10 @@ fn test_prover_stats() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// halo2_impl.rs stub tests
+// circuit.rs tests
 // ═══════════════════════════════════════════════════════════════════════════
 
-#[cfg(not(feature = "halo2"))]
-mod halo2_stub {
+mod circuit_tests {
     use super::*;
 
     fn make_test_circuit() -> Euler3DCircuit {

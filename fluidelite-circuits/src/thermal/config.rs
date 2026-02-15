@@ -391,7 +391,7 @@ impl fmt::Display for ThermalParams {
 /// Circuit sizing for the thermal proof.
 #[derive(Debug, Clone)]
 pub struct ThermalCircuitSizing {
-    /// Halo2 k parameter: 2^k rows in the circuit table.
+    /// Circuit k parameter: 2^k rows in the circuit table.
     pub k: u32,
 
     /// Number of rows consumed by the thermal circuit.
@@ -413,6 +413,8 @@ pub struct ThermalCircuitBreakdown {
     pub implicit_solve: usize,
     /// SVD truncation ordering.
     pub svd_truncation: usize,
+    /// Truncation error bound (Σσᵢ² ≤ ε²).
+    pub truncation_error_bound: usize,
     /// Conservation checks.
     pub conservation: usize,
     /// Boundary condition enforcement.
@@ -442,6 +444,15 @@ impl ThermalCircuitSizing {
         // SVD truncation ordering: chi singular values per site
         let svd_rows = n_sites * chi * ROWS_PER_SV_ORDER;
 
+        // Truncation error bound (Task 6.13):
+        // MAC chain init (1 row) + per-truncated-SV (MAC + range check = 6 rows)
+        // + nonneg check for bound (9 rows).
+        // Worst case: chi_out = chi × Laplacian_bond_dim ≈ 4χ, truncated count ≈ 3χ per bond.
+        // Conservative estimate: n_bonds × 3χ truncated SVs + overhead.
+        let n_bonds = if n_sites > 0 { n_sites - 1 } else { 0 };
+        let max_trunc_svs = n_bonds * chi * 3; // upper bound on truncated SVs
+        let trunc_error_rows = 1 + max_trunc_svs * (1 + 5) + 9; // init + MACs + nonneg
+
         // Conservation: energy balance |∫T^{n+1} - ∫T^n - Δt·∫S| ≤ ε
         let conservation_rows = NUM_THERMAL_VARIABLES * ROWS_PER_CONSERVATION;
 
@@ -451,8 +462,8 @@ impl ThermalCircuitSizing {
         // Public inputs: 4 hash limbs × 3 hashes + dt + α + chi + grid_bits + residual
         let public_input_rows = (4 * 3 + 5) * ROWS_PER_PUBLIC_INPUT;
 
-        let total_rows = rhs_rows + cg_rows + svd_rows + conservation_rows
-            + bc_rows + public_input_rows;
+        let total_rows = rhs_rows + cg_rows + svd_rows + trunc_error_rows
+            + conservation_rows + bc_rows + public_input_rows;
 
         // k: smallest power of 2 that fits all rows + headroom
         let k = ((total_rows as f64).log2().ceil() as u32 + 1)
@@ -467,6 +478,7 @@ impl ThermalCircuitSizing {
                 rhs_assembly: rhs_rows,
                 implicit_solve: cg_rows,
                 svd_truncation: svd_rows,
+                truncation_error_bound: trunc_error_rows,
                 conservation: conservation_rows,
                 boundary_conditions: bc_rows,
                 public_inputs: public_input_rows,

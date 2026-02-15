@@ -69,14 +69,14 @@
 //! - Initial input state hash (4 limbs) at row 0
 //! - Final output state hash (4 limbs) at last row
 //!
-//! # Advantages over Halo2/KZG
+//! # STARK Advantages
 //!
 //! - **No trusted setup**: Fully transparent (hash-based)
 //! - **Post-quantum secure**: Hash commitments, no discrete log assumption
 //! - **GPU-parallelizable**: FFT + Merkle hashing (not sequential polynomial arguments)
 //! - **Multi-step proof**: One proof covers the entire simulation sequence
 //! - **State chaining**: Output→input hash binding proves faithful state evolution
-//! - **Proof size**: ~15–50 KB (vs 800 B for Halo2, but irrelevant for regulated industries)
+//! - **Proof size**: ~15–50 KB (acceptable for regulated industries)
 //!
 //! © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
 
@@ -170,10 +170,10 @@ pub const HASH_LIMBS: usize = 4;
 /// Encodes: backend, field, hash, and constraint layout version.
 /// Bump the minor version for constraint changes, major for breaking
 /// proof format changes.
-pub const PROOF_SYSTEM_VERSION: &str = "winterfell-stark-goldilocks-blake3-v1.0";
+pub const PROOF_SYSTEM_VERSION: &str = "winterfell-stark-goldilocks-blake3-v2.0";
 
 /// Human-readable Layer A backend descriptor for certificate JSON.
-pub const LAYER_A_BACKEND: &str = "Winterfell STARK (Goldilocks + FRI + Blake3)";
+pub const LAYER_A_BACKEND: &str = "Winterfell STARK (Goldilocks + FRI + Blake3) + QTT-Native PDE";
 
 /// Security level string.
 pub const SECURITY_LEVEL: &str = "127-bit (quadratic extension, 40-query FRI)";

@@ -492,6 +492,7 @@ fn main() {
                 "backend": fluidelite_zk::thermal::LAYER_A_BACKEND,
                 "proof_system_version": fluidelite_zk::thermal::PROOF_SYSTEM_VERSION,
                 "security_level": fluidelite_zk::thermal::SECURITY_LEVEL,
+                "proof_level": "qtt_native_pde",
                 "field": "Goldilocks (p = 2^64 - 2^32 + 1)",
                 "commitment": "FRI + Blake3 Merkle",
                 "trusted_setup": false,
@@ -500,6 +501,19 @@ fn main() {
                 "trace_columns": 20,
                 "transition_constraints": 8,
                 "boundary_assertions": 13,
+                "operator_bond_dim": 5,
+                "mps_bond_dim": thermal_params.chi_max,
+                "qtt_sites": thermal_params.num_sites(),
+                "residual_bound": thermal_params.cg_tolerance.to_f64(),
+                "truncation_error_bound": thermal_params.tolerance.to_f64(),
+                "constraints_proven": [
+                    "mpo_contraction",
+                    "operator_pinning",
+                    "state_commitment",
+                    "residual_bound",
+                    "svd_truncation",
+                    "conservation"
+                ],
             });
         }
         #[cfg(all(feature = "halo2", not(feature = "stark")))]

@@ -28,15 +28,11 @@ sha2 = "0.10"
 # Random (for testing/witness generation)
 rand = "0.8"
 
-# Halo2 ZK proving backend (Axiom fork, KZG commitment scheme)
-halo2-axiom = { version = "0.5", optional = true }
-
 # Winterfell STARK proving backend (Goldilocks field, FRI commitment, no trusted setup)
 winterfell = { version = "0.13.1", optional = true, features = ["concurrent"] }
 
 [features]
 default = []
-halo2 = ["dep:halo2-axiom"]
 stark = ["dep:winterfell"]
 
 [dev-dependencies]

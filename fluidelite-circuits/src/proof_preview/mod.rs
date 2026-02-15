@@ -10,7 +10,7 @@
 //! a fast probabilistic assessment useful for:
 //! - Dashboard status updates before full verification completes
 //! - Triage of bad proofs before queuing for full verification
-//! - Air-gap environments where Halo2 is not available
+//! - Air-gap environments where the full proving backend is not available
 //!
 //! © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.
 

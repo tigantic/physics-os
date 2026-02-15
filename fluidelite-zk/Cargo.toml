@@ -247,28 +247,25 @@ required-features = ["groth16"]
 # Enable Groth16 prover (arkworks)
 groth16 = ["dep:ark-std", "dep:ark-ff", "dep:ark-ec", "dep:ark-bn254", "dep:ark-groth16", "dep:ark-relations", "dep:ark-r1cs-std", "dep:ark-serialize", "dep:ark-snark"]
 default = []
-# Enable Halo2 ZK circuit - requires nightly Rust
-# Also propagates halo2 to fluidelite-circuits for real physics domain provers
-halo2 = ["dep:halo2-axiom", "fluidelite-circuits/halo2"]
 # Enable Winterfell STARK prover (Goldilocks field, FRI, post-quantum)
 # Propagates stark to fluidelite-circuits for transparent physics proofs
 stark = ["fluidelite-circuits/stark"]
 # Enable Python bindings
-python = ["dep:pyo3", "halo2"]
+python = ["dep:pyo3", "stark"]
 # Enable REST API server
-server = ["dep:axum", "dep:tower", "dep:tower-http", "dep:dashmap", "dep:reqwest", "halo2"]
+server = ["dep:axum", "dep:tower", "dep:tower-http", "dep:dashmap", "dep:reqwest", "stark"]
 # Enable GPU acceleration via Icicle (requires CUDA 12+)
-gpu = ["dep:icicle-runtime", "dep:icicle-core", "dep:icicle-bn254", "dep:sha3", "dep:num-bigint", "halo2"]
+gpu = ["dep:icicle-runtime", "dep:icicle-core", "dep:icicle-bn254", "dep:sha3", "dep:num-bigint", "stark"]
 # Enable weight encryption for enterprise IP protection (sha2 always available)
 encryption = ["dep:aes-gcm", "dep:hkdf", "dep:getrandom"]
 # Enable DHAT heap profiling for stress tests
 dhat-heap = ["dep:dhat"]
 # Certificate rendering: PDF, HTML, QR code generation
 certificate-render = ["dep:printpdf", "dep:qrcode"]
-# Full production build — GPU + server + halo2 (requires CUDA 12+)
-production = ["halo2", "server", "gpu"]
+# Full production build — GPU + server + STARK (requires CUDA 12+)
+production = ["stark", "server", "gpu"]
 # Production without GPU (CI, ARM, non-CUDA environments)
-production-cpu = ["halo2", "server"]
+production-cpu = ["stark", "server"]
 # Full production with GPU acceleration (alias for clarity)
 production-gpu = ["production"]
 # Enterprise build with encryption
