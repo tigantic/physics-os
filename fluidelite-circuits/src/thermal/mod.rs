@@ -57,6 +57,8 @@ pub mod halo2_impl;
 pub mod prover;
 #[cfg(feature = "stark")]
 pub mod stark_impl;
+#[cfg(feature = "stark")]
+pub mod qtt_stark;
 pub mod witness;
 
 // ═══════════════════════════════════════════════════════════════════════════
