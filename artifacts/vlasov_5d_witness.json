@@ -1,0 +1,1021 @@
+{
+  "physics": "vlasov_poisson",
+  "dims": 5,
+  "qubits_per_dim": 5,
+  "max_rank": 128,
+  "dt": 0.01,
+  "n_steps": 100,
+  "total_points": 33554432,
+  "steps": [
+    {
+      "step": 0,
+      "norm_l2_sq": 1.60137939453125,
+      "max_val": 1.0099999904632568,
+      "min_val": 0.0,
+      "total_mass": 115.73272705078125,
+      "conservation_residual": 0.0,
+      "rank": 16,
+      "state_hash": "a6b137e2a456bad797ecb1ab33f73ea92eaec4081120d896ebcf5c27c8ee5bac"
+    },
+    {
+      "step": 1,
+      "norm_l2_sq": 1.601379632949829,
+      "max_val": 2.9505388736724854,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "cdaba64da92f3dc70aef16e044f3e67fd4b3b92651ee96a7fcf38553df88706e"
+    },
+    {
+      "step": 2,
+      "norm_l2_sq": 1.6013803482055664,
+      "max_val": 151.4243927001953,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 7.152557373046875e-07,
+      "rank": 128,
+      "state_hash": "b47d577eea43cdeaaf99672c6a580c534b815082d5c6fb571b92bbc1e0e8674e"
+    },
+    {
+      "step": 3,
+      "norm_l2_sq": 1.6013808250427246,
+      "max_val": 326.99725341796875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 4.76837158203125e-07,
+      "rank": 128,
+      "state_hash": "2608783f502047649d93357c8efae13adbd341d503a8b55ee3b491c4a0d007e2"
+    },
+    {
+      "step": 4,
+      "norm_l2_sq": 1.6013810634613037,
+      "max_val": 906.7833251953125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "cd560f9e8282ad881d4034edce774ca96b65ed7efabf0226da875f96ccc9baac"
+    },
+    {
+      "step": 5,
+      "norm_l2_sq": 1.6013814210891724,
+      "max_val": 951.499755859375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 3.5762786865234375e-07,
+      "rank": 128,
+      "state_hash": "f80a3d14b3540fb08107b87fde48eb9ad85490bb4683ebc2c337f1a997139ebb"
+    },
+    {
+      "step": 6,
+      "norm_l2_sq": 1.6013814210891724,
+      "max_val": 1305.6396484375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "17a11f8ed6072cf27285447c3ae208b64d4c4784dbd8707ce761c63ce2a875b2"
+    },
+    {
+      "step": 7,
+      "norm_l2_sq": 1.601381540298462,
+      "max_val": 1313.9862060546875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "b69c461b5ff724b9a009f203d9f7a84c2498ad3ceccba4fc08a29e5bcb16b043"
+    },
+    {
+      "step": 8,
+      "norm_l2_sq": 1.6013813018798828,
+      "max_val": 2131.14453125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "e3b11264b25932fc4e3653725c06b98f7784ee9d88892226b55f400fdc209694"
+    },
+    {
+      "step": 9,
+      "norm_l2_sq": 1.6013811826705933,
+      "max_val": 1307.0103759765625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "d0cc787fc7feeb309d7a6a48a97953221c7859fdaf5150c4ff26ff5db64f2739"
+    },
+    {
+      "step": 10,
+      "norm_l2_sq": 1.6013814210891724,
+      "max_val": 2103.275634765625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "cac200d08e14fd92b046402416eed66021701b50504fc6e550a43c4a1472facc"
+    },
+    {
+      "step": 11,
+      "norm_l2_sq": 1.601381778717041,
+      "max_val": 1224.806396484375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 3.5762786865234375e-07,
+      "rank": 128,
+      "state_hash": "b04950293237e983c160fa2dc49c2e8130cb067181246afbfa4fbe4185991bff"
+    },
+    {
+      "step": 12,
+      "norm_l2_sq": 1.601381778717041,
+      "max_val": 1719.883544921875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "188df2b2344eda81ca3adae3172ac50c9e13293d7d3318926527655a867a99d2"
+    },
+    {
+      "step": 13,
+      "norm_l2_sq": 1.6013816595077515,
+      "max_val": 2082.5400390625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "25c925751ad206892c3b0ef47940414aaa712c1297437a9b1433ec1f22392c90"
+    },
+    {
+      "step": 14,
+      "norm_l2_sq": 1.601381540298462,
+      "max_val": 1370.4609375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "e6f79e82b9e405d12da5f27b31d1a30cbf8bb52668a6d964ec0c2fa20939895e"
+    },
+    {
+      "step": 15,
+      "norm_l2_sq": 1.6013813018798828,
+      "max_val": 2588.21728515625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "0d03f9ff76d7c6472e40c0e64d4683ae08f2d295847894a40afef4cfa8bf18cf"
+    },
+    {
+      "step": 16,
+      "norm_l2_sq": 1.601381540298462,
+      "max_val": 2072.730224609375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "327e336e872f24132f85fe5b484c9a13a37f20c18d50a6d9486d4231a7dba4e1"
+    },
+    {
+      "step": 17,
+      "norm_l2_sq": 1.6013816595077515,
+      "max_val": 1328.0157470703125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "0bbd3848c97121c35846e1551d8b66ccd9218960a9dd27e5b6f3ad9f55b78c4f"
+    },
+    {
+      "step": 18,
+      "norm_l2_sq": 1.6013814210891724,
+      "max_val": 3348.115966796875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "ffba9c71b98fedf86e49b1286d8779579527ce7ff4bada474b0314af0eba680f"
+    },
+    {
+      "step": 19,
+      "norm_l2_sq": 1.601381778717041,
+      "max_val": 2473.86083984375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 3.5762786865234375e-07,
+      "rank": 128,
+      "state_hash": "b2365f584da064daa36945bf1916163e0e2650c2c1905d54dc271b827d4746de"
+    },
+    {
+      "step": 20,
+      "norm_l2_sq": 1.601381540298462,
+      "max_val": 3296.982421875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "a4b7905316d36e2927427d57d488a78b28a06cde282851f4777e4a9a464d4c9f"
+    },
+    {
+      "step": 21,
+      "norm_l2_sq": 1.6013813018798828,
+      "max_val": 2118.9267578125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "b8fe77e0daa4b29765fb779b7d3afcb14880fe54884412c4455cea754f7d8d0b"
+    },
+    {
+      "step": 22,
+      "norm_l2_sq": 1.6013813018798828,
+      "max_val": 2299.0986328125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "47b9e7bc42ea234149a1455b28db29561a872b806b5da8c6fad244f9f19979cb"
+    },
+    {
+      "step": 23,
+      "norm_l2_sq": 1.6013808250427246,
+      "max_val": 2605.53857421875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -4.76837158203125e-07,
+      "rank": 128,
+      "state_hash": "ff588cafd40aef817ed5e67c02e31cb0459e0bd74d6f1257232333c4489e896f"
+    },
+    {
+      "step": 24,
+      "norm_l2_sq": 1.6013808250427246,
+      "max_val": 3093.083251953125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "b655e770e3ce6e607b30ea565d17c575c00a91c84921730fdd4e785ae34192c7"
+    },
+    {
+      "step": 25,
+      "norm_l2_sq": 1.6013810634613037,
+      "max_val": 2767.01318359375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "6bec7aef0fd2aaceffd8c12cceeabbb770f26840f19914e06c86c9a14c403543"
+    },
+    {
+      "step": 26,
+      "norm_l2_sq": 1.6013809442520142,
+      "max_val": 3055.09326171875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "1d98ff401cc6a40723a76b1ab7bf35b6450c44fd0810d6be4b01317a324c71d4"
+    },
+    {
+      "step": 27,
+      "norm_l2_sq": 1.6013808250427246,
+      "max_val": 2928.558349609375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "301ae4d5fb4c4937036d35404a35515717597346f1c9bf342f943ad199a8459c"
+    },
+    {
+      "step": 28,
+      "norm_l2_sq": 1.6013813018798828,
+      "max_val": 1150.317138671875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 4.76837158203125e-07,
+      "rank": 128,
+      "state_hash": "2fa4b01efc0e3ca5ed94bd30124e6d0ec49dd56143ee2dadf2c350f0b9a2f488"
+    },
+    {
+      "step": 29,
+      "norm_l2_sq": 1.6013809442520142,
+      "max_val": 1899.9130859375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -3.5762786865234375e-07,
+      "rank": 128,
+      "state_hash": "c1577a72794dc642d3ee3ff2673d06e6cc4596b57e16c610f35f622768d4b733"
+    },
+    {
+      "step": 30,
+      "norm_l2_sq": 1.6013805866241455,
+      "max_val": 1901.377685546875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -3.5762786865234375e-07,
+      "rank": 128,
+      "state_hash": "23a0e1e74df37d90d1e230bbcba998fdc2353f36d0bb33bb8ca895f648cd6713"
+    },
+    {
+      "step": 31,
+      "norm_l2_sq": 1.601380705833435,
+      "max_val": 1869.626953125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "af54e75c284697fb8dd4b0b843360f19b150c3de97cd102bdc2354ab6cdce7e7"
+    },
+    {
+      "step": 32,
+      "norm_l2_sq": 1.6013811826705933,
+      "max_val": 1400.1895751953125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 4.76837158203125e-07,
+      "rank": 128,
+      "state_hash": "4eb10666501ed6d201d0fd2cbda0cfc575dd3d8921aacdf88f4fb6bc0f89cac8"
+    },
+    {
+      "step": 33,
+      "norm_l2_sq": 1.6013810634613037,
+      "max_val": 2577.394287109375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "eb2a718c52d4c21025a0358a5ead4801593f4e6e132e6aa2eb3bf3a3e8040c00"
+    },
+    {
+      "step": 34,
+      "norm_l2_sq": 1.6013811826705933,
+      "max_val": 2400.375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "963bce450a73e6dcbd3052f293af5ab2eb0da019fd92bd8baace57953e4a3aff"
+    },
+    {
+      "step": 35,
+      "norm_l2_sq": 1.6013814210891724,
+      "max_val": 2521.093017578125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "ba4996aa06dc12114b1144dc455fb2cb047fdacd0e6cc748f9e8a6dc4b95b04b"
+    },
+    {
+      "step": 36,
+      "norm_l2_sq": 1.6013814210891724,
+      "max_val": 2182.439697265625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "da24ebb9644cab0b5da6b764c7d00f667f58389db40135cd30a6028f86ad32c2"
+    },
+    {
+      "step": 37,
+      "norm_l2_sq": 1.601381540298462,
+      "max_val": 1301.705078125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "fe7eee049e4726d2607b30309323bb5fc9df814f07d4739d9d6707e8e7fb0eb9"
+    },
+    {
+      "step": 38,
+      "norm_l2_sq": 1.601381540298462,
+      "max_val": 2067.146240234375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "e5d0d575d761e988c803aa3ebf4bc7739fafdf4e205190265e652f92c9452c2d"
+    },
+    {
+      "step": 39,
+      "norm_l2_sq": 1.6013816595077515,
+      "max_val": 1357.350341796875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "aa76441b128fa2310068ba5cd849076a4dfe6d8dbad1cd4c14e1a16d19b25f9e"
+    },
+    {
+      "step": 40,
+      "norm_l2_sq": 1.601381778717041,
+      "max_val": 3239.15087890625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "0d350a9e64f9ea4c737815b2bf2da362ae898b72e333dba251b50403388a4c7a"
+    },
+    {
+      "step": 41,
+      "norm_l2_sq": 1.601381540298462,
+      "max_val": 2048.403076171875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "19a44b67f6b22783e35079c7a6a7f48530f24be685ecd0d0d401c7f153c571be"
+    },
+    {
+      "step": 42,
+      "norm_l2_sq": 1.6013813018798828,
+      "max_val": 1957.8519287109375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "a57439568ba70b5a00bdb9d43f38eed85263e9a8ff28872d5824a2d4d59c94a5"
+    },
+    {
+      "step": 43,
+      "norm_l2_sq": 1.601381540298462,
+      "max_val": 2849.7763671875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "af306320d4db9daa56df091fdcc91ed532a1d032e1598b0fcf5567887e138fe6"
+    },
+    {
+      "step": 44,
+      "norm_l2_sq": 1.6013814210891724,
+      "max_val": 2678.4482421875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "e56d648da634b002639483cf4d5455b61c1a28f6ae8d4b4104068c1ca9f5c799"
+    },
+    {
+      "step": 45,
+      "norm_l2_sq": 1.6013813018798828,
+      "max_val": 2753.12353515625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "df33fc99fd3103e196949645b41106082fc8b5312440d5140ad778ea67af721e"
+    },
+    {
+      "step": 46,
+      "norm_l2_sq": 1.6013813018798828,
+      "max_val": 3307.19287109375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "22f07a33c68c6b352b560e716e06a3144481341d6605506f0b3e3737935cf426"
+    },
+    {
+      "step": 47,
+      "norm_l2_sq": 1.6013813018798828,
+      "max_val": 2507.01025390625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "09d8846ddb79bc98c182566a8524dcf607ee8f5a2f9182983b4a9c61bb8dab89"
+    },
+    {
+      "step": 48,
+      "norm_l2_sq": 1.6013809442520142,
+      "max_val": 2170.649658203125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -3.5762786865234375e-07,
+      "rank": 128,
+      "state_hash": "cf74b11a2e6434df4734be51325f147a9a5b16742a70cb4cdf50a0c8fb66e54d"
+    },
+    {
+      "step": 49,
+      "norm_l2_sq": 1.6013811826705933,
+      "max_val": 850.264892578125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "503a8c12563bd93717e29923196e91bac6c78c732f941aa83f764a12c2990485"
+    },
+    {
+      "step": 50,
+      "norm_l2_sq": 1.6013813018798828,
+      "max_val": 560.7943725585938,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "940b5c6be6f4afa4bfe1a1af3f728401cd69695a9be06fdb6f39ceec728b0f9a"
+    },
+    {
+      "step": 51,
+      "norm_l2_sq": 1.6013811826705933,
+      "max_val": 2366.55126953125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "7e11810e3467005334410b0c9c46d0cda4a8a35b7558060903834ed05202f0e2"
+    },
+    {
+      "step": 52,
+      "norm_l2_sq": 1.6013809442520142,
+      "max_val": 3685.775634765625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "d587f61fbadeec980992509cd03e6e11f3fc7e9bb209e16459bb5d092b96d875"
+    },
+    {
+      "step": 53,
+      "norm_l2_sq": 1.6013813018798828,
+      "max_val": 2586.508056640625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 3.5762786865234375e-07,
+      "rank": 128,
+      "state_hash": "081d1646c109ebac40bdd1a563a0817691be73d9ec1ce8b32b66a71fff2e8ca6"
+    },
+    {
+      "step": 54,
+      "norm_l2_sq": 1.6013811826705933,
+      "max_val": 2036.5538330078125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "9ab751f90f5d1cfb12461171d1ae16e199e821952c364be69387747957e54351"
+    },
+    {
+      "step": 55,
+      "norm_l2_sq": 1.6013810634613037,
+      "max_val": 1170.639892578125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "6d37f35d364770179d35a21bdf7f85d81890227de9332644d02d89f84ff5efec"
+    },
+    {
+      "step": 56,
+      "norm_l2_sq": 1.6013810634613037,
+      "max_val": 1164.212158203125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "4beed184401fe01646a95fd9c287a39d037c776a249494e061c5b1ccbc73c61a"
+    },
+    {
+      "step": 57,
+      "norm_l2_sq": 1.6013805866241455,
+      "max_val": 1608.5228271484375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -4.76837158203125e-07,
+      "rank": 128,
+      "state_hash": "2ec330e2f94dd1cd6dd33f1c346747f95eb56c9fe23017ca1f3611dfa34bb314"
+    },
+    {
+      "step": 58,
+      "norm_l2_sq": 1.6013805866241455,
+      "max_val": 1223.1741943359375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "1ea0b5667aca687960e023a1740281ac3801349cf0ff937bcfd340cfdd2a9b34"
+    },
+    {
+      "step": 59,
+      "norm_l2_sq": 1.6013808250427246,
+      "max_val": 1779.437255859375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "2b1d4988d1206ed9b7b81d6a2c14c65fdd290770b406a2ecf8287287bf1421f7"
+    },
+    {
+      "step": 60,
+      "norm_l2_sq": 1.6013810634613037,
+      "max_val": 2667.44921875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "8bd5bb875fd257791e5269382c75823b3ffbaf2a780cab8ed4a1f81a56fd8e26"
+    },
+    {
+      "step": 61,
+      "norm_l2_sq": 1.6013810634613037,
+      "max_val": 2525.901611328125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "65d08574a84e7b8519652776f680c1d2f9a14c203369264ca0db1e598b0c6dc1"
+    },
+    {
+      "step": 62,
+      "norm_l2_sq": 1.6013808250427246,
+      "max_val": 2313.043212890625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "0236136cc259853775eb127497900c2f71fbe5615327632fea6b5a7f1eedc6d3"
+    },
+    {
+      "step": 63,
+      "norm_l2_sq": 1.6013808250427246,
+      "max_val": 2367.2109375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "c68c074960d9dc49116d66b5d774b9d4ebadfeeecb325d4d12509ead9dd77351"
+    },
+    {
+      "step": 64,
+      "norm_l2_sq": 1.6013805866241455,
+      "max_val": 2794.295654296875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "b11106dcfb823b515a4a7846adb14a81a12aa0cd966794e75b1ce5909d5845b0"
+    },
+    {
+      "step": 65,
+      "norm_l2_sq": 1.6013805866241455,
+      "max_val": 2893.830810546875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "3a4492b522b93f09b96d87a1b9b4a398a052f92f8b911b1ecc69aa8fe7d34d9c"
+    },
+    {
+      "step": 66,
+      "norm_l2_sq": 1.6013803482055664,
+      "max_val": 2488.0498046875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "ef1fd01aead9a17b5e39193b5a39cce6a69f53f0f6f21c0a26f1fd0545b7aec8"
+    },
+    {
+      "step": 67,
+      "norm_l2_sq": 1.6013803482055664,
+      "max_val": 2917.033203125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "aae112f98a191ddd349ca7536b959d5904411b9644e869358eb864652fd84b10"
+    },
+    {
+      "step": 68,
+      "norm_l2_sq": 1.6013803482055664,
+      "max_val": 1288.4937744140625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "ade2a30a6620eb0cb1887e090c12976ebee0fa423bded1adbbab27cec555b75f"
+    },
+    {
+      "step": 69,
+      "norm_l2_sq": 1.6013805866241455,
+      "max_val": 1621.1038818359375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "a52483e34f81cafed06ee1b15b957dccdfdd3ad053f4461c0437fecb595e39ee"
+    },
+    {
+      "step": 70,
+      "norm_l2_sq": 1.6013805866241455,
+      "max_val": 1993.7296142578125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "f290969e04d0a11dcc1c72b87b4607aace1a2945e1019bb92c9e70c64ffc8a60"
+    },
+    {
+      "step": 71,
+      "norm_l2_sq": 1.6013805866241455,
+      "max_val": 2472.298095703125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "eed8ef95c27adcc63c62cb303b8ffa54340a96892735d9daf80cec58a36215e2"
+    },
+    {
+      "step": 72,
+      "norm_l2_sq": 1.6013803482055664,
+      "max_val": 3023.32470703125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "8d6d8ed1c4dedf80c0f41f17d30db92af9c1e8fe9ae72cd77d12f7717fa21d0c"
+    },
+    {
+      "step": 73,
+      "norm_l2_sq": 1.6013801097869873,
+      "max_val": 2094.19677734375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "01e9cea7c110798c1864c547f9f0bb8eca6e1806b706441470b014bdc55c22a5"
+    },
+    {
+      "step": 74,
+      "norm_l2_sq": 1.6013801097869873,
+      "max_val": 2100.022216796875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "e9d7fb3a1c2094a6253d4338f43e0cc77e314deb49f812975145a9cce38a523f"
+    },
+    {
+      "step": 75,
+      "norm_l2_sq": 1.6013805866241455,
+      "max_val": 2522.63818359375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 4.76837158203125e-07,
+      "rank": 128,
+      "state_hash": "1702d21a815b65002bd4c95a57755628156c34bf6ef15d4ed55c2b742edbda7b"
+    },
+    {
+      "step": 76,
+      "norm_l2_sq": 1.601380705833435,
+      "max_val": 2904.621826171875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "c04eef167cae3ef62ee5eb62393acff79e164d1b8a6318989be4628283b361d8"
+    },
+    {
+      "step": 77,
+      "norm_l2_sq": 1.6013805866241455,
+      "max_val": 1443.17041015625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "64d521a527f2435cc42a1592067f59b7f80c09aa2904147611749b94f2da7535"
+    },
+    {
+      "step": 78,
+      "norm_l2_sq": 1.6013808250427246,
+      "max_val": 2630.995361328125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "1bfa1f4ea4bcf702115e7d3dca7a76b360753396b6638c43a305908d3c28d06a"
+    },
+    {
+      "step": 79,
+      "norm_l2_sq": 1.601380705833435,
+      "max_val": 2043.8062744140625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "5dd24a7d452a58957e6137add1dede8fdbfe0f9282cf9f33b9123493c81f99c0"
+    },
+    {
+      "step": 80,
+      "norm_l2_sq": 1.6013808250427246,
+      "max_val": 2811.034423828125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "21ecfc7f2c36368c6b284da3a13207acc5f14b87a235834edf407ba4dd45b859"
+    },
+    {
+      "step": 81,
+      "norm_l2_sq": 1.6013810634613037,
+      "max_val": 1499.94189453125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "d13654d38b3c9d93a7bbc1cbe76be03ea29742d5827cffe271655d9bb0a82dd4"
+    },
+    {
+      "step": 82,
+      "norm_l2_sq": 1.6013814210891724,
+      "max_val": 1838.4833984375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 3.5762786865234375e-07,
+      "rank": 128,
+      "state_hash": "e5c43e789e0e09267727609cd2d64c372da1c9f9652579a5ba630bfe2e744970"
+    },
+    {
+      "step": 83,
+      "norm_l2_sq": 1.601381540298462,
+      "max_val": 2110.254638671875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "1a554c8c5d2aafe100a15fe32ef8f10a7c9daef967bf16bc4536ba52430ad251"
+    },
+    {
+      "step": 84,
+      "norm_l2_sq": 1.601381540298462,
+      "max_val": 1974.1865234375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "d55219aab54d30c9a6bb484d8d4593b8fdafced8e53b32cfa9faa0433aec5657"
+    },
+    {
+      "step": 85,
+      "norm_l2_sq": 1.601381540298462,
+      "max_val": 586.7846069335938,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "5e7623caf892d618591fb65fc140e7f0c458a0dc000196829b1ff3cbe02cca9e"
+    },
+    {
+      "step": 86,
+      "norm_l2_sq": 1.6013816595077515,
+      "max_val": 1046.162841796875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "568d6a78bdbfa554b513a90c9c48ed9cc1f115dc50ee3d7fe0119d91decf2ad9"
+    },
+    {
+      "step": 87,
+      "norm_l2_sq": 1.6013821363449097,
+      "max_val": 517.4223022460938,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 4.76837158203125e-07,
+      "rank": 128,
+      "state_hash": "5aa87a439550a15a13de1df208c348d2a7158c8d9e04047c69df3653900541d5"
+    },
+    {
+      "step": 88,
+      "norm_l2_sq": 1.6013822555541992,
+      "max_val": 1022.77587890625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "8a2bd1437977c9d1ba6c4f7730da9209c1ce686d0f6d4c1403b34027125b1ffe"
+    },
+    {
+      "step": 89,
+      "norm_l2_sq": 1.6013822555541992,
+      "max_val": 1534.44677734375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "7eca89115070db3508959b423e5069e50be4e27b403f32222d689b3420623b74"
+    },
+    {
+      "step": 90,
+      "norm_l2_sq": 1.6013824939727783,
+      "max_val": 1686.5660400390625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "daf53425437edaba0c1fd82d52958ee62b829d9f2089e183e621775ee1190e6c"
+    },
+    {
+      "step": 91,
+      "norm_l2_sq": 1.6013822555541992,
+      "max_val": 2732.3330078125,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "4ec10d6987702655266073df635bd111658a50ed03fb6cb08a1d3a5c9955d568"
+    },
+    {
+      "step": 92,
+      "norm_l2_sq": 1.6013822555541992,
+      "max_val": 2324.889404296875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "456350baf04e51f143c69fb5205415afbadc41f0ac6fca4b11b8d959f80feb71"
+    },
+    {
+      "step": 93,
+      "norm_l2_sq": 1.6013824939727783,
+      "max_val": 2466.824951171875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "68ac775e7cc54e7dd7cc43c3b52b418965988198cd21b4a0d842ae9eabac4946"
+    },
+    {
+      "step": 94,
+      "norm_l2_sq": 1.6013826131820679,
+      "max_val": 2722.98583984375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "f5d1893c085c123d19b1c1f4690b177155440db3ebb248cc49ec913f52846de6"
+    },
+    {
+      "step": 95,
+      "norm_l2_sq": 1.6013826131820679,
+      "max_val": 1627.58447265625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "6240c537c6a2f974fd4215a49b7f9db02d818bc074f20afca9cd99549922e47c"
+    },
+    {
+      "step": 96,
+      "norm_l2_sq": 1.6013827323913574,
+      "max_val": 1794.2640380859375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "b6acf507324c53fa002f47f7fc1d683648651f2a7b30d1008b472fa41c951f2e"
+    },
+    {
+      "step": 97,
+      "norm_l2_sq": 1.6013829708099365,
+      "max_val": 2809.435791015625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 2.384185791015625e-07,
+      "rank": 128,
+      "state_hash": "a4efeb81242f8dfceea877c386be2675a400b30b426a3db96ff111b2d7804c13"
+    },
+    {
+      "step": 98,
+      "norm_l2_sq": 1.6013829708099365,
+      "max_val": 3599.11474609375,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "ade5d32ab489d5ea5df70417c2f1b97fb8347b241477d12c85dfd832890b9c88"
+    },
+    {
+      "step": 99,
+      "norm_l2_sq": 1.6013829708099365,
+      "max_val": 2634.62890625,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "rank": 128,
+      "state_hash": "96e3c69a51c91095cf915241d1c6381868606975f553bd406d44963c0a866dd7"
+    },
+    {
+      "step": 100,
+      "norm_l2_sq": 1.601383090019226,
+      "max_val": 2001.090576171875,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 1.1920928955078125e-07,
+      "rank": 128,
+      "state_hash": "af53d0424d1db528c4794362fa4e62e2d6668f8187a1593a30dd9a39c7301bda"
+    }
+  ]
+}

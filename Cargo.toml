@@ -29,6 +29,7 @@ members = [
     "apps/global_eye",
     "apps/trustless_verify",
     "apps/golden_demo",
+    "apps/vlasov_proof",
     "fluidelite-core",
     "fluidelite-circuits",
     "fluidelite-zk",

@@ -70,7 +70,21 @@ def tt_round(
     for k in range(N - 1, 0, -1):
         r_l, d, r_r = out[k].shape
         mat = out[k].reshape(r_l, d * r_r)
-        U, S, Vh = np.linalg.svd(mat, full_matrices=False)
+
+        # Use rSVD when matrix is large enough to benefit
+        m, n = mat.shape
+        if min(m, n) > 2 * max_rank:
+            # Randomized SVD: project to (max_rank+10) dimensions first
+            k_svd = min(max_rank + 10, min(m, n))
+            Omega = np.random.randn(n, k_svd)
+            Y = mat @ Omega
+            Q, _ = np.linalg.qr(Y)
+            B = Q.T @ mat
+            U_small, S, Vh = np.linalg.svd(B, full_matrices=False)
+            U = Q @ U_small
+        else:
+            U, S, Vh = np.linalg.svd(mat, full_matrices=False)
+
         keep = min(max_rank, int(np.sum(S > cutoff)), len(S))
         keep = max(keep, 1)
         out[k] = (np.diag(S[:keep]) @ Vh[:keep]).reshape(keep, d, r_r)

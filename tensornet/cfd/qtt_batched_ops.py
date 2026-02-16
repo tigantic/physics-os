@@ -166,10 +166,27 @@ def batched_truncation_sweep(
         M_max = max(m.shape[0] for m in mats)
         N_max = max(m.shape[1] for m in mats)
         
-        # Decide: batched full SVD or individual rSVD
-        use_batched = (M_max * N_max <= use_rsvd_threshold * 4)  # Batched is better for small-medium
+        # Decide: rSVD when matrices are large enough to benefit
+        use_rsvd = min(M_max, N_max) > 2 * max_rank
+        use_batched_full = (M_max * N_max <= use_rsvd_threshold * 4) and not use_rsvd
         
-        if use_batched or B >= 4:
+        if use_rsvd:
+            # Per-field rSVD — avoids computing full spectrum for large matrices
+            for i in range(B):
+                r_l, d, r_r = shapes[i]
+                m, n = r_l, d * r_r
+                mat = mats[i]
+                
+                U, S, Vh = _rsvd(mat, max_rank + 10)
+                r = _rank_from_tolerance(S, max_rank, tol)
+                
+                Vhi = Vh[:r, :n]
+                fields[i][k] = Vhi.reshape(r, d, r_r)
+                
+                R_left = U[:m, :r] * S[:r][None, :]
+                prev = fields[i][k - 1]
+                fields[i][k - 1] = torch.einsum('asj,jr->asr', prev, R_left)
+        elif use_batched_full or B >= 4:
             # Batched SVD path — one kernel launch
             batch = torch.zeros(B, M_max, N_max, device=mats[0].device, dtype=mats[0].dtype)
             for i, m in enumerate(mats):

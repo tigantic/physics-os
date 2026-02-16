@@ -897,29 +897,48 @@ def derivative_mpo_gpu(
     """
     Create derivative MPO: D = (S⁺ - S⁻) / (2*dx).
     
-    For small grids, builds explicit matrix.
-    For large grids, constructs from shift MPOs.
+    Analytical construction via ripple-carry shift MPOs:
+    S⁺ has bond dim 2, S⁻ has bond dim 2, so D = (S⁺ - S⁻)/(2dx)
+    has bond dim 4 (direct sum). No dense matrix construction.
+    
+    Complexity: O(num_qubits) core construction, O(1) per core element.
     """
     if device is None:
         device = DEVICE
     
-    if num_qubits <= 14:
-        N = 2**num_qubits
-        scale = 1.0 / (2 * dx)
+    scale = 1.0 / (2 * dx)
+    
+    # Build S⁺ and S⁻ shift MPO cores analytically (ripple-carry adder)
+    # Then form D = scale*(S⁺) + (-scale)*(S⁻) via direct-sum MPO addition
+    sp_cores = _shift_plus_cores(num_qubits, device, dtype)
+    sm_cores = _shift_minus_cores(num_qubits, device, dtype)
+    
+    # Direct-sum: D_cores[k] has bond dim = 2 + 2 = 4
+    cores = []
+    for k in range(num_qubits):
+        sp, sm = sp_cores[k], sm_cores[k]
+        Dl_sp, do, di, Dr_sp = sp.shape
+        Dl_sm, _, _, Dr_sm = sm.shape
         
-        # Vectorized matrix construction
-        i = torch.arange(N, device=device)
-        j_plus = (i + 1) % N
-        j_minus = (i - 1) % N
+        if k == 0:
+            # First site: concatenate along right bond [1, do, di, 2+2]
+            core = torch.zeros(1, do, di, Dr_sp + Dr_sm, device=device, dtype=dtype)
+            core[0, :, :, :Dr_sp] = scale * sp[0]
+            core[0, :, :, Dr_sp:] = -scale * sm[0]
+        elif k == num_qubits - 1:
+            # Last site: concatenate along left bond [2+2, do, di, 1]
+            core = torch.zeros(Dl_sp + Dl_sm, do, di, 1, device=device, dtype=dtype)
+            core[:Dl_sp, :, :, :] = sp
+            core[Dl_sp:, :, :, :] = sm
+        else:
+            # Middle sites: block-diagonal [4, do, di, 4]
+            core = torch.zeros(Dl_sp + Dl_sm, do, di, Dr_sp + Dr_sm, device=device, dtype=dtype)
+            core[:Dl_sp, :, :, :Dr_sp] = sp
+            core[Dl_sp:, :, :, Dr_sp:] = sm
         
-        D = torch.zeros(N, N, dtype=dtype, device=device)
-        D[i, j_plus] = scale
-        D[i, j_minus] = -scale
-        
-        return _dense_matrix_to_mpo_gpu(D, num_qubits, max_bond=256)
-    else:
-        # Use shift MPO difference
-        return identity_mpo_gpu(num_qubits, device, dtype)
+        cores.append(core)
+    
+    return cores
 
 
 def laplacian_mpo_gpu(
@@ -929,27 +948,158 @@ def laplacian_mpo_gpu(
     dtype: torch.dtype = torch.float32,
 ) -> List[torch.Tensor]:
     """
-    Create Laplacian MPO: Δ = (S⁺ - 2I + S⁻) / dx².
+    Create Laplacian MPO: Δ = (S⁺ + S⁻ - 2I) / dx².
+    
+    Analytical construction via direct-sum of shift MPOs:
+    S⁺ (bond dim 2) + S⁻ (bond dim 2) + (-2I) (bond dim 1) = bond dim 5.
+    No dense matrix construction at any grid size.
+    
+    Complexity: O(num_qubits) core construction.
     """
     if device is None:
         device = DEVICE
     
-    if num_qubits <= 14:
-        N = 2**num_qubits
-        scale = 1.0 / (dx * dx)
+    scale = 1.0 / (dx * dx)
+    
+    sp_cores = _shift_plus_cores(num_qubits, device, dtype)
+    sm_cores = _shift_minus_cores(num_qubits, device, dtype)
+    
+    # Direct-sum: L_cores[k] has bond dim = 2(S⁺) + 2(S⁻) + 1(-2I) = 5
+    cores = []
+    for k in range(num_qubits):
+        sp, sm = sp_cores[k], sm_cores[k]
+        Dl_sp, do, di, Dr_sp = sp.shape
+        Dl_sm, _, _, Dr_sm = sm.shape
         
-        i = torch.arange(N, device=device)
-        j_plus = (i + 1) % N
-        j_minus = (i - 1) % N
+        # Identity core: (1, do, di, 1) — diagonal
+        id_core = torch.zeros(1, do, di, 1, device=device, dtype=dtype)
+        for s in range(min(do, di)):
+            id_core[0, s, s, 0] = 1.0
         
-        L = torch.zeros(N, N, dtype=dtype, device=device)
-        L[i, j_plus] = scale
-        L[i, i] = -2 * scale
-        L[i, j_minus] = scale
+        if k == 0:
+            # First: [1, do, di, 2+2+1=5]
+            core = torch.zeros(1, do, di, Dr_sp + Dr_sm + 1, device=device, dtype=dtype)
+            core[0, :, :, :Dr_sp] = scale * sp[0]
+            core[0, :, :, Dr_sp:Dr_sp+Dr_sm] = scale * sm[0]
+            core[0, :, :, Dr_sp+Dr_sm:] = -2.0 * scale * id_core[0]
+        elif k == num_qubits - 1:
+            # Last: [2+2+1=5, do, di, 1]
+            core = torch.zeros(Dl_sp + Dl_sm + 1, do, di, 1, device=device, dtype=dtype)
+            core[:Dl_sp, :, :, :] = sp
+            core[Dl_sp:Dl_sp+Dl_sm, :, :, :] = sm
+            core[Dl_sp+Dl_sm:, :, :, :] = id_core
+        else:
+            # Middle: block-diagonal [5, do, di, 5]
+            core = torch.zeros(Dl_sp + Dl_sm + 1, do, di, Dr_sp + Dr_sm + 1, device=device, dtype=dtype)
+            core[:Dl_sp, :, :, :Dr_sp] = sp
+            core[Dl_sp:Dl_sp+Dl_sm, :, :, Dr_sp:Dr_sp+Dr_sm] = sm
+            core[Dl_sp+Dl_sm:, :, :, Dr_sp+Dr_sm:] = id_core
         
-        return _dense_matrix_to_mpo_gpu(L, num_qubits, max_bond=256)
-    else:
-        return identity_mpo_gpu(num_qubits, device, dtype)
+        cores.append(core)
+    
+    return cores
+
+
+def _shift_plus_cores(
+    num_qubits: int,
+    device: torch.device,
+    dtype: torch.dtype,
+) -> List[torch.Tensor]:
+    """
+    Analytical S⁺ (forward cyclic shift) MPO cores via ripple-carry adder.
+
+    S⁺|x> = |x+1 mod N>. Bond dimension exactly 2.
+
+    Core convention: C[carry_out, out_bit, in_bit, carry_in]
+    where carry propagates right-to-left (LSB → MSB).
+    At LSB (rightmost), carry_in = 1 is hardcoded into the boundary.
+    At MSB (leftmost), carry_out overflow is discarded (cyclic shift).
+    """
+    cores = []
+    for k in range(num_qubits):
+        if k == num_qubits - 1:
+            # LSB (last in QTT MSB-first ordering): always increment.
+            # carry_in = 1 hardcoded (we are adding 1).
+            # Right bond dim 1 encodes carry_in=1.
+            core = torch.zeros(2, 2, 2, 1, device=device, dtype=dtype)
+            # x=0, carry=1: y=1, carry_out=0
+            core[0, 1, 0, 0] = 1.0
+            # x=1, carry=1: y=0, carry_out=1
+            core[1, 0, 1, 0] = 1.0
+        elif k == 0:
+            # MSB (first in QTT MSB-first): absorb carry (periodic boundary)
+            core = torch.zeros(1, 2, 2, 2, device=device, dtype=dtype)
+            # We need to start the carry chain with carry=1 (adding 1)
+            # no_carry path (bond=0): pass through
+            core[0, 0, 0, 0] = 1.0
+            core[0, 1, 1, 0] = 1.0
+            # carry path (bond=1): flip
+            core[0, 1, 0, 1] = 1.0
+            core[0, 0, 1, 1] = 1.0
+        else:
+            # Middle: half-adder
+            # C[carry_out, y, x, carry_in]
+            # carry propagates right-to-left (LSB→MSB)
+            core = torch.zeros(2, 2, 2, 2, device=device, dtype=dtype)
+            # carry_in=0: pass through, carry_out=0
+            core[0, 0, 0, 0] = 1.0
+            core[0, 1, 1, 0] = 1.0
+            # carry_in=1, x=0: y=1, carry_out=0
+            core[0, 1, 0, 1] = 1.0
+            # carry_in=1, x=1: y=0, carry_out=1
+            core[1, 0, 1, 1] = 1.0
+        
+        cores.append(core)
+    
+    return cores
+
+
+def _shift_minus_cores(
+    num_qubits: int,
+    device: torch.device,
+    dtype: torch.dtype,
+) -> List[torch.Tensor]:
+    """
+    Analytical S⁻ (backward cyclic shift) MPO cores via ripple-borrow.
+    
+    S⁻|x> = |x-1 mod N>. Bond dimension exactly 2.
+    """
+    cores = []
+    for k in range(num_qubits):
+        if k == num_qubits - 1:
+            # LSB: always decrement.
+            # borrow_in = 1 hardcoded (we are subtracting 1).
+            # Right bond dim 1 encodes borrow_in=1.
+            core = torch.zeros(2, 2, 2, 1, device=device, dtype=dtype)
+            # x=0, borrow=1: y=1, borrow_out=1 (0-1 = 1 with borrow)
+            core[1, 1, 0, 0] = 1.0
+            # x=1, borrow=1: y=0, borrow_out=0 (1-1 = 0, no borrow)
+            core[0, 0, 1, 0] = 1.0
+        elif k == 0:
+            # MSB: start borrow chain (subtracting 1)
+            core = torch.zeros(1, 2, 2, 2, device=device, dtype=dtype)
+            # no_borrow: pass through
+            core[0, 0, 0, 0] = 1.0
+            core[0, 1, 1, 0] = 1.0
+            # borrow: flip
+            core[0, 1, 0, 1] = 1.0
+            core[0, 0, 1, 1] = 1.0
+        else:
+            # Middle: half-subtractor
+            # C[borrow_out, y, x, borrow_in]
+            # borrow propagates right-to-left (LSB→MSB)
+            core = torch.zeros(2, 2, 2, 2, device=device, dtype=dtype)
+            # borrow_in=0: pass through, borrow_out=0
+            core[0, 0, 0, 0] = 1.0
+            core[0, 1, 1, 0] = 1.0
+            # borrow_in=1, x=0: y=1, borrow_out=1 (need to borrow)
+            core[1, 1, 0, 1] = 1.0
+            # borrow_in=1, x=1: y=0, borrow_out=0 (absorbed borrow)
+            core[0, 0, 1, 1] = 1.0
+        
+        cores.append(core)
+    
+    return cores
 
 
 def _dense_matrix_to_mpo_gpu(

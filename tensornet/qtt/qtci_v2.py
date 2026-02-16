@@ -215,16 +215,22 @@ def parallel_fiber_batch(
     total = n_left * d * n_right
     indices = np.empty((total, N), dtype=int)
 
-    idx = 0
-    for il in range(n_left):
-        for s in range(d):
-            for ir in range(n_right):
-                if site > 0:
-                    indices[idx, :site] = left_indices[il]
-                indices[idx, site] = s
-                if site < N - 1:
-                    indices[idx, site + 1:] = right_indices[ir]
-                idx += 1
+    # Vectorized index assembly using np.repeat/np.tile
+    # instead of triple-nested Python loop
+    if site > 0:
+        # left_indices[il] repeated d*n_right times each
+        left_rep = np.repeat(left_indices, d * n_right, axis=0)
+        indices[:, :site] = left_rep
+
+    # Physical index: tile [0,0,...,1,1,...,d-1,d-1,...] pattern
+    phys = np.repeat(np.arange(d), n_right)  # (d*n_right,)
+    phys = np.tile(phys, n_left)  # (n_left*d*n_right,)
+    indices[:, site] = phys
+
+    if site < N - 1:
+        # right_indices tiled n_left*d times
+        right_rep = np.tile(right_indices, (n_left * d, 1))
+        indices[:, site + 1:] = right_rep
 
     return indices
 
@@ -371,22 +377,27 @@ def qtci_adaptive(
         n_right = right_idx[k].shape[0]
         dk = dims[k]
 
-        # Build the fiber matrix F[left*s, right]
-        F = np.empty((n_left * dk, n_right))
-        for il in range(n_left):
-            for s in range(dk):
-                for ir in range(n_right):
-                    multi_idx = np.empty(N, dtype=int)
-                    if k > 0 and left_idx[k].shape[1] > 0:
-                        multi_idx[:k] = left_idx[k][il]
-                    multi_idx[k] = s
-                    if k < N - 1 and right_idx[k].shape[1] > 0:
-                        multi_idx[k + 1:] = right_idx[k][ir]
-                    F[il * dk + s, ir] = fn(multi_idx)
-                    n_evals += 1
+        # Build the fiber matrix F[left*s, right] via vectorized index assembly
+        # Replaces triple-nested Python loop with parallel_fiber_batch
+        all_indices = parallel_fiber_batch(k, left_idx[k], right_idx[k], dk)
+        # Evaluate function at all indices in one batch
+        F_flat = np.array([fn(idx) for idx in all_indices])
+        n_evals += len(all_indices)
+        F = F_flat.reshape(n_left * dk, n_right)
 
-        # SVD truncation
-        U, S, Vh = np.linalg.svd(F, full_matrices=False)
+        # rSVD for large fiber matrices, full SVD for small ones
+        if min(n_left * dk, n_right) > 2 * config.max_rank:
+            # Randomized SVD: O(m*n*k) vs O(m*n*min(m,n))
+            k_svd = min(config.max_rank + 10, min(n_left * dk, n_right))
+            rng_svd = np.random.default_rng(config.seed + k if config.seed else None)
+            Omega = rng_svd.standard_normal((n_right, k_svd))
+            Y = F @ Omega
+            Q, _ = np.linalg.qr(Y)
+            B = Q.T @ F
+            U_small, S, Vh = np.linalg.svd(B, full_matrices=False)
+            U = Q @ U_small
+        else:
+            U, S, Vh = np.linalg.svd(F, full_matrices=False)
         rank = min(config.max_rank, len(S))
 
         # Adaptive rank: cut where singular values drop below tolerance

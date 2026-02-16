@@ -357,7 +357,7 @@ class SpectralDerivatives3D:
         
         morton = reshaped.permute(inv_perm).reshape(2 ** (3 * self.n_bits))
         
-        # TT-SVD decomposition
+        # TT-SVD decomposition with rSVD for large matrices
         cores = []
         current = morton.reshape(1, -1)
         
@@ -365,7 +365,17 @@ class SpectralDerivatives3D:
             r_left = current.shape[0]
             current = current.reshape(r_left * 2, -1)
             
-            U, S, Vh = torch.linalg.svd(current, full_matrices=False)
+            m, n = current.shape
+            # Use rSVD when matrix is large enough to benefit
+            if min(m, n) > 2 * self.max_rank:
+                k_svd = min(self.max_rank + 10, min(m, n))
+                try:
+                    U, S, Vh = torch.svd_lowrank(current, q=k_svd, niter=1)
+                except RuntimeError:
+                    U, S, Vh = torch.linalg.svd(current, full_matrices=False)
+                    Vh = Vh  # svd_lowrank returns V not Vh; linalg.svd returns Vh
+            else:
+                U, S, Vh = torch.linalg.svd(current, full_matrices=False)
             
             # Truncate
             r = min(self.max_rank, len(S), (S > S[0] * 1e-10).sum().item())

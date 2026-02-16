@@ -616,7 +616,7 @@ def truncate_qtt(qtt: QTTState, max_bond: int = 64, tol: float = 1e-10) -> QTTSt
     return QTTState(cores=cores, num_qubits=qtt.num_qubits)
 
 
-def qtt_add(qtt1: QTTState, qtt2: QTTState, max_bond: int = 64, truncate: bool = True) -> QTTState:
+def qtt_add(qtt1: QTTState, qtt2: QTTState, max_bond: int = 64, truncate: bool = True, tol: float = 1e-10) -> QTTState:
     """
     Add two QTT states: |ψ⟩ = |ψ₁⟩ + |ψ₂⟩
 
@@ -626,6 +626,9 @@ def qtt_add(qtt1: QTTState, qtt2: QTTState, max_bond: int = 64, truncate: bool =
         qtt1, qtt2: QTT states to add
         max_bond: Maximum bond dimension after truncation
         truncate: If False, skip truncation (for batching multiple ops)
+        tol: SVD truncation tolerance.  Singular values below tol × S_max
+             are discarded.  Set higher (e.g. 1e-6) for adaptive rank
+             control where the rank grows with solution complexity.
     
     Optimized:
     - Skips truncation if combined ranks already ≤ max_bond
@@ -676,7 +679,7 @@ def qtt_add(qtt1: QTTState, qtt2: QTTState, max_bond: int = 64, truncate: bool =
     if not truncate or max_combined_rank <= max_bond:
         return result
     
-    return truncate_qtt(result, max_bond=max_bond)
+    return truncate_qtt(result, max_bond=max_bond, tol=tol)
 
 
 def qtt_sum(states: list[QTTState], max_bond: int = 64, weights: list[float] | None = None) -> QTTState:

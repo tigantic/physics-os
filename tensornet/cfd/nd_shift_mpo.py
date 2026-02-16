@@ -229,7 +229,8 @@ def make_nd_shift_mpo(
 
 
 def apply_nd_shift_mpo(
-    cores: list[torch.Tensor], mpo: list[torch.Tensor], max_rank: int = 64
+    cores: list[torch.Tensor], mpo: list[torch.Tensor], max_rank: int = 64,
+    tol: float = 0.0,
 ) -> list[torch.Tensor]:
     """
     Apply N-dimensional shift MPO to QTT cores.
@@ -245,6 +246,9 @@ def apply_nd_shift_mpo(
         cores: Input QTT cores (list of 3D tensors)
         mpo: Shift MPO cores (list of 4D tensors)
         max_rank: Maximum bond dimension after truncation
+        tol: SVD truncation tolerance.  When > 0, singular values below
+             tol × S_max at each bond are discarded, allowing the rank to
+             adapt to the local structure.  Set to 0 for hard rank truncation.
 
     Returns:
         New QTT cores after shift
@@ -280,7 +284,7 @@ def apply_nd_shift_mpo(
             new_cores.append(result)
 
     # Truncate via SVD sweep
-    new_cores = truncate_cores(new_cores, max_rank)
+    new_cores = truncate_cores(new_cores, max_rank, tol=tol)
 
     return new_cores
 

@@ -1,0 +1,76 @@
+{
+  "physics": "vlasov_maxwell",
+  "dims": 6,
+  "qubits_per_dim": 2,
+  "max_rank": 16,
+  "dt": 0.005,
+  "n_steps": 5,
+  "total_points": 4096,
+  "steps": [
+    {
+      "step": 0,
+      "norm_l2_sq": 128.00636291503906,
+      "max_val": 8.000300407409668,
+      "min_val": 0.0,
+      "total_mass": 127.9999771118164,
+      "conservation_residual": 0.0,
+      "rank": 7,
+      "state_hash": "47c0339ed393474ce72daadebdbea3592396838eb7b50938b62c476e0df1bb9c"
+    },
+    {
+      "step": 1,
+      "norm_l2_sq": 128.00640869140625,
+      "max_val": 4.971874713897705,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 4.57763671875e-05,
+      "E_energy": 81610241.07090487,
+      "rank": 16,
+      "state_hash": "ea3650c569a139bd3b84a9d943302ad78f338ca3c3696fbb40ab0f88279bd6e9"
+    },
+    {
+      "step": 2,
+      "norm_l2_sq": 128.00637817382812,
+      "max_val": 4.612735748291016,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": -3.0517578125e-05,
+      "E_energy": 63416203.63013222,
+      "rank": 16,
+      "state_hash": "16a84408272a4a091a025f65895cb367eba72dc15a34358ddc26e410b100fe2f"
+    },
+    {
+      "step": 3,
+      "norm_l2_sq": 128.0063934326172,
+      "max_val": 4.753983974456787,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 1.52587890625e-05,
+      "E_energy": 75024616.42597757,
+      "rank": 16,
+      "state_hash": "2c4b21debe9ac52f24dd71f62edbd9990cb1288055ba5977dc1fe32c5df90bc6"
+    },
+    {
+      "step": 4,
+      "norm_l2_sq": 128.0063934326172,
+      "max_val": 4.926307678222656,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 0.0,
+      "E_energy": 300614224.1102104,
+      "rank": 16,
+      "state_hash": "cbbc91debd00774ae1e7f4c4d454da69e9534b84f26d193c057565420752641a"
+    },
+    {
+      "step": 5,
+      "norm_l2_sq": 128.0064239501953,
+      "max_val": 6.162627696990967,
+      "min_val": 0.0,
+      "total_mass": 0.0,
+      "conservation_residual": 3.0517578125e-05,
+      "E_energy": 340826140.3117845,
+      "rank": 16,
+      "state_hash": "7b79db3b1ceb6427329c46e2b519de2f68626170fa6ab820192fd50de126529b"
+    }
+  ]
+}

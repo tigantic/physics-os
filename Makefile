@@ -29,6 +29,7 @@
 .PHONY: hygiene env format typecheck test-unit test-int
 .PHONY: proofs reproduce physics determinism evidence truth
 .PHONY: package docs security sbom release-check
+.PHONY: vlasov-test vlasov-smoke vlasov-proof vlasov-build-prover
 
 # Python interpreter
 PYTHON ?= python
@@ -75,6 +76,12 @@ help:
 	@echo "  make env            Capture environment"
 	@echo "  make package        Packaging gate (wheel build)"
 	@echo "  make clean          Remove artifacts"
+	@echo ""
+	@echo "Vlasov 6D Proof Pipeline:"
+	@echo "  make vlasov-test         Run Vlasov solver unit tests"
+	@echo "  make vlasov-smoke        Quick 4^6 smoke test (seconds)"
+	@echo "  make vlasov-proof        Full 32^6 video + STARK proof"
+	@echo "  make vlasov-build-prover Build Rust STARK prover binary"
 	@echo ""
 	@echo "Facial Plastics:"
 	@echo "  make fp-test        Run facial plastics tests"
@@ -344,6 +351,43 @@ lockfile-check:
 	@echo "=== Checking Lockfile Consistency ==="
 	$(PYTHON) -m pip install -r requirements-lock.txt --dry-run
 	@echo "✓ Lockfile is consistent"
+
+# ============================================
+# Vlasov 6D Proof Pipeline
+# ============================================
+VLASOV_PROVER = target/release/vlasov-proof
+VLASOV_VIDEO  = scripts/vlasov_6d_video.py
+
+vlasov-test:
+	@echo "=== Vlasov Genuine Solver: Unit Tests ==="
+	PYTHONPATH="QTeneT/src/qtenet:$(PWD):$$PYTHONPATH" \
+		$(PYTHON) -m pytest tests/test_vlasov_genuine.py -v --tb=short -x
+	@echo "✓ Vlasov unit tests passed"
+
+vlasov-smoke:
+	@echo "=== Vlasov 6D Smoke Test (4^6 = 4,096 pts, 5 steps) ==="
+	PYTHONPATH="QTeneT/src/qtenet:$(PWD):$$PYTHONPATH" \
+		$(PYTHON) $(VLASOV_VIDEO) --n-bits 2 --max-rank 16 --steps 5 --dt 0.005 --device cpu --frame-every 5
+	@echo "✓ Vlasov 6D smoke test passed"
+
+vlasov-proof: $(VLASOV_PROVER)
+	@echo "=== Vlasov 6D Full Proof (32^6 = 1B pts) ==="
+	PYTHONPATH="QTeneT/src/qtenet:$(PWD):$$PYTHONPATH" \
+		$(PYTHON) $(VLASOV_VIDEO) --n-bits 5 --max-rank 128 --steps 20 --dt 0.005 --device cpu --frame-every 5
+	@echo "✓ Vlasov 6D proof pipeline complete"
+	@echo "  Artifacts:"
+	@echo "    media/videos/vlasov_6d_phase_space.mp4"
+	@echo "    artifacts/VLASOV_6D_PROOF.bin"
+	@echo "    artifacts/VLASOV_6D_CERTIFICATE.tpc"
+
+vlasov-build-prover:
+	@echo "=== Building Vlasov STARK Prover (Rust) ==="
+	cargo build -p vlasov-proof --release
+	@echo "✓ Prover built: $(VLASOV_PROVER)"
+
+$(VLASOV_PROVER):
+	@echo "Vlasov STARK prover not found, building..."
+	cargo build -p vlasov-proof --release
 
 # ============================================
 # Facial Plastics Product Targets

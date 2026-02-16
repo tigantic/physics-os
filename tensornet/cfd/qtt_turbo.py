@@ -897,35 +897,58 @@ def turbo_truncate_batched(
             # Reshape to (r_l, d * r_r) for right-to-left SVD
             mats.append(core.reshape(r_l, d * r_r))
         
-        # Pad to common size and batch
+        # Batched rSVD: use randomized SVD when matrices are large enough
+        # to benefit (min(M,N) > 2*max_rank), else fall back to full SVD.
+        # rSVD has complexity O(M*N*k) vs O(M*N*min(M,N)) for full SVD.
         max_m = max(m.shape[0] for m in mats)
         max_n = max(m.shape[1] for m in mats)
-        batch = torch.zeros(n_fields, max_m, max_n, device=device)
-        for i, m in enumerate(mats):
-            batch[i, :m.shape[0], :m.shape[1]] = m
-        
-        # ONE batched SVD call for all fields
-        U, S, Vh = torch.linalg.svd(batch, full_matrices=False)
-        
-        # Extract truncated results per field and absorb into previous core
-        for i in range(n_fields):
-            r_l, d, r_r = shapes[i]
-            r = min(max_rank, min(r_l, d * r_r))
-            
-            # Current core gets Vh (reshaped)
-            Vi = Vh[i, :r, :d * r_r]
-            result[i][k] = Vi.reshape(r, d, r_r)
-            
-            # Absorb U @ diag(S) into previous core
-            Ui = U[i, :r_l, :r]
-            Si = S[i, :r]
-            US = Ui * Si.unsqueeze(0)  # Shape (r_l, r)
-            
-            prev_core = result[i][k - 1]
-            prev_r_l, prev_d, _ = prev_core.shape
-            prev_mat = prev_core.reshape(prev_r_l * prev_d, r_l)
-            contracted = prev_mat @ US
-            result[i][k - 1] = contracted.reshape(prev_r_l, prev_d, r)
+        use_rsvd = min(max_m, max_n) > 2 * max_rank
+
+        if use_rsvd:
+            # Per-field rSVD via batch_rsvd — avoids computing full spectrum
+            rsvd_results = batch_rsvd(mats, max_rank, oversampling=5, n_iter=1)
+            for i in range(n_fields):
+                r_l, d, r_r = shapes[i]
+                Ui, Si, Vhi = rsvd_results[i]
+                r = min(max_rank, Ui.shape[1], min(r_l, d * r_r))
+                Ui = Ui[:, :r]
+                Si = Si[:r]
+                Vhi = Vhi[:r, :]
+
+                # Current core gets Vh (reshaped)
+                result[i][k] = Vhi[:, :d * r_r].reshape(r, d, r_r)
+
+                # Absorb U @ diag(S) into previous core
+                US = Ui[:r_l, :r] * Si.unsqueeze(0)  # (r_l, r)
+                prev_core = result[i][k - 1]
+                prev_r_l, prev_d, _ = prev_core.shape
+                prev_mat = prev_core.reshape(prev_r_l * prev_d, r_l)
+                contracted = prev_mat @ US
+                result[i][k - 1] = contracted.reshape(prev_r_l, prev_d, r)
+        else:
+            # Small matrices: batched full SVD is faster (less kernel launch overhead)
+            batch = torch.zeros(n_fields, max_m, max_n, device=device)
+            for i, m in enumerate(mats):
+                batch[i, :m.shape[0], :m.shape[1]] = m
+
+            U, S, Vh = torch.linalg.svd(batch, full_matrices=False)
+
+            for i in range(n_fields):
+                r_l, d, r_r = shapes[i]
+                r = min(max_rank, min(r_l, d * r_r))
+
+                Vi = Vh[i, :r, :d * r_r]
+                result[i][k] = Vi.reshape(r, d, r_r)
+
+                Ui = U[i, :r_l, :r]
+                Si = S[i, :r]
+                US = Ui * Si.unsqueeze(0)
+
+                prev_core = result[i][k - 1]
+                prev_r_l, prev_d, _ = prev_core.shape
+                prev_mat = prev_core.reshape(prev_r_l * prev_d, r_l)
+                contracted = prev_mat @ US
+                result[i][k - 1] = contracted.reshape(prev_r_l, prev_d, r)
     
     return result
 
@@ -1162,35 +1185,52 @@ def turbo_linear_combination_batched(
             shapes.append((r_l, d, r_r))
             mats.append(core.reshape(r_l, d * r_r))
         
-        # Pad to common size
+        # Batched rSVD: use randomized SVD when matrices are large enough
         max_m = max(m.shape[0] for m in mats)
         max_n = max(m.shape[1] for m in mats)
-        batch = torch.zeros(n_fields, max_m, max_n, device=device)
-        for i, m in enumerate(mats):
-            batch[i, :m.shape[0], :m.shape[1]] = m
-        
-        # ONE batched SVD for all fields at this site
-        U, S, Vh = torch.linalg.svd(batch, full_matrices=False)
-        
-        # Extract and absorb into previous cores
-        for i in range(n_fields):
-            r_l, d, r_r = shapes[i]
-            r = min(max_rank, min(r_l, d * r_r))
-            
-            # Current core gets Vh
-            Vi = Vh[i, :r, :d * r_r]
-            accumulated[i][k] = Vi.reshape(r, d, r_r)
-            
-            # Absorb U @ diag(S) into previous core
-            Ui = U[i, :r_l, :r]
-            Si = S[i, :r]
-            US = Ui * Si.unsqueeze(0)  # (r_l, r)
-            
-            prev_core = accumulated[i][k - 1]
-            prev_r_l, prev_d, _ = prev_core.shape
-            prev_mat = prev_core.reshape(prev_r_l * prev_d, r_l)
-            contracted = prev_mat @ US
-            accumulated[i][k - 1] = contracted.reshape(prev_r_l, prev_d, r)
+        use_rsvd = min(max_m, max_n) > 2 * max_rank
+
+        if use_rsvd:
+            rsvd_results = batch_rsvd(mats, max_rank, oversampling=5, n_iter=1)
+            for i in range(n_fields):
+                r_l, d, r_r = shapes[i]
+                Ui, Si, Vhi = rsvd_results[i]
+                r = min(max_rank, Ui.shape[1], min(r_l, d * r_r))
+                Ui = Ui[:, :r]
+                Si = Si[:r]
+                Vhi = Vhi[:r, :]
+
+                accumulated[i][k] = Vhi[:, :d * r_r].reshape(r, d, r_r)
+
+                US = Ui[:r_l, :r] * Si.unsqueeze(0)
+                prev_core = accumulated[i][k - 1]
+                prev_r_l, prev_d, _ = prev_core.shape
+                prev_mat = prev_core.reshape(prev_r_l * prev_d, r_l)
+                contracted = prev_mat @ US
+                accumulated[i][k - 1] = contracted.reshape(prev_r_l, prev_d, r)
+        else:
+            batch = torch.zeros(n_fields, max_m, max_n, device=device)
+            for i, m in enumerate(mats):
+                batch[i, :m.shape[0], :m.shape[1]] = m
+
+            U, S, Vh = torch.linalg.svd(batch, full_matrices=False)
+
+            for i in range(n_fields):
+                r_l, d, r_r = shapes[i]
+                r = min(max_rank, min(r_l, d * r_r))
+
+                Vi = Vh[i, :r, :d * r_r]
+                accumulated[i][k] = Vi.reshape(r, d, r_r)
+
+                Ui = U[i, :r_l, :r]
+                Si = S[i, :r]
+                US = Ui * Si.unsqueeze(0)
+
+                prev_core = accumulated[i][k - 1]
+                prev_r_l, prev_d, _ = prev_core.shape
+                prev_mat = prev_core.reshape(prev_r_l * prev_d, r_l)
+                contracted = prev_mat @ US
+                accumulated[i][k - 1] = contracted.reshape(prev_r_l, prev_d, r)
     
     return accumulated
 

@@ -619,6 +619,114 @@ class NativeDiagnostics:
     mean_rank_u: float
     mean_rank_omega: float
     compression_ratio: float
+    divergence_max: float = 0.0     # max|∇·u|, approximated via sampling
+    max_velocity: float = 0.0       # max|u|, approximated via sampling
+    energy_conservation: float = 0.0  # |E(t) - E(0)| / E(0) if E(0) > 0
+
+
+def _qtt_point_eval(cores: QTTCores, index: int) -> float:
+    """
+    Evaluate a QTT field at a single linear index.
+
+    Binary decomposition of index → MSB-first → contract cores at the
+    selected physical index. O(r² · L) per evaluation.
+    """
+    L = cores.num_sites
+    bits: List[int] = []
+    val = index
+    for _ in range(L):
+        bits.append(val & 1)
+        val >>= 1
+    bits = bits[::-1]  # MSB-first
+
+    result = cores.cores[0][:, bits[0], :]  # (1, r1)
+    for k in range(1, L):
+        result = result @ cores.cores[k][:, bits[k], :]
+    return result.item()
+
+
+def _batched_qtt_eval(
+    cores: List[Tensor],
+    indices: Tensor,
+) -> Tensor:
+    """
+    Batched QTT point evaluation.
+
+    Evaluates a QTT at multiple linear indices simultaneously using
+    batched matrix multiplication. O(B · r² · L) total.
+
+    Args:
+        cores: List of TT cores, each (r_{k-1}, 2, r_k).
+        indices: (B,) int64 tensor of linear indices.
+
+    Returns:
+        (B,) float tensor of evaluated values.
+    """
+    L = len(cores)
+    B = indices.shape[0]
+    device = cores[0].device
+
+    # Decompose indices into per-site binary digits (MSB-first)
+    # bits_per_site[k] is (B,) with values in {0, 1} for site k
+    bits_per_site: List[Tensor] = []
+    remaining = indices.clone()
+    for _ in range(L):
+        bits_per_site.append(remaining & 1)
+        remaining = remaining >> 1
+    bits_per_site = bits_per_site[::-1]  # MSB-first
+
+    # Start with first core: result shape (B, 1, r1)
+    # cores[0] is (1, 2, r1), index with bits to get (B, 1, r1)
+    result = cores[0][0, bits_per_site[0], :]  # (B, r1)
+    result = result.unsqueeze(1)  # (B, 1, r1)
+
+    for k in range(1, L):
+        # cores[k] shape (r_{k-1}, 2, r_k)
+        # Select the physical index for each sample: (B, r_{k-1}, r_k)
+        core_sliced = cores[k][:, bits_per_site[k], :].permute(1, 0, 2)  # (B, r_{k-1}, r_k)
+        result = torch.bmm(result, core_sliced)  # (B, 1, r_k)
+
+    return result.squeeze(2).squeeze(1)  # (B,)
+
+
+def _qtt_vec_max_abs_native(
+    v: QTT3DVectorNative,
+    n_samples: int = 2048,
+) -> float:
+    """
+    Approximate max|v| via batched QTT point evaluation (no decompression).
+
+    Evaluates at n_samples random grid points using fully vectorized
+    tensor operations. Returns the maximum vector magnitude found.
+    """
+    L = v.x.cores.num_sites
+    N = 2 ** L
+    device = v.x.cores.device
+
+    indices = torch.randint(0, N, (n_samples,), device=device)
+
+    vx = _batched_qtt_eval(v.x.cores.cores, indices)  # (B,)
+    vy = _batched_qtt_eval(v.y.cores.cores, indices)  # (B,)
+    vz = _batched_qtt_eval(v.z.cores.cores, indices)  # (B,)
+
+    mag_sq = vx * vx + vy * vy + vz * vz
+    return mag_sq.max().sqrt().item()
+
+
+def _qtt_scalar_max_abs_native(
+    f: QTT3DNative,
+    n_samples: int = 2048,
+) -> float:
+    """
+    Approximate max|f| via batched QTT point evaluation (no decompression).
+    """
+    L = f.cores.num_sites
+    N = 2 ** L
+    device = f.cores.device
+
+    indices = torch.randint(0, N, (n_samples,), device=device)
+    vals = _batched_qtt_eval(f.cores.cores, indices)
+    return vals.abs().max().item()
 
 
 def compute_diagnostics_native(
@@ -626,11 +734,14 @@ def compute_diagnostics_native(
     omega: QTT3DVectorNative,
     t: float,
     dx: float,
+    deriv: Optional['NativeDerivatives3D'] = None,
+    initial_energy: Optional[float] = None,
 ) -> NativeDiagnostics:
     """
     Compute diagnostics NATIVELY - no decompression.
     
-    Uses QTT inner products for energy/enstrophy.
+    Uses QTT inner products for energy/enstrophy, point sampling
+    for max quantities, and optional divergence via derivative operator.
     """
     # Kinetic energy: E = ½ Σ (ux² + uy² + uz²) dx³
     # In QTT: E = ½ dx³ (<ux, ux> + <uy, uy> + <uz, uz>)
@@ -648,7 +759,21 @@ def compute_diagnostics_native(
     # Norms
     u_norm = np.sqrt((ux_sq + uy_sq + uz_sq).item())
     omega_norm = np.sqrt((ox_sq + oy_sq + oz_sq).item())
-    
+
+    # Max velocity magnitude (probabilistic via sampling)
+    max_velocity = _qtt_vec_max_abs_native(u)
+
+    # Divergence (if derivative operator provided)
+    divergence_max = 0.0
+    if deriv is not None:
+        div_u = deriv.divergence(u)
+        divergence_max = _qtt_scalar_max_abs_native(div_u)
+
+    # Energy conservation
+    energy_conservation = 0.0
+    if initial_energy is not None and initial_energy > 0:
+        energy_conservation = abs(kinetic_energy - initial_energy) / initial_energy
+
     return NativeDiagnostics(
         time=t,
         kinetic_energy_qtt=kinetic_energy,
@@ -660,6 +785,9 @@ def compute_diagnostics_native(
         mean_rank_u=u.mean_rank,
         mean_rank_omega=omega.mean_rank,
         compression_ratio=u.compression_ratio,
+        divergence_max=divergence_max,
+        max_velocity=max_velocity,
+        energy_conservation=energy_conservation,
     )
 
 
@@ -948,6 +1076,7 @@ class NativeNS3DSolver:
         self.omega: Optional[QTT3DVectorNative] = None
         self.t: float = 0.0
         self.step_count: int = 0
+        self.initial_energy: Optional[float] = None
         
         # History
         self.diagnostics_history: List[NativeDiagnostics] = []
@@ -959,7 +1088,11 @@ class NativeNS3DSolver:
         self.t = 0.0
         self.step_count = 0
         
-        diag = compute_diagnostics_native(u, omega, 0.0, self.config.dx)
+        diag = compute_diagnostics_native(
+            u, omega, 0.0, self.config.dx,
+            deriv=self.deriv,
+        )
+        self.initial_energy = diag.kinetic_energy_qtt
         self.diagnostics_history.append(diag)
     
     def _rhs(self, u: QTT3DVectorNative, omega: QTT3DVectorNative) -> QTT3DVectorNative:
@@ -1157,7 +1290,10 @@ class NativeNS3DSolver:
         self.t += dt
         self.step_count += 1
         
-        diag = compute_diagnostics_native(self.u, self.omega, self.t, self.config.dx)
+        diag = compute_diagnostics_native(
+            self.u, self.omega, self.t, self.config.dx,
+            deriv=self.deriv, initial_energy=self.initial_energy,
+        )
         self.diagnostics_history.append(diag)
         
         return diag
@@ -1224,7 +1360,10 @@ class NativeNS3DSolver:
         self.t += dt
         self.step_count += 1
         
-        diag = compute_diagnostics_native(self.u, self.omega, self.t, self.config.dx)
+        diag = compute_diagnostics_native(
+            self.u, self.omega, self.t, self.config.dx,
+            deriv=self.deriv, initial_energy=self.initial_energy,
+        )
         self.diagnostics_history.append(diag)
         
         return diag
@@ -1253,6 +1392,9 @@ __all__ = [
     'vector_cross_native',
     'NativeDiagnostics',
     'compute_diagnostics_native',
+    '_qtt_point_eval',
+    '_qtt_vec_max_abs_native',
+    '_qtt_scalar_max_abs_native',
     'taylor_green_native',
     'NativeNS3DConfig',
     'NativeNS3DSolver',

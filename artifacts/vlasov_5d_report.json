@@ -1,0 +1,188 @@
+{
+  "certificate": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/artifacts/VLASOV_5D_CERTIFICATE.tpc",
+  "certificate_size_bytes": 30223,
+  "simulation": {
+    "problem": "Two-Stream Instability 5D",
+    "formulation": "Vlasov-Poisson",
+    "equations": "\u2202f/\u2202t + v\u00b7\u2207_x f + (q/m)E\u00b7\u2207_v f = 0",
+    "time_integrator": "Strang Splitting",
+    "splitting": "2 spatial half-steps + 3 velocity full-steps + 2 spatial half-steps",
+    "dims": 5,
+    "grid_bits": 5,
+    "grid_N": 32,
+    "grid_points": 33554432,
+    "qtt_sites": 25,
+    "max_rank": 128,
+    "dt": 0.01,
+    "n_steps": 100,
+    "domain_spatial": "[-12.57, 12.57]^3",
+    "domain_velocity": "[-6.0, 6.0]^2"
+  },
+  "physics": {
+    "initial_norm_l2": 1.265456199645996,
+    "final_norm_l2": 1.2654576301574707,
+    "norm_conservation": 1.1304314404635673e-06,
+    "initial_mass": 115.73272705078125,
+    "final_mass": -0.9630303382873535,
+    "mass_conservation": 1.008321158265499,
+    "initial_max_rank": 16,
+    "final_max_rank": 128
+  },
+  "qtt_performance": {
+    "dense_operations_ic": 0,
+    "dense_operations_stepping": 0,
+    "qtt_native_stepping": true,
+    "initial_compression": 7358.428070175439,
+    "final_compression": 57.93677696510094,
+    "initial_params": 4560,
+    "final_params": 579156,
+    "initial_memory_kb": 17.8125,
+    "final_memory_kb": 2262.328125,
+    "dense_memory_gb": 0.134217728,
+    "max_rank": 128,
+    "mean_rank": 97.24,
+    "total_wall_time_s": 84.74418354034424,
+    "build_time_s": 0.9284701347351074,
+    "ic_time_s": 0.543971061706543,
+    "mean_step_time_ms": 841.0533452033997
+  },
+  "diagnostics": [
+    {
+      "step": 0,
+      "time": 0.0,
+      "max_rank": 16,
+      "mean_rank": 7.96,
+      "n_params": 4560,
+      "memory_kb": 17.8125,
+      "compression_ratio": 7358.428070175439,
+      "norm_l2": 1.265456199645996,
+      "total_mass": 115.73272705078125
+    },
+    {
+      "step": 10,
+      "time": 0.09999999999999999,
+      "max_rank": 128,
+      "mean_rank": 97.24,
+      "n_params": 579156,
+      "memory_kb": 2262.328125,
+      "compression_ratio": 57.93677696510094,
+      "norm_l2": 1.265457034111023,
+      "total_mass": -0.2642960846424103
+    },
+    {
+      "step": 20,
+      "time": 0.20000000000000004,
+      "max_rank": 128,
+      "mean_rank": 97.24,
+      "n_params": 579156,
+      "memory_kb": 2262.328125,
+      "compression_ratio": 57.93677696510094,
+      "norm_l2": 1.265457034111023,
+      "total_mass": 2.0740301609039307
+    },
+    {
+      "step": 30,
+      "time": 0.3000000000000001,
+      "max_rank": 128,
+      "mean_rank": 97.24,
+      "n_params": 579156,
+      "memory_kb": 2262.328125,
+      "compression_ratio": 57.93677696510094,
+      "norm_l2": 1.2654566764831543,
+      "total_mass": 2.0226857662200928
+    },
+    {
+      "step": 40,
+      "time": 0.4000000000000002,
+      "max_rank": 128,
+      "mean_rank": 97.24,
+      "n_params": 579156,
+      "memory_kb": 2262.328125,
+      "compression_ratio": 57.93677696510094,
+      "norm_l2": 1.2654571533203125,
+      "total_mass": -6.1831231117248535
+    },
+    {
+      "step": 50,
+      "time": 0.5000000000000002,
+      "max_rank": 128,
+      "mean_rank": 97.24,
+      "n_params": 579156,
+      "memory_kb": 2262.328125,
+      "compression_ratio": 57.93677696510094,
+      "norm_l2": 1.2654569149017334,
+      "total_mass": -1.0389091968536377
+    },
+    {
+      "step": 60,
+      "time": 0.6000000000000003,
+      "max_rank": 128,
+      "mean_rank": 97.24,
+      "n_params": 579156,
+      "memory_kb": 2262.328125,
+      "compression_ratio": 57.93677696510094,
+      "norm_l2": 1.2654569149017334,
+      "total_mass": -1.338800072669983
+    },
+    {
+      "step": 70,
+      "time": 0.7000000000000004,
+      "max_rank": 128,
+      "mean_rank": 97.24,
+      "n_params": 579156,
+      "memory_kb": 2262.328125,
+      "compression_ratio": 57.93677696510094,
+      "norm_l2": 1.2654566764831543,
+      "total_mass": 1.9229204654693604
+    },
+    {
+      "step": 80,
+      "time": 0.8000000000000005,
+      "max_rank": 128,
+      "mean_rank": 97.24,
+      "n_params": 579156,
+      "memory_kb": 2262.328125,
+      "compression_ratio": 57.93677696510094,
+      "norm_l2": 1.2654567956924438,
+      "total_mass": -1.4256336688995361
+    },
+    {
+      "step": 90,
+      "time": 0.9000000000000006,
+      "max_rank": 128,
+      "mean_rank": 97.24,
+      "n_params": 579156,
+      "memory_kb": 2262.328125,
+      "compression_ratio": 57.93677696510094,
+      "norm_l2": 1.2654573917388916,
+      "total_mass": 6.733648300170898
+    },
+    {
+      "step": 100,
+      "time": 1.0000000000000007,
+      "max_rank": 128,
+      "mean_rank": 97.24,
+      "n_params": 579156,
+      "memory_kb": 2262.328125,
+      "compression_ratio": 57.93677696510094,
+      "norm_l2": 1.2654576301574707,
+      "total_mass": -0.9630303382873535
+    }
+  ],
+  "provenance": {
+    "timestamp": "2026-02-16T04:58:01.369672+00:00",
+    "device": "cuda",
+    "torch_version": "2.9.1+cu128",
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU"
+  },
+  "trace": {
+    "trace_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/artifacts/vlasov_5d_computation.trc",
+    "trace_hash": "d14346f488f48b600bfb1759eda3caf93ff894e4911c7db36e3d87852e313ace",
+    "trace_entries": 1
+  },
+  "stark_witness": {
+    "witness_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/artifacts/vlasov_5d_witness.json",
+    "n_witness_steps": 101
+  }
+}

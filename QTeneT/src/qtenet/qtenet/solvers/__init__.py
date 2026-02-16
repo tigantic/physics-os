@@ -31,6 +31,16 @@ from qtenet.solvers.vlasov import (
     Vlasov6DConfig,
     VlasovState,
 )
+from qtenet.solvers.vlasov6d_genuine import (
+    Vlasov6DGenuine,
+    Vlasov6DGenuineConfig,
+    Vlasov6DGenuineState,
+)
+from qtenet.solvers.vlasov_genuine import (
+    Vlasov1D1V,
+    Vlasov1D1VConfig,
+    Vlasov1D1VState,
+)
 from qtenet.solvers.euler import (
     EulerND,
     EulerNDConfig,
@@ -59,6 +69,14 @@ __all__ = [
     "Vlasov6D",
     "Vlasov6DConfig",
     "VlasovState",
+    # Vlasov 6D Genuine (Velocity-Dependent Transport)
+    "Vlasov6DGenuine",
+    "Vlasov6DGenuineConfig",
+    "Vlasov6DGenuineState",
+    # Vlasov 1D+1V Genuine (Validated Reference)
+    "Vlasov1D1V",
+    "Vlasov1D1VConfig",
+    "Vlasov1D1VState",
     # Euler (Compressible Flow)
     "EulerND",
     "EulerNDConfig",

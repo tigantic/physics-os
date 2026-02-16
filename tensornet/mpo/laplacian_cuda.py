@@ -176,12 +176,14 @@ class LaplacianCUDA:
         num_modes: int = 12,
         viscosity: float = 1e-4,
         dx: float = 1.0,
+        max_rank: int = 64,
         dtype: torch.dtype = torch.float32,
         device: torch.device = torch.device("cuda"),
     ):
         self.num_modes = num_modes
         self.viscosity = viscosity
         self.dx = dx
+        self._max_rank = max_rank
         self.dtype = dtype
         self.device = device
 
@@ -237,7 +239,8 @@ class LaplacianCUDA:
 
         # Reshape and compress
         new_cores = []
-        max_rank = 8
+        # Adaptive rank: default 64, overridable via self._max_rank
+        max_rank = getattr(self, '_max_rank', 64)
 
         for contracted in contracted_list:
             # Reshape

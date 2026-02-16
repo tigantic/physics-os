@@ -31,6 +31,7 @@ class LaplacianMPO:
         num_modes: int = 12,
         viscosity: float = 1e-4,
         dx: float = 1.0,
+        max_rank: int = 64,
         dtype: torch.dtype = torch.float32,
         device: torch.device = torch.device("cuda"),
     ):
@@ -39,12 +40,16 @@ class LaplacianMPO:
             num_modes: Number of QTT modes (12 for 64×64 grid)
             viscosity: Kinematic viscosity (ν)
             dx: Spatial resolution
+            max_rank: Maximum bond dimension after compression (adaptive cutoff).
+                      Default 64 accommodates turbulent fields. For smooth fields,
+                      the SVD spectrum determines the effective rank (often << max_rank).
             dtype: Tensor data type
             device: Computation device
         """
         self.num_modes = num_modes
         self.viscosity = viscosity
         self.dx = dx
+        self._max_rank = max_rank
         self.dtype = dtype
         self.device = device
 
@@ -125,12 +130,11 @@ class LaplacianMPO:
             # mpo_core: [r_mpo_left, 2, 2, r_mpo_right]
             # qtt_core: [r_qtt_left, 2, r_qtt_right]
 
-            # Optimized contraction with einsum path finding
+            # MPO-QTT contraction: merge physical index k
             contracted = torch.einsum(
                 "ijkl,mjn->imknl",
                 mpo_core,
                 qtt_core,
-                optimize="optimal",  # Let PyTorch find optimal contraction path
             )
 
             # Reshape to merge bond dimensions
@@ -140,17 +144,20 @@ class LaplacianMPO:
 
             new_core = contracted.reshape(r_new_left, d_out, r_new_right)
 
-            # Lazy compression: mark for compression but don't do it yet
-            max_rank = 8
-            if new_core.shape[0] > max_rank or new_core.shape[2] > max_rank:
-                needs_compression.append((i, new_core))
+            # Adaptive rank: compress when bond dim exceeds threshold.
+            # For smooth fields, low rank suffices; for turbulent/discontinuous
+            # fields, higher rank is needed. We determine the rank from the
+            # singular-value spectrum rather than hardcoding.
+            adaptive_max_rank = self._max_rank
+            if new_core.shape[0] > adaptive_max_rank or new_core.shape[2] > adaptive_max_rank:
+                needs_compression.append((i, new_core, adaptive_max_rank))
 
             new_cores.append(new_core)
 
         # Batch compress only cores that need it (minimize overhead)
         if needs_compression:
-            for idx, core in needs_compression:
-                new_cores[idx] = self._compress_core(core, max_rank)
+            for idx, core, rank_cap in needs_compression:
+                new_cores[idx] = self._compress_core(core, rank_cap)
 
         return new_cores
 

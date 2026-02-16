@@ -521,25 +521,25 @@ impl Prover for InternalProver {
         trace_info: &TraceInfo,
         main_trace: &ColMatrix<Felt>,
         domain: &StarkDomain<Felt>,
-        _partition_options: PartitionOptions,
+        partition_options: PartitionOptions,
     ) -> (Self::TraceLde<E>, TracePolyTable<E>) {
         #[cfg(feature = "gpu-stark")]
         {
             match super::gpu_trace_lde::try_gpu_trace_lde::<E, H, VC>(
-                trace_info, main_trace, domain,
+                trace_info, main_trace, domain, partition_options,
             ) {
                 Ok(result) => return result,
                 Err(reason) => {
                     eprintln!("[GPU STARK] falling back to CPU: {reason}");
                     return super::gpu_trace_lde::GpuTraceLde::new_cpu_fallback(
-                        trace_info, main_trace, domain,
+                        trace_info, main_trace, domain, partition_options,
                     );
                 }
             }
         }
         #[cfg(not(feature = "gpu-stark"))]
         {
-            DefaultTraceLde::new(trace_info, main_trace, domain, _partition_options)
+            DefaultTraceLde::new(trace_info, main_trace, domain, partition_options)
         }
     }
 

@@ -1,0 +1,28 @@
+[package]
+name = "vlasov-proof"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.73.0"
+authors = ["Bradly Biron Baker Adams <brad@tigantic.com>"]
+description = "STARK prover for Vlasov 5D/6D QTT-native PDE solver — Winterfell (Goldilocks + FRI)"
+license = "LicenseRef-Proprietary"
+
+[[bin]]
+name = "vlasov-proof"
+path = "src/main.rs"
+
+[dependencies]
+# Circuit library with STARK backend
+fluidelite-circuits = { path = "../../fluidelite-circuits", features = ["stark"] }
+fluidelite-core = { path = "../../fluidelite-core" }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Hashing
+sha2 = "0.10"
+hex = "0.4"
+
+# CLI
+clap = { version = "4", features = ["derive"] }
