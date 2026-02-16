@@ -1,0 +1,570 @@
+{
+  "project": "HyperTensor-VM",
+  "protocol": "trustless_physics_gauntlet_phase8",
+  "phase": 8,
+  "description": "Tier 3 Wire-Up: 45 domains across Quantum Mechanics (5), Quantum Many-Body (13), Electronic Structure (7), Solid State (8), Nuclear & Particle (6), Chemical Physics (3), Quantum Information (3) \u2014 trace adapters, Lean conservation proofs, TPC generation",
+  "timestamp": "2026-02-16T21:01:08Z",
+  "total_tests": 78,
+  "passed": 78,
+  "failed": 0,
+  "total_time_seconds": 35.404,
+  "gauntlets": {
+    "qm_adapter_files_qmech": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0002,
+      "error": null
+    },
+    "qm_adapter_files_qm": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "qmb_adapter_files_cond": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0002,
+      "error": null
+    },
+    "qmb_adapter_files_alg": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "qmb_adapter_files_qft": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "es_adapter_files": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "ss_adapter_files": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "np_adapter_files_nuc": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "np_adapter_files_qft": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "np_adapter_files_part": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "cp_adapter_files": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "qi_adapter_files": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "adapter_total_count": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "core_scf_adapter": {
+      "layer": "core_adapters",
+      "passed": true,
+      "time_seconds": 3.6097,
+      "error": null
+    },
+    "core_eigenvalue_adapter": {
+      "layer": "core_adapters",
+      "passed": true,
+      "time_seconds": 0.0004,
+      "error": null
+    },
+    "lean_qm_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "lean_qmb_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "lean_es_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "lean_ss_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_np_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_cp_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_qi_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "tpc_phase8_script_exists": {
+      "layer": "tpc_script",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "tpc_phase8_importable": {
+      "layer": "tpc_script",
+      "passed": true,
+      "time_seconds": 0.0047,
+      "error": null
+    },
+    "qm_tise_solve": {
+      "layer": "qm_solvers",
+      "passed": true,
+      "time_seconds": 0.0219,
+      "error": null
+    },
+    "qm_tdse_solve": {
+      "layer": "qm_solvers",
+      "passed": true,
+      "time_seconds": 0.0041,
+      "error": null
+    },
+    "qm_scattering_solve": {
+      "layer": "qm_solvers",
+      "passed": true,
+      "time_seconds": 0.0022,
+      "error": null
+    },
+    "qm_semiclassical_solve": {
+      "layer": "qm_solvers",
+      "passed": true,
+      "time_seconds": 0.3359,
+      "error": null
+    },
+    "qm_path_integrals_solve": {
+      "layer": "qm_solvers",
+      "passed": true,
+      "time_seconds": 0.0122,
+      "error": null
+    },
+    "qmb_dmrg_solve": {
+      "layer": "qmb_solvers",
+      "passed": true,
+      "time_seconds": 0.0154,
+      "error": null
+    },
+    "qmb_quantum_spin_solve": {
+      "layer": "qmb_solvers",
+      "passed": true,
+      "time_seconds": 0.0468,
+      "error": null
+    },
+    "qmb_strongly_correlated_solve": {
+      "layer": "qmb_solvers",
+      "passed": true,
+      "time_seconds": 29.8161,
+      "error": null
+    },
+    "qmb_topological_solve": {
+      "layer": "qmb_solvers",
+      "passed": true,
+      "time_seconds": 0.0028,
+      "error": null
+    },
+    "qmb_mbl_solve": {
+      "layer": "qmb_solvers",
+      "passed": true,
+      "time_seconds": 0.0034,
+      "error": null
+    },
+    "qmb_lattice_gauge_solve": {
+      "layer": "qmb_solvers",
+      "passed": true,
+      "time_seconds": 0.0485,
+      "error": null
+    },
+    "qmb_open_quantum_solve": {
+      "layer": "qmb_solvers",
+      "passed": true,
+      "time_seconds": 0.001,
+      "error": null
+    },
+    "qmb_nonequilibrium_qm_solve": {
+      "layer": "qmb_solvers",
+      "passed": true,
+      "time_seconds": 0.0015,
+      "error": null
+    },
+    "qmb_kondo_solve": {
+      "layer": "qmb_solvers",
+      "passed": true,
+      "time_seconds": 0.0004,
+      "error": null
+    },
+    "qmb_bosonic_solve": {
+      "layer": "qmb_solvers",
+      "passed": true,
+      "time_seconds": 0.1295,
+      "error": null
+    },
+    "qmb_fermionic_solve": {
+      "layer": "qmb_solvers",
+      "passed": true,
+      "time_seconds": 0.0007,
+      "error": null
+    },
+    "qmb_nuclear_many_body_solve": {
+      "layer": "qmb_solvers",
+      "passed": true,
+      "time_seconds": 0.0004,
+      "error": null
+    },
+    "qmb_ultracold_solve": {
+      "layer": "qmb_solvers",
+      "passed": true,
+      "time_seconds": 0.0035,
+      "error": null
+    },
+    "es_dft_solve": {
+      "layer": "electronic_solvers",
+      "passed": true,
+      "time_seconds": 0.0988,
+      "error": null
+    },
+    "es_beyond_dft_solve": {
+      "layer": "electronic_solvers",
+      "passed": true,
+      "time_seconds": 0.055,
+      "error": null
+    },
+    "es_tight_binding_solve": {
+      "layer": "electronic_solvers",
+      "passed": true,
+      "time_seconds": 0.001,
+      "error": null
+    },
+    "es_excited_states_solve": {
+      "layer": "electronic_solvers",
+      "passed": true,
+      "time_seconds": 0.0007,
+      "error": null
+    },
+    "es_response_solve": {
+      "layer": "electronic_solvers",
+      "passed": true,
+      "time_seconds": 0.001,
+      "error": null
+    },
+    "es_relativistic_solve": {
+      "layer": "electronic_solvers",
+      "passed": true,
+      "time_seconds": 0.0005,
+      "error": null
+    },
+    "es_embedding_solve": {
+      "layer": "electronic_solvers",
+      "passed": true,
+      "time_seconds": 0.0007,
+      "error": null
+    },
+    "ss_phonons_solve": {
+      "layer": "solid_state_solvers",
+      "passed": true,
+      "time_seconds": 0.0042,
+      "error": null
+    },
+    "ss_band_structure_solve": {
+      "layer": "solid_state_solvers",
+      "passed": true,
+      "time_seconds": 0.0012,
+      "error": null
+    },
+    "ss_classical_magnetism_solve": {
+      "layer": "solid_state_solvers",
+      "passed": true,
+      "time_seconds": 0.0242,
+      "error": null
+    },
+    "ss_superconductivity_solve": {
+      "layer": "solid_state_solvers",
+      "passed": true,
+      "time_seconds": 0.0013,
+      "error": null
+    },
+    "ss_disordered_solve": {
+      "layer": "solid_state_solvers",
+      "passed": true,
+      "time_seconds": 0.0008,
+      "error": null
+    },
+    "ss_surfaces_solve": {
+      "layer": "solid_state_solvers",
+      "passed": true,
+      "time_seconds": 0.0005,
+      "error": null
+    },
+    "ss_defects_solve": {
+      "layer": "solid_state_solvers",
+      "passed": true,
+      "time_seconds": 0.0525,
+      "error": null
+    },
+    "ss_ferroelectrics_solve": {
+      "layer": "solid_state_solvers",
+      "passed": true,
+      "time_seconds": 0.0005,
+      "error": null
+    },
+    "np_nuclear_structure_solve": {
+      "layer": "nuclear_particle_solvers",
+      "passed": true,
+      "time_seconds": 0.2016,
+      "error": null
+    },
+    "np_nuclear_reactions_solve": {
+      "layer": "nuclear_particle_solvers",
+      "passed": true,
+      "time_seconds": 0.0009,
+      "error": null
+    },
+    "np_nuclear_astro_solve": {
+      "layer": "nuclear_particle_solvers",
+      "passed": true,
+      "time_seconds": 0.0006,
+      "error": null
+    },
+    "np_lattice_qcd_solve": {
+      "layer": "nuclear_particle_solvers",
+      "passed": true,
+      "time_seconds": 0.3534,
+      "error": null
+    },
+    "np_perturbative_qft_solve": {
+      "layer": "nuclear_particle_solvers",
+      "passed": true,
+      "time_seconds": 0.0005,
+      "error": null
+    },
+    "np_beyond_sm_solve": {
+      "layer": "nuclear_particle_solvers",
+      "passed": true,
+      "time_seconds": 0.0008,
+      "error": null
+    },
+    "cp_pes_solve": {
+      "layer": "chem_physics_solvers",
+      "passed": true,
+      "time_seconds": 0.0029,
+      "error": null
+    },
+    "cp_reaction_rate_solve": {
+      "layer": "chem_physics_solvers",
+      "passed": true,
+      "time_seconds": 0.0004,
+      "error": null
+    },
+    "cp_catalysis_solve": {
+      "layer": "chem_physics_solvers",
+      "passed": true,
+      "time_seconds": 0.0004,
+      "error": null
+    },
+    "qi_quantum_circuit_solve": {
+      "layer": "quantum_info_solvers",
+      "passed": true,
+      "time_seconds": 0.0046,
+      "error": null
+    },
+    "qi_qec_solve": {
+      "layer": "quantum_info_solvers",
+      "passed": true,
+      "time_seconds": 0.0011,
+      "error": null
+    },
+    "qi_vqe_solve": {
+      "layer": "quantum_info_solvers",
+      "passed": true,
+      "time_seconds": 0.4257,
+      "error": null
+    },
+    "conservation_qm_norm": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0169,
+      "error": null
+    },
+    "conservation_qmb_energy": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0241,
+      "error": null
+    },
+    "conservation_es_electron_count": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.057,
+      "error": null
+    },
+    "conservation_ss_phonon_reality": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "conservation_np_baryon": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "conservation_qi_unitarity": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0004,
+      "error": null
+    },
+    "integration_trace_session_api": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "integration_all_categories_covered": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "integration_consistency_check": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    }
+  },
+  "categories": {
+    "quantum_mechanics": {
+      "domains": 5,
+      "lean_proof": "quantum_mechanics_conservation_proof/QuantumMechanicsConservation.lean",
+      "conservation_laws": [
+        "normalisation",
+        "probability",
+        "optical theorem",
+        "action quantisation",
+        "detailed balance"
+      ]
+    },
+    "quantum_many_body": {
+      "domains": 13,
+      "lean_proof": "qmb_conservation_proof/QuantumManyBodyConservation.lean",
+      "conservation_laws": [
+        "energy convergence",
+        "total Sz",
+        "spectral weight",
+        "Chern integer",
+        "gap ratio",
+        "Gauss law",
+        "trace preservation",
+        "unitarity",
+        "spectral weight",
+        "particle number",
+        "particle number",
+        "nucleon number",
+        "atom number"
+      ]
+    },
+    "electronic_structure": {
+      "domains": 7,
+      "lean_proof": "electronic_structure_conservation_proof/ElectronicStructureConservation.lean",
+      "conservation_laws": [
+        "electron count",
+        "total energy",
+        "charge neutrality",
+        "excitation positivity",
+        "Kramers-Kronig",
+        "current continuity",
+        "electron number"
+      ]
+    },
+    "solid_state": {
+      "domains": 8,
+      "lean_proof": "solid_state_conservation_proof/SolidStateConservation.lean",
+      "conservation_laws": [
+        "acoustic sum rule",
+        "charge neutrality",
+        "magnetisation magnitude",
+        "particle number",
+        "normalisation",
+        "charge neutrality",
+        "charge balance",
+        "polarisation bounded"
+      ]
+    },
+    "nuclear_particle": {
+      "domains": 6,
+      "lean_proof": "nuclear_particle_conservation_proof/NuclearParticleConservation.lean",
+      "conservation_laws": [
+        "nucleon number",
+        "unitarity",
+        "baryon conservation",
+        "gauge invariance",
+        "Ward identity",
+        "probability unitarity"
+      ]
+    },
+    "chem_physics_iter": {
+      "domains": 3,
+      "lean_proof": "chem_physics_iter_conservation_proof/ChemPhysicsIterConservation.lean",
+      "conservation_laws": [
+        "gradient at minimum",
+        "rate positivity",
+        "atom conservation"
+      ]
+    },
+    "quantum_info": {
+      "domains": 3,
+      "lean_proof": "quantum_info_conservation_proof/QuantumInfoConservation.lean",
+      "conservation_laws": [
+        "unitarity",
+        "logical fidelity",
+        "variational bound"
+      ]
+    }
+  }
+}

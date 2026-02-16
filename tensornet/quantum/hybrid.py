@@ -333,7 +333,7 @@ class TNQuantumSimulator:
         Vh = Vh[:chi_new, :]
 
         # Absorb singular values into left tensor
-        US = U @ torch.diag(S)
+        US = U @ torch.diag(S.to(U.dtype))
 
         # Reshape back to MPS tensors
         self.mps[q_left] = US.reshape(chi_l, 2, chi_new)
@@ -416,7 +416,7 @@ class TNQuantumSimulator:
         S = S[:chi_new]
         Vh = Vh[:chi_new, :]
 
-        US = U @ torch.diag(S)
+        US = U @ torch.diag(S.to(U.dtype))
 
         self.mps[q_left] = US.reshape(chi_l, 2, chi_new)
         self.mps[q_right] = Vh.reshape(chi_new, 2, chi_r)
