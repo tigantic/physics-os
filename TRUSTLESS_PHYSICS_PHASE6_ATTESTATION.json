@@ -1,0 +1,373 @@
+{
+  "project": "HyperTensor-VM",
+  "protocol": "trustless_physics_gauntlet_phase6",
+  "phase": 6,
+  "description": "Tier 2A Wire-Up: 25 domains across Fluid Dynamics (8), Electromagnetism (7), StatMech (3), Plasma Physics (7) \u2014 trace adapters, Lean conservation proofs, TPC generation",
+  "timestamp": "2026-02-16T18:48:55Z",
+  "total_tests": 46,
+  "passed": 46,
+  "failed": 0,
+  "total_time_seconds": 4.44,
+  "gauntlets": {
+    "fluid_adapter_files_exist": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0002,
+      "error": null
+    },
+    "em_adapter_files_exist": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "statmech_adapter_files_exist": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "plasma_adapter_files_exist": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "adapter_total_count": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_fluid_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "lean_em_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "lean_statmech_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_plasma_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "tpc_phase6_script_exists": {
+      "layer": "tpc_script",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "tpc_phase6_importable": {
+      "layer": "tpc_script",
+      "passed": true,
+      "time_seconds": 0.0292,
+      "error": null
+    },
+    "fluid_turbulence_solve": {
+      "layer": "fluid_solvers",
+      "passed": true,
+      "time_seconds": 3.7056,
+      "error": null
+    },
+    "fluid_multiphase_solve": {
+      "layer": "fluid_solvers",
+      "passed": true,
+      "time_seconds": 0.012,
+      "error": null
+    },
+    "fluid_rarefied_solve": {
+      "layer": "fluid_solvers",
+      "passed": true,
+      "time_seconds": 0.0055,
+      "error": null
+    },
+    "fluid_non_newtonian_solve": {
+      "layer": "fluid_solvers",
+      "passed": true,
+      "time_seconds": 0.0038,
+      "error": null
+    },
+    "fluid_porous_media_solve": {
+      "layer": "fluid_solvers",
+      "passed": true,
+      "time_seconds": 0.0169,
+      "error": null
+    },
+    "fluid_free_surface_solve": {
+      "layer": "fluid_solvers",
+      "passed": true,
+      "time_seconds": 0.0025,
+      "error": null
+    },
+    "fluid_shallow_water_import": {
+      "layer": "fluid_solvers",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "fluid_reactive_import": {
+      "layer": "fluid_solvers",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "em_electrostatics_import": {
+      "layer": "em_solvers",
+      "passed": true,
+      "time_seconds": 0.0088,
+      "error": null
+    },
+    "em_magnetostatics_import": {
+      "layer": "em_solvers",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "em_maxwell_fdtd_import": {
+      "layer": "em_solvers",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "em_frequency_domain_import": {
+      "layer": "em_solvers",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "em_wave_propagation_import": {
+      "layer": "em_solvers",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "em_photonics_import": {
+      "layer": "em_solvers",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "em_antenna_import": {
+      "layer": "em_solvers",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "statmech_lattice_spin_solve": {
+      "layer": "statmech_solvers",
+      "passed": true,
+      "time_seconds": 0.065,
+      "error": null
+    },
+    "statmech_non_equilibrium_import": {
+      "layer": "statmech_solvers",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "statmech_md_import": {
+      "layer": "statmech_solvers",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "plasma_ideal_mhd_import": {
+      "layer": "plasma_solvers",
+      "passed": true,
+      "time_seconds": 0.0098,
+      "error": null
+    },
+    "plasma_resistive_mhd_import": {
+      "layer": "plasma_solvers",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "plasma_gyrokinetics_import": {
+      "layer": "plasma_solvers",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "plasma_reconnection_import": {
+      "layer": "plasma_solvers",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "plasma_laser_plasma_import": {
+      "layer": "plasma_solvers",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "plasma_dusty_plasma_import": {
+      "layer": "plasma_solvers",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "plasma_space_plasma_import": {
+      "layer": "plasma_solvers",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "conservation_turbulence_tke": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0013,
+      "error": null
+    },
+    "conservation_multiphase_mass": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0047,
+      "error": null
+    },
+    "conservation_rarefied_density": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0027,
+      "error": null
+    },
+    "conservation_porous_mass": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0177,
+      "error": null
+    },
+    "conservation_ising_detailed_balance": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0532,
+      "error": null
+    },
+    "integration_25_domains_covered": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0002,
+      "error": null
+    },
+    "integration_4_lean_proofs": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0002,
+      "error": null
+    },
+    "integration_phase5_intact": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "integration_standalone_solvers_run": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.003,
+      "error": null
+    },
+    "integration_lattice_spin_full": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.4948,
+      "error": null
+    }
+  },
+  "categories": {
+    "fluids": {
+      "domains": 8,
+      "adapters": [
+        "turbulence_adapter.py",
+        "multiphase_adapter.py",
+        "reactive_adapter.py",
+        "rarefied_adapter.py",
+        "shallow_water_adapter.py",
+        "non_newtonian_adapter.py",
+        "porous_media_adapter.py",
+        "free_surface_adapter.py"
+      ],
+      "lean_proof": "fluid_conservation_proof/FluidConservation.lean",
+      "conservation_laws": [
+        "TKE budget",
+        "mass (CH)",
+        "species mass",
+        "number density",
+        "mass (SW)",
+        "KE + elastic",
+        "fluid mass",
+        "enclosed volume"
+      ]
+    },
+    "em": {
+      "domains": 7,
+      "adapters": [
+        "electrostatics_adapter.py",
+        "magnetostatics_adapter.py",
+        "maxwell_fdtd_adapter.py",
+        "frequency_domain_adapter.py",
+        "wave_propagation_adapter.py",
+        "photonics_adapter.py",
+        "antenna_adapter.py"
+      ],
+      "lean_proof": "em_conservation_proof/EMConservation.lean",
+      "conservation_laws": [
+        "Gauss law",
+        "\u2207\u00b7B=0",
+        "EM energy",
+        "field energy",
+        "Poynting energy",
+        "R+T=1",
+        "directivity"
+      ]
+    },
+    "statmech": {
+      "domains": 3,
+      "adapters": [
+        "non_equilibrium_adapter.py",
+        "md_adapter.py",
+        "lattice_spin_adapter.py"
+      ],
+      "lean_proof": "statmech_conservation_proof/StatMechConservation.lean",
+      "conservation_laws": [
+        "stoichiometry",
+        "total energy + momentum",
+        "detailed balance"
+      ]
+    },
+    "plasma": {
+      "domains": 7,
+      "adapters": [
+        "ideal_mhd_adapter.py",
+        "resistive_mhd_adapter.py",
+        "gyrokinetics_adapter.py",
+        "reconnection_adapter.py",
+        "laser_plasma_adapter.py",
+        "dusty_plasma_adapter.py",
+        "space_plasma_adapter.py"
+      ],
+      "lean_proof": "plasma_conservation_proof/PlasmaConservation.lean",
+      "conservation_laws": [
+        "mass + energy + \u2207\u00b7B",
+        "mass + helicity",
+        "particle + energy",
+        "scaling law",
+        "freq matching",
+        "dispersion",
+        "dynamo amplification"
+      ]
+    }
+  }
+}
