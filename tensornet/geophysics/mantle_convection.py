@@ -62,7 +62,7 @@ class StokesFlow2D:
         dTdx = np.gradient(T, self.dx, axis=0)
         rhs = -Ra * dTdx
 
-        from numpy.fft import dstn, idstn
+        from scipy.fft import dstn, idstn
 
         rhs_hat = dstn(rhs, type=1)
 

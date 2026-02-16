@@ -1,0 +1,565 @@
+{
+  "project": "HyperTensor-VM",
+  "protocol": "trustless_physics_gauntlet_phase7",
+  "phase": 7,
+  "description": "Tier 2B Wire-Up: 40 domains across Classical Mechanics (6), Optics (4), Astrophysics (6), Geophysics (6), Materials Science (7), Coupled Physics (7), Chemical Physics (4) \u2014 trace adapters, Lean conservation proofs, TPC generation",
+  "timestamp": "2026-02-16T19:54:03Z",
+  "total_tests": 69,
+  "passed": 69,
+  "failed": 0,
+  "total_time_seconds": 4.143,
+  "gauntlets": {
+    "mechanics_adapter_files_exist": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0002,
+      "error": null
+    },
+    "optics_adapter_files_exist": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "astro_adapter_files_exist": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "geophysics_adapter_files_exist": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "materials_adapter_files_exist": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "coupled_adapter_files_exist": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "chemistry_adapter_files_exist": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "adapter_total_count": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_mechanics_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "lean_optics_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_astro_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_geophysics_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_materials_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_coupled_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_chemistry_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "tpc_phase7_script_exists": {
+      "layer": "tpc_script",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "tpc_phase7_importable": {
+      "layer": "tpc_script",
+      "passed": true,
+      "time_seconds": 0.0347,
+      "error": null
+    },
+    "mechanics_newtonian_solve": {
+      "layer": "mechanics_solvers",
+      "passed": true,
+      "time_seconds": 3.5791,
+      "error": null
+    },
+    "mechanics_symplectic_solve": {
+      "layer": "mechanics_solvers",
+      "passed": true,
+      "time_seconds": 0.0011,
+      "error": null
+    },
+    "mechanics_continuum_solve": {
+      "layer": "mechanics_solvers",
+      "passed": true,
+      "time_seconds": 0.0017,
+      "error": null
+    },
+    "mechanics_structural_solve": {
+      "layer": "mechanics_solvers",
+      "passed": true,
+      "time_seconds": 0.0007,
+      "error": null
+    },
+    "mechanics_nonlinear_dynamics_solve": {
+      "layer": "mechanics_solvers",
+      "passed": true,
+      "time_seconds": 0.0021,
+      "error": null
+    },
+    "mechanics_acoustics_solve": {
+      "layer": "mechanics_solvers",
+      "passed": true,
+      "time_seconds": 0.0015,
+      "error": null
+    },
+    "optics_physical_solve": {
+      "layer": "optics_solvers",
+      "passed": true,
+      "time_seconds": 0.0337,
+      "error": null
+    },
+    "optics_quantum_solve": {
+      "layer": "optics_solvers",
+      "passed": true,
+      "time_seconds": 0.0006,
+      "error": null
+    },
+    "optics_laser_solve": {
+      "layer": "optics_solvers",
+      "passed": true,
+      "time_seconds": 0.0014,
+      "error": null
+    },
+    "optics_ultrafast_solve": {
+      "layer": "optics_solvers",
+      "passed": true,
+      "time_seconds": 0.0048,
+      "error": null
+    },
+    "astro_stellar_structure_solve": {
+      "layer": "astro_solvers",
+      "passed": true,
+      "time_seconds": 0.0017,
+      "error": null
+    },
+    "astro_compact_objects_solve": {
+      "layer": "astro_solvers",
+      "passed": true,
+      "time_seconds": 0.0004,
+      "error": null
+    },
+    "astro_gravitational_waves_solve": {
+      "layer": "astro_solvers",
+      "passed": true,
+      "time_seconds": 0.0004,
+      "error": null
+    },
+    "astro_cosmological_sims_solve": {
+      "layer": "astro_solvers",
+      "passed": true,
+      "time_seconds": 0.0032,
+      "error": null
+    },
+    "astro_cmb_solve": {
+      "layer": "astro_solvers",
+      "passed": true,
+      "time_seconds": 0.0009,
+      "error": null
+    },
+    "astro_radiative_transfer_solve": {
+      "layer": "astro_solvers",
+      "passed": true,
+      "time_seconds": 0.0007,
+      "error": null
+    },
+    "geophysics_seismology_solve": {
+      "layer": "geophysics_solvers",
+      "passed": true,
+      "time_seconds": 0.0059,
+      "error": null
+    },
+    "geophysics_mantle_convection_solve": {
+      "layer": "geophysics_solvers",
+      "passed": true,
+      "time_seconds": 0.0085,
+      "error": null
+    },
+    "geophysics_geodynamo_solve": {
+      "layer": "geophysics_solvers",
+      "passed": true,
+      "time_seconds": 0.0013,
+      "error": null
+    },
+    "geophysics_atmospheric_solve": {
+      "layer": "geophysics_solvers",
+      "passed": true,
+      "time_seconds": 0.0002,
+      "error": null
+    },
+    "geophysics_oceanography_solve": {
+      "layer": "geophysics_solvers",
+      "passed": true,
+      "time_seconds": 0.0007,
+      "error": null
+    },
+    "geophysics_glaciology_solve": {
+      "layer": "geophysics_solvers",
+      "passed": true,
+      "time_seconds": 0.0028,
+      "error": null
+    },
+    "materials_first_principles_solve": {
+      "layer": "materials_solvers",
+      "passed": true,
+      "time_seconds": 0.0047,
+      "error": null
+    },
+    "materials_mechanical_properties_solve": {
+      "layer": "materials_solvers",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "materials_phase_field_solve": {
+      "layer": "materials_solvers",
+      "passed": true,
+      "time_seconds": 0.0034,
+      "error": null
+    },
+    "materials_microstructure_solve": {
+      "layer": "materials_solvers",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "materials_radiation_damage_solve": {
+      "layer": "materials_solvers",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "materials_polymers_solve": {
+      "layer": "materials_solvers",
+      "passed": true,
+      "time_seconds": 0.0011,
+      "error": null
+    },
+    "materials_ceramics_solve": {
+      "layer": "materials_solvers",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "coupled_fsi_solve": {
+      "layer": "coupled_solvers",
+      "passed": true,
+      "time_seconds": 0.0115,
+      "error": null
+    },
+    "coupled_thermo_mechanical_solve": {
+      "layer": "coupled_solvers",
+      "passed": true,
+      "time_seconds": 0.369,
+      "error": null
+    },
+    "coupled_electro_mechanical_solve": {
+      "layer": "coupled_solvers",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "coupled_mhd_solve": {
+      "layer": "coupled_solvers",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "coupled_reacting_flows_import": {
+      "layer": "coupled_solvers",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "coupled_radiation_hydro_solve": {
+      "layer": "coupled_solvers",
+      "passed": true,
+      "time_seconds": 0.0171,
+      "error": null
+    },
+    "coupled_multiscale_solve": {
+      "layer": "coupled_solvers",
+      "passed": true,
+      "time_seconds": 0.0016,
+      "error": null
+    },
+    "chemistry_nonadiabatic_solve": {
+      "layer": "chemistry_solvers",
+      "passed": true,
+      "time_seconds": 0.0128,
+      "error": null
+    },
+    "chemistry_photochemistry_solve": {
+      "layer": "chemistry_solvers",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "chemistry_quantum_reactive_solve": {
+      "layer": "chemistry_solvers",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "chemistry_spectroscopy_solve": {
+      "layer": "chemistry_solvers",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "conservation_newtonian_energy": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0073,
+      "error": null
+    },
+    "conservation_symplectic_hamiltonian": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0033,
+      "error": null
+    },
+    "conservation_phase_field_mass": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0054,
+      "error": null
+    },
+    "conservation_fsi_energy": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0093,
+      "error": null
+    },
+    "conservation_photochemistry_fc_sum": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "conservation_oceanography_energy": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0006,
+      "error": null
+    },
+    "conservation_coupled_mhd_hartmann": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "integration_40_domains_covered": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0003,
+      "error": null
+    },
+    "integration_7_lean_proofs": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0002,
+      "error": null
+    },
+    "integration_phase6_intact": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "integration_phase5_intact": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "integration_trace_session_api": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0003,
+      "error": null
+    }
+  },
+  "categories": {
+    "mechanics": {
+      "domains": 6,
+      "adapters": [
+        "newtonian_dynamics_adapter.py",
+        "symplectic_adapter.py",
+        "continuum_adapter.py",
+        "structural_adapter.py",
+        "nonlinear_dynamics_adapter.py",
+        "acoustics_adapter.py"
+      ],
+      "lean_proof": "mechanics_conservation_proof/MechanicsConservation.lean",
+      "conservation_laws": [
+        "total energy (N-body)",
+        "Hamiltonian (symplectic)",
+        "strain + kinetic energy",
+        "work-energy theorem",
+        "bounded trajectories",
+        "acoustic energy"
+      ]
+    },
+    "optics": {
+      "domains": 4,
+      "adapters": [
+        "physical_optics_adapter.py",
+        "quantum_optics_adapter.py",
+        "laser_physics_adapter.py",
+        "ultrafast_optics_adapter.py"
+      ],
+      "lean_proof": "optics_conservation_proof/OpticsConservation.lean",
+      "conservation_laws": [
+        "total intensity",
+        "tr(\u03c1)=1",
+        "population",
+        "pulse energy"
+      ]
+    },
+    "astro": {
+      "domains": 6,
+      "adapters": [
+        "stellar_structure_adapter.py",
+        "compact_objects_adapter.py",
+        "gravitational_waves_adapter.py",
+        "cosmological_sims_adapter.py",
+        "cmb_adapter.py",
+        "radiative_transfer_adapter.py"
+      ],
+      "lean_proof": "astro_conservation_proof/AstroConservation.lean",
+      "conservation_laws": [
+        "mass",
+        "mass (TOV)",
+        "chirp mass",
+        "energy (N-body)",
+        "baryon number",
+        "energy balance"
+      ]
+    },
+    "geophysics": {
+      "domains": 6,
+      "adapters": [
+        "seismology_adapter.py",
+        "mantle_convection_adapter.py",
+        "geodynamo_adapter.py",
+        "atmospheric_adapter.py",
+        "oceanography_adapter.py",
+        "glaciology_adapter.py"
+      ],
+      "lean_proof": "geophysics_conservation_proof/GeophysicsConservation.lean",
+      "conservation_laws": [
+        "wave energy",
+        "thermal energy",
+        "magnetic energy",
+        "Ox species",
+        "total energy (SW)",
+        "ice mass"
+      ]
+    },
+    "materials": {
+      "domains": 7,
+      "adapters": [
+        "first_principles_adapter.py",
+        "mechanical_properties_adapter.py",
+        "phase_field_adapter.py",
+        "microstructure_adapter.py",
+        "radiation_damage_adapter.py",
+        "polymers_adapter.py",
+        "ceramics_adapter.py"
+      ],
+      "lean_proof": "materials_conservation_proof/MaterialsConservation.lean",
+      "conservation_laws": [
+        "thermodynamic consistency",
+        "symmetry",
+        "concentration",
+        "\u03a3\u03b7 constraint",
+        "energy partition",
+        "incompressibility",
+        "monotone densification"
+      ]
+    },
+    "coupled": {
+      "domains": 7,
+      "adapters": [
+        "fsi_adapter.py",
+        "thermo_mechanical_adapter.py",
+        "electro_mechanical_adapter.py",
+        "coupled_mhd_adapter.py",
+        "reacting_flows_adapter.py",
+        "radiation_hydro_adapter.py",
+        "multiscale_adapter.py"
+      ],
+      "lean_proof": "coupled_conservation_proof/CoupledConservation.lean",
+      "conservation_laws": [
+        "beam energy",
+        "equilibrium",
+        "coupling coefficient",
+        "Hartmann flow",
+        "species mass",
+        "total energy",
+        "stress equilibrium"
+      ]
+    },
+    "chemistry": {
+      "domains": 4,
+      "adapters": [
+        "nonadiabatic_adapter.py",
+        "photochemistry_adapter.py",
+        "quantum_reactive_adapter.py",
+        "spectroscopy_adapter.py"
+      ],
+      "lean_proof": "chemical_physics_conservation_proof/ChemicalPhysicsConservation.lean",
+      "conservation_laws": [
+        "total energy (FSSH)",
+        "FC sum rule",
+        "Arrhenius consistency",
+        "spectral sum rule"
+      ]
+    }
+  }
+}
