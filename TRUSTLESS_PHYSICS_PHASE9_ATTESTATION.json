@@ -1,0 +1,438 @@
+{
+  "project": "HyperTensor-VM",
+  "protocol": "trustless_physics_gauntlet_phase9",
+  "phase": 9,
+  "description": "Tier 4 Wire-Up: 26 domains across StatMech Stochastic (2), Biophysics (6), Computational Methods (6), Quantum Information Extended (2), Special / Applied Physics (10) \u2014 trace adapters, Lean conservation proofs, TPC generation",
+  "timestamp": "2026-02-16T21:37:12Z",
+  "total_tests": 60,
+  "passed": 60,
+  "failed": 0,
+  "total_time_seconds": 4.473,
+  "gauntlets": {
+    "adapter_files_statmech": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "adapter_files_biophysics": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0002,
+      "error": null
+    },
+    "adapter_files_compmeth": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "adapter_files_mlphysics": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "adapter_files_qinfo_ext": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "adapter_files_relativity": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "adapter_files_astro": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "adapter_files_robotics": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "adapter_files_acoustics": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "adapter_files_biomedical": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "adapter_files_environmental": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "adapter_files_energy": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "adapter_files_manufacturing": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "adapter_files_semiconductor": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "adapter_total_count": {
+      "layer": "adapter_files",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "core_stochastic_adapter": {
+      "layer": "core_adapters",
+      "passed": true,
+      "time_seconds": 3.6824,
+      "error": null
+    },
+    "core_ml_adapter": {
+      "layer": "core_adapters",
+      "passed": true,
+      "time_seconds": 0.0003,
+      "error": null
+    },
+    "lean_statmech_stochastic": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "lean_biophysics": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_computational_methods": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_quantum_info_ext": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_special_relativity": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "lean_applied_physics": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "tpc_phase9_script_exists": {
+      "layer": "tpc_script",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "tpc_phase9_importable": {
+      "layer": "tpc_script",
+      "passed": true,
+      "time_seconds": 0.0002,
+      "error": null
+    },
+    "statmech_equilibrium_mc_solve": {
+      "layer": "statmech_solvers",
+      "passed": true,
+      "time_seconds": 0.1669,
+      "error": null
+    },
+    "statmech_monte_carlo_general_solve": {
+      "layer": "statmech_solvers",
+      "passed": true,
+      "time_seconds": 0.1222,
+      "error": null
+    },
+    "bio_protein_structure_solve": {
+      "layer": "biophysics_solvers",
+      "passed": true,
+      "time_seconds": 0.0486,
+      "error": null
+    },
+    "bio_drug_design_solve": {
+      "layer": "biophysics_solvers",
+      "passed": true,
+      "time_seconds": 0.0032,
+      "error": null
+    },
+    "bio_membrane_solve": {
+      "layer": "biophysics_solvers",
+      "passed": true,
+      "time_seconds": 0.0014,
+      "error": null
+    },
+    "bio_nucleic_acids_solve": {
+      "layer": "biophysics_solvers",
+      "passed": true,
+      "time_seconds": 0.0014,
+      "error": null
+    },
+    "bio_systems_biology_solve": {
+      "layer": "biophysics_solvers",
+      "passed": true,
+      "time_seconds": 0.0311,
+      "error": null
+    },
+    "bio_neuroscience_solve": {
+      "layer": "biophysics_solvers",
+      "passed": true,
+      "time_seconds": 0.009,
+      "error": null
+    },
+    "comp_optimization_solve": {
+      "layer": "compmeth_solvers",
+      "passed": true,
+      "time_seconds": 0.0261,
+      "error": null
+    },
+    "comp_inverse_problems_solve": {
+      "layer": "compmeth_solvers",
+      "passed": true,
+      "time_seconds": 0.0021,
+      "error": null
+    },
+    "comp_ml_physics_solve": {
+      "layer": "compmeth_solvers",
+      "passed": true,
+      "time_seconds": 0.038,
+      "error": null
+    },
+    "comp_mesh_generation_solve": {
+      "layer": "compmeth_solvers",
+      "passed": true,
+      "time_seconds": 0.0013,
+      "error": null
+    },
+    "comp_large_scale_linalg_solve": {
+      "layer": "compmeth_solvers",
+      "passed": true,
+      "time_seconds": 0.0187,
+      "error": null
+    },
+    "comp_hpc_solve": {
+      "layer": "compmeth_solvers",
+      "passed": true,
+      "time_seconds": 0.001,
+      "error": null
+    },
+    "qinfo_quantum_simulation_solve": {
+      "layer": "qinfo_ext_solvers",
+      "passed": true,
+      "time_seconds": 0.0268,
+      "error": null
+    },
+    "qinfo_quantum_crypto_solve": {
+      "layer": "qinfo_ext_solvers",
+      "passed": true,
+      "time_seconds": 0.0004,
+      "error": null
+    },
+    "special_relativity_solve": {
+      "layer": "special_solvers",
+      "passed": true,
+      "time_seconds": 0.0014,
+      "error": null
+    },
+    "numerical_gr_solve": {
+      "layer": "special_solvers",
+      "passed": true,
+      "time_seconds": 0.003,
+      "error": null
+    },
+    "astrodynamics_solve": {
+      "layer": "special_solvers",
+      "passed": true,
+      "time_seconds": 0.0018,
+      "error": null
+    },
+    "robotics_solve": {
+      "layer": "special_solvers",
+      "passed": true,
+      "time_seconds": 0.0009,
+      "error": null
+    },
+    "acoustics_solve": {
+      "layer": "special_solvers",
+      "passed": true,
+      "time_seconds": 0.002,
+      "error": null
+    },
+    "biomedical_solve": {
+      "layer": "special_solvers",
+      "passed": true,
+      "time_seconds": 0.0255,
+      "error": null
+    },
+    "environmental_solve": {
+      "layer": "special_solvers",
+      "passed": true,
+      "time_seconds": 0.0013,
+      "error": null
+    },
+    "energy_systems_solve": {
+      "layer": "special_solvers",
+      "passed": true,
+      "time_seconds": 0.0014,
+      "error": null
+    },
+    "manufacturing_solve": {
+      "layer": "special_solvers",
+      "passed": true,
+      "time_seconds": 0.0007,
+      "error": null
+    },
+    "semiconductor_solve": {
+      "layer": "special_solvers",
+      "passed": true,
+      "time_seconds": 0.0118,
+      "error": null
+    },
+    "conservation_equilibrium_mc_detailed_balance": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.1558,
+      "error": null
+    },
+    "conservation_protein_energy": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.049,
+      "error": null
+    },
+    "conservation_neuroscience_spike": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0066,
+      "error": null
+    },
+    "conservation_mesh_balance": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "conservation_sr_invariant_mass": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "conservation_environmental_nonneg": {
+      "layer": "conservation",
+      "passed": true,
+      "time_seconds": 0.0008,
+      "error": null
+    },
+    "integration_trace_session_api": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "integration_all_categories_covered": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "integration_consistency_check": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0252,
+      "error": null
+    }
+  },
+  "categories": {
+    "statmech_stochastic": {
+      "domains": 2,
+      "lean_proof": "statmech_stochastic_conservation_proof/StatMechStochasticConservation.lean",
+      "conservation_laws": [
+        "detailed balance",
+        "energy convergence",
+        "replica exchange",
+        "flat histogram"
+      ]
+    },
+    "biophysics": {
+      "domains": 6,
+      "lean_proof": "biophysics_conservation_proof/BiophysicsConservation.lean",
+      "conservation_laws": [
+        "Ramachandran angles",
+        "binding energy",
+        "bending energy",
+        "MFE",
+        "stoichiometry",
+        "membrane voltage"
+      ]
+    },
+    "computational_methods": {
+      "domains": 6,
+      "lean_proof": "computational_methods_conservation_proof/ComputationalMethodsConservation.lean",
+      "conservation_laws": [
+        "objective decrease",
+        "residual decrease",
+        "loss convergence",
+        "2:1 balance",
+        "Lanczos convergence",
+        "bit-exact reproducibility"
+      ]
+    },
+    "quantum_info_extended": {
+      "domains": 2,
+      "lean_proof": "quantum_info_ext_conservation_proof/QuantumInfoExtConservation.lean",
+      "conservation_laws": [
+        "Trotter fidelity",
+        "energy conservation",
+        "Bell violation",
+        "key rate positivity"
+      ]
+    },
+    "special_applied": {
+      "domains": 10,
+      "lean_proof_relativity": "special_relativity_conservation_proof/SpecialRelativityConservation.lean",
+      "lean_proof_applied": "applied_physics_conservation_proof/AppliedPhysicsConservation.lean",
+      "conservation_laws": [
+        "invariant mass",
+        "Lorentz invariance",
+        "Hamiltonian constraint",
+        "ADM mass",
+        "orbital energy",
+        "kinetic energy",
+        "acoustic energy",
+        "drug mass balance",
+        "concentration non-neg",
+        "efficiency bounds",
+        "enthalpy balance",
+        "charge neutrality"
+      ]
+    }
+  }
+}
