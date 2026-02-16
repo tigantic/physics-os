@@ -1,0 +1,240 @@
+{
+  "project": "HyperTensor-VM",
+  "protocol": "trustless_physics_gauntlet_phase5",
+  "phase": 5,
+  "description": "Tier 1 Wire-Up: Euler 3D, NS-IMEX 2D, Heat Equation, Vlasov-Poisson \u2014 trace adapters, Lean conservation proofs, TPC certificate generation, cross-domain validation",
+  "timestamp": "2026-02-16T18:05:51Z",
+  "total_tests": 27,
+  "passed": 27,
+  "failed": 0,
+  "total_time_seconds": 6.788,
+  "gauntlets": {
+    "trace_adapters_package_exists": {
+      "layer": "trace_adapters",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "trace_adapters_euler3d_api": {
+      "layer": "trace_adapters",
+      "passed": true,
+      "time_seconds": 4.8109,
+      "error": null
+    },
+    "trace_adapters_ns2d_api": {
+      "layer": "trace_adapters",
+      "passed": true,
+      "time_seconds": 0.0075,
+      "error": null
+    },
+    "trace_adapters_heat_api": {
+      "layer": "trace_adapters",
+      "passed": true,
+      "time_seconds": 0.0089,
+      "error": null
+    },
+    "trace_adapters_vlasov_api": {
+      "layer": "trace_adapters",
+      "passed": true,
+      "time_seconds": 0.0007,
+      "error": null
+    },
+    "lean_euler_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0007,
+      "error": null
+    },
+    "lean_thermal_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0004,
+      "error": null
+    },
+    "lean_vlasov_conservation": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0004,
+      "error": null
+    },
+    "lean_navier_stokes": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0003,
+      "error": null
+    },
+    "tpc_scripts_exist": {
+      "layer": "tpc_scripts",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "tpc_scripts_importable": {
+      "layer": "tpc_scripts",
+      "passed": true,
+      "time_seconds": 0.0082,
+      "error": null
+    },
+    "tpc_generator_available": {
+      "layer": "tpc_scripts",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "euler3d_solve_and_trace": {
+      "layer": "euler3d",
+      "passed": true,
+      "time_seconds": 0.3672,
+      "error": null
+    },
+    "euler3d_tpc_certificate": {
+      "layer": "euler3d",
+      "passed": true,
+      "time_seconds": 1.2042,
+      "error": null
+    },
+    "ns2d_solve_and_trace": {
+      "layer": "ns2d",
+      "passed": true,
+      "time_seconds": 0.0373,
+      "error": null
+    },
+    "ns2d_tpc_certificate": {
+      "layer": "ns2d",
+      "passed": true,
+      "time_seconds": 0.0322,
+      "error": null
+    },
+    "heat_solve_and_trace": {
+      "layer": "heat",
+      "passed": true,
+      "time_seconds": 0.0056,
+      "error": null
+    },
+    "heat_tpc_certificate": {
+      "layer": "heat",
+      "passed": true,
+      "time_seconds": 0.0105,
+      "error": null
+    },
+    "vlasov_solve_and_trace": {
+      "layer": "vlasov",
+      "passed": true,
+      "time_seconds": 0.1533,
+      "error": null
+    },
+    "vlasov_tpc_certificate": {
+      "layer": "vlasov",
+      "passed": true,
+      "time_seconds": 0.1333,
+      "error": null
+    },
+    "all_certificates_generated": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "all_certificates_valid": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0004,
+      "error": null
+    },
+    "trace_files_generated": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "four_domains_covered": {
+      "layer": "integration",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "regression_trace_module": {
+      "layer": "regression",
+      "passed": true,
+      "time_seconds": 0.0017,
+      "error": null
+    },
+    "regression_tpc_format": {
+      "layer": "regression",
+      "passed": true,
+      "time_seconds": 0.0001,
+      "error": null
+    },
+    "regression_tpc_generator": {
+      "layer": "regression",
+      "passed": true,
+      "time_seconds": 0.0019,
+      "error": null
+    }
+  },
+  "domains": {
+    "euler3d": {
+      "solver": "tensornet.cfd.euler_3d.Euler3D",
+      "adapter": "tensornet.cfd.trace_adapters.euler3d_adapter.Euler3DTraceAdapter",
+      "lean_proof": "euler_conservation_proof/EulerConservation.lean",
+      "conservation_laws": [
+        "mass",
+        "momentum_x",
+        "momentum_y",
+        "momentum_z",
+        "energy"
+      ],
+      "description": "3D compressible Euler equations, MUSCL-Hancock + HLLC Riemann solver, finite-volume on Cartesian grid"
+    },
+    "ns_imex": {
+      "solver": "tensornet.cfd.ns_2d.NS2DSolver",
+      "adapter": "tensornet.cfd.trace_adapters.ns2d_adapter.NS2DTraceAdapter",
+      "lean_proof": "navier_stokes_proof/NavierStokes.lean",
+      "conservation_laws": [
+        "kinetic_energy",
+        "enstrophy",
+        "divergence_free"
+      ],
+      "description": "2D incompressible Navier-Stokes, pseudo-spectral, RK4 + IMEX diffusion, Taylor-Green benchmark"
+    },
+    "heat": {
+      "solver": "tensornet.cfd.trace_adapters.heat_adapter.HeatTransferTraceAdapter",
+      "adapter": "tensornet.cfd.trace_adapters.heat_adapter.HeatTransferTraceAdapter",
+      "lean_proof": "thermal_conservation_proof/ThermalConservation.lean",
+      "conservation_laws": [
+        "energy_integral",
+        "source_integral"
+      ],
+      "description": "2D heat equation, implicit spectral (unconditionally stable), sinusoidal IC with analytical comparison"
+    },
+    "vlasov": {
+      "solver": "tensornet.cfd.trace_adapters.vlasov_adapter.VlasovTraceAdapter",
+      "adapter": "tensornet.cfd.trace_adapters.vlasov_adapter.VlasovTraceAdapter",
+      "lean_proof": "vlasov_conservation_proof/VlasovConservation.lean",
+      "conservation_laws": [
+        "l2_norm",
+        "particle_count",
+        "kinetic_energy",
+        "field_energy"
+      ],
+      "description": "1D1V Vlasov-Poisson, spectral Strang splitting, Landau damping benchmark"
+    }
+  },
+  "components": {
+    "trace_adapters": {
+      "language": "Python",
+      "files": 5,
+      "description": "4 trace adapters (Euler3D, NS2D, Heat, Vlasov) + package __init__.py. Each wraps a solver with TraceSession logging, conservation tracking, deterministic state hashing"
+    },
+    "lean_proofs": {
+      "language": "Lean 4",
+      "files": 4,
+      "description": "4 formal proofs: EulerConservation (mass/momentum/energy), ThermalConservation (energy, rank, CG, SVD), VlasovConservation (L\u00b2 norm, Landau damping), NavierStokes (regularity, enstrophy). All proved by decide \u2014 no axioms"
+    },
+    "tpc_scripts": {
+      "language": "Python",
+      "files": 4,
+      "description": "4 TPC generation scripts in scripts/tpc/. Each runs solver \u2192 trace \u2192 CertificateGenerator \u2192 .tpc file with Layer A (Lean theorems), Layer B (STARK trace), Layer C (benchmark results)"
+    }
+  }
+}

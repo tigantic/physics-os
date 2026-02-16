@@ -1,0 +1,1906 @@
+{
+  "digest": {
+    "end_time_ns": 1771265151590380544,
+    "entry_count": 53,
+    "op_counts": {
+      "custom": 53
+    },
+    "session_id": "03589dcd-67d9-4b94-b5f4-7c300cbde464",
+    "start_time_ns": 1771265151462527232,
+    "total_duration_ns": 0,
+    "total_duration_s": 0.0,
+    "trace_hash": "da146ffdbca5ccd59438f643fb9e0f4f5b4c68e08d19436b156ebb4ca3c53dd0",
+    "wall_time_s": 0.127853312
+  },
+  "entries": [
+    {
+      "duration_ns": 0,
+      "input_hashes": {},
+      "metrics": {
+        "conservation_initial": {
+          "field_energy": 0.0012566371558713999,
+          "kinetic_energy": 6.2831846655758055,
+          "l2_norm": 3.545084947196123,
+          "particle_count": 12.566370579583259
+        }
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "caaa80f619b6510fa12db71508157c95c905d005a72ecebe0722228ae8c097d7"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "solver": "vlasov_poisson_1d1v",
+        "t_final": 5.0,
+        "v_max": 6.0
+      },
+      "seq": 0,
+      "timestamp_ns": 1771265151462657280
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "caaa80f619b6510fa12db71508157c95c905d005a72ecebe0722228ae8c097d7"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.0012409880339546199,
+          "kinetic_energy": 6.283200363725729,
+          "l2_norm": 3.545084947196123,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.0012566371558713999,
+          "kinetic_energy": 6.2831846655758055,
+          "l2_norm": 3.545084947196123,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 1800306
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "6258e5cce98c798aed17e4062dfdfe8d83ab7fa47d75dde36cd02df4af024dd7"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 1,
+      "timestamp_ns": 1771265151464727040
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "6258e5cce98c798aed17e4062dfdfe8d83ab7fa47d75dde36cd02df4af024dd7"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.0011948965100915636,
+          "kinetic_energy": 6.283246599261963,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.0012409880339546199,
+          "kinetic_energy": 6.283200363725729,
+          "l2_norm": 3.545084947196123,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 1.2526898973219286e-16,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2094563
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "988e2347353a0f039301ebe9a3067e21197bbf7b420733df8426fce95cc70fa0"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 2,
+      "timestamp_ns": 1771265151467253504
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "988e2347353a0f039301ebe9a3067e21197bbf7b420733df8426fce95cc70fa0"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.001120874064799862,
+          "kinetic_energy": 6.28332085170524,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583257
+        },
+        "conservation_before": {
+          "field_energy": 0.0011948965100915636,
+          "kinetic_energy": 6.283246599261963,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 1.7763568394002505e-15,
+        "wall_time_ns": 3323315
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "c03368d1132e150d0f70d2ba8f6102eae4bf5dc3ea27c155379203769d18e16d"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 3,
+      "timestamp_ns": 1771265151470896128
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "c03368d1132e150d0f70d2ba8f6102eae4bf5dc3ea27c155379203769d18e16d"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.0010229236989677448,
+          "kinetic_energy": 6.283419103760012,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.001120874064799862,
+          "kinetic_energy": 6.28332085170524,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583257
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 1.7763568394002505e-15,
+        "wall_time_ns": 2935696
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "3051ce0feb22c767467650b0fc2a6567893315051c9137a5b50239c2874ed89e"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 4,
+      "timestamp_ns": 1771265151474130432
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "3051ce0feb22c767467650b0fc2a6567893315051c9137a5b50239c2874ed89e"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.0009062794876172745,
+          "kinetic_energy": 6.283536102759927,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583257
+        },
+        "conservation_before": {
+          "field_energy": 0.0010229236989677448,
+          "kinetic_energy": 6.283419103760012,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 1.7763568394002505e-15,
+        "wall_time_ns": 2759519
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "7230078e6bd8d3618082fea373e486b0ebaa2d873d3056e9f904a20cd33d1d4c"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 5,
+      "timestamp_ns": 1771265151477173504
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "7230078e6bd8d3618082fea373e486b0ebaa2d873d3056e9f904a20cd33d1d4c"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.000777068384329437,
+          "kinetic_energy": 6.283665700155723,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.0009062794876172745,
+          "kinetic_energy": 6.283536102759927,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583257
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 1.7763568394002505e-15,
+        "wall_time_ns": 2572213
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "767fb640b3cfc06a9f650e6476861f8112b41e83798d8fc864392d506e64bcfd"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 6,
+      "timestamp_ns": 1771265151480061184
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "767fb640b3cfc06a9f650e6476861f8112b41e83798d8fc864392d506e64bcfd"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.0006419182778146853,
+          "kinetic_energy": 6.283801244947611,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.000777068384329437,
+          "kinetic_energy": 6.283665700155723,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2146413
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "8db8a8271fd6849ed1cacdafff3c23742968216467590fd1b85fe1f190762ee2"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 7,
+      "timestamp_ns": 1771265151482508800
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "8db8a8271fd6849ed1cacdafff3c23742968216467590fd1b85fe1f190762ee2"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.0005075399110177503,
+          "kinetic_energy": 6.2839360033413785,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.0006419182778146853,
+          "kinetic_energy": 6.283801244947611,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2066597
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "03aa74af9fed8f3e96e2cacdf910bfd7f366591ebc5007232b9c664e406ad358"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 8,
+      "timestamp_ns": 1771265151484899328
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "03aa74af9fed8f3e96e2cacdf910bfd7f366591ebc5007232b9c664e406ad358"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.00038031180915211937,
+          "kinetic_energy": 6.284063575366316,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.0005075399110177503,
+          "kinetic_energy": 6.2839360033413785,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2197299
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "cbe56c52b6ba9afd937fc3d731c16f14af62e7b4a03ef87461d3087212771474"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 9,
+      "timestamp_ns": 1771265151487375360
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "cbe56c52b6ba9afd937fc3d731c16f14af62e7b4a03ef87461d3087212771474"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.0002658967307947256,
+          "kinetic_energy": 6.284178279828809,
+          "l2_norm": 3.545084947196123,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.00038031180915211937,
+          "kinetic_energy": 6.284063575366316,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 1.2526898973219284e-16,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2079444
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "1182b20b04974428b9b6c89fc36fecd4e0d93f7060dee4b5aa1b645a4b2581f5"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 10,
+      "timestamp_ns": 1771265151489748480
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "1182b20b04974428b9b6c89fc36fecd4e0d93f7060dee4b5aa1b645a4b2581f5"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.0001689154296363079,
+          "kinetic_energy": 6.284275481714297,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583257
+        },
+        "conservation_before": {
+          "field_energy": 0.0002658967307947256,
+          "kinetic_energy": 6.284178279828809,
+          "l2_norm": 3.545084947196123,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 1.2526898973219286e-16,
+        "mass_drift": 1.7763568394002505e-15,
+        "wall_time_ns": 2208875
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "3b7f8ea4d13198cfd3b0e5c978079e310c33ba37c3007a77cd046ad37ed6b809"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 11,
+      "timestamp_ns": 1771265151492237312
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "3b7f8ea4d13198cfd3b0e5c978079e310c33ba37c3007a77cd046ad37ed6b809"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 9.26989291033502e-05,
+          "kinetic_energy": 6.284351840755318,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.0001689154296363079,
+          "kinetic_energy": 6.284275481714297,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583257
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 1.7763568394002505e-15,
+        "wall_time_ns": 2949260
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "98df5d923a8930f3b3b2f48e282358c595e858cd5d3ff95b5765e128e911f378"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 12,
+      "timestamp_ns": 1771265151495471104
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "98df5d923a8930f3b3b2f48e282358c595e858cd5d3ff95b5765e128e911f378"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 3.913444394813901e-05,
+          "kinetic_energy": 6.284405465977007,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 9.26989291033502e-05,
+          "kinetic_energy": 6.284351840755318,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 1.2526898973219284e-16,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2045985
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "43655e372dc0a95472eb2aa50222e4a222019928cb6f8c254b643521d010f3c0"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 13,
+      "timestamp_ns": 1771265151497849344
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "43655e372dc0a95472eb2aa50222e4a222019928cb6f8c254b643521d010f3c0"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 8.613017142260827e-06,
+          "kinetic_energy": 6.284435968126363,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 3.913444394813901e-05,
+          "kinetic_energy": 6.284405465977007,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2086648
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "b7dff83037f9543cecca81343bbdc6cfd85ad2fdaf0ca31733b596120f7d93f6"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 14,
+      "timestamp_ns": 1771265151500192256
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "b7dff83037f9543cecca81343bbdc6cfd85ad2fdaf0ca31733b596120f7d93f6"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 7.943119393374423e-08,
+          "kinetic_energy": 6.284444409431511,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583262
+        },
+        "conservation_before": {
+          "field_energy": 8.613017142260827e-06,
+          "kinetic_energy": 6.284435968126363,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 3.552713678800501e-15,
+        "wall_time_ns": 2240132
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "5f21d59911d4ad45e3db3a0e42bc074a617ba1dfadbae89d17469c092c54a8ae"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 15,
+      "timestamp_ns": 1771265151502737920
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "5f21d59911d4ad45e3db3a0e42bc074a617ba1dfadbae89d17469c092c54a8ae"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 1.117757875908075e-05,
+          "kinetic_energy": 6.284433157540908,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583257
+        },
+        "conservation_before": {
+          "field_energy": 7.943119393374423e-08,
+          "kinetic_energy": 6.284444409431511,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583262
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 5.329070518200751e-15,
+        "wall_time_ns": 2623148
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "154b0860ac91be3fe2b2a4a674b6797ca5388c46c9c5f875f338d6669c21f81c"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 16,
+      "timestamp_ns": 1771265151505642496
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "154b0860ac91be3fe2b2a4a674b6797ca5388c46c9c5f875f338d6669c21f81c"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 3.84777946402055e-05,
+          "kinetic_energy": 6.28440565720152,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 1.117757875908075e-05,
+          "kinetic_energy": 6.284433157540908,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583257
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 1.7763568394002505e-15,
+        "wall_time_ns": 2066534
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "0292b3496a2312dd11aa019647f8ccca94bd00227182b616bb9fe5bd4a1a1d26"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 17,
+      "timestamp_ns": 1771265151508017408
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "0292b3496a2312dd11aa019647f8ccca94bd00227182b616bb9fe5bd4a1a1d26"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 7.77671508825965e-05,
+          "kinetic_energy": 6.284366138756295,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583262
+        },
+        "conservation_before": {
+          "field_energy": 3.84777946402055e-05,
+          "kinetic_energy": 6.28440565720152,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 3.552713678800501e-15,
+        "wall_time_ns": 1968247
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "7cd582445f3c1d76a9406cd1fed919544e8b898fb1d5a8c93c2558ac003e377b"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 18,
+      "timestamp_ns": 1771265151510272512
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "7cd582445f3c1d76a9406cd1fed919544e8b898fb1d5a8c93c2558ac003e377b"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.0001243797863482365,
+          "kinetic_energy": 6.284319286485474,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583257
+        },
+        "conservation_before": {
+          "field_energy": 7.77671508825965e-05,
+          "kinetic_energy": 6.284366138756295,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583262
+        },
+        "l2_relative_drift": 1.2526898973219284e-16,
+        "mass_drift": 5.329070518200751e-15,
+        "wall_time_ns": 2134908
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "b584a8d8070ec300a16dc7f39e662d8c23011db90473187707a4465e1512cf18"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 19,
+      "timestamp_ns": 1771265151512689664
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "b584a8d8070ec300a16dc7f39e662d8c23011db90473187707a4465e1512cf18"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.00017354223769854355,
+          "kinetic_energy": 6.2842698919271145,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583262
+        },
+        "conservation_before": {
+          "field_energy": 0.0001243797863482365,
+          "kinetic_energy": 6.284319286485474,
+          "l2_norm": 3.5450849471961234,
+          "particle_count": 12.566370579583257
+        },
+        "l2_relative_drift": 1.2526898973219284e-16,
+        "mass_drift": 5.329070518200751e-15,
+        "wall_time_ns": 2069437
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "3f8d498b3b3c5afea4c88b4654ab38843d8982d938b6ad7679761d6b852bd12f"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 20,
+      "timestamp_ns": 1771265151515180288
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "3f8d498b3b3c5afea4c88b4654ab38843d8982d938b6ad7679761d6b852bd12f"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.00022070856690486744,
+          "kinetic_energy": 6.284222517482056,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583255
+        },
+        "conservation_before": {
+          "field_energy": 0.00017354223769854355,
+          "kinetic_energy": 6.2842698919271145,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583262
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 7.105427357601002e-15,
+        "wall_time_ns": 2300601
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "aee7df40a8e0cb70a38c71d3ae98dc7ee812af5ddb268561d33a8a9cdc29fd2c"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 21,
+      "timestamp_ns": 1771265151517827328
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "aee7df40a8e0cb70a38c71d3ae98dc7ee812af5ddb268561d33a8a9cdc29fd2c"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.00026186179429699055,
+          "kinetic_energy": 6.284181193885106,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583257
+        },
+        "conservation_before": {
+          "field_energy": 0.00022070856690486744,
+          "kinetic_energy": 6.284222517482056,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583255
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 1.7763568394002505e-15,
+        "wall_time_ns": 2133597
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "f06a836de0b0bdd437fe665a28f41f0ee4a064e99648f0f1de9167ab9d812d44"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 22,
+      "timestamp_ns": 1771265151520235008
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "f06a836de0b0bdd437fe665a28f41f0ee4a064e99648f0f1de9167ab9d812d44"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.0002937615532462793,
+          "kinetic_energy": 6.284149171700911,
+          "l2_norm": 3.5450849471961243,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.00026186179429699055,
+          "kinetic_energy": 6.284181193885106,
+          "l2_norm": 3.545084947196124,
+          "particle_count": 12.566370579583257
+        },
+        "l2_relative_drift": 1.2526898973219284e-16,
+        "mass_drift": 1.7763568394002505e-15,
+        "wall_time_ns": 2340858
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "9b7bd4e00efa85f44699cf0daa20ebb98eba2a3b31128377c1752815e437a45b"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 23,
+      "timestamp_ns": 1771265151522845952
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "9b7bd4e00efa85f44699cf0daa20ebb98eba2a3b31128377c1752815e437a45b"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.0003141226645892139,
+          "kinetic_energy": 6.284128742199537,
+          "l2_norm": 3.5450849471961243,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.0002937615532462793,
+          "kinetic_energy": 6.284149171700911,
+          "l2_norm": 3.5450849471961243,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 1983567
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "c454653d8c043d244e245c3a74ef9aa76e97ea8ab373379374c147033c0f2620"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 24,
+      "timestamp_ns": 1771265151525125632
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "c454653d8c043d244e245c3a74ef9aa76e97ea8ab373379374c147033c0f2620"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.00032171507126340786,
+          "kinetic_energy": 6.28412113719956,
+          "l2_norm": 3.5450849471961248,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.0003141226645892139,
+          "kinetic_energy": 6.284128742199537,
+          "l2_norm": 3.5450849471961243,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 1.2526898973219281e-16,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2061932
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "55b6ff5a7cfe2960c8c09b29d2b24fc842cb19e24f1e339164cf7a787646a997"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 25,
+      "timestamp_ns": 1771265151527450880
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "55b6ff5a7cfe2960c8c09b29d2b24fc842cb19e24f1e339164cf7a787646a997"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.0003163818017887829,
+          "kinetic_energy": 6.284126511212369,
+          "l2_norm": 3.5450849471961248,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.00032171507126340786,
+          "kinetic_energy": 6.28412113719956,
+          "l2_norm": 3.5450849471961248,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2346543
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "d26680b60e035395dd14f6129314284507c3719ac944b23609a5bf12281093bf"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 26,
+      "timestamp_ns": 1771265151530084352
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "d26680b60e035395dd14f6129314284507c3719ac944b23609a5bf12281093bf"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.00029897785042837846,
+          "kinetic_energy": 6.284144002977004,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.0003163818017887829,
+          "kinetic_energy": 6.284126511212369,
+          "l2_norm": 3.5450849471961248,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 1.2526898973219281e-16,
+        "mass_drift": 0.0,
+        "wall_time_ns": 1898607
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "18590f2162249e0f908e67b3d50528605d331e986b7615b8d18d4493653e7dea"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 27,
+      "timestamp_ns": 1771265151532277504
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "18590f2162249e0f908e67b3d50528605d331e986b7615b8d18d4493653e7dea"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.0002712385970555449,
+          "kinetic_energy": 6.284171867717198,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.00029897785042837846,
+          "kinetic_energy": 6.284144002977004,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2116481
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "e928a54ad0d48cb9f0b6b537cb8d4588a03b9338f758b40d0e13afade2059b13"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 28,
+      "timestamp_ns": 1771265151534681600
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "e928a54ad0d48cb9f0b6b537cb8d4588a03b9338f758b40d0e13afade2059b13"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.0002355912222661673,
+          "kinetic_energy": 6.284207666601918,
+          "l2_norm": 3.5450849471961248,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.0002712385970555449,
+          "kinetic_energy": 6.284171867717198,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 1.252689897321928e-16,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2010792
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "cd31e052450c2c849ed1c397a8566891424aad469c83bfc0533a285c41194860"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 29,
+      "timestamp_ns": 1771265151536979200
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "cd31e052450c2c849ed1c397a8566891424aad469c83bfc0533a285c41194860"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.00019492617149527273,
+          "kinetic_energy": 6.284248496280057,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.0002355912222661673,
+          "kinetic_energy": 6.284207666601918,
+          "l2_norm": 3.5450849471961248,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 1.2526898973219281e-16,
+        "mass_drift": 0.0,
+        "wall_time_ns": 1856119
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "cfbff170b3a50213166b4f8b1e988f5f9550e99e5aef50b9e9e27710f7ea19bc"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 30,
+      "timestamp_ns": 1771265151539109888
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "cfbff170b3a50213166b4f8b1e988f5f9550e99e5aef50b9e9e27710f7ea19bc"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.00015234786373051742,
+          "kinetic_energy": 6.284291239212187,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.00019492617149527273,
+          "kinetic_energy": 6.284248496280057,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2059175
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "d7fe071772ce7dbc362074d3eb19b92a7b51777a9f8e7e4015c982c38f83aef0"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 31,
+      "timestamp_ns": 1771265151541472768
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "d7fe071772ce7dbc362074d3eb19b92a7b51777a9f8e7e4015c982c38f83aef0"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.00011092442614718253,
+          "kinetic_energy": 6.284332814937153,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.00015234786373051742,
+          "kinetic_energy": 6.284291239212187,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 1956413
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "5d7c09782893e382ae53964a15f74f80db13a84eec80358787057af76efd2484"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 32,
+      "timestamp_ns": 1771265151543729664
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "5d7c09782893e382ae53964a15f74f80db13a84eec80358787057af76efd2484"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 7.345529093707088e-05,
+          "kinetic_energy": 6.284370413363091,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.00011092442614718253,
+          "kinetic_energy": 6.284332814937153,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2115220
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "e8c44e276cec73791c8c79b917e544e0106040696be58dabdaff32bb783ea4fd"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 33,
+      "timestamp_ns": 1771265151546124032
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "e8c44e276cec73791c8c79b917e544e0106040696be58dabdaff32bb783ea4fd"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 4.2273157807717956e-05,
+          "kinetic_energy": 6.284401693517632,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 7.345529093707088e-05,
+          "kinetic_energy": 6.284370413363091,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2033079
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "2ae48510aa8897767d8340ae691e79d94416e609f26ff8383900aeab29d7c785"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 34,
+      "timestamp_ns": 1771265151548436480
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "2ae48510aa8897767d8340ae691e79d94416e609f26ff8383900aeab29d7c785"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 1.909334957122185e-05,
+          "kinetic_energy": 6.284424934684398,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 4.2273157807717956e-05,
+          "kinetic_energy": 6.284401693517632,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 1870731
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "c588b0e83d9381948c6a32abf9b521d3be637d04815bb15f7d9850badfa3deeb"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 35,
+      "timestamp_ns": 1771265151550584576
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "c588b0e83d9381948c6a32abf9b521d3be637d04815bb15f7d9850badfa3deeb"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 4.919291232267907e-06,
+          "kinetic_energy": 6.284439131169367,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 1.909334957122185e-05,
+          "kinetic_energy": 6.284424934684398,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2115135
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "d5390c9803d2884dced5290ff787e4bbb678737d95e3eff87bbef91777bac45d"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 36,
+      "timestamp_ns": 1771265151552987904
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "d5390c9803d2884dced5290ff787e4bbb678737d95e3eff87bbef91777bac45d"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 8.096393203211494e-09,
+          "kinetic_energy": 6.284444026707384,
+          "l2_norm": 3.545084947196126,
+          "particle_count": 12.566370579583262
+        },
+        "conservation_before": {
+          "field_energy": 4.919291232267907e-06,
+          "kinetic_energy": 6.284439131169367,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 2.505379794643856e-16,
+        "mass_drift": 3.552713678800501e-15,
+        "wall_time_ns": 1990459
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "5f736f345c3d288a10a5cd5da69a6f6d49a38a0969ee43ec934d7cd8cfb62161"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 37,
+      "timestamp_ns": 1771265151555267840
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "5f736f345c3d288a10a5cd5da69a6f6d49a38a0969ee43ec934d7cd8cfb62161"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 3.8954376113336354e-06,
+          "kinetic_energy": 6.284440089346227,
+          "l2_norm": 3.545084947196126,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 8.096393203211494e-09,
+          "kinetic_energy": 6.284444026707384,
+          "l2_norm": 3.545084947196126,
+          "particle_count": 12.566370579583262
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 3.552713678800501e-15,
+        "wall_time_ns": 2338108
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "9e1c5310707105745fcc5cba7bc65825805eaed8e0c16e05f9dd1f8baff7076a"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 38,
+      "timestamp_ns": 1771265151557911040
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "9e1c5310707105745fcc5cba7bc65825805eaed8e0c16e05f9dd1f8baff7076a"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 1.5474384704781118e-05,
+          "kinetic_energy": 6.284428432155975,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 3.8954376113336354e-06,
+          "kinetic_energy": 6.284440089346227,
+          "l2_norm": 3.545084947196126,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 2.5053797946438553e-16,
+        "mass_drift": 0.0,
+        "wall_time_ns": 1900571
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "931ba791dccdac6b5dd1ac8dba8cc883786ed0216b88068c868baa9af3d19e27"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 39,
+      "timestamp_ns": 1771265151560109312
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "931ba791dccdac6b5dd1ac8dba8cc883786ed0216b88068c868baa9af3d19e27"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 3.3119049210287245e-05,
+          "kinetic_energy": 6.284410688971511,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583262
+        },
+        "conservation_before": {
+          "field_energy": 1.5474384704781118e-05,
+          "kinetic_energy": 6.284428432155975,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 3.552713678800501e-15,
+        "wall_time_ns": 2321387
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "84193dda4af1719e055fb1d8c4308d8cc52257a68f07b8ceb4f8c9c47099e936"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 40,
+      "timestamp_ns": 1771265151562730496
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "84193dda4af1719e055fb1d8c4308d8cc52257a68f07b8ceb4f8c9c47099e936"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 5.4840939481630996e-05,
+          "kinetic_energy": 6.284388857319862,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 3.3119049210287245e-05,
+          "kinetic_energy": 6.284410688971511,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583262
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 3.552713678800501e-15,
+        "wall_time_ns": 1933749
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "49bd557287c6eae038298338d4d64aea42cec4c48634612bf2f37b89d1643fd6"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 41,
+      "timestamp_ns": 1771265151565006080
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "49bd557287c6eae038298338d4d64aea42cec4c48634612bf2f37b89d1643fd6"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 7.846408971869746e-05,
+          "kinetic_energy": 6.284365122530288,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 5.4840939481630996e-05,
+          "kinetic_energy": 6.284388857319862,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 1775564
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "3ad08a4b812dc5b81e47f996988a468fe183874797c48172ce0df150823186f9"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 42,
+      "timestamp_ns": 1771265151567092224
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "3ad08a4b812dc5b81e47f996988a468fe183874797c48172ce0df150823186f9"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.00010180436310986234,
+          "kinetic_energy": 6.284341677688272,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 7.846408971869746e-05,
+          "kinetic_energy": 6.284365122530288,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2134583
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "7ea4e15deb26733149cf8a15dc228759671ef5455053bd1cd669698f426c35f1"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 43,
+      "timestamp_ns": 1771265151569494272
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "7ea4e15deb26733149cf8a15dc228759671ef5455053bd1cd669698f426c35f1"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.00012283883301126877,
+          "kinetic_energy": 6.2843205535860465,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.00010180436310986234,
+          "kinetic_energy": 6.284341677688272,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2023690
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "f01d431a0dda62afe8f3b0edb356db0d9a651564e8f90baf765fa3221e75bff6"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 44,
+      "timestamp_ns": 1771265151571812096
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "f01d431a0dda62afe8f3b0edb356db0d9a651564e8f90baf765fa3221e75bff6"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.00013985271452764995,
+          "kinetic_energy": 6.284303471244933,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.00012283883301126877,
+          "kinetic_energy": 6.2843205535860465,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 1924825
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "17f4f3c317b9403dedc92e3f0c8d006a36a6b7a450507c9281cc91cd24a13cbc"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 45,
+      "timestamp_ns": 1771265151574010368
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "17f4f3c317b9403dedc92e3f0c8d006a36a6b7a450507c9281cc91cd24a13cbc"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.0001515537718295031,
+          "kinetic_energy": 6.284291727119682,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.00013985271452764995,
+          "kinetic_energy": 6.284303471244933,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2074349
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "96570845a5bdd4aef05c5b94b6bf243167142219344f14545002802921d72e7d"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 46,
+      "timestamp_ns": 1771265151576447744
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "96570845a5bdd4aef05c5b94b6bf243167142219344f14545002802921d72e7d"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.000157147224274698,
+          "kinetic_energy": 6.284286117982958,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583255
+        },
+        "conservation_before": {
+          "field_energy": 0.0001515537718295031,
+          "kinetic_energy": 6.284291727119682,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 3.552713678800501e-15,
+        "wall_time_ns": 2766500
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "8ff877b86760dfcc6a879579e9262cb0dfb5b440f1d29cb039b47aa3416890d4"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 47,
+      "timestamp_ns": 1771265151579503104
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "8ff877b86760dfcc6a879579e9262cb0dfb5b440f1d29cb039b47aa3416890d4"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.00015636763971286528,
+          "kinetic_energy": 6.284286909007723,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.000157147224274698,
+          "kinetic_energy": 6.284286117982958,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583255
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 3.552713678800501e-15,
+        "wall_time_ns": 2094908
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "ac9c6081452d1a52c93c4b5ce97edc599a810bdd96d91088678ebff1b1f6b1a5"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 48,
+      "timestamp_ns": 1771265151581874176
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "ac9c6081452d1a52c93c4b5ce97edc599a810bdd96d91088678ebff1b1f6b1a5"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.00014946784553686277,
+          "kinetic_energy": 6.284293845008265,
+          "l2_norm": 3.545084947196126,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.00015636763971286528,
+          "kinetic_energy": 6.284286909007723,
+          "l2_norm": 3.545084947196125,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 2.505379794643856e-16,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2326959
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "77c1c692894632fc7fb6d5d4b2e57e31cba125839d5ba522863927a5289add05"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 49,
+      "timestamp_ns": 1771265151584645632
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "77c1c692894632fc7fb6d5d4b2e57e31cba125839d5ba522863927a5289add05"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.00013716822653704448,
+          "kinetic_energy": 6.284306201448928,
+          "l2_norm": 3.545084947196126,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.00014946784553686277,
+          "kinetic_energy": 6.284293845008265,
+          "l2_norm": 3.545084947196126,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 1999010
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "5005151dd75486cdbab61b410d0f8cfdfab526943b77e7a9f5137a4283d8a543"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 0.1,
+        "v_max": 6.0
+      },
+      "seq": 50,
+      "timestamp_ns": 1771265151587105024
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "5005151dd75486cdbab61b410d0f8cfdfab526943b77e7a9f5137a4283d8a543"
+      },
+      "metrics": {
+        "conservation_after": {
+          "field_energy": 0.0001371682265370378,
+          "kinetic_energy": 6.2843062014489295,
+          "l2_norm": 3.545084947196126,
+          "particle_count": 12.566370579583259
+        },
+        "conservation_before": {
+          "field_energy": 0.00013716822653704448,
+          "kinetic_energy": 6.284306201448928,
+          "l2_norm": 3.545084947196126,
+          "particle_count": 12.566370579583259
+        },
+        "l2_relative_drift": 0.0,
+        "mass_drift": 0.0,
+        "wall_time_ns": 2161849
+      },
+      "op": "custom",
+      "output_hashes": {
+        "f": "89ab8fbd9fc90d05cda52c2bae4a339a961279399e6d80a9c6b155355c16637f"
+      },
+      "params": {
+        "Lx": 12.566370614359172,
+        "Nv": 32,
+        "Nx": 32,
+        "dt": 1.7763568394002505e-15,
+        "v_max": 6.0
+      },
+      "seq": 51,
+      "timestamp_ns": 1771265151589574912
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "f": "89ab8fbd9fc90d05cda52c2bae4a339a961279399e6d80a9c6b155355c16637f"
+      },
+      "metrics": {
+        "conservation_final": {
+          "field_energy": 0.0001371682265370378,
+          "kinetic_energy": 6.2843062014489295,
+          "l2_norm": 3.545084947196126,
+          "particle_count": 12.566370579583259
+        },
+        "l2_total_relative_drift": 8.768829281253501e-16,
+        "mass_total_drift": 0.0
+      },
+      "op": "custom",
+      "output_hashes": {},
+      "params": {
+        "num_steps": 51,
+        "t_final_actual": 5.0
+      },
+      "seq": 52,
+      "timestamp_ns": 1771265151589686784
+    }
+  ],
+  "session_id": "03589dcd-67d9-4b94-b5f4-7c300cbde464",
+  "trace_version": 1
+}

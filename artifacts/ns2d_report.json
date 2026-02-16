@@ -1,0 +1,23 @@
+{
+  "domain": "ns_imex",
+  "certificate_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/artifacts/NS2D_GAUNTLET.tpc",
+  "trace_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/traces/ns2d_trace.json",
+  "verified": true,
+  "grid": "32x32",
+  "steps": 11,
+  "wall_time_s": 0.026456117630004883,
+  "metrics": {
+    "ke_initial": 9.869604401089358,
+    "ke_final": 9.83020483514962,
+    "ke_decay": 0.03939956593973726,
+    "enstrophy_initial": 19.739208802178716,
+    "enstrophy_final": 19.66040967029924,
+    "max_divergence": 3.6828480558304834e-15,
+    "num_steps": 11,
+    "wall_time_s": 0.026456117630004883,
+    "trace_hash": "5dd261b0a15177b687bfa68446188a299ec908ed549722febb5ca900220430c3",
+    "expected_ke_ratio": 0.9960079893439915,
+    "actual_ke_ratio": 0.9960079893439915,
+    "ke_ratio_error": 0.0
+  }
+}

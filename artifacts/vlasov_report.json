@@ -1,0 +1,24 @@
+{
+  "domain": "vlasov",
+  "certificate_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/artifacts/VLASOV_GAUNTLET.tpc",
+  "trace_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/traces/vlasov_trace.json",
+  "verified": true,
+  "grid": "32x32",
+  "steps": 51,
+  "wall_time_s": 0.12717962265014648,
+  "metrics": {
+    "l2_initial": 3.545084947196123,
+    "l2_final": 3.545084947196126,
+    "l2_relative_drift": 8.768829281253501e-16,
+    "mass_initial": 12.566370579583259,
+    "mass_final": 12.566370579583259,
+    "mass_relative_drift": 0.0,
+    "ke_initial": 6.2831846655758055,
+    "ke_final": 6.2843062014489295,
+    "fe_initial": 0.0012566371558713999,
+    "fe_final": 0.0001371682265370378,
+    "num_steps": 51,
+    "wall_time_s": 0.12717962265014648,
+    "trace_hash": "da146ffdbca5ccd59438f643fb9e0f4f5b4c68e08d19436b156ebb4ca3c53dd0"
+  }
+}

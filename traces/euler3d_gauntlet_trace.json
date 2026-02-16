@@ -1,0 +1,128 @@
+{
+  "digest": {
+    "end_time_ns": 1771265150018285312,
+    "entry_count": 3,
+    "op_counts": {
+      "custom": 3
+    },
+    "session_id": "76eeffdc-8e4c-4961-aefe-c07e03593bd5",
+    "start_time_ns": 1771265149665902080,
+    "total_duration_ns": 0,
+    "total_duration_s": 0.0,
+    "trace_hash": "82597f0544d961a0194883e78ed0b72875b349745a31a9c9effa57b3fb459cdd",
+    "wall_time_s": 0.352383232
+  },
+  "entries": [
+    {
+      "duration_ns": 0,
+      "input_hashes": {},
+      "metrics": {
+        "conservation_initial": {
+          "energy": 3.0341347555555567,
+          "mass": 1.2136296296296296,
+          "momentum_x": 0.012136296296296296,
+          "momentum_y": 0.0,
+          "momentum_z": 0.0
+        }
+      },
+      "op": "custom",
+      "output_hashes": {
+        "state": "f144c25583f635649ec4dbf50df4caf7ef6de965fbffd1c756a5bbe2b36399c2"
+      },
+      "params": {
+        "cfl": 0.5,
+        "domain": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "gamma": 1.4,
+        "grid": [
+          16,
+          16,
+          16
+        ],
+        "solver": "euler3d",
+        "t_final": 0.01
+      },
+      "seq": 0,
+      "timestamp_ns": 1771265149671845120
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "state": "f144c25583f635649ec4dbf50df4caf7ef6de965fbffd1c756a5bbe2b36399c2"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy": 3.0341347559578677,
+          "mass": 1.213637675858348,
+          "momentum_x": 0.012136376758583483,
+          "momentum_y": 0.0,
+          "momentum_z": 0.0
+        },
+        "conservation_before": {
+          "energy": 3.0341347555555567,
+          "mass": 1.2136296296296296,
+          "momentum_x": 0.012136296296296296,
+          "momentum_y": 0.0,
+          "momentum_z": 0.0
+        },
+        "energy_drift": 4.023110733442081e-10,
+        "mass_drift": 8.04622871841687e-06,
+        "momentum_x_drift": 8.046228718722181e-08,
+        "momentum_y_drift": 0.0,
+        "momentum_z_drift": 0.0,
+        "wall_time_ns": 340128797
+      },
+      "op": "custom",
+      "output_hashes": {
+        "state": "676ccea1204cc51c4c1585d8c15e3085e775ecb00de4b0647929f13c2b312718"
+      },
+      "params": {
+        "cfl": 0.5,
+        "dt": 0.01,
+        "gamma": 1.4,
+        "grid": [
+          16,
+          16,
+          16
+        ]
+      },
+      "seq": 1,
+      "timestamp_ns": 1771265150017916672
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "state": "676ccea1204cc51c4c1585d8c15e3085e775ecb00de4b0647929f13c2b312718"
+      },
+      "metrics": {
+        "conservation_drift": {
+          "energy": 4.023110733442081e-10,
+          "mass": 8.04622871841687e-06,
+          "momentum_x": 8.046228718722181e-08,
+          "momentum_y": 0.0,
+          "momentum_z": 0.0
+        },
+        "conservation_final": {
+          "energy": 3.0341347559578677,
+          "mass": 1.213637675858348,
+          "momentum_x": 0.012136376758583483,
+          "momentum_y": 0.0,
+          "momentum_z": 0.0
+        }
+      },
+      "op": "custom",
+      "output_hashes": {},
+      "params": {
+        "num_steps": 1,
+        "t_final_actual": 0.01
+      },
+      "seq": 2,
+      "timestamp_ns": 1771265150018081024
+    }
+  ],
+  "session_id": "76eeffdc-8e4c-4961-aefe-c07e03593bd5",
+  "trace_version": 1
+}

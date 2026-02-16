@@ -1,0 +1,20 @@
+{
+  "domain": "euler3d",
+  "certificate_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/artifacts/EULER3D_GAUNTLET.tpc",
+  "trace_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/traces/euler3d_trace.json",
+  "verified": true,
+  "grid": "16x16x16",
+  "steps": 1,
+  "wall_time_s": 0.3203275203704834,
+  "metrics": {
+    "mass_initial": 1.2136296296296296,
+    "mass_final": 1.216132833566121,
+    "mass_drift": 0.002503203936491394,
+    "energy_initial": 3.0431762962962967,
+    "energy_final": 3.051903529563051,
+    "energy_drift": 0.008727233266754286,
+    "num_steps": 1,
+    "wall_time_s": 0.3203275203704834,
+    "trace_hash": "2b2e496e1e728992546aa4877d68f1b82d4eae6318bb17785e84366fd3d2e248"
+  }
+}

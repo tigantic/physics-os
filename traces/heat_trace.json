@@ -1,0 +1,1924 @@
+{
+  "digest": {
+    "end_time_ns": 1771265151303306496,
+    "entry_count": 52,
+    "op_counts": {
+      "custom": 52
+    },
+    "session_id": "c0637f1f-f2be-4e68-b265-3428e0939fe5",
+    "start_time_ns": 1771265151298626560,
+    "total_duration_ns": 0,
+    "total_duration_s": 0.0,
+    "trace_hash": "423552aeefa19af5bea76ff4de6ed990e54c17bb5d755cab95b1fa86c3e5b272",
+    "wall_time_s": 0.004679936
+  },
+  "entries": [
+    {
+      "duration_ns": 0,
+      "input_hashes": {},
+      "metrics": {
+        "conservation_initial": {
+          "energy_integral": -1.3910840493203647e-17,
+          "max_temperature": 1.0,
+          "min_temperature": -1.0,
+          "source_integral": 0.0
+        }
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "5d4d5295bdba0a749d16df912fa715fc698a4a7803c691da4b8b1f1066739dfa"
+      },
+      "params": {
+        "alpha": 0.01,
+        "domain": [
+          6.283185307179586,
+          6.283185307179586
+        ],
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "solver": "heat_implicit_spectral",
+        "t_final": 0.5
+      },
+      "seq": 0,
+      "timestamp_ns": 1771265151298679808
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "5d4d5295bdba0a749d16df912fa715fc698a4a7803c691da4b8b1f1066739dfa"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": 7.490452573263505e-17,
+          "max_temperature": 0.9998000399920017,
+          "min_temperature": -0.9998000399920017,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -1.3910840493203647e-17,
+          "max_temperature": 1.0,
+          "min_temperature": -1.0,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 8.88153662258387e-17,
+        "wall_time_ns": 56180
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "697c4cd9ccea7d0ffd518b2b5589176324d4d3ea64e5d6a40bbde5a1ea6117b8"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 1,
+      "timestamp_ns": 1771265151298786304
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "697c4cd9ccea7d0ffd518b2b5589176324d4d3ea64e5d6a40bbde5a1ea6117b8"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -3.6382198212994165e-17,
+          "max_temperature": 0.9996001199680081,
+          "min_temperature": -0.9996001199680081,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": 7.490452573263505e-17,
+          "max_temperature": 0.9998000399920017,
+          "min_temperature": -0.9998000399920017,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 1.112867239456292e-16,
+        "wall_time_ns": 33684
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "6126961e57afc8c5249fc433e012429652451081787e6e6e7cdfffc5de9a835c"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 2,
+      "timestamp_ns": 1771265151298865408
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "6126961e57afc8c5249fc433e012429652451081787e6e6e7cdfffc5de9a835c"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": 5.617839429947628e-17,
+          "max_temperature": 0.9994002399200241,
+          "min_temperature": -0.9994002399200241,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -3.6382198212994165e-17,
+          "max_temperature": 0.9996001199680081,
+          "min_temperature": -0.9996001199680081,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 9.256059251247045e-17,
+        "wall_time_ns": 28420
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "d1e8524d963d64e3f45b82211ebedd44fba8fb17ea4b162566fb263792e526e6"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 3,
+      "timestamp_ns": 1771265151298939904
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "d1e8524d963d64e3f45b82211ebedd44fba8fb17ea4b162566fb263792e526e6"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -1.0861156231232081e-16,
+          "max_temperature": 0.999200399840056,
+          "min_temperature": -0.999200399840056,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": 5.617839429947628e-17,
+          "max_temperature": 0.9994002399200241,
+          "min_temperature": -0.9994002399200241,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 1.647899566117971e-16,
+        "wall_time_ns": 26996
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "6ce927e7d61c5b6af47ac782a29950fb8cf1d76a5d28bf9082890b74b3296a4a"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 4,
+      "timestamp_ns": 1771265151299010304
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "6ce927e7d61c5b6af47ac782a29950fb8cf1d76a5d28bf9082890b74b3296a4a"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": 8.025484899925183e-18,
+          "max_temperature": 0.9990005997201119,
+          "min_temperature": -0.9990005997201119,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -1.0861156231232081e-16,
+          "max_temperature": 0.999200399840056,
+          "min_temperature": -0.999200399840056,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 1.16637047212246e-16,
+        "wall_time_ns": 32387
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "46e7a65c6248f9b0299ef2445348cb0dd6b2fde39a7b9fad529450b053c4620d"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 5,
+      "timestamp_ns": 1771265151299086080
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "46e7a65c6248f9b0299ef2445348cb0dd6b2fde39a7b9fad529450b053c4620d"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": 1.16637047212246e-16,
+          "max_temperature": 0.9988008395522014,
+          "min_temperature": -0.9988008395522014,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": 8.025484899925183e-18,
+          "max_temperature": 0.9990005997201119,
+          "min_temperature": -0.9990005997201119,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 1.0861156231232081e-16,
+        "wall_time_ns": 31868
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "2724c294180edd6578d43b9baf0032688f290444bc74bf55ddc01b792fc4a9e4"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 6,
+      "timestamp_ns": 1771265151299159296
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "2724c294180edd6578d43b9baf0032688f290444bc74bf55ddc01b792fc4a9e4"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": 4.6547812419566065e-17,
+          "max_temperature": 0.9986011193283357,
+          "min_temperature": -0.9986011193283357,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": 1.16637047212246e-16,
+          "max_temperature": 0.9988008395522014,
+          "min_temperature": -0.9988008395522014,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 7.008923479267993e-17,
+        "wall_time_ns": 28765
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "9d3f9f4651a781b5a26b312cc2069865e494dde6a46288c48a9ea28f9de45bd7"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 7,
+      "timestamp_ns": 1771265151299229184
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "9d3f9f4651a781b5a26b312cc2069865e494dde6a46288c48a9ea28f9de45bd7"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -1.4980905146527008e-17,
+          "max_temperature": 0.9984014390405277,
+          "min_temperature": -0.9984014390405277,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": 4.6547812419566065e-17,
+          "max_temperature": 0.9986011193283357,
+          "min_temperature": -0.9986011193283357,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 6.152871756609308e-17,
+        "wall_time_ns": 33270
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "c0726493a3e71907a58ad21a45fee9982a59559a11f3b10f423ad1c20361805e"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 8,
+      "timestamp_ns": 1771265151299303936
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "c0726493a3e71907a58ad21a45fee9982a59559a11f3b10f423ad1c20361805e"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": 6.741407315937155e-17,
+          "max_temperature": 0.9982017986807914,
+          "min_temperature": -0.9982017986807914,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -1.4980905146527008e-17,
+          "max_temperature": 0.9984014390405277,
+          "min_temperature": -0.9984014390405277,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 8.239497830589856e-17,
+        "wall_time_ns": 28085
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "f2a56f71846a4f98e60ec27fea67d5ee2c1c03ebbed798afc526e25f1258e6ce"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 9,
+      "timestamp_ns": 1771265151299374336
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "f2a56f71846a4f98e60ec27fea67d5ee2c1c03ebbed798afc526e25f1258e6ce"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": 5.8853555932784676e-18,
+          "max_temperature": 0.9980021982411433,
+          "min_temperature": -0.9980021982411433,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": 6.741407315937155e-17,
+          "max_temperature": 0.9982017986807914,
+          "min_temperature": -0.9982017986807914,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 6.152871756609308e-17,
+        "wall_time_ns": 33482
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "3823c05d55498559c8a11fd6165fef8a1b76f975a64512b943373b37a1ad5f4d"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 10,
+      "timestamp_ns": 1771265151299449344
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "3823c05d55498559c8a11fd6165fef8a1b76f975a64512b943373b37a1ad5f4d"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -2.407645469977555e-17,
+          "max_temperature": 0.9978026377136007,
+          "min_temperature": -0.9978026377136007,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": 5.8853555932784676e-18,
+          "max_temperature": 0.9980021982411433,
+          "min_temperature": -0.9980021982411433,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 2.9961810293054016e-17,
+        "wall_time_ns": 27343
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "3c1425e3af0bb34195ce659127d4d62e4db642fcb2ffb20882e66254fe131bf2"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 11,
+      "timestamp_ns": 1771265151299518976
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "3c1425e3af0bb34195ce659127d4d62e4db642fcb2ffb20882e66254fe131bf2"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -3.210193959970073e-17,
+          "max_temperature": 0.9976031170901826,
+          "min_temperature": -0.9976031170901826,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -2.407645469977555e-17,
+          "max_temperature": 0.9978026377136007,
+          "min_temperature": -0.9978026377136007,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 8.025484899925183e-18,
+        "wall_time_ns": 33562
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "3cf68ba693b5749f7afb0b7bdf16b99b61c101c1175ba282673ce6ba2d9e027d"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 12,
+      "timestamp_ns": 1771265151299594496
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "3cf68ba693b5749f7afb0b7bdf16b99b61c101c1175ba282673ce6ba2d9e027d"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -2.1401293066467157e-17,
+          "max_temperature": 0.99740363636291,
+          "min_temperature": -0.99740363636291,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -3.210193959970073e-17,
+          "max_temperature": 0.9976031170901826,
+          "min_temperature": -0.9976031170901826,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 1.0700646533233575e-17,
+        "wall_time_ns": 36369
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "900195cbfb1eaa22223c1339420145822da97b3059ffc4c65e161d631336aca8"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 13,
+      "timestamp_ns": 1771265151299673600
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "900195cbfb1eaa22223c1339420145822da97b3059ffc4c65e161d631336aca8"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -9.577078647244052e-17,
+          "max_temperature": 0.9972041955238053,
+          "min_temperature": -0.9972041955238053,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -2.1401293066467157e-17,
+          "max_temperature": 0.99740363636291,
+          "min_temperature": -0.99740363636291,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 7.436949340597335e-17,
+        "wall_time_ns": 28384
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "18a29ddda0299977f7bfcfe2d867fd4c52a4007b2afd1893b70546ee6bef8725"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 14,
+      "timestamp_ns": 1771265151299743744
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "18a29ddda0299977f7bfcfe2d867fd4c52a4007b2afd1893b70546ee6bef8725"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -1.6050969799850366e-17,
+          "max_temperature": 0.9970047945648923,
+          "min_temperature": -0.9970047945648923,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -9.577078647244052e-17,
+          "max_temperature": 0.9972041955238053,
+          "min_temperature": -0.9972041955238053,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 7.971981667259015e-17,
+        "wall_time_ns": 32439
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "ccf43b1999100408b541e79f6119c1e9ccd4fc8b6c0dac0192701406aabd2d21"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 15,
+      "timestamp_ns": 1771265151299819008
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "ccf43b1999100408b541e79f6119c1e9ccd4fc8b6c0dac0192701406aabd2d21"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -9.523575414577885e-17,
+          "max_temperature": 0.9968054334781966,
+          "min_temperature": -0.9968054334781966,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -1.6050969799850366e-17,
+          "max_temperature": 0.9970047945648923,
+          "min_temperature": -0.9970047945648923,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 7.918478434592848e-17,
+        "wall_time_ns": 36626
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "921cc1200040649c94b4bec192753fdb38d95942e8325f4c85434717decf2cf9"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 16,
+      "timestamp_ns": 1771265151299896832
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "921cc1200040649c94b4bec192753fdb38d95942e8325f4c85434717decf2cf9"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -1.498090514652701e-16,
+          "max_temperature": 0.9966061122557455,
+          "min_temperature": -0.9966061122557455,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -9.523575414577885e-17,
+          "max_temperature": 0.9968054334781966,
+          "min_temperature": -0.9968054334781966,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 5.457329731949125e-17,
+        "wall_time_ns": 32275
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "fe73a3aa985e5bb7c9dcbadbd33ca623785ec6cdf87a513045d09d68061c3f62"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 17,
+      "timestamp_ns": 1771265151299970560
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "fe73a3aa985e5bb7c9dcbadbd33ca623785ec6cdf87a513045d09d68061c3f62"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -1.904715082915577e-16,
+          "max_temperature": 0.9964068308895677,
+          "min_temperature": -0.9964068308895677,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -1.498090514652701e-16,
+          "max_temperature": 0.9966061122557455,
+          "min_temperature": -0.9966061122557455,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 4.06624568262876e-17,
+        "wall_time_ns": 26857
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "5ea1b1a4ac990139382b990656791980e894a4cb9afb456b8778b7ee6ab0f8eb"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 18,
+      "timestamp_ns": 1771265151300040448
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "5ea1b1a4ac990139382b990656791980e894a4cb9afb456b8778b7ee6ab0f8eb"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": 7.918478434592848e-17,
+          "max_temperature": 0.9962075893716936,
+          "min_temperature": -0.9962075893716936,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -1.904715082915577e-16,
+          "max_temperature": 0.9964068308895677,
+          "min_temperature": -0.9964068308895677,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 2.696562926374862e-16,
+        "wall_time_ns": 31042
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "e474051fe716984d4ce368c4de4ea653a15f8855dd25f02fc07cdfcac242440f"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 19,
+      "timestamp_ns": 1771265151300113152
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "e474051fe716984d4ce368c4de4ea653a15f8855dd25f02fc07cdfcac242440f"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": 8.346504295922191e-17,
+          "max_temperature": 0.9960083876941546,
+          "min_temperature": -0.9960083876941546,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": 7.918478434592848e-17,
+          "max_temperature": 0.9962075893716936,
+          "min_temperature": -0.9962075893716936,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 4.280258613293433e-18,
+        "wall_time_ns": 25399
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "f3405b7627b4a7ea2290e5474d75985de49caefd6bd8e670d1c558bbe6923600"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 20,
+      "timestamp_ns": 1771265151300179968
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "f3405b7627b4a7ea2290e5474d75985de49caefd6bd8e670d1c558bbe6923600"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -3.959239217296424e-17,
+          "max_temperature": 0.9958092258489848,
+          "min_temperature": -0.9958092258489848,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": 8.346504295922191e-17,
+          "max_temperature": 0.9960083876941546,
+          "min_temperature": -0.9960083876941546,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 1.2305743513218616e-16,
+        "wall_time_ns": 30944
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "ba5e16ffa4bc98471c9a62659a086b128472d8748482a56d448ed1f6f896152b"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 21,
+      "timestamp_ns": 1771265151300252672
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "ba5e16ffa4bc98471c9a62659a086b128472d8748482a56d448ed1f6f896152b"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -3.1566907273039057e-17,
+          "max_temperature": 0.9956101038282191,
+          "min_temperature": -0.9956101038282191,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -3.959239217296424e-17,
+          "max_temperature": 0.9958092258489848,
+          "min_temperature": -0.9958092258489848,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 8.025484899925183e-18,
+        "wall_time_ns": 34647
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "524b9d95fe6077cd6d6e18e90174668599798c0f93594072d6c82c6fc2381324"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 22,
+      "timestamp_ns": 1771265151300361472
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "524b9d95fe6077cd6d6e18e90174668599798c0f93594072d6c82c6fc2381324"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": 2.6751616333083946e-18,
+          "max_temperature": 0.9954110216238945,
+          "min_temperature": -0.9954110216238945,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -3.1566907273039057e-17,
+          "max_temperature": 0.9956101038282191,
+          "min_temperature": -0.9956101038282191,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 3.424206890634745e-17,
+        "wall_time_ns": 27044
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "8927f165c6acc9f9639b87db5f63a22413f2c2f62137d6328baa0917554ea9b5"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 23,
+      "timestamp_ns": 1771265151300434944
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "8927f165c6acc9f9639b87db5f63a22413f2c2f62137d6328baa0917554ea9b5"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": 1.0700646533233579e-17,
+          "max_temperature": 0.9952119792280489,
+          "min_temperature": -0.9952119792280489,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": 2.6751616333083946e-18,
+          "max_temperature": 0.9954110216238945,
+          "min_temperature": -0.9954110216238945,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 8.025484899925183e-18,
+        "wall_time_ns": 33025
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "56d551a982f90f73a1ace8755c3635dd46ea22bd6987064241c78d5c4f3f0dfc"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 24,
+      "timestamp_ns": 1771265151300512256
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "56d551a982f90f73a1ace8755c3635dd46ea22bd6987064241c78d5c4f3f0dfc"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": 2.942677796639234e-17,
+          "max_temperature": 0.9950129766327225,
+          "min_temperature": -0.9950129766327225,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": 1.0700646533233579e-17,
+          "max_temperature": 0.9952119792280489,
+          "min_temperature": -0.9952119792280489,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 1.8726131433158762e-17,
+        "wall_time_ns": 26828
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "c431fad5f644452b5120d8ac48d6bdbbb4867640336ac3f6333c41567820d735"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 25,
+      "timestamp_ns": 1771265151300581888
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "c431fad5f644452b5120d8ac48d6bdbbb4867640336ac3f6333c41567820d735"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -1.1235678859895256e-16,
+          "max_temperature": 0.9948140138299566,
+          "min_temperature": -0.9948140138299566,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": 2.942677796639234e-17,
+          "max_temperature": 0.9950129766327225,
+          "min_temperature": -0.9950129766327225,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 1.417835665653449e-16,
+        "wall_time_ns": 31526
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "9f1fb88bbd278bed482f7c6d8390a4247a7a9dabaf5d3880bf8391d69dba2e9e"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 26,
+      "timestamp_ns": 1771265151300655872
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "9f1fb88bbd278bed482f7c6d8390a4247a7a9dabaf5d3880bf8391d69dba2e9e"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -9.416568949245548e-17,
+          "max_temperature": 0.9946150908117943,
+          "min_temperature": -0.9946150908117943,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -1.1235678859895256e-16,
+          "max_temperature": 0.9948140138299566,
+          "min_temperature": -0.9948140138299566,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 1.8191099106497083e-17,
+        "wall_time_ns": 38719
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "6b7807838c0bf7c98db1f56baf7326912cfe203c71a8c065329aec69aa248b9b"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 27,
+      "timestamp_ns": 1771265151300742144
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "6b7807838c0bf7c98db1f56baf7326912cfe203c71a8c065329aec69aa248b9b"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -1.2733769374547957e-16,
+          "max_temperature": 0.9944162075702804,
+          "min_temperature": -0.9944162075702804,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -9.416568949245548e-17,
+          "max_temperature": 0.9946150908117943,
+          "min_temperature": -0.9946150908117943,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 3.3172004253024085e-17,
+        "wall_time_ns": 39324
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "172e111dc83de80134b765d97ed541431189295e6773225786b7b0d95c627f24"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 28,
+      "timestamp_ns": 1771265151300825856
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "172e111dc83de80134b765d97ed541431189295e6773225786b7b0d95c627f24"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -5.724845895279965e-17,
+          "max_temperature": 0.9942173640974608,
+          "min_temperature": -0.9942173640974608,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -1.2733769374547957e-16,
+          "max_temperature": 0.9944162075702804,
+          "min_temperature": -0.9944162075702804,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 7.008923479267992e-17,
+        "wall_time_ns": 32190
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "a4cf8322c8fa5df096d1b42207f79b7d3348d58a57bf20a9e048715c9f973df1"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 29,
+      "timestamp_ns": 1771265151300899840
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "a4cf8322c8fa5df096d1b42207f79b7d3348d58a57bf20a9e048715c9f973df1"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -5.350323266616789e-18,
+          "max_temperature": 0.9940185603853837,
+          "min_temperature": -0.9940185603853837,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -5.724845895279965e-17,
+          "max_temperature": 0.9942173640974608,
+          "min_temperature": -0.9942173640974608,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 5.1898135686182856e-17,
+        "wall_time_ns": 26591
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "987cb29f125294aa3563fee5cefa0d07250288d43c4f8bd0316c5b3d74aae209"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 30,
+      "timestamp_ns": 1771265151300967680
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "987cb29f125294aa3563fee5cefa0d07250288d43c4f8bd0316c5b3d74aae209"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": 2.942677796639234e-17,
+          "max_temperature": 0.9938197964260984,
+          "min_temperature": -0.9938197964260984,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -5.350323266616789e-18,
+          "max_temperature": 0.9940185603853837,
+          "min_temperature": -0.9940185603853837,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 3.477710123300913e-17,
+        "wall_time_ns": 30899
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "2aba049a4df023eb5241f9935213cfd1c56802044c4169a3dc12ab7da5d69599"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 31,
+      "timestamp_ns": 1771265151301039360
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "2aba049a4df023eb5241f9935213cfd1c56802044c4169a3dc12ab7da5d69599"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -3.2101939599700733e-18,
+          "max_temperature": 0.9936210722116562,
+          "min_temperature": -0.9936210722116562,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": 2.942677796639234e-17,
+          "max_temperature": 0.9938197964260984,
+          "min_temperature": -0.9938197964260984,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 3.2636971926362415e-17,
+        "wall_time_ns": 25419
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "6bf96960b6a3a62d71fddef9b7ecc14269f440a89de83b29bc09dd77dd1085fd"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 32,
+      "timestamp_ns": 1771265151301105920
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "6bf96960b6a3a62d71fddef9b7ecc14269f440a89de83b29bc09dd77dd1085fd"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -4.922297405287446e-17,
+          "max_temperature": 0.9934223877341095,
+          "min_temperature": -0.9934223877341095,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -3.2101939599700733e-18,
+          "max_temperature": 0.9936210722116562,
+          "min_temperature": -0.9936210722116562,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 4.601278009290438e-17,
+        "wall_time_ns": 30594
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "97b3caf6526c24153ebd63a41f4f89d4301aa65986645a55f5fd887794e51fe3"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 33,
+      "timestamp_ns": 1771265151301177856
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "97b3caf6526c24153ebd63a41f4f89d4301aa65986645a55f5fd887794e51fe3"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -5.1363103359521173e-17,
+          "max_temperature": 0.9932237429855124,
+          "min_temperature": -0.9932237429855124,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -4.922297405287446e-17,
+          "max_temperature": 0.9934223877341095,
+          "min_temperature": -0.9934223877341095,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 2.1401293066467163e-18,
+        "wall_time_ns": 25997
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "a65c09f1dc54766918c18c30a77202cd24b7363f889c646e756394f206c604b2"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 34,
+      "timestamp_ns": 1771265151301244160
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "a65c09f1dc54766918c18c30a77202cd24b7363f889c646e756394f206c604b2"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -1.3054788770544966e-16,
+          "max_temperature": 0.9930251379579209,
+          "min_temperature": -0.9930251379579209,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -5.1363103359521173e-17,
+          "max_temperature": 0.9932237429855124,
+          "min_temperature": -0.9932237429855124,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 7.918478434592849e-17,
+        "wall_time_ns": 31587
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "639bab3e747bca42b763fd792b75b315953733c1c2f9e5848404e98fa0a148c3"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 35,
+      "timestamp_ns": 1771265151301317120
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "639bab3e747bca42b763fd792b75b315953733c1c2f9e5848404e98fa0a148c3"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -1.594396333451803e-16,
+          "max_temperature": 0.9928265726433922,
+          "min_temperature": -0.9928265726433922,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -1.3054788770544966e-16,
+          "max_temperature": 0.9930251379579209,
+          "min_temperature": -0.9930251379579209,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 2.889174563973064e-17,
+        "wall_time_ns": 26550
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "ab81ff9324fd11232679c95c7b9ce671ebb97737060e70ec986fafb801e5380c"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 36,
+      "timestamp_ns": 1771265151301385216
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "ab81ff9324fd11232679c95c7b9ce671ebb97737060e70ec986fafb801e5380c"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -2.942677796639234e-17,
+          "max_temperature": 0.9926280470339854,
+          "min_temperature": -0.9926280470339854,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -1.594396333451803e-16,
+          "max_temperature": 0.9928265726433922,
+          "min_temperature": -0.9928265726433922,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 1.3001285537878795e-16,
+        "wall_time_ns": 30817
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "439828a78b1478ff415c642bc141e385bd95a7cd93dc55a094b300a36f827401"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 37,
+      "timestamp_ns": 1771265151301457152
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "439828a78b1478ff415c642bc141e385bd95a7cd93dc55a094b300a36f827401"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -2.1936325393128833e-17,
+          "max_temperature": 0.9924295611217612,
+          "min_temperature": -0.9924295611217612,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -2.942677796639234e-17,
+          "max_temperature": 0.9926280470339854,
+          "min_temperature": -0.9926280470339854,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 7.490452573263507e-18,
+        "wall_time_ns": 30051
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "5e53d44c1b62c558e78ea6f86c0188caf31000dfc3727a683d5a22c5f5fe4884"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 38,
+      "timestamp_ns": 1771265151301527808
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "5e53d44c1b62c558e78ea6f86c0188caf31000dfc3727a683d5a22c5f5fe4884"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -8.293001063256023e-17,
+          "max_temperature": 0.9922311148987814,
+          "min_temperature": -0.9922311148987814,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -2.1936325393128833e-17,
+          "max_temperature": 0.9924295611217612,
+          "min_temperature": -0.9924295611217612,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 6.09936852394314e-17,
+        "wall_time_ns": 61435
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "98aa7da3ab0d2643481e5ac956608456d9a0639a9068ae40b7a41f632e350829"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 39,
+      "timestamp_ns": 1771265151301644544
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "98aa7da3ab0d2643481e5ac956608456d9a0639a9068ae40b7a41f632e350829"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": 3.424206890634745e-17,
+          "max_temperature": 0.9920327083571102,
+          "min_temperature": -0.9920327083571102,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -8.293001063256023e-17,
+          "max_temperature": 0.9922311148987814,
+          "min_temperature": -0.9922311148987814,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 1.1717207953890768e-16,
+        "wall_time_ns": 33765
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "6fab2adde63cb3344f7f44d7f0b9cef654d3b1cf848f491305ab62b429d403eb"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 40,
+      "timestamp_ns": 1771265151301725440
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "6fab2adde63cb3344f7f44d7f0b9cef654d3b1cf848f491305ab62b429d403eb"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -9.14905278591471e-17,
+          "max_temperature": 0.9918343414888123,
+          "min_temperature": -0.9918343414888123,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": 3.424206890634745e-17,
+          "max_temperature": 0.9920327083571102,
+          "min_temperature": -0.9920327083571102,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 1.2573259676549454e-16,
+        "wall_time_ns": 40644
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "27ff1b948f160c4e95b0a5794cf9d91d0bd9fac608564de766e0f36d76c41a5c"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 41,
+      "timestamp_ns": 1771265151301817600
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "27ff1b948f160c4e95b0a5794cf9d91d0bd9fac608564de766e0f36d76c41a5c"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -7.918478434592848e-17,
+          "max_temperature": 0.991636014285955,
+          "min_temperature": -0.991636014285955,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -9.14905278591471e-17,
+          "max_temperature": 0.9918343414888123,
+          "min_temperature": -0.9918343414888123,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 1.2305743513218616e-17,
+        "wall_time_ns": 28030
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "73bd40636b5cc9d54e500e57c9ff5447962fe7695270b69a1f0ae793b9639582"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 42,
+      "timestamp_ns": 1771265151301892096
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "73bd40636b5cc9d54e500e57c9ff5447962fe7695270b69a1f0ae793b9639582"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -1.1984724117221607e-16,
+          "max_temperature": 0.9914377267406069,
+          "min_temperature": -0.9914377267406069,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -7.918478434592848e-17,
+          "max_temperature": 0.991636014285955,
+          "min_temperature": -0.991636014285955,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 4.0662456826287586e-17,
+        "wall_time_ns": 32001
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "19426a56ba028f3926cd21914d7672778cc5b9cd17ce4ab07c0e5003059c654d"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 43,
+      "timestamp_ns": 1771265151301967104
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "19426a56ba028f3926cd21914d7672778cc5b9cd17ce4ab07c0e5003059c654d"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -8.774530157251533e-17,
+          "max_temperature": 0.991239478844838,
+          "min_temperature": -0.991239478844838,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -1.1984724117221607e-16,
+          "max_temperature": 0.9914377267406069,
+          "min_temperature": -0.9914377267406069,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 3.210193959970073e-17,
+        "wall_time_ns": 26312
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "3bf3ea2fa0dc44405257a661356b9e7c2f7fbb6d8da513e71dcac9f86d245749"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 44,
+      "timestamp_ns": 1771265151302036480
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "3bf3ea2fa0dc44405257a661356b9e7c2f7fbb6d8da513e71dcac9f86d245749"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -4.6547812419566065e-17,
+          "max_temperature": 0.9910412705907197,
+          "min_temperature": -0.9910412705907197,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -8.774530157251533e-17,
+          "max_temperature": 0.991239478844838,
+          "min_temperature": -0.991239478844838,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 4.119748915294927e-17,
+        "wall_time_ns": 31339
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "bf102d1b6fd3794416d59d86e912a3cf06f097f7caa239353a0521a9c3ad3f82"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 45,
+      "timestamp_ns": 1771265151302111744
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "bf102d1b6fd3794416d59d86e912a3cf06f097f7caa239353a0521a9c3ad3f82"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -1.1610201488558431e-16,
+          "max_temperature": 0.9908431019703255,
+          "min_temperature": -0.9908431019703255,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -4.6547812419566065e-17,
+          "max_temperature": 0.9910412705907197,
+          "min_temperature": -0.9910412705907197,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 6.955420246601825e-17,
+        "wall_time_ns": 26092
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "9d1eef95a9fa51079b5e8dd21cad0602e2a20bebd3474a626f501426741d1bc0"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 46,
+      "timestamp_ns": 1771265151302180352
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "9d1eef95a9fa51079b5e8dd21cad0602e2a20bebd3474a626f501426741d1bc0"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -7.86497520192668e-17,
+          "max_temperature": 0.9906449729757303,
+          "min_temperature": -0.9906449729757303,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -1.1610201488558431e-16,
+          "max_temperature": 0.9908431019703255,
+          "min_temperature": -0.9908431019703255,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 3.745226286631752e-17,
+        "wall_time_ns": 31955
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "c9301a773d1ca7bd6d9fdf6d74f09f764f902867cb5e21cd1a3cd0c7eacd5ea8"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 47,
+      "timestamp_ns": 1771265151302255104
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "c9301a773d1ca7bd6d9fdf6d74f09f764f902867cb5e21cd1a3cd0c7eacd5ea8"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -7.11592994460033e-17,
+          "max_temperature": 0.9904468835990106,
+          "min_temperature": -0.9904468835990106,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -7.86497520192668e-17,
+          "max_temperature": 0.9906449729757303,
+          "min_temperature": -0.9906449729757303,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 7.490452573263501e-18,
+        "wall_time_ns": 26697
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "0eb05b301a7295a2c2f34f2d54a03cae4b46deab82d3b3c064da7229098f3825"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 48,
+      "timestamp_ns": 1771265151302322944
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "0eb05b301a7295a2c2f34f2d54a03cae4b46deab82d3b3c064da7229098f3825"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -3.745226286631752e-18,
+          "max_temperature": 0.9902488338322442,
+          "min_temperature": -0.9902488338322442,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -7.11592994460033e-17,
+          "max_temperature": 0.9904468835990106,
+          "min_temperature": -0.9904468835990106,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 6.741407315937155e-17,
+        "wall_time_ns": 31811
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "5fdd9ce64a70d0014a46b123a3db09ff4ae494158c927545e672433ad1b0d38a"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 49,
+      "timestamp_ns": 1771265151302396160
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "5fdd9ce64a70d0014a46b123a3db09ff4ae494158c927545e672433ad1b0d38a"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy_integral": -5.1363103359521173e-17,
+          "max_temperature": 0.9900508236675107,
+          "min_temperature": -0.9900508236675107,
+          "source_integral": 0.0
+        },
+        "conservation_before": {
+          "energy_integral": -3.745226286631752e-18,
+          "max_temperature": 0.9902488338322442,
+          "min_temperature": -0.9902488338322442,
+          "source_integral": 0.0
+        },
+        "conservation_residual": 4.761787707288942e-17,
+        "wall_time_ns": 58250
+      },
+      "op": "custom",
+      "output_hashes": {
+        "T": "d2acf0b838725b4b38707fcd2fbd6f6ba7a15616a27d9de2e15808f8bbae7a78"
+      },
+      "params": {
+        "alpha": 0.01,
+        "dt": 0.009999999999999731,
+        "grid": [
+          32,
+          32
+        ],
+        "has_source": false
+      },
+      "seq": 50,
+      "timestamp_ns": 1771265151302579712
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "T": "d2acf0b838725b4b38707fcd2fbd6f6ba7a15616a27d9de2e15808f8bbae7a78"
+      },
+      "metrics": {
+        "conservation_final": {
+          "energy_integral": -5.1363103359521173e-17,
+          "max_temperature": 0.9900508236675107,
+          "min_temperature": -0.9900508236675107,
+          "source_integral": 0.0
+        },
+        "total_conservation_residual": 3.745226286631753e-17
+      },
+      "op": "custom",
+      "output_hashes": {},
+      "params": {
+        "num_steps": 50,
+        "t_final_actual": 0.5
+      },
+      "seq": 51,
+      "timestamp_ns": 1771265151302607872
+    }
+  ],
+  "session_id": "c0637f1f-f2be-4e68-b265-3428e0939fe5",
+  "trace_version": 1
+}

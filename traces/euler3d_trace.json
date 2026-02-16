@@ -1,0 +1,128 @@
+{
+  "digest": {
+    "end_time_ns": 1771265150344939776,
+    "entry_count": 3,
+    "op_counts": {
+      "custom": 3
+    },
+    "session_id": "452c005f-e0b8-4681-882c-fa80e2c58718",
+    "start_time_ns": 1771265150024369152,
+    "total_duration_ns": 0,
+    "total_duration_s": 0.0,
+    "trace_hash": "2b2e496e1e728992546aa4877d68f1b82d4eae6318bb17785e84366fd3d2e248",
+    "wall_time_s": 0.320570624
+  },
+  "entries": [
+    {
+      "duration_ns": 0,
+      "input_hashes": {},
+      "metrics": {
+        "conservation_initial": {
+          "energy": 3.0431762962962967,
+          "mass": 1.2136296296296296,
+          "momentum_x": -2.105311809659556e-18,
+          "momentum_y": 2.5576248937661013e-18,
+          "momentum_z": 4.144832625267251e-18
+        }
+      },
+      "op": "custom",
+      "output_hashes": {
+        "state": "902552eb6802fcfe5fe14d3c2ee19672b830afa1136f45d7bd50cafef3b76f08"
+      },
+      "params": {
+        "cfl": 0.5,
+        "domain": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "gamma": 1.4,
+        "grid": [
+          16,
+          16,
+          16
+        ],
+        "solver": "euler3d",
+        "t_final": 0.01
+      },
+      "seq": 0,
+      "timestamp_ns": 1771265150024604160
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "state": "902552eb6802fcfe5fe14d3c2ee19672b830afa1136f45d7bd50cafef3b76f08"
+      },
+      "metrics": {
+        "conservation_after": {
+          "energy": 3.051903529563051,
+          "mass": 1.216132833566121,
+          "momentum_x": -7.192179239007409e-05,
+          "momentum_y": -7.19213681991327e-05,
+          "momentum_z": -6.855515562929113e-05
+        },
+        "conservation_before": {
+          "energy": 3.0431762962962967,
+          "mass": 1.2136296296296296,
+          "momentum_x": -2.105311809659556e-18,
+          "momentum_y": 2.5576248937661013e-18,
+          "momentum_z": 4.144832625267251e-18
+        },
+        "energy_drift": 0.008727233266754286,
+        "mass_drift": 0.002503203936491394,
+        "momentum_x_drift": 7.192179239007199e-05,
+        "momentum_y_drift": 7.192136819913526e-05,
+        "momentum_z_drift": 6.855515562929528e-05,
+        "wall_time_ns": 319331986
+      },
+      "op": "custom",
+      "output_hashes": {
+        "state": "b8ac5b9c9f1b6056e4b01ec7c067f31f4916caa10f541e531479b4e5499975ee"
+      },
+      "params": {
+        "cfl": 0.5,
+        "dt": 0.01,
+        "gamma": 1.4,
+        "grid": [
+          16,
+          16,
+          16
+        ]
+      },
+      "seq": 1,
+      "timestamp_ns": 1771265150344510464
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "state": "b8ac5b9c9f1b6056e4b01ec7c067f31f4916caa10f541e531479b4e5499975ee"
+      },
+      "metrics": {
+        "conservation_drift": {
+          "energy": 0.008727233266754286,
+          "mass": 0.002503203936491394,
+          "momentum_x": 7.192179239007199e-05,
+          "momentum_y": 7.192136819913526e-05,
+          "momentum_z": 6.855515562929528e-05
+        },
+        "conservation_final": {
+          "energy": 3.051903529563051,
+          "mass": 1.216132833566121,
+          "momentum_x": -7.192179239007409e-05,
+          "momentum_y": -7.19213681991327e-05,
+          "momentum_z": -6.855515562929113e-05
+        }
+      },
+      "op": "custom",
+      "output_hashes": {},
+      "params": {
+        "num_steps": 1,
+        "t_final_actual": 0.01
+      },
+      "seq": 2,
+      "timestamp_ns": 1771265150344676096
+    }
+  ],
+  "session_id": "452c005f-e0b8-4681-882c-fa80e2c58718",
+  "trace_version": 1
+}

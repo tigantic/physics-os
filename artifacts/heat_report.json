@@ -1,0 +1,20 @@
+{
+  "domain": "heat",
+  "certificate_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/artifacts/HEAT_GAUNTLET.tpc",
+  "trace_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/traces/heat_trace.json",
+  "verified": true,
+  "grid": "32x32",
+  "steps": 50,
+  "wall_time_s": 0.003994941711425781,
+  "metrics": {
+    "expected_amplitude": 0.9900498337491681,
+    "actual_amplitude": 0.9900508236675107,
+    "amplitude_error": 9.899183426309577e-07,
+    "max_energy_violation": 0.0,
+    "num_steps": 50,
+    "wall_time_s": 0.003994941711425781,
+    "trace_hash": "423552aeefa19af5bea76ff4de6ed990e54c17bb5d755cab95b1fa86c3e5b272",
+    "energy_initial": -1.3910840493203647e-17,
+    "energy_final": -5.1363103359521173e-17
+  }
+}

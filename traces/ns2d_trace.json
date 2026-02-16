@@ -1,0 +1,471 @@
+{
+  "digest": {
+    "end_time_ns": 1771265151288057856,
+    "entry_count": 13,
+    "op_counts": {
+      "custom": 13
+    },
+    "session_id": "0d3a28fd-ea7b-44e5-b506-27e5842d3741",
+    "start_time_ns": 1771265151261210112,
+    "total_duration_ns": 0,
+    "total_duration_s": 0.0,
+    "trace_hash": "5dd261b0a15177b687bfa68446188a299ec908ed549722febb5ca900220430c3",
+    "wall_time_s": 0.026847744
+  },
+  "entries": [
+    {
+      "duration_ns": 0,
+      "input_hashes": {},
+      "metrics": {
+        "conservation_initial": {
+          "enstrophy": 19.739208802178716,
+          "kinetic_energy": 9.869604401089358,
+          "max_divergence": 4.7972416340079486e-15
+        }
+      },
+      "op": "custom",
+      "output_hashes": {
+        "state": "36d32d73d3ed1d6385b3f113d87c3e39529d01681ad2903862c98a621a6b51ad"
+      },
+      "params": {
+        "domain": [
+          6.283185307179586,
+          6.283185307179586
+        ],
+        "grid": [
+          32,
+          32
+        ],
+        "method": "rk4",
+        "nu": 0.01,
+        "solver": "ns2d",
+        "t_final": 0.1
+      },
+      "seq": 0,
+      "timestamp_ns": 1771265151261457408
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "state": "36d32d73d3ed1d6385b3f113d87c3e39529d01681ad2903862c98a621a6b51ad"
+      },
+      "metrics": {
+        "conservation_after": {
+          "enstrophy": 19.73131469758402,
+          "kinetic_energy": 9.865657348792007,
+          "max_divergence": 2.734310421232941e-15
+        },
+        "conservation_before": {
+          "enstrophy": 19.739208802178716,
+          "kinetic_energy": 9.869604401089358,
+          "max_divergence": 4.7972416340079486e-15
+        },
+        "ke_drift": 0.003947052297350595,
+        "max_divergence": 2.734310421232941e-15,
+        "wall_time_ns": 2040785
+      },
+      "op": "custom",
+      "output_hashes": {
+        "state": "24cb59771ca5b9f8eeaa9c74dc3d660fbd7aaf6254411570d577e66696c16078"
+      },
+      "params": {
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "method": "rk4",
+        "nu": 0.01
+      },
+      "seq": 1,
+      "timestamp_ns": 1771265151263794944
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "state": "24cb59771ca5b9f8eeaa9c74dc3d660fbd7aaf6254411570d577e66696c16078"
+      },
+      "metrics": {
+        "conservation_after": {
+          "enstrophy": 19.723423749999714,
+          "kinetic_energy": 9.861711874999857,
+          "max_divergence": 3.3514554747721204e-15
+        },
+        "conservation_before": {
+          "enstrophy": 19.73131469758402,
+          "kinetic_energy": 9.865657348792007,
+          "max_divergence": 2.734310421232941e-15
+        },
+        "ke_drift": 0.003945473792150267,
+        "max_divergence": 3.3514554747721204e-15,
+        "wall_time_ns": 2057721
+      },
+      "op": "custom",
+      "output_hashes": {
+        "state": "b1c734a4c1acb221a0a4c1baf0398e71c43ea64a6b9fd7a5512f0f54ffe3bdd0"
+      },
+      "params": {
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "method": "rk4",
+        "nu": 0.01
+      },
+      "seq": 2,
+      "timestamp_ns": 1771265151266146816
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "state": "b1c734a4c1acb221a0a4c1baf0398e71c43ea64a6b9fd7a5512f0f54ffe3bdd0"
+      },
+      "metrics": {
+        "conservation_after": {
+          "enstrophy": 19.71553595816325,
+          "kinetic_energy": 9.857767979081625,
+          "max_divergence": 3.2904367769168185e-15
+        },
+        "conservation_before": {
+          "enstrophy": 19.723423749999714,
+          "kinetic_energy": 9.861711874999857,
+          "max_divergence": 3.3514554747721204e-15
+        },
+        "ke_drift": 0.0039438959182316324,
+        "max_divergence": 3.2904367769168185e-15,
+        "wall_time_ns": 1995214
+      },
+      "op": "custom",
+      "output_hashes": {
+        "state": "e1026ef179990ebbb8bb8a2643cb88b689cb3c0d33df0014d7a23775006d35cd"
+      },
+      "params": {
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "method": "rk4",
+        "nu": 0.01
+      },
+      "seq": 3,
+      "timestamp_ns": 1771265151268430336
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "state": "e1026ef179990ebbb8bb8a2643cb88b689cb3c0d33df0014d7a23775006d35cd"
+      },
+      "metrics": {
+        "conservation_after": {
+          "enstrophy": 19.707651320812584,
+          "kinetic_energy": 9.853825660406292,
+          "max_divergence": 3.2306093925739616e-15
+        },
+        "conservation_before": {
+          "enstrophy": 19.71553595816325,
+          "kinetic_energy": 9.857767979081625,
+          "max_divergence": 3.2904367769168185e-15
+        },
+        "ke_drift": 0.003942318675333567,
+        "max_divergence": 3.2306093925739616e-15,
+        "wall_time_ns": 2083847
+      },
+      "op": "custom",
+      "output_hashes": {
+        "state": "8490f8310986a2f4309b4902544712fbc08833643cad5fcbbefc160f6c59902b"
+      },
+      "params": {
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "method": "rk4",
+        "nu": 0.01
+      },
+      "seq": 4,
+      "timestamp_ns": 1771265151270807296
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "state": "8490f8310986a2f4309b4902544712fbc08833643cad5fcbbefc160f6c59902b"
+      },
+      "metrics": {
+        "conservation_after": {
+          "enstrophy": 19.699769836686173,
+          "kinetic_energy": 9.849884918343085,
+          "max_divergence": 3.855890201748666e-15
+        },
+        "conservation_before": {
+          "enstrophy": 19.707651320812584,
+          "kinetic_energy": 9.853825660406292,
+          "max_divergence": 3.2306093925739616e-15
+        },
+        "ke_drift": 0.003940742063207381,
+        "max_divergence": 3.855890201748666e-15,
+        "wall_time_ns": 2002020
+      },
+      "op": "custom",
+      "output_hashes": {
+        "state": "6c585b46e925c2217078e89957d4f5b06d8492f5a19ec27ac830388aaaa0f7c6"
+      },
+      "params": {
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "method": "rk4",
+        "nu": 0.01
+      },
+      "seq": 5,
+      "timestamp_ns": 1771265151273096960
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "state": "6c585b46e925c2217078e89957d4f5b06d8492f5a19ec27ac830388aaaa0f7c6"
+      },
+      "metrics": {
+        "conservation_after": {
+          "enstrophy": 19.691891504522975,
+          "kinetic_energy": 9.845945752261487,
+          "max_divergence": 4.257480827026588e-15
+        },
+        "conservation_before": {
+          "enstrophy": 19.699769836686173,
+          "kinetic_energy": 9.849884918343085,
+          "max_divergence": 3.855890201748666e-15
+        },
+        "ke_drift": 0.0039391660815972784,
+        "max_divergence": 4.257480827026588e-15,
+        "wall_time_ns": 2033270
+      },
+      "op": "custom",
+      "output_hashes": {
+        "state": "055a4a5e9dbdaf3a23fc491d6243ac09e84d9b57ab54a04725070f5719b04f20"
+      },
+      "params": {
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "method": "rk4",
+        "nu": 0.01
+      },
+      "seq": 6,
+      "timestamp_ns": 1771265151275418880
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "state": "055a4a5e9dbdaf3a23fc491d6243ac09e84d9b57ab54a04725070f5719b04f20"
+      },
+      "metrics": {
+        "conservation_after": {
+          "enstrophy": 19.684016323062465,
+          "kinetic_energy": 9.842008161531231,
+          "max_divergence": 3.433763154854145e-15
+        },
+        "conservation_before": {
+          "enstrophy": 19.691891504522975,
+          "kinetic_energy": 9.845945752261487,
+          "max_divergence": 4.257480827026588e-15
+        },
+        "ke_drift": 0.003937590730256346,
+        "max_divergence": 3.433763154854145e-15,
+        "wall_time_ns": 2018222
+      },
+      "op": "custom",
+      "output_hashes": {
+        "state": "a14129eed6370a02044e113f0dd79b70fdb6f6ce89fb279d67852a15ecb21742"
+      },
+      "params": {
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "method": "rk4",
+        "nu": 0.01
+      },
+      "seq": 7,
+      "timestamp_ns": 1771265151277731328
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "state": "a14129eed6370a02044e113f0dd79b70fdb6f6ce89fb279d67852a15ecb21742"
+      },
+      "metrics": {
+        "conservation_after": {
+          "enstrophy": 19.6761442910446,
+          "kinetic_energy": 9.8380721455223,
+          "max_divergence": 2.8729534774836525e-15
+        },
+        "conservation_before": {
+          "enstrophy": 19.684016323062465,
+          "kinetic_energy": 9.842008161531231,
+          "max_divergence": 3.433763154854145e-15
+        },
+        "ke_drift": 0.003936016008930565,
+        "max_divergence": 2.8729534774836525e-15,
+        "wall_time_ns": 2024275
+      },
+      "op": "custom",
+      "output_hashes": {
+        "state": "a9578c31dedf776e8a9808710cb12ca901edf743777e86e9097d193d1f40c5a0"
+      },
+      "params": {
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "method": "rk4",
+        "nu": 0.01
+      },
+      "seq": 8,
+      "timestamp_ns": 1771265151280108288
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "state": "a9578c31dedf776e8a9808710cb12ca901edf743777e86e9097d193d1f40c5a0"
+      },
+      "metrics": {
+        "conservation_after": {
+          "enstrophy": 19.66827540720987,
+          "kinetic_energy": 9.834137703604933,
+          "max_divergence": 3.7780826899126025e-15
+        },
+        "conservation_before": {
+          "enstrophy": 19.6761442910446,
+          "kinetic_energy": 9.8380721455223,
+          "max_divergence": 2.8729534774836525e-15
+        },
+        "ke_drift": 0.0039344419173676926,
+        "max_divergence": 3.7780826899126025e-15,
+        "wall_time_ns": 2035554
+      },
+      "op": "custom",
+      "output_hashes": {
+        "state": "03143df5832f52ce8953674f7446792d3aa67a6dd7943f66787e7680a7ba4982"
+      },
+      "params": {
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "method": "rk4",
+        "nu": 0.01
+      },
+      "seq": 9,
+      "timestamp_ns": 1771265151282445568
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "state": "03143df5832f52ce8953674f7446792d3aa67a6dd7943f66787e7680a7ba4982"
+      },
+      "metrics": {
+        "conservation_after": {
+          "enstrophy": 19.660409670299238,
+          "kinetic_energy": 9.83020483514962,
+          "max_divergence": 3.4628509060782866e-15
+        },
+        "conservation_before": {
+          "enstrophy": 19.66827540720987,
+          "kinetic_energy": 9.834137703604933,
+          "max_divergence": 3.7780826899126025e-15
+        },
+        "ke_drift": 0.003932868455311933,
+        "max_divergence": 3.4628509060782866e-15,
+        "wall_time_ns": 2032920
+      },
+      "op": "custom",
+      "output_hashes": {
+        "state": "172a37a4e4c09f33a450613e6e4f954f0e9cfff58984a889ac3daa1492989329"
+      },
+      "params": {
+        "dt": 0.01,
+        "grid": [
+          32,
+          32
+        ],
+        "method": "rk4",
+        "nu": 0.01
+      },
+      "seq": 10,
+      "timestamp_ns": 1771265151284767232
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "state": "172a37a4e4c09f33a450613e6e4f954f0e9cfff58984a889ac3daa1492989329"
+      },
+      "metrics": {
+        "conservation_after": {
+          "enstrophy": 19.66040967029924,
+          "kinetic_energy": 9.83020483514962,
+          "max_divergence": 3.6828480558304834e-15
+        },
+        "conservation_before": {
+          "enstrophy": 19.660409670299238,
+          "kinetic_energy": 9.83020483514962,
+          "max_divergence": 3.4628509060782866e-15
+        },
+        "ke_drift": 0.0,
+        "max_divergence": 3.6828480558304834e-15,
+        "wall_time_ns": 2400282
+      },
+      "op": "custom",
+      "output_hashes": {
+        "state": "d0f02f451d89ba2896a942952035c762b6c1cfb9eaf02c3aceabcf77e2631bf4"
+      },
+      "params": {
+        "dt": 1.3877787807814457e-17,
+        "grid": [
+          32,
+          32
+        ],
+        "method": "rk4",
+        "nu": 0.01
+      },
+      "seq": 11,
+      "timestamp_ns": 1771265151287502592
+    },
+    {
+      "duration_ns": 0,
+      "input_hashes": {
+        "state": "d0f02f451d89ba2896a942952035c762b6c1cfb9eaf02c3aceabcf77e2631bf4"
+      },
+      "metrics": {
+        "conservation_drift": {
+          "kinetic_energy": 0.03939956593973726,
+          "max_divergence": 3.6828480558304834e-15
+        },
+        "conservation_final": {
+          "enstrophy": 19.66040967029924,
+          "kinetic_energy": 9.83020483514962,
+          "max_divergence": 3.6828480558304834e-15
+        }
+      },
+      "op": "custom",
+      "output_hashes": {},
+      "params": {
+        "num_steps": 11,
+        "t_final_actual": 0.1
+      },
+      "seq": 12,
+      "timestamp_ns": 1771265151287646720
+    }
+  ],
+  "session_id": "0d3a28fd-ea7b-44e5-b506-27e5842d3741",
+  "trace_version": 1
+}
