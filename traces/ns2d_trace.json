@@ -1,16 +1,16 @@
 {
   "digest": {
-    "end_time_ns": 1771265151288057856,
+    "end_time_ns": 1771285093738384640,
     "entry_count": 13,
     "op_counts": {
       "custom": 13
     },
-    "session_id": "0d3a28fd-ea7b-44e5-b506-27e5842d3741",
-    "start_time_ns": 1771265151261210112,
+    "session_id": "999e770e-0104-4831-88c8-1f14a403357c",
+    "start_time_ns": 1771285093705610496,
     "total_duration_ns": 0,
     "total_duration_s": 0.0,
-    "trace_hash": "5dd261b0a15177b687bfa68446188a299ec908ed549722febb5ca900220430c3",
-    "wall_time_s": 0.026847744
+    "trace_hash": "a9be3a9953c51c46091364f5747f51e3a76917a9ff8c1b33f9d794388322c57f",
+    "wall_time_s": 0.032774144
   },
   "entries": [
     {
@@ -42,7 +42,7 @@
         "t_final": 0.1
       },
       "seq": 0,
-      "timestamp_ns": 1771265151261457408
+      "timestamp_ns": 1771285093706056960
     },
     {
       "duration_ns": 0,
@@ -62,7 +62,7 @@
         },
         "ke_drift": 0.003947052297350595,
         "max_divergence": 2.734310421232941e-15,
-        "wall_time_ns": 2040785
+        "wall_time_ns": 3128696
       },
       "op": "custom",
       "output_hashes": {
@@ -78,7 +78,7 @@
         "nu": 0.01
       },
       "seq": 1,
-      "timestamp_ns": 1771265151263794944
+      "timestamp_ns": 1771285093709586176
     },
     {
       "duration_ns": 0,
@@ -98,7 +98,7 @@
         },
         "ke_drift": 0.003945473792150267,
         "max_divergence": 3.3514554747721204e-15,
-        "wall_time_ns": 2057721
+        "wall_time_ns": 2374293
       },
       "op": "custom",
       "output_hashes": {
@@ -114,7 +114,7 @@
         "nu": 0.01
       },
       "seq": 2,
-      "timestamp_ns": 1771265151266146816
+      "timestamp_ns": 1771285093712364288
     },
     {
       "duration_ns": 0,
@@ -134,7 +134,7 @@
         },
         "ke_drift": 0.0039438959182316324,
         "max_divergence": 3.2904367769168185e-15,
-        "wall_time_ns": 1995214
+        "wall_time_ns": 2909418
       },
       "op": "custom",
       "output_hashes": {
@@ -150,7 +150,7 @@
         "nu": 0.01
       },
       "seq": 3,
-      "timestamp_ns": 1771265151268430336
+      "timestamp_ns": 1771285093715875584
     },
     {
       "duration_ns": 0,
@@ -170,7 +170,7 @@
         },
         "ke_drift": 0.003942318675333567,
         "max_divergence": 3.2306093925739616e-15,
-        "wall_time_ns": 2083847
+        "wall_time_ns": 2298291
       },
       "op": "custom",
       "output_hashes": {
@@ -186,7 +186,7 @@
         "nu": 0.01
       },
       "seq": 4,
-      "timestamp_ns": 1771265151270807296
+      "timestamp_ns": 1771285093718501632
     },
     {
       "duration_ns": 0,
@@ -206,7 +206,7 @@
         },
         "ke_drift": 0.003940742063207381,
         "max_divergence": 3.855890201748666e-15,
-        "wall_time_ns": 2002020
+        "wall_time_ns": 2702852
       },
       "op": "custom",
       "output_hashes": {
@@ -222,7 +222,7 @@
         "nu": 0.01
       },
       "seq": 5,
-      "timestamp_ns": 1771265151273096960
+      "timestamp_ns": 1771285093721788928
     },
     {
       "duration_ns": 0,
@@ -242,7 +242,7 @@
         },
         "ke_drift": 0.0039391660815972784,
         "max_divergence": 4.257480827026588e-15,
-        "wall_time_ns": 2033270
+        "wall_time_ns": 2506752
       },
       "op": "custom",
       "output_hashes": {
@@ -258,7 +258,7 @@
         "nu": 0.01
       },
       "seq": 6,
-      "timestamp_ns": 1771265151275418880
+      "timestamp_ns": 1771285093724709120
     },
     {
       "duration_ns": 0,
@@ -278,7 +278,7 @@
         },
         "ke_drift": 0.003937590730256346,
         "max_divergence": 3.433763154854145e-15,
-        "wall_time_ns": 2018222
+        "wall_time_ns": 2306270
       },
       "op": "custom",
       "output_hashes": {
@@ -294,7 +294,7 @@
         "nu": 0.01
       },
       "seq": 7,
-      "timestamp_ns": 1771265151277731328
+      "timestamp_ns": 1771285093727366912
     },
     {
       "duration_ns": 0,
@@ -314,7 +314,7 @@
         },
         "ke_drift": 0.003936016008930565,
         "max_divergence": 2.8729534774836525e-15,
-        "wall_time_ns": 2024275
+        "wall_time_ns": 2244460
       },
       "op": "custom",
       "output_hashes": {
@@ -330,7 +330,7 @@
         "nu": 0.01
       },
       "seq": 8,
-      "timestamp_ns": 1771265151280108288
+      "timestamp_ns": 1771285093729947904
     },
     {
       "duration_ns": 0,
@@ -350,7 +350,7 @@
         },
         "ke_drift": 0.0039344419173676926,
         "max_divergence": 3.7780826899126025e-15,
-        "wall_time_ns": 2035554
+        "wall_time_ns": 2317399
       },
       "op": "custom",
       "output_hashes": {
@@ -366,7 +366,7 @@
         "nu": 0.01
       },
       "seq": 9,
-      "timestamp_ns": 1771265151282445568
+      "timestamp_ns": 1771285093732634112
     },
     {
       "duration_ns": 0,
@@ -386,7 +386,7 @@
         },
         "ke_drift": 0.003932868455311933,
         "max_divergence": 3.4628509060782866e-15,
-        "wall_time_ns": 2032920
+        "wall_time_ns": 2338216
       },
       "op": "custom",
       "output_hashes": {
@@ -402,7 +402,7 @@
         "nu": 0.01
       },
       "seq": 10,
-      "timestamp_ns": 1771265151284767232
+      "timestamp_ns": 1771285093735294208
     },
     {
       "duration_ns": 0,
@@ -422,7 +422,7 @@
         },
         "ke_drift": 0.0,
         "max_divergence": 3.6828480558304834e-15,
-        "wall_time_ns": 2400282
+        "wall_time_ns": 2235673
       },
       "op": "custom",
       "output_hashes": {
@@ -438,7 +438,7 @@
         "nu": 0.01
       },
       "seq": 11,
-      "timestamp_ns": 1771265151287502592
+      "timestamp_ns": 1771285093737857280
     },
     {
       "duration_ns": 0,
@@ -463,9 +463,9 @@
         "t_final_actual": 0.1
       },
       "seq": 12,
-      "timestamp_ns": 1771265151287646720
+      "timestamp_ns": 1771285093738043392
     }
   ],
-  "session_id": "0d3a28fd-ea7b-44e5-b506-27e5842d3741",
+  "session_id": "999e770e-0104-4831-88c8-1f14a403357c",
   "trace_version": 1
 }

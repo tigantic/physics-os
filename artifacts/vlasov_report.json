@@ -5,7 +5,7 @@
   "verified": true,
   "grid": "32x32",
   "steps": 51,
-  "wall_time_s": 0.12717962265014648,
+  "wall_time_s": 0.13104939460754395,
   "metrics": {
     "l2_initial": 3.545084947196123,
     "l2_final": 3.545084947196126,
@@ -18,7 +18,7 @@
     "fe_initial": 0.0012566371558713999,
     "fe_final": 0.0001371682265370378,
     "num_steps": 51,
-    "wall_time_s": 0.12717962265014648,
-    "trace_hash": "da146ffdbca5ccd59438f643fb9e0f4f5b4c68e08d19436b156ebb4ca3c53dd0"
+    "wall_time_s": 0.13104939460754395,
+    "trace_hash": "0d15479d80726b37cbdb914cb7e67b824b8c0e0fc5cf18d9f0b509f849095356"
   }
 }

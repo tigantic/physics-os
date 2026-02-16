@@ -1,0 +1,2429 @@
+{
+  "version": "1.0.0",
+  "project": "HyperTensor-VM",
+  "protocol": "trustless_physics_140",
+  "total_domains": 140,
+  "certified": 140,
+  "phases": {
+    "5": 4,
+    "6": 25,
+    "7": 40,
+    "8": 45,
+    "9": 26
+  },
+  "categories": {
+    "Astrophysics": 6,
+    "Biophysics": 6,
+    "Chemical Physics": 7,
+    "Classical Mechanics": 6,
+    "Computational Methods": 6,
+    "Coupled Multi-Physics": 7,
+    "Electromagnetism": 7,
+    "Electronic Structure": 7,
+    "Fluid Dynamics": 10,
+    "Geophysics": 6,
+    "Materials Science": 7,
+    "Nuclear and Particle": 6,
+    "Optics": 4,
+    "Plasma Physics": 8,
+    "Quantum Information": 5,
+    "Quantum Many-Body": 13,
+    "Quantum Mechanics": 5,
+    "Relativity": 2,
+    "Solid State": 8,
+    "Special Applied": 8,
+    "Statistical Mechanics": 5,
+    "Thermal Physics": 1
+  },
+  "lean_proofs": [
+    "applied_physics_conservation_proof/AppliedPhysicsConservation.lean",
+    "astro_conservation_proof/AstroConservation.lean",
+    "biophysics_conservation_proof/BiophysicsConservation.lean",
+    "chem_physics_iter_conservation_proof/ChemPhysicsIterConservation.lean",
+    "chemical_physics_conservation_proof/ChemicalPhysicsConservation.lean",
+    "computational_methods_conservation_proof/ComputationalMethodsConservation.lean",
+    "coupled_conservation_proof/CoupledConservation.lean",
+    "electronic_structure_conservation_proof/ElectronicStructureConservation.lean",
+    "em_conservation_proof/EMConservation.lean",
+    "euler_conservation_proof/EulerConservation.lean",
+    "fluid_conservation_proof/FluidConservation.lean",
+    "geophysics_conservation_proof/GeophysicsConservation.lean",
+    "materials_conservation_proof/MaterialsConservation.lean",
+    "mechanics_conservation_proof/MechanicsConservation.lean",
+    "navier_stokes_proof/NavierStokes.lean",
+    "nuclear_particle_conservation_proof/NuclearParticleConservation.lean",
+    "optics_conservation_proof/OpticsConservation.lean",
+    "plasma_conservation_proof/PlasmaConservation.lean",
+    "qmb_conservation_proof/QuantumManyBodyConservation.lean",
+    "quantum_info_conservation_proof/QuantumInfoConservation.lean",
+    "quantum_info_ext_conservation_proof/QuantumInfoExtConservation.lean",
+    "quantum_mechanics_conservation_proof/QuantumMechanicsConservation.lean",
+    "solid_state_conservation_proof/SolidStateConservation.lean",
+    "special_relativity_conservation_proof/SpecialRelativityConservation.lean",
+    "statmech_conservation_proof/StatMechConservation.lean",
+    "statmech_stochastic_conservation_proof/StatMechStochasticConservation.lean",
+    "thermal_conservation_proof/ThermalConservation.lean",
+    "vlasov_conservation_proof/VlasovConservation.lean"
+  ],
+  "certificates": [
+    {
+      "index": 1,
+      "domain_id": "II.2",
+      "name": "Euler 3D",
+      "adapter_module": "tensornet.cfd.trace_adapters.euler3d_adapter",
+      "adapter_class": "Euler3DTraceAdapter",
+      "lean_proof": "euler_conservation_proof/EulerConservation.lean",
+      "conservation_laws": [
+        "mass",
+        "momentum",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 5,
+      "category": "Fluid Dynamics",
+      "certified": true
+    },
+    {
+      "index": 2,
+      "domain_id": "III.1",
+      "name": "Heat Transfer",
+      "adapter_module": "tensornet.cfd.trace_adapters.heat_adapter",
+      "adapter_class": "HeatTransferTraceAdapter",
+      "lean_proof": "thermal_conservation_proof/ThermalConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "maximum principle"
+      ],
+      "proof_system": "STARK",
+      "phase": 5,
+      "category": "Thermal Physics",
+      "certified": true
+    },
+    {
+      "index": 3,
+      "domain_id": "II.1",
+      "name": "Navier-Stokes 2D",
+      "adapter_module": "tensornet.cfd.trace_adapters.ns2d_adapter",
+      "adapter_class": "NS2DTraceAdapter",
+      "lean_proof": "navier_stokes_proof/NavierStokes.lean",
+      "conservation_laws": [
+        "mass",
+        "momentum",
+        "divergence-free"
+      ],
+      "proof_system": "STARK",
+      "phase": 5,
+      "category": "Fluid Dynamics",
+      "certified": true
+    },
+    {
+      "index": 4,
+      "domain_id": "VI.1",
+      "name": "Vlasov-Poisson",
+      "adapter_module": "tensornet.cfd.trace_adapters.vlasov_adapter",
+      "adapter_class": "VlasovTraceAdapter",
+      "lean_proof": "vlasov_conservation_proof/VlasovConservation.lean",
+      "conservation_laws": [
+        "particle number",
+        "energy",
+        "entropy"
+      ],
+      "proof_system": "STARK",
+      "phase": 5,
+      "category": "Plasma Physics",
+      "certified": true
+    },
+    {
+      "index": 5,
+      "domain_id": "II.3",
+      "name": "Turbulence (LES/RANS)",
+      "adapter_module": "tensornet.fluids.trace_adapters.turbulence_adapter",
+      "adapter_class": "TurbulenceTraceAdapter",
+      "lean_proof": "fluid_conservation_proof/FluidConservation.lean",
+      "conservation_laws": [
+        "mass",
+        "momentum",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Fluid Dynamics",
+      "certified": true
+    },
+    {
+      "index": 6,
+      "domain_id": "II.4",
+      "name": "Multiphase Flow",
+      "adapter_module": "tensornet.fluids.trace_adapters.multiphase_adapter",
+      "adapter_class": "MultiphaseTraceAdapter",
+      "lean_proof": "fluid_conservation_proof/FluidConservation.lean",
+      "conservation_laws": [
+        "mass",
+        "momentum",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Fluid Dynamics",
+      "certified": true
+    },
+    {
+      "index": 7,
+      "domain_id": "II.5",
+      "name": "Reactive Flow",
+      "adapter_module": "tensornet.fluids.trace_adapters.reactive_adapter",
+      "adapter_class": "ReactiveFlowTraceAdapter",
+      "lean_proof": "fluid_conservation_proof/FluidConservation.lean",
+      "conservation_laws": [
+        "mass",
+        "momentum",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Fluid Dynamics",
+      "certified": true
+    },
+    {
+      "index": 8,
+      "domain_id": "II.6",
+      "name": "Rarefied Gas Dynamics",
+      "adapter_module": "tensornet.fluids.trace_adapters.rarefied_adapter",
+      "adapter_class": "RarefiedGasTraceAdapter",
+      "lean_proof": "fluid_conservation_proof/FluidConservation.lean",
+      "conservation_laws": [
+        "mass",
+        "momentum",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Fluid Dynamics",
+      "certified": true
+    },
+    {
+      "index": 9,
+      "domain_id": "II.7",
+      "name": "Shallow Water",
+      "adapter_module": "tensornet.fluids.trace_adapters.shallow_water_adapter",
+      "adapter_class": "ShallowWaterTraceAdapter",
+      "lean_proof": "fluid_conservation_proof/FluidConservation.lean",
+      "conservation_laws": [
+        "mass",
+        "momentum",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Fluid Dynamics",
+      "certified": true
+    },
+    {
+      "index": 10,
+      "domain_id": "II.8",
+      "name": "Non-Newtonian Flow",
+      "adapter_module": "tensornet.fluids.trace_adapters.non_newtonian_adapter",
+      "adapter_class": "NonNewtonianTraceAdapter",
+      "lean_proof": "fluid_conservation_proof/FluidConservation.lean",
+      "conservation_laws": [
+        "mass",
+        "momentum",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Fluid Dynamics",
+      "certified": true
+    },
+    {
+      "index": 11,
+      "domain_id": "II.9",
+      "name": "Porous Media Flow",
+      "adapter_module": "tensornet.fluids.trace_adapters.porous_media_adapter",
+      "adapter_class": "PorousMediaTraceAdapter",
+      "lean_proof": "fluid_conservation_proof/FluidConservation.lean",
+      "conservation_laws": [
+        "mass",
+        "momentum",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Fluid Dynamics",
+      "certified": true
+    },
+    {
+      "index": 12,
+      "domain_id": "II.10",
+      "name": "Free Surface Flow",
+      "adapter_module": "tensornet.fluids.trace_adapters.free_surface_adapter",
+      "adapter_class": "FreeSurfaceTraceAdapter",
+      "lean_proof": "fluid_conservation_proof/FluidConservation.lean",
+      "conservation_laws": [
+        "mass",
+        "momentum",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Fluid Dynamics",
+      "certified": true
+    },
+    {
+      "index": 13,
+      "domain_id": "IV.1",
+      "name": "Electrostatics",
+      "adapter_module": "tensornet.em.trace_adapters.electrostatics_adapter",
+      "adapter_class": "ElectrostaticsTraceAdapter",
+      "lean_proof": "em_conservation_proof/EMConservation.lean",
+      "conservation_laws": [
+        "Gauss law",
+        "Faraday law",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Electromagnetism",
+      "certified": true
+    },
+    {
+      "index": 14,
+      "domain_id": "IV.2",
+      "name": "Magnetostatics",
+      "adapter_module": "tensornet.em.trace_adapters.magnetostatics_adapter",
+      "adapter_class": "MagnetostaticsTraceAdapter",
+      "lean_proof": "em_conservation_proof/EMConservation.lean",
+      "conservation_laws": [
+        "Gauss law",
+        "Faraday law",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Electromagnetism",
+      "certified": true
+    },
+    {
+      "index": 15,
+      "domain_id": "IV.3",
+      "name": "Maxwell FDTD",
+      "adapter_module": "tensornet.em.trace_adapters.maxwell_fdtd_adapter",
+      "adapter_class": "MaxwellFDTDTraceAdapter",
+      "lean_proof": "em_conservation_proof/EMConservation.lean",
+      "conservation_laws": [
+        "Gauss law",
+        "Faraday law",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Electromagnetism",
+      "certified": true
+    },
+    {
+      "index": 16,
+      "domain_id": "IV.4",
+      "name": "Frequency Domain",
+      "adapter_module": "tensornet.em.trace_adapters.frequency_domain_adapter",
+      "adapter_class": "FrequencyDomainTraceAdapter",
+      "lean_proof": "em_conservation_proof/EMConservation.lean",
+      "conservation_laws": [
+        "Gauss law",
+        "Faraday law",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Electromagnetism",
+      "certified": true
+    },
+    {
+      "index": 17,
+      "domain_id": "IV.5",
+      "name": "Wave Propagation",
+      "adapter_module": "tensornet.em.trace_adapters.wave_propagation_adapter",
+      "adapter_class": "WavePropagationTraceAdapter",
+      "lean_proof": "em_conservation_proof/EMConservation.lean",
+      "conservation_laws": [
+        "Gauss law",
+        "Faraday law",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Electromagnetism",
+      "certified": true
+    },
+    {
+      "index": 18,
+      "domain_id": "IV.6",
+      "name": "Photonics",
+      "adapter_module": "tensornet.em.trace_adapters.photonics_adapter",
+      "adapter_class": "PhotonicsTraceAdapter",
+      "lean_proof": "em_conservation_proof/EMConservation.lean",
+      "conservation_laws": [
+        "Gauss law",
+        "Faraday law",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Electromagnetism",
+      "certified": true
+    },
+    {
+      "index": 19,
+      "domain_id": "IV.7",
+      "name": "Antenna",
+      "adapter_module": "tensornet.em.trace_adapters.antenna_adapter",
+      "adapter_class": "AntennaTraceAdapter",
+      "lean_proof": "em_conservation_proof/EMConservation.lean",
+      "conservation_laws": [
+        "Gauss law",
+        "Faraday law",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Electromagnetism",
+      "certified": true
+    },
+    {
+      "index": 20,
+      "domain_id": "V.2",
+      "name": "Non-Equilibrium StatMech",
+      "adapter_module": "tensornet.statmech.trace_adapters.non_equilibrium_adapter",
+      "adapter_class": "NonEquilibriumTraceAdapter",
+      "lean_proof": "statmech_conservation_proof/StatMechConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "particle number"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Statistical Mechanics",
+      "certified": true
+    },
+    {
+      "index": 21,
+      "domain_id": "V.3",
+      "name": "Molecular Dynamics",
+      "adapter_module": "tensornet.statmech.trace_adapters.md_adapter",
+      "adapter_class": "MDTraceAdapter",
+      "lean_proof": "statmech_conservation_proof/StatMechConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "particle number"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Statistical Mechanics",
+      "certified": true
+    },
+    {
+      "index": 22,
+      "domain_id": "V.5",
+      "name": "Lattice Spin Models",
+      "adapter_module": "tensornet.statmech.trace_adapters.lattice_spin_adapter",
+      "adapter_class": "LatticeSpinTraceAdapter",
+      "lean_proof": "statmech_conservation_proof/StatMechConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "particle number"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Statistical Mechanics",
+      "certified": true
+    },
+    {
+      "index": 23,
+      "domain_id": "VI.2",
+      "name": "Ideal MHD",
+      "adapter_module": "tensornet.plasma.trace_adapters.ideal_mhd_adapter",
+      "adapter_class": "IdealMHDTraceAdapter",
+      "lean_proof": "plasma_conservation_proof/PlasmaConservation.lean",
+      "conservation_laws": [
+        "magnetic flux",
+        "energy",
+        "helicity"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Plasma Physics",
+      "certified": true
+    },
+    {
+      "index": 24,
+      "domain_id": "VI.3",
+      "name": "Resistive MHD",
+      "adapter_module": "tensornet.plasma.trace_adapters.resistive_mhd_adapter",
+      "adapter_class": "ResistiveMHDTraceAdapter",
+      "lean_proof": "plasma_conservation_proof/PlasmaConservation.lean",
+      "conservation_laws": [
+        "magnetic flux",
+        "energy",
+        "helicity"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Plasma Physics",
+      "certified": true
+    },
+    {
+      "index": 25,
+      "domain_id": "VI.4",
+      "name": "Gyrokinetics",
+      "adapter_module": "tensornet.plasma.trace_adapters.gyrokinetics_adapter",
+      "adapter_class": "GyrokineticsTraceAdapter",
+      "lean_proof": "plasma_conservation_proof/PlasmaConservation.lean",
+      "conservation_laws": [
+        "magnetic flux",
+        "energy",
+        "helicity"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Plasma Physics",
+      "certified": true
+    },
+    {
+      "index": 26,
+      "domain_id": "VI.5",
+      "name": "Magnetic Reconnection",
+      "adapter_module": "tensornet.plasma.trace_adapters.reconnection_adapter",
+      "adapter_class": "ReconnectionTraceAdapter",
+      "lean_proof": "plasma_conservation_proof/PlasmaConservation.lean",
+      "conservation_laws": [
+        "magnetic flux",
+        "energy",
+        "helicity"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Plasma Physics",
+      "certified": true
+    },
+    {
+      "index": 27,
+      "domain_id": "VI.6",
+      "name": "Laser-Plasma Interaction",
+      "adapter_module": "tensornet.plasma.trace_adapters.laser_plasma_adapter",
+      "adapter_class": "LaserPlasmaTraceAdapter",
+      "lean_proof": "plasma_conservation_proof/PlasmaConservation.lean",
+      "conservation_laws": [
+        "magnetic flux",
+        "energy",
+        "helicity"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Plasma Physics",
+      "certified": true
+    },
+    {
+      "index": 28,
+      "domain_id": "VI.7",
+      "name": "Dusty Plasma",
+      "adapter_module": "tensornet.plasma.trace_adapters.dusty_plasma_adapter",
+      "adapter_class": "DustyPlasmaTraceAdapter",
+      "lean_proof": "plasma_conservation_proof/PlasmaConservation.lean",
+      "conservation_laws": [
+        "magnetic flux",
+        "energy",
+        "helicity"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Plasma Physics",
+      "certified": true
+    },
+    {
+      "index": 29,
+      "domain_id": "VI.8",
+      "name": "Space Plasma",
+      "adapter_module": "tensornet.plasma.trace_adapters.space_plasma_adapter",
+      "adapter_class": "SpacePlasmaTraceAdapter",
+      "lean_proof": "plasma_conservation_proof/PlasmaConservation.lean",
+      "conservation_laws": [
+        "magnetic flux",
+        "energy",
+        "helicity"
+      ],
+      "proof_system": "STARK",
+      "phase": 6,
+      "category": "Plasma Physics",
+      "certified": true
+    },
+    {
+      "index": 30,
+      "domain_id": "VII.1",
+      "name": "Newtonian Dynamics",
+      "adapter_module": "tensornet.mechanics.trace_adapters.newtonian_dynamics_adapter",
+      "adapter_class": "NewtonianDynamicsTraceAdapter",
+      "lean_proof": "mechanics_conservation_proof/MechanicsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "momentum",
+        "angular momentum"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Classical Mechanics",
+      "certified": true
+    },
+    {
+      "index": 31,
+      "domain_id": "VII.2",
+      "name": "Symplectic Integrators",
+      "adapter_module": "tensornet.mechanics.trace_adapters.symplectic_adapter",
+      "adapter_class": "SymplecticTraceAdapter",
+      "lean_proof": "mechanics_conservation_proof/MechanicsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "momentum",
+        "angular momentum"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Classical Mechanics",
+      "certified": true
+    },
+    {
+      "index": 32,
+      "domain_id": "VII.3",
+      "name": "Continuum Mechanics",
+      "adapter_module": "tensornet.mechanics.trace_adapters.continuum_adapter",
+      "adapter_class": "ContinuumMechanicsTraceAdapter",
+      "lean_proof": "mechanics_conservation_proof/MechanicsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "momentum",
+        "angular momentum"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Classical Mechanics",
+      "certified": true
+    },
+    {
+      "index": 33,
+      "domain_id": "VII.4",
+      "name": "Structural Mechanics",
+      "adapter_module": "tensornet.mechanics.trace_adapters.structural_adapter",
+      "adapter_class": "StructuralMechanicsTraceAdapter",
+      "lean_proof": "mechanics_conservation_proof/MechanicsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "momentum",
+        "angular momentum"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Classical Mechanics",
+      "certified": true
+    },
+    {
+      "index": 34,
+      "domain_id": "VII.5",
+      "name": "Nonlinear Dynamics",
+      "adapter_module": "tensornet.mechanics.trace_adapters.nonlinear_dynamics_adapter",
+      "adapter_class": "NonlinearDynamicsTraceAdapter",
+      "lean_proof": "mechanics_conservation_proof/MechanicsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "momentum",
+        "angular momentum"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Classical Mechanics",
+      "certified": true
+    },
+    {
+      "index": 35,
+      "domain_id": "VII.6",
+      "name": "Acoustics",
+      "adapter_module": "tensornet.mechanics.trace_adapters.acoustics_adapter",
+      "adapter_class": "AcousticsTraceAdapter",
+      "lean_proof": "mechanics_conservation_proof/MechanicsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "momentum",
+        "angular momentum"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Classical Mechanics",
+      "certified": true
+    },
+    {
+      "index": 36,
+      "domain_id": "VIII.1",
+      "name": "Physical Optics",
+      "adapter_module": "tensornet.optics.trace_adapters.physical_optics_adapter",
+      "adapter_class": "PhysicalOpticsTraceAdapter",
+      "lean_proof": "optics_conservation_proof/OpticsConservation.lean",
+      "conservation_laws": [
+        "photon number",
+        "energy",
+        "coherence"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Optics",
+      "certified": true
+    },
+    {
+      "index": 37,
+      "domain_id": "VIII.2",
+      "name": "Quantum Optics",
+      "adapter_module": "tensornet.optics.trace_adapters.quantum_optics_adapter",
+      "adapter_class": "QuantumOpticsTraceAdapter",
+      "lean_proof": "optics_conservation_proof/OpticsConservation.lean",
+      "conservation_laws": [
+        "photon number",
+        "energy",
+        "coherence"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Optics",
+      "certified": true
+    },
+    {
+      "index": 38,
+      "domain_id": "VIII.3",
+      "name": "Laser Physics",
+      "adapter_module": "tensornet.optics.trace_adapters.laser_physics_adapter",
+      "adapter_class": "LaserPhysicsTraceAdapter",
+      "lean_proof": "optics_conservation_proof/OpticsConservation.lean",
+      "conservation_laws": [
+        "photon number",
+        "energy",
+        "coherence"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Optics",
+      "certified": true
+    },
+    {
+      "index": 39,
+      "domain_id": "VIII.4",
+      "name": "Ultrafast Optics",
+      "adapter_module": "tensornet.optics.trace_adapters.ultrafast_optics_adapter",
+      "adapter_class": "UltrafastOpticsTraceAdapter",
+      "lean_proof": "optics_conservation_proof/OpticsConservation.lean",
+      "conservation_laws": [
+        "photon number",
+        "energy",
+        "coherence"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Optics",
+      "certified": true
+    },
+    {
+      "index": 40,
+      "domain_id": "IX.1",
+      "name": "Stellar Structure",
+      "adapter_module": "tensornet.astro.trace_adapters.stellar_structure_adapter",
+      "adapter_class": "StellarStructureTraceAdapter",
+      "lean_proof": "astro_conservation_proof/AstroConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "luminosity"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Astrophysics",
+      "certified": true
+    },
+    {
+      "index": 41,
+      "domain_id": "IX.2",
+      "name": "Compact Objects",
+      "adapter_module": "tensornet.astro.trace_adapters.compact_objects_adapter",
+      "adapter_class": "CompactObjectsTraceAdapter",
+      "lean_proof": "astro_conservation_proof/AstroConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "luminosity"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Astrophysics",
+      "certified": true
+    },
+    {
+      "index": 42,
+      "domain_id": "IX.3",
+      "name": "Gravitational Waves",
+      "adapter_module": "tensornet.astro.trace_adapters.gravitational_waves_adapter",
+      "adapter_class": "GravitationalWavesTraceAdapter",
+      "lean_proof": "astro_conservation_proof/AstroConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "luminosity"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Astrophysics",
+      "certified": true
+    },
+    {
+      "index": 43,
+      "domain_id": "IX.4",
+      "name": "Cosmological Simulations",
+      "adapter_module": "tensornet.astro.trace_adapters.cosmological_sims_adapter",
+      "adapter_class": "CosmologicalSimsTraceAdapter",
+      "lean_proof": "astro_conservation_proof/AstroConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "luminosity"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Astrophysics",
+      "certified": true
+    },
+    {
+      "index": 44,
+      "domain_id": "IX.5",
+      "name": "CMB",
+      "adapter_module": "tensornet.astro.trace_adapters.cmb_adapter",
+      "adapter_class": "CMBTraceAdapter",
+      "lean_proof": "astro_conservation_proof/AstroConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "luminosity"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Astrophysics",
+      "certified": true
+    },
+    {
+      "index": 45,
+      "domain_id": "IX.6",
+      "name": "Radiative Transfer",
+      "adapter_module": "tensornet.astro.trace_adapters.radiative_transfer_adapter",
+      "adapter_class": "RadiativeTransferTraceAdapter",
+      "lean_proof": "astro_conservation_proof/AstroConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "luminosity"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Astrophysics",
+      "certified": true
+    },
+    {
+      "index": 46,
+      "domain_id": "X.1",
+      "name": "Seismology",
+      "adapter_module": "tensornet.geophysics.trace_adapters.seismology_adapter",
+      "adapter_class": "SeismologyTraceAdapter",
+      "lean_proof": "geophysics_conservation_proof/GeophysicsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "angular momentum"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Geophysics",
+      "certified": true
+    },
+    {
+      "index": 47,
+      "domain_id": "X.2",
+      "name": "Mantle Convection",
+      "adapter_module": "tensornet.geophysics.trace_adapters.mantle_convection_adapter",
+      "adapter_class": "MantleConvectionTraceAdapter",
+      "lean_proof": "geophysics_conservation_proof/GeophysicsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "angular momentum"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Geophysics",
+      "certified": true
+    },
+    {
+      "index": 48,
+      "domain_id": "X.3",
+      "name": "Geodynamo",
+      "adapter_module": "tensornet.geophysics.trace_adapters.geodynamo_adapter",
+      "adapter_class": "GeodynamoTraceAdapter",
+      "lean_proof": "geophysics_conservation_proof/GeophysicsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "angular momentum"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Geophysics",
+      "certified": true
+    },
+    {
+      "index": 49,
+      "domain_id": "X.4",
+      "name": "Atmospheric Physics",
+      "adapter_module": "tensornet.geophysics.trace_adapters.atmospheric_adapter",
+      "adapter_class": "AtmosphericPhysicsTraceAdapter",
+      "lean_proof": "geophysics_conservation_proof/GeophysicsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "angular momentum"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Geophysics",
+      "certified": true
+    },
+    {
+      "index": 50,
+      "domain_id": "X.5",
+      "name": "Oceanography",
+      "adapter_module": "tensornet.geophysics.trace_adapters.oceanography_adapter",
+      "adapter_class": "OceanographyTraceAdapter",
+      "lean_proof": "geophysics_conservation_proof/GeophysicsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "angular momentum"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Geophysics",
+      "certified": true
+    },
+    {
+      "index": 51,
+      "domain_id": "X.6",
+      "name": "Glaciology",
+      "adapter_module": "tensornet.geophysics.trace_adapters.glaciology_adapter",
+      "adapter_class": "GlaciologyTraceAdapter",
+      "lean_proof": "geophysics_conservation_proof/GeophysicsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "angular momentum"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Geophysics",
+      "certified": true
+    },
+    {
+      "index": 52,
+      "domain_id": "XI.1",
+      "name": "First Principles Materials",
+      "adapter_module": "tensornet.materials.trace_adapters.first_principles_adapter",
+      "adapter_class": "FirstPrinciplesTraceAdapter",
+      "lean_proof": "materials_conservation_proof/MaterialsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "charge"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Materials Science",
+      "certified": true
+    },
+    {
+      "index": 53,
+      "domain_id": "XI.2",
+      "name": "Mechanical Properties",
+      "adapter_module": "tensornet.materials.trace_adapters.mechanical_properties_adapter",
+      "adapter_class": "MechanicalPropertiesTraceAdapter",
+      "lean_proof": "materials_conservation_proof/MaterialsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "charge"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Materials Science",
+      "certified": true
+    },
+    {
+      "index": 54,
+      "domain_id": "XI.3",
+      "name": "Phase Field",
+      "adapter_module": "tensornet.materials.trace_adapters.phase_field_adapter",
+      "adapter_class": "PhaseFieldTraceAdapter",
+      "lean_proof": "materials_conservation_proof/MaterialsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "charge"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Materials Science",
+      "certified": true
+    },
+    {
+      "index": 55,
+      "domain_id": "XI.4",
+      "name": "Microstructure",
+      "adapter_module": "tensornet.materials.trace_adapters.microstructure_adapter",
+      "adapter_class": "MicrostructureTraceAdapter",
+      "lean_proof": "materials_conservation_proof/MaterialsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "charge"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Materials Science",
+      "certified": true
+    },
+    {
+      "index": 56,
+      "domain_id": "XI.5",
+      "name": "Radiation Damage",
+      "adapter_module": "tensornet.materials.trace_adapters.radiation_damage_adapter",
+      "adapter_class": "RadiationDamageTraceAdapter",
+      "lean_proof": "materials_conservation_proof/MaterialsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "charge"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Materials Science",
+      "certified": true
+    },
+    {
+      "index": 57,
+      "domain_id": "XI.6",
+      "name": "Polymers",
+      "adapter_module": "tensornet.materials.trace_adapters.polymers_adapter",
+      "adapter_class": "PolymersTraceAdapter",
+      "lean_proof": "materials_conservation_proof/MaterialsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "charge"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Materials Science",
+      "certified": true
+    },
+    {
+      "index": 58,
+      "domain_id": "XI.7",
+      "name": "Ceramics",
+      "adapter_module": "tensornet.materials.trace_adapters.ceramics_adapter",
+      "adapter_class": "CeramicsTraceAdapter",
+      "lean_proof": "materials_conservation_proof/MaterialsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "mass",
+        "charge"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Materials Science",
+      "certified": true
+    },
+    {
+      "index": 59,
+      "domain_id": "XII.1",
+      "name": "Fluid-Structure Interaction",
+      "adapter_module": "tensornet.coupled.trace_adapters.fsi_adapter",
+      "adapter_class": "FSITraceAdapter",
+      "lean_proof": "coupled_conservation_proof/CoupledConservation.lean",
+      "conservation_laws": [
+        "total energy",
+        "interface continuity"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Coupled Multi-Physics",
+      "certified": true
+    },
+    {
+      "index": 60,
+      "domain_id": "XII.2",
+      "name": "Thermo-Mechanical",
+      "adapter_module": "tensornet.coupled.trace_adapters.thermo_mechanical_adapter",
+      "adapter_class": "ThermoMechanicalTraceAdapter",
+      "lean_proof": "coupled_conservation_proof/CoupledConservation.lean",
+      "conservation_laws": [
+        "total energy",
+        "interface continuity"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Coupled Multi-Physics",
+      "certified": true
+    },
+    {
+      "index": 61,
+      "domain_id": "XII.3",
+      "name": "Electro-Mechanical",
+      "adapter_module": "tensornet.coupled.trace_adapters.electro_mechanical_adapter",
+      "adapter_class": "ElectroMechanicalTraceAdapter",
+      "lean_proof": "coupled_conservation_proof/CoupledConservation.lean",
+      "conservation_laws": [
+        "total energy",
+        "interface continuity"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Coupled Multi-Physics",
+      "certified": true
+    },
+    {
+      "index": 62,
+      "domain_id": "XII.4",
+      "name": "Coupled MHD",
+      "adapter_module": "tensornet.coupled.trace_adapters.coupled_mhd_adapter",
+      "adapter_class": "CoupledMHDTraceAdapter",
+      "lean_proof": "coupled_conservation_proof/CoupledConservation.lean",
+      "conservation_laws": [
+        "total energy",
+        "interface continuity"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Coupled Multi-Physics",
+      "certified": true
+    },
+    {
+      "index": 63,
+      "domain_id": "XII.5",
+      "name": "Reacting Flows",
+      "adapter_module": "tensornet.coupled.trace_adapters.reacting_flows_adapter",
+      "adapter_class": "ReactingFlowsTraceAdapter",
+      "lean_proof": "coupled_conservation_proof/CoupledConservation.lean",
+      "conservation_laws": [
+        "total energy",
+        "interface continuity"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Coupled Multi-Physics",
+      "certified": true
+    },
+    {
+      "index": 64,
+      "domain_id": "XII.6",
+      "name": "Radiation Hydrodynamics",
+      "adapter_module": "tensornet.coupled.trace_adapters.radiation_hydro_adapter",
+      "adapter_class": "RadiationHydroTraceAdapter",
+      "lean_proof": "coupled_conservation_proof/CoupledConservation.lean",
+      "conservation_laws": [
+        "total energy",
+        "interface continuity"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Coupled Multi-Physics",
+      "certified": true
+    },
+    {
+      "index": 65,
+      "domain_id": "XII.7",
+      "name": "Multiscale",
+      "adapter_module": "tensornet.coupled.trace_adapters.multiscale_adapter",
+      "adapter_class": "MultiscaleTraceAdapter",
+      "lean_proof": "coupled_conservation_proof/CoupledConservation.lean",
+      "conservation_laws": [
+        "total energy",
+        "interface continuity"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Coupled Multi-Physics",
+      "certified": true
+    },
+    {
+      "index": 66,
+      "domain_id": "XV.1",
+      "name": "Nonadiabatic Dynamics",
+      "adapter_module": "tensornet.chemistry.trace_adapters.nonadiabatic_adapter",
+      "adapter_class": "NonadiabaticTraceAdapter",
+      "lean_proof": "chemical_physics_conservation_proof/ChemicalPhysicsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "norm",
+        "atom count"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Chemical Physics",
+      "certified": true
+    },
+    {
+      "index": 67,
+      "domain_id": "XV.2",
+      "name": "Photochemistry",
+      "adapter_module": "tensornet.chemistry.trace_adapters.photochemistry_adapter",
+      "adapter_class": "PhotochemistryTraceAdapter",
+      "lean_proof": "chemical_physics_conservation_proof/ChemicalPhysicsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "norm",
+        "atom count"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Chemical Physics",
+      "certified": true
+    },
+    {
+      "index": 68,
+      "domain_id": "XV.3",
+      "name": "Quantum Reactive Scattering",
+      "adapter_module": "tensornet.chemistry.trace_adapters.quantum_reactive_adapter",
+      "adapter_class": "QuantumReactiveTraceAdapter",
+      "lean_proof": "chemical_physics_conservation_proof/ChemicalPhysicsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "norm",
+        "atom count"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Chemical Physics",
+      "certified": true
+    },
+    {
+      "index": 69,
+      "domain_id": "XV.4",
+      "name": "Spectroscopy",
+      "adapter_module": "tensornet.chemistry.trace_adapters.spectroscopy_adapter",
+      "adapter_class": "SpectroscopyTraceAdapter",
+      "lean_proof": "chemical_physics_conservation_proof/ChemicalPhysicsConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "norm",
+        "atom count"
+      ],
+      "proof_system": "STARK",
+      "phase": 7,
+      "category": "Chemical Physics",
+      "certified": true
+    },
+    {
+      "index": 70,
+      "domain_id": "XIII.1",
+      "name": "Time-Independent Schrodinger",
+      "adapter_module": "tensornet.quantum_mechanics.trace_adapters.tise_adapter",
+      "adapter_class": "TISETraceAdapter",
+      "lean_proof": "quantum_mechanics_conservation_proof/QuantumMechanicsConservation.lean",
+      "conservation_laws": [
+        "normalisation",
+        "probability",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Mechanics",
+      "certified": true
+    },
+    {
+      "index": 71,
+      "domain_id": "XIII.2",
+      "name": "Time-Dependent Schrodinger",
+      "adapter_module": "tensornet.quantum_mechanics.trace_adapters.tdse_adapter",
+      "adapter_class": "TDSETraceAdapter",
+      "lean_proof": "quantum_mechanics_conservation_proof/QuantumMechanicsConservation.lean",
+      "conservation_laws": [
+        "normalisation",
+        "probability",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Mechanics",
+      "certified": true
+    },
+    {
+      "index": 72,
+      "domain_id": "XIII.3",
+      "name": "Scattering Theory",
+      "adapter_module": "tensornet.qm.trace_adapters.scattering_adapter",
+      "adapter_class": "ScatteringTraceAdapter",
+      "lean_proof": "quantum_mechanics_conservation_proof/QuantumMechanicsConservation.lean",
+      "conservation_laws": [
+        "normalisation",
+        "probability",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Mechanics",
+      "certified": true
+    },
+    {
+      "index": 73,
+      "domain_id": "XIII.4",
+      "name": "Semiclassical Methods",
+      "adapter_module": "tensornet.qm.trace_adapters.semiclassical_adapter",
+      "adapter_class": "SemiclassicalTraceAdapter",
+      "lean_proof": "quantum_mechanics_conservation_proof/QuantumMechanicsConservation.lean",
+      "conservation_laws": [
+        "normalisation",
+        "probability",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Mechanics",
+      "certified": true
+    },
+    {
+      "index": 74,
+      "domain_id": "XIII.5",
+      "name": "Path Integrals",
+      "adapter_module": "tensornet.quantum_mechanics.trace_adapters.path_integrals_adapter",
+      "adapter_class": "PathIntegralsTraceAdapter",
+      "lean_proof": "quantum_mechanics_conservation_proof/QuantumMechanicsConservation.lean",
+      "conservation_laws": [
+        "normalisation",
+        "probability",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Mechanics",
+      "certified": true
+    },
+    {
+      "index": 75,
+      "domain_id": "XIV.1",
+      "name": "DMRG",
+      "adapter_module": "tensornet.algorithms.trace_adapters.dmrg_adapter",
+      "adapter_class": "DMRGTraceAdapter",
+      "lean_proof": "qmb_conservation_proof/QuantumManyBodyConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "total Sz",
+        "particle number"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Many-Body",
+      "certified": true
+    },
+    {
+      "index": 76,
+      "domain_id": "XIV.2",
+      "name": "Quantum Spin Models",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.quantum_spin_adapter",
+      "adapter_class": "QuantumSpinTraceAdapter",
+      "lean_proof": "qmb_conservation_proof/QuantumManyBodyConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "total Sz",
+        "particle number"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Many-Body",
+      "certified": true
+    },
+    {
+      "index": 77,
+      "domain_id": "XIV.3",
+      "name": "Strongly Correlated",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.strongly_correlated_adapter",
+      "adapter_class": "StronglyCorrelatedTraceAdapter",
+      "lean_proof": "qmb_conservation_proof/QuantumManyBodyConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "total Sz",
+        "particle number"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Many-Body",
+      "certified": true
+    },
+    {
+      "index": 78,
+      "domain_id": "XIV.4",
+      "name": "Topological Insulators",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.topological_adapter",
+      "adapter_class": "TopologicalTraceAdapter",
+      "lean_proof": "qmb_conservation_proof/QuantumManyBodyConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "total Sz",
+        "particle number"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Many-Body",
+      "certified": true
+    },
+    {
+      "index": 79,
+      "domain_id": "XIV.5",
+      "name": "Many-Body Localisation",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.mbl_adapter",
+      "adapter_class": "MBLTraceAdapter",
+      "lean_proof": "qmb_conservation_proof/QuantumManyBodyConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "total Sz",
+        "particle number"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Many-Body",
+      "certified": true
+    },
+    {
+      "index": 80,
+      "domain_id": "XIV.6",
+      "name": "Lattice Gauge Theory",
+      "adapter_module": "tensornet.qft.trace_adapters.lattice_gauge_adapter",
+      "adapter_class": "LatticeGaugeTraceAdapter",
+      "lean_proof": "qmb_conservation_proof/QuantumManyBodyConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "total Sz",
+        "particle number"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Many-Body",
+      "certified": true
+    },
+    {
+      "index": 81,
+      "domain_id": "XIV.7",
+      "name": "Open Quantum Systems",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.open_quantum_adapter",
+      "adapter_class": "OpenQuantumTraceAdapter",
+      "lean_proof": "qmb_conservation_proof/QuantumManyBodyConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "total Sz",
+        "particle number"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Many-Body",
+      "certified": true
+    },
+    {
+      "index": 82,
+      "domain_id": "XIV.8",
+      "name": "Non-Equilibrium QM",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.nonequilibrium_qm_adapter",
+      "adapter_class": "NonEquilibriumQMTraceAdapter",
+      "lean_proof": "qmb_conservation_proof/QuantumManyBodyConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "total Sz",
+        "particle number"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Many-Body",
+      "certified": true
+    },
+    {
+      "index": 83,
+      "domain_id": "XIV.9",
+      "name": "Kondo Effect",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.kondo_adapter",
+      "adapter_class": "KondoTraceAdapter",
+      "lean_proof": "qmb_conservation_proof/QuantumManyBodyConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "total Sz",
+        "particle number"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Many-Body",
+      "certified": true
+    },
+    {
+      "index": 84,
+      "domain_id": "XIV.10",
+      "name": "Bosonic Systems",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.bosonic_adapter",
+      "adapter_class": "BosonicTraceAdapter",
+      "lean_proof": "qmb_conservation_proof/QuantumManyBodyConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "total Sz",
+        "particle number"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Many-Body",
+      "certified": true
+    },
+    {
+      "index": 85,
+      "domain_id": "XIV.11",
+      "name": "Fermionic Systems",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.fermionic_adapter",
+      "adapter_class": "FermionicTraceAdapter",
+      "lean_proof": "qmb_conservation_proof/QuantumManyBodyConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "total Sz",
+        "particle number"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Many-Body",
+      "certified": true
+    },
+    {
+      "index": 86,
+      "domain_id": "XIV.12",
+      "name": "Nuclear Many-Body",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.nuclear_many_body_adapter",
+      "adapter_class": "NuclearManyBodyTraceAdapter",
+      "lean_proof": "qmb_conservation_proof/QuantumManyBodyConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "total Sz",
+        "particle number"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Many-Body",
+      "certified": true
+    },
+    {
+      "index": 87,
+      "domain_id": "XIV.13",
+      "name": "Ultracold Atoms",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.ultracold_adapter",
+      "adapter_class": "UltracoldTraceAdapter",
+      "lean_proof": "qmb_conservation_proof/QuantumManyBodyConservation.lean",
+      "conservation_laws": [
+        "energy",
+        "total Sz",
+        "particle number"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Many-Body",
+      "certified": true
+    },
+    {
+      "index": 88,
+      "domain_id": "XIV.14",
+      "name": "DFT",
+      "adapter_module": "tensornet.electronic_structure.trace_adapters.dft_adapter",
+      "adapter_class": "DFTTraceAdapter",
+      "lean_proof": "electronic_structure_conservation_proof/ElectronicStructureConservation.lean",
+      "conservation_laws": [
+        "electron count",
+        "total energy",
+        "charge neutrality"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Electronic Structure",
+      "certified": true
+    },
+    {
+      "index": 89,
+      "domain_id": "XIV.15",
+      "name": "Beyond-DFT",
+      "adapter_module": "tensornet.electronic_structure.trace_adapters.beyond_dft_adapter",
+      "adapter_class": "BeyondDFTTraceAdapter",
+      "lean_proof": "electronic_structure_conservation_proof/ElectronicStructureConservation.lean",
+      "conservation_laws": [
+        "electron count",
+        "total energy",
+        "charge neutrality"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Electronic Structure",
+      "certified": true
+    },
+    {
+      "index": 90,
+      "domain_id": "XIV.16",
+      "name": "Tight-Binding",
+      "adapter_module": "tensornet.electronic_structure.trace_adapters.tight_binding_adapter",
+      "adapter_class": "TightBindingTraceAdapter",
+      "lean_proof": "electronic_structure_conservation_proof/ElectronicStructureConservation.lean",
+      "conservation_laws": [
+        "electron count",
+        "total energy",
+        "charge neutrality"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Electronic Structure",
+      "certified": true
+    },
+    {
+      "index": 91,
+      "domain_id": "XIV.17",
+      "name": "Excited States",
+      "adapter_module": "tensornet.electronic_structure.trace_adapters.excited_states_adapter",
+      "adapter_class": "ExcitedStatesTraceAdapter",
+      "lean_proof": "electronic_structure_conservation_proof/ElectronicStructureConservation.lean",
+      "conservation_laws": [
+        "electron count",
+        "total energy",
+        "charge neutrality"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Electronic Structure",
+      "certified": true
+    },
+    {
+      "index": 92,
+      "domain_id": "XIV.18",
+      "name": "Response Properties",
+      "adapter_module": "tensornet.electronic_structure.trace_adapters.response_adapter",
+      "adapter_class": "ResponseTraceAdapter",
+      "lean_proof": "electronic_structure_conservation_proof/ElectronicStructureConservation.lean",
+      "conservation_laws": [
+        "electron count",
+        "total energy",
+        "charge neutrality"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Electronic Structure",
+      "certified": true
+    },
+    {
+      "index": 93,
+      "domain_id": "XIV.19",
+      "name": "Relativistic QM",
+      "adapter_module": "tensornet.electronic_structure.trace_adapters.relativistic_adapter",
+      "adapter_class": "RelativisticTraceAdapter",
+      "lean_proof": "electronic_structure_conservation_proof/ElectronicStructureConservation.lean",
+      "conservation_laws": [
+        "electron count",
+        "total energy",
+        "charge neutrality"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Electronic Structure",
+      "certified": true
+    },
+    {
+      "index": 94,
+      "domain_id": "XIV.20",
+      "name": "Quantum Embedding",
+      "adapter_module": "tensornet.electronic_structure.trace_adapters.embedding_adapter",
+      "adapter_class": "EmbeddingTraceAdapter",
+      "lean_proof": "electronic_structure_conservation_proof/ElectronicStructureConservation.lean",
+      "conservation_laws": [
+        "electron count",
+        "total energy",
+        "charge neutrality"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Electronic Structure",
+      "certified": true
+    },
+    {
+      "index": 95,
+      "domain_id": "XIV.21",
+      "name": "Phonons",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.phonons_adapter",
+      "adapter_class": "PhononsTraceAdapter",
+      "lean_proof": "solid_state_conservation_proof/SolidStateConservation.lean",
+      "conservation_laws": [
+        "acoustic sum rule",
+        "charge neutrality",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Solid State",
+      "certified": true
+    },
+    {
+      "index": 96,
+      "domain_id": "XIV.22",
+      "name": "Band Structure",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.band_structure_adapter",
+      "adapter_class": "BandStructureTraceAdapter",
+      "lean_proof": "solid_state_conservation_proof/SolidStateConservation.lean",
+      "conservation_laws": [
+        "acoustic sum rule",
+        "charge neutrality",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Solid State",
+      "certified": true
+    },
+    {
+      "index": 97,
+      "domain_id": "XIV.23",
+      "name": "Classical Magnetism",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.classical_magnetism_adapter",
+      "adapter_class": "ClassicalMagnetismTraceAdapter",
+      "lean_proof": "solid_state_conservation_proof/SolidStateConservation.lean",
+      "conservation_laws": [
+        "acoustic sum rule",
+        "charge neutrality",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Solid State",
+      "certified": true
+    },
+    {
+      "index": 98,
+      "domain_id": "XIV.24",
+      "name": "Superconductivity",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.superconductivity_adapter",
+      "adapter_class": "SuperconductivityTraceAdapter",
+      "lean_proof": "solid_state_conservation_proof/SolidStateConservation.lean",
+      "conservation_laws": [
+        "acoustic sum rule",
+        "charge neutrality",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Solid State",
+      "certified": true
+    },
+    {
+      "index": 99,
+      "domain_id": "XIV.25",
+      "name": "Disordered Systems",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.disordered_adapter",
+      "adapter_class": "DisorderedTraceAdapter",
+      "lean_proof": "solid_state_conservation_proof/SolidStateConservation.lean",
+      "conservation_laws": [
+        "acoustic sum rule",
+        "charge neutrality",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Solid State",
+      "certified": true
+    },
+    {
+      "index": 100,
+      "domain_id": "XIV.26",
+      "name": "Surfaces and Interfaces",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.surfaces_adapter",
+      "adapter_class": "SurfacesTraceAdapter",
+      "lean_proof": "solid_state_conservation_proof/SolidStateConservation.lean",
+      "conservation_laws": [
+        "acoustic sum rule",
+        "charge neutrality",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Solid State",
+      "certified": true
+    },
+    {
+      "index": 101,
+      "domain_id": "XIV.27",
+      "name": "Defects",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.defects_adapter",
+      "adapter_class": "DefectsTraceAdapter",
+      "lean_proof": "solid_state_conservation_proof/SolidStateConservation.lean",
+      "conservation_laws": [
+        "acoustic sum rule",
+        "charge neutrality",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Solid State",
+      "certified": true
+    },
+    {
+      "index": 102,
+      "domain_id": "XIV.28",
+      "name": "Ferroelectrics",
+      "adapter_module": "tensornet.condensed_matter.trace_adapters.ferroelectrics_adapter",
+      "adapter_class": "FerroelectricsTraceAdapter",
+      "lean_proof": "solid_state_conservation_proof/SolidStateConservation.lean",
+      "conservation_laws": [
+        "acoustic sum rule",
+        "charge neutrality",
+        "energy"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Solid State",
+      "certified": true
+    },
+    {
+      "index": 103,
+      "domain_id": "XVIII.1",
+      "name": "Nuclear Structure",
+      "adapter_module": "tensornet.nuclear.trace_adapters.nuclear_structure_adapter",
+      "adapter_class": "NuclearStructureTraceAdapter",
+      "lean_proof": "nuclear_particle_conservation_proof/NuclearParticleConservation.lean",
+      "conservation_laws": [
+        "nucleon number",
+        "baryon conservation",
+        "unitarity"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Nuclear and Particle",
+      "certified": true
+    },
+    {
+      "index": 104,
+      "domain_id": "XVIII.2",
+      "name": "Nuclear Reactions",
+      "adapter_module": "tensornet.nuclear.trace_adapters.nuclear_reactions_adapter",
+      "adapter_class": "NuclearReactionsTraceAdapter",
+      "lean_proof": "nuclear_particle_conservation_proof/NuclearParticleConservation.lean",
+      "conservation_laws": [
+        "nucleon number",
+        "baryon conservation",
+        "unitarity"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Nuclear and Particle",
+      "certified": true
+    },
+    {
+      "index": 105,
+      "domain_id": "XVIII.3",
+      "name": "Nuclear Astrophysics",
+      "adapter_module": "tensornet.nuclear.trace_adapters.nuclear_astro_adapter",
+      "adapter_class": "NuclearAstroTraceAdapter",
+      "lean_proof": "nuclear_particle_conservation_proof/NuclearParticleConservation.lean",
+      "conservation_laws": [
+        "nucleon number",
+        "baryon conservation",
+        "unitarity"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Nuclear and Particle",
+      "certified": true
+    },
+    {
+      "index": 106,
+      "domain_id": "XVIII.4",
+      "name": "Lattice QCD",
+      "adapter_module": "tensornet.qft.trace_adapters.lattice_qcd_adapter",
+      "adapter_class": "LatticeQCDTraceAdapter",
+      "lean_proof": "nuclear_particle_conservation_proof/NuclearParticleConservation.lean",
+      "conservation_laws": [
+        "nucleon number",
+        "baryon conservation",
+        "unitarity"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Nuclear and Particle",
+      "certified": true
+    },
+    {
+      "index": 107,
+      "domain_id": "XVIII.5",
+      "name": "Perturbative QFT",
+      "adapter_module": "tensornet.qft.trace_adapters.perturbative_qft_adapter",
+      "adapter_class": "PerturbativeQFTTraceAdapter",
+      "lean_proof": "nuclear_particle_conservation_proof/NuclearParticleConservation.lean",
+      "conservation_laws": [
+        "nucleon number",
+        "baryon conservation",
+        "unitarity"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Nuclear and Particle",
+      "certified": true
+    },
+    {
+      "index": 108,
+      "domain_id": "XVIII.6",
+      "name": "Beyond Standard Model",
+      "adapter_module": "tensornet.particle.trace_adapters.beyond_sm_adapter",
+      "adapter_class": "BeyondSmTraceAdapter",
+      "lean_proof": "nuclear_particle_conservation_proof/NuclearParticleConservation.lean",
+      "conservation_laws": [
+        "nucleon number",
+        "baryon conservation",
+        "unitarity"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Nuclear and Particle",
+      "certified": true
+    },
+    {
+      "index": 109,
+      "domain_id": "XV.5",
+      "name": "Potential Energy Surfaces",
+      "adapter_module": "tensornet.chemistry.trace_adapters.pes_adapter",
+      "adapter_class": "PESTraceAdapter",
+      "lean_proof": "chem_physics_iter_conservation_proof/ChemPhysicsIterConservation.lean",
+      "conservation_laws": [
+        "gradient at minimum",
+        "rate positivity",
+        "atom conservation"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Chemical Physics",
+      "certified": true
+    },
+    {
+      "index": 110,
+      "domain_id": "XV.6",
+      "name": "Reaction Rates",
+      "adapter_module": "tensornet.chemistry.trace_adapters.reaction_rate_adapter",
+      "adapter_class": "ReactionRateTraceAdapter",
+      "lean_proof": "chem_physics_iter_conservation_proof/ChemPhysicsIterConservation.lean",
+      "conservation_laws": [
+        "gradient at minimum",
+        "rate positivity",
+        "atom conservation"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Chemical Physics",
+      "certified": true
+    },
+    {
+      "index": 111,
+      "domain_id": "XV.7",
+      "name": "Catalysis",
+      "adapter_module": "tensornet.chemistry.trace_adapters.catalysis_adapter",
+      "adapter_class": "CatalysisTraceAdapter",
+      "lean_proof": "chem_physics_iter_conservation_proof/ChemPhysicsIterConservation.lean",
+      "conservation_laws": [
+        "gradient at minimum",
+        "rate positivity",
+        "atom conservation"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Chemical Physics",
+      "certified": true
+    },
+    {
+      "index": 112,
+      "domain_id": "XIX.1",
+      "name": "Quantum Circuits",
+      "adapter_module": "tensornet.quantum.trace_adapters.quantum_circuit_adapter",
+      "adapter_class": "QuantumCircuitTraceAdapter",
+      "lean_proof": "quantum_info_conservation_proof/QuantumInfoConservation.lean",
+      "conservation_laws": [
+        "unitarity",
+        "fidelity",
+        "variational bound"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Information",
+      "certified": true
+    },
+    {
+      "index": 113,
+      "domain_id": "XIX.2",
+      "name": "Quantum Error Correction",
+      "adapter_module": "tensornet.quantum.trace_adapters.qec_adapter",
+      "adapter_class": "QECTraceAdapter",
+      "lean_proof": "quantum_info_conservation_proof/QuantumInfoConservation.lean",
+      "conservation_laws": [
+        "unitarity",
+        "fidelity",
+        "variational bound"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Information",
+      "certified": true
+    },
+    {
+      "index": 114,
+      "domain_id": "XIX.3",
+      "name": "VQE",
+      "adapter_module": "tensornet.quantum.trace_adapters.vqe_adapter",
+      "adapter_class": "VQETraceAdapter",
+      "lean_proof": "quantum_info_conservation_proof/QuantumInfoConservation.lean",
+      "conservation_laws": [
+        "unitarity",
+        "fidelity",
+        "variational bound"
+      ],
+      "proof_system": "STARK",
+      "phase": 8,
+      "category": "Quantum Information",
+      "certified": true
+    },
+    {
+      "index": 115,
+      "domain_id": "V.1",
+      "name": "Equilibrium Monte Carlo",
+      "adapter_module": "tensornet.statmech.trace_adapters.equilibrium_mc_adapter",
+      "adapter_class": "EquilibriumMCTraceAdapter",
+      "lean_proof": "statmech_stochastic_conservation_proof/StatMechStochasticConservation.lean",
+      "conservation_laws": [
+        "detailed balance",
+        "energy convergence"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Statistical Mechanics",
+      "certified": true
+    },
+    {
+      "index": 116,
+      "domain_id": "V.4",
+      "name": "General Monte Carlo Methods",
+      "adapter_module": "tensornet.statmech.trace_adapters.monte_carlo_general_adapter",
+      "adapter_class": "MonteCarloGeneralTraceAdapter",
+      "lean_proof": "statmech_stochastic_conservation_proof/StatMechStochasticConservation.lean",
+      "conservation_laws": [
+        "replica exchange",
+        "flat histogram"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Statistical Mechanics",
+      "certified": true
+    },
+    {
+      "index": 117,
+      "domain_id": "XVI.1",
+      "name": "Protein Structure",
+      "adapter_module": "tensornet.biophysics.trace_adapters.protein_structure_adapter",
+      "adapter_class": "ProteinStructureTraceAdapter",
+      "lean_proof": "biophysics_conservation_proof/BiophysicsConservation.lean",
+      "conservation_laws": [
+        "energy bounds",
+        "mass action",
+        "species non-negative"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Biophysics",
+      "certified": true
+    },
+    {
+      "index": 118,
+      "domain_id": "XVI.2",
+      "name": "Drug Design",
+      "adapter_module": "tensornet.biophysics.trace_adapters.drug_design_adapter",
+      "adapter_class": "DrugDesignTraceAdapter",
+      "lean_proof": "biophysics_conservation_proof/BiophysicsConservation.lean",
+      "conservation_laws": [
+        "energy bounds",
+        "mass action",
+        "species non-negative"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Biophysics",
+      "certified": true
+    },
+    {
+      "index": 119,
+      "domain_id": "XVI.3",
+      "name": "Membrane Biophysics",
+      "adapter_module": "tensornet.biophysics.trace_adapters.membrane_adapter",
+      "adapter_class": "MembraneTraceAdapter",
+      "lean_proof": "biophysics_conservation_proof/BiophysicsConservation.lean",
+      "conservation_laws": [
+        "energy bounds",
+        "mass action",
+        "species non-negative"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Biophysics",
+      "certified": true
+    },
+    {
+      "index": 120,
+      "domain_id": "XVI.4",
+      "name": "Nucleic Acids",
+      "adapter_module": "tensornet.biophysics.trace_adapters.nucleic_acids_adapter",
+      "adapter_class": "NucleicAcidsTraceAdapter",
+      "lean_proof": "biophysics_conservation_proof/BiophysicsConservation.lean",
+      "conservation_laws": [
+        "energy bounds",
+        "mass action",
+        "species non-negative"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Biophysics",
+      "certified": true
+    },
+    {
+      "index": 121,
+      "domain_id": "XVI.5",
+      "name": "Systems Biology",
+      "adapter_module": "tensornet.biophysics.trace_adapters.systems_biology_adapter",
+      "adapter_class": "SystemsBiologyTraceAdapter",
+      "lean_proof": "biophysics_conservation_proof/BiophysicsConservation.lean",
+      "conservation_laws": [
+        "energy bounds",
+        "mass action",
+        "species non-negative"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Biophysics",
+      "certified": true
+    },
+    {
+      "index": 122,
+      "domain_id": "XVI.6",
+      "name": "Neuroscience",
+      "adapter_module": "tensornet.biophysics.trace_adapters.neuroscience_adapter",
+      "adapter_class": "NeuroscienceTraceAdapter",
+      "lean_proof": "biophysics_conservation_proof/BiophysicsConservation.lean",
+      "conservation_laws": [
+        "energy bounds",
+        "mass action",
+        "species non-negative"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Biophysics",
+      "certified": true
+    },
+    {
+      "index": 123,
+      "domain_id": "XVII.1",
+      "name": "Optimization",
+      "adapter_module": "tensornet.computational_methods.trace_adapters.optimization_adapter",
+      "adapter_class": "OptimizationTraceAdapter",
+      "lean_proof": "computational_methods_conservation_proof/ComputationalMethodsConservation.lean",
+      "conservation_laws": [
+        "objective decrease",
+        "residual",
+        "convergence"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Computational Methods",
+      "certified": true
+    },
+    {
+      "index": 124,
+      "domain_id": "XVII.2",
+      "name": "Inverse Problems",
+      "adapter_module": "tensornet.computational_methods.trace_adapters.inverse_problems_adapter",
+      "adapter_class": "InverseProblemsTraceAdapter",
+      "lean_proof": "computational_methods_conservation_proof/ComputationalMethodsConservation.lean",
+      "conservation_laws": [
+        "objective decrease",
+        "residual",
+        "convergence"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Computational Methods",
+      "certified": true
+    },
+    {
+      "index": 125,
+      "domain_id": "XVII.3",
+      "name": "ML for Physics",
+      "adapter_module": "tensornet.ml_physics.trace_adapters.ml_physics_adapter",
+      "adapter_class": "MLPhysicsTraceAdapter",
+      "lean_proof": "computational_methods_conservation_proof/ComputationalMethodsConservation.lean",
+      "conservation_laws": [
+        "objective decrease",
+        "residual",
+        "convergence"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Computational Methods",
+      "certified": true
+    },
+    {
+      "index": 126,
+      "domain_id": "XVII.4",
+      "name": "Mesh Generation",
+      "adapter_module": "tensornet.computational_methods.trace_adapters.mesh_generation_adapter",
+      "adapter_class": "MeshGenerationTraceAdapter",
+      "lean_proof": "computational_methods_conservation_proof/ComputationalMethodsConservation.lean",
+      "conservation_laws": [
+        "objective decrease",
+        "residual",
+        "convergence"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Computational Methods",
+      "certified": true
+    },
+    {
+      "index": 127,
+      "domain_id": "XVII.5",
+      "name": "Large-Scale Linear Algebra",
+      "adapter_module": "tensornet.computational_methods.trace_adapters.large_scale_linalg_adapter",
+      "adapter_class": "LargeScaleLinAlgTraceAdapter",
+      "lean_proof": "computational_methods_conservation_proof/ComputationalMethodsConservation.lean",
+      "conservation_laws": [
+        "objective decrease",
+        "residual",
+        "convergence"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Computational Methods",
+      "certified": true
+    },
+    {
+      "index": 128,
+      "domain_id": "XVII.6",
+      "name": "HPC Reproducibility",
+      "adapter_module": "tensornet.computational_methods.trace_adapters.hpc_adapter",
+      "adapter_class": "HPCTraceAdapter",
+      "lean_proof": "computational_methods_conservation_proof/ComputationalMethodsConservation.lean",
+      "conservation_laws": [
+        "objective decrease",
+        "residual",
+        "convergence"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Computational Methods",
+      "certified": true
+    },
+    {
+      "index": 129,
+      "domain_id": "XIX.4",
+      "name": "Quantum Simulation",
+      "adapter_module": "tensornet.quantum.trace_adapters.quantum_simulation_adapter",
+      "adapter_class": "QuantumSimulationTraceAdapter",
+      "lean_proof": "quantum_info_ext_conservation_proof/QuantumInfoExtConservation.lean",
+      "conservation_laws": [
+        "Trotter fidelity",
+        "energy conservation",
+        "unitarity"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Quantum Information",
+      "certified": true
+    },
+    {
+      "index": 130,
+      "domain_id": "XIX.5",
+      "name": "Quantum Cryptography",
+      "adapter_module": "tensornet.quantum.trace_adapters.quantum_crypto_adapter",
+      "adapter_class": "QuantumCryptoTraceAdapter",
+      "lean_proof": "quantum_info_ext_conservation_proof/QuantumInfoExtConservation.lean",
+      "conservation_laws": [
+        "Bell violation",
+        "key rate positivity"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Quantum Information",
+      "certified": true
+    },
+    {
+      "index": 131,
+      "domain_id": "XX.1",
+      "name": "Special Relativity",
+      "adapter_module": "tensornet.relativity.trace_adapters.special_relativity_adapter",
+      "adapter_class": "SpecialRelativityTraceAdapter",
+      "lean_proof": "special_relativity_conservation_proof/SpecialRelativityConservation.lean",
+      "conservation_laws": [
+        "invariant mass",
+        "Lorentz invariance",
+        "four-momentum"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Relativity",
+      "certified": true
+    },
+    {
+      "index": 132,
+      "domain_id": "XX.2",
+      "name": "Numerical General Relativity",
+      "adapter_module": "tensornet.relativity.trace_adapters.numerical_gr_adapter",
+      "adapter_class": "NumericalGRTraceAdapter",
+      "lean_proof": "special_relativity_conservation_proof/SpecialRelativityConservation.lean",
+      "conservation_laws": [
+        "Hamiltonian constraint",
+        "momentum constraint",
+        "ADM mass"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Relativity",
+      "certified": true
+    },
+    {
+      "index": 133,
+      "domain_id": "XX.3",
+      "name": "Astrodynamics",
+      "adapter_module": "tensornet.special_applied.trace_adapters.astrodynamics_adapter",
+      "adapter_class": "AstrodynamicsTraceAdapter",
+      "lean_proof": "applied_physics_conservation_proof/AppliedPhysicsConservation.lean",
+      "conservation_laws": [
+        "orbital energy",
+        "Kepler third law"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Special Applied",
+      "certified": true
+    },
+    {
+      "index": 134,
+      "domain_id": "XX.4",
+      "name": "Robotics Physics",
+      "adapter_module": "tensornet.robotics_physics.trace_adapters.robotics_adapter",
+      "adapter_class": "RoboticsTraceAdapter",
+      "lean_proof": "applied_physics_conservation_proof/AppliedPhysicsConservation.lean",
+      "conservation_laws": [
+        "kinetic energy",
+        "Newton-Euler consistency"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Special Applied",
+      "certified": true
+    },
+    {
+      "index": 135,
+      "domain_id": "XX.5",
+      "name": "Applied Acoustics",
+      "adapter_module": "tensornet.acoustics.trace_adapters.acoustics_adapter",
+      "adapter_class": "AcousticsTraceAdapter",
+      "lean_proof": "applied_physics_conservation_proof/AppliedPhysicsConservation.lean",
+      "conservation_laws": [
+        "acoustic energy",
+        "reciprocity"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Special Applied",
+      "certified": true
+    },
+    {
+      "index": 136,
+      "domain_id": "XX.6",
+      "name": "Biomedical Physics",
+      "adapter_module": "tensornet.biomedical.trace_adapters.biomedical_adapter",
+      "adapter_class": "BiomedicalTraceAdapter",
+      "lean_proof": "applied_physics_conservation_proof/AppliedPhysicsConservation.lean",
+      "conservation_laws": [
+        "drug mass balance",
+        "action potential bound"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Special Applied",
+      "certified": true
+    },
+    {
+      "index": 137,
+      "domain_id": "XX.7",
+      "name": "Environmental Physics",
+      "adapter_module": "tensornet.environmental.trace_adapters.environmental_adapter",
+      "adapter_class": "EnvironmentalTraceAdapter",
+      "lean_proof": "applied_physics_conservation_proof/AppliedPhysicsConservation.lean",
+      "conservation_laws": [
+        "concentration non-negative",
+        "mass flux"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Special Applied",
+      "certified": true
+    },
+    {
+      "index": 138,
+      "domain_id": "XX.8",
+      "name": "Energy Systems",
+      "adapter_module": "tensornet.energy.trace_adapters.energy_systems_adapter",
+      "adapter_class": "EnergySystemsTraceAdapter",
+      "lean_proof": "applied_physics_conservation_proof/AppliedPhysicsConservation.lean",
+      "conservation_laws": [
+        "efficiency bounds",
+        "current continuity"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Special Applied",
+      "certified": true
+    },
+    {
+      "index": 139,
+      "domain_id": "XX.9",
+      "name": "Manufacturing Physics",
+      "adapter_module": "tensornet.manufacturing.trace_adapters.manufacturing_adapter",
+      "adapter_class": "ManufacturingTraceAdapter",
+      "lean_proof": "applied_physics_conservation_proof/AppliedPhysicsConservation.lean",
+      "conservation_laws": [
+        "enthalpy balance",
+        "solidification monotone"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Special Applied",
+      "certified": true
+    },
+    {
+      "index": 140,
+      "domain_id": "XX.10",
+      "name": "Semiconductor Physics",
+      "adapter_module": "tensornet.semiconductor.trace_adapters.semiconductor_adapter",
+      "adapter_class": "SemiconductorTraceAdapter",
+      "lean_proof": "applied_physics_conservation_proof/AppliedPhysicsConservation.lean",
+      "conservation_laws": [
+        "charge neutrality",
+        "current continuity",
+        "Bohm criterion"
+      ],
+      "proof_system": "STARK",
+      "phase": 9,
+      "category": "Special Applied",
+      "certified": true
+    }
+  ]
+}

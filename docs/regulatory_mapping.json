@@ -1,0 +1,238 @@
+{
+  "title": "TPC Regulatory & Standards Mapping",
+  "version": "1.0.0",
+  "description": "Maps 140 certified computational physics domains to applicable industry standards, regulatory frameworks, and verification requirements.",
+  "total_domains": 140,
+  "categories": {
+    "Fluid Dynamics": {
+      "domain_count": 10,
+      "standards": [
+        "ASME V&V 20-2009 (Standard for Verification and Validation in Computational Fluid Dynamics and Heat Transfer)",
+        "NASA-STD-7009A (Standard for Models and Simulations)",
+        "AIAA G-077-1998 (Guide for the Verification and Validation of CFD Simulations)",
+        "ISO 13528 (Statistical methods — Proficiency testing by interlaboratory comparison)"
+      ],
+      "domains": ["II.1", "II.2", "II.3", "II.4", "II.5", "II.6", "II.7", "II.8", "II.9", "II.10"]
+    },
+    "Thermal Physics": {
+      "domain_count": 1,
+      "standards": [
+        "ASME V&V 20-2009",
+        "ISO 18434 (Condition monitoring and diagnostics of machines — Thermography)"
+      ],
+      "domains": ["III.1"]
+    },
+    "Electromagnetism": {
+      "domain_count": 7,
+      "standards": [
+        "IEEE 1597.1 (Standard for Validation of Computational Electromagnetics)",
+        "IEEE 1597.2 (Recommended Practice for Validation of Computational Electromagnetics)",
+        "IEC 61000 (Electromagnetic compatibility)",
+        "MIL-STD-461G (Requirements for the Control of Electromagnetic Interference)"
+      ],
+      "domains": ["IV.1", "IV.2", "IV.3", "IV.4", "IV.5", "IV.6", "IV.7"]
+    },
+    "Statistical Mechanics": {
+      "domain_count": 5,
+      "standards": [
+        "NIST Standard Reference Data (Thermophysical Properties of Fluid Systems)",
+        "IUPAC Recommendations for Thermodynamic Properties",
+        "ISO 11357 (Differential scanning calorimetry)"
+      ],
+      "domains": ["V.1", "V.2", "V.3", "V.4", "V.5"]
+    },
+    "Plasma Physics": {
+      "domain_count": 8,
+      "standards": [
+        "ITER Physics Basis (Nuclear Fusion journal standards)",
+        "IEEE 1394 (Plasma diagnostics)",
+        "IAEA Nuclear Fusion Safety Standards",
+        "DOE Fusion Energy Sciences Requirements"
+      ],
+      "domains": ["VI.1", "VI.2", "VI.3", "VI.4", "VI.5", "VI.6", "VI.7", "VI.8"]
+    },
+    "Classical Mechanics": {
+      "domain_count": 6,
+      "standards": [
+        "ASME V&V 10-2006 (Guide for Verification and Validation in Computational Solid Mechanics)",
+        "ISO 10303 (STEP — Standard for Exchange of Product Data)",
+        "NASA-STD-5020A (Requirements for Threaded Fastening Systems in Spaceflight Hardware)"
+      ],
+      "domains": ["VII.1", "VII.2", "VII.3", "VII.4", "VII.5", "VII.6"]
+    },
+    "Optics": {
+      "domain_count": 4,
+      "standards": [
+        "ISO 11146 (Lasers and laser-related equipment — Test methods for laser beam widths)",
+        "ISO 14880 (Optics and photonics — Microlens arrays)",
+        "IEEE Photonics Standards"
+      ],
+      "domains": ["VIII.1", "VIII.2", "VIII.3", "VIII.4"]
+    },
+    "Astrophysics": {
+      "domain_count": 6,
+      "standards": [
+        "IAU Standards of Fundamental Astronomy (SOFA)",
+        "NASA Technical Standards (NASA-STD-7009A)",
+        "LIGO Scientific Collaboration Technical Standards",
+        "Planck Collaboration Data Processing Standards"
+      ],
+      "domains": ["IX.1", "IX.2", "IX.3", "IX.4", "IX.5", "IX.6"]
+    },
+    "Geophysics": {
+      "domain_count": 6,
+      "standards": [
+        "USGS Earthquake Hazards Program Standards",
+        "IASPEI/IUGG Seismological Standards",
+        "WMO Technical Regulations (Atmospheric Sciences)",
+        "ISO 19115 (Geographic information — Metadata)"
+      ],
+      "domains": ["X.1", "X.2", "X.3", "X.4", "X.5", "X.6"]
+    },
+    "Materials Science": {
+      "domain_count": 7,
+      "standards": [
+        "ASTM E8 (Standard Test Methods for Tension Testing of Metallic Materials)",
+        "ASME V&V 10-2006",
+        "ISO 12135 (Metallic materials — Unified method of test for quasi-static fracture toughness)",
+        "ICME Best Practices (TMS Guidelines)"
+      ],
+      "domains": ["XI.1", "XI.2", "XI.3", "XI.4", "XI.5", "XI.6", "XI.7"]
+    },
+    "Coupled Multi-Physics": {
+      "domain_count": 7,
+      "standards": [
+        "ASME V&V 20-2009 (Multi-physics extension)",
+        "NASA-STD-7009A (Multi-disciplinary Analysis)",
+        "ISO 10303-209 (Multidisciplinary analysis and design)",
+        "NAFEMS Quality System for Engineering Simulation"
+      ],
+      "domains": ["XII.1", "XII.2", "XII.3", "XII.4", "XII.5", "XII.6", "XII.7"]
+    },
+    "Quantum Mechanics": {
+      "domain_count": 5,
+      "standards": [
+        "NIST Atomic Spectra Database Standards",
+        "IUPAC Recommendations for Computational Chemistry",
+        "ISO/IEC 4879 (Quantum computing — Terminology and vocabulary)"
+      ],
+      "domains": ["XIII.1", "XIII.2", "XIII.3", "XIII.4", "XIII.5"]
+    },
+    "Quantum Many-Body": {
+      "domain_count": 13,
+      "standards": [
+        "NIST Standard Reference Data for Quantum Systems",
+        "DOE ASCR Verification & Validation Requirements",
+        "APS DAMOP Computational Physics Standards"
+      ],
+      "domains": ["XIV.1", "XIV.2", "XIV.3", "XIV.4", "XIV.5", "XIV.6", "XIV.7", "XIV.8", "XIV.9", "XIV.10", "XIV.11", "XIV.12", "XIV.13"]
+    },
+    "Chemical Physics": {
+      "domain_count": 7,
+      "standards": [
+        "IUPAC Gold Book Standards",
+        "ACS Computational Chemistry Guidelines",
+        "Gaussian Basis Set Exchange Standards",
+        "ISO 10780 (Stationary source emissions)"
+      ],
+      "domains": ["XV.1", "XV.2", "XV.3", "XV.4", "XV.5", "XV.6", "XV.7"]
+    },
+    "Biophysics": {
+      "domain_count": 6,
+      "standards": [
+        "FDA Guidance for Industry: Physiologically Based Pharmacokinetic Analyses",
+        "ICH Q8-Q12 (Pharmaceutical Development Guidelines)",
+        "PDB Validation Standards (wwPDB)",
+        "HUPO Proteomics Standards Initiative"
+      ],
+      "domains": ["XVI.1", "XVI.2", "XVI.3", "XVI.4", "XVI.5", "XVI.6"]
+    },
+    "Computational Methods": {
+      "domain_count": 6,
+      "standards": [
+        "ASME V&V 10-2006 / V&V 20-2009 (General V&V Framework)",
+        "IEEE 1012 (System, Software, and Hardware Verification and Validation)",
+        "ISO/IEC 25010 (Systems and software quality requirements and evaluation)",
+        "SIAM Guidelines for Scientific Computing Reproducibility"
+      ],
+      "domains": ["XVII.1", "XVII.2", "XVII.3", "XVII.4", "XVII.5", "XVII.6"]
+    },
+    "Electronic Structure": {
+      "domain_count": 7,
+      "standards": [
+        "NIST Computational Chemistry Comparison and Benchmark Database",
+        "Delta Gauge for DFT (Reproducibility of DFT Calculations)",
+        "Materials Genome Initiative Standards"
+      ],
+      "domains": ["XIV.14", "XIV.15", "XIV.16", "XIV.17", "XIV.18", "XIV.19", "XIV.20"]
+    },
+    "Solid State": {
+      "domain_count": 8,
+      "standards": [
+        "AFLOW Standards for High-Throughput Materials Science",
+        "Materials Project Data Standards",
+        "ICSD Inorganic Crystal Structure Database Standards",
+        "IEC 60747 (Semiconductor devices)"
+      ],
+      "domains": ["XIV.21", "XIV.22", "XIV.23", "XIV.24", "XIV.25", "XIV.26", "XIV.27", "XIV.28"]
+    },
+    "Nuclear and Particle": {
+      "domain_count": 6,
+      "standards": [
+        "NRC Regulatory Guide 1.203 (Transient and Accident Analysis Methods)",
+        "IAEA Safety Standards Series",
+        "ENDF/B Evaluated Nuclear Data File Standards",
+        "PDG Review of Particle Physics Standards"
+      ],
+      "domains": ["XVIII.1", "XVIII.2", "XVIII.3", "XVIII.4", "XVIII.5", "XVIII.6"]
+    },
+    "Quantum Information": {
+      "domain_count": 5,
+      "standards": [
+        "ISO/IEC 4879 (Quantum computing — Terminology and vocabulary)",
+        "NIST Post-Quantum Cryptography Standards (FIPS 203/204/205)",
+        "IEEE P7130 (Standard for Quantum Computing Definitions)",
+        "QED-C Quantum Economic Development Standards"
+      ],
+      "domains": ["XIX.1", "XIX.2", "XIX.3", "XIX.4", "XIX.5"]
+    },
+    "Relativity": {
+      "domain_count": 2,
+      "standards": [
+        "IAU Resolutions on Relativistic Reference Systems",
+        "IERS Conventions (International Earth Rotation and Reference Systems Service)",
+        "LIGO/Virgo Data Quality Standards"
+      ],
+      "domains": ["XX.1", "XX.2"]
+    },
+    "Special Applied": {
+      "domain_count": 8,
+      "standards": [
+        "ISO 17025 (General requirements for the competence of testing and calibration laboratories)",
+        "IEC 61131 (Programmable controllers — Robot safety)",
+        "ISO 10218 (Robots and robotic devices — Safety requirements)",
+        "ANSI/ASA S1.1 (Acoustics terminology)",
+        "IEEE 2700 (Sensor Performance Parameter Definitions)"
+      ],
+      "domains": ["XX.3", "XX.4", "XX.5", "XX.6", "XX.7", "XX.8", "XX.9", "XX.10"]
+    }
+  },
+  "verification_framework": {
+    "name": "Trustless Physics Compilation (TPC)",
+    "version": "12.0.0",
+    "components": [
+      "TPC trace adapters (140 domains)",
+      "Lean 4 formal conservation proofs (24 libraries)",
+      "TPC certificate registry (machine-readable)",
+      "Phase gauntlets (5 tiers + full-spectrum)",
+      "SHA-256 hash-chain audit trail per session"
+    ],
+    "certification_criteria": {
+      "adapter_instantiation": "Adapter class loads and initialises without error",
+      "solver_execution": "evaluate/solve/propagate produces valid (result, conservation, session) triple",
+      "conservation_verification": "Conservation object contains ≥1 verified physical law with to_dict()",
+      "trace_integrity": "Session has ≥2 hash-chained entries with SHA-256 digests",
+      "lean_proof_coverage": "Domain category has a corresponding Lean 4 formal proof with ≥1 verified theorem"
+    }
+  }
+}

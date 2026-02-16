@@ -1,0 +1,121 @@
+{
+  "project": "HyperTensor-VM",
+  "protocol": "trustless_physics_gauntlet_phase10",
+  "phase": 10,
+  "description": "Full-Spectrum Certification: 140 domains across 22 categories \u2014 5 tiers, 140 trace adapters, 24+ Lean conservation proofs, TPC certificate registry \u2014 all verified end-to-end",
+  "timestamp": "2026-02-16T23:38:47Z",
+  "total_tests": 16,
+  "passed": 16,
+  "failed": 0,
+  "sub_gauntlet_tests": 280,
+  "total_time_seconds": 41.527,
+  "gauntlets": {
+    "registry_loads": {
+      "layer": "registry",
+      "passed": true,
+      "time_seconds": 0.0223,
+      "error": null
+    },
+    "registry_all_fields": {
+      "layer": "registry",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "registry_phase_counts": {
+      "layer": "registry",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "registry_no_duplicates": {
+      "layer": "registry",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "registry_certificates_json": {
+      "layer": "registry",
+      "passed": true,
+      "time_seconds": 0.0003,
+      "error": null
+    },
+    "lean_all_proofs_exist": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0007,
+      "error": null
+    },
+    "lean_proof_count": {
+      "layer": "lean_proofs",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "adapter_import_all_140": {
+      "layer": "adapter_import",
+      "passed": true,
+      "time_seconds": 4.0042,
+      "error": null
+    },
+    "phase5_gauntlet_27_of_27": {
+      "layer": "phase_delegation",
+      "passed": true,
+      "time_seconds": 1.9533,
+      "error": null
+    },
+    "phase6_gauntlet_46_of_46": {
+      "layer": "phase_delegation",
+      "passed": true,
+      "time_seconds": 0.6639,
+      "error": null
+    },
+    "phase7_gauntlet_69_of_69": {
+      "layer": "phase_delegation",
+      "passed": true,
+      "time_seconds": 0.506,
+      "error": null
+    },
+    "phase8_gauntlet_78_of_78": {
+      "layer": "phase_delegation",
+      "passed": true,
+      "time_seconds": 33.4748,
+      "error": null
+    },
+    "phase9_gauntlet_60_of_60": {
+      "layer": "phase_delegation",
+      "passed": true,
+      "time_seconds": 0.9004,
+      "error": null
+    },
+    "total_phase_tests_280": {
+      "layer": "aggregate",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "certification_140_of_140": {
+      "layer": "certification",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    },
+    "categories_22": {
+      "layer": "certification",
+      "passed": true,
+      "time_seconds": 0.0,
+      "error": null
+    }
+  },
+  "domain_coverage": {
+    "total": 140,
+    "certified": 140,
+    "phases": {
+      "5": 4,
+      "6": 25,
+      "7": 40,
+      "8": 45,
+      "9": 26
+    }
+  }
+}

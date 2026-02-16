@@ -3,11 +3,11 @@
   "protocol": "trustless_physics_gauntlet_phase6",
   "phase": 6,
   "description": "Tier 2A Wire-Up: 25 domains across Fluid Dynamics (8), Electromagnetism (7), StatMech (3), Plasma Physics (7) \u2014 trace adapters, Lean conservation proofs, TPC generation",
-  "timestamp": "2026-02-16T18:48:55Z",
+  "timestamp": "2026-02-16T23:38:14Z",
   "total_tests": 46,
   "passed": 46,
   "failed": 0,
-  "total_time_seconds": 4.44,
+  "total_time_seconds": 0.659,
   "gauntlets": {
     "fluid_adapter_files_exist": {
       "layer": "adapter_files",
@@ -54,7 +54,7 @@
     "lean_statmech_conservation": {
       "layer": "lean_proofs",
       "passed": true,
-      "time_seconds": 0.0,
+      "time_seconds": 0.0003,
       "error": null
     },
     "lean_plasma_conservation": {
@@ -72,43 +72,43 @@
     "tpc_phase6_importable": {
       "layer": "tpc_script",
       "passed": true,
-      "time_seconds": 0.0292,
+      "time_seconds": 0.0031,
       "error": null
     },
     "fluid_turbulence_solve": {
       "layer": "fluid_solvers",
       "passed": true,
-      "time_seconds": 3.7056,
+      "time_seconds": 0.0019,
       "error": null
     },
     "fluid_multiphase_solve": {
       "layer": "fluid_solvers",
       "passed": true,
-      "time_seconds": 0.012,
+      "time_seconds": 0.0115,
       "error": null
     },
     "fluid_rarefied_solve": {
       "layer": "fluid_solvers",
       "passed": true,
-      "time_seconds": 0.0055,
+      "time_seconds": 0.0056,
       "error": null
     },
     "fluid_non_newtonian_solve": {
       "layer": "fluid_solvers",
       "passed": true,
-      "time_seconds": 0.0038,
+      "time_seconds": 0.0034,
       "error": null
     },
     "fluid_porous_media_solve": {
       "layer": "fluid_solvers",
       "passed": true,
-      "time_seconds": 0.0169,
+      "time_seconds": 0.0187,
       "error": null
     },
     "fluid_free_surface_solve": {
       "layer": "fluid_solvers",
       "passed": true,
-      "time_seconds": 0.0025,
+      "time_seconds": 0.0027,
       "error": null
     },
     "fluid_shallow_water_import": {
@@ -126,7 +126,7 @@
     "em_electrostatics_import": {
       "layer": "em_solvers",
       "passed": true,
-      "time_seconds": 0.0088,
+      "time_seconds": 0.0,
       "error": null
     },
     "em_magnetostatics_import": {
@@ -168,7 +168,7 @@
     "statmech_lattice_spin_solve": {
       "layer": "statmech_solvers",
       "passed": true,
-      "time_seconds": 0.065,
+      "time_seconds": 0.0275,
       "error": null
     },
     "statmech_non_equilibrium_import": {
@@ -186,7 +186,7 @@
     "plasma_ideal_mhd_import": {
       "layer": "plasma_solvers",
       "passed": true,
-      "time_seconds": 0.0098,
+      "time_seconds": 0.0,
       "error": null
     },
     "plasma_resistive_mhd_import": {
@@ -228,31 +228,31 @@
     "conservation_turbulence_tke": {
       "layer": "conservation",
       "passed": true,
-      "time_seconds": 0.0013,
+      "time_seconds": 0.0014,
       "error": null
     },
     "conservation_multiphase_mass": {
       "layer": "conservation",
       "passed": true,
-      "time_seconds": 0.0047,
+      "time_seconds": 0.0046,
       "error": null
     },
     "conservation_rarefied_density": {
       "layer": "conservation",
       "passed": true,
-      "time_seconds": 0.0027,
+      "time_seconds": 0.003,
       "error": null
     },
     "conservation_porous_mass": {
       "layer": "conservation",
       "passed": true,
-      "time_seconds": 0.0177,
+      "time_seconds": 0.0178,
       "error": null
     },
     "conservation_ising_detailed_balance": {
       "layer": "conservation",
       "passed": true,
-      "time_seconds": 0.0532,
+      "time_seconds": 0.0551,
       "error": null
     },
     "integration_25_domains_covered": {
@@ -270,19 +270,19 @@
     "integration_phase5_intact": {
       "layer": "integration",
       "passed": true,
-      "time_seconds": 0.0,
+      "time_seconds": 0.0001,
       "error": null
     },
     "integration_standalone_solvers_run": {
       "layer": "integration",
       "passed": true,
-      "time_seconds": 0.003,
+      "time_seconds": 0.0033,
       "error": null
     },
     "integration_lattice_spin_full": {
       "layer": "integration",
       "passed": true,
-      "time_seconds": 0.4948,
+      "time_seconds": 0.4958,
       "error": null
     }
   },

@@ -3,16 +3,16 @@
   "protocol": "trustless_physics_gauntlet_phase8",
   "phase": 8,
   "description": "Tier 3 Wire-Up: 45 domains across Quantum Mechanics (5), Quantum Many-Body (13), Electronic Structure (7), Solid State (8), Nuclear & Particle (6), Chemical Physics (3), Quantum Information (3) \u2014 trace adapters, Lean conservation proofs, TPC generation",
-  "timestamp": "2026-02-16T21:01:08Z",
+  "timestamp": "2026-02-16T23:38:46Z",
   "total_tests": 78,
   "passed": 78,
   "failed": 0,
-  "total_time_seconds": 35.404,
+  "total_time_seconds": 33.469,
   "gauntlets": {
     "qm_adapter_files_qmech": {
       "layer": "adapter_files",
       "passed": true,
-      "time_seconds": 0.0002,
+      "time_seconds": 0.0001,
       "error": null
     },
     "qm_adapter_files_qm": {
@@ -24,7 +24,7 @@
     "qmb_adapter_files_cond": {
       "layer": "adapter_files",
       "passed": true,
-      "time_seconds": 0.0002,
+      "time_seconds": 0.0001,
       "error": null
     },
     "qmb_adapter_files_alg": {
@@ -90,13 +90,13 @@
     "core_scf_adapter": {
       "layer": "core_adapters",
       "passed": true,
-      "time_seconds": 3.6097,
+      "time_seconds": 0.0018,
       "error": null
     },
     "core_eigenvalue_adapter": {
       "layer": "core_adapters",
       "passed": true,
-      "time_seconds": 0.0004,
+      "time_seconds": 0.0016,
       "error": null
     },
     "lean_qm_conservation": {
@@ -150,313 +150,313 @@
     "tpc_phase8_importable": {
       "layer": "tpc_script",
       "passed": true,
-      "time_seconds": 0.0047,
+      "time_seconds": 0.0037,
       "error": null
     },
     "qm_tise_solve": {
       "layer": "qm_solvers",
       "passed": true,
-      "time_seconds": 0.0219,
+      "time_seconds": 0.0163,
       "error": null
     },
     "qm_tdse_solve": {
       "layer": "qm_solvers",
       "passed": true,
-      "time_seconds": 0.0041,
+      "time_seconds": 0.0025,
       "error": null
     },
     "qm_scattering_solve": {
       "layer": "qm_solvers",
       "passed": true,
-      "time_seconds": 0.0022,
+      "time_seconds": 0.0004,
       "error": null
     },
     "qm_semiclassical_solve": {
       "layer": "qm_solvers",
       "passed": true,
-      "time_seconds": 0.3359,
+      "time_seconds": 0.3433,
       "error": null
     },
     "qm_path_integrals_solve": {
       "layer": "qm_solvers",
       "passed": true,
-      "time_seconds": 0.0122,
+      "time_seconds": 0.0127,
       "error": null
     },
     "qmb_dmrg_solve": {
       "layer": "qmb_solvers",
       "passed": true,
-      "time_seconds": 0.0154,
+      "time_seconds": 0.0156,
       "error": null
     },
     "qmb_quantum_spin_solve": {
       "layer": "qmb_solvers",
       "passed": true,
-      "time_seconds": 0.0468,
+      "time_seconds": 0.0158,
       "error": null
     },
     "qmb_strongly_correlated_solve": {
       "layer": "qmb_solvers",
       "passed": true,
-      "time_seconds": 29.8161,
+      "time_seconds": 31.3459,
       "error": null
     },
     "qmb_topological_solve": {
       "layer": "qmb_solvers",
       "passed": true,
-      "time_seconds": 0.0028,
+      "time_seconds": 0.0023,
       "error": null
     },
     "qmb_mbl_solve": {
       "layer": "qmb_solvers",
       "passed": true,
-      "time_seconds": 0.0034,
+      "time_seconds": 0.0031,
       "error": null
     },
     "qmb_lattice_gauge_solve": {
       "layer": "qmb_solvers",
       "passed": true,
-      "time_seconds": 0.0485,
+      "time_seconds": 0.049,
       "error": null
     },
     "qmb_open_quantum_solve": {
       "layer": "qmb_solvers",
       "passed": true,
-      "time_seconds": 0.001,
+      "time_seconds": 0.0006,
       "error": null
     },
     "qmb_nonequilibrium_qm_solve": {
       "layer": "qmb_solvers",
       "passed": true,
-      "time_seconds": 0.0015,
+      "time_seconds": 0.0013,
       "error": null
     },
     "qmb_kondo_solve": {
       "layer": "qmb_solvers",
       "passed": true,
-      "time_seconds": 0.0004,
+      "time_seconds": 0.0001,
       "error": null
     },
     "qmb_bosonic_solve": {
       "layer": "qmb_solvers",
       "passed": true,
-      "time_seconds": 0.1295,
+      "time_seconds": 0.1342,
       "error": null
     },
     "qmb_fermionic_solve": {
       "layer": "qmb_solvers",
       "passed": true,
-      "time_seconds": 0.0007,
+      "time_seconds": 0.0003,
       "error": null
     },
     "qmb_nuclear_many_body_solve": {
       "layer": "qmb_solvers",
       "passed": true,
-      "time_seconds": 0.0004,
+      "time_seconds": 0.0001,
       "error": null
     },
     "qmb_ultracold_solve": {
       "layer": "qmb_solvers",
       "passed": true,
-      "time_seconds": 0.0035,
+      "time_seconds": 0.003,
       "error": null
     },
     "es_dft_solve": {
       "layer": "electronic_solvers",
       "passed": true,
-      "time_seconds": 0.0988,
+      "time_seconds": 0.0958,
       "error": null
     },
     "es_beyond_dft_solve": {
       "layer": "electronic_solvers",
       "passed": true,
-      "time_seconds": 0.055,
+      "time_seconds": 0.053,
       "error": null
     },
     "es_tight_binding_solve": {
       "layer": "electronic_solvers",
       "passed": true,
-      "time_seconds": 0.001,
+      "time_seconds": 0.0002,
       "error": null
     },
     "es_excited_states_solve": {
       "layer": "electronic_solvers",
       "passed": true,
-      "time_seconds": 0.0007,
+      "time_seconds": 0.0001,
       "error": null
     },
     "es_response_solve": {
       "layer": "electronic_solvers",
       "passed": true,
-      "time_seconds": 0.001,
+      "time_seconds": 0.0004,
       "error": null
     },
     "es_relativistic_solve": {
       "layer": "electronic_solvers",
       "passed": true,
-      "time_seconds": 0.0005,
+      "time_seconds": 0.0,
       "error": null
     },
     "es_embedding_solve": {
       "layer": "electronic_solvers",
       "passed": true,
-      "time_seconds": 0.0007,
+      "time_seconds": 0.0,
       "error": null
     },
     "ss_phonons_solve": {
       "layer": "solid_state_solvers",
       "passed": true,
-      "time_seconds": 0.0042,
+      "time_seconds": 0.0019,
       "error": null
     },
     "ss_band_structure_solve": {
       "layer": "solid_state_solvers",
       "passed": true,
-      "time_seconds": 0.0012,
+      "time_seconds": 0.0004,
       "error": null
     },
     "ss_classical_magnetism_solve": {
       "layer": "solid_state_solvers",
       "passed": true,
-      "time_seconds": 0.0242,
+      "time_seconds": 0.0179,
       "error": null
     },
     "ss_superconductivity_solve": {
       "layer": "solid_state_solvers",
       "passed": true,
-      "time_seconds": 0.0013,
+      "time_seconds": 0.0005,
       "error": null
     },
     "ss_disordered_solve": {
       "layer": "solid_state_solvers",
       "passed": true,
-      "time_seconds": 0.0008,
+      "time_seconds": 0.0002,
       "error": null
     },
     "ss_surfaces_solve": {
       "layer": "solid_state_solvers",
       "passed": true,
-      "time_seconds": 0.0005,
+      "time_seconds": 0.0,
       "error": null
     },
     "ss_defects_solve": {
       "layer": "solid_state_solvers",
       "passed": true,
-      "time_seconds": 0.0525,
+      "time_seconds": 0.055,
       "error": null
     },
     "ss_ferroelectrics_solve": {
       "layer": "solid_state_solvers",
       "passed": true,
-      "time_seconds": 0.0005,
+      "time_seconds": 0.0,
       "error": null
     },
     "np_nuclear_structure_solve": {
       "layer": "nuclear_particle_solvers",
       "passed": true,
-      "time_seconds": 0.2016,
+      "time_seconds": 0.2059,
       "error": null
     },
     "np_nuclear_reactions_solve": {
       "layer": "nuclear_particle_solvers",
       "passed": true,
-      "time_seconds": 0.0009,
+      "time_seconds": 0.0002,
       "error": null
     },
     "np_nuclear_astro_solve": {
       "layer": "nuclear_particle_solvers",
       "passed": true,
-      "time_seconds": 0.0006,
+      "time_seconds": 0.0,
       "error": null
     },
     "np_lattice_qcd_solve": {
       "layer": "nuclear_particle_solvers",
       "passed": true,
-      "time_seconds": 0.3534,
+      "time_seconds": 0.3664,
       "error": null
     },
     "np_perturbative_qft_solve": {
       "layer": "nuclear_particle_solvers",
       "passed": true,
-      "time_seconds": 0.0005,
+      "time_seconds": 0.0001,
       "error": null
     },
     "np_beyond_sm_solve": {
       "layer": "nuclear_particle_solvers",
       "passed": true,
-      "time_seconds": 0.0008,
+      "time_seconds": 0.0001,
       "error": null
     },
     "cp_pes_solve": {
       "layer": "chem_physics_solvers",
       "passed": true,
-      "time_seconds": 0.0029,
+      "time_seconds": 0.0001,
       "error": null
     },
     "cp_reaction_rate_solve": {
       "layer": "chem_physics_solvers",
       "passed": true,
-      "time_seconds": 0.0004,
+      "time_seconds": 0.0001,
       "error": null
     },
     "cp_catalysis_solve": {
       "layer": "chem_physics_solvers",
       "passed": true,
-      "time_seconds": 0.0004,
+      "time_seconds": 0.0001,
       "error": null
     },
     "qi_quantum_circuit_solve": {
       "layer": "quantum_info_solvers",
       "passed": true,
-      "time_seconds": 0.0046,
+      "time_seconds": 0.0008,
       "error": null
     },
     "qi_qec_solve": {
       "layer": "quantum_info_solvers",
       "passed": true,
-      "time_seconds": 0.0011,
+      "time_seconds": 0.0009,
       "error": null
     },
     "qi_vqe_solve": {
       "layer": "quantum_info_solvers",
       "passed": true,
-      "time_seconds": 0.4257,
+      "time_seconds": 0.5215,
       "error": null
     },
     "conservation_qm_norm": {
       "layer": "conservation",
       "passed": true,
-      "time_seconds": 0.0169,
+      "time_seconds": 0.0184,
       "error": null
     },
     "conservation_qmb_energy": {
       "layer": "conservation",
       "passed": true,
-      "time_seconds": 0.0241,
+      "time_seconds": 0.0548,
       "error": null
     },
     "conservation_es_electron_count": {
       "layer": "conservation",
       "passed": true,
-      "time_seconds": 0.057,
+      "time_seconds": 0.1089,
       "error": null
     },
     "conservation_ss_phonon_reality": {
       "layer": "conservation",
       "passed": true,
-      "time_seconds": 0.002,
+      "time_seconds": 0.0038,
       "error": null
     },
     "conservation_np_baryon": {
       "layer": "conservation",
       "passed": true,
-      "time_seconds": 0.0,
+      "time_seconds": 0.0001,
       "error": null
     },
     "conservation_qi_unitarity": {
       "layer": "conservation",
       "passed": true,
-      "time_seconds": 0.0004,
+      "time_seconds": 0.0011,
       "error": null
     },
     "integration_trace_session_api": {
@@ -468,7 +468,7 @@
     "integration_all_categories_covered": {
       "layer": "integration",
       "passed": true,
-      "time_seconds": 0.0,
+      "time_seconds": 0.0001,
       "error": null
     },
     "integration_consistency_check": {

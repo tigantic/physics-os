@@ -3,64 +3,64 @@
   "protocol": "trustless_physics_gauntlet_phase5",
   "phase": 5,
   "description": "Tier 1 Wire-Up: Euler 3D, NS-IMEX 2D, Heat Equation, Vlasov-Poisson \u2014 trace adapters, Lean conservation proofs, TPC certificate generation, cross-domain validation",
-  "timestamp": "2026-02-16T18:05:51Z",
+  "timestamp": "2026-02-16T23:38:14Z",
   "total_tests": 27,
   "passed": 27,
   "failed": 0,
-  "total_time_seconds": 6.788,
+  "total_time_seconds": 1.948,
   "gauntlets": {
     "trace_adapters_package_exists": {
       "layer": "trace_adapters",
       "passed": true,
-      "time_seconds": 0.0001,
+      "time_seconds": 0.0002,
       "error": null
     },
     "trace_adapters_euler3d_api": {
       "layer": "trace_adapters",
       "passed": true,
-      "time_seconds": 4.8109,
+      "time_seconds": 0.0,
       "error": null
     },
     "trace_adapters_ns2d_api": {
       "layer": "trace_adapters",
       "passed": true,
-      "time_seconds": 0.0075,
+      "time_seconds": 0.0006,
       "error": null
     },
     "trace_adapters_heat_api": {
       "layer": "trace_adapters",
       "passed": true,
-      "time_seconds": 0.0089,
+      "time_seconds": 0.0004,
       "error": null
     },
     "trace_adapters_vlasov_api": {
       "layer": "trace_adapters",
       "passed": true,
-      "time_seconds": 0.0007,
+      "time_seconds": 0.0001,
       "error": null
     },
     "lean_euler_conservation": {
       "layer": "lean_proofs",
       "passed": true,
-      "time_seconds": 0.0007,
+      "time_seconds": 0.0002,
       "error": null
     },
     "lean_thermal_conservation": {
       "layer": "lean_proofs",
       "passed": true,
-      "time_seconds": 0.0004,
+      "time_seconds": 0.003,
       "error": null
     },
     "lean_vlasov_conservation": {
       "layer": "lean_proofs",
       "passed": true,
-      "time_seconds": 0.0004,
+      "time_seconds": 0.0009,
       "error": null
     },
     "lean_navier_stokes": {
       "layer": "lean_proofs",
       "passed": true,
-      "time_seconds": 0.0003,
+      "time_seconds": 0.0004,
       "error": null
     },
     "tpc_scripts_exist": {
@@ -72,7 +72,7 @@
     "tpc_scripts_importable": {
       "layer": "tpc_scripts",
       "passed": true,
-      "time_seconds": 0.0082,
+      "time_seconds": 0.0073,
       "error": null
     },
     "tpc_generator_available": {
@@ -84,49 +84,49 @@
     "euler3d_solve_and_trace": {
       "layer": "euler3d",
       "passed": true,
-      "time_seconds": 0.3672,
+      "time_seconds": 0.3536,
       "error": null
     },
     "euler3d_tpc_certificate": {
       "layer": "euler3d",
       "passed": true,
-      "time_seconds": 1.2042,
+      "time_seconds": 1.2036,
       "error": null
     },
     "ns2d_solve_and_trace": {
       "layer": "ns2d",
       "passed": true,
-      "time_seconds": 0.0373,
+      "time_seconds": 0.0316,
       "error": null
     },
     "ns2d_tpc_certificate": {
       "layer": "ns2d",
       "passed": true,
-      "time_seconds": 0.0322,
+      "time_seconds": 0.0371,
       "error": null
     },
     "heat_solve_and_trace": {
       "layer": "heat",
       "passed": true,
-      "time_seconds": 0.0056,
+      "time_seconds": 0.0054,
       "error": null
     },
     "heat_tpc_certificate": {
       "layer": "heat",
       "passed": true,
-      "time_seconds": 0.0105,
+      "time_seconds": 0.0095,
       "error": null
     },
     "vlasov_solve_and_trace": {
       "layer": "vlasov",
       "passed": true,
-      "time_seconds": 0.1533,
+      "time_seconds": 0.1535,
       "error": null
     },
     "vlasov_tpc_certificate": {
       "layer": "vlasov",
       "passed": true,
-      "time_seconds": 0.1333,
+      "time_seconds": 0.1367,
       "error": null
     },
     "all_certificates_generated": {
@@ -156,7 +156,7 @@
     "regression_trace_module": {
       "layer": "regression",
       "passed": true,
-      "time_seconds": 0.0017,
+      "time_seconds": 0.0001,
       "error": null
     },
     "regression_tpc_format": {
@@ -168,7 +168,7 @@
     "regression_tpc_generator": {
       "layer": "regression",
       "passed": true,
-      "time_seconds": 0.0019,
+      "time_seconds": 0.0016,
       "error": null
     }
   },

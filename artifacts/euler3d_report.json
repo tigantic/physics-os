@@ -5,7 +5,7 @@
   "verified": true,
   "grid": "16x16x16",
   "steps": 1,
-  "wall_time_s": 0.3203275203704834,
+  "wall_time_s": 0.3380098342895508,
   "metrics": {
     "mass_initial": 1.2136296296296296,
     "mass_final": 1.216132833566121,
@@ -14,7 +14,7 @@
     "energy_final": 3.051903529563051,
     "energy_drift": 0.008727233266754286,
     "num_steps": 1,
-    "wall_time_s": 0.3203275203704834,
-    "trace_hash": "2b2e496e1e728992546aa4877d68f1b82d4eae6318bb17785e84366fd3d2e248"
+    "wall_time_s": 0.3380098342895508,
+    "trace_hash": "2c730ceb316f9c044a35d3b18b95a7cb579dd39edfc5f49a22420f146164a8ef"
   }
 }
