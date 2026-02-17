@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { ProofPackage } from "@luxury/core";
 import { Card, CardContent, CardHeader } from "@/ds/components/Card";
 import { CopyField } from "@/ds/components/CopyField";
@@ -6,7 +7,7 @@ import { Chip } from "@/ds/components/Chip";
 /** Validates container digest format: sha256:<64 hex chars> (matches Zod SHA256 schema). */
 const DIGEST_RE = /^sha256:[a-f0-9]{64}$/i;
 
-export function ReproduceScreen({ proof }: { proof: ProofPackage }) {
+export const ReproduceScreen = memo(function ReproduceScreen({ proof }: { proof: ProofPackage }) {
   const { container_digest: digest, seed } = proof.meta.environment;
 
   if (!DIGEST_RE.test(digest) || !Number.isSafeInteger(seed)) {
@@ -34,4 +35,6 @@ export function ReproduceScreen({ proof }: { proof: ProofPackage }) {
       </CardContent>
     </Card>
   );
-}
+});
+
+ReproduceScreen.displayName = "ReproduceScreen";

@@ -1,8 +1,9 @@
+import { memo } from "react";
 import type { ProofPackage, DomainPack } from "@luxury/core";
 import { Card, CardContent, CardHeader } from "@/ds/components/Card";
 import { DataValueNumberView } from "@/features/proof/DataValueView";
 
-export function TimelineScreen({ proof, domain }: { proof: ProofPackage; domain: DomainPack }) {
+export const TimelineScreen = memo(function TimelineScreen({ proof, domain }: { proof: ProofPackage; domain: DomainPack }) {
   return (
     <Card>
       <CardHeader>
@@ -38,4 +39,6 @@ export function TimelineScreen({ proof, domain }: { proof: ProofPackage; domain:
       </CardContent>
     </Card>
   );
-}
+});
+
+TimelineScreen.displayName = "TimelineScreen";

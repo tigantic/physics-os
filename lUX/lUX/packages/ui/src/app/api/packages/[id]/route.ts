@@ -4,6 +4,7 @@ import { getProvider } from "@/config/provider";
 import { logger } from "@/lib/logger";
 import { startTimer, serverTimingHeader } from "@/lib/timing";
 import { increment, observe } from "@/lib/metrics";
+import { computeETag, isNotModified } from "@/lib/etag";
 
 const ParamsSchema = z.object({
   id: z
@@ -45,9 +46,23 @@ export async function GET(request: Request, { params }: { params: { id: string }
     observe("lux_http_duration_ms", timing.durationMs);
     logger.info("api.packages.load", { requestId, packageId: parsed.data.id, durationMs: timing.durationMs });
 
+    const etag = computeETag(proof as unknown as Record<string, unknown>);
+
+    if (isNotModified(request, etag)) {
+      return new NextResponse(null, {
+        status: 304,
+        headers: {
+          ETag: etag,
+          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+          "X-Request-Id": requestId,
+        },
+      });
+    }
+
     return NextResponse.json(proof, {
       status: 200,
       headers: {
+        ETag: etag,
         "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
         "Server-Timing": serverTimingHeader(timing),
         "X-Request-Id": requestId,

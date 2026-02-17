@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { ProofPackage, DomainPack } from "@luxury/core";
 import { Card, CardContent, CardHeader } from "@/ds/components/Card";
 import { DataValueNumberView } from "@/features/proof/DataValueView";
@@ -8,7 +9,7 @@ function lastStepMetric(proof: ProofPackage, metricId: string) {
   return step.metrics[metricId] ?? { status: "missing" as const, reason: "Metric missing" };
 }
 
-export function CompareScreen({
+export const CompareScreen = memo(function CompareScreen({
   proof,
   baseline,
   domain,
@@ -62,4 +63,6 @@ export function CompareScreen({
       </CardContent>
     </Card>
   );
-}
+});
+
+CompareScreen.displayName = "CompareScreen";

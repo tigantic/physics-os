@@ -5,7 +5,29 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### Added — Pass 10
+### Added — Pass 11
+
+- **Phase 6 — Performance & Bundle Optimization**:
+  - **Dynamic imports via `next/dynamic`** (`modeComposer.tsx`): All 7 screen components (`SummaryScreen`, `TimelineScreen`, `GatesScreen`, `EvidenceScreen`, `IntegrityScreen`, `CompareScreen`, `ReproduceScreen`) + `PrimaryViewer` are now lazily loaded. Only the active mode's screen chunk is downloaded. Each screen becomes a separate Next.js chunk.
+  - **`React.memo` on all 7 screen components**: Named function expressions with explicit `displayName` assignments. Eliminates re-renders when `proof` prop reference is stable.
+  - **ModeDial prefetch on hover/focus** (`ModeDial.tsx`): `prefetchMode(m)` calls `router.prefetch()` with the target mode URL on `onMouseEnter` and `onFocus`. Skips prefetch for the currently active mode.
+  - **Bundle analyzer** (`next.config.mjs`): `@next/bundle-analyzer` integration, enabled via `ANALYZE=true` env var. Added `build:analyze` script to `package.json`.
+  - **`optimizePackageImports`** (`next.config.mjs`): Added `lucide-react` and `@radix-ui/react-tooltip` to `experimental.optimizePackageImports` for tree-shaking barrel imports.
+  - **ETag utility** (`lib/etag.ts`): `computeETag(body)` — SHA-256 truncated to 16 hex, weak validator format `W/"..."`. `isNotModified(request, etag)` — checks `If-None-Match` header, handles comma-separated lists. `server-only` guard.
+  - **ETag + conditional 304** on 3 API routes: `/api/packages`, `/api/packages/[id]`, `/api/domains/[domain]` now return `ETag` header on all 200 responses and respond with `304 Not Modified` when `If-None-Match` matches.
+
+### Changed — Pass 11
+
+- **Font optimization** (`layout.tsx`): JetBrains_Mono weights reduced from `["400", "500"]` to `["400"]` (weight 500 unused in codebase). Added `preload: true` to both IBM Plex Sans and JetBrains Mono font declarations.
+- **`next.config.mjs`**: Wrapped in `withBundleAnalyzer`, added `experimental.optimizePackageImports`.
+
+### Tests — Pass 11
+
+- **34 new unit tests** (363 UI total, 639 overall: 276 core + 363 UI):
+  - `etag.test.ts` (11): computeETag — weak format, deterministic, different input, object input, Buffer input, key-order sensitivity. isNotModified — no header, exact match, mismatch, comma-separated match, comma-separated mismatch.
+  - `reactMemo.test.tsx` (14 via `it.each`): All 7 components wrapped with `React.memo` ($$typeof check), all 7 have correct `displayName`.
+  - Updated `modeDial.test.tsx` (+3): Prefetch on mouseEnter, prefetch on focus, no prefetch for active mode.
+  - Updated `apiRoutes.test.ts` (+6): ETag header on 200 response for packages/packages[id]/domains, 304 response when If-None-Match matches for all 3 routes.
 
 - **Phase 5 — Observability & Reliability**:
   - **Structured logger** (`lib/logger.ts`): Zero-dependency server-side NDJSON logger with severity levels (debug/info/warn/error), `LUX_LOG_LEVEL` env var filtering, Error object serialization (message + stack + name), stdout/stderr routing (warn+error → stderr), pid + timestamp + service tag on every line, `server-only` guard.

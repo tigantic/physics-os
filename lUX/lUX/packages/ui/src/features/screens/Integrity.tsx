@@ -1,8 +1,9 @@
+import { memo } from "react";
 import type { ProofPackage } from "@luxury/core";
 import { Card, CardContent, CardHeader } from "@/ds/components/Card";
 import { Chip } from "@/ds/components/Chip";
 
-export function IntegrityScreen({ proof }: { proof: ProofPackage }) {
+export const IntegrityScreen = memo(function IntegrityScreen({ proof }: { proof: ProofPackage }) {
   const v = proof.verification?.status ?? "UNVERIFIED";
   return (
     <Card>
@@ -33,4 +34,6 @@ export function IntegrityScreen({ proof }: { proof: ProofPackage }) {
       </CardContent>
     </Card>
   );
-}
+});
+
+IntegrityScreen.displayName = "IntegrityScreen";

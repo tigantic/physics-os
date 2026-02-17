@@ -1,9 +1,10 @@
+import { memo } from "react";
 import type { ProofPackage } from "@luxury/core";
 import { Card, CardContent, CardHeader } from "@/ds/components/Card";
 import { MarginBar } from "@/ds/components/MarginBar";
 import { Chip } from "@/ds/components/Chip";
 
-export function GatesScreen({ proof }: { proof: ProofPackage }) {
+export const GatesScreen = memo(function GatesScreen({ proof }: { proof: ProofPackage }) {
   const results = Object.values(proof.gate_results);
   return (
     <Card>
@@ -34,4 +35,6 @@ export function GatesScreen({ proof }: { proof: ProofPackage }) {
       </CardContent>
     </Card>
   );
-}
+});
+
+GatesScreen.displayName = "GatesScreen";

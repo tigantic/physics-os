@@ -3,9 +3,10 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import React from "react";
 
 const pushMock = vi.fn();
+const prefetchMock = vi.fn();
 vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams("mode=REVIEW&fixture=pass"),
-  useRouter: () => ({ push: pushMock }),
+  useRouter: () => ({ push: pushMock, prefetch: prefetchMock }),
   usePathname: () => "/gallery",
 }));
 
@@ -97,5 +98,26 @@ describe("ModeDial", () => {
     render(<ModeDial />);
     const reviewTab = screen.getByRole("tab", { name: "REVIEW" });
     expect(reviewTab).toHaveAttribute("tabindex", "0");
+  });
+
+  it("prefetches adjacent mode on mouse enter", () => {
+    prefetchMock.mockClear();
+    render(<ModeDial />);
+    fireEvent.mouseEnter(screen.getByRole("tab", { name: "AUDIT" }));
+    expect(prefetchMock).toHaveBeenCalledWith(expect.stringContaining("mode=AUDIT"));
+  });
+
+  it("prefetches adjacent mode on focus", () => {
+    prefetchMock.mockClear();
+    render(<ModeDial />);
+    fireEvent.focus(screen.getByRole("tab", { name: "EXECUTIVE" }));
+    expect(prefetchMock).toHaveBeenCalledWith(expect.stringContaining("mode=EXECUTIVE"));
+  });
+
+  it("does not prefetch the active mode", () => {
+    prefetchMock.mockClear();
+    render(<ModeDial />);
+    fireEvent.mouseEnter(screen.getByRole("tab", { name: "REVIEW" }));
+    expect(prefetchMock).not.toHaveBeenCalled();
   });
 });

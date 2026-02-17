@@ -1,13 +1,31 @@
+import dynamic from "next/dynamic";
 import type { ProofMode, ProofPackage, DomainPack } from "@luxury/core";
 import { ModeMap } from "@luxury/core";
-import { SummaryScreen } from "@/features/screens/Summary";
-import { TimelineScreen } from "@/features/screens/Timeline";
-import { GatesScreen } from "@/features/screens/Gates";
-import { EvidenceScreen } from "@/features/screens/Evidence";
-import { IntegrityScreen } from "@/features/screens/Integrity";
-import { CompareScreen } from "@/features/screens/Compare";
-import { PrimaryViewer } from "@/features/viewers/PrimaryViewer";
 import { Card, CardHeader, CardContent } from "@/ds/components/Card";
+
+/* ── Dynamic imports — each screen is a separate chunk ────────────────── */
+
+const SummaryScreen = dynamic(() =>
+  import("@/features/screens/Summary").then((m) => m.SummaryScreen),
+);
+const TimelineScreen = dynamic(() =>
+  import("@/features/screens/Timeline").then((m) => m.TimelineScreen),
+);
+const GatesScreen = dynamic(() =>
+  import("@/features/screens/Gates").then((m) => m.GatesScreen),
+);
+const EvidenceScreen = dynamic(() =>
+  import("@/features/screens/Evidence").then((m) => m.EvidenceScreen),
+);
+const IntegrityScreen = dynamic(() =>
+  import("@/features/screens/Integrity").then((m) => m.IntegrityScreen),
+);
+const CompareScreen = dynamic(() =>
+  import("@/features/screens/Compare").then((m) => m.CompareScreen),
+);
+const PrimaryViewer = dynamic(() =>
+  import("@/features/viewers/PrimaryViewer").then((m) => m.PrimaryViewer),
+);
 
 export interface CenterCtx {
   proof: ProofPackage;

@@ -9,13 +9,15 @@ const sans = IBM_Plex_Sans({
   weight: ["400", "500", "600"],
   display: "swap",
   variable: "--font-sans",
+  preload: true,
 });
 
 const mono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400"],
   display: "swap",
   variable: "--font-mono",
+  preload: true,
 });
 
 const siteTitle = "Luxury Physics Viewer";

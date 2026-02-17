@@ -29,6 +29,16 @@ export function ModeDial() {
     router.push(`${pathname}?${next.toString()}`);
   }
 
+  /** Prefetch adjacent mode on hover/focus so transition is near-instant. */
+  function prefetchMode(m: string) {
+    if (m === mode) return;
+    const next = new URLSearchParams(sp.toString());
+    next.set("mode", m);
+    next.set("fixture", fixture);
+    next.set("baseline", baseline);
+    router.prefetch(`${pathname}?${next.toString()}`);
+  }
+
   function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     const currentIdx = MODES.indexOf(mode);
     if (currentIdx === -1) return;
@@ -72,6 +82,8 @@ export function ModeDial() {
           variant={m === mode ? "gold" : "default"}
           size="sm"
           onClick={() => setMode(m)}
+          onMouseEnter={() => prefetchMode(m)}
+          onFocus={() => prefetchMode(m)}
           className={cn(
             "h-10 sm:h-8",
             m === mode && "shadow-[0_0_12px_rgba(201,169,110,0.15)] ring-1 ring-[var(--color-accent-goldBorder)]",

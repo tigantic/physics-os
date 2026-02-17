@@ -3,6 +3,7 @@ import { getProvider } from "@/config/provider";
 import { logger } from "@/lib/logger";
 import { startTimer, serverTimingHeader } from "@/lib/timing";
 import { increment, observe } from "@/lib/metrics";
+import { computeETag, isNotModified } from "@/lib/etag";
 
 /**
  * GET /api/packages — List available proof packages.
@@ -27,11 +28,26 @@ export async function GET(request: Request) {
     observe("lux_http_duration_ms", timing.durationMs);
     logger.info("api.packages.list", { requestId, count: packages.length, durationMs: timing.durationMs });
 
+    const body = { packages };
+    const etag = computeETag(body);
+
+    if (isNotModified(request, etag)) {
+      return new NextResponse(null, {
+        status: 304,
+        headers: {
+          ETag: etag,
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120",
+          "X-Request-Id": requestId,
+        },
+      });
+    }
+
     return NextResponse.json(
-      { packages },
+      body,
       {
         status: 200,
         headers: {
+          ETag: etag,
           "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120",
           "Server-Timing": serverTimingHeader(timing),
           "X-Request-Id": requestId,

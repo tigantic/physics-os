@@ -1,8 +1,9 @@
+import { memo } from "react";
 import type { ProofPackage } from "@luxury/core";
 import { Card, CardContent, CardHeader } from "@/ds/components/Card";
 import { Disclosure } from "@/ds/components/Disclosure";
 
-export function EvidenceScreen({ proof }: { proof: ProofPackage }) {
+export const EvidenceScreen = memo(function EvidenceScreen({ proof }: { proof: ProofPackage }) {
   return (
     <Card>
       <CardHeader>
@@ -22,4 +23,6 @@ export function EvidenceScreen({ proof }: { proof: ProofPackage }) {
       </CardContent>
     </Card>
   );
-}
+});
+
+EvidenceScreen.displayName = "EvidenceScreen";

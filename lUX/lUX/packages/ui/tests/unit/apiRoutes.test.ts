@@ -28,8 +28,10 @@ vi.mock("@/lib/metrics", () => ({
 }));
 
 // Helper: create a Request with X-Request-Id header
-function req(url: string) {
-  return new Request(url, { headers: { "x-request-id": "test-req-id" } });
+function req(url: string, extraHeaders?: Record<string, string>) {
+  return new Request(url, {
+    headers: { "x-request-id": "test-req-id", ...extraHeaders },
+  });
 }
 
 describe("API Routes", () => {
@@ -66,6 +68,32 @@ describe("API Routes", () => {
       expect(response.headers.get("Cache-Control")).toContain("s-maxage=60");
       expect(response.headers.get("Server-Timing")).toContain("list_packages;dur=");
       expect(response.headers.get("X-Request-Id")).toBe("test-req-id");
+    });
+
+    it("includes an ETag header on 200 response", async () => {
+      const { GET } = await import("@/app/api/packages/route");
+      mockProvider.listPackages.mockResolvedValue([{ id: "pkg-1" }]);
+
+      const response = await GET(req("http://localhost/api/packages"));
+      expect(response.status).toBe(200);
+      const etag = response.headers.get("ETag");
+      expect(etag).toMatch(/^W\/"[a-f0-9]{16}"$/);
+    });
+
+    it("returns 304 when If-None-Match matches ETag", async () => {
+      const { GET } = await import("@/app/api/packages/route");
+      mockProvider.listPackages.mockResolvedValue([{ id: "pkg-1" }]);
+
+      // First request to capture ETag
+      const first = await GET(req("http://localhost/api/packages"));
+      const etag = first.headers.get("ETag")!;
+
+      // Second request with matching If-None-Match
+      const second = await GET(
+        req("http://localhost/api/packages", { "If-None-Match": etag }),
+      );
+      expect(second.status).toBe(304);
+      expect(second.headers.get("ETag")).toBe(etag);
     });
 
     it("returns 500 on provider error", async () => {
@@ -119,6 +147,34 @@ describe("API Routes", () => {
       });
       expect(response.headers.get("Cache-Control")).toContain("s-maxage=300");
       expect(response.headers.get("Server-Timing")).toContain("load_package;dur=");
+    });
+
+    it("includes an ETag header on 200 response", async () => {
+      const { GET } = await import("@/app/api/packages/[id]/route");
+      mockProvider.loadPackage.mockResolvedValue({ schema_version: "1.0.0", meta: { id: "run-001" } });
+
+      const response = await GET(req("http://localhost/api/packages/pass"), {
+        params: { id: "pass" },
+      });
+      expect(response.status).toBe(200);
+      expect(response.headers.get("ETag")).toMatch(/^W\/"[a-f0-9]{16}"$/);
+    });
+
+    it("returns 304 when If-None-Match matches ETag", async () => {
+      const { GET } = await import("@/app/api/packages/[id]/route");
+      mockProvider.loadPackage.mockResolvedValue({ schema_version: "1.0.0", meta: { id: "run-001" } });
+
+      const first = await GET(req("http://localhost/api/packages/pass"), {
+        params: { id: "pass" },
+      });
+      const etag = first.headers.get("ETag")!;
+
+      const second = await GET(
+        req("http://localhost/api/packages/pass", { "If-None-Match": etag }),
+        { params: { id: "pass" } },
+      );
+      expect(second.status).toBe(304);
+      expect(second.headers.get("ETag")).toBe(etag);
     });
   });
 
@@ -209,6 +265,34 @@ describe("API Routes", () => {
       });
       expect(response.headers.get("Cache-Control")).toContain("s-maxage=3600");
       expect(response.headers.get("Server-Timing")).toContain("load_domain;dur=");
+    });
+
+    it("includes an ETag header on 200 response", async () => {
+      const { GET } = await import("@/app/api/domains/[domain]/route");
+      mockProvider.loadDomainPack.mockResolvedValue({ id: "com.physics.vlasov", version: "1.0.0" });
+
+      const response = await GET(req("http://localhost/api/domains/com.physics.vlasov"), {
+        params: { domain: "com.physics.vlasov" },
+      });
+      expect(response.status).toBe(200);
+      expect(response.headers.get("ETag")).toMatch(/^W\/"[a-f0-9]{16}"$/);
+    });
+
+    it("returns 304 when If-None-Match matches ETag", async () => {
+      const { GET } = await import("@/app/api/domains/[domain]/route");
+      mockProvider.loadDomainPack.mockResolvedValue({ id: "com.physics.vlasov", version: "1.0.0" });
+
+      const first = await GET(req("http://localhost/api/domains/com.physics.vlasov"), {
+        params: { domain: "com.physics.vlasov" },
+      });
+      const etag = first.headers.get("ETag")!;
+
+      const second = await GET(
+        req("http://localhost/api/domains/com.physics.vlasov", { "If-None-Match": etag }),
+        { params: { domain: "com.physics.vlasov" } },
+      );
+      expect(second.status).toBe(304);
+      expect(second.headers.get("ETag")).toBe(etag);
     });
   });
 });

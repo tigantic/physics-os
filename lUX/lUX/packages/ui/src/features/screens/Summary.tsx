@@ -1,9 +1,10 @@
+import { memo } from "react";
 import type { ProofPackage, DomainPack } from "@luxury/core";
 import { Card, CardContent, CardHeader } from "@/ds/components/Card";
 import { DataValueNumberView } from "@/features/proof/DataValueView";
 import { MathBlock } from "@/features/math/MathBlock";
 
-export function SummaryScreen({ proof, domain, mode }: { proof: ProofPackage; domain: DomainPack; mode: string }) {
+export const SummaryScreen = memo(function SummaryScreen({ proof, domain, mode }: { proof: ProofPackage; domain: DomainPack; mode: string }) {
   const metrics = domain.templates.executive_summary_metric_ids;
   const step = proof.timeline.steps[proof.timeline.steps.length - 1];
 
@@ -45,4 +46,6 @@ export function SummaryScreen({ proof, domain, mode }: { proof: ProofPackage; do
       ) : null}
     </div>
   );
-}
+});
+
+SummaryScreen.displayName = "SummaryScreen";
