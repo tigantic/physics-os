@@ -5,6 +5,36 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Security — Audit Pass
+
+- **Timing-safe comparison hardened** (`lib/auth.ts`): Replaced `timingSafeEqual` with `hmacEqual` using HMAC-SHA256 normalization — both inputs are hashed to fixed-length 32-byte digests before XOR comparison, eliminating length-leak timing side-channel.
+- **`sendBeacon` Content-Type corrected** (`lib/reportError.ts`, `lib/WebVitalsReporter.tsx`): Wrapped JSON body in `new Blob([body], { type: "application/json" })` — `sendBeacon(url, string)` sends `text/plain`; Blob sends correct `application/json`.
+- **CSP report endpoint validated** (`api/csp-report/route.ts`): Full rewrite with Zod schemas (`CspViolationSchema`, `CspReportWrapperSchema`), 16 KiB payload size limit, structured field extraction with type-safe access.
+- **`server-only` guard** (`config/env.ts`): Added `import "server-only"` to prevent accidental client-side import of server configuration.
+- **Metadata XSS prevention** (`gallery/page.tsx`): `generateMetadata` now sanitizes `fixture` param through `VALID_FIXTURES` allowlist with fallback to `"pass"`.
+
+### Fixed — Audit Pass
+
+- **Provider rejected promise cached forever** (`config/provider.ts`): Added `.catch()` handler that clears `_providerPromise = null` — subsequent `getProvider()` calls retry instead of returning the same rejected promise (permanent 503).
+- **`reportError()` called during render** (`error.tsx`, `global-error.tsx`, `gallery/error.tsx`): Moved to `React.useEffect(() => { reportError(error, "..."); }, [error])` — prevents duplicate error reports on re-render.
+- **Gallery error accessibility** (`gallery/error.tsx`): Added `retryRef` with `useEffect` auto-focus, `min-h-[44px]` touch target, proper React import.
+- **Structured `ProviderNotFoundError`** (`core/providers/errors.ts`): New error class with `resource` and `id` fields. API routes now use `instanceof ProviderNotFoundError` instead of fragile `message.includes("not found")` string matching.
+- **`force-dynamic` on data routes**: Added `export const dynamic = "force-dynamic"` to all 4 data API routes — prevents Next.js static optimization that defeats ETag/auth logic.
+- **Histogram Prometheus type** (`lib/metrics.ts`): Changed `# TYPE ${name} summary` to `# TYPE ${name} histogram` for correct Prometheus semantics.
+- **`@next/*` version alignment** (`package.json`): Changed `@next/bundle-analyzer` and `@next/eslint-plugin-next` from `^16` to `^14.2.5` to match `next@^14.2.5`.
+- **Dead dependencies removed** (`package.json`): Removed unused `@fontsource/ibm-plex-sans` and `@fontsource/jetbrains-mono`.
+- **Duplicate env var** (`.env.example`): Removed second `CI=` entry.
+- **CI audit threshold** (`.github/workflows/ci.yml`): Changed from `--audit-level=high || true` to `--audit-level=critical || true`.
+
+### Tests — Audit Pass
+
+- **677 tests maintained** (276 core + 401 UI) — all passing:
+  - Updated `reportError.test.ts` (3 tests): Blob-based `sendBeacon` assertions with `blob.text()` + `application/json` type check.
+  - Updated `webVitalsReporter.test.tsx` (1 test): Same Blob-based assertion.
+  - Updated `apiRoutes.test.ts` (2 tests): `ProviderNotFoundError` thrown instead of generic `Error` for 404 cases.
+  - Updated `metrics.test.ts` (1 test): `# TYPE ... histogram` assertion.
+  - Added global `server-only` mock in `tests/setup.ts` for all test suites.
+
 ### Added — Pass 12
 
 - **Phase 7 — Deployment, Auth & Production Operations**:

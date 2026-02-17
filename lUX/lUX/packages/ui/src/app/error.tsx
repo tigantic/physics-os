@@ -13,7 +13,9 @@ export default function RootError({ error, reset }: { error: Error & { digest?: 
     retryRef.current?.focus();
   }, []);
 
-  reportError(error, "RootError");
+  React.useEffect(() => {
+    reportError(error, "RootError");
+  }, [error]);
 
   return (
     <div

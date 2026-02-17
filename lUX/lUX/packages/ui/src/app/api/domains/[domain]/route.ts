@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getProvider } from "@/config/provider";
+import { ProviderNotFoundError } from "@luxury/core";
 import { logger } from "@/lib/logger";
 import { startTimer, serverTimingHeader } from "@/lib/timing";
 import { increment, observe } from "@/lib/metrics";
@@ -73,7 +74,7 @@ export async function GET(request: Request, { params }: { params: { domain: stri
   } catch (err) {
     const timing = timer.stop();
     const message = err instanceof Error ? err.message : "Failed to load domain pack";
-    const status = message.includes("not found") ? 404 : 500;
+    const status = err instanceof ProviderNotFoundError ? 404 : 500;
 
     increment("lux_http_errors_total", "/api/domains/[domain]");
     logger.error("api.domains.load.error", {
@@ -92,3 +93,4 @@ export async function GET(request: Request, { params }: { params: { domain: stri
 }
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";

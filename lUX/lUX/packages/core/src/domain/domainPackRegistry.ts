@@ -3,6 +3,7 @@ import path from "node:path";
 import { DomainPackSchema } from "../schema/domainPack.zod.js";
 import type { DomainPack } from "../schema/domainPack.zod.js";
 import { deepFreeze } from "../util/deepFreeze.js";
+import { ProviderNotFoundError } from "../providers/errors.js";
 
 /** LRU cache for loaded domain packs — avoids repeated disk IO + Zod parse. */
 const packCache = new Map<string, Promise<DomainPack>>();
@@ -57,7 +58,7 @@ export async function loadDomainPackById(fixturesRoot: string, packId: string): 
   try {
     await fs.access(p);
   } catch {
-    throw new Error(`DomainPack not found: ${packId}`);
+    throw new ProviderNotFoundError("domain", packId);
   }
   return loadDomainPackFromFile(p);
 }

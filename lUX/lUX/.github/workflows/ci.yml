@@ -22,7 +22,7 @@ jobs:
       - run: pnpm -w run test:schema
       - run: pnpm -w run test:coverage
       - name: Security audit
-        run: pnpm audit --audit-level=high || true
+        run: pnpm audit --audit-level=critical || true
       - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@v4

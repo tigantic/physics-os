@@ -15,7 +15,9 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
     retryRef.current?.focus();
   }, []);
 
-  reportError(error, "GlobalError");
+  React.useEffect(() => {
+    reportError(error, "GlobalError");
+  }, [error]);
 
   return (
     <html lang="en">

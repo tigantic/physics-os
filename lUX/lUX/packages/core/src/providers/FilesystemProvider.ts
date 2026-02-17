@@ -8,6 +8,7 @@ import { verifyProofPackageArtifacts } from "../proof/integrity.js";
 import { readArtifactBytes } from "../proof/artifactStore.js";
 import { loadDomainPackForDomain, loadDomainPackById } from "../domain/domainPackRegistry.js";
 import { deepFreeze } from "../util/deepFreeze.js";
+import { ProviderNotFoundError } from "./errors.js";
 
 /**
  * Filesystem-backed ProofDataProvider.
@@ -69,7 +70,7 @@ export class FilesystemProvider implements ProofDataProvider {
     try {
       rawText = await fs.readFile(jsonPath, "utf8");
     } catch {
-      throw new Error(`Proof package not found: ${id}`);
+      throw new ProviderNotFoundError("package", id);
     }
 
     let raw: unknown;

@@ -54,7 +54,7 @@ function beacon(metric: VitalMetric): void {
   const body = JSON.stringify(metric);
   try {
     if (navigator.sendBeacon) {
-      navigator.sendBeacon(endpoint, body);
+      navigator.sendBeacon(endpoint, new Blob([body], { type: "application/json" }));
     } else {
       void fetch(endpoint, {
         method: "POST",

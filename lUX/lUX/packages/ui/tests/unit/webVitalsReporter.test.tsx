@@ -88,7 +88,10 @@ describe("WebVitalsReporter", () => {
 
     // TTFB should be reported immediately (80 - 10 = 70ms)
     expect(sendBeaconSpy).toHaveBeenCalled();
-    const body = JSON.parse(sendBeaconSpy.mock.calls[0]![1] as string) as {
+    const blob = sendBeaconSpy.mock.calls[0]![1] as Blob;
+    expect(blob).toBeInstanceOf(Blob);
+    expect(blob.type).toBe("application/json");
+    const body = JSON.parse(await blob.text()) as {
       name: string;
       value: number;
       rating: string;

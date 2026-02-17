@@ -146,7 +146,7 @@ export function toPrometheus(): string {
   // Application histograms (summary-style: count + sum)
   for (const [name, data] of histograms) {
     lines.push(`# HELP ${name} ${data.help}`);
-    lines.push(`# TYPE ${name} summary`);
+    lines.push(`# TYPE ${name} histogram`);
     lines.push(`${name}_count ${data.count}`);
     lines.push(`${name}_sum ${data.sum}`);
   }

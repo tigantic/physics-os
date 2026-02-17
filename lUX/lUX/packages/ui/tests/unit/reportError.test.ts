@@ -28,15 +28,17 @@ describe("reportError", () => {
     expect(errorSpy).toHaveBeenCalledWith("[lUX] RootError:", err);
   });
 
-  it("beacons JSON payload to /api/errors", () => {
+  it("beacons JSON payload to /api/errors", async () => {
     const err = new Error("boom");
     reportError(err, "GalleryError");
 
     expect(sendBeaconSpy).toHaveBeenCalledOnce();
-    const [url, body] = sendBeaconSpy.mock.calls[0] as [string, string];
+    const [url, blob] = sendBeaconSpy.mock.calls[0] as [string, Blob];
     expect(url).toBe("/api/errors");
+    expect(blob).toBeInstanceOf(Blob);
+    expect(blob.type).toBe("application/json");
 
-    const parsed = JSON.parse(body) as Record<string, unknown>;
+    const parsed = JSON.parse(await blob.text()) as Record<string, unknown>;
     expect(parsed.message).toBe("boom");
     expect(parsed.component).toBe("GalleryError");
     expect(parsed.stack).toBeDefined();
@@ -44,12 +46,12 @@ describe("reportError", () => {
     expect(parsed.userAgent).toBe("test-ua");
   });
 
-  it("includes digest when present", () => {
+  it("includes digest when present", async () => {
     const err = Object.assign(new Error("digest-err"), { digest: "abc123" });
     reportError(err, "Test");
 
-    const [, body] = sendBeaconSpy.mock.calls[0] as [string, string];
-    const parsed = JSON.parse(body) as Record<string, unknown>;
+    const [, blob] = sendBeaconSpy.mock.calls[0] as [string, Blob];
+    const parsed = JSON.parse(await blob.text()) as Record<string, unknown>;
     expect(parsed.digest).toBe("abc123");
   });
 
@@ -86,7 +88,7 @@ describe("reportError", () => {
     expect(() => reportError(new Error("safe"), "Test")).not.toThrow();
   });
 
-  it("includes url from window.location", () => {
+  it("includes url from window.location", async () => {
     Object.defineProperty(globalThis, "window", {
       value: { location: { href: "http://localhost/gallery?x=1" } },
       writable: true,
@@ -95,8 +97,8 @@ describe("reportError", () => {
 
     reportError(new Error("url test"), "Comp");
 
-    const [, body] = sendBeaconSpy.mock.calls[0] as [string, string];
-    const parsed = JSON.parse(body) as Record<string, unknown>;
+    const [, blob] = sendBeaconSpy.mock.calls[0] as [string, Blob];
+    const parsed = JSON.parse(await blob.text()) as Record<string, unknown>;
     expect(parsed.url).toBe("http://localhost/gallery?x=1");
   });
 });

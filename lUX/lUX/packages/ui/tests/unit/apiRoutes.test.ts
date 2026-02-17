@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { ProviderNotFoundError } from "@luxury/core";
 
 // Mock server-only (imported by provider.ts, logger.ts, metrics.ts)
 vi.mock("server-only", () => ({}));
@@ -130,7 +131,7 @@ describe("API Routes", () => {
 
     it("returns 404 for missing package", async () => {
       const { GET } = await import("@/app/api/packages/[id]/route");
-      mockProvider.loadPackage.mockRejectedValue(new Error("Proof package not found: missing"));
+      mockProvider.loadPackage.mockRejectedValue(new ProviderNotFoundError("package", "missing"));
 
       const response = await GET(req("http://localhost/api/packages/missing"), {
         params: { id: "missing" },
@@ -248,7 +249,7 @@ describe("API Routes", () => {
 
     it("returns 404 for missing domain pack", async () => {
       const { GET } = await import("@/app/api/domains/[domain]/route");
-      mockProvider.loadDomainPack.mockRejectedValue(new Error("DomainPack not found: nonexistent"));
+      mockProvider.loadDomainPack.mockRejectedValue(new ProviderNotFoundError("domain", "nonexistent"));
 
       const response = await GET(req("http://localhost/api/domains/nonexistent"), {
         params: { domain: "nonexistent" },

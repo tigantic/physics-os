@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { reportError } from "@/lib/reportError";
 
 /**
@@ -7,7 +8,15 @@ import { reportError } from "@/lib/reportError";
  * Provides structured diagnostics and retry capability.
  */
 export default function GalleryError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
-  reportError(error, "GalleryError");
+  const retryRef = React.useRef<HTMLButtonElement>(null);
+
+  React.useEffect(() => {
+    retryRef.current?.focus();
+  }, []);
+
+  React.useEffect(() => {
+    reportError(error, "GalleryError");
+  }, [error]);
 
   return (
     <div
@@ -25,9 +34,10 @@ export default function GalleryError({ error, reset }: { error: Error & { digest
           <div className="mt-2 text-[11px] text-[var(--color-text-tertiary)]">Digest: {error.digest}</div>
         )}
         <button
+          ref={retryRef}
           type="button"
           onClick={reset}
-          className="mt-5 rounded-md border border-[var(--color-border)] bg-[var(--color-bg-base)] px-5 py-2 text-sm font-medium text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg-raised)]"
+          className="mt-5 min-h-[44px] rounded-md border border-[var(--color-border)] bg-[var(--color-bg-base)] px-5 py-2 text-sm font-medium text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg-raised)] sm:min-h-0"
         >
           Retry
         </button>

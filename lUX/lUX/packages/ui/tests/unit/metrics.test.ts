@@ -80,7 +80,7 @@ describe("metrics", () => {
       observe("defined_histogram", 5);
       const output = toPrometheus();
       expect(output).toContain("# HELP defined_histogram A test histogram");
-      expect(output).toContain("# TYPE defined_histogram summary");
+      expect(output).toContain("# TYPE defined_histogram histogram");
     });
   });
 

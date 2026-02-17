@@ -44,7 +44,7 @@ export function reportError(error: Error & { digest?: string }, component: strin
 
   try {
     if (typeof navigator !== "undefined" && navigator.sendBeacon) {
-      navigator.sendBeacon("/api/errors", body);
+      navigator.sendBeacon("/api/errors", new Blob([body], { type: "application/json" }));
     } else if (typeof fetch !== "undefined") {
       fetch("/api/errors", {
         method: "POST",

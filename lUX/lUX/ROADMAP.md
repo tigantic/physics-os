@@ -5,7 +5,7 @@
 
 ---
 
-## Current State (Post-Pass 12)
+## Current State (Post-Audit Pass)
 
 | Metric | Value | Status |
 |--------|-------|--------|
@@ -17,10 +17,10 @@
 | UI coverage (stmts) | ~90% | ✅ 70% threshold |
 | Lint | Clean | ✅ |
 | Typecheck | Clean | ✅ |
-| CSP | Nonce-based + report-to | ✅ |
+| CSP | Nonce-based + report-to + Zod-validated endpoint | ✅ |
 | HSTS | 2-year, preload | ✅ |
 | WCAG AA contrast | All tokens ≥ 4.5:1 | ✅ |
-| ARIA coverage | Error/loading/404 | ✅ |
+| ARIA coverage | Error/loading/404 + auto-focus retry | ✅ |
 | Motion system | Token-driven, reduced-motion safe | ✅ |
 | Responsive layout | Mobile drawer + collapsible RightRail | ✅ |
 | Touch targets | ≥ 44px mobile (WCAG 2.5.8) | ✅ |
@@ -29,17 +29,20 @@
 | API routes | 8 endpoints (packages, artifacts, domains, health, ready, metrics, csp-report, errors) | ✅ |
 | fs decoupling | Zero `node:fs` imports in UI package | ✅ |
 | Structured logging | NDJSON, request ID correlation | ✅ |
-| Metrics | Prometheus-compatible `/api/metrics` | ✅ |
-| Error tracking | Client error beacons + server logging | ✅ |
+| Metrics | Prometheus-compatible `/api/metrics` (correct histogram type) | ✅ |
+| Error tracking | Client error beacons (JSON Content-Type) + server logging | ✅ |
 | Web Vitals | TTFB, FCP, LCP, CLS, INP collection | ✅ |
 | Server-Timing | All API routes instrumented | ✅ |
-| CSP violation monitoring | `report-to` + `/api/csp-report` | ✅ |
+| CSP violation monitoring | `report-to` + `/api/csp-report` (Zod-validated, 16 KiB limit) | ✅ |
 | Code splitting | `next/dynamic` for all 7 screens + PrimaryViewer | ✅ |
 | React.memo | All 7 screen components memoized | ✅ |
 | ETag / 304 | 3 JSON API routes (packages, packages/[id], domains) | ✅ |
 | Bundle analyzer | `@next/bundle-analyzer` + `build:analyze` script | ✅ |
 | Font optimization | Weight reduction + preload hints | ✅ |
-| Auth | API key + RBAC (viewer/auditor/admin) | ✅ |
+| Auth | HMAC-SHA256 timing-safe + RBAC (viewer/auditor/admin) | ✅ |
+| Error handling | `ProviderNotFoundError` structured class + `useEffect` side-effects | ✅ |
+| Server-only guards | `env.ts` protected from client import | ✅ |
+| Provider resilience | Rejected promise retry on next call | ✅ |
 | Docker Compose | Full service definition + healthcheck | ✅ |
 | Kubernetes | Deployment, Service, Ingress, HPA, ConfigMap, Secret | ✅ |
 | Docker CI | GHCR build+push + semver/SHA tagging | ✅ |
@@ -744,6 +747,12 @@ Track architectural decisions as they're made.
 | Pass 12 | Auth disabled by default | Public viewer is primary use case; opt-in security via `LUX_API_KEY` env var | Auth required by default |
 | Pass 12 | ASCII `...` over Unicode `…` in keyId | HTTP headers require ByteString (ASCII-only); `…` causes Header validation failure | Base64 encode, omit suffix |
 | Pass 12 | Separate K8s manifests over Helm | Simpler for single-service app; no templating overhead; easy to audit | Helm chart, Kustomize overlays |
+| Audit | HMAC-SHA256 normalization over length-guarded XOR | Eliminates length-leak side-channel entirely — both inputs hashed to fixed 32-byte digests | `crypto.timingSafeEqual` (unavailable in Edge), zero-pad to max length |
+| Audit | `ProviderNotFoundError` structured class over string matching | Type-safe `instanceof` check in API routes; carries `resource` and `id` fields | `message.includes("not found")` string matching |
+| Audit | Zod validation on CSP report endpoint | Prevents oversized/malformed payloads; 16 KiB limit; typed field access | No validation (log raw body) |
+| Audit | `sendBeacon` with Blob over raw string | Ensures `Content-Type: application/json`; string sends `text/plain` | Blob wrapper adds ~20 bytes overhead |
+| Audit | `force-dynamic` on data API routes | Prevents Next.js static optimization that bypasses ETag/auth middleware | `revalidate: 0` (insufficient — still statically analyzable) |
+| Audit | Global `server-only` mock in test setup | Single mock location prevents test failures when any module imports `server-only` | Per-test `vi.mock("server-only")` (duplicated across files) |
 
 ---
 

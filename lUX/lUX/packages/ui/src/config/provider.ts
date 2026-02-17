@@ -34,6 +34,11 @@ export function getProvider(): Promise<ProofDataProvider> {
   }).then((p) => {
     _provider = p;
     return p;
+  }).catch((err) => {
+    // Clear cached promise so subsequent calls can retry initialization
+    // instead of returning the same rejected promise forever (permanent 503).
+    _providerPromise = null;
+    throw err;
   });
 
   return _providerPromise;

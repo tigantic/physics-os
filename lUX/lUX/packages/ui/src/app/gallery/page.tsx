@@ -29,7 +29,9 @@ export async function generateMetadata({
 }: {
   searchParams: Record<string, string | string[] | undefined>;
 }): Promise<Metadata> {
-  const fixture = String(searchParams.fixture ?? "pass");
+  const rawFixture = String(searchParams.fixture ?? "pass");
+  // Sanitize: only allow known fixture names in metadata to prevent XSS via OG tags
+  const fixture = VALID_FIXTURES.has(rawFixture) ? rawFixture : "pass";
   const mode = parseMode(Array.isArray(searchParams.mode) ? searchParams.mode[0] : (searchParams.mode ?? undefined));
   const title = `${fixture} · ${mode}`;
   return {
