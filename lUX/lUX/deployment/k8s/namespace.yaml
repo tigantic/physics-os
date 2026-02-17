@@ -1,0 +1,8 @@
+# ── lUX Kubernetes Namespace ─────────────────────────────────────────────────────
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lux
+  labels:
+    app.kubernetes.io/name: lux
+    app.kubernetes.io/part-of: hypertensor

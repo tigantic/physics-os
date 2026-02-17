@@ -1,0 +1,15 @@
+# ── lUX ConfigMap ────────────────────────────────────────────────────────────────
+# Non-secret configuration. Override via Kustomize overlays for staging/prod.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lux-config
+  namespace: lux
+  labels:
+    app.kubernetes.io/name: lux
+    app.kubernetes.io/component: config
+data:
+  LUX_BASE_URL: "https://lux.hypertensor.io"
+  LUX_REVALIDATE: "3600"
+  LUX_LOG_LEVEL: "info"
+  LUX_FIXTURES_ROOT: "/data/fixtures"

@@ -1,0 +1,59 @@
+# ── lUX Docker Compose ──────────────────────────────────────────────────────────
+# Local development & testing configuration.
+#
+# Usage:
+#   docker compose up --build          # Build and start
+#   docker compose up -d               # Detached mode
+#   docker compose logs -f lux         # Tail logs
+#   docker compose down                # Stop and remove
+#
+# Production deployments should use Kubernetes manifests in deployment/k8s/
+# or the Docker image directly with appropriate env injection.
+# ────────────────────────────────────────────────────────────────────────────────
+
+services:
+  lux:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILD_VERSION: ${LUX_VERSION:-dev}
+        BUILD_COMMIT_SHA: ${LUX_COMMIT_SHA:-local}
+        BUILD_DATE: ${BUILD_DATE:-}
+    image: lux-proof-viewer:${LUX_VERSION:-dev}
+    container_name: lux
+    restart: unless-stopped
+    ports:
+      - "${LUX_PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - LUX_FIXTURES_ROOT=/data/fixtures
+      - LUX_BASE_URL=${LUX_BASE_URL:-http://localhost:3000}
+      - LUX_REVALIDATE=${LUX_REVALIDATE:-0}
+      # Auth (optional — omit LUX_API_KEY for public access)
+      - LUX_API_KEY=${LUX_API_KEY:-}
+      - LUX_AUTH_ROLES=${LUX_AUTH_ROLES:-}
+      # Observability
+      - LUX_LOG_LEVEL=${LUX_LOG_LEVEL:-info}
+      - NEXT_PUBLIC_LUX_VITALS_ENDPOINT=${NEXT_PUBLIC_LUX_VITALS_ENDPOINT:-}
+    volumes:
+      - ${LUX_FIXTURES_PATH:-./packages/core/tests/fixtures}:/data/fixtures:ro
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/ready"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.5"
+        reservations:
+          memory: 128M
+          cpus: "0.25"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

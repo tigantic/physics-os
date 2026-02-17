@@ -1,0 +1,18 @@
+# ── lUX Service ─────────────────────────────────────────────────────────────────
+apiVersion: v1
+kind: Service
+metadata:
+  name: lux
+  namespace: lux
+  labels:
+    app.kubernetes.io/name: lux
+    app.kubernetes.io/component: server
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: lux
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP

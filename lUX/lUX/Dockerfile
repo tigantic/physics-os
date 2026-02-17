@@ -25,6 +25,20 @@ RUN pnpm -w run build
 
 # ── Stage 3: Production runner ─────────────────────────────────────────
 FROM node:20-alpine AS runner
+
+# Build-time metadata (injected by CI)
+ARG BUILD_VERSION=dev
+ARG BUILD_COMMIT_SHA=unknown
+ARG BUILD_DATE
+
+LABEL org.opencontainers.image.title="lUX Proof Viewer" \
+      org.opencontainers.image.description="Forensic inspection interface for HyperTensor TPC proof certificates" \
+      org.opencontainers.image.version="${BUILD_VERSION}" \
+      org.opencontainers.image.revision="${BUILD_COMMIT_SHA}" \
+      org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.source="https://github.com/tigantic/HyperTensor-VM" \
+      org.opencontainers.image.licenses="MIT"
+
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
@@ -33,6 +47,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
+ENV LUX_VERSION=${BUILD_VERSION}
+ENV LUX_COMMIT_SHA=${BUILD_COMMIT_SHA}
 
 # Copy Next.js standalone output + static + public assets
 COPY --from=builder /app/packages/ui/.next/standalone ./
@@ -47,6 +63,6 @@ USER nextjs
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD wget -qO- http://localhost:3000/api/health || exit 1
+  CMD wget -qO- http://localhost:3000/api/ready || exit 1
 
 CMD ["node", "packages/ui/server.js"]

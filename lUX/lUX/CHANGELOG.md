@@ -5,6 +5,30 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — Pass 12
+
+- **Phase 7 — Deployment, Auth & Production Operations**:
+  - **Authentication & RBAC** (`lib/auth.ts`): API key authentication with `Authorization: Bearer <key>`. Role-based access control — `viewer` | `auditor` | `admin` hierarchy. `LUX_AUTH_ROLES` JSON env var maps keys to roles (default: `viewer`). Timing-safe constant-time key comparison. Disabled by default (all requests public when `LUX_API_KEY` unset). Infrastructure paths (`/api/health`, `/api/ready`, `/api/metrics`, `/api/csp-report`, `/api/errors`) always public.
+  - **Middleware auth integration** (`middleware.ts`): Auth gate before CSP/security headers. 401 JSON response with `WWW-Authenticate: Bearer realm="lUX"` on auth failure. 403 on insufficient role. `x-auth-role` and `x-auth-key-id` headers propagated downstream. Path-prefix→minimum-role mapping via `PATH_ROLE_REQUIREMENTS`.
+  - **Docker Compose** (`docker-compose.yml`): Full service definition with build args (VERSION, COMMIT_SHA, DATE), port mapping, env vars (auth, observability), volume mount for fixtures, healthcheck via `/api/ready`, resource limits (256M memory, 0.5 CPU), JSON logging.
+  - **Kubernetes manifests** (`deployment/k8s/`): 7 files — namespace, configmap, secret, deployment (2 replicas, rolling update, securityContext, probes, resource limits), service (ClusterIP), ingress (nginx + TLS for `lux.hypertensor.io`), HPA (2–10 replicas, CPU 70% + memory 80% targets, 300s scale-down stabilization).
+  - **Docker CI/CD** (`.github/workflows/docker.yml`): Buildx, GHCR login, metadata-action for semver/SHA/branch/latest tagging, build-push-action with GHA cache, PR-only health check verification.
+  - **Dependabot** (`.github/dependabot.yml`): Weekly updates for npm (grouped minor/patch), github-actions, docker.
+  - **Makefile**: 20+ targets — install, dev, build, lint, typecheck, test, test-coverage, test-e2e, format, ci (quality gate), docker-build/run/stop/logs/push, k8s-apply/delete/rollout/restart, clean, help.
+  - **Operational docs** (6 files in `docs/`): `architecture.md`, `configuration.md`, `deployment.md`, `runbook.md`, `contributing.md`, `testing.md`.
+
+### Changed — Pass 12
+
+- **Dockerfile**: Added `ARG BUILD_VERSION/BUILD_COMMIT_SHA/BUILD_DATE`, OCI image labels (`org.opencontainers.image.*`), `ENV LUX_VERSION/LUX_COMMIT_SHA`, HEALTHCHECK changed from `/api/health` to `/api/ready`.
+- **`.env.example`**: Expanded from ~15 to ~60 lines with comprehensive documentation — auth, observability, build metadata, development sections.
+- **`lib/auth.ts`**: Key ID suffix uses ASCII `...` (not Unicode ellipsis `…`) for HTTP header ByteString compliance.
+
+### Tests — Pass 12
+
+- **38 new unit tests** (401 UI total, 677 overall: 276 core + 401 UI):
+  - `auth.test.ts` (27): parseRoleMap (7 — undefined, empty, invalid JSON, non-object, valid, ignores invalid roles, frozen). hasRole (9 — admin satisfies all, auditor satisfies viewer+auditor, viewer only viewer). isPublicPath (9 — 5 public + 4 protected). authenticateRequest (8 — disabled returns admin, missing header, non-Bearer, wrong key, valid default viewer, role from map, different lengths, case-insensitive Bearer).
+  - `middleware-auth.test.ts` (11): No API key passthrough, 401 on missing auth, 401 on wrong key, valid Bearer passthrough, 5 public path bypasses, viewer role access, X-Request-Id format.
+
 ### Added — Pass 11
 
 - **Phase 6 — Performance & Bundle Optimization**:

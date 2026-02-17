@@ -1,0 +1,33 @@
+# ── lUX Ingress ─────────────────────────────────────────────────────────────────
+# Assumes an Ingress controller (nginx, traefik, etc.) is installed in the cluster.
+# Adjust annotations for your specific ingress controller.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lux
+  namespace: lux
+  labels:
+    app.kubernetes.io/name: lux
+  annotations:
+    # nginx-specific — adjust for your ingress controller
+    nginx.ingress.kubernetes.io/proxy-body-size: "1m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - lux.hypertensor.io
+      secretName: lux-tls
+  rules:
+    - host: lux.hypertensor.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lux
+                port:
+                  name: http

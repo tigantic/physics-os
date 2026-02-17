@@ -1,13 +1,40 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { authenticateRequest, hasRole, isPublicPath, parseRoleMap } from "@/lib/auth";
+import type { AuthRole } from "@/lib/auth";
+
+// ── Auth configuration (read once at module level) ─────────────────────────────
+const LUX_API_KEY = process.env.LUX_API_KEY?.trim() || undefined;
+const ROLE_MAP = parseRoleMap(process.env.LUX_AUTH_ROLES);
 
 /**
- * Middleware that injects a per-request CSP nonce.
+ * Minimum role required per path prefix.
+ * More specific prefixes are checked first.
+ * Paths not listed here require `viewer` by default.
+ */
+const PATH_ROLE_REQUIREMENTS: ReadonlyArray<{ prefix: string; role: AuthRole }> = [
+  // Admin-only endpoints could be added here, e.g.:
+  // { prefix: "/api/admin", role: "admin" },
+  { prefix: "/api/packages", role: "viewer" },
+  { prefix: "/api/domains", role: "viewer" },
+  { prefix: "/gallery", role: "viewer" },
+];
+
+function requiredRoleForPath(pathname: string): AuthRole {
+  for (const entry of PATH_ROLE_REQUIREMENTS) {
+    if (pathname.startsWith(entry.prefix)) return entry.role;
+  }
+  return "viewer";
+}
+
+/**
+ * Middleware that enforces authentication and injects a per-request CSP nonce.
  *
- * This replaces `'unsafe-inline'` in `script-src` with a cryptographic nonce,
- * which Next.js automatically propagates to all <script> tags it emits.
- * `style-src` retains `'unsafe-inline'` because Tailwind injects styles at build
- * time and inline style attributes are used for design-token-driven layouts.
+ * Authentication:
+ *   - If `LUX_API_KEY` is not set, all requests are public (no auth required).
+ *   - If set, `Authorization: Bearer <key>` is required on non-public paths.
+ *   - Infrastructure endpoints (/api/health, /api/ready, /api/metrics, /api/csp-report,
+ *     /api/errors) are always publicly accessible.
  *
  * Also sets:
  *   - `X-Request-Id` for end-to-end request tracing
@@ -16,6 +43,47 @@ import type { NextRequest } from "next/server";
  */
 export function middleware(request: NextRequest) {
   const requestId = request.headers.get("x-request-id") ?? crypto.randomUUID();
+  const pathname = request.nextUrl.pathname;
+
+  // ── Auth gate ────────────────────────────────────────────────────────────────
+  let authRole: string | undefined;
+  let authKeyId: string | undefined;
+
+  if (LUX_API_KEY && !isPublicPath(pathname)) {
+    const authResult = authenticateRequest(
+      request.headers.get("authorization"),
+      LUX_API_KEY,
+      ROLE_MAP,
+    );
+
+    if (!authResult.authenticated) {
+      return NextResponse.json(
+        { error: authResult.reason },
+        {
+          status: 401,
+          headers: {
+            "WWW-Authenticate": 'Bearer realm="lUX"',
+            "X-Request-Id": requestId,
+          },
+        },
+      );
+    }
+
+    const requiredRole = requiredRoleForPath(pathname);
+    if (!hasRole(authResult.role, requiredRole)) {
+      return NextResponse.json(
+        { error: `Insufficient permissions: requires ${requiredRole}, have ${authResult.role}` },
+        {
+          status: 403,
+          headers: { "X-Request-Id": requestId },
+        },
+      );
+    }
+
+    // Propagate auth context downstream via headers (set on requestHeaders below)
+    authRole = authResult.role;
+    authKeyId = authResult.keyId;
+  }
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 
   const csp = [
@@ -35,6 +103,8 @@ export function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-nonce", nonce);
   requestHeaders.set("x-request-id", requestId);
+  if (authRole) requestHeaders.set("x-auth-role", authRole);
+  if (authKeyId) requestHeaders.set("x-auth-key-id", authKeyId);
 
   const response = NextResponse.next({ request: { headers: requestHeaders } });
   response.headers.set("Content-Security-Policy", csp);
