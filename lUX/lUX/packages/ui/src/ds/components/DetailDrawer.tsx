@@ -19,7 +19,7 @@ export interface DetailDrawerProps {
 
 /**
  * DetailDrawer — slides in from the right to show contextual detail.
- * Traps focus, closes on Escape. Overlays on mobile, pushes on desktop.
+ * Traps focus, closes on Escape, locks background scroll, restores focus on close.
  */
 export function DetailDrawer({
   open,
@@ -31,11 +31,16 @@ export function DetailDrawer({
 }: DetailDrawerProps) {
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const closeRef = React.useRef<HTMLButtonElement>(null);
+  const previousFocusRef = React.useRef<HTMLElement | null>(null);
 
-  /* Focus trap: on open, focus the close button */
+  /* Save focus target before opening, restore after closing */
   React.useEffect(() => {
     if (open) {
+      previousFocusRef.current = document.activeElement as HTMLElement | null;
       closeRef.current?.focus();
+    } else if (previousFocusRef.current) {
+      previousFocusRef.current.focus();
+      previousFocusRef.current = null;
     }
   }, [open]);
 
@@ -51,6 +56,49 @@ export function DetailDrawer({
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [open, onClose]);
+
+  /* Scroll lock */
+  React.useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
+  /* Focus trap — cycle Tab within drawer */
+  React.useEffect(() => {
+    if (!open) return;
+    const drawer = drawerRef.current;
+    if (!drawer) return;
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key !== "Tab") return;
+      const focusableEls = drawer!.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusableEls.length === 0) return;
+
+      const first = focusableEls[0];
+      const last = focusableEls[focusableEls.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open]);
 
   if (!open) return null;
 

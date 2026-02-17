@@ -51,6 +51,8 @@ export function ResponsiveShell({
               type="button"
               onClick={() => setRightExpanded((v) => !v)}
               aria-expanded={rightExpanded}
+              aria-controls="right-rail-panel"
+              aria-label={rightExpanded ? "Collapse integrity details" : "Expand integrity details"}
               className="flex w-full items-center justify-between px-4 py-3 text-sm font-medium text-[var(--color-text-primary)] transition-colors duration-hover ease-lux-out hover:bg-[var(--color-bg-hover)]"
             >
               <span>Integrity Details</span>
@@ -71,7 +73,7 @@ export function ResponsiveShell({
                 />
               </svg>
             </button>
-            {rightExpanded && <div className="lux-disclosure-enter">{rightRail}</div>}
+            {rightExpanded && <div id="right-rail-panel" className="lux-disclosure-enter">{rightRail}</div>}
           </div>
         </div>
       </div>

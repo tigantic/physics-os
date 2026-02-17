@@ -40,7 +40,9 @@ export default async function PackagesPage() {
           </p>
         </div>
 
-        <PackageList packages={packages} />
+        <main id="main-content">
+          <PackageList packages={packages} />
+        </main>
       </div>
     </div>
   );

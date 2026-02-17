@@ -8,6 +8,7 @@ describe("DetailDrawer", () => {
 
   beforeEach(() => {
     onClose.mockClear();
+    document.body.style.overflow = "";
   });
 
   it("renders nothing when closed", () => {
@@ -59,5 +60,29 @@ describe("DetailDrawer", () => {
     );
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onClose).toHaveBeenCalledOnce();
+  });
+
+  it("locks body scroll when open", () => {
+    render(
+      <DetailDrawer open={true} onClose={onClose} title="Test">
+        Content
+      </DetailDrawer>,
+    );
+    expect(document.body.style.overflow).toBe("hidden");
+  });
+
+  it("restores body scroll when closed", () => {
+    const { rerender } = render(
+      <DetailDrawer open={true} onClose={onClose} title="Test">
+        Content
+      </DetailDrawer>,
+    );
+    expect(document.body.style.overflow).toBe("hidden");
+    rerender(
+      <DetailDrawer open={false} onClose={onClose} title="Test">
+        Content
+      </DetailDrawer>,
+    );
+    expect(document.body.style.overflow).not.toBe("hidden");
   });
 });

@@ -16,6 +16,9 @@ export function CenterCanvas({
 }) {
   return (
     <div id="mode-tabpanel" role="tabpanel" aria-labelledby={`mode-tab-${mode}`} className="space-y-6">
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        Viewing {mode.toLowerCase()} mode
+      </div>
       {renderCenterScreens({ proof, baseline, domain, packageId, mode })}
     </div>
   );
