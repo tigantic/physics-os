@@ -6,7 +6,7 @@ export function CenterCanvas({
   baseline,
   domain,
   mode,
-  bundleDir
+  bundleDir,
 }: {
   proof: ProofPackage;
   baseline?: ProofPackage;
@@ -14,5 +14,9 @@ export function CenterCanvas({
   mode: ProofMode;
   bundleDir: string;
 }) {
-  return <div role="region" aria-label="Proof analysis" className="space-y-6">{renderCenterScreens({ proof, baseline, domain, bundleDir, mode })}</div>;
+  return (
+    <div role="region" aria-label="Proof analysis" className="space-y-6">
+      {renderCenterScreens({ proof, baseline, domain, bundleDir, mode })}
+    </div>
+  );
 }

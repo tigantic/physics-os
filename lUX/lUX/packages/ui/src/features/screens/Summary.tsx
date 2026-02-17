@@ -12,14 +12,20 @@ export function SummaryScreen({ proof, domain, mode }: { proof: ProofPackage; do
       <Card>
         <CardHeader>
           <div className="text-sm text-[var(--color-text-primary)]">Overview</div>
-          <div className="text-xs text-[var(--color-text-tertiary)]">{proof.verdict.reason || "No additional notes"}</div>
+          <div className="text-xs text-[var(--color-text-tertiary)]">
+            {proof.verdict.reason || "No additional notes"}
+          </div>
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           {metrics.map((mid) => (
             <div key={mid} className="rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-4 py-3">
               <div className="text-xs text-[var(--color-text-tertiary)]">{domain.metrics[mid]?.label ?? mid}</div>
               <div className="mt-2">
-                <DataValueNumberView dv={step.metrics[mid] ?? { status: "missing", reason: "Metric missing" }} metricId={mid} domain={domain} />
+                <DataValueNumberView
+                  dv={step.metrics[mid] ?? { status: "missing", reason: "Metric missing" }}
+                  metricId={mid}
+                  domain={domain}
+                />
               </div>
             </div>
           ))}

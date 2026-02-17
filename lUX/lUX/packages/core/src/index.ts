@@ -8,4 +8,5 @@ export * from "./domain/domainPackRegistry.js";
 export * from "./util/renderLatexToSvg.js";
 export * from "./util/normalizeSvg.js";
 export * from "./util/sanitizeSvg.js";
+export * from "./util/deepFreeze.js";
 export * from "./util/hash.js";

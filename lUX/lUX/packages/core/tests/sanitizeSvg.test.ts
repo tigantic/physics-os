@@ -8,7 +8,7 @@ describe("sanitizeSvg", () => {
   });
 
   it("strips <script> elements", () => {
-    const input = '<svg><script>alert(1)</script><rect/></svg>';
+    const input = "<svg><script>alert(1)</script><rect/></svg>";
     expect(sanitizeSvg(input)).not.toContain("<script");
     expect(sanitizeSvg(input)).toContain("<rect/>");
   });
@@ -53,7 +53,7 @@ describe("sanitizeSvg", () => {
   });
 
   it("strips <foreignObject> elements", () => {
-    const input = '<svg><foreignObject><body><script>alert(1)</script></body></foreignObject><rect/></svg>';
+    const input = "<svg><foreignObject><body><script>alert(1)</script></body></foreignObject><rect/></svg>";
     expect(sanitizeSvg(input)).not.toContain("foreignObject");
     expect(sanitizeSvg(input)).toContain("<rect/>");
   });
@@ -71,10 +71,10 @@ describe("sanitizeSvg", () => {
   it("handles multiple threats in a single SVG", () => {
     const input = [
       "<svg>",
-      '<script>alert(1)</script>',
+      "<script>alert(1)</script>",
       '<rect onclick="hack()" width="10"/>',
       '<a href="javascript:void(0)"><text>link</text></a>',
-      '<foreignObject><div>embedded HTML</div></foreignObject>',
+      "<foreignObject><div>embedded HTML</div></foreignObject>",
       "</svg>",
     ].join("");
     const result = sanitizeSvg(input);

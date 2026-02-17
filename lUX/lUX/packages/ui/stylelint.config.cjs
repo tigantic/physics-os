@@ -1,1 +1,1 @@
-module.exports = require('../../stylelint.config.cjs');
+module.exports = require("../../stylelint.config.cjs");

@@ -17,7 +17,7 @@ export const DomainPackSchema = z.object({
       precision: z.number().int().min(0).max(12),
       validity_range: z.tuple([z.number(), z.number()]).optional(),
       description: z.string().optional(),
-    })
+    }),
   ),
 
   gate_packs: z.record(
@@ -26,7 +26,7 @@ export const DomainPackSchema = z.object({
       label: z.string(),
       manifest_ref: z.string(),
       highlight_metrics: z.array(z.string()).default([]),
-    })
+    }),
   ),
 
   viewers: z.array(
@@ -46,9 +46,9 @@ export const DomainPackSchema = z.object({
         "ArtifactRawViewer",
         "DiffViewer",
       ]),
-      default_config: z.record(z.string(), z.any()).default({}),
+      default_config: z.record(z.string(), z.unknown()).default({}),
       priority: z.number().int().default(0),
-    })
+    }),
   ),
 
   templates: z.object({

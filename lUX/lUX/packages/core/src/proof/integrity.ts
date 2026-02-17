@@ -10,12 +10,12 @@ export function computeMerkleRootFromArtifactHashes(artifactHashes: Array<`sha25
   return sha256Prefixed(joined);
 }
 
-export function verifyProofPackageArtifacts(pkg: ProofPackage, bundleDir: string) {
+export async function verifyProofPackageArtifacts(pkg: ProofPackage, bundleDir: string) {
   const failures: Array<{ code: string; message: string; artifact_id?: string }> = [];
   const computedHashes: Array<`sha256:${string}`> = [];
 
   for (const [id, art] of Object.entries(pkg.artifacts)) {
-    const res = readArtifactBytes(bundleDir, art.uri);
+    const res = await readArtifactBytes(bundleDir, art.uri);
     if (!res.ok) {
       failures.push({ code: "MISSING_ARTIFACT", message: res.reason, artifact_id: id });
       continue;

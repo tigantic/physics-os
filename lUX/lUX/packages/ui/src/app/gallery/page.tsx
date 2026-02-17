@@ -21,7 +21,11 @@ const FIXTURES_ROOT = path.resolve(process.cwd(), "..", "core", "tests", "fixtur
 
 const VALID_FIXTURES = new Set(["pass", "fail", "warn", "incomplete", "tampered"]);
 
-export default function GalleryPage({ searchParams }: { searchParams: Record<string, string | string[] | undefined> }) {
+export default async function GalleryPage({
+  searchParams,
+}: {
+  searchParams: Record<string, string | string[] | undefined>;
+}) {
   const rawFixture = String(searchParams.fixture ?? "pass");
   const rawBaseline = String(searchParams.baseline ?? "pass");
   const fixture = VALID_FIXTURES.has(rawFixture) ? rawFixture : "pass";
@@ -29,11 +33,11 @@ export default function GalleryPage({ searchParams }: { searchParams: Record<str
   const mode = parseMode(searchParams.mode as string | undefined);
 
   const bundleDir = path.resolve(FIXTURES_ROOT, "proof-packages", fixture);
-  const loaded = loadProofPackageFromDir(bundleDir);
-  const domain = loadDomainPackForDomain(FIXTURES_ROOT, loaded.proof.meta.domain_id);
+  const loaded = await loadProofPackageFromDir(bundleDir);
+  const domain = await loadDomainPackForDomain(FIXTURES_ROOT, loaded.proof.meta.domain_id);
 
   const baselineDir = path.resolve(FIXTURES_ROOT, "proof-packages", baseline);
-  const baselineLoaded = loadProofPackageFromDir(baselineDir);
+  const baselineLoaded = await loadProofPackageFromDir(baselineDir);
 
   return (
     <ProofWorkspace

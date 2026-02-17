@@ -8,10 +8,7 @@
       "unit": "dimensionless",
       "format": "scientific",
       "precision": 3,
-      "validity_range": [
-        0,
-        1
-      ]
+      "validity_range": [0, 1]
     },
     "l2_drift": {
       "label": "L2 Drift",
@@ -19,10 +16,7 @@
       "unit": "dimensionless",
       "format": "scientific",
       "precision": 3,
-      "validity_range": [
-        0,
-        1
-      ]
+      "validity_range": [0, 1]
     },
     "reaction_rate": {
       "label": "Reaction Rate",
@@ -36,11 +30,7 @@
     "audit": {
       "label": "Audit",
       "manifest_ref": "audit-v1",
-      "highlight_metrics": [
-        "conservation_residual",
-        "l2_drift",
-        "reaction_rate"
-      ]
+      "highlight_metrics": ["conservation_residual", "l2_drift", "reaction_rate"]
     }
   },
   "viewers": [
@@ -70,17 +60,8 @@
     }
   ],
   "templates": {
-    "executive_summary_metric_ids": [
-      "conservation_residual",
-      "l2_drift",
-      "reaction_rate"
-    ],
-    "publication_sections": [
-      "Abstract",
-      "Methods",
-      "Results",
-      "Integrity"
-    ],
+    "executive_summary_metric_ids": ["conservation_residual", "l2_drift", "reaction_rate"],
+    "publication_sections": ["Abstract", "Methods", "Results", "Integrity"],
     "citation_format": "bibtex"
   }
 }

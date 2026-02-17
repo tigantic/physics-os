@@ -14,9 +14,10 @@ export default [
     rules: {
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/consistent-type-imports": "error",
+      "no-console": ["warn", { allow: ["warn", "error"] }],
     },
   },
   {
-    ignores: ["dist/**"],
+    ignores: ["dist/**", "vitest.config.ts"],
   },
 ];

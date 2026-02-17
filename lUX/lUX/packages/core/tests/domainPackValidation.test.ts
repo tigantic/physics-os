@@ -30,7 +30,7 @@ describe("domain pack validation — all 140 packs", () => {
     const result = DomainPackSchema.safeParse(raw);
     if (!result.success) {
       throw new Error(
-        `${file} failed validation:\n${result.error.issues.map((i) => `  ${i.path.join(".")}: ${i.message}`).join("\n")}`
+        `${file} failed validation:\n${result.error.issues.map((i) => `  ${i.path.join(".")}: ${i.message}`).join("\n")}`,
       );
     }
     // Verify pack ID matches filename

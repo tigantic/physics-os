@@ -13,9 +13,13 @@
     "test:schema": "pnpm -r test:schema",
     "test:e2e": "pnpm --filter ui test:e2e --config packages/ui/playwright.config.ts",
     "build": "pnpm -w run build:tokens && pnpm -r build",
-    "dev": "pnpm --filter ui dev"
+    "dev": "pnpm --filter ui dev",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "tsx": "^4.19.2",
     "typescript": "^5.5.4"
   }

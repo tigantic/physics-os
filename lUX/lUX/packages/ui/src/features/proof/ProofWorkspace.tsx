@@ -11,7 +11,7 @@ export function ProofWorkspace({
   domain,
   fixture,
   mode,
-  bundleDir
+  bundleDir,
 }: {
   proof: ProofPackage;
   baseline?: ProofPackage;
@@ -24,7 +24,9 @@ export function ProofWorkspace({
     <div className="min-h-screen bg-[var(--color-bg-base)]">
       <IdentityStrip proof={proof} />
       <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-2 px-4 pt-4 md:px-6">
-        <div className="text-xs text-[var(--color-text-tertiary)]">Fixture: <span className="font-mono">{fixture}</span></div>
+        <div className="text-xs text-[var(--color-text-tertiary)]">
+          Fixture: <span className="font-mono">{fixture}</span>
+        </div>
         <ModeDial />
       </div>
       <div className="mx-auto flex max-w-[1400px] flex-col gap-0 md:flex-row">

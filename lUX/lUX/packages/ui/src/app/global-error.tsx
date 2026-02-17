@@ -4,13 +4,7 @@
  * Global error boundary — catches root layout errors.
  * Must render its own <html>/<body> since the root layout may have crashed.
  */
-export default function GlobalError({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
     <html lang="en">
       <body
@@ -37,9 +31,7 @@ export default function GlobalError({
           <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1, color: "#888" }}>
             Fatal Render Error
           </div>
-          <div style={{ marginTop: 8, fontSize: 18, fontWeight: 600 }}>
-            Viewer Unrecoverable
-          </div>
+          <div style={{ marginTop: 8, fontSize: 18, fontWeight: 600 }}>Viewer Unrecoverable</div>
           <pre
             style={{
               marginTop: 16,
@@ -52,11 +44,7 @@ export default function GlobalError({
           >
             {error.message}
           </pre>
-          {error.digest && (
-            <div style={{ marginTop: 8, fontSize: 11, color: "#666" }}>
-              Digest: {error.digest}
-            </div>
-          )}
+          {error.digest && <div style={{ marginTop: 8, fontSize: 11, color: "#666" }}>Digest: {error.digest}</div>}
           <button
             type="button"
             onClick={reset}

@@ -20,7 +20,10 @@ export function RightRail({ proof }: { proof: ProofPackage }) {
               <div className="text-xs uppercase tracking-wide text-[var(--color-text-tertiary)]">Failures</div>
               <ul className="mt-2 space-y-1 text-xs text-[var(--color-verdict-fail)]">
                 {proof.verification.failures.map((f, i) => (
-                  <li key={i} className="font-mono">{f.code}{f.artifact_id ? ` (${f.artifact_id})` : ""}</li>
+                  <li key={i} className="font-mono">
+                    {f.code}
+                    {f.artifact_id ? ` (${f.artifact_id})` : ""}
+                  </li>
                 ))}
               </ul>
             </div>

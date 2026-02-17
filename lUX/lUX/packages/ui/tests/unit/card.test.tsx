@@ -47,7 +47,7 @@ describe("CardContent", () => {
       <Card>
         <CardHeader>Title</CardHeader>
         <CardContent>Body</CardContent>
-      </Card>
+      </Card>,
     );
     expect(container.querySelectorAll("div").length).toBeGreaterThanOrEqual(3);
     expect(screen.getByText("Title")).toBeInTheDocument();

@@ -18,7 +18,13 @@ export function CopyField({ label, value }: { label: string; value: string }) {
         <div className="text-[11px] uppercase tracking-wide text-[var(--color-text-tertiary)]">{label}</div>
         <div className="truncate font-mono text-xs text-[var(--color-text-secondary)]">{value}</div>
       </div>
-      <Button variant="ghost" size="sm" onClick={onCopy} aria-label={`Copy ${label}`} className={cn(copied ? "text-[var(--color-accent-gold)]" : "")}>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={onCopy}
+        aria-label={`Copy ${label}`}
+        className={cn(copied ? "text-[var(--color-accent-gold)]" : "")}
+      >
         <span aria-live="polite">{copied ? "Copied" : "Copy"}</span>
       </Button>
     </div>

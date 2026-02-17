@@ -8,36 +8,34 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] border border-[var(--color-border-base)]",
+        default:
+          "bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] border border-[var(--color-border-base)]",
         gold: "bg-[var(--color-accent-gold)] text-[var(--color-bg-base)] hover:opacity-90",
-        ghost: "hover:bg-[var(--color-bg-hover)] text-[var(--color-text-primary)]"
+        ghost: "hover:bg-[var(--color-bg-hover)] text-[var(--color-text-primary)]",
       },
       size: {
         default: "h-9 px-4 py-2",
         sm: "h-8 rounded-md px-3",
-        lg: "h-10 rounded-md px-6"
-      }
+        lg: "h-10 rounded-md px-6",
+      },
     },
     defaultVariants: {
       variant: "default",
-      size: "default"
-    }
-  }
+      size: "default",
+    },
+  },
 );
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   asChild?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
-    return (
-      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
-    );
-  }
+    return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
+  },
 );
 Button.displayName = "Button";
 

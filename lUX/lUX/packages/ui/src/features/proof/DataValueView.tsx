@@ -8,16 +8,26 @@ function formatEngineering(n: number, precision: number): string {
   return `${scaled.toFixed(precision)}e${exp}`;
 }
 
-export function DataValueNumberView({ dv, metricId, domain }: { dv: DataValue<number>; metricId: string; domain: DomainPack }) {
+export function DataValueNumberView({
+  dv,
+  metricId,
+  domain,
+}: {
+  dv: DataValue<number>;
+  metricId: string;
+  domain: DomainPack;
+}) {
   if (dv.status === "missing") return <Chip tone="warn">Data Unavailable</Chip>;
   if (dv.status === "invalid") return <Chip tone="fail">Invalid</Chip>;
   const meta = domain.metrics[metricId];
   const precision = meta?.precision ?? 4;
   const fmt = meta?.format ?? "fixed";
   const s =
-    fmt === "fixed" ? dv.value.toFixed(precision)
-    : fmt === "scientific" ? dv.value.toExponential(precision)
-    : formatEngineering(dv.value, precision);
+    fmt === "fixed"
+      ? dv.value.toFixed(precision)
+      : fmt === "scientific"
+        ? dv.value.toExponential(precision)
+        : formatEngineering(dv.value, precision);
 
   if (meta?.validity_range) {
     const [lo, hi] = meta.validity_range;

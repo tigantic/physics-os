@@ -10,7 +10,7 @@ export default [
     rules: {
       "@next/next/no-html-link-for-pages": "off",
       "@typescript-eslint/no-explicit-any": "error",
-      "@typescript-eslint/consistent-type-imports": "error"
-    }
-  }
+      "@typescript-eslint/consistent-type-imports": "error",
+    },
+  },
 ];

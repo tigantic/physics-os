@@ -1,4 +1,5 @@
 # HyperTensor — UI/UX Build Directive
+
 ## "Luxury-Grade Trustless Physics Certification Platform"
 
 **Codename:** OBSIDIAN
@@ -24,27 +25,34 @@ Before any pixel: this is not a dashboard. This is not a dev tool. This is the i
 Typography is 80% of luxury. Get this wrong and nothing else matters.
 
 ### Primary: Serif Display
+
 **Freight Display Pro** or **Canela** for headings, verdicts, and claim titles.
+
 - Weight: Light and Medium only. Never bold. Luxury whispers.
 - Size: 42px for page titles, 28px for section heads, 22px for claim titles.
 - Letter-spacing: -0.02em (tight, confident, not cramped).
 - Color: Off-white (#F5F3EF) on dark, near-black (#1A1A1E) on light.
 
 ### Secondary: Monospace for Data
+
 **JetBrains Mono** or **Berkeley Mono** for hashes, values, metrics, code.
+
 - Weight: Regular only.
 - Size: 13px. Small. Precise. Like engraved serial numbers.
 - Color: Muted — 60% opacity on background. Data is present, not screaming.
 - Letter-spacing: +0.04em (let each character breathe like machine engraving).
 
 ### Body: Clean Sans
+
 **Söhne** (Klim Type Foundry) or **Untitled Sans** or **Graphik**.
+
 - NOT Inter. NOT Geist. NOT system-ui. Those are free. This is Bentley.
 - If licensing is a constraint: **IBM Plex Sans** (free, refined, nobody uses it).
 - Weight: Regular (400) for body, Medium (500) for labels. Never bold.
 - Size: 15px base. Line-height: 1.65.
 
 ### Typography Rules
+
 - Never use ALL CAPS except for tiny labels (11px, +0.12em tracking, 50% opacity).
 - Never use bold for emphasis. Use weight contrast between serif and sans instead.
 - Numbers in data contexts always use tabular (monospaced) figures.
@@ -95,6 +103,7 @@ Luxury color is restrained. One dominant mood. One accent that means something.
 ```
 
 ### Color Rules
+
 - **Gold is sacred.** It marks: verified attestations, the single most important element on screen, and nothing else. If gold is everywhere, it means nothing.
 - Status colors are muted, never saturated. This isn't a video game. Failures are stated, not screamed.
 - No gradients. No glows. No neon. Gradients are for crypto bros. This is for engineers who sign off on flight hardware.
@@ -107,6 +116,7 @@ Luxury color is restrained. One dominant mood. One accent that means something.
 Luxury is knowing what to leave out. The whitespace IS the design.
 
 ### Spacing Scale (8px base)
+
 ```
 --space-xs:   4px      /* Inside tight elements */
 --space-sm:   8px      /* Between related items */
@@ -118,6 +128,7 @@ Luxury is knowing what to leave out. The whitespace IS the design.
 ```
 
 ### Layout Principles
+
 - **Page margins: 48px minimum.** Let the edges breathe.
 - **Card padding: 32px.** Not 16. Not 24. 32. The content floats inside.
 - **Between cards: 16px.** Tight enough to group, loose enough to distinguish.
@@ -126,6 +137,7 @@ Luxury is knowing what to leave out. The whitespace IS the design.
 - **The 4-column cockpit uses a 280px left rail, flexible center, 320px right rail.** The center is king.
 
 ### Density Toggle
+
 Two modes. Both luxurious, different postures.
 
 - **Review Mode (default):** Generous spacing. One claim fills the viewport. Reading a fine book.
@@ -138,6 +150,7 @@ Two modes. Both luxurious, different postures.
 No drop shadows. No box-shadows with blur. That's 2019.
 
 ### How Things Float
+
 ```css
 /* Level 0: The void. Page background. */
 background: var(--obsidian);
@@ -167,13 +180,15 @@ backdrop-filter: blur(24px) saturate(1.2);
 Everything moves. Nothing bounces. Nothing overshoots. Things arrive with the inevitability of a closing vault door.
 
 ### Easing
+
 ```css
---ease-out:     cubic-bezier(0.16, 1, 0.3, 1);      /* Primary. Deceleration. Arrival. */
---ease-in-out:  cubic-bezier(0.65, 0, 0.35, 1);      /* Transitions between states. */
---ease-subtle:  cubic-bezier(0.25, 0.1, 0.25, 1);    /* Hover states. Almost linear. Barely there. */
+--ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* Primary. Deceleration. Arrival. */
+--ease-in-out: cubic-bezier(0.65, 0, 0.35, 1); /* Transitions between states. */
+--ease-subtle: cubic-bezier(0.25, 0.1, 0.25, 1); /* Hover states. Almost linear. Barely there. */
 ```
 
 ### Durations
+
 ```
 Hover states:          120ms   /* Instant acknowledgment */
 Panel switches:        250ms   /* Deliberate but not slow */
@@ -183,7 +198,9 @@ Loading states:        ∞       /* Skeleton shimmer, never spinners */
 ```
 
 ### The Verification Ceremony
+
 When a proof package is opened and verified:
+
 1. **0ms:** Page loads with skeleton structure visible.
 2. **200ms:** Identity strip fades in. Monospace hashes appear character by character, left to right, like a typewriter. 50ms per character group.
 3. **400ms:** Proof tree fades in from left. Claims appear with staggered delay (30ms each).
@@ -194,6 +211,7 @@ When a proof package is opened and verified:
 This is the moment. This is what they remember. This 1-second ceremony IS the brand.
 
 ### Anti-Patterns
+
 - No bounce. No elastic. No spring physics on UI elements. Springs are for Figma demos, not flight certification.
 - No parallax. No scroll-triggered animations on content. The content is too important to make it dance.
 - No loading spinners. Skeleton screens with a slow shimmer (3s cycle, 5% opacity range).
@@ -204,6 +222,7 @@ This is the moment. This is what they remember. This 1-second ceremony IS the br
 ## VI. COMPONENTS — The Craft
 
 ### The Verdict Badge
+
 The most important 48x48 pixels in the entire application.
 
 ```
@@ -223,6 +242,7 @@ WARN:  Circle. 2px border: --verdict-warn. Interior: transparent.
 - Size: 20px inline with claims, 32px on summary cards, 48px on the run overview.
 
 ### The Claim Card
+
 The atomic unit. Must be perfect.
 
 ```
@@ -258,6 +278,7 @@ The atomic unit. Must be perfect.
 - On select: left border becomes 2px `--accent-gold`. That's it. No other decoration.
 
 ### The Identity Strip (Top Bar)
+
 Fixed. Always visible. The chassis plate.
 
 ```
@@ -272,6 +293,7 @@ Fixed. Always visible. The chassis plate.
 - The integrity badge here is 16px. Tiny. Confident. Like a hallmark stamp on silver.
 
 ### The Proof Tree (Left Rail)
+
 Navigation. Quiet until needed.
 
 - Width: 280px. Collapsible to 48px (icon-only).
@@ -282,6 +304,7 @@ Navigation. Quiet until needed.
 - Collapsed categories show count badge: monospace, 11px, `--text-tertiary`.
 
 ### Command Palette
+
 ⌘K to open. The power move.
 
 - Full-width overlay, vertically centered, max-width 640px.
@@ -295,6 +318,7 @@ Navigation. Quiet until needed.
 ## VII. THE SIX SCREENS
 
 ### Screen 1: Proof Package Overview
+
 **Purpose:** First impression. 5-second comprehension.
 
 - Center: Run verdict (48px badge) + project name (serif, 36px) + one-line summary.
@@ -304,6 +328,7 @@ Navigation. Quiet until needed.
 - All on a single scrollable page. No tabs. The overview IS the experience.
 
 ### Screen 2: Run Detail (The World-Class Screen)
+
 **Purpose:** Claim-by-claim review. The cockpit.
 
 - 4-column layout per the wireframe spec.
@@ -314,6 +339,7 @@ Navigation. Quiet until needed.
 - Keyboard navigation: ↑↓ moves through claims, → opens evidence, ← returns to tree.
 
 ### Screen 3: Step Timeline
+
 **Purpose:** Temporal navigation across the simulation.
 
 - Horizontal timeline (top) with step markers. Anomalies flagged with amber dots.
@@ -322,6 +348,7 @@ Navigation. Quiet until needed.
 - State hash displayed per step in monospace. Hash chain visualized as connected dots.
 
 ### Screen 4: Compare Runs
+
 **Purpose:** Baseline vs candidate. What changed and why.
 
 - 3-column: Baseline | Delta | Candidate.
@@ -331,6 +358,7 @@ Navigation. Quiet until needed.
 - Environment diff: container digest, commit, compile flags.
 
 ### Screen 5: Reproduce
+
 **Purpose:** One-click reproduction. The trust contract.
 
 - Single command block at top. Monospace. Click to copy.
@@ -340,6 +368,7 @@ Navigation. Quiet until needed.
 - This page should feel like a legal document. Clean. Definitive. Nothing decorative.
 
 ### Screen 6: Integrity Explorer
+
 **Purpose:** Cryptographic provenance for the paranoid.
 
 - Merkle tree visualization. Each node = artifact hash. Click to inspect.
@@ -354,12 +383,14 @@ Navigation. Quiet until needed.
 One UI. 140 domains. No fragmentation.
 
 ### The Lens Switcher
+
 - Top-left, next to project name in identity strip.
 - Dropdown: search-first. Type to filter. Grouped by Family.
 - Shows current lens name + a subtle icon.
 - Switching lenses: 250ms crossfade. Invariant tiles, plot presets, and gate defaults update. Structure doesn't change.
 
 ### What a Domain Pack Provides
+
 ```json
 {
   "domain": "vlasov_maxwell",
@@ -382,6 +413,7 @@ One UI. 140 domains. No fragmentation.
 ```
 
 ### Lens Rules
+
 - Lens changes content, never structure.
 - If a metric is missing for a domain, the tile shows "—" with `--text-tertiary`. Never hide the tile. The absence is information.
 - Cross-domain comparison works because the gate manifest is standardized. Domains add metrics; the comparison engine diffs whatever overlaps.
@@ -391,20 +423,24 @@ One UI. 140 domains. No fragmentation.
 ## IX. INTERACTIONS THAT DEFINE THE BRAND
 
 ### Hover-to-Trace
+
 - Hover any metric value → its source in the evidence pane highlights with a 120ms gold underline.
 - Hover a claim → its dependencies in the proof tree get a subtle pulse (one cycle, --accent-gold at 8% opacity).
 - Hover a hash → full hash appears in a tooltip. Monospace. No decoration. Click to copy.
 
 ### Progressive Disclosure
+
 - Default: verdict + margins. One click: gate details + evidence. Two clicks: raw artifacts.
 - Never force three clicks to reach truth. Two is the maximum depth.
 
 ### Keyboard First
+
 - `↑↓` navigate claims. `Enter` opens evidence. `Esc` returns. `⌘K` command palette.
 - `D` toggles density mode. `L` toggles light/dark. `C` opens compare.
 - These shortcuts shown in a quiet `--text-tertiary` hint at bottom of the proof tree on first visit. Then never again.
 
 ### Copy Behavior
+
 - Click any hash: copies full hash. Brief gold flash on the element (80ms).
 - Click any command: copies to clipboard. Monospace text briefly inverts (gold text on obsidian).
 - No "Copied!" toast. No tooltip. The flash IS the confirmation. Quiet confidence.
@@ -430,5 +466,5 @@ If a reviewer opens this and doesn't instinctively sit up straighter, it's not d
 
 ---
 
-*Directive for HyperTensor OBSIDIAN UI*
-*© 2026 Brad McAllister / Tigantic Holdings. All rights reserved.*
+_Directive for HyperTensor OBSIDIAN UI_
+_© 2026 Brad McAllister / Tigantic Holdings. All rights reserved._

@@ -12,21 +12,21 @@ export const ModeMap: Readonly<Record<ProofMode, ModeLayout>> = {
   EXECUTIVE: {
     leftRail: { variant: "collapsed" },
     center: ["HeroMetrics", "ExecutiveNarrative"],
-    rightRail: ["ActionPanel"]
+    rightRail: ["ActionPanel"],
   },
   REVIEW: {
     leftRail: { variant: "claimsTree" },
     center: ["Timeline", "ClaimCards", "PrimaryViewer"],
-    rightRail: ["GateInspector", "AnomalyExplainer", "ReproduceMini"]
+    rightRail: ["GateInspector", "AnomalyExplainer", "ReproduceMini"],
   },
   AUDIT: {
     leftRail: { variant: "flatClaims", includeArtifactBrowserEntry: true },
     center: ["RawArtifactViewer", "ManifestViewer", "DiffViewer"],
-    rightRail: ["ChainInspector", "VerificationFailures", "ReproduceFull"]
+    rightRail: ["ChainInspector", "VerificationFailures", "ReproduceFull"],
   },
   PUBLICATION: {
     leftRail: { variant: "chapters" },
     center: ["PaperView", "FigureStaging"],
-    rightRail: ["ExportTools", "CitationTools"]
-  }
+    rightRail: ["ExportTools", "CitationTools"],
+  },
 };

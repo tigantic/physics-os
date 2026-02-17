@@ -3,16 +3,16 @@ import { Button } from "./button";
 
 const meta: Meta<typeof Button> = {
   title: "UI/Button",
-  component: Button
+  component: Button,
 };
 
 export default meta;
 type Story = StoryObj<typeof Button>;
 
 export const Default: Story = {
-  args: { children: "Button" }
+  args: { children: "Button" },
 };
 
 export const Gold: Story = {
-  args: { children: "Gold", variant: "gold" }
+  args: { children: "Gold", variant: "gold" },
 };

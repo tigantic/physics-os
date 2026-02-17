@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://luxury.hypertensor.io/sitemap.xml

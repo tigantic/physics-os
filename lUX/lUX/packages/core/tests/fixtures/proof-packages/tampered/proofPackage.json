@@ -26,30 +26,17 @@
       "id": "C-001",
       "statement": "Conservation residual stays below tolerance",
       "category": "stability",
-      "tags": [
-        "physics"
-      ],
-      "gate_ids": [
-        "G-001"
-      ],
-      "evidence_refs": [
-        "A-ts",
-        "A-log"
-      ]
+      "tags": ["physics"],
+      "gate_ids": ["G-001"],
+      "evidence_refs": ["A-ts", "A-log"]
     },
     "C-002": {
       "id": "C-002",
       "statement": "L2 drift stays below tolerance",
       "category": "accuracy",
-      "tags": [
-        "physics"
-      ],
-      "gate_ids": [
-        "G-002"
-      ],
-      "evidence_refs": [
-        "A-ts"
-      ]
+      "tags": ["physics"],
+      "gate_ids": ["G-002"],
+      "evidence_refs": ["A-ts"]
     }
   },
   "gate_manifests": {
@@ -65,9 +52,7 @@
           "aggregation": "max",
           "validity": {
             "requires_artifacts": [],
-            "requires_metrics": [
-              "conservation_residual"
-            ],
+            "requires_metrics": ["conservation_residual"],
             "domain_assumptions": []
           }
         },
@@ -79,9 +64,7 @@
           "aggregation": "final",
           "validity": {
             "requires_artifacts": [],
-            "requires_metrics": [
-              "l2_drift"
-            ],
+            "requires_metrics": ["l2_drift"],
             "domain_assumptions": []
           }
         }
@@ -146,9 +129,7 @@
             "value": 0.0
           }
         },
-        "artifact_refs": [
-          "A-ts"
-        ]
+        "artifact_refs": ["A-ts"]
       },
       {
         "step_index": 1,
@@ -171,9 +152,7 @@
             "value": 0.006666666666666666
           }
         },
-        "artifact_refs": [
-          "A-ts"
-        ]
+        "artifact_refs": ["A-ts"]
       },
       {
         "step_index": 2,
@@ -196,9 +175,7 @@
             "value": 0.013333333333333332
           }
         },
-        "artifact_refs": [
-          "A-ts"
-        ]
+        "artifact_refs": ["A-ts"]
       },
       {
         "step_index": 3,
@@ -221,9 +198,7 @@
             "value": 0.02
           }
         },
-        "artifact_refs": [
-          "A-ts"
-        ]
+        "artifact_refs": ["A-ts"]
       }
     ]
   },

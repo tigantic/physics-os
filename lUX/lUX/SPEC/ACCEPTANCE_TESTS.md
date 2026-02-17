@@ -5,4 +5,3 @@
 - DataValue rendering: missing => 'Data Unavailable' chip; invalid => 'Invalid' chip.
 - Tampered fixture must display 'BROKEN_CHAIN' verification state.
 - Token purity: no hardcoded colors in production source.
-

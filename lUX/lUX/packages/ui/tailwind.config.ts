@@ -13,19 +13,19 @@ const config: Config = {
         accent: "var(--color-accent-gold)",
         pass: "var(--color-verdict-pass)",
         fail: "var(--color-verdict-fail)",
-        warn: "var(--color-verdict-warn)"
+        warn: "var(--color-verdict-warn)",
       },
       borderRadius: {
         lg: "var(--radius-outer)",
-        md: "var(--radius-inner)"
+        md: "var(--radius-inner)",
       },
       fontFamily: {
         sans: ["IBMPlexSans", "system-ui", "sans-serif"],
-        mono: ["JetBrainsMono", "ui-monospace", "monospace"]
-      }
-    }
+        mono: ["JetBrainsMono", "ui-monospace", "monospace"],
+      },
+    },
   },
-  plugins: []
+  plugins: [],
 };
 
 export default config;

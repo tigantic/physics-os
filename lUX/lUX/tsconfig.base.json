@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "es2022"
-    ],
+    "lib": ["dom", "dom.iterable", "es2022"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
@@ -15,8 +11,6 @@
     "noEmit": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "preserve",
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   }
 }

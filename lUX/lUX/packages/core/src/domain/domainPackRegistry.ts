@@ -1,34 +1,32 @@
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 import { DomainPackSchema } from "../schema/domainPack.zod.js";
 import type { DomainPack } from "../schema/domainPack.zod.js";
-
-function deepFreeze<T>(obj: T): T {
-  if (obj && typeof obj === "object") {
-    Object.freeze(obj);
-    for (const v of Object.values(obj as Record<string, unknown>)) {
-      if (v && typeof v === "object" && !Object.isFrozen(v)) deepFreeze(v);
-    }
-  }
-  return obj;
-}
+import { deepFreeze } from "../util/deepFreeze.js";
 
 /** LRU cache for loaded domain packs — avoids repeated disk IO + Zod parse. */
-const packCache = new Map<string, DomainPack>();
+const packCache = new Map<string, Promise<DomainPack>>();
 
 /**
  * Load and validate a single DomainPack from a JSON file.
  * Result is deep-frozen and cached by absolute path.
  */
-export function loadDomainPackFromFile(filePath: string): DomainPack {
+export async function loadDomainPackFromFile(filePath: string): Promise<DomainPack> {
   const abs = path.resolve(filePath);
   const cached = packCache.get(abs);
   if (cached) return cached;
 
-  const raw: unknown = JSON.parse(fs.readFileSync(abs, "utf8"));
-  const pack = deepFreeze(DomainPackSchema.parse(raw));
-  packCache.set(abs, pack);
-  return pack;
+  const promise = (async () => {
+    const raw: unknown = JSON.parse(await fs.readFile(abs, "utf8"));
+    return deepFreeze(DomainPackSchema.parse(raw));
+  })();
+  packCache.set(abs, promise);
+  try {
+    return await promise;
+  } catch (err) {
+    packCache.delete(abs);
+    throw err;
+  }
 }
 
 /** Validate that a pack/domain ID contains only safe filesystem characters. */
@@ -45,10 +43,14 @@ function assertSafeId(id: string, label: string): void {
  * Load a domain pack by its pack ID (e.g. "com.physics.euler_3d").
  * Searches <fixturesRoot>/domain-packs/<packId>.json.
  */
-export function loadDomainPackById(fixturesRoot: string, packId: string): DomainPack {
+export async function loadDomainPackById(fixturesRoot: string, packId: string): Promise<DomainPack> {
   assertSafeId(packId, "packId");
   const p = path.resolve(fixturesRoot, "domain-packs", `${packId}.json`);
-  if (!fs.existsSync(p)) throw new Error(`DomainPack not found: ${packId}`);
+  try {
+    await fs.access(p);
+  } catch {
+    throw new Error(`DomainPack not found: ${packId}`);
+  }
   return loadDomainPackFromFile(p);
 }
 
@@ -56,9 +58,9 @@ export function loadDomainPackById(fixturesRoot: string, packId: string): Domain
  * Load a domain pack by TPC domain_id (e.g. "II.2").
  * Uses _manifest.json to resolve domain_id → pack ID.
  */
-export function loadDomainPackForDomain(fixturesRoot: string, domainId: string): DomainPack {
+export async function loadDomainPackForDomain(fixturesRoot: string, domainId: string): Promise<DomainPack> {
   assertSafeId(domainId, "domainId");
-  const manifest = loadManifest(fixturesRoot);
+  const manifest = await loadManifest(fixturesRoot);
   const packId = manifest[domainId];
   if (!packId) {
     // Fallback: try using domainId directly as pack ID
@@ -74,14 +76,19 @@ export function loadDomainPackForDomain(fixturesRoot: string, domainId: string):
 let manifestCache: Record<string, string> | null = null;
 let manifestRoot: string | null = null;
 
-function loadManifest(fixturesRoot: string): Record<string, string> {
+async function loadManifest(fixturesRoot: string): Promise<Record<string, string>> {
   const root = path.resolve(fixturesRoot);
   if (manifestCache && manifestRoot === root) return manifestCache;
 
   const manifestPath = path.join(root, "domain-packs", "_manifest.json");
-  if (!fs.existsSync(manifestPath)) return {};
+  let rawText: string;
+  try {
+    rawText = await fs.readFile(manifestPath, "utf8");
+  } catch {
+    return {};
+  }
 
-  const raw: unknown = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+  const raw: unknown = JSON.parse(rawText);
   if (typeof raw !== "object" || raw === null) return {};
 
   manifestCache = raw as Record<string, string>;
@@ -92,13 +99,15 @@ function loadManifest(fixturesRoot: string): Record<string, string> {
 /**
  * List all available domain pack IDs from the domain-packs directory.
  */
-export function listDomainPackIds(fixturesRoot: string): string[] {
+export async function listDomainPackIds(fixturesRoot: string): Promise<string[]> {
   const dir = path.resolve(fixturesRoot, "domain-packs");
-  if (!fs.existsSync(dir)) return [];
-  return fs
-    .readdirSync(dir)
-    .filter((f) => f.endsWith(".json") && !f.startsWith("_"))
-    .map((f) => f.replace(/\.json$/, ""));
+  let entries: string[];
+  try {
+    entries = await fs.readdir(dir);
+  } catch {
+    return [];
+  }
+  return entries.filter((f) => f.endsWith(".json") && !f.startsWith("_")).map((f) => f.replace(/\.json$/, ""));
 }
 
 /**

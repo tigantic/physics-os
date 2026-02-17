@@ -47,7 +47,11 @@ describe("Button", () => {
   });
 
   it("passes through HTML attributes", () => {
-    render(<Button type="submit" data-testid="submit-btn">Submit</Button>);
+    render(
+      <Button type="submit" data-testid="submit-btn">
+        Submit
+      </Button>,
+    );
     const btn = screen.getByTestId("submit-btn");
     expect(btn).toHaveAttribute("type", "submit");
   });

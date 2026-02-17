@@ -8,10 +8,7 @@
       "unit": "dimensionless",
       "format": "scientific",
       "precision": 3,
-      "validity_range": [
-        0,
-        1
-      ]
+      "validity_range": [0, 1]
     },
     "l2_drift": {
       "label": "L2 Drift",
@@ -19,10 +16,7 @@
       "unit": "dimensionless",
       "format": "scientific",
       "precision": 3,
-      "validity_range": [
-        0,
-        1
-      ]
+      "validity_range": [0, 1]
     },
     "unitarity": {
       "label": "Unitarity Error",
@@ -30,10 +24,7 @@
       "unit": "dimensionless",
       "format": "scientific",
       "precision": 4,
-      "validity_range": [
-        0,
-        1e-08
-      ]
+      "validity_range": [0, 1e-8]
     },
     "cross_section": {
       "label": "Cross Section",
@@ -47,12 +38,7 @@
     "audit": {
       "label": "Audit",
       "manifest_ref": "audit-v1",
-      "highlight_metrics": [
-        "conservation_residual",
-        "l2_drift",
-        "unitarity",
-        "cross_section"
-      ]
+      "highlight_metrics": ["conservation_residual", "l2_drift", "unitarity", "cross_section"]
     }
   },
   "viewers": [
@@ -82,18 +68,8 @@
     }
   ],
   "templates": {
-    "executive_summary_metric_ids": [
-      "conservation_residual",
-      "l2_drift",
-      "unitarity",
-      "cross_section"
-    ],
-    "publication_sections": [
-      "Abstract",
-      "Methods",
-      "Results",
-      "Integrity"
-    ],
+    "executive_summary_metric_ids": ["conservation_residual", "l2_drift", "unitarity", "cross_section"],
+    "publication_sections": ["Abstract", "Methods", "Results", "Integrity"],
     "citation_format": "bibtex"
   }
 }

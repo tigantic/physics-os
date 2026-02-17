@@ -10,7 +10,8 @@
   --radius-inner: 10px;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   background: var(--color-bg-base);
   color: var(--color-text-primary);

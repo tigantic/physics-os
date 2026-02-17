@@ -14,8 +14,18 @@ jobs:
           cache: pnpm
       - run: pnpm install
       - run: pnpm -w run build:tokens
+      - run: pnpm -w run format:check
       - run: pnpm -w run lint
       - run: pnpm -w run typecheck
       - run: pnpm -w run build
       - run: pnpm -w run test:unit
       - run: pnpm -w run test:schema
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            packages/core/coverage/
+            packages/ui/coverage/
+          retention-days: 14

@@ -5,7 +5,7 @@ function hash(buf: Buffer) {
   return crypto.createHash("sha256").update(buf).digest("hex");
 }
 
-const MODES = ["EXECUTIVE","REVIEW","AUDIT","PUBLICATION"];
+const MODES = ["EXECUTIVE", "REVIEW", "AUDIT", "PUBLICATION"];
 
 test.describe("gallery", () => {
   for (const width of [1440, 1728, 2560]) {

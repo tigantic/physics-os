@@ -1,54 +1,54 @@
 export const TOKENS = {
-  "color": {
-    "bg": {
-      "base": "#0D0D10",
-      "raised": "#16161B",
-      "hover": "#1E1E25",
-      "surface": "#232329"
+  color: {
+    bg: {
+      base: "#0D0D10",
+      raised: "#16161B",
+      hover: "#1E1E25",
+      surface: "#232329",
     },
-    "text": {
-      "primary": "#F5F3EF",
-      "secondary": "#9994A1",
-      "tertiary": "#5C5866"
+    text: {
+      primary: "#F5F3EF",
+      secondary: "#9994A1",
+      tertiary: "#5C5866",
     },
-    "accent": {
-      "gold": "#C9A96E",
-      "goldDim": "rgba(201,169,110,0.15)",
-      "goldBorder": "rgba(201,169,110,0.25)"
+    accent: {
+      gold: "#C9A96E",
+      goldDim: "rgba(201,169,110,0.15)",
+      goldBorder: "rgba(201,169,110,0.25)",
     },
-    "verdict": {
-      "pass": "#3D8B5E",
-      "fail": "#A8423F",
-      "warn": "#B8862D",
-      "passBorder": "rgba(61,139,94,0.35)",
-      "failBorder": "rgba(168,66,63,0.35)",
-      "warnBorder": "rgba(184,134,45,0.35)"
+    verdict: {
+      pass: "#3D8B5E",
+      fail: "#A8423F",
+      warn: "#B8862D",
+      passBorder: "rgba(61,139,94,0.35)",
+      failBorder: "rgba(168,66,63,0.35)",
+      warnBorder: "rgba(184,134,45,0.35)",
     },
-    "border": {
-      "base": "rgba(255,255,255,0.06)",
-      "active": "rgba(201,169,110,0.25)"
-    }
+    border: {
+      base: "rgba(255,255,255,0.06)",
+      active: "rgba(201,169,110,0.25)",
+    },
   },
-  "radius": {
-    "outer": 14,
-    "inner": 10
+  radius: {
+    outer: 14,
+    inner: 10,
   },
-  "space": {
-    "u": 8
+  space: {
+    u: 8,
   },
-  "shadow": {
-    "raised": "0 10px 30px rgba(0,0,0,0.45)",
-    "floating": "0 18px 50px rgba(0,0,0,0.6)"
+  shadow: {
+    raised: "0 10px 30px rgba(0,0,0,0.45)",
+    floating: "0 18px 50px rgba(0,0,0,0.6)",
   },
-  "motion": {
-    "easeOut": "cubic-bezier(0.16, 1, 0.3, 1)",
-    "easeInOut": "cubic-bezier(0.65, 0, 0.35, 1)",
-    "fastMs": 180,
-    "baseMs": 220
+  motion: {
+    easeOut: "cubic-bezier(0.16, 1, 0.3, 1)",
+    easeInOut: "cubic-bezier(0.65, 0, 0.35, 1)",
+    fastMs: 180,
+    baseMs: 220,
   },
-  "type": {
-    "ui": "IBMPlexSans",
-    "mono": "JetBrainsMono",
-    "math": "SVG"
-  }
+  type: {
+    ui: "IBMPlexSans",
+    mono: "JetBrainsMono",
+    math: "SVG",
+  },
 } as const;

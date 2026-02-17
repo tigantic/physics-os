@@ -12,10 +12,8 @@ export default [
       "@next/next/no-html-link-for-pages": "off",
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/consistent-type-imports": "error",
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
-      ],
+      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
+      "no-console": ["warn", { allow: ["warn", "error"] }],
     },
   },
   {

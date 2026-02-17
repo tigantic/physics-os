@@ -1,6 +1,6 @@
 import "server-only";
 
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 import type { ProofPackage } from "@luxury/core";
 import { Card, CardContent, CardHeader } from "@/ds/components/Card";
@@ -21,7 +21,7 @@ function parseCsv(bytes: Uint8Array): Array<{ x: number; y: number }> {
 
 function sparkline(points: Array<{ x: number; y: number }>, w = 560, h = 120) {
   if (points.length < 2) return "";
-  const ys = points.map(p => p.y);
+  const ys = points.map((p) => p.y);
   const minY = Math.min(...ys);
   const maxY = Math.max(...ys);
   const dx = points.length - 1;
@@ -39,7 +39,15 @@ function sparkline(points: Array<{ x: number; y: number }>, w = 560, h = 120) {
   return pathD;
 }
 
-export function TimeSeriesViewer({ proof, bundleDir, artifactId }: { proof: ProofPackage; bundleDir: string; artifactId: string }) {
+export async function TimeSeriesViewer({
+  proof,
+  bundleDir,
+  artifactId,
+}: {
+  proof: ProofPackage;
+  bundleDir: string;
+  artifactId: string;
+}) {
   const art = proof.artifacts[artifactId];
   if (!art) return <Chip tone="warn">Data Unavailable</Chip>;
 
@@ -51,11 +59,9 @@ export function TimeSeriesViewer({ proof, bundleDir, artifactId }: { proof: Proo
     return <Chip tone="fail">Invalid Path</Chip>;
   }
 
-  if (!fs.existsSync(resolved)) return <Chip tone="fail">Invalid</Chip>;
-
   let bytes: Buffer;
   try {
-    bytes = fs.readFileSync(resolved);
+    bytes = await fs.readFile(resolved);
   } catch {
     return <Chip tone="fail">Read Error</Chip>;
   }
@@ -67,7 +73,9 @@ export function TimeSeriesViewer({ proof, bundleDir, artifactId }: { proof: Proo
     <Card>
       <CardHeader>
         <div className="text-sm text-[var(--color-text-primary)]">Primary Artifact</div>
-        <div className="text-xs text-[var(--color-text-tertiary)]">{artifactId} · {art.type}</div>
+        <div className="text-xs text-[var(--color-text-tertiary)]">
+          {artifactId} · {art.type}
+        </div>
       </CardHeader>
       <CardContent>
         <div className="rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] p-3">
@@ -75,7 +83,7 @@ export function TimeSeriesViewer({ proof, bundleDir, artifactId }: { proof: Proo
             <path d={d} fill="none" stroke="var(--color-accent-gold)" strokeWidth="2" />
           </svg>
         </div>
-        <div className="mt-2 text-xs text-[var(--color-text-tertiary)] font-mono">{art.hash}</div>
+        <div className="mt-2 font-mono text-xs text-[var(--color-text-tertiary)]">{art.hash}</div>
       </CardContent>
     </Card>
   );

@@ -14,7 +14,7 @@ export function LeftRail({ proof, fixture, mode }: { proof: ProofPackage; fixtur
           </CardHeader>
           <CardContent>
             <ul className="space-y-2">
-              {["pass","fail","warn","incomplete","tampered"].map(id => (
+              {["pass", "fail", "warn", "incomplete", "tampered"].map((id) => (
                 <li key={id}>
                   <Link className="block" href={`/gallery?fixture=${id}&mode=${mode}`}>
                     <div className="flex items-center justify-between rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2">
@@ -40,9 +40,9 @@ export function LeftRail({ proof, fixture, mode }: { proof: ProofPackage; fixtur
         </CardHeader>
         <CardContent>
           <ul className="space-y-2">
-            {Object.values(proof.claims).map(c => (
+            {Object.values(proof.claims).map((c) => (
               <li key={c.id} className="rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2">
-                <div className="text-xs font-mono text-[var(--color-text-tertiary)]">{c.id}</div>
+                <div className="font-mono text-xs text-[var(--color-text-tertiary)]">{c.id}</div>
                 <div className="text-sm text-[var(--color-text-secondary)]">{c.statement}</div>
               </li>
             ))}

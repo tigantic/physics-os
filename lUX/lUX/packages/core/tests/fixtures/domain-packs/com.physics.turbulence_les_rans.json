@@ -8,10 +8,7 @@
       "unit": "dimensionless",
       "format": "scientific",
       "precision": 3,
-      "validity_range": [
-        0,
-        1
-      ]
+      "validity_range": [0, 1]
     },
     "l2_drift": {
       "label": "L2 Drift",
@@ -19,10 +16,7 @@
       "unit": "dimensionless",
       "format": "scientific",
       "precision": 3,
-      "validity_range": [
-        0,
-        1
-      ]
+      "validity_range": [0, 1]
     },
     "mass": {
       "label": "Total Mass",
@@ -58,22 +52,14 @@
       "unit": "dimensionless",
       "format": "fixed",
       "precision": 3,
-      "validity_range": [
-        0,
-        1
-      ]
+      "validity_range": [0, 1]
     }
   },
   "gate_packs": {
     "audit": {
       "label": "Audit",
       "manifest_ref": "audit-v1",
-      "highlight_metrics": [
-        "conservation_residual",
-        "l2_drift",
-        "mass",
-        "momentum"
-      ]
+      "highlight_metrics": ["conservation_residual", "l2_drift", "mass", "momentum"]
     }
   },
   "viewers": [
@@ -103,18 +89,8 @@
     }
   ],
   "templates": {
-    "executive_summary_metric_ids": [
-      "conservation_residual",
-      "l2_drift",
-      "mass",
-      "momentum"
-    ],
-    "publication_sections": [
-      "Abstract",
-      "Methods",
-      "Results",
-      "Integrity"
-    ],
+    "executive_summary_metric_ids": ["conservation_residual", "l2_drift", "mass", "momentum"],
+    "publication_sections": ["Abstract", "Methods", "Results", "Integrity"],
     "citation_format": "bibtex"
   }
 }

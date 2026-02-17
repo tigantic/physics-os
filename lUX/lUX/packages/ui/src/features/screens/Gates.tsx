@@ -15,7 +15,9 @@ export function GatesScreen({ proof }: { proof: ProofPackage; domain: DomainPack
         {results.map((r) => (
           <div key={r.gate_id} className="rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] p-3">
             <div className="flex items-center justify-between">
-              <div className="font-mono text-xs text-[var(--color-text-tertiary)]">{r.gate_id} · {r.metric_id}</div>
+              <div className="font-mono text-xs text-[var(--color-text-tertiary)]">
+                {r.gate_id} · {r.metric_id}
+              </div>
               {r.passed.status === "ok" ? (
                 <Chip tone={r.passed.value ? "gold" : "fail"}>{r.passed.value ? "PASS" : "FAIL"}</Chip>
               ) : r.passed.status === "missing" ? (

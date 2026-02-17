@@ -18,7 +18,10 @@ export function IntegrityScreen({ proof }: { proof: ProofPackage }) {
         {proof.verification?.failures?.length ? (
           <div className="space-y-2">
             {proof.verification.failures.map((f, i) => (
-              <div key={i} className="flex items-center justify-between rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2">
+              <div
+                key={i}
+                className="flex items-center justify-between rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2"
+              >
                 <div className="font-mono text-xs text-[var(--color-text-secondary)]">{f.code}</div>
                 <Chip tone="fail">FAIL</Chip>
               </div>

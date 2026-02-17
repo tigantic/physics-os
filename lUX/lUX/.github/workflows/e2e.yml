@@ -3,6 +3,10 @@ on: [pull_request]
 jobs:
   e2e:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox, mobile-chrome]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -15,7 +19,19 @@ jobs:
       - run: pnpm install
       - run: pnpm -w run build:tokens
       - run: pnpm -w run build
-      - run: npx playwright install chromium --with-deps
-      - run: pnpm -w run test:e2e
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps ${{ matrix.project == 'mobile-chrome' && 'chromium' || matrix.project }}
+      - name: Run E2E (${{ matrix.project }})
+        run: npx playwright test --project=${{ matrix.project }}
+        working-directory: packages/ui
         env:
           CI: "true"
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results-${{ matrix.project }}
+          path: |
+            packages/ui/test-results/
+            packages/ui/playwright-report/
+          retention-days: 14

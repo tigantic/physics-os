@@ -1,0 +1,16 @@
+{
+  "name": "Luxury Physics Viewer",
+  "short_name": "LUX",
+  "description": "Deterministic proof package viewer for Trustless Physics Certificates",
+  "start_url": "/gallery",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#C9A96E",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

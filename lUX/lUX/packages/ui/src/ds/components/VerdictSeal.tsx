@@ -16,12 +16,22 @@ const VERIFICATION_VARIANT: Record<string, BadgeVariant> = {
   UNSUPPORTED: "warn",
 };
 
-export function VerdictSeal({ status, verification }: { status: "PASS" | "FAIL" | "WARN" | "INCOMPLETE"; verification: string }) {
+export function VerdictSeal({
+  status,
+  verification,
+}: {
+  status: "PASS" | "FAIL" | "WARN" | "INCOMPLETE";
+  verification: string;
+}) {
   const s: BadgeVariant = STATUS_VARIANT[status] ?? "default";
   const v: BadgeVariant = VERIFICATION_VARIANT[verification] ?? "default";
 
   return (
-    <div role="status" aria-label={`Verdict: ${status}, Verification: ${verification}`} className="flex items-center gap-2">
+    <div
+      role="status"
+      aria-label={`Verdict: ${status}, Verification: ${verification}`}
+      className="flex items-center gap-2"
+    >
       <Badge variant={s}>{status}</Badge>
       <Badge variant={v}>{verification}</Badge>
     </div>

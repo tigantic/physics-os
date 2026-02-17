@@ -8,13 +8,13 @@ const SemVer = z.string().regex(/^\d+\.\d+\.\d+$/);
 const DataValueNumber = z.discriminatedUnion("status", [
   z.object({ status: z.literal("ok"), value: z.number() }),
   z.object({ status: z.literal("missing"), reason: z.string() }),
-  z.object({ status: z.literal("invalid"), reason: z.string(), details: z.any().optional() }),
+  z.object({ status: z.literal("invalid"), reason: z.string(), details: z.unknown().optional() }),
 ]);
 
 const DataValueBool = z.discriminatedUnion("status", [
   z.object({ status: z.literal("ok"), value: z.boolean() }),
   z.object({ status: z.literal("missing"), reason: z.string() }),
-  z.object({ status: z.literal("invalid"), reason: z.string(), details: z.any().optional() }),
+  z.object({ status: z.literal("invalid"), reason: z.string(), details: z.unknown().optional() }),
 ]);
 
 const MetricId = z.string();
@@ -60,7 +60,7 @@ export const ProofPackageSchema = z.object({
       tags: z.array(z.string()).default([]),
       gate_ids: z.array(GateId).default([]),
       evidence_refs: z.array(ArtifactId).default([]),
-    })
+    }),
   ),
 
   gate_manifests: z.record(
@@ -83,9 +83,9 @@ export const ProofPackageSchema = z.object({
               domain_assumptions: z.array(z.string()).default([]),
             })
             .default({ requires_artifacts: [], requires_metrics: [], domain_assumptions: [] }),
-        })
+        }),
       ),
-    })
+    }),
   ),
 
   gate_results: z.record(
@@ -98,7 +98,7 @@ export const ProofPackageSchema = z.object({
       margin: DataValueNumber,
       evaluated_at: ISO8601.optional(),
       notes: z.string().optional(),
-    })
+    }),
   ),
 
   timeline: z.object({
@@ -109,7 +109,7 @@ export const ProofPackageSchema = z.object({
         state_hash: SHA256,
         metrics: z.record(MetricId, DataValueNumber).default({}),
         artifact_refs: z.array(ArtifactId).default([]),
-      })
+      }),
     ),
   }),
 
@@ -122,8 +122,8 @@ export const ProofPackageSchema = z.object({
       hash: SHA256,
       size_bytes: z.number().int().nonnegative(),
       uri: z.string(),
-      metadata: z.record(z.string(), z.any()).default({}),
-    })
+      metadata: z.record(z.string(), z.unknown()).default({}),
+    }),
   ),
 
   attestation: z.object({
@@ -134,7 +134,7 @@ export const ProofPackageSchema = z.object({
         algorithm: z.enum(["ed25519", "p256", "rsa-pss"]).default("ed25519"),
         signature: z.string(),
         timestamp: ISO8601,
-      })
+      }),
     ),
   }),
 
@@ -150,7 +150,7 @@ export const ProofPackageSchema = z.object({
             message: z.string(),
             artifact_id: ArtifactId.optional(),
             gate_id: GateId.optional(),
-          })
+          }),
         )
         .default([]),
     })

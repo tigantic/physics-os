@@ -23,7 +23,8 @@ export function renderCenterScreens(ctx: CenterCtx) {
   return keys.map((k, i) => {
     const key = `${k}-${i}`;
     if (k === "HeroMetrics") return <SummaryScreen key={key} proof={ctx.proof} domain={ctx.domain} mode={ctx.mode} />;
-    if (k === "ExecutiveNarrative") return <SummaryScreen key={key} proof={ctx.proof} domain={ctx.domain} mode={ctx.mode} />;
+    if (k === "ExecutiveNarrative")
+      return <SummaryScreen key={key} proof={ctx.proof} domain={ctx.domain} mode={ctx.mode} />;
     if (k === "Timeline") return <TimelineScreen key={key} proof={ctx.proof} domain={ctx.domain} />;
     if (k === "ClaimCards") return <GatesScreen key={key} proof={ctx.proof} domain={ctx.domain} />;
     if (k === "PrimaryViewer") return <PrimaryViewer key={key} proof={ctx.proof} bundleDir={ctx.bundleDir} />;
@@ -43,7 +44,8 @@ export function renderCenterScreens(ctx: CenterCtx) {
         </Card>
       );
     }
-    if (k === "DiffViewer") return <CompareScreen key={key} proof={ctx.proof} baseline={ctx.baseline} domain={ctx.domain} />;
+    if (k === "DiffViewer")
+      return <CompareScreen key={key} proof={ctx.proof} baseline={ctx.baseline} domain={ctx.domain} />;
     if (k === "PaperView") return <SummaryScreen key={key} proof={ctx.proof} domain={ctx.domain} mode={ctx.mode} />;
     if (k === "FigureStaging") return <PrimaryViewer key={key} proof={ctx.proof} bundleDir={ctx.bundleDir} />;
     return <IntegrityScreen key={key} proof={ctx.proof} />;

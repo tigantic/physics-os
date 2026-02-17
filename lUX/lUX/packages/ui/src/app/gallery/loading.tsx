@@ -4,7 +4,7 @@
  */
 export default function GalleryLoading() {
   return (
-    <div className="min-h-screen bg-[var(--color-bg-base)] animate-pulse">
+    <div className="min-h-screen animate-pulse bg-[var(--color-bg-base)]">
       {/* Identity strip skeleton */}
       <div className="h-12 border-b border-[var(--color-border)]">
         <div className="mx-auto flex max-w-[1400px] items-center gap-4 px-6 py-3">
@@ -29,7 +29,11 @@ export default function GalleryLoading() {
         <div className="w-[260px] shrink-0 border-r border-[var(--color-border)] p-4">
           <div className="space-y-3">
             {Array.from({ length: 6 }, (_, i) => (
-              <div key={i} className="h-4 rounded bg-[var(--color-bg-raised)]" style={{ width: `${70 + (i % 3) * 10}%` }} />
+              <div
+                key={i}
+                className="h-4 rounded bg-[var(--color-bg-raised)]"
+                style={{ width: `${70 + (i % 3) * 10}%` }}
+              />
             ))}
           </div>
         </div>
@@ -47,7 +51,11 @@ export default function GalleryLoading() {
         <div className="w-[280px] shrink-0 border-l border-[var(--color-border)] p-4">
           <div className="space-y-3">
             {Array.from({ length: 5 }, (_, i) => (
-              <div key={i} className="h-4 rounded bg-[var(--color-bg-raised)]" style={{ width: `${60 + (i % 4) * 10}%` }} />
+              <div
+                key={i}
+                className="h-4 rounded bg-[var(--color-bg-raised)]"
+                style={{ width: `${60 + (i % 4) * 10}%` }}
+              />
             ))}
           </div>
         </div>
