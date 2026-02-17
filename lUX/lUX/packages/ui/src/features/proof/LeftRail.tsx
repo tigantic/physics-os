@@ -22,7 +22,7 @@ export function LeftRail({ proof, fixture, mode }: { proof: ProofPackage; fixtur
                 <li key={id}>
                   <Link
                     className="block"
-                    href={`/gallery?fixture=${id}&mode=${mode}`}
+                    href={`/packages/${encodeURIComponent(id)}?mode=${mode}`}
                     aria-current={id === fixture ? "page" : undefined}
                   >
                     <div

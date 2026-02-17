@@ -67,7 +67,7 @@ describe("LeftRail", () => {
       render(<LeftRail proof={mockProof} fixture="warn" mode={"EXECUTIVE" as ProofMode} />);
       const activeLink = screen.getByRole("link", { current: "page" });
       expect(activeLink).toBeInTheDocument();
-      expect(activeLink).toHaveAttribute("href", "/gallery?fixture=warn&mode=EXECUTIVE");
+      expect(activeLink).toHaveAttribute("href", "/packages/warn?mode=EXECUTIVE");
     });
   });
 

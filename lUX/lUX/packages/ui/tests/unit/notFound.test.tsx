@@ -24,10 +24,10 @@ describe("NotFound", () => {
     expect(screen.getByText("Page not found")).toBeInTheDocument();
   });
 
-  it("renders link to gallery", () => {
+  it("renders link to packages", () => {
     render(<NotFound />);
-    const link = screen.getByRole("link", { name: "Return to proof gallery" });
-    expect(link).toHaveAttribute("href", "/gallery");
+    const link = screen.getByRole("link", { name: "Return to packages" });
+    expect(link).toHaveAttribute("href", "/packages");
   });
 
   it("has main landmark", () => {

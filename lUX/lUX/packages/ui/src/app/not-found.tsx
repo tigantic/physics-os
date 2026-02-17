@@ -7,11 +7,11 @@ export default function NotFound() {
         <h1 className="text-4xl font-bold tracking-tight">404</h1>
         <p className="text-[var(--color-text-secondary)]">Page not found</p>
         <Link
-          href="/gallery"
-          aria-label="Return to proof gallery"
+          href="/packages"
+          aria-label="Return to packages"
           className="inline-block min-h-[44px] rounded-[var(--radius-inner)] bg-[var(--color-accent)] px-6 py-3 text-sm font-medium leading-[1.5] text-[var(--color-bg-base)] transition-colors duration-[var(--motion-hover)] ease-[var(--motion-easeOut)] hover:opacity-90 sm:min-h-0 sm:px-4 sm:py-2"
         >
-          Go to Gallery
+          Go to Packages
         </Link>
       </div>
     </main>

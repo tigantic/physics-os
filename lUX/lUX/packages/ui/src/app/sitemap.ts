@@ -3,11 +3,11 @@ import { env } from "@/config/env";
 
 /**
  * Dynamic sitemap generated at build / request time.
- * Lists all fixture × mode combinations as gallery URLs.
+ * Lists all known package × mode combinations as canonical URLs.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = env.baseUrl;
-  const fixtures = ["pass", "fail", "warn", "incomplete", "tampered"];
+  const packages = ["pass", "fail", "warn", "incomplete", "tampered"];
   const modes = ["EXECUTIVE", "REVIEW", "AUDIT", "PUBLICATION"];
 
   const urls: MetadataRoute.Sitemap = [
@@ -17,12 +17,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 1,
     },
+    {
+      url: `${base}/packages`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
   ];
 
-  for (const fixture of fixtures) {
+  for (const pkg of packages) {
     for (const mode of modes) {
       urls.push({
-        url: `${base}/gallery?fixture=${fixture}&mode=${mode}`,
+        url: `${base}/packages/${pkg}?mode=${mode}`,
         lastModified: new Date(),
         changeFrequency: "weekly",
         priority: 0.8,

@@ -4,9 +4,9 @@ import React from "react";
 import type { ProofPackage, DomainPack, ProofMode } from "@luxury/core";
 
 vi.mock("next/navigation", () => ({
-  useSearchParams: () => new URLSearchParams("mode=REVIEW&fixture=pass"),
+  useSearchParams: () => new URLSearchParams("mode=REVIEW&id=pass"),
   useRouter: () => ({ push: vi.fn() }),
-  usePathname: () => "/gallery",
+  usePathname: () => "/packages/pass",
 }));
 
 // Mock all screen components and viewers to isolate ProofWorkspace
@@ -102,7 +102,7 @@ describe("ProofWorkspace", () => {
     expect(() => render(<ProofWorkspace {...defaultProps} />)).not.toThrow();
   });
 
-  it("renders fixture label", () => {
+  it("renders package label", () => {
     render(<ProofWorkspace {...defaultProps} />);
     expect(screen.getByText("pass")).toBeInTheDocument();
   });

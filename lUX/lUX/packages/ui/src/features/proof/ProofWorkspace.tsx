@@ -40,7 +40,7 @@ export function ProofWorkspace({
       >
         <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-2 px-4 pt-4 md:px-6 2xl:max-w-[1600px]">
           <div className="text-xs text-[var(--color-text-tertiary)]">
-            Fixture: <span className="font-mono">{fixture}</span>
+            Package: <span className="font-mono">{packageId}</span>
           </div>
           <ModeDial />
         </div>

@@ -15,9 +15,9 @@ describe("sitemap", () => {
     expect(first.url).toBe("http://localhost:3000");
   });
 
-  it("contains entries for all fixture × mode combinations (5 × 4 = 20 + 1 base = 21 total)", () => {
+  it("contains entries for all package × mode combinations (5 × 4 = 20 + 1 base + 1 /packages index = 22 total)", () => {
     const result = sitemap();
-    expect(result).toHaveLength(21);
+    expect(result).toHaveLength(22);
   });
 
   it("all entries have lastModified date", () => {
