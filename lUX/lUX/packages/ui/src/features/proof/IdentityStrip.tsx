@@ -1,6 +1,7 @@
 import type { ProofPackage } from "@luxury/core";
 import { VerdictSeal } from "@/ds/components/VerdictSeal";
 import { CopyField } from "@/ds/components/CopyField";
+import { ThemeToggle } from "@/ds/components/ThemeToggle";
 import { HamburgerButton } from "./HamburgerButton";
 
 export function IdentityStrip({ proof }: { proof: ProofPackage }) {
@@ -22,7 +23,10 @@ export function IdentityStrip({ proof }: { proof: ProofPackage }) {
             </h1>
           </div>
         </div>
-        <VerdictSeal status={proof.verdict.status} verification={verification} />
+        <div className="flex items-center gap-3">
+          <VerdictSeal status={proof.verdict.status} verification={verification} />
+          <ThemeToggle className="hidden sm:flex" />
+        </div>
         <div className="hidden w-[420px] lg:block xl:w-[480px]">
           <CopyField label="Run ID" value={proof.meta.id} />
         </div>

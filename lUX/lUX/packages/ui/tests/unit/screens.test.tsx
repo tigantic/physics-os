@@ -56,8 +56,9 @@ describe("TimelineScreen", () => {
     render(<TimelineScreen proof={proof} domain={domain} />);
     expect(screen.getByText("Timeline")).toBeInTheDocument();
     expect(screen.getByText("2 steps")).toBeInTheDocument();
-    expect(screen.getByText("Step 0")).toBeInTheDocument();
-    expect(screen.getByText("Step 1")).toBeInTheDocument();
+    // DataTable renders step indices as bare numbers
+    expect(screen.getByText("0")).toBeInTheDocument();
+    expect(screen.getByText("1")).toBeInTheDocument();
   });
 
   it("displays state hashes", () => {
@@ -176,7 +177,8 @@ describe("CompareScreen", () => {
   it("shows side-by-side metrics when baseline present", () => {
     render(<CompareScreen proof={proof} baseline={proof} domain={domain} />);
     expect(screen.getAllByText("Compare").length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText(/Baseline/)).toBeInTheDocument();
+    // "Baseline" appears in both KeyValueGrid label and DataTable header
+    expect(screen.getAllByText(/Baseline/).length).toBeGreaterThanOrEqual(1);
     // Metric labels appear in each comparison row
     expect(screen.getAllByText("Conservation Residual").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("L2 Drift").length).toBeGreaterThanOrEqual(1);

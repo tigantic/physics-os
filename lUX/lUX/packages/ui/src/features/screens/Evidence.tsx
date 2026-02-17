@@ -2,6 +2,7 @@ import { memo } from "react";
 import type { ProofPackage } from "@luxury/core";
 import { Card, CardContent, CardHeader } from "@/ds/components/Card";
 import { Disclosure } from "@/ds/components/Disclosure";
+import { KeyValueGrid } from "@/ds/components/KeyValueGrid";
 
 export const EvidenceScreen = memo(function EvidenceScreen({ proof }: { proof: ProofPackage }) {
   return (
@@ -13,11 +14,13 @@ export const EvidenceScreen = memo(function EvidenceScreen({ proof }: { proof: P
       <CardContent className="space-y-3">
         {Object.values(proof.artifacts).map((a) => (
           <Disclosure key={a.id} title={`${a.id} · ${a.type}`}>
-            <div className="space-y-2">
-              <div className="font-mono text-xs text-[var(--color-text-tertiary)]">{a.hash}</div>
-              <div className="text-xs text-[var(--color-text-secondary)]">URI: {a.uri}</div>
-              <div className="text-xs text-[var(--color-text-secondary)]">MIME: {a.mime_type}</div>
-            </div>
+            <KeyValueGrid
+              entries={[
+                { label: "Hash", value: a.hash, mono: true },
+                { label: "URI", value: a.uri, mono: true },
+                { label: "MIME", value: a.mime_type },
+              ]}
+            />
           </Disclosure>
         ))}
       </CardContent>
