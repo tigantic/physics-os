@@ -1,0 +1,32 @@
+{
+  "name": "@luxury/core",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.test.json --noEmit",
+    "build": "tsc -p tsconfig.json",
+    "test:unit": "vitest run",
+    "test:schema": "vitest run -t schema"
+  },
+  "dependencies": {
+    "zod": "^3.23.8",
+    "katex": "^0.16.11",
+    "mathjax-full": "^3.2.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5",
+    "@types/node": "^20.12.12",
+    "eslint": "^9.8.0",
+    "typescript-eslint": "^8.0.1"
+  },
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  }
+}

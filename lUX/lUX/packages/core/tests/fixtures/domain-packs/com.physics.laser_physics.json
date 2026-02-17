@@ -1,0 +1,95 @@
+{
+  "id": "com.physics.laser_physics",
+  "version": "1.0.0",
+  "metrics": {
+    "conservation_residual": {
+      "label": "Conservation Residual",
+      "symbol_latex": "r",
+      "unit": "dimensionless",
+      "format": "scientific",
+      "precision": 3,
+      "validity_range": [
+        0,
+        1
+      ]
+    },
+    "l2_drift": {
+      "label": "L2 Drift",
+      "symbol_latex": "\\|\\Delta\\|_2",
+      "unit": "dimensionless",
+      "format": "scientific",
+      "precision": 3,
+      "validity_range": [
+        0,
+        1
+      ]
+    },
+    "energy": {
+      "label": "Total Energy",
+      "symbol_latex": "E",
+      "unit": "J",
+      "format": "scientific",
+      "precision": 4
+    },
+    "intensity": {
+      "label": "Intensity",
+      "symbol_latex": "I",
+      "unit": "W/m\u00b2",
+      "format": "scientific",
+      "precision": 4
+    }
+  },
+  "gate_packs": {
+    "audit": {
+      "label": "Audit",
+      "manifest_ref": "audit-v1",
+      "highlight_metrics": [
+        "conservation_residual",
+        "l2_drift",
+        "energy",
+        "intensity"
+      ]
+    }
+  },
+  "viewers": [
+    {
+      "when": {
+        "artifact_type": "time_series"
+      },
+      "component": "TimeSeriesViewer",
+      "default_config": {},
+      "priority": 10
+    },
+    {
+      "when": {
+        "artifact_type": "log"
+      },
+      "component": "LogViewer",
+      "default_config": {},
+      "priority": 10
+    },
+    {
+      "when": {
+        "artifact_type": "table"
+      },
+      "component": "TableViewer",
+      "default_config": {},
+      "priority": 10
+    }
+  ],
+  "templates": {
+    "executive_summary_metric_ids": [
+      "conservation_residual",
+      "l2_drift",
+      "energy",
+      "intensity"
+    ],
+    "publication_sections": [
+      "Abstract",
+      "Methods",
+      "Results",
+      "Integrity"
+    ],
+    "citation_format": "bibtex"
+  }
+}

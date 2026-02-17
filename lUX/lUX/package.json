@@ -1,0 +1,22 @@
+{
+  "name": "luxury-physics-viewer",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build:tokens": "tsx tools/build-tokens.ts",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "test:unit": "pnpm -r test:unit",
+    "test:schema": "pnpm -r test:schema",
+    "test:e2e": "pnpm --filter ui test:e2e --config packages/ui/playwright.config.ts",
+    "build": "pnpm -w run build:tokens && pnpm -r build",
+    "dev": "pnpm --filter ui dev"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.5.4"
+  }
+}

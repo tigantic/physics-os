@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+.next/
+out/
+
+# Test outputs
+test-results/
+playwright-report/
+coverage/
+
+# Generated (from build:tokens)
+# These are committed for CI cache but regenerated on build
+# packages/ui/src/ds/tokens.css
+# packages/ui/src/ds/tokens.ts
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+*:Zone.Identifier
+
+# Storybook
+storybook-static/
+
+# Misc
+*.log
+*.tsbuildinfo

@@ -1,0 +1,274 @@
+{
+  "schema_version": "1.0.0",
+  "meta": {
+    "id": "incomplete-uuid",
+    "project_id": "proj-001",
+    "domain_id": "com.physics.vlasov",
+    "solver": {
+      "name": "HyperTensor-VM",
+      "version": "1.2.3",
+      "commit_hash": "deadbeef"
+    },
+    "environment": {
+      "container_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "seed": 42,
+      "arch": "x86_64"
+    },
+    "timestamp": "2026-02-16T00:00:00Z"
+  },
+  "verdict": {
+    "status": "INCOMPLETE",
+    "reason": "Gate evaluation indicates non-ideal status",
+    "quality_score": 0.95
+  },
+  "claims": {
+    "C-001": {
+      "id": "C-001",
+      "statement": "Conservation residual stays below tolerance",
+      "category": "stability",
+      "tags": [
+        "physics"
+      ],
+      "gate_ids": [
+        "G-001"
+      ],
+      "evidence_refs": [
+        "A-ts",
+        "A-log"
+      ]
+    },
+    "C-002": {
+      "id": "C-002",
+      "statement": "L2 drift stays below tolerance",
+      "category": "accuracy",
+      "tags": [
+        "physics"
+      ],
+      "gate_ids": [
+        "G-002"
+      ],
+      "evidence_refs": [
+        "A-ts"
+      ]
+    }
+  },
+  "gate_manifests": {
+    "audit-v1": {
+      "id": "audit-v1",
+      "version": "1.0.0",
+      "gates": {
+        "G-001": {
+          "id": "G-001",
+          "metric_id": "conservation_residual",
+          "operator": "lt",
+          "threshold": 0.01,
+          "aggregation": "max",
+          "validity": {
+            "requires_artifacts": [],
+            "requires_metrics": [
+              "conservation_residual"
+            ],
+            "domain_assumptions": []
+          }
+        },
+        "G-002": {
+          "id": "G-002",
+          "metric_id": "l2_drift",
+          "operator": "lt",
+          "threshold": 0.05,
+          "aggregation": "final",
+          "validity": {
+            "requires_artifacts": [],
+            "requires_metrics": [
+              "l2_drift"
+            ],
+            "domain_assumptions": []
+          }
+        }
+      }
+    }
+  },
+  "gate_results": {
+    "G-001": {
+      "gate_id": "G-001",
+      "metric_id": "conservation_residual",
+      "value": {
+        "status": "missing",
+        "reason": "Metric not computed"
+      },
+      "passed": {
+        "status": "missing",
+        "reason": "Metric missing"
+      },
+      "margin": {
+        "status": "missing",
+        "reason": "No value"
+      }
+    },
+    "G-002": {
+      "gate_id": "G-002",
+      "metric_id": "l2_drift",
+      "value": {
+        "status": "ok",
+        "value": 0.02
+      },
+      "passed": {
+        "status": "ok",
+        "value": true
+      },
+      "margin": {
+        "status": "ok",
+        "value": 0.030000000000000002
+      }
+    }
+  },
+  "timeline": {
+    "step_count": 4,
+    "steps": [
+      {
+        "step_index": 0,
+        "state_hash": "sha256:6952b71e7aa4d4189b06ea1a9da05cc591d89070fb70e61d27c04d20ceff0ab3",
+        "metrics": {
+          "mass": {
+            "status": "ok",
+            "value": 1.0
+          },
+          "energy": {
+            "status": "ok",
+            "value": 0.5
+          },
+          "conservation_residual": {
+            "status": "missing",
+            "reason": "Metric not computed"
+          },
+          "l2_drift": {
+            "status": "ok",
+            "value": 0.0
+          }
+        },
+        "artifact_refs": [
+          "A-ts"
+        ]
+      },
+      {
+        "step_index": 1,
+        "state_hash": "sha256:fd60b8b558377dd0faccc55fe5654fd5a0a63714e527f20725b44f48e3da842b",
+        "metrics": {
+          "mass": {
+            "status": "missing",
+            "reason": "Mass not recorded"
+          },
+          "energy": {
+            "status": "ok",
+            "value": 0.51
+          },
+          "conservation_residual": {
+            "status": "missing",
+            "reason": "Metric not computed"
+          },
+          "l2_drift": {
+            "status": "ok",
+            "value": 0.006666666666666666
+          }
+        },
+        "artifact_refs": [
+          "A-ts"
+        ]
+      },
+      {
+        "step_index": 2,
+        "state_hash": "sha256:203de2b9fcbf043c84418ef25b3a14413a597b4513345e4827e62a4b46e3a902",
+        "metrics": {
+          "mass": {
+            "status": "missing",
+            "reason": "Mass not recorded"
+          },
+          "energy": {
+            "status": "ok",
+            "value": 0.52
+          },
+          "conservation_residual": {
+            "status": "missing",
+            "reason": "Metric not computed"
+          },
+          "l2_drift": {
+            "status": "ok",
+            "value": 0.013333333333333332
+          }
+        },
+        "artifact_refs": [
+          "A-ts"
+        ]
+      },
+      {
+        "step_index": 3,
+        "state_hash": "sha256:26ecc45e2263b4503b02291a613ed5862af2d160634291e4659f328e59372079",
+        "metrics": {
+          "mass": {
+            "status": "missing",
+            "reason": "Mass not recorded"
+          },
+          "energy": {
+            "status": "ok",
+            "value": 0.53
+          },
+          "conservation_residual": {
+            "status": "missing",
+            "reason": "Metric not computed"
+          },
+          "l2_drift": {
+            "status": "ok",
+            "value": 0.02
+          }
+        },
+        "artifact_refs": [
+          "A-ts"
+        ]
+      }
+    ]
+  },
+  "artifacts": {
+    "A-ts": {
+      "id": "A-ts",
+      "type": "time_series",
+      "mime_type": "text/csv",
+      "hash": "sha256:49eda37929bfcd9de17b24b69d97bd6bd906150d59034085f71b92ac11c67316",
+      "size_bytes": 37,
+      "uri": "artifacts/timeseries.csv",
+      "metadata": {
+        "x": "step",
+        "y": "value",
+        "unit": "dimensionless"
+      }
+    },
+    "A-log": {
+      "id": "A-log",
+      "type": "log",
+      "mime_type": "text/plain",
+      "hash": "sha256:a352e581beaa8e3bc3b3a49ce9c7446d768ef8ff3209aeff33a976f022094b24",
+      "size_bytes": 56,
+      "uri": "artifacts/run.log",
+      "metadata": {}
+    },
+    "A-params": {
+      "id": "A-params",
+      "type": "table",
+      "mime_type": "text/csv",
+      "hash": "sha256:dac1ed91674a187007169aa8ee91d4f36e173234c91a30cbef9ae905d6db3073",
+      "size_bytes": 19,
+      "uri": "artifacts/params.csv",
+      "metadata": {}
+    }
+  },
+  "attestation": {
+    "merkle_root": "sha256:d2aef988a761d141030a4823855ef4a370f67fdf93b1f2b68f59ebd86ec465bf",
+    "signatures": [
+      {
+        "key_id": "production-signer-v1",
+        "algorithm": "ed25519",
+        "signature": "MEUCIQD00000000000000000000",
+        "timestamp": "2026-02-16T00:00:00Z"
+      }
+    ]
+  }
+}

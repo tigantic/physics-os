@@ -1,0 +1,274 @@
+{
+  "schema_version": "1.0.0",
+  "meta": {
+    "id": "tampered-uuid",
+    "project_id": "proj-001",
+    "domain_id": "com.physics.vlasov",
+    "solver": {
+      "name": "HyperTensor-VM",
+      "version": "1.2.3",
+      "commit_hash": "deadbeef"
+    },
+    "environment": {
+      "container_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "seed": 42,
+      "arch": "x86_64"
+    },
+    "timestamp": "2026-02-16T00:00:00Z"
+  },
+  "verdict": {
+    "status": "FAIL",
+    "reason": "Gate evaluation indicates non-ideal status",
+    "quality_score": 0.95
+  },
+  "claims": {
+    "C-001": {
+      "id": "C-001",
+      "statement": "Conservation residual stays below tolerance",
+      "category": "stability",
+      "tags": [
+        "physics"
+      ],
+      "gate_ids": [
+        "G-001"
+      ],
+      "evidence_refs": [
+        "A-ts",
+        "A-log"
+      ]
+    },
+    "C-002": {
+      "id": "C-002",
+      "statement": "L2 drift stays below tolerance",
+      "category": "accuracy",
+      "tags": [
+        "physics"
+      ],
+      "gate_ids": [
+        "G-002"
+      ],
+      "evidence_refs": [
+        "A-ts"
+      ]
+    }
+  },
+  "gate_manifests": {
+    "audit-v1": {
+      "id": "audit-v1",
+      "version": "1.0.0",
+      "gates": {
+        "G-001": {
+          "id": "G-001",
+          "metric_id": "conservation_residual",
+          "operator": "lt",
+          "threshold": 0.01,
+          "aggregation": "max",
+          "validity": {
+            "requires_artifacts": [],
+            "requires_metrics": [
+              "conservation_residual"
+            ],
+            "domain_assumptions": []
+          }
+        },
+        "G-002": {
+          "id": "G-002",
+          "metric_id": "l2_drift",
+          "operator": "lt",
+          "threshold": 0.05,
+          "aggregation": "final",
+          "validity": {
+            "requires_artifacts": [],
+            "requires_metrics": [
+              "l2_drift"
+            ],
+            "domain_assumptions": []
+          }
+        }
+      }
+    }
+  },
+  "gate_results": {
+    "G-001": {
+      "gate_id": "G-001",
+      "metric_id": "conservation_residual",
+      "value": {
+        "status": "ok",
+        "value": 0.005
+      },
+      "passed": {
+        "status": "ok",
+        "value": true
+      },
+      "margin": {
+        "status": "ok",
+        "value": 0.005
+      }
+    },
+    "G-002": {
+      "gate_id": "G-002",
+      "metric_id": "l2_drift",
+      "value": {
+        "status": "ok",
+        "value": 0.02
+      },
+      "passed": {
+        "status": "ok",
+        "value": true
+      },
+      "margin": {
+        "status": "ok",
+        "value": 0.030000000000000002
+      }
+    }
+  },
+  "timeline": {
+    "step_count": 4,
+    "steps": [
+      {
+        "step_index": 0,
+        "state_hash": "sha256:c4b9a43cec7dfc1352dd8352d4f25cd9fab235a41b64b66eefb03dfeaeba4581",
+        "metrics": {
+          "mass": {
+            "status": "ok",
+            "value": 1.0
+          },
+          "energy": {
+            "status": "ok",
+            "value": 0.5
+          },
+          "conservation_residual": {
+            "status": "ok",
+            "value": 0.004
+          },
+          "l2_drift": {
+            "status": "ok",
+            "value": 0.0
+          }
+        },
+        "artifact_refs": [
+          "A-ts"
+        ]
+      },
+      {
+        "step_index": 1,
+        "state_hash": "sha256:2898badbb6c5d16fa84a62dab44aaa4420b30f36c444c11c7bd25b325863fdbd",
+        "metrics": {
+          "mass": {
+            "status": "ok",
+            "value": 1.0
+          },
+          "energy": {
+            "status": "ok",
+            "value": 0.51
+          },
+          "conservation_residual": {
+            "status": "ok",
+            "value": 0.004
+          },
+          "l2_drift": {
+            "status": "ok",
+            "value": 0.006666666666666666
+          }
+        },
+        "artifact_refs": [
+          "A-ts"
+        ]
+      },
+      {
+        "step_index": 2,
+        "state_hash": "sha256:b2c37f1e50dd02720d498a9161f7dfcd545e46817b27642b8c5f105fb2140390",
+        "metrics": {
+          "mass": {
+            "status": "ok",
+            "value": 1.0
+          },
+          "energy": {
+            "status": "ok",
+            "value": 0.52
+          },
+          "conservation_residual": {
+            "status": "ok",
+            "value": 0.004
+          },
+          "l2_drift": {
+            "status": "ok",
+            "value": 0.013333333333333332
+          }
+        },
+        "artifact_refs": [
+          "A-ts"
+        ]
+      },
+      {
+        "step_index": 3,
+        "state_hash": "sha256:f567603acc4544d8ea98c9edbe4b60814f88593aa331d2401d94370fd6288add",
+        "metrics": {
+          "mass": {
+            "status": "ok",
+            "value": 1.0
+          },
+          "energy": {
+            "status": "ok",
+            "value": 0.53
+          },
+          "conservation_residual": {
+            "status": "ok",
+            "value": 0.005
+          },
+          "l2_drift": {
+            "status": "ok",
+            "value": 0.02
+          }
+        },
+        "artifact_refs": [
+          "A-ts"
+        ]
+      }
+    ]
+  },
+  "artifacts": {
+    "A-ts": {
+      "id": "A-ts",
+      "type": "time_series",
+      "mime_type": "text/csv",
+      "hash": "sha256:49eda37929bfcd9de17b24b69d97bd6bd906150d59034085f71b92ac11c67316",
+      "size_bytes": 37,
+      "uri": "artifacts/timeseries.csv",
+      "metadata": {
+        "x": "step",
+        "y": "value",
+        "unit": "dimensionless"
+      }
+    },
+    "A-log": {
+      "id": "A-log",
+      "type": "log",
+      "mime_type": "text/plain",
+      "hash": "sha256:a352e581beaa8e3bc3b3a49ce9c7446d768ef8ff3209aeff33a976f022094b24",
+      "size_bytes": 56,
+      "uri": "artifacts/run.log",
+      "metadata": {}
+    },
+    "A-params": {
+      "id": "A-params",
+      "type": "table",
+      "mime_type": "text/csv",
+      "hash": "sha256:dac1ed91674a187007169aa8ee91d4f36e173234c91a30cbef9ae905d6db3073",
+      "size_bytes": 19,
+      "uri": "artifacts/params.csv",
+      "metadata": {}
+    }
+  },
+  "attestation": {
+    "merkle_root": "sha256:d2aef988a761d141030a4823855ef4a370f67fdf93b1f2b68f59ebd86ec465bf",
+    "signatures": [
+      {
+        "key_id": "production-signer-v1",
+        "algorithm": "ed25519",
+        "signature": "MEUCIQD00000000000000000000",
+        "timestamp": "2026-02-16T00:00:00Z"
+      }
+    ]
+  }
+}
