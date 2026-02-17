@@ -172,3 +172,6 @@ demo_output/
 # SvelteKit project — override Python lib/ rule for src/lib/
 !sovereign-ui/src/lib/
 !sovereign-ui/src/lib/**
+
+# Windows NTFS Alternate Data Stream markers (contain ':' — illegal on Windows)
+*:Zone.Identifier
