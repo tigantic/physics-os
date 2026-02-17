@@ -1,3 +1,5 @@
+"use client";
+
 import { memo, useMemo } from "react";
 import type { ProofPackage } from "@luxury/core";
 import { Card, CardContent, CardHeader } from "@/ds/components/Card";
