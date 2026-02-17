@@ -29,22 +29,28 @@ export function MobileDrawer({
   const panelRef = React.useRef<HTMLDivElement>(null);
   const previousFocusRef = React.useRef<HTMLElement | null>(null);
 
-  // Lock body scroll while open
+  // Lock body scroll while open, compensate for scrollbar width
   React.useEffect(() => {
     if (open) {
       previousFocusRef.current = document.activeElement as HTMLElement | null;
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = "hidden";
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
       // Focus the panel after paint
       requestAnimationFrame(() => {
         panelRef.current?.focus();
       });
     } else {
       document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
       // Restore previous focus
       previousFocusRef.current?.focus();
     }
     return () => {
       document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
     };
   }, [open]);
 

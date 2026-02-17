@@ -37,8 +37,8 @@ export const KeyValueGrid = React.memo(function KeyValueGrid({
         className,
       )}
     >
-      {entries.map((e) => (
-        <div key={e.label} className="min-w-0">
+      {entries.map((e, i) => (
+        <div key={`${e.label}-${i}`} className="min-w-0">
           <dt className="text-xs uppercase tracking-wider text-[var(--color-text-tertiary)]">
             {e.label}
           </dt>

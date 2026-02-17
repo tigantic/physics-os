@@ -18,7 +18,7 @@ export interface DataTableColumn<T> {
 
 export interface DataTableProps<T> {
   columns: DataTableColumn<T>[];
-  data: T[];
+  data: readonly T[];
   /** Function returning a unique React key for each row */
   rowKey: (row: T, index: number) => string;
   /** Optional caption for a11y */
@@ -31,6 +31,8 @@ export interface DataTableProps<T> {
   className?: string;
   /** Rendered when data is empty */
   emptyState?: React.ReactNode;
+  /** Max rows to render before showing a "Show all" button. Default: unlimited */
+  maxRows?: number;
 }
 
 /* ── Component ─────────────────────────────────────────────────────── */
@@ -45,10 +47,16 @@ function DataTableInner<T>(
     compact = false,
     className,
     emptyState,
+    maxRows,
   }: DataTableProps<T>,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
+  const [expanded, setExpanded] = React.useState(false);
   const cellPad = compact ? "px-3 py-1.5" : "px-4 py-2.5";
+
+  const isCapped = maxRows !== undefined && !expanded && data.length > maxRows;
+  const visibleData = isCapped ? data.slice(0, maxRows) : data;
+  const hiddenCount = data.length - (maxRows ?? data.length);
 
   if (data.length === 0 && emptyState) {
     return (
@@ -87,7 +95,7 @@ function DataTableInner<T>(
           </tr>
         </thead>
         <tbody>
-          {data.map((row, i) => (
+          {visibleData.map((row, i) => (
             <tr
               key={rowKey(row, i)}
               className={cn(
@@ -112,6 +120,15 @@ function DataTableInner<T>(
           ))}
         </tbody>
       </table>
+      {isCapped && (
+        <button
+          type="button"
+          onClick={() => setExpanded(true)}
+          className="flex w-full items-center justify-center gap-1.5 border-t border-[var(--color-border-base)] bg-[var(--color-bg-surface)] px-4 py-2 text-xs font-medium text-[var(--color-accent)] transition-colors duration-hover ease-lux-out hover:bg-[var(--color-bg-hover)]"
+        >
+          Show all {data.length} rows ({hiddenCount} more)
+        </button>
+      )}
     </div>
   );
 }

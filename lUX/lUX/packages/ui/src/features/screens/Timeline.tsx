@@ -69,6 +69,7 @@ export const TimelineScreen = memo(function TimelineScreen({ proof, domain }: { 
           rowKey={(s) => String(s.step_index)}
           caption="Simulation timeline steps"
           compact
+          maxRows={200}
           emptyState={<EmptyState title="No steps" description="Timeline contains no simulation steps." />}
         />
       </CardContent>

@@ -25,14 +25,18 @@ export function ResponsiveShell({
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [rightExpanded, setRightExpanded] = React.useState(false);
 
+  const openDrawer = React.useCallback(() => setDrawerOpen(true), []);
+  const closeDrawer = React.useCallback(() => setDrawerOpen(false), []);
+  const toggleRight = React.useCallback(() => setRightExpanded((v) => !v), []);
+
   return (
     <>
       {/* Header (IdentityStrip) — pass drawer toggle via context */}
-      <DrawerToggleContext.Provider value={() => setDrawerOpen(true)}>{header}</DrawerToggleContext.Provider>
+      <DrawerToggleContext.Provider value={openDrawer}>{header}</DrawerToggleContext.Provider>
 
       {/* Mobile drawer for LeftRail — visible only below md */}
-      <MobileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} side="left" label="Navigation">
-        <div onClick={() => setDrawerOpen(false)}>{leftRail}</div>
+      <MobileDrawer open={drawerOpen} onClose={closeDrawer} side="left" label="Navigation">
+        <div onClick={closeDrawer}>{leftRail}</div>
       </MobileDrawer>
 
       {/* Main 3-column layout */}
@@ -49,7 +53,7 @@ export function ResponsiveShell({
           <div className="border-t border-[var(--color-border-base)]">
             <button
               type="button"
-              onClick={() => setRightExpanded((v) => !v)}
+              onClick={toggleRight}
               aria-expanded={rightExpanded}
               aria-controls="right-rail-panel"
               aria-label={rightExpanded ? "Collapse integrity details" : "Expand integrity details"}

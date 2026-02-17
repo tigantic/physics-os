@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 import type { PackageSummary } from "@luxury/core";
 import { DataTable, type DataTableColumn } from "@/ds/components/DataTable";
 import { Chip } from "@/ds/components/Chip";
@@ -85,10 +85,15 @@ const COLUMNS: DataTableColumn<PackageSummary>[] = [
   },
 ];
 
+/* ── Stable row key extractor ─────────────────────────────────────── */
+
+const packageRowKey = (r: PackageSummary) => r.id;
+
 /* ── Component ────────────────────────────────────────────────────── */
 
 export function PackageList({ packages }: { packages: readonly PackageSummary[] }) {
   const [query, setQuery] = useState("");
+  const onQueryChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value), []);
 
   const filtered = useMemo(() => {
     if (!query.trim()) return packages;
@@ -110,7 +115,7 @@ export function PackageList({ packages }: { packages: readonly PackageSummary[] 
           type="search"
           placeholder="Search packages…"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={onQueryChange}
           className="w-full rounded-[var(--radius-control)] border border-[var(--color-border-base)] bg-[var(--color-bg-surface)] px-4 py-2.5 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]"
           aria-label="Search proof packages"
         />
@@ -119,8 +124,8 @@ export function PackageList({ packages }: { packages: readonly PackageSummary[] 
       {/* Table */}
       <DataTable<PackageSummary>
         columns={COLUMNS}
-        data={[...filtered]}
-        rowKey={(r) => r.id}
+        data={filtered}
+        rowKey={packageRowKey}
         caption="Available proof packages"
         emptyState={
           query.trim() ? (
