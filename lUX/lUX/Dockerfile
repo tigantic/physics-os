@@ -20,8 +20,10 @@ COPY --from=deps /app/packages/core/node_modules ./packages/core/node_modules
 COPY --from=deps /app/packages/ui/node_modules ./packages/ui/node_modules
 COPY . .
 
-# Build tokens → core → ui (standalone output)
-RUN pnpm -w run build
+# Build core → ui (standalone output).
+# Token CSS/TS files are pre-generated and committed to source; the build:tokens
+# step requires tools/ and design/ which are excluded by .dockerignore.
+RUN pnpm -r build
 
 # ── Stage 3: Production runner ─────────────────────────────────────────
 FROM node:20-alpine AS runner
@@ -63,6 +65,6 @@ USER nextjs
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD wget -qO- http://localhost:3000/api/ready || exit 1
+  CMD wget -qO- http://127.0.0.1:3000/api/ready || exit 1
 
 CMD ["node", "packages/ui/server.js"]
