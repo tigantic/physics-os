@@ -39,14 +39,14 @@ describe("PrimaryViewer", () => {
     const proof = makeProof({
       verification: { status: "BROKEN_CHAIN", verifier_version: "0.1.0", failures: [] },
     });
-    render(<PrimaryViewer proof={proof} bundleDir="/tmp/bundle" />);
+    render(<PrimaryViewer proof={proof} packageId="pass" />);
     expect(screen.getByText("BROKEN_CHAIN")).toBeInTheDocument();
     expect(screen.getByRole("status")).toBeInTheDocument();
   });
 
   it('no time_series artifact shows "Data Unavailable"', () => {
     const proof = makeProof({ artifacts: {} });
-    render(<PrimaryViewer proof={proof} bundleDir="/tmp/bundle" />);
+    render(<PrimaryViewer proof={proof} packageId="pass" />);
     expect(screen.getByText("Data Unavailable")).toBeInTheDocument();
   });
 });

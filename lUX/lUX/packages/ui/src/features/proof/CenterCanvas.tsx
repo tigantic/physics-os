@@ -6,17 +6,17 @@ export function CenterCanvas({
   baseline,
   domain,
   mode,
-  bundleDir,
+  packageId,
 }: {
   proof: ProofPackage;
   baseline?: ProofPackage;
   domain: DomainPack;
   mode: ProofMode;
-  bundleDir: string;
+  packageId: string;
 }) {
   return (
     <div id="mode-tabpanel" role="tabpanel" aria-labelledby={`mode-tab-${mode}`} className="space-y-6">
-      {renderCenterScreens({ proof, baseline, domain, bundleDir, mode })}
+      {renderCenterScreens({ proof, baseline, domain, packageId, mode })}
     </div>
   );
 }

@@ -1,40 +1,31 @@
 import "server-only";
 
-import fs from "node:fs/promises";
-import path from "node:path";
 import type { ProofPackage } from "@luxury/core";
 import { Card, CardContent, CardHeader } from "@/ds/components/Card";
 import { Chip } from "@/ds/components/Chip";
+import { getProvider } from "@/config/provider";
 import { parseCsv, sparkline } from "./sparkline";
 
 export async function TimeSeriesViewer({
   proof,
-  bundleDir,
+  packageId,
   artifactId,
 }: {
   proof: ProofPackage;
-  bundleDir: string;
+  packageId: string;
   artifactId: string;
 }) {
   const art = proof.artifacts[artifactId];
   if (!art) return <Chip tone="warn">Data Unavailable</Chip>;
 
-  const fp = path.resolve(bundleDir, art.uri);
+  const provider = await getProvider();
+  const result = await provider.readArtifact(packageId, art.uri);
 
-  // Prevent path traversal — artifact URI must resolve inside bundleDir
-  const resolved = path.resolve(fp);
-  if (!resolved.startsWith(path.resolve(bundleDir) + path.sep)) {
-    return <Chip tone="fail">Invalid Path</Chip>;
-  }
-
-  let bytes: Buffer;
-  try {
-    bytes = await fs.readFile(resolved);
-  } catch {
+  if (!result.ok) {
     return <Chip tone="fail">Read Error</Chip>;
   }
 
-  const pts = parseCsv(bytes);
+  const pts = parseCsv(result.bytes);
   const d = sparkline(pts);
 
   return (

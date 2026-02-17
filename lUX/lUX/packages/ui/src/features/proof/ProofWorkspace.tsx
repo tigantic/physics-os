@@ -22,14 +22,14 @@ export function ProofWorkspace({
   domain,
   fixture,
   mode,
-  bundleDir,
+  packageId,
 }: {
   proof: ProofPackage;
   baseline?: ProofPackage;
   domain: DomainPack;
   fixture: string;
   mode: ProofMode;
-  bundleDir: string;
+  packageId: string;
 }) {
   return (
     <div className="min-h-screen bg-[var(--color-bg-base)]">
@@ -46,7 +46,7 @@ export function ProofWorkspace({
         </div>
         <main id="main-content" className="min-w-0 flex-1 px-4 py-4 md:px-6 md:py-6">
           <Suspense fallback={<CenterSkeleton />}>
-            <CenterCanvas proof={proof} baseline={baseline} domain={domain} mode={mode} bundleDir={bundleDir} />
+            <CenterCanvas proof={proof} baseline={baseline} domain={domain} mode={mode} packageId={packageId} />
           </Suspense>
         </main>
       </ResponsiveShell>

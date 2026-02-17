@@ -66,18 +66,18 @@ const mockDomain: DomainPack = {
 
 describe("CenterCanvas", () => {
   it('has role="tabpanel"', () => {
-    render(<CenterCanvas proof={mockProof} domain={mockDomain} mode={"REVIEW" as ProofMode} bundleDir="/tmp/bundle" />);
+    render(<CenterCanvas proof={mockProof} domain={mockDomain} mode={"REVIEW" as ProofMode} packageId="pass" />);
     expect(screen.getByRole("tabpanel")).toBeInTheDocument();
   });
 
   it("has correct aria-labelledby linking to mode tab", () => {
-    render(<CenterCanvas proof={mockProof} domain={mockDomain} mode={"AUDIT" as ProofMode} bundleDir="/tmp/bundle" />);
+    render(<CenterCanvas proof={mockProof} domain={mockDomain} mode={"AUDIT" as ProofMode} packageId="pass" />);
     const panel = screen.getByRole("tabpanel");
     expect(panel).toHaveAttribute("aria-labelledby", "mode-tab-AUDIT");
   });
 
   it("renders content from modeComposer", () => {
-    render(<CenterCanvas proof={mockProof} domain={mockDomain} mode={"REVIEW" as ProofMode} bundleDir="/tmp/bundle" />);
+    render(<CenterCanvas proof={mockProof} domain={mockDomain} mode={"REVIEW" as ProofMode} packageId="pass" />);
     // REVIEW mode renders Timeline, ClaimCards, PrimaryViewer
     expect(screen.getByTestId("timeline-screen")).toBeInTheDocument();
   });

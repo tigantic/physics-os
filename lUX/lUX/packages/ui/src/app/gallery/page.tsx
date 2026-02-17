@@ -1,10 +1,9 @@
 import "server-only";
 
-import path from "node:path";
 import type { Metadata } from "next";
 import type { ProofMode } from "@luxury/core";
-import { loadProofPackageFromDir, loadDomainPackForDomain } from "@luxury/core";
 import { ProofWorkspace } from "@/features/proof/ProofWorkspace";
+import { getProvider } from "@/config/provider";
 import { env } from "@/config/env";
 
 const VALID_MODES = new Set<ProofMode>(["EXECUTIVE", "REVIEW", "AUDIT", "PUBLICATION"]);
@@ -51,21 +50,19 @@ export default async function GalleryPage({
   const baseline = VALID_FIXTURES.has(rawBaseline) ? rawBaseline : "pass";
   const mode = parseMode(Array.isArray(searchParams.mode) ? searchParams.mode[0] : (searchParams.mode ?? undefined));
 
-  const bundleDir = path.resolve(env.fixturesRoot, "proof-packages", fixture);
-  const loaded = await loadProofPackageFromDir(bundleDir);
-  const domain = await loadDomainPackForDomain(env.fixturesRoot, loaded.proof.meta.domain_id);
-
-  const baselineDir = path.resolve(env.fixturesRoot, "proof-packages", baseline);
-  const baselineLoaded = await loadProofPackageFromDir(baselineDir);
+  const provider = await getProvider();
+  const proof = await provider.loadPackage(fixture);
+  const domain = await provider.loadDomainPack(proof.meta.domain_id);
+  const baselineProof = await provider.loadPackage(baseline);
 
   return (
     <ProofWorkspace
-      proof={loaded.proof}
-      baseline={baselineLoaded.proof}
+      proof={proof}
+      baseline={baselineProof}
       domain={domain}
       fixture={fixture}
       mode={mode}
-      bundleDir={bundleDir}
+      packageId={fixture}
     />
   );
 }

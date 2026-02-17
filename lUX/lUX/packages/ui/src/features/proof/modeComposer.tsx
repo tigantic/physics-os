@@ -13,7 +13,7 @@ export interface CenterCtx {
   proof: ProofPackage;
   baseline?: ProofPackage;
   domain: DomainPack;
-  bundleDir: string;
+  packageId: string;
   mode: ProofMode;
 }
 
@@ -27,7 +27,7 @@ export function renderCenterScreens(ctx: CenterCtx) {
       return <SummaryScreen key={key} proof={ctx.proof} domain={ctx.domain} mode={ctx.mode} />;
     if (k === "Timeline") return <TimelineScreen key={key} proof={ctx.proof} domain={ctx.domain} />;
     if (k === "ClaimCards") return <GatesScreen key={key} proof={ctx.proof} />;
-    if (k === "PrimaryViewer") return <PrimaryViewer key={key} proof={ctx.proof} bundleDir={ctx.bundleDir} />;
+    if (k === "PrimaryViewer") return <PrimaryViewer key={key} proof={ctx.proof} packageId={ctx.packageId} />;
     if (k === "RawArtifactViewer") return <EvidenceScreen key={key} proof={ctx.proof} />;
     if (k === "ManifestViewer") {
       return (
@@ -63,7 +63,7 @@ export function renderCenterScreens(ctx: CenterCtx) {
     if (k === "DiffViewer")
       return <CompareScreen key={key} proof={ctx.proof} baseline={ctx.baseline} domain={ctx.domain} />;
     if (k === "PaperView") return <SummaryScreen key={key} proof={ctx.proof} domain={ctx.domain} mode={ctx.mode} />;
-    if (k === "FigureStaging") return <PrimaryViewer key={key} proof={ctx.proof} bundleDir={ctx.bundleDir} />;
+    if (k === "FigureStaging") return <PrimaryViewer key={key} proof={ctx.proof} packageId={ctx.packageId} />;
     return <IntegrityScreen key={key} proof={ctx.proof} />;
   });
 }

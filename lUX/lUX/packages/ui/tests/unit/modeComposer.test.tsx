@@ -66,7 +66,7 @@ const mockDomain: DomainPack = {
 };
 
 function makeCtx(mode: ProofMode) {
-  return { proof: mockProof, domain: mockDomain, bundleDir: "/tmp/bundle", mode };
+  return { proof: mockProof, domain: mockDomain, packageId: "pass", mode };
 }
 
 describe("renderCenterScreens", () => {
@@ -109,7 +109,7 @@ describe("renderCenterScreens", () => {
         },
       },
     };
-    const ctx = { proof: proofWithManifests, domain: mockDomain, bundleDir: "/tmp/bundle", mode: "AUDIT" as ProofMode };
+    const ctx = { proof: proofWithManifests, domain: mockDomain, packageId: "pass", mode: "AUDIT" as ProofMode };
     const elements = renderCenterScreens(ctx);
     expect(elements.length).toBe(3);
   });

@@ -5,6 +5,41 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — Pass 9
+
+- **Phase 4 — Data Layer Architecture**:
+  - **`ProofDataProvider` interface** (`packages/core/src/providers/types.ts`): Abstract contract for all data access — `listPackages()`, `loadPackage(id)`, `loadDomainPack(domain)`, `readArtifact(packageId, uri)`. Supporting types: `PackageSummary` (lightweight listing metadata), `ArtifactReadResult` (discriminated union with MIME type and hash).
+  - **`FilesystemProvider`** (`packages/core/src/providers/FilesystemProvider.ts`): Production-default provider wrapping existing fs-based loaders. `listPackages()` reads proof-packages directory and extracts lightweight metadata without full Zod validation. `loadPackage()` performs full Zod parse + artifact hash verification + deep-freeze. `readArtifact()` delegates to `readArtifactBytes` with MIME detection via extension map. Path traversal protection via `assertSafeId()`.
+  - **`HttpProvider`** (`packages/core/src/providers/HttpProvider.ts`): REST client for remote lUX API servers. All responses validated client-side with Zod schemas. `readArtifact()` reads `X-Artifact-Hash` header with fallback to client-side SHA-256 computation. Constructor strips trailing slashes, merges custom headers. Descriptive error messages on HTTP failures.
+  - **`createProvider()` factory** (`packages/core/src/providers/createProvider.ts`): Async factory with dynamic imports for tree-shaking. Provider selection: explicit `config.kind` → `LUX_DATA_PROVIDER` env var → default `"filesystem"`. Exhaustive switch with `never` guard. Throws descriptive errors for missing required config.
+  - **Provider singleton** (`packages/ui/src/config/provider.ts`): Server-side lazy initialization via `getProvider()` + `resetProvider()` for tests. Guarded by `server-only` import. Passes `env.fixturesRoot` and `env.apiBaseUrl` to factory.
+  - **4 Next.js API Route Handlers**:
+    - `GET /api/packages` — list packages with `Cache-Control: s-maxage=60`.
+    - `GET /api/packages/[id]` — load full package, Zod ID validation (`/^[a-zA-Z0-9._-]+$/`), 400/404/500 error codes, `s-maxage=300`.
+    - `GET /api/packages/[id]/artifacts/[...path]` — stream artifact bytes, `X-Artifact-Hash` header, Content-Type detection, `immutable, s-maxage=86400`.
+    - `GET /api/domains/[domain]` — load domain pack, `s-maxage=3600`.
+  - **Gallery page rewrite** (`app/gallery/page.tsx`): Removed `import path` and `import { loadProofPackageFromDir, loadDomainPackForDomain }`. Now uses `getProvider()` → `provider.loadPackage()` / `provider.loadDomainPack()`.
+  - **Component tree migration** — `bundleDir: string` prop eliminated across entire component tree: `ProofWorkspace` → `CenterCanvas` → `modeComposer` → `PrimaryViewer` → `TimeSeriesViewer`. Replaced with `packageId: string`.
+  - **TimeSeriesViewer rewrite**: Removed `node:fs/promises` and `node:path` imports. Now uses `provider.readArtifact(packageId, art.uri)` for all data loading. Path traversal protection handled by provider layer.
+  - **`env.ts` extension**: Added `apiBaseUrl` field from `LUX_API_BASE_URL` env var.
+  - **Barrel export**: `@luxury/core` now exports all provider types and implementations via `providers/index.ts`.
+
+### Changed — Pass 9
+
+- **Zero `node:fs` imports in UI package**: All filesystem access now flows through the `ProofDataProvider` abstraction in `@luxury/core`. The UI package is fully decoupled from the filesystem.
+- **`bundleDir` eliminated**: Every component previously threaded a filesystem path; now receives a `packageId` string and delegates data loading to the provider layer.
+
+### Tests — Pass 9
+
+- **56 new unit tests** (550 total: 276 core + 274 UI):
+  - `filesystemProvider.test.ts` (16): listPackages (summaries, field structure, empty root), loadPackage (valid parse, artifact verification, path traversal, invalid chars, missing package, deep-freeze), loadDomainPack (by ID, missing), readArtifact (valid bytes, MIME detection, traversal, missing), name identity.
+  - `httpProvider.test.ts` (15): listPackages (fetch+validate, network error, HTTP error), loadPackage (fetch+validate, traversal guard, invalid chars, deep-freeze), loadDomainPack (fetch+validate), readArtifact (bytes+hash header, client-side hash fallback, HTTP error, network error), name identity, constructor (trailing slash strip, custom header merge).
+  - `createProvider.test.ts` (8): default filesystem, explicit filesystem/http kinds, env var selection, missing config errors, config overrides env.
+  - `apiRoutes.test.ts` (14): packages list (success, error, cache headers), packages/[id] (success, invalid ID, missing, cache), artifacts (success, missing, cache), domains (success, missing, error, cache).
+  - `providerSingleton.test.ts` (3): returns provider instance, singleton caching, reset clears cache.
+  - Updated 4 existing test files: `bundleDir` → `packageId` in proofWorkspace, primaryViewer, centerCanvas, modeComposer tests.
+- **Coverage**: Core 97.05% → **96.21%** (new provider surface area), UI 87.73% → **88.95%**.
+
 ### Added — Pass 8
 
 - **Phase 3 — Responsive Precision & Mobile Excellence**:

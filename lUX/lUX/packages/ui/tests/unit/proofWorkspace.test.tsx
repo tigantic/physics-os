@@ -85,7 +85,7 @@ describe("ProofWorkspace", () => {
     domain: mockDomain,
     fixture: "pass",
     mode: "REVIEW" as ProofMode,
-    bundleDir: "/tmp/bundle",
+    packageId: "pass",
   };
 
   it("renders IdentityStrip with project heading", () => {

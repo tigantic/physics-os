@@ -13,6 +13,8 @@ function requireEnv() {
 
   const revalidate = parseInt(process.env.LUX_REVALIDATE ?? "0", 10);
 
+  const apiBaseUrl = process.env.LUX_API_BASE_URL?.trim() || undefined;
+
   return Object.freeze({
     /** Absolute path to the fixtures directory containing proof-packages/ and domain-packs/. */
     fixturesRoot: path.resolve(fixturesRoot),
@@ -22,6 +24,8 @@ function requireEnv() {
     revalidate: Number.isFinite(revalidate) && revalidate >= 0 ? revalidate : 0,
     /** Whether running in CI. */
     isCI: process.env.CI === "true",
+    /** API base URL for HttpProvider. Undefined = use FilesystemProvider. */
+    apiBaseUrl,
   });
 }
 
