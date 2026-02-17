@@ -1,0 +1,29 @@
+# ── lUX Fixtures PersistentVolumeClaim ──────────────────────────────────────────
+# Provides persistent storage for proof package fixtures.
+#
+# For managed Kubernetes (EKS/GKE/AKS):
+#   Set storageClassName to your cluster's default StorageClass.
+#   Common values: gp3 (EKS), standard (GKE), managed-csi (AKS).
+#
+# For local/minikube:
+#   storageClassName: standard
+#
+# Alternative: skip PVC entirely and bake fixtures into the Docker image
+# (already done in the Dockerfile via COPY --from=builder).
+# In that case, remove the volumeMounts/volumes from deployment.yaml.
+# ────────────────────────────────────────────────────────────────────────────────
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: lux-fixtures
+  namespace: lux
+  labels:
+    app.kubernetes.io/name: lux
+    app.kubernetes.io/component: storage
+spec:
+  accessModes:
+    - ReadOnlyMany
+  storageClassName: ""  # Set to your cluster's StorageClass (e.g., gp3, standard, managed-csi)
+  resources:
+    requests:
+      storage: 1Gi

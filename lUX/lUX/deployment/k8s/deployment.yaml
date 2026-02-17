@@ -33,8 +33,10 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
         - name: lux
+          # Tag is overridden at deploy time by CI/CD or GitOps.
+          # Use `make k8s-set-image TAG=<sha>` to update.
           image: ghcr.io/tigantic/lux:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 3000

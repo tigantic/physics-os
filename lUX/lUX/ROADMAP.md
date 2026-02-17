@@ -820,12 +820,13 @@ Authoritative token set as implemented in `tokens.ts`, `tokens.css`, and `tokens
 - `tests/unit/` — 68 test files covering DS components, screens, infrastructure, error boundaries, verdict regression
 - `tests/e2e/` — 14 Playwright spec files: a11y, gallery, render-profiler, modes, verdicts, a11y-audit, visual-regression, navigation, axe-full-matrix, not-found, security-headers, viewport-mobile, keyboard-flow, health
 
-### Deployment & Operations (10 files)
+### Deployment & Operations (11 files)
 - `Dockerfile` — Multi-stage Alpine build with OCI labels and build metadata
 - `docker-compose.yml` — Local development container config
 - `deployment/k8s/namespace.yaml` — Kubernetes namespace
 - `deployment/k8s/configmap.yaml` — Non-secret configuration
 - `deployment/k8s/secret.yaml` — Secret placeholder (Sealed Secrets)
+- `deployment/k8s/pvc.yaml` — PersistentVolumeClaim for proof fixtures
 - `deployment/k8s/deployment.yaml` — Pod template + probes + resources
 - `deployment/k8s/service.yaml` — ClusterIP service
 - `deployment/k8s/ingress.yaml` — Nginx ingress + TLS

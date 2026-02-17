@@ -81,10 +81,14 @@ k8s-apply: ## Apply Kubernetes manifests
 	kubectl apply -f deployment/k8s/namespace.yaml
 	kubectl apply -f deployment/k8s/configmap.yaml
 	kubectl apply -f deployment/k8s/secret.yaml
+	kubectl apply -f deployment/k8s/pvc.yaml
 	kubectl apply -f deployment/k8s/deployment.yaml
 	kubectl apply -f deployment/k8s/service.yaml
 	kubectl apply -f deployment/k8s/ingress.yaml
 	kubectl apply -f deployment/k8s/hpa.yaml
+
+k8s-set-image: ## Update deployment image tag (usage: make k8s-set-image TAG=abc1234)
+	kubectl -n $(K8S_NS) set image deployment/lux lux=$(IMAGE_NAME):$(TAG)
 
 k8s-delete: ## Delete Kubernetes resources
 	kubectl delete namespace $(K8S_NS) --ignore-not-found
