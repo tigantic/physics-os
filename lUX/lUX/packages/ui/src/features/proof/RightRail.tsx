@@ -1,11 +1,11 @@
-import { ProofPackage } from "@luxury/core";
+import type { ProofPackage } from "@luxury/core";
 import { Card, CardContent, CardHeader } from "@/ds/components/Card";
 import { CopyField } from "@/ds/components/CopyField";
 
 export function RightRail({ proof }: { proof: ProofPackage }) {
   const v = proof.verification?.status ?? "UNVERIFIED";
   return (
-    <div className="w-[360px] shrink-0 px-6 py-6">
+    <aside aria-label="Integrity details" className="w-full px-4 py-4 lg:w-[360px] lg:shrink-0 lg:px-6 lg:py-6">
       <Card>
         <CardHeader>
           <div className="text-sm text-[var(--color-text-primary)]">Integrity</div>
@@ -27,6 +27,6 @@ export function RightRail({ proof }: { proof: ProofPackage }) {
           ) : null}
         </CardContent>
       </Card>
-    </div>
+    </aside>
   );
 }

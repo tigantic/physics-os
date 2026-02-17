@@ -11,13 +11,13 @@ export function TimelineScreen({ proof, domain }: { proof: ProofPackage; domain:
       </CardHeader>
       <CardContent className="space-y-2">
         {proof.timeline.steps.map((s) => (
-          <div key={s.step_index} className="grid grid-cols-12 gap-2 rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2">
-            <div className="col-span-2 font-mono text-xs text-[var(--color-text-tertiary)]">Step {s.step_index}</div>
-            <div className="col-span-4 truncate font-mono text-xs text-[var(--color-text-tertiary)]">{s.state_hash}</div>
-            <div className="col-span-3">
+          <div key={s.step_index} className="grid grid-cols-1 gap-1 rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2 md:grid-cols-12 md:gap-2">
+            <div className="font-mono text-xs text-[var(--color-text-tertiary)] md:col-span-2">Step {s.step_index}</div>
+            <div className="hidden truncate font-mono text-xs text-[var(--color-text-tertiary)] md:col-span-4 md:block">{s.state_hash}</div>
+            <div className="md:col-span-3">
               <DataValueNumberView dv={s.metrics.conservation_residual ?? { status: "missing", reason: "missing" }} metricId="conservation_residual" domain={domain} />
             </div>
-            <div className="col-span-3">
+            <div className="md:col-span-3">
               <DataValueNumberView dv={s.metrics.l2_drift ?? { status: "missing", reason: "missing" }} metricId="l2_drift" domain={domain} />
             </div>
           </div>

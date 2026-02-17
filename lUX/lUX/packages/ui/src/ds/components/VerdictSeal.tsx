@@ -21,7 +21,7 @@ export function VerdictSeal({ status, verification }: { status: "PASS" | "FAIL" 
   const v: BadgeVariant = VERIFICATION_VARIANT[verification] ?? "default";
 
   return (
-    <div className="flex items-center gap-2">
+    <div role="status" aria-label={`Verdict: ${status}, Verification: ${verification}`} className="flex items-center gap-2">
       <Badge variant={s}>{status}</Badge>
       <Badge variant={v}>{verification}</Badge>
     </div>

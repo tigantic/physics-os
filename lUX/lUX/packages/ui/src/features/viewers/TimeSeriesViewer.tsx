@@ -1,3 +1,5 @@
+import "server-only";
+
 import fs from "node:fs";
 import path from "node:path";
 import type { ProofPackage } from "@luxury/core";
@@ -40,10 +42,24 @@ function sparkline(points: Array<{ x: number; y: number }>, w = 560, h = 120) {
 export function TimeSeriesViewer({ proof, bundleDir, artifactId }: { proof: ProofPackage; bundleDir: string; artifactId: string }) {
   const art = proof.artifacts[artifactId];
   if (!art) return <Chip tone="warn">Data Unavailable</Chip>;
-  const fp = path.resolve(bundleDir, art.uri);
-  if (!fs.existsSync(fp)) return <Chip tone="fail">Invalid</Chip>;
 
-  const bytes = fs.readFileSync(fp);
+  const fp = path.resolve(bundleDir, art.uri);
+
+  // Prevent path traversal — artifact URI must resolve inside bundleDir
+  const resolved = path.resolve(fp);
+  if (!resolved.startsWith(path.resolve(bundleDir) + path.sep)) {
+    return <Chip tone="fail">Invalid Path</Chip>;
+  }
+
+  if (!fs.existsSync(resolved)) return <Chip tone="fail">Invalid</Chip>;
+
+  let bytes: Buffer;
+  try {
+    bytes = fs.readFileSync(resolved);
+  } catch {
+    return <Chip tone="fail">Read Error</Chip>;
+  }
+
   const pts = parseCsv(bytes);
   const d = sparkline(pts);
 

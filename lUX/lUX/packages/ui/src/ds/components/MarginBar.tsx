@@ -22,7 +22,7 @@ export function MarginBar({ margin }: { margin: DataValue<number> }) {
 
   return (
     <div className="w-full">
-      <div className="h-2 w-full rounded-full bg-[var(--color-bg-surface)] border border-[var(--color-border-base)] overflow-hidden">
+      <div role="progressbar" aria-valuenow={Math.round(pct * 100)} aria-valuemin={0} aria-valuemax={100} className="h-2 w-full rounded-full bg-[var(--color-bg-surface)] border border-[var(--color-border-base)] overflow-hidden">
         <div className="h-full transition-all duration-200" style={{ width: `${pct * 100}%`, backgroundColor: tone }} />
       </div>
       <div className="mt-1 flex items-center justify-between">

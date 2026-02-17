@@ -11,7 +11,7 @@ export function Chip({ children, tone = "default" }: { children: React.ReactNode
       ? "border-[var(--color-verdict-warn)]/40 bg-[var(--color-bg-raised)] text-[var(--color-verdict-warn)]"
       : "border-[var(--color-border-base)] bg-[var(--color-bg-raised)] text-[var(--color-text-secondary)]";
   return (
-    <span className={cn("inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium", cls)}>
+    <span role="status" className={cn("inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium", cls)}>
       {children}
     </span>
   );

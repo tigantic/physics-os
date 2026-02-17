@@ -60,6 +60,30 @@ describe("domainPackRegistry", () => {
         "DomainPack not found: com.physics.nonexistent"
       );
     });
+
+    it("rejects pack IDs with path traversal (../)", () => {
+      expect(() => loadDomainPackById(FIXTURES, "../../../etc/passwd")).toThrow(
+        "path traversal"
+      );
+    });
+
+    it("rejects pack IDs with forward slashes", () => {
+      expect(() => loadDomainPackById(FIXTURES, "foo/bar")).toThrow(
+        "path traversal"
+      );
+    });
+
+    it("rejects pack IDs with backslashes", () => {
+      expect(() => loadDomainPackById(FIXTURES, "foo\\bar")).toThrow(
+        "path traversal"
+      );
+    });
+
+    it("rejects pack IDs with special characters", () => {
+      expect(() => loadDomainPackById(FIXTURES, "foo bar")).toThrow(
+        "invalid characters"
+      );
+    });
   });
 
   describe("loadDomainPackForDomain", () => {

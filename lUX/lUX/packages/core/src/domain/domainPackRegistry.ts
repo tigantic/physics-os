@@ -31,11 +31,22 @@ export function loadDomainPackFromFile(filePath: string): DomainPack {
   return pack;
 }
 
+/** Validate that a pack/domain ID contains only safe filesystem characters. */
+function assertSafeId(id: string, label: string): void {
+  if (/\.\.[\\/]/.test(id) || /[\\/]/.test(id)) {
+    throw new Error(`${label} contains path traversal characters: ${id}`);
+  }
+  if (!/^[a-zA-Z0-9._-]+$/.test(id)) {
+    throw new Error(`${label} contains invalid characters: ${id}`);
+  }
+}
+
 /**
  * Load a domain pack by its pack ID (e.g. "com.physics.euler_3d").
  * Searches <fixturesRoot>/domain-packs/<packId>.json.
  */
 export function loadDomainPackById(fixturesRoot: string, packId: string): DomainPack {
+  assertSafeId(packId, "packId");
   const p = path.resolve(fixturesRoot, "domain-packs", `${packId}.json`);
   if (!fs.existsSync(p)) throw new Error(`DomainPack not found: ${packId}`);
   return loadDomainPackFromFile(p);
@@ -46,6 +57,7 @@ export function loadDomainPackById(fixturesRoot: string, packId: string): Domain
  * Uses _manifest.json to resolve domain_id → pack ID.
  */
 export function loadDomainPackForDomain(fixturesRoot: string, domainId: string): DomainPack {
+  assertSafeId(domainId, "domainId");
   const manifest = loadManifest(fixturesRoot);
   const packId = manifest[domainId];
   if (!packId) {

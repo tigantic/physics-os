@@ -14,10 +14,10 @@ export function DataValueNumberView({ dv, metricId, domain }: { dv: DataValue<nu
   const meta = domain.metrics[metricId];
   const precision = meta?.precision ?? 4;
   const fmt = meta?.format ?? "fixed";
-  let s = "";
-  if (fmt === "fixed") s = dv.value.toFixed(precision);
-  else if (fmt === "scientific") s = dv.value.toExponential(precision);
-  else s = formatEngineering(dv.value, precision);
+  const s =
+    fmt === "fixed" ? dv.value.toFixed(precision)
+    : fmt === "scientific" ? dv.value.toExponential(precision)
+    : formatEngineering(dv.value, precision);
 
   if (meta?.validity_range) {
     const [lo, hi] = meta.validity_range;

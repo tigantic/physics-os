@@ -1,10 +1,9 @@
 "use client";
 
 /**
- * Gallery-level error boundary — catches proof loading / rendering failures.
- * Provides structured diagnostics and retry capability.
+ * Root-level error boundary — catches any error thrown outside /gallery.
  */
-export default function GalleryError({
+export default function RootError({
   error,
   reset,
 }: {
@@ -12,16 +11,12 @@ export default function GalleryError({
   reset: () => void;
 }) {
   return (
-    <div
-      className="min-h-screen bg-[var(--color-bg-base)] text-[var(--color-text-primary)] p-10"
-      role="alert"
-      aria-live="assertive"
-    >
-      <div className="mx-auto max-w-[900px] rounded-[var(--radius-outer)] border bg-[var(--color-bg-raised)] p-6">
+    <div className="min-h-screen bg-[var(--color-bg-base)] text-[var(--color-text-primary)] flex items-center justify-center p-10">
+      <div className="mx-auto max-w-[600px] rounded-[var(--radius-outer)] border bg-[var(--color-bg-raised)] p-6">
         <div className="text-xs uppercase tracking-wider text-[var(--color-text-tertiary)]">
-          Render Halted
+          Application Error
         </div>
-        <h1 className="mt-2 text-lg font-semibold">Viewer Error</h1>
+        <div className="mt-2 text-lg font-semibold">Something went wrong</div>
         <pre className="mt-4 font-mono text-xs text-[var(--color-verdict-fail)] whitespace-pre-wrap break-words">
           {error.message}
         </pre>

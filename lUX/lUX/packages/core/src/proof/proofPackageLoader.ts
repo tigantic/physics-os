@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-import { ProofPackageSchema, ProofPackage } from "../schema/proofPackage.zod.js";
+import { ProofPackageSchema } from "../schema/proofPackage.zod.js";
+import type { ProofPackage } from "../schema/proofPackage.zod.js";
 import { verifyProofPackageArtifacts } from "./integrity.js";
 
 function deepFreeze<T>(obj: T): T {
@@ -25,13 +26,13 @@ export function loadProofPackageFromDir(bundleDir: string): LoadedProofPackage {
   const parsed = ProofPackageSchema.parse(raw);
   const verification = verifyProofPackageArtifacts(parsed, bundleDir);
 
-  const proof: ProofPackage = {
+  const proof: ProofPackage = deepFreeze({
     ...parsed,
     verification: {
       status: verification.status,
       failures: verification.failures.map(f => ({ code: f.code, message: f.message, artifact_id: f.artifact_id })),
       verifier_version: "0.1.0"
     }
-  };
+  });
   return { bundleDir, proof };
 }

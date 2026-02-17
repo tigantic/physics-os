@@ -22,10 +22,13 @@ export function ModeDial() {
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div role="tablist" aria-label="Proof viewing mode" className="flex items-center gap-2 overflow-x-auto">
       {MODES.map((m) => (
         <Button
           key={m}
+          role="tab"
+          aria-selected={m === mode}
+          tabIndex={m === mode ? 0 : -1}
           variant={m === mode ? "gold" : "default"}
           size="sm"
           onClick={() => setMode(m)}

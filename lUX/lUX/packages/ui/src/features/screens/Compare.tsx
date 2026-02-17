@@ -33,13 +33,13 @@ export function CompareScreen({ proof, baseline, domain }: { proof: ProofPackage
       </CardHeader>
       <CardContent className="space-y-2">
         {mids.map((mid) => (
-          <div key={mid} className="grid grid-cols-12 items-center gap-2 rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2">
-            <div className="col-span-3 text-xs text-[var(--color-text-tertiary)]">{domain.metrics[mid]?.label ?? mid}</div>
-            <div className="col-span-4">
+          <div key={mid} className="grid grid-cols-1 items-center gap-1 rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2 md:grid-cols-12 md:gap-2">
+            <div className="text-xs font-semibold text-[var(--color-text-tertiary)] md:col-span-3 md:font-normal">{domain.metrics[mid]?.label ?? mid}</div>
+            <div className="md:col-span-4">
               <DataValueNumberView dv={lastStepMetric(proof, mid)} metricId={mid} domain={domain} />
             </div>
-            <div className="col-span-1 text-xs text-[var(--color-text-tertiary)]">vs</div>
-            <div className="col-span-4">
+            <div className="hidden text-xs text-[var(--color-text-tertiary)] md:col-span-1 md:block">vs</div>
+            <div className="md:col-span-4">
               <DataValueNumberView dv={lastStepMetric(baseline, mid)} metricId={mid} domain={domain} />
             </div>
           </div>

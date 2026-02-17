@@ -15,4 +15,7 @@ jobs:
       - run: pnpm install
       - run: pnpm -w run build:tokens
       - run: pnpm -w run build
+      - run: npx playwright install chromium --with-deps
       - run: pnpm -w run test:e2e
+        env:
+          CI: "true"

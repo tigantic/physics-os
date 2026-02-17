@@ -5,8 +5,10 @@ module.exports = {
     "color-no-hex": true,
     "function-disallowed-list": ["rgb", "rgba", "hsl", "hsla"],
     "declaration-property-value-disallowed-list": {
-      "/color/": ["/^#/", "/rgb\(/", "/rgba\(/", "/hsl\(/", "/hsla\(/"]
-    }
+      "/color/": ["/^#/", "/rgb\\(/", "/rgba\\(/", "/hsl\\(/", "/hsla\\(/"]
+    },
+    "import-notation": "string",
+    "value-keyword-case": ["lower", { ignoreProperties: ["text-rendering", "font-family"] }]
   },
   ignoreFiles: [
     "**/tokens.css",

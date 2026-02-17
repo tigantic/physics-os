@@ -16,5 +16,6 @@ jobs:
       - run: pnpm -w run build:tokens
       - run: pnpm -w run lint
       - run: pnpm -w run typecheck
+      - run: pnpm -w run build
       - run: pnpm -w run test:unit
       - run: pnpm -w run test:schema

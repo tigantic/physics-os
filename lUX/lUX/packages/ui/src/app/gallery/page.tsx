@@ -1,5 +1,6 @@
+import "server-only";
+
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import type { ProofMode } from "@luxury/core";
 import { loadProofPackageFromDir, loadDomainPackForDomain } from "@luxury/core";
 import { ProofWorkspace } from "@/features/proof/ProofWorkspace";
@@ -11,11 +12,12 @@ function parseMode(raw?: string): ProofMode {
   return VALID_MODES.has(m) ? m : "REVIEW";
 }
 
-/** Workspace-root-relative path to core fixtures, independent of cwd. */
-const FIXTURES_ROOT = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "..", "..", "..", "..", "..", "core", "tests", "fixtures"
-);
+/**
+ * Fixtures path — resolved relative to the UI package root.
+ * Next.js guarantees process.cwd() = the directory containing next.config.*.
+ * In this monorepo: packages/ui → ../core/tests/fixtures.
+ */
+const FIXTURES_ROOT = path.resolve(process.cwd(), "..", "core", "tests", "fixtures");
 
 const VALID_FIXTURES = new Set(["pass", "fail", "warn", "incomplete", "tampered"]);
 

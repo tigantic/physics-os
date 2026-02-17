@@ -7,7 +7,7 @@ import type { DataValue } from "@luxury/core";
 describe("MarginBar", () => {
   it("renders bar for valid margin", () => {
     const margin: DataValue<number> = { status: "ok", value: 0.75 };
-    const { container } = render(<MarginBar margin={margin} />);
+    render(<MarginBar margin={margin} />);
     expect(screen.getByText("75.0%")).toBeInTheDocument();
     // Should not show "Low margin" chip
     expect(screen.queryByText("Low margin")).not.toBeInTheDocument();

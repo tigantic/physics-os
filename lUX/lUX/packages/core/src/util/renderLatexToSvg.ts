@@ -6,6 +6,7 @@ import { liteAdaptor } from "mathjax-full/js/adaptors/liteAdaptor.js";
 import { RegisterHTMLHandler } from "mathjax-full/js/handlers/html.js";
 import type { LiteAdaptor } from "mathjax-full/js/adaptors/liteAdaptor.js";
 import { normalizeSvg } from "./normalizeSvg.js";
+import { sanitizeSvg } from "./sanitizeSvg.js";
 
 let initialized = false;
 let adaptor: LiteAdaptor;
@@ -26,5 +27,5 @@ export function renderLatexToSvg(latex: string, displayMode = true): string {
   const mathml = katex.renderToString(latex, { output: "mathml", throwOnError: false });
   const node = mathDocument.convert(mathml, { display: displayMode });
   const svg = adaptor.outerHTML(node);
-  return normalizeSvg(svg);
+  return sanitizeSvg(normalizeSvg(svg));
 }
