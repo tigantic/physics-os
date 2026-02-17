@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "@/config/utils";
 
-export function Chip({
+export const Chip = React.memo(function Chip({
   children,
   tone = "default",
 }: {
@@ -24,4 +24,4 @@ export function Chip({
       {children}
     </span>
   );
-}
+});

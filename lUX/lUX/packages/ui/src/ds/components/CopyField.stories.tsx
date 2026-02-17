@@ -4,6 +4,7 @@ import { CopyField } from "./CopyField";
 const meta: Meta<typeof CopyField> = {
   title: "DS/CopyField",
   component: CopyField,
+  tags: ["autodocs"],
 };
 
 export default meta;

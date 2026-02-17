@@ -4,6 +4,7 @@ import { VerdictSeal } from "./VerdictSeal";
 const meta: Meta<typeof VerdictSeal> = {
   title: "DS/VerdictSeal",
   component: VerdictSeal,
+  tags: ["autodocs"],
 };
 
 export default meta;

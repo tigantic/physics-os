@@ -1,3 +1,4 @@
+import React from "react";
 import type { DataValue } from "@luxury/core";
 import { Chip } from "./Chip";
 
@@ -12,7 +13,7 @@ import { Chip } from "./Chip";
  * The bar clamps display to [0, 1] and color-codes:
  *   >50 % → gold (comfortable)   10-50 % → warn   <10 % → fail
  */
-export function MarginBar({ margin }: { margin: DataValue<number> }) {
+export const MarginBar = React.memo(function MarginBar({ margin }: { margin: DataValue<number> }) {
   if (margin.status === "missing") return <Chip tone="warn">Data Unavailable</Chip>;
   if (margin.status === "invalid") return <Chip tone="fail">Invalid</Chip>;
 
@@ -38,4 +39,4 @@ export function MarginBar({ margin }: { margin: DataValue<number> }) {
       </div>
     </div>
   );
-}
+});

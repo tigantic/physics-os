@@ -1,13 +1,15 @@
-@import "@fontsource/ibm-plex-sans/400.css";
-@import "@fontsource/ibm-plex-sans/500.css";
-@import "@fontsource/ibm-plex-sans/600.css";
-@import "@fontsource/jetbrains-mono/400.css";
-@import "@fontsource/jetbrains-mono/500.css";
+/* Fonts loaded via next/font in layout.tsx — CSS variables --font-sans and --font-mono */
 
 :root {
-  font-family: IBMPlexSans, system-ui, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-variant-numeric: tabular-nums;
+}
+
+code,
+pre,
+.font-mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
 }

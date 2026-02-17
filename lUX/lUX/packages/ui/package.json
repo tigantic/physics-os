@@ -39,6 +39,7 @@
     "@eslint/js": "^10.0.1",
     "@next/eslint-plugin-next": "^16.1.6",
     "@playwright/test": "^1.46.1",
+    "@storybook/addon-a11y": "^10.2.8",
     "@storybook/addon-essentials": "^8.2.9",
     "@storybook/addon-interactions": "^8.2.9",
     "@storybook/nextjs": "^8.2.9",

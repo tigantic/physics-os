@@ -23,8 +23,12 @@ function init(): void {
 }
 
 export function renderLatexToSvg(latex: string, displayMode = true): string {
+  if (!latex.trim()) return "";
   init();
-  const mathml = katex.renderToString(latex, { output: "mathml", throwOnError: false });
+  const raw = katex.renderToString(latex, { output: "mathml", throwOnError: false });
+  // KaTeX wraps MathML in <span class="katex">; MathJax needs only the <math> element.
+  const mathMatch = raw.match(/<math[\s\S]*<\/math>/);
+  const mathml = mathMatch ? mathMatch[0] : raw;
   const node = mathDocument.convert(mathml, { display: displayMode });
   const svg = adaptor.outerHTML(node);
   return sanitizeSvg(normalizeSvg(svg));

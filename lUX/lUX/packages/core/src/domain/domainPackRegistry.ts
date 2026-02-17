@@ -22,7 +22,9 @@ export async function loadDomainPackFromFile(filePath: string): Promise<DomainPa
     try {
       raw = JSON.parse(text);
     } catch (err) {
-      throw new Error(`Invalid JSON in domain pack ${abs}: ${err instanceof Error ? err.message : String(err)}`, { cause: err });
+      throw new Error(`Invalid JSON in domain pack ${abs}: ${err instanceof Error ? err.message : String(err)}`, {
+        cause: err,
+      });
     }
     return deepFreeze(DomainPackSchema.parse(raw));
   })();

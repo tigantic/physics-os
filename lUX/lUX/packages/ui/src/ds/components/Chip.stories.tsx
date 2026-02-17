@@ -4,6 +4,7 @@ import { Chip } from "./Chip";
 const meta: Meta<typeof Chip> = {
   title: "DS/Chip",
   component: Chip,
+  tags: ["autodocs"],
 };
 
 export default meta;

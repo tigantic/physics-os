@@ -29,7 +29,7 @@ export async function generateMetadata({
   searchParams: Record<string, string | string[] | undefined>;
 }): Promise<Metadata> {
   const fixture = String(searchParams.fixture ?? "pass");
-  const mode = parseMode(searchParams.mode as string | undefined);
+  const mode = parseMode(Array.isArray(searchParams.mode) ? searchParams.mode[0] : (searchParams.mode ?? undefined));
   const title = `${fixture} · ${mode}`;
   return {
     title,
@@ -49,7 +49,7 @@ export default async function GalleryPage({
   const rawBaseline = String(searchParams.baseline ?? "pass");
   const fixture = VALID_FIXTURES.has(rawFixture) ? rawFixture : "pass";
   const baseline = VALID_FIXTURES.has(rawBaseline) ? rawBaseline : "pass";
-  const mode = parseMode(searchParams.mode as string | undefined);
+  const mode = parseMode(Array.isArray(searchParams.mode) ? searchParams.mode[0] : (searchParams.mode ?? undefined));
 
   const bundleDir = path.resolve(env.fixturesRoot, "proof-packages", fixture);
   const loaded = await loadProofPackageFromDir(bundleDir);

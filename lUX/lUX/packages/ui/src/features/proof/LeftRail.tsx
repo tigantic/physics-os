@@ -16,7 +16,11 @@ export function LeftRail({ proof, fixture, mode }: { proof: ProofPackage; fixtur
             <ul className="space-y-2">
               {["pass", "fail", "warn", "incomplete", "tampered"].map((id) => (
                 <li key={id}>
-                  <Link className="block" href={`/gallery?fixture=${id}&mode=${mode}`}>
+                  <Link
+                    className="block"
+                    href={`/gallery?fixture=${id}&mode=${mode}`}
+                    aria-current={id === fixture ? "page" : undefined}
+                  >
                     <div className="flex items-center justify-between rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2">
                       <span className="text-sm text-[var(--color-text-secondary)]">{id}</span>
                       {id === fixture ? <Chip tone="gold">Active</Chip> : null}

@@ -5,7 +5,51 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### Added
+### Added — Pass 5
+
+- **Type guards**: `isMode()` and `isProofMode()` replace unsafe `as` casts in ModeDial and gallery page.
+- **Suspense boundary**: `CenterCanvas` wrapped in `<Suspense>` with skeleton fallback in `ProofWorkspace`.
+- **ManifestViewer syntax highlighting**: Structured key-value rendering with gold-accented gate IDs.
+- **Storybook addon-a11y**: Accessibility panel enabled; autodocs tags on all 8 story files.
+- **E2E tests**: Health endpoint, accessibility (skip-to-content, tab navigation, heading hierarchy), 404 page (7 new specs, 35 total).
+- **95 new unit tests**: Core (deepFreeze, hash, normalizeSvg, renderLatexToSvg, modeMap) + UI (ModeDial, IdentityStrip, LeftRail, RightRail, CenterCanvas, ModeComposer, ProofWorkspace, MathBlock, PrimaryViewer, env, health, sitemap, robots). **368 total unit tests**.
+- **CI hardening**: `test:coverage` script, `pnpm audit --audit-level=high` step, E2E workflow triggers on push to main.
+
+### Changed — Pass 5
+
+- **Font loading**: `@fontsource` CSS imports replaced with `next/font/google` (IBM Plex Sans + JetBrains Mono) for automatic `font-display: swap` and subsetting.
+- **Coverage thresholds raised**: Core 80/75/70/80, UI 70/65/60/70 (lines/functions/branches/statements).
+- **E2E screenshots**: Replaced fragile sha256 hash comparison with Playwright `toHaveScreenshot()` + `maxDiffPixelRatio`.
+- **React.memo**: Added to Chip, MarginBar, Badge (joining CopyField, Disclosure from Pass 4).
+- **Dockerignore**: Expanded to exclude `SPEC/`, `design/`, `tools/`, `storybook-static/`, `*.md`, config dotfiles.
+- **Storybook**: Removed deprecated `argTypesRegex` parameter from preview config.
+
+### Fixed — Pass 5
+
+- **KaTeX/MathJax interop bug**: `renderLatexToSvg` now extracts bare `<math>` element from KaTeX `<span class="katex">` wrapper; added empty-string early return.
+- **Dead prop**: Removed unused `domain` prop from `GatesScreen` interface and call site.
+- **Stable keys**: RightRail failure list uses `${f.code}-${f.artifact_id}` instead of array index.
+- **`aria-current="page"`**: Active fixture link in LeftRail now announces current page to screen readers.
+
+### Added — Pass 4
+
+- **CopyField safety**: Sanitized clipboard content via `DOMPurify.sanitize()`.
+- **Zod manifest validation**: Runtime schema check on proof manifest before rendering.
+- **Typed env config**: Frozen `env` object with Zod-validated `NEXT_PUBLIC_*` vars and ISR revalidate.
+- **SEO/OG meta tags**: Dynamic `generateMetadata()` with Open Graph and Twitter card support.
+- **Skip-to-content link**: Visually hidden anchor targeting `#main-content`, visible on focus.
+- **Heading hierarchy**: Single `<h1>` per page, sequential nesting enforced.
+- **ARIA tabs**: ModeDial uses `role="tablist"` / `role="tab"` / `aria-selected` / roving `tabIndex`.
+- **Health endpoint**: `GET /api/health` returns `{ status, service, timestamp, uptime }`.
+- **Docker HEALTHCHECK**: Container self-monitors via health endpoint.
+- **23 new unit tests** (273 total at time of commit).
+
+### Changed — Pass 4
+
+- **Contrast boost**: Design token adjustments for WCAG AA on all interactive elements.
+- **React.memo**: Added to CopyField and Disclosure components.
+
+### Added — Pass 3
 
 - **Async I/O**: All core loaders (`artifactStore`, `proofPackageLoader`, `domainPackRegistry`, `integrity`) converted from sync `fs` to `fs/promises`.
 - **Dockerfile**: 3-stage alpine build with standalone Next.js output, non-root `nextjs` user.
@@ -21,14 +65,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **`no-console` lint rule**: Warns on `console.log` in both packages.
 - **Shared `deepFreeze` utility**: Deduplicated from `proofPackageLoader` and `domainPackRegistry`.
 
-### Changed
+### Changed — Pass 3
 
 - `z.any()` → `z.unknown()` across all Zod schemas (4 instances) for stricter type safety.
 - Playwright projects renamed from `reduced-motion`/`normal-motion` to `chromium`/`firefox`/`mobile-chrome`.
 - Theme color aligned with design system token `#C9A96E`.
 - Token purity test updated to exclude `layout.tsx` (viewport metadata requires raw hex).
 
-### Fixed
+### Fixed — Pass 3
 
 - Token purity false positive on layout.tsx `themeColor` viewport metadata.
 

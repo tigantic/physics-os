@@ -8,3 +8,14 @@ playwright-report
 coverage
 *.tsbuildinfo
 packages/core/dist
+SPEC/
+design/
+tools/
+storybook-static/
+*.md
+!README.md
+eslint.config.js
+.prettierrc
+.editorconfig
+.env*
+!.env.example

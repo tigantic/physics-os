@@ -1,9 +1,4 @@
 import { test, expect } from "@playwright/test";
-import crypto from "node:crypto";
-
-function hash(buf: Buffer) {
-  return crypto.createHash("sha256").update(buf).digest("hex");
-}
 
 const MODES = ["EXECUTIVE", "REVIEW", "AUDIT", "PUBLICATION"];
 
@@ -14,10 +9,10 @@ test.describe("gallery", () => {
       for (const mode of MODES) {
         await page.goto(`/gallery?fixture=pass&mode=${mode}`);
         await expect(page.getByText("Luxury Physics Viewer")).toBeVisible();
-        const shot1 = await page.screenshot({ fullPage: true });
-        await page.reload();
-        const shot2 = await page.screenshot({ fullPage: true });
-        expect(hash(Buffer.from(shot1))).toBe(hash(Buffer.from(shot2)));
+        await expect(page).toHaveScreenshot(`gallery-${mode}-${width}.png`, {
+          fullPage: true,
+          maxDiffPixelRatio: 0.01,
+        });
       }
     });
 
@@ -25,10 +20,10 @@ test.describe("gallery", () => {
       await page.emulateMedia({ reducedMotion: "reduce" });
       await page.setViewportSize({ width, height: 900 });
       await page.goto(`/gallery?fixture=pass&mode=REVIEW`);
-      const s1 = await page.screenshot({ fullPage: true });
-      await page.reload();
-      const s2 = await page.screenshot({ fullPage: true });
-      expect(hash(Buffer.from(s1))).toBe(hash(Buffer.from(s2)));
+      await expect(page).toHaveScreenshot(`gallery-reduced-${width}.png`, {
+        fullPage: true,
+        maxDiffPixelRatio: 0.01,
+      });
     });
   }
 

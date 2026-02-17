@@ -5,12 +5,18 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/config/utils";
 
 const MODES = ["EXECUTIVE", "REVIEW", "AUDIT", "PUBLICATION"] as const;
+type Mode = (typeof MODES)[number];
+
+function isMode(s: string): s is Mode {
+  return (MODES as readonly string[]).includes(s);
+}
 
 export function ModeDial() {
   const sp = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const mode = (sp.get("mode") ?? "REVIEW") as string;
+  const raw = sp.get("mode") ?? "REVIEW";
+  const mode: Mode = isMode(raw) ? raw : "REVIEW";
   const fixture = sp.get("fixture") ?? "pass";
   const baseline = sp.get("baseline") ?? "pass";
   const tabsRef = React.useRef<(HTMLButtonElement | null)[]>([]);
@@ -24,7 +30,7 @@ export function ModeDial() {
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-    const currentIdx = MODES.indexOf(mode as (typeof MODES)[number]);
+    const currentIdx = MODES.indexOf(mode);
     if (currentIdx === -1) return;
 
     let nextIdx: number | null = null;

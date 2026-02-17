@@ -27,17 +27,18 @@ pnpm dev            # starts Next.js dev server at http://localhost:3000
 
 ## Scripts
 
-| Command             | Description                                 |
-| ------------------- | ------------------------------------------- |
-| `pnpm dev`          | Start Next.js dev server                    |
-| `pnpm build`        | Build tokens → core → ui (production)       |
-| `pnpm lint`         | ESLint across all packages                  |
-| `pnpm typecheck`    | TypeScript strict check across all packages |
-| `pnpm test:unit`    | Vitest unit tests (core + ui)               |
-| `pnpm test:schema`  | Domain pack validation (140 packs)          |
-| `pnpm test:e2e`     | Playwright E2E (Chromium, Firefox, mobile)  |
-| `pnpm format`       | Prettier — format all files                 |
-| `pnpm format:check` | Prettier — check (CI-friendly)              |
+| Command              | Description                                 |
+| -------------------- | ------------------------------------------- |
+| `pnpm dev`           | Start Next.js dev server                    |
+| `pnpm build`         | Build tokens → core → ui (production)       |
+| `pnpm lint`          | ESLint across all packages                  |
+| `pnpm typecheck`     | TypeScript strict check across all packages |
+| `pnpm test:unit`     | Vitest unit tests (core + ui)               |
+| `pnpm test:coverage` | Vitest with coverage thresholds enforced    |
+| `pnpm test:schema`   | Domain pack validation (140 packs)          |
+| `pnpm test:e2e`      | Playwright E2E (Chromium, Firefox, mobile)  |
+| `pnpm format`        | Prettier — format all files                 |
+| `pnpm format:check`  | Prettier — check (CI-friendly)              |
 
 ## Design System
 
@@ -74,9 +75,22 @@ See `SPEC/SECURITY_MODEL.md` for the full threat model.
 
 ## Testing
 
-- **250 unit tests** (Vitest): schema validation, component rendering, accessibility, token purity
-- **28 E2E tests** (Playwright): gallery navigation, proof detail rendering, reduced-motion, error boundaries
-- **Coverage thresholds**: Core 70/65/60/70 · UI 60/55/50/60 (lines/functions/branches/statements)
+- **368 unit tests** (Vitest): schema validation, component rendering, accessibility, token purity, utilities, routes
+- **35 E2E tests** (Playwright): gallery navigation, proof detail rendering, health endpoint, accessibility (skip-to-content, tab pattern, heading hierarchy), 404 page, reduced-motion, error boundaries
+- **Coverage thresholds**: Core 80/75/70/80 · UI 70/65/60/70 (lines/functions/branches/statements)
+
+## Environment Variables
+
+| Variable                         | Default                 | Description                       |
+| -------------------------------- | ----------------------- | --------------------------------- |
+| `NEXT_PUBLIC_BASE_URL`           | `http://localhost:3000` | Canonical base URL for OG/sitemap |
+| `NEXT_PUBLIC_REVALIDATE_SECONDS` | `3600`                  | ISR revalidation interval (secs)  |
+
+## Health Endpoint
+
+```
+GET /api/health → { status: "ok", service: "lux-proof-viewer", timestamp, uptime }
+```
 
 ## Docker
 

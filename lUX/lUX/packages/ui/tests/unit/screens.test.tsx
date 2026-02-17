@@ -83,14 +83,14 @@ describe("EvidenceScreen", () => {
 // ---------------------------------------------------------------------------
 describe("GatesScreen", () => {
   it("renders gate count and gate details", () => {
-    render(<GatesScreen proof={proof} domain={domain} />);
+    render(<GatesScreen proof={proof} />);
     expect(screen.getByText("Gates")).toBeInTheDocument();
     expect(screen.getByText("1 evaluated")).toBeInTheDocument();
     expect(screen.getByText(/G-001/)).toBeInTheDocument();
   });
 
   it("shows PASS chip for passing gate", () => {
-    render(<GatesScreen proof={proof} domain={domain} />);
+    render(<GatesScreen proof={proof} />);
     expect(screen.getAllByText("PASS").length).toBeGreaterThanOrEqual(1);
   });
 
@@ -106,7 +106,7 @@ describe("GatesScreen", () => {
         },
       },
     });
-    render(<GatesScreen proof={failProof} domain={domain} />);
+    render(<GatesScreen proof={failProof} />);
     expect(screen.getAllByText("FAIL").length).toBeGreaterThanOrEqual(1);
   });
 
@@ -122,7 +122,7 @@ describe("GatesScreen", () => {
         },
       },
     });
-    render(<GatesScreen proof={missingProof} domain={domain} />);
+    render(<GatesScreen proof={missingProof} />);
     expect(screen.getAllByText("Data Unavailable").length).toBeGreaterThanOrEqual(1);
   });
 });

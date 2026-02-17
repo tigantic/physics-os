@@ -1,9 +1,9 @@
-import type { ProofPackage, DomainPack } from "@luxury/core";
+import type { ProofPackage } from "@luxury/core";
 import { Card, CardContent, CardHeader } from "@/ds/components/Card";
 import { MarginBar } from "@/ds/components/MarginBar";
 import { Chip } from "@/ds/components/Chip";
 
-export function GatesScreen({ proof }: { proof: ProofPackage; domain: DomainPack }) {
+export function GatesScreen({ proof }: { proof: ProofPackage }) {
   const results = Object.values(proof.gate_results);
   return (
     <Card>

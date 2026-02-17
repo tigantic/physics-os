@@ -115,6 +115,9 @@ importers:
       '@playwright/test':
         specifier: ^1.46.1
         version: 1.58.2
+      '@storybook/addon-a11y':
+        specifier: ^10.2.8
+        version: 10.2.8(storybook@8.6.15(prettier@3.8.1))
       '@storybook/addon-essentials':
         specifier: ^8.2.9
         version: 8.6.14(@types/react@18.3.28)(storybook@8.6.15(prettier@3.8.1))
@@ -1994,6 +1997,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@storybook/addon-a11y@10.2.8':
+    resolution: {integrity: sha512-EW5MzPKNzyPorvodd416U2Np+zEdMPe+BSyomjm0oCXoC/6rDurf05H1pa99rZsrTDRrpog+HCz8iVa4XSwN5Q==}
+    peerDependencies:
+      storybook: ^10.2.8
+
   '@storybook/addon-actions@8.6.14':
     resolution: {integrity: sha512-mDQxylxGGCQSK7tJPkD144J8jWh9IU9ziJMHfB84PKpI/V5ZgqMDnpr2bssTrUaGDqU5e1/z8KcRF+Melhs9pQ==}
     peerDependencies:
@@ -2612,6 +2620,10 @@ packages:
   available-typed-arrays@1.0.7:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
+
+  axe-core@4.11.1:
+    resolution: {integrity: sha512-BASOg+YwO2C+346x3LZOeoovTIoTrRqEsqMa6fmfAV0P+U9mFr9NsyOEpiYvFjbc64NMrSswhV50WdXzdb/Z5A==}
+    engines: {node: '>=4'}
 
   babel-loader@9.2.1:
     resolution: {integrity: sha512-fqe8naHt46e0yIdkjUZYqddSXfej3AHajX+CSO5X7oy0EmPc6o5Xh+RClNoHjnieWz9AW4kZxW9yyFMhVB1QLA==}
@@ -6802,6 +6814,12 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.57.1':
     optional: true
 
+  '@storybook/addon-a11y@10.2.8(storybook@8.6.15(prettier@3.8.1))':
+    dependencies:
+      '@storybook/global': 5.0.0
+      axe-core: 4.11.1
+      storybook: 8.6.15(prettier@3.8.1)
+
   '@storybook/addon-actions@8.6.14(storybook@8.6.15(prettier@3.8.1))':
     dependencies:
       '@storybook/global': 5.0.0
@@ -7657,6 +7675,8 @@ snapshots:
   available-typed-arrays@1.0.7:
     dependencies:
       possible-typed-array-names: 1.1.0
+
+  axe-core@4.11.1: {}
 
   babel-loader@9.2.1(@babel/core@7.29.0)(webpack@5.105.2(esbuild@0.25.12)):
     dependencies:

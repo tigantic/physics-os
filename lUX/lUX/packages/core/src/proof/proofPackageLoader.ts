@@ -22,7 +22,9 @@ export async function loadProofPackageFromDir(bundleDir: string): Promise<Loaded
   try {
     raw = JSON.parse(rawText);
   } catch (err) {
-    throw new Error(`Invalid JSON in proofPackage.json: ${err instanceof Error ? err.message : String(err)}`, { cause: err });
+    throw new Error(`Invalid JSON in proofPackage.json: ${err instanceof Error ? err.message : String(err)}`, {
+      cause: err,
+    });
   }
   const parsed = ProofPackageSchema.parse(raw);
   const verification = await verifyProofPackageArtifacts(parsed, bundleDir);

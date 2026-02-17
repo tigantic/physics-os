@@ -4,6 +4,7 @@ import { MarginBar } from "./MarginBar";
 const meta: Meta<typeof MarginBar> = {
   title: "DS/MarginBar",
   component: MarginBar,
+  tags: ["autodocs"],
 };
 
 export default meta;

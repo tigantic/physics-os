@@ -4,6 +4,7 @@ import { Disclosure } from "./Disclosure";
 const meta: Meta<typeof Disclosure> = {
   title: "DS/Disclosure",
   component: Disclosure,
+  tags: ["autodocs"],
 };
 
 export default meta;

@@ -19,8 +19,8 @@ export function RightRail({ proof }: { proof: ProofPackage }) {
             <div className="rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2">
               <div className="text-xs uppercase tracking-wide text-[var(--color-text-tertiary)]">Failures</div>
               <ul className="mt-2 space-y-1 text-xs text-[var(--color-verdict-fail)]">
-                {proof.verification.failures.map((f, i) => (
-                  <li key={i} className="font-mono">
+                {proof.verification.failures.map((f) => (
+                  <li key={`${f.code}-${f.artifact_id ?? "global"}`} className="font-mono">
                     {f.code}
                     {f.artifact_id ? ` (${f.artifact_id})` : ""}
                   </li>

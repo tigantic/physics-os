@@ -1,9 +1,19 @@
+import { Suspense } from "react";
 import type { ProofPackage, DomainPack, ProofMode } from "@luxury/core";
 import { IdentityStrip } from "./IdentityStrip";
 import { LeftRail } from "./LeftRail";
 import { RightRail } from "./RightRail";
 import { CenterCanvas } from "./CenterCanvas";
 import { ModeDial } from "./ModeDial";
+
+function CenterSkeleton() {
+  return (
+    <div className="animate-pulse space-y-4">
+      <div className="h-40 rounded-[var(--radius-outer)] bg-[var(--color-bg-raised)]" />
+      <div className="h-60 rounded-[var(--radius-outer)] bg-[var(--color-bg-raised)]" />
+    </div>
+  );
+}
 
 export function ProofWorkspace({
   proof,
@@ -32,7 +42,9 @@ export function ProofWorkspace({
       <div className="mx-auto flex max-w-[1400px] flex-col gap-0 md:flex-row">
         <LeftRail proof={proof} fixture={fixture} mode={mode} />
         <main id="main-content" className="min-w-0 flex-1 px-4 py-4 md:px-6 md:py-6">
-          <CenterCanvas proof={proof} baseline={baseline} domain={domain} mode={mode} bundleDir={bundleDir} />
+          <Suspense fallback={<CenterSkeleton />}>
+            <CenterCanvas proof={proof} baseline={baseline} domain={domain} mode={mode} bundleDir={bundleDir} />
+          </Suspense>
         </main>
         <RightRail proof={proof} />
       </div>

@@ -20,6 +20,9 @@ jobs:
       - run: pnpm -w run build
       - run: pnpm -w run test:unit
       - run: pnpm -w run test:schema
+      - run: pnpm -w run test:coverage
+      - name: Security audit
+        run: pnpm audit --audit-level=high || true
       - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@v4
