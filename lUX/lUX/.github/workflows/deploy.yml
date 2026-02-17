@@ -1,0 +1,136 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  packages: write
+  pull-requests: write
+  deployments: write
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository_owner }}/lux
+
+jobs:
+  # ── Build container image ────────────────────────────────────────
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      image-tag: ${{ steps.meta.outputs.version }}
+      digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=pr
+            type=sha,prefix=,format=short
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BUILD_VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] || 'dev' }}
+            BUILD_COMMIT_SHA=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ── Health-check the image ───────────────────────────────────────
+  smoke-test:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Log in to container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run container
+        run: |
+          docker run -d --name lux-smoke \
+            -p 3000:3000 \
+            -e NODE_ENV=production \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.build.outputs.image-tag }}
+
+      - name: Wait for readiness
+        run: |
+          for i in $(seq 1 30); do
+            if wget -qO- http://localhost:3000/api/ready 2>/dev/null; then
+              echo "Health check passed"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Health check failed after 60s"
+          docker logs lux-smoke
+          exit 1
+
+      - name: Verify security headers
+        run: |
+          HEADERS=$(wget -qS --spider http://localhost:3000/ 2>&1)
+          echo "$HEADERS"
+          echo "$HEADERS" | grep -qi "x-content-type-options" || { echo "Missing X-Content-Type-Options"; exit 1; }
+          echo "$HEADERS" | grep -qi "x-frame-options" || { echo "Missing X-Frame-Options"; exit 1; }
+          echo "$HEADERS" | grep -qi "strict-transport-security" || { echo "Missing HSTS"; exit 1; }
+          echo "Security headers verified"
+
+      - name: Cleanup
+        if: always()
+        run: docker rm -f lux-smoke 2>/dev/null || true
+
+  # ── PR preview comment ───────────────────────────────────────────
+  preview-comment:
+    if: github.event_name == 'pull_request'
+    needs: [build, smoke-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment with preview info
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: deploy-preview
+          message: |
+            ### Deploy Preview
+
+            | | |
+            |---|---|
+            | **Image** | `${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.build.outputs.image-tag }}` |
+            | **Digest** | `${{ needs.build.outputs.digest }}` |
+            | **Status** | Smoke test passed |
+
+            ```bash
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.build.outputs.image-tag }}
+            docker run -p 3000:3000 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.build.outputs.image-tag }}
+            ```

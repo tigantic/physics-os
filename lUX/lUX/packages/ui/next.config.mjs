@@ -26,6 +26,54 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react", "@radix-ui/react-tooltip"],
   },
+
+  // ── Cache headers for CDN / reverse-proxy ────────────────────────────────
+  async headers() {
+    return [
+      {
+        // Hashed static assets (_next/static) — immutable, long-lived cache.
+        // Next.js sets these by default for its own server, but explicit
+        // headers ensure CDN/reverse-proxy layers inherit the directive.
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        // Public static files (icons, manifest, PWA assets)
+        source: "/:file(icon\\.svg|manifest\\.json|apple-touch-icon\\.png|favicon\\.ico)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, stale-while-revalidate=604800",
+          },
+        ],
+      },
+      {
+        // Font files self-hosted by next/font
+        source: "/_next/static/media/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        // API routes — never cache
+        source: "/api/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default analyze(nextConfig);

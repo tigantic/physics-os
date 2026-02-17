@@ -5,6 +5,10 @@ import { Card, CardContent, CardHeader } from "@/ds/components/Card";
 import { Chip } from "@/ds/components/Chip";
 import { getProvider } from "@/config/provider";
 import { parseCsv, sparkline } from "./sparkline";
+import { CanvasSparkline } from "./CanvasSparkline";
+
+/** Switch from SVG to canvas rendering above this threshold. */
+const CANVAS_THRESHOLD = 1_000;
 
 export async function TimeSeriesViewer({
   proof,
@@ -26,7 +30,6 @@ export async function TimeSeriesViewer({
   }
 
   const pts = parseCsv(result.bytes);
-  const d = sparkline(pts);
 
   return (
     <Card>
@@ -38,15 +41,23 @@ export async function TimeSeriesViewer({
       </CardHeader>
       <CardContent>
         <div className="rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] p-3">
-          <svg
-            role="img"
-            aria-label={`Time-series sparkline for ${artifactId}`}
-            width="100%"
-            viewBox="0 0 560 120"
-            preserveAspectRatio="none"
-          >
-            <path d={d} fill="none" stroke="var(--color-accent)" strokeWidth="2" />
-          </svg>
+          {pts.length >= CANVAS_THRESHOLD ? (
+            <CanvasSparkline
+              points={pts}
+              label={`Time-series sparkline for ${artifactId}`}
+              color="var(--color-accent)"
+            />
+          ) : (
+            <svg
+              role="img"
+              aria-label={`Time-series sparkline for ${artifactId}`}
+              width="100%"
+              viewBox="0 0 560 120"
+              preserveAspectRatio="none"
+            >
+              <path d={sparkline(pts)} fill="none" stroke="var(--color-accent)" strokeWidth="2" />
+            </svg>
+          )}
         </div>
         <div className="mt-2 font-mono text-xs text-[var(--color-text-tertiary)]">{art.hash}</div>
       </CardContent>

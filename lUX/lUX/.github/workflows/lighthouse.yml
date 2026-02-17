@@ -1,0 +1,63 @@
+name: Lighthouse CI
+
+on:
+  pull_request:
+    paths:
+      - "packages/ui/**"
+      - ".github/workflows/lighthouse.yml"
+  push:
+    branches: [main]
+    paths:
+      - "packages/ui/**"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: lighthouse-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install
+
+      - name: Build tokens
+        run: pnpm -w run build:tokens
+
+      - name: Production build
+        run: pnpm -w run build
+        env:
+          NODE_ENV: production
+
+      - name: Install Chrome for Lighthouse
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Lighthouse CI
+        run: npx @lhci/cli autorun --config=lighthouserc.json
+        working-directory: packages/ui
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          CHROME_PATH: ""
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: packages/ui/.lighthouseci/
+          retention-days: 14

@@ -6,8 +6,9 @@ import { cn } from "@/config/utils";
 export const CopyField = React.memo(function CopyField({ label, value }: { label: string; value: string }) {
   const [copied, setCopied] = React.useState(false);
   const [error, setError] = React.useState(false);
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
 
-  async function onCopy() {
+  const onCopy = React.useCallback(async () => {
     try {
       await navigator.clipboard.writeText(value);
       setCopied(true);
@@ -17,7 +18,10 @@ export const CopyField = React.memo(function CopyField({ label, value }: { label
       setError(true);
       window.setTimeout(() => setError(false), 1500);
     }
-  }
+    // Re-focus the button after the async clipboard operation so keyboard
+    // users don't lose their place in the tab order.
+    buttonRef.current?.focus();
+  }, [value]);
 
   return (
     <div className="flex flex-col gap-2 rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
@@ -26,6 +30,7 @@ export const CopyField = React.memo(function CopyField({ label, value }: { label
         <div className="truncate font-mono text-xs text-[var(--color-text-secondary)]" title={value}>{value}</div>
       </div>
       <Button
+        ref={buttonRef}
         variant="ghost"
         size="sm"
         onClick={onCopy}

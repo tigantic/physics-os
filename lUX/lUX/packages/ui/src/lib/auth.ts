@@ -74,6 +74,8 @@ const PUBLIC_PATHS = new Set([
   "/api/metrics",
   "/api/csp-report",
   "/api/errors",
+  "/api/auth/login",
+  "/api/auth/logout",
 ]);
 
 /**

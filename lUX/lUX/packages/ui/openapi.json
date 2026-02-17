@@ -1,0 +1,1005 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "lUX Proof Viewer API",
+    "version": "0.1.0",
+    "description": "REST API for the lUX deterministic proof-package viewer. Serves proof packages, domain packs, gate results, artifact binaries, and operational endpoints.",
+    "license": {
+      "name": "MIT",
+      "identifier": "MIT"
+    },
+    "contact": {
+      "name": "HyperTensor",
+      "url": "https://github.com/HyperTensor"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local development"
+    }
+  ],
+  "tags": [
+    { "name": "Infrastructure", "description": "Health, readiness, and metrics" },
+    { "name": "Packages", "description": "Proof package listing and retrieval" },
+    { "name": "Artifacts", "description": "Binary artifact download" },
+    { "name": "Domains", "description": "Domain pack configuration" },
+    { "name": "Auth", "description": "Session authentication" },
+    { "name": "Observability", "description": "Error and CSP violation reporting" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "API key passed as Bearer token. Required when LUX_API_KEY is set."
+      },
+      "sessionCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__lux_session",
+        "description": "JWT session cookie obtained via POST /api/auth/login."
+      }
+    },
+    "headers": {
+      "X-Request-Id": {
+        "description": "Unique request trace identifier (UUID).",
+        "schema": { "type": "string", "format": "uuid" }
+      },
+      "X-RateLimit-Limit": {
+        "description": "Maximum requests per minute.",
+        "schema": { "type": "integer" }
+      },
+      "X-RateLimit-Remaining": {
+        "description": "Remaining requests in the current window.",
+        "schema": { "type": "integer" }
+      },
+      "Retry-After": {
+        "description": "Seconds until the rate limit window resets.",
+        "schema": { "type": "integer" }
+      }
+    },
+    "responses": {
+      "RateLimited": {
+        "description": "Rate limit exceeded.",
+        "headers": {
+          "Retry-After": { "$ref": "#/components/headers/Retry-After" },
+          "X-RateLimit-Limit": { "$ref": "#/components/headers/X-RateLimit-Limit" },
+          "X-RateLimit-Remaining": { "$ref": "#/components/headers/X-RateLimit-Remaining" },
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": { "error": { "type": "string", "const": "Too many requests" } },
+              "required": ["error"]
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Authentication required.",
+        "headers": {
+          "WWW-Authenticate": { "schema": { "type": "string", "const": "Bearer realm=\"lUX\"" } },
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": { "error": { "type": "string" } },
+              "required": ["error"]
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Insufficient permissions.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": { "error": { "type": "string" } },
+              "required": ["error"]
+            }
+          }
+        }
+      },
+      "ServerError": {
+        "description": "Internal server error.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": { "error": { "type": "string" } },
+              "required": ["error"]
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "VerdictStatus": {
+        "type": "string",
+        "enum": ["PASS", "FAIL", "WARN", "INCOMPLETE"]
+      },
+      "VerificationStatus": {
+        "type": "string",
+        "enum": ["VERIFIED", "UNVERIFIED", "BROKEN_CHAIN", "UNSUPPORTED"]
+      },
+      "AuthRole": {
+        "type": "string",
+        "enum": ["viewer", "auditor", "admin"]
+      },
+      "ArtifactType": {
+        "type": "string",
+        "enum": ["time_series", "field_2d", "field_3d", "tensor", "log", "table", "blob"]
+      },
+      "GateOperator": {
+        "type": "string",
+        "enum": ["lt", "gt", "eq", "range"]
+      },
+      "Aggregation": {
+        "type": "string",
+        "enum": ["step", "max", "min", "mean", "p95", "final"]
+      },
+      "DataValue": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "enum": ["ok", "missing", "error"] },
+          "value": {}
+        },
+        "required": ["status"]
+      },
+      "PackageSummary": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "domain_id": { "type": "string" },
+          "verdict_status": { "$ref": "#/components/schemas/VerdictStatus" },
+          "quality_score": { "type": "number", "minimum": 0, "maximum": 1 },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "solver_name": { "type": "string" },
+          "verification_status": { "$ref": "#/components/schemas/VerificationStatus" }
+        },
+        "required": ["id", "domain_id", "verdict_status", "quality_score", "timestamp", "solver_name"]
+      },
+      "SolverInfo": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "version": { "type": "string" },
+          "commit_hash": { "type": "string" }
+        },
+        "required": ["name", "version", "commit_hash"]
+      },
+      "Environment": {
+        "type": "object",
+        "properties": {
+          "container_digest": { "type": "string" },
+          "seed": { "type": "integer" },
+          "arch": { "type": "string", "enum": ["x86_64", "arm64"] },
+          "os": { "type": "string" },
+          "deps_lock_hash": { "type": "string" }
+        },
+        "required": ["container_digest", "seed", "arch"]
+      },
+      "PackageMeta": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "project_id": { "type": "string" },
+          "domain_id": { "type": "string" },
+          "solver": { "$ref": "#/components/schemas/SolverInfo" },
+          "environment": { "$ref": "#/components/schemas/Environment" },
+          "timestamp": { "type": "string", "format": "date-time" }
+        },
+        "required": ["id", "project_id", "domain_id", "solver", "environment", "timestamp"]
+      },
+      "Verdict": {
+        "type": "object",
+        "properties": {
+          "status": { "$ref": "#/components/schemas/VerdictStatus" },
+          "reason": { "type": "string" },
+          "quality_score": { "type": "number", "minimum": 0, "maximum": 1 },
+          "quality_breakdown": {
+            "type": "object",
+            "additionalProperties": { "type": "number" }
+          }
+        },
+        "required": ["status", "quality_score"]
+      },
+      "Claim": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "statement": { "type": "string" },
+          "category": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "gate_ids": { "type": "array", "items": { "type": "string" } },
+          "evidence_refs": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["id", "statement", "category", "tags", "gate_ids", "evidence_refs"]
+      },
+      "Gate": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "metric_id": { "type": "string" },
+          "operator": { "$ref": "#/components/schemas/GateOperator" },
+          "threshold": {},
+          "aggregation": { "$ref": "#/components/schemas/Aggregation" },
+          "validity": {
+            "type": "object",
+            "properties": {
+              "requires_artifacts": { "type": "array", "items": { "type": "string" } },
+              "requires_metrics": { "type": "array", "items": { "type": "string" } },
+              "domain_assumptions": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "required": ["id", "metric_id", "operator", "threshold", "aggregation"]
+      },
+      "GateResult": {
+        "type": "object",
+        "properties": {
+          "gate_id": { "type": "string" },
+          "metric_id": { "type": "string" },
+          "value": { "$ref": "#/components/schemas/DataValue" },
+          "passed": { "$ref": "#/components/schemas/DataValue" },
+          "margin": { "$ref": "#/components/schemas/DataValue" },
+          "evaluated_at": { "type": "string", "format": "date-time" },
+          "notes": { "type": "string" }
+        },
+        "required": ["gate_id", "metric_id", "value", "passed"]
+      },
+      "TimelineStep": {
+        "type": "object",
+        "properties": {
+          "step_index": { "type": "integer", "minimum": 0 },
+          "state_hash": { "type": "string" },
+          "metrics": {
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/DataValue" }
+          },
+          "artifact_refs": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["step_index", "state_hash", "metrics"]
+      },
+      "Artifact": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "$ref": "#/components/schemas/ArtifactType" },
+          "mime_type": { "type": "string" },
+          "hash": { "type": "string" },
+          "size_bytes": { "type": "integer", "minimum": 0 },
+          "uri": { "type": "string" },
+          "metadata": { "type": "object" }
+        },
+        "required": ["id", "type", "mime_type", "hash", "size_bytes", "uri"]
+      },
+      "Signature": {
+        "type": "object",
+        "properties": {
+          "key_id": { "type": "string" },
+          "algorithm": { "type": "string", "enum": ["ed25519", "p256", "rsa-pss"] },
+          "signature": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" }
+        },
+        "required": ["key_id", "algorithm", "signature", "timestamp"]
+      },
+      "ProofPackage": {
+        "type": "object",
+        "properties": {
+          "schema_version": { "type": "string" },
+          "meta": { "$ref": "#/components/schemas/PackageMeta" },
+          "verdict": { "$ref": "#/components/schemas/Verdict" },
+          "claims": {
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/Claim" }
+          },
+          "gate_manifests": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "version": { "type": "string" },
+                "gates": {
+                  "type": "object",
+                  "additionalProperties": { "$ref": "#/components/schemas/Gate" }
+                }
+              },
+              "required": ["id", "version", "gates"]
+            }
+          },
+          "gate_results": {
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/GateResult" }
+          },
+          "timeline": {
+            "type": "object",
+            "properties": {
+              "step_count": { "type": "integer", "minimum": 0 },
+              "steps": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/TimelineStep" }
+              }
+            },
+            "required": ["step_count", "steps"]
+          },
+          "artifacts": {
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/Artifact" }
+          },
+          "attestation": {
+            "type": "object",
+            "properties": {
+              "merkle_root": { "type": "string" },
+              "signatures": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/Signature" }
+              }
+            },
+            "required": ["merkle_root", "signatures"]
+          },
+          "verification": {
+            "type": "object",
+            "properties": {
+              "status": { "$ref": "#/components/schemas/VerificationStatus" },
+              "verified_at": { "type": "string", "format": "date-time" },
+              "verifier_version": { "type": "string" },
+              "failures": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string" },
+                    "message": { "type": "string" },
+                    "artifact_id": { "type": "string" },
+                    "gate_id": { "type": "string" }
+                  },
+                  "required": ["code", "message"]
+                }
+              }
+            },
+            "required": ["status"]
+          }
+        },
+        "required": ["schema_version", "meta", "verdict", "claims", "gate_manifests", "gate_results", "timeline", "artifacts", "attestation"]
+      },
+      "DomainMetric": {
+        "type": "object",
+        "properties": {
+          "label": { "type": "string" },
+          "symbol_latex": { "type": "string" },
+          "unit": { "type": "string" },
+          "dimension": { "type": "string" },
+          "format": { "type": "string", "enum": ["fixed", "scientific", "engineering"] },
+          "precision": { "type": "integer", "minimum": 0, "maximum": 12 },
+          "validity_range": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+          "description": { "type": "string" }
+        },
+        "required": ["label", "unit", "format", "precision"]
+      },
+      "DomainPack": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "version": { "type": "string" },
+          "metrics": {
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/DomainMetric" }
+          },
+          "gate_packs": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "label": { "type": "string" },
+                "manifest_ref": { "type": "string" },
+                "highlight_metrics": { "type": "array", "items": { "type": "string" } }
+              },
+              "required": ["label", "manifest_ref"]
+            }
+          },
+          "viewers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "when": {
+                  "type": "object",
+                  "properties": {
+                    "artifact_type": { "type": "string" },
+                    "mime_type": { "type": "string" },
+                    "metric_id": { "type": "string" }
+                  }
+                },
+                "component": { "type": "string" },
+                "default_config": { "type": "object" },
+                "priority": { "type": "integer" }
+              },
+              "required": ["when", "component"]
+            }
+          },
+          "templates": {
+            "type": "object",
+            "properties": {
+              "executive_summary_metric_ids": { "type": "array", "items": { "type": "string" } },
+              "publication_sections": { "type": "array", "items": { "type": "string" } },
+              "citation_format": { "type": "string", "enum": ["bibtex", "apa"] }
+            }
+          }
+        },
+        "required": ["id", "version", "metrics", "gate_packs", "viewers", "templates"]
+      }
+    }
+  },
+  "security": [
+    {},
+    { "bearerAuth": [] },
+    { "sessionCookie": [] }
+  ],
+  "paths": {
+    "/api/health": {
+      "get": {
+        "summary": "Health check",
+        "description": "Returns service health including provider readiness and memory usage.",
+        "tags": ["Infrastructure"],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Service is healthy.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "const": "ok" },
+                    "service": { "type": "string" },
+                    "version": { "type": "string" },
+                    "commitSha": { "type": "string" },
+                    "timestamp": { "type": "string", "format": "date-time" },
+                    "uptime": { "type": "number", "description": "Uptime in seconds." },
+                    "provider": {
+                      "type": "object",
+                      "properties": { "ready": { "type": "boolean" } },
+                      "required": ["ready"]
+                    },
+                    "memory": {
+                      "type": "object",
+                      "properties": {
+                        "heapUsed": { "type": "integer" },
+                        "heapTotal": { "type": "integer" },
+                        "rss": { "type": "integer" },
+                        "external": { "type": "integer" }
+                      },
+                      "required": ["heapUsed", "heapTotal", "rss", "external"]
+                    }
+                  },
+                  "required": ["status", "service", "version", "commitSha", "timestamp", "uptime", "provider", "memory"]
+                }
+              }
+            }
+          },
+          "429": { "$ref": "#/components/responses/RateLimited" }
+        }
+      }
+    },
+    "/api/ready": {
+      "get": {
+        "summary": "Readiness probe",
+        "description": "Returns 200 when the provider is initialised and ready, 503 otherwise.",
+        "tags": ["Infrastructure"],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Service is ready.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "const": "ready" },
+                    "version": { "type": "string" },
+                    "commitSha": { "type": "string" },
+                    "timestamp": { "type": "string", "format": "date-time" }
+                  },
+                  "required": ["status", "version", "commitSha", "timestamp"]
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service is not ready.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "const": "not_ready" },
+                    "reason": { "type": "string" },
+                    "version": { "type": "string" },
+                    "commitSha": { "type": "string" },
+                    "timestamp": { "type": "string", "format": "date-time" }
+                  },
+                  "required": ["status", "reason", "version", "commitSha", "timestamp"]
+                }
+              }
+            }
+          },
+          "429": { "$ref": "#/components/responses/RateLimited" }
+        }
+      }
+    },
+    "/api/metrics": {
+      "get": {
+        "summary": "Prometheus metrics",
+        "description": "Returns Prometheus exposition-format metrics.",
+        "tags": ["Infrastructure"],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Prometheus metrics dump.",
+            "content": {
+              "text/plain; version=0.0.4; charset=utf-8": {
+                "schema": { "type": "string" }
+              }
+            }
+          },
+          "429": { "$ref": "#/components/responses/RateLimited" }
+        }
+      }
+    },
+    "/api/csp-report": {
+      "post": {
+        "summary": "CSP violation report",
+        "description": "Receives Content-Security-Policy violation reports (both legacy report-uri and Reporting API v1 formats). Logs violations and triggers alerts when the rate exceeds the threshold.",
+        "tags": ["Observability"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "csp-report": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    },
+                    "required": ["csp-report"]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "blocked-uri": { "type": "string", "maxLength": 2048 },
+                      "blockedURL": { "type": "string", "maxLength": 2048 },
+                      "violated-directive": { "type": "string", "maxLength": 2048 },
+                      "effectiveDirective": { "type": "string", "maxLength": 2048 },
+                      "document-uri": { "type": "string", "maxLength": 2048 },
+                      "disposition": { "type": "string", "maxLength": 64 }
+                    },
+                    "additionalProperties": true
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": { "description": "Violation recorded." },
+          "400": { "description": "Malformed or invalid report." },
+          "413": { "description": "Payload exceeds 16 KiB." },
+          "429": { "$ref": "#/components/responses/RateLimited" }
+        }
+      }
+    },
+    "/api/errors": {
+      "post": {
+        "summary": "Client error report",
+        "description": "Receives client-side error reports beaconed from error boundaries. Includes breadcrumb trail for debugging context.",
+        "tags": ["Observability"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": { "type": "string", "maxLength": 4096 },
+                  "stack": { "type": "string", "maxLength": 16384 },
+                  "digest": { "type": "string", "maxLength": 256 },
+                  "component": { "type": "string", "maxLength": 128 },
+                  "url": { "type": "string", "maxLength": 2048 },
+                  "timestamp": { "type": "string", "format": "date-time" },
+                  "userAgent": { "type": "string", "maxLength": 512 },
+                  "breadcrumbs": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": { "type": "string", "enum": ["navigation", "action", "error", "state", "lifecycle"] },
+                        "label": { "type": "string" },
+                        "timestamp": { "type": "string", "format": "date-time" },
+                        "data": { "type": "object" }
+                      },
+                      "required": ["type", "label", "timestamp"]
+                    }
+                  }
+                },
+                "required": ["message", "component", "url", "timestamp", "userAgent"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": { "description": "Error recorded." },
+          "400": {
+            "description": "Invalid error report.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "error": { "type": "string" } },
+                  "required": ["error"]
+                }
+              }
+            }
+          },
+          "429": { "$ref": "#/components/responses/RateLimited" }
+        }
+      }
+    },
+    "/api/packages": {
+      "get": {
+        "summary": "List proof packages",
+        "description": "Returns a summary list of all available proof packages. Supports conditional requests (ETag).",
+        "tags": ["Packages"],
+        "responses": {
+          "200": {
+            "description": "Package list.",
+            "headers": {
+              "ETag": { "schema": { "type": "string" } },
+              "Cache-Control": { "schema": { "type": "string" } }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "packages": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/PackageSummary" }
+                    }
+                  },
+                  "required": ["packages"]
+                }
+              }
+            }
+          },
+          "304": { "description": "Not modified (ETag match)." },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/api/packages/{id}": {
+      "get": {
+        "summary": "Get proof package",
+        "description": "Returns the full proof package including claims, gate results, timeline, artifacts, and attestation.",
+        "tags": ["Packages"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "pattern": "^[a-zA-Z0-9._-]+$", "minLength": 1 },
+            "description": "Proof package identifier."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full proof package.",
+            "headers": {
+              "ETag": { "schema": { "type": "string" } },
+              "Cache-Control": { "schema": { "type": "string" } }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProofPackage" }
+              }
+            }
+          },
+          "304": { "description": "Not modified (ETag match)." },
+          "400": {
+            "description": "Invalid package ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "error": { "type": "string" } },
+                  "required": ["error"]
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": {
+            "description": "Package not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "error": { "type": "string", "const": "Package not found" } },
+                  "required": ["error"]
+                }
+              }
+            }
+          },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/api/packages/{id}/artifacts/{path}": {
+      "get": {
+        "summary": "Download artifact",
+        "description": "Streams the raw artifact bytes with the correct MIME type. The path is a catch-all segment supporting nested artifact URIs.",
+        "tags": ["Artifacts"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "pattern": "^[a-zA-Z0-9._-]+$" },
+            "description": "Proof package identifier."
+          },
+          {
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Artifact path (catch-all, one or more segments)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Artifact binary stream.",
+            "headers": {
+              "Content-Type": { "schema": { "type": "string" } },
+              "Content-Length": { "schema": { "type": "integer" } },
+              "X-Artifact-Hash": { "schema": { "type": "string" } },
+              "Cache-Control": { "schema": { "type": "string" } }
+            },
+            "content": {
+              "application/octet-stream": {
+                "schema": { "type": "string", "format": "binary" }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "error": { "type": "string" } },
+                  "required": ["error"]
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": {
+            "description": "Artifact or package not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "error": { "type": "string" } },
+                  "required": ["error"]
+                }
+              }
+            }
+          },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/api/domains/{domain}": {
+      "get": {
+        "summary": "Get domain pack",
+        "description": "Returns the domain configuration including metric definitions, gate packs, viewer mappings, and templates.",
+        "tags": ["Domains"],
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "pattern": "^[a-zA-Z0-9._-]+$", "minLength": 1 },
+            "description": "Domain identifier (e.g. com.physics.vlasov)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Domain pack.",
+            "headers": {
+              "ETag": { "schema": { "type": "string" } },
+              "Cache-Control": { "schema": { "type": "string" } }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DomainPack" }
+              }
+            }
+          },
+          "304": { "description": "Not modified (ETag match)." },
+          "400": {
+            "description": "Invalid domain ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "error": { "type": "string" } },
+                  "required": ["error"]
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": {
+            "description": "Domain not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "error": { "type": "string" } },
+                  "required": ["error"]
+                }
+              }
+            }
+          },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "Login (exchange API key for session)",
+        "description": "Authenticates with an API key and returns an httpOnly session cookie. Requires LUX_SESSION_SECRET to be configured.",
+        "tags": ["Auth"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "apiKey": { "type": "string", "description": "The LUX API key." }
+                },
+                "required": ["apiKey"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful. Session cookie set.",
+            "headers": {
+              "Set-Cookie": { "schema": { "type": "string" } }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "role": { "$ref": "#/components/schemas/AuthRole" },
+                    "expiresAt": { "type": "string", "format": "date-time" }
+                  },
+                  "required": ["role", "expiresAt"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "error": { "type": "string" } },
+                  "required": ["error"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid API key.",
+            "headers": {
+              "WWW-Authenticate": { "schema": { "type": "string" } }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "error": { "type": "string" } },
+                  "required": ["error"]
+                }
+              }
+            }
+          },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "501": {
+            "description": "Session management or auth not configured.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "error": { "type": "string" } },
+                  "required": ["error"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "summary": "Logout (revoke session)",
+        "description": "Invalidates the current session and clears the session cookie.",
+        "tags": ["Auth"],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Logout successful. Session cookie cleared.",
+            "headers": {
+              "Set-Cookie": { "schema": { "type": "string" } }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "ok": { "type": "boolean", "const": true } },
+                  "required": ["ok"]
+                }
+              }
+            }
+          },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "501": {
+            "description": "Session management not configured.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "error": { "type": "string" } },
+                  "required": ["error"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

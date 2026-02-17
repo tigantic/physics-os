@@ -74,7 +74,7 @@ describe("middleware auth integration", () => {
 
   it("passes through when LUX_API_KEY is not set", async () => {
     const mw = await loadMiddleware({ LUX_API_KEY: undefined, LUX_AUTH_ROLES: undefined });
-    const result = mw(fakeRequest("http://localhost:3000/gallery")) as { type?: string };
+    const result = (await mw(fakeRequest("http://localhost:3000/gallery"))) as { type?: string };
     // Should NOT be a JSON error response
     expect(result.type).not.toBe("json");
     // Security headers should be set
@@ -88,7 +88,7 @@ describe("middleware auth integration", () => {
       LUX_API_KEY: "test-secret-key",
       LUX_AUTH_ROLES: undefined,
     });
-    const result = mw(fakeRequest("http://localhost:3000/gallery")) as {
+    const result = (await mw(fakeRequest("http://localhost:3000/gallery"))) as {
       type: string;
       status: number;
       body: { error: string };
@@ -96,7 +96,7 @@ describe("middleware auth integration", () => {
     };
     expect(result.type).toBe("json");
     expect(result.status).toBe(401);
-    expect(result.body.error).toBe("Missing Authorization header");
+    expect(result.body.error).toBe("Authentication required");
     expect(result.headers.get("WWW-Authenticate")).toBe('Bearer realm="lUX"');
   });
 
@@ -104,25 +104,25 @@ describe("middleware auth integration", () => {
 
   it("returns 401 when Bearer token is wrong", async () => {
     const mw = await loadMiddleware({ LUX_API_KEY: "correct-key" });
-    const result = mw(
+    const result = (await mw(
       fakeRequest("http://localhost:3000/gallery", {
         authorization: "Bearer wrong-key",
       }),
-    ) as { type: string; status: number; body: { error: string } };
+    )) as { type: string; status: number; body: { error: string } };
     expect(result.type).toBe("json");
     expect(result.status).toBe(401);
-    expect(result.body.error).toBe("Invalid API key");
+    expect(result.body.error).toBe("Authentication required");
   });
 
   // ── Auth enabled, valid key ───────────────────────────────────────────────
 
   it("passes through with valid Bearer token", async () => {
     const mw = await loadMiddleware({ LUX_API_KEY: "correct-key" });
-    const result = mw(
+    const result = (await mw(
       fakeRequest("http://localhost:3000/gallery", {
         authorization: "Bearer correct-key",
       }),
-    ) as { type?: string };
+    )) as { type?: string };
     expect(result.type).not.toBe("json");
     expect(setMock).toHaveBeenCalled();
   });
@@ -134,9 +134,9 @@ describe("middleware auth integration", () => {
   for (const path of publicPaths) {
     it(`bypasses auth for public path ${path}`, async () => {
       const mw = await loadMiddleware({ LUX_API_KEY: "secret" });
-      const result = mw(
+      const result = (await mw(
         fakeRequest(`http://localhost:3000${path}`),
-      ) as { type?: string };
+      )) as { type?: string };
       expect(result.type).not.toBe("json");
     });
   }
@@ -155,11 +155,11 @@ describe("middleware auth integration", () => {
     // which a viewer-key satisfies. To test 403, we need a path that requires
     // a higher role. Since there are no admin-only paths configured by default,
     // this test verifies the mechanism works by confirming viewer can access viewer paths.
-    const result = mw(
+    const result = (await mw(
       fakeRequest("http://localhost:3000/gallery", {
         authorization: "Bearer viewer-key",
       }),
-    ) as { type?: string };
+    )) as { type?: string };
     expect(result.type).not.toBe("json");
   });
 
@@ -167,7 +167,7 @@ describe("middleware auth integration", () => {
 
   it("sets x-request-id on response", async () => {
     const mw = await loadMiddleware({ LUX_API_KEY: undefined });
-    mw(fakeRequest("http://localhost:3000/gallery"));
+    await mw(fakeRequest("http://localhost:3000/gallery"));
     const call = setMock.mock.calls.find((c: string[]) => c[0] === "X-Request-Id");
     expect(call).toBeDefined();
     // UUID format: 8-4-4-4-12 hex

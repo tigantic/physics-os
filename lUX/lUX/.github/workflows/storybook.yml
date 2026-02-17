@@ -1,0 +1,81 @@
+name: Storybook
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packages/ui/src/**"
+      - "packages/ui/.storybook/**"
+      - "packages/tokens/**"
+      - ".github/workflows/storybook.yml"
+  pull_request:
+    paths:
+      - "packages/ui/src/**"
+      - "packages/ui/.storybook/**"
+      - "packages/tokens/**"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: storybook-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install
+
+      - name: Build tokens
+        run: pnpm -w run build:tokens
+
+      - name: Build Storybook
+        run: pnpm --filter ui build-storybook
+        env:
+          NODE_ENV: production
+
+      - name: Verify build output
+        run: |
+          test -f packages/ui/storybook-static/index.html || { echo "Storybook build output missing"; exit 1; }
+          echo "Build output verified: $(find packages/ui/storybook-static -type f | wc -l) files"
+
+      - name: Upload artifact (PR)
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-build
+          path: packages/ui/storybook-static/
+          retention-days: 7
+
+      - name: Upload Pages artifact (main)
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: packages/ui/storybook-static/
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
