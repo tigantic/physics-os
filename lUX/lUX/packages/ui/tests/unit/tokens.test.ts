@@ -3,47 +3,49 @@ import { TOKENS } from "@/ds/tokens";
 
 describe("TOKENS", () => {
   it("exports color.bg tokens", () => {
-    expect(TOKENS.color.bg.base).toBe("#0D0D10");
-    expect(TOKENS.color.bg.raised).toBe("#16161B");
-    expect(TOKENS.color.bg.hover).toBe("#1E1E25");
-    expect(TOKENS.color.bg.surface).toBe("#232329");
+    expect(TOKENS.color.bg.base).toBe("#0B0C10");
+    expect(TOKENS.color.bg.raised).toBe("#13141A");
+    expect(TOKENS.color.bg.hover).toBe("#1B1C24");
+    expect(TOKENS.color.bg.surface).toBe("#20212B");
   });
 
   it("exports color.text tokens", () => {
-    expect(TOKENS.color.text.primary).toBe("#F5F3EF");
-    expect(TOKENS.color.text.secondary).toBe("#AEA9B4");
-    expect(TOKENS.color.text.tertiary).toBe("#8C8798");
+    expect(TOKENS.color.text.primary).toBe("#EAECF0");
+    expect(TOKENS.color.text.secondary).toBe("#8A8EA0");
+    expect(TOKENS.color.text.tertiary).toBe("#5A5E70");
   });
 
-  it("exports accent gold token", () => {
-    expect(TOKENS.color.accent.gold).toBe("#C9A96E");
+  it("exports accent base token (cobalt)", () => {
+    expect(TOKENS.color.accent.base).toBe("#4B7BF5");
+    expect(TOKENS.color.accent.strong).toBe("#6B96FF");
   });
 
-  it("exports verdict tokens", () => {
-    expect(TOKENS.color.verdict.pass).toBe("#479967");
-    expect(TOKENS.color.verdict.fail).toBe("#D65B55");
-    expect(TOKENS.color.verdict.warn).toBe("#B8862D");
+  it("exports status tokens", () => {
+    expect(TOKENS.color.status.pass).toBe("#34B870");
+    expect(TOKENS.color.status.fail).toBe("#E05252");
+    expect(TOKENS.color.status.warn).toBe("#E5A833");
   });
 
   it("exports radius tokens", () => {
-    expect(TOKENS.radius.outer).toBe(14);
-    expect(TOKENS.radius.inner).toBe(10);
+    expect(TOKENS.radius.outer).toBe(12);
+    expect(TOKENS.radius.inner).toBe(8);
+    expect(TOKENS.radius.pill).toBe(9999);
+    expect(TOKENS.radius.control).toBe(6);
   });
 
   it("exports motion tokens", () => {
-    expect(TOKENS.motion.fastMs).toBe(180);
+    expect(TOKENS.motion.hoverMs).toBe(160);
     expect(TOKENS.motion.baseMs).toBe(220);
     expect(TOKENS.motion.easeOut).toContain("cubic-bezier");
   });
 
   it("exports type tokens", () => {
-    expect(TOKENS.type.ui).toBe("IBMPlexSans");
+    expect(TOKENS.type.ui).toBe("Inter");
     expect(TOKENS.type.mono).toBe("JetBrainsMono");
     expect(TOKENS.type.math).toBe("SVG");
   });
 
   it("is deeply frozen (immutable at compile time via as const)", () => {
-    // Verify the structure is complete (as const makes it readonly)
     const keys = Object.keys(TOKENS);
     expect(keys).toContain("color");
     expect(keys).toContain("radius");

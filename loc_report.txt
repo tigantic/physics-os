@@ -1,0 +1,289 @@
+==============================================================================================================
+HYPERTENSOR-VM FULL FORENSIC LOC MATRIX
+Root: /home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main
+==============================================================================================================
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+SECTION 1: LANGUAGE BREAKDOWN
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Language               Files  Total Lines      Blank       SLOC    Size MB   % SLOC
+──────────────────── ─────── ──────────── ────────── ────────── ────────── ────────
+Lean 4                16,459    4,266,764    844,997  3,412,552     169.47    29.2%
+JSON                   4,505    3,224,145        292  3,223,853     220.11    27.6%
+TypeScript             9,284    1,493,541    151,425  1,321,693      46.10    11.3%
+Rust                   6,173    1,526,217    159,510  1,218,731      52.27    10.4%
+Markdown               5,523    1,123,520    316,157    783,791      43.74     6.7%
+Python                 2,654    1,022,709    193,731    392,015      34.48     3.4%
+Lock                      45      397,344     38,239    359,105      14.93     3.1%
+YAML                     832      242,682     41,542    195,307       8.85     1.7%
+Circom                   483      204,091     17,111    181,071      11.43     1.6%
+Solidity               1,058      206,221     26,667    154,586       7.61     1.3%
+JavaScript               742      143,929     13,494    127,282      12.84     1.1%
+HTML                     332      122,954     13,142    109,467       5.88     0.9%
+Text                     165      113,116     15,408     95,738      12.50     0.8%
+Shell                    519       42,856      4,992     33,367       1.44     0.3%
+TOML                   1,921       30,111      3,244     25,559       0.73     0.2%
+CSS                      107       24,615      3,455     21,160       0.66     0.2%
+CUDA                      23        9,037      1,358      7,025       0.27     0.1%
+Config                    80        2,784        241      2,543       0.11     0.0%
+WGSL Shader               18        4,265        800      2,522       0.16     0.0%
+Docker                    72        3,219        753      2,466       0.11     0.0%
+GLSL Shader                1           59          9         34       0.00     0.0%
+──────────────────── ─────── ──────────── ────────── ────────── ────────── ────────
+TOTAL                 50,996   14,204,179  1,846,567 11,669,867     643.69   100.0%
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+SECTION 2: TOP-LEVEL DIRECTORY BREAKDOWN
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Directory                      Files       SLOC      Total    Size MB         Primary Lang
+──────────────────────────── ─────── ────────── ────────── ────────── ────────────────────
+zk_targets                    21,952  5,838,811  6,556,653     348.21                 JSON
+lean_yang_mills                8,664  1,744,889  2,183,929      86.56               Lean 4
+yang_mills_unified_proof       8,103  1,709,810  2,140,814      85.07               Lean 4
+vendor                         4,306    723,952    824,039      26.65           TypeScript
+clawdbot-main                  3,551    525,314    593,798      18.32           TypeScript
+docs                             491    269,009    389,950      12.37             Markdown
+tensornet                      1,090    172,095    472,737      15.07               Python
+data                              14    135,664    146,375       6.35                 JSON
+fluidelite-zk                    270     59,344     81,017       5.48                 Rust
+QTeneT                            98     56,665     66,433       2.05                 JSON
+products                         214     50,223     90,208       3.80             Solidity
+lUX                              303     34,266     38,418       7.31                 JSON
+scripts                          176     32,616     91,348       3.33               Python
+apps                             103     29,793     40,053       1.40                 Rust
+sovereign-ui                     152     26,501     28,070       1.97           JavaScript
+etherfi_oracle_frontrun_poc       99     22,824     28,671       2.61             Solidity
+tests                             95     17,050     45,387       1.49               Python
+_root                             30     16,529     20,192       0.77                 Lock
+fluidelite                        94     16,372     39,947       2.27               Python
+worldcoin-id                      87     14,919     20,828       1.66                 JSON
+tornado-circuits                  34     14,457     16,772       0.66                 Lock
+fluidelite-circuits               43     14,209     21,393       0.77                 Rust
+FRONTIER                          80     13,475     32,313       1.03               Python
+proofs                            84     10,977     22,152       0.65               Python
+crates                            57      9,179     13,655       0.45                 Rust
+demos                             51      8,574     22,944       0.79               Python
+artifacts                         33      8,025      8,093       0.57                 JSON
+results                           16      7,220      7,223       0.23                 JSON
+ledger                           174      6,051      8,620       0.20                 YAML
+fluidelite-infra                  18      5,963      8,588       0.28                 Rust
+yangmills                         45      5,813     18,854       0.61               Python
+oracle                            28      5,694     13,106       0.44               Python
+sdk                               45      5,552     10,979       0.36               Python
+deployment                        36      5,396      6,885       0.24                 YAML
+traces                             5      4,557      4,557       0.13                 JSON
+The_Compressor                    23      2,873      8,359       0.27               Python
+Physics                           10      2,617      7,755       0.24               Python
+QTT-CEM                           14      2,593      3,505       0.12                 Rust
+certificates                       1      2,429      2,429       0.07                 JSON
+fluidelite-core                   10      2,316      3,580       0.12                 Rust
+proof_engine                      15      2,220      6,420       0.20               Python
+glass-cockpit                      5      1,962      2,578       0.09                 Rust
+experiments                        5      1,912      4,869       0.18               Python
+benchmarks                        17      1,855      3,862       0.11               Python
+.github                           15      1,845      2,419       0.08                 YAML
+QTT-OPT                           14      1,770      2,295       0.07                 Rust
+cases                             17      1,655      1,655       0.04                 JSON
+test_contracts                     6      1,434      1,843       0.07             Solidity
+paper                              8      1,392      2,361       0.07               Python
+tci_core_rust                      9      1,269      1,996       0.06                 Rust
+QTT-FEA                           12      1,205      2,148       0.07                 Rust
+oracle_node                        7      1,142      2,342       0.09               Python
+archive                            9        990      2,335       0.08               Python
+tci_llm                           12        905      2,527       0.08               Python
+tpc                                5        832      1,937       0.07               Python
+ai_scientist                       6        755      2,080       0.07               Python
+qtt_3d_ops                         7        755      2,152       0.07               Python
+sovereign_api                      2        668      1,494       0.05               Python
+evidence                           5        643        985       0.03             Markdown
+CFD_HVAC                           3        617        698       0.02                 JSON
+Tenet-TPhy                         3        588      1,384       0.06             Markdown
+_archived_dense                    4        561      1,249       0.04               Python
+worldcoin-circuits                 5        408        530       0.02             Markdown
+demo_output                        2        407        407       0.01                 JSON
+exploit_verification               4        391        777       0.02             Solidity
+fluid_conservation_proof           1        340        427       0.02               Lean 4
+thermal_conservation_proof         3        336        385       0.02               Lean 4
+qmb_conservation_proof             1        334        441       0.02               Lean 4
+integrations                       4        324        727       0.03               Python
+papers                             2        278        300       0.01                 JSON
+plasma_conservation_proof          1        272        345       0.02               Lean 4
+vlasov_conservation_proof          1        266        321       0.02               Lean 4
+euler_conservation_proof           1        266        311       0.02               Lean 4
+contracts                          2        259        436       0.02             Solidity
+em_conservation_proof              1        230        299       0.01               Lean 4
+yang_mills_proof                   4        216        252       0.01                 JSON
+solid_state_conservation_proof       1        204        272       0.01               Lean 4
+pwa_engine                         4        197        340       0.01               Python
+elite_yang_mills_proof_v2          3        195        215       0.01                 JSON
+electronic_structure_conservation_proof       1        194        256       0.01               Lean 4
+gevulot                            2        191        225       0.01                 JSON
+nuclear_particle_conservation_proof       1        177        233       0.01               Lean 4
+media                             13        177        177       0.03                 Text
+elite_yang_mills_proof             3        162        185       0.01               Lean 4
+quantum_mechanics_conservation_proof       1        161        210       0.01               Lean 4
+statmech_conservation_proof        1        140        176       0.01               Lean 4
+navier_stokes_proof                3        140        161       0.01               Lean 4
+logs                               7        132        132       0.00                 JSON
+video                              3        122        964       0.04                Shell
+verified_yang_mills_proof          3        120        156       0.00               Lean 4
+ai_scientist_output                3        116        144       0.01               Lean 4
+quantum_info_conservation_proof       1        112        147       0.01               Lean 4
+chem_physics_iter_conservation_proof       1        108        142       0.01               Lean 4
+navier_stokes_proof_v2             3        100        119       0.00               Lean 4
+mechanics_conservation_proof       1         98        128       0.01               Lean 4
+applied_physics_conservation_proof       1         91        119       0.00               Lean 4
+docker                             2         84        112       0.00               Docker
+biophysics_conservation_proof       1         73         96       0.00               Lean 4
+materials_conservation_proof       1         71         91       0.00               Lean 4
+coupled_conservation_proof         1         70         90       0.00               Lean 4
+models                             1         69         73       0.00             Markdown
+computational_methods_conservation_proof       1         68         88       0.00               Lean 4
+geophysics_conservation_proof       1         65         83       0.00               Lean 4
+astro_conservation_proof           1         65         83       0.00               Lean 4
+statmech_stochastic_conservation_proof       1         63         78       0.00               Lean 4
+sweep_results                      2         59         77       0.00             Markdown
+demo                               1         56        263       0.01               Python
+profile_results                    1         52         59       0.00                 Text
+special_relativity_conservation_proof       1         51         64       0.00               Lean 4
+optics_conservation_proof          1         51         65       0.00               Lean 4
+chemical_physics_conservation_proof       1         50         64       0.00               Lean 4
+quantum_info_ext_conservation_proof       1         42         53       0.00               Lean 4
+.vscode                            1         19         19       0.00                 JSON
+weights                            2          2          2       0.53                 JSON
+cache                              1          1          1       0.00                 JSON
+images                             1          1          1       0.00             Markdown
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+SECTION 3: TENSORNET/ MODULE BREAKDOWN (Python SLOC)
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Module                        Files   Py SLOC  All SLOC  Total Ln
+──────────────────────────── ────── ───────── ───────── ─────────
+cfd                             118    24,503    25,670    77,272
+genesis                          87    14,879    15,647    41,928
+exploit                          52     8,932    10,837    28,230
+packs                            23    10,476    10,476    26,239
+discovery                        47     8,604     8,865    24,919
+platform                         40     5,961     5,961    15,474
+types                            15     4,253     4,253    12,087
+oracle                           32     3,745     3,745     9,937
+zk                                9     3,560     3,560     9,821
+condensed_matter                 40     3,171     3,171     9,442
+ml_surrogates                    20     3,084     3,084     8,250
+mechanics                        23     3,008     3,008     8,662
+gpu                              17     2,017     2,304     5,978
+neural                           10     2,134     2,134     6,425
+fusion                            9     2,019     2,019     4,959
+algorithms                       15     1,898     1,898     5,721
+cuda                              9       847     1,801     4,065
+quantum                          13     1,798     1,798     4,311
+hyperenv                         10     1,766     1,766     5,014
+core                             15     1,743     1,743     4,723
+docs                              5     1,499     1,499     4,398
+sovereign                        11     1,230     1,496     3,563
+digital_twin                      6     1,470     1,470     3,866
+validation                        6     1,451     1,451     4,406
+simulation                        6     1,436     1,436     4,360
+benchmarks                        8     1,330     1,396     3,165
+intent                            8     1,392     1,392     4,204
+geophysics                       15     1,362     1,362     3,243
+hypersim                          7     1,347     1,347     3,462
+qtt                              11     1,306     1,306     3,858
+materials                        15     1,246     1,246     3,106
+numerics                         13     1,233     1,233     3,932
+chemistry                        15     1,230     1,230     2,967
+distributed                       6     1,221     1,221     3,049
+integration                       5     1,200     1,200     3,219
+site                              5     1,180     1,180     2,645
+astro                            14     1,157     1,157     3,066
+electronic_structure             16     1,137     1,137     2,986
+guidance                          6     1,128     1,128     3,556
+physics                           5       504     1,117     2,200
+  ... + 65 more                 300              31,629
+──────────────────────────── ────── ───────── ─────────
+TENSORNET TOTAL                1087             171,373
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+SECTION 4: DOMAIN CATEGORY ROLLUPS
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Blockchain & Security              27,874 SLOC ( 16.3%)  ████████
+Platform & Infrastructure          27,147 SLOC ( 15.8%)  ███████
+Fluid Dynamics & CFD               26,077 SLOC ( 15.2%)  ███████
+Other Applied                      17,047 SLOC (  9.9%)  ████
+Computational Core                 14,435 SLOC (  8.4%)  ████
+Classical Physics                  13,771 SLOC (  8.0%)  ████
+Visualization & UI                 10,168 SLOC (  5.9%)  ██
+Engineering & Applied               9,453 SLOC (  5.5%)  ██
+Quantum & Condensed Matter          9,271 SLOC (  5.4%)  ██
+AI/ML                               8,483 SLOC (  5.0%)  ██
+Life Sciences                       4,832 SLOC (  2.8%)  █
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+SECTION 5: TOP 30 LARGEST FILES BY SLOC
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  1. 283,403 SLOC  283,403 total   2590.3 KB  zk_targets/polygon-proverjs/src/sm/sm_sha256f/sha256_gates.json
+  2. 82,081 SLOC   82,081 total   3076.0 KB  zk_targets/polygon-proverjs/tools/full-tracer-tests/geth-traces/op-msl_17_defaultTracer_0_geth.json
+  3. 69,758 SLOC   69,758 total   1332.0 KB  zk_targets/pil-stark/test/circuits/bn128/verifyEvals.starkInfo.json
+  4. 65,542 SLOC   73,736 total   3117.6 KB  vendor/circom-ecdsa/circuits/ecdsa_func.circom
+  5. 65,273 SLOC   65,273 total   1717.1 KB  data/market_fluid_1769396063.json
+  6. 63,819 SLOC   99,264 total   2469.1 KB  docs/reports/halo2_report.md
+  7. 62,364 SLOC   62,364 total   2355.5 KB  zk_targets/scroll-circuits/eth-types/src/testdata/trace_v1_5224657.json
+  8. 55,900 SLOC   55,900 total    880.9 KB  zk_targets/polygon-proverjs/testvectors/starkgen_bmscript.json
+  9. 35,864 SLOC   35,864 total   1289.1 KB  zk_targets/polygon-proverjs/tools/full-tracer-tests/geth-traces/op-call_26_defaultTracer_0_geth.json
+ 10. 35,852 SLOC   35,852 total   1286.1 KB  zk_targets/polygon-proverjs/tools/full-tracer-tests/geth-traces/op-call_24_defaultTracer_0_geth.json
+ 11. 35,038 SLOC   53,696 total    989.1 KB  zk_targets/TS_FLUIDELITE_ANALYSIS.md
+ 12. 33,223 SLOC   33,223 total   1083.0 KB  zk_targets/polygon-proverjs/tools/full-tracer-tests/geth-traces/erc20_0_defaultTracer_5_geth.json
+ 13. 32,777 SLOC   40,000 total   1089.3 KB  data/shakespeare.txt
+ 14. 32,563 SLOC   32,563 total    838.3 KB  QTeneT/inventory/qtt_repo_index.json
+ 15. 31,489 SLOC   31,489 total    883.6 KB  zk_targets/polygon-proverjs/tools/full-tracer-tests/geth-traces/op-call_3_defaultTracer_0_geth.json
+ 16. 31,355 SLOC   31,355 total    910.5 KB  zk_targets/polygon-proverjs/tools/full-tracer-tests/geth-traces/mynft_0_defaultTracer_0_geth.json
+ 17. 31,115 SLOC   38,614 total   1285.9 KB  zk_targets/maci-circuits/pnpm-lock.yaml
+ 18. 31,115 SLOC   38,614 total   1285.9 KB  zk_targets/appliedzkp-maci/pnpm-lock.yaml
+ 19. 28,586 SLOC   28,586 total    879.3 KB  zk_targets/polygon-proverjs/tools/full-tracer-tests/geth-traces/op-call_25_defaultTracer_1_geth.json
+ 20. 28,533 SLOC   28,533 total    921.4 KB  zk_targets/polygon-proverjs/tools/full-tracer-tests/geth-traces/uniswapv2-router-benchmark_0_defaultTracer_5_geth.json
+ 21. 27,685 SLOC   30,546 total   1093.0 KB  zk_targets/semaphore/yarn.lock
+ 22. 27,685 SLOC   30,546 total   1093.0 KB  vendor/semaphore-circuits/yarn.lock
+ 23. 27,278 SLOC   27,278 total   1015.9 KB  zk_targets/protocols/packages/loopring_v3/package-lock.json
+ 24. 27,278 SLOC   27,278 total   1015.9 KB  zk_targets/degate_protocols/packages/loopring_v3/package-lock.json
+ 25. 25,445 SLOC   31,295 total   1116.3 KB  zk_targets/linea-circuits/pnpm-lock.yaml
+ 26. 24,949 SLOC   24,959 total   1897.9 KB  zk_targets/circomlib/circuits/poseidon_constants.circom
+ 27. 24,949 SLOC   24,959 total   1897.9 KB  zk_targets/TS-Circom/circuits/recursion_groth16/circomlib/poseidon_constants.circom
+ 28. 24,454 SLOC   24,454 total    717.8 KB  zk_targets/polygon-proverjs/tools/full-tracer-tests/geth-traces/op-return_0_defaultTracer_0_geth.json
+ 29. 23,568 SLOC   23,568 total    732.5 KB  zk_targets/polygon-proverjs/tools/full-tracer-tests/geth-traces/op-return_3_defaultTracer_0_geth.json
+ 30. 22,440 SLOC   22,440 total    695.4 KB  zk_targets/polygon-proverjs/tools/full-tracer-tests/geth-traces/benchmark-keccaks_0_defaultTracer_0_geth.json
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+SECTION 6: RUST CRATE / APP BREAKDOWN
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Crate/Directory                Files       SLOC      Total
+──────────────────────────── ─────── ────────── ──────────
+zk_targets                     5,774  1,103,440  1,365,199
+fluidelite-zk                     90     29,578     42,067
+apps                              77     25,722     34,004
+vendor                            86     22,202     28,898
+fluidelite-circuits               42     14,177     21,342
+crates                            39      7,859     12,017
+fluidelite-infra                  17      5,937      8,542
+fluidelite-core                    9      2,282      3,529
+QTT-CEM                            9      1,924      2,695
+glass-cockpit                      4      1,750      2,194
+tci_core_rust                      6      1,199      1,871
+tests                              5        968      1,437
+QTT-OPT                            8        863      1,216
+QTT-FEA                            7        830      1,206
+
+==============================================================================================================
+EXECUTIVE SUMMARY
+==============================================================================================================
+Total source files:      50,996
+Total lines (raw):     14,204,179
+Total SLOC:            11,669,867
+Total size:              643.69 MB
+Skipped (binary/large):  31,802
+tensornet/ modules:         105
+Languages detected:          21
+
+Python SLOC:            392,015  (3.4%)
+Rust SLOC:             1,218,731  (10.4%)
+Other SLOC:            10,059,121  (86.2%)
+==============================================================================================================

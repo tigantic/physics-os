@@ -5,11 +5,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --radius-outer: 14px;
-  --radius-inner: 10px;
-}
-
 html,
 body {
   height: 100%;
@@ -24,6 +19,39 @@ body {
   border-color: var(--color-border-base);
 }
 
+/* ── Spacing scale (multiples of 8px unit) ── */
+.gap-u1 { gap: calc(var(--space-u) * 1px); }
+.gap-u2 { gap: calc(var(--space-u) * 2 * 1px); }
+.gap-u3 { gap: calc(var(--space-u) * 3 * 1px); }
+.gap-u4 { gap: calc(var(--space-u) * 4 * 1px); }
+.gap-u6 { gap: calc(var(--space-u) * 6 * 1px); }
+.p-u1 { padding: calc(var(--space-u) * 1px); }
+.p-u2 { padding: calc(var(--space-u) * 2 * 1px); }
+.p-u3 { padding: calc(var(--space-u) * 3 * 1px); }
+.p-u4 { padding: calc(var(--space-u) * 4 * 1px); }
+.p-u6 { padding: calc(var(--space-u) * 6 * 1px); }
+
+/* ── Elevation utilities ── */
+.elevation-raised {
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border-base);
+  box-shadow: var(--shadow-raised);
+  border-radius: var(--radius-outer);
+}
+
+.elevation-floating {
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border-base);
+  box-shadow: var(--shadow-floating);
+  border-radius: var(--radius-outer);
+}
+
+/* ── Focus ring utility ── */
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
 /* ── Shimmer gradient for skeleton placeholders ── */
 .lux-shimmer-bg {
   background: linear-gradient(90deg, var(--color-bg-raised) 25%, var(--color-bg-hover) 50%, var(--color-bg-raised) 75%);
@@ -32,7 +60,7 @@ body {
 
 /* ── Disclosure height animation ── */
 .lux-disclosure-enter {
-  animation: lux-disclosure-open 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: lux-disclosure-open var(--motion-base) var(--motion-easeOut) both;
   overflow: hidden;
 }
 

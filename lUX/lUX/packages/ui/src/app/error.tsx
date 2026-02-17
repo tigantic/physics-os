@@ -26,7 +26,7 @@ export default function RootError({ error, reset }: { error: Error & { digest?: 
       <div className="mx-auto max-w-[600px] rounded-[var(--radius-outer)] border bg-[var(--color-bg-raised)] p-6">
         <div className="text-xs uppercase tracking-wider text-[var(--color-text-tertiary)]">Application Error</div>
         <h1 className="mt-2 text-lg font-semibold">Something went wrong</h1>
-        <pre className="mt-4 whitespace-pre-wrap break-words font-mono text-xs text-[var(--color-verdict-fail)]">
+        <pre className="mt-4 whitespace-pre-wrap break-words font-mono text-xs text-[var(--color-status-fail)]">
           {error.message}
         </pre>
         {error.digest && (
@@ -36,7 +36,7 @@ export default function RootError({ error, reset }: { error: Error & { digest?: 
           ref={retryRef}
           type="button"
           onClick={reset}
-          className="mt-5 min-h-[44px] rounded-md border border-[var(--color-border-base)] bg-[var(--color-bg-base)] px-5 py-2 text-sm font-medium text-[var(--color-text-primary)] transition-colors duration-[var(--motion-fastMs)] ease-[var(--motion-easeOut)] hover:bg-[var(--color-bg-raised)] sm:min-h-0"
+          className="mt-5 min-h-[44px] rounded-md border border-[var(--color-border-base)] bg-[var(--color-bg-base)] px-5 py-2 text-sm font-medium text-[var(--color-text-primary)] transition-colors duration-[var(--motion-hover)] ease-[var(--motion-easeOut)] hover:bg-[var(--color-bg-raised)] sm:min-h-0"
         >
           Retry
         </button>

@@ -1,39 +1,104 @@
-:root {
-  --color-accent-gold: #c9a96e;
-  --color-accent-goldBorder: rgba(201, 169, 110, 0.25);
-  --color-accent-goldDim: rgba(201, 169, 110, 0.15);
-  --color-bg-base: #0d0d10;
-  --color-bg-hover: #1e1e25;
-  --color-bg-raised: #16161b;
-  --color-bg-surface: #232329;
-  --color-border-active: rgba(201, 169, 110, 0.25);
-  --color-border-base: rgba(255, 255, 255, 0.06);
-  --color-text-primary: #f5f3ef;
-  --color-text-secondary: #aea9b4;
-  --color-text-tertiary: #8c8798;
-  --color-verdict-fail: #d65b55;
-  --color-verdict-failBorder: rgba(214, 91, 85, 0.35);
-  --color-verdict-pass: #479967;
-  --color-verdict-passBorder: rgba(71, 153, 103, 0.35);
-  --color-verdict-warn: #b8862d;
-  --color-verdict-warnBorder: rgba(184, 134, 45, 0.35);
-  --motion-baseMs: 220;
-  --motion-easeInOut: cubic-bezier(0.65, 0, 0.35, 1);
-  --motion-easeOut: cubic-bezier(0.16, 1, 0.3, 1);
-  --motion-fastMs: 180;
-  --radius-inner: 10;
-  --radius-outer: 14;
-  --shadow-floating: 0 18px 50px rgba(0, 0, 0, 0.6);
-  --shadow-raised: 0 10px 30px rgba(0, 0, 0, 0.45);
-  --space-u: 8;
-  --type-math: SVG;
-  --type-mono: JetBrainsMono;
-  --type-ui: IBMPlexSans;
+/* ── lUX Design Tokens: Instrument-Grade Forensic UI ─────────────────── */
+/* Palette: neutral graphite surfaces, cobalt accent, instrument clarity  */
 
-  /* Fluid type scale — scales smoothly from 320px to 1280px viewport */
-  --type-fluid-xs: clamp(0.6875rem, 0.625rem + 0.2vw, 0.75rem);
-  --type-fluid-sm: clamp(0.75rem, 0.688rem + 0.2vw, 0.875rem);
-  --type-fluid-base: clamp(0.875rem, 0.813rem + 0.2vw, 1rem);
-  --type-fluid-lg: clamp(1rem, 0.938rem + 0.2vw, 1.125rem);
-  --type-fluid-xl: clamp(1.125rem, 1.063rem + 0.2vw, 1.25rem);
+/* ── Dark theme (default) ──────────────────────────────────────────── */
+:root,
+[data-theme="dark"] {
+  /* Surfaces — deep ink, subtle elevation via border + shadow */
+  --color-bg-base: #0B0C10;
+  --color-bg-raised: #13141A;
+  --color-bg-hover: #1B1C24;
+  --color-bg-surface: #20212B;
+
+  /* Text hierarchy — cool neutrals, maximum readability */
+  --color-text-primary: #EAECF0;
+  --color-text-secondary: #8A8EA0;
+  --color-text-tertiary: #5A5E70;
+
+  /* Accent (cobalt) — restrained, for interactive elements only */
+  --color-accent: #4B7BF5;
+  --color-accent-dim: rgba(75, 123, 245, 0.10);
+  --color-accent-border: rgba(75, 123, 245, 0.25);
+  --color-accent-strong: #6B96FF;
+
+  /* Status — tuned for readability, not neon */
+  --color-status-pass: #34B870;
+  --color-status-pass-border: rgba(52, 184, 112, 0.30);
+  --color-status-warn: #E5A833;
+  --color-status-warn-border: rgba(229, 168, 51, 0.30);
+  --color-status-fail: #E05252;
+  --color-status-fail-border: rgba(224, 82, 82, 0.30);
+
+  /* Borders */
+  --color-border-base: rgba(255, 255, 255, 0.06);
+  --color-border-active: rgba(75, 123, 245, 0.30);
+
+  /* Radii — consistent rules, not vibes */
+  --radius-outer: 12px;
+  --radius-inner: 8px;
+  --radius-pill: 9999px;
+  --radius-control: 6px;
+
+  /* Spacing base unit */
+  --space-u: 8;
+
+  /* Shadows — raised = border + subtle shadow; no gradients */
+  --shadow-raised: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-floating: 0 4px 12px rgba(0, 0, 0, 0.4), 0 12px 40px rgba(0, 0, 0, 0.3);
+
+  /* Motion — slow, precise, minimal */
+  --motion-easeOut: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-easeInOut: cubic-bezier(0.33, 1, 0.68, 1);
+  --motion-hover: 160ms;
+  --motion-base: 220ms;
+
+  /* Typography — tight editorial scale */
+  --type-ui: Inter;
+  --type-mono: JetBrainsMono;
+  --type-math: SVG;
+  --type-fluid-xs: clamp(0.6875rem, 0.65rem + 0.12vw, 0.75rem);
+  --type-fluid-sm: clamp(0.75rem, 0.72rem + 0.1vw, 0.8125rem);
+  --type-fluid-base: clamp(0.8125rem, 0.78rem + 0.1vw, 0.875rem);
+  --type-fluid-lg: clamp(0.875rem, 0.85rem + 0.08vw, 0.9375rem);
+  --type-fluid-xl: clamp(1rem, 0.97rem + 0.1vw, 1.0625rem);
+  --type-fluid-2xl: clamp(1.125rem, 1.06rem + 0.2vw, 1.25rem);
+
+  /* Focus ring — visible, consistent */
+  --focus-ring: 0 0 0 2px var(--color-bg-base), 0 0 0 4px var(--color-accent);
+
+  color-scheme: dark;
+}
+
+/* ── Light theme ───────────────────────────────────────────────────── */
+[data-theme="light"] {
+  --color-bg-base: #F5F6F8;
+  --color-bg-raised: #FFFFFF;
+  --color-bg-hover: #ECEDF2;
+  --color-bg-surface: #F0F1F5;
+
+  --color-text-primary: #111318;
+  --color-text-secondary: #525668;
+  --color-text-tertiary: #7C8094;
+
+  --color-accent: #3B63CC;
+  --color-accent-dim: rgba(59, 99, 204, 0.08);
+  --color-accent-border: rgba(59, 99, 204, 0.20);
+  --color-accent-strong: #2A4EAF;
+
+  --color-status-pass: #1B8A4A;
+  --color-status-pass-border: rgba(27, 138, 74, 0.20);
+  --color-status-warn: #B47A16;
+  --color-status-warn-border: rgba(180, 122, 22, 0.20);
+  --color-status-fail: #C73E3E;
+  --color-status-fail-border: rgba(199, 62, 62, 0.20);
+
+  --color-border-base: rgba(0, 0, 0, 0.08);
+  --color-border-active: rgba(59, 99, 204, 0.25);
+
+  --shadow-raised: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-floating: 0 4px 12px rgba(0, 0, 0, 0.08), 0 12px 40px rgba(0, 0, 0, 0.06);
+
+  --focus-ring: 0 0 0 2px var(--color-bg-base), 0 0 0 4px var(--color-accent);
+
+  color-scheme: light;
 }

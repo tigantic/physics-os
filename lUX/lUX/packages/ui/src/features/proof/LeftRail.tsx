@@ -27,9 +27,9 @@ export function LeftRail({ proof, fixture, mode }: { proof: ProofPackage; fixtur
                   >
                     <div
                       className={cn(
-                        "flex items-center justify-between rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2 transition-all duration-fast ease-lux-out",
+                        "flex items-center justify-between rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2 transition-all duration-hover ease-lux-out",
                         id === fixture
-                          ? "border-l-2 border-l-[var(--color-accent-gold)] shadow-[0_0_12px_rgba(201,169,110,0.08)]"
+                          ? "border-l-2 border-l-[var(--color-accent)] shadow-[0_0_12px_rgba(75,123,245,0.08)]"
                           : "hover:bg-[var(--color-bg-hover)]",
                       )}
                     >

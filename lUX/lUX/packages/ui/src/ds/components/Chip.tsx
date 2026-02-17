@@ -10,11 +10,11 @@ export const Chip = React.memo(function Chip({
 }) {
   const cls =
     tone === "gold"
-      ? "border-[var(--color-accent-goldBorder)] bg-[var(--color-accent-goldDim)] text-[var(--color-accent-gold)]"
+      ? "border-[var(--color-accent-border)] bg-[var(--color-accent-dim)] text-[var(--color-accent)]"
       : tone === "fail"
-        ? "border-[var(--color-verdict-fail)]/40 bg-[var(--color-bg-raised)] text-[var(--color-verdict-fail)]"
+        ? "border-[var(--color-status-fail)]/40 bg-[var(--color-bg-raised)] text-[var(--color-status-fail)]"
         : tone === "warn"
-          ? "border-[var(--color-verdict-warn)]/40 bg-[var(--color-bg-raised)] text-[var(--color-verdict-warn)]"
+          ? "border-[var(--color-status-warn)]/40 bg-[var(--color-bg-raised)] text-[var(--color-status-warn)]"
           : "border-[var(--color-border-base)] bg-[var(--color-bg-raised)] text-[var(--color-text-secondary)]";
   return (
     <span

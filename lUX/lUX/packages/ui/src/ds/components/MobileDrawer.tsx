@@ -118,7 +118,7 @@ export function MobileDrawer({
             type="button"
             onClick={onClose}
             aria-label={`Close ${label}`}
-            className="flex h-9 w-9 items-center justify-center rounded-md text-[var(--color-text-secondary)] transition-colors duration-fast ease-lux-out hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-text-primary)]"
+            className="flex h-9 w-9 items-center justify-center rounded-md text-[var(--color-text-secondary)] transition-colors duration-hover ease-lux-out hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-text-primary)]"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />

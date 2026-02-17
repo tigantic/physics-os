@@ -15,7 +15,7 @@ export function IdentityStrip({ proof }: { proof: ProofPackage }) {
           <HamburgerButton />
           <div className="min-w-0">
             <div className="hidden text-xs uppercase tracking-wider text-[var(--color-text-tertiary)] sm:block">
-              Luxury Physics Viewer
+              lUX Proof Viewer
             </div>
             <h1 className="animate-lux-slide-up truncate text-base font-semibold text-[var(--color-text-primary)] md:text-lg">
               {proof.meta.project_id} · {proof.meta.domain_id}

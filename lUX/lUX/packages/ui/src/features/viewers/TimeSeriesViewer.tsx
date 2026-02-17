@@ -45,7 +45,7 @@ export async function TimeSeriesViewer({
             viewBox="0 0 560 120"
             preserveAspectRatio="none"
           >
-            <path d={d} fill="none" stroke="var(--color-accent-gold)" strokeWidth="2" />
+            <path d={d} fill="none" stroke="var(--color-accent)" strokeWidth="2" />
           </svg>
         </div>
         <div className="mt-2 font-mono text-xs text-[var(--color-text-tertiary)]">{art.hash}</div>

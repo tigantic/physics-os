@@ -15,7 +15,7 @@ export function HamburgerButton() {
       type="button"
       onClick={toggle}
       aria-label="Open navigation menu"
-      className="flex h-10 w-10 items-center justify-center rounded-md text-[var(--color-text-secondary)] transition-colors duration-fast ease-lux-out hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-text-primary)] md:hidden"
+      className="flex h-10 w-10 items-center justify-center rounded-md text-[var(--color-text-secondary)] transition-colors duration-hover ease-lux-out hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-text-primary)] md:hidden"
     >
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
         <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />

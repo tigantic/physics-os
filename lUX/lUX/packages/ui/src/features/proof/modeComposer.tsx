@@ -59,7 +59,7 @@ export function renderCenterScreens(ctx: CenterCtx) {
               <pre className="text-xs leading-relaxed">
                 {Object.entries(ctx.proof.gate_manifests ?? {}).map(([gateId, manifest]) => (
                   <div key={gateId} className="mb-3 last:mb-0">
-                    <span className="font-semibold text-[var(--color-accent-gold)]">{gateId}</span>
+                    <span className="font-semibold text-[var(--color-accent)]">{gateId}</span>
                     {"\n"}
                     {Object.entries(manifest as Record<string, unknown>).map(([k2, v]) => (
                       <div key={k2} className="ml-4">

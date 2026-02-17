@@ -1,0 +1,259 @@
+==============================================================================================================
+HYPERTENSOR-VM FORENSIC LOC SWEEP v2 — AUTHORED CODE ONLY
+Root: /home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main
+==============================================================================================================
+
+Excluded vendored dirs: clawdbot-main, openzeppelin-contracts, vendor, worldcoin-id, zk_targets
+Excluded data extensions: .7z, .avi, .bin, .bz2, .class, .csv, .dat, .db, .dll, .docx... (+45 more)
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+SECTION 1: AUTHORED CODE — LANGUAGE BREAKDOWN
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Language               Files  Total Lines      Blank       Code    Size MB       %
+──────────────────── ─────── ──────────── ────────── ────────── ────────── ───────
+Lean 4                16,451    4,263,662    844,759  3,418,903     169.30   72.5%
+Python                 1,944      862,737    168,849    693,888      28.37   14.7%
+Markdown                 571      243,284     69,334    173,950       8.20    4.1%
+Rust                     313      132,120     18,134    113,986       4.67    2.2%
+HTML                      77       99,141     10,431     88,710       4.28    1.7%
+Solidity                 189       87,492      9,807     77,685       3.14    1.5%
+Text                      42       74,509     14,658     59,851       5.64    1.3%
+YAML                     357       53,925      8,921     45,004       1.68    0.9%
+JavaScript               181       27,067      1,504     25,563       6.06    0.5%
+TypeScript               125        9,187      1,050      8,137       0.30    0.2%
+Shell                     76        8,903      1,260      7,643       0.33    0.2%
+CSS                       31        5,013        608      4,405       0.29    0.1%
+WGSL Shader               18        4,265        800      3,465       0.16    0.1%
+CUDA                      11        3,721        568      3,153       0.12    0.1%
+TOML                      59        2,647        444      2,203       0.07    0.0%
+Docker                    14          727        188        539       0.02    0.0%
+Circom                     2          118         17        101       0.00    0.0%
+GLSL Shader                1           59          9         50       0.00    0.0%
+Config                     1           50          7         43       0.00    0.0%
+──────────────────── ─────── ──────────── ────────── ────────── ────────── ───────
+TOTAL                 20,463    5,878,627  1,151,348  4,727,279     232.63    100%
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+SECTION 2: AUTHORED CODE — DIRECTORY BREAKDOWN
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Directory                          Files  Total Lines       Code  Size MB         Primary
+──────────────────────────────── ─────── ──────────── ────────── ──────── ───────────────
+lean_yang_mills                    8,639    2,178,423  1,748,618    86.07          Lean 4
+yang_mills_unified_proof           8,094    2,139,658  1,717,776    85.03          Lean 4
+tensornet                          1,082      471,534    378,655    15.05          Python
+docs                                 404      282,134    215,589     9.71        Markdown
+scripts                              176       91,348     74,215     3.33          Python
+products                             208       88,458     75,910     3.11          Python
+fluidelite-zk                        202       80,342     69,309     2.94            Rust
+data                                   7       59,890     49,179     4.18            Text
+tests                                 91       43,621     33,778     1.44          Python
+apps                                 103       40,053     34,615     1.40            Rust
+fluidelite                            92       39,210     27,867     2.25          Python
+FRONTIER                              64       30,801     24,494     0.99          Python
+etherfi_oracle_frontrun_poc           62       28,426     25,190     1.00        Solidity
+QTeneT                                91       23,841     19,893     1.00          Python
+sovereign-ui                         146       23,456     22,056     1.82      JavaScript
+demos                                 48       22,751     18,263     0.78          Python
+fluidelite-circuits                   43       21,393     18,355     0.77            Rust
+lUX                                  133       20,149     16,854     4.91            YAML
+yangmills                             45       18,854     14,614     0.61          Python
+proofs                                47       18,806     14,693     0.57          Python
+oracle                                27       12,993     10,416     0.44          Python
+crates                                50       12,558     10,675     0.43            Rust
+_root                                 23       10,992      8,521     0.58        Markdown
+sdk                                   40       10,378      8,489     0.34          Python
+ledger                               174        8,620      7,061     0.20            YAML
+fluidelite-infra                      18        8,588      7,243     0.28            Rust
+The_Compressor                        23        8,359      6,697     0.27          Python
+Physics                               10        7,755      5,903     0.24          Python
+proof_engine                          15        6,420      5,165     0.20          Python
+deployment                            33        6,089      5,326     0.22            YAML
+experiments                            4        4,864      4,122     0.18          Python
+benchmarks                            16        3,829      3,065     0.11          Python
+fluidelite-core                       10        3,580      3,072     0.12            Rust
+tornado-circuits                      31        3,504      3,061     0.13      JavaScript
+QTT-CEM                               12        3,262      2,824     0.11            Rust
+glass-cockpit                          5        2,578      2,253     0.09            Rust
+tci_llm                               12        2,527      2,001     0.08          Python
+.github                               15        2,419      2,051     0.08            YAML
+oracle_node                            7        2,342      1,885     0.09          Python
+archive                                8        2,296      1,814     0.08          Python
+qtt_3d_ops                             7        2,152      1,716     0.07          Python
+ai_scientist                           6        2,080      1,687     0.07          Python
+tci_core_rust                          9        1,996      1,679     0.06            Rust
+tpc                                    5        1,937      1,639     0.07          Python
+QTT-FEA                               10        1,921      1,669     0.06            Rust
+paper                                  4        1,878      1,518     0.06          Python
+QTT-OPT                               11        1,861      1,630     0.06            Rust
+test_contracts                         6        1,843      1,567     0.07        Solidity
+sovereign_api                          2        1,494      1,232     0.05          Python
+Tenet-TPhy                             3        1,384      1,012     0.06        Markdown
+_archived_dense                        4        1,249      1,003     0.04          Python
+video                                  3          964        783     0.04          Python
+exploit_verification                   4          777        631     0.02          Python
+evidence                               3          771        588     0.02        Markdown
+integrations                           3          686        537     0.02          Python
+worldcoin-circuits                     5          530        415     0.02        Markdown
+qmb_conservation_proof                 1          441        334     0.02          Lean 4
+artifacts                              2          440        379     0.27            HTML
+contracts                              2          436        371     0.02        Solidity
+fluid_conservation_proof               1          427        340     0.02          Lean 4
+plasma_conservation_proof              1          345        272     0.02          Lean 4
+pwa_engine                             4          340        291     0.01          Python
+vlasov_conservation_proof              1          321        266     0.02          Lean 4
+euler_conservation_proof               1          311        266     0.02          Lean 4
+em_conservation_proof                  1          299        230     0.01          Lean 4
+thermal_conservation_proof             1          281        232     0.02          Lean 4
+solid_state_conservation_proof         1          272        204     0.01          Lean 4
+demo                                   1          263        223     0.01          Python
+electronic_structure_conservation_proof       1          256        194     0.01          Lean 4
+nuclear_particle_conservation_proof       1          233        177     0.01          Lean 4
+CFD_HVAC                               1          220        155     0.01        Markdown
+quantum_mechanics_conservation_proof       1          210        161     0.01          Lean 4
+media                                 13          177        177     0.03            Text
+statmech_conservation_proof            1          176        140     0.01          Lean 4
+quantum_info_conservation_proof        1          147        112     0.01          Lean 4
+yang_mills_proof                       2          143        107     0.01          Lean 4
+chem_physics_iter_conservation_proof       1          142        108     0.01          Lean 4
+mechanics_conservation_proof           1          128         98     0.01          Lean 4
+verified_yang_mills_proof              2          127         91     0.00          Lean 4
+ai_scientist_output                    2          119         91     0.00          Lean 4
+applied_physics_conservation_proof       1          119         91     0.00          Lean 4
+docker                                 2          112         94     0.00           Shell
+elite_yang_mills_proof                 1          108         85     0.00          Lean 4
+biophysics_conservation_proof          1           96         73     0.00          Lean 4
+elite_yang_mills_proof_v2              1           94         74     0.00          Lean 4
+navier_stokes_proof                    1           93         72     0.00          Lean 4
+materials_conservation_proof           1           91         71     0.00          Lean 4
+coupled_conservation_proof             1           90         70     0.00          Lean 4
+computational_methods_conservation_proof       1           88         68     0.00          Lean 4
+geophysics_conservation_proof          1           83         65     0.00          Lean 4
+astro_conservation_proof               1           83         65     0.00          Lean 4
+navier_stokes_proof_v2                 1           78         59     0.00          Lean 4
+statmech_stochastic_conservation_proof       1           78         63     0.00          Lean 4
+gevulot                                1           77         62     0.00           Shell
+models                                 1           73         69     0.00        Markdown
+sweep_results                          1           71         53     0.00        Markdown
+optics_conservation_proof              1           65         51     0.00          Lean 4
+chemical_physics_conservation_proof       1           64         50     0.00          Lean 4
+special_relativity_conservation_proof       1           64         51     0.00          Lean 4
+profile_results                        1           59         52     0.00            Text
+quantum_info_ext_conservation_proof       1           53         42     0.00          Lean 4
+results                                1            9          6     0.00        Markdown
+images                                 1            1          1     0.00        Markdown
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+SECTION 3: TENSORNET/ MODULE BREAKDOWN
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Module                        Files  Total Lines       Code
+──────────────────────────── ────── ──────────── ──────────
+cfd                             118       77,272     60,845
+genesis                          87       41,928     33,099
+exploit                          46       27,706     22,760
+packs                            23       26,239     21,200
+discovery                        47       24,919     20,607
+platform                         40       15,474     12,705
+types                            15       12,087      9,503
+oracle                           32        9,937      8,094
+zk                                9        9,821      8,161
+condensed_matter                 40        9,442      7,516
+mechanics                        23        8,662      6,967
+ml_surrogates                    20        8,250      6,611
+neural                           10        6,425      5,209
+gpu                              17        5,978      4,789
+algorithms                       15        5,721      4,644
+hyperenv                         10        5,014      3,989
+fusion                            9        4,959      4,010
+core                             15        4,723      3,801
+validation                        6        4,406      3,695
+docs                              5        4,398      3,631
+simulation                        6        4,360      3,507
+quantum                          13        4,311      3,418
+intent                            8        4,204      3,434
+cuda                              9        4,065      3,297
+numerics                         13        3,932      3,134
+digital_twin                      6        3,866      3,103
+qtt                              11        3,858      3,200
+sovereign                        11        3,563      2,863
+guidance                          6        3,556      2,795
+hypersim                          7        3,462      2,758
+plasma                           15        3,348      2,656
+geophysics                       15        3,243      2,521
+integration                       5        3,219      2,645
+fieldos                           7        3,214      2,554
+hardware                          9        3,169      2,542
+em                               15        3,166      2,527
+materials                        15        3,106      2,422
+benchmarks                        7        3,099      2,513
+astro                            14        3,066      2,332
+provenance                        7        3,056      2,432
+  ... + 65 more                 293       85,843     68,854
+──────────────────────────── ────── ──────────── ──────────
+TENSORNET TOTAL                1079      470,067    377,343
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+SECTION 4: TOP 30 LARGEST AUTHORED FILES
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  1.  40,000 lines   1089.3 KB  data/shakespeare.txt
+  2.  39,315 lines   1164.4 KB  docs/research/HyperTensor_CFD_Book.md
+  3.  23,546 lines    580.5 KB  docs/reports/zksync_halo2_report.md
+  4.  23,176 lines    879.2 KB  docs/api/tensornet/cfd/index.html
+  5.  13,285 lines    269.4 KB  docs/reports/fluidelite_report.md
+  6.  13,248 lines    399.3 KB  products/fluidelite-zk/foundry/lib/forge-std/src/safeconsole.sol
+  7.  13,248 lines    399.3 KB  fluidelite-zk/foundry/lib/forge-std/src/safeconsole.sol
+  8.  13,248 lines    399.3 KB  etherfi_oracle_frontrun_poc/lib/forge-std/src/safeconsole.sol
+  9.  10,142 lines    338.2 KB  lUX/lUX/pnpm-lock.yaml
+ 10.   7,487 lines    393.9 KB  yang_mills_unified_proof/.lake/packages/mathlib/Mathlib.lean
+ 11.   7,382 lines    387.7 KB  lean_yang_mills/.lake/packages/mathlib/Mathlib.lean
+ 12.   7,248 lines   1261.7 KB  fluidelite/data/wikitext2_test.txt
+ 13.   5,781 lines   1260.3 KB  data/wikitext2_test.txt
+ 14.   5,143 lines    265.7 KB  data/TiganticLabz.txt
+ 15.   4,953 lines   1521.5 KB  data/Invarian-Future_Chronicle_Etymology.txt
+ 16.   4,856 lines    136.8 KB  yang_mills_unified_proof/.lake/packages/mathlib/scripts/nolints_prime_decls.txt
+ 17.   4,856 lines    136.8 KB  lean_yang_mills/.lake/packages/mathlib/scripts/nolints_prime_decls.txt
+ 18.   4,483 lines    338.9 KB  QTeneT/docs/05_ALGORITHM_CATALOG.md
+ 19.   4,226 lines     76.3 KB  yang_mills_unified_proof/.lake/packages/mathlib/docs/1000.yaml
+ 20.   4,216 lines    191.1 KB  PLATFORM_SPECIFICATION.md
+ 21.   4,205 lines     75.5 KB  lean_yang_mills/.lake/packages/mathlib/docs/1000.yaml
+ 22.   4,041 lines    154.7 KB  products/facial_plastics/ui/api.py
+ 23.   3,882 lines    126.0 KB  fluidelite/FINDINGS.md
+ 24.   3,828 lines    672.3 KB  sovereign-ui/.svelte-kit/output/client/_app/immutable/chunks/BtCAaDxU.js
+ 25.   3,655 lines    117.5 KB  sovereign-ui/.svelte-kit/output/server/index.js
+ 26.   3,231 lines    120.0 KB  docs/api/tensornet/core/index.html
+ 27.   2,921 lines     81.9 KB  sovereign-ui/.svelte-kit/output/server/chunks/index2.js
+ 28.   2,917 lines    105.9 KB  tensornet/zk/fezk_elite.py
+ 29.   2,917 lines    115.1 KB  docs/architecture/Sovereign_UI.md
+ 30.   2,728 lines     96.6 KB  tests/test_integration.py
+
+==============================================================================================================
+EXECUTIVE SUMMARY — AUTHORED CODE ONLY
+==============================================================================================================
+  Authored source files:           20,463
+  Authored total lines:         5,878,627
+  Authored code (non-blank):    4,727,279
+  Authored size on disk:           232.63 MB
+  Vendored files excluded:         26,528
+  Vendored lines excluded:      4,666,545
+  Data/binary files skipped:        6,829
+  Other non-source skipped:        29,595
+  tensornet/ modules:                 105
+  Languages detected:                  19
+
+  AUTHORED LINES BY LANGUAGE:
+    Lean 4                4,263,662 lines  (16,451 files)
+    Python                  862,737 lines  (1,944 files)
+    Markdown                243,284 lines  (571 files)
+    Rust                    132,120 lines  (313 files)
+    HTML                     99,141 lines  (77 files)
+    Solidity                 87,492 lines  (189 files)
+    Text                     74,509 lines  (42 files)
+    YAML                     53,925 lines  (357 files)
+    JavaScript               27,067 lines  (181 files)
+    TypeScript                9,187 lines  (125 files)
+    Shell                     8,903 lines  (76 files)
+    CSS                       5,013 lines  (31 files)
+    WGSL Shader               4,265 lines  (18 files)
+    CUDA                      3,721 lines  (11 files)
+    TOML                      2,647 lines  (59 files)
+
+==============================================================================================================

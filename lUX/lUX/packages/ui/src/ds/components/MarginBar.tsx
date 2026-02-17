@@ -20,7 +20,7 @@ export const MarginBar = React.memo(function MarginBar({ margin }: { margin: Dat
   const val = margin.value;
   const pct = Math.max(0, Math.min(1, val));
   const tone =
-    val >= 0.5 ? "var(--color-accent-gold)" : val >= 0.1 ? "var(--color-verdict-warn)" : "var(--color-verdict-fail)";
+    val >= 0.5 ? "var(--color-accent)" : val >= 0.1 ? "var(--color-status-warn)" : "var(--color-status-fail)";
 
   return (
     <div className="w-full">

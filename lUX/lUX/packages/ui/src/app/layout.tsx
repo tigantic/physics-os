@@ -1,10 +1,10 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { env } from "@/config/env";
 import { WebVitalsReporter } from "@/lib/WebVitalsReporter";
 
-const sans = IBM_Plex_Sans({
+const sans = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   display: "swap",
@@ -20,7 +20,7 @@ const mono = JetBrains_Mono({
   preload: true,
 });
 
-const siteTitle = "Luxury Physics Viewer";
+const siteTitle = "lUX Proof Viewer";
 const siteDesc = "Deterministic proof package viewer for Trustless Physics Certificates";
 
 export const metadata: Metadata = {
@@ -52,17 +52,17 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#C9A96E",
-  colorScheme: "dark",
+  themeColor: "#4B7BF5",
+  colorScheme: "dark light",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
+    <html lang="en" data-theme="dark" className={`${sans.variable} ${mono.variable}`}>
       <body className={sans.className}>
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-[var(--color-accent-gold)] focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-[var(--color-bg-base)]"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-[var(--color-accent)] focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-[var(--color-bg-base)]"
         >
           Skip to content
         </a>

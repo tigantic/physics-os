@@ -13,25 +13,25 @@ describe("MarginBar", () => {
     expect(screen.queryByText("Low margin")).not.toBeInTheDocument();
   });
 
-  it("renders gold tone for margin >= 50%", () => {
+  it("renders accent tone for margin >= 50%", () => {
     const margin: DataValue<number> = { status: "ok", value: 0.6 };
     const { container } = render(<MarginBar margin={margin} />);
     const bar = container.querySelector("[style]") as HTMLElement;
-    expect(bar.style.backgroundColor).toContain("gold");
+    expect(bar.style.backgroundColor).toContain("accent");
   });
 
   it("renders warn tone for margin 10-50%", () => {
     const margin: DataValue<number> = { status: "ok", value: 0.3 };
     const { container } = render(<MarginBar margin={margin} />);
     const bar = container.querySelector("[style]") as HTMLElement;
-    expect(bar.style.backgroundColor).toContain("warn");
+    expect(bar.style.backgroundColor).toContain("status-warn");
   });
 
   it("renders fail tone and Low margin chip for margin < 10%", () => {
     const margin: DataValue<number> = { status: "ok", value: 0.05 };
     const { container } = render(<MarginBar margin={margin} />);
     const bar = container.querySelector("[style]") as HTMLElement;
-    expect(bar.style.backgroundColor).toContain("fail");
+    expect(bar.style.backgroundColor).toContain("status-fail");
     expect(screen.getByText("Low margin")).toBeInTheDocument();
   });
 

@@ -8,10 +8,10 @@ describe("responsive tokens", () => {
   describe("fluid type scale", () => {
     const FLUID_TOKENS = [
       { key: "fluidXs" as const, minRem: 0.6875, maxRem: 0.75 },
-      { key: "fluidSm" as const, minRem: 0.75, maxRem: 0.875 },
-      { key: "fluidBase" as const, minRem: 0.875, maxRem: 1 },
-      { key: "fluidLg" as const, minRem: 1, maxRem: 1.125 },
-      { key: "fluidXl" as const, minRem: 1.125, maxRem: 1.25 },
+      { key: "fluidSm" as const, minRem: 0.75, maxRem: 0.8125 },
+      { key: "fluidBase" as const, minRem: 0.8125, maxRem: 0.875 },
+      { key: "fluidLg" as const, minRem: 0.875, maxRem: 0.9375 },
+      { key: "fluidXl" as const, minRem: 1, maxRem: 1.0625 },
     ];
 
     for (const { key, minRem, maxRem } of FLUID_TOKENS) {
@@ -32,12 +32,12 @@ describe("responsive tokens", () => {
   });
 
   describe("motion tokens", () => {
-    it("fastMs < baseMs", () => {
-      expect(TOKENS.motion.fastMs).toBeLessThan(TOKENS.motion.baseMs);
+    it("hoverMs < baseMs", () => {
+      expect(TOKENS.motion.hoverMs).toBeLessThan(TOKENS.motion.baseMs);
     });
 
-    it("fastMs >= 100ms for perceptibility", () => {
-      expect(TOKENS.motion.fastMs).toBeGreaterThanOrEqual(100);
+    it("hoverMs >= 100ms for perceptibility", () => {
+      expect(TOKENS.motion.hoverMs).toBeGreaterThanOrEqual(100);
     });
 
     it("baseMs <= 400ms for responsiveness", () => {

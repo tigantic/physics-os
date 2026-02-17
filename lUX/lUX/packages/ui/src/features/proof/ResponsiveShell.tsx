@@ -51,7 +51,7 @@ export function ResponsiveShell({
               type="button"
               onClick={() => setRightExpanded((v) => !v)}
               aria-expanded={rightExpanded}
-              className="flex w-full items-center justify-between px-4 py-3 text-sm font-medium text-[var(--color-text-primary)] transition-colors duration-fast ease-lux-out hover:bg-[var(--color-bg-hover)]"
+              className="flex w-full items-center justify-between px-4 py-3 text-sm font-medium text-[var(--color-text-primary)] transition-colors duration-hover ease-lux-out hover:bg-[var(--color-bg-hover)]"
             >
               <span>Integrity Details</span>
               <svg
@@ -60,7 +60,7 @@ export function ResponsiveShell({
                 viewBox="0 0 16 16"
                 fill="none"
                 aria-hidden="true"
-                className={`transition-transform duration-fast ease-lux-out ${rightExpanded ? "rotate-180" : ""}`}
+                className={`transition-transform duration-hover ease-lux-out ${rightExpanded ? "rotate-180" : ""}`}
               >
                 <path
                   d="M4 6l4 4 4-4"

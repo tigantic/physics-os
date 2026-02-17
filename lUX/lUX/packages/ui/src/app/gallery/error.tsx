@@ -27,7 +27,7 @@ export default function GalleryError({ error, reset }: { error: Error & { digest
       <div className="mx-auto max-w-[900px] rounded-[var(--radius-outer)] border bg-[var(--color-bg-raised)] p-6">
         <div className="text-xs uppercase tracking-wider text-[var(--color-text-tertiary)]">Render Halted</div>
         <h1 className="mt-2 text-lg font-semibold">Viewer Error</h1>
-        <pre className="mt-4 whitespace-pre-wrap break-words font-mono text-xs text-[var(--color-verdict-fail)]">
+        <pre className="mt-4 whitespace-pre-wrap break-words font-mono text-xs text-[var(--color-status-fail)]">
           {error.message}
         </pre>
         {error.digest && (

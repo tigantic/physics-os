@@ -18,9 +18,9 @@ export function RightRail({ proof }: { proof: ProofPackage }) {
               className={cn(
                 "inline-block h-1.5 w-1.5 rounded-full",
                 v === "VERIFIED"
-                  ? "bg-[var(--color-verdict-pass)]"
+                  ? "bg-[var(--color-status-pass)]"
                   : v === "BROKEN_CHAIN"
-                    ? "bg-[var(--color-verdict-fail)]"
+                    ? "bg-[var(--color-status-fail)]"
                     : "bg-[var(--color-text-tertiary)]",
               )}
               aria-hidden="true"
@@ -35,7 +35,7 @@ export function RightRail({ proof }: { proof: ProofPackage }) {
           {proof.verification?.failures?.length ? (
             <div className="rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2">
               <div className="text-xs uppercase tracking-wide text-[var(--color-text-tertiary)]">Failures</div>
-              <ul className="mt-2 space-y-1 text-xs text-[var(--color-verdict-fail)]">
+              <ul className="mt-2 space-y-1 text-xs text-[var(--color-status-fail)]">
                 {proof.verification.failures.map((f) => (
                   <li key={`${f.code}-${f.artifact_id ?? "global"}`} className="font-mono">
                     {f.code}

@@ -49,8 +49,8 @@ describe("IdentityStrip", () => {
     expect(screen.getByText("VERIFIED")).toBeInTheDocument();
   });
 
-  it('contains "Luxury Physics Viewer" text', () => {
+  it('contains "lUX Proof Viewer" text', () => {
     render(<IdentityStrip proof={mockProof} />);
-    expect(screen.getByText("Luxury Physics Viewer")).toBeInTheDocument();
+    expect(screen.getByText("lUX Proof Viewer")).toBeInTheDocument();
   });
 });

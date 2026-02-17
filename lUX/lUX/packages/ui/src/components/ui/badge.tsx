@@ -3,15 +3,15 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/config/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium transition-colors duration-fast ease-lux-out",
+  "inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium transition-colors duration-hover ease-lux-out",
   {
     variants: {
       variant: {
         default: "border-[var(--color-border-base)] bg-[var(--color-bg-raised)] text-[var(--color-text-secondary)]",
-        gold: "border-[var(--color-accent-goldBorder)] bg-[var(--color-accent-goldDim)] text-[var(--color-accent-gold)]",
-        pass: "border-[var(--color-verdict-passBorder)] bg-[var(--color-bg-raised)] text-[var(--color-verdict-pass)]",
-        fail: "border-[var(--color-verdict-failBorder)] bg-[var(--color-bg-raised)] text-[var(--color-verdict-fail)]",
-        warn: "border-[var(--color-verdict-warnBorder)] bg-[var(--color-bg-raised)] text-[var(--color-verdict-warn)]",
+        gold: "border-[var(--color-accent-border)] bg-[var(--color-accent-dim)] text-[var(--color-accent)]",
+        pass: "border-[var(--color-status-pass-border)] bg-[var(--color-bg-raised)] text-[var(--color-status-pass)]",
+        fail: "border-[var(--color-status-fail-border)] bg-[var(--color-bg-raised)] text-[var(--color-status-fail)]",
+        warn: "border-[var(--color-status-warn-border)] bg-[var(--color-bg-raised)] text-[var(--color-status-warn)]",
       },
     },
     defaultVariants: { variant: "default" },
