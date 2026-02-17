@@ -7,7 +7,10 @@ import { cn } from "@/config/utils";
 export function LeftRail({ proof, fixture, mode }: { proof: ProofPackage; fixture: string; mode: ProofMode }) {
   if (mode === "EXECUTIVE") {
     return (
-      <nav aria-label="Proof fixtures" className="w-full px-4 py-4 md:w-[260px] md:shrink-0 md:px-6 md:py-6">
+      <nav
+        aria-label="Proof fixtures"
+        className="w-full px-4 py-4 md:w-[260px] md:shrink-0 md:px-6 md:py-6 lg:w-[280px] xl:w-[300px]"
+      >
         <Card>
           <CardHeader>
             <div className="text-sm text-[var(--color-text-primary)]">Fixtures</div>
@@ -44,7 +47,10 @@ export function LeftRail({ proof, fixture, mode }: { proof: ProofPackage; fixtur
   }
 
   return (
-    <aside aria-label="Claims list" className="w-full px-4 py-4 md:w-[320px] md:shrink-0 md:px-6 md:py-6">
+    <aside
+      aria-label="Claims list"
+      className="w-full px-4 py-4 md:w-[280px] md:shrink-0 md:px-6 md:py-6 lg:w-[320px] xl:w-[360px]"
+    >
       <Card>
         <CardHeader>
           <div className="text-sm text-[var(--color-text-primary)]">Claims</div>

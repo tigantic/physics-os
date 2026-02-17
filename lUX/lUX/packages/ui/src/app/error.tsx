@@ -34,7 +34,7 @@ export default function RootError({ error, reset }: { error: Error & { digest?: 
           ref={retryRef}
           type="button"
           onClick={reset}
-          className="mt-5 rounded-md border border-[var(--color-border-base)] bg-[var(--color-bg-base)] px-5 py-2 text-sm font-medium text-[var(--color-text-primary)] transition-colors duration-[var(--motion-fastMs)] ease-[var(--motion-easeOut)] hover:bg-[var(--color-bg-raised)]"
+          className="mt-5 min-h-[44px] rounded-md border border-[var(--color-border-base)] bg-[var(--color-bg-base)] px-5 py-2 text-sm font-medium text-[var(--color-text-primary)] transition-colors duration-[var(--motion-fastMs)] ease-[var(--motion-easeOut)] hover:bg-[var(--color-bg-raised)] sm:min-h-0"
         >
           Retry
         </button>

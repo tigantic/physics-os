@@ -23,6 +23,13 @@ const config: Config = {
         sans: ["IBMPlexSans", "system-ui", "sans-serif"],
         mono: ["JetBrainsMono", "ui-monospace", "monospace"],
       },
+      fontSize: {
+        "fluid-xs": "var(--type-fluid-xs)",
+        "fluid-sm": "var(--type-fluid-sm)",
+        "fluid-base": "var(--type-fluid-base)",
+        "fluid-lg": "var(--type-fluid-lg)",
+        "fluid-xl": "var(--type-fluid-xl)",
+      },
       transitionTimingFunction: {
         "lux-out": "var(--motion-easeOut)",
         "lux-in-out": "var(--motion-easeInOut)",

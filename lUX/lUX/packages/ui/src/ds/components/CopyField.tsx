@@ -20,7 +20,7 @@ export const CopyField = React.memo(function CopyField({ label, value }: { label
   }
 
   return (
-    <div className="flex items-center justify-between gap-3 rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2">
+    <div className="flex flex-col gap-2 rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
       <div className="min-w-0">
         <div className="text-[11px] uppercase tracking-wide text-[var(--color-text-tertiary)]">{label}</div>
         <div className="truncate font-mono text-xs text-[var(--color-text-secondary)]">{value}</div>

@@ -50,5 +50,10 @@ export const TOKENS = {
     ui: "IBMPlexSans",
     mono: "JetBrainsMono",
     math: "SVG",
+    fluidXs: "clamp(0.6875rem, 0.625rem + 0.2vw, 0.75rem)",
+    fluidSm: "clamp(0.75rem, 0.688rem + 0.2vw, 0.875rem)",
+    fluidBase: "clamp(0.875rem, 0.813rem + 0.2vw, 1rem)",
+    fluidLg: "clamp(1rem, 0.938rem + 0.2vw, 1.125rem)",
+    fluidXl: "clamp(1.125rem, 1.063rem + 0.2vw, 1.25rem)",
   },
 } as const;

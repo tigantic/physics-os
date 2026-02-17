@@ -9,7 +9,7 @@ export default function NotFound() {
         <Link
           href="/gallery"
           aria-label="Return to proof gallery"
-          className="inline-block rounded-[var(--radius-inner)] bg-[var(--color-accent-gold)] px-4 py-2 text-sm font-medium text-[var(--color-bg-base)] transition-colors duration-[var(--motion-fastMs)] ease-[var(--motion-easeOut)] hover:opacity-90"
+          className="inline-block min-h-[44px] rounded-[var(--radius-inner)] bg-[var(--color-accent-gold)] px-6 py-3 text-sm font-medium leading-[1.5] text-[var(--color-bg-base)] transition-colors duration-[var(--motion-fastMs)] ease-[var(--motion-easeOut)] hover:opacity-90 sm:min-h-0 sm:px-4 sm:py-2"
         >
           Go to Gallery
         </Link>

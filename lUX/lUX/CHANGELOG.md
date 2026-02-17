@@ -5,6 +5,26 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — Pass 8
+
+- **Phase 3 — Responsive Precision & Mobile Excellence**:
+  - **MobileDrawer component**: Production-grade slide-in overlay with focus trap, Escape-to-close, click-outside-to-close, body scroll lock, `aria-modal`, keyboard cycling. Renders from left or right side.
+  - **ResponsiveShell**: Client-side layout orchestrator — manages mobile drawer state for LeftRail (hidden→drawer below md) and collapsible RightRail (disclosure toggle below lg). Exports `DrawerToggleContext` + `useDrawerToggle` hook.
+  - **HamburgerButton**: Context-aware menu trigger in IdentityStrip, `md:hidden`, 40px touch target, auto-connects to ResponsiveShell.
+  - **Breakpoint strategy**: LeftRail responsive widths (`md:w-[260px] lg:w-[280px] xl:w-[300px]` executive / `md:w-[280px] lg:w-[320px] xl:w-[360px]` review). RightRail `lg:w-[360px] xl:w-[400px]`. Gallery skeleton matches responsive layout pattern. `2xl:max-w-[1600px]` ultra-wide container.
+  - **WCAG 2.5.8 touch targets**: Button sizes `h-11 sm:h-9` (default), `h-10 sm:h-8` (sm), `h-12 sm:h-10` (lg). Error retry `min-h-[44px] sm:min-h-0`. 404 link `min-h-[44px]`. ModeDial tabs `h-10 sm:h-8`. Hamburger `h-10 w-10`.
+  - **Fluid typography**: 5 `clamp()` scale tokens (`--type-fluid-xs` through `--type-fluid-xl`) in `tokens.css`, `tokens.ts`, `tokens.json`. Body `font-size: var(--type-fluid-base)`. Tailwind `text-fluid-*` utilities. Font smoothing added to globals.
+  - **Card responsive padding**: `px-4 pt-4 md:px-6 md:pt-5` (header) / `px-4 pb-4 md:px-6 md:pb-5` (content).
+  - **CopyField responsive layout**: `flex-col sm:flex-row` for full-width copy on mobile, inline on desktop.
+  - **IdentityStrip responsive info**: "Luxury Physics Viewer" label `hidden sm:block`, title `text-base md:text-lg`, CopyField `xl:w-[480px]`.
+  - **Gallery loading skeleton**: Responsive — LeftRail hidden below md, RightRail hidden below lg, responsive rail widths, `2xl:max-w-[1600px]`.
+- **39 new unit tests** (494 total: 237 core + 257 UI):
+  - `mobileDrawer.test.tsx` (10): dialog role, aria-modal, translate states (left/right), close button, Escape, backdrop click, body scroll lock, children, label.
+  - `responsiveShell.test.tsx` (6): renders all slots, mobile RightRail toggle, drawer open/close via context, DrawerToggleContext null/fn.
+  - `hamburgerButton.test.tsx` (5): renders nothing without context, renders with context, click calls toggle, md:hidden, touch target sizing.
+  - `responsiveTokens.test.ts` (18): Fluid type scale (5 tokens × 3 assertions: valid clamp, min<max, contains vw) + motion timing constraints.
+- **UI coverage**: 86.94% → **87.73%** statements (70% threshold).
+
 ### Added — Pass 7
 
 - **Phase 1 — Accessibility & Compliance**:

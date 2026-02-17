@@ -73,7 +73,7 @@ export function ModeDial() {
           size="sm"
           onClick={() => setMode(m)}
           className={cn(
-            "h-8",
+            "h-10 sm:h-8",
             m === mode && "shadow-[0_0_12px_rgba(201,169,110,0.15)] ring-1 ring-[var(--color-accent-goldBorder)]",
           )}
         >

@@ -6,7 +6,10 @@ import { cn } from "@/config/utils";
 export function RightRail({ proof }: { proof: ProofPackage }) {
   const v = proof.verification?.status ?? "UNVERIFIED";
   return (
-    <aside aria-label="Integrity details" className="w-full px-4 py-4 lg:w-[360px] lg:shrink-0 lg:px-6 lg:py-6">
+    <aside
+      aria-label="Integrity details"
+      className="w-full px-4 py-4 lg:w-[360px] lg:shrink-0 lg:px-6 lg:py-6 xl:w-[400px]"
+    >
       <Card>
         <CardHeader>
           <div className="text-sm text-[var(--color-text-primary)]">Integrity</div>
