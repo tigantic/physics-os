@@ -1,0 +1,84 @@
+name: Sentry Source Maps
+
+# Upload source maps to Sentry for production error deobfuscation.
+# Gated behind the SENTRY_AUTH_TOKEN secret — skips silently in OSS forks.
+#
+# Covers ROADMAP item:
+#   Phase 5: "Source maps uploaded to Sentry in CI (behind flag for OSS builds)"
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sentry-${{ github.sha }}
+  cancel-in-progress: true
+
+env:
+  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
+jobs:
+  upload-source-maps:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Only run if Sentry is configured — skips silently in OSS forks
+    if: ${{ secrets.SENTRY_AUTH_TOKEN != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build with source maps
+        working-directory: packages/ui
+        env:
+          NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
+        run: |
+          # Enable source map generation for the production build
+          NEXT_CONFIG_SOURCE_MAPS=true pnpm build
+
+      - name: Install Sentry CLI
+        run: |
+          curl -sL https://sentry.io/get-cli/ | SENTRY_CLI_VERSION="2.38.2" bash
+
+      - name: Create Sentry release
+        run: |
+          VERSION="${{ github.sha }}"
+          sentry-cli releases new "$VERSION"
+          sentry-cli releases set-commits "$VERSION" --auto
+
+      - name: Upload source maps
+        run: |
+          VERSION="${{ github.sha }}"
+          sentry-cli sourcemaps upload \
+            --release="$VERSION" \
+            --url-prefix="~/_next" \
+            --validate \
+            packages/ui/.next/static
+
+      - name: Finalize release
+        run: |
+          VERSION="${{ github.sha }}"
+          sentry-cli releases finalize "$VERSION"
+
+      - name: Cleanup source maps from build output
+        run: |
+          # Remove source maps from the build so they aren't deployed publicly
+          find packages/ui/.next -name "*.map" -delete
+          echo "Removed source maps from build output"

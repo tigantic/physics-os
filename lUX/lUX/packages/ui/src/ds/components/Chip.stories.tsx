@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "@storybook/test";
 import { Chip } from "./Chip";
 
 const meta: Meta<typeof Chip> = {
@@ -35,6 +36,14 @@ export const AllTones: Story = {
       <Chip tone="warn">Warn</Chip>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // All 4 tone variants render with fade-in animation
+    expect(canvas.getByText("Default")).toBeVisible();
+    expect(canvas.getByText("Gold")).toBeVisible();
+    expect(canvas.getByText("Fail")).toBeVisible();
+    expect(canvas.getByText("Warn")).toBeVisible();
+  },
 };
 
 export const LongLabel: Story = {

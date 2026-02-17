@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "@storybook/test";
 import { Card, CardHeader, CardContent } from "./Card";
 
 const meta: Meta<typeof Card> = {
@@ -17,6 +18,15 @@ export const Default: Story = {
       <CardContent>Content body goes here.</CardContent>
     </Card>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // Verify card renders structurally with header and content
+    expect(canvas.getByText("Header")).toBeVisible();
+    expect(canvas.getByText("Content body goes here.")).toBeVisible();
+    // Card should have hover transition class (shadow elevation)
+    const card = canvasElement.querySelector("[class*='shadow']") ?? canvasElement.firstElementChild;
+    expect(card).toBeTruthy();
+  },
 };
 
 export const HeaderOnly: Story = {

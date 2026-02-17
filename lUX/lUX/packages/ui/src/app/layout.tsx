@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { env } from "@/config/env";
 import { WebVitalsReporter } from "@/lib/WebVitalsReporter";
+import { CriticalCSS } from "@/lib/CriticalCSS";
 import { TOKENS } from "@/ds/tokens";
 
 const sans = Inter({
@@ -60,6 +61,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" data-theme="dark" className={`${sans.variable} ${mono.variable}`}>
+      <head>
+        <CriticalCSS />
+      </head>
       <body className={sans.className}>
         <a
           href="#main-content"

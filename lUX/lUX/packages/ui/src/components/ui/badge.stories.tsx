@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "@storybook/test";
 import { Badge } from "./badge";
 
 const meta: Meta<typeof Badge> = {
@@ -40,6 +41,15 @@ export const AllVariants: Story = {
       <Badge variant="warn">Warn</Badge>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // All 5 variants should be visible simultaneously
+    expect(canvas.getByText("Default")).toBeVisible();
+    expect(canvas.getByText("Gold")).toBeVisible();
+    expect(canvas.getByText("Pass")).toBeVisible();
+    expect(canvas.getByText("Fail")).toBeVisible();
+    expect(canvas.getByText("Warn")).toBeVisible();
+  },
 };
 
 export const CustomClassName: Story = {

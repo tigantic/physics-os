@@ -22,7 +22,9 @@ describe("token purity", () => {
         // global-error.tsx must use inline hex since root layout CSS may not be loaded
         !f.endsWith("global-error.tsx") &&
         // layout.tsx themeColor requires raw hex for Next.js Viewport metadata API
-        !f.endsWith("layout.tsx"),
+        !f.endsWith("layout.tsx") &&
+        // CriticalCSS.tsx intentionally inlines raw hex tokens to prevent FOUC
+        !f.endsWith("CriticalCSS.tsx"),
     );
     const bad: Array<{ file: string; match: string }> = [];
     const re = /(#[0-9a-fA-F]{3,8})|\brgb\(|\brgba\(|\bhsl\(|\bhsla\(/g;

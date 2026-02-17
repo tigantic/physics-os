@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "@storybook/test";
 import { MarginBar } from "./MarginBar";
 
 const meta: Meta<typeof MarginBar> = {
@@ -13,6 +14,11 @@ type Story = StoryObj<typeof MarginBar>;
 export const HighMargin: Story = {
   args: {
     margin: { status: "ok", value: 0.85 },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // Verify the bar fill renders with the correct percentage
+    expect(canvas.getByText(/85/)).toBeVisible();
   },
 };
 
@@ -67,6 +73,11 @@ export const BoundaryGold: Story = {
 export const MissingData: Story = {
   args: {
     margin: { status: "missing", reason: "Sensor offline" },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // Missing data should show the reason text
+    expect(canvas.getByText(/sensor offline/i)).toBeVisible();
   },
 };
 

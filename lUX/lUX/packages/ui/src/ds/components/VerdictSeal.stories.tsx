@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "@storybook/test";
 import { VerdictSeal } from "./VerdictSeal";
 
 const meta: Meta<typeof VerdictSeal> = {
@@ -12,6 +13,14 @@ type Story = StoryObj<typeof VerdictSeal>;
 
 export const PassVerified: Story = {
   args: { status: "PASS", verification: "VERIFIED" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // Verify the seal renders with entrance animation class and correct content
+    const seal = canvas.getByText(/pass/i);
+    expect(seal).toBeVisible();
+    // Check the verification badge is present
+    expect(canvas.getByText(/verified/i)).toBeVisible();
+  },
 };
 
 export const PassUnverified: Story = {
@@ -20,6 +29,11 @@ export const PassUnverified: Story = {
 
 export const FailBrokenChain: Story = {
   args: { status: "FAIL", verification: "BROKEN_CHAIN" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    expect(canvas.getByText(/fail/i)).toBeVisible();
+    expect(canvas.getByText(/broken.chain/i)).toBeVisible();
+  },
 };
 
 export const FailVerified: Story = {

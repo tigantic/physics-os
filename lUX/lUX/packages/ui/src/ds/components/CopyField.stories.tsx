@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, userEvent, expect, fn } from "@storybook/test";
 import { CopyField } from "./CopyField";
 
 const meta: Meta<typeof CopyField> = {
@@ -14,6 +15,23 @@ export const Default: Story = {
   args: {
     label: "SHA-256",
     value: "sha256:a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Mock clipboard API for Storybook environment
+    const writeText = fn().mockResolvedValue(undefined);
+    Object.assign(navigator, { clipboard: { writeText } });
+
+    const copyBtn = canvas.getByRole("button", { name: /copy sha-256/i });
+    expect(copyBtn).toBeVisible();
+
+    // Click copy — should show "Copied" feedback
+    await userEvent.click(copyBtn);
+    expect(canvas.getByText("Copied")).toBeVisible();
+
+    // Focus should return to the copy button
+    expect(copyBtn).toHaveFocus();
   },
 };
 

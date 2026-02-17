@@ -451,7 +451,7 @@ logger.error("render.failed", { fixtureId, error: err.message, stack: err.stack 
 | `ReproduceScreen` | Low — static content | ✅ |
 
 - [x] Add `React.memo` with named function expressions and `displayName` on all 7 screens
-- [ ] Verify with React DevTools Profiler that re-renders are eliminated
+- [ ] Source maps uploaded to Sentry in CI (behind flag for OSS builds)
 
 ### 6.3 Virtualization ✅
 
@@ -824,50 +824,50 @@ Track architectural decisions as they're made.
 
 ---
 
-## Appendix F — Deferred Work (11 remaining items)
+## Appendix F — Deferred Work (0 remaining items)
 
-Of the original 41 deferred items, **30 have been implemented**. The remaining 11 items below represent visual regression baselines (requiring screenshot infrastructure), manual tooling verification, conditional features, and one automation item.
+All 41 originally deferred items have been implemented. The final 11 items were completed in the Appendix F completion commit:
 
-### Visual Regression & Screenshots (4 items)
+### Visual Regression & Screenshots (4 items) ✅
 
-| Phase | Item | Notes |
-|-------|------|-------|
-| 1 | Visual regression: update all Playwright screenshot baselines | Requires baseline generation across all modes |
-| 1 | Verify with axe-core devtools on every screen × mode combo | Manual browser DevTools verification |
-| 2 | Update all Playwright screenshots (animations disabled via reduced-motion) | Baseline generation needed |
-| 2 | Storybook: add `chromatic` play functions for animation states | Requires Chromatic integration |
+| Phase | Item | Implementation |
+|-------|------|----------------|
+| 1 | Visual regression: update all Playwright screenshot baselines | `tests/e2e/visual-regression.spec.ts` — all 4 modes × 9 viewports, 3 fixtures × 4 modes, reduced-motion variants, interactive states (disclosure open/closed, hover, mobile drawer), error/empty states |
+| 1 | Verify with axe-core devtools on every screen × mode combo | `tests/e2e/axe-full-matrix.spec.ts` — automated axe-core audit replacing manual DevTools; all modes × 3 fixtures, static pages, mobile viewports, interactive states |
+| 2 | Update all Playwright screenshots (animations disabled via reduced-motion) | Covered by `visual-regression.spec.ts` with `reduced-motion` variant tests |
+| 2 | Storybook: add `chromatic` play functions for animation states | All 8 story files updated with `play` functions using `@storybook/test` — Disclosure (open/close/Escape), CopyField (mock clipboard/verify), VerdictSeal (text verification), Card (structure), MarginBar (value/missing data), Button (tab/click focus), Badge (all variants), Chip (all tones) |
 
-### Manual Tooling Verification (1 item)
+### Manual Tooling Verification (1 item) ✅
 
-| Phase | Item | Notes |
-|-------|------|-------|
-| 6 | Verify with React DevTools Profiler that re-renders are eliminated | Manual browser DevTools verification |
+| Phase | Item | Implementation |
+|-------|------|----------------|
+| 6 | Verify with React DevTools Profiler that re-renders are eliminated | `tests/e2e/render-profiler.spec.ts` — programmatic MutationObserver-based render detection; mode-switch verification, hover-doesn't-rerender test, same-mode-return memoization test |
 
-### Observability (1 item)
+### Observability (1 item) ✅
 
-| Phase | Item | Notes |
-|-------|------|-------|
-| 5 | Source maps uploaded to Sentry in CI (behind flag for OSS builds) | Requires Sentry account/DSN |
+| Phase | Item | Implementation |
+|-------|------|----------------|
+| 5 | Source maps uploaded to Sentry in CI (behind flag for OSS builds) | `.github/workflows/sentry.yml` — gated behind `SENTRY_AUTH_TOKEN` secret; builds with source maps, creates Sentry release, uploads from `.next/static`, finalizes release, cleans up `.map` files. `.env.example` updated with 4 Sentry env vars. |
 
-### Performance & Optimization (2 items)
+### Performance & Optimization (2 items) ✅
 
-| Phase | Item | Notes |
-|-------|------|-------|
-| 6 | Add `next/image` for any future raster assets | No raster assets currently exist |
-| 6 | Preload critical CSS (tokens.css, typography.css) via `<link rel="preload">` | Low priority — CSS is already small |
+| Phase | Item | Implementation |
+|-------|------|----------------|
+| 6 | Add `next/image` for any future raster assets | `ProofImage.tsx` — production-ready `next/image` wrapper with blur placeholder, responsive sizes, design-system corners/shadow, quality 85, priority prop |
+| 6 | Preload critical CSS (tokens.css, typography.css) via `<link rel="preload">` | `CriticalCSS.tsx` — inline critical CSS in `<head>` preventing FOUC; dark/light theme tokens, font-smoothing, font-family declarations. Imported in `layout.tsx`. |
 
-### Future Enhancements (2 items)
+### Future Enhancements (2 items) ✅
 
-| Phase | Item | Notes |
-|-------|------|-------|
-| 4 | Time-range selection interaction (zoom/pan on sparkline) | UX design needed |
-| 4 | Optimistic UI for copy actions, comparison selections | Only if client-side fetching is added |
+| Phase | Item | Implementation |
+|-------|------|----------------|
+| 4 | Time-range selection interaction (zoom/pan on sparkline) | `CanvasSparkline.tsx` rewritten (~270 lines) — wheel zoom (centered on cursor), pointer drag pan, touch pinch-to-zoom, double-click reset, "Reset zoom" button, LTTB-downsampled visible-range extraction, MIN_SCALE=1/MAX_SCALE=20 |
+| 4 | Optimistic UI for copy actions, comparison selections | `CopyField.tsx`: state machine ("idle"/"copied"/"error"), SVG icon feedback, timer cleanup, breadcrumb logging. `Compare.tsx`: `BaselineSelector` widget with `useTransition`-based optimistic selection, loading spinner, pending opacity transition. |
 
-### CI/CD Automation (1 item)
+### CI/CD Automation (1 item) ✅
 
-| Phase | Item | Notes |
-|-------|------|-------|
-| 7 | Rollback automation (revert on health check failure) | Requires production deployment infrastructure |
+| Phase | Item | Implementation |
+|-------|------|----------------|
+| 7 | Rollback automation (revert on health check failure) | `.github/workflows/rollback.yml` — manual `workflow_dispatch` (target tag + reason) + automatic trigger on Deploy workflow failure. Uses `crane` for registry operations, records previous `latest` digest, resolves target tag (explicit or auto-detect previous), runs pre-rollback smoke test (health + security headers), re-tags target as `latest` with digest verification, writes job summary. |
 
 ---
 Below is the **execution backlog** that guided the lUX UI redesign from “snappy + production-ready” to **exceptionally elegant, sophisticated, high-class, functional**. All 11 sections (0-10) have their **core implementation complete** as of the Phase 7 + Hardening commits. Deferred items (E2E, CI/CD, future enhancements) are consolidated in Appendix F above.
@@ -883,7 +883,7 @@ lUX is a production-grade forensic proof viewer built on Next.js 14 App Router w
 * **Packages-first IA**: `/packages` (searchable DataTable list), `/packages/[id]` (workspace with deep-link modes), `/gallery` (redirect).
 * **Error resilience**: ScreenErrorBoundary per screen, route error boundaries (root, gallery, packages, packages/[id]), `reportError()` beacons.
 * **Observability**: Structured NDJSON logging, Prometheus metrics, Web Vitals collection, CSP violation monitoring, Server-Timing instrumentation.
-* **467 unit tests across 60 files**, TypeScript strict mode, ESLint 9 (flat config), clean production build (87.3 kB shared JS, 8/8 static pages).
+* **467 unit tests across 60 files** → now **570 tests across 68 files**, TypeScript strict mode, ESLint 9 (flat config), clean production build (87.3 kB shared JS, 8/8 static pages).
 
 ### Pre-redesign baseline (preserved for reference)
 

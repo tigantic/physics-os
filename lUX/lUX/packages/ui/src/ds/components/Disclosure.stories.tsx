@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, userEvent, expect } from "@storybook/test";
 import { Disclosure } from "./Disclosure";
 
 const meta: Meta<typeof Disclosure> = {
@@ -14,6 +15,22 @@ export const Default: Story = {
   args: {
     title: "Advanced Details",
     children: "Hidden content revealed on toggle.",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const toggle = canvas.getByRole("button", { name: /show/i });
+
+    // Initially closed — content not visible
+    expect(canvas.queryByText("Hidden content revealed on toggle.")).toBeNull();
+
+    // Open disclosure
+    await userEvent.click(toggle);
+    expect(canvas.getByText("Hidden content revealed on toggle.")).toBeVisible();
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+
+    // Close disclosure
+    await userEvent.click(canvas.getByRole("button", { name: /hide/i }));
+    expect(canvas.queryByText("Hidden content revealed on toggle.")).toBeNull();
   },
 };
 
@@ -70,4 +87,25 @@ export const NestedDisclosures: Story = {
       </Disclosure>
     </Disclosure>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Open outer disclosure
+    const outerToggle = canvas.getByRole("button", { name: /show/i });
+    await userEvent.click(outerToggle);
+
+    // Inner disclosure should now be visible
+    const innerToggle = canvas.getAllByRole("button", { name: /show/i })[0];
+    expect(innerToggle).toBeVisible();
+
+    // Open inner disclosure
+    await userEvent.click(innerToggle);
+    expect(canvas.getByText("Deeply nested content.")).toBeVisible();
+
+    // Escape inside inner disclosure closes it
+    await userEvent.keyboard("{Escape}");
+
+    // Outer still open — its region should be visible
+    expect(canvas.getByRole("button", { name: /show/i })).toBeVisible();
+  },
 };
