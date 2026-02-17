@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { reportError } from "@/lib/reportError";
 
 interface ScreenErrorBoundaryProps {
   /** Fallback screen name for error display */
@@ -27,9 +28,8 @@ export class ScreenErrorBoundary extends React.Component<ScreenErrorBoundaryProp
     return { error };
   }
 
-  override componentDidCatch(error: Error, info: React.ErrorInfo) {
-    // Log to console in development; production would use reportError
-    console.error(`[ScreenErrorBoundary] ${this.props.screenName}:`, error, info.componentStack);
+  override componentDidCatch(error: Error, _info: React.ErrorInfo) {
+    reportError(error, `ScreenErrorBoundary:${this.props.screenName}`);
   }
 
   override render() {

@@ -23,7 +23,7 @@ export const SummaryScreen = memo(function SummaryScreen({ proof, domain, mode }
           <KeyValueGrid
             entries={[
               { label: "Proof ID", value: proof.meta.id, mono: true, copyable: true },
-              { label: "Verdict", value: proof.verdict.pass ? "PASS" : "FAIL" },
+              { label: "Verdict", value: proof.verdict.status },
               ...(proof.verdict.reason ? [{ label: "Reason", value: proof.verdict.reason }] : []),
             ]}
             columns={2}

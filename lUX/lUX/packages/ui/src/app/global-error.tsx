@@ -6,7 +6,10 @@ import { reportError } from "@/lib/reportError";
 /**
  * Global error boundary — catches root layout errors.
  * Must render its own <html>/<body> since the root layout may have crashed.
- * Uses inline styles because the root layout (and therefore CSS imports) may have crashed.
+ *
+ * IMPORTANT: All styles are inline because CSS custom properties and Tailwind
+ * classes are unavailable — the root layout (and therefore all CSS imports)
+ * may have crashed. Colors approximate the dark-mode design tokens.
  */
 export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   const retryRef = React.useRef<HTMLButtonElement>(null);

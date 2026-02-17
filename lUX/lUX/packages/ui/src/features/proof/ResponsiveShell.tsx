@@ -36,7 +36,10 @@ export function ResponsiveShell({
 
       {/* Mobile drawer for LeftRail — visible only below md */}
       <MobileDrawer open={drawerOpen} onClose={closeDrawer} side="left" label="Navigation">
-        <div onClick={closeDrawer}>{leftRail}</div>
+        {/* role="presentation" — this div delegates click events from child <Link>s
+            to close the drawer on navigation. The actual interactive targets (links)
+            are keyboard accessible; the wrapper is non-interactive for a11y. */}
+        <div role="presentation" onClick={closeDrawer}>{leftRail}</div>
       </MobileDrawer>
 
       {/* Main 3-column layout */}

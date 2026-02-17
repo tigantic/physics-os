@@ -30,6 +30,25 @@ describe("SummaryScreen", () => {
     expect(screen.getByText("L2 Drift")).toBeInTheDocument();
   });
 
+  it("renders verdict status from proof.verdict.status", () => {
+    render(<SummaryScreen proof={proof} domain={domain} mode="REVIEW" />);
+    expect(screen.getByText("PASS")).toBeInTheDocument();
+  });
+
+  it("renders all four verdict statuses correctly", () => {
+    for (const status of ["PASS", "FAIL", "WARN", "INCOMPLETE"] as const) {
+      const { unmount } = render(
+        <SummaryScreen
+          proof={makeProof({ verdict: { status, reason: "", quality_score: 0.5 } })}
+          domain={domain}
+          mode="REVIEW"
+        />,
+      );
+      expect(screen.getByText(status)).toBeInTheDocument();
+      unmount();
+    }
+  });
+
   it("shows Paper View card in PUBLICATION mode", () => {
     render(<SummaryScreen proof={proof} domain={domain} mode="PUBLICATION" />);
     expect(screen.getByText("Paper View")).toBeInTheDocument();

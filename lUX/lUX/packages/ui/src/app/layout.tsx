@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { env } from "@/config/env";
 import { WebVitalsReporter } from "@/lib/WebVitalsReporter";
+import { TOKENS } from "@/ds/tokens";
 
 const sans = Inter({
   subsets: ["latin"],
@@ -52,7 +53,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#4B7BF5",
+  themeColor: TOKENS.color.accent.base,
   colorScheme: "dark light",
 };
 
