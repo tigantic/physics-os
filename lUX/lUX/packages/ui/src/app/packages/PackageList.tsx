@@ -116,7 +116,7 @@ export function PackageList({ packages }: { packages: readonly PackageSummary[] 
           placeholder="Search packages…"
           value={query}
           onChange={onQueryChange}
-          className="w-full rounded-[var(--radius-control)] border border-[var(--color-border-base)] bg-[var(--color-bg-surface)] px-4 py-2.5 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]"
+          className="w-full rounded-[var(--radius-control)] border border-[var(--color-border-base)] bg-[var(--color-bg-surface)] px-4 py-2.5 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus-visible:border-[var(--color-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-border)]"
           aria-label="Search proof packages"
         />
       </div>

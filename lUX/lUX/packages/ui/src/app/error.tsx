@@ -30,13 +30,13 @@ export default function RootError({ error, reset }: { error: Error & { digest?: 
           {error.message}
         </pre>
         {error.digest && (
-          <div className="mt-2 text-[11px] text-[var(--color-text-tertiary)]">Digest: {error.digest}</div>
+          <div className="mt-2 text-2xs text-[var(--color-text-tertiary)]">Digest: {error.digest}</div>
         )}
         <button
           ref={retryRef}
           type="button"
           onClick={reset}
-          className="mt-5 min-h-[44px] rounded-md border border-[var(--color-border-base)] bg-[var(--color-bg-base)] px-5 py-2 text-sm font-medium text-[var(--color-text-primary)] transition-colors duration-[var(--motion-hover)] ease-[var(--motion-easeOut)] hover:bg-[var(--color-bg-raised)] sm:min-h-0"
+          className="mt-5 min-h-[44px] rounded-md border border-[var(--color-border-base)] bg-[var(--color-bg-base)] px-5 py-2 text-sm font-medium text-[var(--color-text-primary)] transition-colors duration-[var(--motion-hover)] ease-[var(--motion-easeOut)] hover:bg-[var(--color-bg-raised)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-border)] sm:min-h-0"
         >
           Retry
         </button>

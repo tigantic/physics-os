@@ -11,3 +11,5 @@ export * from "./components/Skeleton";
 export * from "./components/EmptyState";
 export * from "./components/DetailDrawer";
 export * from "./components/ThemeToggle";
+export * from "./components/ScreenErrorBoundary";
+export * from "./components/MobileDrawer";

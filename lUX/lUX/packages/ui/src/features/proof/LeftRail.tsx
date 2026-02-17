@@ -57,7 +57,7 @@ export function LeftRail({ proof, fixture, mode }: { proof: ProofPackage; fixtur
           <div className="text-xs text-[var(--color-text-tertiary)]">{Object.keys(proof.claims).length} total</div>
         </CardHeader>
         <CardContent>
-          <ul className="space-y-2">
+          <ul className="max-h-[60vh] space-y-2 overflow-y-auto">
             {Object.values(proof.claims).map((c) => (
               <li key={c.id} className="rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2">
                 <div className="font-mono text-xs text-[var(--color-text-tertiary)]">{c.id}</div>

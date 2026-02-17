@@ -32,6 +32,7 @@ const config: Config = {
         mono: ["JetBrainsMono", "ui-monospace", "monospace"],
       },
       fontSize: {
+        "2xs": ["0.6875rem", { lineHeight: "1rem" }],
         "fluid-xs": "var(--type-fluid-xs)",
         "fluid-sm": "var(--type-fluid-sm)",
         "fluid-base": "var(--type-fluid-base)",

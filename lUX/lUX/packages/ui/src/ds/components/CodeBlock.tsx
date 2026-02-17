@@ -50,7 +50,7 @@ export const CodeBlock = React.memo(function CodeBlock({
       {(language || copyable) && (
         <div className="flex items-center justify-between border-b border-[var(--color-border-base)] px-3 py-1.5">
           {language && (
-            <span className="text-[10px] font-medium uppercase tracking-wider text-[var(--color-text-tertiary)]">
+            <span className="text-2xs font-medium uppercase tracking-wider text-[var(--color-text-tertiary)]">
               {language}
             </span>
           )}
@@ -59,7 +59,7 @@ export const CodeBlock = React.memo(function CodeBlock({
               type="button"
               onClick={handleCopy}
               aria-label={copied ? "Copied" : "Copy code"}
-              className="rounded-[var(--radius-control)] px-2 py-0.5 text-[10px] font-medium text-[var(--color-text-tertiary)] transition-colors duration-hover ease-lux-out hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-text-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-border)]"
+              className="rounded-[var(--radius-control)] px-2 py-0.5 text-2xs font-medium text-[var(--color-text-tertiary)] transition-colors duration-hover ease-lux-out hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-text-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-border)]"
             >
               {copied ? "Copied" : "Copy"}
             </button>

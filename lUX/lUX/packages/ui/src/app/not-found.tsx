@@ -9,7 +9,7 @@ export default function NotFound() {
         <Link
           href="/packages"
           aria-label="Return to packages"
-          className="inline-block min-h-[44px] rounded-[var(--radius-inner)] bg-[var(--color-accent)] px-6 py-3 text-sm font-medium leading-[1.5] text-[var(--color-bg-base)] transition-colors duration-[var(--motion-hover)] ease-[var(--motion-easeOut)] hover:opacity-90 sm:min-h-0 sm:px-4 sm:py-2"
+          className="inline-block min-h-[44px] rounded-[var(--radius-inner)] bg-[var(--color-accent)] px-6 py-3 text-sm font-medium leading-[1.5] text-[var(--color-bg-base)] transition-colors duration-[var(--motion-hover)] ease-[var(--motion-easeOut)] hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-border)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg-base)] sm:min-h-0 sm:px-4 sm:py-2"
         >
           Go to Packages
         </Link>

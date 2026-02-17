@@ -16,8 +16,8 @@ export const EvidenceScreen = memo(function EvidenceScreen({ proof }: { proof: P
           <Disclosure key={a.id} title={`${a.id} · ${a.type}`}>
             <KeyValueGrid
               entries={[
-                { label: "Hash", value: a.hash, mono: true },
-                { label: "URI", value: a.uri, mono: true },
+                { label: "Hash", value: a.hash, mono: true, copyable: true },
+                { label: "URI", value: a.uri, mono: true, copyable: true },
                 { label: "MIME", value: a.mime_type },
               ]}
             />

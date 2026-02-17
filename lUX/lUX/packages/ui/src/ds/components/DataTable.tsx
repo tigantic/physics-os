@@ -124,7 +124,7 @@ function DataTableInner<T>(
         <button
           type="button"
           onClick={() => setExpanded(true)}
-          className="flex w-full items-center justify-center gap-1.5 border-t border-[var(--color-border-base)] bg-[var(--color-bg-surface)] px-4 py-2 text-xs font-medium text-[var(--color-accent)] transition-colors duration-hover ease-lux-out hover:bg-[var(--color-bg-hover)]"
+          className="flex w-full items-center justify-center gap-1.5 border-t border-[var(--color-border-base)] bg-[var(--color-bg-surface)] px-4 py-2 text-xs font-medium text-[var(--color-accent)] transition-colors duration-hover ease-lux-out hover:bg-[var(--color-bg-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-accent-border)]"
         >
           Show all {data.length} rows ({hiddenCount} more)
         </button>

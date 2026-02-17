@@ -18,7 +18,10 @@ export function IdentityStrip({ proof }: { proof: ProofPackage }) {
             <div className="hidden text-xs uppercase tracking-wider text-[var(--color-text-tertiary)] sm:block">
               lUX Proof Viewer
             </div>
-            <h1 className="animate-lux-slide-up truncate text-base font-semibold text-[var(--color-text-primary)] md:text-lg">
+            <h1
+              className="animate-lux-slide-up truncate text-base font-semibold text-[var(--color-text-primary)] md:text-lg"
+              title={`${proof.meta.project_id} · ${proof.meta.domain_id}`}
+            >
               {proof.meta.project_id} · {proof.meta.domain_id}
             </h1>
           </div>

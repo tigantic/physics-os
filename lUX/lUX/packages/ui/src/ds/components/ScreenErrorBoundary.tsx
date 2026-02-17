@@ -52,7 +52,7 @@ export class ScreenErrorBoundary extends React.Component<ScreenErrorBoundaryProp
           <button
             type="button"
             onClick={() => this.setState({ error: null })}
-            className="mt-3 rounded-md border border-[var(--color-border-base)] bg-[var(--color-bg-surface)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg-hover)]"
+            className="mt-3 rounded-md border border-[var(--color-border-base)] bg-[var(--color-bg-surface)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-border)]"
           >
             Retry
           </button>

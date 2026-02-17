@@ -132,9 +132,9 @@ export function DetailDrawer({
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[var(--color-border-base)] px-4 py-3">
           <div className="min-w-0">
-            <h2 className="truncate text-sm font-semibold text-[var(--color-text-primary)]">{title}</h2>
+            <h2 className="truncate text-sm font-semibold text-[var(--color-text-primary)]" title={title}>{title}</h2>
             {subtitle && (
-              <p className="truncate text-xs text-[var(--color-text-tertiary)]">{subtitle}</p>
+              <p className="truncate text-xs text-[var(--color-text-tertiary)]" title={subtitle}>{subtitle}</p>
             )}
           </div>
           <button
