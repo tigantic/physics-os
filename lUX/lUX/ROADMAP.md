@@ -547,48 +547,68 @@ For proof packages with 100+ timeline steps or gate results:
 
 ## Appendix A — Storybook Coverage Plan
 
-Stories serve as living documentation and visual regression anchors.
+30 story files covering every component. Shared fixture data in `__fixtures__/storybook.ts`.
 
-| Component | Story Status | Priority |
-|-----------|-------------|----------|
-| Card | ✅ Has story | — |
-| Chip | ✅ Has story | — |
-| CopyField | ✅ Has story | — |
-| Disclosure | ✅ Has story | — |
-| MarginBar | ✅ Has story | — |
-| VerdictSeal | ✅ Has story | — |
-| Badge | ✅ Has story | — |
-| Button | ✅ Has story | — |
-| ModeDial | ❌ Needs story | Phase 2 |
-| IdentityStrip | ❌ Needs story | Phase 2 |
-| DataValueView | ❌ Needs story | Phase 2 |
-| MathBlock | ❌ Needs story | Phase 2 |
-| SummaryScreen | ❌ Needs story | Phase 3 |
-| TimelineScreen | ❌ Needs story | Phase 3 |
-| GatesScreen | ❌ Needs story | Phase 3 |
-| EvidenceScreen | ❌ Needs story | Phase 3 |
-| IntegrityScreen | ❌ Needs story | Phase 3 |
-| CompareScreen | ❌ Needs story | Phase 3 |
-| ReproduceScreen | ❌ Needs story | Phase 3 |
-| LeftRail | ❌ Needs story | Phase 4 |
-| RightRail | ❌ Needs story | Phase 4 |
-| CenterCanvas | ❌ Needs story | Phase 4 |
-| ProofWorkspace | ❌ Needs story (composite) | Phase 4 |
+| Component | Story File | Stories |
+|-----------|-----------|---------|
+| Card | `ds/components/Card.stories.tsx` | ✅ |
+| Chip | `ds/components/Chip.stories.tsx` | ✅ |
+| CopyField | `ds/components/CopyField.stories.tsx` | ✅ |
+| Disclosure | `ds/components/Disclosure.stories.tsx` | ✅ |
+| MarginBar | `ds/components/MarginBar.stories.tsx` | ✅ |
+| VerdictSeal | `ds/components/VerdictSeal.stories.tsx` | ✅ |
+| Badge | `components/ui/badge.stories.tsx` | ✅ |
+| Button | `components/ui/button.stories.tsx` | ✅ |
+| DataTable | `ds/components/DataTable.stories.tsx` | ✅ |
+| KeyValueGrid | `ds/components/KeyValueGrid.stories.tsx` | ✅ |
+| CodeBlock | `ds/components/CodeBlock.stories.tsx` | ✅ |
+| Skeleton | `ds/components/Skeleton.stories.tsx` | ✅ |
+| EmptyState | `ds/components/EmptyState.stories.tsx` | ✅ |
+| DetailDrawer | `ds/components/DetailDrawer.stories.tsx` | ✅ |
+| ThemeToggle | `ds/components/ThemeToggle.stories.tsx` | ✅ |
+| ModeDial | `features/proof/ModeDial.stories.tsx` | ✅ |
+| IdentityStrip | `features/proof/IdentityStrip.stories.tsx` | ✅ |
+| DataValueNumberView | `features/proof/DataValueView.stories.tsx` | ✅ |
+| MathBlock | `features/math/MathBlock.stories.tsx` | ✅ |
+| LeftRail | `features/proof/LeftRail.stories.tsx` | ✅ |
+| RightRail | `features/proof/RightRail.stories.tsx` | ✅ |
+| CenterCanvas | `features/proof/CenterCanvas.stories.tsx` | ✅ |
+| ProofWorkspace | `features/proof/ProofWorkspace.stories.tsx` | ✅ |
+| SummaryScreen | `features/screens/Summary.stories.tsx` | ✅ |
+| TimelineScreen | `features/screens/Timeline.stories.tsx` | ✅ |
+| GatesScreen | `features/screens/Gates.stories.tsx` | ✅ |
+| EvidenceScreen | `features/screens/Evidence.stories.tsx` | ✅ |
+| IntegrityScreen | `features/screens/Integrity.stories.tsx` | ✅ |
+| CompareScreen | `features/screens/Compare.stories.tsx` | ✅ |
+| ReproduceScreen | `features/screens/Reproduce.stories.tsx` | ✅ |
 
-**Note**: Server Components (RSC) require Storybook mocking via `@storybook/nextjs` framework adapter with RSC support. Screen components will need fixture data injection via decorators.
+**Framework**: `@storybook/nextjs` (8.2.9) — provides automatic `next/navigation` mocking for RSC. Addons: `essentials`, `interactions`, `a11y`. Autodocs enabled.
 
 ---
 
 ## Appendix B — Test Coverage Targets
 
-| Package | Current | Phase 5 | Phase 7 |
-|---------|---------|---------|---------|
-| Core (stmts) | 96% | 97% | 99% |
-| Core (branches) | 87% | 92% | 98% |
-| UI (stmts) | 89% | 91% | 95% |
-| UI (branches) | 87% | 89% | 93% |
-| UI (lines) | 89% | 91% | 95% |
-| E2E specs | 35 | 60 | 120 |
+### Actual Coverage (current)
+
+| Package | Stmts | Branches | Functions | Lines |
+|---------|-------|----------|-----------|-------|
+| Core | 96.3% | 86.95% | 100% | 96.3% |
+| UI | 80.14% | 87.24% | 90.09% | 80.14% |
+
+### Enforced Thresholds (`vitest.config.ts`)
+
+| Package | Stmts | Branches | Functions | Lines |
+|---------|-------|----------|-----------|-------|
+| Core | 94% | 85% | 99% | 94% |
+| UI | 78% | 85% | 88% | 78% |
+
+### Test Counts
+
+| Category | Count |
+|----------|-------|
+| Core unit tests | 276 (15 files) |
+| UI unit tests | 570 (68 files) |
+| E2E specs | 66 (14 files) |
 
 **Coverage escalation strategy**: Raise `vitest.config.ts` thresholds by 3-5% each phase. Never lower.
 
@@ -596,76 +616,110 @@ Stories serve as living documentation and visual regression anchors.
 
 ## Appendix C — Design Token Inventory
 
-Final design token set as implemented through Phase 7 + hardening.
+Authoritative token set as implemented in `tokens.ts`, `tokens.css`, and `tokens.json`.
 
-### Colors — Dark Theme (`[data-theme="dark"]`, default)
+### Colors — Dark Theme (`:root, [data-theme="dark"]`, default)
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `bg.base` | `#0F1117` | Page background (graphite) |
-| `bg.surface` | `#1A1D27` | Card/panel background |
-| `bg.elevated` | `#242836` | Elevated surfaces (drawers, popovers) |
-| `bg.hover` | `#2A2E3E` | Interactive hover state |
-| `text.primary` | `#E8EAF0` | Primary text |
-| `text.secondary` | `#A0A4B8` | Secondary text |
-| `text.tertiary` | `#6B7084` | Muted text (≥ 4.5:1 contrast) |
-| `border.base` | `#2A2E3E` | Default borders |
-| `border.subtle` | `#1E2230` | Subtle dividers |
-| `accent.base` | `#4B7BF5` | Cobalt accent (CTA, links, focus) |
-| `accent.weak` | `rgba(75,123,245,0.15)` | Accent backgrounds |
-| `accent.strong` | `#6B93F7` | Accent hover |
-| `verdict.pass` | `#34D399` | Pass state (≥ 4.5:1 on surface) |
-| `verdict.fail` | `#F87171` | Fail state (≥ 4.5:1 on surface) |
-| `verdict.warn` | `#FBBF24` | Warn state (≥ 4.5:1 on surface) |
-| `verdict.incomplete` | `#6B7084` | Incomplete state |
+| CSS Custom Property | Value | Usage |
+|---------------------|-------|-------|
+| `--color-bg-base` | `#0B0C10` | Page background (deep ink) |
+| `--color-bg-raised` | `#13141A` | Card/panel background |
+| `--color-bg-hover` | `#1B1C24` | Interactive hover state |
+| `--color-bg-surface` | `#20212B` | Embedded surfaces |
+| `--color-text-primary` | `#EAECF0` | Primary text |
+| `--color-text-secondary` | `#8A8EA0` | Secondary text |
+| `--color-text-tertiary` | `#5A5E70` | Muted text |
+| `--color-accent` | `#4B7BF5` | Cobalt accent (CTA, links, focus) |
+| `--color-accent-dim` | `rgba(75,123,245,0.10)` | Accent backgrounds |
+| `--color-accent-border` | `rgba(75,123,245,0.25)` | Accent borders |
+| `--color-accent-strong` | `#6B96FF` | Accent hover/active |
+| `--color-status-pass` | `#34B870` | Pass state |
+| `--color-status-fail` | `#E05252` | Fail state |
+| `--color-status-warn` | `#E5A833` | Warn state |
+| `--color-status-pass-border` | `rgba(52,184,112,0.30)` | Pass status border |
+| `--color-status-fail-border` | `rgba(224,82,82,0.30)` | Fail status border |
+| `--color-status-warn-border` | `rgba(229,168,51,0.30)` | Warn status border |
+| `--color-border-base` | `rgba(255,255,255,0.06)` | Default borders |
+| `--color-border-active` | `rgba(75,123,245,0.30)` | Active/focus borders |
 
 ### Colors — Light Theme (`[data-theme="light"]`)
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `bg.base` | `#FFFFFF` | Page background (porcelain) |
-| `bg.surface` | `#F8F9FB` | Card/panel background |
-| `bg.elevated` | `#FFFFFF` | Elevated surfaces |
-| `bg.hover` | `#F0F1F5` | Interactive hover state |
-| `text.primary` | `#1A1D27` | Primary text |
-| `text.secondary` | `#4A4E62` | Secondary text |
-| `text.tertiary` | `#6B7084` | Muted text |
-| `accent.base` | `#3B63CC` | Cobalt accent (darker for light bg) |
+| CSS Custom Property | Value | Usage |
+|---------------------|-------|-------|
+| `--color-bg-base` | `#F5F6F8` | Page background |
+| `--color-bg-raised` | `#FFFFFF` | Card/panel background |
+| `--color-bg-hover` | `#ECEDF2` | Interactive hover state |
+| `--color-bg-surface` | `#F0F1F5` | Embedded surfaces |
+| `--color-text-primary` | `#111318` | Primary text |
+| `--color-text-secondary` | `#525668` | Secondary text |
+| `--color-text-tertiary` | `#7C8094` | Muted text |
+| `--color-accent` | `#3B63CC` | Cobalt accent (darker for light bg) |
+| `--color-accent-dim` | `rgba(59,99,204,0.08)` | Accent backgrounds |
+| `--color-accent-border` | `rgba(59,99,204,0.20)` | Accent borders |
+| `--color-accent-strong` | `#2A4EAF` | Accent hover/active |
+| `--color-status-pass` | `#1B8A4A` | Pass state |
+| `--color-status-fail` | `#C73E3E` | Fail state |
+| `--color-status-warn` | `#B47A16` | Warn state |
+| `--color-status-pass-border` | `rgba(27,138,74,0.20)` | Pass status border |
+| `--color-status-fail-border` | `rgba(199,62,62,0.20)` | Fail status border |
+| `--color-status-warn-border` | `rgba(180,122,22,0.20)` | Warn status border |
+| `--color-border-base` | `rgba(0,0,0,0.08)` | Default borders |
+| `--color-border-active` | `rgba(59,99,204,0.25)` | Active/focus borders |
 
 ### Typography
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--font-sans` | `Inter` | UI text |
-| `--font-mono` | `JetBrains Mono` | Code, hashes, IDs |
-| `text-2xs` | `0.6875rem/1rem` | Dense metadata labels |
-| `text-xs` | `0.75rem` | Small text |
-| `text-sm` | `0.875rem` | Default body |
-| `text-base` | `1rem` | Standard |
-| `text-lg` | `1.125rem` | Subheadings |
-| `text-xl` | `1.25rem` | Headings |
+| CSS Custom Property | Value | Usage |
+|---------------------|-------|-------|
+| `--type-ui` | `Inter` | UI text |
+| `--type-mono` | `JetBrainsMono` | Code, hashes, IDs |
+| `--type-math` | `SVG` | Math notation (LaTeX → SVG) |
+| `--type-fluid-xs` | `clamp(0.6875rem, 0.65rem + 0.12vw, 0.75rem)` | Dense metadata labels |
+| `--type-fluid-sm` | `clamp(0.75rem, 0.72rem + 0.1vw, 0.8125rem)` | Small text |
+| `--type-fluid-base` | `clamp(0.8125rem, 0.78rem + 0.1vw, 0.875rem)` | Default body |
+| `--type-fluid-lg` | `clamp(0.875rem, 0.85rem + 0.08vw, 0.9375rem)` | Subheadings |
+| `--type-fluid-xl` | `clamp(1rem, 0.97rem + 0.1vw, 1.0625rem)` | Headings |
+| `--type-fluid-2xl` | `clamp(1.125rem, 1.06rem + 0.2vw, 1.25rem)` | Large headings |
 
 ### Space
 
-`4px` / `8px` / `12px` / `16px` / `24px` / `32px` / `48px`
+`--space-u: 8` — base unit. Scale: `8px` / `16px` / `24px` / `32px` / `48px`
 
 ### Radius
 
-`xs: 4px` / `sm: 6px` / `md: 8px` / `lg: 12px` / `full: 9999px`
+| CSS Custom Property | Value | Usage |
+|---------------------|-------|-------|
+| `--radius-outer` | `12px` | Cards, major containers |
+| `--radius-inner` | `8px` | Nested elements |
+| `--radius-pill` | `9999px` | Fully rounded (chips, badges) |
+| `--radius-control` | `6px` | Buttons, inputs, small controls |
 
 ### Shadow
 
-| Token | Value |
-|-------|-------|
-| `sm` | `0 1px 2px rgba(0,0,0,0.3)` |
-| `md` | `0 4px 12px rgba(0,0,0,0.4)` |
-| `lg` | `0 8px 24px rgba(0,0,0,0.5)` |
+| CSS Custom Property | Dark Value | Light Value |
+|---------------------|------------|-------------|
+| `--shadow-raised` | `0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2)` | `0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04)` |
+| `--shadow-floating` | `0 4px 12px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.3)` | `0 4px 12px rgba(0,0,0,0.08), 0 12px 40px rgba(0,0,0,0.06)` |
+
+### Motion
+
+| CSS Custom Property | Value | Usage |
+|---------------------|-------|-------|
+| `--motion-easeOut` | `cubic-bezier(0.16, 1, 0.3, 1)` | Exit/reveal animations |
+| `--motion-easeInOut` | `cubic-bezier(0.33, 1, 0.68, 1)` | Bidirectional transitions |
+| `--motion-hover` | `160ms` | Hover state transitions |
+| `--motion-base` | `220ms` | Standard animation duration |
+
+### Focus
+
+| CSS Custom Property | Value |
+|---------------------|-------|
+| `--focus-ring` | `0 0 0 2px var(--color-bg-base), 0 0 0 4px var(--color-accent)` |
 
 ---
 
-## Appendix D — File Inventory (~92 UI source files)
+## Appendix D — File Inventory (84 UI source files + 30 story files)
 
-### App Layer (26 files)
+### App Layer (29 files)
 - `app/page.tsx` — Root redirect → /packages
 - `app/layout.tsx` — Root layout, Inter + JetBrains Mono fonts, metadata, CSP, WebVitalsReporter, themeColor via TOKENS
 - `app/error.tsx` — Root error boundary (reportError integration)
@@ -677,10 +731,13 @@ Final design token set as implemented through Phase 7 + hardening.
 - `app/gallery/page.tsx` — ↻ Redirect to /packages (legacy URL preservation)
 - `app/gallery/error.tsx` — Gallery error boundary (reportError integration)
 - `app/gallery/loading.tsx` — Gallery loading skeleton
-- `app/packages/page.tsx` — **(NEW)** Searchable package list (PackageList + DataTable)
-- `app/packages/error.tsx` — **(NEW)** Package list error boundary
-- `app/packages/[id]/page.tsx` — **(NEW)** Proof workspace (deep-link modes via searchParams)
-- `app/packages/[id]/error.tsx` — **(NEW)** Package workspace error boundary
+- `app/packages/page.tsx` — Searchable package list (PackageList + DataTable)
+- `app/packages/error.tsx` — Package list error boundary
+- `app/packages/loading.tsx` — Package list loading skeleton
+- `app/packages/PackageList.tsx` — Searchable package table with hoisted rowKey + useCallback
+- `app/packages/[id]/page.tsx` — Proof workspace (deep-link modes via searchParams)
+- `app/packages/[id]/error.tsx` — Package workspace error boundary
+- `app/packages/[id]/loading.tsx` — Package workspace loading skeleton
 - `app/api/health/route.ts` — Health endpoint (version, memory, provider status)
 - `app/api/ready/route.ts` — Readiness probe (503 until provider initialized)
 - `app/api/metrics/route.ts` — Prometheus-compatible metrics exposition
@@ -690,26 +747,31 @@ Final design token set as implemented through Phase 7 + hardening.
 - `app/api/packages/[id]/route.ts` — Load package endpoint (instrumented)
 - `app/api/packages/[id]/artifacts/[...path]/route.ts` — Stream artifact endpoint (instrumented)
 - `app/api/domains/[domain]/route.ts` — Load domain pack endpoint (instrumented)
+- `app/api/auth/login/route.ts` — Authentication login endpoint
+- `app/api/auth/logout/route.ts` — Authentication logout endpoint
 
-### Design System (18 files)
+### Design System (21 files: 18 TS/TSX + 3 non-TS)
 - `ds/tokens.ts` — TypeScript design tokens (cobalt + graphite palette, dark/light)
 - `ds/tokens.css` — CSS custom properties (`[data-theme]` switching)
-- `ds/tokens.json` — **(NEW)** Machine-readable token inventory
+- `ds/tokens.json` — Machine-readable token inventory
 - `ds/typography.css` — Font declarations (Inter + JetBrains Mono)
-- `ds/index.ts` — **(NEW)** Barrel export for all DS components
+- `ds/index.ts` — Barrel export for all DS components
 - `ds/components/Card.tsx`
 - `ds/components/Chip.tsx`
 - `ds/components/CopyField.tsx`
 - `ds/components/Disclosure.tsx`
 - `ds/components/MarginBar.tsx`
 - `ds/components/VerdictSeal.tsx`
-- `ds/components/DataTable.tsx` — **(NEW)** Sortable, sticky header, progressive disclosure (`maxRows`), `"use client"`
-- `ds/components/KeyValueGrid.tsx` — **(NEW)** Metadata display with optional `copyable` prop
-- `ds/components/CodeBlock.tsx` — **(NEW)** Syntax-highlighted code with copy button
-- `ds/components/Skeleton.tsx` — **(NEW)** Unified shimmer loading pattern
-- `ds/components/EmptyState.tsx` — **(NEW)** Calm, instructive empty state
-- `ds/components/DetailDrawer.tsx` — **(NEW)** Focus-trapped side drawer, Escape-closes
-- `ds/components/ScreenErrorBoundary.tsx` — **(NEW)** Per-screen error isolation with `reportError()` integration
+- `ds/components/DataTable.tsx` — Sortable, sticky header, progressive disclosure (`maxRows`), `"use client"`
+- `ds/components/KeyValueGrid.tsx` — Metadata display with optional `copyable` prop
+- `ds/components/CodeBlock.tsx` — Syntax-highlighted code with copy button
+- `ds/components/Skeleton.tsx` — Unified shimmer loading pattern
+- `ds/components/EmptyState.tsx` — Calm, instructive empty state
+- `ds/components/DetailDrawer.tsx` — Focus-trapped side drawer, Escape-closes
+- `ds/components/MobileDrawer.tsx` — Slide-over drawer for mobile breakpoints
+- `ds/components/ProofImage.tsx` — Proof artifact image viewer
+- `ds/components/ThemeToggle.tsx` — Dark/light theme switcher
+- `ds/components/ScreenErrorBoundary.tsx` — Per-screen error isolation with `reportError()` integration
 
 ### Feature Components (22 files)
 - `features/proof/ProofWorkspace.tsx`
@@ -720,14 +782,12 @@ Final design token set as implemented through Phase 7 + hardening.
 - `features/proof/ModeDial.tsx`
 - `features/proof/RightRail.tsx` — Context drawer (collapsible)
 - `features/proof/modeComposer.tsx`
-- `features/proof/PackageList.tsx` — **(NEW)** Searchable package table with hoisted rowKey + useCallback
-- `features/proof/MobileDrawer.tsx` — **(NEW)** Slide-over drawer for mobile breakpoints
-- `features/proof/HamburgerButton.tsx` — **(NEW)** Mobile menu trigger (44px touch target)
+- `features/proof/HamburgerButton.tsx` — Mobile menu trigger (44px touch target)
 - `features/proof/DataValueView.tsx`
-- `features/proof/ThemeToggle.tsx` — **(NEW)** Dark/light theme switcher
 - `features/math/MathBlock.tsx` — LaTeX rendering with sanitizeSvg() trust chain (documented JSDoc)
 - `features/viewers/PrimaryViewer.tsx`
 - `features/viewers/TimeSeriesViewer.tsx`
+- `features/viewers/CanvasSparkline.tsx` — Canvas-based sparkline for timeline metrics
 - `features/viewers/sparkline.ts`
 - `features/screens/Summary.tsx` — `"use client"`, uses `verdict.status` (not `.pass`)
 - `features/screens/Timeline.tsx` — `"use client"`
@@ -748,13 +808,18 @@ Final design token set as implemented through Phase 7 + hardening.
 - `lib/metrics.ts` — Prometheus-compatible in-memory metrics (server-only)
 - `lib/reportError.ts` — Client-side error beacon (sendBeacon + fetch fallback)
 - `lib/WebVitalsReporter.tsx` — Core Web Vitals collection (TTFB, FCP, LCP, CLS, INP)
+- `lib/CriticalCSS.tsx` — Critical CSS injection for first paint
+- `lib/session.ts` — Session management
 - `middleware.ts` — CSP, security headers, auth gate, X-Request-Id, Reporting-Endpoints
 - `components/ui/button.tsx`
 - `components/ui/badge.tsx`
 
-### Tests (60 files, 467 tests)
-- `tests/unit/` — 60 test files covering DS components, screens, infrastructure, error boundaries, verdict regression
-- Key additions: `packagesListError.test.tsx` (6), `packageError.test.tsx` (6), verdict regression (2)
+### Shared Fixtures (1 file)
+- `__fixtures__/storybook.ts` — FIXTURE_PROOF_PASS, FIXTURE_PROOF_FAIL, FIXTURE_DOMAIN, ALL_MODES, DEFAULT_MODE
+
+### Tests (68 unit test files, 570 tests + 14 E2E spec files, 66 tests)
+- `tests/unit/` — 68 test files covering DS components, screens, infrastructure, error boundaries, verdict regression
+- `tests/e2e/` — 14 Playwright spec files: a11y, gallery, render-profiler, modes, verdicts, a11y-audit, visual-regression, navigation, axe-full-matrix, not-found, security-headers, viewport-mobile, keyboard-flow, health
 
 ### Deployment & Operations (10 files)
 - `Dockerfile` — Multi-stage Alpine build with OCI labels and build metadata
