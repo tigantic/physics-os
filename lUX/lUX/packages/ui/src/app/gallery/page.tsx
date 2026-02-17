@@ -5,6 +5,8 @@ import type { ProofMode } from "@luxury/core";
 import { ProofWorkspace } from "@/features/proof/ProofWorkspace";
 import { getProvider } from "@/config/provider";
 import { env } from "@/config/env";
+import { logger } from "@/lib/logger";
+import { startTimer } from "@/lib/timing";
 
 const VALID_MODES = new Set<ProofMode>(["EXECUTIVE", "REVIEW", "AUDIT", "PUBLICATION"]);
 
@@ -50,10 +52,20 @@ export default async function GalleryPage({
   const baseline = VALID_FIXTURES.has(rawBaseline) ? rawBaseline : "pass";
   const mode = parseMode(Array.isArray(searchParams.mode) ? searchParams.mode[0] : (searchParams.mode ?? undefined));
 
+  const timer = startTimer("gallery_render");
   const provider = await getProvider();
   const proof = await provider.loadPackage(fixture);
   const domain = await provider.loadDomainPack(proof.meta.domain_id);
   const baselineProof = await provider.loadPackage(baseline);
+  const timing = timer.stop();
+
+  logger.info("gallery.render", {
+    fixture,
+    baseline,
+    mode,
+    domain: proof.meta.domain_id,
+    durationMs: timing.durationMs,
+  });
 
   return (
     <ProofWorkspace

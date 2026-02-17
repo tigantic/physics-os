@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { reportError } from "@/lib/reportError";
 
 /**
  * Root-level error boundary — catches any error thrown outside /gallery.
@@ -12,8 +13,7 @@ export default function RootError({ error, reset }: { error: Error & { digest?: 
     retryRef.current?.focus();
   }, []);
 
-  // Log for production error tracking (Sentry, Datadog, etc. can hook console.error)
-  console.error("[lUX] Root error boundary:", error);
+  reportError(error, "RootError");
 
   return (
     <div

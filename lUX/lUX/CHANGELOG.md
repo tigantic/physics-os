@@ -5,6 +5,43 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — Pass 10
+
+- **Phase 5 — Observability & Reliability**:
+  - **Structured logger** (`lib/logger.ts`): Zero-dependency server-side NDJSON logger with severity levels (debug/info/warn/error), `LUX_LOG_LEVEL` env var filtering, Error object serialization (message + stack + name), stdout/stderr routing (warn+error → stderr), pid + timestamp + service tag on every line, `server-only` guard.
+  - **Server-Timing utility** (`lib/timing.ts`): `startTimer(name)` → `.stop()` → `TimingEntry`, `serverTimingHeader(...entries)` formatter for HTTP `Server-Timing` header. Uses `performance.now()`, returns frozen entries.
+  - **Metrics collection** (`lib/metrics.ts`): Zero-dependency in-memory Prometheus-compatible metrics — counters with labels, gauges, summary-style histograms (count + sum). `toPrometheus()` text exposition format with Node.js runtime metrics (heap, RSS, uptime, external). `resetMetrics()` for test isolation. `server-only` guard.
+  - **Client error reporting** (`lib/reportError.ts`): `"use client"` module, `reportError(error, component)` beacons JSON to `/api/errors` via `navigator.sendBeacon` with `fetch` + `keepalive` fallback. Never throws — all failures silently swallowed.
+  - **Web Vitals reporter** (`lib/WebVitalsReporter.tsx`): `"use client"` component returning `null`. Collects TTFB, FCP, LCP, CLS, INP via PerformanceObserver. Reports on `visibilitychange` → `hidden`. Enabled by `NEXT_PUBLIC_LUX_VITALS_ENDPOINT` env var. Google-recommended thresholds for good/needs-improvement/poor rating.
+  - **4 new API route handlers**:
+    - `GET /api/ready` — Readiness probe. Fast path: `isProviderReady()`. Slow path: attempts `getProvider()`. Returns 200 with version/commitSha when ready, 503 with reason when not.
+    - `GET /api/metrics` — Prometheus text format exposition (`text/plain; version=0.0.4`), `Cache-Control: no-store`. Includes Node.js runtime metrics.
+    - `POST /api/csp-report` — Receives CSP violation reports (both Reporting API v1 and legacy `report-uri` format). Logs as structured warning. Returns 204.
+    - `POST /api/errors` — Receives client-side error beacons. Zod-validated (message max 4096, stack max 16384). Logs as structured error. Returns 204.
+  - **`isProviderReady()` export** (`config/provider.ts`): Returns `true` if provider singleton initialized. Used by `/api/ready` and `/api/health`.
+
+### Changed — Pass 10
+
+- **Middleware** (`middleware.ts`): `X-Request-Id` header generation (UUID, forwards upstream `x-request-id`). `Reporting-Endpoints: csp-endpoint="/api/csp-report"`. `report-uri /api/csp-report` and `report-to csp-endpoint` in CSP directives.
+- **Health endpoint** (`/api/health`): Now includes `version` (from `LUX_VERSION`), `commitSha` (from `LUX_COMMIT_SHA`), `provider.ready`, `memory` (heapUsed, heapTotal, rss, external).
+- **All 4 existing API routes instrumented**: Timer-based `Server-Timing` header, `X-Request-Id` propagation, `lux_http_requests_total` counter, `lux_http_duration_ms` histogram, structured logging on every request.
+- **Gallery page** (`gallery/page.tsx`): Provider calls wrapped in timer with `logger.info("gallery.render", ...)` including fixture/baseline/mode/domain/durationMs.
+- **Root layout** (`layout.tsx`): `<WebVitalsReporter />` mounted for client-side Core Web Vitals collection.
+- **Error boundaries**: All 3 error boundaries (`error.tsx`, `global-error.tsx`, `gallery/error.tsx`) now call `reportError(error, component)` instead of `console.error`, beaconing to `/api/errors`.
+
+### Tests — Pass 10
+
+- **50 new unit tests** (329 UI total, 605 overall: 276 core + 329 UI):
+  - `logger.test.ts` (9): stdout/stderr routing, JSON format, NDJSON newline, level filtering (default info), LUX_LOG_LEVEL=error, LUX_LOG_LEVEL=debug, Error serialization, severity numbers.
+  - `timing.test.ts` (6): startTimer returns TimingEntry, elapsed measurement, frozen entry, serverTimingHeader single/multiple/empty.
+  - `metrics.test.ts` (12): counter increment/custom/auto-create/define, gauge set/overwrite, histogram count+sum/define, toPrometheus runtime metrics/newline/format, resetMetrics.
+  - `reportError.test.ts` (6): console.error call, sendBeacon payload, digest propagation, fetch fallback, never-throw safety, url from window.location.
+  - `webVitalsReporter.test.tsx` (5): renders null, no observers when env absent, registers observers when enabled, TTFB immediate report, cleanup on unmount.
+  - `observabilityRoutes.test.ts` (12): /api/ready (200 when ready, 200 after init, 503 on failure), /api/metrics (Prometheus format, no-store, runtime metrics), /api/csp-report (legacy format, Reporting API v1, invalid JSON), /api/errors (valid payload, invalid payload, non-JSON).
+- Updated `health.test.ts` (+3 tests: version/commitSha, provider readiness, memory stats).
+- Updated `providerSingleton.test.ts` (+2 tests: isProviderReady false/true).
+- Updated `apiRoutes.test.ts` (Request param + Server-Timing/X-Request-Id header assertions).
+
 ### Added — Pass 9
 
 - **Phase 4 — Data Layer Architecture**:

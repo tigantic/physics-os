@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
 import { env } from "@/config/env";
+import { WebVitalsReporter } from "@/lib/WebVitalsReporter";
 
 const sans = IBM_Plex_Sans({
   subsets: ["latin"],
@@ -63,6 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
+        <WebVitalsReporter />
         {children}
       </body>
     </html>

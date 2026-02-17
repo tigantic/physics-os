@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-// Mock server-only (imported by provider.ts)
+// Mock server-only (imported by provider.ts, logger.ts, metrics.ts)
 vi.mock("server-only", () => ({}));
 
 // Mock the provider module before importing routes
@@ -14,7 +14,23 @@ const mockProvider = {
 
 vi.mock("@/config/provider", () => ({
   getProvider: () => Promise.resolve(mockProvider),
+  isProviderReady: () => true,
 }));
+
+// Mock observability modules
+vi.mock("@/lib/logger", () => ({
+  logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+}));
+
+vi.mock("@/lib/metrics", () => ({
+  increment: vi.fn(),
+  observe: vi.fn(),
+}));
+
+// Helper: create a Request with X-Request-Id header
+function req(url: string) {
+  return new Request(url, { headers: { "x-request-id": "test-req-id" } });
+}
 
 describe("API Routes", () => {
   beforeEach(() => {
@@ -35,26 +51,28 @@ describe("API Routes", () => {
         },
       ]);
 
-      const response = await GET();
+      const response = await GET(req("http://localhost/api/packages"));
       expect(response.status).toBe(200);
       const body = await response.json();
       expect(body.packages).toHaveLength(1);
       expect(body.packages[0].id).toBe("pass");
     });
 
-    it("returns Cache-Control header", async () => {
+    it("returns Cache-Control and Server-Timing headers", async () => {
       const { GET } = await import("@/app/api/packages/route");
       mockProvider.listPackages.mockResolvedValue([]);
 
-      const response = await GET();
+      const response = await GET(req("http://localhost/api/packages"));
       expect(response.headers.get("Cache-Control")).toContain("s-maxage=60");
+      expect(response.headers.get("Server-Timing")).toContain("list_packages;dur=");
+      expect(response.headers.get("X-Request-Id")).toBe("test-req-id");
     });
 
     it("returns 500 on provider error", async () => {
       const { GET } = await import("@/app/api/packages/route");
       mockProvider.listPackages.mockRejectedValue(new Error("Disk read failure"));
 
-      const response = await GET();
+      const response = await GET(req("http://localhost/api/packages"));
       expect(response.status).toBe(500);
       const body = await response.json();
       expect(body.error).toContain("Disk read failure");
@@ -66,7 +84,7 @@ describe("API Routes", () => {
       const { GET } = await import("@/app/api/packages/[id]/route");
       mockProvider.loadPackage.mockResolvedValue({ schema_version: "1.0.0", meta: { id: "run-001" } });
 
-      const response = await GET(new Request("http://localhost/api/packages/pass"), {
+      const response = await GET(req("http://localhost/api/packages/pass"), {
         params: { id: "pass" },
       });
       expect(response.status).toBe(200);
@@ -76,7 +94,7 @@ describe("API Routes", () => {
 
     it("returns 400 for invalid ID", async () => {
       const { GET } = await import("@/app/api/packages/[id]/route");
-      const response = await GET(new Request("http://localhost/api/packages/bad!id"), {
+      const response = await GET(req("http://localhost/api/packages/bad!id"), {
         params: { id: "bad!id" },
       });
       expect(response.status).toBe(400);
@@ -86,7 +104,7 @@ describe("API Routes", () => {
       const { GET } = await import("@/app/api/packages/[id]/route");
       mockProvider.loadPackage.mockRejectedValue(new Error("Proof package not found: missing"));
 
-      const response = await GET(new Request("http://localhost/api/packages/missing"), {
+      const response = await GET(req("http://localhost/api/packages/missing"), {
         params: { id: "missing" },
       });
       expect(response.status).toBe(404);
@@ -96,10 +114,11 @@ describe("API Routes", () => {
       const { GET } = await import("@/app/api/packages/[id]/route");
       mockProvider.loadPackage.mockResolvedValue({ schema_version: "1.0.0" });
 
-      const response = await GET(new Request("http://localhost/api/packages/pass"), {
+      const response = await GET(req("http://localhost/api/packages/pass"), {
         params: { id: "pass" },
       });
       expect(response.headers.get("Cache-Control")).toContain("s-maxage=300");
+      expect(response.headers.get("Server-Timing")).toContain("load_package;dur=");
     });
   });
 
@@ -115,7 +134,7 @@ describe("API Routes", () => {
         mimeType: "text/csv",
       });
 
-      const response = await GET(new Request("http://localhost/api/packages/pass/artifacts/artifacts/timeseries.csv"), {
+      const response = await GET(req("http://localhost/api/packages/pass/artifacts/artifacts/timeseries.csv"), {
         params: { id: "pass", path: ["artifacts", "timeseries.csv"] },
       });
       expect(response.status).toBe(200);
@@ -131,7 +150,7 @@ describe("API Routes", () => {
         reason: "Artifact file missing",
       });
 
-      const response = await GET(new Request("http://localhost/api/packages/pass/artifacts/artifacts/missing.csv"), {
+      const response = await GET(req("http://localhost/api/packages/pass/artifacts/artifacts/missing.csv"), {
         params: { id: "pass", path: ["artifacts", "missing.csv"] },
       });
       expect(response.status).toBe(404);
@@ -139,7 +158,7 @@ describe("API Routes", () => {
 
     it("returns 400 for invalid package ID", async () => {
       const { GET } = await import("@/app/api/packages/[id]/artifacts/[...path]/route");
-      const response = await GET(new Request("http://localhost/api/packages/bad!id/artifacts/file.csv"), {
+      const response = await GET(req("http://localhost/api/packages/bad!id/artifacts/file.csv"), {
         params: { id: "bad!id", path: ["file.csv"] },
       });
       expect(response.status).toBe(400);
@@ -155,7 +174,7 @@ describe("API Routes", () => {
         metrics: {},
       });
 
-      const response = await GET(new Request("http://localhost/api/domains/com.physics.vlasov"), {
+      const response = await GET(req("http://localhost/api/domains/com.physics.vlasov"), {
         params: { domain: "com.physics.vlasov" },
       });
       expect(response.status).toBe(200);
@@ -165,7 +184,7 @@ describe("API Routes", () => {
 
     it("returns 400 for invalid domain ID", async () => {
       const { GET } = await import("@/app/api/domains/[domain]/route");
-      const response = await GET(new Request("http://localhost/api/domains/bad!domain"), {
+      const response = await GET(req("http://localhost/api/domains/bad!domain"), {
         params: { domain: "bad!domain" },
       });
       expect(response.status).toBe(400);
@@ -175,7 +194,7 @@ describe("API Routes", () => {
       const { GET } = await import("@/app/api/domains/[domain]/route");
       mockProvider.loadDomainPack.mockRejectedValue(new Error("DomainPack not found: nonexistent"));
 
-      const response = await GET(new Request("http://localhost/api/domains/nonexistent"), {
+      const response = await GET(req("http://localhost/api/domains/nonexistent"), {
         params: { domain: "nonexistent" },
       });
       expect(response.status).toBe(404);
@@ -185,10 +204,11 @@ describe("API Routes", () => {
       const { GET } = await import("@/app/api/domains/[domain]/route");
       mockProvider.loadDomainPack.mockResolvedValue({ id: "test", version: "1.0.0" });
 
-      const response = await GET(new Request("http://localhost/api/domains/test"), {
+      const response = await GET(req("http://localhost/api/domains/test"), {
         params: { domain: "test" },
       });
       expect(response.headers.get("Cache-Control")).toContain("s-maxage=3600");
+      expect(response.headers.get("Server-Timing")).toContain("load_domain;dur=");
     });
   });
 });

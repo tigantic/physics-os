@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { reportError } from "@/lib/reportError";
 
 /**
  * Global error boundary — catches root layout errors.
@@ -14,8 +15,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
     retryRef.current?.focus();
   }, []);
 
-  // Log for production error tracking
-  console.error("[lUX] Global error boundary:", error);
+  reportError(error, "GlobalError");
 
   return (
     <html lang="en">

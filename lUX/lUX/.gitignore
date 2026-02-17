@@ -6,6 +6,9 @@ dist/
 .next/
 out/
 
+# Override parent repo Python ignores
+!packages/*/src/lib/
+
 # Test outputs
 test-results/
 playwright-report/

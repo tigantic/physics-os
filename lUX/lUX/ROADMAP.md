@@ -5,19 +5,19 @@
 
 ---
 
-## Current State (Post-Pass 9)
+## Current State (Post-Pass 10)
 
 | Metric | Value | Status |
 |--------|-------|--------|
 | Unit tests (core) | 276 | ✅ |
-| Unit tests (UI) | 274 | ✅ |
-| Total unit tests | 550 | ✅ |
+| Unit tests (UI) | 329 | ✅ |
+| Total unit tests | 605 | ✅ |
 | E2E specs | 35 | ✅ |
 | Core coverage (stmts) | 96.21% | ✅ 80% threshold |
-| UI coverage (stmts) | 88.95% | ✅ 70% threshold |
+| UI coverage (stmts) | ~90% | ✅ 70% threshold |
 | Lint | Clean | ✅ |
 | Typecheck | Clean | ✅ |
-| CSP | Nonce-based | ✅ |
+| CSP | Nonce-based + report-to | ✅ |
 | HSTS | 2-year, preload | ✅ |
 | WCAG AA contrast | All tokens ≥ 4.5:1 | ✅ |
 | ARIA coverage | Error/loading/404 | ✅ |
@@ -26,8 +26,14 @@
 | Touch targets | ≥ 44px mobile (WCAG 2.5.8) | ✅ |
 | Fluid typography | clamp() scale (5 tokens) | ✅ |
 | Data provider | `ProofDataProvider` abstraction (fs + http) | ✅ |
-| API routes | 4 endpoints (packages, artifacts, domains) | ✅ |
+| API routes | 8 endpoints (packages, artifacts, domains, health, ready, metrics, csp-report, errors) | ✅ |
 | fs decoupling | Zero `node:fs` imports in UI package | ✅ |
+| Structured logging | NDJSON, request ID correlation | ✅ |
+| Metrics | Prometheus-compatible `/api/metrics` | ✅ |
+| Error tracking | Client error beacons + server logging | ✅ |
+| Web Vitals | TTFB, FCP, LCP, CLS, INP collection | ✅ |
+| Server-Timing | All API routes instrumented | ✅ |
+| CSP violation monitoring | `report-to` + `/api/csp-report` | ✅ |
 | Storybook stories | 8 (DS primitives) | ✅ |
 | Docker | Multi-stage Alpine | ✅ |
 | CI | Build + lint + type + test + audit | ✅ |
@@ -56,6 +62,9 @@
 │  API Routes:  /api/packages      (list, detail)  │
 │               /api/packages/[id]/artifacts       │
 │               /api/domains/[domain]              │
+│               /api/health  /api/ready            │
+│               /api/metrics /api/csp-report       │
+│               /api/errors                        │
 │                                                  │
 │  @luxury/core  ← Zod schemas, LaTeX, fixtures    │
 │    └─ ProofDataProvider (interface)              │
@@ -322,18 +331,18 @@ interface ProofDataProvider {
 
 ---
 
-## Phase 5 — Observability & Reliability
+## Phase 5 — Observability & Reliability ✅ PASS 10
 
 **Goal**: Know before users do. Structured logging, error tracking, performance monitoring, and health dashboards.
 
-### 5.1 Structured Error Reporting
+### 5.1 Structured Error Reporting ✅
 
-- [ ] Integrate Sentry (or equivalent) — client + server error capture
-- [ ] Error boundaries forward to reporting service with proof context (fixture ID, mode, route)
+- [x] Client error reporting via `reportError()` — beacons to `/api/errors` with full context (message, stack, digest, component, url, timestamp, userAgent)
+- [x] Error boundaries forward to reporting service with proof context (fixture ID, mode, route)
 - [ ] Source maps uploaded to Sentry in CI (behind flag for OSS builds)
 - [ ] Breadcrumbs: mode switch, fixture selection, copy action, retry attempt
 
-### 5.2 Structured Logging
+### 5.2 Structured Logging ✅
 
 ```typescript
 // Server-side structured logger
@@ -343,36 +352,36 @@ logger.warn("artifact.missing", { fixtureId, artifactPath });
 logger.error("render.failed", { fixtureId, error: err.message, stack: err.stack });
 ```
 
-- [ ] Create `logger.ts` utility (JSON structured output, request ID correlation)
-- [ ] Add logging to gallery page load, API routes, error boundaries
-- [ ] Add `X-Request-ID` header in middleware for request tracing
-- [ ] Log format compatible with ELK / Datadog / CloudWatch
+- [x] Create `logger.ts` utility (JSON structured output, request ID correlation)
+- [x] Add logging to gallery page load, API routes, error boundaries
+- [x] Add `X-Request-ID` header in middleware for request tracing
+- [x] Log format compatible with ELK / Datadog / CloudWatch
 
-### 5.3 Performance Monitoring
+### 5.3 Performance Monitoring ✅
 
-- [ ] Add Web Vitals collection (LCP, FID, CLS, TTFB, INP)
-- [ ] Report to analytics endpoint (configurable, disabled by default)
-- [ ] Add `Server-Timing` header for proof package load duration
+- [x] Add Web Vitals collection (LCP, FCP, CLS, TTFB, INP) via `WebVitalsReporter`
+- [x] Report to analytics endpoint (configurable via `NEXT_PUBLIC_LUX_VITALS_ENDPOINT`, disabled by default)
+- [x] Add `Server-Timing` header for proof package load duration on all API routes
 - [ ] Add Lighthouse CI to CI pipeline with performance budget:
   - LCP < 2.5s
   - CLS < 0.1
   - TTI < 3.5s
   - Performance score ≥ 90
 
-### 5.4 Health & Readiness
+### 5.4 Health & Readiness ✅
 
-- [ ] Extend `/api/health` with dependency checks (data provider connectivity)
-- [ ] Add `/api/ready` — returns 503 until data provider initialized
-- [ ] Add `/api/metrics` — Prometheus-compatible metrics (request count, latency histograms, error rate)
+- [x] Extend `/api/health` with dependency checks (provider readiness, memory stats, version/commitSha)
+- [x] Add `/api/ready` — returns 503 until data provider initialized
+- [x] Add `/api/metrics` — Prometheus-compatible metrics (request count, latency histograms, error rate, Node.js runtime)
 - [ ] Docker HEALTHCHECK uses `/api/ready` instead of `/api/health`
 
-### 5.5 CSP Violation Monitoring
+### 5.5 CSP Violation Monitoring ✅
 
-- [ ] Add `report-to` directive in CSP header
-- [ ] Create `/api/csp-report` endpoint to receive and log violations
+- [x] Add `report-to` directive in CSP header + `Reporting-Endpoints` header
+- [x] Create `/api/csp-report` endpoint to receive and log violations (both Reporting API v1 and legacy `report-uri`)
 - [ ] Alert on unexpected violations (indicates XSS attempt or integration issue)
 
-**Exit Criteria**: All errors captured with context. Request tracing E2E. Web Vitals collected. Lighthouse CI enforced. CSP violations monitored.
+**Exit Criteria**: All errors captured with context ✅. Request tracing E2E ✅. Web Vitals collected ✅. ~~Lighthouse CI~~ *deferred to Phase 6.* CSP violations monitored ✅.
 
 ---
 
@@ -548,14 +557,14 @@ Stories serve as living documentation and visual regression anchors.
 
 ## Appendix B — Test Coverage Targets
 
-| Package | Current | Phase 1 | Phase 3 | Phase 7 |
-|---------|---------|---------|---------|---------|
-| Core (stmts) | 97% | 97% | 98% | 99% |
-| Core (branches) | 93% | 95% | 96% | 98% |
-| UI (stmts) | 78% | 82% | 88% | 92% |
-| UI (branches) | 86% | 88% | 90% | 93% |
-| UI (lines) | 78% | 82% | 88% | 92% |
-| E2E specs | 35 | 50 | 80 | 120 |
+| Package | Current | Phase 5 | Phase 7 |
+|---------|---------|---------|---------|
+| Core (stmts) | 96% | 97% | 99% |
+| Core (branches) | 87% | 92% | 98% |
+| UI (stmts) | 89% | 91% | 95% |
+| UI (branches) | 87% | 89% | 93% |
+| UI (lines) | 89% | 91% | 95% |
+| E2E specs | 35 | 60 | 120 |
 
 **Coverage escalation strategy**: Raise `vitest.config.ts` thresholds by 3-5% each phase. Never lower.
 
@@ -620,25 +629,29 @@ Current design token set and planned extensions:
 
 ---
 
-## Appendix D — File Inventory (63 UI source files)
+## Appendix D — File Inventory (72 UI source files)
 
-### App Layer (15 files)
+### App Layer (20 files)
 - `app/page.tsx` — Root redirect → /gallery
-- `app/layout.tsx` — Root layout, fonts, metadata, CSP
-- `app/error.tsx` — Root error boundary
-- `app/global-error.tsx` — Fatal error boundary
+- `app/layout.tsx` — Root layout, fonts, metadata, CSP, WebVitalsReporter
+- `app/error.tsx` — Root error boundary (reportError integration)
+- `app/global-error.tsx` — Fatal error boundary (reportError integration)
 - `app/loading.tsx` — Root loading skeleton
 - `app/not-found.tsx` — 404 page
 - `app/robots.ts` — robots.txt generation
 - `app/sitemap.ts` — sitemap.xml generation
-- `app/gallery/page.tsx` — Main proof viewer page
-- `app/gallery/error.tsx` — Gallery error boundary
+- `app/gallery/page.tsx` — Main proof viewer page (timer + logger instrumented)
+- `app/gallery/error.tsx` — Gallery error boundary (reportError integration)
 - `app/gallery/loading.tsx` — Gallery loading skeleton
-- `app/api/health/route.ts` — Health endpoint
-- `app/api/packages/route.ts` — List packages endpoint
-- `app/api/packages/[id]/route.ts` — Load package endpoint
-- `app/api/packages/[id]/artifacts/[...path]/route.ts` — Stream artifact endpoint
-- `app/api/domains/[domain]/route.ts` — Load domain pack endpoint
+- `app/api/health/route.ts` — Health endpoint (version, memory, provider status)
+- `app/api/ready/route.ts` — Readiness probe (503 until provider initialized)
+- `app/api/metrics/route.ts` — Prometheus-compatible metrics exposition
+- `app/api/csp-report/route.ts` — CSP violation receiver (Reporting API + legacy)
+- `app/api/errors/route.ts` — Client error beacon receiver (Zod-validated)
+- `app/api/packages/route.ts` — List packages endpoint (instrumented)
+- `app/api/packages/[id]/route.ts` — Load package endpoint (instrumented)
+- `app/api/packages/[id]/artifacts/[...path]/route.ts` — Stream artifact endpoint (instrumented)
+- `app/api/domains/[domain]/route.ts` — Load domain pack endpoint (instrumented)
 
 ### Design System (8 files)
 - `ds/tokens.ts` — TypeScript design tokens
@@ -672,11 +685,16 @@ Current design token set and planned extensions:
 - `features/screens/Compare.tsx`
 - `features/screens/Reproduce.tsx`
 
-### Infrastructure (6 files)
+### Infrastructure (11 files)
 - `config/env.ts`
-- `config/provider.ts` — Server-side `ProofDataProvider` singleton
+- `config/provider.ts` — Server-side `ProofDataProvider` singleton + `isProviderReady()`
 - `config/utils.ts`
-- `middleware.ts`
+- `lib/logger.ts` — Structured NDJSON logger (server-only)
+- `lib/timing.ts` — Server-Timing utility (`startTimer` / `serverTimingHeader`)
+- `lib/metrics.ts` — Prometheus-compatible in-memory metrics (server-only)
+- `lib/reportError.ts` — Client-side error beacon (sendBeacon + fetch fallback)
+- `lib/WebVitalsReporter.tsx` — Core Web Vitals collection (TTFB, FCP, LCP, CLS, INP)
+- `middleware.ts` — CSP, security headers, X-Request-Id, Reporting-Endpoints
 - `components/ui/button.tsx`
 - `components/ui/badge.tsx`
 
@@ -699,6 +717,11 @@ Track architectural decisions as they're made.
 | Pass 9 | Server-only data loading (no SWR/React Query) | All proof data loaded in RSC; no client-side fetching needed yet | SWR, React Query |
 | Pass 9 | Dynamic imports in `createProvider()` | Tree-shake unused provider from bundle | Static imports |
 | Pass 9 | `packageId` prop over `bundleDir` | Filesystem-agnostic; provider resolves location | Threading filesystem paths through component tree |
+| Pass 10 | Zero-dependency logger over Pino/Winston | No external deps; NDJSON format compatible with all log aggregators | Pino (too heavy for edge), Winston, console.log |
+| Pass 10 | In-memory metrics over OpenTelemetry | Minimal footprint; Prometheus text format; no SDK dependency | OpenTelemetry SDK, StatsD |
+| Pass 10 | `sendBeacon` for error/vitals reporting | Survives page unload; non-blocking; browser-native | fetch with keepalive only, XHR |
+| Pass 10 | PerformanceObserver over web-vitals library | Zero dependencies; direct API access; smaller bundle | web-vitals npm package |
+| Pass 10 | `X-Request-Id` in middleware | Request tracing across all routes; correlates logs to requests | Per-route ID generation |
 
 ---
 

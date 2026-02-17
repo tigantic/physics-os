@@ -8,8 +8,14 @@ import type { NextRequest } from "next/server";
  * which Next.js automatically propagates to all <script> tags it emits.
  * `style-src` retains `'unsafe-inline'` because Tailwind injects styles at build
  * time and inline style attributes are used for design-token-driven layouts.
+ *
+ * Also sets:
+ *   - `X-Request-Id` for end-to-end request tracing
+ *   - `Reporting-Endpoints` + `report-to` for CSP violation monitoring
+ *   - Standard security headers (HSTS, COOP, X-Frame-Options, etc.)
  */
 export function middleware(request: NextRequest) {
+  const requestId = request.headers.get("x-request-id") ?? crypto.randomUUID();
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 
   const csp = [
@@ -22,10 +28,13 @@ export function middleware(request: NextRequest) {
     `frame-ancestors 'none'`,
     `base-uri 'self'`,
     `form-action 'self'`,
+    `report-uri /api/csp-report`,
+    `report-to csp-endpoint`,
   ].join("; ");
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-nonce", nonce);
+  requestHeaders.set("x-request-id", requestId);
 
   const response = NextResponse.next({ request: { headers: requestHeaders } });
   response.headers.set("Content-Security-Policy", csp);
@@ -36,6 +45,11 @@ export function middleware(request: NextRequest) {
   response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
   response.headers.set("X-DNS-Prefetch-Control", "off");
   response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
+  response.headers.set("X-Request-Id", requestId);
+  response.headers.set(
+    "Reporting-Endpoints",
+    `csp-endpoint="/api/csp-report"`,
+  );
 
   return response;
 }

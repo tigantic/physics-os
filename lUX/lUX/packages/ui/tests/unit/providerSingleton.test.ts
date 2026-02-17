@@ -50,4 +50,15 @@ describe("getProvider", () => {
     await getProvider();
     expect(vi.mocked(createProvider).mock.calls.length).toBe(callCount + 1);
   });
+
+  it("isProviderReady returns false before init", async () => {
+    const { isProviderReady } = await import("@/config/provider");
+    expect(isProviderReady()).toBe(false);
+  });
+
+  it("isProviderReady returns true after init", async () => {
+    const { getProvider, isProviderReady } = await import("@/config/provider");
+    await getProvider();
+    expect(isProviderReady()).toBe(true);
+  });
 });

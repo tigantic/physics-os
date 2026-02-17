@@ -16,6 +16,14 @@ import { env } from "./env";
 let _provider: ProofDataProvider | null = null;
 let _providerPromise: Promise<ProofDataProvider> | null = null;
 
+/**
+ * Check if the data provider has been successfully initialized.
+ * Used by /api/health and /api/ready for orchestrator probes.
+ */
+export function isProviderReady(): boolean {
+  return _provider !== null;
+}
+
 export function getProvider(): Promise<ProofDataProvider> {
   if (_provider) return Promise.resolve(_provider);
   if (_providerPromise) return _providerPromise;

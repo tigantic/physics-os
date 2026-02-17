@@ -1,12 +1,13 @@
 "use client";
 
+import { reportError } from "@/lib/reportError";
+
 /**
  * Gallery-level error boundary — catches proof loading / rendering failures.
  * Provides structured diagnostics and retry capability.
  */
 export default function GalleryError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
-  // Log for production error tracking
-  console.error("[lUX] Gallery error boundary:", error);
+  reportError(error, "GalleryError");
 
   return (
     <div
