@@ -15,7 +15,7 @@ export function CenterCanvas({
   bundleDir: string;
 }) {
   return (
-    <div role="region" aria-label="Proof analysis" className="space-y-6">
+    <div id="mode-tabpanel" role="tabpanel" aria-labelledby={`mode-tab-${mode}`} className="space-y-6">
       {renderCenterScreens({ proof, baseline, domain, bundleDir, mode })}
     </div>
   );

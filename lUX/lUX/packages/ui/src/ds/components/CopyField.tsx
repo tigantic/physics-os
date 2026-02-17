@@ -1,15 +1,22 @@
 "use client";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/config/utils";
 
-export function CopyField({ label, value }: { label: string; value: string }) {
+export const CopyField = React.memo(function CopyField({ label, value }: { label: string; value: string }) {
   const [copied, setCopied] = React.useState(false);
+  const [error, setError] = React.useState(false);
 
   async function onCopy() {
-    await navigator.clipboard.writeText(value);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 900);
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      setError(false);
+      window.setTimeout(() => setCopied(false), 900);
+    } catch {
+      setError(true);
+      window.setTimeout(() => setError(false), 1500);
+    }
   }
 
   return (
@@ -23,10 +30,10 @@ export function CopyField({ label, value }: { label: string; value: string }) {
         size="sm"
         onClick={onCopy}
         aria-label={`Copy ${label}`}
-        className={cn(copied ? "text-[var(--color-accent-gold)]" : "")}
+        className={cn(copied ? "text-[var(--color-accent-gold)]" : error ? "text-[var(--color-verdict-fail)]" : "")}
       >
-        <span aria-live="polite">{copied ? "Copied" : "Copy"}</span>
+        <span aria-live="polite">{copied ? "Copied" : error ? "Failed" : "Copy"}</span>
       </Button>
     </div>
   );
-}
+});

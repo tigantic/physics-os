@@ -4,7 +4,13 @@
  */
 export default function GalleryLoading() {
   return (
-    <div className="min-h-screen animate-pulse bg-[var(--color-bg-base)]">
+    <div
+      className="min-h-screen animate-pulse bg-[var(--color-bg-base)]"
+      role="status"
+      aria-busy="true"
+      aria-label="Loading proof package"
+    >
+      <span className="sr-only">Loading proof package…</span>
       {/* Identity strip skeleton */}
       <div className="h-12 border-b border-[var(--color-border)]">
         <div className="mx-auto flex max-w-[1400px] items-center gap-4 px-6 py-3">
@@ -39,7 +45,7 @@ export default function GalleryLoading() {
         </div>
 
         {/* Center canvas */}
-        <main className="flex-1 px-6 py-6">
+        <main id="main-content" className="flex-1 px-6 py-6">
           <div className="space-y-4">
             <div className="h-6 w-48 rounded bg-[var(--color-bg-raised)]" />
             <div className="h-40 rounded-lg bg-[var(--color-bg-raised)]" />

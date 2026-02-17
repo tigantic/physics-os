@@ -2,6 +2,7 @@
   "name": "@luxury/core",
   "version": "0.1.0",
   "type": "module",
+  "sideEffects": false,
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint . -c eslint.config.js",

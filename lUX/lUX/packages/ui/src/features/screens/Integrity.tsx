@@ -7,7 +7,7 @@ export function IntegrityScreen({ proof }: { proof: ProofPackage }) {
   return (
     <Card>
       <CardHeader>
-        <div className="text-sm text-[var(--color-text-primary)]">Verification</div>
+        <h2 className="text-sm text-[var(--color-text-primary)]">Verification</h2>
         <div className="text-xs text-[var(--color-text-tertiary)]">{v}</div>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -17,9 +17,9 @@ export function IntegrityScreen({ proof }: { proof: ProofPackage }) {
         </div>
         {proof.verification?.failures?.length ? (
           <div className="space-y-2">
-            {proof.verification.failures.map((f, i) => (
+            {proof.verification.failures.map((f) => (
               <div
-                key={i}
+                key={`${f.code}-${f.artifact_id ?? "global"}`}
                 className="flex items-center justify-between rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2"
               >
                 <div className="font-mono text-xs text-[var(--color-text-secondary)]">{f.code}</div>

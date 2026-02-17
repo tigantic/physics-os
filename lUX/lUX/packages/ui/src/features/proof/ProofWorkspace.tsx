@@ -31,7 +31,7 @@ export function ProofWorkspace({
       </div>
       <div className="mx-auto flex max-w-[1400px] flex-col gap-0 md:flex-row">
         <LeftRail proof={proof} fixture={fixture} mode={mode} />
-        <main className="min-w-0 flex-1 px-4 py-4 md:px-6 md:py-6">
+        <main id="main-content" className="min-w-0 flex-1 px-4 py-4 md:px-6 md:py-6">
           <CenterCanvas proof={proof} baseline={baseline} domain={domain} mode={mode} bundleDir={bundleDir} />
         </main>
         <RightRail proof={proof} />

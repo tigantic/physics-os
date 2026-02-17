@@ -11,7 +11,7 @@ export function SummaryScreen({ proof, domain, mode }: { proof: ProofPackage; do
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <div className="text-sm text-[var(--color-text-primary)]">Overview</div>
+          <h2 className="text-sm text-[var(--color-text-primary)]">Overview</h2>
           <div className="text-xs text-[var(--color-text-tertiary)]">
             {proof.verdict.reason || "No additional notes"}
           </div>
@@ -35,7 +35,7 @@ export function SummaryScreen({ proof, domain, mode }: { proof: ProofPackage; do
       {mode === "PUBLICATION" ? (
         <Card>
           <CardHeader>
-            <div className="text-sm text-[var(--color-text-primary)]">Paper View</div>
+            <h2 className="text-sm text-[var(--color-text-primary)]">Paper View</h2>
             <div className="text-xs text-[var(--color-text-tertiary)]">Deterministic SVG math</div>
           </CardHeader>
           <CardContent>

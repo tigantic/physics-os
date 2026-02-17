@@ -1,7 +1,8 @@
 "use client";
+import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/config/utils";
 
 const MODES = ["EXECUTIVE", "REVIEW", "AUDIT", "PUBLICATION"] as const;
 
@@ -12,6 +13,7 @@ export function ModeDial() {
   const mode = (sp.get("mode") ?? "REVIEW") as string;
   const fixture = sp.get("fixture") ?? "pass";
   const baseline = sp.get("baseline") ?? "pass";
+  const tabsRef = React.useRef<(HTMLButtonElement | null)[]>([]);
 
   function setMode(m: string) {
     const next = new URLSearchParams(sp.toString());
@@ -21,13 +23,45 @@ export function ModeDial() {
     router.push(`${pathname}?${next.toString()}`);
   }
 
+  function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    const currentIdx = MODES.indexOf(mode as (typeof MODES)[number]);
+    if (currentIdx === -1) return;
+
+    let nextIdx: number | null = null;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      nextIdx = (currentIdx + 1) % MODES.length;
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      nextIdx = (currentIdx - 1 + MODES.length) % MODES.length;
+    } else if (e.key === "Home") {
+      nextIdx = 0;
+    } else if (e.key === "End") {
+      nextIdx = MODES.length - 1;
+    }
+
+    if (nextIdx !== null) {
+      e.preventDefault();
+      tabsRef.current[nextIdx]?.focus();
+      setMode(MODES[nextIdx]);
+    }
+  }
+
   return (
-    <div role="tablist" aria-label="Proof viewing mode" className="flex items-center gap-2 overflow-x-auto">
-      {MODES.map((m) => (
+    <div
+      role="tablist"
+      aria-label="Proof viewing mode"
+      className="flex items-center gap-2 overflow-x-auto"
+      onKeyDown={handleKeyDown}
+    >
+      {MODES.map((m, i) => (
         <Button
           key={m}
+          ref={(el) => {
+            tabsRef.current[i] = el;
+          }}
           role="tab"
+          id={`mode-tab-${m}`}
           aria-selected={m === mode}
+          aria-controls="mode-tabpanel"
           tabIndex={m === mode ? 0 : -1}
           variant={m === mode ? "gold" : "default"}
           size="sm"

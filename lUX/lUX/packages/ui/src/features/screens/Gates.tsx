@@ -8,7 +8,7 @@ export function GatesScreen({ proof }: { proof: ProofPackage; domain: DomainPack
   return (
     <Card>
       <CardHeader>
-        <div className="text-sm text-[var(--color-text-primary)]">Gates</div>
+        <h2 className="text-sm text-[var(--color-text-primary)]">Gates</h2>
         <div className="text-xs text-[var(--color-text-tertiary)]">{results.length} evaluated</div>
       </CardHeader>
       <CardContent className="space-y-3">

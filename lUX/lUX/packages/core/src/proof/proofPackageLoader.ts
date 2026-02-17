@@ -18,7 +18,12 @@ export async function loadProofPackageFromDir(bundleDir: string): Promise<Loaded
   } catch {
     throw new Error("proofPackage.json missing");
   }
-  const raw = JSON.parse(rawText);
+  let raw: unknown;
+  try {
+    raw = JSON.parse(rawText);
+  } catch (err) {
+    throw new Error(`Invalid JSON in proofPackage.json: ${err instanceof Error ? err.message : String(err)}`, { cause: err });
+  }
   const parsed = ProofPackageSchema.parse(raw);
   const verification = await verifyProofPackageArtifacts(parsed, bundleDir);
 

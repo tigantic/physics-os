@@ -5,6 +5,9 @@
  * Must render its own <html>/<body> since the root layout may have crashed.
  */
 export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  // Log for production error tracking
+  console.error("[lUX] Global error boundary:", error);
+
   return (
     <html lang="en">
       <body

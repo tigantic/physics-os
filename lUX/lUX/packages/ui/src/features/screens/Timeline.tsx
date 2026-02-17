@@ -6,7 +6,7 @@ export function TimelineScreen({ proof, domain }: { proof: ProofPackage; domain:
   return (
     <Card>
       <CardHeader>
-        <div className="text-sm text-[var(--color-text-primary)]">Timeline</div>
+        <h2 className="text-sm text-[var(--color-text-primary)]">Timeline</h2>
         <div className="text-xs text-[var(--color-text-tertiary)]">{proof.timeline.step_count} steps</div>
       </CardHeader>
       <CardContent className="space-y-2">

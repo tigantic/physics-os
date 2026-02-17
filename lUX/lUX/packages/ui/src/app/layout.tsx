@@ -1,11 +1,36 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
+import { env } from "@/config/env";
+
+const siteTitle = "Luxury Physics Viewer";
+const siteDesc = "Deterministic proof package viewer for Trustless Physics Certificates";
 
 export const metadata: Metadata = {
-  title: "Luxury Physics Viewer",
-  description: "Deterministic proof package viewer for Trustless Physics Certificates",
+  title: {
+    default: siteTitle,
+    template: `%s · ${siteTitle}`,
+  },
+  description: siteDesc,
   manifest: "/manifest.json",
   icons: { icon: "/icon.svg" },
+  metadataBase: new URL(env.baseUrl),
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: env.baseUrl,
+    siteName: siteTitle,
+    title: siteTitle,
+    description: siteDesc,
+  },
+  twitter: {
+    card: "summary",
+    title: siteTitle,
+    description: siteDesc,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export const viewport: Viewport = {
@@ -16,7 +41,15 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-[var(--color-accent-gold)] focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-[var(--color-bg-base)]"
+        >
+          Skip to content
+        </a>
+        {children}
+      </body>
     </html>
   );
 }

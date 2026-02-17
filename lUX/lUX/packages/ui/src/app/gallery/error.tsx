@@ -5,6 +5,9 @@
  * Provides structured diagnostics and retry capability.
  */
 export default function GalleryError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  // Log for production error tracking
+  console.error("[lUX] Gallery error boundary:", error);
+
   return (
     <div
       className="min-h-screen bg-[var(--color-bg-base)] p-10 text-[var(--color-text-primary)]"

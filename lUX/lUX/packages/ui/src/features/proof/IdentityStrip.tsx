@@ -11,9 +11,9 @@ export function IdentityStrip({ proof }: { proof: ProofPackage }) {
           <div className="text-xs uppercase tracking-wider text-[var(--color-text-tertiary)]">
             Luxury Physics Viewer
           </div>
-          <div className="truncate text-lg font-semibold text-[var(--color-text-primary)]">
+          <h1 className="truncate text-lg font-semibold text-[var(--color-text-primary)]">
             {proof.meta.project_id} · {proof.meta.domain_id}
-          </div>
+          </h1>
         </div>
         <VerdictSeal status={proof.verdict.status} verification={verification} />
         <div className="hidden w-[420px] lg:block">

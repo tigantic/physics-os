@@ -2,7 +2,13 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 
-export function Disclosure({ title, children }: { title: string; children: React.ReactNode }) {
+export const Disclosure = React.memo(function Disclosure({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
   const [open, setOpen] = React.useState(false);
   const panelId = React.useId();
   return (
@@ -26,4 +32,4 @@ export function Disclosure({ title, children }: { title: string; children: React
       ) : null}
     </div>
   );
-}
+});

@@ -4,6 +4,9 @@
  * Root-level error boundary — catches any error thrown outside /gallery.
  */
 export default function RootError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  // Log for production error tracking (Sentry, Datadog, etc. can hook console.error)
+  console.error("[lUX] Root error boundary:", error);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg-base)] p-10 text-[var(--color-text-primary)]">
       <div className="mx-auto max-w-[600px] rounded-[var(--radius-outer)] border bg-[var(--color-bg-raised)] p-6">

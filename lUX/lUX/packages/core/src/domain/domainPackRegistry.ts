@@ -17,7 +17,13 @@ export async function loadDomainPackFromFile(filePath: string): Promise<DomainPa
   if (cached) return cached;
 
   const promise = (async () => {
-    const raw: unknown = JSON.parse(await fs.readFile(abs, "utf8"));
+    const text = await fs.readFile(abs, "utf8");
+    let raw: unknown;
+    try {
+      raw = JSON.parse(text);
+    } catch (err) {
+      throw new Error(`Invalid JSON in domain pack ${abs}: ${err instanceof Error ? err.message : String(err)}`, { cause: err });
+    }
     return deepFreeze(DomainPackSchema.parse(raw));
   })();
   packCache.set(abs, promise);
@@ -76,6 +82,10 @@ export async function loadDomainPackForDomain(fixturesRoot: string, domainId: st
 let manifestCache: Record<string, string> | null = null;
 let manifestRoot: string | null = null;
 
+import { z } from "zod";
+
+const ManifestSchema = z.record(z.string(), z.string());
+
 async function loadManifest(fixturesRoot: string): Promise<Record<string, string>> {
   const root = path.resolve(fixturesRoot);
   if (manifestCache && manifestRoot === root) return manifestCache;
@@ -88,10 +98,19 @@ async function loadManifest(fixturesRoot: string): Promise<Record<string, string
     return {};
   }
 
-  const raw: unknown = JSON.parse(rawText);
-  if (typeof raw !== "object" || raw === null) return {};
+  let raw: unknown;
+  try {
+    raw = JSON.parse(rawText);
+  } catch {
+    throw new Error(`Invalid JSON in _manifest.json at ${manifestPath}`);
+  }
 
-  manifestCache = raw as Record<string, string>;
+  const result = ManifestSchema.safeParse(raw);
+  if (!result.success) {
+    throw new Error(`Invalid manifest schema in _manifest.json: ${result.error.message}`);
+  }
+
+  manifestCache = result.data;
   manifestRoot = root;
   return manifestCache;
 }
