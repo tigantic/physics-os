@@ -47,7 +47,13 @@ export async function TimeSeriesViewer({
       </CardHeader>
       <CardContent>
         <div className="rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] p-3">
-          <svg width="100%" viewBox="0 0 560 120" preserveAspectRatio="none">
+          <svg
+            role="img"
+            aria-label={`Time-series sparkline for ${artifactId}`}
+            width="100%"
+            viewBox="0 0 560 120"
+            preserveAspectRatio="none"
+          >
             <path d={d} fill="none" stroke="var(--color-accent-gold)" strokeWidth="2" />
           </svg>
         </div>

@@ -8,9 +8,9 @@ import { ModeDial } from "./ModeDial";
 
 function CenterSkeleton() {
   return (
-    <div className="animate-pulse space-y-4">
-      <div className="h-40 rounded-[var(--radius-outer)] bg-[var(--color-bg-raised)]" />
-      <div className="h-60 rounded-[var(--radius-outer)] bg-[var(--color-bg-raised)]" />
+    <div className="space-y-4">
+      <div className="lux-shimmer-bg h-40 animate-lux-shimmer rounded-[var(--radius-outer)]" />
+      <div className="lux-shimmer-bg h-60 animate-lux-shimmer rounded-[var(--radius-outer)]" />
     </div>
   );
 }

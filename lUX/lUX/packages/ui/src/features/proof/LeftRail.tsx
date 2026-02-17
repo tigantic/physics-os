@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ProofPackage, ProofMode } from "@luxury/core";
 import { Card, CardContent, CardHeader } from "@/ds/components/Card";
 import { Chip } from "@/ds/components/Chip";
+import { cn } from "@/config/utils";
 
 export function LeftRail({ proof, fixture, mode }: { proof: ProofPackage; fixture: string; mode: ProofMode }) {
   if (mode === "EXECUTIVE") {
@@ -21,7 +22,14 @@ export function LeftRail({ proof, fixture, mode }: { proof: ProofPackage; fixtur
                     href={`/gallery?fixture=${id}&mode=${mode}`}
                     aria-current={id === fixture ? "page" : undefined}
                   >
-                    <div className="flex items-center justify-between rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2">
+                    <div
+                      className={cn(
+                        "flex items-center justify-between rounded-[var(--radius-inner)] border bg-[var(--color-bg-surface)] px-3 py-2 transition-all duration-fast ease-lux-out",
+                        id === fixture
+                          ? "border-l-2 border-l-[var(--color-accent-gold)] shadow-[0_0_12px_rgba(201,169,110,0.08)]"
+                          : "hover:bg-[var(--color-bg-hover)]",
+                      )}
+                    >
                       <span className="text-sm text-[var(--color-text-secondary)]">{id}</span>
                       {id === fixture ? <Chip tone="gold">Active</Chip> : null}
                     </div>

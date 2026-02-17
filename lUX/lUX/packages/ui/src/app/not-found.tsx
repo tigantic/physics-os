@@ -8,7 +8,8 @@ export default function NotFound() {
         <p className="text-[var(--color-text-secondary)]">Page not found</p>
         <Link
           href="/gallery"
-          className="inline-block rounded-[var(--radius-inner)] bg-[var(--color-accent-gold)] px-4 py-2 text-sm font-medium text-[var(--color-bg-base)] transition-opacity hover:opacity-90"
+          aria-label="Return to proof gallery"
+          className="inline-block rounded-[var(--radius-inner)] bg-[var(--color-accent-gold)] px-4 py-2 text-sm font-medium text-[var(--color-bg-base)] transition-colors duration-[var(--motion-fastMs)] ease-[var(--motion-easeOut)] hover:opacity-90"
         >
           Go to Gallery
         </Link>

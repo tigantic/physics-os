@@ -12,7 +12,7 @@ describe("TOKENS", () => {
   it("exports color.text tokens", () => {
     expect(TOKENS.color.text.primary).toBe("#F5F3EF");
     expect(TOKENS.color.text.secondary).toBe("#AEA9B4");
-    expect(TOKENS.color.text.tertiary).toBe("#7A7584");
+    expect(TOKENS.color.text.tertiary).toBe("#8C8798");
   });
 
   it("exports accent gold token", () => {
@@ -20,8 +20,8 @@ describe("TOKENS", () => {
   });
 
   it("exports verdict tokens", () => {
-    expect(TOKENS.color.verdict.pass).toBe("#3D8B5E");
-    expect(TOKENS.color.verdict.fail).toBe("#A8423F");
+    expect(TOKENS.color.verdict.pass).toBe("#479967");
+    expect(TOKENS.color.verdict.fail).toBe("#D65B55");
     expect(TOKENS.color.verdict.warn).toBe("#B8862D");
   });
 

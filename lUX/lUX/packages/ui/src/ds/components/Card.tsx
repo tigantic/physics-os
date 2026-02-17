@@ -5,7 +5,7 @@ export function Card({ children, className }: { children: React.ReactNode; class
   return (
     <div
       className={cn(
-        "rounded-[var(--radius-outer)] border bg-[var(--color-bg-raised)] shadow-[var(--shadow-raised)]",
+        "rounded-[var(--radius-outer)] border bg-[var(--color-bg-raised)] shadow-[var(--shadow-raised)] transition-shadow duration-base ease-lux-out hover:shadow-[var(--shadow-floating)]",
         className,
       )}
     >

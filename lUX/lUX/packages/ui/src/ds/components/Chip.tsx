@@ -19,7 +19,10 @@ export const Chip = React.memo(function Chip({
   return (
     <span
       role="status"
-      className={cn("inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium", cls)}
+      className={cn(
+        "inline-flex animate-lux-fade-in items-center rounded-md border px-2 py-0.5 text-xs font-medium",
+        cls,
+      )}
     >
       {children}
     </span>

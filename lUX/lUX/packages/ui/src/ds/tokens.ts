@@ -9,7 +9,7 @@ export const TOKENS = {
     text: {
       primary: "#F5F3EF",
       secondary: "#AEA9B4",
-      tertiary: "#7A7584",
+      tertiary: "#8C8798",
     },
     accent: {
       gold: "#C9A96E",
@@ -17,11 +17,11 @@ export const TOKENS = {
       goldBorder: "rgba(201,169,110,0.25)",
     },
     verdict: {
-      pass: "#3D8B5E",
-      fail: "#A8423F",
+      pass: "#479967",
+      fail: "#D65B55",
       warn: "#B8862D",
-      passBorder: "rgba(61,139,94,0.35)",
-      failBorder: "rgba(168,66,63,0.35)",
+      passBorder: "rgba(71,153,103,0.35)",
+      failBorder: "rgba(214,91,85,0.35)",
       warnBorder: "rgba(184,134,45,0.35)",
     },
     border: {

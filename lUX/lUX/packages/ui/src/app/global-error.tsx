@@ -1,10 +1,19 @@
 "use client";
 
+import * as React from "react";
+
 /**
  * Global error boundary — catches root layout errors.
  * Must render its own <html>/<body> since the root layout may have crashed.
+ * Uses inline styles because the root layout (and therefore CSS imports) may have crashed.
  */
 export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  const retryRef = React.useRef<HTMLButtonElement>(null);
+
+  React.useEffect(() => {
+    retryRef.current?.focus();
+  }, []);
+
   // Log for production error tracking
   console.error("[lUX] Global error boundary:", error);
 
@@ -23,6 +32,8 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
         }}
       >
         <div
+          role="alert"
+          aria-live="assertive"
           style={{
             maxWidth: 600,
             padding: 32,
@@ -31,10 +42,10 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
             background: "#141414",
           }}
         >
-          <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1, color: "#888" }}>
+          <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1, color: "#999" }}>
             Fatal Render Error
           </div>
-          <div style={{ marginTop: 8, fontSize: 18, fontWeight: 600 }}>Viewer Unrecoverable</div>
+          <h1 style={{ marginTop: 8, fontSize: 18, fontWeight: 600 }}>Viewer Unrecoverable</h1>
           <pre
             style={{
               marginTop: 16,
@@ -47,8 +58,9 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
           >
             {error.message}
           </pre>
-          {error.digest && <div style={{ marginTop: 8, fontSize: 11, color: "#666" }}>Digest: {error.digest}</div>}
+          {error.digest && <div style={{ marginTop: 8, fontSize: 11, color: "#777" }}>Digest: {error.digest}</div>}
           <button
+            ref={retryRef}
             type="button"
             onClick={reset}
             style={{

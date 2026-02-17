@@ -30,7 +30,7 @@ export function VerdictSeal({
     <div
       role="status"
       aria-label={`Verdict: ${status}, Verification: ${verification}`}
-      className="flex items-center gap-2"
+      className="flex animate-lux-scale-in items-center gap-2"
     >
       <Badge variant={s}>{status}</Badge>
       <Badge variant={v}>{verification}</Badge>

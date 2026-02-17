@@ -5,13 +5,16 @@ import { CopyField } from "@/ds/components/CopyField";
 export function IdentityStrip({ proof }: { proof: ProofPackage }) {
   const verification = proof.verification?.status ?? "UNVERIFIED";
   return (
-    <header className="sticky top-0 z-50 border-b bg-[var(--color-bg-base)]">
+    <header
+      aria-label="Proof identity"
+      className="bg-[var(--color-bg-base)]/95 sticky top-0 z-50 border-b border-b-[var(--color-border-base)] backdrop-blur-sm"
+    >
       <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-3 px-4 py-3 md:gap-6 md:px-6 md:py-4">
         <div className="min-w-0">
           <div className="text-xs uppercase tracking-wider text-[var(--color-text-tertiary)]">
             Luxury Physics Viewer
           </div>
-          <h1 className="truncate text-lg font-semibold text-[var(--color-text-primary)]">
+          <h1 className="animate-lux-slide-up truncate text-lg font-semibold text-[var(--color-text-primary)]">
             {proof.meta.project_id} · {proof.meta.domain_id}
           </h1>
         </div>

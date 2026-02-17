@@ -1,6 +1,7 @@
 import type { ProofPackage } from "@luxury/core";
 import { Card, CardContent, CardHeader } from "@/ds/components/Card";
 import { CopyField } from "@/ds/components/CopyField";
+import { cn } from "@/config/utils";
 
 export function RightRail({ proof }: { proof: ProofPackage }) {
   const v = proof.verification?.status ?? "UNVERIFIED";
@@ -9,7 +10,20 @@ export function RightRail({ proof }: { proof: ProofPackage }) {
       <Card>
         <CardHeader>
           <div className="text-sm text-[var(--color-text-primary)]">Integrity</div>
-          <div className="text-xs text-[var(--color-text-tertiary)]">{v}</div>
+          <div className="flex items-center gap-2 text-xs text-[var(--color-text-tertiary)]">
+            <span
+              className={cn(
+                "inline-block h-1.5 w-1.5 rounded-full",
+                v === "VERIFIED"
+                  ? "bg-[var(--color-verdict-pass)]"
+                  : v === "BROKEN_CHAIN"
+                    ? "bg-[var(--color-verdict-fail)]"
+                    : "bg-[var(--color-text-tertiary)]",
+              )}
+              aria-hidden="true"
+            />
+            {v}
+          </div>
         </CardHeader>
         <CardContent className="space-y-3">
           <CopyField label="Merkle Root" value={proof.attestation.merkle_root} />

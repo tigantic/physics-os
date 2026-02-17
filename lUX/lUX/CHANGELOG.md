@@ -5,6 +5,25 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — Pass 7
+
+- **Phase 1 — Accessibility & Compliance**:
+  - **WCAG AA color contrast remediation**: `--color-verdict-fail` `#A8423F` → `#D65B55` (4.71:1), `--color-verdict-pass` `#3D8B5E` → `#479967` (5.17:1), `--color-text-tertiary` `#7A7584` → `#8C8798` (5.18:1). All ratios verified against both `#0D0D10` (base) and `#16161B` (raised) backgrounds.
+  - **ARIA gap closure** (7 components): `error.tsx` and `global-error.tsx` get `role="alert"`, `aria-live="assertive"`, auto-focus retry via `useRef`+`useEffect`, semantic `<h1>`. `loading.tsx` gets `role="status"`, `aria-busy`, sr-only text. `not-found.tsx` gets `aria-label` on return link. `IdentityStrip` gets `aria-label="Proof identity"`. `TimeSeriesViewer` SVG gets `role="img"` + `aria-label`.
+  - **Security headers**: HSTS (`max-age=63072000; includeSubDomains; preload`), `Cross-Origin-Opener-Policy: same-origin`, `X-DNS-Prefetch-Control: off` added to CSP middleware.
+- **Phase 2 — Motion System & Visual Polish**:
+  - **Motion tokens wired to Tailwind**: `ease-lux-out` (0.16,1,0.3,1), `ease-lux-in-out` (0.65,0,0.35,1), `duration-fast` (180ms), `duration-base` (220ms).
+  - **CSS keyframes + animations**: `lux-fade-in`, `lux-slide-up`, `lux-scale-in`, `lux-shimmer`, `lux-disclosure-open` — all respect `prefers-reduced-motion`.
+  - **Component animations**: Disclosure (animated reveal), Card (hover shadow elevation), VerdictSeal (entrance scale), Chip (entrance fade), MarginBar (token duration), Button (transition-all), Badge (transition-colors), CopyField (copy-state transition), ModeDial (active tab ring + glow), IdentityStrip (backdrop-blur + slide-up h1), LeftRail (active gold border accent), RightRail (colored status dot indicator).
+  - **Shimmer skeletons**: All `animate-pulse` replaced with directional gradient sweep (`lux-shimmer-bg animate-lux-shimmer`) in `loading.tsx`, `gallery/loading.tsx`, `ProofWorkspace.tsx`.
+- **33 new unit tests** (455 total: 237 core + 218 UI):
+  - `rootError.test.tsx` (8): role=alert, aria-live, h1 heading, error display, label, retry button, digest present/absent.
+  - `globalError.test.tsx` (8): role=alert, aria-live, h1 heading, error display, label, retry button, digest present/absent.
+  - `rootLoading.test.tsx` (4): role=status, aria-busy, aria-label, sr-only text.
+  - `notFound.test.tsx` (4): 404 heading, description, gallery link aria-label, main landmark.
+  - `middleware.test.ts` (9): CSP nonce, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, HSTS, COOP, DNS-Prefetch, unique nonce per request.
+- **UI coverage**: 78.49% → **86.94%** statements (70% threshold).
+
 ### Added — Pass 6
 
 - **Coverage fix**: UI coverage raised from 61% → 78.5% (threshold 70%), CI green.

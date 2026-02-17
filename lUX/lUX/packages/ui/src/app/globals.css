@@ -21,9 +21,37 @@ body {
   border-color: var(--color-border-base);
 }
 
+/* ── Shimmer gradient for skeleton placeholders ── */
+.lux-shimmer-bg {
+  background: linear-gradient(90deg, var(--color-bg-raised) 25%, var(--color-bg-hover) 50%, var(--color-bg-raised) 75%);
+  background-size: 200% 100%;
+}
+
+/* ── Disclosure height animation ── */
+.lux-disclosure-enter {
+  animation: lux-disclosure-open 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  overflow: hidden;
+}
+
+@keyframes lux-disclosure-open {
+  0% {
+    opacity: 0;
+    max-height: 0;
+  }
+
+  100% {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+/* ── Reduced motion: respect user preference ── */
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }

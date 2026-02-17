@@ -30,7 +30,10 @@ export const CopyField = React.memo(function CopyField({ label, value }: { label
         size="sm"
         onClick={onCopy}
         aria-label={`Copy ${label}`}
-        className={cn(copied ? "text-[var(--color-accent-gold)]" : error ? "text-[var(--color-verdict-fail)]" : "")}
+        className={cn(
+          "transition-colors duration-fast ease-lux-out",
+          copied ? "text-[var(--color-accent-gold)]" : error ? "text-[var(--color-verdict-fail)]" : "",
+        )}
       >
         <span aria-live="polite">{copied ? "Copied" : error ? "Failed" : "Copy"}</span>
       </Button>

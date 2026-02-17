@@ -31,7 +31,10 @@ export const MarginBar = React.memo(function MarginBar({ margin }: { margin: Dat
         aria-valuemax={100}
         className="h-2 w-full overflow-hidden rounded-full border border-[var(--color-border-base)] bg-[var(--color-bg-surface)]"
       >
-        <div className="h-full transition-all duration-200" style={{ width: `${pct * 100}%`, backgroundColor: tone }} />
+        <div
+          className="h-full transition-all duration-base ease-lux-out"
+          style={{ width: `${pct * 100}%`, backgroundColor: tone }}
+        />
       </div>
       <div className="mt-1 flex items-center justify-between">
         <span className="font-mono text-xs text-[var(--color-text-tertiary)]">{(val * 100).toFixed(1)}%</span>

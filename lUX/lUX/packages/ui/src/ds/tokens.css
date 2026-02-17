@@ -10,11 +10,11 @@
   --color-border-base: rgba(255, 255, 255, 0.06);
   --color-text-primary: #f5f3ef;
   --color-text-secondary: #aea9b4;
-  --color-text-tertiary: #7a7584;
-  --color-verdict-fail: #a8423f;
-  --color-verdict-failBorder: rgba(168, 66, 63, 0.35);
-  --color-verdict-pass: #3d8b5e;
-  --color-verdict-passBorder: rgba(61, 139, 94, 0.35);
+  --color-text-tertiary: #8c8798;
+  --color-verdict-fail: #d65b55;
+  --color-verdict-failBorder: rgba(214, 91, 85, 0.35);
+  --color-verdict-pass: #479967;
+  --color-verdict-passBorder: rgba(71, 153, 103, 0.35);
   --color-verdict-warn: #b8862d;
   --color-verdict-warnBorder: rgba(184, 134, 45, 0.35);
   --motion-baseMs: 220;
