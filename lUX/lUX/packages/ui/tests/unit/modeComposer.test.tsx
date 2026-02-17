@@ -90,4 +90,36 @@ describe("renderCenterScreens", () => {
     expect(Array.isArray(elements)).toBe(true);
     expect(elements).toHaveLength(3);
   });
+
+  it("returns elements for PUBLICATION mode", () => {
+    const elements = renderCenterScreens(makeCtx("PUBLICATION"));
+    // PUBLICATION center: ["PaperView", "FigureStaging"] => 2 elements
+    expect(Array.isArray(elements)).toBe(true);
+    expect(elements).toHaveLength(2);
+  });
+
+  it("AUDIT mode includes ManifestViewer with gate manifests", () => {
+    const proofWithManifests: ProofPackage = {
+      ...mockProof,
+      gate_manifests: {
+        "audit-v1": {
+          id: "audit-v1",
+          version: "1.0.0",
+          gates: {},
+        },
+      },
+    };
+    const ctx = { proof: proofWithManifests, domain: mockDomain, bundleDir: "/tmp/bundle", mode: "AUDIT" as ProofMode };
+    const elements = renderCenterScreens(ctx);
+    expect(elements.length).toBe(3);
+  });
+
+  it("all elements have unique keys", () => {
+    for (const mode of ["EXECUTIVE", "REVIEW", "AUDIT", "PUBLICATION"] as ProofMode[]) {
+      const elements = renderCenterScreens(makeCtx(mode));
+      const keys = elements.map((el) => el.key);
+      const unique = new Set(keys);
+      expect(unique.size).toBe(keys.length);
+    }
+  });
 });

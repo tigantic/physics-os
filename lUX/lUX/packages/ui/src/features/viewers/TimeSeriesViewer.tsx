@@ -5,39 +5,7 @@ import path from "node:path";
 import type { ProofPackage } from "@luxury/core";
 import { Card, CardContent, CardHeader } from "@/ds/components/Card";
 import { Chip } from "@/ds/components/Chip";
-
-function parseCsv(bytes: Uint8Array): Array<{ x: number; y: number }> {
-  const txt = new TextDecoder().decode(bytes).trim();
-  const lines = txt.split("\n").slice(1);
-  const pts: Array<{ x: number; y: number }> = [];
-  for (const line of lines) {
-    const [a, b] = line.split(",");
-    const x = Number(a);
-    const y = Number(b);
-    if (Number.isFinite(x) && Number.isFinite(y)) pts.push({ x, y });
-  }
-  return pts;
-}
-
-function sparkline(points: Array<{ x: number; y: number }>, w = 560, h = 120) {
-  if (points.length < 2) return "";
-  const ys = points.map((p) => p.y);
-  const minY = Math.min(...ys);
-  const maxY = Math.max(...ys);
-  const dx = points.length - 1;
-  const scaleY = (v: number) => {
-    if (maxY === minY) return h / 2;
-    return h - ((v - minY) / (maxY - minY)) * h;
-  };
-  const pathD = points
-    .map((p, i) => {
-      const x = (i / dx) * w;
-      const y = scaleY(p.y);
-      return `${i === 0 ? "M" : "L"} ${x.toFixed(2)} ${y.toFixed(2)}`;
-    })
-    .join(" ");
-  return pathD;
-}
+import { parseCsv, sparkline } from "./sparkline";
 
 export async function TimeSeriesViewer({
   proof,

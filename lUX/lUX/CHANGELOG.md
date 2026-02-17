@@ -5,6 +5,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — Pass 6
+
+- **Coverage fix**: UI coverage raised from 61% → 78.5% (threshold 70%), CI green.
+- **Sparkline extraction**: Pure functions `parseCsv()` and `sparkline()` extracted from `TimeSeriesViewer.tsx` into standalone `sparkline.ts` module for testability.
+- **53 new unit tests** (422 total: 237 core + 185 UI):
+  - `sparkline.test.ts` (12 tests): CSV parsing (valid, non-finite, header-only, empty, Infinity/NaN, negatives), sparkline SVG generation (empty, 2-point, 3+ point, flat data, custom dimensions, y-clamping).
+  - `tokens.test.ts` (9 tests): All color tokens, radius, motion, type, shadow, space, structural validation.
+  - `galleryError.test.tsx` (7 tests): Error message, heading, Render Halted label, role=alert, retry button, digest present/absent.
+  - `galleryLoading.test.tsx` (5 tests): role=status, aria-busy, screen reader text, main-content id, 4 skeleton pills.
+  - `modeDial.test.tsx` expanded (5 → 12): Click navigation with pushMock, ArrowRight/Left/Home/End keyboard handlers, URL fixture preservation, active tabIndex.
+  - `rightRail.test.tsx` expanded (4 → 9): Commit CopyField, aside aria-label, failures list (DIGEST_MISMATCH, MISSING_ARTIFACT), empty failures, UNVERIFIED fallback.
+  - `modeComposer.test.tsx` expanded (3 → 6): PUBLICATION mode, AUDIT with gate manifests, unique keys across all 4 modes.
+  - `proofWorkspace.test.tsx` expanded (3 → 8): Fixture label, ModeDial tablist, VerdictSeal status, CenterCanvas tabpanel, RightRail integrity.
+- **ROADMAP.md**: Comprehensive 7-phase production roadmap — accessibility, motion system, responsive precision, data layer, observability, performance, deployment. Includes appendices for Storybook plan, coverage targets, design token inventory, file inventory, and decision log.
+
 ### Added — Pass 5
 
 - **Type guards**: `isMode()` and `isProofMode()` replace unsafe `as` casts in ModeDial and gallery page.

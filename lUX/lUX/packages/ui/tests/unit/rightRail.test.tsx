@@ -49,4 +49,50 @@ describe("RightRail", () => {
     render(<RightRail proof={mockProof} />);
     expect(screen.getByText("VERIFIED")).toBeInTheDocument();
   });
+
+  it("renders commit hash CopyField", () => {
+    render(<RightRail proof={mockProof} />);
+    expect(screen.getByText("Commit")).toBeInTheDocument();
+    expect(screen.getByText("abc123")).toBeInTheDocument();
+  });
+
+  it("renders aside with aria-label", () => {
+    const { container } = render(<RightRail proof={mockProof} />);
+    const aside = container.querySelector("aside");
+    expect(aside).toBeTruthy();
+    expect(aside?.getAttribute("aria-label")).toBe("Integrity details");
+  });
+
+  it("renders failures list when verification has failures", () => {
+    const failProof: ProofPackage = {
+      ...mockProof,
+      verification: {
+        status: "BROKEN_CHAIN",
+        verifier_version: "0.1.0",
+        failures: [
+          { code: "DIGEST_MISMATCH", artifact_id: "A-ts", message: "Hash mismatch" },
+          { code: "MISSING_ARTIFACT", message: "Artifact not found" },
+        ],
+      },
+    };
+    render(<RightRail proof={failProof} />);
+    expect(screen.getByText("Failures")).toBeInTheDocument();
+    expect(screen.getByText(/DIGEST_MISMATCH/)).toBeInTheDocument();
+    expect(screen.getByText(/\(A-ts\)/)).toBeInTheDocument();
+    expect(screen.getByText(/MISSING_ARTIFACT/)).toBeInTheDocument();
+  });
+
+  it("does not render failures section when empty", () => {
+    render(<RightRail proof={mockProof} />);
+    expect(screen.queryByText("Failures")).not.toBeInTheDocument();
+  });
+
+  it("falls back to UNVERIFIED when no verification object", () => {
+    const noVerify: ProofPackage = {
+      ...mockProof,
+      verification: undefined as unknown as ProofPackage["verification"],
+    };
+    render(<RightRail proof={noVerify} />);
+    expect(screen.getByText("UNVERIFIED")).toBeInTheDocument();
+  });
 });

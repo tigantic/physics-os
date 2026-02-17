@@ -80,43 +80,53 @@ const mockDomain: DomainPack = {
 };
 
 describe("ProofWorkspace", () => {
+  const defaultProps = {
+    proof: mockProof,
+    domain: mockDomain,
+    fixture: "pass",
+    mode: "REVIEW" as ProofMode,
+    bundleDir: "/tmp/bundle",
+  };
+
   it("renders IdentityStrip with project heading", () => {
-    render(
-      <ProofWorkspace
-        proof={mockProof}
-        domain={mockDomain}
-        fixture="pass"
-        mode={"REVIEW" as ProofMode}
-        bundleDir="/tmp/bundle"
-      />,
-    );
+    render(<ProofWorkspace {...defaultProps} />);
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("hydro-sim · fluid_dynamics");
   });
 
   it('renders id="main-content"', () => {
-    const { container } = render(
-      <ProofWorkspace
-        proof={mockProof}
-        domain={mockDomain}
-        fixture="pass"
-        mode={"REVIEW" as ProofMode}
-        bundleDir="/tmp/bundle"
-      />,
-    );
+    const { container } = render(<ProofWorkspace {...defaultProps} />);
     expect(container.querySelector("#main-content")).toBeInTheDocument();
   });
 
   it("contains Suspense boundary (renders without crashing)", () => {
-    expect(() =>
-      render(
-        <ProofWorkspace
-          proof={mockProof}
-          domain={mockDomain}
-          fixture="pass"
-          mode={"REVIEW" as ProofMode}
-          bundleDir="/tmp/bundle"
-        />,
-      ),
-    ).not.toThrow();
+    expect(() => render(<ProofWorkspace {...defaultProps} />)).not.toThrow();
+  });
+
+  it("renders fixture label", () => {
+    render(<ProofWorkspace {...defaultProps} />);
+    expect(screen.getByText("pass")).toBeInTheDocument();
+  });
+
+  it("renders ModeDial tablist", () => {
+    render(<ProofWorkspace {...defaultProps} />);
+    expect(screen.getByRole("tablist")).toBeInTheDocument();
+  });
+
+  it("renders VerdictSeal status", () => {
+    render(<ProofWorkspace {...defaultProps} />);
+    expect(screen.getByText("PASS")).toBeInTheDocument();
+    // "VERIFIED" appears in multiple components (VerdictSeal, IdentityStrip, RightRail)
+    const verifiedEls = screen.getAllByText("VERIFIED");
+    expect(verifiedEls.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("renders CenterCanvas tabpanel", () => {
+    render(<ProofWorkspace {...defaultProps} />);
+    expect(screen.getByRole("tabpanel")).toBeInTheDocument();
+  });
+
+  it("renders RightRail integrity section", () => {
+    render(<ProofWorkspace {...defaultProps} />);
+    expect(screen.getByText("Integrity")).toBeInTheDocument();
   });
 });
