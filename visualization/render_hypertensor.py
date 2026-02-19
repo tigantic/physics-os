@@ -103,18 +103,18 @@ QUALITY_PRESETS = {
         "title_frames": 45,
     },
     "final": {
-        "samples": 512,
+        "samples": 128,
         "resolution_x": 1920,
         "resolution_y": 1080,
-        "volume_step_rate": 0.1,
-        "volume_max_steps": 1024,
+        "volume_step_rate": 0.5,
+        "volume_max_steps": 256,
         "use_denoising": True,
         "fps": 30,
-        "vortex_frames": 300,
-        "flame_frames": 180,
-        "bars_frames": 150,
-        "bench_frames": 120,
-        "title_frames": 60,
+        "vortex_frames": 120,
+        "flame_frames": 90,
+        "bars_frames": 60,
+        "bench_frames": 48,
+        "title_frames": 30,
     },
 }
 
@@ -216,16 +216,18 @@ def setup_cycles(scene: bpy.types.Scene) -> None:
         scene.cycles.denoising_input_passes = "RGB_ALBEDO_NORMAL"
     scene.cycles.volume_step_rate = CFG["volume_step_rate"]
     scene.cycles.volume_max_steps = CFG["volume_max_steps"]
-    scene.cycles.volume_bounces = 4
-    scene.cycles.max_bounces = 12
-    scene.cycles.diffuse_bounces = 4
-    scene.cycles.glossy_bounces = 4
-    scene.cycles.transmission_bounces = 8
-    scene.cycles.transparent_max_bounces = 8
+    scene.cycles.volume_bounces = 2
+    scene.cycles.max_bounces = 8
+    scene.cycles.diffuse_bounces = 3
+    scene.cycles.glossy_bounces = 3
+    scene.cycles.transmission_bounces = 6
+    scene.cycles.transparent_max_bounces = 6
     scene.cycles.use_fast_gi = False
     scene.cycles.film_exposure = 1.0
     scene.cycles.caustics_reflective = False
     scene.cycles.caustics_refractive = False
+    scene.cycles.scrambling_distance = 0.8
+    scene.cycles.use_light_tree = True
 
     # Film
     scene.render.film_transparent = False
@@ -234,7 +236,7 @@ def setup_cycles(scene: bpy.types.Scene) -> None:
     scene.render.resolution_percentage = 100
     scene.render.image_settings.file_format = "PNG"
     scene.render.image_settings.color_mode = "RGBA"
-    scene.render.image_settings.color_depth = "16"
+    scene.render.image_settings.color_depth = "8"
     scene.render.image_settings.compression = 15
 
     # Color management — Filmic for HDR tonemapping
@@ -246,7 +248,8 @@ def setup_cycles(scene: bpy.types.Scene) -> None:
     # Performance
     scene.render.use_persistent_data = True
     scene.cycles.use_adaptive_sampling = True
-    scene.cycles.adaptive_threshold = 0.005
+    scene.cycles.adaptive_threshold = 0.02
+    scene.cycles.adaptive_min_samples = 16
 
     # FPS
     scene.render.fps = CFG["fps"]

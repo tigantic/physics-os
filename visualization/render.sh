@@ -165,16 +165,34 @@ if command -v ffmpeg &>/dev/null; then
 
     VIDEO_OUT="${OUTPUT_DIR}/hypertensor_visualization.mp4"
 
-    ffmpeg -y \
-        -framerate "$FPS" \
-        -i "${OUTPUT_DIR}/frames/frame_%04d.png" \
-        -c:v libx265 \
-        -crf 18 \
-        -preset slow \
-        -pix_fmt yuv420p \
-        -movflags +faststart \
-        -tag:v hvc1 \
-        "$VIDEO_OUT" 2>&1
+    # Try NVENC hardware encoder first (GPU), fall back to software x265
+    if ffmpeg -hide_banner -encoders 2>/dev/null | grep -q hevc_nvenc; then
+        echo "  Using NVENC hardware encoder (GPU-accelerated)"
+        ffmpeg -y \
+            -framerate "$FPS" \
+            -i "${OUTPUT_DIR}/frames/frame_%04d.png" \
+            -c:v hevc_nvenc \
+            -preset p7 \
+            -rc vbr \
+            -cq 20 \
+            -b:v 0 \
+            -pix_fmt yuv420p \
+            -movflags +faststart \
+            -tag:v hvc1 \
+            "$VIDEO_OUT" 2>&1
+    else
+        echo "  Using software x265 encoder"
+        ffmpeg -y \
+            -framerate "$FPS" \
+            -i "${OUTPUT_DIR}/frames/frame_%04d.png" \
+            -c:v libx265 \
+            -crf 18 \
+            -preset medium \
+            -pix_fmt yuv420p \
+            -movflags +faststart \
+            -tag:v hvc1 \
+            "$VIDEO_OUT" 2>&1
+    fi
 
     if [[ -f "$VIDEO_OUT" ]]; then
         VIDEO_SIZE=$(du -h "$VIDEO_OUT" | cut -f1)
