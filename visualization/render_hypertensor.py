@@ -239,27 +239,33 @@ def setup_gpu() -> str:
 # converges faster, so it gets fewer samples and coarser volume stepping.
 _SCENE_OVERRIDES: Dict[int, Dict[str, Any]] = {
     # Scene 1 — Taylor-Green Vortex
+    # Emission-dominated volumetric: indirect diffuse is negligible.
     1: {
         "max_bounces": 4,
         "diffuse_bounces": 1,
         "glossy_bounces": 1,
         "transmission_bounces": 1,
         "transparent_max_bounces": 2,
-        "volume_bounces": 2,       # Multi-scatter through volume tubes
+        "volume_bounces": 2,           # Multi-scatter through volume tubes
         "adaptive_threshold": 0.025,
+        "adaptive_min_samples": 8,     # Let adaptive kick in sooner
+        "use_fast_gi": True,           # Approximate indirect (invisible for emission)
     },
     # Scene 2 — Combustion Flame
+    # Thin slab geometry with 1D temperature profile — converges fast.
     2: {
         "max_bounces": 4,
         "diffuse_bounces": 1,
         "glossy_bounces": 1,
-        "transmission_bounces": 2,  # Glass chamber
+        "transmission_bounces": 2,     # Glass chamber
         "transparent_max_bounces": 2,
-        "volume_bounces": 1,       # Single-scatter flame
-        "volume_step_rate": 0.7,    # Coarser steps (slab, not 3D)
-        "volume_max_steps": 128,    # Thin slab (0.4u depth vs 2.0u vortex cube)
+        "volume_bounces": 1,           # Single-scatter flame
+        "volume_step_rate": 0.7,       # Coarser steps (slab, not 3D)
+        "volume_max_steps": 128,       # Thin slab (0.4u depth vs 2.0u vortex cube)
         "adaptive_threshold": 0.03,
-        "samples_override": 96,     # Converges faster than vortex
+        "adaptive_min_samples": 8,     # Let adaptive kick in sooner
+        "use_fast_gi": True,           # Approximate indirect (invisible for emission)
+        "samples_override": 96,        # Converges faster than vortex
     },
 }
 
@@ -306,7 +312,7 @@ def setup_cycles(scene: bpy.types.Scene, scene_id: int = -1) -> None:
     scene.render.image_settings.file_format = "PNG"
     scene.render.image_settings.color_mode = "RGBA"
     scene.render.image_settings.color_depth = "8"
-    scene.render.image_settings.compression = 15
+    scene.render.image_settings.compression = 0  # No PNG compression (saves CPU per frame)
 
     # Color management — Filmic for HDR tonemapping
     scene.view_settings.view_transform = "Filmic"
@@ -333,6 +339,10 @@ def setup_cycles(scene: bpy.types.Scene, scene_id: int = -1) -> None:
                 scene.cycles.volume_step_rate = val
             elif key == "adaptive_threshold":
                 scene.cycles.adaptive_threshold = val
+            elif key == "adaptive_min_samples":
+                scene.cycles.adaptive_min_samples = val
+            elif key == "use_fast_gi":
+                scene.cycles.use_fast_gi = val
             elif hasattr(scene.cycles, key):
                 setattr(scene.cycles, key, val)
         applied = ", ".join(f"{k}={v}" for k, v in overrides.items())

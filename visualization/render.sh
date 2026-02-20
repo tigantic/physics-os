@@ -8,14 +8,14 @@
 #
 # Scene filter presets:
 #   all       — All 6 scenes (intro, vortex, flame, compression, benchmarks, end)
-#   physics   — Physics scenes only (vortex + flame), with ffmpeg title/end overlays
+#   physics   — Physics scenes only (vortex + flame)
 #   1,2       — Comma-separated scene numbers (0=intro, 1=vortex, 2=flame, ...)
 #
 # Examples:
 #   ./visualization/render.sh test          # Quick test render (640x360, 16 spp)
 #   ./visualization/render.sh preview       # Preview render (960x540, 64 spp)
-#   ./visualization/render.sh final         # Production render (1920x1080, 128 spp, ~46 min)
-#   ./visualization/render.sh final physics # Physics only (~33 min), charts go in report
+#   ./visualization/render.sh final         # Production render (1920x1080, 128 spp)
+#   ./visualization/render.sh final physics # Physics only (vortex + flame), charts go in report
 #   ./visualization/render.sh test 1        # Only render Scene 1 (vortex)
 #   ./visualization/render.sh final 1,2     # Render scenes 1 and 2 only
 #
@@ -40,9 +40,9 @@ OUTPUT_DIR="${REPO_ROOT}/visualization/output"
 RESULTS_JSON="${REPO_ROOT}/results/industrial_qtt_gpu_simulation_results.json"
 
 # ─── Resolve scene filter presets ──────────────────────────────────
-# "physics" renders only volumetric scenes (vortex + flame) and adds
-# ffmpeg-burned title/end cards so the video still looks complete
-# without spending GPU time on Cycles-rendered text overlays.
+# "physics" renders only the volumetric scenes (vortex + flame).
+# Data campaigns (compression bars, kernel benchmarks) go in the
+# auto-generated static report instead.
 PHYSICS_ONLY=false
 case "$SCENE_FILTER" in
     physics)
@@ -243,92 +243,8 @@ if command -v ffmpeg &>/dev/null; then
         exit 1
     fi
 
-    # ─── Physics-only: prepend title card + append end card ────────
-    # When rendering only the volumetric scenes, ffmpeg burns in a
-    # dark title/end card so the video still opens and closes cleanly
-    # without spending Cycles GPU time on text-only frames.
-
-    if [[ "$PHYSICS_ONLY" == "true" ]]; then
-        echo ""
-        echo "Adding title/end cards via ffmpeg..."
-
-        # Determine render resolution from first frame
-        FIRST_FRAME=$(find "${OUTPUT_DIR}/frames" -name "frame_*.png" -type f | sort | head -1)
-        if [[ -n "$FIRST_FRAME" ]]; then
-            FRAME_RES=$(ffprobe -v error -select_streams v:0 \
-                -show_entries stream=width,height \
-                -of csv=s=x:p=0 "$FIRST_FRAME" 2>/dev/null || echo "1920x1080")
-            RES_W="${FRAME_RES%%x*}"
-            RES_H="${FRAME_RES##*x}"
-        else
-            RES_W=1920; RES_H=1080
-        fi
-
-        TITLE_DURATION=3
-        END_DURATION=3
-
-        # Proportional font sizes based on render height
-        TITLE_FONT_SIZE=$((RES_H / 12))
-        SUBTITLE_FONT_SIZE=$((RES_H / 30))
-        END_FONT_SIZE=$((RES_H / 18))
-        END_SUB_SIZE=$((RES_H / 36))
-
-        # Title card: dark background with centered text (drawtext filter)
-        # Encode with libx265 10-bit to match the main video for lossless concat.
-        TITLE_CARD="${OUTPUT_DIR}/title_card.mp4"
-        ffmpeg -y \
-            -f lavfi -i "color=c=0x0A0E14:s=${RES_W}x${RES_H}:d=${TITLE_DURATION}:r=${FPS}" \
-            -vf "drawtext=text='HyperTensor-VM':fontcolor=0x58D5E3:fontsize=${TITLE_FONT_SIZE}:\
-x=(w-text_w)/2:y=(h-text_h)/2-${SUBTITLE_FONT_SIZE},\
-drawtext=text='Industrial QTT/GPU Simulation':fontcolor=0xE6EDF3:fontsize=${SUBTITLE_FONT_SIZE}:\
-x=(w-text_w)/2:y=(h/2)+${SUBTITLE_FONT_SIZE}" \
-            -c:v libx265 -crf 18 -preset fast -pix_fmt yuv420p10le \
-            -tag:v hvc1 -r "$FPS" \
-            "$TITLE_CARD" 2>&1
-
-        # End card
-        END_CARD="${OUTPUT_DIR}/end_card.mp4"
-        ffmpeg -y \
-            -f lavfi -i "color=c=0x0A0E14:s=${RES_W}x${RES_H}:d=${END_DURATION}:r=${FPS}" \
-            -vf "drawtext=text='HyperTensor-VM':fontcolor=0x58D5E3:fontsize=${END_FONT_SIZE}:\
-x=(w-text_w)/2:y=(h-text_h)/2-${END_SUB_SIZE},\
-drawtext=text='github.com/tigantic/HyperTensor-VM':fontcolor=0x8B949E:fontsize=${END_SUB_SIZE}:\
-x=(w-text_w)/2:y=(h/2)+${END_SUB_SIZE}" \
-            -c:v libx265 -crf 18 -preset fast -pix_fmt yuv420p10le \
-            -tag:v hvc1 -r "$FPS" \
-            "$END_CARD" 2>&1
-
-        # Re-encode main video to matching codec/profile for concat
-        MAIN_COMPAT="${OUTPUT_DIR}/main_compat.mp4"
-        ffmpeg -y -i "$VIDEO_OUT" \
-            -c:v libx265 -crf 18 -preset fast -pix_fmt yuv420p10le \
-            -tag:v hvc1 -r "$FPS" \
-            "$MAIN_COMPAT" 2>&1
-
-        # Concatenate: title + main + end
-        CONCAT_LIST="${OUTPUT_DIR}/concat_list.txt"
-        echo "file '$(basename "$TITLE_CARD")'" > "$CONCAT_LIST"
-        echo "file '$(basename "$MAIN_COMPAT")'" >> "$CONCAT_LIST"
-        echo "file '$(basename "$END_CARD")'" >> "$CONCAT_LIST"
-
-        FINAL_OUT="${OUTPUT_DIR}/hypertensor_physics.mp4"
-        ffmpeg -y -f concat -safe 0 -i "$CONCAT_LIST" \
-            -c copy \
-            -movflags +faststart \
-            "$FINAL_OUT" 2>&1
-
-        # Cleanup intermediate files
-        rm -f "$TITLE_CARD" "$END_CARD" "$MAIN_COMPAT" "$CONCAT_LIST"
-
-        VIDEO_OUT="$FINAL_OUT"
-        echo "  Title/end cards added successfully"
-    fi
-
     VIDEO_SIZE=$(du -h "$VIDEO_OUT" | cut -f1)
     VIDEO_DURATION_SEC=$((FRAME_COUNT / FPS))
-    if [[ "$PHYSICS_ONLY" == "true" ]]; then
-        VIDEO_DURATION_SEC=$((VIDEO_DURATION_SEC + 6))  # +3s title +3s end
-    fi
 
     echo ""
     echo "═══════════════════════════════════════════════════════════════"
@@ -339,9 +255,6 @@ x=(w-text_w)/2:y=(h/2)+${END_SUB_SIZE}" \
     echo "  FPS:      ${FPS}"
     echo "  Duration: ~${VIDEO_DURATION_SEC}s"
     echo "  Render:   ${RENDER_DURATION}s"
-    if [[ "$PHYSICS_ONLY" == "true" ]]; then
-        echo "  Mode:     Physics-only (title/end cards added via ffmpeg)"
-    fi
     echo "═══════════════════════════════════════════════════════════════"
 else
     echo ""
