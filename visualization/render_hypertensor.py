@@ -96,8 +96,8 @@ QUALITY_PRESETS = {
         "volume_max_steps": 512,
         "use_denoising": True,
         "fps": 30,
-        "vortex_frames": 150,
-        "flame_frames": 90,
+        "vortex_frames": 120,
+        "flame_frames": 75,
         "bars_frames": 90,
         "bench_frames": 60,
         "title_frames": 45,
@@ -110,7 +110,7 @@ QUALITY_PRESETS = {
         "volume_max_steps": 256,
         "use_denoising": True,
         "fps": 30,
-        "vortex_frames": 120,
+        "vortex_frames": 105,
         "flame_frames": 90,
         "bars_frames": 60,
         "bench_frames": 48,
@@ -233,8 +233,44 @@ def setup_gpu() -> str:
     return "CPU"
 
 
-def setup_cycles(scene: bpy.types.Scene) -> None:
-    """Configure Cycles renderer with production settings."""
+# Per-scene Cycles overrides. Volumetric physics scenes are emission-dominated
+# with no complex BxDF chains, so bounce limits can be drastically reduced.
+# The flame is a 1D-texture slab (simpler than the 3D procedural vortex) and
+# converges faster, so it gets fewer samples and coarser volume stepping.
+_SCENE_OVERRIDES: Dict[int, Dict[str, Any]] = {
+    # Scene 1 — Taylor-Green Vortex
+    1: {
+        "max_bounces": 4,
+        "diffuse_bounces": 1,
+        "glossy_bounces": 1,
+        "transmission_bounces": 1,
+        "transparent_max_bounces": 2,
+        "volume_bounces": 2,       # Multi-scatter through volume tubes
+        "adaptive_threshold": 0.025,
+    },
+    # Scene 2 — Combustion Flame
+    2: {
+        "max_bounces": 4,
+        "diffuse_bounces": 1,
+        "glossy_bounces": 1,
+        "transmission_bounces": 2,  # Glass chamber
+        "transparent_max_bounces": 2,
+        "volume_bounces": 1,       # Single-scatter flame
+        "volume_step_rate": 0.7,    # Coarser steps (slab, not 3D)
+        "volume_max_steps": 128,    # Thin slab (0.4u depth vs 2.0u vortex cube)
+        "adaptive_threshold": 0.03,
+        "samples_override": 96,     # Converges faster than vortex
+    },
+}
+
+
+def setup_cycles(scene: bpy.types.Scene, scene_id: int = -1) -> None:
+    """Configure Cycles renderer with production settings.
+
+    If *scene_id* is provided, per-scene overrides are applied for
+    bounce limits, adaptive sampling, and volume stepping — giving
+    measurable speedups without visible quality loss.
+    """
     scene.render.engine = "CYCLES"
     scene.cycles.device = "GPU"
     scene.cycles.samples = CFG["samples"]
@@ -286,6 +322,21 @@ def setup_cycles(scene: bpy.types.Scene) -> None:
 
     # FPS
     scene.render.fps = CFG["fps"]
+
+    # ── Per-scene overrides ─────────────────────────────────────
+    overrides = _SCENE_OVERRIDES.get(scene_id, {})
+    if overrides:
+        for key, val in overrides.items():
+            if key == "samples_override":
+                scene.cycles.samples = val
+            elif key == "volume_step_rate":
+                scene.cycles.volume_step_rate = val
+            elif key == "adaptive_threshold":
+                scene.cycles.adaptive_threshold = val
+            elif hasattr(scene.cycles, key):
+                setattr(scene.cycles, key, val)
+        applied = ", ".join(f"{k}={v}" for k, v in overrides.items())
+        print(f"  Cycles overrides: {applied}")
 
 
 def create_dark_world(
@@ -865,13 +916,13 @@ def build_scene_vortex(
     )
 
     # ── Camera: orbit around vortex ─────────────────────────────
+    # DOF disabled — volumetric emission dominates, bokeh adds sampling
+    # cost with no scientific value for this scene.
     cam = add_camera(
         scene,
         location=(4, -3, 2.5),
         target=(0, 0, 0),
         lens=35.0,
-        dof_distance=5.0,
-        fstop=4.0,
     )
 
     # Phase 1: Approach (0 to 20% of frames)
@@ -1031,13 +1082,13 @@ def build_scene_flame(
     )
 
     # ── Camera: tracking shot along flame ───────────────────────
+    # DOF disabled — flame structure must stay uniformly sharp for
+    # scientific presentation; DOF just wastes samples on bokeh.
     cam = add_camera(
         scene,
         location=(-1.5, -1.2, 0.6),
         target=(0, 0, 0),
         lens=50.0,
-        dof_distance=1.5,
-        fstop=2.8,
     )
 
     # Phase 1: Establish (wide shot)
@@ -1578,23 +1629,36 @@ def render_scene(
     Render all frames of a scene.
 
     Returns the number of frames rendered (for offset tracking).
+    Prints per-frame timing and running average for benchmarking.
     """
+    import time
+
     output_path = Path(OUTPUT_DIR) / "frames"
     output_path.mkdir(parents=True, exist_ok=True)
 
     n_frames = scene.frame_end - scene.frame_start + 1
     print(f"  Rendering {n_frames} frames (#{frame_offset + 1}-{frame_offset + n_frames})...")
 
+    frame_times: list[float] = []
     for frame in range(scene.frame_start, scene.frame_end + 1):
+        t0 = time.perf_counter()
         scene.frame_set(frame)
         global_frame = frame_offset + frame
         scene.render.filepath = str(output_path / f"frame_{global_frame:04d}.png")
         bpy.ops.render.render(write_still=True)
+        elapsed = time.perf_counter() - t0
+        frame_times.append(elapsed)
 
         if frame % max(1, n_frames // 5) == 0 or frame == scene.frame_end:
             pct = (frame - scene.frame_start + 1) / n_frames * 100
-            print(f"    Frame {frame}/{scene.frame_end} ({pct:.0f}%)")
+            avg = sum(frame_times) / len(frame_times)
+            remaining = avg * (n_frames - len(frame_times))
+            print(f"    Frame {frame}/{scene.frame_end} ({pct:.0f}%) "
+                  f"— {elapsed:.1f}s (avg {avg:.1f}s, ~{remaining:.0f}s left)")
 
+    total = sum(frame_times)
+    avg = total / len(frame_times)
+    print(f"  Scene total: {total:.1f}s ({avg:.1f}s/frame)")
     return n_frames
 
 
@@ -1648,7 +1712,7 @@ def main() -> None:
         # Rebuild world for each scene (clear_scene removes it)
         builder(scene, data)
         create_dark_world(scene)
-        setup_cycles(scene)
+        setup_cycles(scene, scene_id=scene_id)
 
         n_rendered = render_scene(scene, f"scene{scene_id}", frame_offset)
         frame_offset += n_rendered

@@ -274,6 +274,7 @@ if command -v ffmpeg &>/dev/null; then
         END_SUB_SIZE=$((RES_H / 36))
 
         # Title card: dark background with centered text (drawtext filter)
+        # Encode with libx265 10-bit to match the main video for lossless concat.
         TITLE_CARD="${OUTPUT_DIR}/title_card.mp4"
         ffmpeg -y \
             -f lavfi -i "color=c=0x0A0E14:s=${RES_W}x${RES_H}:d=${TITLE_DURATION}:r=${FPS}" \
@@ -281,7 +282,8 @@ if command -v ffmpeg &>/dev/null; then
 x=(w-text_w)/2:y=(h-text_h)/2-${SUBTITLE_FONT_SIZE},\
 drawtext=text='Industrial QTT/GPU Simulation':fontcolor=0xE6EDF3:fontsize=${SUBTITLE_FONT_SIZE}:\
 x=(w-text_w)/2:y=(h/2)+${SUBTITLE_FONT_SIZE}" \
-            -c:v libx264 -pix_fmt yuv420p -r "$FPS" \
+            -c:v libx265 -crf 18 -preset fast -pix_fmt yuv420p10le \
+            -tag:v hvc1 -r "$FPS" \
             "$TITLE_CARD" 2>&1
 
         # End card
@@ -292,13 +294,15 @@ x=(w-text_w)/2:y=(h/2)+${SUBTITLE_FONT_SIZE}" \
 x=(w-text_w)/2:y=(h-text_h)/2-${END_SUB_SIZE},\
 drawtext=text='github.com/tigantic/HyperTensor-VM':fontcolor=0x8B949E:fontsize=${END_SUB_SIZE}:\
 x=(w-text_w)/2:y=(h/2)+${END_SUB_SIZE}" \
-            -c:v libx264 -pix_fmt yuv420p -r "$FPS" \
+            -c:v libx265 -crf 18 -preset fast -pix_fmt yuv420p10le \
+            -tag:v hvc1 -r "$FPS" \
             "$END_CARD" 2>&1
 
-        # Re-encode main video to compatible format for concat
+        # Re-encode main video to matching codec/profile for concat
         MAIN_COMPAT="${OUTPUT_DIR}/main_compat.mp4"
         ffmpeg -y -i "$VIDEO_OUT" \
-            -c:v libx264 -pix_fmt yuv420p -r "$FPS" \
+            -c:v libx265 -crf 18 -preset fast -pix_fmt yuv420p10le \
+            -tag:v hvc1 -r "$FPS" \
             "$MAIN_COMPAT" 2>&1
 
         # Concatenate: title + main + end
