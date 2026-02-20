@@ -52,7 +52,10 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
-import pyopenvdb as vdb
+try:
+    import pyopenvdb as vdb  # Blender ≤ 4.3
+except ImportError:
+    import openvdb as vdb    # Blender ≥ 4.4
 
 import bpy
 import bmesh
@@ -109,7 +112,7 @@ QUALITY_PRESETS = {
         "samples": 128,
         "resolution_x": 1920,
         "resolution_y": 1080,
-        "volume_step_rate": 0.5,
+        "volume_step_rate": 1.0,
         "volume_max_steps": 256,
         "use_denoising": True,
         "fps": 30,
@@ -217,15 +220,22 @@ def setup_gpu() -> str:
         try:
             prefs.compute_device_type = device_type
             prefs.get_devices()
-            found = False
+            gpu_found = False
             for device in prefs.devices:
                 if device.type != "CPU":
                     device.use = True
-                    found = True
+                    gpu_found = True
                 else:
-                    device.use = False
-            if found:
-                print(f"  GPU: Using {device_type}")
+                    # Enable CPU as a co-render device so tiles are
+                    # dispatched to BOTH CPU and GPU simultaneously.
+                    # Neither device idles while the other works.
+                    device.use = True
+            if gpu_found:
+                gpu_names = [d.name for d in prefs.devices if d.type != "CPU" and d.use]
+                cpu_names = [d.name for d in prefs.devices if d.type == "CPU" and d.use]
+                print(f"  GPU: {', '.join(gpu_names)} ({device_type})")
+                if cpu_names:
+                    print(f"  CPU: {', '.join(cpu_names)} (hybrid co-render)")
                 return device_type
         except Exception:
             continue
@@ -323,11 +333,27 @@ def setup_cycles(scene: bpy.types.Scene, scene_id: int = -1) -> None:
     scene.view_settings.exposure = 0.0
     scene.view_settings.gamma = 1.0
 
-    # Performance
+    # Performance — CPU+GPU hybrid tile scheduling
     scene.render.use_persistent_data = True
     scene.cycles.use_adaptive_sampling = True
     scene.cycles.adaptive_threshold = 0.02
     scene.cycles.adaptive_min_samples = 16
+
+    # Tile size: 512px fits in Blackwell's 48 MB unified L-cache
+    # (512² × RGBA float32 = 4 MB per tile, well under L2 budget).
+    # At 1920×1080 this yields ceil(1920/512)×ceil(1080/512) = 4×3 = 12
+    # tiles — enough to keep both GPU and CPU saturated simultaneously.
+    # Auto-tile defaults to 2048 (entire image = 1 tile) which serialises
+    # CPU and GPU; disabling it lets us control the split explicitly.
+    scene.cycles.use_auto_tile = False
+    scene.cycles.tile_size = 512
+
+    # GPU-accelerated OIDN denoising — runs on CUDA cores instead of
+    # blocking the CPU between frames.  FAST prefilter is sufficient
+    # at 128 spp (low residual noise); ACCURATE adds ~2× denoise time.
+    scene.cycles.denoising_use_gpu = True
+    scene.cycles.denoising_prefilter = "FAST"
+    scene.cycles.denoising_quality = "BALANCED"
 
     # FPS
     scene.render.fps = CFG["fps"]
