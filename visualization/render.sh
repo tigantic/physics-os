@@ -161,34 +161,56 @@ esac
 
 if command -v ffmpeg &>/dev/null; then
     echo ""
-    echo "Encoding video with ffmpeg (H.265, CRF 18)..."
+    echo "Encoding video with ffmpeg (H.265 10-bit)..."
 
     VIDEO_OUT="${OUTPUT_DIR}/hypertensor_visualization.mp4"
 
-    # Try NVENC hardware encoder first (GPU), fall back to software x265
-    if ffmpeg -hide_banner -encoders 2>/dev/null | grep -q hevc_nvenc; then
-        echo "  Using NVENC hardware encoder (GPU-accelerated)"
+    # 10-bit encoding (main10 / p010le) eliminates gradient banding in dark
+    # volumetric falloffs and high-intensity emissives (Planck flames, glowing bars).
+    # Spatial/temporal AQ redistributes bits to flat backgrounds and moving textures.
+    # Explicit BT.709 color metadata prevents washed-out playback in browsers/players.
+
+    # Detect NVENC: capture encoder list into variable to avoid pipefail + grep -q
+    # SIGPIPE issue (grep -q exits early, ffmpeg gets SIGPIPE, pipefail triggers).
+    NVENC_AVAILABLE=false
+    ENCODER_LIST=$(ffmpeg -hide_banner -encoders 2>/dev/null || true)
+    if echo "$ENCODER_LIST" | grep -q hevc_nvenc; then
+        # Verify NVENC actually initializes (driver accessible, not just listed)
+        if ffmpeg -y -f lavfi -i "color=black:s=256x256:d=0.04:r=1" -frames:v 1 \
+                -c:v hevc_nvenc -f null - 2>/dev/null; then
+            NVENC_AVAILABLE=true
+        fi
+    fi
+
+    if [[ "$NVENC_AVAILABLE" == "true" ]]; then
+        echo "  Using NVENC hardware encoder (GPU-accelerated, 10-bit)"
         ffmpeg -y \
             -framerate "$FPS" \
             -i "${OUTPUT_DIR}/frames/frame_%04d.png" \
             -c:v hevc_nvenc \
             -preset p7 \
+            -tune hq \
             -rc vbr \
-            -cq 20 \
+            -cq 18 \
             -b:v 0 \
-            -pix_fmt yuv420p \
+            -spatial-aq 1 \
+            -temporal-aq 1 \
+            -profile:v main10 \
+            -pix_fmt p010le \
+            -color_primaries bt709 -color_trc bt709 -colorspace bt709 \
             -movflags +faststart \
             -tag:v hvc1 \
             "$VIDEO_OUT" 2>&1
     else
-        echo "  Using software x265 encoder"
+        echo "  Using software x265 encoder (10-bit)"
         ffmpeg -y \
             -framerate "$FPS" \
             -i "${OUTPUT_DIR}/frames/frame_%04d.png" \
             -c:v libx265 \
             -crf 18 \
-            -preset medium \
-            -pix_fmt yuv420p \
+            -preset slow \
+            -pix_fmt yuv420p10le \
+            -color_primaries bt709 -color_trc bt709 -colorspace bt709 \
             -movflags +faststart \
             -tag:v hvc1 \
             "$VIDEO_OUT" 2>&1
@@ -214,5 +236,4 @@ else
     echo ""
     echo "WARNING: ffmpeg not found. Frames saved to: ${OUTPUT_DIR}/frames/"
     echo "  Install ffmpeg: sudo apt-get install ffmpeg"
-    echo "  Manual encode:  ffmpeg -framerate ${FPS} -i frames/frame_%04d.png -c:v libx265 -crf 18 output.mp4"
 fi
