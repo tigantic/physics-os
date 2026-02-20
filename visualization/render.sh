@@ -9,7 +9,7 @@
 # Examples:
 #   ./visualization/render.sh test          # Quick test render (640x360, 16 spp)
 #   ./visualization/render.sh preview       # Preview render (960x540, 64 spp)
-#   ./visualization/render.sh final         # Production render (1920x1080, 512 spp)
+#   ./visualization/render.sh final         # Production render (1920x1080, 128 spp, ~46 min)
 #   ./visualization/render.sh test 1        # Only render Scene 1 (vortex)
 #   ./visualization/render.sh final 1,2     # Render scenes 1 and 2 only
 #

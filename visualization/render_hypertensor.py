@@ -180,25 +180,53 @@ def link(
     tree.links.new(src, dst)
 
 
+def _is_wsl() -> bool:
+    """Detect WSL2 environment where OptiX RT cores are unavailable."""
+    try:
+        with open("/proc/version", "r") as f:
+            ver = f.read().lower()
+        return "microsoft" in ver or "wsl" in ver
+    except OSError:
+        return False
+
+
+_WSL = _is_wsl()
+
+
 def setup_gpu() -> str:
-    """Enable GPU rendering. Returns device type used."""
+    """Enable GPU rendering. Returns device type used.
+
+    On WSL2, OptiX is technically 'available' but cannot access hardware
+    RT cores, making it ~2.7× slower than plain CUDA.  We detect WSL2
+    and force CUDA to avoid the OptiX software-fallback penalty.
+    On native Linux/Windows, OptiX is preferred for full RT-core acceleration.
+    """
     prefs = bpy.context.preferences.addons["cycles"].preferences
-    for device_type in ("OPTIX", "CUDA", "HIP", "METAL"):
+
+    # Prefer CUDA on WSL2 (OptiX RT cores inaccessible); OptiX everywhere else
+    if _WSL:
+        order = ("CUDA", "HIP", "OPTIX")
+        print("  WSL2 detected — forcing CUDA (OptiX RT cores unavailable)")
+    else:
+        order = ("OPTIX", "CUDA", "HIP", "METAL")
+
+    for device_type in order:
         try:
             prefs.compute_device_type = device_type
             prefs.get_devices()
             found = False
             for device in prefs.devices:
-                if device.type == device_type:
+                if device.type != "CPU":
                     device.use = True
                     found = True
-                elif device.type == "CPU":
+                else:
                     device.use = False
             if found:
                 print(f"  GPU: Using {device_type}")
                 return device_type
         except Exception:
             continue
+
     # CPU fallback
     prefs.compute_device_type = "NONE"
     print("  GPU: None found, using CPU")
@@ -212,7 +240,12 @@ def setup_cycles(scene: bpy.types.Scene) -> None:
     scene.cycles.samples = CFG["samples"]
     scene.cycles.use_denoising = CFG["use_denoising"]
     if CFG["use_denoising"]:
-        scene.cycles.denoiser = "OPENIMAGEDENOISE"
+        # OptiX denoiser is GPU-accelerated (faster); OIDN is CPU-based (universal).
+        # On WSL2 we force CUDA so OptiX denoiser is unavailable → use OIDN.
+        if _WSL:
+            scene.cycles.denoiser = "OPENIMAGEDENOISE"
+        else:
+            scene.cycles.denoiser = "OPTIX"
         scene.cycles.denoising_input_passes = "RGB_ALBEDO_NORMAL"
     scene.cycles.volume_step_rate = CFG["volume_step_rate"]
     scene.cycles.volume_max_steps = CFG["volume_max_steps"]
