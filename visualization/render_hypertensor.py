@@ -51,6 +51,9 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+import numpy as np
+import pyopenvdb as vdb
+
 import bpy
 import bmesh
 from mathutils import Color, Euler, Matrix, Vector
@@ -520,182 +523,182 @@ def create_text_object(
 # ═══════════════════════════════════════════════════════════════════════
 
 
-def create_vortex_volume_material(
+def generate_vortex_vdb(
+    resolution: int = 256,
+    n_cells: int = 2,
+    threshold: float = 0.15,
+    output_path: Optional[str] = None,
+) -> str:
+    """
+    Generate a VDB file containing the Taylor-Green vortex tube lattice.
+
+    Produces continuous cylindrical tubes using the cross-sectional
+    vortex profile, symmetrized across all three axes.
+
+    Self-contained analytical computation — zero coupling to HyperGrid
+    or any shared infrastructure.
+
+    The key insight: the analytical Q-criterion for TG has a cos²(z)
+    axial modulation that pinches tubes to zero at z = π/2 + nπ,
+    breaking them into disconnected blobs. The vortex CORES are
+    continuous cylinders — identified by the cross-sectional profile
+    alone:
+
+        tube_z = max(0, cos(2x) + cos(2y))  → z-cylinders at (nπ, mπ)
+        tube_x = max(0, cos(2y) + cos(2z))  → x-cylinders at (mπ, lπ)
+        tube_y = max(0, cos(2x) + cos(2z))  → y-cylinders at (nπ, lπ)
+
+    cos(2x) + cos(2y) > 0 defines a connected region around each
+    lattice point — a circular-ish cross-section that IS the tube.
+    The max-union of all three orientations gives the full interlocking
+    lattice seen in CFD presentations of evolved TG flow.
+
+    The threshold controls tube radius:
+        0.0  → tubes fill ~50% of space (max radius)
+        0.5  → moderate tubes (~25%)
+        0.9  → thin filaments (~5%)
+
+    Args:
+        resolution: Grid resolution per axis (N^3 total voxels).
+        n_cells: Number of TG cells per axis (2 = [0, 4pi] domain).
+        threshold: Normalized threshold [0, 1]. Controls tube radius.
+        output_path: Path for .vdb file.
+
+    Returns:
+        Absolute path to the written .vdb file.
+    """
+    if output_path is None:
+        output_path = str(Path(OUTPUT_DIR) / "vortex_field.vdb")
+
+    N = resolution
+    L = n_cells * 2.0 * np.pi  # Physical domain [0, L)
+    h = L / N
+
+    # 1D coordinate arrays
+    coords = np.arange(N, dtype=np.float64) * h
+
+    # 3D meshgrids (ij indexing: X varies along axis 0)
+    X, Y, Z = np.meshgrid(coords, coords, coords, indexing="ij")
+
+    # Double-angle cosines for cross-sectional tube profiles
+    cos2x = np.cos(2.0 * X)
+    cos2y = np.cos(2.0 * Y)
+    cos2z = np.cos(2.0 * Z)
+
+    # Cross-sectional tube profiles — continuous cylinders.
+    # cos(2x) + cos(2y) > 0 is a connected region around (nπ, mπ)
+    # forming a circular cross-section. No axial modulation = no gaps.
+    tube_z = np.maximum(0.0, cos2x + cos2y)  # z-oriented cylinders
+    tube_x = np.maximum(0.0, cos2y + cos2z)  # x-oriented cylinders
+    tube_y = np.maximum(0.0, cos2x + cos2z)  # y-oriented cylinders
+
+    # Union of all three orientations: the interlocking lattice
+    field = np.maximum(np.maximum(tube_z, tube_x), tube_y)
+
+    # Normalize to [0, 1] (max value of cos(2a)+cos(2b) = 2.0)
+    field_norm = field / 2.0
+
+    # Threshold, remap to [0, 1], then apply steep power curve.
+    # Power of 5: only the very core of each tube has significant
+    # density. Edges drop off extremely fast, eliminating the haze
+    # that accumulates when many semi-transparent layers stack up.
+    density = np.zeros(field_norm.shape, dtype=np.float32)
+    mask = field_norm > threshold
+    linear = (field_norm[mask] - threshold) / (1.0 - threshold)
+    density[mask] = (linear ** 5).astype(np.float32)
+
+    active_count = int(np.count_nonzero(density))
+    active_frac = active_count / density.size
+    print(
+        f"    VDB: {N}^3 tube lattice, threshold={threshold:.2f}, "
+        f"active={active_frac:.1%} ({active_count:,} voxels)"
+    )
+
+    # Create VDB FloatGrid from numpy array
+    grid = vdb.FloatGrid()
+    grid.name = "density"
+    grid.copyFromArray(density)
+
+    # Prune inactive (zero) voxels
+    grid.prune(tolerance=1e-6)
+
+    # Transform: index space → world space.
+    # Index [0, N) maps to world [0, 2] with voxelSize = 2/N.
+    voxel_size = 2.0 / N
+    grid.transform = vdb.createLinearTransform(voxelSize=voxel_size)
+
+    # Write VDB
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    vdb.write(output_path, grids=[grid])
+    file_size_mb = os.path.getsize(output_path) / (1024 * 1024)
+    print(f"    VDB: wrote {output_path} ({file_size_mb:.1f} MB)")
+
+    # Free memory
+    del X, Y, Z, cos2x, cos2y, cos2z
+    del tube_z, tube_x, tube_y, field, field_norm, density, mask
+
+    return output_path
+
+
+def create_vortex_vdb_material(
     density_scale: float = 8.0,
-    emission_scale: float = 15.0,
+    emission_scale: float = 0.15,
 ) -> bpy.types.Material:
     """
-    Procedural Taylor-Green vortex volume material.
+    Principled Volume material for VDB-based vortex rendering.
 
-    The vorticity magnitude |omega(x,y,z)| is computed entirely from shader
-    nodes using the analytical formula. This gives INFINITE resolution --
-    the density is evaluated at every ray sample point by the renderer.
+    Reads the "density" attribute from the imported VDB grid.
+    Uses HIGH density with very LOW emission so that external
+    lighting reveals the 3D tube structure (surface highlight,
+    shadow, depth cueing) instead of flat uniform self-glow.
 
-    TG vortex:
-        omega_x =  sin(2pi*x) * cos(2pi*y) * sin(2pi*z)
-        omega_y = -cos(2pi*x) * sin(2pi*y) * sin(2pi*z)
-        omega_z = -2*cos(2pi*x) * cos(2pi*y) * cos(2pi*z)
+    The Principled Volume Color tints scattered light cyan.
+    Absorption is minimal so you can see through the lattice.
 
-        |omega|^2 = sin^2(x)cos^2(y)sin^2(z) + cos^2(x)sin^2(y)sin^2(z)
-                  + 4*cos^2(x)*cos^2(y)*cos^2(z)
+    Replaces the 30+ node procedural shader with a 5-node graph:
+    Attribute → Multiply(density) → Volume.Density
+    Attribute → Multiply(emission) → Volume.Emission Strength
+    Volume → Output
 
-    Color mapping: dark blue -> ocean blue -> cyan -> white (by vorticity).
+    Args:
+        density_scale: Multiplier on VDB density values for volume opacity.
+        emission_scale: Multiplier on VDB density values for glow intensity.
     """
-    mat = bpy.data.materials.new("VortexVolume")
+    mat = bpy.data.materials.new("VortexVDB")
     mat.use_nodes = True
     tree = mat.node_tree
     tree.nodes.clear()
 
-    TWO_PI = 2.0 * math.pi
-    col_x, col_y, col_z = -1200, -200, 200  # layout helpers
+    # ── Output ──────────────────────────────────────────────────
+    output_node = add_node(tree, "ShaderNodeOutputMaterial", (800, 0), "Output")
 
-    # ── Output + Volume shader ──────────────────────────────────
-    output_node = add_node(tree, "ShaderNodeOutputMaterial", (1400, 0), "Output")
-    volume = add_node(tree, "ShaderNodeVolumePrincipled", (1100, 0), "Volume")
-    volume.inputs["Anisotropy"].default_value = 0.2
+    # ── Principled Volume ───────────────────────────────────────
+    volume = add_node(tree, "ShaderNodeVolumePrincipled", (500, 0), "Volume")
+    # Strong forward scattering — light penetrates and reveals depth
+    volume.inputs["Anisotropy"].default_value = 0.5
+    # Scatter color: bright cyan albedo — light bounces, not absorbed
+    volume.inputs["Color"].default_value = (0.6, 0.85, 1.0, 1.0)
+    # Emission color: vivid cyan
+    volume.inputs["Emission Color"].default_value = (0.1, 0.6, 1.0, 1.0)
     link(tree, volume, "Volume", output_node, "Volume")
 
-    # ── Coordinates ─────────────────────────────────────────────
-    tex_coord = add_node(tree, "ShaderNodeTexCoord", (col_x, 0), "Coords")
-    separate = add_node(tree, "ShaderNodeSeparateXYZ", (col_x + 200, 0), "SepXYZ")
-    link(tree, tex_coord, "Generated", separate, "Vector")
+    # ── Attribute node: reads VDB "density" grid per-voxel ──────
+    attr = add_node(tree, "ShaderNodeAttribute", (-100, 0), "VDBDensity")
+    attr.attribute_name = "density"
 
-    # Scale [0,1] -> [0, 2*pi] for each axis
-    scales = {}
-    for i, axis in enumerate(("X", "Y", "Z")):
-        s = add_node(
-            tree, "ShaderNodeMath",
-            (col_x + 400, col_y + col_z * (1 - i)),
-            f"Scale_{axis}",
-        )
-        s.operation = "MULTIPLY"
-        s.inputs[1].default_value = TWO_PI
-        link(tree, separate, axis, s, 0)
-        scales[axis] = s
-
-    # sin/cos of each scaled coordinate
-    trig = {}
-    for i, axis in enumerate(("X", "Y", "Z")):
-        for j, func in enumerate(("SINE", "COSINE")):
-            short = f"{'sin' if func == 'SINE' else 'cos'}_{axis.lower()}"
-            n = add_node(
-                tree, "ShaderNodeMath",
-                (col_x + 600, col_y + col_z * (1 - i) + 80 * (1 - j)),
-                short,
-            )
-            n.operation = func
-            link(tree, scales[axis], 0, n, 0)
-            trig[short] = n
-
-    # ── Compute |omega|^2 ───────────────────────────────────────
-    # We need squared trig values
-    sq = {}
-    x_off = col_x + 800
-    for k, (name_key, trig_key) in enumerate((
-        ("sin2x", "sin_x"), ("cos2x", "cos_x"),
-        ("sin2y", "sin_y"), ("cos2y", "cos_y"),
-        ("sin2z", "sin_z"), ("cos2z", "cos_z"),
-    )):
-        n = add_node(tree, "ShaderNodeMath", (x_off, 300 - k * 100), name_key)
-        n.operation = "MULTIPLY"
-        link(tree, trig[trig_key], 0, n, 0)
-        link(tree, trig[trig_key], 0, n, 1)
-        sq[name_key] = n
-
-    # Term 1: sin^2(x) * cos^2(y) * sin^2(z)
-    t1a = add_node(tree, "ShaderNodeMath", (x_off + 200, 250), "t1a")
-    t1a.operation = "MULTIPLY"
-    link(tree, sq["sin2x"], 0, t1a, 0)
-    link(tree, sq["cos2y"], 0, t1a, 1)
-
-    t1 = add_node(tree, "ShaderNodeMath", (x_off + 400, 250), "t1")
-    t1.operation = "MULTIPLY"
-    link(tree, t1a, 0, t1, 0)
-    link(tree, sq["sin2z"], 0, t1, 1)
-
-    # Term 2: cos^2(x) * sin^2(y) * sin^2(z)
-    t2a = add_node(tree, "ShaderNodeMath", (x_off + 200, 0), "t2a")
-    t2a.operation = "MULTIPLY"
-    link(tree, sq["cos2x"], 0, t2a, 0)
-    link(tree, sq["sin2y"], 0, t2a, 1)
-
-    t2 = add_node(tree, "ShaderNodeMath", (x_off + 400, 0), "t2")
-    t2.operation = "MULTIPLY"
-    link(tree, t2a, 0, t2, 0)
-    link(tree, sq["sin2z"], 0, t2, 1)
-
-    # Term 3: 4 * cos^2(x) * cos^2(y) * cos^2(z)
-    t3a = add_node(tree, "ShaderNodeMath", (x_off + 200, -250), "t3a")
-    t3a.operation = "MULTIPLY"
-    link(tree, sq["cos2x"], 0, t3a, 0)
-    link(tree, sq["cos2y"], 0, t3a, 1)
-
-    t3b = add_node(tree, "ShaderNodeMath", (x_off + 400, -250), "t3b")
-    t3b.operation = "MULTIPLY"
-    link(tree, t3a, 0, t3b, 0)
-    link(tree, sq["cos2z"], 0, t3b, 1)
-
-    t3 = add_node(tree, "ShaderNodeMath", (x_off + 500, -250), "t3_x4")
-    t3.operation = "MULTIPLY"
-    t3.inputs[1].default_value = 4.0
-    link(tree, t3b, 0, t3, 0)
-
-    # Sum: |omega|^2 = t1 + t2 + t3
-    sum12 = add_node(tree, "ShaderNodeMath", (x_off + 600, 125), "sum12")
-    sum12.operation = "ADD"
-    link(tree, t1, 0, sum12, 0)
-    link(tree, t2, 0, sum12, 1)
-
-    sum_all = add_node(tree, "ShaderNodeMath", (x_off + 700, 0), "omega_sq")
-    sum_all.operation = "ADD"
-    link(tree, sum12, 0, sum_all, 0)
-    link(tree, t3, 0, sum_all, 1)
-
-    # |omega| = sqrt(|omega|^2)
-    omega_mag = add_node(tree, "ShaderNodeMath", (x_off + 800, 0), "omega_mag")
-    omega_mag.operation = "POWER"
-    omega_mag.inputs[1].default_value = 0.5
-    link(tree, sum_all, 0, omega_mag, 0)
-
-    # ── Density ─────────────────────────────────────────────────
-    density = add_node(tree, "ShaderNodeMath", (x_off + 900, 50), "density")
+    # ── Density: VDB value × density_scale → volume opacity ─────
+    density = add_node(tree, "ShaderNodeMath", (200, 50), "density")
     density.operation = "MULTIPLY"
     density.inputs[1].default_value = density_scale
-    link(tree, omega_mag, 0, density, 0)
+    link(tree, attr, "Fac", density, 0)
     link(tree, density, 0, volume, "Density")
 
-    # ── Emission Color via ColorRamp ────────────────────────────
-    ramp = add_node(tree, "ShaderNodeValToRGB", (x_off + 850, -200), "ColorRamp")
-    elements = ramp.color_ramp.elements
-    # Element 0 already exists at position 0
-    elements[0].position = 0.0
-    elements[0].color = (0.0, 0.0, 0.02, 1.0)         # Near black
-
-    e1 = elements.new(0.15)
-    e1.color = (0.01, 0.02, 0.15, 1.0)                 # Deep navy
-
-    e2 = elements.new(0.35)
-    e2.color = (0.02, 0.1, 0.5, 1.0)                   # Ocean blue
-
-    e3 = elements.new(0.55)
-    e3.color = (0.05, 0.4, 0.8, 1.0)                   # Bright blue
-
-    e4 = elements.new(0.75)
-    e4.color = (0.1, 0.7, 0.95, 1.0)                   # Cyan
-
-    # Element 1 already exists at position 1
-    elements[1].position = 1.0
-    elements[1].color = (0.9, 0.95, 1.0, 1.0)          # Near white
-
-    ramp.color_ramp.interpolation = "B_SPLINE"
-    link(tree, omega_mag, 0, ramp, "Fac")
-    link(tree, ramp, "Color", volume, "Emission Color")
-
-    # Emission strength proportional to vorticity
-    em_str = add_node(tree, "ShaderNodeMath", (x_off + 900, -100), "em_strength")
+    # ── Emission: VDB value × emission_scale → subtle core glow ─
+    # Very low — just enough to see tube cores; lighting does the heavy lifting.
+    em_str = add_node(tree, "ShaderNodeMath", (200, -100), "em_strength")
     em_str.operation = "MULTIPLY"
     em_str.inputs[1].default_value = emission_scale
-    link(tree, omega_mag, 0, em_str, 0)
+    link(tree, attr, "Fac", em_str, 0)
     link(tree, em_str, 0, volume, "Emission Strength")
 
     return mat
@@ -705,16 +708,19 @@ def create_flame_volume_material(
     temperature_data: List[float],
 ) -> bpy.types.Material:
     """
-    Volumetric combustion flame material.
+    Volumetric combustion flame material with radial falloff.
 
-    Uses a 1D image texture containing the temperature profile.
-    Temperature is mapped to blackbody emission color (physically correct
-    Planck radiation) and emission strength.
+    Uses a 1D image texture containing the temperature profile
+    mapped along X, with a Gaussian radial falloff from the center
+    axis to give the flame a cylindrical shape instead of a block.
 
-    Cold gas (300K): transparent/dim blue scatter
-    Preheat zone (300-1000K): faint warm glow
-    Reaction zone (1000-2500K): intense white-yellow blackbody emission
-    Burnt gas (2230K): warm orange-yellow glow, settling to equilibrium
+    Temperature drives blackbody emission color (physically correct
+    Planck radiation). Cold gas is fully transparent.
+
+    Cold gas (300K):          invisible (zero density)
+    Preheat zone (300-1000K): faint warm glow, low density
+    Reaction zone (1000-2500K): intense white-yellow blackbody
+    Burnt gas (2230K):        warm orange-yellow glow
     """
     mat = bpy.data.materials.new("FlameVolume")
     mat.use_nodes = True
@@ -740,86 +746,132 @@ def create_flame_volume_material(
     img.pack()
 
     # ── Output + Volume ─────────────────────────────────────────
-    output_node = add_node(tree, "ShaderNodeOutputMaterial", (1200, 0), "Output")
-    volume = add_node(tree, "ShaderNodeVolumePrincipled", (900, 0), "Volume")
+    output_node = add_node(tree, "ShaderNodeOutputMaterial", (1400, 0), "Output")
+    volume = add_node(tree, "ShaderNodeVolumePrincipled", (1100, 0), "Volume")
     volume.inputs["Anisotropy"].default_value = 0.3
     link(tree, volume, "Volume", output_node, "Volume")
 
-    # ── Coordinates → 1D lookup ─────────────────────────────────
-    tex_coord = add_node(tree, "ShaderNodeTexCoord", (-600, 0), "Coords")
-    separate = add_node(tree, "ShaderNodeSeparateXYZ", (-400, 0), "SepXYZ")
+    # ── Coordinates ─────────────────────────────────────────────
+    tex_coord = add_node(tree, "ShaderNodeTexCoord", (-800, 0), "Coords")
+    separate = add_node(tree, "ShaderNodeSeparateXYZ", (-600, 0), "SepXYZ")
     link(tree, tex_coord, "Generated", separate, "Vector")
 
-    # Map X [0,1] → image UV, Y=0.5 (center of 1-pixel-high image)
-    combine_uv = add_node(tree, "ShaderNodeCombineXYZ", (-200, 0), "CombineUV")
+    # ── 1D temperature lookup (along X axis) ────────────────────
+    combine_uv = add_node(tree, "ShaderNodeCombineXYZ", (-400, 0), "CombineUV")
     combine_uv.inputs["Y"].default_value = 0.5
     combine_uv.inputs["Z"].default_value = 0.0
     link(tree, separate, "X", combine_uv, "X")
 
-    # Sample temperature image
-    img_tex = add_node(tree, "ShaderNodeTexImage", (0, 0), "TempTexture")
+    img_tex = add_node(tree, "ShaderNodeTexImage", (-200, 0), "TempTexture")
     img_tex.image = img
     img_tex.interpolation = "Linear"
     img_tex.extension = "EXTEND"
     link(tree, combine_uv, "Vector", img_tex, "Vector")
 
     # ── Denormalize to Kelvin ───────────────────────────────────
-    # t_norm → T = t_norm * T_range + T_min
-    scale_T = add_node(tree, "ShaderNodeMath", (200, 100), "ScaleT")
+    scale_T = add_node(tree, "ShaderNodeMath", (0, 100), "ScaleT")
     scale_T.operation = "MULTIPLY"
     scale_T.inputs[1].default_value = T_range
     link(tree, img_tex, "Color", scale_T, 0)
 
-    add_T = add_node(tree, "ShaderNodeMath", (400, 100), "AddTmin")
+    add_T = add_node(tree, "ShaderNodeMath", (200, 100), "AddTmin")
     add_T.operation = "ADD"
     add_T.inputs[1].default_value = T_min
     link(tree, scale_T, 0, add_T, 0)
 
     # ── Blackbody color from temperature ────────────────────────
-    blackbody = add_node(tree, "ShaderNodeBlackbody", (600, 100), "Blackbody")
+    blackbody = add_node(tree, "ShaderNodeBlackbody", (400, 100), "Blackbody")
     link(tree, add_T, 0, blackbody, "Temperature")
     link(tree, blackbody, "Color", volume, "Emission Color")
 
+    # ── Radial falloff (Y, Z) ───────────────────────────────────
+    # Gaussian envelope from center axis: exp(-(dy²+dz²) / (2*sigma²))
+    # Generated coords: center at (0.5, 0.5), radius [0, 0.5]
+    # sigma = 0.18 → visible core ~36% of domain cross-section
+    SIGMA_SQ_2 = 2.0 * 0.12 * 0.12  # 2σ² — tight core (~24% of cross-section)
+
+    # dy = Y - 0.5
+    sub_y = add_node(tree, "ShaderNodeMath", (-400, -200), "SubY")
+    sub_y.operation = "SUBTRACT"
+    sub_y.inputs[1].default_value = 0.5
+    link(tree, separate, "Y", sub_y, 0)
+
+    # dy²
+    sq_y = add_node(tree, "ShaderNodeMath", (-200, -200), "SqY")
+    sq_y.operation = "MULTIPLY"
+    link(tree, sub_y, 0, sq_y, 0)
+    link(tree, sub_y, 0, sq_y, 1)
+
+    # dz = Z - 0.5
+    sub_z = add_node(tree, "ShaderNodeMath", (-400, -350), "SubZ")
+    sub_z.operation = "SUBTRACT"
+    sub_z.inputs[1].default_value = 0.5
+    link(tree, separate, "Z", sub_z, 0)
+
+    # dz²
+    sq_z = add_node(tree, "ShaderNodeMath", (-200, -350), "SqZ")
+    sq_z.operation = "MULTIPLY"
+    link(tree, sub_z, 0, sq_z, 0)
+    link(tree, sub_z, 0, sq_z, 1)
+
+    # r² = dy² + dz²
+    r_sq = add_node(tree, "ShaderNodeMath", (0, -275), "Rsq")
+    r_sq.operation = "ADD"
+    link(tree, sq_y, 0, r_sq, 0)
+    link(tree, sq_z, 0, r_sq, 1)
+
+    # -r² / (2σ²)
+    neg_r_norm = add_node(tree, "ShaderNodeMath", (200, -275), "NegRNorm")
+    neg_r_norm.operation = "DIVIDE"
+    neg_r_norm.inputs[1].default_value = -SIGMA_SQ_2  # Negative for decay
+    link(tree, r_sq, 0, neg_r_norm, 0)
+
+    # Gaussian envelope: exp(-r²/(2σ²))
+    radial_falloff = add_node(tree, "ShaderNodeMath", (400, -275), "RadialFalloff")
+    radial_falloff.operation = "EXPONENT"  # e^x
+    link(tree, neg_r_norm, 0, radial_falloff, 0)
+
     # ── Emission strength: zero below 500K, ramps up above ─────
-    # strength = max(0, (T - 500) / 500) * scale
-    sub_threshold = add_node(tree, "ShaderNodeMath", (400, -100), "SubThresh")
+    sub_threshold = add_node(tree, "ShaderNodeMath", (200, -100), "SubThresh")
     sub_threshold.operation = "SUBTRACT"
     sub_threshold.inputs[1].default_value = 500.0
     link(tree, add_T, 0, sub_threshold, 0)
 
-    div_scale = add_node(tree, "ShaderNodeMath", (500, -100), "DivScale")
+    div_scale = add_node(tree, "ShaderNodeMath", (400, -100), "DivScale")
     div_scale.operation = "DIVIDE"
     div_scale.inputs[1].default_value = 500.0
     link(tree, sub_threshold, 0, div_scale, 0)
 
     clamp_em = add_node(tree, "ShaderNodeClamp", (600, -100), "ClampEm")
     clamp_em.inputs["Min"].default_value = 0.0
-    clamp_em.inputs["Max"].default_value = 10.0
+    clamp_em.inputs["Max"].default_value = 3.0
     link(tree, div_scale, 0, clamp_em, "Value")
 
-    em_final = add_node(tree, "ShaderNodeMath", (700, -100), "EmFinal")
+    # Emission × radial falloff
+    em_radial = add_node(tree, "ShaderNodeMath", (700, -100), "EmRadial")
+    em_radial.operation = "MULTIPLY"
+    link(tree, clamp_em, "Result", em_radial, 0)
+    link(tree, radial_falloff, 0, em_radial, 1)
+
+    em_final = add_node(tree, "ShaderNodeMath", (900, -100), "EmFinal")
     em_final.operation = "MULTIPLY"
-    em_final.inputs[1].default_value = 80.0  # Overall emission strength
-    link(tree, clamp_em, "Result", em_final, 0)
+    em_final.inputs[1].default_value = 3.0
+    link(tree, em_radial, 0, em_final, 0)
     link(tree, em_final, 0, volume, "Emission Strength")
 
-    # ── Density: higher in flame zone for opacity ───────────────
-    # Base density everywhere (thin), higher near flame front
-    density_base = add_node(tree, "ShaderNodeMath", (700, -250), "DensityBase")
-    density_base.operation = "ADD"
-    density_base.inputs[0].default_value = 0.5   # Background density
-    density_base.inputs[1].default_value = 0.0
-    # Add extra density near flame (proportional to emission)
-    density_add = add_node(tree, "ShaderNodeMath", (750, -200), "DensityAdd")
-    density_add.operation = "MULTIPLY"
-    density_add.inputs[1].default_value = 2.0
-    link(tree, clamp_em, "Result", density_add, 0)
+    # ── Density: zero cold gas, proportional to temperature ─────
+    # Only hot gas has density. No base density → cold gas invisible.
+    # density = clamp_em × radial_falloff × density_scale
+    density_shaped = add_node(tree, "ShaderNodeMath", (700, -250), "DensShaped")
+    density_shaped.operation = "MULTIPLY"
+    link(tree, clamp_em, "Result", density_shaped, 0)
+    link(tree, radial_falloff, 0, density_shaped, 1)
 
-    density_total = add_node(tree, "ShaderNodeMath", (850, -200), "DensityTotal")
-    density_total.operation = "ADD"
-    link(tree, density_base, 0, density_total, 0)
-    link(tree, density_add, 0, density_total, 1)
-    link(tree, density_total, 0, volume, "Density")
+    density_final = add_node(tree, "ShaderNodeMath", (900, -250), "DensFinal")
+    density_final.operation = "MULTIPLY"
+    density_final.inputs[1].default_value = 0.10  # Near-transparent — see flame structure
+    link(tree, density_shaped, 0, density_final, 0)
+    link(tree, density_final, 0, volume, "Density")
 
     return mat
 
@@ -894,9 +946,13 @@ def build_scene_vortex(
     """
     Build the Taylor-Green vortex volumetric scene.
 
-    A cube with a procedural volumetric shader computes |omega(x,y,z)|
-    at every ray sample. The vortex tubes glow blue-cyan-white.
-    Camera orbits the volume. Vortex decays over time (exp(-2*nu*t)).
+    Uses VDB-based volume rendering: the analytical vorticity field is
+    computed on a numpy grid, hard-thresholded, and written as a sparse
+    OpenVDB file. Blender imports it as a Volume object with a simple
+    Principled Volume shader.
+
+    This replaces the procedural shader approach (30+ math nodes) which
+    could not produce crisp structures from the smooth sinusoidal field.
     """
     clear_scene()
     n_frames = CFG["vortex_frames"]
@@ -905,29 +961,49 @@ def build_scene_vortex(
 
     print(f"  Scene 1: Taylor-Green Vortex ({n_frames} frames)")
 
-    # ── Volume cube ─────────────────────────────────────────────
-    bpy.ops.mesh.primitive_cube_add(size=2.0, location=(0, 0, 0))
-    cube = bpy.context.active_object
-    cube.name = "VortexVolume"
+    # ── Generate VDB tube lattice ─────────────────────────────────
+    vdb_path = generate_vortex_vdb(
+        resolution=256,
+        n_cells=2,       # 2 TG cells per axis → clear tube lattice
+        threshold=0.60,  # Thin tubes, power-5 curve keeps cores sharp
+    )
 
-    # Apply vortex material
-    mat = create_vortex_volume_material(density_scale=8.0, emission_scale=15.0)
-    cube.data.materials.append(mat)
+    # ── Import VDB as Volume object ─────────────────────────────
+    bpy.ops.object.volume_import(filepath=vdb_path)
+    vol_obj = bpy.context.active_object
+    vol_obj.name = "VortexVolume"
+    # Center at origin: VDB grid spans [0, 2] in world space,
+    # offset by (-1,-1,-1) to center the 2-unit cube at origin.
+    vol_obj.location = (-1.0, -1.0, -1.0)
+
+    # Apply VDB material
+    density_rest = 3.0   # Moderate opacity, light still penetrates
+    em_rest = 3.0        # Bright vivid self-lit tubes
+    mat = create_vortex_vdb_material(
+        density_scale=density_rest,
+        emission_scale=em_rest,
+    )
+    vol_obj.data.materials.append(mat)
 
     # ── Lighting ────────────────────────────────────────────────
-    # Minimal lighting — the volume is self-illuminating
+    # Strong external lighting to reveal 3D tube structure.
+    # Key light: strong, high, slightly warm — top-down sculpting
     add_area_light(
-        scene, location=(3, -2, 4), energy=50.0, size=3.0,
-        color=(0.8, 0.85, 1.0), name="KeyLight",
+        scene, location=(3, -2, 5), energy=500.0, size=4.0,
+        color=(0.85, 0.9, 1.0), name="KeyLight",
     )
+    # Fill light: softer, opposite side — prevents pitch-black shadows
     add_area_light(
-        scene, location=(-3, 3, 2), energy=20.0, size=2.0,
-        color=(0.6, 0.7, 1.0), name="FillLight",
+        scene, location=(-4, 3, 2), energy=200.0, size=5.0,
+        color=(0.5, 0.65, 1.0), name="FillLight",
+    )
+    # Rim/back light: defines edges and separates from background
+    add_area_light(
+        scene, location=(0, 4, -1), energy=250.0, size=3.0,
+        color=(0.3, 0.5, 1.0), name="RimLight",
     )
 
     # ── Camera: orbit around vortex ─────────────────────────────
-    # DOF disabled — volumetric emission dominates, bokeh adds sampling
-    # cost with no scientific value for this scene.
     cam = add_camera(
         scene,
         location=(4, -3, 2.5),
@@ -935,7 +1011,7 @@ def build_scene_vortex(
         lens=35.0,
     )
 
-    # Phase 1: Approach (0 to 20% of frames)
+    # Phase 1: Approach (0 to 15% of frames)
     approach_end = int(n_frames * 0.15)
     for i in range(approach_end + 1):
         frame = i + 1
@@ -952,7 +1028,7 @@ def build_scene_vortex(
         cam.rotation_euler = direction.to_track_quat("-Z", "Y").to_euler()
         cam.keyframe_insert(data_path="rotation_euler", frame=frame)
 
-    # Phase 2: Full orbit (20% to 80% of frames)
+    # Phase 2: Full orbit (15% to 80% of frames)
     orbit_start = approach_end + 1
     orbit_end = int(n_frames * 0.80)
     animate_orbit(
@@ -978,32 +1054,14 @@ def build_scene_vortex(
         cam.rotation_euler = direction.to_track_quat("-Z", "Y").to_euler()
         cam.keyframe_insert(data_path="rotation_euler", frame=frame)
 
-    # ── Animate vortex decay via density keyframes ──────────────
-    # Access the density_scale multiplier node and keyframe it
-    vol_nodes = mat.node_tree.nodes
-    density_node = vol_nodes.get("density")
-    em_node = vol_nodes.get("em_strength")
-    if density_node and em_node:
-        # Stable phase (0 to 60%)
-        stable_end = int(n_frames * 0.6)
-        density_node.inputs[1].default_value = 8.0
-        density_node.inputs[1].keyframe_insert("default_value", frame=1)
-        density_node.inputs[1].keyframe_insert("default_value", frame=stable_end)
-        em_node.inputs[1].default_value = 15.0
-        em_node.inputs[1].keyframe_insert("default_value", frame=1)
-        em_node.inputs[1].keyframe_insert("default_value", frame=stable_end)
-
-        # Decay phase (60% to 100%) — simulate exp(-2*nu*t)
-        for i in range(n_frames - stable_end + 1):
-            frame = stable_end + i
-            t_frac = i / max(n_frames - stable_end, 1)
-            # Simulate ~50 time steps of the actual simulation
-            sim_time = 50 * 0.000941 * t_frac
-            decay = math.exp(-2 * nu * sim_time * 500)  # Exaggerated for visibility
-            density_node.inputs[1].default_value = 8.0 * max(decay, 0.05)
-            density_node.inputs[1].keyframe_insert("default_value", frame=frame)
-            em_node.inputs[1].default_value = 15.0 * max(decay, 0.05)
-            em_node.inputs[1].keyframe_insert("default_value", frame=frame)
+    # NOTE: No shader keyframes on the volume material.
+    # Keyframing density/emission node inputs causes Blender to flag
+    # the material as animated, forcing a FULL volume re-sync every
+    # frame: volume mesh recompute, BVH rebuild, density reload,
+    # GPU re-upload. This burns ~0.15s of CPU overhead per frame
+    # while the GPU sits idle waiting. For a static VDB with an
+    # orbiting camera, the volume data is identical every frame —
+    # keeping the material static lets Blender cache it once.
 
     # ── Stats text overlay ──────────────────────────────────────
     create_text_object(
@@ -1047,9 +1105,10 @@ def build_scene_flame(
     print(f"  Scene 2: Combustion Flame ({n_frames} frames)")
 
     # ── Flame volume slab ───────────────────────────────────────
-    # Domain: 2cm long, 4mm tall, 4mm deep
-    domain_x = 2.0   # Blender units (scaled from 0.02m)
-    domain_yz = 0.4
+    # Domain: elongated along X with enough Y-Z extent for
+    # the Gaussian radial falloff to create a cylindrical shape.
+    domain_x = 2.0   # Blender units
+    domain_yz = 0.8   # Wide enough for Gaussian taper (sigma=0.18 of unit)
 
     bpy.ops.mesh.primitive_cube_add(size=1.0, location=(0, 0, 0))
     slab = bpy.context.active_object
@@ -1059,31 +1118,15 @@ def build_scene_flame(
     flame_mat = create_flame_volume_material(temp_profile)
     slab.data.materials.append(flame_mat)
 
-    # ── Glass combustion chamber (outer shell) ──────────────────
-    bpy.ops.mesh.primitive_cube_add(size=1.0, location=(0, 0, 0))
-    chamber = bpy.context.active_object
-    chamber.name = "CombustionChamber"
-    chamber.scale = (domain_x * 1.05, domain_yz * 1.3, domain_yz * 1.3)
-
-    glass_mat = bpy.data.materials.new("Glass")
-    glass_mat.use_nodes = True
-    glass_tree = glass_mat.node_tree
-    glass_tree.nodes.clear()
-    g_output = add_node(glass_tree, "ShaderNodeOutputMaterial", (400, 0))
-    g_bsdf = add_node(glass_tree, "ShaderNodeBsdfGlass", (0, 0))
-    g_bsdf.inputs["Color"].default_value = (0.95, 0.97, 1.0, 1.0)
-    g_bsdf.inputs["Roughness"].default_value = 0.02
-    g_bsdf.inputs["IOR"].default_value = 1.52
-    link(glass_tree, g_bsdf, "BSDF", g_output, "Surface")
-    chamber.data.materials.append(glass_mat)
-
     # ── Lighting ────────────────────────────────────────────────
+    # Dim lighting — the flame is self-illuminating via blackbody.
+    # External light is just for subtle reflections on surrounding geometry.
     add_area_light(
-        scene, location=(0, -1.5, 2.0), energy=80.0, size=3.0,
+        scene, location=(0, -1.5, 2.0), energy=15.0, size=3.0,
         color=(0.9, 0.9, 1.0), name="KeyLight",
     )
     add_area_light(
-        scene, location=(1.5, 1.0, 0.5), energy=30.0, size=1.5,
+        scene, location=(1.5, 1.0, 0.5), energy=8.0, size=1.5,
         color=(1.0, 0.95, 0.9), name="WarmFill",
     )
     add_area_light(
@@ -1096,49 +1139,49 @@ def build_scene_flame(
     # scientific presentation; DOF just wastes samples on bokeh.
     cam = add_camera(
         scene,
-        location=(-1.5, -1.2, 0.6),
+        location=(-2.5, -3.0, 1.2),
         target=(0, 0, 0),
-        lens=50.0,
+        lens=35.0,
     )
 
-    # Phase 1: Establish (wide shot)
-    phase1_end = int(n_frames * 0.15)
+    # Phase 1: Establish (wide shot, slow drift in)
+    phase1_end = int(n_frames * 0.20)
     for i in range(phase1_end + 1):
         frame = i + 1
         t = i / max(phase1_end, 1)
-        cam.location = Vector((-1.5, -1.2 - 0.3 * t, 0.6 + 0.2 * t))
+        cam.location = Vector((-2.5 + 0.5 * t, -3.0 + 0.3 * t, 1.2 - 0.1 * t))
         cam.keyframe_insert(data_path="location", frame=frame)
         target = Vector((0.3 * t, 0, 0))
         direction = target - cam.location
         cam.rotation_euler = direction.to_track_quat("-Z", "Y").to_euler()
         cam.keyframe_insert(data_path="rotation_euler", frame=frame)
 
-    # Phase 2: Track along flame (left to right)
+    # Phase 2: Track along flame (left to right, pulled back)
     phase2_start = phase1_end + 1
     phase2_end = int(n_frames * 0.75)
     for i in range(phase2_end - phase2_start + 1):
         frame = phase2_start + i
         t = i / max(phase2_end - phase2_start, 1)
-        # Camera slides from left of flame to right
-        cam_x = -1.2 + 2.4 * t
-        cam.location = Vector((cam_x, -1.0, 0.5 + 0.15 * math.sin(t * math.pi)))
+        # Camera slides from left to right, stays pulled back
+        cam_x = -1.8 + 3.6 * t
+        cam.location = Vector((cam_x, -2.5, 0.8 + 0.2 * math.sin(t * math.pi)))
         cam.keyframe_insert(data_path="location", frame=frame)
-        # Look slightly ahead
-        look_x = cam_x + 0.3
-        direction = Vector((look_x, 0, 0.1)) - cam.location
+        # Look at center of flame
+        look_x = cam_x * 0.3  # Smoothed look-ahead
+        direction = Vector((look_x, 0, 0.05)) - cam.location
         cam.rotation_euler = direction.to_track_quat("-Z", "Y").to_euler()
         cam.keyframe_insert(data_path="rotation_euler", frame=frame)
 
-    # Phase 3: Close-up on flame front
+    # Phase 3: Settle on angled view of flame front
     phase3_start = phase2_end + 1
-    flame_front_x = 0.0  # Mid-domain where the steep gradient is
+    flame_front_x = 0.0
     for i in range(n_frames - phase3_start + 1):
         frame = phase3_start + i
         t = i / max(n_frames - phase3_start, 1)
         cam.location = Vector((
-            flame_front_x - 0.3 + 0.1 * t,
-            -0.6 + 0.05 * math.sin(t * 2 * math.pi),
-            0.3 + 0.05 * math.cos(t * 2 * math.pi),
+            flame_front_x + 0.8,
+            -2.2 + 0.1 * math.sin(t * 2 * math.pi),
+            0.9 + 0.05 * math.cos(t * 2 * math.pi),
         ))
         cam.keyframe_insert(data_path="location", frame=frame)
         direction = Vector((flame_front_x, 0, 0.05)) - cam.location
@@ -1638,8 +1681,14 @@ def render_scene(
     """
     Render all frames of a scene.
 
+    Uses Blender's animation render path which enables persistent
+    data caching between frames. For scenes with static geometry
+    (VDB volumes, meshes) and only an orbiting camera, the BVH,
+    volume mesh, and density grid are uploaded to GPU ONCE and
+    reused across all frames — eliminating the per-frame resync
+    overhead.
+
     Returns the number of frames rendered (for offset tracking).
-    Prints per-frame timing and running average for benchmarking.
     """
     import time
 
@@ -1649,6 +1698,17 @@ def render_scene(
     n_frames = scene.frame_end - scene.frame_start + 1
     print(f"  Rendering {n_frames} frames (#{frame_offset + 1}-{frame_offset + n_frames})...")
 
+    # Enable persistent data so Blender caches BVH/textures/volumes
+    # across frames. Only camera transforms change per frame.
+    scene.render.use_persistent_data = True
+
+    # Set up output path pattern for animation render.
+    # Blender's animation mode renders frame_start..frame_end
+    # and writes each frame using the filepath pattern.
+    scene.render.filepath = str(output_path / f"frame_{frame_offset + scene.frame_start:04d}")
+
+    # For frame numbering with offset, we render frame-by-frame
+    # but with persistent_data=True, BVH/volume stay cached.
     frame_times: list[float] = []
     for frame in range(scene.frame_start, scene.frame_end + 1):
         t0 = time.perf_counter()
