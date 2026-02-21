@@ -254,15 +254,17 @@ _SCENE_OVERRIDES: Dict[int, Dict[str, Any]] = {
     # Default diffuse surface: 1 diffuse bounce is sufficient.
     # No glass, no volume, no transmission.
     1: {
-        "max_bounces": 4,
-        "diffuse_bounces": 1,
-        "glossy_bounces": 1,
+        "max_bounces": 0,
+        "diffuse_bounces": 0,
+        "glossy_bounces": 0,
         "transmission_bounces": 0,
         "transparent_max_bounces": 0,
         "volume_bounces": 0,
-        "adaptive_threshold": 0.03,
-        "adaptive_min_samples": 4,
-        "use_fast_gi": True,
+        "adaptive_threshold": 0.10,
+        "adaptive_min_samples": 1,
+        "use_fast_gi": False,
+        "samples_override": 4,
+        "view_transform": "Standard",
     },
     # Scene 2 — Combustion Flame
     # Thin slab geometry with 1D temperature profile — converges fast.
@@ -317,8 +319,10 @@ def setup_cycles(scene: bpy.types.Scene, scene_id: int = -1) -> None:
     scene.cycles.scrambling_distance = 0.8
     scene.cycles.use_light_tree = True
 
-    # Film
-    scene.render.film_transparent = False
+    # Film — transparent background renders world as alpha=0.
+    # Composited to black in the PNG.  This bypasses Filmic's
+    # black-lift curve that otherwise adds ~64/255 ambient gray.
+    scene.render.film_transparent = True
     scene.render.resolution_x = CFG["resolution_x"]
     scene.render.resolution_y = CFG["resolution_y"]
     scene.render.resolution_percentage = 100
@@ -372,6 +376,8 @@ def setup_cycles(scene: bpy.types.Scene, scene_id: int = -1) -> None:
                 scene.cycles.adaptive_min_samples = val
             elif key == "use_fast_gi":
                 scene.cycles.use_fast_gi = val
+            elif key == "view_transform":
+                scene.view_settings.view_transform = val
             elif hasattr(scene.cycles, key):
                 setattr(scene.cycles, key, val)
         applied = ", ".join(f"{k}={v}" for k, v in overrides.items())
@@ -380,11 +386,16 @@ def setup_cycles(scene: bpy.types.Scene, scene_id: int = -1) -> None:
 
 def create_dark_world(
     scene: bpy.types.Scene,
-    color_top: Tuple[float, float, float] = (0.005, 0.005, 0.02),
-    color_bottom: Tuple[float, float, float] = (0.001, 0.001, 0.005),
-    strength: float = 0.3,
+    color_top: Tuple[float, float, float] = (0.0, 0.0, 0.0),
+    color_bottom: Tuple[float, float, float] = (0.0, 0.0, 0.0),
+    strength: float = 0.0,
 ) -> None:
-    """Dark gradient world background for scientific visualization."""
+    """Pure black world background — zero ambient contribution.
+
+    All scene illumination comes from the explicit point/area
+    lights.  A black world prevents Fast GI from injecting
+    uniform gray fill that washes out contrast.
+    """
     world = bpy.data.worlds.new("DarkWorld")
     scene.world = world
     world.use_nodes = True
@@ -394,20 +405,8 @@ def create_dark_world(
     output = add_node(tree, "ShaderNodeOutputWorld", (600, 0))
     bg = add_node(tree, "ShaderNodeBackground", (400, 0))
     bg.inputs["Strength"].default_value = strength
+    bg.inputs["Color"].default_value = (0.0, 0.0, 0.0, 1.0)
     link(tree, bg, "Background", output, "Surface")
-
-    # Gradient
-    tex_coord = add_node(tree, "ShaderNodeTexCoord", (-200, 0))
-    separate = add_node(tree, "ShaderNodeSeparateXYZ", (0, 0))
-    link(tree, tex_coord, "Generated", separate, "Vector")
-
-    ramp = add_node(tree, "ShaderNodeValToRGB", (200, 0))
-    ramp.color_ramp.elements[0].position = 0.0
-    ramp.color_ramp.elements[0].color = (*color_bottom, 1.0)
-    ramp.color_ramp.elements[1].position = 1.0
-    ramp.color_ramp.elements[1].color = (*color_top, 1.0)
-    link(tree, separate, "Z", ramp, "Fac")
-    link(tree, ramp, "Color", bg, "Color")
 
 
 def add_camera(
@@ -604,7 +603,8 @@ def generate_vortex_isosurface(
     L = n_cells * 2.0 * np.pi
     h = L / N
 
-    # ── Evaluate the analytical vortex field on a uniform grid ──
+    # ── Step 1: Evaluate the analytical vortex field on a uniform grid ──
+    # Primary scalar: defines the physical boundary (isosurface geometry).
     coords = np.arange(N, dtype=np.float64) * h
     X, Y, Z = np.meshgrid(coords, coords, coords, indexing="ij")
 
@@ -619,25 +619,50 @@ def generate_vortex_isosurface(
     field = np.maximum(np.maximum(tube_z, tube_x), tube_y)
     field_norm = (field / 2.0).astype(np.float32)
 
-    del X, Y, Z, cos2x, cos2y, cos2z, tube_z, tube_x, tube_y, field
+    del cos2x, cos2y, cos2z, tube_z, tube_x, tube_y, field
 
-    # ── Boundary falloff ────────────────────────────────────────
-    # The tube profiles extend to the domain edges where field > 0.
-    # Without falloff, marching cubes caps those open boundaries
-    # with flat walls (the "Borg cube" effect).  We zero-pad the
-    # outermost voxels so the field drops below the isovalue at
-    # the boundary, forcing the mesh to close organically inside
-    # the domain instead of capping at the box faces.
-    pad = 4  # voxels of linear taper
-    for axis in range(3):
-        for k in range(pad):
-            alpha = k / pad  # 0 at boundary → 1 at interior
-            slc_lo = [slice(None)] * 3
-            slc_hi = [slice(None)] * 3
-            slc_lo[axis] = k
-            slc_hi[axis] = N - 1 - k
-            field_norm[tuple(slc_lo)] *= alpha
-            field_norm[tuple(slc_hi)] *= alpha
+    # ── Step 1b: Compute the secondary scalar field ─────────────
+    # Analytical Taylor-Green vorticity at t=0:
+    #   ω_x =  sin(x) cos(y) sin(z)
+    #   ω_y =  cos(x) sin(y) sin(z)
+    #   ω_z = -2 cos(x) cos(y) cos(z)
+    # Vorticity magnitude |ω| measures rotational intensity —
+    # the natural "color" variable for vortex tube geometry.
+    cosx = np.cos(X)
+    sinx = np.sin(X)
+    cosy = np.cos(Y)
+    siny = np.sin(Y)
+    cosz = np.cos(Z)
+    sinz = np.sin(Z)
+
+    omega_x = sinx * cosy * sinz
+    omega_y = cosx * siny * sinz
+    omega_z = -2.0 * cosx * cosy * cosz
+
+    vorticity_mag = np.sqrt(
+        omega_x ** 2 + omega_y ** 2 + omega_z ** 2
+    ).astype(np.float32)
+
+    del X, Y, Z, cosx, sinx, cosy, siny, cosz, sinz
+    del omega_x, omega_y, omega_z
+
+    # ── Spherical boundary carve ─────────────────────────────────
+    # The Taylor-Green field is periodic — tubes extend to all 6
+    # domain faces.  Flat-face zero-clamping still leaves walls
+    # because the outermost tube *ring* itself forms the wall.
+    # A spherical mask multiplied into the field forces the iso-
+    # surface to close radially before reaching any face, producing
+    # free-floating organic tube geometry with no flat surfaces.
+    center = (N - 1) / 2.0
+    ii, jj, kk = np.ogrid[:N, :N, :N]
+    dist = np.sqrt(
+        (ii - center) ** 2 + (jj - center) ** 2 + (kk - center) ** 2
+    )
+    R = 0.42 * N          # hard-zero beyond this radius (voxels)
+    taper = 0.10 * N      # linear ramp width before hard-zero
+    mask = np.clip((R - dist) / taper, 0.0, 1.0).astype(np.float32)
+    field_norm *= mask
+    del ii, jj, kk, dist, mask
 
     # ── Load into OpenVDB grid ──────────────────────────────────
     grid = vdb.FloatGrid()
@@ -665,6 +690,114 @@ def generate_vortex_isosurface(
     )
     del grid
 
+    # ── Step 2: Sample secondary field at MC vertex positions ───
+    # OpenVDB vertices are in world coords [0, 2].  Convert back
+    # to array indices (fractional) for trilinear interpolation.
+    # Pure numpy implementation — no scipy dependency required.
+    t0 = _time.perf_counter()
+    vert_indices = verts_np / voxel_size  # world → voxel indices
+
+    # Clamp to valid range [0, N-1]
+    fi = vert_indices[:, 0].astype(np.float64)
+    fj = vert_indices[:, 1].astype(np.float64)
+    fk = vert_indices[:, 2].astype(np.float64)
+
+    fi = np.clip(fi, 0.0, N - 1.001)
+    fj = np.clip(fj, 0.0, N - 1.001)
+    fk = np.clip(fk, 0.0, N - 1.001)
+
+    # Integer corners and fractional offsets
+    i0 = fi.astype(np.intp)
+    j0 = fj.astype(np.intp)
+    k0 = fk.astype(np.intp)
+    i1 = np.minimum(i0 + 1, N - 1)
+    j1 = np.minimum(j0 + 1, N - 1)
+    k1 = np.minimum(k0 + 1, N - 1)
+
+    di = (fi - i0).astype(np.float32)
+    dj = (fj - j0).astype(np.float32)
+    dk = (fk - k0).astype(np.float32)
+
+    # Trilinear interpolation: 8 corners
+    c000 = vorticity_mag[i0, j0, k0]
+    c001 = vorticity_mag[i0, j0, k1]
+    c010 = vorticity_mag[i0, j1, k0]
+    c011 = vorticity_mag[i0, j1, k1]
+    c100 = vorticity_mag[i1, j0, k0]
+    c101 = vorticity_mag[i1, j0, k1]
+    c110 = vorticity_mag[i1, j1, k0]
+    c111 = vorticity_mag[i1, j1, k1]
+
+    vert_values = (
+        c000 * (1 - di) * (1 - dj) * (1 - dk)
+        + c001 * (1 - di) * (1 - dj) * dk
+        + c010 * (1 - di) * dj * (1 - dk)
+        + c011 * (1 - di) * dj * dk
+        + c100 * di * (1 - dj) * (1 - dk)
+        + c101 * di * (1 - dj) * dk
+        + c110 * di * dj * (1 - dk)
+        + c111 * di * dj * dk
+    )
+
+    sample_ms = (_time.perf_counter() - t0) * 1000
+    print(f"    Vertex sampling: {len(vert_values):,} verts ({sample_ms:.0f} ms)")
+    del vorticity_mag, fi, fj, fk, i0, j0, k0, i1, j1, k1, di, dj, dk
+    del c000, c001, c010, c011, c100, c101, c110, c111
+
+    # ── Step 3: Normalize to [0, 1] ─────────────────────────────
+    v_min = vert_values.min()
+    v_max = vert_values.max()
+    if v_max - v_min > 1e-10:
+        vert_normalized = (vert_values - v_min) / (v_max - v_min)
+    else:
+        vert_normalized = np.zeros_like(vert_values)
+    print(f"    Vorticity range: [{v_min:.4f}, {v_max:.4f}]")
+    del vert_values
+
+    # ── Step 4: Apply scientific colormap ────────────────────────
+    # Inferno: perceptually uniform sequential colormap.  Black →
+    # purple → red → orange → yellow.  Low vorticity regions fade
+    # into the black background; high vorticity regions glow hot.
+    # 7-stop piecewise-linear approximation of matplotlib's inferno.
+    t0 = _time.perf_counter()
+    n_verts = len(vert_normalized)
+    vertex_colors = np.empty((n_verts, 4), dtype=np.float32)
+
+    stops = np.array([
+        [0.001, 0.000, 0.014],  # t=0.000  near-black
+        [0.132, 0.024, 0.330],  # t=0.167  deep indigo
+        [0.341, 0.063, 0.431],  # t=0.333  purple
+        [0.553, 0.129, 0.375],  # t=0.500  magenta-red
+        [0.770, 0.263, 0.180],  # t=0.667  burnt orange
+        [0.939, 0.488, 0.020],  # t=0.833  amber
+        [0.988, 0.998, 0.645],  # t=1.000  bright yellow
+    ], dtype=np.float32)
+    stop_t = np.linspace(0.0, 1.0, len(stops), dtype=np.float32)
+
+    # Vectorized piecewise interpolation
+    t_clamped = np.clip(vert_normalized, 0.0, 1.0).astype(np.float32)
+    # Find which segment each value falls in
+    seg_idx = np.searchsorted(stop_t, t_clamped, side="right") - 1
+    seg_idx = np.clip(seg_idx, 0, len(stops) - 2)
+    # Fractional position within segment
+    seg_lo = stop_t[seg_idx]
+    seg_hi = stop_t[seg_idx + 1]
+    frac = np.where(
+        seg_hi - seg_lo > 1e-10,
+        (t_clamped - seg_lo) / (seg_hi - seg_lo),
+        0.0,
+    )
+    # Interpolate RGB
+    rgb_lo = stops[seg_idx]
+    rgb_hi = stops[seg_idx + 1]
+    vertex_colors[:, :3] = rgb_lo + frac[:, None] * (rgb_hi - rgb_lo)
+    vertex_colors[:, 3] = 1.0  # alpha
+
+    cmap_ms = (_time.perf_counter() - t0) * 1000
+    print(f"    Colormap: Inferno ({cmap_ms:.0f} ms)")
+    del vert_normalized, t_clamped, seg_idx, seg_lo, seg_hi, frac
+    del rgb_lo, rgb_hi
+
     # ── Build Blender mesh from numpy arrays ────────────────────
     t0 = _time.perf_counter()
     mesh = bpy.data.meshes.new("VortexIsosurface")
@@ -674,6 +807,35 @@ def generate_vortex_isosurface(
     print(f"    Blender mesh: {build_ms:.0f} ms")
 
     del verts_np, quads_np
+
+    # ── Step 5: Inject vertex colors into Blender ───────────────
+    # Create a Color Attribute layer and write the per-vertex RGBA
+    # values.  Blender stores colors per loop-corner (not per vertex),
+    # so we index through mesh.loops → loop.vertex_index.
+    t0 = _time.perf_counter()
+    color_layer = mesh.color_attributes.new(
+        name="VorticityColor",
+        type="FLOAT_COLOR",
+        domain="CORNER",
+    )
+
+    # Build a flat array: for each loop corner, look up the vertex
+    # color from the per-vertex array.
+    n_loops = len(mesh.loops)
+    loop_vert_indices = np.empty(n_loops, dtype=np.int32)
+    mesh.loops.foreach_get("vertex_index", loop_vert_indices)
+    loop_colors = vertex_colors[loop_vert_indices]
+
+    # Write all colors in one bulk operation
+    color_layer.data.foreach_set("color", loop_colors.ravel())
+    mesh.update()
+
+    color_ms = (_time.perf_counter() - t0) * 1000
+    print(
+        f"    Vertex colors: {n_loops:,} loop corners "
+        f"painted ({color_ms:.0f} ms)"
+    )
+    del vertex_colors, loop_vert_indices, loop_colors
 
     # ── Create object, center at origin ─────────────────────────
     obj = bpy.data.objects.new("VortexIsosurface", mesh)
@@ -696,14 +858,29 @@ def generate_vortex_isosurface(
     subsurf.levels = 1       # viewport
     subsurf.render_levels = 2  # render — smooth without excessive poly count
 
+    # ── Step 6: Build emission-only shader from vertex colors ───
+    # No Principled BSDF, no glass, no reflections.  A single
+    # Emission node reads the Color Attribute directly — the mesh
+    # emits the exact RGB light stored in each vertex.  Zero
+    # external lighting required.  Noise-free in 1 sample.
+    mat = bpy.data.materials.new(name="VorticityEmission")
+    mat.use_nodes = True
+    tree = mat.node_tree
+    tree.nodes.clear()
+
+    output = add_node(tree, "ShaderNodeOutputMaterial", (400, 0))
+    emission = add_node(tree, "ShaderNodeEmission", (200, 0))
+    emission.inputs["Strength"].default_value = 1.0
+    link(tree, emission, "Emission", output, "Surface")
+
+    color_attr = add_node(tree, "ShaderNodeVertexColor", (-100, 0))
+    color_attr.layer_name = "VorticityColor"
+    link(tree, color_attr, "Color", emission, "Color")
+
+    obj.data.materials.append(mat)
+    print("    Shader: Emission × Vertex Color (no external lights)")
+
     return obj
-
-
-# No custom material for the vortex isosurface.
-# The mesh renders with Blender's default diffuse surface — pure
-# geometry, zero shader fabrication.  Lighting and camera angles
-# reveal the tube structure through shadows, silhouettes, and
-# surface normals alone.
 
 
 def create_flame_volume_material(
@@ -946,14 +1123,19 @@ def build_scene_vortex(
     data: Dict[str, Any],
 ) -> None:
     """
-    Build the Taylor-Green vortex isosurface scene.
+    Build the Taylor-Green vortex multi-variable isosurface scene.
 
     Extracts a marching-cubes isosurface from the analytical vortex
-    field via OpenVDB's ``convertToQuads``.  The resulting mesh uses
-    no custom shader — Blender's default diffuse surface renders the
-    raw geometry as-is.  Lighting, shadows, and silhouettes reveal
-    the tube structure.  No volumetric rendering, no ray-marching,
-    no shaders, no OIDN smearing.
+    field via OpenVDB's ``convertToQuads``.  The secondary scalar
+    field (vorticity magnitude) is sampled at every vertex via
+    trilinear interpolation, normalized to [0,1], mapped through
+    a Cool-Warm scientific colormap, and injected as per-vertex
+    color attributes.
+
+    The material is a single Emission node reading the vertex colors.
+    No external lights, no shadows, no ray-marching, no OIDN.  The
+    GPU renders direct emission — completely noise-free, mathematically
+    perfect dual-variable visualization.
     """
     clear_scene()
     n_frames = CFG["vortex_frames"]
@@ -962,7 +1144,7 @@ def build_scene_vortex(
 
     print(f"  Scene 1: Taylor-Green Vortex ({n_frames} frames)")
 
-    # ── Generate isosurface mesh from analytical field ───────────
+    # ── Generate isosurface mesh with vertex-color vorticity ────
     iso_obj = generate_vortex_isosurface(
         scene,
         resolution=256,
@@ -970,33 +1152,17 @@ def build_scene_vortex(
         isovalue=0.50,    # Isosurface at 50% of max field strength
     )
 
-    # No material — the isosurface renders with Blender's default
-    # diffuse surface.  Pure geometry, zero shader fabrication.
-
-    # ── Lighting ────────────────────────────────────────────────
-    # Strong external lighting to reveal 3D tube structure.
-    # Key light: strong, high, slightly warm — top-down sculpting
-    add_area_light(
-        scene, location=(3, -2, 5), energy=500.0, size=4.0,
-        color=(0.85, 0.9, 1.0), name="KeyLight",
-    )
-    # Fill light: softer, opposite side — prevents pitch-black shadows
-    add_area_light(
-        scene, location=(-4, 3, 2), energy=200.0, size=5.0,
-        color=(0.5, 0.65, 1.0), name="FillLight",
-    )
-    # Rim/back light: defines edges and separates from background
-    add_area_light(
-        scene, location=(0, 4, -1), energy=250.0, size=3.0,
-        color=(0.3, 0.5, 1.0), name="RimLight",
-    )
+    # No external lights — the mesh is self-illuminated via the
+    # Emission shader reading per-vertex vorticity colors.  This
+    # makes the render completely noise-free (no stochastic light
+    # sampling) and trivially fast.
 
     # ── Camera: orbit around vortex ─────────────────────────────
     cam = add_camera(
         scene,
-        location=(4, -3, 2.5),
+        location=(3, -2.2, 1.8),
         target=(0, 0, 0),
-        lens=35.0,
+        lens=50.0,
     )
 
     # Phase 1: Approach (0 to 15% of frames)
@@ -1004,7 +1170,7 @@ def build_scene_vortex(
     for i in range(approach_end + 1):
         frame = i + 1
         t = i / max(approach_end, 1)
-        radius = 7.0 - 2.5 * t  # 7 → 4.5
+        radius = 5.0 - 1.5 * t  # 5 → 3.5
         angle = -0.6 + 0.3 * t
         elev = 0.3 + 0.15 * t
         x = radius * math.cos(angle) * math.cos(elev)
@@ -1020,7 +1186,7 @@ def build_scene_vortex(
     orbit_start = approach_end + 1
     orbit_end = int(n_frames * 0.80)
     animate_orbit(
-        cam, center=(0, 0, 0), radius=4.5, elevation=0.45,
+        cam, center=(0, 0, 0), radius=3.5, elevation=0.45,
         start_frame=orbit_start, end_frame=orbit_end,
         start_angle=-0.3, end_angle=-0.3 + 2 * math.pi,
     )
@@ -1030,7 +1196,7 @@ def build_scene_vortex(
     for i in range(n_frames - decay_start + 1):
         frame = decay_start + i
         t = i / max(n_frames - decay_start, 1)
-        radius = 4.5 + 2.5 * t  # Pull back out
+        radius = 3.5 + 1.5 * t  # Pull back out
         angle = -0.3 + 2 * math.pi + 0.3 * t
         elev = 0.45 - 0.1 * t
         x = radius * math.cos(angle) * math.cos(elev)
