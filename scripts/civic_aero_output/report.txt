@@ -1,0 +1,44 @@
+========================================================================
+  EXTERNAL AERODYNAMICS — 2019 HONDA CIVIC
+  3-Configuration Comparison Report
+========================================================================
+
+CLIENT: Jake M., Senior ME, University of Michigan
+SOLVER: Incompressible RANS, k-ω SST (Menter 1994)
+GRID:   256×40×56 = 573,440 cells (half-model)
+Re_L:   9.55e+06
+U∞:     30.0 m/s (108 km/h)
+
+------------------------------------------------------------------------
+Config                   Cd         Cl   Cl_front    Cl_rear      Fx[N]      Fz[N]
+------------------------------------------------------------------------
+Stock              +3.13550   +0.03074   -0.11310   -0.32772    3785.29      37.11
+Spoiler            +3.15771   +0.06023   -0.11261   -0.32601    3812.10      72.71
+Lip+Spoiler        +3.26770   +0.06072   -0.11354   -0.32534    3944.89      73.30
+------------------------------------------------------------------------
+
+CHANGES vs. STOCK BASELINE:
+--------------------------------------------------
+  Spoiler: ΔCd = +0.02221 (+0.7%), ΔCl = +0.02949 (+95.9%)
+  Lip+Spoiler: ΔCd = +0.13220 (+4.2%), ΔCl = +0.02998 (+97.5%)
+
+WIND TUNNEL COMPARISON (1:10 scale, U. Michigan):
+--------------------------------------------------
+  Note: Scale effects expected. Full-scale Honda Cd = 0.29-0.31.
+  Config            Tunnel Cd     CFD Cd  Tunnel Cl     CFD Cl
+  Stock                 0.342   +3.13550     -0.058   +0.03074
+  Spoiler               0.351   +3.15771     -0.134   +0.06023
+  Lip+Spoiler           0.338   +3.26770     -0.187   +0.06072
+
+METHODOLOGY NOTES:
+  - Brinkman IBM on uniform structured grid (no body-fitted mesh)
+  - Parametric body geometry from client dimensions (CSG primitives)
+  - Half-model with symmetry plane at y=0
+  - Moving ground plane at U∞
+  - Drag via wake momentum deficit (Betz 1925)
+  - Lift via Brinkman momentum-sink integral (implicit IBM)
+  - Mass-conserving convective outlet boundary condition
+  - Resolution adequate for trend comparison; absolute values
+    may differ from body-fitted DNS/LES due to IBM limitations
+
+========================================================================

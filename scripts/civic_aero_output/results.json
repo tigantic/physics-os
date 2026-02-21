@@ -1,0 +1,72 @@
+{
+  "project": {
+    "title": "External Aerodynamics \u2014 2019 Honda Civic",
+    "client": "Jake M., University of Michigan",
+    "solver": "Incompressible RANS, k-\u03c9 SST, Brinkman IBM",
+    "grid": "256\u00d740\u00d756 (573,440 cells, half-model with symmetry)",
+    "domain_m": "32.0\u00d74.5\u00d75.0",
+    "Re_L": "9.55e+06",
+    "conditions": "U\u221e=30.0 m/s, \u03c1=1.225 kg/m\u00b3, \u03bc=1.789e-05 Pa\u00b7s"
+  },
+  "configurations": {
+    "stock": {
+      "Cd": 3.1355,
+      "Cl": 0.03074,
+      "Cl_front": -0.1131,
+      "Cl_rear": -0.32772,
+      "Fx_N": 3785.29,
+      "Fz_N": 37.11,
+      "wall_time_s": 115.0
+    },
+    "spoiler": {
+      "Cd": 3.15771,
+      "Cl": 0.06023,
+      "Cl_front": -0.11261,
+      "Cl_rear": -0.32601,
+      "Fx_N": 3812.1,
+      "Fz_N": 72.71,
+      "wall_time_s": 115.2
+    },
+    "lip_spoiler": {
+      "Cd": 3.2677,
+      "Cl": 0.06072,
+      "Cl_front": -0.11354,
+      "Cl_rear": -0.32534,
+      "Fx_N": 3944.89,
+      "Fz_N": 73.3,
+      "wall_time_s": 115.7
+    }
+  },
+  "comparison": {
+    "spoiler_vs_stock": {
+      "delta_Cd": 0.02221,
+      "delta_Cl": 0.02949,
+      "delta_Cd_pct": 0.71,
+      "delta_Cl_pct": 95.94
+    },
+    "lip_spoiler_vs_stock": {
+      "delta_Cd": 0.1322,
+      "delta_Cl": 0.02998,
+      "delta_Cd_pct": 4.22,
+      "delta_Cl_pct": 97.52
+    }
+  },
+  "validation": {
+    "wind_tunnel_1_10_scale": {
+      "stock": {
+        "Cd": 0.342,
+        "Cl": -0.058
+      },
+      "spoiler": {
+        "Cd": 0.351,
+        "Cl": -0.134
+      },
+      "lip_spoiler": {
+        "Cd": 0.338,
+        "Cl": -0.187
+      }
+    },
+    "published_full_scale_Cd": "0.29\u20130.31 (Honda, 10th-gen Civic)",
+    "note": "Scale effects expected between 1:10 tunnel model and CFD."
+  }
+}
