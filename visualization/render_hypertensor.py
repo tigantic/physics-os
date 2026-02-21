@@ -791,6 +791,10 @@ def generate_vortex_isosurface(
     rgb_lo = stops[seg_idx]
     rgb_hi = stops[seg_idx + 1]
     vertex_colors[:, :3] = rgb_lo + frac[:, None] * (rgb_hi - rgb_lo)
+    # Scale into [0, 0.33] so that emission × 3.0 peaks at 1.0 in
+    # linear space.  Prevents 8-bit clipping while preserving the
+    # full colormap gradient and giving a proper luminous glow.
+    vertex_colors[:, :3] *= 0.33
     vertex_colors[:, 3] = 1.0  # alpha
 
     cmap_ms = (_time.perf_counter() - t0) * 1000
@@ -870,7 +874,7 @@ def generate_vortex_isosurface(
 
     output = add_node(tree, "ShaderNodeOutputMaterial", (400, 0))
     emission = add_node(tree, "ShaderNodeEmission", (200, 0))
-    emission.inputs["Strength"].default_value = 1.0
+    emission.inputs["Strength"].default_value = 3.0
     link(tree, emission, "Emission", output, "Surface")
 
     color_attr = add_node(tree, "ShaderNodeVertexColor", (-100, 0))
