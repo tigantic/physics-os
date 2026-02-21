@@ -621,6 +621,24 @@ def generate_vortex_isosurface(
 
     del X, Y, Z, cos2x, cos2y, cos2z, tube_z, tube_x, tube_y, field
 
+    # ── Boundary falloff ────────────────────────────────────────
+    # The tube profiles extend to the domain edges where field > 0.
+    # Without falloff, marching cubes caps those open boundaries
+    # with flat walls (the "Borg cube" effect).  We zero-pad the
+    # outermost voxels so the field drops below the isovalue at
+    # the boundary, forcing the mesh to close organically inside
+    # the domain instead of capping at the box faces.
+    pad = 4  # voxels of linear taper
+    for axis in range(3):
+        for k in range(pad):
+            alpha = k / pad  # 0 at boundary → 1 at interior
+            slc_lo = [slice(None)] * 3
+            slc_hi = [slice(None)] * 3
+            slc_lo[axis] = k
+            slc_hi[axis] = N - 1 - k
+            field_norm[tuple(slc_lo)] *= alpha
+            field_norm[tuple(slc_hi)] *= alpha
+
     # ── Load into OpenVDB grid ──────────────────────────────────
     grid = vdb.FloatGrid()
     grid.name = "density"
@@ -663,11 +681,20 @@ def generate_vortex_isosurface(
     # VDB world coords span [0, 2]; shift to center at origin.
     obj.location = (-1.0, -1.0, -1.0)
 
-    # ── Smooth shading for clean reflections ────────────────────
+    # ── Smooth shading ──────────────────────────────────────────
     bpy.context.view_layer.objects.active = obj
     obj.select_set(True)
     bpy.ops.object.shade_smooth()
     obj.select_set(False)
+
+    # ── Subdivision Surface for organic curves ──────────────────
+    # Raw marching-cubes geometry inherits the angular facets of
+    # the voxel grid.  A single level of Catmull-Clark subdivision
+    # in the viewport (2 at render time) smooths these into the
+    # fluid, organic tube shapes the physics describes.
+    subsurf = obj.modifiers.new(name="Subsurf", type="SUBSURF")
+    subsurf.levels = 1       # viewport
+    subsurf.render_levels = 2  # render — smooth without excessive poly count
 
     return obj
 
