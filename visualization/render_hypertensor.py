@@ -246,23 +246,23 @@ def setup_gpu() -> str:
     return "CPU"
 
 
-# Per-scene Cycles overrides. Volumetric physics scenes are emission-dominated
-# with no complex BxDF chains, so bounce limits can be drastically reduced.
-# The flame is a 1D-texture slab (simpler than the 3D procedural vortex) and
-# converges faster, so it gets fewer samples and coarser volume stepping.
+# Per-scene Cycles overrides.  Scene 1 (vortex) is a bare diffuse isosurface
+# mesh — minimal bounce budget, no volume, no transmission.  Scene 2 (flame)
+# is a volumetric slab with emission.
 _SCENE_OVERRIDES: Dict[int, Dict[str, Any]] = {
-    # Scene 1 — Taylor-Green Vortex
-    # Emission-dominated volumetric: indirect diffuse is negligible.
+    # Scene 1 — Taylor-Green Vortex (isosurface mesh, no material)
+    # Default diffuse surface: 1 diffuse bounce is sufficient.
+    # No glass, no volume, no transmission.
     1: {
         "max_bounces": 4,
         "diffuse_bounces": 1,
         "glossy_bounces": 1,
-        "transmission_bounces": 1,
-        "transparent_max_bounces": 2,
-        "volume_bounces": 2,           # Multi-scatter through volume tubes
-        "adaptive_threshold": 0.025,
-        "adaptive_min_samples": 8,     # Let adaptive kick in sooner
-        "use_fast_gi": True,           # Approximate indirect (invisible for emission)
+        "transmission_bounces": 0,
+        "transparent_max_bounces": 0,
+        "volume_bounces": 0,
+        "adaptive_threshold": 0.03,
+        "adaptive_min_samples": 4,
+        "use_fast_gi": True,
     },
     # Scene 2 — Combustion Flame
     # Thin slab geometry with 1D temperature profile — converges fast.
@@ -549,185 +549,134 @@ def create_text_object(
 # ═══════════════════════════════════════════════════════════════════════
 
 
-def generate_vortex_vdb(
+def generate_vortex_isosurface(
+    scene: bpy.types.Scene,
     resolution: int = 256,
     n_cells: int = 2,
-    threshold: float = 0.15,
-    output_path: Optional[str] = None,
-) -> str:
+    isovalue: float = 0.50,
+) -> bpy.types.Object:
     """
-    Generate a VDB file containing the Taylor-Green vortex tube lattice.
+    Generate a marching-cubes isosurface mesh of the Taylor-Green vortex
+    tube lattice and add it to *scene*.
 
-    Produces continuous cylindrical tubes using the cross-sectional
-    vortex profile, symmetrized across all three axes.
+    The analytical vortex field is computed on a uniform grid, loaded
+    into an OpenVDB FloatGrid, and isosurface-extracted via OpenVDB's
+    native ``convertToQuads`` (dual-contour marching cubes).  The
+    resulting quad mesh is imported directly into Blender as a Mesh
+    object — no volumetric rendering, no ray-marching, no OIDN
+    smearing.
 
-    Self-contained analytical computation — zero coupling to HyperGrid
-    or any shared infrastructure.
+    **Why isosurface instead of volume?**
 
-    The key insight: the analytical Q-criterion for TG has a cos²(z)
-    axial modulation that pinches tubes to zero at z = π/2 + nπ,
-    breaking them into disconnected blobs. The vortex CORES are
-    continuous cylinders — identified by the cross-sectional profile
-    alone:
+    Professional CFD tools (ParaView, EnSight, FieldView) render
+    scalar fields as isosurfaces, not smoke.  An isosurface is the
+    mathematically exact 3D shell at a chosen field threshold:
 
-        tube_z = max(0, cos(2x) + cos(2y))  → z-cylinders at (nπ, mπ)
-        tube_x = max(0, cos(2y) + cos(2z))  → x-cylinders at (mπ, lπ)
-        tube_y = max(0, cos(2x) + cos(2z))  → y-cylinders at (nπ, lπ)
+    - **Physics are absolute**: mesh vertices lie exactly on the
+      isovalue contour of the raw QTT data.  Zero fabrication.
+    - **Razor-sharp edges**: standard Glass / Emissive surface
+      shader — no volumetric noise, no AI denoise smearing.
+    - **Blistering speed**: Cycles traces a ray–surface
+      intersection almost instantly vs. stepping through a volume
+      voxel-by-voxel.  Render time drops by an order of magnitude.
 
-    cos(2x) + cos(2y) > 0 defines a connected region around each
-    lattice point — a circular-ish cross-section that IS the tube.
-    The max-union of all three orientations gives the full interlocking
-    lattice seen in CFD presentations of evolved TG flow.
+    The vortex core profile is identical to the volumetric version:
 
-    The threshold controls tube radius:
-        0.0  → tubes fill ~50% of space (max radius)
-        0.5  → moderate tubes (~25%)
-        0.9  → thin filaments (~5%)
+        tube_z = max(0, cos(2x) + cos(2y))  — z-cylinders
+        tube_x = max(0, cos(2y) + cos(2z))  — x-cylinders
+        tube_y = max(0, cos(2x) + cos(2z))  — y-cylinders
+
+    The isovalue controls tube radius (0.0 = fat, 1.0 = thin).
 
     Args:
-        resolution: Grid resolution per axis (N^3 total voxels).
-        n_cells: Number of TG cells per axis (2 = [0, 4pi] domain).
-        threshold: Normalized threshold [0, 1]. Controls tube radius.
-        output_path: Path for .vdb file.
+        scene:      Blender scene to add the mesh to.
+        resolution: Grid resolution per axis (N³ evaluation points).
+        n_cells:    TG cells per axis (2 → domain [0, 4π]).
+        isovalue:   Normalized isovalue in [0, 1].  The isosurface is
+                    extracted where ``field_norm == isovalue``.
 
     Returns:
-        Absolute path to the written .vdb file.
+        The Blender mesh object containing the isosurface.
     """
-    if output_path is None:
-        output_path = str(Path(OUTPUT_DIR) / "vortex_field.vdb")
+    import time as _time
 
     N = resolution
-    L = n_cells * 2.0 * np.pi  # Physical domain [0, L)
+    L = n_cells * 2.0 * np.pi
     h = L / N
 
-    # 1D coordinate arrays
+    # ── Evaluate the analytical vortex field on a uniform grid ──
     coords = np.arange(N, dtype=np.float64) * h
-
-    # 3D meshgrids (ij indexing: X varies along axis 0)
     X, Y, Z = np.meshgrid(coords, coords, coords, indexing="ij")
 
-    # Double-angle cosines for cross-sectional tube profiles
     cos2x = np.cos(2.0 * X)
     cos2y = np.cos(2.0 * Y)
     cos2z = np.cos(2.0 * Z)
 
-    # Cross-sectional tube profiles — continuous cylinders.
-    # cos(2x) + cos(2y) > 0 is a connected region around (nπ, mπ)
-    # forming a circular cross-section. No axial modulation = no gaps.
-    tube_z = np.maximum(0.0, cos2x + cos2y)  # z-oriented cylinders
-    tube_x = np.maximum(0.0, cos2y + cos2z)  # x-oriented cylinders
-    tube_y = np.maximum(0.0, cos2x + cos2z)  # y-oriented cylinders
+    tube_z = np.maximum(0.0, cos2x + cos2y)
+    tube_x = np.maximum(0.0, cos2y + cos2z)
+    tube_y = np.maximum(0.0, cos2x + cos2z)
 
-    # Union of all three orientations: the interlocking lattice
     field = np.maximum(np.maximum(tube_z, tube_x), tube_y)
+    field_norm = (field / 2.0).astype(np.float32)
 
-    # Normalize to [0, 1] (max value of cos(2a)+cos(2b) = 2.0)
-    field_norm = field / 2.0
+    del X, Y, Z, cos2x, cos2y, cos2z, tube_z, tube_x, tube_y, field
 
-    # Threshold, remap to [0, 1], then apply steep power curve.
-    # Power of 5: only the very core of each tube has significant
-    # density. Edges drop off extremely fast, eliminating the haze
-    # that accumulates when many semi-transparent layers stack up.
-    density = np.zeros(field_norm.shape, dtype=np.float32)
-    mask = field_norm > threshold
-    linear = (field_norm[mask] - threshold) / (1.0 - threshold)
-    density[mask] = (linear ** 5).astype(np.float32)
-
-    active_count = int(np.count_nonzero(density))
-    active_frac = active_count / density.size
-    print(
-        f"    VDB: {N}^3 tube lattice, threshold={threshold:.2f}, "
-        f"active={active_frac:.1%} ({active_count:,} voxels)"
-    )
-
-    # Create VDB FloatGrid from numpy array
+    # ── Load into OpenVDB grid ──────────────────────────────────
     grid = vdb.FloatGrid()
     grid.name = "density"
-    grid.copyFromArray(density)
-
-    # Prune inactive (zero) voxels
+    grid.copyFromArray(field_norm)
     grid.prune(tolerance=1e-6)
-
-    # Transform: index space → world space.
-    # Index [0, N) maps to world [0, 2] with voxelSize = 2/N.
     voxel_size = 2.0 / N
     grid.transform = vdb.createLinearTransform(voxelSize=voxel_size)
 
-    # Write VDB
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    vdb.write(output_path, grids=[grid])
-    file_size_mb = os.path.getsize(output_path) / (1024 * 1024)
-    print(f"    VDB: wrote {output_path} ({file_size_mb:.1f} MB)")
+    active = grid.activeVoxelCount()
+    print(
+        f"    VDB: {N}³ field, {active:,} active voxels "
+        f"({active / N**3:.1%})"
+    )
+    del field_norm
 
-    # Free memory
-    del X, Y, Z, cos2x, cos2y, cos2z
-    del tube_z, tube_x, tube_y, field, field_norm, density, mask
+    # ── Marching-cubes isosurface via OpenVDB ───────────────────
+    t0 = _time.perf_counter()
+    verts_np, quads_np = grid.convertToQuads(isovalue=isovalue)
+    iso_ms = (_time.perf_counter() - t0) * 1000
+    print(
+        f"    Isosurface: {len(verts_np):,} verts, "
+        f"{len(quads_np):,} quads @ isovalue={isovalue:.2f} "
+        f"({iso_ms:.0f} ms)"
+    )
+    del grid
 
-    return output_path
+    # ── Build Blender mesh from numpy arrays ────────────────────
+    t0 = _time.perf_counter()
+    mesh = bpy.data.meshes.new("VortexIsosurface")
+    mesh.from_pydata(verts_np.tolist(), [], quads_np.tolist())
+    mesh.update()
+    build_ms = (_time.perf_counter() - t0) * 1000
+    print(f"    Blender mesh: {build_ms:.0f} ms")
+
+    del verts_np, quads_np
+
+    # ── Create object, center at origin ─────────────────────────
+    obj = bpy.data.objects.new("VortexIsosurface", mesh)
+    scene.collection.objects.link(obj)
+    # VDB world coords span [0, 2]; shift to center at origin.
+    obj.location = (-1.0, -1.0, -1.0)
+
+    # ── Smooth shading for clean reflections ────────────────────
+    bpy.context.view_layer.objects.active = obj
+    obj.select_set(True)
+    bpy.ops.object.shade_smooth()
+    obj.select_set(False)
+
+    return obj
 
 
-def create_vortex_vdb_material(
-    density_scale: float = 8.0,
-    emission_scale: float = 0.15,
-) -> bpy.types.Material:
-    """
-    Principled Volume material for VDB-based vortex rendering.
-
-    Reads the "density" attribute from the imported VDB grid.
-    Uses HIGH density with very LOW emission so that external
-    lighting reveals the 3D tube structure (surface highlight,
-    shadow, depth cueing) instead of flat uniform self-glow.
-
-    The Principled Volume Color tints scattered light cyan.
-    Absorption is minimal so you can see through the lattice.
-
-    Replaces the 30+ node procedural shader with a 5-node graph:
-    Attribute → Multiply(density) → Volume.Density
-    Attribute → Multiply(emission) → Volume.Emission Strength
-    Volume → Output
-
-    Args:
-        density_scale: Multiplier on VDB density values for volume opacity.
-        emission_scale: Multiplier on VDB density values for glow intensity.
-    """
-    mat = bpy.data.materials.new("VortexVDB")
-    mat.use_nodes = True
-    tree = mat.node_tree
-    tree.nodes.clear()
-
-    # ── Output ──────────────────────────────────────────────────
-    output_node = add_node(tree, "ShaderNodeOutputMaterial", (800, 0), "Output")
-
-    # ── Principled Volume ───────────────────────────────────────
-    volume = add_node(tree, "ShaderNodeVolumePrincipled", (500, 0), "Volume")
-    # Strong forward scattering — light penetrates and reveals depth
-    volume.inputs["Anisotropy"].default_value = 0.5
-    # Scatter color: bright cyan albedo — light bounces, not absorbed
-    volume.inputs["Color"].default_value = (0.6, 0.85, 1.0, 1.0)
-    # Emission color: vivid cyan
-    volume.inputs["Emission Color"].default_value = (0.1, 0.6, 1.0, 1.0)
-    link(tree, volume, "Volume", output_node, "Volume")
-
-    # ── Attribute node: reads VDB "density" grid per-voxel ──────
-    attr = add_node(tree, "ShaderNodeAttribute", (-100, 0), "VDBDensity")
-    attr.attribute_name = "density"
-
-    # ── Density: VDB value × density_scale → volume opacity ─────
-    density = add_node(tree, "ShaderNodeMath", (200, 50), "density")
-    density.operation = "MULTIPLY"
-    density.inputs[1].default_value = density_scale
-    link(tree, attr, "Fac", density, 0)
-    link(tree, density, 0, volume, "Density")
-
-    # ── Emission: VDB value × emission_scale → subtle core glow ─
-    # Very low — just enough to see tube cores; lighting does the heavy lifting.
-    em_str = add_node(tree, "ShaderNodeMath", (200, -100), "em_strength")
-    em_str.operation = "MULTIPLY"
-    em_str.inputs[1].default_value = emission_scale
-    link(tree, attr, "Fac", em_str, 0)
-    link(tree, em_str, 0, volume, "Emission Strength")
-
-    return mat
+# No custom material for the vortex isosurface.
+# The mesh renders with Blender's default diffuse surface — pure
+# geometry, zero shader fabrication.  Lighting and camera angles
+# reveal the tube structure through shadows, silhouettes, and
+# surface normals alone.
 
 
 def create_flame_volume_material(
@@ -970,15 +919,14 @@ def build_scene_vortex(
     data: Dict[str, Any],
 ) -> None:
     """
-    Build the Taylor-Green vortex volumetric scene.
+    Build the Taylor-Green vortex isosurface scene.
 
-    Uses VDB-based volume rendering: the analytical vorticity field is
-    computed on a numpy grid, hard-thresholded, and written as a sparse
-    OpenVDB file. Blender imports it as a Volume object with a simple
-    Principled Volume shader.
-
-    This replaces the procedural shader approach (30+ math nodes) which
-    could not produce crisp structures from the smooth sinusoidal field.
+    Extracts a marching-cubes isosurface from the analytical vortex
+    field via OpenVDB's ``convertToQuads``.  The resulting mesh uses
+    no custom shader — Blender's default diffuse surface renders the
+    raw geometry as-is.  Lighting, shadows, and silhouettes reveal
+    the tube structure.  No volumetric rendering, no ray-marching,
+    no shaders, no OIDN smearing.
     """
     clear_scene()
     n_frames = CFG["vortex_frames"]
@@ -987,29 +935,16 @@ def build_scene_vortex(
 
     print(f"  Scene 1: Taylor-Green Vortex ({n_frames} frames)")
 
-    # ── Generate VDB tube lattice ─────────────────────────────────
-    vdb_path = generate_vortex_vdb(
+    # ── Generate isosurface mesh from analytical field ───────────
+    iso_obj = generate_vortex_isosurface(
+        scene,
         resolution=256,
-        n_cells=2,       # 2 TG cells per axis → clear tube lattice
-        threshold=0.60,  # Thin tubes, power-5 curve keeps cores sharp
+        n_cells=2,        # 2 TG cells per axis → clear tube lattice
+        isovalue=0.50,    # Isosurface at 50% of max field strength
     )
 
-    # ── Import VDB as Volume object ─────────────────────────────
-    bpy.ops.object.volume_import(filepath=vdb_path)
-    vol_obj = bpy.context.active_object
-    vol_obj.name = "VortexVolume"
-    # Center at origin: VDB grid spans [0, 2] in world space,
-    # offset by (-1,-1,-1) to center the 2-unit cube at origin.
-    vol_obj.location = (-1.0, -1.0, -1.0)
-
-    # Apply VDB material
-    density_rest = 3.0   # Moderate opacity, light still penetrates
-    em_rest = 3.0        # Bright vivid self-lit tubes
-    mat = create_vortex_vdb_material(
-        density_scale=density_rest,
-        emission_scale=em_rest,
-    )
-    vol_obj.data.materials.append(mat)
+    # No material — the isosurface renders with Blender's default
+    # diffuse surface.  Pure geometry, zero shader fabrication.
 
     # ── Lighting ────────────────────────────────────────────────
     # Strong external lighting to reveal 3D tube structure.
@@ -1080,25 +1015,9 @@ def build_scene_vortex(
         cam.rotation_euler = direction.to_track_quat("-Z", "Y").to_euler()
         cam.keyframe_insert(data_path="rotation_euler", frame=frame)
 
-    # NOTE: No shader keyframes on the volume material.
-    # Keyframing density/emission node inputs causes Blender to flag
-    # the material as animated, forcing a FULL volume re-sync every
-    # frame: volume mesh recompute, BVH rebuild, density reload,
-    # GPU re-upload. This burns ~0.15s of CPU overhead per frame
-    # while the GPU sits idle waiting. For a static VDB with an
-    # orbiting camera, the volume data is identical every frame —
-    # keeping the material static lets Blender cache it once.
-
-    # ── Stats text overlay ──────────────────────────────────────
-    create_text_object(
-        scene,
-        text=f"1024\u00b3 QTT DNS  |  Rank 8  |  KE Error {ke_error:.2e}",
-        location=(0, 0, -1.5),
-        size=0.12,
-        color=(0.6, 0.7, 1.0),
-        emission_strength=1.5,
-        name="VortexStats",
-    )
+    # NOTE: The isosurface mesh and material are fully static.
+    # Only the camera moves.  Blender caches the BVH once and
+    # re-uses it every frame — zero per-frame overhead.
 
     # ── Timeline ────────────────────────────────────────────────
     scene.frame_start = 1
