@@ -645,18 +645,20 @@ def _batched_svd(
         G_max = max(gram_sizes)
         dtype = mats[0].dtype
 
-        # Work in float64 for numerical stability of Gram eigendecomposition
-        # (squaring the matrix squares the condition number; float32 is insufficient)
+        # Float64 only for the small Gram and eigh — NOT the full matrix.
+        # The Gram GEMM stays in the caller dtype (float32) where consumer
+        # GPUs are 32× faster; only the small (g×g) result is promoted to
+        # float64 for the eigendecomposition (squaring the matrix squares
+        # the condition number, so float64 eigh is needed).
         compute_dtype = torch.float64
 
         # ── form Gram matrices, pad to (B, G_max, G_max) ──
         grams = torch.zeros(N, G_max, G_max, device=device, dtype=compute_dtype)
         for i in range(N):
-            A = mats[i].to(compute_dtype) if dtype != compute_dtype else mats[i]
             if is_wide[i]:
-                G = A @ A.T                             # (m, m)
+                G = (mats[i] @ mats[i].T).to(compute_dtype)   # float32 GEMM → promote small Gram
             else:
-                G = A.T @ A                             # (n, n)
+                G = (mats[i].T @ mats[i]).to(compute_dtype)   # float32 GEMM → promote small Gram
             G = (G + G.T) * 0.5                         # exact symmetry
             gs = gram_sizes[i]
             grams[i, :gs, :gs] = G
@@ -676,13 +678,15 @@ def _batched_svd(
         S_b = torch.sqrt(torch.clamp(eigvals_b, min=0.0))  # (B, G_max)
 
         # ── recover U, Vh per chain from eigenvectors ──
+        # Recovery stays in the caller dtype (float32) — the big matrix
+        # multiply (eigvecs.T @ A or A @ eigvecs) uses fast FP32 GEMM.
+        # Only S and inv_S are computed in float64 for precision.
         results: List[Tuple[Tensor, Tensor, Tensor]] = []
         for i in range(N):
             gs = gram_sizes[i]
             mi, ni = m_dims[i], n_dims[i]
-            A_i = mats[i].to(compute_dtype) if dtype != compute_dtype else mats[i]
-            S_i = S_b[i, :gs]                            # un-pad eigenvalues
-            evecs = eigvecs_b[i, :gs, :gs]                # un-pad eigenvectors
+            S_i = S_b[i, :gs]                            # un-pad eigenvalues (float64)
+            evecs = eigvecs_b[i, :gs, :gs]                # un-pad eigenvectors (float64)
 
             # Inverse singular values for recovering the other factor
             s0 = S_i[0] if S_i[0] > 0 else torch.tensor(1.0, dtype=compute_dtype, device=device)
@@ -692,28 +696,33 @@ def _batched_svd(
                 torch.zeros_like(S_i),
             )
 
+            # Convert eigenvectors and inv_S to caller dtype for recovery GEMMs
+            evecs_f = evecs.to(dtype)
+            inv_S_f = inv_S.to(dtype)
+
             if is_wide[i]:
                 # G = A @ A.T → eigvecs are left singular vectors U
-                U_core = evecs                                 # (m, gs)
-                Vh_core = inv_S.unsqueeze(1) * (U_core.T @ A_i)  # (gs, n)
+                U_core = evecs_f                               # (m, gs) caller dtype
+                Vh_core = inv_S_f.unsqueeze(1) * (U_core.T @ mats[i])  # (gs, n) float32 GEMM
             else:
                 # G = A.T @ A → eigvecs are right singular vectors V
-                V_core = evecs                                 # (n, gs)
-                U_core = (A_i @ V_core) * inv_S.unsqueeze(0)  # (m, gs)
+                V_core = evecs_f                               # (n, gs) caller dtype
+                U_core = (mats[i] @ V_core) * inv_S_f.unsqueeze(0)  # (m, gs) float32 GEMM
                 Vh_core = V_core.T                             # (gs, n)
 
             # Pad to uniform G_max dimensions for caller compatibility
+            S_out = S_i.to(dtype)
             if gs < G_max:
                 U_pad = torch.zeros(mi, G_max, device=device, dtype=dtype)
-                U_pad[:, :gs] = U_core.to(dtype)
+                U_pad[:, :gs] = U_core
                 Vh_pad = torch.zeros(G_max, ni, device=device, dtype=dtype)
-                Vh_pad[:gs, :] = Vh_core.to(dtype)
+                Vh_pad[:gs, :] = Vh_core
                 S_padded = torch.zeros(G_max, device=device, dtype=dtype)
-                S_padded[:gs] = S_i.to(dtype)
+                S_padded[:gs] = S_out
             else:
-                U_pad = U_core.to(dtype)
-                Vh_pad = Vh_core.to(dtype)
-                S_padded = S_i.to(dtype)
+                U_pad = U_core
+                Vh_pad = Vh_core
+                S_padded = S_out
 
             results.append((U_pad, S_padded, Vh_pad))
 

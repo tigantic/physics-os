@@ -560,40 +560,63 @@ class NativeDerivatives3D:
 
         18 shifts → 1 batched MPO-apply, 3 fused sums → 1 batched fused sum.
         """
-        inv_dx2 = 1.0 / (self.dx ** 2)
-        components = [v.x, v.y, v.z]
+        results = self.laplacian_vectors([v])
+        return results[0]
 
-        # 18 shifts: 6 per component (3 axes × 2 directions)
+    def laplacian_vectors(
+        self, vs: List[QTT3DVectorNative],
+    ) -> List[QTT3DVectorNative]:
+        """
+        Batched ∇² across multiple vector fields.
+
+        Merges all shifts and fused sums into single batched calls:
+        ``len(vs) × 18`` shifts → 1 batched MPO-apply,
+        ``len(vs) × 3`` fused sums → 1 batched fused sum.
+        """
+        n_vecs = len(vs)
+        if n_vecs == 0:
+            return []
+        inv_dx2 = 1.0 / (self.dx ** 2)
+
+        # Collect all shifts across all vector fields
         shift_fields: List[QTT3DNative] = []
         shift_axes: List[int] = []
         shift_dirs: List[int] = []
-        for comp in components:
-            for axis in range(3):
-                shift_fields.extend([comp, comp])
-                shift_axes.extend([axis, axis])
-                shift_dirs.extend([+1, -1])
+        for v in vs:
+            for comp in [v.x, v.y, v.z]:
+                for axis in range(3):
+                    shift_fields.extend([comp, comp])
+                    shift_axes.extend([axis, axis])
+                    shift_dirs.extend([+1, -1])
 
         shifted = self._shift_batched(shift_fields, shift_axes, shift_dirs)
-        # shifted[0:6] → x shifts, [6:12] → y shifts, [12:18] → z shifts
 
-        # Build fused sums for each component: 6 shifts + central term = 7 terms
+        # Build fused sums: 3 per vector field
         term_lists: List[List[QTTCores]] = []
         weight_lists: List[List[float]] = []
-        for c_idx, comp in enumerate(components):
-            base = c_idx * 6
-            terms = [shifted[base + j].cores for j in range(6)] + [comp.cores]
-            weights = [inv_dx2] * 6 + [-6.0 * inv_dx2]
-            term_lists.append(terms)
-            weight_lists.append(weights)
+        for v_idx, v in enumerate(vs):
+            for c_idx, comp in enumerate([v.x, v.y, v.z]):
+                base = (v_idx * 3 + c_idx) * 6
+                terms = [shifted[base + j].cores for j in range(6)] + [comp.cores]
+                weights = [inv_dx2] * 6 + [-6.0 * inv_dx2]
+                term_lists.append(terms)
+                weight_lists.append(weights)
 
-        laps = qtt_fused_sum_batched(term_lists, weight_lists, self.max_rank,
-                                      min_rank=self.min_rank)
-        nb = v.n_bits
-        return QTT3DVectorNative(
-            QTT3DNative(laps[0], nb),
-            QTT3DNative(laps[1], nb),
-            QTT3DNative(laps[2], nb),
+        laps = qtt_fused_sum_batched(
+            term_lists, weight_lists, self.max_rank, min_rank=self.min_rank,
         )
+
+        # Unpack: each group of 3 forms one vector field's laplacian
+        results: List[QTT3DVectorNative] = []
+        nb = vs[0].n_bits
+        for v_idx in range(n_vecs):
+            base = v_idx * 3
+            results.append(QTT3DVectorNative(
+                QTT3DNative(laps[base], nb),
+                QTT3DNative(laps[base + 1], nb),
+                QTT3DNative(laps[base + 2], nb),
+            ))
+        return results
     
     def divergence(self, v: QTT3DVectorNative) -> QTT3DNative:
         """∇·v = ∂vx/∂x + ∂vy/∂y + ∂vz/∂z (batched shifts)."""
@@ -1243,6 +1266,7 @@ class NativeNS3DConfig:
     dt: float = 0.001            # Time step
     device: str = 'cuda'
     dtype: str = 'float32'
+    diagnostics_interval: int = 1  # Compute full diagnostics every N steps
     
     @property
     def N(self) -> int:
@@ -1299,19 +1323,26 @@ class NativeNS3DSolver:
         self.initial_energy = diag.kinetic_energy_qtt
         self.diagnostics_history.append(diag)
     
-    def _rhs(self, u: QTT3DVectorNative, omega: QTT3DVectorNative) -> QTT3DVectorNative:
+    def _rhs(self, u: QTT3DVectorNative, omega: QTT3DVectorNative,
+             u_cross_omega: Optional[QTT3DVectorNative] = None) -> QTT3DVectorNative:
         """
         Compute RHS of vorticity equation NATIVELY.
         
         ∂ω/∂t = ∇×(u×ω) + ν∇²ω
+
+        Parameters
+        ----------
+        u_cross_omega : optional
+            Pre-computed u×ω to avoid redundant cross product when both
+            ``_rhs`` and ``_rhs_velocity`` need it for the same (u, ω).
         """
         max_rank = self.config.max_rank
         nu = self.config.nu
         
         # Nonlinear term: ∇×(u×ω)
-        # All native Hadamard operations
-        u_cross_omega = vector_cross_native(u, omega, max_rank,
-                                            min_rank=self.deriv.min_rank)
+        if u_cross_omega is None:
+            u_cross_omega = vector_cross_native(u, omega, max_rank,
+                                                min_rank=self.deriv.min_rank)
         curl_cross = self.deriv.curl(u_cross_omega)
         
         # Viscous term: ν∇²ω
@@ -1355,7 +1386,8 @@ class NativeNS3DSolver:
         """
         return self.u  # Keep current velocity for now
     
-    def _rhs_velocity(self, u: QTT3DVectorNative, omega: QTT3DVectorNative) -> QTT3DVectorNative:
+    def _rhs_velocity(self, u: QTT3DVectorNative, omega: QTT3DVectorNative,
+                      u_cross_omega: Optional[QTT3DVectorNative] = None) -> QTT3DVectorNative:
         """
         Compute RHS for velocity equation (Navier-Stokes).
         
@@ -1365,13 +1397,19 @@ class NativeNS3DSolver:
         ∂u/∂t = u×ω + ν∇²u - ∇p
         
         With projection to enforce ∇·u = 0.
+
+        Parameters
+        ----------
+        u_cross_omega : optional
+            Pre-computed u×ω to avoid redundant cross product.
         """
         max_rank = self.config.max_rank
         nu = self.config.nu
         
         # Nonlinear term: u × ω
-        u_cross_omega = vector_cross_native(u, omega, max_rank,
-                                            min_rank=self.deriv.min_rank)
+        if u_cross_omega is None:
+            u_cross_omega = vector_cross_native(u, omega, max_rank,
+                                                min_rank=self.deriv.min_rank)
         
         # Viscous term: ν∇²u
         lap_u = self.deriv.laplacian_vector(u)
@@ -1396,6 +1434,65 @@ class NativeNS3DSolver:
             QTT3DNative(rhs_list[2], u.n_bits),
         )
     
+    def _rhs_both(
+        self,
+        u: QTT3DVectorNative,
+        omega: QTT3DVectorNative,
+        u_cross_omega: Optional[QTT3DVectorNative] = None,
+    ) -> Tuple[QTT3DVectorNative, QTT3DVectorNative]:
+        """
+        Compute both vorticity and velocity RHS with shared operations.
+
+        Shares:
+        * ``u × ω`` cross product (computed once)
+        * Single batched add for all 6 output components
+
+        Returns ``(rhs_omega, rhs_u)``.
+        """
+        max_rank = self.config.max_rank
+        nu = self.config.nu
+        min_rank = self.deriv.min_rank
+
+        # Shared cross product
+        if u_cross_omega is None:
+            u_cross_omega = vector_cross_native(
+                u, omega, max_rank, min_rank=min_rank,
+            )
+
+        # Vorticity nonlinear term: curl(u × ω)
+        curl_cross = self.deriv.curl(u_cross_omega)
+
+        # Separate laplacians (batching 36 shifts hurts rather than helps)
+        lap_omega = self.deriv.laplacian_vector(omega)
+        lap_u = self.deriv.laplacian_vector(u)
+
+        # Scale by viscosity and combine all 6 adds in one batch
+        rhs_list = qtt_add_native_batched(
+            [
+                (curl_cross.x.cores, qtt_scale_native(lap_omega.x.cores, nu)),
+                (curl_cross.y.cores, qtt_scale_native(lap_omega.y.cores, nu)),
+                (curl_cross.z.cores, qtt_scale_native(lap_omega.z.cores, nu)),
+                (u_cross_omega.x.cores, qtt_scale_native(lap_u.x.cores, nu)),
+                (u_cross_omega.y.cores, qtt_scale_native(lap_u.y.cores, nu)),
+                (u_cross_omega.z.cores, qtt_scale_native(lap_u.z.cores, nu)),
+            ],
+            max_rank,
+            min_rank=min_rank,
+        )
+
+        nb_o, nb_u = omega.n_bits, u.n_bits
+        rhs_omega = QTT3DVectorNative(
+            QTT3DNative(rhs_list[0], nb_o),
+            QTT3DNative(rhs_list[1], nb_o),
+            QTT3DNative(rhs_list[2], nb_o),
+        )
+        rhs_u = QTT3DVectorNative(
+            QTT3DNative(rhs_list[3], nb_u),
+            QTT3DNative(rhs_list[4], nb_u),
+            QTT3DNative(rhs_list[5], nb_u),
+        )
+        return rhs_omega, rhs_u
+
     def _project_velocity(self, u_star: QTT3DVectorNative) -> QTT3DVectorNative:
         """
         Project velocity to divergence-free (incompressible).
@@ -1472,9 +1569,8 @@ class NativeNS3DSolver:
         dt = self.config.dt
         max_rank = self.config.max_rank
         
-        # Compute RHS for both fields
-        rhs_omega = self._rhs(self.u, self.omega)
-        rhs_u = self._rhs_velocity(self.u, self.omega)
+        # Compute both RHS with shared cross product and batched laplacians
+        rhs_omega, rhs_u = self._rhs_both(self.u, self.omega)
         
         # Update vorticity: omega += dt * rhs_omega
         # Update velocity: u* = u + dt * rhs_u
@@ -1516,11 +1612,7 @@ class NativeNS3DSolver:
         self.t += dt
         self.step_count += 1
         
-        diag = compute_diagnostics_native(
-            self.u, self.omega, self.t, self.config.dx,
-            deriv=self.deriv, initial_energy=self.initial_energy,
-        )
-        self.diagnostics_history.append(diag)
+        diag = self._maybe_diagnostics()
         
         return diag
     
@@ -1529,9 +1621,8 @@ class NativeNS3DSolver:
         dt = self.config.dt
         max_rank = self.config.max_rank
         
-        # Stage 1: k1 = f(y_n)
-        k1_omega = self._rhs(self.u, self.omega)
-        k1_u = self._rhs_velocity(self.u, self.omega)
+        # Stage 1: k1 = f(y_n) — shared cross product + batched laplacians
+        k1_omega, k1_u = self._rhs_both(self.u, self.omega)
         
         # Predictor: y* = y_n + dt * k1
         # 6 independent fused sums → 1 batched call
@@ -1563,9 +1654,8 @@ class NativeNS3DSolver:
         omega_star = self._truncate_vector(omega_star, max_rank)
         u_star = self._truncate_vector(u_star, max_rank)
         
-        # Stage 2: k2 = f(y*)
-        k2_omega = self._rhs(u_star, omega_star)
-        k2_u = self._rhs_velocity(u_star, omega_star)
+        # Stage 2: k2 = f(y*) — shared cross product + batched laplacians
+        k2_omega, k2_u = self._rhs_both(u_star, omega_star)
         
         # Corrector: y_{n+1} = y_n + dt/2 * (k1 + k2)
         # 6 independent fused sums → 1 batched call
@@ -1605,14 +1695,36 @@ class NativeNS3DSolver:
         self.t += dt
         self.step_count += 1
         
-        diag = compute_diagnostics_native(
-            self.u, self.omega, self.t, self.config.dx,
-            deriv=self.deriv, initial_energy=self.initial_energy,
-        )
-        self.diagnostics_history.append(diag)
+        diag = self._maybe_diagnostics()
         
         return diag
-    
+
+    def _maybe_diagnostics(self) -> NativeDiagnostics:
+        """Compute diagnostics at the configured interval.
+
+        Full diagnostics (divergence, sampling) run every
+        ``diagnostics_interval`` steps.  Off-interval steps
+        return a lightweight diagnostic with only QTT inner
+        products (energy, enstrophy, norms) — no shifts or
+        Poisson-level work.
+        """
+        interval = getattr(self.config, 'diagnostics_interval', 1)
+        full = (interval <= 1) or (self.step_count % interval == 0)
+
+        if full:
+            diag = compute_diagnostics_native(
+                self.u, self.omega, self.t, self.config.dx,
+                deriv=self.deriv, initial_energy=self.initial_energy,
+            )
+        else:
+            # Lightweight: inner-product-only diagnostics (no divergence/sampling)
+            diag = compute_diagnostics_native(
+                self.u, self.omega, self.t, self.config.dx,
+                deriv=None, initial_energy=self.initial_energy,
+            )
+        self.diagnostics_history.append(diag)
+        return diag
+
     def _truncate_vector(self, v: QTT3DVectorNative, max_rank: int, tol: float = 1e-10) -> QTT3DVectorNative:
         """Truncate all components of a vector field (batched SVD).
 
