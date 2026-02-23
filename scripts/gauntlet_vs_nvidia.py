@@ -162,6 +162,13 @@ def run_resolution(n_bits: int, max_rank: int, max_steps: int,
         cert_out = Path(cfg.results_dir) / "trustless_certificate.json"
         certificate.save(cert_out)
         print(f"  Certificate saved: {cert_out}")
+        # Also emit signed .tpc binary for the Rust verifier
+        tpc_out = Path(cfg.results_dir) / "trustless_certificate.tpc"
+        try:
+            certificate.save_tpc(tpc_out)
+            print(f"  TPC binary saved:  {tpc_out}")
+        except Exception as exc:
+            print(f"  TPC binary export failed: {exc}")
     else:
         history = solver.run()
     run_time = time.perf_counter() - t1

@@ -904,6 +904,141 @@ class TrustlessCertificate:
     def save(self, path: Path) -> None:
         path.write_text(self.to_json(), encoding="utf-8")
 
+    def save_tpc(self, path: Path) -> None:
+        """Export this certificate to a signed ``.tpc`` binary file.
+
+        Bridges the JSON-based ``TrustlessCertificate`` into the binary
+        ``TPCFile`` format used by the Rust verifier.  The TPC is signed
+        with an ephemeral Ed25519 key so that the binary carries a non-
+        zero signature verifiable by ``apps/trustless_verify``.
+
+        The JSON Ed25519 key-pair (``self.signature`` / ``self.public_key``)
+        signs the *certificate seal* (``self.certificate_hash``).  The TPC
+        signature signs the *binary content hash* — these are independent
+        commitments over the same logical certificate.
+        """
+        from tpc.format import (
+            BenchmarkResult,
+            CoverageLevel,
+            LayerA,
+            LayerB,
+            LayerC,
+            Metadata,
+            QTTParams,
+            TPCFile,
+            TPCHeader,
+            TheoremRef,
+        )
+
+        cfg = self.config_params
+
+        # ── Header ──
+        header = TPCHeader(
+            certificate_id=uuid.UUID(self.certificate_id)
+            if len(self.certificate_id) == 36
+            else uuid.uuid4(),
+            solver_hash=bytes.fromhex(self.config_hash)
+            if len(self.config_hash) == 64
+            else b"\x00" * 32,
+        )
+
+        # ── Layer A: run-proof theorems ──
+        theorems = []
+        for rp in self.run_proofs:
+            theorems.append(TheoremRef(
+                name=rp["name"],
+                file=f"trustless_physics.py::{rp['name']}",
+                statement_hash=hashlib.sha256(
+                    rp["claim"].encode("utf-8")
+                ).hexdigest(),
+            ))
+        layer_a = LayerA(
+            proof_system="lean4",
+            coverage=CoverageLevel.PARTIAL,
+            theorems=theorems,
+            notes=(
+                f"Run-level proofs from QTT NS gauntlet: "
+                f"{sum(1 for rp in self.run_proofs if rp['satisfied'])}"
+                f"/{len(self.run_proofs)} passed"
+            ),
+        )
+
+        # ── Layer B: Merkle hash-chain proof ──
+        merkle_bytes = (
+            bytes.fromhex(self.merkle_root) if self.merkle_root else b""
+        )
+        layer_b = LayerB(
+            proof_system="none",
+            public_inputs={
+                "total_steps": self.total_steps,
+                "merkle_depth": self.merkle_depth,
+                "merkle_leaf_count": self.merkle_leaf_count,
+                "initial_state_commitment": self.initial_state_commitment,
+            },
+            public_outputs={
+                "merkle_root": self.merkle_root,
+                "final_state_commitment": self.final_state_commitment,
+                "certificate_hash": self.certificate_hash,
+                "chain_intact": self.chain_intact,
+            },
+            proof_bytes=merkle_bytes,
+        )
+
+        # ── Layer C: benchmark results ──
+        benchmarks = []
+        if self.step_proofs:
+            last_meta = self.step_proofs[-1].get("metadata", {})
+            cr = last_meta.get("compression_ratio", 0)
+            benchmarks.append(BenchmarkResult(
+                name="compression_ratio",
+                gauntlet="ahmed_body_ib",
+                passed=cr > 1.0,
+                metrics={
+                    "compression_ratio": cr,
+                    "max_rank": last_meta.get("max_rank", 0),
+                    "mean_rank": last_meta.get("mean_rank", 0),
+                    "N": int(cfg.get("N", 0)),
+                    "total_steps": self.total_steps,
+                    "wall_time_s": self.wall_time_s,
+                },
+            ))
+        layer_c = LayerC(benchmarks=benchmarks)
+
+        # ── Metadata ──
+        n_bits = int(cfg.get("n_bits", 0))
+        metadata = Metadata(
+            solver="custom",
+            domain="cfd",
+            description=f"Ahmed Body IB QTT N={cfg.get('N', 0)} nb={n_bits}",
+            qtt_params=QTTParams(
+                grid_bits=n_bits,
+                num_sites=n_bits * 3,
+                max_rank=int(cfg.get("max_rank", 0)),
+                physical_dim=2,
+            ),
+            extra={
+                "N": int(cfg.get("N", 0)),
+                "Re_eff": float(cfg.get("Re_eff", 0)),
+                "total_steps": self.total_steps,
+                "wall_time_s": self.wall_time_s,
+                "certificate_hash": self.certificate_hash,
+                "json_signature": self.signature,
+                "json_public_key": self.public_key,
+                "all_invariants_satisfied": self.all_invariants_satisfied,
+            },
+        )
+
+        # ── Assemble and sign ──
+        tpc = TPCFile(
+            header=header,
+            layer_a=layer_a,
+            layer_b=layer_b,
+            layer_c=layer_c,
+            metadata=metadata,
+        )
+        tpc.sign_ephemeral()
+        tpc.save(path)
+
     @classmethod
     def load(cls, path: Path) -> "TrustlessCertificate":
         data = json.loads(path.read_text(encoding="utf-8"))

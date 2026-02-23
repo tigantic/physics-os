@@ -807,6 +807,31 @@ class TPCFile:
             content_hash=content_hash,
         )
 
+    def sign_ephemeral(self) -> bytes:
+        """
+        Sign the certificate with a fresh ephemeral Ed25519 key.
+
+        Generates a random private key, signs the certificate, and
+        stores the public key + signature in ``self.signature``.
+        This mirrors ``TrustlessCertificate.sign()`` behaviour for
+        demo / self-attested certificates.
+
+        Returns:
+            32-byte public key (raw bytes).
+        """
+        try:
+            from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+        except ImportError:
+            raise ImportError(
+                "cryptography package required for signing. "
+                "Install: pip install cryptography"
+            )
+
+        priv_key = Ed25519PrivateKey.generate()
+        private_bytes = priv_key.private_bytes_raw()
+        self.sign(private_bytes)
+        return self.signature.public_key
+
     def verify_signature(self) -> bool:
         """
         Verify the Ed25519 signature.

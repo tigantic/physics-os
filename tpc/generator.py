@@ -449,13 +449,21 @@ class CertificateGenerator:
         self,
         path: str | Path,
         private_key: bytes | None = None,
+        *,
+        sign: bool = True,
     ) -> tuple[TPCFile, VerificationReport]:
         """
-        Generate, optionally sign, save, and verify the certificate.
+        Generate, sign, save, and verify the certificate.
 
         Args:
             path: Output .tpc file path.
-            private_key: 32-byte Ed25519 private key for signing. If None, unsigned.
+            private_key: 32-byte Ed25519 private key for signing.
+                If ``None`` and *sign* is ``True``, an ephemeral
+                key is generated automatically.
+            sign: If ``True`` (default), the certificate is always
+                signed — either with *private_key* or an ephemeral
+                key. Set to ``False`` to produce an unsigned
+                (self-attested) certificate.
 
         Returns:
             Tuple of (TPCFile, VerificationReport).
@@ -464,6 +472,8 @@ class CertificateGenerator:
 
         if private_key is not None:
             cert.sign(private_key)
+        elif sign:
+            cert.sign_ephemeral()
 
         cert.save(path)
 
