@@ -49,7 +49,7 @@ from tensornet.cfd.ns3d_native import (
     NativeDiagnostics,
     QTT3DNative,
     QTT3DVectorNative,
-    taylor_green_native,
+    taylor_green_analytical,
     compute_diagnostics_native,
     _qtt_vec_max_abs_native,
     _qtt_scalar_max_abs_native,
@@ -135,9 +135,9 @@ def run_simulation(
     solver = NativeNS3DSolver(config)
 
     # ── Initialize Taylor-Green vortex ───────────────────────────────
-    log.info("Initializing Taylor-Green vortex (TT-SVD compression)...")
+    log.info("Initializing Taylor-Green vortex (analytical QTT)...")
     t_init = time.time()
-    u, omega = taylor_green_native(n_bits=n_bits, device=device, max_rank=max_rank)
+    u, omega = taylor_green_analytical(n_bits=n_bits, device=device, max_rank=max_rank)
     init_time = time.time() - t_init
     solver.initialize(u, omega)
     log.info(f"  Initialization: {init_time:.2f}s")
