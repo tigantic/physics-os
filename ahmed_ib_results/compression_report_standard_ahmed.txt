@@ -1,0 +1,58 @@
+════════════════════════════════════════════════════════════════════════
+QTT VOLUME FIELD COMPRESSION — AHMED BODY IB SOLVER
+════════════════════════════════════════════════════════════════════════
+Grid:          32³ = 32,768 cells (5 bits/axis)
+Domain:        [0.0, 4.0]³ m
+dx:            125.0 mm
+Body:          L=1.044m × W=0.389m × H=0.288m
+Re_phys:       2754617
+Re_eff:        6958
+ν_eff:         6.00e-03 m²/s
+χ_max:         16
+Steps:         5
+Wall time:     96.0s
+
+────────────────────────────────────────────────────────────────────────
+STORAGE COMPARISON
+────────────────────────────────────────────────────────────────────────
+  Dense volume (6 fields × 32³ × float32):
+    0.8 MB
+
+  QTT state (velocity + vorticity):
+    102.3 KB
+    Compression: 8×
+
+  QTT total (+ mask + sponge):
+    127.1 KB
+    Compression: 6×
+
+  Per-field breakdown:
+          mask:     17.1 KB  (8×)
+       omega_x:     17.1 KB  (8×)
+       omega_y:     17.1 KB  (8×)
+       omega_z:     17.1 KB  (8×)
+        sponge:      7.7 KB  (17×)
+           u_x:     17.1 KB  (8×)
+           u_y:     17.1 KB  (8×)
+           u_z:     17.1 KB  (8×)
+
+────────────────────────────────────────────────────────────────────────
+COMPRESSION SCALING PROJECTION
+────────────────────────────────────────────────────────────────────────
+     128³ (    2,097,152 pts): dense=0.1GB  QTT≈0.2MB  ratio≈251×
+     256³ (   16,777,216 pts): dense=0.4GB  QTT≈0.3MB  ratio≈1537×
+     512³ (  134,217,728 pts): dense=3.2GB  QTT≈0.3MB  ratio≈9715×
+    1024³ (1,073,741,824 pts): dense=25.8GB  QTT≈0.4MB  ratio≈62954×
+    2048³ (8,589,934,592 pts): dense=206.2GB  QTT≈0.5MB  ratio≈416224×
+    4096³ (68,719,476,736 pts): dense=1649.3GB  QTT≈0.6MB  ratio≈2797951×
+
+────────────────────────────────────────────────────────────────────────
+FINAL FLOW STATE
+────────────────────────────────────────────────────────────────────────
+  Kinetic energy:    nan
+  Enstrophy:         nan
+  Max rank (u):      16
+  Mean rank (u):     11.1
+  Compression (u):   8×
+
+════════════════════════════════════════════════════════════════════════

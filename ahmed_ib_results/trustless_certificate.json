@@ -1,0 +1,1095 @@
+{
+  "certificate_id": "ea7b97ee-be90-4e65-98f4-da03c9765e02",
+  "created_at": "2026-02-22T09:46:54.289937+00:00",
+  "version": "2.0.0",
+  "config_hash": "9e5e124adbde5c515acad2b8bdee891828b6827540ce13a8539e07cb1a700538",
+  "config_params": {
+    "n_bits": 7,
+    "N": 128,
+    "L": 4.0,
+    "dx": 0.03125,
+    "dt": 6.25e-05,
+    "max_rank": 48,
+    "n_steps": 10,
+    "cfl": 0.08,
+    "Re_eff": 12345.471354610272,
+    "nu_eff": 0.0033826168965517237,
+    "eta_brinkman": 0.001,
+    "convergence_tol": 0.0001,
+    "body_length": 1.044,
+    "body_width": 0.389,
+    "body_height": 0.288,
+    "body_velocity": 40.0,
+    "body_Re": 2754617.4142480213,
+    "slant_angle_deg": 25.0,
+    "fillet_radius": 0.1,
+    "smagorinsky_cs": 0.3,
+    "integrator": "rk2",
+    "use_projection": false
+  },
+  "merkle_root": "3ee5246d9174ff2572971e5b02e6303c9f574b04700ee61740acf386215ed41e",
+  "merkle_depth": 4,
+  "merkle_leaf_count": 10,
+  "step_proofs": [
+    {
+      "step_index": 1,
+      "timestamp": 1771753534.625912,
+      "state_commitment": "c1d2e63a2c4617c622713e78c1036bd9e5e9875dbd7b5c6bbfbe0501bd346980",
+      "parent_commitment": "7a6b887a976eb5fb7498cff067c719b2e48cd3d9cfd099c56b8e060cd2dbcf8f",
+      "step_hash": "881b70930536f5f6cf18c94dbe16633eb42b757baa7e71d87a1268d82edd034e",
+      "all_satisfied": false,
+      "invariants": [
+        {
+          "name": "energy_conservation",
+          "claim": "E(t+dt)/E(t) <= 1.0050 (viscous dissipation)",
+          "witness": {
+            "energy_prev": 1677719808.0,
+            "energy_curr": 1677150592.0,
+            "ratio": 0.9996607204628056,
+            "tolerance": 0.005
+          },
+          "satisfied": true,
+          "tag": "CONSERVATION"
+        },
+        {
+          "name": "energy_monotone",
+          "claim": "E(t+dt) <= E(t) (post-clamp monotonicity)",
+          "witness": {
+            "energy_prev": 1677719808.0,
+            "energy_curr": 1677150592.0,
+            "diff": -569216.0
+          },
+          "satisfied": true,
+          "tag": "MONOTONE"
+        },
+        {
+          "name": "rank_bound",
+          "claim": "max_rank <= 48",
+          "witness": {
+            "max_rank_observed": 26,
+            "max_rank_allowed": 48
+          },
+          "satisfied": true,
+          "tag": "BOUND"
+        },
+        {
+          "name": "compression_positive",
+          "claim": "CR > 1.0 (QTT compresses vs dense)",
+          "witness": {
+            "compression_ratio": 754.7332053742803
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "energy_positive",
+          "claim": "E > 0 (kinetic energy positivity)",
+          "witness": {
+            "energy": 1677150592.0
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "cfl_stability",
+          "claim": "CFL = U*dt/dx <= 0.08",
+          "witness": {
+            "dt": 6.25e-05,
+            "dx": 0.03125,
+            "u_max": 40.0,
+            "cfl_actual": 0.08,
+            "cfl_target": 0.08
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        },
+        {
+          "name": "finite_state",
+          "claim": "All state values are finite (no NaN/Inf)",
+          "witness": {
+            "energy_finite": true,
+            "rank_positive": true
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        },
+        {
+          "name": "divergence_bounded",
+          "claim": "max|div(u)| = 2.6972e+01 <= 1.0",
+          "witness": {
+            "divergence_max": 26.972341537475586,
+            "threshold": 1.0
+          },
+          "satisfied": false,
+          "tag": "STABILITY"
+        }
+      ],
+      "metadata": {
+        "energy": 1677150592.0,
+        "energy_prev": 1677719808.0,
+        "max_rank": 26,
+        "mean_rank": 6.6000000000000005,
+        "compression_ratio": 754.7332053742803,
+        "time": 6.25e-05,
+        "clamped": false
+      }
+    },
+    {
+      "step_index": 2,
+      "timestamp": 1771753544.4441147,
+      "state_commitment": "3495d2372b915d408224ea3389e6b2612f4e7990e0b0ade40dbbe60fae4c9bca",
+      "parent_commitment": "c1d2e63a2c4617c622713e78c1036bd9e5e9875dbd7b5c6bbfbe0501bd346980",
+      "step_hash": "213beb6562512da5b2650d76911f9f181f529394cbeb51b113de923cd1dbb89d",
+      "all_satisfied": false,
+      "invariants": [
+        {
+          "name": "energy_conservation",
+          "claim": "E(t+dt)/E(t) <= 1.0050 (viscous dissipation)",
+          "witness": {
+            "energy_prev": 1677150592.0,
+            "energy_curr": 1676718208.0,
+            "ratio": 0.9997421913082448,
+            "tolerance": 0.005
+          },
+          "satisfied": true,
+          "tag": "CONSERVATION"
+        },
+        {
+          "name": "energy_monotone",
+          "claim": "E(t+dt) <= E(t) (post-clamp monotonicity)",
+          "witness": {
+            "energy_prev": 1677150592.0,
+            "energy_curr": 1676718208.0,
+            "diff": -432384.0
+          },
+          "satisfied": true,
+          "tag": "MONOTONE"
+        },
+        {
+          "name": "rank_bound",
+          "claim": "max_rank <= 48",
+          "witness": {
+            "max_rank_observed": 46,
+            "max_rank_allowed": 48
+          },
+          "satisfied": true,
+          "tag": "BOUND"
+        },
+        {
+          "name": "compression_positive",
+          "claim": "CR > 1.0 (QTT compresses vs dense)",
+          "witness": {
+            "compression_ratio": 400.06714994276996
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "energy_positive",
+          "claim": "E > 0 (kinetic energy positivity)",
+          "witness": {
+            "energy": 1676718208.0
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "cfl_stability",
+          "claim": "CFL = U*dt/dx <= 0.08",
+          "witness": {
+            "dt": 6.25e-05,
+            "dx": 0.03125,
+            "u_max": 40.0,
+            "cfl_actual": 0.08,
+            "cfl_target": 0.08
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        },
+        {
+          "name": "finite_state",
+          "claim": "All state values are finite (no NaN/Inf)",
+          "witness": {
+            "energy_finite": true,
+            "rank_positive": true
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        },
+        {
+          "name": "divergence_bounded",
+          "claim": "max|div(u)| = 8.7338e+01 <= 1.0",
+          "witness": {
+            "divergence_max": 87.33837890625,
+            "threshold": 1.0
+          },
+          "satisfied": false,
+          "tag": "STABILITY"
+        }
+      ],
+      "metadata": {
+        "energy": 1676718208.0,
+        "energy_prev": 1677150592.0,
+        "max_rank": 46,
+        "mean_rank": 8.366666666666665,
+        "compression_ratio": 400.06714994276996,
+        "time": 0.000125,
+        "clamped": false
+      }
+    },
+    {
+      "step_index": 3,
+      "timestamp": 1771753553.1810577,
+      "state_commitment": "66be82598f5a09b8723bf5ceb676860fe606ae68817bd1a3443d26bde3f1b2dd",
+      "parent_commitment": "3495d2372b915d408224ea3389e6b2612f4e7990e0b0ade40dbbe60fae4c9bca",
+      "step_hash": "ced4c1a5fde9d4be2f4d7c8042104779a9413428b3ee19d126cd7734f939eb56",
+      "all_satisfied": true,
+      "invariants": [
+        {
+          "name": "energy_conservation",
+          "claim": "E(t+dt)/E(t) <= 1.0050 (viscous dissipation)",
+          "witness": {
+            "energy_prev": 1676718208.0,
+            "energy_curr": 1675729280.0,
+            "ratio": 0.9994102002380116,
+            "tolerance": 0.005
+          },
+          "satisfied": true,
+          "tag": "CONSERVATION"
+        },
+        {
+          "name": "energy_monotone",
+          "claim": "E(t+dt) <= E(t) (post-clamp monotonicity)",
+          "witness": {
+            "energy_prev": 1676718208.0,
+            "energy_curr": 1675729280.0,
+            "diff": -988928.0
+          },
+          "satisfied": true,
+          "tag": "MONOTONE"
+        },
+        {
+          "name": "rank_bound",
+          "claim": "max_rank <= 48",
+          "witness": {
+            "max_rank_observed": 47,
+            "max_rank_allowed": 48
+          },
+          "satisfied": true,
+          "tag": "BOUND"
+        },
+        {
+          "name": "compression_positive",
+          "claim": "CR > 1.0 (QTT compresses vs dense)",
+          "witness": {
+            "compression_ratio": 223.05381833652413
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "energy_positive",
+          "claim": "E > 0 (kinetic energy positivity)",
+          "witness": {
+            "energy": 1675729280.0
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "cfl_stability",
+          "claim": "CFL = U*dt/dx <= 0.08",
+          "witness": {
+            "dt": 6.25e-05,
+            "dx": 0.03125,
+            "u_max": 40.0,
+            "cfl_actual": 0.08,
+            "cfl_target": 0.08
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        },
+        {
+          "name": "finite_state",
+          "claim": "All state values are finite (no NaN/Inf)",
+          "witness": {
+            "energy_finite": true,
+            "rank_positive": true
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        }
+      ],
+      "metadata": {
+        "energy": 1675729280.0,
+        "energy_prev": 1676718208.0,
+        "max_rank": 47,
+        "mean_rank": 10.466666666666667,
+        "compression_ratio": 223.05381833652413,
+        "time": 0.0001875,
+        "clamped": false
+      }
+    },
+    {
+      "step_index": 4,
+      "timestamp": 1771753562.5182123,
+      "state_commitment": "7f6806ee62b613104ffe2802a04705ead1ffc84a49258679a6fba96876c4cbb9",
+      "parent_commitment": "66be82598f5a09b8723bf5ceb676860fe606ae68817bd1a3443d26bde3f1b2dd",
+      "step_hash": "368886953b6b775dbb22af813a9754c71a109e58146e295557be4ab161812be5",
+      "all_satisfied": true,
+      "invariants": [
+        {
+          "name": "energy_conservation",
+          "claim": "E(t+dt)/E(t) <= 1.0050 (viscous dissipation)",
+          "witness": {
+            "energy_prev": 1675729280.0,
+            "energy_curr": 1675197184.0,
+            "ratio": 0.9996824689964241,
+            "tolerance": 0.005
+          },
+          "satisfied": true,
+          "tag": "CONSERVATION"
+        },
+        {
+          "name": "energy_monotone",
+          "claim": "E(t+dt) <= E(t) (post-clamp monotonicity)",
+          "witness": {
+            "energy_prev": 1675729280.0,
+            "energy_curr": 1675197184.0,
+            "diff": -532096.0
+          },
+          "satisfied": true,
+          "tag": "MONOTONE"
+        },
+        {
+          "name": "rank_bound",
+          "claim": "max_rank <= 48",
+          "witness": {
+            "max_rank_observed": 48,
+            "max_rank_allowed": 48
+          },
+          "satisfied": true,
+          "tag": "BOUND"
+        },
+        {
+          "name": "compression_positive",
+          "claim": "CR > 1.0 (QTT compresses vs dense)",
+          "witness": {
+            "compression_ratio": 150.69355688622755
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "energy_positive",
+          "claim": "E > 0 (kinetic energy positivity)",
+          "witness": {
+            "energy": 1675197184.0
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "cfl_stability",
+          "claim": "CFL = U*dt/dx <= 0.08",
+          "witness": {
+            "dt": 6.25e-05,
+            "dx": 0.03125,
+            "u_max": 40.0,
+            "cfl_actual": 0.08,
+            "cfl_target": 0.08
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        },
+        {
+          "name": "finite_state",
+          "claim": "All state values are finite (no NaN/Inf)",
+          "witness": {
+            "energy_finite": true,
+            "rank_positive": true
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        }
+      ],
+      "metadata": {
+        "energy": 1675197184.0,
+        "energy_prev": 1675729280.0,
+        "max_rank": 48,
+        "mean_rank": 12.816666666666668,
+        "compression_ratio": 150.69355688622755,
+        "time": 0.00025,
+        "clamped": false
+      }
+    },
+    {
+      "step_index": 5,
+      "timestamp": 1771753573.1012483,
+      "state_commitment": "9cddb51fce2adac00f72f610e3bb5d6a6efe0dc0edf64eeedc4f824cc026c722",
+      "parent_commitment": "7f6806ee62b613104ffe2802a04705ead1ffc84a49258679a6fba96876c4cbb9",
+      "step_hash": "70f52f8b9e7bb399e7c1a20c0ae724c4452f696df7ef2928611a652611810fff",
+      "all_satisfied": true,
+      "invariants": [
+        {
+          "name": "energy_conservation",
+          "claim": "E(t+dt)/E(t) <= 1.0050 (viscous dissipation)",
+          "witness": {
+            "energy_prev": 1675197184.0,
+            "energy_curr": 1674877056.0,
+            "ratio": 0.999808901302451,
+            "tolerance": 0.005
+          },
+          "satisfied": true,
+          "tag": "CONSERVATION"
+        },
+        {
+          "name": "energy_monotone",
+          "claim": "E(t+dt) <= E(t) (post-clamp monotonicity)",
+          "witness": {
+            "energy_prev": 1675197184.0,
+            "energy_curr": 1674877056.0,
+            "diff": -320128.0
+          },
+          "satisfied": true,
+          "tag": "MONOTONE"
+        },
+        {
+          "name": "rank_bound",
+          "claim": "max_rank <= 48",
+          "witness": {
+            "max_rank_observed": 46,
+            "max_rank_allowed": 48
+          },
+          "satisfied": true,
+          "tag": "BOUND"
+        },
+        {
+          "name": "compression_positive",
+          "claim": "CR > 1.0 (QTT compresses vs dense)",
+          "witness": {
+            "compression_ratio": 179.4277891854894
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "energy_positive",
+          "claim": "E > 0 (kinetic energy positivity)",
+          "witness": {
+            "energy": 1674877056.0
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "cfl_stability",
+          "claim": "CFL = U*dt/dx <= 0.08",
+          "witness": {
+            "dt": 6.25e-05,
+            "dx": 0.03125,
+            "u_max": 40.0,
+            "cfl_actual": 0.08,
+            "cfl_target": 0.08
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        },
+        {
+          "name": "finite_state",
+          "claim": "All state values are finite (no NaN/Inf)",
+          "witness": {
+            "energy_finite": true,
+            "rank_positive": true
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        }
+      ],
+      "metadata": {
+        "energy": 1674877056.0,
+        "energy_prev": 1675197184.0,
+        "max_rank": 46,
+        "mean_rank": 11.483333333333334,
+        "compression_ratio": 179.4277891854894,
+        "time": 0.0003125,
+        "clamped": false
+      }
+    },
+    {
+      "step_index": 6,
+      "timestamp": 1771753581.8480477,
+      "state_commitment": "5caa67bccf3515f029dcf9e5dd04412551dc3d16f5e7ceddc6cf9639dd6084e2",
+      "parent_commitment": "9cddb51fce2adac00f72f610e3bb5d6a6efe0dc0edf64eeedc4f824cc026c722",
+      "step_hash": "cf2e0e494b3b53c4ce16ce8cdbec03449bfc26c39ae2bb12fadbd8e351f45eb4",
+      "all_satisfied": true,
+      "invariants": [
+        {
+          "name": "energy_conservation",
+          "claim": "E(t+dt)/E(t) <= 1.0050 (viscous dissipation)",
+          "witness": {
+            "energy_prev": 1674877056.0,
+            "energy_curr": 1674592000.0,
+            "ratio": 0.9998298048212083,
+            "tolerance": 0.005
+          },
+          "satisfied": true,
+          "tag": "CONSERVATION"
+        },
+        {
+          "name": "energy_monotone",
+          "claim": "E(t+dt) <= E(t) (post-clamp monotonicity)",
+          "witness": {
+            "energy_prev": 1674877056.0,
+            "energy_curr": 1674592000.0,
+            "diff": -285056.0
+          },
+          "satisfied": true,
+          "tag": "MONOTONE"
+        },
+        {
+          "name": "rank_bound",
+          "claim": "max_rank <= 48",
+          "witness": {
+            "max_rank_observed": 47,
+            "max_rank_allowed": 48
+          },
+          "satisfied": true,
+          "tag": "BOUND"
+        },
+        {
+          "name": "compression_positive",
+          "claim": "CR > 1.0 (QTT compresses vs dense)",
+          "witness": {
+            "compression_ratio": 156.91764353768644
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "energy_positive",
+          "claim": "E > 0 (kinetic energy positivity)",
+          "witness": {
+            "energy": 1674592000.0
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "cfl_stability",
+          "claim": "CFL = U*dt/dx <= 0.08",
+          "witness": {
+            "dt": 6.25e-05,
+            "dx": 0.03125,
+            "u_max": 40.0,
+            "cfl_actual": 0.08,
+            "cfl_target": 0.08
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        },
+        {
+          "name": "finite_state",
+          "claim": "All state values are finite (no NaN/Inf)",
+          "witness": {
+            "energy_finite": true,
+            "rank_positive": true
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        }
+      ],
+      "metadata": {
+        "energy": 1674592000.0,
+        "energy_prev": 1674877056.0,
+        "max_rank": 47,
+        "mean_rank": 12.116666666666665,
+        "compression_ratio": 156.91764353768644,
+        "time": 0.000375,
+        "clamped": false
+      }
+    },
+    {
+      "step_index": 7,
+      "timestamp": 1771753590.0256996,
+      "state_commitment": "2e4f67072fa4a5f707a877c980dd0983aff7450bb9fcbbfbf3325ab6773473bb",
+      "parent_commitment": "5caa67bccf3515f029dcf9e5dd04412551dc3d16f5e7ceddc6cf9639dd6084e2",
+      "step_hash": "9d478747a98b48d2ae19f42481a6cf8208048a6c5aee88b31c024f2f1b78a54e",
+      "all_satisfied": true,
+      "invariants": [
+        {
+          "name": "energy_conservation",
+          "claim": "E(t+dt)/E(t) <= 1.0050 (viscous dissipation)",
+          "witness": {
+            "energy_prev": 1674592000.0,
+            "energy_curr": 1674394112.0,
+            "ratio": 0.9998818291261394,
+            "tolerance": 0.005
+          },
+          "satisfied": true,
+          "tag": "CONSERVATION"
+        },
+        {
+          "name": "energy_monotone",
+          "claim": "E(t+dt) <= E(t) (post-clamp monotonicity)",
+          "witness": {
+            "energy_prev": 1674592000.0,
+            "energy_curr": 1674394112.0,
+            "diff": -197888.0
+          },
+          "satisfied": true,
+          "tag": "MONOTONE"
+        },
+        {
+          "name": "rank_bound",
+          "claim": "max_rank <= 48",
+          "witness": {
+            "max_rank_observed": 47,
+            "max_rank_allowed": 48
+          },
+          "satisfied": true,
+          "tag": "BOUND"
+        },
+        {
+          "name": "compression_positive",
+          "claim": "CR > 1.0 (QTT compresses vs dense)",
+          "witness": {
+            "compression_ratio": 143.87705817782657
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "energy_positive",
+          "claim": "E > 0 (kinetic energy positivity)",
+          "witness": {
+            "energy": 1674394112.0
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "cfl_stability",
+          "claim": "CFL = U*dt/dx <= 0.08",
+          "witness": {
+            "dt": 6.25e-05,
+            "dx": 0.03125,
+            "u_max": 40.0,
+            "cfl_actual": 0.08,
+            "cfl_target": 0.08
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        },
+        {
+          "name": "finite_state",
+          "claim": "All state values are finite (no NaN/Inf)",
+          "witness": {
+            "energy_finite": true,
+            "rank_positive": true
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        }
+      ],
+      "metadata": {
+        "energy": 1674394112.0,
+        "energy_prev": 1674592000.0,
+        "max_rank": 47,
+        "mean_rank": 12.583333333333334,
+        "compression_ratio": 143.87705817782657,
+        "time": 0.0004375,
+        "clamped": false
+      }
+    },
+    {
+      "step_index": 8,
+      "timestamp": 1771753597.5438828,
+      "state_commitment": "c02b6816233b81028111b1d3d2b2655f5195b66ad36b0182fe883339fdaf48f1",
+      "parent_commitment": "2e4f67072fa4a5f707a877c980dd0983aff7450bb9fcbbfbf3325ab6773473bb",
+      "step_hash": "daaf20bd3ef9351151da72f79ba85bfe6f724d2725ff648961411627ff48fc3c",
+      "all_satisfied": true,
+      "invariants": [
+        {
+          "name": "energy_conservation",
+          "claim": "E(t+dt)/E(t) <= 1.0050 (viscous dissipation)",
+          "witness": {
+            "energy_prev": 1674394112.0,
+            "energy_curr": 1674147584.0,
+            "ratio": 0.9998527658463242,
+            "tolerance": 0.005
+          },
+          "satisfied": true,
+          "tag": "CONSERVATION"
+        },
+        {
+          "name": "energy_monotone",
+          "claim": "E(t+dt) <= E(t) (post-clamp monotonicity)",
+          "witness": {
+            "energy_prev": 1674394112.0,
+            "energy_curr": 1674147584.0,
+            "diff": -246528.0
+          },
+          "satisfied": true,
+          "tag": "MONOTONE"
+        },
+        {
+          "name": "rank_bound",
+          "claim": "max_rank <= 48",
+          "witness": {
+            "max_rank_observed": 48,
+            "max_rank_allowed": 48
+          },
+          "satisfied": true,
+          "tag": "BOUND"
+        },
+        {
+          "name": "compression_positive",
+          "claim": "CR > 1.0 (QTT compresses vs dense)",
+          "witness": {
+            "compression_ratio": 147.25122876000563
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "energy_positive",
+          "claim": "E > 0 (kinetic energy positivity)",
+          "witness": {
+            "energy": 1674147584.0
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "cfl_stability",
+          "claim": "CFL = U*dt/dx <= 0.08",
+          "witness": {
+            "dt": 6.25e-05,
+            "dx": 0.03125,
+            "u_max": 40.0,
+            "cfl_actual": 0.08,
+            "cfl_target": 0.08
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        },
+        {
+          "name": "finite_state",
+          "claim": "All state values are finite (no NaN/Inf)",
+          "witness": {
+            "energy_finite": true,
+            "rank_positive": true
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        }
+      ],
+      "metadata": {
+        "energy": 1674147584.0,
+        "energy_prev": 1674394112.0,
+        "max_rank": 48,
+        "mean_rank": 12.5,
+        "compression_ratio": 147.25122876000563,
+        "time": 0.0005,
+        "clamped": false
+      }
+    },
+    {
+      "step_index": 9,
+      "timestamp": 1771753605.9715726,
+      "state_commitment": "1743ffc7b6d403c7ea6d0cc5c17d4f88aa771e82569c517d12b8fb66bc012b4a",
+      "parent_commitment": "c02b6816233b81028111b1d3d2b2655f5195b66ad36b0182fe883339fdaf48f1",
+      "step_hash": "0ac8472daccab81124bd196988142f368d92b1abab60118c8992e0be6c64e8dd",
+      "all_satisfied": true,
+      "invariants": [
+        {
+          "name": "energy_conservation",
+          "claim": "E(t+dt)/E(t) <= 1.0050 (viscous dissipation)",
+          "witness": {
+            "energy_prev": 1674147584.0,
+            "energy_curr": 1673964416.0,
+            "ratio": 0.9998905902909931,
+            "tolerance": 0.005
+          },
+          "satisfied": true,
+          "tag": "CONSERVATION"
+        },
+        {
+          "name": "energy_monotone",
+          "claim": "E(t+dt) <= E(t) (post-clamp monotonicity)",
+          "witness": {
+            "energy_prev": 1674147584.0,
+            "energy_curr": 1673964416.0,
+            "diff": -183168.0
+          },
+          "satisfied": true,
+          "tag": "MONOTONE"
+        },
+        {
+          "name": "rank_bound",
+          "claim": "max_rank <= 48",
+          "witness": {
+            "max_rank_observed": 47,
+            "max_rank_allowed": 48
+          },
+          "satisfied": true,
+          "tag": "BOUND"
+        },
+        {
+          "name": "compression_positive",
+          "claim": "CR > 1.0 (QTT compresses vs dense)",
+          "witness": {
+            "compression_ratio": 144.41869433477183
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "energy_positive",
+          "claim": "E > 0 (kinetic energy positivity)",
+          "witness": {
+            "energy": 1673964416.0
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "cfl_stability",
+          "claim": "CFL = U*dt/dx <= 0.08",
+          "witness": {
+            "dt": 6.25e-05,
+            "dx": 0.03125,
+            "u_max": 40.0,
+            "cfl_actual": 0.08,
+            "cfl_target": 0.08
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        },
+        {
+          "name": "finite_state",
+          "claim": "All state values are finite (no NaN/Inf)",
+          "witness": {
+            "energy_finite": true,
+            "rank_positive": true
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        }
+      ],
+      "metadata": {
+        "energy": 1673964416.0,
+        "energy_prev": 1674147584.0,
+        "max_rank": 47,
+        "mean_rank": 12.633333333333333,
+        "compression_ratio": 144.41869433477183,
+        "time": 0.0005625000000000001,
+        "clamped": false
+      }
+    },
+    {
+      "step_index": 10,
+      "timestamp": 1771753614.2851713,
+      "state_commitment": "803e77a9b28ef5e3b18fc79e7cb33e1980f7df38ef1976855548adc63488413f",
+      "parent_commitment": "1743ffc7b6d403c7ea6d0cc5c17d4f88aa771e82569c517d12b8fb66bc012b4a",
+      "step_hash": "abfe8c25a39302b850f04fd508617fcbf2b49fc6bc1f6fe99e77164bcef83416",
+      "all_satisfied": false,
+      "invariants": [
+        {
+          "name": "energy_conservation",
+          "claim": "E(t+dt)/E(t) <= 1.0050 (viscous dissipation)",
+          "witness": {
+            "energy_prev": 1673964416.0,
+            "energy_curr": 1673753472.0,
+            "ratio": 0.9998739853738922,
+            "tolerance": 0.005
+          },
+          "satisfied": true,
+          "tag": "CONSERVATION"
+        },
+        {
+          "name": "energy_monotone",
+          "claim": "E(t+dt) <= E(t) (post-clamp monotonicity)",
+          "witness": {
+            "energy_prev": 1673964416.0,
+            "energy_curr": 1673753472.0,
+            "diff": -210944.0
+          },
+          "satisfied": true,
+          "tag": "MONOTONE"
+        },
+        {
+          "name": "rank_bound",
+          "claim": "max_rank <= 48",
+          "witness": {
+            "max_rank_observed": 47,
+            "max_rank_allowed": 48
+          },
+          "satisfied": true,
+          "tag": "BOUND"
+        },
+        {
+          "name": "compression_positive",
+          "claim": "CR > 1.0 (QTT compresses vs dense)",
+          "witness": {
+            "compression_ratio": 138.67607123964027
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "energy_positive",
+          "claim": "E > 0 (kinetic energy positivity)",
+          "witness": {
+            "energy": 1673753472.0
+          },
+          "satisfied": true,
+          "tag": "POSITIVITY"
+        },
+        {
+          "name": "cfl_stability",
+          "claim": "CFL = U*dt/dx <= 0.08",
+          "witness": {
+            "dt": 6.25e-05,
+            "dx": 0.03125,
+            "u_max": 40.0,
+            "cfl_actual": 0.08,
+            "cfl_target": 0.08
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        },
+        {
+          "name": "finite_state",
+          "claim": "All state values are finite (no NaN/Inf)",
+          "witness": {
+            "energy_finite": true,
+            "rank_positive": true
+          },
+          "satisfied": true,
+          "tag": "STABILITY"
+        },
+        {
+          "name": "divergence_bounded",
+          "claim": "max|div(u)| = 2.3705e+02 <= 1.0",
+          "witness": {
+            "divergence_max": 237.0537109375,
+            "threshold": 1.0
+          },
+          "satisfied": false,
+          "tag": "STABILITY"
+        }
+      ],
+      "metadata": {
+        "energy": 1673753472.0,
+        "energy_prev": 1673964416.0,
+        "max_rank": 47,
+        "mean_rank": 12.85,
+        "compression_ratio": 138.67607123964027,
+        "time": 0.0006250000000000001,
+        "clamped": false
+      }
+    }
+  ],
+  "run_proofs": [
+    {
+      "name": "convergence",
+      "claim": "\u0394E/E < 1.0e-04 (steady state)",
+      "witness": {
+        "steps": 11,
+        "min_required": 50
+      },
+      "satisfied": false,
+      "tag": "CONVERGENCE"
+    },
+    {
+      "name": "total_energy_conservation",
+      "claim": "0 <= E_loss/E_0 <= 10%",
+      "witness": {
+        "E_initial": 1677719808.0,
+        "E_final": 1673753472.0,
+        "loss_fraction": 0.002364123008554239,
+        "max_allowed": 0.1
+      },
+      "satisfied": true,
+      "tag": "CONSERVATION"
+    },
+    {
+      "name": "hash_chain_integrity",
+      "claim": "All step hash links are valid (tamper-evident chain)",
+      "witness": {
+        "total_links": 9,
+        "broken_links": [],
+        "chain_length": 10
+      },
+      "satisfied": true,
+      "tag": "CUSTOM"
+    },
+    {
+      "name": "all_steps_valid",
+      "claim": "Every timestep satisfies all physics invariants",
+      "witness": {
+        "total_steps": 10,
+        "failed_steps": [
+          1,
+          2,
+          10
+        ],
+        "pass_rate": 0.7
+      },
+      "satisfied": false,
+      "tag": "CUSTOM"
+    },
+    {
+      "name": "rank_stability",
+      "claim": "Mean TT rank is stable (slope \u2264 0.1 per step)",
+      "witness": {
+        "slope_per_step": 0.9028787878787877,
+        "initial_mean_rank": 1.0,
+        "final_mean_rank": 12.85,
+        "length": 11
+      },
+      "satisfied": false,
+      "tag": "STABILITY"
+    },
+    {
+      "name": "spectrum_kolmogorov",
+      "claim": "Energy decay consistent with Kolmogorov theory",
+      "witness": {
+        "steps": 11,
+        "status": "insufficient_data"
+      },
+      "satisfied": true,
+      "tag": "CUSTOM"
+    },
+    {
+      "name": "pcc_chain_integrity",
+      "claim": "PCC hash-chain audit trail is intact",
+      "witness": {
+        "total_payloads": 10,
+        "all_verified": 7,
+        "verification_rate": 0.7,
+        "tag_distribution": {
+          "CONSERVATION": 10,
+          "MONOTONE": 10,
+          "BOUND": 10,
+          "POSITIVITY": 20,
+          "STABILITY": 23
+        },
+        "chain_intact": true
+      },
+      "satisfied": true,
+      "tag": "CUSTOM"
+    }
+  ],
+  "initial_state_commitment": "7a6b887a976eb5fb7498cff067c719b2e48cd3d9cfd099c56b8e060cd2dbcf8f",
+  "final_state_commitment": "803e77a9b28ef5e3b18fc79e7cb33e1980f7df38ef1976855548adc63488413f",
+  "certificate_hash": "d3337922464f8570a43d140afd5c8feb178afa008335f714b8eb4fcebeff7a37",
+  "signature": "661ae282044b305d22e02c59c02fd8b50c1817e759ee27f4afbf8635fb332a92a17a11f14a68c9ee931899fe4a465f6f053cf6399af65dcb38ef61cab459220a",
+  "public_key": "abc749996dd9f0425313eb454e731334a9d3f89a83e05e6fea56a039a86aaaad",
+  "total_steps": 10,
+  "all_invariants_satisfied": false,
+  "chain_intact": true,
+  "wall_time_s": 104.64166091800143
+}

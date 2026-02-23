@@ -1,0 +1,875 @@
+[
+  {
+    "step": 1,
+    "time": 6.25e-05,
+    "energy": 1677041408.0,
+    "max_rank_u": 12,
+    "mean_rank_u": 4.6499999999999995,
+    "compression_ratio": 2090.184717607973,
+    "clamped": false
+  },
+  {
+    "step": 2,
+    "time": 0.000125,
+    "energy": 1676395648.0,
+    "max_rank_u": 34,
+    "mean_rank_u": 7.616666666666666,
+    "compression_ratio": 552.463645943098,
+    "clamped": false
+  },
+  {
+    "step": 3,
+    "time": 0.0001875,
+    "energy": 1676042368.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 10.233333333333333,
+    "compression_ratio": 262.23141047015673,
+    "clamped": false
+  },
+  {
+    "step": 4,
+    "time": 0.00025,
+    "energy": 1675554944.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 11.733333333333334,
+    "compression_ratio": 181.58208265989379,
+    "clamped": false
+  },
+  {
+    "step": 5,
+    "time": 0.0003125,
+    "energy": 1675286144.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 12.216666666666667,
+    "compression_ratio": 164.59439095856007,
+    "clamped": false
+  },
+  {
+    "step": 6,
+    "time": 0.000375,
+    "energy": 1674903424.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 12.35,
+    "compression_ratio": 154.51289356058746,
+    "clamped": false
+  },
+  {
+    "step": 7,
+    "time": 0.0004375,
+    "energy": 1674405376.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 12.416666666666666,
+    "compression_ratio": 159.9739625711961,
+    "clamped": false
+  },
+  {
+    "step": 8,
+    "time": 0.0005,
+    "energy": 1674153856.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 12.85,
+    "compression_ratio": 149.0089526786983,
+    "clamped": false
+  },
+  {
+    "step": 9,
+    "time": 0.0005625000000000001,
+    "energy": 1673739264.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 14.616666666666667,
+    "compression_ratio": 125.46276871535117,
+    "clamped": false
+  },
+  {
+    "step": 10,
+    "time": 0.0006250000000000001,
+    "energy": 1673438208.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 13.383333333333335,
+    "compression_ratio": 137.40403599196296,
+    "clamped": false
+  },
+  {
+    "step": 11,
+    "time": 0.0006875000000000002,
+    "energy": 1672599680.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 14.383333333333333,
+    "compression_ratio": 123.48294406280667,
+    "clamped": false
+  },
+  {
+    "step": 12,
+    "time": 0.0007500000000000002,
+    "energy": 1671965824.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 13.483333333333334,
+    "compression_ratio": 134.9229251554793,
+    "clamped": false
+  },
+  {
+    "step": 13,
+    "time": 0.0008125000000000003,
+    "energy": 1671282560.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 14.933333333333332,
+    "compression_ratio": 115.2788038698329,
+    "clamped": false
+  },
+  {
+    "step": 14,
+    "time": 0.0008750000000000003,
+    "energy": 1670732416.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 14.800000000000002,
+    "compression_ratio": 117.00680676957411,
+    "clamped": false
+  },
+  {
+    "step": 15,
+    "time": 0.0009375000000000004,
+    "energy": 1670358528.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 15.133333333333333,
+    "compression_ratio": 113.9839118776723,
+    "clamped": false
+  },
+  {
+    "step": 16,
+    "time": 0.0010000000000000005,
+    "energy": 1669899648.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 14.883333333333333,
+    "compression_ratio": 116.31888773850022,
+    "clamped": false
+  },
+  {
+    "step": 17,
+    "time": 0.0010625000000000005,
+    "energy": 1669444864.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 14.933333333333332,
+    "compression_ratio": 116.07852398523985,
+    "clamped": false
+  },
+  {
+    "step": 18,
+    "time": 0.0011250000000000006,
+    "energy": 1669163520.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 15.15,
+    "compression_ratio": 113.32689675048634,
+    "clamped": false
+  },
+  {
+    "step": 19,
+    "time": 0.0011875000000000006,
+    "energy": 1668675840.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 14.966666666666667,
+    "compression_ratio": 114.97543859649123,
+    "clamped": false
+  },
+  {
+    "step": 20,
+    "time": 0.0012500000000000007,
+    "energy": 1668256256.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 14.9,
+    "compression_ratio": 116.83731986331897,
+    "clamped": false
+  },
+  {
+    "step": 21,
+    "time": 0.0013125000000000007,
+    "energy": 1667310464.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 15.183333333333332,
+    "compression_ratio": 113.35139809743441,
+    "clamped": false
+  },
+  {
+    "step": 22,
+    "time": 0.0013750000000000008,
+    "energy": 1666543232.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 14.916666666666666,
+    "compression_ratio": 117.6192933258553,
+    "clamped": false
+  },
+  {
+    "step": 23,
+    "time": 0.0014375000000000008,
+    "energy": 1666090496.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 15.050000000000002,
+    "compression_ratio": 117.25103432852511,
+    "clamped": false
+  },
+  {
+    "step": 24,
+    "time": 0.001500000000000001,
+    "energy": 1665366272.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 15.533333333333333,
+    "compression_ratio": 114.2322608758806,
+    "clamped": false
+  },
+  {
+    "step": 25,
+    "time": 0.001562500000000001,
+    "energy": 1664830976.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 15.133333333333335,
+    "compression_ratio": 113.91374253123303,
+    "clamped": false
+  },
+  {
+    "step": 26,
+    "time": 0.001625000000000001,
+    "energy": 1664213504.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 15.133333333333335,
+    "compression_ratio": 114.03762914627515,
+    "clamped": false
+  },
+  {
+    "step": 27,
+    "time": 0.001687500000000001,
+    "energy": 1663658880.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 15.216666666666669,
+    "compression_ratio": 111.59020929407592,
+    "clamped": false
+  },
+  {
+    "step": 28,
+    "time": 0.0017500000000000011,
+    "energy": 1662830976.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 15.366666666666665,
+    "compression_ratio": 110.90565505570441,
+    "clamped": false
+  },
+  {
+    "step": 29,
+    "time": 0.0018125000000000012,
+    "energy": 1660695168.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 20.5,
+    "compression_ratio": 74.42867620962971,
+    "clamped": false
+  },
+  {
+    "step": 30,
+    "time": 0.0018750000000000012,
+    "energy": 1659478912.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 15.450000000000001,
+    "compression_ratio": 111.02308180983977,
+    "clamped": false
+  },
+  {
+    "step": 31,
+    "time": 0.0019375000000000013,
+    "energy": 1658327168.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 16.2,
+    "compression_ratio": 105.30338432698423,
+    "clamped": false
+  },
+  {
+    "step": 32,
+    "time": 0.0020000000000000013,
+    "energy": 1657707648.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 15.983333333333334,
+    "compression_ratio": 105.42690528855822,
+    "clamped": false
+  },
+  {
+    "step": 33,
+    "time": 0.0020625000000000014,
+    "energy": 1657297920.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 15.683333333333332,
+    "compression_ratio": 108.5107968264919,
+    "clamped": false
+  },
+  {
+    "step": 34,
+    "time": 0.0021250000000000015,
+    "energy": 1656631296.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 16.033333333333335,
+    "compression_ratio": 103.3147661586968,
+    "clamped": false
+  },
+  {
+    "step": 35,
+    "time": 0.0021875000000000015,
+    "energy": 1656181888.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 16.48333333333333,
+    "compression_ratio": 103.64495403775823,
+    "clamped": false
+  },
+  {
+    "step": 36,
+    "time": 0.0022500000000000016,
+    "energy": 1655785728.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 16.283333333333335,
+    "compression_ratio": 102.41666937978187,
+    "clamped": false
+  },
+  {
+    "step": 37,
+    "time": 0.0023125000000000016,
+    "energy": 1655448832.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 16.9,
+    "compression_ratio": 98.1047247777951,
+    "clamped": false
+  },
+  {
+    "step": 38,
+    "time": 0.0023750000000000017,
+    "energy": 1654676352.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 16.3,
+    "compression_ratio": 104.75284715284715,
+    "clamped": false
+  },
+  {
+    "step": 39,
+    "time": 0.0024375000000000017,
+    "energy": 1653951104.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 16.150000000000002,
+    "compression_ratio": 103.71329662721308,
+    "clamped": false
+  },
+  {
+    "step": 40,
+    "time": 0.002500000000000002,
+    "energy": 1653579008.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 16.383333333333336,
+    "compression_ratio": 102.76462709483519,
+    "clamped": false
+  },
+  {
+    "step": 41,
+    "time": 0.002562500000000002,
+    "energy": 1653124352.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 16.333333333333332,
+    "compression_ratio": 102.38666840255175,
+    "clamped": false
+  },
+  {
+    "step": 42,
+    "time": 0.002625000000000002,
+    "energy": 1652807424.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 16.433333333333334,
+    "compression_ratio": 101.1878538342769,
+    "clamped": false
+  },
+  {
+    "step": 43,
+    "time": 0.002687500000000002,
+    "energy": 1652348288.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 16.45,
+    "compression_ratio": 103.0406498738904,
+    "clamped": false
+  },
+  {
+    "step": 44,
+    "time": 0.002750000000000002,
+    "energy": 1652047360.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 16.066666666666666,
+    "compression_ratio": 104.38785465405674,
+    "clamped": false
+  },
+  {
+    "step": 45,
+    "time": 0.002812500000000002,
+    "energy": 1651781760.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 17.016666666666666,
+    "compression_ratio": 98.04051611294646,
+    "clamped": false
+  },
+  {
+    "step": 46,
+    "time": 0.002875000000000002,
+    "energy": 1650925568.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 17.25,
+    "compression_ratio": 96.54506951477765,
+    "clamped": false
+  },
+  {
+    "step": 47,
+    "time": 0.002937500000000002,
+    "energy": 1650213504.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 16.75,
+    "compression_ratio": 100.29421329507413,
+    "clamped": false
+  },
+  {
+    "step": 48,
+    "time": 0.0030000000000000022,
+    "energy": 1649546496.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 17.033333333333335,
+    "compression_ratio": 98.78868197091982,
+    "clamped": false
+  },
+  {
+    "step": 49,
+    "time": 0.0030625000000000023,
+    "energy": 1649095168.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 16.900000000000002,
+    "compression_ratio": 99.3659738454735,
+    "clamped": false
+  },
+  {
+    "step": 50,
+    "time": 0.0031250000000000023,
+    "energy": 1648789760.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 16.883333333333333,
+    "compression_ratio": 97.94283579301326,
+    "clamped": false
+  },
+  {
+    "step": 51,
+    "time": 0.0031875000000000024,
+    "energy": 1648170496.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 16.599999999999998,
+    "compression_ratio": 100.04541551378685,
+    "clamped": false
+  },
+  {
+    "step": 52,
+    "time": 0.0032500000000000025,
+    "energy": 1647836032.0,
+    "max_rank_u": 47,
+    "mean_rank_u": 16.833333333333332,
+    "compression_ratio": 98.95338156653035,
+    "clamped": false
+  },
+  {
+    "step": 53,
+    "time": 0.0033125000000000025,
+    "energy": 1647302272.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 16.766666666666666,
+    "compression_ratio": 98.4331935665561,
+    "clamped": false
+  },
+  {
+    "step": 54,
+    "time": 0.0033750000000000026,
+    "energy": 1646868992.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 17.150000000000002,
+    "compression_ratio": 96.60733370186107,
+    "clamped": false
+  },
+  {
+    "step": 55,
+    "time": 0.0034375000000000026,
+    "energy": 1646212352.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 17.349999999999998,
+    "compression_ratio": 96.87210913682136,
+    "clamped": false
+  },
+  {
+    "step": 56,
+    "time": 0.0035000000000000027,
+    "energy": 1645453056.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.783333333333335,
+    "compression_ratio": 84.6763930013459,
+    "clamped": false
+  },
+  {
+    "step": 57,
+    "time": 0.0035625000000000027,
+    "energy": 1644137600.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 17.55,
+    "compression_ratio": 94.94244408897474,
+    "clamped": false
+  },
+  {
+    "step": 58,
+    "time": 0.003625000000000003,
+    "energy": 1642377088.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.433333333333334,
+    "compression_ratio": 89.18737773241473,
+    "clamped": false
+  },
+  {
+    "step": 59,
+    "time": 0.003687500000000003,
+    "energy": 1641304576.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.05,
+    "compression_ratio": 92.5105281731561,
+    "clamped": false
+  },
+  {
+    "step": 60,
+    "time": 0.003750000000000003,
+    "energy": 1640048896.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 17.366666666666667,
+    "compression_ratio": 94.56001442871315,
+    "clamped": false
+  },
+  {
+    "step": 61,
+    "time": 0.003812500000000003,
+    "energy": 1639399680.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.066666666666666,
+    "compression_ratio": 91.25193629797232,
+    "clamped": false
+  },
+  {
+    "step": 62,
+    "time": 0.003875000000000003,
+    "energy": 1638548352.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 17.53333333333333,
+    "compression_ratio": 94.34448010077078,
+    "clamped": false
+  },
+  {
+    "step": 63,
+    "time": 0.003937500000000003,
+    "energy": 1637781504.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 17.933333333333334,
+    "compression_ratio": 91.78175876757892,
+    "clamped": false
+  },
+  {
+    "step": 64,
+    "time": 0.004000000000000003,
+    "energy": 1636768384.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.23333333333333,
+    "compression_ratio": 91.01958855357195,
+    "clamped": false
+  },
+  {
+    "step": 65,
+    "time": 0.004062500000000003,
+    "energy": 1636107264.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 17.666666666666668,
+    "compression_ratio": 93.25649235147634,
+    "clamped": false
+  },
+  {
+    "step": 66,
+    "time": 0.004125000000000003,
+    "energy": 1635122688.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.016666666666666,
+    "compression_ratio": 91.96690542318375,
+    "clamped": false
+  },
+  {
+    "step": 67,
+    "time": 0.004187500000000003,
+    "energy": 1634540800.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 17.866666666666664,
+    "compression_ratio": 92.84363378785196,
+    "clamped": false
+  },
+  {
+    "step": 68,
+    "time": 0.004250000000000003,
+    "energy": 1633820800.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 17.916666666666668,
+    "compression_ratio": 92.53501985586115,
+    "clamped": false
+  },
+  {
+    "step": 69,
+    "time": 0.004312500000000003,
+    "energy": 1633043328.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.099999999999998,
+    "compression_ratio": 92.19871625780357,
+    "clamped": false
+  },
+  {
+    "step": 70,
+    "time": 0.004375000000000003,
+    "energy": 1632030080.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.3,
+    "compression_ratio": 88.47995949708886,
+    "clamped": false
+  },
+  {
+    "step": 71,
+    "time": 0.004437500000000003,
+    "energy": 1631196160.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.516666666666666,
+    "compression_ratio": 88.9100929877618,
+    "clamped": false
+  },
+  {
+    "step": 72,
+    "time": 0.004500000000000003,
+    "energy": 1630043904.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.966666666666665,
+    "compression_ratio": 85.12781100316619,
+    "clamped": false
+  },
+  {
+    "step": 73,
+    "time": 0.004562500000000003,
+    "energy": 1628729472.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.63333333333333,
+    "compression_ratio": 86.82660778360474,
+    "clamped": false
+  },
+  {
+    "step": 74,
+    "time": 0.004625000000000003,
+    "energy": 1628073728.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.266666666666666,
+    "compression_ratio": 89.73692768506632,
+    "clamped": false
+  },
+  {
+    "step": 75,
+    "time": 0.004687500000000003,
+    "energy": 1627046272.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.683333333333334,
+    "compression_ratio": 88.22436616558223,
+    "clamped": false
+  },
+  {
+    "step": 76,
+    "time": 0.004750000000000003,
+    "energy": 1626088832.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.766666666666666,
+    "compression_ratio": 86.90816664824843,
+    "clamped": false
+  },
+  {
+    "step": 77,
+    "time": 0.004812500000000003,
+    "energy": 1625022208.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 19.0,
+    "compression_ratio": 86.49714034315882,
+    "clamped": false
+  },
+  {
+    "step": 78,
+    "time": 0.0048750000000000035,
+    "energy": 1624082176.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.1,
+    "compression_ratio": 91.66675408689571,
+    "clamped": false
+  },
+  {
+    "step": 79,
+    "time": 0.0049375000000000035,
+    "energy": 1623350272.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.433333333333334,
+    "compression_ratio": 89.60145835706962,
+    "clamped": false
+  },
+  {
+    "step": 80,
+    "time": 0.005000000000000004,
+    "energy": 1622269312.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.7,
+    "compression_ratio": 88.6995065557592,
+    "clamped": false
+  },
+  {
+    "step": 81,
+    "time": 0.005062500000000004,
+    "energy": 1621235328.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.483333333333334,
+    "compression_ratio": 89.93190199834186,
+    "clamped": false
+  },
+  {
+    "step": 82,
+    "time": 0.005125000000000004,
+    "energy": 1619998464.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 19.0,
+    "compression_ratio": 86.38312829525483,
+    "clamped": false
+  },
+  {
+    "step": 83,
+    "time": 0.005187500000000004,
+    "energy": 1619394560.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.7,
+    "compression_ratio": 88.36811056800944,
+    "clamped": false
+  },
+  {
+    "step": 84,
+    "time": 0.005250000000000004,
+    "energy": 1618528000.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 18.900000000000002,
+    "compression_ratio": 87.24803772014977,
+    "clamped": false
+  },
+  {
+    "step": 85,
+    "time": 0.005312500000000004,
+    "energy": 1617505408.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 19.133333333333333,
+    "compression_ratio": 85.67964047392074,
+    "clamped": false
+  },
+  {
+    "step": 86,
+    "time": 0.005375000000000004,
+    "energy": 1616629760.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 20.016666666666666,
+    "compression_ratio": 79.54001365394826,
+    "clamped": false
+  },
+  {
+    "step": 87,
+    "time": 0.005437500000000004,
+    "energy": 1615533312.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 19.7,
+    "compression_ratio": 81.75818692171744,
+    "clamped": false
+  },
+  {
+    "step": 88,
+    "time": 0.005500000000000004,
+    "energy": 1614887040.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 19.333333333333332,
+    "compression_ratio": 83.15652013005895,
+    "clamped": false
+  },
+  {
+    "step": 89,
+    "time": 0.005562500000000004,
+    "energy": 1614140416.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 19.833333333333332,
+    "compression_ratio": 80.50487523992322,
+    "clamped": false
+  },
+  {
+    "step": 90,
+    "time": 0.005625000000000004,
+    "energy": 1613760000.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 19.8,
+    "compression_ratio": 80.6162835396325,
+    "clamped": false
+  },
+  {
+    "step": 91,
+    "time": 0.005687500000000004,
+    "energy": 1613174272.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 20.083333333333332,
+    "compression_ratio": 79.70325326847066,
+    "clamped": false
+  },
+  {
+    "step": 92,
+    "time": 0.005750000000000004,
+    "energy": 1612276224.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 20.98333333333333,
+    "compression_ratio": 74.89471929908099,
+    "clamped": false
+  },
+  {
+    "step": 93,
+    "time": 0.005812500000000004,
+    "energy": 1611785088.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 20.25,
+    "compression_ratio": 77.96877013830367,
+    "clamped": false
+  },
+  {
+    "step": 94,
+    "time": 0.005875000000000004,
+    "energy": 1611345408.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 20.016666666666666,
+    "compression_ratio": 79.95445302968686,
+    "clamped": false
+  },
+  {
+    "step": 95,
+    "time": 0.005937500000000004,
+    "energy": 1609734062.592,
+    "max_rank_u": 48,
+    "mean_rank_u": 20.45,
+    "compression_ratio": 77.65695665053816,
+    "clamped": true
+  },
+  {
+    "step": 96,
+    "time": 0.0060000000000000045,
+    "energy": 1609180032.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 20.383333333333333,
+    "compression_ratio": 78.53521408063912,
+    "clamped": false
+  },
+  {
+    "step": 97,
+    "time": 0.0060625000000000045,
+    "energy": 1609065600.0,
+    "max_rank_u": 48,
+    "mean_rank_u": 20.35,
+    "compression_ratio": 78.42947966790496,
+    "clamped": false
+  }
+]

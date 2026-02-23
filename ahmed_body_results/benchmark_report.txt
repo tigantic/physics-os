@@ -1,0 +1,150 @@
+════════════════════════════════════════════════════════════════════════
+QTT COMPRESSION BENCHMARK: NVIDIA PhysicsNeMo Ahmed Body
+Mesh-to-Rectilinear Bridge — HyperTensor QTT Engine
+════════════════════════════════════════════════════════════════════════
+Date:       2026-02-21 20:56:04
+Samples:    50
+Grid res:   128 (cells along x-axis)
+χ values:   [32, 64, 128]
+Device:     cuda
+Padding:    5 cm
+
+Grid:       128×64×64 = 545,025 nodes
+dx:         9.9 mm
+Fields:     11 scalar channels
+
+────────────────────────────────────────────────────────────────────────
+AGGREGATE RESULTS PER χ (GRID-SPACE METRICS)
+────────────────────────────────────────────────────────────────────────
+
+  χ = 32
+    Grid compression ratio:
+      Mean:         31×
+      Median:       32×
+      Min:          18×
+      Max:          59×
+    Grid L2 error (mean across fields):
+      Mean:   1.54e-01
+      Max:    1.76e-01
+    Grid L2 error (worst single field):
+      Max:    4.73e-01
+    Storage:
+      Grid raw:    23.3 MB avg per sample
+      QTT:         732.6 KB avg per sample
+      VTP file:    11.5 MB avg
+      vs VTP:      16×
+
+  χ = 64
+    Grid compression ratio:
+      Mean:          9×
+      Median:       10×
+      Min:           6×
+      Max:          18×
+    Grid L2 error (mean across fields):
+      Mean:   9.88e-02
+      Max:    1.20e-01
+    Grid L2 error (worst single field):
+      Max:    2.88e-01
+    Storage:
+      Grid raw:    23.3 MB avg per sample
+      QTT:         2405.1 KB avg per sample
+      VTP file:    11.5 MB avg
+      vs VTP:      5×
+
+  χ = 128
+    Grid compression ratio:
+      Mean:          3×
+      Median:        3×
+      Min:           2×
+      Max:           5×
+    Grid L2 error (mean across fields):
+      Mean:   4.80e-02
+      Max:    7.18e-02
+    Grid L2 error (worst single field):
+      Max:    1.74e-01
+    Storage:
+      Grid raw:    23.3 MB avg per sample
+      QTT:         7522.2 KB avg per sample
+      VTP file:    11.5 MB avg
+      vs VTP:      2×
+
+────────────────────────────────────────────────────────────────────────
+PER-FIELD BREAKDOWN (BEST χ)
+────────────────────────────────────────────────────────────────────────
+  χ = 32
+                   Field |    Ratio |    L2 Grid |
+  -----------------------+----------+------------+
+                     U_x |   13189× |   0.00e+00 |
+                     U_y |   13189× |   0.00e+00 |
+                     U_z |   13189× |   0.00e+00 |
+                       k |      23× |   1.34e-01 |
+                     nut |      23× |   3.60e-01 |
+                   omega |      23× |   1.17e-01 |
+                       p |      23× |   1.85e-01 |
+       wallShearStress_x |      23× |   1.43e-01 |
+       wallShearStress_y |      23× |   2.41e-01 |
+       wallShearStress_z |      23× |   2.29e-01 |
+                   yPlus |      23× |   2.87e-01 |
+
+────────────────────────────────────────────────────────────────────────
+vs NVIDIA PhysicsNeMo TARGETS
+────────────────────────────────────────────────────────────────────────
+
+  χ = 32:
+    [PASS] Grid compression > 10×  [31×]
+    [PASS] Grid compression > 20×  [31×]
+    [MISS] Grid compression > 50×  [31×]
+    [PASS] vs VTP file > 10×  [16×]
+    [MISS] Grid L2 error < 10%  [4.73e-01]
+    [MISS] Grid L2 error < 5%  [4.73e-01]
+    [MISS] Grid L2 error < 1%  [4.73e-01]
+
+  χ = 64:
+    [MISS] Grid compression > 10×  [9×]
+    [MISS] Grid compression > 20×  [9×]
+    [MISS] Grid compression > 50×  [9×]
+    [MISS] vs VTP file > 10×  [5×]
+    [MISS] Grid L2 error < 10%  [2.88e-01]
+    [MISS] Grid L2 error < 5%  [2.88e-01]
+    [MISS] Grid L2 error < 1%  [2.88e-01]
+
+  χ = 128:
+    [MISS] Grid compression > 10×  [3×]
+    [MISS] Grid compression > 20×  [3×]
+    [MISS] Grid compression > 50×  [3×]
+    [MISS] vs VTP file > 10×  [2×]
+    [MISS] Grid L2 error < 10%  [1.74e-01]
+    [MISS] Grid L2 error < 5%  [1.74e-01]
+    [MISS] Grid L2 error < 1%  [1.74e-01]
+
+────────────────────────────────────────────────────────────────────────
+FULL DATASET PROJECTION (4,064 samples)
+────────────────────────────────────────────────────────────────────────
+  χ = 32:
+    Original VTP:  46.7 GB
+    QTT compressed: 2977 MB
+    Reduction:      16×
+  χ = 64:
+    Original VTP:  46.7 GB
+    QTT compressed: 9774 MB
+    Reduction:      5×
+  χ = 128:
+    Original VTP:  46.7 GB
+    QTT compressed: 30570 MB
+    Reduction:      2×
+
+────────────────────────────────────────────────────────────────────────
+TIMING
+────────────────────────────────────────────────────────────────────────
+  Voxelization: 2041 ms avg per sample
+  QTT χ=32:
+    Compress:   80.9 ms avg per field
+    Decompress: 1.2 ms avg per field
+  QTT χ=64:
+    Compress:   100.5 ms avg per field
+    Decompress: 1.5 ms avg per field
+  QTT χ=128:
+    Compress:   135.7 ms avg per field
+    Decompress: 2.4 ms avg per field
+
+════════════════════════════════════════════════════════════════════════
