@@ -27,6 +27,8 @@ from pathlib import Path
 from datetime import date, datetime
 
 ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 RESULTS = ROOT / "ahmed_ib_results"
 ARTIFACTS = ROOT / "artifacts"
 IMAGES = ROOT / "images"
@@ -266,6 +268,27 @@ tr:nth-child(even) td {
 .callout.gold { border-left-color: var(--gold); }
 .callout strong { color: var(--brand); }
 
+/* ── VERIFICATION TRANSCRIPT ───────────────────────────── */
+.vt-row {
+    display: flex; align-items: baseline; gap: 8px;
+    padding: 1px 0;
+}
+.vt-check {
+    display: inline-block; width: 16px; text-align: center;
+    font-weight: 700;
+}
+.vt-pass { color: var(--green); }
+.vt-fail { color: var(--red); }
+.vt-label {
+    display: inline-block; min-width: 130px;
+    color: var(--gray-3); font-weight: 600;
+}
+.vt-value { color: var(--text); }
+.vt-hash {
+    word-break: break-all; font-size: 7.5pt;
+    color: var(--accent);
+}
+
 /* ── FIGURES ────────────────────────────────────────────── */
 .figure {
     text-align: center;
@@ -497,6 +520,7 @@ def build_html(data: dict) -> str:
     <div class="toc-item"><span class="toc-num">10</span><span class="toc-title">Trustless Physics — Cryptographic Proof</span></div>
     <div class="toc-item"><span class="toc-num">11</span><span class="toc-title">QTT Engineering Rules Compliance</span></div>
     <div class="toc-item"><span class="toc-num">12</span><span class="toc-title">Strategic Implications</span></div>
+    <div class="toc-item"><span class="toc-num">13</span><span class="toc-title">Verification Transcript</span></div>
     <div class="toc-item"><span class="toc-num">A</span><span class="toc-title">Appendix: Solver Architecture &amp; Algorithms</span></div>
     <div class="toc-item"><span class="toc-num">B</span><span class="toc-title">Appendix: 4096³ Zero-Dense Mask Construction</span></div>
 </div>
@@ -1142,6 +1166,186 @@ exploration <strong>without HPC infrastructure</strong>.</p>
         <td class="num">${qtt_mb/1024*0.023:.3f}/mo</td>
         <td class="num">{best_cr:,.0f}×</td></tr>
 </table>
+"""
+
+    # ── 13. VERIFICATION TRANSCRIPT ────────────────────────────
+    # Run the live verification against the best-resolution cert + TPC
+    best_N = best["N"]
+    best_cert = data["certs"].get(best_N)
+    best_tpc_path = RESULTS / str(best_N) / "trustless_certificate.tpc"
+
+    transcript_lines: list[str] = []
+    all_checks_pass = False
+
+    if best_cert and best_tpc_path.exists():
+        import hashlib as _hl
+        import struct as _st
+
+        cert_hash = best_cert["certificate_hash"]
+        transcript_lines.append(
+            f'<span class="vt-label">Certificate ID</span>'
+            f'<span class="vt-value">{best_cert["certificate_id"]}</span>'
+        )
+        transcript_lines.append(
+            f'<span class="vt-label">Certificate hash</span>'
+            f'<span class="vt-value vt-hash">{cert_hash}</span>'
+        )
+
+        # Seal recomputation
+        h = _hl.sha256()
+        h.update(best_cert["certificate_id"].encode("utf-8"))
+        h.update(best_cert["config_hash"].encode("utf-8"))
+        h.update(bytes.fromhex(best_cert["merkle_root"]))
+        h.update(_st.pack("<I", best_cert["total_steps"]))
+        h.update(bytes.fromhex(best_cert["initial_state_commitment"]))
+        h.update(bytes.fromhex(best_cert["final_state_commitment"]))
+        for rp in best_cert["run_proofs"]:
+            h.update(rp["name"].encode("utf-8"))
+            h.update(b"\x01" if rp["satisfied"] else b"\x00")
+        seal_ok = h.hexdigest() == cert_hash
+        transcript_lines.append(
+            f'<span class="vt-check {"vt-pass" if seal_ok else "vt-fail"}">'
+            f'{"✓" if seal_ok else "✗"}</span>'
+            f'<span class="vt-label">Seal recompute</span>'
+            f'<span class="vt-value">SHA-256 of (cert_id ‖ config ‖ merkle ‖ steps ‖ states ‖ run_proofs)</span>'
+        )
+
+        # Ed25519 JSON signature
+        json_sig_ok = False
+        json_pub = best_cert.get("public_key", "")
+        if json_pub:
+            try:
+                from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+                    Ed25519PublicKey as _PK,
+                )
+                _pk = _PK.from_public_bytes(bytes.fromhex(json_pub))
+                _pk.verify(
+                    bytes.fromhex(best_cert["signature"]),
+                    bytes.fromhex(cert_hash),
+                )
+                json_sig_ok = True
+            except Exception:
+                json_sig_ok = False
+        transcript_lines.append(
+            f'<span class="vt-check {"vt-pass" if json_sig_ok else "vt-fail"}">'
+            f'{"✓" if json_sig_ok else "✗"}</span>'
+            f'<span class="vt-label">JSON Ed25519 sig</span>'
+            f'<span class="vt-value">key = {json_pub[:16]}…</span>'
+        )
+
+        # Hash chain
+        steps = best_cert["step_proofs"]
+        chain_ok = steps[0]["parent_commitment"] == best_cert["initial_state_commitment"]
+        for i in range(1, len(steps)):
+            if steps[i]["parent_commitment"] != steps[i - 1]["state_commitment"]:
+                chain_ok = False
+                break
+        chain_ok = chain_ok and steps[-1]["state_commitment"] == best_cert["final_state_commitment"]
+        transcript_lines.append(
+            f'<span class="vt-check {"vt-pass" if chain_ok else "vt-fail"}">'
+            f'{"✓" if chain_ok else "✗"}</span>'
+            f'<span class="vt-label">Hash chain</span>'
+            f'<span class="vt-value">{len(steps)} links, initial → final anchored</span>'
+        )
+
+        # Merkle root
+        def _sha256c(a: str, b: str) -> str:
+            return _hl.sha256(bytes.fromhex(a) + bytes.fromhex(b)).hexdigest()
+
+        leaves = [sp["step_hash"] for sp in steps]
+        layer = list(leaves)
+        while len(layer) > 1:
+            nxt = []
+            for i in range(0, len(layer), 2):
+                left = layer[i]
+                right = layer[i + 1] if i + 1 < len(layer) else layer[i]
+                nxt.append(_sha256c(left, right))
+            layer = nxt
+        merkle_ok = layer[0] == best_cert["merkle_root"]
+        transcript_lines.append(
+            f'<span class="vt-check {"vt-pass" if merkle_ok else "vt-fail"}">'
+            f'{"✓" if merkle_ok else "✗"}</span>'
+            f'<span class="vt-label">Merkle root</span>'
+            f'<span class="vt-value">depth = {best_cert["merkle_depth"]}, '
+            f'{len(leaves)} leaves → {best_cert["merkle_root"][:24]}…</span>'
+        )
+
+        # TPC binary signature
+        try:
+            from tpc.format import TPCFile as _TPCFile
+            tpc = _TPCFile.load(best_tpc_path)
+            tpc_sig_ok = tpc.verify_signature()
+            tpc_pub = tpc.signature.public_key.hex()
+            tpc_cert_hash = tpc.metadata.extra.get("certificate_hash", "")
+            tpc_tied = tpc_cert_hash == cert_hash
+        except Exception:
+            tpc_sig_ok = False
+            tpc_pub = "unavailable"
+            tpc_tied = False
+
+        transcript_lines.append(
+            f'<span class="vt-check {"vt-pass" if tpc_sig_ok else "vt-fail"}">'
+            f'{"✓" if tpc_sig_ok else "✗"}</span>'
+            f'<span class="vt-label">TPC binary sig</span>'
+            f'<span class="vt-value">key = {tpc_pub[:16]}…</span>'
+        )
+        transcript_lines.append(
+            f'<span class="vt-check {"vt-pass" if tpc_tied else "vt-fail"}">'
+            f'{"✓" if tpc_tied else "✗"}</span>'
+            f'<span class="vt-label">TPC→JSON anchor</span>'
+            f'<span class="vt-value">metadata.certificate_hash == seal</span>'
+        )
+
+        all_checks_pass = seal_ok and json_sig_ok and chain_ok and merkle_ok and tpc_sig_ok and tpc_tied
+
+        # Invariant summary
+        total_inv = sum(len(sp["invariants"]) for sp in steps)
+        total_pass = sum(
+            inv["satisfied"] for sp in steps for inv in sp["invariants"]
+        )
+        transcript_lines.append(
+            f'<span class="vt-check {"vt-pass" if total_pass == total_inv else "vt-fail"}">'
+            f'{"✓" if total_pass == total_inv else "⚠"}</span>'
+            f'<span class="vt-label">Physics invariants</span>'
+            f'<span class="vt-value">{total_pass:,}/{total_inv:,} '
+            f'({100*total_pass/total_inv:.2f}%)</span>'
+        )
+
+    transcript_html = "\n".join(
+        f'<div class="vt-row">{line}</div>' for line in transcript_lines
+    )
+    verdict_class = "green" if all_checks_pass else "gold"
+    verdict_text = (
+        "All cryptographic checks PASS — certificate is tamper-evident and unforgeable."
+        if all_checks_pass
+        else "Some checks failed — see details above."
+    )
+
+    html += f"""
+<div class="page-break"></div>
+<h1>13. Verification Transcript</h1>
+
+<p>Independent offline verification of the {best_N}³ trustless certificate.
+Every check below is recomputed from raw data at report-generation time — not cached.</p>
+
+<div style="
+    background: var(--gray-1); border: 1px solid var(--gray-2);
+    border-radius: 6px; padding: 12px 16px; margin: 12px 0;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 8.5pt; line-height: 1.8;
+">
+{transcript_html}
+</div>
+
+<div class="callout {verdict_class}">
+    <strong>Verdict:</strong> {verdict_text}
+</div>
+
+<p style="font-size: 8pt; color: var(--gray-3); margin-top: 8px;">
+Both the JSON certificate (Ed25519 over the SHA-256 seal) and the TPC binary
+(Ed25519 over the content hash) anchor to the same <code>certificate_hash</code>,
+ensuring that the simulation record, hash chain, Merkle tree, and binary package
+all attest to an identical, untampered computation.</p>
 """
 
     # ── APPENDIX ───────────────────────────────────────────────
