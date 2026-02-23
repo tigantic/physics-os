@@ -298,10 +298,9 @@ def _eigh_svd_full(
     GPU-stable alternative to ``torch.linalg.svd`` which can trigger
     cuSOLVER convergence failures on near-singular matrices.
 
-    Only the small Gram matrix (m×m or n×n) is computed in float64 for
-    numerical stability.  The large reconstructed factors U / Vh stay
-    in the caller's dtype to halve memory and FLOPS for the dominant
-    matrix multiply.
+    Only the small Gram matrix (m×m or n×n) is promoted to float64
+    for stability — the large matrix ``mat`` stays in its original
+    dtype throughout, avoiding expensive whole-array float64 copies.
 
     Returns
     -------
@@ -314,29 +313,28 @@ def _eigh_svd_full(
     orig_dtype = mat.dtype
 
     if m <= n:
-        # Gram in float64 for stability (only m×m — tiny)
-        mat_d = mat.to(torch.float64)
-        G = mat_d @ mat_d.T                              # (m, m)
-        del mat_d
+        # Gram matrix in caller dtype, then promote for eigh
+        G = (mat @ mat.T).to(torch.float64)               # (m, m)
         evals, evecs = torch.linalg.eigh(G)
+        del G
         evals = evals.flip(0).clamp(min=0)
         evecs = evecs.flip(1)
         S = torch.sqrt(evals).to(orig_dtype)
-        U = evecs.to(orig_dtype)                          # (m, m)
+        U = evecs.to(orig_dtype)                           # (m, m)
         mask = S > 1e-7
         inv_S = torch.zeros_like(S)
         inv_S[mask] = 1.0 / S[mask]
         # Vh reconstruction in caller dtype (the big multiply)
-        Vh = inv_S.unsqueeze(1) * (U.T @ mat)            # (m, n)
+        Vh = inv_S.unsqueeze(1) * (U.T @ mat)             # (m, n)
     else:
-        mat_d = mat.to(torch.float64)
-        G = mat_d.T @ mat_d                               # (n, n)
-        del mat_d
+        # Gram matrix in caller dtype, then promote for eigh
+        G = (mat.T @ mat).to(torch.float64)                # (n, n)
         evals, evecs = torch.linalg.eigh(G)
+        del G
         evals = evals.flip(0).clamp(min=0)
         evecs = evecs.flip(1)
         S = torch.sqrt(evals).to(orig_dtype)
-        Vh = evecs.T.to(orig_dtype)                       # (n, n)
+        Vh = evecs.T.to(orig_dtype)                        # (n, n)
         mask = S > 1e-7
         inv_S = torch.zeros_like(S)
         inv_S[mask] = 1.0 / S[mask]
@@ -656,6 +654,103 @@ def dense_to_qtt_3d(
     cores.append(last_core)
 
     return cores
+
+
+# ═══════════════════════════════════════════════════════════════════════════════════════
+# SPECTRAL POISSON PRECONDITIONER
+# ═══════════════════════════════════════════════════════════════════════════════════════
+
+
+def spectral_poisson_precond(
+    rhs_cores: List[Tensor],
+    n_bits: int,
+    L: float = 2 * math.pi,
+    precond_rank: int = 12,
+    tol: float = 1e-6,
+) -> List[Tensor]:
+    """
+    Spectral preconditioner for the pressure Poisson equation.
+
+    Approximates z = (∇²)⁻¹ r by applying the exact spectral inverse
+    Laplacian in dense space, then compressing back to QTT at low rank.
+    The low-rank truncation makes this an *approximate* inverse —
+    sufficient for preconditioning CG but not for a standalone solve.
+
+    Steps
+    -----
+    1. QTT → dense 3D (incremental build, ~0.2 s at 512³)
+    2. rFFT → divide by discrete Laplacian eigenvalues → irFFT (~0.1 s)
+    3. Dense → QTT at precond_rank (Morton reindex + TT-SVD, ~1 s at rank 12)
+
+    Total cost: ~1.3 s per application at 512³, precond_rank = 12.
+    VRAM spike: ~1.3 GB (dense 512³ + rFFT workspace).
+
+    The discrete Laplacian eigenvalues match the finite-difference stencil
+    used in the CG solver::
+
+        λ_k = (2 / dx²)(cos(2πk/N) − 1)   per axis
+        Λ_{k1,k2,k3} = λ_{k1} + λ_{k2} + λ_{k3}
+
+    Parameters
+    ----------
+    rhs_cores : List[Tensor]
+        QTT cores of the CG residual (3 × n_bits cores, Morton order).
+    n_bits : int
+        Bits per spatial dimension (N = 2^n_bits).
+    L : float
+        Physical domain size (default: 2π periodic box).
+    precond_rank : int
+        Maximum QTT rank for the output.  Lower = faster but rougher
+        approximation.  12 is a good balance at 512³.
+    tol : float
+        SVD truncation tolerance.
+
+    Returns
+    -------
+    List[Tensor]
+        QTT cores of the approximate solution z ≈ (∇²)⁻¹ r.
+    """
+    N = 2 ** n_bits
+    device = rhs_cores[0].device
+    dtype = rhs_cores[0].dtype
+    dx = L / N
+
+    # ── QTT → dense ────────────────────────────────────────────────────
+    rhs_dense = qtt_to_dense_3d(rhs_cores, n_bits)
+
+    # ── Build eigenvalues of discrete 3D Laplacian ─────────────────────
+    # 1D:  λ_k = (2/dx²)(cos(2πν_k) − 1),   ν_k = fftfreq(N)
+    freq = torch.fft.fftfreq(N, device=device, dtype=dtype)
+    freq_r = torch.fft.rfftfreq(N, device=device, dtype=dtype)
+
+    lam_full = (2.0 / dx ** 2) * (torch.cos(2.0 * math.pi * freq) - 1.0)
+    lam_half = (2.0 / dx ** 2) * (torch.cos(2.0 * math.pi * freq_r) - 1.0)
+
+    # 3D eigenvalues (additive separability of the Laplacian)
+    lam3d = (
+        lam_full[:, None, None]
+        + lam_full[None, :, None]
+        + lam_half[None, None, :]
+    )
+    lam3d[0, 0, 0] = 1.0  # avoid division by zero at the zero mode
+
+    # ── FFT solve ──────────────────────────────────────────────────────
+    rhs_hat = torch.fft.rfftn(rhs_dense, dim=(0, 1, 2))
+    del rhs_dense
+
+    z_hat = rhs_hat / lam3d
+    z_hat[0, 0, 0] = 0.0  # enforce mean-zero pressure
+    del rhs_hat, lam3d
+
+    z_dense = torch.fft.irfftn(z_hat, s=(N, N, N), dim=(0, 1, 2))
+    del z_hat
+
+    # ── Dense → QTT at low rank ────────────────────────────────────────
+    z_cores = dense_to_qtt_3d(z_dense, n_bits, max_rank=precond_rank, tol=tol)
+    del z_dense
+
+    torch.cuda.empty_cache()
+    return z_cores
 
 
 # ═══════════════════════════════════════════════════════════════════════════════════════

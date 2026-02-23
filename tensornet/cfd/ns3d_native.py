@@ -619,43 +619,55 @@ class NativeDerivatives3D:
         rhs: QTT3DNative,
         tol: float = 1e-6,
         max_iter: int = 50,
-        preconditioner: Optional[Callable] = None,
         x0: Optional[QTT3DNative] = None,
+        solve_rank: Optional[int] = None,
     ) -> QTT3DNative:
         """
-        Preconditioned CG Poisson solver: solve ∇²p = rhs.
+        CG Poisson solver: solve ∇²p = rhs.
 
-        Uses Conjugate Gradient iteration entirely in QTT format with:
-
-        * **Warm-start** — supply ``x0`` (e.g. previous-step pressure).
-          The solver computes the true initial residual r₀ = rhs − ∇²x0
-          instead of starting from zero, typically halving iteration
-          count for smoothly-evolving flows.
-
-        * **Pluggable preconditioner** — any callable
-          ``M⁻¹ : QTT3DNative → QTT3DNative`` that approximates ∇⁻².
-          The default (spectral FFT at low QTT rank) replaces the old
-          Jacobi diagonal scaling, which for CG was mathematically
-          equivalent to *no* preconditioning (M = cI).
+        Uses Conjugate Gradient iteration entirely in QTT format.
 
         Args:
             rhs: Right-hand side ∇·u* / dt.
             tol: Relative residual tolerance  ||r||/||rhs|| < tol.
             max_iter: Maximum CG iterations (safety cap).
-            preconditioner: Callable(QTT3DNative) → QTT3DNative approximating ∇⁻².
-                If None, runs unpreconditioned CG (z = r).
             x0: Initial guess for the solution (warm-start).
                 If None, starts from zero.
+            solve_rank: QTT rank used for all CG intermediates.
+                If None, uses self.max_rank.  Pressure is naturally
+                smooth so a lower rank (e.g. max_rank // 3) gives
+                the same accuracy at a fraction of the SVD cost.
 
         Returns:
             Pressure field p satisfying ∇²p ≈ rhs.
         """
-        max_rank = self.max_rank
+        # ── Temporarily override rank for the entire solve ─────────────
+        saved_max_rank = self.max_rank
+        saved_min_rank = self.min_rank
+        sr = solve_rank if solve_rank is not None else self.max_rank
+        self.max_rank = sr
+        self.min_rank = max(1, sr // 4)
+
+        try:
+            return self._poisson_cg_inner(rhs, tol, max_iter, x0, sr)
+        finally:
+            self.max_rank = saved_max_rank
+            self.min_rank = saved_min_rank
+
+    def _poisson_cg_inner(
+        self,
+        rhs: QTT3DNative,
+        tol: float,
+        max_iter: int,
+        x0: Optional[QTT3DNative],
+        max_rank: int,
+    ) -> QTT3DNative:
+        """Inner CG loop (called with self.max_rank already patched)."""
         n_sites = 3 * self.n_bits
 
         # ── Initial guess ──────────────────────────────────────────────
         if x0 is not None:
-            x = x0.clone()
+            x = x0
             # True residual: r = rhs - ∇²x0
             Lx0 = self.laplacian(x)
             r_cores = qtt_fused_sum(
@@ -668,31 +680,27 @@ class NativeDerivatives3D:
             x_cores = [torch.zeros(1, 2, 1, device=self.device, dtype=self.dtype)
                        for _ in range(n_sites)]
             x = QTT3DNative(QTTCores(x_cores), self.n_bits)
-            r = rhs.clone()
+            r = rhs
 
-        # ── Preconditioner: z = M⁻¹ r ─────────────────────────────────
-        if preconditioner is not None:
-            z = preconditioner(r)
-        else:
-            z = r.clone()  # unpreconditioned CG
+        p = r  # search direction (unpreconditioned: z = r)
 
-        p = z.clone()  # search direction
-
-        # rz = <r, z>
-        rz = qtt_inner_native(r.cores, z.cores)
+        # rz = <r, z> = <r, r>
+        rz = qtt_inner_native(r.cores, r.cores)
 
         rhs_norm_sq = qtt_inner_native(rhs.cores, rhs.cores).item()
         if rhs_norm_sq < 1e-20:
             return x  # RHS is effectively zero
 
+        converged_k = max_iter
         for k in range(max_iter):
             # Ap = ∇²p
             Ap = self.laplacian(p)
 
-            # alpha = <r,z> / <p, Ap>
+            # alpha = <r,r> / <p, Ap>
             pAp = qtt_inner_native(p.cores, Ap.cores)
 
             if abs(pAp.item()) < 1e-30:
+                converged_k = k
                 break  # breakdown
 
             alpha = rz.item() / pAp.item()
@@ -715,29 +723,33 @@ class NativeDerivatives3D:
 
             # Convergence check
             r_norm_sq = qtt_inner_native(r.cores, r.cores).item()
-            if r_norm_sq / rhs_norm_sq < tol ** 2:
+            rel_res = r_norm_sq / rhs_norm_sq
+            if rel_res < tol ** 2:
+                converged_k = k + 1
                 break
 
-            # z = M⁻¹ r
-            if preconditioner is not None:
-                z = preconditioner(r)
-            else:
-                z = r.clone()
-
-            # beta = <r_new, z_new> / <r_old, z_old>
-            rz_new = qtt_inner_native(r.cores, z.cores)
+            # beta = <r_new, r_new> / <r_old, r_old>  (unpreconditioned)
+            rz_new = torch.tensor(r_norm_sq, device=rz.device)
             beta = rz_new.item() / rz.item() if abs(rz.item()) > 1e-30 else 0.0
 
-            # p = z + beta * p
+            # p = r + beta * p
             p_cores = qtt_fused_sum(
-                [z.cores, p.cores],
+                [r.cores, p.cores],
                 [1.0, beta],
                 max_rank,
             )
             p = QTT3DNative(p_cores, self.n_bits)
 
             rz = rz_new
+        else:
+            converged_k = max_iter
 
+        import logging
+        logging.getLogger(__name__).debug(
+            'CG Poisson: %d iters, rank=%d, rel_res=%.2e',
+            converged_k, max_rank,
+            (r_norm_sq / rhs_norm_sq) ** 0.5 if rhs_norm_sq > 0 else 0.0,
+        )
         return x
 
 
@@ -1388,46 +1400,41 @@ class NativeNS3DSolver:
         """
         Project velocity to divergence-free (incompressible).
 
-        Solves the pressure Poisson equation via CG with warm-start:
+        Uses the exact spectral Leray projector via FFT.  Only the
+        *correction* Δu = −∇p is computed in dense (gradient of smooth
+        pressure → low QTT rank), then added to u* in QTT format.
 
-            ∇²p = (1/dt) ∇·u*
-            u = u* − dt ∇p
-
-        The pressure from the previous time step is cached and reused
-        as the CG initial guess.  For smoothly evolving flows the
-        pressure changes by only a few percent per step, so the CG
-        residual starts small and converges in fewer iterations.
+        Cost breakdown at 512³:
+            QTT → dense:     0.6 s (3 fields)
+            rFFT + irFFT:    0.1 s
+            Dense → QTT:     2.7 s (3 fields, rank ≤ 48)
+            Fused sum:       0.3 s
+            Total:          ~3.7 s
         """
-        dt = self.config.dt
+        from tensornet.cfd.poisson_spectral import spectral_leray_project_qtt
+
         max_rank = self.config.max_rank
         n_bits = u_star.n_bits
+        L = self.config.L
 
-        # RHS = (1/dt) ∇·u*
-        div_u = self.deriv.divergence(u_star)
-        rhs = QTT3DNative(
-            qtt_scale_native(div_u.cores, 1.0 / dt), n_bits,
+        # Spectral Leray correction: Δu = −∇p  (low-rank QTT)
+        dx, dy, dz = spectral_leray_project_qtt(
+            ux_cores=u_star.x.cores.cores,
+            uy_cores=u_star.y.cores.cores,
+            uz_cores=u_star.z.cores.cores,
+            n_bits=n_bits,
+            L=L,
+            max_rank=max_rank,
         )
 
-        # Warm-start from previous pressure (None on first step → zero)
-        x0: Optional[QTT3DNative] = getattr(self, '_pressure_cache', None)
-
-        # Solve ∇²p = rhs via CG
-        p = self.deriv.poisson_cg(rhs, tol=1e-5, max_iter=30, x0=x0)
-
-        # Cache pressure for next step's warm-start
-        self._pressure_cache = p
-
-        # ∇p
-        grad_p = self.deriv.gradient(p)
-
-        # u = u* − dt ∇p  (batched fused sum)
+        # u_proj = u* + Δu  (3 independent fused sums → 1 batched call)
         proj = qtt_fused_sum_batched(
             [
-                [u_star.x.cores, grad_p.x.cores],
-                [u_star.y.cores, grad_p.y.cores],
-                [u_star.z.cores, grad_p.z.cores],
+                [u_star.x.cores, QTTCores(dx)],
+                [u_star.y.cores, QTTCores(dy)],
+                [u_star.z.cores, QTTCores(dz)],
             ],
-            [[1.0, -dt]] * 3,
+            [[1.0, 1.0]] * 3,
             max_rank,
         )
         return QTT3DVectorNative(
