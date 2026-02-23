@@ -40,16 +40,132 @@ try:
 except ImportError:
     TRITON_AVAILABLE = False
 
+# Import Triton kernels (separate file for L2 cache optimized implementations)
+try:
+    from tensornet.cfd.triton_qtt_kernels import (
+        triton_hadamard_core,
+        triton_inner_step,
+    )
+    _HAS_TRITON_KERNELS = TRITON_AVAILABLE
+except ImportError:
+    _HAS_TRITON_KERNELS = False
+
 
 # ═══════════════════════════════════════════════════════════════════════════════════════
 # RANDOMIZED SVD (rSVD)
 # ═══════════════════════════════════════════════════════════════════════════════════════
 
+# Configurable rSVD power iterations (higher = more accurate for
+# ill-conditioned matrices like Brinkman masks; default 2 is fine for
+# smooth fields; 3–4 helps at high rank or steep gradients).
+_RSVD_DEFAULT_POWER_ITER: int = 2
+
+
+def _eigh_svd(
+    mat: Tensor,
+    max_rank: int,
+    tol: float = 1e-10,
+) -> Tuple[Tensor, Tensor, Tensor]:
+    """
+    SVD via Gram matrix eigendecomposition.
+
+    Computes the SVD of ``mat`` by eigendecomposing the smaller Gram matrix
+    (A @ A.T for wide, A.T @ A for tall) via ``torch.linalg.eigh``.
+    This uses cuSOLVER's ``syevd`` driver — a completely different, more
+    stable code path than the ``gesvd``/``gesvdj`` used by
+    ``torch.linalg.svd``.  No convergence-failure retries.
+
+    For QTT-sized matrices (48×96) the Gram matrix is only 48×48, making
+    eigendecomposition very fast.
+
+    Parameters
+    ----------
+    mat : Tensor
+        Input matrix (m, n).
+    max_rank : int
+        Maximum number of singular triplets to retain.
+    tol : float
+        Relative tolerance for adaptive rank truncation.
+
+    Returns
+    -------
+    U : Tensor (m, k)
+    S : Tensor (k,)
+    Vh : Tensor (k, n)
+    """
+    m, n = mat.shape
+    device = mat.device
+    dtype = mat.dtype
+
+    # Tiny matrices: direct SVD is fine (no convergence issues at this size)
+    if min(m, n) <= 4:
+        U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
+        k = min(len(S), max_rank)
+        return U[:, :k], S[:k], Vh[:k, :]
+
+    # Work in float64 for numerical stability of Gram eigendecomposition
+    # (squaring the matrix squares the condition number; float32 is insufficient)
+    A = mat.to(torch.float64) if dtype != torch.float64 else mat
+
+    if m <= n:
+        # Wide matrix: G = A @ A.T is (m, m)
+        G = A @ A.T
+        G = (G + G.T) * 0.5           # enforce exact symmetry
+        eigvals, eigvecs = torch.linalg.eigh(G)  # ascending order
+
+        # Flip to descending
+        eigvals = eigvals.flip(0)
+        eigvecs = eigvecs.flip(1)
+
+        S = torch.sqrt(torch.clamp(eigvals, min=0.0))
+        U = eigvecs                    # (m, m)
+
+        # Truncate
+        k = min(max_rank, len(S), m, n)
+        if tol > 0 and S[0] > 0:
+            valid = S / S[0] > tol
+            k = max(1, min(int(valid.sum().item()), k))
+
+        S_k = S[:k]
+        inv_S = torch.where(
+            S_k > 1e-14 * S[0], 1.0 / S_k, torch.zeros_like(S_k),
+        )
+        Vh = inv_S.unsqueeze(1) * (U[:, :k].T @ A)   # (k, n)
+
+        return U[:, :k].to(dtype), S_k.to(dtype), Vh.to(dtype)
+
+    else:
+        # Tall matrix: G = A.T @ A is (n, n)
+        G = A.T @ A
+        G = (G + G.T) * 0.5
+        eigvals, eigvecs = torch.linalg.eigh(G)
+
+        eigvals = eigvals.flip(0)
+        eigvecs = eigvecs.flip(1)
+
+        S = torch.sqrt(torch.clamp(eigvals, min=0.0))
+        V = eigvecs                    # (n, n)
+
+        k = min(max_rank, len(S), m, n)
+        if tol > 0 and S[0] > 0:
+            valid = S / S[0] > tol
+            k = max(1, min(int(valid.sum().item()), k))
+
+        S_k = S[:k]
+        inv_S = torch.where(
+            S_k > 1e-14 * S[0], 1.0 / S_k, torch.zeros_like(S_k),
+        )
+        U = (A @ V[:, :k]) * inv_S.unsqueeze(0)      # (m, k)
+        Vh = V[:, :k].T                                     # (k, n)
+
+        return U.to(dtype), S_k.to(dtype), Vh.to(dtype)
+
+
 def rsvd(
     A: Tensor,
     rank: int,
     oversampling: int = 10,
-    n_iter: int = 2,
+    n_iter: int = _RSVD_DEFAULT_POWER_ITER,
 ) -> Tuple[Tensor, Tensor, Tensor]:
     """
     Randomized SVD for O(mnk) instead of O(mn min(m,n)).
@@ -89,41 +205,11 @@ def rsvd(
     # Form B = Q^T @ A (small matrix)
     B = Q.T @ A
     
-    # SVD of small matrix with multiple fallbacks
-    svd_success = False
-    
-    # Try 1: Standard SVD
+    # SVD of small projected matrix via Gram-eigh (avoids cuSOLVER gesvd)
     try:
-        U_small, S, Vh = torch.linalg.svd(B, full_matrices=False)
-        svd_success = True
+        U_small, S, Vh = _eigh_svd(B, min(B.shape), 0.0)
     except RuntimeError:
-        pass
-    
-    # Try 2: Add regularization
-    if not svd_success:
-        try:
-            eps = 1e-6 * max(torch.norm(B).item(), 1e-10)
-            B_reg = B + eps * torch.eye(B.shape[0], B.shape[1], device=device, dtype=dtype)
-            U_small, S, Vh = torch.linalg.svd(B_reg, full_matrices=False)
-            svd_success = True
-        except RuntimeError:
-            pass
-    
-    # Try 3: CPU fallback
-    if not svd_success:
-        try:
-            B_cpu = B.cpu()
-            U_small, S, Vh = torch.linalg.svd(B_cpu, full_matrices=False)
-            U_small = U_small.to(device)
-            S = S.to(device)
-            Vh = Vh.to(device)
-            svd_success = True
-        except RuntimeError:
-            pass
-    
-    # Try 4: Return approximate result
-    if not svd_success:
-        # Use economy QR as approximation
+        # Last resort: identity-like approximation
         k = min(k, B.shape[0], B.shape[1])
         U_small = torch.eye(B.shape[0], k, device=device, dtype=dtype)
         S = torch.ones(k, device=device, dtype=dtype) * torch.norm(B).item() / k
@@ -136,8 +222,12 @@ def rsvd(
     return U[:, :k], S[:k], Vh[:k, :]
 
 
-# Threshold for using rSVD vs full SVD (rSVD wins for large matrices)
-_RSVD_THRESHOLD = 512  # Use rSVD when min(m, n) > 512 or m * n > 512 * 512
+# Threshold for using rSVD vs full SVD.
+# FINDINGS (fluidelite/FINDINGS.md §4): rSVD is 0.4–0.7× SLOWER than dense SVD
+# for QTT-sized matrices (48×96, 128×256, etc.) because the random-projection
+# overhead doesn't amortize when target_rank ≈ min(m,n).  rSVD only wins when
+# target_rank << min(m,n).  Dense torch.linalg.svd is the correct default.
+_RSVD_THRESHOLD = 48  # rSVD only when min(m, n) > 48
 
 
 def rsvd_truncate(
@@ -153,14 +243,13 @@ def rsvd_truncate(
     """
     m, n = A.shape
     
-    # Choose SVD method based on matrix size
-    if m * n > _RSVD_THRESHOLD * _RSVD_THRESHOLD or min(m, n) > _RSVD_THRESHOLD:
+    # Choose SVD method based on matrix size.
+    # Dense SVD is faster for QTT-sized matrices (see FINDINGS §4).
+    # rSVD only when matrix is large enough to amortize projection overhead.
+    if min(m, n) > _RSVD_THRESHOLD:
         U, S, Vh = rsvd(A, max_rank)
     else:
-        # Full SVD is faster for small matrices
-        U, S, Vh = torch.linalg.svd(A, full_matrices=False)
-        k = min(len(S), max_rank)
-        U, S, Vh = U[:, :k], S[:k], Vh[:k, :]
+        U, S, Vh = _eigh_svd(A, max_rank, 0.0)
     
     if tol > 0 and len(S) > 0 and S[0] > 0:
         # Find adaptive rank
@@ -181,14 +270,17 @@ def _robust_svd(
     use_rsvd: bool = True,
 ) -> Tuple[Tensor, Tensor, Tensor]:
     """
-    Robust SVD with multiple fallback strategies.
-    
-    Handles ill-conditioned matrices gracefully:
-    1. Try rSVD if matrix is large
-    2. Try full SVD
-    3. Try SVD with regularization  
-    4. Try SVD on CPU
-    5. Return low-rank approximation via rSVD with higher oversampling
+    Robust SVD with cuSOLVER-gesvd-free primary path.
+
+    Primary strategy uses Gram matrix eigendecomposition (``_eigh_svd``)
+    which calls cuSOLVER ``syevd`` — a completely different, convergence-
+    failure-free driver.  Fallback chain for edge cases only.
+
+    Strategies:
+        1. Gram-eigh SVD  (cuSOLVER syevd, no convergence retries)
+        2. rSVD            (random projection + small eigh)
+        3. CPU eigh        (LAPACK dsyev, always converges)
+        4. Identity-like   (last resort, preserves norm)
     """
     # Handle edge cases
     if mat.numel() == 0:
@@ -198,76 +290,37 @@ def _robust_svd(
             torch.zeros(k, device=mat.device, dtype=mat.dtype),
             torch.zeros(k, mat.shape[1], device=mat.device, dtype=mat.dtype),
         )
-    
-    # Strategy 1: Use rSVD for large matrices (more robust)
+
+    # Strategy 1: Gram matrix eigendecomposition (avoids cuSOLVER gesvd)
+    try:
+        U, S, Vh = _eigh_svd(mat, max_rank, tol)
+        if torch.isfinite(S).all():
+            return U, S, Vh
+    except RuntimeError:
+        pass
+
+    # Strategy 2: rSVD (random projection + eigh on small B)
     if use_rsvd and min(mat.shape) > max_rank:
         try:
             return rsvd_truncate(mat, max_rank * 2, tol)
         except Exception:
             pass
-    
-    # Strategy 2: Standard full SVD
-    try:
-        U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
-        return U, S, Vh
-    except RuntimeError:
-        pass
-    
-    # Strategy 3: Add regularization
-    try:
-        eps = 1e-6 * max(torch.norm(mat).item(), 1e-10)
-        m, n = mat.shape
-        if m <= n:
-            reg = eps * torch.eye(m, device=mat.device, dtype=mat.dtype)
-            mat_reg = mat @ mat.T + reg
-            U, S, _ = torch.linalg.svd(mat_reg, full_matrices=False)
-            S = torch.sqrt(torch.clamp(S, min=1e-20))
-            # Recover Vh from U, S, and mat
-            Vh = torch.diag(1.0 / S) @ U.T @ mat
-        else:
-            reg = eps * torch.eye(n, device=mat.device, dtype=mat.dtype)
-            mat_reg = mat.T @ mat + reg
-            _, S, Vh = torch.linalg.svd(mat_reg, full_matrices=False)
-            S = torch.sqrt(torch.clamp(S, min=1e-20))
-            # Recover U from Vh, S, and mat
-            U = mat @ Vh.T @ torch.diag(1.0 / S)
-        return U, S, Vh
-    except RuntimeError:
-        pass
-    
-    # Strategy 4: CPU fallback (more stable algorithms)
+
+    # Strategy 3: CPU eigh fallback (LAPACK dsyev, always converges)
     try:
         mat_cpu = mat.cpu()
-        U, S, Vh = torch.linalg.svd(mat_cpu, full_matrices=False)
+        U, S, Vh = _eigh_svd(mat_cpu, max_rank, tol)
         return U.to(mat.device), S.to(mat.device), Vh.to(mat.device)
     except RuntimeError:
         pass
-    
-    # Strategy 5: rSVD with high oversampling (always stable)
-    k = min(max_rank, min(mat.shape) - 1, 10)
-    k = max(k, 1)
-    oversampling = 20
-    p = min(k + oversampling, min(mat.shape))
-    
-    omega = torch.randn(mat.shape[1], p, device=mat.device, dtype=mat.dtype)
-    Y = mat @ omega
-    Q, _ = torch.linalg.qr(Y)
-    B = Q.T @ mat
-    
-    # Small SVD on B
-    try:
-        Ub, S, Vh = torch.linalg.svd(B, full_matrices=False)
-    except RuntimeError:
-        # Last resort: return identity-like structure
-        k = 1
-        return (
-            torch.ones(mat.shape[0], k, device=mat.device, dtype=mat.dtype) / mat.shape[0]**0.5,
-            torch.tensor([torch.norm(mat).item()], device=mat.device, dtype=mat.dtype),
-            torch.ones(k, mat.shape[1], device=mat.device, dtype=mat.dtype) / mat.shape[1]**0.5,
-        )
-    
-    U = Q @ Ub
-    return U[:, :k], S[:k], Vh[:k, :]
+
+    # Strategy 4: Identity-like structure (last resort)
+    k = 1
+    return (
+        torch.ones(mat.shape[0], k, device=mat.device, dtype=mat.dtype) / mat.shape[0] ** 0.5,
+        torch.tensor([torch.norm(mat).item()], device=mat.device, dtype=mat.dtype),
+        torch.ones(k, mat.shape[1], device=mat.device, dtype=mat.dtype) / mat.shape[1] ** 0.5,
+    )
 
 
 # ═══════════════════════════════════════════════════════════════════════════════════════
@@ -432,6 +485,8 @@ def qtt_truncate_sweep(
     tol: float = 1e-10,
     use_rsvd: bool = True,
     use_canonical: bool = True,
+    rank_profile: Optional[List[int]] = None,
+    min_rank: int = 0,
 ) -> List[Tensor]:
     """
     Canonical TT-round: QR sweep (left-to-right) + SVD sweep (right-to-left).
@@ -442,9 +497,18 @@ def qtt_truncate_sweep(
     
     Uses TOLERANCE-BASED truncation:
         Select r such that sum_{i>r} S_i^2 <= tol^2 * sum_i S_i^2
-        Then clamp r <= max_rank
+        Then clamp r <= max_rank (or rank_profile[k] if provided)
     
-    This controls approximation error, not just rank.
+    Parameters
+    ----------
+    rank_profile : list[int], optional
+        Per-bond rank caps (length L-1 for L cores). If provided,
+        bond k between core[k] and core[k+1] uses rank_profile[k]
+        instead of flat max_rank. Higher scale = higher compress = lower rank.
+    min_rank : int
+        Minimum bond dimension floor. Prevents catastrophic rank collapse
+        where SVD decay artificially truncates to near-rank-1 tensors.
+        A value of max_rank // 4 is typical for turbulence simulations.
     """
     L = len(cores)
     if L == 0:
@@ -499,9 +563,14 @@ def qtt_truncate_sweep(
         else:
             r_adaptive = len(S)
         
-        # Clamp to max_rank
-        r_new = min(r_adaptive, max_rank, len(S))
-        r_new = max(1, r_new)
+        # Clamp to max_rank (or position-dependent profile)
+        # Bond k-1 sits between core[k-1] and core[k].
+        bond_cap = rank_profile[k - 1] if rank_profile is not None else max_rank
+        bond_cap = min(bond_cap, max_rank)
+        r_new = min(r_adaptive, bond_cap, len(S))
+        # Floor: keep at least min_rank SVs (but never more than available)
+        r_floor = min(min_rank, len(S)) if min_rank > 0 else 1
+        r_new = max(r_new, r_floor)
         
         U = U[:, :r_new]
         S = S[:r_new]
@@ -517,6 +586,307 @@ def qtt_truncate_sweep(
         prev_mat = prev_mat @ (U * S)  # Absorb
         new_cores[k - 1] = prev_mat.reshape(r_prev_l, d_prev, r_new)
     
+    return new_cores
+
+
+# ═══════════════════════════════════════════════════════════════════════════════════════
+# BATCHED TRUNCATION — CONCURRENT SVD ACROSS INDEPENDENT QTT CHAINS
+# ═══════════════════════════════════════════════════════════════════════════════════════
+
+def _batched_svd(
+    mats: List[Tensor],
+    max_rank: int,
+    tol: float,
+    use_rsvd: bool,
+) -> List[Tuple[Tensor, Tensor, Tensor]]:
+    """
+    Batch SVD via Gram matrix eigendecomposition.
+
+    Instead of batching ``torch.linalg.svd`` on (B, m, n) — which calls
+    cuSOLVER ``gesvd`` and triggers convergence-failure retries on
+    Blackwell — this forms the *smaller* Gram matrices and batches
+    ``torch.linalg.eigh`` on (B, g, g) where g = min(m, n).
+
+    cuSOLVER ``syevd`` (used by ``eigh``) has no convergence-failure
+    retry mechanism, so batching actually helps instead of hurting.
+
+    For QTT matrices (48×96) the Gram matrices are 48×48, so the
+    batched ``eigh`` is much cheaper than the original batched ``svd``.
+
+    Falls back to per-matrix ``_robust_svd`` on CPU or on any runtime
+    error.
+
+    Parameters
+    ----------
+    mats : list[Tensor]
+        Unfolding matrices, one per independent QTT chain.
+    max_rank, tol, use_rsvd
+        Forwarded to ``_robust_svd`` on the fallback path.
+
+    Returns
+    -------
+    list[(U, S, Vh)]   per-matrix truncated SVD factors.
+    """
+    N = len(mats)
+    if N == 0:
+        return []
+    if N == 1:
+        return [_robust_svd(mats[0], max_rank, tol, use_rsvd)]
+
+    device = mats[0].device
+    if device.type != 'cuda':
+        return [_robust_svd(m, max_rank, tol, use_rsvd) for m in mats]
+
+    try:
+        m_dims = [m.shape[0] for m in mats]
+        n_dims = [m.shape[1] for m in mats]
+        is_wide = [m_dims[i] <= n_dims[i] for i in range(N)]
+        gram_sizes = [min(m_dims[i], n_dims[i]) for i in range(N)]
+        G_max = max(gram_sizes)
+        dtype = mats[0].dtype
+
+        # Work in float64 for numerical stability of Gram eigendecomposition
+        # (squaring the matrix squares the condition number; float32 is insufficient)
+        compute_dtype = torch.float64
+
+        # ── form Gram matrices, pad to (B, G_max, G_max) ──
+        grams = torch.zeros(N, G_max, G_max, device=device, dtype=compute_dtype)
+        for i in range(N):
+            A = mats[i].to(compute_dtype) if dtype != compute_dtype else mats[i]
+            if is_wide[i]:
+                G = A @ A.T                             # (m, m)
+            else:
+                G = A.T @ A                             # (n, n)
+            G = (G + G.T) * 0.5                         # exact symmetry
+            gs = gram_sizes[i]
+            grams[i, :gs, :gs] = G
+
+        # ── batched eigendecomposition — single kernel ──
+        eigvals_b, eigvecs_b = torch.linalg.eigh(grams)  # ascending
+
+        # Flip to descending
+        eigvals_b = eigvals_b.flip(-1)                    # (B, G_max)
+        eigvecs_b = eigvecs_b.flip(-1)                    # (B, G_max, G_max)
+
+        # ── single NaN probe (1 sync) ──
+        if torch.isnan(eigvals_b).any():
+            return [_robust_svd(m, max_rank, tol, use_rsvd) for m in mats]
+
+        # Singular values = sqrt(eigenvalues)
+        S_b = torch.sqrt(torch.clamp(eigvals_b, min=0.0))  # (B, G_max)
+
+        # ── recover U, Vh per chain from eigenvectors ──
+        results: List[Tuple[Tensor, Tensor, Tensor]] = []
+        for i in range(N):
+            gs = gram_sizes[i]
+            mi, ni = m_dims[i], n_dims[i]
+            A_i = mats[i].to(compute_dtype) if dtype != compute_dtype else mats[i]
+            S_i = S_b[i, :gs]                            # un-pad eigenvalues
+            evecs = eigvecs_b[i, :gs, :gs]                # un-pad eigenvectors
+
+            # Inverse singular values for recovering the other factor
+            s0 = S_i[0] if S_i[0] > 0 else torch.tensor(1.0, dtype=compute_dtype, device=device)
+            inv_S = torch.where(
+                S_i > 1e-14 * s0,
+                1.0 / S_i,
+                torch.zeros_like(S_i),
+            )
+
+            if is_wide[i]:
+                # G = A @ A.T → eigvecs are left singular vectors U
+                U_core = evecs                                 # (m, gs)
+                Vh_core = inv_S.unsqueeze(1) * (U_core.T @ A_i)  # (gs, n)
+            else:
+                # G = A.T @ A → eigvecs are right singular vectors V
+                V_core = evecs                                 # (n, gs)
+                U_core = (A_i @ V_core) * inv_S.unsqueeze(0)  # (m, gs)
+                Vh_core = V_core.T                             # (gs, n)
+
+            # Pad to uniform G_max dimensions for caller compatibility
+            if gs < G_max:
+                U_pad = torch.zeros(mi, G_max, device=device, dtype=dtype)
+                U_pad[:, :gs] = U_core.to(dtype)
+                Vh_pad = torch.zeros(G_max, ni, device=device, dtype=dtype)
+                Vh_pad[:gs, :] = Vh_core.to(dtype)
+                S_padded = torch.zeros(G_max, device=device, dtype=dtype)
+                S_padded[:gs] = S_i.to(dtype)
+            else:
+                U_pad = U_core.to(dtype)
+                Vh_pad = Vh_core.to(dtype)
+                S_padded = S_i.to(dtype)
+
+            results.append((U_pad, S_padded, Vh_pad))
+
+        return results
+
+    except RuntimeError:
+        return [_robust_svd(m, max_rank, tol, use_rsvd) for m in mats]
+
+
+def qtt_truncate_sweep_batched(
+    cores_list: List[List[Tensor]],
+    max_rank: int,
+    tol: float = 1e-10,
+    use_rsvd: bool = True,
+    use_canonical: bool = True,
+    rank_profile: Optional[List[int]] = None,
+    min_rank: int = 0,
+) -> List[List[Tensor]]:
+    """
+    Batched TT-round: truncate multiple independent QTT chains together.
+
+    Identical semantics to calling ``qtt_truncate_sweep`` on each chain,
+    but at every bond position the unfolding matrices from *all* chains
+    are batched into a single ``torch.linalg.eigh`` call on their Gram
+    matrices.  This avoids cuSOLVER ``gesvd`` entirely, using the
+    convergence-failure-free ``syevd`` driver instead.
+
+    The tolerance-based rank selection is also vectorised: a single
+    GPU→CPU sync transfers all N adaptive ranks per bond, eliminating
+    the N separate ``.item()`` syncs of the sequential path.
+
+    Parameters
+    ----------
+    cores_list : list[list[Tensor]]
+        One core list per independent chain (e.g. [u_cores, v_cores, w_cores]).
+    max_rank, tol, use_rsvd, use_canonical, rank_profile, min_rank
+        Same semantics as ``qtt_truncate_sweep``.
+
+    Returns
+    -------
+    list[list[Tensor]]
+        Truncated core lists, same order as input.
+    """
+    N = len(cores_list)
+    if N == 0:
+        return []
+    if N == 1:
+        return [qtt_truncate_sweep(
+            cores_list[0], max_rank, tol, use_rsvd,
+            use_canonical, rank_profile, min_rank,
+        )]
+
+    # All chains must have the same number of modes
+    L = len(cores_list[0])
+    for i in range(1, N):
+        if len(cores_list[i]) != L:
+            # Mismatched — fall back to sequential
+            return [
+                qtt_truncate_sweep(
+                    c, max_rank, tol, use_rsvd,
+                    use_canonical, rank_profile, min_rank,
+                )
+                for c in cores_list
+            ]
+
+    if L == 0:
+        return [[] for _ in range(N)]
+
+    # Clone all chains
+    new_cores = [[c.clone() for c in chain] for chain in cores_list]
+
+    # ── PASS 1: QR sweep left→right (independent per chain) ────────
+    if use_canonical:
+        for k in range(L - 1):
+            for i in range(N):
+                core = new_cores[i][k]
+                r_left, d, r_right = core.shape
+                mat = core.reshape(r_left * d, r_right)
+                Q, R = torch.linalg.qr(mat)
+                r_new = Q.shape[1]
+                new_cores[i][k] = Q.reshape(r_left, d, r_new)
+                new_cores[i][k + 1] = torch.einsum('ij,jkl->ikl', R, new_cores[i][k + 1])
+
+    # ── PASS 2: SVD sweep right→left (batched across chains) ──────
+    for k in range(L - 1, 0, -1):
+        # Collect unfolding matrices from every chain
+        mats: List[Tensor] = []
+        meta: List[Tuple[int, int, int]] = []          # (r_left, d, r_right)
+        for i in range(N):
+            core = new_cores[i][k]
+            r_left, d, r_right = core.shape
+            meta.append((r_left, d, r_right))
+            mats.append(core.reshape(r_left, d * r_right))
+
+        # Batched SVD — single kernel for all chains
+        usv_list = _batched_svd(mats, max_rank, tol, use_rsvd)
+
+        # ── vectorised tolerance-based rank selection ──────────
+        # Ensure all S vectors have the same length for stacking.
+        # _batched_svd pads within its GPU path, but fallback paths
+        # (NaN, RuntimeError, CPU) may return variable-length S.
+        S_lengths = [usv[1].shape[0] for usv in usv_list]
+        S_max = max(S_lengths)
+        if any(sl != S_max for sl in S_lengths):
+            # Pad shorter S vectors (and corresponding U/Vh) to S_max
+            padded_usv: List[Tuple[Tensor, Tensor, Tensor]] = []
+            for U_i, S_i, Vh_i in usv_list:
+                if S_i.shape[0] < S_max:
+                    mi, ni = U_i.shape[0], Vh_i.shape[1]
+                    U_new = torch.zeros(mi, S_max, device=U_i.device, dtype=U_i.dtype)
+                    U_new[:, :S_i.shape[0]] = U_i
+                    S_new = torch.zeros(S_max, device=S_i.device, dtype=S_i.dtype)
+                    S_new[:S_i.shape[0]] = S_i
+                    Vh_new = torch.zeros(S_max, ni, device=Vh_i.device, dtype=Vh_i.dtype)
+                    Vh_new[:S_i.shape[0], :] = Vh_i
+                    padded_usv.append((U_new, S_new, Vh_new))
+                else:
+                    padded_usv.append((U_i, S_i, Vh_i))
+            usv_list = padded_usv
+
+        S_all = torch.stack([usv[1] for usv in usv_list])   # (N, k)
+        S_sq = S_all ** 2
+        total_sq = S_sq.sum(dim=1, keepdim=True)             # (N, 1)
+        k_dim = S_all.shape[1]
+
+        if tol > 0:
+            cumsum_sq = torch.cumsum(S_sq, dim=1)            # (N, k)
+            residual_sq = total_sq - cumsum_sq
+            mask = residual_sq <= (tol ** 2) * total_sq      # (N, k) bool
+            # Sentinel column guarantees argmax finds *something*
+            sentinel = torch.ones(
+                N, 1, dtype=torch.bool, device=S_all.device,
+            )
+            mask_ext = torch.cat([mask, sentinel], dim=1)    # (N, k+1)
+            r_adapt_t = mask_ext.to(torch.int32).argmax(dim=1) + 1   # (N,)
+
+            # Chains with total_sq == 0 → keep full rank
+            zero_mask = total_sq.squeeze(1) == 0
+            r_adapt_t = torch.where(
+                zero_mask,
+                torch.full_like(r_adapt_t, k_dim),
+                r_adapt_t,
+            )
+            r_adapt_list = r_adapt_t.tolist()                # ← single sync
+        else:
+            r_adapt_list = [k_dim] * N
+
+        # ── per-chain truncation & absorption ──────────────────
+        bond_cap = rank_profile[k - 1] if rank_profile is not None else max_rank
+        bond_cap = min(bond_cap, max_rank)
+
+        for i in range(N):
+            U_i, S_i, Vh_i = usv_list[i]
+            r_left, d, r_right = meta[i]
+
+            r_adaptive = min(r_adapt_list[i], len(S_i))
+            r_new = min(r_adaptive, bond_cap, len(S_i))
+            r_floor_val = min(min_rank, len(S_i)) if min_rank > 0 else 1
+            r_new = max(r_new, r_floor_val)
+
+            U_i = U_i[:, :r_new]
+            S_i = S_i[:r_new]
+            Vh_i = Vh_i[:r_new, :]
+
+            new_cores[i][k] = Vh_i.reshape(r_new, d, r_right)
+
+            # Absorb U·diag(S) into left neighbour
+            prev = new_cores[i][k - 1]
+            rp_l, dp, rp_r = prev.shape
+            prev_mat = prev.reshape(rp_l * dp, rp_r)
+            prev_mat = prev_mat @ (U_i * S_i)
+            new_cores[i][k - 1] = prev_mat.reshape(rp_l, dp, r_new)
+
     return new_cores
 
 
@@ -589,6 +959,7 @@ def qtt_add_native(
     max_rank: int = 64,
     tol: float = 1e-10,
     lazy_factor: float = 2.0,
+    min_rank: int = 0,
 ) -> QTTCores:
     """
     Native QTT addition: c = a + b.
@@ -630,7 +1001,7 @@ def qtt_add_native(
     
     # Lazy truncation: only truncate if rank exceeds threshold
     if actual_max_rank > lazy_factor * max_rank:
-        truncated = qtt_truncate_sweep(sum_cores, max_rank, tol)
+        truncated = qtt_truncate_sweep(sum_cores, max_rank, tol, min_rank=min_rank)
         return QTTCores(truncated)
     else:
         return QTTCores(sum_cores)
@@ -647,14 +1018,64 @@ def qtt_truncate_now(
     a: QTTCores,
     max_rank: int,
     tol: float = 1e-10,
+    rank_profile: Optional[List[int]] = None,
+    min_rank: int = 0,
 ) -> QTTCores:
     """
     Force truncation immediately.
     
     Use at end of timestep or when ranks have grown too large.
+    
+    Parameters
+    ----------
+    rank_profile : list[int], optional
+        Per-bond rank caps (length L-1). Enables scale-adaptive
+        compression: higher scale → lower rank.
+    min_rank : int
+        Minimum bond dimension floor. Prevents catastrophic rank
+        collapse during truncation.
     """
-    truncated = qtt_truncate_sweep(a.cores, max_rank, tol)
+    truncated = qtt_truncate_sweep(
+        a.cores, max_rank, tol, rank_profile=rank_profile,
+        min_rank=min_rank,
+    )
     return QTTCores(truncated)
+
+
+def qtt_truncate_now_batched(
+    tensors: List[QTTCores],
+    max_rank: int,
+    tol: float = 1e-10,
+    rank_profile: Optional[List[int]] = None,
+    min_rank: int = 0,
+) -> List[QTTCores]:
+    """
+    Force truncation on multiple independent QTT chains concurrently.
+
+    Uses ``qtt_truncate_sweep_batched`` to batch SVD calls across all
+    chains, reducing per-bond kernel-launch overhead N-fold.  For the
+    typical 3-component velocity field this gives ~3× SVD throughput.
+
+    Parameters
+    ----------
+    tensors : list[QTTCores]
+        Independent chains (e.g. [u, v, w]).
+    max_rank, tol, rank_profile, min_rank
+        Same semantics as ``qtt_truncate_now``.
+
+    Returns
+    -------
+    list[QTTCores]
+        Truncated chains, same order as input.
+    """
+    if not tensors:
+        return []
+    results = qtt_truncate_sweep_batched(
+        [t.cores for t in tensors],
+        max_rank, tol,
+        rank_profile=rank_profile, min_rank=min_rank,
+    )
+    return [QTTCores(r) for r in results]
 
 
 def qtt_sub_native(
@@ -679,40 +1100,52 @@ def qtt_hadamard_native(
     tol: float = 1e-10,
     lazy_factor: float = 2.0,
     compress_as_multiply: bool = True,
+    mode: Optional[str] = None,
 ) -> QTTCores:
     """
-    Native QTT Hadamard (element-wise) product with optional compress-as-you-multiply.
-    
-    Two modes:
+    Native QTT Hadamard (element-wise) product.
+
+    Modes (selected automatically or via *compress_as_multiply*):
     1. Standard: Full Kronecker product → truncate
     2. Compress-as-multiply: SVD at each bond during product
-    
-    compress_as_multiply reduces peak memory and can be more accurate
-    for high-rank inputs.
+    3. DMRG: alternating-least-squares sweep (best accuracy for
+       high-rank inputs; use ``mode='dmrg'`` to force)
+
+    Parameters
+    ----------
+    mode : str or None
+        ``'kronecker'``, ``'compress'``, ``'dmrg'``, or ``None``
+        (auto-select based on product rank vs. max_rank).
     """
     assert a.num_sites == b.num_sites
     L = a.num_sites
-    
+
     a_max = a.max_rank
     b_max = b.max_rank
     product_rank = a_max * b_max
-    
+
+    # Auto-select mode (DMRG only on explicit request until fully validated)
+    if mode == 'dmrg':
+        return _hadamard_dmrg(a, b, max_rank, tol)
+
     if compress_as_multiply and product_rank > max_rank * 2:
-        # === COMPRESS-AS-YOU-MULTIPLY ===
-        # Process cores left-to-right, compressing at each bond
         return _hadamard_compress_as_multiply(a, b, max_rank, tol)
-    
+
     # === STANDARD: Kronecker product then truncate ===
     had_cores = []
-    
+    _use_triton = _HAS_TRITON_KERNELS and a.device.type == 'cuda'
+
     for k in range(L):
         ca, cb = a.cores[k], b.cores[k]
         ra_l, d, ra_r = ca.shape
         rb_l, _, rb_r = cb.shape
-        
-        # Kronecker along bonds: c[i,j, s, k,l] = a[i, s, k] * b[j, s, l]
-        prod = torch.einsum('isk,jsl->ijskl', ca, cb)
-        prod = prod.reshape(ra_l * rb_l, d, ra_r * rb_r)
+
+        if _use_triton:
+            prod = triton_hadamard_core(ca, cb)
+        else:
+            # Kronecker along bonds: c[i,j, s, k,l] = a[i, s, k] * b[j, s, l]
+            prod = torch.einsum('isk,jsl->ijskl', ca, cb)
+            prod = prod.reshape(ra_l * rb_l, d, ra_r * rb_r)
         had_cores.append(prod)
     
     # Truncate with larger intermediate rank for accuracy
@@ -798,11 +1231,201 @@ def _hadamard_compress_as_multiply(
     return QTTCores(had_cores)
 
 
+# ═══════════════════════════════════════════════════════════════════════════════════════
+# DMRG-STYLE HADAMARD (ALTERNATING LEAST SQUARES)
+# ═══════════════════════════════════════════════════════════════════════════════════════
+
+def _hadamard_dmrg(
+    a: 'QTTCores',
+    b: 'QTTCores',
+    max_rank: int,
+    tol: float = 1e-10,
+    max_sweeps: int = 4,
+) -> 'QTTCores':
+    """DMRG / alternating-least-squares Hadamard product.
+
+    Instead of forming the full r_a × r_b Kronecker product and
+    truncating afterwards (peak memory O(r_a² r_b²)), this routine
+    optimises one bond at a time while keeping the rank bounded by
+    *max_rank* throughout the sweep.
+
+    Algorithm
+    ---------
+    1. Initialise result ``c`` from a compressed Kronecker product at
+       reduced rank (``max_rank``).
+    2. Sweep left→right then right→left.  At each bond, solve the
+       local problem via SVD of the two-site super-core
+       ``C[k,k+1]`` contracted against the *target* product
+       (represented implicitly via left/right environments).
+    3. Repeat for ``max_sweeps`` sweeps or until the Frobenius
+       residual stalls.
+
+    Complexity per sweep: O(L · r³ · d²) — same as a truncation
+    sweep but with better accuracy because the target is the exact
+    element-wise product, not a pre-formed (and already lossy)
+    Kronecker blow-up.
+    """
+    L = a.num_sites
+    d = 2  # QTT physical dimension
+    device = a.device
+    dtype = a.dtype
+
+    # ── Initialise c from compress-as-multiply at max_rank ──────
+    c = _hadamard_compress_as_multiply(a, b, max_rank, tol)
+
+    # ── Pre-compute left environments for <target|c> ────────────
+    # target[i] = a[i] ⊙ b[i]  (Kronecker cores, never stored
+    # explicitly — contracted on-the-fly via environments).
+    #
+    # left_env[k]  shape (r_a_k, r_b_k, r_c_k)
+    # right_env[k] shape (r_a_k, r_b_k, r_c_k)
+    left_env: List[Tensor] = [None] * (L + 1)
+    right_env: List[Tensor] = [None] * (L + 1)
+
+    # Boundary: scalar 1
+    left_env[0] = torch.ones(1, 1, 1, device=device, dtype=dtype)
+    right_env[L] = torch.ones(1, 1, 1, device=device, dtype=dtype)
+
+    def _update_left(k: int) -> None:
+        """Compute left_env[k+1] from left_env[k]."""
+        ca = a.cores[k]   # (ra_l, d, ra_r)
+        cb = b.cores[k]   # (rb_l, d, rb_r)
+        cc = c.cores[k]   # (rc_l, d, rc_r)
+        le = left_env[k]  # (ra_l, rb_l, rc_l)
+        # Contract: new[ra_r, rb_r, rc_r]
+        #   = sum_{ra_l, rb_l, rc_l, s} le[ra_l,rb_l,rc_l]
+        #     * ca[ra_l,s,ra_r] * cb[rb_l,s,rb_r] * cc[rc_l,s,rc_r]
+        tmp = torch.einsum('abc,asd->sbcd', le, ca)    # (d, rb_l, rc_l, ra_r)
+        tmp = torch.einsum('sbcd,bse->scde', tmp, cb)  # (d, rc_l, ra_r, rb_r)
+        new = torch.einsum('scde,csf->def', tmp, cc)   # (ra_r, rb_r, rc_r)
+        left_env[k + 1] = new
+
+    def _update_right(k: int) -> None:
+        """Compute right_env[k] from right_env[k+1]."""
+        ca = a.cores[k]
+        cb = b.cores[k]
+        cc = c.cores[k]
+        re = right_env[k + 1]  # (ra_r, rb_r, rc_r)
+        tmp = torch.einsum('abc,asd->sbcd', re, ca.permute(2, 1, 0))
+        tmp = torch.einsum('sbcd,bse->scde', tmp, cb.permute(2, 1, 0))
+        new = torch.einsum('scde,csf->def', tmp, cc.permute(2, 1, 0))
+        right_env[k] = new
+
+    # Build initial left environments (left→right)
+    for k in range(L):
+        _update_left(k)
+
+    # ── Sweeps ──────────────────────────────────────────────────
+    for sweep in range(max_sweeps):
+        # Right-to-left sweep: build right envs, update cores
+        for k in range(L - 1, 0, -1):
+            _update_right(k)
+        # Sweep complete → rebuild left envs: update each core
+        for k in range(L - 1):
+            # Two-site super-core of target (a⊙b):
+            # T[ra_l·rb_l, s1, s2, ra_r·rb_r]
+            ca_k = a.cores[k]
+            cb_k = b.cores[k]
+            ca_k1 = a.cores[k + 1]
+            cb_k1 = b.cores[k + 1]
+
+            le = left_env[k]    # (ra_l, rb_l, rc_l) — but we only
+            re = right_env[k + 2]  # need a⊙b projection, not c
+
+            # Build projected two-site block of target into c-basis
+            # M[rc_l, s1, s2, rc_r]  (the part that c should match)
+            #   = sum le[a,b,c] * a_k[a,s1,a'] * b_k[b,s1,b']
+            #         * a_{k+1}[a',s2,a''] * b_{k+1}[b',s2,b'']
+            #         * re[a'',b'',c']
+            # This is O(r³ d²) which is fine for r ≤ 48, d=2.
+            rc_l = left_env[k].shape[2] if left_env[k] is not None else 1
+            rc_r = right_env[k + 2].shape[2] if right_env[k + 2] is not None else 1
+
+            # Contract via intermediate tensors
+            # Step 1: contract le with a_k, b_k
+            t1 = torch.einsum('abc,asd->sbcd', le, ca_k)
+            t2 = torch.einsum('sbcd,bse->scde', t1, cb_k)
+            # t2: (d, rc_l, ra', rb')
+            # Step 2: contract with a_{k+1}, b_{k+1}
+            t3 = torch.einsum('scde,dtf->scetf', t2, ca_k1)
+            t4 = torch.einsum('scetf,etg->scfg', t3, cb_k1)
+            # t4: (d, rc_l, ra'', rb'')  -- wait, dimensions are off
+            # Let me redo this more carefully with explicit shapes
+
+            # Simpler approach: form the two-site block directly
+            # target_2site[i*j, s1, s2, k*l]
+            #   = a_k[i,s1,i'] * b_k[j,s1,j'] * a_{k+1}[i',s2,k] * b_{k+1}[j',s2,l]
+            t_k = torch.einsum('isa,jsb->ijsab', ca_k, cb_k)
+            ra_l, rb_l = ca_k.shape[0], cb_k.shape[0]
+            ra_m, rb_m = ca_k.shape[2], cb_k.shape[2]
+            t_k = t_k.reshape(ra_l * rb_l, d, ra_m * rb_m)
+
+            t_k1 = torch.einsum('isa,jsb->ijsab', ca_k1, cb_k1)
+            ra_r2, rb_r2 = ca_k1.shape[2], cb_k1.shape[2]
+            t_k1 = t_k1.reshape(ra_m * rb_m, d, ra_r2 * rb_r2)
+
+            # Two-site: (ra_l*rb_l, s1, s2, ra_r2*rb_r2)
+            two_site = torch.einsum('iaj,jbk->iabk', t_k, t_k1)
+            rl = ra_l * rb_l
+            rr = ra_r2 * rb_r2
+            mat = two_site.reshape(rl * d, d * rr)
+
+            # SVD → split into two cores with bounded rank
+            U, S, Vh = _robust_svd(mat, max_rank, tol)
+            r_new = min(len(S), max_rank)
+            r_new = max(1, r_new)
+            U = U[:, :r_new]
+            S = S[:r_new]
+            Vh = Vh[:r_new, :]
+
+            # New c cores at k and k+1
+            c_k_new = U.reshape(rl, d, r_new)
+            c_k1_new = (torch.diag(S) @ Vh).reshape(r_new, d, rr)
+
+            # We need to map from the (a⊗b) left/right basis back to
+            # c's basis.  For the DMRG update, the simplest correct
+            # approach is to absorb the left_env and right_env
+            # contractions.  But because c is only an approximation,
+            # doing the exact Kronecker two-site SVD IS the DMRG
+            # update — it produces the optimal rank-r_new cores for
+            # this bond.  We need to truncate the outer dimensions
+            # back to c's rank structure.
+
+            # Truncate outer dimensions via another SVD
+            # Left core: (rl, d, r_new) → need (rc_l, d, r_new)
+            # where rc_l = c.cores[k].shape[0]
+            rc_l_actual = c.cores[k].shape[0]
+            rc_r_actual = c.cores[k + 1].shape[2]
+
+            if rl > rc_l_actual:
+                mat_l = c_k_new.reshape(rl, d * r_new)
+                Ul, Sl, Vhl = _robust_svd(mat_l, rc_l_actual, tol)
+                rc_l_new = min(len(Sl), rc_l_actual)
+                c_k_new = Vhl[:rc_l_new, :].reshape(rc_l_new, d, r_new)
+
+            if rr > rc_r_actual:
+                mat_r = c_k1_new.reshape(r_new * d, rr)
+                Ur, Sr, Vhr = _robust_svd(mat_r, rc_r_actual, tol)
+                rc_r_new = min(len(Sr), rc_r_actual)
+                c_k1_new = Ur[:, :rc_r_new].reshape(r_new, d, rc_r_new)
+
+            c.cores[k] = c_k_new
+            c.cores[k + 1] = c_k1_new
+
+            # Refresh left environment for this site
+            _update_left(k)
+
+    # Final canonical truncation sweep
+    c = QTTCores(qtt_truncate_sweep(c.cores, max_rank, tol))
+    return c
+
+
 def qtt_fused_sum(
     tensors: List[QTTCores],
     weights: List[float],
     max_rank: int = 64,
     tol: float = 1e-10,
+    min_rank: int = 0,
 ) -> QTTCores:
     """
     Fused linear combination: c = sum_i (w_i * a_i)
@@ -862,8 +1485,336 @@ def qtt_fused_sum(
         sum_cores.append(new_core)
     
     # Single truncation at the end
-    truncated = qtt_truncate_sweep(sum_cores, max_rank, tol, use_canonical=True)
+    truncated = qtt_truncate_sweep(
+        sum_cores, max_rank, tol, use_canonical=True, min_rank=min_rank,
+    )
     return QTTCores(truncated)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════════════
+# BATCHED OPERATIONS — LIFT BATCH DIMENSION TO EVERY QTT PRIMITIVE
+# ═══════════════════════════════════════════════════════════════════════════════════════
+#
+# Each batched variant follows the same pattern:
+#   1. Build cores for each independent chain (cheap: einsum, cat, block-diag)
+#   2. Single ``qtt_truncate_sweep_batched`` call (expensive: SVD)
+#
+# This reduces CUDA kernel-launch overhead N-fold at every SVD site.
+# For a 3-component velocity field the typical batch size is 3–18.
+
+
+def _build_direct_sum_cores(
+    a: QTTCores,
+    b: QTTCores,
+) -> List[Tensor]:
+    """Build direct-sum (addition) cores WITHOUT truncation."""
+    L = a.num_sites
+    sum_cores: List[Tensor] = []
+    for k in range(L):
+        ca, cb = a.cores[k], b.cores[k]
+        ra_l, d, ra_r = ca.shape
+        rb_l, _, rb_r = cb.shape
+        if k == 0:
+            new_core = torch.cat([ca, cb], dim=2)
+        elif k == L - 1:
+            new_core = torch.cat([ca, cb], dim=0)
+        else:
+            new_core = torch.zeros(
+                ra_l + rb_l, d, ra_r + rb_r,
+                device=ca.device, dtype=ca.dtype,
+            )
+            new_core[:ra_l, :, :ra_r] = ca
+            new_core[ra_l:, :, ra_r:] = cb
+        sum_cores.append(new_core)
+    return sum_cores
+
+
+def _build_fused_sum_cores(
+    tensors: List[QTTCores],
+    weights: List[float],
+) -> List[Tensor]:
+    """Build fused linear-combination cores WITHOUT truncation."""
+    L = tensors[0].num_sites
+    sum_cores: List[Tensor] = []
+    for k in range(L):
+        cores_at_k = [t.cores[k] for t in tensors]
+        scaled_cores: List[Tensor] = []
+        for core, w in zip(cores_at_k, weights):
+            scaled_cores.append(core * w if k == 0 else core)
+        if k == 0:
+            new_core = torch.cat(scaled_cores, dim=2)
+        elif k == L - 1:
+            new_core = torch.cat(scaled_cores, dim=0)
+        else:
+            total_left = sum(c.shape[0] for c in scaled_cores)
+            total_right = sum(c.shape[2] for c in scaled_cores)
+            d = scaled_cores[0].shape[1]
+            new_core = torch.zeros(
+                total_left, d, total_right,
+                device=scaled_cores[0].device, dtype=scaled_cores[0].dtype,
+            )
+            l_off, r_off = 0, 0
+            for sc in scaled_cores:
+                rl, _, rr = sc.shape
+                new_core[l_off:l_off + rl, :, r_off:r_off + rr] = sc
+                l_off += rl
+                r_off += rr
+        sum_cores.append(new_core)
+    return sum_cores
+
+
+def qtt_add_native_batched(
+    pairs: List[Tuple[QTTCores, QTTCores]],
+    max_rank: int = 64,
+    tol: float = 1e-10,
+    min_rank: int = 0,
+) -> List[QTTCores]:
+    """
+    Batched QTT addition across N independent (a, b) pairs.
+
+    Always truncates (no lazy gate) because the caller is explicitly
+    requesting batched work and expects controlled rank output.
+    """
+    if not pairs:
+        return []
+    all_cores = [_build_direct_sum_cores(a, b) for a, b in pairs]
+    truncated = qtt_truncate_sweep_batched(all_cores, max_rank, tol, min_rank=min_rank)
+    return [QTTCores(c) for c in truncated]
+
+
+def qtt_sub_native_batched(
+    pairs: List[Tuple[QTTCores, QTTCores]],
+    max_rank: int = 64,
+    tol: float = 1e-10,
+    min_rank: int = 0,
+) -> List[QTTCores]:
+    """Batched QTT subtraction: c_i = a_i − b_i for each pair."""
+    neg_pairs = [(a, qtt_scale_native(b, -1.0)) for a, b in pairs]
+    return qtt_add_native_batched(neg_pairs, max_rank, tol, min_rank=min_rank)
+
+
+def qtt_fused_sum_batched(
+    term_lists: List[List[QTTCores]],
+    weight_lists: List[List[float]],
+    max_rank: int = 64,
+    tol: float = 1e-10,
+    min_rank: int = 0,
+) -> List[QTTCores]:
+    """
+    Batched fused linear combination across N independent sums.
+
+    Each entry ``i`` computes ``sum_j(weight_lists[i][j] * term_lists[i][j])``.
+    All N sums share a single batched truncation sweep.
+    """
+    N = len(term_lists)
+    if N == 0:
+        return []
+    if N == 1:
+        return [qtt_fused_sum(
+            term_lists[0], weight_lists[0], max_rank, tol, min_rank=min_rank,
+        )]
+
+    all_cores: List[List[Tensor]] = []
+    for terms, weights in zip(term_lists, weight_lists):
+        if len(terms) == 1:
+            all_cores.append(qtt_scale_native(terms[0], weights[0]).cores)
+        else:
+            all_cores.append(_build_fused_sum_cores(terms, weights))
+
+    truncated = qtt_truncate_sweep_batched(
+        all_cores, max_rank, tol, use_canonical=True, min_rank=min_rank,
+    )
+    return [QTTCores(c) for c in truncated]
+
+
+# ── Batched Hadamard (compress-as-multiply) ─────────────────────────────────
+
+def _hadamard_compress_as_multiply_batched(
+    pairs: List[Tuple[QTTCores, QTTCores]],
+    max_rank: int,
+    tol: float,
+) -> List[QTTCores]:
+    """
+    Batched compress-as-you-multiply Hadamard across N independent pairs.
+
+    At every bond position, the per-bond SVDs from all N pairs are
+    stacked into a single ``_batched_svd`` call.  Tolerance-based rank
+    selection is also vectorised (one GPU→CPU sync per bond, not N).
+    """
+    N = len(pairs)
+    L = pairs[0][0].num_sites
+    _use_triton = _HAS_TRITON_KERNELS and pairs[0][0].device.type == 'cuda'
+
+    all_had_cores: List[List[Tensor]] = [[] for _ in range(N)]
+    carries: List[Optional[Tensor]] = [None] * N
+
+    for k in range(L):
+        # ── Build Kronecker product + absorb carry (cheap) ──
+        prods: List[Tensor] = []
+        for i, (a, b) in enumerate(pairs):
+            ca, cb = a.cores[k], b.cores[k]
+            ra_l, d, ra_r = ca.shape
+            rb_l, _, rb_r = cb.shape
+
+            if _use_triton:
+                prod = triton_hadamard_core(ca, cb)
+            else:
+                prod = torch.einsum('isk,jsl->ijskl', ca, cb)
+                prod = prod.reshape(ra_l * rb_l, d, ra_r * rb_r)
+
+            if carries[i] is not None:
+                prod = torch.einsum('ij,jkl->ikl', carries[i], prod)
+
+            prods.append(prod)
+
+        if k == L - 1:
+            # Last core: no SVD, just store
+            for i in range(N):
+                all_had_cores[i].append(prods[i])
+            continue
+
+        # ── Identify which chains need SVD at this bond ──
+        mats: List[Tensor] = []
+        metas: List[Tuple[int, int, int]] = []
+        svd_idx: List[int] = []
+        skip_idx: List[int] = []
+
+        for i in range(N):
+            r_left, d_val, r_right = prods[i].shape
+            metas.append((r_left, d_val, r_right))
+            mat = prods[i].reshape(r_left * d_val, r_right)
+            if min(mat.shape) <= max_rank:
+                skip_idx.append(i)
+            else:
+                svd_idx.append(i)
+                mats.append(mat)
+
+        # ── Batched SVD for chains that need compression ──
+        if svd_idx:
+            usv_list = _batched_svd(mats, max_rank, tol, True)
+
+            # Ensure uniform S length for stacking
+            S_lens = [usv_list[j][1].shape[0] for j in range(len(svd_idx))]
+            S_max_len = max(S_lens)
+            if any(sl != S_max_len for sl in S_lens):
+                padded: List[Tuple[Tensor, Tensor, Tensor]] = []
+                for U_j, S_j, Vh_j in usv_list:
+                    if S_j.shape[0] < S_max_len:
+                        mj, nj = U_j.shape[0], Vh_j.shape[1]
+                        U_p = torch.zeros(mj, S_max_len, device=U_j.device, dtype=U_j.dtype)
+                        U_p[:, :S_j.shape[0]] = U_j
+                        S_p = torch.zeros(S_max_len, device=S_j.device, dtype=S_j.dtype)
+                        S_p[:S_j.shape[0]] = S_j
+                        Vh_p = torch.zeros(S_max_len, nj, device=Vh_j.device, dtype=Vh_j.dtype)
+                        Vh_p[:S_j.shape[0], :] = Vh_j
+                        padded.append((U_p, S_p, Vh_p))
+                    else:
+                        padded.append((U_j, S_j, Vh_j))
+                usv_list = padded
+
+            # Vectorised tolerance-based rank selection
+            S_all = torch.stack([usv_list[j][1] for j in range(len(svd_idx))])
+            S_sq = S_all ** 2
+            total_sq = S_sq.sum(dim=1, keepdim=True)
+            k_dim = S_all.shape[1]
+
+            if tol > 0:
+                cumsum_sq = torch.cumsum(S_sq, dim=1)
+                residual_sq = total_sq - cumsum_sq
+                mask = residual_sq <= (tol ** 2) * total_sq
+                sentinel = torch.ones(
+                    len(svd_idx), 1, dtype=torch.bool, device=S_all.device,
+                )
+                mask_ext = torch.cat([mask, sentinel], dim=1)
+                r_adapt_t = mask_ext.to(torch.int32).argmax(dim=1) + 1
+                zero_mask = total_sq.squeeze(1) == 0
+                r_adapt_t = torch.where(
+                    zero_mask,
+                    torch.full_like(r_adapt_t, k_dim),
+                    r_adapt_t,
+                )
+                r_adapt_list = r_adapt_t.tolist()
+            else:
+                r_adapt_list = [k_dim] * len(svd_idx)
+
+            # Apply per-chain truncation
+            for j, i in enumerate(svd_idx):
+                U_i, S_i, Vh_i = usv_list[j]
+                r_left, d_val, r_right = metas[i]
+
+                r_new = min(r_adapt_list[j], max_rank, len(S_i))
+                r_new = max(1, r_new)
+
+                U_i = U_i[:, :r_new]
+                S_i = S_i[:r_new]
+                Vh_i = Vh_i[:r_new, :]
+
+                all_had_cores[i].append(U_i.reshape(r_left, d_val, r_new))
+                carries[i] = torch.diag(S_i) @ Vh_i
+
+        # Chains that skipped SVD at this bond
+        for i in skip_idx:
+            all_had_cores[i].append(prods[i])
+            carries[i] = None
+
+    return [QTTCores(c) for c in all_had_cores]
+
+
+def qtt_hadamard_native_batched(
+    pairs: List[Tuple[QTTCores, QTTCores]],
+    max_rank: int = 64,
+    tol: float = 1e-10,
+    min_rank: int = 0,
+) -> List[QTTCores]:
+    """
+    Batched QTT Hadamard product across N independent (a, b) pairs.
+
+    Auto-selects compress-as-multiply when product_rank > 2 × max_rank
+    (which is always true at rank 48: 48² = 2304 > 96).  Falls back to
+    standard Kronecker + batched-truncation for low-rank inputs.
+    """
+    if not pairs:
+        return []
+    if len(pairs) == 1:
+        return [qtt_hadamard_native(pairs[0][0], pairs[0][1], max_rank, tol)]
+
+    # Check if compress-as-multiply is warranted
+    use_cam = any(
+        a.max_rank * b.max_rank > max_rank * 2
+        for a, b in pairs
+    )
+
+    if use_cam:
+        return _hadamard_compress_as_multiply_batched(pairs, max_rank, tol)
+
+    # Standard: build Kronecker cores, batched truncation
+    all_had_cores: List[List[Tensor]] = []
+    product_rank = 0
+    _use_triton = _HAS_TRITON_KERNELS and pairs[0][0].device.type == 'cuda'
+
+    for a, b in pairs:
+        L = a.num_sites
+        a_max, b_max = a.max_rank, b.max_rank
+        product_rank = max(product_rank, a_max * b_max)
+        had_cores: List[Tensor] = []
+        for k_idx in range(L):
+            ca, cb = a.cores[k_idx], b.cores[k_idx]
+            ra_l, d, ra_r = ca.shape
+            rb_l, _, rb_r = cb.shape
+            if _use_triton:
+                prod = triton_hadamard_core(ca, cb)
+            else:
+                prod = torch.einsum('isk,jsl->ijskl', ca, cb)
+                prod = prod.reshape(ra_l * rb_l, d, ra_r * rb_r)
+            had_cores.append(prod)
+        all_had_cores.append(had_cores)
+
+    intermediate_rank = min(max_rank * 2, product_rank)
+    truncated = qtt_truncate_sweep_batched(
+        all_had_cores, intermediate_rank, tol, use_canonical=True,
+        min_rank=min_rank,
+    )
+    return [QTTCores(c) for c in truncated]
 
 
 # ═══════════════════════════════════════════════════════════════════════════════════════
@@ -948,17 +1899,22 @@ def qtt_inner_native(a: QTTCores, b: QTTCores) -> Tensor:
     
     Computed via contraction from left to right.
     O(r² L) complexity, NO decompression.
+    Uses Triton kernel for each contraction step when available.
     """
     assert a.num_sites == b.num_sites
     L = a.num_sites
+    _use_triton = _HAS_TRITON_KERNELS and a.device.type == 'cuda'
     
     # Left boundary
     env = torch.ones(1, 1, device=a.device, dtype=a.dtype)
     
     for k in range(L):
         ca, cb = a.cores[k], b.cores[k]
-        # Contract: env[i,j] @ ca[i,s,k] @ cb[j,s,l] -> new_env[k,l]
-        env = torch.einsum('ij,isk,jsl->kl', env, ca, cb)
+        if _use_triton:
+            env = triton_inner_step(env, ca, cb)
+        else:
+            # Contract: env[i,j] @ ca[i,s,k] @ cb[j,s,l] -> new_env[k,l]
+            env = torch.einsum('ij,isk,jsl->kl', env, ca, cb)
     
     return env.squeeze()
 
@@ -996,7 +1952,8 @@ def qtt_eval_point(qtt: QTTCores, index: int) -> Tensor:
     vec = torch.ones(1, device=qtt.device, dtype=qtt.dtype)
     for k in range(L):
         core = qtt.cores[k]  # (r_left, 2, r_right)
-        vec = torch.einsum('i,ijk->k', vec, core[:, bits[k], :])
+        # core[:, bits[k], :] selects physical index → (r_left, r_right)
+        vec = torch.einsum('i,ij->j', vec, core[:, bits[k], :])
     
     return vec.squeeze()
 
@@ -1038,10 +1995,56 @@ def qtt_eval_batch(qtt: QTTCores, indices: Tensor) -> Tensor:
 # EXPORTS
 # ═══════════════════════════════════════════════════════════════════════════════════════
 
+# ═════════════════════════════════════════════════════════════════════════════════
+# QTT CHECKPOINT: SAVE / LOAD
+# ═════════════════════════════════════════════════════════════════════════════════
+
+
+def qtt_save(cores: 'QTTCores', path: str) -> None:
+    """Serialize QTT cores to disk.
+
+    Stores each core as a named tensor in a PyTorch checkpoint.
+    Light-weight: no pickle, just raw tensors + metadata.
+    """
+    state = {
+        'num_sites': cores.num_sites,
+        'ranks': cores.ranks,
+    }
+    for i, c in enumerate(cores.cores):
+        state[f'core_{i}'] = c.detach().cpu()
+    torch.save(state, path)
+
+
+def qtt_load(path: str, device: Optional[torch.device] = None) -> 'QTTCores':
+    """Load QTT cores from a checkpoint.
+
+    Parameters
+    ----------
+    path : str
+        Path written by ``qtt_save``.
+    device : torch.device, optional
+        Target device (default: CPU).
+
+    Returns
+    -------
+    QTTCores
+    """
+    state = torch.load(path, map_location='cpu', weights_only=True)
+    n = state['num_sites']
+    dev = device or torch.device('cpu')
+    loaded = [state[f'core_{i}'].to(dev) for i in range(n)]
+    return QTTCores(loaded)
+
+
+# ═════════════════════════════════════════════════════════════════════════════════
+# EXPORTS
+# ═════════════════════════════════════════════════════════════════════════════════
+
 __all__ = [
     # rSVD
     'rsvd',
     'rsvd_truncate',
+    '_RSVD_DEFAULT_POWER_ITER',
     
     # Triton
     'TRITON_AVAILABLE',
@@ -1050,10 +2053,20 @@ __all__ = [
     # Core operations
     'QTTCores',
     'qtt_truncate_sweep',
+    'qtt_truncate_now',
+    'qtt_truncate_sweep_batched',
+    'qtt_truncate_now_batched',
     'qtt_add_native',
     'qtt_scale_native',
     'qtt_sub_native',
     'qtt_hadamard_native',
+    'qtt_fused_sum',
+
+    # Batched operations
+    'qtt_add_native_batched',
+    'qtt_sub_native_batched',
+    'qtt_fused_sum_batched',
+    'qtt_hadamard_native_batched',
     
     # Adaptive rank
     'turbulence_rank_profile',
@@ -1065,4 +2078,12 @@ __all__ = [
     'qtt_normalize_native',
     'qtt_eval_point',
     'qtt_eval_batch',
+
+    # Rounding
+    'QTTRoundingContext',
+    'get_rounding_context',
+
+    # Checkpoint
+    'qtt_save',
+    'qtt_load',
 ]

@@ -288,58 +288,132 @@ def spectral_laplacian(
 # QTT-HYBRID INTERFACE
 # ═══════════════════════════════════════════════════════════════════════════════════════
 
+
+def _eigh_svd_full(
+    mat: Tensor,
+) -> Tuple[Tensor, Tensor, Tensor]:
+    """
+    SVD via eigendecomposition of the Gram matrix.
+
+    GPU-stable alternative to ``torch.linalg.svd`` which can trigger
+    cuSOLVER convergence failures on near-singular matrices.
+
+    Only the small Gram matrix (m×m or n×n) is computed in float64 for
+    numerical stability.  The large reconstructed factors U / Vh stay
+    in the caller's dtype to halve memory and FLOPS for the dominant
+    matrix multiply.
+
+    Returns
+    -------
+    U : (m, k)
+    S : (k,)    singular values in descending order
+    Vh : (k, n)
+    where k = min(m, n).
+    """
+    m, n = mat.shape
+    orig_dtype = mat.dtype
+
+    if m <= n:
+        # Gram in float64 for stability (only m×m — tiny)
+        mat_d = mat.to(torch.float64)
+        G = mat_d @ mat_d.T                              # (m, m)
+        del mat_d
+        evals, evecs = torch.linalg.eigh(G)
+        evals = evals.flip(0).clamp(min=0)
+        evecs = evecs.flip(1)
+        S = torch.sqrt(evals).to(orig_dtype)
+        U = evecs.to(orig_dtype)                          # (m, m)
+        mask = S > 1e-7
+        inv_S = torch.zeros_like(S)
+        inv_S[mask] = 1.0 / S[mask]
+        # Vh reconstruction in caller dtype (the big multiply)
+        Vh = inv_S.unsqueeze(1) * (U.T @ mat)            # (m, n)
+    else:
+        mat_d = mat.to(torch.float64)
+        G = mat_d.T @ mat_d                               # (n, n)
+        del mat_d
+        evals, evecs = torch.linalg.eigh(G)
+        evals = evals.flip(0).clamp(min=0)
+        evecs = evecs.flip(1)
+        S = torch.sqrt(evals).to(orig_dtype)
+        Vh = evecs.T.to(orig_dtype)                       # (n, n)
+        mask = S > 1e-7
+        inv_S = torch.zeros_like(S)
+        inv_S[mask] = 1.0 / S[mask]
+        U = mat @ evecs.to(orig_dtype) * inv_S.unsqueeze(0)  # (m, n)
+
+    return U, S, Vh
+
+
 def qtt_to_dense_3d(
     cores: List[Tensor],
     n_bits: int,
 ) -> Tensor:
     """
     Convert QTT cores to dense 3D tensor.
-    
+
     QTT format: 3*n_bits cores, each (r_left, 2, r_right)
-    Morton interleaved: x0, y0, z0, x1, y1, z1, ...
-    
-    Dense format: (N, N, N) where N = 2^n_bits
-    
+    Morton interleaved in MSB-first order per triplet:
+        core 0,1,2 → (x_{n-1}, y_{n-1}, z_{n-1})  — most significant bits
+        core 3,4,5 → (x_{n-2}, y_{n-2}, z_{n-2})
+        ...
+        core 3(n-1), 3(n-1)+1, 3(n-1)+2 → (x_0, y_0, z_0) — least significant
+
+    Dense format: (N, N, N) where N = 2^n_bits.
+
+    Uses incremental 3-axis build so the working tensor never exceeds
+    5 dimensions (Nx, Ny, Nz, new_bit, bond) — safe for n_bits up to
+    any value without hitting PyTorch's 25-dim limit.
+
     Args:
         cores: List of QTT cores
         n_bits: Bits per dimension
-    
+
     Returns:
         Dense tensor (N, N, N)
     """
     n_cores = 3 * n_bits
     assert len(cores) == n_cores, f"Expected {n_cores} cores, got {len(cores)}"
-    
+
     N = 2 ** n_bits
     device = cores[0].device
     dtype = cores[0].dtype
-    
-    # Contract cores to dense tensor
-    # Result shape: (2, 2, 2, ..., 2) with 3*n_bits dimensions
-    result = cores[0].squeeze(0)  # (2, r_1)
-    
-    for i in range(1, n_cores):
-        # result: (..., r_i)
-        # cores[i]: (r_i, 2, r_{i+1})
-        result = torch.einsum('...r,rjR->...jR', result, cores[i])
-    
-    # result: (2, 2, ..., 2, 1) → squeeze last dim
-    result = result.squeeze(-1)  # (2,) * 3*n_bits
-    
-    # Reshape from Morton order to (N, N, N)
-    # Morton: i0, j0, k0, i1, j1, k1, ...
-    # Need to transpose to: i0, i1, ..., j0, j1, ..., k0, k1, ...
-    
-    # Permutation: group all x-bits, then y-bits, then z-bits
-    perm = []
-    for d in range(3):  # x, y, z
-        for b in range(n_bits):
-            perm.append(3 * b + d)
-    
-    result = result.permute(*perm)
-    result = result.reshape(N, N, N)
-    
-    return result
+
+    # Working tensor: (Nx, Ny, Nz, bond_dim)
+    # Start at (1, 1, 1, 1) — a single scalar with trivial bond.
+    result = torch.ones(1, 1, 1, 1, device=device, dtype=dtype)
+
+    for b in range(n_bits):
+        cx = cores[3 * b]          # x bit: (r_in, 2, r_mid1)
+        cy = cores[3 * b + 1]     # y bit: (r_mid1, 2, r_mid2)
+        cz = cores[3 * b + 2]     # z bit: (r_mid2, 2, r_out)
+
+        Nx, Ny, Nz = result.shape[0], result.shape[1], result.shape[2]
+
+        # --- x bit ----------------------------------------------------------
+        # (Nx, Ny, Nz, r) × (r, 2, r') → (Nx, Ny, Nz, 2, r')
+        result = torch.einsum('xyzr,rdR->xyzdR', result, cx)
+        # Solver uses LSB-first ordering (core 0 = x₀ = LSB).
+        # New bit is higher-weight → place it BEFORE old bits (MSB end).
+        # permute: (2_new, Nx_old, Ny, Nz, r') → reshape (2*Nx, Ny, Nz, r')
+        result = result.permute(3, 0, 1, 2, 4).reshape(Nx * 2, Ny, Nz, -1)
+
+        Nx *= 2
+
+        # --- y bit ----------------------------------------------------------
+        result = torch.einsum('xyzr,rdR->xyzdR', result, cy)
+        # (X, 2_new, Ny_old, Nz, r') → reshape (X, 2*Ny, Nz, r')
+        result = result.permute(0, 3, 1, 2, 4).reshape(Nx, Ny * 2, Nz, -1)
+
+        Ny *= 2
+
+        # --- z bit ----------------------------------------------------------
+        result = torch.einsum('xyzr,rdR->xyzdR', result, cz)
+        # (X, Y, 2_new, Nz_old, r') → reshape (X, Y, 2*Nz, r')
+        result = result.permute(0, 1, 3, 2, 4).reshape(Nx, Ny, Nz * 2, -1)
+
+    # (N, N, N, 1) → (N, N, N)
+    return result.squeeze(-1)
 
 
 def solver_qtt_to_dense_3d(
@@ -348,42 +422,42 @@ def solver_qtt_to_dense_3d(
 ) -> Tensor:
     """
     Convert QTT cores (solver format) to dense 3D tensor.
-    
+
     The solver uses row-major (C-order) TT decomposition:
     - Flat index = i * N² + j * N + k
     - Bits in MSB-first order (NOT Morton)
-    
+
     This differs from qtt_to_dense_3d which uses Morton interleaving.
-    
+
+    Uses iterative matrix contraction to stay within PyTorch's 25-dim
+    limit for large n_bits.
+
     Args:
         cores: List of QTT cores from TurboNS3DSolver
         n_bits: Bits per dimension
-    
+
     Returns:
         Dense tensor (N, N, N)
     """
     n_cores = 3 * n_bits
     assert len(cores) == n_cores, f"Expected {n_cores} cores, got {len(cores)}"
-    
+
     N = 2 ** n_bits
-    
-    # Contract cores to flat tensor
-    # Result shape: (2, 2, 2, ..., 2) with 3*n_bits dimensions = (2^(3*n_bits),) = (N³,)
+
+    # Contract cores iteratively using 2-D working matrix.
+    # result shape: (flat_extent, bond_dim)
     result = cores[0].squeeze(0)  # (2, r_1)
-    
+
     for i in range(1, n_cores):
-        # result: (..., r_i)
-        # cores[i]: (r_i, 2, r_{i+1})
-        result = torch.einsum('...r,rjR->...jR', result, cores[i])
-    
-    # result: (2, 2, ..., 2, 1) → squeeze last dim
-    result = result.squeeze(-1)  # (2,) * 3*n_bits
-    
-    # Flatten to (N³,) then reshape to (N, N, N)
-    # The solver uses flat index = i * N² + j * N + k
-    # So we just reshape directly
-    result = result.reshape(N, N, N)
-    
+        flat, r_in = result.shape
+        r_in2, d, r_out = cores[i].shape
+        # (flat, r_in) × (r_in, 2, r_out) → (flat, 2, r_out) → (flat*2, r_out)
+        result = torch.einsum('fr,rdR->fdR', result, cores[i])
+        result = result.reshape(flat * 2, r_out)
+
+    # (N³, 1) → (N, N, N)
+    result = result.squeeze(-1).reshape(N, N, N)
+
     return result
 
 
@@ -424,39 +498,91 @@ def dense_to_solver_qtt_3d(
     
     for i in range(n_cores - 1):
         m, n = work.shape
-        
-        # SVD
-        U, S, Vh = torch.linalg.svd(work, full_matrices=False)
-        
+
+        # SVD via eigh (GPU-stable, no cuSOLVER gesvd)
+        U, S, Vh = _eigh_svd_full(work)
+
         # Truncate
         k = min(max_rank, len(S))
         if tol > 0 and len(S) > 0 and S[0] > 1e-14:
             rel_s = S / S[0]
-            k = max(1, min(k, (rel_s > tol).sum().item()))
-        
+            k = max(1, min(k, int((rel_s > tol).sum().item())))
+
         U = U[:, :k]
         S = S[:k]
         Vh = Vh[:k, :]
-        
+
         # Create core: reshape U from (m, k) to (r_left, 2, k)
         core = U.reshape(r_left, 2, k)
         cores.append(core)
-        
+
         # Prepare next iteration
         work = torch.diag(S) @ Vh  # (k, n)
-        
+
         # Reshape for next site
         if i < n_cores - 2:
             remaining = work.shape[1]
             if remaining >= 2:
                 work = work.reshape(k * 2, remaining // 2)
-        
+
         r_left = k
-    
+
     # Last core
     cores.append(work.reshape(r_left, 2, 1))
-    
+
     return cores
+
+
+def _morton_reindex_3d(tensor: Tensor, n_bits: int) -> Tensor:
+    """
+    Reindex a (N, N, N) tensor from row-major order to a flat vector in
+    Morton (Z-curve) bit-interleaved order.
+
+    Morton flat-index bit layout (MSB-first per triplet)::
+
+        bit 3b+2 → x_b,   bit 3b+1 → y_b,   bit 3b → z_b
+
+    where b = 0 (LSB) … n_bits − 1 (MSB).
+
+    Uses int32 arithmetic so the temporary index buffer is only N³ × 4 B
+    (536 MB at 512³).
+
+    Args:
+        tensor: Dense tensor (N, N, N) in C-order.
+        n_bits: Bits per dimension (N = 2^n_bits, n_bits ≤ 10).
+
+    Returns:
+        Flat vector of length N³ in Morton order.
+    """
+    N = 2 ** n_bits
+    device = tensor.device
+    flat = tensor.reshape(-1)  # C-order: flat[i*N²+j*N+k]
+
+    # For each Morton position m, extract the (i, j, k) it maps to and
+    # compute the C-order index.
+    #
+    # Solver uses LSB-first Morton: core 0 = x₀ (LSB).
+    # In TT-SVD, core 0 = MSB of flat index.  So x₀ (LSB of x) sits
+    # at the MSB position of the Morton flat index:
+    #
+    #   morton bit (3(n-1-b)+2) = x_b,   bit (3(n-1-b)+1) = y_b,
+    #   bit (3(n-1-b))         = z_b
+    #
+    m = torch.arange(N ** 3, device=device, dtype=torch.int32)
+
+    i_val = torch.zeros_like(m)
+    j_val = torch.zeros_like(m)
+    k_val = torch.zeros_like(m)
+    for b in range(n_bits):
+        bp = 3 * (n_bits - 1 - b)          # base bit position for level b
+        i_val |= ((m >> (bp + 2)) & 1) << b
+        j_val |= ((m >> (bp + 1)) & 1) << b
+        k_val |= ((m >> bp)       & 1) << b
+
+    c_idx = (i_val * (N * N) + j_val * N + k_val).long()
+    del m, i_val, j_val, k_val
+
+    return flat[c_idx]
 
 
 def dense_to_qtt_3d(
@@ -467,13 +593,16 @@ def dense_to_qtt_3d(
 ) -> List[Tensor]:
     """
     Convert dense 3D tensor to QTT format with SVD-based truncation.
-    
+
+    Uses int32 Morton reindexing instead of a high-dimensional permute,
+    so it works for any n_bits without hitting PyTorch's 25-dim limit.
+
     Args:
         tensor: Dense tensor (N, N, N)
         n_bits: Bits per dimension
         max_rank: Maximum bond dimension
         tol: Truncation tolerance
-    
+
     Returns:
         List of QTT cores in Morton order
     """
@@ -481,26 +610,11 @@ def dense_to_qtt_3d(
     n_cores = 3 * n_bits
     device = tensor.device
     dtype = tensor.dtype
-    
+
     assert tensor.shape == (N, N, N), f"Expected ({N}, {N}, {N}), got {tensor.shape}"
-    
-    # Reshape to Morton order
-    # From (N, N, N) → (2^n, 2^n, 2^n) → (2, 2, ..., 2) interleaved
-    
-    # First reshape each dimension to binary
-    t = tensor.reshape(*([2] * n_bits), *([2] * n_bits), *([2] * n_bits))
-    
-    # Permute to Morton interleaved order
-    # From: i0, i1, ..., j0, j1, ..., k0, k1, ...
-    # To: i0, j0, k0, i1, j1, k1, ...
-    perm = []
-    for b in range(n_bits):
-        perm.extend([b, n_bits + b, 2 * n_bits + b])
-    
-    t = t.permute(*perm)
-    
-    # Flatten to (2^n_cores,) for TT decomposition
-    t = t.reshape(-1)
+
+    # Reindex to Morton flat order (avoids >25-dim permute)
+    t = _morton_reindex_3d(tensor, n_bits)
     
     # TT-SVD decomposition
     cores = []
@@ -512,10 +626,10 @@ def dense_to_qtt_3d(
         
         # Reshape for SVD
         mat = current.reshape(r_left * 2, remaining)
-        
-        # SVD
-        U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
-        
+
+        # SVD via eigh (GPU-stable, no cuSOLVER gesvd)
+        U, S, Vh = _eigh_svd_full(mat)
+
         # Truncate based on tolerance and max_rank
         S_sum = S.sum()
         S_cumsum = torch.cumsum(S, dim=0)
@@ -525,23 +639,140 @@ def dense_to_qtt_3d(
             len(S),
         )
         rank = max(rank, 1)
-        
+
         U = U[:, :rank]
         S = S[:rank]
         Vh = Vh[:rank, :]
-        
+
         # Core: (r_left, 2, rank)
         core = U.reshape(r_left, 2, rank)
         cores.append(core)
-        
+
         # Prepare next iteration
         current = torch.diag(S) @ Vh
-    
+
     # Last core: (r_left, 2, 1)
     last_core = current.reshape(-1, 2, 1)
     cores.append(last_core)
-    
+
     return cores
+
+
+# ═══════════════════════════════════════════════════════════════════════════════════════
+# SPECTRAL LERAY PROJECTION
+# ═══════════════════════════════════════════════════════════════════════════════════════
+
+
+def spectral_leray_project_qtt(
+    ux_cores: List[Tensor],
+    uy_cores: List[Tensor],
+    uz_cores: List[Tensor],
+    n_bits: int,
+    L: float = 2 * math.pi,
+    max_rank: int = 48,
+    tol: float = 1e-8,
+) -> Tuple[List[Tensor], List[Tensor], List[Tensor]]:
+    """
+    Leray-Helmholtz projection via spectral FFT — correction-only path.
+
+    Instead of converting the full projected velocity through
+    dense→QTT (which destroys the existing QTT structure), this
+    function computes only the *correction* Δu = −∇p in dense, converts
+    that low-rank correction to QTT via TT-SVD, and returns it.
+
+    The caller adds the correction to u* in QTT format::
+
+        u_proj = u* + Δu     (QTT addition, preserves structure)
+
+    Because the correction is the gradient of a smooth scalar pressure
+    field, it has very low QTT rank (typically ≤ 16) and compresses
+    with negligible loss.
+
+    Algorithm
+    ---------
+    1. u* QTT → dense → rFFT
+    2. Compute divergence analytically: k · û
+    3. Pressure: p̂ = −(k · û) / |k|²
+    4. **Correction**: Δû_i = −ik_i · p̂  (= k_i · (k · û) / |k|²)
+       Wait — the Leray correction is Δu = u_proj − u* = −∇p.
+       In Fourier: Δû_i = −k_i · (k · û) / |k|²
+       (no imaginary factor needed since FFT of ∂/∂x already includes
+       the conventional i-factor via the irfftn/rfftn pair).
+    5. irFFT → dense correction
+    6. dense → QTT (low rank, fast TT-SVD)
+
+    Returns the *correction* cores, not the projected velocity.
+
+    Parameters
+    ----------
+    ux_cores, uy_cores, uz_cores : List[Tensor]
+        QTT cores (Morton order) for u*.
+    n_bits, L, max_rank, tol :
+        Grid / rank / tolerance parameters.
+
+    Returns
+    -------
+    (dx_qtt, dy_qtt, dz_qtt) : tuple of List[Tensor]
+        Correction QTT cores such that u_proj = u* + Δu.
+    """
+    N = 2 ** n_bits
+    device = ux_cores[0].device
+    dtype = ux_cores[0].dtype
+
+    # ── Phase 1: QTT → dense → rFFT ────────────────────────────────────
+    ux_dense = qtt_to_dense_3d(ux_cores, n_bits)
+    ux_hat = torch.fft.rfftn(ux_dense)
+    del ux_dense
+
+    uy_dense = qtt_to_dense_3d(uy_cores, n_bits)
+    uy_hat = torch.fft.rfftn(uy_dense)
+    del uy_dense
+
+    uz_dense = qtt_to_dense_3d(uz_cores, n_bits)
+    uz_hat = torch.fft.rfftn(uz_dense)
+    del uz_dense
+
+    # ── Phase 2: Correction scalar in Fourier space ────────────────────
+    k_full = torch.fft.fftfreq(N, d=1.0 / N, device=device, dtype=dtype)
+    k_full = k_full * (2.0 * math.pi / L)
+    k_half = torch.fft.rfftfreq(N, d=1.0 / N, device=device, dtype=dtype)
+    k_half = k_half * (2.0 * math.pi / L)
+
+    kx, ky, kz = torch.meshgrid(k_full, k_full, k_half, indexing="ij")
+    del k_full, k_half
+
+    k_sq = kx ** 2 + ky ** 2 + kz ** 2
+    k_sq_safe = k_sq.clone()
+    k_sq_safe[0, 0, 0] = 1.0
+
+    # Divergence: k · û
+    k_dot_u = kx * ux_hat + ky * uy_hat + kz * uz_hat
+    del ux_hat, uy_hat, uz_hat
+
+    # Correction factor: (k · û) / |k|²
+    correction = k_dot_u / k_sq_safe
+    correction[0, 0, 0] = 0.0          # zero-mean pressure
+    del k_dot_u, k_sq, k_sq_safe
+
+    # ── Phase 3: Per-component correction → dense → QTT ───────────────
+    torch.cuda.empty_cache()
+
+    results: List[List[Tensor]] = []
+    for ki in [kx, ky, kz]:
+        # Δû_i = −k_i · correction
+        delta_hat = -(ki * correction)
+        delta_dense = torch.fft.irfftn(delta_hat, s=(N, N, N))
+        del delta_hat
+        delta_qtt = dense_to_qtt_3d(
+            delta_dense, n_bits, max_rank=max_rank, tol=tol,
+        )
+        del delta_dense
+        results.append(delta_qtt)
+
+    del kx, ky, kz, correction
+    torch.cuda.empty_cache()
+
+    return results[0], results[1], results[2]
 
 
 class SpectralPoissonQTT:

@@ -41,15 +41,22 @@ from torch import Tensor
 from tensornet.cfd.qtt_native_ops import (
     QTTCores,
     rsvd_truncate,
+    _robust_svd,
     qtt_truncate_sweep,
+    qtt_truncate_sweep_batched,
     qtt_truncate_now,
+    qtt_truncate_now_batched,
     qtt_add_native,
+    qtt_add_native_batched,
     qtt_scale_native,
     qtt_sub_native,
+    qtt_sub_native_batched,
     qtt_hadamard_native,
+    qtt_hadamard_native_batched,
     qtt_inner_native,
     qtt_norm_native,
     qtt_fused_sum,
+    qtt_fused_sum_batched,
     QTTRoundingContext,
     get_rounding_context,
     turbulence_rank_profile,
@@ -265,6 +272,7 @@ def apply_mpo_native(
     mpo: List[Tensor],
     max_rank: int = 64,
     tol: float = 1e-10,
+    min_rank: int = 0,
 ) -> QTTCores:
     """
     Apply MPO to QTT state natively.
@@ -293,9 +301,60 @@ def apply_mpo_native(
         new_cores.append(out)
     
     # Truncate to control rank
-    truncated = qtt_truncate_sweep(new_cores, max_rank, tol)
+    truncated = qtt_truncate_sweep(new_cores, max_rank, tol, min_rank=min_rank)
     
     return QTTCores(truncated)
+
+
+def apply_mpo_native_batched(
+    states: List[QTTCores],
+    mpos: List[List[Tensor]],
+    max_rank: int = 64,
+    tol: float = 1e-10,
+    min_rank: int = 0,
+) -> List[QTTCores]:
+    """
+    Apply MPOs to multiple QTT states with a single batched truncation.
+
+    ``states[i]`` is contracted with ``mpos[i]`` independently, then all
+    N results share one ``qtt_truncate_sweep_batched`` call.  This
+    replaces N sequential ``apply_mpo_native`` calls and their N
+    separate truncation sweeps.
+
+    Parameters
+    ----------
+    states : list[QTTCores]
+        N independent QTT chains.
+    mpos : list[list[Tensor]]
+        N MPO core lists (length must match ``states[i].num_sites``).
+    """
+    N = len(states)
+    if N == 0:
+        return []
+    if N == 1:
+        return [apply_mpo_native(states[0], mpos[0], max_rank, tol, min_rank=min_rank)]
+
+    L = states[0].num_sites
+
+    all_contracted: List[List[Tensor]] = []
+    for i in range(N):
+        assert len(states[i].cores) == len(mpos[i])
+        new_cores: List[Tensor] = []
+        for k in range(L):
+            s_core = states[i].cores[k]
+            m_core = mpos[i][k]
+            if TRITON_AVAILABLE and s_core.is_cuda:
+                out = triton_mpo_apply(s_core, m_core)
+            else:
+                out = torch.einsum('isk,asjo->iajok', s_core, m_core)
+                r_s_l, d_s, r_s_r = s_core.shape
+                r_m_l, _, d_out, r_m_r = m_core.shape
+                out = out.reshape(r_s_l * r_m_l, d_out, r_s_r * r_m_r)
+            new_cores.append(out)
+        all_contracted.append(new_cores)
+
+    truncated = qtt_truncate_sweep_batched(all_contracted, max_rank, tol, min_rank=min_rank)
+    return [QTTCores(c) for c in truncated]
 
 
 # ═══════════════════════════════════════════════════════════════════════════════════════
@@ -330,6 +389,9 @@ class NativeDerivatives3D:
         # Adaptive rank profile
         self.rank_profile = turbulence_rank_profile(3 * n_bits, base_rank, max_rank)
         
+        # Minimum rank floor to prevent catastrophic collapse
+        self.min_rank = max(1, max_rank // 4)
+        
         # Pre-build shift MPOs
         self._shift_plus = {}
         self._shift_minus = {}
@@ -345,9 +407,30 @@ class NativeDerivatives3D:
     def _shift(self, f: QTT3DNative, axis: int, direction: int) -> QTT3DNative:
         """Apply shift MPO."""
         mpo = self._shift_plus[axis] if direction > 0 else self._shift_minus[axis]
-        new_cores = apply_mpo_native(f.cores, mpo, self.max_rank)
+        new_cores = apply_mpo_native(f.cores, mpo, self.max_rank, min_rank=self.min_rank)
         return QTT3DNative(new_cores, f.n_bits)
-    
+
+    def _shift_batched(
+        self,
+        fields: List[QTT3DNative],
+        axes: List[int],
+        directions: List[int],
+    ) -> List[QTT3DNative]:
+        """Apply N independent shift MPOs with a single batched truncation."""
+        N = len(fields)
+        assert N == len(axes) == len(directions)
+        if N == 0:
+            return []
+        states = [f.cores for f in fields]
+        mpos = [
+            self._shift_plus[ax] if d > 0 else self._shift_minus[ax]
+            for ax, d in zip(axes, directions)
+        ]
+        results = apply_mpo_native_batched(states, mpos, self.max_rank,
+                                             min_rank=self.min_rank)
+        nb = fields[0].n_bits
+        return [QTT3DNative(r, nb) for r in results]
+
     def ddx(self, f: QTT3DNative) -> QTT3DNative:
         """∂f/∂x via central difference."""
         f_plus = self._shift(f, 0, +1)
@@ -371,6 +454,48 @@ class NativeDerivatives3D:
         diff = qtt_sub_native(f_plus.cores, f_minus.cores, self.max_rank)
         scaled = qtt_scale_native(diff, 1.0 / (2 * self.dx))
         return QTT3DNative(scaled, f.n_bits)
+
+    def _dd_batched(
+        self,
+        fields: List[QTT3DNative],
+        axes: List[int],
+    ) -> List[QTT3DNative]:
+        """
+        Batched central-difference derivatives on N independent fields/axes.
+
+        Each entry computes ``∂fields[i]/∂(axes[i])``.  The 2N shifts are
+        batched into one ``_shift_batched`` call, then the N subtractions
+        share one ``qtt_sub_native_batched`` call.
+
+        Returns scaled derivative fields.
+        """
+        N = len(fields)
+        # 2N shifts: [f0_plus, f0_minus, f1_plus, f1_minus, ...]
+        shift_fields: List[QTT3DNative] = []
+        shift_axes: List[int] = []
+        shift_dirs: List[int] = []
+        for f, ax in zip(fields, axes):
+            shift_fields.extend([f, f])
+            shift_axes.extend([ax, ax])
+            shift_dirs.extend([+1, -1])
+
+        shifted = self._shift_batched(shift_fields, shift_axes, shift_dirs)
+
+        # Pair up (plus, minus) and subtract
+        pairs = [
+            (shifted[2 * i], shifted[2 * i + 1])
+            for i in range(N)
+        ]
+        diffs = qtt_sub_native_batched(
+            [(p.cores, m.cores) for p, m in pairs],
+            self.max_rank,
+            min_rank=self.min_rank,
+        )
+
+        # Scale by 1/(2dx)
+        scale = 1.0 / (2 * self.dx)
+        nb = fields[0].n_bits
+        return [QTT3DNative(qtt_scale_native(d, scale), nb) for d in diffs]
     
     def laplacian(self, f: QTT3DNative) -> QTT3DNative:
         """
@@ -381,79 +506,113 @@ class NativeDerivatives3D:
         """
         inv_dx2 = 1.0 / (self.dx ** 2)
         
-        # Collect all shifts WITHOUT intermediate truncation
-        shifted_fields = []
-        weights = []
+        # Batch all 6 shifts in one call
+        shift_fields = [f, f, f, f, f, f]
+        shift_axes = [0, 0, 1, 1, 2, 2]
+        shift_dirs = [+1, -1, +1, -1, +1, -1]
+        shifted = self._shift_batched(shift_fields, shift_axes, shift_dirs)
+
+        # Fused sum: 6 shifted + central term
+        all_terms = [s.cores for s in shifted] + [f.cores]
+        weights = [inv_dx2] * 6 + [-6.0 * inv_dx2]
         
-        for axis in range(3):
-            f_plus = self._shift(f, axis, +1)
-            f_minus = self._shift(f, axis, -1)
-            shifted_fields.extend([f_plus.cores, f_minus.cores])
-            weights.extend([inv_dx2, inv_dx2])
-        
-        # Add -6*f (the central point contribution)
-        shifted_fields.append(f.cores)
-        weights.append(-6.0 * inv_dx2)
-        
-        # Single fused sum + truncation
-        result = qtt_fused_sum(shifted_fields, weights, self.max_rank)
-        
+        result = qtt_fused_sum(all_terms, weights, self.max_rank,
+                               min_rank=self.min_rank)
         return QTT3DNative(result, f.n_bits)
     
     def curl(self, v: QTT3DVectorNative) -> QTT3DVectorNative:
-        """∇×v = (∂vz/∂y - ∂vy/∂z, ∂vx/∂z - ∂vz/∂x, ∂vy/∂x - ∂vx/∂y)."""
-        dvz_dy = self.ddy(v.z)
-        dvy_dz = self.ddz(v.y)
-        omega_x = QTT3DNative(
-            qtt_sub_native(dvz_dy.cores, dvy_dz.cores, self.max_rank),
-            v.n_bits
+        """
+        ∇×v = (∂vz/∂y − ∂vy/∂z, ∂vx/∂z − ∂vz/∂x, ∂vy/∂x − ∂vx/∂y).
+
+        Batched: 12 shifts → 1 batched MPO-apply, 6 derivative subs →
+        1 batched sub, 3 curl subs → 1 batched sub.
+        """
+        # 6 partial derivatives, each needing 2 shifts = 12 shifts total
+        #   dvz/dy, dvy/dz, dvx/dz, dvz/dx, dvy/dx, dvx/dy
+        deriv_fields = [v.z, v.y, v.x, v.z, v.y, v.x]
+        deriv_axes   = [  1,   2,   2,   0,   0,   1 ]
+
+        derivs = self._dd_batched(deriv_fields, deriv_axes)
+        # derivs = [dvz_dy, dvy_dz, dvx_dz, dvz_dx, dvy_dx, dvx_dy]
+
+        # omega_x = dvz_dy - dvy_dz
+        # omega_y = dvx_dz - dvz_dx
+        # omega_z = dvy_dx - dvx_dy
+        omegas = qtt_sub_native_batched(
+            [
+                (derivs[0].cores, derivs[1].cores),
+                (derivs[2].cores, derivs[3].cores),
+                (derivs[4].cores, derivs[5].cores),
+            ],
+            self.max_rank,
+            min_rank=self.min_rank,
         )
-        
-        dvx_dz = self.ddz(v.x)
-        dvz_dx = self.ddx(v.z)
-        omega_y = QTT3DNative(
-            qtt_sub_native(dvx_dz.cores, dvz_dx.cores, self.max_rank),
-            v.n_bits
+        nb = v.n_bits
+        return QTT3DVectorNative(
+            QTT3DNative(omegas[0], nb),
+            QTT3DNative(omegas[1], nb),
+            QTT3DNative(omegas[2], nb),
         )
-        
-        dvy_dx = self.ddx(v.y)
-        dvx_dy = self.ddy(v.x)
-        omega_z = QTT3DNative(
-            qtt_sub_native(dvy_dx.cores, dvx_dy.cores, self.max_rank),
-            v.n_bits
-        )
-        
-        return QTT3DVectorNative(omega_x, omega_y, omega_z)
     
     def laplacian_vector(self, v: QTT3DVectorNative) -> QTT3DVectorNative:
-        """∇²v component-wise."""
+        """
+        ∇²v component-wise (batched).
+
+        18 shifts → 1 batched MPO-apply, 3 fused sums → 1 batched fused sum.
+        """
+        inv_dx2 = 1.0 / (self.dx ** 2)
+        components = [v.x, v.y, v.z]
+
+        # 18 shifts: 6 per component (3 axes × 2 directions)
+        shift_fields: List[QTT3DNative] = []
+        shift_axes: List[int] = []
+        shift_dirs: List[int] = []
+        for comp in components:
+            for axis in range(3):
+                shift_fields.extend([comp, comp])
+                shift_axes.extend([axis, axis])
+                shift_dirs.extend([+1, -1])
+
+        shifted = self._shift_batched(shift_fields, shift_axes, shift_dirs)
+        # shifted[0:6] → x shifts, [6:12] → y shifts, [12:18] → z shifts
+
+        # Build fused sums for each component: 6 shifts + central term = 7 terms
+        term_lists: List[List[QTTCores]] = []
+        weight_lists: List[List[float]] = []
+        for c_idx, comp in enumerate(components):
+            base = c_idx * 6
+            terms = [shifted[base + j].cores for j in range(6)] + [comp.cores]
+            weights = [inv_dx2] * 6 + [-6.0 * inv_dx2]
+            term_lists.append(terms)
+            weight_lists.append(weights)
+
+        laps = qtt_fused_sum_batched(term_lists, weight_lists, self.max_rank,
+                                      min_rank=self.min_rank)
+        nb = v.n_bits
         return QTT3DVectorNative(
-            self.laplacian(v.x),
-            self.laplacian(v.y),
-            self.laplacian(v.z),
+            QTT3DNative(laps[0], nb),
+            QTT3DNative(laps[1], nb),
+            QTT3DNative(laps[2], nb),
         )
     
     def divergence(self, v: QTT3DVectorNative) -> QTT3DNative:
-        """∇·v = ∂vx/∂x + ∂vy/∂y + ∂vz/∂z."""
-        dvx_dx = self.ddx(v.x)
-        dvy_dy = self.ddy(v.y)
-        dvz_dz = self.ddz(v.z)
-        
-        # Fused sum for efficiency
+        """∇·v = ∂vx/∂x + ∂vy/∂y + ∂vz/∂z (batched shifts)."""
+        derivs = self._dd_batched(
+            [v.x, v.y, v.z],
+            [0, 1, 2],
+        )
         result = qtt_fused_sum(
-            [dvx_dx.cores, dvy_dy.cores, dvz_dz.cores],
+            [derivs[0].cores, derivs[1].cores, derivs[2].cores],
             [1.0, 1.0, 1.0],
-            self.max_rank
+            self.max_rank,
+            min_rank=self.min_rank,
         )
         return QTT3DNative(result, v.n_bits)
     
     def gradient(self, f: QTT3DNative) -> QTT3DVectorNative:
-        """∇f = (∂f/∂x, ∂f/∂y, ∂f/∂z)."""
-        return QTT3DVectorNative(
-            self.ddx(f),
-            self.ddy(f),
-            self.ddz(f),
-        )
+        """∇f = (∂f/∂x, ∂f/∂y, ∂f/∂z) (batched)."""
+        derivs = self._dd_batched([f, f, f], [0, 1, 2])
+        return QTT3DVectorNative(derivs[0], derivs[1], derivs[2])
     
     def poisson_cg(
         self,
@@ -570,35 +729,46 @@ def vector_cross_native(
     u: QTT3DVectorNative,
     v: QTT3DVectorNative,
     max_rank: int = 64,
+    min_rank: int = 0,
 ) -> QTT3DVectorNative:
     """
-    Native cross product u × v.
-    
-    Uses QTT Hadamard product - NO DENSE!
-    
-    (u × v)_x = u_y * v_z - u_z * v_y
-    (u × v)_y = u_z * v_x - u_x * v_z
-    (u × v)_z = u_x * v_y - u_y * v_x
+    Native cross product u × v — batched.
+
+    Uses ``qtt_hadamard_native_batched`` for 6 Hadamard products
+    (1 batched compress-as-multiply sweep instead of 6 sequential)
+    then ``qtt_sub_native_batched`` for 3 subtractions.
+
+    (u × v)_x = u_y * v_z − u_z * v_y
+    (u × v)_y = u_z * v_x − u_x * v_z
+    (u × v)_z = u_x * v_y − u_y * v_x
     """
-    # x component
-    uy_vz = qtt_hadamard_native(u.y.cores, v.z.cores, max_rank)
-    uz_vy = qtt_hadamard_native(u.z.cores, v.y.cores, max_rank)
-    cx = qtt_sub_native(uy_vz, uz_vy, max_rank)
-    
-    # y component
-    uz_vx = qtt_hadamard_native(u.z.cores, v.x.cores, max_rank)
-    ux_vz = qtt_hadamard_native(u.x.cores, v.z.cores, max_rank)
-    cy = qtt_sub_native(uz_vx, ux_vz, max_rank)
-    
-    # z component
-    ux_vy = qtt_hadamard_native(u.x.cores, v.y.cores, max_rank)
-    uy_vx = qtt_hadamard_native(u.y.cores, v.x.cores, max_rank)
-    cz = qtt_sub_native(ux_vy, uy_vx, max_rank)
-    
+    # 6 independent Hadamard products — single batched call
+    had_pairs = [
+        (u.y.cores, v.z.cores),  # uy*vz for omega_x+
+        (u.z.cores, v.y.cores),  # uz*vy for omega_x-
+        (u.z.cores, v.x.cores),  # uz*vx for omega_y+
+        (u.x.cores, v.z.cores),  # ux*vz for omega_y-
+        (u.x.cores, v.y.cores),  # ux*vy for omega_z+
+        (u.y.cores, v.x.cores),  # uy*vx for omega_z-
+    ]
+    hads = qtt_hadamard_native_batched(had_pairs, max_rank, min_rank=min_rank)
+
+    # 3 independent subtractions — single batched call
+    subs = qtt_sub_native_batched(
+        [
+            (hads[0], hads[1]),
+            (hads[2], hads[3]),
+            (hads[4], hads[5]),
+        ],
+        max_rank,
+        min_rank=min_rank,
+    )
+
+    nb = u.n_bits
     return QTT3DVectorNative(
-        QTT3DNative(cx, u.n_bits),
-        QTT3DNative(cy, u.n_bits),
-        QTT3DNative(cz, u.n_bits),
+        QTT3DNative(subs[0], nb),
+        QTT3DNative(subs[1], nb),
+        QTT3DNative(subs[2], nb),
     )
 
 
@@ -814,9 +984,11 @@ def _tt_svd_compress(tensor_flat: Tensor, modes: List[int], max_rank: int) -> Li
     C = tensor_flat.view(modes[0], -1)
     
     for k in range(n_modes - 1):
-        # SVD of current unfolding
-        U, S, Vh = rsvd_truncate(C, max_rank)
-        r = len(S)
+        # SVD of current unfolding — use _robust_svd for cuSOLVER resilience
+        # at 512³ (27 modes), early unfoldings can be large and ill-conditioned
+        U, S, Vh = _robust_svd(C, max_rank)
+        r = min(len(S), max_rank)
+        U, S, Vh = U[:, :r], S[:r], Vh[:r, :]
         
         # Store core
         r_left = 1 if k == 0 else cores[-1].shape[2]
@@ -1106,7 +1278,8 @@ class NativeNS3DSolver:
         
         # Nonlinear term: ∇×(u×ω)
         # All native Hadamard operations
-        u_cross_omega = vector_cross_native(u, omega, max_rank)
+        u_cross_omega = vector_cross_native(u, omega, max_rank,
+                                            min_rank=self.deriv.min_rank)
         curl_cross = self.deriv.curl(u_cross_omega)
         
         # Viscous term: ν∇²ω
@@ -1115,15 +1288,21 @@ class NativeNS3DSolver:
         visc_y = qtt_scale_native(lap_omega.y.cores, nu)
         visc_z = qtt_scale_native(lap_omega.z.cores, nu)
         
-        # Sum terms
-        rhs_x = qtt_add_native(curl_cross.x.cores, visc_x, max_rank)
-        rhs_y = qtt_add_native(curl_cross.y.cores, visc_y, max_rank)
-        rhs_z = qtt_add_native(curl_cross.z.cores, visc_z, max_rank)
+        # Sum terms (batched)
+        rhs_list = qtt_add_native_batched(
+            [
+                (curl_cross.x.cores, visc_x),
+                (curl_cross.y.cores, visc_y),
+                (curl_cross.z.cores, visc_z),
+            ],
+            max_rank,
+            min_rank=self.deriv.min_rank,
+        )
         
         return QTT3DVectorNative(
-            QTT3DNative(rhs_x, omega.n_bits),
-            QTT3DNative(rhs_y, omega.n_bits),
-            QTT3DNative(rhs_z, omega.n_bits),
+            QTT3DNative(rhs_list[0], omega.n_bits),
+            QTT3DNative(rhs_list[1], omega.n_bits),
+            QTT3DNative(rhs_list[2], omega.n_bits),
         )
     
     def _velocity_from_vorticity_native(self, omega: QTT3DVectorNative) -> QTT3DVectorNative:
@@ -1159,7 +1338,8 @@ class NativeNS3DSolver:
         nu = self.config.nu
         
         # Nonlinear term: u × ω
-        u_cross_omega = vector_cross_native(u, omega, max_rank)
+        u_cross_omega = vector_cross_native(u, omega, max_rank,
+                                            min_rank=self.deriv.min_rank)
         
         # Viscous term: ν∇²u
         lap_u = self.deriv.laplacian_vector(u)
@@ -1167,67 +1347,64 @@ class NativeNS3DSolver:
         visc_y = qtt_scale_native(lap_u.y.cores, nu)
         visc_z = qtt_scale_native(lap_u.z.cores, nu)
         
-        # Sum: rhs = u×ω + ν∇²u
-        # Note: pressure gradient projects out but we skip for simplicity
-        rhs_x = qtt_add_native(u_cross_omega.x.cores, visc_x, max_rank)
-        rhs_y = qtt_add_native(u_cross_omega.y.cores, visc_y, max_rank)
-        rhs_z = qtt_add_native(u_cross_omega.z.cores, visc_z, max_rank)
+        # Sum: rhs = u×ω + ν∇²u (batched)
+        rhs_list = qtt_add_native_batched(
+            [
+                (u_cross_omega.x.cores, visc_x),
+                (u_cross_omega.y.cores, visc_y),
+                (u_cross_omega.z.cores, visc_z),
+            ],
+            max_rank,
+            min_rank=self.deriv.min_rank,
+        )
         
         return QTT3DVectorNative(
-            QTT3DNative(rhs_x, u.n_bits),
-            QTT3DNative(rhs_y, u.n_bits),
-            QTT3DNative(rhs_z, u.n_bits),
+            QTT3DNative(rhs_list[0], u.n_bits),
+            QTT3DNative(rhs_list[1], u.n_bits),
+            QTT3DNative(rhs_list[2], u.n_bits),
         )
     
     def _project_velocity(self, u_star: QTT3DVectorNative) -> QTT3DVectorNative:
         """
         Project velocity to divergence-free (incompressible).
-        
-        Uses Chorin projection:
-            1. Solve ∇²p = (1/dt) ∇·u*
-            2. u = u* - dt * ∇p
-        
-        This enforces ∇·u = 0.
+
+        Solves the pressure Poisson equation via CG:
+
+            ∇²p = (1/dt) ∇·u*
+
+        then corrects the velocity:
+
+            u = u* − dt ∇p
         """
         dt = self.config.dt
         max_rank = self.config.max_rank
-        
-        # Compute divergence
+
+        # RHS = (1/dt) ∇·u*
         div_u = self.deriv.divergence(u_star)
-        
-        # Scale by 1/dt for RHS
         rhs = QTT3DNative(
-            qtt_scale_native(div_u.cores, 1.0 / dt),
-            u_star.n_bits
+            qtt_scale_native(div_u.cores, 1.0 / dt), u_star.n_bits
         )
-        
-        # Solve Poisson: ∇²p = rhs
+
+        # Solve ∇²p = rhs via CG
         p = self.deriv.poisson_cg(rhs, tol=1e-5, max_iter=30)
-        
-        # Compute pressure gradient
+
+        # ∇p
         grad_p = self.deriv.gradient(p)
-        
-        # Project: u = u* - dt * ∇p
-        u_x = qtt_fused_sum(
-            [u_star.x.cores, grad_p.x.cores],
-            [1.0, -dt],
-            max_rank
+
+        # u = u* − dt ∇p  (batched fused sum)
+        proj = qtt_fused_sum_batched(
+            [
+                [u_star.x.cores, grad_p.x.cores],
+                [u_star.y.cores, grad_p.y.cores],
+                [u_star.z.cores, grad_p.z.cores],
+            ],
+            [[1.0, -dt]] * 3,
+            max_rank,
         )
-        u_y = qtt_fused_sum(
-            [u_star.y.cores, grad_p.y.cores],
-            [1.0, -dt],
-            max_rank
-        )
-        u_z = qtt_fused_sum(
-            [u_star.z.cores, grad_p.z.cores],
-            [1.0, -dt],
-            max_rank
-        )
-        
         return QTT3DVectorNative(
-            QTT3DNative(u_x, u_star.n_bits),
-            QTT3DNative(u_y, u_star.n_bits),
-            QTT3DNative(u_z, u_star.n_bits),
+            QTT3DNative(proj[0], u_star.n_bits),
+            QTT3DNative(proj[1], u_star.n_bits),
+            QTT3DNative(proj[2], u_star.n_bits),
         )
     
     def step(self, use_rk2: bool = True, project: bool = True) -> NativeDiagnostics:
@@ -1264,17 +1441,30 @@ class NativeNS3DSolver:
         rhs_u = self._rhs_velocity(self.u, self.omega)
         
         # Update vorticity: omega += dt * rhs_omega
-        omega_new = QTT3DVectorNative(
-            QTT3DNative(qtt_fused_sum([self.omega.x.cores, rhs_omega.x.cores], [1.0, dt], max_rank), self.omega.n_bits),
-            QTT3DNative(qtt_fused_sum([self.omega.y.cores, rhs_omega.y.cores], [1.0, dt], max_rank), self.omega.n_bits),
-            QTT3DNative(qtt_fused_sum([self.omega.z.cores, rhs_omega.z.cores], [1.0, dt], max_rank), self.omega.n_bits),
-        )
-        
         # Update velocity: u* = u + dt * rhs_u
+        # 6 independent fused sums → 1 batched call
+        nb_o, nb_u = self.omega.n_bits, self.u.n_bits
+        updates = qtt_fused_sum_batched(
+            [
+                [self.omega.x.cores, rhs_omega.x.cores],
+                [self.omega.y.cores, rhs_omega.y.cores],
+                [self.omega.z.cores, rhs_omega.z.cores],
+                [self.u.x.cores, rhs_u.x.cores],
+                [self.u.y.cores, rhs_u.y.cores],
+                [self.u.z.cores, rhs_u.z.cores],
+            ],
+            [[1.0, dt]] * 6,
+            max_rank,
+        )
+        omega_new = QTT3DVectorNative(
+            QTT3DNative(updates[0], nb_o),
+            QTT3DNative(updates[1], nb_o),
+            QTT3DNative(updates[2], nb_o),
+        )
         u_star = QTT3DVectorNative(
-            QTT3DNative(qtt_fused_sum([self.u.x.cores, rhs_u.x.cores], [1.0, dt], max_rank), self.u.n_bits),
-            QTT3DNative(qtt_fused_sum([self.u.y.cores, rhs_u.y.cores], [1.0, dt], max_rank), self.u.n_bits),
-            QTT3DNative(qtt_fused_sum([self.u.z.cores, rhs_u.z.cores], [1.0, dt], max_rank), self.u.n_bits),
+            QTT3DNative(updates[3], nb_u),
+            QTT3DNative(updates[4], nb_u),
+            QTT3DNative(updates[5], nb_u),
         )
         
         # Project velocity for incompressibility
@@ -1308,16 +1498,29 @@ class NativeNS3DSolver:
         k1_u = self._rhs_velocity(self.u, self.omega)
         
         # Predictor: y* = y_n + dt * k1
-        omega_star = QTT3DVectorNative(
-            QTT3DNative(qtt_fused_sum([self.omega.x.cores, k1_omega.x.cores], [1.0, dt], max_rank), self.omega.n_bits),
-            QTT3DNative(qtt_fused_sum([self.omega.y.cores, k1_omega.y.cores], [1.0, dt], max_rank), self.omega.n_bits),
-            QTT3DNative(qtt_fused_sum([self.omega.z.cores, k1_omega.z.cores], [1.0, dt], max_rank), self.omega.n_bits),
+        # 6 independent fused sums → 1 batched call
+        nb_o, nb_u = self.omega.n_bits, self.u.n_bits
+        pred = qtt_fused_sum_batched(
+            [
+                [self.omega.x.cores, k1_omega.x.cores],
+                [self.omega.y.cores, k1_omega.y.cores],
+                [self.omega.z.cores, k1_omega.z.cores],
+                [self.u.x.cores, k1_u.x.cores],
+                [self.u.y.cores, k1_u.y.cores],
+                [self.u.z.cores, k1_u.z.cores],
+            ],
+            [[1.0, dt]] * 6,
+            max_rank,
         )
-        
+        omega_star = QTT3DVectorNative(
+            QTT3DNative(pred[0], nb_o),
+            QTT3DNative(pred[1], nb_o),
+            QTT3DNative(pred[2], nb_o),
+        )
         u_star = QTT3DVectorNative(
-            QTT3DNative(qtt_fused_sum([self.u.x.cores, k1_u.x.cores], [1.0, dt], max_rank), self.u.n_bits),
-            QTT3DNative(qtt_fused_sum([self.u.y.cores, k1_u.y.cores], [1.0, dt], max_rank), self.u.n_bits),
-            QTT3DNative(qtt_fused_sum([self.u.z.cores, k1_u.z.cores], [1.0, dt], max_rank), self.u.n_bits),
+            QTT3DNative(pred[3], nb_u),
+            QTT3DNative(pred[4], nb_u),
+            QTT3DNative(pred[5], nb_u),
         )
         
         # Truncate intermediates at barrier
@@ -1329,22 +1532,28 @@ class NativeNS3DSolver:
         k2_u = self._rhs_velocity(u_star, omega_star)
         
         # Corrector: y_{n+1} = y_n + dt/2 * (k1 + k2)
-        omega_new = QTT3DVectorNative(
-            QTT3DNative(qtt_fused_sum([self.omega.x.cores, k1_omega.x.cores, k2_omega.x.cores], 
-                                       [1.0, dt/2, dt/2], max_rank), self.omega.n_bits),
-            QTT3DNative(qtt_fused_sum([self.omega.y.cores, k1_omega.y.cores, k2_omega.y.cores], 
-                                       [1.0, dt/2, dt/2], max_rank), self.omega.n_bits),
-            QTT3DNative(qtt_fused_sum([self.omega.z.cores, k1_omega.z.cores, k2_omega.z.cores], 
-                                       [1.0, dt/2, dt/2], max_rank), self.omega.n_bits),
+        # 6 independent fused sums → 1 batched call
+        corr = qtt_fused_sum_batched(
+            [
+                [self.omega.x.cores, k1_omega.x.cores, k2_omega.x.cores],
+                [self.omega.y.cores, k1_omega.y.cores, k2_omega.y.cores],
+                [self.omega.z.cores, k1_omega.z.cores, k2_omega.z.cores],
+                [self.u.x.cores, k1_u.x.cores, k2_u.x.cores],
+                [self.u.y.cores, k1_u.y.cores, k2_u.y.cores],
+                [self.u.z.cores, k1_u.z.cores, k2_u.z.cores],
+            ],
+            [[1.0, dt / 2, dt / 2]] * 6,
+            max_rank,
         )
-        
+        omega_new = QTT3DVectorNative(
+            QTT3DNative(corr[0], nb_o),
+            QTT3DNative(corr[1], nb_o),
+            QTT3DNative(corr[2], nb_o),
+        )
         u_corrected = QTT3DVectorNative(
-            QTT3DNative(qtt_fused_sum([self.u.x.cores, k1_u.x.cores, k2_u.x.cores], 
-                                       [1.0, dt/2, dt/2], max_rank), self.u.n_bits),
-            QTT3DNative(qtt_fused_sum([self.u.y.cores, k1_u.y.cores, k2_u.y.cores], 
-                                       [1.0, dt/2, dt/2], max_rank), self.u.n_bits),
-            QTT3DNative(qtt_fused_sum([self.u.z.cores, k1_u.z.cores, k2_u.z.cores], 
-                                       [1.0, dt/2, dt/2], max_rank), self.u.n_bits),
+            QTT3DNative(corr[3], nb_u),
+            QTT3DNative(corr[4], nb_u),
+            QTT3DNative(corr[5], nb_u),
         )
         
         # Project velocity for incompressibility
@@ -1369,11 +1578,22 @@ class NativeNS3DSolver:
         return diag
     
     def _truncate_vector(self, v: QTT3DVectorNative, max_rank: int, tol: float = 1e-10) -> QTT3DVectorNative:
-        """Truncate all components of a vector field."""
+        """Truncate all components of a vector field (batched SVD).
+
+        Uses the adaptive rank profile from the derivative operator so
+        that higher-scale (fine-grid) modes are compressed more
+        aggressively — matching the energy cascade structure.
+        """
+        xyz = qtt_truncate_now_batched(
+            [v.x.cores, v.y.cores, v.z.cores],
+            max_rank, tol,
+            rank_profile=self.deriv.rank_profile,
+            min_rank=max(1, max_rank // 4),
+        )
         return QTT3DVectorNative(
-            QTT3DNative(qtt_truncate_now(v.x.cores, max_rank, tol), v.n_bits),
-            QTT3DNative(qtt_truncate_now(v.y.cores, max_rank, tol), v.n_bits),
-            QTT3DNative(qtt_truncate_now(v.z.cores, max_rank, tol), v.n_bits),
+            QTT3DNative(xyz[0], v.n_bits),
+            QTT3DNative(xyz[1], v.n_bits),
+            QTT3DNative(xyz[2], v.n_bits),
         )
     
     @property
@@ -1395,6 +1615,7 @@ __all__ = [
     '_qtt_point_eval',
     '_qtt_vec_max_abs_native',
     '_qtt_scalar_max_abs_native',
+    'taylor_green_analytical',
     'taylor_green_native',
     'NativeNS3DConfig',
     'NativeNS3DSolver',

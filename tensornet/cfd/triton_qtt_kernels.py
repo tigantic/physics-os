@@ -44,6 +44,12 @@ if TRITON_AVAILABLE:
     # MPO APPLICATION KERNEL
     # ═══════════════════════════════════════════════════════════════════════════════════
 
+    _mpo_configs = [
+        triton.Config({"BLOCK_L": 16, "BLOCK_R": 16}, num_warps=2),
+        triton.Config({"BLOCK_L": 32, "BLOCK_R": 32}, num_warps=4),
+    ]
+
+    @triton.autotune(configs=_mpo_configs, key=["r_s_l", "r_s_r"])
     @triton.jit
     def _mpo_apply_kernel(
         # State core: (r_s_left, d_s, r_s_right)
@@ -141,10 +147,10 @@ if TRITON_AVAILABLE:
         
         out = torch.empty(out_r_l, d_out, out_r_r, device=state_core.device, dtype=state_core.dtype)
         
-        # Triton requires power-of-2 block sizes
-        BLOCK_L = _next_pow2(min(32, out_r_l))
-        BLOCK_R = _next_pow2(min(32, out_r_r))
-        grid = (triton.cdiv(out_r_l, BLOCK_L), triton.cdiv(out_r_r, BLOCK_R))
+        grid = lambda META: (
+            triton.cdiv(out_r_l, META["BLOCK_L"]),
+            triton.cdiv(out_r_r, META["BLOCK_R"]),
+        )
         
         _mpo_apply_kernel[grid](
             state_core, mpo_core, out,
@@ -153,7 +159,6 @@ if TRITON_AVAILABLE:
             state_core.stride(0), state_core.stride(1), state_core.stride(2),
             mpo_core.stride(0), mpo_core.stride(1), mpo_core.stride(2), mpo_core.stride(3),
             out.stride(0), out.stride(1), out.stride(2),
-            BLOCK_L=BLOCK_L, BLOCK_R=BLOCK_R,
         )
         
         return out
@@ -163,6 +168,12 @@ if TRITON_AVAILABLE:
     # FUSED HADAMARD PRODUCT KERNEL
     # ═══════════════════════════════════════════════════════════════════════════════════
 
+    _hadamard_configs = [
+        triton.Config({"BLOCK": 32}, num_warps=2),
+        triton.Config({"BLOCK": 64}, num_warps=4),
+    ]
+
+    @triton.autotune(configs=_hadamard_configs, key=["ra_l", "rb_l"])
     @triton.jit
     def _hadamard_core_kernel(
         # Input cores
@@ -230,9 +241,7 @@ if TRITON_AVAILABLE:
         
         out = torch.empty(out_l, d, out_r, device=a.device, dtype=a.dtype)
         
-        # Triton requires power-of-2 block sizes
-        BLOCK = _next_pow2(min(128, out_l))
-        grid = (triton.cdiv(out_l, BLOCK),)
+        grid = lambda META: (triton.cdiv(out_l, META["BLOCK"]),)
         
         _hadamard_core_kernel[grid](
             a, b, out,
@@ -240,7 +249,6 @@ if TRITON_AVAILABLE:
             a.stride(0), a.stride(1), a.stride(2),
             b.stride(0), b.stride(1), b.stride(2),
             out.stride(0), out.stride(1), out.stride(2),
-            BLOCK=BLOCK,
         )
         
         return out
@@ -250,6 +258,12 @@ if TRITON_AVAILABLE:
     # FUSED INNER PRODUCT KERNEL
     # ═══════════════════════════════════════════════════════════════════════════════════
 
+    _inner_configs = [
+        triton.Config({"BLOCK_A": 16, "BLOCK_B": 16}, num_warps=2),
+        triton.Config({"BLOCK_A": 32, "BLOCK_B": 32}, num_warps=4),
+    ]
+
+    @triton.autotune(configs=_inner_configs, key=["r_a_r", "r_b_r"])
     @triton.jit
     def _inner_contract_kernel(
         # Environment: (r_a, r_b)
@@ -323,10 +337,10 @@ if TRITON_AVAILABLE:
         
         out = torch.empty(r_a_r, r_b_r, device=a.device, dtype=a.dtype)
         
-        # Triton requires power-of-2 block sizes
-        BLOCK_A = _next_pow2(min(32, r_a_r))
-        BLOCK_B = _next_pow2(min(32, r_b_r))
-        grid = (triton.cdiv(r_a_r, BLOCK_A), triton.cdiv(r_b_r, BLOCK_B))
+        grid = lambda META: (
+            triton.cdiv(r_a_r, META["BLOCK_A"]),
+            triton.cdiv(r_b_r, META["BLOCK_B"]),
+        )
         
         _inner_contract_kernel[grid](
             env, a, b, out,
@@ -335,70 +349,9 @@ if TRITON_AVAILABLE:
             a.stride(0), a.stride(1), a.stride(2),
             b.stride(0), b.stride(1), b.stride(2),
             out.stride(0), out.stride(1),
-            BLOCK_A=BLOCK_A, BLOCK_B=BLOCK_B,
         )
         
         return out
-
-
-    # ═══════════════════════════════════════════════════════════════════════════════════
-    # BATCHED SHIFT KERNEL
-    # ═══════════════════════════════════════════════════════════════════════════════════
-
-    @triton.jit
-    def _shift_mpo_batch_kernel(
-        # Input cores (batch, L, max_r, 2, max_r)
-        in_ptr,
-        # Shift MPO (L, 2, 2, 2)  - simple increment/decrement
-        shift_ptr,
-        # Output (batch, L, max_r*2, 2, max_r*2)
-        out_ptr,
-        # Dimensions
-        batch, L, max_r,
-        # Strides for input
-        in_str_b, in_str_l, in_str_rl, in_str_d, in_str_rr,
-        # Strides for MPO
-        s_str_l, s_str_di, s_str_do, s_str_r,
-        # Strides for output
-        o_str_b, o_str_l, o_str_rl, o_str_d, o_str_rr,
-        # Block size
-        BLOCK_B: tl.constexpr,
-    ):
-        """
-        Batched shift MPO application across all sites.
-        """
-        pid = tl.program_id(0)
-        site = tl.program_id(1)
-        
-        b_base = pid * BLOCK_B
-        b_idx = b_base + tl.arange(0, BLOCK_B)
-        mask_b = b_idx < batch
-        
-        # For each output element
-        for rl_out in range(max_r * 2):
-            for d_out in range(2):
-                for rr_out in range(max_r * 2):
-                    acc = tl.zeros((BLOCK_B,), dtype=tl.float32)
-                    
-                    # Sum over input dimensions
-                    for rl_in in range(max_r):
-                        for d_in in range(2):
-                            for rr_in in range(max_r):
-                                # Load input[b, site, rl_in, d_in, rr_in]
-                                i_off = b_idx * in_str_b + site * in_str_l + rl_in * in_str_rl + d_in * in_str_d + rr_in * in_str_rr
-                                i_val = tl.load(in_ptr + i_off, mask=mask_b, other=0.0)
-                                
-                                # Load shift[site, d_in, d_out, ?]
-                                # Simplified: assume shift MPO has rank 1-2
-                                s_off = site * s_str_l + d_in * s_str_di + d_out * s_str_do
-                                s_val = tl.load(shift_ptr + s_off)
-                                
-                                # Accumulate where indices match
-                                acc += i_val * s_val
-                    
-                    # Store
-                    o_off = b_idx * o_str_b + site * o_str_l + rl_out * o_str_rl + d_out * o_str_d + rr_out * o_str_rr
-                    tl.store(out_ptr + o_off, acc, mask=mask_b)
 
 
 # Fallback implementations for non-Triton systems
