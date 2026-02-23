@@ -556,7 +556,7 @@ def main():
         n_bits_list.append(nb)
 
     # Step limits scale with resolution — finer grid needs more steps
-    step_limits = {7: 150, 8: 250, 9: 400, 10: 600}
+    step_limits = {7: 150, 8: 250, 9: 400, 10: 600, 12: 400}
 
     print("╔══════════════════════════════════════════════════════════════════════════════╗")
     print("║   QTT vs NVIDIA DENSE CFD — MULTI-RESOLUTION GAUNTLET v2.0                 ║")
