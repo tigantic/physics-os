@@ -1,29 +1,13 @@
-# The χ-Regularity Conjecture: QTT Bond-Dimension Universality Across Physical Law
+# χ-Regularity and Rank Atlas: QTT Bond-Dimension Universality Across Physical Law
+
+**Paper A — Scientific Conjecture and Evidence**
 
 **Author:** Brad Tigantic  
 **Affiliation:** Independent Research — HyperTensor Project  
 **Date:** 2026-02-22 (initial evidence) — 2026-02-24 (20-pack campaign) — 2026-02-25 (QTT Physics VM) — 2026-02-25 (scientific hardening) — Living Document  
-**Version:** 3.0.0  
-**Status:** This document has been split into two focused papers and a benchmark suite:
-
-> **Paper A — Scientific Conjecture and Evidence**
-> [`docs/research/paper_a_chi_regularity_atlas.md`](paper_a_chi_regularity_atlas.md)
-> χ-Regularity and Rank Atlas: conjecture, measurement protocol, 20-pack atlas,
-> deep sweep, falsification criteria, dual-measurement validation.
->
-> **Paper B — Systems Architecture and Constructive Evidence**
-> [`docs/research/paper_b_qtt_physics_vm.md`](paper_b_qtt_physics_vm.md)
-> QTT Physics VM: IR, runtime, opcodes, 7 domain compilers, universal benchmark,
-> polylogarithmic resolution scaling, domain-agnostic truncation.
->
-> **Rank Atlas Benchmark v1.0**
-> [`benchmarks/rank_atlas/SPEC.md`](../../benchmarks/rank_atlas/SPEC.md)
-> Versioned benchmark specification, JSON schema, validation checker,
-> deterministic configs, reproducibility scripts, baselines.
-
-This monolithic document is retained as the canonical history and reference.
-For review and evaluation, use Paper A and Paper B instead.
-
+**Version:** 2.5.0  
+**Scientific Status:** Empirically Supported (20-pack, 5-resolution protocol) · Dual-Measurement Validated (20/20 conservative) · Falsification Protocol Specified  
+**Status:** Operationally Validated (751+ measurements, 0 failures) · Protocol-Compliant (20/20 packs at n_bits 6–10)  
 **Repository:** HyperTensor-VM  
 **Commit:** (see git log, branch `main`)  
 **Hardware:** NVIDIA GeForce RTX 5070 Laptop GPU, 7.96 GB VRAM, CC 12.0 (Rank Atlas) · CPU/RAM only (QTT Physics VM)  
@@ -33,10 +17,8 @@ For review and evaluation, use Paper A and Paper B instead.
 - `scripts/research/rank_atlas_campaign.py --packs III VI --n-bits 4 5 6 7 8 9`  
 - `scripts/research/rank_atlas_campaign.py --packs ALL --n-bits 10` (protocol compliance)  
 - `scripts/research/dual_measurement_protocol.py` (§6.4 dual-measurement validation)  
-- `scripts/research/vm_resolution_sweep.py` (resolution-independence sweep)  
-- `benchmarks/rank_atlas/run_benchmark.py` (Rank Atlas Benchmark v1.0)  
 **Evidence Manifest:** `docs/research/evidence_manifest.json` (see Appendix C)  
-**VM Benchmark Data:** `data/vm_7domain_benchmark.json`, `data/vm_resolution_sweep.json`
+**Companion Paper:** *QTT Physics VM: A Domain-Agnostic Tensor Network Runtime for Universal Physics Simulation* (`docs/research/paper_b_qtt_physics_vm.md`)
 
 ---
 
@@ -78,15 +60,10 @@ rigorous cross-domain falsification experiment (the **Rank Atlas Campaign**),
 and specify the acceptance/rejection criteria with which the hypothesis
 stands or falls.
 
-> **Division of Claims.** This document supports two separable claims.
-> **(1) Scientific:** an empirical conjecture about QTT bond-dimension
-> universality across physical law — evaluated against explicit acceptance
-> criteria and currently at pilot scale. **(2) Infrastructure:** that an
-> end-to-end rank-atlas measurement pipeline can be executed reproducibly
-> across 20 physics domains — operational and demonstrated (514
-> measurements, 0 failures). The evidence manifest (Appendix C,
-> `evidence_manifest.json`) indexes both claim types; each claim's
-> `status` value follows the vocabulary defined in that manifest.
+This paper is the scientific component of a two-paper series. The
+companion paper (*QTT Physics VM*, Paper B) provides constructive
+evidence that a single domain-agnostic runtime can execute arbitrary
+physics with bounded rank — the systems-level validation of universality.
 
 ---
 
@@ -102,10 +79,10 @@ stands or falls.
 8. [Analysis Pipeline](#8-analysis-pipeline)
 9. [Expected Outcomes and Falsification Criteria](#9-expected-outcomes-and-falsification-criteria)
 10. [Relation to Open Problems in Mathematics](#10-relation-to-open-problems-in-mathematics)
-11. [Constructive Evidence: QTT Physics VM](#11-constructive-evidence-qtt-physics-vm)
-    - 11.7 [Dual-Measurement Protocol Results](#117-dual-measurement-protocol-results)
-    - 11.8 [Pack VI High-Resolution Assessment](#118-pack-vi-high-resolution-assessment)
-    - 11.9 [Protocol Compliance Expansion](#119-protocol-compliance-expansion)
+11. [Validation Results](#11-validation-results)
+    - 11.1 [Dual-Measurement Protocol Results](#111-dual-measurement-protocol-results)
+    - 11.2 [Pack VI High-Resolution Assessment](#112-pack-vi-high-resolution-assessment)
+    - 11.3 [Protocol Compliance Expansion](#113-protocol-compliance-expansion)
 12. [References](#12-references)
 
 **Appendices**
@@ -879,7 +856,7 @@ producing 20 matched Path A / Path B comparisons. Results: **Path A ≥ Path B
 in 20/20 configurations** (3 agree, 17 A_HIGHER, 0 B_HIGHER). The VM never
 artificially deflates rank — the observed QTT rank during integration is an
 *upper bound* on intrinsic compressibility. Intrinsic rank (Path B) is
-$\chi \leq 8$ across all resolutions. See §11.7 for full results.
+$\chi \leq 8$ across all resolutions. See §11.1 for full results.
 
 A fixed-$T_{\text{final}}$ supplementary at $T = 0.5$ for Maxwell 1D
 (n_bits 6, 8, 10) confirmed the same pattern: Path B $\chi \leq 9$,
@@ -1359,133 +1336,17 @@ needed to assess whether this extension is justified.
 
 ---
 
-## 11. Constructive Evidence: QTT Physics VM
+## 11. Validation Results
 
-### 11.1 Motivation
+> **Constructive evidence.** The QTT Physics VM — a 22-opcode
+> register-machine runtime that executes arbitrary physics entirely in
+> QTT format — provides constructive validation of universality across
+> 7 domains (1D through 3D). For the full VM architecture, domain
+> compilers, 7-domain benchmark, and resolution-independence sweep, see
+> the companion paper: *QTT Physics VM* (Paper B,
+> `docs/research/paper_b_qtt_physics_vm.md`).
 
-The Rank Atlas Campaign (Sections 7–9) establishes the χ-regularity
-conjecture through *passive measurement*: we observe that existing solvers
-produce QTT-compressed states with bounded rank. This leaves open the
-question of whether a *single generic runtime* can execute different PDEs
-in compressed form — the constructive analogue of universality.
-
-The **QTT Physics VM** was built to answer this question. It is a
-register-machine virtual machine with 22 opcodes that operates entirely
-in QTT format. Domain-specific physics is expressed as a *compiler* that
-emits bytecode; the runtime engine is shared and domain-agnostic. If the
-conjecture holds universally, a single runtime with bounded-rank truncation
-should execute *any* physics domain without rank explosion.
-
-### 11.2 Architecture
-
-The VM consists of four layers:
-
-1. **IR layer** (`tensornet/vm/ir.py`, 324 lines): 22-opcode instruction
-   set — `LOAD_FIELD`, `STORE_FIELD`, `GRAD`, `LAPLACE`, `HADAMARD`,
-   `ADD`, `SUB`, `SCALE`, `NEGATE`, `TRUNCATE`, `BC_APPLY`,
-   `LAPLACE_SOLVE`, `INTEGRATE`, `DIV`, `ADVECT`, `MEASURE`,
-   `LOOP_START`, `LOOP_END`, and helpers. All operands are register
-   indices; register contents are QTT tensors.
-
-2. **Tensor wrapper** (`tensornet/vm/qtt_tensor.py`, 457 lines):
-   Dimension-aware QTT tensor supporting 1D, 2D, and 3D fields via
-   `bits_per_dim` tuples. Operations: `hadamard`, `truncate`,
-   `integrate_along`, `broadcast_to`, `inner`, `from_function`.
-
-3. **Operator library** (`tensornet/vm/operators.py`, 391 lines):
-   Analytic MPO construction via binary carry chain — bond dimension 2
-   for shift, 3 for gradient, 5 for Laplacian. Multi-dimensional
-   embedding via Kronecker extension. Poisson solver via QTT-format CG.
-
-4. **Runtime engine** (`tensornet/vm/runtime.py`, ~470 lines): Universal
-   executor that dispatches instructions, manages register file, applies
-   rank governor, collects per-step telemetry. No domain-specific logic.
-
-### 11.3 Domain Compilers
-
-Seven domain compilers emit bytecode for the same runtime:
-
-| # | Compiler | Equation | Dims | Integration | Conserved Quantity |
-|---|----------|----------|------|-------------|-------------------|
-| 1 | `BurgersCompiler` | $\partial_t u + u \partial_x u = \nu \partial_{xx} u$ | 1D | Explicit Euler | Total mass |
-| 2 | `MaxwellCompiler` | $\partial_t E = c \partial_x B$, $\partial_t B = c \partial_x E$ | 1D | Leap-frog | EM energy |
-| 3 | `SchrodingerCompiler` | $i\hbar \partial_t \psi = -\frac{\hbar^2}{2m}\partial_{xx}\psi + V\psi$ | 1D | Störmer-Verlet | Probability |
-| 4 | `DiffusionCompiler` | $\partial_t c + v \partial_x c = D \partial_{xx} c$ | 1D | Explicit Euler | Total mass |
-| 5 | `VlasovPoissonCompiler` | $\partial_t f + v \partial_x f + E \partial_v f = 0$ | 1D+1V | Strang split | Particle number |
-| 6 | `NavierStokes2DCompiler` | $\partial_t \omega + (\mathbf{u}\cdot\nabla)\omega = \nu\nabla^2\omega$ | 2D | Explicit Euler | Enstrophy |
-| 7 | `Maxwell3DCompiler` | $\partial_t \mathbf{E} = c\nabla\times\mathbf{B}$, $\partial_t \mathbf{B} = -c\nabla\times\mathbf{E}$ | 3D | Störmer-Verlet | EM energy |
-
-### 11.4 Seven-Domain Universal Benchmark
-
-All seven domains were compiled and executed on the *identical* runtime
-engine with a single rank governor ($\chi_{\max} = 64$, $\varepsilon = 10^{-10}$).
-
-| Domain | Dims | Grid | Steps | Instr. | $\chi_{\max}$ | $\Delta_{\text{inv}}$ | Class | Wall (s) | Compression |
-|--------|------|------|-------|--------|---------|------------|-------|----------|-------------|
-| Burgers 1D | 1D | 1024 | 100 | 18 | 22 | 2.68e-14 | A | 1.06 | 0.7× |
-| Maxwell 1D | 1D | 1024 | 100 | 11 | 30 | 1.64e-03 | B | 0.70 | 0.4× |
-| Schrödinger 1D | 1D | 1024 | 100 | 18 | 28 | 1.40e-13 | B | 1.05 | 7.3× |
-| Diffusion 1D | 1D | 1024 | 100 | 12 | 22 | 7.53e-15 | B | 0.28 | 0.6× |
-| Vlasov-Poisson | 1D+1V | 64×64 | 50 | 30 | 64 | 2.28e-14 | A | 7.31 | 78.8× |
-| Navier-Stokes 2D | 2D | 64×64 | 50 | 30 | 2 | 1.69e-31 | A | 0.27 | 60.2× |
-| Maxwell 3D | 3D | 16³ | 20 | 78 | 36 | 1.25e-03 | C | 1.01 | 1.7× |
-
-**Key observations:**
-
-1. **Zero code changes** between domains — the runtime is domain-agnostic.
-2. **Bounded rank** — $\chi_{\max} \leq 64$ across all domains with no
-   rank explosion, consistent with χ-regularity at $k = 1$.
-3. **Invariant conservation** — five of seven domains conserve their
-   physical invariant to machine precision ($< 10^{-13}$). The two
-   Maxwell domains have $\Delta \approx 10^{-3}$, attributable to
-   spatial discretization error (confirmed invariant under rank-budget
-   increase; decreasing with grid refinement).
-4. **1D to 3D** — the same 22-opcode instruction set handles scalar 1D,
-   vector 1D, phase-space 2D, vorticity 2D, and full 3D vector curl.
-
-### 11.5 Resolution-Independence Sweep
-
-To verify Conjecture B (polylogarithmic rank growth), the five 1D domains
-were swept across resolutions $n \in \{6, 8, 10, 12, 14\}$ bits
-($N = 64$ to $16{,}384$ grid points). Maximum bond dimension was recorded
-at each resolution.
-
-| Domain | 6b | 8b | 10b | 12b | 14b | Fit: $\chi \sim n^b$ |
-|--------|----|----|-----|-----|-----|---------------------|
-| Burgers | 8 | 12 | 22 | 32 | 64 | $b \approx 2.39$ |
-| Maxwell | 8 | 15 | 30 | 58 | 117 | $b \approx 3.14$ |
-| Schrödinger | 8 | 14 | 28 | 51 | 103 | $b \approx 2.99$ |
-| Diffusion | 8 | 13 | 22 | 38 | 75 | $b \approx 2.58$ |
-| Vlasov | 16 | 64 | — | — | — | (2 points) |
-
-$N = 2^n$ grows exponentially. $\chi \sim n^b = (\log_2 N)^b$ is
-**polylogarithmic in $N$** — exponentially better than dense storage.
-From $n = 6$ to $n = 14$, $N$ grows by a factor of $256$, while $\chi$
-grows by a factor of $8$–$15$. This is consistent with Conjecture B and
-significantly below linear scaling.
-
-### 11.6 Implications for Universality
-
-The VM results provide **constructive evidence** for $k = 1$ universality:
-not merely that QTT rank *happens to be bounded* across domains (the
-observational claim from the Rank Atlas), but that a *single fixed
-algorithm* can exploit this boundedness to execute arbitrary physics with
-shared opcodes and shared truncation policy.
-
-The fact that the same rank governor with the same parameters
-($\chi_{\max} = 64$, $\varepsilon = 10^{-10}$) suffices for all seven
-domains — spanning compressible flow, electromagnetism, quantum mechanics,
-kinetic theory, incompressible flow, and 3D vector fields — strengthens
-the case that χ-regularity is a structural property of physical law
-rather than an artifact of particular solver implementations.
-
-**Evidence artifacts:**
-- Benchmark data: `data/vm_7domain_benchmark.json`
-- Resolution sweep: `data/vm_resolution_sweep.json`
-- VM source: `tensornet/vm/` (IR, runtime, operators, compilers)
-- Sweep script: `scripts/research/vm_resolution_sweep.py`
-
-### 11.7 Dual-Measurement Protocol Results
+### 11.1 Dual-Measurement Protocol Results
 
 The dual-measurement protocol (§6.4) was implemented to address the
 strongest methodological criticism: *how much of the observed QTT
@@ -1570,7 +1431,7 @@ is *conservative* (reports higher rank than intrinsic). Status:
 - Dual-measurement data: `data/dual_measurement_protocol.json`
 - Script: `scripts/research/dual_measurement_protocol.py`
 
-### 11.8 Pack VI High-Resolution Assessment
+### 11.2 Pack VI High-Resolution Assessment
 
 Pack VI (Condensed Matter: band structure) was previously flagged as
 borderline with $q \approx 2.22$ at n_bits 6–9, exceeding the strict
@@ -1609,7 +1470,7 @@ than initially assessed. Rank is not merely polylogarithmic — it is
 **Evidence artifacts:**
 - High-resolution data: `data/rank_atlas_pack_vi_highres.json`
 
-### 11.9 Protocol Compliance Expansion
+### 11.3 Protocol Compliance Expansion
 
 The experimental protocol (§7.2) requires measurements at $n_{\text{bits}}
 \in \{6, 7, 8, 9, 10\}$. The original campaign covered only n_bits
@@ -1701,14 +1562,6 @@ Total measurement count across all campaigns: **751+**.
 | Deep sweep data (III/VI) | `rank_atlas_deep_III_VI.json` | 162 measurements, n_bits 4–9 |
 | Deep sweep report | `atlas_results_deep_III_VI/ATLAS_SUMMARY.md` | Polylog scaling analysis |
 | Evidence manifest | `docs/research/evidence_manifest.json` | Claim-to-artifact index with SHA-256 hashes |
-| QTT Physics VM IR | `tensornet/vm/ir.py` | 22-opcode instruction set |
-| QTT VM runtime | `tensornet/vm/runtime.py` | Universal execution engine |
-| QTT VM operators | `tensornet/vm/operators.py` | Analytic MPO construction (carry chain) |
-| QTT VM tensor wrapper | `tensornet/vm/qtt_tensor.py` | Dimension-aware QTT tensor (1D/2D/3D) |
-| VM compilers (7) | `tensornet/vm/compilers/` | Burgers, Maxwell, Schrödinger, Diffusion, Vlasov, NS-2D, Maxwell-3D |
-| VM 7-domain benchmark | `data/vm_7domain_benchmark.json` | 7/7 pass, bounded rank |
-| VM resolution sweep | `data/vm_resolution_sweep.json` | χ ~ (log₂N)^b polylogarithmic scaling |
-| Resolution sweep script | `scripts/research/vm_resolution_sweep.py` | Automated sweep across 5 domains × 5 resolutions |
 | Dual-measurement protocol | `scripts/research/dual_measurement_protocol.py` | Path A (VM) vs Path B (dense→QTT) validation |
 | Dual-measurement data | `data/dual_measurement_protocol.json` | 20 matched configs + 3 fixed-T supp: 0 B_HIGHER |
 | Pack VI high-res data | `data/rank_atlas_pack_vi_highres.json` | n_bits 8–12, 3 trials: rank saturates at χ=25 |
@@ -1761,12 +1614,6 @@ Total measurement count across all campaigns: **751+**.
   - Fixed-T supplementary: 3/3 A_HIGHER at T=0.5 (Maxwell 1D)
 - [x] Re-measure Pack VI at n_bits ∈ {10, 11, 12} to determine exponent stability (2026-02-25)
   - Rank saturates at χ=25 for n_bits ≥ 11 — C-005 upgraded from Borderline to Supported
-- [x] Build QTT Physics VM: 22-opcode register machine, domain-agnostic runtime (2026-02-25)
-- [x] Implement 7 domain compilers: Burgers, Maxwell, Schrödinger, Diffusion, Vlasov, NS-2D, Maxwell-3D (2026-02-25)
-- [x] Run 7-domain universal benchmark: 7/7 pass, bounded rank, same runtime (2026-02-25)
-- [x] Resolution-independence sweep: χ ~ (log₂N)^b polylogarithmic for 5 domains (2026-02-25)
-- [ ] Extend VM compilers to GPU backend for high-resolution runs
-- [ ] Add more 2D/3D domains (elasticity, MHD, Boltzmann)
 
 ---
 
@@ -1788,17 +1635,14 @@ and inspectable data.
 | C-007 | Grid independence (pack-level) | Partially supported | 16/20 strict, ≥18/20 lenient | `atlas_results_20pack/ATLAS_SUMMARY.md` | Depends on counting rule for packs with mixed pass/fail configs |
 | C-008 | Solver-state compressibility ≈ intrinsic compressibility | Supported (upper-bound) | Path A ≥ Path B in 20/20 configs; 0 B_HIGHER violations | `data/dual_measurement_protocol.json` | VM is conservative (adds integration overhead); intrinsic χ_B ≤ 8 |
 | C-009 | Campaign infrastructure fully operational | Demonstrated | 751+ total measurements, 0 failures, structured outputs | `rank_atlas_20pack.json`, `rank_atlas_deep_III_VI.json`, `data/rank_atlas_*` | Single-GPU, single-operator execution |
-| C-010 | Single runtime executes 7 physics domains (1D–3D) | Demonstrated | 7/7 pass, same runtime, same governor | `data/vm_7domain_benchmark.json` | Max grid 16³ for 3D; CPU-only execution |
-| C-011 | Bounded rank across all 7 VM domains | Supported | χ_max ≤ 64 at governor limit | `data/vm_7domain_benchmark.json` | 3D Maxwell hits governor cap at higher resolution (5b) |
-| C-012 | Invariant conservation ≤ machine precision (5/7 domains) | Demonstrated | Δ < 1e-13 for Burgers, Schrödinger, Diffusion, Vlasov, NS-2D | `data/vm_7domain_benchmark.json` | Maxwell 1D/3D have discretization-limited Δ ≈ 1e-3 |
-| C-013 | Resolution-independent rank scaling (polylogarithmic) | Supported | χ ~ (log₂N)^b, b ∈ [2.4, 3.1] for 4 domains | `data/vm_resolution_sweep.json` | Vlasov limited to 2 resolution points; exponents > 2 for some domains |
-| C-014 | Domain-agnostic truncation policy works for all physics | Supported | Single policy (χ_max=64, ε=1e-10) across 7 domains | `data/vm_7domain_benchmark.json` | No per-domain tuning required |
 | C-015 | Dual-measurement: VM never deflates rank (Path A ≥ Path B) | Demonstrated | 20/20 A_HIGHER or AGREE, 0/20 B_HIGHER | `data/dual_measurement_protocol.json` | Fixed-T supplementary (3 configs) confirms same pattern |
 | C-016 | Pack VI rank saturates (χ ≤ 25 for n_bits ≥ 11) | Supported | χ_max = 25 at n_bits 11 and 12 (identical) | `data/rank_atlas_pack_vi_highres.json` | Only Band_structure problem (PHY-VI.1) measured; other VI taxonomy nodes untested |
 | C-017 | Protocol compliance: 20/20 packs at n_bits 6–10 | Demonstrated | 751+ measurements, 0 failures | `data/rank_atlas_v04_nbits10.json`, `data/rank_atlas_v02_nbits10.json` | V0.2 packs have 1 complexity value (fixed), not 10 |
 
 ---
 
-*Document generated from HyperTensor-VM repository evidence.*
+*Paper A — Scientific Conjecture and Evidence.*
+*Derived from χ-Regularity Hypothesis v2.5.0. Split into Paper A (this document) and Paper B (QTT Physics VM) on 2026-02-24.*
 *Last verified: 2026-02-25 (v2.5.0 — dual-measurement validated, Pack VI resolved, protocol compliant).*
 *Evidence manifest: `docs/research/evidence_manifest.json`*
+*Companion: `docs/research/paper_b_qtt_physics_vm.md`*

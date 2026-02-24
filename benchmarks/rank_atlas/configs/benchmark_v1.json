@@ -1,0 +1,203 @@
+{
+  "_meta": {
+    "benchmark": "Rank Atlas v1.0",
+    "description": "Deterministic configurations for all 20 physics domain packs.",
+    "seeds": [42, 137, 2026],
+    "svd_tolerance": 1e-6,
+    "max_rank_ceiling": 2048,
+    "n_bits_sweep": [6, 7, 8, 9, 10],
+    "n_complexity_values": 10
+  },
+  "packs": {
+    "I": {
+      "taxonomy_id": "PHY-I.1",
+      "domain_name": "Classical Mechanics",
+      "problem_name": "NBodyGravity",
+      "version": "V0.2",
+      "complexity_param_name": "fixed",
+      "complexity_values": [1.0]
+    },
+    "II": {
+      "taxonomy_id": "PHY-II.1",
+      "domain_name": "Fluid Dynamics",
+      "problem_name": "ViscousBurgers1D",
+      "version": "V0.4",
+      "complexity_param_name": "nu",
+      "sweep_lo": 0.001,
+      "sweep_hi": 0.1,
+      "complexity_values": [
+        0.001, 0.002154, 0.004642, 0.01, 0.02154, 0.04642, 0.1,
+        0.003162, 0.006813, 0.01468
+      ]
+    },
+    "III": {
+      "taxonomy_id": "PHY-III.3",
+      "domain_name": "Electromagnetism",
+      "problem_name": "FDTDMaxwell1D",
+      "version": "V0.4",
+      "complexity_param_name": "sigma_pulse",
+      "sweep_lo": 0.05,
+      "sweep_hi": 2.0,
+      "complexity_values": [
+        0.05, 0.08254, 0.1362, 0.2249, 0.3714, 0.6131, 1.0122,
+        1.6709, 2.0, 0.1
+      ]
+    },
+    "IV": {
+      "taxonomy_id": "PHY-IV.1",
+      "domain_name": "Solid Mechanics",
+      "problem_name": "RayTracing",
+      "version": "V0.2",
+      "complexity_param_name": "fixed",
+      "complexity_values": [1.0]
+    },
+    "V": {
+      "taxonomy_id": "PHY-V.5",
+      "domain_name": "Thermodynamics",
+      "problem_name": "AdvectionDiffusion1D",
+      "version": "V0.4",
+      "complexity_param_name": "alpha",
+      "sweep_lo": 0.0001,
+      "sweep_hi": 1.0,
+      "complexity_values": [
+        0.0001, 0.0004642, 0.002154, 0.01, 0.04642, 0.2154, 1.0,
+        0.001, 0.1, 0.5
+      ]
+    },
+    "VI": {
+      "taxonomy_id": "PHY-VI.1",
+      "domain_name": "Statistical Mechanics",
+      "problem_name": "BandStructure",
+      "version": "V0.2",
+      "complexity_param_name": "fixed",
+      "complexity_values": [1.0]
+    },
+    "VII": {
+      "taxonomy_id": "PHY-VII.2",
+      "domain_name": "Quantum Many-Body",
+      "problem_name": "HeisenbergChain",
+      "version": "V0.4",
+      "complexity_param_name": "J",
+      "sweep_lo": 0.1,
+      "sweep_hi": 10.0,
+      "complexity_values": [
+        0.1, 0.2154, 0.4642, 1.0, 2.154, 4.642, 10.0,
+        0.3162, 0.6813, 1.468
+      ]
+    },
+    "VIII": {
+      "taxonomy_id": "PHY-VIII.1",
+      "domain_name": "Electronic Structure",
+      "problem_name": "KohnShamDFT",
+      "version": "V0.4",
+      "complexity_param_name": "Z",
+      "sweep_lo": 1.0,
+      "sweep_hi": 10.0,
+      "complexity_values": [
+        1.0, 1.334, 1.778, 2.371, 3.162, 4.217, 5.623,
+        7.499, 10.0, 2.0
+      ]
+    },
+    "IX": {
+      "taxonomy_id": "PHY-IX.1",
+      "domain_name": "Nuclear Physics",
+      "problem_name": "ShellModel",
+      "version": "V0.2",
+      "complexity_param_name": "fixed",
+      "complexity_values": [1.0]
+    },
+    "X": {
+      "taxonomy_id": "PHY-X.4",
+      "domain_name": "Chemical Physics",
+      "problem_name": "LatticeQCD",
+      "version": "V0.2",
+      "complexity_param_name": "fixed",
+      "complexity_values": [1.0]
+    },
+    "XI": {
+      "taxonomy_id": "PHY-XI.1",
+      "domain_name": "Plasma Physics",
+      "problem_name": "VlasovPoisson",
+      "version": "V0.4",
+      "complexity_param_name": "epsilon",
+      "sweep_lo": 0.001,
+      "sweep_hi": 0.5,
+      "complexity_values": [
+        0.001, 0.002585, 0.006687, 0.01729, 0.04472, 0.1157, 0.2991,
+        0.5, 0.01, 0.1
+      ]
+    },
+    "XII": {
+      "taxonomy_id": "PHY-XII.1",
+      "domain_name": "Optics",
+      "problem_name": "StellarStructure",
+      "version": "V0.2",
+      "complexity_param_name": "fixed",
+      "complexity_values": [1.0]
+    },
+    "XIII": {
+      "taxonomy_id": "PHY-XIII.1",
+      "domain_name": "Geophysics",
+      "problem_name": "SeismicWave",
+      "version": "V0.2",
+      "complexity_param_name": "fixed",
+      "complexity_values": [1.0]
+    },
+    "XIV": {
+      "taxonomy_id": "PHY-XIV.1",
+      "domain_name": "Biophysics",
+      "problem_name": "MolecularDynamics",
+      "version": "V0.2",
+      "complexity_param_name": "fixed",
+      "complexity_values": [1.0]
+    },
+    "XV": {
+      "taxonomy_id": "PHY-XV.1",
+      "domain_name": "Astrophysics",
+      "problem_name": "ReactionKinetics",
+      "version": "V0.2",
+      "complexity_param_name": "fixed",
+      "complexity_values": [1.0]
+    },
+    "XVI": {
+      "taxonomy_id": "PHY-XVI.1",
+      "domain_name": "Materials Science",
+      "problem_name": "CrystalGrowth",
+      "version": "V0.2",
+      "complexity_param_name": "fixed",
+      "complexity_values": [1.0]
+    },
+    "XVII": {
+      "taxonomy_id": "PHY-XVII.1",
+      "domain_name": "Combustion",
+      "problem_name": "LinearAcoustics",
+      "version": "V0.2",
+      "complexity_param_name": "fixed",
+      "complexity_values": [1.0]
+    },
+    "XVIII": {
+      "taxonomy_id": "PHY-XVIII.1",
+      "domain_name": "Climate/Atmosphere",
+      "problem_name": "WeatherPrediction",
+      "version": "V0.2",
+      "complexity_param_name": "fixed",
+      "complexity_values": [1.0]
+    },
+    "XIX": {
+      "taxonomy_id": "PHY-XIX.6",
+      "domain_name": "MHD",
+      "problem_name": "QuantumSensing",
+      "version": "V0.2",
+      "complexity_param_name": "fixed",
+      "complexity_values": [1.0]
+    },
+    "XX": {
+      "taxonomy_id": "PHY-XX.1",
+      "domain_name": "Multiphase Flow",
+      "problem_name": "Solitons",
+      "version": "V0.2",
+      "complexity_param_name": "fixed",
+      "complexity_values": [1.0]
+    }
+  }
+}
