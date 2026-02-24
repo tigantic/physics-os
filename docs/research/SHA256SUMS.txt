@@ -1,0 +1,20 @@
+# SHA-256 checksums for χ-Regularity Conjecture evidence bundle v2.3.1
+# Verify: sha256sum -c docs/research/SHA256SUMS.txt  (from repo root)
+#
+# Artifact hashes are pinned at the time of release.
+# docs/research/chi_regularity_hypothesis.md and docs/research/evidence_manifest.json
+# are marked SELF — their hashes change on every edit and must be re-computed
+# after any modification. All other hashes are immutable campaign outputs.
+
+dc7d9636c4fb47b4c4da1941457b2b40683583c0c3399168c9d4e221a8dc5337  rank_atlas_20pack.json
+5f4c02fc0f4f6cedeecfa4846d7837a8bcfe8d670bae55cf0f69fae3f2c26204  rank_atlas_20pack.parquet
+3b12d702307fb717ad8add7d7ba285f01f993f24b74105768f6e1ed79371db24  atlas_results_20pack/ATLAS_SUMMARY.md
+568c73c208937cab82f46057897316cf421cd41b06c7cfe6c3336644c52ddbb8  atlas_results_20pack/scaling_classes.png
+6749c9725ee100e8d0866a42641101e9bb1363c6de5a5e088fcf6d07df92174e  atlas_results_20pack/alpha_exponents.png
+74808b6a47bff1c54b2f17ca54e0deb4d278705d6f54e389c0d3741831a0e035  rank_atlas_deep_III_VI.json
+f02b6b563ede6160fd32e974e9b220421bdf6ec37ad579b99755c3072223c746  rank_atlas_deep_III_VI.parquet
+8cd983011df40a33fe5c7c7c93049135bb685a3e14f185a781cc741f019adb5c  atlas_results_deep_III_VI/ATLAS_SUMMARY.md
+b5fbcc42ca2411c03032da704c32e7fd519a0d5b8403a356b655b0a77245b3e2  scripts/research/rank_atlas_campaign.py
+# SELF: re-compute after any edit
+# docs/research/chi_regularity_hypothesis.md
+# docs/research/evidence_manifest.json

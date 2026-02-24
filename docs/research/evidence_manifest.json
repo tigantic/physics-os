@@ -1,0 +1,187 @@
+{
+  "bundle_version": "atlas-20pack-v2.3.1",
+  "generated": "2026-02-24T00:00:00Z",
+  "document": "docs/research/chi_regularity_hypothesis.md",
+  "integrity": {
+    "checksums_file": "docs/research/SHA256SUMS.txt",
+    "note": "Run 'sha256sum -c docs/research/SHA256SUMS.txt' from repo root to verify all artifacts"
+  },
+  "status_vocabulary": {
+    "supported": "Claim is backed by data meeting the stated acceptance criterion",
+    "supported_with_caveat": "Claim is backed by data, but one or more sub-metrics are weak or ambiguous (see caveat field)",
+    "partially_supported": "Claim is met under some counting rules but not others; rule sensitivity is documented",
+    "borderline": "Observed metric is near but outside the stated acceptance threshold; non-divergent behavior observed",
+    "demonstrated": "Platform or infrastructure capability verified by successful execution (not a scientific claim)",
+    "assumed_not_verified": "Claim is assumed based on architectural reasoning but lacks direct measurement; verification protocol specified"
+  },
+  "repo": {
+    "name": "HyperTensor-VM",
+    "branch": "main",
+    "commit": "799102423d88619a0c649cf4ab5c9a34b204269c",
+    "commit_short": "79910242"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "torch": "2.9.1+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+    "gpu_vram_gb": 7.96,
+    "compute_capability": "12.0"
+  },
+  "claims": [
+    {
+      "id": "C-001",
+      "statement": "20/20 packs measured, 352 measurements, 0 failures",
+      "status": "supported",
+      "evidence": [
+        {"path": "rank_atlas_20pack.json", "type": "raw_data"},
+        {"path": "atlas_results_20pack/ATLAS_SUMMARY.md", "type": "report"}
+      ]
+    },
+    {
+      "id": "C-002",
+      "statement": "All V0.4 packs Class A (|α| < 0.1)",
+      "status": "supported_with_caveat",
+      "caveat": "Pack III α-fit non-diagnostic (R² = 0.062); classified by bounded χ behavior",
+      "evidence": [
+        {"path": "rank_atlas_20pack.json", "type": "raw_data"},
+        {"path": "atlas_results_20pack/alpha_exponents.png", "type": "visualization"}
+      ]
+    },
+    {
+      "id": "C-003",
+      "statement": "Universality k = 1 (gap statistic selects single cluster)",
+      "status": "supported",
+      "caveat": "Small sample size (20 domains, 6 with complexity sweeps)",
+      "evidence": [
+        {"path": "atlas_results_20pack/ATLAS_SUMMARY.md", "type": "report"}
+      ]
+    },
+    {
+      "id": "C-004",
+      "statement": "Conjecture B behavior in Pack III extreme pulse widths (q ≈ 1.7)",
+      "status": "supported",
+      "evidence": [
+        {"path": "rank_atlas_deep_III_VI.json", "type": "raw_data"},
+        {"path": "atlas_results_deep_III_VI/ATLAS_SUMMARY.md", "type": "report"}
+      ]
+    },
+    {
+      "id": "C-005",
+      "statement": "Pack VI rank growth remains polylogarithmic (q ≈ 2.22)",
+      "status": "borderline",
+      "caveat": "Exceeds strict q ≤ 2 threshold; predicted rank still < 25 at n_bits = 14",
+      "evidence": [
+        {"path": "rank_atlas_deep_III_VI.json", "type": "raw_data"},
+        {"path": "atlas_results_deep_III_VI/ATLAS_SUMMARY.md", "type": "report"}
+      ]
+    },
+    {
+      "id": "C-006",
+      "statement": "Grid independence at configuration level: 36/44 pass (81.8%)",
+      "status": "supported",
+      "evidence": [
+        {"path": "atlas_results_20pack/ATLAS_SUMMARY.md", "type": "report"}
+      ]
+    },
+    {
+      "id": "C-007",
+      "statement": "Grid independence at pack level: 16/20 strict, ≥18/20 lenient",
+      "status": "partially_supported",
+      "caveat": "Depends on counting rule for packs with mixed pass/fail configs",
+      "counting_rule": "Pack passes lenient if majority of its (pack, ξ) configurations pass |b|/a < 0.05 and no configuration exhibits monotonic rank divergence across all tested n_bits values",
+      "evidence": [
+        {"path": "atlas_results_20pack/ATLAS_SUMMARY.md", "type": "report"}
+      ]
+    },
+    {
+      "id": "C-008",
+      "statement": "Solver-state compressibility ≈ intrinsic field compressibility",
+      "status": "assumed_not_verified",
+      "caveat": "Dual-measurement protocol (§6.4) not yet implemented",
+      "evidence": []
+    },
+    {
+      "id": "C-009",
+      "statement": "Campaign infrastructure fully operational: 514 measurements, 0 failures, structured outputs",
+      "status": "demonstrated",
+      "evidence": [
+        {"path": "rank_atlas_20pack.json", "type": "raw_data"},
+        {"path": "rank_atlas_deep_III_VI.json", "type": "raw_data"},
+        {"path": "scripts/research/rank_atlas_campaign.py", "type": "code"}
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "rank_atlas_20pack.json",
+      "description": "20-pack campaign raw measurements (352 entries)",
+      "sha256": "dc7d9636c4fb47b4c4da1941457b2b40683583c0c3399168c9d4e221a8dc5337",
+      "mime": "application/json"
+    },
+    {
+      "path": "rank_atlas_20pack.parquet",
+      "description": "20-pack campaign compressed format",
+      "sha256": "5f4c02fc0f4f6cedeecfa4846d7837a8bcfe8d670bae55cf0f69fae3f2c26204",
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "atlas_results_20pack/ATLAS_SUMMARY.md",
+      "description": "20-pack campaign summary report",
+      "sha256": "3b12d702307fb717ad8add7d7ba285f01f993f24b74105768f6e1ed79371db24",
+      "mime": "text/markdown"
+    },
+    {
+      "path": "atlas_results_20pack/scaling_classes.png",
+      "description": "Scaling class visualization",
+      "sha256": "568c73c208937cab82f46057897316cf421cd41b06c7cfe6c3336644c52ddbb8",
+      "mime": "image/png"
+    },
+    {
+      "path": "atlas_results_20pack/alpha_exponents.png",
+      "description": "Per-pack α-exponent comparison plot",
+      "sha256": "6749c9725ee100e8d0866a42641101e9bb1363c6de5a5e088fcf6d07df92174e",
+      "mime": "image/png"
+    },
+    {
+      "path": "rank_atlas_deep_III_VI.json",
+      "description": "Deep sweep on Packs III and VI (162 entries, n_bits 4–9)",
+      "sha256": "74808b6a47bff1c54b2f17ca54e0deb4d278705d6f54e389c0d3741831a0e035",
+      "mime": "application/json"
+    },
+    {
+      "path": "rank_atlas_deep_III_VI.parquet",
+      "description": "Deep sweep compressed format",
+      "sha256": "f02b6b563ede6160fd32e974e9b220421bdf6ec37ad579b99755c3072223c746",
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "atlas_results_deep_III_VI/ATLAS_SUMMARY.md",
+      "description": "Deep sweep summary report",
+      "sha256": "8cd983011df40a33fe5c7c7c93049135bb685a3e14f185a781cc741f019adb5c",
+      "mime": "text/markdown"
+    },
+    {
+      "path": "scripts/research/rank_atlas_campaign.py",
+      "description": "Campaign measurement + analysis pipeline",
+      "sha256": "b5fbcc42ca2411c03032da704c32e7fd519a0d5b8403a356b655b0a77245b3e2",
+      "mime": "text/x-python"
+    },
+    {
+      "path": "docs/research/chi_regularity_hypothesis.md",
+      "description": "\u03c7-Regularity Conjecture document (this file)",
+      "sha256": "cd759a68a15e51e84ad98be337bb5eb0da1718cda68cd74c39ad0310879c4239",
+      "mime": "text/markdown"
+    }
+  ],
+  "entry_points": [
+    {
+      "description": "Full 20-pack campaign",
+      "command": "PYTHONPATH=\"$PWD:$PYTHONPATH\" python3 scripts/research/rank_atlas_campaign.py --packs ALL --n-bits 4 5 6 7 --n-complexity 5 --n-trials 2 --output rank_atlas_20pack.json --output-dir atlas_results_20pack"
+    },
+    {
+      "description": "Deep sweep on Packs III and VI",
+      "command": "PYTHONPATH=\"$PWD:$PYTHONPATH\" python3 scripts/research/rank_atlas_campaign.py --packs III VI --n-bits 4 5 6 7 8 9 --n-complexity 8 --n-trials 3 --output rank_atlas_deep_III_VI.json --output-dir atlas_results_deep_III_VI"
+    }
+  ]
+}
