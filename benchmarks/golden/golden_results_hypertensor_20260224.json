@@ -1,0 +1,880 @@
+{
+  "_meta": {
+    "benchmark": "Golden Physics Benchmark v1.0",
+    "runner_version": "1.0.0",
+    "config": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/benchmarks/golden/configs/benchmark_v1.json",
+    "domains": [
+      "burgers",
+      "maxwell",
+      "maxwell_3d",
+      "schrodinger",
+      "advection_diffusion",
+      "vlasov_poisson",
+      "navier_stokes_2d"
+    ],
+    "n_trials": 3,
+    "total_measurements": 21,
+    "total_time_s": 19.27,
+    "timestamp": "2026-02-24T21:37:34.083941+00:00"
+  },
+  "measurements": [
+    {
+      "domain": "burgers",
+      "trial": 1,
+      "seed": 42,
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "total_mass",
+      "conservation_band_max": 100.0,
+      "wall_time_band_max": 5.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:14.955848+00:00",
+      "conservation_initial": -0.0,
+      "conservation_final": -0.0,
+      "conservation_relative_error": 40.7,
+      "conservation_status": "drift",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 0.407,
+      "n_dims": 1,
+      "grid_points": 256,
+      "wall_time_s": 4.681772,
+      "throughput_gp_per_s": 144191.0,
+      "grid_resolution": [
+        256
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-burgers-t1-s42",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "burgers",
+      "trial": 2,
+      "seed": 137,
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "total_mass",
+      "conservation_band_max": 100.0,
+      "wall_time_band_max": 5.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:19.701611+00:00",
+      "conservation_initial": -0.0,
+      "conservation_final": -0.0,
+      "conservation_relative_error": 40.7,
+      "conservation_status": "drift",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 0.407,
+      "n_dims": 1,
+      "grid_points": 256,
+      "wall_time_s": 0.171471,
+      "throughput_gp_per_s": 149746.5,
+      "grid_resolution": [
+        256
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-burgers-t2-s137",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "burgers",
+      "trial": 3,
+      "seed": 2026,
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "total_mass",
+      "conservation_band_max": 100.0,
+      "wall_time_band_max": 5.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:19.873572+00:00",
+      "conservation_initial": -0.0,
+      "conservation_final": -0.0,
+      "conservation_relative_error": 40.7,
+      "conservation_status": "drift",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 0.407,
+      "n_dims": 1,
+      "grid_points": 256,
+      "wall_time_s": 0.174794,
+      "throughput_gp_per_s": 146852.2,
+      "grid_resolution": [
+        256
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-burgers-t3-s2026",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "maxwell",
+      "trial": 1,
+      "seed": 42,
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "em_energy",
+      "conservation_band_max": 0.01,
+      "wall_time_band_max": 5.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:20.048881+00:00",
+      "conservation_initial": 0.04433292,
+      "conservation_final": 0.04431686,
+      "conservation_relative_error": 0.000362,
+      "conservation_status": "drift",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 3.62e-06,
+      "n_dims": 1,
+      "grid_points": 256,
+      "wall_time_s": 0.188826,
+      "throughput_gp_per_s": 136302.5,
+      "grid_resolution": [
+        256
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-maxwell-t1-s42",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "maxwell",
+      "trial": 2,
+      "seed": 137,
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "em_energy",
+      "conservation_band_max": 0.01,
+      "wall_time_band_max": 5.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:20.238250+00:00",
+      "conservation_initial": 0.04433292,
+      "conservation_final": 0.04431686,
+      "conservation_relative_error": 0.000362,
+      "conservation_status": "drift",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 3.62e-06,
+      "n_dims": 1,
+      "grid_points": 256,
+      "wall_time_s": 0.193668,
+      "throughput_gp_per_s": 132541.8,
+      "grid_resolution": [
+        256
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-maxwell-t2-s137",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "maxwell",
+      "trial": 3,
+      "seed": 2026,
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "em_energy",
+      "conservation_band_max": 0.01,
+      "wall_time_band_max": 5.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:20.432428+00:00",
+      "conservation_initial": 0.04433292,
+      "conservation_final": 0.04431686,
+      "conservation_relative_error": 0.000362,
+      "conservation_status": "drift",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 3.62e-06,
+      "n_dims": 1,
+      "grid_points": 256,
+      "wall_time_s": 0.191952,
+      "throughput_gp_per_s": 133748.7,
+      "grid_resolution": [
+        256
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-maxwell-t3-s2026",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "maxwell_3d",
+      "trial": 1,
+      "seed": 42,
+      "n_bits": 4,
+      "n_steps": 20,
+      "max_rank": 32,
+      "conservation_quantity": "em_energy",
+      "conservation_band_max": 0.01,
+      "wall_time_band_max": 15.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:20.624941+00:00",
+      "conservation_initial": 0.00142563,
+      "conservation_final": 0.00142742,
+      "conservation_relative_error": 0.00125,
+      "conservation_status": "drift",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 6.25e-05,
+      "n_dims": 3,
+      "grid_points": 4096,
+      "wall_time_s": 1.098376,
+      "throughput_gp_per_s": 82370.1,
+      "grid_resolution": [
+        16,
+        16,
+        16
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-maxwell_3d-t1-s42",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "maxwell_3d",
+      "trial": 2,
+      "seed": 137,
+      "n_bits": 4,
+      "n_steps": 20,
+      "max_rank": 32,
+      "conservation_quantity": "em_energy",
+      "conservation_band_max": 0.01,
+      "wall_time_band_max": 15.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:21.723808+00:00",
+      "conservation_initial": 0.00142563,
+      "conservation_final": 0.00142742,
+      "conservation_relative_error": 0.00125,
+      "conservation_status": "drift",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 6.25e-05,
+      "n_dims": 3,
+      "grid_points": 4096,
+      "wall_time_s": 0.977872,
+      "throughput_gp_per_s": 85104.1,
+      "grid_resolution": [
+        16,
+        16,
+        16
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-maxwell_3d-t2-s137",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "maxwell_3d",
+      "trial": 3,
+      "seed": 2026,
+      "n_bits": 4,
+      "n_steps": 20,
+      "max_rank": 32,
+      "conservation_quantity": "em_energy",
+      "conservation_band_max": 0.01,
+      "wall_time_band_max": 15.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:22.702259+00:00",
+      "conservation_initial": 0.00142563,
+      "conservation_final": 0.00142742,
+      "conservation_relative_error": 0.00125,
+      "conservation_status": "drift",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 6.25e-05,
+      "n_dims": 3,
+      "grid_points": 4096,
+      "wall_time_s": 0.997296,
+      "throughput_gp_per_s": 83999.9,
+      "grid_resolution": [
+        16,
+        16,
+        16
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-maxwell_3d-t3-s2026",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "schrodinger",
+      "trial": 1,
+      "seed": 42,
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "probability",
+      "conservation_band_max": 1e-06,
+      "wall_time_band_max": 10.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:23.700047+00:00",
+      "conservation_initial": 0.08862269,
+      "conservation_final": 0.08862269,
+      "conservation_relative_error": 4.59e-10,
+      "conservation_status": "conserved",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 5e-12,
+      "n_dims": 1,
+      "grid_points": 256,
+      "wall_time_s": 0.383674,
+      "throughput_gp_per_s": 66858.8,
+      "grid_resolution": [
+        256
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-schrodinger-t1-s42",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "schrodinger",
+      "trial": 2,
+      "seed": 137,
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "probability",
+      "conservation_band_max": 1e-06,
+      "wall_time_band_max": 10.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:24.084266+00:00",
+      "conservation_initial": 0.08862269,
+      "conservation_final": 0.08862269,
+      "conservation_relative_error": 4.59e-10,
+      "conservation_status": "conserved",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 5e-12,
+      "n_dims": 1,
+      "grid_points": 256,
+      "wall_time_s": 0.384472,
+      "throughput_gp_per_s": 66724.3,
+      "grid_resolution": [
+        256
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-schrodinger-t2-s137",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "schrodinger",
+      "trial": 3,
+      "seed": 2026,
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "probability",
+      "conservation_band_max": 1e-06,
+      "wall_time_band_max": 10.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:24.469249+00:00",
+      "conservation_initial": 0.08862269,
+      "conservation_final": 0.08862269,
+      "conservation_relative_error": 4.59e-10,
+      "conservation_status": "conserved",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 5e-12,
+      "n_dims": 1,
+      "grid_points": 256,
+      "wall_time_s": 0.376267,
+      "throughput_gp_per_s": 68166.8,
+      "grid_resolution": [
+        256
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-schrodinger-t3-s2026",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "advection_diffusion",
+      "trial": 1,
+      "seed": 42,
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "total_mass",
+      "conservation_band_max": 1e-06,
+      "wall_time_band_max": 5.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:24.846035+00:00",
+      "conservation_initial": 0.12533141,
+      "conservation_final": 0.12533141,
+      "conservation_relative_error": 5e-13,
+      "conservation_status": "conserved",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 0.0,
+      "n_dims": 1,
+      "grid_points": 256,
+      "wall_time_s": 0.135986,
+      "throughput_gp_per_s": 188819.0,
+      "grid_resolution": [
+        256
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-advection_diffusion-t1-s42",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "advection_diffusion",
+      "trial": 2,
+      "seed": 137,
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "total_mass",
+      "conservation_band_max": 1e-06,
+      "wall_time_band_max": 5.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:24.982530+00:00",
+      "conservation_initial": 0.12533141,
+      "conservation_final": 0.12533141,
+      "conservation_relative_error": 5e-13,
+      "conservation_status": "conserved",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 0.0,
+      "n_dims": 1,
+      "grid_points": 256,
+      "wall_time_s": 0.131908,
+      "throughput_gp_per_s": 194707.6,
+      "grid_resolution": [
+        256
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-advection_diffusion-t2-s137",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "advection_diffusion",
+      "trial": 3,
+      "seed": 2026,
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "total_mass",
+      "conservation_band_max": 1e-06,
+      "wall_time_band_max": 5.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:25.114984+00:00",
+      "conservation_initial": 0.12533141,
+      "conservation_final": 0.12533141,
+      "conservation_relative_error": 5e-13,
+      "conservation_status": "conserved",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 0.0,
+      "n_dims": 1,
+      "grid_points": 256,
+      "wall_time_s": 0.132592,
+      "throughput_gp_per_s": 193768.2,
+      "grid_resolution": [
+        256
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-advection_diffusion-t3-s2026",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "vlasov_poisson",
+      "trial": 1,
+      "seed": 42,
+      "n_bits": 6,
+      "n_steps": 20,
+      "max_rank": 32,
+      "conservation_quantity": "particle_number",
+      "conservation_band_max": 1e-06,
+      "wall_time_band_max": 30.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:25.248089+00:00",
+      "conservation_initial": 6.28318529,
+      "conservation_final": 6.28318529,
+      "conservation_relative_error": 1.23e-14,
+      "conservation_status": "conserved",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 0.0,
+      "n_dims": 2,
+      "grid_points": 4096,
+      "wall_time_s": 2.641025,
+      "throughput_gp_per_s": 31165.0,
+      "grid_resolution": [
+        64,
+        64
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          6.283185307179586
+        ],
+        [
+          -6.0,
+          6.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-vlasov_poisson-t1-s42",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "vlasov_poisson",
+      "trial": 2,
+      "seed": 137,
+      "n_bits": 6,
+      "n_steps": 20,
+      "max_rank": 32,
+      "conservation_quantity": "particle_number",
+      "conservation_band_max": 1e-06,
+      "wall_time_band_max": 30.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:27.889947+00:00",
+      "conservation_initial": 6.28318529,
+      "conservation_final": 6.28318529,
+      "conservation_relative_error": 1.23e-14,
+      "conservation_status": "conserved",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 0.0,
+      "n_dims": 2,
+      "grid_points": 4096,
+      "wall_time_s": 2.778927,
+      "throughput_gp_per_s": 29752.5,
+      "grid_resolution": [
+        64,
+        64
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          6.283185307179586
+        ],
+        [
+          -6.0,
+          6.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-vlasov_poisson-t2-s137",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "vlasov_poisson",
+      "trial": 3,
+      "seed": 2026,
+      "n_bits": 6,
+      "n_steps": 20,
+      "max_rank": 32,
+      "conservation_quantity": "particle_number",
+      "conservation_band_max": 1e-06,
+      "wall_time_band_max": 30.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:30.669573+00:00",
+      "conservation_initial": 6.28318529,
+      "conservation_final": 6.28318529,
+      "conservation_relative_error": 1.23e-14,
+      "conservation_status": "conserved",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 0.0,
+      "n_dims": 2,
+      "grid_points": 4096,
+      "wall_time_s": 2.849857,
+      "throughput_gp_per_s": 28850.8,
+      "grid_resolution": [
+        64,
+        64
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          6.283185307179586
+        ],
+        [
+          -6.0,
+          6.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-vlasov_poisson-t3-s2026",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "navier_stokes_2d",
+      "trial": 1,
+      "seed": 42,
+      "n_bits": 5,
+      "n_steps": 50,
+      "max_rank": 32,
+      "conservation_quantity": "total_mass",
+      "conservation_band_max": 1.0,
+      "wall_time_band_max": 10.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:33.520279+00:00",
+      "conservation_initial": 0.0,
+      "conservation_final": 0.0,
+      "conservation_relative_error": 0.056,
+      "conservation_status": "drift",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 0.00112,
+      "n_dims": 2,
+      "grid_points": 1024,
+      "wall_time_s": 0.234363,
+      "throughput_gp_per_s": 219764.2,
+      "grid_resolution": [
+        32,
+        32
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-navier_stokes_2d-t1-s42",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "navier_stokes_2d",
+      "trial": 2,
+      "seed": 137,
+      "n_bits": 5,
+      "n_steps": 50,
+      "max_rank": 32,
+      "conservation_quantity": "total_mass",
+      "conservation_band_max": 1.0,
+      "wall_time_band_max": 10.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:33.755071+00:00",
+      "conservation_initial": 0.0,
+      "conservation_final": 0.0,
+      "conservation_relative_error": 0.056,
+      "conservation_status": "drift",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 0.00112,
+      "n_dims": 2,
+      "grid_points": 1024,
+      "wall_time_s": 0.162995,
+      "throughput_gp_per_s": 315280.3,
+      "grid_resolution": [
+        32,
+        32
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-navier_stokes_2d-t2-s137",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    },
+    {
+      "domain": "navier_stokes_2d",
+      "trial": 3,
+      "seed": 2026,
+      "n_bits": 5,
+      "n_steps": 50,
+      "max_rank": 32,
+      "conservation_quantity": "total_mass",
+      "conservation_band_max": 1.0,
+      "wall_time_band_max": 10.0,
+      "device": "cpu",
+      "timestamp": "2026-02-24T21:37:33.918512+00:00",
+      "conservation_initial": 0.0,
+      "conservation_final": 0.0,
+      "conservation_relative_error": 0.056,
+      "conservation_status": "drift",
+      "conservation_within_band": true,
+      "conservation_drift_per_step": 0.00112,
+      "n_dims": 2,
+      "grid_points": 1024,
+      "wall_time_s": 0.16498,
+      "throughput_gp_per_s": 311432.4,
+      "grid_resolution": [
+        32,
+        32
+      ],
+      "domain_bounds": [
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "certificate_issued": true,
+      "certificate_verified": true,
+      "certificate_job_id": "golden-navier_stokes_2d-t3-s2026",
+      "n_claims": 2,
+      "pipeline_success": true,
+      "runtime_version": "3.1.0"
+    }
+  ]
+}

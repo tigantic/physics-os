@@ -1,0 +1,102 @@
+{
+  "_meta": {
+    "benchmark": "Golden Physics Benchmark v1.0",
+    "description": "Deterministic configurations for all 7 QTT physics domains.",
+    "seeds": [42, 137, 2026],
+    "baseline_tag": "v4.0.0",
+    "runtime_version": "3.1.0",
+    "device": "cpu",
+    "recorded_at": "2026-02-24",
+    "notes": [
+      "Conservation errors are physics-dependent — some domains (burgers, navier_stokes_2d) have large relative errors at low resolution.",
+      "This is expected behavior, not a bug.",
+      "Wall-time bands are generous (10x) to accommodate CI variation."
+    ]
+  },
+  "domains": {
+    "burgers": {
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "total_mass",
+      "conservation_error_max": 100.0,
+      "wall_time_max_s": 5.0,
+      "must_succeed": true,
+      "must_certify": true,
+      "description": "Viscous Burgers equation — 1D nonlinear advection + diffusion.",
+      "spatial_dims": 1
+    },
+    "maxwell": {
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "em_energy",
+      "conservation_error_max": 0.01,
+      "wall_time_max_s": 5.0,
+      "must_succeed": true,
+      "must_certify": true,
+      "description": "FDTD Maxwell 1D — electromagnetic wave propagation.",
+      "spatial_dims": 1
+    },
+    "maxwell_3d": {
+      "n_bits": 4,
+      "n_steps": 20,
+      "max_rank": 32,
+      "conservation_quantity": "em_energy",
+      "conservation_error_max": 0.01,
+      "wall_time_max_s": 15.0,
+      "must_succeed": true,
+      "must_certify": true,
+      "description": "FDTD Maxwell 3D — full 3D electromagnetic wave propagation.",
+      "spatial_dims": 3
+    },
+    "schrodinger": {
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "probability",
+      "conservation_error_max": 1e-06,
+      "wall_time_max_s": 10.0,
+      "must_succeed": true,
+      "must_certify": true,
+      "description": "Quantum Schrödinger equation — wavepacket evolution.",
+      "spatial_dims": 1
+    },
+    "advection_diffusion": {
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "total_mass",
+      "conservation_error_max": 1e-06,
+      "wall_time_max_s": 5.0,
+      "must_succeed": true,
+      "must_certify": true,
+      "description": "Linear advection-diffusion — scalar transport.",
+      "spatial_dims": 1
+    },
+    "vlasov_poisson": {
+      "n_bits": 6,
+      "n_steps": 20,
+      "max_rank": 32,
+      "conservation_quantity": "particle_number",
+      "conservation_error_max": 1e-06,
+      "wall_time_max_s": 30.0,
+      "must_succeed": true,
+      "must_certify": true,
+      "description": "Vlasov-Poisson kinetic plasma — 2D phase space (x, v).",
+      "spatial_dims": 2
+    },
+    "navier_stokes_2d": {
+      "n_bits": 5,
+      "n_steps": 50,
+      "max_rank": 32,
+      "conservation_quantity": "total_mass",
+      "conservation_error_max": 1.0,
+      "wall_time_max_s": 10.0,
+      "must_succeed": true,
+      "must_certify": true,
+      "description": "2D incompressible Navier-Stokes — vorticity-stream formulation.",
+      "spatial_dims": 2
+    }
+  }
+}

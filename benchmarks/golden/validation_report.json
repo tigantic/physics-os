@@ -1,0 +1,73 @@
+{
+  "file_path": "benchmarks/golden/golden_results_hypertensor_20260224.json",
+  "total_measurements": 21,
+  "error_count": 0,
+  "warning_count": 0,
+  "errors": [],
+  "warnings": [],
+  "domain_coverage": {
+    "schrodinger": 3,
+    "vlasov_poisson": 3,
+    "burgers": 3,
+    "advection_diffusion": 3,
+    "maxwell": 3,
+    "maxwell_3d": 3,
+    "navier_stokes_2d": 3
+  },
+  "domain_pass_rate": {
+    "schrodinger": 1.0,
+    "vlasov_poisson": 1.0,
+    "burgers": 1.0,
+    "advection_diffusion": 1.0,
+    "maxwell": 1.0,
+    "maxwell_3d": 1.0,
+    "navier_stokes_2d": 1.0
+  },
+  "domain_cert_rate": {
+    "schrodinger": 1.0,
+    "vlasov_poisson": 1.0,
+    "burgers": 1.0,
+    "advection_diffusion": 1.0,
+    "maxwell": 1.0,
+    "maxwell_3d": 1.0,
+    "navier_stokes_2d": 1.0
+  },
+  "domain_conservation": {
+    "schrodinger": {
+      "in_band_rate": 1.0,
+      "avg_error": 4.59e-10,
+      "max_error": 4.59e-10
+    },
+    "vlasov_poisson": {
+      "in_band_rate": 1.0,
+      "avg_error": 1.23e-14,
+      "max_error": 1.23e-14
+    },
+    "burgers": {
+      "in_band_rate": 1.0,
+      "avg_error": 40.7,
+      "max_error": 40.7
+    },
+    "advection_diffusion": {
+      "in_band_rate": 1.0,
+      "avg_error": 5e-13,
+      "max_error": 5e-13
+    },
+    "maxwell": {
+      "in_band_rate": 1.0,
+      "avg_error": 0.00036200000000000007,
+      "max_error": 0.000362
+    },
+    "maxwell_3d": {
+      "in_band_rate": 1.0,
+      "avg_error": 0.00125,
+      "max_error": 0.00125
+    },
+    "navier_stokes_2d": {
+      "in_band_rate": 1.0,
+      "avg_error": 0.056,
+      "max_error": 0.056
+    }
+  },
+  "benchmark_verdict": "PASSED"
+}
