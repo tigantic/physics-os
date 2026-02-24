@@ -1,0 +1,93 @@
+[
+  {
+    "domain": "burgers",
+    "label": "Viscous Burgers (1D Navier\u2013Stokes)",
+    "dims": "1D",
+    "grid": "1024",
+    "n_steps": 100,
+    "instructions": 15,
+    "chi_max": 22,
+    "invariant_error": 2.6765370233644807e-14,
+    "scaling_class": "A",
+    "wall_time": 1.062,
+    "compression": 0.7
+  },
+  {
+    "domain": "maxwell",
+    "label": "Maxwell Equations (1D TE mode)",
+    "dims": "1D",
+    "grid": "1024",
+    "n_steps": 100,
+    "instructions": 18,
+    "chi_max": 30,
+    "invariant_error": 0.0016356329498462211,
+    "scaling_class": "B",
+    "wall_time": 0.702,
+    "compression": 0.4
+  },
+  {
+    "domain": "schrodinger",
+    "label": "Schr\u00f6dinger Equation (1D harmonic oscillator)",
+    "dims": "1D",
+    "grid": "1024",
+    "n_steps": 100,
+    "instructions": 32,
+    "chi_max": 28,
+    "invariant_error": 1.4046487762995803e-13,
+    "scaling_class": "B",
+    "wall_time": 1.055,
+    "compression": 7.3
+  },
+  {
+    "domain": "advection_diffusion",
+    "label": "Advection-Diffusion (scalar transport)",
+    "dims": "1D",
+    "grid": "1024",
+    "n_steps": 100,
+    "instructions": 14,
+    "chi_max": 22,
+    "invariant_error": 7.529553395358846e-15,
+    "scaling_class": "B",
+    "wall_time": 0.277,
+    "compression": 0.6
+  },
+  {
+    "domain": "vlasov_poisson",
+    "label": "Vlasov\u2013Poisson (1D1V electrostatic plasma)",
+    "dims": "1D+1V",
+    "grid": "64\u00d764",
+    "n_steps": 50,
+    "instructions": 22,
+    "chi_max": 64,
+    "invariant_error": 2.2758635770370866e-14,
+    "scaling_class": "A",
+    "wall_time": 7.315,
+    "compression": 78.8
+  },
+  {
+    "domain": "navier_stokes_2d",
+    "label": "2D Navier\u2013Stokes (vorticity-stream)",
+    "dims": "2D",
+    "grid": "64\u00d764",
+    "n_steps": 50,
+    "instructions": 25,
+    "chi_max": 2,
+    "invariant_error": 1.690870197382563e-31,
+    "scaling_class": "A",
+    "wall_time": 0.27,
+    "compression": 60.2
+  },
+  {
+    "domain": "maxwell_3d",
+    "label": "3D Maxwell Equations (full curl)",
+    "dims": "3D",
+    "grid": "16\u00b3",
+    "n_steps": 20,
+    "instructions": 78,
+    "chi_max": 36,
+    "invariant_error": 0.0012519513552040928,
+    "scaling_class": "C",
+    "wall_time": 1.008,
+    "compression": 1.7
+  }
+]

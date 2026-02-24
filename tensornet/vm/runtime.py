@@ -342,13 +342,22 @@ class QTTRuntime:
         """Create initial QTT tensor for a field spec."""
         init_fn = program.metadata.get(f"init_{spec.name}")
         if init_fn is not None and callable(init_fn):
-            domain = tuple(
-                spec.bc_params.get("domain", (0.0, 1.0))
-                if spec.n_dims == 1
-                else spec.bc_params.get("domain", tuple((0.0, 1.0) for _ in range(spec.n_dims)))
-            )
-            if spec.n_dims == 1:
-                domain = (domain,) if not isinstance(domain[0], tuple) else domain
+            # Build domain tuple-of-tuples: ((lo0, hi0), (lo1, hi1), ...)
+            raw_domain = spec.bc_params.get("domain", None)
+            if raw_domain is None:
+                domain: tuple[tuple[float, float], ...] = tuple(
+                    (0.0, 1.0) for _ in range(spec.n_dims)
+                )
+            elif spec.n_dims == 1:
+                # 1D: bc_params["domain"] may be (lo, hi) or ((lo, hi),)
+                if isinstance(raw_domain[0], (list, tuple)):
+                    domain = tuple(tuple(p) for p in raw_domain)
+                else:
+                    domain = (tuple(raw_domain),)  # type: ignore[arg-type]
+            else:
+                # Multi-dim: bc_params["domain"] = ((lo0,hi0), (lo1,hi1), ...)
+                domain = tuple(tuple(p) for p in raw_domain)
+
             return QTTTensor.from_function(
                 init_fn,
                 bits_per_dim=spec.bits_per_dim,
