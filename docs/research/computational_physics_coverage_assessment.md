@@ -2,6 +2,7 @@
 
 **Repository**: HyperTensor-VM (`workspace-reorg` branch)
 **Date**: February 7, 2026
+**Path audit**: February 23, 2026 — all source file paths verified against repository tree
 **Assessed against**: `computational_physics_taxonomy (1).md` (140 sub-domains)
 **Assessor**: Automated audit of full repository
 **Status**: **140/140 COMPLETE** — All domains fully implemented
@@ -78,12 +79,12 @@
 
 | # | Sub-domain | Status | Source Files | Notes |
 |:-:|-----------|:------:|-------------|-------|
-| I.1 | Newtonian Particle Dynamics | ✅ | `tensornet/fusion/tokamak.py`, `tensornet/guidance/trajectory.py`, `tensornet/defense/ballistics.py`, CivStack Orbital Forge | Boris pusher, 6-DOF ballistics, N-body orbital, RK45/RK7(8) |
+| I.1 | Newtonian Particle Dynamics | ✅ | `tensornet/fusion/tokamak.py`, `tensornet/guidance/trajectory.py`, `tensornet/defense/ballistics.py`, `scripts/gauntlets/orbital_forge_gauntlet.py` | Boris pusher, 6-DOF ballistics, N-body orbital, RK45/RK7(8) |
 | I.2 | Lagrangian / Hamiltonian Mechanics | ✅ | `tensornet/mechanics/symplectic.py`, `variational.py` | Störmer-Verlet, Ruth-4, Yoshida-6 symplectic integrators; Noether conservation; action minimization |
 | I.3 | Continuum Mechanics | ✅ | `tensornet/mechanics/continuum.py` | Neo-Hookean, Mooney-Rivlin hyperelastic; Drucker-Prager plasticity; cohesive-zone fracture; Updated Lagrangian |
 | I.4 | Structural Mechanics | ✅ | `tensornet/mechanics/structural.py` | Timoshenko beam, Mindlin-Reissner plate, eigenvalue buckling, modal (Lanczos), composite CLT Tsai-Wu |
-| I.5 | Nonlinear Dynamics & Chaos | ✅ | CivStack Dynamics, `tensornet/cfd/hou_luo_ansatz.py` | Lorenz, Hamiltonian chaos, blowup analysis |
-| I.6 | Acoustics & Vibration | ✅ | `tensornet/mechanics/acoustics.py` | Helmholtz BEM, structural-acoustic coupling, room acoustics (image source), aeroacoustics (Lighthill) |
+| I.5 | Nonlinear Dynamics & Chaos | ✅ | `tensornet/mechanics/trace_adapters/nonlinear_dynamics_adapter.py`, `tensornet/cfd/koopman_tt.py`, `tensornet/cfd/hou_luo_ansatz.py` | Lorenz, Hamiltonian chaos, blowup analysis |
+| I.6 | Acoustics & Vibration | ✅ | `tensornet/acoustics/applied_acoustics.py`, `tensornet/mechanics/trace_adapters/acoustics_adapter.py` | Helmholtz BEM, structural-acoustic coupling, room acoustics (image source), aeroacoustics (Lighthill) |
 
 ---
 
@@ -91,16 +92,16 @@
 
 | # | Sub-domain | Status | Source Files | Notes |
 |:-:|-----------|:------:|-------------|-------|
-| II.1 | Incompressible Navier-Stokes | ✅ | `tensornet/cfd/ns_2d.py`, `ns_3d.py`, `ns2d_qtt_native.py`, QTeneT `ns3d.py` | Multiple 2D/3D solvers, projection, QTT-native, spectral hybrid |
+| II.1 | Incompressible Navier-Stokes | ✅ | `tensornet/cfd/ns_2d.py`, `ns_3d.py`, `ns2d_qtt_native.py`, `QTeneT/src/qtenet/qtenet/solvers/ns3d.py` | Multiple 2D/3D solvers, projection, QTT-native, spectral hybrid |
 | II.2 | Compressible Flow | ✅ | `tensornet/cfd/euler_3d.py`, `weno.py`, `godunov.py` | Euler/NS, HLLC/Godunov, WENO5-JS/Z, Strang splitting |
-| II.3 | Turbulence | ✅ | `tensornet/cfd/turbulence.py`, `les.py`, QTeneT DNS/DHIT | RANS (k-ε, k-ω SST, SA), LES, hybrid, DNS, K41, Koopman |
-| II.4 | Multiphase Flow | ✅ | `tensornet/fluids/multiphase.py` | Cahn-Hilliard, VOF, level-set, Rayleigh-Taylor benchmark |
+| II.3 | Turbulence | ✅ | `tensornet/cfd/turbulence.py`, `les.py`, `scripts/research/dhit_benchmark.py` | RANS (k-ε, k-ω SST, SA), LES, hybrid, DNS, K41, Koopman |
+| II.4 | Multiphase Flow | ✅ | `tensornet/multiphase/multiphase_flow.py` | Cahn-Hilliard, VOF, level-set, Rayleigh-Taylor benchmark |
 | II.5 | Reactive Flow / Combustion | ✅ | `tensornet/cfd/reactive_ns.py`, `chemistry.py` | 5-species air, Park 2-temperature, Arrhenius |
-| II.6 | Rarefied Gas / Kinetic | ✅ | `tensornet/fluids/rarefied.py`, `tensornet/cfd/fast_vlasov_5d.py` | DSMC (NTC), BGK relaxation, Vlasov-Poisson 5D/6D |
-| II.7 | Shallow Water / Geophysical | ✅ | CivStack Hermes | Shallow water, Coriolis, advection-diffusion |
-| II.8 | Non-Newtonian / Complex Fluids | ✅ | `tensornet/fluids/non_newtonian.py` | Oldroyd-B, Bingham, FENE-P, Herschel-Bulkley, log-conformation |
-| II.9 | Porous Media Flow | ✅ | `tensornet/fluids/porous_media.py` | Darcy, Richards, Brinkman, Buckley-Leverett |
-| II.10 | Free Surface / Interfacial | ✅ | `tensornet/fluids/free_surface.py` | Level-set, CSF surface tension, Marangoni, thin-film, contact angle |
+| II.6 | Rarefied Gas / Kinetic | ✅ | `tensornet/cfd/dsmc.py`, `tensornet/cfd/fast_vlasov_5d.py` | DSMC (NTC), BGK relaxation, Vlasov-Poisson 5D/6D |
+| II.7 | Shallow Water / Geophysical | ✅ | `scripts/gauntlets/hermes_gauntlet.py` | Shallow water, Coriolis, advection-diffusion |
+| II.8 | Non-Newtonian / Complex Fluids | ✅ | `tensornet/cfd/non_newtonian.py` | Oldroyd-B, Bingham, FENE-P, Herschel-Bulkley, log-conformation |
+| II.9 | Porous Media Flow | ✅ | `tensornet/porous_media/__init__.py` | Darcy, Richards, Brinkman, Buckley-Leverett |
+| II.10 | Free Surface / Interfacial | ✅ | `tensornet/free_surface/__init__.py` | Level-set, CSF surface tension, Marangoni, thin-film, contact angle |
 
 ---
 
@@ -110,7 +111,7 @@
 |:-:|-----------|:------:|-------------|-------|
 | III.1 | Electrostatics | ✅ | `tensornet/em/electrostatics.py` | Poisson-Boltzmann, capacitance extraction, multipole expansion |
 | III.2 | Magnetostatics | ✅ | `tensornet/em/magnetostatics.py` | Biot-Savart, vector potential A, magnetic dipole, inductance |
-| III.3 | Full Maxwell (Time-Domain) | ✅ | `crates/cem-qtt/` | FDTD Yee lattice, PML, MPS/MPO compression, Q16.16 |
+| III.3 | Full Maxwell (Time-Domain) | ✅ | `QTT-CEM/` | FDTD Yee lattice, PML, MPS/MPO compression, Q16.16 |
 | III.4 | Frequency-Domain EM | ✅ | `tensornet/em/frequency_domain.py` | FDFD 2D TM, Method of Moments, Helmholtz, bistatic RCS |
 | III.5 | EM Wave Propagation | ✅ | `tensornet/em/wave_propagation.py` | FDTD 1D/2D, PML, Mie scattering, CFL stability |
 | III.6 | Computational Photonics | ✅ | `tensornet/em/computational_photonics.py` | Transfer matrix, coupled-mode theory, slab waveguide, Bragg stack |
@@ -135,9 +136,9 @@
 |:-:|-----------|:------:|-------------|-------|
 | V.1 | Equilibrium StatMech | ✅ | `tensornet/statmech/equilibrium.py` | Metropolis/Wolff MC, Wang-Landau, partition function, Landau mean-field, Ising/Potts/XY |
 | V.2 | Non-Equilibrium StatMech | ✅ | `tensornet/statmech/non_equilibrium.py` | Jarzynski, Crooks, Kubo response, KMC, Gillespie SSA |
-| V.3 | Molecular Dynamics | ✅ | `tensornet/md/molecular_dynamics.py` | Velocity Verlet, Nosé-Hoover, Parrinello-Rahman, PME, REMD |
+| V.3 | Molecular Dynamics | ✅ | `tensornet/md/engine.py` | Velocity Verlet, Nosé-Hoover, Parrinello-Rahman, PME, REMD |
 | V.4 | Monte Carlo (General) | ✅ | `tensornet/statmech/monte_carlo.py` | Swendsen-Wang cluster, parallel tempering, histogram reweighting, multicanonical MC |
-| V.5 | Heat Transfer | ✅ | `tensornet/thermal/heat_transfer.py` | View factors (MC ray-tracing), radiosity, RTE, Stefan solidification, conjugate CHT |
+| V.5 | Heat Transfer | ✅ | `tensornet/heat_transfer/radiation.py` | View factors (MC ray-tracing), radiosity, RTE, Stefan solidification, conjugate CHT |
 | V.6 | Lattice Models & Spin Systems | ✅ | `tensornet/mps/hamiltonians.py`, `tensornet/algorithms/` | 7 Hamiltonians, DMRG/TEBD/TDVP solvers |
 
 ---
@@ -146,11 +147,11 @@
 
 | # | Sub-domain | Status | Source Files | Notes |
 |:-:|-----------|:------:|-------------|-------|
-| VI.1 | Time-Independent SE | ✅ | `tensornet/qm/tise.py` | DVR, shooting method, spectral solver, WKB tunneling |
-| VI.2 | Time-Dependent SE | ✅ | `tensornet/qm/tdse.py` | Split-operator, Crank-Nicolson, Chebyshev propagator, wavepacket |
+| VI.1 | Time-Independent SE | ✅ | `tensornet/quantum_mechanics/stationary.py` | DVR, shooting method, spectral solver, WKB tunneling |
+| VI.2 | Time-Dependent SE | ✅ | `tensornet/quantum_mechanics/propagator.py` | Split-operator, Crank-Nicolson, Chebyshev propagator, wavepacket |
 | VI.3 | Scattering Theory | ✅ | `tensornet/qm/scattering.py` | Partial-wave T-matrix, Born approximation, R-matrix, Breit-Wigner |
-| VI.4 | Semiclassical / WKB | ✅ | `tensornet/qm/semiclassical.py` | Eikonal solver, WKB connection formulas, Bohr-Sommerfeld, Maslov index |
-| VI.5 | Path Integral Methods | ✅ | `tensornet/qm/path_integrals.py` | RPMD, PIMC, instanton tunneling, φ⁴ lattice |
+| VI.4 | Semiclassical / WKB | ✅ | `tensornet/qm/semiclassical_wkb.py` | Eikonal solver, WKB connection formulas, Bohr-Sommerfeld, Maslov index |
+| VI.5 | Path Integral Methods | ✅ | `tensornet/quantum_mechanics/path_integrals.py` | RPMD, PIMC, instanton tunneling, φ⁴ lattice |
 
 ---
 
@@ -195,7 +196,7 @@
 | IX.1 | Phonons & Lattice Dynamics | ✅ | `tensornet/condensed_matter/phonons.py` | Dynamical matrix, phonon DOS, anharmonic 3-phonon, phonon BTE |
 | IX.2 | Band Structure | ✅ | `tensornet/condensed_matter/band_structure.py` | Tight-binding bands, k·p, density of states, Wannier projection |
 | IX.3 | Magnetism (Classical) | ✅ | `tensornet/condensed_matter/classical_magnetism.py` | LLG micromagnetics, Stoner-Wohlfarth, domain wall Walker breakdown, Heisenberg 2D MC |
-| IX.4 | Superconductivity | ✅ | CivStack ODIN, `tensornet/fusion/` | Eliashberg, McMillan-Allen-Dynes, BCS gap |
+| IX.4 | Superconductivity | ✅ | `scripts/research/odin_superconductor_solver.py`, `scripts/gauntlets/laluh6_odin_gauntlet.py`, `tensornet/fusion/` | Eliashberg, McMillan-Allen-Dynes, BCS gap |
 | IX.5 | Disordered Systems | ✅ | `tensornet/condensed_matter/disordered.py` | Anderson model, KPM spectral, Edwards-Anderson spin glass, localisation metrics |
 | IX.6 | Surfaces & Interfaces | ✅ | `tensornet/condensed_matter/surfaces_interfaces.py` | Surface energy, Langmuir/BET/Freundlich adsorption, Schottky barrier, heterostructure band alignment |
 | IX.7 | Defects in Solids | ✅ | `tensornet/condensed_matter/defects.py` | Point defect calculator, Peierls-Nabarro, grain boundary energy |
@@ -220,13 +221,13 @@
 
 | # | Sub-domain | Status | Source Files | Notes |
 |:-:|-----------|:------:|-------------|-------|
-| XI.1 | Ideal MHD | ✅ | CivStack TOMAHAWK, `FRONTIER/02_SPACE_WEATHER/alfven_waves.py` | Induction equation, Alfvén waves, TT-compressed MHD |
+| XI.1 | Ideal MHD | ✅ | `scripts/gauntlets/tomahawk_cfd_gauntlet.py`, `FRONTIER/02_SPACE_WEATHER/alfven_waves.py` | Induction equation, Alfvén waves, TT-compressed MHD |
 | XI.2 | Resistive / Extended MHD | ✅ | `tensornet/plasma/extended_mhd.py` | Hall MHD, two-fluid, gyroviscosity, implicit integration |
-| XI.3 | Kinetic Theory (Plasma) | ✅ | `tensornet/cfd/fast_vlasov_5d.py`, QTeneT Vlasov 6D | Vlasov-Poisson/Maxwell 5D/6D, Landau damping, two-stream |
+| XI.3 | Kinetic Theory (Plasma) | ✅ | `tensornet/cfd/fast_vlasov_5d.py`, `QTeneT/src/qtenet/qtenet/solvers/vlasov6d_genuine.py` | Vlasov-Poisson/Maxwell 5D/6D, Landau damping, two-stream |
 | XI.4 | Gyrokinetics | ✅ | `tensornet/plasma/gyrokinetics.py` | 5D gyrokinetic Vlasov, ITG/TEM/ETG growth rates, tokamak transport |
-| XI.5 | Magnetic Reconnection | ✅ | `tensornet/plasma/reconnection.py` | Sweet-Parker, Petschek, plasmoid instability, guide field |
+| XI.5 | Magnetic Reconnection | ✅ | `tensornet/plasma/magnetic_reconnection.py` | Sweet-Parker, Petschek, plasmoid instability, guide field |
 | XI.6 | Laser-Plasma | ✅ | `tensornet/plasma/laser_plasma.py` | SRS, SBS, relativistic self-focusing, wakefield |
-| XI.7 | Dusty / Complex Plasmas | ✅ | `tensornet/plasma/dusty_plasma.py` | Yukawa OCP, dust-acoustic waves, grain charging, dust crystal |
+| XI.7 | Dusty / Complex Plasmas | ✅ | `tensornet/plasma/dusty_plasmas.py` | Yukawa OCP, dust-acoustic waves, grain charging, dust crystal |
 | XI.8 | Space & Astrophysical Plasma | ✅ | `tensornet/plasma/space_plasma.py` | Cosmic ray Parker transport, jet launching, planetary dynamo |
 
 ---
@@ -251,8 +252,8 @@
 | XIII.1 | Seismology | ✅ | `tensornet/geophysics/seismology.py` | Acoustic wave 2D, seismic ray tracing, travel-time tomography, moment tensor inversion |
 | XIII.2 | Mantle Convection | ✅ | `tensornet/geophysics/mantle_convection.py` | Stokes flow, Rayleigh-Bénard, temperature-dependent viscosity |
 | XIII.3 | Geomagnetism & Dynamo | ✅ | `tensornet/geophysics/geodynamo.py` | Magnetic induction, alpha-omega dynamo, dynamo parameters |
-| XIII.4 | Atmospheric Physics | ✅ | `tensornet/atmosphere/atmospheric_physics.py` | Chapman ozone, Kessler warm-rain, radiative-convective equilibrium |
-| XIII.5 | Oceanography | ✅ | `tensornet/ocean/oceanography.py` | Primitive equations, thermohaline, internal wave, tidal constituents |
+| XIII.4 | Atmospheric Physics | ✅ | `tensornet/geophysics/atmosphere.py` | Chapman ozone, Kessler warm-rain, radiative-convective equilibrium |
+| XIII.5 | Oceanography | ✅ | `tensornet/geophysics/oceanography.py` | Primitive equations, thermohaline, internal wave, tidal constituents |
 | XIII.6 | Glaciology | ✅ | `tensornet/geophysics/glaciology.py` | Glen's flow law, shallow ice approximation, GIA, ice thermodynamics |
 
 ---
@@ -262,8 +263,8 @@
 | # | Sub-domain | Status | Source Files | Notes |
 |:-:|-----------|:------:|-------------|-------|
 | XIV.1 | First-Principles Design | ✅ | `tensornet/materials/first_principles_design.py` | Birch-Murnaghan EOS, elastic constants, convex hull stability, phonon dispersion |
-| XIV.2 | Mechanical Properties | ✅ | `tensornet/materials/mechanical.py` | Full C_ij tensor, Frenkel ideal strength, Griffith fracture, Paris fatigue, power-law creep |
-| XIV.3 | Phase-Field Methods | ✅ | `tensornet/materials/phase_field.py` | Cahn-Hilliard, Allen-Cahn, dendritic solidification, spinodal decomposition |
+| XIV.2 | Mechanical Properties | ✅ | `tensornet/materials/mechanical_properties.py` | Full C_ij tensor, Frenkel ideal strength, Griffith fracture, Paris fatigue, power-law creep |
+| XIV.3 | Phase-Field Methods | ✅ | `tensornet/phase_field/__init__.py` | Cahn-Hilliard, Allen-Cahn, dendritic solidification, spinodal decomposition |
 | XIV.4 | Microstructure Evolution | ✅ | `tensornet/materials/microstructure.py` | Cahn-Hilliard 2D, Allen-Cahn 2D, multi-phase grain growth, classical nucleation |
 | XIV.5 | Radiation Damage | ✅ | `tensornet/materials/radiation_damage.py` | NRT displacements, BCA, stopping power, Frenkel pair thermodynamics |
 | XIV.6 | Polymers & Soft Matter | ✅ | `tensornet/materials/polymers_soft_matter.py` | Flory-Huggins, SCFT 1D, reptation model, rubber elasticity, ideal chain |
@@ -280,7 +281,7 @@
 | XV.3 | Quantum Reaction Dynamics | ✅ | `tensornet/chemistry/quantum_reactive.py` | TST with Wigner/Eckart tunnelling, collinear reactive scattering (LEPS), barrier transmission |
 | XV.4 | Nonadiabatic Dynamics | ✅ | `tensornet/chemistry/nonadiabatic.py` | Landau-Zener, Tully FSSH, spin-boson model, Marcus rate |
 | XV.5 | Photochemistry | ✅ | `tensornet/chemistry/photochemistry.py` | IC/ISC rates, photodissociation, fluorescence lifetime |
-| XV.6 | Catalysis | ✅ | `tensornet/fusion/resonant_catalysis.py`, CivStack Femto-Fab | Resonant bond rupture, Lorentzian spectrum, Ru-Fe₃S₃ |
+| XV.6 | Catalysis | ✅ | `tensornet/fusion/resonant_catalysis.py`, `scripts/gauntlets/femto_fabricator_gauntlet.py` | Resonant bond rupture, Lorentzian spectrum, Ru-Fe₃S₃ |
 | XV.7 | Spectroscopy | ✅ | `tensornet/chemistry/spectroscopy.py` | IR/Raman (anharmonic), UV-Vis, Franck-Condon, rotational, NMR chemical shift |
 
 ---
@@ -289,12 +290,12 @@
 
 | # | Sub-domain | Status | Source Files | Notes |
 |:-:|-----------|:------:|-------------|-------|
-| XVI.1 | Protein Structure & Dynamics | ✅ | CivStack Proteome Compiler, `tig011a_dynamic_validation.py` | Ramachandran, Rosetta, Miyazawa-Jernigan |
+| XVI.1 | Protein Structure & Dynamics | ✅ | `scripts/gauntlets/proteome_compiler_gauntlet.py`, `tig011a_dynamic_validation.py` | Ramachandran, Rosetta, Miyazawa-Jernigan |
 | XVI.2 | Drug Design & Binding | ✅ | `tig011a_multimechanism.py`, `_docking_qmmm.py` | Multi-mechanism, QM/MM, FEP, docking, Lipinski |
-| XVI.3 | Membrane Biophysics | ✅ | `tensornet/biophysics/membrane.py` | Coarse-grained lipid bilayer, electroporation, channel gating |
+| XVI.3 | Membrane Biophysics | ✅ | `tensornet/membrane_bio/__init__.py` | Coarse-grained lipid bilayer, electroporation, channel gating |
 | XVI.4 | Nucleic Acids | ✅ | `FRONTIER/07_GENOMICS/rna_structure.py`, `dna_tensor.py` | RNA MFE folding, DNA tensor network |
-| XVI.5 | Systems Biology | ✅ | `tensornet/biophysics/systems_biology.py` | FBA via LP, gene regulatory network (Boolean + ODE), Gillespie |
-| XVI.6 | Neuroscience | ✅ | CivStack Connectome/Neuromorphic | H-H, LIF, Izhikevich, STDP, DTI tractography |
+| XVI.5 | Systems Biology | ✅ | `tensornet/biology/systems_biology.py` | FBA via LP, gene regulatory network (Boolean + ODE), Gillespie |
+| XVI.6 | Neuroscience | ✅ | `scripts/research/qtt_neural_connectome.py`, `scripts/research/qtt_neuromorphic_integration.py`, `tensornet/hardware/neuromorphic.py` | H-H, LIF, Izhikevich, STDP, DTI tractography |
 
 ---
 
@@ -302,11 +303,11 @@
 
 | # | Sub-domain | Status | Source Files | Notes |
 |:-:|-----------|:------:|-------------|-------|
-| XVII.1 | Optimization | ✅ | `crates/opt-qtt/`, `tensornet/cfd/optimization.py` | SIMP, adjoint, multi-objective, Sears-Haack |
-| XVII.2 | Inverse Problems | ✅ | `crates/opt-qtt/`, `tensornet/cfd/adjoint.py` | Adjoint sensitivity, Tikhonov, parameter recovery |
-| XVII.3 | ML for Physics | ✅ | `tensornet/ml_physics/pinn.py`, `neural_operator.py` | PINNs, FNO, neural network potentials, TT-decomposed weights |
-| XVII.4 | Mesh Generation & Adaptive | ✅ | `tensornet/mesh/adaptive_mesh.py` | Octree/quadtree, Delaunay 2D/3D, h-adaptivity, Morton Z-curve |
-| XVII.5 | Linear Algebra (Large-Scale) | ✅ | `tensornet/algorithms/lanczos.py`, `crates/fea-qtt/` | CG, Lanczos, Krylov methods |
+| XVII.1 | Optimization | ✅ | `QTT-OPT/opt-qtt/`, `tensornet/cfd/optimization.py` | SIMP, adjoint, multi-objective, Sears-Haack |
+| XVII.2 | Inverse Problems | ✅ | `QTT-OPT/opt-qtt/`, `tensornet/cfd/adjoint.py` | Adjoint sensitivity, Tikhonov, parameter recovery |
+| XVII.3 | ML for Physics | ✅ | `tensornet/ml_physics/__init__.py` (PINN, FNO), `tensornet/ml_surrogates/pinns_v2.py` | PINNs, FNO, neural network potentials, TT-decomposed weights |
+| XVII.4 | Mesh Generation & Adaptive | ✅ | `tensornet/mesh_amr/__init__.py` | Octree/quadtree, Delaunay 2D/3D, h-adaptivity, Morton Z-curve |
+| XVII.5 | Linear Algebra (Large-Scale) | ✅ | `tensornet/algorithms/lanczos.py`, `QTT-FEA/fea-qtt/` | CG, Lanczos, Krylov methods |
 | XVII.6 | HPC | ✅ | `crates/hyper_core/`, WGPU shaders, CUDA | GPU compute, async, IPC, Morton Z |
 
 ---
@@ -315,13 +316,13 @@
 
 | # | Sub-domain | Status | Source Files | Notes |
 |:-:|-----------|:------:|-------------|-------|
-| XVIII.1 | Fluid-Structure Interaction | ✅ | `tensornet/coupled/fsi.py` | Partitioned NS+FEA, ALE, vortex-induced vibration, hemodynamic FSI |
+| XVIII.1 | Fluid-Structure Interaction | ✅ | `tensornet/fsi/__init__.py` | Partitioned NS+FEA, ALE, vortex-induced vibration, hemodynamic FSI |
 | XVIII.2 | Thermo-Mechanical | ✅ | `tensornet/coupled/thermo_mechanical.py` | Thermal buckling, casting solidification, welding residual stress |
 | XVIII.3 | Electro-Mechanical | ✅ | `tensornet/coupled/electro_mechanical.py` | Piezoelectric, MEMS cantilever pull-in, electrostatic actuator |
 | XVIII.4 | MHD (Coupled) | ✅ | `tensornet/coupled/coupled_mhd.py` | Hartmann liquid metal, crystal growth, MHD pump, EM braking |
 | XVIII.5 | Chemically Reacting Flows | ✅ | `tensornet/cfd/reactive_ns.py`, `chemistry.py` | Reactive NS + multi-species chemistry |
-| XVIII.6 | Radiation-Hydro | ✅ | `tensornet/radiation/radiation_hydro.py` | Flux-limited diffusion, S_N, grey/multigroup, implicit MC |
-| XVIII.7 | Multiscale Methods | ✅ | `tensornet/coupled/multiscale.py` | FE² concurrent, homogenization, bridging atomistic-continuum |
+| XVIII.6 | Radiation-Hydro | ✅ | `tensornet/radiation/__init__.py` | Flux-limited diffusion, S_N, grey/multigroup, implicit MC |
+| XVIII.7 | Multiscale Methods | ✅ | `tensornet/multiscale/multiscale.py` | FE² concurrent, homogenization, bridging atomistic-continuum |
 
 ---
 
@@ -333,7 +334,7 @@
 | XIX.2 | Quantum Error Correction | ✅ | `tensornet/quantum/error_mitigation.py`, `FRONTIER/05_QUANTUM_ERROR_CORRECTION/` | ZNE/PEC/CDR, surface code, stabilizer, MWPM |
 | XIX.3 | Quantum Algorithms | ✅ | `tensornet/quantum/hybrid.py` | VQE, QAOA, parameter-shift, Born Machine |
 | XIX.4 | Quantum Simulation | ✅ | `tensornet/algorithms/`, `yangmills/` | DMRG/TEBD as quantum simulation |
-| XIX.5 | Quantum Crypto & Communication | ✅ | CivStack Oracle | Shannon entropy, lattice crypto, CRYSTALS-Dilithium |
+| XIX.5 | Quantum Crypto & Communication | ✅ | `fluidelite-zk/src/semaphore/pqc.rs`, `scripts/gauntlets/oracle_gauntlet.py` | Post-quantum signing (CRYSTALS-Dilithium), Shannon entropy |
 
 ---
 
@@ -341,16 +342,16 @@
 
 | # | Sub-domain | Status | Source Files | Notes |
 |:-:|-----------|:------:|-------------|-------|
-| XX.1 | Relativistic Mechanics | ✅ | `tensornet/relativity/special_relativity.py` | Full Lorentz dynamics, Thomas precession, relativistic rocket, velocity addition |
+| XX.1 | Relativistic Mechanics | ✅ | `tensornet/relativity/relativistic_mechanics.py` | Full Lorentz dynamics, Thomas precession, relativistic rocket, velocity addition |
 | XX.2 | General Relativity (Numerical) | ✅ | `tensornet/relativity/numerical_gr.py` | BSSN formalism, gauge conditions, puncture initial data, Schwarzschild/Kerr |
-| XX.3 | Astrodynamics | ✅ | CivStack Orbital Forge | J₂, drag, SRP, lunisolar, Lambert, TLE |
-| XX.4 | Robotics Physics | ✅ | `tensornet/robotics_physics/robotics.py` | Featherstone ABA, Newton-Euler, LCP contact, Cosserat rod |
+| XX.3 | Astrodynamics | ✅ | `scripts/gauntlets/orbital_forge_gauntlet.py` | J₂, drag, SRP, lunisolar, Lambert, TLE |
+| XX.4 | Robotics Physics | ✅ | `tensornet/robotics_physics/__init__.py` | Featherstone ABA, Newton-Euler, LCP contact, Cosserat rod |
 | XX.5 | Acoustics (Applied) | ✅ | `tensornet/acoustics/applied_acoustics.py` | Lighthill aeroacoustics, FW-H, LEE, jet noise Tam-Auriault |
-| XX.6 | Biomedical Engineering | ✅ | `tensornet/biomedical/biomedical_eng.py` | Bidomain cardiac, FitzHugh-Nagumo, drug delivery PK, Holzapfel-Ogden |
-| XX.7 | Environmental Physics | ✅ | `tensornet/environment/environmental.py` | Gaussian plume, SCS rainfall-runoff, coastal surge, fire-atmosphere |
-| XX.8 | Energy Systems | ✅ | `tensornet/energy_systems/energy.py` | Drift-diffusion solar, Newman battery, Butler-Volmer fuel cell, neutron diffusion |
+| XX.6 | Biomedical Engineering | ✅ | `tensornet/biomedical/biomedical.py` | Bidomain cardiac, FitzHugh-Nagumo, drug delivery PK, Holzapfel-Ogden |
+| XX.7 | Environmental Physics | ✅ | `tensornet/environmental/environmental.py` | Gaussian plume, SCS rainfall-runoff, coastal surge, fire-atmosphere |
+| XX.8 | Energy Systems | ✅ | `tensornet/energy/energy_systems.py` | Drift-diffusion solar, Newman battery, Butler-Volmer fuel cell, neutron diffusion |
 | XX.9 | Manufacturing & Process | ✅ | `tensornet/manufacturing/manufacturing.py` | Goldak welding, Scheil solidification, melt pool Marangoni, Merchant machining |
-| XX.10 | Semiconductor Device | ✅ | CivStack Femto-Fab, `FRONTIER/03_SEMICONDUCTOR_PLASMA/` | EUV photoresist, Child-Langmuir, ICP, IEDF |
+| XX.10 | Semiconductor Device | ✅ | `scripts/gauntlets/femto_fabricator_gauntlet.py`, `FRONTIER/03_SEMICONDUCTOR_PLASMA/` | EUV photoresist, Child-Langmuir, ICP, IEDF |
 
 ---
 
