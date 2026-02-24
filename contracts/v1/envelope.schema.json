@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hypertensor.dev/contracts/v1/envelope.schema.json",
+  "title": "HyperTensor Artifact Envelope v1",
+  "description": "Content-addressed, signed envelope wrapping every job result.",
+  "type": "object",
+  "required": [
+    "envelope_version",
+    "job_id",
+    "job_type",
+    "status",
+    "created_at",
+    "input_manifest_hash",
+    "result",
+    "artifact_hashes",
+    "versions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "envelope_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "job_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "job_type": {
+      "type": "string",
+      "enum": [
+        "physics_vm_execution",
+        "rank_atlas_benchmark",
+        "rank_atlas_diagnostic",
+        "validation",
+        "attestation"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["queued", "running", "succeeded", "failed", "validated", "attested"]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "idempotency_key": {
+      "type": ["string", "null"]
+    },
+    "input_manifest_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "result": {
+      "description": "Domain-specific result payload.  Schema varies by job_type.",
+      "type": ["object", "null"]
+    },
+    "validation": {
+      "description": "Structured validation report.",
+      "type": ["object", "null"],
+      "$ref": "#/$defs/validation_report"
+    },
+    "certificate": {
+      "description": "Signed trust certificate.",
+      "type": ["object", "null"],
+      "$ref": "#/$defs/trust_certificate"
+    },
+    "artifact_hashes": {
+      "type": "object",
+      "properties": {
+        "input": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "result": { "type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$" },
+        "validation": { "type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$" },
+        "certificate": { "type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$" }
+      },
+      "required": ["input"]
+    },
+    "versions": {
+      "type": "object",
+      "required": ["api_version", "schema_version", "runtime_version"],
+      "properties": {
+        "api_version": { "type": "string" },
+        "schema_version": { "type": "string" },
+        "runtime_version": { "type": "string" }
+      }
+    },
+    "error": {
+      "type": ["object", "null"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^E[0-9]{3}$" },
+        "message": { "type": "string" },
+        "retryable": { "type": "boolean" }
+      },
+      "required": ["code", "message", "retryable"]
+    }
+  },
+  "$defs": {
+    "validation_report": {
+      "type": "object",
+      "properties": {
+        "valid": { "type": "boolean" },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "passed", "detail"],
+            "properties": {
+              "name": { "type": "string" },
+              "passed": { "type": "boolean" },
+              "detail": { "type": "string" },
+              "severity": {
+                "type": "string",
+                "enum": ["error", "warning", "info"]
+              }
+            }
+          }
+        },
+        "validated_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "trust_certificate": {
+      "type": "object",
+      "required": [
+        "certificate_version",
+        "job_id",
+        "issued_at",
+        "issuer",
+        "claims",
+        "input_manifest_hash",
+        "result_hash",
+        "replay_metadata",
+        "signature"
+      ],
+      "properties": {
+        "certificate_version": { "type": "string", "const": "1.0.0" },
+        "job_id": { "type": "string", "format": "uuid" },
+        "issued_at": { "type": "string", "format": "date-time" },
+        "issuer": { "type": "string" },
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["tag", "claim", "witness", "satisfied"],
+            "properties": {
+              "tag": {
+                "type": "string",
+                "enum": ["CONSERVATION", "BOUND", "STABILITY", "CONVERGENCE", "CONSISTENCY", "DETERMINISM"]
+              },
+              "claim": { "type": "string" },
+              "witness": { "type": "object" },
+              "satisfied": { "type": "boolean" }
+            }
+          }
+        },
+        "input_manifest_hash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "result_hash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "replay_metadata": {
+          "type": "object",
+          "required": ["runtime_version", "config_hash", "device_class"],
+          "properties": {
+            "runtime_version": { "type": "string" },
+            "config_hash": { "type": "string" },
+            "seed": { "type": ["integer", "null"] },
+            "device_class": { "type": "string", "enum": ["cpu", "cuda"] }
+          }
+        },
+        "signature": { "type": "string" }
+      }
+    }
+  }
+}
