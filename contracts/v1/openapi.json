@@ -1,0 +1,600 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "HyperTensor Runtime API",
+        "summary": "Licensed execution access + evidence guarantees for compression-native physics compute.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/v1/health": {
+            "get": {
+                "tags": [
+                    "health"
+                ],
+                "summary": "Health check",
+                "description": "Liveness probe. Returns runtime versions and uptime.",
+                "operationId": "health_v1_health_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Health V1 Health Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/capabilities": {
+            "get": {
+                "tags": [
+                    "capabilities"
+                ],
+                "summary": "List capabilities",
+                "description": "Returns available physics domains, accepted parameters, and result field descriptions.  No execution occurs.",
+                "operationId": "get_capabilities_v1_capabilities_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get Capabilities V1 Capabilities Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/contracts/{version}": {
+            "get": {
+                "tags": [
+                    "contracts"
+                ],
+                "summary": "Get contract schemas",
+                "description": "Returns the versioned contract specification and JSON schemas.",
+                "operationId": "get_contract_v1_contracts__version__get",
+                "parameters": [
+                    {
+                        "name": "version",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Version"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "title": "Response Get Contract V1 Contracts  Version  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/contracts": {
+            "get": {
+                "tags": [
+                    "contracts"
+                ],
+                "summary": "List contract versions",
+                "description": "Returns available contract versions.",
+                "operationId": "list_contracts_v1_contracts_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response List Contracts V1 Contracts Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/jobs": {
+            "post": {
+                "tags": [
+                    "jobs"
+                ],
+                "summary": "Submit a job",
+                "description": "Submit a physics simulation, benchmark, validation, or attestation job.  Returns immediately with job status.  The job executes asynchronously.  Poll GET /v1/jobs/{job_id} for status.",
+                "operationId": "submit_job_v1_jobs_post",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "x-idempotency-key",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "X-Idempotency-Key"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SubmitJobRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Job created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "title": "Response Submit Job V1 Jobs Post"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    },
+                    "409": {
+                        "description": "Idempotency key collision"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/jobs/{job_id}": {
+            "get": {
+                "tags": [
+                    "jobs"
+                ],
+                "summary": "Get job status",
+                "description": "Returns job metadata and state.  Does not include result payload.",
+                "operationId": "get_job_v1_jobs__job_id__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "job_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Job Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "title": "Response Get Job V1 Jobs  Job Id  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/jobs/{job_id}/result": {
+            "get": {
+                "tags": [
+                    "jobs"
+                ],
+                "summary": "Get job result",
+                "description": "Returns the full result payload (envelope format).",
+                "operationId": "get_result_v1_jobs__job_id__result_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "job_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Job Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "title": "Response Get Result V1 Jobs  Job Id  Result Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/jobs/{job_id}/validation": {
+            "get": {
+                "tags": [
+                    "jobs"
+                ],
+                "summary": "Get validation report",
+                "description": "Returns the structured validation report for a completed job.",
+                "operationId": "get_validation_v1_jobs__job_id__validation_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "job_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Job Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "title": "Response Get Validation V1 Jobs  Job Id  Validation Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/jobs/{job_id}/certificate": {
+            "get": {
+                "tags": [
+                    "jobs"
+                ],
+                "summary": "Get trust certificate",
+                "description": "Returns the signed trust certificate for an attested job.",
+                "operationId": "get_certificate_v1_jobs__job_id__certificate_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "job_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Job Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "title": "Response Get Certificate V1 Jobs  Job Id  Certificate Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/validate": {
+            "post": {
+                "tags": [
+                    "validate"
+                ],
+                "summary": "Validate an artifact bundle",
+                "description": "Stateless validation of a result artifact.  Does not require authentication.  Accepts a result payload and returns a structured validation report.",
+                "operationId": "validate_artifact_v1_validate_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "additionalProperties": true,
+                                "type": "object",
+                                "title": "Body"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Validate Artifact V1 Validate Post"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "JobType": {
+                "type": "string",
+                "enum": [
+                    "physics_vm_execution",
+                    "rank_atlas_benchmark",
+                    "rank_atlas_diagnostic",
+                    "validation",
+                    "attestation",
+                    "full_pipeline"
+                ],
+                "title": "JobType"
+            },
+            "SubmitJobRequest": {
+                "properties": {
+                    "job_type": {
+                        "$ref": "#/components/schemas/JobType",
+                        "description": "Type of job to run."
+                    },
+                    "domain": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Domain",
+                        "description": "Physics domain (required for execution jobs)."
+                    },
+                    "n_bits": {
+                        "type": "integer",
+                        "maximum": 14.0,
+                        "minimum": 4.0,
+                        "title": "N Bits",
+                        "default": 8
+                    },
+                    "n_steps": {
+                        "type": "integer",
+                        "maximum": 10000.0,
+                        "minimum": 1.0,
+                        "title": "N Steps",
+                        "default": 100
+                    },
+                    "dt": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "exclusiveMinimum": 0.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Dt"
+                    },
+                    "max_rank": {
+                        "type": "integer",
+                        "maximum": 128.0,
+                        "minimum": 2.0,
+                        "title": "Max Rank",
+                        "default": 64
+                    },
+                    "parameters": {
+                        "additionalProperties": true,
+                        "type": "object",
+                        "title": "Parameters"
+                    },
+                    "return_fields": {
+                        "type": "boolean",
+                        "title": "Return Fields",
+                        "default": true
+                    },
+                    "return_coordinates": {
+                        "type": "boolean",
+                        "title": "Return Coordinates",
+                        "default": true
+                    },
+                    "artifact_bundle": {
+                        "anyOf": [
+                            {
+                                "additionalProperties": true,
+                                "type": "object"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Artifact Bundle"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "job_type"
+                ],
+                "title": "SubmitJobRequest",
+                "description": "Job submission request."
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        },
+        "securitySchemes": {
+            "HTTPBearer": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}

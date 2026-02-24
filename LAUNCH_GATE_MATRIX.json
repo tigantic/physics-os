@@ -1,0 +1,175 @@
+{
+  "document": "LAUNCH_GATE_MATRIX",
+  "version": "1.0.0",
+  "baseline_tag": "v4.0.0",
+  "baseline_commit": "569ff1da5334a0614179f1d06d6508ff479e6cd0",
+  "last_updated": "2025-07-24",
+  "overall_verdict": "NOT_READY",
+  "gates": [
+    {
+      "id": "G1",
+      "name": "Scope Baseline",
+      "status": "PASS",
+      "blocking": false,
+      "criteria_met": 9,
+      "criteria_total": 9,
+      "criteria": [
+        {"id": "G1.1", "name": "Commit hash documented", "status": "PASS"},
+        {"id": "G1.2", "name": "Tag applied", "status": "PASS"},
+        {"id": "G1.3", "name": "API version documented", "status": "PASS"},
+        {"id": "G1.4", "name": "Job types enumerated", "status": "PASS"},
+        {"id": "G1.5", "name": "Domains enumerated", "status": "PASS"},
+        {"id": "G1.6", "name": "Outputs enumerated", "status": "PASS"},
+        {"id": "G1.7", "name": "Release branch created", "status": "PASS"},
+        {"id": "G1.8", "name": "Versioning policy documented", "status": "PASS"},
+        {"id": "G1.9", "name": "API surface freeze documented", "status": "PASS"}
+      ]
+    },
+    {
+      "id": "G2",
+      "name": "Contract Stability",
+      "status": "PASS",
+      "blocking": false,
+      "criteria_met": 5,
+      "criteria_total": 5,
+      "criteria": [
+        {"id": "G2.1", "name": "Request/response schemas frozen", "status": "PASS"},
+        {"id": "G2.2", "name": "Error envelope standardized", "status": "PASS"},
+        {"id": "G2.3", "name": "Certificate envelope frozen", "status": "PASS"},
+        {"id": "G2.4", "name": "OpenAPI spec generated and committed", "status": "PASS", "evidence": "contracts/v1/openapi.json"},
+        {"id": "G2.5", "name": "Contract drift CI check", "status": "PASS", "evidence": "scripts/check_contract_drift.py"}
+      ]
+    },
+    {
+      "id": "G3",
+      "name": "Forbidden Outputs",
+      "status": "PARTIAL",
+      "blocking": true,
+      "criteria_met": 3,
+      "criteria_total": 4,
+      "criteria": [
+        {"id": "G3.1", "name": "Forbidden fields registry created", "status": "PASS", "evidence": "FORBIDDEN_OUTPUTS.md"},
+        {"id": "G3.2", "name": "Response sanitizer enforces allowlist", "status": "PASS"},
+        {"id": "G3.3", "name": "Log redaction verified", "status": "FAIL", "severity": "medium", "remediation": "Add log redaction test"},
+        {"id": "G3.4", "name": "Certificate claim allowlist enforced", "status": "PASS"}
+      ]
+    },
+    {
+      "id": "G4",
+      "name": "Reliability",
+      "status": "PARTIAL",
+      "blocking": true,
+      "criteria_met": 5,
+      "criteria_total": 6,
+      "criteria": [
+        {"id": "G4.1", "name": "Idempotency prevents duplicate execution", "status": "PASS", "evidence": "QUEUE_BEHAVIOR_SPEC.md §3"},
+        {"id": "G4.2", "name": "Duplicate submit returns existing job", "status": "PASS", "evidence": "QUEUE_BEHAVIOR_SPEC.md §3"},
+        {"id": "G4.3", "name": "Timeout produces deterministic error", "status": "PASS", "evidence": "QUEUE_BEHAVIOR_SPEC.md §2.3"},
+        {"id": "G4.4", "name": "Invalid transitions rejected", "status": "PASS", "evidence": "QUEUE_BEHAVIOR_SPEC.md §1.4"},
+        {"id": "G4.5", "name": "Concurrent burst no corruption", "status": "FAIL", "severity": "high", "remediation": "Write concurrent burst test"},
+        {"id": "G4.6", "name": "Server restart behavior documented", "status": "PASS", "evidence": "QUEUE_BEHAVIOR_SPEC.md §5"}
+      ]
+    },
+    {
+      "id": "G5",
+      "name": "Security",
+      "status": "PARTIAL",
+      "blocking": true,
+      "criteria_met": 5,
+      "criteria_total": 7,
+      "criteria": [
+        {"id": "G5.1", "name": "Bearer auth enforced", "status": "PASS"},
+        {"id": "G5.2", "name": "Rate limiting enforced", "status": "PASS"},
+        {"id": "G5.3", "name": "401 on missing auth", "status": "PASS"},
+        {"id": "G5.4", "name": "No secrets in logs", "status": "FAIL", "severity": "high", "remediation": "Log scan test"},
+        {"id": "G5.5", "name": "No private keys committed", "status": "FAIL", "severity": "medium", "remediation": "Repo secret scan"},
+        {"id": "G5.6", "name": "Key rotation documented", "status": "PASS", "evidence": "SECURITY_OPERATIONS.md §1.4"},
+        {"id": "G5.7", "name": "Startup secret validation", "status": "PASS", "evidence": "SECURITY_OPERATIONS.md §3"}
+      ]
+    },
+    {
+      "id": "G6",
+      "name": "Certificate Integrity",
+      "status": "NOT_STARTED",
+      "blocking": true,
+      "criteria_met": 0,
+      "criteria_total": 6,
+      "criteria": [
+        {"id": "G6.1", "name": "Claim tampering detected", "status": "FAIL", "severity": "critical"},
+        {"id": "G6.2", "name": "Envelope tampering detected", "status": "FAIL", "severity": "critical"},
+        {"id": "G6.3", "name": "Signature byte corruption detected", "status": "FAIL", "severity": "critical"},
+        {"id": "G6.4", "name": "Wrong verification key rejected", "status": "FAIL", "severity": "critical"},
+        {"id": "G6.5", "name": "Replay against different payload detected", "status": "FAIL", "severity": "critical"},
+        {"id": "G6.6", "name": "Certificate from invalid validation rejected", "status": "FAIL", "severity": "critical"}
+      ]
+    },
+    {
+      "id": "G7",
+      "name": "Observability",
+      "status": "PARTIAL",
+      "blocking": true,
+      "criteria_met": 4,
+      "criteria_total": 5,
+      "criteria": [
+        {"id": "G7.1", "name": "Request ID on every request", "status": "FAIL", "severity": "high", "remediation": "Add request_id middleware"},
+        {"id": "G7.2", "name": "Job ID in logs", "status": "PASS"},
+        {"id": "G7.3", "name": "API key identity in logs", "status": "PASS"},
+        {"id": "G7.4", "name": "Structured log schema documented", "status": "PASS", "evidence": "OPERATIONS_RUNBOOK.md §3"},
+        {"id": "G7.5", "name": "Health/capabilities endpoints documented", "status": "PASS", "evidence": "OPERATIONS_RUNBOOK.md §5"}
+      ]
+    },
+    {
+      "id": "G8",
+      "name": "Golden Benchmark Suite",
+      "status": "NOT_STARTED",
+      "blocking": true,
+      "criteria_met": 0,
+      "criteria_total": 4,
+      "criteria": [
+        {"id": "G8.1", "name": "1 job per domain defined", "status": "FAIL", "severity": "high"},
+        {"id": "G8.2", "name": "Expected tolerances documented", "status": "FAIL", "severity": "high"},
+        {"id": "G8.3", "name": "Conservation baselines recorded", "status": "FAIL", "severity": "high"},
+        {"id": "G8.4", "name": "Automated regression test", "status": "FAIL", "severity": "high"}
+      ]
+    },
+    {
+      "id": "G9",
+      "name": "Billing Shadow",
+      "status": "PARTIAL",
+      "blocking": false,
+      "criteria_met": 1,
+      "criteria_total": 4,
+      "criteria": [
+        {"id": "G9.1", "name": "Billing calculator on every job", "status": "FAIL", "severity": "medium"},
+        {"id": "G9.2", "name": "Usage ledger records", "status": "FAIL", "severity": "medium"},
+        {"id": "G9.3", "name": "Pricing model documented", "status": "PASS", "evidence": "PRICING_MODEL.md + METERING_POLICY.md"},
+        {"id": "G9.4", "name": "Invoice export available", "status": "FAIL", "severity": "medium", "remediation": "Format documented, implementation pending"}
+      ]
+    },
+    {
+      "id": "G10",
+      "name": "Alpha Acceptance",
+      "status": "NOT_STARTED",
+      "blocking": true,
+      "criteria_met": 0,
+      "criteria_total": 5,
+      "criteria": [
+        {"id": "G10.1", "name": "All blocking gates pass", "status": "FAIL", "severity": "critical"},
+        {"id": "G10.2", "name": "Golden benchmark 7/7 pass", "status": "FAIL", "severity": "critical"},
+        {"id": "G10.3", "name": "Error rate < 1% on valid payloads", "status": "FAIL", "severity": "critical"},
+        {"id": "G10.4", "name": "P95 job time < 30s (n_bits <= 10)", "status": "FAIL", "severity": "high"},
+        {"id": "G10.5", "name": "Certificate verification 100%", "status": "FAIL", "severity": "critical"}
+      ]
+    }
+  ],
+  "summary": {
+    "total_criteria": 55,
+    "criteria_passed": 32,
+    "criteria_failed": 23,
+    "pass_rate": 0.582,
+    "blocking_gates_passed": 2,
+    "blocking_gates_total": 9,
+    "non_blocking_gates_passed": 0,
+    "non_blocking_gates_total": 1
+  }
+}
