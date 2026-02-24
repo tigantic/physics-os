@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import logging
 import sys
+import uuid
 from contextlib import asynccontextmanager
 from typing import AsyncIterator
 
@@ -18,12 +19,36 @@ from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
+from starlette.responses import Response
 
 import hypertensor
 
 from .config import settings
 
 logger = logging.getLogger("hypertensor.api")
+
+
+# ── Request ID middleware ────────────────────────────────────────────
+
+
+class RequestIDMiddleware(BaseHTTPMiddleware):
+    """Attach a unique ``X-Request-ID`` to every request/response cycle.
+
+    If the client sends ``X-Request-ID``, it is preserved.  Otherwise a
+    UUID-4 is generated.  The ID is stored in ``request.state.request_id``
+    for use in log lines and error responses, and returned in the
+    ``X-Request-ID`` response header.
+    """
+
+    async def dispatch(
+        self, request: Request, call_next: RequestResponseEndpoint,
+    ) -> Response:
+        request_id = request.headers.get("x-request-id") or str(uuid.uuid4())
+        request.state.request_id = request_id
+        response = await call_next(request)
+        response.headers["X-Request-ID"] = request_id
+        return response
 
 
 # ── Lifecycle ───────────────────────────────────────────────────────
@@ -44,9 +69,10 @@ async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
         logger.warning("Authentication is DISABLED (HYPERTENSOR_REQUIRE_AUTH=false).")
     else:
         logger.info("Auth enabled  |  %d API key(s) loaded.", len(settings.api_keys))
-        # Print first key for local dev convenience
+        # Print masked key prefix for local dev convenience
         if settings.debug and settings.api_keys:
-            logger.info("Dev API key: %s", settings.api_keys[0])
+            _k = settings.api_keys[0]
+            logger.info("Dev API key: %s...%s", _k[:4], _k[-4:])
     yield
     logger.info("HyperTensor API shutting down.")
 
@@ -88,7 +114,7 @@ async def _generic_error(request: Request, exc: Exception) -> JSONResponse:
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={
-            "code": "E001",
+            "code": "E012",
             "message": "Internal server error." if not settings.debug else str(exc),
             "retryable": True,
         },
@@ -121,6 +147,7 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    app.add_middleware(RequestIDMiddleware)
 
     # ── Exception handlers ──────────────────────────────────────────
     app.add_exception_handler(RequestValidationError, _validation_error)  # type: ignore[arg-type]

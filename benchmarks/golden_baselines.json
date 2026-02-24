@@ -1,0 +1,86 @@
+{
+  "_meta": {
+    "description": "Golden benchmark baselines for 7 QTT physics domains.",
+    "baseline_tag": "v4.0.0",
+    "runtime_version": "3.1.0",
+    "device": "cpu",
+    "recorded_at": "2025-07-25",
+    "notes": [
+      "Conservation errors are physics-dependent — some domains (burgers, navier_stokes_2d) have large relative errors at low resolution.",
+      "This is expected behavior, not a bug. The golden test validates: (1) execution succeeds, (2) conservation error stays within band, (3) full pipeline completes, (4) certificate verifies.",
+      "Wall-time bands are generous (10x) to accommodate CI variation."
+    ]
+  },
+  "domains": {
+    "burgers": {
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "total_mass",
+      "conservation_error_max": 100.0,
+      "wall_time_max_s": 5.0,
+      "must_succeed": true,
+      "must_certify": true
+    },
+    "maxwell": {
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "em_energy",
+      "conservation_error_max": 0.01,
+      "wall_time_max_s": 5.0,
+      "must_succeed": true,
+      "must_certify": true
+    },
+    "maxwell_3d": {
+      "n_bits": 4,
+      "n_steps": 20,
+      "max_rank": 32,
+      "conservation_quantity": "em_energy",
+      "conservation_error_max": 0.01,
+      "wall_time_max_s": 15.0,
+      "must_succeed": true,
+      "must_certify": true
+    },
+    "schrodinger": {
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "probability",
+      "conservation_error_max": 1e-06,
+      "wall_time_max_s": 10.0,
+      "must_succeed": true,
+      "must_certify": true
+    },
+    "advection_diffusion": {
+      "n_bits": 8,
+      "n_steps": 100,
+      "max_rank": 32,
+      "conservation_quantity": "total_mass",
+      "conservation_error_max": 1e-06,
+      "wall_time_max_s": 5.0,
+      "must_succeed": true,
+      "must_certify": true
+    },
+    "vlasov_poisson": {
+      "n_bits": 6,
+      "n_steps": 20,
+      "max_rank": 32,
+      "conservation_quantity": "particle_number",
+      "conservation_error_max": 1e-06,
+      "wall_time_max_s": 30.0,
+      "must_succeed": true,
+      "must_certify": true
+    },
+    "navier_stokes_2d": {
+      "n_bits": 5,
+      "n_steps": 50,
+      "max_rank": 32,
+      "conservation_quantity": "total_mass",
+      "conservation_error_max": 1.0,
+      "wall_time_max_s": 10.0,
+      "must_succeed": true,
+      "must_certify": true
+    }
+  }
+}

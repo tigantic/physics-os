@@ -391,6 +391,19 @@ async def _run_physics_execution(job: Job, loop: asyncio.AbstractEventLoop) -> N
     job.result = result_payload
     result_hash = content_hash(result_payload)
     job.artifact_hashes["result"] = result_hash
+
+    # ── Metering (shadow billing) ───────────────────────────────────
+    from hypertensor.billing.meter import ledger as _billing_ledger
+
+    wall_time = sanitized.get("performance", {}).get("wall_time_s", 0.0)
+    _billing_ledger.record(
+        job_id=job.job_id,
+        api_key_suffix=job.api_key_suffix,
+        domain=inp.domain or "",
+        device_class=settings.device,
+        wall_time_s=wall_time,
+    )
+
     job.transition(JobState.SUCCEEDED)
     store.update(job)
 
