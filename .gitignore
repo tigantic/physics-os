@@ -175,3 +175,32 @@ demo_output/
 
 # Windows NTFS Alternate Data Stream markers (contain ':' — illegal on Windows)
 *:Zone.Identifier
+
+# External project directories (not part of HyperTensor)
+aave-extraction/
+flash-liquidator/
+HVAC_CFD/
+
+# Rank Atlas experiment data (large binary / JSON output)
+atlas_*.json
+atlas_*.parquet
+atlas_*_results/
+rank_atlas_*.json
+rank_atlas_*.parquet
+data/rank_atlas_*.parquet
+
+# Benchmark result directories
+atlas_results/
+atlas_results_full/
+atlas_results_v02_nbits10/
+atlas_results_v04_nbits10/
+atlas_results_vi_highres/
+
+# Ahmed body data (CFD mesh output)
+ahmed_body_data/
+
+# Misc working files
+Brads_Hypothesis.txt
+DOMAIN_PACK_AUDIT.md
+loc_report.txt
+loc_authored_report*.txt
