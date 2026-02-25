@@ -137,7 +137,7 @@ All measurements must conform to `benchmarks/golden/schema.json`.
 | `certificate_job_id` | string | Job ID in certificate |
 | `n_claims` | integer | Number of claims generated |
 | `pipeline_success` | boolean | All stages completed |
-| `device` | string | "cpu" or "cuda" |
+| `device` | string | "cpu", "cuda", or "gpu" |
 | `timestamp` | string | ISO 8601 measurement timestamp |
 
 ### 4.2 Optional Fields

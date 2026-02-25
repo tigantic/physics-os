@@ -42,7 +42,7 @@ VALID_DOMAINS = {
     "navier_stokes_2d",
 }
 
-VALID_DEVICES = {"cpu", "cuda"}
+VALID_DEVICES = {"cpu", "cuda", "gpu"}
 
 VALID_CONSERVATION_STATUS = {"conserved", "drift"}
 

@@ -91,6 +91,17 @@ class Maxwell3DCompiler(BaseCompiler):
         def init_zero(x: NDArray, y: NDArray, z: NDArray) -> NDArray:
             return np.zeros_like(x)
 
+        # Separable factors for GPU-native init (NO dense grid).
+        # init_Ex = exp(-r²/2σ²) = exp(-x²/2σ²) × exp(-y²/2σ²) × exp(-z²/2σ²)
+        def _gaussian_1d(t: NDArray) -> NDArray:
+            return np.exp(-((t - 0.5) ** 2) / (2.0 * sigma ** 2))
+
+        def _zero_1d(t: NDArray) -> NDArray:
+            return np.zeros_like(t)
+
+        def _ones_1d(t: NDArray) -> NDArray:
+            return np.ones_like(t)
+
         def invariant_fn(fields: dict) -> float:
             h = fields["Ex"].grid_spacing(0)
             dV = h ** 3
@@ -198,6 +209,10 @@ class Maxwell3DCompiler(BaseCompiler):
             "init_Bx": init_zero,
             "init_By": init_zero,
             "init_Bz": init_zero,
+            # Separable factors for GPU-native init — NO dense grids
+            # init_Ex: f(x,y,z) = g(x) * g(y) * g(z)
+            "init_Ex_separable": [_gaussian_1d, _gaussian_1d, _gaussian_1d],
+            # Zero fields: handled by GPUQTTTensor.zeros() automatically
             "invariant_fn": invariant_fn,
             "invariant": "em_energy",
             "equations": "∂E/∂t = c∇×B, ∂B/∂t = −c∇×E",

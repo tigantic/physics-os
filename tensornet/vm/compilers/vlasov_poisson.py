@@ -208,6 +208,17 @@ class VlasovPoissonCompiler(BaseCompiler):
                 "init_f": init_f,
                 "init_v_coord": init_v_coord,
                 "init_E_2d": lambda x, v: np.zeros_like(x),
+                # Separable: f(x,v) = (1+ε cos x) × exp(-v²/2)/√(2π)
+                "init_f_separable": [
+                    lambda x: 1.0 + eps * np.cos(x),
+                    lambda v: np.exp(-v * v / 2.0) / np.sqrt(2.0 * np.pi),
+                ],
+                # v_coord(x,v) = 1(x) × v(v)  — separable
+                "init_v_coord_separable": [
+                    lambda x: np.ones_like(x),
+                    lambda v: v.copy(),
+                ],
+                # E_2d: zero — handled automatically by GPUQTTTensor.zeros()
                 "invariant_fn": invariant_fn,
                 "invariant": "particle_number",
                 "equations": "∂f/∂t + v·∂f/∂x + E·∂f/∂v = 0, ∇²φ = −ρ",

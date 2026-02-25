@@ -147,7 +147,7 @@
     "device": {
       "type": "string",
       "description": "Compute device used.",
-      "enum": ["cpu", "cuda"]
+      "enum": ["cpu", "cuda", "gpu"]
     },
     "timestamp": {
       "type": "string",

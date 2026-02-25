@@ -1,7 +1,7 @@
 {
   "_meta": {
-    "benchmark": "Golden Physics Benchmark v1.0",
-    "runner_version": "1.0.0",
+    "benchmark": "Golden Physics Benchmark v4.0.0 \u2014 GPU-Native",
+    "runner_version": "4.0.0",
     "config": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/benchmarks/golden/configs/benchmark_v1.json",
     "domains": [
       "burgers",
@@ -14,8 +14,13 @@
     ],
     "n_trials": 3,
     "total_measurements": 21,
-    "total_time_s": 19.27,
-    "timestamp": "2026-02-24T21:37:34.083941+00:00"
+    "total_time_s": 83.12,
+    "timestamp": "2026-02-24T23:12:50.793968+00:00",
+    "device": "gpu",
+    "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+    "gpu_vram_bytes": 8546484224,
+    "cuda_version": "12.8",
+    "backend": "Triton/CUDA + rSVD + adaptive rank"
   },
   "measurements": [
     {
@@ -28,18 +33,21 @@
       "conservation_quantity": "total_mass",
       "conservation_band_max": 100.0,
       "wall_time_band_max": 5.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:14.955848+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:11:27.671351+00:00",
       "conservation_initial": -0.0,
-      "conservation_final": -0.0,
-      "conservation_relative_error": 40.7,
+      "conservation_final": 0.0,
+      "conservation_relative_error": 2.13,
       "conservation_status": "drift",
       "conservation_within_band": true,
-      "conservation_drift_per_step": 0.407,
+      "conservation_drift_per_step": 0.0213,
       "n_dims": 1,
       "grid_points": 256,
-      "wall_time_s": 4.681772,
-      "throughput_gp_per_s": 144191.0,
+      "wall_time_s": 4.635709,
+      "throughput_gp_per_s": 7625.9,
       "grid_resolution": [
         256
       ],
@@ -54,7 +62,7 @@
       "certificate_job_id": "golden-burgers-t1-s42",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "burgers",
@@ -66,18 +74,21 @@
       "conservation_quantity": "total_mass",
       "conservation_band_max": 100.0,
       "wall_time_band_max": 5.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:19.701611+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:11:32.325464+00:00",
       "conservation_initial": -0.0,
       "conservation_final": -0.0,
-      "conservation_relative_error": 40.7,
+      "conservation_relative_error": 1.9,
       "conservation_status": "drift",
       "conservation_within_band": true,
-      "conservation_drift_per_step": 0.407,
+      "conservation_drift_per_step": 0.019,
       "n_dims": 1,
       "grid_points": 256,
-      "wall_time_s": 0.171471,
-      "throughput_gp_per_s": 149746.5,
+      "wall_time_s": 3.096152,
+      "throughput_gp_per_s": 8271.4,
       "grid_resolution": [
         256
       ],
@@ -92,7 +103,7 @@
       "certificate_job_id": "golden-burgers-t2-s137",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "burgers",
@@ -104,18 +115,21 @@
       "conservation_quantity": "total_mass",
       "conservation_band_max": 100.0,
       "wall_time_band_max": 5.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:19.873572+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:11:35.422152+00:00",
       "conservation_initial": -0.0,
-      "conservation_final": -0.0,
-      "conservation_relative_error": 40.7,
+      "conservation_final": 0.0,
+      "conservation_relative_error": 4.52,
       "conservation_status": "drift",
       "conservation_within_band": true,
-      "conservation_drift_per_step": 0.407,
+      "conservation_drift_per_step": 0.0452,
       "n_dims": 1,
       "grid_points": 256,
-      "wall_time_s": 0.174794,
-      "throughput_gp_per_s": 146852.2,
+      "wall_time_s": 3.076233,
+      "throughput_gp_per_s": 8324.1,
       "grid_resolution": [
         256
       ],
@@ -130,7 +144,7 @@
       "certificate_job_id": "golden-burgers-t3-s2026",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "maxwell",
@@ -142,8 +156,11 @@
       "conservation_quantity": "em_energy",
       "conservation_band_max": 0.01,
       "wall_time_band_max": 5.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:20.048881+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:11:38.498919+00:00",
       "conservation_initial": 0.04433292,
       "conservation_final": 0.04431686,
       "conservation_relative_error": 0.000362,
@@ -152,8 +169,8 @@
       "conservation_drift_per_step": 3.62e-06,
       "n_dims": 1,
       "grid_points": 256,
-      "wall_time_s": 0.188826,
-      "throughput_gp_per_s": 136302.5,
+      "wall_time_s": 3.117417,
+      "throughput_gp_per_s": 8215.4,
       "grid_resolution": [
         256
       ],
@@ -168,7 +185,7 @@
       "certificate_job_id": "golden-maxwell-t1-s42",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "maxwell",
@@ -180,8 +197,11 @@
       "conservation_quantity": "em_energy",
       "conservation_band_max": 0.01,
       "wall_time_band_max": 5.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:20.238250+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:11:41.616883+00:00",
       "conservation_initial": 0.04433292,
       "conservation_final": 0.04431686,
       "conservation_relative_error": 0.000362,
@@ -190,8 +210,8 @@
       "conservation_drift_per_step": 3.62e-06,
       "n_dims": 1,
       "grid_points": 256,
-      "wall_time_s": 0.193668,
-      "throughput_gp_per_s": 132541.8,
+      "wall_time_s": 3.118594,
+      "throughput_gp_per_s": 8212.1,
       "grid_resolution": [
         256
       ],
@@ -206,7 +226,7 @@
       "certificate_job_id": "golden-maxwell-t2-s137",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "maxwell",
@@ -218,8 +238,11 @@
       "conservation_quantity": "em_energy",
       "conservation_band_max": 0.01,
       "wall_time_band_max": 5.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:20.432428+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:11:44.736010+00:00",
       "conservation_initial": 0.04433292,
       "conservation_final": 0.04431686,
       "conservation_relative_error": 0.000362,
@@ -228,8 +251,8 @@
       "conservation_drift_per_step": 3.62e-06,
       "n_dims": 1,
       "grid_points": 256,
-      "wall_time_s": 0.191952,
-      "throughput_gp_per_s": 133748.7,
+      "wall_time_s": 3.117046,
+      "throughput_gp_per_s": 8216.3,
       "grid_resolution": [
         256
       ],
@@ -244,7 +267,7 @@
       "certificate_job_id": "golden-maxwell-t3-s2026",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "maxwell_3d",
@@ -256,8 +279,11 @@
       "conservation_quantity": "em_energy",
       "conservation_band_max": 0.01,
       "wall_time_band_max": 15.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:20.624941+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:11:47.853672+00:00",
       "conservation_initial": 0.00142563,
       "conservation_final": 0.00142742,
       "conservation_relative_error": 0.00125,
@@ -266,8 +292,8 @@
       "conservation_drift_per_step": 6.25e-05,
       "n_dims": 3,
       "grid_points": 4096,
-      "wall_time_s": 1.098376,
-      "throughput_gp_per_s": 82370.1,
+      "wall_time_s": 6.732425,
+      "throughput_gp_per_s": 12171.6,
       "grid_resolution": [
         16,
         16,
@@ -292,7 +318,7 @@
       "certificate_job_id": "golden-maxwell_3d-t1-s42",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "maxwell_3d",
@@ -304,8 +330,11 @@
       "conservation_quantity": "em_energy",
       "conservation_band_max": 0.01,
       "wall_time_band_max": 15.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:21.723808+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:11:54.586627+00:00",
       "conservation_initial": 0.00142563,
       "conservation_final": 0.00142742,
       "conservation_relative_error": 0.00125,
@@ -314,8 +343,8 @@
       "conservation_drift_per_step": 6.25e-05,
       "n_dims": 3,
       "grid_points": 4096,
-      "wall_time_s": 0.977872,
-      "throughput_gp_per_s": 85104.1,
+      "wall_time_s": 6.771551,
+      "throughput_gp_per_s": 12101.2,
       "grid_resolution": [
         16,
         16,
@@ -340,7 +369,7 @@
       "certificate_job_id": "golden-maxwell_3d-t2-s137",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "maxwell_3d",
@@ -352,8 +381,11 @@
       "conservation_quantity": "em_energy",
       "conservation_band_max": 0.01,
       "wall_time_band_max": 15.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:22.702259+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:12:01.358713+00:00",
       "conservation_initial": 0.00142563,
       "conservation_final": 0.00142742,
       "conservation_relative_error": 0.00125,
@@ -362,8 +394,8 @@
       "conservation_drift_per_step": 6.25e-05,
       "n_dims": 3,
       "grid_points": 4096,
-      "wall_time_s": 0.997296,
-      "throughput_gp_per_s": 83999.9,
+      "wall_time_s": 6.738278,
+      "throughput_gp_per_s": 12160.9,
       "grid_resolution": [
         16,
         16,
@@ -388,7 +420,7 @@
       "certificate_job_id": "golden-maxwell_3d-t3-s2026",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "schrodinger",
@@ -400,8 +432,11 @@
       "conservation_quantity": "probability",
       "conservation_band_max": 1e-06,
       "wall_time_band_max": 10.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:23.700047+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:12:08.097536+00:00",
       "conservation_initial": 0.08862269,
       "conservation_final": 0.08862269,
       "conservation_relative_error": 4.59e-10,
@@ -410,8 +445,8 @@
       "conservation_drift_per_step": 5e-12,
       "n_dims": 1,
       "grid_points": 256,
-      "wall_time_s": 0.383674,
-      "throughput_gp_per_s": 66858.8,
+      "wall_time_s": 6.985743,
+      "throughput_gp_per_s": 3665.5,
       "grid_resolution": [
         256
       ],
@@ -426,7 +461,7 @@
       "certificate_job_id": "golden-schrodinger-t1-s42",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "schrodinger",
@@ -438,8 +473,11 @@
       "conservation_quantity": "probability",
       "conservation_band_max": 1e-06,
       "wall_time_band_max": 10.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:24.084266+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:12:15.083831+00:00",
       "conservation_initial": 0.08862269,
       "conservation_final": 0.08862269,
       "conservation_relative_error": 4.59e-10,
@@ -448,8 +486,8 @@
       "conservation_drift_per_step": 5e-12,
       "n_dims": 1,
       "grid_points": 256,
-      "wall_time_s": 0.384472,
-      "throughput_gp_per_s": 66724.3,
+      "wall_time_s": 6.973973,
+      "throughput_gp_per_s": 3671.7,
       "grid_resolution": [
         256
       ],
@@ -464,7 +502,7 @@
       "certificate_job_id": "golden-schrodinger-t2-s137",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "schrodinger",
@@ -476,8 +514,11 @@
       "conservation_quantity": "probability",
       "conservation_band_max": 1e-06,
       "wall_time_band_max": 10.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:24.469249+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:12:22.058338+00:00",
       "conservation_initial": 0.08862269,
       "conservation_final": 0.08862269,
       "conservation_relative_error": 4.59e-10,
@@ -486,8 +527,8 @@
       "conservation_drift_per_step": 5e-12,
       "n_dims": 1,
       "grid_points": 256,
-      "wall_time_s": 0.376267,
-      "throughput_gp_per_s": 68166.8,
+      "wall_time_s": 7.207641,
+      "throughput_gp_per_s": 3552.7,
       "grid_resolution": [
         256
       ],
@@ -502,7 +543,7 @@
       "certificate_job_id": "golden-schrodinger-t3-s2026",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "advection_diffusion",
@@ -514,18 +555,21 @@
       "conservation_quantity": "total_mass",
       "conservation_band_max": 1e-06,
       "wall_time_band_max": 5.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:24.846035+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:12:29.266636+00:00",
       "conservation_initial": 0.12533141,
       "conservation_final": 0.12533141,
-      "conservation_relative_error": 5e-13,
+      "conservation_relative_error": 1.98e-13,
       "conservation_status": "conserved",
       "conservation_within_band": true,
       "conservation_drift_per_step": 0.0,
       "n_dims": 1,
       "grid_points": 256,
-      "wall_time_s": 0.135986,
-      "throughput_gp_per_s": 188819.0,
+      "wall_time_s": 2.366876,
+      "throughput_gp_per_s": 10820.6,
       "grid_resolution": [
         256
       ],
@@ -540,7 +584,7 @@
       "certificate_job_id": "golden-advection_diffusion-t1-s42",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "advection_diffusion",
@@ -552,18 +596,21 @@
       "conservation_quantity": "total_mass",
       "conservation_band_max": 1e-06,
       "wall_time_band_max": 5.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:24.982530+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:12:31.634053+00:00",
       "conservation_initial": 0.12533141,
       "conservation_final": 0.12533141,
-      "conservation_relative_error": 5e-13,
+      "conservation_relative_error": 4.28e-13,
       "conservation_status": "conserved",
       "conservation_within_band": true,
       "conservation_drift_per_step": 0.0,
       "n_dims": 1,
       "grid_points": 256,
-      "wall_time_s": 0.131908,
-      "throughput_gp_per_s": 194707.6,
+      "wall_time_s": 2.334981,
+      "throughput_gp_per_s": 10967.9,
       "grid_resolution": [
         256
       ],
@@ -578,7 +625,7 @@
       "certificate_job_id": "golden-advection_diffusion-t2-s137",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "advection_diffusion",
@@ -590,18 +637,21 @@
       "conservation_quantity": "total_mass",
       "conservation_band_max": 1e-06,
       "wall_time_band_max": 5.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:25.114984+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:12:33.969563+00:00",
       "conservation_initial": 0.12533141,
       "conservation_final": 0.12533141,
-      "conservation_relative_error": 5e-13,
+      "conservation_relative_error": 5.05e-13,
       "conservation_status": "conserved",
       "conservation_within_band": true,
       "conservation_drift_per_step": 0.0,
       "n_dims": 1,
       "grid_points": 256,
-      "wall_time_s": 0.132592,
-      "throughput_gp_per_s": 193768.2,
+      "wall_time_s": 2.349601,
+      "throughput_gp_per_s": 10899.7,
       "grid_resolution": [
         256
       ],
@@ -616,7 +666,7 @@
       "certificate_job_id": "golden-advection_diffusion-t3-s2026",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "vlasov_poisson",
@@ -628,18 +678,21 @@
       "conservation_quantity": "particle_number",
       "conservation_band_max": 1e-06,
       "wall_time_band_max": 30.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:25.248089+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:12:36.319705+00:00",
       "conservation_initial": 6.28318529,
       "conservation_final": 6.28318529,
-      "conservation_relative_error": 1.23e-14,
+      "conservation_relative_error": 3.63e-14,
       "conservation_status": "conserved",
       "conservation_within_band": true,
       "conservation_drift_per_step": 0.0,
       "n_dims": 2,
       "grid_points": 4096,
-      "wall_time_s": 2.641025,
-      "throughput_gp_per_s": 31165.0,
+      "wall_time_s": 2.184703,
+      "throughput_gp_per_s": 37532.4,
       "grid_resolution": [
         64,
         64
@@ -659,7 +712,7 @@
       "certificate_job_id": "golden-vlasov_poisson-t1-s42",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "vlasov_poisson",
@@ -671,18 +724,21 @@
       "conservation_quantity": "particle_number",
       "conservation_band_max": 1e-06,
       "wall_time_band_max": 30.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:27.889947+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:12:38.504941+00:00",
       "conservation_initial": 6.28318529,
       "conservation_final": 6.28318529,
-      "conservation_relative_error": 1.23e-14,
+      "conservation_relative_error": 1.91e-13,
       "conservation_status": "conserved",
       "conservation_within_band": true,
       "conservation_drift_per_step": 0.0,
       "n_dims": 2,
       "grid_points": 4096,
-      "wall_time_s": 2.778927,
-      "throughput_gp_per_s": 29752.5,
+      "wall_time_s": 2.319631,
+      "throughput_gp_per_s": 35348.3,
       "grid_resolution": [
         64,
         64
@@ -702,7 +758,7 @@
       "certificate_job_id": "golden-vlasov_poisson-t2-s137",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "vlasov_poisson",
@@ -714,18 +770,21 @@
       "conservation_quantity": "particle_number",
       "conservation_band_max": 1e-06,
       "wall_time_band_max": 30.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:30.669573+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:12:40.825074+00:00",
       "conservation_initial": 6.28318529,
       "conservation_final": 6.28318529,
-      "conservation_relative_error": 1.23e-14,
+      "conservation_relative_error": 2.8e-14,
       "conservation_status": "conserved",
       "conservation_within_band": true,
       "conservation_drift_per_step": 0.0,
       "n_dims": 2,
       "grid_points": 4096,
-      "wall_time_s": 2.849857,
-      "throughput_gp_per_s": 28850.8,
+      "wall_time_s": 2.200294,
+      "throughput_gp_per_s": 37260.8,
       "grid_resolution": [
         64,
         64
@@ -745,7 +804,7 @@
       "certificate_job_id": "golden-vlasov_poisson-t3-s2026",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "navier_stokes_2d",
@@ -757,18 +816,21 @@
       "conservation_quantity": "total_mass",
       "conservation_band_max": 1.0,
       "wall_time_band_max": 10.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:33.520279+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:12:43.025907+00:00",
       "conservation_initial": 0.0,
       "conservation_final": 0.0,
-      "conservation_relative_error": 0.056,
+      "conservation_relative_error": 0.139,
       "conservation_status": "drift",
       "conservation_within_band": true,
-      "conservation_drift_per_step": 0.00112,
+      "conservation_drift_per_step": 0.00278,
       "n_dims": 2,
       "grid_points": 1024,
-      "wall_time_s": 0.234363,
-      "throughput_gp_per_s": 219764.2,
+      "wall_time_s": 2.588798,
+      "throughput_gp_per_s": 19786.2,
       "grid_resolution": [
         32,
         32
@@ -788,7 +850,7 @@
       "certificate_job_id": "golden-navier_stokes_2d-t1-s42",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "navier_stokes_2d",
@@ -800,18 +862,21 @@
       "conservation_quantity": "total_mass",
       "conservation_band_max": 1.0,
       "wall_time_band_max": 10.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:33.755071+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:12:45.615241+00:00",
       "conservation_initial": 0.0,
       "conservation_final": 0.0,
-      "conservation_relative_error": 0.056,
+      "conservation_relative_error": 0.139,
       "conservation_status": "drift",
       "conservation_within_band": true,
-      "conservation_drift_per_step": 0.00112,
+      "conservation_drift_per_step": 0.00278,
       "n_dims": 2,
       "grid_points": 1024,
-      "wall_time_s": 0.162995,
-      "throughput_gp_per_s": 315280.3,
+      "wall_time_s": 2.575567,
+      "throughput_gp_per_s": 19888.3,
       "grid_resolution": [
         32,
         32
@@ -831,7 +896,7 @@
       "certificate_job_id": "golden-navier_stokes_2d-t2-s137",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     },
     {
       "domain": "navier_stokes_2d",
@@ -843,18 +908,21 @@
       "conservation_quantity": "total_mass",
       "conservation_band_max": 1.0,
       "wall_time_band_max": 10.0,
-      "device": "cpu",
-      "timestamp": "2026-02-24T21:37:33.918512+00:00",
+      "device": "gpu",
+      "gpu_device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_bytes": 8546484224,
+      "cuda_version": "12.8",
+      "timestamp": "2026-02-24T23:12:48.191324+00:00",
       "conservation_initial": 0.0,
       "conservation_final": 0.0,
-      "conservation_relative_error": 0.056,
+      "conservation_relative_error": 0.139,
       "conservation_status": "drift",
       "conservation_within_band": true,
-      "conservation_drift_per_step": 0.00112,
+      "conservation_drift_per_step": 0.00278,
       "n_dims": 2,
       "grid_points": 1024,
-      "wall_time_s": 0.16498,
-      "throughput_gp_per_s": 311432.4,
+      "wall_time_s": 2.602106,
+      "throughput_gp_per_s": 19684.5,
       "grid_resolution": [
         32,
         32
@@ -874,7 +942,7 @@
       "certificate_job_id": "golden-navier_stokes_2d-t3-s2026",
       "n_claims": 2,
       "pipeline_success": true,
-      "runtime_version": "3.1.0"
+      "runtime_version": "4.0.0"
     }
   ]
 }

@@ -67,7 +67,7 @@ BANNER = r"""
 ║                                                                  ║
 ║      G O L D E N   P H Y S I C S   B E N C H M A R K           ║
 ║                                                                  ║
-║              HyperTensor QTT VM • v1.0                          ║
+║           HyperTensor QTT VM • v4.0.0 • GPU-Native             ║
 ║                                                                  ║
 ║   7 Domains • Full Pipeline • Trustless Attestation             ║
 ║                                                                  ║
@@ -148,6 +148,26 @@ def run_single_measurement(
     job_id = f"golden-{domain}-t{trial}-s{seed}"
     ts = datetime.now(timezone.utc).isoformat()
 
+    # Detect device — GPU when CUDA available, CPU fallback
+    config = ExecutionConfig(
+        domain=domain,
+        n_bits=n_bits,
+        n_steps=n_steps,
+        max_rank=max_rank,
+        device="auto",  # GPU if CUDA available, else CPU
+    )
+    device_class = "gpu" if config.use_gpu else "cpu"
+
+    # GPU metadata
+    gpu_info: dict[str, Any] = {}
+    if device_class == "gpu":
+        import torch
+        gpu_info = {
+            "gpu_device": torch.cuda.get_device_name(0),
+            "gpu_vram_bytes": torch.cuda.get_device_properties(0).total_memory,
+            "cuda_version": torch.version.cuda or "unknown",
+        }
+
     # Base record (filled on success or failure)
     record: dict[str, Any] = {
         "domain": domain,
@@ -159,16 +179,10 @@ def run_single_measurement(
         "conservation_quantity": conservation_quantity,
         "conservation_band_max": conservation_band_max,
         "wall_time_band_max": wall_time_band_max,
-        "device": "cpu",
+        "device": device_class,
+        **gpu_info,
         "timestamp": ts,
     }
-
-    config = ExecutionConfig(
-        domain=domain,
-        n_bits=n_bits,
-        n_steps=n_steps,
-        max_rank=max_rank,
-    )
 
     # Arm SIGALRM for hard timeout
     old_handler = signal.signal(signal.SIGALRM, _timeout_handler)
@@ -251,8 +265,8 @@ def run_single_measurement(
             input_manifest_hash=content_hash(input_spec),
             result_hash=result_hash,
             config_hash=content_hash(input_spec),
-            runtime_version="3.1.0",
-            device_class="cpu",
+            runtime_version="4.0.0",
+            device_class=device_class,
         )
 
         verified = verify_certificate(certificate)
@@ -263,7 +277,7 @@ def run_single_measurement(
             "certificate_job_id": job_id,
             "n_claims": len(claims),
             "pipeline_success": True,
-            "runtime_version": "3.1.0",
+            "runtime_version": "4.0.0",
         })
 
     except Exception as exc:
@@ -552,8 +566,24 @@ Examples:
     if not args.quiet:
         print(BANNER)
     print("=" * 64)
-    print("Golden Physics Benchmark v1.0")
+    print("Golden Physics Benchmark v4.0.0 — GPU-Native")
     print("=" * 64)
+
+    # GPU detection
+    try:
+        import torch
+        if torch.cuda.is_available():
+            gpu_name = torch.cuda.get_device_name(0)
+            gpu_vram = torch.cuda.get_device_properties(0).total_memory
+            print(f"GPU:      {gpu_name}")
+            print(f"VRAM:     {gpu_vram / (1024**3):.1f} GB")
+            print(f"CUDA:     {torch.version.cuda}")
+            print(f"Backend:  Triton/CUDA \u2022 rSVD \u2022 Adaptive rank")
+        else:
+            print("Device:   CPU (no CUDA available)")
+    except ImportError:
+        print("Device:   CPU (PyTorch not installed)")
+
     print(f"Config:   {config_path}")
     print(f"Domains:  {', '.join(domains)} ({len(domains)} total)")
     print(f"Trials:   {args.n_trials}")
@@ -574,16 +604,34 @@ Examples:
 
     # ── Write results ───────────────────────────────────────────────
     output_path = Path(args.output)
+    # GPU meta for output
+    gpu_meta: dict[str, Any] = {}
+    try:
+        import torch
+        if torch.cuda.is_available():
+            gpu_meta = {
+                "device": "gpu",
+                "gpu_device": torch.cuda.get_device_name(0),
+                "gpu_vram_bytes": torch.cuda.get_device_properties(0).total_memory,
+                "cuda_version": torch.version.cuda or "unknown",
+                "backend": "Triton/CUDA + rSVD + adaptive rank",
+            }
+        else:
+            gpu_meta = {"device": "cpu", "backend": "NumPy"}
+    except ImportError:
+        gpu_meta = {"device": "cpu", "backend": "NumPy"}
+
     output_data = {
         "_meta": {
-            "benchmark": "Golden Physics Benchmark v1.0",
-            "runner_version": "1.0.0",
+            "benchmark": "Golden Physics Benchmark v4.0.0 — GPU-Native",
+            "runner_version": "4.0.0",
             "config": str(config_path),
             "domains": domains,
             "n_trials": args.n_trials,
             "total_measurements": len(results),
             "total_time_s": round(elapsed_total, 2),
             "timestamp": datetime.now(timezone.utc).isoformat(),
+            **gpu_meta,
         },
         "measurements": results,
     }

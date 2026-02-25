@@ -590,8 +590,8 @@ def qtt_hadamard_native(
         for i in range(n_k):
             # A_i: (r_left_a, r_right_a)
             # B_i: (r_left_b, r_right_b)
-            A_i = A_k[:, i, :]
-            B_i = B_k[:, i, :]
+            A_i = A_k[:, i, :].contiguous()
+            B_i = B_k[:, i, :].contiguous()
             
             # Kronecker product: (r_left_a * r_left_b, r_right_a * r_right_b)
             kron = torch.kron(A_i, B_i)

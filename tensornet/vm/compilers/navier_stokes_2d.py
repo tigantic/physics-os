@@ -175,6 +175,15 @@ class NavierStokes2DCompiler(BaseCompiler):
             metadata={
                 "init_omega": init_omega,
                 "init_psi": init_psi,
+                # Separable: 2 sin(2πx) sin(2πy) = f(x) × g(y)
+                "init_omega_separable": (
+                    [
+                        lambda x: np.sin(2.0 * np.pi * x),
+                        lambda y: np.sin(2.0 * np.pi * y),
+                    ],
+                    2.0,  # scale factor
+                ),
+                # init_psi: zero — handled automatically by GPUQTTTensor.zeros()
                 "invariant_fn": invariant_fn,
                 "invariant": "total_mass",
                 "equations": "∂ω/∂t + (u·∇)ω = ν∇²ω, ∇²ψ = −ω",
