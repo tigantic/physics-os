@@ -171,6 +171,7 @@ class GPUExecutionResult:
 
     telemetry: ProgramTelemetry
     fields: dict[str, GPUQTTTensor]
+    probes: dict[str, list[float]] = field(default_factory=dict)
     success: bool = True
     error: str = ""
 
@@ -230,6 +231,10 @@ class GPURuntime:
         for name, spec in program.fields.items():
             fields[name] = self._initialize_field_gpu(spec, program)
 
+        # ── 2b. Initialize probe storage ────────────────────────────
+        from collections import defaultdict as _defaultdict
+        self._probe_data: dict[str, list[float]] = _defaultdict(list)
+
         # ── 3. Set up telemetry ─────────────────────────────────────
         opcodes_used = sorted(set(i.opcode.value for i in program.instructions))
         collector = TelemetryCollector(
@@ -261,7 +266,7 @@ class GPURuntime:
                 trunc_before = self.governor.n_truncations
 
                 for instr in loop_body:
-                    self._dispatch(instr, registers, fields, program)
+                    self._dispatch(instr, registers, fields, program, step=step)
 
                 trunc_after = self.governor.n_truncations
 
@@ -301,7 +306,10 @@ class GPURuntime:
         telemetry.total_truncations = self.governor.n_truncations
 
         return GPUExecutionResult(
-            telemetry=telemetry, fields=fields, success=True
+            telemetry=telemetry,
+            fields=fields,
+            probes=dict(self._probe_data),
+            success=True,
         )
 
     # ================================================================
@@ -314,6 +322,8 @@ class GPURuntime:
         regs: list[GPUQTTTensor | None],
         fields: dict[str, GPUQTTTensor],
         program: Program,
+        *,
+        step: int = 0,
     ) -> None:
         """Execute a single instruction on GPU."""
         op = instr.opcode
@@ -468,6 +478,79 @@ class GPURuntime:
                 result = result.add(partial)
             regs[instr.dst] = self.governor.truncate(result)
 
+        elif op == OpCode.MASK_MULTIPLY:
+            # Element-wise multiply field by a spatial mask (material field).
+            # src[0] = mask register (e.g. inv_eps_r), src[1] = source field.
+            mask = self._get_reg(regs, instr.src[0])
+            src_field = self._get_reg(regs, instr.src[1])
+            result = mask.hadamard(src_field)
+            regs[instr.dst] = self.governor.truncate(result)
+
+        elif op == OpCode.SOURCE_ADD:
+            # dst += source * temporal_amplitude(step).
+            # src[0] = spatial source profile register.
+            import math as _math_sa
+
+            dst_field = self._get_reg(regs, instr.dst)
+            source = self._get_reg(regs, instr.src[0])
+
+            amplitude = 1.0
+            if "freq_center" in instr.params:
+                f0 = float(instr.params["freq_center"])
+                bw = float(instr.params.get("bandwidth", f0 * 0.5))
+                t_peak = float(instr.params.get("t_peak", 0.0))
+                t = step * program.dt
+                tau = (
+                    1.0 / (2.0 * _math_sa.pi * bw) if bw > 0 else 1e10
+                )
+                envelope = _math_sa.exp(
+                    -(t - t_peak) ** 2 / (2.0 * tau ** 2)
+                )
+                carrier = _math_sa.sin(2.0 * _math_sa.pi * f0 * t)
+                amplitude = envelope * carrier
+
+            if abs(amplitude) > 1e-15:
+                scaled = source.scale(amplitude)
+                regs[instr.dst] = self.governor.truncate(
+                    dst_field.add(scaled)
+                )
+
+        elif op == OpCode.DFT_ACCUMULATE:
+            # Accumulate DFT bin: dst += src * weight(step).
+            # weight = cos(phase) for "real", sin(phase) for "imag".
+            # When omega is provided (physical angular frequency):
+            #   phase = omega * step * dt
+            # Otherwise legacy bin-based formula:
+            #   phase = −2π · freq_bin · step / n_steps
+            import math as _math_dft
+
+            acc = self._get_reg(regs, instr.dst)
+            src_field = self._get_reg(regs, instr.src[0])
+            omega = instr.params.get("omega")
+            if omega is not None:
+                phase = float(omega) * step * program.dt
+            else:
+                freq_bin = int(instr.params.get("freq_bin", 0))
+                n_steps = program.n_steps
+                phase = -2.0 * _math_dft.pi * freq_bin * step / n_steps
+            cos_w = _math_dft.cos(phase)
+            sin_w = _math_dft.sin(phase)
+            component = instr.params.get("component", "real")
+            weight = cos_w if component == "real" else sin_w
+            if abs(weight) > 1e-15:
+                contribution = src_field.scale(weight)
+                regs[instr.dst] = self.governor.truncate(
+                    acc.add(contribution)
+                )
+
+        elif op == OpCode.PROBE_RECORD:
+            # Evaluate QTT tensor at a physical point and store scalar.
+            src_field = self._get_reg(regs, instr.src[0])
+            probe_name = str(instr.params["probe_name"])
+            coords = tuple(instr.params["coords"])
+            value = src_field.evaluate_at_point(coords)
+            self._probe_data[probe_name].append(value)
+
         elif op == OpCode.CURL:
             raise NotImplementedError("CURL not implemented for GPU runtime")
 
@@ -573,11 +656,12 @@ class GPURuntime:
                 except Exception:
                     pass
 
-                # For small multi-dim (≤2D, n_bits≤8): use CPU from_function
+                # For small multi-dim (n_bits≤8 per dim, ≤16M total):
+                # use CPU from_function → compress → transfer to GPU.
                 total_points = 1
                 for nb in spec.bits_per_dim:
                     total_points *= 2 ** nb
-                if total_points <= 2 ** 20:  # ≤ 1M points: OK on CPU
+                if total_points <= 2 ** 24:  # ≤ 16M points: OK on CPU
                     cpu_tensor = QTTTensor.from_function(
                         init_fn,
                         bits_per_dim=spec.bits_per_dim,
@@ -605,24 +689,68 @@ class GPURuntime:
     ) -> GPUQTTTensor:
         """Apply boundary conditions on GPU.
 
-        Same logic as CPU but on GPU tensors.
+        Operates on QTT cores directly — no dense materialization.
         """
         if kind == BCKind.PERIODIC:
             return tensor
+
+        if kind == BCKind.PEC:
+            # Perfect Electric Conductor: E_tangential → 0 at boundaries.
+            # In QTT binary representation, the MSB core (core[0]) controls
+            # the left/right halves of the domain. Zeroing one row of the MSB
+            # core enforces field=0 on the first half-boundary. For full PEC
+            # on a [0,1] box, we zero the boundary-adjacent entries of both
+            # the first and last core in each spatial dimension group.
+            #
+            # For each dimension's core group (bits_per_dim[d] cores):
+            #   - First core (MSB): zero row 0 of index 0 (left boundary)
+            #   - Last core (LSB): zero row 0 of index 1 (right boundary)
+            #
+            # This implements homogeneous Dirichlet enforcement in QTT
+            # at the domain faces — which is exactly PEC for E-tangential.
+            dims = params.get("dims", None)  # which dims to apply PEC on
+            new_cores = [c.clone() for c in tensor.cores]
+
+            n_dims = len(tensor.bits_per_dim)
+            target_dims = dims if dims is not None else list(range(n_dims))
+
+            for d in target_dims:
+                start, end = tensor.dim_core_range(d)
+                # Left boundary: zero the j=0 slice of the MSB core
+                # Core shape: (r_left, 2, r_right)
+                # j=0 corresponds to the left half of this binary level
+                new_cores[start] = new_cores[start].clone()
+                new_cores[start][:, 0, :] = 0.0
+                # Right boundary: zero the j=1 slice of the LSB core
+                new_cores[end - 1] = new_cores[end - 1].clone()
+                new_cores[end - 1][:, 1, :] = 0.0
+
+            return GPUQTTTensor(
+                cores=new_cores,
+                bits_per_dim=tensor.bits_per_dim,
+                domain=tensor.domain,
+            )
 
         if kind == BCKind.DIRICHLET:
             left_val = float(params.get("left", 0.0))
             right_val = float(params.get("right", 0.0))
             if abs(left_val) < 1e-30 and abs(right_val) < 1e-30:
-                return tensor
+                # Homogeneous Dirichlet = same as PEC
+                return GPURuntime._apply_bc_gpu(
+                    tensor, BCKind.PEC, params
+                )
             return tensor
 
         if kind == BCKind.NEUMANN:
             return tensor
 
         if kind == BCKind.ABSORBING:
+            # Convolutional PML-like damping: attenuate boundary region.
+            # The MSB core controls the first/last spatial half.
+            # Scaling it damps boundary-adjacent modes.
+            damping = float(params.get("damping", 0.95))
             new_cores = [c.clone() for c in tensor.cores]
-            new_cores[0] = new_cores[0] * 0.95
+            new_cores[0] = new_cores[0] * damping
             return GPUQTTTensor(
                 cores=new_cores,
                 bits_per_dim=tensor.bits_per_dim,

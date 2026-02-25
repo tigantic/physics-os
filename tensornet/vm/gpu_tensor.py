@@ -584,6 +584,65 @@ class GPUQTTTensor:
             domain=tuple(new_domain),
         )
 
+    # ── point evaluation ───────────────────────────────────────────
+
+    def evaluate_at_point(self, coords: tuple[float, ...]) -> float:
+        """Evaluate the QTT tensor at a single physical point.
+
+        Converts physical coordinates to binary grid indices, then
+        contracts through all cores selecting the appropriate binary
+        digit at each level.  Complexity: O(n_cores × r²).
+
+        Parameters
+        ----------
+        coords : tuple[float, ...]
+            Physical coordinates, one per dimension.  Must be within
+            the domain bounds.
+
+        Returns
+        -------
+        float
+            Tensor value at the specified point.
+        """
+        if len(coords) != self.n_dims:
+            raise ValueError(
+                f"Expected {self.n_dims} coordinates, got {len(coords)}"
+            )
+
+        # Convert physical coords → binary digit sequence for all cores
+        binary_digits: list[int] = []
+        for d in range(self.n_dims):
+            lo, hi = self.domain[d]
+            nb = self.bits_per_dim[d]
+            n_grid = 2 ** nb
+            t = (coords[d] - lo) / (hi - lo)
+            idx = int(t * n_grid)
+            idx = max(0, min(n_grid - 1, idx))
+            # MSB-first binary expansion
+            for bit_pos in range(nb - 1, -1, -1):
+                binary_digits.append((idx >> bit_pos) & 1)
+
+        # Sequential core contraction: result starts as (1,) row vector
+        result = torch.ones(1, device=self.device, dtype=torch.float64)
+        for k, core in enumerate(self.cores):
+            # core: (r_left, 2, r_right)  →  select binary digit slice
+            mat = core[:, binary_digits[k], :]  # (r_left, r_right)
+            result = result @ mat  # (r_right,)
+
+        return float(result.item())
+
+    def evaluate_at_points(
+        self, points: list[tuple[float, ...]]
+    ) -> list[float]:
+        """Evaluate the QTT tensor at multiple physical points.
+
+        Convenience wrapper around :meth:`evaluate_at_point`.
+        Each evaluation is O(n_cores × r²); total is O(n_points × n_cores × r²).
+        """
+        return [self.evaluate_at_point(p) for p in points]
+
+    # ── broadcasting ────────────────────────────────────────────────
+
     def broadcast_to(
         self,
         target_bits: tuple[int, ...],

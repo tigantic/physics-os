@@ -69,6 +69,12 @@ class OpCode(enum.Enum):
     # ── Telemetry ────────────────────────────────────────────────────
     MEASURE = "measure"
 
+    # ── Material / masking ───────────────────────────────────────────
+    MASK_MULTIPLY = "mask_multiply"  # dst = mask_field ⊙ src (material scaling)
+    SOURCE_ADD = "source_add"        # dst += source_field (current injection)
+    DFT_ACCUMULATE = "dft_accumulate" # DFT bin accumulation for freq-domain
+    PROBE_RECORD = "probe_record"    # record scalar at probe point each step
+
     # ── Control flow ─────────────────────────────────────────────────
     LOOP_START = "loop_start"
     LOOP_END = "loop_end"
@@ -80,6 +86,7 @@ class BCKind(enum.Enum):
     DIRICHLET = "dirichlet"
     NEUMANN = "neumann"
     ABSORBING = "absorbing"
+    PEC = "pec"  # Perfect Electric Conductor: E_tangential → 0 at boundary
 
 
 @dataclass(frozen=True)
@@ -312,6 +319,96 @@ def measure(reg: int, label: str = "") -> Instruction:
     """Record telemetry for a register."""
     return Instruction(OpCode.MEASURE, src=(reg,),
                        params={"label": label})
+
+
+def mask_multiply(dst: int, mask: int, src: int) -> Instruction:
+    """dst = mask ⊙ src (material / geometry masking via Hadamard)."""
+    return Instruction(OpCode.MASK_MULTIPLY, dst=dst, src=(mask, src))
+
+
+def source_add(
+    dst: int,
+    source: int,
+    *,
+    freq_center: float = 0.0,
+    bandwidth: float = 0.0,
+    t_peak: float = 0.0,
+) -> Instruction:
+    """dst += source * temporal_amplitude(step).
+
+    When *freq_center* > 0 the runtime applies a Gaussian-modulated
+    sinusoidal envelope:
+
+        τ  = 1 / (2π · bandwidth)  (if bandwidth > 0, else very long)
+        a(t) = sin(2π f₀ t) · exp(−(t − t_peak)² / 2τ²)
+
+    The source register holds the *spatial* profile; the runtime
+    multiplies by a(t) at each step.
+    """
+    params: dict[str, Any] = {}
+    if freq_center > 0.0:
+        params["freq_center"] = freq_center
+        params["bandwidth"] = bandwidth
+        params["t_peak"] = t_peak
+    return Instruction(OpCode.SOURCE_ADD, dst=dst, src=(source,), params=params)
+
+
+def dft_accumulate(
+    dst: int,
+    src: int,
+    freq_bin: int = 0,
+    component: str = "real",
+    omega: float | None = None,
+) -> Instruction:
+    """Accumulate DFT bin for frequency-domain extraction.
+
+    *component* is ``"real"`` (cos weight) or ``"imag"`` (sin weight).
+
+    If *omega* (angular frequency, rad/time-unit) is provided, the DFT
+    phase is computed as ``omega * step * dt`` using the physical
+    frequency.  Otherwise the legacy bin-based formula
+    ``2π * freq_bin * step / n_steps`` is used.
+    """
+    params: dict[str, object] = {
+        "freq_bin": freq_bin,
+        "component": component,
+    }
+    if omega is not None:
+        params["omega"] = omega
+    return Instruction(
+        OpCode.DFT_ACCUMULATE,
+        dst=dst,
+        src=(src,),
+        params=params,
+    )
+
+
+def probe_record(
+    src: int,
+    probe_name: str,
+    coords: tuple[float, ...],
+) -> Instruction:
+    """Record field value at a probe point for time-domain extraction.
+
+    The runtime evaluates the QTT tensor in register *src* at the
+    physical *coords* and appends the scalar to a named time series.
+    Cost: O(n_cores × r²) per evaluation — negligible vs. MPO ops.
+
+    Parameters
+    ----------
+    src : int
+        Source register containing the field to probe.
+    probe_name : str
+        Unique identifier for this probe (e.g. ``"V_z"``).  Time series
+        are keyed by this name in the execution result.
+    coords : tuple[float, ...]
+        Physical coordinates at which to evaluate the field.
+    """
+    return Instruction(
+        OpCode.PROBE_RECORD,
+        src=(src,),
+        params={"probe_name": probe_name, "coords": coords},
+    )
 
 
 def loop_start(n_steps: int) -> Instruction:

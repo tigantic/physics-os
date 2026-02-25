@@ -9,6 +9,7 @@ from .base import BaseCompiler
 from .diffusion import DiffusionCompiler
 from .maxwell import MaxwellCompiler
 from .maxwell_3d import Maxwell3DCompiler
+from .maxwell_antenna_3d import MaxwellAntenna3DCompiler
 from .navier_stokes import BurgersCompiler
 from .navier_stokes_2d import NavierStokes2DCompiler
 from .schrodinger import SchrodingerCompiler
@@ -25,6 +26,7 @@ ALL_COMPILERS: list[type[BaseCompiler]] = [
 MULTI_DIM_COMPILERS: list[type[BaseCompiler]] = [
     NavierStokes2DCompiler,
     Maxwell3DCompiler,
+    MaxwellAntenna3DCompiler,
 ]
 
 __all__ = [
@@ -32,6 +34,7 @@ __all__ = [
     "BurgersCompiler",
     "MaxwellCompiler",
     "Maxwell3DCompiler",
+    "MaxwellAntenna3DCompiler",
     "NavierStokes2DCompiler",
     "SchrodingerCompiler",
     "DiffusionCompiler",
