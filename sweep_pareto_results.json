@@ -1,0 +1,122 @@
+{
+  "config": {
+    "family": "half_wave_dipole",
+    "n_bits": 9,
+    "n_steps": 50,
+    "n_candidates": 3,
+    "seed": 42,
+    "grid_size": "512\u00b3",
+    "total_sweep_time_s": 797.7414895119873
+  },
+  "sweep_summary": {
+    "n_points": 3,
+    "n_successful": 3,
+    "n_failed": 0
+  },
+  "pareto_summary": {
+    "n_candidates": 3,
+    "n_fronts": 3,
+    "n_file_now": 0,
+    "n_hold": 3,
+    "n_discard": 0,
+    "objectives": [
+      "peak_gain_dbi",
+      "fractional_bandwidth",
+      "radiation_efficiency"
+    ],
+    "top_score": 0.641502137726663,
+    "top_candidate": "HALF-140a86495eeeca76"
+  },
+  "candidates": [
+    {
+      "candidate_id": "HALF-140a86495eeeca76",
+      "params": {
+        "arm_length": 0.30921040871780925,
+        "wire_radius": 0.008296207176067733,
+        "gap_half": 0.029390558790918897
+      },
+      "param_hash": "140a86495eeeca76",
+      "pareto_front": 1,
+      "crowding_distance": Infinity,
+      "scores": {
+        "rf_performance": 0.9,
+        "manufacturability": 0.043347584844419904,
+        "novelty_proxy": 1.0,
+        "claim_breadth": 0.2,
+        "market_relevance": 0.7,
+        "verification_quality": 0.75
+      },
+      "composite_score": 0.641502137726663,
+      "triage": "HOLD",
+      "triage_reason": "Score 0.64 \u2014 general hold for review",
+      "metrics": {
+        "s11_min_db": -29.291208728026696,
+        "peak_gain_dbi": -300.0,
+        "fractional_bandwidth": 1.5555555555555556,
+        "radiation_efficiency": 4.878247248304671e-33,
+        "vswr_min": 1.0710611930583374,
+        "wall_time_s": 258.4654630129953
+      }
+    },
+    {
+      "candidate_id": "HALF-5360729d92a85440",
+      "params": {
+        "arm_length": 0.332186814566789,
+        "wire_radius": 0.020360745391321832,
+        "gap_half": 0.02646494799778456
+      },
+      "param_hash": "5360729d92a85440",
+      "pareto_front": 0,
+      "crowding_distance": Infinity,
+      "scores": {
+        "rf_performance": 0.75,
+        "manufacturability": 0.0957948565293269,
+        "novelty_proxy": 1.0,
+        "claim_breadth": 0.2,
+        "market_relevance": 0.7,
+        "verification_quality": 0.75
+      },
+      "composite_score": 0.611869228479399,
+      "triage": "HOLD",
+      "triage_reason": "Score 0.61 \u2014 general hold for review",
+      "metrics": {
+        "s11_min_db": -22.367239691548345,
+        "peak_gain_dbi": -300.0,
+        "fractional_bandwidth": 1.5555555555555556,
+        "radiation_efficiency": 9.19886419956795e-33,
+        "vswr_min": 1.164840498518643,
+        "wall_time_s": 258.7588300470088
+      }
+    },
+    {
+      "candidate_id": "HALF-2dbdc0d3a1441037",
+      "params": {
+        "arm_length": 0.23511578136867017,
+        "wire_radius": 0.017977930848140346,
+        "gap_half": 0.028169124721215043
+      },
+      "param_hash": "2dbdc0d3a1441037",
+      "pareto_front": 2,
+      "crowding_distance": Infinity,
+      "scores": {
+        "rf_performance": 0.675,
+        "manufacturability": 0.09003068022944795,
+        "novelty_proxy": 1.0,
+        "claim_breadth": 0.2,
+        "market_relevance": 0.7,
+        "verification_quality": 0.75
+      },
+      "composite_score": 0.5922546020344173,
+      "triage": "HOLD",
+      "triage_reason": "Score 0.59 \u2014 general hold for review",
+      "metrics": {
+        "s11_min_db": -26.13005293339951,
+        "peak_gain_dbi": -300.0,
+        "fractional_bandwidth": 1.5555555555555556,
+        "radiation_efficiency": 3.089834400679163e-33,
+        "vswr_min": 1.1038765724178627,
+        "wall_time_s": 261.60457396900165
+      }
+    }
+  ]
+}
