@@ -30,6 +30,7 @@ from tensornet.cfd.qtt_2d import QTT2DState, dense_to_qtt_2d, qtt_2d_to_dense
 from tensornet.cfd.qtt_2d_shift_native import (
     apply_shift_mpo,
     make_interleaved_shift_mpo,
+    make_interleaved_shift_minus_mpo,
     truncate_qtt2d,
 )
 
@@ -140,8 +141,6 @@ class Euler2D_Native:
         self.dy = 1.0 / (2**ny)
 
         # Pre-build shift MPOs (they're reusable)
-        # Note: Currently only +1 shift is implemented natively
-        # For -1 shift, we use a different approach in _apply_shift
         n_cores = nx + ny
         dtype = self.config.dtype
         device = self.config.device
@@ -151,6 +150,14 @@ class Euler2D_Native:
             n_cores, axis="x", dtype=dtype, device=device
         )
         self.shift_y_plus = make_interleaved_shift_mpo(
+            n_cores, axis="y", dtype=dtype, device=device
+        )
+
+        # -1 shift MPOs for flux differencing: F[i] - F[i-1]
+        self.shift_x_minus = make_interleaved_shift_minus_mpo(
+            n_cores, axis="x", dtype=dtype, device=device
+        )
+        self.shift_y_minus = make_interleaved_shift_minus_mpo(
             n_cores, axis="y", dtype=dtype, device=device
         )
 
@@ -165,13 +172,13 @@ class Euler2D_Native:
 
     def _apply_shift_plus(self, qtt: QTT2DState, axis: str) -> QTT2DState:
         """Apply +1 shift MPO to a QTT2D field."""
-        if axis == "x":
-            mpo = self.shift_x_plus
-        else:
-            mpo = self.shift_y_plus
+        mpo = self.shift_x_plus if axis == "x" else self.shift_y_plus
+        return apply_shift_mpo(qtt, mpo, max_rank=self.config.max_rank)
 
-        cores = apply_shift_mpo(qtt.cores, mpo)
-        return QTT2DState(cores, nx=qtt.nx, ny=qtt.ny)
+    def _apply_shift_minus(self, qtt: QTT2DState, axis: str) -> QTT2DState:
+        """Apply -1 shift MPO to a QTT2D field: result[i] = field[(i-1) mod N]."""
+        mpo = self.shift_x_minus if axis == "x" else self.shift_y_minus
+        return apply_shift_mpo(qtt, mpo, max_rank=self.config.max_rank)
 
     def _qtt2d_add(self, a: QTT2DState, b: QTT2DState) -> QTT2DState:
         """Add two QTT2D states."""
@@ -197,6 +204,11 @@ class Euler2D_Native:
         """
         Evolve state in one axis direction using native TCI flux.
 
+        Fully native O(log N) implementation:
+        1. Flux via TCI sampling → QTT (O(r² log N))
+        2. Flux difference via -1 shift MPO (O(n r²))
+        3. State update via QTT arithmetic (O(n r²))
+
         Args:
             state: Current state
             dt: Time step
@@ -205,7 +217,7 @@ class Euler2D_Native:
         Returns:
             Updated state
         """
-        # Compute flux via TCI (this is O(log N)!)
+        # 1. Compute flux via TCI (O(r² log N))
         F_rho, F_rhou, F_rhov, F_E = compute_flux_2d_tci(
             state.rho,
             state.rhou,
@@ -215,265 +227,21 @@ class Euler2D_Native:
             config=self.flux_config,
         )
 
-        # Compute flux difference: F_{i+1/2} - F_{i-1/2}
-        # Using: dF[i] = F[i+1/2] - F[i-1/2] = F[i] - F[i-1]
-        # Since we only have +1 shift, rewrite as:
-        #   dF[i] = F[i] - F[i-1]
-        # Let G = shift(F, +1), so G[i] = F[i+1]
-        # Then: G[i-1] = F[i], so F[i] = G[i-1]
-        # Actually, simpler: compute shift(F,+1) to get F at i+1 positions
-        # Then the update at position i uses: F[i] - F[i-1]
-        #
-        # Alternative formulation:
-        # Let F_plus = F (interface flux at i+1/2)
-        # Let F_shift = shift(F, +1) = F at (i+1)+1/2 = F_{i+3/2}
-        # We need F_{i+1/2} - F_{i-1/2}
-        # Note: F shifted by +1 in cell index gives F_{i+3/2}
-        # We can compute: F - (what was F at i-1)
-        # Since shift by +1: (shift_plus(F))[i] = F[i+1]
-        # So F[i-1] = (shift_plus(F^{-1}))[i] where F^{-1} is inverse shift
-        #
-        # Key insight: F_{i+1/2} - F_{i-1/2} = F - shift^{-1}(F)
-        # We don't have shift^{-1}, but: shift^{-1}(F) = shift^{N-1}(F) for periodic BC
-        # This is expensive. Better approach:
-        #
-        # The flux at i-1/2 is computed using states at i-1 and i.
-        # Our TCI computes flux at i+1/2 using states at i and i+1.
-        # So: shift(Flux, +1)[i] = Flux at (i+1)+1/2 = Flux_{i+3/2}
-        #
-        # We need: dF[i] = Flux_{i+1/2} - Flux_{i-1/2}
-        # Note that (Flux shifted by +1)[i-1] = Flux[i], so:
-        # Flux_{i-1/2} = (what would be Flux at position i-1)
-        #
-        # Actually the cleanest approach for conservative difference:
-        # dF = F - roll(F, shifts=1) where roll with +1 brings F[N-1] to F[0], F[0] to F[1], etc.
-        # This is: dF[i] = F[i] - F[(i-1) mod N]
-        #
-        # Our shift_plus does: (shift_plus(F))[i] = F[(i+1) mod N]
-        # So: roll(F, +1) via shift_plus gives F advanced by 1
-        # We need: roll(F, -1) = F[(i-1) mod N] at position i
-        #
-        # Using only shift_plus:
-        # shift_plus(shift_plus(...)) N-1 times = shift by N-1 = shift by -1
-        # Too expensive!
-        #
-        # Better: compute the flux at i-1/2 directly by computing flux with shifted state
-        # FluxMinus = flux(state[i-1], state[i]) = flux computed from shift_plus(state), state
-        # But TCI samples both neighbors already...
-        #
-        # SIMPLEST FIX: Just compute in correct direction
-        # Our flux at index i is F_{i+1/2} (right interface)
-        # The update should be: U_new = U - dt/dx * (F_{i+1/2} - F_{i-1/2})
-        # Let's denote our flux as F_right[i] = F_{i+1/2}
-        # Then F_{i-1/2} = F_right[i-1] = shift_minus(F_right)[i]
-        #
-        # If we compute F_shifted = shift_plus(F), we get F_right[(i+1) mod N]
-        # So: dF[i] = F_right[i] - F_right[i-1]
-        # Rearrange:
-        #   (shift_plus(dF))[i] = dF[i+1] = F_right[i+1] - F_right[i]
-        #   so shift_plus(F) - F = dF shifted by +1
-        #
-        # Apply update at wrong place, then shift back? Complex.
-        #
-        # THE FIX: Build the -1 shift MPO!
-        # For now, use direct difference with +1 shift:
-        # dF = shift_plus(F) - F, which gives dF[i] = F[i+1] - F[i] = F_{i+3/2} - F_{i+1/2}
-        # This is the *outflow* at cell i+1 instead of cell i.
-        # Apply to U shifted by +1, then shift back? No, that's convoluted.
-        #
-        # CLEANEST: Compute F at i-1/2 by using the flux function at shifted indices!
-        # The TCI samples at (i, i+1). If we want F_{i-1/2}, sample at (i-1, i).
-        # This means: for TCI of F_left, use shifted indices in the sampler.
-        #
-        # Actually simplest approach:
-        # Build flux from shifted state, don't shift the flux!
-        # state_shift = shift_plus(state) - gives state at i+1
-        # flux_left = flux(shift_plus(state), state) = Rusanov using (rho[i+1], rho[i])
-        # But wait - our current flux uses state[i] and state[i+1] = shift_plus(state[i])
-        # So it computes F_{i+1/2}.
-        #
-        # For F_{i-1/2}, we need flux(state[i-1], state[i]).
-        # Let state_minus1 = (hypothetical shift_minus state).
-        # state[i-1] appears at position i in shift_minus(state).
-        #
-        # Using shift_plus: shift_plus^{N-1}(state) = shift_minus(state)
-        # For small N this is OK but expensive.
-        #
-        # PRAGMATIC SOLUTION: Directly compute dF using the finite difference
-        # recognizing that shift_plus(F) gives F at i+1, so:
-        # F[i] - F[i-1] = F[i] - shift_minus(F)[i]
-        # and shift_minus(F)[i] = shift_plus^{N-1}(F)[i]
-        # For 2D with N=64, N-1=63 shifts... too many.
-        #
-        # BEST APPROACH: Implement shift_minus directly!
-        # Binary subtraction instead of addition.
-        # Will do this now.
+        # 2. Flux difference: dF[i] = F_{i+1/2} - F_{i-1/2} = F[i] - F[i-1]
+        #    Using native -1 shift MPO: shift_minus(F)[i] = F[(i-1) mod N]
+        #    So: dF = F - shift_minus(F)
+        F_rho_shifted = self._apply_shift_minus(F_rho, axis)
+        F_rhou_shifted = self._apply_shift_minus(F_rhou, axis)
+        F_rhov_shifted = self._apply_shift_minus(F_rhov, axis)
+        F_E_shifted = self._apply_shift_minus(F_E, axis)
 
-        # TEMPORARY WORKAROUND: Compute dF = F - F_shifted using multiple +1 shifts
-        # For small grids (N=32), do 31 shifts. For large grids, this is too slow.
-        #
-        # Let's instead compute the correct flux direction:
-        # dF[i] = F_{i+1/2} - F_{i-1/2}
-        # Using shift_plus: (shift_plus(F))[i-1] = F[i], so at index i: F[i] is known
-        # We need F[i-1]. Note that F = our computed flux.
-        #
-        # Observe: shift_plus(A)[i] = A[(i+1) mod N]
-        # Define: A_prev[i] = A[(i-1) mod N]
-        # We need: dF = F - F_prev
-        #
-        # If we compute G = F - shift_plus(F), we get G[i] = F[i] - F[i+1]
-        # But we need F[i] - F[i-1] = dF.
-        #
-        # Key: (shift_plus(dF))[i] = dF[(i+1) mod N] = F[i+1] - F[i]
-        # So: shift_plus(dF) = shift_plus(F) - F
-        # Therefore: dF = shift_plus^{-1}(shift_plus(F) - F)
-        #
-        # We don't have shift_plus^{-1}... back to needing it.
-        #
-        # FINAL SOLUTION:
-        # The finite volume update is: U_new[i] = U[i] - dt/dx * (F_{i+1/2} - F_{i-1/2})
-        # Rewrite as: U_new[i] = U[i] - dt/dx * F_{i+1/2} + dt/dx * F_{i-1/2}
-        #
-        # Let F_right = F (our computed flux at right interface)
-        # Then: F_{i-1/2} at index i = F_right at index (i-1)
-        #
-        # Alternative conservative form:
-        # sum over all i: U_new[i] - U[i] = -dt/dx * sum(F_{i+1/2} - F_{i-1/2})
-        #                                 = -dt/dx * (F_{N-1/2} - F_{-1/2}) = 0 for periodic
-        # This is automatic if we use: U_new = U - dt/dx * (F - F_shifted_minus1)
-        #
-        # IMPLEMENTATION:
-        # Use the fact that for the flux difference, we can equivalently think of it as:
-        # dF = shift_plus(F) - F applied at index i-1
-        # So: U_new[i-1] = U[i-1] - dt/dx * (shift_plus(F)[i-1] - F[i-1])
-        #                = U[i-1] - dt/dx * (F[i] - F[i-1])
-        #                = U[i-1] - dt/dx * (F_{i+1/2} - F_{i-1/2})  ← Exactly right!
-        #
-        # So the update formula becomes:
-        # Let dF_forward = shift_plus(F) - F   (this gives F[i+1] - F[i] at each position)
-        # Apply: U_temp = U - dt/dx * dF_forward
-        # Then shift U_temp by -1 to get correct alignment? No, wait...
-        #
-        # Let me reconsider. If dF_forward[i] = F[i+1] - F[i], then:
-        # U_temp[i] = U[i] - dt/dx * (F[i+1] - F[i])
-        # But we want: U_new[i] = U[i] - dt/dx * (F[i] - F[i-1])
-        #
-        # Note: U_temp[i-1] = U[i-1] - dt/dx * (F[i] - F[i-1]) ← This is U_new[i-1]!
-        # So: U_new[i] = U_temp[i-1] = shift_plus(U_temp)[i]?
-        # Check: shift_plus(U_temp)[i] = U_temp[(i+1) mod N] = U_temp[i+1]
-        # That's not right...
-        #
-        # shift_minus(U_temp)[i] = U_temp[(i-1) mod N] = U_temp[i-1] = U_new[i-1]
-        # So we need shift_minus which we don't have!
-        #
-        # OK I'll implement the binary subtraction MPO. But for now, quick workaround:
-        # Compute flux at left interface F_left instead of F_right.
-        # F_left[i] = F_{i-1/2} = flux(state[i-1], state[i])
-        #           = flux using (rho[(i-1) mod N], rho[i])
-        # Our current TCI computes flux(state[i], state[i+1]).
-        # To get flux(state[i-1], state[i]), we shift the left state index:
-        # F_left = flux(shift_minus(state), state)
-        #
-        # But we don't have shift_minus for state either!
-        #
-        # WORKAROUND: Compute as F_left via shift_plus on indices
-        # The TCI sampler uses neighbor indices.
-        # Currently: left_idx = morton_idx, right_idx = morton_idx shifted by +1 in axis
-        # For F_left: left_idx = morton_idx shifted by -1 in axis, right_idx = morton_idx
-        #
-        # Change the flux sampler to compute F_{i-1/2} instead of F_{i+1/2}:
-        # Then dF = shift_plus(F_left) - F_left
-        # Because: shift_plus(F_left)[i] = F_left[i+1] = F_{(i+1)-1/2} = F_{i+1/2}
-        # And: dF[i] = F_{i+1/2} - F_{i-1/2} ✓
+        mr = self.config.max_rank
+        dF_rho = truncate_qtt2d(self._qtt2d_add(F_rho, self._qtt2d_scale(F_rho_shifted, -1.0)), mr)
+        dF_rhou = truncate_qtt2d(self._qtt2d_add(F_rhou, self._qtt2d_scale(F_rhou_shifted, -1.0)), mr)
+        dF_rhov = truncate_qtt2d(self._qtt2d_add(F_rhov, self._qtt2d_scale(F_rhov_shifted, -1.0)), mr)
+        dF_E = truncate_qtt2d(self._qtt2d_add(F_E, self._qtt2d_scale(F_E_shifted, -1.0)), mr)
 
-        # For now, let's compute F_left by adjusting the sampler
-        # Actually, compute_flux_2d_tci already has an option for this?
-        # Let me check... No, it always uses (i, i+1) neighbor pattern.
-
-        # Quick workaround using existing code:
-        # 1. Compute F_right as usual
-        # 2. Compute: G = shift_plus(F_right) - F_right
-        #    G[i] = F_right[i+1] - F_right[i] = F_{i+3/2} - F_{i+1/2}
-        # 3. Note that G is the flux difference for cell i+1:
-        #    dF[i+1] = F_{i+3/2} - F_{i+1/2} = G[i]
-        # 4. So dF = shift_minus(G) which we can't compute directly...
-        #
-        # FINAL WORKAROUND: Change the update formula
-        # Instead of: U_new = U - dt/dx * dF
-        # Compute: G = shift_plus(F) - F
-        # And apply: U_new = U - dt/dx * shift_minus(G)
-        #
-        # Since shift_minus(G) = shift_plus^{N-1}(G), for small grids we can do this.
-        # For a 32x32 grid, N=32 in each dimension, so 31 shifts in the interleaved format.
-        # Actually in Morton order with interleaved bits, a shift by -1 in x or y
-        # is complex... each axis shift touches different bit positions.
-        #
-        # THE RIGHT SOLUTION: Implement shift_minus MPO.
-        # For now, fall back to a hybrid approach:
-        # Compute flux via TCI (fast), but do the shift difference using small dense ops.
-
-        # === HYBRID APPROACH ===
-        # The flux TCI is O(log N), which is the expensive part.
-        # The shift difference can be done via:
-        # 1. Evaluate F at all Morton indices (O(N) but cheap for small N)
-        # 2. Compute difference in dense form
-        # 3. Recompress to QTT
-        #
-        # This is temporary until we implement shift_minus MPO.
-
-        # For now, let's use a simpler approach:
-        # Compute F via TCI, then do the shift in dense space for the difference.
-        # This is O(N) for the difference but O(log N) for flux - still faster than
-        # computing flux in dense space!
-
-        N = 2 ** (self.nx + self.ny)
-        indices = torch.arange(N, dtype=torch.long, device=self.config.device)
-
-        # Evaluate flux at all indices (this is O(N) but fast since TCI already built the QTT)
-        F_rho_dense = qtt2d_eval_batch(F_rho, indices)
-        F_rhou_dense = qtt2d_eval_batch(F_rhou, indices)
-        F_rhov_dense = qtt2d_eval_batch(F_rhov, indices)
-        F_E_dense = qtt2d_eval_batch(F_E, indices)
-
-        # Compute shift in dense space: F[i] - F[i-1] = F - roll(F, 1)
-        # roll(F, 1) shifts elements: F[0] <- F[N-1], F[1] <- F[0], etc.
-        # So roll(F, 1)[i] = F[(i-1) mod N] = F_{i-1}
-        dF_rho_dense = F_rho_dense - torch.roll(F_rho_dense, 1)
-        dF_rhou_dense = F_rhou_dense - torch.roll(F_rhou_dense, 1)
-        dF_rhov_dense = F_rhov_dense - torch.roll(F_rhov_dense, 1)
-        dF_E_dense = F_E_dense - torch.roll(F_E_dense, 1)
-
-        # Reshape to 2D grid for recompression
-        Nx, Ny = 2**self.nx, 2**self.ny
-
-        # Reconstruct 2D arrays from Morton order
-        # Note: dense_to_qtt_2d is already imported at module level
-
-        # Reconstruct 2D arrays from Morton order
-        rho_2d = torch.zeros(Nx, Ny, dtype=self.config.dtype, device=self.config.device)
-        rhou_2d = torch.zeros_like(rho_2d)
-        rhov_2d = torch.zeros_like(rho_2d)
-        E_2d = torch.zeros_like(rho_2d)
-
-        for m in range(N):
-            ix, iy = 0, 0
-            for b in range(self.nx + self.ny):
-                if b % 2 == 0:  # x bit
-                    ix |= ((m >> b) & 1) << (b // 2)
-                else:  # y bit
-                    iy |= ((m >> b) & 1) << (b // 2)
-            rho_2d[ix, iy] = dF_rho_dense[m]
-            rhou_2d[ix, iy] = dF_rhou_dense[m]
-            rhov_2d[ix, iy] = dF_rhov_dense[m]
-            E_2d[ix, iy] = dF_E_dense[m]
-
-        # Compress back to QTT2D
-        dF_rho = dense_to_qtt_2d(rho_2d, max_bond=self.config.max_rank)
-        dF_rhou = dense_to_qtt_2d(rhou_2d, max_bond=self.config.max_rank)
-        dF_rhov = dense_to_qtt_2d(rhov_2d, max_bond=self.config.max_rank)
-        dF_E = dense_to_qtt_2d(E_2d, max_bond=self.config.max_rank)
-
-        # Update: U^{n+1} = U^n - dt/dx * dF
+        # 3. Update: U^{n+1} = U^n - dt/dx * dF
         dx = self.dx if axis == "x" else self.dy
         coeff = -dt / dx
 
@@ -484,7 +252,7 @@ class Euler2D_Native:
 
         # Truncate to control rank growth
         new_state = Euler2DStateNative(rho_new, rhou_new, rhov_new, E_new)
-        return new_state.truncate(self.config.max_rank)
+        return new_state.truncate(mr)
 
     def step(self, state: Euler2DStateNative, dt: float) -> Euler2DStateNative:
         """

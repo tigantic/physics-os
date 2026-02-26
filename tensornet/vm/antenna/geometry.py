@@ -609,16 +609,51 @@ class EShapedPatchDesign(_BaseAntennaDesign):
                 mask[slot_region] = 1.0
             return mask
 
-        # Inject the custom conductor mask into program metadata
-        # This requires monkey-patching the compiled program's metadata
+        # ── Multi-term separable decomposition ──────────────────────
+        # mask = 1 - ground - patch + slot1 + slot2
+        # (5 rank-1 terms, exact decomposition, zero dense grids)
+        def _one(t: np.ndarray) -> np.ndarray:
+            return np.ones_like(t)
+
+        def _ground_z(z: np.ndarray) -> np.ndarray:
+            return np.where(z < gt, 1.0, 0.0)
+
+        def _patch_x(x: np.ndarray) -> np.ndarray:
+            return np.where(np.abs(x - 0.5) < pw / 2.0, 1.0, 0.0)
+
+        def _patch_y(y: np.ndarray) -> np.ndarray:
+            return np.where(np.abs(y - 0.5) < pl / 2.0, 1.0, 0.0)
+
+        def _patch_z(z: np.ndarray) -> np.ndarray:
+            return np.where(np.abs(z - h_sub) < pt / 2.0, 1.0, 0.0)
+
+        slot1_cx = 0.5 + slot_offset
+        slot2_cx = 0.5 - slot_offset
+
+        def _slot1_x(x: np.ndarray) -> np.ndarray:
+            return np.where(np.abs(x - slot1_cx) < slot_width / 2.0, 1.0, 0.0)
+
+        def _slot2_x(x: np.ndarray) -> np.ndarray:
+            return np.where(np.abs(x - slot2_cx) < slot_width / 2.0, 1.0, 0.0)
+
+        def _slot_y(y: np.ndarray) -> np.ndarray:
+            return np.where(np.abs(y - 0.5) < slot_length / 2.0, 1.0, 0.0)
+
+        eslot_sep: list[tuple[list, float]] = [
+            ([_one, _one, _one], 1.0),          # free space
+            ([_one, _one, _ground_z], -1.0),     # ground plane
+            ([_patch_x, _patch_y, _patch_z], -1.0),  # patch conductor
+            ([_slot1_x, _slot_y, _patch_z], 1.0),    # slot 1 (air)
+            ([_slot2_x, _slot_y, _patch_z], 1.0),    # slot 2 (air)
+        ]
+
+        # Inject multi-term separable + dense fallback into program
         original_compile = compiler.compile
 
         def _compile_with_eslots() -> Any:
             prog = original_compile()
             prog.metadata["init_conductor_mask"] = _e_shaped_cond_mask
-            # Force dense init for conductor mask (slots not separable)
-            if "init_conductor_mask_separable" in prog.metadata:
-                del prog.metadata["init_conductor_mask_separable"]
+            prog.metadata["init_conductor_mask_separable"] = eslot_sep
             return prog
 
         compiler.compile = _compile_with_eslots  # type: ignore[assignment]
@@ -824,13 +859,74 @@ class USlotsDesign(_BaseAntennaDesign):
 
             return mask
 
+        # ── Multi-term separable decomposition ──────────────────────
+        # mask = 1 - ground - patch + bar + left_arm + right_arm
+        # (6 rank-1 terms, exact decomposition, zero dense grids)
+        cx, cy = 0.5, 0.5
+        half_w = slot_width_x / 2.0
+        bar_y_lo = cy - slot_length_y / 2.0
+        bar_y_hi = bar_y_lo + slot_arm_w
+        arm_y_lo = bar_y_lo
+        arm_y_hi = cy + slot_length_y / 2.0
+        left_x_lo = cx - half_w
+        left_x_hi = left_x_lo + slot_arm_w
+        right_x_hi = cx + half_w
+        right_x_lo = right_x_hi - slot_arm_w
+
+        def _one(t: np.ndarray) -> np.ndarray:
+            return np.ones_like(t)
+
+        def _ground_z(z: np.ndarray) -> np.ndarray:
+            return np.where(z < gt, 1.0, 0.0)
+
+        def _patch_x(x: np.ndarray) -> np.ndarray:
+            return np.where(np.abs(x - 0.5) < pw / 2.0, 1.0, 0.0)
+
+        def _patch_y(y: np.ndarray) -> np.ndarray:
+            return np.where(np.abs(y - 0.5) < pl / 2.0, 1.0, 0.0)
+
+        def _patch_z(z: np.ndarray) -> np.ndarray:
+            return np.where(np.abs(z - h_sub) < pt / 2.0, 1.0, 0.0)
+
+        # U-slot bottom bar
+        def _bar_x(x: np.ndarray) -> np.ndarray:
+            return np.where(np.abs(x - cx) < half_w, 1.0, 0.0)
+
+        def _bar_y(y: np.ndarray) -> np.ndarray:
+            return np.where((y >= bar_y_lo) & (y <= bar_y_hi), 1.0, 0.0)
+
+        # Left arm
+        def _left_x(x: np.ndarray) -> np.ndarray:
+            return np.where(
+                (x >= left_x_lo) & (x <= left_x_hi), 1.0, 0.0
+            )
+
+        def _arm_y(y: np.ndarray) -> np.ndarray:
+            return np.where(
+                (y >= arm_y_lo) & (y <= arm_y_hi), 1.0, 0.0
+            )
+
+        # Right arm
+        def _right_x(x: np.ndarray) -> np.ndarray:
+            return np.where(
+                (x >= right_x_lo) & (x <= right_x_hi), 1.0, 0.0
+            )
+
+        uslot_sep: list[tuple[list, float]] = [
+            ([_one, _one, _one], 1.0),              # free space
+            ([_one, _one, _ground_z], -1.0),         # ground plane
+            ([_patch_x, _patch_y, _patch_z], -1.0),  # patch conductor
+            ([_bar_x, _bar_y, _patch_z], 1.0),       # U bottom bar (air)
+            ([_left_x, _arm_y, _patch_z], 1.0),      # left arm (air)
+            ([_right_x, _arm_y, _patch_z], 1.0),     # right arm (air)
+        ]
+
         original_compile = compiler.compile
 
         def _compile_with_uslot() -> Any:
             prog = original_compile()
             prog.metadata["init_conductor_mask"] = _u_slot_cond_mask
-            if "init_conductor_mask_separable" in prog.metadata:
-                del prog.metadata["init_conductor_mask_separable"]
+            prog.metadata["init_conductor_mask_separable"] = uslot_sep
             return prog
 
         compiler.compile = _compile_with_uslot  # type: ignore[assignment]

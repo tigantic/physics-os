@@ -618,6 +618,46 @@ class GPURuntime:
         sep_key = f"init_{spec.name}_separable"
         sep_factors = program.metadata.get(sep_key)
         if sep_factors is not None:
+            mr = self.governor.max_rank
+            ct = self.governor.rel_tol
+            bpd = spec.bits_per_dim
+
+            # Multi-term separable: list of (factors, scale) tuples.
+            # Each term creates a rank-1 QTT; the sum gives a rank-N
+            # tensor that is then truncated.  This decomposition handles
+            # conductor masks with ground planes + patches + slots
+            # without ANY dense materialization.
+            if (
+                isinstance(sep_factors, list)
+                and len(sep_factors) > 0
+                and isinstance(sep_factors[0], tuple)
+                and len(sep_factors[0]) == 2
+                and isinstance(sep_factors[0][0], list)
+            ):
+                terms = sep_factors
+                result = GPUQTTTensor.from_separable(
+                    factors=terms[0][0],
+                    bits_per_dim=bpd,
+                    domain=domain,
+                    max_rank=mr,
+                    cutoff=ct,
+                    scale=terms[0][1],
+                )
+                for factors_i, scale_i in terms[1:]:
+                    term = GPUQTTTensor.from_separable(
+                        factors=factors_i,
+                        bits_per_dim=bpd,
+                        domain=domain,
+                        max_rank=mr,
+                        cutoff=ct,
+                        scale=scale_i,
+                    )
+                    result = result.add(term)
+                # Truncate accumulated rank back down
+                result = result.truncate(max_rank=mr, cutoff=ct)
+                return result
+
+            # Single-term separable (original path)
             scale = 1.0
             factors = sep_factors
             # Support (factors_list, scale) tuple
@@ -625,10 +665,10 @@ class GPURuntime:
                 factors, scale = sep_factors
             return GPUQTTTensor.from_separable(
                 factors=factors,
-                bits_per_dim=spec.bits_per_dim,
+                bits_per_dim=bpd,
                 domain=domain,
-                max_rank=self.governor.max_rank,
-                cutoff=self.governor.rel_tol,
+                max_rank=mr,
+                cutoff=ct,
                 scale=scale,
             )
 

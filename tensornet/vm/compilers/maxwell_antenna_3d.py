@@ -923,7 +923,19 @@ class MaxwellAntenna3DCompiler(BaseCompiler):
     def _patch_fields(
         self,
     ) -> tuple[list, list | None, "Callable"]:
-        """Build fields for rectangular microstrip patch."""
+        """Build fields for rectangular microstrip patch.
+
+        Conductor mask decomposition (multi-term separable):
+            mask(x,y,z) = 1 - ground(z) - patch(x,y,z)
+
+        Since ground and patch occupy disjoint z-ranges, this is exact:
+            Term 1: +1 · ones(x) · ones(y) · ones(z)
+            Term 2: -1 · ones(x) · ones(y) · ground_z(z)
+            Term 3: -1 · box_x(x) · box_y(y) · box_z(z)
+
+        Each term is rank-1 separable.  The runtime sums them and
+        truncates — zero dense materialization at any grid size.
+        """
         geo = self._geo
         assert isinstance(geo, PatchGeometry)
 
@@ -931,9 +943,6 @@ class MaxwellAntenna3DCompiler(BaseCompiler):
         h_sub = geo.substrate_height
 
         # inv_eps_r: 1/ε_r in substrate, 1 above.
-        # ε_r(x,y,z) = ε_r if z < h_sub else 1.0
-        # → inv_ε_r = 1/ε_r if z < h_sub else 1.0
-        # This is separable: 1(x) · 1(y) · f(z)
         inv_eps_val = 1.0 / eps_r
 
         def _inv_eps_z(z: NDArray) -> NDArray:
@@ -965,4 +974,23 @@ class MaxwellAntenna3DCompiler(BaseCompiler):
             mask[patch] = 0.0
             return mask
 
-        return inv_eps_sep, None, _cond_mask_3d
+        # Multi-term separable: mask = 1 - ground - patch
+        def _ground_z(z: NDArray) -> NDArray:
+            return np.where(z < gt, 1.0, 0.0)
+
+        def _box_x(x: NDArray) -> NDArray:
+            return np.where(np.abs(x - 0.5) < pw / 2.0, 1.0, 0.0)
+
+        def _box_y(y: NDArray) -> NDArray:
+            return np.where(np.abs(y - 0.5) < pl / 2.0, 1.0, 0.0)
+
+        def _box_z(z: NDArray) -> NDArray:
+            return np.where(np.abs(z - h_sub) < pt / 2.0, 1.0, 0.0)
+
+        cond_mask_sep: list[tuple[list, float]] = [
+            ([_one, _one, _one], 1.0),        # free space
+            ([_one, _one, _ground_z], -1.0),   # ground plane
+            ([_box_x, _box_y, _box_z], -1.0),  # patch conductor
+        ]
+
+        return inv_eps_sep, cond_mask_sep, _cond_mask_3d
