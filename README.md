@@ -35,6 +35,8 @@
 
 </div>
 
+> **[Documentation](https://tigantic.github.io/HyperTensor-VM)** · **[Architecture](ARCHITECTURE.md)** · **[Roadmap](ROADMAP.md)** · **[Specification](PLATFORM_SPECIFICATION.md)** · **[Challenges](challenges/)**
+
 ---
 
 ## The Problem
@@ -252,6 +254,23 @@ Every vertical has dedicated domain packs, validation gauntlets, and signed atte
 | 8 | **Materials** | Superconductor at 300K | 18 | **Structural** | FEA-QTT Hex8 elasticity |
 | 9 | **Quantum** | Surface code error correction | 19 | **Optimization** | SIMP topology + inverse |
 | 10 | **Drug Design** | QM/MM binding free energy | 20 | **Facial Plastics** | Surgical simulation (43K LOC, 941 tests) |
+
+---
+
+## Civilization Challenges — *Mutationes Civilizatoriae*
+
+Six execution documents mapping demonstrated capabilities to civilization-scale problems. Each includes governing equations, phased execution plans, revenue models, and terminates in trustless on-chain verification.
+
+> **[Full Index →](challenges/README.md)**
+
+| # | Challenge | Crisis | Demonstrated Capability |
+|:-:|-----------|--------|------------------------|
+| **I** | [Grid Stability](challenges/challenge_I_grid_stability.md) | Continental blackout cascades | 2^50 states verified · 114 ns regime detection · 61 KB for full grid |
+| **II** | [Pandemic Preparedness](challenges/challenge_II_pandemic_preparedness.md) | $2.6B per drug, 85% proteome undruggable | Physics-first drug design · TIG-011a from zero training data |
+| **III** | [Climate Tipping Points](challenges/challenge_III_climate_tipping_points.md) | 3× uncertainty in climate sensitivity | Global atmosphere at 1 km in 300 KB · Treaty-grade ZK proofs |
+| **IV** | [Fusion Energy](challenges/challenge_IV_fusion_energy.md) | Plasma control 3.6M× too slow | 177 μs control loop · StarHeart Q=14.1 · 5.6× faster than real-time |
+| **V** | [Supply Chain](challenges/challenge_V_supply_chain.md) | $9T fragility, cascades outpace humans | Logistics as Euler equations · WENO shock capturing at rank 3 |
+| **VI** | [Proof of Reality](challenges/challenge_VI_proof_of_reality.md) | Deepfakes collapse evidentiary trust | Maxwell-equation consistency · Undefeatable without solving physics |
 
 ---
 
@@ -510,6 +529,7 @@ HyperTensor-VM/
 ├── products/                       # Shipped products
 │   └── facial_plastics/            #   Surgical simulation (43K LOC, 941 tests)
 ├── deploy/telemetry/               # Prometheus + Grafana observability stack
+├── challenges/                     # 6 Civilization Challenge execution documents
 ├── docs/                           # 27 subdirectories, 25 ADRs
 ├── tests/                          # 370+ tests across integration + unit suites
 ├── tools/                          # sync_versions.py, dep_graph.py, 75+ scripts
@@ -568,6 +588,7 @@ All versions in sync.       # 7/7 OK
 | [`docs/operations/`](docs/operations/) | Operations runbook, launch gate matrix, security operations |
 | [`docs/product/`](docs/product/) | Pricing model, release notes, certificate test matrix, launch readiness |
 | [`docs/strategy/`](docs/strategy/) | Commercial execution plan (7 phases complete), IP strategy |
+| [`challenges/`](challenges/) | **Civilization Challenges** — 6 execution documents (grid, pandemic, climate, fusion, supply chain, proof of reality) |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution guidelines, PR process, review requirements |
 | [`SECURITY.md`](SECURITY.md) | Security policy, vulnerability reporting |
 
