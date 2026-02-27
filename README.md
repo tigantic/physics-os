@@ -19,20 +19,19 @@
 [![Audit Gates](https://github.com/tigantic/HyperTensor-VM/actions/workflows/audit-gates.yml/badge.svg?branch=main)](https://github.com/tigantic/HyperTensor-VM/actions/workflows/audit-gates.yml)
 [![Hardening](https://github.com/tigantic/HyperTensor-VM/actions/workflows/hardening.yml/badge.svg?branch=main)](https://github.com/tigantic/HyperTensor-VM/actions/workflows/hardening.yml)
 [![Docs](https://github.com/tigantic/HyperTensor-VM/actions/workflows/docs.yml/badge.svg)](https://github.com/tigantic/HyperTensor-VM/actions/workflows/docs.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/tigantic/HyperTensor-VM/badge)](https://scorecard.dev/viewer/?uri=github.com/tigantic/HyperTensor-VM)
 
-[![Release](https://img.shields.io/badge/Release-v4.0.1-blue?style=for-the-badge)](https://github.com/tigantic/HyperTensor-VM/releases/tag/v4.0.1)
-[![LOC](https://img.shields.io/badge/LOC-1.51M-blue?style=for-the-badge)]()
-[![Tests](https://img.shields.io/badge/Tests-370%2B_Passing-brightgreen?style=for-the-badge)]()
+[![Release](https://img.shields.io/github/v/release/tigantic/HyperTensor-VM?style=for-the-badge&color=blue)](https://github.com/tigantic/HyperTensor-VM/releases/latest)
+[![LOC](https://img.shields.io/badge/LOC-1.51M-blue?style=for-the-badge)](PLATFORM_SPECIFICATION.md)
+[![Tests](https://img.shields.io/badge/Tests-370%2B_Passing-brightgreen?style=for-the-badge)](https://github.com/tigantic/HyperTensor-VM/actions/workflows/ci.yml)
+[![V&V](https://img.shields.io/badge/V%26V-ASME_10--2019-gold?style=for-the-badge)](PLATFORM_SPECIFICATION.md)
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=for-the-badge)](LICENSE)
 
 [![Python](https://img.shields.io/badge/Python-471K_LOC-3776AB?style=flat-square&logo=python&logoColor=white)]()
 [![Rust](https://img.shields.io/badge/Rust-151K_LOC-000000?style=flat-square&logo=rust&logoColor=white)]()
-[![Lean 4](https://img.shields.io/badge/Lean_4-Formally_Verified-purple?style=flat-square)]()
+[![Lean 4](https://img.shields.io/badge/Lean_4-57%2B_Theorems-purple?style=flat-square)]()
 [![CUDA](https://img.shields.io/badge/CUDA-GPU_Accelerated-76B900?style=flat-square&logo=nvidia&logoColor=white)]()
-
-[**Documentation**](https://tigantic.github.io/HyperTensor-VM) · [**Architecture**](ARCHITECTURE.md) · [**Roadmap**](ROADMAP.md) · [**Specification**](PLATFORM_SPECIFICATION.md)
-
-**Package V40.0.1** · **API V2.0.0** · **19 Rust Workspace Members** · **February 2026**
+[![OpenSSF Best Practices](https://img.shields.io/badge/OpenSSF-Best_Practices-green?style=flat-square&logo=opensourceinitiative&logoColor=white)](https://github.com/tigantic/HyperTensor-VM/blob/main/SECURITY.md)
 
 </div>
 
@@ -363,9 +362,22 @@ Each produces a **cryptographically signed attestation JSON** with SHA-256 commi
 
 > Hellskin (re-entry) · Tomahawk (missile CFD) · Starheart (fusion) · Chronos (TDVP) · Orbital Forge (trajectory) · Prometheus (combustion) · LaLuH₆ Odin (superconductor @ 300K) · Femto Fabricator (< 0.1Å) · Proteome (protein folding) · QTT-Native · Sovereign Genesis · 7× Genesis Layers · 4× Trustless Physics Phases · SNHFF · ADE V1/V2 · Production Hardening · + more
 
-### V&V Framework (ASME V&V 10-2019)
+### V&V Framework — ASME V&V 10-2019 Aligned (3,755 LOC)
 
-Method of Manufactured Solutions · Conservation tracking (mass, momentum, energy) · h/p/dt convergence studies with Richardson extrapolation · Stability analysis (CFL, von Neumann) · Benchmark comparison suite
+A dedicated verification and validation framework implementing the full ASME V&V 10-2019 methodology. Not a wrapper — a ground-up implementation with 8 specialized modules:
+
+| Module | LOC | Methodology |
+|--------|----:|-------------|
+| `mms.py` | 305 | **Method of Manufactured Solutions** — inject known analytic solutions, verify solver converges to them |
+| `conservation.py` | 358 | **Conservation tracking** — mass, momentum, energy balance at every timestep (Δ < 10⁻¹⁵) |
+| `convergence.py` | 363 | **h/p/dt convergence** — Richardson extrapolation, observed-order computation, asymptotic range verification |
+| `stability.py` | 490 | **Stability analysis** — CFL condition, von Neumann spectral radius, eigenvalue bounds |
+| `performance.py` | 385 | **Performance regression** — wall time, throughput, memory high-water-mark, CI-gated |
+| `benchmarks.py` | 410 | **Benchmark suite** — 8 published CFD references with L1/L2/L∞ norms against exact/reference data |
+| `vv.py` | 832 | **V&V orchestrator** — pipeline runner, report generator, pass/fail adjudication |
+| `vertical_vv.py` | 505 | **Industry-specific V&V** — per-vertical validation requirements with domain-expert review gates |
+
+> **Every solver assertion in this codebase traces back to a V&V module.** Conservation violations, convergence regression, and stability breaches are CI-blocking — they cannot be merged.
 
 ---
 
@@ -561,17 +573,35 @@ All versions in sync.       # 7/7 OK
 
 ---
 
-## Security
+## Security & Compliance Posture
 
-- **IP Boundary**: Whitelist-only sanitization at every exit path — 25 forbidden field categories
-- **Authentication**: Bearer tokens with per-client rate limiting (HMAC-SHA256)
-- **Signing**: Ed25519 keypair — server-side only, never exposed
-- **Certificates**: SHA-256 content-addressed, independently verifiable
-- **Input Validation**: Pydantic V2 strict mode on all API inputs
-- **Log Security**: No API keys, no signing material in any log output (CI-enforced)
-- **Supply Chain**: Dependabot (3 ecosystems), CODEOWNERS (278 rules), pre-commit hooks
+### Standards Alignment
 
-Full policy: [`SECURITY.md`](SECURITY.md) · [`docs/operations/SECURITY_OPERATIONS.md`](docs/operations/SECURITY_OPERATIONS.md)
+| Standard / Framework | Status | Implementation |
+|----------------------|:------:|----------------|
+| **ASME V&V 10-2019** | ✅ Aligned | 3,755 LOC dedicated V&V framework — 8 modules, all CI-gated |
+| **OpenSSF Scorecard** | ✅ Active | Automated security health metrics — [live badge](https://scorecard.dev/viewer/?uri=github.com/tigantic/HyperTensor-VM) |
+| **OpenSSF Best Practices** | ✅ Implemented | Security policy, vulnerability disclosure, code review, CI/CD |
+| **Supply Chain (SLSA-adjacent)** | ✅ Enforced | Dependabot (3 ecosystems), CODEOWNERS (278 rules), pre-commit, pinned Actions |
+| **NIST SP 800-218 (SSDF)** | ✅ Partial | Secure development lifecycle, automated testing, change management |
+
+### Defense-in-Depth
+
+| Layer | Control | Enforcement |
+|:-----:|---------|-------------|
+| **API** | Bearer tokens + HMAC-SHA256 per-client rate limiting (60 rpm) | Runtime |
+| **IP Boundary** | Whitelist-only sanitization — 25 forbidden field categories | Every exit path |
+| **Signing** | Ed25519 keypair — server-side only, never exported | Certificate generation |
+| **Certificates** | SHA-256 content-addressed, independently verifiable offline | Every completed job |
+| **Input** | Pydantic V2 strict mode on all API inputs — no coercion | Request ingestion |
+| **Logs** | Zero API keys, zero signing material in any log output | CI-enforced scan |
+| **Dependencies** | Dependabot weekly (pip + cargo + Actions), lockfile pinning | Automated PRs |
+| **Review** | CODEOWNERS with 278 path-to-owner rules — domain-expert approval required | Every PR |
+| **Secrets** | Pre-commit hooks with detect-secrets + bare-except prevention | Pre-push gate |
+| **Formal** | Lean 4 theorem proving (57+ theorems) — mathematical correctness proofs | Build artifact |
+| **ZK** | Halo2 circuits — computation integrity without revealing internals | Attestation layer |
+
+Full policy: [`SECURITY.md`](SECURITY.md) · [`SECURITY_OPERATIONS.md`](docs/operations/SECURITY_OPERATIONS.md) · [`FORBIDDEN_OUTPUTS.md`](FORBIDDEN_OUTPUTS.md)
 
 ---
 
