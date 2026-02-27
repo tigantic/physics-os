@@ -190,6 +190,17 @@
 /apps/vlasov_proof/                  @tigantic/rust @tigantic/physics
 
 # ============================================
+# Civilization Challenges
+# ============================================
+/challenges/                         @tigantic/core @tigantic/physics
+
+# ============================================
+# Experiments & Validation
+# ============================================
+/experiments/                        @tigantic/core
+/experiments/validation/             @tigantic/core @tigantic/physics
+
+# ============================================
 # Products
 # ============================================
 /products/                           @tigantic/core

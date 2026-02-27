@@ -136,7 +136,7 @@ HyperTensor is a computational physics operating system that uses Quantized Tens
 | **`tensornet/` Modules** | 105 |
 | **CI/CD Workflows** | 11 |
 | **Makefile Targets** | 30+ |
-| **CODEOWNERS Mappings** | 278 |
+| **CODEOWNERS Mappings** | 289 |
 | **pip Extras (Feature Flags)** | 16 |
 
 ### `tensornet/` Breakdown (Top Directories by LOC)
@@ -768,7 +768,7 @@ Test suites introduced for the Runtime Access Layer (all post-February 10, 2026)
 | **Domain Packs** | 20 | — | ✅ |
 | **Taxonomy Nodes** | 168 | — | ✅ |
 | **CI Workflows** | 11 | — | ✅ |
-| **CODEOWNERS Rules** | 278 lines | — | ✅ |
+| **CODEOWNERS Rules** | 289 lines | — | ✅ |
 | **Version Sync Checkpoints** | 7/7 | 7/7 | ✅ |
 | **Dependency Graph** | 16 nodes, 34 edges | — | ✅ |
 | **Dependabot Ecosystems** | 3 | — | ✅ |
@@ -1398,7 +1398,7 @@ Automated dependency updates across 3 ecosystems:
 
 Grouped updates reduce PR noise — a single PR per ecosystem per week for non-breaking changes.
 
-#### CODEOWNERS (278 Lines)
+#### CODEOWNERS (289 Lines)
 
 Domain-ownership enforcement via `.github/CODEOWNERS`:
 
@@ -1416,7 +1416,7 @@ Domain-ownership enforcement via `.github/CODEOWNERS`:
 | `.github/**` | `@tigantic/infra-team` | CI/CD |
 | + 120 more | Various | Domain-specific |
 
-Every PR requires review from the owning team. 278 path-to-owner mappings ensure no change lands without domain-expert review.
+Every PR requires review from the owning team. 289 path-to-owner mappings ensure no change lands without domain-expert review.
 
 #### Feature Flags (pip Extras)
 
@@ -1672,7 +1672,7 @@ HyperTensor-VM-main/
 │       ├── hardening.yml           #   Production hardening gates
 │       ├── ledger-validation.yml   #   Ledger integrity (168 nodes)
 │       └── vv-validation.yml       #   V&V framework checks
-├── CODEOWNERS                      # 278 path-to-owner mappings (domain-expert review)
+├── CODEOWNERS                      # 289 path-to-owner mappings (domain-expert review)
 ├── hypertensor/                    # Runtime Access Layer (v4.0.0)
 │   ├── api/                        #   FastAPI server (9 endpoints)
 │   │   ├── routers/                #     Job, validate, capabilities, contracts, health
@@ -1747,7 +1747,20 @@ HyperTensor-VM-main/
 │   ├── reports/                    #   Coverage dashboards, audit reports
 │   ├── strategy/                   #   Commercial execution, IP strategy
 │   └── ... (20 more)              #   api, architecture, tutorials, workflows, etc.
+├── challenges/                     # Civilization Challenge validation programs (6)
+│   ├── challenge_I_grid_stability.md
+│   ├── challenge_II_pandemic_preparedness.md    # ✅ All 5 phases complete
+│   ├── challenge_III_climate_tipping_points.md
+│   ├── challenge_IV_fusion_energy.md
+│   ├── challenge_V_supply_chain.md
+│   └── challenge_VI_proof_of_reality.md
 ├── experiments/                    # Research experiments & benchmarks
+│   └── validation/                 #   Civilization Challenge pipelines & MD validation
+│       ├── tig011a_md_validation.py
+│       ├── challenge_ii_phase2_library.py
+│       ├── challenge_ii_phase3_atlas.py
+│       ├── challenge_ii_phase4_pandemic.py
+│       └── challenge_ii_phase5_zk_proofs.py
 ├── integrations/                   # Unity, Unreal, Blender, FreeCAD, VS Code
 ├── products/                       # Shipped vertical products
 │   └── facial_plastics/            #   Surgical simulation (43K LOC, 941 tests)
@@ -1786,7 +1799,7 @@ This release hardens the v4.0.0 baseline with production-grade developer infrast
 - **Observability Stack**: Prometheus + Grafana Docker Compose stack (`deploy/telemetry/`) with 8 alert rules across 3 groups, pre-provisioned Grafana dashboard
 - **MkDocs Material Documentation**: Full documentation site with deep purple theme, dark/light mode, 27 subdirectories, auto-deploy via `docs.yml`
 - **Dependency Graph Visualization**: `tools/dep_graph.py` — 16 module-group nodes, 34 edges, Mermaid/DOT/SVG output
-- **CODEOWNERS**: 278 path-to-owner mappings covering 120+ domain-specific directories
+- **CODEOWNERS**: 289 path-to-owner mappings covering 120+ domain-specific directories
 - **Release Automation**: Tag-driven workflow (`.github/workflows/release.yml`) with OIDC trusted publishing, dry-run support, 4-stage pipeline
 - **Dependabot**: Automated dependency updates for pip, cargo, and GitHub Actions ecosystems (weekly Monday schedule)
 - **Feature Flags**: 16 pip extras in `pyproject.toml` (cfd, quantum, plasma, ml, em, aerospace, etc.)
