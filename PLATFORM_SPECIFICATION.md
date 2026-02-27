@@ -1727,7 +1727,8 @@ HyperTensor-VM-main/
 │   ├── tci_core/                   #   Tensor Cross Interpolation (1.3K LOC)
 │   ├── tci_core_rust/              #   TCI PyO3 extension module (1.9K LOC)
 │   └── ...                         #   + 3 more (circuits, infra, gpu)
-├── contracts/                      # Product contract specifications
+├── contracts/                      # Contract specifications & on-chain verifiers
+│   ├── HyperTensorBindingVerifier.sol  # ZK binding affinity verifier (Groth16, EIP-197)
 │   └── v1/SPEC.md                  #   API contract v1
 ├── data/                           # Datasets (atlas packs, NOAA, benchmarks)
 ├── deploy/                         # Deployment & operations
@@ -1809,6 +1810,7 @@ This release hardens the v4.0.0 baseline with production-grade developer infrast
 - **Security**: `gevulot_key.json` removed from git tracking, `*_key.json` pattern added to `.gitignore`, ledger validation paths corrected (`ledger/` → `apps/ledger/`)
 - **Rust Workspace**: `crates/tci_core_rust` added as 19th workspace member (PyO3 TCI extension module)
 - **Audit Tracker**: [`AUDIT_EXECUTION_TRACKER.md`](AUDIT_EXECUTION_TRACKER.md) — 35 findings with resolution status, evidence, and completion dates
+- **Challenge II Quality Audit** (`c14e12e4`): 7-finding quality sweep across all 5 phases (8,134 LOC). Fixes: (1) FDA IND document hash insertion bug, (2) Solidity verifier G1 point negation using scalar field Fr→base field Fp, (3) Solidity `_ecAdd`/`_ecMul` precompile success checks, (4) Phase 3 `generate_attestation` return type hint, (5) Phase 4 rotation function naming aligned to actual behavior, (6) challenge doc duplicate Phase 3 section removed + Phase 5 LOC count corrected, (7) Phase 2 `embed_3d` maxIterations aligned to Phase 4 optimised value. PDB cache directories added to `.gitignore`.
 
 ### v4.0.0 (February 24, 2026) — RUNTIME ACCESS LAYER & SCOPE FREEZE
 
