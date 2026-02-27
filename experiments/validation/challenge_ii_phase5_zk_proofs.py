@@ -703,9 +703,13 @@ contract HyperTensorBindingVerifier is IBindingVerifier {
         vk_x = _ecAdd(vk_x, _ecMul(ic[3], commitInput));
     }
 
-    // BN256 curve prime
+    // BN256 scalar field order (Fr) — used for public input reduction
     uint256 private constant _PRIME =
         21888242871839275222246405745257275088548364400416034343698204186575808495617;
+
+    // BN256 base field prime (Fp) — used for G1 point negation
+    uint256 private constant _FIELD_PRIME =
+        21888242871839275222246405745257275088696311157297823662689037894645226208583;
 
     function _verifyPairing(
         uint256[2] memory a,
@@ -715,9 +719,9 @@ contract HyperTensorBindingVerifier is IBindingVerifier {
     ) internal view returns (bool) {
         // Pairing check via EIP-197 precompile
         uint256[24] memory input;
-        // -A
+        // -A (negate G1 point: y → Fp - y)
         input[0] = a[0];
-        input[1] = _PRIME - a[1];
+        input[1] = _FIELD_PRIME - a[1];
         // B
         input[2] = b[0]; input[3] = b[1];
         input[4] = b[2]; input[5] = b[3];
@@ -751,9 +755,11 @@ contract HyperTensorBindingVerifier is IBindingVerifier {
         uint256[4] memory input;
         input[0] = a[0]; input[1] = a[1];
         input[2] = b[0]; input[3] = b[1];
+        bool success;
         assembly {
-            let success := staticcall(gas(), 0x06, input, 128, c, 64)
+            success := staticcall(gas(), 0x06, input, 128, c, 64)
         }
+        require(success, "ecAdd failed");
     }
 
     function _ecMul(uint256[2] memory p, uint256 s)
@@ -761,9 +767,11 @@ contract HyperTensorBindingVerifier is IBindingVerifier {
     {
         uint256[3] memory input;
         input[0] = p[0]; input[1] = p[1]; input[2] = s;
+        bool success;
         assembly {
-            let success := staticcall(gas(), 0x07, input, 96, r, 64)
+            success := staticcall(gas(), 0x07, input, 96, r, 64)
         }
+        require(success, "ecMul failed");
     }
 }
 """
@@ -898,9 +906,7 @@ def generate_fda_ind(
         doc_hash="",
     )
     doc_hash = sha256_hex(doc.encode())
-    doc = doc.replace("doc_hash}", doc_hash + "}")
-    # Fix: actually replace the empty hash
-    doc = doc.replace(f"Document Hash: {doc_hash}", f"Document Hash: {doc_hash}")
+    doc = doc.replace("Document Hash: ", f"Document Hash: {doc_hash}")
     return doc, doc_hash
 
 

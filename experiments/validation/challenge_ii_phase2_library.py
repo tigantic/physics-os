@@ -930,7 +930,7 @@ def embed_3d(candidate: Candidate) -> bool:
     params = AllChem.ETKDGv3()
     params.randomSeed = 42
     params.useRandomCoords = True
-    params.maxIterations = 200
+    params.maxIterations = 50
     status = AllChem.EmbedMolecule(mol_h, params)
     if status != 0:
         return False

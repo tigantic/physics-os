@@ -914,7 +914,7 @@ def run_atlas_pipeline() -> AtlasResult:
 # ===================================================================
 #  Module 8: Attestation and Report Generation
 # ===================================================================
-def generate_attestation(result: AtlasResult, atlas: BindingAtlas) -> Path:
+def generate_attestation(result: AtlasResult, atlas: BindingAtlas) -> Tuple[Path, str]:
     """Generate cryptographic attestation JSON."""
     atlas_dict = atlas.to_dict()
 

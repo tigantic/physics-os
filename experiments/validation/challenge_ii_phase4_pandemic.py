@@ -852,8 +852,13 @@ def embed_3d(candidate: DrugCandidate) -> bool:
     return True
 
 
-def _rotation_matrices_6() -> List[NDArray[np.float64]]:
-    """6 rotation matrices for docking orientations."""
+def _docking_rotation_matrices() -> List[NDArray[np.float64]]:
+    """4 rotation matrices for fast docking orientations.
+
+    Generates identity + 3 cardinal rotations. Reduced from 6 to 4
+    as a deliberate performance optimisation — the full 6-orientation
+    sweep is used in Phase 2's exhaustive library scoring.
+    """
     rots = [np.eye(3)]
     for axis in range(3):
         for angle in [np.pi / 2, np.pi, -np.pi / 2]:
@@ -868,7 +873,7 @@ def _rotation_matrices_6() -> List[NDArray[np.float64]]:
     return rots[:4]
 
 
-_ROTATIONS = _rotation_matrices_6()
+_ROTATIONS = _docking_rotation_matrices()
 
 
 def dock_and_score(

@@ -173,3 +173,6 @@ experiments/atlas_results*/
 # ── Large data files (>100 MB, exceeds GitHub limit) ──────────────────────────
 data/real_data/goes18_reconstructed.bin
 experiments/frontier/07_GENOMICS/data/clinvar.vcf.gz
+
+pdb_cache/
+data/pdb_cache/

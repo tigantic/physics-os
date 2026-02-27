@@ -181,37 +181,6 @@ Toxicology: 8/8 PASS
 
 **Artifacts:** `experiments/validation/challenge_ii_phase3_atlas.py` (~1,161 LOC), `docs/attestations/CHALLENGE_II_PHASE3_ATLAS.json`
 
-**Target list (preliminary):**
-
-| Protein | Disease | PDB | Current Status |
-|---------|---------|-----|---------------|
-| KRAS G12D | Pancreatic cancer | 6GJ8 | Undruggable (TIG-011a lead exists) |
-| KRAS G12C | Lung cancer | 6OIM | Sotorasib approved 2021 (benchmark) |
-| MYC | Multiple cancers | 1NKP | No approved drugs |
-| TP53 Y220C | Multiple cancers | 2J1X | Phase I trials only |
-| STAT3 | Multiple cancers | 6NJS | No approved drugs |
-
-### Phase 3: Pre-Computed Binding Atlas (Weeks 11-18)
-
-**Objective:** Build atlas of binding energy landscapes for all PDB structures.
-
-| Task | Description | Deliverable |
-|------|-------------|-------------|
-| 3.1 | PDB automated download pipeline (~200,000 structures) | Raw structure files |
-| 3.2 | Active site identification (CASTp / fpocket) | Pocket coordinates |
-| 3.3 | QTT energy field computation at 1.0 Å resolution | Compressed atlas |
-| 3.4 | Atlas indexing: target → energy field → optimal fragments | Queryable database |
-| 3.5 | Atlas compression: QTT stores entire atlas in GB, not TB | Compression benchmark |
-
-**Scale math:**
-```
-200,000 proteins × 25³ grid × 6 probe types × 8 bytes = ~18.6 TB (dense)
-QTT at rank 16: ~200,000 × 30 × 256 × 8 = ~12 GB
-Compression: ~1,500x
-```
-
-The entire structural biology of known proteins, queryable from a laptop.
-
 ### Phase 4: Pandemic Response Pipeline (Weeks 19-24) — ✅ COMPLETE
 
 **Objective:** 48-hour turnaround from novel pathogen structure to candidate molecules.
@@ -259,7 +228,7 @@ The entire structural biology of known proteins, queryable from a laptop.
 
 **Exit Criteria:** ✅ PASS — LJ circuit verified, binding minimum proven, on-chain verifier emitted, FDA IND generated, IP protection demonstrated.
 
-**Artifacts:** `experiments/validation/challenge_ii_phase5_zk_proofs.py` (~900 LOC), `contracts/HyperTensorBindingVerifier.sol` (231 lines), `docs/attestations/CHALLENGE_II_PHASE5_ZK_PROOFS.json`, `docs/reports/FDA_IND_BINDING_EVIDENCE.txt`
+**Artifacts:** `experiments/validation/challenge_ii_phase5_zk_proofs.py` (~1,553 LOC), `contracts/HyperTensorBindingVerifier.sol` (237 lines), `docs/attestations/CHALLENGE_II_PHASE5_ZK_PROOFS.json`, `docs/reports/FDA_IND_BINDING_EVIDENCE.txt`
 
 ---
 
