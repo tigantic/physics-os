@@ -1,0 +1,217 @@
+# Challenge II Phase 2: 10,000-Candidate Drug Library
+
+**Mutationes Civilizatoriae — Pandemic Preparedness**
+**Generated:** 2026-02-27 20:08 UTC
+**Author:** Bradly Biron Baker Adams | Tigantic Holdings LLC
+
+---
+
+## Pipeline Summary
+
+| Metric | Value |
+|--------|-------|
+| Targets processed | 5 |
+| Scaffolds | 40 |
+| R-groups | 50 |
+| Raw combinations | 2000 |
+| Unique valid candidates | 1979 |
+| Tox-screened | 1979 |
+| Tox-passing | 1918 |
+| 3D-embedded | 1340 |
+| Pipeline time | 761.3 s |
+
+---
+
+## Per-Target Results
+
+### KRAS G12D (6GJ8)
+
+**Disease:** Pancreatic cancer
+**Pocket atoms:** 90
+**Pharmacophore:** Shallow pocket (weak interactions)
+
+**Energy Field Minima (kcal/mol):**
+
+| Probe | Min Energy |
+|-------|-----------|
+| C_aromatic | -1.89 |
+| C_sp3 | -2.13 |
+| N_acceptor | 33.33 |
+| O_acceptor | 33.33 |
+| S_donor | 13.33 |
+| Hal | 6.67 |
+
+**TT-SVD compression:** 1.8× (error: 0.0574)
+
+**Candidates scored:** 1340
+**Candidates passing tox:** 1918
+
+**Top 5 Candidates:**
+
+| Rank | SMILES | Binding Energy (kcal/mol) |
+|------|--------|--------------------------|
+| 1 | `FC1=CC=c2cnc([nH]2)=c2nc[nH]c2=NC=C1` | -11.97 |
+| 2 | `COc1cccc2[nH]c(cc1)C(F)=CC=N2` | -10.09 |
+| 3 | `CC(=O)N1CCC=Nc2ncc(F)n2CC1` | -9.91 |
+| 4 | `CC(=O)N1CCC=Nc2ncc(Cl)n2CC1` | -9.53 |
+| 5 | `COC1=CC=c2cnc([nH]2)=NC(N)=NC=C1` | -9.48 |
+
+**Wiggle test mean penalty:** 84.79 kcal/mol
+
+---
+
+### KRAS G12C (6OIM)
+
+**Disease:** Lung cancer
+**Pocket atoms:** 129
+**Pharmacophore:** Shallow pocket (weak interactions)
+
+**Energy Field Minima (kcal/mol):**
+
+| Probe | Min Energy |
+|-------|-----------|
+| C_aromatic | -1.98 |
+| C_sp3 | -2.23 |
+| N_acceptor | 54.24 |
+| O_acceptor | 54.24 |
+| S_donor | 21.69 |
+| Hal | 10.84 |
+
+**TT-SVD compression:** 1.8× (error: 0.0838)
+
+**Candidates scored:** 1340
+**Candidates passing tox:** 1918
+
+**Top 5 Candidates:**
+
+| Rank | SMILES | Binding Energy (kcal/mol) |
+|------|--------|--------------------------|
+| 1 | `CCc1ncnc2cc(OC)c(OC)cc12` | -19.10 |
+| 2 | `COc1cccc2[nH]c(cc1)C(F)=CC=N2` | -18.50 |
+| 3 | `c1ccc2c(N3CCOCC3)n[nH]c2c1` | -18.22 |
+| 4 | `COc1cc2ncnc(C(F)(F)F)c2cc1OC` | -17.71 |
+| 5 | `C1=CN2CCN(c3ccccc3)CCN=C2O1` | -16.62 |
+
+**Wiggle test mean penalty:** -68.96 kcal/mol
+
+---
+
+### MYC-MAX bHLH-LZ (1NKP)
+
+**Disease:** Multiple cancers
+**Pocket atoms:** 178
+**Pharmacophore:** Shallow pocket (weak interactions)
+
+**Energy Field Minima (kcal/mol):**
+
+| Probe | Min Energy |
+|-------|-----------|
+| C_aromatic | -1.75 |
+| C_sp3 | -1.97 |
+| N_acceptor | 75.08 |
+| O_acceptor | 75.08 |
+| S_donor | 30.02 |
+| Hal | 15.01 |
+
+**TT-SVD compression:** 1.8× (error: 0.0784)
+
+**Candidates scored:** 1327
+**Candidates passing tox:** 1918
+
+**Top 5 Candidates:**
+
+| Rank | SMILES | Binding Energy (kcal/mol) |
+|------|--------|--------------------------|
+| 1 | `COc1nccs1` | 1549.66 |
+| 2 | `COc1cc[nH]n1` | 1560.05 |
+| 3 | `COc1ncco1` | 1592.29 |
+| 4 | `Nc1cnccn1` | 1615.99 |
+| 5 | `Cc1csc(N)n1` | 1638.60 |
+
+**Wiggle test mean penalty:** 11.63 kcal/mol
+
+---
+
+### TP53 Y220C (2J1X)
+
+**Disease:** Multiple cancers
+**Pocket atoms:** 163
+**Pharmacophore:** Shallow pocket (weak interactions)
+
+**Energy Field Minima (kcal/mol):**
+
+| Probe | Min Energy |
+|-------|-----------|
+| C_aromatic | -2.13 |
+| C_sp3 | -2.40 |
+| N_acceptor | 63.67 |
+| O_acceptor | 63.67 |
+| S_donor | 25.46 |
+| Hal | 12.73 |
+
+**TT-SVD compression:** 1.8× (error: 0.0789)
+
+**Candidates scored:** 1255
+**Candidates passing tox:** 1918
+
+**Top 5 Candidates:**
+
+| Rank | SMILES | Binding Energy (kcal/mol) |
+|------|--------|--------------------------|
+| 1 | `CCOc1cc(F)ccn1` | 2201.93 |
+| 2 | `COc1nccs1` | 2305.41 |
+| 3 | `FC(F)(F)c1nccs1` | 2321.46 |
+| 4 | `c1ccc(Nc2nc3ccccc3s2)nc1` | 2418.30 |
+| 5 | `Brc1ncco1` | 2425.36 |
+
+**Wiggle test mean penalty:** -175.60 kcal/mol
+
+---
+
+### STAT3 SH2 (6NJS)
+
+**Disease:** Multiple cancers
+**Pocket atoms:** 93
+**Pharmacophore:** Shallow pocket (weak interactions)
+
+**Energy Field Minima (kcal/mol):**
+
+| Probe | Min Energy |
+|-------|-----------|
+| C_aromatic | -1.96 |
+| C_sp3 | -2.20 |
+| N_acceptor | 24.75 |
+| O_acceptor | 24.75 |
+| S_donor | 9.90 |
+| Hal | 4.95 |
+
+**TT-SVD compression:** 1.8× (error: 0.0475)
+
+**Candidates scored:** 1340
+**Candidates passing tox:** 1918
+
+**Top 5 Candidates:**
+
+| Rank | SMILES | Binding Energy (kcal/mol) |
+|------|--------|--------------------------|
+| 1 | `CS(=O)(=O)Nc1nc2ccccc2[nH]1` | -9.77 |
+| 2 | `CS(=O)(=O)Nc1nc2cc(Cl)ccc2[nH]1` | -4.81 |
+| 3 | `CCNc1ncc(Cl)cn1` | -4.37 |
+| 4 | `CCOc1nc(C)cs1` | -2.61 |
+| 5 | `CNc1ccn(C)n1` | 2.83 |
+
+**Wiggle test mean penalty:** 324.39 kcal/mol
+
+---
+
+## Exit Criteria
+
+| Criterion | Value | Threshold | Result |
+|-----------|-------|-----------|--------|
+| Targets processed | 5 | ≥ 5 | PASS |
+| Min candidates/target | 1255 | ≥ 500 | PASS |
+| **Overall** | | | **PASS** |
+
+---
+
+*Generated by HyperTensor Challenge II Phase 2 Pipeline*

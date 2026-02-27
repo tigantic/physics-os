@@ -1,0 +1,287 @@
+{
+  "hashes": {
+    "SHA-256": "f10484face91d56f27e679f73ce926fee91d385d15204d60d0be77d458256ab2",
+    "SHA3-256": "135fd930449a589ce068a63d947a8b6da0f6dff9d9108533388ff33872c202be",
+    "BLAKE2b": "6a4559a96372103119826b8af542dac610c13371515bed0ecb292a867f955f8c158439bb336772be53e6e7625f4e12d197bfedd3985d6092c43e753efa6ff4d4"
+  },
+  "data": {
+    "pipeline": "Challenge II Phase 2: 10,000-Candidate Drug Library",
+    "version": "1.0.0",
+    "targets": [
+      {
+        "name": "KRAS_G12D",
+        "pdb_id": "6GJ8",
+        "protein": "KRAS G12D",
+        "disease": "Pancreatic cancer",
+        "pocket_atoms": 90,
+        "grid_shape": [
+          28,
+          28,
+          28
+        ],
+        "grid_resolution_angstrom": 0.75,
+        "energy_minima_kcal_mol": {
+          "C_aromatic": -1.89,
+          "C_sp3": -2.13,
+          "N_acceptor": 33.33,
+          "O_acceptor": 33.33,
+          "S_donor": 13.33,
+          "Hal": 6.67
+        },
+        "tt_compression_ratio": 1.8,
+        "tt_reconstruction_error": 0.0574,
+        "candidates_scored": 1340,
+        "candidates_tox_pass": 1918,
+        "top_5_candidates": [
+          {
+            "smiles": "FC1=CC=c2cnc([nH]2)=c2nc[nH]c2=NC=C1",
+            "energy_kcal_mol": -11.97
+          },
+          {
+            "smiles": "COc1cccc2[nH]c(cc1)C(F)=CC=N2",
+            "energy_kcal_mol": -10.09
+          },
+          {
+            "smiles": "CC(=O)N1CCC=Nc2ncc(F)n2CC1",
+            "energy_kcal_mol": -9.91
+          },
+          {
+            "smiles": "CC(=O)N1CCC=Nc2ncc(Cl)n2CC1",
+            "energy_kcal_mol": -9.53
+          },
+          {
+            "smiles": "COC1=CC=c2cnc([nH]2)=NC(N)=NC=C1",
+            "energy_kcal_mol": -9.48
+          }
+        ],
+        "wiggle_mean_penalty_kcal_mol": 84.79,
+        "pharmacophore": "Shallow pocket (weak interactions)"
+      },
+      {
+        "name": "KRAS_G12C",
+        "pdb_id": "6OIM",
+        "protein": "KRAS G12C",
+        "disease": "Lung cancer",
+        "pocket_atoms": 129,
+        "grid_shape": [
+          28,
+          28,
+          28
+        ],
+        "grid_resolution_angstrom": 0.75,
+        "energy_minima_kcal_mol": {
+          "C_aromatic": -1.98,
+          "C_sp3": -2.23,
+          "N_acceptor": 54.24,
+          "O_acceptor": 54.24,
+          "S_donor": 21.69,
+          "Hal": 10.84
+        },
+        "tt_compression_ratio": 1.8,
+        "tt_reconstruction_error": 0.0838,
+        "candidates_scored": 1340,
+        "candidates_tox_pass": 1918,
+        "top_5_candidates": [
+          {
+            "smiles": "CCc1ncnc2cc(OC)c(OC)cc12",
+            "energy_kcal_mol": -19.1
+          },
+          {
+            "smiles": "COc1cccc2[nH]c(cc1)C(F)=CC=N2",
+            "energy_kcal_mol": -18.5
+          },
+          {
+            "smiles": "c1ccc2c(N3CCOCC3)n[nH]c2c1",
+            "energy_kcal_mol": -18.22
+          },
+          {
+            "smiles": "COc1cc2ncnc(C(F)(F)F)c2cc1OC",
+            "energy_kcal_mol": -17.71
+          },
+          {
+            "smiles": "C1=CN2CCN(c3ccccc3)CCN=C2O1",
+            "energy_kcal_mol": -16.62
+          }
+        ],
+        "wiggle_mean_penalty_kcal_mol": -68.96,
+        "pharmacophore": "Shallow pocket (weak interactions)"
+      },
+      {
+        "name": "MYC",
+        "pdb_id": "1NKP",
+        "protein": "MYC-MAX bHLH-LZ",
+        "disease": "Multiple cancers",
+        "pocket_atoms": 178,
+        "grid_shape": [
+          28,
+          28,
+          28
+        ],
+        "grid_resolution_angstrom": 0.75,
+        "energy_minima_kcal_mol": {
+          "C_aromatic": -1.75,
+          "C_sp3": -1.97,
+          "N_acceptor": 75.08,
+          "O_acceptor": 75.08,
+          "S_donor": 30.02,
+          "Hal": 15.01
+        },
+        "tt_compression_ratio": 1.8,
+        "tt_reconstruction_error": 0.0784,
+        "candidates_scored": 1327,
+        "candidates_tox_pass": 1918,
+        "top_5_candidates": [
+          {
+            "smiles": "COc1nccs1",
+            "energy_kcal_mol": 1549.66
+          },
+          {
+            "smiles": "COc1cc[nH]n1",
+            "energy_kcal_mol": 1560.05
+          },
+          {
+            "smiles": "COc1ncco1",
+            "energy_kcal_mol": 1592.29
+          },
+          {
+            "smiles": "Nc1cnccn1",
+            "energy_kcal_mol": 1615.99
+          },
+          {
+            "smiles": "Cc1csc(N)n1",
+            "energy_kcal_mol": 1638.6
+          }
+        ],
+        "wiggle_mean_penalty_kcal_mol": 11.63,
+        "pharmacophore": "Shallow pocket (weak interactions)"
+      },
+      {
+        "name": "TP53_Y220C",
+        "pdb_id": "2J1X",
+        "protein": "TP53 Y220C",
+        "disease": "Multiple cancers",
+        "pocket_atoms": 163,
+        "grid_shape": [
+          28,
+          28,
+          28
+        ],
+        "grid_resolution_angstrom": 0.75,
+        "energy_minima_kcal_mol": {
+          "C_aromatic": -2.13,
+          "C_sp3": -2.4,
+          "N_acceptor": 63.67,
+          "O_acceptor": 63.67,
+          "S_donor": 25.46,
+          "Hal": 12.73
+        },
+        "tt_compression_ratio": 1.8,
+        "tt_reconstruction_error": 0.0789,
+        "candidates_scored": 1255,
+        "candidates_tox_pass": 1918,
+        "top_5_candidates": [
+          {
+            "smiles": "CCOc1cc(F)ccn1",
+            "energy_kcal_mol": 2201.93
+          },
+          {
+            "smiles": "COc1nccs1",
+            "energy_kcal_mol": 2305.41
+          },
+          {
+            "smiles": "FC(F)(F)c1nccs1",
+            "energy_kcal_mol": 2321.46
+          },
+          {
+            "smiles": "c1ccc(Nc2nc3ccccc3s2)nc1",
+            "energy_kcal_mol": 2418.3
+          },
+          {
+            "smiles": "Brc1ncco1",
+            "energy_kcal_mol": 2425.36
+          }
+        ],
+        "wiggle_mean_penalty_kcal_mol": -175.6,
+        "pharmacophore": "Shallow pocket (weak interactions)"
+      },
+      {
+        "name": "STAT3",
+        "pdb_id": "6NJS",
+        "protein": "STAT3 SH2",
+        "disease": "Multiple cancers",
+        "pocket_atoms": 93,
+        "grid_shape": [
+          28,
+          28,
+          28
+        ],
+        "grid_resolution_angstrom": 0.75,
+        "energy_minima_kcal_mol": {
+          "C_aromatic": -1.96,
+          "C_sp3": -2.2,
+          "N_acceptor": 24.75,
+          "O_acceptor": 24.75,
+          "S_donor": 9.9,
+          "Hal": 4.95
+        },
+        "tt_compression_ratio": 1.8,
+        "tt_reconstruction_error": 0.0475,
+        "candidates_scored": 1340,
+        "candidates_tox_pass": 1918,
+        "top_5_candidates": [
+          {
+            "smiles": "CS(=O)(=O)Nc1nc2ccccc2[nH]1",
+            "energy_kcal_mol": -9.77
+          },
+          {
+            "smiles": "CS(=O)(=O)Nc1nc2cc(Cl)ccc2[nH]1",
+            "energy_kcal_mol": -4.81
+          },
+          {
+            "smiles": "CCNc1ncc(Cl)cn1",
+            "energy_kcal_mol": -4.37
+          },
+          {
+            "smiles": "CCOc1nc(C)cs1",
+            "energy_kcal_mol": -2.61
+          },
+          {
+            "smiles": "CNc1ccn(C)n1",
+            "energy_kcal_mol": 2.83
+          }
+        ],
+        "wiggle_mean_penalty_kcal_mol": 324.39,
+        "pharmacophore": "Shallow pocket (weak interactions)"
+      }
+    ],
+    "library_summary": {
+      "scaffolds": 40,
+      "r_groups": 50,
+      "total_generated": 2000,
+      "total_unique_valid": 1979,
+      "total_tox_screened": 1979,
+      "total_tox_pass": 1918,
+      "total_embedded_3d": 1340
+    },
+    "exit_criteria": {
+      "targets_processed": 5,
+      "targets_threshold": 5,
+      "targets_PASS": true,
+      "min_candidates_scored_per_target": 1255,
+      "candidates_threshold": 500,
+      "candidates_PASS": true,
+      "overall_PASS": true
+    },
+    "engine": {
+      "energy_field": "LJ 6-12 + Coulomb (AMBER combining rules)",
+      "compression": "TT-SVD (rank \u2264 20)",
+      "candidate_generation": "Combinatorial scaffold \u00d7 R-group",
+      "toxicology": "8-panel (PAINS, Brenk, NIH, Lipinski, hERG, CYP450, Ames, Reactive)",
+      "docking": "26-orientation rotational sampling",
+      "scoring": "Direct LJ interaction energy"
+    },
+    "pipeline_time_seconds": 761.3,
+    "timestamp": "2026-02-27T20:08:35.822658+00:00",
+    "author": "Bradly Biron Baker Adams | Tigantic Holdings LLC"
+  }
+}
