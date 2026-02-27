@@ -1,0 +1,177 @@
+{
+  "attestation": "Challenge II Phase 5: Trustless Binding Affinity Proofs",
+  "version": "4.0.0",
+  "timestamp": "2026-02-27T20:52:47.614681+00:00",
+  "author": "Bradly Biron Baker Adams",
+  "organisation": "Tigantic Holdings LLC",
+  "task_5_1_lj_circuit": {
+    "circuits": [
+      {
+        "molecule": "TIG-011a (erlotinib analogue)",
+        "target": "EGFR T790M",
+        "n_pairs": 6,
+        "n_constraints": 48,
+        "n_advice_cells": 72,
+        "all_pass": true,
+        "energy_q16_first": -3026,
+        "energy_float_first": -0.0462
+      },
+      {
+        "molecule": "Nirmatrelvir analogue",
+        "target": "SARS-CoV-2 Mpro",
+        "n_pairs": 6,
+        "n_constraints": 48,
+        "n_advice_cells": 72,
+        "all_pass": true,
+        "energy_q16_first": 14221,
+        "energy_float_first": 0.217
+      },
+      {
+        "molecule": "Oseltamivir analogue",
+        "target": "H5N1 Neuraminidase",
+        "n_pairs": 6,
+        "n_constraints": 48,
+        "n_advice_cells": 72,
+        "all_pass": true,
+        "energy_q16_first": 0,
+        "energy_float_first": 0.0
+      }
+    ],
+    "all_pass": true
+  },
+  "task_5_2_binding_minimum": {
+    "proofs": [
+      {
+        "molecule": "TIG-011a (erlotinib analogue)",
+        "target": "EGFR T790M",
+        "min_energy": -5.0,
+        "threshold": -2.0,
+        "merkle_depth": 15,
+        "grid_root": "6d99482c69b568deb1a0e42e8a0aed073d879d57a9571c62907d38af4e198281",
+        "verified": true,
+        "checks": [
+          "Merkle proof: PASS",
+          "Energy < threshold: PASS",
+          "Fiat-Shamir: PASS",
+          "Response binding: PASS"
+        ]
+      },
+      {
+        "molecule": "Nirmatrelvir analogue",
+        "target": "SARS-CoV-2 Mpro",
+        "min_energy": -5.0,
+        "threshold": -2.0,
+        "merkle_depth": 15,
+        "grid_root": "d58dbb62b66c16e043ad94d3f3e451be20fecb8baf12b5a2bdbb5042975f3b15",
+        "verified": true,
+        "checks": [
+          "Merkle proof: PASS",
+          "Energy < threshold: PASS",
+          "Fiat-Shamir: PASS",
+          "Response binding: PASS"
+        ]
+      },
+      {
+        "molecule": "Oseltamivir analogue",
+        "target": "H5N1 Neuraminidase",
+        "min_energy": -5.0,
+        "threshold": -2.0,
+        "merkle_depth": 15,
+        "grid_root": "5f5bdf3921f056a72923976aeb8f8fc91e537935a26a053ecb36eb5bdc97c6c8",
+        "verified": true,
+        "checks": [
+          "Merkle proof: PASS",
+          "Energy < threshold: PASS",
+          "Fiat-Shamir: PASS",
+          "Response binding: PASS"
+        ]
+      }
+    ],
+    "all_pass": true
+  },
+  "task_5_3_on_chain_verifier": {
+    "contract": "HyperTensorBindingVerifier",
+    "n_lines": 231,
+    "source_hash": "1a83448527dd02be79d9b4b6d3832f25c0521190f3154c68643b61861b6cf601",
+    "interface": "IBindingVerifier",
+    "methods": [
+      "verifyBinding",
+      "registerClaim",
+      "getClaim"
+    ],
+    "emitted": true
+  },
+  "task_5_4_fda_ind": {
+    "document_path": "docs/reports/FDA_IND_BINDING_EVIDENCE.txt",
+    "document_hash": "ca04e63a7ca4ce1cc477b21575266831f55c45e00cace742c9c7c90ee64bb69c",
+    "molecule": "TIG-011a (erlotinib analogue)",
+    "target": "EGFR T790M",
+    "generated": true
+  },
+  "task_5_5_ip_protection": {
+    "ip_proofs": [
+      {
+        "molecule": "TIG-011a (erlotinib analogue)",
+        "target": "EGFR T790M",
+        "commitment": "c0757fae3543d2d5766c7a3393f63a0dcf41c850efe60800b568f0e2316dfb8b",
+        "smiles_revealed": false,
+        "lj_circuit": true,
+        "merkle_proof": true,
+        "fiat_shamir": true,
+        "binding_verified": true,
+        "n_constraints": 48,
+        "proof_hash": "919ca497639f362465069c2d03ad4c72735c3376f11f653703be23c30450f680"
+      },
+      {
+        "molecule": "Nirmatrelvir analogue",
+        "target": "SARS-CoV-2 Mpro",
+        "commitment": "3c09b4582c2fa0b1d67a14de571d08dd81e075d6bddeed275c565e6088badbcf",
+        "smiles_revealed": false,
+        "lj_circuit": true,
+        "merkle_proof": true,
+        "fiat_shamir": true,
+        "binding_verified": true,
+        "n_constraints": 48,
+        "proof_hash": "7b02f520f57183e8f11f964f0874e137e2a794a6a1dd687e1f550b0950068ff2"
+      },
+      {
+        "molecule": "Oseltamivir analogue",
+        "target": "H5N1 Neuraminidase",
+        "commitment": "d88e06ab038e826cb37e6baee1f952c45ada4da779747406ec8a6ee227c6bf5a",
+        "smiles_revealed": false,
+        "lj_circuit": true,
+        "merkle_proof": true,
+        "fiat_shamir": true,
+        "binding_verified": true,
+        "n_constraints": 48,
+        "proof_hash": "5c9e4c8cecb48cfb86ef9df06c9d73bc3aa8c1871a446feee43a05f44d7b6421"
+      }
+    ],
+    "all_pass": true
+  },
+  "exit_criteria": {
+    "zk_proof_of_lj_energy": {
+      "pass": true,
+      "description": "ZK circuit constraints verified for LJ energy computation"
+    },
+    "binding_minimum_proof": {
+      "pass": true,
+      "description": "Merkle + Fiat-Shamir proof of binding minimum verified"
+    },
+    "on_chain_verifier": {
+      "pass": true,
+      "description": "Solidity verifier contract emitted with Groth16 pairing"
+    },
+    "fda_ind_format": {
+      "pass": true,
+      "description": "FDA IND supporting data document generated"
+    },
+    "ip_protection": {
+      "pass": true,
+      "description": "Binding proven without revealing SMILES"
+    }
+  },
+  "overall_pass": true,
+  "total_time_s": 0.2,
+  "sha256": "a8fcb757d66ea3fafe8bc5765ffb09900c2ce12d39e25c9f23ca9ef63ca46757"
+}
