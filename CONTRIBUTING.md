@@ -12,9 +12,9 @@ Thank you for your interest in contributing to HyperTensor! This document provid
 
 2. **Set Up Environment**
    ```bash
-   python -m venv .venv
-   .venv\Scripts\activate  # Windows
-   # source .venv/bin/activate  # Linux/Mac
+   python3 -m venv .venv
+   source .venv/bin/activate        # Linux / macOS
+   # .venv\Scripts\activate         # Windows
    pip install -e ".[dev]"
    ```
 

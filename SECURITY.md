@@ -74,9 +74,11 @@ We recommend:
 
 HyperTensor uses:
 
-- **Dilithium2** (Post-Quantum Cryptography) for attestation signing
-- **ECDSA** fallback for legacy systems
-- **SHA-256** for content hashing
+- **Ed25519** for trust certificate signing (server-side only, never exported)
+- **Halo2** ZK circuits for zero-knowledge computation integrity proofs
+- **Dilithium2** (Post-Quantum Cryptography) for attestation signing (forward-looking)
+- **ECDSA** fallback for legacy system interoperability
+- **SHA-256** for content-addressed hashing and certificate binding
 - **Merkle DAG** for provenance tracking
 
 ### Data Handling
@@ -118,5 +120,5 @@ Subscribe to security notifications:
 
 ---
 
-**Last Updated**: 2026-02-09  
-**Policy Version**: 2.0
+**Last Updated**: 2026-02-27  
+**Policy Version**: 2.1

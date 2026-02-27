@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **ARCHITECTURE.md** — system architecture with 3 Mermaid diagrams (dependency graph, job lifecycle, verification flow), ADR index, IP boundary documentation
+- **ROADMAP.md** — 4-milestone product roadmap (Private Alpha → GA), research frontiers, honest status assessment
+- **NOTICE** — third-party software attributions (Python, Rust, Lean 4, dev tools)
+- **.github/FUNDING.yml** — sponsorship and investment links
+- **.github/ISSUE_TEMPLATE/config.yml** — template chooser, blank issues disabled
+- **OpenSSF Scorecard badge** — live dynamic security health metric in README
+- **ASME V&V 10-2019 badge** — gold prestige badge in README badge row
+- **V&V module table** — full 8-module breakdown (3,755 LOC) with per-module methodology in README
+- **Security & Compliance Posture** section — Standards Alignment table (5 frameworks) + Defense-in-Depth matrix (11 layers) in README
+- **GitHub Release v4.0.1** — formal release with comprehensive release notes
+
+### Changed
+- **README.md** rewritten (596 → 670 lines) — planetary OS positioning, live CI badges, expanded project tree, V&V prestige table, security compliance matrix
+- **CITATION.cff** — updated all metrics (1.51M LOC, 19 languages, 168 nodes, 20 verticals, 370+ tests, v4.0.1)
+- **CODE_OF_CONDUCT.md** — upgraded from 28-line stub to complete Contributor Covenant 2.1 (133 lines)
+- **SECURITY.md** — added Ed25519 and Halo2 to cryptographic considerations, updated policy version
+- **Repo metadata** — description updated, homepage URL set, wiki disabled, topics refined to 20 elite tags
+- **Release badge** now links to dynamic `/releases/latest`
+- **LOC/Tests badges** now link to live CI and Platform Specification
+
+### Removed
+- 10 stale Dependabot PRs (closed with branch deletion)
+- 13 stale branches (only `main` remains)
+- 5 lower-value topics replaced with elite alternatives (exascale, halo2, ed25519, trustless, mcp-server)
+
 ## [40.0.1] - 2026-02-09 (Phase 7: Productization & Ecosystem Hardening)
 
 ### Added

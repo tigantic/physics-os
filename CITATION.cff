@@ -1,32 +1,38 @@
 cff-version: 1.2.0
-title: "HyperTensor: The Physics-First Tensor Network Engine"
+title: "HyperTensor: The Planetary Operating System for Physics Computation"
 message: "If you use this software, please cite it as below."
 type: software
 authors:
   - family-names: Adams
     given-names: Bradly Biron Baker
     affiliation: Tigantic Holdings LLC
+    orcid: ""
 repository-code: https://github.com/tigantic/HyperTensor-VM
-url: https://github.com/tigantic/HyperTensor-VM
+url: https://tigantic.github.io/HyperTensor-VM
 abstract: >-
   Unified computational physics platform using Quantized Tensor Train (QTT)
-  compression to operate on 10^12 grid points without dense materialization.
-  1,153K lines of code across 9 languages. 167 physics taxonomy nodes spanning
-  20 domain packs. Full-stack verification: Lean 4 formal proofs, Halo2 ZK
-  circuits, attested benchmark validation. 5 integrated platforms, 19 industry
-  verticals, 295 tests passing.
+  compression to operate on 4.4×10¹² grid points without dense materialization.
+  1.51M lines of code across 19 languages. 168 physics taxonomy nodes spanning
+  20 domain packs. Full-stack verification: Lean 4 formal proofs (57+ theorems),
+  Halo2 ZK circuits, Ed25519 trustless certificates. 6 integrated platforms,
+  20 industry verticals, 370+ tests passing. O(log N) memory scaling enables
+  exascale simulation on commodity hardware.
 keywords:
   - tensor networks
   - quantized tensor train
-  - matrix product states
-  - DMRG
   - computational physics
   - CFD
   - Navier-Stokes
   - zero-knowledge proofs
   - formal verification
-  - PyTorch
+  - exascale
+  - halo2
+  - ed25519
+  - trustless
+  - Lean 4
   - Rust
+  - scientific computing
+  - GPU computing
 license: LicenseRef-Proprietary
-version: "4.0.0"
-date-released: 2026-02-09
+version: "4.0.1"
+date-released: 2026-02-27
