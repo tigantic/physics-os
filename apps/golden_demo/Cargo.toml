@@ -35,7 +35,7 @@ rand = "0.8"
 chrono = "0.4"
 
 # Zip
-zip = { version = "2.2", default-features = false, features = ["deflate"] }
+zip = { version = "8.1", default-features = false, features = ["deflate"] }
 
 [features]
 default = []
