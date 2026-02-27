@@ -1,1019 +1,1079 @@
 # Repository Inventory
 
-> **Auto-generated**: 2026-02-27 | **Tracked files**: ~14,561 | **Languages**: 19 | **First-party LOC**: ~1.51M
-
-Comprehensive index of every application, library, experiment, proof, product, tool, and infrastructure component in the HyperTensor-VM monorepo.
+> **Generated**: 2026-02-27 | **Tracked files**: ~10,364 | **Languages**: 20+ | **First-party LOC**: ~1.84M
+>
+> Comprehensive index of every application, library, experiment, proof, product,
+> tool, and infrastructure component in the HyperTensor-VM monorepo.
 
 ---
 
 ## Table of Contents
 
-1. [Applications (`apps/`)](#1-applications)
-2. [Rust Crates (`crates/`)](#2-rust-crates)
-3. [Products (`products/`)](#3-products)
-4. [Hypertensor Platform Service (`hypertensor/`)](#4-hypertensor-platform-service)
-5. [Physics Engine Library (`tensornet/`)](#5-physics-engine-library)
-6. [Domain Packs — 168 Taxonomy Nodes (`tensornet/packs/`)](#6-domain-packs--168-taxonomy-nodes)
-7. [Formal Proofs (`proofs/`)](#7-formal-proofs)
-8. [Smart Contracts (`contracts/`)](#8-smart-contracts)
-9. [Experiments & R\&D (`experiments/`)](#9-experiments--rd)
-10. [Challenges (`challenges/`)](#10-civilization-challenges)
-11. [Test Suite (`tests/`)](#11-test-suite)
-12. [Integrations (`integrations/`)](#12-integrations)
-13. [Deployment (`deploy/`)](#13-deployment)
-14. [Developer Tools (`tools/`)](#14-developer-tools)
-15. [Documentation (`docs/`)](#15-documentation)
-16. [CI/CD (`.github/workflows/`)](#16-cicd)
-17. [Data & Artifacts](#17-data--artifacts)
-18. [Archive (`archive/`)](#18-archive)
-19. [Full 168-Node Taxonomy](#19-full-168-node-taxonomy)
+| § | Section | Scope |
+|---|---------|-------|
+| 1 | [The Civilization Stack](#1-the-civilization-stack) | 20 grand R&D projects + validation gauntlets |
+| 2 | [TensorNet Core Library](#2-tensornet-core-library) | 16 physics modules, ~310K LOC, ~765 files |
+| 3 | [Applications](#3-applications) | 15 deployed apps in `apps/` |
+| 4 | [Products](#4-products) | Shippable products in `products/` |
+| 5 | [Experiments](#5-experiments) | Frontier physics, demos, research |
+| 6 | [Validation Gauntlets](#6-validation-gauntlets) | 38 gauntlets, 37K LOC |
+| 7 | [Tools & Scripts](#7-tools--scripts) | 208 files across `tools/scripts/` |
+| 8 | [Proofs & Certificates](#8-proofs--certificates) | Trustless Physics Certificates, ZK proofs |
+| 9 | [Rust Crates](#9-rust-crates) | 15 crates, ~204K LOC |
+| 10 | [Infrastructure & Deployment](#10-infrastructure--deployment) | Deploy, contracts, integrations |
+| 11 | [HyperTensor Platform Service](#11-hypertensor-platform-service) | API, billing, CLI, MCP, SDK |
+| 12 | [Test Suite](#12-test-suite) | 104 test files, ~52K LOC |
+| 13 | [Documentation & Governance](#13-documentation--governance) | docs/, ADRs, governance, specs |
+| 14 | [Backward-Compatibility Shim Map](#14-backward-compatibility-shim-map) | Re-export shims under `tensornet/` |
+| 15 | [Data & Archive](#15-data--archive) | Datasets, cached models, archived artifacts |
 
 ---
 
-## 1. Applications
+## Grand Summary
 
-Standalone, deployable applications and services.
-
-| App | Path | Language | Description |
-|-----|------|:--------:|-------------|
-| **Glass Cockpit** | `apps/glass_cockpit/` | Python | Sovereign observation layer for atmospheric intelligence — real-time weather/satellite data visualization |
-| **Glass Cockpit (Root)** | `apps/glass_cockpit_root/` | Rust | Root-level Glass Cockpit rendering engine |
-| **Global Eye** | `apps/global_eye/` | Rust | Global monitoring and surveillance physics platform |
-| **Golden Demo** | `apps/golden_demo/` | Rust | TPC end-to-end demo: simulate → prove → verify → visualize |
-| **Capability Ledger** | `apps/ledger/` | Python/YAML | 168-node taxonomy registry, dashboard generator, schema validation |
-| **Galaxy Feed Oracle** | `apps/oracle/` | Python | Real-time market entropy analysis with GPU-accelerated regime detection |
-| **Tensor Genesis Oracle Node** | `apps/oracle_node/` | Python | Domain-agnostic structure engine — "The Universal Truth Machine" |
-| **QTeneT** | `apps/qtenet/` | Python | Quantized Tensor Network Physics Engine — O(log N) complexity |
-| **Enterprise SDK (Legacy)** | `apps/sdk_legacy/` | Python | HyperTensor Enterprise SDK v1.0.0 |
-| **Sovereign API** | `apps/sovereign_api/` | Python | Real-time data provider and sovereign physics API server |
-| **Sovereign UI** | `apps/sovereign_ui/` | TypeScript | Frontend dashboard for sovereign physics data |
-| **The Compressor** | `apps/the_compressor/` | Python | 63,321× QTT compression engine for satellite/volumetric data |
-| **Trustless Verify** | `apps/trustless_verify/` | Rust | TPC binary verifier with Ed25519 signature validation + explorer UI |
-| **Vlasov Proof** | `apps/vlasov_proof/` | Rust | Standalone Vlasov equation ZK proof application |
-| **Exploit Verification** | `apps/exploit_verification/` | Python/Solidity | Pendle oracle manipulation forensic verification suite |
+| Area | Files | LOC | Primary Language |
+|------|-------|-----|-----------------|
+| `tensornet/` | 1,192 | ~492K | Python |
+| `apps/` | 207 | ~84K | Python + Rust |
+| `products/` | 154 | ~78K | Python |
+| `experiments/` | 2,623 | ~442K | Python |
+| `tools/` | 200 | ~110K | Python |
+| `tests/` | 115 | ~52K | Python |
+| `proofs/` | 7,473 | ~371K | Python + JSON |
+| `crates/` | 716 | ~204K | Rust |
+| `contracts/` | 3 | ~675 | Solidity |
+| `hypertensor/` | 31 | ~3.9K | Python |
+| `integrations/` | 1 | ~518 | C# / C++ |
+| **Total** | **~12,715** | **~1.84M** | |
 
 ---
 
-## 2. Rust Crates
+## 1. The Civilization Stack
 
-Native Rust libraries providing performance-critical computation, ZK circuits, and GPU acceleration.
+Twenty interlocking grand projects — from tokamak plasma control through
+self-replicating civilizational seeds — each backed by a dedicated validation
+gauntlet in `tools/scripts/gauntlets/`.
 
-| Crate | Path | Description |
-|-------|------|-------------|
-| **fluidelite** | `crates/fluidelite/` | FluidElite CFD optimization and benchmarking framework |
-| **fluidelite_circuits** | `crates/fluidelite_circuits/` | Physics ZK circuits: Euler 3D, Navier-Stokes IMEX, thermal diffusion (Halo2) |
-| **fluidelite_core** | `crates/fluidelite_core/` | Core tensor primitives: Q16 field, MPS, MPO, operators, physics traits |
-| **fluidelite_infra** | `crates/fluidelite_infra/` | Infrastructure: prover pools, Gevulot integration, dashboard, multi-tenancy |
-| **fluidelite_zk** | `crates/fluidelite_zk/` | ZK-provable FluidElite inference using Halo2 — deployment-ready |
-| **gevulot** | `crates/gevulot/` | Gevulot decentralized prover registration and task definitions |
-| **hyper_bridge** | `crates/hyper_bridge/` | RAM Bridge IPC protocol for Python ↔ Rust tensor streaming |
-| **hyper_core** | `crates/hyper_core/` | HyperTensor physics engine core: QTT, MPO, CFD operators |
-| **hyper_gpu_py** | `crates/hyper_gpu_py/` | PyO3 bindings for CUDA GPU acceleration (97M queries/sec) |
-| **proof_bridge** | `crates/proof_bridge/` | Bridge between Python computation traces and ZK proof generation |
-| **qtt_cem** | `crates/qtt_cem/` | Computational Electromagnetics via QTT — FDTD Maxwell solver (Q16.16) |
-| **qtt_fea** | `crates/qtt_fea/` | Structural Mechanics FEA via QTT — static linear elasticity (Q16.16) |
-| **qtt_opt** | `crates/qtt_opt/` | PDE-Constrained Optimization via adjoint methods — SIMP topology optimization |
-| **tci_core** | `crates/tci_core/` | Tensor Cross Interpolation for native QTT construction (PyO3) |
-| **tci_core_rust** | `crates/tci_core_rust/` | TT-Cross Interpolation core algorithms — pure Rust |
+| # | Project | Domain | Key Metric | Confidence | Gauntlet |
+|---|---------|--------|------------|------------|----------|
+| 1 | **TOMAHAWK** | Aerospace / Tokamak | 49,091× CFD compression | Solid Physics | `tomahawk_cfd_gauntlet.py` (823 LOC) |
+| 2 | **TIG-011a** | Oncology Drug Design | ΔG = −13.7 kcal/mol | Validated | 6 gauntlets (5,751 LOC) |
+| 3 | **SnHf-F** | EUV Lithography | 0.42 nm blur | Plausible | `snhff_stochastic_gauntlet.py` (766 LOC) |
+| 4 | **Li₃InCl₄.₈Br₁.₂** | Superionic Electrolyte | 112 S/cm conductivity | Lottery Ticket | `li3incl48br12_superionic_gauntlet.py` (932 LOC) |
+| 5 | **LaLuH₆ ODIN** | Room-Temp Superconductor | Tc = 306 K | Lottery Ticket | `laluh6_odin_gauntlet.py` (1,083 LOC) |
+| 6 | **HELL-SKIN** | Hypersonic TPS | MP = 4,005 °C | Solid Physics | `hellskin_gauntlet.py` (1,075 LOC) |
+| 7 | **STAR-HEART** | Compact Fusion | Q = 14.1 | Lottery Ticket | `starheart_gauntlet.py` (1,177 LOC) |
+| 8 | **Dynamics Engine** | Physics Core | Langevin / MHD stability | Solid Physics | *(core engine)* |
+| 9 | **QTT Brain** | Neuromorphic | 490 T synapses → 13,660 params | Plausible | *(core engine)* |
+| 10 | **Neuromorphic Chip** | Compute | 70 B neurons @ 0.06 W | Plausible | *(HAL backend)* |
+| 11 | **Femto-Fabricator** | Molecular Mfg | 0.016 Å placement | Plausible | `femto_fabricator_gauntlet.py` (1,202 LOC) |
+| 12 | **Proteome Compiler** | Synthetic Biology | 712 params → 20 K proteins | Plausible | `proteome_compiler_gauntlet.py` (1,111 LOC) |
+| 13 | **Metric Engine** | Propulsion | Non-propulsive drive | Lottery Ticket | `metric_engine_gauntlet.py` (945 LOC) |
+| 14 | **PROMETHEUS** | Consciousness / IIT | EI = 2.54 bits | Plausible | `prometheus_gauntlet.py` (1,707 LOC) |
+| 15 | **ORACLE** | Quantum Computing | 255× thermal advantage | Lottery Ticket | `oracle_gauntlet.py` (791 LOC) |
+| 16 | **ORBITAL FORGE** | Space Infrastructure | 500 km station, 50 crew | Solid Physics | `orbital_forge_gauntlet.py` (1,192 LOC) |
+| 17 | **HERMES** | Interstellar Comms | 1 M ly beacon | Solid Physics | `hermes_gauntlet.py` (1,276 LOC) |
+| 18 | **CORNUCOPIA** | Post-Scarcity Econ | $0.008 / kWh | Solid Physics | `cornucopia_gauntlet.py` (1,180 LOC) |
+| 19 | **CHRONOS** | Temporal Physics | GPS 38.5 μs/day | Solid Physics | `chronos_gauntlet.py` (1,246 LOC) |
+| 20 | **SOVEREIGN GENESIS** | Civilizational Autarchy | Self-replicating seed | Sum of All | `sovereign_genesis_gauntlet.py` (1,022 LOC) |
 
----
+### TIG-011a Gauntlet Detail
 
-## 3. Products
+The oncology drug candidate has the deepest validation suite (6 dedicated files, 5,751 LOC):
 
-Deployable product packages ready for end users or customers.
-
-| Product | Path | Description |
-|---------|------|-------------|
-| **Facial Plastics** | `products/facial_plastics/` | Surgical simulation platform — anatomy generation, pre/post-op analysis, clinical governance, UI, Docker deployment |
-| **FluidElite** | `products/fluidelite/` | FluidElite compute kernels package |
-| **FluidElite-ZK** | `products/fluidelite-zk/` | Gevulot-deployed ZK prover image for trustless physics verification |
-| **The Compressor** | `products/the_compressor/` | Pre-compressed QTT datasets (NOAA 24h, hybrid, block SVD outputs) |
-
----
-
-## 4. Hypertensor Platform Service
-
-The runtime platform — API server, CLI, billing, SDK, and MCP server.
-
-| Module | Path | Description |
-|--------|------|-------------|
-| **API Server** | `hypertensor/api/` | FastAPI app with auth, config, and routers (capabilities, contracts, health, jobs, validate) |
-| **Billing** | `hypertensor/billing/` | Metering and invoice generation for platform usage |
-| **CLI** | `hypertensor/cli/` | Command-line interface for job submission and management |
-| **Core** | `hypertensor/core/` | Executor, certificates, hasher, sanitizer, evidence collection, registry |
-| **Jobs** | `hypertensor/jobs/` | Job models and persistent store |
-| **MCP Server** | `hypertensor/mcp/` | Model Context Protocol server for AI-assisted physics |
-| **SDK** | `hypertensor/sdk/` | Python SDK client for programmatic platform access |
+| Gauntlet | LOC | Focus |
+|----------|-----|-------|
+| `tig011a_multimechanism.py` | 2,377 | Coulombic, LJ, hydrophobic, π-π, covalent warhead |
+| `tig011a_dynamic_validation.py` | 1,093 | 500 ns MD, H-bond persistence, FEP |
+| `tig011a_docking_qmmm.py` | 935 | Multi-pose sampling, QM/MM scoring |
+| `tig011a_dielectric_gauntlet.py` | 605 | KRAS G12D binding across ε = 4–80 |
+| `tig011a_wiggle_tt.py` | 403 | N-methyl piperazine variant energy well |
+| `tig011a_tox_screen.py` | 398 | PAINS, Lipinski, hERG, CYP450, Ames |
+| `tig011a_attestation.py` | 340 | Cryptographic hash attestation |
 
 ---
 
-## 5. Physics Engine Library
+## 2. TensorNet Core Library
 
-`tensornet/` — the core physics engine with **117 sub-modules** spanning every domain.
+`tensornet/` — **1,192 files, ~492K LOC** — the physics engine of HyperTensor-VM.
 
-### Core Infrastructure
+Organized into 16 major modules. Each module may contain STARK trace adapters
+for Trustless Physics Certificate generation.
 
-| Module | Path | Files | Description |
-|--------|------|------:|-------------|
-| **core** | `tensornet/core/` | — | Core tensor operations, decompositions, and data structures |
-| **qtt** | `tensornet/qtt/` | 12 | Quantized Tensor Train compression, decomposition, arithmetic |
-| **mps** | `tensornet/mps/` | 3 | Matrix Product State representations and operations |
-| **mpo** | `tensornet/mpo/` | 6 | Matrix Product Operator construction and application |
-| **algorithms** | `tensornet/algorithms/` | 15 | DMRG, TEBD, TDVP, TCI, variational methods |
-| **numerics** | `tensornet/numerics/` | 13 | Numerical methods: quadrature, interpolation, differentiation |
-| **types** | `tensornet/types/` | 15 | Type system for physics quantities, units, dimensions |
+### 2.1 `tensornet/cfd/` — Computational Fluid Dynamics
 
-### Physics Domains
+**115 files, ~78,200 LOC** — The flagship CFD engine. QTT-native solvers from
+1D Euler through 6D Vlasov-Poisson, all operating at O(log N) complexity.
 
-| Module | Path | Files | Domain |
-|--------|------|------:|--------|
-| **cfd** | `tensornet/cfd/` | 117 | Computational Fluid Dynamics — NS, Euler, RANS, LES, WENO, shock capturing |
-| **fluids** | `tensornet/fluids/` | 11 | General fluid mechanics: multiphase, reactive, free-surface |
-| **free_surface** | `tensornet/free_surface/` | 2 | Free surface and interfacial flow |
-| **multiphase** | `tensornet/multiphase/` | 2 | Multiphase flow modeling |
-| **em** | `tensornet/em/` | 20 | Computational Electromagnetics — FDTD, PML, antenna, CEM-QTT |
-| **quantum** | `tensornet/quantum/` | 16 | Quantum computing: circuits, error correction, simulation |
-| **quantum_mechanics** | `tensornet/quantum_mechanics/` | 2 | Schrödinger equation, semiclassical methods |
-| **qm** | `tensornet/qm/` | 2 | Quantum mechanics primitives |
-| **qft** | `tensornet/qft/` | 2 | Quantum field theory |
-| **condensed_matter** | `tensornet/condensed_matter/` | 2 | DFT, Hubbard model, superconductors |
-| **electronic_structure** | `tensornet/electronic_structure/` | 2 | Band structure, DFT, beyond-DFT methods |
-| **plasma** | `tensornet/plasma/` | 2 | Plasma physics — Vlasov-Poisson, MHD, kinetic theory |
-| **plasma_nuclear** | `tensornet/plasma_nuclear/` | 5 | Plasma-nuclear coupling, fusion physics |
-| **fusion** | `tensornet/fusion/` | 2 | Fusion energy: tokamak, MARRS, disruption prediction |
-| **nuclear** | `tensornet/nuclear/` | 2 | Nuclear structure, reactions, astrophysics |
-| **particle** | `tensornet/particle/` | 2 | Particle physics: lattice QCD, pQFT |
-| **mechanics** | `tensornet/mechanics/` | 2 | Structural mechanics and elasticity |
-| **materials** | `tensornet/materials/` | 11 | Materials science: phase-field, radiation damage, polymers |
-| **heat_transfer** | `tensornet/heat_transfer/` | 2 | Conduction, convection, radiation heat transfer |
-| **acoustics** | `tensornet/acoustics/` | 2 | Acoustics and vibration |
-| **optics** | `tensornet/optics/` | 2 | Physical optics, laser physics, photonics |
-| **relativity** | `tensornet/relativity/` | 2 | General and special relativity, geodesics |
-| **statmech** | `tensornet/statmech/` | 2 | Statistical mechanics: equilibrium, non-equilibrium |
-| **geophysics** | `tensornet/geophysics/` | 2 | Seismology, mantle convection, geomagnetism |
-| **astro** | `tensornet/astro/` | 11 | Astrophysics: stellar evolution, gravitational waves, cosmology |
-| **chemistry** | `tensornet/chemistry/` | 2 | Reaction kinetics, thermodynamics |
-| **biology** | `tensornet/biology/` | 2 | Computational biology |
-| **biophysics** | `tensornet/biophysics/` | 1 | Biophysics modeling |
-| **membrane_bio** | `tensornet/membrane_bio/` | 2 | Membrane biophysics |
-| **neural** | `tensornet/neural/` | 1 | Computational neuroscience |
-| **phase_field** | `tensornet/phase_field/` | 2 | Phase-field modeling |
-| **porous_media** | `tensornet/porous_media/` | 2 | Porous media flow |
-| **radiation** | `tensornet/radiation/` | 2 | Radiation transport and damage |
-| **fsi** | `tensornet/fsi/` | 2 | Fluid-structure interaction |
-| **coupled** | `tensornet/coupled/` | 2 | Multi-physics coupling |
-| **multiscale** | `tensornet/multiscale/` | 2 | Multiscale methods |
-| **md** | `tensornet/md/` | 2 | Molecular dynamics |
+| Sub-area | Key Files | Description |
+|----------|-----------|-------------|
+| **Euler solvers** | `euler_1d.py`, `euler_2d.py`, `euler_3d.py`, `euler2d_native.py`, `euler_nd_native.py`, `fast_euler_2d.py`, `fast_euler_3d.py` | 1D through N-D compressible Euler |
+| **Navier-Stokes** | `ns_2d.py`, `ns_3d.py`, `ns2d_qtt_native.py`, `ns3d_native.py`, `ns3d_qtt_native.py`, `ns3d_realtime.py`, `ns3d_turbo.py`, `navier_stokes.py`, `viscous.py` | Incompressible / compressible NS, real-time capable |
+| **QTT core ops** | `pure_qtt_ops.py` (1,071), `qtt_native_ops.py` (2,098), `qtt_turbo.py` (1,465), `nd_shift_mpo.py` (859), `qtt.py`, `qtt_cfd.py`, `qtt_hadamard.py`, `qtt_reciprocal.py`, `qtt_shift_stable.py` | Native QTT arithmetic — no dense fallback |
+| **QTT-TCI** | `qtt_tci.py` (1,270), `tci_true.py` (841), `tci_flux.py` (871), `qtt_tci_gpu.py`, `flux_2d_tci.py`, `flux_batch.py` | Tensor Cross Interpolation construction + flux |
+| **QTT spectral** | `qtt_fft.py` (897), `qtt_spectral.py`, `poisson_spectral.py` (1,047), `turbo_spectral.py` | Spectral methods in QTT format |
+| **QTT time integration** | `qtt_tdvp.py` (786), `qtt_imex.py` (662), `implicit.py` | TDVP, IMEX, implicit schemes |
+| **Triton GPU kernels** | `qtt_triton_kernels.py` (1,441), `qtt_triton_kernels_v2.py` (2,260), `qtt_triton_native.py` (1,472), `qtt_triton_ops.py` (1,597), `qtt_triton.py`, `triton_qtt3d.py`, `triton_qtt_kernels.py` | Production Triton kernel suite |
+| **Turbulence** | `turbulence.py`, `les.py` (1,010), `hybrid_les.py`, `kolmogorov_spectrum.py`, `turbulence_forcing.py`, `turbulence_simulation.py`, `turbulence_validation.py`, `turbulence_qtt_benchmark.py` | RANS, LES, DNS validation |
+| **Singularity / blow-up** | `singularity_hunter.py`, `hou_luo_ansatz.py`, `self_similar.py`, `newton_refine.py`, `stabilized_refine.py`, `kantorovich.py`, `adjoint_blowup.py` | NS millennium-problem numerical exploration |
+| **Kinetic / Vlasov** | `fast_vlasov_5d.py` | 5D Vlasov-Poisson via ND shift MPO |
+| **Koopman** | `koopman_tt.py` (1,645) | TT Koopman operator for turbulence |
+| **Numerics** | `weno.py`, `weno_native_tt.py`, `weno_tt.py`, `dg.py`, `sem.py`, `space_time_dg.py`, `limiters.py`, `godunov.py` | WENO/TENO, DG, SEM, Riemann solvers |
+| **Speciality** | `dsmc.py` (1,056), `lbm.py`, `sph.py`, `non_newtonian.py`, `reactive_ns.py`, `combustion_dns.py`, `real_gas.py`, `plasma.py`, `chemistry.py` | Rarefied gas, LBM, SPH, reacting flow, real gas |
+| **HVAC bridge** | `comfort_metrics.py`, `thermal_qtt.py` | PMV/PPD comfort, thermal transport for HVAC |
+| **Infrastructure** | `adaptive_tt.py`, `analytical_qtt.py`, `boundaries.py`, `chi_diagnostic.py`, `differentiable.py`, `geometry.py`, `morton_3d.py`, `multi_objective.py`, `optimization.py`, `qtt_2d.py`, `qtt_2d_shift.py`, `qtt_2d_shift_native.py`, `qtt_3d_state.py`, `qtt_batched_ops.py`, `qtt_checkpoint_stream.py`, `qtt_eval.py`, `qtt_multiscale.py`, `qtt_regularity.py`, `qtt_streaming.py`, `tci_benchmark_suite.py` | AMR, Morton curves, checkpointing, diagnostics |
+| **Trace adapters** | 5 files | STARK adapters for Euler3D, NS-IMEX, Heat, Vlasov |
 
-### Genesis Layers (8 Meta-Primitives)
+### 2.2 `tensornet/genesis/` — QTT Meta-Primitive Expansion Protocol
 
-| Module | Path | Description |
-|--------|------|-------------|
-| **QTT-OT** | `tensornet/genesis/ot/` | Trillion-point Sinkhorn optimal transport — O(r³ log N) |
-| **QTT-SGW** | `tensornet/genesis/sgw/` | Billion-node spectral graph wavelets with Chebyshev filters |
-| **QTT-RMT** | `tensornet/genesis/rmt/` | Random matrix eigenvalue statistics without dense storage |
-| **QTT-TG** | `tensornet/genesis/tropical/` | Shortest paths via tropical min-plus semiring algebra |
-| **QTT-RKHS** | `tensornet/genesis/rkhs/` | Trillion-sample Gaussian processes with QTT kernel matrices |
-| **QTT-PH** | `tensornet/genesis/topology/` | Persistent homology (Betti numbers) at scale |
-| **QTT-GA** | `tensornet/genesis/ga/` | Clifford algebras Cl(p,q,r) — Cl(50) in KB, not PB |
-| **QTT-Aging** | `tensornet/genesis/aging/` | Biological aging as rank growth; reversal as rank reduction |
+**76 files, ~38,000 LOC** — Seven QTT-native mathematical primitives plus
+aging simulator and benchmarks.
 
-### Applied Verticals & Industry
+| Sub-module | Files | LOC | Description |
+|------------|-------|-----|-------------|
+| `ot/` — Optimal Transport | 8 | ~5,400 | Sinkhorn in QTT, Wasserstein barycenters, transport plans |
+| `topology/` — Persistent Homology | 7 | ~2,900 | Boundary operators, persistence, simplicial complexes |
+| `sgw/` — Spectral Graph Wavelets | 7 | ~2,800 | Chebyshev approx, filter banks, graph Laplacian |
+| `rkhs/` — Kernel Methods | 7 | ~3,400 | Gaussian processes, kernel ridge, MMD |
+| `rmt/` — Random Matrix Theory | 7 | ~2,700 | GOE/GUE/GSE ensembles, free probability, universality |
+| `ga/` — Geometric Algebra | 8 | ~3,400 | CGA, multivectors, rotors, QTT-compressed GA |
+| `tropical/` — Tropical Geometry | 8 | ~4,000 | Semiring algebra, shortest paths, QTT-native tropical ops |
+| `aging/` — Biological Aging | 8 | ~5,300 | Cell state dynamics, epigenetic clock, interventions, topology |
+| `core/` | 8 | ~3,300 | Exceptions, logging, profiling, rSVD, Triton ops, validation |
+| `fusion/` | 3 | ~2,400 | Genesis fusion demos, geometric types pipeline |
+| `demos/` | 7 | ~2,900 | GPU QTT, hierarchical compression, NOAA petabyte, 1 TB stream |
+| `benchmarks/` | 2 | ~1,000 | "GENESIS vs The World" massacre benchmark |
 
-| Module | Path | Files | Domain |
-|--------|------|------:|--------|
-| **aerospace** | `tensornet/aerospace/` | 7 | Aerodynamics, flight validation |
-| **applied** | `tensornet/applied/` | 15 | Applied physics across domains |
-| **biomedical** | `tensornet/biomedical/` | 2 | Biomedical engineering |
-| **medical** | `tensornet/medical/` | 2 | Medical physics |
-| **life_sci** | `tensornet/life_sci/` | 8 | Life sciences: drug discovery, pharmacokinetics |
-| **energy** | `tensornet/energy/` | 2 | Energy systems |
-| **energy_env** | `tensornet/energy_env/` | 6 | Energy and environment |
-| **environmental** | `tensornet/environmental/` | 2 | Environmental modeling |
-| **manufacturing** | `tensornet/manufacturing/` | 2 | Manufacturing processes |
-| **semiconductor** | `tensornet/semiconductor/` | 1 | Semiconductor physics |
-| **financial** | `tensornet/financial/` | 1 | Financial physics models |
-| **racing** | `tensornet/racing/` | 1 | Motorsport physics |
-| **defense** | `tensornet/defense/` | 1 | Defense applications |
-| **urban** | `tensornet/urban/` | 1 | Urban physics and infrastructure |
-| **agri** | `tensornet/agri/` | 1 | Agricultural modeling |
-| **cyber** | `tensornet/cyber/` | 1 | Cybersecurity physics |
-| **emergency** | `tensornet/emergency/` | 1 | Emergency response modeling |
-| **robotics_physics** | `tensornet/robotics_physics/` | 2 | Robotics physics simulation |
-| **autonomy** | `tensornet/autonomy/` | 1 | Autonomous systems |
-| **guidance** | `tensornet/guidance/` | 2 | Guidance, navigation, and control |
-| **fuel** | `tensornet/fuel/` | 1 | Fuel systems and combustion |
-| **special_applied** | `tensornet/special_applied/` | 1 | Special-purpose applied physics |
-| **digital_twin** | `tensornet/digital_twin/` | 1 | Digital twin framework |
-| **discovery** | `tensornet/discovery/` | 1 | Physics discovery engine |
+### 2.3 `tensornet/ml/discovery/` — Autonomous Discovery Engine
 
-### Platform & Infrastructure
+**42 files, ~23,500 LOC** — Chains Genesis primitives into autonomous
+scientific discovery pipelines with API, connectors, and production hardening.
 
-| Module | Path | Files | Description |
-|--------|------|------:|-------------|
-| **platform** | `tensornet/platform/` | 35 | Platform orchestration, job pipeline, capability registry |
-| **engine** | `tensornet/engine/` | 13 | Simulation engine: scheduler, execution, state management |
-| **infra** | `tensornet/infra/` | 17 | Infrastructure: logging, metrics, deployment, configuration |
-| **sim** | `tensornet/sim/` | 8 | Simulation framework |
-| **substrate** | `tensornet/substrate/` | 1 | Field Oracle substrate — canonical `sample/slice/step/stats` API |
-| **fieldops** | `tensornet/fieldops/` | 1 | Physics operators as composable FieldGraph nodes |
-| **fieldos** | `tensornet/fieldos/` | 1 | Field OS layer |
-| **validation** | `tensornet/validation/` | 1 | V&V (Verification & Validation) framework |
-| **certification** | `tensornet/certification/` | 1 | Physics certification engine |
-| **provenance** | `tensornet/provenance/` | 1 | Data provenance and lineage tracking |
-| **sovereign** | `tensornet/sovereign/` | 1 | Sovereign data pipeline |
-| **oracle** | `tensornet/oracle/` | 2 | Oracle subsystem |
-| **zk** | `tensornet/zk/` | 1 | Zero-knowledge proof integration |
-| **vm** | `tensornet/vm/` | 2 | Register-based virtual machine |
-| **packs** | `tensornet/packs/` | 24 | 20 domain packs (168 taxonomy nodes) |
+| Sub-module | Files | Description |
+|------------|-------|-------------|
+| Core | 8 | Engine orchestrator (v1 + v2), config, findings, pipelines, protocol |
+| `api/` | 5 | FastAPI server, distributed API, GPU API, Pydantic models |
+| `connectors/` | 7 | Coinbase L2, Ethereum, fusion, historical, molecular PDB, streaming |
+| `hypothesis/` | 2 | Automated hypothesis generation |
+| `ingest/` | 5 | DeFi, markets, molecular, plasma data ingestion |
+| `pipelines/` | 5 | DeFi, markets, molecular, plasma discovery pipelines |
+| `primitives/` | 7 | GA, kernel, OT, RMT, SGW, topology discovery primitives |
+| `production/` | 5 | Observability, performance, resilience, security (1,016 LOC) |
 
-### ML, Visualization, and Compute
+### 2.4 `tensornet/aerospace/` — Aerospace, Defense & Exploit Engine
 
-| Module | Path | Files | Description |
-|--------|------|------:|-------------|
-| **ml** | `tensornet/ml/` | 7 | Machine learning for physics |
-| **ml_physics** | `tensornet/ml_physics/` | 2 | ML-physics hybrid models |
-| **ml_surrogates** | `tensornet/ml_surrogates/` | 1 | ML surrogate models |
-| **cuda** | `tensornet/cuda/` | 10 | CUDA GPU kernels |
-| **gpu** | `tensornet/gpu/` | 2 | GPU compute abstraction |
-| **hw** | `tensornet/hw/` | 1 | Hardware interface |
-| **hardware** | `tensornet/hardware/` | 1 | Hardware configuration |
-| **distributed** | `tensornet/distributed/` | 1 | Distributed computing |
-| **distributed_tn** | `tensornet/distributed_tn/` | 2 | Distributed tensor networks |
-| **hypervisual** | `tensornet/hypervisual/` | 1 | Real-time QTT field rendering (Glass Cockpit) |
-| **visualization** | `tensornet/visualization/` | 1 | Data visualization framework |
-| **shaders** | `tensornet/shaders/` | 1 | GPU shader programs |
-| **mesh_amr** | `tensornet/mesh_amr/` | 2 | Mesh generation and adaptive mesh refinement |
-| **adaptive** | `tensornet/adaptive/` | 1 | Adaptive methods |
-| **realtime** | `tensornet/realtime/` | 1 | Real-time simulation |
-| **benchmarks** | `tensornet/benchmarks/` | 1 | Performance benchmarks |
+**56 files, ~26,700 LOC**
 
-### Remaining Modules
+| Sub-module | Files | LOC | Description |
+|------------|-------|-----|-------------|
+| `guidance/` | 6 | ~3,600 | 6-DOF trajectory, bank-to-turn, proportional nav, kill-vehicle divert, TRN, comms blackout |
+| `autonomy/` | 5 | ~2,600 | Mission planning, decision making, A*/RRT path planning, obstacle avoidance |
+| `defense/` | 4 | ~1,200 | Hydroacoustic warfare, 6-DOF ballistics, Munk sound speed, FDTD sonar |
+| `racing/` | 2 | ~350 | F1 dirty-air wake tracker |
+| `exploit/` | 38 | ~19,000 | QTT-based DeFi vulnerability hunting — Compound V3, EigenLayer, Ethena, Euler V2, Lido, Morpho Blue, Pendle, Renzo, Usual, Cairo ZK circuits, Koopman structural exploits, historical validator, Immunefi bounty integration |
 
-| Module | Path | Files | Description |
-|--------|------|------:|-------------|
-| **computational_methods** | `tensornet/computational_methods/` | 1 | General computational methods |
-| **coordination** | `tensornet/coordination/` | 1 | Multi-solver coordination |
-| **data** | `tensornet/data/` | 1 | Data management |
-| **deployment** | `tensornet/deployment/` | 1 | Deployment utilities |
-| **exploit** | `tensornet/exploit/` | 1 | DeFi exploit detection physics |
-| **flight_validation** | `tensornet/flight_validation/` | 1 | Flight validation benchmarks |
-| **gateway** | `tensornet/gateway/` | 1 | API gateway |
-| **hyperenv** | `tensornet/hyperenv/` | 1 | HyperEnvironment simulation |
-| **hypersim** | `tensornet/hypersim/` | 1 | HyperSim multi-domain simulator |
-| **integration** | `tensornet/integration/` | 1 | Cross-module integration |
-| **intent** | `tensornet/intent/` | 1 | Natural-language intent engine |
-| **physics** | `tensornet/physics/` | 1 | General physics utilities |
-| **sdk** | `tensornet/sdk/` | 1 | Internal SDK |
-| **simulation** | `tensornet/simulation/` | 1 | Simulation primitives |
-| **site** | `tensornet/site/` | 1 | Documentation site generator |
+### 2.5 `tensornet/quantum/` — Quantum Physics
 
----
+**99 files, ~22,500 LOC**
 
-## 6. Domain Packs — 168 Taxonomy Nodes
+| Sub-module | Files | Description |
+|------------|-------|-------------|
+| `condensed_matter/` | 20 solvers + 20 adapters | Band structure, bosonic/fermionic, Kondo, MBL, NEGF, open quantum, phonons, topological phases, ultracold atoms |
+| `electronic_structure/` | 7 solvers + 7 adapters | DFT, beyond-DFT (GW, DMFT), embedding, excited states, relativistic, tight-binding |
+| `qft/` | 3 solvers + 3 adapters | Lattice QCD, lattice QFT, perturbative QFT |
+| `qm/` | 2 solvers + 2 adapters | Scattering, semiclassical WKB |
+| `quantum_mechanics/` | 3 solvers + 3 adapters | Path integrals, propagator, stationary states |
+| `statmech/` | 3 solvers + 5 adapters | Equilibrium, Monte Carlo, non-equilibrium |
+| Root | 7 | Error mitigation, hybrid classical-quantum, QTT renderers (CPU, GLSL, PyTorch) |
 
-Each domain pack corresponds to a physics vertical. All 168 nodes are registered in `apps/ledger/nodes/*.yaml`.
+### 2.6 `tensornet/engine/` — Execution Engine, GPU, VM
 
-| Pack | Domain | Nodes | Module |
-|------|--------|------:|--------|
-| PHY-I | Classical Mechanics | 8 | `tensornet/packs/pack_i.py` |
-| PHY-II | Classical Fluids (CFD) | 10 | `tensornet/packs/pack_ii.py` |
-| PHY-III | Electromagnetics (CEM) | 7 | `tensornet/packs/pack_iii.py` |
-| PHY-IV | Optics | 7 | `tensornet/packs/pack_iv.py` |
-| PHY-V | Statistical Mechanics | 6 | `tensornet/packs/pack_v.py` |
-| PHY-VI | Quantum Mechanics | 10 | `tensornet/packs/pack_vi.py` |
-| PHY-VII | Quantum Many-Body | 13 | `tensornet/packs/pack_vii.py` |
-| PHY-VIII | Electronic Structure | 10 | `tensornet/packs/pack_viii.py` |
-| PHY-IX | Condensed Matter | 8 | `tensornet/packs/pack_ix.py` |
-| PHY-X | Nuclear & Particle | 9 | `tensornet/packs/pack_x.py` |
-| PHY-XI | Plasma Physics | 10 | `tensornet/packs/pack_xi.py` |
-| PHY-XII | Astrophysics | 10 | `tensornet/packs/pack_xii.py` |
-| PHY-XIII | Geophysics | 8 | `tensornet/packs/pack_xiii.py` |
-| PHY-XIV | Materials Science | 8 | `tensornet/packs/pack_xiv.py` |
-| PHY-XV | Chemical Physics | 8 | `tensornet/packs/pack_xv.py` |
-| PHY-XVI | Biophysics | 8 | `tensornet/packs/pack_xvi.py` |
-| PHY-XVII | Computational Methods | 6 | `tensornet/packs/pack_xvii.py` |
-| PHY-XVIII | Multi-Physics Coupling | 8 | `tensornet/packs/pack_xviii.py` |
-| PHY-XIX | Quantum Computing | 8 | `tensornet/packs/pack_xix.py` |
-| PHY-XX | Special & Applied | 6 | `tensornet/packs/pack_xx.py` |
-| | **Total** | **168** | |
+**93 files, ~36,050 LOC**
 
-Full node-level listing: [§19 Full 168-Node Taxonomy](#19-full-168-node-taxonomy).
+| Sub-module | Files | LOC | Description |
+|------------|-------|-----|-------------|
+| `vm/` | 29 | ~6,500 | QTT Physics VM — IR, operators, runtime (CPU + GPU), telemetry, antenna design, PDE compilers (Maxwell, NS, Schrödinger, Vlasov-Poisson), post-processing |
+| `gpu/` | 16 | ~5,400 | Advection, Blackwell opts, fluid dynamics, HIL real-time, kernel autotune, managed memory, mixed precision, multi-GPU TN, NVLink topology, persistent kernels, tensor core |
+| `hardware/` | 9 | ~3,200 | Unified HAL — ARM SVE, FPGA, Apple Metal, neuromorphic, Intel oneAPI, photonic, quantum backend, ROCm/HIP |
+| `distributed/` | 6 | ~3,000 | MPI/NCCL comms, domain decomposition, GPU manager, parallel solver, scheduler |
+| `distributed_tn/` | 5 | ~2,200 | Distributed DMRG, load balancer, MPS ops, parallel TEBD |
+| `adaptive/` | 4 | ~2,400 | Bond dimension optimizer, adaptive compression, entanglement analysis |
+| `realtime/` | 5 | ~2,700 | Inference engine, kernel fusion, latency optimizer, memory manager |
+| `substrate/` | 6 | ~2,500 | Field Oracle API, FieldBundle, Morton ops, frame budget, stats |
+| `gateway/` | 6 | ~2,100 | OPERATION VALHALLA Phase 4 — modular grid, onion renderer, orbital command |
+| `fuel/` | 3 | ~600 | S3 fetcher, tile compositor |
+| `hw/` | 3 | ~1,700 | Verilog/SystemVerilog security analyzer, Yosys netlist analyzer (v1 + v2) |
 
----
+### 2.7 `tensornet/em/` — Electromagnetics
 
-## 7. Formal Proofs
+**24 files, ~15,300 LOC**
 
-Mathematical and cryptographic verification spanning Lean 4, Python proof engines, and ZK circuits.
+| File | LOC | Description |
+|------|-----|-------------|
+| `chu_limit.py` | 3,347 | 3D QTT topology optimization for antennas |
+| `qtt_3d.py` | 1,839 | 3D QTT Maxwell operators |
+| `chu_limit_gpu.py` | 1,585 | GPU-native Chu limit |
+| `qtt_helmholtz_gpu.py` | 1,414 | GPU-native QTT Helmholtz |
+| `qtt_helmholtz.py` | 1,305 | QTT Helmholtz via TT-GMRES |
+| `frequency_sweep.py` | 1,254 | QTT frequency sweep |
+| `topology_opt.py` | 1,317 | Density-based topology optimization |
+| `s_parameters.py` | 1,069 | S-parameter extraction |
+| `boundaries.py` | 1,031 | PML for QTT Maxwell |
+| `electrostatics.py` | 805 | Poisson-Boltzmann (III.1) |
+| Others (14 files) | ~1,300 | Magnetostatics, wave propagation, FDFD, photonics, antenna/microwave + 7 STARK adapters |
 
-### Lean 4 Formal Proofs (27 Conservation + 6 Core = 33 first-party `.lean` files)
+### 2.8 `tensornet/platform/` — Platform Layer
 
-| Proof | Path | Domain |
-|-------|------|--------|
-| **EulerConservation** | `proofs/conservation/euler/` | Euler equation conservation laws |
-| **FluidConservation** | `proofs/conservation/fluid/` | General fluid conservation |
-| **PlasmaConservation** | `proofs/conservation/plasma/` | Vlasov/plasma conservation |
-| **QuantumManyBodyConservation** | `proofs/conservation/qmb/` | Quantum many-body conservation |
-| **QuantumMechanicsConservation** | `proofs/conservation/quantum_mechanics/` | QM conservation laws |
-| **QuantumInfoConservation** | `proofs/conservation/quantum_info/` | Quantum information |
-| **QuantumInfoExtConservation** | `proofs/conservation/quantum_info_ext/` | Extended quantum info |
-| **EMConservation** | `proofs/conservation/em/` | Electromagnetic conservation |
-| **MechanicsConservation** | `proofs/conservation/mechanics/` | Classical mechanics |
-| **ThermalConservation** | `proofs/conservation/thermal/` | Thermal/heat conservation |
-| **StatMechConservation** | `proofs/conservation/statmech/` | Statistical mechanics |
-| **StatMechStochasticConservation** | `proofs/conservation/statmech_stochastic/` | Stochastic stat mech |
-| **MaterialsConservation** | `proofs/conservation/materials/` | Materials science |
-| **SolidStateConservation** | `proofs/conservation/solid_state/` | Solid state physics |
-| **ElectronicStructureConservation** | `proofs/conservation/electronic_structure/` | Electronic structure |
-| **OpticsConservation** | `proofs/conservation/optics/` | Optics |
-| **NuclearParticleConservation** | `proofs/conservation/nuclear_particle/` | Nuclear & particle |
-| **AstroConservation** | `proofs/conservation/astro/` | Astrophysics |
-| **GeophysicsConservation** | `proofs/conservation/geophysics/` | Geophysics |
-| **BiophysicsConservation** | `proofs/conservation/biophysics/` | Biophysics |
-| **ChemicalPhysicsConservation** | `proofs/conservation/chemical_physics/` | Chemical physics |
-| **ChemPhysicsIterConservation** | `proofs/conservation/chem_physics_iter/` | Iterative chem physics |
-| **AppliedPhysicsConservation** | `proofs/conservation/applied_physics/` | Applied physics |
-| **ComputationalMethodsConservation** | `proofs/conservation/computational_methods/` | Comp methods |
-| **CoupledConservation** | `proofs/conservation/coupled/` | Coupled systems |
-| **SpecialRelativityConservation** | `proofs/conservation/special_relativity/` | Special relativity |
-| **VlasovConservation** | `proofs/conservation/vlasov/` | Vlasov equation |
-| **NavierStokes v1** | `proofs/navier_stokes/v1/` | Navier-Stokes conservation |
-| **NavierStokes v2** | `proofs/navier_stokes/v2/` | Navier-Stokes regularity |
-| **YangMills (multiple)** | `proofs/yang_mills/` | Yang-Mills mass gap — 6 Lean variants |
+**40 files, ~15,474 LOC**
 
-### Python Proof Engine
+| Sub-area | Key Files | Description |
+|----------|-----------|-------------|
+| **Data & export** | `data_model.py`, `export.py`, `arrow_export.py`, `mesh_import.py`, `checkpoint.py`, `lakehouse.py`, `timeseries_db.py`, `data_versioning.py` | Mesh, Field, BCs, VTK/HDF5/CSV/Parquet, GMSH import |
+| **Solvers** | `solvers.py`, `coupled.py`, `qtt_solver.py`, `qtt.py`, `tci.py`, `acceleration.py` | Time integrators, multi-physics coupling, QTT bridge |
+| **V&V** | `vv/` (7 files) | Benchmarks, conservation, convergence, MMS, performance, stability |
+| **Platform services** | `protocols.py`, `domain_pack.py`, `deprecation.py`, `security.py`, `lineage.py`, `reproduce.py`, `replay.py`, `experiment_tracker.py`, `federation.py` | PEP 544 protocols, DomainPack plugin, provenance, SBOM |
+| **Analysis** | `inverse.py`, `adjoint.py`, `optimization.py`, `uq.py`, `postprocess.py`, `visualize.py` | Inverse problems, Bayesian UQ, gradient optimization |
+| **Vertical slices** | `vertical_ode.py`, `vertical_pde.py`, `vertical_vv.py` | End-to-end demo slices |
 
-| Module | Path | Description |
-|--------|------|-------------|
-| **Proof Engine** | `proofs/proof_engine/` | Certificate generation, convergence proofs, Coq/Lean/Isabelle export, dashboard |
-| **TPC Library** | `proofs/tpc/` | Trustless Physics Certificate format, constants, registry, generator |
-| **Yang-Mills Core** | `proofs/yang_mills/core/` | SU(2) lattice gauge, Hamiltonian, DMRG, transfer matrix, scaling analysis |
-| **Proof Pipeline** | `proofs/proof_phase_*.py` | 8 phased proof scripts (1a → 6) plus production, plasma, summary |
+### 2.9 `tensornet/materials/` — Materials Science & Mechanics
 
-### ZK Circuit References
+**42 files, ~10,100 LOC**
 
-| Circuit | Path | Description |
-|---------|------|-------------|
-| **Circom ECDSA** | `proofs/zk_circuits/circom_ecdsa/` | ECDSA signature circuits |
-| **Semaphore** | `proofs/zk_circuits/semaphore/` | Privacy-preserving identity circuits |
-| **Tornado** | `proofs/zk_circuits/tornado/` | Tornado Cash circuits (reference) |
-| **Worldcoin** | `proofs/zk_circuits/worldcoin_circuits/` | Worldcoin identity circuits (reference) |
-| **Worldcoin ID** | `proofs/zk_circuits/worldcoin_id/` | World ID verification (reference) |
+| Sub-module | Files | Description |
+|------------|-------|-------------|
+| Root solvers | 7 | First principles (DFT), mechanical properties, microstructure (Cahn-Hilliard), polymers/soft matter, radiation damage, ceramics (UHTC) |
+| `mechanics/` | 14 solvers + 6 adapters | Continuum (Neo-Hookean), DEM, fracture (LEFM/EPFM), HHO, IGA (NURBS), mimetic FD, MPM, Noether verification, peridynamics, structural (beam/plate/shell), symplectic (Ruth-4/Yoshida), tribology, variational, VEM, XFEM |
+| `manufacturing/` | 2 + 1 adapter | Goldak welding, Scheil solidification, AM melt pool |
+| Trace adapters | 7 | STARK adapters for XIV.1–XIV.7 |
 
-### ZK Target References
+### 2.10 `tensornet/applied/` — Applied Physics Domains
 
-| Target | Path | Description |
-|--------|------|-------------|
-| **DeGate/Loopring** | `proofs/zk_targets/degate_protocols/` | Loopring v3 DEX circuits |
-| **Light Protocol** | `proofs/zk_targets/light-protocol/` | Compressed state proofs |
-| **Linea** | `proofs/zk_targets/linea-circuits/` | Linea zkEVM circuits |
-| **Noir** | `proofs/zk_targets/noir-lang/` | Noir DSL circuits |
-| **OpenTitan** | `proofs/zk_targets/opentitan/` | Hardware security module |
+**48 files, ~11,800 LOC**
 
----
+| Sub-module | Files | Description |
+|------------|-------|-------------|
+| `acoustics/` | 4 | Helmholtz BEM, room acoustics, Lighthill aeroacoustic, Tam-Auriault jet noise, duct acoustics |
+| `optics/` | 8 | Physical optics (diffraction, polarization), quantum optics (Jaynes-Cummings), laser physics, ultrafast optics + 4 STARK adapters |
+| `intent/` | 8 | NL field steering — LLM-to-solver pipeline, FieldQuery DSL, swarm command |
+| `financial/` | 4 | NS solver on order-book density, Coinbase live feed, Unreal Engine bridge |
+| `physics/` | 4 | Hypersonic hazard field, trajectory optimizer |
+| `medical/` | 2 | Carreau-Yasuda blood flow, stenosis simulation |
+| `cyber/` | 2 | DDoS-as-fluid-dynamics, heat equation on graphs |
+| `emergency/` | 2 | Rothermel wildfire model, ember transport |
+| `particle/` | 3 | Beyond Standard Model — neutrino oscillations, dark matter, GUT |
+| `radiation/` | 1 | Flux-limited diffusion, grey/multigroup transport |
+| `robotics_physics/` | 2 | Newton-Euler, Featherstone ABA, LCP contact |
+| `special_applied/` | 2 | Astrodynamics STARK adapter |
 
-## 8. Smart Contracts
+### 2.11 `tensornet/plasma_nuclear/` — Plasma & Nuclear Physics
 
-On-chain verification and API contracts.
+**36 files, ~8,800 LOC**
 
-| Contract | Path | Description |
-|----------|------|-------------|
-| **FluidEliteHalo2Verifier** | `contracts/FluidEliteHalo2Verifier.sol` | On-chain Halo2 proof verification for FluidElite physics |
-| **HyperTensorBindingVerifier** | `contracts/HyperTensorBindingVerifier.sol` | Groth16 on-chain verifier for ZK drug-binding affinity proofs (EIP-197) |
-| **ZeroExpansionSemaphoreVerifier** | `contracts/ZeroExpansionSemaphoreVerifier.sol` | Semaphore identity verification for zero-expansion proofs |
-| **API Contract v1** | `contracts/v1/` | OpenAPI spec, JSON schema, and SPEC.md for the platform API |
+| Sub-module | Files | Description |
+|------------|-------|-------------|
+| `plasma/` | 7 solvers + 7 adapters | Extended MHD, gyrokinetics, space plasma, laser-plasma, magnetic reconnection, dusty plasmas |
+| `nuclear/` | 4 solvers + 3 adapters | Nuclear structure, reactions, astrophysics |
+| `fusion/` | 9 | DARPA MARRS solid-state fusion — electron screening, phonon trigger, resonant catalysis, superionic dynamics, QTT screening, tokamak equilibrium |
+
+### 2.12 `tensornet/fluids/` — Advanced Fluid Physics
+
+**38 files, ~8,900 LOC**
+
+| Sub-module | Files | Description |
+|------------|-------|-------------|
+| `coupled/` | 3 solvers + 7 adapters | Coupled MHD, electro-mechanical, thermo-mechanical |
+| `fsi/` | 1 | FSI, ALE, flutter, VIV (485 LOC) |
+| `multiphase/` | 2 | Cahn-Hilliard + VOF |
+| `free_surface/` | 1 | Level-set, thin-film |
+| `heat_transfer/` | 2 | Radiative + coupled heat transfer (957 LOC) |
+| `mesh_amr/` | 1 | Octree/quadtree AMR (767 LOC) |
+| `porous_media/` | 1 | Darcy, Brinkman, Richards |
+| `phase_field/` | 2 | Phase-field methods, PFC model |
+| `multiscale/` | 2 | FE², homogenisation |
+| `computational_methods/` trace adapters | 6 | HPC, inverse problems, large-scale linalg, mesh generation, optimization |
+| Top-level trace adapters | 8 | STARK adapters for II.3–II.10 |
+
+### 2.13 `tensornet/life_sci/` — Life Sciences
+
+**33 files, ~7,500 LOC**
+
+| Sub-module | Files | Description |
+|------------|-------|-------------|
+| `chemistry/` | 7 solvers + 7 adapters | PES/NEB, reaction rates (TST/RRKM), quantum reactive, nonadiabatic (FSSH), photochemistry, spectroscopy (IR/Raman/NMR) |
+| `biology/` | 3 | Systems biology (FBA, GRN, Gillespie SSA), social-force ABM |
+| `biomedical/` | 2 + 1 adapter | Cardiac electrophysiology (bidomain), compartment PK, hyperelasticity |
+| `biophysics/` trace adapters | 7 | Drug design, membrane, neuroscience, nucleic acids, protein structure, systems biology |
+| `md/` | 2 | Full MD engine — Verlet, Nosé-Hoover, Parrinello-Rahman, PME, REMD (935 LOC) |
+| `membrane_bio/` | 1 | Coarse-grained lipid bilayer, electroporation |
+
+### 2.14 `tensornet/energy_env/` — Energy & Environment
+
+**16 files, ~3,500 LOC**
+
+| Sub-module | Files | Description |
+|------------|-------|-------------|
+| `energy/` | 5 | Jensen Park wake model, drift-diffusion solar, Newman battery, Butler-Volmer + Unreal Engine wake viz |
+| `environmental/` | 3 | Gaussian plume, SCS curve number, storm surge |
+| `urban/` | 3 | Procedural voxel city generation, Venturi urban wind solver |
+| `agri/` | 2 | Vertical farm microclimate optimization |
+
+### 2.15 `tensornet/infra/` — Infrastructure Modules
+
+**~70 files** spanning deployment, integration, visualization, and orchestration.
+
+| Sub-module | Description |
+|------------|-------------|
+| `digital_twin/` (6 files, ~3,866 LOC) | Digital twin framework — health monitor, predictive maintenance, reduced-order models (POD/DMD), real-time state sync, twin orchestrator |
+| `coordination/` | Multi-component coordination |
+| `deployment/` | Deployment tooling |
+| `fieldops/` | Field operation utilities |
+| `fieldos/` | Field OS services |
+| `hyperenv/` | HyperTensor environment management |
+| `hypersim/` | Simulation orchestration |
+| `hypervisual/` | Visualization services |
+| `integration/` | External system integration |
+| `oracle/` | Oracle infrastructure |
+| `provenance/` | Content-addressed provenance |
+| `sdk/` | SDK infrastructure |
+| `site/` | Site/web infrastructure |
+| `sovereign/` | Sovereign compute infrastructure |
+| `zk/` | Zero-knowledge proof infrastructure |
+
+### 2.16 Additional TensorNet Modules
+
+| Module | Description |
+|--------|-------------|
+| `tensornet/core/` | Core TN operations — MPS, MPO, DMRG, TEBD, contraction |
+| `tensornet/algorithms/` | Advanced TN algorithms |
+| `tensornet/mpo/` | Matrix Product Operator library |
+| `tensornet/mps/` | Matrix Product State library |
+| `tensornet/qtt/` | QTT utilities and construction |
+| `tensornet/types/` | Type definitions |
+| `tensornet/numerics/` | Numerical utilities |
+| `tensornet/validation/` | Validation framework |
+| `tensornet/certification/` | TPC certification engine |
+| `tensornet/sim/` | Simulation orchestration |
+| `tensornet/visualization/` | Plotting and rendering |
+| `tensornet/benchmark_runner.py` | Benchmark execution runner |
 
 ---
 
-## 9. Experiments & R\&D
+## 3. Applications
 
-Research experiments, validation pipelines, demos, and proof-of-concept work.
+`apps/` — **207 code files, ~84K LOC** — Deployed or deployable applications.
 
-### Validation Pipelines (Challenge II — Pandemic Preparedness)
+### 3.1 `apps/oracle/` — Market Prediction Engine *(APPLICATION)*
 
-| Pipeline | Path | Description |
-|----------|------|-------------|
-| **TIG-011a MD Validation** | `experiments/validation/tig011a_md_validation.py` | Phase 1: Molecular dynamics of TIG-011a binding (Velocity Verlet, Nosé-Hoover, MM-GBSA) |
-| **10K Drug Library** | `experiments/validation/challenge_ii_phase2_library.py` | Phase 2: 10,000-candidate drug library (5 targets, scaffold × R-group) |
-| **Binding Atlas** | `experiments/validation/challenge_ii_phase3_atlas.py` | Phase 3: Pre-computed atlas (40 structures, QTT compression) |
-| **Pandemic Response** | `experiments/validation/challenge_ii_phase4_pandemic.py` | Phase 4: 7-target pandemic response pipeline (48-hour turnaround) |
-| **ZK Binding Proofs** | `experiments/validation/challenge_ii_phase5_zk_proofs.py` | Phase 5: Zero-knowledge proofs, Merkle trees, Fiat-Shamir, on-chain verifier |
+**25 files, ~12,787 LOC (Python)**
 
-### Frontier — Trillion-Dollar Physics Applications
+Real-time market prediction engine using QTT tensor networks. Trinity signal
+system processing live exchange data from Coinbase, Binance, and Bybit.
 
-| Frontier | Path | Description |
-|----------|------|-------------|
-| **01 Fusion** | `experiments/frontier/01_FUSION/` | Fusion energy validation demo |
-| **02 Space Weather** | `experiments/frontier/02_SPACE_WEATHER/` | Alfvén waves, bow shock, Sod shock tube |
-| **03 Semiconductor Plasma** | `experiments/frontier/03_SEMICONDUCTOR_PLASMA/` | ICP discharge, plasma sheath, ion energy |
-| **04 Particle Accelerator** | `experiments/frontier/04_PARTICLE_ACCELERATOR/` | Beam dynamics, RF cavity, space charge, wakefield |
-| **05 Quantum Error Correction** | `experiments/frontier/05_QUANTUM_ERROR_CORRECTION/` | Surface codes, stabilizer formalism, threshold analysis |
-| **06 Fusion Control** | `experiments/frontier/06_FUSION_CONTROL/` | Control loop, disruption predictor |
-| **07 Genomics** | `experiments/frontier/07_GENOMICS/` | ClinVar, ENCODE, genome validation attestations |
+| Component | Key Files | Description |
+|-----------|-----------|-------------|
+| Core engine | `ns_predictor.py` (1,600), `oracle_engine.py`, `live_oracle.py` | NS-based market prediction |
+| Exchange feeds | `coinbase_oracle.py`, `binance_oracle.py`, `bybit_oracle.py`, `binance_firehose.py`, `coinbase_firehose.py`, `bybit_firehose.py`, `multi_exchange_oracle.py` | WebSocket market data ingestion |
+| Galaxy Trinity | `galaxy_feed_v2.py`, `galaxy_feed_v3.py` | Three firehoses → one signal |
+| QTT encoding | `qtt_encoder.py`, `qtt_encoder_cuda.py`, `sketch_encoder.py` | Order book → MPS/holographic compression |
+| GPU kernels | `triton_slicer.py`, `cuda_graph_slicer.py`, `batched_kernel.py`, `zero_loop_kernel.py`, `oracle_kernel.py` | Triton/CUDA financial slicers |
 
-### Demo Runners (46 demos)
+### 3.2 `apps/glass_cockpit/` — Atmospheric Observation Layer *(APPLICATION)*
 
-| Demo | Path | Description |
-|------|------|-------------|
-| **Flagship Pipeline** | `experiments/demos/runners/flagship_pipeline.py` | End-to-end platform showcase |
-| **Holy Grail Video** | `experiments/demos/runners/holy_grail_video.py` | Video-quality physics visualization |
-| **HyperTensor Hub** | `experiments/demos/runners/hypertensor_hub.py` | Platform hub demo |
-| **HyperTensor Pro** | `experiments/demos/runners/hypertensor_pro.py` | Pro-tier feature demo |
-| **Physics-First Drug Design** | `experiments/demos/runners/physics_first_drug_design.py` | Drug discovery via physics |
-| **Oracle Hunt** | `experiments/demos/runners/oracle_hunt_demo.py` | DeFi oracle manipulation detection |
-| **Black Swan Forensics** | `experiments/demos/runners/black_swan_945_forensic.py` | Flash crash forensic analysis |
-| **Trap the Swan** | `experiments/demos/runners/trap_the_swan.py` | Flash crash prediction |
-| **Blue Marble** | `experiments/demos/runners/blue_marble.py` | Earth observation |
-| **Kelvin-Helmholtz** | `experiments/demos/runners/kelvin_helmholtz_demo.py` | KH instability simulation |
-| **CFD Shock** | `experiments/demos/runners/cfd_shock.py` | Shock tube demonstration |
-| **Conference Room CFD** | `experiments/demos/runners/conference_room_cfd.py` | HVAC airflow simulation |
-| **Millennium Hunter** | `experiments/demos/runners/millennium_hunter.py` | Millennium Prize problem hunter |
-| **Weather Viewer** | `experiments/demos/runners/weather_viewer.py` | Weather data visualization |
-| **World Data Slicer** | `experiments/demos/runners/world_data_slicer.py` | Global data slicing tool |
-| **Resolution Independence** | `experiments/demos/runners/resolution_independence.py` | QTT resolution-independent demo |
-| **Provable Physics** | `experiments/demos/runners/provable_physics.py` | Trustless physics demo |
-| **Memory Wall** | `experiments/demos/runners/memory_wall.py` | Memory wall breaker demo |
-| **Intent Demo** | `experiments/demos/runners/intent_demo.py` | Natural-language physics interface |
-| **Layer 7 Physics RL** | `experiments/demos/runners/layer7_physics_rl.py` | Reinforcement learning for physics |
-| **Layer 9 Engine Integration** | `experiments/demos/runners/layer9_engine_integration.py` | Full engine integration |
-| *...and 25 more* | `experiments/demos/runners/` | See directory for complete list |
+**68 code files (62 Rust + 11 WGSL shaders), ~23,708 LOC**
 
-### Research Scripts
+Sovereign GPU-native atmospheric visualization layer built on `wgpu`. Real-time
+globe rendering with QTT tensor field overlays.
 
-| Script | Path | Description |
-|--------|------|-------------|
-| **Helmholtz Rank Test** | `experiments/scripts/phase0_helmholtz_rank_test.py` | Phase 0 rank analysis |
-| **Helmholtz QTT Solve** | `experiments/scripts/phase1_helmholtz_qtt_solve.py` | Phase 1 QTT solution |
-| **Chu Limit 1024** | `experiments/scripts/run_chu_1024.py` | 1024-mode Chu limit computation |
-| **Chu Limit Challenge** | `experiments/scripts/run_chu_limit_challenge.py` | Maximum Chu limit test |
-| **Convergence Study** | `experiments/scripts/run_convergence_study.py` | Systematic convergence analysis |
-| **Exascale Invention Sweep** | `experiments/scripts/run_exascale_invention_sweep.py` | Exascale-scale invention search |
-| **Fast Invention Sweep** | `experiments/scripts/run_fast_invention_sweep.py` | Fast invention candidate search |
-| **Kelvin-Helmholtz Run** | `experiments/scripts/run_kelvin_helmholtz.py` | KH instability execution |
-| **Parametric Sweep** | `experiments/scripts/run_parametric_sweep.py` | Multi-parameter sweep |
-| **GPU Bench** | `experiments/scripts/run_gpu_bench.sh` | GPU performance benchmarks |
-| **Gradient Diagnostics** | `experiments/scripts/diag_gradient.py` | Gradient flow diagnostics |
-| **Wave Port Validation** | `experiments/scripts/validate_wave_port.py` | CEM wave port validation |
-| **Exascale Attestation Gen** | `experiments/scripts/generate_exascale_attestation.py` | Attestation generation |
+| Component | Key Files | Description |
+|-----------|-----------|-------------|
+| Core renderer | `renderer.rs`, `globe.rs`, `globe_quadtree.rs` | wgpu pipeline, Earth globe with LOD quadtree |
+| Tensor viz | `tensor_renderer.rs`, `tensor_field.rs`, `vorticity_renderer.rs`, `vorticity_ghost.rs` | QTT field visualization, vorticity rendering |
+| Data | `weather_tensor.rs`, `grib_decoder.rs`, `noaa_fetcher.rs` | GRIB weather data, NOAA integration |
+| Flow viz | `streamlines.rs`, `particle_system.rs` | Streamline + particle flow visualization |
+| Bridge | `bridge.rs`, `ram_bridge_v2.rs`, `injection_buffer.rs` | RAM bridge to Python engine |
+| UI | `hud_overlay.rs`, `camera.rs`, `interaction.rs`, `text.rs`, `text_gpu.rs` | HUD, 3D camera, SDF GPU text |
+| Infra | `affinity.rs`, `lod.rs`, `telemetry.rs`, `verification.rs`, `starfield.rs` | E-core pinning, LOD, proof verification |
+| Shaders | 11 WGSL files | Globe, grid, particles, SDF text, tensor colormap |
 
-### Other Experiments
+### 3.3 `apps/qtenet/` — QTeneT Physics Engine *(APPLICATION)*
 
-| Experiment | Path | Description |
-|------------|------|-------------|
-| **AAVE Extraction** | `experiments/aave_extraction/` | DeFi AAVE protocol extraction forensics |
-| **Ahmed Body** | `experiments/ahmed_body/` | NVIDIA Ahmed body aerodynamics (QTT pipeline) |
-| **AI Scientist** | `experiments/ai_scientist/` | Automated physics discovery: conjecture → formalize → prove |
-| **CFD-HVAC** | `experiments/cfd_hvac/` | Building ventilation CFD analysis suite |
-| **Clawdbot** | `experiments/clawdbot/` | Personal AI assistant |
-| **EtherFi Oracle Frontrun** | `experiments/etherfi_oracle_frontrun_poc/` | Oracle frontrunning proof-of-concept (Foundry) |
-| **Flash Liquidator** | `experiments/flash_liquidator/` | DeFi flash liquidation toolkit (Foundry) |
-| **HVAC-CFD** | `experiments/hvac_cfd/` | HyperFOAM HVAC execution charter and audit |
-| **lUX** | `experiments/lux/` | lUX experimental framework |
-| **Notebooks** | `experiments/notebooks/` | 6 Jupyter notebooks (Bose-Hubbard, Heisenberg, TEBD, TFIM, demo, integration) |
-| **Orbital Frames** | `experiments/orbital_frames/` | Orbital mechanics frame renders |
-| **Physics Standalone** | `experiments/physics_standalone/` | Standalone physics benchmarks and regression tests |
-| **PWA Engine** | `experiments/pwa_engine/` | Partial Wave Analysis engine (Eq. 5.48, Badui dissertation) |
-| **QTT 3D Ops** | `experiments/qtt_3d_ops/` | QTT-native 3D CFD operations |
-| **Santa 2025** | `experiments/santa2025/` | Kaggle Santa 2025 competition submissions |
-| **TCI-LLM** | `experiments/tci_llm/` | Gradient-free language modeling via Tensor Cross Interpolation |
-| **Visualization** | `experiments/visualization/` | Report generation and rendering scripts |
+**43 code files, ~12,866 LOC (Python)**
 
----
+Quantized Tensor Network Physics Engine — O(log N) complexity PDE solver
+distributed as a standalone package.
 
-## 10. Civilization Challenges
+| Component | Key Files | Description |
+|-----------|-----------|-------------|
+| Solvers | `vlasov_genuine.py` (1,264), `ns3d.py` (1,048), `vlasov6d_genuine.py` (1,005), `vlasov.py`, `euler.py` | 6D Vlasov (1B grid → 200 KB), 3D NS |
+| TCI | `tci/from_function.py`, `tci/from_samples.py` | Black-box function → QTT |
+| Operators | `shift_nd.py`, `laplacian_nd.py`, `gradient_nd.py` | N-dimensional MPO operators |
+| Workflows | `workflows/qtt_turbulence/` (7 files) | DHIT benchmark, turbulence proof, spectral NS3D |
+| SDK | `sdk/api.py`, `apps/cli.py` | Public API, CLI entry |
+| Benchmarks | `curse_scaling.py` | Curse-of-dimensionality scaling |
+| Demos | `holy_grail.py`, `two_stream.py` | 6D plasma, two-stream instability |
 
-Six grand challenges positioning HyperTensor-VM against humanity's most critical problems.
+### 3.4 `apps/oracle_node/` — Tensor Genesis Oracle Node *(APPLICATION)*
 
-| # | Challenge | Path | Status |
-|:-:|-----------|------|:------:|
-| I | **Grid Stability** | `challenges/challenge_I_grid_stability.md` | Defined |
-| II | **Pandemic Preparedness** | `challenges/challenge_II_pandemic_preparedness.md` | Phase 1–5 Complete |
-| III | **Climate Tipping Points** | `challenges/challenge_III_climate_tipping_points.md` | Defined |
-| IV | **Fusion Energy** | `challenges/challenge_IV_fusion_energy.md` | Defined |
-| V | **Supply Chain** | `challenges/challenge_V_supply_chain.md` | Defined |
-| VI | **Proof of Reality** | `challenges/challenge_VI_proof_of_reality.md` | Defined |
+**4 files, ~2,175 LOC** — Domain-agnostic mathematical structure engine.
+Raw numbers → signed attestation via OT, SGW, RKHS, PH, GA pipeline.
+FastAPI server.
 
----
+### 3.5 `apps/the_compressor/` — Universal QTT Compressor *(APPLICATION)*
 
-## 11. Test Suite
+**20 code files** — QTT compression for arbitrary data (NOAA 24h, hybrid
+Triton kernels, block SVD, rank sweep, decompression, GPU reconstruction).
 
-104 test files spanning unit tests, integration tests, audit layers, and benchmarks.
+### 3.6 `apps/ledger/` — Physics Taxonomy Ledger *(APPLICATION)*
 
-### Integration Tests
+**3 Python files + 168 YAML node definitions** — The canonical machine-readable
+registry for all 168 physics taxonomy nodes. Schema-validated via
+`schema.yaml`. Dashboard generation.
 
-| Test | Path | Description |
-|------|------|-------------|
-| Advection MMS | `tests/integration/test_advection_mms.py` | Method of Manufactured Solutions — advection |
-| CFD Physics | `tests/integration/test_cfd_physics.py` | CFD correctness |
-| DMRG Physics | `tests/integration/test_dmrg_physics.py` | DMRG accuracy |
-| Euler 2D MMS | `tests/integration/test_euler2d_mms.py` | Euler 2D manufactured solutions |
-| Euler 2D Physics | `tests/integration/test_euler2d_physics.py` | Euler 2D conservation |
-| Euler 3D MMS | `tests/integration/test_euler3d_mms.py` | Euler 3D manufactured solutions |
-| Flagship Pipeline | `tests/integration/test_flagship_pipeline.py` | End-to-end pipeline |
-| Lid-Driven Cavity | `tests/integration/test_lid_driven_cavity.py` | Classic CFD benchmark |
-| Poisson MMS | `tests/integration/test_poisson_mms.py` | Poisson manufactured solutions |
-| Shu-Osher | `tests/integration/test_shu_osher_benchmark.py` | Shu-Osher shock benchmark |
-| Taylor-Green | `tests/integration/test_taylor_green_benchmark.py` | Taylor-Green vortex |
+### 3.7 `apps/sdk_legacy/` — Legacy SDK Distribution *(APPLICATION)*
 
-### Audit Layers
+**25 files** — Python, TypeScript, Conda, Docker, and enterprise SDK
+distributions for external consumers.
 
-| Layer | Path | Scope |
-|:-----:|------|-------|
-| 4 | `tests/audit_layer_4.py` | Audit layer 4 |
-| 5 | `tests/audit_layer_5.py` | Audit layer 5 |
-| 6 | `tests/audit_layer_6.py` | Audit layer 6 |
-| 7 | `tests/audit_layer_7.py` | Audit layer 7 |
-| 8 | `tests/audit_layer_8.py` | Audit layer 8 |
-| 9 | `tests/audit_layer_9.py` | Audit layer 9 |
+### 3.8 `apps/global_eye/` — Global Eye *(APPLICATION)*
 
-### Performance Benchmarks
+**Rust application** (`Cargo.toml` + `src/`) — Satellite-scale global
+observation.
 
-| Benchmark | Path | Description |
-|-----------|------|-------------|
-| Optimized Pipeline | `tests/benchmarks/optimized_pipeline_benchmark.py` | Full pipeline benchmark |
-| QTT Comprehensive | `tests/benchmarks/qtt_comprehensive_benchmark.py` | QTT operation benchmarks |
-| QTT Full Pipeline | `tests/benchmarks/qtt_full_pipeline_benchmark.py` | End-to-end QTT benchmark |
-| QTT Native | `tests/benchmarks/qtt_native_benchmark.py` | Native QTT ops benchmark |
-| QTT Render | `tests/benchmarks/qtt_render_benchmark.py` | Rendering benchmark |
+### 3.9 `apps/sovereign_api/` — Sovereign API *(APPLICATION)*
 
-### Domain Tests (selected — 80+ unit tests)
+**2 files** — `sovereign_api.py` + `live_data_provider.py` — Sovereign
+compute API surface.
 
-Key test files include: `test_navier_stokes`, `test_fusion`, `test_quantum_physics`, `test_pwa_engine`, `test_exploit_hunter`, `test_financial`, `test_fire`, `test_ballistics`, `test_vlasov_genuine`, `test_racing`, `test_certificate_integrity`, `test_trustless_certificate`, `test_packs`, `test_140_domains`, `test_platform`, `test_billing`, `test_provenance`, and many more. Full listing: `tests/` directory.
+### 3.10 `apps/sovereign_ui/` — Sovereign UI *(APPLICATION)*
+
+**2 files** — Sovereign compute UI frontend.
+
+### 3.11 `apps/exploit_verification/` — Exploit Verification *(APPLICATION)*
+
+**1 file** — Verification harness for exploit engine results.
+
+### 3.12 `apps/golden_demo/` — Golden Demo *(APPLICATION)*
+
+**1 file** — Curated demonstration runner.
+
+### 3.13 `apps/trustless_verify/` — Trustless Verification *(APPLICATION)*
+
+**2 files** — TPC certificate verification tool.
+
+### 3.14 `apps/vlasov_proof/` — Vlasov Proof Generator *(APPLICATION)*
+
+**1 file** — Standalone Vlasov-Poisson proof certificate generator.
+
+### 3.15 `apps/glass_cockpit_root/` — Glass Cockpit Root *(APPLICATION)*
+
+**4 files** — Root-level Glass Cockpit configuration.
 
 ---
 
-## 12. Integrations
+## 4. Products
 
-Game engine and visualization integrations.
+`products/` — **154 files, ~78K LOC** — Shippable, deployable product suites.
 
-| Integration | Path | Description |
-|-------------|------|-------------|
-| **Unity** | `integrations/unity/` | Unity package: Editor + Runtime HyperTensor plugin |
-| **Unreal Engine** | `integrations/unreal/` | Unreal plugin with Python bridge for real-time physics |
+### 4.1 `products/facial_plastics/` — Facial Plastic Surgery Digital Twin *(PRODUCT)*
 
----
+**102 Python files + SPA UI + SvelteKit UI, ~50,446 LOC**
 
-## 13. Deployment
+Full-featured physics-grounded surgical simulation and planning platform for
+facial plastic and reconstructive surgery. Multi-tenant, tested, deployable
+with Gunicorn/Caddy.
 
-Infrastructure for containerized deployment and observability.
+| Sub-package | Files | LOC | Description |
+|-------------|-------|-----|-------------|
+| **core/** | 4 | ~1,770 | Types, CaseBundle (content-addressed), config, provenance (SHA-256) |
+| **data/** | 8 | ~4,855 | DICOM ingest, surface ingest, photo ingest, anatomy generator (1,917 LOC), paired dataset, case library, curator, synthetic augment |
+| **twin/** | 6 | ~2,858 | Twin builder orchestrator, segmentation, landmarks, FEM meshing, registration, materials |
+| **plan/** | 5 | ~4,626 | Plan compiler (2,210 LOC), DSL, rhinoplasty operators, facelift operators, blepharoplasty, fillers |
+| **sim/** | 9 | ~5,459 | FEM soft tissue (958 LOC), CFD airway, FSI nasal valve, cartilage, anisotropy, aging, orchestrator, sutures, healing |
+| **metrics/** | 7 | ~4,571 | Aesthetic proportions, safety, NSGA-II optimizer, cohort analytics, uncertainty (MC/LHS), functional, distributed optimizer |
+| **governance/** | 4 | ~1,510 | Multi-tenant isolation, RBAC (surgeon/resident/admin), consent workflow, immutable audit trail |
+| **postop/** | 5 | ~2,068 | Bland-Altman validation, ICP alignment, dashboard, Bayesian calibration, outcome ingest |
+| **ui/** | 4 + SPA + SvelteKit | ~5,559 | Full backend API (4,041 LOC), WSGI, HTTP server, auth middleware; Three.js 3D viewer; 7-phase SvelteKit UI |
+| **tests/** | 28 | ~13,000 | Full test suite: sim, twin, plan, metrics, governance, UI, integration |
+| Root | 6 | ~2,325 | CLI, anatomy generator, reports, Gunicorn config, `__init__.py`, `__main__.py` |
 
-| Component | Path | Description |
-|-----------|------|-------------|
-| **Containerfile** | `deploy/Containerfile` | Main container image |
-| **Config Container** | `deploy/config/Containerfile` | Configuration container |
-| **Docker Compose** | `deploy/docker/` | Docker deployment orchestration |
-| **Telemetry Stack** | `deploy/telemetry/` | Prometheus + alerts: `docker-compose.yml`, `prometheus.yml`, `alerts.yml` |
+### 4.2 `products/fluidelite/` — FluidElite Solver *(PRODUCT)*
 
----
+GPU kernels directory — pre-compiled solver kernels for the FluidElite
+commercial CFD product.
 
-## 14. Developer Tools
+### 4.3 `products/fluidelite-zk/` — FluidElite ZK Verifier *(PRODUCT)*
 
-Internal tooling for analytics, migrations, and reporting.
+ZK-verifiable FluidElite deployment — Gevulot keys, Foundry contracts,
+container image.
 
-| Tool | Path | Description |
-|------|------|-------------|
-| **LOC Audit** | `tools/loc_audit.py` | Lines-of-code analysis across the monorepo |
-| **Dep Graph** | `tools/dep_graph.py` | Dependency graph generator |
-| **Sync Versions** | `tools/sync_versions.py` | Version synchronization across packages |
-| **Forensic LOC Sweep** | `tools/forensic_loc_sweep.py` | Forensic code authorship analysis |
-| **Forensic LOC Sweep v2** | `tools/forensic_loc_sweep_v2.py` | Enhanced forensic analysis |
-| **Migrate TensorNet Phase 5** | `tools/migrate_tensornet_phase5.py` | Phase 5 migration script |
-| **PDF Report Generator** | `tools/scripts/generate_pdf_report.py` | PDF report generation |
-| **Update LOC Counts** | `tools/scripts/update_loc_counts.py` | Automated LOC metric updates |
-| **Mach 5 Wedge** | `tools/scripts/mach5_wedge.py` | Mach 5 wedge flow calculator |
-| **QTT Derivative Verify** | `tools/scripts/qtt_deriv_verify.py` | QTT derivative verification |
-| **Packaging Gate** | `tools/scripts/packaging_gate.py` | Release packaging validation |
-| **Wedge Flow Demo** | `tools/scripts/wedge_flow_demo.py` | Wedge flow demonstration |
-| **Profile Performance** | `tools/scripts/profile_performance.py` | Performance profiling |
-| **Phase 4 Integration** | `tools/scripts/run_phase4_integration.sh` | Phase 4 integration runner |
-| **Glass Cockpit Launcher** | `tools/scripts/Start-GlassCockpit.ps1` | PowerShell Glass Cockpit starter |
+### 4.4 `products/the_compressor/` — The Compressor Data Store *(PRODUCT)*
+
+Pre-computed QTT compression artifacts (NOAA 24h, hybrid, block SVD, auto
+venv outputs).
 
 ---
 
-## 15. Documentation
+## 5. Experiments
 
-326+ Markdown documents across 22 subdirectories.
+`experiments/` — **2,623 files, ~442K LOC** — Research, frontier physics,
+demos, and proof-of-concept code.
 
-| Directory | Files | Topics |
-|-----------|------:|--------|
-| `docs/adr/` | 25 | Architecture Decision Records (ADR-0001 through ADR-0025) |
-| `docs/api/` | 87 | API reference documentation |
-| `docs/architecture/` | 14 | System architecture documents |
-| `docs/attestations/` | 1 | Attestation documentation |
-| `docs/audit/` | 4 | Security and code audit reports |
-| `docs/audits/` | 9 | Extended audit documents |
-| `docs/commercial/` | 3 | Commercial strategy and execution |
-| `docs/domains/` | 11 | Domain-specific documentation (per physics vertical) |
-| `docs/evolution/` | 1 | OS evolution strategy |
-| `docs/getting-started/` | 3 | Quickstart guides |
-| `docs/governance/` | 14 | Governance policies and registries |
-| `docs/legacy/` | 15 | Legacy documentation |
-| `docs/operations/` | 10 | Operations runbooks |
-| `docs/papers/` | — | Research papers (PDF) |
-| `docs/phases/` | 8 | Development phase documentation |
-| `docs/product/` | 4 | Product documentation |
-| `docs/regulatory/` | 1 | Regulatory compliance |
-| `docs/reports/` | 50 | Validation and analysis reports |
-| `docs/research/` | 42 | Research notes and findings |
-| `docs/roadmaps/` | 4 | Product and technical roadmaps |
-| `docs/specifications/` | 2 | Technical specifications |
-| `docs/strategy/` | 5 | Strategic planning (Commercial Execution, OS Evolution, etc.) |
-| `docs/tutorials/` | 3 | Tutorials |
-| `docs/workflows/` | 6 | Workflow documentation |
+### 5.1 `experiments/hvac_cfd/` — HVAC-CFD Digital Twin Platform *(APPLICATION)*
 
-### Top-Level Documents
+**109 Python files + Next.js UI, ~52,345 LOC**
+
+Full HVAC CFD digital twin platform — a complete consulting-grade business
+application. Three major subsystems:
+
+| Subsystem | Description |
+|-----------|-------------|
+| **HyperFOAM** (`Review/hyperfoam/`, 30+ files) | GPU-native CFD solver for HVAC: immersed boundary grid (1,137 LOC), thermal/species transport, k-ε turbulence, multizone (zone graph, data center, fire/smoke, equipment, duplex), optimizer, pipeline, predictive alerts, CAD/IFC import, cleanroom ISO 14644 |
+| **Intake** (`intake/`, 15+ files) | Universal document intake — Streamlit app (1,841 LOC), staging UI, PDF/Excel/IFC/image extractors, schema validation, unit conversion ("Sandwich Method"), 3D Plotly visualization, HyperFOAM bridge |
+| **Web-UI & Dashboard** | EigenPsi CFD analysis server (976 LOC), Next.js HyperTensor UI with FastAPI backend (944 LOC), Streamlit HVAC dashboard |
+| **Benchmarks** (`Review/Tier1/`, 15 files) | Nielsen room benchmarks, QTT-NS solvers, thermal multi-physics |
+| **Tests** (`Review/tests/`, 10 files) | Deployment, crucible, validation, eigenpsi API |
+
+### 5.2 `experiments/frontier/` — Frontier Physics *(EXPERIMENT)*
+
+**56 Python files, ~29,528 LOC** — Seven frontier physics domains, each with
+validation attestations.
+
+| Domain | Files | LOC | Key Content |
+|--------|-------|-----|-------------|
+| `01_FUSION/` | 5 | ~2,220 | Landau damping, tokamak geometry, two-stream instability |
+| `02_SPACE_WEATHER/` | 6 | ~1,816 | Solar wind bow shock, Sod shock, Alfvén waves |
+| `03_SEMICONDUCTOR_PLASMA/` | 5 | ~2,093 | ICP discharge, plasma sheath, etch rate, ion energy distribution |
+| `04_PARTICLE_ACCELERATOR/` | 4 | ~1,862 | Beam dynamics, plasma wakefield, RF cavity, space charge |
+| `05_QUANTUM_ERROR_CORRECTION/` | 3 | ~1,371 | Surface code, stabilizer formalism, threshold analysis |
+| `06_FUSION_CONTROL/` | 3 | ~2,182 | Plasma controller, disruption predictor, control loop |
+| `07_GENOMICS/` | 27 | ~17,984 | Full-genome tensor DNA, GPU genomics, clinical classifier, ESM-2 scorer, CRISPR guide RNA, multi-species conservation, RNA structure, ClinVar integration, variant API (FastAPI) |
+
+### 5.3 `experiments/demos/` — Demonstrations *(DEMO)*
+
+**46 runner files + supporting assets, ~22,501 LOC**
+
+| Category | Key Runners | Description |
+|----------|-------------|-------------|
+| Desktop apps | `hypertensor_hub.py` (1,193), `hypertensor_pro.py` (1,275) | PySide6 + VisPy desktop application |
+| Forensics | `forensic_instrument.py` (1,357), `forensic_hub.py` (1,294), `forensic_hub_v2.py` | Weather singularity investigation tools |
+| Flagship | `flagship_pipeline.py` (960) | Phase 21-24 full integration proof |
+| Millennium | `millennium_hunter.py` (621) | NS singularity numerical analysis ($1M problem) |
+| Weather | `weather_viewer.py`, `ingest_noaa_gfs.py`, `blue_marble.py` | 3D atmospheric QTT viewer |
+| CFD | `conference_room_cfd.py`, `conference_room_qtt.py`, `cfd_shock.py`, `qtt_shock_tube.py` | Ventilation, shock waves |
+| Physics | `provable_physics.py`, `pure_qtt_pde.py`, `resolution_independence.py` | Cryptographic proofs, PDE demos |
+| Black Swan | `trap_the_swan.py`, `black_swan_reproduce.py`, `black_swan_945_forensic.py`, `black_swan_1024_confirm.py` | Singularity hunting |
+| KH instability | `kelvin_helmholtz_animation.py`, `kelvin_helmholtz_demo.py` | KH vortex roll-up |
+| Finance | `oracle_hunt_demo.py` | ORACLE vulnerability hunt |
+| Streamlit | `streamlit_app.py` | FluidEliteZK — ZK-verifiable LLM demo |
+
+### 5.4 `experiments/ai_scientist/` — AI Scientist *(EXPERIMENT)*
+
+**6 files, ~2,080 LOC** — AI-driven scientific discovery pipeline:
+conjecture → formalize (PhysLean / Lean 4) → prove. LLM-aided formalization.
+
+### 5.5 `experiments/tci_llm/` — TCI Language Model *(EXPERIMENT)*
+
+**10 files, ~2,261 LOC** — Gradient-free language modeling via tensor cross
+interpolation. SVD-LLM with 119× improvement. Rank ~50 insight.
+
+### 5.6 `experiments/aave_extraction/` — DeFi Security Research *(TOOL)*
+
+**17 files, ~9,064 LOC** — Ethereum smart contract vulnerability scanning.
+QTT-EVM extraction engine, cross-contract exploitation, proxy init analysis,
+live 72h WebSocket scanner, kill-chains for Ronin (1,907 ETH), Harmony
+(94.79 ETH), Lido (16.47 ETH), Makina Caliber.
+
+### 5.7 `experiments/pwa_engine/` — Partial Wave Analysis *(EXPERIMENT)*
+
+**4 files, ~2,595 LOC** — Thesis-grade PWA engine from Badui (2020) Eq. 5.48.
+Gram-matrix-accelerated extended likelihood. Core engine: 2,299 LOC.
+
+### 5.8 `experiments/lux/` — lUX Proof Package Viewer *(APPLICATION)*
+
+**Full TypeScript/Next.js monorepo** — The frontend UI/UX for Facial Plastic
+Surgery (FPS) digital twin proof verification.
+
+| Component | Description |
+|-----------|-------------|
+| `packages/core/` | Core library — proof validation, attestation, test fixtures |
+| `packages/ui/` | Next.js frontend — dashboard, gallery, proof workspace, design system (Card, Chip, CodeBlock, DataTable, VerdictSeal, ModeDial, etc.) |
+| Routes | `/`, `/gallery`, `/packages/[id]` |
+| API | Auth, health, metrics, packages, domains, CSP |
+| Screens | Summary, Evidence, Gates, Integrity, Timeline, Compare |
+| Testing | Playwright e2e + Vitest + Storybook |
+| Infra | Docker Compose, CI, Lighthouse, pnpm workspace |
+
+### 5.9 `experiments/cfd_hvac/` — CFD-HVAC Attestations *(DOCUMENTATION)*
+
+**No Python code** — `README.md` plus Tier 1 QTT CFD and Tier 2 Thermal
+Comfort attestation JSON files.
+
+### 5.10 Other Experiments
+
+| Directory | Classification | Description |
+|-----------|---------------|-------------|
+| `experiments/ahmed_body/` | Experiment | Ahmed body automotive aerodynamics |
+| `experiments/benchmarks/` | Benchmark | Performance benchmark suite |
+| `experiments/validation/` | Validation | Challenge II validation phases |
+| `experiments/physics_standalone/` | Experiment | Standalone physics demos |
+| `experiments/notebooks/` | Notebook | Jupyter exploration notebooks |
+| `experiments/papers/` | Research | Paper drafts and figures |
+| `experiments/scripts/` | Script | Ad-hoc experiment scripts |
+| `experiments/visualization/` | Visualization | Rendering experiments |
+| `experiments/orbital_frames/` | Experiment | Orbital frame generation |
+| `experiments/santa2025/` | Experiment | Santa 2025 challenge |
+| `experiments/qtt_3d_ops/` | Experiment | 3D QTT operation experiments |
+| `experiments/qtt_aero_output/` | Data | QTT aerodynamics output artifacts |
+| `experiments/flash_liquidator/` | Tool | Flash liquidation experiments |
+| `experiments/etherfi_oracle_frontrun_poc/` | Tool | EtherFi oracle frontrunning PoC |
+
+---
+
+## 6. Validation Gauntlets
+
+`tools/scripts/gauntlets/` — **38 files, ~37,060 LOC** — Production-grade
+validation suites covering every Civilization Stack project and all Trustless
+Physics Certificate phases.
+
+### Civilization Stack Gauntlets (20)
+
+| Gauntlet | LOC | Project |
+|----------|-----|---------|
+| `tomahawk_cfd_gauntlet.py` | 823 | #1 TOMAHAWK — tokamak plasma rampdown, 27K× TT compression |
+| `tig011a_multimechanism.py` | 2,377 | #2 TIG-011a — multi-mechanism binding physics |
+| `tig011a_dynamic_validation.py` | 1,093 | #2 TIG-011a — 500 ns MD, H-bond, FEP |
+| `tig011a_docking_qmmm.py` | 935 | #2 TIG-011a — multi-pose QM/MM |
+| `tig011a_dielectric_gauntlet.py` | 605 | #2 TIG-011a — dielectric sweep |
+| `tig011a_wiggle_tt.py` | 403 | #2 TIG-011a — energy well test |
+| `tig011a_tox_screen.py` | 398 | #2 TIG-011a — in-silico tox |
+| `tig011a_attestation.py` | 340 | #2 TIG-011a — crypto attestation |
+| `snhff_stochastic_gauntlet.py` | 766 | #3 SnHf-F — quantum well EUV resist |
+| `li3incl48br12_superionic_gauntlet.py` | 932 | #4 Li₃InCl₄.₈Br₁.₂ — paddle-wheel resonance |
+| `laluh6_odin_gauntlet.py` | 1,083 | #5 LaLuH₆ ODIN — Meissner, zero resistance, Jc |
+| `hellskin_gauntlet.py` | 1,075 | #6 HELL-SKIN — 60 MW arc-jet, thermal shock |
+| `starheart_gauntlet.py` | 1,177 | #7 STAR-HEART — Q > 10, MHD stability, Lawson |
+| `femto_fabricator_gauntlet.py` | 1,202 | #11 FEMTO-FABRICATOR — diamondoid AFM construction |
+| `proteome_compiler_gauntlet.py` | 1,111 | #12 PROTEOME COMPILER — function → protein → DNA |
+| `metric_engine_gauntlet.py` | 945 | #13 METRIC ENGINE — Schwinger-limit metric engineering |
+| `prometheus_gauntlet.py` | 1,707 | #14 PROMETHEUS — IIT Φ consciousness computation |
+| `oracle_gauntlet.py` | 791 | #15 ORACLE — warm-temp topological qubits |
+| `orbital_forge_gauntlet.py` | 1,192 | #16 ORBITAL FORGE — orbital mechanics, rotating habitats |
+| `hermes_gauntlet.py` | 1,276 | #17 HERMES — interstellar signal propagation, QKD |
+| `cornucopia_gauntlet.py` | 1,180 | #18 CORNUCOPIA — energy/material/info abundance |
+| `chronos_gauntlet.py` | 1,246 | #19 CHRONOS — relativistic time dilation, causality |
+| `sovereign_genesis_gauntlet.py` | 1,022 | #20 SOVEREIGN GENESIS — Von Neumann self-replicator |
+
+### Infrastructure & Trustless Physics Gauntlets (15)
+
+| Gauntlet | LOC | Scope |
+|----------|-----|-------|
+| `trustless_physics_gauntlet.py` | 918 | Phase 0 — TPC format, computation trace, cert gen |
+| `trustless_physics_phase1_gauntlet.py` | 793 | Phase 1 — Single-domain MVP (Euler 3D) |
+| `trustless_physics_phase2_gauntlet.py` | 973 | Phase 2 — Multi-domain, Lean proofs, customer API |
+| `trustless_physics_phase3_gauntlet.py` | 840 | Phase 3 — Prover pool, Gevulot, dashboard |
+| `trustless_physics_phase5_gauntlet.py` | 912 | Phase 5 — Tier 1 (4 domains) |
+| `trustless_physics_phase6_gauntlet.py` | 864 | Phase 6 — Tier 2A (25 domains) |
+| `trustless_physics_phase7_gauntlet.py` | 1,304 | Phase 7 — Tier 2B (40 domains) |
+| `trustless_physics_phase8_gauntlet.py` | 1,150 | Phase 8 — Tier 3 (45 domains) |
+| `trustless_physics_phase9_gauntlet.py` | 951 | Phase 9 — Tier 4 (26 domains) |
+| `trustless_physics_phase10_gauntlet.py` | 492 | Phase 10 — Full-spectrum (140 domains, 5 tiers) |
+| `ade_gauntlet.py` | 1,075 | Autonomous Discovery Engine v1 |
+| `ade_gauntlet_v2.py` | 1,015 | ADE v2 — regime-aware validation |
+| `genesis_benchmark_suite.py` | 872 | Tensor Genesis — all 7 QTT-native layers |
+| `qtt_native_gauntlet.py` | 582 | QTT-native — tropical matrix ops, persistence |
+| `production_hardening_gauntlet.py` | 640 | Production hardening — logging, profiling, validation |
+
+---
+
+## 7. Tools & Scripts
+
+`tools/scripts/` — **208 files, ~65,684+ LOC total** across 8 sub-directories
+plus 68 top-level scripts.
+
+### Top-Level Scripts (68 files, ~28,624 LOC)
+
+| Category | Key Scripts | Description |
+|----------|-------------|-------------|
+| **Ahmed Body** | `ahmed_body_ib_solver.py` (1,691), `ahmed_body_ib_solver_v1.py`, `ahmed_body_spectrum.py` | Immersed boundary QTT solvers |
+| **Civic Aero** | `civic_aero.py` (1,799), `civic_aero_qtt.py` (1,660) | Honda Civic external aero, QTT-native Morton grid |
+| **Supersonic** | `mach5_wedge.py` | Mach 5 oblique shock validation |
+| **Industrial** | `industrial_qtt_gpu_simulation.py` (1,020) | 1024³ DNS + compression scaling |
+| **Trustless** | `trustless_physics.py` (1,765), `run_trustless_ahmed.py` | Hash-chained Merkle-tree crypto attestation |
+| **Vlasov** | `vlasov_6d_video.py` (1,153), `generate_vlasov_certificate.py` (1,085) | 6D Vlasov-Maxwell video, STARK proof certs |
+| **Reports** | `generate_elite_report.py` (1,575), `generate_pdf_report.py` (1,353), `generate_executive_certificate.py` (821) | PDF/HTML report generation |
+| **V&V gates** | `physics_validation.py`, `detect_vv_regression.py`, `determinism_check.py` | Sod shock, oblique shock, SBLI gates |
+| **Security** | `security_scan.py`, `sign_manifest.py` (PQC Dilithium2) | Vulnerability scanning, PQC signing |
+| **Packaging** | `packaging_gate.py`, `release_check.py`, `generate_sbom.py`, `export_release_zip.py` | Build gates, SBOM (CycloneDX/SPDX), release |
+| **DevOps** | `format_lint.py`, `check_import_cycles.py`, `check_docstrings.py`, `check_contract_drift.py`, `check_pwa_regression.py`, `rename_tests.py`, `update_loc_counts.py` | Code quality gates |
+| **Benchmarks** | `benchmark_tt_cfd.py`, `gauntlet_vs_nvidia.py`, `scaling_tests.py`, `compare_tenpy.py`, `reproduce.py` | Performance benchmarks |
+| **QTT debug** | `qtt_axis_exact.py`, `qtt_axis_verify.py`, `qtt_debug_step.py`, `qtt_deriv_verify.py`, `qtt_single_step.py` | Diagnostic / verification scripts |
+
+### Sub-directories
+
+| Directory | Files | Description |
+|-----------|-------|-------------|
+| `gauntlets/` | 38 | *(See §6 above)* |
+| `research/` | 60 | Yang-Mills proof pipeline (v1/v2), HELL-SKIN thermal solver, STAR-HEART fusion solver, ODIN superconductor solver, live market fluid analysis, NS millennium pipeline, QTT connectome, neuromorphic integration, EUV quantum well, FLU-X001 M2 blocker, sovereign API/daemon, Kida convergence |
+| `testing/` | 19 | 100K stress, 4K, CUDA kernel, fusion, GPU, grid shock, implicit, MPO perf, optimization, phase 3/4 integration, planetary, stealth, urban canyon, weather tests |
+| `tpc/` | 8 | TPC certificate generators (Euler3D, NS-IMEX, heat, Vlasov, phases 6–9) |
+| `profiling/` | 4 | Deep profile, component, ops, 4K render |
+| `setup/` | 6 | GPU check, PyTorch check, quick test, realtime renderer, pressure solver |
+| `tools/` | 5 | Extension builder, crypto QTT compress/decompress, FluidElite ingest |
+
+### Root-Level Tools
+
+| File | Description |
+|------|-------------|
+| `tools/dep_graph.py` | Dependency graph generator |
+| `tools/forensic_loc_sweep.py` | Forensic LOC sweep v1 |
+| `tools/forensic_loc_sweep_v2.py` | Forensic LOC sweep v2 |
+| `tools/loc_audit.py` | LOC audit tool |
+| `tools/migrate_tensornet_phase5.py` | Phase 5 migration script |
+| `tools/sync_versions.py` | Version synchronization |
+
+---
+
+## 8. Proofs & Certificates
+
+`proofs/` — **7,473 files, ~371K LOC** — Trustless Physics Certificates,
+ZK proof circuits, conservation proofs, and Yang-Mills research.
+
+| Sub-area | Description |
+|----------|-------------|
+| **Phase proofs** | `proof_phase_1a.py` through `proof_phase_6.py` — staged TPC generation with result JSON |
+| **Phase 21-24** | Dense audit, TDVP conservation, WENO order/shock, TT evolution |
+| **Discovery** | `proof_discovery_engine.py` — ADE pipeline validation |
+| **DeFi** | `proof_defi_pipeline.py`, `proof_exploit_invariants.py` — DeFi security proofs |
+| **Plasma** | `proof_plasma_pipeline.py` — plasma discovery pipeline proof |
+| **Markets** | `proof_markets_pipeline.py` — market pipeline proof |
+| **Molecular** | `proof_molecular_pipeline.py` — molecular discovery proof |
+| **Algorithms** | `proof_algorithms.py`, `proof_decompositions.py` — TN algorithm validation |
+| **CFD** | `proof_cfd_conservation.py`, `proof_ns_projection.py` — conservation law proofs |
+| **Millennium** | `proof_millennium.py` — NS millennium problem numerical evidence |
+| **Production** | `proof_production.py`, `proof_level_3.py` through `proof_level_5.py` — staged maturity gates |
+| **Navier-Stokes** | `proofs/navier_stokes/` — dedicated NS proof sub-directory |
+| **Conservation** | `proofs/conservation/` — conservation law proof artifacts |
+| **Yang-Mills** | `proofs/yang_mills/` — Yang-Mills mass gap research |
+| **TPC engine** | `proofs/proof_engine/` — TPC proof generation engine |
+| **ZK circuits** | `proofs/zk_circuits/` — zero-knowledge proof circuits |
+| **ZK targets** | `proofs/zk_targets/` — verification target contracts |
+| **Tenet** | `proofs/tenet_tphy/` — TeneT physics proofs |
+| **TPC** | `proofs/tpc/` — certificate storage |
+
+---
+
+## 9. Rust Crates
+
+`crates/` — **15 crates, 716 files, ~204K LOC**
+
+| Crate | Description |
+|-------|-------------|
+| `tci_core/` | Core TCI (Tensor Cross Interpolation) in Rust |
+| `tci_core_rust/` | Pure-Rust TCI implementation |
+| `fluidelite/` | FluidElite core solver |
+| `fluidelite_core/` | FluidElite core library |
+| `fluidelite_circuits/` | ZK circuit definitions |
+| `fluidelite_infra/` | FluidElite infrastructure |
+| `fluidelite_zk/` | ZK verification for FluidElite |
+| `gevulot/` | Gevulot decentralized prover integration |
+| `hyper_bridge/` | Python ↔ Rust bridge |
+| `hyper_core/` | Core Rust library |
+| `hyper_gpu_py/` | GPU-accelerated Python bindings |
+| `proof_bridge/` | Proof system bridge |
+| `qtt_cem/` | QTT Cross-Entropy Method optimizer |
+| `qtt_fea/` | QTT Finite Element Analysis |
+| `qtt_opt/` | QTT Optimization library |
+
+---
+
+## 10. Infrastructure & Deployment
+
+### `contracts/` — Solidity Smart Contracts (3 files, ~675 LOC)
+
+| Contract | Description |
+|----------|-------------|
+| `FluidEliteHalo2Verifier.sol` | Halo2 ZK proof on-chain verifier |
+| `HyperTensorBindingVerifier.sol` | Binding proof verifier |
+| `ZeroExpansionSemaphoreVerifier.sol` | Semaphore-based anonymity verifier |
+| `v1/` | Version 1 contract archive |
+
+### `integrations/` — Game Engine Integrations (1 file)
+
+| Directory | Description |
+|-----------|-------------|
+| `unity/` | Unity Engine integration |
+| `unreal/` | Unreal Engine integration |
+
+### `deploy/` — Deployment Infrastructure
+
+| Directory | Description |
+|-----------|-------------|
+| `Containerfile` | Container build definition |
+| `config/` | Deployment configuration |
+| `docker/` | Docker Compose and Dockerfile definitions |
+| `telemetry/` | Telemetry collection infrastructure |
+
+---
+
+## 11. HyperTensor Platform Service
+
+`hypertensor/` — **31 files, ~3,900 LOC** — The SaaS platform layer.
+
+| Sub-module | Files | Description |
+|------------|-------|-------------|
+| `api/` | 6 | FastAPI application, auth, config, routers |
+| `billing/` | 3 | Usage metering, invoice generation |
+| `cli/` | 3 | Command-line interface |
+| `core/` | 7 | Certificates, evidence, executor, hasher, registry, sanitizer |
+| `jobs/` | 3 | Job models and persistent store |
+| `mcp/` | 2 | Model Context Protocol server |
+| `sdk/` | 2 | Python SDK client |
+
+---
+
+## 12. Test Suite
+
+`tests/` — **104 Python files, ~52,258 LOC**
+
+| Category | Key Files | Description |
+|----------|-----------|-------------|
+| **Audit layers** | `audit_layer_4.py` through `audit_layer_9.py` | Constitutional audit verification |
+| **Domain tests** | `test_140_domains.py` | Full 140-domain TPC coverage test |
+| **Physics tests** | `test_advanced_physics.py`, `test_boundary_conditions.py`, `test_boundary_layer.py`, `test_ballistics.py` | Physics validation |
+| **Integration** | `integration/`, `integration_suite/` | Cross-module integration tests |
+| **Benchmarks** | `benchmarks/` | Performance regression tests |
+| **Alpha acceptance** | `test_alpha_acceptance.py` | Alpha release gate |
+| **Billing** | `test_billing.py` | Billing system tests |
+
+---
+
+## 13. Documentation & Governance
+
+### `docs/` — Documentation Tree
+
+| Sub-directory | Description |
+|---------------|-------------|
+| `INDEX.md` | Documentation index |
+| `ONBOARDING.md` | Developer onboarding guide |
+| `PHYSICS_INVENTORY.md` | Physics domain inventory |
+| `adr/` | Architecture Decision Records (25+) |
+| `api/` | API reference documentation |
+| `architecture/` | Architecture documentation |
+| `attestations/` | Validation attestation artifacts |
+| `audit/`, `audits/` | Audit reports and findings |
+| `commercial/` | Commercial documentation |
+| `domains/` | Physics domain documentation |
+| `evolution/` | Platform evolution history |
+| `getting-started/` | Quickstart guides |
+| `governance/` | Governance documentation |
+| `images/`, `media/` | Visual assets |
+| `legacy/` | Legacy documentation archive |
+| `operations/` | Operations runbooks |
+| `papers/` | Research papers |
+| `phases/` | Development phase documentation |
+| `product/` | Product documentation |
+| `regulatory/` | Regulatory compliance |
+| `reports/` | Generated reports |
+| `research/` | Research documentation |
+| `roadmaps/` | Strategic roadmaps |
+| `specifications/` | Technical specifications |
+| `strategy/` | Business strategy docs |
+| `tutorials/` | Step-by-step tutorials |
+| `workflows/` | Workflow documentation |
+
+### Top-Level Governance Documents
 
 | Document | Description |
 |----------|-------------|
-| `PLATFORM_SPECIFICATION.md` | Canonical platform specification (2,069 lines, 25 sections) |
-| `ARCHITECTURE.md` | System architecture overview |
-| `README.md` | Repository README |
-| `ROADMAP.md` | Development roadmap |
-| `CHANGELOG.md` | Version changelog |
+| `CONSTITUTION.md` | Project constitution and operating principles |
+| `CODE_OF_CONDUCT.md` | Community code of conduct |
 | `CONTRIBUTING.md` | Contribution guidelines |
-| `CODE_OF_CONDUCT.md` | Code of conduct |
 | `SECURITY.md` | Security policy |
-| `LICENSE` | Apache 2.0 license |
-| `NOTICE` | Third-party notice |
+| `SECURITY_OPERATIONS.md` | Security operations runbook |
+| `LICENSE` | Project license |
+| `CODEOWNERS` | Code ownership map |
 | `CITATION.cff` | Citation metadata |
-| `CODEOWNERS` | Code ownership (289 lines) |
+| `CHANGELOG.md` | Version changelog |
+| `PLATFORM_SPECIFICATION.md` | Authoritative platform specification (~2,068 lines) |
+| `ARCHITECTURE.md` | System architecture |
+| `ROADMAP.md` | Strategic roadmap |
+| `README.md` | Repository README |
+| `API_SURFACE_FREEZE.md` | API stability guarantees |
+| `DETERMINISM_ENVELOPE.md` | Determinism guarantees |
+| `ERROR_CODE_MATRIX.md` | Error code reference |
+| `FORBIDDEN_OUTPUTS.md` | Output safety constraints |
+| `METERING_POLICY.md` | Usage metering policy |
+| `PRICING_MODEL.md` | Pricing model |
+| `QUEUE_BEHAVIOR_SPEC.md` | Queue behavior specification |
+| `OPERATIONS_RUNBOOK.md` | Operations playbook |
+| `LAUNCH_READINESS.md` | Launch readiness checklist |
+| `CLAIM_REGISTRY.md` | Scientific claim registry |
+| `DOMAIN_PACK_AUDIT.md` | Domain pack audit report |
+| `CERTIFICATE_TEST_MATRIX.md` | TPC test matrix |
 
----
+### `challenges/` — Civilization Challenges (6 files)
 
-## 16. CI/CD
-
-11 GitHub Actions workflows.
-
-| Workflow | Trigger | Description |
-|----------|---------|-------------|
-| `ci.yml` | Push/PR | Main CI pipeline |
-| `nightly.yml` | Cron | Nightly full regression |
-| `release.yml` | Tag | Release packaging and publishing |
-| `docs.yml` | Push | Documentation build and deploy |
-| `contracts-ci.yml` | Push/PR | Smart contract compilation and tests |
-| `exploit-engine.yml` | Push/PR | Exploit detection engine tests |
-| `facial-plastics-ci.yml` | Push/PR | Facial Plastics product CI |
-| `hardening.yml` | Push/PR | Security hardening checks |
-| `audit-gates.yml` | Push/PR | Audit gate validation |
-| `ledger-validation.yml` | Push/PR | Capability ledger schema/integrity (168 nodes) |
-| `vv-validation.yml` | Push/PR | V&V suite validation |
-
----
-
-## 17. Data & Artifacts
-
-### Data (`data/`)
-
-| Directory | Description |
+| Challenge | Description |
 |-----------|-------------|
-| `data/ahmed_body_data/` | Ahmed body aerodynamics input data |
-| `data/ahmed_body_results/` | Ahmed body simulation results |
-| `data/ahmed_ib_results/` | Ahmed immersed-boundary results |
-| `data/atlas/` | Benchmark atlas reference data for taxonomy nodes |
-| `data/cache/` | Computation cache |
-| `data/cases/` | Test case definitions |
-| `data/local_data/` | Local experimental data |
-| `data/models/` | Pre-trained models |
-| `data/pdb_cache/` | Protein Data Bank structure cache |
-| `data/real_data/` | Real-world validation datasets |
-| `data/sovereign_data/` | Sovereign data pipeline outputs |
-| `data/weights/` | Model weights |
-
-### Artifacts (`artifacts/`)
-
-| Directory | Description |
-|-----------|-------------|
-| `artifacts/attestations/` | Signed attestation files |
-| `artifacts/build-info/` | Build metadata |
-| `artifacts/certificates/` | Trust certificates |
-| `artifacts/evidence/` | V&V evidence packages |
-| `artifacts/logs/` | Execution logs |
-| `artifacts/outputs/` | Computation outputs |
-| `artifacts/phase6/` – `artifacts/phase8/` | Phase-specific artifacts |
-| `artifacts/profile_results/` | Performance profiles |
-| `artifacts/results/` | General results |
-| `artifacts/traces/` | Computation traces for ZK proving |
+| I | Grid Stability |
+| II | Pandemic Preparedness |
+| III | Climate Tipping Points |
+| IV | Fusion Energy |
+| V | Supply Chain |
+| VI | Proof of Reality |
 
 ---
 
-## 18. Archive
+## 14. Backward-Compatibility Shim Map
 
-Historical and superseded components preserved for reference.
+The `tensornet/` package provides flat re-export shims so that deeply nested
+modules can be imported from short paths. Each shim `__init__.py` re-exports
+from the canonical location.
 
-| Item | Description |
-|------|-------------|
-| `archive/api_prototype/` | Early API prototype |
-| `archive/build_artifacts/` | Historical build outputs |
-| `archive/dense/` | Pre-QTT dense implementations |
-| `archive/proof_of_concept/` | Early proof-of-concept code |
-| `archive/vendor/` | Vendored dependencies |
-| `archive/*.zip` | Archived packages: FRONTIER, QTT-FEA, QTT-OPT, CEM-QTT, FluidElite-ZK, TCI-LLM, proofs, demos |
-
----
-
-## 19. Full 168-Node Taxonomy
-
-Every physics node in the capability ledger (`apps/ledger/nodes/*.yaml`).
-
-### PHY-I — Classical Mechanics (8 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-I.1 | Newtonian Particle Dynamics |
-| PHY-I.2 | Lagrangian/Hamiltonian Mechanics |
-| PHY-I.3 | Continuum Mechanics |
-| PHY-I.4 | Structural Mechanics |
-| PHY-I.5 | Nonlinear Dynamics and Chaos |
-| PHY-I.6 | Acoustics and Vibration |
-| PHY-I.7 | Continuum Mechanics (extended) |
-| PHY-I.8 | Chaos Theory |
-
-### PHY-II — Classical Fluids / CFD (10 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-II.1 | Incompressible Navier-Stokes |
-| PHY-II.2 | Compressible Flow |
-| PHY-II.3 | Turbulence |
-| PHY-II.4 | Multiphase Flow |
-| PHY-II.5 | Reactive Flow / Combustion |
-| PHY-II.6 | Rarefied Gas / Kinetic |
-| PHY-II.7 | Shallow Water / Geophysical Fluids |
-| PHY-II.8 | Non-Newtonian / Complex Fluids |
-| PHY-II.9 | Porous Media |
-| PHY-II.10 | Free Surface / Interfacial |
-
-### PHY-III — Electromagnetics / CEM (7 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-III.1 | Electrostatics |
-| PHY-III.2 | Magnetostatics |
-| PHY-III.3 | Full Maxwell Time-Domain |
-| PHY-III.4 | Frequency-Domain EM |
-| PHY-III.5 | Wave Propagation |
-| PHY-III.6 | Computational Photonics |
-| PHY-III.7 | Antennas and Microwaves |
-
-### PHY-IV — Optics (7 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-IV.1 | Physical Optics |
-| PHY-IV.2 | Quantum Optics |
-| PHY-IV.3 | Laser Physics |
-| PHY-IV.4 | Ultrafast Optics |
-| PHY-IV.5 | Nonlinear Optics |
-| PHY-IV.6 | Quantum Optics (extended) |
-| PHY-IV.7 | Photonic Crystal |
-
-### PHY-V — Statistical Mechanics (6 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-V.1 | Equilibrium Statistical Mechanics |
-| PHY-V.2 | Non-Equilibrium Statistical Mechanics |
-| PHY-V.3 | Molecular Dynamics |
-| PHY-V.4 | Monte Carlo Methods |
-| PHY-V.5 | Heat Transfer |
-| PHY-V.6 | Lattice Models and Spin Systems |
-
-### PHY-VI — Quantum Mechanics (10 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-VI.1 | Time-Independent Schrödinger |
-| PHY-VI.2 | TDSE Propagation |
-| PHY-VI.3 | Scattering Theory |
-| PHY-VI.4 | Semiclassical Methods |
-| PHY-VI.5 | Path Integrals |
-| PHY-VI.6 | Strongly Correlated |
-| PHY-VI.7 | Mesoscopic Physics |
-| PHY-VI.8 | Surface Physics |
-| PHY-VI.9 | Disordered Systems |
-| PHY-VI.10 | Phase Transitions |
-
-### PHY-VII — Quantum Many-Body (13 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-VII.1 | Tensor Network Methods |
-| PHY-VII.2 | Quantum Spin Systems |
-| PHY-VII.3 | Strongly Correlated Electrons |
-| PHY-VII.4 | Topological Phases |
-| PHY-VII.5 | MBL and Disorder |
-| PHY-VII.6 | Lattice Gauge Theory |
-| PHY-VII.7 | Open Quantum Systems |
-| PHY-VII.8 | Non-Equilibrium Quantum Dynamics |
-| PHY-VII.9 | Quantum Impurity |
-| PHY-VII.10 | Bosonic Many-Body |
-| PHY-VII.11 | Fermionic Systems |
-| PHY-VII.12 | Nuclear Many-Body |
-| PHY-VII.13 | Ultracold Atoms |
-
-### PHY-VIII — Electronic Structure (10 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-VIII.1 | DFT |
-| PHY-VIII.2 | Beyond-DFT Correlated Methods |
-| PHY-VIII.3 | Semi-Empirical and Tight-Binding |
-| PHY-VIII.4 | Excited States |
-| PHY-VIII.5 | Response Properties |
-| PHY-VIII.6 | Relativistic Electronic Structure |
-| PHY-VIII.7 | Quantum Embedding |
-| PHY-VIII.8 | Response Functions |
-| PHY-VIII.9 | Band Structure |
-| PHY-VIII.10 | Ab Initio MD |
-
-### PHY-IX — Condensed Matter (8 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-IX.1 | Phonons and Lattice Dynamics |
-| PHY-IX.2 | Band Structure and Transport |
-| PHY-IX.3 | Magnetism |
-| PHY-IX.4 | Superconductivity |
-| PHY-IX.5 | Disordered Systems |
-| PHY-IX.6 | Surfaces and Interfaces |
-| PHY-IX.7 | Defects in Solids |
-| PHY-IX.8 | Ferroelectrics and Multiferroics |
-
-### PHY-X — Nuclear & Particle (9 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-X.1 | Nuclear Structure |
-| PHY-X.2 | Nuclear Reactions |
-| PHY-X.3 | Nuclear Astrophysics |
-| PHY-X.4 | Lattice QCD |
-| PHY-X.5 | Perturbative QFT |
-| PHY-X.6 | Beyond Standard Model |
-| PHY-X.7 | Dark Matter |
-| PHY-X.8 | Neutrino Physics |
-| PHY-X.9 | Partial Wave Analysis |
-
-### PHY-XI — Plasma Physics (10 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-XI.1 | Ideal MHD |
-| PHY-XI.2 | Resistive/Extended MHD |
-| PHY-XI.3 | Kinetic Theory Plasma |
-| PHY-XI.4 | Gyrokinetics |
-| PHY-XI.5 | Magnetic Reconnection |
-| PHY-XI.6 | Laser-Plasma Interaction |
-| PHY-XI.7 | Dusty Plasmas |
-| PHY-XI.8 | Space and Astrophysical Plasma |
-| PHY-XI.9 | Ion Acoustic Waves |
-| PHY-XI.10 | Plasma Instabilities |
-
-### PHY-XII — Astrophysics (10 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-XII.1 | Stellar Structure and Evolution |
-| PHY-XII.2 | Compact Objects |
-| PHY-XII.3 | Gravitational Waves |
-| PHY-XII.4 | Cosmological Simulations |
-| PHY-XII.5 | CMB and Early Universe |
-| PHY-XII.6 | Radiative Transfer Astrophysical |
-| PHY-XII.7 | Accretion |
-| PHY-XII.8 | Radiation Transport |
-| PHY-XII.9 | Dark Energy |
-| PHY-XII.10 | CMB |
-
-### PHY-XIII — Geophysics (8 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-XIII.1 | Seismology |
-| PHY-XIII.2 | Mantle Convection |
-| PHY-XIII.3 | Geomagnetism and Dynamo |
-| PHY-XIII.4 | Atmospheric Physics |
-| PHY-XIII.5 | Oceanography |
-| PHY-XIII.6 | Glaciology |
-| PHY-XIII.7 | Volcanology |
-| PHY-XIII.8 | Geodesy |
-
-### PHY-XIV — Materials Science (8 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-XIV.1 | First-Principles Materials Design |
-| PHY-XIV.2 | Mechanical Properties |
-| PHY-XIV.3 | Phase-Field Methods |
-| PHY-XIV.4 | Microstructure Evolution |
-| PHY-XIV.5 | Radiation Damage |
-| PHY-XIV.6 | Polymers and Soft Matter |
-| PHY-XIV.7 | Ceramics and High-Temperature Materials |
-| PHY-XIV.8 | Cell Signaling |
-
-### PHY-XV — Chemical Physics (8 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-XV.1 | Potential Energy Surfaces |
-| PHY-XV.2 | Reaction Rate Theory |
-| PHY-XV.3 | Quantum Reaction Dynamics |
-| PHY-XV.4 | Nonadiabatic Dynamics |
-| PHY-XV.5 | Photochemistry |
-| PHY-XV.6 | Catalysis |
-| PHY-XV.7 | Spectroscopy |
-| PHY-XV.8 | Combustion |
-
-### PHY-XVI — Biophysics (8 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-XVI.1 | Protein Structure and Dynamics |
-| PHY-XVI.2 | Drug Design and Binding |
-| PHY-XVI.3 | Membrane Biophysics |
-| PHY-XVI.4 | Nucleic Acids |
-| PHY-XVI.5 | Systems Biology |
-| PHY-XVI.6 | Neuroscience Computational |
-| PHY-XVI.7 | Metamaterials |
-| PHY-XVI.8 | Phase-Field Modeling |
-
-### PHY-XVII — Computational Methods (6 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-XVII.1 | Optimization |
-| PHY-XVII.2 | Inverse Problems |
-| PHY-XVII.3 | ML for Physics |
-| PHY-XVII.4 | Mesh Generation and Adaptivity |
-| PHY-XVII.5 | Linear Algebra Large-Scale |
-| PHY-XVII.6 | High-Performance Computing |
-
-### PHY-XVIII — Multi-Physics Coupling (8 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-XVIII.1 | Fluid-Structure Interaction |
-| PHY-XVIII.2 | Thermo-Mechanical Coupling |
-| PHY-XVIII.3 | Electro-Mechanical Coupling |
-| PHY-XVIII.4 | Magnetohydrodynamics Coupled |
-| PHY-XVIII.5 | Chemically Reacting Flows |
-| PHY-XVIII.6 | Radiation-Hydrodynamics |
-| PHY-XVIII.7 | Multiscale Methods |
-| PHY-XVIII.8 | Data Assimilation |
-
-### PHY-XIX — Quantum Computing (8 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-XIX.1 | Quantum Circuit Simulation |
-| PHY-XIX.2 | Quantum Error Correction |
-| PHY-XIX.3 | Quantum Algorithms |
-| PHY-XIX.4 | Quantum Simulation |
-| PHY-XIX.5 | Quantum Cryptography and Communication |
-| PHY-XIX.6 | Quantum Sensing |
-| PHY-XIX.7 | Quantum Simulation (extended) |
-| PHY-XIX.8 | Quantum Cryptography |
-
-### PHY-XX — Special & Applied (6 nodes)
-
-| Node | Name |
-|------|------|
-| PHY-XX.1 | Relativistic Mechanics |
-| PHY-XX.2 | General Relativity Numerical |
-| PHY-XX.3 | Astrodynamics |
-| PHY-XX.4 | Robotics Physics |
-| PHY-XX.5 | Acoustics Applied |
-| PHY-XX.6 | Biomedical Engineering |
+| Shim Path | Canonical Location |
+|-----------|--------------------|
+| `tensornet/acoustics/` | `tensornet.applied.acoustics` |
+| `tensornet/adaptive/` | `tensornet.engine.adaptive` |
+| `tensornet/agri/` | `tensornet.energy_env.agri` |
+| `tensornet/algorithms/` | `tensornet.core.algorithms` |
+| `tensornet/astro/` | `tensornet.applied.special_applied` |
+| `tensornet/autonomy/` | `tensornet.aerospace.autonomy` |
+| `tensornet/biology/` | `tensornet.life_sci.biology` |
+| `tensornet/biomedical/` | `tensornet.life_sci.biomedical` |
+| `tensornet/biophysics/` | `tensornet.life_sci.biophysics` |
+| `tensornet/certification/` | `tensornet.platform.certification` |
+| `tensornet/chemistry/` | `tensornet.life_sci.chemistry` |
+| `tensornet/computational_methods/` | `tensornet.fluids.computational_methods` |
+| `tensornet/condensed_matter/` | `tensornet.quantum.condensed_matter` |
+| `tensornet/coordination/` | `tensornet.infra.coordination` |
+| `tensornet/coupled/` | `tensornet.fluids.coupled` |
+| `tensornet/cyber/` | `tensornet.applied.cyber` |
+| `tensornet/data/` | `tensornet.platform.data` |
+| `tensornet/defense/` | `tensornet.aerospace.defense` |
+| `tensornet/deployment/` | `tensornet.infra.deployment` |
+| `tensornet/digital_twin/` | `tensornet.infra.digital_twin` |
+| `tensornet/discovery/` | `tensornet.ml.discovery` |
+| `tensornet/distributed/` | `tensornet.engine.distributed` |
+| `tensornet/distributed_tn/` | `tensornet.engine.distributed_tn` |
+| `tensornet/electronic_structure/` | `tensornet.quantum.electronic_structure` |
+| `tensornet/emergency/` | `tensornet.applied.emergency` |
+| `tensornet/energy/` | `tensornet.energy_env.energy` |
+| `tensornet/environmental/` | `tensornet.energy_env.environmental` |
+| `tensornet/exploit/` | `tensornet.aerospace.exploit` |
+| `tensornet/fieldops/` | `tensornet.infra.fieldops` |
+| `tensornet/fieldos/` | `tensornet.infra.fieldos` |
+| `tensornet/financial/` | `tensornet.applied.financial` |
+| `tensornet/flight_validation/` | `tensornet.aerospace.flight_validation` |
+| `tensornet/free_surface/` | `tensornet.fluids.free_surface` |
+| `tensornet/fsi/` | `tensornet.fluids.fsi` |
+| `tensornet/fuel/` | `tensornet.engine.fuel` |
+| `tensornet/fusion/` | `tensornet.plasma_nuclear.fusion` |
+| `tensornet/gateway/` | `tensornet.engine.gateway` |
+| `tensornet/geophysics/` | `tensornet.applied.geophysics` |
+| `tensornet/gpu/` | `tensornet.engine.gpu` |
+| `tensornet/guidance/` | `tensornet.aerospace.guidance` |
+| `tensornet/hardware/` | `tensornet.engine.hardware` |
+| `tensornet/heat_transfer/` | `tensornet.fluids.heat_transfer` |
+| `tensornet/hw/` | `tensornet.engine.hw` |
+| `tensornet/hyperenv/` | `tensornet.infra.hyperenv` |
+| `tensornet/hypersim/` | `tensornet.infra.hypersim` |
+| `tensornet/hypervisual/` | `tensornet.infra.hypervisual` |
+| `tensornet/intent/` | `tensornet.applied.intent` |
+| `tensornet/integration/` | `tensornet.infra.integration` |
+| `tensornet/manufacturing/` | `tensornet.materials.manufacturing` |
+| `tensornet/md/` | `tensornet.life_sci.md` |
+| `tensornet/mechanics/` | `tensornet.materials.mechanics` |
+| `tensornet/medical/` | `tensornet.applied.medical` |
+| `tensornet/membrane_bio/` | `tensornet.life_sci.membrane_bio` |
+| `tensornet/mesh_amr/` | `tensornet.fluids.mesh_amr` |
+| `tensornet/ml_physics/` | `tensornet.ml.ml_physics` |
+| `tensornet/ml_surrogates/` | `tensornet.ml.ml_surrogates` |
+| `tensornet/multiphase/` | `tensornet.fluids.multiphase` |
+| `tensornet/multiscale/` | `tensornet.fluids.multiscale` |
+| `tensornet/neural/` | `tensornet.ml.neural` |
+| `tensornet/nuclear/` | `tensornet.plasma_nuclear.nuclear` |
+| `tensornet/optics/` | `tensornet.applied.optics` |
+| `tensornet/oracle/` | `tensornet.infra.oracle` |
+| `tensornet/particle/` | `tensornet.applied.particle` |
+| `tensornet/phase_field/` | `tensornet.fluids.phase_field` |
+| `tensornet/physics/` | `tensornet.applied.physics` |
+| `tensornet/plasma/` | `tensornet.plasma_nuclear.plasma` |
+| `tensornet/porous_media/` | `tensornet.fluids.porous_media` |
+| `tensornet/provenance/` | `tensornet.infra.provenance` |
+| `tensornet/qft/` | `tensornet.quantum.qft` |
+| `tensornet/qm/` | `tensornet.quantum.qm` |
+| `tensornet/quantum_mechanics/` | `tensornet.quantum.quantum_mechanics` |
+| `tensornet/racing/` | `tensornet.aerospace.racing` |
+| `tensornet/radiation/` | `tensornet.applied.radiation` |
+| `tensornet/realtime/` | `tensornet.engine.realtime` |
+| `tensornet/relativity/` | `tensornet.applied.relativity` |
+| `tensornet/robotics_physics/` | `tensornet.applied.robotics_physics` |
+| `tensornet/sdk/` | `tensornet.infra.sdk` |
+| `tensornet/semiconductor/` | `tensornet.quantum.semiconductor` |
+| `tensornet/sim/` | `tensornet.platform.sim` |
+| `tensornet/site/` | `tensornet.infra.site` |
+| `tensornet/sovereign/` | `tensornet.infra.sovereign` |
+| `tensornet/special_applied/` | `tensornet.applied.special_applied` |
+| `tensornet/statmech/` | `tensornet.quantum.statmech` |
+| `tensornet/substrate/` | `tensornet.engine.substrate` |
+| `tensornet/urban/` | `tensornet.energy_env.urban` |
+| `tensornet/visualization/` | `tensornet.platform.visualization` |
+| `tensornet/vm/` | `tensornet.engine.vm` |
+| `tensornet/zk/` | `tensornet.infra.zk` |
 
 ---
 
-## Summary Statistics
+## 15. Data & Archive
 
-| Metric | Count |
-|--------|------:|
-| Tracked files | ~14,561 |
-| First-party LOC | ~1.51M |
-| Languages | 19 |
-| Applications (`apps/`) | 15 |
-| Rust crates (`crates/`) | 15 |
-| Products (`products/`) | 4 |
-| Platform modules (`hypertensor/`) | 7 |
-| TensorNet modules (`tensornet/`) | 117 |
-| Domain packs | 20 |
-| Taxonomy nodes | 168 |
-| Genesis layers | 8 |
-| Lean 4 formal proofs | 33 |
-| Smart contracts | 3 (+1 API spec) |
-| Experiments/R&D areas | 20+ |
-| Frontier applications | 7 |
-| Demo runners | 46 |
-| Research scripts | 13 |
-| Jupyter notebooks | 6 |
-| Civilization challenges | 6 |
-| Test files | 104 |
-| CI/CD workflows | 11 |
-| Game engine integrations | 2 |
-| Documentation files (.md) | 326+ |
-| ADRs | 25 |
+### `data/` — Datasets & Cached Artifacts
+
+| Content | Description |
+|---------|-------------|
+| `6GJ8.pdb` | PDB structure file for drug design |
+| `ahmed_body_data/`, `ahmed_body_results/`, `ahmed_ib_results/` | Ahmed body simulation data |
+| `atlas/` | Rank atlas data |
+| `cache/`, `pdb_cache/` | Cached computation results |
+| `cases/` | Simulation case data |
+| `models/`, `weights/` | Trained model weights |
+| `noaa_24h_raw/` | NOAA 24-hour raw weather data |
+| `real_data/`, `local_data/`, `sovereign_data/` | Domain-specific datasets |
+| `*.json` | Benchmark results, fluid analysis, rank atlas data |
+| `shakespeare.txt`, `wikitext2_*.txt` | Text corpora for TCI-LLM experiments |
+| `HVAC_Blueprint.png` | HVAC blueprint for intake demo |
+
+### `archive/` — Archived Artifacts
+
+| Content | Description |
+|---------|-------------|
+| `FRONTIER.zip` | Archived frontier experiments |
+| `QTT-FEA.zip`, `QTT-OPT.zip` | Archived QTT optimization/FEA |
+| `fluidelite-zk.zip`, `fluidelite.zip` | FluidElite archives |
+| `crates.zip`, `proofs.zip`, `demos.zip` | Bulk archives |
+| `api_prototype/`, `api_prototype_content/` | API prototype archive |
+| `dense/`, `dense_content/` | Dense solver reference implementations |
+| `proof_of_concept/` | Early PoC code |
+| `vendor/` | Vendored dependencies |
 
 ---
 
-*This document was compiled by exhaustive traversal of every directory and file in the repository. The canonical machine-readable registry for the 168 taxonomy nodes is `apps/ledger/nodes/*.yaml`. For the authoritative platform specification, see `PLATFORM_SPECIFICATION.md`.*
+## Cross-Reference: Physics Domain Coverage
+
+The 168 physics taxonomy nodes in `apps/ledger/nodes/*.yaml` map across the
+TensorNet modules as follows:
+
+| TPC Tier | Domain Count | Primary Module |
+|----------|-------------|----------------|
+| Tier 0 (Core) | 4 | `tensornet/cfd/` (Euler3D, NS-IMEX, Heat, Vlasov-Poisson) |
+| Tier 1 (Fluid) | 8 | `tensornet/cfd/`, `tensornet/fluids/` |
+| Tier 2A (25 domains) | 25 | `tensornet/em/`, `tensornet/plasma_nuclear/`, `tensornet/quantum/statmech/` |
+| Tier 2B (40 domains) | 40 | `tensornet/materials/mechanics/`, `tensornet/applied/optics/`, `tensornet/quantum/`, `tensornet/fluids/coupled/` |
+| Tier 3 (45 domains) | 45 | `tensornet/quantum/`, `tensornet/quantum/electronic_structure/`, `tensornet/quantum/condensed_matter/` |
+| Tier 4 (26 domains) | 26 | `tensornet/life_sci/`, `tensornet/quantum/`, `tensornet/applied/` |
+| **Total** | **168** | |
+
+---
+
+*This document was compiled by exhaustive file-level traversal of every
+directory in the repository. The canonical machine-readable registry for the
+168 taxonomy nodes is `apps/ledger/nodes/*.yaml`. For the authoritative
+platform specification, see `PLATFORM_SPECIFICATION.md`.*

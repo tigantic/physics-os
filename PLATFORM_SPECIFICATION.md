@@ -1690,7 +1690,7 @@ HyperTensor-VM-main/
 │   ├── cli/                        #   CLI (run, validate, attest, verify, serve)
 │   ├── mcp/                        #   MCP server (11 AI-agent tools)
 │   └── contracts/                  #   JSON Schema contract templates
-├── tensornet/                      # Physics Engine (471K LOC, 105 modules)
+├── tensornet/                      # Physics Engine (~492K LOC, 105+ modules)
 │   ├── py.typed                    #   PEP 561 type marker
 │   ├── vm/                         #   Physics VM (IR, compilers, runtime, rank governor)
 │   ├── cfd/                        #   CFD solvers (77K LOC)
@@ -1755,7 +1755,16 @@ HyperTensor-VM-main/
 │   ├── challenge_IV_fusion_energy.md
 │   ├── challenge_V_supply_chain.md
 │   └── challenge_VI_proof_of_reality.md
-├── experiments/                    # Research experiments & benchmarks
+├── experiments/                    # Research experiments & benchmarks (~442K LOC)
+│   ├── hvac_cfd/                   #   HVAC CFD application (109 files, 52K LOC)
+│   ├── frontier/                   #   Frontier physics experiments (56 files, 7 domains)
+│   ├── demos/                      #   46 demonstration runners
+│   ├── lux/                        #   FPS digital-twin frontend UI/UX
+│   ├── ai_scientist/               #   Autonomous discovery experiments
+│   ├── tci_llm/                    #   Tensor Cross Interpolation LLM experiments
+│   ├── aave_extraction/            #   DeFi extraction experiments
+│   ├── pwa_engine/                 #   Progressive Web App engine
+│   ├── cfd_hvac/                   #   HVAC CFD documentation
 │   └── validation/                 #   Civilization Challenge pipelines & MD validation
 │       ├── tig011a_md_validation.py
 │       ├── challenge_ii_phase2_library.py
@@ -1763,8 +1772,11 @@ HyperTensor-VM-main/
 │       ├── challenge_ii_phase4_pandemic.py
 │       └── challenge_ii_phase5_zk_proofs.py
 ├── integrations/                   # Unity, Unreal, Blender, FreeCAD, VS Code
-├── products/                       # Shipped vertical products
-│   └── facial_plastics/            #   Surgical simulation (43K LOC, 941 tests)
+├── products/                       # Shipped vertical products (~78K LOC)
+│   ├── facial_plastics/            #   Surgical simulation (50K LOC, 941 tests)
+│   ├── fluidelite/                 #   FluidElite CFD product (Rust)
+│   ├── fluidelite-zk/              #   FluidElite ZK verifier product (Rust)
+│   └── the_compressor/             #   Tensor compression product
 ├── proofs/                         # Formal proofs (Lean 4, conservation, Yang-Mills)
 ├── tests/                          # Test suites
 │   ├── test_integration.py         #   173 integration tests (TensorNet)
@@ -1773,6 +1785,7 @@ HyperTensor-VM-main/
 │   ├── dep_graph.py                #   Dependency graph visualizer (16 nodes, 34 edges)
 │   ├── sync_versions.py            #   Version sync validator (7 checkpoints)
 │   └── scripts/                    #   75+ maintenance & CI scripts
+├── INVENTORY.md                    # Comprehensive repository inventory (1,079 lines)
 ├── AUDIT_EXECUTION_TRACKER.md      # Audit finding tracker (35 items)
 ├── PLATFORM_SPECIFICATION.md       # ← This document
 ├── VERSION                         # Single source of truth for all version numbers
