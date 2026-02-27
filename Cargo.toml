@@ -69,7 +69,7 @@ memmap2 = "0.9"
 shared_memory = "0.12"
 
 # Serialization
-bytemuck = { version = "1.14", features = ["derive"] }
+bytemuck = { version = "1.25", features = ["derive"] }
 crc = "3.0"
 
 # Error Handling
