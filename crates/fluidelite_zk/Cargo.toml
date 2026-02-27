@@ -144,7 +144,7 @@ dashmap = { version = "6.1", optional = true }
 aes-gcm = { version = "0.10", optional = true }
 hkdf = { version = "0.12", optional = true }
 # sha2 already defined above, reuse it for encryption feature
-getrandom = { version = "0.2", optional = true }
+getrandom = { version = "0.3", optional = true }
 
 # DHAT heap profiler (optional, for stress testing)
 dhat = { version = "0.3", optional = true }

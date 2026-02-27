@@ -34,7 +34,7 @@ rand = "0.8"
 # Encryption for enterprise weight protection (AES-256-GCM)
 aes-gcm = { version = "0.10", optional = true }
 hkdf = { version = "0.12", optional = true }
-getrandom = { version = "0.2", optional = true }
+getrandom = { version = "0.3", optional = true }
 
 # Constant-time comparison
 subtle = "2.5"
