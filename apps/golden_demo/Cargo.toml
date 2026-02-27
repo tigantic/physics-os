@@ -13,8 +13,8 @@ path = "src/main.rs"
 
 [dependencies]
 # Core physics
-fluidelite-core = { path = "../../fluidelite-core" }
-fluidelite-circuits = { path = "../../fluidelite-circuits" }
+fluidelite-core = { path = "../../crates/fluidelite_core" }
+fluidelite-circuits = { path = "../../crates/fluidelite_circuits" }
 
 # Certificate writer
 proof-bridge = { path = "../../crates/proof_bridge" }

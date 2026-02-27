@@ -35,7 +35,7 @@ This document maps high-level requirements to implementing code and tests.
 | CFD-01 | Euler1D conserves mass/momentum/energy | `tensornet/cfd/euler_1d.py` | `test_euler1d_conservation_*` |
 | CFD-02 | Shock tube matches exact Riemann | `tensornet/cfd/godunov.py` | `test_cfd_sod_shock_tube_*` |
 | CFD-03 | Euler2D uses Strang splitting | `tensornet/cfd/euler_2d.py` | `test_euler2d_*` |
-| CFD-04 | Oblique shock matches NACA 1135 | `oblique_shock_exact()` | `scripts/wedge_flow_demo.py` |
+| CFD-04 | Oblique shock matches NACA 1135 | `oblique_shock_exact()` | `tools/scripts/wedge_flow_demo.py` |
 | CFD-05 | Boundary conditions: all types | `BCType`, `BCType1D` | `test_cfd_bc_*` |
 
 ## Quality Requirements

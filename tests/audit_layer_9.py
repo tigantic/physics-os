@@ -89,7 +89,7 @@ def test_unreal_plugin_structure():
 
 def test_integration_module():
     """Test tensornet.integration module."""
-    from tensornet.integration import Configuration, HealthStatus, get_logger
+    from tensornet.infra.integration import Configuration, HealthStatus, get_logger
 
     # Test Configuration
     config = Configuration()

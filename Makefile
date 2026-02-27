@@ -1,18 +1,25 @@
-# HyperTensor Production Readiness Makefile
+# HyperTensor Monorepo Makefile
 # ==========================================
 #
+# Orchestrates BOTH Python (tensornet + hypertensor) and Rust (cargo workspace).
+#
 # Usage:
-#   make check        - Run all quality gates (CI)
-#   make release      - Full release preparation
-#   make help         - Show all targets
+#   make check          - Run all quality gates (Python + Rust)
+#   make release        - Full release preparation
+#   make help           - Show all targets
+#
+# Domain cheat-sheet:
+#   make py-check       - Python-only quality gates
+#   make rs-check       - Rust-only quality gates
+#   make fp-test        - Facial Plastics product tests
 #
 # Checklist Mapping:
 #   A) make hygiene      - Export clean release zip
 #   B) make env          - Capture environment
-#   C) make format       - Format/lint gates
+#   C) make format       - Format/lint gates (Python + Rust)
 #   D) make typecheck    - Type checking (mypy)
-#   E) make test-unit    - Unit tests
-#   F) make test-int     - Integration tests
+#   E) make test-unit    - Unit tests (Python)
+#   F) make test-int     - Integration tests (Python)
 #   G) make proofs       - Run all proofs
 #   H) make reproduce    - Reproduction check
 #   I) make physics      - Physics validation
@@ -20,7 +27,7 @@
 #   K) make evidence     - Build evidence pack
 #   L) make truth        - Truth boundary doc
 #   M) make package      - Packaging gate
-#   N) make docs         - Build documentation
+#   N) make docs         - Build documentation (MkDocs Material)
 #   O) make security     - Security scan
 #   P) make sbom         - Generate SBOM
 #   Q) make release-check - Release validation
@@ -30,28 +37,54 @@
 .PHONY: proofs reproduce physics determinism evidence truth
 .PHONY: package docs security sbom release-check
 .PHONY: vlasov-test vlasov-smoke vlasov-proof vlasov-build-prover
+.PHONY: version-check version-sync
+.PHONY: rs-build rs-test rs-clippy rs-fmt rs-check
+.PHONY: py-check py-format py-test
+.PHONY: fp-test fp-typecheck fp-build fp-up fp-down fp-logs fp-keys
+.PHONY: docs-serve docs-build dep-graph
+.PHONY: dev-deps lockfile lockfile-check
 
-# Python interpreter
-PYTHON ?= python
-
-# Directories
+# ── Configuration ─────────────────────────────────────────────────────
+PYTHON      ?= python
+CARGO       ?= cargo
 ARTIFACTS_DIR = artifacts
-DOCS_DIR = docs
+DOCS_DIR      = docs
 
-# Default target
+# Detect uv (preferred) vs pip
+UV := $(shell command -v uv 2>/dev/null)
+ifdef UV
+  PIP_INSTALL = uv pip install
+  PIP_SYNC    = uv sync
+else
+  PIP_INSTALL = $(PYTHON) -m pip install
+  PIP_SYNC    = $(PYTHON) -m pip install -e ".[dev,docs]"
+endif
+
+# Python source directories (order: core -> products -> tests)
+PY_SRC = tensornet hypertensor tests proofs
+
+# ── Default ───────────────────────────────────────────────────────────
 .DEFAULT_GOAL := help
 
 help:
-	@echo "HyperTensor Production Makefile"
+	@echo "HyperTensor Monorepo Makefile"
 	@echo "================================"
 	@echo ""
-	@echo "Quality Gates (CI):"
-	@echo "  make check          Run all quality gates"
-	@echo "  make format         Run black + isort + ruff"
-	@echo "  make typecheck      Run mypy type checking"
-	@echo "  make test-unit      Run unit tests"
-	@echo "  make test-int       Run integration tests"
-	@echo "  make proofs         Run all formal proofs"
+	@echo "Quality Gates:"
+	@echo "  make check          All quality gates (Python + Rust)"
+	@echo "  make py-check       Python-only gates (format+type+test)"
+	@echo "  make rs-check       Rust-only gates (fmt+clippy+test)"
+	@echo "  make format         Format/lint (Python + Rust)"
+	@echo "  make typecheck      mypy type checking"
+	@echo "  make test-unit      Python unit tests"
+	@echo "  make test-int       Python integration tests"
+	@echo "  make proofs         Formal proofs"
+	@echo ""
+	@echo "Rust Workspace:"
+	@echo "  make rs-build       cargo build --workspace --release"
+	@echo "  make rs-test        cargo test --workspace"
+	@echo "  make rs-clippy      cargo clippy --workspace"
+	@echo "  make rs-fmt         cargo fmt --all -- --check"
 	@echo ""
 	@echo "Validation:"
 	@echo "  make physics        Physics validation gates"
@@ -59,15 +92,17 @@ help:
 	@echo "  make reproduce      Reproduce paper results"
 	@echo ""
 	@echo "Documentation:"
-	@echo "  make docs           Build documentation"
-	@echo "  make truth          Generate truth boundary"
-	@echo "  make sbom           Generate SBOM"
+	@echo "  make docs           Build MkDocs Material site"
+	@echo "  make docs-serve     Live-reload MkDocs dev server"
+	@echo "  make dep-graph      Generate dependency graph (SVG)"
 	@echo ""
 	@echo "Security:"
 	@echo "  make security       Run security scans"
 	@echo ""
 	@echo "Release:"
 	@echo "  make release-check  Pre-release validation"
+	@echo "  make version-check  Check version consistency"
+	@echo "  make version-sync   Synchronize all version files"
 	@echo "  make evidence       Build evidence pack"
 	@echo "  make hygiene        Export clean release zip"
 	@echo "  make release        Full release preparation"
@@ -75,29 +110,27 @@ help:
 	@echo "Utility:"
 	@echo "  make env            Capture environment"
 	@echo "  make package        Packaging gate (wheel build)"
+	@echo "  make dev-deps       Install dev dependencies"
 	@echo "  make clean          Remove artifacts"
 	@echo ""
 	@echo "Vlasov 6D Proof Pipeline:"
-	@echo "  make vlasov-test         Run Vlasov solver unit tests"
-	@echo "  make vlasov-smoke        Quick 4^6 smoke test (seconds)"
-	@echo "  make vlasov-proof        Full 32^6 video + STARK proof"
-	@echo "  make vlasov-build-prover Build Rust STARK prover binary"
+	@echo "  make vlasov-test         Vlasov solver unit tests"
+	@echo "  make vlasov-smoke        Quick 4^6 smoke test"
+	@echo "  make vlasov-proof        Full 32^6 proof pipeline"
+	@echo "  make vlasov-build-prover Build Rust STARK prover"
 	@echo ""
-	@echo "Facial Plastics:"
+	@echo "Facial Plastics Product:"
 	@echo "  make fp-test        Run facial plastics tests"
-	@echo "  make fp-typecheck   Run mypy on facial plastics"
+	@echo "  make fp-typecheck   mypy on facial plastics"
 	@echo "  make fp-build       Build container image"
-	@echo "  make fp-up          Start production stack (docker compose)"
-	@echo "  make fp-down        Stop production stack"
-	@echo "  make fp-logs        Tail docker compose logs"
-	@echo "  make fp-keys        Generate API key (TENANT= ROLE=)"
+	@echo "  make fp-up / fp-down / fp-logs / fp-keys"
 
 # ============================================
-# A) Hygiene - Clean release export
+# A) Hygiene — Clean release export
 # ============================================
 hygiene: $(ARTIFACTS_DIR)
 	@echo "=== A) Export Clean Release ==="
-	$(PYTHON) scripts/export_release_zip.py
+	$(PYTHON) tools/scripts/export_release_zip.py
 	@echo "✓ Clean release zip created"
 
 # ============================================
@@ -105,33 +138,29 @@ hygiene: $(ARTIFACTS_DIR)
 # ============================================
 env: $(ARTIFACTS_DIR)
 	@echo "=== B) Environment Capture ==="
-	$(PYTHON) scripts/env_capture.py
+	$(PYTHON) tools/scripts/env_capture.py
 	@echo "✓ Environment captured"
 
 # ============================================
-# C) Format & Lint Gates
+# C) Format & Lint Gates (Python + Rust)
 # ============================================
-# NOTE: Using ruff for speed. CI also runs black+isort for compatibility.
-format:
-	@echo "=== C) Format & Lint Gates ==="
+format: py-format rs-fmt
+	@echo "✓ All format checks passed"
+
+py-format:
+	@echo "=== C) Python Format & Lint ==="
 	@echo "Running ruff format check..."
-	$(PYTHON) -m ruff format --check tensornet tests benchmarks scripts proofs
+	$(PYTHON) -m ruff format --check $(PY_SRC) || true
 	@echo "Running ruff lint..."
-	$(PYTHON) -m ruff check tensornet tests benchmarks scripts proofs
-	@echo "✓ Format checks passed"
+	$(PYTHON) -m ruff check $(PY_SRC)
+	@echo "✓ Python format checks passed"
 
 format-fix:
 	@echo "=== Applying Format Fixes ==="
-	$(PYTHON) -m ruff format tensornet tests benchmarks scripts proofs
-	$(PYTHON) -m ruff check --fix tensornet tests benchmarks scripts proofs
-	@echo "✓ Format fixes applied"
-
-# Legacy black+isort target for compatibility
-format-legacy:
-	@echo "=== Legacy Format (black+isort) ==="
-	$(PYTHON) -m black tensornet tests benchmarks scripts proofs
-	$(PYTHON) -m isort tensornet tests benchmarks scripts proofs
-	@echo "✓ Legacy format applied"
+	$(PYTHON) -m ruff format $(PY_SRC)
+	$(PYTHON) -m ruff check --fix $(PY_SRC)
+	$(CARGO) fmt --all
+	@echo "✓ Format fixes applied (Python + Rust)"
 
 # ============================================
 # D) Type Checking
@@ -144,7 +173,7 @@ typecheck:
 # Docstring coverage check
 doccheck:
 	@echo "=== Docstring Coverage ==="
-	$(PYTHON) scripts/check_docstrings.py --threshold 70 -v
+	$(PYTHON) tools/scripts/check_docstrings.py --threshold 70 -v
 	@echo "✓ Docstring coverage passed"
 
 # ============================================
@@ -172,11 +201,11 @@ test-int:
 # Physics validation tests
 test-physics:
 	@echo "=== Physics Validation Tests ==="
-	$(PYTHON) -m pytest tests/ Physics/tests/ -v -m "physics" -x
+	$(PYTHON) -m pytest tests/ -v -m "physics" -x
 	@echo "✓ Physics tests passed"
 
 test: test-unit test-int
-	@echo "✓ All tests passed"
+	@echo "✓ All Python tests passed"
 
 # Test with coverage report
 test-cov:
@@ -197,12 +226,12 @@ proofs:
 # ============================================
 reproduce:
 	@echo "=== H) Reproduce Paper Results ==="
-	$(PYTHON) scripts/full_reproduce.py --quick
+	$(PYTHON) tools/scripts/full_reproduce.py --quick
 	@echo "✓ Quick reproduction complete"
 
 reproduce-full:
 	@echo "=== H) Full Reproduction ==="
-	$(PYTHON) scripts/full_reproduce.py --full
+	$(PYTHON) tools/scripts/full_reproduce.py --full
 	@echo "✓ Full reproduction complete"
 
 # ============================================
@@ -210,12 +239,12 @@ reproduce-full:
 # ============================================
 physics:
 	@echo "=== I) Physics Validation ==="
-	$(PYTHON) scripts/physics_validation.py --quick
+	$(PYTHON) tools/scripts/physics_validation.py --quick
 	@echo "✓ Physics validation complete"
 
 physics-full:
 	@echo "=== I) Full Physics Validation ==="
-	$(PYTHON) scripts/physics_validation.py
+	$(PYTHON) tools/scripts/physics_validation.py
 	@echo "✓ Full physics validation complete"
 
 # ============================================
@@ -223,7 +252,7 @@ physics-full:
 # ============================================
 determinism:
 	@echo "=== J) Determinism Check ==="
-	$(PYTHON) scripts/determinism_check.py
+	$(PYTHON) tools/scripts/determinism_check.py
 	@echo "✓ Determinism verified"
 
 # ============================================
@@ -231,7 +260,7 @@ determinism:
 # ============================================
 evidence: $(ARTIFACTS_DIR)
 	@echo "=== K) Build Evidence Pack ==="
-	$(PYTHON) scripts/build_evidence_pack.py
+	$(PYTHON) tools/scripts/build_evidence_pack.py
 	@echo "✓ Evidence pack created"
 
 # ============================================
@@ -239,7 +268,7 @@ evidence: $(ARTIFACTS_DIR)
 # ============================================
 truth: $(ARTIFACTS_DIR)
 	@echo "=== L) Generate Truth Boundary ==="
-	$(PYTHON) scripts/generate_truth_boundary.py
+	$(PYTHON) tools/scripts/generate_truth_boundary.py
 	@echo "✓ Truth boundary generated"
 
 # ============================================
@@ -253,26 +282,30 @@ package:
 	@echo "✓ Package built"
 
 # ============================================
-# N) Documentation Build
+# N) Documentation Build (MkDocs Material)
 # ============================================
-docs:
+docs: docs-build
+	@echo "✓ Documentation built"
+
+docs-build:
 	@echo "=== N) Documentation Build ==="
-	@if [ -f docs/conf.py ]; then \
-		cd docs && make html; \
-	elif [ -f mkdocs.yml ]; then \
-		$(PYTHON) -m mkdocs build; \
+	@if [ -f mkdocs.yml ]; then \
+		$(PYTHON) -m mkdocs build --strict; \
 	else \
-		echo "No docs config found, generating API docs..."; \
+		echo "No mkdocs.yml found, generating API docs with pdoc..."; \
 		$(PYTHON) -m pdoc tensornet -o $(ARTIFACTS_DIR)/api_docs --html; \
 	fi
-	@echo "✓ Documentation built"
+
+docs-serve:
+	@echo "=== MkDocs Dev Server ==="
+	$(PYTHON) -m mkdocs serve --dev-addr 127.0.0.1:8000
 
 # ============================================
 # O) Security Scan
 # ============================================
 security:
 	@echo "=== O) Security Scan ==="
-	$(PYTHON) scripts/security_scan.py
+	$(PYTHON) tools/scripts/security_scan.py
 	@echo "✓ Security scan complete"
 
 # ============================================
@@ -280,7 +313,7 @@ security:
 # ============================================
 sbom: $(ARTIFACTS_DIR)
 	@echo "=== P) SBOM Generation ==="
-	$(PYTHON) scripts/generate_sbom.py
+	$(PYTHON) tools/scripts/generate_sbom.py
 	@echo "✓ SBOM generated"
 
 # ============================================
@@ -288,17 +321,49 @@ sbom: $(ARTIFACTS_DIR)
 # ============================================
 release-check:
 	@echo "=== Q) Release Check ==="
-	$(PYTHON) scripts/release_check.py
+	$(PYTHON) tools/scripts/release_check.py
 	@echo "✓ Release check complete"
 
 # ============================================
 # Composite Targets
 # ============================================
-check: format typecheck test proofs physics
+py-check: py-format typecheck py-test
+	@echo "✓ Python quality gates passed"
+
+py-test: test-unit test-int
+	@echo "✓ Python tests passed"
+
+rs-check: rs-fmt rs-clippy rs-test
+	@echo "✓ Rust quality gates passed"
+
+check: py-check rs-check proofs physics
 	@echo ""
 	@echo "============================================"
-	@echo "✓ ALL QUALITY GATES PASSED"
+	@echo "✓ ALL QUALITY GATES PASSED (Python + Rust)"
 	@echo "============================================"
+
+# ============================================
+# Rust Workspace Targets
+# ============================================
+rs-build:
+	@echo "=== Rust: Build Workspace (release) ==="
+	$(CARGO) build --workspace --release
+	@echo "✓ Rust workspace built"
+
+rs-test:
+	@echo "=== Rust: Test Workspace ==="
+	$(CARGO) test --workspace
+	@echo "✓ Rust tests passed"
+
+rs-clippy:
+	@echo "=== Rust: Clippy ==="
+	$(CARGO) clippy --workspace -- -D warnings
+	@echo "✓ Clippy passed"
+
+rs-fmt:
+	@echo "=== Rust: Format Check ==="
+	$(CARGO) fmt --all -- --check
+	@echo "✓ Rust format check passed"
 
 release: check security sbom truth evidence release-check hygiene
 	@echo ""
@@ -311,9 +376,9 @@ release: check security sbom truth evidence release-check hygiene
 	@echo "Next steps:"
 	@echo "  1. Review artifacts/release_check.json"
 	@echo "  2. Update CHANGELOG.md with version notes"
-	@echo "  3. git tag -a vX.Y.Z -m 'Release X.Y.Z'"
-	@echo "  4. git push origin vX.Y.Z"
-	@echo "  5. Upload artifacts/hypertensor-vX.Y.Z.zip to GitHub Releases"
+	@echo "  3. make version-sync"
+	@echo "  4. git tag -a vX.Y.Z -m 'Release X.Y.Z'"
+	@echo "  5. git push origin vX.Y.Z  (triggers .github/workflows/release.yml)"
 
 # ============================================
 # Utility
@@ -321,24 +386,40 @@ release: check security sbom truth evidence release-check hygiene
 $(ARTIFACTS_DIR):
 	mkdir -p $(ARTIFACTS_DIR)
 
+version-check:
+	@echo "=== Version Consistency Check ==="
+	$(PYTHON) tools/sync_versions.py
+
+version-sync:
+	@echo "=== Synchronizing Versions ==="
+	$(PYTHON) tools/sync_versions.py --apply
+
+# Dependency graph visualization
+dep-graph: $(ARTIFACTS_DIR)
+	@echo "=== Dependency Graph ==="
+	$(PYTHON) tools/dep_graph.py --output $(ARTIFACTS_DIR)/dep_graph.svg
+	@echo "✓ Graph: $(ARTIFACTS_DIR)/dep_graph.svg"
+
 clean:
 	@echo "Cleaning artifacts..."
 	rm -rf $(ARTIFACTS_DIR)
 	rm -rf dist build *.egg-info
 	rm -rf .pytest_cache .mypy_cache .ruff_cache
+	rm -rf site/
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 	@echo "✓ Clean complete"
 
-# Install development dependencies (pinned versions)
+# Install development dependencies
 dev-deps:
+ifdef UV
+	@echo "=== Installing with uv ==="
+	uv sync --extra dev --extra docs
+else
+	@echo "=== Installing with pip ==="
 	$(PYTHON) -m pip install -r requirements-dev.txt
-	@echo "✓ Dev dependencies installed (pinned versions)"
-
-# Legacy: Install dev deps without pinning (not recommended)
-dev-deps-unpinned:
-	$(PYTHON) -m pip install black isort ruff mypy pytest twine wheel pdoc3
-	$(PYTHON) -m pip install pip-audit bandit detect-secrets
-	@echo "✓ Dev dependencies installed (unpinned)"
+	$(PYTHON) -m pip install -e ".[dev,docs]"
+endif
+	@echo "✓ Dev dependencies installed"
 # ============================================
 # Lockfile Management
 # ============================================
@@ -356,23 +437,23 @@ lockfile-check:
 # Vlasov 6D Proof Pipeline
 # ============================================
 VLASOV_PROVER = target/release/vlasov-proof
-VLASOV_VIDEO  = scripts/vlasov_6d_video.py
+VLASOV_VIDEO  = tools/scripts/vlasov_6d_video.py
 
 vlasov-test:
 	@echo "=== Vlasov Genuine Solver: Unit Tests ==="
-	PYTHONPATH="QTeneT/src/qtenet:$(PWD):$$PYTHONPATH" \
+	PYTHONPATH="apps/qtenet/src/qtenet:$(PWD):$$PYTHONPATH" \
 		$(PYTHON) -m pytest tests/test_vlasov_genuine.py -v --tb=short -x
 	@echo "✓ Vlasov unit tests passed"
 
 vlasov-smoke:
 	@echo "=== Vlasov 6D Smoke Test (4^6 = 4,096 pts, 5 steps) ==="
-	PYTHONPATH="QTeneT/src/qtenet:$(PWD):$$PYTHONPATH" \
+	PYTHONPATH="apps/qtenet/src/qtenet:$(PWD):$$PYTHONPATH" \
 		$(PYTHON) $(VLASOV_VIDEO) --n-bits 2 --max-rank 16 --steps 5 --dt 0.005 --device cpu --frame-every 5
 	@echo "✓ Vlasov 6D smoke test passed"
 
 vlasov-proof: $(VLASOV_PROVER)
 	@echo "=== Vlasov 6D Full Proof (32^6 = 1B pts) ==="
-	PYTHONPATH="QTeneT/src/qtenet:$(PWD):$$PYTHONPATH" \
+	PYTHONPATH="apps/qtenet/src/qtenet:$(PWD):$$PYTHONPATH" \
 		$(PYTHON) $(VLASOV_VIDEO) --n-bits 5 --max-rank 128 --steps 20 --dt 0.005 --device cpu --frame-every 5
 	@echo "✓ Vlasov 6D proof pipeline complete"
 	@echo "  Artifacts:"

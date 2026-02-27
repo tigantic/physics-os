@@ -1,0 +1,24 @@
+{
+  "project_id": "2026-001",
+  "client": "GApex Architecture Group",
+  "timestamp": "2026-01-17T22:16:43.984933",
+  "optimal_settings": {
+    "velocity": 2.08,
+    "angle": 45.0,
+    "supply_temp": 12.777777777777779
+  },
+  "validation": {
+    "temperature": 18.046774088541678,
+    "co2": 423.7725392659505,
+    "velocity": 0.1321236049135526,
+    "all_pass": false
+  },
+  "assets": {
+    "thermal": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-001_GApex_Architecture_G/output/thermal_heatmap.png",
+    "velocity": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-001_GApex_Architecture_G/output/velocity_field.png",
+    "convergence": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-001_GApex_Architecture_G/output/convergence_plot.png",
+    "dashboard": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-001_GApex_Architecture_G/output/dashboard_summary.png",
+    "pdf": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-001_GApex_Architecture_G/output/2026-001_CFD_Report.pdf"
+  },
+  "elapsed_seconds": 181.34781670570374
+}

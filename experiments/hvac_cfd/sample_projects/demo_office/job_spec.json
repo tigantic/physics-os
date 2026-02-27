@@ -1,0 +1,125 @@
+{
+  "schema_version": "1.0.0",
+  "schema_min_reader_version": "1.0.0",
+  "project": {
+    "name": "Demo Office",
+    "description": "Sample HVAC simulation for a small office space",
+    "author": "HyperFOAM Team",
+    "created": "2025-01-01T00:00:00Z",
+    "modified": "2025-01-01T00:00:00Z"
+  },
+  "units": {
+    "length": "m",
+    "velocity": "m/s",
+    "temperature": "C",
+    "pressure": "Pa"
+  },
+  "coordinate_system": {
+    "origin": [0.0, 0.0, 0.0],
+    "up_axis": "Z"
+  },
+  "geometry": {
+    "room": {
+      "id": 1,
+      "name": "Office Room",
+      "dimensions": [10.0, 8.0, 3.0],
+      "position": [0.0, 0.0, 0.0],
+      "wallThickness": 0.15
+    },
+    "external_models": [],
+    "furniture": [],
+    "occupants": [
+      {
+        "id": 1,
+        "name": "Seated Worker",
+        "type": "seated",
+        "position": [5.0, 4.0, 0.0],
+        "heat_output": 75.0,
+        "co2_output": 0.005
+      }
+    ]
+  },
+  "hvac": {
+    "vents": [
+      {
+        "id": 1,
+        "name": "Supply Vent 1",
+        "type": 0,
+        "position": [5.0, 0.1, 2.8],
+        "dimensions": [0.6, 0.15, 0.05],
+        "direction": [0.0, 1.0, -0.2],
+        "flowRate": 0.15,
+        "temperature": 18.0,
+        "velocity": 2.5,
+        "diffuserPattern": "4-way"
+      },
+      {
+        "id": 2,
+        "name": "Return Vent 1",
+        "type": 1,
+        "position": [5.0, 7.9, 0.2],
+        "dimensions": [0.6, 0.3, 0.05],
+        "direction": [0.0, 1.0, 0.0],
+        "flowRate": 0.15,
+        "temperature": 22.0,
+        "velocity": 1.5,
+        "diffuserPattern": "linear"
+      }
+    ],
+    "diffusers": []
+  },
+  "sources": {
+    "heat_sources": [
+      {
+        "id": 1,
+        "name": "South Window",
+        "type": "surface",
+        "position": [5.0, 0.0, 1.5],
+        "power": 500.0
+      }
+    ],
+    "contaminant_sources": []
+  },
+  "grid": {
+    "type": "adaptive",
+    "base_resolution": 0.1,
+    "refinement_regions": [
+      {
+        "id": "vent_region",
+        "type": "box",
+        "bounds": [[4.0, 0.0, 2.5], [6.0, 2.0, 3.0]],
+        "refinement_level": 2
+      }
+    ],
+    "total_cells_estimate": 500000
+  },
+  "solver": {
+    "profile": "draft",
+    "max_iterations": 1000,
+    "convergence_threshold": 1e-4,
+    "time_stepping": {
+      "type": "steady",
+      "max_time": 0.0,
+      "time_step": 0.0
+    },
+    "turbulence_model": "k-epsilon",
+    "radiation_model": "none"
+  },
+  "targets": {
+    "adpi_threshold": 80.0,
+    "ppd_threshold": 20.0,
+    "co2_threshold": 1000.0,
+    "velocity_threshold": 0.25
+  },
+  "optimization": {
+    "enabled": false,
+    "variables": [],
+    "objectives": [],
+    "constraints": []
+  },
+  "deliverables": {
+    "report_template": "standard",
+    "export_formats": ["pdf", "html"],
+    "include_animations": false
+  }
+}

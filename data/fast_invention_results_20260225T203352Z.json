@@ -1,0 +1,124 @@
+{
+  "attestation": {
+    "protocol": "FAST_ANTENNA_INVENTION_SWEEP",
+    "version": "1.0.0",
+    "timestamp": "2026-02-25T20:37:44.455784+00:00",
+    "project": "HyperTensor-VM"
+  },
+  "config": {
+    "n_bits": 12,
+    "grid": "4,096\u00b3",
+    "total_dofs": 68719476736,
+    "dofs_human": "68.7B",
+    "exceeds_previous_record_by": "0\u00d7",
+    "n_steps": 50,
+    "max_rank": 48,
+    "seed": 42,
+    "families": [
+      "dipole",
+      "patch",
+      "e_shaped",
+      "u_slot"
+    ],
+    "n_candidates_per_family": 1,
+    "total_candidates": 4,
+    "total_wall_time_s": 232.42157930300164
+  },
+  "per_family_summary": {
+    "dipole": {
+      "family": "half_wave_dipole",
+      "n_points": 1,
+      "n_successful": 1,
+      "n_failed": 0,
+      "total_wall_time_s": 228.44140135000634,
+      "n_bits": 12,
+      "n_steps": 50,
+      "best_gain_dbi": -100.0,
+      "best_s11_db": -0.10025566173433441,
+      "best_fractional_bw": 0.0
+    },
+    "patch": {
+      "family": "rectangular_patch",
+      "n_points": 1,
+      "n_successful": 0,
+      "n_failed": 1,
+      "total_wall_time_s": 0.03694142700987868,
+      "n_bits": 12,
+      "n_steps": 50,
+      "best_gain_dbi": null,
+      "best_s11_db": null,
+      "best_fractional_bw": null
+    },
+    "e_shaped": {
+      "family": "e_shaped_patch",
+      "n_points": 1,
+      "n_successful": 0,
+      "n_failed": 1,
+      "total_wall_time_s": 0.03650082599779125,
+      "n_bits": 12,
+      "n_steps": 50,
+      "best_gain_dbi": null,
+      "best_s11_db": null,
+      "best_fractional_bw": null
+    },
+    "u_slot": {
+      "family": "u_slot_patch",
+      "n_points": 1,
+      "n_successful": 0,
+      "n_failed": 1,
+      "total_wall_time_s": 0.03658965200884268,
+      "n_bits": 12,
+      "n_steps": 50,
+      "best_gain_dbi": null,
+      "best_s11_db": null,
+      "best_fractional_bw": null
+    }
+  },
+  "pareto_summary": {
+    "n_candidates": 1,
+    "n_fronts": 1,
+    "n_file_now": 0,
+    "n_hold": 0,
+    "n_discard": 1,
+    "objectives": [
+      "peak_gain_dbi",
+      "fractional_bandwidth",
+      "radiation_efficiency"
+    ],
+    "top_score": 0.46436922847939904,
+    "top_candidate": "HALF-5360729d92a85440"
+  },
+  "ranked_candidates": [
+    {
+      "candidate_id": "HALF-5360729d92a85440",
+      "params": {
+        "arm_length": 0.332186814566789,
+        "wire_radius": 0.020360745391321832,
+        "gap_half": 0.02646494799778456
+      },
+      "param_hash": "5360729d92a85440",
+      "pareto_front": 0,
+      "crowding_distance": Infinity,
+      "scores": {
+        "rf_performance": 0.5,
+        "manufacturability": 0.0957948565293269,
+        "novelty_proxy": 0.5,
+        "claim_breadth": 0.5,
+        "market_relevance": 0.5,
+        "verification_quality": 0.75
+      },
+      "composite_score": 0.46436922847939904,
+      "triage": "DISCARD",
+      "triage_reason": "Score 0.46 < 0.5 or breadth 0.50 and market 0.50 both below thresholds",
+      "metrics": {
+        "s11_min_db": -0.10025566173433441,
+        "peak_gain_dbi": -100.0,
+        "fractional_bandwidth": 0.0,
+        "radiation_efficiency": 0.0,
+        "vswr_min": 173.2767191365106,
+        "wall_time_s": 224.58899378299247
+      }
+    }
+  ],
+  "self_hash": "4937471374690b19bb6cdb2a1c44c6a25c1c832b1db3a10677184a05ca656334"
+}

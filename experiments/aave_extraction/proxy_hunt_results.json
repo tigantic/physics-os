@@ -1,0 +1,56 @@
+{
+  "scanned": 9,
+  "high_value": 3,
+  "vulnerable": 0,
+  "targets": [],
+  "all_proxies": [
+    {
+      "address": "0xc3d688B66703497DAA19211EEdff47f25384cdc3",
+      "is_proxy": true,
+      "proxy_type": "transparent",
+      "impl_address": "0xeb330b7c1622e0f8b18a7dd1decc27cf3d980e61",
+      "admin_address": "0x1ec63b5883c3481134fd50d5daebc83ecd2e8779",
+      "eth_balance_wei": 0,
+      "eth_balance_eth": 0.0,
+      "usdc_balance": 134039041.767588,
+      "total_value_usd": 264346814.40137464,
+      "initialized_slot0": 7779264662200408776060505562156108093137823041782962828763455764635722,
+      "has_initialize_selector": false,
+      "initialize_reverts": true,
+      "upgrade_protected": true,
+      "vulnerability": null
+    },
+    {
+      "address": "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
+      "is_proxy": true,
+      "proxy_type": "custom_delegate",
+      "impl_address": "",
+      "admin_address": "",
+      "eth_balance_wei": 2695508463910367287250,
+      "eth_balance_eth": 2695.5084639103675,
+      "usdc_balance": 11826.523383,
+      "total_value_usd": 7565931.3646260295,
+      "initialized_slot0": 0,
+      "has_initialize_selector": false,
+      "initialize_reverts": true,
+      "upgrade_protected": true,
+      "vulnerability": null
+    },
+    {
+      "address": "0xae78736Cd615f374D3085123A210448E74Fc6393",
+      "is_proxy": true,
+      "proxy_type": "custom_delegate",
+      "impl_address": "",
+      "admin_address": "",
+      "eth_balance_wei": 3889857316397305746054,
+      "eth_balance_eth": 3889.8573163973056,
+      "usdc_balance": 0.0,
+      "total_value_usd": 10891600.485912455,
+      "initialized_slot0": 43203122240047095727284913645285970914488536942081,
+      "has_initialize_selector": false,
+      "initialize_reverts": true,
+      "upgrade_protected": true,
+      "vulnerability": null
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "case_id": "HF_20260115_214412_c10494cb",
+  "project_name": "duesche",
+  "room_name": "Fail",
+  "created_at": "2026-01-15T21:44:12.490178",
+  "units": "SI",
+  "domain": {
+    "width_x_m": 3.6576,
+    "length_z_m": 2.7432,
+    "height_y_m": 4.572,
+    "volume_m3": 45.873,
+    "grid_resolution": [
+      36,
+      45,
+      27
+    ],
+    "total_cells": 43740,
+    "cell_size_m": 0.1
+  },
+  "boundary_conditions": {
+    "inlet": {
+      "type": "velocity_inlet",
+      "location_center_m": [
+        1.8288,
+        4.572,
+        1.3716
+      ],
+      "dimensions_m": [
+        0.6095999999999999,
+        0.6095999999999999
+      ],
+      "velocity_vector_ms": [
+        0,
+        -0.0,
+        0
+      ],
+      "temperature_k": 285.93,
+      "flow_rate_m3s": 0.0,
+      "vent_count": 1,
+      "effective_area_m2": 0.055742,
+      "_original": {
+        "cfm": 0.0,
+        "temp_f": 55.0,
+        "diffuser_in": [
+          24.0,
+          24.0
+        ]
+      }
+    },
+    "outlet": {
+      "type": "pressure_outlet",
+      "location_center_m": [
+        1.8288,
+        0.3,
+        0.0
+      ],
+      "dimensions_m": [
+        0.3,
+        0.15
+      ],
+      "gauge_pressure_pa": 0
+    },
+    "walls": {
+      "floor": {
+        "type": "wall",
+        "thermal": "adiabatic"
+      },
+      "ceiling": {
+        "type": "wall",
+        "thermal": "adiabatic"
+      },
+      "north": {
+        "type": "wall",
+        "thermal": "adiabatic"
+      },
+      "south": {
+        "type": "wall",
+        "thermal": "adiabatic"
+      },
+      "east": {
+        "type": "wall",
+        "thermal": "adiabatic"
+      },
+      "west": {
+        "type": "wall",
+        "thermal": "adiabatic"
+      }
+    }
+  },
+  "heat_sources": [
+    {
+      "name": "Internal Load",
+      "type": "volumetric",
+      "location_center_m": [
+        1.8288,
+        0.5,
+        1.3716
+      ],
+      "power_w": 175.0,
+      "_original_btu_hr": 597.0
+    }
+  ],
+  "solver_settings": {
+    "gravity_vector": [
+      0,
+      -9.81,
+      0
+    ],
+    "turbulence_model": "k-epsilon-realizable",
+    "pressure_velocity_coupling": "SIMPLE",
+    "time_stepping": "steady",
+    "convergence_criteria": 1e-05
+  },
+  "fluid_properties": {
+    "density_kg_m3": 1.225,
+    "viscosity_pa_s": 1.81e-05,
+    "thermal_conductivity_w_mk": 0.026,
+    "specific_heat_j_kgk": 1006,
+    "prandtl_number": 0.71
+  }
+}

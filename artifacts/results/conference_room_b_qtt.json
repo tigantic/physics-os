@@ -1,0 +1,24 @@
+{
+  "client": "James Chen, Facilities Engineering",
+  "project": "Conference Room B Ventilation",
+  "method": "QTT-Accelerated Compressible Euler (Low-Mach)",
+  "date": "2026-01-06T07:28:42.796881",
+  "room": {
+    "L": 9.0,
+    "H": 3.0,
+    "h_inlet_mm": 168.0,
+    "u_inlet": 0.455
+  },
+  "Re_inlet": 5096,
+  "Re_room": 91000,
+  "grid": "64x32",
+  "qtt_bits": 11,
+  "solve_time_s": 18.911929193000105,
+  "findings": {
+    "u_breathing_3m": 8.022139231415314e-05,
+    "u_breathing_6m": 0.5484651990648588,
+    "jet_core_3m": 2.8064516129032255,
+    "jet_core_6m": 2.903225806451613,
+    "problem_confirmed": false
+  }
+}

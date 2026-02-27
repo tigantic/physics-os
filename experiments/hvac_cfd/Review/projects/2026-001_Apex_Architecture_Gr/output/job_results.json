@@ -1,0 +1,24 @@
+{
+  "project_id": "2026-001",
+  "client": "Apex Architecture Group",
+  "timestamp": "2026-01-18T20:31:54.113434",
+  "optimal_settings": {
+    "velocity": 0.614574187884109,
+    "angle": 35.0,
+    "supply_temp": 20.22222222222222
+  },
+  "validation": {
+    "temperature": 20.086831665039085,
+    "co2": 404.13100280761716,
+    "velocity": 0.1476978440070525,
+    "all_pass": true
+  },
+  "assets": {
+    "thermal": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-001_Apex_Architecture_Gr/output/thermal_heatmap.png",
+    "velocity": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-001_Apex_Architecture_Gr/output/velocity_field.png",
+    "convergence": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-001_Apex_Architecture_Gr/output/convergence_plot.png",
+    "dashboard": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-001_Apex_Architecture_Gr/output/dashboard_summary.png",
+    "pdf": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-001_Apex_Architecture_Gr/output/2026-001_CFD_Report.pdf"
+  },
+  "elapsed_seconds": 238.59009552001953
+}

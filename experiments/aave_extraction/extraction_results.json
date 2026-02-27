@@ -1,0 +1,28 @@
+{
+  "Aave_V1_PoolCore": {
+    "path_exists": true,
+    "path_distance": 1000000000.0,
+    "n_blocks": 136,
+    "qtt_memory_kb": 0.46875,
+    "payload_success": false,
+    "hex_payloads": []
+  },
+  "Aave_V2_LendingPoolProxy": {
+    "path_exists": true,
+    "path_distance": 1000000000.0,
+    "n_blocks": 97,
+    "qtt_memory_kb": 0.34375,
+    "payload_success": false,
+    "hex_payloads": []
+  },
+  "Aave_V2_PoolAddressesProviderRegistry": {
+    "path_exists": true,
+    "path_distance": 5.900000095367432,
+    "n_blocks": 101,
+    "qtt_memory_kb": 1.46875,
+    "payload_success": true,
+    "hex_payloads": [
+      "0x8da5cb5b"
+    ]
+  }
+}

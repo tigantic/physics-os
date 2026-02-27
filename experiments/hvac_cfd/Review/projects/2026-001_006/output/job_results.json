@@ -1,0 +1,24 @@
+{
+  "project_id": "2026-001",
+  "client": "006",
+  "timestamp": "2026-01-18T20:20:15.719872",
+  "optimal_settings": {
+    "velocity": 0.614574187884109,
+    "angle": 35.0,
+    "supply_temp": 20.22222222222222
+  },
+  "validation": {
+    "temperature": 20.103021240234398,
+    "co2": 404.9742919921875,
+    "velocity": 0.1514575414126739,
+    "all_pass": true
+  },
+  "assets": {
+    "thermal": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-001_006/output/thermal_heatmap.png",
+    "velocity": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-001_006/output/velocity_field.png",
+    "convergence": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-001_006/output/convergence_plot.png",
+    "dashboard": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-001_006/output/dashboard_summary.png",
+    "pdf": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-001_006/output/2026-001_CFD_Report.pdf"
+  },
+  "elapsed_seconds": 242.4373652935028
+}

@@ -312,7 +312,7 @@ ns3d_qtt_native.py
 
 | Source | Finding | Implication |
 |--------|---------|-------------|
-| `fluidelite/FINDINGS.md` | Rank 24 optimal (261× compression) | Current `max_rank=64` may be over-provisioned |
+| `crates/fluidelite/FINDINGS.md` | Rank 24 optimal (261× compression) | Current `max_rank=64` may be over-provisioned |
 | `proofs/LEVEL_3_FINDINGS.md` | χ ~ Re^0.035 (nearly constant) | QTT compression validated for turbulence |
 | `proofs/LEVEL_3_FINDINGS.md` | χ stabilizes at ~39 for Re=1K-50K | Test rank 32-48 for NS solver |
 
@@ -352,7 +352,7 @@ From `BLACK_SWAN_FINDINGS.md`:
 
 ### 10.5 Applied Rank Sweep Methodology
 
-From `fluidelite/FINDINGS.md` rank sweep:
+From `crates/fluidelite/FINDINGS.md` rank sweep:
 
 | Rank | Accuracy | Perplexity | Compression | Notes |
 |------|----------|------------|-------------|-------|

@@ -1,0 +1,48 @@
+{
+  "client": {
+    "name": "GAYpex Architecture Group",
+    "project_id": "2026-001",
+    "contact": "Sarah Connor, Lead Architect",
+    "email": "s.connor@apex-arch.com"
+  },
+  "room": {
+    "name": "Executive Conference Room B",
+    "type": "conference",
+    "dimensions_m": [
+      8.9916,
+      6.00456,
+      2.9870400000000004
+    ]
+  },
+  "load": {
+    "occupants": 14,
+    "heat_load_per_person_watts": 100.0,
+    "equipment_load_watts": 500.0,
+    "lighting_load_watts": 200.0
+  },
+  "hvac": {
+    "supply_temp_c": 12.777777777777779,
+    "supply_cfm": 850.0,
+    "supply_velocity_ms": 2.01,
+    "diffuser_type": "ceiling_slot",
+    "num_diffusers": 2,
+    "diffuser_area_m2": 0.1,
+    "supply_angle_deg": 45.0
+  },
+  "constraints": {
+    "max_velocity_ms": 0.254,
+    "target_temp_c": 22.22222222222222,
+    "temp_range_c": [
+      20.0,
+      24.444444444444443
+    ],
+    "max_co2_ppm": 1000.0
+  },
+  "deliverables": {
+    "thermal_heatmap": true,
+    "velocity_field": true,
+    "convergence_plot": true,
+    "pdf_report": true
+  },
+  "notes": "Summer peak load scenario - full occupancy meeting"
+}

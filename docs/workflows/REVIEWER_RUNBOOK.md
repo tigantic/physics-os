@@ -14,7 +14,7 @@ pip install -e .
 python demos/flagship_pipeline.py
 
 # 3. Verify evidence
-python evidence/flagship_pack/verify.py
+python artifacts/evidence/flagship_pack/verify.py
 ```
 
 **Expected output: `PASS`**
@@ -68,7 +68,7 @@ pip install -e ".[dev]"
 After running `demos/flagship_pipeline.py`:
 
 ```
-evidence/flagship_pack/
+artifacts/evidence/flagship_pack/
 ├── manifest.json      # Results + SHA256 hashes + HMAC signature
 ├── verify.py          # Self-contained verification script
 └── data/

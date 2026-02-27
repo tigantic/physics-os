@@ -20,7 +20,7 @@ class TestCoreImports:
         import tensornet
 
         assert hasattr(tensornet, "__version__")
-        assert tensornet.__version__ == "0.1.0"
+        assert tensornet.__version__ == "40.0.1"
 
     def test_mps_import_succeeds_when_installed(self):
         """Test that MPS imports successfully when installed."""
@@ -1876,7 +1876,7 @@ class TestDeployment:
     """Test TensorRT export and embedded deployment utilities."""
 
     def test_deployment_tensorrt_import_succeeds(self):
-        from tensornet.deployment import (ExportConfig, ExportResult,
+        from tensornet.infra.deployment import (ExportConfig, ExportResult,
                                           TensorRTExporter,
                                           benchmark_inference, export_to_onnx,
                                           optimize_for_tensorrt,
@@ -1886,7 +1886,7 @@ class TestDeployment:
         assert TensorRTExporter is not None
 
     def test_deployment_embedded_import_succeeds(self):
-        from tensornet.deployment import (EmbeddedRuntime, JetsonConfig,
+        from tensornet.infra.deployment import (EmbeddedRuntime, JetsonConfig,
                                           MemoryProfile, PowerMode,
                                           configure_jetson_power,
                                           create_inference_pipeline,
@@ -1896,7 +1896,7 @@ class TestDeployment:
         assert EmbeddedRuntime is not None
 
     def test_deployment_precision_modes_have_values(self):
-        from tensornet.deployment.tensorrt_export import (OptimizationLevel,
+        from tensornet.infra.deployment.tensorrt_export import (OptimizationLevel,
                                                           Precision)
 
         assert Precision.FP16.value == "fp16"
@@ -1904,8 +1904,8 @@ class TestDeployment:
         assert OptimizationLevel.O3.value == 3
 
     def test_deployment_export_config_sets_values(self):
-        from tensornet.deployment import ExportConfig
-        from tensornet.deployment.tensorrt_export import Precision
+        from tensornet.infra.deployment import ExportConfig
+        from tensornet.infra.deployment.tensorrt_export import Precision
 
         config = ExportConfig(
             precision=Precision.FP16, max_batch_size=4, workspace_size_mb=2048
@@ -1916,7 +1916,7 @@ class TestDeployment:
         assert config.opset_version == 17
 
     def test_deployment_cfd_inference_module_runs(self):
-        from tensornet.deployment.tensorrt_export import CFDInferenceModule
+        from tensornet.infra.deployment.tensorrt_export import CFDInferenceModule
 
         model = CFDInferenceModule((64, 64), n_vars=4, gamma=1.4)
 
@@ -1926,7 +1926,7 @@ class TestDeployment:
         assert y.shape == x.shape
 
     def test_deployment_tt_contraction_module_counts_cores(self):
-        from tensornet.deployment.tensorrt_export import TTContraction
+        from tensornet.infra.deployment.tensorrt_export import TTContraction
 
         cores = [
             torch.randn(1, 4, 4, 3),
@@ -1946,8 +1946,8 @@ class TestDeployment:
         import tempfile
         from pathlib import Path
 
-        from tensornet.deployment import ExportConfig, export_to_onnx
-        from tensornet.deployment.tensorrt_export import CFDInferenceModule
+        from tensornet.infra.deployment import ExportConfig, export_to_onnx
+        from tensornet.infra.deployment.tensorrt_export import CFDInferenceModule
 
         model = CFDInferenceModule((32, 32))
         x = torch.randn(1, 4, 32, 32)
@@ -1965,8 +1965,8 @@ class TestDeployment:
 
         import tempfile
 
-        from tensornet.deployment import ExportConfig, TensorRTExporter
-        from tensornet.deployment.tensorrt_export import Precision
+        from tensornet.infra.deployment import ExportConfig, TensorRTExporter
+        from tensornet.infra.deployment.tensorrt_export import Precision
 
         config = ExportConfig(precision=Precision.FP32)
         exporter = TensorRTExporter(config)
@@ -1979,7 +1979,7 @@ class TestDeployment:
             assert result.model_size_mb > 0
 
     def test_deployment_benchmark_result_stores_metrics(self):
-        from tensornet.deployment.tensorrt_export import BenchmarkResult
+        from tensornet.infra.deployment.tensorrt_export import BenchmarkResult
 
         result = BenchmarkResult(
             latency_ms=1.5,
@@ -1992,14 +1992,14 @@ class TestDeployment:
         assert result.throughput_samples_per_sec == 666.0
 
     def test_deployment_power_modes_have_values(self):
-        from tensornet.deployment import PowerMode
+        from tensornet.infra.deployment import PowerMode
 
         assert PowerMode.MAXN.value == "MAXN"
         assert PowerMode.MODE_30W.value == "30W"
         assert PowerMode.MODE_10W.value == "10W"
 
     def test_deployment_jetson_config_sets_defaults(self):
-        from tensornet.deployment import JetsonConfig, PowerMode
+        from tensornet.infra.deployment import JetsonConfig, PowerMode
 
         config = JetsonConfig(
             power_mode=PowerMode.MODE_30W, target_fps=100.0, thermal_limit_c=85.0
@@ -2010,7 +2010,7 @@ class TestDeployment:
         assert config.target_fps == 100.0
 
     def test_deployment_memory_profile_computes_availability(self):
-        from tensornet.deployment import MemoryProfile
+        from tensornet.infra.deployment import MemoryProfile
 
         profile = MemoryProfile(
             total_system_mb=64000, model_weights_mb=500, inference_buffer_mb=1000
@@ -2020,7 +2020,7 @@ class TestDeployment:
         assert profile.utilization_pct < 20
 
     def test_deployment_memory_pool_allocates_and_resets(self):
-        from tensornet.deployment.embedded import MemoryPool
+        from tensornet.infra.deployment.embedded import MemoryPool
 
         pool = MemoryPool(pool_size_mb=10, device="cpu")
 
@@ -2035,8 +2035,8 @@ class TestDeployment:
         assert pool.get_usage_mb() == 0
 
     def test_deployment_thermal_monitor_normal_state(self):
-        from tensornet.deployment import JetsonConfig
-        from tensornet.deployment.embedded import ThermalMonitor, ThermalState
+        from tensornet.infra.deployment import JetsonConfig
+        from tensornet.infra.deployment.embedded import ThermalMonitor, ThermalState
 
         config = JetsonConfig()
         monitor = ThermalMonitor(config)
@@ -2049,7 +2049,7 @@ class TestDeployment:
         assert monitor.thermal_state == ThermalState.NORMAL
 
     def test_deployment_embedded_runtime_initializes(self):
-        from tensornet.deployment import EmbeddedRuntime, JetsonConfig
+        from tensornet.infra.deployment import EmbeddedRuntime, JetsonConfig
 
         config = JetsonConfig(target_fps=50.0)
         runtime = EmbeddedRuntime(config)
@@ -2062,7 +2062,7 @@ class TestDeployment:
         runtime.shutdown()
 
     def test_deployment_inference_metrics_computes_hit_rate(self):
-        from tensornet.deployment.embedded import InferenceMetrics
+        from tensornet.infra.deployment.embedded import InferenceMetrics
 
         metrics = InferenceMetrics(
             latency_ms=5.0,
@@ -2083,7 +2083,7 @@ class TestGuidance:
     """Test trajectory and guidance modules."""
 
     def test_guidance_trajectory_import_succeeds(self):
-        from tensornet.guidance import (AeroCoefficients, AtmosphericModel,
+        from tensornet.aerospace.guidance import (AeroCoefficients, AtmosphericModel,
                                         TrajectoryConfig, TrajectorySolver,
                                         VehicleState, exponential_atmosphere,
                                         isa_atmosphere)
@@ -2092,7 +2092,7 @@ class TestGuidance:
         assert TrajectorySolver is not None
 
     def test_guidance_controller_import_succeeds(self):
-        from tensornet.guidance import (ConstraintType, GuidanceCommand,
+        from tensornet.aerospace.guidance import (ConstraintType, GuidanceCommand,
                                         GuidanceController, GuidanceMode,
                                         TrajectoryConstraint,
                                         bank_angle_guidance,
@@ -2102,7 +2102,7 @@ class TestGuidance:
         assert proportional_navigation is not None
 
     def test_guidance_isa_atmosphere_sea_level_values(self):
-        from tensornet.guidance import isa_atmosphere
+        from tensornet.aerospace.guidance import isa_atmosphere
 
         atm_0 = isa_atmosphere(0)
         atm_10k = isa_atmosphere(10000)
@@ -2117,7 +2117,7 @@ class TestGuidance:
         assert atm_30k.density_kg_m3 < atm_10k.density_kg_m3
 
     def test_guidance_exponential_atmosphere_density_decay(self):
-        from tensornet.guidance import exponential_atmosphere
+        from tensornet.aerospace.guidance import exponential_atmosphere
 
         atm_0 = exponential_atmosphere(0)
         atm_20k = exponential_atmosphere(20000)
@@ -2126,7 +2126,7 @@ class TestGuidance:
         assert atm_20k.density_kg_m3 < atm_0.density_kg_m3
 
     def test_guidance_vehicle_state_computes_velocity(self):
-        from tensornet.guidance import VehicleState
+        from tensornet.aerospace.guidance import VehicleState
 
         state = VehicleState(altitude_m=20000, u_m_s=1000, v_m_s=0, w_m_s=100)
 
@@ -2137,7 +2137,7 @@ class TestGuidance:
         assert abs(alpha - math.atan2(100, 1000)) < 1e-10
 
     def test_guidance_vehicle_state_tensor_roundtrip(self):
-        from tensornet.guidance import VehicleState
+        from tensornet.aerospace.guidance import VehicleState
 
         state = VehicleState(
             latitude_rad=0.1, longitude_rad=0.2, altitude_m=15000, u_m_s=500
@@ -2152,7 +2152,7 @@ class TestGuidance:
         assert abs(state2.altitude_m - 15000) < 1
 
     def test_guidance_aero_coefficients_stores_values(self):
-        from tensornet.guidance.trajectory import AeroCoefficients
+        from tensornet.aerospace.guidance.trajectory import AeroCoefficients
 
         aero = AeroCoefficients(CD=0.02, CL=0.5, CL_alpha=5.7)
 
@@ -2160,8 +2160,8 @@ class TestGuidance:
         assert aero.CL_alpha == 5.7
 
     def test_guidance_trajectory_config_sets_defaults(self):
-        from tensornet.guidance import TrajectoryConfig
-        from tensornet.guidance.trajectory import IntegrationMethod
+        from tensornet.aerospace.guidance import TrajectoryConfig
+        from tensornet.aerospace.guidance.trajectory import IntegrationMethod
 
         config = TrajectoryConfig(dt_s=0.001, integration_method=IntegrationMethod.RK4)
 
@@ -2169,7 +2169,7 @@ class TestGuidance:
         assert config.save_interval == 10
 
     def test_guidance_gravity_model_decreases_with_altitude(self):
-        from tensornet.guidance.trajectory import gravity_model
+        from tensornet.aerospace.guidance.trajectory import gravity_model
 
         g_0 = gravity_model(0)
         g_100k = gravity_model(100000)
@@ -2178,7 +2178,7 @@ class TestGuidance:
         assert g_100k < g_0  # Gravity decreases with altitude
 
     def test_guidance_trajectory_solver_single_step_changes_state(self):
-        from tensornet.guidance import (TrajectoryConfig, TrajectorySolver,
+        from tensornet.aerospace.guidance import (TrajectoryConfig, TrajectorySolver,
                                         VehicleState)
 
         config = TrajectoryConfig(dt_s=0.01)
@@ -2194,7 +2194,7 @@ class TestGuidance:
         )
 
     def test_guidance_trajectory_propagation_produces_trajectory(self):
-        from tensornet.guidance import (TrajectoryConfig, TrajectorySolver,
+        from tensornet.aerospace.guidance import (TrajectoryConfig, TrajectorySolver,
                                         VehicleState)
 
         config = TrajectoryConfig(dt_s=0.01, save_interval=100)
@@ -2212,7 +2212,7 @@ class TestGuidance:
         )
 
     def test_guidance_command_to_controls_has_surfaces(self):
-        from tensornet.guidance import GuidanceCommand, GuidanceMode
+        from tensornet.aerospace.guidance import GuidanceCommand, GuidanceMode
 
         cmd = GuidanceCommand(
             bank_angle_rad=math.radians(30),
@@ -2226,7 +2226,7 @@ class TestGuidance:
         assert "dr" in controls
 
     def test_guidance_trajectory_constraint_computes_margin(self):
-        from tensornet.guidance import ConstraintType, TrajectoryConstraint
+        from tensornet.aerospace.guidance import ConstraintType, TrajectoryConstraint
 
         # Test constraint within active margin (>90% of limit)
         constraint = TrajectoryConstraint(
@@ -2244,7 +2244,7 @@ class TestGuidance:
         assert not constraint2.is_active  # Not within 10% of limit
 
     def test_guidance_proportional_navigation_returns_finite(self):
-        from tensornet.guidance import VehicleState, proportional_navigation
+        from tensornet.aerospace.guidance import VehicleState, proportional_navigation
 
         vehicle = VehicleState(latitude_rad=0.0, longitude_rad=0.0, u_m_s=1000.0)
 
@@ -2255,8 +2255,8 @@ class TestGuidance:
         assert math.isfinite(a_cmd)
 
     def test_guidance_bank_angle_respects_corridor(self):
-        from tensornet.guidance import VehicleState, bank_angle_guidance
-        from tensornet.guidance.controller import (CorridorBounds,
+        from tensornet.aerospace.guidance import VehicleState, bank_angle_guidance
+        from tensornet.aerospace.guidance.controller import (CorridorBounds,
                                                    WaypointTarget)
 
         state = VehicleState(altitude_m=50000, u_m_s=3000)
@@ -2271,8 +2271,8 @@ class TestGuidance:
         assert cmd.mode is not None
 
     def test_guidance_controller_computes_valid_command(self):
-        from tensornet.guidance import GuidanceController, VehicleState
-        from tensornet.guidance.controller import (CorridorBounds,
+        from tensornet.aerospace.guidance import GuidanceController, VehicleState
+        from tensornet.aerospace.guidance.controller import (CorridorBounds,
                                                    WaypointTarget)
 
         target = WaypointTarget(latitude_rad=0.1, longitude_rad=0.1)
@@ -2288,9 +2288,9 @@ class TestGuidance:
         assert cmd.constraint_margin <= 1.1  # Allow small numerical tolerance
 
     def test_guidance_heating_estimate_positive_at_hypersonic(self):
-        from tensornet.guidance import (GuidanceController, VehicleState,
+        from tensornet.aerospace.guidance import (GuidanceController, VehicleState,
                                         isa_atmosphere)
-        from tensornet.guidance.controller import WaypointTarget
+        from tensornet.aerospace.guidance.controller import WaypointTarget
 
         controller = GuidanceController(target=WaypointTarget(0, 0))
 
@@ -2303,8 +2303,8 @@ class TestGuidance:
         assert q_dot > 0
 
     def test_guidance_aerodynamic_lookup_returns_positive(self):
-        from tensornet.guidance import GuidanceController
-        from tensornet.guidance.controller import WaypointTarget
+        from tensornet.aerospace.guidance import GuidanceController
+        from tensornet.aerospace.guidance.controller import WaypointTarget
 
         controller = GuidanceController(target=WaypointTarget(0, 0))
 
@@ -2315,9 +2315,9 @@ class TestGuidance:
         assert CL / CD > 0  # Finite L/D
 
     def test_guidance_constraint_limiting_enforces_bounds(self):
-        from tensornet.guidance import (GuidanceCommand, GuidanceController,
+        from tensornet.aerospace.guidance import (GuidanceCommand, GuidanceController,
                                         VehicleState)
-        from tensornet.guidance.controller import (CorridorBounds,
+        from tensornet.aerospace.guidance.controller import (CorridorBounds,
                                                    WaypointTarget)
 
         controller = GuidanceController(
@@ -2338,8 +2338,8 @@ class TestGuidance:
         assert abs(limited.bank_angle_rad) <= math.radians(80)
 
     def test_guidance_controller_reset_clears_state(self):
-        from tensornet.guidance import GuidanceController
-        from tensornet.guidance.controller import WaypointTarget
+        from tensornet.aerospace.guidance import GuidanceController
+        from tensornet.aerospace.guidance.controller import WaypointTarget
 
         controller = GuidanceController(target=WaypointTarget(0, 0))
         controller.heat_load_accumulated = 100.0
@@ -2357,7 +2357,7 @@ class TestSimulationHIL:
     def test_hil_imu_sensor_measures_with_noise(self):
         import numpy as np
 
-        from tensornet.simulation import IMUSensor
+        from tensornet.sim.simulation import IMUSensor
 
         imu = IMUSensor(update_rate_hz=400)
         true_state = {"ax": 9.81, "ay": 0, "az": 0, "p": 0.1, "q": 0, "r": 0}
@@ -2372,7 +2372,7 @@ class TestSimulationHIL:
     def test_hil_gps_sensor_provides_valid_position(self):
         import numpy as np
 
-        from tensornet.simulation import GPSSensor
+        from tensornet.sim.simulation import GPSSensor
 
         gps = GPSSensor()
         true_state = {
@@ -2391,7 +2391,7 @@ class TestSimulationHIL:
         assert "num_satellites" in measurement
 
     def test_hil_air_data_sensor_measures_pressure(self):
-        from tensornet.simulation import AirDataSensor
+        from tensornet.sim.simulation import AirDataSensor
 
         air_data = AirDataSensor()
         true_state = {
@@ -2408,7 +2408,7 @@ class TestSimulationHIL:
         assert "alpha_deg" in measurement
 
     def test_hil_control_surface_respects_limits(self):
-        from tensornet.simulation import ControlSurface
+        from tensornet.sim.simulation import ControlSurface
 
         elevator = ControlSurface(
             name="elevator", rate_limit_deg_s=60, position_limit_deg=30
@@ -2425,7 +2425,7 @@ class TestSimulationHIL:
         assert all(-30 <= p <= 30 for p in positions)
 
     def test_hil_thrust_actuator_approaches_command(self):
-        from tensornet.simulation import ThrustActuator
+        from tensornet.sim.simulation import ThrustActuator
 
         thrust = ThrustActuator(max_thrust_N=100000)
         thrust.is_ignited = True
@@ -2440,7 +2440,7 @@ class TestSimulationHIL:
         assert thrusts[-1] < 100000
 
     def test_hil_interface_steps_sensors_and_actuators(self):
-        from tensornet.simulation import (ControlSurface, HILConfig,
+        from tensornet.sim.simulation import (ControlSurface, HILConfig,
                                           HILInterface, IMUSensor)
 
         config = HILConfig(dt_s=0.01)
@@ -2459,7 +2459,7 @@ class TestSimulationHIL:
         assert len(hil.telemetry_log) == 1
 
     def test_hil_vehicle_sensor_suite_creates_components(self):
-        from tensornet.simulation import (create_vehicle_actuators,
+        from tensornet.sim.simulation import (create_vehicle_actuators,
                                           create_vehicle_sensors)
 
         sensors = create_vehicle_sensors("hypersonic")
@@ -2476,7 +2476,7 @@ class TestSimulationFlightData:
     def test_flightdata_telemetry_frame_roundtrips_dict(self):
         import numpy as np
 
-        from tensornet.simulation import TelemetryFrame
+        from tensornet.sim.simulation import TelemetryFrame
 
         frame = TelemetryFrame(
             timestamp=0.0,
@@ -2493,7 +2493,7 @@ class TestSimulationFlightData:
     def test_flightdata_record_computes_duration(self):
         import numpy as np
 
-        from tensornet.simulation import FlightRecord, TelemetryFrame
+        from tensornet.sim.simulation import FlightRecord, TelemetryFrame
 
         record = FlightRecord(
             flight_id="TEST_001", vehicle_id="HGV-1", date="2024-01-01"
@@ -2511,7 +2511,7 @@ class TestSimulationFlightData:
         assert record.sample_rate > 9
 
     def test_flightdata_csv_parsing_extracts_frames(self):
-        from tensornet.simulation import TelemetryFormat, parse_telemetry
+        from tensornet.sim.simulation import TelemetryFormat, parse_telemetry
 
         csv_data = """time,lat,lon,alt,vn,ve,vd,mach
 0.0,34.0,-118.0,10000,100,0,-10,5.0
@@ -2527,7 +2527,7 @@ class TestSimulationFlightData:
     def test_flightdata_trajectory_reconstruction_full_state(self):
         import numpy as np
 
-        from tensornet.simulation import (FlightRecord, TelemetryFrame,
+        from tensornet.sim.simulation import (FlightRecord, TelemetryFrame,
                                           TrajectoryReconstruction)
 
         # Create synthetic flight data
@@ -2553,7 +2553,7 @@ class TestSimulationRealTimeCFD:
     """Test real-time CFD coupling components."""
 
     def test_rtcfd_aero_table_config_stores_dimensions(self):
-        from tensornet.simulation import AeroTableConfig
+        from tensornet.sim.simulation import AeroTableConfig
 
         config = AeroTableConfig(
             mach_range=(0.5, 8.0), alpha_range=(-5, 20), n_mach=16, n_alpha=26
@@ -2563,7 +2563,7 @@ class TestSimulationRealTimeCFD:
         assert config.n_alpha == 26
 
     def test_rtcfd_aero_table_populates_from_cfd(self):
-        from tensornet.simulation import (AeroTable, AeroTableConfig,
+        from tensornet.sim.simulation import (AeroTable, AeroTableConfig,
                                           create_hypersonic_waverider_model)
 
         config = AeroTableConfig(n_mach=5, n_alpha=11, n_beta=3)
@@ -2575,7 +2575,7 @@ class TestSimulationRealTimeCFD:
         assert table.CL_table.shape == (5, 11, 3)
 
     def test_rtcfd_aero_table_lookup_returns_coefficients(self):
-        from tensornet.simulation import (AeroTable, AeroTableConfig,
+        from tensornet.sim.simulation import (AeroTable, AeroTableConfig,
                                           create_hypersonic_waverider_model)
 
         config = AeroTableConfig(n_mach=10, n_alpha=21, n_beta=5)
@@ -2589,7 +2589,7 @@ class TestSimulationRealTimeCFD:
         assert aero.CD > 0  # Positive drag
 
     def test_rtcfd_interface_computes_forces(self):
-        from tensornet.simulation import (AeroTable, AeroTableConfig,
+        from tensornet.sim.simulation import (AeroTable, AeroTableConfig,
                                           RealTimeCFD,
                                           create_hypersonic_waverider_model)
 
@@ -2617,7 +2617,7 @@ class TestSimulationRealTimeCFD:
         assert aero["L"] > 0
 
     def test_rtcfd_derivative_estimation_positive_slope(self):
-        from tensornet.simulation import (AeroTable, AeroTableConfig,
+        from tensornet.sim.simulation import (AeroTable, AeroTableConfig,
                                           RealTimeCFD,
                                           create_hypersonic_waverider_model)
 
@@ -2638,7 +2638,7 @@ class TestSimulationMission:
     """Test mission simulation components."""
 
     def test_mission_config_stores_coordinates(self):
-        from tensornet.simulation import MissionConfig
+        from tensornet.sim.simulation import MissionConfig
 
         config = MissionConfig(
             launch_lat=34.0, launch_lon=-118.0, target_lat=35.0, target_lon=-117.0
@@ -2650,7 +2650,7 @@ class TestSimulationMission:
     def test_mission_uncertainty_model_samples_near_unity(self):
         import numpy as np
 
-        from tensornet.simulation import UncertaintyModel
+        from tensornet.sim.simulation import UncertaintyModel
 
         uncertainty = UncertaintyModel(density_sigma_pct=5.0)
 
@@ -2660,7 +2660,7 @@ class TestSimulationMission:
         assert 0.8 < np.mean(density_factors) < 1.2
 
     def test_mission_single_run_produces_result(self):
-        from tensornet.simulation import (MissionConfig, MissionSimulator,
+        from tensornet.sim.simulation import (MissionConfig, MissionSimulator,
                                           UncertaintyModel)
 
         config = MissionConfig(
@@ -2679,7 +2679,7 @@ class TestSimulationMission:
         assert isinstance(result.max_mach, float)
 
     def test_mission_monte_carlo_returns_multiple_results(self):
-        from tensornet.simulation import (MissionConfig, MonteCarloConfig,
+        from tensornet.sim.simulation import (MissionConfig, MonteCarloConfig,
                                           UncertaintyModel, run_monte_carlo)
 
         config = MissionConfig(boost_duration_s=15.0, dt_s=0.5, max_time_s=60.0)
@@ -2691,7 +2691,7 @@ class TestSimulationMission:
         assert len(results) == 5
 
     def test_mission_dispersion_analysis_computes_cep(self):
-        from tensornet.simulation import (MissionConfig, MonteCarloConfig,
+        from tensornet.sim.simulation import (MissionConfig, MonteCarloConfig,
                                           UncertaintyModel, analyze_dispersion,
                                           run_monte_carlo)
 
@@ -2706,7 +2706,7 @@ class TestSimulationMission:
         assert "success_rate" in analysis
 
     def test_mission_phases_recorded_in_history(self):
-        from tensornet.simulation import (MissionConfig, MissionPhase,
+        from tensornet.sim.simulation import (MissionConfig, MissionPhase,
                                           MissionSimulator)
 
         config = MissionConfig(

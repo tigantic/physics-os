@@ -18,15 +18,15 @@ Without a single authoritative registry, it is impossible to answer: "What is th
 
 ## Decision
 
-The **capability ledger** (`ledger/`) is the single source of truth for the maturity state of every taxonomy node. Specifically:
+The **capability ledger** (`apps/ledger/`) is the single source of truth for the maturity state of every taxonomy node. Specifically:
 
-1. Each node has a `ledger/nodes/PHY-{PACK}.{NODE}.yaml` file conforming to `ledger/schema.yaml`.
-2. `ledger/index.yaml` is an auto-generated aggregate.
+1. Each node has a `apps/ledger/nodes/PHY-{PACK}.{NODE}.yaml` file conforming to `apps/ledger/schema.yaml`.
+2. `apps/ledger/index.yaml` is an auto-generated aggregate.
 3. The `state` field in each node YAML is the **only** authoritative V-state for that node.
 4. V-state promotions require evidence (test results, benchmark outputs) and are gated by CI.
 5. `PLATFORM_SPECIFICATION.md` remains the source of truth for inventory/LOC metrics but does **not** confer maturity status.
 
-The ledger is regenerated from the generator script (`ledger/generate_ledger.py`) for the initial bootstrap and then maintained via individual node file edits thereafter.
+The ledger is regenerated from the generator script (`apps/ledger/generate_ledger.py`) for the initial bootstrap and then maintained via individual node file edits thereafter.
 
 ## Consequences
 

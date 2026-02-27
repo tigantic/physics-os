@@ -50,7 +50,7 @@ def proof_23_1_tmr_bit_flip():
     """
     print("\nProof 23.1: TMR Bit Flip Correction")
 
-    from tensornet.deployment.rad_hard import (MajorityVoter, TMRConfig,
+    from tensornet.infra.deployment.rad_hard import (MajorityVoter, TMRConfig,
                                                TMRExecutor)
 
     # Create three identical tensors (correct state)
@@ -111,7 +111,7 @@ def proof_23_2_tmr_multiple_flips():
     """
     print("\nProof 23.2: TMR Multiple Bit Flips")
 
-    from tensornet.deployment.rad_hard import MajorityVoter
+    from tensornet.infra.deployment.rad_hard import MajorityVoter
 
     # Create test tensor
     correct_value = torch.tensor([1.0, 2.0, 3.0, 4.0, 5.0], dtype=torch.float64)
@@ -170,7 +170,7 @@ def proof_23_3_conservation_watchdog():
     """
     print("\nProof 23.3: Conservation Watchdog Detection")
 
-    from tensornet.deployment.rad_hard import ConservationWatchdog
+    from tensornet.infra.deployment.rad_hard import ConservationWatchdog
 
     # Use larger thresholds for normal CFD time-stepping
     watchdog = ConservationWatchdog(
@@ -245,7 +245,7 @@ def proof_23_4_checkpoint_rollback():
     """
     print("\nProof 23.4: Checkpoint Rollback Recovery")
 
-    from tensornet.deployment.rad_hard import (CheckpointManager,
+    from tensornet.infra.deployment.rad_hard import (CheckpointManager,
                                                ConservationWatchdog)
 
     # Use temporary directory for checkpoints
@@ -330,7 +330,7 @@ def proof_23_5_tmr_executor():
     """
     print("\nProof 23.5: TMR Executor Integration")
 
-    from tensornet.deployment.rad_hard import TMRConfig, TMRExecutor
+    from tensornet.infra.deployment.rad_hard import TMRConfig, TMRExecutor
 
     # Define a simple kernel
     def my_kernel(x: torch.Tensor) -> torch.Tensor:

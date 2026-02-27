@@ -1064,7 +1064,7 @@ def test_tci_convergence_smooth():
 
 **Benchmarks:**
 ```python
-# benchmarks/bench_flux_batch.py
+# experiments/benchmarks/benchmarks/bench_flux_batch.py
 import torch
 import time
 

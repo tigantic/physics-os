@@ -57,7 +57,7 @@ fluidelite-core/
 ### A3: Proof Infrastructure (HIGH)
 
 ```
-fluidelite-zk/
+crates/fluidelite_zk/
 ├── src/
 │   ├── circuit/
 │   │   ├── mod.rs              # HybridLookupCircuit
@@ -82,7 +82,7 @@ fluidelite-zk/
 ### A4: GPU Integration (MEDIUM)
 
 ```
-fluidelite-zk/
+crates/fluidelite_zk/
 ├── src/
 │   ├── gpu.rs                  # GpuAccelerator (ICICLE interface)
 │   ├── gpu_halo2_prover.rs     # GPU prover pipeline
@@ -128,7 +128,7 @@ contracts/
 ### C1: REST API
 
 ```
-fluidelite-zk/
+crates/fluidelite_zk/
 ├── src/
 │   ├── server.rs               # Axum HTTP server
 │   ├── trustless_api.rs        # API route handlers

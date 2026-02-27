@@ -2,79 +2,277 @@
 # See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 #
 # Each line is a file pattern followed by one or more owners.
-# Order matters - the last matching pattern has the highest precedence.
+# Order matters — the last matching pattern has the highest precedence.
+#
+# Teams:
+#   @tigantic/core      — Engine, algorithms, core tensor operations
+#   @tigantic/cfd       — CFD, fluids, multiphase, free-surface, FSI
+#   @tigantic/quantum   — Quantum mechanics, QFT, condensed matter
+#   @tigantic/sdk       — SDK, API, CLI, integrations
+#   @tigantic/rust      — Rust crates, GPU kernels
+#   @tigantic/security  — Security, ZK proofs, contracts, deploy
+#   @tigantic/docs      — Documentation, governance, onboarding
+#   @tigantic/ml        — ML/AI, neural networks, surrogates
+#   @tigantic/physics   — Cross-domain physics validation
 
-# Default owner for all files
+# ============================================
+# Default
+# ============================================
 * @tigantic/core
 
 # ============================================
-# Core Package
+# tensornet/ — Core Library (13 domain groups)
 # ============================================
-/tensornet/core/ @tigantic/core
-/tensornet/algorithms/ @tigantic/core
+/tensornet/                          @tigantic/core
+/tensornet/__init__.py               @tigantic/core
+/tensornet/core/                     @tigantic/core
+/tensornet/types/                    @tigantic/core
+/tensornet/mps/                      @tigantic/core
+/tensornet/mpo/                      @tigantic/core
+/tensornet/qtt/                      @tigantic/core
+/tensornet/numerics/                 @tigantic/core
+/tensornet/algorithms/               @tigantic/core
+
+# Engine group — execution core, platform, gateway
+/tensornet/engine/                   @tigantic/core
+/tensornet/platform/                 @tigantic/core
+/tensornet/sdk/                      @tigantic/sdk
+/tensornet/genesis/                  @tigantic/core
+
+# CFD & Fluids group
+/tensornet/cfd/                      @tigantic/cfd
+/tensornet/fluids/                   @tigantic/cfd
+/tensornet/multiphase/               @tigantic/cfd
+/tensornet/free_surface/             @tigantic/cfd
+/tensornet/fsi/                      @tigantic/cfd
+/tensornet/heat_transfer/            @tigantic/cfd
+
+# Quantum group
+/tensornet/quantum/                  @tigantic/quantum
+/tensornet/qm/                       @tigantic/quantum
+/tensornet/qft/                      @tigantic/quantum
+/tensornet/condensed_matter/         @tigantic/quantum
+/tensornet/statmech/                 @tigantic/quantum
+/tensornet/electronic_structure/     @tigantic/quantum
+
+# Materials group
+/tensornet/materials/                @tigantic/core @tigantic/physics
+/tensornet/mechanics/                @tigantic/core @tigantic/physics
+/tensornet/phase_field/              @tigantic/core @tigantic/physics
+
+# Aerospace group
+/tensornet/aerospace/                @tigantic/cfd @tigantic/physics
+/tensornet/flight_validation/        @tigantic/cfd @tigantic/physics
+/tensornet/guidance/                 @tigantic/core
+/tensornet/racing/                   @tigantic/cfd
+
+# Astro group
+/tensornet/astro/                    @tigantic/physics
+/tensornet/relativity/               @tigantic/physics
+/tensornet/geophysics/               @tigantic/physics
+
+# Plasma & Nuclear group
+/tensornet/plasma/                   @tigantic/physics
+/tensornet/plasma_nuclear/           @tigantic/physics
+/tensornet/nuclear/                  @tigantic/physics
+/tensornet/fusion/                   @tigantic/physics
+/tensornet/radiation/                @tigantic/physics
+
+# Life Sciences group
+/tensornet/life_sci/                 @tigantic/physics
+/tensornet/biology/                  @tigantic/physics
+/tensornet/biomedical/               @tigantic/physics
+/tensornet/biophysics/               @tigantic/physics
+/tensornet/medical/                  @tigantic/physics
+/tensornet/membrane_bio/             @tigantic/physics
+
+# Energy & Environment group
+/tensornet/energy_env/               @tigantic/physics
+/tensornet/energy/                   @tigantic/physics
+/tensornet/environmental/            @tigantic/physics
+/tensornet/fuel/                     @tigantic/physics
+
+# ML group
+/tensornet/ml/                       @tigantic/ml
+/tensornet/ml_physics/               @tigantic/ml @tigantic/physics
+/tensornet/ml_surrogates/            @tigantic/ml
+/tensornet/neural/                   @tigantic/ml
+/tensornet/discovery/                @tigantic/ml
+
+# Simulation group
+/tensornet/sim/                      @tigantic/core
+/tensornet/simulation/               @tigantic/core
+/tensornet/digital_twin/             @tigantic/core
+/tensornet/coupled/                  @tigantic/core
+/tensornet/multiscale/               @tigantic/core
+/tensornet/mesh_amr/                 @tigantic/core
+
+# Infrastructure group
+/tensornet/infra/                    @tigantic/core @tigantic/security
+/tensornet/distributed/              @tigantic/core
+/tensornet/distributed_tn/           @tigantic/core
+/tensornet/cuda/                     @tigantic/rust
+/tensornet/gpu/                      @tigantic/rust
+/tensornet/hw/                       @tigantic/rust
+
+# Applied group
+/tensornet/applied/                  @tigantic/core
+/tensornet/special_applied/          @tigantic/core
+/tensornet/defense/                  @tigantic/core @tigantic/security
+/tensornet/cyber/                    @tigantic/security
+/tensornet/financial/                @tigantic/core
+/tensornet/urban/                    @tigantic/core
+/tensornet/manufacturing/            @tigantic/core
+/tensornet/autonomy/                 @tigantic/core
+/tensornet/robotics_physics/         @tigantic/core
+/tensornet/emergency/                @tigantic/core
+
+# EM group
+/tensornet/em/                       @tigantic/physics
+/tensornet/optics/                   @tigantic/physics
+/tensornet/semiconductor/            @tigantic/physics
+/tensornet/acoustics/                @tigantic/physics
+
+# Remaining tensornet modules
+/tensornet/packs/                    @tigantic/core
+/tensornet/substrate/                @tigantic/core
+/tensornet/adaptive/                 @tigantic/core
+/tensornet/validation/               @tigantic/core @tigantic/physics
+/tensornet/certification/            @tigantic/core @tigantic/security
+/tensornet/provenance/               @tigantic/core @tigantic/security
+/tensornet/zk/                       @tigantic/security
+/tensornet/exploit/                  @tigantic/security
+/tensornet/visualization/            @tigantic/core
+/tensornet/shaders/                  @tigantic/rust
 
 # ============================================
-# CFD Package
+# hypertensor/ — Licensed Execution Fabric
 # ============================================
-/tensornet/cfd/ @tigantic/cfd
-/benchmarks/ @tigantic/cfd
+/hypertensor/                        @tigantic/core @tigantic/sdk
+/hypertensor/api/                    @tigantic/sdk
+/hypertensor/sdk/                    @tigantic/sdk
+/hypertensor/mcp/                    @tigantic/sdk
+/hypertensor/cli/                    @tigantic/sdk
+/hypertensor/core/                   @tigantic/core @tigantic/security
+/hypertensor/jobs/                   @tigantic/core
+/hypertensor/billing/                @tigantic/core
 
 # ============================================
-# SDK and Server
+# Rust Crates
 # ============================================
-/sdk/ @tigantic/sdk
-/tensornet/server/ @tigantic/sdk
+/crates/                             @tigantic/rust
+/crates/fluidelite_zk/               @tigantic/rust @tigantic/security
+/crates/hyper_bridge/                @tigantic/rust @tigantic/core
+/crates/hyper_core/                  @tigantic/rust @tigantic/core
+/crates/hyper_gpu_py/                @tigantic/rust
+/crates/proof_bridge/                @tigantic/rust @tigantic/security
+/crates/tci_core/                    @tigantic/rust @tigantic/core
+/crates/fluidelite_core/             @tigantic/rust @tigantic/cfd
+/crates/fluidelite_circuits/         @tigantic/rust @tigantic/security
+/crates/fluidelite_infra/            @tigantic/rust
+/crates/qtt_cem/                     @tigantic/rust @tigantic/physics
+/crates/qtt_fea/                     @tigantic/rust @tigantic/physics
+/crates/qtt_opt/                     @tigantic/rust @tigantic/physics
+/Cargo.toml                          @tigantic/rust @tigantic/core
+/Cargo.lock                          @tigantic/rust
 
 # ============================================
-# Rust TCI Extension
+# Applications
 # ============================================
-/tci_core_rust/ @tigantic/rust
+/apps/                               @tigantic/core
+/apps/glass_cockpit/                 @tigantic/rust
+/apps/golden_demo/                   @tigantic/rust
+/apps/global_eye/                    @tigantic/rust
+/apps/qtenet/                        @tigantic/core
+/apps/sovereign_api/                 @tigantic/sdk
+/apps/sovereign_ui/                  @tigantic/sdk
+/apps/trustless_verify/              @tigantic/rust @tigantic/security
+/apps/vlasov_proof/                  @tigantic/rust @tigantic/physics
 
 # ============================================
-# Quantum Extensions
+# Products
 # ============================================
-/tensornet/quantum/ @tigantic/quantum
+/products/                           @tigantic/core
+/products/facial_plastics/           @tigantic/core @tigantic/cfd
+/products/fluidelite/                @tigantic/cfd @tigantic/rust
+/products/fluidelite-zk/             @tigantic/security @tigantic/rust
+/products/the_compressor/            @tigantic/core
 
 # ============================================
-# Documentation
+# Contracts
 # ============================================
-/docs/ @tigantic/docs
-/README.md @tigantic/core @tigantic/docs
-/CONTRIBUTING.md @tigantic/core @tigantic/docs
-
-# ============================================
-# Security-Sensitive Files
-# ============================================
-/.github/workflows/ @tigantic/security @tigantic/core
-/pyproject.toml @tigantic/core
-/requirements*.txt @tigantic/core @tigantic/security
-/.secrets.baseline @tigantic/security
-/scripts/security_scan.py @tigantic/security
+/contracts/                          @tigantic/core @tigantic/security
 
 # ============================================
 # Proofs and Evidence
 # ============================================
-/proofs/ @tigantic/core @tigantic/cfd
-/evidence/ @tigantic/core
+/proofs/                             @tigantic/core @tigantic/security
+/artifacts/                          @tigantic/core
 
 # ============================================
-# Integration Tests
+# Documentation
 # ============================================
-/tests/integration/ @tigantic/core @tigantic/cfd
+/docs/                               @tigantic/docs
+/docs/governance/                    @tigantic/core @tigantic/docs
+/docs/operations/                    @tigantic/core @tigantic/security
+/docs/adr/                           @tigantic/core @tigantic/docs
+/docs/architecture/                  @tigantic/core @tigantic/docs
+/docs/specifications/                @tigantic/core @tigantic/docs
+/docs/regulatory/                    @tigantic/core @tigantic/security
+/docs/tutorials/                     @tigantic/docs
+/README.md                           @tigantic/core @tigantic/docs
+/CONTRIBUTING.md                     @tigantic/core @tigantic/docs
+/PLATFORM_SPECIFICATION.md           @tigantic/core @tigantic/docs
 
 # ============================================
-# Physics Module
+# Tests
 # ============================================
-/Physics/ @tigantic/physics
+/tests/                              @tigantic/core
+/tests/integration/                  @tigantic/core @tigantic/cfd
+/tests/integration_suite/            @tigantic/rust
 
 # ============================================
-# LOCKED - Performance-Critical (DO NOT MODIFY)
+# Tools
 # ============================================
-# These files contain validated, benchmarked optimizations.
-# Changes require attestation review and benchmark proof.
-/SOVEREIGN_ATTESTATION.md @tigantic/core @tigantic/cfd
-/tensornet/substrate/morton_ops.py @tigantic/core
-/tensornet/adaptive/compression.py @tigantic/core
-/tensornet/adaptive/entanglement.py @tigantic/core
+/tools/                              @tigantic/core
+/tools/sync_versions.py              @tigantic/core
+/tools/scripts/                      @tigantic/core
+
+# ============================================
+# Build, CI & Infrastructure
+# ============================================
+/.github/workflows/                  @tigantic/security @tigantic/core
+/Makefile                            @tigantic/core
+/pyproject.toml                      @tigantic/core
+/mkdocs.yml                          @tigantic/core @tigantic/docs
+/requirements*.txt                   @tigantic/core @tigantic/security
+/VERSION                             @tigantic/core
+/CITATION.cff                        @tigantic/core @tigantic/docs
+/Containerfile                       @tigantic/core @tigantic/security
+/mypy.ini                            @tigantic/core
+
+# ============================================
+# Deploy
+# ============================================
+/deploy/                             @tigantic/core @tigantic/security
+
+# ============================================
+# Integrations
+# ============================================
+/integrations/                       @tigantic/sdk
+
+# ============================================
+# Security-Sensitive Files
+# ============================================
+/.secrets.baseline                   @tigantic/security
+/SECURITY.md                         @tigantic/security @tigantic/core
+/SECURITY_OPERATIONS.md              @tigantic/security @tigantic/core
+
+# ============================================
+# LOCKED — Performance-Critical (attestation required)
+# ============================================
+/tensornet/substrate/morton_ops.py   @tigantic/core
+/tensornet/adaptive/compression.py   @tigantic/core
+/tensornet/adaptive/entanglement.py  @tigantic/core
 /tensornet/adaptive/bond_optimizer.py @tigantic/core
-/tensornet/core/mps.py @tigantic/core
+/tensornet/core/mps.py              @tigantic/core

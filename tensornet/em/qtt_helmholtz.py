@@ -38,7 +38,7 @@ from typing import Optional
 import numpy as np
 from numpy.typing import NDArray
 
-from tensornet.vm.operators import (
+from tensornet.engine.vm.operators import (
     laplacian_mpo_1d,
     identity_mpo,
     _embed_1d_mpo,
@@ -459,7 +459,7 @@ def helmholtz_mpo_3d(
     list[NDArray]
         Complex MPO cores for the 3-D Helmholtz operator.
     """
-    from tensornet.vm.operators import laplacian_mpo
+    from tensornet.engine.vm.operators import laplacian_mpo
 
     # Full Laplacian (sums over all 3 dims internally)
     L_cores = laplacian_mpo(n_bits_per_dim, domain)

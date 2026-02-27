@@ -1,0 +1,42 @@
+{
+  "project": "Tier 1 Nielsen Benchmark",
+  "date": "2026-01-06T21:42:58.613532",
+  "solver": "HyperTensor Projection Method (Skew-Symmetric Advection)",
+  "configuration": {
+    "grid": "256\u00d7128",
+    "domain_m": "9.0\u00d73.0",
+    "Re": 5000,
+    "inlet_velocity_m_s": 0.455,
+    "inlet_height_m": 0.16800000000000015,
+    "solver": "vorticity-streamfunction (omega-psi)"
+  },
+  "performance": {
+    "solve_time_s": 137.4,
+    "iterations": 10000,
+    "converged": false
+  },
+  "validation": {
+    "benchmark": "Nielsen et al. / Aalborg University",
+    "rms_error_x1_pct": 33.9,
+    "rms_error_x2_pct": 34.4,
+    "rms_error_avg_pct": 34.15,
+    "target_pct": 10.0,
+    "status": "FAIL"
+  },
+  "mass_conservation": {
+    "imbalance_pct": 98.643,
+    "status": "FAIL"
+  },
+  "breathing_zone": {
+    "min_velocity_m_s": 0.0253,
+    "mean_velocity_m_s": 0.0265,
+    "max_velocity_m_s": 0.0315,
+    "ashrae_55_status": "FAIL"
+  },
+  "deliverables": [
+    "tier1_velocity_field.png",
+    "tier1_profile_validation.png",
+    "tier1_streamlines.png",
+    "tier1_breathing_zone.png"
+  ]
+}

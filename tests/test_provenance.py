@@ -12,7 +12,7 @@ import time
 import numpy as np
 import pytest
 
-from tensornet.provenance import (  # Merkle; Commit; History; Store; Diff; Audit
+from tensornet.infra.provenance import (  # Merkle; Commit; History; Store; Diff; Audit
     AuditEvent, AuditQuery, AuditTrail, Branch, CommitMetadata, DiffEngine,
     DiffSummary, DiffType, EventSeverity, EventType, FieldCommit, FieldDiff,
     FileSystemBackend, HistoryGraph, MemoryBackend, MerkleDAG, MerkleNode,

@@ -1,18 +1,24 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 #                         HYPERTENSOR WORKSPACE
 #                    Tensor-Compressed Physics at Scale
+#  Version: 4.0.0
 # ═══════════════════════════════════════════════════════════════════════════════
 #
 # Architecture:
-#   crates/hyper_core     - Physics engine core (QTT, MPO, CFD operators)
-#   crates/hyper_bridge   - RAM bridge IPC protocol (Python ↔ Rust streaming)
-#   crates/proof_bridge   - Trustless Physics: trace → ZK proof pipeline
-#   apps/glass_cockpit    - Fighter jet cockpit visualization
-#   apps/global_eye       - Global weather observation platform
-#   apps/trustless_verify - Standalone TPC certificate verifier
-#   QTT-CEM/QTT-CEM      - CEM-QTT: Maxwell FDTD solver (Q16.16 + MPS/MPO)
-#   QTT-FEA/fea-qtt       - FEA-QTT: Hex8 static elasticity solver (Q16.16 + CG)
-#   QTT-OPT/opt-qtt       - OPT-QTT: SIMP topology optimization + inverse problems (Q16.16 + adjoint)
+#   crates/hyper_core         - Physics engine core (QTT, MPO, CFD operators)
+#   crates/hyper_bridge       - RAM bridge IPC protocol (Python ↔ Rust streaming)
+#   crates/proof_bridge       - Trustless Physics: trace → ZK proof pipeline
+#   crates/fluidelite_core    - FluidElite core engine
+#   crates/fluidelite_circuits- FluidElite ZK circuit layer
+#   crates/fluidelite_zk      - FluidElite ZK proving
+#   crates/fluidelite_infra   - FluidElite infrastructure utilities
+#   crates/qtt_cem            - CEM-QTT: Maxwell FDTD solver (Q16.16 + MPS/MPO)
+#   crates/qtt_fea            - FEA-QTT: Hex8 static elasticity solver (Q16.16 + CG)
+#   crates/qtt_opt            - OPT-QTT: SIMP topology optimization (Q16.16 + adjoint)
+#   crates/tci_core_rust      - TCI core Rust implementation
+#   apps/glass_cockpit        - Fighter jet cockpit visualization
+#   apps/global_eye           - Global weather observation platform
+#   apps/trustless_verify     - Standalone TPC certificate verifier
 #
 # Build: cargo build --workspace --release
 # Test:  cargo test --workspace
@@ -20,25 +26,35 @@
 
 [workspace]
 members = [
+    # ── Core engine crates ──────────────────────────────────────────────
     "crates/hyper_core",
     "crates/hyper_bridge",
-    "crates/tci_core",
     "crates/hyper_gpu_py",
+    "crates/tci_core",
     "crates/proof_bridge",
+
+    # ── FluidElite family ───────────────────────────────────────────────
+    "crates/fluidelite_core",
+    "crates/fluidelite_circuits",
+    "crates/fluidelite_zk",
+    "crates/fluidelite_infra",
+
+    # ── QTT solvers ─────────────────────────────────────────────────────
+    "crates/qtt_cem",
+    "crates/qtt_fea",
+    "crates/qtt_opt",
+
+    # ── Applications ────────────────────────────────────────────────────
     "apps/glass_cockpit",
     "apps/global_eye",
-    "apps/trustless_verify",
     "apps/golden_demo",
+    "apps/trustless_verify",
     "apps/vlasov_proof",
-    "fluidelite-core",
-    "fluidelite-circuits",
-    "fluidelite-zk",
-    "fluidelite-infra",
+
+    # ── Test harnesses ──────────────────────────────────────────────────
     "tests/integration_suite",
-    "QTT-CEM/QTT-CEM",
-    "QTT-FEA/fea-qtt",
-    "QTT-OPT/opt-qtt",
-]
+    # ── PyO3 extension module ─────────────────────────────────────────────────
+    "crates/tci_core_rust",]
 exclude = [
     "crates/proof_bridge/fuzz",
 ]

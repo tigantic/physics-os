@@ -1,0 +1,46 @@
+[package]
+name = "fluidelite-infra"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.73.0"
+authors = ["Bradly Biron Baker Adams <brad@tigantic.com>"]
+description = "Infrastructure layer for FluidElite ZK: prover pools, Gevulot integration, dashboard, multi-tenancy"
+license = "LicenseRef-Proprietary"
+repository = "https://github.com/tigantic/FluidElite"
+keywords = ["zk", "prover-pool", "gevulot", "multi-tenant"]
+categories = ["cryptography"]
+
+[lib]
+name = "fluidelite_infra"
+path = "src/lib.rs"
+
+[dependencies]
+# Core tensor primitives (Q16, MPS, MPO, physics_traits)
+fluidelite-core = { path = "../fluidelite_core" }
+# Physics circuits (euler3d, ns_imex, thermal) — for batch prover type bounds
+fluidelite-circuits = { path = "../fluidelite_circuits" }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Numerics (fixed-point for ZK)
+num-traits = "0.2"
+
+# Hashing
+sha2 = "0.10"
+
+# Random (for testing/benchmarks)
+rand = "0.8"
+
+# Hex encoding
+hex = "0.4"
+
+# Logging
+tracing = "0.1"
+
+# Constant-time comparison
+subtle = "2.5"
+
+[dev-dependencies]
+# (tests use types from fluidelite-zk which is already a dep)

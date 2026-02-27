@@ -545,7 +545,7 @@ Project HyperTensor/
 ├── crates/hyper_bridge/        # IPC Protocol [Phase 3/4]
 │   ├── src/ipc.rs              # 132KB shared memory
 │   └── src/swarm.rs            # EntityState protocol [Phase 4]
-├── tci_core_rust/              # Rust TCI library
+├── crates/tci_core_rust/              # Rust TCI library
 ├── proofs/                     # Mathematical proofs
 ├── tests/                      # 60+ test files
 ├── test_planetary.py           # [FINAL] 15-phase validation suite

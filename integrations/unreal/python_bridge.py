@@ -235,7 +235,7 @@ class HyperTensorBridge:
         
         # Create field
         try:
-            from tensornet.substrate import Field, FieldType
+            from tensornet.engine.substrate import Field, FieldType
             
             field_type_str = config.get('field_type', 'vector')
             field_type_map = {
@@ -341,7 +341,7 @@ class HyperTensorBridge:
         
         try:
             # Create slice specification
-            from tensornet.substrate import SliceSpec
+            from tensornet.engine.substrate import SliceSpec
             spec = SliceSpec(axis=axis, position=position, resolution=(res_x, res_y))
             
             # Extract slice
@@ -479,7 +479,7 @@ class HyperTensorBridge:
         try:
             path = payload.decode('utf-8')
             
-            from tensornet.substrate import Field, FieldBundle
+            from tensornet.engine.substrate import Field, FieldBundle
             bundle = FieldBundle.load(path)
             field = Field.deserialize(bundle)
             

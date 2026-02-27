@@ -1,40 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.plasma_nuclear.nuclear.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.nuclear import X
+    from tensornet.nuclear.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.plasma_nuclear.nuclear``.
 """
-Nuclear physics package.
+import importlib as _il
+import sys as _sys
 
-Domains: X.1 Nuclear Structure, X.2 Nuclear Reactions, X.3 Nuclear Astrophysics.
-"""
-
-from .structure import (
-    NuclearShellModel,
-    HartreeFockBogoliubov,
-    NuclearDFT,
-)
-from .reactions import (
-    OpticalModelPotential,
-    RMatrixSolver,
-    HauserFeshbach,
-    DWBATransfer,
-)
-from .astrophysics import (
-    ThermonuclearRate,
-    NuclearReactionNetwork,
-    RProcess,
-    SProcess,
-)
-
-__all__ = [
-    # X.1 Nuclear Structure
-    "NuclearShellModel",
-    "HartreeFockBogoliubov",
-    "NuclearDFT",
-    # X.2 Nuclear Reactions
-    "OpticalModelPotential",
-    "RMatrixSolver",
-    "HauserFeshbach",
-    "DWBATransfer",
-    # X.3 Nuclear Astrophysics
-    "ThermonuclearRate",
-    "NuclearReactionNetwork",
-    "RProcess",
-    "SProcess",
-]
+_real = _il.import_module("tensornet.plasma_nuclear.nuclear")
+_sys.modules[__name__] = _real

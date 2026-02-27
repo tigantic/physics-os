@@ -85,7 +85,7 @@ High standards (Constitution, strict linting, proofs for new algorithms) could i
 ~~Two issues: (a) CI not running benchmarks due to misconfigured module path. (b) Integration tests masked with `|| true`.~~
 
 **Resolution**:
-- ✅ Benchmark path fixed — `benchmarks/` now correctly referenced
+- ✅ Benchmark path fixed — `experiments/benchmarks/benchmarks/` now correctly referenced
 - ✅ Integration tests run properly in CI
 - ✅ Test naming refactored to Constitutional format (181 tests renamed per Article III.3.2)
 
@@ -212,10 +212,10 @@ The project is now **audit-complete** and ready for beta release.
   - [x] Fixed SUPERSONIC_INFLOW BC: added handling in `_apply_bc_x` (commit b5a5ac2)
   - [x] Strang dimensional splitting validation — works correctly
   - [x] Supersonic wedge flow tests with ImmersedBoundary (commit 10e6c14)
-  - [x] Wedge flow demo: `scripts/wedge_flow_demo.py` validates oblique shock relations
+  - [x] Wedge flow demo: `tools/scripts/wedge_flow_demo.py` validates oblique shock relations
 
 - [x] **Performance Profiling**: — DONE (2025-12-21)
-  - Created `scripts/profile_performance.py` with PyTorch profiler
+  - Created `tools/scripts/profile_performance.py` with PyTorch profiler
   - Profiles DMRG, TEBD, Euler1D, Euler2D
   - Identified bottlenecks: `einsum` (63% for DMRG), `_linalg_svd` (25% for TEBD)
   - Chrome trace export with `--save` flag
@@ -246,7 +246,7 @@ The project is now **audit-complete** and ready for beta release.
   - [x] Created CONTRIBUTING.md with TL;DR of Constitution
   - [x] Added `.github/ISSUE_TEMPLATE/good_first_issue.md` template
   - [x] Added `.github/DISCUSSIONS.md` with category setup guide
-  - [x] TeNPy comparison: `scripts/compare_tenpy.py` validates against established library
+  - [x] TeNPy comparison: `tools/scripts/compare_tenpy.py` validates against established library
 
 - [x] **Technical Debt Cleanup**: — DONE (2025-12-21)
   - [x] Reviewed NotImplementedError references — most modules fully implemented
@@ -254,13 +254,13 @@ The project is now **audit-complete** and ready for beta release.
   - Remaining placeholders are in advanced features (adjoint, multi-objective, ROM)
 
 - [x] **Performance & Scaling Tests**: — DONE (2025-12-21)
-  - [x] Created `scripts/scaling_tests.py` with complexity analysis
+  - [x] Created `tools/scripts/scaling_tests.py` with complexity analysis
   - [x] DMRG scales as O(L^2.57), O(chi^0.67) — consistent with expectations
   - [x] Euler1D scales as O(N^1.1) — linear as expected
   - [x] Euler2D is slow (pure Python) but scales as O(N^0.5) — noted for optimization
   - [x] Distributed DMRG already implemented: `tensornet/distributed_tn/distributed_dmrg.py` (531 lines)
   - [x] GPU acceleration already implemented: `tensornet/core/gpu.py` (723 lines)
-  - [x] GPU demo: `scripts/gpu_demo.py` benchmarks einsum, SVD, Roe flux on CPU vs GPU
+  - [x] GPU demo: `tools/scripts/gpu_demo.py` benchmarks einsum, SVD, Roe flux on CPU vs GPU
 
 - [x] **Compliance & Quality**: — DONE (2025-12-21)
   - [x] Created `docs/REQUIREMENTS_TRACEABILITY.md` with requirements → test mapping
@@ -456,10 +456,10 @@ TDVP: d|u⟩/dt = P_T (-L̂|u⟩)  projected onto MPS manifold
 
 | Component | File | Description |
 |-----------|------|-------------|
-| `TMRExecutor` | `deployment/rad_hard.py` | Triple-stream GPU execution |
-| `majority_voter` | `deployment/rad_hard.py` | CUDA kernel for voting |
-| `conservation_watchdog` | `deployment/rad_hard.py` | Energy/mass sanity checks |
-| `checkpoint_manager` | `deployment/rad_hard.py` | Periodic state snapshots |
+| `TMRExecutor` | `deploy/rad_hard.py` | Triple-stream GPU execution |
+| `majority_voter` | `deploy/rad_hard.py` | CUDA kernel for voting |
+| `conservation_watchdog` | `deploy/rad_hard.py` | Energy/mass sanity checks |
+| `checkpoint_manager` | `deploy/rad_hard.py` | Periodic state snapshots |
 
 ---
 

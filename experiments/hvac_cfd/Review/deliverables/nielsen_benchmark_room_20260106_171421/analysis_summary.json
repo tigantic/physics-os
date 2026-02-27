@@ -1,0 +1,56 @@
+{
+  "project": {
+    "name": "Nielsen Benchmark Room",
+    "date": "2026-01-06T17:22:01.915928",
+    "analyst": "HyperTensor HVAC v1.0"
+  },
+  "configuration": {
+    "grid": "256\u00d7128",
+    "domain": "9.0m \u00d7 3.0m",
+    "reynolds_number": 5000,
+    "supply_temperature_C": 17.0,
+    "setpoint_C": 24.0,
+    "inlet_velocity_m_s": 0.455
+  },
+  "validation": {
+    "benchmark": "Nielsen et al. (1978)",
+    "rms_error_pct": 17.0,
+    "target_pct": 10.0,
+    "status": "FAIL",
+    "jet_penetration": {
+      "x1m": 91.3,
+      "x2m": 69.5,
+      "x4m": 44.5,
+      "x6m": 10.4,
+      "x8m": 12.5
+    }
+  },
+  "thermal_comfort": {
+    "standard": "ASHRAE 55-2020",
+    "adpi_pct": 86.3,
+    "adpi_target_pct": 70.0,
+    "grade": "B (Good)",
+    "status": "PASS",
+    "edt_mean_C": -0.08,
+    "edt_range_C": [
+      -5.92,
+      1.19
+    ],
+    "velocity_mean_m_s": 0.095,
+    "velocity_max_m_s": 0.318,
+    "velocity_compliance_pct": 100.0
+  },
+  "temperature": {
+    "mean_C": 23.3,
+    "min_C": 17.0,
+    "max_C": 24.0,
+    "uniformity_pct": 25.5
+  },
+  "recommendation": "Poor temperature uniformity - add mixing or relocate supplies",
+  "figures": {
+    "velocity": "nielsen_benchmark_room_velocity.png",
+    "temperature": "nielsen_benchmark_room_temperature.png",
+    "comfort": "nielsen_benchmark_room_comfort.png",
+    "profiles": "nielsen_benchmark_room_profiles.png"
+  }
+}

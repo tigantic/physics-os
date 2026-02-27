@@ -1221,7 +1221,7 @@ representation that can be optimized for various hardware.
 
     builder.add_example(
         """
-from tensornet.deployment import (
+from tensornet.infra.deployment import (
     TensorRTExporter,
     ExportConfig,
     Precision,
@@ -1300,7 +1300,7 @@ power-efficient package.
 
     builder.add_example(
         """
-from tensornet.deployment import (
+from tensornet.infra.deployment import (
     EmbeddedRuntime,
     JetsonConfig,
     PowerMode,

@@ -19,7 +19,7 @@ import numpy as np
 import pytest
 import torch
 
-from tensornet.fusion.tokamak import (ConfinementReport, PlasmaState,
+from tensornet.plasma_nuclear.fusion.tokamak import (ConfinementReport, PlasmaState,
                                       TokamakReactor)
 
 # ============================================================================

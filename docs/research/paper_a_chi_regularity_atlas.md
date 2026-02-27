@@ -13,10 +13,10 @@
 **Hardware:** NVIDIA GeForce RTX 5070 Laptop GPU, 7.96 GB VRAM, CC 12.0 (Rank Atlas) · CPU/RAM only (QTT Physics VM)  
 **Software:** Python 3.12.3, PyTorch 2.9.1+cu128, CUDA 12.8 (Rank Atlas) · NumPy 2.2.3 (QTT Physics VM)  
 **Campaign Entry Points:**  
-- `scripts/research/rank_atlas_campaign.py --packs ALL --n-bits 4 5 6 7`  
-- `scripts/research/rank_atlas_campaign.py --packs III VI --n-bits 4 5 6 7 8 9`  
-- `scripts/research/rank_atlas_campaign.py --packs ALL --n-bits 10` (protocol compliance)  
-- `scripts/research/dual_measurement_protocol.py` (§6.4 dual-measurement validation)  
+- `tools/scripts/research/rank_atlas_campaign.py --packs ALL --n-bits 4 5 6 7`  
+- `tools/scripts/research/rank_atlas_campaign.py --packs III VI --n-bits 4 5 6 7 8 9`  
+- `tools/scripts/research/rank_atlas_campaign.py --packs ALL --n-bits 10` (protocol compliance)  
+- `tools/scripts/research/dual_measurement_protocol.py` (§6.4 dual-measurement validation)  
 **Evidence Manifest:** `docs/research/evidence_manifest.json` (see Appendix C)  
 **Companion Paper:** *QTT Physics VM: A Domain-Agnostic Tensor Network Runtime for Universal Physics Simulation* (`docs/research/paper_b_qtt_physics_vm.md`)
 
@@ -302,9 +302,9 @@ on 64³ grid (n_bits = 6). SVD truncation tolerance ε = 10⁻⁶. Max rank
 ceiling 2048 (never constraining). Per-component rank tracking for velocity
 (u_x, u_y, u_z) and vorticity (ω_x, ω_y, ω_z).
 
-**Source:** `scripts/research/rank_vs_re_figure1.py`
+**Source:** `tools/scripts/research/rank_vs_re_figure1.py`
 
-**Fitting:** The workflow at `QTeneT/workflows/qtt_turbulence/run_workflow.py`
+**Fitting:** The workflow at `apps/qtenet/workflows/qtt_turbulence/run_workflow.py`
 fits the power law χ ~ Re^α using least-squares regression in log-log space:
 
 $$
@@ -326,7 +326,7 @@ effectively constant.
 
 ### 3.3 Curse-of-Dimensionality Benchmark
 
-**Source:** `QTeneT/src/qtenet/qtenet/benchmarks/curse_scaling.py`
+**Source:** `apps/qtenet/src/qtenet/qtenet/benchmarks/curse_scaling.py`
 
 The benchmark verifies O(log N) memory scaling by measuring QTT parameter
 counts against dense storage from 3D through 6D:
@@ -366,7 +366,7 @@ tolerance ε = 10⁻⁶, max_rank ceiling 2048. GPU: NVIDIA RTX 5070
 (7.96 GB VRAM, CUDA 12.8).
 
 **Source:**
-- Campaign script: `scripts/research/rank_atlas_campaign.py`
+- Campaign script: `tools/scripts/research/rank_atlas_campaign.py`
 - Raw data: `rank_atlas_20pack.json` (352 measurements)
 - Report: `atlas_results_20pack/ATLAS_SUMMARY.md`
 - Visualizations: `atlas_results_20pack/scaling_classes.png`,
@@ -1039,7 +1039,7 @@ class AtlasMeasurement:
 ### 7.5 Measurement Protocol
 
 The production experiment code implementing this protocol is at:
-`scripts/research/rank_atlas_campaign.py` (companion to this document).
+`tools/scripts/research/rank_atlas_campaign.py` (companion to this document).
 It provides `run_single_measurement()`, `run_campaign()`,
 `analyze_campaign()`, and `generate_report()` — covering the full
 pipeline from domain-pack instantiation through statistical analysis.
@@ -1055,7 +1055,7 @@ The protocol for each (pack, complexity, n_bits) triple is:
    (typically 1–10 characteristic time units or to steady state).
 4. **Extract** the QTT bond dimensions and full singular value spectra
    using `get_bond_dimensions()` (existing function in
-   `scripts/research/rank_vs_re_figure1.py`).
+   `tools/scripts/research/rank_vs_re_figure1.py`).
 5. **Compute** entanglement entropy via
    `EntanglementSpectrum.from_singular_values()`.
 6. **Fit** area-law scaling via `AreaLawAnalyzer`.
@@ -1429,7 +1429,7 @@ is *conservative* (reports higher rank than intrinsic). Status:
 
 **Evidence artifacts:**
 - Dual-measurement data: `data/dual_measurement_protocol.json`
-- Script: `scripts/research/dual_measurement_protocol.py`
+- Script: `tools/scripts/research/dual_measurement_protocol.py`
 
 ### 11.2 Pack VI High-Resolution Assessment
 
@@ -1544,16 +1544,16 @@ Total measurement count across all campaigns: **751+**.
 | Hypothesis v1.0 | `docs/legacy/HYPOTHESIS_HISTORY.md` | Formal conjecture, sub-conjectures |
 | Ahmed body certificate | `ahmed_ib_results/trustless_certificate.json` | Cryptographic attestation |
 | Grid reports | `ahmed_ib_results/{128,512,4096}/report.txt` | Compression data |
-| Re scaling study | `scripts/research/rank_vs_re_figure1.py` | Taylor-Green rank measurement |
-| Re sweep workflow | `QTeneT/workflows/qtt_turbulence/run_workflow.py` | χ ~ Re^α fitting |
+| Re scaling study | `tools/scripts/research/rank_vs_re_figure1.py` | Taylor-Green rank measurement |
+| Re sweep workflow | `apps/qtenet/workflows/qtt_turbulence/run_workflow.py` | χ ~ Re^α fitting |
 | Bond optimizer | `tensornet/adaptive/bond_optimizer.py` | BondDimensionTracker |
 | Entanglement analysis | `tensornet/adaptive/entanglement.py` | EntanglementSpectrum, AreaLawAnalyzer |
 | RMT universality | `tensornet/genesis/rmt/universality.py` | Wigner semicircle, Marchenko-Pastur |
 | Domain packs | `tensornet/packs/pack_{i..xx}.py` | 20 physics domain implementations |
 | Schmidt decomposition | `oracle/qtt_encoder.py` | SVD-based Schmidt rank computation |
-| Curse-breaking benchmark | `QTeneT/src/qtenet/qtenet/benchmarks/curse_scaling.py` | O(log N) scaling proof |
+| Curse-breaking benchmark | `apps/qtenet/src/qtenet/qtenet/benchmarks/curse_scaling.py` | O(log N) scaling proof |
 | Coverage assessment | `docs/research/computational_physics_coverage_assessment.md` | 140 sub-domain taxonomy |
-| Rank Atlas campaign | `scripts/research/rank_atlas_campaign.py` | 20-pack measurement + analysis pipeline |
+| Rank Atlas campaign | `tools/scripts/research/rank_atlas_campaign.py` | 20-pack measurement + analysis pipeline |
 | Atlas raw data (JSON) | `rank_atlas_20pack.json` | 352 measurements, all 20 packs |
 | Atlas raw data (Parquet) | `rank_atlas_20pack.parquet` | Compressed measurement format |
 | Atlas summary report | `atlas_results_20pack/ATLAS_SUMMARY.md` | Campaign report: Supported |
@@ -1562,7 +1562,7 @@ Total measurement count across all campaigns: **751+**.
 | Deep sweep data (III/VI) | `rank_atlas_deep_III_VI.json` | 162 measurements, n_bits 4–9 |
 | Deep sweep report | `atlas_results_deep_III_VI/ATLAS_SUMMARY.md` | Polylog scaling analysis |
 | Evidence manifest | `docs/research/evidence_manifest.json` | Claim-to-artifact index with SHA-256 hashes |
-| Dual-measurement protocol | `scripts/research/dual_measurement_protocol.py` | Path A (VM) vs Path B (dense→QTT) validation |
+| Dual-measurement protocol | `tools/scripts/research/dual_measurement_protocol.py` | Path A (VM) vs Path B (dense→QTT) validation |
 | Dual-measurement data | `data/dual_measurement_protocol.json` | 20 matched configs + 3 fixed-T supp: 0 B_HIGHER |
 | Pack VI high-res data | `data/rank_atlas_pack_vi_highres.json` | n_bits 8–12, 3 trials: rank saturates at χ=25 |
 | V0.4 n_bits=10 expansion | `data/rank_atlas_v04_nbits10.json` | 180 measurements, 6 packs, protocol compliance |

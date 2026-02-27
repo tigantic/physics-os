@@ -1,43 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.energy_env.urban.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.urban import X
+    from tensornet.urban.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.energy_env.urban``.
 """
-TensorNet Urban Module - Urban Canyon Wind Physics
+import importlib as _il
+import sys as _sys
 
-Phase 7: The Urban Canyon
-=========================
-
-Simulates micro-climate wind tunnel effects in urban environments.
-Wind hits buildings, accelerates around corners (Venturi Effect),
-and creates dangerous updrafts/downdrafts.
-
-Target Markets:
-- Logistics: Amazon Prime Air, Google Wing drone delivery
-- Architecture: Wind load analysis, pedestrian comfort
-- Urban Air Mobility: Flying taxis, eVTOL corridors
-
-Physics:
-- No-slip boundary conditions (zero velocity at walls)
-- Conservation of mass (wind accelerates around obstacles)
-- Venturi effect (flow speedup in narrow passages)
-- Updraft/downdraft generation at building faces
-
-Outputs:
-- Kill Zones: High turbulence areas (no-fly)
-- Green Lanes: Safe flight corridors
-- Wind acceleration maps
-"""
-
-from tensornet.urban.city_gen import BuildingSpec, VoxelCity
-from tensornet.urban.solver import (
-                                    FlightSafetyReport,
-                                    UrbanFlowSolver,
-                                    analyze_flight_safety,
-                                    solve_urban_flow,
-)
-
-__all__ = [
-    "VoxelCity",
-    "BuildingSpec",
-    "solve_urban_flow",
-    "UrbanFlowSolver",
-    "analyze_flight_safety",
-    "FlightSafetyReport",
-]
+_real = _il.import_module("tensornet.energy_env.urban")
+_sys.modules[__name__] = _real

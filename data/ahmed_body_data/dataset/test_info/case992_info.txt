@@ -1,0 +1,8 @@
+Length : 1169.0 
+Width : 489.0 
+Height : 268.0 
+GroundClearance : 47.5 
+SlantAngle : 32.5 
+FilletRadius : 80.0 
+Velocity : 20.0 
+Re (based on length) : 1579729.73

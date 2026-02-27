@@ -75,7 +75,7 @@ jobs:
           pip install torch numpy scipy
 
       - name: Check for import cycles
-        run: python scripts/check_import_cycles.py
+        run: python tools/scripts/check_import_cycles.py
 
   # ============================================
   # Stage 1: Lint & Format
@@ -95,23 +95,17 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ruff black isort pre-commit
+          pip install ruff pre-commit
 
       - name: Run pre-commit hooks
         run: pre-commit run --all-files --show-diff-on-failure
         continue-on-error: true
 
-      - name: Check formatting (Black)
-        run: black --check tensornet tests benchmarks scripts proofs
-        continue-on-error: true
-
-      - name: Check imports (isort)
-        run: isort --check-only tensornet tests benchmarks scripts proofs
-        continue-on-error: true
-
       - name: Lint (Ruff)
-        run: ruff check tensornet tests benchmarks scripts proofs
-        continue-on-error: true
+        run: ruff check tensornet hypertensor tests proofs
+
+      - name: Format check (Ruff)
+        run: ruff format --check tensornet hypertensor tests proofs
 
   # ============================================
   # Stage 2: Type Checking
@@ -290,15 +284,13 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Set up Rust
-        uses: dtolnay/rust-action@stable
-        with:
-          toolchain: stable
+        uses: dtolnay/rust-toolchain@stable
 
       - name: Install maturin
         run: pip install maturin
 
       - name: Build Rust extension
-        working-directory: tci_core_rust
+        working-directory: crates/tci_core_rust
         run: maturin build --release
         continue-on-error: true  # Rust extension is optional
 

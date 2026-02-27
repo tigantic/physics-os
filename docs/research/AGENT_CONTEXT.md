@@ -51,7 +51,7 @@ Project HyperTensor/
 
 | File | Purpose | Priority |
 |------|---------|:--------:|
-| [CONSTITUTION.md](CONSTITUTION.md) | Coding standards, governance, principles | 🔴 HIGH |
+| [CONSTITUTION.md](../governance/CONSTITUTION.md) | Coding standards, governance, principles | 🔴 HIGH |
 | [HYPERTENSOR_VV_FRAMEWORK.md](HYPERTENSOR_VV_FRAMEWORK.md) | V&V methodology, ASME/NASA alignment | 🔴 HIGH |
 | [docs/INDEX.md](docs/INDEX.md) | Master documentation hub | 🟡 MEDIUM |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution guidelines | 🟡 MEDIUM |
@@ -279,7 +279,7 @@ dtype=torch.float64
 ```
 
 ### 4. Import Cycles
-- Run `python scripts/check_import_cycles.py` before committing
+- Run `python tools/scripts/check_import_cycles.py` before committing
 - Avoid circular imports between tensornet submodules
 
 ### 5. File Naming
@@ -395,7 +395,7 @@ cd glass-cockpit && cargo run --release --bin phase3
 | `tensornet/cfd/` | All CFD solvers, Riemann, WENO |
 | `tensornet/validation/` | V&V framework, regression detection |
 | `tests/integration/` | MMS tests, benchmark validations |
-| `scripts/` | Automation, profiling, CI helpers |
+| `tools/scripts/` | Automation, profiling, CI helpers |
 | `proofs/` | Mathematical verification scripts |
 | `docs/architecture/` | System design documents |
 | `docs/phases/` | Phase completion reports |
@@ -416,7 +416,7 @@ cd glass-cockpit && cargo run --release --bin phase3
 
 ### Development
 - [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute
-- [CONSTITUTION.md](CONSTITUTION.md) - Standards and governance
+- [CONSTITUTION.md](../governance/CONSTITUTION.md) - Standards and governance
 - [.github/workflows/](../.github/workflows/) - CI/CD pipelines
 
 ---
@@ -424,7 +424,7 @@ cd glass-cockpit && cargo run --release --bin phase3
 ## 🚀 Getting Started (New Agent Checklist)
 
 1. ☐ Read this document completely
-2. ☐ Skim [CONSTITUTION.md](CONSTITUTION.md) for code standards
+2. ☐ Skim [CONSTITUTION.md](../governance/CONSTITUTION.md) for code standards
 3. ☐ Review [HYPERTENSOR_VV_FRAMEWORK.md](HYPERTENSOR_VV_FRAMEWORK.md) for V&V requirements
 4. ☐ Understand the tensornet module structure (`ls tensornet/`)
 5. ☐ Run tests to verify environment: `pytest tests/ -x -v --tb=short`

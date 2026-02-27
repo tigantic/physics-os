@@ -13,10 +13,22 @@ Usage:
 
 import os
 import random
+import sys
+from pathlib import Path
 from typing import Generator
 
 import numpy as np
 import pytest
+
+# ── Ensure moved directories are importable ─────────────────────────────────
+_repo_root = Path(__file__).resolve().parent.parent
+_benchmarks_parent = _repo_root / "experiments" / "benchmarks"
+_tools_dir = _repo_root / "tools"
+_proofs_dir = _repo_root / "proofs"
+for _p in (_benchmarks_parent, _tools_dir, _proofs_dir):
+    _p_str = str(_p)
+    if _p_str not in sys.path:
+        sys.path.insert(0, _p_str)
 
 # =============================================================================
 # DETERMINISTIC SEEDING

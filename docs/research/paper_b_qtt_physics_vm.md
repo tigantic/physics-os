@@ -13,7 +13,7 @@
 **Hardware:** CPU/RAM only (NumPy backend; no GPU required for VM execution)  
 **Software:** Python 3.12.3, NumPy 2.2.3  
 **Entry Points:**  
-- `scripts/research/vm_resolution_sweep.py` (resolution-independence sweep)  
+- `tools/scripts/research/vm_resolution_sweep.py` (resolution-independence sweep)  
 **VM Source:** `tensornet/vm/` (IR, runtime, operators, compilers)  
 **Benchmark Data:** `data/vm_7domain_benchmark.json`, `data/vm_resolution_sweep.json`  
 **Companion Paper:** *χ-Regularity and Rank Atlas: QTT Bond-Dimension Universality Across Physical Law* (Paper A, `docs/research/paper_a_chi_regularity_atlas.md`)
@@ -345,8 +345,8 @@ The QTT Physics VM is, to our knowledge, the first demonstration of:
 | VM compilers (7) | `tensornet/vm/compilers/` | Burgers, Maxwell, Schrödinger, Diffusion, Vlasov, NS-2D, Maxwell-3D |
 | VM 7-domain benchmark | `data/vm_7domain_benchmark.json` | 7/7 pass, bounded rank |
 | VM resolution sweep | `data/vm_resolution_sweep.json` | χ ~ (log₂N)^b polylogarithmic scaling |
-| Resolution sweep script | `scripts/research/vm_resolution_sweep.py` | Automated sweep across 5 domains × 5 resolutions |
-| Dual-measurement protocol | `scripts/research/dual_measurement_protocol.py` | Path A (VM) vs Path B (dense→QTT) validation |
+| Resolution sweep script | `tools/scripts/research/vm_resolution_sweep.py` | Automated sweep across 5 domains × 5 resolutions |
+| Dual-measurement protocol | `tools/scripts/research/dual_measurement_protocol.py` | Path A (VM) vs Path B (dense→QTT) validation |
 | Dual-measurement data | `data/dual_measurement_protocol.json` | 20 matched configs + 3 fixed-T supp: 0 B_HIGHER |
 
 ---

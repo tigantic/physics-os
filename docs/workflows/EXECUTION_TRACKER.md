@@ -423,10 +423,10 @@ Project HyperTensor/
 
 | Component | File | Status | Description |
 |-----------|------|--------|-------------|
-| Mach 5 Wedge Simulation | `scripts/mach5_wedge.py` | ✅ Implemented | Full validation script |
+| Mach 5 Wedge Simulation | `tools/scripts/mach5_wedge.py` | ✅ Implemented | Full validation script |
 | TDVP-2 Algorithm | `algorithms/tdvp.py` | ✅ Implemented | Two-site time evolution |
 | TDVP Imaginary Time | `algorithms/tdvp.py` | ✅ Implemented | Ground state via β-evolution |
-| DMR Benchmark | `benchmarks/double_mach_reflection.py` | ✅ Implemented | Woodward-Colella test |
+| DMR Benchmark | `experiments/benchmarks/experiments/benchmarks/benchmarks/double_mach_reflection.py` | ✅ Implemented | Woodward-Colella test |
 | TDVPResult Dataclass | `algorithms/tdvp.py` | ✅ Implemented | Result container |
 
 #### Phase 5: Tensor Network CFD Coupling (QTT)
@@ -441,7 +441,7 @@ Project HyperTensor/
 | qtt_to_euler | `cfd/qtt.py` | ✅ Implemented | QTT → Euler2DState reconstruction |
 | compression_analysis | `cfd/qtt.py` | ✅ Implemented | χ vs error analysis |
 | estimate_area_law_exponent | `cfd/qtt.py` | ✅ Implemented | Area Law validation |
-| QTT Benchmark | `benchmarks/qtt_compression.py` | ✅ Implemented | 4-case validation suite |
+| QTT Benchmark | `experiments/benchmarks/experiments/benchmarks/benchmarks/qtt_compression.py` | ✅ Implemented | 4-case validation suite |
 
 #### Phase 6: Navier-Stokes Viscous Terms
 
@@ -462,7 +462,7 @@ Project HyperTensor/
 | stagnation_temperature | `cfd/viscous.py` | ✅ Implemented | T₀ = T(1 + (γ-1)/2 M²) |
 | recovery_temperature | `cfd/viscous.py` | ✅ Implemented | T_r = T(1 + r(γ-1)/2 M²) |
 | stanton_number | `cfd/viscous.py` | ✅ Implemented | St = h/(ρuCp) |
-| Blasius Validation | `benchmarks/blasius_validation.py` | ✅ Implemented | 5-case viscous validation |
+| Blasius Validation | `experiments/benchmarks/experiments/benchmarks/benchmarks/blasius_validation.py` | ✅ Implemented | 5-case viscous validation |
 
 #### Phase 7: Coupled NS, 3D Euler, Real-Gas
 
@@ -506,7 +506,7 @@ Project HyperTensor/
 | ReactiveConfig | `cfd/reactive_ns.py` | ✅ Implemented | Reactive NS config |
 | ReactiveNS | `cfd/reactive_ns.py` | ✅ Implemented | Coupled chemistry+NS |
 | reactive_flat_plate_ic | `cfd/reactive_ns.py` | ✅ Implemented | Reacting flat plate IC |
-| SBLI Benchmark | `benchmarks/sbli_benchmark.py` | ✅ Implemented | Compression corner SBLI |
+| SBLI Benchmark | `experiments/benchmarks/benchmarks/sbli_benchmark.py` | ✅ Implemented | Compression corner SBLI |
 
 #### Phase 9: RANS Turbulence, Adjoint Solver, Shape Optimization
 
@@ -591,28 +591,28 @@ Project HyperTensor/
 
 | Component | File | Status | Description |
 |-----------|------|--------|-------------|
-| Precision | `deployment/tensorrt_export.py` | ✅ Implemented | FP32, FP16, INT8, TF32 modes |
-| OptimizationLevel | `deployment/tensorrt_export.py` | ✅ Implemented | O0-O3 TensorRT optimization |
-| ExportConfig | `deployment/tensorrt_export.py` | ✅ Implemented | ONNX/TRT export configuration |
-| ExportResult | `deployment/tensorrt_export.py` | ✅ Implemented | Export result container |
-| CFDInferenceModule | `deployment/tensorrt_export.py` | ✅ Implemented | Exportable CFD module |
-| TTContraction | `deployment/tensorrt_export.py` | ✅ Implemented | TT contraction as nn.Module |
-| export_to_onnx | `deployment/tensorrt_export.py` | ✅ Implemented | PyTorch → ONNX export |
-| optimize_for_tensorrt | `deployment/tensorrt_export.py` | ✅ Implemented | ONNX → TRT engine build |
-| validate_exported_model | `deployment/tensorrt_export.py` | ✅ Implemented | Reference output validation |
-| benchmark_inference | `deployment/tensorrt_export.py` | ✅ Implemented | Latency/throughput benchmark |
-| TensorRTExporter | `deployment/tensorrt_export.py` | ✅ Implemented | High-level export interface |
-| PowerMode | `deployment/embedded.py` | ✅ Implemented | MAXN, 50W, 30W, 15W, 10W |
-| ThermalState | `deployment/embedded.py` | ✅ Implemented | NORMAL, THROTTLE_1/2, CRITICAL |
-| JetsonConfig | `deployment/embedded.py` | ✅ Implemented | Jetson deployment config |
-| MemoryProfile | `deployment/embedded.py` | ✅ Implemented | SWaP memory analysis |
-| InferenceMetrics | `deployment/embedded.py` | ✅ Implemented | Real-time metrics container |
-| MemoryPool | `deployment/embedded.py` | ✅ Implemented | Pre-allocated memory pool |
-| ThermalMonitor | `deployment/embedded.py` | ✅ Implemented | Thermal throttling management |
-| EmbeddedRuntime | `deployment/embedded.py` | ✅ Implemented | Runtime manager for HIL |
-| configure_jetson_power | `deployment/embedded.py` | ✅ Implemented | nvpmodel interface |
-| optimize_memory_layout | `deployment/embedded.py` | ✅ Implemented | Cache-aligned tensors |
-| create_inference_pipeline | `deployment/embedded.py` | ✅ Implemented | Full deployment pipeline |
+| Precision | `deploy/config/tensorrt_export.py` | ✅ Implemented | FP32, FP16, INT8, TF32 modes |
+| OptimizationLevel | `deploy/config/tensorrt_export.py` | ✅ Implemented | O0-O3 TensorRT optimization |
+| ExportConfig | `deploy/config/tensorrt_export.py` | ✅ Implemented | ONNX/TRT export configuration |
+| ExportResult | `deploy/config/tensorrt_export.py` | ✅ Implemented | Export result container |
+| CFDInferenceModule | `deploy/config/tensorrt_export.py` | ✅ Implemented | Exportable CFD module |
+| TTContraction | `deploy/config/tensorrt_export.py` | ✅ Implemented | TT contraction as nn.Module |
+| export_to_onnx | `deploy/config/tensorrt_export.py` | ✅ Implemented | PyTorch → ONNX export |
+| optimize_for_tensorrt | `deploy/config/tensorrt_export.py` | ✅ Implemented | ONNX → TRT engine build |
+| validate_exported_model | `deploy/config/tensorrt_export.py` | ✅ Implemented | Reference output validation |
+| benchmark_inference | `deploy/config/tensorrt_export.py` | ✅ Implemented | Latency/throughput benchmark |
+| TensorRTExporter | `deploy/config/tensorrt_export.py` | ✅ Implemented | High-level export interface |
+| PowerMode | `deploy/config/embedded.py` | ✅ Implemented | MAXN, 50W, 30W, 15W, 10W |
+| ThermalState | `deploy/config/embedded.py` | ✅ Implemented | NORMAL, THROTTLE_1/2, CRITICAL |
+| JetsonConfig | `deploy/config/embedded.py` | ✅ Implemented | Jetson deployment config |
+| MemoryProfile | `deploy/config/embedded.py` | ✅ Implemented | SWaP memory analysis |
+| InferenceMetrics | `deploy/config/embedded.py` | ✅ Implemented | Real-time metrics container |
+| MemoryPool | `deploy/config/embedded.py` | ✅ Implemented | Pre-allocated memory pool |
+| ThermalMonitor | `deploy/config/embedded.py` | ✅ Implemented | Thermal throttling management |
+| EmbeddedRuntime | `deploy/config/embedded.py` | ✅ Implemented | Runtime manager for HIL |
+| configure_jetson_power | `deploy/config/embedded.py` | ✅ Implemented | nvpmodel interface |
+| optimize_memory_layout | `deploy/config/embedded.py` | ✅ Implemented | Cache-aligned tensors |
+| create_inference_pipeline | `deploy/config/embedded.py` | ✅ Implemented | Full deployment pipeline |
 | IntegrationMethod | `guidance/trajectory.py` | ✅ Implemented | EULER, RK2, RK4, RK45 |
 | AtmosphereType | `guidance/trajectory.py` | ✅ Implemented | ISA, EXPONENTIAL, US76, MARS |
 | AtmosphericModel | `guidance/trajectory.py` | ✅ Implemented | T, p, ρ, a at altitude |
@@ -919,25 +919,25 @@ Project HyperTensor/
 | CSSMinifier | `site/assets.py` | ✅ Implemented | CSS minification |
 | JSMinifier | `site/assets.py` | ✅ Implemented | JavaScript minification |
 | ImageOptimizer | `site/assets.py` | ✅ Implemented | Image optimization |
-| BenchmarkConfig | `benchmarks/benchmark_suite.py` | ✅ Implemented | Benchmark configuration |
-| PrecisionMode | `benchmarks/benchmark_suite.py` | ✅ Implemented | FP32/FP16/INT8/TF32 enum |
-| LatencyStats | `benchmarks/benchmark_suite.py` | ✅ Implemented | Latency statistics dataclass |
-| MemoryStats | `benchmarks/benchmark_suite.py` | ✅ Implemented | Memory usage statistics |
-| ThroughputStats | `benchmarks/benchmark_suite.py` | ✅ Implemented | Throughput statistics |
-| AccuracyStats | `benchmarks/benchmark_suite.py` | ✅ Implemented | Numerical accuracy metrics |
-| BenchmarkResult | `benchmarks/benchmark_suite.py` | ✅ Implemented | Complete benchmark result |
-| LatencyBenchmark | `benchmarks/benchmark_suite.py` | ✅ Implemented | Latency benchmark runner |
-| ProfileConfig | `benchmarks/profiler.py` | ✅ Implemented | Profiler configuration |
-| ProfileResult | `benchmarks/profiler.py` | ✅ Implemented | Profiling result container |
-| LayerProfile | `benchmarks/profiler.py` | ✅ Implemented | Per-layer timing data |
-| TensorRTProfiler | `benchmarks/profiler.py` | ✅ Implemented | TensorRT profiling interface |
-| ReportFormat | `benchmarks/reports.py` | ✅ Implemented | MARKDOWN/HTML/JSON/CSV enum |
-| BenchmarkReport | `benchmarks/reports.py` | ✅ Implemented | Report generation utility |
-| OptimizationRecommendation | `benchmarks/analysis.py` | ✅ Implemented | Optimization suggestion |
-| OptimizationCategory | `benchmarks/analysis.py` | ✅ Implemented | PRECISION/BATCHING/MEMORY enum |
-| ImpactLevel | `benchmarks/analysis.py` | ✅ Implemented | LOW/MEDIUM/HIGH/CRITICAL enum |
-| EffortLevel | `benchmarks/analysis.py` | ✅ Implemented | TRIVIAL/LOW/MEDIUM/HIGH enum |
-| PerformanceAnalyzer | `benchmarks/analysis.py` | ✅ Implemented | Performance analysis engine |
+| BenchmarkConfig | `experiments/benchmarks/benchmarks/benchmark_suite.py` | ✅ Implemented | Benchmark configuration |
+| PrecisionMode | `experiments/benchmarks/benchmarks/benchmark_suite.py` | ✅ Implemented | FP32/FP16/INT8/TF32 enum |
+| LatencyStats | `experiments/benchmarks/benchmarks/benchmark_suite.py` | ✅ Implemented | Latency statistics dataclass |
+| MemoryStats | `experiments/benchmarks/benchmarks/benchmark_suite.py` | ✅ Implemented | Memory usage statistics |
+| ThroughputStats | `experiments/benchmarks/benchmarks/benchmark_suite.py` | ✅ Implemented | Throughput statistics |
+| AccuracyStats | `experiments/benchmarks/benchmarks/benchmark_suite.py` | ✅ Implemented | Numerical accuracy metrics |
+| BenchmarkResult | `experiments/benchmarks/benchmarks/benchmark_suite.py` | ✅ Implemented | Complete benchmark result |
+| LatencyBenchmark | `experiments/benchmarks/benchmarks/benchmark_suite.py` | ✅ Implemented | Latency benchmark runner |
+| ProfileConfig | `experiments/benchmarks/benchmarks/profiler.py` | ✅ Implemented | Profiler configuration |
+| ProfileResult | `experiments/benchmarks/benchmarks/profiler.py` | ✅ Implemented | Profiling result container |
+| LayerProfile | `experiments/benchmarks/benchmarks/profiler.py` | ✅ Implemented | Per-layer timing data |
+| TensorRTProfiler | `experiments/benchmarks/benchmarks/profiler.py` | ✅ Implemented | TensorRT profiling interface |
+| ReportFormat | `experiments/benchmarks/benchmarks/reports.py` | ✅ Implemented | MARKDOWN/HTML/JSON/CSV enum |
+| BenchmarkReport | `experiments/benchmarks/benchmarks/reports.py` | ✅ Implemented | Report generation utility |
+| OptimizationRecommendation | `experiments/benchmarks/benchmarks/analysis.py` | ✅ Implemented | Optimization suggestion |
+| OptimizationCategory | `experiments/benchmarks/benchmarks/analysis.py` | ✅ Implemented | PRECISION/BATCHING/MEMORY enum |
+| ImpactLevel | `experiments/benchmarks/benchmarks/analysis.py` | ✅ Implemented | LOW/MEDIUM/HIGH/CRITICAL enum |
+| EffortLevel | `experiments/benchmarks/benchmarks/analysis.py` | ✅ Implemented | TRIVIAL/LOW/MEDIUM/HIGH enum |
+| PerformanceAnalyzer | `experiments/benchmarks/benchmarks/analysis.py` | ✅ Implemented | Performance analysis engine |
 | FlightDataSource | `flight_validation/data_loader.py` | ✅ Implemented | WIND_TUNNEL/FLIGHT_TEST/CFD enum |
 | FlightDataFormat | `flight_validation/data_loader.py` | ✅ Implemented | CSV/JSON/HDF5/MATLAB enum |
 | FlightCondition | `flight_validation/data_loader.py` | ✅ Implemented | Freestream conditions dataclass |

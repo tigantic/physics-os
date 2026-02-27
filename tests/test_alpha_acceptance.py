@@ -38,7 +38,7 @@ from hypertensor.core.sanitizer import sanitize_result
 # ── Baselines ───────────────────────────────────────────────────────
 
 _BASELINE_PATH = (
-    pathlib.Path(__file__).resolve().parent.parent / "benchmarks" / "golden_baselines.json"
+    pathlib.Path(__file__).resolve().parent.parent / "experiments" / "benchmarks" / "benchmarks" / "golden_baselines.json"
 )
 
 with open(_BASELINE_PATH) as _f:
@@ -126,7 +126,7 @@ class TestG10_1_BlockingGates:
     def test_gate_matrix_exists(self) -> None:
         """LAUNCH_GATE_MATRIX.json must exist."""
         root = pathlib.Path(__file__).resolve().parent.parent
-        assert (root / "LAUNCH_GATE_MATRIX.json").exists()
+        assert (root / "docs" / "operations" / "LAUNCH_GATE_MATRIX.json").exists()
 
 
 # ════════════════════════════════════════════════════════════════════

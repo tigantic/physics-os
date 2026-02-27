@@ -274,9 +274,9 @@ result = lap.apply(field)  # Rank stays bounded
 
 | Benchmark | File | Validated By |
 |-----------|------|--------------|
-| Sod Shock Tube | `benchmarks/sod_shock_tube.py` | L1(ρ) = 1.66e-02 vs exact Riemann |
-| QTT Compression | `benchmarks/qtt_compression.py` | 4/4 tests, 315× compression |
-| Blasius Boundary Layer | `benchmarks/blasius_validation.py` | 5/5 viscous term validations |
+| Sod Shock Tube | `experiments/benchmarks/experiments/benchmarks/benchmarks/sod_shock_tube.py` | L1(ρ) = 1.66e-02 vs exact Riemann |
+| QTT Compression | `experiments/benchmarks/experiments/benchmarks/benchmarks/qtt_compression.py` | 4/4 tests, 315× compression |
+| Blasius Boundary Layer | `experiments/benchmarks/experiments/benchmarks/benchmarks/blasius_validation.py` | 5/5 viscous term validations |
 | Taylor-Green Vortex | `demos/millennium_hunter.py` | 32³→512³ resolution scaling |
 
 **Test Results:**

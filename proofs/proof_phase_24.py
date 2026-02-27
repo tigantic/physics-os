@@ -200,7 +200,7 @@ def proof_24_3_rom_methods():
     """
     print("\nProof 24.3: ROM Methods (POD/DMD)")
 
-    from tensornet.digital_twin.reduced_order import (DMDModel, PODModel,
+    from tensornet.infra.digital_twin.reduced_order import (DMDModel, PODModel,
                                                       ROMConfig)
 
     # Generate synthetic snapshot data (sine waves with decay)
@@ -281,7 +281,7 @@ def proof_24_4_consensus():
     """
     print("\nProof 24.4: Consensus Protocols")
 
-    from tensornet.coordination.consensus import (AverageConsensus,
+    from tensornet.infra.coordination.consensus import (AverageConsensus,
                                                   ConsensusConfig,
                                                   ConsensusState, MaxConsensus,
                                                   WeightedConsensus)
@@ -363,7 +363,7 @@ def proof_24_5_uq():
     """
     print("\nProof 24.5: Uncertainty Quantification")
 
-    from tensornet.ml_surrogates.uncertainty import (UncertaintyConfig,
+    from tensornet.ml.ml_surrogates.uncertainty import (UncertaintyConfig,
                                                      UncertaintyEstimate,
                                                      UncertaintyType)
 

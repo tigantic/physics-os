@@ -1,0 +1,305 @@
+[
+  {
+    "pack_id": "II",
+    "domain_name": "Fluid Dynamics",
+    "problem_name": "ViscousBurgers1D",
+    "n_bits": 6,
+    "n_cells": 64,
+    "complexity_param_name": "reynolds_number",
+    "complexity_param_value": 100.0,
+    "svd_tolerance": 1e-06,
+    "max_rank_ceiling": 2048,
+    "n_sites": 6,
+    "bond_dimensions": [
+      2,
+      4,
+      6,
+      4,
+      2
+    ],
+    "singular_value_spectra": [
+      [
+        1.0000000000000002,
+        1.0
+      ],
+      [
+        1.0000000000000009,
+        1.0,
+        0.9999999999999998,
+        0.9999999999999994
+      ],
+      [
+        1.0000000000000036,
+        1.0000000000000018,
+        1.0000000000000004,
+        1.0,
+        0.9999999999999997,
+        0.9999999999999981
+      ],
+      [
+        1.0000000000000016,
+        1.0000000000000002,
+        0.9999999999999992,
+        0.9999999999999974
+      ],
+      [
+        1.0000000000000002,
+        0.9999999999999984
+      ]
+    ],
+    "max_rank": 6,
+    "mean_rank": 3.6,
+    "median_rank": 4,
+    "rank_std": 1.6733200530681511,
+    "peak_rank_site": 2,
+    "rank_utilization": 0.6,
+    "sv_decay_exponents": [
+      0.0,
+      1.0161317009576382e-15,
+      2.7758463296535183e-15,
+      2.7715011311854236e-15,
+      0.0
+    ],
+    "sv_decay_mean": 1.312695832359316e-15,
+    "spectral_gaps": [
+      1.0000000000000002,
+      1.0000000000000009,
+      1.0000000000000018,
+      1.0000000000000013,
+      1.0000000000000018
+    ],
+    "bond_entropies": [
+      0.6931471805599453,
+      1.3862943611198906,
+      1.791759469228055,
+      1.3862943611198908,
+      0.6931471805599452
+    ],
+    "total_entropy": 5.950642552587727,
+    "entropy_density": 0.9917737587646211,
+    "effective_ranks": [
+      1.9999999999999996,
+      4.0,
+      6.000000000000002,
+      3.999999999999999,
+      1.9999999999999996
+    ],
+    "area_law_exponent": 0.17444483255029658,
+    "area_law_r_squared": 0.041080620734211815,
+    "area_law_type": "log_corrected",
+    "dense_bytes": 512,
+    "qtt_bytes": 1088,
+    "compression_ratio": 0.47058823529411764,
+    "reconstruction_error": 1.8171030902180973e-08,
+    "physics_invariant_name": "energy_conservation",
+    "physics_invariant_value": 0.06482875347137451,
+    "physics_invariant_passed": true,
+    "wall_time_s": 0.3758357870101463,
+    "peak_gpu_mem_mb": 8.1494140625,
+    "device": "cuda",
+    "timestamp": "2026-02-24T02:23:56.303396+00:00",
+    "seed": 42
+  },
+  {
+    "pack_id": "II",
+    "domain_name": "Fluid Dynamics",
+    "problem_name": "ViscousBurgers1D",
+    "n_bits": 6,
+    "n_cells": 64,
+    "complexity_param_name": "reynolds_number",
+    "complexity_param_value": 10000.0,
+    "svd_tolerance": 1e-06,
+    "max_rank_ceiling": 2048,
+    "n_sites": 6,
+    "bond_dimensions": [
+      2,
+      4,
+      6,
+      4,
+      2
+    ],
+    "singular_value_spectra": [
+      [
+        1.0000000000000002,
+        1.0
+      ],
+      [
+        1.0000000000000004,
+        1.0,
+        0.9999999999999994,
+        0.9999999999999987
+      ],
+      [
+        1.0000000000000004,
+        1.0,
+        0.9999999999999996,
+        0.9999999999999993,
+        0.9999999999999974,
+        0.9999999999999966
+      ],
+      [
+        1.0,
+        0.9999999999999974,
+        0.999999999999997,
+        0.9999999999999968
+      ],
+      [
+        0.9999999999999994,
+        0.9999999999999982
+      ]
+    ],
+    "max_rank": 6,
+    "mean_rank": 3.6,
+    "median_rank": 4,
+    "rank_std": 1.6733200530681511,
+    "peak_rank_site": 2,
+    "rank_utilization": 0.6,
+    "sv_decay_exponents": [
+      0.0,
+      1.2083057581877136e-15,
+      1.9965123408186863e-15,
+      2.3593755849088516e-15,
+      0.0
+    ],
+    "sv_decay_mean": 1.1128387367830505e-15,
+    "spectral_gaps": [
+      1.0000000000000002,
+      1.0000000000000004,
+      1.0000000000000004,
+      1.0000000000000027,
+      1.0000000000000013
+    ],
+    "bond_entropies": [
+      0.6931471805599453,
+      1.3862943611198906,
+      1.7917594692280552,
+      1.3862943611198906,
+      0.6931471805599452
+    ],
+    "total_entropy": 5.950642552587727,
+    "entropy_density": 0.9917737587646211,
+    "effective_ranks": [
+      1.9999999999999996,
+      4.0,
+      5.999999999999997,
+      4.0,
+      1.9999999999999996
+    ],
+    "area_law_exponent": 0.17444482449128174,
+    "area_law_r_squared": 0.041080620735384876,
+    "area_law_type": "log_corrected",
+    "dense_bytes": 512,
+    "qtt_bytes": 1088,
+    "compression_ratio": 0.47058823529411764,
+    "reconstruction_error": 4.167180822634009e-09,
+    "physics_invariant_name": "energy_conservation",
+    "physics_invariant_value": 0.0010457634925842285,
+    "physics_invariant_passed": true,
+    "wall_time_s": 0.051261752989375964,
+    "peak_gpu_mem_mb": 8.1494140625,
+    "device": "cuda",
+    "timestamp": "2026-02-24T02:23:56.679823+00:00",
+    "seed": 42
+  },
+  {
+    "pack_id": "II",
+    "domain_name": "Fluid Dynamics",
+    "problem_name": "ViscousBurgers1D",
+    "n_bits": 6,
+    "n_cells": 64,
+    "complexity_param_name": "reynolds_number",
+    "complexity_param_value": 1000000.0,
+    "svd_tolerance": 1e-06,
+    "max_rank_ceiling": 2048,
+    "n_sites": 6,
+    "bond_dimensions": [
+      2,
+      4,
+      6,
+      4,
+      2
+    ],
+    "singular_value_spectra": [
+      [
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        0.9999999999999996,
+        0.9999999999999994,
+        0.9999999999999988
+      ],
+      [
+        1.0000000000000004,
+        0.9999999999999996,
+        0.9999999999999989,
+        0.999999999999998,
+        0.9999999999999974,
+        0.9999999999999963
+      ],
+      [
+        1.0000000000000029,
+        1.0,
+        0.9999999999999994,
+        0.9999999999999974
+      ],
+      [
+        1.0000000000000002,
+        1.0
+      ]
+    ],
+    "max_rank": 6,
+    "mean_rank": 3.6,
+    "median_rank": 4,
+    "rank_std": 1.6733200530681511,
+    "peak_rank_site": 2,
+    "rank_utilization": 0.6,
+    "sv_decay_exponents": [
+      0.0,
+      7.807571525819909e-16,
+      2.1616847867570315e-15,
+      3.664755630041257e-15,
+      0.0
+    ],
+    "sv_decay_mean": 1.3214395138760558e-15,
+    "spectral_gaps": [
+      1.0,
+      1.0000000000000004,
+      1.0000000000000009,
+      1.0000000000000029,
+      1.0000000000000002
+    ],
+    "bond_entropies": [
+      0.6931471805599454,
+      1.3862943611198906,
+      1.7917594692280552,
+      1.3862943611198908,
+      0.6931471805599453
+    ],
+    "total_entropy": 5.950642552587727,
+    "entropy_density": 0.9917737587646211,
+    "effective_ranks": [
+      2.000000000000001,
+      3.999999999999999,
+      6.0,
+      3.9999999999999982,
+      1.9999999999999996
+    ],
+    "area_law_exponent": 0.1744448292054655,
+    "area_law_r_squared": 0.04108062073521268,
+    "area_law_type": "log_corrected",
+    "dense_bytes": 512,
+    "qtt_bytes": 1088,
+    "compression_ratio": 0.47058823529411764,
+    "reconstruction_error": 4.268670306117883e-09,
+    "physics_invariant_name": "energy_conservation",
+    "physics_invariant_value": 0.0003815889358520508,
+    "physics_invariant_passed": true,
+    "wall_time_s": 0.04459859599592164,
+    "peak_gpu_mem_mb": 8.1494140625,
+    "device": "cuda",
+    "timestamp": "2026-02-24T02:23:56.731422+00:00",
+    "seed": 42
+  }
+]

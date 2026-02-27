@@ -1,0 +1,62 @@
+{
+  "certificate": {
+    "format": "TPC v1",
+    "layers": [
+      "Mathematical Truth",
+      "Computational Integrity",
+      "Physical Fidelity"
+    ],
+    "signature": "Ed25519",
+    "size_bytes": 2827
+  },
+  "certificate_hash": "019fdfb2cef9ae0c38686d1d6a894f60463a72b136e07280316f2ba0c36561d6",
+  "conservation": {
+    "integral_after": 24471.000381469727,
+    "integral_before": 24471.000381469727,
+    "residual": 0.0,
+    "verdict": "CONSERVED"
+  },
+  "lean": {
+    "axioms": 0,
+    "configs_verified": 3,
+    "file": "ThermalConservation.lean",
+    "hash": "94c468f1cdd01257555047c79e01eaedf5d3ef8d6925d6ae964c0c819b388182",
+    "methodology": "decide (kernel-checked)"
+  },
+  "pipeline": [
+    "thermal_simulation",
+    "witness_generation",
+    "zk_proof",
+    "tpc_certificate",
+    "lean_verification",
+    "visualization"
+  ],
+  "proof": {
+    "cg_iterations": 50,
+    "circuit": "ThermalCircuit",
+    "conservation_residual_raw": 0,
+    "constraints": 56975,
+    "k": 17,
+    "proof_size_bytes": 800,
+    "system": "Halo2-KZG"
+  },
+  "proof_hash": "f384c7cf1251ff727523375b3ae9f4cd37c1b1002a6e9bbcf3e89d5c6cff0410",
+  "protocol": "TRUSTLESS_PHYSICS_GOLDEN_DEMO",
+  "quality": {
+    "compiler_warnings": 0,
+    "formal_axioms": 0,
+    "gauntlet_pass_rate": "180/180",
+    "test_pass_rate": "170/170"
+  },
+  "simulation": {
+    "arithmetic": "Q16.16 fixed-point",
+    "boundary_condition": "Periodic",
+    "chi_max": 4,
+    "equation": "∂T/∂t = α∇²T + S(x,t)",
+    "grid_bits": 4,
+    "num_sites": 12,
+    "physics": "heat_equation"
+  },
+  "timestamp": "2026-02-23T06:14:32.321109222+00:00",
+  "version": "1.0.0"
+}

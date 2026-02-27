@@ -1588,8 +1588,8 @@ All placeholder implementations now use:
 | `genesis/topology/qtt_native.py` | Betti numbers | Rank estimation via randomized probing |
 | `fusion/qtt_screening.py` | Debye length | Pure TT contraction O(d r²) |
 | `fusion/qtt_superionic.py` | Force interpolation | TT gradient via finite difference |
-| `deployment/embedded.py` | Thermal reading | Real sysfs + simulation fallback |
-| `deployment/embedded.py` | TensorRT execution | Full pycuda integration |
+| `deploy/embedded.py` | Thermal reading | Real sysfs + simulation fallback |
+| `deploy/embedded.py` | TensorRT execution | Full pycuda integration |
 
 **New Module Created:**
 - `tensornet/cfd/qtt_reciprocal.py` — Newton-Schulz iteration for QTT element-wise reciprocal

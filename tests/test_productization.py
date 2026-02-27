@@ -486,15 +486,15 @@ class TestSDKImports:
     """SDK public API surface: all re-exports are importable."""
 
     def test_sdk_version(self) -> None:
-        from tensornet.sdk import __sdk_version__
+        from tensornet.infra.sdk import __sdk_version__
         assert __sdk_version__ == "2.0.0"
 
     def test_workflow_builder_import(self) -> None:
-        from tensornet.sdk import WorkflowBuilder
+        from tensornet.infra.sdk import WorkflowBuilder
         assert WorkflowBuilder is not None
 
     def test_data_model_reexports(self) -> None:
-        from tensornet.sdk import (
+        from tensornet.infra.sdk import (
             Mesh,
             StructuredMesh,
             UnstructuredMesh,
@@ -506,7 +506,7 @@ class TestSDKImports:
         ])
 
     def test_protocol_reexports(self) -> None:
-        from tensornet.sdk import (
+        from tensornet.infra.sdk import (
             ProblemSpec,
             Solver,
             Observable,
@@ -517,11 +517,11 @@ class TestSDKImports:
         ])
 
     def test_export_reexports(self) -> None:
-        from tensornet.sdk import export_vtu, export_csv, export_json
+        from tensornet.infra.sdk import export_vtu, export_csv, export_json
         assert all(fn is not None for fn in [export_vtu, export_csv, export_json])
 
     def test_postprocess_reexports(self) -> None:
-        from tensornet.sdk import (
+        from tensornet.infra.sdk import (
             probe, slice_field, integrate, field_statistics,
             fft_field, gradient_field, histogram,
         )
@@ -531,12 +531,12 @@ class TestSDKImports:
         ])
 
     def test_deprecation_reexports(self) -> None:
-        from tensornet.sdk import PLATFORM_VERSION, VersionInfo, deprecated, since
+        from tensornet.infra.sdk import PLATFORM_VERSION, VersionInfo, deprecated, since
         assert PLATFORM_VERSION is not None
         assert VersionInfo is not None
 
     def test_security_reexports(self) -> None:
-        from tensornet.sdk import generate_sbom, audit_dependencies, license_audit
+        from tensornet.infra.sdk import generate_sbom, audit_dependencies, license_audit
         assert all(fn is not None for fn in [
             generate_sbom, audit_dependencies, license_audit,
         ])
@@ -546,7 +546,7 @@ class TestWorkflowBuilderConfig:
     """WorkflowBuilder fluent API configuration."""
 
     def test_builder_domain(self) -> None:
-        from tensornet.sdk import WorkflowBuilder
+        from tensornet.infra.sdk import WorkflowBuilder
 
         b = WorkflowBuilder("test")
         b.domain(shape=(64,), extent=((0.0, 1.0),))
@@ -556,7 +556,7 @@ class TestWorkflowBuilderConfig:
         assert wf.name == "test"
 
     def test_builder_validation_no_mesh(self) -> None:
-        from tensornet.sdk import WorkflowBuilder
+        from tensornet.infra.sdk import WorkflowBuilder
 
         b = WorkflowBuilder("bad")
         b.field("u")
@@ -565,7 +565,7 @@ class TestWorkflowBuilderConfig:
             b.build()
 
     def test_builder_validation_no_solver(self) -> None:
-        from tensornet.sdk import WorkflowBuilder
+        from tensornet.infra.sdk import WorkflowBuilder
 
         b = WorkflowBuilder("bad")
         b.domain(shape=(64,), extent=((0.0, 1.0),))
@@ -574,7 +574,7 @@ class TestWorkflowBuilderConfig:
             b.build()
 
     def test_builder_validation_no_fields(self) -> None:
-        from tensornet.sdk import WorkflowBuilder
+        from tensornet.infra.sdk import WorkflowBuilder
 
         b = WorkflowBuilder("bad")
         b.domain(shape=(64,), extent=((0.0, 1.0),))
@@ -583,7 +583,7 @@ class TestWorkflowBuilderConfig:
             b.build()
 
     def test_builder_chaining(self) -> None:
-        from tensornet.sdk import WorkflowBuilder
+        from tensornet.infra.sdk import WorkflowBuilder
 
         wf = (
             WorkflowBuilder("chain_test")
@@ -612,20 +612,20 @@ class TestRecipes:
     """Recipe registration and retrieval."""
 
     def test_list_recipes(self) -> None:
-        from tensornet.sdk.recipes import list_recipes
+        from tensornet.infra.sdk.recipes import list_recipes
 
         recipes = list_recipes()
         assert isinstance(recipes, list)
         assert len(recipes) >= 8  # We registered 8 built-in recipes
 
     def test_list_recipes_by_domain(self) -> None:
-        from tensornet.sdk.recipes import list_recipes
+        from tensornet.infra.sdk.recipes import list_recipes
 
         fluid = list_recipes(domain="fluid_dynamics")
         assert len(fluid) >= 2  # burgers_1d, sod_shock_tube
 
     def test_get_recipe_burgers(self) -> None:
-        from tensornet.sdk.recipes import get_recipe
+        from tensornet.infra.sdk.recipes import get_recipe
 
         builder = get_recipe("burgers_1d")
         assert builder._config.name == "burgers_1d"
@@ -633,25 +633,25 @@ class TestRecipes:
         assert wf.name == "burgers_1d"
 
     def test_get_recipe_harmonic(self) -> None:
-        from tensornet.sdk.recipes import get_recipe
+        from tensornet.infra.sdk.recipes import get_recipe
 
         builder = get_recipe("harmonic_oscillator")
         assert builder._config.solver_id == "PHY-I.4"
 
     def test_get_recipe_with_overrides(self) -> None:
-        from tensornet.sdk.recipes import get_recipe
+        from tensornet.infra.sdk.recipes import get_recipe
 
         builder = get_recipe("burgers_1d", n_cells=512, reynolds=200.0)
         assert builder._config.mesh_shape == (512,)
 
     def test_get_recipe_unknown_raises(self) -> None:
-        from tensornet.sdk.recipes import get_recipe
+        from tensornet.infra.sdk.recipes import get_recipe
 
         with pytest.raises(KeyError, match="Unknown recipe"):
             get_recipe("nonexistent_solver_9999")
 
     def test_recipe_info_repr(self) -> None:
-        from tensornet.sdk.recipes import list_recipes
+        from tensornet.infra.sdk.recipes import list_recipes
 
         recipes = list_recipes()
         for r in recipes:

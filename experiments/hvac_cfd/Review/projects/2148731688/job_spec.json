@@ -1,0 +1,35 @@
+{
+  "client": {
+    "name": "Christine Adams",
+    "project_id": "2148731688",
+    "contact": "Christine Constanssa"
+  },
+  "room": {
+    "name": "Living Room",
+    "type": "Lobby",
+    "dimensions_m": [
+      17.0,
+      30.0,
+      3.0
+    ]
+  },
+  "load": {
+    "occupants": 10,
+    "heat_load_per_person_watts": 100,
+    "equipment_load_watts": 500,
+    "lighting_load_watts": 350
+  },
+  "constraints": {
+    "max_velocity_ms": 0.25,
+    "target_temp_c": 22.0,
+    "temp_tolerance_c": 2.0,
+    "max_co2_ppm": 1000
+  },
+  "deliverables": {
+    "thermal_heatmap": true,
+    "velocity_field": true,
+    "convergence_plot": true,
+    "pdf_report": true
+  },
+  "notes": "Test #1"
+}

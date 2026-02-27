@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EigenPsi CFD Analysis — Project Intake Form</title>
+  <style>
+    @page {
+      size: letter;
+      margin: 0.5in;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 10pt;
+      line-height: 1.4;
+      color: #1a1a1a;
+      background: #fff;
+      padding: 0.5in;
+      max-width: 8.5in;
+      margin: 0 auto;
+    }
+    
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 3px solid #0066cc;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .logo {
+      font-size: 24pt;
+      font-weight: 700;
+      color: #0066cc;
+      letter-spacing: -0.5px;
+    }
+    
+    .logo span {
+      color: #1a1a1a;
+    }
+    
+    .header-right {
+      text-align: right;
+      font-size: 9pt;
+      color: #666;
+    }
+    
+    .doc-title {
+      font-size: 14pt;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-top: 4px;
+    }
+    
+    /* Instructions */
+    .instructions {
+      background: #f0f7ff;
+      border: 1px solid #cce0ff;
+      border-radius: 4px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 9pt;
+    }
+    
+    .instructions h3 {
+      font-size: 10pt;
+      color: #0066cc;
+      margin-bottom: 6px;
+    }
+    
+    .instructions ul {
+      margin-left: 18px;
+      color: #444;
+    }
+    
+    .instructions li {
+      margin-bottom: 2px;
+    }
+    
+    /* Sections */
+    .section {
+      margin-bottom: 18px;
+      page-break-inside: avoid;
+    }
+    
+    .section-header {
+      background: #0066cc;
+      color: #fff;
+      font-size: 11pt;
+      font-weight: 600;
+      padding: 6px 12px;
+      margin-bottom: 0;
+    }
+    
+    .section-body {
+      border: 1px solid #ddd;
+      border-top: none;
+      padding: 12px;
+    }
+    
+    /* Form Grid */
+    .form-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+    
+    .form-row:last-child {
+      margin-bottom: 0;
+    }
+    
+    .form-group {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .form-group.half {
+      flex: 0.5;
+    }
+    
+    .form-group.third {
+      flex: 0.33;
+    }
+    
+    .form-group.quarter {
+      flex: 0.25;
+    }
+    
+    .form-group.full {
+      flex: 1 1 100%;
+    }
+    
+    label {
+      display: block;
+      font-size: 8pt;
+      font-weight: 600;
+      color: #444;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 3px;
+    }
+    
+    label .required {
+      color: #cc0000;
+    }
+    
+    label .unit {
+      font-weight: 400;
+      color: #666;
+      text-transform: none;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      font-size: 10pt;
+      font-family: inherit;
+      background: #fafafa;
+    }
+    
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #0066cc;
+      background: #fff;
+    }
+    
+    textarea {
+      min-height: 60px;
+      resize: vertical;
+    }
+    
+    /* Checkbox Group */
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 9pt;
+    }
+    
+    .checkbox-item input[type="checkbox"],
+    .checkbox-item input[type="radio"] {
+      width: 14px;
+      height: 14px;
+      margin: 0;
+    }
+    
+    /* Helper Text */
+    .helper {
+      font-size: 8pt;
+      color: #666;
+      margin-top: 2px;
+    }
+    
+    /* OR Divider */
+    .or-divider {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #999;
+      font-size: 8pt;
+      font-weight: 600;
+      margin: 8px 0;
+    }
+    
+    .or-divider::before,
+    .or-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #ddd;
+    }
+    
+    /* Calculated Field */
+    .calculated {
+      background: #f5f5f5;
+      border-style: dashed;
+    }
+    
+    /* Table for multiple items */
+    .item-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9pt;
+    }
+    
+    .item-table th {
+      background: #f0f0f0;
+      border: 1px solid #ddd;
+      padding: 6px 8px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 8pt;
+      text-transform: uppercase;
+    }
+    
+    .item-table td {
+      border: 1px solid #ddd;
+      padding: 4px 6px;
+    }
+    
+    .item-table input {
+      border: none;
+      background: transparent;
+      width: 100%;
+      padding: 2px;
+    }
+    
+    /* Analysis Type Selection */
+    .analysis-type-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    
+    .analysis-type-option {
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .analysis-type-option:hover {
+      border-color: #0066cc;
+      background: #f0f7ff;
+    }
+    
+    .analysis-type-option input {
+      display: none;
+    }
+    
+    .analysis-type-option input:checked + .option-content {
+      color: #0066cc;
+    }
+    
+    .analysis-type-option input:checked ~ .option-content {
+      color: #0066cc;
+    }
+    
+    .analysis-type-option:has(input:checked) {
+      border-color: #0066cc;
+      background: #f0f7ff;
+    }
+    
+    .option-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    
+    .option-title {
+      font-weight: 600;
+      font-size: 9pt;
+    }
+    
+    .option-desc {
+      font-size: 8pt;
+      color: #666;
+    }
+    
+    /* Footer */
+    .footer {
+      margin-top: 24px;
+      padding-top: 12px;
+      border-top: 1px solid #ddd;
+      font-size: 8pt;
+      color: #666;
+      text-align: center;
+    }
+    
+    /* Print Styles */
+    @media print {
+      body {
+        padding: 0;
+        background: #fff;
+      }
+      
+      input, select, textarea {
+        border: 1px solid #999;
+        background: #fff;
+      }
+      
+      .no-print {
+        display: none;
+      }
+    }
+    
+    /* Digital Form Enhancements */
+    @media screen {
+      .submit-section {
+        background: #f0f7ff;
+        border: 1px solid #cce0ff;
+        border-radius: 4px;
+        padding: 16px;
+        margin-top: 20px;
+        text-align: center;
+      }
+      
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 24px;
+        font-size: 11pt;
+        font-weight: 600;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      
+      .btn-primary {
+        background: #0066cc;
+        color: #fff;
+      }
+      
+      .btn-primary:hover {
+        background: #0055aa;
+      }
+      
+      .btn-secondary {
+        background: #fff;
+        color: #333;
+        border: 1px solid #ccc;
+        margin-left: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <div class="logo">Eigen<span>Psi</span></div>
+      <div class="doc-title">CFD Analysis — Project Intake Form</div>
+    </div>
+    <div class="header-right">
+      <div>Decision-Grade Airflow Intelligence</div>
+      <div>intake@eigenpsi.com</div>
+      <div style="margin-top: 8px; font-size: 8pt;">Form ID: <span id="formId">_____________</span></div>
+    </div>
+  </div>
+  
+  <!-- Instructions -->
+  <div class="instructions">
+    <h3>📋 Instructions</h3>
+    <ul>
+      <li><strong>Required fields</strong> are marked with <span style="color:#cc0000;">*</span> — analysis cannot proceed without these.</li>
+      <li>Fill in available information. Leave unknown fields blank — we'll use industry-standard defaults.</li>
+      <li>Attach any available drawings, schedules, or photos. Reference them in the Notes section.</li>
+      <li>Return completed form via email. Analysis typically completed within <strong>48 hours</strong>.</li>
+    </ul>
+  </div>
+  
+  <!-- Section A: Project Information -->
+  <div class="section">
+    <div class="section-header">A. Project Information</div>
+    <div class="section-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Company / Client Name <span class="required">*</span></label>
+          <input type="text" name="client_name" id="client_name" required>
+        </div>
+        <div class="form-group">
+          <label>Project Name / ID <span class="required">*</span></label>
+          <input type="text" name="project_name" id="project_name" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Contact Name <span class="required">*</span></label>
+          <input type="text" name="contact_name" id="contact_name" required>
+        </div>
+        <div class="form-group">
+          <label>Email <span class="required">*</span></label>
+          <input type="email" name="contact_email" id="contact_email" required>
+        </div>
+        <div class="form-group half">
+          <label>Phone</label>
+          <input type="tel" name="contact_phone" id="contact_phone">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Project Address / Location</label>
+          <input type="text" name="project_address" id="project_address" placeholder="Building name, address, floor, etc.">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Section B: Analysis Type -->
+  <div class="section">
+    <div class="section-header">B. Analysis Type <span style="font-weight:400;font-size:9pt;">(Select One)</span></div>
+    <div class="section-body">
+      <div class="analysis-type-grid">
+        <label class="analysis-type-option">
+          <input type="radio" name="analysis_type" value="comfort_verification" checked>
+          <div class="option-content">
+            <span class="option-title">☑ Comfort Verification</span>
+            <span class="option-desc">Validate ASHRAE 55 compliance for new or existing design</span>
+          </div>
+        </label>
+        <label class="analysis-type-option">
+          <input type="radio" name="analysis_type" value="hot_spot_diagnosis">
+          <div class="option-content">
+            <span class="option-title">🔥 Hot Spot Diagnosis</span>
+            <span class="option-desc">Investigate comfort complaints or problem areas</span>
+          </div>
+        </label>
+        <label class="analysis-type-option">
+          <input type="radio" name="analysis_type" value="design_validation">
+          <div class="option-content">
+            <span class="option-title">📐 Design Validation</span>
+            <span class="option-desc">Pre-construction verification of proposed HVAC design</span>
+          </div>
+        </label>
+        <label class="analysis-type-option">
+          <input type="radio" name="analysis_type" value="equipment_sizing">
+          <div class="option-content">
+            <span class="option-title">⚙️ Equipment Sizing</span>
+            <span class="option-desc">Determine optimal CFM, tonnage, or diffuser configuration</span>
+          </div>
+        </label>
+        <label class="analysis-type-option">
+          <input type="radio" name="analysis_type" value="failure_analysis">
+          <div class="option-content">
+            <span class="option-title">⚠️ Failure Analysis</span>
+            <span class="option-desc">Simulate equipment failure scenarios (e.g., CRAC outage)</span>
+          </div>
+        </label>
+        <label class="analysis-type-option">
+          <input type="radio" name="analysis_type" value="data_center">
+          <div class="option-content">
+            <span class="option-title">🖥️ Data Center Thermal</span>
+            <span class="option-desc">Rack-level thermal analysis, hot/cold aisle optimization</span>
+          </div>
+        </label>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Section C: Room Geometry -->
+  <div class="section">
+    <div class="section-header">C. Room / Space Geometry</div>
+    <div class="section-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Room / Space Name <span class="required">*</span></label>
+          <input type="text" name="room_name" id="room_name" placeholder="e.g., Conference Room B, Data Hall 4">
+        </div>
+        <div class="form-group half">
+          <label>Room Type</label>
+          <select name="room_type" id="room_type">
+            <option value="">— Select —</option>
+            <option value="conference">Conference Room</option>
+            <option value="office_private">Private Office</option>
+            <option value="office_open">Open Office</option>
+            <option value="server_room">Server / IT Room</option>
+            <option value="data_center">Data Center</option>
+            <option value="classroom">Classroom / Training</option>
+            <option value="retail">Retail Space</option>
+            <option value="warehouse">Warehouse</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group third">
+          <label>Length <span class="required">*</span> <span class="unit">(ft)</span></label>
+          <input type="number" name="room_length_ft" id="room_length_ft" step="0.1" placeholder="30">
+        </div>
+        <div class="form-group third">
+          <label>Width <span class="required">*</span> <span class="unit">(ft)</span></label>
+          <input type="number" name="room_width_ft" id="room_width_ft" step="0.1" placeholder="20">
+        </div>
+        <div class="form-group third">
+          <label>Ceiling Height <span class="required">*</span> <span class="unit">(ft)</span></label>
+          <input type="number" name="room_height_ft" id="room_height_ft" step="0.1" placeholder="10">
+        </div>
+        <div class="form-group third">
+          <label>Volume <span class="unit">(ft³) — auto</span></label>
+          <input type="text" name="room_volume_ft3" id="room_volume_ft3" class="calculated" readonly placeholder="6,000">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Description / Notes on Geometry</label>
+          <input type="text" name="geometry_notes" id="geometry_notes" placeholder="e.g., L-shaped room, raised floor, dropped ceiling in NE corner">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Attached Drawing Reference</label>
+          <input type="text" name="drawing_ref" id="drawing_ref" placeholder="e.g., Floor plan attached, see page 2 of mechanical drawings">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Section D: HVAC — Supply Air -->
+  <div class="section">
+    <div class="section-header">D. HVAC — Supply Air</div>
+    <div class="section-body">
+      <div class="form-row">
+        <div class="form-group third">
+          <label>Total Supply Airflow <span class="required">*</span> <span class="unit">(CFM)</span></label>
+          <input type="number" name="supply_cfm" id="supply_cfm" step="10" placeholder="1200">
+        </div>
+        <div class="form-group" style="flex:0 0 auto; display:flex; align-items:flex-end; padding-bottom:6px;">
+          <span style="color:#999; font-size:9pt; font-weight:600;">— OR —</span>
+        </div>
+        <div class="form-group third">
+          <label>System Tonnage <span class="unit">(tons)</span></label>
+          <input type="number" name="system_tons" id="system_tons" step="0.5" placeholder="3">
+          <div class="helper">Rule of thumb: 1 ton ≈ 400 CFM</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group third">
+          <label>Supply Air Temperature <span class="required">*</span> <span class="unit">(°F)</span></label>
+          <input type="number" name="supply_temp_f" id="supply_temp_f" step="1" placeholder="55">
+        </div>
+        <div class="form-group third">
+          <label>Number of Supply Diffusers <span class="required">*</span></label>
+          <input type="number" name="num_diffusers" id="num_diffusers" min="1" placeholder="2">
+        </div>
+        <div class="form-group third">
+          <label>Diffuser Type <span class="required">*</span></label>
+          <select name="diffuser_type" id="diffuser_type">
+            <option value="">— Select —</option>
+            <option value="ceiling_slot">Ceiling Slot Diffuser</option>
+            <option value="ceiling_square">Ceiling Square Diffuser</option>
+            <option value="ceiling_round">Ceiling Round Diffuser</option>
+            <option value="ceiling_linear">Linear Ceiling Diffuser</option>
+            <option value="floor_tile">Raised Floor Tile (Data Center)</option>
+            <option value="floor_swirl">Floor Swirl Diffuser</option>
+            <option value="sidewall">Sidewall Register</option>
+            <option value="other">Other (describe in notes)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group third">
+          <label>Diffuser Size <span class="unit">(inches)</span></label>
+          <input type="text" name="diffuser_size" id="diffuser_size" placeholder='e.g., 12"x12", 24"x6"'>
+        </div>
+        <div class="form-group">
+          <label>Diffuser Location</label>
+          <input type="text" name="diffuser_location" id="diffuser_location" placeholder="e.g., Centered on ceiling, 2 units evenly spaced along length">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Section E: HVAC — Return Air -->
+  <div class="section">
+    <div class="section-header">E. HVAC — Return Air</div>
+    <div class="section-body">
+      <div class="form-row">
+        <div class="form-group third">
+          <label>Number of Return Grilles</label>
+          <input type="number" name="num_returns" id="num_returns" min="0" placeholder="1">
+        </div>
+        <div class="form-group">
+          <label>Return Location</label>
+          <select name="return_location" id="return_location">
+            <option value="">— Select —</option>
+            <option value="low_wall">Low Wall (standard)</option>
+            <option value="high_wall">High Wall</option>
+            <option value="ceiling">Ceiling Return</option>
+            <option value="floor">Floor Return</option>
+            <option value="ducted">Ducted Return</option>
+            <option value="plenum">Ceiling Plenum Return</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Return Position Description</label>
+          <input type="text" name="return_position" id="return_position" placeholder="e.g., Low wall opposite supply diffusers">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Section F: Thermal Loads -->
+  <div class="section">
+    <div class="section-header">F. Thermal Loads (Heat Sources)</div>
+    <div class="section-body">
+      <div class="form-row">
+        <div class="form-group third">
+          <label>Number of Occupants <span class="required">*</span></label>
+          <input type="number" name="num_occupants" id="num_occupants" min="0" placeholder="12">
+        </div>
+        <div class="form-group third">
+          <label>Occupancy Type</label>
+          <select name="occupancy_type" id="occupancy_type">
+            <option value="seated" selected>Seated (office work)</option>
+            <option value="standing">Standing (light activity)</option>
+            <option value="walking">Walking / Moving</option>
+            <option value="light_work">Light physical work</option>
+          </select>
+        </div>
+        <div class="form-group third">
+          <label>Heat per Person <span class="unit">(W) — auto</span></label>
+          <input type="number" name="heat_per_person" id="heat_per_person" class="calculated" value="100" readonly>
+          <div class="helper">Seated=100W, Standing=120W, Active=150W</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group third">
+          <label>Equipment Heat Load <span class="unit">(W)</span></label>
+          <input type="number" name="equipment_watts" id="equipment_watts" step="50" placeholder="500">
+          <div class="helper">Computers, AV, servers, etc.</div>
+        </div>
+        <div class="form-group third">
+          <label>Lighting Load <span class="unit">(W)</span></label>
+          <input type="number" name="lighting_watts" id="lighting_watts" step="50" placeholder="200">
+          <div class="helper">Leave blank to auto-estimate</div>
+        </div>
+        <div class="form-group third">
+          <label>Total Heat Load <span class="unit">(W) — auto</span></label>
+          <input type="text" name="total_heat_watts" id="total_heat_watts" class="calculated" readonly placeholder="1,900">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Additional Heat Sources (describe)</label>
+          <input type="text" name="additional_heat" id="additional_heat" placeholder="e.g., South-facing windows with solar gain, server rack in corner (5kW)">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Section G: Comfort Targets (Optional) -->
+  <div class="section">
+    <div class="section-header">G. Comfort Targets <span style="font-weight:400;font-size:9pt;">(Optional — defaults to ASHRAE 55)</span></div>
+    <div class="section-body">
+      <div class="form-row">
+        <div class="form-group quarter">
+          <label>Target Temperature <span class="unit">(°F)</span></label>
+          <input type="number" name="target_temp_f" id="target_temp_f" step="1" placeholder="72">
+        </div>
+        <div class="form-group quarter">
+          <label>Min Acceptable <span class="unit">(°F)</span></label>
+          <input type="number" name="temp_min_f" id="temp_min_f" step="1" placeholder="68">
+        </div>
+        <div class="form-group quarter">
+          <label>Max Acceptable <span class="unit">(°F)</span></label>
+          <input type="number" name="temp_max_f" id="temp_max_f" step="1" placeholder="75">
+        </div>
+        <div class="form-group quarter">
+          <label>Max Draft Velocity <span class="unit">(fpm)</span></label>
+          <input type="number" name="max_velocity_fpm" id="max_velocity_fpm" step="5" placeholder="50">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group quarter">
+          <label>Max CO₂ <span class="unit">(ppm)</span></label>
+          <input type="number" name="max_co2_ppm" id="max_co2_ppm" step="50" placeholder="1000">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Section H: Problem Description (Conditional) -->
+  <div class="section">
+    <div class="section-header">H. Problem Description / Special Requests</div>
+    <div class="section-body">
+      <div class="form-row">
+        <div class="form-group full">
+          <label>Describe the Issue or Question <span class="unit">(for Hot Spot / Failure Analysis)</span></label>
+          <textarea name="problem_description" id="problem_description" placeholder="e.g., Occupants in the NE corner consistently report feeling too warm. Complaint occurs mainly in afternoon hours. Looking to identify cause and recommend solution."></textarea>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label>Specific Questions to Answer</label>
+          <textarea name="specific_questions" id="specific_questions" placeholder="e.g., 
+1. Will the proposed diffuser layout provide adequate mixing?
+2. What happens if we add a return vent in the corner?
+3. Is the current CFM sufficient for 14 occupants?"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Section I: Attachments -->
+  <div class="section">
+    <div class="section-header">I. Attachments Checklist</div>
+    <div class="section-body">
+      <p style="font-size:9pt; color:#666; margin-bottom:10px;">Check all documents included with this form:</p>
+      <div class="checkbox-group">
+        <label class="checkbox-item"><input type="checkbox" name="attach_floorplan"> Floor Plan / Layout</label>
+        <label class="checkbox-item"><input type="checkbox" name="attach_mechanical"> Mechanical Drawings</label>
+        <label class="checkbox-item"><input type="checkbox" name="attach_schedule"> Equipment Schedule</label>
+        <label class="checkbox-item"><input type="checkbox" name="attach_photos"> Site Photos</label>
+        <label class="checkbox-item"><input type="checkbox" name="attach_specs"> Equipment Specs / Cut Sheets</label>
+        <label class="checkbox-item"><input type="checkbox" name="attach_other"> Other (describe below)</label>
+      </div>
+      <div class="form-row" style="margin-top:10px;">
+        <div class="form-group">
+          <label>Attachment Notes</label>
+          <input type="text" name="attachment_notes" id="attachment_notes" placeholder="e.g., CAD file requires AutoCAD 2020 or later">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Signature / Confirmation -->
+  <div class="section">
+    <div class="section-header">J. Confirmation</div>
+    <div class="section-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Submitted By</label>
+          <input type="text" name="submitted_by" id="submitted_by">
+        </div>
+        <div class="form-group third">
+          <label>Date</label>
+          <input type="text" name="submit_date" id="submit_date">
+        </div>
+      </div>
+      <div style="margin-top:12px; padding:10px; background:#fffbea; border:1px solid #f0e6c8; border-radius:4px; font-size:9pt;">
+        <strong>⚡ Turnaround:</strong> Analysis typically completed within <strong>48 hours</strong> of receiving complete information. Incomplete forms may delay analysis.
+      </div>
+    </div>
+  </div>
+  
+  <!-- Digital Submit Section (screen only) -->
+  <div class="submit-section no-print">
+    <p style="margin-bottom:12px; color:#666;">Save this form as PDF or export data for direct import:</p>
+    <button type="button" class="btn btn-primary" onclick="exportJSON()">
+      📤 Export Data (JSON)
+    </button>
+    <button type="button" class="btn btn-secondary" onclick="window.print()">
+      🖨️ Print / Save PDF
+    </button>
+  </div>
+  
+  <!-- Footer -->
+  <div class="footer">
+    EigenPsi | Decision-Grade Airflow Intelligence | eigenpsi.com<br>
+    <span style="font-size:7pt;">Confidential — Information provided will be used solely for CFD analysis purposes.</span>
+  </div>
+  
+  <script>
+    // Auto-calculate volume
+    function updateVolume() {
+      const l = parseFloat(document.getElementById('room_length_ft').value) || 0;
+      const w = parseFloat(document.getElementById('room_width_ft').value) || 0;
+      const h = parseFloat(document.getElementById('room_height_ft').value) || 0;
+      const vol = l * w * h;
+      document.getElementById('room_volume_ft3').value = vol > 0 ? vol.toLocaleString() : '';
+    }
+    
+    // Auto-calculate heat per person based on activity
+    function updateHeatPerPerson() {
+      const activity = document.getElementById('occupancy_type').value;
+      const heatMap = { seated: 100, standing: 120, walking: 150, light_work: 150 };
+      document.getElementById('heat_per_person').value = heatMap[activity] || 100;
+      updateTotalHeat();
+    }
+    
+    // Auto-calculate total heat load
+    function updateTotalHeat() {
+      const occ = parseInt(document.getElementById('num_occupants').value) || 0;
+      const hpp = parseInt(document.getElementById('heat_per_person').value) || 100;
+      const eq = parseInt(document.getElementById('equipment_watts').value) || 0;
+      const lt = parseInt(document.getElementById('lighting_watts').value) || 0;
+      const total = (occ * hpp) + eq + lt;
+      document.getElementById('total_heat_watts').value = total > 0 ? total.toLocaleString() : '';
+    }
+    
+    // CFM from tons calculation hint
+    function updateCFMHint() {
+      const tons = parseFloat(document.getElementById('system_tons').value) || 0;
+      if (tons > 0 && !document.getElementById('supply_cfm').value) {
+        document.getElementById('supply_cfm').placeholder = Math.round(tons * 400) + ' (from tons)';
+      }
+    }
+    
+    // Export form data as JSON
+    function exportJSON() {
+      const form = document.querySelector('body');
+      const inputs = form.querySelectorAll('input, select, textarea');
+      const data = {
+        _form: 'eigenpsi_intake_v1',
+        _exported: new Date().toISOString(),
+        project: {},
+        geometry: {},
+        hvac_supply: {},
+        hvac_return: {},
+        thermal_loads: {},
+        targets: {},
+        problem: {},
+        attachments: {}
+      };
+      
+      // Map fields to categories
+      const fieldMap = {
+        client_name: 'project', project_name: 'project', contact_name: 'project',
+        contact_email: 'project', contact_phone: 'project', project_address: 'project',
+        analysis_type: 'project',
+        
+        room_name: 'geometry', room_type: 'geometry', room_length_ft: 'geometry',
+        room_width_ft: 'geometry', room_height_ft: 'geometry', room_volume_ft3: 'geometry',
+        geometry_notes: 'geometry', drawing_ref: 'geometry',
+        
+        supply_cfm: 'hvac_supply', system_tons: 'hvac_supply', supply_temp_f: 'hvac_supply',
+        num_diffusers: 'hvac_supply', diffuser_type: 'hvac_supply', diffuser_size: 'hvac_supply',
+        diffuser_location: 'hvac_supply',
+        
+        num_returns: 'hvac_return', return_location: 'hvac_return', return_position: 'hvac_return',
+        
+        num_occupants: 'thermal_loads', occupancy_type: 'thermal_loads', heat_per_person: 'thermal_loads',
+        equipment_watts: 'thermal_loads', lighting_watts: 'thermal_loads', total_heat_watts: 'thermal_loads',
+        additional_heat: 'thermal_loads',
+        
+        target_temp_f: 'targets', temp_min_f: 'targets', temp_max_f: 'targets',
+        max_velocity_fpm: 'targets', max_co2_ppm: 'targets',
+        
+        problem_description: 'problem', specific_questions: 'problem',
+        
+        attachment_notes: 'attachments', submitted_by: 'project', submit_date: 'project'
+      };
+      
+      inputs.forEach(input => {
+        const name = input.name;
+        if (!name) return;
+        
+        let value;
+        if (input.type === 'checkbox') {
+          value = input.checked;
+        } else if (input.type === 'radio') {
+          if (input.checked) value = input.value;
+          else return;
+        } else {
+          value = input.value;
+        }
+        
+        if (value === '' || value === null || value === undefined) return;
+        
+        // Convert numeric strings
+        if (input.type === 'number' && value) {
+          value = parseFloat(value);
+        }
+        
+        const category = fieldMap[name] || 'other';
+        if (name.startsWith('attach_')) {
+          data.attachments[name.replace('attach_', '')] = value;
+        } else {
+          data[category][name] = value;
+        }
+      });
+      
+      // Download JSON
+      const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const projectName = data.project.project_name || 'intake';
+      a.href = url;
+      a.download = `eigenpsi_${projectName.replace(/[^a-z0-9]/gi, '_')}_intake.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    
+    // Set up event listeners
+    document.getElementById('room_length_ft').addEventListener('input', updateVolume);
+    document.getElementById('room_width_ft').addEventListener('input', updateVolume);
+    document.getElementById('room_height_ft').addEventListener('input', updateVolume);
+    document.getElementById('occupancy_type').addEventListener('change', updateHeatPerPerson);
+    document.getElementById('num_occupants').addEventListener('input', updateTotalHeat);
+    document.getElementById('equipment_watts').addEventListener('input', updateTotalHeat);
+    document.getElementById('lighting_watts').addEventListener('input', updateTotalHeat);
+    document.getElementById('system_tons').addEventListener('input', updateCFMHint);
+    
+    // Set today's date
+    document.getElementById('submit_date').value = new Date().toLocaleDateString();
+    
+    // Generate form ID
+    document.getElementById('formId').textContent = 'EP-' + Date.now().toString(36).toUpperCase();
+  </script>
+</body>
+</html>

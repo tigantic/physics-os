@@ -1,0 +1,74 @@
+{
+  "attestation": "GPU_QTT_MAXWELL_3D_BENCHMARK",
+  "version": "1.0.0",
+  "timestamp": "2026-02-26T09:39:57.447315+00:00",
+  "system": {
+    "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+    "gpu_memory_bytes": 8546484224,
+    "gpu_memory_gb": 8.5,
+    "cuda_version": "12.8",
+    "torch_version": "2.9.1+cu128",
+    "python_version": "3.12.3",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+  },
+  "summary": {
+    "scales_tested": 2,
+    "min_grid": "2048\u00b3",
+    "max_grid": "4096\u00b3",
+    "max_compression_ratio": 575231.6742784437,
+    "all_converged": false,
+    "total_wall_time_s": 277.885
+  },
+  "results": [
+    {
+      "grid": "2048\u00b3",
+      "grid_N3": 8589934592,
+      "n_bits_per_dim": 11,
+      "n_sites_total": 33,
+      "chi_max": 48,
+      "qtt_bytes": 845120,
+      "dense_bytes": 68719476736,
+      "compression_ratio": 81313.3,
+      "conservation_error": 0.003139088504660869,
+      "converged": false,
+      "n_iter": 7,
+      "final_residual": 0.0031089598955245123,
+      "wall_time_build_s": 0.675,
+      "wall_time_solve_s": 98.065,
+      "wall_time_total_s": 99.235,
+      "gpu_peak_mem_mb": 1975.4,
+      "max_rank": 48,
+      "n_sweeps_max": 50,
+      "tol": 0.001,
+      "k": 20.0
+    },
+    {
+      "grid": "4096\u00b3",
+      "grid_N3": 68719476736,
+      "n_bits_per_dim": 12,
+      "n_sites_total": 36,
+      "chi_max": 48,
+      "qtt_bytes": 955712,
+      "dense_bytes": 549755813888,
+      "compression_ratio": 575231.7,
+      "conservation_error": 0.08974826385477683,
+      "converged": false,
+      "n_iter": 10,
+      "final_residual": 0.08974262747447033,
+      "wall_time_build_s": 0.134,
+      "wall_time_solve_s": 177.989,
+      "wall_time_total_s": 178.649,
+      "gpu_peak_mem_mb": 1977.6,
+      "max_rank": 48,
+      "n_sweeps_max": 50,
+      "tol": 0.001,
+      "k": 20.0
+    }
+  ],
+  "invariants": {
+    "no_cpu_tensors": true,
+    "no_dense_N3": true,
+    "no_numpy_in_hot_path": true,
+    "qtt_native_throughout": true
+  }
+}

@@ -25,17 +25,17 @@ import json
 import torch
 
 # Local imports
-from tensornet.discovery.connectors.coinbase_l2 import (
+from tensornet.ml.discovery.connectors.coinbase_l2 import (
     SimulatedL2Connector, L2Snapshot, L2Update
 )
-from tensornet.discovery.connectors.historical import (
+from tensornet.ml.discovery.connectors.historical import (
     HistoricalDataLoader, HistoricalEvent
 )
-from tensornet.discovery.connectors.streaming import (
+from tensornet.ml.discovery.connectors.streaming import (
     StreamingPipeline, ReplayPipeline, StreamingConfig, StreamingResult
 )
-from tensornet.discovery.ingest.markets import MarketsIngester, MarketSnapshot
-from tensornet.discovery.pipelines.markets_pipeline import MarketsDiscoveryPipeline
+from tensornet.ml.discovery.ingest.markets import MarketsIngester, MarketSnapshot
+from tensornet.ml.discovery.pipelines.markets_pipeline import MarketsDiscoveryPipeline
 
 
 @dataclass

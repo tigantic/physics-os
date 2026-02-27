@@ -15,7 +15,7 @@ import numpy as np
 import pytest
 import torch
 
-from tensornet.distributed.domain_decomp import (DecompType, DomainConfig,
+from tensornet.engine.distributed.domain_decomp import (DecompType, DomainConfig,
                                                  DomainDecomposition,
                                                  SubdomainInfo)
 

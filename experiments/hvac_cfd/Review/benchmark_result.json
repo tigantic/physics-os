@@ -1,0 +1,35 @@
+[
+  {
+    "scheme": "tvd",
+    "grid": "128x64",
+    "iterations": 800,
+    "converged": false,
+    "solve_time_s": 36.5,
+    "rms_x1": 35.0,
+    "rms_x2": 20.1,
+    "rms_avg": 27.5,
+    "passed": false
+  },
+  {
+    "scheme": "tvd",
+    "grid": "256x128",
+    "iterations": 1500,
+    "converged": false,
+    "solve_time_s": 79.5,
+    "rms_x1": 31.9,
+    "rms_x2": 20.0,
+    "rms_avg": 26.0,
+    "passed": false
+  },
+  {
+    "scheme": "tvd",
+    "grid": "384x192",
+    "iterations": 2000,
+    "converged": false,
+    "solve_time_s": 101.7,
+    "rms_x1": 31.7,
+    "rms_x2": 20.0,
+    "rms_avg": 25.8,
+    "passed": false
+  }
+]

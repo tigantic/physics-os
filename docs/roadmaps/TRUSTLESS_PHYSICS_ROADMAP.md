@@ -19,8 +19,8 @@ This roadmap extends Tenet-TPhy from its current 3-solver proof pipeline (Euler 
 
 | Layer | Name | Mechanism | Reusable Infrastructure |
 |:-----:|------|-----------|------------------------|
-| A | Mathematical Truth | Lean 4 formal proofs of governing equations | `lean_yang_mills/` — extend per domain |
-| B | Computational Integrity | STARK/Halo2 proof of computation trace | `fluidelite-zk/`, `crates/proof_bridge/` — reusable |
+| A | Mathematical Truth | Lean 4 formal proofs of governing equations | `proofs/yang_mills/lean/` — extend per domain |
+| B | Computational Integrity | STARK/Halo2 proof of computation trace | `crates/fluidelite_zk/`, `crates/proof_bridge/` — reusable |
 | C | Physical Fidelity | Attested benchmark validation + hardware | `tpc/generator.py`, gauntlet framework — reusable |
 
 **Key insight**: The STARK AIR (`ThermalAir`) and TPC infrastructure are **physics-agnostic**. The 8 transition constraints (energy conservation, dt/α constancy, step increment, hash chain continuity) and 20-column trace layout apply to any time-stepping PDE solver. Extending to new domains is primarily a matter of:
@@ -44,20 +44,20 @@ The following components exist and are production-tested per `PLATFORM_SPECIFICA
 | Computation trace logger | `tensornet/core/trace.py` | 1,013 | — | ✅ Phase 0 |
 | Proof bridge (Rust) | `crates/proof_bridge/` | 1,718 | 12/12 | ✅ Phase 0 |
 | Standalone verifier | `apps/trustless_verify/` | 965 | — | ✅ Phase 0 |
-| Halo2 circuit framework | `fluidelite-zk/src/circuit/` | ~2K | — | ✅ Phase 1 |
-| Hybrid prover (STARK+Halo2) | `fluidelite-zk/src/halo2_hybrid_prover.rs` | — | — | ✅ |
-| Groth16 prover | `fluidelite-zk/src/groth16_prover.rs` | — | — | ✅ |
-| GPU Halo2 prover | `fluidelite-zk/src/gpu_halo2_prover.rs` | — | — | ✅ |
-| Zero-expansion prover v3 | `fluidelite-zk/src/zero_expansion_prover_v3.rs` | — | — | ✅ |
-| Trustless REST API | `fluidelite-zk/src/trustless_api.rs` | 860 | — | ✅ Phase 2 |
-| Certificate authority | `fluidelite-zk/src/certificate_authority.rs` | — | — | ✅ |
-| Multi-timestep prover | `fluidelite-zk/src/multi_timestep.rs` | — | — | ✅ |
-| Proof profiler | `fluidelite-zk/src/proof_profiler.rs` | — | — | ✅ |
-| Gevulot prover binary | `fluidelite-zk/src/bin/gevulot_prover.rs` | — | — | ✅ Phase 3 |
-| Certificate generator bin | `fluidelite-zk/src/bin/generate_certificate.rs` | — | — | ✅ |
-| Multi-GPU support | `fluidelite-zk/src/multi_gpu.rs` | — | — | ✅ |
-| Rate limiter | `fluidelite-zk/src/rate_limit.rs` | — | — | ✅ Phase 3 |
-| Deployment (Containerfile) | `deployment/` | ~1,300 | — | ✅ Phase 2 |
+| Halo2 circuit framework | `crates/fluidelite_zk/src/circuit/` | ~2K | — | ✅ Phase 1 |
+| Hybrid prover (STARK+Halo2) | `crates/fluidelite_zk/src/halo2_hybrid_prover.rs` | — | — | ✅ |
+| Groth16 prover | `crates/fluidelite_zk/src/groth16_prover.rs` | — | — | ✅ |
+| GPU Halo2 prover | `crates/fluidelite_zk/src/gpu_halo2_prover.rs` | — | — | ✅ |
+| Zero-expansion prover v3 | `crates/fluidelite_zk/src/zero_expansion_prover_v3.rs` | — | — | ✅ |
+| Trustless REST API | `crates/fluidelite_zk/src/trustless_api.rs` | 860 | — | ✅ Phase 2 |
+| Certificate authority | `crates/fluidelite_zk/src/certificate_authority.rs` | — | — | ✅ |
+| Multi-timestep prover | `crates/fluidelite_zk/src/multi_timestep.rs` | — | — | ✅ |
+| Proof profiler | `crates/fluidelite_zk/src/proof_profiler.rs` | — | — | ✅ |
+| Gevulot prover binary | `crates/fluidelite_zk/src/bin/gevulot_prover.rs` | — | — | ✅ Phase 3 |
+| Certificate generator bin | `crates/fluidelite_zk/src/bin/generate_certificate.rs` | — | — | ✅ |
+| Multi-GPU support | `crates/fluidelite_zk/src/multi_gpu.rs` | — | — | ✅ |
+| Rate limiter | `crates/fluidelite_zk/src/rate_limit.rs` | — | — | ✅ Phase 3 |
+| Deployment (Containerfile) | `deploy/` | ~1,300 | — | ✅ Phase 2 |
 
 ### Existing Lean 4 Proofs
 
@@ -137,7 +137,7 @@ These domains already have QTT solvers with STARK-compatible computation traces.
 For each domain:
 1. **Trace adapter** (`tensornet/<domain>/trace_adapter.py`, ~50 LOC) — hooks solver to `ComputationTrace`
 2. **Lean 4 conservation shell** (if not existing) — formal statement of governing conservation laws
-3. **TPC generation script** (`scripts/tpc/generate_<domain>.py`, ~80 LOC)
+3. **TPC generation script** (`tools/scripts/tpc/generate_<domain>.py`, ~80 LOC)
 4. **Gauntlet test** (extend `trustless_physics_phase5_gauntlet.py`)
 
 ### Exit Criteria
@@ -586,7 +586,7 @@ Build a machine-readable registry of all 140 TPC certificates:
 A single command that re-generates and re-verifies all 140 certificates:
 
 ```bash
-python scripts/gauntlets/trustless_physics_full_spectrum_gauntlet.py
+python tools/scripts/gauntlets/trustless_physics_full_spectrum_gauntlet.py
 ```
 
 Produces:
@@ -675,18 +675,18 @@ This section serves as the canonical "toolbox check" — any new work must verif
 | Computation trace logger | `tensornet/core/trace.py` | All 140 domains |
 | Proof bridge | `crates/proof_bridge/` | All 140 domains |
 | Standalone verifier | `apps/trustless_verify/` | All 140 domains |
-| Halo2 circuit base | `fluidelite-zk/src/circuit/` | All circuit-based proofs |
-| Hybrid prover | `fluidelite-zk/src/halo2_hybrid_prover.rs` | All hybrid STARK+Halo2 proofs |
-| Groth16 prover | `fluidelite-zk/src/groth16_prover.rs` | All Groth16 proofs |
-| GPU acceleration | `fluidelite-zk/src/gpu*.rs` | All GPU-accelerated proofs |
-| Trustless REST API | `fluidelite-zk/src/trustless_api.rs` | All API-driven certificate generation |
-| Genesis integration | `fluidelite-zk/src/genesis_prover.rs` | All genesis primitive proofs |
-| Certificate authority | `fluidelite-zk/src/certificate_authority.rs` | All PKI operations |
-| Multi-timestep prover | `fluidelite-zk/src/multi_timestep.rs` | All time-stepping domains |
-| Proof profiler | `fluidelite-zk/src/proof_profiler.rs` | All profiling/benchmarking |
-| Gevulot integration | `fluidelite-zk/src/bin/gevulot_prover.rs` | All decentralized verification |
-| Deployment infra | `deployment/` | All on-premise deployments |
-| Gauntlet framework | `scripts/gauntlets/` | All validation suites |
+| Halo2 circuit base | `crates/fluidelite_zk/src/circuit/` | All circuit-based proofs |
+| Hybrid prover | `crates/fluidelite_zk/src/halo2_hybrid_prover.rs` | All hybrid STARK+Halo2 proofs |
+| Groth16 prover | `crates/fluidelite_zk/src/groth16_prover.rs` | All Groth16 proofs |
+| GPU acceleration | `crates/fluidelite_zk/src/gpu*.rs` | All GPU-accelerated proofs |
+| Trustless REST API | `crates/fluidelite_zk/src/trustless_api.rs` | All API-driven certificate generation |
+| Genesis integration | `crates/fluidelite_zk/src/genesis_prover.rs` | All genesis primitive proofs |
+| Certificate authority | `crates/fluidelite_zk/src/certificate_authority.rs` | All PKI operations |
+| Multi-timestep prover | `crates/fluidelite_zk/src/multi_timestep.rs` | All time-stepping domains |
+| Proof profiler | `crates/fluidelite_zk/src/proof_profiler.rs` | All profiling/benchmarking |
+| Gevulot integration | `crates/fluidelite_zk/src/bin/gevulot_prover.rs` | All decentralized verification |
+| Deployment infra | `deploy/` | All on-premise deployments |
+| Gauntlet framework | `tools/scripts/gauntlets/` | All validation suites |
 | Attestation format | `docs/attestations/*.json` | All attestation outputs |
 | Lean thermal proof | `thermal_conservation_proof/ThermalConservation.lean` | Heat transfer domains |
 | Lean Vlasov proof | `vlasov_conservation_proof/VlasovConservation.lean` | Kinetic/plasma domains |

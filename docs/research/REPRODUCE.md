@@ -59,7 +59,7 @@ sha256sum scripts/research/rank_atlas_campaign.py
 ## Step 1 — Full 20-Pack Campaign (352 measurements)
 
 ```bash
-python scripts/research/rank_atlas_campaign.py \
+python tools/scripts/research/rank_atlas_campaign.py \
     --packs ALL \
     --n-bits 4 5 6 7 \
     --output-json data/rank_atlas_20pack.json \
@@ -97,7 +97,7 @@ prints `VERDICT: FALSIFIED` and the specific pack+config.
 ## Step 2 — Deep Sweep on Packs III & VI (162 measurements)
 
 ```bash
-python scripts/research/rank_atlas_campaign.py \
+python tools/scripts/research/rank_atlas_campaign.py \
     --packs III VI \
     --n-bits 4 5 6 7 8 9 \
     --output-json data/rank_atlas_deep_III_VI.json \

@@ -35,7 +35,7 @@ from hypertensor.core.sanitizer import sanitize_result
 # ── Load baselines ──────────────────────────────────────────────────
 
 _BASELINE_PATH = (
-    pathlib.Path(__file__).resolve().parent.parent / "benchmarks" / "golden_baselines.json"
+    pathlib.Path(__file__).resolve().parent.parent / "experiments" / "benchmarks" / "benchmarks" / "golden_baselines.json"
 )
 
 with open(_BASELINE_PATH) as _f:

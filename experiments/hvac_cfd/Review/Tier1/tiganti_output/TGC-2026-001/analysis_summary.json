@@ -1,0 +1,18 @@
+{
+  "project_id": "TGC-2026-001",
+  "client": "James Morrison",
+  "timestamp": "2026-01-07T21:04:49.203110",
+  "simulation": {
+    "grid": "48\u00d748\u00d724",
+    "converged": true,
+    "iterations": 562,
+    "wall_time_s": 1.5727865049993852
+  },
+  "results": {
+    "max_velocity_ms": 2.286,
+    "mean_velocity_occupied_ms": 0.039193970545019434,
+    "stagnation_pct": 92.97996976568405,
+    "comfort_score": 0,
+    "assessment": "POOR - Significant comfort issues"
+  }
+}

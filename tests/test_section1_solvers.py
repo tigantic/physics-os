@@ -71,7 +71,7 @@ class TestSpaceTimeDG:
 # ── Peridynamics ───────────────────────────────────────────────────
 class TestPeridynamics:
     def test_import(self):
-        from tensornet.mechanics.peridynamics import (
+        from tensornet.materials.mechanics.peridynamics import (
             PeridynamicsModel,
             PeridynamicsSolver,
             Material,
@@ -82,7 +82,7 @@ class TestPeridynamics:
 # ── MPM ─────────────────────────────────────────────────────────────
 class TestMPM:
     def test_import(self):
-        from tensornet.mechanics.mpm import (
+        from tensornet.materials.mechanics.mpm import (
             MPMSolver,
             MPMParticleState,
             ShapeFunction,
@@ -93,16 +93,16 @@ class TestMPM:
 # ── PFC ─────────────────────────────────────────────────────────────
 class TestPFC:
     def test_import(self):
-        from tensornet.phase_field.pfc import PFCState, PFCSolver
+        from tensornet.fluids.phase_field.pfc import PFCState, PFCSolver
 
 
 # ── XFEM ────────────────────────────────────────────────────────────
 class TestXFEM:
     def test_import(self):
-        from tensornet.mechanics.xfem import XFEMSolver, XFEMState, CrackGeometry
+        from tensornet.materials.mechanics.xfem import XFEMSolver, XFEMState, CrackGeometry
 
     def test_heaviside(self):
-        from tensornet.mechanics.xfem import heaviside
+        from tensornet.materials.mechanics.xfem import heaviside
         # heaviside returns sign: +1 above, -1 below
         vals = heaviside(np.array([1.0, -1.0, 0.0]))
         assert vals[0] == 1.0
@@ -113,10 +113,10 @@ class TestXFEM:
 # ── IGA ─────────────────────────────────────────────────────────────
 class TestIGA:
     def test_import(self):
-        from tensornet.mechanics.iga import IGASolver1D, IGAState
+        from tensornet.materials.mechanics.iga import IGASolver1D, IGAState
 
     def test_bspline_partition_of_unity(self):
-        from tensornet.mechanics.iga import basis_funs, find_span
+        from tensornet.materials.mechanics.iga import basis_funs, find_span
         # Knot vector, degree, param value
         U = np.array([0, 0, 0, 0.5, 1, 1, 1], dtype=float)
         p = 2
@@ -132,20 +132,20 @@ class TestIGA:
 # ── VEM ─────────────────────────────────────────────────────────────
 class TestVEM:
     def test_import(self):
-        from tensornet.mechanics.vem import VEMSolver, VEMState
+        from tensornet.materials.mechanics.vem import VEMSolver, VEMState
 
 
 # ── Mimetic FD ──────────────────────────────────────────────────────
 class TestMimeticFD:
     def test_import(self):
-        from tensornet.mechanics.mimetic import (
+        from tensornet.materials.mechanics.mimetic import (
             MimeticFDSolver,
             MFDMesh2D,
             build_cartesian_mfd_mesh,
         )
 
     def test_mesh_build(self):
-        from tensornet.mechanics.mimetic import build_cartesian_mfd_mesh
+        from tensornet.materials.mechanics.mimetic import build_cartesian_mfd_mesh
         mesh = build_cartesian_mfd_mesh(4, 4)
         assert mesh.n_cells > 0
 
@@ -153,7 +153,7 @@ class TestMimeticFD:
 # ── HHO ─────────────────────────────────────────────────────────────
 class TestHHO:
     def test_import(self):
-        from tensornet.mechanics.hho import HHOSolver, HHOState, HHOMesh2D
+        from tensornet.materials.mechanics.hho import HHOSolver, HHOState, HHOMesh2D
 
 
 # ── LES/ILES ────────────────────────────────────────────────────────
@@ -167,10 +167,10 @@ class TestILES:
 # ── AMR ─────────────────────────────────────────────────────────────
 class TestAMR:
     def test_octree_amr(self):
-        from tensornet.mesh_amr import OctreeAMR
+        from tensornet.fluids.mesh_amr import OctreeAMR
         amr = OctreeAMR(Lx=1.0, Ly=1.0, Lz=1.0, max_level=3)
         assert amr.max_level == 3
 
     def test_sfc_load_balancer(self):
-        from tensornet.mesh_amr import SFCLoadBalancer
+        from tensornet.fluids.mesh_amr import SFCLoadBalancer
         assert callable(SFCLoadBalancer)

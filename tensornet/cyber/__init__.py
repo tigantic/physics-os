@@ -1,20 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.applied.cyber.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.cyber import X
+    from tensornet.cyber.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.applied.cyber``.
 """
-TensorNet Cyber Module - Network Attack Visualization
+import importlib as _il
+import sys as _sys
 
-Phase 10: The Grid Shock
-- Network traffic as fluid flow
-- DDoS attacks as pressure shockwaves
-- Cascade failure detection
-
-Physics meets cybersecurity:
-The same equations that model pipe networks
-can visualize network attacks.
-"""
-
-from .grid_shock import AttackSimulation, CascadeReport, CyberGrid
-
-__all__ = [
-    "CyberGrid",
-    "AttackSimulation",
-    "CascadeReport",
-]
+_real = _il.import_module("tensornet.applied.cyber")
+_sys.modules[__name__] = _real

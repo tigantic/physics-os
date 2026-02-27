@@ -150,8 +150,8 @@ def test_protocol_compliance() -> TestResult:
     start = time.perf_counter()
     
     try:
-        from tensornet.discovery.protocol import GenesisPrimitive, PrimitiveType
-        from tensornet.discovery.primitives import (
+        from tensornet.ml.discovery.protocol import GenesisPrimitive, PrimitiveType
+        from tensornet.ml.discovery.primitives import (
             OptimalTransportPrimitive,
             SpectralWaveletPrimitive,
             RandomMatrixPrimitive,
@@ -239,8 +239,8 @@ def test_chain_correctness() -> TestResult:
     start = time.perf_counter()
     
     try:
-        from tensornet.discovery.protocol import PrimitiveChain
-        from tensornet.discovery.primitives import (
+        from tensornet.ml.discovery.protocol import PrimitiveChain
+        from tensornet.ml.discovery.primitives import (
             OptimalTransportPrimitive,
             SpectralWaveletPrimitive,
             KernelPrimitive,
@@ -313,7 +313,7 @@ def test_finding_integrity() -> TestResult:
     start = time.perf_counter()
     
     try:
-        from tensornet.discovery.findings import (
+        from tensornet.ml.discovery.findings import (
             Finding,
             FindingType,
             Severity,
@@ -440,7 +440,7 @@ def test_attestation_validity() -> TestResult:
     start = time.perf_counter()
     
     try:
-        from tensornet.discovery import DiscoveryEngine, DiscoveryResult
+        from tensornet.ml.discovery import DiscoveryEngine, DiscoveryResult
         import torch
         
         # Run engine to get attestation
@@ -512,7 +512,7 @@ def test_pipeline_completeness() -> TestResult:
     start = time.perf_counter()
     
     try:
-        from tensornet.discovery import (
+        from tensornet.ml.discovery import (
             DiscoveryEngine,
             DeFiDiscoveryPipeline,
         )

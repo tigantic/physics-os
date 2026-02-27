@@ -1,0 +1,166 @@
+# HyperTensor Documentation — MkDocs Material
+# https://squidfunk.github.io/mkdocs-material/
+#
+# Build:  mkdocs build --strict
+# Serve:  mkdocs serve
+# Deploy: mkdocs gh-deploy (or via .github/workflows/docs.yml)
+
+site_name: HyperTensor
+site_description: "The Physics-First Tensor Network Engine — Quantum-inspired computation at exascale"
+site_url: https://tigantic.github.io/HyperTensor-VM
+repo_url: https://github.com/tigantic/HyperTensor-VM
+repo_name: tigantic/HyperTensor-VM
+edit_uri: edit/main/docs/
+
+copyright: "&copy; 2024-2026 Tigantic Holdings LLC. All rights reserved."
+
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - navigation.path
+    - navigation.footer
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - search.suggest
+    - search.highlight
+    - search.share
+    - toc.follow
+
+plugins:
+  - search
+  - section-index
+  # API reference auto-generation
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: ["."]
+          options:
+            show_source: true
+            show_root_heading: true
+            show_symbol_type_heading: true
+            heading_level: 3
+            members_order: source
+            docstring_style: numpy
+            show_if_no_docstring: false
+            separate_signature: true
+            filters:
+              - "!^_"
+  # Auto-generate API nav from source tree
+  - gen-files:
+      scripts:
+        - docs/gen_ref_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+
+markdown_extensions:
+  - admonition
+  - abbr
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra_javascript:
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/tigantic/HyperTensor-VM
+  version:
+    provider: mike
+
+nav:
+  - Home:
+    - index.md
+    - CHANGELOG.md
+  - Getting Started:
+    - getting-started/index.md
+    - getting-started/installation.md
+    - getting-started/quickstart.md
+  - Architecture:
+    - architecture/index.md
+    - architecture/platform-specification.md
+    - architecture/tensor-network-engine.md
+    - architecture/three-tier-design.md
+  - API Reference:
+    - reference/
+  - Domain Packs:
+    - domains/index.md
+    - domains/cfd.md
+    - domains/quantum.md
+    - domains/fluids.md
+    - domains/materials.md
+    - domains/aerospace.md
+    - domains/plasma-nuclear.md
+    - domains/life-sciences.md
+    - domains/energy-environment.md
+    - domains/em.md
+    - domains/ml.md
+  - ADRs:
+    - adr/index.md
+  - Governance:
+    - governance/index.md
+    - governance/constitution.md
+    - governance/contributing.md
+    - governance/code-of-conduct.md
+    - governance/security.md
+  - Operations:
+    - operations/index.md
+    - operations/runbook.md
+    - operations/release-process.md
+    - operations/error-codes.md

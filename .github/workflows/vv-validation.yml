@@ -248,7 +248,7 @@ jobs:
       - name: Detect regressions
         id: detect
         run: |
-          python scripts/detect_vv_regression.py \
+          python tools/scripts/detect_vv_regression.py \
             --baseline ${{ env.BASELINE_FILE }} \
             --current artifacts/ \
             --output regression_report.json \
@@ -296,7 +296,7 @@ jobs:
 
       - name: Generate dashboard
         run: |
-          python scripts/generate_vv_dashboard.py \
+          python tools/scripts/generate_vv_dashboard.py \
             --artifacts artifacts/ \
             --output vv_dashboard.html \
             --commit ${{ github.sha }} \
@@ -350,14 +350,14 @@ jobs:
 
       - name: Generate validation manifest
         run: |
-          python scripts/generate_validation_manifest.py \
+          python tools/scripts/generate_validation_manifest.py \
             --artifacts artifacts/ \
             --commit ${{ github.sha }} \
             --output validation_manifest.json
 
       - name: Sign manifest with PQC
         run: |
-          python scripts/sign_manifest.py \
+          python tools/scripts/sign_manifest.py \
             --manifest validation_manifest.json \
             --algorithm dilithium2 \
             --output signed_manifest.json \

@@ -21,19 +21,19 @@ import pytest
 
 class TestFoundationModel:
     def test_config_defaults(self):
-        from tensornet.ml_surrogates.foundation_model import FoundationConfig
+        from tensornet.ml.ml_surrogates.foundation_model import FoundationConfig
         cfg = FoundationConfig()
         assert cfg.d_model == 512
         assert cfg.n_heads == 8
         assert cfg.n_layers == 12
 
     def test_physics_domain_enum(self):
-        from tensornet.ml_surrogates.foundation_model import PhysicsDomain
+        from tensornet.ml.ml_surrogates.foundation_model import PhysicsDomain
         assert len(PhysicsDomain) >= 20
         assert PhysicsDomain.CFD.value == "cfd"
 
     def test_predict_shape(self):
-        from tensornet.ml_surrogates.foundation_model import (
+        from tensornet.ml.ml_surrogates.foundation_model import (
             FoundationConfig,
             PhysicsFoundationModel,
         )
@@ -46,7 +46,7 @@ class TestFoundationModel:
         assert out.shape[2] == cfg.output_dim
 
     def test_few_shot_adapt(self):
-        from tensornet.ml_surrogates.foundation_model import (
+        from tensornet.ml.ml_surrogates.foundation_model import (
             FoundationConfig,
             PhysicsFoundationModel,
         )
@@ -59,7 +59,7 @@ class TestFoundationModel:
         assert isinstance(result, dict)
 
     def test_save_load_roundtrip(self):
-        from tensornet.ml_surrogates.foundation_model import (
+        from tensornet.ml.ml_surrogates.foundation_model import (
             FoundationConfig,
             PhysicsFoundationModel,
         )
@@ -77,11 +77,11 @@ class TestFoundationModel:
 
 class TestNeuralOperatorLibrary:
     def test_fno_import_and_create(self):
-        from tensornet.ml_surrogates import FNO2d, FNO3d, TFNO2d, create_fno
+        from tensornet.ml.ml_surrogates import FNO2d, FNO3d, TFNO2d, create_fno
         assert callable(create_fno)
 
     def test_deeponet_import(self):
-        from tensornet.ml_surrogates import DeepONet, MultiInputDeepONet
+        from tensornet.ml.ml_surrogates import DeepONet, MultiInputDeepONet
         assert DeepONet is not None
 
 
@@ -91,21 +91,21 @@ class TestNeuralOperatorLibrary:
 
 class TestPINNsV2:
     def test_causal_pinn_inner_net(self):
-        from tensornet.ml_surrogates.pinns_v2 import CausalPINN
+        from tensornet.ml.ml_surrogates.pinns_v2 import CausalPINN
         net = CausalPINN()
         x = np.random.randn(20, net.cfg.input_dim)
         y = net.net.forward(x)
         assert y.shape[0] == 20
 
     def test_separated_pinn_forward(self):
-        from tensornet.ml_surrogates.pinns_v2 import SeparatedPINN
+        from tensornet.ml.ml_surrogates.pinns_v2 import SeparatedPINN
         net = SeparatedPINN()
         x = np.random.randn(10, net.cfg.input_dim)
         y = net.forward(x)
         assert y.shape[0] == 10
 
     def test_competitive_pinn_train(self):
-        from tensornet.ml_surrogates.pinns_v2 import CompetitivePINN
+        from tensornet.ml.ml_surrogates.pinns_v2 import CompetitivePINN
         net = CompetitivePINN()
         dim = net.cfg.input_dim
         x = np.random.randn(20, dim)
@@ -125,7 +125,7 @@ class TestPINNsV2:
 
 class TestEquivariantNets:
     def test_se3_linear(self):
-        from tensornet.neural.equivariant import SE3Linear, SE3LinearConfig
+        from tensornet.ml.neural.equivariant import SE3Linear, SE3LinearConfig
         cfg = SE3LinearConfig(in_features=4, out_features=8, lmax=2)
         layer = SE3Linear(cfg)
         # features: {l: (N, 2l+1, in_features)}
@@ -139,7 +139,7 @@ class TestEquivariantNets:
         assert out[1].shape == (5, 3, 8)
 
     def test_so3_convolution(self):
-        from tensornet.neural.equivariant import SO3Convolution, SO3ConvConfig
+        from tensornet.ml.neural.equivariant import SO3Convolution, SO3ConvConfig
         cfg = SO3ConvConfig()
         conv = SO3Convolution(cfg)
         n_nodes = 10
@@ -158,7 +158,7 @@ class TestEquivariantNets:
         assert out.shape[0] == n_nodes
 
     def test_equivariant_net_forward(self):
-        from tensornet.neural.equivariant import EquivariantNet
+        from tensornet.ml.neural.equivariant import EquivariantNet
         net = EquivariantNet()
         cfg = net.cfg
         n_nodes = 6
@@ -182,7 +182,7 @@ class TestEquivariantNets:
 
 class TestGNNSolvers:
     def test_entanglement_gnn_import(self):
-        from tensornet.neural import EntanglementGNN, GNNConfig
+        from tensornet.ml.neural import EntanglementGNN, GNNConfig
         assert EntanglementGNN is not None
 
 
@@ -192,18 +192,18 @@ class TestGNNSolvers:
 
 class TestDiffusionModel:
     def test_noise_schedule_linear(self):
-        from tensornet.ml_surrogates.diffusion_model import NoiseSchedule
+        from tensornet.ml.ml_surrogates.diffusion_model import NoiseSchedule
         ns = NoiseSchedule(n_timesteps=50, schedule_type="linear")
         assert len(ns.betas) == 50
         assert ns.alpha_bar[-1] < ns.alpha_bar[0]
 
     def test_noise_schedule_cosine(self):
-        from tensornet.ml_surrogates.diffusion_model import NoiseSchedule
+        from tensornet.ml.ml_surrogates.diffusion_model import NoiseSchedule
         ns = NoiseSchedule(n_timesteps=50, schedule_type="cosine")
         assert len(ns.betas) == 50
 
     def test_score_net(self):
-        from tensornet.ml_surrogates.diffusion_model import ScoreNet
+        from tensornet.ml.ml_surrogates.diffusion_model import ScoreNet
         net = ScoreNet()
         cfg = net.cfg
         x = np.random.randn(5, cfg.field_dim)
@@ -213,13 +213,13 @@ class TestDiffusionModel:
         assert out.shape == (5, cfg.field_dim)
 
     def test_diffusion_sample(self):
-        from tensornet.ml_surrogates.diffusion_model import PhysicsDiffusionModel
+        from tensornet.ml.ml_surrogates.diffusion_model import PhysicsDiffusionModel
         model = PhysicsDiffusionModel()
         samples = model.sample(batch_size=3)
         assert samples.shape[0] == 3
 
     def test_ddim_sample(self):
-        from tensornet.ml_surrogates.diffusion_model import PhysicsDiffusionModel
+        from tensornet.ml.ml_surrogates.diffusion_model import PhysicsDiffusionModel
         model = PhysicsDiffusionModel()
         samples = model.sample_ddim(batch_size=2, n_steps=5)
         assert samples.shape[0] == 2
@@ -231,24 +231,24 @@ class TestDiffusionModel:
 
 class TestLLMPipeline:
     def test_solver_intent_enum(self):
-        from tensornet.intent.llm_pipeline import SolverIntent
+        from tensornet.applied.intent.llm_pipeline import SolverIntent
         assert len(SolverIntent) >= 10
         assert hasattr(SolverIntent, "CFD_STEADY")
 
     def test_mock_backend(self):
-        from tensornet.intent.llm_pipeline import MockLLMBackend
+        from tensornet.applied.intent.llm_pipeline import MockLLMBackend
         b = MockLLMBackend()
         out = b.complete("test prompt")
         assert isinstance(out, str) and len(out) > 0
 
     def test_intent_classifier(self):
-        from tensornet.intent.llm_pipeline import IntentClassifier, SolverIntent
+        from tensornet.applied.intent.llm_pipeline import IntentClassifier, SolverIntent
         clf = IntentClassifier()
         q = clf.classify("run a CFD simulation of flow over an airfoil")
         assert q.intent in list(SolverIntent)
 
     def test_solver_dispatcher(self):
-        from tensornet.intent.llm_pipeline import (
+        from tensornet.applied.intent.llm_pipeline import (
             ParsedQuery,
             SolverDispatcher,
             SolverIntent,
@@ -269,7 +269,7 @@ class TestLLMPipeline:
         assert result is not None
 
     def test_pipeline_end_to_end(self):
-        from tensornet.intent.llm_pipeline import LLMSolverPipeline, SolverIntent
+        from tensornet.applied.intent.llm_pipeline import LLMSolverPipeline, SolverIntent
         pipe = LLMSolverPipeline()
         pipe.dispatcher.register(SolverIntent.CFD_STEADY, lambda *a, **kw: {"solver": "cfd"})
         pipe.dispatcher.register(SolverIntent.CFD_TRANSIENT, lambda *a, **kw: {"solver": "cfd"})
@@ -283,18 +283,18 @@ class TestLLMPipeline:
 
 class TestRLMesh:
     def test_mesh_environment(self):
-        from tensornet.neural.rl_mesh import MeshEnvironment
+        from tensornet.ml.neural.rl_mesh import MeshEnvironment
         env = MeshEnvironment(n_elements=20)
         env.reset()
         assert env.n_elements == 20
 
     def test_mesh_actions(self):
-        from tensornet.neural.rl_mesh import MeshAction
+        from tensornet.ml.neural.rl_mesh import MeshAction
         assert MeshAction.NOOP.value == 0
         assert MeshAction.H_REFINE.value == 1
 
     def test_rl_agent_creation(self):
-        from tensornet.neural.rl_mesh import MeshEnvironment, PPOConfig, RLMeshAgent
+        from tensornet.ml.neural.rl_mesh import MeshEnvironment, PPOConfig, RLMeshAgent
         env = MeshEnvironment(n_elements=8)
         cfg = PPOConfig()
         agent = RLMeshAgent(env=env, cfg=cfg)
@@ -307,7 +307,7 @@ class TestRLMesh:
 
 class TestNeuralCorrectors:
     def test_corrector_net(self):
-        from tensornet.ml_surrogates.neural_corrector import CorrectorNet
+        from tensornet.ml.ml_surrogates.neural_corrector import CorrectorNet
         net = CorrectorNet()
         cfg = net.cfg
         x = np.random.randn(10, cfg.input_dim)
@@ -315,7 +315,7 @@ class TestNeuralCorrectors:
         assert correction.shape[0] == 10
 
     def test_spectral_corrector(self):
-        from tensornet.ml_surrogates.neural_corrector import SpectralCorrector
+        from tensornet.ml.ml_surrogates.neural_corrector import SpectralCorrector
         net = SpectralCorrector()
         cfg = net.cfg
         x = np.random.randn(10, cfg.n_channels)
@@ -323,7 +323,7 @@ class TestNeuralCorrectors:
         assert corrected.shape == x.shape
 
     def test_adaptive_corrector(self):
-        from tensornet.ml_surrogates.neural_corrector import AdaptiveCorrector
+        from tensornet.ml.ml_surrogates.neural_corrector import AdaptiveCorrector
         net = AdaptiveCorrector()
         cfg = net.cfg
         x = np.random.randn(10, cfg.input_dim)
@@ -331,7 +331,7 @@ class TestNeuralCorrectors:
         assert out.shape[0] == 10
 
     def test_corrector_trainer(self):
-        from tensornet.ml_surrogates.neural_corrector import CorrectorNet, CorrectorTrainer
+        from tensornet.ml.ml_surrogates.neural_corrector import CorrectorNet, CorrectorTrainer
         net = CorrectorNet()
         trainer = CorrectorTrainer(net)
         in_dim = net.cfg.input_dim
@@ -349,7 +349,7 @@ class TestNeuralCorrectors:
 
 class TestAutomatedModelSelection:
     def test_algorithm_selector_import(self):
-        from tensornet.neural import AlgorithmSelector, AlgorithmType
+        from tensornet.ml.neural import AlgorithmSelector, AlgorithmType
         assert AlgorithmSelector is not None
 
 
@@ -359,7 +359,7 @@ class TestAutomatedModelSelection:
 
 class TestMultiFidelity:
     def test_single_fidelity_gp(self):
-        from tensornet.ml_surrogates.multi_fidelity import SingleFidelityGP
+        from tensornet.ml.ml_surrogates.multi_fidelity import SingleFidelityGP
         gp = SingleFidelityGP(length_scale=1.0, variance=1.0)
         x_train = np.linspace(0, 5, 10).reshape(-1, 1)
         y_train = np.sin(x_train).ravel()
@@ -369,7 +369,7 @@ class TestMultiFidelity:
         assert mu.shape == (1,) and var.shape == (1,)
 
     def test_multi_fidelity_gp(self):
-        from tensornet.ml_surrogates.multi_fidelity import MultiFidelityGP
+        from tensornet.ml.ml_surrogates.multi_fidelity import MultiFidelityGP
         mf = MultiFidelityGP()
         x_lo = np.linspace(0, 5, 20).reshape(-1, 1)
         y_lo = np.sin(x_lo).ravel()
@@ -380,7 +380,7 @@ class TestMultiFidelity:
         assert mu.shape == (1,)
 
     def test_cokrig_surrogate(self):
-        from tensornet.ml_surrogates.multi_fidelity import (
+        from tensornet.ml.ml_surrogates.multi_fidelity import (
             CoKrigingSurrogate,
             FidelityLevel,
         )
@@ -408,7 +408,7 @@ class TestSymbolicRegression:
 
 class TestTransformerStepper:
     def test_forward_shape(self):
-        from tensornet.ml_surrogates.transformer_stepper import TransformerTimeStepper
+        from tensornet.ml.ml_surrogates.transformer_stepper import TransformerTimeStepper
         model = TransformerTimeStepper()
         cfg = model.cfg
         # forward expects (B, window_size, n_patches, token_dim)
@@ -417,7 +417,7 @@ class TestTransformerStepper:
         assert out.shape == (2, cfg.n_patches, cfg.token_dim)
 
     def test_autoregressive_rollout(self):
-        from tensornet.ml_surrogates.transformer_stepper import TransformerTimeStepper
+        from tensornet.ml.ml_surrogates.transformer_stepper import TransformerTimeStepper
         model = TransformerTimeStepper()
         cfg = model.cfg
         seed = np.random.randn(1, cfg.window_size, cfg.n_patches, cfg.token_dim)
@@ -425,7 +425,7 @@ class TestTransformerStepper:
         assert trajectory.shape == (1, 3, cfg.n_patches, cfg.token_dim)
 
     def test_config_properties(self):
-        from tensornet.ml_surrogates.transformer_stepper import (
+        from tensornet.ml.ml_surrogates.transformer_stepper import (
             TimeStepperConfig,
             TransformerTimeStepper,
         )
@@ -442,7 +442,7 @@ class TestTransformerStepper:
 
 class TestActiveLearning:
     def test_active_learner_import(self):
-        from tensornet.ml_surrogates import ActiveLearner
+        from tensornet.ml.ml_surrogates import ActiveLearner
         assert ActiveLearner is not None
 
 
@@ -452,7 +452,7 @@ class TestActiveLearning:
 
 class TestQTTOperator:
     def test_qtt_field(self):
-        from tensornet.ml_surrogates.qtt_operator import QTTField
+        from tensornet.ml.ml_surrogates.qtt_operator import QTTField
         cores = [np.random.randn(1, 2, 4) for _ in range(4)]
         cores[-1] = np.random.randn(4, 2, 1)
         for i in range(1, len(cores) - 1):
@@ -463,7 +463,7 @@ class TestQTTOperator:
         assert full is not None
 
     def test_qtt_operator_net(self):
-        from tensornet.ml_surrogates.qtt_operator import QTTField, QTTOperatorNet
+        from tensornet.ml.ml_surrogates.qtt_operator import QTTField, QTTOperatorNet
         net = QTTOperatorNet()
         n = net.cfg.n_sites
         bond = net.cfg.bond_dim
@@ -478,7 +478,7 @@ class TestQTTOperator:
         assert len(out.cores) == n
 
     def test_qtt_norm(self):
-        from tensornet.ml_surrogates.qtt_operator import QTTField, qtt_norm
+        from tensornet.ml.ml_surrogates.qtt_operator import QTTField, qtt_norm
         cores = [np.random.randn(1, 2, 4), np.random.randn(4, 2, 1)]
         qf = QTTField(cores=cores)
         n = qtt_norm(qf)
@@ -491,13 +491,13 @@ class TestQTTOperator:
 
 class TestSelfSupervised:
     def test_physics_augmentation(self):
-        from tensornet.ml_surrogates.self_supervised import PhysicsAugmentation
+        from tensornet.ml.ml_surrogates.self_supervised import PhysicsAugmentation
         field = np.random.randn(10, 4)
         out = PhysicsAugmentation.add_noise(field, sigma=0.01)
         assert out.shape == field.shape
 
     def test_masked_autoencoder(self):
-        from tensornet.ml_surrogates.self_supervised import MaskedFieldAutoencoder
+        from tensornet.ml.ml_surrogates.self_supervised import MaskedFieldAutoencoder
         mae = MaskedFieldAutoencoder()
         cfg = mae.cfg
         # forward expects 3D: (B, n_patches, patch_dim)
@@ -508,7 +508,7 @@ class TestSelfSupervised:
         assert result["reconstruction"].shape == x.shape
 
     def test_contrastive_learner(self):
-        from tensornet.ml_surrogates.self_supervised import ContrastiveLearner
+        from tensornet.ml.ml_surrogates.self_supervised import ContrastiveLearner
         cl = ContrastiveLearner()
         cfg = cl.cfg
         x = np.random.randn(10, cfg.patch_dim)
@@ -516,7 +516,7 @@ class TestSelfSupervised:
         assert isinstance(result, dict)
 
     def test_pretraining_pipeline(self):
-        from tensornet.ml_surrogates.self_supervised import (
+        from tensornet.ml.ml_surrogates.self_supervised import (
             ContrastiveLearner,
             MaskedFieldAutoencoder,
             PreTrainingPipeline,
@@ -537,7 +537,7 @@ class TestSelfSupervised:
 
 class TestPhysicsRAG:
     def test_vector_store(self):
-        from tensornet.ml_surrogates.physics_rag import (
+        from tensornet.ml.ml_surrogates.physics_rag import (
             DocType,
             PhysicsDocument,
             VectorStore,
@@ -553,7 +553,7 @@ class TestPhysicsRAG:
         assert len(results) == 1
 
     def test_retriever(self):
-        from tensornet.ml_surrogates.physics_rag import (
+        from tensornet.ml.ml_surrogates.physics_rag import (
             DocType,
             PhysicsDocument,
             PhysicsRetriever,
@@ -569,7 +569,7 @@ class TestPhysicsRAG:
         assert len(results) == 1
 
     def test_rag_pipeline(self):
-        from tensornet.ml_surrogates.physics_rag import (
+        from tensornet.ml.ml_surrogates.physics_rag import (
             DocType,
             PhysicsDocument,
             RAGPipeline,
@@ -591,7 +591,7 @@ class TestPhysicsRAG:
 
 class TestHyperparamTuner:
     def test_search_space(self):
-        from tensornet.ml_surrogates.hyperparam_tuner import (
+        from tensornet.ml.ml_surrogates.hyperparam_tuner import (
             ParamRange,
             ParamType,
             SearchSpace,
@@ -604,7 +604,7 @@ class TestHyperparamTuner:
         assert "lr" in sample and "layers" in sample
 
     def test_grid_searcher(self):
-        from tensornet.ml_surrogates.hyperparam_tuner import (
+        from tensornet.ml.ml_surrogates.hyperparam_tuner import (
             GridSearcher,
             ParamRange,
             ParamType,
@@ -617,7 +617,7 @@ class TestHyperparamTuner:
         assert cfg is not None and "x" in cfg
 
     def test_bayesian_optimiser(self):
-        from tensornet.ml_surrogates.hyperparam_tuner import (
+        from tensornet.ml.ml_surrogates.hyperparam_tuner import (
             BayesianOptimiser,
             ParamRange,
             ParamType,
@@ -635,7 +635,7 @@ class TestHyperparamTuner:
         assert bo.suggest() is not None or True
 
     def test_hyper_tuner(self):
-        from tensornet.ml_surrogates.hyperparam_tuner import (
+        from tensornet.ml.ml_surrogates.hyperparam_tuner import (
             HyperTuner,
             ParamRange,
             ParamType,
@@ -659,27 +659,27 @@ class TestHyperparamTuner:
 
 class TestNeuralClosure:
     def test_strain_rate(self):
-        from tensornet.ml_surrogates.neural_closure import strain_rate
+        from tensornet.ml.ml_surrogates.neural_closure import strain_rate
         grad_u = np.random.randn(3, 3)
         S = strain_rate(grad_u)
         assert S.shape == (3, 3)
 
     def test_reynolds_stress_closure(self):
-        from tensornet.ml_surrogates.neural_closure import ReynoldsStressClosure
+        from tensornet.ml.ml_surrogates.neural_closure import ReynoldsStressClosure
         model = ReynoldsStressClosure()
         grad_u = np.random.randn(5, 3, 3)
         tau = model.predict_anisotropy(grad_u)
         assert tau is not None
 
     def test_subgrid_flux_closure(self):
-        from tensornet.ml_surrogates.neural_closure import SubgridFluxClosure
+        from tensornet.ml.ml_surrogates.neural_closure import SubgridFluxClosure
         model = SubgridFluxClosure()
         grad_u = np.random.randn(5, 3, 3)
         flux = model.predict(grad_u)
         assert flux is not None
 
     def test_closure_trainer(self):
-        from tensornet.ml_surrogates.neural_closure import (
+        from tensornet.ml.ml_surrogates.neural_closure import (
             ClosureTrainer,
             ReynoldsStressClosure,
         )
@@ -697,7 +697,7 @@ class TestNeuralClosure:
 
 class TestMultiModal:
     def test_field_encoder(self):
-        from tensornet.ml_surrogates.multimodal import FieldEncoder
+        from tensornet.ml.ml_surrogates.multimodal import FieldEncoder
         enc = FieldEncoder()
         cfg = enc.cfg
         x = np.random.randn(10, cfg.input_dim)
@@ -705,14 +705,14 @@ class TestMultiModal:
         assert out.shape[0] == 10
 
     def test_point_cloud_encoder(self):
-        from tensornet.ml_surrogates.multimodal import PointCloudEncoder
+        from tensornet.ml.ml_surrogates.multimodal import PointCloudEncoder
         enc = PointCloudEncoder()
         x = np.random.randn(2, 20, 3)
         out = enc.encode(x)
         assert out is not None
 
     def test_multi_modal_fusion(self):
-        from tensornet.ml_surrogates.multimodal import Modality, MultiModalFusion
+        from tensornet.ml.ml_surrogates.multimodal import Modality, MultiModalFusion
         fuser = MultiModalFusion(latent_dim=8, n_heads=2)
         embeddings = {
             Modality.FIELD: np.random.randn(5, 8),
@@ -722,7 +722,7 @@ class TestMultiModal:
         assert out is not None
 
     def test_multi_modal_physics_ai(self):
-        from tensornet.ml_surrogates.multimodal import MultiModalPhysicsAI
+        from tensornet.ml.ml_surrogates.multimodal import MultiModalPhysicsAI
         ai = MultiModalPhysicsAI()
         field = np.random.randn(2, 64)
         points = np.random.randn(2, 10, 3)
@@ -736,7 +736,7 @@ class TestMultiModal:
 
 class TestS5Imports:
     def test_ml_surrogates_init(self):
-        from tensornet.ml_surrogates import (
+        from tensornet.ml.ml_surrogates import (
             PhysicsFoundationModel,
             CausalPINN,
             PhysicsDiffusionModel,
@@ -758,7 +758,7 @@ class TestS5Imports:
         ])
 
     def test_neural_init(self):
-        from tensornet.neural import (
+        from tensornet.ml.neural import (
             SE3Linear,
             EquivariantNet,
             MeshAction,
@@ -769,7 +769,7 @@ class TestS5Imports:
         ])
 
     def test_intent_init(self):
-        from tensornet.intent import (
+        from tensornet.applied.intent import (
             SolverIntent,
             LLMSolverPipeline,
             IntentClassifier,

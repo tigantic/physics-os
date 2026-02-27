@@ -9,11 +9,11 @@ on:
   push:
     branches: [main, develop, master]
     paths:
-      - 'ledger/**'
+      - 'apps/ledger/**'
   pull_request:
     branches: [main, develop, master]
     paths:
-      - 'ledger/**'
+      - 'apps/ledger/**'
   schedule:
     # Nightly at 02:00 UTC
     - cron: '0 2 * * *'
@@ -38,14 +38,14 @@ jobs:
         run: pip install pyyaml
 
       - name: Validate ledger schema
-        run: python3 ledger/validate_ledger.py
+        run: python3 apps/ledger/validate_ledger.py
 
       - name: Check node count
         run: |
-          COUNT=$(ls ledger/nodes/*.yaml 2>/dev/null | wc -l)
+          COUNT=$(ls apps/ledger/nodes/*.yaml 2>/dev/null | wc -l)
           echo "Node files found: $COUNT"
-          if [ "$COUNT" -ne 140 ]; then
-            echo "ERROR: Expected 140 node files, found $COUNT"
+          if [ "$COUNT" -ne 168 ]; then
+            echo "ERROR: Expected 168 node files, found $COUNT"
             exit 1
           fi
           echo "✓ Node count correct"
@@ -54,8 +54,8 @@ jobs:
         run: |
           python3 -c "
           import yaml, pathlib
-          index = yaml.safe_load(pathlib.Path('ledger/index.yaml').read_text())
-          nodes_dir = pathlib.Path('ledger/nodes')
+          index = yaml.safe_load(pathlib.Path('apps/ledger/index.yaml').read_text())
+          nodes_dir = pathlib.Path('apps/ledger/nodes')
           node_files = sorted(nodes_dir.glob('*.yaml'))
 
           # Check every node file has a corresponding index entry
@@ -82,7 +82,7 @@ jobs:
         run: |
           python3 -c "
           import yaml, pathlib
-          nodes_dir = pathlib.Path('ledger/nodes')
+          nodes_dir = pathlib.Path('apps/ledger/nodes')
           states = {}
           tiers = {}
           for f in sorted(nodes_dir.glob('*.yaml')):

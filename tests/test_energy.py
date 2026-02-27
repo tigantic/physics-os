@@ -16,7 +16,7 @@ import numpy as np
 import pytest
 import torch
 
-from tensornet.energy.turbine import TurbineSpec, WindFarm
+from tensornet.energy_env.energy.turbine import TurbineSpec, WindFarm
 
 # ============================================================================
 # FIXTURES

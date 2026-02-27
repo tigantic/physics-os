@@ -1,20 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.applied.particle.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.particle import X
+    from tensornet.particle.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.applied.particle``.
 """
-Particle physics package.
+import importlib as _il
+import sys as _sys
 
-Domain: X.6 Beyond the Standard Model.
-"""
-
-from .beyond_sm import (
-    NeutrinoOscillations,
-    DarkMatterRelic,
-    GUTRunningCouplings,
-    SMEFTOperators,
-)
-
-__all__ = [
-    # X.6 Beyond the Standard Model
-    "NeutrinoOscillations",
-    "DarkMatterRelic",
-    "GUTRunningCouplings",
-    "SMEFTOperators",
-]
+_real = _il.import_module("tensornet.applied.particle")
+_sys.modules[__name__] = _real

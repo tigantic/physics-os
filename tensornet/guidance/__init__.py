@@ -1,48 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.aerospace.guidance.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.guidance import X
+    from tensornet.guidance.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.aerospace.guidance``.
 """
-Guidance Module
-===============
+import importlib as _il
+import sys as _sys
 
-Physics-aware trajectory and guidance for hypersonic vehicles.
-
-Submodules:
-    trajectory: 6-DOF dynamics, atmospheric model, integration
-    controller: Guidance laws, constraint handling, CFD coupling
-"""
-
-from tensornet.guidance.controller import (
-                                           ConstraintType,
-                                           GuidanceCommand,
-                                           GuidanceController,
-                                           GuidanceMode,
-                                           TrajectoryConstraint,
-                                           bank_angle_guidance,
-                                           proportional_navigation,
-)
-from tensornet.guidance.trajectory import (
-                                           AeroCoefficients,
-                                           AtmosphericModel,
-                                           TrajectoryConfig,
-                                           TrajectorySolver,
-                                           VehicleState,
-                                           exponential_atmosphere,
-                                           isa_atmosphere,
-)
-
-__all__ = [
-    # Trajectory
-    "AtmosphericModel",
-    "VehicleState",
-    "AeroCoefficients",
-    "TrajectoryConfig",
-    "TrajectorySolver",
-    "isa_atmosphere",
-    "exponential_atmosphere",
-    # Controller
-    "GuidanceMode",
-    "ConstraintType",
-    "GuidanceCommand",
-    "TrajectoryConstraint",
-    "GuidanceController",
-    "proportional_navigation",
-    "bank_angle_guidance",
-]
+_real = _il.import_module("tensornet.aerospace.guidance")
+_sys.modules[__name__] = _real

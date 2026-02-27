@@ -329,7 +329,7 @@ class MyFlux(FluxScheme):
 ### Adding Rust Extensions
 
 ```rust
-// In tci_core_rust/src/lib.rs
+// In crates/tci_core_rust/src/lib.rs
 #[pyclass]
 pub struct MyExtension {
     // ...

@@ -100,8 +100,8 @@ Small scale ratios are modest. **The physics scales.**
 
 ## FILE LOCATIONS
 
-- **Engine:** `fluidelite-zk/src/bin/fluid_ingest.rs`
-- **Benchmark:** `benchmarks/PETABYTE_RESULT.json`
+- **Engine:** `crates/fluidelite_zk/src/bin/fluid_ingest.rs`
+- **Benchmark:** `experiments/benchmarks/benchmarks/PETABYTE_RESULT.json`
 - **This Doc:** `QTT_COMPRESSION_PHYSICS.md`
 
 ---

@@ -1,0 +1,52 @@
+{
+  "client": {
+    "name": "lj",
+    "project_id": "l-kj",
+    "contact": ";lkj",
+    "email": ";lkj"
+  },
+  "room": {
+    "name": ";lkj",
+    "type": "conference",
+    "dimensions_m": [
+      7.315200000000001,
+      5.1816,
+      2.7432000000000003
+    ]
+  },
+  "load": {
+    "occupants": 2,
+    "heat_load_per_person_watts": 100,
+    "equipment_load_watts": 1250,
+    "lighting_load_watts": 500
+  },
+  "hvac": {
+    "supply_cfm": 660,
+    "supply_temp_c": 12.777777777777779,
+    "diffuser_type": "ceiling_square",
+    "num_diffusers": 2,
+    "diffuser_size": "24x24",
+    "diffuser_location": "ceiling center",
+    "supply_velocity_ms": 3.11
+  },
+  "constraints": {
+    "max_velocity_ms": 0.254,
+    "target_temp_c": 22.22222222222222,
+    "temp_range_c": [
+      20,
+      23.88888888888889
+    ],
+    "max_co2_ppm": 1000
+  },
+  "simulation": {
+    "duration_seconds": 300
+  },
+  "analysis_type": "comfort_verification",
+  "notes": "afdssfasdf",
+  "deliverables": {
+    "thermal_heatmap": true,
+    "velocity_field": true,
+    "convergence_plot": true,
+    "pdf_report": true
+  }
+}

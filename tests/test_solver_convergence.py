@@ -23,10 +23,11 @@ import torch
 
 # ── project root on sys.path ──────────────────────────────────────
 ROOT = Path(__file__).resolve().parent.parent
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+_scripts_dir = str(ROOT / "tools" / "scripts")
+if _scripts_dir not in sys.path:
+    sys.path.insert(0, _scripts_dir)
 
-from scripts.ahmed_body_ib_solver import (  # noqa: E402
+from ahmed_body_ib_solver import (  # noqa: E402
     AhmedBodyConfig,
     AhmedBodyIBSolver,
     AhmedBodyParams,

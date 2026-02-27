@@ -372,8 +372,8 @@ def run_qtt_operator_test(bits: int, rank: int, device: torch.device) -> TestRes
     Test: QTT-based Laplacian operator matches FD Laplacian.
     """
     try:
-        from tensornet.fieldops import Laplacian
-        from tensornet.substrate import Field
+        from tensornet.infra.fieldops import Laplacian
+        from tensornet.engine.substrate import Field
     except ImportError as e:
         return TestResult(
             name="QTT Laplacian vs FD",

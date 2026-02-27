@@ -358,7 +358,7 @@ def run_full_benchmark():
         sys.exit(1)
     
     import torch
-    from tensornet.visualization.tensor_slicer import TensorSlicer
+    from tensornet.sim.visualization.tensor_slicer import TensorSlicer
     
     print("=" * 70)
     print("QTT SEPARABLE RENDERING BENCHMARK")

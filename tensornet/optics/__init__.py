@@ -1,58 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.applied.optics.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.optics import X
+    from tensornet.optics.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.applied.optics``.
 """
-tensornet.optics — Physical & wave optics.
+import importlib as _il
+import sys as _sys
 
-Modules:
-    physical_optics  Diffraction, polarization, angular spectrum propagation
-"""
-
-from tensornet.optics.physical_optics import (
-    FresnelPropagator,
-    FraunhoferPropagator,
-    AngularSpectrumPropagator,
-    JonesVector,
-    JonesMatrix,
-    MuellerMatrix,
-    StokesVector,
-    ThinFilmStack,
-    GaussianBeam,
-)
-from tensornet.optics.quantum_optics import (
-    JaynesCummingsModel,
-    PhotonStatistics,
-    SqueezedState,
-    HongOuMandel,
-)
-from tensornet.optics.laser_physics import (
-    FourLevelLaser,
-    GaussianBeam as LaserGaussianBeam,
-    FabryPerotCavity,
-)
-from tensornet.optics.ultrafast_optics import (
-    UltrafastPulse,
-    SplitStepFourier,
-    SelfPhaseModulation,
-    Autocorrelation,
-)
-
-__all__ = [
-    "FresnelPropagator",
-    "FraunhoferPropagator",
-    "AngularSpectrumPropagator",
-    "JonesVector",
-    "JonesMatrix",
-    "MuellerMatrix",
-    "StokesVector",
-    "ThinFilmStack",
-    "GaussianBeam",
-    "JaynesCummingsModel",
-    "PhotonStatistics",
-    "SqueezedState",
-    "HongOuMandel",
-    "FourLevelLaser",
-    "LaserGaussianBeam",
-    "FabryPerotCavity",
-    "UltrafastPulse",
-    "SplitStepFourier",
-    "SelfPhaseModulation",
-    "Autocorrelation",
-]
+_real = _il.import_module("tensornet.applied.optics")
+_sys.modules[__name__] = _real

@@ -1,21 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.aerospace.defense.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.defense import X
+    from tensornet.defense.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.aerospace.defense``.
 """
-TensorNet Defense Module - Hydroacoustic Warfare
+import importlib as _il
+import sys as _sys
 
-Phase 8: The Silent Sub
-- Ocean domain with Munk Sound Speed Profile
-- FDTD Wave Equation solver for sonar propagation
-- Shadow zone detection for submarine stealth
-
-The physics that hides submarines, now on your GPU.
-"""
-
-from .ocean import OceanDomain, SoundSpeedProfile
-from .solver import AcousticField, StealthReport, solve_sonar_ping
-
-__all__ = [
-    "OceanDomain",
-    "SoundSpeedProfile",
-    "solve_sonar_ping",
-    "AcousticField",
-    "StealthReport",
-]
+_real = _il.import_module("tensornet.aerospace.defense")
+_sys.modules[__name__] = _real

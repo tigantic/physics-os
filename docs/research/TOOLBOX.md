@@ -32,15 +32,15 @@ The complete catalog of HyperTensor - a physics-first tensor network ecosystem.
 | `tensornet/` | 416 | 213,663 | 53.5% |
 | `root/*.py` | 57 | 41,830 | 10.5% |
 | `tests/` | 60 | 28,232 | 7.1% |
-| `fluidelite/` | 82 | 25,604 | 6.4% |
+| `crates/fluidelite/` | 82 | 25,604 | 6.4% |
 | `demos/` | 45 | 21,910 | 5.5% |
 | `yangmills/` | 45 | 18,855 | 4.7% |
 | `proofs/` | 34 | 13,424 | 3.4% |
-| `scripts/` | 61 | 13,329 | 3.3% |
+| `tools/scripts/` | 61 | 13,329 | 3.3% |
 | `Physics/` | 10 | 7,755 | 1.9% |
-| `sdk/` | 19 | 6,725 | 1.7% |
-| `benchmarks/` | 15 | 3,719 | 0.9% |
-| `proof_engine/` | 7 | 2,759 | 0.7% |
+| `apps/sdk_legacy/` | 19 | 6,725 | 1.7% |
+| `experiments/benchmarks/benchmarks/` | 15 | 3,719 | 0.9% |
+| `proofs/proof_engine/` | 7 | 2,759 | 0.7% |
 | `tci_llm/` | 10 | 2,261 | 0.6% |
 | `ai_scientist/` | 6 | 2,080 | 0.5% |
 
@@ -103,7 +103,7 @@ The complete catalog of HyperTensor - a physics-first tensor network ecosystem.
 | `agri/` | 2 | 397 | | `mps/` | 2 | 432 |
 | `algorithms/` | 6 | 2,316 | | `neural/` | 5 | 2,928 |
 | `autonomy/` | 5 | 1,871 | | `numerics/` | 2 | 492 |
-| `benchmarks/` | 7 | 2,534 | | `oracle/` | 32 | 9,936 |
+| `experiments/benchmarks/benchmarks/` | 7 | 2,534 | | `oracle/` | 32 | 9,936 |
 | `certification/` | 3 | 1,212 | | `physics/` | 4 | 1,587 |
 | `cfd/` | 73 | 45,681 | | `provenance/` | 7 | 3,056 |
 | `coordination/` | 5 | 2,167 | | `quantum/` | 7 | 3,831 |
@@ -112,7 +112,7 @@ The complete catalog of HyperTensor - a physics-first tensor network ecosystem.
 | `cyber/` | 2 | 456 | | `simulation/` | 6 | 4,360 |
 | `data/` | 3 | 891 | | `site/` | 5 | 2,645 |
 | `defense/` | 4 | 1,634 | | `sovereign/` | 10 | 3,127 |
-| `deployment/` | 4 | 1,423 | | `substrate/` | 6 | 2,549 |
+| `deploy/` | 4 | 1,423 | | `substrate/` | 6 | 2,549 |
 | `digital_twin/` | 6 | 3,866 | | `urban/` | 3 | 1,068 |
 | `distributed/` | 6 | 2,891 | | `validation/` | 6 | 4,406 |
 | `distributed_tn/` | 5 | 2,134 | | `visualization/` | 2 | 705 |
@@ -199,10 +199,10 @@ High-performance tensor operations for LLMs and ZK proofs.
 
 | Component | Location | Description |
 |-----------|----------|-------------|
-| Python Core | `fluidelite/` | 59 files - MPS/MPO operations |
-| Rust Prover | `fluidelite-zk/` | 48 Rust files + 24 binaries |
-| Triton Kernels | `fluidelite/core/triton_kernels.py` | GPU-native ops |
-| LLM Integration | `fluidelite/llm/` | Tensor-compressed language models |
+| Python Core | `crates/fluidelite/` | 59 files - MPS/MPO operations |
+| Rust Prover | `crates/fluidelite_zk/` | 48 Rust files + 24 binaries |
+| Triton Kernels | `crates/fluidelite/core/triton_kernels.py` | GPU-native ops |
+| LLM Integration | `crates/fluidelite/llm/` | Tensor-compressed language models |
 
 **Binaries:**
 | Binary | Description |
@@ -225,7 +225,7 @@ High-performance tensor operations for LLMs and ZK proofs.
 | Bridge | `tensornet/sovereign/bridge_writer.py` | Cross-chain bridge |
 | Streaming | `tensornet/sovereign/qtt_bridge_streamer.py` | QTT over network |
 | Weather | `tensornet/sovereign/weather_stream.py` | Real-time data ingestion |
-| Gevulot | `gevulot/` | Prover network integration |
+| Gevulot | `crates/gevulot/` | Prover network integration |
 
 ---
 
@@ -447,13 +447,13 @@ from tensornet.visualization import TensorSlicer
 | `agri/` | 2 | Agricultural simulation |
 | `algorithms/` | 6 | Core algorithms |
 | `autonomy/` | 5 | Autonomous systems |
-| `benchmarks/` | 7 | Performance benchmarks |
+| `experiments/benchmarks/benchmarks/` | 7 | Performance benchmarks |
 | `certification/` | 3 | Safety certification |
 | `coordination/` | 5 | Multi-agent coordination |
 | `cyber/` | 2 | Cybersecurity |
 | `data/` | 3 | Data utilities |
 | `defense/` | 4 | Defense applications |
-| `deployment/` | 4 | Deployment tooling |
+| `deploy/` | 4 | Deployment tooling |
 | `digital_twin/` | 6 | Digital twin simulation |
 | `distributed/` | 6 | Distributed computing |
 | `distributed_tn/` | 5 | Distributed tensor networks |
@@ -484,7 +484,7 @@ from tensornet.visualization import TensorSlicer
 
 ---
 
-### fluidelite/ - Production Tensor Engine
+### crates/fluidelite/ - Production Tensor Engine
 **12 submodules | 59 files**
 
 | Submodule | Files | Purpose |
@@ -521,10 +521,10 @@ from yangmills import Hamiltonian, Lattice, SU2, GroundState
 | Module | Files | Purpose |
 |--------|-------|---------|
 | `proofs/` | 34 | Mathematical proof scripts |
-| `sdk/` | 19 | Enterprise SDK, QTT-SDK |
+| `apps/sdk_legacy/` | 19 | Enterprise SDK, QTT-SDK |
 | `tci_llm/` | 10 | Tensor Core Interface for LLMs |
 | `ai_scientist/` | 6 | Automated scientific discovery |
-| `proof_engine/` | 7 | Proof orchestration |
+| `proofs/proof_engine/` | 7 | Proof orchestration |
 | `Physics/` | 10 | Standalone physics benchmarks |
 
 ---
@@ -533,12 +533,12 @@ from yangmills import Hamiltonian, Lattice, SU2, GroundState
 
 | Crate | Location | Purpose |
 |-------|----------|---------|
-| `fluidelite-zk` | `fluidelite-zk/` | High-perf ZK prover (48 files) |
+| `fluidelite-zk` | `crates/fluidelite_zk/` | High-perf ZK prover (48 files) |
 | `hyper_core` | `crates/hyper_core/` | Core tensor operations |
 | `hyper_bridge` | `crates/hyper_bridge/` | Python/Rust FFI |
 | `glass_cockpit` | `apps/glass_cockpit/` | Flight display (68 files) |
 | `global_eye` | `apps/global_eye/` | Global monitoring |
-| `tci_core_rust` | `tci_core_rust/` | Tensor Core Interface |
+| `tci_core_rust` | `crates/tci_core_rust/` | Tensor Core Interface |
 
 ---
 
@@ -546,7 +546,7 @@ from yangmills import Hamiltonian, Lattice, SU2, GroundState
 
 | Package | Files | Purpose |
 |---------|-------|---------|
-| `lean_yang_mills/` | 7 | Yang-Mills formalization, mass gap theorem |
+| `proofs/yang_mills/lean/` | 7 | Yang-Mills formalization, mass gap theorem |
 | `yang_mills_unified_proof/` | 1 | Lean 4 unified proof |
 
 ---
@@ -836,7 +836,7 @@ results = analyzer.analyze_file("rtl/module.sv")
 |-------------|----------|---------|
 | Unity | `integrations/unity/` | Game engine |
 | Unreal | `integrations/unreal/` | Game engine |
-| Gevulot | `gevulot/` | Prover network |
+| Gevulot | `crates/gevulot/` | Prover network |
 
 ---
 
@@ -1034,4 +1034,4 @@ python -c "from tensornet.core import check_environment; check_environment()"
 ---
 
 *Generated by HyperTensor Phase 27 • February 6, 2026*  
-*Run `python scripts/update_loc_counts.py` to refresh statistics*
+*Run `python tools/scripts/update_loc_counts.py` to refresh statistics*

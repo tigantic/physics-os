@@ -1,0 +1,23 @@
+# uv configuration for HyperTensor monorepo
+# See: https://docs.astral.sh/uv/configuration/
+#
+# This configures uv as the preferred Python package manager.
+# Developers can use `uv sync` instead of `pip install -e ".[dev]"`.
+#
+# Usage:
+#   uv sync                      # Install default (core + dev)
+#   uv sync --extra cfd          # Install with CFD domain pack
+#   uv sync --extra all          # Install everything
+#   uv run pytest tests/         # Run tests via uv
+#   uv run mkdocs serve          # Serve docs via uv
+
+[pip]
+# Always install in editable mode for the root package
+# This is equivalent to `pip install -e .`
+
+[tool]
+# Override index for PyTorch CPU wheels (saves bandwidth in CI)
+# Uncomment for CI environments without GPU:
+# [[tool.uv.index]]
+# name = "pytorch-cpu"
+# url = "https://download.pytorch.org/whl/cpu"

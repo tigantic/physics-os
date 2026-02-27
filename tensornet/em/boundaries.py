@@ -39,7 +39,7 @@ from numpy.typing import NDArray
 from tensornet.em.qtt_helmholtz import (
     array_to_tt, diag_mpo_from_tt, mpo_add_c, mpo_scale_c,
 )
-from tensornet.vm.operators import (
+from tensornet.engine.vm.operators import (
     _shift_left_mpo, _shift_right_mpo, identity_mpo,
 )
 

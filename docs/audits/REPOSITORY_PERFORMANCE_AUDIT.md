@@ -220,7 +220,7 @@ U, S, Vh = torch.linalg.svd(theta_mat, full_matrices=False)
 ```
 
 #### C. Benchmark/Test Code
-**Files**: `scripts/gpu_demo.py`, `scripts/profile_flagship.py`, `proofs/proof_decompositions.py`
+**Files**: `tools/scripts/gpu_demo.py`, `tools/scripts/profile_flagship.py`, `proofs/proof_decompositions.py`
 
 ```python
 Multiple lines: Correctness tests
@@ -670,7 +670,7 @@ Margin: +5.31ms (+47%)
 - `tensornet/digital_twin/reduced_order.py`: Lines 210, 293, 622
 - `tensornet/algorithms/tdvp.py`: Line 291
 - `tensornet/distributed_tn/distributed_dmrg.py`: Line 193
-- `scripts/gpu_demo.py`: Lines 152, 156, 166, 171
+- `tools/scripts/gpu_demo.py`: Lines 152, 156, 166, 171
 - `proofs/proof_decompositions.py`: Lines 81
 
 ### A.3 Dense Materializations (100+ instances)

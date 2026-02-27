@@ -20,7 +20,7 @@ import numpy as np
 import pytest
 import torch
 
-from tensornet.racing.wake import DirtyAirReport, WakeTracker
+from tensornet.aerospace.racing.wake import DirtyAirReport, WakeTracker
 
 # ============================================================================
 # FIXTURES

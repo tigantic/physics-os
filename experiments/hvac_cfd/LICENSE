@@ -1,0 +1,260 @@
+================================================================================
+                    PROPRIETARY SOFTWARE LICENSE AGREEMENT
+================================================================================
+
+                         HYPERTENSOR™ PHYSICS ENGINE
+                      
+              Copyright © 2025 Bradly Biron Baker Adams. All Rights Reserved.
+                              Tigantic Holdings LLC
+
+================================================================================
+                              NOTICE TO ALL PARTIES
+================================================================================
+
+THIS SOFTWARE AND ALL ASSOCIATED INTELLECTUAL PROPERTY ARE THE EXCLUSIVE 
+PROPERTY OF BRADLY BIRON BAKER ADAMS AND TIGANTIC HOLDINGS LLC. UNAUTHORIZED 
+ACCESS, USE, COPYING, MODIFICATION, DISTRIBUTION, OR REVERSE ENGINEERING IS 
+STRICTLY PROHIBITED AND WILL BE PROSECUTED TO THE FULLEST EXTENT OF THE LAW.
+
+BY ACCESSING, VIEWING, OR POSSESSING THIS SOFTWARE IN ANY FORM, YOU ACKNOWLEDGE 
+THAT YOU HAVE READ, UNDERSTOOD, AND AGREE TO BE BOUND BY THE TERMS OF THIS 
+LICENSE AGREEMENT.
+
+================================================================================
+                           SECTION 1: DEFINITIONS
+================================================================================
+
+1.1 "Software" means the HyperTensor Physics Engine, including but not limited 
+    to all source code, object code, algorithms, data structures, mathematical 
+    models, tensor network implementations, computational fluid dynamics solvers, 
+    CUDA kernels, GPU shaders, neural network architectures, reinforcement 
+    learning environments, visualization systems, documentation, specifications, 
+    designs, inventions, trade secrets, and any derivative works thereof.
+
+1.2 "Intellectual Property" means all patents, patent applications, copyrights, 
+    trademarks, trade secrets, know-how, proprietary information, algorithms, 
+    methods, processes, techniques, and any other intellectual property rights 
+    associated with the Software.
+
+1.3 "Owner" means Bradly Biron Baker Adams, an individual, and Tigantic Holdings 
+    LLC, a limited liability company, jointly and severally.
+
+1.4 "Authorized User" means any individual or entity that has executed a separate 
+    written license agreement with the Owner expressly granting specific rights 
+    to use the Software.
+
+================================================================================
+                        SECTION 2: OWNERSHIP & RIGHTS
+================================================================================
+
+2.1 EXCLUSIVE OWNERSHIP. The Software, including all Intellectual Property 
+    embodied therein, is and shall remain the sole and exclusive property of 
+    the Owner. No license, right, title, or interest in the Software is granted 
+    or implied except as expressly set forth in a separate written agreement 
+    signed by an authorized representative of the Owner.
+
+2.2 RESERVATION OF RIGHTS. All rights not expressly granted herein are reserved 
+    to the Owner. This includes, without limitation, all patent rights, 
+    copyright rights, trademark rights, trade secret rights, and any other 
+    intellectual property rights in any jurisdiction worldwide.
+
+2.3 NO IMPLIED LICENSES. Nothing in this document shall be construed as granting 
+    any license or right under any patent, copyright, trademark, or other 
+    intellectual property right of the Owner, whether by estoppel, implication, 
+    or otherwise.
+
+================================================================================
+                          SECTION 3: PROHIBITED ACTS
+================================================================================
+
+THE FOLLOWING ACTS ARE STRICTLY PROHIBITED WITHOUT PRIOR WRITTEN AUTHORIZATION 
+FROM THE OWNER:
+
+3.1 COPYING. Reproducing, copying, duplicating, or creating any copies of the 
+    Software in whole or in part, by any means, whether electronic, mechanical, 
+    photocopying, recording, or otherwise.
+
+3.2 MODIFICATION. Modifying, adapting, translating, altering, transforming, or 
+    creating any derivative works based upon the Software.
+
+3.3 DISTRIBUTION. Distributing, publishing, transmitting, transferring, lending, 
+    leasing, renting, sublicensing, or otherwise making the Software available 
+    to any third party.
+
+3.4 REVERSE ENGINEERING. Reverse engineering, disassembling, decompiling, 
+    decrypting, or otherwise attempting to derive the source code, algorithms, 
+    data structures, or underlying ideas of the Software.
+
+3.5 COMMERCIAL USE. Using the Software for any commercial purpose, including 
+    but not limited to providing services, developing competing products, or 
+    generating revenue directly or indirectly.
+
+3.6 ACADEMIC USE. Using the Software for academic research, publication, or 
+    educational purposes without a separate written academic license agreement.
+
+3.7 BENCHMARK DISCLOSURE. Publishing, disclosing, or otherwise making available 
+    any performance benchmarks, comparisons, or analyses of the Software without 
+    prior written consent.
+
+3.8 REMOVAL OF NOTICES. Removing, altering, or obscuring any copyright notices, 
+    trademark notices, proprietary legends, or other notices of ownership or 
+    confidentiality.
+
+================================================================================
+                         SECTION 4: TRADE SECRETS
+================================================================================
+
+4.1 TRADE SECRET STATUS. The Software contains valuable trade secrets and 
+    confidential proprietary information of the Owner. The algorithms, methods, 
+    techniques, and implementations contained in the Software represent years 
+    of research, development, and investment.
+
+4.2 CONFIDENTIALITY OBLIGATION. Any party who gains access to the Software, 
+    whether authorized or unauthorized, shall maintain the Software in strict 
+    confidence and shall not disclose any portion thereof to any third party.
+
+4.3 NON-CIRCUMVENTION. Any party who becomes aware of the Software shall not 
+    directly or indirectly circumvent, avoid, or bypass the Owner's rights by 
+    using the knowledge, methods, or techniques learned from the Software to 
+    develop competing products or services.
+
+================================================================================
+                         SECTION 5: PATENT RIGHTS
+================================================================================
+
+5.1 PATENT NOTICE. The Software may be protected by one or more patents or 
+    patent applications in the United States and/or other countries. Patent 
+    pending.
+
+5.2 NO PATENT LICENSE. No license under any patent, patent application, or 
+    patent rights of the Owner is granted by this document. Any use of the 
+    Software that infringes the Owner's patent rights is strictly prohibited.
+
+================================================================================
+                        SECTION 6: TRADEMARK RIGHTS
+================================================================================
+
+6.1 TRADEMARK NOTICE. "HyperTensor," "TensorNet," "Glass Cockpit," "Planetary 
+    Operating System," "Tigantic," "TiganticLabz," and associated logos, designs, 
+    and trade dress are trademarks or service marks of the Owner. All rights 
+    reserved.
+
+6.2 NO TRADEMARK LICENSE. No license to use any trademark, service mark, trade 
+    name, or trade dress of the Owner is granted by this document.
+
+================================================================================
+                      SECTION 7: ENFORCEMENT & REMEDIES
+================================================================================
+
+7.1 INJUNCTIVE RELIEF. Any unauthorized use, copying, modification, distribution, 
+    or reverse engineering of the Software will cause immediate and irreparable 
+    harm to the Owner for which monetary damages would be inadequate. The Owner 
+    shall be entitled to seek immediate injunctive relief, without the necessity 
+    of proving actual damages or posting any bond.
+
+7.2 MONETARY DAMAGES. In addition to injunctive relief, the Owner shall be 
+    entitled to recover all actual damages, consequential damages, lost profits, 
+    and any gains realized by the infringer as a result of the unauthorized use.
+
+7.3 STATUTORY DAMAGES. To the extent available under applicable law, the Owner 
+    may elect to recover statutory damages in lieu of actual damages.
+
+7.4 ATTORNEY'S FEES. The prevailing party in any action to enforce this license 
+    shall be entitled to recover reasonable attorney's fees and costs.
+
+7.5 CRIMINAL PROSECUTION. Unauthorized access to, use of, or distribution of 
+    the Software may constitute criminal violations under the Computer Fraud 
+    and Abuse Act (18 U.S.C. § 1030), the Economic Espionage Act (18 U.S.C. 
+    §§ 1831-1839), the Digital Millennium Copyright Act (17 U.S.C. § 1201), 
+    and other applicable state and federal laws. The Owner reserves the right 
+    to refer any violations to appropriate law enforcement authorities.
+
+================================================================================
+                       SECTION 8: GOVERNING LAW & VENUE
+================================================================================
+
+8.1 GOVERNING LAW. This License Agreement shall be governed by and construed 
+    in accordance with the laws of the State of Delaware, United States of 
+    America, without regard to its conflict of law provisions.
+
+8.2 EXCLUSIVE JURISDICTION. Any dispute arising out of or relating to this 
+    License Agreement or the Software shall be resolved exclusively in the 
+    state or federal courts located in Delaware. The parties consent to the 
+    personal jurisdiction of such courts.
+
+8.3 WAIVER OF JURY TRIAL. TO THE FULLEST EXTENT PERMITTED BY LAW, THE PARTIES 
+    HEREBY WAIVE THEIR RIGHT TO A JURY TRIAL IN ANY PROCEEDING ARISING OUT OF 
+    OR RELATING TO THIS LICENSE AGREEMENT OR THE SOFTWARE.
+
+================================================================================
+                     SECTION 9: INTERNATIONAL PROTECTION
+================================================================================
+
+9.1 INTERNATIONAL RIGHTS. The Owner claims and reserves all intellectual property 
+    rights in the Software in all countries and jurisdictions worldwide, including 
+    but not limited to rights under the Berne Convention, the TRIPS Agreement, 
+    the WIPO Copyright Treaty, and any bilateral or multilateral intellectual 
+    property treaties.
+
+9.2 EXPORT RESTRICTIONS. The Software may be subject to U.S. export control 
+    laws and regulations. Any export, re-export, or transfer of the Software 
+    in violation of applicable export control laws is strictly prohibited.
+
+================================================================================
+                         SECTION 10: MISCELLANEOUS
+================================================================================
+
+10.1 ENTIRE AGREEMENT. This License Agreement constitutes the entire agreement 
+     between the parties with respect to the subject matter hereof and supersedes 
+     all prior or contemporaneous understandings, agreements, representations, 
+     and warranties.
+
+10.2 SEVERABILITY. If any provision of this License Agreement is held to be 
+     invalid, illegal, or unenforceable, the remaining provisions shall continue 
+     in full force and effect.
+
+10.3 NO WAIVER. The failure of the Owner to enforce any right or provision of 
+     this License Agreement shall not constitute a waiver of such right or 
+     provision.
+
+10.4 ASSIGNMENT. The Owner may assign or transfer this License Agreement and 
+     all rights hereunder without restriction. Any attempted assignment by any 
+     other party without the Owner's prior written consent shall be void.
+
+10.5 SURVIVAL. The provisions of this License Agreement relating to ownership, 
+     confidentiality, prohibited acts, enforcement, and remedies shall survive 
+     any termination or expiration of this License Agreement.
+
+================================================================================
+                               CONTACT INFORMATION
+================================================================================
+
+For licensing inquiries, authorized access, or any other matters relating to 
+the Software, contact:
+
+    Bradly Biron Baker Adams
+    Tigantic Holdings LLC
+    
+    Email: legal@tigantic.com
+
+================================================================================
+                                    NOTICE
+================================================================================
+
+THIS SOFTWARE IS PROVIDED FOR VIEWING PURPOSES ONLY. POSSESSION OF THIS 
+SOFTWARE DOES NOT GRANT ANY LICENSE OR RIGHT TO USE THE SOFTWARE. IF YOU HAVE 
+RECEIVED THIS SOFTWARE WITHOUT AUTHORIZATION, YOU ARE REQUIRED TO IMMEDIATELY 
+DELETE ALL COPIES AND NOTIFY THE OWNER.
+
+UNAUTHORIZED USE OF THIS SOFTWARE IS A VIOLATION OF FEDERAL AND STATE LAW AND 
+WILL BE PROSECUTED.
+
+================================================================================
+
+                    © 2025 Bradly Biron Baker Adams. All Rights Reserved.
+                                 Tigantic Holdings LLC
+                              
+                         THE PLANETARY OPERATING SYSTEM
+                         15 Industries. One Physics Engine.
+
+================================================================================

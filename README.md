@@ -26,7 +26,7 @@
 [![Industries](https://img.shields.io/badge/Industries-20-orange?style=flat-square)]()
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)](LICENSE)
 
-**Platform V3.0.0** · **Package V40.2** · **February 2026**
+**Platform V3.0.0** · **Package V40.0.1** · **February 2026**
 
 </div>
 
@@ -205,9 +205,9 @@ print(f"Inlet velocity recovery: {info['inlet_recovery']:.1f}%")  # 94.4%
 | # | Platform | Location | Size | Purpose |
 |:-:|----------|----------|-----:|---------|
 | 1 | **HyperTensor VM** | `tensornet/` | 784 files · 409K LOC | Core physics engine — CFD, quantum, plasma, 60+ submodules |
-| 2 | **FluidElite** | `fluidelite/`, `fluidelite-zk/` | 162 files · 57K LOC | Production tensor engine + ZK prover (24 Rust binaries) |
-| 3 | **Sovereign Compute** | `tensornet/sovereign/`, `gevulot/` | 10 files · 3K LOC | Decentralized physics computation network |
-| 4 | **QTeneT** | `QTeneT/` | 103 files · 10K LOC | Enterprise QTT SDK — TCI, solvers, benchmarks, CLI |
+| 2 | **FluidElite** | `crates/fluidelite*/` | 162 files · 57K LOC | Production tensor engine + ZK prover (24 Rust binaries) |
+| 3 | **Sovereign Compute** | `tensornet/sovereign/`, `crates/gevulot/` | 10 files · 3K LOC | Decentralized physics computation network |
+| 4 | **QTeneT** | `apps/qtenet/` | 103 files · 10K LOC | Enterprise QTT SDK — TCI, solvers, benchmarks, CLI |
 | 5 | **Platform Substrate** | `tensornet/platform/`, `tensornet/sdk/` | 36 files · 14K LOC | Unified simulation API V3.0.0 + WorkflowBuilder SDK |
 
 ---
@@ -312,7 +312,7 @@ Cryptographic proof that a physics simulation ran correctly, without revealing t
 | Mass-dependent BW | Δm₀ ≤ 12 MeV, ΔΓ₀ ≤ 6 MeV | ✅ |
 
 **Reference:** Badui (2020), *"Extraction of Spin Density Matrix Elements..."*, Indiana University (165 pp).
-**Replication note:** [`paper/PWA_REPLICATION_NOTE.md`](paper/PWA_REPLICATION_NOTE.md) — complete methodology, results, and reproduction instructions.
+**Replication note:** [`docs/papers/paper/PWA_REPLICATION_NOTE.md`](docs/papers/paper/PWA_REPLICATION_NOTE.md) — complete methodology, results, and reproduction instructions.
 
 ### V&V Framework
 
@@ -402,37 +402,47 @@ HyperTensor-VM/
 │   ├── core/                     #   TT/QTT operations
 │   ├── algorithms/               #   DMRG, TEBD, Lanczos
 │   └── [60+ more submodules]     #   Quantum, plasma, fusion, condensed matter, ...
-├── fluidelite-zk/                # ZK prover engine (Rust, 31K LOC)
-├── apps/glass_cockpit/           # Real-time flight visualization (Rust/wgpu, 31K LOC)
-├── crates/                       # Rust crates — bridge, core, GPU bindings
-├── QTeneT/                       # Enterprise QTT SDK (10K LOC)
-├── ledger/                       # Capability ledger (168 YAML nodes + schema)
-├── tests/                        # Test suite (295 tests passing)
-├── scripts/                      # Gauntlets, research scripts, tools
-├── docs/                         # Documentation
-│   ├── adr/                      #   Architecture Decision Records (ADR-0001–0011)
-│   ├── attestations/             #   Cryptographically signed validation JSONs
-│   ├── reports/                  #   Benchmark & analysis reports
-│   └── research/                 #   Research papers & taxonomy
-├── experiments/                  # Research experiments & replication studies
-│   ├── pwa_engine/               #   PWA Compute Engine V3.0.0 (core.py ~2,300 LOC)
-│   └── run_pwa_engine.py         #   10 experiments + 11 publication figures (~1,400 LOC)
-├── proofs/                       # Lean 4 formal verification
+├── hypertensor/                  # Runtime Access Layer (31 files, 4K LOC)
+│   ├── api/                      #   FastAPI server with 9 frozen endpoints
+│   ├── sdk/                      #   Typed Python SDK (sync + async)
+│   ├── cli/                      #   CLI (run, validate, attest, verify, serve)
+│   └── mcp/                      #   MCP server (11 AI-agent tools)
+├── crates/                       # Rust workspace (18 crates, 112K LOC)
+│   ├── fluidelite_zk/            #   ZK prover engine (31K LOC)
+│   ├── hyper_bridge/             #   Python↔Rust IPC (6K LOC)
+│   ├── hyper_core/               #   Core tensor ops (2.6K LOC)
+│   ├── qtt_cem/                  #   Maxwell FDTD (2.7K LOC)
+│   ├── qtt_fea/                  #   Hex8 elasticity (1.2K LOC)
+│   ├── qtt_opt/                  #   Topology optimization (1.2K LOC)
+│   └── ...                       #   + 12 more crates
+├── apps/                         # Standalone applications & demos
+│   ├── glass_cockpit/            #   Flight visualization (Rust + WGSL, 31K LOC)
+│   ├── qtenet/                   #   Enterprise QTT SDK (10K LOC)
+│   └── ...                       #   + 13 more apps
+├── contracts/                    # Product contract specifications
+│   └── v1/SPEC.md                #   API contract v1
+├── data/                         # Datasets (atlas packs, NOAA, benchmarks)
+├── deploy/                       # Deployment (Containerfile, manifests)
+├── docs/                         # All documentation
+│   ├── adr/                      #   23 Architecture Decision Records
+│   ├── governance/               #   Constitution, policies, API freeze
+│   ├── operations/               #   Runbooks, launch gates, security ops
+│   ├── papers/                   #   Research papers and figures
+│   ├── product/                  #   Pricing, release notes, certificates
+│   ├── reports/                  #   Coverage dashboards, audit reports
+│   └── strategy/                 #   Commercial execution, IP strategy
+├── experiments/                  # Research experiments & benchmarks
+├── integrations/                 # Unity, Unreal, Blender, FreeCAD, VS Code
 ├── products/                     # Shipped vertical products
-│   └── facial_plastics/           #   Facial plastics surgical simulation (94 files, 43K LOC, 941 tests)
-│       ├── core/                  #     Types, config, CaseBundle, provenance
-│       ├── data/                  #     DICOM/surface/photo ingest, anatomy gen, case library
-│       ├── twin/                  #     Segmentation, meshing, registration, landmarks
-│       ├── plan/                  #     DSL, compiler, 4 procedure operator sets
-│       ├── sim/                   #     FEM, CFD, FSI, cartilage, sutures, healing, anisotropy, aging
-│       ├── metrics/               #     Aesthetic, functional, safety, UQ, NSGA-II, distributed optimizer
-│       ├── governance/            #     Audit, consent, RBAC, multi-tenant
-│       ├── postop/                #     Outcome ingest, alignment, calibration, validation, dashboard
-│       └── tests/                 #     29 test files, 941 tests passing
-├── paper/                        # Research manuscripts, replication notes, figures
-├── deployment/                   # Container, config, health checks
-├── PLATFORM_SPECIFICATION.md     # Full platform spec (4,144 lines)
-├── Commercial_Execution.md       # 7-phase execution plan (all COMPLETE)
+│   └── facial_plastics/          #   Surgical simulation (94 files, 43K LOC, 941 tests)
+├── proofs/                       # Formal proofs (Lean 4, conservation, Yang-Mills)
+├── tests/                        # Test suites (295 tests passing)
+├── tools/                        # Build scripts, CI utilities, pre-commit hooks
+│   └── scripts/                  #   75+ maintenance & gauntlet scripts
+├── PLATFORM_SPECIFICATION.md     # Full platform spec (24 sections, 7 appendices)
+├── Cargo.toml                    # Rust workspace manifest (18 crates)
+├── Makefile                      # CI/CD pipeline
+├── VERSION                       # Single source of truth for version numbers
 └── CHANGELOG.md                  # Semantic versioning history
 ```
 
@@ -504,7 +514,7 @@ make release          # Full release preparation
 
 ## Execution History
 
-All 7 phases of the [Commercial Execution Plan](Commercial_Execution.md) have been delivered:
+All 7 phases of the [Commercial Execution Plan](docs/strategy/Commercial_Execution.md) have been delivered:
 
 | Phase | Deliverable | Commit | Key Metric |
 |:-----:|-------------|:------:|------------|
@@ -528,15 +538,16 @@ All 7 phases of the [Commercial Execution Plan](Commercial_Execution.md) have be
 
 | Document | Description |
 |----------|-------------|
-| [`PLATFORM_SPECIFICATION.md`](PLATFORM_SPECIFICATION.md) | Complete platform specification — LOC matrices, physics inventory, component catalog |
-| [`Commercial_Execution.md`](Commercial_Execution.md) | 7-phase execution plan with version-state model (all phases COMPLETE) |
+| [`PLATFORM_SPECIFICATION.md`](PLATFORM_SPECIFICATION.md) | Complete platform specification — 24 sections, 7 appendices, validated metrics |
+| [`docs/strategy/Commercial_Execution.md`](docs/strategy/Commercial_Execution.md) | 7-phase execution plan with version-state model (all phases COMPLETE) |
 | [`CHANGELOG.md`](CHANGELOG.md) | Semantic versioning history (V26.0 → V40.0.1) |
-| [`docs/adr/`](docs/adr/) | Architecture Decision Records (ADR-0001 through ADR-0011) |
-| [`docs/COVERAGE_DASHBOARD.md`](docs/COVERAGE_DASHBOARD.md) | 167-node coverage dashboard with per-node V-state |
-| [`CONSTITUTION.md`](CONSTITUTION.md) | Coding standards and engineering governance |
+| [`docs/adr/`](docs/adr/) | Architecture Decision Records (ADR-0001 through ADR-0023) |
+| [`docs/reports/COVERAGE_DASHBOARD.md`](docs/reports/COVERAGE_DASHBOARD.md) | 167-node coverage dashboard with per-node V-state |
+| [`docs/governance/CONSTITUTION.md`](docs/governance/CONSTITUTION.md) | Coding standards and engineering governance |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution guidelines, PR process, review rules |
 | [`SECURITY.md`](SECURITY.md) | Security policy, vulnerability reporting, cryptographic methods |
-| [`paper/PWA_REPLICATION_NOTE.md`](paper/PWA_REPLICATION_NOTE.md) | PWA Compute Engine V3.0.0 replication note — Eq. 5.48, 10 experiments |
+| [`docs/papers/paper/PWA_REPLICATION_NOTE.md`](docs/papers/paper/PWA_REPLICATION_NOTE.md) | PWA Compute Engine V3.0.0 replication note — Eq. 5.48, 10 experiments |
+| [`docs/INDEX.md`](docs/INDEX.md) | Comprehensive documentation navigation hub |
 
 ---
 

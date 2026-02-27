@@ -1,17 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.applied.medical.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.medical import X
+    from tensornet.medical.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.applied.medical``.
 """
-TensorNet Medical Module - Hemodynamic Simulation
+import importlib as _il
+import sys as _sys
 
-Phase 11: The Surgical Pre-Flight
-- Non-Newtonian blood flow (shear thinning)
-- Stenosis (plaque blockage) modeling
-- Wall shear stress → Rupture risk prediction
-
-The physics that saves lives before the scalpel.
-"""
-
-from .hemo import ArterySimulation, StenosisReport
-
-__all__ = [
-    "ArterySimulation",
-    "StenosisReport",
-]
+_real = _il.import_module("tensornet.applied.medical")
+_sys.modules[__name__] = _real

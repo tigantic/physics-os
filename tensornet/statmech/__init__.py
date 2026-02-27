@@ -1,55 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.quantum.statmech.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.statmech import X
+    from tensornet.statmech.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.quantum.statmech``.
 """
-tensornet.statmech — Statistical mechanics.
+import importlib as _il
+import sys as _sys
 
-Modules:
-    equilibrium       Classical Monte Carlo, partition functions, phase transitions
-    non_equilibrium   Jarzynski, Crooks, Gillespie SSA, kinetic MC
-"""
-
-from tensornet.statmech.equilibrium import (
-    MetropolisMC,
-    WolffClusterMC,
-    WangLandauMC,
-    PartitionFunction,
-    LandauMeanField,
-    IsingModel,
-    PottsModel,
-    XYModel,
-)
-
-from tensornet.statmech.non_equilibrium import (
-    JarzynskiEstimator,
-    CrooksEstimator,
-    KuboResponse,
-    KineticMonteCarlo,
-    GillespieSSA,
-    ChemicalMasterEquation,
-)
-
-from tensornet.statmech.monte_carlo import (
-    SwendsenWangCluster,
-    ParallelTempering,
-    HistogramReweighting,
-    MulticanonicalMC,
-)
-
-__all__ = [
-    "MetropolisMC",
-    "WolffClusterMC",
-    "WangLandauMC",
-    "PartitionFunction",
-    "LandauMeanField",
-    "IsingModel",
-    "PottsModel",
-    "XYModel",
-    "JarzynskiEstimator",
-    "CrooksEstimator",
-    "KuboResponse",
-    "KineticMonteCarlo",
-    "GillespieSSA",
-    "ChemicalMasterEquation",
-    "SwendsenWangCluster",
-    "ParallelTempering",
-    "HistogramReweighting",
-    "MulticanonicalMC",
-]
+_real = _il.import_module("tensornet.quantum.statmech")
+_sys.modules[__name__] = _real

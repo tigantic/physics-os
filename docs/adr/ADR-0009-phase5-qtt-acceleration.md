@@ -13,7 +13,7 @@ on dense tensors.  The repository already contains mature QTT / TN primitives:
 - `tensornet/cfd/pure_qtt_ops.py` (1069 lines): TT-SVD, rounding, arithmetic.
 - `tensornet/cfd/qtt_tci.py` (1271 lines): Python TCI engine.
 - `tensornet/core/` + `tensornet/algorithms/`: MPS, MPO, DMRG, TEBD, TDVP.
-- `QTeneT/`: N-D QTT operators, NS3D / Vlasov / Euler solvers.
+- `apps/qtenet/`: N-D QTT operators, NS3D / Vlasov / Euler solvers.
 
 **Gap identified:** Zero bridge between QTT primitives and the platform data
 model / protocols.  No domain pack can natively consume QTT fields, and there

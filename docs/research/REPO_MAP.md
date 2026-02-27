@@ -14,7 +14,7 @@ HyperTensor-VM-main/
 ├── 📁 apps/                # Applications (glass_cockpit, global_eye)
 ├── 📁 crates/              # Rust bridges (CUDA, core)
 ├── 📁 docs/                # API docs, architecture, tutorials
-├── 📁 fluidelite/          # Alternative fluid simulation stack
+├── 📁 crates/fluidelite/          # Alternative fluid simulation stack
 ├── 📁 integrations/        # Unity, Unreal integrations
 ├── 📁 sdk/                 # Docker, Conda, Enterprise SDK
 ├── 📁 scripts/             # Setup, profiling, testing
@@ -348,7 +348,7 @@ crates/
         └── tensor.rs
 ```
 
-### 📁 fluidelite/ — Alternative Fluid Stack
+### 📁 crates/fluidelite/ — Alternative Fluid Stack
 
 ```
 fluidelite/
@@ -471,7 +471,7 @@ starheart_gauntlet.py              → Validation
 ```
 elite_yang_mills_proof_v2.py       → Latest proof
 yang_mills_unified_proof/          → Full proof suite
-lean_yang_mills/                   → Lean formalization
+proofs/yang_mills/lean/                   → Lean formalization
 ```
 
 ---

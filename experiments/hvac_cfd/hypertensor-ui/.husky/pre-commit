@@ -1,0 +1,22 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run lint-staged for formatting and linting
+npx lint-staged
+
+# Run TypeScript type checking (per Article VII)
+echo "🔍 Running type check..."
+npm run type-check || {
+  echo "❌ Type check failed. Please fix TypeScript errors before committing."
+  exit 1
+}
+
+# Run tests for changed files (per Article III)
+echo "🧪 Running tests..."
+npx vitest run --passWithNoTests || {
+  echo "❌ Tests failed. Please fix failing tests before committing."
+  exit 1
+}
+
+echo "✅ Pre-commit checks passed!"
+

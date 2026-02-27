@@ -1,0 +1,38 @@
+{
+  "project": "Tier 1 Nielsen Benchmark",
+  "date": "2026-01-06T21:50:06.502174",
+  "solver": "HyperTensor Projection Method (TVD MUSCL)",
+  "configuration": {
+    "grid": "256\u00d7128",
+    "domain_m": "9.0\u00d73.0",
+    "Re": 5000,
+    "inlet_velocity_m_s": 0.455,
+    "inlet_height_m": 0.168,
+    "advection_scheme": "TVD MUSCL (van Leer limiter)"
+  },
+  "performance": {
+    "solve_time_s": 231.6,
+    "iterations": 5000,
+    "converged": false
+  },
+  "validation": {
+    "benchmark": "Nielsen et al. / Aalborg University",
+    "rms_error_x1_pct": 34.56,
+    "rms_error_x2_pct": 21.94,
+    "rms_error_avg_pct": 28.95,
+    "target_pct": 10.0,
+    "status": "FAIL"
+  },
+  "breathing_zone": {
+    "min_velocity_m_s": 0.0,
+    "mean_velocity_m_s": 0.1336,
+    "max_velocity_m_s": 0.546,
+    "ashrae_55_status": "FAIL"
+  },
+  "deliverables": [
+    "tier1_velocity_field.png",
+    "tier1_profile_validation.png",
+    "tier1_streamlines.png",
+    "tier1_breathing_zone.png"
+  ]
+}

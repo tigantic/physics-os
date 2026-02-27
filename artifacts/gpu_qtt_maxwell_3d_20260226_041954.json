@@ -1,0 +1,52 @@
+{
+  "attestation": "GPU_QTT_MAXWELL_3D_BENCHMARK",
+  "version": "1.0.0",
+  "timestamp": "2026-02-26T09:19:54.733989+00:00",
+  "system": {
+    "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+    "gpu_memory_bytes": 8546484224,
+    "gpu_memory_gb": 8.5,
+    "cuda_version": "12.8",
+    "torch_version": "2.9.1+cu128",
+    "python_version": "3.12.3",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+  },
+  "summary": {
+    "scales_tested": 1,
+    "min_grid": "128\u00b3",
+    "max_grid": "128\u00b3",
+    "max_compression_ratio": 0,
+    "all_converged": false,
+    "total_wall_time_s": 0.404
+  },
+  "results": [
+    {
+      "grid": "128\u00b3",
+      "grid_N3": 2097152,
+      "n_bits_per_dim": 7,
+      "n_sites_total": 21,
+      "chi_max": 0,
+      "qtt_bytes": 0,
+      "dense_bytes": 16777216,
+      "compression_ratio": 0,
+      "conservation_error": Infinity,
+      "converged": false,
+      "n_iter": 0,
+      "final_residual": Infinity,
+      "wall_time_build_s": 0,
+      "wall_time_solve_s": 0,
+      "wall_time_total_s": 0,
+      "gpu_peak_mem_mb": 0,
+      "max_rank": 48,
+      "n_sweeps_max": 30,
+      "tol": 1e-06,
+      "k": 20.0
+    }
+  ],
+  "invariants": {
+    "no_cpu_tensors": true,
+    "no_dense_N3": true,
+    "no_numpy_in_hot_path": true,
+    "qtt_native_throughout": true
+  }
+}

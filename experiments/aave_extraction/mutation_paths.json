@@ -1,0 +1,34 @@
+{
+  "contract": "Aave_V2_PoolAddressesProviderRegistry",
+  "address": "0xbaA999AC55EAce41CcAE355c77809e68Bb345170",
+  "safe_harbor": "0x464C71f6c2F760DdA6093dCB91C24c39e5d6e18c",
+  "mutation_paths": [
+    {
+      "selector": "0xf2fde38b",
+      "name": "transferOwnership(address)",
+      "distance": 5,
+      "blocks": [
+        408,
+        2818,
+        2836,
+        2777,
+        2809
+      ],
+      "write_step": null,
+      "calldata": "0xf2fde38b000000000000000000000000464c71f6c2f760dda6093dcb91c24c39e5d6e18c"
+    },
+    {
+      "selector": "0x715018a6",
+      "name": "renounceOwnership()",
+      "distance": 4,
+      "blocks": [
+        283,
+        996,
+        1028,
+        552
+      ],
+      "write_step": null,
+      "calldata": null
+    }
+  ]
+}

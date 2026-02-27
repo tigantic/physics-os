@@ -21,11 +21,11 @@ generates and verifies zero-knowledge proofs of physics simulation correctness.
 | NS-IMEX Circuit (`fluidelite-circuits/src/ns_imex/`) | Rust/Halo2 | ~2,800 | CRITICAL |
 | Thermal Circuit (`fluidelite-circuits/src/thermal/`) | Rust/Halo2 | ~2,200 | CRITICAL |
 | Q16.16 Fixed-Point Arithmetic (`fluidelite-core/src/field/`) | Rust | ~1,500 | HIGH |
-| Hybrid Lookup Circuit (`fluidelite-zk/src/circuit/`) | Rust/Halo2 | ~1,800 | HIGH |
-| Proof Pipeline (`fluidelite-zk/src/prover.rs`, `verifier.rs`) | Rust | ~1,200 | HIGH |
-| GPU Prover Integration (`fluidelite-zk/src/gpu_halo2_prover.rs`) | Rust/ICICLE | ~830 | MEDIUM |
-| Multi-Timestep Aggregation (`fluidelite-zk/src/multi_timestep.rs`) | Rust | ~600 | MEDIUM |
-| Certificate Authority (`fluidelite-zk/src/certificate_authority.rs`) | Rust | ~715 | HIGH |
+| Hybrid Lookup Circuit (`crates/fluidelite_zk/src/circuit/`) | Rust/Halo2 | ~1,800 | HIGH |
+| Proof Pipeline (`crates/fluidelite_zk/src/prover.rs`, `verifier.rs`) | Rust | ~1,200 | HIGH |
+| GPU Prover Integration (`crates/fluidelite_zk/src/gpu_halo2_prover.rs`) | Rust/ICICLE | ~830 | MEDIUM |
+| Multi-Timestep Aggregation (`crates/fluidelite_zk/src/multi_timestep.rs`) | Rust | ~600 | MEDIUM |
+| Certificate Authority (`crates/fluidelite_zk/src/certificate_authority.rs`) | Rust | ~715 | HIGH |
 
 **Total Estimated Lines:** ~14,165  
 **Focus Areas:** Soundness, completeness, zero-knowledge property, under-constrained 

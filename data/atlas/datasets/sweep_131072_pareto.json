@@ -1,0 +1,207 @@
+{
+  "protocol": "PARAMETRIC_ANTENNA_IP_SWEEP",
+  "grid": "131072\u00b3",
+  "dofs_per_candidate": 2251799813685248,
+  "dofs_per_candidate_human": "2.25 petaDOFs",
+  "total_dofs_explored": 13510798882111488,
+  "total_dofs_explored_human": "13.5 petaDOFs",
+  "n_candidates": 6,
+  "n_steps": 100,
+  "total_sweep_time_s": 4771.854689205997,
+  "pareto_summary": {
+    "n_candidates": 6,
+    "n_fronts": 1,
+    "n_file_now": 0,
+    "n_hold": 6,
+    "n_discard": 0,
+    "objectives": [
+      "peak_gain_dbi",
+      "fractional_bandwidth",
+      "radiation_efficiency"
+    ],
+    "top_score": 0.7436225505816945,
+    "top_candidate": "DIP-086eaaeb4c5ea597"
+  },
+  "candidates": [
+    {
+      "candidate_id": "DIP-086eaaeb4c5ea597",
+      "params": {
+        "arm_length": 0.11314112973616863,
+        "wire_radius": 0.010400132222364175,
+        "gap_half": 0.022076223831061365
+      },
+      "param_hash": "086eaaeb4c5ea597",
+      "pareto_front": 0,
+      "crowding_distance": 0.0,
+      "scores": {
+        "rf_performance": 0.95,
+        "manufacturability": 0.04081700387796359,
+        "novelty_proxy": 1.0,
+        "claim_breadth": 1.0,
+        "market_relevance": 0.5,
+        "verification_quality": 0.75
+      },
+      "composite_score": 0.7436225505816945,
+      "triage": "HOLD",
+      "triage_reason": "Score 0.74 \u2265 0.5 with breadth 1.00 \u2265 0.6 \u2014 portfolio candidate for family bundling",
+      "metrics": {
+        "s11_min_db": -0.02031629056226183,
+        "peak_gain_dbi": -100.0,
+        "fractional_bandwidth": 0.0,
+        "radiation_efficiency": 0.0,
+        "vswr_min": 855.0668805831718,
+        "wall_time_s": 1005.3570669900073
+      }
+    },
+    {
+      "candidate_id": "DIP-e47f4ce1d4a45db1",
+      "params": {
+        "arm_length": 0.30094419840475317,
+        "wire_radius": 0.020300317160531576,
+        "gap_half": 0.025816954901445935
+      },
+      "param_hash": "e47f4ce1d4a45db1",
+      "pareto_front": 0,
+      "crowding_distance": Infinity,
+      "scores": {
+        "rf_performance": 1.0,
+        "manufacturability": 0.0931719773543987,
+        "novelty_proxy": 0.8825949003408545,
+        "claim_breadth": 1.0,
+        "market_relevance": 0.5,
+        "verification_quality": 0.75
+      },
+      "composite_score": 0.7404947766713306,
+      "triage": "HOLD",
+      "triage_reason": "Score 0.74 \u2265 0.5 with breadth 1.00 \u2265 0.6 \u2014 portfolio candidate for family bundling",
+      "metrics": {
+        "s11_min_db": -0.021879768666870424,
+        "peak_gain_dbi": -100.0,
+        "fractional_bandwidth": 0.0,
+        "radiation_efficiency": 0.0,
+        "vswr_min": 793.9658195881377,
+        "wall_time_s": 1237.7555633970042
+      }
+    },
+    {
+      "candidate_id": "DIP-96d273d26e3d9b02",
+      "params": {
+        "arm_length": 0.3335150491221286,
+        "wire_radius": 0.011812354774818866,
+        "gap_half": 0.016668025093175852
+      },
+      "param_hash": "96d273d26e3d9b02",
+      "pareto_front": 0,
+      "crowding_distance": 0.0,
+      "scores": {
+        "rf_performance": 0.9000000000000001,
+        "manufacturability": 0.035002422363764704,
+        "novelty_proxy": 1.0,
+        "claim_breadth": 1.0,
+        "market_relevance": 0.5,
+        "verification_quality": 0.75
+      },
+      "composite_score": 0.7302503633545647,
+      "triage": "HOLD",
+      "triage_reason": "Score 0.73 \u2265 0.5 with breadth 1.00 \u2265 0.6 \u2014 portfolio candidate for family bundling",
+      "metrics": {
+        "s11_min_db": -0.014516757209012923,
+        "peak_gain_dbi": -100.0,
+        "fractional_bandwidth": 0.0,
+        "radiation_efficiency": 0.0,
+        "vswr_min": 1196.6710656974697,
+        "wall_time_s": 618.0300902449962
+      }
+    },
+    {
+      "candidate_id": "DIP-140a86495eeeca76",
+      "params": {
+        "arm_length": 0.30921040871780925,
+        "wire_radius": 0.008296207176067733,
+        "gap_half": 0.029390558790918897
+      },
+      "param_hash": "140a86495eeeca76",
+      "pareto_front": 0,
+      "crowding_distance": 0.0,
+      "scores": {
+        "rf_performance": 0.8,
+        "manufacturability": 0.043347584844419904,
+        "novelty_proxy": 1.0,
+        "claim_breadth": 1.0,
+        "market_relevance": 0.5,
+        "verification_quality": 0.75
+      },
+      "composite_score": 0.7065021377266629,
+      "triage": "HOLD",
+      "triage_reason": "Score 0.71 \u2265 0.5 with breadth 1.00 \u2265 0.6 \u2014 portfolio candidate for family bundling",
+      "metrics": {
+        "s11_min_db": -0.0073446160593276764,
+        "peak_gain_dbi": -100.0,
+        "fractional_bandwidth": 0.0,
+        "radiation_efficiency": 0.0,
+        "vswr_min": 1998.9999999999984,
+        "wall_time_s": 643.6115293229959
+      }
+    },
+    {
+      "candidate_id": "DIP-2dbdc0d3a1441037",
+      "params": {
+        "arm_length": 0.23511578136867017,
+        "wire_radius": 0.017977930848140346,
+        "gap_half": 0.028169124721215043
+      },
+      "param_hash": "2dbdc0d3a1441037",
+      "pareto_front": 0,
+      "crowding_distance": 0.0,
+      "scores": {
+        "rf_performance": 0.8500000000000001,
+        "manufacturability": 0.09003068022944795,
+        "novelty_proxy": 0.89414776243181,
+        "claim_breadth": 1.0,
+        "market_relevance": 0.5,
+        "verification_quality": 0.75
+      },
+      "composite_score": 0.7048341545207792,
+      "triage": "HOLD",
+      "triage_reason": "Score 0.70 \u2265 0.5 with breadth 1.00 \u2265 0.6 \u2014 portfolio candidate for family bundling",
+      "metrics": {
+        "s11_min_db": -0.007839326714321602,
+        "peak_gain_dbi": -100.0,
+        "fractional_bandwidth": 0.0,
+        "radiation_efficiency": 0.0,
+        "vswr_min": 1998.9999999999984,
+        "wall_time_s": 606.0602191600046
+      }
+    },
+    {
+      "candidate_id": "DIP-5360729d92a85440",
+      "params": {
+        "arm_length": 0.332186814566789,
+        "wire_radius": 0.020360745391321832,
+        "gap_half": 0.02646494799778456
+      },
+      "param_hash": "5360729d92a85440",
+      "pareto_front": 0,
+      "crowding_distance": Infinity,
+      "scores": {
+        "rf_performance": 0.75,
+        "manufacturability": 0.0957948565293269,
+        "novelty_proxy": 0.9392154515026456,
+        "claim_breadth": 1.0,
+        "market_relevance": 0.5,
+        "verification_quality": 0.75
+      },
+      "composite_score": 0.6897123187799281,
+      "triage": "HOLD",
+      "triage_reason": "Score 0.69 \u2265 0.5 with breadth 1.00 \u2265 0.6 \u2014 portfolio candidate for family bundling",
+      "metrics": {
+        "s11_min_db": -0.00393883416661997,
+        "peak_gain_dbi": -100.0,
+        "fractional_bandwidth": 0.0,
+        "radiation_efficiency": 0.0,
+        "vswr_min": 1998.9999999999984,
+        "wall_time_s": 628.9480490459973
+      }
+    }
+  ]
+}

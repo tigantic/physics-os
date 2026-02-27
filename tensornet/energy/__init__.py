@@ -1,28 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.energy_env.energy.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.energy import X
+    from tensornet.energy.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.energy_env.energy``.
 """
-TensorNet Energy Module - Wind Farm Physics & Optimization
+import importlib as _il
+import sys as _sys
 
-Phase 5: Commercial Energy Simulation
-Target Market: Offshore Wind Developers (Orsted, Shell Energy)
-
-Capabilities:
-- Jensen Park Wake Model (industry standard)
-- Velocity deficit calculation
-- Multi-turbine wake superposition
-- Power output optimization
-- Real-time Unreal Engine visualization
-"""
-
-from tensornet.energy.turbine import WindFarm
-from tensornet.energy.energy_systems import (
-    DriftDiffusionSolarCell,
-    NewmanP2D,
-    NeutronDiffusion,
-)
-
-__all__ = [
-    "WindFarm",
-    # XX.8 Energy Systems
-    "DriftDiffusionSolarCell",
-    "NewmanP2D",
-    "NeutronDiffusion",
-]
+_real = _il.import_module("tensornet.energy_env.energy")
+_sys.modules[__name__] = _real

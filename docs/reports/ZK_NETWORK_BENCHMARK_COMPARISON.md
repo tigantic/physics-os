@@ -23,7 +23,7 @@ Fluid-ZK demonstrates **categorical superiority** over production ZK systems by 
 
 | Metric | Value | Source |
 |--------|-------|--------|
-| Merkle Depth | 50 (1.1 quadrillion members) | [proof_attestation.json](fluidelite-zk/proof_attestation.json) |
+| Merkle Depth | 50 (1.1 quadrillion members) | [proof_attestation.json](crates/fluidelite_zk/proof_attestation.json) |
 | Proof Time | **24.51 - 33ms** | Benchmarked |
 | Witness Size | 187.1 KB | QTT compressed |
 | Traditional Witness | 34 Petabytes | Would require (impossible) |
@@ -35,7 +35,7 @@ Fluid-ZK demonstrates **categorical superiority** over production ZK systems by 
 
 | Metric | Value | Source |
 |--------|-------|--------|
-| Constraints/Token | **147,000** | [README.md](fluidelite-zk/README.md) |
+| Constraints/Token | **147,000** | [README.md](crates/fluidelite_zk/README.md) |
 | Comparison | 50M for transformers | 340x advantage |
 | GPU Proof Time | **~8ms** | RTX 5070 Laptop |
 | Proof Size | ~800 bytes | Groth16 |
@@ -45,9 +45,9 @@ Fluid-ZK demonstrates **categorical superiority** over production ZK systems by 
 
 | Operation | Time | Throughput | Source |
 |-----------|------|------------|--------|
-| MSM 2^20 points | **37ms** | 28M pts/sec | [GPU_ACCELERATION.md](fluidelite-zk/GPU_ACCELERATION.md) |
+| MSM 2^20 points | **37ms** | 28M pts/sec | [GPU_ACCELERATION.md](crates/fluidelite_zk/GPU_ACCELERATION.md) |
 | MSM 2^18 points | ~12ms | 88-120 TPS | Benchmarked |
-| P50 Latency | <15ms | Target met | [VASTAI_DEPLOYMENT.md](fluidelite-zk/VASTAI_DEPLOYMENT.md) |
+| P50 Latency | <15ms | Target met | [VASTAI_DEPLOYMENT.md](crates/fluidelite_zk/VASTAI_DEPLOYMENT.md) |
 
 ---
 

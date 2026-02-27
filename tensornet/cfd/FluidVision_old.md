@@ -292,13 +292,13 @@ We bet that the low singular values discarded during MPS truncation correspond t
 #### 5.1 Paper
 | Task | Status | File |
 |------|--------|------|
-| ☐ Paper outline | Not Started | `paper/outline.md` |
-| ☐ Introduction + motivation | Not Started | `paper/sections/intro.tex` |
-| ☐ Method section | Not Started | `paper/sections/method.tex` |
-| ☐ Experiments section | Not Started | `paper/sections/experiments.tex` |
-| ☐ Related work | Not Started | `paper/sections/related.tex` |
-| ☐ Conclusion + limitations | Not Started | `paper/sections/conclusion.tex` |
-| ☐ Arxiv submission | Not Started | `paper/arxiv/` |
+| ☐ Paper outline | Not Started | `docs/papers/paper/outline.md` |
+| ☐ Introduction + motivation | Not Started | `docs/papers/docs/papers/paper/sections/intro.tex` |
+| ☐ Method section | Not Started | `docs/papers/paper/sections/method.tex` |
+| ☐ Experiments section | Not Started | `docs/papers/paper/sections/experiments.tex` |
+| ☐ Related work | Not Started | `docs/papers/paper/sections/related.tex` |
+| ☐ Conclusion + limitations | Not Started | `docs/papers/paper/sections/conclusion.tex` |
+| ☐ Arxiv submission | Not Started | `docs/papers/paper/arxiv/` |
 
 **Target Venue:** NeurIPS 2026 / ICML 2027
 

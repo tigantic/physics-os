@@ -330,7 +330,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `geometry.py` — Wedge geometry and immersed boundary method
   - `BCType`, `FlowState`, `BoundaryManager` — BC management classes
   - `WedgeGeometry`, `ImmersedBoundary` — Geometry handling
-- **Benchmark**: `benchmarks/oblique_shock.py` — Oblique shock validation with convergence study
+- **Benchmark**: `experiments/benchmarks/benchmarks/oblique_shock.py` — Oblique shock validation with convergence study
 - **Tests**: Extended `tests/test_integration.py` with 2D solver tests (33 tests total)
 
 - **Phase 2: CFD Module** (`tensornet/cfd/`)
@@ -342,7 +342,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `MUSCL` — Second-order reconstruction class
   - Standard test problems: `sod_shock_tube_ic`, `lax_shock_tube_ic`, `shu_osher_ic`
   - MPS interface: `euler_to_mps`, `mps_to_euler`
-- **Benchmark**: `benchmarks/sod_shock_tube.py` — Sod shock tube validation
+- **Benchmark**: `experiments/benchmarks/benchmarks/sod_shock_tube.py` — Sod shock tube validation
 - **Core Package Structure**:
   - `tensornet/core/mps.py` — Full MPS class (~400 lines)
   - `tensornet/core/mpo.py` — Full MPO class (~230 lines)

@@ -1,0 +1,226 @@
+{
+  "attestation": {
+    "protocol": "FAST_ANTENNA_INVENTION_SWEEP",
+    "version": "1.0.0",
+    "timestamp": "2026-02-25T21:02:05.238756+00:00",
+    "project": "HyperTensor-VM"
+  },
+  "config": {
+    "n_bits": 12,
+    "grid": "4,096\u00b3",
+    "total_dofs": 68719476736,
+    "dofs_human": "68.7B",
+    "exceeds_previous_record_by": "0\u00d7",
+    "n_steps": 50,
+    "max_rank": 48,
+    "seed": 42,
+    "families": [
+      "dipole",
+      "patch",
+      "e_shaped",
+      "u_slot"
+    ],
+    "n_candidates_per_family": 1,
+    "total_candidates": 4,
+    "total_wall_time_s": 1049.9425535310002
+  },
+  "per_family_summary": {
+    "dipole": {
+      "family": "half_wave_dipole",
+      "n_points": 1,
+      "n_successful": 1,
+      "n_failed": 0,
+      "total_wall_time_s": 222.84242190599616,
+      "n_bits": 12,
+      "n_steps": 50,
+      "best_gain_dbi": -100.0,
+      "best_s11_db": -0.001097767946582322,
+      "best_fractional_bw": 0.0
+    },
+    "patch": {
+      "family": "rectangular_patch",
+      "n_points": 1,
+      "n_successful": 1,
+      "n_failed": 0,
+      "total_wall_time_s": 282.86710647800646,
+      "n_bits": 12,
+      "n_steps": 50,
+      "best_gain_dbi": -100.0,
+      "best_s11_db": 0.0,
+      "best_fractional_bw": 0.0
+    },
+    "e_shaped": {
+      "family": "e_shaped_patch",
+      "n_points": 1,
+      "n_successful": 1,
+      "n_failed": 0,
+      "total_wall_time_s": 289.4145863950107,
+      "n_bits": 12,
+      "n_steps": 50,
+      "best_gain_dbi": -100.0,
+      "best_s11_db": 0.0,
+      "best_fractional_bw": 0.0
+    },
+    "u_slot": {
+      "family": "u_slot_patch",
+      "n_points": 1,
+      "n_successful": 1,
+      "n_failed": 0,
+      "total_wall_time_s": 251.1718196330039,
+      "n_bits": 12,
+      "n_steps": 50,
+      "best_gain_dbi": -100.0,
+      "best_s11_db": 0.0,
+      "best_fractional_bw": 0.0
+    }
+  },
+  "pareto_summary": {
+    "n_candidates": 4,
+    "n_fronts": 1,
+    "n_file_now": 4,
+    "n_hold": 0,
+    "n_discard": 0,
+    "objectives": [
+      "peak_gain_dbi",
+      "fractional_bandwidth",
+      "radiation_efficiency"
+    ],
+    "top_score": 0.8791666666666667,
+    "top_candidate": "RECT-c49b154a6ae334d5"
+  },
+  "ranked_candidates": [
+    {
+      "candidate_id": "RECT-c49b154a6ae334d5",
+      "params": {
+        "patch_width": 0.4914678230728645,
+        "patch_length": 0.36639889569662354,
+        "substrate_eps_r": 8.28851444221563,
+        "substrate_height": 0.032811363267554586,
+        "feed_offset_y": -0.08244210931566492
+      },
+      "param_hash": "c49b154a6ae334d5",
+      "pareto_front": 0,
+      "crowding_distance": 0.0,
+      "scores": {
+        "rf_performance": 0.9166666666666667,
+        "manufacturability": 1.0,
+        "novelty_proxy": 1.0,
+        "claim_breadth": 1.0,
+        "market_relevance": 0.5,
+        "verification_quality": 0.75
+      },
+      "composite_score": 0.8791666666666667,
+      "triage": "FILE_NOW",
+      "triage_reason": "Score 0.88 \u2265 0.75 and novelty 1.00 \u2265 0.6",
+      "metrics": {
+        "s11_min_db": 0.0,
+        "peak_gain_dbi": -100.0,
+        "fractional_bandwidth": 0.0,
+        "radiation_efficiency": 0.0,
+        "vswr_min": 1998.9999999999984,
+        "wall_time_s": 279.69736721599475
+      }
+    },
+    {
+      "candidate_id": "HALF-5360729d92a85440",
+      "params": {
+        "arm_length": 0.332186814566789,
+        "wire_radius": 0.020360745391321832,
+        "gap_half": 0.02646494799778456
+      },
+      "param_hash": "5360729d92a85440",
+      "pareto_front": 0,
+      "crowding_distance": Infinity,
+      "scores": {
+        "rf_performance": 1.0,
+        "manufacturability": 0.0957948565293269,
+        "novelty_proxy": 1.0,
+        "claim_breadth": 1.0,
+        "market_relevance": 0.5,
+        "verification_quality": 0.75
+      },
+      "composite_score": 0.764369228479399,
+      "triage": "FILE_NOW",
+      "triage_reason": "Score 0.76 \u2265 0.75 and novelty 1.00 \u2265 0.6",
+      "metrics": {
+        "s11_min_db": -0.001097767946582322,
+        "peak_gain_dbi": -100.0,
+        "fractional_bandwidth": 0.0,
+        "radiation_efficiency": 0.0,
+        "vswr_min": 1998.9999999999984,
+        "wall_time_s": 218.9304787380097
+      }
+    },
+    {
+      "candidate_id": "E_SH-6b01b77a47e9155e",
+      "params": {
+        "patch_width": 0.43351504912212857,
+        "patch_length": 0.20839161235559028,
+        "slot_length": 0.16668025093175853,
+        "slot_width": 0.012190188289361439,
+        "slot_offset": 0.04851473904810574,
+        "substrate_eps_r": 4.7321958129698185,
+        "substrate_height": 0.0821333509135472,
+        "feed_offset_y": -0.003898832107894795
+      },
+      "param_hash": "6b01b77a47e9155e",
+      "pareto_front": 0,
+      "crowding_distance": 0.0,
+      "scores": {
+        "rf_performance": 0.9166666666666667,
+        "manufacturability": 0.17066263605106013,
+        "novelty_proxy": 1.0,
+        "claim_breadth": 1.0,
+        "market_relevance": 0.5,
+        "verification_quality": 0.75
+      },
+      "composite_score": 0.7547660620743257,
+      "triage": "FILE_NOW",
+      "triage_reason": "Score 0.75 \u2265 0.75 and novelty 1.00 \u2265 0.6",
+      "metrics": {
+        "s11_min_db": 0.0,
+        "peak_gain_dbi": -100.0,
+        "fractional_bandwidth": 0.0,
+        "radiation_efficiency": 0.0,
+        "vswr_min": 1998.9999999999984,
+        "wall_time_s": 286.28084397099155
+      }
+    },
+    {
+      "candidate_id": "U_SL-bfb320993799ec3c",
+      "params": {
+        "patch_width": 0.432186814566789,
+        "patch_length": 0.2816635319256157,
+        "slot_length_y": 0.22171958398227648,
+        "slot_width_x": 0.22736832697424733,
+        "slot_arm_width": 0.011013675132404786,
+        "substrate_eps_r": 5.902489406547024,
+        "substrate_height": 0.08327977913932472,
+        "feed_offset_y": -0.02567228336676554
+      },
+      "param_hash": "bfb320993799ec3c",
+      "pareto_front": 0,
+      "crowding_distance": Infinity,
+      "scores": {
+        "rf_performance": 0.9166666666666667,
+        "manufacturability": 0.154191451853667,
+        "novelty_proxy": 1.0,
+        "claim_breadth": 1.0,
+        "market_relevance": 0.5,
+        "verification_quality": 0.75
+      },
+      "composite_score": 0.7522953844447167,
+      "triage": "FILE_NOW",
+      "triage_reason": "Score 0.75 \u2265 0.75 and novelty 1.00 \u2265 0.6",
+      "metrics": {
+        "s11_min_db": 0.0,
+        "peak_gain_dbi": -100.0,
+        "fractional_bandwidth": 0.0,
+        "radiation_efficiency": 0.0,
+        "vswr_min": 1998.9999999999984,
+        "wall_time_s": 248.135108862989
+      }
+    }
+  ],
+  "self_hash": "eb517edcb9f6529346ef06f7436066ad1fdc42e4c7bd42175c75ac9097d1bd83"
+}

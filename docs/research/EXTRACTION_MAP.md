@@ -100,7 +100,7 @@ def step(self, state, dt):
 
 | Target File | Source | What to Extract |
 |-------------|--------|-----------------|
-| `quantum/schrodinger.py` | `benchmarks/tfim_ground_state.py` | DMRG concepts |
+| `quantum/schrodinger.py` | `experiments/benchmarks/experiments/benchmarks/benchmarks/tfim_ground_state.py` | DMRG concepts |
 | `quantum/hamiltonians.py` | `tensornet/core/mpo.py` | MPO builders |
 
 ---
@@ -168,11 +168,11 @@ These stay in the main HyperTensor-VM repository:
 |----------|-------|-----------------|
 | **Apps** | `apps/glass_cockpit/`, `apps/global_eye/` | GUI-specific |
 | **Demos** | `demos/*.py` | Visualization, domain-specific |
-| **Benchmarks** | `benchmarks/*.py` | Testing/validation |
+| **Benchmarks** | `experiments/benchmarks/benchmarks/*.py` | Testing/validation |
 | **Proofs** | `proofs/*.py` | Attestation scripts |
 | **Domain Modules** | `tensornet/defense/`, `tensornet/medical/`, etc. | Vertical integrations |
 | **Discovery Solvers** | `tig011a_*.py`, `euv_*.py`, `starheart_*.py` | Application-specific |
-| **Rust Bindings** | `crates/`, `tci_core_rust/` | Separate package |
+| **Rust Bindings** | `crates/`, `crates/tci_core_rust/` | Separate package |
 
 ---
 

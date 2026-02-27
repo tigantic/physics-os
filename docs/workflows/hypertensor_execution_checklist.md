@@ -18,7 +18,7 @@
 | 2025-12-27 | Session 2 | Updated Issue Registry with verified status for 8 additional items |
 | 2025-12-27 | Session 3 | Created requirements-dev.txt with pinned versions, updated Makefile dev-deps target |
 | 2025-12-27 | Session 3 | Fixed security_scan.py auto-install behavior - now fails fast with helpful error messages |
-| 2025-12-27 | Session 3 | Verified CI badge present in README, verified sdk/qtt-sdk egg-info and tci_core_rust/target untracked |
+| 2025-12-27 | Session 3 | Verified CI badge present in README, verified sdk/qtt-sdk egg-info and crates/tci_core_rust/target untracked |
 | 2025-12-27 | Session 4 | Added Physics/tests to pytest testpaths in pyproject.toml |
 | 2025-12-27 | Session 4 | Created proofs/common.py with shared utilities (ProofResult, Tolerances, run_proofs, save_results) |
 | 2025-12-27 | Session 4 | Added comprehensive dev environment documentation to CONTRIBUTING.md |
@@ -32,14 +32,14 @@
 | 2025-12-27 | Session 4 | **Session 4 Summary: 38 additional items completed (110 → 148)** |
 | 2025-12-27 | Session 5 | Created docs/ONBOARDING.md - first 30 minutes guide |
 | 2025-12-27 | Session 5 | Created tensornet/logging_config.py - centralized logging module |
-| 2025-12-27 | Session 5 | Created ErrorDetail, ErrorResponse schemas in sdk/server/main.py |
+| 2025-12-27 | Session 5 | Created ErrorDetail, ErrorResponse schemas in apps/sdk_legacy/server/main.py |
 | 2025-12-27 | Session 5 | Added correlation IDs to all error responses |
 | 2025-12-27 | Session 5 | Created tests/test_tci_core_imports.py for Rust extension tests |
 | 2025-12-27 | Session 5 | Created benchmarks/tests/ directory with validity tests |
 | 2025-12-27 | Session 5 | Created docs/ARCHITECTURE_GUIDE.md with Mermaid diagrams |
 | 2025-12-27 | Session 5 | Created docs/RELEASING.md with full release checklist |
 | 2025-12-27 | Session 5 | Added twine, pdoc, build, pre-commit to pyproject.toml dev extras |
-| 2025-12-27 | Session 5 | Created sdk/server/.env.example with CORS configuration |
+| 2025-12-27 | Session 5 | Created apps/sdk_legacy/server/.env.example with CORS configuration |
 | 2025-12-27 | Session 5 | Added error handling tests to sdk/server/tests/test_server.py |
 | 2025-12-27 | Session 5 | Added coverage threshold (70%) to pyproject.toml and CI workflow |
 | 2025-12-27 | Session 5 | Added codecov badge to README.md |
@@ -62,8 +62,8 @@
 | 2025-12-27 | Session 6 | Created tensornet/ml_surrogates/base.py with shared types |
 | 2025-12-27 | Session 6 | Created tests/test_domain_decomp.py with edge case tests |
 | 2025-12-27 | Session 6 | Added TestServerConfiguration tests to server tests |
-| 2025-12-27 | Session 6 | Fixed missing 'import os' in sdk/server/main.py |
-| 2025-12-27 | Session 6 | Verified sdk/qtt-sdk/tests is discoverable (14 tests) |
+| 2025-12-27 | Session 6 | Fixed missing 'import os' in apps/sdk_legacy/server/main.py |
+| 2025-12-27 | Session 6 | Verified apps/sdk_legacy/qtt-sdk/tests is discoverable (14 tests) |
 | 2025-12-27 | Session 6 | Generated API reference for public modules (core, cfd) |
 | 2025-12-27 | Session 6 | Updated generate_api_docs.py to use pdoc3 |
 | 2025-12-27 | Session 6 | Verified domain_decomp algorithm is well-documented |
@@ -147,10 +147,10 @@
 
 - [x] ✅ Remove `dist/` directory from repository (verified untracked 2025-12-27)
 - [x] ✅ Remove `tensornet.egg-info/` directory from repository (verified untracked 2025-12-27)
-- [x] ✅ `sdk/qtt-sdk/src/qtt_sdk.egg-info/` verified untracked in git (local only)
+- [x] ✅ `apps/sdk_legacy/qtt-sdk/src/qtt_sdk.egg-info/` verified untracked in git (local only)
 - [x] ✅ Remove all `__pycache__/` directories from repository (verified untracked 2025-12-27)
 - [x] ✅ Remove `.pytest_cache/` directories from repository (verified untracked 2025-12-27)
-- [x] ✅ `tci_core_rust/target/` verified untracked in git (.gitignore present)
+- [x] ✅ `crates/tci_core_rust/target/` verified untracked in git (.gitignore present)
 - [x] ✅ Numba cache files verified untracked (release script excludes them)
 - [x] ✅ Add CI check to reject PRs containing these artifacts (hygiene stage in ci.yml) (2025-12-27)
 - [x] ✅ Verify `.gitignore` rules are effective for new commits (verified 2025-12-27)
@@ -210,7 +210,7 @@
 
 - [x] ✅ **DECIDED:** pip freeze for simplicity (lockfiles are reference, not enforced) (2025-12-27)
 - [x] ✅ Generated lockfile for root `tensornet` package (`requirements-lock.txt`) (2025-12-27)
-- [x] ✅ Generated lockfile for `sdk/qtt-sdk` package (`sdk/qtt-sdk/requirements-lock.txt`) (2025-12-27)
+- [x] ✅ Generated lockfile for `apps/sdk_legacy/qtt-sdk` package (`apps/sdk_legacy/qtt-sdk/requirements-lock.txt`) (2025-12-27)
 - [x] ✅ Documented lockfile generation/update process in CONTRIBUTING.md (2025-12-27)
 - [x] ✅ Added `make lockfile` and `make lockfile-check` targets (2025-12-27)
 
@@ -260,13 +260,13 @@
 
 ### 3.2 Secret Scan Exclusion Tightening
 
-**Evidence:** `scripts/security_scan.py:L31-L36` excludes all `*.json`
+**Evidence:** `tools/scripts/security_scan.py:L31-L36` excludes all `*.json`
 
-- [x] ✅ Reviewed `SECRET_EXCLUSIONS` list in `scripts/security_scan.py` (2025-12-27)
+- [x] ✅ Reviewed `SECRET_EXCLUSIONS` list in `tools/scripts/security_scan.py` (2025-12-27)
 - [x] ✅ Removed blanket `*.json` exclusion (2025-12-27)
 - [x] ✅ Added specific exclusions for known safe directories (2025-12-27):
   - [x] `results/*.json` (benchmark results)
-  - [x] `evidence/*.json` (test evidence)
+  - [x] `artifacts/artifacts/evidence/*.json` (test evidence)
   - [x] `*_results.json` pattern
 - [x] ✅ Secrets baseline verified - 17 plugins configured, 0 secrets detected
 
@@ -318,17 +318,17 @@
 
 #### 3.5.1 CORS Configuration
 
-**Evidence:** `sdk/server/main.py:L138-L145` uses `allow_origins=['*']` and `allow_methods=['*']`
+**Evidence:** `apps/sdk_legacy/server/main.py:L138-L145` uses `allow_origins=['*']` and `allow_methods=['*']`
 
 - [x] Make CORS origins configurable via environment variable ✅ FIXED 2025-12-27 (HYPERTENSOR_CORS_ORIGINS)
 - [x] Set default to localhost-only for development ✅ FIXED 2025-12-27
 - [x] ✅ Document production CORS configuration (`docs/SERVER_CONFIGURATION.md`) (2025-12-27)
-- [x] ✅ Add example `.env` with CORS settings (`sdk/server/.env.example`) (2025-12-27)
+- [x] ✅ Add example `.env` with CORS settings (`apps/sdk_legacy/server/.env.example`) (2025-12-27)
 - [x] ✅ Added server configuration tests (`TestServerConfiguration` in test_server.py) (2025-12-27)
 
 #### 3.5.2 Error Message Sanitization
 
-**Evidence:** `sdk/server/main.py:L108-L112` uses `HTTPException(500, str(e))`
+**Evidence:** `apps/sdk_legacy/server/main.py:L108-L112` uses `HTTPException(500, str(e))`
 
 - [x] Create error handling middleware ✅ FIXED 2025-12-27 (_sanitize_error helper)
 - [x] Log full exception internally with stack trace ✅ FIXED 2025-12-27
@@ -339,7 +339,7 @@
 
 #### 3.5.3 Concurrency Safety
 
-**Evidence:** `sdk/server/main.py:L90-L114` uses global mutable `state.fields` without locking
+**Evidence:** `apps/sdk_legacy/server/main.py:L90-L114` uses global mutable `state.fields` without locking
 
 - [x] ✅ FIXED: Added `asyncio.Lock` for state mutations
 - [x] ✅ Added thread-safe methods: `allocate_handle()`, `add_field()`, `remove_field()`, `get_field()`
@@ -348,9 +348,9 @@
 
 ### 3.6 Security Scan Script Fixes
 
-**Evidence:** `scripts/security_scan.py:L61-L64` and `L93-L97` auto-install tools
+**Evidence:** `tools/scripts/security_scan.py:L61-L64` and `L93-L97` auto-install tools
 
-- [x] ✅ Remove auto-install behavior from `scripts/security_scan.py` (2025-12-27)
+- [x] ✅ Remove auto-install behavior from `tools/scripts/security_scan.py` (2025-12-27)
 - [x] ✅ Add all security tools to dev dependencies with pinned versions (requirements-dev.txt 2025-12-27)
 - [x] ✅ Make script fail fast if tools are missing (2025-12-27)
 - [x] ✅ Update CI to pre-install security tools (already in ci.yml security stage)
@@ -459,9 +459,9 @@ Review and disposition each module:
 
 **Evidence:** `02b-duplication.md`
 
-- [x] ✅ Remove `demos/evidence/flagship_pack/verify.py` (2025-12-27)
-- [x] ✅ Keep `evidence/flagship_pack/verify.py` as canonical
-- [x] N/A - `evidence/flagship_pack/verify.py` is canonical location
+- [x] ✅ Remove `demos/artifacts/evidence/flagship_pack/verify.py` (2025-12-27)
+- [x] ✅ Keep `artifacts/artifacts/evidence/flagship_pack/verify.py` as canonical
+- [x] N/A - `artifacts/artifacts/evidence/flagship_pack/verify.py` is canonical location
 - [x] ✅ No references found to removed duplicate
 
 #### 4.3.2 Symbol List Duplication
@@ -527,7 +527,7 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 - [x] ✅ Decide inclusion policy for `Physics/tests/` - Added to testpaths (2025-12-27)
   - [x] ✅ Option A: Add to `testpaths` in `pyproject.toml` (2025-12-27)
   - [ ] Option B: Keep separate, document in CONTRIBUTING.md
-- [x] ✅ Verified `sdk/qtt-sdk/tests/` is discoverable (pytest collects 14 tests) (2025-12-27)
+- [x] ✅ Verified `apps/sdk_legacy/qtt-sdk/tests/` is discoverable (pytest collects 14 tests) (2025-12-27)
 - [x] ✅ Document test organization in CONTRIBUTING.md (2025-12-27)
 
 #### 5.1.2 Pytest Markers
@@ -591,7 +591,7 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 
 #### 5.5.1 Server Tests
 
-- [x] ✅ Create `sdk/server/tests/` directory (2025-12-27)
+- [x] ✅ Create `apps/sdk_legacy/server/tests/` directory (2025-12-27)
 - [x] ✅ Add request/response tests for each endpoint (2025-12-27)
 - [x] ✅ Add validation tests (input sanitization) (2025-12-27)
 - [x] ✅ Add error handling tests (2025-12-27)
@@ -612,7 +612,7 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 
 #### 5.5.4 Performance Tests
 
-- [x] ✅ Create `benchmarks/tests/` for perf regression tests (2025-12-27)
+- [x] ✅ Create `experiments/benchmarks/benchmarks/tests/` for perf regression tests (2025-12-27)
 - [x] ✅ Added threshold assertions for critical paths (TestPerformanceThresholds class) (2025-12-27)
 - [x] ✅ Configured perf tests to run in CI nightly (`.github/workflows/nightly.yml`) (2025-12-27)
 
@@ -695,8 +695,8 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 | Project | Location | Build Tool |
 |---------|----------|------------|
 | tensornet | root | setuptools |
-| qtt-sdk | `sdk/qtt-sdk/` | setuptools |
-| tci_core_rust | `tci_core_rust/` | maturin |
+| qtt-sdk | `apps/sdk_legacy/qtt-sdk/` | setuptools |
+| tci_core_rust | `crates/tci_core_rust/` | maturin |
 
 #### 6.4.2 Workspace Considerations
 
@@ -733,9 +733,9 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 
 #### 7.2.2 API Documentation
 
-- [x] ✅ Configure pdoc for API docs (`make docs` target, `scripts/generate_api_docs.py`) (2025-12-27)
+- [x] ✅ Configure pdoc for API docs (`make docs` target, `tools/scripts/generate_api_docs.py`) (2025-12-27)
 - [x] ✅ Generated API reference for public modules (core, cfd in docs/api/) (2025-12-27)
-- [x] ✅ Add docstring coverage check (`scripts/check_docstrings.py`, `make doccheck`) (2025-12-27)
+- [x] ✅ Add docstring coverage check (`tools/scripts/check_docstrings.py`, `make doccheck`) (2025-12-27)
 - [x] ✅ Publish docs setup (`.github/workflows/docs.yml` for GitHub Pages) (2025-12-27)
 
 #### 7.2.3 Architecture Documentation
@@ -752,8 +752,8 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 - [x] ✅ Assign owners for:
   - [x] ✅ `tensornet/cfd/` - CFD team
   - [x] ✅ `tensornet/core/` - Core team
-  - [x] ✅ `sdk/` - SDK team
-  - [x] ✅ `tci_core_rust/` - Rust team
+  - [x] ✅ `apps/sdk_legacy/` - SDK team
+  - [x] ✅ `crates/tci_core_rust/` - Rust team
   - [x] ✅ Security-sensitive files
 
 #### 7.3.2 PR/Issue Templates
@@ -774,7 +774,7 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
   3. [x] ✅ Run `make release` (proofs + lint + type + tests)
   4. [x] ✅ Build wheels/sdist (`python -m build`)
   5. [x] ✅ Validate packages (`twine check dist/*`)
-  6. [x] ✅ Generate SBOM (`scripts/generate_sbom.py`)
+  6. [x] ✅ Generate SBOM (`tools/scripts/generate_sbom.py`)
   7. [x] ✅ Tag release (`git tag vX.Y.Z`)
   8. [x] ✅ Publish to PyPI
   9. [x] ✅ Create GitHub release with SBOM
@@ -790,14 +790,14 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 | 1 | Broken secret-scanning pre-commit hook | S | `.pre-commit-config.yaml:L28-L35` | [x] ✅ FIXED |
 | 2 | Unsafe deserialization default | M | `tensornet/fieldos/field.py:L400-L407` | [x] ✅ FIXED |
 | 3 | Secret material stored in repo | M | `demos/millennium_hunter_keys.json` | [x] ✅ MITIGATED |
-| 4 | Server CORS defaults fully open | S | `sdk/server/main.py:L138-L145` | [x] ✅ FIXED |
+| 4 | Server CORS defaults fully open | S | `apps/sdk_legacy/server/main.py:L138-L145` | [x] ✅ FIXED |
 
 ### Severity: Medium
 
 | # | Issue | Effort | Evidence | Status |
 |---|-------|--------|----------|--------|
-| 5 | Server returns raw exception messages | S | `sdk/server/main.py:L108-L112` | [x] ✅ FIXED |
-| 6 | Global mutable state without concurrency controls | M | `sdk/server/main.py:L90-L114` | [x] ✅ FIXED |
+| 5 | Server returns raw exception messages | S | `apps/sdk_legacy/server/main.py:L108-L112` | [x] ✅ FIXED |
+| 6 | Global mutable state without concurrency controls | M | `apps/sdk_legacy/server/main.py:L90-L114` | [x] ✅ FIXED |
 | 7 | Build artifacts/caches present in archive | S | `.gitignore:L11-L27` | [x] ✅ VERIFIED UNTRACKED |
 | 8 | Dev tooling not consistently declared | S | `Makefile:L98-L121` | [x] ✅ FIXED (pyproject.toml dev extras + requirements-dev.txt) |
 | 9 | Type checking is non-blocking | S | `Makefile:L118-L121` | [x] ✅ FIXED |
@@ -814,7 +814,7 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 | 14 | Physics tests not in default collection | S | `pyproject.toml:L67-L70` | [x] ✅ FIXED |
 | 17 | O(n²) behavior in error mapping loop | S | `tensornet/cfd/qtt_tci.py:L356-L360` | [x] ✅ NOT AN ISSUE (dict lookup is O(1)) |
 | 18 | Demo/test routines in library modules | M | `tensornet/ml_surrogates/surrogate_base.py:L325-L384` | [~] PARTIAL: moved surrogate_base tests (40+ modules remain) |
-| 19 | Security scan script auto-installs tools | S | `scripts/security_scan.py:L61-L64` | [x] ✅ FIXED |
+| 19 | Security scan script auto-installs tools | S | `tools/scripts/security_scan.py:L61-L64` | [x] ✅ FIXED |
 
 ### Severity: Low
 
@@ -877,7 +877,7 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 | 6 | 25 | `tensornet/docs/sphinx_config.py:160-344` | `generate_conf_py` | code |
 | 7 | 22 | `tensornet/coordination/formation.py:180-281` | `FormationController.compute_formation_positions` | code |
 | 8 | 22 | `tensornet/neural/entanglement_gnn.py:411-502` | `build_entanglement_graph` | code |
-| 9 | 21 | `scripts/mach5_wedge.py:40-337` | `run_mach5_wedge` | scripts |
+| 9 | 21 | `tools/scripts/mach5_wedge.py:40-337` | `run_mach5_wedge` | scripts |
 | 10 | 21 | `tensornet/cfd/euler_2d.py:269-321` | `Euler2D._apply_bc_x` | code |
 | 11 | 21 | `tensornet/distributed/parallel_solver.py:284-408` | `ParallelGMRESSolver.solve` | code |
 | 12 | 21 | `tensornet/docs/examples.py:424-504` | `ExampleRunner.generate_report` | code |
@@ -887,15 +887,15 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 | 16 | 19 | `tensornet/docs/api_reference.py:393-473` | `ClassDoc.to_markdown` | code |
 | 17 | 18 | `proofs/proof_master.py:90-204` | `main` | scripts |
 | 18 | 18 | `proofs/proof_phase_1c.py:229-287` | `run_all_proofs` | scripts |
-| 19 | 18 | `scripts/full_reproduce.py:231-320` | `main` | scripts |
-| 20 | 18 | `scripts/profile_performance.py:235-302` | `main` | scripts |
-| 21 | 18 | `sdk/qtt-sdk/examples/make_pdf.py:36-446` | `create_complete_technical_volume` | code |
+| 19 | 18 | `tools/scripts/full_reproduce.py:231-320` | `main` | scripts |
+| 20 | 18 | `tools/scripts/profile_performance.py:235-302` | `main` | scripts |
+| 21 | 18 | `apps/sdk_legacy/qtt-sdk/examples/make_pdf.py:36-446` | `create_complete_technical_volume` | code |
 | 22 | 18 | `tensornet/intent/query.py:352-407` | `Aggregator.apply` | code |
 | 23 | 17 | `demos/millennium_hunter.py:125-232` | `build_rank1_3d_qtt_tensorfree` | scripts |
 | 24 | 17 | `tensornet/cfd/godunov.py:385-554` | `exact_riemann` | code |
 | 25 | 17 | `tensornet/docs/api_reference.py:544-617` | `ModuleDoc.to_markdown` | code |
 | 26 | 16 | `demos/layer9_engine_integration.py:345-526` | `run_validation` | scripts |
-| 27 | 16 | `scripts/release_check.py:219-321` | `main` | scripts |
+| 27 | 16 | `tools/scripts/release_check.py:219-321` | `main` | scripts |
 | 28 | 16 | `tensornet/cfd/kantorovich.py:311-395` | `NewtonKantorovichVerifier.verify_profile` | code |
 | 29 | 16 | `tensornet/digital_twin/health_monitor.py:433-499` | `AnomalyDetector.check` | code |
 | 30 | 16 | `tensornet/flight_validation/reports.py:183-285` | `ValidationReport._generate_markdown` | code |

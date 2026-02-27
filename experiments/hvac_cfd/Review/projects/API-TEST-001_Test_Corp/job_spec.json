@@ -1,0 +1,47 @@
+{
+  "client": {
+    "name": "Test Corp",
+    "project_id": "API-TEST-001",
+    "contact": null,
+    "email": null
+  },
+  "room": {
+    "name": "Conference Room",
+    "type": "conference_room",
+    "dimensions_m": [
+      10.0,
+      8.0,
+      3.0
+    ]
+  },
+  "load": {
+    "occupants": 10,
+    "heat_load_per_person_watts": 100.0,
+    "equipment_load_watts": 0.0,
+    "lighting_load_watts": 0.0
+  },
+  "hvac": {
+    "supply_temp_c": 18.0,
+    "supply_cfm": null,
+    "supply_velocity_ms": null,
+    "diffuser_type": "ceiling_slot",
+    "num_diffusers": 2,
+    "diffuser_area_m2": 0.1
+  },
+  "constraints": {
+    "max_velocity_ms": 0.25,
+    "target_temp_c": 22.0,
+    "temp_range_c": [
+      20.0,
+      24.0
+    ],
+    "max_co2_ppm": 1000.0
+  },
+  "deliverables": {
+    "thermal_heatmap": true,
+    "velocity_field": true,
+    "convergence_plot": true,
+    "pdf_report": true
+  },
+  "notes": null
+}

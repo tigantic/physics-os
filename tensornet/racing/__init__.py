@@ -1,18 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.aerospace.racing.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.racing import X
+    from tensornet.racing.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.aerospace.racing``.
 """
-TensorNet Racing Module - Aerodynamic Wake Analysis
+import importlib as _il
+import sys as _sys
 
-Phase 12: The Invisible Wall
-- Dirty air wake tracking behind race cars
-- Turbulent vortex visualization
-- Real-time overtake window detection
-
-The physics that wins races.
-"""
-
-from .wake import DirtyAirReport, WakeTracker, track_dirty_air
-
-__all__ = [
-    "WakeTracker",
-    "DirtyAirReport",
-    "track_dirty_air",
-]
+_real = _il.import_module("tensornet.aerospace.racing")
+_sys.modules[__name__] = _real

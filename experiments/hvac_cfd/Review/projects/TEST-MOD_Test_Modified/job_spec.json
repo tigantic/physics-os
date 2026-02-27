@@ -1,0 +1,38 @@
+{
+  "client": {
+    "name": "Test Modified Params",
+    "project_id": "TEST-MOD",
+    "contact": "Test User",
+    "email": "test@test.com"
+  },
+  "room": {
+    "name": "Test Room",
+    "type": "conference",
+    "dimensions_m": [8.0, 6.0, 3.0]
+  },
+  "load": {
+    "occupants": 20,
+    "heat_load_per_person_watts": 120,
+    "equipment_load_watts": 1000,
+    "lighting_load_watts": 300
+  },
+  "hvac": {
+    "supply_temp_c": 16.0,
+    "supply_velocity_ms": 2.5,
+    "supply_angle_deg": 30.0,
+    "num_diffusers": 2,
+    "diffuser_area_m2": 0.1
+  },
+  "constraints": {
+    "target_temp_c": 22.0,
+    "temp_range_c": [20.0, 24.0],
+    "max_velocity_ms": 0.25,
+    "max_co2_ppm": 1000
+  },
+  "deliverables": {
+    "thermal_heatmap": true,
+    "velocity_field": true,
+    "convergence_plot": true,
+    "pdf_report": true
+  }
+}

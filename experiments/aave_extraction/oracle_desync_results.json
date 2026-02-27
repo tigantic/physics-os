@@ -1,0 +1,9 @@
+{
+  "block": 24508125,
+  "vaults_scanned": 4,
+  "movements": [],
+  "migrator_txs": [],
+  "desyncs": [],
+  "exploitable": 0,
+  "verdict": "NOT_EXPLOITABLE"
+}

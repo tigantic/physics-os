@@ -1,0 +1,19 @@
+{
+  "client": "James Chen, Facilities Engineering",
+  "project": "Conference Room B Ventilation",
+  "date": "2026-01-06T07:21:22.409525",
+  "room": {
+    "L": 9.0,
+    "H": 3.0,
+    "h_inlet_mm": 168.0,
+    "u_inlet": 0.455
+  },
+  "Re_inlet": 5096.0,
+  "Re_room": 91000.0,
+  "grid": "128x64",
+  "findings": {
+    "u_breathing_3m": NaN,
+    "u_breathing_6m": NaN,
+    "jet_core_3m": 0.047619047619047616,
+    "jet_core_6m": 0.047619047619047616,
+    "problem_confirmed": 

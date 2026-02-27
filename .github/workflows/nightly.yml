@@ -63,12 +63,10 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Set up Rust
-        uses: dtolnay/rust-action@stable
-        with:
-          toolchain: stable
+        uses: dtolnay/rust-toolchain@stable
 
       - name: Build and benchmark Rust extension
-        working-directory: tci_core_rust
+        working-directory: crates/tci_core_rust
         run: |
           cargo build --release
           cargo bench 2>&1 | tee rust_benchmark.log
@@ -77,7 +75,7 @@ jobs:
       - name: Compare Rust vs Python TCI
         run: |
           pip install -e ".[dev]"
-          python benchmarks/rust_vs_python_tci.py 2>&1 | tee rust_vs_python.log
+          python tools/rust_vs_python_tci.py 2>&1 | tee rust_vs_python.log
         continue-on-error: true
 
       - name: Upload Rust benchmark results
@@ -115,7 +113,7 @@ jobs:
         timeout-minutes: 10
 
       - name: Check regression thresholds
-        run: python3 scripts/check_pwa_regression.py
+        run: python3 tools/scripts/check_pwa_regression.py
 
       - name: Run PWA pytest suite
         run: |
@@ -128,7 +126,7 @@ jobs:
         with:
           name: pwa-results-${{ github.run_number }}
           path: |
-            paper/figures/pwa_engine_metadata.json
-            paper/figures/pwa_*.png
+            docs/papers/paper/figures/pwa_engine_metadata.json
+            docs/papers/paper/figures/pwa_*.png
             pwa_engine.log
           retention-days: 30

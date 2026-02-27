@@ -1,39 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.infra.sovereign.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.sovereign import X
+    from tensornet.sovereign.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.infra.sovereign``.
 """
-Sovereign Architecture: End-to-End Tensor Sparsity
+import importlib as _il
+import sys as _sys
 
-Modules:
-    - implicit_qtt_renderer: Implicit QTT evaluation without materialization
-    - protocol: Wire format definitions for Python ↔ Rust IPC
-    - weather_stream: Weather data writer for Global Eye
-"""
-
-from .implicit_qtt_renderer import ImplicitQTTRenderer, test_implicit_renderer
-
-# Weather Bridge (Global Eye Phase 1)
-from .protocol import (
-                       PROTOCOL_MAGIC,
-                       PROTOCOL_VERSION,
-                       SHM_PATH,
-                       SHM_SIZE,
-                       WeatherHeader,
-                       verify_protocol,
-)
-from .weather_stream import WeatherStreamWriter, close_bridge, get_writer, write_to_bridge
-
-__all__ = [
-    # QTT
-    "ImplicitQTTRenderer",
-    "test_implicit_renderer",
-    # Protocol
-    "WeatherHeader",
-    "PROTOCOL_MAGIC",
-    "PROTOCOL_VERSION",
-    "SHM_PATH",
-    "SHM_SIZE",
-    "verify_protocol",
-    # Weather Stream
-    "WeatherStreamWriter",
-    "write_to_bridge",
-    "close_bridge",
-    "get_writer",
-]
+_real = _il.import_module("tensornet.infra.sovereign")
+_sys.modules[__name__] = _real

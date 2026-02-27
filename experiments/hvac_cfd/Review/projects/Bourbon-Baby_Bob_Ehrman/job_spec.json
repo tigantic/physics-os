@@ -1,0 +1,52 @@
+{
+  "client": {
+    "name": "Bob Ehrman",
+    "project_id": "Bourbon-Baby",
+    "contact": "Bob Uhrman",
+    "email": "Bourbon@baby.com"
+  },
+  "room": {
+    "name": "Boom-Boom Room",
+    "type": "other",
+    "dimensions_m": [
+      7.315200000000001,
+      4.8768,
+      2.7432000000000003
+    ]
+  },
+  "load": {
+    "occupants": 2,
+    "heat_load_per_person_watts": 100,
+    "equipment_load_watts": 1200,
+    "lighting_load_watts": 350
+  },
+  "hvac": {
+    "supply_cfm": 60,
+    "supply_temp_c": 12.777777777777779,
+    "diffuser_type": "sidewall",
+    "num_diffusers": 2,
+    "diffuser_size": "24\"x24\"",
+    "diffuser_location": "Ceiling Center",
+    "supply_velocity_ms": 0.28
+  },
+  "constraints": {
+    "max_velocity_ms": 0.254,
+    "target_temp_c": 22.22222222222222,
+    "temp_range_c": [
+      20,
+      23.88888888888889
+    ],
+    "max_co2_ppm": 1000
+  },
+  "simulation": {
+    "duration_seconds": 300
+  },
+  "analysis_type": "comfort_verification",
+  "notes": "Hugh G Penis",
+  "deliverables": {
+    "thermal_heatmap": true,
+    "velocity_field": true,
+    "convergence_plot": true,
+    "pdf_report": true
+  }
+}

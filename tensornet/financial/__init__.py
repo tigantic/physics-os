@@ -1,47 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.applied.financial.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.financial import X
+    from tensornet.financial.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.applied.financial``.
 """
-TensorNet Financial Module - Liquidity Weather System
+import importlib as _il
+import sys as _sys
 
-Phase 6: Real-Time Order Book Physics
-=====================================
-
-The "Alpha" Pipeline:
-    Order Book → Density Field → Navier-Stokes → Price Prediction
-
-Core Hypothesis:
-    Price is a particle suspended in a liquidity fluid.
-    It follows the path of least resistance (low pressure).
-    By modeling the order book as a compressible fluid,
-    we can predict "dam breaks" before price moves.
-
-Physics Mapping:
-    - Space (x): Price levels ($95,000 - $105,000 for BTC)
-    - Density (ρ): log(Volume) at each price level
-    - Pressure (P): Limit order concentration
-    - Velocity (u): Market order flow
-    - Temperature (T): Volatility (σ of last 100 trades)
-
-Solver:
-    ∂u/∂t = -∇P + ν∇²u
-    (Price acceleration = -Pressure gradient + Friction)
-
-Visual Output:
-    - Green Fog: Deep buy liquidity (support)
-    - Red Fog: Deep sell liquidity (resistance)
-    - White Particle: Current price
-    - Signal: Red fog thins → Breakout imminent
-
-Target Market:
-    - Proprietary Trading Desks
-    - Crypto Market Makers
-    - Quantitative Hedge Funds
-"""
-
-from tensornet.financial.feed import MarketDataFeed, OrderBookFluid
-from tensornet.financial.solver import LiquiditySolver, solve_price_flow
-
-__all__ = [
-    "OrderBookFluid",
-    "MarketDataFeed",
-    "LiquiditySolver",
-    "solve_price_flow",
-]
+_real = _il.import_module("tensornet.applied.financial")
+_sys.modules[__name__] = _real

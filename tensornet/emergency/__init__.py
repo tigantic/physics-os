@@ -1,17 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.applied.emergency.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.emergency import X
+    from tensornet.emergency.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.applied.emergency``.
 """
-TensorNet Emergency Module - Wildfire Prediction
+import importlib as _il
+import sys as _sys
 
-Phase 14: The Wildfire Prophet
-- Fire-atmosphere coupling
-- Ember transport (spotting)
-- Fire front propagation prediction
-
-The physics that saves communities.
-"""
-
-from .fire import FireReport, FireSim
-
-__all__ = [
-    "FireSim",
-    "FireReport",
-]
+_real = _il.import_module("tensornet.applied.emergency")
+_sys.modules[__name__] = _real

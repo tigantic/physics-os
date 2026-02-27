@@ -1,175 +1,226 @@
 # HyperTensor Documentation Index
 
 ```
-╔════════════════════════════════════════════════════════════════╗
-║                    DOCUMENTATION HUB                            ║
-║              Organized by Category                              ║
-╚════════════════════════════════════════════════════════════════╝
+╔══════════════════════════════════════════════════════════════════════╗
+║                        DOCUMENTATION HUB                            ║
+║            Tensor-Compressed Physics at Scale                        ║
+╚══════════════════════════════════════════════════════════════════════╝
 ```
 
-## 📁 Root Documents (Key References)
+> **Repository structure**: 17 top-level directories, 16 root config/doc files.
+> Root items reduced from 265 → 33 during the Feb 2026 reorganization.
+
+---
+
+## Quick Navigation
+
+| You want to… | Go to |
+|:-------------|:------|
+| Understand the platform | [PLATFORM_SPECIFICATION.md](../PLATFORM_SPECIFICATION.md) |
+| Start contributing | [CONTRIBUTING.md](../CONTRIBUTING.md) |
+| Onboard as a new developer | [ONBOARDING.md](ONBOARDING.md) |
+| Browse architecture decisions | [docs/adr/](adr/README.md) (23 ADRs) |
+| Read the API reference | [docs/api/](api/README.md) (90 modules) |
+| Review the physics inventory | [PHYSICS_INVENTORY.md](PHYSICS_INVENTORY.md) |
+| See the repo reorg plan | [REPO_REORGANIZATION_EXECUTION_PLAN.md](REPO_REORGANIZATION_EXECUTION_PLAN.md) |
+
+---
+
+## Root Documents
 
 | Document | Purpose |
 |----------|---------|
-| [README.md](../README.md) | Project overview and quickstart |
-| [CONSTITUTION.md](../CONSTITUTION.md) | Core principles and governance |
-| [CONTRIBUTING.md](../CONTRIBUTING.md) | Contribution guidelines |
+| [README.md](../README.md) | Project overview, quickstart, and badges |
+| [PLATFORM_SPECIFICATION.md](../PLATFORM_SPECIFICATION.md) | Authoritative platform spec (24 sections, 7 appendices) |
 | [CHANGELOG.md](../CHANGELOG.md) | Version history |
-| [HYPERTENSOR_VV_FRAMEWORK.md](../HYPERTENSOR_VV_FRAMEWORK.md) | **V&V Framework v1.5.0** |
+| [CONTRIBUTING.md](../CONTRIBUTING.md) | Contribution guidelines |
+| [SECURITY.md](../SECURITY.md) | Security policy and vulnerability reporting |
+| [CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md) | Community standards |
+| [LICENSE](../LICENSE) | License terms |
+| [CITATION.cff](../CITATION.cff) | Academic citation metadata |
+| [Makefile](../Makefile) | Build, test, lint targets |
 
 ---
 
-## 🏗️ Architecture (`docs/architecture/`)
+## Directory Structure
 
-System design and architecture specifications.
-
-| Document | Description |
-|----------|-------------|
-| [SOVEREIGN_ARCHITECTURE.md](architecture/SOVEREIGN_ARCHITECTURE.md) | Main sovereign engine architecture |
-| [CORRECTED_SOVEREIGN_ARCHITECTURE.md](architecture/CORRECTED_SOVEREIGN_ARCHITECTURE.md) | Updated architecture corrections |
-| [Sovereign_Systems_Topology.md](architecture/Sovereign_Systems_Topology.md) | System topology diagrams |
-| [Sovereign_UI.md](architecture/Sovereign_UI.md) | UI architecture |
-| [NS_MILLENNIUM_FRAMEWORK.md](architecture/NS_MILLENNIUM_FRAMEWORK.md) | Navier-Stokes millennium framework |
-| [ARCHITECTURE_GUIDE.md](architecture/ARCHITECTURE_GUIDE.md) | Architecture overview guide |
-| [RAM_BRIDGE_SPEC.md](architecture/RAM_BRIDGE_SPEC.md) | RAM bridge specifications |
-
----
-
-## 📋 Phases (`docs/phases/`)
-
-Project phase documentation and milestones.
-
-| Document | Description |
-|----------|-------------|
-| [PHASE_0_EXIT_CRITERIA.md](phases/PHASE_0_EXIT_CRITERIA.md) | Phase 0 completion criteria |
-| [PHASE_3_PLAN.md](phases/PHASE_3_PLAN.md) | Phase 3 planning |
-| [PHASE3_INTEGRATION_COMPLETE.md](phases/PHASE3_INTEGRATION_COMPLETE.md) | Phase 3 integration status |
-| [PHASE3_QUICKSTART.md](phases/PHASE3_QUICKSTART.md) | Phase 3 quickstart guide |
-| [PHASE4_PLAN.md](phases/PHASE4_PLAN.md) | Phase 4 planning |
-| [PHASE_4_EVENT_DRIVEN_RESULTS.md](phases/PHASE_4_EVENT_DRIVEN_RESULTS.md) | Phase 4 results |
-| [PHASE_5.1_CHECKPOINT_RESULTS.md](phases/PHASE_5.1_CHECKPOINT_RESULTS.md) | Phase 5.1 checkpoint |
-| [PHASE_5.2_IMPLEMENTATION_COMPLETE.md](phases/PHASE_5.2_IMPLEMENTATION_COMPLETE.md) | Phase 5.2 completion |
+```
+HyperTensor-VM-main/
+├── apps/               # Standalone applications (Rust binaries, Python apps)
+├── archive/            # Archived prototypes and deprecated code
+├── artifacts/          # Build outputs, attestations, certificates, logs
+├── contracts/          # Solidity smart contracts (Halo2 verifier, Semaphore)
+├── crates/             # Rust workspace crates (15 members)
+├── data/               # Datasets, models, caches, material databases
+├── deploy/             # Containerfile, Docker configs, deployment manifests
+├── docs/               # ← You are here
+├── experiments/        # Research scripts, benchmarks, notebooks
+├── hypertensor/        # Python package: HyperTensor orchestration layer
+├── integrations/       # Game engine integrations (Unity, Unreal)
+├── products/           # Product-specific Python packages
+├── proofs/             # Mathematical proofs (conservation, Yang-Mills, ZK)
+├── tensornet/          # Python package: Tensor network engine (108 modules)
+├── tests/              # Test suites (Python + Rust integration)
+└── tools/              # Developer tools, scripts, LOC reports
+```
 
 ---
 
-## 🔍 Audits (`docs/audits/`)
+## Documentation Sections
 
-Performance, capability, and compliance audits.
+### Architecture (`docs/architecture/`)
 
-| Document | Description |
-|----------|-------------|
-| [CAPABILITY_AUDIT.md](audits/CAPABILITY_AUDIT.md) | Capability assessment |
-| [PERFORMANCE_AUDIT_FINDINGS.md](audits/PERFORMANCE_AUDIT_FINDINGS.md) | Performance analysis |
-| [PIPELINE_ANALYSIS.md](audits/PIPELINE_ANALYSIS.md) | Pipeline analysis |
-| [PIPELINE_OPTIMIZATION_AUDIT.md](audits/PIPELINE_OPTIMIZATION_AUDIT.md) | Optimization recommendations |
-| [QTT_PERFORMANCE_AUDIT.md](audits/QTT_PERFORMANCE_AUDIT.md) | QTT performance |
-| [R&G_AUDIT.md](audits/R&G_AUDIT.md) | R&G compliance audit |
-| [REPOSITORY_PERFORMANCE_AUDIT.md](audits/REPOSITORY_PERFORMANCE_AUDIT.md) | Repository health |
-| [ROADMAP_AUDIT.md](audits/ROADMAP_AUDIT.md) | Roadmap compliance |
-| [DEPENDENCY_VERIFICATION.md](audits/DEPENDENCY_VERIFICATION.md) | Dependency verification |
-
----
-
-## ⚙️ Workflows (`docs/workflows/`)
-
-Development and operational workflows.
+System design, topology, and technical specifications.
 
 | Document | Description |
 |----------|-------------|
-| [GIT_WORKFLOW.md](workflows/GIT_WORKFLOW.md) | Git branching and commit workflow |
-| [GIT_SETUP_COMPLETE.md](workflows/GIT_SETUP_COMPLETE.md) | Git setup verification |
-| [COMMIT_CHECKLIST.md](workflows/COMMIT_CHECKLIST.md) | Pre-commit checklist |
-| [REVIEWER_RUNBOOK.md](workflows/REVIEWER_RUNBOOK.md) | Code review procedures |
-| [EXECUTION_TRACKER.md](workflows/EXECUTION_TRACKER.md) | Execution tracking |
-| [hypertensor_execution_checklist.md](workflows/hypertensor_execution_checklist.md) | Execution checklist |
+| [SOVEREIGN_ARCHITECTURE.md](architecture/SOVEREIGN_ARCHITECTURE.md) | Sovereign engine architecture |
+| [RAM_BRIDGE_SPEC.md](architecture/RAM_BRIDGE_SPEC.md) | Rust↔Python RAM bridge IPC spec |
+| [HYPERTENSOR_ZK_STACK.md](architecture/HYPERTENSOR_ZK_STACK.md) | ZK proof stack architecture |
+| [PHYSICS_PIPELINE_COMPLETE.md](architecture/PHYSICS_PIPELINE_COMPLETE.md) | End-to-end physics pipeline |
+| [SAFE_SERIALIZATION.md](architecture/SAFE_SERIALIZATION.md) | Safe serialization guide |
 
----
+### Architecture Decision Records (`docs/adr/`)
 
-## 🛡️ Attestations (`docs/attestations/`)
+23 accepted ADRs covering core platform decisions. See [adr/README.md](adr/README.md) for the full index.
 
-Cryptographic validation and phase attestations.
+**Highlights:**
+- ADR-0001: Capability Ledger as Source of Truth
+- ADR-0012: Never Go Dense — All Operations in TT/QTT
+- ADR-0017: Q16.16 Fixed-Point for ZK Arithmetic
+- ADR-0021: Python Monolith + Rust Crates Architecture
+- ADR-0023: Domain Pack Taxonomy (168 Nodes, 20 Verticals)
 
-| Document | Description |
-|----------|-------------|
-| [SOVEREIGN_ATTESTATION.md](attestations/SOVEREIGN_ATTESTATION.md) | Sovereign engine attestation |
-| [PHASE1_PURGE_ATTESTATION.json](attestations/PHASE1_PURGE_ATTESTATION.json) | Phase 1 validation |
-| [PHASE2_MUSCLE_ATTESTATION.json](attestations/PHASE2_MUSCLE_ATTESTATION.json) | Phase 2 validation |
-| [PHASE3_FUEL_ATTESTATION.json](attestations/PHASE3_FUEL_ATTESTATION.json) | Phase 3 validation |
-| [PHASE4_GATEWAY_FOUNDATIONS_ATTESTATION.json](attestations/PHASE4_GATEWAY_FOUNDATIONS_ATTESTATION.json) | Phase 4 foundations |
-| [PHASE4_GATEWAY_COMPLETE_ATTESTATION.json](attestations/PHASE4_GATEWAY_COMPLETE_ATTESTATION.json) | Phase 4 complete |
-| [VALIDATION_EVIDENCE.json](attestations/VALIDATION_EVIDENCE.json) | Validation evidence pack |
+### API Reference (`docs/api/`)
 
----
+Auto-generated module documentation for all `tensornet` and `hypertensor` submodules. See [api/README.md](api/README.md).
 
-## 🗺️ Roadmaps (`docs/roadmaps/`)
+### Attestations (`docs/attestations/`)
 
-Project roadmaps and feature planning.
+Cryptographic validation records and phase attestation artifacts (85 items).
+
+### Audits (`docs/audits/`)
 
 | Document | Description |
 |----------|-------------|
-| [ROADMAP.md](roadmaps/ROADMAP.md) | Main project roadmap |
+| [CAPABILITY_AUDIT.md](audits/CAPABILITY_AUDIT.md) | Capability coverage assessment |
+| [PERFORMANCE_AUDIT_FINDINGS.md](audits/PERFORMANCE_AUDIT_FINDINGS.md) | Performance analysis results |
+| [QTT_PERFORMANCE_AUDIT.md](audits/QTT_PERFORMANCE_AUDIT.md) | QTT-specific performance audit |
+| [PIPELINE_OPTIMIZATION_AUDIT.md](audits/PIPELINE_OPTIMIZATION_AUDIT.md) | Pipeline optimization findings |
+
+### Commercial (`docs/commercial/`)
+
+| Document | Description |
+|----------|-------------|
+| [NVIDIA_QTT_PHYSICS_VM_PITCH.md](commercial/NVIDIA_QTT_PHYSICS_VM_PITCH.md) | NVIDIA partnership pitch |
+| [NVIDIA_TECHNICAL_BRIEF.md](commercial/NVIDIA_TECHNICAL_BRIEF.md) | Technical brief for NVIDIA |
+
+### Governance (`docs/governance/`)
+
+| Document | Description |
+|----------|-------------|
+| [API_SURFACE_FREEZE.md](governance/API_SURFACE_FREEZE.md) | API stability policy |
+| [CONSTITUTION.md](governance/CONSTITUTION.md) | Platform constitution |
+| [DETERMINISM_ENVELOPE.md](governance/DETERMINISM_ENVELOPE.md) | Determinism requirements |
+| [ERROR_CODE_MATRIX.md](governance/ERROR_CODE_MATRIX.md) | Error code registry |
+| [FORBIDDEN_OUTPUTS.md](governance/FORBIDDEN_OUTPUTS.md) | Forbidden output constraints |
+| [METERING_POLICY.md](governance/METERING_POLICY.md) | Compute metering policy |
+| [QUEUE_BEHAVIOR_SPEC.md](governance/QUEUE_BEHAVIOR_SPEC.md) | Job queue behavior spec |
+| [CLAIM_REGISTRY.md](governance/CLAIM_REGISTRY.md) | Mathematical claim registry |
+| [DOMAIN_PACK_AUDIT.md](governance/DOMAIN_PACK_AUDIT.md) | Domain pack compliance audit |
+
+### Operations (`docs/operations/`)
+
+| Document | Description |
+|----------|-------------|
+| [OPERATIONS_RUNBOOK.md](operations/OPERATIONS_RUNBOOK.md) | Production operations runbook |
+| [SECURITY_OPERATIONS.md](operations/SECURITY_OPERATIONS.md) | Security operations procedures |
+| [RELEASING.md](operations/RELEASING.md) | Release procedures |
+| [SERVER_CONFIGURATION.md](operations/SERVER_CONFIGURATION.md) | Server configuration guide |
+| [LAUNCH_GATE_MATRIX.json](operations/LAUNCH_GATE_MATRIX.json) | Launch readiness gates |
+
+### Phases (`docs/phases/`)
+
+Phase planning and completion documentation (8 documents covering Phases 0–5.2).
+
+### Product (`docs/product/`)
+
+| Document | Description |
+|----------|-------------|
+| [LAUNCH_READINESS.md](product/LAUNCH_READINESS.md) | Launch readiness assessment |
+| [PRICING_MODEL.md](product/PRICING_MODEL.md) | Pricing and metering model |
+| [RELEASE_NOTES_v4.0.0_BASELINE.md](product/RELEASE_NOTES_v4.0.0_BASELINE.md) | v4.0.0 release notes |
+| [CERTIFICATE_TEST_MATRIX.md](product/CERTIFICATE_TEST_MATRIX.md) | Certificate test matrix |
+
+### Research (`docs/research/`)
+
+Research documents, findings, and hypothesis records (40+ items including QTT benchmarks, drug discovery, Vlasov 6D, NTT findings).
+
+### Roadmaps (`docs/roadmaps/`)
+
+| Document | Description |
+|----------|-------------|
+| [ROADMAP.md](roadmaps/ROADMAP.md) | Master project roadmap |
 | [SOVEREIGN_ENGINE_ROADMAP.md](roadmaps/SOVEREIGN_ENGINE_ROADMAP.md) | Sovereign engine roadmap |
 | [UI_Roadmap.md](roadmaps/UI_Roadmap.md) | UI development roadmap |
 
----
+### Strategy (`docs/strategy/`)
 
-## 📚 API Reference (`docs/api/`)
+| Document | Description |
+|----------|-------------|
+| [Commercial_Execution.md](strategy/Commercial_Execution.md) | Commercial execution strategy |
+| [EXASCALE_IP_EXECUTION_PLAN.md](strategy/EXASCALE_IP_EXECUTION_PLAN.md) | Exascale IP strategy |
+| [OS_Evolution.md](strategy/OS_Evolution.md) | Open-source evolution plan |
 
-Auto-generated API documentation for all modules.
-
-See [docs/api/README.md](api/README.md) for the complete API reference.
-
----
-
-## 📖 Tutorials (`docs/tutorials/`)
-
-Step-by-step guides and tutorials.
+### Tutorials (`docs/tutorials/`)
 
 | Document | Description |
 |----------|-------------|
 | [cfd_compressible_flow.md](tutorials/cfd_compressible_flow.md) | CFD compressible flow tutorial |
 | [mps_ground_state.md](tutorials/mps_ground_state.md) | MPS ground state tutorial |
+| [TPC_INTEGRATOR_GUIDE.md](tutorials/TPC_INTEGRATOR_GUIDE.md) | TPC integration guide |
 
----
-
-## 📝 Specifications (`docs/specifications/`)
-
-Technical specifications and grand vision documents.
+### Workflows (`docs/workflows/`)
 
 | Document | Description |
 |----------|-------------|
-| [EXECUTION_OVERVIEW.md](specifications/EXECUTION_OVERVIEW.md) | Execution overview |
-| [GRAND_VISION.md](specifications/GRAND_VISION.md) | Project grand vision |
+| [GIT_WORKFLOW.md](workflows/GIT_WORKFLOW.md) | Git branching and commit workflow |
+| [COMMIT_CHECKLIST.md](workflows/COMMIT_CHECKLIST.md) | Pre-commit checklist |
+| [REVIEWER_RUNBOOK.md](workflows/REVIEWER_RUNBOOK.md) | Code review procedures |
+
+### Additional Sections
+
+| Directory | Contents |
+|-----------|----------|
+| [audit/](audit/) | Repository review report (4 items) |
+| [evolution/](evolution/) | Platform evolution tracking |
+| [images/](images/) | Diagrams and screenshots |
+| [legacy/](legacy/) | Historical documents (15 items) |
+| [media/](media/) | Video and media assets |
+| [papers/](papers/) | Academic papers and publications (14 items) |
+| [regulatory/](regulatory/) | Regulatory compliance mappings |
+| [reports/](reports/) | Generated reports and dashboards (44+ items) |
+| [specifications/](specifications/) | Technical specifications and vision docs |
 
 ---
 
-## 🗄️ Legacy (`docs/legacy/`)
+## Rust Workspace (`crates/`)
 
-Historical documents and archived content.
-
-| Document | Description |
-|----------|-------------|
-| [DECISION_LOG.md](legacy/DECISION_LOG.md) | Historical decisions |
-| [EXPERIMENT_LOG.md](legacy/EXPERIMENT_LOG.md) | Experiment history |
-| [HYPOTHESIS_HISTORY.md](legacy/HYPOTHESIS_HISTORY.md) | Hypothesis tracking |
-| [BREAKTHROUGH_DISCOVERIES.md](legacy/BREAKTHROUGH_DISCOVERIES.md) | Key breakthroughs |
-| [HOLY_GRAIL_PROOF_INDEX.md](legacy/HOLY_GRAIL_PROOF_INDEX.md) | Holy Grail proofs |
-| [MPO_INTEGRATION_STATUS.md](legacy/MPO_INTEGRATION_STATUS.md) | MPO integration |
-| [OPERATION_VALHALLA.md](legacy/OPERATION_VALHALLA.md) | Operation Valhalla |
-| [TEST_MATRICES.md](legacy/TEST_MATRICES.md) | Test matrices |
-| [REPO_INVENTORY.md](legacy/REPO_INVENTORY.md) | Repository inventory |
-
----
-
-## 🛠️ Developer Guides (Root of `docs/`)
-
-| Document | Description |
-|----------|-------------|
-| [ONBOARDING.md](ONBOARDING.md) | New developer onboarding |
-| [RELEASING.md](RELEASING.md) | Release procedures |
-| [SAFE_SERIALIZATION.md](SAFE_SERIALIZATION.md) | Safe serialization guide |
-| [SERVER_CONFIGURATION.md](SERVER_CONFIGURATION.md) | Server configuration |
+| Crate | Description |
+|-------|-------------|
+| `hyper_core` | Physics engine core (QTT, MPO, CFD operators) |
+| `hyper_bridge` | RAM bridge IPC (Python ↔ Rust streaming) |
+| `hyper_gpu_py` | GPU acceleration PyO3 bindings |
+| `tci_core` | Tensor Cross Interpolation (PyO3) |
+| `proof_bridge` | Trace → ZK proof pipeline |
+| `fluidelite_core` | FluidElite core engine |
+| `fluidelite_circuits` | FluidElite Halo2 circuit definitions |
+| `fluidelite_zk` | FluidElite ZK proving layer |
+| `fluidelite_infra` | FluidElite infrastructure utilities |
+| `qtt_cem` | CEM-QTT: Maxwell FDTD solver (Q16.16) |
+| `qtt_fea` | FEA-QTT: Hex8 static elasticity solver |
+| `qtt_opt` | OPT-QTT: SIMP topology optimization |
 
 ---
 
-*Last updated: January 2, 2026*
+*Last updated: February 25, 2026*

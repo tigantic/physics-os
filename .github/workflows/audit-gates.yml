@@ -176,7 +176,7 @@ jobs:
       - name: Check no unsafe code
         run: |
           # Verify #![deny(unsafe_code)] is enforced
-          grep -r "deny(unsafe_code)" fluidelite-zk/src/lib.rs || {
+          grep -r "deny(unsafe_code)" crates/fluidelite_zk/src/lib.rs || {
             echo "ERROR: #![deny(unsafe_code)] not found in lib.rs"
             exit 1
           }

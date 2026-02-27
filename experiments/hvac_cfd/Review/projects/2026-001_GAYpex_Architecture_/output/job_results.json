@@ -1,0 +1,24 @@
+{
+  "project_id": "2026-001",
+  "client": "GAYpex Architecture Group",
+  "timestamp": "2026-01-17T22:49:41.579873",
+  "optimal_settings": {
+    "velocity": 2.01,
+    "angle": 45.0,
+    "supply_temp": 12.777777777777779
+  },
+  "validation": {
+    "temperature": 20.00354003906252,
+    "co2": 405.36891072591146,
+    "velocity": 0.13215957599216685,
+    "all_pass": true
+  },
+  "assets": {
+    "thermal": "projects/2026-001_GAYpex_Architecture_/output/thermal_heatmap.png",
+    "velocity": "projects/2026-001_GAYpex_Architecture_/output/velocity_field.png",
+    "convergence": "projects/2026-001_GAYpex_Architecture_/output/convergence_plot.png",
+    "dashboard": "projects/2026-001_GAYpex_Architecture_/output/dashboard_summary.png",
+    "pdf": "projects/2026-001_GAYpex_Architecture_/output/2026-001_CFD_Report.pdf"
+  },
+  "elapsed_seconds": 95.26083302497864
+}

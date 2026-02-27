@@ -1,27 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.engine.fuel.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.fuel import X
+    from tensornet.fuel.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.engine.fuel``.
 """
-TensorNet Fuel Module
-=====================
+import importlib as _il
+import sys as _sys
 
-OPERATION VALHALLA - Phase 3: THE FUEL
-
-Orbital data integration: S3→VRAM pipeline for satellite imagery.
-Direct streaming from NOAA/NASA to GPU memory.
-
-Modules:
-    - s3_fetcher: Async S3 client with HTTP/2 (requires aiohttp)
-    - tile_compositor: GPU tile assembly
-    - cache: LRU cache for tile management
-
-Author: OPERATION VALHALLA
-Date: 2025-12-28
-"""
-
-from .tile_compositor import TileCompositor
-
-try:
-    from .s3_fetcher import S3Fetcher
-
-    __all__ = ["S3Fetcher", "TileCompositor"]
-except ImportError:
-    # aiohttp not installed - compositor still works
-    __all__ = ["TileCompositor"]
+_real = _il.import_module("tensornet.engine.fuel")
+_sys.modules[__name__] = _real

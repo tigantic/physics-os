@@ -1,46 +1,15 @@
-"""Quantum mechanics solvers for single-particle Schrödinger equation."""
+"""Backward-compatibility shim — real module at tensornet.quantum.quantum_mechanics.
 
-from .stationary import (
-    DVRSolver,
-    ShootingMethodSolver,
-    SpectralSolver,
-    WKBApproximation,
-    HydrogenAtom,
-    HarmonicOscillator,
-    EigenResult,
-)
-from .propagator import (
-    SplitOperatorPropagator,
-    CrankNicolsonPropagator,
-    ChebyshevPropagator,
-    WavepacketTunneling,
-    PropagationResult,
-)
-from .path_integrals import (
-    PIMC,
-    RPMD,
-    InstantonSolver,
-    ThermodynamicIntegration,
-)
+This shim exists so that legacy imports like::
 
-__all__ = [
-    # Stationary
-    "DVRSolver",
-    "ShootingMethodSolver",
-    "SpectralSolver",
-    "WKBApproximation",
-    "HydrogenAtom",
-    "HarmonicOscillator",
-    "EigenResult",
-    # Time-dependent
-    "SplitOperatorPropagator",
-    "CrankNicolsonPropagator",
-    "ChebyshevPropagator",
-    "WavepacketTunneling",
-    "PropagationResult",
-    # Path integrals
-    "PIMC",
-    "RPMD",
-    "InstantonSolver",
-    "ThermodynamicIntegration",
-]
+    from tensornet.quantum_mechanics import X
+    from tensornet.quantum_mechanics.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.quantum.quantum_mechanics``.
+"""
+import importlib as _il
+import sys as _sys
+
+_real = _il.import_module("tensornet.quantum.quantum_mechanics")
+_sys.modules[__name__] = _real

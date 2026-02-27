@@ -74,7 +74,7 @@ def test_blasius():
         env["PYTHONPATH"] = PROJECT_ROOT
         env["PYTHONIOENCODING"] = "utf-8"
         result = subprocess.run(
-            [sys.executable, "benchmarks/blasius_validation.py"],
+            [sys.executable, "experiments/benchmarks/benchmarks/blasius_validation.py"],
             capture_output=True,
             text=True,
             timeout=120,

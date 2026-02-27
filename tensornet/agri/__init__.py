@@ -1,20 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.energy_env.agri.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.agri import X
+    from tensornet.agri.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.energy_env.agri``.
 """
-TensorNet Agriculture Module
+import importlib as _il
+import sys as _sys
 
-Phase 15: Vertical Farm Microclimate Optimization
-
-The final frontier of the Planetary Operating System:
-Precision agriculture in controlled environments.
-
-Classes:
-    VerticalFarm: Microclimate simulation for indoor agriculture
-    HarvestReport: Crop yield and quality predictions
-"""
-
-from .microclimate import HarvestReport, VerticalFarm, optimize_climate
-
-__all__ = [
-    "VerticalFarm",
-    "HarvestReport",
-    "optimize_climate",
-]
+_real = _il.import_module("tensornet.energy_env.agri")
+_sys.modules[__name__] = _real

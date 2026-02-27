@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EigenPsi | CFD Analysis Cockpit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --bg: #0a0d10;
+      --bg-card: #12161c;
+      --bg-input: #0d1014;
+      --bg-hover: #1a1f26;
+      --border: #2a3038;
+      --border-focus: #3b82f6;
+      --text: #e8eaed;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+      --accent: #3b82f6;
+      --accent-dim: rgba(59, 130, 246, 0.15);
+      --success: #22c55e;
+      --success-dim: rgba(34, 197, 94, 0.15);
+      --warning: #f59e0b;
+      --warning-dim: rgba(245, 158, 11, 0.15);
+      --danger: #ef4444;
+      --danger-dim: rgba(239, 68, 68, 0.15);
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    
+    /* Layout */
+    .app {
+      display: grid;
+      grid-template-columns: 260px 1fr 320px;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar - Projects */
+    .sidebar {
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .sidebar-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .logo {
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .logo span { color: var(--text); }
+    
+    .tagline {
+      font-size: 0.6875rem;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+    
+    .sidebar-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+    
+    .section-label {
+      font-size: 0.625rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      margin-bottom: 0.5rem;
+    }
+    
+    .project-list {
+      list-style: none;
+      margin-bottom: 1rem;
+    }
+    
+    .project-item {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.625rem 0.75rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      transition: all 0.15s;
+      margin-bottom: 0.25rem;
+    }
+    .project-item:hover { background: var(--bg-hover); color: var(--text); }
+    .project-item.active { background: var(--accent-dim); color: var(--accent); }
+    
+    .project-status {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      margin-left: auto;
+    }
+    .project-status.complete { background: var(--success); }
+    .project-status.running { background: var(--warning); animation: pulse 1.5s infinite; }
+    .project-status.draft { background: var(--text-dim); }
+    
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { animation: spin 1s linear infinite; }
+    
+    .sidebar-footer {
+      padding: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+      font-family: inherit;
+      width: 100%;
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn svg { width: 1rem; height: 1rem; }
+    
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: #2563eb; }
+    
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-success:hover:not(:disabled) { background: #16a34a; }
+    
+    .btn-ghost { background: transparent; color: var(--text-muted); }
+    .btn-ghost:hover:not(:disabled) { background: var(--bg-hover); color: var(--text); }
+    
+    .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+    
+    /* Main Content */
+    .main {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .main-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+    
+    .project-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+    
+    .header-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .header-actions .btn { width: auto; }
+    
+    /* Drop Zone */
+    .drop-zone {
+      margin: 1.5rem;
+      padding: 2rem;
+      border: 2px dashed var(--border);
+      border-radius: 0.5rem;
+      text-align: center;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    
+    .drop-zone:hover,
+    .drop-zone.drag-over {
+      border-color: var(--accent);
+      background: var(--accent-dim);
+    }
+    
+    .drop-zone-icon {
+      width: 3rem;
+      height: 3rem;
+      color: var(--text-dim);
+      margin-bottom: 0.75rem;
+    }
+    
+    .drop-zone.drag-over .drop-zone-icon { color: var(--accent); }
+    
+    .drop-zone h3 {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .drop-zone p {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+    
+    .drop-zone.has-file {
+      border-style: solid;
+      border-color: var(--success);
+      background: var(--success-dim);
+    }
+    
+    .drop-zone.has-file .drop-zone-icon { color: var(--success); }
+    
+    /* Form Content */
+    .form-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+    }
+    
+    .form-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .form-section-header svg {
+      width: 1rem;
+      height: 1rem;
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .form-group.span-2 { grid-column: span 2; }
+    .form-group.span-3 { grid-column: span 3; }
+    .form-group.span-4 { grid-column: span 4; }
+    
+    label {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    
+    label .required { color: var(--danger); }
+    label .unit { color: var(--text-dim); text-transform: none; font-weight: 400; }
+    
+    input, select, textarea {
+      padding: 0.5rem 0.625rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      color: var(--text);
+      font-size: 0.8125rem;
+      font-family: inherit;
+      transition: border-color 0.15s;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--border-focus);
+    }
+    
+    input.error, select.error { border-color: var(--danger); }
+    input.imported { border-color: var(--success); background: var(--success-dim); }
+    
+    input[type="number"], .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; }
+    input[readonly] { background: var(--bg); color: var(--text-muted); }
+    
+    textarea { min-height: 4rem; resize: vertical; }
+    
+    .input-with-unit {
+      display: flex;
+      align-items: stretch;
+    }
+    
+    .input-with-unit input {
+      border-radius: 0.25rem 0 0 0.25rem;
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .input-with-unit .unit-label {
+      padding: 0 0.5rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-left: none;
+      border-radius: 0 0.25rem 0.25rem 0;
+      display: flex;
+      align-items: center;
+      font-size: 0.6875rem;
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Validation Banner */
+    .validation-banner {
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      margin: 0 1.5rem 1rem;
+      border-radius: 0.375rem;
+      font-size: 0.8125rem;
+    }
+    
+    .validation-banner.show { display: flex; }
+    .validation-banner.error { background: var(--danger-dim); color: var(--danger); }
+    .validation-banner.success { background: var(--success-dim); color: var(--success); }
+    
+    .validation-banner svg { width: 1.25rem; height: 1.25rem; flex-shrink: 0; }
+    
+    /* Right Panel - Console & Results */
+    .right-panel {
+      background: var(--bg-card);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .panel-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .panel-tab {
+      flex: 1;
+      padding: 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-align: center;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      font-family: inherit;
+    }
+    
+    .panel-tab:hover { color: var(--text); }
+    .panel-tab.active { color: var(--accent); }
+    .panel-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent);
+    }
+    
+    .panel-content {
+      flex: 1;
+      overflow-y: auto;
+      display: none;
+    }
+    
+    .panel-content.active { display: block; }
+    
+    /* Console */
+    .console {
+      padding: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      line-height: 1.6;
+    }
+    
+    .console-line {
+      margin-bottom: 0.125rem;
+      word-break: break-all;
+    }
+    
+    .console-time { color: var(--text-dim); }
+    .console-success { color: var(--success); }
+    .console-warning { color: var(--warning); }
+    .console-error { color: var(--danger); }
+    .console-info { color: var(--accent); }
+    
+    /* Progress */
+    .progress-section {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .progress-bar {
+      height: 6px;
+      background: var(--bg);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+    
+    .progress-fill.complete { background: var(--success); }
+    
+    /* Results */
+    .results-section {
+      padding: 1rem;
+    }
+    
+    .result-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .result-card h4 {
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.375rem 0;
+      font-size: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .metric-row:last-child { border-bottom: none; }
+    
+    .metric-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+    }
+    
+    .metric-status {
+      font-size: 0.625rem;
+      font-weight: 600;
+      padding: 0.125rem 0.375rem;
+      border-radius: 0.25rem;
+    }
+    
+    .metric-status.pass { background: var(--success-dim); color: var(--success); }
+    .metric-status.fail { background: var(--danger-dim); color: var(--danger); }
+    
+    .result-image {
+      width: 100%;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+    
+    /* Status Bar */
+    .status-bar {
+      padding: 0.75rem 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.6875rem;
+      color: var(--text-muted);
+      background: var(--bg);
+    }
+    
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    
+    .status-dot.online { background: var(--success); }
+    .status-dot.offline { background: var(--danger); }
+    
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .app { grid-template-columns: 240px 1fr 280px; }
+    }
+    
+    @media (max-width: 900px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar, .right-panel { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar - Projects -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo"><span>Eigen</span>Psi</div>
+        <div class="tagline">CFD Analysis Cockpit</div>
+      </div>
+      
+      <div class="sidebar-content">
+        <div class="section-label">Projects</div>
+        <ul class="project-list" id="projectList">
+          <li class="project-item active" data-id="new">
+            <span>+ New Project</span>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-footer">
+        <div style="font-size:0.6875rem; color:var(--text-dim); margin-bottom:0.5rem;">
+          <span class="status-indicator"><span class="status-dot online"></span> GPU Ready</span>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="showIntakeForm()">
+          📋 Open Intake Form
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <div class="main-header">
+        <div class="project-title" id="projectTitle">New Project</div>
+        <div class="header-actions">
+          <button class="btn btn-ghost btn-sm" onclick="clearForm()">Clear</button>
+          <button class="btn btn-primary btn-sm" onclick="saveProject()">Save</button>
+          <button class="btn btn-success btn-sm" id="runBtn" onclick="runSimulation()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Run
+          </button>
+        </div>
+      </div>
+      
+      <!-- Drop Zone for Import -->
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+        <svg class="drop-zone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <h3>Import Intake Form</h3>
+        <p>Drop JSON file here or click to browse</p>
+        <input type="file" id="fileInput" accept=".json" style="display:none" onchange="handleFileSelect(event)">
+      </div>
+      
+      <!-- Validation Banner -->
+      <div class="validation-banner" id="validationBanner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span id="validationMessage">Missing required fields</span>
+      </div>
+      
+      <!-- Form -->
+      <div class="form-scroll">
+        <!-- Project Info -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Project
+          </div>
+          <div class="form-grid">
+            <div class="form-group span-2">
+              <label>Client Name <span class="required">*</span></label>
+              <input type="text" id="f_client_name" data-required>
+            </div>
+            <div class="form-group span-2">
+              <label>Project Name <span class="required">*</span></label>
+              <input type="text" id="f_project_name" data-required>
+            </div>
+            <div class="form-group span-2">
+              <label>Contact</label>
+              <input type="text" id="f_contact_name">
+            </div>
+            <div class="form-group span-2">
+              <label>Email</label>
+              <input type="email" id="f_contact_email">
+            </div>
+            <div class="form-group span-2">
+              <label>Analysis Type</label>
+              <select id="f_analysis_type">
+                <option value="comfort_verification">Comfort Verification</option>
+                <option value="hot_spot_diagnosis">Hot Spot Diagnosis</option>
+                <option value="design_validation">Design Validation</option>
+                <option value="equipment_sizing">Equipment Sizing</option>
+                <option value="failure_analysis">Failure Analysis</option>
+                <option value="data_center">Data Center Thermal</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Geometry -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+            Geometry
+          </div>
+          <div class="form-grid">
+            <div class="form-group span-2">
+              <label>Room Name <span class="required">*</span></label>
+              <input type="text" id="f_room_name" data-required>
+            </div>
+            <div class="form-group span-2">
+              <label>Room Type</label>
+              <select id="f_room_type">
+                <option value="conference">Conference Room</option>
+                <option value="office_open">Open Office</option>
+                <option value="office_private">Private Office</option>
+                <option value="server_room">Server Room</option>
+                <option value="data_center">Data Center</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Length <span class="required">*</span> <span class="unit">(ft)</span></label>
+              <input type="number" id="f_length" step="0.1" data-required oninput="calcVolume()">
+            </div>
+            <div class="form-group">
+              <label>Width <span class="required">*</span> <span class="unit">(ft)</span></label>
+              <input type="number" id="f_width" step="0.1" data-required oninput="calcVolume()">
+            </div>
+            <div class="form-group">
+              <label>Height <span class="required">*</span> <span class="unit">(ft)</span></label>
+              <input type="number" id="f_height" step="0.1" data-required oninput="calcVolume()">
+            </div>
+            <div class="form-group">
+              <label>Volume <span class="unit">(ft³)</span></label>
+              <input type="text" id="f_volume" readonly class="mono">
+            </div>
+          </div>
+        </div>
+        
+        <!-- HVAC Supply -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+            HVAC — Supply Air
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Supply CFM <span class="required">*</span></label>
+              <input type="number" id="f_supply_cfm" step="10" data-required>
+            </div>
+            <div class="form-group">
+              <label>Supply Temp <span class="required">*</span> <span class="unit">(°F)</span></label>
+              <input type="number" id="f_supply_temp" step="1" value="55" data-required>
+            </div>
+            <div class="form-group">
+              <label># Diffusers <span class="required">*</span></label>
+              <input type="number" id="f_num_diffusers" min="1" value="2" data-required>
+            </div>
+            <div class="form-group">
+              <label>Diffuser Type <span class="required">*</span></label>
+              <select id="f_diffuser_type" data-required>
+                <option value="">— Select —</option>
+                <option value="ceiling_slot">Ceiling Slot</option>
+                <option value="ceiling_square">Ceiling Square</option>
+                <option value="ceiling_round">Ceiling Round</option>
+                <option value="floor_tile">Floor Tile</option>
+                <option value="sidewall">Sidewall</option>
+              </select>
+            </div>
+            <div class="form-group span-2">
+              <label>Diffuser Size</label>
+              <input type="text" id="f_diffuser_size" placeholder='12"x12"'>
+            </div>
+            <div class="form-group span-2">
+              <label>Diffuser Location</label>
+              <input type="text" id="f_diffuser_location" placeholder="Ceiling center">
+            </div>
+          </div>
+        </div>
+        
+        <!-- HVAC Return -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            HVAC — Return Air
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label># Returns</label>
+              <input type="number" id="f_num_returns" min="0" value="1">
+            </div>
+            <div class="form-group span-3">
+              <label>Return Location</label>
+              <select id="f_return_location">
+                <option value="low_wall">Low Wall (opposite supply)</option>
+                <option value="high_wall">High Wall</option>
+                <option value="ceiling">Ceiling</option>
+                <option value="plenum">Ceiling Plenum</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Thermal Loads -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+            Thermal Loads
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Occupants <span class="required">*</span></label>
+              <input type="number" id="f_occupants" min="0" data-required oninput="calcHeat()">
+            </div>
+            <div class="form-group">
+              <label>Activity</label>
+              <select id="f_activity" onchange="calcHeat()">
+                <option value="100">Seated (100W)</option>
+                <option value="120">Standing (120W)</option>
+                <option value="150">Active (150W)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Equipment <span class="unit">(W)</span></label>
+              <input type="number" id="f_equipment_w" step="50" value="0" oninput="calcHeat()">
+            </div>
+            <div class="form-group">
+              <label>Lighting <span class="unit">(W)</span></label>
+              <input type="number" id="f_lighting_w" step="50" value="0" oninput="calcHeat()">
+            </div>
+            <div class="form-group span-2">
+              <label>Total Heat Load <span class="unit">(W)</span></label>
+              <input type="text" id="f_total_heat" readonly class="mono">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Targets -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            Comfort Targets (ASHRAE 55)
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Target Temp <span class="unit">(°F)</span></label>
+              <input type="number" id="f_target_temp" value="72">
+            </div>
+            <div class="form-group">
+              <label>Min Temp <span class="unit">(°F)</span></label>
+              <input type="number" id="f_temp_min" value="68">
+            </div>
+            <div class="form-group">
+              <label>Max Temp <span class="unit">(°F)</span></label>
+              <input type="number" id="f_temp_max" value="75">
+            </div>
+            <div class="form-group">
+              <label>Max Velocity <span class="unit">(fpm)</span></label>
+              <input type="number" id="f_max_velocity" value="50">
+            </div>
+            <div class="form-group">
+              <label>Max CO₂ <span class="unit">(ppm)</span></label>
+              <input type="number" id="f_max_co2" value="1000">
+            </div>
+            <div class="form-group">
+              <label>Sim Duration <span class="unit">(s)</span></label>
+              <input type="number" id="f_duration" value="300" step="60">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Notes -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Notes & Special Requests
+          </div>
+          <div class="form-grid">
+            <div class="form-group span-4">
+              <label>Problem Description / Questions</label>
+              <textarea id="f_notes" placeholder="Describe any issues, complaints, or specific questions..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <span class="status-indicator">
+          <span class="status-dot" id="serverDot"></span>
+          <span id="serverStatus">Connecting...</span>
+        </span>
+        <span style="margin-left:auto;" id="lastSaved">—</span>
+      </div>
+    </main>
+
+    <!-- Right Panel -->
+    <aside class="right-panel">
+      <div class="panel-tabs">
+        <button class="panel-tab active" data-panel="console">Console</button>
+        <button class="panel-tab" data-panel="results">Results</button>
+      </div>
+      
+      <!-- Progress -->
+      <div class="progress-section" id="progressSection" style="display:none;">
+        <div class="progress-header">
+          <span id="progressLabel">Simulating...</span>
+          <span id="progressPercent">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+      
+      <!-- Console Panel -->
+      <div class="panel-content active" id="panel-console">
+        <div class="console" id="consoleOutput">
+          <div class="console-line"><span class="console-info">Ready. Import intake form or enter data manually.</span></div>
+        </div>
+      </div>
+      
+      <!-- Results Panel -->
+      <div class="panel-content" id="panel-results">
+        <div class="results-section" id="resultsContent">
+          <div style="text-align:center; padding:2rem; color:var(--text-dim);">
+            <p>Run simulation to see results</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    // ===========================================
+    // STATE
+    // ===========================================
+    let currentProject = null;
+    let isRunning = false;
+    let ws = null;
+
+    // ===========================================
+    // FILE IMPORT
+    // ===========================================
+    const dropZone = document.getElementById('dropZone');
+    
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('drag-over');
+    });
+    
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('drag-over');
+    });
+    
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file) processFile(file);
+    });
+    
+    function handleFileSelect(e) {
+      const file = e.target.files[0];
+      if (file) processFile(file);
+    }
+    
+    function processFile(file) {
+      if (!file.name.endsWith('.json')) {
+        log('Error: Please import a JSON file', 'error');
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          importIntakeData(data);
+          dropZone.classList.add('has-file');
+          dropZone.querySelector('h3').textContent = 'Imported: ' + file.name;
+          dropZone.querySelector('p').textContent = 'Click to import a different file';
+          log('✓ Imported intake form: ' + file.name, 'success');
+        } catch (err) {
+          log('Error parsing JSON: ' + err.message, 'error');
+        }
+      };
+      reader.readAsText(file);
+    }
+    
+    function importIntakeData(data) {
+      // Map intake form fields to UI fields
+      const mapping = {
+        // Project
+        'project.client_name': 'f_client_name',
+        'project.project_name': 'f_project_name',
+        'project.contact_name': 'f_contact_name',
+        'project.contact_email': 'f_contact_email',
+        'project.analysis_type': 'f_analysis_type',
+        
+        // Geometry
+        'geometry.room_name': 'f_room_name',
+        'geometry.room_type': 'f_room_type',
+        'geometry.room_length_ft': 'f_length',
+        'geometry.room_width_ft': 'f_width',
+        'geometry.room_height_ft': 'f_height',
+        
+        // HVAC Supply
+        'hvac_supply.supply_cfm': 'f_supply_cfm',
+        'hvac_supply.supply_temp_f': 'f_supply_temp',
+        'hvac_supply.num_diffusers': 'f_num_diffusers',
+        'hvac_supply.diffuser_type': 'f_diffuser_type',
+        'hvac_supply.diffuser_size': 'f_diffuser_size',
+        'hvac_supply.diffuser_location': 'f_diffuser_location',
+        
+        // HVAC Return
+        'hvac_return.num_returns': 'f_num_returns',
+        'hvac_return.return_location': 'f_return_location',
+        
+        // Thermal Loads
+        'thermal_loads.num_occupants': 'f_occupants',
+        'thermal_loads.equipment_watts': 'f_equipment_w',
+        'thermal_loads.lighting_watts': 'f_lighting_w',
+        
+        // Targets
+        'targets.target_temp_f': 'f_target_temp',
+        'targets.temp_min_f': 'f_temp_min',
+        'targets.temp_max_f': 'f_temp_max',
+        'targets.max_velocity_fpm': 'f_max_velocity',
+        'targets.max_co2_ppm': 'f_max_co2',
+        
+        // Notes
+        'problem.problem_description': 'f_notes',
+        'problem.specific_questions': 'f_notes'
+      };
+      
+      let importedCount = 0;
+      
+      for (const [path, fieldId] of Object.entries(mapping)) {
+        const [section, key] = path.split('.');
+        if (data[section] && data[section][key] !== undefined && data[section][key] !== '') {
+          const el = document.getElementById(fieldId);
+          if (el) {
+            // Handle concatenation for notes
+            if (fieldId === 'f_notes' && el.value) {
+              el.value += '\n\n' + data[section][key];
+            } else {
+              el.value = data[section][key];
+            }
+            el.classList.add('imported');
+            importedCount++;
+          }
+        }
+      }
+      
+      // Handle activity/heat mapping
+      if (data.thermal_loads?.occupancy_type) {
+        const activityMap = { seated: '100', standing: '120', walking: '150', light_work: '150' };
+        const actEl = document.getElementById('f_activity');
+        if (actEl && activityMap[data.thermal_loads.occupancy_type]) {
+          actEl.value = activityMap[data.thermal_loads.occupancy_type];
+        }
+      }
+      
+      // Calculate derived fields
+      calcVolume();
+      calcHeat();
+      
+      // Update project title
+      const pname = data.project?.project_name || 'Imported Project';
+      document.getElementById('projectTitle').textContent = pname;
+      
+      log(`Imported ${importedCount} fields from intake form`, 'info');
+      
+      // Clear imported highlighting after 3s
+      setTimeout(() => {
+        document.querySelectorAll('.imported').forEach(el => el.classList.remove('imported'));
+      }, 3000);
+    }
+    
+    // ===========================================
+    // CALCULATIONS
+    // ===========================================
+    function calcVolume() {
+      const l = parseFloat(document.getElementById('f_length').value) || 0;
+      const w = parseFloat(document.getElementById('f_width').value) || 0;
+      const h = parseFloat(document.getElementById('f_height').value) || 0;
+      const vol = l * w * h;
+      document.getElementById('f_volume').value = vol > 0 ? vol.toLocaleString() : '';
+    }
+    
+    function calcHeat() {
+      const occ = parseInt(document.getElementById('f_occupants').value) || 0;
+      const activity = parseInt(document.getElementById('f_activity').value) || 100;
+      const eq = parseInt(document.getElementById('f_equipment_w').value) || 0;
+      const lt = parseInt(document.getElementById('f_lighting_w').value) || 0;
+      const total = (occ * activity) + eq + lt;
+      document.getElementById('f_total_heat').value = total > 0 ? total.toLocaleString() + ' W' : '';
+    }
+    
+    // ===========================================
+    // VALIDATION
+    // ===========================================
+    function validate() {
+      const required = document.querySelectorAll('[data-required]');
+      const missing = [];
+      
+      required.forEach(el => {
+        if (!el.value || el.value.trim() === '') {
+          el.classList.add('error');
+          const label = el.parentElement.querySelector('label').textContent.replace('*', '').trim();
+          missing.push(label);
+        } else {
+          el.classList.remove('error');
+        }
+      });
+      
+      const banner = document.getElementById('validationBanner');
+      if (missing.length > 0) {
+        banner.className = 'validation-banner show error';
+        document.getElementById('validationMessage').textContent = 'Missing: ' + missing.slice(0, 3).join(', ') + (missing.length > 3 ? ` (+${missing.length - 3} more)` : '');
+        return false;
+      } else {
+        banner.className = 'validation-banner show success';
+        document.getElementById('validationMessage').textContent = '✓ All required fields complete';
+        setTimeout(() => banner.classList.remove('show'), 2000);
+        return true;
+      }
+    }
+    
+    // ===========================================
+    // BUILD JOB SPEC
+    // ===========================================
+    function buildJobSpec() {
+      // Convert imperial to metric for solver
+      const ftToM = 0.3048;
+      const fpmToMs = 0.00508;
+      const fToC = (f) => (parseFloat(f) - 32) * 5/9;
+      
+      return {
+        client: {
+          name: document.getElementById('f_client_name').value,
+          project_id: document.getElementById('f_project_name').value.replace(/[^a-z0-9]/gi, '-'),
+          contact: document.getElementById('f_contact_name').value,
+          email: document.getElementById('f_contact_email').value
+        },
+        room: {
+          name: document.getElementById('f_room_name').value,
+          type: document.getElementById('f_room_type').value,
+          dimensions_m: [
+            parseFloat(document.getElementById('f_length').value) * ftToM,
+            parseFloat(document.getElementById('f_width').value) * ftToM,
+            parseFloat(document.getElementById('f_height').value) * ftToM
+          ]
+        },
+        load: {
+          occupants: parseInt(document.getElementById('f_occupants').value) || 0,
+          heat_load_per_person_watts: parseInt(document.getElementById('f_activity').value) || 100,
+          equipment_load_watts: parseInt(document.getElementById('f_equipment_w').value) || 0,
+          lighting_load_watts: parseInt(document.getElementById('f_lighting_w').value) || 0
+        },
+        hvac: {
+          supply_cfm: parseFloat(document.getElementById('f_supply_cfm').value),
+          supply_temp_c: fToC(document.getElementById('f_supply_temp').value),
+          diffuser_type: document.getElementById('f_diffuser_type').value,
+          num_diffusers: parseInt(document.getElementById('f_num_diffusers').value) || 2,
+          diffuser_size: document.getElementById('f_diffuser_size').value,
+          diffuser_location: document.getElementById('f_diffuser_location').value
+        },
+        constraints: {
+          max_velocity_ms: parseFloat(document.getElementById('f_max_velocity').value) * fpmToMs,
+          target_temp_c: fToC(document.getElementById('f_target_temp').value),
+          temp_range_c: [
+            fToC(document.getElementById('f_temp_min').value),
+            fToC(document.getElementById('f_temp_max').value)
+          ],
+          max_co2_ppm: parseInt(document.getElementById('f_max_co2').value) || 1000
+        },
+        simulation: {
+          duration_seconds: parseInt(document.getElementById('f_duration').value) || 300
+        },
+        analysis_type: document.getElementById('f_analysis_type').value,
+        notes: document.getElementById('f_notes').value,
+        deliverables: {
+          thermal_heatmap: true,
+          velocity_field: true,
+          convergence_plot: true,
+          pdf_report: true
+        }
+      };
+    }
+    
+    // ===========================================
+    // ACTIONS
+    // ===========================================
+    function clearForm() {
+      document.querySelectorAll('input:not([type="hidden"]), select, textarea').forEach(el => {
+        if (el.type === 'checkbox' || el.type === 'radio') {
+          el.checked = false;
+        } else if (!el.hasAttribute('readonly')) {
+          el.value = el.defaultValue || '';
+        }
+        el.classList.remove('error', 'imported');
+      });
+      
+      dropZone.classList.remove('has-file');
+      dropZone.querySelector('h3').textContent = 'Import Intake Form';
+      dropZone.querySelector('p').textContent = 'Drop JSON file here or click to browse';
+      
+      document.getElementById('validationBanner').classList.remove('show');
+      document.getElementById('projectTitle').textContent = 'New Project';
+      
+      log('Form cleared', 'info');
+    }
+    
+    async function saveProject() {
+      if (!validate()) return;
+      
+      const spec = buildJobSpec();
+      log('Saving project...', 'info');
+      
+      try {
+        const res = await fetch('/api/projects', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(spec)
+        });
+        const data = await res.json();
+        currentProject = data.project_id;
+        document.getElementById('lastSaved').textContent = 'Saved ' + new Date().toLocaleTimeString();
+        log('✓ Project saved: ' + data.project_id, 'success');
+        loadProjects();
+      } catch (err) {
+        log('Save failed: ' + err.message, 'error');
+      }
+    }
+    
+    async function runSimulation() {
+      if (!validate()) return;
+      if (isRunning) return;
+      
+      await saveProject();
+      if (!currentProject) return;
+      
+      isRunning = true;
+      updateRunButton();
+      
+      // Show progress
+      document.getElementById('progressSection').style.display = 'block';
+      document.getElementById('progressFill').style.width = '0%';
+      document.getElementById('progressFill').classList.remove('complete');
+      
+      // Switch to console tab
+      document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel-content').forEach(p => p.classList.remove('active'));
+      document.querySelector('[data-panel="console"]').classList.add('active');
+      document.getElementById('panel-console').classList.add('active');
+      
+      try {
+        const duration = parseInt(document.getElementById('f_duration').value) || 300;
+        await fetch(`/api/projects/${currentProject}/run`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ duration })
+        });
+        log('Simulation started', 'info');
+      } catch (err) {
+        log('Failed to start: ' + err.message, 'error');
+        isRunning = false;
+        updateRunButton();
+      }
+    }
+    
+    function updateRunButton() {
+      const btn = document.getElementById('runBtn');
+      if (isRunning) {
+        btn.disabled = true;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg> Running';
+      } else {
+        btn.disabled = false;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run';
+      }
+    }
+    
+    // ===========================================
+    // CONSOLE
+    // ===========================================
+    function log(msg, type = '') {
+      const console = document.getElementById('consoleOutput');
+      const line = document.createElement('div');
+      line.className = 'console-line';
+      const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+      
+      if (!type) {
+        if (msg.includes('✓') || msg.includes('success') || msg.includes('complete')) type = 'success';
+        else if (msg.includes('error') || msg.includes('Error') || msg.includes('fail')) type = 'error';
+        else if (msg.includes('warn') || msg.includes('!!')) type = 'warning';
+      }
+      
+      line.innerHTML = `<span class="console-time">[${time}]</span> <span class="console-${type}">${escapeHtml(msg)}</span>`;
+      console.appendChild(line);
+      console.scrollTop = console.scrollHeight;
+    }
+    
+    function escapeHtml(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    
+    // ===========================================
+    // WEBSOCKET
+    // ===========================================
+    function connectWS() {
+      const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+      ws = new WebSocket(`${protocol}//${location.host}/ws/logs`);
+      
+      ws.onopen = () => {
+        document.getElementById('serverDot').classList.add('online');
+        document.getElementById('serverDot').classList.remove('offline');
+        document.getElementById('serverStatus').textContent = 'Connected';
+      };
+      
+      ws.onclose = () => {
+        document.getElementById('serverDot').classList.remove('online');
+        document.getElementById('serverDot').classList.add('offline');
+        document.getElementById('serverStatus').textContent = 'Disconnected';
+        setTimeout(connectWS, 2000);
+      };
+      
+      ws.onerror = () => ws.close();
+      
+      ws.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+        
+        if (data.type === 'log') {
+          log(data.message);
+          
+          // Parse structured progress: [PROGRESS] phase=X pct=Y | message
+          const progressMatch = data.message.match(/\[PROGRESS\] phase=(\w+) pct=(\d+) \| (.+)/);
+          if (progressMatch) {
+            const phase = progressMatch[1];
+            const pct = parseInt(progressMatch[2]);
+            const msg = progressMatch[3];
+            
+            // Phase labels for UI
+            const phaseLabels = {
+              'init': 'Initializing...',
+              'baseline': 'Baseline Simulation',
+              'optimize': 'Optimizing Settings',
+              'validate': 'Validation Simulation',
+              'report': 'Generating Report',
+              'complete': 'Complete'
+            };
+            
+            document.getElementById('progressFill').style.width = pct + '%';
+            document.getElementById('progressPercent').textContent = pct + '%';
+            document.getElementById('progressLabel').textContent = phaseLabels[phase] || msg;
+            
+            if (phase === 'complete') {
+              document.getElementById('progressFill').classList.add('complete');
+            }
+          }
+          
+          if (data.message === '[DONE]') {
+            isRunning = false;
+            updateRunButton();
+            document.getElementById('progressFill').style.width = '100%';
+            document.getElementById('progressFill').classList.add('complete');
+            document.getElementById('progressLabel').textContent = 'Complete';
+            document.getElementById('progressPercent').textContent = '100%';
+            
+            // Refresh project to get results
+            if (currentProject) {
+              loadProjectResults(currentProject);
+            }
+          }
+        }
+        
+        if (data.type === 'complete' && data.results) {
+          displayResults(data.results);
+        }
+      };
+    }
+    
+    // ===========================================
+    // PROJECTS
+    // ===========================================
+    async function loadProjects() {
+      try {
+        const res = await fetch('/api/projects');
+        const data = await res.json();
+        const list = document.getElementById('projectList');
+        
+        // Keep "New Project" item
+        list.innerHTML = '<li class="project-item" data-id="new" onclick="clearForm()"><span>+ New Project</span></li>';
+        
+        data.projects.forEach(p => {
+          const li = document.createElement('li');
+          const safeId = escapeHtml(p.id || '');
+          const safeStatus = escapeHtml(p.status || '');
+          li.className = 'project-item' + (currentProject === p.id ? ' active' : '');
+          li.dataset.id = p.id;
+          li.onclick = () => loadProject(p.id);
+          li.innerHTML = `<span>${safeId}</span><span class="project-status ${safeStatus}"></span>`;
+          list.appendChild(li);
+        });
+      } catch (err) {
+        console.error('Failed to load projects:', err);
+      }
+    }
+    
+    async function loadProject(id) {
+      try {
+        const res = await fetch(`/api/projects/${id}`);
+        const data = await res.json();
+        
+        currentProject = id;
+        document.querySelectorAll('.project-item').forEach(el => {
+          el.classList.toggle('active', el.dataset.id === id);
+        });
+        
+        if (data.spec) {
+          // TODO: Populate form from spec
+          document.getElementById('projectTitle').textContent = data.spec.client?.project_id || id;
+        }
+        
+        if (data.results) {
+          displayResults(data.results);
+        }
+      } catch (err) {
+        log('Failed to load project: ' + err.message, 'error');
+      }
+    }
+    
+    async function loadProjectResults(id) {
+      try {
+        const res = await fetch(`/api/projects/${id}`);
+        const data = await res.json();
+        if (data.results) {
+          displayResults(data.results, data.assets);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    
+    function displayResults(results, assets = []) {
+      const v = results.validation || results;
+      
+      // Convert metric to imperial for display
+      const cToF = (c) => (c * 9/5) + 32;
+      const msToFpm = (ms) => ms / 0.00508;
+      
+      const temp = v.temperature ? cToF(v.temperature) : null;
+      const vel = v.velocity ? msToFpm(v.velocity) : null;
+      
+      let html = `
+        <div class="result-card">
+          <h4>ASHRAE 55 Compliance</h4>
+          <div class="metric-row">
+            <span>Temperature</span>
+            <span class="metric-value">${temp ? temp.toFixed(1) + '°F' : '—'}</span>
+            <span class="metric-status ${temp >= 68 && temp <= 75 ? 'pass' : 'fail'}">${temp >= 68 && temp <= 75 ? 'PASS' : 'FAIL'}</span>
+          </div>
+          <div class="metric-row">
+            <span>Air Velocity</span>
+            <span class="metric-value">${vel ? vel.toFixed(0) + ' fpm' : '—'}</span>
+            <span class="metric-status ${vel < 50 ? 'pass' : 'fail'}">${vel < 50 ? 'PASS' : 'FAIL'}</span>
+          </div>
+          <div class="metric-row">
+            <span>CO₂ Level</span>
+            <span class="metric-value">${v.co2 ? Math.round(v.co2) + ' ppm' : '—'}</span>
+            <span class="metric-status ${v.co2 < 1000 ? 'pass' : 'fail'}">${v.co2 < 1000 ? 'PASS' : 'FAIL'}</span>
+          </div>
+        </div>
+      `;
+      
+      // Add images
+      if (assets && assets.length) {
+        const images = assets.filter(a => a.name.endsWith('.png'));
+        images.forEach(img => {
+          html += `
+            <div class="result-card">
+              <h4>${img.name.replace('.png', '').replace(/_/g, ' ')}</h4>
+              <img class="result-image" src="${img.path}" onclick="window.open(this.src)">
+            </div>
+          `;
+        });
+        
+        const pdf = assets.find(a => a.name.endsWith('.pdf'));
+        if (pdf) {
+          html += `
+            <div class="result-card">
+              <h4>Report</h4>
+              <a href="${pdf.path}" target="_blank" class="btn btn-primary" style="margin-top:0.5rem;">Open PDF Report</a>
+            </div>
+          `;
+        }
+      }
+      
+      document.getElementById('resultsContent').innerHTML = html;
+      
+      // Switch to results tab
+      document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel-content').forEach(p => p.classList.remove('active'));
+      document.querySelector('[data-panel="results"]').classList.add('active');
+      document.getElementById('panel-results').classList.add('active');
+    }
+    
+    // ===========================================
+    // TABS
+    // ===========================================
+    document.querySelectorAll('.panel-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.panel-content').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
+      });
+    });
+    
+    // ===========================================
+    // UTILITIES
+    // ===========================================
+    function showIntakeForm() {
+      window.open('/intake', '_blank');
+    }
+    
+    // ===========================================
+    // INIT
+    // ===========================================
+    
+    // Default example data for testing (Apex Architecture project)
+    const EXAMPLE_DATA = {
+      client: {
+        name: "Apex Architecture Group",
+        project_id: "2026-001",
+        contact: "Sarah Connor, Lead Architect",
+        email: "s.connor@apex-arch.com"
+      },
+      room: {
+        name: "Executive Conference Room B",
+        type: "conference",
+        length_ft: 29.5,
+        width_ft: 19.7,
+        height_ft: 9.8
+      },
+      hvac: {
+        supply_cfm: 800,
+        supply_temp_f: 55,
+        num_diffusers: 2,
+        diffuser_type: "ceiling_slot",
+        diffuser_size: "24x6",
+        diffuser_location: "Ceiling, centered"
+      },
+      load: {
+        occupants: 14,
+        activity: 100,
+        equipment_w: 500,
+        lighting_w: 200
+      },
+      constraints: {
+        target_temp_f: 72,
+        temp_min_f: 68,
+        temp_max_f: 76,
+        max_velocity_fpm: 50,
+        max_co2_ppm: 1000
+      },
+      notes: "Summer peak load scenario - full occupancy meeting"
+    };
+    
+    function loadExampleData() {
+      // Client
+      document.getElementById('f_client_name').value = EXAMPLE_DATA.client.name;
+      document.getElementById('f_project_name').value = EXAMPLE_DATA.client.project_id;
+      document.getElementById('f_contact_name').value = EXAMPLE_DATA.client.contact;
+      document.getElementById('f_contact_email').value = EXAMPLE_DATA.client.email;
+      
+      // Room
+      document.getElementById('f_room_name').value = EXAMPLE_DATA.room.name;
+      document.getElementById('f_room_type').value = EXAMPLE_DATA.room.type;
+      document.getElementById('f_length').value = EXAMPLE_DATA.room.length_ft;
+      document.getElementById('f_width').value = EXAMPLE_DATA.room.width_ft;
+      document.getElementById('f_height').value = EXAMPLE_DATA.room.height_ft;
+      
+      // HVAC
+      document.getElementById('f_supply_cfm').value = EXAMPLE_DATA.hvac.supply_cfm;
+      document.getElementById('f_supply_temp').value = EXAMPLE_DATA.hvac.supply_temp_f;
+      document.getElementById('f_num_diffusers').value = EXAMPLE_DATA.hvac.num_diffusers;
+      document.getElementById('f_diffuser_type').value = EXAMPLE_DATA.hvac.diffuser_type;
+      document.getElementById('f_diffuser_size').value = EXAMPLE_DATA.hvac.diffuser_size;
+      document.getElementById('f_diffuser_location').value = EXAMPLE_DATA.hvac.diffuser_location;
+      
+      // Loads
+      document.getElementById('f_occupants').value = EXAMPLE_DATA.load.occupants;
+      document.getElementById('f_activity').value = EXAMPLE_DATA.load.activity;
+      document.getElementById('f_equipment_w').value = EXAMPLE_DATA.load.equipment_w;
+      document.getElementById('f_lighting_w').value = EXAMPLE_DATA.load.lighting_w;
+      
+      // Constraints
+      document.getElementById('f_target_temp').value = EXAMPLE_DATA.constraints.target_temp_f;
+      document.getElementById('f_temp_min').value = EXAMPLE_DATA.constraints.temp_min_f;
+      document.getElementById('f_temp_max').value = EXAMPLE_DATA.constraints.temp_max_f;
+      document.getElementById('f_max_velocity').value = EXAMPLE_DATA.constraints.max_velocity_fpm;
+      document.getElementById('f_max_co2').value = EXAMPLE_DATA.constraints.max_co2_ppm;
+      
+      // Notes
+      if (document.getElementById('f_notes')) {
+        document.getElementById('f_notes').value = EXAMPLE_DATA.notes;
+      }
+      
+      // Simulation duration
+      document.getElementById('f_duration').value = 120;
+      
+      // Recalculate derived fields
+      calcVolume();
+      calcHeat();
+      
+      // Update title
+      document.getElementById('projectTitle').textContent = EXAMPLE_DATA.client.project_id + ' - ' + EXAMPLE_DATA.room.name;
+      
+      log('Loaded example data (Apex Architecture)', 'info');
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      connectWS();
+      loadProjects();
+      loadExampleData();  // Auto-load example data on startup
+      calcVolume();
+      calcHeat();
+    });
+  </script>
+</body>
+</html>

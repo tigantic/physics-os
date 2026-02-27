@@ -40,20 +40,73 @@ classifiers = [
 dependencies = [
     "torch>=2.0.0",
     "numpy>=1.24.0",
+    "scipy>=1.10.0",
 ]
 
+# ---------------------------------------------------------------------------
+# Feature flags — pip install tensornet[cfd,quantum] etc.
+# ---------------------------------------------------------------------------
 [project.optional-dependencies]
+
+# Domain packs —————————————————————————————————————————————————————
+cfd = [
+    "scipy>=1.10.0",
+    "h5py>=3.8",
+    "matplotlib>=3.7",
+]
+quantum = [
+    "scipy>=1.10.0",
+]
+fluids = [
+    "scipy>=1.10.0",
+    "h5py>=3.8",
+]
+materials = [
+    "scipy>=1.10.0",
+]
+aerospace = [
+    "scipy>=1.10.0",
+    "h5py>=3.8",
+]
+astro = [
+    "scipy>=1.10.0",
+    "h5py>=3.8",
+]
+plasma = [
+    "scipy>=1.10.0",
+]
+ml = [
+    "scipy>=1.10.0",
+]
+em = [
+    "scipy>=1.10.0",
+]
+
+# Aggregate domain extras
+physics-all = [
+    "tensornet[cfd,quantum,fluids,materials,aerospace,astro,plasma,ml,em]",
+]
+
+# Tooling ——————————————————————————————————————————————————————————
 dev = [
-    "pytest>=7.0",
+    "pytest>=8.0",
     "pytest-cov>=4.0",
-    "ruff>=0.1.0",
-    "mypy>=1.0",
+    "pytest-timeout>=2.0",
+    "pytest-xdist>=3.5",
+    "ruff>=0.8.0",
+    "mypy>=1.10",
     "bandit>=1.7",
     "detect-secrets>=1.4",
     "twine>=5.0",
     "build>=1.0",
-    "pdoc>=14.0",
     "pre-commit>=3.0",
+]
+docs = [
+    "mkdocs-material>=9.5",
+    "mkdocstrings[python]>=0.24",
+    "mkdocs-gen-files>=0.5",
+    "mkdocs-literate-nav>=0.6",
+    "mkdocs-section-index>=0.3",
 ]
 viz = [
     "matplotlib>=3.7",
@@ -65,23 +118,30 @@ io = [
 benchmark = [
     "tenpy>=0.10",
     "scipy>=1.10",
+    "pytest-benchmark>=5.0",
 ]
+
+# Everything
 all = [
-    "tensornet[dev,viz,io,benchmark]",
+    "tensornet[dev,docs,viz,io,benchmark,physics-all]",
 ]
 
 [project.urls]
 Homepage = "https://github.com/tigantic/HyperTensor-VM"
-Documentation = "https://github.com/tigantic/HyperTensor-VM#readme"
+Documentation = "https://tigantic.github.io/HyperTensor-VM"
 Repository = "https://github.com/tigantic/HyperTensor-VM.git"
 Issues = "https://github.com/tigantic/HyperTensor-VM/issues"
+Changelog = "https://github.com/tigantic/HyperTensor-VM/blob/main/CHANGELOG.md"
+
+[project.scripts]
+tensornet = "tensornet.platform.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["tensornet*"]
+include = ["tensornet*", "hypertensor*"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests", "Physics/tests"]
+testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
 pythonpath = ["."]
@@ -123,11 +183,10 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["S101"]  # asserts OK in tests
-"benchmarks/**/*.py" = ["S101"]
 "proofs/**/*.py" = ["S101"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["tensornet"]
+known-first-party = ["tensornet", "hypertensor"]
 
 # Security: Flag pickle usage as warning
 [tool.ruff.lint.flake8-bandit]

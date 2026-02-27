@@ -1,66 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.engine.distributed_tn.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.distributed_tn import X
+    from tensornet.distributed_tn.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.engine.distributed_tn``.
 """
-Distributed Tensor Network Module
-==================================
+import importlib as _il
+import sys as _sys
 
-Distributed computing framework for tensor network algorithms:
-- Distributed DMRG with domain decomposition
-- Parallel TEBD with ghost sites
-- Cross-node MPS operations
-- Load balancing and fault tolerance
-"""
-
-from tensornet.distributed_tn.distributed_dmrg import (
-                                                       DistributedDMRG,
-                                                       DistributedDMRGResult,
-                                                       DMRGPartition,
-                                                       PartitionConfig,
-                                                       run_distributed_dmrg,
-)
-from tensornet.distributed_tn.load_balancer import (
-                                                       BalancingStrategy,
-                                                       LoadBalancer,
-                                                       LoadBalancerConfig,
-                                                       WorkerStatus,
-                                                       rebalance_workload,
-)
-from tensornet.distributed_tn.mps_operations import (
-                                                       CompressionStrategy,
-                                                       CrossNodeContraction,
-                                                       DistributedMPS,
-                                                       MPSPartition,
-                                                       merge_partitions,
-)
-from tensornet.distributed_tn.parallel_tebd import (
-                                                       GhostSites,
-                                                       ParallelTEBD,
-                                                       ParallelTEBDResult,
-                                                       TEBDPartition,
-                                                       run_parallel_tebd,
-)
-
-__all__ = [
-    # Distributed DMRG
-    "DistributedDMRG",
-    "DMRGPartition",
-    "PartitionConfig",
-    "DistributedDMRGResult",
-    "run_distributed_dmrg",
-    # Parallel TEBD
-    "ParallelTEBD",
-    "TEBDPartition",
-    "GhostSites",
-    "ParallelTEBDResult",
-    "run_parallel_tebd",
-    # MPS operations
-    "DistributedMPS",
-    "MPSPartition",
-    "CrossNodeContraction",
-    "CompressionStrategy",
-    "merge_partitions",
-    # Load balancing
-    "LoadBalancer",
-    "WorkerStatus",
-    "BalancingStrategy",
-    "LoadBalancerConfig",
-    "rebalance_workload",
-]
+_real = _il.import_module("tensornet.engine.distributed_tn")
+_sys.modules[__name__] = _real

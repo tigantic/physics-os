@@ -1,0 +1,24 @@
+{
+  "project_id": "TEST-001",
+  "client": "Test Corp",
+  "timestamp": "2026-01-18T20:14:16.766805",
+  "optimal_settings": {
+    "velocity": 0.35536602700781805,
+    "angle": 25.0,
+    "supply_temp": 20.0
+  },
+  "validation": {
+    "temperature": 20.081765747070335,
+    "co2": 404.8289337158203,
+    "velocity": 0.10169627156574279,
+    "all_pass": true
+  },
+  "assets": {
+    "thermal": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/TEST_MODIFIED_PARAMS/output/thermal_heatmap.png",
+    "velocity": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/TEST_MODIFIED_PARAMS/output/velocity_field.png",
+    "convergence": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/TEST_MODIFIED_PARAMS/output/convergence_plot.png",
+    "dashboard": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/TEST_MODIFIED_PARAMS/output/dashboard_summary.png",
+    "pdf": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/TEST_MODIFIED_PARAMS/output/TEST-001_CFD_Report.pdf"
+  },
+  "elapsed_seconds": 176.01151514053345
+}

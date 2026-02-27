@@ -1,21 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.fluids.multiphase.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.multiphase import X
+    from tensornet.multiphase.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.fluids.multiphase``.
 """
-Multiphase flow: Cahn-Hilliard phase-field, VOF advection, Rayleigh-Taylor.
+import importlib as _il
+import sys as _sys
 
-Domain II.4 — NEW.
-"""
-
-from .multiphase_flow import (
-    CahnHilliardSolver,
-    VOFAdvection,
-    SurfaceTensionCSF,
-    RayleighTaylorSetup,
-    TwoPhaseNavierStokes,
-)
-
-__all__ = [
-    "CahnHilliardSolver",
-    "VOFAdvection",
-    "SurfaceTensionCSF",
-    "RayleighTaylorSetup",
-    "TwoPhaseNavierStokes",
-]
+_real = _il.import_module("tensornet.fluids.multiphase")
+_sys.modules[__name__] = _real

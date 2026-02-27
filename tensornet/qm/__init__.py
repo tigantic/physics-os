@@ -1,25 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.quantum.qm.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.qm import X
+    from tensornet.qm.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.quantum.qm``.
 """
-Quantum mechanics package: scattering theory, semiclassical (WKB) methods.
+import importlib as _il
+import sys as _sys
 
-Domains: VI.3, VI.4.
-"""
-
-from .scattering import (
-    PartialWaveScattering,
-    BornApproximation,
-    RMatrixScattering,
-    BreitWignerResonance,
-)
-from .semiclassical_wkb import (
-    WKBSolver,
-    TullySurfaceHopping,
-    HermanKlukPropagator,
-)
-
-__all__ = [
-    # Scattering (VI.3)
-    "PartialWaveScattering", "BornApproximation",
-    "RMatrixScattering", "BreitWignerResonance",
-    # Semiclassical / WKB (VI.4)
-    "WKBSolver", "TullySurfaceHopping", "HermanKlukPropagator",
-]
+_real = _il.import_module("tensornet.quantum.qm")
+_sys.modules[__name__] = _real

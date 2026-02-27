@@ -1,0 +1,24 @@
+{
+  "project_id": "2026-001",
+  "client": "Apex Architecture Group",
+  "timestamp": "2026-01-17T20:17:13.842381",
+  "optimal_settings": {
+    "velocity": 1.451077943615257,
+    "angle": 45.0,
+    "supply_temp": 20.0
+  },
+  "validation": {
+    "temperature": 20.390080769856795,
+    "co2": 424.0279225667318,
+    "velocity": 0.21022474467754365,
+    "all_pass": true
+  },
+  "assets": {
+    "thermal": "projects/2026-001_Apex_HQ/output/thermal_heatmap.png",
+    "velocity": "projects/2026-001_Apex_HQ/output/velocity_field.png",
+    "convergence": "projects/2026-001_Apex_HQ/output/convergence_plot.png",
+    "dashboard": "projects/2026-001_Apex_HQ/output/dashboard_summary.png",
+    "pdf": "projects/2026-001_Apex_HQ/output/2026-001_CFD_Report.pdf"
+  },
+  "elapsed_seconds": 390.94088649749756
+}

@@ -1,0 +1,24 @@
+{
+  "project_id": "2026-007",
+  "client": "gafawer Architecture Group",
+  "timestamp": "2026-01-18T00:21:29.231018",
+  "optimal_settings": {
+    "velocity": 0.5804311774461028,
+    "angle": 25.0,
+    "supply_temp": 20.22222222222222
+  },
+  "validation": {
+    "temperature": 20.104058837890648,
+    "co2": 405.03505859375,
+    "velocity": 0.1546188922598958,
+    "all_pass": true
+  },
+  "assets": {
+    "thermal": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-007_gafawer_Architecture/output/thermal_heatmap.png",
+    "velocity": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-007_gafawer_Architecture/output/velocity_field.png",
+    "convergence": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-007_gafawer_Architecture/output/convergence_plot.png",
+    "dashboard": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-007_gafawer_Architecture/output/dashboard_summary.png",
+    "pdf": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/2026-007_gafawer_Architecture/output/2026-007_CFD_Report.pdf"
+  },
+  "elapsed_seconds": 237.52355194091797
+}

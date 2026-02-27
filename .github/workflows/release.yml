@@ -1,0 +1,186 @@
+# Release automation — triggered by pushing a version tag
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.*'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (skip publish)'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write       # Create GitHub Release
+  id-token: write       # OIDC for trusted publishing
+  packages: write       # GHCR container publish
+
+env:
+  PYTHON_VERSION: '3.12'
+  RUST_TOOLCHAIN: 'stable'
+
+jobs:
+  # ──────────────────────────────────────────────────────────────────────
+  # 1. Validate — version consistency and quality gates
+  # ──────────────────────────────────────────────────────────────────────
+  validate:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.extract.outputs.version }}
+      prerelease: ${{ steps.extract.outputs.prerelease }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Extract version from tag
+        id: extract
+        run: |
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            TAG="${GITHUB_REF#refs/tags/v}"
+          else
+            TAG="$(grep '^RELEASE=' VERSION | cut -d= -f2)"
+          fi
+          echo "version=${TAG}" >> "$GITHUB_OUTPUT"
+
+          # Detect pre-release (contains alpha, beta, rc, dev)
+          if [[ "$TAG" =~ (alpha|beta|rc|dev) ]]; then
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Release version: ${TAG}"
+
+      - name: Version consistency check
+        run: python tools/sync_versions.py
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Lint
+        run: python -m ruff check tensornet tests
+
+      - name: Type check
+        run: python -m mypy tensornet --ignore-missing-imports
+
+      - name: Unit tests
+        run: python -m pytest tests/ -x -m "not integration and not slow" --timeout=120
+
+  # ──────────────────────────────────────────────────────────────────────
+  # 2. Build Python — sdist + wheels
+  # ──────────────────────────────────────────────────────────────────────
+  build-python:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install build tools
+        run: python -m pip install --upgrade pip build twine
+
+      - name: Build sdist and wheel
+        run: python -m build
+
+      - name: Validate distributions
+        run: python -m twine check dist/*
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-dist
+          path: dist/
+          retention-days: 30
+
+  # ──────────────────────────────────────────────────────────────────────
+  # 3. Build Rust — workspace binaries
+  # ──────────────────────────────────────────────────────────────────────
+  build-rust:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Build workspace (release)
+        run: cargo build --workspace --release
+
+      - name: Run Rust tests
+        run: cargo test --workspace
+
+      - name: Clippy
+        run: cargo clippy --workspace -- -D warnings
+
+  # ──────────────────────────────────────────────────────────────────────
+  # 4. Publish GitHub Release
+  # ──────────────────────────────────────────────────────────────────────
+  publish:
+    needs: [validate, build-python, build-rust]
+    runs-on: ubuntu-latest
+    if: github.ref_type == 'tag' && !inputs.dry_run
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Python artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: python-dist
+          path: dist/
+
+      - name: Generate release notes
+        id: notes
+        run: |
+          VERSION="${{ needs.validate.outputs.version }}"
+          {
+            echo "## HyperTensor v${VERSION}"
+            echo ""
+            echo "### Packages"
+            echo "- \`tensornet\` Python package v${VERSION}"
+            echo "- Rust workspace (18 crates)"
+            echo ""
+            echo "### Install"
+            echo '```bash'
+            echo "pip install tensornet==${VERSION}"
+            echo '```'
+            echo ""
+            echo "### Checksums"
+            echo '```'
+            cd dist && sha256sum * || true
+            echo '```'
+          } > release_notes.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: release_notes.md
+          prerelease: ${{ needs.validate.outputs.prerelease == 'true' }}
+          files: |
+            dist/*
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

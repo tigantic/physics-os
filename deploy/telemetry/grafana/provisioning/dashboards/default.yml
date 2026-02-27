@@ -1,0 +1,13 @@
+# Grafana dashboard provisioning — auto-loads from filesystem
+apiVersion: 1
+
+providers:
+  - name: HyperTensor
+    orgId: 1
+    folder: HyperTensor
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /var/lib/grafana/dashboards
+      foldersFromFilesStructure: false

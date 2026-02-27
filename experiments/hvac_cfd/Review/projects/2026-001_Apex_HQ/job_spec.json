@@ -1,0 +1,41 @@
+{
+  "client": {
+    "name": "Apex Architecture Group",
+    "project_id": "2026-001",
+    "contact": "Sarah Connor, Lead Architect",
+    "email": "s.connor@apex-arch.com"
+  },
+  "room": {
+    "name": "Executive Conference Room B",
+    "type": "conference_room",
+    "dimensions_m": [9.0, 6.0, 3.0],
+    "description": "12-seat boardroom with AV equipment"
+  },
+  "load": {
+    "occupants": 14,
+    "heat_load_per_person_watts": 100,
+    "equipment_load_watts": 500,
+    "lighting_load_watts": 200
+  },
+  "hvac": {
+    "supply_temp_c": 18.0,
+    "supply_velocity_ms": 0.8,
+    "supply_angle_deg": 45.0,
+    "diffuser_type": "ceiling_slot",
+    "num_diffusers": 2,
+    "diffuser_area_m2": 0.1
+  },
+  "constraints": {
+    "max_velocity_ms": 0.25,
+    "target_temp_c": 22.0,
+    "temp_range_c": [20.0, 24.0],
+    "max_co2_ppm": 1000
+  },
+  "deliverables": {
+    "thermal_heatmap": true,
+    "velocity_field": true,
+    "convergence_plot": true,
+    "pdf_report": true
+  },
+  "notes": "Client requests validation for summer peak load scenario. Meeting scheduled for Jan 15."
+}

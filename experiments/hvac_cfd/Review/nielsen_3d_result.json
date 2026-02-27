@@ -1,0 +1,26 @@
+[
+  {
+    "solver": "3D-laminar",
+    "grid": "128\u00d724\u00d796",
+    "cells": 294912,
+    "iterations": 2000,
+    "converged": false,
+    "solve_time_s": 32.7,
+    "rms_x1": 17.3,
+    "rms_x2": 18.5,
+    "rms_avg": 17.9,
+    "passed": false
+  },
+  {
+    "solver": "3D-LES",
+    "grid": "128\u00d724\u00d796",
+    "cells": 294912,
+    "iterations": 2000,
+    "converged": false,
+    "solve_time_s": 30.8,
+    "rms_x1": 18.2,
+    "rms_x2": 25.4,
+    "rms_avg": 21.8,
+    "passed": false
+  }
+]

@@ -1,0 +1,60 @@
+# Dependabot Configuration
+# ========================
+# Automated dependency update PRs for all ecosystems in this monorepo.
+# See: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
+
+version: 2
+
+updates:
+  # ── Python (pip) ────────────────────────────────────────────────────
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    reviewers:
+      - "tigantic/core"
+    labels:
+      - "dependencies"
+      - "python"
+    open-pull-requests-limit: 10
+    groups:
+      testing:
+        patterns:
+          - "pytest*"
+          - "coverage*"
+      linting:
+        patterns:
+          - "ruff"
+          - "mypy"
+          - "bandit"
+      docs:
+        patterns:
+          - "mkdocs*"
+          - "mkdocstrings*"
+
+  # ── Rust (cargo) ────────────────────────────────────────────────────
+  - package-ecosystem: "cargo"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    reviewers:
+      - "tigantic/rust"
+    labels:
+      - "dependencies"
+      - "rust"
+    open-pull-requests-limit: 10
+
+  # ── GitHub Actions ──────────────────────────────────────────────────
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    reviewers:
+      - "tigantic/core"
+    labels:
+      - "dependencies"
+      - "ci"
+    open-pull-requests-limit: 5

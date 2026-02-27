@@ -1,0 +1,45 @@
+# Prometheus configuration for HyperTensor monitoring
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+
+rule_files:
+  - alerts.yml
+
+scrape_configs:
+  # ── HyperTensor API Server ────────────────────────────────────────
+  - job_name: hypertensor-api
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - "host.docker.internal:8000"
+        labels:
+          service: hypertensor-api
+          tier: "2"
+
+  # ── Job Executor Worker Pool ──────────────────────────────────────
+  - job_name: hypertensor-workers
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - "host.docker.internal:8001"
+        labels:
+          service: hypertensor-worker
+          tier: "2"
+
+  # ── Facial Plastics Product API ───────────────────────────────────
+  - job_name: facial-plastics
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - "host.docker.internal:8100"
+        labels:
+          service: facial-plastics
+          product: "true"
+
+  # ── Prometheus self-monitoring ────────────────────────────────────
+  - job_name: prometheus
+    static_configs:
+      - targets:
+          - "localhost:9090"

@@ -20,7 +20,7 @@ import numpy as np
 import pytest
 import torch
 
-from tensornet.defense.ballistics import BallisticSolution, BallisticSolver
+from tensornet.aerospace.defense.ballistics import BallisticSolution, BallisticSolver
 
 # ============================================================================
 # FIXTURES

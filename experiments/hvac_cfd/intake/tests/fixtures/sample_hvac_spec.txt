@@ -1,0 +1,40 @@
+HVAC SPECIFICATION DOCUMENT
+===========================
+
+Project: North Tower Conference Room B
+Client: TechCorp Industries
+Date: 2024-01-15
+
+ROOM GEOMETRY
+-------------
+Room: Executive Conference B
+Dimensions: 40 ft × 30 ft × 12 ft (ceiling)
+Floor Area: 1,200 sq ft
+Volume: 14,400 cu ft
+
+MECHANICAL REQUIREMENTS
+-----------------------
+Supply Air: 2500 CFM
+Supply Temperature: 55°F
+Return Temperature: 75°F
+Air Changes per Hour: 10.4
+
+DIFFUSER SCHEDULE
+-----------------
+Qty: 4
+Type: 4-way square diffuser
+Size: 24" × 24"
+Location: Ceiling mounted, evenly spaced
+
+HEAT LOAD CALCULATION
+---------------------
+People: 20 occupants × 250 BTU/hr = 5,000 BTU/hr
+Lighting: 1.5 W/sq ft × 1,200 sq ft × 3.41 BTU/hr/W = 6,138 BTU/hr
+Equipment: 3,000 BTU/hr
+Total Sensible: 14,138 BTU/hr (~4,143 W)
+
+NOTES
+-----
+- Building orientation: South-facing windows
+- Perimeter heating provided separately
+- VAV system with reheat coils

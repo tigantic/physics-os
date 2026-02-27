@@ -25,7 +25,7 @@ Example:
     >>> print(f"Ground state energy: {E:.8f}")
 """
 
-__version__ = "40.0.0"
+__version__ = "40.0.1"
 __author__ = "TiganticLabz"
 
 # Algorithms
@@ -68,7 +68,7 @@ from tensornet.core.mps import MPS
 from tensornet.core.states import ghz_mps, product_mps, random_mps
 
 # Deployment Module (Phase 11)
-from tensornet.deployment import (
+from tensornet.infra.deployment import (
                                        EmbeddedRuntime,
                                        ExportConfig,
                                        ExportResult,
@@ -86,7 +86,7 @@ from tensornet.deployment import (
 )
 
 # Digital Twin Module (Phase 13)
-from tensornet.digital_twin import (
+from tensornet.infra.digital_twin import (
                                        AnomalyDetector,
                                        AutoencoderROM,
                                        DigitalTwin,
@@ -111,7 +111,7 @@ from tensornet.digital_twin import (
 )
 
 # Distributed Computing Module (Phase 13)
-from tensornet.distributed import (
+from tensornet.engine.distributed import (
                                        AllReduceOp,
                                        CommPattern,
                                        Communicator,
@@ -180,7 +180,7 @@ from tensornet.docs import (
 )
 
 # Guidance Module (Phase 11)
-from tensornet.guidance import (
+from tensornet.aerospace.guidance import (
                                        AeroCoefficients,
                                        AtmosphericModel,
                                        ConstraintType,
@@ -198,7 +198,7 @@ from tensornet.guidance import (
 )
 
 # ML Surrogates Module (Phase 13)
-from tensornet.ml_surrogates import (
+from tensornet.ml.ml_surrogates import (
                                        ActiveLearner,
                                        BayesianUQ,
                                        CFDSurrogate,
@@ -239,7 +239,7 @@ from tensornet.mps.hamiltonians import (
 )
 
 # Simulation Module (Phase 12)
-from tensornet.simulation import (  # HIL; Flight Data; Real-Time CFD; Mission Simulation
+from tensornet.sim.simulation import (  # HIL; Flight Data; Real-Time CFD; Mission Simulation
                                        ActuatorModel,
                                        AeroTable,
                                        AeroTableConfig,
@@ -273,7 +273,7 @@ from tensornet.simulation import (  # HIL; Flight Data; Real-Time CFD; Mission S
 )
 
 # Validation Module (Phase 15)
-from tensornet.validation import (  # Physical validation; Benchmarks; Regression; V&V
+from tensornet.sim.validation import (  # Physical validation; Benchmarks; Regression; V&V
                                        AnalyticalValidation,
                                        AnalyticalValidator,
                                        ArrayComparator,

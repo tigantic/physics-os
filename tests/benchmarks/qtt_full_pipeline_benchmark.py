@@ -266,7 +266,7 @@ def benchmark_qtt_eval(config: PipelineConfig):
 def benchmark_qtt_render(config: PipelineConfig):
     """Benchmark QTT 2D rendering using our optimized separable path."""
     import torch
-    from tensornet.visualization.tensor_slicer import TensorSlicer
+    from tensornet.sim.visualization.tensor_slicer import TensorSlicer
     
     print("\n" + "=" * 70)
     print("STAGE 3: QTT 2D RENDERING (SEPARABLE)")
@@ -412,7 +412,7 @@ def benchmark_end_to_end(config: PipelineConfig):
     """Benchmark complete end-to-end pipeline."""
     import torch
     from tensornet.cfd.qtt_2d import dense_to_qtt_2d, QTT2DState
-    from tensornet.visualization.tensor_slicer import TensorSlicer
+    from tensornet.sim.visualization.tensor_slicer import TensorSlicer
     
     print("\n" + "=" * 70)
     print("STAGE 5: END-TO-END PIPELINE")

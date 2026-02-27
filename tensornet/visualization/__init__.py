@@ -1,15 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.sim.visualization.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.visualization import X
+    from tensornet.visualization.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.sim.visualization``.
 """
-HyperTensor Visualization Module
-================================
+import importlib as _il
+import sys as _sys
 
-Decompression-free rendering and visualization for Tensor Trains.
-"""
-
-from .tensor_slicer import TensorSlicer, create_sine_qtt, create_slicer_from_qtt, create_test_qtt
-
-__all__ = [
-    "TensorSlicer",
-    "create_slicer_from_qtt",
-    "create_test_qtt",
-    "create_sine_qtt",
-]
+_real = _il.import_module("tensornet.sim.visualization")
+_sys.modules[__name__] = _real

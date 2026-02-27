@@ -22,7 +22,7 @@
 | Document | Description | Status |
 |----------|-------------|--------|
 | [FLUIDELITE_ZK_EXECUTION_FRAMEWORK.md](FLUIDELITE_ZK_EXECUTION_FRAMEWORK.md) | Core architecture, QTT theory, methodology | ✅ Current |
-| [fluidelite-zk/FLUIDELITE_ZK_V3_ROADMAP.md](fluidelite-zk/FLUIDELITE_ZK_V3_ROADMAP.md) | Long-term vision | Reference |
+| [crates/fluidelite_zk/FLUIDELITE_ZK_V3_ROADMAP.md](crates/fluidelite_zk/FLUIDELITE_ZK_V3_ROADMAP.md) | Long-term vision | Reference |
 
 ### Session Reports
 

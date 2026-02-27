@@ -120,7 +120,7 @@ def execute(config: ExecutionConfig) -> Any:
 
 def _execute_gpu(config: ExecutionConfig, program: Any, spec: Any) -> Any:
     """Execute on GPU via GPURuntime — Triton/CUDA, rSVD, adaptive rank."""
-    from tensornet.vm.gpu_runtime import GPURuntime, GPURankGovernor
+    from tensornet.engine.vm.gpu_runtime import GPURuntime, GPURankGovernor
 
     governor = GPURankGovernor(
         max_rank=config.max_rank,
@@ -150,8 +150,8 @@ def _execute_gpu(config: ExecutionConfig, program: Any, spec: Any) -> Any:
 
 def _execute_cpu(config: ExecutionConfig, program: Any, spec: Any) -> Any:
     """Execute on CPU via QTTRuntime — NumPy fallback."""
-    from tensornet.vm.runtime import QTTRuntime
-    from tensornet.vm.rank_governor import RankGovernor, TruncationPolicy
+    from tensornet.engine.vm.runtime import QTTRuntime
+    from tensornet.engine.vm.rank_governor import RankGovernor, TruncationPolicy
 
     governor = RankGovernor(
         policy=TruncationPolicy(

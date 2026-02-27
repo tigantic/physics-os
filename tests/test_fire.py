@@ -20,7 +20,7 @@ import numpy as np
 import pytest
 import torch
 
-from tensornet.emergency.fire import FireReport, FireSim
+from tensornet.applied.emergency.fire import FireReport, FireSim
 
 # ============================================================================
 # FIXTURES

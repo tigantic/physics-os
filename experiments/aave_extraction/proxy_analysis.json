@@ -1,0 +1,76 @@
+[
+  {
+    "contract": "Aave_V2_LendingPoolProxy",
+    "address": "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9",
+    "vulnerabilities": [
+      {
+        "severity": "MEDIUM",
+        "title": "Missing EIP-1967 Admin Slot",
+        "description": "Proxy uses IMPLEMENTATION slot but no standard ADMIN slot found. Admin may be stored in non-standard location or hardcoded.",
+        "location": null,
+        "calldata": null
+      }
+    ],
+    "findings": {
+      "eip1967_slots": [
+        "IMPLEMENTATION"
+      ],
+      "admin_functions": [
+        "upgradeTo(address)",
+        "upgradeToAndCall(address,bytes)",
+        "implementation()",
+        "setImplementation(address)",
+        "admin()"
+      ],
+      "delegatecall_count": 3,
+      "initializers": []
+    }
+  },
+  {
+    "contract": "Aave_V1_PoolCore",
+    "address": "0x3dfd23A6c5E8BbcFc9581d2E864a68feb6a076d3",
+    "vulnerabilities": [],
+    "findings": {
+      "eip1967_slots": [
+        "IMPLEMENTATION",
+        "ADMIN"
+      ],
+      "admin_functions": [
+        "changeAdmin(address)",
+        "setImplementation(address)",
+        "admin()",
+        "upgradeTo(address)",
+        "upgradeToAndCall(address,bytes)",
+        "implementation()"
+      ],
+      "delegatecall_count": 3,
+      "initializers": []
+    }
+  },
+  {
+    "contract": "Aave_V2_PoolAddressesProviderRegistry",
+    "address": "0xbaA999AC55EAce41CcAE355c77809e68Bb345170",
+    "vulnerabilities": [
+      {
+        "severity": "INFO",
+        "title": "No DELEGATECALL Found",
+        "description": "Contract does not contain DELEGATECALL opcode. May not be a proxy or uses CALL instead.",
+        "location": null,
+        "calldata": null
+      },
+      {
+        "severity": "MEDIUM",
+        "title": "Low Storage Slot Usage",
+        "description": "Proxy uses low storage slots ([0, 0, 0, 0, 0, 3]). May collide with implementation contract storage.",
+        "location": 294,
+        "calldata": null
+      }
+    ],
+    "findings": {
+      "eip1967_slots": [],
+      "admin_functions": [],
+      "delegatecall_count": 0,
+      "initializers": []
+    }
+  }
+]

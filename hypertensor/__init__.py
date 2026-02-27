@@ -18,7 +18,7 @@ Core (never distributed)
 - ``hypertensor.jobs``       — Job state machine and store
 """
 
-__version__ = "1.0.0"
-API_VERSION = "1.0.0"
+__version__ = "40.0.1"
+API_VERSION = "2.0.0"
 SCHEMA_VERSION = "1.0.0"
-RUNTIME_VERSION = "3.1.0"
+RUNTIME_VERSION = "1.0.0"

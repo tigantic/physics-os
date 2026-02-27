@@ -70,7 +70,7 @@ Linear regression:
 | Conservation Laws | ✅ PASS | Error: 2.2e-16 |
 | DMRG Heisenberg | ✅ PASS | E error: 0.03% |
 
-Run with: `python scripts/physics_validation.py`
+Run with: `python tools/scripts/physics_validation.py`
 
 ---
 

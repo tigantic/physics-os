@@ -511,7 +511,7 @@ transported = plan.apply(mu, t=0.5)  # Interpolation at t=0.5
 python -m tensornet.genesis.ot.benchmark \
     --grid-sizes 16,20,24,28,32,36,40 \
     --regularizations 0.1,0.01,0.001 \
-    --output benchmarks/qtt_ot_benchmark.json
+    --output experiments/benchmarks/benchmarks/qtt_ot_benchmark.json
 ```
 
 **Expected Results**:

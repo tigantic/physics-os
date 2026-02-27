@@ -217,7 +217,7 @@ No AWS credentials required (public bucket).
 - [NOAA GOES-18 on AWS](https://registry.opendata.aws/noaa-goes/)
 - [QTT Tensor Format](https://arxiv.org/abs/2009.11348)
 - [NIST Post-Quantum Cryptography](https://csrc.nist.gov/projects/post-quantum-cryptography)
-- [FluidElite Architecture](./fluidelite-zk/README.md)
+- [FluidElite Architecture](./crates/fluidelite_zk/README.md)
 
 ---
 

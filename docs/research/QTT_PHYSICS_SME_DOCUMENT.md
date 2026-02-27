@@ -181,7 +181,7 @@ $$\text{TCI: } f(x) \xrightarrow{\text{sample}} \{f(x_i)\}_{i \in I} \xrightarro
 The critical subroutine: find rows that maximize submatrix volume (determinant).
 
 ```rust
-// From tci_core_rust/src/maxvol.rs
+// From crates/tci_core_rust/src/maxvol.rs
 pub fn maxvol(a: &Array2<f64>, config: &MaxVolConfig) -> MaxVolResult {
     // 1. Initialize pivots
     // 2. Compute B = A[pivots, :] and B_inv
@@ -198,7 +198,7 @@ pub fn maxvol(a: &Array2<f64>, config: &MaxVolConfig) -> MaxVolResult {
 
 | Implementation | Location | Use Case |
 |----------------|----------|----------|
-| **Rust TCI Core** | `tci_core_rust/` | High-performance pivot selection |
+| **Rust TCI Core** | `crates/tci_core_rust/` | High-performance pivot selection |
 | **Python TCI** | `tensornet/cfd/qtt_tci.py` | Fallback when Rust unavailable |
 | **Dense fallback** | `qtt_from_function_dense()` | Small grids (≤2^12) |
 
@@ -314,8 +314,8 @@ The repository includes validation scripts ("gauntlets") testing against known p
 | Algorithm | Location | Complexity | Use Case |
 |-----------|----------|------------|----------|
 | **TT-SVD** | `tensornet/cfd/qtt.py:tt_svd()` | O(d·n·r³) | Initial compression |
-| **rSVD** | `fluidelite/core/decompositions.py:rsvd_truncated()` | O(m·n·k) | Large matrices |
-| **SafeSVD** | `fluidelite/core/decompositions.py:SafeSVD` | O(m·n·r) | Stable gradients |
+| **rSVD** | `crates/fluidelite/core/decompositions.py:rsvd_truncated()` | O(m·n·k) | Large matrices |
+| **SafeSVD** | `crates/fluidelite/core/decompositions.py:SafeSVD` | O(m·n·r) | Stable gradients |
 | **QR positive** | `tensornet/core/decompositions.py:qr_positive()` | O(m·n²) | Canonical forms |
 
 ### 6.2 Time Evolution
@@ -337,9 +337,9 @@ The repository includes validation scripts ("gauntlets") testing against known p
 
 | Solver | Location | Method |
 |--------|----------|--------|
-| **CG (matrix-free)** | `fluidelite/qtt_features.py:cg_solve_streaming()` | Avoids materializing XtX |
+| **CG (matrix-free)** | `crates/fluidelite/qtt_features.py:cg_solve_streaming()` | Avoids materializing XtX |
 | **Jacobi (QTT-native)** | `tensornet/cfd/ns2d_qtt_native.py` | Poisson in QTT format |
-| **Least Squares** | `fluidelite/qtt_tci.py` | Closed-form: W = (XtX + λI)⁻¹XtY |
+| **Least Squares** | `crates/fluidelite/qtt_tci.py` | Closed-form: W = (XtX + λI)⁻¹XtY |
 
 ---
 
@@ -384,7 +384,7 @@ fluidelite/
 ### 7.3 TCI Core (Rust)
 
 ```
-tci_core_rust/
+crates/tci_core_rust/
 ├── src/
 │   ├── lib.rs              # PyO3 bindings
 │   ├── maxvol.rs           # MaxVol pivot selection
@@ -748,9 +748,9 @@ $$\mathbf{v}^+ = \mathbf{v}^- + \mathbf{v}' \times \mathbf{s}, \quad \mathbf{s} 
 
 | Innovation | Impact | Location |
 |------------|--------|----------|
-| TCI for LLM | No gradients needed | `tci_llm/`, `fluidelite/` |
+| TCI for LLM | No gradients needed | `tci_llm/`, `crates/fluidelite/` |
 | Morton-ordered QTT | 2D→1D locality | `tensornet/cfd/` |
-| Matrix-free CG | O(features) memory | `fluidelite/qtt_features.py` |
+| Matrix-free CG | O(features) memory | `crates/fluidelite/qtt_features.py` |
 | Implicit QTT CUDA | <1.5ms @ 4K | `tensornet/sovereign/` |
 | RTE precision | Sub-meter @ planetary | `apps/glass_cockpit/` |
 | QTT Langevin | 1000× PES compression | `tensornet/fusion/` |
@@ -1302,9 +1302,9 @@ PPO-based training with custom callbacks and multi-agent support.
 | Root gauntlets | 29,176 | 9.6% |
 | `tests/` | 26,797 | 8.8% |
 | `demos/` | 20,473 | 6.7% |
-| `fluidelite/` | 20,243 | 6.6% |
-| `scripts/` | 12,981 | 4.3% |
-| `benchmarks/` | 3,719 | 1.2% |
+| `crates/fluidelite/` | 20,243 | 6.6% |
+| `tools/scripts/` | 12,981 | 4.3% |
+| `experiments/benchmarks/benchmarks/` | 3,719 | 1.2% |
 | `tci_llm/` | 2,261 | 0.7% |
 
 ### 18.3 Tensornet Subdirectories (Top 20)

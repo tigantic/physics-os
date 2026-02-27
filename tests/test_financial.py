@@ -17,7 +17,7 @@ import numpy as np
 import pytest
 import torch
 
-from tensornet.financial.solver import (FlowSignal, LiquiditySolver,
+from tensornet.applied.financial.solver import (FlowSignal, LiquiditySolver,
                                         SignalDirection)
 
 # ============================================================================

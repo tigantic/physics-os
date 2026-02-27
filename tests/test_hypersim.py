@@ -121,7 +121,7 @@ class TestRewardFunctions:
 
     def test_sparse_reward(self, mock_field):
         """Test sparse reward function."""
-        from tensornet.hypersim.rewards import SparseReward
+        from tensornet.infra.hypersim.rewards import SparseReward
 
         # Goal achieved
         reward_fn = SparseReward(
@@ -139,7 +139,7 @@ class TestRewardFunctions:
 
     def test_dense_reward(self, mock_field):
         """Test dense reward function."""
-        from tensornet.hypersim.rewards import DenseReward
+        from tensornet.infra.hypersim.rewards import DenseReward
 
         reward_fn = DenseReward(
             reward_fn=lambda f, s: -s * 0.01,  # Time penalty
@@ -150,7 +150,7 @@ class TestRewardFunctions:
 
     def test_composite_reward(self, mock_field):
         """Test composite reward function."""
-        from tensornet.hypersim.rewards import CompositeReward, DenseReward
+        from tensornet.infra.hypersim.rewards import CompositeReward, DenseReward
 
         r1 = DenseReward(lambda f, s: 1.0)
         r2 = DenseReward(lambda f, s: 2.0)
@@ -167,7 +167,7 @@ class TestRewardFunctions:
 
     def test_shaped_reward(self, mock_field):
         """Test potential-based shaping."""
-        from tensornet.hypersim.rewards import DenseReward, ShapedReward
+        from tensornet.infra.hypersim.rewards import DenseReward, ShapedReward
 
         base = DenseReward(lambda f, s: 1.0)
         shaped = ShapedReward(
@@ -190,7 +190,7 @@ class TestRewardFunctions:
 
     def test_energy_reward(self, mock_field):
         """Test energy-based reward."""
-        from tensornet.hypersim.rewards import EnergyReward
+        from tensornet.infra.hypersim.rewards import EnergyReward
 
         # Minimize energy
         reward = EnergyReward(minimize=True)
@@ -199,7 +199,7 @@ class TestRewardFunctions:
 
     def test_vorticity_reward(self, mock_field):
         """Test vorticity reward."""
-        from tensornet.hypersim.rewards import VorticityReward
+        from tensornet.infra.hypersim.rewards import VorticityReward
 
         reward = VorticityReward(maximize=True)
         r = reward(mock_field, 0)
@@ -207,7 +207,7 @@ class TestRewardFunctions:
 
     def test_dissipation_reward(self, mock_field):
         """Test dissipation reward."""
-        from tensornet.hypersim.rewards import DissipationReward
+        from tensornet.infra.hypersim.rewards import DissipationReward
 
         reward = DissipationReward()
 
@@ -223,7 +223,7 @@ class TestRewardFunctions:
 
     def test_reward_scaling(self, mock_field):
         """Test reward scaling and clipping."""
-        from tensornet.hypersim.rewards import DenseReward, RewardConfig
+        from tensornet.infra.hypersim.rewards import DenseReward, RewardConfig
 
         config = RewardConfig(scale=2.0, clip_min=-5.0, clip_max=5.0)
         reward = DenseReward(lambda f, s: 10.0, config=config)
@@ -234,7 +234,7 @@ class TestRewardFunctions:
 
     def test_make_reward_factory(self, mock_field):
         """Test reward factory function."""
-        from tensornet.hypersim.rewards import make_reward
+        from tensornet.infra.hypersim.rewards import make_reward
 
         reward = make_reward("energy", minimize=True, scale=0.5)
         r = reward(mock_field, 0)
@@ -251,7 +251,7 @@ class TestSpaces:
 
     def test_observation_config(self):
         """Test observation configuration."""
-        from tensornet.hypersim.spaces import (ObservationConfig,
+        from tensornet.infra.hypersim.spaces import (ObservationConfig,
                                                ObservationType)
 
         config = ObservationConfig(
@@ -264,7 +264,7 @@ class TestSpaces:
 
     def test_field_observation_shape(self):
         """Test observation shape computation."""
-        from tensornet.hypersim.spaces import (FieldObservation,
+        from tensornet.infra.hypersim.spaces import (FieldObservation,
                                                ObservationConfig,
                                                ObservationType)
 
@@ -285,7 +285,7 @@ class TestSpaces:
         """Test action configuration."""
         import numpy as np
 
-        from tensornet.hypersim.spaces import (ActionConfig, ActionType,
+        from tensornet.infra.hypersim.spaces import (ActionConfig, ActionType,
                                                ActuatorConfig)
 
         actuators = [
@@ -302,7 +302,7 @@ class TestSpaces:
 
     def test_field_action_shape(self):
         """Test action shape computation."""
-        from tensornet.hypersim.spaces import (ActionConfig, ActionType,
+        from tensornet.infra.hypersim.spaces import (ActionConfig, ActionType,
                                                FieldAction)
 
         config = ActionConfig(action_type=ActionType.CONTINUOUS)
@@ -314,7 +314,7 @@ class TestSpaces:
 
     def test_action_to_forces(self):
         """Test action to force conversion."""
-        from tensornet.hypersim.spaces import (ActionConfig, ActionType,
+        from tensornet.infra.hypersim.spaces import (ActionConfig, ActionType,
                                                FieldAction)
 
         config = ActionConfig(action_type=ActionType.CONTINUOUS)
@@ -332,7 +332,7 @@ class TestSpaces:
         """Test action masking."""
         import numpy as np
 
-        from tensornet.hypersim.spaces import (ActionConfig, ActionMask,
+        from tensornet.infra.hypersim.spaces import (ActionConfig, ActionMask,
                                                ActionType, ActuatorConfig)
 
         # Create config with explicit actuators
@@ -356,7 +356,7 @@ class TestCurriculum:
 
     def test_curriculum_stage(self):
         """Test curriculum stage configuration."""
-        from tensornet.hypersim.curriculum import CurriculumStage
+        from tensornet.infra.hypersim.curriculum import CurriculumStage
 
         stage = CurriculumStage(
             name="beginner",
@@ -370,7 +370,7 @@ class TestCurriculum:
 
     def test_curriculum_progression(self):
         """Test curriculum advancement."""
-        from tensornet.hypersim.curriculum import Curriculum, CurriculumStage
+        from tensornet.infra.hypersim.curriculum import Curriculum, CurriculumStage
 
         stages = [
             CurriculumStage(
@@ -395,7 +395,7 @@ class TestCurriculum:
 
     def test_curriculum_get_options(self):
         """Test curriculum options generation."""
-        from tensornet.hypersim.curriculum import Curriculum, CurriculumStage
+        from tensornet.infra.hypersim.curriculum import Curriculum, CurriculumStage
 
         stages = [CurriculumStage("test", viscosity=0.05)]
         curriculum = Curriculum(stages, seed=42)
@@ -407,7 +407,7 @@ class TestCurriculum:
 
     def test_curriculum_state_dict(self):
         """Test curriculum serialization."""
-        from tensornet.hypersim.curriculum import Curriculum, CurriculumStage
+        from tensornet.infra.hypersim.curriculum import Curriculum, CurriculumStage
 
         stages = [CurriculumStage("test")]
         curriculum = Curriculum(stages)
@@ -424,7 +424,7 @@ class TestCurriculum:
 
     def test_domain_randomizer(self):
         """Test domain randomization."""
-        from tensornet.hypersim.curriculum import (DomainRandomizer,
+        from tensornet.infra.hypersim.curriculum import (DomainRandomizer,
                                                    RandomizationRange)
 
         ranges = [
@@ -442,7 +442,7 @@ class TestCurriculum:
 
     def test_difficulty_scheduler(self):
         """Test adaptive difficulty."""
-        from tensornet.hypersim.curriculum import DifficultyScheduler
+        from tensornet.infra.hypersim.curriculum import DifficultyScheduler
 
         scheduler = DifficultyScheduler(
             easy_params={"viscosity": 0.1},
@@ -463,7 +463,7 @@ class TestCurriculum:
 
     def test_make_fluid_curriculum(self):
         """Test preset curriculum factory."""
-        from tensornet.hypersim.curriculum import make_fluid_curriculum
+        from tensornet.infra.hypersim.curriculum import make_fluid_curriculum
 
         curriculum = make_fluid_curriculum("standard")
         assert len(curriculum.stages) > 0
@@ -483,7 +483,7 @@ class TestWrappers:
 
     def test_frame_stack(self, mock_gymnasium):
         """Test frame stacking wrapper."""
-        from tensornet.hypersim.wrappers import FrameStack
+        from tensornet.infra.hypersim.wrappers import FrameStack
 
         # Create mock env
         class MockEnv:
@@ -515,7 +515,7 @@ class TestWrappers:
 
     def test_action_repeat(self, mock_gymnasium):
         """Test action repeat wrapper."""
-        from tensornet.hypersim.wrappers import ActionRepeat
+        from tensornet.infra.hypersim.wrappers import ActionRepeat
 
         class MockEnv:
             observation_space = mock_gymnasium.spaces.Box(shape=(4,))
@@ -541,7 +541,7 @@ class TestWrappers:
 
     def test_reward_scaling(self, mock_gymnasium):
         """Test reward scaling wrapper."""
-        from tensornet.hypersim.wrappers import RewardScaling
+        from tensornet.infra.hypersim.wrappers import RewardScaling
 
         class MockEnv:
             observation_space = mock_gymnasium.spaces.Box(shape=(4,))
@@ -563,7 +563,7 @@ class TestWrappers:
 
     def test_time_limit(self, mock_gymnasium):
         """Test time limit wrapper."""
-        from tensornet.hypersim.wrappers import TimeLimit
+        from tensornet.infra.hypersim.wrappers import TimeLimit
 
         class MockEnv:
             observation_space = mock_gymnasium.spaces.Box(shape=(4,))
@@ -590,7 +590,7 @@ class TestWrappers:
 
     def test_record_episode(self, mock_gymnasium):
         """Test episode recording."""
-        from tensornet.hypersim.wrappers import RecordEpisode
+        from tensornet.infra.hypersim.wrappers import RecordEpisode
 
         class MockEnv:
             observation_space = mock_gymnasium.spaces.Box(shape=(4,))
@@ -619,7 +619,7 @@ class TestWrappers:
 
     def test_make_wrapped_env(self, mock_gymnasium):
         """Test wrapper factory."""
-        from tensornet.hypersim.wrappers import make_wrapped_env
+        from tensornet.infra.hypersim.wrappers import make_wrapped_env
 
         class MockEnv:
             observation_space = mock_gymnasium.spaces.Box(shape=(3, 64, 64))
@@ -661,8 +661,8 @@ class TestRegistry:
 
     def test_register_and_make(self):
         """Test environment registration."""
-        from tensornet.hypersim.env import FluidEnv
-        from tensornet.hypersim.registry import (list_envs, make_env,
+        from tensornet.infra.hypersim.env import FluidEnv
+        from tensornet.infra.hypersim.registry import (list_envs, make_env,
                                                  register_env, unregister_env)
 
         # Register custom env
@@ -685,7 +685,7 @@ class TestRegistry:
 
     def test_list_envs(self):
         """Test listing environments."""
-        from tensornet.hypersim.registry import list_envs
+        from tensornet.infra.hypersim.registry import list_envs
 
         envs = list_envs()
         assert len(envs) > 0
@@ -693,7 +693,7 @@ class TestRegistry:
 
     def test_get_env_spec(self):
         """Test getting environment spec."""
-        from tensornet.hypersim.registry import get_env_spec
+        from tensornet.infra.hypersim.registry import get_env_spec
 
         spec = get_env_spec("fluid-control-v0")
         assert "entry_point" in spec
@@ -701,7 +701,7 @@ class TestRegistry:
 
     def test_preset_envs_exist(self):
         """Test preset environments are registered."""
-        from tensornet.hypersim.registry import list_envs
+        from tensornet.infra.hypersim.registry import list_envs
 
         envs = list_envs()
 
@@ -719,14 +719,14 @@ class TestRegistry:
     )
     def test_make_fluid_env_convenience(self):
         """Test convenience function."""
-        from tensornet.hypersim.registry import make_fluid_env
+        from tensornet.infra.hypersim.registry import make_fluid_env
 
         env = make_fluid_env(difficulty="easy", ndim=2)
         assert env is not None
 
     def test_task_specs(self):
         """Test task specifications."""
-        from tensornet.hypersim.registry import TASK_SPECS, TaskSpec
+        from tensornet.infra.hypersim.registry import TASK_SPECS, TaskSpec
 
         assert "target_field" in TASK_SPECS
 
@@ -745,7 +745,7 @@ class TestFluidEnv:
 
     def test_env_config(self):
         """Test environment configuration."""
-        from tensornet.hypersim.env import FluidEnvConfig
+        from tensornet.infra.hypersim.env import FluidEnvConfig
 
         config = FluidEnvConfig(
             dims=2,
@@ -761,7 +761,7 @@ class TestFluidEnv:
         """Test environment state serialization."""
         import torch
 
-        from tensornet.hypersim.env import EnvState
+        from tensornet.infra.hypersim.env import EnvState
 
         cores = [torch.randn(8, 2, 8) for _ in range(12)]
         state = EnvState(
@@ -784,7 +784,7 @@ class TestFluidEnv:
         """Test step result structure."""
         import numpy as np
 
-        from tensornet.hypersim.env import StepResult
+        from tensornet.infra.hypersim.env import StepResult
 
         result = StepResult(
             observation=np.zeros((3, 64, 64)),
@@ -809,7 +809,7 @@ class TestIntegration:
 
     def test_import_all(self):
         """Test all exports are importable."""
-        from tensornet.hypersim import (  # Environment; Rewards; Spaces; Curriculum; Wrappers; Registry
+        from tensornet.infra.hypersim import (  # Environment; Rewards; Spaces; Curriculum; Wrappers; Registry
             ActionMask, ActionRepeat, CompositeReward, Curriculum,
             CurriculumStage, DenseReward, DomainRandomizer, EnvState,
             FieldAction, FieldObservation, FluidEnv, FluidEnvConfig,
@@ -818,9 +818,9 @@ class TestIntegration:
 
     def test_full_workflow(self, mock_field):
         """Test complete RL workflow."""
-        from tensornet.hypersim.curriculum import Curriculum, CurriculumStage
-        from tensornet.hypersim.rewards import DenseReward
-        from tensornet.hypersim.spaces import (FieldObservation,
+        from tensornet.infra.hypersim.curriculum import Curriculum, CurriculumStage
+        from tensornet.infra.hypersim.rewards import DenseReward
+        from tensornet.infra.hypersim.spaces import (FieldObservation,
                                                ObservationConfig)
 
         # Setup curriculum
@@ -851,8 +851,8 @@ class TestIntegration:
 
     def test_reward_curriculum_integration(self, mock_field):
         """Test reward with curriculum difficulty."""
-        from tensornet.hypersim.curriculum import DifficultyScheduler
-        from tensornet.hypersim.rewards import DenseReward, RewardConfig
+        from tensornet.infra.hypersim.curriculum import DifficultyScheduler
+        from tensornet.infra.hypersim.rewards import DenseReward, RewardConfig
 
         scheduler = DifficultyScheduler(
             easy_params={"reward_scale": 2.0},

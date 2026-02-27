@@ -1,0 +1,28 @@
+{
+  "client": "James Chen, Facilities Engineering",
+  "project": "Conference Room B Ventilation",
+  "method": "NS2D_QTT_Native (Vorticity-Streamfunction)",
+  "date": "2026-01-06T07:57:20.966967",
+  "room": {
+    "L": 9.0,
+    "H": 3.0,
+    "h_inlet_mm": 168.0,
+    "u_inlet": 0.455
+  },
+  "Re_inlet": 5096,
+  "Re_room": 91000,
+  "grid": "2048x512",
+  "total_cells": 1048576,
+  "qtt_cores": 20,
+  "max_rank": 64,
+  "n_steps": 100,
+  "solve_time_s": 178.69942743900174,
+  "steps_per_second": 0.5595988830693627,
+  "findings": {
+    "u_breathing_3m_ms": 1.1020591978082392e-12,
+    "u_breathing_6m_ms": 8.744753267608145e-32,
+    "jet_core_3m_m": 2.9060665362035225,
+    "jet_core_6m_m": 2.62426614481409,
+    "ashrae_minimum_ms": 0.1
+  }
+}

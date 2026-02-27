@@ -4,7 +4,7 @@
 # Stages: Build → Test → Gas Report → Fork Deploy Simulation
 #
 # Triggered by changes to:
-#   - fluidelite-zk/foundry/**
+#   - crates/fluidelite_zk/foundry/**
 #   - contracts/**
 
 name: Contracts CI
@@ -13,12 +13,12 @@ on:
   push:
     branches: [main, develop, master]
     paths:
-      - 'fluidelite-zk/foundry/**'
+      - 'crates/fluidelite_zk/foundry/**'
       - 'contracts/**'
   pull_request:
     branches: [main, develop, master]
     paths:
-      - 'fluidelite-zk/foundry/**'
+      - 'crates/fluidelite_zk/foundry/**'
       - 'contracts/**'
 
 env:
@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: fluidelite-zk/foundry
+        working-directory: crates/fluidelite_zk/foundry
     steps:
       - uses: actions/checkout@v4
         with:
@@ -67,7 +67,7 @@ jobs:
     needs: [build]
     defaults:
       run:
-        working-directory: fluidelite-zk/foundry
+        working-directory: crates/fluidelite_zk/foundry
     steps:
       - uses: actions/checkout@v4
         with:
@@ -90,7 +90,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gas-report
-          path: fluidelite-zk/foundry/gas-report.txt
+          path: crates/fluidelite_zk/foundry/gas-report.txt
 
   # ============================================
   # Stage 3: Security Analysis
@@ -101,7 +101,7 @@ jobs:
     needs: [build]
     defaults:
       run:
-        working-directory: fluidelite-zk/foundry
+        working-directory: crates/fluidelite_zk/foundry
     steps:
       - uses: actions/checkout@v4
         with:
@@ -144,7 +144,7 @@ jobs:
     needs: [test]
     defaults:
       run:
-        working-directory: fluidelite-zk/foundry
+        working-directory: crates/fluidelite_zk/foundry
     steps:
       - uses: actions/checkout@v4
         with:
@@ -170,7 +170,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gas-benchmark
-          path: fluidelite-zk/foundry/gas-benchmark.txt
+          path: crates/fluidelite_zk/foundry/gas-benchmark.txt
 
   # ============================================
   # Stage 5: Fork Deployment Simulation
@@ -182,7 +182,7 @@ jobs:
     if: github.event_name == 'pull_request'
     defaults:
       run:
-        working-directory: fluidelite-zk/foundry
+        working-directory: crates/fluidelite_zk/foundry
     env:
       PRIVATE_KEY: "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
       SIGNER_1: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"

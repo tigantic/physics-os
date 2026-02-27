@@ -1,79 +1,15 @@
-"""QTT Physics VM — Universal compressed physics compute runtime.
+"""Backward-compatibility shim — real module at tensornet.engine.vm.
 
-Compiles different PDEs into the same operator bytecode and runs them
-on one runtime.  If k=1 universality is real, then the backend is the
-product — not the domain.
+This shim exists so that legacy imports like::
 
-Architecture
-------------
-::
+    from tensornet.vm import X
+    from tensornet.vm.sub import Y
 
-    Domain Equations          Operator IR           QTT Runtime
-    ┌───────────────┐    ┌─────────────────┐    ┌──────────────┐
-    │ Navier-Stokes │───▶│ grad, laplace,  │    │ ┌──────────┐ │
-    │ Maxwell       │───▶│ hadamard, scale,│───▶│ │ Register │ │
-    │ Schrödinger   │───▶│ truncate, bc,   │    │ │   File   │ │
-    │ Vlasov-Poisson│───▶│ measure, ...    │    │ └──────────┘ │
-    │ Adv-Diffusion │───▶│                 │    │ Rank Governor │
-    └───────────────┘    └─────────────────┘    │ Telemetry    │
-                                                 └──────────────┘
-
-Usage
------
-Run the unified benchmark across all 5 physics domains::
-
-    python -m tensornet.vm.benchmark --n-bits 8 --n-steps 100
-
-Programmatic::
-
-    from tensornet.vm import QTTRuntime, RankGovernor
-    from tensornet.vm.compilers import BurgersCompiler
-
-    program = BurgersCompiler(n_bits=8, n_steps=100).compile()
-    runtime = QTTRuntime()
-    result = runtime.execute(program)
-    print(result.telemetry.summary_line())
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.engine.vm``.
 """
+import importlib as _il
+import sys as _sys
 
-from .ir import (
-    BCKind,
-    FieldSpec,
-    Instruction,
-    OpCode,
-    Program,
-)
-from .qtt_tensor import QTTTensor
-from .operators import OperatorCache, mpo_apply, poisson_solve
-from .rank_governor import RankGovernor, TruncationPolicy
-from .runtime import ExecutionResult, QTTRuntime
-from .telemetry import ProgramTelemetry, StepTelemetry, TelemetryCollector
-from .benchmark import run_benchmark, save_results, generate_markdown_report
-
-__all__ = [
-    # IR
-    "BCKind",
-    "FieldSpec",
-    "Instruction",
-    "OpCode",
-    "Program",
-    # Tensor
-    "QTTTensor",
-    # Operators
-    "OperatorCache",
-    "mpo_apply",
-    "poisson_solve",
-    # Runtime
-    "QTTRuntime",
-    "ExecutionResult",
-    # Rank control
-    "RankGovernor",
-    "TruncationPolicy",
-    # Telemetry
-    "ProgramTelemetry",
-    "StepTelemetry",
-    "TelemetryCollector",
-    # Benchmark
-    "run_benchmark",
-    "save_results",
-    "generate_markdown_report",
-]
+_real = _il.import_module("tensornet.engine.vm")
+_sys.modules[__name__] = _real

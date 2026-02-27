@@ -91,13 +91,13 @@ TRADITIONAL (impossible at scale):
 
 | Component | Location | Status |
 |-----------|----------|--------|
-| Zero-Expansion MSM | `fluidelite-zk/src/qtt_native_msm.rs` | ✅ Production |
-| Zero-Expansion Prover | `fluidelite-zk/src/zero_expansion_prover.rs` | ✅ Production |
-| MPS/MPO Primitives | `fluidelite-zk/src/mps.rs`, `mpo.rs` | ✅ Implemented |
-| Hybrid Circuit | `fluidelite-zk/src/circuit/hybrid_unified.rs` | ✅ Implemented |
-| QTT-GA (Rust) | `fluidelite-zk/src/qtt_ga.rs` | ✅ Production |
-| QTT-RMT (Rust) | `fluidelite-zk/src/qtt_rmt.rs` | ✅ Production |
-| QTT-RKHS (Rust) | `fluidelite-zk/src/qtt_rkhs.rs` | ✅ Production |
+| Zero-Expansion MSM | `crates/fluidelite_zk/src/qtt_native_msm.rs` | ✅ Production |
+| Zero-Expansion Prover | `crates/fluidelite_zk/src/zero_expansion_prover.rs` | ✅ Production |
+| MPS/MPO Primitives | `crates/fluidelite_zk/src/mps.rs`, `mpo.rs` | ✅ Implemented |
+| Hybrid Circuit | `crates/fluidelite_zk/src/circuit/hybrid_unified.rs` | ✅ Implemented |
+| QTT-GA (Rust) | `crates/fluidelite_zk/src/qtt_ga.rs` | ✅ Production |
+| QTT-RMT (Rust) | `crates/fluidelite_zk/src/qtt_rmt.rs` | ✅ Production |
+| QTT-RKHS (Rust) | `crates/fluidelite_zk/src/qtt_rkhs.rs` | ✅ Production |
 
 ### 1.2 Implementation Priority
 
@@ -129,7 +129,7 @@ Point addition in GA:
 ### 2.3 Tasks
 
 - [ ] 2.3.1 Analyze Python QTT-GA implementation
-- [ ] 2.3.2 Create `fluidelite-zk/src/qtt_ga.rs`
+- [ ] 2.3.2 Create `crates/fluidelite_zk/src/qtt_ga.rs`
 - [ ] 2.3.3 Implement `QTTMultivector` struct
 - [ ] 2.3.4 Implement geometric product in QTT form
 - [ ] 2.3.5 Implement rotor operations
@@ -151,7 +151,7 @@ For n ≤ 12, this is acceptable. For larger n, need TT Cayley table.
 ### 2.5 Findings
 
 **Completed:**
-- ✅ Created `fluidelite-zk/src/qtt_ga.rs` (770+ lines)
+- ✅ Created `crates/fluidelite_zk/src/qtt_ga.rs` (770+ lines)
 - ✅ Implemented `CliffordSignature` with metric handling
 - ✅ Implemented `QttCore` tensor train core structure
 - ✅ Implemented `QttMultivector` with TT representation
@@ -180,7 +180,7 @@ Use random matrix theory for structured Fiat-Shamir challenges.
 ### 3.2 Tasks
 
 - [x] 3.2.1 Analyze Python QTT-RMT implementation
-- [x] 3.2.2 Create `fluidelite-zk/src/qtt_rmt.rs`
+- [x] 3.2.2 Create `crates/fluidelite_zk/src/qtt_rmt.rs`
 - [x] 3.2.3 Implement Wigner semicircle distribution
 - [x] 3.2.4 Implement QTT ensemble and Hutchinson trace
 - [x] 3.2.5 Implement RMT challenge generator
@@ -198,7 +198,7 @@ Use random matrix theory for structured Fiat-Shamir challenges.
 ### 3.4 Findings
 
 **Completed:**
-- ✅ Created `fluidelite-zk/src/qtt_rmt.rs` (500 lines)
+- ✅ Created `crates/fluidelite_zk/src/qtt_rmt.rs` (500 lines)
 - ✅ Wigner semicircle distribution with CDF/inverse sampling
 - ✅ QTT MPO ensemble with Wigner structure
 - ✅ Hutchinson trace estimator
@@ -221,7 +221,7 @@ Compress lookup tables using kernel methods.
 ### 4.2 Tasks
 
 - [x] 4.2.1 Analyze Python QTT-RKHS implementation
-- [x] 4.2.2 Create `fluidelite-zk/src/qtt_rkhs.rs`
+- [x] 4.2.2 Create `crates/fluidelite_zk/src/qtt_rkhs.rs`
 - [x] 4.2.3 Implement RBF kernel in QTT
 - [x] 4.2.4 Implement kernel ridge regression
 - [x] 4.2.5 Add MMD for distribution comparison
@@ -241,7 +241,7 @@ Compress lookup tables using kernel methods.
 ### 4.4 Findings
 
 **Completed:**
-- ✅ Created `fluidelite-zk/src/qtt_rkhs.rs` (450 lines)
+- ✅ Created `crates/fluidelite_zk/src/qtt_rkhs.rs` (450 lines)
 - ✅ `RbfKernel` - Gaussian kernel with length_scale, variance
 - ✅ `PolynomialKernel` - Linear/quadratic kernels
 - ✅ `QttKernelCore` - TT core for kernel matrices
@@ -288,7 +288,7 @@ Wire together QTT-GA, QTT-RMT, and QTT-RKHS into cohesive prover infrastructure.
 ### 5.4 Findings
 
 **Completed:**
-- ✅ Created `fluidelite-zk/src/genesis_integration.rs` (450+ lines)
+- ✅ Created `crates/fluidelite_zk/src/genesis_integration.rs` (450+ lines)
 - ✅ Transcript with deterministic RMT challenges
 - ✅ GA rotor-based rotation working
 - ✅ Compressed lookup tables with interpolation
@@ -342,7 +342,7 @@ ZeroExpansionV21
 1. Created FEZK_PROD.md roadmap
 2. Analyzed Python QTT-GA implementation (623 lines in qtt_multivector.py)
 3. Analyzed Python multivector.py and products.py
-4. Created `fluidelite-zk/src/qtt_ga.rs` (770+ lines)
+4. Created `crates/fluidelite_zk/src/qtt_ga.rs` (770+ lines)
 5. Fixed compilation errors (type annotations, closures)
 6. All 9 tests passing including benchmark and rotor rotation
 
@@ -356,7 +356,7 @@ ZeroExpansionV21
 
 **Actions:**
 7. Analyzed Python QTT-RMT implementation
-8. Created `fluidelite-zk/src/qtt_rmt.rs` (500 lines)
+8. Created `crates/fluidelite_zk/src/qtt_rmt.rs` (500 lines)
 9. Implemented Wigner semicircle, QTT ensemble, Hutchinson trace
 10. All 8 tests passing
 
@@ -364,14 +364,14 @@ ZeroExpansionV21
 
 **Actions:**
 11. Analyzed Python QTT-RKHS implementation
-12. Created `fluidelite-zk/src/qtt_rkhs.rs` (450 lines)
+12. Created `crates/fluidelite_zk/src/qtt_rkhs.rs` (450 lines)
 13. Implemented RBF kernel, lookup tables, kernel ridge regression
 14. All 6 tests passing
 
 ### 2026-01-25 - Phase 5 Complete
 
 **Actions:**
-15. Created `fluidelite-zk/src/genesis_integration.rs` (450+ lines)
+15. Created `crates/fluidelite_zk/src/genesis_integration.rs` (450+ lines)
 16. Implemented Transcript with RMT Fiat-Shamir
 17. Implemented GaCurvePoint with rotor rotation
 18. Implemented CompressedLookupTable

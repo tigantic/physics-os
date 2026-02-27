@@ -1,36 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.fluids.coupled.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.coupled import X
+    from tensornet.coupled.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.fluids.coupled``.
 """
-Coupled physics package: MHD-coupled flows, magnetoconvection, EM pumps,
-thermo-mechanical coupling, electro-mechanical coupling.
+import importlib as _il
+import sys as _sys
 
-Domains: XVIII.2, XVIII.3, XVIII.4.
-"""
-
-from .coupled_mhd import (
-    HartmannFlow,
-    CzochralskiMHD,
-    EMPump,
-    Magnetoconvection,
-)
-from .thermo_mechanical import (
-    ThermoelasticSolver,
-    ThermalBuckling,
-    WeldingResidualStress,
-    CastingSolidificationStress,
-)
-from .electro_mechanical import (
-    PiezoelectricSolver,
-    MEMSPullIn,
-    ElectrostrictiveMaterial,
-    CombDriveActuator,
-)
-
-__all__ = [
-    # MHD
-    "HartmannFlow", "CzochralskiMHD", "EMPump", "Magnetoconvection",
-    # Thermo-Mechanical (XVIII.2)
-    "ThermoelasticSolver", "ThermalBuckling",
-    "WeldingResidualStress", "CastingSolidificationStress",
-    # Electro-Mechanical (XVIII.3)
-    "PiezoelectricSolver", "MEMSPullIn",
-    "ElectrostrictiveMaterial", "CombDriveActuator",
-]
+_real = _il.import_module("tensornet.fluids.coupled")
+_sys.modules[__name__] = _real

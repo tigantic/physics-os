@@ -13,8 +13,8 @@ path = "src/main.rs"
 
 [dependencies]
 # Circuit library with STARK backend
-fluidelite-circuits = { path = "../../fluidelite-circuits", features = ["stark"] }
-fluidelite-core = { path = "../../fluidelite-core" }
+fluidelite-circuits = { path = "../../crates/fluidelite_circuits", features = ["stark"] }
+fluidelite-core = { path = "../../crates/fluidelite_core" }
 
 # Serialization
 serde = { version = "1.0", features = ["derive"] }

@@ -1,55 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.infra.site.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.site import X
+    from tensornet.site.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.infra.site``.
 """
-Static documentation site generation module.
+import importlib as _il
+import sys as _sys
 
-This module provides infrastructure for generating static documentation
-sites from the tensornet codebase, including:
-- Sphinx-compatible configuration
-- Static site generation (HTML, PDF)
-- Search index generation
-- API documentation rendering
-- Tutorial and guide rendering
-"""
-
-from .assets import Asset, AssetManager, AssetType, optimize_images, process_assets
-from .generator import (
-                     Navigation,
-                     NavItem,
-                     Page,
-                     PageType,
-                     SiteBuilder,
-                     SiteConfig,
-                     build_site,
-                     serve_site,
-)
-from .search import Indexer, SearchIndex, SearchResult, build_search_index, search
-from .themes import HyperTensorTheme, Theme, ThemeConfig, get_theme, list_themes
-
-__all__ = [
-    # Generator
-    "SiteConfig",
-    "SiteBuilder",
-    "PageType",
-    "Page",
-    "Navigation",
-    "NavItem",
-    "build_site",
-    "serve_site",
-    # Themes
-    "Theme",
-    "ThemeConfig",
-    "get_theme",
-    "list_themes",
-    "HyperTensorTheme",
-    # Search
-    "SearchIndex",
-    "SearchResult",
-    "Indexer",
-    "build_search_index",
-    "search",
-    # Assets
-    "AssetType",
-    "Asset",
-    "AssetManager",
-    "process_assets",
-    "optimize_images",
-]
+_real = _il.import_module("tensornet.infra.site")
+_sys.modules[__name__] = _real

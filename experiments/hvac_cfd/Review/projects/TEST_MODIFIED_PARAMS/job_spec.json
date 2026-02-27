@@ -1,0 +1,47 @@
+{
+  "client": {
+    "name": "Test Corp",
+    "project_id": "TEST-001",
+    "contact": "Test",
+    "email": "test@test.com"
+  },
+  "room": {
+    "name": "Small Meeting Room",
+    "type": "conference",
+    "dimensions_m": [
+      5.0,
+      4.0,
+      3.0
+    ]
+  },
+  "load": {
+    "occupants": 6,
+    "heat_load_per_person_watts": 120.0,
+    "equipment_load_watts": 300.0,
+    "lighting_load_watts": 100.0
+  },
+  "hvac": {
+    "supply_temp_c": 15.0,
+    "supply_cfm": 400.0,
+    "supply_velocity_ms": 2.5,
+    "diffuser_type": "ceiling_slot",
+    "num_diffusers": 1,
+    "diffuser_area_m2": 0.1,
+    "supply_angle_deg": 30.0
+  },
+  "constraints": {
+    "temp_range_c": [
+      21.0,
+      23.0
+    ],
+    "target_temp_c": 22.0,
+    "max_draft_ms": 0.2,
+    "max_co2_ppm": 800.0
+  },
+  "deliverables": {
+    "heatmap": true,
+    "velocity_field": true,
+    "convergence_plot": true,
+    "pdf_report": true
+  }
+}

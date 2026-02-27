@@ -1,22 +1,15 @@
-"""Quantum field theory solvers: lattice QCD and perturbative methods."""
+"""Backward-compatibility shim — real module at tensornet.quantum.qft.
 
-from .lattice_qcd import (
-    SU3Group,
-    WilsonGaugeAction,
-    WilsonFermion,
-    CreutzRatio,
-    HadronCorrelator,
-)
-from .perturbative import (
-    FeynmanDiagram,
-    DimensionalRegularisation,
-    MSBarRenormalisation,
-    RunningCoupling,
-)
+This shim exists so that legacy imports like::
 
-__all__ = [
-    "SU3Group", "WilsonGaugeAction", "WilsonFermion",
-    "CreutzRatio", "HadronCorrelator",
-    "FeynmanDiagram", "DimensionalRegularisation",
-    "MSBarRenormalisation", "RunningCoupling",
-]
+    from tensornet.qft import X
+    from tensornet.qft.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.quantum.qft``.
+"""
+import importlib as _il
+import sys as _sys
+
+_real = _il.import_module("tensornet.quantum.qft")
+_sys.modules[__name__] = _real

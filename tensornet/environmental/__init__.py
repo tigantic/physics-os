@@ -1,20 +1,15 @@
+"""Backward-compatibility shim — real module at tensornet.energy_env.environmental.
+
+This shim exists so that legacy imports like::
+
+    from tensornet.environmental import X
+    from tensornet.environmental.sub import Y
+
+continue to work after the Phase 5 domain decomposition.
+The canonical import path is now ``tensornet.energy_env.environmental``.
 """
-Environmental physics package: atmospheric dispersion, hydrology,
-storm surge, wildfire modeling.
+import importlib as _il
+import sys as _sys
 
-Domains: XX.7.
-"""
-
-from .environmental import (
-    GaussianPlume,
-    SCSCurveNumber,
-    StormSurge1D,
-    FireAtmosphere,
-)
-
-__all__ = [
-    "GaussianPlume",
-    "SCSCurveNumber",
-    "StormSurge1D",
-    "FireAtmosphere",
-]
+_real = _il.import_module("tensornet.energy_env.environmental")
+_sys.modules[__name__] = _real

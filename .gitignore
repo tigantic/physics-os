@@ -122,6 +122,10 @@ logs/
 *.temp
 *.swp
 *~
+nohup.out
+
+# Backup files
+*.bak
 
 # Secrets (never commit)
 .secrets
@@ -129,41 +133,27 @@ logs/
 *.pem
 credentials.json
 *_keys.json
+*_key.json
+gevulot_key.json
 !*_keys.json.example
 cuda-keyring_1.1-1_all.deb
 
 # Rust build artifacts
-glass-cockpit/target/
 target/
 zk_targets/zk-email-verify
-crypto_data/
-noaa_24h_raw/
 real_data/*.bin
 real_data/*.nc
 *.zip
-Clawdbot/
-clawdbot-main/
-target/
-noaa_24h_raw/
-lean_yang_mills/
+
+# Products build artifacts
 products/fluidelite-zk/fluidelite.img
-FRONTIER/07_GENOMICS/data/clinvar.vcf.gz
-FRONTIER/07_GENOMICS/data/*.vcf.gz
 
 # External submodule directories (managed separately)
-tornado-circuits/
-vendor/circom-ecdsa/
-vendor/semaphore-circuits/
-worldcoin-circuits/
-worldcoin-id/
 yang_mills_unified_proof/.lake/packages/mathlib/
-zk_targets/
-media/
-video/output/concat.txt
-demo_output/
 
 # Windows Zone.Identifier metadata
 *:Zone.Identifier
+*_Zone.Identifier
 
 # Ephemeral summaries
 .execution_summary.txt
@@ -173,37 +163,13 @@ demo_output/
 !sovereign-ui/src/lib/
 !sovereign-ui/src/lib/**
 
-# Windows NTFS Alternate Data Stream markers (contain ':' — illegal on Windows)
-*:Zone.Identifier
-
-# External project directories (not part of HyperTensor)
-aave-extraction/
-flash-liquidator/
-HVAC_CFD/
-
 # Rank Atlas experiment data (large binary / JSON output)
-atlas_*.json
-atlas_*.parquet
-atlas_*_results/
-rank_atlas_*.json
-rank_atlas_*.parquet
+data/atlas_*.parquet
 data/rank_atlas_*.parquet
 
-# Benchmark result directories
-atlas_results/
-atlas_results_full/
-atlas_results_v02_nbits10/
-atlas_results_v04_nbits10/
-atlas_results_vi_highres/
+# Benchmark result directories (in experiments/)
+experiments/atlas_results*/
 
-# Ahmed body data (CFD mesh output)
-ahmed_body_data/
-
-# Misc working files
-Brads_Hypothesis.txt
-DOMAIN_PACK_AUDIT.md
-loc_report.txt
-loc_authored_report*.txt
-
-# Archived prototype
-_archived_api_prototype/
+# ── Large data files (>100 MB, exceeds GitHub limit) ──────────────────────────
+data/real_data/goes18_reconstructed.bin
+experiments/frontier/07_GENOMICS/data/clinvar.vcf.gz

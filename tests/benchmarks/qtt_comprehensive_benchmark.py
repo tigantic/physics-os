@@ -336,7 +336,7 @@ def benchmark_rendering():
     print("SECTION 4: RENDERING")
     print("=" * 70)
     
-    from tensornet.visualization.tensor_slicer import TensorSlicer
+    from tensornet.sim.visualization.tensor_slicer import TensorSlicer
     from tensornet.cfd.qtt_2d import dense_to_qtt_2d
     
     results = []
@@ -602,7 +602,7 @@ def benchmark_point_evaluation():
     print("SECTION 7: POINT EVALUATION")
     print("=" * 70)
     
-    from tensornet.visualization.tensor_slicer import TensorSlicer
+    from tensornet.sim.visualization.tensor_slicer import TensorSlicer
     from tensornet.cfd.pure_qtt_ops import dense_to_qtt
     
     results = []

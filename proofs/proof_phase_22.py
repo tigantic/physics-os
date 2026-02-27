@@ -226,7 +226,7 @@ def proof_22_4_fads_sensitivity():
     """
     print("\nProof 22.4: FADS Sensor Sensitivity")
 
-    from tensornet.simulation.sensors import (FADSSensor, NoiseModel,
+    from tensornet.sim.simulation.sensors import (FADSSensor, NoiseModel,
                                               SensorNoiseConfig)
 
     # Create FADS with no noise for clean sensitivity
@@ -356,7 +356,7 @@ def proof_22_6_aerotrn_drift():
     """
     print("\nProof 22.6: Aero-TRN Navigation Drift")
 
-    from tensornet.guidance.aero_trn import (AeroTRN, AeroTRNConfig,
+    from tensornet.aerospace.guidance.aero_trn import (AeroTRN, AeroTRNConfig,
                                              TerrainMap,
                                              compute_aero_signature)
 
@@ -553,7 +553,7 @@ def proof_22_9_divert_accuracy():
     """
     print("\nProof 22.9: Divert Guidance Accuracy")
 
-    from tensornet.guidance.divert import (DivertGuidance, DivertThruster,
+    from tensornet.aerospace.guidance.divert import (DivertGuidance, DivertThruster,
                                            TargetState, ThrusterConfig,
                                            VehicleState, time_to_go,
                                            zero_effort_miss)

@@ -1,0 +1,24 @@
+{
+  "project_id": "TEST-MOD",
+  "client": "Test Modified Params",
+  "timestamp": "2026-01-18T00:35:09.784925",
+  "optimal_settings": {
+    "velocity": 2.5,
+    "angle": 30.0,
+    "supply_temp": 16.0
+  },
+  "validation": {
+    "temperature": 20.891077270507832,
+    "co2": 571.6539459228516,
+    "velocity": 0.17180185229372,
+    "all_pass": true
+  },
+  "assets": {
+    "thermal": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/TEST-MOD_Test_Modified/output/thermal_heatmap.png",
+    "velocity": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/TEST-MOD_Test_Modified/output/velocity_field.png",
+    "convergence": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/TEST-MOD_Test_Modified/output/convergence_plot.png",
+    "dashboard": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/TEST-MOD_Test_Modified/output/dashboard_summary.png",
+    "pdf": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/Review/projects/TEST-MOD_Test_Modified/output/TEST-MOD_CFD_Report.pdf"
+  },
+  "elapsed_seconds": 366.39257287979126
+}

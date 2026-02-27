@@ -23,7 +23,7 @@ import pytest
 
 class TestTelemetry:
     def test_observability_import(self):
-        from tensornet.discovery.production.observability import MetricsCollector
+        from tensornet.ml.discovery.production.observability import MetricsCollector
         assert MetricsCollector is not None
 
 
@@ -257,7 +257,7 @@ class TestArrowExport:
 
 class TestStreamingPipeline:
     def test_streaming_import(self):
-        from tensornet.discovery import StreamingPipeline
+        from tensornet.ml.discovery import StreamingPipeline
         assert StreamingPipeline is not None
 
 
@@ -355,8 +355,8 @@ class TestExperimentTracker:
 
 class TestLiveIngestion:
     def test_noaa_connector_exists(self):
-        import tensornet.discovery
-        assert tensornet.discovery is not None
+        import tensornet.ml.discovery
+        assert tensornet.ml.discovery is not None
 
 
 # ============================================================== #
@@ -422,7 +422,7 @@ class TestFederation:
 
 class TestAnomalyDetection:
     def test_regime_detector_exists(self):
-        from tensornet.neural import AlgorithmSelector
+        from tensornet.ml.neural import AlgorithmSelector
         assert AlgorithmSelector is not None
 
 

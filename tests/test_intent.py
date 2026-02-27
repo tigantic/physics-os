@@ -7,7 +7,7 @@ from typing import Any, Dict
 import numpy as np
 import pytest
 
-from tensornet.intent import (  # Query; Parser; Constraints; Goals; Engine
+from tensornet.applied.intent import (  # Query; Parser; Constraints; Goals; Engine
     ActionPlan, Aggregator, BoundConstraint, Constraint, ConstraintSet,
     ConstraintSolver, ConstraintType, EntityExtractor, ExecutionContext,
     FieldQuery, Goal, GoalCoordinator, GoalDirector, GoalStatus, GoalType,
