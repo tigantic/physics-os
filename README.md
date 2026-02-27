@@ -15,16 +15,22 @@
 
 <br/>
 
-[![Release](https://img.shields.io/badge/Release-v4.0.1-blue?style=for-the-badge)]()
+[![CI](https://github.com/tigantic/HyperTensor-VM/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tigantic/HyperTensor-VM/actions/workflows/ci.yml)
+[![Audit Gates](https://github.com/tigantic/HyperTensor-VM/actions/workflows/audit-gates.yml/badge.svg?branch=main)](https://github.com/tigantic/HyperTensor-VM/actions/workflows/audit-gates.yml)
+[![Hardening](https://github.com/tigantic/HyperTensor-VM/actions/workflows/hardening.yml/badge.svg?branch=main)](https://github.com/tigantic/HyperTensor-VM/actions/workflows/hardening.yml)
+[![Docs](https://github.com/tigantic/HyperTensor-VM/actions/workflows/docs.yml/badge.svg)](https://github.com/tigantic/HyperTensor-VM/actions/workflows/docs.yml)
+
+[![Release](https://img.shields.io/badge/Release-v4.0.1-blue?style=for-the-badge)](https://github.com/tigantic/HyperTensor-VM/releases/tag/v4.0.1)
 [![LOC](https://img.shields.io/badge/LOC-1.51M-blue?style=for-the-badge)]()
 [![Tests](https://img.shields.io/badge/Tests-370%2B_Passing-brightgreen?style=for-the-badge)]()
-[![CI](https://img.shields.io/badge/CI-11_Workflows-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)]()
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=for-the-badge)](LICENSE)
 
 [![Python](https://img.shields.io/badge/Python-471K_LOC-3776AB?style=flat-square&logo=python&logoColor=white)]()
 [![Rust](https://img.shields.io/badge/Rust-151K_LOC-000000?style=flat-square&logo=rust&logoColor=white)]()
 [![Lean 4](https://img.shields.io/badge/Lean_4-Formally_Verified-purple?style=flat-square)]()
 [![CUDA](https://img.shields.io/badge/CUDA-GPU_Accelerated-76B900?style=flat-square&logo=nvidia&logoColor=white)]()
+
+[**Documentation**](https://tigantic.github.io/HyperTensor-VM) · [**Architecture**](ARCHITECTURE.md) · [**Roadmap**](ROADMAP.md) · [**Specification**](PLATFORM_SPECIFICATION.md)
 
 **Package V40.0.1** · **API V2.0.0** · **19 Rust Workspace Members** · **February 2026**
 
@@ -496,6 +502,14 @@ HyperTensor-VM/
 ├── tests/                          # 370+ tests across integration + unit suites
 ├── tools/                          # sync_versions.py, dep_graph.py, 75+ scripts
 ├── .github/workflows/              # 11 CI/CD workflows
+├── .github/ISSUE_TEMPLATE/         # Bug report, feature request, template chooser
+├── .github/PULL_REQUEST_TEMPLATE.md # PR checklist with physics-specific gates
+├── .github/FUNDING.yml             # Sponsorship / investment links
+├── .github/dependabot.yml          # Automated dependency updates (3 ecosystems)
+├── .pre-commit-config.yaml         # 7 hook categories (ruff, secrets, conventional commits)
+├── ARCHITECTURE.md                 # System architecture with Mermaid diagrams
+├── ROADMAP.md                      # Product milestones and research frontiers
+├── NOTICE                          # Third-party software attributions
 ├── CODEOWNERS                      # 278 domain-expert review mappings
 ├── Makefile                        # 30+ orchestration targets (uv auto-detect)
 ├── VERSION                         # Single source of truth for all versions
@@ -528,10 +542,15 @@ All versions in sync.       # 7/7 OK
 
 ## Documentation
 
+> **[Documentation Site](https://tigantic.github.io/HyperTensor-VM)** — Full API reference, guides, and ADRs powered by MkDocs Material.
+
 | Document | Description |
 |----------|-------------|
 | [`PLATFORM_SPECIFICATION.md`](PLATFORM_SPECIFICATION.md) | **Master specification** — 24 sections, 7 appendices, 2,052 lines, every metric validated |
+| [`ARCHITECTURE.md`](ARCHITECTURE.md) | System architecture — Mermaid diagrams, data flow, IP boundary, ADR index |
+| [`ROADMAP.md`](ROADMAP.md) | Product roadmap — milestones, research frontiers, honest status assessment |
 | [`CHANGELOG.md`](CHANGELOG.md) | Full semantic versioning history |
+| [`NOTICE`](NOTICE) | Third-party software attributions and licenses |
 | [`docs/adr/`](docs/adr/) | 25 Architecture Decision Records |
 | [`docs/governance/`](docs/governance/) | Constitution, API freeze, determinism envelope, metering policy, forbidden outputs |
 | [`docs/operations/`](docs/operations/) | Operations runbook, launch gate matrix, security operations |

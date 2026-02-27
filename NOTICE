@@ -1,0 +1,67 @@
+HyperTensor — The Planetary Operating System for Physics Computation
+Copyright 2025-2026 Bradly Biron Baker Adams / Tigantic Holdings LLC
+All rights reserved.
+
+This product is proprietary software. See LICENSE for terms.
+
+================================================================================
+THIRD-PARTY SOFTWARE NOTICES
+================================================================================
+
+HyperTensor incorporates or depends on the following third-party software.
+Each component is used under its respective license.
+
+--------------------------------------------------------------------------------
+Python Dependencies
+--------------------------------------------------------------------------------
+
+NumPy                   BSD-3-Clause        https://numpy.org
+SciPy                   BSD-3-Clause        https://scipy.org
+PyTorch                 BSD-3-Clause        https://pytorch.org
+FastAPI                 MIT                 https://fastapi.tiangolo.com
+Pydantic                MIT                 https://pydantic.dev
+uvicorn                 BSD-3-Clause        https://uvicorn.org
+httpx                   BSD-3-Clause        https://www.python-httpx.org
+click                   BSD-3-Clause        https://click.palletsprojects.com
+cryptography            Apache-2.0/BSD-3    https://cryptography.io
+PyNaCl                  Apache-2.0          https://pynacl.readthedocs.io
+matplotlib              PSF                 https://matplotlib.org
+h5py                    BSD-3-Clause        https://www.h5py.org
+opt-einsum              MIT                 https://optimized-einsum.readthedocs.io
+
+--------------------------------------------------------------------------------
+Rust Dependencies
+--------------------------------------------------------------------------------
+
+halo2_proofs            MIT/Apache-2.0      https://github.com/zcash/halo2
+wgpu                    MIT/Apache-2.0      https://wgpu.rs
+tokio                   MIT                 https://tokio.rs
+serde                   MIT/Apache-2.0      https://serde.rs
+prost (protobuf)        Apache-2.0          https://github.com/tokio-rs/prost
+criterion               MIT/Apache-2.0      https://github.com/bheisler/criterion.rs
+ed25519-dalek           BSD-3-Clause        https://github.com/dalek-cryptography/ed25519-dalek
+
+--------------------------------------------------------------------------------
+Formal Verification
+--------------------------------------------------------------------------------
+
+Lean 4                  Apache-2.0          https://lean-lang.org
+Mathlib4                Apache-2.0          https://github.com/leanprover-community/mathlib4
+
+--------------------------------------------------------------------------------
+Development Tools
+--------------------------------------------------------------------------------
+
+ruff                    MIT                 https://docs.astral.sh/ruff
+mypy                    MIT                 https://mypy-lang.org
+pytest                  MIT                 https://pytest.org
+MkDocs Material         MIT                 https://squidfunk.github.io/mkdocs-material
+
+================================================================================
+
+Full dependency lists are maintained in:
+  - pyproject.toml       (Python packages)
+  - Cargo.toml           (Rust crates)
+  - requirements-lock.txt (pinned Python dependencies)
+
+For security vulnerabilities in dependencies, see SECURITY.md.
