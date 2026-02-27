@@ -89,7 +89,7 @@ tokio = { version = "1.35", features = ["full"] }
 
 # HTTP server for REST API
 axum = { version = "0.7", optional = true }
-tower = { version = "0.4", optional = true }
+tower = { version = "0.5", optional = true }
 tower-http = { version = "0.5", features = ["cors", "trace", "timeout", "limit"], optional = true }
 
 # Logging
