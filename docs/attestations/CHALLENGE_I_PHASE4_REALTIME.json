@@ -1,0 +1,47 @@
+{
+  "hashes": {
+    "SHA-256": "819bc1ce5df57418db6ec823af1c2bc6aa87406889ea1a0da69d6b0bb61bfa01",
+    "SHA3-256": "6ad0b016bb5e9c5812d23a668115dece7480e3adb890a7fc01705957b015cb80",
+    "BLAKE2b": "b190544f5f3a4289302d36e386052c3310115ef292886795f608fe3f0abfea9ea50485ebac681cc4b741c0a9af759d2b9a8637fd0267ed4401535d7e86ced9e5"
+  },
+  "data": {
+    "pipeline": "Challenge I Phase 4: Real-Time Deployment Architecture",
+    "version": "1.0.0",
+    "scada_ingestion": {
+      "frames_processed": 250,
+      "pmu_readings_processed": 1500,
+      "ingestion_rate_fps": 1454.4
+    },
+    "oracle_kernel": {
+      "total_state_evaluations": 51093560,
+      "throughput_states_per_sec": 17550718.0,
+      "throughput_pass": true
+    },
+    "alert_system": {
+      "total_alerts": 135,
+      "watch": 12,
+      "warning": 9,
+      "critical": 114,
+      "hierarchy_demonstrated": true
+    },
+    "latency": {
+      "detection_to_alert_ns": 144099.0,
+      "detection_to_alert_us": 144.1,
+      "under_1ms": true
+    },
+    "dashboard": {
+      "snapshots_generated": 50,
+      "cascade_detected": false
+    },
+    "exit_criteria": {
+      "scada_ingestion_functional": true,
+      "oracle_throughput_pass": true,
+      "alert_hierarchy_demonstrated": true,
+      "latency_under_1ms": true,
+      "overall_PASS": true
+    },
+    "pipeline_time_seconds": 3.1,
+    "timestamp": "2026-02-28T04:51:42.241004+00:00",
+    "author": "Bradly Biron Baker Adams | Tigantic Holdings LLC"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "hashes": {
+    "SHA-256": "8adcd5221bc55e16b961ca1f718d84186b6327501108e7fc66b81b7b8ed86e91",
+    "SHA3-256": "413c226e8f9e0c0a804541c79571a8f6ff4a567fee940e2aa6aa741cd9718b0c",
+    "BLAKE2b": "8fb67f4d8c637493cb3520acc5723624375b372e427d26287a0006513c164afc05d0dee4885842f1ae1ea2f2f5ff80d33877d3bff196d72ce6e154dd50dfdc6f"
+  },
+  "data": {
+    "pipeline": "Challenge I Phase 3: Continental Grid 100K-Bus",
+    "version": "1.0.0",
+    "topology": {
+      "n_buses": 99500,
+      "n_generators": 24875,
+      "n_regions": 30,
+      "n_ties": 34,
+      "n_internal_lines": 248714,
+      "interconnects": [
+        "Eastern",
+        "WECC",
+        "ERCOT"
+      ]
+    },
+    "monte_carlo": {
+      "n_scenarios": 10000,
+      "scenarios_with_cascade": 10000,
+      "cascade_detected_early_pct": 100.0,
+      "mean_load_shed_mw": 98903.3,
+      "max_load_shed_mw": 149500.0,
+      "mean_freq_nadir_hz": 58.2,
+      "time_s": 3.5
+    },
+    "qtt_compression": {
+      "state_dimension": 398060,
+      "n_bits": 19,
+      "max_rank": 6,
+      "compression_ratio": 26.4,
+      "rank_bounded": true
+    },
+    "memory": {
+      "state_dense_bytes": 3184480,
+      "state_tt_bytes": 158720,
+      "total_mb": 1.17,
+      "under_100mb": true
+    },
+    "oracle": {
+      "detections": 10000,
+      "mean_latency_ns": 76251.8
+    },
+    "exit_criteria": {
+      "scenarios_completed": true,
+      "cascade_early_detection_pct": 100.0,
+      "cascade_early_detection_pass": true,
+      "memory_under_100mb": true,
+      "overall_PASS": true
+    },
+    "pipeline_time_seconds": 24.8,
+    "timestamp": "2026-02-28T04:58:05.178903+00:00",
+    "author": "Bradly Biron Baker Adams | Tigantic Holdings LLC"
+  }
+}

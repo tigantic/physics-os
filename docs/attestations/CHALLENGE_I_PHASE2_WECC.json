@@ -1,0 +1,107 @@
+{
+  "hashes": {
+    "SHA-256": "d1690a24a6c24e5cda0c83f4d8269d9bee4f2eaf5de141288ff5e6949d25f36c",
+    "SHA3-256": "18429d6ec9572cbd7e2e4746739ffa7879b38812aa2d74bcda3a33c0c782fc59",
+    "BLAKE2b": "f4e96a6b3403debcf5bc7201fad4c7dcfd355b6618e9b4f258a4c9ec392b5ff6d9fc92e42fd5c14ffec4a3abd11a3cae85aa72ea5bc609558ba1e140388474f8"
+  },
+  "data": {
+    "pipeline": "Challenge I Phase 2: WECC-Scale Grid Stability",
+    "version": "1.0.0",
+    "topology": {
+      "n_buses": 18000,
+      "n_generators": 4500,
+      "n_internal_lines": 44991,
+      "n_inter_area_ties": 15,
+      "n_areas": 11,
+      "dc_power_flow_time_s": 1.323,
+      "max_line_flow_mw": 14863.2
+    },
+    "renewables": {
+      "total_renewable_injection_mw": 12645.4,
+      "qtt_compressed": true
+    },
+    "cascade_ne_blackout": {
+      "scenario": "2003 Northeast Blackout",
+      "total_load_shed_mw": 30600.0,
+      "total_gen_tripped_mw": 27500.0,
+      "total_affected_mw": 58100.0,
+      "historical_benchmark_mw": 61800.0,
+      "magnitude_match_pct": 94.0,
+      "freq_nadir_hz": 58.2,
+      "cascade_events": 29,
+      "areas_islanded": 3,
+      "passes_10pct": true,
+      "simulation_time_s": 2.54
+    },
+    "cascade_tx_ercot": {
+      "scenario": "2021 Texas ERCOT Failure",
+      "total_load_shed_mw": 35000.0,
+      "total_gen_tripped_mw": 49850.0,
+      "historical_gen_unavailable_mw": 48600.0,
+      "magnitude_match_pct": 97.4,
+      "freq_nadir_hz": 58.2,
+      "historical_freq_nadir_hz": 59.302,
+      "timeline_match_pct": 98.1,
+      "cascade_events": 16,
+      "passes_10pct": true,
+      "simulation_time_s": 2.78
+    },
+    "qtt_compression": {
+      "state_dimension": 72022,
+      "n_bits_qtt": 17,
+      "tt_parameters": 14812,
+      "compression_ratio": 8.8,
+      "max_rank": 32,
+      "memory_dense_bytes": 576176,
+      "memory_tt_bytes": 118496,
+      "memory_reduction_factor": 4.9,
+      "rank_bounded": true,
+      "rank_history_sample": [
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    "exit_criteria": {
+      "criterion": "Both historical cascades reproduced within 10% of post-mortem data",
+      "ne_blackout_pass": true,
+      "tx_ercot_pass": true,
+      "overall_PASS": true
+    },
+    "engine": {
+      "topology": "Synthetic WECC (small-world per area + inter-ties)",
+      "power_flow": "DC (sparse B-matrix, scipy spsolve)",
+      "transient": "Area-aggregated swing equation, RK4",
+      "protection": "Overcurrent, UFLS (4-stage), gen UF/overspeed",
+      "compression": "TT-SVD (quantics fold) on full state vector",
+      "renewables": "Beta(solar) + Weibull(wind) stochastic model"
+    },
+    "physics": {
+      "model": "Area-aggregated classical swing equation",
+      "swing_equation": "2H d\u03c9/dt = P_m \u2212 P_e \u2212 D(\u03c9\u22121)",
+      "tie_flow": "P_tie = (\u03b4_i \u2212 \u03b4_j) / X_tie",
+      "base_mva": 100.0,
+      "frequency_hz": 60.0
+    },
+    "pipeline_time_seconds": 7.0,
+    "timestamp": "2026-02-28T04:57:36.182919+00:00",
+    "author": "Bradly Biron Baker Adams | Tigantic Holdings LLC"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "hashes": {
+    "SHA-256": "cd740744afc108b1084adfbdd9bb1d3a74e4a998cc7b67a927fec34ad7bc0c19",
+    "SHA3-256": "6a186f1f537181a69406390b80c06c60ea17be28262d431732d7fe4323e13e99",
+    "BLAKE2b": "a56f833d7436b52764c8d685fb2dd37af545d23f747772f2d72c75f80255960f36c90ca49ed0140a8cb73d59e325f75afaf0ff403bf74799e2af5674a9f16a5c"
+  },
+  "data": {
+    "pipeline": "Challenge I Phase 5: Trustless Regulatory Certification",
+    "version": "1.0.0",
+    "zk_swing_equation": {
+      "proofs_generated": 8,
+      "proofs_verified": 8,
+      "constraints_total": 80,
+      "constraints_satisfied": 80,
+      "all_pass": true
+    },
+    "n1_contingency": {
+      "contingencies": 130,
+      "all_survived": true,
+      "merkle_root": "7c5bac0e14fe60afc96bde10cd500374cf1b25bdc6a3d56bb92e8f64f17f051f",
+      "groth16_a": "0f04b53fd3e74ddf149243cf9cb51013",
+      "groth16_b": "6d6065915d6f7735dd361ec9acdad187",
+      "groth16_c": "dec935f941a4f0be9877d34d9d2c6d0e",
+      "verification_time_us": 21.7
+    },
+    "onchain_verifier": {
+      "contract": "HyperTensorGridStabilityVerifier",
+      "estimated_gas": 214450,
+      "gas_under_300k": true,
+      "source_lines": 110
+    },
+    "multi_party": {
+      "parties": 5,
+      "all_stable": true,
+      "protocol_rounds": 3
+    },
+    "nerc_package": {
+      "standards_referenced": 12,
+      "package_hash": "02a8935527e7b9a1c2f068b40b78a96b"
+    },
+    "exit_criteria": {
+      "zk_swing_verified": true,
+      "n1_all_survived": true,
+      "gas_under_300k": true,
+      "multiparty_stable": true,
+      "nerc_package_generated": true,
+      "overall_PASS": true
+    },
+    "pipeline_time_seconds": 0.1,
+    "timestamp": "2026-02-28T04:57:18.271152+00:00",
+    "author": "Bradly Biron Baker Adams | Tigantic Holdings LLC"
+  }
+}
