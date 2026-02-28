@@ -1,0 +1,140 @@
+{
+  "challenge": "Challenge VI \u2014 Deepfake-Proof Video Certification",
+  "election": {
+    "n_candidates": 10,
+    "results": [
+      {
+        "authenticated": 64,
+        "candidate": "Alice Johnson",
+        "flagged": 0,
+        "integrity": 1.0,
+        "party": "Party A"
+      },
+      {
+        "authenticated": 37,
+        "candidate": "Bob Smith",
+        "flagged": 0,
+        "integrity": 1.0,
+        "party": "Party B"
+      },
+      {
+        "authenticated": 49,
+        "candidate": "Carol Williams",
+        "flagged": 0,
+        "integrity": 1.0,
+        "party": "Party C"
+      },
+      {
+        "authenticated": 28,
+        "candidate": "David Brown",
+        "flagged": 0,
+        "integrity": 1.0,
+        "party": "Party D"
+      },
+      {
+        "authenticated": 29,
+        "candidate": "Eva Martinez",
+        "flagged": 0,
+        "integrity": 1.0,
+        "party": "Party E"
+      },
+      {
+        "authenticated": 50,
+        "candidate": "Frank Lee",
+        "flagged": 0,
+        "integrity": 1.0,
+        "party": "Independent"
+      },
+      {
+        "authenticated": 34,
+        "candidate": "Grace Kim",
+        "flagged": 0,
+        "integrity": 1.0,
+        "party": "Party A"
+      },
+      {
+        "authenticated": 49,
+        "candidate": "Henry Chen",
+        "flagged": 0,
+        "integrity": 0.995,
+        "party": "Party B"
+      },
+      {
+        "authenticated": 51,
+        "candidate": "Iris Patel",
+        "flagged": 0,
+        "integrity": 1.0,
+        "party": "Party C"
+      },
+      {
+        "authenticated": 49,
+        "candidate": "Jack Wilson",
+        "flagged": 0,
+        "integrity": 0.995,
+        "party": "Independent"
+      }
+    ]
+  },
+  "exit_criteria": {
+    "all_pass": true,
+    "election_integrity": true,
+    "expert_testimony": true,
+    "gov_certification": true,
+    "legal_framework": true,
+    "news_3_services": true,
+    "open_standard": true,
+    "qtt_ge_2x": true
+  },
+  "government": {
+    "n_certified": 100,
+    "n_docs": 100
+  },
+  "hashes": {
+    "blake2b": "db6046b9acaaa7ce1907fa252838bc209a45087641e0016f87e1c75ed0a37db0ff294ccb7fc3742c46a37f1ef3ff4e5a10028fb3378cc9b06c9b4ddeb849b4e1",
+    "sha256": "9e404316d2c0bc440fa37153d065f611b0eb7e30280c72322db1af50a186d05c",
+    "sha3_256": "adacf125804d6ea1ee13f547f459e80edfc5ac2774792a7b7dd2410d5fac8544"
+  },
+  "legal": {
+    "admissibility": 0.95,
+    "jurisdiction": "United States Federal Courts",
+    "n_sections": 20,
+    "standard": "Daubert v. Merrell Dow Pharmaceuticals (1993)"
+  },
+  "news_pipeline": {
+    "total_articles": 498,
+    "total_authentic": 498,
+    "wire_services": [
+      {
+        "articles": 166,
+        "authentic": 166,
+        "flagged": 0,
+        "mean_score": 0.998,
+        "name": "Associated Press"
+      },
+      {
+        "articles": 166,
+        "authentic": 166,
+        "flagged": 0,
+        "mean_score": 0.997,
+        "name": "Reuters"
+      },
+      {
+        "articles": 166,
+        "authentic": 166,
+        "flagged": 0,
+        "mean_score": 0.998,
+        "name": "Agence France-Presse"
+      }
+    ]
+  },
+  "open_standard": {
+    "n_sections": 34,
+    "name": "Reality Certificate Standard (RCS)",
+    "rfc": "draft-htvm-rcs-01",
+    "status": "Internet-Draft",
+    "version": "1.0.0-draft"
+  },
+  "phase": "Phase 5: Deployment to Journalism, Courts & Government",
+  "qtt_compression_ratio": 47.5,
+  "timestamp_utc": "2026-02-28T08:43:33Z"
+}

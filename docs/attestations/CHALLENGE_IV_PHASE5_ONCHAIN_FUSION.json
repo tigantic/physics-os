@@ -1,0 +1,73 @@
+{
+  "challenge": "Challenge IV \u2014 Fusion Energy",
+  "equilibrium": {
+    "beta_poloidal": 0.0136,
+    "beta_toroidal": 0.0136,
+    "li": 0.6792,
+    "shafranov_shift_m": 0.0012
+  },
+  "exit_criteria": {
+    "all_pass": true,
+    "investor_protocol": true,
+    "mhd_zk_circuit": true,
+    "nrc_package": true,
+    "on_chain_300k": true,
+    "q_factor_proof": true,
+    "qtt_ge_2x": true
+  },
+  "hashes": {
+    "blake2b": "d611da2292fa2c998db37a668f1cb8f66cad32bc00934fd0e6c3795396b7995e9774f4154fcd6577e9017763e5250c934661d972d82b93ff5080a159c3188cf7",
+    "sha256": "9b4f70926f9cffae8bb26d888f64aa08483ebca53417247a92957d548523cacb",
+    "sha3_256": "0df0d843e4dc011afa262a2b5fca7bccc5f463d21ad18b9d556fb89e3d4b44e8"
+  },
+  "investor_dd": {
+    "n_investors": 5,
+    "n_verified": 5
+  },
+  "mhd_circuit": {
+    "constraints": [
+      {
+        "gates": 36864,
+        "name": "grad_shafranov_elliptic",
+        "type": "grad_shafranov"
+      },
+      {
+        "gates": 128,
+        "name": "pressure_flux",
+        "type": "pressure"
+      },
+      {
+        "gates": 128,
+        "name": "current_function",
+        "type": "current"
+      },
+      {
+        "gates": 192,
+        "name": "safety_factor",
+        "type": "current"
+      }
+    ],
+    "total_gates": 37312
+  },
+  "nrc_package": {
+    "id": "HTVM-NRC-d0459fec6efd897b",
+    "n_sections": 20,
+    "version": "1.0.0"
+  },
+  "on_chain": {
+    "gas_cost": 190000,
+    "proof_size_bytes": 96,
+    "under_300k": true
+  },
+  "phase": "Phase 5: On-Chain Fusion Verification",
+  "q_factor": {
+    "P_fusion_MW": 99.3,
+    "Q": 3.97,
+    "lawson_satisfied": false,
+    "proof_hash": "2a23c8cbf69c43d104087a7af3af9135...",
+    "tau_E_s": 0.376,
+    "triple_product": 9.470697360162769e+20
+  },
+  "qtt_compression_ratio": 2.5,
+  "timestamp_utc": "2026-02-28T08:43:05Z"
+}

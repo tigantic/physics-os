@@ -1,0 +1,97 @@
+{
+  "challenge": "Challenge III \u2014 Climate Tipping Points",
+  "ensemble": {
+    "consensus_achieved": true,
+    "consensus_level": 0.75,
+    "mean_warming": -0.007,
+    "n_members": 20,
+    "p_value": 0.016,
+    "std_warming": 0.029
+  },
+  "exit_criteria": {
+    "all_pass": true,
+    "ensemble_proof": true,
+    "geo_certificate": true,
+    "multi_nation_3plus": true,
+    "ns_zk_circuit": true,
+    "qtt_ge_2x": true,
+    "standards_package": true
+  },
+  "geoengineering": {
+    "confidence": 0.99,
+    "hash": "8d68c53abb57d213f3ac0a5ce5c8685a...",
+    "injection_tg": 8.0,
+    "intervention": "Stratospheric Aerosol Injection (SAI)",
+    "precip_change_pct": -6.4,
+    "temp_reduction_K": 3.2
+  },
+  "hashes": {
+    "blake2b": "d5d6b2a2d857f8af5dd78d77e0f5b89a5f7eb1342b2fad8d33bd2f00c87d0d2d67867f910213ecb37e2bf43c2b8ea1b2124691b50706629f1c3a93185a737587",
+    "sha256": "aa80628286101db5907b42b0dcb1bc8e6039868bb453b433f36bc8602390bdbe",
+    "sha3_256": "d7cf3098ead88b9fa960968ac47c69b18f2b28b2eca9fb874d7f9a97eac1e01b"
+  },
+  "multi_nation": {
+    "n_signatories": 5,
+    "n_verified": 5,
+    "signatories": [
+      {
+        "nation": "United States",
+        "verified": true
+      },
+      {
+        "nation": "European Union",
+        "verified": true
+      },
+      {
+        "nation": "China",
+        "verified": true
+      },
+      {
+        "nation": "India",
+        "verified": true
+      },
+      {
+        "nation": "Brazil",
+        "verified": true
+      }
+    ]
+  },
+  "ns_circuit": {
+    "constraints": [
+      {
+        "gates": 28672,
+        "name": "momentum_x",
+        "type": "momentum",
+        "wires": 16384
+      },
+      {
+        "gates": 28672,
+        "name": "momentum_y",
+        "type": "momentum",
+        "wires": 16384
+      },
+      {
+        "gates": 12288,
+        "name": "continuity",
+        "type": "continuity",
+        "wires": 8192
+      },
+      {
+        "gates": 24576,
+        "name": "energy_conservation",
+        "type": "energy",
+        "wires": 12288
+      }
+    ],
+    "proof_gas": 258000,
+    "total_gates": 94208
+  },
+  "phase": "Phase 5: Treaty-Grade On-Chain Climate Proofs",
+  "qtt_compression_ratio": 17.1,
+  "standards": {
+    "id": "HTVM-CLIMATE-fd9bcd6cd491ec79",
+    "n_sections": 13,
+    "version": "1.0.0"
+  },
+  "timestamp_utc": "2026-02-28T08:41:38Z"
+}

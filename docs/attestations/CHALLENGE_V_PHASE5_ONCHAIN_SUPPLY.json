@@ -1,0 +1,87 @@
+{
+  "certificate": {
+    "company": "Global Logistics Corp",
+    "level": "Gold",
+    "score": 87.6,
+    "tx": "0xdacef21a548f753d3b1a582fbad625..."
+  },
+  "challenge": "Challenge V \u2014 Supply Chain Resilience",
+  "euler_circuit": {
+    "constraints": [
+      {
+        "gates": 250,
+        "name": "mass_conservation",
+        "type": "conservation"
+      },
+      {
+        "gates": 840,
+        "name": "momentum_conservation",
+        "type": "momentum"
+      },
+      {
+        "gates": 100,
+        "name": "boundary_conditions",
+        "type": "boundary"
+      },
+      {
+        "gates": 150,
+        "name": "kirchhoff_balance",
+        "type": "conservation"
+      }
+    ],
+    "proof_gas": 190000,
+    "total_gates": 1340
+  },
+  "exit_criteria": {
+    "all_pass": true,
+    "corporate_cert": true,
+    "euler_zk_circuit": true,
+    "insurance_risk_score": true,
+    "n1_resilience_proof": true,
+    "qtt_ge_2x": true,
+    "trade_finance_pricing": true
+  },
+  "hashes": {
+    "blake2b": "fd541382211f3f2213cd44e39c8a24b038780236b9fd1c4182ba7b54399b8e6c493ab8a2fd618f49fae2277415590857e4821cdfbf240c0b045f940d59d67168",
+    "sha256": "e7283c7e6cc8a5fd937965d19760dc282e3f3a71ce3ae6a9d947670d52f40ca8",
+    "sha3_256": "b6bcabcd75df5c2f0bbf2e870669636dbada575b8f53ba3de9cf98afbd005e54"
+  },
+  "insurance": {
+    "ale_usd": 1956605.0,
+    "grade": "A",
+    "score": 87.6,
+    "tail_95": 4087821.0
+  },
+  "n1_resilience": {
+    "n_resilient": 50,
+    "n_tests": 50,
+    "score": 1.0,
+    "verified": true,
+    "worst_loss": 0.0177
+  },
+  "phase": "Phase 5: On-Chain Supply Chain Proofs",
+  "qtt_compression_ratio": 2.8,
+  "timestamp_utc": "2026-02-28T08:43:20Z",
+  "trade_finance": [
+    {
+      "instrument": "Letter of Credit",
+      "rate_bps": 56.2
+    },
+    {
+      "instrument": "Trade Insurance",
+      "rate_bps": 33.7
+    },
+    {
+      "instrument": "Factoring",
+      "rate_bps": 89.9
+    },
+    {
+      "instrument": "Supply Chain Finance",
+      "rate_bps": 45.0
+    },
+    {
+      "instrument": "Forfaiting",
+      "rate_bps": 67.4
+    }
+  ]
+}
