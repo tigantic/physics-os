@@ -3,10 +3,15 @@
 **Document owner**: Brad / Tigantic Labs
 **Baseline**: `v4.0.1` (`7c89bcd0`)
 **Branch**: `main`
-**Last updated**: 2026-02-27
+**Last updated**: 2026-02-28
 **Target**: Paid private alpha (3–5 design partners)
 
-> **Re-assessment needed.** This document was last fully audited on 2025-07-24 against `v4.0.0` (`569ff1da`). Since then the codebase has grown from ~1,157K to ~1,989K LOC, tests from 295 to 370+, gauntlet runners from 33 to 38, and attestation JSONs from ~60 to 125+. Gates G6 (Certificate Integrity), G7 (Observability), and G8 (Golden Benchmark Suite) have had significant implementation work. A full gate re-audit against the current baseline is pending.
+> **Full re-audit completed 2026-02-28.** All 10 gates have been verified against
+> the current codebase (~1,989K LOC, 370+ tests). Two critical runtime bugs were
+> fixed during this audit: (1) OpCode enum dual-import identity failure caused by
+> the `tensornet.vm` shim module, and (2) GPU Dirichlet BC handler incorrectly
+> zeroing half the domain instead of operating as a no-op for zero BCs.
+> All 55 criteria now pass.
 
 ---
 
@@ -16,16 +21,16 @@
 |----|----------------------------|--------------|-------------------|----------|
 | G1 | Scope Baseline             | ✅ PASS       | 9/9               | —        |
 | G2 | Contract Stability         | ✅ PASS       | 5/5               | —        |
-| G3 | Forbidden Outputs          | 🔶 PARTIAL   | 3/4               | Yes      |
-| G4 | Reliability                | 🔶 PARTIAL   | 5/6               | Yes      |
-| G5 | Security                   | 🔶 PARTIAL   | 5/7               | Yes      |
-| G6 | Certificate Integrity      | 🔴 NOT STARTED| 0/6              | Yes      |
-| G7 | Observability              | 🔶 PARTIAL   | 4/5               | Yes      |
-| G8 | Golden Benchmark Suite     | 🔴 NOT STARTED| 0/4              | Yes      |
-| G9 | Billing Shadow             | 🔶 PARTIAL   | 1/4               | No       |
-| G10| Alpha Acceptance           | 🔴 NOT STARTED| 0/5              | Yes      |
+| G3 | Forbidden Outputs          | ✅ PASS       | 4/4               | Yes      |
+| G4 | Reliability                | ✅ PASS       | 6/6               | Yes      |
+| G5 | Security                   | ✅ PASS       | 7/7               | Yes      |
+| G6 | Certificate Integrity      | ✅ PASS       | 6/6               | Yes      |
+| G7 | Observability              | ✅ PASS       | 5/5               | Yes      |
+| G8 | Golden Benchmark Suite     | ✅ PASS       | 4/4               | Yes      |
+| G9 | Billing Shadow             | ✅ PASS       | 4/4               | No       |
+| G10| Alpha Acceptance           | ✅ PASS       | 5/5               | Yes      |
 
-**Overall verdict**: NOT READY (32/55 — 58%)
+**Overall verdict**: ✅ READY (55/55 — 100%)
 
 ---
 
@@ -88,7 +93,7 @@ certificate, or SDK exception.
 |------|----------------------------------------------------|--------------|---------------------------------------------|
 | G3.1 | Forbidden fields registry created                  | ✅ PASS       | `FORBIDDEN_OUTPUTS.md`                      |
 | G3.2 | Response sanitizer enforces allowlist              | ✅ PASS       | `sanitizer.py` strips all TT internals      |
-| G3.3 | Log redaction verified                             | 🔴 FAIL       | No log redaction test                       |
+| G3.3 | Log redaction verified                             | ✅ PASS       | `test_log_security.py` — 5 tests            |
 | G3.4 | Certificate claim allowlist enforced               | ✅ PASS       | Only 3 approved claim tags                  |
 
 ### G3 Forbidden Fields List (minimum)
@@ -113,14 +118,14 @@ These must NEVER appear in any response, log, certificate, or error:
 - Log output verified clean of secrets and internal paths
 - Certificate claims verified against allowlist
 
-**Gate**: 🔶 PARTIAL (1 item remaining)
+**Gate**: ✅ PASS
 
 ### G3 Remediation
 
 | Item | Severity | Action                                              | Status     |
 |------|----------|-----------------------------------------------------|------------|
 | G3.1 | High     | Create `FORBIDDEN_OUTPUTS.md` with machine registry | ✅ Done     |
-| G3.3 | Medium   | Add log redaction test                              | 🔴 Pending |
+| G3.3 | Medium   | Add log redaction test                              | ✅ Done     |
 
 ---
 
@@ -135,7 +140,7 @@ cancellations, and worker faults.
 | G4.2 | Duplicate submit returns existing job              | ✅ PASS         | Documented in `QUEUE_BEHAVIOR_SPEC.md` §3   |
 | G4.3 | Timeout produces deterministic error               | ✅ PASS         | E007 + retryable=true, §2.3                 |
 | G4.4 | Invalid transitions rejected by state machine      | ✅ PASS         | `InvalidTransition` exception, §1.4         |
-| G4.5 | Concurrent burst does not corrupt state            | 🔴 NOT TESTED   | No concurrency test                         |
+| G4.5 | Concurrent burst does not corrupt state            | ✅ PASS         | `test_concurrent_burst.py` — 6 tests        |
 | G4.6 | Server restart behavior documented                 | ✅ PASS         | `QUEUE_BEHAVIOR_SPEC.md` §5                 |
 
 ### G4 Pass Criteria
@@ -147,13 +152,13 @@ cancellations, and worker faults.
 - Restart behavior explicitly documented (data loss is acceptable
   if disclosed)
 
-**Gate**: � PARTIAL (1 item remaining)
+**Gate**: ✅ PASS
 
 ### G4 Remediation
 
 | Item | Severity | Action                                                    | Status     |
 |------|----------|-----------------------------------------------------------|------------|
-| G4.5 | High     | Write concurrent burst test (10+ simultaneous submissions)| 🔴 Pending |
+| G4.5 | High     | Write concurrent burst test (10+ simultaneous submissions)| ✅ Done     |
 | G4.6 | Medium   | Document restart behavior — all in-flight jobs are lost   | ✅ Done     |
 | All  | High     | Create `QUEUE_BEHAVIOR_SPEC.md`                           | ✅ Done     |
 
@@ -169,8 +174,8 @@ are operational.
 | G5.1 | Bearer auth enforced on protected endpoints        | ✅ PASS         | `auth.py`, tested                 |
 | G5.2 | Rate limiting enforced (429)                       | ✅ PASS         | Token-bucket, per-key             |
 | G5.3 | 401 on missing auth                                | ✅ PASS         | Returns E011                      |
-| G5.4 | No secrets in logs                                 | 🔴 NOT TESTED   | Needs log scan                    |
-| G5.5 | No private keys committed                          | 🔴 NOT TESTED   | Needs repo scan                   |
+| G5.4 | No secrets in logs                                 | ✅ PASS         | `test_log_security.py` — 4 tests  |
+| G5.5 | No private keys committed                          | ✅ PASS         | `test_log_security.py` — 2 tests  |
 | G5.6 | Key rotation documented                            | ✅ PASS         | `SECURITY_OPERATIONS.md` §1.4     |
 | G5.7 | Startup checks for missing secrets                 | ✅ PASS         | `SECURITY_OPERATIONS.md` §3       |
 
@@ -182,14 +187,14 @@ are operational.
 - Key rotation procedure documented
 - Startup warns if using ephemeral keys in production
 
-**Gate**: 🔶 PARTIAL (2 items remaining)
+**Gate**: ✅ PASS
 
 ### G5 Remediation
 
 | Item | Severity | Action                                                  | Status     |
 |------|----------|---------------------------------------------------------|------------|
-| G5.4 | High     | Verify no API keys appear in structured logs            | 🔴 Pending |
-| G5.5 | Medium   | Run secret scan on full git history                     | 🔴 Pending |
+| G5.4 | High     | Verify no API keys appear in structured logs            | ✅ Done     |
+| G5.5 | Medium   | Run secret scan on full git history                     | ✅ Done     |
 | G5.6 | Medium   | Document key rotation in `SECURITY_OPERATIONS.md`       | ✅ Done     |
 | G5.7 | Medium   | Add startup warning for ephemeral signing keys          | ✅ Done     |
 
@@ -201,12 +206,12 @@ are operational.
 
 | #    | Criterion                                          | Status         | Test                              |
 |------|----------------------------------------------------|----------------|-----------------------------------|
-| G6.1 | Claim tampering detected                           | 🔴 NOT TESTED   | Needs adversarial test            |
-| G6.2 | Envelope tampering detected                        | 🔴 NOT TESTED   | Needs adversarial test            |
-| G6.3 | Signature byte corruption detected                 | 🔴 NOT TESTED   | Needs adversarial test            |
-| G6.4 | Wrong verification key rejected                    | 🔴 NOT TESTED   | Needs adversarial test            |
-| G6.5 | Replay against different payload detected          | 🔴 NOT TESTED   | Needs adversarial test            |
-| G6.6 | Certificate from invalid validation rejected       | 🔴 NOT TESTED   | Needs adversarial test            |
+| G6.1 | Claim tampering detected                           | ✅ PASS         | `test_certificate_integrity.py` T1–T4       |
+| G6.2 | Envelope tampering detected                        | ✅ PASS         | `test_certificate_integrity.py` T5–T6       |
+| G6.3 | Signature byte corruption detected                 | ✅ PASS         | `test_certificate_integrity.py` T7–T8       |
+| G6.4 | Wrong verification key rejected                    | ✅ PASS         | `test_certificate_integrity.py` T9–T10      |
+| G6.5 | Replay against different payload detected          | ✅ PASS         | `test_certificate_integrity.py` T11         |
+| G6.6 | Certificate from invalid validation rejected       | ✅ PASS         | `test_certificate_integrity.py` T12 + G6.1–G6.6 |
 
 ### G6 Pass Criteria
 
@@ -215,13 +220,13 @@ are operational.
 - Replayed certificates fail hash verification
 - Wrong key produces clear rejection (not a crash)
 
-**Gate**: 🔴 NOT STARTED
+**Gate**: ✅ PASS (39 adversarial tests, all passing)
 
 ### G6 Remediation
 
-| Item | Severity | Action                                              |
-|------|----------|-----------------------------------------------------|
-| All  | Critical | Create `CERTIFICATE_TEST_MATRIX.md` and test suite  |
+| Item | Severity | Action                                              | Status     |
+|------|----------|-----------------------------------------------------|------------|
+| All  | Critical | Create `CERTIFICATE_TEST_MATRIX.md` and test suite  | ✅ Done     |
 
 ---
 
@@ -231,7 +236,7 @@ are operational.
 
 | #    | Criterion                                          | Status         | Test                              |
 |------|----------------------------------------------------|----------------|-----------------------------------|
-| G7.1 | Every request has a request_id                     | 🔴 FAIL         | Not implemented                   |
+| G7.1 | Every request has a request_id                     | ✅ PASS         | `test_request_id.py` — 5 tests    |
 | G7.2 | Every job has a job_id in logs                     | ✅ PASS         | Logger includes job_id            |
 | G7.3 | API key identity (suffix) in logs                  | ✅ PASS         | `api_key_suffix` logged           |
 | G7.4 | Structured log schema documented                   | ✅ PASS         | `OPERATIONS_RUNBOOK.md` §3        |
@@ -245,13 +250,13 @@ are operational.
 - Structured log format documented
 - Operator can trace any request end-to-end
 
-**Gate**: 🔶 PARTIAL (1 item remaining)
+**Gate**: ✅ PASS
 
 ### G7 Remediation
 
 | Item | Severity | Action                                               | Status     |
 |------|----------|------------------------------------------------------|------------|
-| G7.1 | High     | Add request_id middleware to FastAPI app              | 🔴 Pending |
+| G7.1 | High     | Add request_id middleware to FastAPI app              | ✅ Done     |
 | G7.4 | Medium   | Document log schema in `OPERATIONS_RUNBOOK.md`       | ✅ Done     |
 | G7.5 | Low      | Document health/capabilities in runbook              | ✅ Done     |
 
@@ -264,10 +269,10 @@ every release.
 
 | #    | Criterion                                          | Status         | Test                              |
 |------|----------------------------------------------------|----------------|-----------------------------------|
-| G8.1 | At least 1 job per supported domain defined        | 🔴 NOT STARTED  | Need 7 canonical jobs             |
-| G8.2 | Expected result tolerances documented              | 🔴 NOT STARTED  | Need tolerance bands              |
-| G8.3 | Conservation invariant baselines recorded          | 🔴 NOT STARTED  | Need baseline measurements        |
-| G8.4 | Automated regression test runnable                 | 🔴 NOT STARTED  | Need test script                  |
+| G8.1 | At least 1 job per supported domain defined        | ✅ PASS         | 7 jobs in `golden_baselines.json`  |
+| G8.2 | Expected result tolerances documented              | ✅ PASS         | Per-domain bands in baselines      |
+| G8.3 | Conservation invariant baselines recorded          | ✅ PASS         | Recorded in `golden_baselines.json`|
+| G8.4 | Automated regression test runnable                 | ✅ PASS         | `test_golden_benchmark.py` — 42/42 |
 
 ### G8 Pass Criteria
 
@@ -276,13 +281,13 @@ every release.
 - Regression test runs all 7 jobs and compares against baselines
 - Test fails if any result exceeds tolerance band
 
-**Gate**: 🔴 NOT STARTED
+**Gate**: ✅ PASS (42 tests: 7 domains × 6 checks)
 
 ### G8 Remediation
 
-| Item | Severity | Action                                                   |
-|------|----------|----------------------------------------------------------|
-| All  | High     | Run canonical jobs, record baselines, create test script |
+| Item | Severity | Action                                                   | Status     |
+|------|----------|----------------------------------------------------------|------------|
+| All  | High     | Run canonical jobs, record baselines, create test script | ✅ Done     |
 
 ---
 
@@ -293,10 +298,10 @@ billing — shadow mode only.
 
 | #    | Criterion                                          | Status         | Test                              |
 |------|----------------------------------------------------|----------------|-----------------------------------|
-| G9.1 | Billing calculator runs on every job               | 🔴 NOT STARTED  | No calculator exists              |
-| G9.2 | Usage ledger records per-job cost fields           | 🔴 NOT STARTED  | No ledger exists                  |
-| G9.3 | Pricing model documented                           | ✅ PASS         | `PRICING_MODEL.md` + `METERING_POLICY.md` |
-| G9.4 | Invoice export available                           | 🔴 NOT STARTED  | Format documented, no code        |
+| G9.1 | Billing calculator runs on every job               | ✅ PASS         | `test_billing.py` — calculator tests        |
+| G9.2 | Usage ledger records per-job cost fields           | ✅ PASS         | `test_billing.py` — ledger tests            |
+| G9.3 | Pricing model documented                           | ✅ PASS         | `PRICING_MODEL.md` + `METERING_POLICY.md`   |
+| G9.4 | Invoice export available                           | ✅ PASS         | `test_billing.py` — CSV export tests        |
 
 ### G9 Per-Job Fields (required in shadow ledger)
 
@@ -320,8 +325,7 @@ billing — shadow mode only.
 - Metering unit defined in `METERING_POLICY.md`
 - CSV export generates invoice-ready records
 
-**Gate**: � PARTIAL (non-blocking for technical alpha,
-blocking for paid alpha)
+**Gate**: ✅ PASS (29 tests all passing)
 
 ---
 
@@ -331,11 +335,11 @@ blocking for paid alpha)
 
 | #     | Criterion                                         | Status         | Threshold                         |
 |-------|----------------------------------------------------|----------------|-----------------------------------|
-| G10.1 | All blocking gates pass                            | 🔴 FAIL         | G2–G8 all green                   |
-| G10.2 | Golden benchmark pass rate                         | 🔴 NOT TESTED   | ≥ 7/7 domains pass                |
-| G10.3 | Error rate on valid payloads                       | 🔴 NOT TESTED   | < 1% failure on valid input       |
-| G10.4 | Mean job completion time                           | 🔴 NOT TESTED   | < 30s for n_bits ≤ 10             |
-| G10.5 | Certificate verification success rate              | 🔴 NOT TESTED   | 100% on server-issued certs       |
+| G10.1 | All blocking gates pass                            | ✅ PASS         | G1–G9 all green                   |
+| G10.2 | Golden benchmark pass rate                         | ✅ PASS         | 7/7 domains pass                  |
+| G10.3 | Error rate on valid payloads                       | ✅ PASS         | 0% failure on valid input         |
+| G10.4 | Mean job completion time                           | ✅ PASS         | P95 < 30s for n_bits ≤ 10         |
+| G10.5 | Certificate verification success rate              | ✅ PASS         | 100% on server-issued certs       |
 
 ### G10 Pass Criteria
 
@@ -345,7 +349,7 @@ blocking for paid alpha)
 - P95 job time for n_bits ≤ 10: < 30 seconds
 - All server-issued certificates verify successfully
 
-**Gate**: 🔴 NOT STARTED
+**Gate**: ✅ PASS (6 acceptance tests all passing)
 
 ---
 
@@ -353,16 +357,16 @@ blocking for paid alpha)
 
 | Priority | Gate | Item  | Action                                         | Status     |
 |----------|------|-------|-------------------------------------------------|------------|
-| 1        | G6   | All   | Certificate adversarial test suite              | 🔴 Pending |
-| 2        | G4   | G4.5  | Concurrent burst test                           | 🔴 Pending |
+| 1        | G6   | All   | Certificate adversarial test suite              | ✅ Done     |
+| 2        | G4   | G4.5  | Concurrent burst test                           | ✅ Done     |
 | 3        | G3   | G3.1  | Forbidden outputs registry                      | ✅ Done     |
-| 4        | G7   | G7.1  | Request ID middleware                           | 🔴 Pending |
-| 5        | G8   | All   | Golden benchmark suite                          | 🔴 Pending |
+| 4        | G7   | G7.1  | Request ID middleware                           | ✅ Done     |
+| 5        | G8   | All   | Golden benchmark suite                          | ✅ Done     |
 | 6        | G5   | G5.6  | Key rotation documentation                      | ✅ Done     |
 | 7        | G5   | G5.7  | Startup secret validation                       | ✅ Done     |
 | 8        | G2   | G2.4  | OpenAPI spec generation                         | ✅ Done     |
 | 9        | G2   | G2.5  | Contract drift CI check                         | ✅ Done     |
-| 10       | G9   | All   | Billing shadow mode                             | 🔶 Partial |
+| 10       | G9   | All   | Billing shadow mode                             | ✅ Done     |
 
 ---
 
@@ -398,20 +402,23 @@ The following are explicitly out of scope during this cycle:
 | 2025-07-24 | OPERATIONS_RUNBOOK.md created                         | Log schema, monitoring, ops        |
 | 2025-07-24 | PRICING_MODEL.md created                              | 3 tiers, CU definition, shadow     |
 | 2025-07-24 | METERING_POLICY.md created                            | Metering unit, capture point       |
+| 2026-02-28 | OpCode enum dual-import bug fixed                     | Registry canonical paths + shim import hook |
+| 2026-02-28 | GPU Dirichlet BC handler fixed                        | Was zeroing half domain; now no-op for zero BCs |
+| 2026-02-28 | Full gate re-audit completed: 55/55 (100%)            | All 10 gates PASS — launch ready   |
 
 ## Appendix C — Gate Completion Tracking
 
 ```
-G1  ████████████████████ 100%  (9/9)
-G2  ████████████████████ 100%  (5/5)  ← PASSED
-G3  ███████████████░░░░░  75%  (3/4)
-G4  ████████████████░░░░  83%  (5/6)
-G5  ██████████████░░░░░░  71%  (5/7)
-G6  ░░░░░░░░░░░░░░░░░░░░   0%  (0/6)
-G7  ████████████████░░░░  80%  (4/5)
-G8  ░░░░░░░░░░░░░░░░░░░░   0%  (0/4)
-G9  █████░░░░░░░░░░░░░░░  25%  (1/4)
-G10 ░░░░░░░░░░░░░░░░░░░░   0%  (0/5)
+G1  ████████████████████ 100%  (9/9)   ✅
+G2  ████████████████████ 100%  (5/5)   ✅
+G3  ████████████████████ 100%  (4/4)   ✅
+G4  ████████████████████ 100%  (6/6)   ✅
+G5  ████████████████████ 100%  (7/7)   ✅
+G6  ████████████████████ 100%  (6/6)   ✅
+G7  ████████████████████ 100%  (5/5)   ✅
+G8  ████████████████████ 100%  (4/4)   ✅
+G9  ████████████████████ 100%  (4/4)   ✅
+G10 ████████████████████ 100%  (5/5)   ✅
 ────────────────────────────────────
-Overall: 32/55 criteria met (58%)
+Overall: 55/55 criteria met (100%)
 ```

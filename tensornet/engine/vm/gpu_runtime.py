@@ -775,10 +775,13 @@ class GPURuntime:
             left_val = float(params.get("left", 0.0))
             right_val = float(params.get("right", 0.0))
             if abs(left_val) < 1e-30 and abs(right_val) < 1e-30:
-                # Homogeneous Dirichlet = same as PEC
-                return GPURuntime._apply_bc_gpu(
-                    tensor, BCKind.PEC, params
-                )
+                # Homogeneous zero Dirichlet: for confined wave packets
+                # and smooth fields, boundary values are naturally near
+                # zero.  Aggressively zeroing QTT cores would corrupt
+                # interior values (zeroing the MSB core's j=0 slice
+                # wipes the entire left half of the domain, not just
+                # the boundary point).  Match the CPU runtime: no-op.
+                return tensor
             return tensor
 
         if kind == BCKind.NEUMANN:
