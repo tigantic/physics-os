@@ -1,8 +1,8 @@
 <div align="center">
 
-# HyperTensor Architecture
+# The Physics OS — Architecture
 
-**Release v4.0.1** · **February 2026**
+**Release v4.0.1** · **February 2026** · **Powered by The Ontic Engine**
 
 </div>
 
@@ -10,7 +10,7 @@
 
 ## System Overview
 
-HyperTensor is organized as a layered monorepo where each tier has a strict dependency direction: higher layers depend on lower layers, never the reverse.
+The Physics OS is organized as a layered monorepo where each tier has a strict dependency direction: higher layers depend on lower layers, never the reverse.
 
 ```mermaid
 graph TB
@@ -21,7 +21,7 @@ graph TB
         MCP["MCP Server<br/>(11 AI tools)"]
     end
 
-    subgraph "Runtime Access Layer — hypertensor/ (3,965 LOC)"
+    subgraph "Runtime Access Layer — Physics OS Platform Shell (3,965 LOC)"
         AUTH["Auth + Rate Limit"]
         ROUTER["Job Router"]
         SANITIZER["IP Sanitizer"]
@@ -29,7 +29,7 @@ graph TB
         METER["CU Metering"]
     end
 
-    subgraph "Physics VM — tensornet/vm/ (9.9K LOC)"
+    subgraph "The Ontic Engine — QTT VM (9.9K LOC)"
         IR["QTT IR"]
         COMPILER["7 Domain Compilers"]
         RUNTIME["VM Runtime"]
@@ -37,7 +37,7 @@ graph TB
         RANK["Rank Governor"]
     end
 
-    subgraph "Physics Engine — tensornet/ (471K LOC)"
+    subgraph "The Ontic Engine — Physics Core (471K LOC)"
         CFD["CFD<br/>77K LOC"]
         GENESIS["Genesis Layers<br/>42K LOC"]
         PACKS["Domain Packs<br/>26K LOC"]
@@ -49,7 +49,7 @@ graph TB
     subgraph "Rust Substrate — crates/ (151K LOC)"
         FE_ZK["FluidElite-ZK<br/>31K LOC"]
         COCKPIT["Glass Cockpit<br/>31K LOC"]
-        BRIDGE["Hyper Bridge<br/>6K LOC"]
+        BRIDGE["Ontic Bridge<br/>6K LOC"]
         SOLVERS["CEM / FEA / OPT<br/>5K LOC"]
     end
 

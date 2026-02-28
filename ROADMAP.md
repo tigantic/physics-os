@@ -1,8 +1,8 @@
 <div align="center">
 
-# HyperTensor Roadmap
+# The Physics OS — Roadmap
 
-**Release v4.0.1** · **February 2026**
+**Release v4.0.1** · **February 2026** · **Powered by The Ontic Engine**
 
 </div>
 

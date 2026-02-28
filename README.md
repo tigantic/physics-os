@@ -1,17 +1,19 @@
 <div align="center">
 
 ```
-██╗  ██╗██╗   ██╗██████╗ ███████╗██████╗ ████████╗███████╗███╗   ██╗███████╗ ██████╗ ██████╗ 
-██║  ██║╚██╗ ██╔╝██╔══██╗██╔════╝██╔══██╗╚══██╔══╝██╔════╝████╗  ██║██╔════╝██╔═══██╗██╔══██╗
-███████║ ╚████╔╝ ██████╔╝█████╗  ██████╔╝   ██║   █████╗  ██╔██╗ ██║███████╗██║   ██║██████╔╝
-██╔══██║  ╚██╔╝  ██╔═══╝ ██╔══╝  ██╔══██╗   ██║   ██╔══╝  ██║╚██╗██║╚════██║██║   ██║██╔══██╗
-██║  ██║   ██║   ██║     ███████╗██║  ██║   ██║   ███████╗██║ ╚████║███████║╚██████╔╝██║  ██║
-╚═╝  ╚═╝   ╚═╝   ╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═══╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝
+████████╗██╗  ██╗███████╗    ██████╗ ██╗  ██╗██╗   ██╗███████╗██╗ ██████╗███████╗     ██████╗ ███████╗
+╚══██╔══╝██║  ██║██╔════╝    ██╔══██╗██║  ██║╚██╗ ██╔╝██╔════╝██║██╔════╝██╔════╝    ██╔═══██╗██╔════╝
+   ██║   ███████║█████╗      ██████╔╝███████║ ╚████╔╝ ███████╗██║██║     ███████╗    ██║   ██║███████╗
+   ██║   ██╔══██║██╔══╝      ██╔═══╝ ██╔══██║  ╚██╔╝  ╚════██║██║██║     ╚════██║    ██║   ██║╚════██║
+   ██║   ██║  ██║███████╗    ██║     ██║  ██║   ██║   ███████║██║╚██████╗███████║    ╚██████╔╝███████║
+   ╚═╝   ╚═╝  ╚═╝╚══════╝    ╚═╝     ╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝ ╚═════╝╚══════╝     ╚═════╝ ╚══════╝
 ```
 
-### **The Planetary Operating System for Physics Computation**
+### **Powered by The Ontic Engine**
 
 *One codebase. ~2 million lines of code. 20 industries. Cryptographic proof that the physics is real.*
+
+**Tigantic Holdings LLC** · **DBA: HolonomiX**
 
 <br/>
 
@@ -45,11 +47,11 @@ Physics simulation at scale requires supercomputers. A single high-fidelity CFD 
 
 ## The Solution
 
-**HyperTensor** replaces dense numerical arrays with **Quantized Tensor Trains (QTT)** — a mathematical compression that reduces memory from O(N³) to O(log N). A simulation that requires 1 TB of RAM in dense format fits in 64 MB. A grid of **4.4 × 10¹² degrees of freedom** runs on a single workstation.
+**The Physics OS** — powered by **The Ontic Engine** — replaces dense numerical arrays with **Quantized Tensor Trains (QTT)** — a mathematical compression that reduces memory from O(N³) to O(log N). A simulation that requires 1 TB of RAM in dense format fits in 64 MB. A grid of **4.4 × 10¹² degrees of freedom** runs on a single workstation.
 
 This isn't an approximation. Conservation laws are verified to machine precision (Δ < 10⁻¹⁵). Every simulation produces a cryptographic trust certificate — a Lean 4-verified, Halo2-proven, Ed25519-signed proof that the physics actually ran correctly.
 
-| | Traditional CFD | HyperTensor |
+| | Traditional CFD | The Physics OS |
 |---|:---:|:---:|
 | **Maximum Grid** | ~10⁹ points | **4.4 × 10¹² points** |
 | **Memory Scaling** | O(N³) | **O(log N)** |
@@ -61,15 +63,15 @@ This isn't an approximation. Conservation laws are verified to machine precision
 
 ---
 
-## The Product: Runtime Access Layer
+## The Platform Shell: Runtime Access Layer
 
-The **HyperTensor Runtime** (`hypertensor/`, 31 files, 3,965 LOC) is the commercial surface over the physics engine — exposing simulation-as-a-service through four access surfaces while protecting all intellectual property behind a whitelist-only sanitization boundary.
+The **Physics OS Platform Shell** (`hypertensor/`, 31 files, 3,965 LOC) is the commercial surface over The Ontic Engine — exposing simulation-as-a-service through four access surfaces while protecting all intellectual property behind a whitelist-only sanitization boundary.
 
 ### Four Ways In
 
 ```
                      ┌──────────────────────────────────────────┐
-                     │           HyperTensor Runtime             │
+                     │       Physics OS — Platform Shell          │
                      │                                          │
    REST API ────────▶│  Auth · Rate Limit · Job Router          │
    Python SDK ──────▶│  IP Sanitizer · Evidence Generator       │──▶ Trust Certificate
@@ -151,9 +153,11 @@ hypertensor serve --port 8000
 
 ---
 
-## The Engine: 500K Lines of Physics
+## The Ontic Engine: 500K Lines of Physics
 
-The core physics engine (`tensornet/`, 1,218 files, 500,216 LOC) implements a register-based bytecode VM for QTT computation. Domain specifications compile to an intermediate representation (IR) of QTT operations — no dense arrays are ever materialized.
+> *The internal factory floor where physics are compiled, executed, and constrained by conservation laws.*
+
+The Ontic Engine (`tensornet/`, 1,218 files, 500,216 LOC) implements a register-based bytecode VM for QTT computation. Domain specifications compile to an intermediate representation (IR) of QTT operations — no dense arrays are ever materialized.
 
 ### Seven Physics Domains
 
@@ -293,8 +297,8 @@ Six execution documents mapping demonstrated capabilities to civilization-scale 
 
 | # | Platform | Size | Purpose |
 |:-:|----------|-----:|---------|
-| 1 | **HyperTensor Runtime** | 3,965 LOC | Commercial API + SDK + CLI + MCP |
-| 2 | **Physics VM** (`tensornet/`) | 500K LOC | QTT compute engine — 105 modules, 1,218 files |
+| 1 | **Physics OS Platform Shell** | 3,965 LOC | Commercial API + SDK + CLI + MCP |
+| 2 | **The Ontic Engine** (`tensornet/`) | 500K LOC | QTT compute engine — 105 modules, 1,218 files |
 | 3 | **FluidElite** (`crates/fluidelite*/`) | 57K LOC | Production tensor engine + ZK prover |
 | 4 | **QTeneT** (`apps/qtenet/`) | 10K LOC | Enterprise QTT SDK |
 | 5 | **Platform Substrate** | 13.7K LOC | Unified simulation API V2.0.0 |
@@ -412,17 +416,17 @@ A dedicated verification and validation framework implementing the full ASME V&V
 │         └──────────────┴─────────────┴───────────────────────┘                   │
 │                                      │  HTTPS / Bearer Auth                       │
 │   ┌──────────────────────────────────▼────────────────────────────────────────┐  │
-│   │           HyperTensor Runtime Access Layer (v4.0.0, 3,965 LOC)            │  │
+│   │           Physics OS — Platform Shell (v4.0.0, 3,965 LOC)            │  │
 │   │   Auth · Rate Limit · Job Router · IP Sanitizer · Certificates · Metering │  │
-│   └──────────────────────────────────┬────────────────────────────────────────┘  │
+│   └────────────────────────────────────┬────────────────────────────────────┘  │
 │                                      │  IP Boundary                               │
-│   ┌──────────────────────────────────▼────────────────────────────────────────┐  │
-│   │           Physics VM — QTT Execution Engine (29 files, 9.9K LOC)          │  │
+│   ┌────────────────────────────────────▼────────────────────────────────────┐  │
+│   │           The Ontic Engine — QTT Execution Core (29 files, 9.9K LOC)   │  │
 │   │   IR · 7 Domain Compilers · Runtime · GPU Runtime · Rank Governor         │  │
 │   └──────────────────────────────────┬────────────────────────────────────────┘  │
 │                                      │                                            │
 │   ┌──────────────────────────────────▼────────────────────────────────────────┐  │
-│   │           tensornet/ Physics Engine (1,218 files, 500K LOC)               │  │
+│   │           The Ontic Engine — Physics Core (1,218 files, 500K LOC)               │  │
 │   │   ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐    │  │
 │   │   │  CFD   │ │Genesis │ │Exploit │ │ Packs  │ │Discover│ │Platform│    │  │
 │   │   │  77K   │ │  42K   │ │  28K   │ │  26K   │ │  25K   │ │  15K   │    │  │
@@ -432,7 +436,7 @@ A dedicated verification and validation framework implementing the full ASME V&V
 │                                                                                  │
 │   Rust Substrate (19 workspace members, 132K LOC)                                │
 │   ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐          │
-│   │FluidElite-ZK │ │Glass Cockpit │ │ Hyper Bridge │ │CEM / FEA /   │          │
+│   │FluidElite-ZK │ │Glass Cockpit │ │ Ontic Bridge │ │CEM / FEA /   │          │
 │   │  31K LOC     │ │  31K LOC     │ │   6K LOC     │ │OPT  5K LOC   │          │
 │   └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘          │
 │                                                                                  │
@@ -486,8 +490,8 @@ pip install tensornet[io]              # h5py, netCDF4, vtk
 ## Project Structure
 
 ```
-HyperTensor-VM/
-├── hypertensor/                    # Runtime Access Layer (31 files, 3,965 LOC)
+The Physics OS/
+├── hypertensor/                    # Platform Shell (31 files, 3,965 LOC)
 │   ├── api/                        #   FastAPI server — 9 frozen endpoints
 │   │   ├── routers/                #     jobs, validate, capabilities, contracts, health
 │   │   ├── auth.py                 #     Bearer token + rate limiting (60 rpm)
@@ -503,7 +507,7 @@ HyperTensor-VM/
 │   ├── sdk/                        #   Typed sync + async client
 │   ├── cli/                        #   CLI (run, validate, attest, verify, serve)
 │   └── mcp/                        #   MCP server — 11 AI-agent tools
-├── tensornet/                      # Physics Engine (1,218 files, 500K LOC)
+├── tensornet/                      # The Ontic Engine (1,218 files, 500K LOC)
 │   ├── vm/                         #   Register-based QTT VM (IR, compilers, rank governor)
 │   ├── cfd/                        #   Computational Fluid Dynamics (77K LOC)
 │   ├── genesis/                    #   QTT Meta-Primitives — 8 layers (42K LOC)
@@ -521,7 +525,7 @@ HyperTensor-VM/
 │   ├── qtt_fea/                    #   Hex8 static elasticity (Q16.16)
 │   ├── qtt_opt/                    #   SIMP topology optimization
 │   └── ...                         #   + 14 more crates
-├── apps/                           # Standalone applications
+├── apps/                           # Vertical Applications
 │   ├── glass_cockpit/              #   Flight visualization (Rust + WGSL, 31K LOC)
 │   ├── qtenet/                     #   Enterprise QTT SDK (10K LOC)
 │   └── trustless_verify/           #   Standalone certificate verifier
@@ -649,14 +653,16 @@ This software and all associated intellectual property are the exclusive propert
 ## Citation
 
 ```bibtex
-@software{hypertensor2026,
-  title     = {HyperTensor: The Planetary Operating System for Physics Computation},
+@software{physics_os_2026,
+  title     = {The Physics OS: Compression-Native Computational Physics},
+  subtitle  = {Powered by The Ontic Engine},
   author    = {Adams, Bradly Biron Baker},
   year      = {2026},
   version   = {4.0.1},
   url       = {https://github.com/tigantic/HyperTensor-VM},
   note      = {~1.99M LOC. 20 industries. 168 physics nodes. Trustless certificates.
-               Three-layer verification: Lean 4 + Halo2 ZK + Ed25519.}
+               Three-layer verification: Lean 4 + Halo2 ZK + Ed25519.
+               Tigantic Holdings LLC, DBA HolonomiX.}
 }
 ```
 
@@ -667,7 +673,7 @@ This software and all associated intellectual property are the exclusive propert
 ```
 ╔══════════════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                          ║
-║      O N E   C O D E B A S E   ·   O N E   P H Y S I C S   E N G I N E                  ║
+║      O N E   C O D E B A S E   ·   T H E   O N T I C   E N G I N E                      ║
 ║                                                                                          ║
 ║      1 , 9 8 8 , 8 1 1   L I N E S   O F   C O D E                                      ║
 ║                                                                                          ║
@@ -679,12 +685,12 @@ This software and all associated intellectual property are the exclusive propert
 ║                                                                                          ║
 ║      L E A N   4   ·   H A L O 2   ·   E D 2 5 5 1 9                                    ║
 ║                                                                                          ║
-║                          T H E   P L A N E T A R Y   O S                                 ║
+║                          T H E   P H Y S I C S   O S                                     ║
 ║                                                                                          ║
 ╚══════════════════════════════════════════════════════════════════════════════════════════╝
 ```
 
-**HyperTensor** · Release v4.0.1 · © 2025–2026 Tigantic Holdings LLC
+**The Physics OS** · Release v4.0.1 · © 2025–2026 Tigantic Holdings LLC · DBA HolonomiX
 
 *"In God we trust. All others must bring data."* — W. Edwards Deming
 

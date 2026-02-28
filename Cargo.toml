@@ -1,12 +1,12 @@
 # ═══════════════════════════════════════════════════════════════════════════════
-#                         HYPERTENSOR WORKSPACE
-#                    Tensor-Compressed Physics at Scale
+#                       THE PHYSICS OS — RUST WORKSPACE
+#               Powered by The Ontic Engine · Tigantic Holdings LLC
 #  Version: 4.0.0
 # ═══════════════════════════════════════════════════════════════════════════════
 #
 # Architecture:
-#   crates/hyper_core         - Physics engine core (QTT, MPO, CFD operators)
-#   crates/hyper_bridge       - RAM bridge IPC protocol (Python ↔ Rust streaming)
+#   crates/hyper_core         - Ontic Engine core (QTT, MPO, CFD operators)
+#   crates/hyper_bridge       - Ontic Bridge IPC protocol (Python ↔ Rust streaming)
 #   crates/proof_bridge       - Trustless Physics: trace → ZK proof pipeline
 #   crates/fluidelite_core    - FluidElite core engine
 #   crates/fluidelite_circuits- FluidElite ZK circuit layer

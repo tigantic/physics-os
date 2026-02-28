@@ -1,11 +1,11 @@
 {
-  "title": "HyperTensor: Quantum-Inspired Tensor Networks for Computational Physics",
-  "description": "A pure PyTorch implementation of Matrix Product States (MPS) and Matrix Product Operators (MPO) for many-body quantum physics and computational fluid dynamics. Features include DMRG ground state search, TEBD/TDVP time evolution, and compressible Euler solvers with shock-capturing schemes.",
+  "title": "The Physics OS: Compression-Native Computational Physics — Powered by The Ontic Engine",
+  "description": "The Physics OS replaces dense numerical arrays with Quantized Tensor Trains (QTT) to run exascale simulations on commodity hardware. Powered by The Ontic Engine — a register-based bytecode VM where physics are compiled, executed, and constrained by conservation laws. ~2M LOC, 168 physics nodes, 20 industries, cryptographic trust certificates. Tigantic Holdings LLC, DBA HolonomiX.",
   "upload_type": "software",
   "creators": [
     {
-      "name": "TiganticLabz",
-      "affiliation": "TiganticLabz"
+      "name": "Adams, Bradly Biron Baker",
+      "affiliation": "Tigantic Holdings LLC (DBA HolonomiX)"
     }
   ],
   "keywords": [

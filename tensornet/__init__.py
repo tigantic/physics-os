@@ -1,9 +1,13 @@
 """
-TensorNet: Quantum-Inspired Tensor Networks for Computational Physics
-======================================================================
+The Ontic Engine — Where Physics Are Compiled, Executed, and Constrained
+========================================================================
 
-A pure PyTorch implementation of Matrix Product States (MPS) and
-Matrix Product Operators (MPO) for many-body physics and CFD.
+The computational heart of The Physics OS.  A pure PyTorch implementation
+of Matrix Product States (MPS) and Matrix Product Operators (MPO) for
+many-body physics and CFD, with a register-based QTT VM that compiles
+domain specifications into compression-native bytecode.
+
+Tigantic Holdings LLC · DBA HolonomiX · The Physics OS · The Ontic Engine
 
 Core Components:
     MPS     - Matrix Product State representation

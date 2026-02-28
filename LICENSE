@@ -2,10 +2,10 @@
                     PROPRIETARY SOFTWARE LICENSE AGREEMENT
 ================================================================================
 
-                         HYPERTENSOR™ PHYSICS ENGINE
+                     THE PHYSICS OS™ · THE ONTIC ENGINE™
                       
-              Copyright © 2025 Bradly Biron Baker Adams. All Rights Reserved.
-                              Tigantic Holdings LLC
+              Copyright © 2025–2026 Bradly Biron Baker Adams. All Rights Reserved.
+                  Tigantic Holdings LLC · DBA HolonomiX
 
 ================================================================================
                               NOTICE TO ALL PARTIES
@@ -24,12 +24,13 @@ LICENSE AGREEMENT.
                            SECTION 1: DEFINITIONS
 ================================================================================
 
-1.1 "Software" means the HyperTensor Physics Engine, including but not limited 
+1.1 "Software" means The Physics OS and The Ontic Engine, including but not limited 
     to all source code, object code, algorithms, data structures, mathematical 
     models, tensor network implementations, computational fluid dynamics solvers, 
     CUDA kernels, GPU shaders, neural network architectures, reinforcement 
     learning environments, visualization systems, documentation, specifications, 
     designs, inventions, trade secrets, and any derivative works thereof.
+    Formerly known as "HyperTensor."
 
 1.2 "Intellectual Property" means all patents, patent applications, copyrights, 
     trademarks, trade secrets, know-how, proprietary information, algorithms, 
