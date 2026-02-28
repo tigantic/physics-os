@@ -14,7 +14,7 @@
 *Verifiable Structured Compute Infrastructure for Physics Simulation*
 
 [![Release](https://img.shields.io/badge/Release-v4.0.1-blue?style=for-the-badge)]()
-[![LOC](https://img.shields.io/badge/LOC-1%2C513K-blue?style=for-the-badge)]()
+[![LOC](https://img.shields.io/badge/LOC-1%2C989K-blue?style=for-the-badge)]()
 [![Python](https://img.shields.io/badge/Python-851K-3776AB?style=for-the-badge&logo=python&logoColor=white)]()
 [![Rust](https://img.shields.io/badge/Rust-132K-000000?style=for-the-badge&logo=rust&logoColor=white)]()
 [![Solidity](https://img.shields.io/badge/Solidity-34K-363636?style=for-the-badge&logo=solidity&logoColor=white)]()
@@ -95,39 +95,40 @@ HyperTensor is a computational physics operating system that uses Quantized Tens
 
 ## §3 Repository Metrics
 
-> *All metrics validated February 26, 2026 via `forensic_loc_sweep_v2.py`. Excludes vendored dependencies, build artifacts, and data files. The `hypertensor/` package (3,965 lines, 31 files) was added after the last forensic sweep and is accounted separately.*
+> *All metrics validated via `forensic_loc_sweep_v2.py` methodology (run from repo root). Excludes vendored dependencies (40,613 files / 8.6M lines), build artifacts, and data files. Last sweep: February 27, 2026 (post-Clawdbot removal). `experiments/clawdbot/` (4,223 files) was deleted on February 27, 2026.*
+>
+> *Note: §3 counts authored source files only (19 language extensions, excluding JSON/binary/vendored). INVENTORY.md uses a broader methodology that includes all git-tracked files. The two documents are complementary, not contradictory.*
 
 ### Language Distribution
 
 | Language | Lines | Code Lines | Files | Share |
 |----------|------:|----------:|------:|------:|
-| Python | 850,553 | 688,017 | 1,906 | 56.4% |
-| Rust | 132,120 | 107,483 | 313 | 8.8% |
-| Solidity | 34,223 | 26,851 | 89 | 2.3% |
-| JavaScript | 26,986 | 22,076 | 180 | 1.8% |
-| Lean 4 | 8,022 | 5,890 | 44 | 0.5% |
-| TypeScript | 7,409 | 5,927 | 106 | 0.5% |
-| WGSL | 4,265 | 3,524 | 18 | 0.3% |
-| CUDA | 3,721 | 3,063 | 11 | 0.2% |
-| LaTeX | 2,223 | 1,780 | — | 0.1% |
-| + 10 more | ~443,621 | — | 981 | 29.1% |
-| **Total (Forensic Audit)** | **1,509,143** | **1,215,268** | **3,648** | **100%** |
-| + `hypertensor/` (post-audit) | +3,965 | ~3,200 | +31 | — |
-| **Grand Total** | **~1,513,108** | **~1,218,468** | **3,679** | — |
+| Python | 993,624 | 802,554 | 2,302 | 50.0% |
+| Markdown | 281,239 | 203,353 | 696 | 14.1% |
+| HTML | 201,974 | 186,699 | 339 | 10.2% |
+| Rust | 132,120 | 113,986 | 313 | 6.6% |
+| Solidity | 103,772 | 91,801 | 483 | 5.2% |
+| TypeScript | 94,506 | 81,628 | 597 | 4.8% |
+| JavaScript | 51,196 | 43,907 | 540 | 2.6% |
+| YAML | 30,195 | 25,223 | 280 | 1.5% |
+| Lean 4 | 8,022 | 6,314 | 44 | 0.4% |
+| CSS | 7,658 | 6,787 | 42 | 0.4% |
+| + 9 more | 84,505 | 66,811 | 146 | 4.2% |
+| **Grand Total** | **1,988,811** | **1,629,063** | **5,882** | **100%** |
 
 ### Summary Counts
 
 | Metric | Value |
 |--------|------:|
-| **Total Authored Lines** | 1,513,108 |
-| **Authored Code (non-blank)** | ~1,218,468 |
-| **Source Files** | 3,679 |
+| **Total Authored Lines** | 1,988,811 |
+| **Authored Code (non-blank)** | 1,629,063 |
+| **Source Files** | 5,882 |
 | **Languages Detected** | 19 |
 | **Test Files** | ~195 |
 | **Tests Passing** | 370+ |
 | **Gauntlet Runners** | 38 |
 | **Attestation JSONs** | 125+ |
-| **Documentation Files** | 461+ |
+| **Documentation Files** | 696+ |
 | **Documentation Directories** | 27 |
 | **Architecture Decision Records** | 25 |
 | **Domain Packs** | 20 |
@@ -143,18 +144,18 @@ HyperTensor is a computational physics operating system that uses Quantized Tens
 
 | Directory | Lines | Code | Files |
 |-----------|------:|-----:|------:|
-| `tensornet/cfd/` | 77,299 | 62,175 | 112 |
-| `tensornet/genesis/` | 42,437 | 34,195 | 80 |
-| `tensornet/exploit/` | 28,395 | 22,866 | 42 |
-| `tensornet/packs/` | 26,094 | 21,024 | 23 |
-| `tensornet/discovery/` | 25,484 | 20,530 | 44 |
-| `tensornet/platform/` | 15,003 | 12,089 | 36 |
-| `tensornet/types/` | 12,087 | 9,741 | 15 |
-| `tensornet/oracle/` | 10,547 | 8,498 | 32 |
-| `tensornet/zk/` | 10,135 | 8,167 | 9 |
-| `tensornet/vm/` | 9,896 | 7,975 | 29 |
-| + 95 more modules | ~214,157 | — | ~660 |
-| **Total `tensornet/`** | **471,534** | **378,655** | **1,082** |
+| `tensornet/cfd/` | 80,534 | 63,540 | 119 |
+| `tensornet/infra/` | 56,829 | 45,952 | 120 |
+| `tensornet/genesis/` | 41,928 | 33,099 | 87 |
+| `tensornet/ml/` | 40,629 | 33,243 | 83 |
+| `tensornet/engine/` | 36,601 | 29,769 | 96 |
+| `tensornet/aerospace/` | 35,448 | 28,915 | 64 |
+| `tensornet/packs/` | 26,239 | 21,200 | 23 |
+| `tensornet/quantum/` | 25,180 | 20,118 | 103 |
+| `tensornet/sim/` | 18,689 | 15,256 | 31 |
+| `tensornet/em/` | 17,327 | 14,403 | 24 |
+| + 95 more modules | ~121,812 | — | ~468 |
+| **Total `tensornet/`** | **500,216** | **402,591** | **1,218** |
 
 ---
 
@@ -361,7 +362,7 @@ When `HYPERTENSOR_DEVICE=cuda` (or `auto` with CUDA available), the GPU runtime 
 | # | Platform | Location | Size | Language | Purpose |
 |:-:|----------|----------|-----:|----------|---------|
 | 1 | **HyperTensor Runtime** | `hypertensor/` | 3,965 LOC | Python | Commercial product surface: API, SDK, CLI, MCP, billing, certificates |
-| 2 | **HyperTensor VM** | `tensornet/` | ~492K LOC | Python | Physics compute engine: 105+ modules, ~1,192 files |
+| 2 | **HyperTensor VM** | `tensornet/` | ~500K LOC | Python | Physics compute engine: 105+ modules, ~1,218 files |
 | 3 | **FluidElite** | `crates/fluidelite*/` | 57K LOC | Python + Rust | Production tensor engine + ZK prover (24 binaries) |
 | 4 | **QTeneT** | `apps/qtenet/` | ~13K LOC | Python + LaTeX | Enterprise QTT SDK: TCI, operators, solvers, demos, benchmarks |
 | 5 | **Platform Substrate** | `tensornet/platform/` + `tensornet/sdk/` | 13.7K LOC | Python | Unified simulation API: WorkflowBuilder, domain packs, V&V harness |
@@ -452,7 +453,7 @@ The HyperTensor Civilization Stack deploys QTT-compressed physics simulation acr
 | 17 | Electromagnetics | Maxwell FDTD, antenna, PML | CEM-QTT Poynting conservation |
 | 18 | Structural Mechanics | Hex8 FEA, linear elasticity | FEA-QTT cantilever benchmark |
 | 19 | Optimization | SIMP topology, adjoint, inverse | OPT-QTT compliance minimization |
-| 20 | Facial Plastic Surgery | Multi-physics surgical simulation | 94-file product (941 tests) |
+| 20 | Facial Plastic Surgery | Multi-physics surgical simulation | 102-file product (~50K LOC, 941 tests) |
 
 ---
 
@@ -693,22 +694,24 @@ Verification and Validation follows ASME V&V 10-2019 principles via `tensornet/p
 
 ### §13.4 Gauntlets (38)
 
-38 dedicated validation gauntlets covering all major subsystems. Each gauntlet produces a cryptographically signed attestation JSON with SHA-256 commit binding.
+38 dedicated validation gauntlets in `tools/scripts/gauntlets/` covering all major subsystems. Each gauntlet produces a cryptographically signed attestation JSON with SHA-256 commit binding. An additional 8 inline module gauntlets reside within `tensornet/genesis/`.
 
 <details>
-<summary><strong>Full Gauntlet List</strong></summary>
+<summary><strong>Full Gauntlet List — 38 Standalone + 8 Inline</strong></summary>
+
+**Standalone Gauntlets** (`tools/scripts/gauntlets/`)
 
 | Gauntlet | Domain | Tests |
 |----------|--------|:-----:|
 | `ade_gauntlet.py` | Autonomous Discovery V1 | ✅ |
 | `ade_gauntlet_v2.py` | Autonomous Discovery V2 | ✅ |
-| `test_aging_gauntlet.py` | Biological aging/rank dynamics | ✅ |
 | `chronos_gauntlet.py` | TDVP time evolution | ✅ |
 | `cornucopia_gauntlet.py` | Resource optimization | ✅ |
-| `femto_fabricator_gauntlet.py` | Atomic placement (< 0.1Å) | ✅ |
+| `femto_fabricator_gauntlet.py` | Atomic placement (< 0.1 Å) | ✅ |
+| `genesis_benchmark_suite.py` | Genesis engine benchmarks | ✅ |
 | `hellskin_gauntlet.py` | Re-entry heat shield | ✅ |
 | `hermes_gauntlet.py` | Routing correctness | ✅ |
-| `laluh6_odin_gauntlet.py` | Superconductor at 300K | ✅ |
+| `laluh6_odin_gauntlet.py` | Superconductor at 300 K | ✅ |
 | `li3incl48br12_superionic_gauntlet.py` | Superionic battery | ✅ |
 | `metric_engine_gauntlet.py` | Performance metrics | ✅ |
 | `oracle_gauntlet.py` | Forecast accuracy | ✅ |
@@ -717,6 +720,33 @@ Verification and Validation follows ASME V&V 10-2019 principles via `tensornet/p
 | `prometheus_gauntlet.py` | Fire simulation | ✅ |
 | `proteome_compiler_gauntlet.py` | Protein folding | ✅ |
 | `qtt_native_gauntlet.py` | Native QTT operations | ✅ |
+| `snhff_stochastic_gauntlet.py` | Stochastic NS | ✅ |
+| `sovereign_genesis_gauntlet.py` | System bootstrap | ✅ |
+| `starheart_gauntlet.py` | Fusion reactor | ✅ |
+| `tig011a_attestation.py` | TIG-011a project attestation | ✅ |
+| `tig011a_dielectric_gauntlet.py` | Dielectric properties | ✅ |
+| `tig011a_docking_qmmm.py` | Docking + QM/MM validation | ✅ |
+| `tig011a_dynamic_validation.py` | Dynamic ensemble validation | ✅ |
+| `tig011a_multimechanism.py` | Multi-mechanism binding | ✅ |
+| `tig011a_tox_screen.py` | Toxicity screening | ✅ |
+| `tig011a_wiggle_tt.py` | Wiggle test + TT compression | ✅ |
+| `tomahawk_cfd_gauntlet.py` | Missile aerodynamics | ✅ |
+| `trustless_physics_gauntlet.py` | TPC Phase 0 (25 tests) | ✅ |
+| `trustless_physics_phase1_gauntlet.py` | TPC Phase 1 (24 tests) | ✅ |
+| `trustless_physics_phase2_gauntlet.py` | TPC Phase 2 (45 tests) | ✅ |
+| `trustless_physics_phase3_gauntlet.py` | TPC Phase 3 (40 tests) | ✅ |
+| `trustless_physics_phase5_gauntlet.py` | TPC Phase 5 | ✅ |
+| `trustless_physics_phase6_gauntlet.py` | TPC Phase 6 | ✅ |
+| `trustless_physics_phase7_gauntlet.py` | TPC Phase 7 | ✅ |
+| `trustless_physics_phase8_gauntlet.py` | TPC Phase 8 | ✅ |
+| `trustless_physics_phase9_gauntlet.py` | TPC Phase 9 | ✅ |
+| `trustless_physics_phase10_gauntlet.py` | TPC Phase 10 | ✅ |
+
+**Inline Module Gauntlets** (`tensornet/genesis/`)
+
+| Gauntlet | Domain | Tests |
+|----------|--------|:-----:|
+| `test_aging_gauntlet.py` | Biological aging / rank dynamics | ✅ |
 | `qtt_ga_gauntlet.py` | Geometric Algebra | ✅ |
 | `qtt_ot_gauntlet.py` | Optimal Transport | ✅ |
 | `qtt_ph_gauntlet.py` | Persistent Homology | ✅ |
@@ -724,15 +754,6 @@ Verification and Validation follows ASME V&V 10-2019 principles via `tensornet/p
 | `qtt_rmt_gauntlet.py` | Random Matrix Theory | ✅ |
 | `qtt_sgw_gauntlet.py` | Spectral Graph Wavelets | ✅ |
 | `qtt_tropical_gauntlet.py` | Tropical Geometry | ✅ |
-| `snhff_stochastic_gauntlet.py` | Stochastic NS | ✅ |
-| `sovereign_genesis_gauntlet.py` | System bootstrap | ✅ |
-| `starheart_gauntlet.py` | Fusion reactor | ✅ |
-| `tig011a_dielectric_gauntlet.py` | Dielectric properties | ✅ |
-| `tomahawk_cfd_gauntlet.py` | Missile aerodynamics | ✅ |
-| `trustless_physics_gauntlet.py` | TPC Phase 0 (25 tests) | ✅ |
-| `trustless_physics_phase1_gauntlet.py` | TPC Phase 1 (24 tests) | ✅ |
-| `trustless_physics_phase2_gauntlet.py` | TPC Phase 2 (45 tests) | ✅ |
-| `trustless_physics_phase3_gauntlet.py` | TPC Phase 3 (40 tests) | ✅ |
 
 </details>
 
@@ -785,36 +806,38 @@ Launch readiness is tracked via [`LAUNCH_GATE_MATRIX.json`](docs/operations/LAUN
 
 | Language | Total Lines | Code Lines | Files | Primary Location |
 |----------|----------:|----------:|------:|-----------------|
-| **Python** | 850,553 | 688,017 | 1,906 | `tensornet/`, `hypertensor/`, `tests/`, `tools/scripts/` |
-| **Rust** | 132,120 | 107,483 | 313 | `crates/`, `apps/glass_cockpit/` |
-| **Solidity** | 34,223 | 26,851 | 89 | `contracts/`, `tensornet/exploit/` |
-| **JavaScript** | 26,986 | 22,076 | 180 | `integrations/`, `sdk/` |
-| **Lean 4** | 8,022 | 5,890 | 44 | `proofs/` |
-| **TypeScript** | 7,409 | 5,927 | 106 | `integrations/`, tools |
-| **WGSL** | 4,265 | 3,524 | 18 | `apps/glass_cockpit/src/shaders/` |
-| **CUDA** | 3,721 | 3,063 | 11 | `tensornet/cuda/`, `tensornet/gpu/` |
-| **LaTeX** | 2,223 | 1,780 | — | `apps/qtenet/`, documentation |
+| **Python** | 993,624 | 802,554 | 2,302 | `tensornet/`, `hypertensor/`, `tests/`, `tools/scripts/` |
+| **Markdown** | 281,239 | 203,353 | 696 | `docs/`, repo root, `tensornet/` |
+| **HTML** | 201,974 | 186,699 | 339 | `apps/`, `experiments/` |
+| **Rust** | 132,120 | 113,986 | 313 | `crates/`, `apps/glass_cockpit/` |
+| **Solidity** | 103,772 | 91,801 | 483 | `contracts/`, `proofs/`, `experiments/` |
+| **TypeScript** | 94,506 | 81,628 | 597 | `experiments/lux/`, `experiments/hvac_cfd/` |
+| **JavaScript** | 51,196 | 43,907 | 540 | `experiments/`, `integrations/` |
+| **YAML** | 30,195 | 25,223 | 280 | `apps/ledger/nodes/`, `.github/` |
+| **Lean 4** | 8,022 | 6,314 | 44 | `proofs/` |
+| **CSS** | 7,658 | 6,787 | 42 | `experiments/lux/`, `apps/` |
+| **+ 9 more** | 84,505 | 66,811 | 146 | Shell, WGSL, CUDA, TOML, Docker, Circom, GLSL, Config |
 
 ### §14.2 Python Breakdown — `tensornet/` Modules
 
 | Module | Files | LOC | Purpose |
 |--------|------:|----:|---------|
-| `cfd/` | 112 | 77,299 | Computational Fluid Dynamics (Euler, NS, RANS, LES, WENO, reactive, MHD) |
-| `genesis/` | 80 | 42,437 | QTT Meta-Primitives (8 layers: OT, SGW, RMT, TG, RKHS, PH, GA, Aging) |
-| `exploit/` | 42 | 28,395 | Smart contract vulnerability hunting (Koopman spectral) |
-| `packs/` | 23 | 26,094 | Domain Packs (20 verticals, 168 taxonomy nodes) |
-| `discovery/` | 44 | 25,484 | Autonomous Discovery Engine |
-| `platform/` | 36 | 15,003 | Platform Substrate V2.0.0 (protocols, solvers, V&V, export) |
-| `types/` | 15 | 12,087 | Type system and geometric types |
-| `oracle/` | 32 | 10,547 | Assumption extraction |
-| `zk/` | 9 | 10,135 | Zero-knowledge analysis |
-| `vm/` | 29 | 9,896 | Physics VM (IR, compilers, runtime, rank governor, GPU) |
-| `core/` | 11 | 4,050 | TT/QTT fundamental operations |
-| `sdk/` | 3 | 1,072 | Platform SDK (WorkflowBuilder, recipes) |
-| + 93 more | ~660 | ~209,035 | Domain-specific modules (fusion, hyperenv, guidance, etc.) |
-| **Total** | **~1,192** | **~492,000** | |
+| `cfd/` | 119 | 80,534 | Computational Fluid Dynamics (Euler, NS, RANS, LES, WENO, reactive, MHD) |
+| `infra/` | 120 | 56,829 | Infrastructure (scheduling, orchestration, monitoring) |
+| `genesis/` | 87 | 41,928 | QTT Meta-Primitives (8 layers: OT, SGW, RMT, TG, RKHS, PH, GA, Aging) |
+| `ml/` | 83 | 40,629 | Machine Learning (surrogates, PINN, active learning) |
+| `engine/` | 96 | 36,601 | Compute engine (solvers, pipelines, execution) |
+| `aerospace/` | 64 | 35,448 | Aerospace (re-entry, hypersonics, orbital) |
+| `packs/` | 23 | 26,239 | Domain Packs (20 verticals, 168 taxonomy nodes) |
+| `quantum/` | 103 | 25,180 | Quantum computing (QEC, surface codes, DMRG) |
+| `sim/` | 31 | 18,689 | Simulation harness and orchestration |
+| `em/` | 24 | 17,327 | Electromagnetics (Maxwell FDTD, PML, antenna) |
+| `platform/` | 40 | 15,474 | Platform Substrate V2.0.0 (protocols, solvers, V&V, export) |
+| `applied/` | 47 | 14,034 | Applied physics (structural, thermal, multiscale) |
+| + 93 more | ~381 | ~91,304 | Domain-specific modules (fusion, hyperenv, guidance, etc.) |
+| **Total** | **1,218** | **500,216** | |
 
-> *The forensic sweep (§3, February 26) measured 471,534 lines / 1,082 files. The higher totals above reflect the full INVENTORY.md file traversal, which includes additional shim `__init__.py` files and modules added after the sweep.*
+> *INVENTORY.md uses a broader file traversal (all git-tracked files) and may report slightly higher totals for `tensornet/`. The §3 sweep uses the `forensic_loc_sweep_v2.py` methodology which excludes JSON, binary, and vendored files.*
 
 ### §14.3 Rust Workspace Inventory (19 Members)
 
@@ -915,7 +938,7 @@ flowchart TB
         vm["Physics VM (tensornet/vm/)"]
         compilers["7 Domain Compilers"]
         rank_gov["Rank Governor"]
-        subgraph physics["tensornet/ — ~492K LOC"]
+        subgraph physics["tensornet/ — ~500K LOC"]
             direction LR
             cfd["CFD 77K"]
             genesis["Genesis 42K"]
@@ -981,7 +1004,7 @@ flowchart TB
 │  └──────────────────────────────────┬───────────────────────────────────────┘  │
 │                                     │                                           │
 │  ┌──────────────────────────────────▼───────────────────────────────────────┐  │
-│  │         tensornet/ Physics Engine (~1,192 files, ~492K LOC)              │  │
+│  │         tensornet/ Physics Engine (~1,218 files, ~500K LOC)              │  │
 │  │  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐     │  │
 │  │  │ CFD    │ │Genesis │ │Exploit │ │ Packs  │ │Discover│ │Platform│     │  │
 │  │  │ 77K    │ │ 42K    │ │ 28K    │ │ 26K    │ │ 25K    │ │ 15K    │     │  │
@@ -1049,7 +1072,7 @@ Client                    API                     Runtime                    VM
 | # | Platform | Location | Size | Language |
 |:-:|----------|----------|:----:|----------|
 | 1 | HyperTensor Runtime | `hypertensor/` | 3,965 LOC | Python |
-| 2 | HyperTensor VM | `tensornet/` | ~492K LOC | Python |
+| 2 | HyperTensor VM | `tensornet/` | ~500K LOC | Python |
 | 3 | FluidElite + ZK | `crates/fluidelite*/` | 57K LOC | Python + Rust |
 | 4 | QTeneT Enterprise SDK | `apps/qtenet/` | ~13K LOC | Python + LaTeX |
 | 5 | Platform Substrate + SDK | `tensornet/platform/`, `tensornet/sdk/` | 13.7K LOC | Python |
@@ -1692,7 +1715,7 @@ HyperTensor-VM-main/
 │   ├── cli/                        #   CLI (run, validate, attest, verify, serve)
 │   ├── mcp/                        #   MCP server (11 AI-agent tools)
 │   └── contracts/                  #   JSON Schema contract templates
-├── tensornet/                      # Physics Engine (~492K LOC, 105+ modules)
+├── tensornet/                      # Physics Engine (~500K LOC, 105+ modules)
 │   ├── py.typed                    #   PEP 561 type marker
 │   ├── vm/                         #   Physics VM (IR, compilers, runtime, rank governor)
 │   ├── cfd/                        #   CFD solvers (77K LOC)
@@ -1850,7 +1873,7 @@ The v4.0.0 release introduces the **HyperTensor Runtime Access Layer** — the p
 
 ### v40.2 (February 10, 2026) — FACIAL PLASTICS V5 COMPLETE
 
-First shipped vertical product: `products/facial_plastics/` — 94 files, 43K LOC, 941 tests. Four procedure families, digital-twin builder, multi-physics simulation, NSGA-II optimization, governance layer. Plus 14 new physics sections (§22–§35 in prior spec) documenting 97,645 LOC of previously uncataloged physics code. 20th industry vertical.
+First shipped vertical product: `products/facial_plastics/` — 102 files, ~50K LOC, 941 tests. Four procedure families, digital-twin builder, multi-physics simulation, NSGA-II optimization, governance layer. Plus 14 new physics sections (§22–§35 in prior spec) documenting 97,645 LOC of previously uncataloged physics code. 20th industry vertical.
 
 ### v40.2 (February 9, 2026) — PWA COMPUTE ENGINE V3.0.0
 
