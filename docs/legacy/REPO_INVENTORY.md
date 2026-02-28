@@ -112,9 +112,9 @@
 
 | Module | Description |
 |--------|-------------|
-| `hyper_bridge/protocol.rs` | RAM Bridge header protocol (4KB header, 8MB data) |
-| `hyper_bridge/trajectory.rs` | **Phase 3**: Waypoint IPC (256-byte header, 16-byte waypoints) |
-| `hyper_bridge/swarm.rs` | **Phase 4**: SwarmHeader + EntityState (64-byte cache-aligned) |
+| `ontic_bridge/protocol.rs` | RAM Bridge header protocol (4KB header, 8MB data) |
+| `ontic_bridge/trajectory.rs` | **Phase 3**: Waypoint IPC (256-byte header, 16-byte waypoints) |
+| `ontic_bridge/swarm.rs` | **Phase 4**: SwarmHeader + EntityState (64-byte cache-aligned) |
 
 ### CUDA Kernels
 
@@ -542,7 +542,7 @@ The Physics OS/
 │   │   ├── ghost_plane.rs      # Replay visualization [Phase 3]
 │   │   └── swarm_renderer.rs   # Multi-agent rendering [Phase 4]
 │   └── src/shaders/            # 15 WGSL shaders
-├── crates/hyper_bridge/        # IPC Protocol [Phase 3/4]
+├── crates/ontic_bridge/        # IPC Protocol [Phase 3/4]
 │   ├── src/ipc.rs              # 132KB shared memory
 │   └── src/swarm.rs            # EntityState protocol [Phase 4]
 ├── crates/tci_core_rust/              # Rust TCI library

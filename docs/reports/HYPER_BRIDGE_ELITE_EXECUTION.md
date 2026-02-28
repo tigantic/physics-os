@@ -18,7 +18,7 @@
 | Phase 3: GPU-Native Evaluation | ✅ COMPLETE | 4/4 |
 | Phase 4: Testing & Validation | ✅ COMPLETE | 5/5 |
 
-**Test Results**: 81/81 passing ✅ (70 hyper_bridge + 11 hyper_core)
+**Test Results**: 81/81 passing ✅ (70 ontic_bridge + 11 ontic_core)
 
 ---
 
@@ -31,7 +31,7 @@
 | **No Python Loops** | N/A (Rust consumer) | N/A | Triton kernels in producer |
 | **Higher Scale = Higher Compress** | ✅ Bond dims in header | RESOLVED | QTTBridgeHeader.bond_dims[] |
 | **No Decompression** | ✅ Zero-copy core access | RESOLVED | QTTFrame.core_f32() |
-| **No Dense** | ✅ GPU TT evaluation | RESOLVED | TTEvaluator in hyper_core |
+| **No Dense** | ✅ GPU TT evaluation | RESOLVED | TTEvaluator in ontic_core |
 
 ---
 
@@ -76,17 +76,17 @@
 
 | File | Lines | Purpose |
 |------|-------|---------|
-| `crates/hyper_bridge/src/qtt.rs` | 1100+ | Full QTT-native IPC protocol |
-| `crates/hyper_bridge/src/sovereign_v2.rs` | 450+ | Refactored SovereignBridge with bytemuck |
-| `crates/hyper_bridge/src/tests/mod.rs` | 10 | Test module organization |
-| `crates/hyper_bridge/src/tests/concurrent.rs` | 175+ | Concurrent access tests |
-| `crates/hyper_bridge/src/tests/fuzz.rs` | 325+ | Fuzzing tests for malformed data |
-| `crates/hyper_bridge/src/tests/constitution.rs` | 415+ | Constitution compliance validation |
-| `crates/hyper_core/src/gpu/mod.rs` | 50+ | GPU module declaration |
-| `crates/hyper_core/src/gpu/tt_eval.rs` | 350+ | TT evaluator with CPU fallback |
-| `crates/hyper_core/src/gpu/tt_eval.wgsl` | 165 | WGPU compute shader |
-| `crates/hyper_core/src/gpu/pipeline.rs` | 275 | GPU pipeline with zero-copy |
-| `crates/hyper_core/benches/tt_bench.rs` | 145 | Criterion benchmarks |
+| `crates/ontic_bridge/src/qtt.rs` | 1100+ | Full QTT-native IPC protocol |
+| `crates/ontic_bridge/src/sovereign_v2.rs` | 450+ | Refactored SovereignBridge with bytemuck |
+| `crates/ontic_bridge/src/tests/mod.rs` | 10 | Test module organization |
+| `crates/ontic_bridge/src/tests/concurrent.rs` | 175+ | Concurrent access tests |
+| `crates/ontic_bridge/src/tests/fuzz.rs` | 325+ | Fuzzing tests for malformed data |
+| `crates/ontic_bridge/src/tests/constitution.rs` | 415+ | Constitution compliance validation |
+| `crates/ontic_core/src/gpu/mod.rs` | 50+ | GPU module declaration |
+| `crates/ontic_core/src/gpu/tt_eval.rs` | 350+ | TT evaluator with CPU fallback |
+| `crates/ontic_core/src/gpu/tt_eval.wgsl` | 165 | WGPU compute shader |
+| `crates/ontic_core/src/gpu/pipeline.rs` | 275 | GPU pipeline with zero-copy |
+| `crates/ontic_core/benches/tt_bench.rs` | 145 | Criterion benchmarks |
 
 ### Files Modified
 
@@ -106,7 +106,7 @@
 
 ### [P0-1] Fix WeatherHeader Packed Alignment
 
-**File**: `crates/hyper_bridge/src/weather.rs`  
+**File**: `crates/ontic_bridge/src/weather.rs`  
 **Severity**: CRITICAL  
 **Doctrine Violation**: Dense memory access pattern
 
@@ -189,7 +189,7 @@ const _: () = {
 
 ### [P0-3] Fix WeatherFrame Unsafe Pointer Alignment
 
-**File**: `crates/hyper_bridge/src/weather.rs`  
+**File**: `crates/ontic_bridge/src/weather.rs`  
 **Lines**: 156-170
 
 **Current State**:
@@ -229,7 +229,7 @@ pub fn v_field(&self) -> &[f32] {
 
 ### [P1-1] Refactor SovereignBridge to Use Bytemuck Struct
 
-**File**: `crates/hyper_bridge/src/sovereign.rs`  
+**File**: `crates/ontic_bridge/src/sovereign.rs`  
 **Severity**: HIGH
 
 **Current State**: Manual hex offset calculations (error-prone)
@@ -291,7 +291,7 @@ const _: () = {
 
 ### [P2-1] Design QTTBridgeHeader Structure
 
-**File**: `crates/hyper_bridge/src/qtt.rs` (NEW)  
+**File**: `crates/ontic_bridge/src/qtt.rs` (NEW)  
 **Doctrine**: QTT Native, No Decompression, No Dense
 
 **Design Specification**:
@@ -577,7 +577,7 @@ impl QTTBridgeHeader {
 
 ### [P3-1] WGPU Compute Shader for TT Contraction
 
-**File**: `crates/hyper_core/src/gpu/tt_eval.wgsl` (NEW)
+**File**: `crates/ontic_core/src/gpu/tt_eval.wgsl` (NEW)
 
 **Design**: Evaluate TT at specific indices WITHOUT full reconstruction
 
@@ -723,4 +723,4 @@ Week 3:
 
 ---
 
-*This document tracks the elevation of hyper_bridge to ELITE production standards.*
+*This document tracks the elevation of ontic_bridge to ELITE production standards.*

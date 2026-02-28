@@ -337,11 +337,11 @@ apps/
 
 ```
 crates/
-├── hyper_bridge/           # Rust ↔ Python bridge
+├── ontic_bridge/           # Rust ↔ Python bridge
 │   ├── Cargo.toml
 │   └── src/
 │       └── lib.rs
-└── hyper_core/             # Core Rust tensor ops
+└── ontic_core/             # Core Rust tensor ops
     ├── Cargo.toml
     └── src/
         ├── lib.rs

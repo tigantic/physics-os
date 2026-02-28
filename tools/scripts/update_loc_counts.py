@@ -171,8 +171,8 @@ def scan_rust_crates(root: Path) -> dict[str, DirStats]:
         ("fluidelite-zk", root / "fluidelite-zk"),
         ("glass_cockpit", root / "apps" / "glass_cockpit"),
         ("global_eye", root / "apps" / "global_eye"),
-        ("hyper_bridge", root / "crates" / "hyper_bridge"),
-        ("hyper_core", root / "crates" / "hyper_core"),
+        ("ontic_bridge", root / "crates" / "ontic_bridge"),
+        ("ontic_core", root / "crates" / "ontic_core"),
         ("tci_core_rust", root / "tci_core_rust"),
     ]
     

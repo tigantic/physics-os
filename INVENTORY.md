@@ -776,9 +776,9 @@ ZK proof circuits, conservation proofs, and Yang-Mills research.
 | `fluidelite_infra/` | FluidElite infrastructure |
 | `fluidelite_zk/` | ZK verification for FluidElite |
 | `gevulot/` | Gevulot decentralized prover integration |
-| `hyper_bridge/` | Python ↔ Rust bridge |
-| `hyper_core/` | Core Rust library |
-| `hyper_gpu_py/` | GPU-accelerated Python bindings |
+| `ontic_bridge/` | Python ↔ Rust bridge |
+| `ontic_core/` | Core Rust library |
+| `ontic_gpu_py/` | GPU-accelerated Python bindings |
 | `proof_bridge/` | Proof system bridge |
 | `qtt_cem/` | QTT Cross-Entropy Method optimizer |
 | `qtt_fea/` | QTT Finite Element Analysis |

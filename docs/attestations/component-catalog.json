@@ -203,7 +203,7 @@
         "loc": 20703,
         "purpose": "ZK Prover Engine"
       },
-      "hyper_bridge": {
+      "ontic_bridge": {
         "files": 8,
         "loc": 2135,
         "purpose": "Python/Rust FFI Bridge"
@@ -218,7 +218,7 @@
         "loc": 1167,
         "purpose": "Global Monitoring"
       },
-      "hyper_core": {
+      "ontic_core": {
         "files": 3,
         "loc": 184,
         "purpose": "Core Operations"

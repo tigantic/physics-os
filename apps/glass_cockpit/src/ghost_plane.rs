@@ -7,7 +7,7 @@
 //! giving the pilot/AI a visual target to fly toward.
 
 use glam::{Vec3, Quat, Mat4};
-use hyper_bridge::trajectory::{TrajectoryData, Waypoint};
+use ontic_bridge::trajectory::{TrajectoryData, Waypoint};
 
 /// Ghost plane configuration
 #[derive(Debug, Clone, Copy)]

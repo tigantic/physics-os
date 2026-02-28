@@ -308,7 +308,7 @@
 | XVII.3 | ML for Physics | ✅ | `ontic/ml_physics/__init__.py` (PINN, FNO), `ontic/ml_surrogates/pinns_v2.py` | PINNs, FNO, neural network potentials, TT-decomposed weights |
 | XVII.4 | Mesh Generation & Adaptive | ✅ | `ontic/mesh_amr/__init__.py` | Octree/quadtree, Delaunay 2D/3D, h-adaptivity, Morton Z-curve |
 | XVII.5 | Linear Algebra (Large-Scale) | ✅ | `ontic/algorithms/lanczos.py`, `crates/qtt_fea/` | CG, Lanczos, Krylov methods |
-| XVII.6 | HPC | ✅ | `crates/hyper_core/`, WGPU shaders, CUDA | GPU compute, async, IPC, Morton Z |
+| XVII.6 | HPC | ✅ | `crates/ontic_core/`, WGPU shaders, CUDA | GPU compute, async, IPC, Morton Z |
 
 ---
 

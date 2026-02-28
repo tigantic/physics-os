@@ -90,7 +90,7 @@
         "n_symbols": 0
       },
       {
-        "path": "crates/hyper_core/src/lib.rs",
+        "path": "crates/ontic_core/src/lib.rs",
         "lang": "rs",
         "score": 118,
         "proposed_category": "core",
@@ -683,7 +683,7 @@
         "n_symbols": 7
       },
       {
-        "path": "crates/hyper_bridge/src/lib.rs",
+        "path": "crates/ontic_bridge/src/lib.rs",
         "lang": "rs",
         "score": 63,
         "proposed_category": "core",
@@ -696,7 +696,7 @@
         "n_symbols": null
       },
       {
-        "path": "crates/hyper_core/benches/tt_bench.rs",
+        "path": "crates/ontic_core/benches/tt_bench.rs",
         "lang": "rs",
         "score": 63,
         "proposed_category": "core",
@@ -707,7 +707,7 @@
         "n_symbols": null
       },
       {
-        "path": "crates/hyper_core/src/gpu/tt_eval.rs",
+        "path": "crates/ontic_core/src/gpu/tt_eval.rs",
         "lang": "rs",
         "score": 63,
         "proposed_category": "core",
@@ -1941,7 +1941,7 @@
         "n_symbols": 8
       },
       {
-        "path": "crates/hyper_bridge/src/bench_real_data.rs",
+        "path": "crates/ontic_bridge/src/bench_real_data.rs",
         "lang": "rs",
         "score": 38,
         "proposed_category": null,
@@ -1952,7 +1952,7 @@
         "n_symbols": null
       },
       {
-        "path": "crates/hyper_bridge/src/sovereign_v2.rs",
+        "path": "crates/ontic_bridge/src/sovereign_v2.rs",
         "lang": "rs",
         "score": 38,
         "proposed_category": null,
@@ -1962,18 +1962,7 @@
         "n_symbols": null
       },
       {
-        "path": "crates/hyper_bridge/src/tests/concurrent.rs",
-        "lang": "rs",
-        "score": 38,
-        "proposed_category": null,
-        "keywords": [
-          "QTT",
-          "QTT"
-        ],
-        "n_symbols": null
-      },
-      {
-        "path": "crates/hyper_bridge/src/tests/constitution.rs",
+        "path": "crates/ontic_bridge/src/tests/concurrent.rs",
         "lang": "rs",
         "score": 38,
         "proposed_category": null,
@@ -1984,7 +1973,7 @@
         "n_symbols": null
       },
       {
-        "path": "crates/hyper_bridge/src/tests/fuzz.rs",
+        "path": "crates/ontic_bridge/src/tests/constitution.rs",
         "lang": "rs",
         "score": 38,
         "proposed_category": null,
@@ -1995,7 +1984,18 @@
         "n_symbols": null
       },
       {
-        "path": "crates/hyper_bridge/src/weather.rs",
+        "path": "crates/ontic_bridge/src/tests/fuzz.rs",
+        "lang": "rs",
+        "score": 38,
+        "proposed_category": null,
+        "keywords": [
+          "QTT",
+          "QTT"
+        ],
+        "n_symbols": null
+      },
+      {
+        "path": "crates/ontic_bridge/src/weather.rs",
         "lang": "rs",
         "score": 38,
         "proposed_category": null,
@@ -2005,7 +2005,7 @@
         "n_symbols": null
       },
       {
-        "path": "crates/hyper_core/src/transforms/morton.rs",
+        "path": "crates/ontic_core/src/transforms/morton.rs",
         "lang": "rs",
         "score": 38,
         "proposed_category": null,
@@ -2015,7 +2015,7 @@
         "n_symbols": null
       },
       {
-        "path": "crates/hyper_gpu_py/src/lib.rs",
+        "path": "crates/ontic_gpu_py/src/lib.rs",
         "lang": "rs",
         "score": 38,
         "proposed_category": null,
@@ -2933,7 +2933,7 @@
       "n_symbols": 0
     },
     {
-      "path": "crates/hyper_core/src/lib.rs",
+      "path": "crates/ontic_core/src/lib.rs",
       "lang": "rs",
       "score": 118,
       "proposed_category": "core",
@@ -3526,7 +3526,7 @@
       "n_symbols": 7
     },
     {
-      "path": "crates/hyper_bridge/src/lib.rs",
+      "path": "crates/ontic_bridge/src/lib.rs",
       "lang": "rs",
       "score": 63,
       "proposed_category": "core",
@@ -3539,7 +3539,7 @@
       "n_symbols": null
     },
     {
-      "path": "crates/hyper_core/benches/tt_bench.rs",
+      "path": "crates/ontic_core/benches/tt_bench.rs",
       "lang": "rs",
       "score": 63,
       "proposed_category": "core",
@@ -3550,7 +3550,7 @@
       "n_symbols": null
     },
     {
-      "path": "crates/hyper_core/src/gpu/tt_eval.rs",
+      "path": "crates/ontic_core/src/gpu/tt_eval.rs",
       "lang": "rs",
       "score": 63,
       "proposed_category": "core",
@@ -4792,7 +4792,7 @@
       "n_symbols": 8
     },
     {
-      "path": "crates/hyper_bridge/src/bench_real_data.rs",
+      "path": "crates/ontic_bridge/src/bench_real_data.rs",
       "lang": "rs",
       "score": 38,
       "proposed_category": null,
@@ -4803,7 +4803,7 @@
       "n_symbols": null
     },
     {
-      "path": "crates/hyper_bridge/src/sovereign_v2.rs",
+      "path": "crates/ontic_bridge/src/sovereign_v2.rs",
       "lang": "rs",
       "score": 38,
       "proposed_category": null,
@@ -4813,18 +4813,7 @@
       "n_symbols": null
     },
     {
-      "path": "crates/hyper_bridge/src/tests/concurrent.rs",
-      "lang": "rs",
-      "score": 38,
-      "proposed_category": null,
-      "keywords": [
-        "QTT",
-        "QTT"
-      ],
-      "n_symbols": null
-    },
-    {
-      "path": "crates/hyper_bridge/src/tests/constitution.rs",
+      "path": "crates/ontic_bridge/src/tests/concurrent.rs",
       "lang": "rs",
       "score": 38,
       "proposed_category": null,
@@ -4835,7 +4824,7 @@
       "n_symbols": null
     },
     {
-      "path": "crates/hyper_bridge/src/tests/fuzz.rs",
+      "path": "crates/ontic_bridge/src/tests/constitution.rs",
       "lang": "rs",
       "score": 38,
       "proposed_category": null,
@@ -4846,7 +4835,18 @@
       "n_symbols": null
     },
     {
-      "path": "crates/hyper_bridge/src/weather.rs",
+      "path": "crates/ontic_bridge/src/tests/fuzz.rs",
+      "lang": "rs",
+      "score": 38,
+      "proposed_category": null,
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "n_symbols": null
+    },
+    {
+      "path": "crates/ontic_bridge/src/weather.rs",
       "lang": "rs",
       "score": 38,
       "proposed_category": null,
@@ -4856,7 +4856,7 @@
       "n_symbols": null
     },
     {
-      "path": "crates/hyper_core/src/transforms/morton.rs",
+      "path": "crates/ontic_core/src/transforms/morton.rs",
       "lang": "rs",
       "score": 38,
       "proposed_category": null,
@@ -4866,7 +4866,7 @@
       "n_symbols": null
     },
     {
-      "path": "crates/hyper_gpu_py/src/lib.rs",
+      "path": "crates/ontic_gpu_py/src/lib.rs",
       "lang": "rs",
       "score": 38,
       "proposed_category": null,
@@ -7240,7 +7240,7 @@
       "n_symbols": 5
     },
     {
-      "path": "crates/hyper_core/src/bin/gpu_bench.rs",
+      "path": "crates/ontic_core/src/bin/gpu_bench.rs",
       "lang": "rs",
       "score": 13,
       "proposed_category": "core",
@@ -7250,7 +7250,7 @@
       "n_symbols": null
     },
     {
-      "path": "crates/hyper_core/src/gpu/pipeline.rs",
+      "path": "crates/ontic_core/src/gpu/pipeline.rs",
       "lang": "rs",
       "score": 13,
       "proposed_category": "core",
@@ -7260,7 +7260,7 @@
       "n_symbols": null
     },
     {
-      "path": "crates/hyper_core/src/gpu/wgpu_pipeline.rs",
+      "path": "crates/ontic_core/src/gpu/wgpu_pipeline.rs",
       "lang": "rs",
       "score": 13,
       "proposed_category": "core",

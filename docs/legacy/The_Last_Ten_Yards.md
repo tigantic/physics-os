@@ -70,7 +70,7 @@ Files fixed:
 - `README.md` (badge)
 - `CITATION.cff`
 - `.zenodo.json`
-- All Rust crates (`apps/glass_cockpit`, `apps/global_eye`, `hyper_core`, `hyper_bridge`, `tci_core`)
+- All Rust crates (`apps/glass_cockpit`, `apps/global_eye`, `ontic_core`, `ontic_bridge`, `tci_core`)
 - SDK files, CUDA setup.py, site generator
 
 ---

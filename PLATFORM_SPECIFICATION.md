@@ -847,10 +847,10 @@ Launch readiness is tracked via [`LAUNCH_GATE_MATRIX.json`](docs/operations/LAUN
 | `glass_cockpit` | 68 | 30,608 | Flight instrumentation and visualization (wgpu, 18 WGSL shaders) |
 | `fluidelite_circuits` | 42 | 21,342 | ZK circuit definitions (Halo2 constraint systems) |
 | `fluidelite_infra` | 17 | 8,542 | FluidElite infrastructure (persistence, networking, deployment) |
-| `hyper_bridge` | 16 | 5,917 | Python/Rust FFI via mmap + protobuf (132KB shared memory, 9ms latency) |
+| `ontic_bridge` | 16 | 5,917 | Python/Rust FFI via mmap + protobuf (132KB shared memory, 9ms latency) |
 | `fluidelite_core` | 9 | 3,529 | FluidElite core tensor engine (Rust) |
 | `cem-qtt` | 9 | 2,695 | Maxwell FDTD solver (Q16.16 fixed-point, MPS/MPO tensor compression) |
-| `hyper_core` | 10 | 2,638 | Core tensor operations |
+| `ontic_core` | 10 | 2,638 | Core tensor operations |
 | `glass-cockpit` | 4 | 2,194 | Cockpit utilities |
 | `tci_core_rust` | 6 | 1,871 | Tensor Cross Interpolation (Rust) |
 | `proof_bridge` | 6 | 1,718 | Computation trace → ZK circuit builder |
@@ -861,7 +861,7 @@ Launch readiness is tracked via [`LAUNCH_GATE_MATRIX.json`](docs/operations/LAUN
 | `trustless_verify` | 3 | 965 | Standalone TPC certificate verifier |
 | `golden_demo` | 1 | 909 | Golden-path demo application (Rust) |
 | `vlasov_proof` | 1 | 355 | Vlasov equation formal proof harness (Rust) |
-| `hyper_gpu_py` | 1 | 347 | GPU Python bindings |
+| `ontic_gpu_py` | 1 | 347 | GPU Python bindings |
 
 ### §14.4 Lean 4 Formal Proofs
 
@@ -1509,7 +1509,7 @@ pip install tensornet[all]              # Everything
 
 | Bridge | Mechanism | Latency | Throughput |
 |--------|-----------|--------:|-----------|
-| Python ↔ Rust (`hyper_bridge`) | mmap + protobuf, 132KB shared memory | 9 ms | Streaming for tensors > 100MB |
+| Python ↔ Rust (`ontic_bridge`) | mmap + protobuf, 132KB shared memory | 9 ms | Streaming for tensors > 100MB |
 | Python ↔ CUDA | CuPy / direct ctypes | < 1 ms | GPU memory bandwidth bound |
 | Python ↔ Triton | JIT compilation | First call: ~2s; subsequent: < 1 ms | Kernel-dependent |
 | Rust ↔ GPU (WGSL) | wgpu | < 1 ms | GPU bound |
@@ -1519,7 +1519,7 @@ pip install tensornet[all]              # Everything
 | Format | Use |
 |--------|-----|
 | **JSON** | API request/response, attestation envelopes, certificates |
-| **Protocol Buffers** | Cross-language tensor exchange (hyper_bridge) |
+| **Protocol Buffers** | Cross-language tensor exchange (ontic_bridge) |
 | **NPZ** | NumPy array serialization (internal tensors) |
 | **VTK/VTU** | CFD visualization export (`ontic/platform/export/`) |
 | **ONNX** | Neural network import/export |
@@ -1743,8 +1743,8 @@ HyperTensor-VM-main/
 │   ├── fluidelite_core/            #   FluidElite CFD core (Rust)
 │   ├── fluidelite_zk/              #   FluidElite ZK prover (Rust, 31K LOC)
 │   ├── gevulot/                    #   Gevulot decentralized prover
-│   ├── hyper_bridge/               #   Python↔Rust IPC (6K LOC)
-│   ├── hyper_core/                 #   Core tensor ops (2.6K LOC)
+│   ├── ontic_bridge/               #   Python↔Rust IPC (6K LOC)
+│   ├── ontic_core/                 #   Core tensor ops (2.6K LOC)
 │   ├── proof_bridge/               #   Trace→ZK circuit (1.7K LOC)
 │   ├── qtt_cem/                    #   Maxwell FDTD (Rust, 2.7K LOC)
 │   ├── qtt_fea/                    #   Hex8 elasticity (Rust, 1.2K LOC)

@@ -99,8 +99,8 @@ HyperTensor-VM (monorepo)
 │   ├── discovery/        25K LOC — Discovery engine
 │   └── [93 more dirs]    Physics domains (acoustics → zk)
 ├── crates/               Rust substrate  (15 crates, 151K LOC)
-│   ├── hyper_core/       Core QTT/MPO ops
-│   ├── hyper_bridge/     Python↔Rust IPC
+│   ├── ontic_core/       Core QTT/MPO ops
+│   ├── ontic_bridge/     Python↔Rust IPC
 │   ├── proof_bridge/     ZK proof pipeline
 │   ├── fluidelite_*/     FluidElite family (4 crates)
 │   ├── qtt_*/            Native solvers (CEM, FEA, OPT)
@@ -292,7 +292,7 @@ Physics Problem
 |:-----:|------|-------|:----------------:|:-----------:|
 | **0** | Identity Layer | Brand assets, README, docs, LICENSE, headers | None | 1 session |
 | **1** | Python Package Rename | `ontic/` → `ontic/`, `physics_os/` → `physics_os/` | **YES** | 2-3 sessions |
-| **2** | Rust Crate Rename | `hyper_core` → `ontic_core`, `hyper_bridge` → `ontic_bridge` | **YES** | 1 session |
+| **2** | Rust Crate Rename | `ontic_core` → `ontic_core`, `ontic_bridge` → `ontic_bridge` | **YES** | 1 session |
 | **3** | Repository Rename | `HyperTensor-VM` → `physics-os` on GitHub | **YES** | 1 session |
 | **4** | Documentation Overhaul | Full rebrand of all 30+ docs | None (content) | 1-2 sessions |
 | **5** | CI/CD & Deployment | Workflow names, badge URLs, container tags | Operational | 1 session |
@@ -385,9 +385,9 @@ Physics Problem
 
 | Current | New |
 |---------|-----|
-| `crates/hyper_core/` | `crates/ontic_core/` |
-| `crates/hyper_bridge/` | `crates/ontic_bridge/` |
-| `crates/hyper_gpu_py/` | `crates/ontic_gpu_py/` |
+| `crates/ontic_core/` | `crates/ontic_core/` |
+| `crates/ontic_bridge/` | `crates/ontic_bridge/` |
+| `crates/ontic_gpu_py/` | `crates/ontic_gpu_py/` |
 
 Update `Cargo.toml` workspace members, all `use` statements, and the PyO3 module registration.
 

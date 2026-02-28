@@ -7,7 +7,7 @@ Usage:
     
 This builds:
     - tci_core: Rust TCI via PyO3
-    - hyper_gpu_py: CUDA pipeline via PyO3
+    - ontic_gpu_py: CUDA pipeline via PyO3
 """
 
 import subprocess
@@ -81,7 +81,7 @@ def main():
     # Extensions to build
     extensions = [
         "tci_core",      # Rust TCI
-        "hyper_gpu_py",  # CUDA pipeline
+        "ontic_gpu_py",  # CUDA pipeline
     ]
     
     results = {}
@@ -103,7 +103,7 @@ def main():
         print("\n✅ All extensions built successfully!")
         print("\nUsage in Python:")
         print("  from tci_core import TCISampler, RUST_AVAILABLE")
-        print("  from hyper_gpu_py import CudaTTEvaluator, CUDA_AVAILABLE")
+        print("  from ontic_gpu_py import CudaTTEvaluator, CUDA_AVAILABLE")
     else:
         print("\n⚠️ Some extensions failed to build.")
         print("Check that Rust, CUDA toolkit, and Python dev headers are installed.")

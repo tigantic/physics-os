@@ -21,9 +21,9 @@ The platform's correctness model depends on deterministic, bit-exact execution a
 
 1. `ontic/` and `physics_os/` are the Python package roots (108 and ~30 modules respectively).
 2. `crates/` contains 15 Rust workspace members providing core compute, bridge, and ZK capabilities.
-3. `hyper_bridge` exposes Rust functions to Python via PyO3 (`#[pyfunction]`, `#[pyclass]`).
-4. High-throughput data transfer uses `mmap`-backed shared memory (`hyper_core` ↔ Python via `memmap2`).
-5. `apps/` contains standalone Rust binaries (glass_cockpit, global_eye) that consume `hyper_core` directly.
+3. `ontic_bridge` exposes Rust functions to Python via PyO3 (`#[pyfunction]`, `#[pyclass]`).
+4. High-throughput data transfer uses `mmap`-backed shared memory (`ontic_core` ↔ Python via `memmap2`).
+5. `apps/` contains standalone Rust binaries (glass_cockpit, global_eye) that consume `ontic_core` directly.
 6. The deployment unit is a single container (`deploy/Containerfile`) bundling Python + compiled Rust extensions.
 7. Version synchronization is enforced via `pyproject.toml` (Python) and `Cargo.toml` (Rust workspace) with CI checks.
 

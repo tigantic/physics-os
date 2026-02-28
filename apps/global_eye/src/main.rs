@@ -1,7 +1,7 @@
 //! Global Eye - HyperTensor Atmospheric Observation Platform
 //!
-//! A global-scale weather visualization system that shares the hyper_bridge IPC
-//! protocol and hyper_core physics transforms with Glass Cockpit.
+//! A global-scale weather visualization system that shares the ontic_bridge IPC
+//! protocol and ontic_core physics transforms with Glass Cockpit.
 //!
 //! # Phase 1C-10: Complete Integration
 //!
@@ -41,10 +41,10 @@ fn main() -> Result<()> {
     println!();
     
     // Check weather bridge status
-    let reader = hyper_bridge::WeatherReader::new();
+    let reader = ontic_bridge::WeatherReader::new();
     
     if reader.is_available() {
-        println!("  ✓ Weather bridge detected at {}", hyper_bridge::WEATHER_SHM_PATH);
+        println!("  ✓ Weather bridge detected at {}", ontic_bridge::WEATHER_SHM_PATH);
         
         // Try to read current frame
         match reader.read_current() {
@@ -197,7 +197,7 @@ fn main() -> Result<()> {
 }
 
 /// Print information about a weather frame.
-fn print_frame_info(frame: &hyper_bridge::WeatherFrame) {
+fn print_frame_info(frame: &ontic_bridge::WeatherFrame) {
     let header = frame.header();
     
     // Copy fields from packed struct to avoid unaligned access

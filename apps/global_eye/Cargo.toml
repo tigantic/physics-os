@@ -3,7 +3,7 @@ name = "global_eye"
 version = "0.1.0"
 edition = "2021"
 authors = ["TiganticLabz <dev@tigantic.com>"]
-description = "Global weather observation platform - HyperTensor satellite intelligence"
+description = "Global weather observation platform - Ontic Engine satellite intelligence"
 license = "LicenseRef-Proprietary"
 rust-version = "1.75"
 
@@ -11,8 +11,8 @@ rust-version = "1.75"
 # ─────────────────────────────────────────────────────────────────────────────
 # Workspace Crates (shared physics + IPC)
 # ─────────────────────────────────────────────────────────────────────────────
-hyper_bridge = { path = "../../crates/hyper_bridge" }
-hyper_core = { path = "../../crates/hyper_core" }
+ontic_bridge = { path = "../../crates/ontic_bridge" }
+ontic_core = { path = "../../crates/ontic_core" }
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Graphics Pipeline

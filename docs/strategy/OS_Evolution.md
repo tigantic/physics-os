@@ -212,7 +212,7 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 | 3.11 | **Mixed-precision pipeline** — FP64 where needed (conservation), FP16/BF16 elsewhere, INT8 for inference | 2-4× throughput increase | ✅ `ontic/gpu/mixed_precision.py` |
 | 3.12 | **NVIDIA GH200 / Blackwell optimization** — Exploit unified CPU-GPU memory, transformer engines | Next-gen GPU architecture advantage | ✅ `ontic/gpu/blackwell_opt.py` |
 | 3.13 | **ARM SVE/SVE2 SIMD** — Vectorized QTT kernels for Graviton/Neoverse | Cloud-native ARM performance | ✅ `ontic/hardware/arm_sve.py` |
-| 3.14 | **WebGPU compute shaders** — Browser-native physics computation via wgpu | Physics in the browser, zero-install demos | ✅ `crates/hyper_core/` Rust WGPU |
+| 3.14 | **WebGPU compute shaders** — Browser-native physics computation via wgpu | Physics in the browser, zero-install demos | ✅ `crates/ontic_core/` Rust WGPU |
 | 3.15 | **Distributed MPI solver framework** — Domain-decomposed QTT across thousands of nodes | Exascale-class simulations | ✅ `ontic/distributed/` |
 | 3.16 | **NVLink / NVSwitch-aware communication** — Topology-optimized collective operations | Multi-GPU scaling efficiency | ✅ `ontic/gpu/nvlink_topology.py` |
 | 3.17 | **Persistent kernel execution** — Long-running GPU kernels for iterative solvers | Eliminate CPU-GPU synchronization | ✅ `ontic/gpu/persistent_kernel.py` |

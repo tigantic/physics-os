@@ -508,11 +508,11 @@ mv tci_core_rust/      crates/tci_core_rust/
 [workspace]
 members = [
     # Core crates
-    "crates/hyper_core",
-    "crates/hyper_bridge",
+    "crates/ontic_core",
+    "crates/ontic_bridge",
     "crates/tci_core",
     "crates/tci_core_rust",
-    "crates/hyper_gpu_py",
+    "crates/ontic_gpu_py",
     "crates/proof_bridge",
     # FluidElite family
     "crates/fluidelite",

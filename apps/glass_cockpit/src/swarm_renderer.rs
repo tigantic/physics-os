@@ -11,7 +11,7 @@
 //! - Leader highlighting
 
 use glam::{Vec3, Vec4, Quat};
-use hyper_bridge::swarm::{EntityState, EntityType, SwarmData, Formation};
+use ontic_bridge::swarm::{EntityState, EntityType, SwarmData, Formation};
 
 // =============================================================================
 // SWARM RENDERER CONFIG
@@ -450,7 +450,7 @@ pub fn generate_trail_mesh(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use hyper_bridge::swarm::SwarmData;
+    use ontic_bridge::swarm::SwarmData;
     
     #[test]
     fn test_swarm_renderer_update() {

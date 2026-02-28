@@ -746,7 +746,7 @@ The Civilization Stack comprises 20 domain-specific applications (~31,400 LOC) b
 
 ### 20. GPU & Rust Compute Infrastructure
 
-**Source**: `crates/hyper_core/` (1,096 LOC), `crates/hyper_bridge/` (2,209 LOC), `crates/tci_core/` (807 LOC)
+**Source**: `crates/ontic_core/` (1,096 LOC), `crates/ontic_bridge/` (2,209 LOC), `crates/tci_core/` (807 LOC)
 
 #### 20.1 GPU TT Evaluator
 

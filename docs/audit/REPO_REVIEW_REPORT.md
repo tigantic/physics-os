@@ -48,8 +48,8 @@
 │   - Checkpoint          │               ▼
 │   - Provenance/Lineage  │    ┌──────────────────────────────────────────┐
 └────────┬────────────────┘    │       Rust Layer                         │
-         │                     │  hyper_core (QTT GPU eval, WGPU)         │
-         ▼                     │  hyper_bridge (shared-mem IPC)           │
+         │                     │  ontic_core (QTT GPU eval, WGPU)         │
+         ▼                     │  ontic_bridge (shared-mem IPC)           │
 ┌─────────────────────────┐    │  tci_core (TT-Cross PyO3)               │
 │  Physics Engine          │    │  proof_bridge (trace→ZK)                │
 │  tensornet.* (784 files) │    │  fluidelite-core (Q16.16 fixed-point)   │
@@ -83,7 +83,7 @@
 | FluidElite Server | `fluidelite-zk` (Axum) | HTTP REST |
 | CLI: trace-to-proof | `crates/proof_bridge/src/bin/trace_to_proof.rs` | CLI |
 | CLI: trustless-verify | `apps/trustless_verify/` | CLI |
-| GPU Bench | `crates/hyper_core/gpu_bench` | CLI |
+| GPU Bench | `crates/ontic_core/gpu_bench` | CLI |
 | Gevulot Prover | Containerfile → `/program` | VM binary |
 
 ### Build/Run/Deploy Flow
@@ -118,8 +118,8 @@ Source → pip install -e ".[all]" (Python)
 | `ontic/exploit/` | DeFi exploit hunting engine | ~26K | `hunter.py`, `etherfi_hunt.py`, `hypergrid.py` |
 | `ontic/genesis/` | Code/config generation | ~41K | Various generators |
 | `ontic/cuda/` | CUDA kernels + Python bindings | ~3.7K + 570 | `qtt_native_kernels.cu`, `qtt_native_ops.py` |
-| `crates/hyper_core/` | Rust GPU TT evaluator (WGPU) | ~2K | `src/gpu/tt_eval.rs` |
-| `crates/hyper_bridge/` | Shared-memory IPC | ~6K | `src/protocol.rs`, `src/reader.rs` |
+| `crates/ontic_core/` | Rust GPU TT evaluator (WGPU) | ~2K | `src/gpu/tt_eval.rs` |
+| `crates/ontic_bridge/` | Shared-memory IPC | ~6K | `src/protocol.rs`, `src/reader.rs` |
 | `crates/tci_core/` | TT-Cross interpolation (PyO3) | ~3K | `src/lib.rs`, `src/maxvol.rs` |
 | `crates/proof_bridge/` | Trace→ZK circuit builder | ~5K | `src/circuit_builder.rs`, `src/certificate.rs` |
 | `fluidelite-core/` | Fixed-point primitives | ~4K | Q16.16 arithmetic for ZK |
@@ -334,7 +334,7 @@ make check        # All gates: format + typecheck + test + proofs + physics
 |-----------|-------|------|
 | Python physics engine | Single-threaded (GIL) | PyTorch releases GIL for tensor ops → effective parallelism for compute; Python-side orchestration is sequential |
 | Rust TCI core | `rayon` thread pool | Sound; no shared mutable state |
-| Rust hyper_bridge | Explicitly NOT thread-safe | Documented; per-consumer instances required |
+| Rust ontic_bridge | Explicitly NOT thread-safe | Documented; per-consumer instances required |
 | CUDA kernels | GPU parallelism | No stream management; all on default stream → serialized kernel launches |
 | Distributed module | MPI-style via `ontic.distributed` | Module structure exists; implementation depth not verified |
 
@@ -404,7 +404,7 @@ make check        # All gates: format + typecheck + test + proofs + physics
 | **Dependency outage (PyPI/crates.io)** | Build fails; Icicle from git tag compounds risk | Cargo.lock mitigates; Python lockfile partially mitigates |
 | **GPU OOM** | `VRAMManager` triggers emergency cleanup (`gc.collect()` + `torch.cuda.empty_cache()`) — no prioritized eviction | [ontic/gpu/memory.py](ontic/gpu/memory.py) |
 | **Disk full** | Certificate storage has `max_total_size = "10GB"` in config but no enforcement code found | [deploy/config/deployment.toml](deploy/config/deployment.toml) |
-| **Network partition** | Shared-memory IPC has no timeout; reader blocks indefinitely | [crates/hyper_bridge/src/lib.rs](crates/hyper_bridge/src/lib.rs) |
+| **Network partition** | Shared-memory IPC has no timeout; reader blocks indefinitely | [crates/ontic_bridge/src/lib.rs](crates/ontic_bridge/src/lib.rs) |
 | **Invalid config** | `deployment.toml` parsed at startup; missing required fields cause crash | No graceful degradation or defaults documented |
 | **Corrupted checkpoint** | Loads with warning only; simulation continues with bad data | [ontic/platform/checkpoint.py line 210](ontic/platform/checkpoint.py#L210) |
 

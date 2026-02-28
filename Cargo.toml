@@ -5,8 +5,8 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 #
 # Architecture:
-#   crates/hyper_core         - Ontic Engine core (QTT, MPO, CFD operators)
-#   crates/hyper_bridge       - Ontic Bridge IPC protocol (Python ↔ Rust streaming)
+#   crates/ontic_core         - Ontic Engine core (QTT, MPO, CFD operators)
+#   crates/ontic_bridge       - Ontic Bridge IPC protocol (Python ↔ Rust streaming)
 #   crates/proof_bridge       - Trustless Physics: trace → ZK proof pipeline
 #   crates/fluidelite_core    - FluidElite core engine
 #   crates/fluidelite_circuits- FluidElite ZK circuit layer
@@ -27,9 +27,9 @@
 [workspace]
 members = [
     # ── Core engine crates ──────────────────────────────────────────────
-    "crates/hyper_core",
-    "crates/hyper_bridge",
-    "crates/hyper_gpu_py",
+    "crates/ontic_core",
+    "crates/ontic_bridge",
+    "crates/ontic_gpu_py",
     "crates/tci_core",
     "crates/proof_bridge",
 

@@ -119,7 +119,7 @@ impl WindTexture {
     
     /// Update from a WeatherFrame (zero-copy from shared memory).
     #[cfg(feature = "weather-bridge")]
-    pub fn update_from_frame(&self, queue: &Queue, frame: &hyper_bridge::WeatherFrame) {
+    pub fn update_from_frame(&self, queue: &Queue, frame: &ontic_bridge::WeatherFrame) {
         self.update(queue, frame.u_field(), frame.v_field());
     }
     

@@ -5,7 +5,7 @@
 use crate::camera::Camera;
 use crate::globe_mesh::{GlobeMesh, GlobeVertex};
 use crate::wind_texture::WindTexture;
-use hyper_bridge::WeatherReader;
+use ontic_bridge::WeatherReader;
 use wgpu::util::DeviceExt;
 use winit::window::Window;
 

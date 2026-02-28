@@ -28953,7 +28953,7 @@
       "symbols": null
     },
     {
-      "path": "crates/hyper_bridge/src/bench_real_data.rs",
+      "path": "crates/ontic_bridge/src/bench_real_data.rs",
       "lang": "rs",
       "category": "other",
       "keywords": [
@@ -28963,7 +28963,7 @@
       "symbols": null
     },
     {
-      "path": "crates/hyper_bridge/src/lib.rs",
+      "path": "crates/ontic_bridge/src/lib.rs",
       "lang": "rs",
       "category": "other",
       "keywords": [
@@ -28975,7 +28975,7 @@
       "symbols": null
     },
     {
-      "path": "crates/hyper_bridge/src/sovereign_v2.rs",
+      "path": "crates/ontic_bridge/src/sovereign_v2.rs",
       "lang": "rs",
       "category": "other",
       "keywords": [
@@ -28984,17 +28984,7 @@
       "symbols": null
     },
     {
-      "path": "crates/hyper_bridge/src/tests/concurrent.rs",
-      "lang": "rs",
-      "category": "other",
-      "keywords": [
-        "QTT",
-        "QTT"
-      ],
-      "symbols": null
-    },
-    {
-      "path": "crates/hyper_bridge/src/tests/constitution.rs",
+      "path": "crates/ontic_bridge/src/tests/concurrent.rs",
       "lang": "rs",
       "category": "other",
       "keywords": [
@@ -29004,7 +28994,7 @@
       "symbols": null
     },
     {
-      "path": "crates/hyper_bridge/src/tests/fuzz.rs",
+      "path": "crates/ontic_bridge/src/tests/constitution.rs",
       "lang": "rs",
       "category": "other",
       "keywords": [
@@ -29014,7 +29004,17 @@
       "symbols": null
     },
     {
-      "path": "crates/hyper_bridge/src/weather.rs",
+      "path": "crates/ontic_bridge/src/tests/fuzz.rs",
+      "lang": "rs",
+      "category": "other",
+      "keywords": [
+        "QTT",
+        "QTT"
+      ],
+      "symbols": null
+    },
+    {
+      "path": "crates/ontic_bridge/src/weather.rs",
       "lang": "rs",
       "category": "other",
       "keywords": [
@@ -29023,7 +29023,7 @@
       "symbols": null
     },
     {
-      "path": "crates/hyper_core/benches/tt_bench.rs",
+      "path": "crates/ontic_core/benches/tt_bench.rs",
       "lang": "rs",
       "category": "other",
       "keywords": [
@@ -29033,7 +29033,7 @@
       "symbols": null
     },
     {
-      "path": "crates/hyper_core/src/bin/gpu_bench.rs",
+      "path": "crates/ontic_core/src/bin/gpu_bench.rs",
       "lang": "rs",
       "category": "other",
       "keywords": [
@@ -29042,7 +29042,7 @@
       "symbols": null
     },
     {
-      "path": "crates/hyper_core/src/gpu/pipeline.rs",
+      "path": "crates/ontic_core/src/gpu/pipeline.rs",
       "lang": "rs",
       "category": "other",
       "keywords": [
@@ -29051,7 +29051,7 @@
       "symbols": null
     },
     {
-      "path": "crates/hyper_core/src/gpu/tt_eval.rs",
+      "path": "crates/ontic_core/src/gpu/tt_eval.rs",
       "lang": "rs",
       "category": "other",
       "keywords": [
@@ -29061,7 +29061,7 @@
       "symbols": null
     },
     {
-      "path": "crates/hyper_core/src/gpu/wgpu_pipeline.rs",
+      "path": "crates/ontic_core/src/gpu/wgpu_pipeline.rs",
       "lang": "rs",
       "category": "other",
       "keywords": [
@@ -29070,7 +29070,7 @@
       "symbols": null
     },
     {
-      "path": "crates/hyper_core/src/lib.rs",
+      "path": "crates/ontic_core/src/lib.rs",
       "lang": "rs",
       "category": "other",
       "keywords": [
@@ -29082,7 +29082,7 @@
       "symbols": null
     },
     {
-      "path": "crates/hyper_core/src/transforms/morton.rs",
+      "path": "crates/ontic_core/src/transforms/morton.rs",
       "lang": "rs",
       "category": "other",
       "keywords": [
@@ -29091,7 +29091,7 @@
       "symbols": null
     },
     {
-      "path": "crates/hyper_gpu_py/src/lib.rs",
+      "path": "crates/ontic_gpu_py/src/lib.rs",
       "lang": "rs",
       "category": "other",
       "keywords": [
@@ -29675,21 +29675,21 @@
       "symbols": null
     },
     {
-      "path": "target/release/.fingerprint/hyper_bridge-4f555ab24e501262/bin-qtt_bench_runner.json",
+      "path": "target/release/.fingerprint/ontic_bridge-4f555ab24e501262/bin-qtt_bench_runner.json",
       "lang": "json",
       "category": "qtt-misc",
       "keywords": [],
       "symbols": null
     },
     {
-      "path": "target/release/.fingerprint/hyper_bridge-808b49f125d04ef7/bin-qtt_bench_runner.json",
+      "path": "target/release/.fingerprint/ontic_bridge-808b49f125d04ef7/bin-qtt_bench_runner.json",
       "lang": "json",
       "category": "qtt-misc",
       "keywords": [],
       "symbols": null
     },
     {
-      "path": "target/release/.fingerprint/hyper_bridge-c4589d528b53b533/test-bin-qtt_bench_runner.json",
+      "path": "target/release/.fingerprint/ontic_bridge-c4589d528b53b533/test-bin-qtt_bench_runner.json",
       "lang": "json",
       "category": "qtt-misc",
       "keywords": [],
@@ -31680,7 +31680,7 @@
       ]
     },
     {
-      "path": "crates/hyper_bridge/src/bin/qtt_bench_runner.rs",
+      "path": "crates/ontic_bridge/src/bin/qtt_bench_runner.rs",
       "lang": "rs",
       "category": "qtt-misc",
       "keywords": [
@@ -31689,7 +31689,7 @@
       "symbols": null
     },
     {
-      "path": "crates/hyper_bridge/src/qtt.rs",
+      "path": "crates/ontic_bridge/src/qtt.rs",
       "lang": "rs",
       "category": "qtt-misc",
       "keywords": [

@@ -33,7 +33,7 @@ Halo2 (PLONKish) was selected because: (1) universal trusted setup (KZG ceremony
 1. Circuit definitions live in `crates/fluidelite_circuits/` and `crates/fluidelite_zk/`.
 2. Custom gates implement Q16.16 multiplication, addition, and comparison.
 3. Lookup tables provide range checks [0, 2^16) and precomputed trigonometric values.
-4. Proof generation is performed by `proof_bridge` (Rust) invoked from Python via `hyper_bridge`.
+4. Proof generation is performed by `proof_bridge` (Rust) invoked from Python via `ontic_bridge`.
 5. Verifier contracts are generated and deployed to `contracts/FluidEliteHalo2Verifier.sol`.
 6. Groth16 is retained as a secondary option (via `fluidelite-zk`'s `groth16_real` binary) for applications requiring minimal proof size.
 

@@ -6,7 +6,7 @@
 //!
 //! This module requires the `wgpu` feature to be enabled:
 //! ```toml
-//! hyper_core = { version = "0.1", features = ["wgpu"] }
+//! ontic_core = { version = "0.1", features = ["wgpu"] }
 //! ```
 //!
 //! # Architecture

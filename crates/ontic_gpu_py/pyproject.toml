@@ -3,7 +3,7 @@ requires = ["maturin>=1.4,<2.0"]
 build-backend = "maturin"
 
 [project]
-name = "hyper_gpu_py"
+name = "ontic_gpu_py"
 version = "0.1.0"
 description = "CUDA-accelerated TT evaluation for HyperTensor (97M queries/sec)"
 requires-python = ">=3.10"

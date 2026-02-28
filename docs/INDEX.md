@@ -208,9 +208,9 @@ Research documents, findings, and hypothesis records (40+ items including QTT be
 
 | Crate | Description |
 |-------|-------------|
-| `hyper_core` | Physics engine core (QTT, MPO, CFD operators) |
-| `hyper_bridge` | RAM bridge IPC (Python ↔ Rust streaming) |
-| `hyper_gpu_py` | GPU acceleration PyO3 bindings |
+| `ontic_core` | Physics engine core (QTT, MPO, CFD operators) |
+| `ontic_bridge` | RAM bridge IPC (Python ↔ Rust streaming) |
+| `ontic_gpu_py` | GPU acceleration PyO3 bindings |
 | `tci_core` | Tensor Cross Interpolation (PyO3) |
 | `proof_bridge` | Trace → ZK proof pipeline |
 | `fluidelite_core` | FluidElite core engine |

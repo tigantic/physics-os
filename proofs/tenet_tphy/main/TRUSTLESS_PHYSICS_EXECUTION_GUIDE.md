@@ -18,7 +18,7 @@
 | Genesis Primitives (7+1) | `ontic/genesis/` | 40,836 | ✅ | Yes |
 | FluidElite-ZK Prover | `crates/fluidelite_zk/` | 31,325 | ✅ | Partial |
 | Glass Cockpit | `apps/glass_cockpit/` | 30,608 | ✅ | Yes |
-| Hyper Bridge IPC | `crates/hyper_bridge/` | 5,917 | ✅ | Yes |
+| Hyper Bridge IPC | `crates/ontic_bridge/` | 5,917 | ✅ | Yes |
 | Lean 4 Proofs | `proofs/yang_mills/lean/` | 1,246 | ✅ | Partial |
 | QTeneT Enterprise SDK | `apps/qtenet/` | 10,408 | ✅ | Yes |
 | Gauntlets (29) | Root + `tests/` | ~31K | ✅ | Yes |
@@ -222,7 +222,7 @@ The trace is the input to the ZK prover. It must be:
 Connect the QTT solver trace to the FluidElite-ZK prover:
 
 ```
-tensornet (Python) → trace.json → hyper_bridge (mmap) → fluidelite-zk (Rust) → proof.bin
+tensornet (Python) → trace.json → ontic_bridge (mmap) → fluidelite-zk (Rust) → proof.bin
 ```
 
 The bridge must:

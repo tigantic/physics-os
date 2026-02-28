@@ -9,7 +9,7 @@
 //! ```
 
 use std::path::Path;
-use hyper_bridge::bench_real_data::{
+use ontic_bridge::bench_real_data::{
     BenchmarkConfig, run_benchmark, run_standard_benchmark_suite, export_results_json,
 };
 

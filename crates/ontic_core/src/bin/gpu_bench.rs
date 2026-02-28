@@ -7,7 +7,7 @@ use std::sync::Arc;
 use std::time::Instant;
 
 #[cfg(feature = "gpu")]
-use hyper_core::gpu::{GpuContext, CudaTTPipeline, AsyncCudaTTPipeline};
+use ontic_core::gpu::{GpuContext, CudaTTPipeline, AsyncCudaTTPipeline};
 
 fn main() {
     println!("╔════════════════════════════════════════════════════════════════╗");

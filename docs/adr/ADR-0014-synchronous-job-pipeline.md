@@ -33,4 +33,4 @@ The `QUEUE_BEHAVIOR_SPEC.md` governs ordering guarantees and timeout behavior.
 - **Easier:** No infrastructure dependencies (Redis, RabbitMQ, Celery).
 - **Easier:** Debugging — single process, single stack trace.
 - **Harder:** Horizontal scaling requires a load balancer + multiple VM instances (not worker pools).
-- **Risk:** Long-running jobs block the event loop. Mitigated by the 300-second hard timeout and offloading compute to Rust threads via `hyper_bridge`.
+- **Risk:** Long-running jobs block the event loop. Mitigated by the 300-second hard timeout and offloading compute to Rust threads via `ontic_bridge`.

@@ -13,7 +13,7 @@
 //! # Example
 //!
 //! ```rust,ignore
-//! use hyper_core::gpu::TTEvaluator;
+//! use ontic_core::gpu::TTEvaluator;
 //!
 //! // Create evaluator with WGPU device
 //! let evaluator = TTEvaluator::new(&device, &queue);

@@ -13,7 +13,7 @@
 //! # Usage
 //!
 //! ```rust,ignore
-//! use hyper_bridge::{RamBridgeReader, TensorBridgeHeader};
+//! use ontic_bridge::{RamBridgeReader, TensorBridgeHeader};
 //!
 //! let mut bridge = RamBridgeReader::connect("/dev/shm/hypertensor_bridge")?;
 //!

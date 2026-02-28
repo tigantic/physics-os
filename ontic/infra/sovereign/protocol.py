@@ -3,7 +3,7 @@ Weather Bridge Protocol - Global Eye Phase 1B-5
 ================================================
 
 Defines the shared memory protocol between Python (producer) and Rust (consumer).
-This must match EXACTLY with crates/hyper_bridge/src/weather.rs
+This must match EXACTLY with crates/ontic_bridge/src/weather.rs
 
 Protocol Layout:
     Bytes 0-47:    WeatherHeader (48 bytes, padded for alignment)

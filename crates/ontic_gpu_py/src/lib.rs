@@ -1,4 +1,4 @@
-//! HyperGPU Python Bindings
+//! Ontic GPU Python Bindings
 //!
 //! Exposes the Rust CUDA TT evaluation pipeline to Python via PyO3.
 //! This enables Python to leverage the 97M queries/sec CUDA kernel
@@ -7,7 +7,7 @@
 //! # Usage from Python
 //!
 //! ```python
-//! from hyper_gpu_py import CudaTTEvaluator
+//! from ontic_gpu_py import CudaTTEvaluator
 //!
 //! # Initialize CUDA
 //! evaluator = CudaTTEvaluator()
@@ -28,7 +28,7 @@ use numpy::{PyArray1, PyArray2, PyArrayMethods, PyUntypedArrayMethods, IntoPyArr
 use std::sync::Arc;
 
 #[cfg(feature = "gpu")]
-use hyper_core::gpu::{GpuContext, CudaTTPipeline, CudaError};
+use ontic_core::gpu::{GpuContext, CudaTTPipeline, CudaError};
 
 /// Convert CudaError to PyErr
 #[cfg(feature = "gpu")]
@@ -42,7 +42,7 @@ fn cuda_available() -> bool {
     #[cfg(feature = "gpu")]
     {
         std::panic::catch_unwind(|| {
-            hyper_core::gpu::GpuContext::new().is_ok()
+            ontic_core::gpu::GpuContext::new().is_ok()
         }).unwrap_or(false)
     }
     #[cfg(not(feature = "gpu"))]
@@ -57,7 +57,7 @@ fn cuda_available() -> bool {
 fn cuda_device_name(_device_id: usize) -> PyResult<String> {
     #[cfg(feature = "gpu")]
     {
-        let ctx = hyper_core::gpu::GpuContext::new_on_device(_device_id)
+        let ctx = ontic_core::gpu::GpuContext::new_on_device(_device_id)
             .map_err(|e| PyRuntimeError::new_err(format!("CUDA error: {}", e)))?;
         Ok(ctx.device_name.clone())
     }
@@ -336,7 +336,7 @@ impl BatchQTTEvaluator {
 
 /// PyO3 module initialization - NO CUDA CALLS HERE
 #[pymodule]
-fn hyper_gpu_py(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn ontic_gpu_py(m: &Bound<'_, PyModule>) -> PyResult<()> {
     // Don't check CUDA at import time - defer to cuda_available()
     m.add("CUDA_AVAILABLE", false)?;  // Conservative default - call cuda_available() to check
     m.add_function(wrap_pyfunction!(cuda_available, m)?)?;

@@ -32,10 +32,10 @@ IPC bridges, and real-time visualization. Compiled to native binaries.
 
 | Crate | Purpose |
 |-------|---------|
-| `hyper_core` | Physics engine core (QTT, MPO, CFD operators) |
-| `hyper_bridge` | RAM bridge IPC (Python <-> Rust streaming) |
+| `ontic_core` | Physics engine core (QTT, MPO, CFD operators) |
+| `ontic_bridge` | RAM bridge IPC (Python <-> Rust streaming) |
 | `proof_bridge` | Trustless Physics: trace -> ZK proof pipeline |
-| `hyper_gpu_py` | GPU compute kernels (PyO3 bindings) |
+| `ontic_gpu_py` | GPU compute kernels (PyO3 bindings) |
 | `fluidelite_*` | FluidElite ZK proving family |
 | `qtt_cem` | Maxwell FDTD solver |
 | `qtt_fea` | Hex8 static elasticity solver |

@@ -38,7 +38,7 @@ The Physics OS/
 │   ├── glass_cockpit/   # Python side of real-time viz
 │   └── global_eye/      # Planetary monitoring system
 ├── glass-cockpit/       # Rust visualizer (120 FPS)
-├── crates/              # Rust workspace (hyper_core, hyper_bridge)
+├── crates/              # Rust workspace (ontic_core, ontic_bridge)
 ├── docs/                # Organized documentation
 ├── scripts/             # Automation, profiling, testing utilities
 ├── proofs/              # Mathematical verification scripts
@@ -79,8 +79,8 @@ mypy                  # Type checking
 ### Rust Crates
 ```
 glass-cockpit/        # Real-time visualization (egui, wgpu)
-crates/hyper_core/    # Core tensor operations
-crates/hyper_bridge/  # Python-Rust FFI bridge
+crates/ontic_core/    # Core tensor operations
+crates/ontic_bridge/  # Python-Rust FFI bridge
 ```
 
 ---

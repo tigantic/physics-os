@@ -7,7 +7,7 @@
 //! # Example
 //!
 //! ```
-//! use hyper_core::transforms::morton::{encode_2d, decode_2d};
+//! use ontic_core::transforms::morton::{encode_2d, decode_2d};
 //!
 //! let (x, y) = (5, 3);
 //! let morton = encode_2d(x, y);

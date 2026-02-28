@@ -52,10 +52,10 @@ The complete catalog of The Physics OS - a physics-first tensor network ecosyste
 |-------|------:|----:|---------|
 | `apps/glass_cockpit` | 68 | 30,608 | Flight instrumentation |
 | `fluidelite-zk` | 51 | 20,703 | ZK prover engine |
-| `crates/hyper_bridge` | 8 | 2,135 | Python/Rust FFI |
+| `crates/ontic_bridge` | 8 | 2,135 | Python/Rust FFI |
 | `tci_core_rust` | 6 | 1,871 | Tensor Core Interface |
 | `apps/global_eye` | 5 | 1,167 | Global monitoring |
-| `crates/hyper_core` | 3 | 184 | Core operations |
+| `crates/ontic_core` | 3 | 184 | Core operations |
 
 ---
 
@@ -534,8 +534,8 @@ from yangmills import Hamiltonian, Lattice, SU2, GroundState
 | Crate | Location | Purpose |
 |-------|----------|---------|
 | `fluidelite-zk` | `crates/fluidelite_zk/` | High-perf ZK prover (48 files) |
-| `hyper_core` | `crates/hyper_core/` | Core tensor operations |
-| `hyper_bridge` | `crates/hyper_bridge/` | Python/Rust FFI |
+| `ontic_core` | `crates/ontic_core/` | Core tensor operations |
+| `ontic_bridge` | `crates/ontic_bridge/` | Python/Rust FFI |
 | `glass_cockpit` | `apps/glass_cockpit/` | Flight display (68 files) |
 | `global_eye` | `apps/global_eye/` | Global monitoring |
 | `tci_core_rust` | `crates/tci_core_rust/` | Tensor Core Interface |

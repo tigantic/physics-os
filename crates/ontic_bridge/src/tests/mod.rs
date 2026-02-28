@@ -1,4 +1,4 @@
-//! Extended test suite for hyper_bridge
+//! Extended test suite for ontic_bridge
 //!
 //! Includes:
 //! - Concurrent access tests

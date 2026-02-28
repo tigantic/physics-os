@@ -1,14 +1,14 @@
 [package]
-name = "hyper_gpu_py"
+name = "ontic_gpu_py"
 version = "0.1.0"
 edition = "2021"
 authors = ["TiganticLabz <dev@tigantic.com>"]
-description = "PyO3 bindings for HyperTensor GPU acceleration (CUDA 97M queries/sec)"
+description = "PyO3 bindings for Ontic Engine GPU acceleration (CUDA 97M queries/sec)"
 license = "LicenseRef-Proprietary"
 rust-version = "1.75"
 
 [lib]
-name = "hyper_gpu_py"
+name = "ontic_gpu_py"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
@@ -19,11 +19,11 @@ pyo3 = { version = "0.24", features = ["extension-module"] }
 numpy = "0.24"
 
 # The actual GPU implementation - optional
-hyper_core = { path = "../hyper_core", optional = true }
+ontic_core = { path = "../ontic_core", optional = true }
 
 # Error handling
 thiserror = "1.0"
 
 [features]
 default = []
-gpu = ["hyper_core"]
+gpu = ["ontic_core"]

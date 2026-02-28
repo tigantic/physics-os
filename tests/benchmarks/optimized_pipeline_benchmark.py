@@ -48,7 +48,7 @@ def check_rust_tci() -> bool:
 def check_rust_cuda() -> bool:
     """Check if Rust CUDA pipeline is available."""
     try:
-        from hyper_gpu_py import cuda_available
+        from ontic_gpu_py import cuda_available
         return cuda_available()
     except ImportError:
         return False
@@ -87,7 +87,7 @@ def print_availability():
         print("\n  To build Rust extensions, run:")
         print("    pip install maturin")
         print("    cd crates/tci_core && maturin develop --release")
-        print("    cd crates/hyper_gpu_py && maturin develop --release")
+        print("    cd crates/ontic_gpu_py && maturin develop --release")
     
     return rust_tci, rust_cuda, triton_ok, pytorch_cuda
 
@@ -248,11 +248,11 @@ def benchmark_point_evaluation(n_qubits: int = 16, n_points: int = 100000, max_r
     result_rust = BenchResult(
         name="Rust CUDA",
         time_ms=0, throughput=0, memory_mb=0, success=False,
-        notes="Not built - run: cd crates/hyper_gpu_py && maturin develop --release"
+        notes="Not built - run: cd crates/ontic_gpu_py && maturin develop --release"
     )
     
     if check_rust_cuda():
-        from hyper_gpu_py import BatchQTTEvaluator
+        from ontic_gpu_py import BatchQTTEvaluator
         
         print(f"\n  Rust CUDA evaluation...")
         
@@ -262,7 +262,7 @@ def benchmark_point_evaluation(n_qubits: int = 16, n_points: int = 100000, max_r
         evaluator = BatchQTTEvaluator()
         
         # Flatten cores for Rust API
-        # TODO: Need to adapt interface once hyper_gpu_py is built
+        # TODO: Need to adapt interface once ontic_gpu_py is built
         
         # For now, show placeholder
         result_rust.notes = "Interface pending - kernel ready in Rust"
@@ -413,7 +413,7 @@ def run_all_benchmarks():
     if not rust_tci:
         print("  1. Build Rust TCI: cd crates/tci_core && maturin develop --release")
     if not rust_cuda:
-        print("  2. Build Rust CUDA: cd crates/hyper_gpu_py && maturin develop --release")
+        print("  2. Build Rust CUDA: cd crates/ontic_gpu_py && maturin develop --release")
     if not triton_ok:
         print("  3. Install Triton: pip install triton")
     if rust_tci and rust_cuda and triton_ok:

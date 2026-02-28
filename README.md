@@ -312,7 +312,7 @@ Six execution documents mapping demonstrated capabilities to civilization-scale 
 | `glass_cockpit` | 30,608 | Flight visualization — wgpu, 18 WGSL shaders |
 | `fluidelite_circuits` | 21,342 | Halo2 constraint system definitions |
 | `fluidelite_infra` | 8,542 | Persistence, networking, deployment infrastructure |
-| `hyper_bridge` | 5,917 | Python↔Rust IPC — mmap + protobuf, 9ms latency |
+| `ontic_bridge` | 5,917 | Python↔Rust IPC — mmap + protobuf, 9ms latency |
 | + 14 more | ~33K | CEM, FEA, OPT solvers · TCI · GPU bindings · formal proofs |
 
 ### CI/CD — 11 Workflows
@@ -520,7 +520,7 @@ The Physics OS/
 │   └── ... (93 more modules)       #   Quantum, plasma, fusion, materials, ...
 ├── crates/                         # Rust workspace — 19 members (132K LOC)
 │   ├── fluidelite_zk/              #   ZK prover (Halo2, Gevulot, multi-tenant)
-│   ├── hyper_bridge/               #   Python↔Rust IPC (mmap + protobuf)
+│   ├── ontic_bridge/               #   Python↔Rust IPC (mmap + protobuf)
 │   ├── qtt_cem/                    #   Maxwell FDTD solver (Q16.16)
 │   ├── qtt_fea/                    #   Hex8 static elasticity (Q16.16)
 │   ├── qtt_opt/                    #   SIMP topology optimization

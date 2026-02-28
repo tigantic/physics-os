@@ -4,11 +4,11 @@
 //!
 //! Run with:
 //! ```shell
-//! cargo bench -p hyper_core --bench tt_bench
+//! cargo bench -p ontic_core --bench tt_bench
 //! ```
 
 use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
-use hyper_core::gpu::TTEvaluator;
+use ontic_core::gpu::TTEvaluator;
 
 /// Create a random TT with specified structure
 fn create_random_tt(num_sites: u32, physical_dim: u32, max_bond: u16) -> TTEvaluator {
