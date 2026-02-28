@@ -14,7 +14,7 @@ Standard 3D benchmark: Taylor-Green Vortex
 - Initial: u = sin(x)cos(y)cos(z), v = -cos(x)sin(y)cos(z), w = 0
 - Tests: Energy decay, enstrophy growth, vortex stretching
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 2025
 """
 

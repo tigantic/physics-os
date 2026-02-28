@@ -48,7 +48,7 @@ if torch.cuda.is_available():
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.backends.cudnn.allow_tf32 = True
 
-# ── HyperTensor platform imports ──
+# ── The Ontic Engine platform imports ──
 from ontic.engine.adaptive.bond_optimizer import (
     AdaptiveBondConfig,
     BondDimensionTracker,

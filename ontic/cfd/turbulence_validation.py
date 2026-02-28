@@ -11,7 +11,7 @@ Validates that the QTT solver captures real turbulence physics:
 The key question: Does O(log N) QTT compression preserve the essential
 physics of turbulent flows?
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2025
 """
 

@@ -263,7 +263,7 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 | 5.14 ✅ | **Active learning for experimental design** — Bayesian optimization of simulation parameters | Optimal parameter exploration |
 | 5.15 ✅ | **Operator learning on QTT** — Train neural operators directly on TT-compressed data | ML without ever going dense |
 | 5.16 ✅ | **Self-supervised pre-training on physics data** — Contrastive/masked pre-training on The Physics OS outputs | Embeddings for any physics field |
-| 5.17 ✅ | **Retrieval-Augmented Generation (RAG) for physics** — Vector DB of all HyperTensor results, LLM retrieves and reasons | Conversational physics analysis |
+| 5.17 ✅ | **Retrieval-Augmented Generation (RAG) for physics** — Vector DB of all The Ontic Engine results, LLM retrieves and reasons | Conversational physics analysis |
 | 5.18 ✅ | **Automated hyperparameter tuning** — Bayesian/evolutionary optimization of solver parameters | Optimal CFL, time-step, tolerance selection |
 | 5.19 ✅ | **Neural closure models** — Learned subgrid-scale models for LES/RANS trained on DNS data | Data-driven turbulence modeling |
 | 5.20 ✅ | **Multi-modal physics AI** — Joint model over fields, spectra, images, text, and equations | Unified physics understanding |
@@ -328,7 +328,7 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 | 8.12 | **Sandbox environment** — Docker-based isolated simulation sandbox | Safe execution, reproducible environments |
 | 8.13 | **Batch job orchestration** — Slurm/PBS/Kubernetes job submission and monitoring | HPC cluster integration |
 | 8.14 | **Simulation-as-a-Function** — AWS Lambda / Cloud Functions for single simulation invocations | Serverless physics |
-| 8.15 | **Package registry** — PyPI distribution of individual packs (pip install hypertensor-cfd) | Modular installation |
+| 8.15 | **Package registry** — PyPI distribution of individual packs (pip install ontic-cfd) | Modular installation |
 | 8.16 | **WASM compilation** — Compile core solvers to WebAssembly | Physics in any browser |
 | 8.17 | **Interactive playground** — Web-based sandbox with live code editing and simulation | Zero-install experimentation |
 
@@ -420,7 +420,7 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 | 12.8 | **Recursive SNARKs** — Proofs that verify proofs (infinite recursion) | Unbounded verifiable computation |
 | 12.9 | **ZK coprocessor integration** — Axiom/Brevis/RISC Zero delegation for heavy computation | Outsourced verified compute |
 | 12.10 | **Verifiable randomness** — Provably fair random seeds for Monte Carlo simulations | Trustless UQ |
-| 12.11 | **Cross-chain proof portability** — Verify HyperTensor proofs on any blockchain | Multi-chain physics attestation |
+| 12.11 | **Cross-chain proof portability** — Verify The Ontic Engine proofs on any blockchain | Multi-chain physics attestation |
 | 12.12 | **Privacy-preserving benchmarking** — Compare solver performance without revealing proprietary data | Industry collaboration without exposure |
 | 12.13 | **Decentralized proving marketplace** — Anyone can submit proofs, earn tokens | Distributed verification economy |
 | 12.14 | **Proof-of-Physics consensus** — Blockchain consensus based on useful physics computation | Replace proof-of-work with proof-of-simulation |
@@ -432,7 +432,7 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 | # | Enhancement | Impact |
 |---|-------------|--------|
 | 13.1 | **OpenFOAM mesh/field import/export** — polyMesh, internalField, system/fvSchemes | 60%+ of CFD users |
-| 13.2 | **FEniCS/Firedrake bridge** — UFL form language → HyperTensor solver | Variational form import |
+| 13.2 | **FEniCS/Firedrake bridge** — UFL form language → The Ontic Engine solver | Variational form import |
 | 13.3 | **MOOSE framework integration** — INL's multi-physics framework interop | Nuclear engineering community |
 | 13.4 | **LAMMPS bridge** — Import/export LAMMPS data files, couple MD with continuum | Molecular dynamics community |
 | 13.5 | **Quantum ESPRESSO bridge** — Input/output DFT data, charge densities, wavefunctions | First-principles materials community |
@@ -486,15 +486,15 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 
 | # | Enhancement | Impact |
 |---|-------------|--------|
-| 15.1 | **HyperTensor Cloud** — Managed SaaS platform with pay-per-simulation pricing | Revenue without customer infrastructure |
+| 15.1 | **Ontic Cloud** — Managed SaaS platform with pay-per-simulation pricing | Revenue without customer infrastructure |
 | 15.2 | **Enterprise on-premise deployment** — Helm charts, Terraform, air-gapped installation | Regulated industry customers |
 | 15.3 | **Marketplace for domain packs** — Third-party developers sell specialized solvers | Ecosystem economics |
-| 15.4 | **Certification programs** — HyperTensor Certified Engineer / Physicist badges | Community credentialing |
+| 15.4 | **Certification programs** — Ontic Certified Engineer / Physicist badges | Community credentialing |
 | 15.5 | **University partnerships** — Free academic licenses, course materials, textbook integration | Next-gen physicist training |
 | 15.6 | **Industry-specific packaging** — "The Physics OS for Aerospace", "for Energy", "for Pharma" | Targeted go-to-market |
 | 15.7 | **API metering and billing** — Usage-based pricing with Stripe/billing integration | Monetization infrastructure |
 | 15.8 | **White-label OEM** — Embed The Ontic Engine inside third-party products | B2B2C distribution |
-| 15.9 | **Benchmarking service** — Paid benchmark reports comparing customer solver vs. HyperTensor | Land-and-expand sales tool |
+| 15.9 | **Benchmarking service** — Paid benchmark reports comparing customer solver vs. The Ontic Engine | Land-and-expand sales tool |
 | 15.10 | **Consulting arm** — Professional services for custom solver development | High-touch revenue |
 | 15.11 | **Open-source core, commercial extensions** — Freemium model with Genesis/ZK as premium | Community growth + revenue |
 | 15.12 | **Patent portfolio** — File patents on QTT-PDE, QTT-ZK, trustless physics, novel Genesis layers | IP moat |
@@ -565,7 +565,7 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 |---|------|--------|
 | 18.2.1 | **Open governance model** — Apache Foundation-style governance with elected committers | Sustainable community development |
 | 18.2.2 | **Physics bounty program** — Pay contributors for validated solver implementations | Incentivized coverage expansion |
-| 18.2.3 | **Annual HyperTensor Conference** — Physical conference + virtual for community building | Ecosystem network effects |
+| 18.2.3 | **Annual Ontic Conference** — Physical conference + virtual for community building | Ecosystem network effects |
 | 18.2.4 | **Research grants** — Fund PhD students to implement and validate new physics domains | Academic pipeline |
 | 18.2.5 | **Industry advisory board** — Representatives from aerospace, energy, pharma, defense, finance | Product-market signal |
 | 18.2.6 | **Physics Working Groups** — Domain-specific committees owning pack direction | Distributed expertise |

@@ -10,7 +10,7 @@ Architecture: "Decompression-Free Rendering"
 - We mathematically "project" screen pixels onto the Tensor Train (Good)
 
 Pipeline:
-1. HyperTensor Core: Holds state (2^50 points) in compressed format
+1. Ontic Core: Holds state (2^50 points) in compressed format
 2. The Slicer: Constructs "Probe Tensor" for screen pixels
 3. The Contraction: Core * Probe = 2D array (W x H)
 4. The Renderer: Maps values to colors (Heatmap)

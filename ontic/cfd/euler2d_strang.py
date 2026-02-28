@@ -12,7 +12,7 @@ Strang Splitting Scheme: U^{n+1} = L_x(dt/2) L_y(dt) L_x(dt/2) U^n
 - No grid transposition needed (just swap MPO operators)
 - Maintains O(log N) complexity via native shift MPOs
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 2025
 """
 

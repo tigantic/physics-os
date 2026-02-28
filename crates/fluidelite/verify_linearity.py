@@ -20,7 +20,7 @@ CRITICAL INSIGHT:
     
     TRUE linearity test: Compare contracted tensor amplitudes, not logits.
 
-Author: HyperTensor Labs
+Author: TiganticLabz
 Date: January 2026
 """
 

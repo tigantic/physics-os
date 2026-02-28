@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-HyperTensor Flagship Pipeline
+Ontic Flagship Pipeline
 ==============================
 
 ONE EXECUTABLE. ONE TRUTH.
@@ -72,7 +72,7 @@ if torch.cuda.is_available():
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
 
-# HyperTensor imports
+# The Ontic Engine imports
 from ontic.core.mps import MPS
 from ontic.cfd.euler_1d import Euler1D, EulerState
 from ontic.cfd.godunov import hllc_flux
@@ -888,7 +888,7 @@ def main() -> int:
     """
     print()
     print("╔" + "═" * 58 + "╗")
-    print("║" + " HYPERTENSOR FLAGSHIP PIPELINE ".center(58) + "║")
+    print("║" + " ONTIC_ENGINE FLAGSHIP PIPELINE ".center(58) + "║")
     print("║" + " One Executable. One Truth. ".center(58) + "║")
     print("╚" + "═" * 58 + "╝")
     print()

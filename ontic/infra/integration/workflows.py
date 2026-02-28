@@ -1,5 +1,5 @@
 """
-Workflow Orchestration for Project HyperTensor.
+Workflow Orchestration for Project The Ontic Engine.
 
 Provides end-to-end workflow definitions and execution for:
 - CFD simulations

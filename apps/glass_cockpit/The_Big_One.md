@@ -481,4 +481,4 @@ main_phase7.rs
 ---
 
 *Document Created: December 30, 2025*
-*Project: HyperTensor Glass Cockpit - Planetary Scale Upgrade*
+*Project: Ontic Glass Cockpit - Planetary Scale Upgrade*

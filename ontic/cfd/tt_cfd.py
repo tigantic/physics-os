@@ -1,7 +1,7 @@
 """
 TT-CFD: Tensor-Train Native CFD Solver using TDVP Time Evolution.
 
-This module implements the core thesis of HyperTensor: running CFD simulations
+This module implements the core thesis of The Ontic Engine: running CFD simulations
 directly "inside the tensor network" using Time-Dependent Variational Principle
 (TDVP) for time evolution. This achieves O(N·D²) complexity instead of O(N³).
 
@@ -801,7 +801,7 @@ class TT_Euler1D:
     """
     Complete 1D Euler solver operating entirely in TT/MPS format.
 
-    This is the core implementation of the HyperTensor thesis:
+    This is the core implementation of the Ontic Engine thesis:
     CFD simulation running "inside the tensor network."
 
     The solver:

@@ -525,7 +525,7 @@
         "n_symbols": 6
       },
       {
-        "path": "scripts/setup/hypertensor_core.py",
+        "path": "scripts/setup/ontic_core.py",
         "lang": "py",
         "score": 65,
         "proposed_category": "core",
@@ -3368,7 +3368,7 @@
       "n_symbols": 6
     },
     {
-      "path": "scripts/setup/hypertensor_core.py",
+      "path": "scripts/setup/ontic_core.py",
       "lang": "py",
       "score": 65,
       "proposed_category": "core",
@@ -5807,7 +5807,7 @@
       "n_symbols": null
     },
     {
-      "path": "HYPERTENSOR_VV_FRAMEWORK.md",
+      "path": "ONTIC_ENGINE_VV_FRAMEWORK.md",
       "lang": "md",
       "score": 25,
       "proposed_category": null,
@@ -5827,7 +5827,7 @@
       "n_symbols": null
     },
     {
-      "path": "HyperTensor_CFD_Book.md",
+      "path": "Ontic_CFD_Book.md",
       "lang": "md",
       "score": 25,
       "proposed_category": null,
@@ -5947,7 +5947,7 @@
       "n_symbols": 4
     },
     {
-      "path": "docs/HYPERTENSOR_ZK_STACK.md",
+      "path": "docs/ONTIC_ENGINE_ZK_STACK.md",
       "lang": "md",
       "score": 25,
       "proposed_category": null,
@@ -6397,7 +6397,7 @@
       "n_symbols": null
     },
     {
-      "path": "docs/workflows/hypertensor_execution_checklist.md",
+      "path": "docs/workflows/ontic_execution_checklist.md",
       "lang": "md",
       "score": 25,
       "proposed_category": null,

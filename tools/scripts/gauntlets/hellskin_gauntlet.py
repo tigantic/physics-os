@@ -19,7 +19,7 @@ Applications:
 - Atmospheric re-entry heat shields
 - Scramjet engine liners
 
-Author: HyperTensor Gauntlet Framework
+Author: TiganticLabz Gauntlet Framework
 """
 
 import numpy as np

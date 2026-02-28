@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HYPERTENSOR-VM FORENSIC LOC SWEEP
+PHYSICS-OS FORENSIC LOC SWEEP
 Runs a single-pass walk of the entire repo and outputs a full metric matrix.
 Usage: python3 forensic_loc_sweep.py > loc_report.txt
 """
@@ -101,7 +101,7 @@ def get_module_path(filepath, root):
 
 def main():
     print("=" * 110)
-    print("HYPERTENSOR-VM FULL FORENSIC LOC MATRIX")
+    print("PHYSICS-OS FULL FORENSIC LOC MATRIX")
     print(f"Root: {ROOT}")
     print("=" * 110)
     

@@ -21,7 +21,7 @@
 | 8 | [Proofs & Certificates](#8-proofs--certificates) | Trustless Physics Certificates, ZK proofs |
 | 9 | [Rust Crates](#9-rust-crates) | 15 crates, ~204K LOC |
 | 10 | [Infrastructure & Deployment](#10-infrastructure--deployment) | Deploy, contracts, integrations |
-| 11 | [The Physics OS Service](#11-hypertensor-platform-service) | API, billing, CLI, MCP, SDK |
+| 11 | [The Physics OS Service](#11-ontic-platform-service) | API, billing, CLI, MCP, SDK |
 | 12 | [Test Suite](#12-test-suite) | 104 test files, ~52K LOC |
 | 13 | [Documentation & Governance](#13-documentation--governance) | docs/, ADRs, governance, specs |
 | 14 | [Backward-Compatibility Shim Map](#14-backward-compatibility-shim-map) | Re-export shims under `ontic/` |
@@ -328,7 +328,7 @@ scientific discovery pipelines with API, connectors, and production hardening.
 | `deployment/` | Deployment tooling |
 | `fieldops/` | Field operation utilities |
 | `fieldos/` | Field OS services |
-| `hyperenv/` | HyperTensor environment management |
+| `hyperenv/` | The Ontic Engine environment management |
 | `hypersim/` | Simulation orchestration |
 | `hypervisual/` | Visualization services |
 | `integration/` | External system integration |
@@ -529,7 +529,7 @@ application. Three major subsystems:
 |-----------|-------------|
 | **HyperFOAM** (`Review/hyperfoam/`, 30+ files) | GPU-native CFD solver for HVAC: immersed boundary grid (1,137 LOC), thermal/species transport, k-ε turbulence, multizone (zone graph, data center, fire/smoke, equipment, duplex), optimizer, pipeline, predictive alerts, CAD/IFC import, cleanroom ISO 14644 |
 | **Intake** (`intake/`, 15+ files) | Universal document intake — Streamlit app (1,841 LOC), staging UI, PDF/Excel/IFC/image extractors, schema validation, unit conversion ("Sandwich Method"), 3D Plotly visualization, HyperFOAM bridge |
-| **Web-UI & Dashboard** | EigenPsi CFD analysis server (976 LOC), Next.js HyperTensor UI with FastAPI backend (944 LOC), Streamlit HVAC dashboard |
+| **Web-UI & Dashboard** | EigenPsi CFD analysis server (976 LOC), Next.js Ontic UI with FastAPI backend (944 LOC), Streamlit HVAC dashboard |
 | **Benchmarks** (`Review/Tier1/`, 15 files) | Nielsen room benchmarks, QTT-NS solvers, thermal multi-physics |
 | **Tests** (`Review/tests/`, 10 files) | Deployment, crucible, validation, eigenpsi API |
 
@@ -554,7 +554,7 @@ validation attestations.
 
 | Category | Key Runners | Description |
 |----------|-------------|-------------|
-| Desktop apps | `hypertensor_hub.py` (1,193), `hypertensor_pro.py` (1,275) | PySide6 + VisPy desktop application |
+| Desktop apps | `ontic_hub.py` (1,193), `ontic_pro.py` (1,275) | PySide6 + VisPy desktop application |
 | Forensics | `forensic_instrument.py` (1,357), `forensic_hub.py` (1,294), `forensic_hub_v2.py` | Weather singularity investigation tools |
 | Flagship | `flagship_pipeline.py` (960) | Phase 21-24 full integration proof |
 | Millennium | `millennium_hunter.py` (621) | NS singularity numerical analysis ($1M problem) |
@@ -793,7 +793,7 @@ ZK proof circuits, conservation proofs, and Yang-Mills research.
 | Contract | Description |
 |----------|-------------|
 | `FluidEliteHalo2Verifier.sol` | Halo2 ZK proof on-chain verifier |
-| `HyperTensorBindingVerifier.sol` | Binding proof verifier |
+| `OnticBindingVerifier.sol` | Binding proof verifier |
 | `ZeroExpansionSemaphoreVerifier.sol` | Semaphore-based anonymity verifier |
 | `v1/` | Version 1 contract archive |
 

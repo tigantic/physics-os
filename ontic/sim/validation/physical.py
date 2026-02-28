@@ -1,5 +1,5 @@
 """
-Physical Validation Module for Project HyperTensor.
+Physical Validation Module for Project The Ontic Engine.
 
 Provides physics-based validation tests including:
 - Conservation law verification (mass, momentum, energy)

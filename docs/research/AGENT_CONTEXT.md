@@ -52,7 +52,7 @@ The Physics OS/
 | File | Purpose | Priority |
 |------|---------|:--------:|
 | [CONSTITUTION.md](../governance/CONSTITUTION.md) | Coding standards, governance, principles | 🔴 HIGH |
-| [HYPERTENSOR_VV_FRAMEWORK.md](HYPERTENSOR_VV_FRAMEWORK.md) | V&V methodology, ASME/NASA alignment | 🔴 HIGH |
+| [ONTIC_VV_FRAMEWORK.md](ONTIC_VV_FRAMEWORK.md) | V&V methodology, ASME/NASA alignment | 🔴 HIGH |
 | [docs/INDEX.md](docs/INDEX.md) | Master documentation hub | 🟡 MEDIUM |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution guidelines | 🟡 MEDIUM |
 | [CHANGELOG.md](CHANGELOG.md) | Version history, recent changes | 🟢 REFERENCE |
@@ -410,7 +410,7 @@ cd glass-cockpit && cargo run --release --bin phase3
 - [docs/architecture/](docs/architecture/) - System design
 
 ### V&V
-- [HYPERTENSOR_VV_FRAMEWORK.md](HYPERTENSOR_VV_FRAMEWORK.md) - V&V methodology
+- [ONTIC_VV_FRAMEWORK.md](ONTIC_VV_FRAMEWORK.md) - V&V methodology
 - [tests/integration/test_*_mms.py](tests/integration/) - MMS tests
 - [docs/audits/](docs/audits/) - Audit reports
 
@@ -425,7 +425,7 @@ cd glass-cockpit && cargo run --release --bin phase3
 
 1. ☐ Read this document completely
 2. ☐ Skim [CONSTITUTION.md](../governance/CONSTITUTION.md) for code standards
-3. ☐ Review [HYPERTENSOR_VV_FRAMEWORK.md](HYPERTENSOR_VV_FRAMEWORK.md) for V&V requirements
+3. ☐ Review [ONTIC_VV_FRAMEWORK.md](ONTIC_VV_FRAMEWORK.md) for V&V requirements
 4. ☐ Understand the tensornet module structure (`ls ontic/`)
 5. ☐ Run tests to verify environment: `pytest tests/ -x -v --tb=short`
 6. ☐ Check current git status: `git log --oneline -10`

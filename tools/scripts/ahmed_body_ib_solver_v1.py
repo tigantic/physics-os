@@ -51,7 +51,7 @@ import numpy as np
 import torch
 from torch import Tensor
 
-# ── HyperTensor QTT Engine ─────────────────────────────────────────
+# ── Ontic QTT Engine ─────────────────────────────────────────
 from ontic.cfd.ns3d_native import (
     QTT3DNative,
     QTT3DVectorNative,
@@ -1214,7 +1214,7 @@ Examples:
 
     print("╔══════════════════════════════════════════════════════════════════╗")
     print("║  Ahmed Body Immersed Boundary QTT Solver                       ║")
-    print("║  Full Volumetric Synthesis — HyperTensor QTT Engine            ║")
+    print("║  Full Volumetric Synthesis — Ontic QTT Engine            ║")
     print("║  Tigantic Holdings LLC — Brad Adams                            ║")
     print("╚══════════════════════════════════════════════════════════════════╝")
     print()

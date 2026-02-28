@@ -11,7 +11,7 @@ Where W is learned via closed-form least squares: (X^T X + λI)^(-1) X^T Y
 
 No gradients. No backpropagation. Just one matrix solve.
 
-Author: HyperTensor Project
+Author: TiganticLabz Project
 Date: January 14, 2026
 """
 

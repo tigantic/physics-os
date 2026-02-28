@@ -36,7 +36,7 @@ Morton layout for 2D (x, v) with qubits_per_dim = L:
   Velocity index: j = Σ_l b_{site(l)} × 2^l  where l is the v-bit level.
   Physical velocity: v = v_min + j × dv.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: January 2026
 """
 

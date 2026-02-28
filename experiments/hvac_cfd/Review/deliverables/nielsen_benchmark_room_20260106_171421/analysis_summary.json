@@ -2,7 +2,7 @@
   "project": {
     "name": "Nielsen Benchmark Room",
     "date": "2026-01-06T17:22:01.915928",
-    "analyst": "HyperTensor HVAC v1.0"
+    "analyst": "Ontic HVAC v1.0"
   },
   "configuration": {
     "grid": "256\u00d7128",

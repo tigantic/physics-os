@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 print("""
 ╔══════════════════════════════════════════════════════════════════════╗
-║            HYPERTENSOR WEATHER SYSTEM SETUP                          ║
+║            ONTIC_ENGINE WEATHER SYSTEM SETUP                          ║
 ║                                                                      ║
 ║  Generating synthetic atmospheric data for visualization             ║
 ╚══════════════════════════════════════════════════════════════════════╝

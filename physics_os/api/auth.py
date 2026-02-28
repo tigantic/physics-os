@@ -1,4 +1,4 @@
-"""HyperTensor API — Authentication and rate limiting.
+"""Ontic API — Authentication and rate limiting.
 
 Bearer token auth with per-key token-bucket rate limiting.
 """

@@ -72,7 +72,7 @@ We recommend:
 
 ### Cryptographic Considerations
 
-HyperTensor uses:
+The Ontic Engine uses:
 
 - **Ed25519** for trust certificate signing (server-side only, never exported)
 - **Halo2** ZK circuits for zero-knowledge computation integrity proofs
@@ -93,17 +93,17 @@ HyperTensor uses:
 
 | Variable | Purpose | Default |
 |----------|---------|---------|
-| `HYPERTENSOR_SIGN_KEY` | Path to signing key | None |
-| `HYPERTENSOR_VERIFY_SIGS` | Enforce signature verification | `true` |
-| `HYPERTENSOR_AUDIT_LOG` | Path to audit log | `./audit.log` |
+| `ONTIC_SIGN_KEY` | Path to signing key | None |
+| `ONTIC_VERIFY_SIGS` | Enforce signature verification | `true` |
+| `ONTIC_AUDIT_LOG` | Path to audit log | `./audit.log` |
 
 ### Audit Logging
 
 Enable comprehensive audit logging:
 
 ```bash
-export HYPERTENSOR_AUDIT_LOG=/var/log/physics_os/audit.log
-export HYPERTENSOR_AUDIT_LEVEL=INFO
+export ONTIC_AUDIT_LOG=/var/log/physics_os/audit.log
+export ONTIC_AUDIT_LEVEL=INFO
 ```
 
 ## Security Updates

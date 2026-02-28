@@ -255,4 +255,4 @@ SHA256: (see TT_KOOPMAN_ATTESTATION.json)
 
 *"Chaos is just order waiting to be discovered in a higher dimension."*
 
-**HyperTensor Team, 2026**
+**TiganticLabz, 2026**

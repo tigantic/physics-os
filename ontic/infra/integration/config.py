@@ -1,5 +1,5 @@
 """
-Configuration Management for Project HyperTensor.
+Configuration Management for Project The Ontic Engine.
 
 Provides hierarchical configuration with:
 - Multiple sources (files, environment, defaults)
@@ -227,10 +227,10 @@ class EnvironmentConfig:
     """
     Configuration from environment variables.
 
-    Follows convention: HYPERTENSOR_SECTION_KEY = value
+    Follows convention: ONTIC_ENGINE_SECTION_KEY = value
     """
 
-    PREFIX = "HYPERTENSOR"
+    PREFIX = "ONTIC_ENGINE"
 
     @classmethod
     def load(cls, prefix: str | None = None) -> Configuration:
@@ -404,7 +404,7 @@ class ConfigManager:
                 for key, value in section_data.items():
                     self.config.set(f"{section_name}.{key}", value, source)
 
-    def load_environment(self, prefix: str = "HYPERTENSOR"):
+    def load_environment(self, prefix: str = "ONTIC_ENGINE"):
         """Load configuration from environment variables."""
         env_config = EnvironmentConfig.load(prefix)
         self.config.merge(env_config, ConfigSource.ENVIRONMENT)

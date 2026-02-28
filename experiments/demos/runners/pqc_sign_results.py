@@ -125,8 +125,8 @@ def create_results_manifest() -> Dict[str, Any]:
         
         "metadata": {
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-            "tool": "HyperTensor",
-            "repository": "tigantic/HyperTensor",
+            "tool": "The Ontic Engine",
+            "repository": "tigantic/physics-os",
             "branch": "main"
         }
     }

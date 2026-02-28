@@ -23,7 +23,7 @@ CRITICAL FIXES:
 
 Goal: Maintain >70% snap-back success even at ε_r = 80
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026-01-05
 Status: READY FOR SYNTHESIS
 """
@@ -40,7 +40,7 @@ import hashlib
 # =============================================================================
 # QTT-NATIVE 3D BINDING POCKET GRID
 # =============================================================================
-# HyperTensor QTT Commandments:
+# Ontic QTT Commandments:
 # 1. QTT must be NATIVE - no decompression
 # 2. SVD → rSVD (randomized, GPU-native)
 # 3. Python loops → vectorized ops (Triton when available)
@@ -1951,7 +1951,7 @@ def generate_attestation(
     """Generate SHA256-signed attestation for multi-mechanism results."""
     
     attestation = {
-        "project": "HyperTensor Drug Design",
+        "project": "Ontic Drug Design",
         "module": "TIG-011a Multi-Mechanism Enhancement",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         
@@ -2212,7 +2212,7 @@ def main():
     
     # Generate comprehensive attestation
     attestation = {
-        "project": "HyperTensor Drug Design",
+        "project": "Ontic Drug Design",
         "module": "TIG-011a Multi-Mechanism Enhancement",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "status": final_status,

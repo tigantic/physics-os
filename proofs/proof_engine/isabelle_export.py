@@ -2,7 +2,7 @@
 Isabelle/HOL Proof Backend
 ============================
 
-Export HyperTensor certificates to Isabelle/HOL format (.thy files).
+Export The Ontic Engine certificates to Isabelle/HOL format (.thy files).
 
 Isabelle/HOL uses Higher-Order Logic with a powerful simplifier
 (simp), Isar structured proofs, and extensive standard library
@@ -124,7 +124,7 @@ def encode_list_nat(values: Sequence[float], precision: int = 32) -> str:
 # ---------------------------------------------------------------------------
 
 class IsabelleExporter:
-    """Export HyperTensor certificates to Isabelle/HOL theories.
+    """Export The Ontic Engine certificates to Isabelle/HOL theories.
 
     Generates .thy files with decidable witness proofs
     (simp, arith, eval).
@@ -292,7 +292,7 @@ class IsabelleExporter:
             imports=["Main", '"HOL-Analysis.Analysis"'],
         )
 
-        theory.raw_blocks.append("(* HyperTensor Certificate Export *)")
+        theory.raw_blocks.append("(* Ontic Certificate Export *)")
 
         for claim in cert.get("claims", []):
             sub = self.export_interval_bound(
@@ -312,7 +312,7 @@ class IsabelleExporter:
         self,
         output_dir: Union[str, Path],
         theories: Dict[str, IsabelleTheory],
-        session_name: str = "HyperTensor",
+        session_name: str = "The Ontic Engine",
     ) -> Path:
         """Generate a full Isabelle session with ROOT file.
 

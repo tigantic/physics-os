@@ -24,7 +24,7 @@ TARGET:
 - Thermal conductivity < 2 W/m·K
 - Thermal shock resistance: Excellent
 
-Author: HyperTensor Physics Engine
+Author: TiganticLabz Physics Engine
 Date: January 5, 2026
 """
 
@@ -415,7 +415,7 @@ def generate_attestation(result: Dict) -> Dict:
             'Scramjet combustor liners',
             'Nuclear thermal propulsion',
         ],
-        'framework': 'HyperTensor Mass-Disorder Phonon Scattering',
+        'framework': 'Ontic Mass-Disorder Phonon Scattering',
     }
     
     content = json.dumps(attestation, sort_keys=True, default=str)

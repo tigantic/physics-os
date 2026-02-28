@@ -2,7 +2,7 @@
 Intent - Natural Language Field Steering
 ==========================================
 
-Layer 6 of the HyperTensor platform.
+Layer 6 of the Ontic Engine platform.
 
 Provides high-level intent-based control over simulations:
 - Natural language queries parsed to field operations

@@ -102,7 +102,7 @@ def generate_readme_index(output_dir: Path, modules: List[str]) -> None:
     readme_path = output_dir / "README.md"
 
     content = [
-        "# HyperTensor API Documentation",
+        "# Ontic API Documentation",
         "",
         f"Generated: {datetime.utcnow().isoformat()}Z",
         "",

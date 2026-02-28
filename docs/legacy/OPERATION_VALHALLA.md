@@ -11,7 +11,7 @@
 
 ## EXECUTIVE SUMMARY
 
-**Mission**: Transform HyperTensor from CPU-bound proof-of-concept into GPU-native orbital command center with real-time satellite data fusion and tensor-accelerated physics simulation.
+**Mission**: Transform The Ontic Engine from CPU-bound proof-of-concept into GPU-native orbital command center with real-time satellite data fusion and tensor-accelerated physics simulation.
 
 **Strategic Objective**: Deploy RTX 5070 (8GB GDDR7) as primary computational substrate for real-time atmospheric dynamics visualization at 60+ FPS with live NOAA/NASA S3 data feeds.
 
@@ -38,12 +38,12 @@ Eliminate legacy CPU-bound implementations and local file dependencies to establ
 #### Entry Criteria
 - [x] All current processes terminated (pkill -f python3)
 - [x] Git working directory committed or stashed
-- [x] Backup of current `hypertensor_sovereign.py` state
+- [x] Backup of current `ontic_sovereign.py` state
 
 #### Execution Checklist
 
 **1.1 Code Deprecation**
-- [x] Mark `hypertensor_sovereign.py` as `[DEPRECATED]` in header
+- [x] Mark `ontic_sovereign.py` as `[DEPRECATED]` in header
 - [x] Move to `archive/proof_of_concept/` directory
 - [x] Document lessons learned in `EXPERIMENT_LOG.md`
 - [x] Remove from active execution paths

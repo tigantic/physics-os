@@ -1,6 +1,6 @@
 # The Physics OS — Server Configuration Guide
 
-This document describes how to configure the HyperTensor REST API server for production deployments.
+This document describes how to configure the Ontic Engine REST API server for production deployments.
 
 ---
 
@@ -49,21 +49,21 @@ Cross-Origin Resource Sharing (CORS) controls which web origins can access the A
 
 ```bash
 # Default - no configuration needed
-HYPERTENSOR_CORS_ORIGINS=http://localhost:3000,http://localhost:8080
+ONTIC_CORS_ORIGINS=http://localhost:3000,http://localhost:8080
 ```
 
 #### Option 2: Specific Origins (Recommended for Production)
 
 ```bash
 # Explicit allowed origins
-HYPERTENSOR_CORS_ORIGINS=https://myapp.example.com,https://admin.example.com
+ONTIC_CORS_ORIGINS=https://myapp.example.com,https://admin.example.com
 ```
 
 #### Option 3: Open CORS (NOT Recommended)
 
 ```bash
 # Allow all origins - SECURITY RISK
-HYPERTENSOR_CORS_ORIGINS=*
+ONTIC_CORS_ORIGINS=*
 ```
 
 ### Production CORS Checklist
@@ -96,28 +96,28 @@ None - all variables have sensible defaults.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `HYPERTENSOR_CORS_ORIGINS` | localhost:3000,8080 | Allowed CORS origins |
-| `HYPERTENSOR_HOST` | 127.0.0.1 | Server bind address |
-| `HYPERTENSOR_PORT` | 8000 | Server port |
-| `HYPERTENSOR_WORKERS` | 1 | Number of worker processes |
-| `HYPERTENSOR_LOG_LEVEL` | INFO | Logging level |
-| `HYPERTENSOR_LOG_FILE` | (none) | Path to log file |
-| `HYPERTENSOR_MAX_MEMORY` | 1GB | Maximum field memory |
-| `HYPERTENSOR_MAX_FIELDS` | 100 | Maximum concurrent fields |
-| `HYPERTENSOR_TIMEOUT` | 30 | Request timeout (seconds) |
+| `ONTIC_CORS_ORIGINS` | localhost:3000,8080 | Allowed CORS origins |
+| `ONTIC_HOST` | 127.0.0.1 | Server bind address |
+| `ONTIC_PORT` | 8000 | Server port |
+| `ONTIC_WORKERS` | 1 | Number of worker processes |
+| `ONTIC_LOG_LEVEL` | INFO | Logging level |
+| `ONTIC_LOG_FILE` | (none) | Path to log file |
+| `ONTIC_MAX_MEMORY` | 1GB | Maximum field memory |
+| `ONTIC_MAX_FIELDS` | 100 | Maximum concurrent fields |
+| `ONTIC_TIMEOUT` | 30 | Request timeout (seconds) |
 
 ### Example Production .env
 
 ```bash
 # Production configuration
-HYPERTENSOR_CORS_ORIGINS=https://app.example.com
-HYPERTENSOR_HOST=0.0.0.0
-HYPERTENSOR_PORT=8000
-HYPERTENSOR_WORKERS=4
-HYPERTENSOR_LOG_LEVEL=WARNING
-HYPERTENSOR_LOG_FILE=/var/log/physics_os/server.log
-HYPERTENSOR_MAX_MEMORY=4294967296
-HYPERTENSOR_MAX_FIELDS=200
+ONTIC_CORS_ORIGINS=https://app.example.com
+ONTIC_HOST=0.0.0.0
+ONTIC_PORT=8000
+ONTIC_WORKERS=4
+ONTIC_LOG_LEVEL=WARNING
+ONTIC_LOG_FILE=/var/log/physics_os/server.log
+ONTIC_MAX_MEMORY=4294967296
+ONTIC_MAX_FIELDS=200
 ```
 
 ### Using the .env.example Pattern
@@ -178,7 +178,7 @@ server {
 For authenticated endpoints, configure API key:
 
 ```bash
-HYPERTENSOR_API_KEY=your-secure-api-key
+ONTIC_API_KEY=your-secure-api-key
 ```
 
 ### 4. Error Message Security
@@ -205,7 +205,7 @@ Rule of thumb: `workers = 2 * CPU cores + 1`
 
 ```bash
 # For 4-core server
-HYPERTENSOR_WORKERS=9
+ONTIC_WORKERS=9
 ```
 
 ### Memory Limits
@@ -214,7 +214,7 @@ Set memory limits per worker:
 
 ```bash
 # 1GB per worker
-HYPERTENSOR_MAX_MEMORY=1073741824
+ONTIC_MAX_MEMORY=1073741824
 ```
 
 ### Connection Limits
@@ -262,9 +262,9 @@ Prometheus metrics endpoint planned for future release.
 
 **Symptom:** Browser shows "CORS policy" error
 
-**Fix:** Add your origin to `HYPERTENSOR_CORS_ORIGINS`:
+**Fix:** Add your origin to `ONTIC_CORS_ORIGINS`:
 ```bash
-HYPERTENSOR_CORS_ORIGINS=https://yourapp.com
+ONTIC_CORS_ORIGINS=https://yourapp.com
 ```
 
 ### Connection Refused
@@ -274,7 +274,7 @@ HYPERTENSOR_CORS_ORIGINS=https://yourapp.com
 **Fix:** Check bind address:
 ```bash
 # For external access
-HYPERTENSOR_HOST=0.0.0.0
+ONTIC_HOST=0.0.0.0
 ```
 
 ### Out of Memory
@@ -283,8 +283,8 @@ HYPERTENSOR_HOST=0.0.0.0
 
 **Fix:** Reduce limits or increase resources:
 ```bash
-HYPERTENSOR_MAX_FIELDS=50
-HYPERTENSOR_MAX_MEMORY=536870912  # 512MB
+ONTIC_MAX_FIELDS=50
+ONTIC_MAX_MEMORY=536870912  # 512MB
 ```
 
 ---

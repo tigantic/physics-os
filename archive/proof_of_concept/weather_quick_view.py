@@ -54,7 +54,7 @@ if HAS_MATPLOTLIB:
     
     # Create figure with multiple subplots
     fig = plt.figure(figsize=(16, 10))
-    fig.suptitle('HyperTensor Weather Data Visualization', fontsize=16, fontweight='bold')
+    fig.suptitle('Ontic Weather Data Visualization', fontsize=16, fontweight='bold')
     
     # 1. Surface U-Wind (1000 hPa - level 0)
     ax1 = fig.add_subplot(2, 3, 1)

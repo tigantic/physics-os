@@ -20,7 +20,7 @@ This module:
 3. Calculates radially-averaged energy spectrum E(k)
 4. Fits inertial range to verify -5/3 exponent
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026
 """
 

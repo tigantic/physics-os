@@ -26,7 +26,7 @@ Use 2D lattice Yang-Mills in QTT format:
 - Electric term: diagonal (easy)
 - Plaquette term: shift MPO for neighbors
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-16
 """
 

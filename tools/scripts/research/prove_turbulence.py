@@ -19,7 +19,7 @@ Gate Criteria (Pass/Fail):
 - Divergence max < 10^-6
 - Kolmogorov spectrum shows power-law decay
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2025
 """
 

@@ -1,8 +1,8 @@
 """
-User Guides Generator for Project HyperTensor.
+User Guides Generator for Project The Ontic Engine.
 
 This module provides tools for creating and generating user guides,
-tutorials, and documentation content for the HyperTensor framework.
+tutorials, and documentation content for the Ontic Engine framework.
 
 Features:
     - Structured guide sections
@@ -588,15 +588,15 @@ class GuideBuilder:
 
 
 def create_getting_started() -> Tutorial:
-    """Create the Getting Started guide for HyperTensor.
+    """Create the Getting Started guide for The Ontic Engine.
 
     Returns:
         Complete Getting Started tutorial.
     """
-    builder = GuideBuilder("Getting Started with HyperTensor")
+    builder = GuideBuilder("Getting Started with The Ontic Engine")
 
     builder.set_description(
-        "This guide will help you get up and running with Project HyperTensor, "
+        "This guide will help you get up and running with Project The Ontic Engine, "
         "a quantum-inspired tensor network framework for hypersonic CFD."
     )
     builder.set_difficulty(DifficultyLevel.BEGINNER)
@@ -607,7 +607,7 @@ def create_getting_started() -> Tutorial:
     builder.add_prerequisite("Basic knowledge of linear algebra")
     builder.add_prerequisite("Familiarity with NumPy/PyTorch")
 
-    builder.add_objective("Install HyperTensor and verify the installation")
+    builder.add_objective("Install The Ontic Engine and verify the installation")
     builder.add_objective("Create your first tensor network simulation")
     builder.add_objective("Run a simple CFD benchmark")
     builder.add_objective("Understand the core concepts")
@@ -616,7 +616,7 @@ def create_getting_started() -> Tutorial:
     builder.add_section(
         "Installation",
         """
-HyperTensor can be installed via pip or from source. We recommend using a virtual 
+The Ontic Engine can be installed via pip or from source. We recommend using a virtual 
 environment to avoid dependency conflicts.
 """,
     )
@@ -628,7 +628,7 @@ python -m venv physics_os-env
 source physics_os-env/bin/activate  # Linux/Mac
 # or: physics_os-env\\Scripts\\activate  # Windows
 
-# Install HyperTensor
+# Install The Ontic Engine
 pip install ontic
 """,
         description="Installing via pip:",
@@ -637,8 +637,8 @@ pip install ontic
     builder.add_example(
         """
 # Clone the repository
-git clone https://github.com/tigantic/HyperTensor.git
-cd HyperTensor
+git clone https://github.com/tigantic/physics-os.git
+cd The Ontic Engine
 
 # Install in development mode
 pip install -e .
@@ -683,7 +683,7 @@ print(f"Energy per site: {result.energy/L:.6f}")
     builder.add_section(
         "Core Concepts",
         """
-HyperTensor is built on tensor network methods, which provide efficient 
+The Ontic Engine is built on tensor network methods, which provide efficient 
 representations of high-dimensional data. Here are the key concepts:
 """,
     )
@@ -719,7 +719,7 @@ each tensor in the MPS while keeping others fixed.
     builder.add_section(
         "Your First CFD Simulation",
         """
-HyperTensor extends tensor networks to computational fluid dynamics. 
+The Ontic Engine extends tensor networks to computational fluid dynamics. 
 Let's run the classic Sod shock tube benchmark.
 """,
     )
@@ -751,7 +751,7 @@ print(f"Max velocity: {u.max():.3f}")
     builder.add_section(
         "Next Steps",
         """
-Now that you have HyperTensor working, here are some suggested next steps:
+Now that you have The Ontic Engine working, here are some suggested next steps:
 
 1. **Explore the tutorials**: Check out our in-depth tutorials for tensor 
    networks, CFD, and advanced features.
@@ -765,21 +765,21 @@ Now that you have HyperTensor working, here are some suggested next steps:
 """,
     )
 
-    builder.add_author("HyperTensor Team")
+    builder.add_author("TiganticLabz")
 
     return builder.build()
 
 
 def create_cfd_tutorial() -> Tutorial:
-    """Create the CFD tutorial for HyperTensor.
+    """Create the CFD tutorial for The Ontic Engine.
 
     Returns:
         Complete CFD tutorial.
     """
-    builder = GuideBuilder("Computational Fluid Dynamics with HyperTensor")
+    builder = GuideBuilder("Computational Fluid Dynamics with The Ontic Engine")
 
     builder.set_description(
-        "Learn how to use HyperTensor for hypersonic computational fluid dynamics, "
+        "Learn how to use The Ontic Engine for hypersonic computational fluid dynamics, "
         "from basic Euler equations to reactive Navier-Stokes simulations."
     )
     builder.set_difficulty(DifficultyLevel.INTERMEDIATE)
@@ -804,7 +804,7 @@ Computational Fluid Dynamics (CFD) solves the governing equations of fluid
 motion numerically. For hypersonic flows (Mach > 5), we encounter unique 
 challenges including strong shocks, high temperatures, and chemical reactions.
 
-HyperTensor uses tensor network compression to efficiently represent flow 
+The Ontic Engine uses tensor network compression to efficiently represent flow 
 fields, exploiting the "area law" scaling of correlations in turbulent flows.
 """,
     )
@@ -946,7 +946,7 @@ final_state = solver.solve(
         "QTT Compression",
         """
 Quantized Tensor Train (QTT) compression enables logarithmic scaling of 
-storage and computation. This is the key innovation of HyperTensor.
+storage and computation. This is the key innovation of The Ontic Engine.
 """,
     )
 
@@ -973,13 +973,13 @@ analysis = compression_analysis(final_state, chi_values=[16, 32, 64, 128])
         description="Compressing flow fields with QTT:",
     )
 
-    builder.add_author("HyperTensor Team")
+    builder.add_author("TiganticLabz")
 
     return builder.build()
 
 
 def create_tensor_network_primer() -> Tutorial:
-    """Create the Tensor Network primer for HyperTensor.
+    """Create the Tensor Network primer for The Ontic Engine.
 
     Returns:
         Complete Tensor Network primer tutorial.
@@ -1179,21 +1179,21 @@ tensor network compression viable for fluid dynamics!
 """,
     )
 
-    builder.add_author("HyperTensor Team")
+    builder.add_author("TiganticLabz")
 
     return builder.build()
 
 
 def create_deployment_guide() -> Tutorial:
-    """Create the Deployment guide for HyperTensor.
+    """Create the Deployment guide for The Ontic Engine.
 
     Returns:
         Complete Deployment tutorial.
     """
-    builder = GuideBuilder("Deploying HyperTensor to Embedded Systems")
+    builder = GuideBuilder("Deploying The Ontic Engine to Embedded Systems")
 
     builder.set_description(
-        "Learn how to deploy HyperTensor models to embedded systems like "
+        "Learn how to deploy The Ontic Engine models to embedded systems like "
         "NVIDIA Jetson for real-time hypersonic vehicle guidance."
     )
     builder.set_difficulty(DifficultyLevel.ADVANCED)
@@ -1354,6 +1354,6 @@ Here are strategies to achieve this:
 """,
     )
 
-    builder.add_author("HyperTensor Team")
+    builder.add_author("TiganticLabz")
 
     return builder.build()

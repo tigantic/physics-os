@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HyperTensor Forensic Instrument
+Ontic Forensic Instrument
 ===============================
 
 True forensic-grade atmospheric visualization:
@@ -1055,7 +1055,7 @@ class ForensicViewport:
 class ForensicInstrument(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("HyperTensor Forensic Instrument")
+        self.setWindowTitle("Ontic Forensic Instrument")
         self.setMinimumSize(1700, 1000)
         self.setStyleSheet(STYLE)
         
@@ -1337,7 +1337,7 @@ class ForensicInstrument(QMainWindow):
 def main():
     print("""
 ╔══════════════════════════════════════════════════════════════════════╗
-║              HYPERTENSOR FORENSIC INSTRUMENT                         ║
+║              ONTIC_ENGINE FORENSIC INSTRUMENT                         ║
 ║                                                                      ║
 ║  • Resolution-Independent Manifold Sampling                          ║
 ║  • Vector Flow Barbs (not heatmap blobs)                             ║

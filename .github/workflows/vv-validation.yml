@@ -1,6 +1,6 @@
-# HyperTensor V&V Validation Pipeline
+# Ontic VOntic V&VV Validation Pipeline
 # ====================================
-# Implements Phase 3 Automation from HYPERTENSOR_VV_FRAMEWORK.md
+# Implements Phase 3 Automation from ONTIC_VV_FRAMEWORK.md
 # - CI/CD pipeline integration
 # - Automated validation dashboard
 # - Regression detection alerts

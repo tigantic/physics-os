@@ -20,7 +20,7 @@ No gradients. No backprop. No truncation gradient problem.
 """
 
 __version__ = "0.1.0"
-__author__ = "HyperTensor Labs"
+__author__ = "TiganticLabz"
 
 from .context_encoder import ContextEncoder
 from .fluidelite_model import FluidEliteModel

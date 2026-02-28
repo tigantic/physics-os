@@ -20,7 +20,7 @@ Architecture:
 - Hierarchical routing matching QTT core structure
 - Event-driven (spike-based) operation
 
-Author: HyperTensor Neuromorphic Division
+Author: TiganticLabz Neuromorphic Division
 Date: 2026-01-05
 """
 
@@ -578,7 +578,7 @@ def run_neuromorphic_integration():
     
     # Attestation
     attestation = {
-        "project": "HyperTensor Neuromorphic",
+        "project": "Ontic Neuromorphic",
         "module": "QTT → SnHf-F Hardware Integration",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         

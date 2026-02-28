@@ -1,4 +1,4 @@
-"""HyperTensor API — Health endpoint.
+"""Ontic API — Health endpoint.
 
 ``GET /v1/health`` returns server status, GPU info, and uptime.
 """

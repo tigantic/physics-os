@@ -23,7 +23,7 @@ Kernel Map (replaces Python for-loops):
     mpo_contract_kernel     → mpo_apply (fused MPO contraction)
     env_contract_kernel     → qtt_inner (fused environment chain)
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from __future__ import annotations

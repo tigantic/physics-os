@@ -40,7 +40,7 @@ use crate::{BridgeError, Result};
 // Protocol Constants
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// Magic number for protocol validation: "HTSB" (HyperTensor Sovereign Bridge)
+/// Magic number for protocol validation: "HTSB" (Ontic Sovereign Bridge)
 pub const SOVEREIGN_MAGIC: u32 = 0x48545342;
 
 /// Protocol version

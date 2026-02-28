@@ -1,1 +1,1 @@
-"""HyperTensor job system."""
+"""The Ontic Engine job system."""

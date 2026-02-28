@@ -8,7 +8,7 @@ The Final Three Tests:
 
 "If it survives the Crucible, it ships."
 
-Author: HyperTensor Physics Laboratory
+Author: TiganticLabz Physics Laboratory
 Copyright (c) 2025 TiganticLabz. All Rights Reserved.
 """
 

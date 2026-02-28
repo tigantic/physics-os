@@ -1,5 +1,5 @@
 """
-HyperTensor Recipe Book — per-domain composable workflow patterns.
+Ontic Recipe Book — per-domain composable workflow patterns.
 
 A **recipe** is a pre-built ``WorkflowConfig`` generator that encodes
 domain expertise: recommended mesh resolution, time-stepping, boundary

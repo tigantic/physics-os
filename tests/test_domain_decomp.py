@@ -8,7 +8,7 @@ Tests edge cases including:
 - Ghost zone handling
 - Neighbor computation with periodicity
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 import numpy as np

@@ -1,5 +1,5 @@
 """
-HyperTensor Complete Technical Volume
+Ontic Complete Technical Volume
 ======================================
 Consolidates all 3 JSON proof certificates + energy decay graph into one PDF.
 
@@ -34,7 +34,7 @@ def draw_footer(c, width, page_num):
     c.setFillColor(colors.black)
 
 def create_complete_technical_volume():
-    filename = "HyperTensor_Complete_Technical_Volume.pdf"
+    filename = "Ontic_Complete_Technical_Volume.pdf"
     c = canvas.Canvas(filename, pagesize=letter)
     width, height = letter
     page_num = 0
@@ -57,7 +57,7 @@ def create_complete_technical_volume():
     c.line(inch, height - 1.5*inch, width - inch, height - 1.5*inch)
     
     c.setFont("Helvetica-Bold", 28)
-    c.drawString(inch, height - 2.5*inch, "HyperTensor")
+    c.drawString(inch, height - 2.5*inch, "The Ontic Engine")
     c.setFont("Helvetica-Bold", 20)
     c.drawString(inch, height - 3*inch, "Technical Validation Report")
     
@@ -270,7 +270,7 @@ def create_complete_technical_volume():
         y -= 4.2*inch
     
     c.setFont("Helvetica-Oblique", 9)
-    c.drawCentredString(width/2, y, "Figure 1: Red line (HyperTensor QTT) overlaps analytical Navier-Stokes solution.")
+    c.drawCentredString(width/2, y, "Figure 1: Red line (Ontic QTT) overlaps analytical Navier-Stokes solution.")
     
     # Interpretation box
     y -= 0.5*inch
@@ -410,7 +410,7 @@ def create_complete_technical_volume():
     text.setLeading(14)
     
     conclusion = [
-        "This Technical Volume provides irrefutable evidence that the HyperTensor",
+        "This Technical Volume provides irrefutable evidence that the Ontic Engine",
         "QTT Physics Engine can:",
         "",
         "  1. Compress billion-point CFD data to < 2KB with machine precision",

@@ -26,7 +26,7 @@ At weak coupling on large lattice:
 - Entanglement should increase
 - Glueball can "swell"
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-16
 """
 

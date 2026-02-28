@@ -6,7 +6,7 @@ Seeing a Rank-62 tensor swirl is indistinguishable from a dense simulation.
 
 This script runs a full KH simulation and renders it to video.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 2025
 """
 
@@ -150,7 +150,7 @@ def render_kh_instability(history, filename="kelvin_helmholtz_qtt.mp4",
     rank_text = fig.text(0.5, 0.02, '', ha='center', fontsize=12,
                          color='blue', fontweight='bold')
     
-    fig.suptitle("Kelvin-Helmholtz Instability: HyperTensor QTT Solver", 
+    fig.suptitle("Kelvin-Helmholtz Instability: Ontic QTT Solver", 
                  fontsize=16, fontweight='bold', y=0.99)
     
     plt.tight_layout(rect=[0, 0.04, 1, 0.94])
@@ -251,7 +251,7 @@ def render_vorticity(history, filename="kh_vorticity.mp4", fps=20):
                         fontsize=12, color='blue',
                         bbox=dict(facecolor='white', alpha=0.8))
     
-    fig.suptitle("Kelvin-Helmholtz Vortex Roll-Up: HyperTensor QTT",
+    fig.suptitle("Kelvin-Helmholtz Vortex Roll-Up: Ontic QTT",
                  fontsize=14, fontweight='bold')
     
     plt.tight_layout()
@@ -298,7 +298,7 @@ def main():
     args = parser.parse_args()
     
     print("=" * 60)
-    print("HyperTensor: Kelvin-Helmholtz Instability Animation")
+    print("The Ontic Engine: Kelvin-Helmholtz Instability Animation")
     print("=" * 60)
     print(f"Grid: {2**args.n}×{2**args.n}")
     print(f"T_final: {args.time}")

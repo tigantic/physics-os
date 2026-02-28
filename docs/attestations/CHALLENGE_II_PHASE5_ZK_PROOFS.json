@@ -90,7 +90,7 @@
     "all_pass": true
   },
   "task_5_3_on_chain_verifier": {
-    "contract": "HyperTensorBindingVerifier",
+    "contract": "OnticBindingVerifier",
     "n_lines": 231,
     "source_hash": "1a83448527dd02be79d9b4b6d3832f25c0521190f3154c68643b61861b6cf601",
     "interface": "IBindingVerifier",

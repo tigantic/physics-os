@@ -6,7 +6,7 @@
 
 ## Overview
 
-The HyperTensor Unreal Plugin provides native Blueprint and C++ integration for QTT field visualization and simulation within Unreal Engine projects.
+Ontic Unreal Plugin provides native Blueprint and C++ integration for QTT field visualization and simulation within Unreal Engine projects.
 
 ## Features
 
@@ -26,18 +26,18 @@ The HyperTensor Unreal Plugin provides native Blueprint and C++ integration for 
 
 ### Blueprint
 
-1. Add a `HyperTensorFieldActor` to your level
+1. Add a `OnticFieldActor` to your level
 2. Configure field dimensions and resolution
 3. Use Blueprint nodes to sample/evolve the field
 
 ### C++
 
 ```cpp
-#include "HyperTensor/HyperTensorField.h"
+#include "The Ontic Engine/OnticField.h"
 
 // Create field component
-UHyperTensorFieldComponent* Field = CreateDefaultSubobject<UHyperTensorFieldComponent>(TEXT("Field"));
-Field->Initialize(64, 64, 64, EHyperTensorFieldType::Vector);
+UOnticFieldComponent* Field = CreateDefaultSubobject<UOnticFieldComponent>(TEXT("Field"));
+Field->Initialize(64, 64, 64, EOnticFieldType::Vector);
 
 // Sample field
 FVector Value = Field->Sample(FVector(0.5f, 0.5f, 0.5f));

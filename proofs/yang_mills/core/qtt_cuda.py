@@ -27,7 +27,7 @@ This module provides CUDA acceleration for QTT operations by:
 
 Target Hardware: RTX 5070 (Blackwell architecture, 12GB VRAM)
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-15
 """
 

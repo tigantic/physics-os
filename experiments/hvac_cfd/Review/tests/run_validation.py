@@ -9,7 +9,7 @@ Usage:
     python run_validation.py --crucible        # Run Crucible only
     python run_validation.py --report          # Generate JSON report
     
-Author: HyperTensor Physics Laboratory
+Author: TiganticLabz Physics Laboratory
 Copyright (c) 2025 TiganticLabz. All Rights Reserved.
 """
 

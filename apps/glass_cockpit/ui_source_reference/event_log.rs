@@ -2,7 +2,7 @@
  * Phase 7: Event Log Terminal
  * 
  * Bottom pane scrolling event log with:
- * - Timestamped HyperTensor events
+ * - Timestamped The Ontic Engine events
  * - Filtering by event type
  * - Color-coded severity levels
  * - High-throughput logging without lag

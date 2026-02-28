@@ -27,7 +27,7 @@ USAGE:
     python3 prove_qtt_turbulence_workflow.py --reset   # Clear checkpoint and restart
     python3 prove_qtt_turbulence_workflow.py --status  # Show current status
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026-02-05
 """
 

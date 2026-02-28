@@ -109,7 +109,7 @@ Ready for arXiv submission:
 
 ## License
 
-Proprietary - HyperTensor Research
+Proprietary - Ontic Research
 
 ---
 

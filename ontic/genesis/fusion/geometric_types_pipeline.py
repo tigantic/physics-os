@@ -26,7 +26,7 @@ GENESIS PRIMITIVES:
     PH   — Persistent Homology (topological features)
     GA   — Geometric Algebra (rotations, transformations)
 
-Author: HyperTensor Genesis Protocol
+Author: TiganticLabz Genesis Protocol
 Date: January 27, 2026
 """
 

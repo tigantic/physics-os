@@ -1,5 +1,5 @@
 """
-Integration Module for Project HyperTensor.
+Integration Module for Project The Ontic Engine.
 
 Phase 16: System integration and deployment hardening including:
 - End-to-end workflow orchestration

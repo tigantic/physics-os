@@ -1,11 +1,11 @@
 #!/bin/bash
-# Comprehensive dependency verification for Project HyperTensor
+# Comprehensive dependency verification for Project The Ontic Engine
 # Run from WSL: bash verify_dependencies.sh
 
 set -e
 
 echo "======================================"
-echo "Project HyperTensor Dependency Check"
+echo "Project Ontic Dependency Check"
 echo "======================================"
 echo ""
 

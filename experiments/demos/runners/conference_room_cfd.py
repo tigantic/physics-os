@@ -27,7 +27,7 @@ from typing import Tuple
 import json
 from datetime import datetime
 
-# Use HyperTensor CFD modules
+# Use Ontic CFD modules
 import sys
 sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
 

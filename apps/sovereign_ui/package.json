@@ -2,7 +2,7 @@
   "name": "sovereign-ui",
   "version": "1.0.0",
   "private": true,
-  "description": "Sovereign Intelligence - Interface to Cognition for HyperTensor VM",
+  "description": "Sovereign Intelligence - Interface to Cognition for The Ontic Engine",
   "type": "module",
   "scripts": {
     "dev": "vite dev",

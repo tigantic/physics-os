@@ -14,7 +14,7 @@ WHAT WE PROVE:
 5. Derivative Operators - ∂/∂x and ∂²/∂x² work in QTT/MPO format
 6. Burgers' Equation - Nonlinear PDE (u_t + u*u_x = ν*u_xx)
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2025-12-23
 """
 

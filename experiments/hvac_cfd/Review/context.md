@@ -125,7 +125,7 @@ HVAC_CFD is a GPU-accelerated Computational Fluid Dynamics (CFD) system for HVAC
 │                              │                                              │
 └──────────────────────────────┼──────────────────────────────────────────────┘
                                │ Shared Memory (Zero-Copy)
-                               │ /mnt/c/HyperTensor/Bridge/DOMINION_PHYSICS_BUFFER.dat
+                               │ /mnt/c/The Ontic Engine/Bridge/DOMINION_PHYSICS_BUFFER.dat
                                │ (4 MB for 64³ × 4 channels × float32)
                                ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -516,9 +516,9 @@ Each tier has a dedicated panel with real-time metrics:
 ### 6.1 Shared Memory Protocol
 
 **Buffer Location:**
-- Windows: `C:\HyperTensor\Bridge\DOMINION_PHYSICS_BUFFER.dat`
+- Windows: `C:\The Ontic Engine\Bridge\DOMINION_PHYSICS_BUFFER.dat`
 - Linux: `/dev/shm/DOMINION_PHYSICS_BUFFER`
-- WSL: `/mnt/c/HyperTensor/Bridge/DOMINION_PHYSICS_BUFFER.dat`
+- WSL: `/mnt/c/The Ontic Engine/Bridge/DOMINION_PHYSICS_BUFFER.dat`
 
 **Memory Layout (64-byte header + voxel data):**
 
@@ -552,7 +552,7 @@ class SharedMemoryBuffer:
     """Zero-copy shared memory writer."""
     
     def __init__(self, nx, ny, nz, n_channels=4):
-        self.path = Path("/mnt/c/HyperTensor/Bridge/DOMINION_PHYSICS_BUFFER.dat")
+        self.path = Path("/mnt/c/The Ontic Engine/Bridge/DOMINION_PHYSICS_BUFFER.dat")
         self.header_size = 64
         self.data_size = nx * ny * nz * n_channels * 4
         

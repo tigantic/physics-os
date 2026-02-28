@@ -35,7 +35,7 @@ REFERENCES:
   - ESA Concurrent Design Facility standards
   - NASA Systems Engineering Handbook
 
-Author: HyperTensor Civilization Stack
+Author: TiganticLabz Civilization Stack
 Date: 2025-01-05
 """
 

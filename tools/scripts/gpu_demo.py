@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-GPU Acceleration Demo for HyperTensor CFD
+GPU Acceleration Demo for Ontic CFD
 
 Demonstrates GPU-accelerated flux computation and compares
 CPU vs GPU performance for the 2D Euler solver.
@@ -188,7 +188,7 @@ def main():
     args = parser.parse_args()
 
     print("=" * 50)
-    print("HyperTensor GPU Acceleration Demo")
+    print("Ontic GPU Acceleration Demo")
     print("=" * 50)
 
     has_gpu = check_gpu_availability()

@@ -2,10 +2,10 @@
 
 using UnityEngine;
 
-namespace Tigantic.HyperTensor
+namespace Tigantic.Ontic
 {
     /// <summary>
-    /// Interface for native HyperTensor bridge implementations.
+    /// Interface for native Ontic bridge implementations.
     /// </summary>
     public interface INativeBridge
     {

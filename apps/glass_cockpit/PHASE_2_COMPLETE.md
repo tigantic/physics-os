@@ -351,8 +351,8 @@ RAM bridge integration notes:
 
 ```bash
 $ cargo build --release
-   Compiling hypertensor-glass-cockpit v0.1.0
-warning: `hypertensor-glass-cockpit` (bin "glass-cockpit") generated 26 warnings
+   Compiling ontic-glass-cockpit v0.1.0
+warning: `ontic-glass-cockpit` (bin "glass-cockpit") generated 26 warnings
     Finished `release` profile [optimized] target(s) in 0.06s
 
 $ ls -lh target/release/glass-cockpit

@@ -10,7 +10,7 @@ Key differences from euler2d_strang.py:
 
 Complexity: O(log N × r⁵) per timestep instead of O(N²)
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 2025
 """
 

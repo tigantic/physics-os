@@ -24,7 +24,7 @@ Key advantages:
 - RNS channels are embarrassingly parallel
 - Tensor cores can accelerate MPO contractions
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from __future__ import annotations

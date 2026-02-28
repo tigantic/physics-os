@@ -147,7 +147,7 @@ ax.text(8, 0.8, f"Scale: 2^{data['grid_bits']} = {data['scale']:,} points  |  To
         fontsize=12, ha='center', color='#888888', fontfamily='monospace')
 
 # Branding
-ax.text(8, 0.3, "TENSOR GENESIS • HyperTensor VM • January 2026",
+ax.text(8, 0.3, "TENSOR GENESIS • The Ontic Engine • January 2026",
         fontsize=10, ha='center', color='#555555', fontfamily='monospace')
 
 # Save

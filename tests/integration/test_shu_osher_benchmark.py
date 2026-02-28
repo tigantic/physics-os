@@ -30,7 +30,7 @@ dissipation and shock-capturing properties.
 
 Constitutional Compliance:
     - Article IV.1: Verification (V&V)
-    - HYPERTENSOR_VV_FRAMEWORK.md Section 3.3
+    - ONTIC_VV_FRAMEWORK.md Section 3.3
     - Canonical CFD benchmark
 
 Tag: [PHASE-1A] [BENCHMARK] [TIER-1] [V&V]

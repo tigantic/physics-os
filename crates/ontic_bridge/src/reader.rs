@@ -27,7 +27,7 @@ impl RamBridgeReader {
     /// Connect to an existing RAM bridge
     ///
     /// # Arguments
-    /// * `path` - Path to shared memory file (e.g., "/dev/shm/hypertensor_bridge")
+    /// * `path` - Path to shared memory file (e.g., "/dev/shm/ontic_bridge")
     ///
     /// # Returns
     /// * `Ok(Self)` - Successfully connected
@@ -174,7 +174,7 @@ mod tests {
     
     #[test]
     fn test_connect_missing_file() {
-        let result = RamBridgeReader::connect("/tmp/nonexistent_hypertensor_bridge");
+        let result = RamBridgeReader::connect("/tmp/nonexistent_ontic_bridge");
         assert!(result.is_err());
     }
 }

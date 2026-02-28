@@ -70,7 +70,7 @@ def test_unreal_plugin_structure():
     """Test Unreal plugin structure exists."""
     unreal_dir = os.path.join(PROJECT_ROOT, "integrations", "unreal")
 
-    required = ["HyperTensor.uplugin", "Source", "python_bridge.py", "README.md"]
+    required = ["The Ontic Engine.uplugin", "Source", "python_bridge.py", "README.md"]
     missing = [f for f in required if not os.path.exists(os.path.join(unreal_dir, f))]
 
     if missing:
@@ -79,12 +79,12 @@ def test_unreal_plugin_structure():
     # Check uplugin file
     import json
 
-    with open(os.path.join(unreal_dir, "HyperTensor.uplugin")) as f:
+    with open(os.path.join(unreal_dir, "The Ontic Engine.uplugin")) as f:
         plugin = json.load(f)
 
     assert "FriendlyName" in plugin or "VersionName" in plugin, "Invalid uplugin format"
 
-    return True, f"Unreal plugin: HyperTensor.uplugin"
+    return True, f"Unreal plugin: The Ontic Engine.uplugin"
 
 
 def test_integration_module():

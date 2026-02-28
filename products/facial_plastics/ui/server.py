@@ -464,7 +464,7 @@ def start_server(
 
     server = HTTPServer((host, port), handler_class)
     logger.info(
-        "HyperTensor Facial Plastics UI — http://%s:%d  (library: %s)",
+        "Ontic Facial Plastics UI — http://%s:%d  (library: %s)",
         host, port, library_root,
     )
     return server
@@ -477,7 +477,7 @@ def _main() -> None:
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="HyperTensor Facial Plastics UI server",
+        description="Ontic Facial Plastics UI server",
     )
     parser.add_argument("--port", type=int, default=8420, help="TCP port")
     parser.add_argument("--host", type=str, default="127.0.0.1", help="Bind address")

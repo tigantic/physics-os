@@ -9,7 +9,7 @@ Test plan:
 2. Large N (2^14, 2^16, 2^18): QTT-only, verify residual convergence + rank
 3. Multiple media and wavenumbers
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: February 2026
 """
 

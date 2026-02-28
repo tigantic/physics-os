@@ -1,7 +1,7 @@
 """
 Documentation site themes.
 
-This module provides theming support for HyperTensor documentation sites.
+This module provides theming support for The Ontic Engine documentation sites.
 """
 
 from dataclasses import dataclass, field
@@ -337,16 +337,16 @@ img {
 """
 
 
-class HyperTensorTheme(Theme):
+class OnticTheme(Theme):
     """
-    Custom theme for HyperTensor documentation.
+    Custom theme for The Ontic Engine documentation.
 
     Features aerospace-inspired design with emphasis on
     technical documentation clarity.
     """
 
     def __init__(self):
-        """Initialize HyperTensor theme."""
+        """Initialize The Ontic Engine theme."""
         config = ThemeConfig(
             name="physics_os",
             colors=ThemeColors(
@@ -384,11 +384,11 @@ class HyperTensorTheme(Theme):
         super().__init__(config)
 
     def get_css(self) -> str:
-        """Get HyperTensor theme CSS."""
+        """Get The Ontic Engine theme CSS."""
         base = super().get_css()
 
         custom = """
-/* HyperTensor Theme Customizations */
+/* Ontic Theme Customizations */
 
 .site-nav {
     background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%);
@@ -498,7 +498,7 @@ h1 {
 # Theme registry
 _themes: dict[str, Theme] = {
     "default": Theme(),
-    "physics_os": HyperTensorTheme(),
+    "physics_os": OnticTheme(),
 }
 
 

@@ -12,7 +12,7 @@ Future extensions:
 - IMAS connector for ITER data
 - OMFIT/OMAS integration
 
-Author: HyperTensor Fusion Division
+Author: TiganticLabz Fusion Division
 Date: January 2026
 """
 
@@ -467,7 +467,7 @@ class FusionConnector:
     def full_analysis(
         self,
         shot_id: str = "ANALYSIS",
-        device: str = "HyperTensor-SIM",
+        device: str = "The Ontic Engine-SIM",
     ) -> FusionAnalysisResult:
         """
         Run complete fusion plasma analysis.

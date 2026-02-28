@@ -32,7 +32,7 @@ Gauge Invariance:
     - Physical states satisfy Gauss law: G_x |ψ⟩ = 0 at each site x
     - Hamiltonian commutes with Gauss operators: [H, G_x] = 0
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-15
 """
 

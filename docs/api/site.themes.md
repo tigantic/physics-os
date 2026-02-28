@@ -15,7 +15,7 @@ This module provides theming support for The Physics OS documentation sites.
 
 Color scheme options.
 
-### class `HyperTensorTheme`(Theme)
+### class `OnticTheme`(Theme)
 
 Custom theme for The Physics OS documentation.
 

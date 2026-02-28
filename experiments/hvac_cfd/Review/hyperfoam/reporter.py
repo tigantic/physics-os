@@ -9,7 +9,7 @@ Outputs:
 - PNG: High-resolution renders from simulation
 - JSON: Provenance record for reproducibility audit
 
-Author: HyperTensor Physics Laboratory
+Author: TiganticLabz Physics Laboratory
 Copyright (c) 2025 TiganticLabz. All Rights Reserved.
 SPDX-License-Identifier: Proprietary
 """

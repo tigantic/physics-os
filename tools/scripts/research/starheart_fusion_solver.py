@@ -28,7 +28,7 @@ Physics:
   - Energy Balance: P_fusion = P_alpha + P_neutron
   - Q-Factor: Q = P_fusion / P_input
   
-Author: HyperTensor Physics Engine
+Author: TiganticLabz Physics Engine
 Date: January 5, 2026
 """
 
@@ -122,7 +122,7 @@ class PlasmaState:
 
 class FusionReactor:
     """
-    Compact Spherical Tokamak with HyperTensor Feedback Control
+    Compact Spherical Tokamak with Ontic Feedback Control
     
     Geometry: "Apple Core" - High aspect ratio, natural divertor
     Coils: LaLuH₆ room-temperature superconductor
@@ -225,7 +225,7 @@ class FusionReactor:
         τ_E = 0.0562 × I_p^0.93 × B^0.15 × P^-0.69 × n19^0.41 × 
               M^0.19 × R^1.97 × ε^0.58 × κ^0.78
               
-        With HyperTensor feedback control, we achieve enhanced H-factor
+        With The Ontic Engine feedback control, we achieve enhanced H-factor
         """
         # Plasma current from q-scaling: I_p = 5 × B × a² × κ / (q × R)
         q = self.plasma.q_safety
@@ -309,7 +309,7 @@ class FusionReactor:
         Calculate feedback control parameters for turbulence suppression
         Using TT-compressed representation of the control manifold
         
-        Key insight: The HyperTensor feedback applies magnetic perturbations
+        Key insight: The Ontic Engine feedback applies magnetic perturbations
         10,000 times per second to cancel growing MHD modes.
         """
         # Characteristic MHD time  
@@ -606,7 +606,7 @@ class FusionReactor:
         print()
         
         # Feedback control analysis
-        print("FEEDBACK CONTROL ANALYSIS (HyperTensor-RL):")
+        print("FEEDBACK CONTROL ANALYSIS (The Ontic Engine-RL):")
         feedback = self.feedback_control_authority()
         print(f"  Feedback frequency:    {self.feedback_frequency:,} Hz")
         print(f"  TT-Rank:               {self.tt_rank}")
@@ -763,7 +763,7 @@ def create_attestation(results: Dict) -> Dict:
             "tau_E_s": round(float(results["tau_E_s"]), 2)
         },
         "control": {
-            "method": "HyperTensor-RL Feedback",
+            "method": "The Ontic Engine-RL Feedback",
             "tt_rank": int(results["tt_rank"]),
             "feedback_Hz": int(results["feedback_Hz"]),
             "plasma_mode": results["plasma_mode"],

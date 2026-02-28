@@ -2,7 +2,7 @@
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║              C L A S S I C A L   M E C H A N I C S   M O D U L E          ║
 ║                                                                            ║
-║  Production-grade classical mechanics solvers for HyperTensor.             ║
+║  Production-grade classical mechanics solvers for The Ontic Engine.             ║
 ║  Covers I.2 (Lagrangian/Hamiltonian), I.3 (Continuum),                    ║
 ║  I.4 (Structural) of the 140-domain taxonomy.                             ║
 ╚══════════════════════════════════════════════════════════════════════════════╝

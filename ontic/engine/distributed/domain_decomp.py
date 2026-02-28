@@ -4,7 +4,7 @@ Domain decomposition for parallel CFD simulations.
 This module implements domain decomposition strategies for
 distributing CFD grids across multiple processors/GPUs.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from dataclasses import dataclass

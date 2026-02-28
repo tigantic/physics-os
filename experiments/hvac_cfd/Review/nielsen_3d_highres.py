@@ -13,7 +13,7 @@ Target: <10% RMS error against Aalborg experimental data.
 import json
 import sys
 import time
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project HyperTensor')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project The Ontic Engine')
 
 import numpy as np
 import torch

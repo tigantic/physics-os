@@ -21,7 +21,7 @@
 
 ## Task 5.3: On-Chain Verifier
 
-- Contract: `HyperTensorBindingVerifier`
+- Contract: `OnticBindingVerifier`
 - Lines: 231
 - Interface: `IBindingVerifier`
 - Methods: verifyBinding, registerClaim, getClaim

@@ -9,7 +9,7 @@ Supports:
 - 3D Euler equations (turbulence, vortex dynamics)
 - Future: 5D Vlasov-Poisson (plasma kinetics)
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 2025
 """
 

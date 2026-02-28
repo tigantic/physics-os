@@ -37,7 +37,7 @@
 | Genesis Cross-Primitive Pipeline | ~12 | ~2,700 | `ontic/genesis/fusion/`, `ontic/genesis/__init__.py` |
 | Quantum Computing & Error Mitigation | ~15 | ~2,400 | `ontic/quantum/` |
 | QTeneT Enterprise SDK | ~30 | ~10,400 | `apps/qtenet/` (8 submodules + workflows) |
-| Formal Verification (Lean 4) | 6 proofs | ~633 | `lean/HyperTensor/` |
+| Formal Verification (Lean 4) | 6 proofs | ~633 | `lean/The Ontic Engine/` |
 | FRONTIER Fusion & Kinetic Plasma | ~12 | ~2,291 | `FRONTIER/01_FUSION/` |
 | FRONTIER Space Weather | ~8 | ~1,948 | `FRONTIER/02_SPACE_WEATHER/` |
 | FRONTIER Semiconductor Plasma | ~14 | ~2,353 | `FRONTIER/03_SEMICONDUCTOR_PLASMA/` |
@@ -731,7 +731,7 @@ The Civilization Stack comprises 20 domain-specific applications (~31,400 LOC) b
 
 ### 19. Formal Verification (Lean 4)
 
-**Source**: `lean/HyperTensor/` (~633 LOC across 6 files)
+**Source**: `lean/The Ontic Engine/` (~633 LOC across 6 files)
 
 | Proof | Physics Statement | Method |
 |-------|-------------------|--------|

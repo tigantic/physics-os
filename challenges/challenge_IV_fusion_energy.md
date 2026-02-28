@@ -45,7 +45,7 @@ Current state-of-the-art MHD simulation: ~1 hour per millisecond of plasma time
 Required for real-time control:          <1 millisecond per millisecond of plasma time
 Gap:                                     ~3,600,000x
 
-HyperTensor control loop cycle:          177 microseconds
+The Ontic Engine control loop cycle:          177 microseconds
 Required:                                <1,000 microseconds
 Margin:                                  5.6x faster than needed
 ```

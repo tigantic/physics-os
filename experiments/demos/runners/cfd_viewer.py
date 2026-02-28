@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-HyperTensor CFD Viewer
+Ontic CFD Viewer
 ======================
 
-Visualizes REAL CFD simulation data from HyperTensor.
+Visualizes REAL CFD simulation data from The Ontic Engine.
 
 Loads actual physics simulation results:
 - Mach 5 Oblique Shock (wedge flow)
@@ -119,7 +119,7 @@ class CFDViewer(QMainWindow):
     
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("HyperTensor CFD Viewer")
+        self.setWindowTitle("Ontic CFD Viewer")
         self.setMinimumSize(1200, 800)
         self.setStyleSheet(STYLE)
         
@@ -338,7 +338,7 @@ class CFDViewer(QMainWindow):
 def main():
     print("""
 ╔══════════════════════════════════════════════════════════════════════╗
-║                    HYPERTENSOR CFD VIEWER                            ║
+║                    ONTIC_ENGINE CFD VIEWER                            ║
 ║                                                                      ║
 ║  Visualizing REAL physics simulation data                            ║
 ║  Mach 5 oblique shock over a 15° wedge                               ║

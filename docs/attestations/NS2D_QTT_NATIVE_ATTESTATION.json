@@ -81,7 +81,7 @@
       "tensornet/cfd/pure_qtt_ops.py"
     ]
   },
-  "framework": "HyperTensor QTT-Native CFD",
+  "framework": "Ontic QTT-Native CFD",
   "constitution": "Article IV.1 (Verification), Tier 1 Physics",
   "sha256": "a7f3c9d2e8b4156a3c7d9e2f8a4b6c1d3e5f7a9b2c4d6e8f0a1b3c5d7e9f1a3b5"
 }

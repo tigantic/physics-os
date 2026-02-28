@@ -1,4 +1,4 @@
-# HyperTensor Development Dependencies
+# Ontic Development Dependencies
 # =====================================
 # Pin exact versions for reproducible dev environments
 #

@@ -35,7 +35,7 @@ REFERENCES:
   - SETI Institute detection protocols
   - ESA LISA Pathfinder communication analysis
 
-Author: HyperTensor Civilization Stack
+Author: TiganticLabz Civilization Stack
 Date: 2025-01-05
 """
 

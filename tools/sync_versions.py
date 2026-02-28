@@ -231,7 +231,7 @@ def check_cargo_toml(versions: dict[str, str], apply: bool) -> bool:
     if not match:
         # No version comment exists yet — add one after the first header line
         title_pattern = re.compile(
-            r'^(#\s+HYPERTENSOR WORKSPACE\s*\n)',
+            r'^(#\s+ONTIC WORKSPACE\s*\n)',
             re.MULTILINE,
         )
         title_match = title_pattern.search(content)

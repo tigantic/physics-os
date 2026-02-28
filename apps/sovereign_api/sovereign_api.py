@@ -7,7 +7,7 @@ Bridges the Sovereign Daemon to the SvelteKit frontend via:
 - WebSocket: Real-time regime updates, primitive scores, signals
 - REST: State snapshots, historical data, manifold data
 
-Author: Genesis Stack / HyperTensor VM
+Author: Genesis Stack / The Ontic Engine
 Version: 1.0.0
 """
 

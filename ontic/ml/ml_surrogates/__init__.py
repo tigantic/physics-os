@@ -1,5 +1,5 @@
 """
-Machine Learning Surrogate Models for HyperTensor.
+Machine Learning Surrogate Models for The Ontic Engine.
 
 This module provides neural network-based surrogate models for
 accelerating CFD simulations. These models learn from high-fidelity
@@ -23,7 +23,7 @@ Example:
     >>> pinn = PhysicsInformedNet(config)
     >>> pinn.train(x_data, y_data, boundary_conditions)
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from .deep_onet import (

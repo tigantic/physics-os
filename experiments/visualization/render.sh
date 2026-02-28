@@ -1,6 +1,6 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════════════
-# HyperTensor Visualization — Render Pipeline
+# Ontic Visualization — Render Pipeline
 # ═══════════════════════════════════════════════════════════════════════
 #
 # Usage:
@@ -52,7 +52,7 @@ case "$SCENE_FILTER" in
 esac
 
 echo "═══════════════════════════════════════════════════════════════"
-echo "  HyperTensor — Blender Cycles Render Pipeline"
+echo "  The Ontic Engine — Blender Cycles Render Pipeline"
 echo "  Quality:  ${QUALITY}"
 echo "  Scenes:   ${SCENE_FILTER}${PHYSICS_ONLY:+ (physics-only mode)}"
 echo "  Output:   ${OUTPUT_DIR}"
@@ -153,7 +153,7 @@ RENDER_QUALITY="$QUALITY" \
 RESULTS_JSON="$RESULTS_JSON" \
 OUTPUT_DIR="$OUTPUT_DIR" \
 SCENE_FILTER="$SCENE_FILTER" \
-"$BLENDER" --background --python "${SCRIPT_DIR}/render_hypertensor.py" 2>&1
+"$BLENDER" --background --python "${SCRIPT_DIR}/render_ontic.py" 2>&1
 
 RENDER_END=$(date +%s)
 RENDER_DURATION=$((RENDER_END - RENDER_START))
@@ -185,7 +185,7 @@ if command -v ffmpeg &>/dev/null; then
     echo ""
     echo "Encoding video with ffmpeg (H.265 10-bit)..."
 
-    VIDEO_OUT="${OUTPUT_DIR}/hypertensor_visualization.mp4"
+    VIDEO_OUT="${OUTPUT_DIR}/ontic_visualization.mp4"
 
     # 10-bit encoding (main10 / p010le) eliminates gradient banding in dark
     # volumetric falloffs and high-intensity emissives (Planck flames, glowing bars).

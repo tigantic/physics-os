@@ -1,1 +1,1 @@
-"""HyperTensor API — Router package."""
+"""Ontic API — Router package."""

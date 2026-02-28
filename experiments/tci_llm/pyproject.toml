@@ -9,7 +9,7 @@ description = "Gradient-Free Language Modeling via Tensor Cross Interpolation"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "HyperTensor Team"}
+    {name = "TiganticLabz"}
 ]
 requires-python = ">=3.10"
 classifiers = [
@@ -41,9 +41,9 @@ gpu = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/hypertensor/tci-llm"
-Documentation = "https://github.com/hypertensor/tci-llm#readme"
-Repository = "https://github.com/hypertensor/tci-llm"
+Homepage = "https://github.com/tigantic/tci-llm"
+Documentation = "https://github.com/tigantic/tci-llm#readme"
+Repository = "https://github.com/tigantic/tci-llm"
 
 [tool.setuptools.packages.find]
 where = ["."]

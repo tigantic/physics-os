@@ -2,7 +2,7 @@
 FieldOps - Physics Operator Library
 ====================================
 
-Layer 1 of the HyperTensor substrate.
+Layer 1 of the Ontic Engine substrate.
 
 Standard library of field operators that compose to build simulations.
 All operators work directly in QTT format - O(d × r²) not O(N).

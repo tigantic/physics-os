@@ -1,4 +1,4 @@
-"""Cross-domain integration tests for HyperTensor physics engine.
+"""Cross-domain integration tests for The Ontic Engine physics engine.
 
 These tests verify that outputs from one physics domain can be meaningfully
 consumed by another, validating physical consistency across module boundaries.

@@ -115,7 +115,7 @@ Central/skew-symmetric need smaller timestep (already handled in fixed solver wi
 
 After copying fixed solver:
 ```bash
-cd /path/to/hypertensor
+cd /path/to/physics_os
 python -m tensornet.hvac.nielsen --re 5000 --nx 256 --ny 128
 ```
 
@@ -125,7 +125,7 @@ python -m tensornet.hvac.nielsen --re 5000 --nx 256 --ny 128
 
 1. **Morinishi et al. (1998)** "Fully conservative higher order finite difference schemes for incompressible flow" — JCP 143:90-124 — Skew-symmetric formulation
 
-2. **HyperTensor tt_poisson.py** — Working spectral implementation with projection method
+2. **The Ontic Engine tt_poisson.py** — Working spectral implementation with projection method
 
 3. **Nielsen benchmark** — Aalborg University IEA Annex 20
 

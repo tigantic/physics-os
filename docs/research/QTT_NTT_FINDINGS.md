@@ -183,7 +183,7 @@ Tensor methods can still accelerate ZK proving, but not through QTT-NTT:
 3. **Structured MSM** - When scalars come from polynomial evaluations, tensor methods apply
 4. **Standard GPU NTT** - Use cuFFT-style implementation, it's already optimal
 
-See: `docs/HYPERTENSOR_ZK_STACK.md` for the revised execution plan.
+See: `docs/ONTIC_ZK_STACK.md` for the revised execution plan.
 
 ---
 

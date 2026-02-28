@@ -356,9 +356,9 @@ impl GrayscaleBridgeRenderer {
         // Cross-platform path: Windows uses TEMP, Linux uses /dev/shm
         let path = if cfg!(target_os = "windows") {
             let temp = std::env::var("TEMP").unwrap_or_else(|_| "C:\\Temp".to_string());
-            PathBuf::from(temp).join("hypertensor_bridge")
+            PathBuf::from(temp).join("ontic_bridge")
         } else {
-            PathBuf::from("/dev/shm/hypertensor_bridge")
+            PathBuf::from("/dev/shm/ontic_bridge")
         };
         println!("  Trying grayscale bridge at: {:?}", path);
         match RamBridgeV2::connect(path) {

@@ -15,7 +15,7 @@ SUCCESS CRITERIA (from Battle Plan):
     - Gap lower bound: gap - ε > 0 where ε is proven
     - Proof certificate generated for external verification
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-15
 """
 

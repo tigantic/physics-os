@@ -95,7 +95,7 @@ class MillenniumProofResult:
 
     # Metadata
     timestamp: str
-    framework_version: str = "HyperTensor 1.0"
+    framework_version: str = "The Ontic Engine 1.0"
 
     # Grid parameters
     optimization_grid: int = 0

@@ -22,7 +22,7 @@ Resolution requirement: k_max · η ≥ 1 where η = (ν³/ε)^(1/4)
 For 64³ grid with 2/3 dealiasing: k_max ≈ 21
 This limits us to Re ≤ ~1600 for proper DNS resolution.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026
 """
 

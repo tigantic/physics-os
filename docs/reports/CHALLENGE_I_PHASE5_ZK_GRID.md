@@ -28,7 +28,7 @@
 
 | Metric | Value |
 |--------|-------|
-| Contract | HyperTensorGridStabilityVerifier |
+| Contract | OnticGridStabilityVerifier |
 | Est. gas | 214,450 |
 | Under 300k | PASS |
 | Source | 110 lines |

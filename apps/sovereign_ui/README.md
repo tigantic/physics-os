@@ -242,4 +242,4 @@ The UI expects the following WebSocket messages:
 
 ## License
 
-Part of the HyperTensor VM project. See root LICENSE file.
+Part of the Ontic Engine VM project. See root LICENSE file.

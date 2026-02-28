@@ -3,7 +3,7 @@
 
 import sys
 import time
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project HyperTensor')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project The Ontic Engine')
 
 from ontic.hvac.projection_solver import ProjectionConfig, ProjectionSolver
 

@@ -218,7 +218,7 @@ Fusion plasmas are inherently unstable. Without active control:
 - **Edge-localized modes (ELMs)** → Periodic energy bursts damage wall
 - **Disruptions** → Sudden plasma death, massive forces on structure
 
-### The HyperTensor Solution
+### Ontic Solution
 
 We use TT-compressed representation of the plasma state to enable real-time optimal control:
 
@@ -370,7 +370,7 @@ By correcting 1 million times per second, the plasma never gets a chance to deve
    - Double containment, passive getters
 
 4. **Disruption Resilience**
-   - HyperTensor control prevents 99% of disruptions
+   - The Ontic Engine control prevents 99% of disruptions
    - If disruption occurs: energy goes to wall (designed for it)
    - No reactor breach possible
 

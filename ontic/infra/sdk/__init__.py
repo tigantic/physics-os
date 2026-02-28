@@ -1,9 +1,9 @@
 """
-HyperTensor SDK — Stable Public API Surface
+Ontic SDK — Stable Public API Surface
 =============================================
 
 This module is the **primary entry point** for external teams building on
-the HyperTensor platform.  It re-exports a curated, stable subset of the
+the Ontic Engine platform.  It re-exports a curated, stable subset of the
 internal platform modules so that consumers are shielded from internal
 reorgs.
 

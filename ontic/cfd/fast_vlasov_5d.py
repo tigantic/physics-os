@@ -21,7 +21,7 @@ For 5D with 32 points per dim (5 qubits each):
 - Dense storage: 128 MB (float32)
 - QTT storage: O(r² × 25) ~ few KB
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 2025
 """
 

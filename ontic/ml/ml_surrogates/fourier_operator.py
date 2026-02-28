@@ -14,7 +14,7 @@ Key features:
 Reference:
     Li et al. "Fourier Neural Operator for Parametric PDEs" (2021)
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from dataclasses import dataclass

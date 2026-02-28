@@ -83,7 +83,7 @@ The following checks MUST pass before any release:
 - [ ] `/v1/health` returns only `status`, `version`, `uptime_s` — no system info
 - [ ] `/v1/capabilities` returns only domain names, parameter specs, and job types — no internal class references
 - [ ] Certificate claims contain only derived physical quantities (conservation, bounds, stability) — no TT metadata
-- [ ] Debug mode (`HYPERTENSOR_DEBUG=true`) does NOT add forbidden fields to responses
+- [ ] Debug mode (`ONTIC_DEBUG=true`) does NOT add forbidden fields to responses
 
 ---
 

@@ -57,7 +57,7 @@ Get singleton instance.
 ##### `load_environment`
 
 ```python
-def load_environment(self, prefix: str = 'HYPERTENSOR')
+def load_environment(self, prefix: str = 'ONTIC_ENGINE')
 ```
 
 Load configuration from environment variables.
@@ -294,7 +294,7 @@ Complete configuration with multiple sections.
 ##### `__init__`
 
 ```python
-def __init__(self, name: str = 'hypertensor', version: str = '1.0', sections: Dict[str, config.ConfigSection] = <factory>) -> None
+def __init__(self, name: str = 'ontic', version: str = '1.0', sections: Dict[str, config.ConfigSection] = <factory>) -> None
 ```
 
 ##### `add_section`
@@ -382,7 +382,7 @@ Validate all sections, returning list of errors.
 
 Configuration from environment variables.
 
-Follows convention: HYPERTENSOR_SECTION_KEY = value
+Follows convention: ONTIC_ENGINE_SECTION_KEY = value
 
 #### Methods
 

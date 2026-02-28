@@ -14,7 +14,7 @@ Methods:
     2. GPU DMRG - Full MPS/MPO optimization on device
     3. GPU Power Iteration - Simple but effective
     
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-15
 """
 

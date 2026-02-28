@@ -19,7 +19,7 @@ QTT-Native Approach:
     - Track max |ω| via sampling (not dense materialization)
     - Estimate Sobolev norms from spectral representation
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026-01-16
 Tag: [PHYSICS-TOOLBOX] [REGULARITY] [BKM-CRITERION]
 """

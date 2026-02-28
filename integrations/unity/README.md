@@ -6,7 +6,7 @@
 
 ## Overview
 
-The HyperTensor Unity Package provides native C# integration for QTT field visualization and simulation within Unity projects.
+Ontic Unity Package provides native C# integration for QTT field visualization and simulation within Unity projects.
 
 ## Features
 
@@ -26,7 +26,7 @@ The HyperTensor Unity Package provides native C# integration for QTT field visua
 
 ### Option 2: Manual
 
-1. Copy the `com.tigantic.hypertensor` folder to your project's `Packages` directory
+1. Copy the `com.tigantic.ontic` folder to your project's `Packages` directory
 2. Unity will automatically detect and import the package
 
 ## Quick Start
@@ -34,11 +34,11 @@ The HyperTensor Unity Package provides native C# integration for QTT field visua
 ### Basic Usage
 
 ```csharp
-using Tigantic.HyperTensor;
+using Tigantic.The Ontic Engine;
 
 public class FluidController : MonoBehaviour
 {
-    public HyperTensorField field;
+    public OnticField field;
     
     void Start()
     {
@@ -66,7 +66,7 @@ public class FluidController : MonoBehaviour
 ### Editor Tools
 
 1. Create a new GameObject
-2. Add Component → HyperTensor → Field
+2. Add Component → The Ontic Engine → Field
 3. Configure field properties in Inspector
 4. Press Play to see simulation
 

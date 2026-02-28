@@ -14,7 +14,7 @@ Mathematical Foundation:
 
 Target Latency: <20µs per tick on RTX 5070 (Tensor Cores + FP16)
 
-Author: HyperTensor Genesis Team
+Author: TiganticLabz Genesis Team
 """
 
 import torch

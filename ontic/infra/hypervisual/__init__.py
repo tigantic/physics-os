@@ -2,7 +2,7 @@
 HyperVisual - Resolution-Independent Visualization
 ===================================================
 
-Layer 2 of HyperTensor architecture.
+Layer 2 of The Ontic Engine architecture.
 Tile-based rendering that never decompresses the full field.
 
 Core Components:

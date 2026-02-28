@@ -72,7 +72,7 @@
       "tensornet/fusion/qtt_superionic.py"
     ],
     "tests_added": "tests/test_marrs_fusion.py::TestQTTCompression, TestQTTSuperionic",
-    "framework": "HyperTensor TensorNet"
+    "framework": "The Ontic Engine"
   },
   "sha256": "1b306c736cf74b0942a6193797e3576b6d8c55dbc9f32f1c283c7f4ce8837b07"
 }

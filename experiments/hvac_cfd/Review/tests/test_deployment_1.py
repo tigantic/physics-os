@@ -6,7 +6,7 @@ Tests:
 2. The Frame Budget Stress Test (60 FPS under load)
 3. The Cold Start Audit (< 2 seconds to interactive)
 
-Author: HyperTensor Physics Laboratory
+Author: TiganticLabz Physics Laboratory
 Copyright (c) 2025 TiganticLabz. All Rights Reserved.
 """
 

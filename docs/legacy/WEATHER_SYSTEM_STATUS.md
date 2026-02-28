@@ -55,7 +55,7 @@ The synthetic data includes physically accurate features:
 ### 1. Generate Weather Data (Already Done! ✅)
 
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Ontic Engine
 python3 demos/weather_setup_minimal.py
 ```
 
@@ -271,7 +271,7 @@ If running from Windows accessing WSL files:
 ```bash
 # Run directly in WSL instead:
 wsl
-cd ~/TiganticLabz/Main_Projects/Project\ HyperTensor
+cd ~/TiganticLabz/Main_Projects/Project\ The Ontic Engine
 python3 demos/weather_quick_view.py
 ```
 

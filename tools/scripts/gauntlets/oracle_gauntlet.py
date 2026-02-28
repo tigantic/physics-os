@@ -54,7 +54,7 @@ DISCLAIMER:
   - Epitaxial ODIN/semiconductor interfaces
   - Majorana detection and manipulation
   
-Author: HyperTensor Civilization Stack
+Author: TiganticLabz Civilization Stack
 Date: 2025-01-05
 """
 

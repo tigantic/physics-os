@@ -18,7 +18,7 @@ Usage:
     python nvidia_ahmed_body_qtt_pipeline.py
 
     # Step 3: (Optional) Use your own QTT engine
-    python nvidia_ahmed_body_qtt_pipeline.py --engine hypertensor
+    python nvidia_ahmed_body_qtt_pipeline.py --engine ontic
 
 Author: Brad Adams / Tigantic Holdings LLC
 Date: February 2026
@@ -559,20 +559,20 @@ def compress_field_manual(
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# STEP 3b: HYPERTENSOR ENGINE HOOK
+# STEP 3b: ONTIC_ENGINE ENGINE HOOK
 # ═══════════════════════════════════════════════════════════════════════
 
-def compress_field_hypertensor(
+def compress_field_ontic(
     data: np.ndarray,
     field_name: str,
     max_rank: int = 64,
     tolerance: float = 1e-6,
 ) -> CompressionResult:
     """
-    Hook for Brad's HyperTensor QTT engine.
+    Hook for Brad's Ontic QTT engine.
 
     INSTRUCTIONS:
-    1. Import your QTT compression from HyperTensor
+    1. Import your QTT compression from The Ontic Engine
     2. Replace the placeholder below with actual calls
     3. The interface expects: compress(data) → compressed, decompress(compressed) → data
 
@@ -582,11 +582,11 @@ def compress_field_hypertensor(
         compressed = compressor.compress(data)
         reconstructed = compressor.decompress(compressed)
     """
-    # ─── REPLACE THIS BLOCK WITH HYPERTENSOR INTEGRATION ───
+    # ─── REPLACE THIS BLOCK WITH ONTIC_ENGINE INTEGRATION ───
     # For now, falls through to manual implementation
-    print(f"    [HyperTensor] Hook not connected - using manual TT-SVD")
-    print(f"    [HyperTensor] Edit compress_field_hypertensor() in this file")
-    print(f"    [HyperTensor] to plug in your QTT engine")
+    print(f"    [The Ontic Engine] Hook not connected - using manual TT-SVD")
+    print(f"    [The Ontic Engine] Edit compress_field_ontic() in this file")
+    print(f"    [The Ontic Engine] to plug in your QTT engine")
     return compress_field_manual(data, field_name, max_rank, tolerance)
     # ─── END REPLACE ───────────────────────────────────────
 
@@ -600,7 +600,7 @@ def compress_field(
     if config.engine == "tntorch" and HAS_TNTORCH:
         return compress_field_tntorch(data, field_name, config.max_rank, config.tolerance)
     elif config.engine == "physics_os":
-        return compress_field_hypertensor(data, field_name, config.max_rank, config.tolerance)
+        return compress_field_ontic(data, field_name, config.max_rank, config.tolerance)
     else:
         return compress_field_manual(data, field_name, config.max_rank, config.tolerance)
 

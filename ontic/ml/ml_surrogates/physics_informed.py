@@ -12,7 +12,7 @@ Key features:
     - Boundary condition enforcement
     - Support for Euler and Navier-Stokes equations
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from dataclasses import dataclass

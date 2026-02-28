@@ -5,7 +5,7 @@ build-backend = "maturin"
 [project]
 name = "tci_core"
 version = "0.1.0"
-description = "TT-Cross Interpolation core algorithms for HyperTensor"
+description = "TT-Cross Interpolation core algorithms for The Ontic Engine"
 requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Rust",

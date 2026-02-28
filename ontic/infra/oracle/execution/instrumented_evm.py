@@ -3,7 +3,7 @@ Instrumented EVM with full observability and Chi tracking.
 
 This is ORACLE's proof engine - turns theoretical attacks into verified exploits.
 
-Chi metrics from HyperTensor CFD: higher Chi = closer to exploit.
+Chi metrics from Ontic CFD: higher Chi = closer to exploit.
 """
 
 from __future__ import annotations

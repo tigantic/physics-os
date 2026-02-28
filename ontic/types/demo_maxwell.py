@@ -27,7 +27,7 @@ Maxwell's Equations (in vacuum, SI units):
 
 Wave equation: c² = 1/(μ₀ε₀) ≈ (3×10⁸ m/s)²
 
-Author: HyperTensor Geometric Types Protocol
+Author: TiganticLabz Geometric Types Protocol
 Date: January 27, 2026
 """
 
@@ -955,7 +955,7 @@ def run_maxwell_demo():
     
     attestation = {
         "demonstration": "MAXWELL EQUATIONS",
-        "project": "HYPERTENSOR-VM",
+        "project": "ONTIC_ENGINE-VM",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "tests": [
             {

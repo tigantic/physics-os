@@ -15,7 +15,7 @@ SUCCESS CRITERIA (from Battle Plan):
     - Gap ratio SU(3)/SU(2) within expected range
     - Mass gap Δ > 0 for SU(3)
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-15
 """
 

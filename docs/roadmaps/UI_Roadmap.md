@@ -415,7 +415,7 @@ Produce a **broadcast-quality atmospheric visualization system** that rivals NOA
 
 ### ✅ Completed (December 27, 2025)
 
-**Application:** `demos/hypertensor_pro.py` (1270+ lines)
+**Application:** `demos/ontic_pro.py` (1270+ lines)
 
 **Core Features Delivered:**
 
@@ -472,7 +472,7 @@ Produce a **broadcast-quality atmospheric visualization system** that rivals NOA
 
 ## Immediate Next Step
 
-**Ready for Launch:** Run `python demos/hypertensor_pro.py`
+**Ready for Launch:** Run `python demos/ontic_pro.py`
 
 ---
 

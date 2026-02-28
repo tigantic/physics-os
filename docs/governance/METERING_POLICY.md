@@ -18,8 +18,8 @@ CU = wall_time_s × device_multiplier
 
 | Device Class | Multiplier | Detection                                |
 |--------------|------------|------------------------------------------|
-| `cpu`        | 1.0        | `HYPERTENSOR_DEVICE != cuda`             |
-| `cuda`       | 10.0       | `HYPERTENSOR_DEVICE == cuda` or auto-detected |
+| `cpu`        | 1.0        | `ONTIC_DEVICE != cuda`             |
+| `cuda`       | 10.0       | `ONTIC_DEVICE == cuda` or auto-detected |
 
 ### 1.2 Measurement Point
 

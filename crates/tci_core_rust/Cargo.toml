@@ -2,8 +2,8 @@
 name = "tci_core_rust"
 version = "0.1.0"
 edition = "2021"
-authors = ["HyperTensor Team"]
-description = "TT-Cross Interpolation core algorithms for HyperTensor"
+authors = ["TiganticLabz"]
+description = "TT-Cross Interpolation core algorithms for The Ontic Engine"
 license = "LicenseRef-Proprietary"
 
 [lib]

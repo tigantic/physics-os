@@ -265,7 +265,7 @@ ontic/gpu/
 | File | Purpose |
 |------|---------|
 | `hellskin_thermal_solver.py` | Extreme thermal |
-| `hypertensor_dynamics.py` | Core dynamics engine |
+| `ontic_dynamics.py` | Core dynamics engine |
 | `odin_superconductor_solver.py` | Superconductor |
 | `starheart_fusion_solver.py` | Fusion reactor |
 | `ssb_optimize_resonance.py` | SSB resonance |
@@ -367,10 +367,10 @@ fluidelite/
 ```
 integrations/
 ├── unity/                  # Unity C# bindings
-│   ├── HyperTensorPlugin.cs
+│   ├── OnticPlugin.cs
 │   └── ...
 └── unreal/                 # Unreal C++ bindings
-    ├── HyperTensorPlugin.cpp
+    ├── OnticPlugin.cpp
     └── ...
 ```
 
@@ -428,8 +428,8 @@ demos/
 | `AGENT_CONTEXT.md` | AI agent context |
 | `CONSTITUTION.md` | Project constitution |
 | `CONTRIBUTING.md` | Contribution guide |
-| `HYPERTENSOR_VV_FRAMEWORK.md` | V&V framework |
-| `HyperTensor_CFD_Book.md` | CFD textbook (1.2MB!) |
+| `ONTIC_ENGINE_VV_FRAMEWORK.md` | V&V framework |
+| `Ontic_CFD_Book.md` | CFD textbook (1.2MB!) |
 | `EXTRACTION_MAP.md` | Data extraction |
 | `CIVILIZATION_STACK_PHASE_*.md` | Civilization roadmap |
 | `TOOLBOX.md` | Functional module catalog |

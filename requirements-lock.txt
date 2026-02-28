@@ -255,7 +255,7 @@ qiskit-ibm-runtime==0.43.1
 qiskit-qasm3-import==0.6.0
 qrcode==8.2
 qsharp==1.22.0
--e git+https://github.com/tigantic/HyperTensor.git@3c866064f032e06550f11378a52debfab2500e75#egg=qtt_sdk&subdirectory=sdk\qtt-sdk
+-e git+https://github.com/tigantic/physics-os.git@3c866064f032e06550f11378a52debfab2500e75#egg=qtt_sdk&subdirectory=sdk\qtt-sdk
 quantcrypt==1.0.1
 readme_renderer==44.0
 redis==5.2.0
@@ -305,9 +305,9 @@ starlette==0.38.6
 stevedore==5.6.0
 structlog==23.3.0
 sympy==1.14.0
-tci_core @ file:///C:/TiganticLabz/Main_Projects/Project%20HyperTensor/tci_core_rust/target/wheels/tci_core-0.1.0-cp311-cp311-win_amd64.whl#sha256=340804a5411ba1ed473caf4c9c563d7d04a073130f74f81a465909ec5640e7de
+tci_core @ file:///C:/TiganticLabz/Main_Projects/Project%20The Ontic Engine/tci_core_rust/target/wheels/tci_core-0.1.0-cp311-cp311-win_amd64.whl#sha256=340804a5411ba1ed473caf4c9c563d7d04a073130f74f81a465909ec5640e7de
 tenacity==8.5.0
--e git+https://github.com/tigantic/HyperTensor.git@3c866064f032e06550f11378a52debfab2500e75#egg=tensornet
+-e git+https://github.com/tigantic/physics-os.git@3c866064f032e06550f11378a52debfab2500e75#egg=tensornet
 threadpoolctl==3.6.0
 tiktoken==0.5.2
 tokenizers==0.22.1

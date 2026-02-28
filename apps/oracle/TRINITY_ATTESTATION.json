@@ -103,7 +103,7 @@
       "zero_loop_kernel.py"
     ]
   },
-  "author": "Genesis Stack / HyperTensor VM",
+  "author": "Genesis Stack / The Ontic Engine",
   "hardware": {
     "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
     "driver": "565.77",

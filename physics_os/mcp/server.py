@@ -1,6 +1,6 @@
-"""HyperTensor MCP — Model Context Protocol tool server.
+"""Ontic MCP — Model Context Protocol tool server.
 
-Exposes the HyperTensor Runtime as MCP tools for agent-native
+Exposes the Ontic Engine Runtime as MCP tools for agent-native
 workflows.  Agents call these tools to:
 
 1. Discover available physics domains
@@ -173,10 +173,10 @@ def _verify_certificate(certificate: dict[str, Any]) -> dict[str, Any]:
 
 TOOLS: list[dict[str, Any]] = [
     {
-        "name": "hypertensor_list_domains",
+        "name": "ontic_list_domains",
         "description": (
             "List all available physics simulation domains supported by "
-            "the HyperTensor runtime.  Returns domain keys, labels, and "
+            "the Ontic Engine runtime.  Returns domain keys, labels, and "
             "accepted parameters."
         ),
         "inputSchema": {
@@ -185,9 +185,9 @@ TOOLS: list[dict[str, Any]] = [
         },
     },
     {
-        "name": "hypertensor_run_simulation",
+        "name": "ontic_run_simulation",
         "description": (
-            "Submit a physics simulation job to the HyperTensor runtime.  "
+            "Submit a physics simulation job to the Ontic Engine runtime.  "
             "Runs a QTT-compressed PDE solver for the specified domain.  "
             "Returns the result payload, validation report, and trust "
             "certificate (for full_pipeline jobs)."
@@ -198,7 +198,7 @@ TOOLS: list[dict[str, Any]] = [
                 "domain": {
                     "type": "string",
                     "description": (
-                        "Physics domain key.  Use hypertensor_list_domains "
+                        "Physics domain key.  Use ontic_list_domains "
                         "to see available options."
                     ),
                 },
@@ -241,7 +241,7 @@ TOOLS: list[dict[str, Any]] = [
         },
     },
     {
-        "name": "hypertensor_validate",
+        "name": "ontic_validate",
         "description": (
             "Validate a physics simulation result artifact or envelope.  "
             "Checks field integrity, conservation laws, numerical stability, "
@@ -259,7 +259,7 @@ TOOLS: list[dict[str, Any]] = [
         },
     },
     {
-        "name": "hypertensor_verify_certificate",
+        "name": "ontic_verify_certificate",
         "description": (
             "Verify the cryptographic signature on a trust certificate.  "
             "Returns whether the signature is valid and a summary of claims."
@@ -279,10 +279,10 @@ TOOLS: list[dict[str, Any]] = [
 
 
 _TOOL_DISPATCH: dict[str, Any] = {
-    "hypertensor_list_domains": lambda args: _list_domains(),
-    "hypertensor_run_simulation": lambda args: _submit_job(**args),
-    "hypertensor_validate": lambda args: _validate_artifact(args["artifact"]),
-    "hypertensor_verify_certificate": lambda args: _verify_certificate(args["certificate"]),
+    "ontic_list_domains": lambda args: _list_domains(),
+    "ontic_run_simulation": lambda args: _submit_job(**args),
+    "ontic_validate": lambda args: _validate_artifact(args["artifact"]),
+    "ontic_verify_certificate": lambda args: _verify_certificate(args["certificate"]),
 }
 
 

@@ -30,7 +30,7 @@ The QTT cores encode the recurrence:
 
 Each core is 2x2 (rank 2) encoding the phase accumulation.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026-02-03
 """
 

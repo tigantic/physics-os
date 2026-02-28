@@ -2,7 +2,7 @@
 HyperSim - RL-Ready Simulation Environments
 ============================================
 
-Layer 3 of HyperTensor architecture.
+Layer 3 of The Ontic Engine architecture.
 Gymnasium-compatible environments for learning fluid control.
 
 Core Components:

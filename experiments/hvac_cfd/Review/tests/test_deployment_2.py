@@ -6,7 +6,7 @@ Tests:
 2. Inverse Design Loop (Target → BC convergence)
 3. Boundary Condition Integrity (No unphysical spikes)
 
-Author: HyperTensor Physics Laboratory
+Author: TiganticLabz Physics Laboratory
 Copyright (c) 2025 TiganticLabz. All Rights Reserved.
 """
 

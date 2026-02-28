@@ -4,7 +4,7 @@ Multi-GPU resource management for distributed CFD.
 This module provides GPU device management, memory pooling,
 and workload distribution for multi-GPU simulations.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 import threading

@@ -41,7 +41,7 @@ REFERENCES:
   - Tononi G et al (2016) "Integrated Information Theory: From Consciousness 
     to Its Physical Substrate" Nature Reviews Neuroscience
 
-Author: HyperTensor Civilization Stack
+Author: TiganticLabz Civilization Stack
 Date: 2026-01-05
 """
 

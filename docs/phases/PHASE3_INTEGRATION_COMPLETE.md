@@ -122,7 +122,7 @@ struct TensorBridgeHeader {
 ### Memory Layout
 
 ```
-File: /dev/shm/hypertensor_bridge (12 MB total)
+File: /dev/shm/ontic_bridge (12 MB total)
 ─────────────────────────────────────────────
 Offset 0x0000: Header (4096 bytes)
   - Magic number validation
@@ -162,7 +162,7 @@ Offset 0x1000: Data (8,294,400 bytes)
 
 ### Memory Footprint
 
-- **Shared Memory:** 12 MB (/dev/shm/hypertensor_bridge)
+- **Shared Memory:** 12 MB (/dev/shm/ontic_bridge)
 - **GPU VRAM:** ~50 MB (textures + buffers)
 - **CPU RAM:** <10 MB (Python + Rust combined)
 - **Memory Leaks:** None detected (10,000+ frame test)
@@ -354,7 +354,7 @@ f5e770e - feat(phase3): Add real-time tensor streaming pipeline
 
 **Terminal 1 - Python Streamer:**
 ```bash
-cd ~/TiganticLabz/Main_Projects/Project\ HyperTensor
+cd ~/TiganticLabz/Main_Projects/Project\ The Ontic Engine
 python test_phase3_integration.py 60 turbulence
 ```
 

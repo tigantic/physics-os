@@ -123,7 +123,7 @@ def generate_deliverables(result: NielsenResult, output_dir: Path) -> None:
     # Profile at x/H = 1.0
     ax1 = axes[0]
     ax1.plot(result.profile_x1["u_Uinlet"], result.profile_x1["y_H"], 
-             'b-', linewidth=2, label='HyperTensor (TVD MUSCL)')
+             'b-', linewidth=2, label='The Ontic Engine (TVD MUSCL)')
     ax1.plot(AALBORG_DATA["x_H_1.0"]["u_Uinlet"], AALBORG_DATA["x_H_1.0"]["y_H"],
              'ko', markersize=8, label='Nielsen Exp. Data')
     ax1.axvline(0, color='gray', linestyle='--', alpha=0.5)
@@ -138,7 +138,7 @@ def generate_deliverables(result: NielsenResult, output_dir: Path) -> None:
     # Profile at x/H = 2.0
     ax2 = axes[1]
     ax2.plot(result.profile_x2["u_Uinlet"], result.profile_x2["y_H"],
-             'b-', linewidth=2, label='HyperTensor (TVD MUSCL)')
+             'b-', linewidth=2, label='The Ontic Engine (TVD MUSCL)')
     ax2.plot(AALBORG_DATA["x_H_2.0"]["u_Uinlet"], AALBORG_DATA["x_H_2.0"]["y_H"],
              'ko', markersize=8, label='Nielsen Exp. Data')
     ax2.axvline(0, color='gray', linestyle='--', alpha=0.5)
@@ -150,7 +150,7 @@ def generate_deliverables(result: NielsenResult, output_dir: Path) -> None:
     ax2.set_xlim(-0.3, 1.0)
     ax2.set_ylim(0, 1)
     
-    plt.suptitle('Tier 1 Validation: HyperTensor vs Nielsen Experimental Data', fontsize=14)
+    plt.suptitle('Tier 1 Validation: The Ontic Engine vs Nielsen Experimental Data', fontsize=14)
     plt.tight_layout()
     plt.savefig(output_dir / 'tier1_profile_validation.png', dpi=150)
     plt.close()
@@ -228,7 +228,7 @@ def generate_deliverables(result: NielsenResult, output_dir: Path) -> None:
     summary = {
         "project": "Tier 1 Nielsen Benchmark",
         "date": datetime.now().isoformat(),
-        "solver": "HyperTensor Projection Method (TVD MUSCL)",
+        "solver": "Ontic Projection Method (TVD MUSCL)",
         "configuration": {
             "grid": f"{nx}×{ny}",
             "domain_m": f"9.0×3.0",

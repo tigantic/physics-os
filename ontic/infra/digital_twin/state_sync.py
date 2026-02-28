@@ -12,7 +12,7 @@ Key features:
     - Network resilience with buffering and recovery
     - Multi-fidelity state representation
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 import queue

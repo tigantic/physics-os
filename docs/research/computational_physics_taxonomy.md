@@ -4,7 +4,7 @@
 Every computationally relevant branch of physics, organized hierarchically.
 Each entry includes: key equations, standard computational methods, and QTT relevance.
 
-*Purpose: Measure existing Tigantic/HyperTensor coverage against the complete field.*
+*Purpose: Measure existing Tigantic/The Ontic Engine coverage against the complete field.*
 
 ---
 

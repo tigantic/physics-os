@@ -18,7 +18,7 @@ Randomized SVD (rSVD):
 For TT-SVD with max_rank=64, we only ever need k=64 singular values.
 This means 64GB chunks are trivial.
 
-Author: HyperTensor Genesis Protocol
+Author: TiganticLabz Genesis Protocol
 Date: January 24, 2026
 """
 

@@ -27,7 +27,7 @@ This simulation analyzes airflow patterns in a 650 sq ft conference room to:
 
 METHODOLOGY
 ===========
-- 3D Computational Fluid Dynamics (CFD) using HyperTensor engine
+- 3D Computational Fluid Dynamics (CFD) using The Ontic Engine engine
 - Validated against Nielsen IEA Annex 20 benchmark (<10% RMS error)
 - Skew-symmetric advection for energy-conserving numerics
 - Boundary injection for non-periodic wall treatment
@@ -727,7 +727,7 @@ LIMITATIONS & ASSUMPTIONS
 ═══════════════════════════════════════════════════════════════════════════════
 
   Report Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
-  TigantiCFD Engine v1.0 | HyperTensor Platform
+  TigantiCFD Engine v1.0 | Ontic Platform
   © 2026 Tigantic Holdings LLC - All Rights Reserved
   
   Questions? Contact: support@tigantic.com

@@ -143,7 +143,7 @@ Generated from: `qtt_repo_index.json`
 - `py` demos/forensic_hub.py
 - `py` demos/forensic_hub_v2.py
 - `py` demos/forensic_instrument.py
-- `py` demos/hypertensor_hub.py
+- `py` demos/ontic_hub.py
 - `py` demos/ingest_noaa_gfs.py
 - `py` demos/kelvin_helmholtz_animation.py
 - `py` demos/kelvin_helmholtz_demo.py
@@ -418,9 +418,9 @@ Generated from: `qtt_repo_index.json`
 - `md` FLUIDELITE_SESSION_REPORT.md
 - `md` FLUIDELITE_V1.2_UPGRADE_REPORT.md
 - `md` FLUIDELITE_ZK_EXECUTION_FRAMEWORK.md
-- `md` HYPERTENSOR_VV_FRAMEWORK.md
+- `md` ONTIC_ENGINE_VV_FRAMEWORK.md
 - `md` HYPER_BRIDGE_ELITE_EXECUTION.md
-- `md` HyperTensor_CFD_Book.md
+- `md` Ontic_CFD_Book.md
 - `md` PLATFORM_SPECIFICATION.md
 - `md` POLYGON_ZKEVM_SECURITY_REPORT.md
 - `md` README.md
@@ -432,7 +432,7 @@ Generated from: `qtt_repo_index.json`
 - `md` YANG_MILLS_BATTLE_PLAN.md
 - `md` apps/glass_cockpit/PHASE_1_COMPLETE.md
 - `md` apps/glass_cockpit/PHASE_2_COMPLETE.md
-- `md` docs/HYPERTENSOR_ZK_STACK.md
+- `md` docs/ONTIC_ENGINE_ZK_STACK.md
 - `md` docs/INDEX.md
 - `md` docs/ONBOARDING.md
 - `md` docs/PHYSICS_FIRST_DRUG_DESIGN.md
@@ -477,7 +477,7 @@ Generated from: `qtt_repo_index.json`
 - `md` docs/workflows/COMMIT_CHECKLIST.md
 - `md` docs/workflows/EXECUTION_TRACKER.md
 - `md` docs/workflows/GIT_SETUP_COMPLETE.md
-- `md` docs/workflows/hypertensor_execution_checklist.md
+- `md` docs/workflows/ontic_execution_checklist.md
 - `md` artifacts/evidence/drug_discovery/PHYSICS_FIRST_DRUG_DESIGN.md
 - `md` crates/fluidelite_zk/FLUIDELITE_ZK_V3_ROADMAP.md
 - `md` crates/fluidelite_zk/WORLDCOIN_PRODUCTION_README.md
@@ -568,7 +568,7 @@ Generated from: `qtt_repo_index.json`
 - `py` scripts/profile_flagship.py
 - `py` scripts/profile_performance.py
 - `py` scripts/reproduce.py
-- `py` tools/scripts/setup/hypertensor_core.py
+- `py` tools/scripts/setup/ontic_core.py
 - `py` tools/scripts/setup/quick_test.py
 - `py` tools/scripts/setup/realtime_renderer.py
 - `py` scripts/test_excited.py

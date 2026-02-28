@@ -11,7 +11,7 @@ Methods:
     - Bayesian neural networks: Full posterior estimation
     - Calibration: Ensuring uncertainty estimates are reliable
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from dataclasses import dataclass

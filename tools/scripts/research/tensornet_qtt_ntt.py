@@ -2,7 +2,7 @@
 QTT-NTT: Tensor Train Accelerated Number Theoretic Transform
 ============================================================
 
-Plugs into HyperTensor's existing QTT infrastructure for ZK proving acceleration.
+Plugs into The Ontic Engine's existing QTT infrastructure for ZK proving acceleration.
 
 Key insight: NTT butterfly is an MPO with special structure.
 We use existing qtt_native_ops.apply_mpo_cuda for the heavy lifting.
@@ -295,7 +295,7 @@ class QTTNTT:
     """
     QTT-accelerated NTT for ZK proving.
     
-    Uses HyperTensor's existing QTT infrastructure with NTT-specific optimizations.
+    Uses The Ontic Engine's existing QTT infrastructure with NTT-specific optimizations.
     
     Example:
         # Complex FFT

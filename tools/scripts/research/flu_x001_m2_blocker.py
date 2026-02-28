@@ -28,7 +28,7 @@ PHYSICS ENGINE:
 - Dielectric stress testing (membrane environment ε_r ≈ 2-4)
 - Mutation resistance scoring
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026-01-27
 Status: PHASE 1 - STRUCTURE ANALYSIS
 """

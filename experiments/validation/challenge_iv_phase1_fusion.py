@@ -1020,7 +1020,7 @@ def run_pipeline() -> PipelineResult:
     """Execute the full Challenge IV Phase 1 validation pipeline."""
     print("""
 ╔══════════════════════════════════════════════════════════════════╗
-║  HyperTensor — Challenge IV Phase 1                            ║
+║  The Ontic Engine — Challenge IV Phase 1                            ║
 ║  ITER Reference Scenario Validation                            ║
 ║  Grad-Shafranov · MHD Stability · Control Benchmark            ║
 ║  15 MA Baseline · QTT Compression · Real-Time Control          ║

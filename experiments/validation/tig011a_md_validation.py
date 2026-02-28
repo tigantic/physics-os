@@ -21,7 +21,7 @@ Exit Criteria (Challenge II specification)
   * MD confirms binding pose within 2.0 Å RMSD of physics prediction
   * ΔG_bind < −8 kcal/mol
 
-Engine: HyperTensor tensornet.life_sci.md (AMBER FF, PME, Nosé-Hoover)
+Engine: The Ontic Engine tensornet.life_sci.md (AMBER FF, PME, Nosé-Hoover)
 Cross-validation: OpenMM 8.4 with AMBER14
 
 Author: Bradly Biron Baker Adams | Tigantic Holdings LLC
@@ -200,7 +200,7 @@ def download_pdb(pdb_id: str, cache_dir: Optional[Path] = None) -> str:
 
     url = f"https://files.rcsb.org/download/{pdb_id}.pdb"
     print(f"  [PDB] Downloading {pdb_id} from RCSB...")
-    req = urllib.request.Request(url, headers={"User-Agent": "HyperTensor/4.0"})
+    req = urllib.request.Request(url, headers={"User-Agent": "The Ontic Engine/4.0"})
     resp = urllib.request.urlopen(req, timeout=30)
     data = resp.read().decode("utf-8")
 
@@ -1366,7 +1366,7 @@ def generate_attestation(result: SimulationResult,
             "overall_PASS": result.overall_pass,
         },
         "engine": {
-            "md": "HyperTensor tensornet.life_sci.md",
+            "md": "The Ontic Engine tensornet.life_sci.md",
             "force_field": "AMBER-like LJ + Coulomb + GAFF",
             "thermostat": "Nosé-Hoover (τ = 0.5 ps)",
             "integrator": "Velocity Verlet (dt = 2 fs)",
@@ -1529,7 +1529,7 @@ def generate_report(result: SimulationResult,
     buf.append("| Charges (protein) | AMBER ff14SB templates |")
     buf.append("| Charges (ligand) | RDKit Gasteiger |")
     buf.append("| Minimization | Steepest descent |")
-    buf.append("| Platform | HyperTensor tensornet.life_sci.md |")
+    buf.append("| Platform | The Ontic Engine tensornet.life_sci.md |")
     buf.append("")
     buf.append("---")
     buf.append("")
@@ -1823,7 +1823,7 @@ def main() -> None:
     """Run the complete TIG-011a MD validation and generate artifacts."""
     print()
     print("╔══════════════════════════════════════════════════════════════════╗")
-    print("║  HyperTensor — TIG-011a MD Validation Pipeline                 ║")
+    print("║  The Ontic Engine — TIG-011a MD Validation Pipeline                 ║")
     print("║  Challenge II Phase 1: Pandemic Preparedness                   ║")
     print("║  Target: KRAS G12D (PDB: 6GJ8)                                ║")
     print("║  Candidate: TIG-011a (COc1ccc2ncnc(N3CCN(C)CC3)c2c1)          ║")

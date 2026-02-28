@@ -19,7 +19,7 @@ The Solution:
 
 This gauntlet proves TIG-011a is a legitimate synthesis candidate.
 
-Author: HyperTensor Pharma Division
+Author: TiganticLabz Pharma Division
 Date: 2026-01-05
 """
 
@@ -523,7 +523,7 @@ def run_tig011a_gauntlet():
     
     # Build attestation
     attestation = {
-        "project": "HyperTensor Pharma",
+        "project": "Ontic Pharma",
         "module": "TIG-011a Dielectric Sweep Gauntlet",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         

@@ -29,7 +29,7 @@ Morton layout for 6D with L = qubits_per_dim:
   Dimension of site k: (6L − 1 − k) % 6.
   Axis 0 = x, 1 = y, 2 = z, 3 = vx, 4 = vy, 5 = vz.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: February 2026
 
 © 2026 Tigantic Holdings LLC. All rights reserved. PROPRIETARY.

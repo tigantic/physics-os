@@ -1,6 +1,6 @@
 //! Constitution Compliance Validation
 //!
-//! Validates that all protocols comply with HyperTensor Constitution requirements:
+//! Validates that all protocols comply with Ontic Constitution requirements:
 //!
 //! - Article II: Tensor Representation (QTT format)
 //! - Article IV: Memory Layout (alignment, power-of-2 sizes)
@@ -374,7 +374,7 @@ fn test_constitution_frame_number_type() {
 #[test]
 fn test_constitution_compliance_summary() {
     println!("\n═══════════════════════════════════════════════════════════════════");
-    println!("       HYPERTENSOR CONSTITUTION COMPLIANCE REPORT");
+    println!("       ONTIC CONSTITUTION COMPLIANCE REPORT");
     println!("═══════════════════════════════════════════════════════════════════\n");
     
     println!("Article II: Tensor Representation");

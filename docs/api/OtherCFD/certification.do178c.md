@@ -677,10 +677,10 @@ Maps requirements to verification evidence.
 
 ## Functions
 
-### `create_hypertensor_requirements`
+### `create_ontic_requirements`
 
 ```python
-def create_hypertensor_requirements() -> do178c.RequirementsDatabase
+def create_ontic_requirements() -> do178c.RequirementsDatabase
 ```
 
 Create example requirements for The Physics OS system.

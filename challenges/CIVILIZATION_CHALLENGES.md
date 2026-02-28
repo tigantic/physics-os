@@ -102,7 +102,7 @@ The Physics OS's Civilization Challenge suite demonstrates, through production-g
 
 **Crisis:** Drug discovery costs $2.6B per approved compound, takes 10–15 years, and fails 90% of the time. 85% of the human proteome is considered "undruggable" by machine-learning approaches because training data doesn't exist for novel binding sites.
 
-**Alignment:** HyperTensor solves molecular mechanics from first principles — no training data required. The TIG-011a KRAS G12D inhibitor was designed entirely from physics, targeting the most frequently mutated oncogene in human cancer.
+**Alignment:** The Ontic Engine solves molecular mechanics from first principles — no training data required. The TIG-011a KRAS G12D inhibitor was designed entirely from physics, targeting the most frequently mutated oncogene in human cancer.
 
 ### Phase Completion
 
@@ -272,7 +272,7 @@ The Physics OS's Civilization Challenge suite demonstrates, through production-g
 
 **Crisis:** COVID exposed $9T in global supply chain fragility. The 2021 Suez Canal blockage and port backlogs demonstrated that disruptions propagate faster than human decision cycles. The Port of LA saw 73 container ships at anchor during the peak crisis — a phenomenon never modeled in advance.
 
-**Alignment:** HyperTensor treats logistics networks as compressible fluid dynamics — density = TEU/km, momentum = TEU·km/s, using the exact same Euler equations and Riemann solvers validated in the grid stability and climate challenges. Shock-capturing (HLL Riemann solver) naturally detects supply chain disruptions the same way it detects physical shock waves.
+**Alignment:** The Ontic Engine treats logistics networks as compressible fluid dynamics — density = TEU/km, momentum = TEU·km/s, using the exact same Euler equations and Riemann solvers validated in the grid stability and climate challenges. Shock-capturing (HLL Riemann solver) naturally detects supply chain disruptions the same way it detects physical shock waves.
 
 ### Phase Completion
 
@@ -341,7 +341,7 @@ The Physics OS's Civilization Challenge suite demonstrates, through production-g
 
 **Crisis:** Deepfakes have collapsed evidentiary trust. Courts, journalists, and governments can no longer distinguish authentic media from synthetic. The detection arms race (trained classifier vs. trained generator) is fundamentally unwinnable — the generator can always adapt to the classifier's features.
 
-**Alignment:** HyperTensor breaks the arms race by testing whether an image is **physically consistent** — whether light, shadow, reflection, scattering, noise, and chromatic aberration obey Maxwell's equations and radiative transfer physics. A deepfake generator would need to solve the full electromagnetic field equations to pass these tests, which is computationally intractable for adversarial generation.
+**Alignment:** The Ontic Engine breaks the arms race by testing whether an image is **physically consistent** — whether light, shadow, reflection, scattering, noise, and chromatic aberration obey Maxwell's equations and radiative transfer physics. A deepfake generator would need to solve the full electromagnetic field equations to pass these tests, which is computationally intractable for adversarial generation.
 
 ### Phase Completion
 

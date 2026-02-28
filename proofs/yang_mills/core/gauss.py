@@ -30,7 +30,7 @@ Implementation:
     - Ingoing links: -E^a (field points toward site)
     - Outgoing links: +E^a (field points away from site)
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-15
 """
 

@@ -466,7 +466,7 @@ ls -1 | wc -l
 
 # Verify no broken Python imports (only moved non-Python dirs)
 python -c "import tensornet; print(tensornet.__version__)"
-python -c "import hypertensor; print(hypertensor.__version__)"
+python -c "import physics_os; print(physics_os.__version__)"
 
 # Verify Rust workspace still compiles
 cargo check --workspace 2>&1 | tail -5
@@ -680,7 +680,7 @@ Group 107 flat modules into 27 canonical packages via 3-tier decomposition:
 
 - [x] Root `ls -1 | wc -l` ≤ 30  → **34 items (17 dirs + 17 files)**
 - [x] `python -c "import tensornet"` succeeds — **v40.0.0**
-- [x] `python -c "import hypertensor"` succeeds
+- [x] `python -c "import physics_os"` succeeds
 - [x] `cargo check --workspace` succeeds (18 packages resolve; pre-existing `fluidelite-zk` compile error unrelated to moves)
 - [x] `pytest` passes → **655 passed, 2 pre-existing fails (ai_scientist pkg missing, combustion_dns export), 15 skipped**
 - [x] `ontic/` ≤ 30 real dirs → **27 real directories** (107 → 27, 75% reduction)

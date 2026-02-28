@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-HyperTensor Unique Capability Demo
+Ontic Unique Capability Demo
 ==================================
 
 What others CAN do: TT-SVD compression, pointwise query
-What HyperTensor CAN do: STORE and OPERATE on fields at scale
+What Ontic CAN do: STORE and OPERATE on fields at scale
 
 Scroll to increase grid size.
 Watch: grid hits BILLIONS, memory stays KB.

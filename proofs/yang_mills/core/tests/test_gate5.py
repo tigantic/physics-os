@@ -17,7 +17,7 @@ SUCCESS CRITERIA (from Battle Plan):
     - Truncation error bounded uniformly in L
     - Compression ratio remains favorable
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-15
 """
 

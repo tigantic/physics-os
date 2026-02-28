@@ -18,7 +18,7 @@ Rules:
 3. ALL operations stay in TT format
 4. Rank adapts to local structure
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2025
 """
 

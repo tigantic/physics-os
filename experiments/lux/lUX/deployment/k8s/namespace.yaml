@@ -5,4 +5,4 @@ metadata:
   name: lux
   labels:
     app.kubernetes.io/name: lux
-    app.kubernetes.io/part-of: hypertensor
+    app.kubernetes.io/part-of: ontic

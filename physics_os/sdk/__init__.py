@@ -1,1 +1,1 @@
-"""HyperTensor SDK — __init__."""
+"""Ontic SDK — __init__."""

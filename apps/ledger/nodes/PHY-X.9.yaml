@@ -7,7 +7,7 @@ id: "PHY-X.9"
 name: "Partial Wave Analysis"
 pack: "X"
 pack_name: "Nuclear and Particle Physics"
-owner: "@hypertensor-core"
+owner: "@ontic-core"
 tier: "B"
 state: "V0.4"
 description: >

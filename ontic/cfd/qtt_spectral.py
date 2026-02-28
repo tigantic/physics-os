@@ -29,7 +29,7 @@ The Magic:
     FFT of rank-r QTT → rank-r QTT (no explosion!)
     This is fundamentally different from MPO shift which doubles rank.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026-01-16
 Tag: [PHYSICS-TOOLBOX] [QTT-SPECTRAL]
 """

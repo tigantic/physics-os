@@ -204,4 +204,4 @@ The Yang-Mills Battle Plan achieved its goals within the strong coupling regime.
 
 ---
 
-*HyperTensor 2026 — Honest Assessment*
+*The Ontic Engine 2026 — Honest Assessment*

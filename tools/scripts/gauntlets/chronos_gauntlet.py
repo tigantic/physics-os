@@ -24,7 +24,7 @@ CIVILIZATION STACK INTEGRATION:
   - ORBITAL FORGE: Relativistic velocity platforms
   - QTT Brain: Temporal prediction algorithms
 
-Author: HyperTensor Gauntlet Framework
+Author: TiganticLabz Gauntlet Framework
 """
 
 import numpy as np

@@ -99,7 +99,7 @@ setup(
     description="CUDA kernels for TensorNet CFD acceleration",
     author="TiganticLabz",
     author_email="dev@tigantic.com",
-    url="https://github.com/tigantic/HyperTensor",
+    url="https://github.com/tigantic/physics-os",
     ext_modules=get_extensions(),
     cmdclass={
         "build_ext": BuildExtension.with_options(no_python_abi_suffix=True),

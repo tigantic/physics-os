@@ -1,4 +1,4 @@
-"""HyperTensor API — Simulation endpoint.
+"""Ontic API — Simulation endpoint.
 
 ``POST /v1/simulate`` accepts a physics problem specification and
 returns computed observables with conservation diagnostics.

@@ -1,7 +1,7 @@
 {
   "project": "Tier 1 Nielsen Benchmark",
   "date": "2026-01-06T21:38:42.249151",
-  "solver": "HyperTensor Projection Method (Skew-Symmetric Advection)",
+  "solver": "Ontic Projection Method (Skew-Symmetric Advection)",
   "configuration": {
     "grid": "256\u00d7128",
     "domain_m": "9.0\u00d73.0",

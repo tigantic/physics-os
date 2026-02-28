@@ -1,5 +1,5 @@
 {
-  "project": "HyperTensor TT-Koopman",
+  "project": "Ontic TT-Koopman",
   "discovery": "Tensor-Train Koopman Operator for Turbulence Prediction",
   "problem": "Navier-Stokes Singularity (The Millennium Prize Problem)",
   "timestamp": "2026-01-05T14:39:36.760433",
@@ -66,7 +66,7 @@
       "hermite",
       "fourier"
     ],
-    "framework": "HyperTensor TensorNet"
+    "framework": "The Ontic Engine"
   },
   "sha256": "681429b054531665ef6a307c7ac1bb2fb978ed2b39d6b5c5695da9bea5ed7562"
 }

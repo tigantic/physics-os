@@ -39,7 +39,7 @@ CUDA Acceleration Analysis (January 2026):
     
     Enable with: solver.enable_cuda() (enables GPU for Hadamard ops)
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: January 2026
 Constitution: Article IV.1 (Verification), Tier 1 Physics
 """

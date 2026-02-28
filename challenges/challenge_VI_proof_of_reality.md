@@ -41,7 +41,7 @@ Every step obeys Maxwell's equations. A deepfake does not simulate Maxwell's equ
 
 **If you can simulate the physics of image formation from first principles, you can test whether a recorded image is consistent with those physics.**
 
-This is not artifact detection. It is physics verification. The generator cannot defeat it because defeating it requires solving Maxwell's equations — which is what HyperTensor does.
+This is not artifact detection. It is physics verification. The generator cannot defeat it because defeating it requires solving Maxwell's equations — which is what The Ontic Engine does.
 
 ---
 

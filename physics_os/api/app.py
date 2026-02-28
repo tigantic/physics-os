@@ -1,4 +1,4 @@
-"""HyperTensor API — FastAPI application factory.
+"""Ontic API — FastAPI application factory.
 
 ``create_app()`` wires every router, middleware, and lifecycle hook
 into a single ``FastAPI`` instance.  It is the only entry-point to
@@ -59,14 +59,14 @@ async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Startup / shutdown hooks."""
     _configure_logging()
     logger.info(
-        "HyperTensor API %s  |  runtime %s  |  schema %s  |  device %s",
+        "Ontic API %s  |  runtime %s  |  schema %s  |  device %s",
         physics_os.API_VERSION,
         physics_os.RUNTIME_VERSION,
         physics_os.SCHEMA_VERSION,
         settings.device,
     )
     if not settings.require_auth:
-        logger.warning("Authentication is DISABLED (HYPERTENSOR_REQUIRE_AUTH=false).")
+        logger.warning("Authentication is DISABLED (ONTIC_REQUIRE_AUTH=false).")
     else:
         logger.info("Auth enabled  |  %d API key(s) loaded.", len(settings.api_keys))
         # Print masked key prefix for local dev convenience
@@ -74,7 +74,7 @@ async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
             _k = settings.api_keys[0]
             logger.info("Dev API key: %s...%s", _k[:4], _k[-4:])
     yield
-    logger.info("HyperTensor API shutting down.")
+    logger.info("Ontic API shutting down.")
 
 
 def _configure_logging() -> None:
@@ -125,9 +125,9 @@ async def _generic_error(request: Request, exc: Exception) -> JSONResponse:
 
 
 def create_app() -> FastAPI:
-    """Build the HyperTensor API application."""
+    """Build the Ontic Engine API application."""
     app = FastAPI(
-        title="HyperTensor Runtime API",
+        title="Ontic Runtime API",
         summary=(
             "Licensed execution access + evidence guarantees "
             "for compression-native physics compute."
@@ -170,7 +170,7 @@ def create_app() -> FastAPI:
     @app.get("/", include_in_schema=False)
     async def root() -> dict[str, str]:
         return {
-            "service": "HyperTensor Runtime API",
+            "service": "Ontic Runtime API",
             "version": physics_os.API_VERSION,
             "docs": "/docs" if settings.debug else "disabled",
         }

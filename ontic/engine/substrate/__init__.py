@@ -1,5 +1,5 @@
 """
-HyperTensor Substrate Layer
+Ontic Substrate Layer
 ===========================
 
 The foundational layer that everything hangs on.

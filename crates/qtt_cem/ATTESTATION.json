@@ -68,7 +68,7 @@
     "conservation": "Poynting theorem verification (src/conservation.rs)"
   },
   "integration_targets": [
-    "HyperTensor (physics engine \u2014 upstream)",
+    "The Ontic Engine (physics engine \u2014 upstream)",
     "FluideLite (ZK proof framework \u2014 downstream)",
     "QTT compression (published, Zenodo)",
     "INVARIAN/Trust Fabric (PQC provenance)"

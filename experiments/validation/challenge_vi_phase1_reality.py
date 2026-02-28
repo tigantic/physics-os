@@ -1118,7 +1118,7 @@ def run_pipeline() -> PipelineResult:
     """Execute the full Challenge VI Phase 1 validation pipeline."""
     print("""
 ╔══════════════════════════════════════════════════════════════════╗
-║  HyperTensor — Challenge VI Phase 1                            ║
+║  The Ontic Engine — Challenge VI Phase 1                            ║
 ║  Static Image Physics Consistency Checker                      ║
 ║  5 Physics Tests · QTT Compression · ROC Evaluation            ║
 ║  Shadow · Specular · Scattering · Noise · Chromatic Aberration ║

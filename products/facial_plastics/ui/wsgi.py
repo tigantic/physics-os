@@ -23,7 +23,7 @@ Or create the app programmatically::
 
 Environment variables consumed by ``create_app()``:
 
-    HYPERTENSOR_DATA_ROOT   Case library root (default: ./cases)
+    ONTIC_DATA_ROOT   Case library root (default: ./cases)
     FP_CORS_ORIGINS         Comma-separated CORS origins (default: *)
     FP_AUTH_ENABLED          true/false (default: true)
     FP_RATE_LIMIT_ENABLED    true/false (default: true)
@@ -527,7 +527,7 @@ def create_app(
     Parameters
     ----------
     library_root : Path | None
-        Case library directory.  Falls back to ``$HYPERTENSOR_DATA_ROOT``
+        Case library directory.  Falls back to ``$ONTIC_DATA_ROOT``
         then ``./cases``.
     allowed_origins : tuple[str, ...] | None
         CORS origins.  Falls back to ``$FP_CORS_ORIGINS`` (comma-separated)
@@ -549,7 +549,7 @@ def create_app(
     from .auth import AuthMiddleware, RateLimitMiddleware
 
     if library_root is None:
-        env_root = os.environ.get("HYPERTENSOR_DATA_ROOT")
+        env_root = os.environ.get("ONTIC_DATA_ROOT")
         library_root = Path(env_root) if env_root else Path("cases")
 
     if allowed_origins is None:

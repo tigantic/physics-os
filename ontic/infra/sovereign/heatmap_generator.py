@@ -32,7 +32,7 @@ class CUDAHeatmapGenerator:
     Args:
         resolution: Grid resolution (width, height) - default 128x64
         device: CUDA device to use
-        bridge_path: Path to RAM bridge (default /dev/shm/hypertensor_bridge)
+        bridge_path: Path to RAM bridge (default /dev/shm/ontic_bridge)
 
     Example:
         >>> gen = CUDAHeatmapGenerator(resolution=(256, 128))
@@ -78,7 +78,7 @@ class CUDAHeatmapGenerator:
         from pathlib import Path
 
         bridge = (
-            Path(bridge_path) if bridge_path else Path("/dev/shm/hypertensor_bridge")
+            Path(bridge_path) if bridge_path else Path("/dev/shm/ontic_bridge")
         )
         self.writer = TensorBridgeWriter(
             path=bridge,

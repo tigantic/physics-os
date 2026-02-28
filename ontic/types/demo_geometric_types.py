@@ -20,7 +20,7 @@ Demonstrates:
 The key insight: The type signature `VectorField[R3, Divergence(0)]` isn't documentation.
 It's a RUNTIME GUARANTEE that the operations must preserve.
 
-Author: HyperTensor Geometric Types Protocol
+Author: TiganticLabz Geometric Types Protocol
 Date: January 27, 2026
 """
 
@@ -942,7 +942,7 @@ def run_demonstration() -> List[DemoResult]:
     
     attestation = {
         "demonstration": "GEOMETRIC TYPE SYSTEM",
-        "project": "HYPERTENSOR-VM",
+        "project": "ONTIC_ENGINE-VM",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "tests": [
             {

@@ -14,7 +14,7 @@ Uses GPU for everything:
 - All operations in VRAM
 - Streaming chunks through GPU memory
 
-Author: HyperTensor Genesis Protocol
+Author: TiganticLabz Genesis Protocol
 Date: January 24, 2026
 """
 

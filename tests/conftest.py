@@ -1,5 +1,5 @@
 """
-Shared pytest fixtures and configuration for HyperTensor test suite.
+Shared pytest fixtures and configuration for The Ontic Engine test suite.
 
 Provides:
     - Deterministic random seeding for reproducible tests
@@ -42,13 +42,13 @@ def deterministic_seed(request) -> Generator[int, None, None]:
     Automatically seed all random number generators for deterministic tests.
 
     This fixture runs before every test to ensure reproducibility.
-    The seed can be overridden via the HYPERTENSOR_TEST_SEED environment variable.
+    The seed can be overridden via the ONTIC_TEST_SEED environment variable.
 
     Yields:
         The seed value used for this test.
     """
     # Allow override via environment variable
-    seed = int(os.environ.get("HYPERTENSOR_TEST_SEED", DEFAULT_SEED))
+    seed = int(os.environ.get("ONTIC_TEST_SEED", DEFAULT_SEED))
 
     # Seed Python's random
     random.seed(seed)
@@ -86,7 +86,7 @@ def random_state() -> np.random.RandomState:
 
 
 # =============================================================================
-# PYTEST MARKERS (V&V Taxonomy per HYPERTENSOR_VV_FRAMEWORK.md)
+# PYTEST MARKERS (V&V Taxonomy per ONTIC_VV_FRAMEWORK.md)
 # =============================================================================
 def pytest_configure(config):
     """Register custom markers for test categorization.

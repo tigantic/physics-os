@@ -252,4 +252,4 @@ from yangmills.tensor_network import MPS, MPO, DMRG
 
 ---
 
-*HyperTensor Phase II — The Real Challenge Begins*
+*Ontic Phase II — The Real Challenge Begins*

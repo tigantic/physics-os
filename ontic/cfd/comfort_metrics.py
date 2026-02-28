@@ -10,7 +10,7 @@ Implements ASHRAE Standard 55 / ISO 7730 thermal comfort calculations:
 
 Reference: Fanger, P.O. (1970) Thermal Comfort
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: January 2026
 """
 

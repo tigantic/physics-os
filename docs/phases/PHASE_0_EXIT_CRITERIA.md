@@ -204,7 +204,7 @@ When Glass Cockpit launches, you should see:
 
 ```
 ┌────────────────────────────────────────────┐
-│  HyperTensor Glass Cockpit - Phase 0      │
+│  Ontic Glass Cockpit - Phase 0      │
 ├────────────────────────────────────────────┤
 │                                            │
 │                    ▲                       │

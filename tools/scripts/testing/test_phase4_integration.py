@@ -14,7 +14,7 @@ Expected Performance:
 - Total Python overhead: <12ms
 - Target FPS: 60+ @ 1920×1080
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 28, 2025
 """
 

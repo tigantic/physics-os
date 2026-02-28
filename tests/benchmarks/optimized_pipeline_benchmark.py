@@ -364,7 +364,7 @@ def benchmark_triton_kernels(n_qubits: int = 16, n_points: int = 100000) -> Benc
 def run_all_benchmarks():
     """Run all optimization benchmarks."""
     print("=" * 70)
-    print("HYPERTENSOR OPTIMIZATION BENCHMARK SUITE")
+    print("ONTIC OPTIMIZATION BENCHMARK SUITE")
     print("=" * 70)
     print(f"Date: {time.strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Device: {'CUDA' if torch.cuda.is_available() else 'CPU'}")

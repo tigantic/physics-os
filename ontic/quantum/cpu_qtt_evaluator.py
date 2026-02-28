@@ -21,7 +21,7 @@ Expected Performance:
     - 65K samples (256×256 sparse grid): ~8-12ms
     - 262K samples (512×512 sparse grid): ~30-40ms
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 2025
 """
 

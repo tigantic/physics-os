@@ -278,7 +278,7 @@ class S3Streamer:
 
 def main():
     print("╔" + "═" * 78 + "╗")
-    print("║" + " " * 15 + "HYPERTENSOR GLOBAL QTT - CLOUD COMPRESSION" + " " * 19 + "║")
+    print("║" + " " * 15 + "ONTIC GLOBAL QTT - CLOUD COMPRESSION" + " " * 19 + "║")
     print("║" + " " * 15 + "NOAA GOES-18 Infrared Physics Brick from S3" + " " * 18 + "║")
     print("╚" + "═" * 78 + "╝")
     print()

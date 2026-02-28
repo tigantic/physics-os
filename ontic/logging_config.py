@@ -1,5 +1,5 @@
 """
-Centralized logging configuration for HyperTensor.
+Centralized logging configuration for The Ontic Engine.
 
 This module provides a unified logging setup for the entire library,
 with support for different log levels, formatters, and handlers.
@@ -24,7 +24,7 @@ __all__ = [
     "get_logger",
     "configure_logging",
     "set_log_level",
-    "HyperTensorLogger",
+    "OnticLogger",
 ]
 
 # Default format for log messages
@@ -39,7 +39,7 @@ LIBRARY_ROOT = "ontic"
 _configured = False
 
 
-class HyperTensorFormatter(logging.Formatter):
+class OnticFormatter(logging.Formatter):
     """Custom formatter with colors for terminal output."""
 
     # ANSI color codes
@@ -65,8 +65,8 @@ class HyperTensorFormatter(logging.Formatter):
         return message
 
 
-class HyperTensorLogger(logging.Logger):
-    """Extended logger with HyperTensor-specific methods."""
+class OnticLogger(logging.Logger):
+    """Extended logger with The Ontic Engine-specific methods."""
 
     def computation(self, msg: str, *args, **kwargs):
         """Log computational progress at INFO level."""
@@ -89,10 +89,10 @@ class HyperTensorLogger(logging.Logger):
 
 
 # Register our custom logger class
-logging.setLoggerClass(HyperTensorLogger)
+logging.setLoggerClass(OnticLogger)
 
 
-def get_logger(name: str) -> HyperTensorLogger:
+def get_logger(name: str) -> OnticLogger:
     """
     Get a logger instance for the given module name.
 
@@ -100,7 +100,7 @@ def get_logger(name: str) -> HyperTensorLogger:
         name: The module name (typically __name__)
 
     Returns:
-        A configured HyperTensorLogger instance
+        A configured OnticLogger instance
 
     Example:
         >>> logger = get_logger(__name__)
@@ -125,7 +125,7 @@ def configure_logging(
     stream: bool = True,
 ) -> None:
     """
-    Configure logging for the HyperTensor library.
+    Configure logging for the Ontic Engine library.
 
     Args:
         level: Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
@@ -164,7 +164,7 @@ def configure_logging(
     if stream:
         stream_handler = logging.StreamHandler(sys.stdout)
         stream_handler.setLevel(level)
-        stream_handler.setFormatter(HyperTensorFormatter(format, use_colors=use_colors))
+        stream_handler.setFormatter(OnticFormatter(format, use_colors=use_colors))
         root_logger.addHandler(stream_handler)
 
     # Add file handler if requested
@@ -183,7 +183,7 @@ def configure_logging(
 
 def set_log_level(level: str | int) -> None:
     """
-    Set the log level for all HyperTensor loggers.
+    Set the log level for all The Ontic Engine loggers.
 
     Args:
         level: Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
@@ -199,7 +199,7 @@ def set_log_level(level: str | int) -> None:
 
 
 def silence_warnings() -> None:
-    """Silence all HyperTensor warnings (not recommended for development)."""
+    """Silence all The Ontic Engine warnings (not recommended for development)."""
     set_log_level("ERROR")
     warnings.filterwarnings("ignore", module="ontic.*")
 
@@ -213,7 +213,7 @@ def enable_debug() -> None:
 _module_logger = None
 
 
-def _get_test_logger() -> HyperTensorLogger:
+def _get_test_logger() -> OnticLogger:
     """Get a test logger for module testing."""
     global _module_logger
     if _module_logger is None:

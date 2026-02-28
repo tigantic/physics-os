@@ -84,7 +84,7 @@ BANNER = r"""
 ║                                                                  ║
 ║     Q T T   C U B I C   S C A L I N G   B E N C H M A R K      ║
 ║                                                                  ║
-║            HyperTensor VM • Maxwell 3D • GPU-Native             ║
+║            The Ontic Engine • Maxwell 3D • GPU-Native             ║
 ║                                                                  ║
 ║     128³ → 4096³ • O(log N) • Triton/CUDA • rSVD • Adaptive    ║
 ║                                                                  ║

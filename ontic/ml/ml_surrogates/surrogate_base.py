@@ -5,7 +5,7 @@ This module provides the foundational abstractions for neural network
 surrogate models used to accelerate CFD simulations. All specific
 architectures (PINN, DeepONet, FNO) inherit from these base classes.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from abc import ABC, abstractmethod

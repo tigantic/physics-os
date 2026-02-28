@@ -8,7 +8,7 @@ import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {Groth16Verifier} from "./Groth16Verifier.sol";
 
 /// @title Zero-Expansion Semaphore Verifier v3.0 (Hardened)
-/// @author HyperTensor Labs
+/// @author Ontic Labs
 /// @notice Verifies Groth16 proofs via BN254 pairing delegation.
 ///         Supports tree depths 16-50 with constant gas cost.
 /// @dev S-07 FIX: `_verifyZeroExpansionProof()` now performs real Groth16

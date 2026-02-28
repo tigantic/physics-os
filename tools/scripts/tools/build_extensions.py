@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build script for HyperTensor Rust-Python extensions.
+Build script for Ontic Rust-Python extensions.
 
 Usage:
     python build_extensions.py [--release]
@@ -71,7 +71,7 @@ def main():
     release = "--release" in sys.argv or "-r" in sys.argv
     
     print("="*60)
-    print("HyperTensor Extension Builder")
+    print("Ontic Extension Builder")
     print("="*60)
     
     # Check prerequisites

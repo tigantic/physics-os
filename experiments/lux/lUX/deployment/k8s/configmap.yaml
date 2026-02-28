@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/name: lux
     app.kubernetes.io/component: config
 data:
-  LUX_BASE_URL: "https://lux.hypertensor.io"
+  LUX_BASE_URL: "https://lux.physics-os.io"
   LUX_REVALIDATE: "3600"
   LUX_LOG_LEVEL: "info"
   LUX_FIXTURES_ROOT: "/data/fixtures"

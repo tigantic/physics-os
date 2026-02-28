@@ -38,6 +38,6 @@
     "dendrite_free": "True",
     "all_targets_met": "True"
   },
-  "framework": "HyperTensor Phonon-Assisted Transport Model",
+  "framework": "Ontic Phonon-Assisted Transport Model",
   "sha256": "1aa493575f753c0a0b484702e4bb95a1ed64356ebab47be91f636397e6608486"
 }

@@ -20,7 +20,7 @@ Physics:
   Pressure: P = 2.5 (uniform)
   γ = 1.4
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 import argparse

@@ -32,7 +32,7 @@
     "tau_E_s": 3.21
   },
   "control": {
-    "method": "HyperTensor-RL Feedback",
+    "method": "The Ontic Engine-RL Feedback",
     "tt_rank": 12,
     "feedback_Hz": 1000000,
     "plasma_mode": "LAMINAR",

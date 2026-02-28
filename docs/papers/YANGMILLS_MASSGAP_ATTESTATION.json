@@ -101,7 +101,7 @@
     "underlying_problem": "Module Learning With Errors (MLWE)",
     
     "key_info": {
-      "key_id": "HYPERTENSOR-VM-SOVEREIGN-2026-YM",
+      "key_id": "PHYSICS-OS-SOVEREIGN-2026-YM",
       "public_key_hash_sha256": "4a7f9c2e8d1b3f6a5e7c9d2b8f4a1e3c7d9b2f5a8e6c1d3b7f9a2e4d6c8b1f3a",
       "key_generation_timestamp": "2026-01-01T00:00:00Z",
       "key_purpose": "Yang-Mills Mass Gap Proof Attestation"

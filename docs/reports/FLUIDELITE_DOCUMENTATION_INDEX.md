@@ -116,7 +116,7 @@
 
 ---
 
-## Related HyperTensor Documentation
+## Related Ontic Documentation
 
 | Document | Relevance |
 |----------|-----------|

@@ -6,8 +6,8 @@ Thank you for your interest in contributing to The Physics OS! This document pro
 
 1. **Fork & Clone**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/hypertensor.git
-   cd hypertensor
+   git clone https://github.com/YOUR_USERNAME/physics-os.git
+   cd physics_os
    ```
 
 2. **Set Up Environment**
@@ -136,8 +136,8 @@ python ontic/docs/api_reference.py
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/tigantic/hypertensor.git
-   cd hypertensor
+   git clone https://github.com/tigantic/physics-os.git
+   cd physics_os
    ```
 
 2. **Create and activate virtual environment**
@@ -201,14 +201,14 @@ pytest tests/ -v -m gpu
 pytest tests/test_dmrg.py -v
 
 # Run with specific random seed (for reproducibility debugging)
-HYPERTENSOR_TEST_SEED=12345 pytest tests/ -v
+ONTIC_ENGINE_TEST_SEED=12345 pytest tests/ -v
 ```
 
 ### Test Reproducibility
 
 All tests are seeded for reproducibility via `tests/conftest.py`:
 - Default seed: `42`
-- Override with `HYPERTENSOR_TEST_SEED` environment variable
+- Override with `ONTIC_ENGINE_TEST_SEED` environment variable
 - Seeds: `random`, `numpy.random`, `torch.manual_seed`
 
 If a test fails sporadically, try running with different seeds to reproduce.

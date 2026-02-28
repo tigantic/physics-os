@@ -11,7 +11,7 @@ Key capabilities:
     - Anomaly detection using statistical and ML methods
     - Fatigue life estimation and monitoring
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from collections import deque

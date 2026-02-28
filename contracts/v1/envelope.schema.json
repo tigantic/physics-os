@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://hypertensor.dev/contracts/v1/envelope.schema.json",
-  "title": "HyperTensor Artifact Envelope v1",
+  "$id": "https://physics-os.dev/contracts/v1/envelope.schema.json",
+  "title": "Ontic Artifact Envelope v1",
   "description": "Content-addressed, signed envelope wrapping every job result.",
   "type": "object",
   "required": [

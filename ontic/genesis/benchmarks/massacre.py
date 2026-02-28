@@ -20,7 +20,7 @@ At scales from 10³ to 10¹² points.
 
 The results speak for themselves.
 
-Author: HyperTensor Genesis Protocol
+Author: TiganticLabz Genesis Protocol
 Date: January 24, 2026
 """
 

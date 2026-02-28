@@ -31,7 +31,7 @@ from typing import Dict, List, Optional, Tuple
 import numpy as np
 import torch
 
-# ── HyperTensor imports ───────────────────────────────────────────
+# ── The Ontic Engine imports ───────────────────────────────────────────
 _tools_dir = Path(__file__).resolve().parent.parent   # tools/
 _repo_root = _tools_dir.parent                        # repo root
 sys.path.insert(0, str(_tools_dir))
@@ -340,7 +340,7 @@ def generate_gauntlet_report(results: List[ResolutionResult],
     L.append("")
     L.append(sep)
     L.append("  QTT vs NVIDIA DENSE CFD — MULTI-RESOLUTION GAUNTLET")
-    L.append("  HyperTensor QTT Engine — Tigantic Holdings LLC")
+    L.append("  Ontic QTT Engine — Tigantic Holdings LLC")
     L.append(sep)
     L.append("")
 
@@ -359,7 +359,7 @@ def generate_gauntlet_report(results: List[ResolutionResult],
 
     # ── QTT multi-resolution table
     L.append(dash)
-    L.append("  HYPERTENSOR QTT — VOLUMETRIC FLOW SYNTHESIS")
+    L.append("  ONTIC QTT — VOLUMETRIC FLOW SYNTHESIS")
     L.append(dash)
     L.append(f"  Approach:       QTT-NS + Brinkman IB → O(r² log N) solver")
     L.append(f"  No dense CFD.   No mesh.   No data transfer bottleneck.")
@@ -442,7 +442,7 @@ def generate_gauntlet_report(results: List[ResolutionResult],
         L.append(f"    Content:     11 surface fields, no volumetric flow")
         L.append(f"    Generation:  Dense RANS CFD on HPC cluster")
         L.append(f"")
-        L.append(f"  HyperTensor QTT (1 simulation, FULL VOLUME):")
+        L.append(f"  Ontic QTT (1 simulation, FULL VOLUME):")
         L.append(f"    Storage:     {best.qtt_velocity_bytes / 1e3:.1f} KB")
         L.append(f"    Content:     3D velocity field, {best.N}³ = {best.N**3:,} cells")
         L.append(f"    Generation:  Single GPU, {best.wall_time:.0f} s wall time")
@@ -570,7 +570,7 @@ def main():
 
     print("╔══════════════════════════════════════════════════════════════════════════════╗")
     print("║   QTT vs NVIDIA DENSE CFD — MULTI-RESOLUTION GAUNTLET v2.0                 ║")
-    print("║   HyperTensor QTT Engine — Tigantic Holdings LLC                            ║")
+    print("║   Ontic QTT Engine — Tigantic Holdings LLC                            ║")
     print("╠══════════════════════════════════════════════════════════════════════════════╣")
     print(f"║   Resolutions:  {' → '.join(f'{r}³' for r in resolutions):<57}║")
     print(f"║   Integrator:   {args.integrator.upper():<57}║")

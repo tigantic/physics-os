@@ -21,7 +21,7 @@ EXPERIMENT:
    - Does the solver saturate the available ranks?
    - Does Δ/g² deviate from 1.5 (or 0.375)?
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-16
 """
 

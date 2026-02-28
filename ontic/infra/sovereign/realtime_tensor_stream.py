@@ -32,7 +32,7 @@ class RealtimeTensorStream:
         self,
         width: int = 1920,
         height: int = 1080,
-        bridge_path: str = "/dev/shm/hypertensor_bridge",
+        bridge_path: str = "/dev/shm/ontic_bridge",
         device: str = "cuda" if torch.cuda.is_available() else "cpu",
     ):
         """

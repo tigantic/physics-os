@@ -10,10 +10,10 @@ readme = "README.md"
 license = {text = "Proprietary - Tigantic Holdings LLC"}
 requires-python = ">=3.9"
 authors = [
-    {name = "HyperTensor Team", email = "support@tigantic.com"}
+    {name = "TiganticLabz", email = "support@tigantic.com"}
 ]
 maintainers = [
-    {name = "HyperTensor Team", email = "support@tigantic.com"}
+    {name = "TiganticLabz", email = "support@tigantic.com"}
 ]
 keywords = [
     "tensor-train",

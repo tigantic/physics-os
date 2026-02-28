@@ -462,7 +462,7 @@ def analyze_flight_safety(
 def demo_urban_solver():
     """Demonstrate urban flow solving."""
     print("=" * 70)
-    print("  HYPERTENSOR URBAN - VENTURI SOLVER")
+    print("  ONTIC_ENGINE URBAN - VENTURI SOLVER")
     print("  Phase 7B: Urban Wind Physics")
     print("=" * 70)
     print()

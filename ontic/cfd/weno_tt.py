@@ -1,5 +1,5 @@
 """
-WENO-TT: Tensor-Train WENO Reconstruction for HyperTensor CFD.
+WENO-TT: Tensor-Train WENO Reconstruction for Ontic CFD.
 
 This module implements the tensorized version of WENO reconstruction,
 where the smoothness indicators and weights are computed directly in

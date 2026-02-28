@@ -1,4 +1,4 @@
-# Prometheus configuration for HyperTensor monitoring
+# Prometheus configuration for The Ontic Engine monitoring
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
@@ -8,24 +8,24 @@ rule_files:
   - alerts.yml
 
 scrape_configs:
-  # ── HyperTensor API Server ────────────────────────────────────────
-  - job_name: hypertensor-api
+  # ── Ontic API Server ────────────────────────────────────────
+  - job_name: ontic-api
     metrics_path: /metrics
     static_configs:
       - targets:
           - "host.docker.internal:8000"
         labels:
-          service: hypertensor-api
+          service: ontic-api
           tier: "2"
 
   # ── Job Executor Worker Pool ──────────────────────────────────────
-  - job_name: hypertensor-workers
+  - job_name: ontic-workers
     metrics_path: /metrics
     static_configs:
       - targets:
           - "host.docker.internal:8001"
         labels:
-          service: hypertensor-worker
+          service: ontic-worker
           tier: "2"
 
   # ── Facial Plastics Product API ───────────────────────────────────

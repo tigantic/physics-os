@@ -43,7 +43,7 @@ def main() -> None:
     DOFS = N ** 3
 
     print("=" * 80)
-    print("  HYPERTENSOR-VM  —  EXASCALE ANTENNA INVENTION SWEEP")
+    print("  ONTIC_ENGINE-VM  —  EXASCALE ANTENNA INVENTION SWEEP")
     print("=" * 80)
     print(f"  Grid:       {N:,}³  ({DOFS:,.0f} DOFs = {DOFS/1e12:.1f}T)")
     print(f"  Steps:      {N_STEPS}")

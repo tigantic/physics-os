@@ -17,7 +17,7 @@ Target: <10% RMS error against Aalborg experimental data.
 import json
 import sys
 import time
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project HyperTensor')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project The Ontic Engine')
 
 import numpy as np
 import torch
@@ -303,7 +303,7 @@ if __name__ == "__main__":
         results.append(run_rans_benchmark(nx=256, ny=128, max_iter=2000, C_ml=C_ml))
     
     # Save results
-    output_path = '/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/rans_result.json'
+    output_path = '/home/brad/TiganticLabz/Main_Projects/Project The Ontic Engine/HVAC_CFD/rans_result.json'
     with open(output_path, 'w') as f:
         json.dump(results, f, indent=2)
     

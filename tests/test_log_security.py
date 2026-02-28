@@ -239,16 +239,16 @@ class TestG3_3_LogRedaction:
         api_logger.setLevel(logging.DEBUG)
         try:
             api_logger.info(
-                "HyperTensor API %s  |  runtime %s  |  schema %s  |  device %s",
+                "Ontic API %s  |  runtime %s  |  schema %s  |  device %s",
                 physics_os.API_VERSION,
                 physics_os.RUNTIME_VERSION,
                 physics_os.SCHEMA_VERSION,
                 "cpu",
             )
             api_logger.warning(
-                "Authentication is DISABLED (HYPERTENSOR_REQUIRE_AUTH=false)."
+                "Authentication is DISABLED (ONTIC_REQUIRE_AUTH=false)."
             )
-            api_logger.info("HyperTensor API shutting down.")
+            api_logger.info("Ontic API shutting down.")
 
             _assert_no_forbidden(handler.records, _FORBIDDEN_IP_PATTERNS, "G3.3-app")
         finally:

@@ -208,7 +208,7 @@ def sign_manifest(manifest_path: Path, algorithm: str, output_path: Path) -> dic
         "public_key": base64.b64encode(public_key).decode(),
         "signature": base64.b64encode(signature).decode(),
         "signed_at": datetime.utcnow().isoformat() + "Z",
-        "signer": "HyperTensor V&V CI/CD",
+        "signer": "Ontic VOntic V&VV CI/CD",
     }
 
     return manifest

@@ -1,5 +1,5 @@
 """
-Certification Module for HyperTensor
+Certification Module for The Ontic Engine
 ====================================
 
 Provides DO-178C compliance infrastructure and hardware deployment
@@ -36,7 +36,7 @@ from .do178c import (  # Design Assurance Levels; Requirements Management; Test 
     VerificationEvidence,
     VerificationMethod,
     VerificationPackage,
-    create_hypertensor_requirements,
+    create_ontic_requirements,
     create_sample_safety_assessment,
 )
 from .hardware import (  # Hardware Types; Quantization; Memory Optimization; Real-Time Scheduling; WCET Analysis; HIL Validation; Deployment; Convenience Functions
@@ -80,7 +80,7 @@ __all__ = [
     "ConfigurationManagement",
     "VerificationEvidence",
     "VerificationPackage",
-    "create_hypertensor_requirements",
+    "create_ontic_requirements",
     "create_sample_safety_assessment",
     # Hardware
     "HardwareType",

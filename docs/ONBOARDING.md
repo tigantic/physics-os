@@ -12,8 +12,8 @@ Welcome to The Physics OS! This guide will get you up and running with the proje
 
 ```bash
 # Clone the repository
-git clone https://github.com/tigantic/hypertensor.git
-cd hypertensor
+git clone https://github.com/tigantic/physics-os.git
+cd physics_os
 
 # Create virtual environment
 python -m venv .venv

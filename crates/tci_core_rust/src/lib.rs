@@ -1,4 +1,4 @@
-//! TCI Core - TT-Cross Interpolation algorithms for HyperTensor
+//! TCI Core - TT-Cross Interpolation algorithms for The Ontic Engine
 //!
 //! This crate provides high-performance Rust implementations of:
 //! - MaxVol pivot selection algorithm

@@ -23,7 +23,7 @@ Visual Quality:
     128² → 4K: ~30× upsampling (acceptable for smooth atmospheric fields)
     256² → 4K: ~15× upsampling (high quality)
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 2025
 """
 

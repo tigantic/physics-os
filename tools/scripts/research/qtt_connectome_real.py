@@ -11,7 +11,7 @@ Real data sources:
 - Connectivity: CoCoMac database, Allen Mouse Brain Connectivity Atlas
 - Synaptic densities: Braitenberg & Schüz 1998
 
-Author: HyperTensor Neuroscience
+Author: TiganticLabz Neuroscience
 Date: 2026-01-05
 """
 
@@ -479,7 +479,7 @@ def run_real_connectome():
     
     # Attestation
     attestation = {
-        "project": "HyperTensor Neuroscience",
+        "project": "Ontic Neuroscience",
         "module": "QTT Neural Connectome - Real Neuroanatomy",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         

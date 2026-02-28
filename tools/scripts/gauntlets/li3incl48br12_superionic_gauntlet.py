@@ -24,7 +24,7 @@ The halide lattice (Cl/Br) rotates like paddle-wheels.
 When rotation frequency matches Li⁺ hopping frequency,
 the lattice "throws" ions forward - superionic transport.
 
-Author: HyperTensor Gauntlet Framework
+Author: TiganticLabz Gauntlet Framework
 Date: 2026-01-05
 """
 
@@ -826,7 +826,7 @@ def run_superionic_gauntlet():
     
     # Generate attestation
     attestation = {
-        "project": "HyperTensor Civilization Stack",
+        "project": "Ontic Civilization Stack",
         "module": "Li₃InCl₄.₈Br₁.₂ Superionic Electrolyte",
         "gauntlet": "Paddle-Wheel Resonance + Stochastic Fast-Charge",
         "timestamp": datetime.now(timezone.utc).isoformat(),

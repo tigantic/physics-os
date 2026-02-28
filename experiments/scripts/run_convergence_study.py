@@ -59,7 +59,7 @@ def main() -> None:
     OUTPUT = f"convergence_study_{ts}.json"
 
     print("=" * 80)
-    print("  HYPERTENSOR-VM  —  TIME-STEP CONVERGENCE STUDY")
+    print("  ONTIC_ENGINE-VM  —  TIME-STEP CONVERGENCE STUDY")
     print("=" * 80)
     print(f"  Grid:            {N}³  ({N**3:,} DOFs)")
     print(f"  CFL dt:          {dt_cfl:.6e}")

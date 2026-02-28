@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-NOAA GFS Weather Data Ingestion for HyperTensor
+NOAA GFS Weather Data Ingestion for The Ontic Engine
 ================================================
 
 Downloads REAL weather data from NOAA GFS (Global Forecast System) and 
-compresses it into a QTT manifold for visualization in HyperTensor.
+compresses it into a QTT manifold for visualization in The Ontic Engine.
 
 Data Source: AWS Open Data (NOAA GFS)
 - Format: GRIB2
@@ -14,7 +14,7 @@ Data Source: AWS Open Data (NOAA GFS)
 This script:
 1. Downloads a single GFS timestep from AWS (no account needed)
 2. Extracts 3D atmospheric data (U-wind across pressure levels)
-3. Compresses into QTT format using HyperTensor
+3. Compresses into QTT format using The Ontic Engine
 4. Saves for visualization in the CFD viewer
 
 Requirements:
@@ -364,7 +364,7 @@ def compress_to_qtt(data: np.ndarray, max_rank: int = 64) -> dict:
     """
     Compress 3D atmospheric data to QTT format.
     
-    This is the core HyperTensor operation - turning dense weather data
+    This is the core The Ontic Engine operation - turning dense weather data
     into a compressed manifold.
     """
     import torch
@@ -478,7 +478,7 @@ def main():
 ╔══════════════════════════════════════════════════════════════════════╗
 ║              NOAA GFS WEATHER DATA INGESTION                         ║
 ║                                                                      ║
-║  Real atmospheric data → QTT Manifold → HyperTensor Forensic Hub     ║
+║  Real atmospheric data → QTT Manifold → Ontic Forensic Hub     ║
 ║  Now with temporal snapshots for ghosting/time-travel                ║
 ╚══════════════════════════════════════════════════════════════════════╝
     """)

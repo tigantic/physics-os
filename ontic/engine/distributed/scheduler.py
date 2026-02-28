@@ -4,7 +4,7 @@ Distributed task scheduling for CFD simulations.
 This module provides task scheduling and dependency management
 for parallel CFD computations.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 import threading

@@ -1,8 +1,8 @@
 # Copyright 2025 Tigantic Labs. All Rights Reserved.
 """
-HyperTensor Python Bridge for Unreal Engine
+Ontic Python Bridge for Unreal Engine
 
-Provides ZMQ-based communication between the HyperTensor Python backend
+Provides ZMQ-based communication between the Ontic Engine Python backend
 and the Unreal Engine plugin for real-time field manipulation.
 
 Usage:
@@ -89,9 +89,9 @@ class BridgeStats:
         return 0.0
 
 
-class HyperTensorBridge:
+class OnticBridge:
     """
-    ZMQ bridge between Unreal Engine and HyperTensor Python backend.
+    ZMQ bridge between Unreal Engine and Ontic Python backend.
     
     Handles message serialization/deserialization and routes commands
     to the appropriate Field operations.
@@ -144,7 +144,7 @@ class HyperTensorBridge:
         self._thread = threading.Thread(target=self._message_loop, daemon=True)
         self._thread.start()
         
-        print(f"HyperTensor Bridge started on port {self.port}")
+        print(f"Ontic Bridge started on port {self.port}")
     
     def stop(self) -> None:
         """Stop the bridge server."""
@@ -159,7 +159,7 @@ class HyperTensorBridge:
         if self._context:
             self._context.term()
         
-        print("HyperTensor Bridge stopped")
+        print("Ontic Bridge stopped")
     
     def _message_loop(self) -> None:
         """Main message processing loop."""
@@ -272,7 +272,7 @@ class HyperTensorBridge:
             return self._make_ok_response(struct.pack('<I', new_handle))
             
         except ImportError:
-            return self._make_error_response("HyperTensor not available")
+            return self._make_error_response("The Ontic Engine not available")
         except Exception as e:
             return self._make_error_response(f"Failed to create field: {e}")
     
@@ -496,12 +496,12 @@ class HyperTensorBridge:
 
 def main():
     """Main entry point for the bridge server."""
-    parser = argparse.ArgumentParser(description='HyperTensor Python Bridge for Unreal Engine')
+    parser = argparse.ArgumentParser(description='Ontic Python Bridge for Unreal Engine')
     parser.add_argument('--port', type=int, default=5555, help='ZMQ port to listen on')
     parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose logging')
     args = parser.parse_args()
     
-    bridge = HyperTensorBridge(port=args.port, verbose=args.verbose)
+    bridge = OnticBridge(port=args.port, verbose=args.verbose)
     bridge.start()
     
     try:

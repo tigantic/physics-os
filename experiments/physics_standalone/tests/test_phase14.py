@@ -193,7 +193,7 @@ class TestUserGuides:
         
         section = GuideSection(
             title="Introduction",
-            content="Welcome to HyperTensor!",
+            content="Welcome to The Ontic Engine!",
             level=2,
             examples=[
                 CodeExample(code="import tensornet", description="Import the library"),
@@ -208,7 +208,7 @@ class TestUserGuides:
         # Test markdown conversion
         md = section.to_markdown()
         assert "## Introduction" in md
-        assert "Welcome to HyperTensor" in md
+        assert "Welcome to The Ontic Engine" in md
         assert "TIP" in md
     
     def test_tutorial(self):
@@ -217,10 +217,10 @@ class TestUserGuides:
         
         tutorial = Tutorial(
             title="Getting Started",
-            description="Learn to use HyperTensor.",
+            description="Learn to use The Ontic Engine.",
             difficulty=DifficultyLevel.BEGINNER,
             prerequisites=["Python 3.9+"],
-            objectives=["Install HyperTensor"],
+            objectives=["Install The Ontic Engine"],
             sections=[
                 GuideSection(title="Installation", content="Run pip install..."),
             ],
@@ -269,7 +269,7 @@ class TestUserGuides:
         
         guide = create_getting_started()
         
-        assert guide.title == "Getting Started with HyperTensor"
+        assert guide.title == "Getting Started with The Ontic Engine"
         assert len(guide.sections) > 0
         assert len(guide.prerequisites) > 0
         assert len(guide.objectives) > 0
@@ -342,14 +342,14 @@ class TestSphinxConfig:
         from ontic.docs import SphinxConfig, generate_conf_py
         
         config = SphinxConfig(
-            project="HyperTensor",
+            project="The Ontic Engine",
             author="TiganticLabz",
             version="2.2.0",
         )
         
         content = generate_conf_py(config)
         
-        assert "HyperTensor" in content
+        assert "The Ontic Engine" in content
         assert "TiganticLabz" in content
         assert "extensions = [" in content
         assert "sphinx.ext.autodoc" in content

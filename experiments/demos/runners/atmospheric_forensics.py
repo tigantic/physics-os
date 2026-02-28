@@ -1,5 +1,5 @@
 """
-HyperTensor Atmospheric Forensics
+Ontic Atmospheric Forensics
 ==================================
 
 Broadcast-quality atmospheric visualization with NASA Blue Marble substrate.
@@ -749,7 +749,7 @@ class AtmosphericForensicsWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         
-        self.setWindowTitle("HyperTensor Atmospheric Forensics")
+        self.setWindowTitle("Ontic Atmospheric Forensics")
         self.setMinimumSize(1400, 800)
         self.setStyleSheet("""
             QMainWindow {
@@ -778,7 +778,7 @@ class AtmosphericForensicsWindow(QMainWindow):
         
         # Top HUD bar
         self.top_hud = self._create_hud_bar([
-            ("HYPERTENSOR ATMOSPHERIC FORENSICS", "title"),
+            ("ONTIC_ENGINE ATMOSPHERIC FORENSICS", "title"),
             ("NASA Blue Marble 8K | Equirectangular Projection", "subtitle"),
         ], align="left")
         viewport_layout.addWidget(self.top_hud)
@@ -1002,7 +1002,7 @@ class AtmosphericForensicsWindow(QMainWindow):
 def main():
     print("""
 ╔══════════════════════════════════════════════════════════════════════════╗
-║                 HYPERTENSOR ATMOSPHERIC FORENSICS                        ║
+║                 ONTIC_ENGINE ATMOSPHERIC FORENSICS                        ║
 ║                                                                          ║
 ║   • NASA Blue Marble 8K satellite imagery                                ║
 ║   • Professional vector field rendering                                  ║

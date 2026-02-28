@@ -233,7 +233,7 @@ measurement objects conforming to the schema. The file should be named:
 rank_atlas_results_<implementation>_<date>.json
 ```
 
-Example: `rank_atlas_results_hypertensor_20260224.json`
+Example: `rank_atlas_results_ontic_20260224.json`
 
 The validation checker (`benchmarks/rank_atlas/validate.py`) must pass
 with zero errors before results are considered valid.
@@ -242,7 +242,7 @@ with zero errors before results are considered valid.
 
 ## 7. Reference Results
 
-### 7.1 HyperTensor Baseline (2026-02-24)
+### 7.1 Ontic Baseline (2026-02-24)
 
 | Metric | Value |
 |--------|-------|

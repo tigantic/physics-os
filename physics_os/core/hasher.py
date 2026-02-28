@@ -1,6 +1,6 @@
 """Content-addressed hashing for artifact integrity.
 
-Every payload in the HyperTensor system is independently hashable
+Every payload in the Ontic Engine system is independently hashable
 using SHA-256 over a canonical JSON representation (sorted keys,
 no whitespace, UTF-8 encoded).
 

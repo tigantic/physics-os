@@ -5,7 +5,7 @@ Probe the Navier-Stokes finite-time singularity at unprecedented resolution usin
 
 **Question**: Does the information content (QTT rank) of turbulent flow grow slower than the grid resolution?
 
-**Target**: If HyperTensor survives t=9 (singularity zone) with Rank < 100, we have a tool that can probe the singularity deeper than any existing method.
+**Target**: If The Ontic Engine survives t=9 (singularity zone) with Rank < 100, we have a tool that can probe the singularity deeper than any existing method.
 
 ---
 

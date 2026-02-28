@@ -32,7 +32,7 @@ The Trade-off:
 
 For turbulence hunting, rank stability >> exact shift.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026-01-16
 Tag: [PHYSICS-TOOLBOX] [RANK-PRESERVING]
 """

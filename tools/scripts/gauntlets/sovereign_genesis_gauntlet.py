@@ -27,7 +27,7 @@ THE GENESIS SEQUENCE:
 
 This is the definition of Technological Autarchy.
 
-Author: HyperTensor Gauntlet Framework
+Author: TiganticLabz Gauntlet Framework
 For: Tigantic Labs — The Sovereign Architecture
 """
 

@@ -1,5 +1,5 @@
 """
-Monitoring and Logging for Project HyperTensor.
+Monitoring and Logging for Project The Ontic Engine.
 
 Provides:
 - Structured logging with multiple outputs

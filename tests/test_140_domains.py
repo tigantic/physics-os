@@ -1,5 +1,5 @@
 """
-HyperTensor 140/140 Computational Physics Domain Test Suite.
+The Ontic Engine 140/140 Computational Physics Domain Test Suite.
 
 Unified pytest harness validating all 140 capability sub-domains
 across 20 taxonomy categories and 15+ physics packages. Each domain
@@ -836,7 +836,7 @@ def test_registry_summary(capsys: pytest.CaptureFixture) -> None:
 
     with capsys.disabled():
         print("\n" + "=" * 60)
-        print("  HyperTensor 140/140 Domain Test Registry Summary")
+        print("  The Ontic Engine 140/140 Domain Test Registry Summary")
         print("=" * 60)
         print(f"  Total domains registered: {len(ALL_DOMAINS)}")
         print(f"  Total key classes tracked: {total_classes}")

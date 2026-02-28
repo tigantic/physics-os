@@ -19,7 +19,7 @@ Strategy:
 - Anti-perovskite structure → highest bottleneck factor (0.90)
 - Fine-grained composition sweep
 
-Author: HyperTensor Physics Engine
+Author: TiganticLabz Physics Engine
 Date: January 5, 2026
 """
 
@@ -414,7 +414,7 @@ def generate_attestation(result: Dict) -> Dict:
             'dendrite_free': winner['P_dendrite'] < 0.01,
             'all_targets_met': result['targets_met'],
         },
-        'framework': 'HyperTensor Phonon-Assisted Transport Model',
+        'framework': 'Ontic Phonon-Assisted Transport Model',
     }
     
     content = json.dumps(attestation, sort_keys=True, default=str)

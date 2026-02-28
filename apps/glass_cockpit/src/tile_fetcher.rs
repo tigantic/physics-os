@@ -318,7 +318,7 @@ impl TileFetcherRuntime {
 impl TileFetcher {
     /// Create new tile fetcher with background async runtime
     pub fn new(config: GibsConfig) -> Result<Self> {
-        let cache_dir = std::env::temp_dir().join("hypertensor_tiles");
+        let cache_dir = std::env::temp_dir().join("ontic_tiles");
         std::fs::create_dir_all(&cache_dir)
             .context("Failed to create tile cache directory")?;
         

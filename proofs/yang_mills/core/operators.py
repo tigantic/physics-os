@@ -30,7 +30,7 @@ Truncation Strategy:
     - For j_max = 1/2: dim = 1 + 4 = 5 per link
     - For j_max = 1: dim = 1 + 4 + 9 = 14 per link
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-15
 """
 

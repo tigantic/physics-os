@@ -1,4 +1,4 @@
-"""HyperTensor API — Capabilities endpoint.
+"""Ontic API — Capabilities endpoint.
 
 GET /v1/capabilities — Enumerate available physics domains and parameters.
 """

@@ -22,7 +22,7 @@ QTT compression gets BETTER as data size increases because:
 
 This demo PROVES it by compressing at multiple scales.
 
-Author: HyperTensor Genesis Protocol
+Author: TiganticLabz Genesis Protocol
 Date: January 24, 2026
 """
 

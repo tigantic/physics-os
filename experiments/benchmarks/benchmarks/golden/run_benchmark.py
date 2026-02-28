@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Golden Physics Benchmark v1.0 — Standalone Runner.
 
-Executes all 7 QTT physics domains through the full HyperTensor pipeline
+Executes all 7 QTT physics domains through the full The Ontic Engine pipeline
 (compile → execute → sanitize → validate → attest → verify), collects
 structured measurements, and optionally validates results against the
 documented tolerance bands.
@@ -67,7 +67,7 @@ BANNER = r"""
 ║                                                                  ║
 ║      G O L D E N   P H Y S I C S   B E N C H M A R K           ║
 ║                                                                  ║
-║           HyperTensor QTT VM • v4.0.0 • GPU-Native             ║
+║           Ontic QTT VM • v4.0.0 • GPU-Native             ║
 ║                                                                  ║
 ║   7 Domains • Full Pipeline • Trustless Attestation             ║
 ║                                                                  ║

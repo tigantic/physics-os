@@ -1,6 +1,6 @@
 # Domain Packs
 
-HyperTensor organizes its 168 physics taxonomy nodes into installable
+The Ontic Engine organizes its 168 physics taxonomy nodes into installable
 domain packs. Each pack can be installed independently via pip extras.
 
 ## Available Packs

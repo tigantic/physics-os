@@ -1,1 +1,1 @@
-"""HyperTensor MCP — __init__."""
+"""Ontic MCP — __init__."""

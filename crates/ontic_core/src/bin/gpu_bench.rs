@@ -11,7 +11,7 @@ use ontic_core::gpu::{GpuContext, CudaTTPipeline, AsyncCudaTTPipeline};
 
 fn main() {
     println!("╔════════════════════════════════════════════════════════════════╗");
-    println!("║          HyperTensor TT Evaluation Benchmark                   ║");
+    println!("║          Ontic TT Evaluation Benchmark                   ║");
     println!("║         ASYNC PIPELINE + PINNED MEMORY + DOUBLE BUFFER         ║");
     println!("╚════════════════════════════════════════════════════════════════╝");
     println!();

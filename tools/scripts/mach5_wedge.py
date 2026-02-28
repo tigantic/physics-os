@@ -3,7 +3,7 @@ Mach 5 Supersonic Wedge Flow Simulation
 ========================================
 
 Simulates hypersonic flow (M=5) over a sharp wedge, demonstrating
-the core capability of Project HyperTensor for aerospace CFD.
+the core capability of Project The Ontic Engine for aerospace CFD.
 
 Physical Setup:
     - Freestream: M∞ = 5.0, p∞ = 1 atm, T∞ = 300 K (normalized)
@@ -71,7 +71,7 @@ def run_mach5_wedge(
 
     if verbose:
         print("=" * 70)
-        print("PROJECT HYPERTENSOR: MACH 5 WEDGE FLOW SIMULATION")
+        print("PROJECT ONTIC: MACH 5 WEDGE FLOW SIMULATION")
         print("=" * 70)
         print(f"Date: {datetime.now().isoformat()}")
         print()

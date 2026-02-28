@@ -231,7 +231,7 @@
   },
   
   "certification": {
-    "attestor": "HyperTensor Yang-Mills Gauntlet",
+    "attestor": "Ontic Yang-Mills Gauntlet",
     "protocol": "YANG_MILLS_BATTLE_PLAN.md Gate 1",
     "reproducibility": "python3 yangmills/tests/test_gate1.py",
     "hash_verification": "All tests deterministic to machine precision"

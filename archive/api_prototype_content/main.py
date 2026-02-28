@@ -1,4 +1,4 @@
-"""HyperTensor Physics API — Application factory.
+"""Ontic Physics API — Application factory.
 
 Launch with::
 
@@ -54,7 +54,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     settings.device = _detect_device()
 
     logger.info("╔══════════════════════════════════════════════════╗")
-    logger.info("║        HyperTensor Physics API  v1.0.0          ║")
+    logger.info("║        Ontic Physics API  v1.0.0          ║")
     logger.info("╠══════════════════════════════════════════════════╣")
     logger.info("║  Device    : %-35s ║", settings.device)
     logger.info("║  Auth      : %-35s ║", "enabled" if settings.require_auth else "disabled")
@@ -70,13 +70,13 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     yield
 
     # ── Shutdown ────────────────────────────────────────────────────
-    logger.info("HyperTensor API shutting down.")
+    logger.info("Ontic API shutting down.")
 
 
 def create_app() -> FastAPI:
     """Build the FastAPI application."""
     app = FastAPI(
-        title="HyperTensor Physics API",
+        title="Ontic Physics API",
         description=(
             "Production inference API for the QTT Physics VM.  "
             "Solve physics problems across 7 domains with polylogarithmic "
@@ -93,7 +93,7 @@ def create_app() -> FastAPI:
             "url": "https://github.com/tigantic/physics-os",
         },
         contact={
-            "name": "HyperTensor",
+            "name": "The Ontic Engine",
             "url": "https://github.com/tigantic/physics-os",
         },
     )
@@ -115,7 +115,7 @@ def create_app() -> FastAPI:
     @app.get("/", include_in_schema=False)
     async def root() -> dict[str, str]:
         return {
-            "service": "HyperTensor Physics API",
+            "service": "Ontic Physics API",
             "version": "1.0.0",
             "docs": "/docs",
             "health": "/v1/health",

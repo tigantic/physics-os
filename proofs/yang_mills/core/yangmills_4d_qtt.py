@@ -38,7 +38,7 @@ For L = 16: 4 × 4 = 16 qubits, vs 4^4 × 16 = 65536 links
 The electric term E² is DIAGONAL - easy in QTT!
 The plaquette term couples neighbors - use shift MPO!
 
-Author: HyperTensor Yang-Mills Project  
+Author: TiganticLabz Yang-Mills Project  
 Date: 2026-01-16
 """
 

@@ -23,7 +23,7 @@ Strategy:
 4. Track compression stats
 5. Continue until target bytes reached
 
-Author: HyperTensor Genesis Protocol
+Author: TiganticLabz Genesis Protocol
 Date: January 24, 2026
 """
 

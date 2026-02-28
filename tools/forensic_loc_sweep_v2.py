@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HYPERTENSOR-VM FORENSIC LOC SWEEP v2 — AUTHORED CODE ONLY
+PHYSICS-OS FORENSIC LOC SWEEP v2 — AUTHORED CODE ONLY
 Excludes vendored, third-party, and generated data directories.
 Usage: python3 forensic_loc_sweep_v2.py > loc_authored_report.txt
 """
@@ -125,7 +125,7 @@ def is_vendored(filepath, root):
 
 def main():
     print("=" * 110)
-    print("HYPERTENSOR-VM FORENSIC LOC SWEEP v2 — AUTHORED CODE ONLY")
+    print("PHYSICS-OS FORENSIC LOC SWEEP v2 — AUTHORED CODE ONLY")
     print(f"Root: {ROOT}")
     print("=" * 110)
     print(f"\nExcluded vendored dirs: {', '.join(sorted(VENDORED_DIRS))}")

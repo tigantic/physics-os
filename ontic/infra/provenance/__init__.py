@@ -2,7 +2,7 @@
 Provenance - Merkle DAG for Field Lineage
 ==========================================
 
-Layer 5 of the HyperTensor platform.
+Layer 5 of the Ontic Engine platform.
 
 Provides immutable, verifiable history of field operations:
 - Content-addressed storage

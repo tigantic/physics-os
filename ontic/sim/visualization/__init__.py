@@ -1,5 +1,5 @@
 """
-HyperTensor Visualization Module
+Ontic Visualization Module
 ================================
 
 Decompression-free rendering and visualization for Tensor Trains.

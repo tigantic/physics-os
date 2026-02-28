@@ -11,7 +11,7 @@ Multiple advection discretizations with different numerical properties:
 | quick       | O(Δx³)| Low          | CFL < ~0.5       |
 | weno3       | O(Δx³)| Adaptive     | TVD              |
 
-The old HyperTensor solver used spectral (FFT) which has zero numerical
+The old The Ontic Engine solver used spectral (FFT) which has zero numerical
 diffusion. For non-periodic domains (walls, inlet, outlet), we need
 finite difference schemes. Central differences are the closest to
 spectral in terms of diffusion properties.

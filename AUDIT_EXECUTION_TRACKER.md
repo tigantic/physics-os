@@ -57,7 +57,7 @@
 | **Risk** | Downstream consumers receive inconsistent version metadata. Provenance and compatibility checks fail silently. |
 | **Remediation** | 1. Run `tools/sync_versions.py --apply` to fix the 4 Python/CFF drift points. 2. Manually update `README.md` from "Package V40.2" to "Package V40.0.1". 3. Add `sync_versions.py --check` to CI as a gate. |
 | **Completed** | 2026-02-27 |
-| **Notes** | All 7 checkpoints now report OK via `tools/sync_versions.py`. tensornet=40.0.1, hypertensor=40.0.1, RUNTIME=1.0.0, API=2.0.0, CITATION=4.0.0, Cargo comment=4.0.0, README=V40.0.1. Also fixed hardcoded `tests/test_integration.py` assertion (40.0.0→40.0.1). |
+| **Notes** | All 7 checkpoints now report OK via `tools/sync_versions.py`. ontic=40.0.1, physics_os=40.0.1, RUNTIME=1.0.0, API=2.0.0, CITATION=4.0.0, Cargo comment=4.0.0, README=V40.0.1. Also fixed hardcoded `tests/test_integration.py` assertion (40.0.0→40.0.1). |
 
 ---
 
@@ -143,7 +143,7 @@
 | **Risk** | CI installs unnecessary dependencies. black/isort checks are redundant with ruff and may produce conflicting opinions. Non-existent directory arguments cause misleading exit codes. |
 | **Remediation** | 1. Remove `black isort` from pip install line. 2. Remove the "Check formatting (Black)" and "Check imports (isort)" steps entirely. 3. Update the ruff step targets to `tensornet tests proofs` (removing `benchmarks` and `scripts`). |
 | **Completed** | 2026-02-27 |
-| **Notes** | Removed black+isort install and steps. Replaced with `ruff check` and `ruff format --check` targeting `tensornet hypertensor tests proofs`. Removed `continue-on-error: true` from ruff steps (L-09 resolved simultaneously). |
+| **Notes** | Removed black+isort install and steps. Replaced with `ruff check` and `ruff format --check` targeting `ontic physics_os tests proofs`. Removed `continue-on-error: true` from ruff steps (L-09 resolved simultaneously). |
 
 ---
 
@@ -182,10 +182,10 @@
 | Field | Value |
 |-------|-------|
 | **File** | `Makefile` L64 |
-| **Finding** | `PY_SRC = tensornet hypertensor tests benchmarks proofs` — the `benchmarks` directory does not exist at the repo root. |
+| **Finding** | `PY_SRC = ontic physics_os tests benchmarks proofs` — the `benchmarks` directory does not exist at the repo root. |
 | **Evidence** | `ls -d benchmarks` → not found. `ls -d proofs` → exists (valid). |
 | **Risk** | `ruff check` and `ruff format` invocations include a non-existent target. Currently benign but misleading. |
-| **Remediation** | Remove `benchmarks` from `PY_SRC`: `PY_SRC = tensornet hypertensor tests proofs`. |
+| **Remediation** | Remove `benchmarks` from `PY_SRC`: `PY_SRC = ontic physics_os tests proofs`. |
 | **Completed** | 2026-02-27 |
 | **Notes** | Fixed in Makefile L64. |
 
@@ -195,7 +195,7 @@
 
 | Field | Value |
 |-------|-------|
-| **Files** | `images/PHT_Image_3.png_Zone.Identifier`, `images/hypertensor_Logo.png.png_Zone.Identifier`, `images/hypertensor_banner.png.png_Zone.Identifier`, `images/imagescore_insight.png.png_Zone.Identifier`, `images/imagesvv_framework.png.png_Zone.Identifier` |
+| **Files** | `images/PHT_Image_3.png_Zone.Identifier`, `images/ontic_Logo.png.png_Zone.Identifier`, `images/ontic_banner.png.png_Zone.Identifier`, `images/imagescore_insight.png.png_Zone.Identifier`, `images/imagesvv_framework.png.png_Zone.Identifier` |
 | **Finding** | Windows NTFS Zone.Identifier metadata files are tracked in git. The `.gitignore` has `*:Zone.Identifier` (colon separator) but these files use `_Zone.Identifier` (underscore separator), so they slip through. |
 | **Evidence** | `git ls-files '*Zone.Identifier'` → 5 files. `.gitignore` → `*:Zone.Identifier`. |
 | **Risk** | Repository pollution with OS-specific metadata. Confusing for non-Windows contributors. |
@@ -280,11 +280,11 @@
 | Field | Value |
 |-------|-------|
 | **Finding** | The entire `physics_os/` package (Tier 2 execution fabric) has no dedicated test files. |
-| **Evidence** | `find hypertensor -name 'test_*.py' -o -name '*_test.py' \| wc -l` → 0. |
+| **Evidence** | `find physics_os -name 'test_*.py' -o -name '*_test.py' \| wc -l` → 0. |
 | **Risk** | Tier 2 runtime code is exercised only incidentally via integration tests. Regressions in the execution fabric go undetected. |
 | **Remediation** | Create `tests/test_physics_os/` test suite covering at minimum: `__init__.py` version imports, runtime module load, API contract surface. |
 | **Completed** | 2026-02-27 |
-| **Notes** | Created `tests/test_hypertensor.py` with 35 tests: 5 version metadata, 22 module imports, 2 hasher, 1 sanitizer, 1 registry, 2 jobs, 2 store. All 35 passing. |
+| **Notes** | Created `tests/test_ontic.py` with 35 tests: 5 version metadata, 22 module imports, 2 hasher, 1 sanitizer, 1 registry, 2 jobs, 2 store. All 35 passing. |
 
 ---
 
@@ -510,7 +510,7 @@
 | Field | Value |
 |-------|-------|
 | **Finding** | Baseline metrics captured during audit for tracking improvement. |
-| **Metrics** | **Tracked files:** 9,057. **Languages:** 9 (Python, Rust, TypeScript, YAML, Markdown, JSON, TOML, Shell, Svelte). **Pack size:** 1.16 GiB. **Cargo workspace members:** 22 crates. **Python packages:** 2 (tensornet, hypertensor). **CI workflows:** 13. **Physics taxonomy nodes:** 168. **LOC (authored):** ~1,157K. |
+| **Metrics** | **Tracked files:** 9,057. **Languages:** 9 (Python, Rust, TypeScript, YAML, Markdown, JSON, TOML, Shell, Svelte). **Pack size:** 1.16 GiB. **Cargo workspace members:** 22 crates. **Python packages:** 2 (ontic, physics_os). **CI workflows:** 13. **Physics taxonomy nodes:** 168. **LOC (authored):** ~1,157K. |
 | **Action** | No action required. Use as a baseline for future audits. Re-measure after L-01 through L-06 remediation to quantify improvement. |
 | **Completed** | 2026-02-27 |
 | **Notes** | Baseline recorded. Post-audit test suite: 208 passed, 0 failed, 8 skipped. All versions synced (7/7 OK). |
@@ -530,7 +530,7 @@ Recommended execution sequence based on risk and dependency chains:
 | **Phase 5 — Tooling & Compliance** | M-05, M-07, M-08, M-14 | ✅ pdoc→mkdocs, py.typed, dependabot. M-14 false positive. |
 | **Phase 6 — Git Hygiene** | M-03, L-10, M-04 | ✅ Zone.Identifier removed. Copyright updated. |
 | **Phase 7 — Repo Size** | L-01, L-02, L-03, L-04, L-05, L-06 | ✅ `.gitattributes` LFS rules declared. Migration pending LFS install. |
-| **Phase 8 — Test & Maintenance** | M-09, M-12, L-07, L-08 | ✅ 35 hypertensor tests added. Cargo workspace fixed. L-07 deferred. |
+| **Phase 8 — Test & Maintenance** | M-09, M-12, L-07, L-08 | ✅ 35 shim tests added. Cargo workspace fixed. L-07 deferred. |
 | **Phase 9 — Baseline** | I-01 | ✅ 208 passed / 0 failed / 8 skipped. |
 
 ---

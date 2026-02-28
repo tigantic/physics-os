@@ -1,7 +1,7 @@
-# HyperTensor Telemetry Stack
+# Ontic Telemetry Stack
 # =============================
 #
-# Prometheus + Grafana stack for monitoring HyperTensor API server,
+# Prometheus + Grafana stack for monitoring Ontic API server,
 # job execution metrics, and physics validation pipelines.
 #
 # Usage:
@@ -9,7 +9,7 @@
 #   Open http://localhost:3000 (Grafana, admin/admin)
 #   Prometheus UI: http://localhost:9090
 #
-# The HyperTensor API server exposes metrics at /metrics (Prometheus format).
+# Ontic API server exposes metrics at /metrics (Prometheus format).
 
 services:
   prometheus:

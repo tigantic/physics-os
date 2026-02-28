@@ -1,6 +1,6 @@
-"""HyperTensor API — Configuration via environment variables.
+"""Ontic API — Configuration via environment variables.
 
-All settings read from ``HYPERTENSOR_*`` env vars with sensible defaults
+All settings read from ``ONTIC_ENGINE_*`` env vars with sensible defaults
 for local development.  Production deployments override via Docker env
 or ``.env`` file.
 """
@@ -18,10 +18,10 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """Server configuration.
 
-    Environment variables are prefixed ``HYPERTENSOR_``.
+    Environment variables are prefixed ``ONTIC_ENGINE_``.
     """
 
-    model_config = {"env_prefix": "HYPERTENSOR_"}
+    model_config = {"env_prefix": "ONTIC_ENGINE_"}
 
     # ── Server ──────────────────────────────────────────────────────
     host: str = "0.0.0.0"

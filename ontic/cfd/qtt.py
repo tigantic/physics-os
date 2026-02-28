@@ -2,7 +2,7 @@
 Quantized Tensor Train (QTT) for CFD Field Compression
 =======================================================
 
-This module implements the core thesis of Project HyperTensor:
+This module implements the core thesis of Project The Ontic Engine:
 
     **Area Law Compression**: Turbulent flow fields satisfy an Area Law
     analogous to quantum entanglement—correlations scale with boundary

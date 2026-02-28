@@ -7,7 +7,7 @@ PHILOSOPHICAL FOUNDATION:
 - Proving smoothness requires showing it for ALL initial conditions, ALL time (impossible)
 - Proving blowup requires finding just ONE counterexample (achievable)
 
-THE IRONY OF HYPERTENSOR:
+THE IRONY OF ONTIC_ENGINE:
 Our SVD truncation is designed to SUPPRESS rank explosion. We are literally 
 "smoothing over" the crack in reality that mathematicians are looking for.
 

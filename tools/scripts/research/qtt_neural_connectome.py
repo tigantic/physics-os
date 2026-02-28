@@ -24,7 +24,7 @@ Key Innovations:
 4. Criticality detection (edge-of-chaos dynamics)
 5. Energy efficiency metrics (ops/watt comparison)
 
-Author: HyperTensor Neuroscience Division
+Author: TiganticLabz Neuroscience Division
 Date: 2026-01-05
 """
 
@@ -1004,7 +1004,7 @@ def run_connectome_analysis():
     # ATTESTATION
     # ==========================================================================
     attestation = {
-        "project": "HyperTensor Neuroscience",
+        "project": "Ontic Neuroscience",
         "module": "QTT Neural Connectome Mapping",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         

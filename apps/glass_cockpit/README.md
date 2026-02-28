@@ -66,7 +66,7 @@ Frame 120: 16.67ms | Mean: 16.51ms | FPS: 60.6 | Stability: 1.01
 
 ### 3. RAM Bridge
 
-If HyperTensor simulation is running:
+If The Ontic Engine simulation is running:
 ```
 [2/4] Connecting to RAM bridge...
   ✓ RAM bridge connected (frame 42347)

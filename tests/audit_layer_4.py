@@ -21,7 +21,7 @@ Success criteria:
     - max_error < 1e-4 for each test
     - Reconstruction matches analytical truth
 
-Author: HyperTensor Validation Team
+Author: TiganticLabz Validation Team
 """
 
 import time
@@ -572,7 +572,7 @@ if __name__ == "__main__":
 
     print()
     print("=" * 66)
-    print(" HyperTensor Layer 4 Audit: Morton-Aware Slicing")
+    print(" Ontic Layer 4 Audit: Morton-Aware Slicing")
     print("=" * 66)
     print()
 

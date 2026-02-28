@@ -1,5 +1,5 @@
 """
-QTT-Optimal Transport (QTT-OT) — Layer 20 of the HyperTensor Capability Stack
+QTT-Optimal Transport (QTT-OT) — Layer 20 of the Ontic Engine Capability Stack
 
 This module implements Optimal Transport algorithms in Quantized Tensor Train
 format, enabling trillion-point distribution matching on commodity hardware.

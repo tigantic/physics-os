@@ -441,7 +441,7 @@ async def run_bridge_demo():
     Demo: Synthetic data streaming to visualize protocol.
     """
     print("=" * 70)
-    print("  HYPERTENSOR FINANCIAL - LIQUIDITY BRIDGE")
+    print("  ONTIC_ENGINE FINANCIAL - LIQUIDITY BRIDGE")
     print("  Phase 6C: Visualization Pipeline")
     print("=" * 70)
     print()
@@ -501,7 +501,7 @@ async def run_live_pipeline():
     Run full live pipeline with Coinbase data.
     """
     print("=" * 70)
-    print("  HYPERTENSOR FINANCIAL - LIQUIDITY WEATHER")
+    print("  ONTIC_ENGINE FINANCIAL - LIQUIDITY WEATHER")
     print("  LIVE TRADING SYSTEM")
     print("=" * 70)
     print()

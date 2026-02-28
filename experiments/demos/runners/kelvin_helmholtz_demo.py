@@ -14,7 +14,7 @@ Key metrics to watch:
 - Conservation: Mass, momentum, energy should be preserved
 - Vortex formation: Visual confirmation of roll-up
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 2025
 """
 

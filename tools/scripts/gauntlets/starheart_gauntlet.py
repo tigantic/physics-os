@@ -20,7 +20,7 @@ Physics Models:
 - TT-Compressed Feedback Manifold (1 MHz control)
 - Energy Balance (Q-factor calculation)
 
-Author: HyperTensor Civilization Stack
+Author: TiganticLabz Civilization Stack
 Date: 2026-01-05
 """
 

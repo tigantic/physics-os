@@ -38,10 +38,10 @@ Client (SDK/CLI/curl)
 
 ### 1.2 Process Model
 
-- **Workers**: 1 (HYPERTENSOR_WORKERS=1, mandatory for alpha)
+- **Workers**: 1 (ONTIC_ENGINE_WORKERS=1, mandatory for alpha)
 - **Concurrency**: Sequential job execution (blocking)
 - **State**: In-memory only (lost on restart)
-- **GPU**: Optional (HYPERTENSOR_DEVICE=auto detects CUDA)
+- **GPU**: Optional (ONTIC_ENGINE_DEVICE=auto detects CUDA)
 
 ---
 
@@ -54,34 +54,34 @@ Client (SDK/CLI/curl)
 python3 --version  # Requires 3.10+
 
 # 2. Verify dependencies
-python3 -c "import hypertensor; print(hypertensor.__version__)"
+python3 -c "import physics_os; print(physics_os.__version__)"
 python3 -c "from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey; print('Ed25519: OK')"
 
 # 3. Set required environment variables
-export HYPERTENSOR_SIGNING_KEY_PATH=/etc/physics_os/signing_key.pem
-export HYPERTENSOR_API_KEYS="htk_user1_key1,htk_user2_key2"
-export HYPERTENSOR_REQUIRE_AUTH=true
+export ONTIC_ENGINE_SIGNING_KEY_PATH=/etc/physics_os/signing_key.pem
+export ONTIC_ENGINE_API_KEYS="htk_user1_key1,htk_user2_key2"
+export ONTIC_ENGINE_REQUIRE_AUTH=true
 
 # 4. Optional: Configure compute
-export HYPERTENSOR_DEVICE=auto        # auto, cpu, or cuda
-export HYPERTENSOR_MAX_N_BITS=14      # Maximum grid resolution
-export HYPERTENSOR_JOB_TIMEOUT_S=300  # 5 minute timeout
+export ONTIC_ENGINE_DEVICE=auto        # auto, cpu, or cuda
+export ONTIC_ENGINE_MAX_N_BITS=14      # Maximum grid resolution
+export ONTIC_ENGINE_JOB_TIMEOUT_S=300  # 5 minute timeout
 
 # 5. Optional: Restrict network
-export HYPERTENSOR_HOST=127.0.0.1     # Bind to loopback
-export HYPERTENSOR_CORS_ORIGINS="https://app.hypertensor.io"
+export ONTIC_ENGINE_HOST=127.0.0.1     # Bind to loopback
+export ONTIC_ENGINE_CORS_ORIGINS="https://app.physics-os.io"
 ```
 
 ### 2.2 Start Server
 
 ```bash
-python -m hypertensor serve
+python -m physics_os serve
 ```
 
 Or with explicit options:
 
 ```bash
-python -m hypertensor serve --host 127.0.0.1 --port 8000
+python -m physics_os serve --host 127.0.0.1 --port 8000
 ```
 
 ### 2.3 Verify Startup
@@ -136,7 +136,7 @@ Per FORBIDDEN_OUTPUTS.md:
 - API keys (even partial)
 - Signing key material
 - Bond dimensions, SVD values, TT cores
-- Full stack traces in production (use `HYPERTENSOR_DEBUG=false`)
+- Full stack traces in production (use `ONTIC_ENGINE_DEBUG=false`)
 - Authorization header values
 - Internal tensor shapes or compression ratios
 
@@ -144,7 +144,7 @@ Per FORBIDDEN_OUTPUTS.md:
 
 | Setting                | Development    | Alpha Production |
 |------------------------|----------------|------------------|
-| `HYPERTENSOR_LOG_LEVEL` | `debug`       | `info`           |
+| `ONTIC_ENGINE_LOG_LEVEL` | `debug`       | `info`           |
 | Stack traces in logs   | Yes            | No               |
 | Request timing         | Yes            | Yes              |
 | Internal class names   | Yes (in logs)  | Yes (in logs)*   |
@@ -251,11 +251,11 @@ fi
 
 ```bash
 # Graceful (systemd)
-sudo systemctl restart hypertensor
+sudo systemctl restart physics-os
 
 # Manual
-kill -TERM $(pgrep -f "hypertensor serve")
-python -m hypertensor serve
+kill -TERM $(pgrep -f "physics_os serve")
+python -m physics_os serve
 ```
 
 **Warning**: All in-memory jobs are lost on restart.
@@ -296,7 +296,7 @@ Expected: HTTP 201, state `attested`, certificate present.
 ### 6.6 Verify a Certificate
 
 ```bash
-python -m hypertensor verify path/to/certificate.json
+python -m physics_os verify path/to/certificate.json
 ```
 
 ---
@@ -305,10 +305,10 @@ python -m hypertensor verify path/to/certificate.json
 
 ### 7.1 Server Unresponsive
 
-1. Check process: `pgrep -f "hypertensor serve"`
+1. Check process: `pgrep -f "physics_os serve"`
 2. Check port: `ss -tlnp | grep 8000`
 3. Check health: `curl -s http://127.0.0.1:8000/v1/health`
-4. Check logs: `journalctl -u hypertensor -n 100`
+4. Check logs: `journalctl -u physics-os -n 100`
 5. If hanging: likely a long-running simulation — wait or restart
 
 ### 7.2 Certificate Verification Failure
@@ -323,12 +323,12 @@ python -m hypertensor verify path/to/certificate.json
 
 1. Check job count: Large field values consume memory
 2. Restart server to clear in-memory store
-3. Reduce `HYPERTENSOR_MAX_FIELD_POINTS` if needed
-4. Reduce `HYPERTENSOR_MAX_N_BITS` to limit grid size
+3. Reduce `ONTIC_ENGINE_MAX_FIELD_POINTS` if needed
+4. Reduce `ONTIC_ENGINE_MAX_N_BITS` to limit grid size
 
 ### 7.4 Persistent Job Failures
 
 1. Check error codes in responses (E006 = divergence, E007 = timeout)
 2. Reduce `n_bits` or `n_steps` in test submissions
-3. Check GPU availability if `HYPERTENSOR_DEVICE=auto`
+3. Check GPU availability if `ONTIC_ENGINE_DEVICE=auto`
 4. Review executor logs for compilation errors

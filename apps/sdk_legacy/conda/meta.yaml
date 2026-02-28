@@ -1,4 +1,4 @@
-{% set name = "hypertensor" %}
+{% set name = "ontic" %}
 {% set version = "1.0.0" %}
 
 package:
@@ -37,17 +37,17 @@ test:
     - pytest --pyargs tensornet -v
 
 about:
-  home: https://github.com/tigantic/HyperTensor
+  home: https://github.com/tigantic/physics-os
   license: Apache-2.0
   license_family: Apache
   license_file: LICENSE
   summary: QTT-compressed tensor network library for field simulation
   description: |
-    HyperTensor is a high-performance tensor network library built on
+    The Ontic Engine is a high-performance tensor network library built on
     Quantized Tensor Train (QTT) decomposition. It provides a unified
     Field Substrate API for simulation, visualization, and AI environments.
-  doc_url: https://hypertensor.readthedocs.io/
-  dev_url: https://github.com/tigantic/HyperTensor
+  doc_url: https://physics-os.readthedocs.io/
+  dev_url: https://github.com/tigantic/physics-os
 
 extra:
   recipe-maintainers:

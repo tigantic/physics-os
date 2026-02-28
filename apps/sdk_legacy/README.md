@@ -5,15 +5,15 @@
 
 ## Overview
 
-The HyperTensor Enterprise SDK provides production-ready packaging, deployment tools, and enterprise features for integrating The Physics OS into commercial applications.
+Ontic Enterprise SDK provides production-ready packaging, deployment tools, and enterprise features for integrating The Physics OS into commercial applications.
 
 ## Distribution Formats
 
 | Format | Use Case | Location |
 |--------|----------|----------|
-| PyPI Wheel | Standard Python installation | `pip install hypertensor` |
-| Conda Package | Scientific computing environments | `conda install -c tigantic hypertensor` |
-| Docker Image | Containerized deployment | `docker pull tigantic/hypertensor` |
+| PyPI Wheel | Standard Python installation | `pip install physics-os` |
+| Conda Package | Scientific computing environments | `conda install -c tigantic ontic` |
+| Docker Image | Containerized deployment | `docker pull tigantic/ontic` |
 | C++ SDK | Native integration | `sdk/cpp/` |
 | WebAssembly | Browser deployment | `sdk/wasm/` |
 
@@ -22,35 +22,35 @@ The HyperTensor Enterprise SDK provides production-ready packaging, deployment t
 ### Python (PyPI)
 
 ```bash
-pip install hypertensor
+pip install physics-os
 
 # With GPU support
-pip install hypertensor[cuda]
+pip install physics-os[cuda]
 
 # With all optional dependencies
-pip install hypertensor[all]
+pip install physics-os[all]
 ```
 
 ### Conda
 
 ```bash
-conda install -c tigantic hypertensor
+conda install -c tigantic ontic
 
 # With CUDA
-conda install -c tigantic hypertensor-cuda
+conda install -c tigantic ontic-cuda
 ```
 
 ### Docker
 
 ```bash
 # CPU only
-docker run -it tigantic/hypertensor
+docker run tigantic/ontic
 
 # With GPU
-docker run --gpus all -it tigantic/hypertensor:cuda
+docker run tigantic/ontic:cuda
 
 # Jupyter notebook
-docker run -p 8888:8888 tigantic/hypertensor:jupyter
+docker run tigantic/ontic:jupyter
 ```
 
 ## SDK Components
@@ -131,13 +131,13 @@ Enterprise licenses include:
 ```bash
 # Clone repository
 git clone https://github.com/tigantic/The Physics OS.git
-cd HyperTensor
+cd The Ontic Engine
 
 # Build Python wheel
 python -m build
 
 # Build Docker image
-docker build -t hypertensor -f sdk/docker/Dockerfile .
+docker build -t ontic -f sdk/docker/Dockerfile .
 
 # Build C++ SDK
 cd sdk/cpp
@@ -148,10 +148,10 @@ make -j$(nproc)
 
 ## API Documentation
 
-See [API Reference](https://hypertensor.readthedocs.io/) for complete documentation.
+See [API Reference](https://physics-os.readthedocs.io/) for complete documentation.
 
 ## Support
 
-- **Community**: [GitHub Discussions](https://github.com/tigantic/HyperTensor/discussions)
-- **Issues**: [GitHub Issues](https://github.com/tigantic/HyperTensor/issues)
+- **Community**: [GitHub Discussions](https://github.com/tigantic/physics-os/discussions)
+- **Issues**: [GitHub Issues](https://github.com/tigantic/physics-os/issues)
 - **Enterprise**: enterprise@tigantic.com

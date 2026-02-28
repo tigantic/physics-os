@@ -2,9 +2,9 @@ Traceback (most recent call last):
 
 ======================================================================
    LEVEL 5: BKM CRITERION ù THE REAL REGULARITY TEST
-  File "C:\TiganticLabz\Main_Projects\Project HyperTensor\proofs\proof_level_5.py", line 627, in <module>
+  File "C:\TiganticLabz\Main_Projects\Project The Ontic Engine\proofs\proof_level_5.py", line 627, in <module>
     run_all_proofs()
-  File "C:\TiganticLabz\Main_Projects\Project HyperTensor\proofs\proof_level_5.py", line 553, in run_all_proofs
+  File "C:\TiganticLabz\Main_Projects\Project The Ontic Engine\proofs\proof_level_5.py", line 553, in run_all_proofs
     print("   Beale-Kato-Majda (1984): \u222b\u2016\u03c9\u2016_\u221e dt < \u221e \u27fa Regular")
   File "C:\Users\bradl\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1252.py", line 19, in encode
     return codecs.charmap_encode(input,self.errors,encoding_table)[0]

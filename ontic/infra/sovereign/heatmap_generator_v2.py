@@ -204,9 +204,9 @@ class CUDAHeatmapGeneratorV2:
         elif platform.system() == "Windows":
             import tempfile
 
-            bridge = Path(tempfile.gettempdir()) / "hypertensor_bridge"
+            bridge = Path(tempfile.gettempdir()) / "ontic_bridge"
         else:
-            bridge = Path("/dev/shm/hypertensor_bridge")
+            bridge = Path("/dev/shm/ontic_bridge")
 
         # Grayscale bridge writer
         self.writer = GrayscaleBridgeWriter(

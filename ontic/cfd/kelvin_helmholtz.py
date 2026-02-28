@@ -14,7 +14,7 @@ The Physics:
 - Perturbation: v = A * sin(4*pi*x) * exp(-(y-0.5)^2/sigma^2)
 - Pressure: P = 2.5 (uniform, isobaric)
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 2025
 """
 

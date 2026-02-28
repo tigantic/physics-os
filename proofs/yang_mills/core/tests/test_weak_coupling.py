@@ -19,7 +19,7 @@ This test explores the weak coupling regime (g < 0.1) to see if:
   2. The gap follows exponential scaling (POSSIBLE - dimensional transmutation)
   3. Something else happens (TBD)
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-15
 """
 

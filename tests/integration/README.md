@@ -1,7 +1,7 @@
 # Integration Tests
 
 This directory contains integration tests that validate end-to-end functionality
-across multiple modules of the HyperTensor framework.
+across multiple modules of the Ontic Engine framework.
 
 ## Test Categories
 

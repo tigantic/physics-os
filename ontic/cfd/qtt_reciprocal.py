@@ -15,7 +15,7 @@ This is essential for Euler equation fluxes where division by density is require
     F_rhov = rhou * rhov / rho
     F_E = (E + P) * rhou / rho
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: January 2026
 Tag: [PHYSICS-TOOLBOX] [NONLINEAR]
 """

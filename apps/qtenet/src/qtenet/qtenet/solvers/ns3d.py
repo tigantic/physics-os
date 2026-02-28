@@ -8,7 +8,7 @@ Production O(log N) DNS turbulence solver with:
 - Triton-accelerated core operations
 - χ ~ Re⁰ validated scaling
 
-This is the enterprise packaging of HyperTensor's tensornet/cfd/ns3d_native.py
+This is the enterprise packaging of The Ontic Engine's tensornet/cfd/ns3d_native.py
 
 Key Breakthrough:
     Bond dimension (χ) is INDEPENDENT of Reynolds number.

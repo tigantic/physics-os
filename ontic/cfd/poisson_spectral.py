@@ -27,7 +27,7 @@ APPROACH:
 VALIDATION:
     Error < 1e-6 for analytical solutions on 32³, 64³, 128³
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026-02-05
 """
 

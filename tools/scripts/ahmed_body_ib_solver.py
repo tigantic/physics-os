@@ -41,7 +41,7 @@ import numpy as np
 import torch
 from torch import Tensor
 
-# ── HyperTensor QTT Engine ─────────────────────────────────────────
+# ── Ontic QTT Engine ─────────────────────────────────────────
 from ontic.cfd.ns3d_native import (
     QTT3DNative,
     QTT3DVectorNative,
@@ -1632,7 +1632,7 @@ def main():
 
     print("╔══════════════════════════════════════════════════════════════════╗")
     print("║  Ahmed Body IB — QTT Volumetric Synthesis  (v2 semi-implicit)  ║")
-    print("║  HyperTensor QTT Engine — Tigantic Holdings LLC                ║")
+    print("║  Ontic QTT Engine — Tigantic Holdings LLC                ║")
     print("╚══════════════════════════════════════════════════════════════════╝")
     print(f"  Case: {cid}   Body: {bp.length:.3f}×{bp.width:.3f}×{bp.height:.3f} m")
     print(f"  U∞ = {bp.velocity:.1f} m/s   Re = {bp.Re:.0f}")

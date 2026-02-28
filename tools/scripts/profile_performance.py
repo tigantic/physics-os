@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Performance profiling script for HyperTensor.
+Performance profiling script for The Ontic Engine.
 
 Uses PyTorch profiler to identify bottlenecks in:
 1. MPS algorithms (DMRG, TEBD)
@@ -231,7 +231,7 @@ def save_trace(prof, name: str, output_dir: Path):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Profile HyperTensor performance")
+    parser = argparse.ArgumentParser(description="Profile The Ontic Engine performance")
     parser.add_argument("--dmrg", action="store_true", help="Profile DMRG")
     parser.add_argument("--tebd", action="store_true", help="Profile TEBD")
     parser.add_argument("--cfd1d", action="store_true", help="Profile Euler1D")

@@ -1,6 +1,6 @@
 # The Physics OS — Universal Physics Solver — Extraction Map
 
-## Target: Standalone Package `hypertensor-physics`
+## Target: Standalone Package `ontic-physics`
 
 Extract the core physics engine into a minimal, dependency-light universal solver 
 that can be pip-installed and used anywhere.
@@ -10,7 +10,7 @@ that can be pip-installed and used anywhere.
 ## Package Structure
 
 ```
-hypertensor-physics/
+ontic-physics/
 ├── physics_os/
 │   ├── __init__.py              # Public API
 │   ├── core/
@@ -62,7 +62,7 @@ hypertensor-physics/
 
 | Target File | Source | What to Extract |
 |-------------|--------|-----------------|
-| `core/tensor_train.py` | `hypertensor_dynamics.py` L31-93 | `TTTensor`, `tt_round`, `tt_to_full` |
+| `core/tensor_train.py` | `ontic_dynamics.py` L31-93 | `TTTensor`, `tt_round`, `tt_to_full` |
 | `core/tensor_train.py` | `ontic/core/decompositions.py` | `svd_truncated` (torch version) |
 | `core/constants.py` | `starheart_fusion_solver.py` L39-53 | Physical constants |
 
@@ -79,8 +79,8 @@ def step(self, state, dt):
 
 | Target File | Source | What to Extract |
 |-------------|--------|-----------------|
-| `integrators/symplectic.py` | `hypertensor_dynamics.py` L102-138 | `SymplecticIntegrator` |
-| `integrators/langevin.py` | `hypertensor_dynamics.py` L145-222 | `LangevinDynamics` |
+| `integrators/symplectic.py` | `ontic_dynamics.py` L102-138 | `SymplecticIntegrator` |
+| `integrators/langevin.py` | `ontic_dynamics.py` L145-222 | `LangevinDynamics` |
 | `integrators/runge_kutta.py` | NEW (standard RK4/RK45) | Adaptive stepping |
 
 ---
@@ -89,8 +89,8 @@ def step(self, state, dt):
 
 | Target File | Source | What to Extract |
 |-------------|--------|-----------------|
-| `pde/mhd.py` | `hypertensor_dynamics.py` L229-316 | `ResistiveMHD` |
-| `pde/fokker_planck.py` | `hypertensor_dynamics.py` L323-401 | `FokkerPlanck` |
+| `pde/mhd.py` | `ontic_dynamics.py` L229-316 | `ResistiveMHD` |
+| `pde/fokker_planck.py` | `ontic_dynamics.py` L323-401 | `FokkerPlanck` |
 | `pde/euler.py` | `ontic/physics/hypersonic.py` | Dynamic pressure, shocks |
 | `pde/diffusion.py` | `hellskin_thermal_solver.py` | Heat equation |
 
@@ -119,7 +119,7 @@ def step(self, state, dt):
 
 ```toml
 [project]
-name = "hypertensor-physics"
+name = "ontic-physics"
 version = "0.1.0"
 dependencies = [
     "numpy>=1.20",
@@ -180,10 +180,10 @@ These stay in the main The Physics OS-VM repository:
 
 ```bash
 # 1. Create new package
-mkdir -p hypertensor-physics/physics_os/{core,integrators,pde,quantum,materials,utils}
+mkdir -p ontic-physics/physics_os/{core,integrators,pde,quantum,materials,utils}
 
 # 2. Extract core (from this repo)
-cp hypertensor_dynamics.py hypertensor-physics/physics_os/
+cp ontic_dynamics.py ontic-physics/physics_os/
 
 # 3. Split into modules
 # (See detailed extraction below)
@@ -200,7 +200,7 @@ cp hypertensor_dynamics.py hypertensor-physics/physics_os/
 ### `physics_os/core/tensor_train.py`
 
 ```python
-# Extract from: hypertensor_dynamics.py lines 28-93
+# Extract from: ontic_dynamics.py lines 28-93
 # Add: tt_add, tt_dot, tt_matvec operations
 # Add: torch backend option
 
@@ -219,7 +219,7 @@ def tt_dot(a: TTTensor, b: TTTensor) -> float: ...
 ### `physics_os/integrators/symplectic.py`
 
 ```python
-# Extract from: hypertensor_dynamics.py lines 102-138
+# Extract from: ontic_dynamics.py lines 102-138
 
 class SymplecticIntegrator:
     def __init__(self, force_fn, mass=1.0, max_rank=12): ...
@@ -230,7 +230,7 @@ class SymplecticIntegrator:
 ### `physics_os/pde/mhd.py`
 
 ```python
-# Extract from: hypertensor_dynamics.py lines 229-316
+# Extract from: ontic_dynamics.py lines 229-316
 
 class ResistiveMHD:
     def __init__(self, nx, L, eta): ...

@@ -90,7 +90,7 @@ Synthetic Pattern @ 1920×1080:
 │ RAM Bridge Writer   │    stream_from_qtt() method
 │ 60 FPS timing       │    Raw f32 data (not RGBA8)
 └─────────┬───────────┘
-          │ Shared Memory (/dev/shm/hypertensor_bridge)
+          │ Shared Memory (/dev/shm/ontic_bridge)
           ↓
 ┌─────────────────────┐
 │  RAM Bridge Reader  │ ← Existing: glass-cockpit/ram_bridge_v2.rs

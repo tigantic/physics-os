@@ -1,4 +1,4 @@
-"""HyperTensor API — Contract schema endpoint.
+"""Ontic API — Contract schema endpoint.
 
 GET /v1/contracts/{version} — Return versioned contract schemas.
 """

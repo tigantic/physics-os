@@ -4,7 +4,7 @@ Parallel iterative solvers for distributed CFD.
 This module provides parallel implementations of iterative
 solvers (CG, GMRES) with domain decomposition preconditioning.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from collections.abc import Callable

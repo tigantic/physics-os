@@ -519,7 +519,7 @@ def run_solver_demo():
     Demo: Generate synthetic order book and compute signals.
     """
     print("=" * 70)
-    print("  HYPERTENSOR FINANCIAL - LIQUIDITY SOLVER")
+    print("  ONTIC_ENGINE FINANCIAL - LIQUIDITY SOLVER")
     print("  Phase 6B: Navier-Stokes Price Flow")
     print("=" * 70)
     print()

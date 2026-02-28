@@ -10,7 +10,7 @@ Output saved to benchmark_result.json
 import json
 import sys
 import time
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project HyperTensor')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project The Ontic Engine')
 
 import numpy as np
 import torch
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     print(f"  TVD 384x192: {results[-1]['rms_avg']}%")
     
     # Save results
-    output_path = '/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/benchmark_result.json'
+    output_path = '/home/brad/TiganticLabz/Main_Projects/Project The Ontic Engine/HVAC_CFD/benchmark_result.json'
     with open(output_path, 'w') as f:
         json.dump(results, f, indent=2)
     

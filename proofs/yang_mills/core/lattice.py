@@ -22,7 +22,7 @@ Indexing:
     - Links: (site_index, direction) or flat index
     - Periodic boundary conditions standard
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-15
 """
 

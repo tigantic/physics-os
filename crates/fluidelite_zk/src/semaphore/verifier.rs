@@ -73,7 +73,7 @@ impl SemaphoreVerifierContract {
 pragma solidity ^0.8.21;
 
 /// @title Zero-Expansion Semaphore Verifier v3.0 (PQC Hybrid)
-/// @author HyperTensor Labs
+/// @author TiganticLabz
 /// @notice Verifies Semaphore proofs using Zero-Expansion for depths 16-50
 /// @dev Supports 2^50 = 1 quadrillion members with constant gas cost
 contract ZeroExpansionSemaphoreVerifier {{

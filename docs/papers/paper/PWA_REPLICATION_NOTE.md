@@ -364,7 +364,7 @@ experiments/
 
 ```bash
 # From repository root
-cd /path/to/HyperTensor-VM-main
+cd /path/to/physics-os
 python3 experiments/run_pwa_engine.py
 
 # Output:

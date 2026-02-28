@@ -1,5 +1,5 @@
 """
-HyperTensor Facial Plastics — CLI Entry Point
+Ontic Facial Plastics — CLI Entry Point
 ===============================================
 
 Provides command-line access to the full platform pipeline:
@@ -129,7 +129,7 @@ def build_parser() -> argparse.ArgumentParser:
     """Construct the full argument parser with all sub-commands."""
     parser = argparse.ArgumentParser(
         prog="facial_plastics",
-        description="HyperTensor Facial Plastics CLI",
+        description="Ontic Facial Plastics CLI",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=textwrap.dedent("""\
             Examples:
@@ -591,7 +591,7 @@ def cmd_serve(args: argparse.Namespace) -> None:
 
     mode = "production" if enable_auth else "development (auth disabled)"
     print(
-        f"Starting HyperTensor Facial Plastics UI on "
+        f"Starting Ontic Facial Plastics UI on "
         f"http://{args.host}:{args.port}  [{mode}]"
     )
     print("Press Ctrl+C to stop.")
@@ -644,7 +644,7 @@ def cmd_info(args: argparse.Namespace) -> None:
     """Print platform info."""
     from products.facial_plastics import __version__
     cfg = _load_config(args)
-    print(f"HyperTensor Facial Plastics v{__version__}")
+    print(f"Ontic Facial Plastics v{__version__}")
     print(f"  Data root: {cfg.data_root}")
     print(f"  Operators: {len(_get_all_operators())}")
     builders = _get_plan_builders()

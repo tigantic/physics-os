@@ -502,7 +502,7 @@ class GlobalQTTCompressor:
 
 def main():
     print("╔" + "═" * 78 + "╗")
-    print("║" + " " * 20 + "HYPERTENSOR 50GB CLOUD COMPRESSOR" + " " * 23 + "║")
+    print("║" + " " * 20 + "ONTIC 50GB CLOUD COMPRESSOR" + " " * 23 + "║")
     print("║" + " " * 20 + "Global QTT on NOAA GOES-18 Satellite Data" + " " * 16 + "║")
     print("╚" + "═" * 78 + "╝")
     print()

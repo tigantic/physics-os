@@ -9,7 +9,7 @@ description = "Quantum Tensor Train Compression & Universal Random-Access File S
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "HyperTensor Team", email = "team@hypertensor.io"}
+    {name = "TiganticLabz", email = "team@physics-os.io"}
 ]
 keywords = [
     "compression",
@@ -63,10 +63,10 @@ dev = [
 qtt = "qtt.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/hypertensor/qtt"
+Homepage = "https://github.com/tigantic/qtt"
 Documentation = "https://qtt.readthedocs.io"
-Repository = "https://github.com/hypertensor/qtt"
-Issues = "https://github.com/hypertensor/qtt/issues"
+Repository = "https://github.com/tigantic/qtt"
+Issues = "https://github.com/tigantic/qtt/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]

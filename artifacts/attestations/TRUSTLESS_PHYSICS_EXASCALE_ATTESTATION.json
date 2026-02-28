@@ -330,7 +330,7 @@
       "description": "8-point world-record sweep: 128\u00b3 \u2192 16,384\u00b3"
     },
     "golden_physics_results": {
-      "path": "benchmarks/golden/golden_results_hypertensor_20260224.json",
+      "path": "benchmarks/golden/golden_results_ontic_20260224.json",
       "sha256": "7b61fc1f88e24484dfd1c6b56be76aa14a2bcb5f495b39bc517d07ac5760b0f6",
       "description": "7-domain golden physics benchmark (21 measurements, all GPU-native)"
     }

@@ -2,7 +2,7 @@
 Coq Proof Backend
 ==================
 
-Export HyperTensor certificates to Coq proof assistant format (.v files).
+Export The Ontic Engine certificates to Coq proof assistant format (.v files).
 
 Coq uses the Calculus of Inductive Constructions (CIC) — a dependent
 type theory with inductive types and universe polymorphism.
@@ -124,7 +124,7 @@ def interval_to_Q(lo: float, hi: float, precision: int = 32) -> Tuple[str, str]:
 # ---------------------------------------------------------------------------
 
 class CoqExporter:
-    """Export HyperTensor certificates to Coq proof files.
+    """Export The Ontic Engine certificates to Coq proof files.
 
     Generates rigorous .v files with decidable witness proofs
     (no axioms, no admit).
@@ -236,7 +236,7 @@ class CoqExporter:
         - 'claims': list of {'name', 'value', 'lower', 'upper'}
         """
         parts = [
-            "(** HyperTensor Certificate Export *)",
+            "(** Ontic Certificate Export *)",
             "Require Import QArith ZArith Lia.",
             "",
         ]
@@ -257,7 +257,7 @@ class CoqExporter:
         self,
         output_dir: Union[str, Path],
         modules: Dict[str, str],
-        project_name: str = "HyperTensor",
+        project_name: str = "The Ontic Engine",
     ) -> Path:
         """Generate a full Coq project with _CoqProject and Makefile.
 

@@ -1,5 +1,5 @@
 """
-Quantum Module for HyperTensor
+Quantum Module for The Ontic Engine
 ==============================
 
 Quantum-classical hybrid algorithms, error mitigation, quantum-inspired

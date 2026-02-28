@@ -76,7 +76,7 @@ System design, topology, and technical specifications.
 |----------|-------------|
 | [SOVEREIGN_ARCHITECTURE.md](architecture/SOVEREIGN_ARCHITECTURE.md) | Sovereign engine architecture |
 | [RAM_BRIDGE_SPEC.md](architecture/RAM_BRIDGE_SPEC.md) | Rust↔Python RAM bridge IPC spec |
-| [HYPERTENSOR_ZK_STACK.md](architecture/HYPERTENSOR_ZK_STACK.md) | ZK proof stack architecture |
+| [ONTIC_ENGINE_ZK_STACK.md](architecture/ONTIC_ENGINE_ZK_STACK.md) | ZK proof stack architecture |
 | [PHYSICS_PIPELINE_COMPLETE.md](architecture/PHYSICS_PIPELINE_COMPLETE.md) | End-to-end physics pipeline |
 | [SAFE_SERIALIZATION.md](architecture/SAFE_SERIALIZATION.md) | Safe serialization guide |
 
@@ -93,7 +93,7 @@ System design, topology, and technical specifications.
 
 ### API Reference (`docs/api/`)
 
-Auto-generated module documentation for all `tensornet` and `hypertensor` submodules. See [api/README.md](api/README.md).
+Auto-generated module documentation for all `tensornet` and `ontic` submodules. See [api/README.md](api/README.md).
 
 ### Attestations (`docs/attestations/`)
 

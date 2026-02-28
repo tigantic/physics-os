@@ -366,7 +366,7 @@ result = lap.apply(field)  # Rank stays bounded
 
 **Live Engine Test (December 26, 2025):**
 - Unreal Engine 5.7 installed and running
-- Blueprint project created: `HyperTensorDemo`
+- Blueprint project created: `OnticDemo`
 - Python Foundation plugin enabled
 - **Socket connection from Unreal to The Physics OS bridge: SUCCESS**
 
@@ -549,7 +549,7 @@ These are NOT on active roadmap until foundation is solid:
 
 ### Unreal Engine Integration Status (December 26, 2025)
 - ✅ C++ Plugin compiled for UE 5.7
-- ✅ HyperTensorFieldComponent available in editor
+- ✅ OnticFieldComponent available in editor
 - ✅ Python bridge socket connection verified
 - 🔲 Demo scene with volumetric field visualization
 - 🔲 ZMQ library integration in C++ for live bridge
@@ -570,7 +570,7 @@ Prepare the FieldBundle replay tool for external verification of the 512³ singu
 
 **Status:** Demo implemented (`demos/world_data_slicer.py`)
 
-The HyperTensor World Data Slicer transforms interaction with global datasets from "download and wait" to "point and synthesize". Instead of handling petabytes of raw pixels, you query a Quantum-Inspired manifold that resolves detail on demand.
+Ontic World Data Slicer transforms interaction with global datasets from "download and wait" to "point and synthesize". Instead of handling petabytes of raw pixels, you query a Quantum-Inspired manifold that resolves detail on demand.
 
 **Demonstrated Capabilities:**
 | Feature | Traditional GIS | The Physics OS |
@@ -587,9 +587,9 @@ The HyperTensor World Data Slicer transforms interaction with global datasets fr
 
 ### The Physics OS — Hub (Primary Demo Interface)
 
-**Status:** Implemented (`demos/hypertensor_hub.py`)
+**Status:** Implemented (`demos/ontic_hub.py`)
 
-The HyperTensor Hub is the primary interface for demonstrating all validated layers. Built with PySide6 + VisPy for GPU-accelerated visualization.
+Ontic Hub is the primary interface for demonstrating all validated layers. Built with PySide6 + VisPy for GPU-accelerated visualization.
 
 **Advantages over Unreal Engine integration:**
 - **Low Latency:** Direct memory access to QTT cores (no ZMQ bridge)
@@ -605,7 +605,7 @@ The HyperTensor Hub is the primary interface for demonstrating all validated lay
 
 **The Pivot:**
 Layer 9 (Engine Integration) is validated via the Unreal bridge. The "hard part" is done.
-Unreal is now a plugin for others to use. The primary demo happens in the clean, professional HyperTensor Hub.
+Unreal is now a plugin for others to use. The primary demo happens in the clean, professional Ontic Hub.
 
 ---
 

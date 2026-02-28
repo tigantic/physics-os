@@ -26,7 +26,7 @@ import time
 import torch
 
 # Add project root
-sys.path.insert(0, "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor")
+sys.path.insert(0, "/home/brad/TiganticLabz/Main_Projects/Project The Ontic Engine")
 
 from ontic.applied.physics.hypersonic import HazardField, VehicleConfig, calculate_hazard_field
 from ontic.applied.physics.trajectory_optimizer import find_optimal_trajectory
@@ -291,7 +291,7 @@ def run_integration_test():
     )
 
     # Save output
-    output_path = "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/ontic/physics/trajectory_output.json"
+    output_path = "/home/brad/TiganticLabz/Main_Projects/Project The Ontic Engine/ontic/physics/trajectory_output.json"
     with open(output_path, "w") as f:
         f.write(json_output)
     print(f"  Saved: {output_path}")

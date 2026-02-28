@@ -19,7 +19,7 @@ References:
     - N≡N bond energy: 9.79 eV (945 kJ/mol)
     - N≡N bond length: 1.10 Å → N-N single: 1.45 Å
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026-01-05
 """
 
@@ -697,7 +697,7 @@ def generate_hummingbird_attestation(
     """Generate attestation JSON for the Hummingbird catalyst discovery."""
     
     attestation = {
-        "project": "HyperTensor Resonant Catalysis",
+        "project": "Ontic Resonant Catalysis",
         "discovery": "Phonon-Assisted Nitrogen Fixation",
         "codename": "Hummingbird",
         "timestamp": datetime.now().isoformat(),

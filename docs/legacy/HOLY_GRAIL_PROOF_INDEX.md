@@ -105,7 +105,7 @@ QTT is 16x smaller than Linear TT (log₂N / N = 8/256 = 1/32)
 
 ## Executive Summary
 
-This document indexes all formal proofs in the HyperTensor framework. The proofs establish:
+This document indexes all formal proofs in the Ontic Engine framework. The proofs establish:
 
 | Claim | Status | Proof |
 |-------|--------|-------|
@@ -121,7 +121,7 @@ This document indexes all formal proofs in the HyperTensor framework. The proofs
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                        HYPERTENSOR STACK                            │
+│                        ONTIC STACK                            │
 ├─────────────────────────────────────────────────────────────────────┤
 │  qtt_cfd.py    │  QTT_Euler1D  │  O(log N·d·χ²) │  TURBO MODE     │
 ├─────────────────────────────────────────────────────────────────────┤

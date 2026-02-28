@@ -1,4 +1,4 @@
-"""HyperTensor Physics API — Production inference server.
+"""Ontic Physics API — Production inference server.
 
 Exposes the QTT Physics VM as a stateless REST API.  All tensor-train
 internals (bond dimensions, singular-value spectra, compression

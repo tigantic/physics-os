@@ -5,7 +5,7 @@ PLANETARY OPERATING SYSTEM - FINAL VALIDATION
 15 Industries. One Physics Engine. Zero Compromise.
 
 This test validates the final 5 phases that complete the
-HyperTensor Planetary Operating System:
+Ontic Planetary Operating System:
 
 Phase 11: Medical (Hemodynamics)
 Phase 12: Racing (Dirty Air)

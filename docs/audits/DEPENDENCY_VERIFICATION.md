@@ -32,7 +32,7 @@ This repository is hosted on the WSL filesystem at:
 │  │  • GPU shaders (WGSL)                               │   │
 │  └─────────────────────────────────────────────────────┘   │
 │                                                              │
-│  Shared Memory: /dev/shm/hypertensor_bridge                │
+│  Shared Memory: /dev/shm/ontic_bridge                │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -129,15 +129,15 @@ Expected: `Python 3.10.x`, `Python 3.11.x`, or `Python 3.12.x`
 
 #### Option A: venv (Built-in)
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Ontic Engine
 python3 -m venv venv
 source venv/bin/activate  # Activate for every session
 ```
 
 #### Option B: conda (If you prefer)
 ```bash
-conda create -n hypertensor python=3.11 -y
-conda activate hypertensor
+conda create -n physics-os python=3.11 -y
+conda activate physics-os
 ```
 
 **Verification**:
@@ -152,7 +152,7 @@ All dependencies are specified in `requirements-lock.txt`. Install with:
 
 ```bash
 # Ensure you're in the project directory and venv is activated
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Ontic Engine
 source venv/bin/activate  # If using venv
 
 pip install --upgrade pip
@@ -224,7 +224,7 @@ CUDA memory: 16.0 GB
 The `tensornet` package must be installed in editable mode:
 
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Ontic Engine
 pip install -e .
 ```
 
@@ -302,7 +302,7 @@ Dependencies are managed in `glass-cockpit/Cargo.toml`:
 
 **Build**:
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/glass-cockpit
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Ontic Engine/glass-cockpit
 cargo build --release
 ```
 
@@ -358,7 +358,7 @@ Get-Process glass-cockpit | Select-Object ProcessorAffinity
 **Verification**:
 ```bash
 # Terminal 1 (Python):
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Ontic Engine
 python3 ontic/sovereign/realtime_tensor_stream.py
 
 # Terminal 2 (Rust):
@@ -530,14 +530,14 @@ python3 test_100k_stress.py
 ## 6. Shared Memory Configuration
 
 ### 6.1 /dev/shm Requirements
-- **Path**: `/dev/shm/hypertensor_bridge`
+- **Path**: `/dev/shm/ontic_bridge`
 - **Size**: ~8.3 MB (1920×1080×4 + 4096 header)
 - **Permissions**: Read/write for current user
 
 **Verification**:
 ```bash
 df -h /dev/shm
-ls -lh /dev/shm/hypertensor_bridge  # After running Python writer
+ls -lh /dev/shm/ontic_bridge  # After running Python writer
 ```
 
 Expected: `/dev/shm` has ≥100 MB free space.
@@ -599,8 +599,8 @@ echo $WSL_DISTRO_NAME
 Every new terminal session requires activation:
 
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor
-source venv/bin/activate  # Or 'conda activate hypertensor'
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Ontic Engine
+source venv/bin/activate  # Or 'conda activate physics-os'
 ```
 
 ### 8.2 Running Tests
@@ -657,13 +657,13 @@ pip uninstall torch torchvision torchaudio
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 ```
 
-### 9.3 "Cannot open /dev/shm/hypertensor_bridge"
+### 9.3 "Cannot open /dev/shm/ontic_bridge"
 **Cause**: Python writer not running, or permissions issue.
 
 **Solution**:
 ```bash
 # Clean up stale bridge:
-rm /dev/shm/hypertensor_bridge
+rm /dev/shm/ontic_bridge
 
 # Ensure Python writer runs first (creates the bridge):
 python3 ontic/sovereign/realtime_tensor_stream.py
@@ -985,7 +985,7 @@ cargo build --release --features profiling
 | Doctrine | Requirement | Implementation | Verification |
 |----------|-------------|----------------|--------------|
 | **1: Computational Sovereignty** | P-cores never interrupted | Windows: `ProcessorAffinity` API | `Get-Process \| Select ProcessorAffinity` |
-| **2: RAM Bridge Protocol** | Zero-copy shared memory | `shared_memory` crate, `/dev/shm` | `ls -lh /dev/shm/hypertensor_bridge` |
+| **2: RAM Bridge Protocol** | Zero-copy shared memory | `shared_memory` crate, `/dev/shm` | `ls -lh /dev/shm/ontic_bridge` |
 | **3: Procedural Rendering** | No image assets | Pure WGSL shaders | `find glass-cockpit -name '*.png' \| wc -l` → 0 |
 | **4: Template Prohibition** | From-scratch Rust/wgpu | Approved stack only | Cargo.toml audit (Section 3.2) |
 | **4.1: Pragmatic Bootstrap** | Conditional egui/iced | Not yet added | Will verify E-core affinity if used |

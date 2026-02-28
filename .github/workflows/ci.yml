@@ -1,4 +1,4 @@
-# HyperTensor CI Pipeline
+# Ontic CI Pipeline
 # ======================
 # Runs on every push and pull request to main/develop
 # Implements quality gates from physics_os_execution_checklist.md

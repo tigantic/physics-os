@@ -287,7 +287,7 @@ pub struct NoaaFetcher {
 impl NoaaFetcher {
     /// Create new NOAA fetcher with background runtime
     pub fn new() -> Result<Self> {
-        let cache_dir = std::env::temp_dir().join("hypertensor_noaa_cache");
+        let cache_dir = std::env::temp_dir().join("ontic_noaa_cache");
         std::fs::create_dir_all(&cache_dir).ok();
         
         let cache = Arc::new(Mutex::new(ForecastCache::new()));

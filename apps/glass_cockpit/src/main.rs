@@ -1,5 +1,5 @@
 /*!
- * HyperTensor Glass Cockpit - Phase 1: Grid Visualization
+ * Ontic Glass Cockpit - Phase 1: Grid Visualization
  * 
  * Sovereign observation layer for atmospheric intelligence.
  * 
@@ -43,7 +43,7 @@ fn main() -> Result<()> {
     #[cfg(feature = "debug-logging")]
     env_logger::init();
     
-    println!("HyperTensor Glass Cockpit v0.1.0");
+    println!("Ontic Glass Cockpit v0.1.0");
     println!("Phase 1: Grid Visualization");
     println!("═══════════════════════════════════════════════");
     
@@ -78,7 +78,7 @@ fn main() -> Result<()> {
     println!("[3/4] Initializing GPU pipeline...");
     let event_loop = EventLoop::new()?;
     let window_obj = WindowBuilder::new()
-        .with_title("HyperTensor Glass Cockpit - Phase 1")
+        .with_title("Ontic Glass Cockpit - Phase 1")
         .with_inner_size(winit::dpi::PhysicalSize::new(1920, 1080))
         .build(&event_loop)?;
     

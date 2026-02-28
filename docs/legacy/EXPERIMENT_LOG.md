@@ -30,7 +30,7 @@ Each entry follows the structure:
 ### [EXPERIMENT-001] 2D Incompressible NS Solver Development
 **Date:** 2025-12-22  
 **Phase:** [PHASE-1A]  
-**Investigator:** HyperTensor Team  
+**Investigator:** TiganticLabz  
 
 **Objective:**  
 Build and validate 2D incompressible Navier-Stokes solver using spectral methods with projection (Chorin-Temam) for exact incompressibility.

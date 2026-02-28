@@ -15,7 +15,7 @@ Morton-Aware QTT Slicing Operations
 ║  Validated: 2024-12-28 | 244 FPS @ 4K | 165Hz mandate exceeded       ║
 ╚══════════════════════════════════════════════════════════════════════╝
 
-The "Optical Nerve" of HyperTensor.
+The "Optical Nerve" of The Ontic Engine.
 
 Key Insight:
     A 3D QTT with Morton ordering stores bits as: (z_k, y_k, x_k) per core
@@ -32,7 +32,7 @@ Complexity:
 
 This is TRUE resolution-independent slicing.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from dataclasses import dataclass

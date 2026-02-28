@@ -822,7 +822,7 @@ def generate_atlas_visualizations(df: pd.DataFrame, results: dict, output_dir: s
 # Main entry point
 if __name__ == "__main__":
     
-    # Load your 140 domains from HyperTensor
+    # Load your 140 domains from The Ontic Engine
     from physics_os.domains import load_all_domains
     domains = load_all_domains()  # Returns list of PhysicsDomain objects
     

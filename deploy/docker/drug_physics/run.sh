@@ -36,7 +36,7 @@ esac
 
 echo ""
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║     HYPERTENSOR DRUG PHYSICS ENGINE                         ║"
+echo "║     ONTIC DRUG PHYSICS ENGINE                         ║"
 echo "║     Running: $SCRIPT"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo ""

@@ -253,7 +253,7 @@ class QTTHeader:
 def _get_shm_path(name: str) -> Path:
     """Get platform-specific shared memory path.
     
-    Uses fixed path C:\\HyperTensor\\Bridge for WSL<->Windows IPC.
+    Uses fixed path C:\\The Ontic Engine\\Bridge for WSL<->Windows IPC.
     """
     import platform
     
@@ -261,13 +261,13 @@ def _get_shm_path(name: str) -> Path:
     is_wsl = "microsoft" in platform.uname().release.lower()
     
     if platform.system() == "Windows":
-        # Native Windows: use fixed HyperTensor Bridge directory
-        bridge_dir = Path(r"C:\HyperTensor\Bridge")
+        # Native Windows: use fixed Ontic Bridge directory
+        bridge_dir = Path(r"C:\The Ontic Engine\Bridge")
         bridge_dir.mkdir(parents=True, exist_ok=True)
         return bridge_dir / f"{name}.dat"
     elif is_wsl:
         # WSL2: write to fixed Windows path so native Windows can read it
-        bridge_dir = Path("/mnt/c/HyperTensor/Bridge")
+        bridge_dir = Path("/mnt/c/The Ontic Engine/Bridge")
         bridge_dir.mkdir(parents=True, exist_ok=True)
         return bridge_dir / f"{name}.dat"
     else:

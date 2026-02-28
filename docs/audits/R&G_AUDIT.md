@@ -269,7 +269,7 @@ The project is now **audit-complete** and ready for beta release.
 
 ---
 
-*By following this staged plan, in 90 days HyperTensor should have robust 1D/2D capability, a growing user base, and polished presentation — moving from "alpha" to "beta" stage while laying groundwork for advanced phases (3D, control, deployment).*
+*By following this staged plan, in 90 days The Ontic Engine should have robust 1D/2D capability, a growing user base, and polished presentation — moving from "alpha" to "beta" stage while laying groundwork for advanced phases (3D, control, deployment).*
 
 ---
 
@@ -278,7 +278,7 @@ The project is now **audit-complete** and ready for beta release.
 **Added**: 2025-12-22  
 **Status**: 🔴 CRITICAL — Core thesis features not yet implemented
 
-This section documents the gap between the GRAND_VISION.md and actual implementation. These are the features that differentiate HyperTensor from "yet another CFD library" and fulfill the mission of "putting a wind tunnel inside the missile."
+This section documents the gap between the GRAND_VISION.md and actual implementation. These are the features that differentiate The Ontic Engine from "yet another CFD library" and fulfill the mission of "putting a wind tunnel inside the missile."
 
 ---
 
@@ -369,7 +369,7 @@ TDVP: d|u⟩/dt = P_T (-L̂|u⟩)  projected onto MPS manifold
 **Status**: ✅ IMPLEMENTED (2025-12-22) — Phase 22
 
 **Vision Claim** (GRAND_VISION.md §6.2):
-> "The HyperTensor system continuously simulates the electron density field ne(x,t) around the vehicle... creating a 'Blackout Map' showing instantaneous attenuation for each antenna array."
+> "The Ontic Engine system continuously simulates the electron density field ne(x,t) around the vehicle... creating a 'Blackout Map' showing instantaneous attenuation for each antenna array."
 
 **Implementation** (commit f1447cd):
 - `ontic/cfd/plasma.py` (550 lines): Saha ionization, plasma_frequency, rf_attenuation, PlasmaSheath

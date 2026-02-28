@@ -302,7 +302,7 @@ impl CertificateData {
         // Default verification URL
         if data.verification_url.is_empty() {
             data.verification_url = format!(
-                "https://verify.hypertensor.io/tpc/{}",
+                "https://verify.physics-os.io/tpc/{}",
                 data.certificate_id
             );
         }
@@ -924,7 +924,7 @@ mod pdf {
 
         ctx.set_color(DARK.0, DARK.1, DARK.2);
         ctx.text(
-            "HYPERTENSOR VM",
+            "ONTIC_ENGINE VM",
             10.0,
             CONTENT_L + 44.0,
             footer_y + 2.0,
@@ -1251,7 +1251,7 @@ details li {{ font-family: var(--mono); font-size: 11px; color: var(--text2); pa
 
 <!-- Footer -->
 <div class="footer">
-  <div class="brand">HYPERTENSOR VM</div>
+  <div class="brand">ONTIC_ENGINE VM</div>
   <div>Tigantic Holdings LLC</div>
   <div style="margin-top:8px">Trustless Physics: Verified by Mathematics, Not Reputation</div>
 </div>

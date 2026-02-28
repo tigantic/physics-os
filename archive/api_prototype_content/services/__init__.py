@@ -1,1 +1,1 @@
-"""HyperTensor API — Services package."""
+"""Ontic API — Services package."""

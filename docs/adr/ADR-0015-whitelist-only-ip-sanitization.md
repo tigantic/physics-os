@@ -25,7 +25,7 @@ A blacklist approach (reject known-bad patterns) is inherently incomplete — no
 2. Mesh dimensions: integer ∈ [8, 1048576], must be power-of-2.
 3. Solver tolerances: float ∈ [1e-15, 1e-1].
 4. Material properties: enum from `data/materials/*.yaml` registry only.
-5. File paths: resolved and verified to be within `$HYPERTENSOR_DATA_ROOT` — no `..`, no symlink escape.
+5. File paths: resolved and verified to be within `$ONTIC_DATA_ROOT` — no `..`, no symlink escape.
 6. String parameters: ASCII printable only, max 256 characters, regex `^[a-zA-Z0-9_\-\.]+$`.
 7. Any value outside the whitelist returns HTTP 422 with the specific constraint violation.
 

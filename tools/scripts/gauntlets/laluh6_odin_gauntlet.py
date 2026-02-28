@@ -23,7 +23,7 @@ The La-Lu cage compresses H₆ octahedra to metallic hydrogen densities.
 At 219 GPa internal pressure, hydrogen phonons (65 THz) drive Cooper pairing.
 BCS theory predicts Tc ~ ω_D × exp(-1/N(0)V) → 306.4 K.
 
-Author: HyperTensor Gauntlet Framework
+Author: TiganticLabz Gauntlet Framework
 Date: 2026-01-05
 """
 
@@ -996,7 +996,7 @@ def run_odin_gauntlet():
     
     # Generate attestation
     attestation = {
-        "project": "HyperTensor Civilization Stack",
+        "project": "Ontic Civilization Stack",
         "module": "LaLuH₆ ODIN Superconductor",
         "gauntlet": "Meissner Effect + Zero Resistance + Critical Current",
         "timestamp": datetime.now(timezone.utc).isoformat(),

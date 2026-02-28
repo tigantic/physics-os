@@ -278,13 +278,13 @@ class TestConfig:
         from ontic.infra.integration import EnvironmentConfig
         
         # Set environment variable
-        os.environ["HYPERTENSOR_CFD_CFL"] = "0.7"
+        os.environ["ONTIC_ENGINE_CFD_CFL"] = "0.7"
         
         try:
             config = EnvironmentConfig.load()
             assert config.get("cfd.cfl") == 0.7
         finally:
-            del os.environ["HYPERTENSOR_CFD_CFL"]
+            del os.environ["ONTIC_ENGINE_CFD_CFL"]
     
     def test_config_validation(self):
         """Test configuration validation."""

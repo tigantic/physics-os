@@ -1,4 +1,4 @@
-"""HyperTensor API — Validate endpoint.
+"""Ontic API — Validate endpoint.
 
 POST /v1/validate — Stateless validation of an artifact bundle.
 """

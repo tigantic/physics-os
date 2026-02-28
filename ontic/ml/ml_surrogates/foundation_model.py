@@ -3,7 +3,7 @@
 ====================================
 
 Large pre-trained transformer architecture on multi-domain simulation
-data across all 20 HyperTensor packs.  Supports few-shot adaptation,
+data across all 20 The Ontic Engine packs.  Supports few-shot adaptation,
 fine-tuning, and zero-shot transfer between physics domains.
 
 Architecture: Encoder-only transformer with continuous (x,t,field)
@@ -31,7 +31,7 @@ import numpy as np
 # ── Domain registry ────────────────────────────────────────────────
 
 class PhysicsDomain(Enum):
-    """The 20 HyperTensor physics packs as token domains."""
+    """The 20 The Ontic Engine physics packs as token domains."""
     CFD = "cfd"
     STRUCTURAL = "structural"
     THERMAL = "thermal"

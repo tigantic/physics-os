@@ -23,7 +23,7 @@ def deterministic_seed(request) -> Generator[int, None, None]:
     """
     Automatically seed all random number generators for deterministic tests.
     """
-    seed = int(os.environ.get("HYPERTENSOR_TEST_SEED", DEFAULT_SEED))
+    seed = int(os.environ.get("ONTIC_ENGINE_TEST_SEED", DEFAULT_SEED))
     
     random.seed(seed)
     np.random.seed(seed)

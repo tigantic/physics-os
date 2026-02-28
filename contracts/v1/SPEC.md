@@ -175,7 +175,7 @@ Bond dimensions, compression ratios, TT cores, singular values, scaling class, s
   "certificate_version": "1.0.0",
   "job_id": "uuid",
   "issued_at": "ISO-8601",
-  "issuer": "hypertensor-runtime",
+  "issuer": "ontic-runtime",
   "claims": [
     {
       "tag": "CONSERVATION",

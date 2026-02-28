@@ -1,5 +1,5 @@
 """
-Digital Twin Framework for HyperTensor.
+Digital Twin Framework for The Ontic Engine.
 
 This module provides real-time digital twin capabilities for hypersonic
 vehicles, enabling live state synchronization, predictive analytics,

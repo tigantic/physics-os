@@ -24,7 +24,7 @@
       "verification_time_us": 21.7
     },
     "onchain_verifier": {
-      "contract": "HyperTensorGridStabilityVerifier",
+      "contract": "OnticGridStabilityVerifier",
       "estimated_gas": 214450,
       "gas_under_300k": true,
       "source_lines": 110

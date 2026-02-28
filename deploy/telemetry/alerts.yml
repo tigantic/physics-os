@@ -1,9 +1,9 @@
-# Prometheus alerting rules for HyperTensor
+# Prometheus alerting rules for The Ontic Engine
 groups:
-  - name: hypertensor-api
+  - name: ontic-api
     rules:
       - alert: APIHighLatency
-        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{service="hypertensor-api"}[5m])) > 2.0
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{service="ontic-api"}[5m])) > 2.0
         for: 5m
         labels:
           severity: warning
@@ -20,17 +20,17 @@ groups:
           summary: "API 5xx error rate > 5%"
 
       - alert: APIDown
-        expr: up{job="hypertensor-api"} == 0
+        expr: up{job="ontic-api"} == 0
         for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "HyperTensor API is down"
+          summary: "Ontic API is down"
 
-  - name: hypertensor-jobs
+  - name: ontic-jobs
     rules:
       - alert: JobQueueBacklog
-        expr: hypertensor_job_queue_depth > 100
+        expr: ontic_job_queue_depth > 100
         for: 10m
         labels:
           severity: warning
@@ -38,7 +38,7 @@ groups:
           summary: "Job queue depth > 100 for 10 minutes"
 
       - alert: JobFailureRate
-        expr: rate(hypertensor_jobs_failed_total[15m]) / rate(hypertensor_jobs_completed_total[15m]) > 0.1
+        expr: rate(ontic_jobs_failed_total[15m]) / rate(ontic_jobs_completed_total[15m]) > 0.1
         for: 15m
         labels:
           severity: critical
@@ -48,7 +48,7 @@ groups:
   - name: physics-validation
     rules:
       - alert: PhysicsValidationDrift
-        expr: hypertensor_physics_residual_l2 > 1e-6
+        expr: ontic_physics_residual_l2 > 1e-6
         for: 5m
         labels:
           severity: warning
@@ -56,7 +56,7 @@ groups:
           summary: "Physics validation residual above tolerance"
 
       - alert: CompressionRatioRegression
-        expr: hypertensor_compression_ratio < 100
+        expr: ontic_compression_ratio < 100
         for: 5m
         labels:
           severity: warning

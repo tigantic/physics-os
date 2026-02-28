@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 /// @title Proof Calldata Compressor — Gas-Optimized Proof Submission
-/// @author HyperTensor Labs
+/// @author Ontic Labs
 /// @notice Provides compact encoding for BN254 proof elements to minimize
 ///         calldata gas costs (16 gas/non-zero byte, 4 gas/zero byte on L1).
 /// @dev Techniques applied:

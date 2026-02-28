@@ -38,7 +38,7 @@ SUCCESS CRITERIA (from Battle Plan):
     - Hamiltonian Hermitian
     - Trivial state gauge-invariant
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-15
 """
 

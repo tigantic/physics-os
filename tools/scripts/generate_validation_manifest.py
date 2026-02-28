@@ -193,7 +193,7 @@ def generate_manifest(
         "artifacts": collect_artifact_hashes(artifacts_dir),
         "validation": parse_test_results(artifacts_dir),
         "metadata": {
-            "framework": "HyperTensor V&V Framework",
+            "framework": "Ontic VOntic V&VV Framework",
             "framework_version": "1.4.0",
             "standard": "ASME V&V 10-2019",
             "classification": "PROPRIETARY - Tigantic Holdings LLC",

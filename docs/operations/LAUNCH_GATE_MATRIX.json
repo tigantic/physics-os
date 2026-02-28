@@ -111,7 +111,7 @@
       "criteria_met": 5,
       "criteria_total": 5,
       "criteria": [
-        {"id": "G7.1", "name": "Request ID on every request", "status": "PASS", "evidence": "hypertensor/api/app.py::RequestIDMiddleware (UUID-4, client-passthrough)"},
+        {"id": "G7.1", "name": "Request ID on every request", "status": "PASS", "evidence": "physics_os/api/app.py::RequestIDMiddleware (UUID-4, client-passthrough)"},
         {"id": "G7.2", "name": "Job ID in logs", "status": "PASS"},
         {"id": "G7.3", "name": "API key identity in logs", "status": "PASS"},
         {"id": "G7.4", "name": "Structured log schema documented", "status": "PASS", "evidence": "OPERATIONS_RUNBOOK.md §3"},
@@ -140,10 +140,10 @@
       "criteria_met": 4,
       "criteria_total": 4,
       "criteria": [
-        {"id": "G9.1", "name": "Billing calculator on every job", "status": "PASS", "evidence": "hypertensor/billing/meter.py::calculate_cu() + tests/test_billing.py::TestG9_1 (9 tests)"},
-        {"id": "G9.2", "name": "Usage ledger records", "status": "PASS", "evidence": "hypertensor/billing/meter.py::UsageLedger + tests/test_billing.py::TestG9_2 (9 tests)"},
+        {"id": "G9.1", "name": "Billing calculator on every job", "status": "PASS", "evidence": "physics_os/billing/meter.py::calculate_cu() + tests/test_billing.py::TestG9_1 (9 tests)"},
+        {"id": "G9.2", "name": "Usage ledger records", "status": "PASS", "evidence": "physics_os/billing/meter.py::UsageLedger + tests/test_billing.py::TestG9_2 (9 tests)"},
         {"id": "G9.3", "name": "Pricing model documented", "status": "PASS", "evidence": "PRICING_MODEL.md + METERING_POLICY.md"},
-        {"id": "G9.4", "name": "Invoice export available", "status": "PASS", "evidence": "hypertensor/billing/invoice.py + tests/test_billing.py::TestG9_4 (11 tests)"}
+        {"id": "G9.4", "name": "Invoice export available", "status": "PASS", "evidence": "physics_os/billing/invoice.py + tests/test_billing.py::TestG9_4 (11 tests)"}
       ]
     },
     {

@@ -12,7 +12,7 @@ This is an extreme-scale CFD simulation for validation purposes.
 """
 
 import sys
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project HyperTensor')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project The Ontic Engine')
 
 import torch
 import numpy as np
@@ -207,7 +207,7 @@ def main():
     }
     
     import json
-    output_path = '/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/HVAC_CFD/nielsen_1B_result.json'
+    output_path = '/home/brad/TiganticLabz/Main_Projects/Project The Ontic Engine/HVAC_CFD/nielsen_1B_result.json'
     with open(output_path, 'w') as f:
         json.dump(results, f, indent=2)
     print(f"\nResults saved to {output_path}")

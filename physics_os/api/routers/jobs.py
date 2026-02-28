@@ -1,4 +1,4 @@
-"""HyperTensor API — Job endpoints.
+"""Ontic API — Job endpoints.
 
 POST /v1/jobs                  → Submit a job
 GET  /v1/jobs/{job_id}         → Get job status

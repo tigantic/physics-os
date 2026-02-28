@@ -22,7 +22,7 @@
   "access_right": "restricted",
   "related_identifiers": [
     {
-      "identifier": "https://github.com/TiganticLabz/hypertensor",
+      "identifier": "https://github.com/tigantic/physics-os",
       "relation": "isSupplementTo",
       "scheme": "url"
     }

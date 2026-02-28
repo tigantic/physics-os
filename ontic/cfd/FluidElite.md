@@ -190,7 +190,7 @@ If smoke test passes:
 
 # QTT-Native LLM Execution Plan: "FluidElite"
 
-**Project Goal:** Build an infinite-context LLM using Quantized Tensor Train (QTT) compression, leveraging your existing HyperTensor/PyTenNet infrastructure.
+**Project Goal:** Build an infinite-context LLM using Quantized Tensor Train (QTT) compression, leveraging your existing The Ontic Engine/PyTenNet infrastructure.
 
 **Target Hardware:** Lenovo Legion 5i (i9-14900HX, RTX 5070 8GB, 32GB RAM)
 

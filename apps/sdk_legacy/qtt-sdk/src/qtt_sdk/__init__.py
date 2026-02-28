@@ -13,7 +13,7 @@ Example:
 """
 
 __version__ = "1.0.0"
-__author__ = "HyperTensor Team"
+__author__ = "TiganticLabz"
 
 from qtt_sdk.core import (
     QTTState,

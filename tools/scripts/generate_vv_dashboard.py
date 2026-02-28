@@ -27,7 +27,7 @@ DASHBOARD_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HyperTensor V&V Dashboard</title>
+    <title>Ontic VOntic V&VV Dashboard</title>
     <style>
         :root {
             --bg-primary: #0d1117;
@@ -256,7 +256,7 @@ DASHBOARD_TEMPLATE = """
 <body>
     <div class="container">
         <header>
-            <h1>🔬 HyperTensor V&V Dashboard</h1>
+            <h1>🔬 Ontic VOntic V&VV Dashboard</h1>
             <p class="subtitle">Verification & Validation Status Report</p>
             <div class="meta">
                 <span class="meta-item">📅 {generated_date}</span>
@@ -336,7 +336,7 @@ DASHBOARD_TEMPLATE = """
         
         <footer>
             <p class="quote">"In God we trust. All others must bring data." — W. Edwards Deming</p>
-            <p>HyperTensor V&V Framework v1.4.0 | ASME V&V 10-2019 Compliant</p>
+            <p>Ontic VOntic V&VV Framework v1.4.0 | ASME V&V 10-2019 Compliant</p>
         </footer>
     </div>
 </body>

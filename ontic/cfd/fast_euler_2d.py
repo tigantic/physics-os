@@ -11,7 +11,7 @@ No TCI, no dense operations, pure tensor train throughout.
 For higher accuracy, can upgrade to Rusanov or WENO, but this
 demonstrates the achievable O(log N) performance.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 2025
 """
 

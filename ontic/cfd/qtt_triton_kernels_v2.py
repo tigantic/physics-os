@@ -78,7 +78,7 @@ PERFORMANCE SUMMARY:
   apply_mpo:     1-2 ms per operator
   Render 1024²:  4.5 FPS (bottleneck: O(n×r²×N_pixels) TT contraction)
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: January 2026
 """
 

@@ -14,7 +14,7 @@ Physics:
 where f is the large-scale forcing that injects energy at low
 wavenumbers, maintaining the turbulent cascade.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026
 """
 

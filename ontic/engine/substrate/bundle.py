@@ -11,7 +11,7 @@ A FieldBundle contains:
     - History (truncation errors, energy over time)
     - Hash chain (for determinism verification)
 
-File format: .htf (HyperTensor Field)
+File format: .htf (Ontic Field)
 """
 
 from __future__ import annotations
@@ -192,7 +192,7 @@ class FieldBundle:
         """
         Save bundle to file.
 
-        Format: .htf (HyperTensor Field)
+        Format: .htf (Ontic Field)
 
         Structure:
             - Header (magic, version, flags)

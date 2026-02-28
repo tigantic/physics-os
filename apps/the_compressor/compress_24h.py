@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                    HYPERTENSOR 24-HOUR KILL SHOT                             ║
+║                    ONTIC 24-HOUR KILL SHOT                             ║
 ║                                                                              ║
 ║  Target: 16.8 GB → ~2.5 MB (6,800× compression)                             ║
 ║  Method: Streaming Hierarchical 4D QTT with Temporal Manifold Collapse       ║
@@ -247,7 +247,7 @@ def compute_storage(batch_compressed: Dict) -> int:
 
 def run_24h_killshot():
     print('╔' + '═'*78 + '╗')
-    print('║' + ' '*20 + 'HYPERTENSOR 24-HOUR KILL SHOT' + ' '*28 + '║')
+    print('║' + ' '*20 + 'ONTIC 24-HOUR KILL SHOT' + ' '*28 + '║')
     print('║' + ' '*20 + 'Target: 16.8 GB → ~2.5 MB' + ' '*32 + '║')
     print('╚' + '═'*78 + '╝')
     print()

@@ -44,7 +44,7 @@ REFERENCES:
   - Diamandis P (2012) "Abundance: The Future Is Better Than You Think"
   - Boulding K (1966) "The Economics of Spaceship Earth"
 
-Author: HyperTensor Civilization Stack
+Author: TiganticLabz Civilization Stack
 Date: 2025-01-05
 """
 

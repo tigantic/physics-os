@@ -117,7 +117,7 @@ results['tensornet_modules'] = dict(results['tensornet_modules'])
 
 # Print report
 print("=" * 80)
-print("HYPERTENSOR-VM FORENSIC LOC AUDIT")
+print("PHYSICS-OS FORENSIC LOC AUDIT")
 print("=" * 80)
 
 print(f"\n{'GRAND TOTALS':=^80}")

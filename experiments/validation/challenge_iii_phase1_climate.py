@@ -1276,7 +1276,7 @@ def run_pipeline() -> PipelineResult:
     """Execute the full Challenge III Phase 1 validation pipeline."""
     print("""
 ╔══════════════════════════════════════════════════════════════════╗
-║  HyperTensor — Challenge III Phase 1                           ║
+║  The Ontic Engine — Challenge III Phase 1                           ║
 ║  Regional Atmospheric Dispersion                               ║
 ║  Research Triangle Park, NC · 100 m Resolution                 ║
 ║  Real NOAA + EPA Data · NS + QTT · AERMOD Comparison           ║

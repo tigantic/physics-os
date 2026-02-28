@@ -5,7 +5,7 @@ import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /// @title TPC Certificate Registry — On-Chain Record of Trustless Physics Certificates
-/// @author HyperTensor Labs
+/// @author Ontic Labs
 /// @notice Stores certificate hashes and metadata on-chain for public auditability.
 ///         Links TPC binary certificates to their on-chain verification proofs.
 /// @dev Designed to work alongside `Groth16Verifier` and `FluidEliteHalo2Verifier`.

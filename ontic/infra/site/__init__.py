@@ -22,7 +22,7 @@ from .generator import (
                      serve_site,
 )
 from .search import Indexer, SearchIndex, SearchResult, build_search_index, search
-from .themes import HyperTensorTheme, Theme, ThemeConfig, get_theme, list_themes
+from .themes import OnticTheme, Theme, ThemeConfig, get_theme, list_themes
 
 __all__ = [
     # Generator
@@ -39,7 +39,7 @@ __all__ = [
     "ThemeConfig",
     "get_theme",
     "list_themes",
-    "HyperTensorTheme",
+    "OnticTheme",
     # Search
     "SearchIndex",
     "SearchResult",

@@ -1,6 +1,6 @@
 """TCI Core - High-performance TT-Cross Interpolation
 
-This package provides Rust-accelerated TCI algorithms for HyperTensor.
+This package provides Rust-accelerated TCI algorithms for The Ontic Engine.
 """
 
 __version__ = "0.1.0"

@@ -23,7 +23,7 @@ Mathematical Foundation:
     - Kogut-Susskind Hamiltonian formulation (1975)
     - Tensor network / MPS / QTT representation
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-15
 Status: Sprint 1 - Infrastructure
 """

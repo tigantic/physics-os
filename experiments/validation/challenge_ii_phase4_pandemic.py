@@ -1321,7 +1321,7 @@ def generate_report(result: PandemicResult) -> Path:
 # ===================================================================
 def main() -> None:
     print("╔══════════════════════════════════════════════════════════════════╗")
-    print("║  HyperTensor — Challenge II Phase 4                            ║")
+    print("║  The Ontic Engine — Challenge II Phase 4                            ║")
     print("║  Pandemic Response Pipeline                                     ║")
     print("║  48-Hour Turnaround: Structure → Candidates → Synthesis Routes ║")
     print("╚══════════════════════════════════════════════════════════════════╝")

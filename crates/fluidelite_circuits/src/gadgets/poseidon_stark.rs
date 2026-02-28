@@ -171,7 +171,7 @@ fn mds_matrix() -> &'static [[Felt; POSEIDON_WIDTH]; POSEIDON_WIDTH] {
 /// Generate Poseidon round constants deterministically.
 ///
 /// Uses SHA-256 with domain separator
-/// `"HyperTensor_Poseidon_Goldilocks_t12_RF8_RP22_alpha7"` followed by
+/// `"Ontic_Poseidon_Goldilocks_t12_RF8_RP22_alpha7"` followed by
 /// the round index and element index (both as little-endian u64).
 /// The first 8 bytes of each hash are reduced mod p.
 ///
@@ -179,7 +179,7 @@ fn mds_matrix() -> &'static [[Felt; POSEIDON_WIDTH]; POSEIDON_WIDTH] {
 /// fully determined by the parameter string and can be independently
 /// verified by any party.
 fn generate_round_constants() -> Vec<[Felt; POSEIDON_WIDTH]> {
-    let domain = b"HyperTensor_Poseidon_Goldilocks_t12_RF8_RP22_alpha7";
+    let domain = b"Ontic_Poseidon_Goldilocks_t12_RF8_RP22_alpha7";
     let mut constants = Vec::with_capacity(POSEIDON_NUM_ROUNDS);
     for round in 0..POSEIDON_NUM_ROUNDS {
         let mut row = [Felt::ZERO; POSEIDON_WIDTH];

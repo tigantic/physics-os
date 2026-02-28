@@ -58,7 +58,7 @@ except ImportError:
     print("[FATAL] VTK required. Install: pip install vtk")
     sys.exit(1)
 
-# ── PyTorch + HyperTensor QTT engine ────────────────────────────────
+# ── PyTorch + Ontic QTT engine ────────────────────────────────
 try:
     import torch
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -69,7 +69,7 @@ except ImportError:
 try:
     from ontic.cfd.qtt import field_to_qtt, qtt_to_field
 except ImportError:
-    print("[FATAL] HyperTensor QTT engine not found.")
+    print("[FATAL] Ontic QTT engine not found.")
     print("        Ensure tensornet.cfd.qtt is importable.")
     sys.exit(1)
 
@@ -385,7 +385,7 @@ def compress_field_qtt(
     """
     QTT-compress a single scalar field on the structured grid.
 
-    Uses HyperTensor's field_to_qtt engine (TT-SVD with randomized SVD).
+    Uses The Ontic Engine's field_to_qtt engine (TT-SVD with randomized SVD).
 
     Parameters
     ----------
@@ -574,7 +574,7 @@ def generate_report(
 
     lines.append(sep)
     lines.append("QTT COMPRESSION BENCHMARK: NVIDIA PhysicsNeMo Ahmed Body")
-    lines.append(f"Mesh-to-Rectilinear Bridge — HyperTensor QTT Engine")
+    lines.append(f"Mesh-to-Rectilinear Bridge — Ontic QTT Engine")
     lines.append(sep)
     lines.append(f"Date:       {time.strftime('%Y-%m-%d %H:%M:%S')}")
     lines.append(f"Samples:    {len(benchmarks)}")
@@ -850,7 +850,7 @@ Examples:
 
     print("╔══════════════════════════════════════════════════════════════════╗")
     print("║  QTT × NVIDIA PhysicsNeMo Ahmed Body Compression Benchmark    ║")
-    print("║  Mesh-to-Rectilinear Bridge — HyperTensor QTT Engine          ║")
+    print("║  Mesh-to-Rectilinear Bridge — Ontic QTT Engine          ║")
     print("║  Tigantic Holdings LLC — Brad Adams                            ║")
     print("╚══════════════════════════════════════════════════════════════════╝")
     print()

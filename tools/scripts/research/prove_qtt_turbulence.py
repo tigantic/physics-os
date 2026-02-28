@@ -24,7 +24,7 @@ Gate Criteria:
 - O(log N) scaling confirmed (ratio < 3× for 4× grid)
 - Compression > 100× at 128³
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026-02-05
 """
 

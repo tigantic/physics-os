@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Copyright 2025 Tigantic Labs. All Rights Reserved.
 """
-HyperTensor Build Script
+Ontic Build Script
 
 Builds distribution packages for various platforms and formats.
 
@@ -121,7 +121,7 @@ def build_docker(target: str = "base") -> int:
     
     dockerfile = SDK_DIR / "docker" / "Dockerfile"
     
-    tag = "tigantic/hypertensor"
+    tag = "tigantic/ontic"
     if target != "base":
         tag = f"{tag}:{target}"
     else:
@@ -185,7 +185,7 @@ def publish_pypi(test: bool = True) -> int:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="HyperTensor Build Script")
+    parser = argparse.ArgumentParser(description="Ontic Build Script")
     parser.add_argument(
         "target",
         choices=["clean", "wheel", "sdist", "conda", "docker", "all", "test", "publish"],

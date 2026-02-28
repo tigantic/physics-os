@@ -28,7 +28,7 @@ References:
     [1] Morton, G.M. "A Computer Oriented Geodetic Data Base" (1966)
     [2] Samet, H. "Foundations of Multidimensional and Metric Data Structures"
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2025
 """
 

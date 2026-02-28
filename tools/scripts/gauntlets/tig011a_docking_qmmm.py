@@ -9,7 +9,7 @@ Completes the validation suite with:
 
 This provides the final two validation gates for comprehensive drug candidate assessment.
 
-Author: HyperTensor Drug Design Team
+Author: TiganticLabz Drug Design Team
 Date: 2026-01-05
 """
 
@@ -872,7 +872,7 @@ def run_full_validation():
     # GENERATE ATTESTATION
     # ==========================================================================
     attestation = {
-        "project": "HyperTensor Drug Design",
+        "project": "Ontic Drug Design",
         "module": "TIG-011a Docking + QM/MM Validation",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "validation_type": "Docking Diversification + QM/MM",

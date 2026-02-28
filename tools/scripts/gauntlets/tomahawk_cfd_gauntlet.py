@@ -19,7 +19,7 @@ Integration: STAR-HEART reactor intelligence pilot
              Works with LaLuH₆ superconductor coils
              Protected by HELL-SKIN thermal shield (4005°C limit)
 
-Author: HyperTensor Fusion Division
+Author: TiganticLabz Fusion Division
 Date: 2026-01-05
 """
 
@@ -753,7 +753,7 @@ def run_tomahawk_gauntlet():
     
     # Build attestation
     attestation = {
-        "project": "HyperTensor TOMAHAWK",
+        "project": "Ontic TOMAHAWK",
         "module": "CFD Gauntlet - Instability Rampdown",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         

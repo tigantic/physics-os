@@ -4,7 +4,7 @@ Layer 9 Full Validation: Engine Integration
 ============================================
 
 Validates the complete engine integration pipeline by:
-1. Starting the HyperTensor ZMQ bridge
+1. Starting the Ontic Engine ZMQ bridge
 2. Simulating an engine client (Unreal/Unity equivalent)
 3. Testing all message types: INIT, SAMPLE, SLICE, STEP, STATS, PING
 4. Verifying round-trip communication with real physics fields
@@ -51,7 +51,7 @@ class MessageType:
 
 class MockEngineClient:
     """
-    Simulates an Unreal/Unity client connecting to HyperTensor bridge.
+    Simulates an Unreal/Unity client connecting to The Ontic Engine bridge.
     """
     
     def __init__(self, port: int = 5556):
@@ -353,7 +353,7 @@ def run_validation():
     results = []
     
     # Start bridge
-    print("Starting HyperTensor Bridge Server...")
+    print("Starting Ontic Bridge Server...")
     server = MockBridgeServer(port=PORT)
     server.start()
     print(f"  Bridge running on port {PORT}")
@@ -519,7 +519,7 @@ def run_validation():
         print("    - Health monitoring (PING)")
         print()
         print("  This proves any engine (Unreal/Unity/Custom) can connect")
-        print("  and control HyperTensor physics fields via the bridge.")
+        print("  and control The Ontic Engine physics fields via the bridge.")
     else:
         print("  ⚠️  Some tests failed")
     

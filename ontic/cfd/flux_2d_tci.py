@@ -10,7 +10,7 @@ Key Insight:
 - TCI samples flux at O(r² × log N) points, not O(N²)
 - Result: O(log N) flux computation instead of O(N²)
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 2025
 """
 

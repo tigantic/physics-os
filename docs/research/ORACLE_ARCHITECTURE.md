@@ -21,7 +21,7 @@
 11. [Implementation Plan](#implementation-plan)
 12. [Timeline](#timeline)
 13. [Success Metrics](#success-metrics)
-14. [Integration with The Physics OS](#integration-with-hypertensor)
+14. [Integration with The Physics OS](#integration-with-ontic)
 
 ---
 
@@ -1725,7 +1725,7 @@ ORACLE is considered successful if it can:
 
 ### Existing Tools to Integrate
 
-| HyperTensor Module | ORACLE Use |
+| Ontic Module | ORACLE Use |
 |-------------------|------------|
 | `ontic/numerics/interval.py` | Rigorous bounds propagation |
 | `ontic/cfd/kantorovich.py` | Mathematical proof certificates |

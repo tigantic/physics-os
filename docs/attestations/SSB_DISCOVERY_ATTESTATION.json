@@ -24,6 +24,6 @@
     "I": 1.5
   },
   "targets_met": true,
-  "physics_framework": "HyperTensor TT-Compressed Hamiltonian",
+  "physics_framework": "Ontic TT-Compressed Hamiltonian",
   "sha256": "35ff1e03a04e3467cd911c5304a14217f95fe5aaf9d76edc30239374f1c45908"
 }

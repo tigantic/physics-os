@@ -35,7 +35,7 @@ Integration:
   - TIG-011a (#2): Drug design validation
   - Femto-Fabricator (#11): Direct protein synthesis via APL
 
-Author: HyperTensor Civilization Stack
+Author: TiganticLabz Civilization Stack
 Date: 2026-01-05
 """
 

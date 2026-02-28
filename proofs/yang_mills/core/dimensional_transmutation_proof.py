@@ -15,7 +15,7 @@ If M → const as g → 0: DIMENSIONAL TRANSMUTATION PROVEN!
 If M → 0: Theory is massless (no gap)
 If M → ∞: Something wrong with calculation
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-16
 """
 

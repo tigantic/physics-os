@@ -35,7 +35,7 @@ plt.figure(figsize=(10, 6), dpi=300)
 plt.style.use('bmh')  # Scientific style
 
 # 1. The Data Line
-plt.plot(times, energy, color='#D32F2F', linewidth=2.5, label='HyperTensor QTT Solver')
+plt.plot(times, energy, color='#D32F2F', linewidth=2.5, label='Ontic QTT Solver')
 
 # 2. The Theoretical Reference (The "Truth")
 # In a perfect solver, they overlap. We make them dashed to show the match.

@@ -4,7 +4,7 @@
 The Validation Doctrine for Operation: DOMINION
 Type I Civilization Engine Forensic Audits
 
-Author: HyperTensor Physics Laboratory
+Author: TiganticLabz Physics Laboratory
 Copyright (c) 2025 TiganticLabz. All Rights Reserved.
 """
 

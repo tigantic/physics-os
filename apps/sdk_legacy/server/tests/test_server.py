@@ -1,5 +1,5 @@
 """
-Tests for HyperTensor REST API Server
+Tests for Ontic REST API Server
 =====================================
 
 Tests for the FastAPI server endpoints including field operations,
@@ -249,7 +249,7 @@ class TestConcurrency:
         
         # All should succeed or return controlled errors (not 500)
         for status in results:
-            assert status in [200, 201, 500]  # 500 only if HyperTensor not available
+            assert status in [200, 201, 500]  # 500 only if The Ontic Engine not available
     
     def test_handle_allocation_unique(self, client):
         """Test that each field gets a unique handle."""
@@ -292,7 +292,7 @@ class TestServerConfiguration:
         # This test verifies the configuration is read (may need reload)
         # Check that the environment variable pattern is correct
         test_origins = "http://example.com,http://test.com"
-        monkeypatch.setenv("HYPERTENSOR_CORS_ORIGINS", test_origins)
+        monkeypatch.setenv("ONTIC_CORS_ORIGINS", test_origins)
         
         # The origins should be parsed as comma-separated
         origins = test_origins.split(",")
@@ -306,7 +306,7 @@ class TestServerConfiguration:
         
         # Get the default CORS setting
         default_origins = os.environ.get(
-            "HYPERTENSOR_CORS_ORIGINS",
+            "ONTIC_CORS_ORIGINS",
             "http://localhost:3000,http://localhost:8080,http://127.0.0.1:3000,http://127.0.0.1:8080"
         )
         
@@ -326,7 +326,7 @@ class TestServerConfiguration:
         assert response.status_code == 200
         data = response.json()
         assert "openapi" in data
-        assert data["info"]["title"] == "HyperTensor API"
+        assert data["info"]["title"] == "Ontic API"
     
     def test_health_returns_version_info(self, client):
         """Health endpoint should include version information."""

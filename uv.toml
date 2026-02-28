@@ -1,4 +1,4 @@
-# uv configuration for HyperTensor monorepo
+# uv configuration for The Ontic Engine monorepo
 # See: https://docs.astral.sh/uv/configuration/
 #
 # This configures uv as the preferred Python package manager.

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HyperTensor World Data Slicer
+Ontic World Data Slicer
 =============================
 
 Demonstrates the "Global Manifold" concept: querying world-scale datasets
@@ -40,7 +40,7 @@ class GlobalManifoldSlicer:
         Initialize the Global Manifold Slicer.
         
         Args:
-            field: HyperTensor Field representing the global dataset
+            field: Ontic Field representing the global dataset
             name: Human-readable name for the manifold
         """
         self.field = field
@@ -53,7 +53,7 @@ class GlobalManifoldSlicer:
         """
         Samples the field at a specific coordinate with increasing detail.
         
-        In HyperTensor, 'zoom' is just querying the manifold at higher bit-depth.
+        In The Ontic Engine, 'zoom' is just querying the manifold at higher bit-depth.
         No data reloading required - the structure IS the resolution.
         
         Args:
@@ -66,7 +66,7 @@ class GlobalManifoldSlicer:
         self.query_count += 1
         
         print(f"\n{'='*60}")
-        print(f"HyperTensor Zoom: Level {zoom_level}")
+        print(f"Ontic Zoom: Level {zoom_level}")
         print(f"{'='*60}")
         print(f"Target Z-index: {target_coords.get('z', 'center')}")
         print(f"Camera Position: {target_coords.get('eye', (0.5, 0.5, 1.0))}")
@@ -180,7 +180,7 @@ def demo_cyclone_investigation():
     """
     Demonstrate investigating a cyclone singularity.
     
-    This mimics the workflow of a meteorologist using HyperTensor
+    This mimics the workflow of a meteorologist using The Ontic Engine
     to zoom into a storm system without waiting for data downloads.
     """
     print("\n" + "="*70)
@@ -192,7 +192,7 @@ def demo_cyclone_investigation():
     - Wait for cloud-gap-free composites
     - Re-download as storm moves
     
-    With HyperTensor: Query the manifold at any resolution, instantly.
+    With The Ontic Engine: Query the manifold at any resolution, instantly.
     """)
     
     # Create the global weather manifold (smaller for demo speed)
@@ -236,10 +236,10 @@ def demo_cyclone_investigation():
 
 def demo_satellite_comparison():
     """
-    Compare traditional GIS loading vs HyperTensor sampling.
+    Compare traditional GIS loading vs The Ontic Engine sampling.
     """
     print("\n" + "="*70)
-    print("COMPARISON: Traditional GIS vs HyperTensor")
+    print("COMPARISON: Traditional GIS vs The Ontic Engine")
     print("="*70)
     
     comparisons = [
@@ -266,7 +266,7 @@ def demo_satellite_comparison():
     ]
     
     print("\n┌" + "─"*20 + "┬" + "─"*30 + "┬" + "─"*35 + "┐")
-    print(f"│ {'Data Source':<18} │ {'Traditional Loading':<28} │ {'HyperTensor Sampling':<33} │")
+    print(f"│ {'Data Source':<18} │ {'Traditional Loading':<28} │ {'Ontic Sampling':<33} │")
     print("├" + "─"*20 + "┼" + "─"*30 + "┼" + "─"*35 + "┤")
     
     for c in comparisons:
@@ -282,7 +282,7 @@ def main():
     """Main entry point for the World Data Slicer demo."""
     print("""
 ╔══════════════════════════════════════════════════════════════════════╗
-║                 HYPERTENSOR WORLD DATA SLICER                        ║
+║                 ONTIC_ENGINE WORLD DATA SLICER                        ║
 ║                                                                      ║
 ║  Transform "download and wait" → "point and synthesize"              ║
 ║  Query petabyte-scale data as a continuous manifold                  ║
@@ -320,7 +320,7 @@ def main():
     print("="*70)
     print("""
 Key Takeaways:
-1. HyperTensor treats global datasets as continuous manifolds
+1. The Ontic Engine treats global datasets as continuous manifolds
 2. "Zoom" is just querying at higher bit-depth - no data reload
 3. MortonSlicer provides O(L×r²) extraction regardless of total size
 4. Same infrastructure works for weather, satellite, environmental data

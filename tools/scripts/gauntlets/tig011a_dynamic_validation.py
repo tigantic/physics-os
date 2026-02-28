@@ -16,7 +16,7 @@ CONFIDENCE GATES:
 - H-bond occupancy > 75% → specific contacts maintained  
 - ΔG_FEP within ±1.5 kcal/mol of QTT prediction → model validated
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026-01-05
 Status: DYNAMIC ENSEMBLE VALIDATION
 """
@@ -932,7 +932,7 @@ def generate_dynamic_attestation(result: DynamicValidationResult) -> dict:
     """Generate attestation for dynamic validation."""
     
     attestation = {
-        "project": "HyperTensor Drug Design",
+        "project": "Ontic Drug Design",
         "module": "TIG-011a Dynamic Ensemble Validation",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "validation_type": "MD + FEP + GIST",

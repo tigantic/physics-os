@@ -24,7 +24,7 @@ Key Constraints:
     - det(g) < 0 (Lorentzian signature)
     - g^{μρ} g_{ρν} = δ^μ_ν (inverse relation)
 
-Author: HyperTensor Geometric Types Protocol
+Author: TiganticLabz Geometric Types Protocol
 Date: January 27, 2026
 """
 
@@ -1064,7 +1064,7 @@ def run_gr_demo():
     
     attestation = {
         "demonstration": "GENERAL RELATIVITY",
-        "project": "HYPERTENSOR-VM",
+        "project": "ONTIC_ENGINE-VM",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "tests": [
             {

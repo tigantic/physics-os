@@ -203,7 +203,7 @@ The Physics OS Platform Shell (v4.0.0) is the commercial product surface over th
 |---------|-------------|---------|:----:|
 | **REST API** | `physics_os.api.app:app` | 9-endpoint FastAPI server for job submission, results, certificates | Bearer |
 | **Python SDK** | `physics_os.sdk.client` | Sync + async typed client with polling, local validation | Bearer |
-| **CLI** | `python -m hypertensor` | `run`, `validate`, `attest`, `verify`, `serve` commands | Key |
+| **CLI** | `python -m physics_os` | `run`, `validate`, `attest`, `verify`, `serve` commands | Key |
 | **MCP Server** | `physics_os.mcp.server` | 11 AI-agent-callable tools for physics simulation workflows | Config |
 
 ### §4.3 Job Model
@@ -246,7 +246,7 @@ Idempotency is provided via `X-Idempotency-Key` header. Duplicate submissions wi
 
 **Certificate Signing.** Ed25519 asymmetric signing via the `cryptography` library. Each certificate contains claim-witness predicates (CONSERVATION, STABILITY, BOUND) with deterministic evaluation. The signing key is the most sensitive asset — compromise enables certificate forgery. Key management procedures are in [`SECURITY_OPERATIONS.md`](docs/operations/SECURITY_OPERATIONS.md).
 
-**Authentication.** Static bearer tokens (`HYPERTENSOR_API_KEYS`), per-key token-bucket rate limiting (default 60 rpm, burst 10), timing-safe comparison.
+**Authentication.** Static bearer tokens (`ONTIC_ENGINE_API_KEYS`), per-key token-bucket rate limiting (default 60 rpm, burst 10), timing-safe comparison.
 
 ### §4.5 Error Model
 
@@ -351,7 +351,7 @@ Key parameters: `max_rank` (2–128, default 64), relative truncation tolerance 
 
 ### §5.4 GPU Runtime
 
-When `HYPERTENSOR_DEVICE=cuda` (or `auto` with CUDA available), the GPU runtime dispatches QTT operations to Triton JIT-compiled or CUDA kernels. Operations that remain in compressed format (operator application, truncation, rounding) execute entirely on-device. Dense reconstruction for output fields is the only step that materializes array data, and this occurs at the sanitizer boundary after execution completes.
+When `ONTIC_ENGINE_DEVICE=cuda` (or `auto` with CUDA available), the GPU runtime dispatches QTT operations to Triton JIT-compiled or CUDA kernels. Operations that remain in compressed format (operator application, truncation, rounding) execute entirely on-device. Dense reconstruction for output fields is the only step that materializes array data, and this occurs at the sanitizer boundary after execution completes.
 
 ---
 
@@ -406,10 +406,10 @@ All version numbers are synchronized via `tools/sync_versions.py`, which validat
 | **Release** | v4.0.1 | Git tag (v4.0.0 baseline: `569ff1da`) | Infrastructure-hardened baseline |
 | **Platform** | V3.0.0 | `README.md` badge | Overall The Physics OS version |
 | **Platform Substrate API** | V2.0.0 | `ontic/platform/__init__.py` | Platform module API version |
-| **Package (tensornet)** | 40.0.1 | `ontic.__version__` | Physics engine package version |
-| **Package (hypertensor)** | 40.0.1 | `hypertensor.__version__` | Runtime Access Layer package version |
-| **Runtime Version** | 1.0.0 | `hypertensor.RUNTIME_VERSION` | Execution engine compatibility version |
-| **API Version** | 2.0.0 | `hypertensor.API_VERSION` | API contract schema version |
+| **Package (tensornet)** | 40.0.1 | `physics_os.__version__` | Physics engine package version |
+| **Package (physics_os)** | 40.0.1 | `physics_os.__version__` | Runtime Access Layer package version |
+| **Runtime Version** | 1.0.0 | `physics_os.RUNTIME_VERSION` | Execution engine compatibility version |
+| **API Version** | 2.0.0 | `physics_os.API_VERSION` | API contract schema version |
 | **API Contract (URI)** | v1 | `/v1/` URI prefix | Frozen endpoint contract |
 | **Cargo Workspace** | 4.0.0 | `Cargo.toml` header | Rust workspace release version |
 | **CITATION** | 4.0.0 | `CITATION.cff` | Academic citation version (tracks RELEASE) |
@@ -573,7 +573,7 @@ Trust certificates issued by the Runtime Access Layer use a simplified but crypt
   "certificate_version": "1.0.0",
   "job_id": "uuid",
   "issued_at": "ISO-8601",
-  "issuer": "hypertensor-runtime",
+  "issuer": "ontic-runtime",
   "claims": [
     { "tag": "CONSERVATION", "claim": "...", "witness": {...}, "satisfied": true },
     { "tag": "STABILITY",    "claim": "...", "witness": {...}, "satisfied": true },
@@ -769,7 +769,7 @@ Test suites introduced for the Runtime Access Layer (all post-February 10, 2026)
 | `test_log_security.py` | Log output sanitization | No API keys, no signing material, no forbidden fields in logs |
 | `test_golden_benchmark.py` | Regression baselines | Golden output comparison across all 7 domains |
 | `test_alpha_acceptance.py` | End-to-end alpha workflow | Full pipeline: submit → execute → validate → attest → verify |
-| `test_hypertensor.py` | Runtime Access Layer | 35 tests: version metadata, imports, hasher, sanitizer, registry, job models, store |
+| `test_ontic.py` | Runtime Access Layer | 35 tests: version metadata, imports, hasher, sanitizer, registry, job models, store |
 
 ### §13.6 Quality Metrics
 
@@ -1124,7 +1124,7 @@ The Rank Governor automatically adapts QTT bond dimensions to fit available hard
 
 | Artifact | Technology | Description |
 |----------|-----------|-------------|
-| `Containerfile` | Podman / Docker | Multi-stage: CUDA 12.x base → Python 3.12 → tensornet + hypertensor |
+| `Containerfile` | Podman / Docker | Multi-stage: CUDA 12.x base → Python 3.12 → ontic + physics_os |
 | `pyproject.toml` | PEP 517 / setuptools | Package build configuration |
 | `Cargo.toml` | Cargo workspace | 19 Rust workspace members, workspace-level dependency management |
 | `requirements-lock.txt` | pip | Pinned production dependencies |
@@ -1753,7 +1753,7 @@ physics-os-main/
 │   ├── tci_core_rust/              #   TCI PyO3 extension module (1.9K LOC)
 │   └── ...                         #   + 3 more (circuits, infra, gpu)
 ├── contracts/                      # Contract specifications & on-chain verifiers
-│   ├── HyperTensorBindingVerifier.sol  # ZK binding affinity verifier (Groth16, EIP-197)
+│   ├── OnticBindingVerifier.sol  # ZK binding affinity verifier (Groth16, EIP-197)
 │   └── v1/SPEC.md                  #   API contract v1
 ├── data/                           # Datasets (atlas packs, NOAA, benchmarks)
 ├── deploy/                         # Deployment & operations
@@ -1805,7 +1805,7 @@ physics-os-main/
 ├── proofs/                         # Formal proofs (Lean 4, conservation, Yang-Mills)
 ├── tests/                          # Test suites
 │   ├── test_integration.py         #   173 integration tests (TensorNet)
-│   └── test_hypertensor.py         #   35 tests (Runtime Access Layer)
+│   └── test_ontic.py         #   35 tests (Runtime Access Layer)
 ├── tools/                          # Build scripts, utilities, infrastructure
 │   ├── dep_graph.py                #   Dependency graph visualizer (16 nodes, 34 edges)
 │   ├── sync_versions.py            #   Version sync validator (7 checkpoints)
@@ -1831,7 +1831,7 @@ physics-os-main/
 
 This release hardens the v4.0.0 baseline with production-grade developer infrastructure, comprehensive audit remediation, and next-generation monorepo tooling.
 
-- **Version Integrity**: Package version `40.0.0` → `40.0.1` synchronized across 7 manifests via `tools/sync_versions.py`; `hypertensor.API_VERSION` set to `2.0.0`, `RUNTIME_VERSION` to `1.0.0`
+- **Version Integrity**: Package version `40.0.0` → `40.0.1` synchronized across 7 manifests via `tools/sync_versions.py`; `physics_os.API_VERSION` set to `2.0.0`, `RUNTIME_VERSION` to `1.0.0`
 - **35-Finding Audit Remediation**: 2 critical (credential exposure, version drift), 7 high (CI misconfigurations), 14 medium (tooling, compliance, git hygiene), 11 low (repo size, maintenance), 1 info (false positive) — 30 resolved, 4 deferred for manual action
 - **CI Pipeline Modernization**: `dtolnay/rust-action` → `dtolnay/rust-toolchain`, Black+isort removed in favor of `ruff check` + `ruff format --check`, lint steps now CI-blocking (removed `continue-on-error`), corrected `working-directory` paths
 - **Monorepo Makefile**: 30+ targets orchestrating Python and Rust toolchains with automatic `uv` detection
@@ -1844,7 +1844,7 @@ This release hardens the v4.0.0 baseline with production-grade developer infrast
 - **Feature Flags**: 16 pip extras in `pyproject.toml` (cfd, quantum, plasma, ml, em, aerospace, etc.)
 - **PEP 561**: `ontic/py.typed` marker for downstream type checker compatibility
 - **Git Hygiene**: Zone.Identifier files removed, `.gitattributes` LFS tracking for binary assets, credential (`gevulot_key.json`) removed from index
-- **Test Suite Expansion**: 35 new `test_hypertensor.py` tests covering Runtime Access Layer (version metadata, imports, hasher, sanitizer, registry, job models, store); total tests 370+
+- **Test Suite Expansion**: 35 new `test_ontic.py` tests covering Runtime Access Layer (version metadata, imports, hasher, sanitizer, registry, job models, store); total tests 370+
 - **Security**: `gevulot_key.json` removed from git tracking, `*_key.json` pattern added to `.gitignore`, ledger validation paths corrected (`ledger/` → `apps/ledger/`)
 - **Rust Workspace**: `crates/tci_core_rust` added as 19th workspace member (PyO3 TCI extension module)
 - **Audit Tracker**: [`AUDIT_EXECUTION_TRACKER.md`](AUDIT_EXECUTION_TRACKER.md) — 35 findings with resolution status, evidence, and completion dates
@@ -2037,9 +2037,9 @@ See [`CHANGELOG.md`](CHANGELOG.md) for complete history.
 | Platform | V3.0.0 | `README.md` badge | Overall system version |
 | Substrate API | V2.0.0 | `ontic/platform/__init__.py` | Platform module API |
 | Package (tensornet) | 40.0.1 | `ontic/__init__.py` | Physics engine package |
-| Package (hypertensor) | 40.0.1 | `physics_os/__init__.py` | Runtime Access Layer package |
-| Runtime Version | 1.0.0 | `hypertensor.RUNTIME_VERSION` | Execution engine compatibility |
-| API Version | 2.0.0 | `hypertensor.API_VERSION` | API contract schema |
+| Package (physics_os) | 40.0.1 | `physics_os/__init__.py` | Runtime Access Layer package |
+| Runtime Version | 1.0.0 | `physics_os.RUNTIME_VERSION` | Execution engine compatibility |
+| API Version | 2.0.0 | `physics_os.API_VERSION` | API contract schema |
 | API Contract (URI) | v1 | `/v1/` URI prefix | Frozen endpoint contract |
 | Cargo Workspace | 4.0.0 | `Cargo.toml` header | Rust workspace release |
 | CITATION | 4.0.0 | `CITATION.cff` | Academic citation (tracks RELEASE) |

@@ -2,7 +2,7 @@ This is the "Deep Dive" documentation for Project The Physics OS. This is not a 
 The Comprehensive Vision
 To enable "Physics-Aware" Hypersonics.
 Current missiles fly blind, relying on pre-calculated look-up tables. If they encounter unpredicted turbulence at Mach 10, they disintegrate.
-HyperTensor embeds a Real-Time Digital Twin of the airflow directly into the missile's guidance chip. By solving the Euler equations using Tensor Networks (which compress fluid states by 1000x), the missile can "hallucinate" the air 5 seconds ahead and adjust control surfaces to ride the shockwave rather than fight it.
+The Ontic Engine embeds a Real-Time Digital Twin of the airflow directly into the missile's guidance chip. By solving the Euler equations using Tensor Networks (which compress fluid states by 1000x), the missile can "hallucinate" the air 5 seconds ahead and adjust control surfaces to ride the shockwave rather than fight it.
 
 Phase 1: The "Tensor Kernel" (1D Compressible Flow)
 Objective: Prove that a Tensor Network can solve non-linear gas dynamics (Shocks, Rarefactions) without a mesh grid.
@@ -24,7 +24,7 @@ v1.2: Full Euler System (Sod Shock Tube).
 Irrefutable Proof (The "Sod" Test)
 You run the simulation. You extract the density profile.
 Visual Proof: The plot must show a vertical step function (Shock) and a linear slope (Rarefaction) that perfectly overlays the exact analytical solution.
-The "Kill Shot": Standard CFD (Finite Volume) "smears" the shock over 3-4 pixels due to numerical viscosity. HyperTensor should maintain a sharp transition (1 "site" width) because high-frequency data is preserved in the entanglement entropy.
+The "Kill Shot": Standard CFD (Finite Volume) "smears" the shock over 3-4 pixels due to numerical viscosity. The Ontic Engine should maintain a sharp transition (1 "site" width) because high-frequency data is preserved in the entanglement entropy.
 
 Phase 2: The "Hypersonic Reality" (2D Shockwaves)
 Objective: Simulate a Mach 5 wedge flow on a laptop, matching ANSYS Fluent accuracy.
@@ -74,11 +74,11 @@ This is the exact checklist a Principal Investigator would hand to a Lead Engine
 PHASE 1: THE TENSOR KERNEL (Days 1-14)
 Goal: Build a 1D Compressed Euler Solver that beats Finite Volume Methods (FVM) in shock sharpness.
 1. Infrastructure Setup
-[ ] Initialize Git Repo: hypertensor
+[ ] Initialize Git Repo: physics-os
 [ ] Dependency Lock: PyTorch, NumPy, Matplotlib, tensornet (your engine).
 [ ] Create Module Structure:
-hypertensor.physics.euler_1d (The Equations)
-hypertensor.solvers.tebd (The Time Stepper)
+ontic.physics.euler_1d (The Equations)
+ontic.solvers.tebd (The Time Stepper)
 physics_os.core.mpo_utils (Operator Builders)
 2. The Physics Operators (Hamiltonian Construction)
 [ ] Implement Conservation Variables Mapping: Map [rho, u, P] $\to$ Conservative Vector U = [rho, rho*u, E].

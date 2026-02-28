@@ -1,7 +1,7 @@
 //! # cem-qtt — Computational Electromagnetics via Quantized Tensor Trains
 //!
 //! FDTD Maxwell solver in Q16.16 fixed-point arithmetic with MPS/MPO
-//! tensor network compression. Part of the HyperTensor physics engine.
+//! tensor network compression. Part of the Ontic Engine physics engine.
 //!
 //! ## Architecture
 //!

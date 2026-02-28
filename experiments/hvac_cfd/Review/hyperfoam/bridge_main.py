@@ -30,7 +30,7 @@ Commands Handled:
 Usage:
     python -m hyperfoam.bridge_main --bridge-mode [--grid 64] [--preset conference]
 
-Author: HyperTensor Physics Laboratory
+Author: TiganticLabz Physics Laboratory
 Copyright (c) 2025-2026 TiganticLabz. All Rights Reserved.
 SPDX-License-Identifier: Proprietary
 """

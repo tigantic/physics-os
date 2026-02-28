@@ -1,5 +1,5 @@
 """
-API Reference Generator for Project HyperTensor.
+API Reference Generator for Project The Ontic Engine.
 
 This module provides automated extraction and generation of API documentation
 from Python source code, including docstrings, type annotations, and signatures.

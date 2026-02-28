@@ -21,7 +21,7 @@ For v1 (single-node, alpha phase), the platform processes <100 concurrent jobs. 
 
 **The v1 job store is an in-process Python dictionary with optional SQLite persistence.** Specifically:
 
-1. `hypertensor.vm.job_store` maintains a `dict[str, JobRecord]` with a configurable max size (default: 10,000).
+1. `ontic.vm.job_store` maintains a `dict[str, JobRecord]` with a configurable max size (default: 10,000).
 2. LRU eviction removes the oldest completed jobs when the limit is reached.
 3. On graceful shutdown, the store is serialized to `artifacts/job_store_snapshot.json`.
 4. On startup, if a snapshot exists, it is loaded (warm start).

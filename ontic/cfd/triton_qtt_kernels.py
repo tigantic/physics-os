@@ -16,7 +16,7 @@ Kernels:
 - qtt_svd_step: Single SVD step with truncation
 - qtt_hadamard: Fused Hadamard product
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2025
 """
 

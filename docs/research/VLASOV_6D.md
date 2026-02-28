@@ -100,7 +100,7 @@ make vlasov-build-prover
 ## Running Manually
 
 ```bash
-cd /path/to/HyperTensor-VM-main
+cd /path/to/physics-os
 
 # Set PYTHONPATH
 export PYTHONPATH="apps/qtenet/src/qtenet:$PWD:$PYTHONPATH"

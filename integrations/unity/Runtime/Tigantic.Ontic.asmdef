@@ -1,0 +1,14 @@
+{
+    "name": "Tigantic.Ontic",
+    "rootNamespace": "Tigantic.Ontic",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

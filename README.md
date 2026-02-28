@@ -85,7 +85,7 @@ The **Physics OS Platform Shell** (`physics_os/`, 31 files, 3,965 LOC) is the co
 |---------|-------------|
 | **REST API** | 9 frozen OpenAPI endpoints — submit jobs, poll results, retrieve signed certificates |
 | **Python SDK** | Sync + async typed client with auth, polling, and local certificate validation |
-| **CLI** | `hypertensor run` · `validate` · `attest` · `verify` · `serve` |
+| **CLI** | `physics-os run` · `validate` · `attest` · `verify` · `serve` |
 | **MCP Server** | 11 tools for AI agent workflows — agents can autonomously run physics simulations |
 
 ### Six-State Job Lifecycle
@@ -109,21 +109,21 @@ uvicorn physics_os.api.app:create_app --factory --host 0.0.0.0 --port 8000
 
 # Submit a physics job
 curl -X POST http://localhost:8000/v1/jobs \
-  -H "Authorization: Bearer $HYPERTENSOR_API_KEY" \
+  -H "Authorization: Bearer $ONTIC_ENGINE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"domain": "cfd", "job_type": "full_pipeline", "parameters": {"n_bits": 7, "n_steps": 100}}'
 
 # Retrieve the signed trust certificate
 curl http://localhost:8000/v1/jobs/{job_id}/certificate \
-  -H "Authorization: Bearer $HYPERTENSOR_API_KEY"
+  -H "Authorization: Bearer $ONTIC_ENGINE_API_KEY"
 ```
 
 ### Quick Start — Python SDK
 
 ```python
-from physics_os.sdk.client import HyperTensorClient
+from physics_os.sdk.client import OnticClient
 
-client = HyperTensorClient(base_url="http://localhost:8000", api_key="...")
+client = OnticClient(base_url="http://localhost:8000", api_key="...")
 
 # Submit, wait, get certificate — one call
 result = client.run_and_wait(
@@ -142,13 +142,13 @@ print(f"Verified:    {client.verify(result.certificate)}")  # True
 
 ```bash
 # Run a simulation end-to-end
-hypertensor run --domain cfd --n-bits 7 --n-steps 100
+physics-os run --domain cfd --n-bits 7 --n-steps 100
 
 # Verify a trust certificate
-hypertensor verify certificate.json
+physics-os verify certificate.json
 
 # Start the API server
-hypertensor serve --port 8000
+physics-os serve --port 8000
 ```
 
 ---
@@ -460,8 +460,8 @@ pip install -e ".[cfd,quantum]"     # CFD + Quantum only
 pip install -e ".[dev,docs]"        # Development + documentation
 
 # Verify
-python -c "import tensornet; import hypertensor; print(f'tensornet {tensornet.__version__} | hypertensor {hypertensor.__version__}')"
-# → tensornet 40.0.1 | hypertensor 40.0.1
+python -c "import tensornet; import physics_os; print(f'ontic {ontic.__version__} | physics_os {physics_os.__version__}')"
+# → tensornet 40.0.1 | physics_os 40.0.1
 
 # Run tests
 make check                          # Full quality gate (Python + Rust)
@@ -562,10 +562,10 @@ All version numbers are validated by `tools/sync_versions.py` across 7 checkpoin
 | Namespace | Version | Source |
 |-----------|:-------:|--------|
 | Release | v4.0.1 | Infrastructure-hardened baseline |
-| Package (tensornet) | 40.0.1 | `ontic.__version__` |
-| Package (hypertensor) | 40.0.1 | `hypertensor.__version__` |
-| API Version | 2.0.0 | `hypertensor.API_VERSION` |
-| Runtime Version | 1.0.0 | `hypertensor.RUNTIME_VERSION` |
+| Package (tensornet) | 40.0.1 | `physics_os.__version__` |
+| Package (physics_os) | 40.0.1 | `physics_os.__version__` |
+| API Version | 2.0.0 | `physics_os.API_VERSION` |
+| Runtime Version | 1.0.0 | `physics_os.RUNTIME_VERSION` |
 | Cargo Workspace | 4.0.0 | `Cargo.toml` |
 | CITATION | 4.0.0 | `CITATION.cff` |
 

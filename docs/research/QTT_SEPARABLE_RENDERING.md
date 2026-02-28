@@ -293,7 +293,7 @@ Different zoom levels can use different core subsets:
 ### Quick Sanity Check
 
 ```bash
-cd /path/to/HyperTensor-VM-main
+cd /path/to/physics-os
 python3 -c "
 from ontic.visualization.tensor_slicer import TensorSlicer
 import numpy as np

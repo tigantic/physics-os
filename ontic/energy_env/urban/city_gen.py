@@ -468,7 +468,7 @@ class VoxelCity:
 def demo_city_generation():
     """Demonstrate city generation."""
     print("=" * 70)
-    print("  HYPERTENSOR URBAN - VOXEL CITY GENERATOR")
+    print("  ONTIC_ENGINE URBAN - VOXEL CITY GENERATOR")
     print("  Phase 7A: Procedural City Generation")
     print("=" * 70)
     print()

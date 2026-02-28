@@ -14,7 +14,7 @@ This module provides:
     - Integration with Field class from ontic.substrate
     - Compatibility with existing rendering pipeline
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from __future__ import annotations

@@ -228,7 +228,7 @@ Toxicology: 8/8 PASS
 
 **Exit Criteria:** ✅ PASS — LJ circuit verified, binding minimum proven, on-chain verifier emitted, FDA IND generated, IP protection demonstrated.
 
-**Artifacts:** `experiments/validation/challenge_ii_phase5_zk_proofs.py` (~1,553 LOC), `contracts/HyperTensorBindingVerifier.sol` (237 lines), `docs/attestations/CHALLENGE_II_PHASE5_ZK_PROOFS.json`, `docs/reports/FDA_IND_BINDING_EVIDENCE.txt`
+**Artifacts:** `experiments/validation/challenge_ii_phase5_zk_proofs.py` (~1,553 LOC), `contracts/OnticBindingVerifier.sol` (237 lines), `docs/attestations/CHALLENGE_II_PHASE5_ZK_PROOFS.json`, `docs/reports/FDA_IND_BINDING_EVIDENCE.txt`
 
 ---
 

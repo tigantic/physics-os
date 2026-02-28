@@ -1,5 +1,5 @@
 ======================================================================
- HYPERTENSOR PERFORMANCE PROFILE
+ ONTIC_ENGINE PERFORMANCE PROFILE
 ======================================================================
 
 FLAGSHIP PIPELINE

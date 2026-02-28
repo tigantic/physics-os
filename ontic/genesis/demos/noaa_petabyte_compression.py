@@ -21,7 +21,7 @@ QTT Compression Advantage:
 
 This demo simulates compressing realistic NOAA-scale datasets.
 
-Author: HyperTensor Genesis Protocol
+Author: TiganticLabz Genesis Protocol
 Date: January 24, 2026
 """
 

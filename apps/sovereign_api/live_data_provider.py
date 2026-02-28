@@ -8,7 +8,7 @@ RMT/RKHS/Betti regime detection pipeline on live data.
 
 Replaces SimulatedDataProvider for production use.
 
-Author: Genesis Stack / HyperTensor VM
+Author: Genesis Stack / The Ontic Engine
 Version: 1.0.0
 """
 

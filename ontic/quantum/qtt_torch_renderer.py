@@ -19,7 +19,7 @@ The Trade-Off:
 - Compute: Increased (matrix contractions for every pixel)
 - Net effect: Shift bottleneck from 342 GB/s memory to 33.4 TFLOPS compute
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: January 2025
 """
 

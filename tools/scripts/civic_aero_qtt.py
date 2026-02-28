@@ -45,7 +45,7 @@ References
   ontic/cfd/ns2d_qtt_native.py  — QTT CG Poisson template
   tools/scripts/civic_aero.py             — Dense solver reference implementation
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: February 2026
 Constitution: Article IV.1 (Verification), Tier 1 Physics
 """

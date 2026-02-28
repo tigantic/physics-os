@@ -37,7 +37,7 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 from numpy.typing import NDArray
 
-# ── HyperTensor imports ──────────────────────────────────────────────
+# ── The Ontic Engine imports ──────────────────────────────────────────────
 import sys
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(BASE_DIR))

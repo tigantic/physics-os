@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Nielsen Benchmark Runner — HyperTensor QTT 3D with Boundary Injection
+Nielsen Benchmark Runner — Ontic QTT 3D with Boundary Injection
 ======================================================================
 
-Run this in your HyperTensor environment:
+Run this in your The Ontic Engine environment:
 
     python qtt_nielsen_runner.py mass     # Test mass conservation
     python qtt_nielsen_runner.py nielsen  # Run full Nielsen benchmark
@@ -397,7 +397,7 @@ if __name__ == "__main__":
     print()
     print("╔══════════════════════════════════════════════════════════════════╗")
     print("║  QTT 3D NAVIER-STOKES — BOUNDARY INJECTION FIX                   ║")
-    print("║  Project HyperTensor / TigantiCFD                                ║")
+    print("║  Project The Ontic Engine / TigantiCFD                                ║")
     print("╚══════════════════════════════════════════════════════════════════╝")
     print()
     

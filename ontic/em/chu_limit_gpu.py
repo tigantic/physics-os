@@ -14,7 +14,7 @@ Architecture
 
 NO NumPy in hot path. NO CPU fallback. NO dense N³ arrays.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from __future__ import annotations

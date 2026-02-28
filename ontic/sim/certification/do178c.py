@@ -174,7 +174,7 @@ class RequirementsDatabase:
     Manages the complete set of requirements and their relationships.
     """
 
-    def __init__(self, project_name: str = "HyperTensor"):
+    def __init__(self, project_name: str = "The Ontic Engine"):
         self.project_name = project_name
         self.requirements: dict[str, Requirement] = {}
         self.creation_date = datetime.datetime.now().isoformat()
@@ -350,7 +350,7 @@ class CoverageReport:
     analysis_date: str = field(
         default_factory=lambda: datetime.datetime.now().isoformat()
     )
-    tool_name: str = "HyperTensor Coverage Analyzer"
+    tool_name: str = "Ontic Coverage Analyzer"
 
     @property
     def meets_objective(self) -> bool:
@@ -913,11 +913,11 @@ class VerificationPackage:
 # =============================================================================
 
 
-def create_hypertensor_requirements() -> RequirementsDatabase:
+def create_ontic_requirements() -> RequirementsDatabase:
     """
-    Create example requirements for HyperTensor system.
+    Create example requirements for The Ontic Engine system.
     """
-    db = RequirementsDatabase("HyperTensor")
+    db = RequirementsDatabase("The Ontic Engine")
 
     # High-level requirements
     db.add_requirement(
@@ -987,9 +987,9 @@ def create_hypertensor_requirements() -> RequirementsDatabase:
 
 def create_sample_safety_assessment() -> SafetyAssessment:
     """
-    Create example safety assessment for HyperTensor.
+    Create example safety assessment for The Ontic Engine.
     """
-    assessment = SafetyAssessment("HyperTensor GNC System")
+    assessment = SafetyAssessment("Ontic GNC System")
 
     assessment.add_hazard(
         Hazard(
@@ -1033,7 +1033,7 @@ if __name__ == "__main__":
 
     # Test requirements database
     print("\n1. Creating requirements database...")
-    req_db = create_hypertensor_requirements()
+    req_db = create_ontic_requirements()
     print(f"Added {len(req_db.requirements)} requirements")
 
     matrix = req_db.get_traceability_matrix()
@@ -1049,7 +1049,7 @@ if __name__ == "__main__":
 
     # Test verification package
     print("\n3. Creating verification package...")
-    package = VerificationPackage("HyperTensor", DAL.LEVEL_B)
+    package = VerificationPackage("The Ontic Engine", DAL.LEVEL_B)
 
     package.add_test_case(
         TestCase(

@@ -14,7 +14,7 @@ Key features:
 Reference:
     Lu et al. "Learning nonlinear operators via DeepONet" (2021)
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from dataclasses import dataclass, field

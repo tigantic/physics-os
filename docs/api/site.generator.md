@@ -278,7 +278,7 @@ Configuration for static site generation.
 ##### `__init__`
 
 ```python
-def __init__(self, title: str = 'The Physics OS Documentation', description: str = 'Quantum-inspired tensor network framework for hypersonic CFD', version: str = '2.5.0', base_url: str = '/', output_dir: str = '_site', source_dir: str = 'docs', theme: str = 'hypertensor', minify_html: bool = True, minify_css: bool = True, minify_js: bool = True, generate_sitemap: bool = True, generate_search_index: bool = True, syntax_highlighting: bool = True, math_rendering: bool = True, mermaid_diagrams: bool = True, author: str = 'Tigantic Holdings LLC', repository: str = 'https://github.com/tigantic/The Physics OS', license: str = 'MIT', nav_config: Dict[str, Any] = <factory>) -> None
+def __init__(self, title: str = 'The Physics OS Documentation', description: str = 'Quantum-inspired tensor network framework for hypersonic CFD', version: str = '2.5.0', base_url: str = '/', output_dir: str = '_site', source_dir: str = 'docs', theme: str = 'ontic', minify_html: bool = True, minify_css: bool = True, minify_js: bool = True, generate_sitemap: bool = True, generate_search_index: bool = True, syntax_highlighting: bool = True, math_rendering: bool = True, mermaid_diagrams: bool = True, author: str = 'Tigantic Holdings LLC', repository: str = 'https://github.com/tigantic/The Physics OS', license: str = 'MIT', nav_config: Dict[str, Any] = <factory>) -> None
 ```
 
 ##### `to_dict`

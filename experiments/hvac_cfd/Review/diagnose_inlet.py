@@ -4,7 +4,7 @@ Diagnose inlet jet behavior in 3D Nielsen benchmark.
 """
 
 import sys
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project HyperTensor')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project The Ontic Engine')
 
 import numpy as np
 import torch

@@ -2,7 +2,7 @@
 
 ## Repository Structure
 
-**Primary Repository**: `tigantic/HyperTensor` (origin)  
+**Primary Repository**: `tigantic/physics-os` (origin)  
 **Proposed Secondary**: `tigantic/physics-os` (for deployment artifacts)
 
 ## Current Status
@@ -20,7 +20,7 @@ d799b3f test: Add GPU validation tests and archived experiments
 bae436e feat(sovereign): Add Phase 1-5 implementation modules
 e365d24 docs: Phase 1-5 attestations and sovereign engine roadmap
 8b86dc5 feat(glass-cockpit): Phase 2 complete - GPU text rendering + tensor visualization
-d180b8d Clean up hypertensor_pro.py: remove unused imports/variables
+d180b8d Clean up ontic_pro.py: remove unused imports/variables
 add2893 Complete Physics OS audit - all 256 checklist items resolved
 3c86606 Integrate World Data Slicer with The Physics OS Hub
 acbffae Add World Data Slicer demo - point-and-synthesize for global datasets
@@ -43,13 +43,13 @@ git push origin main
 
 ```bash
 # Add new remote
-git remote add hypertensor-vm https://github.com/tigantic/physics-os.git
+git remote add physics-os https://github.com/tigantic/physics-os.git
 
 # Verify remotes
 git remote -v
 
 # Push to secondary remote (if repository exists)
-git push hypertensor-vm main
+git push physics-os main
 ```
 
 **Note**: Create `tigantic/physics-os` repository on GitHub first if needed.
@@ -170,13 +170,13 @@ git push origin hotfix/critical-bug
 
 ## Remote Repository Purposes
 
-### `origin` (tigantic/HyperTensor)
+### `origin` (tigantic/physics-os)
 **Purpose**: Primary development repository  
 **Contents**: Full source code, tests, documentation  
 **Visibility**: Public (as specified in LICENSE)  
 **Pushes**: All commits from solo developer
 
-### `hypertensor-vm` (tigantic/physics-os) - Proposed
+### `physics-os` (tigantic/physics-os) - Proposed
 **Purpose**: Deployment artifacts and releases  
 **Contents**:
 - Compiled binaries (glass-cockpit executable)

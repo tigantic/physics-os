@@ -11,7 +11,7 @@ Root Cause of Original Failure:
 
 Solution:
     Central differences have ~0 numerical viscosity.
-    Matches spectral methods used in working HyperTensor solvers.
+    Matches spectral methods used in working The Ontic Engine solvers.
     
 Tradeoff:
     - Upwind: unconditionally stable, highly diffusive

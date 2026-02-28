@@ -301,7 +301,7 @@ class DeFiDiscoveryPipeline:
         
         report += f"""## Attestation
 
-This analysis was performed using the HyperTensor Autonomous Discovery Engine.
+This analysis was performed using the Ontic Engine Autonomous Discovery Engine.
 
 **Full Hash**: `{result.attestation_hash}`
 **Execution Time**: {result.total_time*1000:.1f}ms

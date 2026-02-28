@@ -6564,7 +6564,7 @@
           "kind": "class",
           "name": "ForensicHub",
           "lineno": 752,
-          "doc1": "The HyperTensor Forensic Investigation Hub."
+          "doc1": "Ontic Forensic Investigation Hub."
         },
         {
           "kind": "function",
@@ -6604,7 +6604,7 @@
           "kind": "class",
           "name": "ForensicHubV2",
           "lineno": 612,
-          "doc1": "HyperTensor Forensic Hub v2"
+          "doc1": "Ontic Forensic Hub v2"
         },
         {
           "kind": "function",
@@ -6661,7 +6661,7 @@
       ]
     },
     {
-      "path": "demos/hypertensor_hub.py",
+      "path": "demos/ontic_hub.py",
       "lang": "py",
       "category": "demos",
       "keywords": [
@@ -6706,15 +6706,15 @@
         },
         {
           "kind": "class",
-          "name": "HyperTensorHub",
+          "name": "OnticHub",
           "lineno": 646,
-          "doc1": "The HyperTensor Hub - Primary interface for manifold interaction."
+          "doc1": "Ontic Hub - Primary interface for manifold interaction."
         },
         {
           "kind": "function",
           "name": "main",
           "lineno": 1168,
-          "doc1": "Launch the HyperTensor Hub."
+          "doc1": "Launch the Ontic Engine Hub."
         }
       ]
     },
@@ -7534,7 +7534,7 @@
           "kind": "function",
           "name": "demo_satellite_comparison",
           "lineno": 237,
-          "doc1": "Compare traditional GIS loading vs HyperTensor sampling."
+          "doc1": "Compare traditional GIS loading vs The Ontic Engine sampling."
         },
         {
           "kind": "function",
@@ -16113,7 +16113,7 @@
       "symbols": null
     },
     {
-      "path": "HYPERTENSOR_VV_FRAMEWORK.md",
+      "path": "ONTIC_ENGINE_VV_FRAMEWORK.md",
       "lang": "md",
       "category": "other",
       "keywords": [
@@ -16131,7 +16131,7 @@
       "symbols": null
     },
     {
-      "path": "HyperTensor_CFD_Book.md",
+      "path": "Ontic_CFD_Book.md",
       "lang": "md",
       "category": "other",
       "keywords": [
@@ -16239,7 +16239,7 @@
       "symbols": null
     },
     {
-      "path": "docs/HYPERTENSOR_ZK_STACK.md",
+      "path": "docs/ONTIC_ENGINE_ZK_STACK.md",
       "lang": "md",
       "category": "other",
       "keywords": [
@@ -16644,7 +16644,7 @@
       "symbols": null
     },
     {
-      "path": "docs/workflows/hypertensor_execution_checklist.md",
+      "path": "docs/workflows/ontic_execution_checklist.md",
       "lang": "md",
       "category": "other",
       "keywords": [
@@ -20396,9 +20396,9 @@
       "symbols": [
         {
           "kind": "function",
-          "name": "run_hypertensor_dmrg",
+          "name": "run_ontic_dmrg",
           "lineno": 28,
-          "doc1": "Run DMRG with HyperTensor."
+          "doc1": "Run DMRG with The Ontic Engine."
         },
         {
           "kind": "function",
@@ -20835,7 +20835,7 @@
       ]
     },
     {
-      "path": "scripts/setup/hypertensor_core.py",
+      "path": "scripts/setup/ontic_core.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22770,25 +22770,25 @@
           "kind": "function",
           "name": "create_getting_started",
           "lineno": 590,
-          "doc1": "Create the Getting Started guide for HyperTensor."
+          "doc1": "Create the Getting Started guide for The Ontic Engine."
         },
         {
           "kind": "function",
           "name": "create_cfd_tutorial",
           "lineno": 773,
-          "doc1": "Create the CFD tutorial for HyperTensor."
+          "doc1": "Create the CFD tutorial for The Ontic Engine."
         },
         {
           "kind": "function",
           "name": "create_tensor_network_primer",
           "lineno": 981,
-          "doc1": "Create the Tensor Network primer for HyperTensor."
+          "doc1": "Create the Tensor Network primer for The Ontic Engine."
         },
         {
           "kind": "function",
           "name": "create_deployment_guide",
           "lineno": 1187,
-          "doc1": "Create the Deployment guide for HyperTensor."
+          "doc1": "Create the Deployment guide for The Ontic Engine."
         }
       ]
     },
@@ -24936,9 +24936,9 @@
         },
         {
           "kind": "class",
-          "name": "HyperTensorTheme",
+          "name": "OnticTheme",
           "lineno": 340,
-          "doc1": "Custom theme for HyperTensor documentation."
+          "doc1": "Custom theme for The Ontic Engine documentation."
         },
         {
           "kind": "function",

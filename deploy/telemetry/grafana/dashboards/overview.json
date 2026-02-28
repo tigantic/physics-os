@@ -13,7 +13,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "sum(rate(http_requests_total{service=\"hypertensor-api\"}[5m])) by (method)",
+          "expr": "sum(rate(http_requests_total{service=\"ontic-api\"}[5m])) by (method)",
           "legendFormat": "{{ method }}"
         }
       ],
@@ -30,17 +30,17 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "histogram_quantile(0.50, rate(http_request_duration_seconds_bucket{service=\"hypertensor-api\"}[5m]))",
+          "expr": "histogram_quantile(0.50, rate(http_request_duration_seconds_bucket{service=\"ontic-api\"}[5m]))",
           "legendFormat": "p50"
         },
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{service=\"hypertensor-api\"}[5m]))",
+          "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{service=\"ontic-api\"}[5m]))",
           "legendFormat": "p95"
         },
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket{service=\"hypertensor-api\"}[5m]))",
+          "expr": "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket{service=\"ontic-api\"}[5m]))",
           "legendFormat": "p99"
         }
       ],
@@ -57,7 +57,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "hypertensor_job_queue_depth"
+          "expr": "ontic_job_queue_depth"
         }
       ],
       "fieldConfig": {
@@ -79,7 +79,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "increase(hypertensor_jobs_completed_total[24h])"
+          "expr": "increase(ontic_jobs_completed_total[24h])"
         }
       ],
       "fieldConfig": {
@@ -95,7 +95,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "rate(hypertensor_jobs_failed_total[15m]) / (rate(hypertensor_jobs_completed_total[15m]) + rate(hypertensor_jobs_failed_total[15m]))"
+          "expr": "rate(ontic_jobs_failed_total[15m]) / (rate(ontic_jobs_completed_total[15m]) + rate(ontic_jobs_failed_total[15m]))"
         }
       ],
       "fieldConfig": {
@@ -119,7 +119,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "hypertensor_compression_ratio"
+          "expr": "ontic_compression_ratio"
         }
       ],
       "fieldConfig": {
@@ -142,7 +142,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "hypertensor_physics_residual_l2",
+          "expr": "ontic_physics_residual_l2",
           "legendFormat": "{{ domain }}"
         }
       ],
@@ -162,12 +162,12 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "hypertensor_bond_dimension_max",
+          "expr": "ontic_bond_dimension_max",
           "legendFormat": "max chi"
         },
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "hypertensor_bond_dimension_avg",
+          "expr": "ontic_bond_dimension_avg",
           "legendFormat": "avg chi"
         }
       ]
@@ -175,12 +175,12 @@
   ],
   "refresh": "30s",
   "schemaVersion": 39,
-  "tags": ["hypertensor", "physics", "tensor-networks"],
+  "tags": ["ontic", "physics", "tensor-networks"],
   "templating": { "list": [] },
   "time": { "from": "now-6h", "to": "now" },
   "timepicker": {},
   "timezone": "browser",
-  "title": "HyperTensor Overview",
-  "uid": "hypertensor-overview",
+  "title": "Ontic Overview",
+  "uid": "ontic-overview",
   "version": 1
 }

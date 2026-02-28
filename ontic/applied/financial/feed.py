@@ -495,7 +495,7 @@ async def run_demo():
     Demo: Connect to Coinbase and print physics updates.
     """
     print("=" * 70)
-    print("  HYPERTENSOR FINANCIAL - LIQUIDITY WEATHER")
+    print("  ONTIC_ENGINE FINANCIAL - LIQUIDITY WEATHER")
     print("  Phase 6A: Live Order Book Feed")
     print("=" * 70)
     print()

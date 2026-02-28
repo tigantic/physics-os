@@ -509,7 +509,7 @@ def run_all_validations():
     """Run all Blasius/viscous validations."""
     print("\n" + "=" * 70)
     print("BLASIUS FLAT PLATE BOUNDARY LAYER VALIDATION SUITE")
-    print("Project HyperTensor - Phase 6: Navier-Stokes Viscous Terms")
+    print("Project The Ontic Engine - Phase 6: Navier-Stokes Viscous Terms")
     print("=" * 70)
 
     results = {}

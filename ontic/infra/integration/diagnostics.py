@@ -1,5 +1,5 @@
 """
-System Diagnostics for Project HyperTensor.
+System Diagnostics for Project The Ontic Engine.
 
 Provides:
 - System information gathering

@@ -15,7 +15,7 @@ SUCCESS CRITERIA (from Battle Plan):
     - Energy unchanged under all local gauge transforms
     - [H, G] = 0 verified for all Gauss law generators
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-15
 """
 

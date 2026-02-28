@@ -1,4 +1,4 @@
-//! Global Eye - HyperTensor Atmospheric Observation Platform
+//! Global Eye - Ontic Atmospheric Observation Platform
 //!
 //! A global-scale weather visualization system that shares the ontic_bridge IPC
 //! protocol and ontic_core physics transforms with Glass Cockpit.
@@ -36,7 +36,7 @@ use winit::{
 fn main() -> Result<()> {
     println!("╔═══════════════════════════════════════════════════════════════╗");
     println!("║               GLOBAL EYE - Weather Observation                ║");
-    println!("║                    HyperTensor Platform                       ║");
+    println!("║                    Ontic Platform                       ║");
     println!("╚═══════════════════════════════════════════════════════════════╝");
     println!();
     
@@ -72,7 +72,7 @@ fn main() -> Result<()> {
     // Create window and event loop
     let event_loop = EventLoop::new()?;
     let window = WindowBuilder::new()
-        .with_title("Global Eye - HyperTensor Weather Visualization")
+        .with_title("Global Eye - Ontic Weather Visualization")
         .with_inner_size(winit::dpi::LogicalSize::new(1280, 720))
         .build(&event_loop)?;
     

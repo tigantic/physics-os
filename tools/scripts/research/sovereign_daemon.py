@@ -31,7 +31,7 @@ Features:
     - Automatic reconnection with exponential backoff
     - Health check endpoint for monitoring
 
-Author: Genesis Stack / HyperTensor VM
+Author: Genesis Stack / The Ontic Engine
 Version: 1.0.0
 """
 

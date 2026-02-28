@@ -15,7 +15,7 @@ SUCCESS CRITERIA (from Battle Plan):
     - Gap reproducible across different initializations
     - Gap within expected bounds
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-15
 """
 

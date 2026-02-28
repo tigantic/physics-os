@@ -59,7 +59,7 @@ The API returns HTTP 500 with code E012 for invalid transitions
 ### 2.1 Current Architecture (v4.0.0)
 
 - **Concurrency**: Single-threaded synchronous execution
-- **Workers**: `HYPERTENSOR_WORKERS=1` (default)
+- **Workers**: `ONTIC_WORKERS=1` (default)
 - **Queue**: In-memory, no persistence
 - **Ordering**: FIFO (jobs execute in submission order)
 - **Blocking**: POST `/v1/jobs` blocks until execution completes
@@ -88,7 +88,7 @@ If any step fails:
 
 ### 2.3 Timeout Behavior
 
-- Configured via `HYPERTENSOR_JOB_TIMEOUT_S` (default: 300s)
+- Configured via `ONTIC_JOB_TIMEOUT_S` (default: 300s)
 - Currently enforced at the Python level (not OS-level signal)
 - Timeout during execution → `failed` state with error code E007
 - The timeout covers simulation execution only, not validation/attestation
@@ -132,7 +132,7 @@ but this validation is pending implementation.
 
 ### 4.1 Single Worker (Current)
 
-With `HYPERTENSOR_WORKERS=1`:
+With `ONTIC_WORKERS=1`:
 
 | Scenario                                | Expected Behavior                    |
 |-----------------------------------------|--------------------------------------|
@@ -143,7 +143,7 @@ With `HYPERTENSOR_WORKERS=1`:
 
 ### 4.2 Multiple Workers (Future)
 
-With `HYPERTENSOR_WORKERS > 1` (not tested, not supported in alpha):
+With `ONTIC_WORKERS > 1` (not tested, not supported in alpha):
 
 | Scenario                                | Risk                                  |
 |-----------------------------------------|---------------------------------------|
@@ -152,7 +152,7 @@ With `HYPERTENSOR_WORKERS > 1` (not tested, not supported in alpha):
 | Rate limiter across workers             | Per-process buckets (not shared)      |
 | Certificate signing                     | Safe (key is process-local constant)  |
 
-**Alpha constraint**: `HYPERTENSOR_WORKERS` MUST be `1`.
+**Alpha constraint**: `ONTIC_WORKERS` MUST be `1`.
 
 ### 4.3 Thread Safety
 

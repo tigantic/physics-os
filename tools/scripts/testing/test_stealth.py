@@ -1,7 +1,7 @@
 """
 Test Script: Silent Sub Stealth Analysis
 
-Demonstrates submarine acoustic stealth using the HyperTensor
+Demonstrates submarine acoustic stealth using the Ontic Engine
 hydroacoustic solver. We prove mathematically that a submarine
 hiding behind a seamount (or in a thermal shadow) is invisible
 to active sonar.

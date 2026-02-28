@@ -43,7 +43,7 @@ Usage:
     # Inference
     next_byte = model.predict(context_bytes)
 
-Author: HyperTensor Labs
+Author: TiganticLabz
 Date: January 2026
 """
 

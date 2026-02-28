@@ -1,5 +1,5 @@
 """
-WENO and TENO Shock-Capturing Schemes for HyperTensor CFD.
+WENO and TENO Shock-Capturing Schemes for Ontic CFD.
 
 This module implements high-order weighted essentially non-oscillatory (WENO)
 and targeted essentially non-oscillatory (TENO) reconstruction schemes for

@@ -1,5 +1,5 @@
 """
-Numerics module for HyperTensor.
+Numerics module for The Ontic Engine.
 
 Provides rigorous numerical methods for Computer-Assisted Proofs:
 - Interval arithmetic for error tracking

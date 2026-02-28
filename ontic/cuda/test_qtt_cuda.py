@@ -6,7 +6,7 @@ QTT CUDA Backend Test
 Tests the CUDA fused kernels for QTT operations.
 Verifies correctness against CPU implementation and benchmarks performance.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: January 2026
 """
 

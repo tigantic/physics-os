@@ -157,7 +157,7 @@ jobs:
         run: |
           VERSION="${{ needs.validate.outputs.version }}"
           {
-            echo "## HyperTensor v${VERSION}"
+            echo "## The Ontic Engine v${VERSION}"
             echo ""
             echo "### Packages"
             echo "- \`tensornet\` Python package v${VERSION}"

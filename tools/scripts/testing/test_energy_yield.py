@@ -2,7 +2,7 @@
 """
 Phase 5B: The Commercial Demo - Wind Farm Optimization
 
-This script proves the commercial value of HyperTensor's wake physics engine.
+This script proves the commercial value of The Ontic Engine's wake physics engine.
 We simulate two scenarios:
   - Scenario A: Bad layout (turbines in a straight line = wake blocking)
   - Scenario B: Optimized layout (staggered = wake avoidance)
@@ -32,7 +32,7 @@ def print_header():
     """Print demo header."""
     print("=" * 70)
     print("  ╔═══════════════════════════════════════════════════════════════╗")
-    print("  ║     HYPERTENSOR ENERGY - COMMERCIAL DEMONSTRATION            ║")
+    print("  ║     ONTIC ENERGY - COMMERCIAL DEMONSTRATION            ║")
     print("  ║     Phase 5: Wind Farm Wake Optimization                     ║")
     print("  ╚═══════════════════════════════════════════════════════════════╝")
     print("=" * 70)
@@ -135,7 +135,7 @@ def run_commercial_demo():
     # ========================================================================
     # Turbine 2 shifted laterally by 100m to dodge the wake cone
 
-    print("[SCENARIO B] HyperTensor Optimized Layout")
+    print("[SCENARIO B] Ontic Optimized Layout")
     print("-" * 50)
 
     turbines_opt = [
@@ -187,7 +187,7 @@ def run_commercial_demo():
     scaled_revenue = delta_revenue * scaling_factor
 
     print(f"  ┌─────────────────────────────────────────────────────────┐")
-    print(f"  │  HYPERTENSOR FOUND ${delta_revenue:,.0f} OF HIDDEN VALUE/YEAR   │")
+    print(f"  │  ONTIC FOUND ${delta_revenue:,.0f} OF HIDDEN VALUE/YEAR   │")
     print(f"  │                                                         │")
     print(f"  │  Scaled to 50-turbine farm: ${scaled_revenue:,.0f}/year        │")
     print(f"  │  20-year project lifetime:  ${scaled_revenue * 20:,.0f}       │")

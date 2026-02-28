@@ -1,10 +1,10 @@
 # ELITE UI EXECUTION ROADMAP
 
-**HyperTensor Facial Plastics Platform — Production User Interface**
+**Ontic Facial Plastics Platform — Production User Interface**
 
 | Field | Value |
 |-------|-------|
-| Product | HyperTensor Facial Plastics v1.0.0 |
+| Product | Ontic Facial Plastics v1.0.0 |
 | Backend API Surface | 25 REST endpoints, 34 UIApplication methods, 4 operator families, 972 LOC |
 | Current Frontend | 1,407 LOC scaffold (HTML/CSS/JS) — routes exist, functionality does not |
 | Target | World-class surgical planning cockpit for elite craniofacial professionals |

@@ -1,5 +1,5 @@
 """
-Benchmark tests module for HyperTensor.
+Benchmark tests module for The Ontic Engine.
 
 These tests validate that performance benchmarks:
 1. Run without errors

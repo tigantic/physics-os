@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HyperTensor Forensic Hub
+Ontic Forensic Hub
 ========================
 
 The complete forensic investigation tool for weather singularities.
@@ -114,7 +114,7 @@ class ForensicFinding:
     
     def to_manifest(self) -> dict:
         return {
-            'hypertensor_version': '0.1.0',
+            'ontic_version': '0.1.0',
             'finding_id': self.finding_id,
             'timestamp': self.timestamp,
             'field_hash': self.field_hash,
@@ -751,14 +751,14 @@ class ManifestSigner:
 
 class ForensicHub(QMainWindow):
     """
-    The HyperTensor Forensic Investigation Hub.
+    Ontic Forensic Investigation Hub.
     
     Industrial Slate themed interface for weather singularity forensics.
     """
     
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("HyperTensor Forensic Hub")
+        self.setWindowTitle("Ontic Forensic Hub")
         self.setMinimumSize(1600, 1000)
         self.setStyleSheet(STYLE)
         
@@ -1267,7 +1267,7 @@ class ForensicHub(QMainWindow):
 def main():
     print("""
 ╔══════════════════════════════════════════════════════════════════════╗
-║                  HYPERTENSOR FORENSIC HUB                            ║
+║                  ONTIC_ENGINE FORENSIC HUB                            ║
 ║                                                                      ║
 ║  Weather Singularity Investigation Tool                              ║
 ║  Industrial Slate Interface • QTT-Compressed Manifolds               ║

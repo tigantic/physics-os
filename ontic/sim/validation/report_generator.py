@@ -1,5 +1,5 @@
 """
-Validation Report Generator for Project HyperTensor
+Validation Report Generator for Project The Ontic Engine
 ====================================================
 
 Generates formal validation reports for all 15 physics domains per ASME V&V 10-2019.

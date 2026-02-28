@@ -25,7 +25,7 @@ Representations:
     - j = 1/2: fundamental (2-dim) ← used for links
     - j = 1: adjoint (3-dim) ← electric field transforms
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-15
 """
 

@@ -15,7 +15,7 @@ Where:
 
 Coupled with NS2D_QTT_Native for velocity field.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: January 2026
 """
 

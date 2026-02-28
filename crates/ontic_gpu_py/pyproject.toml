@@ -5,7 +5,7 @@ build-backend = "maturin"
 [project]
 name = "ontic_gpu_py"
 version = "0.1.0"
-description = "CUDA-accelerated TT evaluation for HyperTensor (97M queries/sec)"
+description = "CUDA-accelerated TT evaluation for The Ontic Engine (97M queries/sec)"
 requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Rust",

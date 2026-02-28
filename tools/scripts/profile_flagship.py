@@ -219,7 +219,7 @@ def generate_report(all_results: Dict) -> str:
     """Generate human-readable performance report."""
     lines = []
     lines.append("=" * 70)
-    lines.append(" HYPERTENSOR PERFORMANCE PROFILE")
+    lines.append(" ONTIC PERFORMANCE PROFILE")
     lines.append("=" * 70)
     lines.append("")
 
@@ -289,7 +289,7 @@ def generate_report(all_results: Dict) -> str:
 def main():
     """Run all profiling benchmarks."""
     print("=" * 70)
-    print(" HYPERTENSOR PERFORMANCE PROFILER")
+    print(" ONTIC PERFORMANCE PROFILER")
     print("=" * 70)
     print()
 

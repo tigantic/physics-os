@@ -6,7 +6,7 @@
 //!
 //! # Protocol Overview
 //!
-//! The RAM Bridge uses a memory-mapped file (`/dev/shm/hypertensor_bridge`) with:
+//! The RAM Bridge uses a memory-mapped file (`/dev/shm/ontic_bridge`) with:
 //! - **Header (4KB)**: Metadata, frame counter, tensor statistics, synchronization
 //! - **Data Buffer (8MB+)**: Raw tensor data (RGBA8, grayscale, or raw float)
 //!
@@ -15,7 +15,7 @@
 //! ```rust,ignore
 //! use ontic_bridge::{RamBridgeReader, TensorBridgeHeader};
 //!
-//! let mut bridge = RamBridgeReader::connect("/dev/shm/hypertensor_bridge")?;
+//! let mut bridge = RamBridgeReader::connect("/dev/shm/ontic_bridge")?;
 //!
 //! loop {
 //!     if let Some((header, data)) = bridge.read_frame()? {

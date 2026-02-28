@@ -1,5 +1,5 @@
 """
-HyperTensor Domain Packs — Physics Plugins (I–XX)
+Ontic Domain Packs — Physics Plugins (I–XX)
 ===================================================
 
 Each domain pack is a cohesive bundle of equations, discretizations, solvers,

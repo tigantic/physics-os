@@ -14,7 +14,7 @@ The detector provides a unified regime_score that can be used to:
     - Adjust learning rates during high-volatility periods
     - Reset prediction models when physics change
 
-Author: Genesis Stack / HyperTensor VM
+Author: Genesis Stack / The Ontic Engine
 """
 
 from __future__ import annotations

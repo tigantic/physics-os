@@ -1,4 +1,4 @@
-"""HyperTensor Tier-2 Execution Fabric — Unit Tests.
+"""Ontic Tier-2 Execution Fabric — Unit Tests.
 
 Covers: package metadata, module imports, version contract surface,
 core registry/hasher/sanitizer, and job models.

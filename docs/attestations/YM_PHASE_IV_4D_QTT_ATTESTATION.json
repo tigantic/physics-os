@@ -2,7 +2,7 @@
   "attestation": "YM_PHASE_IV_4D_QTT_HOLY_GRAIL",
   "version": "1.0.0",
   "date": "2026-01-16",
-  "framework": "HyperTensor Civilization Stack",
+  "framework": "Ontic Civilization Stack",
   
   "title": "4D Yang-Mills Mass Gap via QTT Holy Grail",
   "subtitle": "O(log N) Solution to Millennium Prize Problem",
@@ -119,7 +119,7 @@
   ],
   
   "signature": {
-    "framework": "HyperTensor VM",
+    "framework": "The Ontic Engine",
     "theorem": "Yang-Mills mass gap proven via QTT dimensional transmutation",
     "hash": "YM4D_QTT_HOLY_GRAIL_20260116"
   }

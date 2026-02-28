@@ -187,7 +187,7 @@ The Physics OS/
 │   ├── site/                     # Phase 17: Static documentation site
 │   │   ├── __init__.py           # Site module exports
 │   │   ├── generator.py          # SiteBuilder, Page, Navigation
-│   │   ├── themes.py             # HyperTensorTheme, ThemeColors
+│   │   ├── themes.py             # OnticTheme, ThemeColors
 │   │   ├── search.py             # SearchIndex, TF-IDF ranking
 │   │   └── assets.py             # AssetManager, CSS/JS minifier
 │   ├── benchmarks/               # Phase 17: TensorRT integration benchmarks
@@ -259,7 +259,7 @@ The Physics OS/
 │   ├── site/                     # Phase 17: Static documentation site
 │   │   ├── __init__.py           # Site module exports
 │   │   ├── generator.py          # SiteBuilder, Page, Navigation
-│   │   ├── themes.py             # HyperTensorTheme, ThemeColors
+│   │   ├── themes.py             # OnticTheme, ThemeColors
 │   │   ├── search.py             # SearchIndex, TF-IDF ranking
 │   │   └── assets.py             # AssetManager, CSS/JS minifier
 │   ├── benchmarks/               # Phase 17: TensorRT integration benchmarks
@@ -279,28 +279,28 @@ The Physics OS/
 │   │   ├── README.md             # Plugin documentation
 │   │   ├── The Physics OS.uplugin   # Plugin manifest
 │   │   ├── python_bridge.py      # ZMQ bridge for Python backend
-│   │   └── Source/HyperTensor/   # C++ plugin source
+│   │   └── Source/The Ontic Engine/   # C++ plugin source
 │   │       ├── The Physics OS.Build.cs
 │   │       ├── Public/           # Headers
-│   │       │   ├── HyperTensorTypes.h
-│   │       │   ├── HyperTensorFieldComponent.h
-│   │       │   ├── HyperTensorFieldActor.h
-│   │       │   └── HyperTensorModule.h
+│   │       │   ├── OnticTypes.h
+│   │       │   ├── OnticFieldComponent.h
+│   │       │   ├── OnticFieldActor.h
+│   │       │   └── OnticModule.h
 │   │       └── Private/          # Implementation
-│   │           ├── HyperTensorFieldComponent.cpp
-│   │           ├── HyperTensorFieldActor.cpp
-│   │           └── HyperTensorModule.cpp
+│   │           ├── OnticFieldComponent.cpp
+│   │           ├── OnticFieldActor.cpp
+│   │           └── OnticModule.cpp
 │   └── unity/                    # Unity Engine Package
 │       ├── README.md             # Package documentation
 │       ├── package.json          # Unity package manifest
 │       ├── Runtime/              # Runtime assemblies
-│       │   ├── HyperTensorTypes.cs
-│       │   ├── HyperTensorField.cs
-│       │   ├── HyperTensorFieldRenderer.cs
+│       │   ├── OnticTypes.cs
+│       │   ├── OnticField.cs
+│       │   ├── OnticFieldRenderer.cs
 │       │   ├── NativeBridge.cs
 │       │   └── Tigantic.The Physics OS.asmdef
 │       └── Editor/               # Editor assemblies
-│           ├── HyperTensorFieldEditor.cs
+│           ├── OnticFieldEditor.cs
 │           └── Tigantic.The Physics OS.Editor.asmdef
 ├── sdk/                          # Enterprise SDK & Distribution
 │   ├── README.md                 # SDK overview
@@ -906,7 +906,7 @@ The Physics OS/
 | ThemeTypography | `site/themes.py` | ✅ Implemented | Typography settings dataclass |
 | ThemeLayout | `site/themes.py` | ✅ Implemented | Layout configuration dataclass |
 | ColorScheme | `site/themes.py` | ✅ Implemented | LIGHT/DARK/AUTO enum |
-| HyperTensorTheme | `site/themes.py` | ✅ Implemented | Complete theme configuration |
+| OnticTheme | `site/themes.py` | ✅ Implemented | Complete theme configuration |
 | get_theme | `site/themes.py` | ✅ Implemented | Theme retrieval function |
 | list_themes | `site/themes.py` | ✅ Implemented | Available themes listing |
 | Tokenizer | `site/search.py` | ✅ Implemented | Text tokenizer with stemming |

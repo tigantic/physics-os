@@ -21,7 +21,7 @@ Resolution requirement:
 - 64³ grid (n_bits=6) for Re ≤ 1600
 - k_max ≈ 21 (2/3 dealiasing), η ~ (ν³)^(1/4)
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026
 """
 

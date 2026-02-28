@@ -3,7 +3,7 @@
     "title": "QTT Turbo Native NS3D Solver",
     "version": "2.0.0",
     "date": "2026-02-03",
-    "author": "HyperTensor Team",
+    "author": "TiganticLabz",
     "changelog": [
       "v1.0.0: Initial lazy truncation implementation",
       "v2.0.0: TRUE ADAPTIVE RANK - error-controlled truncation, no fixed cap"

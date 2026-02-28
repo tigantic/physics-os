@@ -24,7 +24,7 @@ Key benefits:
     - Operations like divergence, curl computed via QTT contractions
     - Seamless interop with Genesis layers (OT, SGW, RKHS, etc.)
 
-Author: HyperTensor Genesis Protocol
+Author: TiganticLabz Genesis Protocol
 Date: January 27, 2026
 """
 

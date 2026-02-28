@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Scaling tests for HyperTensor.
+Scaling tests for The Ontic Engine.
 
 Measures performance scaling with problem size for:
 1. DMRG: scaling with system size L and bond dimension chi
@@ -269,7 +269,7 @@ def print_complexity_analysis(results: List[ScalingResult]):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="HyperTensor scaling tests")
+    parser = argparse.ArgumentParser(description="The Ontic Engine scaling tests")
     parser.add_argument("--dmrg", action="store_true", help="Run DMRG scaling tests")
     parser.add_argument("--cfd", action="store_true", help="Run CFD scaling tests")
     parser.add_argument("--all", action="store_true", help="Run all scaling tests")

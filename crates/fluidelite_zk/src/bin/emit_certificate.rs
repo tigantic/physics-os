@@ -36,7 +36,7 @@ struct Cli {
     #[arg(short, long)]
     dir: Option<PathBuf>,
 
-    /// Verification URL for the QR code (default: https://verify.hypertensor.io/tpc/{id}).
+    /// Verification URL for the QR code (default: https://verify.physics-os.io/tpc/{id}).
     #[arg(long)]
     verify_url: Option<String>,
 

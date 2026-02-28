@@ -1,5 +1,5 @@
 /*!
- * HyperTensor Glass Cockpit - Phase 7: Telemetry Rails
+ * Ontic Glass Cockpit - Phase 7: Telemetry Rails
  * 
  * GPU-accelerated telemetry visualization with:
  * - System Vitality Rail (left): CPU, memory, frame time sparklines
@@ -200,13 +200,13 @@ fn main() -> Result<()> {
     
     crash_log.log("Panic hook installed");
     
-    println!("HyperTensor Glass Cockpit v0.7.0 [Sovereign 165Hz]");
+    println!("Ontic Glass Cockpit v0.7.0 [Sovereign 165Hz]");
     println!("Phase 7: Telemetry Rails");
     println!("═══════════════════════════════════════════════");
     
     // Initialize event log early for logging startup
     let mut event_log = EventLog::new();
-    event_log.info(EventCategory::System, "HyperTensor Glass Cockpit v0.7.0 starting");
+    event_log.info(EventCategory::System, "Ontic Glass Cockpit v0.7.0 starting");
     crash_log.log("Event log initialized");
     
     // STEP 1: Enforce E-core affinity (Doctrine 1: Computational Sovereignty)
@@ -285,7 +285,7 @@ fn main() -> Result<()> {
     let event_loop = EventLoop::new()?;
     crash_log.log("  EventLoop created");
     let window = Arc::new(WindowBuilder::new()
-        .with_title("HyperTensor Glass Cockpit - Phase 7 Telemetry")
+        .with_title("Ontic Glass Cockpit - Phase 7 Telemetry")
         .with_inner_size(winit::dpi::PhysicalSize::new(1920, 1080))
         .build(&event_loop)?);
     crash_log.log("  Window created");
@@ -1228,7 +1228,7 @@ async fn init_gpu(window: &Window) -> Result<(wgpu::Device, wgpu::Queue, wgpu::S
     
     let (device, queue) = adapter.request_device(
         &wgpu::DeviceDescriptor {
-            label: Some("HyperTensor GPU"),
+            label: Some("Ontic GPU"),
             required_features: wgpu::Features::empty(),
             required_limits: wgpu::Limits::default(),
             

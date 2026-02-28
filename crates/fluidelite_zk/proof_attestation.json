@@ -1,7 +1,7 @@
 {
   "attestation": "Zero-Expansion Semaphore Proof",
   "timestamp": "2026-01-25T00:00:00Z",
-  "system": "HyperTensor FEZK",
+  "system": "Ontic FEZK",
   "gpu": "NVIDIA RTX 5070 (8GB)",
   "tree_depth": 50,
   "max_members": "1125899906842624",

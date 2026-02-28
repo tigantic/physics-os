@@ -239,13 +239,13 @@ conforming to the schema. File naming convention:
 golden_results_<implementation>_<date>.json
 ```
 
-Example: `golden_results_hypertensor_20260224.json`
+Example: `golden_results_ontic_20260224.json`
 
 ---
 
 ## 9. Reference Results
 
-### 9.1 HyperTensor Baseline (2025-07-25)
+### 9.1 Ontic Baseline (2025-07-25)
 
 | Domain | Wall Time | Conservation Error | Certificate | Verdict |
 |--------|-----------|-------------------|-------------|---------|

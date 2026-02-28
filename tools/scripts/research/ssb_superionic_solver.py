@@ -27,7 +27,7 @@ TARGET:
 
 INPUT SPACE: Li-Sc-In-Cl-Br-I (High-Entropy Halides)
 
-Author: HyperTensor Physics Engine
+Author: TiganticLabz Physics Engine
 Date: January 5, 2026
 """
 
@@ -595,7 +595,7 @@ def generate_attestation(result: Dict) -> Dict:
         },
         'composition': winner['composition'],
         'targets_met': bool(result['targets_met']),
-        'physics_framework': 'HyperTensor TT-Compressed Hamiltonian',
+        'physics_framework': 'Ontic TT-Compressed Hamiltonian',
     }
     
     # Generate hash

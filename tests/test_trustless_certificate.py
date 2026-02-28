@@ -60,7 +60,7 @@ from trustless_physics import (
 
 class TestSHA256:
     def test_deterministic(self) -> None:
-        data = b"HyperTensor QTT"
+        data = b"Ontic QTT"
         h1 = sha256_bytes(data)
         h2 = sha256_bytes(data)
         assert h1 == h2

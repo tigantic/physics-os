@@ -6,7 +6,7 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
 
 /// @title VK Update Governance — Timelock + Multi-Sig for Verification Key Rotation
-/// @author HyperTensor Labs
+/// @author Ontic Labs
 /// @notice Queues VK updates with a 48-hour timelock and requires 2-of-3 multi-sig
 ///         approval before execution. Protects all FluidElite verifier contracts from
 ///         malicious VK swaps.

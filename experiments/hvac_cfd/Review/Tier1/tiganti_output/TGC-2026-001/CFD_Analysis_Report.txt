@@ -114,7 +114,7 @@ LIMITATIONS & ASSUMPTIONS
 ═══════════════════════════════════════════════════════════════════════════════
 
   Report Generated: 2026-01-07 20:46:51
-  TigantiCFD Engine v1.0 | HyperTensor Platform
+  TigantiCFD Engine v1.0 | Ontic Platform
   © 2026 Tigantic Holdings LLC - All Rights Reserved
   
   Questions? Contact: support@tigantic.com

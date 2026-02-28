@@ -40,7 +40,7 @@ Integration:
   - ODIN (#5): Extreme magnetic field generation
   - Dynamics Engine (#8): Relativistic MHD simulation
 
-Author: HyperTensor Civilization Stack
+Author: TiganticLabz Civilization Stack
 Date: 2026-01-05
 """
 

@@ -15,7 +15,7 @@ accounting for:
 - Coriolis effect (Earth rotation)
 - Variable wind field
 
-The HyperTensor Edge: We sample the wind field at EVERY point along
+Ontic Edge: We sample the wind field at EVERY point along
 the trajectory, not just at the shooter position.
 
 References:

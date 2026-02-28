@@ -80,7 +80,7 @@ Frame 3600 | FPS: 60.1 | Latency: 12.34ms | Range: [-0.845, 1.234] | Drops: 0
 
 ### "RAM bridge not available"
 - Ensure Python streamer is running first
-- Check `/dev/shm/hypertensor_bridge` exists (Linux only)
+- Check `/dev/shm/ontic_bridge` exists (Linux only)
 
 ### Low FPS or high latency
 - Verify GPU acceleration: `nvidia-smi` or `radeontop`

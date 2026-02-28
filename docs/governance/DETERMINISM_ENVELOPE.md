@@ -7,7 +7,7 @@
 
 ## 1. Purpose
 
-HyperTensor produces physics simulation results using Quantized Tensor
+The Ontic Engine produces physics simulation results using Quantized Tensor
 Train (QTT) decomposition.  Because the system runs on floating-point
 hardware, exact bitwise reproducibility is not guaranteed.  This
 document defines the **acceptable variance bands** within which two

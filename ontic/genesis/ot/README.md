@@ -1,6 +1,6 @@
 # QTT-Optimal Transport (QTT-OT)
 
-## Layer 20 of the HyperTensor Capability Stack
+## Layer 20 of the Ontic Engine Capability Stack
 
 > **Constitutional Reference**: TENSOR_GENESIS.md, Part II, Primitive 1
 

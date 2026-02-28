@@ -2,7 +2,7 @@
 Field OS - Complete Orchestration Layer
 =========================================
 
-Layer 7 of the HyperTensor platform.
+Layer 7 of the Ontic Engine platform.
 
 Brings together all layers into a unified operating system for reality:
 - Unified Field representation and lifecycle management

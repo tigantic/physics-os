@@ -38,7 +38,7 @@ def print_header():
     """Print demo header."""
     print("=" * 70)
     print("  ╔═══════════════════════════════════════════════════════════════╗")
-    print("  ║     HYPERTENSOR URBAN - DRONE HIGHWAY SCANNER                ║")
+    print("  ║     ONTIC URBAN - DRONE HIGHWAY SCANNER                ║")
     print("  ║     Phase 7: Urban Canyon Wind Analysis                      ║")
     print("  ╚═══════════════════════════════════════════════════════════════╝")
     print("=" * 70)

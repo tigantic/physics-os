@@ -18,7 +18,7 @@ Validation Criteria:
 - K41 spectrum: E(k) ∝ k^(-5/3)
 - Compression ratio maintenance
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2025
 """
 

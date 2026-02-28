@@ -4,7 +4,7 @@ MPI-style communication patterns for distributed CFD.
 This module provides communication primitives for data exchange
 between processors in distributed simulations.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 import queue

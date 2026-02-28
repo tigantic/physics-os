@@ -3,7 +3,7 @@ Shared Utilities for Proof Scripts
 ===================================
 
 This module provides common utilities, constants, and data structures
-used across all proof scripts in the HyperTensor project.
+used across all proof scripts in the Ontic Engine project.
 
 Usage:
     from proofs.common import ProofResult, TOLERANCES, run_proofs, save_results

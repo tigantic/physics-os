@@ -1,7 +1,7 @@
 {
   "project": "Tier 1 Nielsen Benchmark",
   "date": "2026-01-06T21:50:06.502174",
-  "solver": "HyperTensor Projection Method (TVD MUSCL)",
+  "solver": "Ontic Projection Method (TVD MUSCL)",
   "configuration": {
     "grid": "256\u00d7128",
     "domain_m": "9.0\u00d73.0",

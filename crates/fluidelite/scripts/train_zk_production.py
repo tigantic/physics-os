@@ -15,7 +15,7 @@ Target: WikiText-2 perplexity < 50 (competitive with small RNNs)
 Usage:
     python train_zk_production.py --epochs 5 --output weights/production_zk.pt
 
-Author: HyperTensor Labs  
+Author: TiganticLabz  
 Date: January 2026
 """
 

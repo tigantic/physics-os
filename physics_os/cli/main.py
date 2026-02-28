@@ -1,4 +1,4 @@
-"""HyperTensor CLI — Command-line interface.
+"""Ontic CLI — Command-line interface.
 
 Usage::
 
@@ -300,7 +300,7 @@ def cmd_serve(args: argparse.Namespace) -> None:
     """Start the HTTP API server."""
     import uvicorn
 
-    _stderr(f"Starting HyperTensor API on {args.host}:{args.port}")
+    _stderr(f"Starting Ontic API on {args.host}:{args.port}")
     uvicorn.run(
         "physics_os.api.app:app",
         host=args.host,
@@ -318,7 +318,7 @@ def build_parser() -> argparse.ArgumentParser:
     """Construct the argument parser."""
     parser = argparse.ArgumentParser(
         prog="physics_os",
-        description="HyperTensor Runtime — licensed execution fabric for compression-native compute",
+        description="Ontic Runtime — licensed execution fabric for compression-native compute",
     )
     parser.add_argument(
         "--version", action="version",

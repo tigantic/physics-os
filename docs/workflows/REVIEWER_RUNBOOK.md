@@ -167,7 +167,7 @@ Same hardware + same seed = identical results.
 
 For questions about this evaluation:
 - Open an issue on GitHub
-- Reference: HyperTensor Phase 21-24 Implementation
+- Reference: Ontic Phase 21-24 Implementation
 
 ---
 

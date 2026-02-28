@@ -19,7 +19,7 @@ Architecture per RK2 step:
 
 Expected speedup: 4-8x over standard implementation
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2025
 """
 

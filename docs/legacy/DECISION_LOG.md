@@ -52,14 +52,14 @@ The χ-regularity research is exploratory and high-risk. The Physics OS is a pro
 
 **Decision:**  
 Create `tigantic/NS-Millennium` as a fork of The Physics OS. This provides:
-- Full HyperTensor infrastructure (QTT, proofs, dense guard)
+- Full The Ontic Engine infrastructure (QTT, proofs, dense guard)
 - Clean separation for experimental work
 - Independent versioning and releases
 - No risk to The Physics OS stability
 
 **Consequences:**  
 - Maintain two repositories
-- Sync upstream HyperTensor improvements as needed
+- Sync upstream The Ontic Engine improvements as needed
 - NS-specific code lives only in NS-Millennium
 
 **Review Trigger:**  

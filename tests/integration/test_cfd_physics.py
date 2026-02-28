@@ -17,7 +17,7 @@ import pytest
 import torch
 
 # Mark entire module with V&V taxonomy markers
-# Per HYPERTENSOR_VV_FRAMEWORK.md Section 7.1
+# Per ONTIC_VV_FRAMEWORK.md Section 7.1
 pytestmark = [
     pytest.mark.integration,
     pytest.mark.physics,

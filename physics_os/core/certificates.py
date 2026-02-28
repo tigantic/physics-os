@@ -43,7 +43,7 @@ def _init_keys() -> None:
     global _SIGNING_KEY, _VERIFY_KEY, _USE_ED25519
 
     # Check for pre-configured key material
-    key_path = os.environ.get("HYPERTENSOR_SIGNING_KEY_PATH")
+    key_path = os.environ.get("ONTIC_SIGNING_KEY_PATH")
     if key_path and os.path.exists(key_path):
         try:
             from cryptography.hazmat.primitives.asymmetric.ed25519 import (
@@ -78,12 +78,12 @@ def _init_keys() -> None:
         pass
 
     # Fallback: HMAC-SHA256 with server-local secret
-    secret = os.environ.get("HYPERTENSOR_HMAC_SECRET", "").encode("utf-8")
+    secret = os.environ.get("ONTIC_HMAC_SECRET", "").encode("utf-8")
     if not secret:
         secret = os.urandom(32)
         logger.warning(
             "Certificate signing: HMAC-SHA256 (random ephemeral secret).  "
-            "Set HYPERTENSOR_SIGNING_KEY_PATH or HYPERTENSOR_HMAC_SECRET "
+            "Set ONTIC_SIGNING_KEY_PATH or ONTIC_HMAC_SECRET "
             "for persistent signatures."
         )
     _SIGNING_KEY = secret

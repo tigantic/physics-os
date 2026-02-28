@@ -3,7 +3,7 @@
  * 
  * Doctrine 2: RAM Bridge Protocol
  * 
- * Zero-copy, lock-free shared memory reader for HyperTensor simulation data.
+ * Zero-copy, lock-free shared memory reader for The Ontic Engine simulation data.
  * 
  * Constitutional Compliance:
  * - Read-only access (no bidirectional communication)

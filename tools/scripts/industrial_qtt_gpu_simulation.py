@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Industrial-Scale Native QTT / GPU Simulation — HyperTensor VM
+Industrial-Scale Native QTT / GPU Simulation — The Ontic Engine
 ===============================================================
 
 RULES:
@@ -28,7 +28,7 @@ RULES:
 Hardware: NVIDIA RTX 5070 Laptop (8 GB VRAM, SM 12.0, CUDA 12.8)
 Stack:    PyTorch 2.9.1+cu128, Triton 3.5.1, ontic 40.x
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from __future__ import annotations
@@ -919,7 +919,7 @@ def run_campaign_iv(nx: int = 256, t_final: float = 5e-4) -> CombustionResult:
 
 def main():
     print("\n" + "=" * 72)
-    print("  HYPERTENSOR -- NATIVE QTT / GPU SIMULATION")
+    print("  ONTIC -- NATIVE QTT / GPU SIMULATION")
     print("  Triton-fused kernels | Adaptive rank | Zero dense | rSVD")
     print("=" * 72)
 

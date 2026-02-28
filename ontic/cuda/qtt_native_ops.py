@@ -14,7 +14,7 @@ Key functions:
 These replace the sequential Python loops with fused CUDA kernels,
 eliminating the kernel launch overhead that killed GPU performance.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: January 2026
 """
 

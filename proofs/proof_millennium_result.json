@@ -1,6 +1,6 @@
 {
   "timestamp": "2025-12-22T16:53:34.124914",
-  "framework_version": "HyperTensor 1.0",
+  "framework_version": "The Ontic Engine 1.0",
   "optimization_grid": 32,
   "verification_grid": 32,
   "viscosity": 0.001,

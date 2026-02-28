@@ -11,7 +11,7 @@
 
 ```
 ================================================================================================
-                                  HYPERTENSOR HARDWARE TOPOLOGY
+                                  ONTIC HARDWARE TOPOLOGY
                              (Intel i9-14900HX + NVIDIA RTX 5070)
 ================================================================================================
 
@@ -22,7 +22,7 @@
                │                                                    │
                ▼                                                    ▼
     ┌─────────────────────────┐                          ┌─────────────────────────┐
-    │  HYPERTENSOR SIMULATION │                          │    GLASS COCKPIT UI     │
+    │  ONTIC SIMULATION │                          │    GLASS COCKPIT UI     │
     │  (C++ / AVX-512)        │                          │    (Rust / WGPU)        │
     │                         │                          │                         │
     │  • 100k Frame Loop      │                          │  • Main Loop (165Hz)    │

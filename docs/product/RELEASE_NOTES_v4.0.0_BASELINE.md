@@ -38,8 +38,8 @@ physics compute.
 
 | Component                   | Purpose                                     |
 |-----------------------------|---------------------------------------------|
-| `hypertensor.jobs.models`   | State machine (6 states, 6 job types)       |
-| `hypertensor.jobs.store`    | Thread-safe in-memory store + idempotency   |
+| `ontic.jobs.models`   | State machine (6 states, 6 job types)       |
+| `ontic.jobs.store`    | Thread-safe in-memory store + idempotency   |
 
 ### Contracts
 

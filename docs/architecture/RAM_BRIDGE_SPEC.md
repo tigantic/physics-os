@@ -30,7 +30,7 @@ The Sovereign RAM Bridge is a zero-copy, lock-free shared memory interface enabl
 
 struct SovereignBridgeHeader {
     // === Identification (16 bytes) ===
-    uint32_t magic;              // 0x00: 0x48545342 ("HTSB" - HyperTensor Sovereign Bridge)
+    uint32_t magic;              // 0x00: 0x48545342 ("HTSB" - Ontic Sovereign Bridge)
     uint32_t version;            // 0x04: Protocol version (1)
     uint64_t creation_timestamp; // 0x08: Unix timestamp (seconds since epoch)
     

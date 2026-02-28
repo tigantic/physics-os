@@ -1,4 +1,4 @@
-"""HyperTensor API — Request and response schemas.
+"""Ontic API — Request and response schemas.
 
 Every response strips TT-internal data (bond dimensions, singular
 values, compression ratios, TT cores, rank evolution).  Clients

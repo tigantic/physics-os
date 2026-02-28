@@ -26,7 +26,7 @@ d799b3f test: Add GPU validation tests and archived experiments
 bae436e feat(sovereign): Add Phase 1-5 implementation modules
 e365d24 docs: Phase 1-5 attestations and sovereign engine roadmap
 8b86dc5 feat(glass-cockpit): Phase 2 complete - GPU text rendering + tensor visualization
-d180b8d Clean up hypertensor_pro.py: remove unused imports/variables
+d180b8d Clean up ontic_pro.py: remove unused imports/variables
 add2893 Complete Physics OS audit - all 256 checklist items resolved
 3c86606 Integrate World Data Slicer with The Physics OS Hub
 acbffae Add World Data Slicer demo - point-and-synthesize for global datasets
@@ -142,10 +142,10 @@ git push origin main
 cd '/home/brad/TiganticLabz/Main_Projects/Project The Physics OS'
 
 # Add new remote
-git remote add hypertensor-vm https://github.com/tigantic/physics-os.git
+git remote add physics-os https://github.com/tigantic/physics-os.git
 
 # Push to new remote
-git push hypertensor-vm main
+git push physics-os main
 ```
 
 **Purpose**:
@@ -163,7 +163,7 @@ git status
 # Should see: "Your branch is up to date with 'origin/main'"
 
 # Verify on GitHub
-# Visit: https://github.com/tigantic/HyperTensor/commits/main
+# Visit: https://github.com/tigantic/physics-os/commits/main
 ```
 
 ### 3. Tag Phase 2 Release (Optional)
@@ -242,6 +242,6 @@ Created in this session:
 ---
 
 **Setup Completed**: December 28, 2025  
-**Repository**: tigantic/HyperTensor  
+**Repository**: tigantic/physics-os  
 **Commits Ready**: 13  
 **Documentation**: Complete ✅

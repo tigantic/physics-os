@@ -27,13 +27,13 @@ Quick Start:
     ...     for match in results.matches:
     ...         print(f.read_text(match))
 
-Author: HyperTensor Team
+Author: TiganticLabz
 License: MIT
 Version: 1.0.0
 """
 
 __version__ = "1.0.0"
-__author__ = "HyperTensor Team"
+__author__ = "TiganticLabz"
 
 from qtt.container import (
     QTTContainer,

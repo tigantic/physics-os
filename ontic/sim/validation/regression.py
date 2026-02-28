@@ -1,5 +1,5 @@
 """
-Regression Testing Module for Project HyperTensor.
+Regression Testing Module for Project The Ontic Engine.
 
 Provides regression testing framework including:
 - Golden value comparison and management

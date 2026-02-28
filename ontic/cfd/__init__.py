@@ -1,4 +1,4 @@
-"""HyperTensor CFD — public re-exports.
+"""Ontic CFD — public re-exports.
 
 Every symbol listed in ``__all__`` is importable directly from
 ``ontic.cfd`` so that downstream code (tests, experiments, docs,

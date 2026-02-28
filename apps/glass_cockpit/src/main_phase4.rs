@@ -1,5 +1,5 @@
 /*!
- * HyperTensor Glass Cockpit - Phase 4: Globe & Satellite Visualization
+ * Ontic Glass Cockpit - Phase 4: Globe & Satellite Visualization
  * 
  * Orthographic globe rendering with NASA GIBS satellite tiles.
  * 
@@ -29,7 +29,7 @@ use tile_fetcher::{TileFetcher, GibsConfig};
 
 /// Phase 4 Globe Visualization
 fn main() -> Result<()> {
-    println!("HyperTensor Glass Cockpit v0.4.0");
+    println!("Ontic Glass Cockpit v0.4.0");
     println!("Phase 4: Globe & Satellite Visualization");
     println!("═══════════════════════════════════════════════");
     
@@ -55,7 +55,7 @@ fn main() -> Result<()> {
     println!("[3/4] Creating window...");
     let event_loop = EventLoop::new()?;
     let window = Arc::new(WindowBuilder::new()
-        .with_title("HyperTensor Glass Cockpit - Phase 4")
+        .with_title("Ontic Glass Cockpit - Phase 4")
         .with_inner_size(winit::dpi::PhysicalSize::new(1920, 1080))
         .build(&event_loop)?);
     println!("  ✓ Window created (1920×1080)");
@@ -176,7 +176,7 @@ async fn init_gpu(window: &Window) -> Result<(wgpu::Device, wgpu::Queue, wgpu::S
     
     let (device, queue) = adapter.request_device(
         &wgpu::DeviceDescriptor {
-            label: Some("HyperTensor GPU"),
+            label: Some("Ontic GPU"),
             required_features: wgpu::Features::empty(),
             required_limits: wgpu::Limits::default(),
         },

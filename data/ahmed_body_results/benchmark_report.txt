@@ -1,6 +1,6 @@
 ════════════════════════════════════════════════════════════════════════
 QTT COMPRESSION BENCHMARK: NVIDIA PhysicsNeMo Ahmed Body
-Mesh-to-Rectilinear Bridge — HyperTensor QTT Engine
+Mesh-to-Rectilinear Bridge — Ontic QTT Engine
 ════════════════════════════════════════════════════════════════════════
 Date:       2026-02-21 20:56:04
 Samples:    50

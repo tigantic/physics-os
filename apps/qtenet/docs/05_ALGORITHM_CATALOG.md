@@ -971,7 +971,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class AnomalyDetector` (L575) — Rank-Gradient Anomaly Detection.
   - `class TemporalMorpher` (L655) — Spatio-Temporal Morphing for "Ghosting" effect.
   - `class ManifestSigner` (L711) — Creates cryptographically signed forensic manifests.
-  - `class ForensicHub` (L752) — The HyperTensor Forensic Investigation Hub.
+  - `class ForensicHub` (L752) — Ontic Forensic Investigation Hub.
   - `function main` (L1267)
 - **demos/forensic_hub_v2.py**
   - `class ManifoldSampler` (L124) — Samples the manifold at arbitrary resolution within view bounds.
@@ -986,15 +986,15 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class ForensicViewport` (L455) — Resolution-independent forensic viewport.
   - `class ForensicInstrument` (L1055)
   - `function main` (L1337)
-- **demos/hypertensor_hub.py**
+- **demos/ontic_hub.py**
   - `class FieldCreationWorker` (L75) — Worker thread for creating Field objects (can take seconds on CPU).
   - `class SliceWorker` (L120) — Worker thread for slice extraction (O(L×r²) but still needs threading).
   - `class ManifoldCanvas` (L295) — VisPy Canvas for manifold visualization.
   - `class ForensicBlade` (L394) — Forensic 4D Blade - Temporal navigation through field history.
   - `class TelemetryBlade` (L494) — Telemetry Blade - Real-time field statistics and performance metrics.
   - `class IntentBlade` (L568) — Intent Blade - Natural language query interface (Layer 8).
-  - `class HyperTensorHub` (L646) — The HyperTensor Hub - Primary interface for manifold interaction.
-  - `function main` (L1168) — Launch the HyperTensor Hub.
+  - `class OnticHub` (L646) — Ontic Hub - Primary interface for manifold interaction.
+  - `function main` (L1168) — Launch the Ontic Engine Hub.
 - **demos/ingest_noaa_gfs.py**
   - `function get_latest_gfs_url` (L54) — Get URL for latest available GFS data on AWS.
   - `function download_gfs_subset` (L88) — Download a subset of GFS data using byte-range requests.
@@ -1115,7 +1115,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class GlobalManifoldSlicer` (L30) — The "Optical Nerve" for world-scale data.
   - `function create_synthetic_weather_field` (L144) — Create a synthetic weather field for demonstration.
   - `function demo_cyclone_investigation` (L179) — Demonstrate investigating a cyclone singularity.
-  - `function demo_satellite_comparison` (L237) — Compare traditional GIS loading vs HyperTensor sampling.
+  - `function demo_satellite_comparison` (L237) — Compare traditional GIS loading vs The Ontic Engine sampling.
   - `function main` (L281) — Main entry point for the World Data Slicer demo.
 
 ## fluidelite (71)
@@ -2831,7 +2831,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function check_imports` (L21) — Check if all tensornet modules can be imported.
   - `function main` (L75) — Run import cycle check.
 - **scripts/compare_tenpy.py**
-  - `function run_hypertensor_dmrg` (L28) — Run DMRG with The Physics OS.
+  - `function run_ontic_dmrg` (L28) — Run DMRG with The Physics OS.
   - `function run_tenpy_dmrg` (L49) — Run DMRG with TeNPy (if installed).
   - `function bethe_ansatz_energy` (L99) — Approximate Bethe ansatz energy for Heisenberg chain.
   - `function main` (L112)
@@ -2896,7 +2896,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
 - **scripts/reproduce.py**
   - `function run_benchmark` (L51) — Run a single benchmark and return results.
   - `function main` (L93)
-- **tools/scripts/setup/hypertensor_core.py**
+- **tools/scripts/setup/ontic_core.py**
   - `class FluidState` (L26) — Production fluid state backed by QTT decomposition.
   - `function create_fluid_state` (L360) — Create a FluidState for rendering.
 - **tools/scripts/setup/realtime_renderer.py**
@@ -3503,7 +3503,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class ThemeLayout` (L104) — Layout configuration.
   - `class ThemeConfig` (L148) — Complete theme configuration.
   - `class Theme` (L182) — Documentation site theme.
-  - `class HyperTensorTheme` (L340) — Custom theme for The Physics OS documentation.
+  - `class OnticTheme` (L340) — Custom theme for The Physics OS documentation.
   - `function get_theme` (L505) — Get theme by name.
   - `function list_themes` (L523) — List available theme names.
   - `function register_theme` (L533) — Register a custom theme.

@@ -28,7 +28,7 @@ class TestSiteGenerator:
         
         config = SiteConfig()
         
-        assert config.title == "HyperTensor Documentation"
+        assert config.title == "Ontic Documentation"
         assert config.base_url == "/"
         assert config.theme == "physics_os"
     

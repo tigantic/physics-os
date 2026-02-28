@@ -201,4 +201,4 @@ SHA256: (see HUMMINGBIRD_ATTESTATION.json)
 
 *"The Opera Singer has found her note."*
 
-**HyperTensor Team, 2026**
+**TiganticLabz, 2026**

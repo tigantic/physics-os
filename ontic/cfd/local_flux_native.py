@@ -20,7 +20,7 @@ Key insight: All operations can be done in QTT format!
 - Flux average: 0.5 * (F_L + F_R) via QTT arithmetic
 - Dissipation: 0.5 * alpha * (U_R - U_L) via QTT arithmetic
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 2025
 """
 

@@ -13,7 +13,7 @@ Tests:
 For QTT-based operators to be "validated", they must match these
 analytical results within truncation tolerance.
 
-Author: HyperTensor Validation Team
+Author: TiganticLabz Validation Team
 """
 
 import time
@@ -512,7 +512,7 @@ if __name__ == "__main__":
 
     print()
     print("=" * 66)
-    print(" HyperTensor Layer 5 Audit: FieldOps Operators")
+    print(" Ontic Layer 5 Audit: FieldOps Operators")
     print("=" * 66)
     print()
 

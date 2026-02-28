@@ -691,7 +691,7 @@ Produces attestation JSON with:
 ## 7. REPOSITORY STRUCTURE (NEW CODE)
 
 ```
-HyperTensor/
+The Ontic Engine/
 ├── tpc/                              # NEW: Trustless Physics Certificate
 │   ├── __init__.py
 │   ├── format.py                     # .tpc serializer/deserializer

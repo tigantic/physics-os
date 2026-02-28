@@ -31,9 +31,9 @@ instead of O(d^L) — the key to tractability.
 Mathematical Foundation:
     - Oseledets (2011): Tensor-Train decomposition
     - Khoromskij (2011): Quantized tensor trains
-    - HyperTensor thesis: Reality is low-rank
+    - The Ontic Engine thesis: Reality is low-rank
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-15
 """
 

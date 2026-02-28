@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Copyright 2025 Tigantic Labs. All Rights Reserved.
 """
-HyperTensor REST API Server
+Ontic REST API Server
 
 Provides HTTP endpoints for field operations, useful for:
 - Web applications
@@ -182,14 +182,14 @@ if HAS_FASTAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         """App lifespan context."""
-        print("HyperTensor Server starting...")
+        print("Ontic Server starting...")
         yield
-        print("HyperTensor Server shutting down...")
+        print("Ontic Server shutting down...")
         state.fields.clear()
 
     app = FastAPI(
-        title="HyperTensor API",
-        description="REST API for HyperTensor field operations",
+        title="Ontic API",
+        description="REST API for The Ontic Engine field operations",
         version="1.0.0",
         lifespan=lifespan,
     )
@@ -197,7 +197,7 @@ if HAS_FASTAPI:
     # CORS middleware - configurable via environment
     # SECURITY: Default to localhost-only in production
     CORS_ORIGINS = os.environ.get(
-        "HYPERTENSOR_CORS_ORIGINS",
+        "ONTIC_CORS_ORIGINS",
         "http://localhost:3000,http://localhost:8080,http://127.0.0.1:3000,http://127.0.0.1:8080"
     ).split(",")
     
@@ -218,7 +218,7 @@ if HAS_FASTAPI:
         """Error codes for programmatic handling."""
         INTERNAL_ERROR = "INTERNAL_ERROR"
         FIELD_NOT_FOUND = "FIELD_NOT_FOUND"
-        HYPERTENSOR_UNAVAILABLE = "HYPERTENSOR_UNAVAILABLE"
+        ONTIC_UNAVAILABLE = "ONTIC_UNAVAILABLE"
         VALIDATION_ERROR = "VALIDATION_ERROR"
         OPERATION_FAILED = "OPERATION_FAILED"
     
@@ -320,7 +320,7 @@ if HAS_FASTAPI:
         except ImportError:
             raise HTTPException(
                 status_code=500,
-                detail={"error": {"code": ErrorCodes.HYPERTENSOR_UNAVAILABLE, "message": "HyperTensor not available"}}
+                detail={"error": {"code": ErrorCodes.ONTIC_UNAVAILABLE, "message": "The Ontic Engine not available"}}
             )
         except Exception as e:
             raise HTTPException(status_code=500, detail=_sanitize_error(e))
@@ -433,7 +433,7 @@ def main():
     """Main entry point."""
     import argparse
     
-    parser = argparse.ArgumentParser(description="HyperTensor REST API Server")
+    parser = argparse.ArgumentParser(description="Ontic REST API Server")
     parser.add_argument("--host", default="0.0.0.0", help="Host to bind to")
     parser.add_argument("--port", type=int, default=8000, help="Port to listen on")
     parser.add_argument("--workers", type=int, default=1, help="Number of workers")

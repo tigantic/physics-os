@@ -2,7 +2,7 @@
 """
 Quantum Compression of Crypto/Stock Market Data
 ================================================
-Uses QTT (Quantized Tensor Train) compression from HyperTensor's GENESIS module
+Uses QTT (Quantized Tensor Train) compression from The Ontic Engine's GENESIS module
 to compress 2.9GB of 5-minute OHLCV market data.
 
 Production-grade implementation with full error handling.

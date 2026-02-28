@@ -25,7 +25,7 @@ DEFAULT_HEIGHT = 1080
 DEFAULT_CHANNELS = 4
 
 # Shared memory path (Linux /dev/shm for zero-copy)
-DEFAULT_BRIDGE_PATH = Path("/dev/shm/hypertensor_bridge")
+DEFAULT_BRIDGE_PATH = Path("/dev/shm/ontic_bridge")
 
 
 class TensorBridgeWriter:
@@ -39,7 +39,7 @@ class TensorBridgeWriter:
         - Data (8MB): 1920×1080 RGBA8 pre-rendered pixels
 
     Args:
-        path: Path to shared memory file (default: /dev/shm/hypertensor_bridge)
+        path: Path to shared memory file (default: /dev/shm/ontic_bridge)
         width: Frame width in pixels
         height: Frame height in pixels
         create: Whether to create the bridge file if it doesn't exist

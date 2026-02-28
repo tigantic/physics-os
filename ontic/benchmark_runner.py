@@ -1,4 +1,4 @@
-"""HyperTensor Physics Benchmark Runner.
+"""Ontic Physics Benchmark Runner.
 
 Profiles import time, instantiation cost, and lightweight computation across
 all 140 physics domains.  Produces machine-readable JSON + human-readable
@@ -470,7 +470,7 @@ def report_to_markdown(report: BenchmarkReport) -> str:
     lines: list[str] = []
     a = lines.append
 
-    a("# HyperTensor v40.0.0 — Physics Benchmark Report")
+    a("# The Ontic Engine v40.0.0 — Physics Benchmark Report")
     a("")
     a(f"**Timestamp:** {report.timestamp}")
     a(f"**Domains:** {report.total_domains}")
@@ -534,7 +534,7 @@ def report_to_markdown(report: BenchmarkReport) -> str:
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="ontic.benchmark_runner",
-        description="Benchmark all 140 HyperTensor physics domains.",
+        description="Benchmark all 140 The Ontic Engine physics domains.",
     )
     parser.add_argument(
         "--categories", "-c", nargs="*", default=None,
@@ -580,7 +580,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         domains = ALL_DOMAINS
 
     if not args.quiet:
-        print(f"HyperTensor Benchmark Runner v40.0.0")
+        print(f"Ontic Benchmark Runner v40.0.0")
         print(f"Benchmarking {len(domains)} domains "
               f"(repeat={args.repeat})...\n")
 

@@ -17,7 +17,7 @@ CUDA Acceleration:
 - Uses CUDA streams for parallel core processing
 - Falls back to optimized einsum when kernel unavailable
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 2025
 """
 

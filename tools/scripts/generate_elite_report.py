@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate the definitive HyperTensor QTT benchmark PDF report.
+Generate the definitive Ontic QTT benchmark PDF report.
 
 Combines:
   - Multi-resolution gauntlet results (128³ + 256³ + 512³)
@@ -32,7 +32,7 @@ if str(ROOT) not in sys.path:
 RESULTS = ROOT / "ahmed_ib_results"
 ARTIFACTS = ROOT / "artifacts"
 IMAGES = ROOT / "images"
-OUTPUT = ARTIFACTS / "HyperTensor_QTT_ELITE_Report.pdf"
+OUTPUT = ARTIFACTS / "Ontic_QTT_ELITE_Report.pdf"
 
 
 # ── helpers ────────────────────────────────────────────────────────
@@ -96,7 +96,7 @@ def load_all_data() -> dict:
     # Images
     data["spectrum_img"] = img_data_uri(RESULTS / "ahmed_body_spectrum.png")
     data["velocity_img"] = img_data_uri(RESULTS / "ahmed_body_velocity_slices.png")
-    data["logo_img"] = img_data_uri(IMAGES / "hypertensor_logo.png")
+    data["logo_img"] = img_data_uri(IMAGES / "ontic_logo.png")
 
     return data
 
@@ -110,7 +110,7 @@ CSS = """
     size: letter;
     margin: 0.9in 0.85in 1.0in 0.85in;
     @bottom-center {
-        content: "HyperTensor QTT Engine — Tigantic Holdings LLC — Confidential";
+        content: "Ontic QTT Engine — Tigantic Holdings LLC — Confidential";
         font-size: 7.5pt;
         color: #888;
         font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
@@ -473,14 +473,14 @@ def build_html(data: dict) -> str:
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>HyperTensor QTT Engine — ELITE Benchmark Report</title>
+<title>Ontic QTT Engine — ELITE Benchmark Report</title>
 <style>{CSS}</style>
 </head>
 <body>
 
 <div class="cover">
     <div class="brand-bar"></div>
-    <h1>HyperTensor QTT Engine</h1>
+    <h1>Ontic QTT Engine</h1>
     <div class="subtitle">Quantized Tensor Train Navier-Stokes Solver</div>
     <div class="subtitle" style="color: var(--green); font-size: 12pt; margin-top: -1em;">
         Multi-Resolution Benchmark vs Dense CFD — ELITE Engineering Report
@@ -513,7 +513,7 @@ def build_html(data: dict) -> str:
     <div class="toc-item"><span class="toc-num">3</span><span class="toc-title">The Solution: QTT-Native Navier-Stokes</span></div>
     <div class="toc-item"><span class="toc-num">4</span><span class="toc-title">Benchmark Configuration</span></div>
     <div class="toc-item"><span class="toc-num">5</span><span class="toc-title">Results: Multi-Resolution Gauntlet</span></div>
-    <div class="toc-item"><span class="toc-num">6</span><span class="toc-title">Head-to-Head: HyperTensor vs NVIDIA</span></div>
+    <div class="toc-item"><span class="toc-num">6</span><span class="toc-title">Head-to-Head: The Ontic Engine vs NVIDIA</span></div>
     <div class="toc-item"><span class="toc-num">7</span><span class="toc-title">Physics Validation</span></div>
     <div class="toc-item"><span class="toc-num">8</span><span class="toc-title">Executive Physics Certificate</span></div>
     <div class="toc-item"><span class="toc-num">9</span><span class="toc-title">Scaling Projections</span></div>
@@ -534,7 +534,7 @@ def build_html(data: dict) -> str:
 <div class="page-break"></div>
 <h1>1. Executive Summary</h1>
 
-<p>HyperTensor's Quantized Tensor Train (QTT) Navier-Stokes engine replaces dense CFD entirely.
+<p>The Ontic Engine's Quantized Tensor Train (QTT) Navier-Stokes engine replaces dense CFD entirely.
 Instead of solving on a mesh and storing N³ arrays, the solver operates natively in compressed
 tensor-train format with <strong>O(r² log N)</strong> storage and compute — logarithmic in grid size.</p>
 
@@ -615,7 +615,7 @@ consumes <strong>{nv['total_vtp_bytes']/1e9:.1f} GB</strong> of storage for surf
     html += """
 <h1>3. The Solution: QTT-Native Navier-Stokes</h1>
 
-<p>HyperTensor's QTT-NS solver operates entirely in compressed tensor-train format.
+<p>The Ontic Engine's QTT-NS solver operates entirely in compressed tensor-train format.
 The 3D velocity field is represented as a sequence of small matrices (TT cores), with
 storage <strong>O(r² · 3 · n_bits)</strong> — logarithmic in grid size, not cubic.</p>
 
@@ -754,7 +754,7 @@ aerodynamics benchmark, identical to the geometry in NVIDIA's PhysicsNeMo datase
     equiv_bytes = nv["total_samples"] * best["qtt_velocity_bytes"]
     html += f"""
 <div class="page-break"></div>
-<h1>6. Head-to-Head: HyperTensor vs NVIDIA</h1>
+<h1>6. Head-to-Head: The Ontic Engine vs NVIDIA</h1>
 
 <div class="stat-row">
     <div class="stat-card">
@@ -775,7 +775,7 @@ aerodynamics benchmark, identical to the geometry in NVIDIA's PhysicsNeMo datase
 </div>
 
 <table>
-    <tr><th>Metric</th><th>NVIDIA PhysicsNeMo</th><th>HyperTensor QTT</th><th class="num">Advantage</th></tr>
+    <tr><th>Metric</th><th>NVIDIA PhysicsNeMo</th><th>Ontic QTT</th><th class="num">Advantage</th></tr>
     <tr><td>Storage per sample</td><td>{nv['avg_vtp_bytes']/1e6:.1f} MB (VTP surface)</td>
         <td class="highlight-cell">{best_qtt_kb:.1f} KB (full volume)</td><td class="num">{nvidia_ratio:.0f}×</td></tr>
     <tr><td>Data content</td><td>11 surface fields only</td>
@@ -1430,7 +1430,7 @@ PYTHONPATH="$PWD:$PYTHONPATH" python3 tools/tools/scripts/generate_elite_report.
     <tr><td>ahmed_ib_results/4096/trustless_certificate.json</td><td>4096³ Ed25519 certificate</td></tr>
     <tr><td>ahmed_ib_results/spectrum_data.json</td><td>Energy spectrum analysis</td></tr>
     <tr><td>ahmed_ib_results/ahmed_body_spectrum.png</td><td>3-panel spectrum figure</td></tr>
-    <tr><td>artifacts/HyperTensor_QTT_ELITE_Report.pdf</td><td>This report</td></tr>
+    <tr><td>artifacts/Ontic_QTT_ELITE_Report.pdf</td><td>This report</td></tr>
 </table>
 """
 
@@ -1490,7 +1490,7 @@ is computed via QTT subtraction.</p>
 
 <div style="text-align: center; margin-top: 2em; color: var(--gray-3); font-size: 9pt;">
     <p><strong>Report HTR-2026-004-GAUNTLET-ELITE</strong></p>
-    <p>HyperTensor QTT Engine v2.0.0 — Ed25519 Signed, RK2, Trustless Physics</p>
+    <p>Ontic QTT Engine v2.0.0 — Ed25519 Signed, RK2, Trustless Physics</p>
     <p>Tigantic Holdings LLC — {today}</p>
     <p style="margin-top: 1em; font-style: italic; color: var(--brand);">
         "Dense CFD is dead. QTT is the future."

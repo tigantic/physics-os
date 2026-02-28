@@ -19,7 +19,7 @@ REPO_ROOT = Path(__file__).resolve().parent
 
 EXASCALE_RESULTS = REPO_ROOT / "benchmarks" / "golden" / "scaling_results_exascale_20260224.json"
 WORLD_RECORD_RESULTS = REPO_ROOT / "benchmarks" / "golden" / "scaling_results_world_record_20260224.json"
-GOLDEN_RESULTS = REPO_ROOT / "benchmarks" / "golden" / "golden_results_hypertensor_20260224.json"
+GOLDEN_RESULTS = REPO_ROOT / "benchmarks" / "golden" / "golden_results_ontic_20260224.json"
 OUTPUT = REPO_ROOT / "TRUSTLESS_PHYSICS_EXASCALE_ATTESTATION.json"
 
 
@@ -258,7 +258,7 @@ def build_attestation() -> dict:
                 "description": "8-point world-record sweep: 128³ → 16,384³",
             },
             "golden_physics_results": {
-                "path": "experiments/benchmarks/benchmarks/golden/golden_results_hypertensor_20260224.json",
+                "path": "experiments/benchmarks/benchmarks/golden/golden_results_ontic_20260224.json",
                 "sha256": file_hashes.get("golden_physics", "N/A"),
                 "description": "7-domain golden physics benchmark (21 measurements, all GPU-native)",
             },

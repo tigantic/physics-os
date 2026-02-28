@@ -5,7 +5,7 @@ Simulation Submitter
 The "Submit" action bridge.
 
 Takes user-validated UI data (in Feet/CFM) and converts it to 
-SI Physics Payload (Meters/Pascals) for the HyperTensor solver.
+SI Physics Payload (Meters/Pascals) for the Ontic Engine solver.
 
 FLOW:
 -----
@@ -13,7 +13,7 @@ FLOW:
     2. All fields turn Green (validated)
     3. User clicks "Submit"
     4. This module converts Human Units → Physics Units
-    5. Clean JSON sent to HyperTensor solver
+    5. Clean JSON sent to The Ontic Engine solver
 
 PUBLIC API (Article V, Section 5.1):
 ------------------------------------

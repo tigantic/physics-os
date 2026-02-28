@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ═══════════════════════════════════════════════════════════════════════════
-# HyperTensor — Publication-Quality Report Generator
+# The Ontic Engine — Publication-Quality Report Generator
 # ═══════════════════════════════════════════════════════════════════════════
 #
 # Reads results/industrial_qtt_gpu_simulation_results.json and generates
@@ -12,7 +12,7 @@
 #   python visualization/generate_report.py --png-only   # skip PDF, PNGs only
 #
 # Output:
-#   visualization/output/report/hypertensor_report.pdf
+#   visualization/output/report/ontic_report.pdf
 #   visualization/output/report/fig_*.png
 #
 # ═══════════════════════════════════════════════════════════════════════════
@@ -100,7 +100,7 @@ def apply_style() -> None:
 
 
 def watermark(ax: plt.Axes) -> None:
-    """Add HyperTensor watermark to bottom-right of axes."""
+    """Add The Ontic Engine watermark to bottom-right of axes."""
     ax.text(0.99, 0.01, "physics-os",
             transform=ax.transAxes, fontsize=FONT_SIZES["watermark"],
             color=TEXT_SECONDARY, alpha=0.4,
@@ -975,7 +975,7 @@ def generate_report(results_path: str | Path,
 
     # Generate PDF
     if not png_only:
-        pdf_path = output_dir / "hypertensor_report.pdf"
+        pdf_path = output_dir / "ontic_report.pdf"
         print(f"\n  Assembling PDF: {pdf_path}...", flush=True)
         with PdfPages(str(pdf_path)) as pdf:
             for fig_id, fig in figures:
@@ -986,7 +986,7 @@ def generate_report(results_path: str | Path,
             d["Title"] = "physics-os Industrial Simulation Report"
             d["Author"] = "physics-os Visualization Pipeline"
             d["Subject"] = "QTT/GPU Simulation Results"
-            d["Keywords"] = "QTT, GPU, DNS, CFD, Tensor, HyperTensor"
+            d["Keywords"] = "QTT, GPU, DNS, CFD, Tensor, The Ontic Engine"
 
         pdf_size_mb = pdf_path.stat().st_size / (1024 * 1024)
         print(f"    → {pdf_path} ({pdf_size_mb:.1f} MB)")
@@ -1002,7 +1002,7 @@ def generate_report(results_path: str | Path,
     print(f"  Figures: {len(figures)} generated")
     print(f"  PNGs:    {output_dir}/fig_*.png")
     if not png_only:
-        print(f"  PDF:     {output_dir}/hypertensor_report.pdf")
+        print(f"  PDF:     {output_dir}/ontic_report.pdf")
     print("═══════════════════════════════════════════════════════════════")
 
 
@@ -1012,7 +1012,7 @@ def generate_report(results_path: str | Path,
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Generate HyperTensor simulation report",
+        description="Generate The Ontic Engine simulation report",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -1057,7 +1057,7 @@ Examples:
     )
 
     print("═══════════════════════════════════════════════════════════════")
-    print("  HyperTensor — Report Generator")
+    print("  The Ontic Engine — Report Generator")
     print(f"  Results:  {results_path}")
     print(f"  Output:   {output_dir}")
     print(f"  DPI:      {args.dpi}")

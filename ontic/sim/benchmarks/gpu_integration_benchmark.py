@@ -25,7 +25,7 @@ import time
 import torch
 
 # Add project root to path
-sys.path.insert(0, "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor")
+sys.path.insert(0, "/home/brad/TiganticLabz/Main_Projects/Project The Ontic Engine")
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Import CUDA Module

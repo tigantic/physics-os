@@ -2,7 +2,7 @@
 5.18 — Automated Hyperparameter Tuning
 ========================================
 
-General-purpose hyperparameter optimiser for HyperTensor solvers.
+General-purpose hyperparameter optimiser for The Ontic Engine solvers.
 Extends the existing GPU kernel auto-tune to the full solver stack.
 
 Components:

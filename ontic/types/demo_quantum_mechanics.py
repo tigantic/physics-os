@@ -23,7 +23,7 @@ Key Constraints:
     - Unitary evolution: U†U = I
     - Hermitian observables: H† = H
 
-Author: HyperTensor Geometric Types Protocol
+Author: TiganticLabz Geometric Types Protocol
 Date: January 27, 2026
 """
 
@@ -786,7 +786,7 @@ def run_qm_demo():
     
     attestation = {
         "demonstration": "QUANTUM MECHANICS",
-        "project": "HYPERTENSOR-VM",
+        "project": "ONTIC_ENGINE-VM",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "tests": [
             {

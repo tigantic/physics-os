@@ -17,7 +17,7 @@ then throw it away to push gigabytes of pixels on GPU. This is madness.
 The RTX 5070 has 33.4 TFLOPS of compute sitting idle while we saturate
 342 GB/s bandwidth. We treat it as a forklift, not a mathematician."
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: January 2025
 """
 

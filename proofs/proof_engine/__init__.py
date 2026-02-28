@@ -1,5 +1,5 @@
 """
-HyperTensor Proof Engine
+Ontic Proof Engine
 ========================
 
 Computer-Assisted Proof Generator for Mathematical Physics.

@@ -1,7 +1,7 @@
-"""HyperTensor API — API-key authentication.
+"""Ontic API — API-key authentication.
 
 Simple bearer-token scheme.  Keys are configured via
-``HYPERTENSOR_API_KEYS`` (comma-separated) or auto-generated
+``ONTIC_ENGINE_API_KEYS`` (comma-separated) or auto-generated
 at startup.  Send as::
 
     Authorization: Bearer <key>

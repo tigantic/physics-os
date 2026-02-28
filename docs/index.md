@@ -42,7 +42,7 @@ The Physics OS is a **monorepo** with three tiers:
 | Tier | Package | Language | Purpose |
 |------|---------|----------|---------|
 | 1 | `tensornet` | Python | Physics engine — MPS, MPO, QTT, DMRG, TEBD, CFD |
-| 2 | `hypertensor` | Python | Licensed execution fabric — API, SDK, MCP, billing |
+| 2 | `ontic` | Python | Licensed execution fabric — API, SDK, MCP, billing |
 | 3 | `crates/*` | Rust | Performance substrate — GPU kernels, ZK proofs, IPC |
 
 ## Domain Packs

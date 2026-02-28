@@ -10,13 +10,13 @@ For 1 BILLION cells:
 - Dense: 1B × 4 bytes × 5 fields = 20 GB per state
 - QTT: 30 qubits × 32² × 5 fields × 4 bytes ≈ 600 KB per state
 
-This is why HyperTensor exists.
+This is why The Ontic Engine exists.
 
 Reference: Source_of_Truth.md §1: "Dense is Anti-QTT"
 """
 
 import sys
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project HyperTensor')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project The Ontic Engine')
 
 import time
 import math

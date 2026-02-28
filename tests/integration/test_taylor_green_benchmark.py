@@ -25,7 +25,7 @@ ideal for verifying numerical accuracy and convergence order.
 
 Constitutional Compliance:
     - Article IV.1: Verification (V&V)
-    - HYPERTENSOR_VV_FRAMEWORK.md Section 3.3
+    - ONTIC_VV_FRAMEWORK.md Section 3.3
     - Phase 1a gate validation
 
 Tag: [PHASE-1A] [BENCHMARK] [TIER-1] [V&V]

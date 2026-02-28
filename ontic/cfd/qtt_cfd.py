@@ -16,7 +16,7 @@ For turbulent/shock-laden flows satisfying the Area Law, QTT achieves:
     - Storage: O(log N · χ²) vs O(N²) classical
     - Evolution: O(log N · χ³) per step via TDVP in QTT format
 
-This is the "Turbo" mode that makes HyperTensor valuable.
+This is the "Turbo" mode that makes The Ontic Engine valuable.
 
 Constitution Compliance: Article I.1, Article II.1
 """

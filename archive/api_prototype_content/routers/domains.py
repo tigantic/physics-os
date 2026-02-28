@@ -1,4 +1,4 @@
-"""HyperTensor API — Domain catalog endpoint.
+"""Ontic API — Domain catalog endpoint.
 
 ``GET /v1/domains``      → list all available physics domains
 ``GET /v1/domains/{id}`` → detailed info for a single domain

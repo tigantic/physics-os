@@ -48,7 +48,7 @@ THIS MODULE:
 Use QTT Holy Grail to compute gap at multiple couplings and verify
 the renormalization group prediction.
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-16
 """
 

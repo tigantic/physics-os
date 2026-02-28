@@ -31,7 +31,7 @@ chmod 600 /etc/physics_os/signing_key.pem
 **Configuration:**
 
 ```bash
-export HYPERTENSOR_SIGNING_KEY_PATH=/etc/physics_os/signing_key.pem
+export ONTIC_ENGINE_SIGNING_KEY_PATH=/etc/physics_os/signing_key.pem
 ```
 
 **Without this variable**, the server generates an **ephemeral** Ed25519 key
@@ -44,7 +44,7 @@ If the `cryptography` library is unavailable, the system falls back to
 HMAC-SHA256.  This mode:
 
 - Cannot share a public verification key (symmetric)
-- Uses `HYPERTENSOR_HMAC_SECRET` or a random 32-byte secret
+- Uses `ONTIC_ENGINE_HMAC_SECRET` or a random 32-byte secret
 - Certificates are verifiable only by the issuing server
 
 **Alpha requirement**: Ed25519 MUST be available.  HMAC fallback is for
@@ -59,10 +59,10 @@ NOT session tokens.
 
 ```bash
 # Single key
-export HYPERTENSOR_API_KEYS="htk_abc123def456"
+export ONTIC_ENGINE_API_KEYS="htk_abc123def456"
 
 # Multiple keys (comma-separated)
-export HYPERTENSOR_API_KEYS="htk_key1,htk_key2,htk_key3"
+export ONTIC_ENGINE_API_KEYS="htk_key1,htk_key2,htk_key3"
 ```
 
 **Without this variable**, the server generates a random 32-byte
@@ -82,7 +82,7 @@ Example: `htk_alice_7kf9xm2p`
 **Signing key rotation:**
 
 1. Generate new key (`signing_key_v2.pem`)
-2. Update `HYPERTENSOR_SIGNING_KEY_PATH` to point to new key
+2. Update `ONTIC_ENGINE_SIGNING_KEY_PATH` to point to new key
 3. Restart server
 4. Old certificates remain verifiable IF the verifier has
    both the old and new public keys.  Document the old public key
@@ -92,7 +92,7 @@ Example: `htk_alice_7kf9xm2p`
 **API key rotation:**
 
 1. Issue new key to user
-2. Add new key to `HYPERTENSOR_API_KEYS` (both old and new active)
+2. Add new key to `ONTIC_ENGINE_API_KEYS` (both old and new active)
 3. Notify user to switch to new key
 4. After confirmation (or 7-day grace period), remove old key
 5. Restart server
@@ -109,10 +109,10 @@ no secrets database.
 
 | Variable                         | Content                    | Required (Alpha) |
 |----------------------------------|----------------------------|-------------------|
-| `HYPERTENSOR_SIGNING_KEY_PATH`   | Path to Ed25519 PEM key    | Yes               |
-| `HYPERTENSOR_API_KEYS`           | Comma-separated bearer keys | Yes              |
-| `HYPERTENSOR_HMAC_SECRET`        | HMAC fallback secret       | No (Ed25519 only) |
-| `HYPERTENSOR_REQUIRE_AUTH`       | `true` or `false`          | Must be `true`    |
+| `ONTIC_ENGINE_SIGNING_KEY_PATH`   | Path to Ed25519 PEM key    | Yes               |
+| `ONTIC_ENGINE_API_KEYS`           | Comma-separated bearer keys | Yes              |
+| `ONTIC_ENGINE_HMAC_SECRET`        | HMAC fallback secret       | No (Ed25519 only) |
+| `ONTIC_ENGINE_REQUIRE_AUTH`       | `true` or `false`          | Must be `true`    |
 
 ### 2.2 Secrets in Logs
 
@@ -135,7 +135,7 @@ Error responses MUST NOT contain:
 - Stack traces (capture in server-side log only)
 - Configuration dump
 
-Production debug mode (`HYPERTENSOR_DEBUG=true`) MAY add request
+Production debug mode (`ONTIC_ENGINE_DEBUG=true`) MAY add request
 timing to responses but MUST NOT add stack traces or config.
 
 ---
@@ -146,11 +146,11 @@ The server SHOULD validate at startup:
 
 | Check                                        | Severity  | Action on Failure                |
 |----------------------------------------------|-----------|----------------------------------|
-| `HYPERTENSOR_SIGNING_KEY_PATH` is set        | Critical  | Log warning, use ephemeral key   |
+| `ONTIC_ENGINE_SIGNING_KEY_PATH` is set        | Critical  | Log warning, use ephemeral key   |
 | Signing key file exists and is readable      | Critical  | Log error, exit                  |
 | Signing key file permissions ≤ 0600          | Warning   | Log warning                      |
-| `HYPERTENSOR_API_KEYS` contains ≥ 1 key     | Critical  | Generate random key, log it      |
-| `HYPERTENSOR_REQUIRE_AUTH` is `true`         | Warning   | Log warning (alpha insecure)     |
+| `ONTIC_ENGINE_API_KEYS` contains ≥ 1 key     | Critical  | Generate random key, log it      |
+| `ONTIC_ENGINE_REQUIRE_AUTH` is `true`         | Warning   | Log warning (alpha insecure)     |
 | Ed25519 library available (`cryptography`)   | Warning   | Fall back to HMAC, log warning   |
 | Rate limiter configured (`rate_limit_rpm`)   | Info      | Use default (60 rpm)             |
 | CORS origins ≠ `["*"]`                       | Warning   | Log warning (open CORS)          |
@@ -163,8 +163,8 @@ The system uses per-key token-bucket rate limiting.
 
 | Parameter          | Default | Config Variable             |
 |--------------------|---------|------------------------------|
-| Requests/minute    | 60      | `HYPERTENSOR_RATE_LIMIT_RPM` |
-| Burst capacity     | 10      | `HYPERTENSOR_RATE_LIMIT_BURST` |
+| Requests/minute    | 60      | `ONTIC_ENGINE_RATE_LIMIT_RPM` |
+| Burst capacity     | 10      | `ONTIC_ENGINE_RATE_LIMIT_BURST` |
 
 Rate limit state is **in-memory**.  It resets on server restart.
 This is acceptable for single-process alpha.
@@ -198,7 +198,7 @@ Alpha deployments MUST use HTTPS.  Options:
 For alpha, restrict CORS to known client origins:
 
 ```bash
-export HYPERTENSOR_CORS_ORIGINS="https://app.hypertensor.io"
+export ONTIC_ENGINE_CORS_ORIGINS="https://app.physics-os.io"
 ```
 
 Default `["*"]` is development only.
@@ -208,7 +208,7 @@ Default `["*"]` is development only.
 For production:
 
 ```bash
-export HYPERTENSOR_HOST="127.0.0.1"  # Behind reverse proxy
+export ONTIC_ENGINE_HOST="127.0.0.1"  # Behind reverse proxy
 ```
 
 Default `0.0.0.0` binds all interfaces (acceptable if firewalled).
@@ -231,7 +231,7 @@ If signing key is compromised:
 
 If an API key is compromised:
 
-1. Remove key from `HYPERTENSOR_API_KEYS`, restart
+1. Remove key from `ONTIC_ENGINE_API_KEYS`, restart
 2. Issue new key to legitimate user
 3. Review server logs for unauthorized usage
 4. Document incident
@@ -247,13 +247,13 @@ See `FORBIDDEN_OUTPUTS.md` — Response to Accidental Leak section.
 ### Start Server (Alpha)
 
 ```bash
-export HYPERTENSOR_SIGNING_KEY_PATH=/etc/physics_os/signing_key.pem
-export HYPERTENSOR_API_KEYS="htk_user1_xxx,htk_user2_yyy"
-export HYPERTENSOR_REQUIRE_AUTH=true
-export HYPERTENSOR_HOST=127.0.0.1
-export HYPERTENSOR_LOG_LEVEL=info
+export ONTIC_ENGINE_SIGNING_KEY_PATH=/etc/physics_os/signing_key.pem
+export ONTIC_ENGINE_API_KEYS="htk_user1_xxx,htk_user2_yyy"
+export ONTIC_ENGINE_REQUIRE_AUTH=true
+export ONTIC_ENGINE_HOST=127.0.0.1
+export ONTIC_ENGINE_LOG_LEVEL=info
 
-python -m hypertensor serve
+python -m physics_os serve
 ```
 
 ### Health Check
@@ -265,7 +265,7 @@ curl -s http://127.0.0.1:8000/v1/health | python3 -m json.tool
 ### Verify Certificate
 
 ```bash
-python -m hypertensor verify path/to/certificate.json
+python -m physics_os verify path/to/certificate.json
 ```
 
 ### List Capabilities (unauthenticated)

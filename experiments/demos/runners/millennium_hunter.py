@@ -11,7 +11,7 @@ The $1 Million Question:
 The Barrier:
   Standard solvers crash because resolving the singularity requires N → ∞.
 
-The HyperTensor Bet:
+Ontic Bet:
   We simulate a virtual grid of 1024³ (1 Billion Points).
   We bet that the information content (Rank) of the singularity 
   grows slower than the grid resolution.
@@ -22,10 +22,10 @@ The Experiment:
   Early Time (0 < t < 4): Laminar flow, Rank stays low (~4-10)
   Critical Time (t ≈ 9): Vortex sheets roll up and shatter
   
-  The Hunt: If HyperTensor survives t=9 with Rank < 100, you have a tool
+  The Hunt: If The Ontic Engine survives t=9 with Rank < 100, you have a tool
   that can probe the singularity deeper than anyone else.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 2025
 """
 

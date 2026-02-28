@@ -3,7 +3,7 @@
 Pure QTT PDE Solver Demo
 ========================
 
-This demo shows what makes HyperTensor unique:
+This demo shows what makes The Ontic Engine unique:
 
     ★ PDE operators (derivatives, Laplacians) as Matrix Product Operators (MPO)
     ★ Field state as Quantized Tensor-Train (QTT)
@@ -16,7 +16,7 @@ Traditional approach:
     Dense field (N points) → Compute physics → Dense field
     Memory: O(N), Compute: O(N)
 
-HyperTensor approach:
+The Ontic Engine approach:
     QTT field (log N cores) → MPO operators → QTT field
     Memory: O(log N × r²), Compute: O(log N × r³)
 
@@ -67,7 +67,7 @@ def print_header():
     print("  All operations performed directly on tensor-train cores")
     print("=" * 74)
     print("""
-  This demo shows HyperTensor's unique capability:
+  This demo shows The Ontic Engine's unique capability:
 
     ★ Operators (∇, ∇²) represented as Matrix Product Operators (MPO)
     ★ Field state represented as Quantized Tensor-Train (QTT)  
@@ -394,7 +394,7 @@ def main():
        → Operations on 2^24 = 16M points in milliseconds
        → Memory: O(log N × r²) vs O(N) for dense
 
-  This is HyperTensor's unique capability:
+  This is The Ontic Engine's unique capability:
   
     ★ Not just compression - a different compute model
     ★ PDEs solved in compressed space  

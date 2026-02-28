@@ -51,7 +51,7 @@ PREDICTION OUTPUTS:
     3. Price distribution: μ ± σ cone evolution
     4. Cascade probability: P(liquidation_cascade | H, funding)
 
-Author: Genesis Stack / HyperTensor VM
+Author: Genesis Stack / The Ontic Engine
 """
 
 import asyncio

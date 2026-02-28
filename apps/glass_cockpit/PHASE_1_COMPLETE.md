@@ -95,7 +95,7 @@
 
 ```bash
 $ cargo build --release
-   Compiling hypertensor-glass-cockpit v0.1.0
+   Compiling ontic-glass-cockpit v0.1.0
    Finished release [optimized] target(s)
 
 $ ls -lh target/release/glass-cockpit

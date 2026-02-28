@@ -8,7 +8,7 @@
 
 ## Context
 
-HyperTensor claims mathematical correctness for conservation laws (mass, momentum, energy), PDE discretization operators, and tensor decomposition properties. Marketing these claims to aerospace, defense, and nuclear clients requires more than unit tests — it requires **formal verification**: machine-checked proofs that the mathematical statements are logically valid.
+The Ontic Engine claims mathematical correctness for conservation laws (mass, momentum, energy), PDE discretization operators, and tensor decomposition properties. Marketing these claims to aerospace, defense, and nuclear clients requires more than unit tests — it requires **formal verification**: machine-checked proofs that the mathematical statements are logically valid.
 
 Candidates evaluated:
 

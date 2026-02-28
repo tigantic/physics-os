@@ -5,7 +5,7 @@ This module provides comprehensive training infrastructure for
 neural network surrogates including data augmentation, active
 learning, and cross-validation.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from dataclasses import dataclass

@@ -1,4 +1,4 @@
-"""HyperTensor API — IP-safe result serializer.
+"""Ontic API — IP-safe result serializer.
 
 Converts ``ExecutionResult`` into API response models, stripping
 ALL tensor-train internals:

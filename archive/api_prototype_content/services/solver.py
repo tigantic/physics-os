@@ -1,4 +1,4 @@
-"""HyperTensor API — Solver service.
+"""Ontic API — Solver service.
 
 Maps API requests to QTT VM compilers, executes the simulation,
 and returns the raw ``ExecutionResult`` (which is then sanitized

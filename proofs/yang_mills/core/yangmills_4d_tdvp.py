@@ -33,7 +33,7 @@ COMPUTATIONAL APPROACH:
 
 This is EXACTLY parallel to the 5D Vlasov breakthrough!
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-16
 """
 

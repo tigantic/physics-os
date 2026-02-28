@@ -1,5 +1,5 @@
 """
-Static site generator for HyperTensor documentation.
+Static site generator for The Ontic Engine documentation.
 
 This module provides the core site generation functionality including:
 - Page rendering from Markdown/RST
@@ -144,7 +144,7 @@ class Page:
 class SiteConfig:
     """Configuration for static site generation."""
 
-    title: str = "HyperTensor Documentation"
+    title: str = "Ontic Documentation"
     description: str = "Quantum-inspired tensor network framework for hypersonic CFD"
     version: str = "2.5.0"
     base_url: str = "/"
@@ -165,8 +165,8 @@ class SiteConfig:
     mermaid_diagrams: bool = True
 
     # Metadata
-    author: str = "HyperTensor Team"
-    repository: str = "https://github.com/tigantic/HyperTensor"
+    author: str = "TiganticLabz"
+    repository: str = "https://github.com/tigantic/physics-os"
     license: str = "Proprietary - Tigantic Holdings LLC"
 
     # Navigation
@@ -460,7 +460,7 @@ class TemplateEngine:
 
 class SiteBuilder:
     """
-    Static site builder for HyperTensor documentation.
+    Static site builder for The Ontic Engine documentation.
 
     Generates a complete static documentation site from source files.
     """
@@ -722,7 +722,7 @@ class SiteBuilder:
 
     def _generate_css(self) -> str:
         """Generate base CSS styles."""
-        return """/* HyperTensor Documentation Styles */
+        return """/* Ontic Documentation Styles */
 :root {
     --primary: #0066cc;
     --secondary: #6c757d;

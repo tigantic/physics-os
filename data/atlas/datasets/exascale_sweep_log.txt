@@ -1,5 +1,5 @@
 ================================================================================
-  HYPERTENSOR-VM  —  EXASCALE ANTENNA INVENTION SWEEP
+  ONTIC_ENGINE-VM  —  EXASCALE ANTENNA INVENTION SWEEP
 ================================================================================
   Grid:       16,384³  (4,398,046,511,104 DOFs = 4.4T)
   Steps:      200

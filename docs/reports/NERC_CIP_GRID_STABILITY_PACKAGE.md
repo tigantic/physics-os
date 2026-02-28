@@ -1,6 +1,6 @@
 # NERC CIP-Compliant Grid Stability Certification Package
 
-**Issuing Authority:** HyperTensor Trustless Verification System
+**Issuing Authority:** Ontic Trustless Verification System
 **Author:** Bradly Biron Baker Adams | Tigantic Holdings LLC
 **Date:** 2026-02-28 04:57 UTC
 **Classification:** PUBLIC — Cryptographically Verified
@@ -15,7 +15,7 @@ This package provides cryptographic proof that the assessed power system satisfi
 
 ## 2. Methodology
 
-HyperTensor Quantum Tensor Train (QTT) Oracle Kernel performs full N-1 contingency analysis on continental-scale grid models (100,000+ buses) with trustless zero-knowledge proof of stability. Each contingency scenario is proven via Halo2 ZK circuit for the swing equation, aggregated via Merkle tree, and verified on-chain via Groth16 pairing check (<300k gas). Multi-party protocol allows utilities to prove stability without revealing sensitive topology.
+Ontic Quantum Tensor Train (QTT) Oracle Kernel performs full N-1 contingency analysis on continental-scale grid models (100,000+ buses) with trustless zero-knowledge proof of stability. Each contingency scenario is proven via Halo2 ZK circuit for the swing equation, aggregated via Merkle tree, and verified on-chain via Groth16 pairing check (<300k gas). Multi-party protocol allows utilities to prove stability without revealing sensitive topology.
 
 ---
 
@@ -66,7 +66,7 @@ HyperTensor Quantum Tensor Train (QTT) Oracle Kernel performs full N-1 contingen
 
 | Parameter | Value |
 |-----------|-------|
-| Contract | `HyperTensorGridStabilityVerifier` |
+| Contract | `OnticGridStabilityVerifier` |
 | Solidity | `^0.8.20` |
 | Est. gas | 214,450 |
 | Under 300k | YES |

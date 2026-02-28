@@ -211,14 +211,14 @@ class TestWSGICounters:
 
 class TestCreateApp:
     def test_create_app_default_has_auth(self, tmp_path: Path) -> None:
-        os.environ["HYPERTENSOR_DATA_ROOT"] = str(tmp_path)
+        os.environ["ONTIC_DATA_ROOT"] = str(tmp_path)
         try:
             app = create_app()
             # With auth enabled (default), outermost layer is RateLimitMiddleware
             from products.facial_plastics.ui.auth import RateLimitMiddleware
             assert isinstance(app, RateLimitMiddleware)
         finally:
-            del os.environ["HYPERTENSOR_DATA_ROOT"]
+            del os.environ["ONTIC_DATA_ROOT"]
 
     def test_create_app_auth_disabled(self, tmp_path: Path) -> None:
         app = create_app(library_root=tmp_path, enable_auth=False, enable_rate_limit=False)

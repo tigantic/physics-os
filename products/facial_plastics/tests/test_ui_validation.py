@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Exhaustive client-side UI validation — tests every capability the surgeon
-can execute through the HyperTensor Facial Plastics Surgical Cockpit.
+can execute through the Ontic Engine Facial Plastics Surgical Cockpit.
 
 Runs from OUTSIDE the container, hitting the live deployment exactly as
 a browser would (through Caddy on port 80, or direct to app on 8420).
@@ -675,7 +675,7 @@ def test_css_design_system():
 
 def main():
     print("╔══════════════════════════════════════════════════════════╗")
-    print("║  HyperTensor Facial Plastics — Full UI Validation      ║")
+    print("║  Ontic Facial Plastics — Full UI Validation      ║")
     print("║  Testing every capability from the client/surgeon side ║")
     print("╚══════════════════════════════════════════════════════════╝")
 

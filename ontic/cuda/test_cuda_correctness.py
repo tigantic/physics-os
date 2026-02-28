@@ -17,7 +17,7 @@ import torch
 
 # Import CUDA extension (need torch first for library paths)
 sys.path.insert(
-    0, "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/ontic/cuda"
+    0, "/home/brad/TiganticLabz/Main_Projects/Project The Ontic Engine/ontic/cuda"
 )
 import tensornet_cuda
 

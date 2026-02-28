@@ -104,7 +104,7 @@ fluidelite/
 ```bibtex
 @software{fluidelite2026,
   title={FluidElite: Gradient-Free Language Models via Tensor Cross Interpolation},
-  author={HyperTensor Team},
+  author={TiganticLabz},
   year={2026},
   url={https://github.com/physics_os/fluidelite}
 }

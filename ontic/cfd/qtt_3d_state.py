@@ -17,7 +17,7 @@ Complexity Analysis:
     
     For N=1024, r=64:  Dense=4GB, QTT=~1MB → 4000× compression
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2025
 """
 

@@ -156,7 +156,7 @@ for the complete mapping from claims to artifacts and acceptance criteria.
 | Symptom                            | Fix                                                   |
 |------------------------------------|-------------------------------------------------------|
 | `CUDA not available`               | Verify `torch.cuda.is_available()` — install cu128    |
-| `ModuleNotFoundError: hypertensor` | Run from repo root; ensure `PYTHONPATH=.`             |
+| `ModuleNotFoundError: ontic` | Run from repo root; ensure `PYTHONPATH=.`             |
 | OOM on GPU                         | Reduce `--n-bits` range or use `--device cpu`         |
 | Hash mismatch on outputs           | Ensure commit `79910242`; FP non-determinism may cause minor JSON float diffs |
 

@@ -116,7 +116,7 @@ def generate_cyclonedx_sbom(
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "tools": [
                 {
-                    "vendor": "HyperTensor",
+                    "vendor": "The Ontic Engine",
                     "name": "generate_sbom.py",
                     "version": "1.0.0",
                 }
@@ -169,7 +169,7 @@ def generate_cbom(project_root: Path) -> Dict[str, Any]:
         )
 
     cbom = {
-        "format": "HyperTensor-CBOM",
+        "format": "The Ontic Engine-CBOM",
         "version": "1.0",
         "generated_at": datetime.utcnow().isoformat() + "Z",
         "summary": {

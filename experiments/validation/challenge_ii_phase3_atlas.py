@@ -1110,7 +1110,7 @@ def generate_report(result: AtlasResult, atlas: BindingAtlas) -> Path:
 def main() -> None:
     """Entry point."""
     print("╔══════════════════════════════════════════════════════════════════╗")
-    print("║  HyperTensor — Challenge II Phase 3                            ║")
+    print("║  The Ontic Engine — Challenge II Phase 3                            ║")
     print("║  Pre-Computed Binding Atlas                                     ║")
     print("║  QTT-Compressed Energy Landscapes for PDB-Scale Drug Discovery ║")
     print("╚══════════════════════════════════════════════════════════════════╝")

@@ -2,9 +2,9 @@
 apiVersion: 1
 
 providers:
-  - name: HyperTensor
+  - name: The Ontic Engine
     orgId: 1
-    folder: HyperTensor
+    folder: The Ontic Engine
     type: file
     disableDeletion: false
     editable: true

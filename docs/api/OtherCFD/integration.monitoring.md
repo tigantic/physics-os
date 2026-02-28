@@ -143,7 +143,7 @@ Structured log entry.
 ##### `__init__`
 
 ```python
-def __init__(self, timestamp: float, level: monitoring.LogLevel, message: str, logger_name: str = 'hypertensor', context: Dict[str, Any] = <factory>, source: Optional[str] = None, line: Optional[int] = None) -> None
+def __init__(self, timestamp: float, level: monitoring.LogLevel, message: str, logger_name: str = 'ontic', context: Dict[str, Any] = <factory>, source: Optional[str] = None, line: Optional[int] = None) -> None
 ```
 
 ##### `to_dict`
@@ -385,7 +385,7 @@ Structured logger with multiple handlers.
 ##### `__init__`
 
 ```python
-def __init__(self, name: str = 'hypertensor', level: monitoring.LogLevel = <LogLevel.INFO: 20>)
+def __init__(self, name: str = 'ontic', level: monitoring.LogLevel = <LogLevel.INFO: 20>)
 ```
 
 Initialize logger.
@@ -450,7 +450,7 @@ Get buffered log entries.
 ##### `get_logger`
 
 ```python
-def get_logger(name: str = 'hypertensor') -> 'StructuredLogger'
+def get_logger(name: str = 'ontic') -> 'StructuredLogger'
 ```
 
 Get or create a logger by name.
@@ -621,7 +621,7 @@ Convert to dictionary.
 ### `get_logger`
 
 ```python
-def get_logger(name: str = 'hypertensor') -> monitoring.StructuredLogger
+def get_logger(name: str = 'ontic') -> monitoring.StructuredLogger
 ```
 
 Get a structured logger.

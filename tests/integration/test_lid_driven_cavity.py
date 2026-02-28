@@ -27,7 +27,7 @@ Reynolds numbers tested: Re = 100, 400, 1000
 
 Constitutional Compliance:
     - Article IV.1: Verification (V&V)
-    - HYPERTENSOR_VV_FRAMEWORK.md Section 3.3
+    - ONTIC_VV_FRAMEWORK.md Section 3.3
     - Phase 1a gate validation
 
 Tag: [PHASE-1A] [BENCHMARK] [TIER-2] [V&V]

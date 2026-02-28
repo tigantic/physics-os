@@ -5,7 +5,7 @@ This module provides shared types, constants, and utilities used across
 the ml_surrogates subpackage. It is designed to avoid circular imports
 by keeping foundational types separate from implementations.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from dataclasses import dataclass, field

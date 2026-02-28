@@ -16,7 +16,7 @@ Forcing types:
 
 The forcing is constructed in QTT format to avoid dense operations.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026
 """
 

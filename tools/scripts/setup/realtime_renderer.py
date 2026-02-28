@@ -1,8 +1,8 @@
 """
-HyperTensor Real-Time Renderer
+Ontic Real-Time Renderer
 ==============================
 
-Production script that connects HyperTensor QTT engine to matplotlib visualization.
+Production script that connects Ontic QTT engine to matplotlib visualization.
 Renders a 1080p window into a trillion-point simulation without decompressing
 the other 999 billion points.
 
@@ -10,7 +10,7 @@ Usage:
     python realtime_renderer.py
 
 Requirements:
-    - hypertensor_core.py (in same folder or installed)
+    - ontic_core.py (in same folder or installed)
     - numpy, matplotlib
 """
 
@@ -22,16 +22,16 @@ from matplotlib.animation import FuncAnimation
 
 # --- THE CRITICAL IMPORT ---
 try:
-    import hypertensor_core as ht
+    import ontic_core as ht
 
-    print("SUCCESS: HyperTensor Core loaded.")
+    print("SUCCESS: Ontic Core loaded.")
 except ImportError:
-    print("CRITICAL ERROR: 'hypertensor_core.py' not found.")
+    print("CRITICAL ERROR: 'ontic_core.py' not found.")
     print("Place your engine file in this folder to run the Real Tech.")
     exit()
 
 print("=" * 60)
-print("--- HYPERTENSOR: REAL-TIME RENDERER ---")
+print("--- ONTIC_ENGINE: REAL-TIME RENDERER ---")
 print("Connecting Visualization to QTT Engine...")
 print("=" * 60)
 
@@ -89,7 +89,7 @@ plt.style.use("dark_background")
 fig, ax = plt.subplots(figsize=(10, 10), facecolor="black")
 ax.axis("off")
 ax.set_title(
-    "HyperTensor: QTT Real-Time Fluid Simulation", color="white", fontsize=14, pad=20
+    "The Ontic Engine: QTT Real-Time Fluid Simulation", color="white", fontsize=14, pad=20
 )
 
 # Initial frame
@@ -170,7 +170,7 @@ def update(frame):
 
 
 print("\n" + "=" * 60)
-print("System Linked. Running HyperTensor simulation...")
+print("System Linked. Running The Ontic Engine simulation...")
 print("Close window to exit.")
 print("=" * 60 + "\n")
 

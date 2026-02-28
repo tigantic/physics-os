@@ -1,5 +1,5 @@
 /*!
- * HyperTensor Glass Cockpit - Phase 3: Live Tensor Visualization
+ * Ontic Glass Cockpit - Phase 3: Live Tensor Visualization
  * 
  * Real-time tensor field visualization from Sovereign Engine.
  * 
@@ -28,7 +28,7 @@ use tensor_colormap::{TensorColormap, ColormapType};
 
 /// Phase 3 Live Tensor Visualization
 fn main() -> Result<()> {
-    println!("HyperTensor Glass Cockpit v0.3.0");
+    println!("Ontic Glass Cockpit v0.3.0");
     println!("Phase 3: Live Tensor Visualization");
     println!("═══════════════════════════════════════════════");
     
@@ -46,14 +46,14 @@ fn main() -> Result<()> {
     
     // STEP 2: Connect to RAM Bridge v2
     println!("[2/4] Connecting to RAM Bridge v2...");
-    let mut bridge = RamBridgeV2::connect("/dev/shm/hypertensor_bridge".into())?;
+    let mut bridge = RamBridgeV2::connect("/dev/shm/ontic_bridge".into())?;
     println!("  ✓ RAM Bridge v2 connected");
     
     // STEP 3: Initialize wgpu
     println!("[3/4] Initializing GPU pipeline...");
     let event_loop = EventLoop::new()?;
     let window_obj = WindowBuilder::new()
-        .with_title("HyperTensor Glass Cockpit - Phase 3")
+        .with_title("Ontic Glass Cockpit - Phase 3")
         .with_inner_size(winit::dpi::PhysicalSize::new(1920, 1080))
         .build(&event_loop)?;
     

@@ -15,7 +15,7 @@ This demonstrates what NO OTHER FRAMEWORK ON EARTH can do:
 - O(r³ log N) complexity at every stage
 - Seamless composition across mathematical domains
 
-Author: HyperTensor Genesis Protocol
+Author: TiganticLabz Genesis Protocol
 Date: January 24, 2026
 """
 

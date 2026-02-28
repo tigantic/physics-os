@@ -1,4 +1,4 @@
-# Runtime dependencies for HyperTensor Facial Plastics container.
+# Runtime dependencies for Ontic Facial Plastics container.
 # Pinned to versions tested in CI.
 numpy==2.2.6
 scipy==1.16.3

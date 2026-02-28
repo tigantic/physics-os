@@ -1,4 +1,4 @@
-"""HyperTensor API — Health endpoint.
+"""Ontic API — Health endpoint.
 
 GET /v1/health — Liveness & readiness probe.
 """

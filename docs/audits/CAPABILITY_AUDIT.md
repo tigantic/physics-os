@@ -60,7 +60,7 @@ at compile time that C++ hides until runtime. PyO3 bindings are cleaner than pyb
 
 ## Executive Summary
 
-HyperTensor solves PDEs using Tensor-Train (TT) and Quantized Tensor-Train (QTT) representations, achieving logarithmic memory complexity for smooth solutions. **All four implementation phases are now complete.**
+The Ontic Engine solves PDEs using Tensor-Train (TT) and Quantized Tensor-Train (QTT) representations, achieving logarithmic memory complexity for smooth solutions. **All four implementation phases are now complete.**
 
 | Category | Status |
 |----------|--------|
@@ -1575,4 +1575,4 @@ Rank Dynamics:
 — Richard Feynman
 
 *"Sophistication over speed. Exceptionalism is our brand."*  
-— HyperTensor Design Philosophy
+— Ontic Design Philosophy

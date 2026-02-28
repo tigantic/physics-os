@@ -23,7 +23,7 @@ Complexity:
     Per timestep: O(r³ × 3 log₂ N) 
     Memory: O(r² × 3 log₂ N)
     
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2025
 """
 

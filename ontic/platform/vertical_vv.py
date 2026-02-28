@@ -411,7 +411,7 @@ def _register_heat_benchmark(registry: BenchmarkRegistry) -> None:
         setup_fn=setup_fn,
         default_resolutions=(32, 64, 128, 256),
         convergence_order=2,
-        source="HyperTensor Platform V&V Suite",
+        source="Ontic Platform V&V Suite",
         tags=["parabolic", "diffusion", "1D", "analytical"],
     )
     registry.register(benchmark)

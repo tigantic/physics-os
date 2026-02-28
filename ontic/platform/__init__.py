@@ -1,5 +1,5 @@
 """
-HyperTensor Platform — V2.0.0 (Phases 1–7)
+Ontic Platform — V2.0.0 (Phases 1–7)
 =============================================
 
 Canonical interfaces and infrastructure for the unified simulation + inference

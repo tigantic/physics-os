@@ -1,7 +1,7 @@
 {
     "openapi": "3.1.0",
     "info": {
-        "title": "HyperTensor Runtime API",
+        "title": "Ontic Runtime API",
         "summary": "Licensed execution access + evidence guarantees for compression-native physics compute.",
         "version": "1.0.0"
     },

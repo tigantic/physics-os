@@ -81,9 +81,9 @@ class QTTBridgeStreamer:
         elif platform.system() == "Windows":
             import tempfile
 
-            self.bridge_path = Path(tempfile.gettempdir()) / "hypertensor_bridge"
+            self.bridge_path = Path(tempfile.gettempdir()) / "ontic_bridge"
         else:
-            self.bridge_path = Path("/dev/shm/hypertensor_bridge")
+            self.bridge_path = Path("/dev/shm/ontic_bridge")
 
         self.channels = 4  # RGBA
         self.data_size = self.width * self.height * self.channels

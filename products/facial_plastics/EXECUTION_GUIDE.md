@@ -477,7 +477,7 @@ curl -H "X-API-Key: fp_..." https://fp.yourorg.com/api/contract
 
 | Service | Image | Port | Purpose |
 |---------|-------|------|---------|
-| `app` | `hypertensor-facial-plastics` | 8420 (internal) | Gunicorn WSGI server |
+| `app` | `ontic-facial-plastics` | 8420 (internal) | Gunicorn WSGI server |
 | `caddy` | `caddy:2-alpine` | 80, 443 | TLS termination, reverse proxy |
 | `backup` | `alpine:3.19` | — | Daily `/data` tarball + 30-day retention |
 
@@ -495,7 +495,7 @@ curl -H "X-API-Key: fp_..." https://fp.yourorg.com/api/contract
 | `FP_AUTH_ENABLED` | `true` | Enable API-key authentication |
 | `FP_RATE_LIMIT_ENABLED` | `true` | Enable per-IP rate limiting |
 | `FP_RATE_LIMIT_RPM` | `120` | Requests per minute per IP |
-| `HYPERTENSOR_DATA_ROOT` | `/data` | Case library root |
+| `ONTIC_ENGINE_DATA_ROOT` | `/data` | Case library root |
 
 ### 10.5 Authentication
 
@@ -522,8 +522,8 @@ Rate limiting: 120 requests/minute per client IP (fixed-window).
 ```
 Push to main → mypy → pytest (85% coverage) → benchmark → container build → GHCR push
                                                                                 ↓
-                                                                    ghcr.io/<owner>/hypertensor-facial-plastics:latest
-                                                                    ghcr.io/<owner>/hypertensor-facial-plastics:<sha>
+                                                                    ghcr.io/<owner>/ontic-facial-plastics:latest
+                                                                    ghcr.io/<owner>/ontic-facial-plastics:<sha>
 ```
 
 ### 10.8 Makefile Targets

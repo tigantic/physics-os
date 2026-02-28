@@ -1,5 +1,5 @@
 """
-Runnable Code Examples for Project HyperTensor.
+Runnable Code Examples for Project The Ontic Engine.
 
 This module provides infrastructure for creating, validating, and running
 code examples from documentation and tutorials.

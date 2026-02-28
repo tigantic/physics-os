@@ -17,7 +17,7 @@ energy shadows that steal their profits.
 
 Requirements:
   - Unreal Engine with UDP listener on port 19000
-  - HyperTensor Energy Connector Plugin (or custom Blueprint)
+  - Ontic Energy Connector Plugin (or custom Blueprint)
 
 Run: python ontic/energy/unreal_stream.py
 """
@@ -337,7 +337,7 @@ def run_visualization_demo():
     3. Stream everything to Unreal
     """
     print("=" * 70)
-    print("  HYPERTENSOR ENERGY - UNREAL ENGINE BRIDGE")
+    print("  ONTIC_ENGINE ENERGY - UNREAL ENGINE BRIDGE")
     print("  Phase 5C: Wake Visualization Demo")
     print("=" * 70)
     print()
@@ -436,7 +436,7 @@ def run_comparison_demo():
     bridge = UnrealBridge()
 
     print("[STREAM] Sending comparison data...")
-    bridge.send_comparison(power_bad, power_opt, "Direct Wake", "HyperTensor Optimized")
+    bridge.send_comparison(power_bad, power_opt, "Direct Wake", "Ontic Optimized")
 
     # Stream both wake fields with different tags
     print("[STREAM] Sending Scenario A wake field...")

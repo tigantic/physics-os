@@ -1,5 +1,5 @@
 """
-Verification and Validation (V&V) Module for Project HyperTensor.
+Verification and Validation (V&V) Module for Project The Ontic Engine.
 
 Provides formal V&V framework including:
 - Verification: Solving the equations right (code correctness)

@@ -187,7 +187,7 @@ work globally.
 
 ## Author
 
-Genesis Stack / HyperTensor VM
+Genesis Stack / The Ontic Engine
 
 ## License
 

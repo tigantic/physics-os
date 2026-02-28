@@ -22,7 +22,7 @@ THE TARGET:
 - P = 0 GPa (ambient pressure)
 - Strong electron-phonon coupling λ > 2
 
-Author: HyperTensor Physics Engine
+Author: TiganticLabz Physics Engine
 Date: January 5, 2026
 """
 
@@ -468,7 +468,7 @@ def generate_attestation(result: Dict) -> Dict:
             'stability_factor': w['stability'],
         },
         'physics': 'Allen-Dynes modified BCS with cage compression',
-        'framework': 'HyperTensor Phonon-Mediated Pairing',
+        'framework': 'Ontic Phonon-Mediated Pairing',
     }
     
     content = json.dumps(attestation, sort_keys=True, default=str)

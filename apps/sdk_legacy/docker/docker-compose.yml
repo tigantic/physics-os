@@ -2,29 +2,29 @@ version: "3.9"
 
 services:
   # =============================================================================
-  # HYPERTENSOR BASE
+  # ONTIC_ENGINE BASE
   # =============================================================================
-  hypertensor:
+  ontic:
     build:
       context: ../..
       dockerfile: sdk/docker/Dockerfile
       target: base
-    image: tigantic/hypertensor:latest
-    container_name: hypertensor
+    image: tigantic/ontic:latest
+    container_name: ontic
     volumes:
-      - hypertensor-data:/home/physics_os/data
+      - ontic-data:/home/physics_os/data
     restart: unless-stopped
 
   # =============================================================================
-  # HYPERTENSOR GPU
+  # ONTIC_ENGINE GPU
   # =============================================================================
-  hypertensor-gpu:
+  ontic-gpu:
     build:
       context: ../..
       dockerfile: sdk/docker/Dockerfile
       target: cuda
-    image: tigantic/hypertensor:cuda
-    container_name: hypertensor-gpu
+    image: tigantic/ontic:cuda
+    container_name: ontic-gpu
     deploy:
       resources:
         reservations:
@@ -33,7 +33,7 @@ services:
               count: all
               capabilities: [gpu]
     volumes:
-      - hypertensor-data:/home/physics_os/data
+      - ontic-data:/home/physics_os/data
     restart: unless-stopped
 
   # =============================================================================
@@ -44,13 +44,13 @@ services:
       context: ../..
       dockerfile: sdk/docker/Dockerfile
       target: jupyter
-    image: tigantic/hypertensor:jupyter
-    container_name: hypertensor-jupyter
+    image: tigantic/ontic:jupyter
+    container_name: ontic-jupyter
     ports:
       - "8888:8888"
     volumes:
-      - hypertensor-notebooks:/home/physics_os/notebooks
-      - hypertensor-data:/home/physics_os/data
+      - ontic-notebooks:/home/physics_os/notebooks
+      - ontic-data:/home/physics_os/data
     restart: unless-stopped
 
   # =============================================================================
@@ -61,16 +61,16 @@ services:
       context: ../..
       dockerfile: sdk/docker/Dockerfile
       target: server
-    image: tigantic/hypertensor:server
-    container_name: hypertensor-server
+    image: tigantic/ontic:server
+    container_name: ontic-server
     ports:
       - "8000:8000"  # REST API
       - "5555:5555"  # ZMQ Bridge
     volumes:
-      - hypertensor-data:/home/physics_os/data
+      - ontic-data:/home/physics_os/data
     environment:
-      - HYPERTENSOR_LOG_LEVEL=INFO
-      - HYPERTENSOR_MAX_WORKERS=4
+      - ONTIC_ENGINE_LOG_LEVEL=INFO
+      - ONTIC_ENGINE_MAX_WORKERS=4
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -84,7 +84,7 @@ services:
   # =============================================================================
   prometheus:
     image: prom/prometheus:latest
-    container_name: hypertensor-prometheus
+    container_name: ontic-prometheus
     ports:
       - "9090:9090"
     volumes:
@@ -100,7 +100,7 @@ services:
   # =============================================================================
   grafana:
     image: grafana/grafana:latest
-    container_name: hypertensor-grafana
+    container_name: ontic-grafana
     ports:
       - "3000:3000"
     volumes:
@@ -114,11 +114,11 @@ services:
     restart: unless-stopped
 
 volumes:
-  hypertensor-data:
-  hypertensor-notebooks:
+  ontic-data:
+  ontic-notebooks:
   prometheus-data:
   grafana-data:
 
 networks:
   default:
-    name: hypertensor-network
+    name: ontic-network

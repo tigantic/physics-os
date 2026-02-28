@@ -2,7 +2,7 @@
 pragma solidity ^0.8.21;
 
 /// @title Standard Groth16 Verifier for Zero-Expansion Semaphore
-/// @author HyperTensor Labs
+/// @author Ontic Labs
 /// @notice This is a STANDARD Groth16 verifier. The magic is in the PROVER.
 /// @dev Uses ecPairing precompile (0x08). Anyone can verify this is standard Groth16.
 ///

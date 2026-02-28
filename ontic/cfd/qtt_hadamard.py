@@ -25,7 +25,7 @@ Also Provided:
     - qtt_polynomial: Evaluate polynomial P(f)
     - qtt_nonlinear_advection: u*∂u/∂x term
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026-01-16
 Tag: [PHYSICS-TOOLBOX] [NONLINEAR]
 """

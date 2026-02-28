@@ -2,7 +2,7 @@
 
 ## Overview
 
-FEZK (FLUIDELITE Enhanced ZK) v2.0 is a complete rewrite of the ZK circuit vulnerability analyzer, integrating the full HyperTensor tensornet stack for unprecedented scalability.
+FEZK (FLUIDELITE Enhanced ZK) v2.0 is a complete rewrite of the ZK circuit vulnerability analyzer, integrating the full The Ontic Engine tensornet stack for unprecedented scalability.
 
 **Key Insight**: ZK circuit analysis is fundamentally a tensor problem. By representing constraint matrices as Quantized Tensor Trains (QTT) and constraint operations as Matrix Product Operators (MPO), we achieve O(log N) complexity instead of O(N²).
 

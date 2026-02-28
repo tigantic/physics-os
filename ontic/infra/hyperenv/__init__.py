@@ -2,7 +2,7 @@
 HyperEnv - Multi-Agent RL Training Infrastructure
 ==================================================
 
-Layer 4 of the HyperTensor platform.
+Layer 4 of the Ontic Engine platform.
 
 Builds on HyperSim to provide:
 - Multi-agent coordination

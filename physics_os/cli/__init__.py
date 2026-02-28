@@ -1,1 +1,1 @@
-"""HyperTensor CLI — __init__."""
+"""Ontic CLI — __init__."""

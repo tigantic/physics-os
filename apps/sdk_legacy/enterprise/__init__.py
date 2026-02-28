@@ -1,6 +1,6 @@
 # Copyright 2025 Tigantic Labs. All Rights Reserved.
 """
-HyperTensor Enterprise Module
+Ontic Enterprise Module
 
 Provides enterprise features including:
 - License management
@@ -161,7 +161,7 @@ class LicenseManager:
     @classmethod
     def _store_license(cls, key: str) -> None:
         """Store license key."""
-        license_dir = Path.home() / ".hypertensor"
+        license_dir = Path.home() / ".ontic"
         license_dir.mkdir(exist_ok=True)
         
         license_file = license_dir / "license.key"
@@ -170,7 +170,7 @@ class LicenseManager:
     @classmethod
     def _load_stored_license(cls) -> None:
         """Load stored license key."""
-        license_file = Path.home() / ".hypertensor" / "license.key"
+        license_file = Path.home() / ".ontic" / "license.key"
         
         if license_file.exists():
             try:

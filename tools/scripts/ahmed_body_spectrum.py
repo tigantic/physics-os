@@ -28,7 +28,7 @@ from typing import Tuple, List, Dict, Any
 import numpy as np
 import torch
 
-# ── HyperTensor imports ───────────────────────────────────────────
+# ── The Ontic Engine imports ───────────────────────────────────────────
 _tools_dir = Path(__file__).resolve().parent.parent   # tools/
 _repo_root = _tools_dir.parent                        # repo root
 sys.path.insert(0, str(_tools_dir))

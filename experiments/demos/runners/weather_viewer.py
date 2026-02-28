@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HyperTensor Weather Manifold Viewer
+Ontic Weather Manifold Viewer
 ===================================
 
 Visualizes 3D atmospheric data compressed into QTT manifolds.
@@ -122,7 +122,7 @@ class WeatherViewer(QMainWindow):
     
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("HyperTensor Weather Manifold Viewer")
+        self.setWindowTitle("Ontic Weather Manifold Viewer")
         self.setMinimumSize(1400, 900)
         self.setStyleSheet(STYLE)
         
@@ -429,7 +429,7 @@ class WeatherViewer(QMainWindow):
 def main():
     print("""
 ╔══════════════════════════════════════════════════════════════════════╗
-║              HYPERTENSOR WEATHER MANIFOLD VIEWER                     ║
+║              ONTIC_ENGINE WEATHER MANIFOLD VIEWER                     ║
 ║                                                                      ║
 ║  Visualizing atmospheric data compressed into QTT manifolds          ║
 ╚══════════════════════════════════════════════════════════════════════╝

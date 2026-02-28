@@ -1,13 +1,13 @@
 {
-    "name": "com.tigantic.hypertensor",
+    "name": "com.tigantic.ontic",
     "version": "1.0.0",
-    "displayName": "HyperTensor",
+    "displayName": "The Ontic Engine",
     "description": "QTT-compressed field visualization and simulation for Unity",
     "unity": "2021.3",
     "unityRelease": "0f1",
-    "documentationUrl": "https://github.com/tigantic/HyperTensor/tree/main/integrations/unity",
-    "changelogUrl": "https://github.com/tigantic/HyperTensor/blob/main/CHANGELOG.md",
-    "licensesUrl": "https://github.com/tigantic/HyperTensor/blob/main/LICENSE",
+    "documentationUrl": "https://github.com/tigantic/physics-os/tree/main/integrations/unity",
+    "changelogUrl": "https://github.com/tigantic/physics-os/blob/main/CHANGELOG.md",
+    "licensesUrl": "https://github.com/tigantic/physics-os/blob/main/LICENSE",
     "dependencies": {},
     "keywords": [
         "tensor",
@@ -24,7 +24,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/tigantic/HyperTensor.git"
+        "url": "https://github.com/tigantic/physics-os.git"
     },
     "samples": [
         {

@@ -1,5 +1,5 @@
 /*!
- * HyperTensor Glass Cockpit - Phase 6: Convergence Heatmaps
+ * Ontic Glass Cockpit - Phase 6: Convergence Heatmaps
  * 
  * GPU-accelerated convergence zone visualization with:
  * - Globe rendering
@@ -81,7 +81,7 @@ impl VizMode {
 /// Phase 6 Convergence Heatmap Visualization
 #[allow(unused_assignments)] // current_fps assigned in closure, used for telemetry
 fn main() -> Result<()> {
-    println!("HyperTensor Glass Cockpit v0.6.0 [Sovereign 165Hz]");
+    println!("Ontic Glass Cockpit v0.6.0 [Sovereign 165Hz]");
     println!("Phase 6: Convergence Heatmaps");
     println!("═══════════════════════════════════════════════");
     
@@ -116,7 +116,7 @@ fn main() -> Result<()> {
     println!("[4/7] Creating window...");
     let event_loop = EventLoop::new()?;
     let window = Arc::new(WindowBuilder::new()
-        .with_title("HyperTensor Glass Cockpit - Phase 6")
+        .with_title("Ontic Glass Cockpit - Phase 6")
         .with_inner_size(winit::dpi::PhysicalSize::new(1920, 1080))
         .build(&event_loop)?);
     println!("  ✓ Window created (1920×1080)");
@@ -500,7 +500,7 @@ async fn init_gpu(window: &Window) -> Result<(wgpu::Device, wgpu::Queue, wgpu::S
     
     let (device, queue) = adapter.request_device(
         &wgpu::DeviceDescriptor {
-            label: Some("HyperTensor GPU"),
+            label: Some("Ontic GPU"),
             required_features: wgpu::Features::empty(),
             required_limits: wgpu::Limits::default(),
         },

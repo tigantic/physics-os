@@ -19,8 +19,8 @@
   },
   "platforms": [
     {
-      "id": "hypertensor-vm",
-      "name": "HyperTensor VM",
+      "id": "physics-os",
+      "name": "The Ontic Engine",
       "description": "The Physics-First Tensor Network Engine",
       "location": "tensornet/",
       "language": "Python",

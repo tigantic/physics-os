@@ -801,7 +801,7 @@ self.command_pipe.send(cmd)
 
 **Verified State:**
 - Bridge: 50 FPS, 7-channel protocol
-- Buffer: `C:\HyperTensor\Bridge\DOMINION_PHYSICS_BUFFER.dat` (7.34 MB)
+- Buffer: `C:\The Ontic Engine\Bridge\DOMINION_PHYSICS_BUFFER.dat` (7.34 MB)
 - GPU: RTX 5070 @ 135-160 FPS
 
 ### Phase 1 Files Modified

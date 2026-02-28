@@ -21,7 +21,7 @@ Key Innovation:
     Morton-order aware indexing enables O(H×W×L×r²) complexity,
     avoiding full O(N³) decompression.
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 28, 2025
 """
 

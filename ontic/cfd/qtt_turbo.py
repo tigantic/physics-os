@@ -23,7 +23,7 @@ Rank Control:
     Adaptive: target_error = 1e-6, rank follows automatically
               Higher scale → higher compression → lower rank
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2025
 """
 

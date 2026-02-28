@@ -4,7 +4,7 @@ Wedge Flow Demo - Oblique Shock Physics Validation
 ===================================================
 
 Demonstrates oblique shock relations for supersonic flow over a wedge.
-This validates the analytical shock relations in HyperTensor CFD.
+This validates the analytical shock relations in Ontic CFD.
 
 Physical Setup:
     - Freestream Mach: M1 = 2.0 to 5.0
@@ -24,7 +24,7 @@ from ontic.cfd.euler_2d import oblique_shock_exact
 
 def main():
     print("=" * 60)
-    print("HyperTensor Wedge Flow Demo - Oblique Shock Relations")
+    print("Ontic Wedge Flow Demo - Oblique Shock Relations")
     print("=" * 60)
     print()
 
@@ -146,7 +146,7 @@ def main():
 
     print()
     print("=" * 60)
-    print("Demo complete - HyperTensor CFD validated")
+    print("Demo complete - Ontic CFD validated")
     print("=" * 60)
 
     return True

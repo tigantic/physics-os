@@ -301,7 +301,7 @@ make check        # All gates: format + typecheck + test + proofs + physics
 | `fp_keys.json` | ✅ Stores hashes only | SHA-256 key hashes, not raw keys |
 | Pre-commit detect-secrets hook | ✅ Configured | [.pre-commit-config.yaml](.pre-commit-config.yaml) |
 | Hardcoded keys in source | ❌ Two instances | SEC-01, SEC-02 |
-| Environment variables for secrets | ✅ Documented | `HYPERTENSOR_SIGN_KEY`, `FLUIDELITE_API_KEY` in deployment.toml |
+| Environment variables for secrets | ✅ Documented | `ONTIC_ENGINE_SIGN_KEY`, `FLUIDELITE_API_KEY` in deployment.toml |
 
 ### 6.4 Dependency Supply Chain
 
@@ -345,7 +345,7 @@ make check        # All gates: format + typecheck + test + proofs + physics
 | **MemoryPool is dead code** | [ontic/core/gpu.py MemoryPool.allocate()](ontic/core/gpu.py#L159-L182): returns `torch.zeros()` instead of pool view | Pool tracking overhead with no benefit; every "allocation" is a fresh tensor |
 | **TDVP environment storage** | All L environment tensors stored simultaneously | O(L·χ²·D) memory; could OOM for large χ with no checkpointing strategy |
 | **TCI sample cache unbounded** | `HashMap<u64, f64>` in [crates/tci_core/src/lib.rs](crates/tci_core/src/lib.rs) | For high-dimensional problems (n_qubits ≤ 40), cache can grow to GB scale |
-| **Shared-memory IPC** | `/dev/shm/hypertensor_bridge` with 8MB+ data buffer | Linux-specific; no timeout/watchdog for reader blocking |
+| **Shared-memory IPC** | `/dev/shm/ontic_bridge` with 8MB+ data buffer | Linux-specific; no timeout/watchdog for reader blocking |
 
 ### 7.4 Algorithmic Risks
 

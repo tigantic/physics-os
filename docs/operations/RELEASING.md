@@ -126,7 +126,7 @@ twine upload --repository testpypi dist/*
 1. Go to GitHub Releases
 2. Click "Create a new release"
 3. Select the tag `vX.Y.Z`
-4. Title: `HyperTensor vX.Y.Z`
+4. Title: `The Ontic Engine vX.Y.Z`
 5. Body: Copy from CHANGELOG
 6. Attach:
    - Wheel file (`*.whl`)
@@ -141,7 +141,7 @@ twine upload --repository testpypi dist/*
 ### 1. Verify Installation
 
 ```bash
-pip install hypertensor==X.Y.Z
+pip install physics-os==X.Y.Z
 python -c "import tensornet; print(tensornet.__version__)"
 ```
 

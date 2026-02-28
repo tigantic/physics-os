@@ -15,7 +15,7 @@ Tests:
     4. Trending Market Tracking
     5. Topology Discovery Speed
 
-Author: Genesis Stack / HyperTensor VM
+Author: Genesis Stack / The Ontic Engine
 """
 
 from __future__ import annotations

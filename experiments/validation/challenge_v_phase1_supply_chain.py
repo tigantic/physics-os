@@ -1161,7 +1161,7 @@ def run_pipeline() -> PipelineResult:
     """Execute the full Challenge V Phase 1 validation pipeline."""
     print("""
 ╔══════════════════════════════════════════════════════════════════╗
-║  HyperTensor — Challenge V Phase 1                             ║
+║  The Ontic Engine — Challenge V Phase 1                             ║
 ║  Trans-Pacific Corridor Supply Chain Model                     ║
 ║  Shanghai → LA · 1D Euler · HLL Riemann · QTT Compression      ║
 ║  Real Port of LA Data · 2021 Congestion Reproduction           ║

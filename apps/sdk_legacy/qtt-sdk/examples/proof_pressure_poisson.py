@@ -27,7 +27,7 @@ THIS SCRIPT PROVES:
 5. Full 2D incompressible Navier-Stokes with projection
 6. Ranks remain BOUNDED through time evolution
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2025-12-23
 """
 

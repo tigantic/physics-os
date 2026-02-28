@@ -18,10 +18,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - lux.hypertensor.io
+        - lux.physics-os.io
       secretName: lux-tls
   rules:
-    - host: lux.hypertensor.io
+    - host: lux.physics-os.io
       http:
         paths:
           - path: /

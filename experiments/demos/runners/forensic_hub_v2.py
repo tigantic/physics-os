@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HyperTensor Forensic Hub v2
+Ontic Forensic Hub v2
 ===========================
 
 Resolution-independent manifold visualization with:
@@ -611,12 +611,12 @@ class ForensicViewportV2:
 
 class ForensicHubV2(QMainWindow):
     """
-    HyperTensor Forensic Hub v2
+    Ontic Forensic Hub v2
     """
     
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("HyperTensor Forensic Hub v2")
+        self.setWindowTitle("Ontic Forensic Hub v2")
         self.setMinimumSize(1600, 1000)
         self.setStyleSheet(STYLE)
         
@@ -895,7 +895,7 @@ class ForensicHubV2(QMainWindow):
 def main():
     print("""
 ╔══════════════════════════════════════════════════════════════════════╗
-║                HYPERTENSOR FORENSIC HUB v2                           ║
+║                ONTIC_ENGINE FORENSIC HUB v2                           ║
 ║                                                                      ║
 ║  Resolution-Independent • Vector Flow • Auto-Contrast                ║
 ║  Industrial Cobalt Palette • Singularity Detection                   ║

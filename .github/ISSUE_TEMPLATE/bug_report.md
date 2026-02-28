@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Create a report to help us improve HyperTensor
+about: Create a report to help us improve The Ontic Engine
 title: '[BUG] '
 labels: bug, triage
 assignees: ''

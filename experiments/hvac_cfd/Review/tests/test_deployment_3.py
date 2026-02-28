@@ -6,7 +6,7 @@ Tests:
 2. ASET/RSET Forensic Audit (Time-to-tenability)
 3. Kill Switch Latency (< 3 frames response)
 
-Author: HyperTensor Physics Laboratory
+Author: TiganticLabz Physics Laboratory
 Copyright (c) 2025 TiganticLabz. All Rights Reserved.
 """
 

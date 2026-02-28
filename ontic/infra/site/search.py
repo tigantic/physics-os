@@ -2,7 +2,7 @@
 Search index generation and querying for documentation site.
 
 This module provides full-text search capabilities for the
-HyperTensor documentation site.
+The Ontic Engine documentation site.
 """
 
 import hashlib

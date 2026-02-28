@@ -11,7 +11,7 @@ signature that any physicist will immediately recognize as "Real Kinetic Physics
 
 Output: holy_grail_5d.mp4
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: December 2025
 """
 
@@ -321,7 +321,7 @@ def run_holy_grail_demo(output_file="holy_grail_5d.mp4", n_frames=100,
     
     # Styling
     title = ax.set_title(
-        "5D HyperTensor Vlasov: Two-Stream Instability\n" +
+        "5D Ontic Vlasov: Two-Stream Instability\n" +
         f"Phase Space (x, vx) — {total_pts:,} points compressed to QTT",
         color='white', fontsize=14, pad=15
     )

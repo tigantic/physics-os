@@ -19,7 +19,7 @@ For v1, the platform targets single-node execution with GPU acceleration. Real-t
 
 **The v1 job pipeline is synchronous and in-process.** Specifically:
 
-1. `hypertensor.vm.execute()` blocks until the job completes and returns the result directly.
+1. `ontic.vm.execute()` blocks until the job completes and returns the result directly.
 2. The REST API handler awaits the synchronous call and streams the response.
 3. MCP tool calls map 1:1 to synchronous VM invocations.
 4. No external message broker, no worker pool, no distributed state.

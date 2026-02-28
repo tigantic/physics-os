@@ -3,7 +3,7 @@
 **Document Version**: 1.0  
 **Date**: December 22, 2025  
 **Classification**: Technical Summary  
-**Repository**: github.com/tigantic/HyperTensor
+**Repository**: github.com/tigantic/physics-os
 
 ---
 
@@ -292,5 +292,5 @@ python -m pytest tests/test_integration.py -v
 
 This document summarizes verified technical achievements based on reproducible code artifacts. All quantitative claims can be validated by executing the referenced scripts and examining the output files.
 
-**Prepared by**: HyperTensor Development Team  
+**Prepared by**: Ontic Development Team  
 **Date**: December 22, 2025

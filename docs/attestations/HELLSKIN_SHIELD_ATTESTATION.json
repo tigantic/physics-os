@@ -32,6 +32,6 @@
     "Scramjet combustor liners",
     "Nuclear thermal propulsion"
   ],
-  "framework": "HyperTensor Mass-Disorder Phonon Scattering",
+  "framework": "Ontic Mass-Disorder Phonon Scattering",
   "sha256": "36cd458f9805a11f08d157f4b07bc9ba02dc3fb650ca646890a4c26fe594c1c2"
 }

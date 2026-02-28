@@ -36,7 +36,7 @@ Integration:
   - Neuromorphic (#10): Real-time tip control at MHz rates
   - STAR-HEART (#7): Power for industrial-scale assembly
 
-Author: HyperTensor Civilization Stack
+Author: TiganticLabz Civilization Stack
 Date: 2026-01-05
 """
 

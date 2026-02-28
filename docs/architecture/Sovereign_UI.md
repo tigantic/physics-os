@@ -29,7 +29,7 @@
 
 | Component | Phase | Status | Integration Notes |
 |-----------|-------|--------|-------------------|
-| `ram_bridge_v2.rs` | 0 | ✅ **ACTIVE** | Zero-copy shared memory, `/dev/shm/hypertensor_bridge` |
+| `ram_bridge_v2.rs` | 0 | ✅ **ACTIVE** | Zero-copy shared memory, `/dev/shm/ontic_bridge` |
 | `affinity.rs` | 0 | ✅ **ACTIVE** | Linux E-core affinity implemented via `nix::libc` |
 | `grid.wgsl` | 1 | ✅ **ACTIVE** | Wired via `grid_renderer.rs` module, Layer 0 background |
 | `sdf.wgsl` | 1 | ✅ **ACTIVE** | Drives `glass_chrome.rs` SDF panels, Layer 5 chrome |
@@ -91,7 +91,7 @@ Pass 3 - Telemetry Pass:
 
 ## Executive Summary
 
-The HyperTensor Glass Cockpit is not a user interface. It is a **Sovereign Observation Layer**—a hardware-isolated instrument cluster that renders atmospheric intelligence at 165Hz without ever interrupting the physics engine that generates it.
+Ontic Glass Cockpit is not a user interface. It is a **Sovereign Observation Layer**—a hardware-isolated instrument cluster that renders atmospheric intelligence at 165Hz without ever interrupting the physics engine that generates it.
 
 This document establishes the architectural principles, engineering patterns, and decision frameworks that govern its construction. The goal is simple: build a frontend worthy of the backend. If the QTT cores can compress a planetary atmosphere into real-time tensor math, the visualization layer must match that capability curve—not bottleneck it with template bloat and browser overhead.
 
@@ -153,7 +153,7 @@ Data flows from simulation to UI through a shared memory segment (`/dev/shm/sove
         │ WRITES (P-cores)                          │ READS (E-cores)
         │                                           ▼
 ┌───────────────────┐                    ┌───────────────────────┐
-│ HyperTensor Core  │                    │   Glass Cockpit UI    │
+│ Ontic Core  │                    │   Glass Cockpit UI    │
 │ (Ubuntu/WSL2)     │                    │   (Windows/Rust)      │
 │                   │                    │                       │
 │ • QTT Compression │                    │ • WGPU Rendering      │
@@ -388,7 +388,7 @@ The 100,000-frame simulation is a navigable timeline, not a video.
 - **Interface**: High-resolution seismograph bar pulsing at engine heartbeat
 - **Mechanism**: Playhead drag changes the index pointer into the RAM bridge
 - **Performance**: No loading spinner. Frame data already exists in memory.
-- **Enhancement**: "Comparison Shadow" overlays ground-truth satellite against HyperTensor prediction at any timestamp
+- **Enhancement**: "Comparison Shadow" overlays ground-truth satellite against The Ontic Engine prediction at any timestamp
 
 ### 2. Core Inspection (Mathematical Transparency)
 
@@ -520,7 +520,7 @@ If frame rate drops below threshold:
 | **NOAA GFS** | Atmospheric model | 6 hours | Simulation initial conditions |
 | **ECMWF ERA5** | Reanalysis | Historical | Back-testing validation |
 
-### The HyperTensor Overlay Protocol
+### Ontic Overlay Protocol
 
 External data is never displayed raw. It is always a substrate for tensor visualization:
 
@@ -567,7 +567,7 @@ Neither shows the *mathematical structure* that produces weather. Neither allows
 
 ## The Glass Cockpit Proposition
 
-The HyperTensor Glass Cockpit sits in a new category: **Computational Transparency for Atmospheric Intelligence**.
+Ontic Glass Cockpit sits in a new category: **Computational Transparency for Atmospheric Intelligence**.
 
 - A hedge fund analyst can drill into the tensor structure driving a hurricane forecast and assess model confidence before making a position.
 - A defense planner can inject synthetic weather scenarios and watch logistics networks respond in real-time.
@@ -625,7 +625,7 @@ The demo must be *undeniably impressive*. Infinite zoom with no latency. Real-ti
   - Implementation: RAM Bridge Protocol v2 (4KB header + 8MB RGBA8 buffer)
   - **File:** `ram_bridge_v2.rs` (485 lines) - ✅ USED in Phase 7
   
-- [x] **Rust Scaffold**: Initialize `hypertensor-glass-cockpit` project
+- [x] **Rust Scaffold**: Initialize `ontic-glass-cockpit` project
   - ✅ Project created with all dependencies (wgpu 0.19, winit 0.29, glam, pollster, shared_memory)
   - ✅ Compiles successfully on Windows WSL2/Ubuntu
   
@@ -1200,7 +1200,7 @@ OFFSET    SIZE    TYPE        DESCRIPTION
 **Classification:** Internal Engineering Doctrine  
 **Version:** 1.0  
 **Date:** 2025-12-28  
-**Parent Document:** `hypertensor_glass_cockpit_doctrine.md`
+**Parent Document:** `ontic_glass_cockpit_doctrine.md`
 
 ---
 
@@ -1742,7 +1742,7 @@ enum InjectionType {
 
 ```
 ┌─────────────────────┐                    ┌─────────────────────┐
-│   Glass Cockpit     │                    │   HyperTensor Sim   │
+│   Glass Cockpit     │                    │   Ontic Sim   │
 │     (E-cores)       │                    │     (P-cores)       │
 └──────────┬──────────┘                    └──────────┬──────────┘
            │                                          │
@@ -2435,7 +2435,7 @@ Ray marching is expensive. Optimizations:
 # Run during UI operation
 # FAIL if any thread is on cores 0-15
 
-$proc = Get-Process -Name "HyperTensor_UI"
+$proc = Get-Process -Name "Ontic_UI"
 $affinity = $proc.ProcessorAffinity.ToInt64()
 
 # Mask for P-cores (0-15)

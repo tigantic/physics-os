@@ -3,7 +3,7 @@ Executive Summary
 The strategic supremacy in the twenty-first-century aerospace domain is increasingly defined by the mastery of the hypersonic regime—flight velocities exceeding Mach 5. At these speeds, the conventional assumptions of aerodynamics dissolve into a complex interplay of non-equilibrium thermodynamics, chemical dissociation, and magnetohydrodynamics. The current generation of hypersonic glide vehicles (HGVs) and cruise missiles operates on a paradigm of pre-computation: flight control laws are derived from static wind tunnel databases and interpolated lookup tables. This approach, while sufficient for ballistic trajectories, is dangerously brittle when engaged in aggressive maneuvering or when encountering unforeseen atmospheric anomalies. The vehicle is effectively blind to the immediate, evolving physics of its own environment.
 The Physics OS proposes a radical architectural shift: the embedding of a high-fidelity, real-time Computational Fluid Dynamics (CFD) simulator directly into the guidance and control loop of the missile. This system, colloquially described as "putting a wind tunnel inside the missile," aims to solve the full three-dimensional Navier-Stokes equations in milliseconds, providing the autopilot with a predictive, physics-based model of the flow field as it evolves.
 The realization of this "impossible" goal rests on two convergent technological breakthroughs. First, the application of Quantum-Inspired Tensor Networks—specifically Matrix Product States (MPS) and Tensor Trains (TT)—to classical fluid dynamics. This mathematical framework allows for the compression of the exponentially vast state space of turbulent fluids into low-rank manifolds, reducing computational complexity from exponential to polynomial. Second, the maturation of edge-compute hardware, exemplified by the NVIDIA Jetson AGX Orin Industrial, which brings data-center-class tensor acceleration to a form factor compatible with the Size, Weight, and Power (SWaP) constraints of a tactical missile.
-This report provides an exhaustive technical analysis of the HyperTensor architecture. It details the aerothermodynamic challenges of Mach 10 flight, the mathematical machinery of the Tensor Train Navier-Stokes solver, the hardware specification for edge implementation, and the operational revolutions enabled by this technology—specifically in solving the plasma blackout communications crisis and achieving zero-drift inertial navigation through aerodynamic terrain matching.
+This report provides an exhaustive technical analysis of the Ontic Engine architecture. It details the aerothermodynamic challenges of Mach 10 flight, the mathematical machinery of the Tensor Train Navier-Stokes solver, the hardware specification for edge implementation, and the operational revolutions enabled by this technology—specifically in solving the plasma blackout communications crisis and achieving zero-drift inertial navigation through aerodynamic terrain matching.
 1. The Hypersonic Aerothermodynamic Environment
 To understand the necessity of real-time CFD, one must first appreciate the extreme hostility and complexity of the hypersonic environment. Flight at Mach 10 (approximately 3.4 km/s at altitude) is not merely "faster" supersonic flight; it is a distinct physical regime where the kinetic energy of the flow is sufficient to tear apart the molecular structure of the air itself.
 1.1 The Failure of the Ideal Gas Law
@@ -34,12 +34,12 @@ In recent years, Physics-Informed Neural Networks (PINNs) have been touted as a 
 Spectral Bias: Neural networks struggle to learn high-frequency features. In hypersonics, the shock wave is a high-frequency discontinuity. PINNs often "blur" the shock, leading to inaccurate drag predictions.12
 Lack of Conservation: A neural network minimizes a "loss function." It does not mathematically guarantee the conservation of mass, momentum, and energy. A 1% error in energy conservation in a hypersonic flow can translate to a 1000K error in temperature prediction.
 Generalization Failure: A PINN is only as good as its training data. If the missile encounters a flow regime outside the training set (e.g., a specific combination of yaw and roll at high altitude), the network's output is unpredictable and often physically nonsensical.14
-The HyperTensor project rejects these approximations in favor of a solver that is both physically rigorous and computationally efficient.
-3. The HyperTensor Mathematical Engine: Tensor Networks
+The Ontic Engine project rejects these approximations in favor of a solver that is both physically rigorous and computationally efficient.
+3. Ontic Mathematical Engine: Tensor Networks
 The core innovation of The Physics OS is the application of Tensor Network (TN) theory to the compressible Navier-Stokes equations. Originally developed for quantum many-body physics to describe the entanglement of quantum states, TNs provide a mathematical framework for breaking the "curse of dimensionality" in classical fluid dynamics.
 3.1 From Quantum Entanglement to Fluid Turbulence
 In quantum physics, the state of a many-particle system is described by a wave function that lives in a Hilbert space of exponential dimension. However, physical states of interest (ground states) are not random; they exhibit limited "entanglement." The "Area Law" states that the entanglement entropy of a region scales with its boundary area, not its volume.16
-HyperTensor leverages the insight that turbulent fluids satisfy a similar Area Law. The correlations in a fluid flow—the structures like eddies, vortices, and shocks—are not random noise. They possess a hierarchical structure. This means the information content of the flow is much lower than the raw grid dimension suggests. By representing the fluid state vector as a Matrix Product State (MPS) or Tensor Train (TT), we can compress the data by orders of magnitude while preserving the essential physics.7
+The Ontic Engine leverages the insight that turbulent fluids satisfy a similar Area Law. The correlations in a fluid flow—the structures like eddies, vortices, and shocks—are not random noise. They possess a hierarchical structure. This means the information content of the flow is much lower than the raw grid dimension suggests. By representing the fluid state vector as a Matrix Product State (MPS) or Tensor Train (TT), we can compress the data by orders of magnitude while preserving the essential physics.7
 3.2 The Tensor Train (TT) Decomposition
 In the standard Finite Volume Method, the fluid state $\mathcal{U}$ is a tensor of order $d$ (where $d$ is the number of spatial dimensions, usually 3). The total elements are $N^d$.
 In the Tensor Train format, this massive tensor is decomposed into a chain of $d$ smaller tensors connected by "bonds":
@@ -50,7 +50,7 @@ Compression: Storage scales as $d \cdot N \cdot D^2$ instead of $N^d$. For a typ
 Operations: The Navier-Stokes equations involve linear and non-linear operators (gradients, advection). In the TT format, these operators are also decomposed into Matrix Product Operators (MPO). Applying an operator to a state (e.g., calculating fluxes) becomes a series of small matrix multiplications, the cost of which scales linearly with grid size.19
 3.3 The Time-Dependent Variational Principle (TDVP)
 To simulate the flight in real-time, the system must advance the state $\mathcal{U}$ in time. Standard explicit time-stepping (like Runge-Kutta) is inefficient for Tensor Networks because adding two tensors increases the bond dimension, requiring a costly "re-compression" step (SVD) that introduces errors.
-HyperTensor utilizes the Time-Dependent Variational Principle (TDVP). Instead of leaving the tensor manifold, TDVP projects the evolution equation directly onto the tangent space of the tensor manifold of fixed rank.20
+The Ontic Engine utilizes the Time-Dependent Variational Principle (TDVP). Instead of leaving the tensor manifold, TDVP projects the evolution equation directly onto the tangent space of the tensor manifold of fixed rank.20
 
 $$\frac{d}{dt}|\Psi(t)\rangle = -i P_{T_{|\Psi(t)\rangle}} \hat{L} |\Psi(t)\rangle$$
 Where $\hat{L}$ is the Liouvillian operator representing the discretized Navier-Stokes equations.
@@ -59,7 +59,7 @@ Stability: It preserves the geometric properties of the flow (symplectic integra
 Adaptivity: The algorithm can dynamically adjust the bond dimension. In smooth laminar regions, $D$ is kept low (saving compute). Near a shock wave or in a turbulent wake, $D$ is increased locally to capture the complexity. This is the tensor equivalent of Adaptive Mesh Refinement (AMR).22
 3.4 Handling Shocks: The "Gibbs" Phenomenon Resolution
 A major challenge in compressing functions with discontinuities (like shock waves) is the Gibbs phenomenon—spurious oscillations near the jump. In a guidance system, these oscillations could be misinterpreted as turbulence, causing the fins to flutter.
-HyperTensor integrates WENO-TT (Weighted Essentially Non-Oscillatory Tensor Train) schemes. The high-order reconstruction weights of the WENO scheme are themselves tensorized. This allows the solver to capture shocks with 5th-order accuracy without oscillation, even in the highly compressed TT format. The tensor network naturally "entangles" the state across the shock, effectively encoding the Rankine-Hugoniot jump conditions into the bond structure.24
+The Ontic Engine integrates WENO-TT (Weighted Essentially Non-Oscillatory Tensor Train) schemes. The high-order reconstruction weights of the WENO scheme are themselves tensorized. This allows the solver to capture shocks with 5th-order accuracy without oscillation, even in the highly compressed TT format. The tensor network naturally "entangles" the state across the shock, effectively encoding the Rankine-Hugoniot jump conditions into the bond structure.24
 4. Hardware Architecture: The Edge of the Edge
 The mathematical elegance of Tensor Networks must be matched by a hardware platform capable of executing these algorithms within the harsh constraints of a missile airframe. The NVIDIA Jetson AGX Orin Industrial is identified as the enabling hardware.
 4.1 The Compute Platform Specification
@@ -92,12 +92,12 @@ Rated for launch loads and boost-phase vibration.27
 
 4.2 Tensor Core Acceleration of Fluid Dynamics
 The primary operation in the TDVP algorithm is the contraction of core tensors. This involves multiplying matrices of size $D \times D$.
-Mapping: The HyperTensor software stack (built on CUDA and cuTensor) maps the tensor blocks directly to the Orin's Tensor Cores.
+Mapping: The Ontic Engine software stack (built on CUDA and cuTensor) maps the tensor blocks directly to the Orin's Tensor Cores.
 Efficiency: While standard CUDA cores compute one floating-point operation per cycle, Tensor Cores compute a full $4 \times 4$ matrix multiply-accumulate in one cycle. This provides a theoretical speedup of over $10\times$ for the specific linear algebra dominating the CFD solver.28
 Mixed Precision Strategy: To maximize speed, the solver uses Mixed Precision. The bulk of the flow evolution is computed in FP16 (Half Precision). Since fluid dynamics is often limited by discretization error rather than floating-point error, FP16 is sufficient for the "updates." Critical conservation sums are accumulated in FP32. This doubles the effective memory bandwidth and computational throughput.19
 4.3 Radiation Hardening Strategy
 Operating at 30-50km altitude places the electronics in a region of elevated cosmic ray flux (the Pfotzer maximum). Single Event Upsets (SEUs)—bit flips caused by high-energy particles—are a major risk. Standard "Rad-Hard" chips (like BAE Systems' RAD750) are generations behind in performance and cannot support The Physics OS.
-HyperTensor employs a Software-Defined Radiation Hardening approach on the Commercial Off-The-Shelf (COTS) Orin module 30:
+The Ontic Engine employs a Software-Defined Radiation Hardening approach on the Commercial Off-The-Shelf (COTS) Orin module 30:
 Triple Modular Redundancy (TMR) on GPU: The critical tensor update kernel is launched as three independent streams on physically separate partitions of the GPU (using NVIDIA's Multi-Instance GPU or spatial partitioning). A voter kernel compares the result of the three streams at each time step. If one differs, it is overwritten by the consensus of the other two.
 Algorithmic Sanity Checks: The physics itself acts as a check. The solver monitors the total energy and mass of the system. A bit flip in the exponent of a float will create a massive, non-physical spike in energy. The TDVP algorithm detects this violation of the "manifold" constraints and reverts to the last valid checkpoint (saved every 10 steps).30
 ECC Memory: The Orin's LPDDR5 supports inline ECC, correcting single-bit errors in memory before they reach the processor.27
@@ -119,13 +119,13 @@ The primary operational breakthrough of The Physics OS is the mitigation of plas
 6.1 The Physics of Signal Loss
 As discussed in Section 1.2, the plasma sheath blocks RF communications when $f_{signal} < f_{plasma}$. The sheath is not uniform; it is thickest at the nose (stagnation point) and thinner in the wake. However, the wake structure is highly dynamic. During a high-G turn, the "clean" window shifts rapidly. A static antenna selection logic cannot keep up.3
 6.2 Real-Time Sheath Mapping
-The HyperTensor system continuously simulates the electron density field $n_e(\mathbf{x}, t)$ around the vehicle.
+The Ontic Engine system continuously simulates the electron density field $n_e(\mathbf{x}, t)$ around the vehicle.
 Chemistry Model: The solver includes a 5-species chemical kinetics model ($N_2, O_2, NO, N, O$) coupled to the fluid flow. The "stiff" source terms of the chemical reactions are handled efficiently by the TDVP time-stepper.21
 Mapping: The 3D electron density field is projected onto the vehicle surface to create a "Blackout Map." This map shows the instantaneous attenuation (in dB) for each installed antenna array.
 6.3 Dynamic Commutation Strategy
 The guidance computer uses this map to execute a Cognitive Communications strategy:
 Smart Switching: The system continuously switches the transmitter to the antenna with the lowest predicted attenuation. This switching happens on the millisecond timescale, far faster than a "search and lock" hardware loop could achieve.
-Attitude Modulation: If the mission requires a critical "check-in" (e.g., receiving a final target update or abort code) and all antennas are blocked, the HyperTensor system calculates a specific maneuver (e.g., a sideslip or "wiffle") that will momentarily shed the plasma from a specific sector. It "flies the vehicle to communicate," creating a synthetic window.5
+Attitude Modulation: If the mission requires a critical "check-in" (e.g., receiving a final target update or abort code) and all antennas are blocked, the Ontic Engine system calculates a specific maneuver (e.g., a sideslip or "wiffle") that will momentarily shed the plasma from a specific sector. It "flies the vehicle to communicate," creating a synthetic window.5
 Frequency Hopping: The simulation predicts the exact plasma frequency. If the system has a variable-frequency transmitter, it can tune the frequency to just above the local $\omega_{pe}$ threshold to punch through the sheath with minimum power.3
 7. Operational Application II: Aero-TRN Navigation
 The second breakthrough is Aerodynamic Terrain Relative Navigation (Aero-TRN). In a GPS-denied environment, inertial drift is the enemy. Over a 30-minute flight, a tactical grade IMU can drift by kilometers.
@@ -133,7 +133,7 @@ The second breakthrough is Aerodynamic Terrain Relative Navigation (Aero-TRN). I
 Terrain Relative Navigation (TRN) uses radar to match the ground below to a map. This is impossible at Mach 10 and 40km altitude (too high, too much plasma noise). However, the "terrain" the missile is interacting with is the atmosphere itself.
 The pressure distribution over the vehicle is a unique fingerprint of its state vector (Velocity, Angle of Attack, Sideslip, Altitude/Density).
 Sensors: The missile is equipped with a Flush Air Data System (FADS)—a matrix of pressure ports on the nose and chines.9
-The Loop: The HyperTensor CFD simulates the expected pressure distribution for the IMU's estimated position and velocity.
+The Loop: Ontic CFD simulates the expected pressure distribution for the IMU's estimated position and velocity.
 7.2 The Inverse Problem
 There will be a discrepancy between the measured pressure and the simulated pressure. This discrepancy is the error signal.
 Because the Tensor Network solver is essentially a sequence of differentiable linear algebra operations, the entire CFD simulation is differentiable.35
@@ -157,14 +157,14 @@ The Physics OS represents the transition from "Fly-by-Wire" (following pre-progr
 Unstable Designs: Vehicles can be designed with extreme instability (for range/agility) because the active CFD control can stabilize them.
 Damage Tolerance: The system can adapt to battle damage (holes in wings) by simulating the damaged geometry and finding a new control solution.
 9.2 The Quantum Bridge
-While implemented on classical GPU hardware, the algorithms used (MPS/TT) are fundamentally quantum-mechanical. This makes HyperTensor "quantum-ready." As actual quantum computers become available (and miniaturized), the software stack can be ported with minimal changes, unlocking even greater fidelity.18 But the crucial insight is that we do not need to wait for quantum hardware. The quantum-inspired mathematical revolution provides the necessary speedup now on silicon that can fly today.
+While implemented on classical GPU hardware, the algorithms used (MPS/TT) are fundamentally quantum-mechanical. This makes The Ontic Engine "quantum-ready." As actual quantum computers become available (and miniaturized), the software stack can be ported with minimal changes, unlocking even greater fidelity.18 But the crucial insight is that we do not need to wait for quantum hardware. The quantum-inspired mathematical revolution provides the necessary speedup now on silicon that can fly today.
 9.3 Conclusion
-The "impossible" goal of a wind tunnel in a missile is achievable. It requires the convergence of the NVIDIA Jetson Orin's tensorial compute power with the algorithmic compression of Tensor Networks. By solving the Navier-Stokes equations in real-time, HyperTensor solves the plasma blackout, eliminates inertial drift, and enables the agility required to win the high-speed fight. It transforms the hypersonic missile from a dumb projectile into a physics-aware predator.
+The "impossible" goal of a wind tunnel in a missile is achievable. It requires the convergence of the NVIDIA Jetson Orin's tensorial compute power with the algorithmic compression of Tensor Networks. By solving the Navier-Stokes equations in real-time, The Ontic Engine solves the plasma blackout, eliminates inertial drift, and enables the agility required to win the high-speed fight. It transforms the hypersonic missile from a dumb projectile into a physics-aware predator.
 Comparison of Computational Architectures
 Feature
 Classical CFD (Finite Volume)
 Deep Learning (PINNs)
-HyperTensor (Tensor Networks)
+The Ontic Engine (Tensor Networks)
 Data Structure
 Dense Grid ($N^3$)
 Neural Weights

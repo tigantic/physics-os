@@ -15,7 +15,7 @@ SUCCESS CRITERIA (from Battle Plan):
     - Monotonic convergence with rank
     - State overlap with exact ground state > 0.9999
 
-Author: HyperTensor Yang-Mills Project
+Author: TiganticLabz Yang-Mills Project
 Date: 2026-01-15
 """
 

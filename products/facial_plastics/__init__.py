@@ -1,5 +1,5 @@
 """
-HyperTensor Facial Plastics Platform
+Ontic Facial Plastics Platform
 ======================================
 
 Physics-grounded, data-driven surgical simulation and planning system

@@ -16,7 +16,7 @@ Gate Criteria:
 - Memory usage <8GB for 256³
 - O(log N) time scaling
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2025-02
 """
 

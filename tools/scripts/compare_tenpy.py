@@ -3,7 +3,7 @@
 TeNPy Comparison Benchmark
 ==========================
 
-Compares HyperTensor DMRG implementation against TeNPy (if installed)
+Compares Ontic DMRG implementation against TeNPy (if installed)
 for the Heisenberg XXZ chain ground state.
 
 This serves as validation against a well-established tensor network library.
@@ -25,8 +25,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 import torch
 
 
-def run_hypertensor_dmrg(L: int, chi_max: int, num_sweeps: int = 10):
-    """Run DMRG with HyperTensor."""
+def run_ontic_dmrg(L: int, chi_max: int, num_sweeps: int = 10):
+    """Run DMRG with The Ontic Engine."""
     from ontic import dmrg, heisenberg_mpo
 
     print(f"  Building Heisenberg MPO (L={L})...")
@@ -128,9 +128,9 @@ def main():
     print(f"Bethe ansatz reference: E = {E_bethe:.8f} (E/L = {E_bethe/args.L:.8f})")
     print()
 
-    # HyperTensor
-    print("HyperTensor DMRG:")
-    ht_result = run_hypertensor_dmrg(args.L, args.chi, args.sweeps)
+    # The Ontic Engine
+    print("Ontic DMRG:")
+    ht_result = run_ontic_dmrg(args.L, args.chi, args.sweeps)
     print(f"  Energy: {ht_result['energy']:.8f}")
     print(f"  E/L: {ht_result['energy_per_site']:.8f}")
     print(f"  Time: {ht_result['time']:.2f}s")
@@ -156,7 +156,7 @@ def main():
         print("=" * 60)
         energy_diff = abs(ht_result["energy"] - tp_result["energy"])
         print(f"Energy difference: {energy_diff:.2e}")
-        print(f"HyperTensor speedup: {tp_result['time'] / ht_result['time']:.2f}x")
+        print(f"The Ontic Engine speedup: {tp_result['time'] / ht_result['time']:.2f}x")
 
         if energy_diff < 1e-6:
             print("✓ Energies match to machine precision!")

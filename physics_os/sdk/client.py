@@ -1,14 +1,14 @@
-"""HyperTensor SDK — Python client library.
+"""Ontic SDK — Python client library.
 
-Provides a typed, synchronous + async client for the HyperTensor
+Provides a typed, synchronous + async client for the Ontic Engine
 Runtime API.  Handles authentication, job submission, polling,
 result retrieval, and local validation.
 
 Usage::
 
-    from physics_os.sdk.client import HyperTensorClient
+    from physics_os.sdk.client import OnticClient
 
-    client = HyperTensorClient(
+    client = OnticClient(
         base_url="https://api.physics_os.io",
         api_key="sk-...",
     )
@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class JobResult:
-    """Represents a completed HyperTensor job with all artifacts."""
+    """Represents a completed The Ontic Engine job with all artifacts."""
 
     job_id: str
     status: str
@@ -82,8 +82,8 @@ class Domain:
 # ── Client ──────────────────────────────────────────────────────────
 
 
-class HyperTensorClient:
-    """Synchronous client for the HyperTensor Runtime API.
+class OnticClient:
+    """Synchronous client for the Ontic Engine Runtime API.
 
     Parameters
     ----------

@@ -24,7 +24,7 @@ Key Constraints:
     - Field strength transforms covariantly
     - Action is gauge-invariant
 
-Author: HyperTensor Geometric Types Protocol
+Author: TiganticLabz Geometric Types Protocol
 Date: January 27, 2026
 """
 
@@ -818,7 +818,7 @@ def run_yang_mills_demo():
     
     attestation = {
         "demonstration": "YANG-MILLS GAUGE THEORY",
-        "project": "HYPERTENSOR-VM",
+        "project": "ONTIC_ENGINE-VM",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "tests": [
             {

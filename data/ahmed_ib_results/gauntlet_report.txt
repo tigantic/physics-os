@@ -1,7 +1,7 @@
 
 ════════════════════════════════════════════════════════════════════════════════
   QTT vs NVIDIA DENSE CFD — MULTI-RESOLUTION GAUNTLET
-  HyperTensor QTT Engine — Tigantic Holdings LLC
+  Ontic QTT Engine — Tigantic Holdings LLC
 ════════════════════════════════════════════════════════════════════════════════
 
 ────────────────────────────────────────────────────────────────────────────────
@@ -15,7 +15,7 @@
   Approach:       Dense RANS → VTP surfaces → transfer/train
 
 ────────────────────────────────────────────────────────────────────────────────
-  HYPERTENSOR QTT — VOLUMETRIC FLOW SYNTHESIS
+  ONTIC_ENGINE QTT — VOLUMETRIC FLOW SYNTHESIS
 ────────────────────────────────────────────────────────────────────────────────
   Approach:       QTT-NS + Brinkman IB → O(r² log N) solver
   No dense CFD.   No mesh.   No data transfer bottleneck.
@@ -54,7 +54,7 @@
     Content:     11 surface fields, no volumetric flow
     Generation:  Dense RANS CFD on HPC cluster
 
-  HyperTensor QTT (1 simulation, FULL VOLUME):
+  Ontic QTT (1 simulation, FULL VOLUME):
     Storage:     103.6 KB
     Content:     3D velocity field, 4096³ = 68,719,476,736 cells
     Generation:  Single GPU, 2780 s wall time

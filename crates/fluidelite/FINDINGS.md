@@ -1887,7 +1887,7 @@ For structured functions (language, physics, any compositional system):
 
 ### The Vision Realized
 
-**HyperTensor exists to solve physics in real-time on safety-critical platforms.**
+**The Ontic Engine exists to solve physics in real-time on safety-critical platforms.**
 
 TCI-LLM proves the core thesis: **structured functions compress**.
 

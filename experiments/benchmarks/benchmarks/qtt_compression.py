@@ -2,7 +2,7 @@
 QTT Compression Benchmark for Hypersonic Flow Fields
 =====================================================
 
-This benchmark validates the core thesis of Project HyperTensor:
+This benchmark validates the core thesis of Project The Ontic Engine:
 
     "Turbulent flow fields satisfy an Area Law analogous to quantum
     entanglement—correlations scale with boundary area, not volume—
@@ -304,7 +304,7 @@ def run_all_benchmarks(verbose: bool = True, save_results: bool = True) -> dict:
     """Run all QTT compression benchmarks."""
 
     print("=" * 70)
-    print("PROJECT HYPERTENSOR: QTT COMPRESSION BENCHMARKS")
+    print("PROJECT ONTIC_ENGINE: QTT COMPRESSION BENCHMARKS")
     print("Validating Area Law Hypothesis for CFD Fields")
     print("=" * 70)
 

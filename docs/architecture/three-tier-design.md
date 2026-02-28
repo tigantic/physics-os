@@ -10,7 +10,7 @@ MPO, QTT, and 168 physics domain packs. Fully open-source.
 
 **Install:** `pip install tensornet`
 
-## Tier 2: hypertensor (Python)
+## Tier 2: physics_os (Python)
 
 Licensed execution fabric providing REST API, Python SDK, MCP tool server,
 job scheduling, billing, and certificate generation. Never distributed as

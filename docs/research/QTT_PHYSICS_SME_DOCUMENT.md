@@ -324,7 +324,7 @@ The repository includes validation scripts ("gauntlets") testing against known p
 |-----------|----------|------------|
 | **TEBD** | `ontic/algorithms/tebd.py` | Local gates, O(dt²) or O(dt³) |
 | **TDVP** | `ontic/algorithms/tdvp.py` | Energy conserving, long-range |
-| **Verlet** | `hypertensor_dynamics.py` | Symplectic, TT re-compression |
+| **Verlet** | `ontic_dynamics.py` | Symplectic, TT re-compression |
 
 ### 6.3 Ground State
 
@@ -412,7 +412,7 @@ tci_llm/
 ├── starheart_fusion_solver.py     # Tokamak physics
 ├── odin_superconductor_solver.py  # Superconductor BCS
 ├── hellskin_thermal_solver.py     # Thermal protection
-├── hypertensor_dynamics.py        # Langevin, MHD, Fokker-Planck
+├── ontic_dynamics.py        # Langevin, MHD, Fokker-Planck
 ├── qtt_neural_connectome.py       # Brain connectivity
 └── tomahawk_cfd_gauntlet.py       # MHD plasma control
 ```
@@ -761,7 +761,7 @@ $$\mathbf{v}^+ = \mathbf{v}^- + \mathbf{v}' \times \mathbf{s}, \quad \mathbf{s} 
 
 *Document Version: 2.0 — MAXED OUT EDITION*  
 *Last Updated: January 14, 2026*  
-*Author: HyperTensor Analysis — The SME of all SMEs*  
+*Author: TiganticLabz Analysis — The SME of all SMEs*  
 *Total Coverage: ~458,000 LOC across 1,273 files*
 
 ---

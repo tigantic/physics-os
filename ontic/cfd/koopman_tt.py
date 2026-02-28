@@ -32,7 +32,7 @@ APPLICATIONS:
     3. Climate turbulence modeling
     4. Submarine wake prediction
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2026-01-05
 Status: ACTIVE RESEARCH (Not validation - genuine attack on unsolved problem)
 """
@@ -1494,7 +1494,7 @@ def generate_koopman_attestation(
     from datetime import datetime
     
     attestation = {
-        "project": "HyperTensor TT-Koopman",
+        "project": "Ontic TT-Koopman",
         "discovery": "Tensor-Train Koopman Operator for Turbulence Prediction",
         "problem": "Navier-Stokes Singularity (The Millennium Prize Problem)",
         "timestamp": datetime.now().isoformat(),
@@ -1557,7 +1557,7 @@ def generate_koopman_attestation(
                 "TransitionAnalysis"
             ],
             "dictionary_types": ["polynomial", "hermite", "fourier"],
-            "framework": "HyperTensor TensorNet"
+            "framework": "The Ontic Engine"
         }
     }
     
@@ -1571,7 +1571,7 @@ def generate_koopman_attestation(
 def run_full_koopman_demo() -> Tuple[KoopmanDecomposition, TransitionAnalysis, Dict[str, Any]]:
     """Run complete TT-Koopman demonstration and generate attestation."""
     print("\n" + "="*70)
-    print("HYPERTENSOR TT-KOOPMAN: ATTACKING THE NAVIER-STOKES SINGULARITY")
+    print("ONTIC_ENGINE TT-KOOPMAN: ATTACKING THE NAVIER-STOKES SINGULARITY")
     print("="*70 + "\n")
     
     # Demo 1: Lorenz (classic chaos)

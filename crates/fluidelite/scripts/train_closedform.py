@@ -21,7 +21,7 @@ Training is INSTANT - single matrix solve, no epochs!
 Usage:
     python train_closedform.py --max_chars 1000000 --reg 0.001
 
-Author: HyperTensor Labs  
+Author: TiganticLabz  
 Date: January 2026
 """
 

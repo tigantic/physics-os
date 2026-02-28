@@ -11,7 +11,7 @@ Key capabilities:
     - Reliability and risk quantification
     - Component-level and system-level analysis
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from dataclasses import dataclass, field

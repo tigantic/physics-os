@@ -18,7 +18,7 @@ The Solution:
 
 Without this resist, the neuromorphic brain chip cannot be manufactured.
 
-Author: HyperTensor Lithography Division
+Author: TiganticLabz Lithography Division
 Date: 2026-01-05
 """
 
@@ -678,7 +678,7 @@ def run_snhff_gauntlet():
     
     # Build attestation
     attestation = {
-        "project": "HyperTensor Lithography",
+        "project": "Ontic Lithography",
         "module": "SnHf-F Stochastic Blur Gauntlet",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         

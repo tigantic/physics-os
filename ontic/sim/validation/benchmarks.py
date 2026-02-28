@@ -1,5 +1,5 @@
 """
-Benchmark Module for Project HyperTensor.
+Benchmark Module for Project The Ontic Engine.
 
 Provides performance benchmarking utilities including:
 - Timing measurement with statistical analysis

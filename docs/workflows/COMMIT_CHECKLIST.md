@@ -246,6 +246,6 @@ Fix:    Test → Fix → Test → Commit → Push
 Emergency: git reset --hard HEAD~1 (local only!)
 ```
 
-**Current Status**: 12 commits ready to push to `tigantic/HyperTensor`
+**Current Status**: 12 commits ready to push to `tigantic/physics-os`
 
 **Next Action**: Authenticate and push with `git push origin main`

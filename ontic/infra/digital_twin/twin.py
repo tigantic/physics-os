@@ -12,7 +12,7 @@ The digital twin enables:
     - Health monitoring and anomaly detection
     - Maintenance optimization
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 import queue

@@ -157,7 +157,7 @@ class TestIntegration:
     def test_constitution_snippet(self):
         """Test with a snippet similar to CONSTITUTION.md."""
         text = """
-# HYPERTENSOR CONSTITUTION
+# ONTIC_ENGINE CONSTITUTION
 
 ## Article I: Scientific Integrity
 

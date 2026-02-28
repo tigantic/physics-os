@@ -30,7 +30,7 @@ Key Features:
 4. Spectral diagnostics for K41 validation
 5. Energy/enstrophy conservation monitoring
 
-Author: HyperTensor Team
+Author: TiganticLabz
 Date: 2025
 """
 

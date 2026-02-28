@@ -10,7 +10,7 @@ Key methods:
     - Dynamic Mode Decomposition (DMD): Linear dynamics extraction
     - Autoencoders: Nonlinear manifold learning with neural networks
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from dataclasses import dataclass, field

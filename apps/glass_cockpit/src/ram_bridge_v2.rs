@@ -115,7 +115,7 @@ impl RamBridgeV2 {
     /// Connect to RAM bridge
     ///
     /// # Arguments
-    /// * `path` - Path to shared memory file (e.g., "/dev/shm/hypertensor_bridge")
+    /// * `path` - Path to shared memory file (e.g., "/dev/shm/ontic_bridge")
     ///
     /// # Returns
     /// * `Ok(Self)` - Successfully connected

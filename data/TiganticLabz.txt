@@ -337,17 +337,17 @@ brad@LAPTOP-IJ60I377:~/TiganticLabz$ cd /home/brad/TiganticLabz && find . -maxde
 ./Vault/Github_Backup_20251126/internal-intelligence-master/internal-intelligence-master/docs
 ./Vault/Github_Backup_20251126/internal-intelligence-master/internal-intelligence-master/bin
 ./Vault/Github_Backup_20251126/internal-intelligence-master/internal-intelligence-master/tools
-./Vault/hypertensor-physics
-./Vault/hypertensor-physics/hypertensor
-./Vault/hypertensor-physics/hypertensor/__pycache__
-./Vault/hypertensor-physics/hypertensor/core
-./Vault/hypertensor-physics/hypertensor/core/__pycache__
-./Vault/hypertensor-physics/hypertensor/integrators
-./Vault/hypertensor-physics/hypertensor/integrators/__pycache__
-./Vault/hypertensor-physics/hypertensor/pde
-./Vault/hypertensor-physics/hypertensor/pde/__pycache__
-./Vault/hypertensor-physics/tests
-./Vault/hypertensor-physics/examples
+./Vault/ontic-physics
+./Vault/ontic-physics/hypertensor
+./Vault/ontic-physics/hypertensor/__pycache__
+./Vault/ontic-physics/hypertensor/core
+./Vault/ontic-physics/physics_os/core/__pycache__
+./Vault/ontic-physics/hypertensor/integrators
+./Vault/ontic-physics/hypertensor/integrators/__pycache__
+./Vault/ontic-physics/hypertensor/pde
+./Vault/ontic-physics/hypertensor/pde/__pycache__
+./Vault/ontic-physics/tests
+./Vault/ontic-physics/examples
 ./Vault/Repo_Cold_Storage
 ./Vault/Repo_Cold_Storage/pqc_provenance_Certified
 ./Vault/Repo_Cold_Storage/pqc_provenance_Certified/pqc_provenance
@@ -2324,7 +2324,7 @@ brad@LAPTOP-IJ60I377:~/TiganticLabz$ cd /home/brad/TiganticLabz && find . -maxde
 ./Main_Projects/QTT_NSFD/demos/smoke_cinema
 ./Main_Projects/QTT_NSFD/demos/billion_smoke
 ./Main_Projects/QTT_NSFD/demos/infinite_smoke
-./Main_Projects/QTT_NSFD/demos/hypertensor_ocean
+./Main_Projects/QTT_NSFD/demos/ontic_ocean
 ./Main_Projects/QTT_NSFD/demos/fluid_lab
 ./Main_Projects/QTT_NSFD/tensornet
 ./Main_Projects/QTT_NSFD/tensornet/quantum
@@ -2752,17 +2752,17 @@ brad@LAPTOP-IJ60I377:~/TiganticLabz$ cd /home/brad/TiganticLabz && find . -maxde
 ./Main_Projects/QTT_NSFD/Physics/tests
 ./Main_Projects/QTT_NSFD/Physics/tests/__pycache__
 ./Main_Projects/QTT_NSFD/Physics/results
-./Main_Projects/hypertensor-physics
-./Main_Projects/hypertensor-physics/hypertensor
-./Main_Projects/hypertensor-physics/hypertensor/__pycache__
-./Main_Projects/hypertensor-physics/hypertensor/core
-./Main_Projects/hypertensor-physics/hypertensor/core/__pycache__
-./Main_Projects/hypertensor-physics/hypertensor/integrators
-./Main_Projects/hypertensor-physics/hypertensor/integrators/__pycache__
-./Main_Projects/hypertensor-physics/hypertensor/pde
-./Main_Projects/hypertensor-physics/hypertensor/pde/__pycache__
-./Main_Projects/hypertensor-physics/tests
-./Main_Projects/hypertensor-physics/examples
+./Main_Projects/ontic-physics
+./Main_Projects/ontic-physics/hypertensor
+./Main_Projects/ontic-physics/hypertensor/__pycache__
+./Main_Projects/ontic-physics/hypertensor/core
+./Main_Projects/ontic-physics/physics_os/core/__pycache__
+./Main_Projects/ontic-physics/hypertensor/integrators
+./Main_Projects/ontic-physics/hypertensor/integrators/__pycache__
+./Main_Projects/ontic-physics/hypertensor/pde
+./Main_Projects/ontic-physics/hypertensor/pde/__pycache__
+./Main_Projects/ontic-physics/tests
+./Main_Projects/ontic-physics/examples
 ./Main_Projects/NTTFAI
 ./Main_Projects/NTTFAI/logs
 ./Main_Projects/NTTFAI/frontend
@@ -5063,7 +5063,7 @@ brad@LAPTOP-IJ60I377:~/TiganticLabz$ cd /home/brad/TiganticLabz && find . -maxde
 ./Vault
 ./Vault/TiganticLabz_Map_20251216_015047
 ./Vault/Github_Backup_20251126
-./Vault/hypertensor-physics
+./Vault/ontic-physics
 ./Vault/Repo_Cold_Storage
 ./.IP_PORTFOLIO
 ./.IP_PORTFOLIO/Hermeneutics_Book
@@ -5105,7 +5105,7 @@ brad@LAPTOP-IJ60I377:~/TiganticLabz$ cd /home/brad/TiganticLabz && find . -maxde
 ./Main_Projects/INVARIAN
 ./Main_Projects/Internal-Intelligence
 ./Main_Projects/QTT_NSFD
-./Main_Projects/hypertensor-physics
+./Main_Projects/ontic-physics
 ./Main_Projects/NTTFAI
 ./Main_Projects/internal-intelligence-master
 ./Main_Projects/tensornet-1hour-master
@@ -5117,7 +5117,7 @@ brad@LAPTOP-IJ60I377:~/TiganticLabz$ cd /home/brad/TiganticLabz && find . -maxde
 ./Main_Projects/pytorchvT-main
 ./Main_Projects/AuraTrader
 ./Main_Projects/TTT
-./Main_Projects/Project HyperTensor - Copy
+./Main_Projects/Project The Ontic Engine - Copy
 ./Main_Projects/d669b918-71af-4ad6-9fc7-d4eeaf23ba97
 ./Main_Projects/ai-enterprise-platform (4)
 ./Main_Projects/HyperTensor-VM-main
@@ -5129,7 +5129,7 @@ brad@LAPTOP-IJ60I377:~/TiganticLabz$ cd /home/brad/TiganticLabz && find . -maxde
 ./Main_Projects/ISP_ElLITE_BD
 ./Main_Projects/Brading_Go_Live_Starter
 ./Main_Projects/Cookbook
-./Main_Projects/Project HyperTensor
+./Main_Projects/Project The Ontic Engine
 ./Main_Projects/HyperFusion
 ./Main_Projects/GovconEliteAi
 ./A4Q roadmap synthesis_files
@@ -5139,5 +5139,5 @@ brad@LAPTOP-IJ60I377:~/TiganticLabz$ cd /home/brad/TiganticLabz && find . -maxde
 ./node_modules/playwright-core
 ./Quantum_Research
 ./UnrealProjects
-./UnrealProjects/HyperTensorDemo
+./UnrealProjects/OnticDemo
 brad@LAPTOP-IJ60I377:~/Tig

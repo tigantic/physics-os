@@ -69,7 +69,7 @@ The complete naming hierarchy from legal entity to code symbol:
 | **Tigantic Holdings LLC** | Delaware LLC. Legal owner of all IP. | Corporate |
 | **HolonomiX** | DBA. The public-facing brand. | Brand |
 | **The Physics OS** | The complete platform — everything a user touches. | Product |
-| **The Ontic Engine** | *"The internal factory floor where physics are compiled, executed, and constrained by conservation laws."* The runtime that takes physics specifications and produces verified results. Formerly "HyperTensor VM." | Core |
+| **The Ontic Engine** | *"The internal factory floor where physics are compiled, executed, and constrained by conservation laws."* The runtime that takes physics specifications and produces verified results. Formerly "The Ontic Engine." | Core |
 | **Ontic** | "Of or relating to real existence" (ontology → ontic). Physics deals in what *is* — not simulations of reality, but computational structures that obey the same conservation laws as reality. | Etymology |
 | **Physics OS** | The operating-system metaphor: physics modules are programs, the Ontic Engine is the kernel, client surfaces are the shell, and trust certificates are the audit log. | Metaphor |
 
@@ -401,7 +401,7 @@ Update `Cargo.toml` workspace members, all `use` statements, and the PyO3 module
 
 ### 4.4 Phase 4 — Documentation Overhaul
 
-Full rebrand of all documentation. Every instance of "HyperTensor" becomes either "The Physics OS" (platform context) or "The Ontic Engine" (runtime context).
+Full rebrand of all documentation. Every instance of "The Ontic Engine" becomes either "The Physics OS" (platform context) or "The Ontic Engine" (runtime context).
 
 **Priority order:**
 1. README.md (first thing anyone sees)
@@ -431,7 +431,7 @@ Full rebrand of all documentation. Every instance of "HyperTensor" becomes eithe
 | **ontic** | The Ontic Engine — physics VM + libraries | `ontic-engine` | `import ontic` |
 | **physics_os** | Platform shell — API, SDK, CLI, MCP | `physics-os` | `import physics_os` |
 | **tensornet** | Backward compatibility shim → ontic | (alias) | `import tensornet` |
-| **hypertensor** | Backward compatibility shim → physics_os | (alias) | `import hypertensor` |
+| **hypertensor** | Backward compatibility shim → physics_os | (alias) | `import physics_os` |
 
 ### 5.2 Rust Crates
 
@@ -495,7 +495,7 @@ The major version bump signals to all consumers that this is a new era. The API 
 3. **In code:** Package names are lowercase: `ontic`, `physics_os`. Module references follow Python convention.
 4. **In docs:** Use the full name with article on first mention, then "the engine" or "the platform" for subsequent references.
 5. **HolonomiX** — Note the capital X. This is the public brand. Use in marketing, website, legal. Not in code.
-6. **"HyperTensor"** — Legacy name. Deprecated. Backward compatibility shims use it. No new usage.
+6. **"The Ontic Engine"** — Legacy name. Deprecated. Backward compatibility shims use it. No new usage.
 
 ---
 
@@ -510,9 +510,9 @@ Phase 1 will be driven by a migration script (`tools/scripts/rebrand.py`) that:
    - `from tensornet` → `from ontic`
    - `import tensornet` → `import ontic`
    - `from hypertensor` → `from physics_os`
-   - `import hypertensor` → `import physics_os`
+   - `import physics_os` → `import physics_os`
    - `"tensornet` (in pyproject.toml strings) → `"ontic`
-   - `HyperTensor` (in docs/comments) → Context-dependent: "The Physics OS" or "The Ontic Engine"
+   - `The Ontic Engine` (in docs/comments) → Context-dependent: "The Physics OS" or "The Ontic Engine"
 3. Generates a diff report for manual review
 4. Preserves git blame via `git mv` where possible
 
@@ -528,10 +528,10 @@ PYTHONPATH="$PWD:$PYTHONPATH" python3 -m pytest tests/ -x --timeout=120
 cargo test --workspace
 
 # Import verification
-python3 -c "import ontic; print(ontic.__version__)"
+python3 -c "import ontic; print(physics_os.__version__)"
 python3 -c "import physics_os; print(physics_os.__version__)"
 python3 -c "import tensornet; print(tensornet.__version__)"  # shim
-python3 -c "import hypertensor; print(hypertensor.__version__)"  # shim
+python3 -c "import physics_os; print(physics_os.__version__)"  # shim
 
 # Lint
 ruff check .
@@ -604,8 +604,8 @@ Week 4           Phase 3 + 5 — Repository Rename + CI/CD
 | Criterion | Measurement |
 |-----------|-------------|
 | All tests pass | `pytest tests/ -x` = 0 failures |
-| No "HyperTensor" in brand surfaces | `grep -rn "HyperTensor" README.md ARCHITECTURE.md PLATFORM_SPECIFICATION.md` = 0 hits |
-| Backward compatibility works | `import tensornet` and `import hypertensor` succeed with deprecation warnings |
+| No "The Ontic Engine" in brand surfaces | `grep -rn "The Ontic Engine" README.md ARCHITECTURE.md PLATFORM_SPECIFICATION.md` = 0 hits |
+| Backward compatibility works | `import tensornet` and `import physics_os` succeed with deprecation warnings |
 | New imports work | `import ontic` and `import physics_os` succeed |
 | Documentation consistent | Every doc uses "The Physics OS" / "The Ontic Engine" terminology |
 | CI/CD green | All 11 workflows pass |
@@ -628,7 +628,7 @@ Week 4           Phase 3 + 5 — Repository Rename + CI/CD
 
 <div align="center">
 
-*This document is the source of truth for the HyperTensor → Physics OS transformation.*
+*This document is the source of truth for the Ontic Engine → Physics OS transformation.*
 *All naming decisions, phasing, and migration strategies are governed by this plan.*
 
 **Tigantic Holdings LLC** · **DBA: HolonomiX** · **Proprietary & Confidential**

@@ -16,7 +16,7 @@ from physics_os.api.app import create_app
 
 @pytest.fixture(scope="module")
 def client() -> TestClient:
-    """Test client for the HyperTensor API."""
+    """Test client for the Ontic Engine API."""
     app = create_app()
     return TestClient(app)
 

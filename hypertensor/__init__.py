@@ -5,7 +5,7 @@
     Update your imports::
 
         # Old
-        from hypertensor.core.registry import DomainRegistry
+        from ontic.core.registry import DomainRegistry
         # New
         from physics_os.core.registry import DomainRegistry
 

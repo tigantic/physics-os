@@ -63,7 +63,7 @@ def main():
     pattern = sys.argv[2] if len(sys.argv) > 2 else "turbulence"
 
     print("=" * 60)
-    print("HyperTensor Phase 3 Integration Test")
+    print("Ontic Phase 3 Integration Test")
     print("=" * 60)
     print(f"Duration: {duration}s")
     print(f"Pattern: {pattern}")

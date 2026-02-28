@@ -2,7 +2,7 @@
 pragma solidity ^0.8.21;
 
 /// @title Worldcoin Zero-Expansion Integration
-/// @author HyperTensor Labs
+/// @author Ontic Labs
 /// @notice Replaces Worldcoin's Groth16 Semaphore with Zero-Expansion
 /// @dev Traditional Groth16 at depth 50 = 34 PB per proof (IMPOSSIBLE)
 /// @dev Zero-Expansion at depth 50 = 732 KB per proof (188 TPS on RTX 5070)

@@ -14,7 +14,7 @@ Output: JSON attestation file with compression metrics, timings, GPU stats.
 
 Hardware requirement: CUDA GPU with ≥ 4 GB VRAM (cores stay in O(L·r²) memory).
 
-Author: HyperTensor Team
+Author: TiganticLabz
 """
 
 from __future__ import annotations
@@ -272,7 +272,7 @@ def main() -> None:
         args.max_scale = args.scale
 
     print(f"╔══════════════════════════════════════════════════════════╗")
-    print(f"║  HyperTensor GPU QTT Maxwell 3D Benchmark              ║")
+    print(f"║  Ontic GPU QTT Maxwell 3D Benchmark              ║")
     print(f"║  Grid range: {2**args.min_scale}³ → {2**args.max_scale}³"
           f"{'':>{52 - len(f'Grid range: {2**args.min_scale}³ → {2**args.max_scale}³')}}║")
     print(f"║  Device: {torch.cuda.get_device_name(0)[:45]:<46s}║")

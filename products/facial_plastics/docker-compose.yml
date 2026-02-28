@@ -19,7 +19,7 @@ services:
     container_name: fp-app
     restart: unless-stopped
     environment:
-      - HYPERTENSOR_DATA_ROOT=/data
+      - ONTIC_DATA_ROOT=/data
       - FP_BIND=0.0.0.0:8420
       - FP_WORKERS=${FP_WORKERS:-4}
       - FP_TIMEOUT=${FP_TIMEOUT:-300}

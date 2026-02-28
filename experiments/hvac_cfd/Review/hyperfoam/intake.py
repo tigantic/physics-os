@@ -11,7 +11,7 @@ Features:
 - Grid snapping for voxelization
 - Provenance hash generation
 
-Author: HyperTensor Physics Laboratory
+Author: TiganticLabz Physics Laboratory
 Copyright (c) 2025 TiganticLabz. All Rights Reserved.
 SPDX-License-Identifier: Proprietary
 """

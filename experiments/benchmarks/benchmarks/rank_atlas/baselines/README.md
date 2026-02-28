@@ -1,4 +1,4 @@
-# Rank Atlas v1.0 — HyperTensor Reference Baselines
+# Rank Atlas v1.0 — Ontic Reference Baselines
 
 ## Baseline A: In-Solver QTT (Rank Atlas Campaign)
 

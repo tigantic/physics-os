@@ -29,7 +29,7 @@ where
 }
 
 // [JPW] Keep this adapter to halo2curves to minimize code changes.
-// [HyperTensor] GPU MSM dispatch added: when the `gpu-msm` feature is enabled
+// [The Ontic Engine] GPU MSM dispatch added: when the `gpu-msm` feature is enabled
 // and the curve is BN254, this routes through ICICLE's CUDA MSM kernel instead
 // of the CPU Pippenger implementation. Falls back to CPU transparently.
 /// Performs a multi-exponentiation operation.

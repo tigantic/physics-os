@@ -32,7 +32,7 @@ This module provides:
 - Structure-preserving operation verification
 - QTT as the universal runtime encoding
 
-Author: HyperTensor Geometric Types Protocol
+Author: TiganticLabz Geometric Types Protocol
 Date: January 27, 2026
 """
 

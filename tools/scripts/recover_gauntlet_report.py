@@ -217,7 +217,7 @@ def generate_report(results: List[ResData]) -> str:
     L.append("")
     L.append(sep)
     L.append("  QTT vs NVIDIA DENSE CFD — MULTI-RESOLUTION GAUNTLET v2.0")
-    L.append("  HyperTensor QTT Engine — Tigantic Holdings LLC")
+    L.append("  Ontic QTT Engine — Tigantic Holdings LLC")
     L.append(sep)
     L.append("")
 
@@ -232,7 +232,7 @@ def generate_report(results: List[ResData]) -> str:
     L.append("")
 
     L.append(dash)
-    L.append("  HYPERTENSOR QTT — VOLUMETRIC FLOW SYNTHESIS")
+    L.append("  ONTIC QTT — VOLUMETRIC FLOW SYNTHESIS")
     L.append(dash)
     L.append("")
 
@@ -301,7 +301,7 @@ def generate_report(results: List[ResData]) -> str:
         L.append(f"    Storage:     {nv['total_vtp_bytes'] / 1e9:.1f} GB")
         L.append(f"    Content:     11 surface fields, no volumetric flow")
         L.append(f"")
-        L.append(f"  HyperTensor QTT (1 simulation, FULL VOLUME):")
+        L.append(f"  Ontic QTT (1 simulation, FULL VOLUME):")
         L.append(f"    Storage:     {best.qtt_velocity_bytes / 1e3:.1f} KB")
         L.append(f"    Content:     3D velocity field, {best.N}³ = {best.N**3:,} cells")
         L.append(f"    Generation:  Single GPU, {best.wall_time:.0f} s wall time")
