@@ -1,0 +1,163 @@
+{
+  "challenge": "Challenge III \u2014 Climate Tipping Points",
+  "phase": "Phase 2: Regional Climate Ensemble",
+  "timestamp_utc": "2026-02-28T07:08:26.727617+00:00",
+  "configuration": {
+    "n_ensemble": 10000,
+    "n_ssp_scenarios": 4,
+    "ssp_scenarios": [
+      "SSP1-2.6",
+      "SSP2-4.5",
+      "SSP3-7.0",
+      "SSP5-8.5"
+    ],
+    "domain_km": 200.0,
+    "grid_resolution_km": 5.0,
+    "grid_nx": 40,
+    "grid_ny": 40,
+    "n_steps": 200,
+    "dt_s": 60.0,
+    "sampling_method": "Latin Hypercube Sampling (McKay et al. 1979)"
+  },
+  "memory_benchmark": {
+    "total_qtt_memory_mb": 233.49,
+    "total_dense_memory_mb": 122.07,
+    "compression_ratio": 0.52,
+    "under_10gb_limit": true
+  },
+  "ssp_statistics": {
+    "SSP1-2.6": {
+      "n_members": 2500,
+      "mean_max_concentration_ugm3": 9732.97,
+      "std_max_concentration_ugm3": 9766.43,
+      "mean_qtt_rank": 24.0,
+      "exceedance_rate_35ugm3": 1.0
+    },
+    "SSP2-4.5": {
+      "n_members": 2500,
+      "mean_max_concentration_ugm3": 14284.02,
+      "std_max_concentration_ugm3": 13144.51,
+      "mean_qtt_rank": 24.0,
+      "exceedance_rate_35ugm3": 1.0
+    },
+    "SSP3-7.0": {
+      "n_members": 2500,
+      "mean_max_concentration_ugm3": 19702.0,
+      "std_max_concentration_ugm3": 18894.59,
+      "mean_qtt_rank": 24.0,
+      "exceedance_rate_35ugm3": 1.0
+    },
+    "SSP5-8.5": {
+      "n_members": 2500,
+      "mean_max_concentration_ugm3": 25941.65,
+      "std_max_concentration_ugm3": 24830.5,
+      "mean_qtt_rank": 24.0,
+      "exceedance_rate_35ugm3": 1.0
+    }
+  },
+  "return_periods": [
+    {
+      "threshold_ugm3": 35.0,
+      "n_exceedances": 10000,
+      "exceedance_rate": 1.0,
+      "return_period": 1.0,
+      "ssp_rates": {
+        "SSP1-2.6": 1.0,
+        "SSP2-4.5": 1.0,
+        "SSP3-7.0": 1.0,
+        "SSP5-8.5": 1.0
+      }
+    },
+    {
+      "threshold_ugm3": 50.0,
+      "n_exceedances": 10000,
+      "exceedance_rate": 1.0,
+      "return_period": 1.0,
+      "ssp_rates": {
+        "SSP1-2.6": 1.0,
+        "SSP2-4.5": 1.0,
+        "SSP3-7.0": 1.0,
+        "SSP5-8.5": 1.0
+      }
+    },
+    {
+      "threshold_ugm3": 75.0,
+      "n_exceedances": 10000,
+      "exceedance_rate": 1.0,
+      "return_period": 1.0,
+      "ssp_rates": {
+        "SSP1-2.6": 1.0,
+        "SSP2-4.5": 1.0,
+        "SSP3-7.0": 1.0,
+        "SSP5-8.5": 1.0
+      }
+    },
+    {
+      "threshold_ugm3": 100.0,
+      "n_exceedances": 10000,
+      "exceedance_rate": 1.0,
+      "return_period": 1.0,
+      "ssp_rates": {
+        "SSP1-2.6": 1.0,
+        "SSP2-4.5": 1.0,
+        "SSP3-7.0": 1.0,
+        "SSP5-8.5": 1.0
+      }
+    },
+    {
+      "threshold_ugm3": 150.0,
+      "n_exceedances": 10000,
+      "exceedance_rate": 1.0,
+      "return_period": 1.0,
+      "ssp_rates": {
+        "SSP1-2.6": 1.0,
+        "SSP2-4.5": 1.0,
+        "SSP3-7.0": 1.0,
+        "SSP5-8.5": 1.0
+      }
+    },
+    {
+      "threshold_ugm3": 200.0,
+      "n_exceedances": 10000,
+      "exceedance_rate": 1.0,
+      "return_period": 1.0,
+      "ssp_rates": {
+        "SSP1-2.6": 1.0,
+        "SSP2-4.5": 1.0,
+        "SSP3-7.0": 1.0,
+        "SSP5-8.5": 1.0
+      }
+    }
+  ],
+  "tipping_signatures": [
+    {
+      "transition": "SSP1-2.6 \u2192 SSP2-4.5",
+      "rank_jump_ratio": 1.0,
+      "variance_ratio": 1.811,
+      "tipping_score": 1.346,
+      "topological_change": false
+    },
+    {
+      "transition": "SSP2-4.5 \u2192 SSP3-7.0",
+      "rank_jump_ratio": 1.0,
+      "variance_ratio": 2.066,
+      "tipping_score": 1.437,
+      "topological_change": false
+    },
+    {
+      "transition": "SSP3-7.0 \u2192 SSP5-8.5",
+      "rank_jump_ratio": 1.0,
+      "variance_ratio": 1.727,
+      "tipping_score": 1.314,
+      "topological_change": false
+    }
+  ],
+  "ensemble_solve_time_s": 167.39,
+  "total_pipeline_time_s": 167.55,
+  "pass": true,
+  "hashes": {
+    "sha256": "fabd58a105ebbcb02511d996ad0b196964f84fe581d82a255f52c19ef32e7990",
+    "sha3_256": "c12c523800a255da2e44e3effed33f26e5e26501124c035ba1686eeef4515940",
+    "blake2b": "d20468eea4d7c097f0d3f268d9597493e90a0936855db5b8a38d124bd8e4e9107485388354094c95e75e041fce37e8b0ef38f22c53cc6d9c032f9a33c4aab7b1"
+  }
+}

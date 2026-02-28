@@ -1,0 +1,83 @@
+{
+  "challenge": "Challenge VI \u2014 Cryptographic Proof of Physical Reality",
+  "phase": "Phase 2: Video Temporal Consistency",
+  "timestamp_utc": "2026-02-28T07:38:25.755579+00:00",
+  "configuration": {
+    "fps": 30,
+    "n_frames": 90,
+    "image_size": "128\u00d7128",
+    "n_authentic": 50,
+    "n_manipulated": 50
+  },
+  "tests": [
+    {
+      "test_name": "Temporal Lighting Consistency",
+      "auc": 1.0,
+      "accuracy": 1.0,
+      "tp": 50,
+      "fp": 0,
+      "tn": 50,
+      "fn": 0,
+      "qtt_compression": 45.18,
+      "qtt_max_rank": 32,
+      "pass": true
+    },
+    {
+      "test_name": "Motion Blur Consistency",
+      "auc": 1.0,
+      "accuracy": 1.0,
+      "tp": 50,
+      "fp": 0,
+      "tn": 50,
+      "fn": 0,
+      "qtt_compression": 45.18,
+      "qtt_max_rank": 32,
+      "pass": true
+    },
+    {
+      "test_name": "Depth-of-Field Coherence",
+      "auc": 1.0,
+      "accuracy": 1.0,
+      "tp": 50,
+      "fp": 0,
+      "tn": 50,
+      "fn": 0,
+      "qtt_compression": 45.18,
+      "qtt_max_rank": 32,
+      "pass": true
+    },
+    {
+      "test_name": "Reflection Dynamics",
+      "auc": 1.0,
+      "accuracy": 1.0,
+      "tp": 50,
+      "fp": 0,
+      "tn": 50,
+      "fn": 0,
+      "qtt_compression": 45.18,
+      "qtt_max_rank": 32,
+      "pass": true
+    },
+    {
+      "test_name": "Audio-Visual Alignment",
+      "auc": 0.9328,
+      "accuracy": 0.92,
+      "tp": 50,
+      "fp": 8,
+      "tn": 42,
+      "fn": 0,
+      "qtt_compression": 45.18,
+      "qtt_max_rank": 32,
+      "pass": true
+    }
+  ],
+  "combined_auc": 0.9866,
+  "combined_accuracy": 0.984,
+  "total_pipeline_time_s": 124.14,
+  "pass": true,
+  "hashes": {
+    "sha256": "7c23c52be4234f0c682257df77f16501686f0e28b3d36ab9b2bc6853101ff710",
+    "sha3_256": "6ed84bfb7a40ea8e42695485c07b6d634b06a183ecc1b6ef74fec8628d4d2401",
+    "blake2b": "0a7306b4f54f0d4041689aa40d41efbad3e459d262476f7c3c4532796018b00a5b8069c6287edcefcf09819577e20aa908d46e67b4f12f037605dce0941d8912"
+  }
+}

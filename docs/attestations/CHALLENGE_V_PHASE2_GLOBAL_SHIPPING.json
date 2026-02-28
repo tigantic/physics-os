@@ -1,0 +1,61 @@
+{
+  "challenge": "Challenge V \u2014 Supply Chain Resilience",
+  "phase": "Phase 2: Global Shipping Network",
+  "timestamp_utc": "2026-02-28T07:19:59.727509+00:00",
+  "configuration": {
+    "n_routes": 50,
+    "n_ports": 99,
+    "cells_per_route": 64,
+    "sim_days": 90,
+    "dt_days": 0.5,
+    "n_steps": 180
+  },
+  "scenarios": [
+    {
+      "scenario": "Suez Canal Blockage (2021)",
+      "peak_queue_teu": 83200.0,
+      "peak_queue_port": "Port Said",
+      "congestion_duration_days": 46.0,
+      "rerouted_teu": 9750.0,
+      "economic_impact_billion_usd": 10.129,
+      "n_ports_congested": 4,
+      "cascade_detected": false,
+      "cascade_score": 0.0404,
+      "qtt_compression_ratio": 0.54,
+      "qtt_max_rank": 32,
+      "pass": true
+    },
+    {
+      "scenario": "Red Sea Crisis (2023-2024)",
+      "peak_queue_teu": 597740.0,
+      "peak_queue_port": "Port Said",
+      "congestion_duration_days": 68.5,
+      "rerouted_teu": 90750.0,
+      "economic_impact_billion_usd": 60.626,
+      "n_ports_congested": 4,
+      "cascade_detected": false,
+      "cascade_score": 0.0404,
+      "qtt_compression_ratio": 0.54,
+      "qtt_max_rank": 32,
+      "pass": true
+    }
+  ],
+  "multi_commodity": {
+    "n_commodities": 3,
+    "container_teu": 2029914.3,
+    "bulk_tonnes": 12932481.7,
+    "tanker_barrels": 59739020.4,
+    "modal_split_achieved": true
+  },
+  "network_qtt": {
+    "compression_ratio": 0.54,
+    "max_rank": 32
+  },
+  "total_pipeline_time_s": 15.71,
+  "pass": true,
+  "hashes": {
+    "sha256": "1d3812d4768efc518d30acbbfd7a8a88fbe803a91d886827685a0f729fff1510",
+    "sha3_256": "2d2d35fc2f047f0f962bec4aae91ebc6f7380263d1a08ac087219300352ec1e5",
+    "blake2b": "02282e7711f83648cc924fe6f8d27c290d3acbb5280220bf3105240928ad64740cff7851855ca997c2d39de546014aa2e0573db3580b9ec02c8d0ec3d1f6a819"
+  }
+}

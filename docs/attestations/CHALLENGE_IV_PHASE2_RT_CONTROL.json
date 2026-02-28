@@ -1,0 +1,216 @@
+{
+  "challenge": "Challenge IV \u2014 Fusion Energy",
+  "phase": "Phase 2: Real-Time Plasma Control Demonstration",
+  "timestamp_utc": "2026-02-28T07:11:40.222816+00:00",
+  "configuration": {
+    "n_mc_shots": 10000,
+    "n_instability_modes": 5,
+    "modes": [
+      "kink_n1",
+      "ballooning",
+      "vertical_displacement",
+      "tearing_2_1",
+      "elm_type_i"
+    ],
+    "control_cycle_us": 50.0,
+    "plasma_geometry": {
+      "R0_m": 6.2,
+      "a_m": 2.0,
+      "kappa": 1.7,
+      "delta": 0.33,
+      "B0_T": 5.3,
+      "Ip_MA": 15.0
+    },
+    "grid": {
+      "NR": 64,
+      "NZ": 128
+    }
+  },
+  "results": {
+    "overall_survival_rate": 1.0,
+    "survival_above_99pct": true,
+    "all_modes_under_100us": true,
+    "total_survived": 10000,
+    "total_disrupted": 0
+  },
+  "mode_statistics": [
+    {
+      "mode": "kink_n1",
+      "n_shots": 2000,
+      "detection_rate": 1.0,
+      "survival_rate": 1.0,
+      "mean_detection_us": 50.0,
+      "std_detection_us": 0.0,
+      "mean_control_energy_mj": 0.942
+    },
+    {
+      "mode": "ballooning",
+      "n_shots": 2000,
+      "detection_rate": 1.0,
+      "survival_rate": 1.0,
+      "mean_detection_us": 50.0,
+      "std_detection_us": 0.0,
+      "mean_control_energy_mj": 1.647
+    },
+    {
+      "mode": "vertical_displacement",
+      "n_shots": 2000,
+      "detection_rate": 1.0,
+      "survival_rate": 1.0,
+      "mean_detection_us": 50.0,
+      "std_detection_us": 0.0,
+      "mean_control_energy_mj": 1.062
+    },
+    {
+      "mode": "tearing_2_1",
+      "n_shots": 2000,
+      "detection_rate": 1.0,
+      "survival_rate": 1.0,
+      "mean_detection_us": 50.0,
+      "std_detection_us": 0.0,
+      "mean_control_energy_mj": 0.561
+    },
+    {
+      "mode": "elm_type_i",
+      "n_shots": 2000,
+      "detection_rate": 1.0,
+      "survival_rate": 1.0,
+      "mean_detection_us": 50.0,
+      "std_detection_us": 0.0,
+      "mean_control_energy_mj": 4.297
+    }
+  ],
+  "pareto_front_sample": [
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.0125,
+      "effectiveness": 0.1372,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.0241,
+      "effectiveness": 0.1767,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.0394,
+      "effectiveness": 0.226,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.0585,
+      "effectiveness": 0.2692,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.0813,
+      "effectiveness": 0.297,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.108,
+      "effectiveness": 0.3626,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.1383,
+      "effectiveness": 0.3958,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.1724,
+      "effectiveness": 0.4156,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.2103,
+      "effectiveness": 0.4488,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.252,
+      "effectiveness": 0.5049,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.2974,
+      "effectiveness": 0.5309,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.3465,
+      "effectiveness": 0.5569,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.3995,
+      "effectiveness": 0.5719,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.4561,
+      "effectiveness": 0.5807,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.5166,
+      "effectiveness": 0.62,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.5808,
+      "effectiveness": 0.6269,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.6487,
+      "effectiveness": 0.6883,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.7959,
+      "effectiveness": 0.7057,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 0.9581,
+      "effectiveness": 0.7074,
+      "action_type": "coil_pulse"
+    },
+    {
+      "mode": "kink_n1",
+      "energy_mj": 1.0449,
+      "effectiveness": 0.7344,
+      "action_type": "coil_pulse"
+    }
+  ],
+  "qtt_benchmark": {
+    "compression_ratio": 9.51,
+    "max_rank": 11
+  },
+  "total_pipeline_time_s": 1.43,
+  "pass": true,
+  "hashes": {
+    "sha256": "9ff2ca0a6e2b55a44c4634814d2b2d25d2d4976d51be1239f89dfe5084dbb0e7",
+    "sha3_256": "ebff47e6f4f5f8d6048826077f52d5550293850b6cdf9312c58ec2cef53f3b9a",
+    "blake2b": "2a22dac59bc0e71deb21fbb80ad94238d90ca6a22a109db97414a42ccad2adf5a09a53fc8ca2c657d6f65c8432bf9f816f380c2545c792d75296749d23dee399"
+  }
+}
