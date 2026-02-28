@@ -1,0 +1,167 @@
+{
+  "hashes": {
+    "SHA-256": "690f723f52f3d6cbd5075cf8e4d3c984cbeba8a99f62b5cb6fa68d629d246bfc",
+    "SHA3-256": "fe3cafdb21f88c2fe3ca844ee7aeea767f593162aed6cde9e2794d16e76a8c46",
+    "BLAKE2b": "cec366093e9ac90a70dd649d8ea23bb58057f7bcb6f1d511bdbddb9fb2adfcd329208bbefe129d937279ce5e19c10712330afac2299744e49f3b49eb5b11eb26"
+  },
+  "data": {
+    "pipeline": "Challenge III Phase 1: Regional Atmospheric Dispersion",
+    "version": "1.0.0",
+    "data_sources": {
+      "meteorological": {
+        "provider": "NOAA Integrated Surface Database (ISD)",
+        "station": "RDU (723060-13722)",
+        "location": "35.8801\u00b0N, 78.788\u00b0W",
+        "records_downloaded": 200
+      },
+      "air_quality": {
+        "provider": "EPA Air Quality System (AQS)",
+        "site": "Wake County, NC (FIPS 37183)",
+        "observations": 365
+      },
+      "emissions": {
+        "provider": "EPA National Emissions Inventory (NEI) 2020",
+        "n_point_sources": 12,
+        "region": "Wake County, NC"
+      }
+    },
+    "domain": {
+      "region": "Research Triangle Park, NC",
+      "center_lat": 35.8801,
+      "center_lon": -78.788,
+      "size_km": "50.0 x 50.0",
+      "resolution_m": 100.0,
+      "grid_cells": "500 x 500 = 250,000",
+      "terrain": "USGS Piedmont elevation (61-167 m ASL)"
+    },
+    "scenarios": [
+      {
+        "scenario": "Light SW Wind (typical)",
+        "wind_speed_ms": 2.1,
+        "wind_dir_deg": 240.1,
+        "temperature_c": 24.1,
+        "ns_max_concentration_ugm3": 490.2633,
+        "aermod_max_concentration_ugm3": 15.8679,
+        "resolution_advantage_factor": 3.6,
+        "qtt_compression_ratio": 13.55,
+        "qtt_max_rank": 32,
+        "qtt_velocity_rank": 32,
+        "qtt_concentration_rank": 32,
+        "dense_memory_bytes": 6000000,
+        "qtt_memory_bytes": 147648,
+        "simulation_time_s": 29.01,
+        "oracle_assessment": "NORMAL",
+        "oracle_anomaly_score": 1.0,
+        "rank_evolution": [
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32
+        ],
+        "passes": true
+      },
+      {
+        "scenario": "Moderate Wind (median)",
+        "wind_speed_ms": 2.8,
+        "wind_dir_deg": 202.1,
+        "temperature_c": 13.4,
+        "ns_max_concentration_ugm3": 421.7565,
+        "aermod_max_concentration_ugm3": 9.3029,
+        "resolution_advantage_factor": 3.54,
+        "qtt_compression_ratio": 13.61,
+        "qtt_max_rank": 32,
+        "qtt_velocity_rank": 32,
+        "qtt_concentration_rank": 32,
+        "dense_memory_bytes": 6000000,
+        "qtt_memory_bytes": 146912,
+        "simulation_time_s": 30.08,
+        "oracle_assessment": "NORMAL",
+        "oracle_anomaly_score": 1.0,
+        "rank_evolution": [
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32
+        ],
+        "passes": true
+      },
+      {
+        "scenario": "Strong Wind (90th pctl)",
+        "wind_speed_ms": 6.0,
+        "wind_dir_deg": 293.1,
+        "temperature_c": 0.2,
+        "ns_max_concentration_ugm3": 130.7667,
+        "aermod_max_concentration_ugm3": 6.1334,
+        "resolution_advantage_factor": 3.06,
+        "qtt_compression_ratio": 13.55,
+        "qtt_max_rank": 32,
+        "qtt_velocity_rank": 32,
+        "qtt_concentration_rank": 32,
+        "dense_memory_bytes": 6000000,
+        "qtt_memory_bytes": 147648,
+        "simulation_time_s": 30.17,
+        "oracle_assessment": "NORMAL",
+        "oracle_anomaly_score": 1.0,
+        "rank_evolution": [
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32
+        ],
+        "passes": true
+      }
+    ],
+    "summary": {
+      "total_scenarios": 3,
+      "scenarios_passing": 3,
+      "all_pass": true
+    },
+    "exit_criteria": {
+      "criterion": "100m NS simulation outperforms AERMOD Gaussian plume for complex terrain dispersion with QTT compression",
+      "scenarios_tested": 3,
+      "scenarios_passing": 3,
+      "overall_PASS": true
+    },
+    "engine": {
+      "solver": "2D Incompressible NS + Scalar Advection-Diffusion",
+      "advection": "Upwind (2nd order)",
+      "diffusion": "Explicit with sub-stepping",
+      "pressure": "Jacobi iterative Poisson",
+      "splitting": "Strang splitting (advection \u2192 diffusion \u2192 source \u2192 projection)",
+      "terrain": "Jackson-Hunt linearized speed-up",
+      "compression": "TT-SVD (quantics fold)",
+      "reference": "AERMOD Gaussian plume (Pasquill-Gifford Class D)"
+    },
+    "physics": {
+      "governing_equations": "Incompressible Navier-Stokes + scalar transport",
+      "ns_equation": "\u2202u/\u2202t + (u\u00b7\u2207)u = -\u2207p/\u03c1 + \u03bd\u2207\u00b2u",
+      "scalar_transport": "\u2202C/\u2202t + (u\u00b7\u2207)C = \u03ba\u2207\u00b2C + S",
+      "wind_profile": "Logarithmic boundary layer with terrain correction",
+      "dispersion_reference": "Pasquill-Gifford (Cimorelli et al. 2005)"
+    },
+    "pipeline_time_seconds": 89.3,
+    "timestamp": "2026-02-28T05:53:50.566803+00:00",
+    "author": "Bradly Biron Baker Adams | Tigantic Holdings LLC"
+  }
+}

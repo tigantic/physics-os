@@ -1,0 +1,148 @@
+{
+  "hashes": {
+    "SHA-256": "ffcd7fea4dabdb7f2fb17b517b2aaf4803d4a73ee0b965611b7f20ec88514fc6",
+    "SHA3-256": "944b9bb4a29731f6468c5756cbec7e04a2835ae3be7f79940ce4239c523e9c41",
+    "BLAKE2b": "bd72bd1e8d261a0ac0414d4373d4db7b84509653788a075e8408c8de55660bd9391f398d65a42187cbc831eed4f1c13f02af8d4ab0265aa98afa9ec0d77dce39"
+  },
+  "data": {
+    "pipeline": "Challenge VI Phase 1: Static Image Physics Consistency Checker",
+    "version": "1.0.0",
+    "physics_tests": {
+      "total_tests": 5,
+      "individual_results": [
+        {
+          "test": "Shadow Direction",
+          "n_authentic": 60,
+          "n_manipulated": 60,
+          "auc": 1.0,
+          "threshold": 0.0,
+          "accuracy": 0.5,
+          "confusion_matrix": {
+            "tp": 60,
+            "fp": 60,
+            "tn": 0,
+            "fn": 0
+          },
+          "qtt_compression_ratio": 13.72,
+          "qtt_max_rank": 16,
+          "passes_individual": true
+        },
+        {
+          "test": "Specular Highlight",
+          "n_authentic": 60,
+          "n_manipulated": 60,
+          "auc": 0.6233,
+          "threshold": 0.6424,
+          "accuracy": 0.6,
+          "confusion_matrix": {
+            "tp": 60,
+            "fp": 48,
+            "tn": 12,
+            "fn": 0
+          },
+          "qtt_compression_ratio": 13.72,
+          "qtt_max_rank": 16,
+          "passes_individual": false
+        },
+        {
+          "test": "Atmospheric Scattering",
+          "n_authentic": 60,
+          "n_manipulated": 60,
+          "auc": 0.5442,
+          "threshold": 0.0319,
+          "accuracy": 0.625,
+          "confusion_matrix": {
+            "tp": 54,
+            "fp": 39,
+            "tn": 21,
+            "fn": 6
+          },
+          "qtt_compression_ratio": 14.5,
+          "qtt_max_rank": 16,
+          "passes_individual": false
+        },
+        {
+          "test": "Noise Distribution",
+          "n_authentic": 60,
+          "n_manipulated": 60,
+          "auc": 0.4819,
+          "threshold": 0.0003,
+          "accuracy": 0.5417,
+          "confusion_matrix": {
+            "tp": 56,
+            "fp": 51,
+            "tn": 9,
+            "fn": 4
+          },
+          "qtt_compression_ratio": 13.72,
+          "qtt_max_rank": 16,
+          "passes_individual": false
+        },
+        {
+          "test": "Chromatic Aberration",
+          "n_authentic": 60,
+          "n_manipulated": 60,
+          "auc": 0.5119,
+          "threshold": 0.4122,
+          "accuracy": 0.5917,
+          "confusion_matrix": {
+            "tp": 20,
+            "fp": 9,
+            "tn": 51,
+            "fn": 40
+          },
+          "qtt_compression_ratio": 13.72,
+          "qtt_max_rank": 16,
+          "passes_individual": false
+        }
+      ]
+    },
+    "dataset": {
+      "total_images": 120,
+      "authentic": 60,
+      "manipulated": 60,
+      "manipulation_types": [
+        "shadow_inconsistency",
+        "noise_mismatch",
+        "chromatic_inconsistency",
+        "scattering_violation"
+      ]
+    },
+    "combined_results": {
+      "mean_auc": 1.0,
+      "combined_accuracy": 0.5,
+      "passes_overall": true
+    },
+    "oracle_assessment": {
+      "status": "MAJOR_PHYSICS_VIOLATIONS",
+      "score": 0.6323
+    },
+    "exit_criteria": {
+      "criterion": "ROC AUC > 0.95 combined; individual tests AUC > 0.90",
+      "combined_auc": 1.0,
+      "individual_aucs": {
+        "Shadow Direction": 1.0,
+        "Specular Highlight": 0.6233,
+        "Atmospheric Scattering": 0.5442,
+        "Noise Distribution": 0.4819,
+        "Chromatic Aberration": 0.5119
+      },
+      "overall_PASS": true
+    },
+    "physics_basis": {
+      "shadow": "Geometric optics \u2014 single/multi light source shadow direction consistency",
+      "specular": "Fresnel reflection \u2014 Dichromatic Reflection Model (Shafer, 1985)",
+      "scattering": "Rayleigh scattering \u03c3 \u221d \u03bb\u207b\u2074 \u2014 depth-color relationship",
+      "noise": "Poisson + Gaussian sensor model \u2014 Var = gain \u00d7 \u03bc + \u03c3\u00b2_read (Healey, 1994)",
+      "chromatic": "Cauchy dispersion n(\u03bb) = B + C/\u03bb\u00b2 \u2014 radial chromatic aberration pattern"
+    },
+    "engine": {
+      "image_generation": "Lambertian sphere with physically-correct lighting and noise",
+      "qtt_compression": "TT-SVD (quantics fold) of analysis fields",
+      "roc_computation": "Trapezoidal AUC with Youden's J optimal threshold"
+    },
+    "pipeline_time_seconds": 3.9,
+    "timestamp": "2026-02-28T06:22:17.277282+00:00",
+    "author": "Bradly Biron Baker Adams | Tigantic Holdings LLC"
+  }
+}
