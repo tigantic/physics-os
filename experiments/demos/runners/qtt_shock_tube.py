@@ -36,7 +36,7 @@ import torch
 import numpy as np
 
 # Import the QTT-native Euler solver
-from tensornet.cfd.qtt_cfd import QTT_Euler1D, QTTCFDConfig, complexity_comparison
+from ontic.cfd.qtt_cfd import QTT_Euler1D, QTTCFDConfig, complexity_comparison
 
 
 def format_bytes(n: int) -> str:
@@ -413,7 +413,7 @@ def compare_with_exact():
     
     # Try to get exact solution for comparison
     try:
-        from tensornet.cfd import exact_riemann
+        from ontic.cfd import exact_riemann
         
         x = torch.linspace(0.5/N, 1.0 - 0.5/N, N, dtype=torch.float64)
         rho_exact, u_exact, p_exact = exact_riemann(

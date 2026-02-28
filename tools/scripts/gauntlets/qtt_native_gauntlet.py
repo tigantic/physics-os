@@ -31,7 +31,7 @@ from typing import Dict, List, Tuple, Optional
 print("Loading QTT-Native modules...")
 
 # QTT-Native Tropical
-from tensornet.genesis.tropical.qtt_native import (
+from ontic.genesis.tropical.qtt_native import (
     QTTTropicalMatrix,
     qtt_tropical_matmul,
     qtt_floyd_warshall,
@@ -40,7 +40,7 @@ from tensornet.genesis.tropical.qtt_native import (
 print("  ✓ QTT-Native Tropical loaded")
 
 # QTT-Native Persistent Homology
-from tensornet.genesis.topology.qtt_native import (
+from ontic.genesis.topology.qtt_native import (
     QTTVector,
     QTTMatrix,
     QTTBoundaryMatrix,

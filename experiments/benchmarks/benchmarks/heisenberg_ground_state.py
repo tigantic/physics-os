@@ -14,7 +14,7 @@ import platform
 import psutil
 import torch
 
-from tensornet import dmrg, heisenberg_mpo
+from ontic import dmrg, heisenberg_mpo
 
 
 def get_hardware_specs() -> dict:

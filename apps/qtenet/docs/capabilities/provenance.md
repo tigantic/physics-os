@@ -23,8 +23,8 @@ Run manifests, deterministic controls, attestations.
 
 ## Canonical upstream sources (recommended top picks)
 
-- `tensornet/core/determinism.py` (cat=core, lang=py, score=150)
-- `tensornet/cfd/koopman_tt.py` (cat=cfd, lang=py, score=135)
+- `ontic/core/determinism.py` (cat=core, lang=py, score=150)
+- `ontic/cfd/koopman_tt.py` (cat=cfd, lang=py, score=135)
 - `demos/forensic_hub.py` (cat=demos, lang=py, score=20)
 - `demos/pqc_sign_results.py` (cat=demos, lang=py, score=20)
 - `demos/MILLENNIUM_HUNTER_ATTESTATION.json` (cat=demos, lang=json, score=10)
@@ -34,8 +34,8 @@ Run manifests, deterministic controls, attestations.
 
 ## Candidate set (ranked, truncated)
 
-- `tensornet/core/determinism.py` (cat=core, score=150)
-- `tensornet/cfd/koopman_tt.py` (cat=cfd, score=135)
+- `ontic/core/determinism.py` (cat=core, score=150)
+- `ontic/cfd/koopman_tt.py` (cat=cfd, score=135)
 - `demos/forensic_hub.py` (cat=demos, score=20)
 - `demos/pqc_sign_results.py` (cat=demos, score=20)
 - `demos/MILLENNIUM_HUNTER_ATTESTATION.json` (cat=demos, score=10)

@@ -372,5 +372,5 @@ MIT License - see [LICENSE](../LICENSE)
 ## References
 
 - [Halo2 Book](https://zcash.github.io/halo2/)
-- [FluidElite Architecture](../tensornet/cfd/FluidElite.md)
+- [FluidElite Architecture](../ontic/cfd/FluidElite.md)
 - [halo2-axiom](https://github.com/axiom-crypto/halo2-axiom)

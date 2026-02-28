@@ -28,8 +28,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 def profile_dmrg(device: str = "cpu", chi: int = 64, L: int = 20):
     """Profile DMRG ground state search."""
-    from tensornet import dmrg, heisenberg_mpo
-    from tensornet.core import random_mps
+    from ontic import dmrg, heisenberg_mpo
+    from ontic.core import random_mps
 
     print(f"Profiling DMRG: L={L}, chi={chi}, device={device}")
 
@@ -60,8 +60,8 @@ def profile_dmrg(device: str = "cpu", chi: int = 64, L: int = 20):
 
 def profile_tebd(device: str = "cpu", chi: int = 64, L: int = 20):
     """Profile TEBD time evolution."""
-    from tensornet.algorithms.tebd import tebd_step
-    from tensornet.core import MPS
+    from ontic.algorithms.tebd import tebd_step
+    from ontic.core import MPS
 
     print(f"Profiling TEBD: L={L}, chi={chi}, device={device}")
 
@@ -120,7 +120,7 @@ def profile_tebd(device: str = "cpu", chi: int = 64, L: int = 20):
 
 def profile_cfd_1d(Nx: int = 500):
     """Profile 1D Euler solver."""
-    from tensornet.cfd.euler_1d import Euler1D, EulerState
+    from ontic.cfd.euler_1d import Euler1D, EulerState
 
     print(f"Profiling Euler1D: Nx={Nx}")
 
@@ -160,7 +160,7 @@ def profile_cfd_1d(Nx: int = 500):
 
 def profile_cfd_2d(Nx: int = 100, Ny: int = 100):
     """Profile 2D Euler solver."""
-    from tensornet.cfd.euler_2d import BCType, Euler2D, Euler2DState
+    from ontic.cfd.euler_2d import BCType, Euler2D, Euler2DState
 
     print(f"Profiling Euler2D: Nx={Nx}, Ny={Ny}")
 

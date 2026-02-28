@@ -7,7 +7,7 @@
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
 This module leverages the RTX 5070 GPU for ground state optimization
-using the existing tensornet CUDA infrastructure.
+using the existing ontic CUDA infrastructure.
 
 Methods:
     1. Direct GPU Lanczos - CUDA-native sparse eigensolve

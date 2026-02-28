@@ -65,7 +65,7 @@ This isn't an approximation. Conservation laws are verified to machine precision
 
 ## The Platform Shell: Runtime Access Layer
 
-The **Physics OS Platform Shell** (`hypertensor/`, 31 files, 3,965 LOC) is the commercial surface over The Ontic Engine — exposing simulation-as-a-service through four access surfaces while protecting all intellectual property behind a whitelist-only sanitization boundary.
+The **Physics OS Platform Shell** (`physics_os/`, 31 files, 3,965 LOC) is the commercial surface over The Ontic Engine — exposing simulation-as-a-service through four access surfaces while protecting all intellectual property behind a whitelist-only sanitization boundary.
 
 ### Four Ways In
 
@@ -105,7 +105,7 @@ Every job that completes successfully produces three cryptographic artifacts:
 
 ```bash
 # Start the server
-uvicorn hypertensor.api.app:create_app --factory --host 0.0.0.0 --port 8000
+uvicorn physics_os.api.app:create_app --factory --host 0.0.0.0 --port 8000
 
 # Submit a physics job
 curl -X POST http://localhost:8000/v1/jobs \
@@ -121,7 +121,7 @@ curl http://localhost:8000/v1/jobs/{job_id}/certificate \
 ### Quick Start — Python SDK
 
 ```python
-from hypertensor.sdk.client import HyperTensorClient
+from physics_os.sdk.client import HyperTensorClient
 
 client = HyperTensorClient(base_url="http://localhost:8000", api_key="...")
 
@@ -157,7 +157,7 @@ hypertensor serve --port 8000
 
 > *The internal factory floor where physics are compiled, executed, and constrained by conservation laws.*
 
-The Ontic Engine (`tensornet/`, 1,218 files, 500,216 LOC) implements a register-based bytecode VM for QTT computation. Domain specifications compile to an intermediate representation (IR) of QTT operations — no dense arrays are ever materialized.
+The Ontic Engine (`ontic/`, 1,218 files, 500,216 LOC) implements a register-based bytecode VM for QTT computation. Domain specifications compile to an intermediate representation (IR) of QTT operations — no dense arrays are ever materialized.
 
 ### Seven Physics Domains
 
@@ -183,7 +183,7 @@ Every operation stays in TT/QTT format. Dense materialization is architecturally
 ### SDK — WorkflowBuilder
 
 ```python
-from tensornet.sdk import WorkflowBuilder
+from ontic.sdk import WorkflowBuilder
 
 result = (
     WorkflowBuilder("sod_shock")
@@ -298,7 +298,7 @@ Six execution documents mapping demonstrated capabilities to civilization-scale 
 | # | Platform | Size | Purpose |
 |:-:|----------|-----:|---------|
 | 1 | **Physics OS Platform Shell** | 3,965 LOC | Commercial API + SDK + CLI + MCP |
-| 2 | **The Ontic Engine** (`tensornet/`) | 500K LOC | QTT compute engine — 105 modules, 1,218 files |
+| 2 | **The Ontic Engine** (`ontic/`) | 500K LOC | QTT compute engine — 105 modules, 1,218 files |
 | 3 | **FluidElite** (`crates/fluidelite*/`) | 57K LOC | Production tensor engine + ZK prover |
 | 4 | **QTeneT** (`apps/qtenet/`) | 10K LOC | Enterprise QTT SDK |
 | 5 | **Platform Substrate** | 13.7K LOC | Unified simulation API V2.0.0 |
@@ -355,7 +355,7 @@ Production Prometheus + Grafana stack under `deploy/telemetry/`:
 | **Dependabot** | Weekly updates for pip, cargo, and GitHub Actions |
 | **CODEOWNERS** | 278 path-to-owner mappings — every PR requires domain-expert review |
 | **Pre-commit** | ruff, bare-except detection, large file prevention, YAML/JSON validation |
-| **PEP 561** | `tensornet/py.typed` — downstream type checker support |
+| **PEP 561** | `ontic/py.typed` — downstream type checker support |
 | **Feature Flags** | 16 pip extras for domain-specific installation |
 
 ---
@@ -491,7 +491,7 @@ pip install tensornet[io]              # h5py, netCDF4, vtk
 
 ```
 The Physics OS/
-├── hypertensor/                    # Platform Shell (31 files, 3,965 LOC)
+├── physics_os/                    # Platform Shell (31 files, 3,965 LOC)
 │   ├── api/                        #   FastAPI server — 9 frozen endpoints
 │   │   ├── routers/                #     jobs, validate, capabilities, contracts, health
 │   │   ├── auth.py                 #     Bearer token + rate limiting (60 rpm)
@@ -507,7 +507,7 @@ The Physics OS/
 │   ├── sdk/                        #   Typed sync + async client
 │   ├── cli/                        #   CLI (run, validate, attest, verify, serve)
 │   └── mcp/                        #   MCP server — 11 AI-agent tools
-├── tensornet/                      # The Ontic Engine (1,218 files, 500K LOC)
+├── ontic/                      # The Ontic Engine (1,218 files, 500K LOC)
 │   ├── vm/                         #   Register-based QTT VM (IR, compilers, rank governor)
 │   ├── cfd/                        #   Computational Fluid Dynamics (77K LOC)
 │   ├── genesis/                    #   QTT Meta-Primitives — 8 layers (42K LOC)
@@ -562,7 +562,7 @@ All version numbers are validated by `tools/sync_versions.py` across 7 checkpoin
 | Namespace | Version | Source |
 |-----------|:-------:|--------|
 | Release | v4.0.1 | Infrastructure-hardened baseline |
-| Package (tensornet) | 40.0.1 | `tensornet.__version__` |
+| Package (tensornet) | 40.0.1 | `ontic.__version__` |
 | Package (hypertensor) | 40.0.1 | `hypertensor.__version__` |
 | API Version | 2.0.0 | `hypertensor.API_VERSION` |
 | Runtime Version | 1.0.0 | `hypertensor.RUNTIME_VERSION` |

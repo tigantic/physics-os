@@ -69,8 +69,8 @@
 
 | File | Purpose | Version |
 |------|---------|---------|
-| [tensornet/zk/fluidelite_circuit_analyzer.py](tensornet/zk/fluidelite_circuit_analyzer.py) | Main Circom analyzer | v1.2 |
-| [tensornet/zk/halo2_analyzer.py](tensornet/zk/halo2_analyzer.py) | Rust/Halo2 analyzer | v1.0 |
+| [ontic/zk/fluidelite_circuit_analyzer.py](ontic/zk/fluidelite_circuit_analyzer.py) | Main Circom analyzer | v1.2 |
+| [ontic/zk/halo2_analyzer.py](ontic/zk/halo2_analyzer.py) | Rust/Halo2 analyzer | v1.0 |
 
 ### Key Classes (v1.2)
 
@@ -86,11 +86,11 @@
 
 | Module | Used For |
 |--------|----------|
-| `tensornet/cfd/qtt.py` | QTT decomposition, `tt_svd()` |
-| `tensornet/cfd/pure_qtt_ops.py` | MPO operations reference |
-| `tensornet/numerics/interval.py` | `Interval` class |
-| `tensornet/cfd/qtt_tci.py` | TCI (future) |
-| `tensornet/cfd/qtt_tci_gpu.py` | CUDA kernels (future) |
+| `ontic/cfd/qtt.py` | QTT decomposition, `tt_svd()` |
+| `ontic/cfd/pure_qtt_ops.py` | MPO operations reference |
+| `ontic/numerics/interval.py` | `Interval` class |
+| `ontic/cfd/qtt_tci.py` | TCI (future) |
+| `ontic/cfd/qtt_tci_gpu.py` | CUDA kernels (future) |
 
 ---
 
@@ -161,7 +161,7 @@ ALL TESTS PASSED - FLUIDELITE v1.2 OPERATIONAL
 ```bash
 cd /home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main
 python -c "
-from tensornet.zk.fluidelite_circuit_analyzer import FluidEliteCircuitAnalyzer
+from ontic.zk.fluidelite_circuit_analyzer import FluidEliteCircuitAnalyzer
 analyzer = FluidEliteCircuitAnalyzer()
 findings = analyzer.analyze_circom('path/to/circuit.circom')
 "
@@ -170,7 +170,7 @@ findings = analyzer.analyze_circom('path/to/circuit.circom')
 ### Run Tests
 ```bash
 python -c "
-from tensornet.zk.fluidelite_circuit_analyzer import *
+from ontic.zk.fluidelite_circuit_analyzer import *
 print(f'PyTorch: {HAS_TORCH}, QTT: {HAS_QTT}')
 "
 ```

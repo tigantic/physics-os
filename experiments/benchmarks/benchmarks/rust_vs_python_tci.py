@@ -10,8 +10,8 @@ import time
 import numpy as np
 import torch
 
-import tensornet.cfd.qtt_tci as qtt_mod
-from tensornet.cfd.qtt_tci import qtt_from_function
+import ontic.cfd.qtt_tci as qtt_mod
+from ontic.cfd.qtt_tci import qtt_from_function
 
 
 def test_fn(idx):

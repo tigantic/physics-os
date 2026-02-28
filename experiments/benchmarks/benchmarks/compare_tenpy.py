@@ -16,7 +16,7 @@ from pathlib import Path
 import torch
 
 try:
-    from tensornet import MPS, dmrg, heisenberg_mpo
+    from ontic import MPS, dmrg, heisenberg_mpo
 except ImportError:
     print("tensornet not installed")
     sys.exit(1)

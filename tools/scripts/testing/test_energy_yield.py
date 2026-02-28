@@ -22,10 +22,10 @@ import sys
 
 import torch
 
-# Ensure tensornet is importable
+# Ensure ontic is importable
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from tensornet.energy_env.energy.turbine import WindFarm
+from ontic.energy_env.energy.turbine import WindFarm
 
 
 def print_header():
@@ -220,7 +220,7 @@ def run_commercial_demo():
     print()
 
     print("[SUCCESS] Commercial demo complete.")
-    print("[NEXT] Run tensornet/energy/unreal_stream.py to visualize wake field.")
+    print("[NEXT] Run ontic/energy/unreal_stream.py to visualize wake field.")
 
     return power_a, power_b, delta_revenue
 

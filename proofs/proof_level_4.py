@@ -133,7 +133,7 @@ def proof_4_1_energy_inequality() -> AnalyticalResult:
 
     We verify this by comparing ΔE with -2ν∫Ω dt.
     """
-    from tensornet.cfd.ns_3d import NS3DSolver, NSState3D
+    from ontic.cfd.ns_3d import NS3DSolver, NSState3D
 
     print("\n" + "=" * 70)
     print("PROOF 4.1: Energy Inequality")
@@ -226,7 +226,7 @@ def proof_4_2_energy_decay() -> AnalyticalResult:
 
     We verify this holds for ALL timesteps in our simulation.
     """
-    from tensornet.cfd.ns_3d import NS3DSolver, NSState3D
+    from ontic.cfd.ns_3d import NS3DSolver, NSState3D
 
     print("\n" + "=" * 70)
     print("PROOF 4.2: Energy Decay (Monotonicity)")
@@ -319,7 +319,7 @@ def proof_4_3_poincare_bound() -> AnalyticalResult:
     dx = L / N
 
     # Test on random divergence-free field
-    from tensornet.cfd.ns_3d import project_velocity_3d
+    from ontic.cfd.ns_3d import project_velocity_3d
 
     torch.manual_seed(42)
     u = torch.randn(N, N, N)
@@ -385,7 +385,7 @@ def proof_4_4_exponential_decay() -> AnalyticalResult:
 
     This proves solutions MUST decay exponentially — no blowup possible!
     """
-    from tensornet.cfd.ns_3d import NS3DSolver, NSState3D
+    from ontic.cfd.ns_3d import NS3DSolver, NSState3D
 
     print("\n" + "=" * 70)
     print("PROOF 4.4: Exponential Energy Decay")
@@ -473,7 +473,7 @@ def proof_4_5_sobolev_bound() -> AnalyticalResult:
 
     We verify: Ω(t) remains bounded throughout evolution.
     """
-    from tensornet.cfd.ns_3d import NS3DSolver, NSState3D
+    from ontic.cfd.ns_3d import NS3DSolver, NSState3D
 
     print("\n" + "=" * 70)
     print("PROOF 4.5: Sobolev Regularity (Enstrophy Control)")

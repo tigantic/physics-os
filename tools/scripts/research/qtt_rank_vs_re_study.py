@@ -36,7 +36,7 @@ import json
 import torch
 import numpy as np
 
-from tensornet.cfd.ns3d_qtt_native import (
+from ontic.cfd.ns3d_qtt_native import (
     NS3DQTTSolver, NS3DConfig, taylor_green_3d,
     TimeIntegrator, TruncationStrategy,
 )

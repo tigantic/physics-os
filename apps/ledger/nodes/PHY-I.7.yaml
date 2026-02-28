@@ -13,7 +13,7 @@ state: "V0.2"
 description: "PHY-I.7_Continuum_mechanics solver"
 
 source_files:
-  - "tensornet/packs/pack_i.py"
+  - "ontic/packs/pack_i.py"
 
 tests:
   smoke:

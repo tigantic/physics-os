@@ -44,7 +44,7 @@ import torch
 from torch import Tensor
 
 # Import from upstream tensornet
-from tensornet.cfd.qtt_tci import (
+from ontic.cfd.qtt_tci import (
     qtt_from_function_tci_python as _tci_python,
     qtt_from_function_dense as _tci_dense,
     RUST_AVAILABLE as _RUST_TCI_AVAILABLE,
@@ -52,7 +52,7 @@ from tensornet.cfd.qtt_tci import (
 
 # Try Rust TCI if available
 try:
-    from tensornet.cfd.qtt_tci import qtt_from_function_tci_rust as _tci_rust
+    from ontic.cfd.qtt_tci import qtt_from_function_tci_rust as _tci_rust
 except ImportError:
     _tci_rust = None
 
@@ -222,7 +222,7 @@ def _tci_smart(
     This ensures TCI captures function peaks, not just zero regions.
     """
     import torch
-    from tensornet.cfd.qtt_tci import _maxvol_simple
+    from ontic.cfd.qtt_tci import _maxvol_simple
     
     dev = torch.device(device)
     N = 2 ** n_qubits
@@ -382,7 +382,7 @@ def from_function_2d(
         
         cores = from_function_2d(temperature_field, n_qubits_x=10, n_qubits_y=10)
     """
-    from tensornet.cfd.qtt_2d import morton_encode_batch
+    from ontic.cfd.qtt_2d import morton_encode_batch
     
     total_qubits = n_qubits_x + n_qubits_y
     

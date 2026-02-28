@@ -1,7 +1,7 @@
 # HyperTensor CI Pipeline
 # ======================
 # Runs on every push and pull request to main/develop
-# Implements quality gates from hypertensor_execution_checklist.md
+# Implements quality gates from physics_os_execution_checklist.md
 
 name: CI
 
@@ -102,10 +102,10 @@ jobs:
         continue-on-error: true
 
       - name: Lint (Ruff)
-        run: ruff check tensornet hypertensor tests proofs
+        run: ruff check ontic physics_os tests proofs
 
       - name: Format check (Ruff)
-        run: ruff format --check tensornet hypertensor tests proofs
+        run: ruff format --check ontic physics_os tests proofs
 
   # ============================================
   # Stage 2: Type Checking
@@ -127,7 +127,7 @@ jobs:
           pip install mypy torch numpy
 
       - name: Run mypy
-        run: python -m mypy tensornet --ignore-missing-imports
+        run: python -m mypy ontic --ignore-missing-imports
 
   # ============================================
   # Stage 3: Security Scan
@@ -149,7 +149,7 @@ jobs:
           pip install bandit detect-secrets
 
       - name: Run Bandit
-        run: bandit -r tensornet -ll -ii
+        run: bandit -r ontic -ll -ii
 
       - name: Check for secrets
         run: detect-secrets scan --baseline .secrets.baseline
@@ -175,7 +175,7 @@ jobs:
           pip install -e ".[dev]"
 
       - name: Run unit tests with coverage
-        run: pytest tests/ -v --ignore=tests/integration -x --tb=short --cov=tensornet --cov-report=xml --cov-report=term-missing
+        run: pytest tests/ -v --ignore=tests/integration -x --tb=short --cov=ontic --cov-report=xml --cov-report=term-missing
       
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4

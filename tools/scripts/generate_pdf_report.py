@@ -1238,11 +1238,11 @@ the original compute environment.</p>
 
 <table>
     <tr><th>File</th><th class="num">Lines</th><th>Role</th></tr>
-    <tr><td>tensornet/cfd/qtt_native_ops.py</td><td class="num">~1,368</td>
+    <tr><td>ontic/cfd/qtt_native_ops.py</td><td class="num">~1,368</td>
         <td>Core QTT operations: add, hadamard (+ DMRG), inner, truncation, rSVD, checkpoint</td></tr>
-    <tr><td>tensornet/cfd/ns3d_native.py</td><td class="num">1,402</td>
+    <tr><td>ontic/cfd/ns3d_native.py</td><td class="num">1,402</td>
         <td>Native QTT NS solver, derivatives, TT-SVD, Taylor-Green</td></tr>
-    <tr><td>tensornet/cfd/triton_qtt_kernels.py</td><td class="num">~440</td>
+    <tr><td>ontic/cfd/triton_qtt_kernels.py</td><td class="num">~440</td>
         <td>Triton GPU kernels: MPO apply, Hadamard core, inner step (autotuned)</td></tr>
     <tr><td>tools/scripts/ahmed_body_ib_solver.py</td><td class="num">~960</td>
         <td>Ahmed Body IB solver (RK2/Heun, Chorin projection, correction-based)</td></tr>

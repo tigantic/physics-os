@@ -1,6 +1,6 @@
 # HyperTensor-VM Domain Pack Audit
 
-**Generated from**: `tensornet/packs/pack_i.py` through `pack_xx.py`
+**Generated from**: `ontic/packs/pack_i.py` through `pack_xx.py`
 **Total packs**: 20 | **Total taxonomy nodes**: 166
 
 ---
@@ -34,7 +34,7 @@
 
 ## Pack I — Classical Mechanics
 
-**File**: `tensornet/packs/pack_i.py` (970 lines)
+**File**: `ontic/packs/pack_i.py` (970 lines)
 **Pack class**: `ClassicalMechanicsPack` | **Version**: 0.2.0
 **Solver return style**: Types (classes) via `dict(_SOLVERS)`
 
@@ -63,7 +63,7 @@
 
 ## Pack II — Fluid Dynamics
 
-**File**: `tensornet/packs/pack_ii.py` (1416 lines)
+**File**: `ontic/packs/pack_ii.py` (1416 lines)
 **Pack class**: `FluidDynamicsPack` | **Version**: 0.4.0
 **Solver return style**: Types (classes)
 **Has**: Discretizations (`FVM_Burgers_1D`), Observables (`BurgersL2Observable`, `BurgersIntegralObservable`, `BurgersKEObservable`), Benchmarks, Vertical slice (`run_fluids_vertical_slice`)
@@ -90,7 +90,7 @@
 
 ## Pack III — Electromagnetism
 
-**File**: `tensornet/packs/pack_iii.py` (1338 lines)
+**File**: `ontic/packs/pack_iii.py` (1338 lines)
 **Pack class**: `ElectromagnetismPack` | **Version**: 0.4.0
 **Has**: Discretizations (`FDTD_1D`), Observables (`EMEnergyObservable`), Benchmarks, Vertical slice (`run_em_vertical_slice`)
 
@@ -113,7 +113,7 @@
 
 ## Pack IV — Optics and Photonics
 
-**File**: `tensornet/packs/pack_iv.py` (1298 lines)
+**File**: `ontic/packs/pack_iv.py` (1298 lines)
 **Pack class**: `OpticsPack` | **Version**: 0.2.0
 **Solver return style**: Types via `dict(_SOLVERS)`
 
@@ -133,7 +133,7 @@ All parameters hardcoded in properties. No complexity controls exposed.
 
 ## Pack V — Thermodynamics and Statistical Mechanics
 
-**File**: `tensornet/packs/pack_v.py` (709 lines)
+**File**: `ontic/packs/pack_v.py` (709 lines)
 **Pack class**: `ThermoStatMechPack` | **Version**: 0.4.0
 **Has**: Discretizations (`FVM_AdvDiff_1D`), Observables (`AdvDiffL2Observable`, `AdvDiffIntegralObservable`), Benchmarks, Vertical slice (`run_heat_vertical_slice`)
 
@@ -155,7 +155,7 @@ All parameters hardcoded in properties. No complexity controls exposed.
 
 ## Pack VI — Condensed Matter Physics
 
-**File**: `tensornet/packs/pack_vi.py` (1718 lines)
+**File**: `ontic/packs/pack_vi.py` (1718 lines)
 **Pack class**: `CondensedMatterPack` | **Version**: 0.2.0
 **Solver return style**: Types via `dict(_SOLVERS)`
 
@@ -178,7 +178,7 @@ All parameters hardcoded. No constructor kwargs.
 
 ## Pack VII — Quantum Many-Body Physics
 
-**File**: `tensornet/packs/pack_vii.py` (1706 lines)
+**File**: `ontic/packs/pack_vii.py` (1706 lines)
 **Pack class**: `QuantumManyBodyPack` | **Version**: 0.4.0
 **Has**: Benchmarks, Vertical slice (`run_quantum_mb_vertical_slice`)
 
@@ -208,7 +208,7 @@ All parameters hardcoded. No constructor kwargs.
 
 ## Pack VIII — Density Functional Theory
 
-**File**: `tensornet/packs/pack_viii.py` (641 lines)
+**File**: `ontic/packs/pack_viii.py` (641 lines)
 **Pack class**: `DensityFunctionalTheoryPack` | **Version**: 0.4.0
 **Solver return style**: **Instances** (e.g. `KohnShamSolver()`, `_ScaffoldSolver("...")`)
 **Has**: Discretizations (`KS_FD_1D`), Observables (`TotalEnergyObs`), Vertical slice (`run_dft_vertical_slice`)
@@ -236,7 +236,7 @@ All parameters hardcoded. No constructor kwargs.
 
 ## Pack IX — Nuclear Physics
 
-**File**: `tensornet/packs/pack_ix.py` (1359 lines)
+**File**: `ontic/packs/pack_ix.py` (1359 lines)
 **Pack class**: `NuclearPhysicsPack` | **Version**: 0.2.0
 **Solver return style**: Types via `dict(_SOLVERS)`
 
@@ -257,7 +257,7 @@ All parameters hardcoded. ShellModelSolver uses physical constants (`_AMU_TO_MEV
 
 ## Pack X — Nuclear and Particle Physics
 
-**File**: `tensornet/packs/pack_x.py` (1469 lines)
+**File**: `ontic/packs/pack_x.py` (1469 lines)
 **Pack class**: `ParticlePhysicsPack` | **Version**: 0.4.0
 **Solver return style**: Types via `dict(_SOLVERS)`
 **Note**: PHY-X.9 (PWASpec/PWASolver) appended at line 1427–1428
@@ -280,7 +280,7 @@ No constructor kwargs on any spec.
 
 ## Pack XI — Plasma Physics
 
-**File**: `tensornet/packs/pack_xi.py` (657 lines)
+**File**: `ontic/packs/pack_xi.py` (657 lines)
 **Pack class**: `PlasmaPhysicsPack` | **Version**: 0.4.0
 **Solver return style**: **Instances** (e.g. `VlasovSolver()`, `_ScaffoldSolver("...")`)
 **Has**: Discretizations (`VP_Grid_2D`), Observables (`EFieldEnergyObs`), Vertical slice (`run_plasma_vertical_slice`)
@@ -308,7 +308,7 @@ No constructor kwargs on any spec.
 
 ## Pack XII — Astrophysics
 
-**File**: `tensornet/packs/pack_xii.py` (1575 lines)
+**File**: `ontic/packs/pack_xii.py` (1575 lines)
 **Pack class**: `AstrophysicsPack` | **Version**: 0.2.0
 **Solver return style**: Types via `dict(_SOLVERS)`
 
@@ -331,7 +331,7 @@ No constructor kwargs. All parameters hardcoded.
 
 ## Pack XIII — Geophysics
 
-**File**: `tensornet/packs/pack_xiii.py` (1433 lines)
+**File**: `ontic/packs/pack_xiii.py` (1433 lines)
 **Pack class**: `GeophysicsPack` | **Version**: 0.2.0
 **Solver return style**: Types via `dict(_SOLVERS)`
 
@@ -352,7 +352,7 @@ No constructor kwargs.
 
 ## Pack XIV — Biophysics
 
-**File**: `tensornet/packs/pack_xiv.py` (1574 lines)
+**File**: `ontic/packs/pack_xiv.py` (1574 lines)
 **Pack class**: `BiophysicsPack` | **Version**: 0.2.0
 **Solver return style**: Types via `dict(_SOLVERS)`
 
@@ -373,7 +373,7 @@ No constructor kwargs.
 
 ## Pack XV — Chemical Physics
 
-**File**: `tensornet/packs/pack_xv.py` (1516 lines)
+**File**: `ontic/packs/pack_xv.py` (1516 lines)
 **Pack class**: `ChemicalPhysicsPack` | **Version**: 0.2.0
 **Solver return style**: Types via `dict(_SOLVERS)`
 
@@ -394,7 +394,7 @@ No constructor kwargs.
 
 ## Pack XVI — Materials Science
 
-**File**: `tensornet/packs/pack_xvi.py` (747 lines)
+**File**: `ontic/packs/pack_xvi.py` (747 lines)
 **Pack class**: `MaterialsSciencePack` | **Version**: 0.2.0
 **Solver return style**: Types via `_NODE_MAP` (tuple unpacking)
 
@@ -415,7 +415,7 @@ No constructor kwargs.
 
 ## Pack XVII — Acoustics
 
-**File**: `tensornet/packs/pack_xvii.py` (906 lines)
+**File**: `ontic/packs/pack_xvii.py` (906 lines)
 **Pack class**: `AcousticsPack` | **Version**: 0.2.0
 **Solver return style**: Types via `_NODE_MAP`
 
@@ -434,7 +434,7 @@ No constructor kwargs.
 
 ## Pack XVIII — Atmospheric Physics
 
-**File**: `tensornet/packs/pack_xviii.py` (1262 lines)
+**File**: `ontic/packs/pack_xviii.py` (1262 lines)
 **Pack class**: `AtmosphericPhysicsPack` | **Version**: 0.2.0
 **Solver return style**: Types via `_NODE_MAP`
 
@@ -455,7 +455,7 @@ No constructor kwargs.
 
 ## Pack XIX — Quantum Computing
 
-**File**: `tensornet/packs/pack_xix.py` (1439 lines)
+**File**: `ontic/packs/pack_xix.py` (1439 lines)
 **Pack class**: `QuantumComputingPack` | **Version**: 0.2.0
 **Solver return style**: Types via `_NODE_MAP`
 
@@ -476,7 +476,7 @@ No constructor kwargs.
 
 ## Pack XX — Nonlinear Dynamics
 
-**File**: `tensornet/packs/pack_xx.py` (1171 lines)
+**File**: `ontic/packs/pack_xx.py` (1171 lines)
 **Pack class**: `NonlinearDynamicsPack` | **Version**: 0.2.0
 **Solver return style**: Types via `_NODE_MAP`
 

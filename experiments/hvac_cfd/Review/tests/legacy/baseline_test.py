@@ -17,7 +17,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 import numpy as np
 import torch
-from tensornet.hvac.projection_solver import ProjectionConfig, ProjectionSolver
+from ontic.hvac.projection_solver import ProjectionConfig, ProjectionSolver
 
 # Log file path (relative to this script)
 LOG_FILE = Path(__file__).parent / 'benchmark_output.log'

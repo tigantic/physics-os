@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Potts, KMC"
 
 source_files:
-  - "tensornet/materials/microstructure.py"
+  - "ontic/materials/microstructure.py"
 
 tests:
   smoke:

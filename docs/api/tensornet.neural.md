@@ -1,4 +1,4 @@
-# Module `tensornet.neural`
+# Module `ontic.neural`
 
 Neural-Enhanced Tensor Network Module =====================================
 

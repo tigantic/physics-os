@@ -59,14 +59,14 @@ def _format_mem(b: float) -> str:
 def run_validation() -> int:
     import torch
 
-    from tensornet.engine.vm.compilers.maxwell_antenna_3d import (
+    from ontic.engine.vm.compilers.maxwell_antenna_3d import (
         MaxwellAntenna3DCompiler,
         DipoleGeometry,
         WavePort,
     )
-    from tensornet.engine.vm.gpu_runtime import GPURuntime, GPURankGovernor
-    from tensornet.engine.vm.postprocessing.s_parameters import SParameterExtractor
-    from tensornet.engine.vm.postprocessing.far_field import FarFieldExtractor
+    from ontic.engine.vm.gpu_runtime import GPURuntime, GPURankGovernor
+    from ontic.engine.vm.postprocessing.s_parameters import SParameterExtractor
+    from ontic.engine.vm.postprocessing.far_field import FarFieldExtractor
 
     all_pass = True
 

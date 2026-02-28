@@ -91,7 +91,7 @@ Stage Breakdown:
 - ✅ Full 7-stage QTT-native pipeline
 - ✅ DeFi pool/lending analysis (real + synthetic data)
 - ✅ Plasma shot analysis (synthetic data)
-- ✅ **Boris pusher particle simulation** (from tensornet.fusion.TokamakReactor)
+- ✅ **Boris pusher particle simulation** (from ontic.fusion.TokamakReactor)
 - ✅ Molecular/drug discovery analysis (real PDB + synthetic data)
 - ✅ Financial markets analysis (real + synthetic data)
 - ✅ Flash crash detection with V-shaped recovery
@@ -324,7 +324,7 @@ Input Data (any domain)
 
 | Task | Status | Owner | ETA |
 |------|:------:|-------|-----|
-| Create `tensornet/discovery/` module | ✅ | Claude | Done |
+| Create `ontic/discovery/` module | ✅ | Claude | Done |
 | Define `QTTGenesisPrimitive` protocol | ✅ | Claude | Done |
 | Wrap QTT-OT in protocol interface | ✅ | Claude | Done |
 | Wrap QTT-SGW in protocol interface | ✅ | Claude | Done |
@@ -356,8 +356,8 @@ Input Data (any domain)
 | Proof test suite (6/6 PASS) | ✅ | Done | — |
 
 **Implementation:**
-- `tensornet/discovery/ingest/defi.py` — DeFi data ingester
-- `tensornet/discovery/pipelines/defi_pipeline.py` — Full DeFi discovery pipeline
+- `ontic/discovery/ingest/defi.py` — DeFi data ingester
+- `ontic/discovery/pipelines/defi_pipeline.py` — Full DeFi discovery pipeline
 - `proofs/proof_defi_pipeline.py` — Phase 1 proof tests
 
 **Success Metric:** At least 1 valid Medium+ finding on Immunefi.  
@@ -384,8 +384,8 @@ Input Data (any domain)
 | Proof test suite (10/10 PASS) | ✅ | Done | — |
 
 **Implementation:**
-- `tensornet/discovery/ingest/plasma.py` — Plasma data ingester (PlasmaShot, MagneticField3D, PlasmaProfile)
-- `tensornet/discovery/pipelines/plasma_pipeline.py` — Full 9-stage plasma discovery pipeline
+- `ontic/discovery/ingest/plasma.py` — Plasma data ingester (PlasmaShot, MagneticField3D, PlasmaProfile)
+- `ontic/discovery/pipelines/plasma_pipeline.py` — Full 9-stage plasma discovery pipeline
 - `proofs/proof_plasma_pipeline.py` — Phase 2 proof tests
 
 **Success Metric:** Novel hypothesis about ELM mitigation or H-mode access.  
@@ -408,8 +408,8 @@ Input Data (any domain)
 | Hypothesis generation | ✅ | ADE | Day 38 |
 
 **Files Created:**
-- `tensornet/discovery/ingest/molecular.py` — PDB parsing, sequence embedding, binding sites
-- `tensornet/discovery/pipelines/molecular_pipeline.py` — 8-stage analysis pipeline
+- `ontic/discovery/ingest/molecular.py` — PDB parsing, sequence embedding, binding sites
+- `ontic/discovery/pipelines/molecular_pipeline.py` — 8-stage analysis pipeline
 - `proofs/proof_molecular_pipeline.py` — 15 proof tests
 
 **Success Metric:** Rediscover known inhibitor binding sites + 1 novel candidate.  
@@ -439,11 +439,11 @@ Input Data (any domain)
 | - Cross-asset correlation exploitation | ✅ | ADE | Done |
 
 **Files Created:**
-- `tensornet/discovery/ingest/markets.py` — OHLCV, order book, trades, volume profiles
-- `tensornet/discovery/pipelines/markets_pipeline.py` — 8-stage analysis pipeline
+- `ontic/discovery/ingest/markets.py` — OHLCV, order book, trades, volume profiles
+- `ontic/discovery/pipelines/markets_pipeline.py` — 8-stage analysis pipeline
 - `proofs/proof_markets_pipeline.py` — 17 proof tests
 - `live_market_fluid.py` — **Real-time multi-asset fluid dynamics analysis**
-- `tensornet/discovery/connectors/coinbase_l2.py` — WebSocket L2 order book connector
+- `ontic/discovery/connectors/coinbase_l2.py` — WebSocket L2 order book connector
 
 ---
 
@@ -610,9 +610,9 @@ The **Differentiable QTT** module enables fully end-to-end gradient-based optimi
 ```
 
 **Implementation Files:**
-- `tensornet/neural/differentiable_qtt.py` — Core module (830+ lines)
-- `tensornet/neural/genesis_optimizer.py` — Domain-aware optimizer (1000+ lines)
-- `tensornet/neural/truncation_policy.py` — RL-based rank adaptation
+- `ontic/neural/differentiable_qtt.py` — Core module (830+ lines)
+- `ontic/neural/genesis_optimizer.py` — Domain-aware optimizer (1000+ lines)
+- `ontic/neural/truncation_policy.py` — RL-based rank adaptation
 
 **Key Classes:**
 
@@ -743,7 +743,7 @@ The **RegimeDetector** module enables the Genesis Stack to detect when market "p
 ```
 
 **Implementation Files:**
-- `tensornet/neural/regime_detector.py` — Full regime detection module (800+ lines)
+- `ontic/neural/regime_detector.py` — Full regime detection module (800+ lines)
 
 **Key Classes:**
 
@@ -850,7 +850,7 @@ The **Sovereign Daemon** serves as the "Nervous System" for live market monitori
 **Implementation Files:**
 
 - `sovereign_daemon.py` — Main daemon (900+ lines) with PulseEngine, SentinelEngine, DispatcherEngine
-- `tensornet/neural/regime_detector.py` — RMT/RKHS/Betti regime detection (800+ lines)
+- `ontic/neural/regime_detector.py` — RMT/RKHS/Betti regime detection (800+ lines)
 
 **Usage:**
 
@@ -981,10 +981,10 @@ This enables CFD-style analysis: "pressure" (order imbalance), "turbulence" (vol
 | CLI `live` command with 3 modes | ✅ | ADE | Done |
 
 **Files Created:**
-- `tensornet/discovery/connectors/__init__.py` — Module exports
-- `tensornet/discovery/connectors/coinbase_l2.py` — WebSocket L2 order book connector
-- `tensornet/discovery/connectors/historical.py` — Historical event loader (Flash Crash, GME, Lehman)
-- `tensornet/discovery/connectors/streaming.py` — Real-time streaming analysis pipeline
+- `ontic/discovery/connectors/__init__.py` — Module exports
+- `ontic/discovery/connectors/coinbase_l2.py` — WebSocket L2 order book connector
+- `ontic/discovery/connectors/historical.py` — Historical event loader (Flash Crash, GME, Lehman)
+- `ontic/discovery/connectors/streaming.py` — Real-time streaming analysis pipeline
 - `proofs/proof_live_data.py` — 13 proof tests
 
 **Key Components:**
@@ -1065,11 +1065,11 @@ python -m tensornet.discovery live --mode stream --duration 30
 | 26 proof tests passing | ✅ | ADE | Done |
 
 **Files Created:**
-- `tensornet/discovery/api/__init__.py` — Module exports
-- `tensornet/discovery/api/server.py` — FastAPI server with full endpoint suite
-- `tensornet/discovery/api/models.py` — Pydantic request/response schemas
-- `tensornet/discovery/api/gpu.py` — GPU backend with CUDA + Icicle support
-- `tensornet/discovery/api/distributed.py` — Multi-GPU distributed execution
+- `ontic/discovery/api/__init__.py` — Module exports
+- `ontic/discovery/api/server.py` — FastAPI server with full endpoint suite
+- `ontic/discovery/api/models.py` — Pydantic request/response schemas
+- `ontic/discovery/api/gpu.py` — GPU backend with CUDA + Icicle support
+- `ontic/discovery/api/distributed.py` — Multi-GPU distributed execution
 - `proofs/proof_api.py` — 26 proof tests
 
 **Key Components:**
@@ -1213,15 +1213,15 @@ curl http://localhost:8000/gpu
 | 34 proof tests passing | ✅ | ADE | Done |
 
 **Files Created:**
-- `tensornet/discovery/production/__init__.py` — Module exports
-- `tensornet/discovery/production/resilience.py` — Circuit breakers, rate limiting, retries
-- `tensornet/discovery/production/observability.py` — Logging, metrics, health checks, tracing
-- `tensornet/discovery/production/security.py` — Validation, auth, signing, audit
-- `tensornet/discovery/production/performance.py` — Caching, pooling, batching, memory
-- `tensornet/discovery/Dockerfile` — Multi-stage container build
-- `tensornet/discovery/docker-compose.yml` — Full stack deployment
-- `tensornet/discovery/nginx.conf` — Reverse proxy with SSL, rate limiting
-- `tensornet/discovery/prometheus.yml` — Metrics scraping configuration
+- `ontic/discovery/production/__init__.py` — Module exports
+- `ontic/discovery/production/resilience.py` — Circuit breakers, rate limiting, retries
+- `ontic/discovery/production/observability.py` — Logging, metrics, health checks, tracing
+- `ontic/discovery/production/security.py` — Validation, auth, signing, audit
+- `ontic/discovery/production/performance.py` — Caching, pooling, batching, memory
+- `ontic/discovery/Dockerfile` — Multi-stage container build
+- `ontic/discovery/docker-compose.yml` — Full stack deployment
+- `ontic/discovery/nginx.conf` — Reverse proxy with SSL, rate limiting
+- `ontic/discovery/prometheus.yml` — Metrics scraping configuration
 - `proofs/proof_production.py` — 34 proof tests
 
 **Key Components:**
@@ -1300,10 +1300,10 @@ curl http://localhost:8000/gpu
 **Deployment:**
 ```bash
 # Build container
-docker build -t tensornet/discovery:1.8.0 -f tensornet/discovery/Dockerfile .
+docker build -t ontic/discovery:1.8.0 -f ontic/discovery/Dockerfile .
 
 # Run with docker-compose
-cd tensornet/discovery && docker-compose up -d
+cd ontic/discovery && docker-compose up -d
 
 # Access services
 # - API:        http://localhost:8000
@@ -1385,76 +1385,76 @@ cd tensornet/discovery && docker-compose up -d
 
 ### Core Infrastructure
 
-- [x] `tensornet/discovery/__init__.py` ✅
-- [x] `tensornet/discovery/engine_v2.py` — Main engine (5-stage pipeline) ✅
-- [x] `tensornet/discovery/protocol.py` — Primitive interface ✅
-- [x] `tensornet/discovery/pipeline.py` — Orchestrator ✅
-- [x] `tensornet/discovery/findings.py` — Finding dataclass ✅
-- [x] `tensornet/discovery/__main__.py` — CLI interface ✅
-- [x] `tensornet/discovery/hypothesis/generator.py` — Hypothesis synthesis ✅
+- [x] `ontic/discovery/__init__.py` ✅
+- [x] `ontic/discovery/engine_v2.py` — Main engine (5-stage pipeline) ✅
+- [x] `ontic/discovery/protocol.py` — Primitive interface ✅
+- [x] `ontic/discovery/pipeline.py` — Orchestrator ✅
+- [x] `ontic/discovery/findings.py` — Finding dataclass ✅
+- [x] `ontic/discovery/__main__.py` — CLI interface ✅
+- [x] `ontic/discovery/hypothesis/generator.py` — Hypothesis synthesis ✅
 
 ### Primitive Wrappers
 
-- [x] `tensornet/discovery/primitives/optimal_transport.py` ✅
-- [x] `tensornet/discovery/primitives/spectral_wavelets.py` ✅
-- [x] `tensornet/discovery/primitives/random_matrix.py` ✅
-- [x] `tensornet/discovery/primitives/tropical_wrapper.py` ✅ (direct in engine_v2.py)
-- [x] `tensornet/discovery/primitives/kernel.py` ✅
-- [x] `tensornet/discovery/primitives/topology.py` ✅
-- [x] `tensornet/discovery/primitives/geometric_algebra.py` ✅
+- [x] `ontic/discovery/primitives/optimal_transport.py` ✅
+- [x] `ontic/discovery/primitives/spectral_wavelets.py` ✅
+- [x] `ontic/discovery/primitives/random_matrix.py` ✅
+- [x] `ontic/discovery/primitives/tropical_wrapper.py` ✅ (direct in engine_v2.py)
+- [x] `ontic/discovery/primitives/kernel.py` ✅
+- [x] `ontic/discovery/primitives/topology.py` ✅
+- [x] `ontic/discovery/primitives/geometric_algebra.py` ✅
 
 **V2 Engine (7-Stage QTT-Native):**
-- [x] `tensornet/discovery/engine_v2.py` — All 7 Genesis primitives ✅
+- [x] `ontic/discovery/engine_v2.py` — All 7 Genesis primitives ✅
 
 ### Domain Ingesters
 
-- [x] `tensornet/discovery/ingest/defi.py` ✅
-- [x] `tensornet/discovery/ingest/plasma.py` ✅
-- [x] `tensornet/discovery/ingest/molecular.py` ✅
-- [x] `tensornet/discovery/ingest/markets.py` ✅
-- [ ] `tensornet/discovery/ingest/grid.py`
-- [ ] `tensornet/discovery/ingest/climate.py`
+- [x] `ontic/discovery/ingest/defi.py` ✅
+- [x] `ontic/discovery/ingest/plasma.py` ✅
+- [x] `ontic/discovery/ingest/molecular.py` ✅
+- [x] `ontic/discovery/ingest/markets.py` ✅
+- [ ] `ontic/discovery/ingest/grid.py`
+- [ ] `ontic/discovery/ingest/climate.py`
 
 ### Domain Pipelines
 
-- [x] `tensornet/discovery/pipelines/defi_pipeline.py` ✅
-- [x] `tensornet/discovery/pipelines/plasma_pipeline.py` ✅
-- [x] `tensornet/discovery/pipelines/molecular_pipeline.py` ✅
-- [x] `tensornet/discovery/pipelines/markets_pipeline.py` ✅
+- [x] `ontic/discovery/pipelines/defi_pipeline.py` ✅
+- [x] `ontic/discovery/pipelines/plasma_pipeline.py` ✅
+- [x] `ontic/discovery/pipelines/molecular_pipeline.py` ✅
+- [x] `ontic/discovery/pipelines/markets_pipeline.py` ✅
 
 ### Live Data Connectors (Phase 5)
 
-- [x] `tensornet/discovery/connectors/__init__.py` ✅
-- [x] `tensornet/discovery/connectors/coinbase_l2.py` ✅
-- [x] `tensornet/discovery/connectors/historical.py` ✅
-- [x] `tensornet/discovery/connectors/streaming.py` ✅
+- [x] `ontic/discovery/connectors/__init__.py` ✅
+- [x] `ontic/discovery/connectors/coinbase_l2.py` ✅
+- [x] `ontic/discovery/connectors/historical.py` ✅
+- [x] `ontic/discovery/connectors/streaming.py` ✅
 
 ### Unification API (Phase 6)
 
-- [x] `tensornet/discovery/api/__init__.py` ✅
-- [x] `tensornet/discovery/api/server.py` ✅
-- [x] `tensornet/discovery/api/models.py` ✅
-- [x] `tensornet/discovery/api/gpu.py` ✅
-- [x] `tensornet/discovery/api/distributed.py` ✅
+- [x] `ontic/discovery/api/__init__.py` ✅
+- [x] `ontic/discovery/api/server.py` ✅
+- [x] `ontic/discovery/api/models.py` ✅
+- [x] `ontic/discovery/api/gpu.py` ✅
+- [x] `ontic/discovery/api/distributed.py` ✅
 
 ### Production Hardening (Phase 7)
 
-- [x] `tensornet/discovery/production/__init__.py` ✅
-- [x] `tensornet/discovery/production/resilience.py` ✅
-- [x] `tensornet/discovery/production/observability.py` ✅
-- [x] `tensornet/discovery/production/security.py` ✅
-- [x] `tensornet/discovery/production/performance.py` ✅
-- [x] `tensornet/discovery/Dockerfile` ✅
-- [x] `tensornet/discovery/docker-compose.yml` ✅
-- [x] `tensornet/discovery/nginx.conf` ✅
-- [x] `tensornet/discovery/prometheus.yml` ✅
+- [x] `ontic/discovery/production/__init__.py` ✅
+- [x] `ontic/discovery/production/resilience.py` ✅
+- [x] `ontic/discovery/production/observability.py` ✅
+- [x] `ontic/discovery/production/security.py` ✅
+- [x] `ontic/discovery/production/performance.py` ✅
+- [x] `ontic/discovery/Dockerfile` ✅
+- [x] `ontic/discovery/docker-compose.yml` ✅
+- [x] `ontic/discovery/nginx.conf` ✅
+- [x] `ontic/discovery/prometheus.yml` ✅
 
 ### Hypothesis Generator
 
-- [x] `tensornet/discovery/hypothesis/generator.py` ✅
-- [x] `tensornet/discovery/hypothesis/__init__.py` ✅
-- [ ] `tensornet/discovery/hypothesis/templates.py` (merged into generator)
-- [ ] `tensornet/discovery/hypothesis/confidence.py` (merged into generator)
+- [x] `ontic/discovery/hypothesis/generator.py` ✅
+- [x] `ontic/discovery/hypothesis/__init__.py` ✅
+- [ ] `ontic/discovery/hypothesis/templates.py` (merged into generator)
+- [ ] `ontic/discovery/hypothesis/confidence.py` (merged into generator)
 
 ### Tests
 
@@ -1592,7 +1592,7 @@ All placeholder implementations now use:
 | `deploy/embedded.py` | TensorRT execution | Full pycuda integration |
 
 **New Module Created:**
-- `tensornet/cfd/qtt_reciprocal.py` — Newton-Schulz iteration for QTT element-wise reciprocal
+- `ontic/cfd/qtt_reciprocal.py` — Newton-Schulz iteration for QTT element-wise reciprocal
 
 ### ⚠️ Approximations (Documented Deviations)
 
@@ -1629,7 +1629,7 @@ All placeholder implementations now use:
 | **Molecular** | `RCSBConnector` | ✅ Production-ready | RCSB PDB REST/Search APIs |
 | **Molecular** | `AlphaFoldConnector` | ✅ Production-ready | AlphaFold EBI API |
 | **Plasma** | `FusionConnector` | ✅ Production-ready | Boris pusher + TT-MHD integration |
-| **Plasma** | `TokamakReactor` | ✅ Production-ready | From `tensornet.fusion` |
+| **Plasma** | `TokamakReactor` | ✅ Production-ready | From `ontic.fusion` |
 | **Plasma** | MDSplus | 🔶 Future | DIII-D, EAST, KSTAR databases |
 | **Plasma** | IMAS | 🔶 Future | ITER data (pending access) |
 
@@ -1637,19 +1637,19 @@ All placeholder implementations now use:
 
 ```python
 # DeFi - Real Ethereum data
-from tensornet.discovery.connectors import EthereumConnector
+from ontic.discovery.connectors import EthereumConnector
 connector = EthereumConnector()  # Uses ALCHEMY_API_KEY env var
 pool = connector.get_uniswap_pool("0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640")
 swaps = connector.get_recent_swaps(pool.pool_address, limit=100)
 
 # Molecular - Real PDB structures  
-from tensornet.discovery.connectors import MolecularConnector
+from ontic.discovery.connectors import MolecularConnector
 connector = MolecularConnector()
 structure = connector.get_structure("4HHB")  # Hemoglobin
 tensor = connector.to_tensor(structure)  # Ready for pipeline
 
 # Plasma - Boris pusher simulation
-from tensornet.discovery.connectors import FusionConnector
+from ontic.discovery.connectors import FusionConnector
 connector = FusionConnector()
 shot = connector.simulate_shot(n_particles=1000, steps=500)
 profile = connector.extract_profiles(shot)  # Ready for plasma_pipeline
@@ -1755,13 +1755,13 @@ All core modules validated on real data with **12/12 tests passing**:
 
 ```
 # Existing Genesis primitives
-tensornet.genesis.ot
-tensornet.genesis.sgw
-tensornet.genesis.rmt
-tensornet.genesis.tropical
-tensornet.genesis.rkhs
-tensornet.genesis.topology
-tensornet.genesis.ga
+ontic.genesis.ot
+ontic.genesis.sgw
+ontic.genesis.rmt
+ontic.genesis.tropical
+ontic.genesis.rkhs
+ontic.genesis.topology
+ontic.genesis.ga
 
 # Core dependencies
 torch>=2.0.0
@@ -1847,8 +1847,8 @@ ade discover \
 ### Python API
 
 ```python
-from tensornet.discovery import DiscoveryPipeline
-from tensornet.discovery.ingest import DeFiIngester
+from ontic.discovery import DiscoveryPipeline
+from ontic.discovery.ingest import DeFiIngester
 
 # Initialize
 pipeline = DiscoveryPipeline()

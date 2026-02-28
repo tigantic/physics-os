@@ -1,4 +1,4 @@
-# Module `tensornet.autonomy`
+# Module `ontic.autonomy`
 
 Autonomy Module for Tensor Network Operations ==============================================
 

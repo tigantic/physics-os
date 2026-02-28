@@ -1,7 +1,7 @@
 # Queue Behavior Specification
 
 **Baseline**: v4.0.0
-**Module**: `hypertensor/jobs/store.py`, `hypertensor/jobs/models.py`
+**Module**: `physics_os/jobs/store.py`, `physics_os/jobs/models.py`
 **Status**: Active specification — changes require documentation update
 
 ---

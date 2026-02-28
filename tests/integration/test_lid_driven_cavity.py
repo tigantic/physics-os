@@ -43,8 +43,8 @@ import torch
 
 # Skip if Navier-Stokes module not available
 try:
-    from tensornet.cfd.ns_2d import NS2DSolver, NSState
-    from tensornet.cfd.tt_poisson import compute_divergence_2d
+    from ontic.cfd.ns_2d import NS2DSolver, NSState
+    from ontic.cfd.tt_poisson import compute_divergence_2d
 
     HAS_NS2D = True
 except ImportError:

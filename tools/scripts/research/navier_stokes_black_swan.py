@@ -39,8 +39,8 @@ import hashlib
 sys.path.insert(0, str(Path(__file__).parent))
 
 # Import existing infrastructure
-from tensornet.cfd.ns_3d import NS3DSolver
-from tensornet.cfd.hou_luo_ansatz import HouLuoConfig, create_hou_luo_profile
+from ontic.cfd.ns_3d import NS3DSolver
+from ontic.cfd.hou_luo_ansatz import HouLuoConfig, create_hou_luo_profile
 
 
 # ═══════════════════════════════════════════════════════════════════════════════════════
@@ -311,7 +311,7 @@ class BlackSwanHunter:
         )
         
         # Import NSState3D
-        from tensornet.cfd.ns_3d import NSState3D
+        from ontic.cfd.ns_3d import NSState3D
         
         # Initialize state
         state = NSState3D(

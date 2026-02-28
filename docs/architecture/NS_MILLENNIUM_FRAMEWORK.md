@@ -125,9 +125,9 @@ Research outcomes ranked by impact. All levels constitute meaningful contributio
 **Combined Gate:** Both Phase 1a and 1b gates passed.
 
 **Artifacts:**
-- `tensornet/cfd/qtt_ns_2d.py` — 2D incompressible solver
-- `tensornet/cfd/qtt_ns_3d.py` — 3D incompressible solver  
-- `tensornet/cfd/tt_poisson.py` — TT Poisson solver
+- `ontic/cfd/qtt_ns_2d.py` — 2D incompressible solver
+- `ontic/cfd/qtt_ns_3d.py` — 3D incompressible solver  
+- `ontic/cfd/tt_poisson.py` — TT Poisson solver
 - `proofs/proof_ns_projection.py` — Projection method proofs
 
 **Tag:** `[PHASE-1]`

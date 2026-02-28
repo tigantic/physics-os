@@ -29,7 +29,7 @@ The complete catalog of The Physics OS - a physics-first tensor network ecosyste
 
 | Directory | Files | LOC | % of Python |
 |-----------|------:|----:|------------:|
-| `tensornet/` | 416 | 213,663 | 53.5% |
+| `ontic/` | 416 | 213,663 | 53.5% |
 | `root/*.py` | 57 | 41,830 | 10.5% |
 | `tests/` | 60 | 28,232 | 7.1% |
 | `crates/fluidelite/` | 82 | 25,604 | 6.4% |
@@ -73,7 +73,7 @@ The complete catalog of The Physics OS - a physics-first tensor network ecosyste
 
 ---
 
-### 🔬 tensornet/ Breakdown (416 files | 213,663 LOC)
+### 🔬 ontic/ Breakdown (416 files | 213,663 LOC)
 
 #### Top 15 Submodules by LOC
 
@@ -178,10 +178,10 @@ A complete simulation platform for computational physics using QTT (Quantized Te
 
 | Component | Location | Description |
 |-----------|----------|-------------|
-| Core Engine | `tensornet/` | 55 Python modules, 416 files |
-| GPU Backend | `tensornet/gpu/`, `tensornet/cuda/` | CUDA acceleration |
-| Visualization | `tensornet/visualization/`, `tensornet/quantum/` | Real-time rendering |
-| RL Environments | `tensornet/hyperenv/`, `tensornet/hypersim/` | Gym-compatible physics |
+| Core Engine | `ontic/` | 55 Python modules, 416 files |
+| GPU Backend | `ontic/gpu/`, `ontic/cuda/` | CUDA acceleration |
+| Visualization | `ontic/visualization/`, `ontic/quantum/` | Real-time rendering |
+| RL Environments | `ontic/hyperenv/`, `ontic/hypersim/` | Gym-compatible physics |
 
 **Capabilities:**
 - CFD at 10¹² grid points without dense materialization
@@ -221,10 +221,10 @@ High-performance tensor operations for LLMs and ZK proofs.
 
 | Component | Location | Description |
 |-----------|----------|-------------|
-| Protocol | `tensornet/sovereign/protocol.py` | Compute protocol |
-| Bridge | `tensornet/sovereign/bridge_writer.py` | Cross-chain bridge |
-| Streaming | `tensornet/sovereign/qtt_bridge_streamer.py` | QTT over network |
-| Weather | `tensornet/sovereign/weather_stream.py` | Real-time data ingestion |
+| Protocol | `ontic/sovereign/protocol.py` | Compute protocol |
+| Bridge | `ontic/sovereign/bridge_writer.py` | Cross-chain bridge |
+| Streaming | `ontic/sovereign/qtt_bridge_streamer.py` | QTT over network |
+| Weather | `ontic/sovereign/weather_stream.py` | Real-time data ingestion |
 | Gevulot | `crates/gevulot/` | Prover network integration |
 
 ---
@@ -237,16 +237,16 @@ High-performance tensor operations for LLMs and ZK proofs.
 
 ## Python Modules (87)
 
-### tensornet/ - Core Physics Engine
+### ontic/ - Core Physics Engine
 **55 submodules | 416 files**
 
 #### 🌊 CFD (Computational Fluid Dynamics)
-**`tensornet/cfd/`** | 73 files
+**`ontic/cfd/`** | 73 files
 
 ```python
-from tensornet.cfd import Euler1D, Euler2D, Euler3D
-from tensornet.cfd import QTTNavierStokesIMEX, IMEXScheme
-from tensornet.cfd import qtt_roll_exact, qtt_walsh_hadamard
+from ontic.cfd import Euler1D, Euler2D, Euler3D
+from ontic.cfd import QTTNavierStokesIMEX, IMEXScheme
+from ontic.cfd import qtt_roll_exact, qtt_walsh_hadamard
 ```
 
 | Module | Purpose |
@@ -269,11 +269,11 @@ from tensornet.cfd import qtt_roll_exact, qtt_walsh_hadamard
 | `comfort_metrics.py` | HVAC comfort indices |
 
 #### 🎯 Exploit Hunting
-**`tensornet/exploit/`** | 38 files
+**`ontic/exploit/`** | 38 files
 
 ```python
-from tensornet.exploit import KoopmanExploitHunter, HypergridController
-from tensornet.exploit import PrecisionAnalyzer, BountyReporter
+from ontic.exploit import KoopmanExploitHunter, HypergridController
+from ontic.exploit import PrecisionAnalyzer, BountyReporter
 ```
 
 | Module | Purpose |
@@ -288,10 +288,10 @@ from tensornet.exploit import PrecisionAnalyzer, BountyReporter
 | `renzo_hunt.py`, `kelp_hunt.py`, `etherfi_hunt.py` | LRT protocol hunts |
 
 #### 🔮 Oracle (Assumption Extraction)
-**`tensornet/oracle/`** | 32 files
+**`ontic/oracle/`** | 32 files
 
 ```python
-from tensornet.oracle import ImplicitExtractor, AssumptionChallenger
+from ontic.oracle import ImplicitExtractor, AssumptionChallenger
 ```
 
 | Submodule | Purpose |
@@ -304,11 +304,11 @@ from tensornet.oracle import ImplicitExtractor, AssumptionChallenger
 | `verification/` | Formal verification |
 
 #### ⚙️ Core Operations
-**`tensornet/core/`** | 10 files
+**`ontic/core/`** | 10 files
 
 ```python
-from tensornet.core import decompositions, mpo, mps
-from tensornet.core.determinism import set_global_seed
+from ontic.core import decompositions, mpo, mps
+from ontic.core.determinism import set_global_seed
 ```
 
 | Module | Purpose |
@@ -321,10 +321,10 @@ from tensornet.core.determinism import set_global_seed
 | `dense_guard.py` | Prevent accidental dense ops |
 
 #### 🔐 ZK (Zero-Knowledge)
-**`tensornet/zk/`** | 9 files
+**`ontic/zk/`** | 9 files
 
 ```python
-from tensornet.zk import Halo2Analyzer, PILParser, ZKASMEliteAnalyzer
+from ontic.zk import Halo2Analyzer, PILParser, ZKASMEliteAnalyzer
 ```
 
 | Module | Purpose |
@@ -335,10 +335,10 @@ from tensornet.zk import Halo2Analyzer, PILParser, ZKASMEliteAnalyzer
 | `fezk_elite.py` | Elite ZK circuit analysis |
 
 #### ☢️ Fusion
-**`tensornet/fusion/`** | 9 files
+**`ontic/fusion/`** | 9 files
 
 ```python
-from tensornet.fusion import MARRSSimulator, TokamakSolver
+from ontic.fusion import MARRSSimulator, TokamakSolver
 ```
 
 | Module | Purpose |
@@ -350,10 +350,10 @@ from tensornet.fusion import MARRSSimulator, TokamakSolver
 | `phonon_trigger.py` | Fokker-Planck phonon trigger |
 
 #### 🔬 Quantum
-**`tensornet/quantum/`** | 7 files
+**`ontic/quantum/`** | 7 files
 
 ```python
-from tensornet.quantum import QTTTorchRenderer, HybridQTTRenderer
+from ontic.quantum import QTTTorchRenderer, HybridQTTRenderer
 ```
 
 | Module | Purpose |
@@ -364,10 +364,10 @@ from tensornet.quantum import QTTTorchRenderer, HybridQTTRenderer
 | `error_mitigation.py` | Quantum error mitigation |
 
 #### 🎮 GPU Acceleration
-**`tensornet/gpu/`** | 8 files
+**`ontic/gpu/`** | 8 files
 
 ```python
-from tensornet.gpu import FluidDynamics, KernelAutotuner
+from ontic.gpu import FluidDynamics, KernelAutotuner
 ```
 
 | Module | Purpose |
@@ -378,10 +378,10 @@ from tensornet.gpu import FluidDynamics, KernelAutotuner
 | `kernel_autotune_cache.py` | Kernel autotuning |
 
 #### 🤖 ML Surrogates
-**`tensornet/ml_surrogates/`** | 8 files
+**`ontic/ml_surrogates/`** | 8 files
 
 ```python
-from tensornet.ml_surrogates import FourierOperator, DeepONet, PINN
+from ontic.ml_surrogates import FourierOperator, DeepONet, PINN
 ```
 
 | Module | Purpose |
@@ -392,10 +392,10 @@ from tensornet.ml_surrogates import FourierOperator, DeepONet, PINN
 | `uncertainty.py` | Bayesian uncertainty |
 
 #### 🌌 HyperEnv (RL Environments)
-**`tensornet/hyperenv/`** | 10 files
+**`ontic/hyperenv/`** | 10 files
 
 ```python
-from tensornet.hyperenv import HypersonicEnv, Trainer
+from ontic.hyperenv import HypersonicEnv, Trainer
 ```
 
 | Module | Purpose |
@@ -406,10 +406,10 @@ from tensornet.hyperenv import HypersonicEnv, Trainer
 | `train_pilot.py` | Autonomous pilot training |
 
 #### 🎯 HyperSim (Gym Environments)
-**`tensornet/hypersim/`** | 7 files
+**`ontic/hypersim/`** | 7 files
 
 ```python
-from tensornet.hypersim import FluidEnv, QTTSpaces
+from ontic.hypersim import FluidEnv, QTTSpaces
 ```
 
 | Module | Purpose |
@@ -420,10 +420,10 @@ from tensornet.hypersim import FluidEnv, QTTSpaces
 | `curriculum.py` | Progressive difficulty |
 
 #### 🎨 Visualization
-**`tensornet/visualization/`** | 2 files
+**`ontic/visualization/`** | 2 files
 
 ```python
-from tensornet.visualization import TensorSlicer
+from ontic.visualization import TensorSlicer
 ```
 
 | Module | Purpose |
@@ -431,7 +431,7 @@ from tensornet.visualization import TensorSlicer
 | `tensor_slicer.py` | Decompression-free 2D slices of 10¹²+ tensors |
 
 #### 🔢 Numerics
-**`tensornet/numerics/`** | 2 files
+**`ontic/numerics/`** | 2 files
 
 | Module | Purpose |
 |--------|---------|
@@ -439,7 +439,7 @@ from tensornet.visualization import TensorSlicer
 
 ---
 
-### 🌍 Domain Verticals (tensornet/)
+### 🌍 Domain Verticals (ontic/)
 
 | Domain | Files | Purpose |
 |--------|-------|---------|
@@ -768,12 +768,12 @@ python The_Compressor/universal.py benchmark compressed.npz
 
 | Tool | Location | Purpose |
 |------|----------|---------|
-| `verilog_elite_analyzer.py` | `tensornet/hw/` | Pattern-based Verilog security scanner |
-| `yosys_netlist_analyzer_v2.py` | `tensornet/hw/` | sv2v+Yosys synthesis pipeline |
-| `yosys_netlist_analyzer.py` | `tensornet/hw/` | JSON netlist analysis |
+| `verilog_elite_analyzer.py` | `ontic/hw/` | Pattern-based Verilog security scanner |
+| `yosys_netlist_analyzer_v2.py` | `ontic/hw/` | sv2v+Yosys synthesis pipeline |
+| `yosys_netlist_analyzer.py` | `ontic/hw/` | JSON netlist analysis |
 
 ```python
-from tensornet.hw import VerilogEliteAnalyzer, YosysNetlistAnalyzer
+from ontic.hw import VerilogEliteAnalyzer, YosysNetlistAnalyzer
 analyzer = VerilogEliteAnalyzer()
 results = analyzer.analyze_file("rtl/module.sv")
 ```
@@ -788,7 +788,7 @@ results = analyzer.analyze_file("rtl/module.sv")
 | `temp_debridge_hunt.py` | root | deBridge hunt |
 | `advanced_vulnerability_hunt.py` | root | Multi-protocol hunt |
 | `GMX_V2_VULNERABILITY_ANALYSIS.py` | root | GMX V2 analysis |
-| `tensornet/exploit/cairo_circuit_hunter.py` | module | Cairo ZK circuits |
+| `ontic/exploit/cairo_circuit_hunter.py` | module | Cairo ZK circuits |
 
 ---
 
@@ -845,7 +845,7 @@ results = analyzer.analyze_file("rtl/module.sv")
 1. **Never Go Dense**: Use QTT cores, never materialize full tensors
 2. **Rank Control**: Always truncate after operations that grow rank
 3. **GPU First**: Auto-detect CUDA, fall back to CPU
-4. **Reproducibility**: Seed control via `tensornet/core/determinism.py`
+4. **Reproducibility**: Seed control via `ontic/core/determinism.py`
 5. **Attestation**: Every gauntlet produces signed JSON proof
 6. **Physics First**: Numerical methods grounded in physical laws
 
@@ -858,7 +858,7 @@ results = analyzer.analyze_file("rtl/module.sv")
 | Type | Definition | Example | How to Use |
 |------|------------|---------|------------|
 | **Platform** | Integrated system | Ontic Engine | Deploy & configure |
-| **Module** | Reusable library | `tensornet/cfd/` | `import` it |
+| **Module** | Reusable library | `ontic/cfd/` | `import` it |
 | **Application** | Standalone executable | `hellskin_gauntlet.py` | `python` run it |
 | **Tool** | Single-purpose utility | `verilog_elite_analyzer.py` | Invoke for task |
 
@@ -866,10 +866,10 @@ results = analyzer.analyze_file("rtl/module.sv")
 
 ```python
 # Modules - you IMPORT them
-from tensornet.cfd import Euler3D, QTTNavierStokesIMEX
-from tensornet.exploit import KoopmanExploitHunter
-from tensornet.fusion import MARRSSimulator
-from tensornet.hw import VerilogEliteAnalyzer
+from ontic.cfd import Euler3D, QTTNavierStokesIMEX
+from ontic.exploit import KoopmanExploitHunter
+from ontic.fusion import MARRSSimulator
+from ontic.hw import VerilogEliteAnalyzer
 
 # Applications - you RUN them
 # python hellskin_gauntlet.py
@@ -889,8 +889,8 @@ from tensornet.hw import VerilogEliteAnalyzer
 
 ### 1. Run a CFD Simulation
 ```python
-from tensornet.cfd import Euler3D
-from tensornet.core.determinism import set_global_seed
+from ontic.cfd import Euler3D
+from ontic.core.determinism import set_global_seed
 
 set_global_seed(42)
 solver = Euler3D(grid_bits=10, gamma=1.4)  # 2^10 = 1024 points per dim
@@ -900,7 +900,7 @@ print(f"Final energy: {result.total_energy()}")
 
 ### 2. Hunt Smart Contract Vulnerabilities
 ```python
-from tensornet.exploit import KoopmanExploitHunter
+from ontic.exploit import KoopmanExploitHunter
 
 hunter = KoopmanExploitHunter()
 results = hunter.analyze_contract("path/to/Contract.sol")
@@ -910,7 +910,7 @@ for vuln in results.vulnerabilities:
 
 ### 3. Run a Fusion Reactor Simulation
 ```python
-from tensornet.fusion import TokamakSolver
+from ontic.fusion import TokamakSolver
 
 tokamak = TokamakSolver(
     major_radius=6.2,  # meters
@@ -923,7 +923,7 @@ print(f"Energy confinement: {confinement:.3f} s")
 
 ### 4. Analyze Hardware Verilog
 ```python
-from tensornet.hw import VerilogEliteAnalyzer
+from ontic.hw import VerilogEliteAnalyzer
 
 analyzer = VerilogEliteAnalyzer()
 findings = analyzer.scan_directory("rtl/")
@@ -933,8 +933,8 @@ for finding in findings:
 
 ### 5. Use Genesis Primitives
 ```python
-from tensornet.genesis.ot import QTTSinkhorn, wasserstein_distance
-from tensornet.genesis.ga import CliffordAlgebra, QTTMultivector
+from ontic.genesis.ot import QTTSinkhorn, wasserstein_distance
+from ontic.genesis.ga import CliffordAlgebra, QTTMultivector
 
 # Optimal Transport
 w2 = wasserstein_distance(source_qtt, target_qtt, p=2)
@@ -947,7 +947,7 @@ result = mv.geometric_product(mv)
 
 ### 6. Reverse Biological Aging
 ```python
-from tensornet.genesis.aging import (
+from ontic.genesis.aging import (
     young_cell, aged_cell, AgingOperator,
     YamanakaOperator, HorvathClock,
     find_optimal_intervention,
@@ -986,7 +986,7 @@ print(f"Best intervention: rank {best.rank_after}, fidelity {best.fidelity:.3f}"
 | Error | Cause | Solution |
 |-------|-------|----------|
 | `ModuleNotFoundError: tensornet` | Package not installed | `pip install -e .` from repo root |
-| `ImportError: cannot import 'Euler3D'` | Wrong import path | Use `from tensornet.cfd import Euler3D` |
+| `ImportError: cannot import 'Euler3D'` | Wrong import path | Use `from ontic.cfd import Euler3D` |
 | `CUDA out of memory` | GPU memory exhausted | Reduce `grid_bits` or use CPU fallback |
 
 ### Runtime Errors
@@ -1015,7 +1015,7 @@ python hellskin_gauntlet.py --verbose
 cat HELLSKIN_GAUNTLET_ATTESTATION.json | jq '.result'
 
 # Validate environment
-python -c "from tensornet.core import check_environment; check_environment()"
+python -c "from ontic.core import check_environment; check_environment()"
 ```
 
 ---

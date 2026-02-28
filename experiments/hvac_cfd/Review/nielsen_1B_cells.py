@@ -17,7 +17,7 @@ sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project HyperTensor')
 import torch
 import numpy as np
 import time
-from tensornet.hvac.solver_3d import Solver3D, Solver3DConfig, Inlet3D, Outlet3D
+from ontic.hvac.solver_3d import Solver3D, Solver3DConfig, Inlet3D, Outlet3D
 
 def main():
     # Check GPU memory

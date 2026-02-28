@@ -2,8 +2,8 @@
 """Gradient diagnostic for Chu optimizer — traces signal at each stage."""
 import sys, math, torch
 sys.path.insert(0, '.')
-from tensornet.em.chu_limit_gpu import *
-from tensornet.em.qtt_helmholtz_gpu import *
+from ontic.em.chu_limit_gpu import *
+from ontic.em.qtt_helmholtz_gpu import *
 
 config = make_chu_gpu_config('4096')
 device = torch.device('cuda')

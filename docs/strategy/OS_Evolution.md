@@ -73,21 +73,21 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 | 1.1.18 | **Boltzmann Transport Equation (BTE) direct solver** — Full 6D phase-space for phonons/electrons | Nano-scale heat transport, ultrafast carrier dynamics |
 
 **§1.1 Implementation Files:**
-- 1.1.1 → `tensornet/cfd/les.py` (ILES enum added)
-- 1.1.2 → `tensornet/cfd/lbm.py`
-- 1.1.3 → `tensornet/cfd/sph.py`
-- 1.1.4 → `tensornet/cfd/dg.py`
-- 1.1.5 → `tensornet/cfd/sem.py`
-- 1.1.7 → `tensornet/mechanics/peridynamics.py`
-- 1.1.8 → `tensornet/mechanics/mpm.py`
-- 1.1.9 → `tensornet/phase_field/pfc.py`
-- 1.1.10 → `tensornet/mechanics/xfem.py`
-- 1.1.12 → `tensornet/mechanics/iga.py`
-- 1.1.13 → `tensornet/mechanics/vem.py`
-- 1.1.14 → `tensornet/mesh_amr/__init__.py` (OctreeAMR, AMRPatch, SFCLoadBalancer)
-- 1.1.15 → `tensornet/cfd/space_time_dg.py`
-- 1.1.16 → `tensornet/mechanics/mimetic.py`
-- 1.1.17 → `tensornet/mechanics/hho.py`
+- 1.1.1 → `ontic/cfd/les.py` (ILES enum added)
+- 1.1.2 → `ontic/cfd/lbm.py`
+- 1.1.3 → `ontic/cfd/sph.py`
+- 1.1.4 → `ontic/cfd/dg.py`
+- 1.1.5 → `ontic/cfd/sem.py`
+- 1.1.7 → `ontic/mechanics/peridynamics.py`
+- 1.1.8 → `ontic/mechanics/mpm.py`
+- 1.1.9 → `ontic/phase_field/pfc.py`
+- 1.1.10 → `ontic/mechanics/xfem.py`
+- 1.1.12 → `ontic/mechanics/iga.py`
+- 1.1.13 → `ontic/mechanics/vem.py`
+- 1.1.14 → `ontic/mesh_amr/__init__.py` (OctreeAMR, AMRPatch, SFCLoadBalancer)
+- 1.1.15 → `ontic/cfd/space_time_dg.py`
+- 1.1.16 → `ontic/mechanics/mimetic.py`
+- 1.1.17 → `ontic/mechanics/hho.py`
 
 ### 1.2 Physics Domain Expansions — ✅ 20/20 COMPLETE
 
@@ -115,24 +115,24 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 | 1.2.20 | **Agent-based modeling (ABM)** — Millions of autonomous agents with physics-based interactions | Traffic, crowd dynamics, market microstructure |
 
 **§1.2 Implementation Files:**
-- 1.2.1 → `tensornet/relativity/numerical_gr.py` (BSSNEvolution, BSSNEvolver added)
-- 1.2.2 → `tensornet/qft/lattice_qcd.py` (DynamicalHMC added)
-- 1.2.3 → `tensornet/nuclear/structure.py` (IMSRG, CoupledClusterSD, NCSM added)
-- 1.2.4 → `tensornet/qft/perturbative.py` (SplittingFunctions, PartonShower added)
-- 1.2.5 → `tensornet/algorithms/peps.py`
-- 1.2.6 → `tensornet/algorithms/mera.py`
-- 1.2.7 → `tensornet/condensed_matter/negf.py`
-- 1.2.8 → `tensornet/relativity/rel_hydro.py`
-- 1.2.9 → `tensornet/plasma/extended_mhd.py` (RadiationMHD added)
-- 1.2.10 → `tensornet/mechanics/dem.py`
-- 1.2.11 → `tensornet/platform/coupled.py` (NWayCoupler added)
-- 1.2.13 → `tensornet/condensed_matter/caloric.py`
-- 1.2.14 → `tensornet/mechanics/tribology.py`
-- 1.2.15 → `tensornet/mechanics/fracture.py`
-- 1.2.16 → `tensornet/cfd/combustion_dns.py`
-- 1.2.17 → `tensornet/geophysics/magnetotellurics.py`
-- 1.2.18 → `tensornet/qft/lattice_qft.py`
-- 1.2.20 → `tensornet/biology/abm.py`
+- 1.2.1 → `ontic/relativity/numerical_gr.py` (BSSNEvolution, BSSNEvolver added)
+- 1.2.2 → `ontic/qft/lattice_qcd.py` (DynamicalHMC added)
+- 1.2.3 → `ontic/nuclear/structure.py` (IMSRG, CoupledClusterSD, NCSM added)
+- 1.2.4 → `ontic/qft/perturbative.py` (SplittingFunctions, PartonShower added)
+- 1.2.5 → `ontic/algorithms/peps.py`
+- 1.2.6 → `ontic/algorithms/mera.py`
+- 1.2.7 → `ontic/condensed_matter/negf.py`
+- 1.2.8 → `ontic/relativity/rel_hydro.py`
+- 1.2.9 → `ontic/plasma/extended_mhd.py` (RadiationMHD added)
+- 1.2.10 → `ontic/mechanics/dem.py`
+- 1.2.11 → `ontic/platform/coupled.py` (NWayCoupler added)
+- 1.2.13 → `ontic/condensed_matter/caloric.py`
+- 1.2.14 → `ontic/mechanics/tribology.py`
+- 1.2.15 → `ontic/mechanics/fracture.py`
+- 1.2.16 → `ontic/cfd/combustion_dns.py`
+- 1.2.17 → `ontic/geophysics/magnetotellurics.py`
+- 1.2.18 → `ontic/qft/lattice_qft.py`
+- 1.2.20 → `ontic/biology/abm.py`
 
 ### 1.3 Numerical Methods — ✅ 14/14 COMPLETE
 
@@ -154,17 +154,17 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 | 1.3.14 | **Proper Generalized Decomposition (PGD)** — On-the-fly separated representations | Multi-parametric problems without sampling |
 
 **§1.3 Implementation Files:**
-- 1.3.1 → `tensornet/numerics/parareal.py`
-- 1.3.2 → `tensornet/numerics/exponential.py`
-- 1.3.4 → `tensornet/numerics/amg.py`
-- 1.3.5 → `tensornet/numerics/p_multigrid.py`
-- 1.3.6 → `tensornet/numerics/deflated_krylov.py`
-- 1.3.7 → `tensornet/numerics/h_matrix.py`
-- 1.3.8 → `tensornet/numerics/fmm.py`
-- 1.3.10 → `tensornet/numerics/ad.py`
-- 1.3.12 → `tensornet/numerics/sparse_grid.py`
-- 1.3.13 → `tensornet/numerics/reduced_basis.py`
-- 1.3.14 → `tensornet/numerics/pgd.py`
+- 1.3.1 → `ontic/numerics/parareal.py`
+- 1.3.2 → `ontic/numerics/exponential.py`
+- 1.3.4 → `ontic/numerics/amg.py`
+- 1.3.5 → `ontic/numerics/p_multigrid.py`
+- 1.3.6 → `ontic/numerics/deflated_krylov.py`
+- 1.3.7 → `ontic/numerics/h_matrix.py`
+- 1.3.8 → `ontic/numerics/fmm.py`
+- 1.3.10 → `ontic/numerics/ad.py`
+- 1.3.12 → `ontic/numerics/sparse_grid.py`
+- 1.3.13 → `ontic/numerics/reduced_basis.py`
+- 1.3.14 → `ontic/numerics/pgd.py`
 
 ---
 
@@ -172,26 +172,26 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 
 | # | Enhancement | Impact | Status |
 |---|-------------|--------|--------|
-| 2.1 | **PEPS (Projected Entangled Pair States)** — Native 2D tensor network beyond MPS | 2D quantum systems, frustrated magnets, image compression | ✅ `tensornet/algorithms/peps.py` |
-| 2.2 | **MERA contraction engine** — Full MERA optimization with isometric constraints | Critical phenomena, conformal field theory | ✅ `tensornet/algorithms/mera.py` |
-| 2.3 | **Tree Tensor Networks (TTN)** — Hierarchical decomposition beyond chain topology | Systems with hierarchical entanglement structure | ✅ `tensornet/algorithms/ttn.py` |
-| 2.4 | **Tensor Ring decomposition** — Periodic boundary TT, no edge effects | Circular/periodic systems, improved conditioning | ✅ `tensornet/algorithms/tensor_ring.py` |
-| 2.5 | **Tensor Network Renormalization (TNR)** — Fixed-point iteration for scale-invariant tensors | Critical exponents, phase transitions | ✅ `tensornet/algorithms/tnr.py` |
-| 2.6 | **QTT-FFT** — Fast Fourier Transform entirely in QTT format | Spectral methods without dense materialization | ✅ `tensornet/cfd/qtt_fft.py` |
-| 2.7 | **QTT-Sparse direct solver** — LU/Cholesky factorization in TT format | Exact linear algebra in compressed format | ✅ `tensornet/qtt/sparse_direct.py` |
+| 2.1 | **PEPS (Projected Entangled Pair States)** — Native 2D tensor network beyond MPS | 2D quantum systems, frustrated magnets, image compression | ✅ `ontic/algorithms/peps.py` |
+| 2.2 | **MERA contraction engine** — Full MERA optimization with isometric constraints | Critical phenomena, conformal field theory | ✅ `ontic/algorithms/mera.py` |
+| 2.3 | **Tree Tensor Networks (TTN)** — Hierarchical decomposition beyond chain topology | Systems with hierarchical entanglement structure | ✅ `ontic/algorithms/ttn.py` |
+| 2.4 | **Tensor Ring decomposition** — Periodic boundary TT, no edge effects | Circular/periodic systems, improved conditioning | ✅ `ontic/algorithms/tensor_ring.py` |
+| 2.5 | **Tensor Network Renormalization (TNR)** — Fixed-point iteration for scale-invariant tensors | Critical exponents, phase transitions | ✅ `ontic/algorithms/tnr.py` |
+| 2.6 | **QTT-FFT** — Fast Fourier Transform entirely in QTT format | Spectral methods without dense materialization | ✅ `ontic/cfd/qtt_fft.py` |
+| 2.7 | **QTT-Sparse direct solver** — LU/Cholesky factorization in TT format | Exact linear algebra in compressed format | ✅ `ontic/qtt/sparse_direct.py` |
 | 2.8 | **Continuous TCI** — Function-to-QTT interpolation for arbitrary smooth functions | Direct physics-to-QTT pipeline | ✅ `apps/qtenet/` + `crates/tci_core_rust/` |
-| 2.9 | **Automatic rank adaptation** — Bayesian rank selection, information-theoretic criteria | Eliminate manual rank tuning | ✅ `tensornet/qtt/rank_adaptive.py` |
-| 2.10 | **QTT on unstructured meshes** — Graph-based TT decomposition for FEM/FVM meshes | Break the structured-grid limitation | ✅ `tensornet/qtt/unstructured.py` |
-| 2.11 | **Tensor network contraction optimization** — Opt_einsum on steroids for TN contraction order | Exponential speedup on complex network topologies | ✅ `tensornet/algorithms/contraction_opt.py` |
-| 2.12 | **QTT eigensolvers** — Native Lanczos/Davidson in TT format | Ground states, excited states without dense matrices | ✅ `tensornet/qtt/eigensolvers.py` |
-| 2.13 | **QTT-Krylov methods** — GMRES/CG entirely in TT format with rank control | Iterative linear algebra at 10¹² scale | ✅ `tensornet/qtt/krylov.py` |
-| 2.14 | **Dynamic rank adaptation during time integration** — Rank grows/shrinks as physics demands | Shocks form → rank increases; smooth → rank decreases | ✅ `tensornet/qtt/dynamic_rank.py` |
-| 2.15 | **Differentiable tensor networks** — PyTorch-native autograd through TT operations | End-to-end gradient-based optimization of TT parameters | ✅ `tensornet/qtt/differentiable.py` |
-| 2.16 | **QTT-PDE: native PDE solvers in QTT** — Full implicit time-stepping in TT format | True "never go dense" for implicit methods | ✅ `tensornet/qtt/pde_solvers.py` |
-| 2.17 | **Quantics Tensor Cross Interpolation (QTCI) 2.0** — Adaptive pivot selection, parallel cross, error certification | Faster convergence, guaranteed accuracy | ✅ `tensornet/qtt/qtci_v2.py` |
-| 2.18 | **Fermionic tensor networks** — Swap gates, Jordan-Wigner, parity-preserving tensors | Correct 2D fermionic systems | ✅ `tensornet/algorithms/fermionic.py` (enhanced) |
-| 2.19 | **Symmetric tensor networks** — SU(2), U(1) symmetric MPS/MPO with CGC coefficients | Exploit symmetries for massive speedup | ✅ `tensornet/algorithms/symmetric_tn.py` |
-| 2.20 | **QTT for time-series** — Compress and analyze temporal sequences as QTT | Financial data, sensor streams, climate records | ✅ `tensornet/qtt/time_series.py` |
+| 2.9 | **Automatic rank adaptation** — Bayesian rank selection, information-theoretic criteria | Eliminate manual rank tuning | ✅ `ontic/qtt/rank_adaptive.py` |
+| 2.10 | **QTT on unstructured meshes** — Graph-based TT decomposition for FEM/FVM meshes | Break the structured-grid limitation | ✅ `ontic/qtt/unstructured.py` |
+| 2.11 | **Tensor network contraction optimization** — Opt_einsum on steroids for TN contraction order | Exponential speedup on complex network topologies | ✅ `ontic/algorithms/contraction_opt.py` |
+| 2.12 | **QTT eigensolvers** — Native Lanczos/Davidson in TT format | Ground states, excited states without dense matrices | ✅ `ontic/qtt/eigensolvers.py` |
+| 2.13 | **QTT-Krylov methods** — GMRES/CG entirely in TT format with rank control | Iterative linear algebra at 10¹² scale | ✅ `ontic/qtt/krylov.py` |
+| 2.14 | **Dynamic rank adaptation during time integration** — Rank grows/shrinks as physics demands | Shocks form → rank increases; smooth → rank decreases | ✅ `ontic/qtt/dynamic_rank.py` |
+| 2.15 | **Differentiable tensor networks** — PyTorch-native autograd through TT operations | End-to-end gradient-based optimization of TT parameters | ✅ `ontic/qtt/differentiable.py` |
+| 2.16 | **QTT-PDE: native PDE solvers in QTT** — Full implicit time-stepping in TT format | True "never go dense" for implicit methods | ✅ `ontic/qtt/pde_solvers.py` |
+| 2.17 | **Quantics Tensor Cross Interpolation (QTCI) 2.0** — Adaptive pivot selection, parallel cross, error certification | Faster convergence, guaranteed accuracy | ✅ `ontic/qtt/qtci_v2.py` |
+| 2.18 | **Fermionic tensor networks** — Swap gates, Jordan-Wigner, parity-preserving tensors | Correct 2D fermionic systems | ✅ `ontic/algorithms/fermionic.py` (enhanced) |
+| 2.19 | **Symmetric tensor networks** — SU(2), U(1) symmetric MPS/MPO with CGC coefficients | Exploit symmetries for massive speedup | ✅ `ontic/algorithms/symmetric_tn.py` |
+| 2.20 | **QTT for time-series** — Compress and analyze temporal sequences as QTT | Financial data, sensor streams, climate records | ✅ `ontic/qtt/time_series.py` |
 
 ---
 
@@ -199,26 +199,26 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 
 | # | Enhancement | Impact | Status |
 |---|-------------|--------|--------|
-| 3.1 | **Multi-GPU tensor network contractions** — Distributed MPS/MPO across GPU cluster | Scale beyond single-GPU memory limits | ✅ `tensornet/gpu/multi_gpu_tn.py` |
+| 3.1 | **Multi-GPU tensor network contractions** — Distributed MPS/MPO across GPU cluster | Scale beyond single-GPU memory limits | ✅ `ontic/gpu/multi_gpu_tn.py` |
 | 3.2 | **CUDA Graph fusion for entire solver pipelines** — Capture full timestep as single graph | Eliminate kernel launch overhead | ✅ `oracle/cuda_graph_slicer.py` |
 | 3.3 | **Triton kernel library** — Complete QTT operation library in Triton | Portable GPU acceleration without CUDA lock-in | ✅ 14+ Triton files |
-| 3.4 | **ROCm / HIP full support** — Parity with CUDA for AMD GPUs | MI300X access, data center diversification | ✅ `tensornet/hardware/rocm_hip.py` |
-| 3.5 | **Intel oneAPI / SYCL backend** — Full support for Intel Arc and Ponte Vecchio | Intel GPU access, HPC center compatibility | ✅ `tensornet/hardware/oneapi_sycl.py` |
-| 3.6 | **Apple Metal / MPS backend** — Native M-series GPU acceleration | MacBook Pro as physics workstation | ✅ `tensornet/hardware/metal_mps.py` |
-| 3.7 | **FPGA acceleration** — QTT core operations on Xilinx/Intel FPGAs | Ultra-low latency, deterministic timing, edge deployment | ✅ `tensornet/hardware/fpga.py` |
-| 3.8 | **Neuromorphic hardware** — Deploy spiking network models to Intel Loihi / SpiNNaker | Brain-scale simulation at milliwatt power | ✅ `tensornet/hardware/neuromorphic.py` |
-| 3.9 | **Photonic accelerators** — Map linear algebra to photonic mesh (Lightmatter, Luminous) | Speed-of-light matrix multiply | ✅ `tensornet/hardware/photonic.py` |
-| 3.10 | **Quantum hardware backend** — Execute VQE/QAOA on real quantum processors (IBM, Google, IonQ) | Hybrid classical-quantum physics | ✅ `tensornet/hardware/quantum_backend.py` |
-| 3.11 | **Mixed-precision pipeline** — FP64 where needed (conservation), FP16/BF16 elsewhere, INT8 for inference | 2-4× throughput increase | ✅ `tensornet/gpu/mixed_precision.py` |
-| 3.12 | **NVIDIA GH200 / Blackwell optimization** — Exploit unified CPU-GPU memory, transformer engines | Next-gen GPU architecture advantage | ✅ `tensornet/gpu/blackwell_opt.py` |
-| 3.13 | **ARM SVE/SVE2 SIMD** — Vectorized QTT kernels for Graviton/Neoverse | Cloud-native ARM performance | ✅ `tensornet/hardware/arm_sve.py` |
+| 3.4 | **ROCm / HIP full support** — Parity with CUDA for AMD GPUs | MI300X access, data center diversification | ✅ `ontic/hardware/rocm_hip.py` |
+| 3.5 | **Intel oneAPI / SYCL backend** — Full support for Intel Arc and Ponte Vecchio | Intel GPU access, HPC center compatibility | ✅ `ontic/hardware/oneapi_sycl.py` |
+| 3.6 | **Apple Metal / MPS backend** — Native M-series GPU acceleration | MacBook Pro as physics workstation | ✅ `ontic/hardware/metal_mps.py` |
+| 3.7 | **FPGA acceleration** — QTT core operations on Xilinx/Intel FPGAs | Ultra-low latency, deterministic timing, edge deployment | ✅ `ontic/hardware/fpga.py` |
+| 3.8 | **Neuromorphic hardware** — Deploy spiking network models to Intel Loihi / SpiNNaker | Brain-scale simulation at milliwatt power | ✅ `ontic/hardware/neuromorphic.py` |
+| 3.9 | **Photonic accelerators** — Map linear algebra to photonic mesh (Lightmatter, Luminous) | Speed-of-light matrix multiply | ✅ `ontic/hardware/photonic.py` |
+| 3.10 | **Quantum hardware backend** — Execute VQE/QAOA on real quantum processors (IBM, Google, IonQ) | Hybrid classical-quantum physics | ✅ `ontic/hardware/quantum_backend.py` |
+| 3.11 | **Mixed-precision pipeline** — FP64 where needed (conservation), FP16/BF16 elsewhere, INT8 for inference | 2-4× throughput increase | ✅ `ontic/gpu/mixed_precision.py` |
+| 3.12 | **NVIDIA GH200 / Blackwell optimization** — Exploit unified CPU-GPU memory, transformer engines | Next-gen GPU architecture advantage | ✅ `ontic/gpu/blackwell_opt.py` |
+| 3.13 | **ARM SVE/SVE2 SIMD** — Vectorized QTT kernels for Graviton/Neoverse | Cloud-native ARM performance | ✅ `ontic/hardware/arm_sve.py` |
 | 3.14 | **WebGPU compute shaders** — Browser-native physics computation via wgpu | Physics in the browser, zero-install demos | ✅ `crates/hyper_core/` Rust WGPU |
-| 3.15 | **Distributed MPI solver framework** — Domain-decomposed QTT across thousands of nodes | Exascale-class simulations | ✅ `tensornet/distributed/` |
-| 3.16 | **NVLink / NVSwitch-aware communication** — Topology-optimized collective operations | Multi-GPU scaling efficiency | ✅ `tensornet/gpu/nvlink_topology.py` |
-| 3.17 | **Persistent kernel execution** — Long-running GPU kernels for iterative solvers | Eliminate CPU-GPU synchronization | ✅ `tensornet/gpu/persistent_kernel.py` |
-| 3.18 | **Hardware-in-the-loop (HIL) real-time** — Sub-millisecond solver loop with deterministic scheduling | Embedded control systems, autopilots | ✅ `tensornet/gpu/hil_realtime.py` |
-| 3.19 | **Tensor Core exploitation** — Map TT contractions to NVIDIA Tensor Cores (FP64 on H100) | Hardware-native tensor operations | ✅ `tensornet/gpu/tensor_core.py` |
-| 3.20 | **Memory-mapped GPU tensors** — Unified virtual memory for oversubscription | Handle problems larger than GPU VRAM | ✅ `tensornet/gpu/managed_memory.py` |
+| 3.15 | **Distributed MPI solver framework** — Domain-decomposed QTT across thousands of nodes | Exascale-class simulations | ✅ `ontic/distributed/` |
+| 3.16 | **NVLink / NVSwitch-aware communication** — Topology-optimized collective operations | Multi-GPU scaling efficiency | ✅ `ontic/gpu/nvlink_topology.py` |
+| 3.17 | **Persistent kernel execution** — Long-running GPU kernels for iterative solvers | Eliminate CPU-GPU synchronization | ✅ `ontic/gpu/persistent_kernel.py` |
+| 3.18 | **Hardware-in-the-loop (HIL) real-time** — Sub-millisecond solver loop with deterministic scheduling | Embedded control systems, autopilots | ✅ `ontic/gpu/hil_realtime.py` |
+| 3.19 | **Tensor Core exploitation** — Map TT contractions to NVIDIA Tensor Cores (FP64 on H100) | Hardware-native tensor operations | ✅ `ontic/gpu/tensor_core.py` |
+| 3.20 | **Memory-mapped GPU tensors** — Unified virtual memory for oversubscription | Handle problems larger than GPU VRAM | ✅ `ontic/gpu/managed_memory.py` |
 
 ---
 

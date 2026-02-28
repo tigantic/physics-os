@@ -46,7 +46,7 @@ def _check_solver_available():
 
 def _get_solver_classes():
     """Lazy import of solver classes."""
-    from tensornet.hvac.solver_3d import Solver3D, Solver3DConfig, Inlet3D, Outlet3D, HeatSource
+    from ontic.hvac.solver_3d import Solver3D, Solver3DConfig, Inlet3D, Outlet3D, HeatSource
     return Solver3D, Solver3DConfig, Inlet3D, Outlet3D, HeatSource
 
 

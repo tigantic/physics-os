@@ -6,8 +6,8 @@
 
 | Module | Description |
 |--------|-------------|
-| `tensornet.fluids` | Core fluid dynamics |
-| `tensornet.multiphase` | Multiphase flow |
-| `tensornet.free_surface` | Free-surface flow |
-| `tensornet.fsi` | Fluid-structure interaction |
-| `tensornet.heat_transfer` | Heat transfer and convection |
+| `ontic.fluids` | Core fluid dynamics |
+| `ontic.multiphase` | Multiphase flow |
+| `ontic.free_surface` | Free-surface flow |
+| `ontic.fsi` | Fluid-structure interaction |
+| `ontic.heat_transfer` | Heat transfer and convection |

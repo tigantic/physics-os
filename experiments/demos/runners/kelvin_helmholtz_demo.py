@@ -27,12 +27,12 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from tensornet.cfd.euler2d_strang import (
+from ontic.cfd.euler2d_strang import (
     Euler2D_Strang, Euler2DConfig, Euler2DState, 
     create_kelvin_helmholtz_ic
 )
-from tensornet.cfd.kelvin_helmholtz import build_kh_via_dense, KHConfig, analyze_kh_ranks
-from tensornet.cfd.qtt_2d import qtt_2d_to_dense
+from ontic.cfd.kelvin_helmholtz import build_kh_via_dense, KHConfig, analyze_kh_ranks
+from ontic.cfd.qtt_2d import qtt_2d_to_dense
 
 
 def run_kh_validation(n_bits: int = 6, max_steps: int = 100, t_final: float = 2.0):

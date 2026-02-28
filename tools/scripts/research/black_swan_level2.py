@@ -30,7 +30,7 @@ import time
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from tensornet.cfd.ns_3d import NS3DSolver, NSState3D
+from ontic.cfd.ns_3d import NS3DSolver, NSState3D
 
 
 @dataclass

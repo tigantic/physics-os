@@ -6,9 +6,9 @@ These modules are included in the core `tensornet` package.
 
 | Module | Description |
 |--------|-------------|
-| `tensornet.life_sci` | Life sciences group |
-| `tensornet.biology` | Biological modeling |
-| `tensornet.biomedical` | Biomedical engineering |
-| `tensornet.biophysics` | Biophysics |
-| `tensornet.medical` | Medical physics |
-| `tensornet.membrane_bio` | Membrane biophysics |
+| `ontic.life_sci` | Life sciences group |
+| `ontic.biology` | Biological modeling |
+| `ontic.biomedical` | Biomedical engineering |
+| `ontic.biophysics` | Biophysics |
+| `ontic.medical` | Medical physics |
+| `ontic.membrane_bio` | Membrane biophysics |

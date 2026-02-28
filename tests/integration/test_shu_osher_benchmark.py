@@ -46,8 +46,8 @@ import torch
 
 # Skip if Euler solver not available
 try:
-    from tensornet.cfd.euler_1d import BCType1D, Euler1D, EulerState
-    from tensornet.cfd.godunov import hllc_flux, roe_flux
+    from ontic.cfd.euler_1d import BCType1D, Euler1D, EulerState
+    from ontic.cfd.godunov import hllc_flux, roe_flux
 
     HAS_EULER1D = True
 except ImportError:

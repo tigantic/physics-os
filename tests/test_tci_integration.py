@@ -14,10 +14,10 @@ import math
 
 import torch
 
-from tensornet.cfd.qtt_eval import (QTTContiguous, dense_to_qtt_cores,
+from ontic.cfd.qtt_eval import (QTTContiguous, dense_to_qtt_cores,
                                     qtt_eval_batch, qtt_eval_multi_field_batch,
                                     qtt_to_dense, verify_qtt_evaluation)
-from tensornet.cfd.tci_flux import (TCIFluxConfig, rusanov_flux,
+from ontic.cfd.tci_flux import (TCIFluxConfig, rusanov_flux,
                                     verify_sound_speed_formula)
 
 

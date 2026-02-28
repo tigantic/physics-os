@@ -99,7 +99,7 @@ This is **exact** - no approximation, no truncation, no numerical error beyond f
 
 ## Implementation Architecture
 
-### File: `tensornet/visualization/tensor_slicer.py`
+### File: `ontic/visualization/tensor_slicer.py`
 
 #### Key Functions
 
@@ -295,7 +295,7 @@ Different zoom levels can use different core subsets:
 ```bash
 cd /path/to/HyperTensor-VM-main
 python3 -c "
-from tensornet.visualization.tensor_slicer import TensorSlicer
+from ontic.visualization.tensor_slicer import TensorSlicer
 import numpy as np
 
 cores = [np.random.randn(8, 2, 8).astype(np.float32) for _ in range(20)]

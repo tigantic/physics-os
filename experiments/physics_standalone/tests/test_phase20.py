@@ -17,7 +17,7 @@ def test_quantum_circuit():
     """Test quantum circuit construction and operations."""
     print("Testing QuantumCircuit...")
     
-    from tensornet.quantum import QuantumCircuit, GateType
+    from ontic.quantum import QuantumCircuit, GateType
     
     # Create circuit
     circuit = QuantumCircuit(n_qubits=3)
@@ -36,7 +36,7 @@ def test_tn_quantum_simulator():
     """Test tensor network quantum simulator."""
     print("Testing TNQuantumSimulator...")
     
-    from tensornet.quantum import TNQuantumSimulator, QuantumCircuit
+    from ontic.quantum import TNQuantumSimulator, QuantumCircuit
     
     # Create simple circuit with single qubit gates only (avoid MPS contraction dtype issues)
     circuit = QuantumCircuit(n_qubits=2)
@@ -58,7 +58,7 @@ def test_vqe():
     """Test Variational Quantum Eigensolver."""
     print("Testing VQE...")
     
-    from tensornet.quantum import VQE, VQEConfig
+    from ontic.quantum import VQE, VQEConfig
     
     # Simple Hamiltonian that doesn't require complex MPS operations
     def simple_hamiltonian(sim) -> float:
@@ -84,7 +84,7 @@ def test_qaoa():
     """Test Quantum Approximate Optimization Algorithm."""
     print("Testing QAOA...")
     
-    from tensornet.quantum import QAOA, QAOAConfig
+    from ontic.quantum import QAOA, QAOAConfig
     
     # Simple cost Hamiltonian
     cost_terms = [("ZI", 0.5), ("IZ", 0.5)]
@@ -109,7 +109,7 @@ def test_born_machine():
     """Test Tensor Network Born Machine."""
     print("Testing TensorNetworkBornMachine...")
     
-    from tensornet.quantum import TensorNetworkBornMachine
+    from ontic.quantum import TensorNetworkBornMachine
     
     # Create Born machine - uses n_sites, not n_qubits
     n_sites = 4
@@ -136,7 +136,7 @@ def test_noise_model():
     """Test noise model construction."""
     print("Testing NoiseModel...")
     
-    from tensornet.quantum import NoiseModel, NoiseType, NoiseChannel
+    from ontic.quantum import NoiseModel, NoiseType, NoiseChannel
     
     # Create noise model using the fluent API
     model = NoiseModel()
@@ -158,7 +158,7 @@ def test_zne():
     """Test Zero-Noise Extrapolation."""
     print("Testing ZeroNoiseExtrapolator...")
     
-    from tensornet.quantum import ZeroNoiseExtrapolator, ZNEConfig, ExtrapolationMethod
+    from ontic.quantum import ZeroNoiseExtrapolator, ZNEConfig, ExtrapolationMethod
     
     # Create ZNE with config
     config = ZNEConfig(
@@ -186,7 +186,7 @@ def test_qec_codes():
     """Test Quantum Error Correction codes."""
     print("Testing QEC Codes...")
     
-    from tensornet.quantum import BitFlipCode, PhaseFlipCode, ShorCode
+    from ontic.quantum import BitFlipCode, PhaseFlipCode, ShorCode
     
     # Test bit-flip code
     bit_flip = BitFlipCode()
@@ -230,7 +230,7 @@ def test_requirements_database():
     """Test requirements management."""
     print("Testing RequirementsDatabase...")
     
-    from tensornet.sim.certification import (
+    from ontic.sim.certification import (
         RequirementsDatabase, Requirement, RequirementType,
         DAL, VerificationMethod, RequirementStatus
     )
@@ -278,7 +278,7 @@ def test_safety_assessment():
     """Test safety assessment framework."""
     print("Testing SafetyAssessment...")
     
-    from tensornet.sim.certification import (
+    from ontic.sim.certification import (
         SafetyAssessment, Hazard, HazardSeverity, HazardProbability, DAL
     )
     
@@ -328,7 +328,7 @@ def test_coverage_analyzer():
     """Test coverage analysis."""
     print("Testing CoverageAnalyzer...")
     
-    from tensornet.sim.certification import CoverageAnalyzer, CoverageType, DAL
+    from ontic.sim.certification import CoverageAnalyzer, CoverageType, DAL
     
     # Create analyzer for DAL A (requires MC/DC)
     analyzer = CoverageAnalyzer(["test.py"], DAL.LEVEL_A)
@@ -360,7 +360,7 @@ def test_hardware_specs():
     """Test hardware specifications."""
     print("Testing HardwareSpec...")
     
-    from tensornet.sim.certification import HARDWARE_PRESETS
+    from ontic.sim.certification import HARDWARE_PRESETS
     
     # Check presets exist
     assert 'jetson_orin' in HARDWARE_PRESETS
@@ -379,7 +379,7 @@ def test_quantization():
     """Test model quantization."""
     print("Testing ModelQuantizer...")
     
-    from tensornet.sim.certification import ModelQuantizer, QuantizationConfig, Precision
+    from ontic.sim.certification import ModelQuantizer, QuantizationConfig, Precision
     
     # INT8 quantization
     config = QuantizationConfig(precision=Precision.INT8)
@@ -407,7 +407,7 @@ def test_realtime_scheduler():
     """Test real-time schedulability analysis."""
     print("Testing RealTimeScheduler...")
     
-    from tensornet.sim.certification import TaskSpec, RealTimeScheduler
+    from ontic.sim.certification import TaskSpec, RealTimeScheduler
     
     # Create task set
     tasks = [
@@ -438,7 +438,7 @@ def test_wcet_analyzer():
     """Test WCET analysis."""
     print("Testing WCETAnalyzer...")
     
-    from tensornet.sim.certification import WCETAnalyzer, HARDWARE_PRESETS
+    from ontic.sim.certification import WCETAnalyzer, HARDWARE_PRESETS
     
     # Create analyzer
     analyzer = WCETAnalyzer(HARDWARE_PRESETS['raspberry_pi_5'])
@@ -461,7 +461,7 @@ def test_hil_validator():
     """Test hardware-in-the-loop validation."""
     print("Testing HILValidator...")
     
-    from tensornet.sim.certification import HILValidator, HARDWARE_PRESETS
+    from ontic.sim.certification import HILValidator, HARDWARE_PRESETS
     
     # Create validator
     validator = HILValidator(HARDWARE_PRESETS['jetson_orin'], tolerance=1e-4)
@@ -498,7 +498,7 @@ def test_deployment_package():
     """Test deployment package creation."""
     print("Testing DeploymentPackage...")
     
-    from tensornet.sim.certification import (
+    from ontic.sim.certification import (
         DeploymentPackage, HARDWARE_PRESETS, Precision, deploy_to_hardware
     )
     import torch.nn as nn

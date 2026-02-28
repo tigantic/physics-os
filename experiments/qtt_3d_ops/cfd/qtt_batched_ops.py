@@ -19,7 +19,7 @@ Architecture:
        multiple operations, then does ONE batched truncation
 
 Usage:
-    from tensornet.cfd.qtt_batched_ops import (
+    from ontic.cfd.qtt_batched_ops import (
         batched_truncation_sweep,
         batched_linear_combination,
         batched_rhs_truncate,

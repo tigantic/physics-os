@@ -1,5 +1,5 @@
 """
-Test Module: tensornet/fusion/tokamak.py
+Test Module: ontic/fusion/tokamak.py
 
 Phase 9: Tokamak Magnetic Confinement Fusion Simulation
 Constitutional Compliance:
@@ -19,7 +19,7 @@ import numpy as np
 import pytest
 import torch
 
-from tensornet.plasma_nuclear.fusion.tokamak import (ConfinementReport, PlasmaState,
+from ontic.plasma_nuclear.fusion.tokamak import (ConfinementReport, PlasmaState,
                                       TokamakReactor)
 
 # ============================================================================

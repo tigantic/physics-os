@@ -13,7 +13,7 @@ state: "V0.2"
 description: "PHY-VI.8_Surface_physics solver"
 
 source_files:
-  - "tensornet/packs/pack_vi.py"
+  - "ontic/packs/pack_vi.py"
 
 tests:
   smoke:

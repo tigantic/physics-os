@@ -47,7 +47,7 @@ import torch
 import numpy as np
 
 # Import tt_svd from the library (canonical implementation)
-from tensornet.cfd.qtt import tt_svd as _lib_tt_svd
+from ontic.cfd.qtt import tt_svd as _lib_tt_svd
 
 
 def format_bytes(n: int) -> str:
@@ -136,7 +136,7 @@ def create_taylor_green_vorticity(resolution: int, time: float = 0.0, nu: float 
 
 
 # =============================================================================
-# QTT Implementation - Uses library implementation from tensornet.cfd.qtt
+# QTT Implementation - Uses library implementation from ontic.cfd.qtt
 # =============================================================================
 
 def tt_svd(

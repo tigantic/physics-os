@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Partitioned/monolithic"
 
 source_files:
-  - "tensornet/fsi/__init__.py"
+  - "ontic/fsi/__init__.py"
 
 tests:
   smoke:

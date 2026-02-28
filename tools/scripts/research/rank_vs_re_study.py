@@ -38,7 +38,7 @@ import torch
 from torch import Tensor
 import numpy as np
 
-from tensornet.cfd.ns_3d import (
+from ontic.cfd.ns_3d import (
     NS3DSolver, NSState3D,
     compute_vorticity_3d,
 )

@@ -104,7 +104,7 @@ Walls: No-slip boundaries
 ### Solver Configuration
 
 ```python
-from tensornet.cfd.ns2d_qtt_native import (
+from ontic.cfd.ns2d_qtt_native import (
     NS2D_QTT_Native,
     NS2DQTTConfig,
     create_conference_room_ic,
@@ -210,9 +210,9 @@ CFD_HVAC/
 
 ## References
 
-- `tensornet/cfd/ns2d_qtt_native.py` - Main solver implementation
-- `tensornet/cfd/pure_qtt_ops.py` - QTT arithmetic operations
-- `tensornet/cfd/nd_shift_mpo.py` - Derivative operators
+- `ontic/cfd/ns2d_qtt_native.py` - Main solver implementation
+- `ontic/cfd/pure_qtt_ops.py` - QTT arithmetic operations
+- `ontic/cfd/nd_shift_mpo.py` - Derivative operators
 - `docs/audits/QTT_PERFORMANCE_AUDIT.md` - Performance analysis
 
 ---

@@ -26,7 +26,7 @@ import torch
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from tensornet.cfd.trace_adapters.euler3d_adapter import Euler3DTraceAdapter
+from ontic.cfd.trace_adapters.euler3d_adapter import Euler3DTraceAdapter
 from tpc.format import BenchmarkResult, HardwareSpec, TheoremRef
 from tpc.generator import CertificateGenerator
 
@@ -137,7 +137,7 @@ def generate_euler3d_certificate(
     log.info(f"γ:       {gamma}")
 
     # ── Create solver + adapter ──────────────────────────────────────
-    from tensornet.cfd.euler_3d import Euler3D, Euler3DState
+    from ontic.cfd.euler_3d import Euler3D, Euler3DState
     solver = Euler3D(
         Nx=Nx, Ny=Ny, Nz=Nz,
         Lx=1.0, Ly=1.0, Lz=1.0,
@@ -237,7 +237,7 @@ def generate_euler3d_certificate(
         total_time_s=wall_time,
     )
 
-    gen.set_solver_hash(PROJECT_ROOT / "tensornet" / "cfd" / "euler_3d.py")
+    gen.set_solver_hash(PROJECT_ROOT / "ontic" / "cfd" / "euler_3d.py")
 
     cert, report = gen.generate_and_save(str(out_path))
     log.info(f"  Certificate: {out_path.name}")

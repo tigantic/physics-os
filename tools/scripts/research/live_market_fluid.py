@@ -50,14 +50,14 @@ else:
     print("⚠️  Running on CPU (install CUDA for GPU acceleration)")
 
 # TensorNet imports
-from tensornet.ml.discovery.connectors.coinbase_l2 import (
+from ontic.ml.discovery.connectors.coinbase_l2 import (
     CoinbaseL2Connector, L2Snapshot, L2Update, HAS_WEBSOCKETS
 )
-from tensornet import field_to_qtt, QTTCompressionResult
+from ontic import field_to_qtt, QTTCompressionResult
 
 # GPU-accelerated modules from existing codebase
 try:
-    from tensornet.genesis.demos.triton_qtt import rsvd_triton, tt_rsvd, triton_matmul, triton_gram
+    from ontic.genesis.demos.triton_qtt import rsvd_triton, tt_rsvd, triton_matmul, triton_gram
     HAS_TRITON_QTT = True
     print("✓ Triton QTT kernels loaded (rSVD, TT decomposition)")
 except ImportError as e:
@@ -65,7 +65,7 @@ except ImportError as e:
     print(f"⚠️  Triton QTT not available: {e}")
 
 try:
-    from tensornet.cuda.qtt_native_ops import (
+    from ontic.cuda.qtt_native_ops import (
         qtt_inner_cuda, qtt_add_cuda, qtt_hadamard_cuda, is_cuda_available as qtt_cuda_available
     )
     HAS_QTT_CUDA = qtt_cuda_available()

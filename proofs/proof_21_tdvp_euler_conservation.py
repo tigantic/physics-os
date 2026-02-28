@@ -26,7 +26,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 def test_mps_state_roundtrip():
     """Test that MPSState correctly encodes and decodes primitive variables."""
-    from tensornet.cfd.tt_cfd import MPSState
+    from ontic.cfd.tt_cfd import MPSState
 
     N = 16
     chi_max = 8
@@ -66,7 +66,7 @@ def test_mps_state_roundtrip():
 
 def test_conservation_check():
     """Test that conservation quantities are computed correctly."""
-    from tensornet.cfd.tt_cfd import MPSState
+    from ontic.cfd.tt_cfd import MPSState
 
     N = 16
     chi_max = 8
@@ -116,7 +116,7 @@ def test_conservation_check():
 
 def test_euler_mpo_construction():
     """Test that EulerMPO can be constructed."""
-    from tensornet.cfd.tt_cfd import EulerMPO
+    from ontic.cfd.tt_cfd import EulerMPO
 
     N = 8
     dx = 0.1
@@ -145,7 +145,7 @@ def test_euler_mpo_construction():
 
 def test_tt_euler_1d_init():
     """Test TT_Euler1D initialization."""
-    from tensornet.cfd.tt_cfd import TT_Euler1D
+    from ontic.cfd.tt_cfd import TT_Euler1D
 
     N = 8
     chi_max = 4
@@ -183,7 +183,7 @@ def test_tt_euler_1d_init():
 
 def test_sod_initialization():
     """Test Sod shock tube initialization."""
-    from tensornet.cfd.tt_cfd import TT_Euler1D
+    from ontic.cfd.tt_cfd import TT_Euler1D
 
     N = 16
     chi_max = 8

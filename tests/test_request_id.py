@@ -11,7 +11,7 @@ import uuid
 import pytest
 from fastapi.testclient import TestClient
 
-from hypertensor.api.app import create_app
+from physics_os.api.app import create_app
 
 
 @pytest.fixture(scope="module")

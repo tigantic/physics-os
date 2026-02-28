@@ -59,9 +59,9 @@ except ImportError:
 
 # HyperTensor imports
 try:
-    from tensornet.engine.substrate import Field, SliceSpec
-    from tensornet.infra.hypervisual import SliceEngine
-    from tensornet.applied.intent import IntentParser, IntentEngine
+    from ontic.engine.substrate import Field, SliceSpec
+    from ontic.infra.hypervisual import SliceEngine
+    from ontic.applied.intent import IntentParser, IntentEngine
     TENSORNET_AVAILABLE = True
 except ImportError:
     TENSORNET_AVAILABLE = False

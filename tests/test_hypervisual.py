@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 import torch
 
-from tensornet.infra.hypervisual import (COOLWARM, GRAYSCALE, INFERNO, JET, MAGMA,
+from ontic.infra.hypervisual import (COOLWARM, GRAYSCALE, INFERNO, JET, MAGMA,
                                    PLASMA, TURBO, VIRIDIS, ColorMap,
                                    FrameBuffer, LODPyramid, RenderConfig,
                                    RenderStats, SliceEngine, SlicePlane,
@@ -17,7 +17,7 @@ from tensornet.infra.hypervisual import (COOLWARM, GRAYSCALE, INFERNO, JET, MAGM
                                    StreamStats, Tile, TileCoord, TileRenderer,
                                    TransferFunction, VolumeRenderer,
                                    apply_colormap)
-from tensornet.engine.substrate import Field
+from ontic.engine.substrate import Field
 
 # =============================================================================
 # FIXTURES

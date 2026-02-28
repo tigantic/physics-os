@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Excited state dynamics"
 
 source_files:
-  - "tensornet/chemistry/photochemistry.py"
+  - "ontic/chemistry/photochemistry.py"
 
 tests:
   smoke:

@@ -6,7 +6,7 @@
 
 | Module | Description |
 |--------|-------------|
-| `tensornet.aerospace` | Aerospace physics |
-| `tensornet.flight_validation` | Flight dynamics validation |
-| `tensornet.guidance` | Guidance and navigation |
-| `tensornet.racing` | Motorsport aerodynamics |
+| `ontic.aerospace` | Aerospace physics |
+| `ontic.flight_validation` | Flight dynamics validation |
+| `ontic.guidance` | Guidance and navigation |
+| `ontic.racing` | Motorsport aerodynamics |

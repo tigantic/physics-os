@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Biot-Savart, inductance"
 
 source_files:
-  - "tensornet/em/magnetostatics.py"
+  - "ontic/em/magnetostatics.py"
 
 tests:
   smoke:

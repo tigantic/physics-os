@@ -52,7 +52,7 @@ import torch
 from torch import Tensor
 
 # ── HyperTensor QTT Engine ─────────────────────────────────────────
-from tensornet.cfd.ns3d_native import (
+from ontic.cfd.ns3d_native import (
     QTT3DNative,
     QTT3DVectorNative,
     NativeNS3DConfig,
@@ -64,7 +64,7 @@ from tensornet.cfd.ns3d_native import (
     _tt_svd_compress,
     _batched_qtt_eval,
 )
-from tensornet.cfd.qtt_native_ops import (
+from ontic.cfd.qtt_native_ops import (
     QTTCores,
     qtt_add_native,
     qtt_scale_native,

@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Diagram eval, sector decomposition hooks"
 
 source_files:
-  - "tensornet/qft/perturbative.py"
+  - "ontic/qft/perturbative.py"
 
 tests:
   smoke:

@@ -13,7 +13,7 @@ state: "V0.2"
 description: "PHY-IV.5_Nonlinear_optics solver"
 
 source_files:
-  - "tensornet/packs/pack_iv.py"
+  - "ontic/packs/pack_iv.py"
 
 tests:
   smoke:

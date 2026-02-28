@@ -27,7 +27,7 @@ def proof_rk4_convergence_2d() -> Dict[str, Any]:
 
     Uses Taylor-Green vortex with exact solution to measure temporal error.
     """
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.ns_2d import NS2DSolver
 
     N = 64
     nu = 0.1
@@ -95,7 +95,7 @@ def proof_rk4_convergence_3d() -> Dict[str, Any]:
     1. RK4 is more accurate than Euler
     2. RK4 error is small (< 1% of KE)
     """
-    from tensornet.cfd.ns_3d import NS3DSolver, taylor_green_3d_exact_energy
+    from ontic.cfd.ns_3d import NS3DSolver, taylor_green_3d_exact_energy
 
     N = 24  # Smaller grid for speed
     nu = 1.0
@@ -162,7 +162,7 @@ def proof_rk4_incompressibility() -> Dict[str, Any]:
     Each RK4 stage projects to div-free, so final solution remains
     incompressible to machine precision.
     """
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.ns_2d import NS2DSolver
 
     N = 64
     nu = 0.01
@@ -193,7 +193,7 @@ def proof_rk4_energy_conservation() -> Dict[str, Any]:
     For viscous flow, energy should decay monotonically.
     RK4 should match theoretical decay rate accurately.
     """
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.ns_2d import NS2DSolver
 
     N = 64
     nu = 0.1

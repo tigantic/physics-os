@@ -24,7 +24,7 @@ import torch
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tensornet.hvac.projection_solver import ProjectionConfig, ProjectionSolver
+from ontic.hvac.projection_solver import ProjectionConfig, ProjectionSolver
 
 
 # ============================================================================

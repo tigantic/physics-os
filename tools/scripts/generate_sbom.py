@@ -67,7 +67,7 @@ def generate_cyclonedx_sbom(
     """Generate SBOM in CycloneDX format."""
     # Get project metadata
     pyproject_path = project_root / "pyproject.toml"
-    project_name = "hypertensor"
+    project_name = "physics_os"
     project_version = "2.13.0"
 
     if pyproject_path.exists():
@@ -135,7 +135,7 @@ def generate_cyclonedx_sbom(
 
 def generate_cbom(project_root: Path) -> Dict[str, Any]:
     """Generate Code Bill of Materials."""
-    tensornet_dir = project_root / "tensornet"
+    tensornet_dir = project_root / "ontic"
 
     modules = []
     total_lines = 0
@@ -223,7 +223,7 @@ def main():
             "spdxVersion": "SPDX-2.3",
             "dataLicense": "CC0-1.0",
             "SPDXID": "SPDXRef-DOCUMENT",
-            "name": "hypertensor-sbom",
+            "name": "physics_os-sbom",
             "packages": [
                 {
                     "name": p["name"],

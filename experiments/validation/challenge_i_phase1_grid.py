@@ -63,8 +63,8 @@ import numpy as np
 from numpy.typing import NDArray
 
 # ── TensorNet QTT stack (numpy-based) ──
-from tensornet.qtt.sparse_direct import tt_round, tt_matvec
-from tensornet.qtt.eigensolvers import (
+from ontic.qtt.sparse_direct import tt_round, tt_matvec
+from ontic.qtt.eigensolvers import (
     tt_inner,
     tt_norm,
     tt_axpy,
@@ -73,7 +73,7 @@ from tensornet.qtt.eigensolvers import (
     tt_lanczos,
     TTEigResult,
 )
-from tensornet.qtt.pde_solvers import (
+from ontic.qtt.pde_solvers import (
     PDEConfig,
     PDEResult,
     backward_euler,
@@ -81,13 +81,13 @@ from tensornet.qtt.pde_solvers import (
     identity_mpo,
     shifted_operator,
 )
-from tensornet.qtt.dynamic_rank import (
+from ontic.qtt.dynamic_rank import (
     DynamicRankConfig,
     DynamicRankState,
     RankStrategy,
     adapt_ranks,
 )
-from tensornet.qtt.unstructured import rcm_order, quantics_fold, mesh_to_tt, MeshTT
+from ontic.qtt.unstructured import rcm_order, quantics_fold, mesh_to_tt, MeshTT
 
 # ===================================================================
 #  Constants

@@ -40,7 +40,7 @@ def gate_gradient_ascent_works() -> Dict:
 
     The hunter should find ICs with progressively higher enstrophy.
     """
-    from tensornet.cfd.singularity_hunter import (HuntingConfig,
+    from ontic.cfd.singularity_hunter import (HuntingConfig,
                                                   SingularityHunter)
 
     print("\n" + "=" * 60)
@@ -105,8 +105,8 @@ def gate_smooth_ic_generation() -> Dict:
         - Smooth (bounded gradients)
         - Diverse (different random seeds give different ICs)
     """
-    from tensornet.cfd.ns_3d import compute_divergence_3d
-    from tensornet.cfd.singularity_hunter import (HuntingConfig,
+    from ontic.cfd.ns_3d import compute_divergence_3d
+    from ontic.cfd.singularity_hunter import (HuntingConfig,
                                                   SingularityHunter)
 
     print("\n" + "=" * 60)
@@ -181,7 +181,7 @@ def gate_chi_responds_to_optimization() -> Dict:
 
     As we optimize, chi_max should show variation (not stuck at constant).
     """
-    from tensornet.cfd.singularity_hunter import (HuntingConfig,
+    from ontic.cfd.singularity_hunter import (HuntingConfig,
                                                   SingularityHunter)
 
     print("\n" + "=" * 60)
@@ -245,7 +245,7 @@ def gate_solver_stability() -> Dict:
     After optimization finds high-enstrophy ICs, the solver
     should still run without NaN/Inf.
     """
-    from tensornet.cfd.singularity_hunter import (HuntingConfig,
+    from ontic.cfd.singularity_hunter import (HuntingConfig,
                                                   SingularityHunter)
 
     print("\n" + "=" * 60)

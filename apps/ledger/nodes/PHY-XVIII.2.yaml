@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Thermal stress, thermal expansion"
 
 source_files:
-  - "tensornet/coupled/thermo_mechanical.py"
+  - "ontic/coupled/thermo_mechanical.py"
 
 tests:
   smoke:

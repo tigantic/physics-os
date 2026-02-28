@@ -25,7 +25,7 @@ import numpy as np
 # Add parent to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from tensornet.cfd.qtt_tdvp import (
+from ontic.cfd.qtt_tdvp import (
     QTT_TDVP_Euler1D,
     QTTTDVPConfig,
     QTTState,

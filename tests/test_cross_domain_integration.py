@@ -43,8 +43,8 @@ class TestQMToChemistry:
 
     def test_hydrogen_energy_feeds_morse_depth(self) -> None:
         """H-atom binding energy sets Morse well depth D_e."""
-        qm = _import("tensornet.quantum_mechanics.stationary")
-        chem = _import("tensornet.chemistry.pes")
+        qm = _import("ontic.quantum_mechanics.stationary")
+        chem = _import("ontic.chemistry.pes")
 
         # Hydrogen ground-state binding energy (magnitude, in eV)
         E_bind = abs(qm.HydrogenAtom.energy(1) * qm.HARTREE_EV)
@@ -60,8 +60,8 @@ class TestQMToChemistry:
 
     def test_qho_frequency_agrees_with_morse_harmonic(self) -> None:
         """QHO frequency matches Morse harmonic limit ω = α√(2D_e/μ)."""
-        qm = _import("tensornet.quantum_mechanics.stationary")
-        chem = _import("tensornet.chemistry.pes")
+        qm = _import("ontic.quantum_mechanics.stationary")
+        chem = _import("ontic.chemistry.pes")
 
         D_e, alpha, r_e = 4.746, 1.942, 0.7414
         mu = 0.5  # reduced mass of H₂ in atomic units (illustrative)
@@ -88,8 +88,8 @@ class TestQMToReactionRate:
 
     def test_qho_energy_drives_tst_barrier(self) -> None:
         """Transition state theory uses QHO zero-point energy as barrier."""
-        qm = _import("tensornet.quantum_mechanics.stationary")
-        chem = _import("tensornet.chemistry.reaction_rate")
+        qm = _import("ontic.quantum_mechanics.stationary")
+        chem = _import("ontic.chemistry.reaction_rate")
 
         ho_r = qm.HarmonicOscillator(omega=1000.0, mass=1.0)
         ho_ts = qm.HarmonicOscillator(omega=800.0, mass=1.0)
@@ -115,7 +115,7 @@ class TestQMToReactionRate:
 
     def test_tst_wigner_correction_positive(self) -> None:
         """Wigner tunnelling correction κ ≥ 1."""
-        chem = _import("tensornet.chemistry.reaction_rate")
+        chem = _import("ontic.chemistry.reaction_rate")
         tst = chem.TransitionStateTheory(
             E_a=0.5,
             frequencies_reactant=[1000.0],
@@ -136,8 +136,8 @@ class TestEMToOptics:
     def test_biot_savart_field_validates_gaussian_beam_scale(self) -> None:
         """Magnetic field magnitude from a loop ~ μ₀I/(2R) at center;
         same geometric scale used for Gaussian beam waist."""
-        em = _import("tensornet.em.magnetostatics")
-        opt = _import("tensornet.optics.physical_optics")
+        em = _import("ontic.em.magnetostatics")
+        opt = _import("ontic.optics.physical_optics")
 
         R = 0.01  # 1 cm radius loop
         I = 1.0
@@ -155,8 +155,8 @@ class TestEMToOptics:
 
     def test_fdtd_source_freq_feeds_fresnel(self) -> None:
         """FDTD simulation frequency drives Fresnel propagator wavelength."""
-        em = _import("tensornet.em.wave_propagation")
-        opt = _import("tensornet.optics.physical_optics")
+        em = _import("ontic.em.wave_propagation")
+        opt = _import("ontic.optics.physical_optics")
 
         freq = 5e14  # visible light
         c0 = 3e8
@@ -183,8 +183,8 @@ class TestStatMechToCoupledMHD:
     def test_ising_temperature_scales_hartmann_flow(self) -> None:
         """Ising critical temperature sets a characteristic energy scale
         that feeds into Hartmann flow viscosity scaling."""
-        sm = _import("tensornet.statmech.equilibrium")
-        mhd = _import("tensornet.coupled.coupled_mhd")
+        sm = _import("ontic.statmech.equilibrium")
+        mhd = _import("ontic.coupled.coupled_mhd")
 
         ising = sm.IsingModel(L=16, temperature=2.0)
         T_c = ising.critical_temperature
@@ -211,8 +211,8 @@ class TestNuclearToAstro:
 
     def test_binding_energy_feeds_gamow(self) -> None:
         """Nuclear binding energy from Bethe-Weizsäcker feeds Gamow window."""
-        nuc = _import("tensornet.nuclear.structure")
-        astro = _import("tensornet.nuclear.astrophysics")
+        nuc = _import("ontic.nuclear.structure")
+        astro = _import("ontic.nuclear.astrophysics")
 
         # Iron-56 shell model
         fe56 = nuc.NuclearShellModel(A=56, Z=26)
@@ -231,8 +231,8 @@ class TestNuclearToAstro:
 
     def test_woods_saxon_potential_depth(self) -> None:
         """Woods-Saxon potential at centre feeds nuclear reaction model."""
-        nuc = _import("tensornet.nuclear.structure")
-        react = _import("tensornet.nuclear.reactions")
+        nuc = _import("ontic.nuclear.structure")
+        react = _import("ontic.nuclear.reactions")
 
         sm = nuc.NuclearShellModel(A=208, Z=82)  # Pb-208
         V_center = sm.woods_saxon(0.0)
@@ -243,7 +243,7 @@ class TestNuclearToAstro:
 
     def test_thermonuclear_rate_temperature_dependence(self) -> None:
         """Thermonuclear rate increases steeply with T9."""
-        astro = _import("tensornet.nuclear.astrophysics")
+        astro = _import("ontic.nuclear.astrophysics")
 
         pp = astro.ThermonuclearRate(Z1=1, Z2=1, A1=1, A2=1)
         w_low = pp.gamow_width(0.01)
@@ -260,7 +260,7 @@ class TestNuclearParticle:
 
     def test_pmns_unitarity(self) -> None:
         """PMNS matrix from particle physics must be unitary."""
-        part = _import("tensornet.particle.beyond_sm")
+        part = _import("ontic.particle.beyond_sm")
         nu = part.NeutrinoOscillations()
         U = nu.pmns_matrix()
         UdU = U.conj().T @ U
@@ -271,7 +271,7 @@ class TestNuclearParticle:
 
     def test_neutrino_probability_conservation(self) -> None:
         """Sum of oscillation probabilities from flavour α to all β = 1."""
-        part = _import("tensornet.particle.beyond_sm")
+        part = _import("ontic.particle.beyond_sm")
         nu = part.NeutrinoOscillations()
         for alpha in range(3):
             total = sum(
@@ -284,8 +284,8 @@ class TestNuclearParticle:
 
     def test_neutrino_rates_feed_rprocess(self) -> None:
         """Neutrino oscillation probabilities modulate r-process neutron density."""
-        part = _import("tensornet.particle.beyond_sm")
-        astro = _import("tensornet.nuclear.astrophysics")
+        part = _import("ontic.particle.beyond_sm")
+        astro = _import("ontic.nuclear.astrophysics")
 
         nu = part.NeutrinoOscillations()
         # Survival probability of electron neutrino
@@ -308,8 +308,8 @@ class TestCondMatToElecStruct:
 
     def test_phonon_frequencies_positive_definite(self) -> None:
         """Dynamical matrix eigenvalues (ω²) must be non-negative for stable crystal."""
-        cm = _import("tensornet.condensed_matter.phonons")
-        es = _import("tensornet.electronic_structure.dft")
+        cm = _import("ontic.condensed_matter.phonons")
+        es = _import("ontic.electronic_structure.dft")
 
         # Diatomic chain phonon spectrum
         result = cm.DynamicalMatrix.diatomic_chain(m1=12.0, m2=16.0, k_spring=50.0, n_q=100)
@@ -323,7 +323,7 @@ class TestCondMatToElecStruct:
 
     def test_monoatomic_chain_has_acoustic_mode(self) -> None:
         """Monoatomic chain: ω(q=0) = 0 (acoustic branch)."""
-        cm = _import("tensornet.condensed_matter.phonons")
+        cm = _import("ontic.condensed_matter.phonons")
         result = cm.DynamicalMatrix.monoatomic_chain(mass=28.0, k_spring=100.0, n_q=201)
         omegas = result.frequencies  # shape (n_q, 1)
         # q-grid is linspace(-π/a, π/a, n_q), so q=0 is at the midpoint
@@ -342,8 +342,8 @@ class TestMaterialsToCoupled:
 
     def test_elastic_tensor_feeds_thermoelastic(self) -> None:
         """Isotropic elastic constants from ElasticTensor → ThermoelasticSolver."""
-        mat = _import("tensornet.materials.mechanical_properties")
-        coup = _import("tensornet.coupled.thermo_mechanical")
+        mat = _import("ontic.materials.mechanical_properties")
+        coup = _import("ontic.coupled.thermo_mechanical")
 
         E_steel = 200e9  # Pa
         nu_steel = 0.3
@@ -373,7 +373,7 @@ class TestMaterialsToFerroelectric:
 
     def test_landau_spontaneous_polarisation_below_Tc(self) -> None:
         """Below T_c, spontaneous polarisation is nonzero."""
-        cm = _import("tensornet.condensed_matter.ferroelectrics")
+        cm = _import("ontic.condensed_matter.ferroelectrics")
         ld = cm.LandauDevonshire()
         P_s = ld.spontaneous_polarisation(T=300.0)  # below Tc=393K
         assert P_s > 0, "Spontaneous polarisation must be positive below Tc"
@@ -384,7 +384,7 @@ class TestMaterialsToFerroelectric:
 
     def test_piezoelectric_coupling_coefficient(self) -> None:
         """Piezoelectric coupling coefficient k² < 1 (energy bound)."""
-        cm = _import("tensornet.condensed_matter.ferroelectrics")
+        cm = _import("ontic.condensed_matter.ferroelectrics")
         pz = cm.PiezoelectricCoupling(d33=300e-12, eps_33=1000.0, s33=12e-12)
         k_sq = pz.coupling_coefficient()
         assert 0 < k_sq < 1, (
@@ -404,8 +404,8 @@ class TestGeophysicsPipeline:
 
     def test_seismic_velocity_drives_convection_viscosity(self) -> None:
         """Seismic wave velocity heterogeneity maps to thermal anomaly."""
-        geo_seis = _import("tensornet.geophysics.seismology")
-        geo_conv = _import("tensornet.geophysics.mantle_convection")
+        geo_seis = _import("ontic.geophysics.seismology")
+        geo_conv = _import("ontic.geophysics.mantle_convection")
 
         # Set up 2D acoustic wave simulation
         nx, nz = 50, 50
@@ -430,7 +430,7 @@ class TestCondMatTopological:
 
     def test_trivial_insulator_chern_zero(self) -> None:
         """Trivial insulator (large mass parameter) has Chern number = 0."""
-        cm = _import("tensornet.condensed_matter.topological_phases")
+        cm = _import("ontic.condensed_matter.topological_phases")
         calc = cm.ChernNumberCalculator(nk=30)
         # QWZ model with m=3 (trivial phase)
         H = calc.qwz_hamiltonian(kx=0.0, ky=0.0, m=3.0)
@@ -450,8 +450,8 @@ class TestNuclearToMaterials:
     def test_binding_energy_drives_fracture_criterion(self) -> None:
         """Nuclear binding energy sets energy scale; fracture toughness
         from materials science gives complementary structural scale."""
-        nuc = _import("tensornet.nuclear.structure")
-        mat = _import("tensornet.materials.mechanical_properties")
+        nuc = _import("ontic.nuclear.structure")
+        mat = _import("ontic.materials.mechanical_properties")
 
         fe56 = nuc.NuclearShellModel(A=56, Z=26)
         BE = fe56.binding_energy_bethe_weizsacker()
@@ -476,8 +476,8 @@ class TestStellarToNuclear:
 
     def test_pp_chain_rate_positive_at_solar_T(self) -> None:
         """p-p chain rate at solar conditions must be positive."""
-        astro_star = _import("tensornet.astro.stellar_structure")
-        astro_nuc = _import("tensornet.nuclear.astrophysics")
+        astro_star = _import("ontic.astro.stellar_structure")
+        astro_nuc = _import("ontic.nuclear.astrophysics")
 
         # Solar core conditions
         T_core = 1.5e7  # K
@@ -496,7 +496,7 @@ class TestStellarToNuclear:
 
     def test_gamow_peak_scales_with_charge(self) -> None:
         """Gamow energy ∝ (Z₁Z₂)^{2/3} — heavier nuclei have higher barrier."""
-        astro = _import("tensornet.nuclear.astrophysics")
+        astro = _import("ontic.nuclear.astrophysics")
         T9 = 0.1
 
         pp = astro.ThermonuclearRate(Z1=1, Z2=1, A1=1, A2=1)
@@ -518,9 +518,9 @@ class TestMultiDomainQMChemStatMech:
 
     def test_qm_morse_tst_chain(self) -> None:
         """Hydrogen wavefunction → Morse PES → TST rate constant."""
-        qm = _import("tensornet.quantum_mechanics.stationary")
-        chem_pes = _import("tensornet.chemistry.pes")
-        chem_rate = _import("tensornet.chemistry.reaction_rate")
+        qm = _import("ontic.quantum_mechanics.stationary")
+        chem_pes = _import("ontic.chemistry.pes")
+        chem_rate = _import("ontic.chemistry.reaction_rate")
 
         # Step 1: QM — H-atom binding energy as Morse depth
         D_e = abs(qm.HydrogenAtom.energy(1) * qm.HARTREE_EV)
@@ -551,9 +551,9 @@ class TestMultiDomainNuclearParticleAstro:
 
     def test_nuclear_neutrino_rprocess_chain(self) -> None:
         """Nuclear shell model → PMNS unitarity → r-process Saha ratio."""
-        nuc = _import("tensornet.nuclear.structure")
-        part = _import("tensornet.particle.beyond_sm")
-        astro_nuc = _import("tensornet.nuclear.astrophysics")
+        nuc = _import("ontic.nuclear.structure")
+        part = _import("ontic.particle.beyond_sm")
+        astro_nuc = _import("ontic.nuclear.astrophysics")
 
         # Step 1: Nuclear — Fe-56 binding
         fe56 = nuc.NuclearShellModel(A=56, Z=26)
@@ -586,9 +586,9 @@ class TestMultiDomainEMOpticsMaterials:
 
     def test_em_beam_material_chain(self) -> None:
         """EM Biot-Savart → Gaussian beam divergence → Birch-Murnaghan EOS."""
-        em = _import("tensornet.em.magnetostatics")
-        opt = _import("tensornet.optics.physical_optics")
-        mat = _import("tensornet.materials.first_principles_design")
+        em = _import("ontic.em.magnetostatics")
+        opt = _import("ontic.optics.physical_optics")
+        mat = _import("ontic.materials.first_principles_design")
 
         # Step 1: EM — magnetic field from current loop
         bs = em.BiotSavart(current=1.0)
@@ -615,29 +615,29 @@ class TestMultiDomainEMOpticsMaterials:
 # =============================================================================
 
 CROSS_DOMAIN_MODULES = [
-    "tensornet.quantum_mechanics.stationary",
-    "tensornet.chemistry.pes",
-    "tensornet.chemistry.reaction_rate",
-    "tensornet.em.magnetostatics",
-    "tensornet.em.wave_propagation",
-    "tensornet.optics.physical_optics",
-    "tensornet.statmech.equilibrium",
-    "tensornet.coupled.coupled_mhd",
-    "tensornet.nuclear.structure",
-    "tensornet.nuclear.reactions",
-    "tensornet.nuclear.astrophysics",
-    "tensornet.particle.beyond_sm",
-    "tensornet.condensed_matter.phonons",
-    "tensornet.condensed_matter.band_structure",
-    "tensornet.condensed_matter.topological_phases",
-    "tensornet.condensed_matter.ferroelectrics",
-    "tensornet.electronic_structure.dft",
-    "tensornet.materials.mechanical_properties",
-    "tensornet.materials.first_principles_design",
-    "tensornet.coupled.thermo_mechanical",
-    "tensornet.geophysics.seismology",
-    "tensornet.geophysics.mantle_convection",
-    "tensornet.astro.stellar_structure",
+    "ontic.quantum_mechanics.stationary",
+    "ontic.chemistry.pes",
+    "ontic.chemistry.reaction_rate",
+    "ontic.em.magnetostatics",
+    "ontic.em.wave_propagation",
+    "ontic.optics.physical_optics",
+    "ontic.statmech.equilibrium",
+    "ontic.coupled.coupled_mhd",
+    "ontic.nuclear.structure",
+    "ontic.nuclear.reactions",
+    "ontic.nuclear.astrophysics",
+    "ontic.particle.beyond_sm",
+    "ontic.condensed_matter.phonons",
+    "ontic.condensed_matter.band_structure",
+    "ontic.condensed_matter.topological_phases",
+    "ontic.condensed_matter.ferroelectrics",
+    "ontic.electronic_structure.dft",
+    "ontic.materials.mechanical_properties",
+    "ontic.materials.first_principles_design",
+    "ontic.coupled.thermo_mechanical",
+    "ontic.geophysics.seismology",
+    "ontic.geophysics.mantle_convection",
+    "ontic.astro.stellar_structure",
 ]
 
 

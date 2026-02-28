@@ -13,7 +13,7 @@ state: "V0.2"
 description: "PHY-XIII.7_Volcanology solver"
 
 source_files:
-  - "tensornet/packs/pack_xiii.py"
+  - "ontic/packs/pack_xiii.py"
 
 tests:
   smoke:

@@ -13,7 +13,7 @@ state: "V0.2"
 description: "ADM/BSSN/Z4"
 
 source_files:
-  - "tensornet/relativity/numerical_gr.py"
+  - "ontic/relativity/numerical_gr.py"
 
 tests:
   smoke:

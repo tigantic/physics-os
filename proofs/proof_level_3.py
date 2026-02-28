@@ -53,10 +53,10 @@ def gate_re1000_chi_tracking() -> Dict:
         - chi_max reached
         - growth rate (polynomial? exponential?)
     """
-    from tensornet.cfd.chi_diagnostic import (ChiTrajectory,
+    from ontic.cfd.chi_diagnostic import (ChiTrajectory,
                                               analyze_regularity,
                                               compute_chi_state_3d)
-    from tensornet.cfd.ns_3d import NS3DSolver
+    from ontic.cfd.ns_3d import NS3DSolver
 
     print("\n" + "=" * 60)
     print("Gate 1: Re=1000 chi Tracking")
@@ -161,10 +161,10 @@ def gate_re10000_chi_tracking() -> Dict:
         - Higher chi values
         - Potentially faster growth
     """
-    from tensornet.cfd.chi_diagnostic import (ChiTrajectory,
+    from ontic.cfd.chi_diagnostic import (ChiTrajectory,
                                               analyze_regularity,
                                               compute_chi_state_3d)
-    from tensornet.cfd.ns_3d import NS3DSolver
+    from ontic.cfd.ns_3d import NS3DSolver
 
     print("\n" + "=" * 60)
     print("Gate 2: Re=10000 chi Tracking")
@@ -282,9 +282,9 @@ def gate_reynolds_scaling_law() -> Dict:
         - alpha > 1: Superlinear (concerning)
         - alpha -> infinity: Potential blowup
     """
-    from tensornet.cfd.chi_diagnostic import (ChiTrajectory,
+    from ontic.cfd.chi_diagnostic import (ChiTrajectory,
                                               compute_chi_state_3d)
-    from tensornet.cfd.ns_3d import NS3DSolver
+    from ontic.cfd.ns_3d import NS3DSolver
 
     print("\n" + "=" * 60)
     print("Gate 3: Reynolds Scaling Law")
@@ -415,9 +415,9 @@ def gate_blowup_detection() -> Dict:
         2. Growth rate decays over time
         3. chi_max / chi_initial remains finite
     """
-    from tensornet.cfd.chi_diagnostic import (ChiTrajectory,
+    from ontic.cfd.chi_diagnostic import (ChiTrajectory,
                                               compute_chi_state_3d)
-    from tensornet.cfd.ns_3d import NS3DSolver
+    from ontic.cfd.ns_3d import NS3DSolver
 
     print("\n" + "=" * 60)
     print("Gate 4: Blowup vs Bound Detection")

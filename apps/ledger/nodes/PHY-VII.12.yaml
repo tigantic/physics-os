@@ -13,7 +13,7 @@ state: "V0.2"
 description: "IMSRG, CC hooks"
 
 source_files:
-  - "tensornet/condensed_matter/nuclear_many_body.py"
+  - "ontic/condensed_matter/nuclear_many_body.py"
 
 tests:
   smoke:

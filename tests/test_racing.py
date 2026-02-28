@@ -1,5 +1,5 @@
 """
-Test Module: tensornet/racing/wake.py
+Test Module: ontic/racing/wake.py
 
 Phase 12: F1 Dirty Air Wake Tracker
 Constitutional Compliance:
@@ -20,7 +20,7 @@ import numpy as np
 import pytest
 import torch
 
-from tensornet.aerospace.racing.wake import DirtyAirReport, WakeTracker
+from ontic.aerospace.racing.wake import DirtyAirReport, WakeTracker
 
 # ============================================================================
 # FIXTURES

@@ -31,7 +31,7 @@
 | 2025-12-27 | Session 4 | Added pre-commit to CI workflow |
 | 2025-12-27 | Session 4 | **Session 4 Summary: 38 additional items completed (110 → 148)** |
 | 2025-12-27 | Session 5 | Created docs/ONBOARDING.md - first 30 minutes guide |
-| 2025-12-27 | Session 5 | Created tensornet/logging_config.py - centralized logging module |
+| 2025-12-27 | Session 5 | Created ontic/logging_config.py - centralized logging module |
 | 2025-12-27 | Session 5 | Created ErrorDetail, ErrorResponse schemas in apps/sdk_legacy/server/main.py |
 | 2025-12-27 | Session 5 | Added correlation IDs to all error responses |
 | 2025-12-27 | Session 5 | Created tests/test_tci_core_imports.py for Rust extension tests |
@@ -59,7 +59,7 @@
 | 2025-12-27 | Session 6 | Generated lockfiles for root and sdk/qtt-sdk packages |
 | 2025-12-27 | Session 6 | Added lockfile documentation to CONTRIBUTING.md |
 | 2025-12-27 | Session 6 | Added make lockfile and make lockfile-check targets |
-| 2025-12-27 | Session 6 | Created tensornet/ml_surrogates/base.py with shared types |
+| 2025-12-27 | Session 6 | Created ontic/ml_surrogates/base.py with shared types |
 | 2025-12-27 | Session 6 | Created tests/test_domain_decomp.py with edge case tests |
 | 2025-12-27 | Session 6 | Added TestServerConfiguration tests to server tests |
 | 2025-12-27 | Session 6 | Fixed missing 'import os' in apps/sdk_legacy/server/main.py |
@@ -146,7 +146,7 @@
 **Evidence:** `.gitignore:L3-L6`, `.gitignore:L11-L27`, `.gitignore:L37-L50`
 
 - [x] ✅ Remove `dist/` directory from repository (verified untracked 2025-12-27)
-- [x] ✅ Remove `tensornet.egg-info/` directory from repository (verified untracked 2025-12-27)
+- [x] ✅ Remove `ontic.egg-info/` directory from repository (verified untracked 2025-12-27)
 - [x] ✅ `apps/sdk_legacy/qtt-sdk/src/qtt_sdk.egg-info/` verified untracked in git (local only)
 - [x] ✅ Remove all `__pycache__/` directories from repository (verified untracked 2025-12-27)
 - [x] ✅ Remove `.pytest_cache/` directories from repository (verified untracked 2025-12-27)
@@ -285,7 +285,7 @@
 
 #### 3.4.1 Field.load() Fix
 
-**Evidence:** `tensornet/fieldos/field.py:L400-L407` uses `allow_pickle=True`
+**Evidence:** `ontic/fieldos/field.py:L400-L407` uses `allow_pickle=True`
 
 - [x] Modify `Field.load()` to use `allow_pickle=False` ✅ FIXED 2025-12-27
 - [x] Change metadata storage from pickle to JSON string ✅ FIXED 2025-12-27
@@ -296,7 +296,7 @@
 
 #### 3.4.2 Trainer pickle.load Fix
 
-**Evidence:** `tensornet/hyperenv/trainer.py:L77-L99` uses `pickle.load`
+**Evidence:** `ontic/hyperenv/trainer.py:L77-L99` uses `pickle.load`
 
 - [x] ✅ Review all uses of `pickle.load` in trainer - FIXED 2025-12-27
 - [x] ✅ Replace with safe alternatives (JSON for state, torch.save for weights)
@@ -363,7 +363,7 @@
 
 ### 4.1 Top Complexity Hotspots (CC > 20)
 
-#### 4.1.1 `tensornet/cfd/qtt_tci.py:qtt_from_function_tci_rust` (CC=35)
+#### 4.1.1 `ontic/cfd/qtt_tci.py:qtt_from_function_tci_rust` (CC=35)
 
 **Location:** Lines 222-435  
 **Risk Score:** 79.30
@@ -378,7 +378,7 @@
 - [x] N/A - Helper tests deferred (helpers are implementation detail, main function is tested)
 - [x] ✅ Performance regression tests added to benchmarks/tests/test_benchmark_validity.py
 
-#### 4.1.2 `tensornet/distributed/domain_decomp.py:_create_subdomains` (CC=35)
+#### 4.1.2 `ontic/distributed/domain_decomp.py:_create_subdomains` (CC=35)
 
 **Location:** Lines 141-242  
 **Risk Score:** 72.73
@@ -397,7 +397,7 @@
   - Coverage tests
 - [x] ✅ Algorithm documented with docstrings (already present, verified 2025-12-27)
 
-#### 4.1.3 `tensornet/simulation/flight_data.py:_parse_csv` (CC=32)
+#### 4.1.3 `ontic/simulation/flight_data.py:_parse_csv` (CC=32)
 
 **Location:** Lines 450-521  
 **Risk Score:** 66.35
@@ -409,7 +409,7 @@
 - [x] ✅ CC reduced from 32 to ~5-8
 - [x] N/A - CSV format tests deferred (module is research code, formats may evolve)
 
-#### 4.1.4 `tensornet/cfd/stabilized_refine.py:stabilized_newton_refinement` (CC=30)
+#### 4.1.4 `ontic/cfd/stabilized_refine.py:stabilized_newton_refinement` (CC=30)
 
 **Location:** Lines 273-444  
 **Risk Score:** 60.64  
@@ -426,14 +426,14 @@
 
 | Function | File | CC | Action |
 |----------|------|-----|--------|
-| `qtt_from_function_tci_python` | `tensornet/cfd/qtt_tci.py:75-219` | 25 | - [ ] Refactor |
-| `generate_conf_py` | `tensornet/docs/sphinx_config.py:160-344` | 25 | - [ ] Refactor |
-| `FormationController.compute_formation_positions` | `tensornet/coordination/formation.py:180-281` | 22 | - [ ] Refactor |
-| `build_entanglement_graph` | `tensornet/neural/entanglement_gnn.py:411-502` | 22 | - [ ] Refactor |
-| `Euler2D._apply_bc_x` | `tensornet/cfd/euler_2d.py:269-321` | 21 | - [ ] Refactor |
-| `ParallelGMRESSolver.solve` | `tensornet/distributed/parallel_solver.py:284-408` | 21 | - [ ] Refactor |
-| `ExampleRunner.generate_report` | `tensornet/docs/examples.py:424-504` | 21 | - [ ] Refactor |
-| `extract_examples_from_docstrings` | `tensornet/docs/examples.py:553-670` | 21 | - [ ] Refactor |
+| `qtt_from_function_tci_python` | `ontic/cfd/qtt_tci.py:75-219` | 25 | - [ ] Refactor |
+| `generate_conf_py` | `ontic/docs/sphinx_config.py:160-344` | 25 | - [ ] Refactor |
+| `FormationController.compute_formation_positions` | `ontic/coordination/formation.py:180-281` | 22 | - [ ] Refactor |
+| `build_entanglement_graph` | `ontic/neural/entanglement_gnn.py:411-502` | 22 | - [ ] Refactor |
+| `Euler2D._apply_bc_x` | `ontic/cfd/euler_2d.py:269-321` | 21 | - [ ] Refactor |
+| `ParallelGMRESSolver.solve` | `ontic/distributed/parallel_solver.py:284-408` | 21 | - [ ] Refactor |
+| `ExampleRunner.generate_report` | `ontic/docs/examples.py:424-504` | 21 | - [ ] Refactor |
+| `extract_examples_from_docstrings` | `ontic/docs/examples.py:553-670` | 21 | - [ ] Refactor |
 
 ### 4.2 Potential Dead Code Modules
 
@@ -441,17 +441,17 @@
 
 Review and disposition each module:
 
-- [x] ✅ `tensornet/cfd/euler2d_native.py` - [x] Keep (native solver variant, no imports but may be used externally)
-- [x] ✅ `tensornet/cfd/euler_nd_native.py` - [x] Keep (generalized N-D solver, research code)
-- [x] ✅ `tensornet/cfd/fast_euler_2d.py` - [x] Keep (performance variant)
-- [x] ✅ `tensornet/cfd/flux_batch.py` - [x] Keep (batched flux computation)
-- [x] ✅ `tensornet/cfd/local_flux_native.py` - [x] Keep (native implementation)
-- [x] ✅ `tensornet/cfd/newton_refine.py` - [x] Keep (research Newton refinement)
-- [x] ✅ `tensornet/cfd/qtt_2d_shift.py` - [x] Keep (2D shift operations)
-- [x] ✅ `tensornet/cfd/stabilized_refine.py` - [x] Keep (verified API completeness)
-- [x] ✅ `tensornet/cfd/weno_native_tt.py` - [x] Keep (TT WENO implementation, ~1000 lines)
-- [x] ✅ `tensornet/core/determinism.py` - [x] Keep (provides reproducibility functions)
-- [x] ✅ `tensornet/guidance/comms.py` - [x] Keep (Phase 22 plasma blackout feature)
+- [x] ✅ `ontic/cfd/euler2d_native.py` - [x] Keep (native solver variant, no imports but may be used externally)
+- [x] ✅ `ontic/cfd/euler_nd_native.py` - [x] Keep (generalized N-D solver, research code)
+- [x] ✅ `ontic/cfd/fast_euler_2d.py` - [x] Keep (performance variant)
+- [x] ✅ `ontic/cfd/flux_batch.py` - [x] Keep (batched flux computation)
+- [x] ✅ `ontic/cfd/local_flux_native.py` - [x] Keep (native implementation)
+- [x] ✅ `ontic/cfd/newton_refine.py` - [x] Keep (research Newton refinement)
+- [x] ✅ `ontic/cfd/qtt_2d_shift.py` - [x] Keep (2D shift operations)
+- [x] ✅ `ontic/cfd/stabilized_refine.py` - [x] Keep (verified API completeness)
+- [x] ✅ `ontic/cfd/weno_native_tt.py` - [x] Keep (TT WENO implementation, ~1000 lines)
+- [x] ✅ `ontic/core/determinism.py` - [x] Keep (provides reproducibility functions)
+- [x] ✅ `ontic/guidance/comms.py` - [x] Keep (Phase 22 plasma blackout feature)
 
 ### 4.3 Duplication Remediation
 
@@ -466,7 +466,7 @@ Review and disposition each module:
 
 #### 4.3.2 Symbol List Duplication
 
-**Evidence:** `tensornet/__init__.py:L515-549` duplicates `tensornet/distributed/__init__.py:L67-105`
+**Evidence:** `ontic/__init__.py:L515-549` duplicates `ontic/distributed/__init__.py:L67-105`
 
 - [x] N/A - Current duplication is intentional for stable public API
 - [x] N/A - Current exports maintained for backward compatibility
@@ -490,25 +490,25 @@ Files affected:
 
 #### 4.3.4 QTT Decomposition Duplication
 
-**Evidence:** ~25 lines duplicated between `demos/resolution_independence.py:164-199` and `tensornet/cfd/qtt.py:123-162`
+**Evidence:** ~25 lines duplicated between `demos/resolution_independence.py:164-199` and `ontic/cfd/qtt.py:123-162`
 
-- [x] ✅ Canonical location: `tensornet/cfd/qtt.py:tt_svd()`
-- [x] ✅ Updated to import from library via `from tensornet.cfd.qtt import tt_svd as _lib_tt_svd`
+- [x] ✅ Canonical location: `ontic/cfd/qtt.py:tt_svd()`
+- [x] ✅ Updated to import from library via `from ontic.cfd.qtt import tt_svd as _lib_tt_svd`
 - [x] ✅ Library function has test coverage in tests/test_qtt.py
 
 ### 4.4 Import Cycle Resolution
 
 **Evidence:** `06b-temporal-coupling.md`
 
-Cycle in `tensornet/ml_surrogates/` (size 4):
-- `tensornet/ml_surrogates/physics_informed.py`
-- `tensornet/ml_surrogates/deep_onet.py`
-- `tensornet/ml_surrogates/fourier_operator.py`
-- `tensornet/ml_surrogates/surrogate_base.py`
+Cycle in `ontic/ml_surrogates/` (size 4):
+- `ontic/ml_surrogates/physics_informed.py`
+- `ontic/ml_surrogates/deep_onet.py`
+- `ontic/ml_surrogates/fourier_operator.py`
+- `ontic/ml_surrogates/surrogate_base.py`
 
 - [x] ✅ Analyzed - cycle is benign (Python handles gracefully, all imports succeed)
-- [x] ✅ Extracted to tensornet/ml_surrogates/base.py (SurrogateType, TrainingConfig, etc.)
-- [x] ✅ Created `tensornet/ml_surrogates/base.py` with shared types (SurrogateType, TrainingConfig, NormalizationParams, TrainingState, utility functions) (2025-12-27)
+- [x] ✅ Extracted to ontic/ml_surrogates/base.py (SurrogateType, TrainingConfig, etc.)
+- [x] ✅ Created `ontic/ml_surrogates/base.py` with shared types (SurrogateType, TrainingConfig, NormalizationParams, TrainingState, utility functions) (2025-12-27)
 - [x] N/A - Cycle is benign, all imports work correctly
 - [x] ✅ Added scripts/check_import_cycles.py and integrated into CI hygiene stage
 
@@ -618,7 +618,7 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 
 ### 5.6 Demo/Test Code in Library Modules
 
-**Evidence:** `tensornet/ml_surrogates/surrogate_base.py:L325-L384` contains `test_surrogate_base()`
+**Evidence:** `ontic/ml_surrogates/surrogate_base.py:L325-L384` contains `test_surrogate_base()`
 
 - [x] N/A - Demo/test code separation deferred (inline tests serve as documentation)
 - [x] N/A - Deferred (major refactoring, low priority)
@@ -633,7 +633,7 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 
 ### 6.1 Root Export Reduction
 
-**Evidence:** `tensornet/__init__.py:L1-L120` imports many modules; `__all__` is extensive (`L214+`)
+**Evidence:** `ontic/__init__.py:L1-L120` imports many modules; `__all__` is extensive (`L214+`)
 
 #### 6.1.1 Audit Current Exports
 
@@ -658,7 +658,7 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 
 ### 6.2 Subpackage Boundaries
 
-**Evidence:** Directory structure under `tensornet/`
+**Evidence:** Directory structure under `ontic/`
 
 #### 6.2.1 Define Bounded Contexts
 
@@ -683,7 +683,7 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 
 **Evidence:** 2,367 `print(` occurrences in code files; only 6 files import `logging`
 
-- [x] ✅ Create logging configuration module (`tensornet/logging_config.py`) (2025-12-27)
+- [x] ✅ Create logging configuration module (`ontic/logging_config.py`) (2025-12-27)
 - [x] N/A - print() replacement deferred (logging_config.py available for new code)
 
 ### 6.4 Monorepo Structure Clarification
@@ -750,8 +750,8 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 
 - [x] ✅ Create `CODEOWNERS` file (2025-12-27)
 - [x] ✅ Assign owners for:
-  - [x] ✅ `tensornet/cfd/` - CFD team
-  - [x] ✅ `tensornet/core/` - Core team
+  - [x] ✅ `ontic/cfd/` - CFD team
+  - [x] ✅ `ontic/core/` - Core team
   - [x] ✅ `apps/sdk_legacy/` - SDK team
   - [x] ✅ `crates/tci_core_rust/` - Rust team
   - [x] ✅ Security-sensitive files
@@ -788,7 +788,7 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 | # | Issue | Effort | Evidence | Status |
 |---|-------|--------|----------|--------|
 | 1 | Broken secret-scanning pre-commit hook | S | `.pre-commit-config.yaml:L28-L35` | [x] ✅ FIXED |
-| 2 | Unsafe deserialization default | M | `tensornet/fieldos/field.py:L400-L407` | [x] ✅ FIXED |
+| 2 | Unsafe deserialization default | M | `ontic/fieldos/field.py:L400-L407` | [x] ✅ FIXED |
 | 3 | Secret material stored in repo | M | `demos/millennium_hunter_keys.json` | [x] ✅ MITIGATED |
 | 4 | Server CORS defaults fully open | S | `apps/sdk_legacy/server/main.py:L138-L145` | [x] ✅ FIXED |
 
@@ -802,7 +802,7 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 | 8 | Dev tooling not consistently declared | S | `Makefile:L98-L121` | [x] ✅ FIXED (pyproject.toml dev extras + requirements-dev.txt) |
 | 9 | Type checking is non-blocking | S | `Makefile:L118-L121` | [x] ✅ FIXED |
 | 10 | Python version mismatch | S | `pyproject.toml:L11-L12` vs `mypy.ini:L1-L3` | [x] ✅ FIXED |
-| 11 | Large API surface area | M | `tensornet/__init__.py:L1-L120` | [ ] |
+| 11 | Large API surface area | M | `ontic/__init__.py:L1-L120` | [ ] |
 | 12 | Print-based logging pervasive | M | 2,367 `print(` occurrences | [ ] |
 | 16 | High complexity hotspots (CC>20) | M | `02a-top-complexity.csv` | [ ] |
 
@@ -812,8 +812,8 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 |---|-------|--------|----------|--------|
 | 13 | sys.path manipulation | S | `tests/test_fieldops.py:L20-L22` | [x] ✅ FIXED |
 | 14 | Physics tests not in default collection | S | `pyproject.toml:L67-L70` | [x] ✅ FIXED |
-| 17 | O(n²) behavior in error mapping loop | S | `tensornet/cfd/qtt_tci.py:L356-L360` | [x] ✅ NOT AN ISSUE (dict lookup is O(1)) |
-| 18 | Demo/test routines in library modules | M | `tensornet/ml_surrogates/surrogate_base.py:L325-L384` | [~] PARTIAL: moved surrogate_base tests (40+ modules remain) |
+| 17 | O(n²) behavior in error mapping loop | S | `ontic/cfd/qtt_tci.py:L356-L360` | [x] ✅ NOT AN ISSUE (dict lookup is O(1)) |
+| 18 | Demo/test routines in library modules | M | `ontic/ml_surrogates/surrogate_base.py:L325-L384` | [~] PARTIAL: moved surrogate_base tests (40+ modules remain) |
 | 19 | Security scan script auto-installs tools | S | `tools/scripts/security_scan.py:L61-L64` | [x] ✅ FIXED |
 
 ### Severity: Low
@@ -831,35 +831,35 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 
 | Rank | File | CC Max | Inbound Imports | LOC | Risk Score |
 |------|------|--------|-----------------|-----|------------|
-| 1 | `tensornet/cfd/qtt_tci.py` | 35 | 8 | 651 | 79.30 |
-| 2 | `tensornet/distributed/domain_decomp.py` | 35 | 2 | 365 | 72.73 |
-| 3 | `tensornet/simulation/flight_data.py` | 32 | 1 | 675 | 66.35 |
-| 4 | `tensornet/cfd/stabilized_refine.py` | 30 | 0 | 320 | 60.64 |
-| 5 | `tensornet/cfd/euler_2d.py` | 21 | 15 | 619 | 58.24 |
-| 6 | `tensornet/cfd/tt_cfd.py` | 15 | 24 | 838 | 55.68 |
-| 7 | `tensornet/docs/sphinx_config.py` | 25 | 1 | 573 | 52.15 |
-| 8 | `tensornet/cfd/ns_3d.py` | 12 | 24 | 767 | 49.53 |
-| 9 | `tensornet/cfd/chi_diagnostic.py` | 12 | 22 | 397 | 46.79 |
-| 10 | `tensornet/neural/entanglement_gnn.py` | 22 | 1 | 460 | 45.92 |
-| 11 | `tensornet/cfd/ns_2d.py` | 12 | 21 | 378 | 45.76 |
-| 12 | `tensornet/coordination/formation.py` | 22 | 1 | 334 | 45.67 |
-| 13 | `tensornet/docs/examples.py` | 21 | 1 | 565 | 44.13 |
-| 14 | `tensornet/cfd/godunov.py` | 17 | 9 | 411 | 43.82 |
-| 15 | `tensornet/distributed/parallel_solver.py` | 21 | 1 | 406 | 43.81 |
+| 1 | `ontic/cfd/qtt_tci.py` | 35 | 8 | 651 | 79.30 |
+| 2 | `ontic/distributed/domain_decomp.py` | 35 | 2 | 365 | 72.73 |
+| 3 | `ontic/simulation/flight_data.py` | 32 | 1 | 675 | 66.35 |
+| 4 | `ontic/cfd/stabilized_refine.py` | 30 | 0 | 320 | 60.64 |
+| 5 | `ontic/cfd/euler_2d.py` | 21 | 15 | 619 | 58.24 |
+| 6 | `ontic/cfd/tt_cfd.py` | 15 | 24 | 838 | 55.68 |
+| 7 | `ontic/docs/sphinx_config.py` | 25 | 1 | 573 | 52.15 |
+| 8 | `ontic/cfd/ns_3d.py` | 12 | 24 | 767 | 49.53 |
+| 9 | `ontic/cfd/chi_diagnostic.py` | 12 | 22 | 397 | 46.79 |
+| 10 | `ontic/neural/entanglement_gnn.py` | 22 | 1 | 460 | 45.92 |
+| 11 | `ontic/cfd/ns_2d.py` | 12 | 21 | 378 | 45.76 |
+| 12 | `ontic/coordination/formation.py` | 22 | 1 | 334 | 45.67 |
+| 13 | `ontic/docs/examples.py` | 21 | 1 | 565 | 44.13 |
+| 14 | `ontic/cfd/godunov.py` | 17 | 9 | 411 | 43.82 |
+| 15 | `ontic/distributed/parallel_solver.py` | 21 | 1 | 406 | 43.81 |
 
 ### Central Modules (High Inbound Imports)
 
 | Module | Inbound Imports | Notes |
 |--------|-----------------|-------|
-| `tensornet.cfd.pure_qtt_ops` | 26 | Central CFD utility |
-| `tensornet.cfd.tt_cfd` | 24 | Central CFD module |
-| `tensornet.cfd.ns_3d` | 24 | Navier-Stokes 3D |
-| `tensornet.cfd.chi_diagnostic` | 22 | Diagnostics |
-| `tensornet.cfd.ns_2d` | 21 | Navier-Stokes 2D |
-| `tensornet.core.mps` | 18 | Core MPS operations |
-| `tensornet.cfd.euler_2d` | 15 | Euler 2D solver |
-| `tensornet.cfd.qtt_2d` | 14 | QTT 2D operations |
-| `tensornet.core.decompositions` | 11 | Tensor decompositions |
+| `ontic.cfd.pure_qtt_ops` | 26 | Central CFD utility |
+| `ontic.cfd.tt_cfd` | 24 | Central CFD module |
+| `ontic.cfd.ns_3d` | 24 | Navier-Stokes 3D |
+| `ontic.cfd.chi_diagnostic` | 22 | Diagnostics |
+| `ontic.cfd.ns_2d` | 21 | Navier-Stokes 2D |
+| `ontic.core.mps` | 18 | Core MPS operations |
+| `ontic.cfd.euler_2d` | 15 | Euler 2D solver |
+| `ontic.cfd.qtt_2d` | 14 | QTT 2D operations |
+| `ontic.core.decompositions` | 11 | Tensor decompositions |
 
 ---
 
@@ -869,53 +869,53 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 
 | Rank | CC | File | Function | Category |
 |------|-----|------|----------|----------|
-| 1 | 35 | `tensornet/cfd/qtt_tci.py:222-435` | `qtt_from_function_tci_rust` | code |
-| 2 | 35 | `tensornet/distributed/domain_decomp.py:141-242` | `DomainDecomposition._create_subdomains` | code |
-| 3 | 32 | `tensornet/simulation/flight_data.py:450-521` | `_parse_csv` | code |
-| 4 | 30 | `tensornet/cfd/stabilized_refine.py:273-444` | `stabilized_newton_refinement` | code |
-| 5 | 25 | `tensornet/cfd/qtt_tci.py:75-219` | `qtt_from_function_tci_python` | code |
-| 6 | 25 | `tensornet/docs/sphinx_config.py:160-344` | `generate_conf_py` | code |
-| 7 | 22 | `tensornet/coordination/formation.py:180-281` | `FormationController.compute_formation_positions` | code |
-| 8 | 22 | `tensornet/neural/entanglement_gnn.py:411-502` | `build_entanglement_graph` | code |
+| 1 | 35 | `ontic/cfd/qtt_tci.py:222-435` | `qtt_from_function_tci_rust` | code |
+| 2 | 35 | `ontic/distributed/domain_decomp.py:141-242` | `DomainDecomposition._create_subdomains` | code |
+| 3 | 32 | `ontic/simulation/flight_data.py:450-521` | `_parse_csv` | code |
+| 4 | 30 | `ontic/cfd/stabilized_refine.py:273-444` | `stabilized_newton_refinement` | code |
+| 5 | 25 | `ontic/cfd/qtt_tci.py:75-219` | `qtt_from_function_tci_python` | code |
+| 6 | 25 | `ontic/docs/sphinx_config.py:160-344` | `generate_conf_py` | code |
+| 7 | 22 | `ontic/coordination/formation.py:180-281` | `FormationController.compute_formation_positions` | code |
+| 8 | 22 | `ontic/neural/entanglement_gnn.py:411-502` | `build_entanglement_graph` | code |
 | 9 | 21 | `tools/scripts/mach5_wedge.py:40-337` | `run_mach5_wedge` | scripts |
-| 10 | 21 | `tensornet/cfd/euler_2d.py:269-321` | `Euler2D._apply_bc_x` | code |
-| 11 | 21 | `tensornet/distributed/parallel_solver.py:284-408` | `ParallelGMRESSolver.solve` | code |
-| 12 | 21 | `tensornet/docs/examples.py:424-504` | `ExampleRunner.generate_report` | code |
-| 13 | 21 | `tensornet/docs/examples.py:553-670` | `extract_examples_from_docstrings` | code |
+| 10 | 21 | `ontic/cfd/euler_2d.py:269-321` | `Euler2D._apply_bc_x` | code |
+| 11 | 21 | `ontic/distributed/parallel_solver.py:284-408` | `ParallelGMRESSolver.solve` | code |
+| 12 | 21 | `ontic/docs/examples.py:424-504` | `ExampleRunner.generate_report` | code |
+| 13 | 21 | `ontic/docs/examples.py:553-670` | `extract_examples_from_docstrings` | code |
 | 14 | 20 | `proofs/proof_level_3.py:383-528` | `gate_blowup_detection` | scripts |
-| 15 | 20 | `tensornet/docs/api_reference.py:757-829` | `DocstringParser._parse_google` | code |
-| 16 | 19 | `tensornet/docs/api_reference.py:393-473` | `ClassDoc.to_markdown` | code |
+| 15 | 20 | `ontic/docs/api_reference.py:757-829` | `DocstringParser._parse_google` | code |
+| 16 | 19 | `ontic/docs/api_reference.py:393-473` | `ClassDoc.to_markdown` | code |
 | 17 | 18 | `proofs/proof_master.py:90-204` | `main` | scripts |
 | 18 | 18 | `proofs/proof_phase_1c.py:229-287` | `run_all_proofs` | scripts |
 | 19 | 18 | `tools/scripts/full_reproduce.py:231-320` | `main` | scripts |
 | 20 | 18 | `tools/scripts/profile_performance.py:235-302` | `main` | scripts |
 | 21 | 18 | `apps/sdk_legacy/qtt-sdk/examples/make_pdf.py:36-446` | `create_complete_technical_volume` | code |
-| 22 | 18 | `tensornet/intent/query.py:352-407` | `Aggregator.apply` | code |
+| 22 | 18 | `ontic/intent/query.py:352-407` | `Aggregator.apply` | code |
 | 23 | 17 | `demos/millennium_hunter.py:125-232` | `build_rank1_3d_qtt_tensorfree` | scripts |
-| 24 | 17 | `tensornet/cfd/godunov.py:385-554` | `exact_riemann` | code |
-| 25 | 17 | `tensornet/docs/api_reference.py:544-617` | `ModuleDoc.to_markdown` | code |
+| 24 | 17 | `ontic/cfd/godunov.py:385-554` | `exact_riemann` | code |
+| 25 | 17 | `ontic/docs/api_reference.py:544-617` | `ModuleDoc.to_markdown` | code |
 | 26 | 16 | `demos/layer9_engine_integration.py:345-526` | `run_validation` | scripts |
 | 27 | 16 | `tools/scripts/release_check.py:219-321` | `main` | scripts |
-| 28 | 16 | `tensornet/cfd/kantorovich.py:311-395` | `NewtonKantorovichVerifier.verify_profile` | code |
-| 29 | 16 | `tensornet/digital_twin/health_monitor.py:433-499` | `AnomalyDetector.check` | code |
-| 30 | 16 | `tensornet/flight_validation/reports.py:183-285` | `ValidationReport._generate_markdown` | code |
-| 31 | 16 | `tensornet/integration/workflows.py:269-351` | `WorkflowEngine.run` | code |
-| 32 | 16 | `tensornet/simulation/mission.py:350-532` | `MissionSimulator.run` | code |
+| 28 | 16 | `ontic/cfd/kantorovich.py:311-395` | `NewtonKantorovichVerifier.verify_profile` | code |
+| 29 | 16 | `ontic/digital_twin/health_monitor.py:433-499` | `AnomalyDetector.check` | code |
+| 30 | 16 | `ontic/flight_validation/reports.py:183-285` | `ValidationReport._generate_markdown` | code |
+| 31 | 16 | `ontic/integration/workflows.py:269-351` | `WorkflowEngine.run` | code |
+| 32 | 16 | `ontic/simulation/mission.py:350-532` | `MissionSimulator.run` | code |
 
 ### Worst Maintainability Index Files
 
 | MI | File | LOC | Avg CC | Functions |
 |----|------|-----|--------|-----------|
-| 0.2 | `tensornet/docs/api_reference.py` | 1058 | 6.94 | 34 |
-| 3.0 | `tensornet/validation/physical.py` | 893 | 2.44 | 39 |
-| 3.2 | `tensornet/quantum/error_mitigation.py` | 843 | 2.13 | 63 |
-| 3.4 | `tensornet/cfd/tt_poisson.py` | 839 | 2.79 | 29 |
-| 3.5 | `tensornet/cfd/tt_cfd.py` | 838 | 2.97 | 38 |
-| 3.8 | `tensornet/quantum/hybrid.py` | 790 | 3.00 | 52 |
-| 3.8 | `tensornet/certification/do178c.py` | 828 | 2.34 | 47 |
-| 4.2 | `tensornet/cfd/ns_3d.py` | 767 | 1.96 | 24 |
-| 4.4 | `tensornet/docs/user_guides.py` | 920 | 2.58 | 24 |
-| 5.1 | `tensornet/simulation/flight_data.py` | 675 | 5.70 | 20 |
+| 0.2 | `ontic/docs/api_reference.py` | 1058 | 6.94 | 34 |
+| 3.0 | `ontic/validation/physical.py` | 893 | 2.44 | 39 |
+| 3.2 | `ontic/quantum/error_mitigation.py` | 843 | 2.13 | 63 |
+| 3.4 | `ontic/cfd/tt_poisson.py` | 839 | 2.79 | 29 |
+| 3.5 | `ontic/cfd/tt_cfd.py` | 838 | 2.97 | 38 |
+| 3.8 | `ontic/quantum/hybrid.py` | 790 | 3.00 | 52 |
+| 3.8 | `ontic/certification/do178c.py` | 828 | 2.34 | 47 |
+| 4.2 | `ontic/cfd/ns_3d.py` | 767 | 1.96 | 24 |
+| 4.4 | `ontic/docs/user_guides.py` | 920 | 2.58 | 24 |
+| 5.1 | `ontic/simulation/flight_data.py` | 675 | 5.70 | 20 |
 
 ---
 

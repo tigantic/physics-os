@@ -95,7 +95,7 @@ The **Hummingbird** catalyst (`Ru-Fe₃S₄`) enables ambient-temperature nitrog
 
 ### 1. Run Catalyst Screening
 ```python
-from tensornet.fusion import screen_catalysts, N2_TRIPLE_BOND
+from ontic.fusion import screen_catalysts, N2_TRIPLE_BOND
 
 result = screen_catalysts(N2_TRIPLE_BOND)
 print(f"Best: {result.best_catalyst.formula}")
@@ -104,7 +104,7 @@ print(f"Q = {result.best_resonance.resonance_quality:.4f}")
 
 ### 2. Run Activation Simulation
 ```python
-from tensornet.fusion import (
+from ontic.fusion import (
     ResonantCatalysisSolver,
     create_hummingbird_catalyst,
     N2_TRIPLE_BOND
@@ -129,7 +129,7 @@ print(f"Final BO: {result.trajectory[-1].bond_order:.2f}")
 
 ### 3. Full Demo with Attestation
 ```python
-from tensornet.fusion import run_hummingbird_demo
+from ontic.fusion import run_hummingbird_demo
 
 result, attestation = run_hummingbird_demo()
 ```
@@ -185,7 +185,7 @@ $$D_{eff} = D_e \times \left(\frac{BO}{3}\right)^{1.5}$$
 
 | File | Description |
 |------|-------------|
-| `tensornet/fusion/resonant_catalysis.py` | Core simulation module |
+| `ontic/fusion/resonant_catalysis.py` | Core simulation module |
 | `HUMMINGBIRD_ATTESTATION.json` | Machine-readable results |
 | `HUMMINGBIRD_BENCH_PROTOCOL.md` | This document |
 

@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Elastic waves, FWI interfaces"
 
 source_files:
-  - "tensornet/geophysics/seismology.py"
+  - "ontic/geophysics/seismology.py"
 
 tests:
   smoke:

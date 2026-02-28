@@ -368,7 +368,7 @@ def compress_to_qtt(data: np.ndarray, max_rank: int = 64) -> dict:
     into a compressed manifold.
     """
     import torch
-    from tensornet.cfd.pure_qtt_ops import dense_to_qtt, qtt_to_dense
+    from ontic.cfd.pure_qtt_ops import dense_to_qtt, qtt_to_dense
     
     print(f"\n🔧 Compressing to QTT manifold...")
     print(f"  Input shape: {data.shape}")

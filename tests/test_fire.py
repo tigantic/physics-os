@@ -1,5 +1,5 @@
 """
-Test Module: tensornet/emergency/fire.py
+Test Module: ontic/emergency/fire.py
 
 Phase 14: Wildfire Spread Prediction
 Constitutional Compliance:
@@ -20,7 +20,7 @@ import numpy as np
 import pytest
 import torch
 
-from tensornet.applied.emergency.fire import FireReport, FireSim
+from ontic.applied.emergency.fire import FireReport, FireSim
 
 # ============================================================================
 # FIXTURES

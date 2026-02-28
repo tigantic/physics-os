@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Docking, FEP/TI hooks"
 
 source_files:
-  - "tensornet/chemistry/pes.py"
+  - "ontic/chemistry/pes.py"
 
 tests:
   smoke:

@@ -1,4 +1,4 @@
-# Module `tensornet.flight_validation`
+# Module `ontic.flight_validation`
 
 Flight data validation module for V&V campaign.
 

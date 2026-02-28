@@ -13,8 +13,8 @@ state: "V0.2"
 description: "Digital/analog interfaces"
 
 source_files:
-  - "tensornet/algorithms/tebd.py"
-  - "tensornet/algorithms/tdvp.py"
+  - "ontic/algorithms/tebd.py"
+  - "ontic/algorithms/tdvp.py"
 
 tests:
   smoke:

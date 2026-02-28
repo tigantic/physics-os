@@ -35,7 +35,7 @@ Result container for TEBD time evolution.
 
 #### Attributes
 
-- **psi** (`<class 'tensornet.core.mps.MPS'>`): 
+- **psi** (`<class 'ontic.core.mps.MPS'>`): 
 - **times** (`typing.List[float]`): 
 - **energies** (`typing.Optional[typing.List[float]]`): 
 - **entropies** (`typing.List[typing.List[float]]`): 
@@ -46,7 +46,7 @@ Result container for TEBD time evolution.
 ##### `__init__`
 
 ```python
-def __init__(self, psi: tensornet.core.mps.MPS, times: List[float], energies: Optional[List[float]], entropies: List[List[float]], truncation_errors: List[float]) -> None
+def __init__(self, psi: ontic.core.mps.MPS, times: List[float], energies: Optional[List[float]], entropies: List[List[float]], truncation_errors: List[float]) -> None
 ```
 
 ## Functions
@@ -120,7 +120,7 @@ H = -J Σᵢ SᶻᵢSᶻᵢ₊₁ - g Σᵢ Sˣᵢ
 ### `imaginary_time_evolution`
 
 ```python
-def imaginary_time_evolution(psi: tensornet.core.mps.MPS, gates_odd: List[torch.Tensor], gates_even: List[torch.Tensor], num_steps: int, chi_max: int, order: int = 2, cutoff: float = 1e-14, normalize_every: int = 1, verbose: bool = False) -> tensornet.core.mps.MPS
+def imaginary_time_evolution(psi: ontic.core.mps.MPS, gates_odd: List[torch.Tensor], gates_even: List[torch.Tensor], num_steps: int, chi_max: int, order: int = 2, cutoff: float = 1e-14, normalize_every: int = 1, verbose: bool = False) -> ontic.core.mps.MPS
 ```
 
 Imaginary time evolution for ground state preparation.
@@ -131,7 +131,7 @@ As β → ∞, |ψ⟩ → ground state (if overlap is non-zero).
 
 **Parameters:**
 
-- **psi** (`<class 'tensornet.core.mps.MPS'>`): Initial MPS (modified in-place) gates_odd, gates_even: Imaginary time gates
+- **psi** (`<class 'ontic.core.mps.MPS'>`): Initial MPS (modified in-place) gates_odd, gates_even: Imaginary time gates
 - **num_steps** (`<class 'int'>`): Number of steps
 - **chi_max** (`<class 'int'>`): Maximum bond dimension
 - **order** (`<class 'int'>`): Trotter order
@@ -139,21 +139,21 @@ As β → ∞, |ψ⟩ → ground state (if overlap is non-zero).
 - **normalize_every** (`<class 'int'>`): Normalize every N steps
 - **verbose** (`<class 'bool'>`): Print progress
 
-**Returns**: `<class 'tensornet.core.mps.MPS'>` - Ground state MPS
+**Returns**: `<class 'ontic.core.mps.MPS'>` - Ground state MPS
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\tebd.py:461](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\tebd.py#L461)*
 
 ### `tebd`
 
 ```python
-def tebd(psi: tensornet.core.mps.MPS, gates_odd: List[torch.Tensor], gates_even: List[torch.Tensor], num_steps: int, dt: float, chi_max: int, order: int = 2, cutoff: float = 1e-14, compute_energy: Optional[Callable[[tensornet.core.mps.MPS], float]] = None, compute_every: int = 1, normalize_every: int = 1, verbose: bool = False) -> tebd.TEBDResult
+def tebd(psi: ontic.core.mps.MPS, gates_odd: List[torch.Tensor], gates_even: List[torch.Tensor], num_steps: int, dt: float, chi_max: int, order: int = 2, cutoff: float = 1e-14, compute_energy: Optional[Callable[[ontic.core.mps.MPS], float]] = None, compute_every: int = 1, normalize_every: int = 1, verbose: bool = False) -> tebd.TEBDResult
 ```
 
 Run TEBD time evolution.
 
 **Parameters:**
 
-- **psi** (`<class 'tensornet.core.mps.MPS'>`): Initial MPS (modified in-place)
+- **psi** (`<class 'ontic.core.mps.MPS'>`): Initial MPS (modified in-place)
 - **gates_odd** (`typing.List[torch.Tensor]`): Gates for odd bonds
 - **gates_even** (`typing.List[torch.Tensor]`): Gates for even bonds
 - **num_steps** (`<class 'int'>`): Number of time steps
@@ -161,7 +161,7 @@ Run TEBD time evolution.
 - **chi_max** (`<class 'int'>`): Maximum bond dimension
 - **order** (`<class 'int'>`): Trotter order
 - **cutoff** (`<class 'float'>`): SVD cutoff
-- **compute_energy** (`typing.Optional[typing.Callable[[tensornet.core.mps.MPS], float]]`): Optional function to compute energy
+- **compute_energy** (`typing.Optional[typing.Callable[[ontic.core.mps.MPS], float]]`): Optional function to compute energy
 - **compute_every** (`<class 'int'>`): Compute observables every N steps
 - **normalize_every** (`<class 'int'>`): Normalize every N steps
 - **verbose** (`<class 'bool'>`): Print progress
@@ -173,7 +173,7 @@ Run TEBD time evolution.
 ### `tebd_step`
 
 ```python
-def tebd_step(psi: tensornet.core.mps.MPS, gates_odd: List[torch.Tensor], gates_even: List[torch.Tensor], chi_max: int, cutoff: float = 1e-14, order: int = 2) -> float
+def tebd_step(psi: ontic.core.mps.MPS, gates_odd: List[torch.Tensor], gates_even: List[torch.Tensor], chi_max: int, cutoff: float = 1e-14, order: int = 2) -> float
 ```
 
 Perform one TEBD step (second-order Trotter).
@@ -183,7 +183,7 @@ For second-order:
 
 **Parameters:**
 
-- **psi** (`<class 'tensornet.core.mps.MPS'>`): MPS (modified in-place)
+- **psi** (`<class 'ontic.core.mps.MPS'>`): MPS (modified in-place)
 - **gates_odd** (`typing.List[torch.Tensor]`): Gates for odd bonds (0-1, 2-3, ...)
 - **gates_even** (`typing.List[torch.Tensor]`): Gates for even bonds (1-2, 3-4, ...)
 - **chi_max** (`<class 'int'>`): Maximum bond dimension

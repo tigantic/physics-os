@@ -55,7 +55,7 @@ def proof_22_1_saha_equilibrium():
     """
     print("\nProof 22.1: Saha Ionization Equilibrium")
 
-    from tensornet.cfd.plasma import Species, saha_ionization
+    from ontic.cfd.plasma import Species, saha_ionization
 
     # Test 1: High temperature should give high electron density
     n_e_high_T = saha_ionization(T=15000.0, p=1000.0, species="N2")
@@ -107,7 +107,7 @@ def proof_22_2_plasma_frequency():
     """
     print("\nProof 22.2: Plasma Frequency Physics")
 
-    from tensornet.cfd.plasma import plasma_frequency
+    from ontic.cfd.plasma import plasma_frequency
 
     # Test known value
     n_e = 1e18  # electrons per m³
@@ -164,7 +164,7 @@ def proof_22_3_blackout_geometry():
     """
     print("\nProof 22.3: Blackout Geometry Consistency")
 
-    from tensornet.cfd.plasma import plasma_frequency, rf_attenuation
+    from ontic.cfd.plasma import plasma_frequency, rf_attenuation
 
     # Test electron density field
     n_e_values = torch.tensor([1e15, 1e16, 1e17, 1e18], dtype=torch.float64)
@@ -226,7 +226,7 @@ def proof_22_4_fads_sensitivity():
     """
     print("\nProof 22.4: FADS Sensor Sensitivity")
 
-    from tensornet.sim.simulation.sensors import (FADSSensor, NoiseModel,
+    from ontic.sim.simulation.sensors import (FADSSensor, NoiseModel,
                                               SensorNoiseConfig)
 
     # Create FADS with no noise for clean sensitivity
@@ -291,7 +291,7 @@ def proof_22_5_differentiable_cfd():
     """
     print("\nProof 22.5: Differentiable CFD Conservation")
 
-    from tensornet.cfd.differentiable import DifferentiableEuler1D
+    from ontic.cfd.differentiable import DifferentiableEuler1D
 
     # Setup
     nx = 50
@@ -356,7 +356,7 @@ def proof_22_6_aerotrn_drift():
     """
     print("\nProof 22.6: Aero-TRN Navigation Drift")
 
-    from tensornet.aerospace.guidance.aero_trn import (AeroTRN, AeroTRNConfig,
+    from ontic.aerospace.guidance.aero_trn import (AeroTRN, AeroTRNConfig,
                                              TerrainMap,
                                              compute_aero_signature)
 
@@ -426,7 +426,7 @@ def proof_22_7_jet_penetration():
     """
     print("\nProof 22.7: Jet Penetration Correlations")
 
-    from tensornet.cfd.jet_interaction import (barrel_shock_radius,
+    from ontic.cfd.jet_interaction import (barrel_shock_radius,
                                                jet_penetration_height,
                                                mach_disk_location)
 
@@ -486,7 +486,7 @@ def proof_22_8_ji_forces():
     """
     print("\nProof 22.8: Jet Interaction Forces")
 
-    from tensornet.cfd.jet_interaction import (JetConfig,
+    from ontic.cfd.jet_interaction import (JetConfig,
                                                JetInteractionCorrector,
                                                UnderexpandedJet)
 
@@ -553,7 +553,7 @@ def proof_22_9_divert_accuracy():
     """
     print("\nProof 22.9: Divert Guidance Accuracy")
 
-    from tensornet.aerospace.guidance.divert import (DivertGuidance, DivertThruster,
+    from ontic.aerospace.guidance.divert import (DivertGuidance, DivertThruster,
                                            TargetState, ThrusterConfig,
                                            VehicleState, time_to_go,
                                            zero_effort_miss)

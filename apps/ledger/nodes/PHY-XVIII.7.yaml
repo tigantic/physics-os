@@ -13,7 +13,7 @@ state: "V0.2"
 description: "FE-squared, HMM, QM/MM bridges"
 
 source_files:
-  - "tensornet/multiscale/multiscale.py"
+  - "ontic/multiscale/multiscale.py"
 
 tests:
   smoke:

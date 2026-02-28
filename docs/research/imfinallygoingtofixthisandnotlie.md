@@ -62,7 +62,7 @@ When the user calls out bullshit, they are right. I shall not defend broken code
 
 | # | Line | Category | Code |
 |---|------|----------|------|
-| 1 | 30 | dense_to_qtt import | `from tensornet.cfd.qtt_eval import dense_to_qtt_cores` |
+| 1 | 30 | dense_to_qtt import | `from ontic.cfd.qtt_eval import dense_to_qtt_cores` |
 | 2 | 61 | dense_to_qtt call | `cores = dense_to_qtt_cores(values, max_rank=max_rank)` |
 | 3 | 108 | list comprehension + range | `pivots_left = [set(range(min(initial_pivots, 2**d))) for d in range(n_qubits)]` |
 | 4 | 111 | list comprehension + range | `for d in range(n_qubits)` |
@@ -106,7 +106,7 @@ When the user calls out bullshit, they are right. I shall not defend broken code
 | 42 | 1033 | torch.ones_like x2 | `torch.where(x < 0.5, torch.ones_like(x), 0.125 * torch.ones_like(x))` |
 | 43 | 1034 | torch.zeros | `u = torch.zeros(N)` |
 | 44 | 1035 | torch.ones_like x2 | `torch.where(x < 0.5, torch.ones_like(x), 0.1 * torch.ones_like(x))` |
-| 45 | 1041 | dense_to_qtt import | `from tensornet.cfd.qtt_eval import dense_to_qtt_cores` |
+| 45 | 1041 | dense_to_qtt import | `from ontic.cfd.qtt_eval import dense_to_qtt_cores` |
 | 46 | 1043 | dense_to_qtt call | `rho_cores = dense_to_qtt_cores(rho, max_rank=32)` |
 | 47 | 1044 | dense_to_qtt call | `rhou_cores = dense_to_qtt_cores(rhou, max_rank=32)` |
 | 48 | 1045 | dense_to_qtt call | `E_cores = dense_to_qtt_cores(E, max_rank=32)` |
@@ -142,10 +142,10 @@ When the user calls out bullshit, they are right. I shall not defend broken code
 | 71 | 217 | reshape | `core = fiber.reshape(r_left, 2, 1)` |
 | 72 | 221 | list comp | `params = sum(c.numel() for c in cores)` |
 | 73 | 222 | list comp | `max_r = max(c.shape[-1] for c in cores)` |
-| 74 | 261 | dense_to_qtt import | `from tensornet.cfd.qtt_eval import dense_to_qtt_cores` |
+| 74 | 261 | dense_to_qtt import | `from ontic.cfd.qtt_eval import dense_to_qtt_cores` |
 | 75 | 262 | dense_to_qtt call | `return dense_to_qtt_cores(values, max_rank=max_rank, tol=tol)` |
 | 76 | 269 | for loop | `for c in range(n_chunks):` |
-| 77 | 275 | dense_to_qtt import | `from tensornet.cfd.qtt_eval import dense_to_qtt_cores` |
+| 77 | 275 | dense_to_qtt import | `from ontic.cfd.qtt_eval import dense_to_qtt_cores` |
 | 78 | 276 | dense_to_qtt call | `chunk_cores = dense_to_qtt_cores(values, max_rank=max_rank, tol=tol)` |
 | 79 | 319 | for loop | `for k in range(n_qubits):` |
 | 80 | 332 | for loop | `for sweep in range(n_sweeps):` |
@@ -379,7 +379,7 @@ When the user calls out bullshit, they are right. I shall not defend broken code
 
 ## BONUS: Additional Files With Same Issues
 
-Searching the rest of tensornet/cfd/:
+Searching the rest of ontic/cfd/:
 
 | # | File | Line | Issue |
 |---|------|------|-------|
@@ -473,12 +473,12 @@ Searching the rest of tensornet/cfd/:
 ### Session 2026-01-28 (2) — MPO ARITHMETIC & SHIFT OPERATOR FIXES
 
 **Files Modified:**
-- `tensornet/cfd/pure_qtt_ops.py` 
+- `ontic/cfd/pure_qtt_ops.py` 
   - Added MPO arithmetic: `mpo_scale`, `mpo_add`, `mpo_negate`, `mpo_subtract`
   - Rewrote `shift_mpo` with correct LSB-to-MSB carry propagation
   - Fixed `derivative_mpo` sign: (S⁻ - S⁺)/(2dx) instead of (S⁺ - S⁻)/(2dx)
   - Removed duplicate return statement (dead code cleanup)
-- `tensornet/cfd/weno_native_tt.py`
+- `ontic/cfd/weno_native_tt.py`
   - Added complexity warning to `compute_weno_weights_tt` (O(N) fallback for small grids)
 
 **Issue #232-234 (P0) — O(N²) Matrix Construction:**
@@ -517,8 +517,8 @@ Searching the rest of tensornet/cfd/:
 ### Session 2026-01-28 — PRIMARY FIXES COMPLETE
 
 **Files Modified:**
-- `tensornet/cfd/tci_true.py` (lines 145-157, 188-196, 221-254, 321-337)
-- `tensornet/cfd/qtt_tci.py` (lines 564-603, 651-656, 244-251, 1087-1160)
+- `ontic/cfd/tci_true.py` (lines 145-157, 188-196, 221-254, 321-337)
+- `ontic/cfd/qtt_tci.py` (lines 564-603, 651-656, 244-251, 1087-1160)
 
 **Benchmark Results (RTX 5070 Laptop GPU):**
 | Operation | Performance |
@@ -619,9 +619,9 @@ Derivative error: 6.31e-04
 ```
 
 ### euler_3d.py O(N²) Loop — ACCEPTABLE
-Located O(Nx×Nz) loops in `_sweep_x`, `_sweep_y`, `_sweep_z` in `tensornet/cfd/euler_3d.py`.
+Located O(Nx×Nz) loops in `_sweep_x`, `_sweep_y`, `_sweep_z` in `ontic/cfd/euler_3d.py`.
 **Status:** This is the reference implementation. The optimized version exists at
-`tensornet/cfd/fast_euler_3d.py` which uses pure QTT operations with O(log N × r³) complexity.
+`ontic/cfd/fast_euler_3d.py` which uses pure QTT operations with O(log N × r³) complexity.
 
 ### All Critical Fixes Complete
 
@@ -728,8 +728,8 @@ Throughput: 946 ops/sec
    - Priority: LOW — wait for Python validation first
 
 ### Files Created This Session
-- [tensornet/cfd/qtt_streaming.py](tensornet/cfd/qtt_streaming.py) — Working SVD-based QTT construction from function
-- [tensornet/cfd/tci_fixed.py](tensornet/cfd/tci_fixed.py) — Attempted TCI fix (still has issues)
+- [ontic/cfd/qtt_streaming.py](ontic/cfd/qtt_streaming.py) — Working SVD-based QTT construction from function
+- [ontic/cfd/tci_fixed.py](ontic/cfd/tci_fixed.py) — Attempted TCI fix (still has issues)
 
 ### Core Pipeline: PRODUCTION READY ✅
 ```

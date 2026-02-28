@@ -87,7 +87,7 @@ from qtenet.solvers.vlasov6d_genuine import (
     Vlasov6DGenuineConfig,
     Vlasov6DGenuineState,
 )
-from tensornet.core.trace import trace_session
+from ontic.core.trace import trace_session
 from tpc.format import BenchmarkResult, HardwareSpec, QTTParams
 from tpc.generator import CertificateGenerator
 

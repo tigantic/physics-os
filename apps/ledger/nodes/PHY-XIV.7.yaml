@@ -13,7 +13,7 @@ state: "V0.2"
 description: "High-temp material properties"
 
 source_files:
-  - "tensornet/materials/ceramics.py"
+  - "ontic/materials/ceramics.py"
 
 tests:
   smoke:

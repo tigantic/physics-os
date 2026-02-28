@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Symplectic and variational integrators"
 
 source_files:
-  - "tensornet/mechanics/symplectic.py"
+  - "ontic/mechanics/symplectic.py"
 
 tests:
   smoke:

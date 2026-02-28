@@ -9,7 +9,7 @@
 
 ```
 HyperTensor-VM-main/
-├── 📁 tensornet/           # Core library (329 modules)
+├── 📁 ontic/           # Core library (329 modules)
 ├── 📁 demos/               # Demo scripts & evidence
 ├── 📁 apps/                # Applications (glass_cockpit, global_eye)
 ├── 📁 crates/              # Rust bridges (CUDA, core)
@@ -30,7 +30,7 @@ HyperTensor-VM-main/
 
 ---
 
-## 🔬 tensornet/ — Core Library (329 modules)
+## 🔬 ontic/ — Core Library (329 modules)
 
 ### By Module Count
 
@@ -91,10 +91,10 @@ HyperTensor-VM-main/
 
 ---
 
-### 🌊 tensornet/cfd/ — CFD Engine (70 modules)
+### 🌊 ontic/cfd/ — CFD Engine (70 modules)
 
 ```
-tensornet/cfd/
+ontic/cfd/
 ├── __init__.py                     # Exports all
 │
 ├── # QTT Core
@@ -173,10 +173,10 @@ tensornet/cfd/
 
 ---
 
-### 🔮 tensornet/quantum/ — Quantum Computing (7 modules)
+### 🔮 ontic/quantum/ — Quantum Computing (7 modules)
 
 ```
-tensornet/quantum/
+ontic/quantum/
 ├── __init__.py
 ├── quantum_bridge.py               # Quantum-classical bridge
 ├── quantum_gates.py                # Gate implementations
@@ -188,10 +188,10 @@ tensornet/quantum/
 
 ---
 
-### ⚛️ tensornet/fusion/ — Fusion Reactor Simulation (9 modules)
+### ⚛️ ontic/fusion/ — Fusion Reactor Simulation (9 modules)
 
 ```
-tensornet/fusion/
+ontic/fusion/
 ├── __init__.py
 ├── tokamak_core.py                 # Tokamak physics
 ├── plasma_equilibrium.py           # MHD equilibrium
@@ -205,10 +205,10 @@ tensornet/fusion/
 
 ---
 
-### 🧠 tensornet/ml_surrogates/ — Machine Learning (8 modules)
+### 🧠 ontic/ml_surrogates/ — Machine Learning (8 modules)
 
 ```
-tensornet/ml_surrogates/
+ontic/ml_surrogates/
 ├── __init__.py
 ├── neural_operator.py              # DeepONet, FNO
 ├── physics_informed.py             # PINNs
@@ -221,10 +221,10 @@ tensornet/ml_surrogates/
 
 ---
 
-### 🖥️ tensornet/gpu/ — GPU Acceleration (7 modules)
+### 🖥️ ontic/gpu/ — GPU Acceleration (7 modules)
 
 ```
-tensornet/gpu/
+ontic/gpu/
 ├── __init__.py
 ├── memory_manager.py               # VRAM management
 ├── kernel_launcher.py              # Kernel dispatch
@@ -440,17 +440,17 @@ demos/
 
 ### CFD Work
 ```
-tensornet/cfd/qtt.py           → QTT fundamentals
-tensornet/cfd/ns_qtt_solver.py → Navier-Stokes solver
-tensornet/cfd/qtt_spectral.py  → FFT/WHT operations
-tensornet/cfd/chi_diagnostic.py → Singularity detection
+ontic/cfd/qtt.py           → QTT fundamentals
+ontic/cfd/ns_qtt_solver.py → Navier-Stokes solver
+ontic/cfd/qtt_spectral.py  → FFT/WHT operations
+ontic/cfd/chi_diagnostic.py → Singularity detection
 ```
 
 ### Black Swan Hunting
 ```
 navier_stokes_black_swan.py        → Main hunter
-tensornet/cfd/singularity_hunter.py → Detection engine
-tensornet/cfd/qtt_regularity.py    → BKM criterion
+ontic/cfd/singularity_hunter.py → Detection engine
+ontic/cfd/qtt_regularity.py    → BKM criterion
 ```
 
 ### Superconductor Research
@@ -463,7 +463,7 @@ li3incl48br12_superionic_gauntlet.py → Superionic
 ### Fusion Simulation
 ```
 starheart_fusion_solver.py         → Fusion solver
-tensornet/fusion/*                 → Fusion library
+ontic/fusion/*                 → Fusion library
 starheart_gauntlet.py              → Validation
 ```
 
@@ -489,7 +489,7 @@ python starheart_gauntlet.py
 python navier_stokes_black_swan.py
 
 # Explore CFD
-python -c "from tensornet.cfd import *; print('CFD loaded!')"
+python -c "from ontic.cfd import *; print('CFD loaded!')"
 ```
 
 ---

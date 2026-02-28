@@ -166,73 +166,73 @@ def _check_adapter_dir(pkg: Path, adapters: list[str], label: str) -> None:
 
 @gauntlet("qm_adapter_files_qmech", layer="adapter_files")
 def test_qm_adapter_files_qmech():
-    _check_adapter_dir(ROOT / "tensornet" / "quantum_mechanics" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "quantum_mechanics" / "trace_adapters",
                        QM_ADAPTERS_QMECH, "quantum mechanics (qmech)")
 
 
 @gauntlet("qm_adapter_files_qm", layer="adapter_files")
 def test_qm_adapter_files_qm():
-    _check_adapter_dir(ROOT / "tensornet" / "qm" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "qm" / "trace_adapters",
                        QM_ADAPTERS_QM, "quantum mechanics (qm)")
 
 
 @gauntlet("qmb_adapter_files_cond", layer="adapter_files")
 def test_qmb_adapter_files_cond():
-    _check_adapter_dir(ROOT / "tensornet" / "condensed_matter" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "condensed_matter" / "trace_adapters",
                        QMB_ADAPTERS_COND, "quantum many-body (cond_matter)")
 
 
 @gauntlet("qmb_adapter_files_alg", layer="adapter_files")
 def test_qmb_adapter_files_alg():
-    _check_adapter_dir(ROOT / "tensornet" / "algorithms" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "algorithms" / "trace_adapters",
                        QMB_ADAPTERS_ALG, "quantum many-body (algorithms)")
 
 
 @gauntlet("qmb_adapter_files_qft", layer="adapter_files")
 def test_qmb_adapter_files_qft():
-    _check_adapter_dir(ROOT / "tensornet" / "qft" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "qft" / "trace_adapters",
                        QMB_ADAPTERS_QFT, "quantum many-body (qft)")
 
 
 @gauntlet("es_adapter_files", layer="adapter_files")
 def test_es_adapter_files():
-    _check_adapter_dir(ROOT / "tensornet" / "electronic_structure" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "electronic_structure" / "trace_adapters",
                        ES_ADAPTERS, "electronic structure")
 
 
 @gauntlet("ss_adapter_files", layer="adapter_files")
 def test_ss_adapter_files():
-    _check_adapter_dir(ROOT / "tensornet" / "condensed_matter" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "condensed_matter" / "trace_adapters",
                        SS_ADAPTERS, "solid state")
 
 
 @gauntlet("np_adapter_files_nuc", layer="adapter_files")
 def test_np_adapter_files_nuc():
-    _check_adapter_dir(ROOT / "tensornet" / "nuclear" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "nuclear" / "trace_adapters",
                        NP_ADAPTERS_NUC, "nuclear")
 
 
 @gauntlet("np_adapter_files_qft", layer="adapter_files")
 def test_np_adapter_files_qft():
-    _check_adapter_dir(ROOT / "tensornet" / "qft" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "qft" / "trace_adapters",
                        NP_ADAPTERS_QFT, "particle (qft)")
 
 
 @gauntlet("np_adapter_files_part", layer="adapter_files")
 def test_np_adapter_files_part():
-    _check_adapter_dir(ROOT / "tensornet" / "particle" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "particle" / "trace_adapters",
                        NP_ADAPTERS_PART, "particle")
 
 
 @gauntlet("cp_adapter_files", layer="adapter_files")
 def test_cp_adapter_files():
-    _check_adapter_dir(ROOT / "tensornet" / "chemistry" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "chemistry" / "trace_adapters",
                        CP_ADAPTERS, "chemical physics")
 
 
 @gauntlet("qi_adapter_files", layer="adapter_files")
 def test_qi_adapter_files():
-    _check_adapter_dir(ROOT / "tensornet" / "quantum" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "quantum" / "trace_adapters",
                        QI_ADAPTERS, "quantum info")
 
 
@@ -251,7 +251,7 @@ def test_adapter_total_count():
 
 @gauntlet("core_scf_adapter", layer="core_adapters")
 def test_core_scf_adapter():
-    from tensornet.core.scf_trace_adapter import SCFTraceAdapter, SCFConvergence
+    from ontic.core.scf_trace_adapter import SCFTraceAdapter, SCFConvergence
     adapter = SCFTraceAdapter("test_scf")
     assert hasattr(adapter, "run")
     assert callable(adapter.run)
@@ -259,7 +259,7 @@ def test_core_scf_adapter():
 
 @gauntlet("core_eigenvalue_adapter", layer="core_adapters")
 def test_core_eigenvalue_adapter():
-    from tensornet.core.eigenvalue_trace_adapter import (
+    from ontic.core.eigenvalue_trace_adapter import (
         EigenvalueTraceAdapter, EigenvalueConvergence,
     )
     adapter = EigenvalueTraceAdapter("test_eig")
@@ -415,7 +415,7 @@ def test_tpc_phase8_importable():
 
 @gauntlet("qm_tise_solve", layer="qm_solvers")
 def test_qm_tise_solve():
-    from tensornet.quantum.quantum_mechanics.trace_adapters.tise_adapter import TISETraceAdapter
+    from ontic.quantum.quantum_mechanics.trace_adapters.tise_adapter import TISETraceAdapter
     adapter = TISETraceAdapter(x_min=-10.0, x_max=10.0, n_grid=200, mass=1.0)
     evals, cons, session = adapter.solve(n_states=5)
     assert len(evals) >= 3, f"Expected ≥3 eigenvalues, got {len(evals)}"
@@ -425,7 +425,7 @@ def test_qm_tise_solve():
 
 @gauntlet("qm_tdse_solve", layer="qm_solvers")
 def test_qm_tdse_solve():
-    from tensornet.quantum.quantum_mechanics.trace_adapters.tdse_adapter import TDSETraceAdapter
+    from ontic.quantum.quantum_mechanics.trace_adapters.tdse_adapter import TDSETraceAdapter
     adapter = TDSETraceAdapter(x_min=-20.0, x_max=20.0, n_grid=256, mass=1.0)
     x = np.linspace(-20, 20, 256)
     psi_0 = np.exp(-x**2 / 2.0).astype(complex)
@@ -437,7 +437,7 @@ def test_qm_tdse_solve():
 
 @gauntlet("qm_scattering_solve", layer="qm_solvers")
 def test_qm_scattering_solve():
-    from tensornet.quantum.qm.trace_adapters.scattering_adapter import ScatteringTraceAdapter
+    from ontic.quantum.qm.trace_adapters.scattering_adapter import ScatteringTraceAdapter
     adapter = ScatteringTraceAdapter(k=1.0, l_max=10)
     dsigma, cons, session = adapter.evaluate()
     assert cons.total_cross_section > 0
@@ -446,7 +446,7 @@ def test_qm_scattering_solve():
 
 @gauntlet("qm_semiclassical_solve", layer="qm_solvers")
 def test_qm_semiclassical_solve():
-    from tensornet.quantum.qm.trace_adapters.semiclassical_adapter import SemiclassicalTraceAdapter
+    from ontic.quantum.qm.trace_adapters.semiclassical_adapter import SemiclassicalTraceAdapter
     adapter = SemiclassicalTraceAdapter(mass=1.0)
     energies, cons, session = adapter.evaluate(n_levels=5)
     assert cons.n_levels >= 1
@@ -455,7 +455,7 @@ def test_qm_semiclassical_solve():
 
 @gauntlet("qm_path_integrals_solve", layer="qm_solvers")
 def test_qm_path_integrals_solve():
-    from tensornet.quantum.quantum_mechanics.trace_adapters.path_integrals_adapter import PathIntegralsTraceAdapter
+    from ontic.quantum.quantum_mechanics.trace_adapters.path_integrals_adapter import PathIntegralsTraceAdapter
     adapter = PathIntegralsTraceAdapter(n_beads=8, temperature=1.0, mass=1.0)
     result, cons, session = adapter.evaluate(n_mc_steps=100)
     assert cons.detailed_balance
@@ -468,8 +468,8 @@ def test_qm_path_integrals_solve():
 
 @gauntlet("qmb_dmrg_solve", layer="qmb_solvers")
 def test_qmb_dmrg_solve():
-    from tensornet.algorithms.trace_adapters.dmrg_adapter import DMRGTraceAdapter
-    from tensornet.mps.hamiltonians import heisenberg_mpo
+    from ontic.algorithms.trace_adapters.dmrg_adapter import DMRGTraceAdapter
+    from ontic.mps.hamiltonians import heisenberg_mpo
     mpo = heisenberg_mpo(6)
     adapter = DMRGTraceAdapter(chi_max=16, num_sweeps=4)
     result, cons, session = adapter.evaluate(H_mpo=mpo)
@@ -479,7 +479,7 @@ def test_qmb_dmrg_solve():
 
 @gauntlet("qmb_quantum_spin_solve", layer="qmb_solvers")
 def test_qmb_quantum_spin_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.quantum_spin_adapter import QuantumSpinTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.quantum_spin_adapter import QuantumSpinTraceAdapter
     adapter = QuantumSpinTraceAdapter(L=6, J=1.0, Delta=1.0)
     result, cons, session = adapter.evaluate()
     assert cons.ground_energy < 0
@@ -488,7 +488,7 @@ def test_qmb_quantum_spin_solve():
 
 @gauntlet("qmb_strongly_correlated_solve", layer="qmb_solvers")
 def test_qmb_strongly_correlated_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.strongly_correlated_adapter import StronglyCorrelatedTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.strongly_correlated_adapter import StronglyCorrelatedTraceAdapter
     adapter = StronglyCorrelatedTraceAdapter(U=4.0, mu=2.0, D=1.0, beta=10.0)
     result, cons, session = adapter.evaluate(max_iter=10, tol=1e-3)
     assert len(session.entries) >= 2
@@ -496,7 +496,7 @@ def test_qmb_strongly_correlated_solve():
 
 @gauntlet("qmb_topological_solve", layer="qmb_solvers")
 def test_qmb_topological_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.topological_adapter import TopologicalTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.topological_adapter import TopologicalTraceAdapter
     adapter = TopologicalTraceAdapter(nk=10)
     C, cons, session = adapter.evaluate()
     assert len(session.entries) >= 2
@@ -504,7 +504,7 @@ def test_qmb_topological_solve():
 
 @gauntlet("qmb_mbl_solve", layer="qmb_solvers")
 def test_qmb_mbl_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.mbl_adapter import MBLTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.mbl_adapter import MBLTraceAdapter
     adapter = MBLTraceAdapter(L=6, W=5.0)
     evals, cons, session = adapter.evaluate()
     assert cons.n_eigenvalues > 0
@@ -513,7 +513,7 @@ def test_qmb_mbl_solve():
 
 @gauntlet("qmb_lattice_gauge_solve", layer="qmb_solvers")
 def test_qmb_lattice_gauge_solve():
-    from tensornet.quantum.qft.trace_adapters.lattice_gauge_adapter import LatticeGaugeTraceAdapter
+    from ontic.quantum.qft.trace_adapters.lattice_gauge_adapter import LatticeGaugeTraceAdapter
     adapter = LatticeGaugeTraceAdapter(L=4, beta=2.0)
     plaq, cons, session = adapter.evaluate(n_sweeps=5)
     assert len(session.entries) >= 2
@@ -521,7 +521,7 @@ def test_qmb_lattice_gauge_solve():
 
 @gauntlet("qmb_open_quantum_solve", layer="qmb_solvers")
 def test_qmb_open_quantum_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.open_quantum_adapter import OpenQuantumTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.open_quantum_adapter import OpenQuantumTraceAdapter
     adapter = OpenQuantumTraceAdapter(dim=3)
     rho_f, cons, session = adapter.evaluate(n_steps=50, dt=0.1)
     assert abs(cons.trace_rho_final - 1.0) < 0.05
@@ -530,7 +530,7 @@ def test_qmb_open_quantum_solve():
 
 @gauntlet("qmb_nonequilibrium_qm_solve", layer="qmb_solvers")
 def test_qmb_nonequilibrium_qm_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.nonequilibrium_qm_adapter import NonEquilibriumQMTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.nonequilibrium_qm_adapter import NonEquilibriumQMTraceAdapter
     adapter = NonEquilibriumQMTraceAdapter(dim=3)
     qe, cons, session = adapter.evaluate(T_period=1.0)
     assert cons.n_quasi_energies > 0
@@ -539,7 +539,7 @@ def test_qmb_nonequilibrium_qm_solve():
 
 @gauntlet("qmb_kondo_solve", layer="qmb_solvers")
 def test_qmb_kondo_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.kondo_adapter import KondoTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.kondo_adapter import KondoTraceAdapter
     adapter = KondoTraceAdapter(eps_d=-2.0, U=4.0, V_hyb=0.5)
     result, cons, session = adapter.evaluate()
     assert cons.kondo_temperature > 0
@@ -548,7 +548,7 @@ def test_qmb_kondo_solve():
 
 @gauntlet("qmb_bosonic_solve", layer="qmb_solvers")
 def test_qmb_bosonic_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.bosonic_adapter import BosonicTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.bosonic_adapter import BosonicTraceAdapter
     adapter = BosonicTraceAdapter(N_grid=64, x_max=10.0)
     result, cons, session = adapter.evaluate(g=1.0)
     assert len(session.entries) >= 2
@@ -556,7 +556,7 @@ def test_qmb_bosonic_solve():
 
 @gauntlet("qmb_fermionic_solve", layer="qmb_solvers")
 def test_qmb_fermionic_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.fermionic_adapter import FermionicTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.fermionic_adapter import FermionicTraceAdapter
     adapter = FermionicTraceAdapter(N_k=100, E_cutoff=10.0)
     result, cons, session = adapter.evaluate(V0=0.5)
     assert cons.gap_nonzero
@@ -565,7 +565,7 @@ def test_qmb_fermionic_solve():
 
 @gauntlet("qmb_nuclear_many_body_solve", layer="qmb_solvers")
 def test_qmb_nuclear_many_body_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.nuclear_many_body_adapter import NuclearManyBodyTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.nuclear_many_body_adapter import NuclearManyBodyTraceAdapter
     adapter = NuclearManyBodyTraceAdapter(n_orbits=4, n_particles=2)
     evals, cons, session = adapter.evaluate(n_states=3)
     assert cons.n_eigenvalues >= 1
@@ -574,7 +574,7 @@ def test_qmb_nuclear_many_body_solve():
 
 @gauntlet("qmb_ultracold_solve", layer="qmb_solvers")
 def test_qmb_ultracold_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.ultracold_adapter import UltracoldTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.ultracold_adapter import UltracoldTraceAdapter
     adapter = UltracoldTraceAdapter(nx=64, Lx=20.0, g_int=1.0)
     psi, cons, session = adapter.evaluate(n_steps=200)
     assert len(session.entries) >= 2
@@ -586,7 +586,7 @@ def test_qmb_ultracold_solve():
 
 @gauntlet("es_dft_solve", layer="electronic_solvers")
 def test_es_dft_solve():
-    from tensornet.quantum.electronic_structure.trace_adapters.dft_adapter import DFTTraceAdapter
+    from ontic.quantum.electronic_structure.trace_adapters.dft_adapter import DFTTraceAdapter
     adapter = DFTTraceAdapter(ngrid=100, L=20.0, n_electrons=2)
     result, cons, session = adapter.evaluate(max_iter=50, tol=1e-5)
     assert len(session.entries) >= 2
@@ -594,7 +594,7 @@ def test_es_dft_solve():
 
 @gauntlet("es_beyond_dft_solve", layer="electronic_solvers")
 def test_es_beyond_dft_solve():
-    from tensornet.quantum.electronic_structure.trace_adapters.beyond_dft_adapter import BeyondDFTTraceAdapter
+    from ontic.quantum.electronic_structure.trace_adapters.beyond_dft_adapter import BeyondDFTTraceAdapter
     adapter = BeyondDFTTraceAdapter(n_basis=6, n_electrons=2)
     result, cons, session = adapter.evaluate(max_iter=50, tol=1e-6)
     assert len(session.entries) >= 2
@@ -602,7 +602,7 @@ def test_es_beyond_dft_solve():
 
 @gauntlet("es_tight_binding_solve", layer="electronic_solvers")
 def test_es_tight_binding_solve():
-    from tensornet.quantum.electronic_structure.trace_adapters.tight_binding_adapter import TightBindingTraceAdapter
+    from ontic.quantum.electronic_structure.trace_adapters.tight_binding_adapter import TightBindingTraceAdapter
     adapter = TightBindingTraceAdapter(n_atoms=2)
     evals, cons, session = adapter.evaluate()
     assert cons.n_bands >= 1
@@ -611,7 +611,7 @@ def test_es_tight_binding_solve():
 
 @gauntlet("es_excited_states_solve", layer="electronic_solvers")
 def test_es_excited_states_solve():
-    from tensornet.quantum.electronic_structure.trace_adapters.excited_states_adapter import ExcitedStatesTraceAdapter
+    from ontic.quantum.electronic_structure.trace_adapters.excited_states_adapter import ExcitedStatesTraceAdapter
     adapter = ExcitedStatesTraceAdapter(n_occ=2, n_virt=4)
     exc_e, cons, session = adapter.evaluate(n_states=3)
     assert cons.n_excitations >= 1
@@ -620,7 +620,7 @@ def test_es_excited_states_solve():
 
 @gauntlet("es_response_solve", layer="electronic_solvers")
 def test_es_response_solve():
-    from tensornet.quantum.electronic_structure.trace_adapters.response_adapter import ResponseTraceAdapter
+    from ontic.quantum.electronic_structure.trace_adapters.response_adapter import ResponseTraceAdapter
     adapter = ResponseTraceAdapter(n_occ=2, n_virt=4)
     alpha, cons, session = adapter.evaluate()
     assert len(session.entries) >= 2
@@ -628,7 +628,7 @@ def test_es_response_solve():
 
 @gauntlet("es_relativistic_solve", layer="electronic_solvers")
 def test_es_relativistic_solve():
-    from tensornet.quantum.electronic_structure.trace_adapters.relativistic_adapter import RelativisticTraceAdapter
+    from ontic.quantum.electronic_structure.trace_adapters.relativistic_adapter import RelativisticTraceAdapter
     adapter = RelativisticTraceAdapter(Z=1)
     energies, cons, session = adapter.evaluate(n_max=2)
     assert cons.ground_energy < 0
@@ -637,7 +637,7 @@ def test_es_relativistic_solve():
 
 @gauntlet("es_embedding_solve", layer="electronic_solvers")
 def test_es_embedding_solve():
-    from tensornet.quantum.electronic_structure.trace_adapters.embedding_adapter import EmbeddingTraceAdapter
+    from ontic.quantum.electronic_structure.trace_adapters.embedding_adapter import EmbeddingTraceAdapter
     adapter = EmbeddingTraceAdapter()
     E, cons, session = adapter.evaluate()
     assert len(session.entries) >= 2
@@ -649,7 +649,7 @@ def test_es_embedding_solve():
 
 @gauntlet("ss_phonons_solve", layer="solid_state_solvers")
 def test_ss_phonons_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.phonons_adapter import PhononsTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.phonons_adapter import PhononsTraceAdapter
     adapter = PhononsTraceAdapter(n_atoms=2)
     band, cons, session = adapter.evaluate()
     assert cons.n_modes >= 1
@@ -658,7 +658,7 @@ def test_ss_phonons_solve():
 
 @gauntlet("ss_band_structure_solve", layer="solid_state_solvers")
 def test_ss_band_structure_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.band_structure_adapter import BandStructureTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.band_structure_adapter import BandStructureTraceAdapter
     adapter = BandStructureTraceAdapter()
     bands, cons, session = adapter.evaluate(n_k=20)
     assert cons.n_bands >= 1
@@ -667,7 +667,7 @@ def test_ss_band_structure_solve():
 
 @gauntlet("ss_classical_magnetism_solve", layer="solid_state_solvers")
 def test_ss_classical_magnetism_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.classical_magnetism_adapter import ClassicalMagnetismTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.classical_magnetism_adapter import ClassicalMagnetismTraceAdapter
     adapter = ClassicalMagnetismTraceAdapter(alpha=0.1, Ms=8e5)
     m_hist, cons, session = adapter.evaluate(n_steps=100, dt=1e-12)
     assert len(session.entries) >= 2
@@ -675,7 +675,7 @@ def test_ss_classical_magnetism_solve():
 
 @gauntlet("ss_superconductivity_solve", layer="solid_state_solvers")
 def test_ss_superconductivity_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.superconductivity_adapter import SuperconductivityTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.superconductivity_adapter import SuperconductivityTraceAdapter
     adapter = SuperconductivityTraceAdapter(N_k=100)
     result, cons, session = adapter.evaluate(V0=0.3)
     assert cons.gap_magnitude > 0
@@ -684,7 +684,7 @@ def test_ss_superconductivity_solve():
 
 @gauntlet("ss_disordered_solve", layer="solid_state_solvers")
 def test_ss_disordered_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.disordered_adapter import DisorderedTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.disordered_adapter import DisorderedTraceAdapter
     adapter = DisorderedTraceAdapter(L=20, W=2.0)
     evals, cons, session = adapter.evaluate()
     assert cons.n_eigenvalues > 0
@@ -693,7 +693,7 @@ def test_ss_disordered_solve():
 
 @gauntlet("ss_surfaces_solve", layer="solid_state_solvers")
 def test_ss_surfaces_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.surfaces_adapter import SurfacesTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.surfaces_adapter import SurfacesTraceAdapter
     adapter = SurfacesTraceAdapter()
     E_surf, cons, session = adapter.evaluate()
     assert len(session.entries) >= 2
@@ -701,7 +701,7 @@ def test_ss_surfaces_solve():
 
 @gauntlet("ss_defects_solve", layer="solid_state_solvers")
 def test_ss_defects_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.defects_adapter import DefectsTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.defects_adapter import DefectsTraceAdapter
     adapter = DefectsTraceAdapter(n_atoms=4)
     result, cons, session = adapter.evaluate()
     assert len(session.entries) >= 2
@@ -709,7 +709,7 @@ def test_ss_defects_solve():
 
 @gauntlet("ss_ferroelectrics_solve", layer="solid_state_solvers")
 def test_ss_ferroelectrics_solve():
-    from tensornet.quantum.condensed_matter.trace_adapters.ferroelectrics_adapter import FerroelectricsTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.ferroelectrics_adapter import FerroelectricsTraceAdapter
     adapter = FerroelectricsTraceAdapter()
     P, cons, session = adapter.evaluate(T=300.0)
     assert len(session.entries) >= 2
@@ -721,7 +721,7 @@ def test_ss_ferroelectrics_solve():
 
 @gauntlet("np_nuclear_structure_solve", layer="nuclear_particle_solvers")
 def test_np_nuclear_structure_solve():
-    from tensornet.plasma_nuclear.nuclear.trace_adapters.nuclear_structure_adapter import NuclearStructureTraceAdapter
+    from ontic.plasma_nuclear.nuclear.trace_adapters.nuclear_structure_adapter import NuclearStructureTraceAdapter
     adapter = NuclearStructureTraceAdapter(A=16, Z=8)
     evals, cons, session = adapter.evaluate()
     assert cons.binding_energy < 0 or cons.nucleon_number_conserved
@@ -730,7 +730,7 @@ def test_np_nuclear_structure_solve():
 
 @gauntlet("np_nuclear_reactions_solve", layer="nuclear_particle_solvers")
 def test_np_nuclear_reactions_solve():
-    from tensornet.plasma_nuclear.nuclear.trace_adapters.nuclear_reactions_adapter import NuclearReactionsTraceAdapter
+    from ontic.plasma_nuclear.nuclear.trace_adapters.nuclear_reactions_adapter import NuclearReactionsTraceAdapter
     adapter = NuclearReactionsTraceAdapter(channel_radius=5.0)
     sigma, cons, session = adapter.evaluate(n_energies=20)
     assert cons.peak_cross_section > 0
@@ -739,7 +739,7 @@ def test_np_nuclear_reactions_solve():
 
 @gauntlet("np_nuclear_astro_solve", layer="nuclear_particle_solvers")
 def test_np_nuclear_astro_solve():
-    from tensornet.plasma_nuclear.nuclear.trace_adapters.nuclear_astro_adapter import NuclearAstroTraceAdapter
+    from ontic.plasma_nuclear.nuclear.trace_adapters.nuclear_astro_adapter import NuclearAstroTraceAdapter
     adapter = NuclearAstroTraceAdapter(Z1=1, Z2=1)
     E_G, cons, session = adapter.evaluate()
     assert cons.gamow_energy > 0
@@ -748,7 +748,7 @@ def test_np_nuclear_astro_solve():
 
 @gauntlet("np_lattice_qcd_solve", layer="nuclear_particle_solvers")
 def test_np_lattice_qcd_solve():
-    from tensornet.quantum.qft.trace_adapters.lattice_qcd_adapter import LatticeQCDTraceAdapter
+    from ontic.quantum.qft.trace_adapters.lattice_qcd_adapter import LatticeQCDTraceAdapter
     adapter = LatticeQCDTraceAdapter(L=4, beta=6.0)
     plaq, cons, session = adapter.evaluate(n_sweeps=5)
     assert len(session.entries) >= 2
@@ -756,7 +756,7 @@ def test_np_lattice_qcd_solve():
 
 @gauntlet("np_perturbative_qft_solve", layer="nuclear_particle_solvers")
 def test_np_perturbative_qft_solve():
-    from tensornet.quantum.qft.trace_adapters.perturbative_qft_adapter import PerturbativeQFTTraceAdapter
+    from ontic.quantum.qft.trace_adapters.perturbative_qft_adapter import PerturbativeQFTTraceAdapter
     adapter = PerturbativeQFTTraceAdapter(n_f=5)
     alpha, cons, session = adapter.evaluate()
     assert cons.alpha_s_mz > 0
@@ -765,7 +765,7 @@ def test_np_perturbative_qft_solve():
 
 @gauntlet("np_beyond_sm_solve", layer="nuclear_particle_solvers")
 def test_np_beyond_sm_solve():
-    from tensornet.applied.particle.trace_adapters.beyond_sm_adapter import BeyondSmTraceAdapter
+    from ontic.applied.particle.trace_adapters.beyond_sm_adapter import BeyondSmTraceAdapter
     adapter = BeyondSmTraceAdapter()
     result, cons, session = adapter.evaluate()
     assert abs(cons.oscillation_probability_sum - 1.0) < 0.1
@@ -778,7 +778,7 @@ def test_np_beyond_sm_solve():
 
 @gauntlet("cp_pes_solve", layer="chem_physics_solvers")
 def test_cp_pes_solve():
-    from tensornet.life_sci.chemistry.trace_adapters.pes_adapter import PESTraceAdapter
+    from ontic.life_sci.chemistry.trace_adapters.pes_adapter import PESTraceAdapter
     adapter = PESTraceAdapter(D_e=4.746, alpha_m=1.94, r_e=0.741)
     levels, cons, session = adapter.evaluate()
     assert cons.gradient_zero_at_minimum
@@ -787,7 +787,7 @@ def test_cp_pes_solve():
 
 @gauntlet("cp_reaction_rate_solve", layer="chem_physics_solvers")
 def test_cp_reaction_rate_solve():
-    from tensornet.life_sci.chemistry.trace_adapters.reaction_rate_adapter import ReactionRateTraceAdapter
+    from ontic.life_sci.chemistry.trace_adapters.reaction_rate_adapter import ReactionRateTraceAdapter
     adapter = ReactionRateTraceAdapter(Ea=0.5, nu_imag=1e13)
     rates, cons, session = adapter.evaluate()
     assert cons.rate_positive
@@ -796,7 +796,7 @@ def test_cp_reaction_rate_solve():
 
 @gauntlet("cp_catalysis_solve", layer="chem_physics_solvers")
 def test_cp_catalysis_solve():
-    from tensornet.life_sci.chemistry.trace_adapters.catalysis_adapter import CatalysisTraceAdapter
+    from ontic.life_sci.chemistry.trace_adapters.catalysis_adapter import CatalysisTraceAdapter
     adapter = CatalysisTraceAdapter(D_e=4.0, alpha_c=1.5, r_e=1.0)
     result, cons, session = adapter.evaluate(n_sites=10)
     assert cons.atom_count_conserved
@@ -809,7 +809,7 @@ def test_cp_catalysis_solve():
 
 @gauntlet("qi_quantum_circuit_solve", layer="quantum_info_solvers")
 def test_qi_quantum_circuit_solve():
-    from tensornet.quantum.trace_adapters.quantum_circuit_adapter import QuantumCircuitTraceAdapter
+    from ontic.quantum.trace_adapters.quantum_circuit_adapter import QuantumCircuitTraceAdapter
     adapter = QuantumCircuitTraceAdapter(n_qubits=3, chi_max=16)
     sim, cons, session = adapter.evaluate()
     assert cons.trace_preserved
@@ -818,7 +818,7 @@ def test_qi_quantum_circuit_solve():
 
 @gauntlet("qi_qec_solve", layer="quantum_info_solvers")
 def test_qi_qec_solve():
-    from tensornet.quantum.trace_adapters.qec_adapter import QECTraceAdapter
+    from ontic.quantum.trace_adapters.qec_adapter import QECTraceAdapter
     adapter = QECTraceAdapter()
     result, cons, session = adapter.evaluate()
     assert cons.logical_fidelity > 0.5
@@ -827,7 +827,7 @@ def test_qi_qec_solve():
 
 @gauntlet("qi_vqe_solve", layer="quantum_info_solvers")
 def test_qi_vqe_solve():
-    from tensornet.quantum.trace_adapters.vqe_adapter import VQETraceAdapter
+    from ontic.quantum.trace_adapters.vqe_adapter import VQETraceAdapter
     adapter = VQETraceAdapter(n_qubits=2)
     result, cons, session = adapter.evaluate()
     assert cons.converged
@@ -841,7 +841,7 @@ def test_qi_vqe_solve():
 @gauntlet("conservation_qm_norm", layer="conservation")
 def test_conservation_qm_norm():
     """TISE eigenstates have unit norm (within tolerance)."""
-    from tensornet.quantum.quantum_mechanics.trace_adapters.tise_adapter import TISETraceAdapter
+    from ontic.quantum.quantum_mechanics.trace_adapters.tise_adapter import TISETraceAdapter
     adapter = TISETraceAdapter(n_grid=200)
     evals, cons, session = adapter.solve(n_states=3)
     assert cons.norm_error < 0.05, f"Norm error too large: {cons.norm_error}"
@@ -850,8 +850,8 @@ def test_conservation_qm_norm():
 @gauntlet("conservation_qmb_energy", layer="conservation")
 def test_conservation_qmb_energy():
     """DMRG ground energy is negative for Heisenberg chain."""
-    from tensornet.algorithms.trace_adapters.dmrg_adapter import DMRGTraceAdapter
-    from tensornet.mps.hamiltonians import heisenberg_mpo
+    from ontic.algorithms.trace_adapters.dmrg_adapter import DMRGTraceAdapter
+    from ontic.mps.hamiltonians import heisenberg_mpo
     mpo = heisenberg_mpo(6)
     adapter = DMRGTraceAdapter(chi_max=16, num_sweeps=4)
     result, cons, session = adapter.evaluate(H_mpo=mpo)
@@ -861,7 +861,7 @@ def test_conservation_qmb_energy():
 @gauntlet("conservation_es_electron_count", layer="conservation")
 def test_conservation_es_electron_count():
     """DFT conserves electron count."""
-    from tensornet.quantum.electronic_structure.trace_adapters.dft_adapter import DFTTraceAdapter
+    from ontic.quantum.electronic_structure.trace_adapters.dft_adapter import DFTTraceAdapter
     adapter = DFTTraceAdapter(ngrid=100, L=20.0, n_electrons=2)
     result, cons, session = adapter.evaluate(max_iter=50)
     assert cons.electron_count_error < 0.1, f"Electron count error: {cons.electron_count_error}"
@@ -870,7 +870,7 @@ def test_conservation_es_electron_count():
 @gauntlet("conservation_ss_phonon_reality", layer="conservation")
 def test_conservation_ss_phonon_reality():
     """Phonon frequencies are all real."""
-    from tensornet.quantum.condensed_matter.trace_adapters.phonons_adapter import PhononsTraceAdapter
+    from ontic.quantum.condensed_matter.trace_adapters.phonons_adapter import PhononsTraceAdapter
     adapter = PhononsTraceAdapter(n_atoms=2)
     band, cons, session = adapter.evaluate()
     assert cons.all_real_frequencies
@@ -879,7 +879,7 @@ def test_conservation_ss_phonon_reality():
 @gauntlet("conservation_np_baryon", layer="conservation")
 def test_conservation_np_baryon():
     """Nuclear astrophysics conserves baryon number."""
-    from tensornet.plasma_nuclear.nuclear.trace_adapters.nuclear_astro_adapter import NuclearAstroTraceAdapter
+    from ontic.plasma_nuclear.nuclear.trace_adapters.nuclear_astro_adapter import NuclearAstroTraceAdapter
     adapter = NuclearAstroTraceAdapter(Z1=1, Z2=1)
     E_G, cons, session = adapter.evaluate()
     assert cons.baryon_number_conserved
@@ -888,7 +888,7 @@ def test_conservation_np_baryon():
 @gauntlet("conservation_qi_unitarity", layer="conservation")
 def test_conservation_qi_unitarity():
     """Quantum circuit preserves unitarity."""
-    from tensornet.quantum.trace_adapters.quantum_circuit_adapter import QuantumCircuitTraceAdapter
+    from ontic.quantum.trace_adapters.quantum_circuit_adapter import QuantumCircuitTraceAdapter
     adapter = QuantumCircuitTraceAdapter(n_qubits=3, chi_max=16)
     sim, cons, session = adapter.evaluate()
     assert cons.unitarity_error < 1e-6
@@ -901,7 +901,7 @@ def test_conservation_qi_unitarity():
 @gauntlet("integration_trace_session_api", layer="integration")
 def test_integration_trace_session_api():
     """TraceSession API works uniformly across adapters."""
-    from tensornet.core.trace import TraceSession
+    from ontic.core.trace import TraceSession
     session = TraceSession()
     session.log_custom(
         name="integration_test",
@@ -932,7 +932,7 @@ def test_integration_all_categories_covered():
 @gauntlet("integration_consistency_check", layer="integration")
 def test_integration_consistency_check():
     """Each adapter returns (result, conservation, session) triple."""
-    from tensornet.quantum.electronic_structure.trace_adapters.embedding_adapter import EmbeddingTraceAdapter
+    from ontic.quantum.electronic_structure.trace_adapters.embedding_adapter import EmbeddingTraceAdapter
     adapter = EmbeddingTraceAdapter()
     output = adapter.evaluate()
     assert isinstance(output, tuple) and len(output) == 3, (

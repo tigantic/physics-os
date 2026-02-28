@@ -25,7 +25,7 @@ import numpy as np
 import pytest
 import torch
 
-from tensornet.plasma_nuclear.fusion import (
+from ontic.plasma_nuclear.fusion import (
     # Electron Screening
     ElectronScreeningSolver,
     ScreeningResult,

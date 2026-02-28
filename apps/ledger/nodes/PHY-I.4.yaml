@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Beams, plates, shells, buckling, vibration, composites"
 
 source_files:
-  - "tensornet/mechanics/structural.py"
+  - "ontic/mechanics/structural.py"
 
 tests:
   smoke:

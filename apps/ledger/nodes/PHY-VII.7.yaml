@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Lindblad MPO"
 
 source_files:
-  - "tensornet/condensed_matter/open_quantum.py"
+  - "ontic/condensed_matter/open_quantum.py"
 
 tests:
   smoke:

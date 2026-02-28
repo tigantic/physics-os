@@ -38,7 +38,7 @@ Update version in `pyproject.toml`:
 version = "X.Y.Z"
 ```
 
-Update version in `tensornet/__init__.py`:
+Update version in `ontic/__init__.py`:
 
 ```python
 __version__ = "X.Y.Z"

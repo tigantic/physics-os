@@ -23,14 +23,14 @@ import pytest
 
 class TestTTN:
     def test_random_ttn_to_tensor(self):
-        from tensornet.algorithms.ttn import random_ttn
+        from ontic.algorithms.ttn import random_ttn
         ttn = random_ttn(4, d=2, chi=4, seed=0)
         T = ttn.to_tensor()
         assert T.shape == (2, 2, 2, 2)
         assert np.linalg.norm(T) > 0
 
     def test_ttn_expectation_local(self):
-        from tensornet.algorithms.ttn import random_ttn
+        from ontic.algorithms.ttn import random_ttn
         ttn = random_ttn(4, d=2, chi=4, seed=1)
         T = ttn.to_tensor()
         norm_sq = np.sum(T ** 2)
@@ -40,7 +40,7 @@ class TestTTN:
         assert abs(exp - norm_sq) < 1e-10 * abs(norm_sq), f"{exp} vs {norm_sq}"
 
     def test_ttn_truncate(self):
-        from tensornet.algorithms.ttn import random_ttn
+        from ontic.algorithms.ttn import random_ttn
         ttn = random_ttn(4, d=2, chi=8, seed=2)
         T_full = ttn.to_tensor()
         ttn.truncate_(chi_max=3)
@@ -50,7 +50,7 @@ class TestTTN:
         assert error < 1.0  # Just ensure it runs and produces reasonable output
 
     def test_ttn_from_mps(self):
-        from tensornet.algorithms.ttn import ttn_from_mps
+        from ontic.algorithms.ttn import ttn_from_mps
         rng = np.random.default_rng(3)
         cores = [rng.standard_normal((1, 2, 4)),
                  rng.standard_normal((4, 2, 4)),
@@ -62,7 +62,7 @@ class TestTTN:
         assert T.shape == (2, 2, 2, 2)
 
     def test_coarse_grain(self):
-        from tensornet.algorithms.ttn import random_ttn, coarse_grain
+        from ontic.algorithms.ttn import random_ttn, coarse_grain
         ttn = random_ttn(4, d=2, chi=4, seed=4)
         ttn_cg = coarse_grain(ttn, chi_max=4)
         # Coarse-grained TTN should still have a valid root and produce a tensor
@@ -76,13 +76,13 @@ class TestTTN:
 
 class TestTensorRing:
     def test_random_tensor_ring_roundtrip(self):
-        from tensornet.algorithms.tensor_ring import random_tensor_ring
+        from ontic.algorithms.tensor_ring import random_tensor_ring
         tr = random_tensor_ring((3, 4, 5), rank=3, seed=0)
         T = tr.to_tensor()
         assert T.shape == (3, 4, 5)
 
     def test_tensor_to_tr_and_back(self):
-        from tensornet.algorithms.tensor_ring import tensor_to_tr
+        from ontic.algorithms.tensor_ring import tensor_to_tr
         rng = np.random.default_rng(1)
         T = rng.standard_normal((4, 4, 4))
         tr = tensor_to_tr(T, rank=8, n_sweeps=20, seed=1)
@@ -92,7 +92,7 @@ class TestTensorRing:
         assert error < 2.0
 
     def test_tr_add(self):
-        from tensornet.algorithms.tensor_ring import random_tensor_ring, tr_add
+        from ontic.algorithms.tensor_ring import random_tensor_ring, tr_add
         a = random_tensor_ring((3, 3), rank=2, seed=2)
         b = random_tensor_ring((3, 3), rank=2, seed=3)
         c = tr_add(a, b)
@@ -102,7 +102,7 @@ class TestTensorRing:
         assert np.allclose(Tc, Ta + Tb, atol=1e-10)
 
     def test_tr_hadamard(self):
-        from tensornet.algorithms.tensor_ring import random_tensor_ring, tr_hadamard
+        from ontic.algorithms.tensor_ring import random_tensor_ring, tr_hadamard
         a = random_tensor_ring((3, 4), rank=2, seed=4)
         b = random_tensor_ring((3, 4), rank=2, seed=5)
         c = tr_hadamard(a, b)
@@ -118,7 +118,7 @@ class TestTensorRing:
 
 class TestTNR:
     def test_ising_tensor_symmetry(self):
-        from tensornet.algorithms.tnr import ising_tensor
+        from ontic.algorithms.tnr import ising_tensor
         T = ising_tensor(beta=0.5)
         assert T.shape == (2, 2, 2, 2)
         # Z2 symmetry: T is invariant under simultaneous spin flip
@@ -130,7 +130,7 @@ class TestTNR:
                         assert abs(T[i, j, k, l] - T[1-i, 1-j, 1-k, 1-l]) < 1e-12
 
     def test_tnr_step_reduces_dimension(self):
-        from tensornet.algorithms.tnr import ising_tensor, tnr_step, TNRConfig
+        from ontic.algorithms.tnr import ising_tensor, tnr_step, TNRConfig
         T = ising_tensor(beta=0.4)
         config = TNRConfig(chi=4, chi_env=4, n_opt_sweeps=2, max_steps=1)
         T_new, S_vals = tnr_step(T, config)
@@ -139,7 +139,7 @@ class TestTNR:
         assert len(S_vals) > 0
 
     def test_free_energy_per_site(self):
-        from tensornet.algorithms.tnr import ising_tensor, free_energy_per_site
+        from ontic.algorithms.tnr import ising_tensor, free_energy_per_site
         beta = 0.3
         T = ising_tensor(beta)
         fe = free_energy_per_site(T, beta)
@@ -171,7 +171,7 @@ class TestQTTSparse:
         return cores
 
     def test_tt_round_preserves_identity(self):
-        from tensornet.qtt.sparse_direct import tt_round
+        from ontic.qtt.sparse_direct import tt_round
         cores = self._random_tt(4, seed=10)
         rounded = tt_round(cores, max_rank=3)
         # Reconstruct and compare
@@ -185,7 +185,7 @@ class TestQTTSparse:
         assert np.allclose(T1, T2, atol=1e-10)
 
     def test_tt_matvec_identity(self):
-        from tensornet.qtt.sparse_direct import tt_matvec
+        from ontic.qtt.sparse_direct import tt_matvec
         mpo = self._identity_mpo(3)
         x = self._random_tt(3, seed=11)
         y = tt_matvec(mpo, x, max_rank=4)
@@ -200,7 +200,7 @@ class TestQTTSparse:
         assert np.allclose(Tx, Ty, atol=1e-10)
 
     def test_tt_solve(self):
-        from tensornet.qtt.sparse_direct import tt_solve
+        from ontic.qtt.sparse_direct import tt_solve
         A = self._identity_mpo(3)
         b = self._random_tt(3, seed=12)
         x = tt_solve(A, b, max_rank=4)
@@ -218,19 +218,19 @@ class TestQTTSparse:
 
 class TestRankAdaptive:
     def test_rank_aic(self):
-        from tensornet.qtt.rank_adaptive import rank_aic
+        from ontic.qtt.rank_adaptive import rank_aic
         S = np.array([10.0, 5.0, 1.0, 0.01, 1e-6])
         r = rank_aic(S, m=8, n=8)
         assert 1 <= r <= len(S)
 
     def test_rank_bic(self):
-        from tensornet.qtt.rank_adaptive import rank_bic
+        from ontic.qtt.rank_adaptive import rank_bic
         S = np.array([10.0, 5.0, 1.0, 0.01, 1e-6])
         r = rank_bic(S, m=8, n=8, n_samples=64)
         assert 1 <= r <= len(S)
 
     def test_adaptive_round(self):
-        from tensornet.qtt.rank_adaptive import adaptive_round
+        from ontic.qtt.rank_adaptive import adaptive_round
         rng = np.random.default_rng(0)
         # Low-rank signal embedded in higher TT rank
         cores = [rng.standard_normal((1, 2, 4)),
@@ -248,7 +248,7 @@ class TestRankAdaptive:
 
 class TestUnstructured:
     def test_rcm_order(self):
-        from tensornet.qtt.unstructured import rcm_order
+        from ontic.qtt.unstructured import rcm_order
         # Simple path graph as adjacency matrix
         adj = np.zeros((4, 4), dtype=float)
         adj[0, 1] = adj[1, 0] = 1
@@ -259,7 +259,7 @@ class TestUnstructured:
         assert set(perm) == {0, 1, 2, 3}
 
     def test_quantics_fold_unfold(self):
-        from tensornet.qtt.unstructured import quantics_fold, quantics_unfold
+        from ontic.qtt.unstructured import quantics_fold, quantics_unfold
         for idx in range(16):
             bits = quantics_fold(idx, 4)
             assert len(bits) == 4
@@ -267,7 +267,7 @@ class TestUnstructured:
             assert rec == idx
 
     def test_mesh_to_tt_roundtrip(self):
-        from tensornet.qtt.unstructured import mesh_to_tt, tt_to_mesh
+        from ontic.qtt.unstructured import mesh_to_tt, tt_to_mesh
         # 8-node path graph as adjacency matrix
         adj = np.zeros((8, 8), dtype=float)
         for i in range(7):
@@ -286,7 +286,7 @@ class TestUnstructured:
 
 class TestContractionOpt:
     def _simple_graph(self):
-        from tensornet.algorithms.contraction_opt import TNGraph, TensorNode, Edge
+        from ontic.algorithms.contraction_opt import TNGraph, TensorNode, Edge
         # Three tensors sharing pairwise indices
         n0 = TensorNode(id=0, shape=(2, 3), indices=['i', 'j'])
         n1 = TensorNode(id=1, shape=(3, 4), indices=['j', 'k'])
@@ -298,21 +298,21 @@ class TestContractionOpt:
         )
 
     def test_greedy_order(self):
-        from tensornet.algorithms.contraction_opt import greedy_order
+        from ontic.algorithms.contraction_opt import greedy_order
         graph = self._simple_graph()
         plan = greedy_order(graph)
         assert len(plan.steps) == 2  # 3 tensors → 2 pairwise contractions
         assert plan.total_flops > 0
 
     def test_optimal_order(self):
-        from tensornet.algorithms.contraction_opt import optimal_order
+        from ontic.algorithms.contraction_opt import optimal_order
         graph = self._simple_graph()
         plan = optimal_order(graph)
         assert len(plan.steps) == 2
         assert plan.total_flops > 0
 
     def test_random_greedy(self):
-        from tensornet.algorithms.contraction_opt import random_greedy_order
+        from ontic.algorithms.contraction_opt import random_greedy_order
         graph = self._simple_graph()
         plan = random_greedy_order(graph, n_trials=10, seed=42)
         assert len(plan.steps) == 2
@@ -334,7 +334,7 @@ class TestEigensolvers:
         return cores
 
     def test_tt_inner(self):
-        from tensornet.qtt.eigensolvers import tt_inner
+        from ontic.qtt.eigensolvers import tt_inner
         rng = np.random.default_rng(0)
         a = [rng.standard_normal((1, 2, 3)),
              rng.standard_normal((3, 2, 3)),
@@ -355,7 +355,7 @@ class TestEigensolvers:
         assert abs(val - expected) < 1e-10 * max(abs(expected), 1)
 
     def test_tt_norm(self):
-        from tensornet.qtt.eigensolvers import tt_norm
+        from ontic.qtt.eigensolvers import tt_norm
         rng = np.random.default_rng(1)
         a = [rng.standard_normal((1, 2, 2)),
              rng.standard_normal((2, 2, 1))]
@@ -363,7 +363,7 @@ class TestEigensolvers:
         assert n > 0
 
     def test_tt_lanczos_finds_ground(self):
-        from tensornet.qtt.eigensolvers import tt_lanczos
+        from ontic.qtt.eigensolvers import tt_lanczos
         # 4-site identity MPO → eigenvalue = 1 (all eigvals = 1)
         n = 3
         d = 2
@@ -406,19 +406,19 @@ class TestKrylov:
         return cores
 
     def test_tt_cg_identity(self):
-        from tensornet.qtt.krylov import tt_cg
+        from ontic.qtt.krylov import tt_cg
         A = self._identity_mpo(3)
         b = self._random_tt(3, seed=20)
         x0 = self._random_tt(3, seed=21)
         result = tt_cg(A, b, x0, max_iter=20, tol=1e-6, max_rank=4)
         # x = b for identity
-        from tensornet.qtt.eigensolvers import tt_inner, tt_norm
+        from ontic.qtt.eigensolvers import tt_inner, tt_norm
         norm_b = tt_norm(b)
         # Check convergence
         assert len(result.residual_norms) > 0
 
     def test_tt_gmres_identity(self):
-        from tensornet.qtt.krylov import tt_gmres
+        from ontic.qtt.krylov import tt_gmres
         A = self._identity_mpo(3)
         b = self._random_tt(3, seed=22)
         x0 = self._random_tt(3, seed=23)
@@ -432,7 +432,7 @@ class TestKrylov:
 
 class TestDynamicRank:
     def test_adapt_ranks_residual(self):
-        from tensornet.qtt.dynamic_rank import (
+        from ontic.qtt.dynamic_rank import (
             adapt_ranks, DynamicRankConfig, RankStrategy,
         )
         rng = np.random.default_rng(0)
@@ -445,7 +445,7 @@ class TestDynamicRank:
         assert len(state.ranks) > 0
 
     def test_adapt_ranks_entropy(self):
-        from tensornet.qtt.dynamic_rank import (
+        from ontic.qtt.dynamic_rank import (
             adapt_ranks, DynamicRankConfig, RankStrategy,
         )
         rng = np.random.default_rng(1)
@@ -457,7 +457,7 @@ class TestDynamicRank:
         assert len(new_cores) == 3
 
     def test_dynamic_rank_step(self):
-        from tensornet.qtt.dynamic_rank import (
+        from ontic.qtt.dynamic_rank import (
             dynamic_rank_step, DynamicRankConfig, RankStrategy,
         )
         rng = np.random.default_rng(2)
@@ -467,7 +467,7 @@ class TestDynamicRank:
 
         def rhs_fn(u):
             # Simple: du/dt = -u (exponential decay)
-            from tensornet.qtt.eigensolvers import tt_scale
+            from ontic.qtt.eigensolvers import tt_scale
             return tt_scale(u, -1.0)
 
         config = DynamicRankConfig(
@@ -484,7 +484,7 @@ class TestDynamicRank:
 
 class TestDifferentiable:
     def test_numpy_tape_basic(self):
-        from tensornet.qtt.differentiable import NumpyTape
+        from ontic.qtt.differentiable import NumpyTape
         tape = NumpyTape()
         a = tape.variable(np.array([1.0, 2.0, 3.0]))
         b = tape.variable(np.array([4.0, 5.0, 6.0]))
@@ -495,7 +495,7 @@ class TestDifferentiable:
         np.testing.assert_allclose(grads[a], np.array([4.0, 5.0, 6.0]))
 
     def test_tt_inner_diff(self):
-        from tensornet.qtt.differentiable import TTTensor, tt_inner_diff
+        from ontic.qtt.differentiable import TTTensor, tt_inner_diff
         rng = np.random.default_rng(0)
         a = TTTensor(cores=[
             rng.standard_normal((1, 2, 2)),
@@ -512,7 +512,7 @@ class TestDifferentiable:
         assert a.grads[1] is not None
 
     def test_tt_loss_and_backward(self):
-        from tensornet.qtt.differentiable import TTTensor, tt_loss
+        from ontic.qtt.differentiable import TTTensor, tt_loss
         rng = np.random.default_rng(1)
         a = TTTensor(cores=[rng.standard_normal((1, 2, 2)),
                             rng.standard_normal((2, 2, 1))])
@@ -525,7 +525,7 @@ class TestDifferentiable:
         assert a.grads[0] is not None
 
     def test_gradient_descent_step(self):
-        from tensornet.qtt.differentiable import (
+        from ontic.qtt.differentiable import (
             TTTensor, tt_loss, tt_gradient_descent_step,
         )
         rng = np.random.default_rng(2)
@@ -566,13 +566,13 @@ class TestPDESolvers:
         return cores
 
     def test_identity_mpo(self):
-        from tensornet.qtt.pde_solvers import identity_mpo
+        from ontic.qtt.pde_solvers import identity_mpo
         I = identity_mpo(3, d=2)
         assert len(I) == 3
         assert I[0].shape == (1, 2, 2, 1)
 
     def test_shifted_operator(self):
-        from tensornet.qtt.pde_solvers import identity_mpo, shifted_operator
+        from ontic.qtt.pde_solvers import identity_mpo, shifted_operator
         L = self._identity_mpo(3)
         A = shifted_operator(L, alpha=0.5, d=2)
         assert len(A) == 3
@@ -580,7 +580,7 @@ class TestPDESolvers:
         assert A[1].shape[0] > 1
 
     def test_backward_euler_runs(self):
-        from tensornet.qtt.pde_solvers import backward_euler, PDEConfig
+        from ontic.qtt.pde_solvers import backward_euler, PDEConfig
         # Zero operator → (I) u_{n+1} = u_n → u stays constant
         L = []
         for _ in range(3):
@@ -601,7 +601,7 @@ class TestPDESolvers:
 
 class TestQTCI:
     def test_rook_pivot(self):
-        from tensornet.qtt.qtci_v2 import rook_pivot
+        from ontic.qtt.qtci_v2 import rook_pivot
         rng = np.random.default_rng(0)
         A = rng.standard_normal((8, 5))
         rows, cols, sub = rook_pivot(A, max_iter=10)
@@ -609,7 +609,7 @@ class TestQTCI:
         assert len(rows) <= min(8, 5)
 
     def test_parallel_fiber_batch(self):
-        from tensornet.qtt.qtci_v2 import parallel_fiber_batch
+        from ontic.qtt.qtci_v2 import parallel_fiber_batch
         left = np.array([[0, 0], [0, 1]])   # 2 left multi-indices for 2 sites
         right = np.array([[1], [0]])         # 2 right multi-indices for 1 site
         indices = parallel_fiber_batch(site=2, left_indices=left,
@@ -618,7 +618,7 @@ class TestQTCI:
         assert indices.shape == (12, 4)
 
     def test_certify_error(self):
-        from tensornet.qtt.qtci_v2 import certify_error
+        from ontic.qtt.qtci_v2 import certify_error
         # Perfect TT for a constant function
         cores = [np.ones((1, 2, 1)) for _ in range(3)]
         # f(idx) = 1 for all idx
@@ -628,7 +628,7 @@ class TestQTCI:
         assert err < 1e-10
 
     def test_qtci_adaptive_constant(self):
-        from tensornet.qtt.qtci_v2 import qtci_adaptive, QTCIConfig
+        from ontic.qtt.qtci_v2 import qtci_adaptive, QTCIConfig
         def fn(idx):
             return 1.0
         config = QTCIConfig(max_rank=4, tol=1e-6, n_probe=200, seed=0)
@@ -644,7 +644,7 @@ class TestQTCI:
 class TestFermionicEnhancements:
     def test_fermionic_swap_gate(self):
         import torch
-        from tensornet.algorithms.fermionic import fermionic_swap_gate
+        from ontic.algorithms.fermionic import fermionic_swap_gate
         fswap = fermionic_swap_gate(d=2)
         assert fswap.shape == (4, 4)
         # FSWAP² = I (involution)
@@ -652,7 +652,7 @@ class TestFermionicEnhancements:
 
     def test_parity_projector_is_projector(self):
         import torch
-        from tensornet.algorithms.fermionic import parity_projector
+        from ontic.algorithms.fermionic import parity_projector
         P = parity_projector(target_parity=0, L=3, d=2)
         # Apply P twice = apply once (projector property)
         # For a simple test, just check shapes
@@ -662,7 +662,7 @@ class TestFermionicEnhancements:
 
     def test_parity_preserving_tensor(self):
         import torch
-        from tensornet.algorithms.fermionic import parity_preserving_tensor
+        from ontic.algorithms.fermionic import parity_preserving_tensor
         T = parity_preserving_tensor((2, 2, 2), target_parity=0, seed=0)
         # Only even-parity entries should be nonzero
         for i in range(2):
@@ -674,7 +674,7 @@ class TestFermionicEnhancements:
 
     def test_fswap_mpo_gate(self):
         import torch
-        from tensornet.algorithms.fermionic import fswap_mpo_gate
+        from ontic.algorithms.fermionic import fswap_mpo_gate
         mpo = fswap_mpo_gate(site=0, L=3, d=2)
         assert len(mpo.tensors) == 3
 
@@ -685,14 +685,14 @@ class TestFermionicEnhancements:
 
 class TestSymmetricTN:
     def test_charge_label_arithmetic(self):
-        from tensornet.algorithms.symmetric_tn import ChargeLabel
+        from ontic.algorithms.symmetric_tn import ChargeLabel
         a = ChargeLabel(3)
         b = ChargeLabel(5)
         assert (a + b).q == 8
         assert (-a).q == -3
 
     def test_sym_tensor_to_dense(self):
-        from tensornet.algorithms.symmetric_tn import (
+        from ontic.algorithms.symmetric_tn import (
             SymTensor, SymLeg, SymSector, ChargeLabel,
         )
         leg = SymLeg([SymSector(ChargeLabel(0), 2), SymSector(ChargeLabel(1), 1)])
@@ -708,7 +708,7 @@ class TestSymmetricTN:
         assert abs(dense[0, 2]) < 1e-14  # Cross-sector = 0
 
     def test_clebsch_gordan(self):
-        from tensornet.algorithms.symmetric_tn import clebsch_gordan_su2
+        from ontic.algorithms.symmetric_tn import clebsch_gordan_su2
         # ⟨1/2, 1/2; 1/2, -1/2 | 1, 0⟩ = 1/√2
         cg = clebsch_gordan_su2(0.5, 0.5, 1.0, 0.5, -0.5, 0.0)
         assert abs(cg - 1.0 / math.sqrt(2)) < 1e-10
@@ -718,25 +718,25 @@ class TestSymmetricTN:
         assert abs(abs(cg0) - 1.0 / math.sqrt(2)) < 1e-10
 
     def test_u1_fuse(self):
-        from tensornet.algorithms.symmetric_tn import u1_fuse, SymLeg, SymSector, ChargeLabel
+        from ontic.algorithms.symmetric_tn import u1_fuse, SymLeg, SymSector, ChargeLabel
         l1 = SymLeg([SymSector(ChargeLabel(0), 1), SymSector(ChargeLabel(1), 1)])
         l2 = SymLeg([SymSector(ChargeLabel(0), 1), SymSector(ChargeLabel(1), 1)])
         fused = u1_fuse(l1, l2)
         assert fused.total_dim == 4  # (0,0), (0,1)+(1,0), (1,1) = 1+2+1
 
     def test_random_sym_mps(self):
-        from tensornet.algorithms.symmetric_tn import random_sym_mps
+        from ontic.algorithms.symmetric_tn import random_sym_mps
         mps = random_sym_mps(n_sites=4, d=2, chi=3, total_charge=2, seed=0)
         assert mps.n_sites == 4
         assert mps.total_charge.q == 2
 
     def test_heisenberg_sym_mpo(self):
-        from tensornet.algorithms.symmetric_tn import heisenberg_sym_mpo
+        from ontic.algorithms.symmetric_tn import heisenberg_sym_mpo
         mpo = heisenberg_sym_mpo(n_sites=4, J=1.0, Jz=1.0, h=0.0)
         assert mpo.n_sites == 4
 
     def test_sym_svd(self):
-        from tensornet.algorithms.symmetric_tn import (
+        from ontic.algorithms.symmetric_tn import (
             SymTensor, SymLeg, SymSector, ChargeLabel, sym_svd,
         )
         leg = SymLeg([SymSector(ChargeLabel(0), 2), SymSector(ChargeLabel(1), 2)])
@@ -756,7 +756,7 @@ class TestSymmetricTN:
 
 class TestQTTTimeSeries:
     def test_compress_decompress_roundtrip(self):
-        from tensornet.qtt.time_series import compress_timeseries, decompress_timeseries
+        from ontic.qtt.time_series import compress_timeseries, decompress_timeseries
         signal = np.sin(np.linspace(0, 4 * np.pi, 64))
         qts = compress_timeseries(signal, dt=0.1)
         rec = decompress_timeseries(qts)
@@ -764,14 +764,14 @@ class TestQTTTimeSeries:
         assert error < 1e-10  # Lossless at default tolerance
 
     def test_compression_ratio(self):
-        from tensornet.qtt.time_series import compress_timeseries, QTTTimeSeriesConfig
+        from ontic.qtt.time_series import compress_timeseries, QTTTimeSeriesConfig
         signal = np.sin(np.linspace(0, 2 * np.pi, 256))
         config = QTTTimeSeriesConfig(max_rank=8, tol=1e-4)
         qts = compress_timeseries(signal, config)
         assert qts.compression_ratio > 1.0  # Should compress a smooth signal
 
     def test_streaming_update(self):
-        from tensornet.qtt.time_series import (
+        from ontic.qtt.time_series import (
             compress_timeseries, decompress_timeseries,
             streaming_update, QTTTimeSeriesConfig,
         )
@@ -784,7 +784,7 @@ class TestQTTTimeSeries:
         assert len(rec) == 48
 
     def test_qtt_spectrum(self):
-        from tensornet.qtt.time_series import compress_timeseries, qtt_spectrum
+        from ontic.qtt.time_series import compress_timeseries, qtt_spectrum
         signal = np.sin(np.linspace(0, 4 * np.pi, 64))
         qts = compress_timeseries(signal)
         psd = qtt_spectrum(qts)
@@ -792,7 +792,7 @@ class TestQTTTimeSeries:
         assert np.all(psd >= 0)
 
     def test_qtt_downsample(self):
-        from tensornet.qtt.time_series import (
+        from ontic.qtt.time_series import (
             compress_timeseries, qtt_downsample, decompress_timeseries,
         )
         signal = np.sin(np.linspace(0, 2 * np.pi, 64))
@@ -810,17 +810,17 @@ class TestPreExistingImports:
     """Verify that items 2.1, 2.2, 2.6, 2.8 remain importable."""
 
     def test_peps_import(self):
-        from tensornet.algorithms.peps import (
+        from ontic.algorithms.peps import (
             PEPSState, random_peps, contract_boundary_mps,
         )
 
     def test_mera_import(self):
-        from tensornet.algorithms.mera import (
+        from ontic.algorithms.mera import (
             MERALayer, MERAState, random_binary_mera, evaluate_energy,
         )
 
     def test_qtt_fft_import(self):
-        from tensornet.cfd.qtt_fft import QTTFFTConfig, SpectralNS3D
+        from ontic.cfd.qtt_fft import QTTFFTConfig, SpectralNS3D
 
     def test_continuous_tci_import(self):
         import importlib

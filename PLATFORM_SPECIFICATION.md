@@ -134,28 +134,28 @@ The Physics OS is a computational physics operating system that uses Quantized T
 | **Domain Packs** | 20 |
 | **Taxonomy Nodes** | 168 |
 | **Industry Verticals** | 20 |
-| **`tensornet/` Modules** | 105 |
+| **`ontic/` Modules** | 105 |
 | **CI/CD Workflows** | 11 |
 | **Makefile Targets** | 30+ |
 | **CODEOWNERS Mappings** | 289 |
 | **pip Extras (Feature Flags)** | 16 |
 
-### `tensornet/` Breakdown (Top Directories by LOC)
+### `ontic/` Breakdown (Top Directories by LOC)
 
 | Directory | Lines | Code | Files |
 |-----------|------:|-----:|------:|
-| `tensornet/cfd/` | 80,534 | 63,540 | 119 |
-| `tensornet/infra/` | 56,829 | 45,952 | 120 |
-| `tensornet/genesis/` | 41,928 | 33,099 | 87 |
-| `tensornet/ml/` | 40,629 | 33,243 | 83 |
-| `tensornet/engine/` | 36,601 | 29,769 | 96 |
-| `tensornet/aerospace/` | 35,448 | 28,915 | 64 |
-| `tensornet/packs/` | 26,239 | 21,200 | 23 |
-| `tensornet/quantum/` | 25,180 | 20,118 | 103 |
-| `tensornet/sim/` | 18,689 | 15,256 | 31 |
-| `tensornet/em/` | 17,327 | 14,403 | 24 |
+| `ontic/cfd/` | 80,534 | 63,540 | 119 |
+| `ontic/infra/` | 56,829 | 45,952 | 120 |
+| `ontic/genesis/` | 41,928 | 33,099 | 87 |
+| `ontic/ml/` | 40,629 | 33,243 | 83 |
+| `ontic/engine/` | 36,601 | 29,769 | 96 |
+| `ontic/aerospace/` | 35,448 | 28,915 | 64 |
+| `ontic/packs/` | 26,239 | 21,200 | 23 |
+| `ontic/quantum/` | 25,180 | 20,118 | 103 |
+| `ontic/sim/` | 18,689 | 15,256 | 31 |
+| `ontic/em/` | 17,327 | 14,403 | 24 |
 | + 95 more modules | ~121,812 | — | ~468 |
-| **Total `tensornet/`** | **500,216** | **402,591** | **1,218** |
+| **Total `ontic/`** | **500,216** | **402,591** | **1,218** |
 
 ---
 
@@ -201,10 +201,10 @@ The Physics OS Platform Shell (v4.0.0) is the commercial product surface over th
 
 | Surface | Entry Point | Purpose | Auth |
 |---------|-------------|---------|:----:|
-| **REST API** | `hypertensor.api.app:app` | 9-endpoint FastAPI server for job submission, results, certificates | Bearer |
-| **Python SDK** | `hypertensor.sdk.client` | Sync + async typed client with polling, local validation | Bearer |
+| **REST API** | `physics_os.api.app:app` | 9-endpoint FastAPI server for job submission, results, certificates | Bearer |
+| **Python SDK** | `physics_os.sdk.client` | Sync + async typed client with polling, local validation | Bearer |
 | **CLI** | `python -m hypertensor` | `run`, `validate`, `attest`, `verify`, `serve` commands | Key |
-| **MCP Server** | `hypertensor.mcp.server` | 11 AI-agent-callable tools for physics simulation workflows | Config |
+| **MCP Server** | `physics_os.mcp.server` | 11 AI-agent-callable tools for physics simulation workflows | Config |
 
 ### §4.3 Job Model
 
@@ -238,7 +238,7 @@ Idempotency is provided via `X-Idempotency-Key` header. Duplicate submissions wi
 
 ### §4.4 Security Architecture
 
-**IP Boundary.** The `sanitize_result()` function in `hypertensor/core/sanitizer.py` is the **sole exit path** from the QTT runtime to the public API. It performs whitelist-only extraction — only explicitly listed fields pass through. Everything else is discarded at the function boundary. This is not a filter; it is a reconstruction step that builds a new dictionary from scratch.
+**IP Boundary.** The `sanitize_result()` function in `physics_os/core/sanitizer.py` is the **sole exit path** from the QTT runtime to the public API. It performs whitelist-only extraction — only explicitly listed fields pass through. Everything else is discarded at the function boundary. This is not a filter; it is a reconstruction step that builds a new dictionary from scratch.
 
 **Allowed fields:** domain, grid metadata, dense field values (from `qtt.to_dense()`), conservation metrics, performance timing, validation reports, certificate metadata.
 
@@ -295,39 +295,39 @@ Three-tier determinism envelope per [`DETERMINISM_ENVELOPE.md`](docs/governance/
 
 10-gate launch checklist tracked in [`LAUNCH_GATE_MATRIX.json`](docs/operations/LAUNCH_GATE_MATRIX.json) with 55+ criteria and evidence references. Human-readable overview: [`LAUNCH_READINESS.md`](docs/product/LAUNCH_READINESS.md).
 
-### §4.9 `hypertensor/` Package Layout (31 files, 3,965 lines)
+### §4.9 `physics_os/` Package Layout (31 files, 3,965 lines)
 
 | Package | Files | Purpose |
 |---------|:-----:|---------|
-| `hypertensor/api/` | 8 | FastAPI application, routers (jobs, validate, capabilities, contracts, health), auth, config |
-| `hypertensor/core/` | 6 | Content-addressed hasher, 7-domain compiler registry, VM executor bridge, IP sanitizer, evidence generator, Ed25519 certificates |
-| `hypertensor/jobs/` | 2 | 6-state machine, thread-safe in-memory store with idempotency |
-| `hypertensor/sdk/` | 1 | Sync + async typed client |
-| `hypertensor/cli/` | 3 | CLI entry point and command dispatch |
-| `hypertensor/mcp/` | 1 | MCP server with 11 AI-agent tools |
+| `physics_os/api/` | 8 | FastAPI application, routers (jobs, validate, capabilities, contracts, health), auth, config |
+| `physics_os/core/` | 6 | Content-addressed hasher, 7-domain compiler registry, VM executor bridge, IP sanitizer, evidence generator, Ed25519 certificates |
+| `physics_os/jobs/` | 2 | 6-state machine, thread-safe in-memory store with idempotency |
+| `physics_os/sdk/` | 1 | Sync + async typed client |
+| `physics_os/cli/` | 3 | CLI entry point and command dispatch |
+| `physics_os/mcp/` | 1 | MCP server with 11 AI-agent tools |
 | `contracts/v1/` | 2 | Runtime contract spec + JSON Schema for artifact envelopes |
 
 ---
 
 ## §5 Physics VM — QTT Execution Engine
 
-The Physics VM (`tensornet/vm/`, 29 files, 9,896 LOC) is a register-based bytecode execution engine for Quantized Tensor Train computations. It compiles physics domain specifications into an intermediate representation (IR) of QTT operations and executes them without ever materializing full dense arrays.
+The Physics VM (`ontic/vm/`, 29 files, 9,896 LOC) is a register-based bytecode execution engine for Quantized Tensor Train computations. It compiles physics domain specifications into an intermediate representation (IR) of QTT operations and executes them without ever materializing full dense arrays.
 
 ### §5.1 VM Architecture
 
 | Component | Module | Purpose |
 |-----------|--------|---------|
-| **IR** | `tensornet/vm/ir.py` | Instruction set defining QTT operations (create, apply operator, measure, round, step) |
-| **Compilers** | `tensornet/vm/compilers/` | Domain-specific compilers that translate physics parameters into IR instruction sequences |
-| **Runtime** | `tensornet/vm/runtime.py` | Register-based executor: allocates QTT registers, dispatches IR instructions, manages state |
-| **GPU Runtime** | `tensornet/vm/gpu_runtime.py` | CUDA/Triton-accelerated execution path for supported operations |
-| **QTT Tensor** | `tensornet/vm/qtt_tensor.py` | Core QTT data structure with TT-decomposition, orthogonalization, truncation |
-| **Operators** | `tensornet/vm/operators.py` | QTT-format differential operators (shift, Laplacian, gradient, advection) |
-| **GPU Operators** | `tensornet/vm/gpu_operators.py` | GPU-accelerated operator kernels |
-| **Rank Governor** | `tensornet/vm/rank_governor.py` | Adaptive truncation policy controlling bond dimensions during time evolution |
-| **Telemetry** | `tensornet/vm/telemetry.py` | Execution metrics: wall time, conservation tracking, invariant monitoring |
-| **Benchmark** | `tensornet/vm/benchmark.py` | Rank Atlas integration for QTT performance profiling |
-| **Postprocessing** | `tensornet/vm/postprocessing.py` | Dense reconstruction, field extraction, coordinate generation |
+| **IR** | `ontic/vm/ir.py` | Instruction set defining QTT operations (create, apply operator, measure, round, step) |
+| **Compilers** | `ontic/vm/compilers/` | Domain-specific compilers that translate physics parameters into IR instruction sequences |
+| **Runtime** | `ontic/vm/runtime.py` | Register-based executor: allocates QTT registers, dispatches IR instructions, manages state |
+| **GPU Runtime** | `ontic/vm/gpu_runtime.py` | CUDA/Triton-accelerated execution path for supported operations |
+| **QTT Tensor** | `ontic/vm/qtt_tensor.py` | Core QTT data structure with TT-decomposition, orthogonalization, truncation |
+| **Operators** | `ontic/vm/operators.py` | QTT-format differential operators (shift, Laplacian, gradient, advection) |
+| **GPU Operators** | `ontic/vm/gpu_operators.py` | GPU-accelerated operator kernels |
+| **Rank Governor** | `ontic/vm/rank_governor.py` | Adaptive truncation policy controlling bond dimensions during time evolution |
+| **Telemetry** | `ontic/vm/telemetry.py` | Execution metrics: wall time, conservation tracking, invariant monitoring |
+| **Benchmark** | `ontic/vm/benchmark.py` | Rank Atlas integration for QTT performance profiling |
+| **Postprocessing** | `ontic/vm/postprocessing.py` | Dense reconstruction, field extraction, coordinate generation |
 
 ### §5.2 Domain Compilers
 
@@ -361,16 +361,16 @@ When `HYPERTENSOR_DEVICE=cuda` (or `auto` with CUDA available), the GPU runtime 
 
 | # | Platform | Location | Size | Language | Purpose |
 |:-:|----------|----------|-----:|----------|---------|
-| 1 | **Physics OS Platform Shell** | `hypertensor/` | 3,965 LOC | Python | Commercial product surface: API, SDK, CLI, MCP, billing, certificates |
-| 2 | **The Ontic Engine** | `tensornet/` | ~500K LOC | Python | Physics compute engine: 105+ modules, ~1,218 files |
+| 1 | **Physics OS Platform Shell** | `physics_os/` | 3,965 LOC | Python | Commercial product surface: API, SDK, CLI, MCP, billing, certificates |
+| 2 | **The Ontic Engine** | `ontic/` | ~500K LOC | Python | Physics compute engine: 105+ modules, ~1,218 files |
 | 3 | **FluidElite** | `crates/fluidelite*/` | 57K LOC | Python + Rust | Production tensor engine + ZK prover (24 binaries) |
 | 4 | **QTeneT** | `apps/qtenet/` | ~13K LOC | Python + LaTeX | Enterprise QTT SDK: TCI, operators, solvers, demos, benchmarks |
-| 5 | **Platform Substrate** | `tensornet/platform/` + `tensornet/sdk/` | 13.7K LOC | Python | Unified simulation API: WorkflowBuilder, domain packs, V&V harness |
-| 6 | **Sovereign Compute** | `tensornet/sovereign/`, `crates/gevulot/` | 3K LOC | Python | Decentralized physics computation network |
+| 5 | **Platform Substrate** | `ontic/platform/` + `ontic/sdk/` | 13.7K LOC | Python | Unified simulation API: WorkflowBuilder, domain packs, V&V harness |
+| 6 | **Sovereign Compute** | `ontic/sovereign/`, `crates/gevulot/` | 3K LOC | Python | Decentralized physics computation network |
 
 ### §6.2 Platform Substrate V2.0.0
 
-The Platform Substrate (`tensornet/platform/`, 33 modules, 12,618 LOC) provides the canonical simulation API. All domain packs, solvers, and workflows conform to its protocols.
+The Platform Substrate (`ontic/platform/`, 33 modules, 12,618 LOC) provides the canonical simulation API. All domain packs, solvers, and workflows conform to its protocols.
 
 **Core APIs:**
 - `ProblemSpec`, `Discretization`, `Solver`, `Observable`, `Workflow` — runtime-checkable Protocol classes
@@ -378,11 +378,11 @@ The Platform Substrate (`tensornet/platform/`, 33 modules, 12,618 LOC) provides 
 - 7 PDE solvers: Poisson, advection-diffusion, Stokes, Helmholtz, wave, Euler, coupled
 - QTT acceleration: TCI black-box decomposition, Kronecker PDE solver, automatic rank control
 
-**SDK** (`tensornet/sdk/`, 3 files, 1,072 LOC):
+**SDK** (`ontic/sdk/`, 3 files, 1,072 LOC):
 - `WorkflowBuilder` fluent API: `.domain()` → `.mesh()` → `.physics()` → `.solve()` → `.export()`
 - Pre-built recipes: `thermal_analysis`, `cfd_pipeline`, `structural_analysis`
 
-**V&V Harness** (`tensornet/platform/vv/`, 6 files, 2,418 LOC):
+**V&V Harness** (`ontic/platform/vv/`, 6 files, 2,418 LOC):
 - Convergence studies (h/p/dt with Richardson extrapolation)
 - Conservation tracking (mass, momentum, energy)
 - Method of Manufactured Solutions framework
@@ -393,7 +393,7 @@ The Platform Substrate (`tensornet/platform/`, 33 modules, 12,618 LOC) provides 
 | Type | Definition | Usage | Example |
 |------|------------|-------|---------|
 | **Platform** | Integrated system with APIs and infrastructure | Deploy & configure | Physics OS Platform Shell |
-| **Module** | Reusable library with `__init__.py` | `import` statement | `tensornet/cfd/` |
+| **Module** | Reusable library with `__init__.py` | `import` statement | `ontic/cfd/` |
 | **Application** | Standalone executable with `main()` | `python script.py` | `hellskin_gauntlet.py` |
 | **Tool** | Single-purpose utility | Invoke for specific task | `verilog_elite_analyzer.py` |
 
@@ -405,8 +405,8 @@ All version numbers are synchronized via `tools/sync_versions.py`, which validat
 |-----------|:-------:|--------|-------|
 | **Release** | v4.0.1 | Git tag (v4.0.0 baseline: `569ff1da`) | Infrastructure-hardened baseline |
 | **Platform** | V3.0.0 | `README.md` badge | Overall The Physics OS version |
-| **Platform Substrate API** | V2.0.0 | `tensornet/platform/__init__.py` | Platform module API version |
-| **Package (tensornet)** | 40.0.1 | `tensornet.__version__` | Physics engine package version |
+| **Platform Substrate API** | V2.0.0 | `ontic/platform/__init__.py` | Platform module API version |
+| **Package (tensornet)** | 40.0.1 | `ontic.__version__` | Physics engine package version |
 | **Package (hypertensor)** | 40.0.1 | `hypertensor.__version__` | Runtime Access Layer package version |
 | **Runtime Version** | 1.0.0 | `hypertensor.RUNTIME_VERSION` | Execution engine compatibility version |
 | **API Version** | 2.0.0 | `hypertensor.API_VERSION` | API contract schema version |
@@ -420,10 +420,10 @@ All version numbers are synchronized via `tools/sync_versions.py`, which validat
 |:----------:|------|-------|
 | 1 | `pyproject.toml` | `version` → PACKAGE (40.0.1) |
 | 2 | `CITATION.cff` | `version` → RELEASE (4.0.0) |
-| 3 | `tensornet/__init__.py` | `__version__` → PACKAGE (40.0.1) |
-| 4 | `hypertensor/__init__.py` | `__version__` → PACKAGE (40.0.1) |
-| 5 | `hypertensor/__init__.py` | `RUNTIME_VERSION` → RUNTIME (1.0.0) |
-| 6 | `hypertensor/__init__.py` | `API_VERSION` → SUBSTRATE_API (2.0.0) |
+| 3 | `ontic/__init__.py` | `__version__` → PACKAGE (40.0.1) |
+| 4 | `physics_os/__init__.py` | `__version__` → PACKAGE (40.0.1) |
+| 5 | `physics_os/__init__.py` | `RUNTIME_VERSION` → RUNTIME (1.0.0) |
+| 6 | `physics_os/__init__.py` | `API_VERSION` → SUBSTRATE_API (2.0.0) |
 | 7 | `Cargo.toml` | `# Version:` comment → RELEASE (4.0.0) |
 
 ---
@@ -496,14 +496,14 @@ The TENSOR GENESIS Protocol extends QTT into 8 unexploited mathematical domains.
 
 | Layer | Primitive | Module | LOC | Key Capability |
 |:-----:|-----------|--------|----:|----------------|
-| 20 | **QTT-OT** | `tensornet/genesis/ot/` | 4,190 | Trillion-point Sinkhorn optimal transport in O(r³ log N) |
-| 21 | **QTT-SGW** | `tensornet/genesis/sgw/` | 2,822 | Billion-node spectral graph wavelets with Chebyshev filters |
-| 22 | **QTT-RMT** | `tensornet/genesis/rmt/` | 2,501 | Random matrix eigenvalue statistics without dense storage |
-| 23 | **QTT-TG** | `tensornet/genesis/tropical/` | 3,143 | Shortest paths via tropical min-plus semiring algebra |
-| 24 | **QTT-RKHS** | `tensornet/genesis/rkhs/` | 2,904 | Trillion-sample Gaussian processes with QTT kernel matrices |
-| 25 | **QTT-PH** | `tensornet/genesis/topology/` | 2,149 | Persistent homology (Betti numbers β₀, β₁, β₂) at scale |
-| 26 | **QTT-GA** | `tensornet/genesis/ga/` | 3,277 | Clifford algebras Cl(p,q,r) — Cl(50) in KB, not PB |
-| 27 | **QTT-Aging** | `tensornet/genesis/aging/` | 5,210 | Biological aging as rank growth; reversal as rank reduction |
+| 20 | **QTT-OT** | `ontic/genesis/ot/` | 4,190 | Trillion-point Sinkhorn optimal transport in O(r³ log N) |
+| 21 | **QTT-SGW** | `ontic/genesis/sgw/` | 2,822 | Billion-node spectral graph wavelets with Chebyshev filters |
+| 22 | **QTT-RMT** | `ontic/genesis/rmt/` | 2,501 | Random matrix eigenvalue statistics without dense storage |
+| 23 | **QTT-TG** | `ontic/genesis/tropical/` | 3,143 | Shortest paths via tropical min-plus semiring algebra |
+| 24 | **QTT-RKHS** | `ontic/genesis/rkhs/` | 2,904 | Trillion-sample Gaussian processes with QTT kernel matrices |
+| 25 | **QTT-PH** | `ontic/genesis/topology/` | 2,149 | Persistent homology (Betti numbers β₀, β₁, β₂) at scale |
+| 26 | **QTT-GA** | `ontic/genesis/ga/` | 3,277 | Clifford algebras Cl(p,q,r) — Cl(50) in KB, not PB |
+| 27 | **QTT-Aging** | `ontic/genesis/aging/` | 5,210 | Biological aging as rank growth; reversal as rank reduction |
 
 **Cross-Primitive Pipeline** — Chains OT → SGW → RKHS → PH → GA end-to-end without densification:
 
@@ -681,7 +681,7 @@ Partial Wave Analysis replication of Badui (2020), "Extraction of Spin Density M
 
 ### §13.3 V&V Framework
 
-Verification and Validation follows ASME V&V 10-2019 principles via `tensornet/platform/vv/`:
+Verification and Validation follows ASME V&V 10-2019 principles via `ontic/platform/vv/`:
 
 | Method | Implementation | Purpose |
 |--------|---------------|---------|
@@ -694,7 +694,7 @@ Verification and Validation follows ASME V&V 10-2019 principles via `tensornet/p
 
 ### §13.4 Gauntlets (38)
 
-38 dedicated validation gauntlets in `tools/scripts/gauntlets/` covering all major subsystems. Each gauntlet produces a cryptographically signed attestation JSON with SHA-256 commit binding. An additional 8 inline module gauntlets reside within `tensornet/genesis/`.
+38 dedicated validation gauntlets in `tools/scripts/gauntlets/` covering all major subsystems. Each gauntlet produces a cryptographically signed attestation JSON with SHA-256 commit binding. An additional 8 inline module gauntlets reside within `ontic/genesis/`.
 
 <details>
 <summary><strong>Full Gauntlet List — 38 Standalone + 8 Inline</strong></summary>
@@ -742,7 +742,7 @@ Verification and Validation follows ASME V&V 10-2019 principles via `tensornet/p
 | `trustless_physics_phase9_gauntlet.py` | TPC Phase 9 | ✅ |
 | `trustless_physics_phase10_gauntlet.py` | TPC Phase 10 | ✅ |
 
-**Inline Module Gauntlets** (`tensornet/genesis/`)
+**Inline Module Gauntlets** (`ontic/genesis/`)
 
 | Gauntlet | Domain | Tests |
 |----------|--------|:-----:|
@@ -806,8 +806,8 @@ Launch readiness is tracked via [`LAUNCH_GATE_MATRIX.json`](docs/operations/LAUN
 
 | Language | Total Lines | Code Lines | Files | Primary Location |
 |----------|----------:|----------:|------:|-----------------|
-| **Python** | 993,624 | 802,554 | 2,302 | `tensornet/`, `hypertensor/`, `tests/`, `tools/scripts/` |
-| **Markdown** | 281,239 | 203,353 | 696 | `docs/`, repo root, `tensornet/` |
+| **Python** | 993,624 | 802,554 | 2,302 | `ontic/`, `physics_os/`, `tests/`, `tools/scripts/` |
+| **Markdown** | 281,239 | 203,353 | 696 | `docs/`, repo root, `ontic/` |
 | **HTML** | 201,974 | 186,699 | 339 | `apps/`, `experiments/` |
 | **Rust** | 132,120 | 113,986 | 313 | `crates/`, `apps/glass_cockpit/` |
 | **Solidity** | 103,772 | 91,801 | 483 | `contracts/`, `proofs/`, `experiments/` |
@@ -818,7 +818,7 @@ Launch readiness is tracked via [`LAUNCH_GATE_MATRIX.json`](docs/operations/LAUN
 | **CSS** | 7,658 | 6,787 | 42 | `experiments/lux/`, `apps/` |
 | **+ 9 more** | 84,505 | 66,811 | 146 | Shell, WGSL, CUDA, TOML, Docker, Circom, GLSL, Config |
 
-### §14.2 Python Breakdown — `tensornet/` Modules
+### §14.2 Python Breakdown — `ontic/` Modules
 
 | Module | Files | LOC | Purpose |
 |--------|------:|----:|---------|
@@ -837,7 +837,7 @@ Launch readiness is tracked via [`LAUNCH_GATE_MATRIX.json`](docs/operations/LAUN
 | + 93 more | ~381 | ~91,304 | Domain-specific modules (fusion, hyperenv, guidance, etc.) |
 | **Total** | **1,218** | **500,216** | |
 
-> *INVENTORY.md uses a broader file traversal (all git-tracked files) and may report slightly higher totals for `tensornet/`. The §3 sweep uses the `forensic_loc_sweep_v2.py` methodology which excludes JSON, binary, and vendored files.*
+> *INVENTORY.md uses a broader file traversal (all git-tracked files) and may report slightly higher totals for `ontic/`. The §3 sweep uses the `forensic_loc_sweep_v2.py` methodology which excludes JSON, binary, and vendored files.*
 
 ### §14.3 Rust Workspace Inventory (19 Members)
 
@@ -876,11 +876,11 @@ Launch readiness is tracked via [`LAUNCH_GATE_MATRIX.json`](docs/operations/LAUN
 
 | Type | Count | Location | Purpose |
 |------|:-----:|----------|---------|
-| CUDA Kernels | 11 | `tensornet/cuda/`, `tensornet/gpu/` | TT contraction, MPO×MPS, QTT rounding, advection, diffusion, pressure |
+| CUDA Kernels | 11 | `ontic/cuda/`, `ontic/gpu/` | TT contraction, MPO×MPS, QTT rounding, advection, diffusion, pressure |
 | Triton Kernels | 3 | `fluidelite/core/` | MPO kernel, tensor-times-matrix |
 | WGSL Shaders | 18 | `apps/glass_cockpit/src/shaders/` | Atmosphere, cloud, earth, flow, HUD, PBR, terrain, trajectory, vortex, wake |
 
-### §14.6 `hypertensor/` Package Breakdown
+### §14.6 `physics_os/` Package Breakdown
 
 | File | LOC | Purpose |
 |------|----:|---------|
@@ -935,10 +935,10 @@ flowchart TB
 
     subgraph engine["Physics Compute Engine"]
         direction TB
-        vm["Physics VM (tensornet/vm/)"]
+        vm["Physics VM (ontic/vm/)"]
         compilers["7 Domain Compilers"]
         rank_gov["Rank Governor"]
-        subgraph physics["tensornet/ — ~500K LOC"]
+        subgraph physics["ontic/ — ~500K LOC"]
             direction LR
             cfd["CFD 77K"]
             genesis["Genesis 42K"]
@@ -1004,7 +1004,7 @@ flowchart TB
 │  └──────────────────────────────────┬───────────────────────────────────────┘  │
 │                                     │                                           │
 │  ┌──────────────────────────────────▼───────────────────────────────────────┐  │
-│  │         tensornet/ Physics Engine (~1,218 files, ~500K LOC)              │  │
+│  │         ontic/ Physics Engine (~1,218 files, ~500K LOC)              │  │
 │  │  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐     │  │
 │  │  │ CFD    │ │Genesis │ │Exploit │ │ Packs  │ │Discover│ │Platform│     │  │
 │  │  │ 77K    │ │ 42K    │ │ 28K    │ │ 26K    │ │ 25K    │ │ 15K    │     │  │
@@ -1071,14 +1071,14 @@ Client                    API                     Runtime                    VM
 
 | # | Platform | Location | Size | Language |
 |:-:|----------|----------|:----:|----------|
-| 1 | Physics OS Platform Shell | `hypertensor/` | 3,965 LOC | Python |
-| 2 | The Ontic Engine | `tensornet/` | ~500K LOC | Python |
+| 1 | Physics OS Platform Shell | `physics_os/` | 3,965 LOC | Python |
+| 2 | The Ontic Engine | `ontic/` | ~500K LOC | Python |
 | 3 | FluidElite + ZK | `crates/fluidelite*/` | 57K LOC | Python + Rust |
 | 4 | QTeneT Enterprise SDK | `apps/qtenet/` | ~13K LOC | Python + LaTeX |
-| 5 | Platform Substrate + SDK | `tensornet/platform/`, `tensornet/sdk/` | 13.7K LOC | Python |
-| 6 | Sovereign Compute | `tensornet/sovereign/`, `crates/gevulot/` | 3K LOC | Python |
+| 5 | Platform Substrate + SDK | `ontic/platform/`, `ontic/sdk/` | 13.7K LOC | Python |
+| 6 | Sovereign Compute | `ontic/sovereign/`, `crates/gevulot/` | 3K LOC | Python |
 
-### §16.2 Python Modules (105+ in `tensornet/`)
+### §16.2 Python Modules (105+ in `ontic/`)
 
 See [§14.2](#142-python-breakdown--tensornet-modules) for the full breakdown.
 
@@ -1147,13 +1147,13 @@ Deployment topology per [`OPERATIONS_RUNBOOK.md`](docs/operations/OPERATIONS_RUN
    [Shared Artifact Store]     ← Signed certificates, results
 ```
 
-**Startup sequence**: `uvicorn hypertensor.api.app:create_app --factory --host 0.0.0.0 --port 8000`
+**Startup sequence**: `uvicorn physics_os.api.app:create_app --factory --host 0.0.0.0 --port 8000`
 
 ### §17.4 Logging & Monitoring
 
 | Component | Configuration | Reference |
 |-----------|--------------|-----------|
-| **Structured Logging** | JSON format, configurable level | `hypertensor/api/config.py` |
+| **Structured Logging** | JSON format, configurable level | `physics_os/api/config.py` |
 | **Security Filtering** | No API keys, no signing material in logs (enforced by `test_log_security.py`) | [`SECURITY_OPERATIONS.md`](docs/operations/SECURITY_OPERATIONS.md) |
 | **Health Endpoint** | `GET /v1/health` — liveness check | API |
 | **Metering Telemetry** | Per-job CU capture (device, duration, error) | Per [`METERING_POLICY.md`](docs/governance/METERING_POLICY.md) |
@@ -1171,11 +1171,11 @@ Deployment topology per [`OPERATIONS_RUNBOOK.md`](docs/operations/OPERATIONS_RUN
 | `docs.yml` | Push to main (docs/**) | Build & deploy MkDocs Material site to GitHub Pages |
 | `audit-gates.yml` | Push/PR | Audit gate enforcement (version sync, forbidden outputs, security) |
 | `contracts-ci.yml` | Push/PR (contracts/**) | Contract schema validation (JSON Schema + OpenAPI) |
-| `exploit-engine.yml` | Push/PR (tensornet/exploit/**) | Smart contract exploit engine validation |
+| `exploit-engine.yml` | Push/PR (ontic/exploit/**) | Smart contract exploit engine validation |
 | `facial-plastics-ci.yml` | Push/PR (products/**) | Facial plastics product test suite (941 tests) |
 | `hardening.yml` | Push/PR | Production hardening gates (log security, certificate integrity) |
 | `ledger-validation.yml` | Push/PR (apps/ledger/**) | Capability ledger schema/integrity validation (168 nodes) |
-| `vv-validation.yml` | Push/PR (tensornet/platform/vv/**) | V&V framework conformance checks |
+| `vv-validation.yml` | Push/PR (ontic/platform/vv/**) | V&V framework conformance checks |
 
 #### Makefile Orchestration (30+ Targets)
 
@@ -1338,7 +1338,7 @@ The `VERSION` file at the repository root is the single source of truth. `tools/
 
 #### Dependency Graph (`tools/dep_graph.py`)
 
-Visualizes inter-module dependencies across `tensornet/` subpackages:
+Visualizes inter-module dependencies across `ontic/` subpackages:
 
 ```bash
 $ python tools/dep_graph.py --group-only
@@ -1356,7 +1356,7 @@ Outputs Mermaid flowcharts, DOT graphs, or SVG images. The 16 module groups and 
 
 #### PEP 561 Type Marker
 
-`tensornet/py.typed` enables downstream consumers to use `tensornet` type stubs with mypy, pyright, and other type checkers without `--ignore-missing-imports`.
+`ontic/py.typed` enables downstream consumers to use `tensornet` type stubs with mypy, pyright, and other type checkers without `--ignore-missing-imports`.
 
 #### Pre-Commit Hooks
 
@@ -1429,10 +1429,10 @@ Domain-ownership enforcement via `.github/CODEOWNERS`:
 
 | Path Pattern | Owner | Domain |
 |-------------|-------|--------|
-| `tensornet/cfd/**` | `@tigantic/cfd-team` | Computational Fluid Dynamics |
-| `tensornet/genesis/**` | `@tigantic/genesis-team` | QTT Meta-Primitives |
-| `tensornet/vm/**` | `@tigantic/vm-team` | Physics VM |
-| `hypertensor/**` | `@tigantic/runtime-team` | Runtime Access Layer |
+| `ontic/cfd/**` | `@tigantic/cfd-team` | Computational Fluid Dynamics |
+| `ontic/genesis/**` | `@tigantic/genesis-team` | QTT Meta-Primitives |
+| `ontic/vm/**` | `@tigantic/vm-team` | Physics VM |
+| `physics_os/**` | `@tigantic/runtime-team` | Runtime Access Layer |
 | `crates/**` | `@tigantic/rust-team` | Rust Substrate |
 | `proofs/**` | `@tigantic/proofs-team` | Formal Verification |
 | `contracts/**` | `@tigantic/contracts-team` | API Contracts |
@@ -1500,10 +1500,10 @@ pip install tensornet[all]              # Everything
 | **Blender** | Python add-on | — | Planned |
 | **FreeCAD** | Python add-on | — | Planned |
 | **VS Code** | Extension | — | Planned |
-| **Blockchain** | Substrate / Polkadot | `tensornet/sovereign/` | Beta |
+| **Blockchain** | Substrate / Polkadot | `ontic/sovereign/` | Beta |
 | **ZK Network** | Gevulot protocol | `crates/gevulot/`, `crates/fluidelite_zk/` | Beta |
-| **MCP** | Model Context Protocol | `hypertensor/mcp/server.py` (11 tools) | v1.0.0 |
-| **REST API** | OpenAPI 3.1 | `hypertensor/api/` (9 endpoints) | v1.0.0 |
+| **MCP** | Model Context Protocol | `physics_os/mcp/server.py` (11 tools) | v1.0.0 |
+| **REST API** | OpenAPI 3.1 | `physics_os/api/` (9 endpoints) | v1.0.0 |
 
 ### §18.2 Cross-Language Bridges
 
@@ -1521,7 +1521,7 @@ pip install tensornet[all]              # Everything
 | **JSON** | API request/response, attestation envelopes, certificates |
 | **Protocol Buffers** | Cross-language tensor exchange (hyper_bridge) |
 | **NPZ** | NumPy array serialization (internal tensors) |
-| **VTK/VTU** | CFD visualization export (`tensornet/platform/export/`) |
+| **VTK/VTU** | CFD visualization export (`ontic/platform/export/`) |
 | **ONNX** | Neural network import/export |
 | **Parquet** | Tabular results (discovery, optimization) |
 
@@ -1574,7 +1574,7 @@ pip install tensornet[all]              # Everything
 
 The API surface is **frozen** as of v4.0.0 per [`API_SURFACE_FREEZE.md`](docs/governance/API_SURFACE_FREEZE.md):
 
-- **Frozen endpoints**: 9 (all in `hypertensor/api/routers/`)
+- **Frozen endpoints**: 9 (all in `physics_os/api/routers/`)
 - **Frozen schemas**: `JobRequest`, `JobResponse`, `ArtifactEnvelope`, `TrustCertificate`, `ValidationReport`, `Capabilities`, `ContractSchema`
 - **Frozen error codes**: E001–E012 (see [§4.5](#45-error-model))
 - **Versioning policy**: URI-versioned (`/v1/`), additive-only changes within a major version
@@ -1698,7 +1698,7 @@ HyperTensor-VM-main/
 │       ├── ledger-validation.yml   #   Ledger integrity (168 nodes)
 │       └── vv-validation.yml       #   V&V framework checks
 ├── CODEOWNERS                      # 289 path-to-owner mappings (domain-expert review)
-├── hypertensor/                    # Runtime Access Layer (v4.0.0)
+├── physics_os/                    # Runtime Access Layer (v4.0.0)
 │   ├── api/                        #   FastAPI server (9 endpoints)
 │   │   ├── routers/                #     Job, validate, capabilities, contracts, health
 │   │   ├── auth.py                 #     Bearer token + rate limiting
@@ -1715,7 +1715,7 @@ HyperTensor-VM-main/
 │   ├── cli/                        #   CLI (run, validate, attest, verify, serve)
 │   ├── mcp/                        #   MCP server (11 AI-agent tools)
 │   └── contracts/                  #   JSON Schema contract templates
-├── tensornet/                      # Physics Engine (~500K LOC, 105+ modules)
+├── ontic/                      # Physics Engine (~500K LOC, 105+ modules)
 │   ├── py.typed                    #   PEP 561 type marker
 │   ├── vm/                         #   Physics VM (IR, compilers, runtime, rank governor)
 │   ├── cfd/                        #   CFD solvers (77K LOC)
@@ -1842,7 +1842,7 @@ This release hardens the v4.0.0 baseline with production-grade developer infrast
 - **Release Automation**: Tag-driven workflow (`.github/workflows/release.yml`) with OIDC trusted publishing, dry-run support, 4-stage pipeline
 - **Dependabot**: Automated dependency updates for pip, cargo, and GitHub Actions ecosystems (weekly Monday schedule)
 - **Feature Flags**: 16 pip extras in `pyproject.toml` (cfd, quantum, plasma, ml, em, aerospace, etc.)
-- **PEP 561**: `tensornet/py.typed` marker for downstream type checker compatibility
+- **PEP 561**: `ontic/py.typed` marker for downstream type checker compatibility
 - **Git Hygiene**: Zone.Identifier files removed, `.gitattributes` LFS tracking for binary assets, credential (`gevulot_key.json`) removed from index
 - **Test Suite Expansion**: 35 new `test_hypertensor.py` tests covering Runtime Access Layer (version metadata, imports, hasher, sanitizer, registry, job models, store); total tests 370+
 - **Security**: `gevulot_key.json` removed from git tracking, `*_key.json` pattern added to `.gitignore`, ledger validation paths corrected (`ledger/` → `apps/ledger/`)
@@ -1856,7 +1856,7 @@ This release hardens the v4.0.0 baseline with production-grade developer infrast
 
 The v4.0.0 release introduces the **Physics OS Platform Shell** — the product-grade API, SDK, CLI, and MCP server that makes the physics engine commercially accessible. This release also establishes the scope freeze: all surfaces, schemas, error codes, and contracts are locked.
 
-- **Runtime Access Layer** (`hypertensor/`, 31 files, 3,965 LOC):
+- **Runtime Access Layer** (`physics_os/`, 31 files, 3,965 LOC):
   - FastAPI server with 9 frozen endpoints across 5 routers
   - Ed25519 trust certificates with SHA-256 content-addressed hashing
   - 6-state job lifecycle: `pending → running → completed / failed / cancelled`, with `validating` gate
@@ -2035,9 +2035,9 @@ See [`CHANGELOG.md`](CHANGELOG.md) for complete history.
 |-----------|:-------:|----------|-----------|
 | Release Tag | v4.0.1 | Latest release | Hardened baseline |
 | Platform | V3.0.0 | `README.md` badge | Overall system version |
-| Substrate API | V2.0.0 | `tensornet/platform/__init__.py` | Platform module API |
-| Package (tensornet) | 40.0.1 | `tensornet/__init__.py` | Physics engine package |
-| Package (hypertensor) | 40.0.1 | `hypertensor/__init__.py` | Runtime Access Layer package |
+| Substrate API | V2.0.0 | `ontic/platform/__init__.py` | Platform module API |
+| Package (tensornet) | 40.0.1 | `ontic/__init__.py` | Physics engine package |
+| Package (hypertensor) | 40.0.1 | `physics_os/__init__.py` | Runtime Access Layer package |
 | Runtime Version | 1.0.0 | `hypertensor.RUNTIME_VERSION` | Execution engine compatibility |
 | API Version | 2.0.0 | `hypertensor.API_VERSION` | API contract schema |
 | API Contract (URI) | v1 | `/v1/` URI prefix | Frozen endpoint contract |

@@ -16,27 +16,27 @@ class TestCoreImports:
     """Test that all core components import correctly."""
 
     def test_tensornet_import_succeeds_when_installed(self):
-        """Test that tensornet imports and has version when installed."""
-        import tensornet
+        """Test that ontic imports and has version when installed."""
+        import ontic
 
-        assert hasattr(tensornet, "__version__")
-        assert tensornet.__version__ == "40.0.1"
+        assert hasattr(ontic, "__version__")
+        assert ontic.__version__ == "40.0.1"
 
     def test_mps_import_succeeds_when_installed(self):
         """Test that MPS imports successfully when installed."""
-        from tensornet import MPS
+        from ontic import MPS
 
         assert MPS is not None
 
     def test_mpo_import_succeeds_when_installed(self):
         """Test that MPO imports successfully when installed."""
-        from tensornet import MPO
+        from ontic import MPO
 
         assert MPO is not None
 
     def test_algorithms_import_succeeds_when_installed(self):
         """Test that algorithms import successfully when installed."""
-        from tensornet import dmrg, lanczos_ground_state, tebd
+        from ontic import dmrg, lanczos_ground_state, tebd
 
         assert dmrg is not None
         assert tebd is not None
@@ -44,7 +44,7 @@ class TestCoreImports:
 
     def test_hamiltonians_import_succeeds_when_installed(self):
         """Test that hamiltonians import successfully when installed."""
-        from tensornet import bose_hubbard_mpo, heisenberg_mpo, tfim_mpo
+        from ontic import bose_hubbard_mpo, heisenberg_mpo, tfim_mpo
 
         assert heisenberg_mpo is not None
         assert tfim_mpo is not None
@@ -52,7 +52,7 @@ class TestCoreImports:
 
     def test_cfd_import_succeeds_when_installed(self):
         """Test that CFD imports successfully when installed."""
-        from tensornet import Euler1D, exact_riemann, sod_shock_tube_ic
+        from ontic import Euler1D, exact_riemann, sod_shock_tube_ic
 
         assert Euler1D is not None
         assert sod_shock_tube_ic is not None
@@ -64,7 +64,7 @@ class TestMPS:
 
     def test_mps_random_creates_valid_structure(self):
         """Test that MPS.random creates valid tensor structure."""
-        from tensornet import MPS
+        from ontic import MPS
 
         psi = MPS.random(L=10, d=2, chi=8)
         assert psi.L == 10
@@ -76,7 +76,7 @@ class TestMPS:
 
     def test_mps_norm_equals_one_when_normalized(self):
         """Test that MPS norm equals one when normalized."""
-        from tensornet import MPS
+        from ontic import MPS
 
         psi = MPS.random(L=6, d=2, chi=4, normalize=True)
         norm = psi.norm()
@@ -84,7 +84,7 @@ class TestMPS:
 
     def test_mps_canonicalize_produces_orthogonal_tensors(self):
         """Test that MPS canonicalize produces orthogonal tensors."""
-        from tensornet import MPS
+        from ontic import MPS
 
         psi = MPS.random(L=8, d=2, chi=4)
         psi.canonicalize_to_(4)
@@ -100,7 +100,7 @@ class TestMPS:
 
     def test_mps_ghz_has_log2_entropy_at_center(self):
         """Test that GHZ MPS has log(2) entropy at center bond."""
-        from tensornet.core.states import ghz_mps
+        from ontic.core.states import ghz_mps
 
         ghz = ghz_mps(L=5)
         assert ghz.L == 5
@@ -116,7 +116,7 @@ class TestMPO:
 
     def test_mpo_heisenberg_creates_valid_structure(self):
         """Test that heisenberg_mpo creates valid MPO structure."""
-        from tensornet import heisenberg_mpo
+        from ontic import heisenberg_mpo
 
         H = heisenberg_mpo(L=6, J=1.0)
         assert H.L == 6
@@ -124,14 +124,14 @@ class TestMPO:
 
     def test_mpo_tfim_creates_valid_structure(self):
         """Test that tfim_mpo creates valid MPO structure."""
-        from tensornet import tfim_mpo
+        from ontic import tfim_mpo
 
         H = tfim_mpo(L=8, J=1.0, g=0.5)
         assert H.L == 8
 
     def test_mpo_heisenberg_is_hermitian(self):
         """Test that Heisenberg MPO is Hermitian."""
-        from tensornet import heisenberg_mpo
+        from ontic import heisenberg_mpo
 
         H = heisenberg_mpo(L=4, J=1.0)
         assert H.is_hermitian()
@@ -143,7 +143,7 @@ class TestDMRG:
 
     def test_dmrg_runs_without_error_on_small_chain(self):
         """Test that DMRG runs without error on small chain."""
-        from tensornet import dmrg, heisenberg_mpo
+        from ontic import dmrg, heisenberg_mpo
 
         H = heisenberg_mpo(L=4, J=1.0)
         result = dmrg(H, chi_max=16, num_sweeps=3, tol=1e-8)
@@ -161,7 +161,7 @@ class TestTEBD:
 
     def test_tebd_gates_have_correct_shape_for_heisenberg(self):
         """Test that TEBD gates have correct shape for Heisenberg."""
-        from tensornet.algorithms.tebd import build_heisenberg_gates
+        from ontic.algorithms.tebd import build_heisenberg_gates
 
         gates_odd, gates_even = build_heisenberg_gates(L=6, dt=0.01)
 
@@ -177,7 +177,7 @@ class TestCFD:
 
     def test_euler1d_creates_correct_grid_spacing(self):
         """Test that Euler1D creates correct grid spacing."""
-        from tensornet import Euler1D
+        from ontic import Euler1D
 
         solver = Euler1D(N=100, x_min=0.0, x_max=1.0)
         assert solver.N == 100
@@ -185,7 +185,7 @@ class TestCFD:
 
     def test_euler1d_sod_ic_has_correct_states(self):
         """Test that Sod IC has correct left and right states."""
-        from tensornet import Euler1D, sod_shock_tube_ic
+        from ontic import Euler1D, sod_shock_tube_ic
 
         solver = Euler1D(N=50)
         ic = sod_shock_tube_ic(N=50)
@@ -201,7 +201,7 @@ class TestCFD:
 
     def test_euler1d_step_advances_time_positively(self):
         """Test that Euler1D step advances time positively."""
-        from tensornet import Euler1D, sod_shock_tube_ic
+        from ontic import Euler1D, sod_shock_tube_ic
 
         solver = Euler1D(N=100)
         ic = sod_shock_tube_ic(N=100)
@@ -217,7 +217,7 @@ class TestCFD:
 
     def test_euler1d_to_mps_preserves_dimensions(self):
         """Test that euler_to_mps preserves dimensions."""
-        from tensornet import Euler1D, euler_to_mps, sod_shock_tube_ic
+        from ontic import Euler1D, euler_to_mps, sod_shock_tube_ic
 
         N = 50
         ic = sod_shock_tube_ic(N)
@@ -231,7 +231,7 @@ class TestCFD:
         """Test that exact Riemann solver produces positive density."""
         import torch
 
-        from tensornet import exact_riemann
+        from ontic import exact_riemann
 
         x = torch.linspace(0, 1, 100)
         rho, u, p = exact_riemann(
@@ -255,7 +255,7 @@ class TestLimiters:
 
     def test_limiter_minmod_clips_to_valid_range(self):
         """Test that minmod limiter clips to valid range."""
-        from tensornet.cfd.limiters import minmod
+        from ontic.cfd.limiters import minmod
 
         r = torch.tensor([0.0, 0.5, 1.0, 2.0, -1.0])
         phi = minmod(r)
@@ -266,7 +266,7 @@ class TestLimiters:
 
     def test_limiter_superbee_is_compressive(self):
         """Test that superbee limiter is compressive."""
-        from tensornet.cfd.limiters import superbee
+        from ontic.cfd.limiters import superbee
 
         r = torch.tensor([0.5, 1.0, 2.0])
         phi = superbee(r)
@@ -280,7 +280,7 @@ class TestEuler2D:
     """Test 2D Euler solver."""
 
     def test_euler2d_creates_correct_grid_spacing(self):
-        from tensornet.cfd.euler_2d import Euler2D
+        from ontic.cfd.euler_2d import Euler2D
 
         solver = Euler2D(Nx=50, Ny=25, Lx=2.0, Ly=1.0)
         assert solver.Nx == 50
@@ -289,7 +289,7 @@ class TestEuler2D:
         assert solver.dy == 1.0 / 25
 
     def test_euler2d_state_computes_supersonic_mach(self):
-        from tensornet.cfd.euler_2d import Euler2DState
+        from ontic.cfd.euler_2d import Euler2DState
 
         Ny, Nx = 10, 20
         rho = torch.ones(Ny, Nx)
@@ -305,7 +305,7 @@ class TestEuler2D:
         assert (state.M > 1.0).all()  # Supersonic
 
     def test_euler2d_conservative_roundtrip_preserves_state(self):
-        from tensornet.cfd.euler_2d import Euler2DState
+        from ontic.cfd.euler_2d import Euler2DState
 
         Ny, Nx = 5, 5
         rho = torch.ones(Ny, Nx, dtype=torch.float64)
@@ -324,7 +324,7 @@ class TestEuler2D:
         assert torch.allclose(state.p, state2.p, atol=1e-12)
 
     def test_euler2d_supersonic_wedge_ic_creates_uniform_flow(self):
-        from tensornet.cfd.euler_2d import supersonic_wedge_ic
+        from ontic.cfd.euler_2d import supersonic_wedge_ic
 
         ic = supersonic_wedge_ic(Nx=50, Ny=25, M_inf=3.0)
 
@@ -333,7 +333,7 @@ class TestEuler2D:
         assert (ic.M < 3.1).all()
 
     def test_euler2d_step_maintains_positivity(self):
-        from tensornet.cfd.euler_2d import Euler2D, supersonic_wedge_ic
+        from ontic.cfd.euler_2d import Euler2D, supersonic_wedge_ic
 
         solver = Euler2D(Nx=20, Ny=10, Lx=1.0, Ly=0.5)
         ic = supersonic_wedge_ic(Nx=20, Ny=10, M_inf=2.0)
@@ -350,7 +350,7 @@ class TestEuler2D:
     def test_euler2d_oblique_shock_matches_theory(self):
         import math
 
-        from tensornet.cfd.euler_2d import oblique_shock_exact
+        from ontic.cfd.euler_2d import oblique_shock_exact
 
         # M=2.0, θ=10° wedge
         result = oblique_shock_exact(M1=2.0, theta=math.radians(10.0))
@@ -368,7 +368,7 @@ class TestWedgeGeometry:
     def test_wedge_creation_sets_half_angle_correctly(self):
         import math
 
-        from tensornet.cfd.geometry import WedgeGeometry
+        from ontic.cfd.geometry import WedgeGeometry
 
         wedge = WedgeGeometry(
             x_leading_edge=0.2,
@@ -382,7 +382,7 @@ class TestWedgeGeometry:
     def test_wedge_is_inside_detects_centerline_point(self):
         import math
 
-        from tensornet.cfd.geometry import WedgeGeometry
+        from ontic.cfd.geometry import WedgeGeometry
 
         wedge = WedgeGeometry(
             x_leading_edge=0.0,
@@ -406,7 +406,7 @@ class TestWedgeGeometry:
     def test_wedge_immersed_boundary_creates_mask(self):
         import math
 
-        from tensornet.cfd.geometry import ImmersedBoundary, WedgeGeometry
+        from ontic.cfd.geometry import ImmersedBoundary, WedgeGeometry
 
         Nx, Ny = 20, 20
         Lx, Ly = 1.0, 1.0
@@ -434,14 +434,14 @@ class TestBoundaryConditions:
     """Test boundary condition module."""
 
     def test_bc_types_have_correct_string_values(self):
-        from tensornet.cfd.boundaries import BCType
+        from ontic.cfd.boundaries import BCType
 
         assert BCType.PERIODIC.value == "periodic"
         assert BCType.REFLECTIVE.value == "reflective"
         assert BCType.INFLOW_SUPERSONIC.value == "inflow_supersonic"
 
     def test_flowstate_detects_supersonic_conditions(self):
-        from tensornet.cfd.boundaries import FlowState
+        from ontic.cfd.boundaries import FlowState
 
         state = FlowState(rho=1.0, u=500.0, v=0.0, p=101325.0)
 
@@ -455,15 +455,15 @@ class TestTDVP:
     """Test TDVP time evolution algorithm."""
 
     def test_tdvp_import_succeeds_when_installed(self):
-        from tensornet import TDVPResult, tdvp, tdvp_step
+        from ontic import TDVPResult, tdvp, tdvp_step
 
         assert callable(tdvp)
         assert callable(tdvp_step)
 
     def test_tdvp_result_has_expected_structure(self):
         """Test TDVPResult dataclass structure."""
-        from tensornet import MPS
-        from tensornet.algorithms.tdvp import TDVPResult
+        from ontic import MPS
+        from ontic.algorithms.tdvp import TDVPResult
 
         psi = MPS.random(L=4, d=2, chi=4)
         result = TDVPResult(
@@ -482,8 +482,8 @@ class TestTDVP:
         """Test TDVP step function exists and can be called with proper args."""
         import dataclasses
 
-        from tensornet import MPS
-        from tensornet.algorithms.tdvp import TDVPResult, tdvp_step
+        from ontic import MPS
+        from ontic.algorithms.tdvp import TDVPResult, tdvp_step
 
         # Verify the core components exist
         assert callable(tdvp_step)
@@ -502,7 +502,7 @@ class TestPhase4Integration:
     def test_oblique_shock_matches_mach5_reference(self):
         import math
 
-        from tensornet.cfd.euler_2d import oblique_shock_exact
+        from ontic.cfd.euler_2d import oblique_shock_exact
 
         # Mach 5, θ=15° wedge - exact values
         result = oblique_shock_exact(M1=5.0, theta=math.radians(15.0))
@@ -534,7 +534,7 @@ class TestQTTCompression:
     """Test Phase 5: QTT compression for TN-CFD coupling."""
 
     def test_qtt_import_succeeds_when_installed(self):
-        from tensornet import (euler_to_qtt, field_to_qtt, qtt_to_euler,
+        from ontic import (euler_to_qtt, field_to_qtt, qtt_to_euler,
                                qtt_to_field)
 
         assert callable(field_to_qtt)
@@ -544,7 +544,7 @@ class TestQTTCompression:
 
     @pytest.mark.skip(reason="QTT field_to_qtt API mismatch")
     def test_qtt_field_creates_correct_structure(self):
-        from tensornet.cfd.qtt import field_to_qtt, qtt_to_field
+        from ontic.cfd.qtt import field_to_qtt, qtt_to_field
 
         # Create simple test field (power of 2 for clean QTT)
         field = torch.randn(32, 32, dtype=torch.float64)
@@ -557,7 +557,7 @@ class TestQTTCompression:
 
     @pytest.mark.skip(reason="QTT field_to_qtt API mismatch")
     def test_qtt_roundtrip_preserves_smooth_field(self):
-        from tensornet.cfd.qtt import field_to_qtt, qtt_to_field
+        from ontic.cfd.qtt import field_to_qtt, qtt_to_field
 
         # Create smooth field (should compress well)
         x = torch.linspace(0, 1, 64, dtype=torch.float64)
@@ -575,8 +575,8 @@ class TestQTTCompression:
 
     @pytest.mark.skip(reason="QTT euler_to_qtt API mismatch")
     def test_qtt_euler_state_roundtrip_preserves_uniform(self):
-        from tensornet.cfd.euler_2d import supersonic_wedge_ic
-        from tensornet.cfd.qtt import euler_to_qtt, qtt_to_euler
+        from ontic.cfd.euler_2d import supersonic_wedge_ic
+        from ontic.cfd.qtt import euler_to_qtt, qtt_to_euler
 
         # Create Mach 3 uniform flow (should compress perfectly)
         state = supersonic_wedge_ic(Nx=64, Ny=32, M_inf=3.0)
@@ -599,7 +599,7 @@ class TestQTTCompression:
 
     @pytest.mark.skip(reason="QTT field_to_qtt API mismatch")
     def test_qtt_compression_ratio_high_for_constant(self):
-        from tensornet.cfd.qtt import field_to_qtt
+        from ontic.cfd.qtt import field_to_qtt
 
         # Large field should show good compression
         field = torch.ones(128, 128, dtype=torch.float64)
@@ -615,7 +615,7 @@ class TestViscousTerms:
     """Test Navier-Stokes viscous terms implementation."""
 
     def test_sutherland_viscosity_matches_air_at_300k(self):
-        from tensornet.cfd.viscous import sutherland_viscosity
+        from ontic.cfd.viscous import sutherland_viscosity
 
         # Room temperature: ~300 K
         T = torch.tensor([300.0])
@@ -625,7 +625,7 @@ class TestViscousTerms:
         assert 1.7e-5 < mu.item() < 2.0e-5
 
     def test_sutherland_viscosity_scales_with_temperature(self):
-        from tensornet.cfd.viscous import sutherland_viscosity
+        from ontic.cfd.viscous import sutherland_viscosity
 
         # Viscosity should increase with temperature
         T_low = torch.tensor([200.0])
@@ -637,7 +637,7 @@ class TestViscousTerms:
         assert mu_high > mu_low
 
     def test_viscous_thermal_conductivity_in_air_range(self):
-        from tensornet.cfd.viscous import (sutherland_viscosity,
+        from ontic.cfd.viscous import (sutherland_viscosity,
                                            thermal_conductivity)
 
         T = torch.tensor([300.0])
@@ -648,7 +648,7 @@ class TestViscousTerms:
         assert 0.02 < k.item() < 0.04
 
     def test_viscous_velocity_gradients_match_linear_profile(self):
-        from tensornet.cfd.viscous import velocity_gradients_2d
+        from ontic.cfd.viscous import velocity_gradients_2d
 
         # Linear velocity profile: u = x, v = 2y
         Ny, Nx = 32, 32
@@ -667,7 +667,7 @@ class TestViscousTerms:
         assert abs(grads["dvdy"][Ny // 2, Nx // 2].item() - 2.0) < 0.1
 
     def test_viscous_stress_tensor_for_pure_shear(self):
-        from tensornet.cfd.viscous import (stress_tensor_2d,
+        from ontic.cfd.viscous import (stress_tensor_2d,
                                            velocity_gradients_2d)
 
         # Pure shear: u = y, v = 0
@@ -688,7 +688,7 @@ class TestViscousTerms:
         assert abs(tau["tau_xy"][Ny // 2, Nx // 2].item() - 1.0) < 0.2
 
     def test_viscous_rhs_has_correct_dimensions(self):
-        from tensornet.cfd.viscous import compute_viscous_rhs_2d
+        from ontic.cfd.viscous import compute_viscous_rhs_2d
 
         Ny, Nx = 32, 32
         rho = torch.ones(Ny, Nx, dtype=torch.float64) * 1.225  # kg/m³
@@ -703,7 +703,7 @@ class TestViscousTerms:
         assert torch.allclose(rhs[0], torch.zeros_like(rhs[0]))
 
     def test_viscous_recovery_temperature_below_stagnation(self):
-        from tensornet.cfd.viscous import (recovery_temperature,
+        from ontic.cfd.viscous import (recovery_temperature,
                                            stagnation_temperature)
 
         T_inf = 300.0  # K
@@ -720,7 +720,7 @@ class TestViscousTerms:
         assert T_rec > T_inf
 
     def test_viscous_reynolds_number_in_expected_range(self):
-        from tensornet.cfd.viscous import reynolds_number
+        from ontic.cfd.viscous import reynolds_number
 
         # Standard conditions
         rho = 1.225  # kg/m³
@@ -738,7 +738,7 @@ class TestNavierStokes2D:
     """Test coupled Navier-Stokes solver."""
 
     def test_ns2d_config_computes_grid_spacing(self):
-        from tensornet.cfd.navier_stokes import NavierStokes2DConfig
+        from ontic.cfd.navier_stokes import NavierStokes2DConfig
 
         config = NavierStokes2DConfig(Nx=64, Ny=32, Lx=1.0, Ly=0.5)
 
@@ -748,7 +748,7 @@ class TestNavierStokes2D:
         assert abs(config.dy - 0.5 / 31) < 1e-10
 
     def test_ns2d_creates_euler_solver(self):
-        from tensornet.cfd.navier_stokes import (NavierStokes2D,
+        from ontic.cfd.navier_stokes import (NavierStokes2D,
                                                  NavierStokes2DConfig)
 
         config = NavierStokes2DConfig(Nx=32, Ny=16, Lx=0.5, Ly=0.25)
@@ -758,7 +758,7 @@ class TestNavierStokes2D:
         assert ns.euler is not None
 
     def test_ns2d_flat_plate_ic_has_nonzero_velocity(self):
-        from tensornet.cfd.navier_stokes import (NavierStokes2DConfig,
+        from ontic.cfd.navier_stokes import (NavierStokes2DConfig,
                                                  flat_plate_ic)
 
         config = NavierStokes2DConfig(Nx=64, Ny=32, Lx=1.0, Ly=0.5)
@@ -768,7 +768,7 @@ class TestNavierStokes2D:
         assert state.u.mean().item() > 0  # Non-zero velocity
 
     def test_ns2d_timestep_positive_and_small(self):
-        from tensornet.cfd.navier_stokes import (NavierStokes2D,
+        from ontic.cfd.navier_stokes import (NavierStokes2D,
                                                  NavierStokes2DConfig,
                                                  flat_plate_ic)
 
@@ -786,7 +786,7 @@ class TestEuler3D:
     """Test 3D Euler solver."""
 
     def test_euler3d_state_has_correct_shape(self):
-        from tensornet.cfd.euler_3d import Euler3DState
+        from ontic.cfd.euler_3d import Euler3DState
 
         Nz, Ny, Nx = 8, 16, 32
         rho = torch.ones(Nz, Ny, Nx, dtype=torch.float64)
@@ -801,7 +801,7 @@ class TestEuler3D:
         assert state.mach_number().mean().item() > 0
 
     def test_euler3d_conservative_roundtrip_preserves_state(self):
-        from tensornet.cfd.euler_3d import Euler3DState
+        from ontic.cfd.euler_3d import Euler3DState
 
         rho = torch.rand(4, 8, 8, dtype=torch.float64) + 0.5
         u = torch.rand(4, 8, 8, dtype=torch.float64) * 100
@@ -818,7 +818,7 @@ class TestEuler3D:
         assert torch.allclose(state1.p, state2.p, rtol=1e-10)
 
     def test_euler3d_solver_computes_grid_spacing(self):
-        from tensornet.cfd.euler_3d import Euler3D
+        from ontic.cfd.euler_3d import Euler3D
 
         solver = Euler3D(Nx=16, Ny=16, Nz=8, Lx=1.0, Ly=1.0, Lz=0.5)
 
@@ -827,7 +827,7 @@ class TestEuler3D:
         assert abs(solver.dz - 0.5 / 7) < 1e-10
 
     def test_euler3d_uniform_flow_creates_correct_mach(self):
-        from tensornet.cfd.euler_3d import Euler3D, uniform_flow_3d
+        from ontic.cfd.euler_3d import Euler3D, uniform_flow_3d
 
         solver = Euler3D(Nx=8, Ny=8, Nz=8, Lx=1.0, Ly=1.0, Lz=1.0)
         state = uniform_flow_3d(solver, M_inf=2.0)
@@ -840,7 +840,7 @@ class TestRealGas:
     """Test real-gas thermodynamics."""
 
     def test_realgas_gamma_decreases_at_high_temperature(self):
-        from tensornet.cfd.real_gas import gamma_variable
+        from ontic.cfd.real_gas import gamma_variable
 
         T_low = torch.tensor([300.0])
         T_high = torch.tensor([2000.0])
@@ -853,7 +853,7 @@ class TestRealGas:
         assert abs(gamma_low.item() - 1.4) < 0.05
 
     def test_realgas_equilibrium_gamma_monotonic_decrease(self):
-        from tensornet.cfd.real_gas import equilibrium_gamma_air
+        from ontic.cfd.real_gas import equilibrium_gamma_air
 
         T = torch.tensor([300.0, 1000.0, 3000.0, 6000.0])
         gamma = equilibrium_gamma_air(T)
@@ -867,7 +867,7 @@ class TestRealGas:
         assert 1.1 < gamma[-1] < 1.4
 
     def test_realgas_cp_increases_with_temperature(self):
-        from tensornet.cfd.real_gas import cp_polynomial
+        from ontic.cfd.real_gas import cp_polynomial
 
         T = torch.tensor([300.0, 1000.0])
         cp = cp_polynomial(T, species="Air")
@@ -878,7 +878,7 @@ class TestRealGas:
         assert cp[1] > cp[0]
 
     def test_realgas_enthalpy_positive_above_reference(self):
-        from tensornet.cfd.real_gas import enthalpy_sensible
+        from ontic.cfd.real_gas import enthalpy_sensible
 
         T = torch.tensor([500.0, 1000.0])
         h = enthalpy_sensible(T, T_ref=298.15)
@@ -888,7 +888,7 @@ class TestRealGas:
         assert h[1] > h[0]
 
     def test_realgas_post_shock_subsonic_downstream(self):
-        from tensornet.cfd.real_gas import post_shock_equilibrium
+        from ontic.cfd.real_gas import post_shock_equilibrium
 
         result = post_shock_equilibrium(M1=5.0, T1=300.0, p1=101325.0)
 
@@ -904,14 +904,14 @@ class TestChemistry:
     """Test multi-species chemistry (Phase 8)."""
 
     def test_chemistry_species_enum_has_correct_indices(self):
-        from tensornet.cfd.chemistry import Species
+        from ontic.cfd.chemistry import Species
 
         assert Species.N2.value == 0
         assert Species.O2.value == 1
         assert Species.O.value == 4
 
     def test_chemistry_air_5species_mass_fractions_sum_to_one(self):
-        from tensornet.cfd.chemistry import Species, air_5species_ic
+        from ontic.cfd.chemistry import Species, air_5species_ic
 
         state = air_5species_ic(shape=(10, 10), T=300.0, p=101325.0)
 
@@ -927,7 +927,7 @@ class TestChemistry:
         assert abs(state.Y[Species.O2][0, 0].item() - 0.233) < 1e-6
 
     def test_chemistry_reaction_rates_negligible_at_low_temp(self):
-        from tensornet.cfd.chemistry import (air_5species_ic,
+        from ontic.cfd.chemistry import (air_5species_ic,
                                              compute_reaction_rates)
 
         state = air_5species_ic(shape=(1, 1), T=300.0)
@@ -939,7 +939,7 @@ class TestChemistry:
         assert max_omega < 1e-10
 
     def test_chemistry_o2_dissociates_at_high_temp(self):
-        from tensornet.cfd.chemistry import (Species, air_5species_ic,
+        from ontic.cfd.chemistry import (Species, air_5species_ic,
                                              compute_reaction_rates)
 
         state = air_5species_ic(shape=(1, 1), T=5000.0)
@@ -952,7 +952,7 @@ class TestChemistry:
         assert omega[Species.O].item() > 0
 
     def test_chemistry_post_shock_shows_dissociation(self):
-        from tensornet.cfd.chemistry import Species, post_shock_composition
+        from ontic.cfd.chemistry import Species, post_shock_composition
 
         Y = post_shock_composition(M=10.0, T1=300.0)
 
@@ -969,7 +969,7 @@ class TestImplicit:
     """Test implicit time integration (Phase 8)."""
 
     def test_implicit_newton_converges_to_root(self):
-        from tensornet.cfd.implicit import (ImplicitConfig, SolverStatus,
+        from ontic.cfd.implicit import (ImplicitConfig, SolverStatus,
                                             newton_solve)
 
         # Solve x^2 - 4 = 0 (root at x=2)
@@ -986,7 +986,7 @@ class TestImplicit:
         assert abs(result.x.item() - 2.0) < 1e-8
 
     def test_implicit_numerical_jacobian_matches_exact(self):
-        from tensornet.cfd.implicit import numerical_jacobian
+        from ontic.cfd.implicit import numerical_jacobian
 
         def f(x):
             return torch.stack([x[0] ** 2, x[0] * x[1]])
@@ -1001,7 +1001,7 @@ class TestImplicit:
     def test_implicit_backward_euler_matches_exponential(self):
         import math
 
-        from tensornet.cfd.implicit import backward_euler_scalar
+        from ontic.cfd.implicit import backward_euler_scalar
 
         # dy/dt = -y, y(0) = 1 => y(t) = e^(-t)
         def f(t, y):
@@ -1013,7 +1013,7 @@ class TestImplicit:
         assert abs(y - math.exp(-0.1)) < 0.01
 
     def test_implicit_adaptive_handles_stiff_ode(self):
-        from tensornet.cfd.implicit import AdaptiveImplicit
+        from ontic.cfd.implicit import AdaptiveImplicit
 
         # Integrate dy/dt = -10*y from y(0) = 1 to t = 0.5
         def f(y):
@@ -1036,8 +1036,8 @@ class TestReactiveNS:
     """Test reactive Navier-Stokes solver (Phase 8)."""
 
     def test_reactive_state_has_valid_mass_fractions(self):
-        from tensornet.cfd.chemistry import Species
-        from tensornet.cfd.reactive_ns import (ReactiveConfig, ReactiveState,
+        from ontic.cfd.chemistry import Species
+        from ontic.cfd.reactive_ns import (ReactiveConfig, ReactiveState,
                                                reactive_flat_plate_ic)
 
         config = ReactiveConfig(Nx=16, Ny=16, Lx=0.1, Ly=0.05)
@@ -1053,7 +1053,7 @@ class TestReactiveNS:
         assert abs(state.Y[Species.N2][0, 0].item() - 0.767) < 1e-6
 
     def test_reactive_state_passes_validation(self):
-        from tensornet.cfd.reactive_ns import (ReactiveConfig,
+        from ontic.cfd.reactive_ns import (ReactiveConfig,
                                                reactive_flat_plate_ic)
 
         config = ReactiveConfig(Nx=8, Ny=8)
@@ -1063,7 +1063,7 @@ class TestReactiveNS:
         assert valid, f"State validation failed: {msg}"
 
     def test_reactive_ns_creates_euler_solver(self):
-        from tensornet.cfd.reactive_ns import ReactiveConfig, ReactiveNS
+        from ontic.cfd.reactive_ns import ReactiveConfig, ReactiveNS
 
         config = ReactiveConfig(Nx=16, Ny=16)
         solver = ReactiveNS(config)
@@ -1072,7 +1072,7 @@ class TestReactiveNS:
         assert solver.adaptive_integrator is not None
 
     def test_reactive_ns_timestep_positive_and_small(self):
-        from tensornet.cfd.reactive_ns import (ReactiveConfig, ReactiveNS,
+        from ontic.cfd.reactive_ns import (ReactiveConfig, ReactiveNS,
                                                reactive_flat_plate_ic)
 
         config = ReactiveConfig(Nx=16, Ny=16, Lx=0.1, Ly=0.05)
@@ -1090,7 +1090,7 @@ class TestTurbulence:
     """Test RANS turbulence modeling (Phase 9)."""
 
     def test_turbulence_import_succeeds_when_installed(self):
-        from tensornet.cfd.turbulence import (TurbulenceModel, TurbulentState,
+        from ontic.cfd.turbulence import (TurbulenceModel, TurbulentState,
                                               k_epsilon_eddy_viscosity,
                                               k_omega_sst_eddy_viscosity,
                                               spalart_allmaras_eddy_viscosity)
@@ -1100,7 +1100,7 @@ class TestTurbulence:
         assert TurbulenceModel.SPALART_ALLMARAS is not None
 
     def test_turbulent_state_zeros_has_correct_shape(self):
-        from tensornet.cfd.turbulence import TurbulentState
+        from ontic.cfd.turbulence import TurbulentState
 
         shape = (10, 10)
         state = TurbulentState.zeros(shape)
@@ -1111,7 +1111,7 @@ class TestTurbulence:
         assert state.mu_t.shape == shape
 
     def test_turbulence_k_epsilon_computes_correct_viscosity(self):
-        from tensornet.cfd.turbulence import k_epsilon_eddy_viscosity
+        from ontic.cfd.turbulence import k_epsilon_eddy_viscosity
 
         rho = torch.full((10, 10), 1.2, dtype=torch.float64)
         k = torch.full((10, 10), 1.0, dtype=torch.float64)
@@ -1123,7 +1123,7 @@ class TestTurbulence:
         assert torch.allclose(mu_t, torch.full_like(mu_t, 1.08), atol=1e-6)
 
     def test_turbulence_k_omega_sst_blending_in_bounds(self):
-        from tensornet.cfd.turbulence import (k_omega_sst_eddy_viscosity,
+        from ontic.cfd.turbulence import (k_omega_sst_eddy_viscosity,
                                               sst_blending_functions)
 
         rho = torch.full((10, 10), 1.2, dtype=torch.float64)
@@ -1148,7 +1148,7 @@ class TestTurbulence:
         assert (mu_t >= 0).all()
 
     def test_turbulence_spalart_allmaras_nonnegative(self):
-        from tensornet.cfd.turbulence import spalart_allmaras_eddy_viscosity
+        from ontic.cfd.turbulence import spalart_allmaras_eddy_viscosity
 
         rho = torch.full((10, 10), 1.2, dtype=torch.float64)
         nu = torch.full((10, 10), 1.5e-5, dtype=torch.float64)
@@ -1160,7 +1160,7 @@ class TestTurbulence:
         assert (mu_t >= 0).all()
 
     def test_turbulence_log_law_velocity_in_expected_range(self):
-        from tensornet.cfd.turbulence import log_law_velocity
+        from ontic.cfd.turbulence import log_law_velocity
 
         y_plus = torch.tensor([30.0, 100.0, 300.0], dtype=torch.float64)
         u_plus = log_law_velocity(y_plus)
@@ -1170,7 +1170,7 @@ class TestTurbulence:
         assert (u_plus < 25).all()
 
     def test_turbulence_compressibility_corrections_have_shape(self):
-        from tensornet.cfd.turbulence import (sarkar_correction,
+        from ontic.cfd.turbulence import (sarkar_correction,
                                               wilcox_compressibility)
 
         k = torch.full((5, 5), 1000.0, dtype=torch.float64)
@@ -1185,7 +1185,7 @@ class TestTurbulence:
         assert F_Mt.shape == (5, 5)
 
     def test_turbulence_initialization_has_positive_k(self):
-        from tensornet.cfd.turbulence import (TurbulenceModel, TurbulentState,
+        from ontic.cfd.turbulence import (TurbulenceModel, TurbulentState,
                                               initialize_turbulence)
 
         rho = torch.full((10, 10), 1.2, dtype=torch.float64)
@@ -1203,7 +1203,7 @@ class TestAdjoint:
     """Test adjoint solver framework (Phase 9)."""
 
     def test_adjoint_import_succeeds_when_installed(self):
-        from tensornet.cfd.adjoint import (AdjointConfig, AdjointEuler2D,
+        from ontic.cfd.adjoint import (AdjointConfig, AdjointEuler2D,
                                            AdjointMethod, AdjointState,
                                            DragObjective, HeatFluxObjective)
 
@@ -1211,7 +1211,7 @@ class TestAdjoint:
         assert AdjointMethod.DISCRETE is not None
 
     def test_adjoint_state_zeros_has_correct_shape(self):
-        from tensornet.cfd.adjoint import AdjointState
+        from ontic.cfd.adjoint import AdjointState
 
         psi = AdjointState.zeros((10, 10))
 
@@ -1225,7 +1225,7 @@ class TestAdjoint:
         assert torch.allclose(psi.psi_rho, psi2.psi_rho)
 
     def test_adjoint_drag_objective_gradient_nonzero_on_surface(self):
-        from tensornet.cfd.adjoint import DragObjective
+        from ontic.cfd.adjoint import DragObjective
 
         surface_mask = torch.zeros(10, 10, dtype=torch.float64)
         surface_mask[0, :] = 1.0
@@ -1252,7 +1252,7 @@ class TestAdjoint:
         assert (dJ[3][0, :] != 0).any()
 
     def test_adjoint_flux_jacobians_no_nan(self):
-        from tensornet.cfd.adjoint import AdjointEuler2D
+        from ontic.cfd.adjoint import AdjointEuler2D
 
         solver = AdjointEuler2D(Nx=10, Ny=10, dx=0.1, dy=0.1)
 
@@ -1272,7 +1272,7 @@ class TestAdjoint:
         assert not torch.isnan(B).any()
 
     def test_adjoint_rhs_zero_for_zero_psi(self):
-        from tensornet.cfd.adjoint import AdjointEuler2D, AdjointState
+        from ontic.cfd.adjoint import AdjointEuler2D, AdjointState
 
         solver = AdjointEuler2D(Nx=10, Ny=10, dx=0.1, dy=0.1)
 
@@ -1290,7 +1290,7 @@ class TestAdjoint:
         assert rhs.to_tensor().norm().item() < 1e-10
 
     def test_adjoint_shape_sensitivity_has_correct_shape(self):
-        from tensornet.cfd.adjoint import (AdjointState,
+        from ontic.cfd.adjoint import (AdjointState,
                                            compute_shape_sensitivity)
 
         psi = AdjointState.zeros((10, 10))
@@ -1317,7 +1317,7 @@ class TestOptimization:
     """Test shape optimization framework (Phase 9)."""
 
     def test_optimization_import_succeeds_when_installed(self):
-        from tensornet.cfd.optimization import (BSplineParameterization,
+        from ontic.cfd.optimization import (BSplineParameterization,
                                                 FFDParameterization,
                                                 OptimizationConfig,
                                                 OptimizerType, ShapeOptimizer)
@@ -1326,7 +1326,7 @@ class TestOptimization:
         assert OptimizerType.STEEPEST_DESCENT is not None
 
     def test_optimization_bspline_evaluates_curve(self):
-        from tensornet.cfd.optimization import BSplineParameterization
+        from ontic.cfd.optimization import BSplineParameterization
 
         n_control = 6
         param = BSplineParameterization(n_control, degree=3, n_eval_points=20)
@@ -1347,7 +1347,7 @@ class TestOptimization:
         assert diff.mean() < 0.2  # Allow some deviation due to B-spline smoothing
 
     def test_optimization_bspline_gradient_has_correct_shape(self):
-        from tensornet.cfd.optimization import BSplineParameterization
+        from ontic.cfd.optimization import BSplineParameterization
 
         n_control = 5
         param = BSplineParameterization(n_control, n_eval_points=10)
@@ -1360,7 +1360,7 @@ class TestOptimization:
         assert jac.shape == (20, 10)  # (n_eval*2, n_control*2)
 
     def test_optimization_ffd_preserves_surface_at_zero(self):
-        from tensornet.cfd.optimization import FFDParameterization
+        from ontic.cfd.optimization import FFDParameterization
 
         # Simple surface
         surface = torch.zeros(10, 2, dtype=torch.float64)
@@ -1381,7 +1381,7 @@ class TestOptimization:
         assert torch.allclose(deformed, surface, atol=1e-10)
 
     def test_optimization_wedge_problem_spans_x_range(self):
-        from tensornet.cfd.optimization import create_wedge_design_problem
+        from ontic.cfd.optimization import create_wedge_design_problem
 
         param, alpha0 = create_wedge_design_problem(n_control=8, theta_initial=10.0)
 
@@ -1401,7 +1401,7 @@ class TestOptimization:
         assert y_controls[-1].item() > y_controls[0].item()
 
     def test_optimization_gradient_smoothing_reduces_oscillation(self):
-        from tensornet.cfd.optimization import (BSplineParameterization,
+        from ontic.cfd.optimization import (BSplineParameterization,
                                                 OptimizationConfig,
                                                 ShapeOptimizer)
 
@@ -1438,7 +1438,7 @@ class TestLES:
     """Test LES subgrid-scale models."""
 
     def test_les_import_succeeds_when_installed(self):
-        from tensornet.cfd import (LESModel, LESState, compute_sgs_viscosity,
+        from ontic.cfd import (LESModel, LESState, compute_sgs_viscosity,
                                    filter_width, smagorinsky_viscosity,
                                    strain_rate_magnitude, vreman_viscosity,
                                    wale_viscosity)
@@ -1447,7 +1447,7 @@ class TestLES:
         assert LESState is not None
 
     def test_les_filter_width_2d_computes_geometric_mean(self):
-        from tensornet.cfd.les import filter_width
+        from ontic.cfd.les import filter_width
 
         dx = torch.ones(32, 32) * 0.01
         dy = torch.ones(32, 32) * 0.02
@@ -1459,7 +1459,7 @@ class TestLES:
         assert torch.allclose(delta, torch.ones_like(delta) * expected, rtol=1e-4)
 
     def test_les_filter_width_3d_computes_cube_root(self):
-        from tensornet.cfd.les import filter_width
+        from ontic.cfd.les import filter_width
 
         dx = torch.ones(16, 16, 16) * 0.01
         dy = torch.ones(16, 16, 16) * 0.02
@@ -1472,7 +1472,7 @@ class TestLES:
         assert torch.allclose(delta, torch.ones_like(delta) * expected, rtol=1e-4)
 
     def test_les_strain_rate_magnitude_for_couette_flow(self):
-        from tensornet.cfd.les import strain_rate_magnitude
+        from ontic.cfd.les import strain_rate_magnitude
 
         Nx, Ny = 32, 32
         # Simple shear: u = y, v = 0
@@ -1488,7 +1488,7 @@ class TestLES:
         assert torch.allclose(S_mag, torch.ones_like(S_mag), rtol=1e-4)
 
     def test_les_smagorinsky_viscosity_formula(self):
-        from tensornet.cfd.les import smagorinsky_viscosity
+        from ontic.cfd.les import smagorinsky_viscosity
 
         S = torch.ones(32, 32) * 100.0
         delta = 0.01  # scalar
@@ -1502,7 +1502,7 @@ class TestLES:
         assert torch.allclose(mu_sgs, torch.ones_like(mu_sgs) * expected, rtol=1e-4)
 
     def test_les_van_driest_damping_near_wall_behavior(self):
-        from tensornet.cfd.les import van_driest_damping
+        from ontic.cfd.les import van_driest_damping
 
         y_plus = torch.tensor([0.0, 5.0, 25.0, 100.0])
         D = van_driest_damping(y_plus, A_plus=25.0)
@@ -1513,7 +1513,7 @@ class TestLES:
         assert D[3].item() > 0.9  # Near one far from wall
 
     def test_les_wale_viscosity_nonnegative(self):
-        from tensornet.cfd.les import wale_viscosity
+        from ontic.cfd.les import wale_viscosity
 
         Nx, Ny = 16, 16
         delta = 0.01  # scalar
@@ -1532,7 +1532,7 @@ class TestLES:
         assert (mu_wale >= 0).all()
 
     def test_les_compute_sgs_viscosity_dispatches_all_models(self):
-        from tensornet.cfd.les import LESModel, compute_sgs_viscosity
+        from ontic.cfd.les import LESModel, compute_sgs_viscosity
 
         Nx, Ny = 16, 16
         rho = torch.ones(Nx, Ny)
@@ -1555,7 +1555,7 @@ class TestHybridLES:
     """Test hybrid RANS-LES models."""
 
     def test_hybrid_les_import_succeeds_when_installed(self):
-        from tensornet.cfd import (HybridLESState, HybridModel,
+        from ontic.cfd import (HybridLESState, HybridModel,
                                    ddes_delay_function, des_length_scale,
                                    estimate_rans_les_ratio, run_hybrid_les)
 
@@ -1563,7 +1563,7 @@ class TestHybridLES:
         assert HybridLESState is not None
 
     def test_hybrid_les_grid_scale_methods(self):
-        from tensornet.cfd.hybrid_les import compute_grid_scale
+        from ontic.cfd.hybrid_les import compute_grid_scale
 
         dx = torch.ones(10, 10) * 0.01
         dy = torch.ones(10, 10) * 0.02
@@ -1578,7 +1578,7 @@ class TestHybridLES:
         )
 
     def test_hybrid_les_des_length_scale_transition(self):
-        from tensornet.cfd.hybrid_les import (compute_wall_distance_scale,
+        from ontic.cfd.hybrid_les import (compute_wall_distance_scale,
                                               des_length_scale)
 
         d_wall = torch.linspace(0.001, 0.1, 20)
@@ -1598,7 +1598,7 @@ class TestHybridLES:
         assert torch.allclose(l_des, expected)
 
     def test_hybrid_les_ddes_delay_function_bounds(self):
-        from tensornet.cfd.hybrid_les import ddes_delay_function
+        from ontic.cfd.hybrid_les import ddes_delay_function
 
         r_d = torch.tensor([0.1, 0.5, 1.0, 2.0, 5.0])
         f_d = ddes_delay_function(r_d)
@@ -1610,7 +1610,7 @@ class TestHybridLES:
         assert (f_d <= 1).all()
 
     def test_hybrid_les_ddes_runs_with_blending(self):
-        from tensornet.cfd.hybrid_les import HybridModel, run_hybrid_les
+        from ontic.cfd.hybrid_les import HybridModel, run_hybrid_les
 
         Nx, Ny = 32, 32
         rho = torch.ones(Nx, Ny)
@@ -1637,7 +1637,7 @@ class TestHybridLES:
         assert state.f_d is not None
 
     def test_hybrid_les_all_models_run(self):
-        from tensornet.cfd.hybrid_les import (HybridModel,
+        from ontic.cfd.hybrid_les import (HybridModel,
                                               estimate_rans_les_ratio,
                                               run_hybrid_les)
 
@@ -1671,7 +1671,7 @@ class TestMultiObjectiveOptimization:
     """Test multi-objective optimization framework."""
 
     def test_moo_import_succeeds_when_installed(self):
-        from tensornet.cfd import (MOOAlgorithm, MOOConfig, MOOResult,
+        from ontic.cfd import (MOOAlgorithm, MOOConfig, MOOResult,
                                    MultiObjectiveOptimizer, ObjectiveSpec,
                                    ParetoSolution, dominates,
                                    fast_non_dominated_sort)
@@ -1680,7 +1680,7 @@ class TestMultiObjectiveOptimization:
         assert MultiObjectiveOptimizer is not None
 
     def test_moo_dominance_relation_correct(self):
-        from tensornet.cfd.multi_objective import dominates
+        from ontic.cfd.multi_objective import dominates
 
         obj_a = {"f1": 1.0, "f2": 2.0}
         obj_b = {"f1": 2.0, "f2": 3.0}
@@ -1697,7 +1697,7 @@ class TestMultiObjectiveOptimization:
         assert dominates(obj_c, obj_a, minimize) == False
 
     def test_moo_non_dominated_sorting_identifies_pareto(self):
-        from tensornet.cfd.multi_objective import (ParetoSolution,
+        from ontic.cfd.multi_objective import (ParetoSolution,
                                                    fast_non_dominated_sort)
 
         population = [
@@ -1718,7 +1718,7 @@ class TestMultiObjectiveOptimization:
             assert 3 in fronts[1]
 
     def test_moo_crowding_distance_boundary_infinite(self):
-        from tensornet.cfd.multi_objective import (ParetoSolution,
+        from ontic.cfd.multi_objective import (ParetoSolution,
                                                    crowding_distance)
 
         population = [
@@ -1740,7 +1740,7 @@ class TestMultiObjectiveOptimization:
         assert population[1].crowding_distance < float("inf")
 
     def test_moo_hypervolume_2d_matches_expected(self):
-        from tensornet.cfd.multi_objective import (ParetoSolution,
+        from ontic.cfd.multi_objective import (ParetoSolution,
                                                    hypervolume_2d)
 
         front = [
@@ -1756,7 +1756,7 @@ class TestMultiObjectiveOptimization:
         assert abs(hv - 6.0) < 0.01
 
     def test_moo_nsga2_produces_pareto_front(self):
-        from tensornet.cfd.multi_objective import (MOOAlgorithm, MOOConfig,
+        from ontic.cfd.multi_objective import (MOOAlgorithm, MOOConfig,
                                                    MultiObjectiveOptimizer,
                                                    create_drag_heating_problem)
 
@@ -1779,7 +1779,7 @@ class TestGPUAcceleration:
     """Test GPU acceleration utilities."""
 
     def test_gpu_import_succeeds_when_installed(self):
-        from tensornet.core import (DeviceType, GPUConfig, MemoryPool,
+        from ontic.core import (DeviceType, GPUConfig, MemoryPool,
                                     compute_strain_rate_gpu, get_device,
                                     roe_flux_gpu, to_device)
 
@@ -1787,7 +1787,7 @@ class TestGPUAcceleration:
         assert GPUConfig is not None
 
     def test_gpu_get_device_returns_cpu_when_no_cuda(self):
-        from tensornet.core.gpu import DeviceType, GPUConfig, get_device
+        from ontic.core.gpu import DeviceType, GPUConfig, get_device
 
         # Should get CPU if CUDA not available
         config = GPUConfig(device=DeviceType.CPU)
@@ -1795,7 +1795,7 @@ class TestGPUAcceleration:
         assert device.type == "cpu"
 
     def test_gpu_memory_pool_allocates_tensor(self):
-        from tensornet.core.gpu import MemoryPool, get_device
+        from ontic.core.gpu import MemoryPool, get_device
 
         device = get_device()
         pool = MemoryPool(device)
@@ -1806,7 +1806,7 @@ class TestGPUAcceleration:
         pool.reset()
 
     def test_gpu_roe_flux_produces_nonzero_flux(self):
-        from tensornet.core.gpu import get_device, roe_flux_gpu
+        from ontic.core.gpu import get_device, roe_flux_gpu
 
         device = get_device()
         Nx, Ny = 32, 32
@@ -1831,7 +1831,7 @@ class TestGPUAcceleration:
         assert F_rho.abs().max() > 0
 
     def test_gpu_strain_rate_couette_flow_value(self):
-        from tensornet.core.gpu import compute_strain_rate_gpu, get_device
+        from ontic.core.gpu import compute_strain_rate_gpu, get_device
 
         device = get_device()
         Nx, Ny = 32, 32
@@ -1851,7 +1851,7 @@ class TestGPUAcceleration:
         assert 0.5 < interior.mean().item() < 2.0
 
     def test_gpu_benchmark_kernel_runs(self):
-        from tensornet.core.gpu import (benchmark_kernel,
+        from ontic.core.gpu import (benchmark_kernel,
                                         compute_strain_rate_gpu, get_device)
 
         device = get_device()
@@ -1876,7 +1876,7 @@ class TestDeployment:
     """Test TensorRT export and embedded deployment utilities."""
 
     def test_deployment_tensorrt_import_succeeds(self):
-        from tensornet.infra.deployment import (ExportConfig, ExportResult,
+        from ontic.infra.deployment import (ExportConfig, ExportResult,
                                           TensorRTExporter,
                                           benchmark_inference, export_to_onnx,
                                           optimize_for_tensorrt,
@@ -1886,7 +1886,7 @@ class TestDeployment:
         assert TensorRTExporter is not None
 
     def test_deployment_embedded_import_succeeds(self):
-        from tensornet.infra.deployment import (EmbeddedRuntime, JetsonConfig,
+        from ontic.infra.deployment import (EmbeddedRuntime, JetsonConfig,
                                           MemoryProfile, PowerMode,
                                           configure_jetson_power,
                                           create_inference_pipeline,
@@ -1896,7 +1896,7 @@ class TestDeployment:
         assert EmbeddedRuntime is not None
 
     def test_deployment_precision_modes_have_values(self):
-        from tensornet.infra.deployment.tensorrt_export import (OptimizationLevel,
+        from ontic.infra.deployment.tensorrt_export import (OptimizationLevel,
                                                           Precision)
 
         assert Precision.FP16.value == "fp16"
@@ -1904,8 +1904,8 @@ class TestDeployment:
         assert OptimizationLevel.O3.value == 3
 
     def test_deployment_export_config_sets_values(self):
-        from tensornet.infra.deployment import ExportConfig
-        from tensornet.infra.deployment.tensorrt_export import Precision
+        from ontic.infra.deployment import ExportConfig
+        from ontic.infra.deployment.tensorrt_export import Precision
 
         config = ExportConfig(
             precision=Precision.FP16, max_batch_size=4, workspace_size_mb=2048
@@ -1916,7 +1916,7 @@ class TestDeployment:
         assert config.opset_version == 17
 
     def test_deployment_cfd_inference_module_runs(self):
-        from tensornet.infra.deployment.tensorrt_export import CFDInferenceModule
+        from ontic.infra.deployment.tensorrt_export import CFDInferenceModule
 
         model = CFDInferenceModule((64, 64), n_vars=4, gamma=1.4)
 
@@ -1926,7 +1926,7 @@ class TestDeployment:
         assert y.shape == x.shape
 
     def test_deployment_tt_contraction_module_counts_cores(self):
-        from tensornet.infra.deployment.tensorrt_export import TTContraction
+        from ontic.infra.deployment.tensorrt_export import TTContraction
 
         cores = [
             torch.randn(1, 4, 4, 3),
@@ -1946,8 +1946,8 @@ class TestDeployment:
         import tempfile
         from pathlib import Path
 
-        from tensornet.infra.deployment import ExportConfig, export_to_onnx
-        from tensornet.infra.deployment.tensorrt_export import CFDInferenceModule
+        from ontic.infra.deployment import ExportConfig, export_to_onnx
+        from ontic.infra.deployment.tensorrt_export import CFDInferenceModule
 
         model = CFDInferenceModule((32, 32))
         x = torch.randn(1, 4, 32, 32)
@@ -1965,8 +1965,8 @@ class TestDeployment:
 
         import tempfile
 
-        from tensornet.infra.deployment import ExportConfig, TensorRTExporter
-        from tensornet.infra.deployment.tensorrt_export import Precision
+        from ontic.infra.deployment import ExportConfig, TensorRTExporter
+        from ontic.infra.deployment.tensorrt_export import Precision
 
         config = ExportConfig(precision=Precision.FP32)
         exporter = TensorRTExporter(config)
@@ -1979,7 +1979,7 @@ class TestDeployment:
             assert result.model_size_mb > 0
 
     def test_deployment_benchmark_result_stores_metrics(self):
-        from tensornet.infra.deployment.tensorrt_export import BenchmarkResult
+        from ontic.infra.deployment.tensorrt_export import BenchmarkResult
 
         result = BenchmarkResult(
             latency_ms=1.5,
@@ -1992,14 +1992,14 @@ class TestDeployment:
         assert result.throughput_samples_per_sec == 666.0
 
     def test_deployment_power_modes_have_values(self):
-        from tensornet.infra.deployment import PowerMode
+        from ontic.infra.deployment import PowerMode
 
         assert PowerMode.MAXN.value == "MAXN"
         assert PowerMode.MODE_30W.value == "30W"
         assert PowerMode.MODE_10W.value == "10W"
 
     def test_deployment_jetson_config_sets_defaults(self):
-        from tensornet.infra.deployment import JetsonConfig, PowerMode
+        from ontic.infra.deployment import JetsonConfig, PowerMode
 
         config = JetsonConfig(
             power_mode=PowerMode.MODE_30W, target_fps=100.0, thermal_limit_c=85.0
@@ -2010,7 +2010,7 @@ class TestDeployment:
         assert config.target_fps == 100.0
 
     def test_deployment_memory_profile_computes_availability(self):
-        from tensornet.infra.deployment import MemoryProfile
+        from ontic.infra.deployment import MemoryProfile
 
         profile = MemoryProfile(
             total_system_mb=64000, model_weights_mb=500, inference_buffer_mb=1000
@@ -2020,7 +2020,7 @@ class TestDeployment:
         assert profile.utilization_pct < 20
 
     def test_deployment_memory_pool_allocates_and_resets(self):
-        from tensornet.infra.deployment.embedded import MemoryPool
+        from ontic.infra.deployment.embedded import MemoryPool
 
         pool = MemoryPool(pool_size_mb=10, device="cpu")
 
@@ -2035,8 +2035,8 @@ class TestDeployment:
         assert pool.get_usage_mb() == 0
 
     def test_deployment_thermal_monitor_normal_state(self):
-        from tensornet.infra.deployment import JetsonConfig
-        from tensornet.infra.deployment.embedded import ThermalMonitor, ThermalState
+        from ontic.infra.deployment import JetsonConfig
+        from ontic.infra.deployment.embedded import ThermalMonitor, ThermalState
 
         config = JetsonConfig()
         monitor = ThermalMonitor(config)
@@ -2049,7 +2049,7 @@ class TestDeployment:
         assert monitor.thermal_state == ThermalState.NORMAL
 
     def test_deployment_embedded_runtime_initializes(self):
-        from tensornet.infra.deployment import EmbeddedRuntime, JetsonConfig
+        from ontic.infra.deployment import EmbeddedRuntime, JetsonConfig
 
         config = JetsonConfig(target_fps=50.0)
         runtime = EmbeddedRuntime(config)
@@ -2062,7 +2062,7 @@ class TestDeployment:
         runtime.shutdown()
 
     def test_deployment_inference_metrics_computes_hit_rate(self):
-        from tensornet.infra.deployment.embedded import InferenceMetrics
+        from ontic.infra.deployment.embedded import InferenceMetrics
 
         metrics = InferenceMetrics(
             latency_ms=5.0,
@@ -2083,7 +2083,7 @@ class TestGuidance:
     """Test trajectory and guidance modules."""
 
     def test_guidance_trajectory_import_succeeds(self):
-        from tensornet.aerospace.guidance import (AeroCoefficients, AtmosphericModel,
+        from ontic.aerospace.guidance import (AeroCoefficients, AtmosphericModel,
                                         TrajectoryConfig, TrajectorySolver,
                                         VehicleState, exponential_atmosphere,
                                         isa_atmosphere)
@@ -2092,7 +2092,7 @@ class TestGuidance:
         assert TrajectorySolver is not None
 
     def test_guidance_controller_import_succeeds(self):
-        from tensornet.aerospace.guidance import (ConstraintType, GuidanceCommand,
+        from ontic.aerospace.guidance import (ConstraintType, GuidanceCommand,
                                         GuidanceController, GuidanceMode,
                                         TrajectoryConstraint,
                                         bank_angle_guidance,
@@ -2102,7 +2102,7 @@ class TestGuidance:
         assert proportional_navigation is not None
 
     def test_guidance_isa_atmosphere_sea_level_values(self):
-        from tensornet.aerospace.guidance import isa_atmosphere
+        from ontic.aerospace.guidance import isa_atmosphere
 
         atm_0 = isa_atmosphere(0)
         atm_10k = isa_atmosphere(10000)
@@ -2117,7 +2117,7 @@ class TestGuidance:
         assert atm_30k.density_kg_m3 < atm_10k.density_kg_m3
 
     def test_guidance_exponential_atmosphere_density_decay(self):
-        from tensornet.aerospace.guidance import exponential_atmosphere
+        from ontic.aerospace.guidance import exponential_atmosphere
 
         atm_0 = exponential_atmosphere(0)
         atm_20k = exponential_atmosphere(20000)
@@ -2126,7 +2126,7 @@ class TestGuidance:
         assert atm_20k.density_kg_m3 < atm_0.density_kg_m3
 
     def test_guidance_vehicle_state_computes_velocity(self):
-        from tensornet.aerospace.guidance import VehicleState
+        from ontic.aerospace.guidance import VehicleState
 
         state = VehicleState(altitude_m=20000, u_m_s=1000, v_m_s=0, w_m_s=100)
 
@@ -2137,7 +2137,7 @@ class TestGuidance:
         assert abs(alpha - math.atan2(100, 1000)) < 1e-10
 
     def test_guidance_vehicle_state_tensor_roundtrip(self):
-        from tensornet.aerospace.guidance import VehicleState
+        from ontic.aerospace.guidance import VehicleState
 
         state = VehicleState(
             latitude_rad=0.1, longitude_rad=0.2, altitude_m=15000, u_m_s=500
@@ -2152,7 +2152,7 @@ class TestGuidance:
         assert abs(state2.altitude_m - 15000) < 1
 
     def test_guidance_aero_coefficients_stores_values(self):
-        from tensornet.aerospace.guidance.trajectory import AeroCoefficients
+        from ontic.aerospace.guidance.trajectory import AeroCoefficients
 
         aero = AeroCoefficients(CD=0.02, CL=0.5, CL_alpha=5.7)
 
@@ -2160,8 +2160,8 @@ class TestGuidance:
         assert aero.CL_alpha == 5.7
 
     def test_guidance_trajectory_config_sets_defaults(self):
-        from tensornet.aerospace.guidance import TrajectoryConfig
-        from tensornet.aerospace.guidance.trajectory import IntegrationMethod
+        from ontic.aerospace.guidance import TrajectoryConfig
+        from ontic.aerospace.guidance.trajectory import IntegrationMethod
 
         config = TrajectoryConfig(dt_s=0.001, integration_method=IntegrationMethod.RK4)
 
@@ -2169,7 +2169,7 @@ class TestGuidance:
         assert config.save_interval == 10
 
     def test_guidance_gravity_model_decreases_with_altitude(self):
-        from tensornet.aerospace.guidance.trajectory import gravity_model
+        from ontic.aerospace.guidance.trajectory import gravity_model
 
         g_0 = gravity_model(0)
         g_100k = gravity_model(100000)
@@ -2178,7 +2178,7 @@ class TestGuidance:
         assert g_100k < g_0  # Gravity decreases with altitude
 
     def test_guidance_trajectory_solver_single_step_changes_state(self):
-        from tensornet.aerospace.guidance import (TrajectoryConfig, TrajectorySolver,
+        from ontic.aerospace.guidance import (TrajectoryConfig, TrajectorySolver,
                                         VehicleState)
 
         config = TrajectoryConfig(dt_s=0.01)
@@ -2194,7 +2194,7 @@ class TestGuidance:
         )
 
     def test_guidance_trajectory_propagation_produces_trajectory(self):
-        from tensornet.aerospace.guidance import (TrajectoryConfig, TrajectorySolver,
+        from ontic.aerospace.guidance import (TrajectoryConfig, TrajectorySolver,
                                         VehicleState)
 
         config = TrajectoryConfig(dt_s=0.01, save_interval=100)
@@ -2212,7 +2212,7 @@ class TestGuidance:
         )
 
     def test_guidance_command_to_controls_has_surfaces(self):
-        from tensornet.aerospace.guidance import GuidanceCommand, GuidanceMode
+        from ontic.aerospace.guidance import GuidanceCommand, GuidanceMode
 
         cmd = GuidanceCommand(
             bank_angle_rad=math.radians(30),
@@ -2226,7 +2226,7 @@ class TestGuidance:
         assert "dr" in controls
 
     def test_guidance_trajectory_constraint_computes_margin(self):
-        from tensornet.aerospace.guidance import ConstraintType, TrajectoryConstraint
+        from ontic.aerospace.guidance import ConstraintType, TrajectoryConstraint
 
         # Test constraint within active margin (>90% of limit)
         constraint = TrajectoryConstraint(
@@ -2244,7 +2244,7 @@ class TestGuidance:
         assert not constraint2.is_active  # Not within 10% of limit
 
     def test_guidance_proportional_navigation_returns_finite(self):
-        from tensornet.aerospace.guidance import VehicleState, proportional_navigation
+        from ontic.aerospace.guidance import VehicleState, proportional_navigation
 
         vehicle = VehicleState(latitude_rad=0.0, longitude_rad=0.0, u_m_s=1000.0)
 
@@ -2255,8 +2255,8 @@ class TestGuidance:
         assert math.isfinite(a_cmd)
 
     def test_guidance_bank_angle_respects_corridor(self):
-        from tensornet.aerospace.guidance import VehicleState, bank_angle_guidance
-        from tensornet.aerospace.guidance.controller import (CorridorBounds,
+        from ontic.aerospace.guidance import VehicleState, bank_angle_guidance
+        from ontic.aerospace.guidance.controller import (CorridorBounds,
                                                    WaypointTarget)
 
         state = VehicleState(altitude_m=50000, u_m_s=3000)
@@ -2271,8 +2271,8 @@ class TestGuidance:
         assert cmd.mode is not None
 
     def test_guidance_controller_computes_valid_command(self):
-        from tensornet.aerospace.guidance import GuidanceController, VehicleState
-        from tensornet.aerospace.guidance.controller import (CorridorBounds,
+        from ontic.aerospace.guidance import GuidanceController, VehicleState
+        from ontic.aerospace.guidance.controller import (CorridorBounds,
                                                    WaypointTarget)
 
         target = WaypointTarget(latitude_rad=0.1, longitude_rad=0.1)
@@ -2288,9 +2288,9 @@ class TestGuidance:
         assert cmd.constraint_margin <= 1.1  # Allow small numerical tolerance
 
     def test_guidance_heating_estimate_positive_at_hypersonic(self):
-        from tensornet.aerospace.guidance import (GuidanceController, VehicleState,
+        from ontic.aerospace.guidance import (GuidanceController, VehicleState,
                                         isa_atmosphere)
-        from tensornet.aerospace.guidance.controller import WaypointTarget
+        from ontic.aerospace.guidance.controller import WaypointTarget
 
         controller = GuidanceController(target=WaypointTarget(0, 0))
 
@@ -2303,8 +2303,8 @@ class TestGuidance:
         assert q_dot > 0
 
     def test_guidance_aerodynamic_lookup_returns_positive(self):
-        from tensornet.aerospace.guidance import GuidanceController
-        from tensornet.aerospace.guidance.controller import WaypointTarget
+        from ontic.aerospace.guidance import GuidanceController
+        from ontic.aerospace.guidance.controller import WaypointTarget
 
         controller = GuidanceController(target=WaypointTarget(0, 0))
 
@@ -2315,9 +2315,9 @@ class TestGuidance:
         assert CL / CD > 0  # Finite L/D
 
     def test_guidance_constraint_limiting_enforces_bounds(self):
-        from tensornet.aerospace.guidance import (GuidanceCommand, GuidanceController,
+        from ontic.aerospace.guidance import (GuidanceCommand, GuidanceController,
                                         VehicleState)
-        from tensornet.aerospace.guidance.controller import (CorridorBounds,
+        from ontic.aerospace.guidance.controller import (CorridorBounds,
                                                    WaypointTarget)
 
         controller = GuidanceController(
@@ -2338,8 +2338,8 @@ class TestGuidance:
         assert abs(limited.bank_angle_rad) <= math.radians(80)
 
     def test_guidance_controller_reset_clears_state(self):
-        from tensornet.aerospace.guidance import GuidanceController
-        from tensornet.aerospace.guidance.controller import WaypointTarget
+        from ontic.aerospace.guidance import GuidanceController
+        from ontic.aerospace.guidance.controller import WaypointTarget
 
         controller = GuidanceController(target=WaypointTarget(0, 0))
         controller.heat_load_accumulated = 100.0
@@ -2357,7 +2357,7 @@ class TestSimulationHIL:
     def test_hil_imu_sensor_measures_with_noise(self):
         import numpy as np
 
-        from tensornet.sim.simulation import IMUSensor
+        from ontic.sim.simulation import IMUSensor
 
         imu = IMUSensor(update_rate_hz=400)
         true_state = {"ax": 9.81, "ay": 0, "az": 0, "p": 0.1, "q": 0, "r": 0}
@@ -2372,7 +2372,7 @@ class TestSimulationHIL:
     def test_hil_gps_sensor_provides_valid_position(self):
         import numpy as np
 
-        from tensornet.sim.simulation import GPSSensor
+        from ontic.sim.simulation import GPSSensor
 
         gps = GPSSensor()
         true_state = {
@@ -2391,7 +2391,7 @@ class TestSimulationHIL:
         assert "num_satellites" in measurement
 
     def test_hil_air_data_sensor_measures_pressure(self):
-        from tensornet.sim.simulation import AirDataSensor
+        from ontic.sim.simulation import AirDataSensor
 
         air_data = AirDataSensor()
         true_state = {
@@ -2408,7 +2408,7 @@ class TestSimulationHIL:
         assert "alpha_deg" in measurement
 
     def test_hil_control_surface_respects_limits(self):
-        from tensornet.sim.simulation import ControlSurface
+        from ontic.sim.simulation import ControlSurface
 
         elevator = ControlSurface(
             name="elevator", rate_limit_deg_s=60, position_limit_deg=30
@@ -2425,7 +2425,7 @@ class TestSimulationHIL:
         assert all(-30 <= p <= 30 for p in positions)
 
     def test_hil_thrust_actuator_approaches_command(self):
-        from tensornet.sim.simulation import ThrustActuator
+        from ontic.sim.simulation import ThrustActuator
 
         thrust = ThrustActuator(max_thrust_N=100000)
         thrust.is_ignited = True
@@ -2440,7 +2440,7 @@ class TestSimulationHIL:
         assert thrusts[-1] < 100000
 
     def test_hil_interface_steps_sensors_and_actuators(self):
-        from tensornet.sim.simulation import (ControlSurface, HILConfig,
+        from ontic.sim.simulation import (ControlSurface, HILConfig,
                                           HILInterface, IMUSensor)
 
         config = HILConfig(dt_s=0.01)
@@ -2459,7 +2459,7 @@ class TestSimulationHIL:
         assert len(hil.telemetry_log) == 1
 
     def test_hil_vehicle_sensor_suite_creates_components(self):
-        from tensornet.sim.simulation import (create_vehicle_actuators,
+        from ontic.sim.simulation import (create_vehicle_actuators,
                                           create_vehicle_sensors)
 
         sensors = create_vehicle_sensors("hypersonic")
@@ -2476,7 +2476,7 @@ class TestSimulationFlightData:
     def test_flightdata_telemetry_frame_roundtrips_dict(self):
         import numpy as np
 
-        from tensornet.sim.simulation import TelemetryFrame
+        from ontic.sim.simulation import TelemetryFrame
 
         frame = TelemetryFrame(
             timestamp=0.0,
@@ -2493,7 +2493,7 @@ class TestSimulationFlightData:
     def test_flightdata_record_computes_duration(self):
         import numpy as np
 
-        from tensornet.sim.simulation import FlightRecord, TelemetryFrame
+        from ontic.sim.simulation import FlightRecord, TelemetryFrame
 
         record = FlightRecord(
             flight_id="TEST_001", vehicle_id="HGV-1", date="2024-01-01"
@@ -2511,7 +2511,7 @@ class TestSimulationFlightData:
         assert record.sample_rate > 9
 
     def test_flightdata_csv_parsing_extracts_frames(self):
-        from tensornet.sim.simulation import TelemetryFormat, parse_telemetry
+        from ontic.sim.simulation import TelemetryFormat, parse_telemetry
 
         csv_data = """time,lat,lon,alt,vn,ve,vd,mach
 0.0,34.0,-118.0,10000,100,0,-10,5.0
@@ -2527,7 +2527,7 @@ class TestSimulationFlightData:
     def test_flightdata_trajectory_reconstruction_full_state(self):
         import numpy as np
 
-        from tensornet.sim.simulation import (FlightRecord, TelemetryFrame,
+        from ontic.sim.simulation import (FlightRecord, TelemetryFrame,
                                           TrajectoryReconstruction)
 
         # Create synthetic flight data
@@ -2553,7 +2553,7 @@ class TestSimulationRealTimeCFD:
     """Test real-time CFD coupling components."""
 
     def test_rtcfd_aero_table_config_stores_dimensions(self):
-        from tensornet.sim.simulation import AeroTableConfig
+        from ontic.sim.simulation import AeroTableConfig
 
         config = AeroTableConfig(
             mach_range=(0.5, 8.0), alpha_range=(-5, 20), n_mach=16, n_alpha=26
@@ -2563,7 +2563,7 @@ class TestSimulationRealTimeCFD:
         assert config.n_alpha == 26
 
     def test_rtcfd_aero_table_populates_from_cfd(self):
-        from tensornet.sim.simulation import (AeroTable, AeroTableConfig,
+        from ontic.sim.simulation import (AeroTable, AeroTableConfig,
                                           create_hypersonic_waverider_model)
 
         config = AeroTableConfig(n_mach=5, n_alpha=11, n_beta=3)
@@ -2575,7 +2575,7 @@ class TestSimulationRealTimeCFD:
         assert table.CL_table.shape == (5, 11, 3)
 
     def test_rtcfd_aero_table_lookup_returns_coefficients(self):
-        from tensornet.sim.simulation import (AeroTable, AeroTableConfig,
+        from ontic.sim.simulation import (AeroTable, AeroTableConfig,
                                           create_hypersonic_waverider_model)
 
         config = AeroTableConfig(n_mach=10, n_alpha=21, n_beta=5)
@@ -2589,7 +2589,7 @@ class TestSimulationRealTimeCFD:
         assert aero.CD > 0  # Positive drag
 
     def test_rtcfd_interface_computes_forces(self):
-        from tensornet.sim.simulation import (AeroTable, AeroTableConfig,
+        from ontic.sim.simulation import (AeroTable, AeroTableConfig,
                                           RealTimeCFD,
                                           create_hypersonic_waverider_model)
 
@@ -2617,7 +2617,7 @@ class TestSimulationRealTimeCFD:
         assert aero["L"] > 0
 
     def test_rtcfd_derivative_estimation_positive_slope(self):
-        from tensornet.sim.simulation import (AeroTable, AeroTableConfig,
+        from ontic.sim.simulation import (AeroTable, AeroTableConfig,
                                           RealTimeCFD,
                                           create_hypersonic_waverider_model)
 
@@ -2638,7 +2638,7 @@ class TestSimulationMission:
     """Test mission simulation components."""
 
     def test_mission_config_stores_coordinates(self):
-        from tensornet.sim.simulation import MissionConfig
+        from ontic.sim.simulation import MissionConfig
 
         config = MissionConfig(
             launch_lat=34.0, launch_lon=-118.0, target_lat=35.0, target_lon=-117.0
@@ -2650,7 +2650,7 @@ class TestSimulationMission:
     def test_mission_uncertainty_model_samples_near_unity(self):
         import numpy as np
 
-        from tensornet.sim.simulation import UncertaintyModel
+        from ontic.sim.simulation import UncertaintyModel
 
         uncertainty = UncertaintyModel(density_sigma_pct=5.0)
 
@@ -2660,7 +2660,7 @@ class TestSimulationMission:
         assert 0.8 < np.mean(density_factors) < 1.2
 
     def test_mission_single_run_produces_result(self):
-        from tensornet.sim.simulation import (MissionConfig, MissionSimulator,
+        from ontic.sim.simulation import (MissionConfig, MissionSimulator,
                                           UncertaintyModel)
 
         config = MissionConfig(
@@ -2679,7 +2679,7 @@ class TestSimulationMission:
         assert isinstance(result.max_mach, float)
 
     def test_mission_monte_carlo_returns_multiple_results(self):
-        from tensornet.sim.simulation import (MissionConfig, MonteCarloConfig,
+        from ontic.sim.simulation import (MissionConfig, MonteCarloConfig,
                                           UncertaintyModel, run_monte_carlo)
 
         config = MissionConfig(boost_duration_s=15.0, dt_s=0.5, max_time_s=60.0)
@@ -2691,7 +2691,7 @@ class TestSimulationMission:
         assert len(results) == 5
 
     def test_mission_dispersion_analysis_computes_cep(self):
-        from tensornet.sim.simulation import (MissionConfig, MonteCarloConfig,
+        from ontic.sim.simulation import (MissionConfig, MonteCarloConfig,
                                           UncertaintyModel, analyze_dispersion,
                                           run_monte_carlo)
 
@@ -2706,7 +2706,7 @@ class TestSimulationMission:
         assert "success_rate" in analysis
 
     def test_mission_phases_recorded_in_history(self):
-        from tensornet.sim.simulation import (MissionConfig, MissionPhase,
+        from ontic.sim.simulation import (MissionConfig, MissionPhase,
                                           MissionSimulator)
 
         config = MissionConfig(

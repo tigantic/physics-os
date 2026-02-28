@@ -1,4 +1,4 @@
-# Module `tensornet.realtime`
+# Module `ontic.realtime`
 
 Real-time inference optimization for tensor network models.
 

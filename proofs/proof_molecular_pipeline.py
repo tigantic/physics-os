@@ -17,11 +17,11 @@ from typing import List, Tuple
 import torch
 
 # Local imports
-from tensornet.ml.discovery.ingest.molecular import (
+from ontic.ml.discovery.ingest.molecular import (
     MolecularIngester, ProteinStructure,
     create_synthetic_protein
 )
-from tensornet.ml.discovery.pipelines.molecular_pipeline import (
+from ontic.ml.discovery.pipelines.molecular_pipeline import (
     MolecularDiscoveryPipeline, MolecularPipelineResult
 )
 

@@ -19,7 +19,7 @@ Run: python test_fusion.py
 import numpy as np
 import torch
 
-from tensornet.plasma_nuclear.fusion.tokamak import (PlasmaState, TokamakReactor,
+from ontic.plasma_nuclear.fusion.tokamak import (PlasmaState, TokamakReactor,
                                       verify_gyration)
 
 

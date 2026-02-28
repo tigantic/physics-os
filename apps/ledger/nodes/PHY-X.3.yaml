@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Reaction networks + hydro coupling"
 
 source_files:
-  - "tensornet/nuclear/astrophysics.py"
+  - "ontic/nuclear/astrophysics.py"
 
 tests:
   smoke:

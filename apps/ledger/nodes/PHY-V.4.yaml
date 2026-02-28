@@ -13,7 +13,7 @@ state: "V0.2"
 description: "MCMC, PIMC, QMC entrypoints"
 
 source_files:
-  - "tensornet/statmech/monte_carlo.py"
+  - "ontic/statmech/monte_carlo.py"
 
 tests:
   smoke:

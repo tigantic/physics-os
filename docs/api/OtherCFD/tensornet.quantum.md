@@ -1,4 +1,4 @@
-# Module `tensornet.quantum`
+# Module `ontic.quantum`
 
 Quantum Module for The Physics OS ==============================
 

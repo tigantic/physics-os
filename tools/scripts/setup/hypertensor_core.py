@@ -17,10 +17,10 @@ from typing import Optional, Tuple
 
 import numpy as np
 
-# Add tensornet to path
+# Add ontic to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from tensornet.sim.visualization.tensor_slicer import TensorSlicer
+from ontic.sim.visualization.tensor_slicer import TensorSlicer
 
 
 class FluidState:

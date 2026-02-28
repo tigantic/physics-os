@@ -1,7 +1,7 @@
 # Forbidden Outputs Registry
 
 **Baseline**: v4.0.0
-**Enforcement point**: `hypertensor/core/sanitizer.py` — `sanitize_result()`
+**Enforcement point**: `physics_os/core/sanitizer.py` — `sanitize_result()`
 **Status**: FROZEN — changes require version bump and security review
 
 ---
@@ -63,7 +63,7 @@ output.  Leaking any of these is a **security incident**.
 | **IR opcodes**           | `ir_instructions`, `opcode_sequence`, `ir_graph`        | Reveals compiler internals                     |
 | **Register state**       | `register_count`, `virtual_registers`, register map     | Reveals VM architecture                        |
 | **Truncation policy**    | `rel_tol`, `max_rank` (internal), policy parameters     | Reveals quality-performance tradeoffs          |
-| **Internal class names** | `tensornet.vm.*`, `QTTRuntime`, `RankGovernor`          | Reveals implementation structure               |
+| **Internal class names** | `ontic.vm.*`, `QTTRuntime`, `RankGovernor`          | Reveals implementation structure               |
 | **Stack traces**         | Python tracebacks with internal paths                   | Reveals file structure and dependencies        |
 | **Timing internals**     | Per-step timing, SVD timing, per-core timing            | Enables performance reverse engineering        |
 | **Key material**         | `_SIGNING_KEY`, `_VERIFY_KEY` (private), HMAC secret    | Enables certificate forgery                    |

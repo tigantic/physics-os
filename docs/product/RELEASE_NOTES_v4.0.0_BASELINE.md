@@ -18,21 +18,21 @@ physics compute.
 
 | Surface | Entry Point                        | Status   |
 |---------|------------------------------------|----------|
-| API     | `hypertensor.api.app:app`          | Verified |
-| SDK     | `hypertensor.sdk.client`           | Verified |
-| MCP     | `hypertensor.mcp.server`           | Verified |
-| CLI     | `python -m hypertensor.cli`        | Verified |
+| API     | `physics_os.api.app:app`          | Verified |
+| SDK     | `physics_os.sdk.client`           | Verified |
+| MCP     | `physics_os.mcp.server`           | Verified |
+| CLI     | `python -m physics_os.cli`        | Verified |
 
 ### Core Layer (server-side only, never distributed)
 
 | Module                     | Purpose                                      |
 |----------------------------|----------------------------------------------|
-| `hypertensor.core.hasher`  | Content-addressed SHA-256 over canonical JSON |
-| `hypertensor.core.registry`| 7-domain compiler registry                   |
-| `hypertensor.core.executor`| Bridges jobs to tensornet.vm runtime          |
-| `hypertensor.core.sanitizer`| IP-safe output filtering                    |
-| `hypertensor.core.evidence`| Validation reports + claim-witness generation |
-| `hypertensor.core.certificates`| Ed25519 signing + verification            |
+| `physics_os.core.hasher`  | Content-addressed SHA-256 over canonical JSON |
+| `physics_os.core.registry`| 7-domain compiler registry                   |
+| `physics_os.core.executor`| Bridges jobs to ontic.vm runtime          |
+| `physics_os.core.sanitizer`| IP-safe output filtering                    |
+| `physics_os.core.evidence`| Validation reports + claim-witness generation |
+| `physics_os.core.certificates`| Ed25519 signing + verification            |
 
 ### Job System
 
@@ -127,32 +127,32 @@ through the launch gate checklist before reaching the release branch.
 ```
 contracts/v1/SPEC.md
 contracts/v1/envelope.schema.json
-hypertensor/__init__.py
-hypertensor/api/__init__.py
-hypertensor/api/app.py
-hypertensor/api/auth.py
-hypertensor/api/config.py
-hypertensor/api/routers/__init__.py
-hypertensor/api/routers/capabilities.py
-hypertensor/api/routers/contracts.py
-hypertensor/api/routers/health.py
-hypertensor/api/routers/jobs.py
-hypertensor/api/routers/validate.py
-hypertensor/cli/__init__.py
-hypertensor/cli/__main__.py
-hypertensor/cli/main.py
-hypertensor/core/__init__.py
-hypertensor/core/certificates.py
-hypertensor/core/evidence.py
-hypertensor/core/executor.py
-hypertensor/core/hasher.py
-hypertensor/core/registry.py
-hypertensor/core/sanitizer.py
-hypertensor/jobs/__init__.py
-hypertensor/jobs/models.py
-hypertensor/jobs/store.py
-hypertensor/mcp/__init__.py
-hypertensor/mcp/server.py
-hypertensor/sdk/__init__.py
-hypertensor/sdk/client.py
+physics_os/__init__.py
+physics_os/api/__init__.py
+physics_os/api/app.py
+physics_os/api/auth.py
+physics_os/api/config.py
+physics_os/api/routers/__init__.py
+physics_os/api/routers/capabilities.py
+physics_os/api/routers/contracts.py
+physics_os/api/routers/health.py
+physics_os/api/routers/jobs.py
+physics_os/api/routers/validate.py
+physics_os/cli/__init__.py
+physics_os/cli/__main__.py
+physics_os/cli/main.py
+physics_os/core/__init__.py
+physics_os/core/certificates.py
+physics_os/core/evidence.py
+physics_os/core/executor.py
+physics_os/core/hasher.py
+physics_os/core/registry.py
+physics_os/core/sanitizer.py
+physics_os/jobs/__init__.py
+physics_os/jobs/models.py
+physics_os/jobs/store.py
+physics_os/mcp/__init__.py
+physics_os/mcp/server.py
+physics_os/sdk/__init__.py
+physics_os/sdk/client.py
 ```

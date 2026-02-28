@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Split-operator, Chebyshev"
 
 source_files:
-  - "tensornet/quantum_mechanics/propagator.py"
+  - "ontic/quantum_mechanics/propagator.py"
 
 tests:
   smoke:

@@ -159,7 +159,7 @@ below the curse of dimensionality. This means:
 ## Technical Architecture
 
 ```
-tensornet/vm/
+ontic/vm/
 ├── ir.py              22-opcode instruction set (324 lines)
 ├── qtt_tensor.py      Dimension-aware QTT wrapper (457 lines)
 ├── operators.py       Analytic MPO via binary carry chain (391 lines)

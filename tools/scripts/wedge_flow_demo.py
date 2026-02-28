@@ -19,7 +19,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import math
 
-from tensornet.cfd.euler_2d import oblique_shock_exact
+from ontic.cfd.euler_2d import oblique_shock_exact
 
 
 def main():
@@ -107,7 +107,7 @@ def main():
 
     import torch
 
-    from tensornet.cfd.geometry import ImmersedBoundary, WedgeGeometry
+    from ontic.cfd.geometry import ImmersedBoundary, WedgeGeometry
 
     # Create wedge
     wedge = WedgeGeometry(

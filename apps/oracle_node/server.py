@@ -193,7 +193,7 @@ def numbers_to_qtt_distribution(data: List[float], grid_size: int = None) -> "QT
     This is THE ADAPTER — the only domain-specific part.
     Once data is a QTT tensor, the math is universal.
     """
-    from tensornet.genesis.ot import QTTDistribution
+    from ontic.genesis.ot import QTTDistribution
     
     arr = np.array(data, dtype=np.float64)
     
@@ -241,7 +241,7 @@ def stage_1_optimal_transport(dist_a: "QTTDistribution", dist_b: "QTTDistributio
     - Finance: "Liquidity moved by X basis points"  
     - Medical: "Blood flow changed by X ml/min"
     """
-    from tensornet.genesis.ot import wasserstein_distance
+    from ontic.genesis.ot import wasserstein_distance
     
     start = time.perf_counter()
     
@@ -272,7 +272,7 @@ def stage_2_spectral_wavelets(dist_a: "QTTDistribution", dist_b: "QTTDistributio
     - Finance: "Flash crash vs recession"
     - Medical: "Local clot vs systemic hypertension"
     """
-    from tensornet.genesis.sgw import QTTLaplacian, QTTSignal, QTTGraphWavelet
+    from ontic.genesis.sgw import QTTLaplacian, QTTSignal, QTTGraphWavelet
     
     start = time.perf_counter()
     
@@ -333,8 +333,8 @@ def stage_3_rkhs_anomaly(
     
     Uses stratified subsampling to avoid O(n²) memory explosion.
     """
-    from tensornet.genesis.rkhs import RBFKernel, maximum_mean_discrepancy
-    from tensornet.genesis.core.triton_ops import qtt_evaluate_at_indices
+    from ontic.genesis.rkhs import RBFKernel, maximum_mean_discrepancy
+    from ontic.genesis.core.triton_ops import qtt_evaluate_at_indices
     
     start = time.perf_counter()
     
@@ -346,7 +346,7 @@ def stage_3_rkhs_anomaly(
     sample_indices = torch.linspace(0, n - 1, n_samples, dtype=torch.long)
     
     # Evaluate QTT at sample points (no full dense materialization)
-    from tensornet.genesis.sgw.graph_signals import QTTSignal
+    from ontic.genesis.sgw.graph_signals import QTTSignal
     signal_a = QTTSignal.from_cores(dist_a.cores)
     signal_b = QTTSignal.from_cores(dist_b.cores)
     
@@ -428,8 +428,8 @@ def stage_4_topology(
     
     Complexity thresholds loaded from calibration if available.
     """
-    from tensornet.genesis.topology.qtt_native import qtt_persistence_grid_1d
-    from tensornet.genesis.core.triton_ops import qtt_evaluate_at_indices
+    from ontic.genesis.topology.qtt_native import qtt_persistence_grid_1d
+    from ontic.genesis.core.triton_ops import qtt_evaluate_at_indices
     
     start = time.perf_counter()
     
@@ -518,8 +518,8 @@ def stage_5_geometric_direction(
     
     Gradient thresholds loaded from calibration if available.
     """
-    from tensornet.genesis.ga import CliffordAlgebra, Multivector, geometric_product
-    from tensornet.genesis.core.triton_ops import qtt_evaluate_at_indices
+    from ontic.genesis.ga import CliffordAlgebra, Multivector, geometric_product
+    from ontic.genesis.core.triton_ops import qtt_evaluate_at_indices
     
     start = time.perf_counter()
     

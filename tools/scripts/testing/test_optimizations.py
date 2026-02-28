@@ -17,7 +17,7 @@ import time
 import numpy as np
 import torch
 
-from tensornet.engine.gateway.orbital_command import OrbitalCommandCenter
+from ontic.engine.gateway.orbital_command import OrbitalCommandCenter
 
 
 def main():

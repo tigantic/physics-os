@@ -55,11 +55,11 @@ HyperTensor-VM-main/
 ├── deploy/             # Containerfile, Docker configs, deployment manifests
 ├── docs/               # ← You are here
 ├── experiments/        # Research scripts, benchmarks, notebooks
-├── hypertensor/        # Python package: Physics OS orchestration layer
+├── physics_os/        # Python package: Physics OS orchestration layer
 ├── integrations/       # Game engine integrations (Unity, Unreal)
 ├── products/           # Product-specific Python packages
 ├── proofs/             # Mathematical proofs (conservation, Yang-Mills, ZK)
-├── tensornet/          # Python package: Tensor network engine (108 modules)
+├── ontic/          # Python package: Tensor network engine (108 modules)
 ├── tests/              # Test suites (Python + Rust integration)
 └── tools/              # Developer tools, scripts, LOC reports
 ```

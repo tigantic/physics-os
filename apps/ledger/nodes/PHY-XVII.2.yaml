@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Regularization, Bayesian"
 
 source_files:
-  - "tensornet/cfd/adjoint.py"
+  - "ontic/cfd/adjoint.py"
 
 tests:
   smoke:

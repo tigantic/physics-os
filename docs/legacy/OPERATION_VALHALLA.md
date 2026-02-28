@@ -102,7 +102,7 @@ Migrate all physics simulation to RTX 5070 Tensor Cores using PyTorch CUDA, achi
 - [x] Profile Tensor Core utilization baseline
 
 **2.2 Tensor Field Architecture**
-- [x] Design `tensornet.gpu.TensorField` class specification
+- [x] Design `ontic.gpu.TensorField` class specification
 - [x] Implement CUDA-native field storage (torch.Tensor on device)
 - [x] Create GPU-resident slice() operations with zero-copy
 - [x] Build batched tensor contraction primitives
@@ -138,8 +138,8 @@ Migrate all physics simulation to RTX 5070 Tensor Cores using PyTorch CUDA, achi
 - [x] Memory leaks eliminated (24-hour stress test passed)
 
 #### Deliverables
-- `tensornet/gpu/tensor_field.py` implementation
-- `tensornet/gpu/fluid_dynamics.py` CUDA kernels
+- `ontic/gpu/tensor_field.py` implementation
+- `ontic/gpu/fluid_dynamics.py` CUDA kernels
 - Performance validation report (`GPU_MUSCLE_ATTESTATION.json`)
 - Benchmark comparison charts
 
@@ -168,7 +168,7 @@ Establish direct S3→VRAM data pipeline for NOAA/NASA satellite imagery, elimin
 - [x] Establish data licensing compliance
 
 **3.2 High-Speed Fetcher Implementation**
-- [x] Build `tensornet.fuel.S3Fetcher` async client
+- [x] Build `ontic.fuel.S3Fetcher` async client
 - [x] Implement HTTP/2 multiplexed tile downloads
 - [x] Create in-memory decompression pipeline (JPEG→CUDA)
 - [x] Design exponential backoff retry logic
@@ -204,8 +204,8 @@ Establish direct S3→VRAM data pipeline for NOAA/NASA satellite imagery, elimin
 - [x] 99.9% uptime during 48-hour endurance test
 
 #### Deliverables
-- `tensornet/fuel/s3_fetcher.py` implementation
-- `tensornet/fuel/tile_compositor.py` GPU pipeline
+- `ontic/fuel/s3_fetcher.py` implementation
+- `ontic/fuel/tile_compositor.py` GPU pipeline
 - Data source documentation (`S3_ENDPOINTS.md`)
 - Performance telemetry dashboard
 
@@ -313,7 +313,7 @@ We manage Light and Depth through five discrete GPU render passes.
 #### Execution Checklist
 
 **4.1 Photonic Discipline Implementation**
-- [x] Color palette constants (`tensornet/gateway/photonic_discipline.py`)
+- [x] Color palette constants (`ontic/gateway/photonic_discipline.py`)
 - [x] Plasma gradient generator (perceptually uniform)
 - [x] Opacity mapping utilities (signal burns through noise)
 - [x] GutterSystem spacing constants (4px standard)
@@ -321,7 +321,7 @@ We manage Light and Depth through five discrete GPU render passes.
 - [x] Theme validation tests
 
 **4.2 Modular Grid Engine**
-- [x] NOTA layout calculator (`tensornet/gateway/modular_grid.py`)
+- [x] NOTA layout calculator (`ontic/gateway/modular_grid.py`)
 - [x] 70/30 golden ratio zone computation
 - [x] BentoBox widget containers (Alpha/Beta/Gamma)
 - [x] Corner-anchored HUD overlay rectangles
@@ -329,7 +329,7 @@ We manage Light and Depth through five discrete GPU render passes.
 - [x] Content rendering for bento boxes
 
 **4.3 Onion Renderer Pipeline**
-- [x] 5-layer framebuffer stack (`tensornet/gateway/onion_renderer.py`)
+- [x] 5-layer framebuffer stack (`ontic/gateway/onion_renderer.py`)
 - [x] Depth-sorted composition with correct blending
 - [x] Per-layer opacity and enable/disable controls
 - [x] Geological layer: Satellite texture mapper
@@ -371,11 +371,11 @@ We manage Light and Depth through five discrete GPU render passes.
 - [x] NOTA grid maintains golden ratio at all resolutions
 
 #### Deliverables
-- [x] `tensornet/gateway/photonic_discipline.py` - Color theory implementation
-- [x] `tensornet/gateway/modular_grid.py` - NOTA layout engine
-- [x] `tensornet/gateway/onion_renderer.py` - 5-layer compositor
-- [x] `tensornet/gateway/renderer.py` - OpenGL rendering engine
-- [x] `tensornet/gateway/orbital_command.py` - Main application window
+- [x] `ontic/gateway/photonic_discipline.py` - Color theory implementation
+- [x] `ontic/gateway/modular_grid.py` - NOTA layout engine
+- [x] `ontic/gateway/onion_renderer.py` - 5-layer compositor
+- [x] `ontic/gateway/renderer.py` - OpenGL rendering engine
+- [x] `ontic/gateway/orbital_command.py` - Main application window
 - [x] UI/UX design specification document
 - [x] Video demonstration (1080p, 60 FPS, 2 minutes)
 - [x] `PHASE4_GATEWAY_ATTESTATION.json` - Completion certification

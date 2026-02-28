@@ -43,7 +43,7 @@
 │  │   ┌──────────────────────────────────────────────────────────────────────┐  │   │
 │  │   │                    BATCHED OPERATIONS LAYER                          │  │   │
 │  │   │                                                                      │  │   │
-│  │   │  qtt_3d_ops/cfd/           tensornet/cfd/                           │  │   │
+│  │   │  qtt_3d_ops/cfd/           ontic/cfd/                           │  │   │
 │  │   │  ├── qtt_batched_ops.py    ├── qtt_batched_ops.py  (copy)           │  │   │
 │  │   │  ├── triton_qtt3d.py       ├── triton_qtt3d.py     (copy)           │  │   │
 │  │   │  ├── qtt_batched_patch.py  └── qtt_batched_patch.py                 │  │   │
@@ -92,7 +92,7 @@
 | `qtt_3d_ops/cfd/benchmark_batched.py` | 494 | Correctness + performance validation |
 | `qtt_3d_ops/cfd/INTEGRATION_GUIDE.md` | 182 | Integration documentation |
 
-**Note:** These are DUPLICATED in `tensornet/cfd/` - the copies appear to be the same.
+**Note:** These are DUPLICATED in `ontic/cfd/` - the copies appear to be the same.
 
 ### 2.3 Core QTT Infrastructure
 
@@ -110,10 +110,10 @@
 | File | Lines | Purpose |
 |------|-------|---------|
 | `qtt_3d_ops/cfd/triton_qtt3d.py` | 399 | **3D residual absorption** (the fast one) |
-| `tensornet/cfd/triton_qtt3d.py` | 399 | Copy of above |
-| `tensornet/cfd/qtt_triton.py` | ~400 | Older Triton truncation kernels |
-| `tensornet/cfd/qtt_triton_kernels.py` | ~1000 | Full Triton kernel suite |
-| `tensornet/cfd/qtt_triton_kernels_v2.py` | ~1700 | V2 with 2D extensions |
+| `ontic/cfd/triton_qtt3d.py` | 399 | Copy of above |
+| `ontic/cfd/qtt_triton.py` | ~400 | Older Triton truncation kernels |
+| `ontic/cfd/qtt_triton_kernels.py` | ~1000 | Full Triton kernel suite |
+| `ontic/cfd/qtt_triton_kernels_v2.py` | ~1700 | V2 with 2D extensions |
 
 ---
 
@@ -240,7 +240,7 @@
 I was profiling `ns3d_native.py` which:
 - Uses `poisson_cg` for pressure projection (9.4 seconds!)
 - Uses sequential SVDs (not batched)
-- Uses the OLD Triton kernels in `tensornet/cfd/triton_qtt3d.py`
+- Uses the OLD Triton kernels in `ontic/cfd/triton_qtt3d.py`
 
 ### The ACTUAL Workflow
 
@@ -253,9 +253,9 @@ The current solver `ns3d_qtt_native.py`:
 
 There are TWO copies of the batched ops:
 1. `qtt_3d_ops/cfd/` — appears to be the source
-2. `tensornet/cfd/` — appears to be a copy
+2. `ontic/cfd/` — appears to be a copy
 
-Both `ns3d_qtt_native.py` imports from `tensornet.cfd.qtt_batched_ops`, so the tensornet copy is what's actually used.
+Both `ns3d_qtt_native.py` imports from `ontic.cfd.qtt_batched_ops`, so the tensornet copy is what's actually used.
 
 ---
 
@@ -264,7 +264,7 @@ Both `ns3d_qtt_native.py` imports from `tensornet.cfd.qtt_batched_ops`, so the t
 1. **Profile the CORRECT solver**: `ns3d_qtt_native.py` with `NS3DQTTSolver`
 2. **Use the benchmark**: `qtt_3d_ops/cfd/benchmark_batched.py`
 3. **Verify Triton kernels**: Are they being JIT-compiled correctly?
-4. **Check import paths**: Ensure `tensornet.cfd.qtt_batched_ops` matches `qtt_3d_ops/cfd/`
+4. **Check import paths**: Ensure `ontic.cfd.qtt_batched_ops` matches `qtt_3d_ops/cfd/`
 
 ---
 
@@ -276,7 +276,7 @@ ns3d_qtt_native.py
 │   └── QTT3DState, QTT3DVectorField, QTT3DDerivatives
 ├── imports pure_qtt_ops.py
 │   └── QTTState, dense_to_qtt, qtt_to_dense
-├── imports qtt_batched_ops.py (from tensornet.cfd)
+├── imports qtt_batched_ops.py (from ontic.cfd)
 │   ├── batched_truncation_sweep
 │   ├── add_cores_raw, scale_cores, hadamard_cores_raw
 │   ├── batched_cross_product
@@ -380,7 +380,7 @@ From `crates/fluidelite/FINDINGS.md` rank sweep:
 Before profiling, verify:
 
 - [ ] Using `ns3d_qtt_native.py`, NOT `ns3d_native.py`
-- [ ] Imports from `tensornet.cfd.qtt_batched_ops` (not other versions)
+- [ ] Imports from `ontic.cfd.qtt_batched_ops` (not other versions)
 - [ ] `batched_cross_product` being called (not sequential)
 - [ ] `triton_residual_absorb_3d` JIT-compiled successfully
 - [ ] 2/3 dealiasing enabled for spectral operations
@@ -798,7 +798,7 @@ class TurboNS3DConfig:
 | **turbine.py** | Wind farm wake physics (Jensen Park model) | Matched `*turb*` but NOT related to CFD turbulence |
 | **docs/api/cfd.turbulence.md** | API documentation for RANS module | Auto-generated, covers turbulence.py |
 | **docs/api/OtherCFD/cfd.turbulence.md** | Same as above | Duplicate |
-| **docs/api/tensornet/cfd/turbulence.html** | HTML version of API docs | Auto-generated |
+| **docs/api/ontic/cfd/turbulence.html** | HTML version of API docs | Auto-generated |
 
 ---
 

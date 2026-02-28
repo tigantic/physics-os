@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Piezo, MEMS"
 
 source_files:
-  - "tensornet/coupled/electro_mechanical.py"
+  - "ontic/coupled/electro_mechanical.py"
 
 tests:
   smoke:

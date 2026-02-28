@@ -29,7 +29,7 @@ from dataclasses import dataclass
 import torch
 from torch import Tensor
 
-from tensornet.cfd.euler_nd_native import (
+from ontic.cfd.euler_nd_native import (
     EulerND_Native as _EulerND,
     EulerNDConfig as _EulerNDConfig,
     EulerNDState as _EulerNDState,

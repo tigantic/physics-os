@@ -13,7 +13,7 @@ state: "V0.2"
 description: "HH, networks"
 
 source_files:
-  - "tensornet/medical/hemo.py"
+  - "ontic/medical/hemo.py"
 
 tests:
   smoke:

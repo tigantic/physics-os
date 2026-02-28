@@ -4,11 +4,11 @@
 ║                                                                                      ║
 ║               NAVIER-STOKES REGULARITY PROOF - V2                                    ║
 ║                                                                                      ║
-║                    Using Tested tensornet/cfd Infrastructure                         ║
+║                    Using Tested ontic/cfd Infrastructure                         ║
 ║                                                                                      ║
 ╠══════════════════════════════════════════════════════════════════════════════════════╣
 ║                                                                                      ║
-║  This version uses the VALIDATED NS3DSolver from tensornet/cfd/ns_3d.py              ║
+║  This version uses the VALIDATED NS3DSolver from ontic/cfd/ns_3d.py              ║
 ║  which has passed gate criteria:                                                     ║
 ║    - Taylor-Green decay rate error < 5%                                              ║
 ║    - max|∇·u| < 10⁻⁶                                                                 ║
@@ -38,7 +38,7 @@ import math
 sys.path.insert(0, str(Path(__file__).parent))
 
 # Import the VALIDATED solver
-from tensornet.cfd.ns_3d import (
+from ontic.cfd.ns_3d import (
     NS3DSolver,
     NSState3D,
     compute_vorticity_3d,
@@ -135,7 +135,7 @@ class RegularityAnalyzer:
     
     def compute_divergence(self, state: NSState3D) -> float:
         """Compute max |∇·u|."""
-        from tensornet.cfd.ns_3d import compute_divergence_3d
+        from ontic.cfd.ns_3d import compute_divergence_3d
         div = compute_divergence_3d(
             state.u, state.v, state.w,
             self.dx, self.dx, self.dx,
@@ -333,7 +333,7 @@ def generate_lean_proof(results: List[RegularityResult], bounds: Dict) -> str:
 ║                                                                              ║
 ║  Generated: {datetime.now().isoformat()}
 ║                                                                              ║
-║  SOLVER: tensornet/cfd/ns_3d.py (VALIDATED)                                  ║
+║  SOLVER: ontic/cfd/ns_3d.py (VALIDATED)                                  ║
 ║    - Spectral discretization with Chorin-Temam projection                    ║
 ║    - RK4 time stepping with projection at each stage                         ║
 ║    - Gate: decay rate error < 5%, max|∇·u| < 10⁻⁶                            ║
@@ -437,7 +437,7 @@ def run_regularity_proof(N: int = 32, nu: float = 0.01, T_final: float = 0.5) ->
     print("╔" + "═" * 78 + "╗")
     print("║" + " " * 15 + "NAVIER-STOKES REGULARITY PROOF V2" + " " * 27 + "║")
     print("║" + " " * 78 + "║")
-    print("║  Using VALIDATED tensornet/cfd/ns_3d.py solver" + " " * 29 + "║")
+    print("║  Using VALIDATED ontic/cfd/ns_3d.py solver" + " " * 29 + "║")
     print("║  Gate criteria: decay rate error < 5%, max|∇·u| < 10⁻⁶" + " " * 20 + "║")
     print("╚" + "═" * 78 + "╝")
     

@@ -68,11 +68,11 @@ from scipy import sparse
 from scipy.sparse.linalg import spsolve
 
 # ── TensorNet QTT stack ──
-from tensornet.qtt.sparse_direct import tt_round, tt_matvec
-from tensornet.qtt.eigensolvers import tt_inner, tt_norm, tt_axpy, tt_scale, tt_add
-from tensornet.qtt.pde_solvers import PDEConfig, PDEResult, backward_euler, identity_mpo, shifted_operator
-from tensornet.qtt.dynamic_rank import DynamicRankConfig, DynamicRankState, RankStrategy, adapt_ranks
-from tensornet.qtt.unstructured import quantics_fold, mesh_to_tt, MeshTT
+from ontic.qtt.sparse_direct import tt_round, tt_matvec
+from ontic.qtt.eigensolvers import tt_inner, tt_norm, tt_axpy, tt_scale, tt_add
+from ontic.qtt.pde_solvers import PDEConfig, PDEResult, backward_euler, identity_mpo, shifted_operator
+from ontic.qtt.dynamic_rank import DynamicRankConfig, DynamicRankState, RankStrategy, adapt_ranks
+from ontic.qtt.unstructured import quantics_fold, mesh_to_tt, MeshTT
 
 # ===================================================================
 #  Constants

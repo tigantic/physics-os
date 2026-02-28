@@ -13,7 +13,7 @@ state: "V0.2"
 description: "FLD, IMC"
 
 source_files:
-  - "tensornet/radiation/__init__.py"
+  - "ontic/radiation/__init__.py"
 
 tests:
   smoke:

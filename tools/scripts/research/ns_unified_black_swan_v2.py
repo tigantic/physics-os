@@ -32,8 +32,8 @@ import math
 ROOT = Path(__file__).parent
 sys.path.insert(0, str(ROOT))
 
-from tensornet.cfd.ns_3d import NS3DSolver, NSState3D
-from tensornet.cfd.pure_qtt_ops import dense_to_qtt
+from ontic.cfd.ns_3d import NS3DSolver, NSState3D
+from ontic.cfd.pure_qtt_ops import dense_to_qtt
 
 
 # ═══════════════════════════════════════════════════════════════════════════════════════

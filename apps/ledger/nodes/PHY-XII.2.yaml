@@ -13,7 +13,7 @@ state: "V0.2"
 description: "TOV, accretion, GRMHD hooks"
 
 source_files:
-  - "tensornet/astro/compact_objects.py"
+  - "ontic/astro/compact_objects.py"
 
 tests:
   smoke:

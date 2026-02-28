@@ -48,9 +48,9 @@ def gate_bkm_analog():
     Our chi tracks ||nablau||, which bounds ||omega||.
     Verify: intchi dt remains bounded for smooth viscous flow.
     """
-    from tensornet.cfd.chi_diagnostic import (ChiTrajectory,
+    from ontic.cfd.chi_diagnostic import (ChiTrajectory,
                                               compute_chi_state_2d)
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.ns_2d import NS2DSolver
 
     print("\n" + "=" * 60)
     print("Gate 1: Beale-Kato-Majda Analog")
@@ -134,8 +134,8 @@ def gate_energy_enstrophy_balance():
 
     Verify this fundamental identity numerically.
     """
-    from tensornet.cfd.chi_diagnostic import compute_chi_state_2d
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.chi_diagnostic import compute_chi_state_2d
+    from ontic.cfd.ns_2d import NS2DSolver
 
     print("\n" + "=" * 60)
     print("Gate 2: Energy-Enstrophy Balance")
@@ -231,10 +231,10 @@ def gate_regularity_certificate():
     - chi trajectory summary
     - Bounds verified
     """
-    from tensornet.cfd.chi_diagnostic import (ChiTrajectory,
+    from ontic.cfd.chi_diagnostic import (ChiTrajectory,
                                               analyze_regularity,
                                               compute_chi_state_2d)
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.ns_2d import NS2DSolver
 
     print("\n" + "=" * 60)
     print("Gate 3: Regularity Certificate")
@@ -344,8 +344,8 @@ def gate_scaling_law():
     For smooth data: ||nablau|| ~ O(1) independent of N
     For rough (high-k) data: ||nablau|| ~ O(k) grows with wavenumber
     """
-    from tensornet.cfd.chi_diagnostic import compute_chi_state_2d
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.chi_diagnostic import compute_chi_state_2d
+    from ontic.cfd.ns_2d import NS2DSolver
 
     print("\n" + "=" * 60)
     print("Gate 4: Scaling Law Verification")

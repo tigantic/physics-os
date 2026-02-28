@@ -7,7 +7,7 @@ Transverse-field Ising model: H = -J Σ Z_i Z_{i+1} - h Σ X_i
 
 import torch
 
-from tensornet import dmrg, tfim_mpo
+from ontic import dmrg, tfim_mpo
 
 
 def exact_tfim_E0(L: int, h: float) -> float:

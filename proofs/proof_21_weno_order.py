@@ -17,7 +17,7 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tensornet.cfd.weno import (ReconstructionSide, WENOConfig,
+from ontic.cfd.weno import (ReconstructionSide, WENOConfig,
                                 convergence_order, smoothness_indicators,
                                 teno5, weno5_js, weno5_z)
 

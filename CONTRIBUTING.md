@@ -88,9 +88,9 @@ This document contains:
 - Validation commands to run before/after changes
 
 **Files under protection:**
-- `tensornet/sovereign/morton.py` — O(1) Morton encoding
-- `tensornet/adaptive/*.py` — rSVD threshold = 100
-- `tensornet/core/mps.py` — Tensor network core
+- `ontic/sovereign/morton.py` — O(1) Morton encoding
+- `ontic/adaptive/*.py` — rSVD threshold = 100
+- `ontic/core/mps.py` — Tensor network core
 
 Changes to these files require:
 1. Reading the attestation document
@@ -121,7 +121,7 @@ python scripts/profile_performance.py --dmrg --tebd
 
 ### Building Documentation
 ```bash
-python tensornet/docs/api_reference.py
+python ontic/docs/api_reference.py
 # Output in docs/api/
 ```
 
@@ -174,8 +174,8 @@ The project uses the following development tools (pinned in `requirements-dev.tx
 |------|---------|---------|
 | pytest | Testing | `pytest tests/ -v` |
 | ruff | Linting/formatting | `ruff check . && ruff format .` |
-| mypy | Type checking | `mypy tensornet/` |
-| bandit | Security scanning | `bandit -r tensornet/` |
+| mypy | Type checking | `mypy ontic/` |
+| bandit | Security scanning | `bandit -r ontic/` |
 | detect-secrets | Secret detection | `detect-secrets scan` |
 | pre-commit | Git hooks | `pre-commit install` |
 
@@ -273,7 +273,7 @@ pip install -e ".[dev]"
 Use the centralized logging module instead of `print()` statements:
 
 ```python
-from tensornet.logging_config import get_logger
+from ontic.logging_config import get_logger
 
 logger = get_logger(__name__)
 
@@ -307,7 +307,7 @@ logger.convergence(iteration=10, value=1e-8)     # Convergence tracking
 - Proof scripts for result display
 
 Avoid `print()` in:
-- Library code (`tensornet/`)
+- Library code (`ontic/`)
 - Test files (use pytest's capfd instead)
 - Server code (use structured logging)
 

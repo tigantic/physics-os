@@ -51,9 +51,9 @@
 
 | Field | Value |
 |-------|-------|
-| **Files** | `VERSION`, `tensornet/__init__.py`, `hypertensor/__init__.py`, `CITATION.cff`, `README.md` |
+| **Files** | `VERSION`, `ontic/__init__.py`, `physics_os/__init__.py`, `CITATION.cff`, `README.md` |
 | **Finding** | The canonical `VERSION` file declares `PACKAGE=40.0.1`, but 5 downstream manifests have diverged. |
-| **Evidence** | `tensornet/__init__.py` L28: `__version__ = "40.0.0"` (expected 40.0.1). `hypertensor/__init__.py` L21: `__version__ = "1.0.0"` (expected 40.0.1). `hypertensor/__init__.py` L22: `API_VERSION = "1.0.0"` (VERSION API_CONTRACT=1 — format mismatch, align to "1"). `hypertensor/__init__.py` L24: `RUNTIME_VERSION = "3.1.0"` (expected 1.0.0). `CITATION.cff` L31: `version: "4.0.0"` (expected 40.0.1). |
+| **Evidence** | `ontic/__init__.py` L28: `__version__ = "40.0.0"` (expected 40.0.1). `physics_os/__init__.py` L21: `__version__ = "1.0.0"` (expected 40.0.1). `physics_os/__init__.py` L22: `API_VERSION = "1.0.0"` (VERSION API_CONTRACT=1 — format mismatch, align to "1"). `physics_os/__init__.py` L24: `RUNTIME_VERSION = "3.1.0"` (expected 1.0.0). `CITATION.cff` L31: `version: "4.0.0"` (expected 40.0.1). |
 | **Risk** | Downstream consumers receive inconsistent version metadata. Provenance and compatibility checks fail silently. |
 | **Remediation** | 1. Run `tools/sync_versions.py --apply` to fix the 4 Python/CFF drift points. 2. Manually update `README.md` from "Package V40.2" to "Package V40.0.1". 3. Add `sync_versions.py --check` to CI as a gate. |
 | **Completed** | 2026-02-27 |
@@ -247,17 +247,17 @@
 
 ---
 
-### M-07 ✅ — No `py.typed` Marker in `tensornet/` (PEP 561)
+### M-07 ✅ — No `py.typed` Marker in `ontic/` (PEP 561)
 
 | Field | Value |
 |-------|-------|
-| **File** | `tensornet/py.typed` (missing) |
+| **File** | `ontic/py.typed` (missing) |
 | **Finding** | PEP 561 requires a `py.typed` marker file for type checkers to recognize inline type annotations in installed packages. The `tensornet` package has extensive type hints but no marker. |
-| **Evidence** | `ls tensornet/py.typed` → not found. |
+| **Evidence** | `ls ontic/py.typed` → not found. |
 | **Risk** | Consumers using mypy/pyright won't see tensornet's type information when the package is installed. |
-| **Remediation** | Create empty `tensornet/py.typed` file. Add `"tensornet/py.typed"` to `package-data` in `pyproject.toml` if not auto-discovered. |
+| **Remediation** | Create empty `ontic/py.typed` file. Add `"ontic/py.typed"` to `package-data` in `pyproject.toml` if not auto-discovered. |
 | **Completed** | 2026-02-27 |
-| **Notes** | Created empty `tensornet/py.typed` marker file. |
+| **Notes** | Created empty `ontic/py.typed` marker file. |
 
 ---
 
@@ -275,14 +275,14 @@
 
 ---
 
-### M-09 ✅ — `hypertensor/` Has Zero Test Files
+### M-09 ✅ — `physics_os/` Has Zero Test Files
 
 | Field | Value |
 |-------|-------|
-| **Finding** | The entire `hypertensor/` package (Tier 2 execution fabric) has no dedicated test files. |
+| **Finding** | The entire `physics_os/` package (Tier 2 execution fabric) has no dedicated test files. |
 | **Evidence** | `find hypertensor -name 'test_*.py' -o -name '*_test.py' \| wc -l` → 0. |
 | **Risk** | Tier 2 runtime code is exercised only incidentally via integration tests. Regressions in the execution fabric go undetected. |
-| **Remediation** | Create `tests/test_hypertensor/` test suite covering at minimum: `__init__.py` version imports, runtime module load, API contract surface. |
+| **Remediation** | Create `tests/test_physics_os/` test suite covering at minimum: `__init__.py` version imports, runtime module load, API contract surface. |
 | **Completed** | 2026-02-27 |
 | **Notes** | Created `tests/test_hypertensor.py` with 35 tests: 5 version metadata, 22 module imports, 2 hasher, 1 sanitizer, 1 registry, 2 jobs, 2 store. All 35 passing. |
 
@@ -416,7 +416,7 @@
 
 | Field | Value |
 |-------|-------|
-| **File** | `docs/api/tensornet/cfd.tar` |
+| **File** | `docs/api/ontic/cfd.tar` |
 | **Finding** | A 3 MB tarball is tracked in git inside the docs tree. |
 | **Risk** | Binary diff, inflates clone. |
 | **Remediation** | Move to Git LFS or extract/generate during build. |
@@ -441,7 +441,7 @@
 
 | Field | Value |
 |-------|-------|
-| **Finding** | 89 `__init__.py` files across `tensornet/` contain backward-compatibility re-exports or shim imports. |
+| **Finding** | 89 `__init__.py` files across `ontic/` contain backward-compatibility re-exports or shim imports. |
 | **Risk** | Maintenance surface area. Import-time overhead. Difficult to determine which re-exports are still needed. |
 | **Remediation** | Audit with `tools/dep_graph.py` to identify unused shims. Deprecate with warnings before removal. |
 | **Completed** | DEFERRED |

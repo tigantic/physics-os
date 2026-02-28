@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Rigid/soft body, contact"
 
 source_files:
-  - "tensornet/robotics_physics/__init__.py"
+  - "ontic/robotics_physics/__init__.py"
 
 tests:
   smoke:

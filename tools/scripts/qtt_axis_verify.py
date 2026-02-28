@@ -10,8 +10,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import torch
 import time
 
-from tensornet.cfd.qtt_3d_state import QTT3DState
-from tensornet.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo
+from ontic.cfd.qtt_3d_state import QTT3DState
+from ontic.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo
 
 
 def main():

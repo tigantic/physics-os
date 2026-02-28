@@ -18,7 +18,7 @@ class TestAPIReferenceExtraction:
     
     def test_parameter_doc(self):
         """Test ParameterDoc creation and formatting."""
-        from tensornet.docs import ParameterDoc
+        from ontic.docs import ParameterDoc
         
         param = ParameterDoc(
             name="chi_max",
@@ -40,7 +40,7 @@ class TestAPIReferenceExtraction:
     
     def test_function_doc(self):
         """Test FunctionDoc creation and formatting."""
-        from tensornet.docs import FunctionDoc, ParameterDoc, ReturnDoc
+        from ontic.docs import FunctionDoc, ParameterDoc, ReturnDoc
         
         func_doc = FunctionDoc(
             name="run_dmrg",
@@ -68,7 +68,7 @@ class TestAPIReferenceExtraction:
     
     def test_class_doc(self):
         """Test ClassDoc creation and formatting."""
-        from tensornet.docs import ClassDoc, AttributeDoc, FunctionDoc
+        from ontic.docs import ClassDoc, AttributeDoc, FunctionDoc
         
         class_doc = ClassDoc(
             name="MPS",
@@ -97,10 +97,10 @@ class TestAPIReferenceExtraction:
     
     def test_module_doc(self):
         """Test ModuleDoc creation and formatting."""
-        from tensornet.docs import ModuleDoc, FunctionDoc, ClassDoc
+        from ontic.docs import ModuleDoc, FunctionDoc, ClassDoc
         
         module_doc = ModuleDoc(
-            name="tensornet.core",
+            name="ontic.core",
             short_description="Core tensor network components.",
             functions=[
                 FunctionDoc(name="svd_truncated", short_description="Truncated SVD"),
@@ -110,19 +110,19 @@ class TestAPIReferenceExtraction:
             ],
         )
         
-        assert module_doc.name == "tensornet.core"
+        assert module_doc.name == "ontic.core"
         assert len(module_doc.functions) == 1
         assert len(module_doc.classes) == 1
         
         # Test markdown conversion
         md = module_doc.to_markdown()
-        assert "tensornet.core" in md
+        assert "ontic.core" in md
         assert "Functions" in md
         assert "Classes" in md
     
     def test_docstring_parser_google_style(self):
         """Test parsing Google-style docstrings."""
-        from tensornet.docs.api_reference import DocstringParser, DocstringStyle
+        from ontic.docs.api_reference import DocstringParser, DocstringStyle
         
         parser = DocstringParser(DocstringStyle.GOOGLE)
         
@@ -151,16 +151,16 @@ class TestAPIReferenceExtraction:
     
     def test_api_extractor(self):
         """Test API extraction from modules."""
-        from tensornet.docs import APIExtractor
+        from ontic.docs import APIExtractor
         
         extractor = APIExtractor(include_private=False)
         
         # Test extraction from a simple module
-        import tensornet.core.decompositions as decomp_module
+        import ontic.core.decompositions as decomp_module
         
         doc = extractor.extract_module(decomp_module)
         
-        assert doc.name == "tensornet.core.decompositions"
+        assert doc.name == "ontic.core.decompositions"
         assert len(doc.functions) > 0
 
 
@@ -169,7 +169,7 @@ class TestUserGuides:
     
     def test_code_example(self):
         """Test CodeExample creation and formatting."""
-        from tensornet.docs import CodeExample
+        from ontic.docs import CodeExample
         
         example = CodeExample(
             code="x = torch.randn(10)\nprint(x.shape)",
@@ -189,7 +189,7 @@ class TestUserGuides:
     
     def test_guide_section(self):
         """Test GuideSection creation and formatting."""
-        from tensornet.docs import GuideSection, CodeExample
+        from ontic.docs import GuideSection, CodeExample
         
         section = GuideSection(
             title="Introduction",
@@ -213,7 +213,7 @@ class TestUserGuides:
     
     def test_tutorial(self):
         """Test Tutorial creation and formatting."""
-        from tensornet.docs import Tutorial, GuideSection, DifficultyLevel
+        from ontic.docs import Tutorial, GuideSection, DifficultyLevel
         
         tutorial = Tutorial(
             title="Getting Started",
@@ -239,7 +239,7 @@ class TestUserGuides:
     
     def test_guide_builder(self):
         """Test GuideBuilder fluent interface."""
-        from tensornet.docs import GuideBuilder, DifficultyLevel
+        from ontic.docs import GuideBuilder, DifficultyLevel
         
         builder = GuideBuilder("My Tutorial")
         
@@ -265,7 +265,7 @@ class TestUserGuides:
     
     def test_getting_started_guide(self):
         """Test Getting Started guide generation."""
-        from tensornet.docs import create_getting_started
+        from ontic.docs import create_getting_started
         
         guide = create_getting_started()
         
@@ -281,7 +281,7 @@ class TestUserGuides:
     
     def test_cfd_tutorial(self):
         """Test CFD tutorial generation."""
-        from tensornet.docs import create_cfd_tutorial
+        from ontic.docs import create_cfd_tutorial
         
         guide = create_cfd_tutorial()
         
@@ -294,7 +294,7 @@ class TestUserGuides:
     
     def test_tensor_network_primer(self):
         """Test Tensor Network primer generation."""
-        from tensornet.docs import create_tensor_network_primer
+        from ontic.docs import create_tensor_network_primer
         
         guide = create_tensor_network_primer()
         
@@ -307,7 +307,7 @@ class TestUserGuides:
     
     def test_deployment_guide(self):
         """Test Deployment guide generation."""
-        from tensornet.docs import create_deployment_guide
+        from ontic.docs import create_deployment_guide
         
         guide = create_deployment_guide()
         
@@ -323,7 +323,7 @@ class TestSphinxConfig:
     
     def test_sphinx_config_creation(self):
         """Test SphinxConfig creation."""
-        from tensornet.docs import SphinxConfig, SphinxTheme
+        from ontic.docs import SphinxConfig, SphinxTheme
         
         config = SphinxConfig(
             project="TestProject",
@@ -339,7 +339,7 @@ class TestSphinxConfig:
     
     def test_generate_conf_py(self):
         """Test conf.py generation."""
-        from tensornet.docs import SphinxConfig, generate_conf_py
+        from ontic.docs import SphinxConfig, generate_conf_py
         
         config = SphinxConfig(
             project="HyperTensor",
@@ -357,7 +357,7 @@ class TestSphinxConfig:
     
     def test_sphinx_builder(self):
         """Test SphinxBuilder initialization."""
-        from tensornet.docs import SphinxConfig, SphinxBuilder
+        from ontic.docs import SphinxConfig, SphinxBuilder
         from pathlib import Path
         import tempfile
         
@@ -378,7 +378,7 @@ class TestCodeExamples:
     
     def test_example_config(self):
         """Test ExampleConfig creation."""
-        from tensornet.docs import ExampleConfig
+        from ontic.docs import ExampleConfig
         
         config = ExampleConfig(
             timeout_seconds=10.0,
@@ -391,7 +391,7 @@ class TestCodeExamples:
     
     def test_runnable_example_success(self):
         """Test successful example execution."""
-        from tensornet.docs import RunnableExample, ExampleStatus
+        from ontic.docs import RunnableExample, ExampleStatus
         
         example = RunnableExample(
             code="x = 2 + 2\nprint(x)",
@@ -407,7 +407,7 @@ class TestCodeExamples:
     
     def test_runnable_example_failure(self):
         """Test failed example (wrong output)."""
-        from tensornet.docs import RunnableExample, ExampleStatus
+        from ontic.docs import RunnableExample, ExampleStatus
         
         example = RunnableExample(
             code="print(5)",
@@ -422,7 +422,7 @@ class TestCodeExamples:
     
     def test_runnable_example_error(self):
         """Test example with runtime error."""
-        from tensornet.docs import RunnableExample, ExampleStatus
+        from ontic.docs import RunnableExample, ExampleStatus
         
         example = RunnableExample(
             code="raise ValueError('test error')",
@@ -438,7 +438,7 @@ class TestCodeExamples:
     
     def test_runnable_example_skip(self):
         """Test skipped example."""
-        from tensornet.docs import RunnableExample, ExampleStatus
+        from ontic.docs import RunnableExample, ExampleStatus
         
         example = RunnableExample(
             code="print('hello')",
@@ -453,7 +453,7 @@ class TestCodeExamples:
     
     def test_example_runner(self):
         """Test ExampleRunner with multiple examples."""
-        from tensornet.docs import ExampleRunner, RunnableExample
+        from ontic.docs import ExampleRunner, RunnableExample
         
         runner = ExampleRunner()
         
@@ -481,7 +481,7 @@ class TestCodeExamples:
     
     def test_example_runner_report(self):
         """Test ExampleRunner report generation."""
-        from tensornet.docs import ExampleRunner, RunnableExample
+        from ontic.docs import ExampleRunner, RunnableExample
         
         runner = ExampleRunner()
         runner.add_example(RunnableExample(code="print(1)", name="test"))
@@ -502,7 +502,7 @@ class TestCodeExamples:
     
     def test_validate_example(self):
         """Test validate_example convenience function."""
-        from tensornet.docs import validate_example, ExampleStatus
+        from ontic.docs import validate_example, ExampleStatus
         
         result = validate_example("x = 1 + 1\nprint(x)", expected_output="2")
         
@@ -510,7 +510,7 @@ class TestCodeExamples:
     
     def test_validate_syntax(self):
         """Test syntax validation without execution."""
-        from tensornet.docs.examples import validate_syntax
+        from ontic.docs.examples import validate_syntax
         
         # Valid syntax
         is_valid, error = validate_syntax("x = 1 + 1")
@@ -524,7 +524,7 @@ class TestCodeExamples:
     
     def test_example_to_notebook_cell(self):
         """Test converting example to notebook cell."""
-        from tensornet.docs import RunnableExample
+        from ontic.docs import RunnableExample
         
         example = RunnableExample(
             code="import torch\nx = torch.randn(10)",
@@ -544,7 +544,7 @@ class TestDocumentationImports:
     
     def test_api_reference_imports(self):
         """Test API reference module imports."""
-        from tensornet.docs import (
+        from ontic.docs import (
             ModuleDoc,
             ClassDoc,
             FunctionDoc,
@@ -562,7 +562,7 @@ class TestDocumentationImports:
     
     def test_user_guides_imports(self):
         """Test user guides module imports."""
-        from tensornet.docs import (
+        from ontic.docs import (
             GuideSection,
             Tutorial,
             CodeExample,
@@ -579,7 +579,7 @@ class TestDocumentationImports:
     
     def test_sphinx_imports(self):
         """Test Sphinx config module imports."""
-        from tensornet.docs import (
+        from ontic.docs import (
             SphinxConfig,
             SphinxTheme,
             SphinxBuilder,
@@ -593,7 +593,7 @@ class TestDocumentationImports:
     
     def test_examples_imports(self):
         """Test examples module imports."""
-        from tensornet.docs import (
+        from ontic.docs import (
             ExampleConfig,
             RunnableExample,
             ExampleRunner,

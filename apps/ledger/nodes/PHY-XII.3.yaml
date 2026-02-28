@@ -13,7 +13,7 @@ state: "V0.2"
 description: "PN/EOB + NR interfaces"
 
 source_files:
-  - "tensornet/astro/gravitational_waves.py"
+  - "ontic/astro/gravitational_waves.py"
 
 tests:
   smoke:

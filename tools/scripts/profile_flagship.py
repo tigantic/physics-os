@@ -34,8 +34,8 @@ import torch
 
 def profile_mps_operations():
     """Profile MPS creation and manipulation."""
-    from tensornet.cfd.tt_cfd import MPSState
-    from tensornet.core.mps import MPS
+    from ontic.cfd.tt_cfd import MPSState
+    from ontic.core.mps import MPS
 
     results = {}
 
@@ -73,7 +73,7 @@ def profile_mps_operations():
 
 def profile_weno_operations():
     """Profile WENO reconstruction."""
-    from tensornet.cfd.weno import weno5_z
+    from ontic.cfd.weno import weno5_z
 
     results = {}
     sizes = [64, 128, 256, 512, 1024]
@@ -104,7 +104,7 @@ def profile_weno_operations():
 
 def profile_euler_solver():
     """Profile Euler 1D solver."""
-    from tensornet.cfd.euler_1d import Euler1D, EulerState
+    from ontic.cfd.euler_1d import Euler1D, EulerState
 
     results = {}
     sizes = [64, 128, 256, 512]

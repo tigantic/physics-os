@@ -5,7 +5,7 @@ Profiling Utilities ====================
 Memory and performance profiling decorators per Article VIII.8.2.
 
 Usage:
-    from tensornet.core.profiling import profile, memory_profile
+    from ontic.core.profiling import profile, memory_profile
 
     @profile
     def my_function():

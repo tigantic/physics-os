@@ -235,7 +235,7 @@ class HyperTensorBridge:
         
         # Create field
         try:
-            from tensornet.engine.substrate import Field, FieldType
+            from ontic.engine.substrate import Field, FieldType
             
             field_type_str = config.get('field_type', 'vector')
             field_type_map = {
@@ -341,7 +341,7 @@ class HyperTensorBridge:
         
         try:
             # Create slice specification
-            from tensornet.engine.substrate import SliceSpec
+            from ontic.engine.substrate import SliceSpec
             spec = SliceSpec(axis=axis, position=position, resolution=(res_x, res_y))
             
             # Extract slice
@@ -417,7 +417,7 @@ class HyperTensorBridge:
         radius = struct.unpack('<f', payload[28:32])[0]
         
         try:
-            from tensornet.operators import Impulse
+            from ontic.operators import Impulse
             impulse_op = Impulse(
                 center=np.array(position),
                 direction=np.array(direction),
@@ -479,7 +479,7 @@ class HyperTensorBridge:
         try:
             path = payload.decode('utf-8')
             
-            from tensornet.engine.substrate import Field, FieldBundle
+            from ontic.engine.substrate import Field, FieldBundle
             bundle = FieldBundle.load(path)
             field = Field.deserialize(bundle)
             

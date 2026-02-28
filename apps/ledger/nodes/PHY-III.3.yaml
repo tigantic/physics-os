@@ -13,7 +13,7 @@ state: "V0.4"
 description: "FDTD, PML"
 
 source_files:
-  - "tensornet/em/wave_propagation.py"
+  - "ontic/em/wave_propagation.py"
 
 tests:
   smoke:

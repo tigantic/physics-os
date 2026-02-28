@@ -142,7 +142,7 @@ LEAN_REFS: dict[str, list[dict[str, Any]]] = {
 # ═══════════════════════════════════════════════════════════════════════
 
 def _run_newtonian_dynamics() -> dict[str, Any]:
-    from tensornet.materials.mechanics.trace_adapters.newtonian_dynamics_adapter import (
+    from ontic.materials.mechanics.trace_adapters.newtonian_dynamics_adapter import (
         NewtonianDynamicsTraceAdapter,
     )
     pos0 = np.array([[0.0, 0.0], [1.0, 0.0], [0.5, 0.866]])
@@ -154,7 +154,7 @@ def _run_newtonian_dynamics() -> dict[str, Any]:
 
 
 def _run_symplectic() -> dict[str, Any]:
-    from tensornet.materials.mechanics.trace_adapters.symplectic_adapter import (
+    from ontic.materials.mechanics.trace_adapters.symplectic_adapter import (
         SymplecticTraceAdapter,
     )
     adapter = SymplecticTraceAdapter()
@@ -165,7 +165,7 @@ def _run_symplectic() -> dict[str, Any]:
 
 
 def _run_continuum() -> dict[str, Any]:
-    from tensornet.materials.mechanics.trace_adapters.continuum_adapter import (
+    from ontic.materials.mechanics.trace_adapters.continuum_adapter import (
         ContinuumMechanicsTraceAdapter,
     )
     adapter = ContinuumMechanicsTraceAdapter(n_elem=50)
@@ -174,7 +174,7 @@ def _run_continuum() -> dict[str, Any]:
 
 
 def _run_structural() -> dict[str, Any]:
-    from tensornet.materials.mechanics.trace_adapters.structural_adapter import (
+    from ontic.materials.mechanics.trace_adapters.structural_adapter import (
         StructuralMechanicsTraceAdapter,
     )
     adapter = StructuralMechanicsTraceAdapter(n_elem=20, L=2.0, EI=1e4, GA=1e6)
@@ -183,7 +183,7 @@ def _run_structural() -> dict[str, Any]:
 
 
 def _run_nonlinear_dynamics() -> dict[str, Any]:
-    from tensornet.materials.mechanics.trace_adapters.nonlinear_dynamics_adapter import (
+    from ontic.materials.mechanics.trace_adapters.nonlinear_dynamics_adapter import (
         NonlinearDynamicsTraceAdapter,
     )
     adapter = NonlinearDynamicsTraceAdapter()
@@ -194,7 +194,7 @@ def _run_nonlinear_dynamics() -> dict[str, Any]:
 
 
 def _run_acoustics() -> dict[str, Any]:
-    from tensornet.materials.mechanics.trace_adapters.acoustics_adapter import (
+    from ontic.materials.mechanics.trace_adapters.acoustics_adapter import (
         AcousticsTraceAdapter,
     )
     adapter = AcousticsTraceAdapter(nx=200, Lx=1.0, c=343.0, rho=1.225)
@@ -208,7 +208,7 @@ def _run_acoustics() -> dict[str, Any]:
 # ═══════════════════════════════════════════════════════════════════════
 
 def _run_physical_optics() -> dict[str, Any]:
-    from tensornet.applied.optics.trace_adapters.physical_optics_adapter import (
+    from ontic.applied.optics.trace_adapters.physical_optics_adapter import (
         PhysicalOpticsTraceAdapter,
     )
     adapter = PhysicalOpticsTraceAdapter(wavelength=633e-9, dx=10e-6, N=256)
@@ -219,7 +219,7 @@ def _run_physical_optics() -> dict[str, Any]:
 
 
 def _run_quantum_optics() -> dict[str, Any]:
-    from tensornet.applied.optics.trace_adapters.quantum_optics_adapter import (
+    from ontic.applied.optics.trace_adapters.quantum_optics_adapter import (
         QuantumOpticsTraceAdapter,
     )
     adapter = QuantumOpticsTraceAdapter(n_max=10, g=0.1, omega_c=1.0, omega_a=1.0)
@@ -228,7 +228,7 @@ def _run_quantum_optics() -> dict[str, Any]:
 
 
 def _run_laser_physics() -> dict[str, Any]:
-    from tensornet.applied.optics.trace_adapters.laser_physics_adapter import (
+    from ontic.applied.optics.trace_adapters.laser_physics_adapter import (
         LaserPhysicsTraceAdapter,
     )
     adapter = LaserPhysicsTraceAdapter()
@@ -237,7 +237,7 @@ def _run_laser_physics() -> dict[str, Any]:
 
 
 def _run_ultrafast_optics() -> dict[str, Any]:
-    from tensornet.applied.optics.trace_adapters.ultrafast_optics_adapter import (
+    from ontic.applied.optics.trace_adapters.ultrafast_optics_adapter import (
         UltrafastOpticsTraceAdapter,
     )
     adapter = UltrafastOpticsTraceAdapter(N=256, T_window=10e-12)
@@ -252,7 +252,7 @@ def _run_ultrafast_optics() -> dict[str, Any]:
 # ═══════════════════════════════════════════════════════════════════════
 
 def _run_stellar_structure() -> dict[str, Any]:
-    from tensornet.astro.trace_adapters.stellar_structure_adapter import (
+    from ontic.astro.trace_adapters.stellar_structure_adapter import (
         StellarStructureTraceAdapter,
     )
     adapter = StellarStructureTraceAdapter()
@@ -261,7 +261,7 @@ def _run_stellar_structure() -> dict[str, Any]:
 
 
 def _run_compact_objects() -> dict[str, Any]:
-    from tensornet.astro.trace_adapters.compact_objects_adapter import (
+    from ontic.astro.trace_adapters.compact_objects_adapter import (
         CompactObjectsTraceAdapter,
     )
     adapter = CompactObjectsTraceAdapter()
@@ -270,7 +270,7 @@ def _run_compact_objects() -> dict[str, Any]:
 
 
 def _run_gravitational_waves() -> dict[str, Any]:
-    from tensornet.astro.trace_adapters.gravitational_waves_adapter import (
+    from ontic.astro.trace_adapters.gravitational_waves_adapter import (
         GravitationalWavesTraceAdapter,
     )
     adapter = GravitationalWavesTraceAdapter()
@@ -279,7 +279,7 @@ def _run_gravitational_waves() -> dict[str, Any]:
 
 
 def _run_cosmological_sims() -> dict[str, Any]:
-    from tensornet.astro.trace_adapters.cosmological_sims_adapter import (
+    from ontic.astro.trace_adapters.cosmological_sims_adapter import (
         CosmologicalSimsTraceAdapter,
     )
     np.random.seed(42)
@@ -293,7 +293,7 @@ def _run_cosmological_sims() -> dict[str, Any]:
 
 
 def _run_cmb() -> dict[str, Any]:
-    from tensornet.astro.trace_adapters.cmb_adapter import CMBTraceAdapter
+    from ontic.astro.trace_adapters.cmb_adapter import CMBTraceAdapter
 
     adapter = CMBTraceAdapter()
     T_arr, Xe_arr, cons, session = adapter.solve(T_start=5000.0, T_end=2000.0, n_steps=1000)
@@ -301,7 +301,7 @@ def _run_cmb() -> dict[str, Any]:
 
 
 def _run_radiative_transfer() -> dict[str, Any]:
-    from tensornet.astro.trace_adapters.radiative_transfer_adapter import (
+    from ontic.astro.trace_adapters.radiative_transfer_adapter import (
         RadiativeTransferTraceAdapter,
     )
     adapter = RadiativeTransferTraceAdapter(nx=100, n_mu=4, tau_max=10.0)
@@ -315,7 +315,7 @@ def _run_radiative_transfer() -> dict[str, Any]:
 # ═══════════════════════════════════════════════════════════════════════
 
 def _run_seismology() -> dict[str, Any]:
-    from tensornet.astro.geophysics.trace_adapters.seismology_adapter import (
+    from ontic.astro.geophysics.trace_adapters.seismology_adapter import (
         SeismologyTraceAdapter,
     )
     adapter = SeismologyTraceAdapter(nx=50, nz=50)
@@ -324,7 +324,7 @@ def _run_seismology() -> dict[str, Any]:
 
 
 def _run_mantle_convection() -> dict[str, Any]:
-    from tensornet.astro.geophysics.trace_adapters.mantle_convection_adapter import (
+    from ontic.astro.geophysics.trace_adapters.mantle_convection_adapter import (
         MantleConvectionTraceAdapter,
     )
     adapter = MantleConvectionTraceAdapter(nx=32, ny=32)
@@ -333,7 +333,7 @@ def _run_mantle_convection() -> dict[str, Any]:
 
 
 def _run_geodynamo() -> dict[str, Any]:
-    from tensornet.astro.geophysics.trace_adapters.geodynamo_adapter import (
+    from ontic.astro.geophysics.trace_adapters.geodynamo_adapter import (
         GeodynamoTraceAdapter,
     )
     adapter = GeodynamoTraceAdapter(nr=50)
@@ -342,7 +342,7 @@ def _run_geodynamo() -> dict[str, Any]:
 
 
 def _run_atmospheric() -> dict[str, Any]:
-    from tensornet.astro.geophysics.trace_adapters.atmospheric_adapter import (
+    from ontic.astro.geophysics.trace_adapters.atmospheric_adapter import (
         AtmosphericPhysicsTraceAdapter,
     )
     adapter = AtmosphericPhysicsTraceAdapter()
@@ -355,7 +355,7 @@ def _run_atmospheric() -> dict[str, Any]:
 
 
 def _run_oceanography() -> dict[str, Any]:
-    from tensornet.astro.geophysics.trace_adapters.oceanography_adapter import (
+    from ontic.astro.geophysics.trace_adapters.oceanography_adapter import (
         OceanographyTraceAdapter,
     )
     adapter = OceanographyTraceAdapter(nx=30, ny=30, Lx=1e6, Ly=1e6, H=4000.0)
@@ -367,7 +367,7 @@ def _run_oceanography() -> dict[str, Any]:
 
 
 def _run_glaciology() -> dict[str, Any]:
-    from tensornet.astro.geophysics.trace_adapters.glaciology_adapter import (
+    from ontic.astro.geophysics.trace_adapters.glaciology_adapter import (
         GlaciologyTraceAdapter,
     )
     adapter = GlaciologyTraceAdapter(nx=100, dx=5000.0)
@@ -384,7 +384,7 @@ def _run_glaciology() -> dict[str, Any]:
 # ═══════════════════════════════════════════════════════════════════════
 
 def _run_first_principles() -> dict[str, Any]:
-    from tensornet.materials.trace_adapters.first_principles_adapter import (
+    from ontic.materials.trace_adapters.first_principles_adapter import (
         FirstPrinciplesTraceAdapter,
     )
     adapter = FirstPrinciplesTraceAdapter(V0=75.0, E0=-8.5, B0=100.0, B0p=4.0)
@@ -394,7 +394,7 @@ def _run_first_principles() -> dict[str, Any]:
 
 
 def _run_mechanical_properties() -> dict[str, Any]:
-    from tensornet.materials.trace_adapters.mechanical_properties_adapter import (
+    from ontic.materials.trace_adapters.mechanical_properties_adapter import (
         MechanicalPropertiesTraceAdapter,
     )
     adapter = MechanicalPropertiesTraceAdapter.from_cubic(C11=108.0, C12=61.0, C44=29.0)
@@ -403,7 +403,7 @@ def _run_mechanical_properties() -> dict[str, Any]:
 
 
 def _run_phase_field() -> dict[str, Any]:
-    from tensornet.materials.trace_adapters.phase_field_adapter import (
+    from ontic.materials.trace_adapters.phase_field_adapter import (
         PhaseFieldTraceAdapter,
     )
     adapter = PhaseFieldTraceAdapter(nx=64, ny=64, dx=1.0, M=1.0, kappa=0.5, W=1.0)
@@ -412,7 +412,7 @@ def _run_phase_field() -> dict[str, Any]:
 
 
 def _run_microstructure() -> dict[str, Any]:
-    from tensornet.materials.trace_adapters.microstructure_adapter import (
+    from ontic.materials.trace_adapters.microstructure_adapter import (
         MicrostructureTraceAdapter,
     )
     adapter = MicrostructureTraceAdapter(nx=32, ny=32, n_grains=4)
@@ -421,7 +421,7 @@ def _run_microstructure() -> dict[str, Any]:
 
 
 def _run_radiation_damage() -> dict[str, Any]:
-    from tensornet.materials.trace_adapters.radiation_damage_adapter import (
+    from ontic.materials.trace_adapters.radiation_damage_adapter import (
         RadiationDamageTraceAdapter,
     )
     adapter = RadiationDamageTraceAdapter(Ed=40.0, Z=26, A=55.845)
@@ -431,7 +431,7 @@ def _run_radiation_damage() -> dict[str, Any]:
 
 
 def _run_polymers() -> dict[str, Any]:
-    from tensornet.materials.trace_adapters.polymers_adapter import (
+    from ontic.materials.trace_adapters.polymers_adapter import (
         PolymersTraceAdapter,
     )
     adapter = PolymersTraceAdapter(n_grid=32, L=10.0, N=100, f=0.5, chi_N=20.0)
@@ -440,7 +440,7 @@ def _run_polymers() -> dict[str, Any]:
 
 
 def _run_ceramics() -> dict[str, Any]:
-    from tensornet.materials.trace_adapters.ceramics_adapter import (
+    from ontic.materials.trace_adapters.ceramics_adapter import (
         CeramicsTraceAdapter,
     )
     adapter = CeramicsTraceAdapter(mechanism="volume", a=1e-6)
@@ -454,7 +454,7 @@ def _run_ceramics() -> dict[str, Any]:
 # ═══════════════════════════════════════════════════════════════════════
 
 def _run_fsi() -> dict[str, Any]:
-    from tensornet.fluids.coupled.trace_adapters.fsi_adapter import FSITraceAdapter
+    from ontic.fluids.coupled.trace_adapters.fsi_adapter import FSITraceAdapter
 
     adapter = FSITraceAdapter(n_nodes=50, L=1.0, EI=1.0, rho_A=1.0)
     f_ext = np.sin(np.linspace(0, np.pi, 50))
@@ -463,7 +463,7 @@ def _run_fsi() -> dict[str, Any]:
 
 
 def _run_thermo_mechanical() -> dict[str, Any]:
-    from tensornet.fluids.coupled.trace_adapters.thermo_mechanical_adapter import (
+    from ontic.fluids.coupled.trace_adapters.thermo_mechanical_adapter import (
         ThermoMechanicalTraceAdapter,
     )
     adapter = ThermoMechanicalTraceAdapter(nx=30, ny=30)
@@ -476,7 +476,7 @@ def _run_thermo_mechanical() -> dict[str, Any]:
 
 
 def _run_electro_mechanical() -> dict[str, Any]:
-    from tensornet.fluids.coupled.trace_adapters.electro_mechanical_adapter import (
+    from ontic.fluids.coupled.trace_adapters.electro_mechanical_adapter import (
         ElectroMechanicalTraceAdapter,
     )
     adapter = ElectroMechanicalTraceAdapter(n_elem=30, L=0.05)
@@ -485,7 +485,7 @@ def _run_electro_mechanical() -> dict[str, Any]:
 
 
 def _run_coupled_mhd() -> dict[str, Any]:
-    from tensornet.fluids.coupled.trace_adapters.coupled_mhd_adapter import (
+    from ontic.fluids.coupled.trace_adapters.coupled_mhd_adapter import (
         CoupledMHDTraceAdapter,
     )
     adapter = CoupledMHDTraceAdapter(a=0.01, B0=1.0, rho=1e4, nu=1e-6, sigma=1e6)
@@ -496,10 +496,10 @@ def _run_coupled_mhd() -> dict[str, Any]:
 def _run_reacting_flows() -> dict[str, Any]:
     """Reacting flows — skip if Torch unavailable."""
     try:
-        from tensornet.fluids.coupled.trace_adapters.reacting_flows_adapter import (
+        from ontic.fluids.coupled.trace_adapters.reacting_flows_adapter import (
             ReactingFlowsTraceAdapter,
         )
-        from tensornet.cfd.reactive_ns import ReactiveConfig, reactive_flat_plate_ic
+        from ontic.cfd.reactive_ns import ReactiveConfig, reactive_flat_plate_ic
 
         adapter = ReactingFlowsTraceAdapter(Nx=32, Ny=32, Lx=1.0, Ly=1.0, cfl=0.3)
         config = ReactiveConfig(Nx=32, Ny=32, Lx=1.0, Ly=1.0, cfl=0.3)
@@ -508,7 +508,7 @@ def _run_reacting_flows() -> dict[str, Any]:
         return _package("reacting_flows", session, n, t, {"Nx": 32})
     except (ImportError, Exception) as exc:
         log.warning(f"Reacting flows skipped: {exc}")
-        from tensornet.core.trace import TraceEntry, TraceSession
+        from ontic.core.trace import TraceEntry, TraceSession
 
         session = TraceSession()
         entry = TraceEntry(
@@ -522,7 +522,7 @@ def _run_reacting_flows() -> dict[str, Any]:
 
 
 def _run_radiation_hydro() -> dict[str, Any]:
-    from tensornet.fluids.coupled.trace_adapters.radiation_hydro_adapter import (
+    from ontic.fluids.coupled.trace_adapters.radiation_hydro_adapter import (
         RadiationHydroTraceAdapter,
     )
     adapter = RadiationHydroTraceAdapter(nx=200, Lx=1.0)
@@ -531,7 +531,7 @@ def _run_radiation_hydro() -> dict[str, Any]:
 
 
 def _run_multiscale() -> dict[str, Any]:
-    from tensornet.fluids.coupled.trace_adapters.multiscale_adapter import (
+    from ontic.fluids.coupled.trace_adapters.multiscale_adapter import (
         MultiscaleTraceAdapter,
     )
     adapter = MultiscaleTraceAdapter(L_macro=1.0, n_elem_macro=10, n_elem_micro=20)
@@ -544,7 +544,7 @@ def _run_multiscale() -> dict[str, Any]:
 # ═══════════════════════════════════════════════════════════════════════
 
 def _run_nonadiabatic() -> dict[str, Any]:
-    from tensornet.life_sci.chemistry.trace_adapters.nonadiabatic_adapter import (
+    from ontic.life_sci.chemistry.trace_adapters.nonadiabatic_adapter import (
         NonadiabaticTraceAdapter,
     )
     adapter = NonadiabaticTraceAdapter(n_states=2, mass=2000.0, dt=0.5)
@@ -555,7 +555,7 @@ def _run_nonadiabatic() -> dict[str, Any]:
 
 
 def _run_photochemistry() -> dict[str, Any]:
-    from tensornet.life_sci.chemistry.trace_adapters.photochemistry_adapter import (
+    from ontic.life_sci.chemistry.trace_adapters.photochemistry_adapter import (
         PhotochemistryTraceAdapter,
     )
     adapter = PhotochemistryTraceAdapter(S=1.0)
@@ -564,7 +564,7 @@ def _run_photochemistry() -> dict[str, Any]:
 
 
 def _run_quantum_reactive() -> dict[str, Any]:
-    from tensornet.life_sci.chemistry.trace_adapters.quantum_reactive_adapter import (
+    from ontic.life_sci.chemistry.trace_adapters.quantum_reactive_adapter import (
         QuantumReactiveTraceAdapter,
     )
     adapter = QuantumReactiveTraceAdapter(Ea=0.5, nu_imag=1e13, Q_ratio=1.0)
@@ -573,7 +573,7 @@ def _run_quantum_reactive() -> dict[str, Any]:
 
 
 def _run_spectroscopy() -> dict[str, Any]:
-    from tensornet.life_sci.chemistry.trace_adapters.spectroscopy_adapter import (
+    from ontic.life_sci.chemistry.trace_adapters.spectroscopy_adapter import (
         SpectroscopyTraceAdapter,
     )
     adapter = SpectroscopyTraceAdapter()

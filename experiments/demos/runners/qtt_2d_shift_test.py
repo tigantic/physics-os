@@ -7,11 +7,11 @@ If we can shift a pattern in X or Y correctly, Strang splitting works.
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
-from tensornet.cfd.qtt_2d import (
+from ontic.cfd.qtt_2d import (
     dense_to_qtt_2d, qtt_2d_to_dense, 
     QTT2DState, morton_encode, morton_decode
 )
-from tensornet.cfd.pure_qtt_ops import QTTState
+from ontic.cfd.pure_qtt_ops import QTTState
 
 
 def naive_shift_x_dense(field: torch.Tensor, shift: int = 1) -> torch.Tensor:

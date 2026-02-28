@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Check for import cycles in the tensornet package.
+Check for import cycles in the ontic package.
 
 This script attempts to import all public modules to detect circular import
 errors at runtime. It does NOT detect static cycles that Python handles
@@ -20,41 +20,41 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 def check_imports() -> tuple[list[str], list[str]]:
     """
-    Check if all tensornet modules can be imported.
+    Check if all ontic modules can be imported.
 
     Returns:
         Tuple of (successful_imports, failed_imports)
     """
     modules_to_check = [
         # Core modules
-        "tensornet",
-        "tensornet.core",
-        "tensornet.core.mps",
-        "tensornet.core.mpo",
-        "tensornet.core.decompositions",
-        "tensornet.core.gpu",
+        "ontic",
+        "ontic.core",
+        "ontic.core.mps",
+        "ontic.core.mpo",
+        "ontic.core.decompositions",
+        "ontic.core.gpu",
         # CFD modules
-        "tensornet.cfd",
-        "tensornet.cfd.qtt",
-        "tensornet.cfd.euler_1d",
-        "tensornet.cfd.euler_2d",
-        "tensornet.cfd.euler_3d",
-        "tensornet.cfd.godunov",
-        "tensornet.cfd.weno",
+        "ontic.cfd",
+        "ontic.cfd.qtt",
+        "ontic.cfd.euler_1d",
+        "ontic.cfd.euler_2d",
+        "ontic.cfd.euler_3d",
+        "ontic.cfd.godunov",
+        "ontic.cfd.weno",
         # ML modules
-        "tensornet.ml_surrogates",
-        "tensornet.ml_surrogates.base",
-        "tensornet.ml_surrogates.surrogate_base",
-        "tensornet.ml_surrogates.physics_informed",
-        "tensornet.ml_surrogates.deep_onet",
-        "tensornet.ml_surrogates.fourier_operator",
+        "ontic.ml_surrogates",
+        "ontic.ml_surrogates.base",
+        "ontic.ml_surrogates.surrogate_base",
+        "ontic.ml_surrogates.physics_informed",
+        "ontic.ml_surrogates.deep_onet",
+        "ontic.ml_surrogates.fourier_operator",
         # Distributed
-        "tensornet.distributed",
-        "tensornet.distributed.domain_decomp",
+        "ontic.distributed",
+        "ontic.distributed.domain_decomp",
         # Autonomy
-        "tensornet.autonomy",
+        "ontic.autonomy",
         # Guidance
-        "tensornet.guidance",
+        "ontic.guidance",
     ]
 
     successful = []
@@ -74,7 +74,7 @@ def check_imports() -> tuple[list[str], list[str]]:
 
 def main() -> int:
     """Run import cycle check."""
-    print("Checking tensornet imports for circular import errors...")
+    print("Checking ontic imports for circular import errors...")
     print("-" * 60)
 
     successful, failed = check_imports()

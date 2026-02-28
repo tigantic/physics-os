@@ -17,11 +17,11 @@ from typing import List, Tuple
 import torch
 
 # Local imports
-from tensornet.ml.discovery.ingest.markets import (
+from ontic.ml.discovery.ingest.markets import (
     MarketsIngester, MarketSnapshot, OrderBookSnapshot, OrderBookLevel, OHLCV,
     create_synthetic_flash_crash, create_synthetic_market
 )
-from tensornet.ml.discovery.pipelines.markets_pipeline import (
+from ontic.ml.discovery.pipelines.markets_pipeline import (
     MarketsDiscoveryPipeline, MarketsPipelineResult
 )
 

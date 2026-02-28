@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Wave/Helmholtz, scattering, vibroacoustics"
 
 source_files:
-  - "tensornet/acoustics/applied_acoustics.py"
+  - "ontic/acoustics/applied_acoustics.py"
 
 tests:
   smoke:

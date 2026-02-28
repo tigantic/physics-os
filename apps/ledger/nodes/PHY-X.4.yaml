@@ -13,7 +13,7 @@ state: "V0.2"
 description: "HMC, multigrid interfaces"
 
 source_files:
-  - "tensornet/qft/lattice_qcd.py"
+  - "ontic/qft/lattice_qcd.py"
 
 tests:
   smoke:

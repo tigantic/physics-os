@@ -9,7 +9,7 @@ and the factory function.
 import pytest
 import torch
 
-from tensornet.ml.ml_surrogates.surrogate_base import (MLPSurrogate,
+from ontic.ml.ml_surrogates.surrogate_base import (MLPSurrogate,
                                                     ResNetSurrogate,
                                                     SurrogateConfig,
                                                     SurrogateType,

@@ -12,7 +12,7 @@ Verifies:
 import numpy as np
 import pytest
 
-from tensornet.sim.visualization.tensor_slicer import (TensorSlicer,
+from ontic.sim.visualization.tensor_slicer import (TensorSlicer,
                                                    create_sine_qtt,
                                                    create_test_qtt)
 

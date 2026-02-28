@@ -85,7 +85,7 @@ A systematic improvement sprint was executed against the Ontic Engine QTT‑base
 
 ## Domain 2: QTT Tensor Operations
 
-**File:** `tensornet/cfd/qtt_native_ops.py` (1,368 lines)
+**File:** `ontic/cfd/qtt_native_ops.py` (1,368 lines)
 
 ### Todo 3 — rSVD Power Iterations, Lazy Truncation, QTT Checkpointing
 
@@ -188,7 +188,7 @@ TrustlessCertificate
 
 ## Domain 4: Triton GPU Kernels
 
-**File:** `tensornet/cfd/triton_qtt_kernels.py` (446 lines)
+**File:** `ontic/cfd/triton_qtt_kernels.py` (446 lines)
 
 ### Todo 8 — Triton Autotuning
 
@@ -315,9 +315,9 @@ The single xfail is `TestHadamard::test_hadamard_modes[dmrg]` — a pre-existing
 | File | Lines | Role | Status |
 |---|---|---|---|
 | `tools/scripts/ahmed_body_ib_solver.py` | 1,016 | NS3D QTT solver with IB Ahmed body | **Modified** |
-| `tensornet/cfd/qtt_native_ops.py` | 1,368 | Core QTT tensor operations | **Modified** |
+| `ontic/cfd/qtt_native_ops.py` | 1,368 | Core QTT tensor operations | **Modified** |
 | `tools/scripts/trustless_physics.py` | 1,624 | Trustless proof engine v2.0.0 | **Modified** |
-| `tensornet/cfd/triton_qtt_kernels.py` | 446 | Triton GPU kernels | **Modified** |
+| `ontic/cfd/triton_qtt_kernels.py` | 446 | Triton GPU kernels | **Modified** |
 | `tests/test_solver_convergence.py` | 627 | Solver convergence + benchmark tests | **Created** |
 | `tests/test_qtt_native_ops.py` | 423 | QTT operations tests | **Created** |
 | `tests/test_trustless_certificate.py` | 500 | Trustless certificate tests | **Created** |
@@ -331,7 +331,7 @@ The single xfail is `TestHadamard::test_hadamard_modes[dmrg]` — a pre-existing
 
 ### DMRG Hadamard Einsum Bug (Deferred)
 
-**Location:** `tensornet/cfd/qtt_native_ops.py`, `_hadamard_dmrg()` ~L916
+**Location:** `ontic/cfd/qtt_native_ops.py`, `_hadamard_dmrg()` ~L916
 
 **Symptom:** `RuntimeError: einsum(): subscript c has size 4 for operand 1 which does not broadcast with previously seen size 8`
 

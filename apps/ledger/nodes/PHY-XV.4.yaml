@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Surface hopping, AIMS hooks"
 
 source_files:
-  - "tensornet/chemistry/nonadiabatic.py"
+  - "ontic/chemistry/nonadiabatic.py"
 
 tests:
   smoke:

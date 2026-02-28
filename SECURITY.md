@@ -102,7 +102,7 @@ HyperTensor uses:
 Enable comprehensive audit logging:
 
 ```bash
-export HYPERTENSOR_AUDIT_LOG=/var/log/hypertensor/audit.log
+export HYPERTENSOR_AUDIT_LOG=/var/log/physics_os/audit.log
 export HYPERTENSOR_AUDIT_LEVEL=INFO
 ```
 

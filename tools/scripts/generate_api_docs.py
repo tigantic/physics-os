@@ -15,10 +15,10 @@ from pathlib import Path
 
 # Public modules to document
 PUBLIC_MODULES = [
-    "tensornet.core",
-    "tensornet.cfd",
-    "tensornet.dmrg",
-    "tensornet.qtt",
+    "ontic.core",
+    "ontic.cfd",
+    "ontic.dmrg",
+    "ontic.qtt",
 ]
 
 
@@ -68,7 +68,7 @@ def main():
 
     print()
     print("API documentation generated!")
-    print(f"Open {output_dir}/tensornet/index.html in a browser")
+    print(f"Open {output_dir}/ontic/index.html in a browser")
 
 
 if __name__ == "__main__":

@@ -8,8 +8,8 @@ internals.
 
 ```
 HyperTensor-VM/
-├── tensornet/          # Tier 1: Physics engine (Python)
-├── hypertensor/        # Tier 2: Execution fabric (Python)
+├── ontic/          # Tier 1: Physics engine (Python)
+├── physics_os/        # Tier 2: Execution fabric (Python)
 ├── crates/             # Tier 3: Rust performance substrate
 ├── apps/               # Standalone applications
 ├── products/           # Commercial products

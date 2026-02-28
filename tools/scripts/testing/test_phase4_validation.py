@@ -20,7 +20,7 @@ def test_imports():
 
     # Test 1: QTT Slice Extractor
     try:
-        from tensornet.infra.sovereign.qtt_slice_extractor import (QTT3DState,
+        from ontic.infra.sovereign.qtt_slice_extractor import (QTT3DState,
                                                              QTTSliceExtractor)
 
         print("✓ QTT Slice Extractor imports successfully")
@@ -33,7 +33,7 @@ def test_imports():
 
     # Test 2: Real-Time Streamer (modified)
     try:
-        from tensornet.infra.sovereign.realtime_tensor_stream import \
+        from ontic.infra.sovereign.realtime_tensor_stream import \
             RealtimeTensorStream
 
         streamer = RealtimeTensorStream.__dict__

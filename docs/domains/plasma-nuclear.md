@@ -6,8 +6,8 @@
 
 | Module | Description |
 |--------|-------------|
-| `tensornet.plasma` | Plasma physics |
-| `tensornet.plasma_nuclear` | Combined plasma-nuclear |
-| `tensornet.nuclear` | Nuclear physics |
-| `tensornet.fusion` | Fusion energy |
-| `tensornet.radiation` | Radiation transport |
+| `ontic.plasma` | Plasma physics |
+| `ontic.plasma_nuclear` | Combined plasma-nuclear |
+| `ontic.nuclear` | Nuclear physics |
+| `ontic.fusion` | Fusion energy |
+| `ontic.radiation` | Radiation transport |

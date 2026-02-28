@@ -34,7 +34,7 @@ from datetime import datetime
 import gc
 
 # Import the QTT solver
-from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
 
 
 @dataclass
@@ -257,7 +257,7 @@ def run_operational_rank_study(
     max_rank_overall = 0
     
     # Get initial enstrophy
-    from tensornet.cfd.qtt_turbo import turbo_inner
+    from ontic.cfd.qtt_turbo import turbo_inner
     enstrophy_0 = sum(turbo_inner(solver.omega[i], solver.omega[i]).item() for i in range(3))
     
     if verbose:

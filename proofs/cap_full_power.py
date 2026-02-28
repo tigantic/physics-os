@@ -25,16 +25,16 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tensornet.cfd.adjoint_blowup import (AdjointOptimizer, OptimizationConfig,
+from ontic.cfd.adjoint_blowup import (AdjointOptimizer, OptimizationConfig,
                                           find_blowup_candidate)
-from tensornet.cfd.hou_luo_ansatz import (HouLuoConfig,
+from ontic.cfd.hou_luo_ansatz import (HouLuoConfig,
                                           analyze_blowup_geometry,
                                           create_hou_luo_profile)
-from tensornet.cfd.kantorovich import (NewtonKantorovichVerifier,
+from ontic.cfd.kantorovich import (NewtonKantorovichVerifier,
                                        VerificationStatus)
-from tensornet.cfd.qtt import field_to_qtt, qtt_to_field
-from tensornet.cfd.self_similar import RescaledNSEquations, SelfSimilarScaling
-from tensornet.numerics.interval import Interval, validate_interval_arithmetic
+from ontic.cfd.qtt import field_to_qtt, qtt_to_field
+from ontic.cfd.self_similar import RescaledNSEquations, SelfSimilarScaling
+from ontic.numerics.interval import Interval, validate_interval_arithmetic
 
 
 def apply_qtt_shield(profile: torch.Tensor, chi_max: int = 32) -> torch.Tensor:

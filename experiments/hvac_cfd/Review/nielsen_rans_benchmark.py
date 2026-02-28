@@ -24,7 +24,7 @@ import torch
 from torch import Tensor
 
 # Import the base solver
-from tensornet.hvac.projection_solver import ProjectionConfig, ProjectionSolver, SolverState
+from ontic.hvac.projection_solver import ProjectionConfig, ProjectionSolver, SolverState
 
 
 # Aalborg experimental data

@@ -27,7 +27,7 @@ ROOT = Path(__file__).parent
 sys.path.insert(0, str(ROOT))
 
 # Import QTT compression
-from tensornet.genesis.sgw import QTTSignal
+from ontic.genesis.sgw import QTTSignal
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f"Using device: {DEVICE}")

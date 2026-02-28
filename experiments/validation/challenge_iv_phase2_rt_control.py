@@ -48,8 +48,8 @@ from typing import Dict, List, Optional, Tuple
 import numpy as np
 from numpy.typing import NDArray
 
-from tensornet.qtt.sparse_direct import tt_round
-from tensornet.qtt.eigensolvers import tt_norm
+from ontic.qtt.sparse_direct import tt_round
+from ontic.qtt.eigensolvers import tt_norm
 # quantics_fold is an index→bits map; we use inline TT-SVD for array compression
 
 # ===================================================================

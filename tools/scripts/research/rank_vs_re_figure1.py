@@ -26,7 +26,7 @@ from typing import Any
 import torch
 
 # Import the ACTUAL working API
-from tensornet.cfd.ns3d_qtt_native import (
+from ontic.cfd.ns3d_qtt_native import (
     NS3DConfig,
     NS3DQTTSolver,
     taylor_green_3d,

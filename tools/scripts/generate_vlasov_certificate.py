@@ -55,8 +55,8 @@ from qtenet.solvers.vlasov import (
     Vlasov6DConfig,
     VlasovState,
 )
-from tensornet.cfd.pure_qtt_ops import QTTState, qtt_to_dense, qtt_add
-from tensornet.core.trace import trace_session, TraceSession
+from ontic.cfd.pure_qtt_ops import QTTState, qtt_to_dense, qtt_add
+from ontic.core.trace import trace_session, TraceSession
 from tpc.format import BenchmarkResult, HardwareSpec, QTTParams
 from tpc.generator import CertificateGenerator
 
@@ -602,7 +602,7 @@ def build_certificate(results: dict[str, Any], output_dir: Path) -> Path:
         },
         {
             "name": "MortonShiftMPO",
-            "file": "tensornet/cfd/nd_shift_mpo.py",
+            "file": "ontic/cfd/nd_shift_mpo.py",
             "statement": (
                 f"Rank-2 shift MPO with Morton interleaving for {dims}D grid, "
                 f"O(r² × n) contraction per application"
@@ -611,7 +611,7 @@ def build_certificate(results: dict[str, Any], output_dir: Path) -> Path:
         },
         {
             "name": "SVDTruncation",
-            "file": "tensornet/cfd/nd_shift_mpo.py",
+            "file": "ontic/cfd/nd_shift_mpo.py",
             "statement": "Optimal rank truncation via SVD with bounded error",
             "status": "verified_exact",
         },

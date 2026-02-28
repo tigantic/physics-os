@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Adjoint-ready, topology optimization hooks"
 
 source_files:
-  - "tensornet/cfd/optimization.py"
+  - "ontic/cfd/optimization.py"
 
 tests:
   smoke:

@@ -1,4 +1,4 @@
-# Module `tensornet.docs`
+# Module `ontic.docs`
 
 Documentation Module for Project The Physics OS.
 

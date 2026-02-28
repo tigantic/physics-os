@@ -96,5 +96,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Fixed** for any bug fixes
 - **Security** for vulnerability fixes
 
-[Unreleased]: https://github.com/hypertensor/hypertensor-ui/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/hypertensor/hypertensor-ui/releases/tag/v0.1.0
+[Unreleased]: https://github.com/physics_os/hypertensor-ui/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/physics_os/hypertensor-ui/releases/tag/v0.1.0

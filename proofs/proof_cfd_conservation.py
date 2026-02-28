@@ -28,7 +28,7 @@ import torch
 
 def test_euler1d_mass_conservation():
     """Test that Euler1D conserves total mass."""
-    from tensornet.cfd.euler_1d import BCType1D, Euler1D, EulerState
+    from ontic.cfd.euler_1d import BCType1D, Euler1D, EulerState
 
     N = 200
     solver = Euler1D(N=N, x_min=0.0, x_max=1.0, gamma=1.4, cfl=0.4)
@@ -67,7 +67,7 @@ def test_euler1d_mass_conservation():
 
 def test_euler1d_periodic_conservation():
     """Test conservation in periodic domain (closed system)."""
-    from tensornet.cfd.euler_1d import BCType1D, Euler1D, EulerState
+    from ontic.cfd.euler_1d import BCType1D, Euler1D, EulerState
 
     N = 200
     solver = Euler1D(N=N, x_min=0.0, x_max=1.0, gamma=1.4, cfl=0.4)
@@ -132,7 +132,7 @@ def test_euler1d_periodic_conservation():
 
 def test_rankine_hugoniot_shock_relations():
     """Test that shocks satisfy Rankine-Hugoniot jump conditions."""
-    from tensornet.cfd.godunov import exact_riemann
+    from ontic.cfd.godunov import exact_riemann
 
     # Sod shock tube: known solution has shock, contact, rarefaction
     rho_L, u_L, p_L = 1.0, 0.0, 1.0
@@ -164,7 +164,7 @@ def test_rankine_hugoniot_shock_relations():
 
 def test_entropy_condition():
     """Test that shocks satisfy entropy condition (S increases across shock)."""
-    from tensornet.cfd.godunov import exact_riemann
+    from ontic.cfd.godunov import exact_riemann
 
     gamma = 1.4
 
@@ -197,7 +197,7 @@ def test_entropy_condition():
 
 def test_flux_consistency():
     """Test that flux functions are consistent at uniform states."""
-    from tensornet.cfd.godunov import euler_flux, hll_flux, hllc_flux, roe_flux
+    from ontic.cfd.godunov import euler_flux, hll_flux, hllc_flux, roe_flux
 
     gamma = 1.4
 

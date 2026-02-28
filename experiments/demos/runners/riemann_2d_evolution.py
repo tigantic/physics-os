@@ -17,7 +17,7 @@ from matplotlib.animation import FuncAnimation
 from dataclasses import dataclass
 from typing import Tuple, List
 
-from tensornet.cfd.qtt_2d import (
+from ontic.cfd.qtt_2d import (
     dense_to_qtt_2d, qtt_2d_to_dense, QTT2DState,
     riemann_quadrant_ic, primitive_to_conservative_2d
 )

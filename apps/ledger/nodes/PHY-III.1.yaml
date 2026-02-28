@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Poisson, capacitance"
 
 source_files:
-  - "tensornet/em/electrostatics.py"
+  - "ontic/em/electrostatics.py"
 
 tests:
   smoke:

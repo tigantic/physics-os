@@ -16,11 +16,11 @@ make html
 
 | File | Content |
 |------|---------|
-| `tensornet.core.rst` | Core operations (MPS, MPO, decompositions) |
-| `tensornet.algorithms.rst` | DMRG, TEBD, TDVP, Lanczos |
-| `tensornet.cfd.rst` | CFD solvers (Euler, Navier-Stokes) |
-| `tensornet.quantum.rst` | Quantum-classical hybrid |
-| `tensornet.certification.rst` | DO-178C compliance |
+| `ontic.core.rst` | Core operations (MPS, MPO, decompositions) |
+| `ontic.algorithms.rst` | DMRG, TEBD, TDVP, Lanczos |
+| `ontic.cfd.rst` | CFD solvers (Euler, Navier-Stokes) |
+| `ontic.quantum.rst` | Quantum-classical hybrid |
+| `ontic.certification.rst` | DO-178C compliance |
 
 ## Constitutional Compliance
 

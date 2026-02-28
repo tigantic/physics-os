@@ -30,7 +30,7 @@ def proof_3d_poisson_solver() -> Dict[str, Any]:
         - Laplacian is exact for trigonometric functions
         - Poisson self-consistency: solve(nabla^2φ) ~= φ
     """
-    from tensornet.cfd.ns_3d import laplacian_spectral_3d, poisson_solve_fft_3d
+    from ontic.cfd.ns_3d import laplacian_spectral_3d, poisson_solve_fft_3d
 
     N = 32
     dx = dy = dz = 2 * math.pi / N
@@ -77,7 +77,7 @@ def proof_3d_spectral_operators() -> Dict[str, Any]:
         - Gradient is exact for sin/cos
         - Divergence of div-free field is zero
     """
-    from tensornet.cfd.ns_3d import compute_divergence_3d, compute_gradient_3d
+    from ontic.cfd.ns_3d import compute_divergence_3d, compute_gradient_3d
 
     N = 32
     dx = dy = dz = 2 * math.pi / N
@@ -127,7 +127,7 @@ def proof_3d_projection() -> Dict[str, Any]:
     Verifies:
         - Projection enforces nabla·u = 0 to machine precision
     """
-    from tensornet.cfd.ns_3d import compute_divergence_3d, project_velocity_3d
+    from ontic.cfd.ns_3d import compute_divergence_3d, project_velocity_3d
 
     N = 32
     dx = dy = dz = 2 * math.pi / N
@@ -173,7 +173,7 @@ def proof_3d_taylor_green() -> Dict[str, Any]:
     The 3D Taylor-Green with modes (1,1,1) has |k|^2 = 3,
     so kinetic energy decays as exp(-6nut).
     """
-    from tensornet.cfd.ns_3d import (NS3DSolver, compute_divergence_3d,
+    from ontic.cfd.ns_3d import (NS3DSolver, compute_divergence_3d,
                                      taylor_green_3d_exact_energy)
 
     # Parameters: high viscosity for Stokes regime

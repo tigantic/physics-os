@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Hemodynamics, cardiac EP, imaging hooks"
 
 source_files:
-  - "tensornet/biomedical/biomedical.py"
+  - "ontic/biomedical/biomedical.py"
 
 tests:
   smoke:

@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Shift-invert ED, statistics"
 
 source_files:
-  - "tensornet/condensed_matter/mbl_disorder.py"
+  - "ontic/condensed_matter/mbl_disorder.py"
 
 tests:
   smoke:

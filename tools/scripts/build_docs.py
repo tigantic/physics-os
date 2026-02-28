@@ -50,7 +50,7 @@ def build_with_pdoc(output_dir: Path) -> Tuple[bool, str]:
                 sys.executable,
                 "-m",
                 "pdoc",
-                "tensornet",
+                "ontic",
                 "-o",
                 str(output_dir),
                 "--html",
@@ -75,7 +75,7 @@ def build_with_pdoc(output_dir: Path) -> Tuple[bool, str]:
 def build_with_pydoc(output_dir: Path) -> Tuple[bool, str]:
     """Build documentation using pydoc (fallback)."""
     try:
-        modules = find_all_modules("tensornet")
+        modules = find_all_modules("ontic")
 
         output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -118,10 +118,10 @@ def generate_readme_index(output_dir: Path, modules: List[str]) -> None:
             "",
             "## Quick Links",
             "",
-            "- [Core](tensornet/core.html)",
-            "- [Algorithms](tensornet/algorithms.html)",
-            "- [CFD](tensornet/cfd.html)",
-            "- [MPS](tensornet/mps.html)",
+            "- [Core](ontic/core.html)",
+            "- [Algorithms](ontic/algorithms.html)",
+            "- [CFD](ontic/cfd.html)",
+            "- [MPS](ontic/mps.html)",
         ]
     )
 
@@ -148,7 +148,7 @@ def main():
 
     if success:
         # Generate index
-        modules = find_all_modules("tensornet")
+        modules = find_all_modules("ontic")
         generate_readme_index(output_dir, modules)
 
         print(f"\n✓ Documentation built successfully")

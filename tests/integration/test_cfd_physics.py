@@ -24,7 +24,7 @@ pytestmark = [
     pytest.mark.benchmark,  # Tier 1 benchmarks (Sod, Lax, etc.)
 ]
 
-from tensornet.cfd.godunov import (conserved_to_primitive, euler_flux,
+from ontic.cfd.godunov import (conserved_to_primitive, euler_flux,
                                    exact_riemann, hll_flux, hllc_flux,
                                    primitive_to_conserved, roe_flux)
 
@@ -339,7 +339,7 @@ class TestEuler1DBoundaryConditions:
 
     def test_reflective_bc_reverses_momentum(self):
         """Verify reflective BC creates ghost cell with reversed momentum."""
-        from tensornet.cfd import BCType1D, Euler1D, sod_shock_tube_ic
+        from ontic.cfd import BCType1D, Euler1D, sod_shock_tube_ic
 
         solver = Euler1D(N=100, x_min=0.0, x_max=1.0)
         solver.set_boundary_conditions(
@@ -374,7 +374,7 @@ class TestEuler1DBoundaryConditions:
 
     def test_transmissive_bc_copies_state(self):
         """Verify transmissive BC creates zero-gradient ghost cell."""
-        from tensornet.cfd import BCType1D, Euler1D, sod_shock_tube_ic
+        from ontic.cfd import BCType1D, Euler1D, sod_shock_tube_ic
 
         solver = Euler1D(N=100, x_min=0.0, x_max=1.0)
         solver.set_boundary_conditions(
@@ -398,7 +398,7 @@ class TestEuler1DBoundaryConditions:
 
     def test_periodic_bc_wraps_state(self):
         """Verify periodic BC wraps state from opposite boundary."""
-        from tensornet.cfd import BCType1D, Euler1D, sod_shock_tube_ic
+        from ontic.cfd import BCType1D, Euler1D, sod_shock_tube_ic
 
         solver = Euler1D(N=100, x_min=0.0, x_max=1.0)
         solver.set_boundary_conditions(left=BCType1D.PERIODIC, right=BCType1D.PERIODIC)
@@ -420,8 +420,8 @@ class TestEuler1DBoundaryConditions:
 
     def test_reflective_bc_conserves_mass(self):
         """Verify simulation with reflective walls conserves total mass."""
-        from tensornet.cfd import BCType1D, Euler1D
-        from tensornet.cfd.euler_1d import EulerState
+        from ontic.cfd import BCType1D, Euler1D
+        from ontic.cfd.euler_1d import EulerState
 
         solver = Euler1D(N=100, x_min=0.0, x_max=1.0, cfl=0.4)
         solver.set_boundary_conditions(

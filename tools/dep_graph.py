@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Generate dependency graph of tensornet's internal module structure.
+"""Generate dependency graph of ontic's internal module structure.
 
-Walks tensornet/ source tree, parses imports, and outputs a graph in
+Walks ontic/ source tree, parses imports, and outputs a graph in
 SVG (via graphviz), Mermaid markdown, or DOT format.
 
 Usage:
@@ -25,7 +25,7 @@ from collections import defaultdict
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-TENSORNET_ROOT = REPO_ROOT / "tensornet"
+TENSORNET_ROOT = REPO_ROOT / "ontic"
 
 # ── Domain group classification ──────────────────────────────────────────
 # Mirrors the Phase 5 migration groups.
@@ -122,12 +122,12 @@ GROUP_COLORS: dict[str, str] = {
 
 
 def get_group(module_name: str) -> str:
-    """Return the domain group for a top-level tensornet submodule."""
+    """Return the domain group for a top-level ontic submodule."""
     return MODULE_TO_GROUP.get(module_name, "other")
 
 
 def parse_imports(filepath: Path) -> set[str]:
-    """Extract tensornet imports from a Python file."""
+    """Extract ontic imports from a Python file."""
     imports: set[str] = set()
     try:
         tree = ast.parse(filepath.read_text(errors="replace"))
@@ -137,12 +137,12 @@ def parse_imports(filepath: Path) -> set[str]:
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for alias in node.names:
-                if alias.name.startswith("tensornet."):
+                if alias.name.startswith("ontic."):
                     parts = alias.name.split(".")
                     if len(parts) >= 2:
                         imports.add(parts[1])
         elif isinstance(node, ast.ImportFrom):
-            if node.module and node.module.startswith("tensornet."):
+            if node.module and node.module.startswith("ontic."):
                 parts = node.module.split(".")
                 if len(parts) >= 2:
                     imports.add(parts[1])
@@ -152,7 +152,7 @@ def parse_imports(filepath: Path) -> set[str]:
 def build_dependency_graph(
     group_only: bool = False,
 ) -> tuple[set[str], set[tuple[str, str]]]:
-    """Walk tensornet/ and build (nodes, edges) dependency graph.
+    """Walk ontic/ and build (nodes, edges) dependency graph.
 
     If group_only=True, nodes are group names and edges are group→group.
     Otherwise, nodes are top-level submodule names.
@@ -242,7 +242,7 @@ def render_dot(
     group_only: bool = False,
 ) -> str:
     """Render as Graphviz DOT."""
-    lines = ['digraph tensornet {', '    rankdir=LR;', '    node [shape=box, style=filled];']
+    lines = ['digraph ontic {', '    rankdir=LR;', '    node [shape=box, style=filled];']
 
     if group_only:
         for node in sorted(nodes):
@@ -286,7 +286,7 @@ def render_svg(dot_source: str) -> bytes:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Generate tensornet dependency graph")
+    parser = argparse.ArgumentParser(description="Generate ontic dependency graph")
     parser.add_argument(
         "--format", choices=["mermaid", "dot", "svg"], default="mermaid",
         help="Output format (default: mermaid)",

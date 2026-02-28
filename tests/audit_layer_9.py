@@ -88,8 +88,8 @@ def test_unreal_plugin_structure():
 
 
 def test_integration_module():
-    """Test tensornet.integration module."""
-    from tensornet.infra.integration import Configuration, HealthStatus, get_logger
+    """Test ontic.integration module."""
+    from ontic.infra.integration import Configuration, HealthStatus, get_logger
 
     # Test Configuration
     config = Configuration()
@@ -103,7 +103,7 @@ def test_integration_module():
     logger = get_logger("test")
     assert logger is not None
 
-    return True, "tensornet.integration module validated"
+    return True, "ontic.integration module validated"
 
 
 def run_audit():

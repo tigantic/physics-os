@@ -13,7 +13,7 @@ state: "V0.2"
 description: "N-body, AMR hydro"
 
 source_files:
-  - "tensornet/astro/cosmological_sims.py"
+  - "ontic/astro/cosmological_sims.py"
 
 tests:
   smoke:

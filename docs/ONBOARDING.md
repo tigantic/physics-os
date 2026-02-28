@@ -60,7 +60,7 @@ The Physics OS is a quantum-inspired tensor network library for:
 ### Hello World Example
 
 ```python
-from tensornet import MPS, heisenberg_mpo, dmrg
+from ontic import MPS, heisenberg_mpo, dmrg
 
 # Create a 10-site Heisenberg chain Hamiltonian
 H = heisenberg_mpo(L=10, J=1.0, Jz=1.0)
@@ -80,8 +80,8 @@ print(f"Final bond dimension: {psi.bond_dimensions}")
 ## 📁 Project Structure (5 minutes)
 
 ```
-hypertensor/
-├── tensornet/              # Main library
+physics_os/
+├── ontic/              # Main library
 │   ├── core/               # MPS, MPO, decompositions
 │   ├── algorithms/         # DMRG, TEBD, TDVP
 │   ├── cfd/                # CFD solvers (Euler, QTT)
@@ -98,9 +98,9 @@ hypertensor/
 
 | File | Purpose |
 |------|---------|
-| `tensornet/__init__.py` | Public API exports |
-| `tensornet/core/mps.py` | MPS implementation |
-| `tensornet/algorithms/dmrg.py` | DMRG algorithm |
+| `ontic/__init__.py` | Public API exports |
+| `ontic/core/mps.py` | MPS implementation |
+| `ontic/algorithms/dmrg.py` | DMRG algorithm |
 | `tests/conftest.py` | Pytest fixtures |
 | `pyproject.toml` | Project configuration |
 
@@ -137,7 +137,7 @@ git checkout -b feature/my-feature
 
 ### 2. Make Changes
 
-Edit files in `tensornet/` and add tests in `tests/`.
+Edit files in `ontic/` and add tests in `tests/`.
 
 ### 3. Lint and Format
 

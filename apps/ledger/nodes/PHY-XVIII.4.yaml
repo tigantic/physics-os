@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Liquid metals, braking"
 
 source_files:
-  - "tensornet/coupled/coupled_mhd.py"
+  - "ontic/coupled/coupled_mhd.py"
 
 tests:
   smoke:

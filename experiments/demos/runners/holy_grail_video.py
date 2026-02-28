@@ -24,14 +24,14 @@ import time
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, PROJECT_ROOT)
 
-from tensornet.cfd.fast_euler_3d import (
+from ontic.cfd.fast_euler_3d import (
     Euler3DConfig,
     Euler3DState,
     FastEuler3D,
     create_taylor_green_state,
 )
-from tensornet.cfd.nd_shift_mpo import truncate_cores
-from tensornet.infra.hypervisual import SliceEngine, ColorMap, VIRIDIS, PLASMA
+from ontic.cfd.nd_shift_mpo import truncate_cores
+from ontic.infra.hypervisual import SliceEngine, ColorMap, VIRIDIS, PLASMA
 
 
 def extract_density_slice(state: Euler3DState, z_idx: int) -> np.ndarray:
@@ -77,7 +77,7 @@ def extract_density_slice(state: Euler3DState, z_idx: int) -> np.ndarray:
 
 def extract_velocity_magnitude_slice(state: Euler3DState, z_idx: int) -> np.ndarray:
     """Extract XY slice of velocity magnitude at given z index."""
-    from tensornet.cfd.pure_qtt_ops import QTTState
+    from ontic.cfd.pure_qtt_ops import QTTState
     
     # Get momentum components
     rho_cores = state.rho.cores

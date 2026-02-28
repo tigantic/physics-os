@@ -19,8 +19,8 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 import torch
-from tensornet.cfd.tt_cfd import TT_Euler1D, TTCFDConfig
-from tensornet.core.dense_guard import DenseMaterializationGuard, check_tt_complexity
+from ontic.cfd.tt_cfd import TT_Euler1D, TTCFDConfig
+from ontic.core.dense_guard import DenseMaterializationGuard, check_tt_complexity
 
 
 def main():

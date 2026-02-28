@@ -13,7 +13,7 @@ state: "V0.4"
 description: "Kohn-Sham, SCF"
 
 source_files:
-  - "tensornet/electronic_structure/dft.py"
+  - "ontic/electronic_structure/dft.py"
 
 tests:
   smoke:

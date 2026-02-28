@@ -201,7 +201,7 @@ def benchmark_qtt_ot() -> ScalingAnalysis:
     print("  LAYER 20: QTT-OT — Optimal Transport (QTT-Native)")
     print("━" * 90)
     
-    from tensornet.genesis.ot import QTTDistribution, wasserstein_distance, barycenter
+    from ontic.genesis.ot import QTTDistribution, wasserstein_distance, barycenter
     
     bit_counts = [10, 14, 18, 20, 22, 24]  # N = 2^bits: 1K to 16M
     scales = [2**b for b in bit_counts]
@@ -280,7 +280,7 @@ def benchmark_qtt_sgw() -> ScalingAnalysis:
     print("  LAYER 21: QTT-SGW — Spectral Graph Wavelets (QTT-Native)")
     print("━" * 90)
     
-    from tensornet.genesis.sgw import QTTLaplacian, QTTSignal, QTTGraphWavelet
+    from ontic.genesis.sgw import QTTLaplacian, QTTSignal, QTTGraphWavelet
     
     bit_counts = [8, 10, 12, 14, 16, 18, 20]  # N = 256 to 1M
     scales = [2**b for b in bit_counts]
@@ -363,7 +363,7 @@ def benchmark_qtt_rmt() -> ScalingAnalysis:
     print("  LAYER 22: QTT-RMT — Random Matrix Theory (QTT-Native)")
     print("━" * 90)
     
-    from tensornet.genesis.rmt import QTTEnsemble, QTTResolvent, WignerSemicircle
+    from ontic.genesis.rmt import QTTEnsemble, QTTResolvent, WignerSemicircle
     
     bit_counts = [8, 10, 12, 14, 16, 18]  # N = 256 to 256K
     scales = [2**b for b in bit_counts]
@@ -441,10 +441,10 @@ def benchmark_qtt_tropical() -> ScalingAnalysis:
     print("  LAYER 23: QTT-TG — Tropical Geometry (QTT-Native)")
     print("━" * 90)
     
-    from tensornet.genesis.tropical import (
+    from ontic.genesis.tropical import (
         QTTTropicalMatrix, qtt_tropical_matmul, qtt_floyd_warshall
     )
-    from tensornet.genesis.tropical.semiring import MinPlusSemiring
+    from ontic.genesis.tropical.semiring import MinPlusSemiring
     
     bit_counts = [8, 10, 12, 14, 16, 18, 20]  # N = 256 to 1M
     scales = [2**b for b in bit_counts]
@@ -517,7 +517,7 @@ def benchmark_qtt_rkhs() -> ScalingAnalysis:
     print("  LAYER 24: QTT-RKHS — Kernel Methods (QTT-Native)")
     print("━" * 90)
     
-    from tensornet.genesis.rkhs import RBFKernel, GPRegressor, maximum_mean_discrepancy
+    from ontic.genesis.rkhs import RBFKernel, GPRegressor, maximum_mean_discrepancy
     
     # For RKHS, we test on point clouds (kernel matrices are O(N²) dense)
     # The QTT advantage is in structured kernel approximations
@@ -596,7 +596,7 @@ def benchmark_qtt_ph() -> ScalingAnalysis:
     print("  LAYER 25: QTT-PH — Persistent Homology (QTT-Native)")
     print("━" * 90)
     
-    from tensornet.genesis.topology import (
+    from ontic.genesis.topology import (
         QTTBoundaryMatrix, qtt_persistence_grid_1d, qtt_betti_numbers_grid
     )
     
@@ -673,7 +673,7 @@ def benchmark_qtt_ga() -> ScalingAnalysis:
     print("  LAYER 26: QTT-GA — Geometric Algebra (QTT-Native)")
     print("━" * 90)
     
-    from tensornet.genesis.ga import QTTMultivector, qtt_geometric_product
+    from ontic.genesis.ga import QTTMultivector, qtt_geometric_product
     
     # For GA, n generators → 2^n components
     # We test n = 10 to 40 generators (2^10 = 1K to 2^40 = 1T components!)

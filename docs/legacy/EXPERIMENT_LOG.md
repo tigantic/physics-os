@@ -66,8 +66,8 @@ Phase 1a gate criteria satisfied:
 The spectral projection method provides EXACT incompressibility, eliminating RISK-R8 (divergence contamination of χ signal).
 
 **Artifacts:**  
-- `tensornet/cfd/tt_poisson.py` - Poisson solver and spectral operators
-- `tensornet/cfd/ns_2d.py` - 2D NS solver
+- `ontic/cfd/tt_poisson.py` - Poisson solver and spectral operators
+- `ontic/cfd/ns_2d.py` - 2D NS solver
 - `proofs/proof_phase_1a.py` - Comprehensive Phase 1a proofs
 - `proofs/proof_phase_1a_result.json` - Proof results
 

@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Folding, mechanics"
 
 source_files:
-  - "tensornet/biology/systems_biology.py"
+  - "ontic/biology/systems_biology.py"
 
 tests:
   smoke:

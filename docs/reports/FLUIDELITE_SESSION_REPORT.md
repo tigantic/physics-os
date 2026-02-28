@@ -230,12 +230,12 @@ Notable: Parser flagged `for` as an unconstrained signal - this is a loop variab
 
 | Tool | File | Purpose | Version |
 |------|------|---------|---------|
-| FLUIDELITE Circom | `tensornet/zk/fluidelite_circuit_analyzer.py` | Circom AST analysis | v1.3 |
-| FLUIDELITE Halo2 | `tensornet/zk/halo2_analyzer.py` | Rust/Halo2 circuit analysis | v1.0 |
-| QTT Rank Analyzer | `tensornet/zk/fluidelite_circuit_analyzer.py` | GPU rSVD-accelerated rank | v1.3 |
-| Interval Propagator | `tensornet/zk/fluidelite_circuit_analyzer.py` | Rigorous overflow detection | v1.3 |
-| QTT Constraint Matrix | `tensornet/zk/fluidelite_circuit_analyzer.py` | Billion-signal compression | v1.3 |
-| MPO Constraint Ops | `tensornet/zk/fluidelite_circuit_analyzer.py` | O(n log n) framework | v1.3 |
+| FLUIDELITE Circom | `ontic/zk/fluidelite_circuit_analyzer.py` | Circom AST analysis | v1.3 |
+| FLUIDELITE Halo2 | `ontic/zk/halo2_analyzer.py` | Rust/Halo2 circuit analysis | v1.0 |
+| QTT Rank Analyzer | `ontic/zk/fluidelite_circuit_analyzer.py` | GPU rSVD-accelerated rank | v1.3 |
+| Interval Propagator | `ontic/zk/fluidelite_circuit_analyzer.py` | Rigorous overflow detection | v1.3 |
+| QTT Constraint Matrix | `ontic/zk/fluidelite_circuit_analyzer.py` | Billion-signal compression | v1.3 |
+| MPO Constraint Ops | `ontic/zk/fluidelite_circuit_analyzer.py` | O(n log n) framework | v1.3 |
 
 ---
 
@@ -385,7 +385,7 @@ During performance testing, we discovered the GPU was **not being properly utili
 
 ### Code Changes Made
 
-**File: `tensornet/cfd/qtt.py` (Line 148)**
+**File: `ontic/cfd/qtt.py` (Line 148)**
 ```python
 # BEFORE: Only used rSVD for dimensions > 1 million
 large_dimension = max(m, n) > 1_000_000
@@ -394,7 +394,7 @@ large_dimension = max(m, n) > 1_000_000
 large_dimension = max(m, n) > 50_000
 ```
 
-**File: `tensornet/zk/fluidelite_circuit_analyzer.py`**
+**File: `ontic/zk/fluidelite_circuit_analyzer.py`**
 - `from_matrix()`: Added GPU device selection, `rsvd_threshold` parameter
 - `_compress_with_gpu()`: Fixed to keep tensors on GPU, avoid `.cpu().numpy()` bouncing
 
@@ -647,7 +647,7 @@ Deficiency: 10 DOF
 
 ### New Tool Built: Halo2 Constraint Matrix Extractor
 
-**File**: `tensornet/zk/halo2_constraint_extractor.py`
+**File**: `ontic/zk/halo2_constraint_extractor.py`
 
 Capabilities:
 1. Parse Halo2 `create_gate` expressions
@@ -739,7 +739,7 @@ To find REAL vulnerabilities in Scroll zkEVM:
 | FLUIDELITE Circom | `fluidelite_circuit_analyzer.py` | v1.3 | ✅ Production |
 | FLUIDELITE Halo2 Pattern | `halo2_analyzer.py` | v1.0 | ✅ Production |
 | **Halo2 Constraint Extractor** | `halo2_constraint_extractor.py` | **v1.0** | **NEW** |
-| QTT Compression | `tensornet/cfd/qtt.py` | v1.3 | ✅ Production |
+| QTT Compression | `ontic/cfd/qtt.py` | v1.3 | ✅ Production |
 
 ### Next Steps
 
@@ -766,7 +766,7 @@ User directive: *"Let's stop running into roadblocks where we have to build out 
 
 ### New Tool: FEZK Elite v3.0
 
-**File**: `tensornet/zk/fezk_elite.py`
+**File**: `ontic/zk/fezk_elite.py`
 
 ```
 ███████╗███████╗███████╗██╗  ██╗    ███████╗██╗     ██╗████████╗███████╗
@@ -906,7 +906,7 @@ FEZKElite
 ### Usage
 
 ```python
-from tensornet.zk.fezk_elite import FEZKElite, Framework
+from ontic.zk.fezk_elite import FEZKElite, Framework
 from pathlib import Path
 
 analyzer = FEZKElite()
@@ -925,13 +925,13 @@ results = analyzer.analyze_directory(Path("zk_targets/"))
 
 ```bash
 # Analyze single file
-python tensornet/zk/fezk_elite.py circuit.circom
+python ontic/zk/fezk_elite.py circuit.circom
 
 # Analyze directory
-python tensornet/zk/fezk_elite.py zk_targets/scroll-circuits/ --framework halo2
+python ontic/zk/fezk_elite.py zk_targets/scroll-circuits/ --framework halo2
 
 # Output to JSON
-python tensornet/zk/fezk_elite.py zk_targets/ --output results.json
+python ontic/zk/fezk_elite.py zk_targets/ --output results.json
 ```
 
 ### Performance
@@ -952,7 +952,7 @@ python tensornet/zk/fezk_elite.py zk_targets/ --output results.json
 | FLUIDELITE Circom | `fluidelite_circuit_analyzer.py` | v2.0 | ✅ Production |
 | Halo2 Constraint Extractor | `halo2_constraint_extractor.py` | v2.0 | ✅ Production |
 | Halo2 Pattern Analyzer | `halo2_analyzer.py` | v1.0 | ✅ Production |
-| QTT Compression | `tensornet/cfd/qtt.py` | v1.3 | ✅ Production |
+| QTT Compression | `ontic/cfd/qtt.py` | v1.3 | ✅ Production |
 
 ### Bounty Targets (All Frameworks)
 
@@ -1189,7 +1189,7 @@ Unlike other zkEVM implementations:
 
 ### New Tool: PIL Parser v1.0
 
-**Location**: Inline analysis (to be extracted to `tensornet/zk/pil_parser.py`)
+**Location**: Inline analysis (to be extracted to `ontic/zk/pil_parser.py`)
 
 Capabilities:
 - Parse `namespace` declarations
@@ -1329,7 +1329,7 @@ Main.FREE[0-7] are primary prover-controlled witness signals. They feed into:
 |------|------|---------|--------|
 | **FEZK Elite** | `fezk_elite.py` | v3.3 | ✅ PIL SUPPORT |
 | PIL Parser | (inline) | v1.0 | 🔧 Needs lookup support |
-| QTT Compression | `tensornet/cfd/qtt.py` | v1.3 | ✅ Production |
+| QTT Compression | `ontic/cfd/qtt.py` | v1.3 | ✅ Production |
 
 ---
 
@@ -1453,9 +1453,9 @@ The rank analysis shows 1287 DOF, but this is an **artifact of linear analysis**
 
 | Tool | File | Version | Status |
 |------|------|---------|--------|
-| **PIL Elite Analyzer** | `tensornet/zk/pil_elite_analyzer.py` | **v2.0** | **✅ PRODUCTION** |
-| PIL Parser | `tensornet/zk/pil_parser.py` | v1.0 | ✅ Legacy |
-| Constraint Graph | `tensornet/zk/pil_constraint_graph.py` | v1.0 | ✅ Legacy |
+| **PIL Elite Analyzer** | `ontic/zk/pil_elite_analyzer.py` | **v2.0** | **✅ PRODUCTION** |
+| PIL Parser | `ontic/zk/pil_parser.py` | v1.0 | ✅ Legacy |
+| Constraint Graph | `ontic/zk/pil_constraint_graph.py` | v1.0 | ✅ Legacy |
 
 ### Final Assessment
 
@@ -1496,7 +1496,7 @@ With PIL constraints verified as secure (Session 12), the attack surface moves t
 
 ### New Tool: zkASM Elite Analyzer v1.0
 
-**File**: `tensornet/zk/zkasm_elite_analyzer.py`
+**File**: `ontic/zk/zkasm_elite_analyzer.py`
 
 Capabilities:
 - Parse all zkASM instruction patterns
@@ -1618,9 +1618,9 @@ sWR {
 
 | Tool | File | Version | Status |
 |------|------|---------|--------|
-| **zkASM Elite Analyzer** | `tensornet/zk/zkasm_elite_analyzer.py` | **v1.0** | **✅ PRODUCTION** |
-| PIL Elite Analyzer | `tensornet/zk/pil_elite_analyzer.py` | v2.0 | ✅ Production |
-| FEZK Elite | `tensornet/zk/fezk_elite.py` | v3.3 | ✅ Production |
+| **zkASM Elite Analyzer** | `ontic/zk/zkasm_elite_analyzer.py` | **v1.0** | **✅ PRODUCTION** |
+| PIL Elite Analyzer | `ontic/zk/pil_elite_analyzer.py` | v2.0 | ✅ Production |
+| FEZK Elite | `ontic/zk/fezk_elite.py` | v3.3 | ✅ Production |
 
 ### Conclusion
 
@@ -1753,7 +1753,7 @@ The mathematical foundation is identical:
 - **ZK Circuit**: Unconstrained signal → Fake proof → Steal funds
 - **Hardware**: Floating wire → X-propagation → Privilege escalation / Key extraction
 
-**Built**: `tensornet/hw/verilog_elite_analyzer.py` v1.0
+**Built**: `ontic/hw/verilog_elite_analyzer.py` v1.0
 
 ### OpenTitan Analysis Results
 
@@ -1820,11 +1820,11 @@ The lightweight parser doesn't trace:
 
 | Tool | File | Version | Domain |
 |------|------|---------|--------|
-| **Verilog Elite Analyzer** | `tensornet/hw/verilog_elite_analyzer.py` | **v1.0** | **Hardware** |
-| zkASM Elite Analyzer | `tensornet/zk/zkasm_elite_analyzer.py` | v1.0 | ZK (zkASM) |
-| PIL Elite Analyzer | `tensornet/zk/pil_elite_analyzer.py` | v2.0 | ZK (PIL) |
-| FEZK Elite | `tensornet/zk/fezk_elite.py` | v3.3 | ZK (Multi) |
-| FLUIDELITE QTT | `tensornet/qtt/` | v1.4 | Core Engine |
+| **Verilog Elite Analyzer** | `ontic/hw/verilog_elite_analyzer.py` | **v1.0** | **Hardware** |
+| zkASM Elite Analyzer | `ontic/zk/zkasm_elite_analyzer.py` | v1.0 | ZK (zkASM) |
+| PIL Elite Analyzer | `ontic/zk/pil_elite_analyzer.py` | v2.0 | ZK (PIL) |
+| FEZK Elite | `ontic/zk/fezk_elite.py` | v3.3 | ZK (Multi) |
+| FLUIDELITE QTT | `ontic/qtt/` | v1.4 | Core Engine |
 
 ---
 

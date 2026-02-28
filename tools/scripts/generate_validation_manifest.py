@@ -186,7 +186,7 @@ def generate_manifest(
 
     manifest = {
         "manifest_version": "1.0.0",
-        "schema": "hypertensor-vv-manifest-v1",
+        "schema": "physics_os-vv-manifest-v1",
         "timestamp": datetime.utcnow().isoformat() + "Z",
         "code": get_git_info(),
         "environment": get_environment_info(),

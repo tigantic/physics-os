@@ -11,7 +11,7 @@ that can be pip-installed and used anywhere.
 
 ```
 hypertensor-physics/
-├── hypertensor/
+├── physics_os/
 │   ├── __init__.py              # Public API
 │   ├── core/
 │   │   ├── __init__.py
@@ -63,7 +63,7 @@ hypertensor-physics/
 | Target File | Source | What to Extract |
 |-------------|--------|-----------------|
 | `core/tensor_train.py` | `hypertensor_dynamics.py` L31-93 | `TTTensor`, `tt_round`, `tt_to_full` |
-| `core/tensor_train.py` | `tensornet/core/decompositions.py` | `svd_truncated` (torch version) |
+| `core/tensor_train.py` | `ontic/core/decompositions.py` | `svd_truncated` (torch version) |
 | `core/constants.py` | `starheart_fusion_solver.py` L39-53 | Physical constants |
 
 **Key Innovation (The Patent):**
@@ -91,7 +91,7 @@ def step(self, state, dt):
 |-------------|--------|-----------------|
 | `pde/mhd.py` | `hypertensor_dynamics.py` L229-316 | `ResistiveMHD` |
 | `pde/fokker_planck.py` | `hypertensor_dynamics.py` L323-401 | `FokkerPlanck` |
-| `pde/euler.py` | `tensornet/physics/hypersonic.py` | Dynamic pressure, shocks |
+| `pde/euler.py` | `ontic/physics/hypersonic.py` | Dynamic pressure, shocks |
 | `pde/diffusion.py` | `hellskin_thermal_solver.py` | Heat equation |
 
 ---
@@ -101,7 +101,7 @@ def step(self, state, dt):
 | Target File | Source | What to Extract |
 |-------------|--------|-----------------|
 | `quantum/schrodinger.py` | `experiments/benchmarks/experiments/benchmarks/benchmarks/tfim_ground_state.py` | DMRG concepts |
-| `quantum/hamiltonians.py` | `tensornet/core/mpo.py` | MPO builders |
+| `quantum/hamiltonians.py` | `ontic/core/mpo.py` | MPO builders |
 
 ---
 
@@ -138,19 +138,19 @@ full = ["torch>=2.0", "scipy>=1.7"]
 ## Public API (What Users Import)
 
 ```python
-from hypertensor import TTTensor, tt_round, tt_to_full
+from physics_os import TTTensor, tt_round, tt_to_full
 
 # Integrators
-from hypertensor.integrators import SymplecticIntegrator, LangevinDynamics
+from physics_os.integrators import SymplecticIntegrator, LangevinDynamics
 
 # PDE Solvers
-from hypertensor.pde import ResistiveMHD, FokkerPlanck, HeatEquation
+from physics_os.pde import ResistiveMHD, FokkerPlanck, HeatEquation
 
 # Materials
-from hypertensor.materials import allen_dynes_tc, nernst_einstein
+from physics_os.materials import allen_dynes_tc, nernst_einstein
 
 # Convenience: All-in-one physics step
-from hypertensor import HyperStep
+from physics_os import HyperStep
 
 def my_simulation():
     state = initial_condition()
@@ -170,7 +170,7 @@ These stay in the main The Physics OS-VM repository:
 | **Demos** | `demos/*.py` | Visualization, domain-specific |
 | **Benchmarks** | `experiments/benchmarks/benchmarks/*.py` | Testing/validation |
 | **Proofs** | `proofs/*.py` | Attestation scripts |
-| **Domain Modules** | `tensornet/defense/`, `tensornet/medical/`, etc. | Vertical integrations |
+| **Domain Modules** | `ontic/defense/`, `ontic/medical/`, etc. | Vertical integrations |
 | **Discovery Solvers** | `tig011a_*.py`, `euv_*.py`, `starheart_*.py` | Application-specific |
 | **Rust Bindings** | `crates/`, `crates/tci_core_rust/` | Separate package |
 
@@ -180,10 +180,10 @@ These stay in the main The Physics OS-VM repository:
 
 ```bash
 # 1. Create new package
-mkdir -p hypertensor-physics/hypertensor/{core,integrators,pde,quantum,materials,utils}
+mkdir -p hypertensor-physics/physics_os/{core,integrators,pde,quantum,materials,utils}
 
 # 2. Extract core (from this repo)
-cp hypertensor_dynamics.py hypertensor-physics/hypertensor/
+cp hypertensor_dynamics.py hypertensor-physics/physics_os/
 
 # 3. Split into modules
 # (See detailed extraction below)
@@ -197,7 +197,7 @@ cp hypertensor_dynamics.py hypertensor-physics/hypertensor/
 
 ## File-by-File Extraction
 
-### `hypertensor/core/tensor_train.py`
+### `physics_os/core/tensor_train.py`
 
 ```python
 # Extract from: hypertensor_dynamics.py lines 28-93
@@ -216,7 +216,7 @@ def tt_add(a: TTTensor, b: TTTensor) -> TTTensor: ...
 def tt_dot(a: TTTensor, b: TTTensor) -> float: ...
 ```
 
-### `hypertensor/integrators/symplectic.py`
+### `physics_os/integrators/symplectic.py`
 
 ```python
 # Extract from: hypertensor_dynamics.py lines 102-138
@@ -227,7 +227,7 @@ class SymplecticIntegrator:
     def run(self, x0, v0, n_steps, dt) -> Dict: ...
 ```
 
-### `hypertensor/pde/mhd.py`
+### `physics_os/pde/mhd.py`
 
 ```python
 # Extract from: hypertensor_dynamics.py lines 229-316

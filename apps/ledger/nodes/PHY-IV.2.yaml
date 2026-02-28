@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Master equation, trajectories"
 
 source_files:
-  - "tensornet/optics/quantum_optics.py"
+  - "ontic/optics/quantum_optics.py"
 
 tests:
   smoke:

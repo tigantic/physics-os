@@ -112,14 +112,14 @@ F_{i+1/2} = ½(F_L + F_R) - ½ λ_max (U_R - U_L)
 ##### `from_mps`
 
 ```python
-def from_mps(mps: tensornet.core.mps.MPS, x_min: float = 0.0, x_max: float = 1.0, gamma: float = 1.4, cfl: float = 0.5) -> 'Euler1D'
+def from_mps(mps: ontic.core.mps.MPS, x_min: float = 0.0, x_max: float = 1.0, gamma: float = 1.4, cfl: float = 0.5) -> 'Euler1D'
 ```
 
 Create solver from MPS state.
 
 **Parameters:**
 
-- **mps** (`<class 'tensornet.core.mps.MPS'>`): MPS with physical dimension 3 x_min, x_max: Domain bounds
+- **mps** (`<class 'ontic.core.mps.MPS'>`): MPS with physical dimension 3 x_min, x_max: Domain bounds
 - **gamma** (`<class 'float'>`): Ratio of specific heats
 - **cfl** (`<class 'float'>`): CFL number
 
@@ -194,7 +194,7 @@ Rusanov flux in space.
 ##### `to_mps`
 
 ```python
-def to_mps(self, chi_max: int = 1) -> tensornet.core.mps.MPS
+def to_mps(self, chi_max: int = 1) -> ontic.core.mps.MPS
 ```
 
 Convert current state to MPS representation.
@@ -208,7 +208,7 @@ Larger chi enables entanglement for multi-scale representation.
 
 - **chi_max** (`<class 'int'>`): Maximum bond dimension
 
-**Returns**: `<class 'tensornet.core.mps.MPS'>` - MPS representation of state
+**Returns**: `<class 'ontic.core.mps.MPS'>` - MPS representation of state
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\euler_1d.py:443](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\euler_1d.py#L443)*
 
@@ -328,7 +328,7 @@ Stack conserved variables: (N, 3).
 ### `euler_to_mps`
 
 ```python
-def euler_to_mps(state: euler_1d.EulerState) -> tensornet.core.mps.MPS
+def euler_to_mps(state: euler_1d.EulerState) -> ontic.core.mps.MPS
 ```
 
 Convert EulerState to MPS representation.
@@ -353,7 +353,7 @@ Right state: ρ = 0.5, u = 0, p = 0.571
 ### `mps_to_euler`
 
 ```python
-def mps_to_euler(mps: tensornet.core.mps.MPS, gamma: float = 1.4) -> euler_1d.EulerState
+def mps_to_euler(mps: ontic.core.mps.MPS, gamma: float = 1.4) -> euler_1d.EulerState
 ```
 
 Convert MPS to EulerState.

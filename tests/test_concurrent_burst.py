@@ -23,8 +23,8 @@ from typing import Any
 
 import pytest
 
-from hypertensor.jobs.models import Job, JobInput, JobState, JobType
-from hypertensor.jobs.store import JobStore
+from physics_os.jobs.models import Job, JobInput, JobState, JobType
+from physics_os.jobs.store import JobStore
 
 # ── Helpers ─────────────────────────────────────────────────────────
 

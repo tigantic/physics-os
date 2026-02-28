@@ -176,7 +176,7 @@ def compress_to_qtt(
     info : dict
         Rank profile and compression stats.
     """
-    from tensornet.engine.vm.gpu_tensor import _tt_svd_1d
+    from ontic.engine.vm.gpu_tensor import _tt_svd_1d
 
     N = len(field)
     n_bits = int(math.log2(N))

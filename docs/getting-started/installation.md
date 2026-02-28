@@ -41,6 +41,6 @@ cargo clippy --workspace
 ## Verify Installation
 
 ```python
-import tensornet
+import ontic
 print(tensornet.__version__)
 ```

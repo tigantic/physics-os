@@ -17,13 +17,13 @@ import sys
 import time
 from pathlib import Path
 
-# Add tensornet to path
+# Add ontic to path
 sys.path.insert(0, str(Path(__file__).parent))
 
 
 def run_python_streamer(duration: float, pattern: str):
     """Run Python tensor streamer in subprocess"""
-    from tensornet.infra.sovereign.realtime_tensor_stream import test_realtime_stream
+    from ontic.infra.sovereign.realtime_tensor_stream import test_realtime_stream
 
     print(f"[Python] Starting tensor stream ({pattern}, {duration}s)")
     test_realtime_stream(duration=duration, pattern=pattern, fps=60.0)

@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Global MHD, cosmic rays"
 
 source_files:
-  - "tensornet/plasma/space_plasma.py"
+  - "ontic/plasma/space_plasma.py"
 
 tests:
   smoke:

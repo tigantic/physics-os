@@ -9,7 +9,7 @@ import threading
 from datetime import datetime, timezone
 
 # Resilience tests
-from tensornet.ml.discovery.production.resilience import (
+from ontic.ml.discovery.production.resilience import (
     CircuitBreaker, CircuitBreakerConfig, CircuitBreakerError, CircuitState,
     RateLimiter, RateLimiterConfig, RateLimitExceeded,
     RetryPolicy, RetryStrategy,
@@ -19,7 +19,7 @@ from tensornet.ml.discovery.production.resilience import (
 )
 
 # Observability tests
-from tensornet.ml.discovery.production.observability import (
+from ontic.ml.discovery.production.observability import (
     StructuredLogger, LogLevel, LogContext,
     MetricsCollector, MetricType,
     HealthChecker, HealthStatus, ComponentHealth,
@@ -28,7 +28,7 @@ from tensornet.ml.discovery.production.observability import (
 )
 
 # Security tests
-from tensornet.ml.discovery.production.security import (
+from ontic.ml.discovery.production.security import (
     InputValidator, ValidationError, FieldSpec,
     RequiredRule, TypeRule, RangeRule, LengthRule, PatternRule, EnumRule,
     APIKeyAuth, AuthenticationError, AuthorizationError,
@@ -38,7 +38,7 @@ from tensornet.ml.discovery.production.security import (
 )
 
 # Performance tests
-from tensornet.ml.discovery.production.performance import (
+from ontic.ml.discovery.production.performance import (
     CacheManager, CachePolicy, CacheStats,
     ConnectionPool, PooledConnection,
     BatchOptimizer, BatchConfig,

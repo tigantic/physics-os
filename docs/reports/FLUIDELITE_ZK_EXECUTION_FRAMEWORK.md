@@ -556,7 +556,7 @@ product(pb, value, numerator, FMT(prefix, ".product")),
 - [x] Interval arithmetic (`interval.py`)
 - [x] Spectral analysis (`qtt_spectral_bridge.py`)
 - [x] Circom parser (ORACLE extension)
-- [x] Lightweight Circom analyzer (`tensornet/zk/fluidelite_circuit_analyzer.py`)
+- [x] Lightweight Circom analyzer (`ontic/zk/fluidelite_circuit_analyzer.py`)
 - [x] Control flow trace analysis (manual grep-based)
 
 ### Validated in Session (January 2026)

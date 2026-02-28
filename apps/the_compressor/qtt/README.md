@@ -206,6 +206,6 @@ MIT License
   title = {QTT: Quantum Tensor Train Universal File System},
   author = {Tigantic Holdings LLC},
   year = {2026},
-  url = {https://github.com/hypertensor/qtt}
+  url = {https://github.com/physics_os/qtt}
 }
 ```

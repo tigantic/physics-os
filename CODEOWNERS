@@ -21,141 +21,141 @@
 * @tigantic/core
 
 # ============================================
-# tensornet/ — Core Library (13 domain groups)
+# ontic/ — Core Library (13 domain groups)
 # ============================================
-/tensornet/                          @tigantic/core
-/tensornet/__init__.py               @tigantic/core
-/tensornet/core/                     @tigantic/core
-/tensornet/types/                    @tigantic/core
-/tensornet/mps/                      @tigantic/core
-/tensornet/mpo/                      @tigantic/core
-/tensornet/qtt/                      @tigantic/core
-/tensornet/numerics/                 @tigantic/core
-/tensornet/algorithms/               @tigantic/core
+/ontic/                          @tigantic/core
+/ontic/__init__.py               @tigantic/core
+/ontic/core/                     @tigantic/core
+/ontic/types/                    @tigantic/core
+/ontic/mps/                      @tigantic/core
+/ontic/mpo/                      @tigantic/core
+/ontic/qtt/                      @tigantic/core
+/ontic/numerics/                 @tigantic/core
+/ontic/algorithms/               @tigantic/core
 
 # Engine group — execution core, platform, gateway
-/tensornet/engine/                   @tigantic/core
-/tensornet/platform/                 @tigantic/core
-/tensornet/sdk/                      @tigantic/sdk
-/tensornet/genesis/                  @tigantic/core
+/ontic/engine/                   @tigantic/core
+/ontic/platform/                 @tigantic/core
+/ontic/sdk/                      @tigantic/sdk
+/ontic/genesis/                  @tigantic/core
 
 # CFD & Fluids group
-/tensornet/cfd/                      @tigantic/cfd
-/tensornet/fluids/                   @tigantic/cfd
-/tensornet/multiphase/               @tigantic/cfd
-/tensornet/free_surface/             @tigantic/cfd
-/tensornet/fsi/                      @tigantic/cfd
-/tensornet/heat_transfer/            @tigantic/cfd
+/ontic/cfd/                      @tigantic/cfd
+/ontic/fluids/                   @tigantic/cfd
+/ontic/multiphase/               @tigantic/cfd
+/ontic/free_surface/             @tigantic/cfd
+/ontic/fsi/                      @tigantic/cfd
+/ontic/heat_transfer/            @tigantic/cfd
 
 # Quantum group
-/tensornet/quantum/                  @tigantic/quantum
-/tensornet/qm/                       @tigantic/quantum
-/tensornet/qft/                      @tigantic/quantum
-/tensornet/condensed_matter/         @tigantic/quantum
-/tensornet/statmech/                 @tigantic/quantum
-/tensornet/electronic_structure/     @tigantic/quantum
+/ontic/quantum/                  @tigantic/quantum
+/ontic/qm/                       @tigantic/quantum
+/ontic/qft/                      @tigantic/quantum
+/ontic/condensed_matter/         @tigantic/quantum
+/ontic/statmech/                 @tigantic/quantum
+/ontic/electronic_structure/     @tigantic/quantum
 
 # Materials group
-/tensornet/materials/                @tigantic/core @tigantic/physics
-/tensornet/mechanics/                @tigantic/core @tigantic/physics
-/tensornet/phase_field/              @tigantic/core @tigantic/physics
+/ontic/materials/                @tigantic/core @tigantic/physics
+/ontic/mechanics/                @tigantic/core @tigantic/physics
+/ontic/phase_field/              @tigantic/core @tigantic/physics
 
 # Aerospace group
-/tensornet/aerospace/                @tigantic/cfd @tigantic/physics
-/tensornet/flight_validation/        @tigantic/cfd @tigantic/physics
-/tensornet/guidance/                 @tigantic/core
-/tensornet/racing/                   @tigantic/cfd
+/ontic/aerospace/                @tigantic/cfd @tigantic/physics
+/ontic/flight_validation/        @tigantic/cfd @tigantic/physics
+/ontic/guidance/                 @tigantic/core
+/ontic/racing/                   @tigantic/cfd
 
 # Astro group
-/tensornet/astro/                    @tigantic/physics
-/tensornet/relativity/               @tigantic/physics
-/tensornet/geophysics/               @tigantic/physics
+/ontic/astro/                    @tigantic/physics
+/ontic/relativity/               @tigantic/physics
+/ontic/geophysics/               @tigantic/physics
 
 # Plasma & Nuclear group
-/tensornet/plasma/                   @tigantic/physics
-/tensornet/plasma_nuclear/           @tigantic/physics
-/tensornet/nuclear/                  @tigantic/physics
-/tensornet/fusion/                   @tigantic/physics
-/tensornet/radiation/                @tigantic/physics
+/ontic/plasma/                   @tigantic/physics
+/ontic/plasma_nuclear/           @tigantic/physics
+/ontic/nuclear/                  @tigantic/physics
+/ontic/fusion/                   @tigantic/physics
+/ontic/radiation/                @tigantic/physics
 
 # Life Sciences group
-/tensornet/life_sci/                 @tigantic/physics
-/tensornet/biology/                  @tigantic/physics
-/tensornet/biomedical/               @tigantic/physics
-/tensornet/biophysics/               @tigantic/physics
-/tensornet/medical/                  @tigantic/physics
-/tensornet/membrane_bio/             @tigantic/physics
+/ontic/life_sci/                 @tigantic/physics
+/ontic/biology/                  @tigantic/physics
+/ontic/biomedical/               @tigantic/physics
+/ontic/biophysics/               @tigantic/physics
+/ontic/medical/                  @tigantic/physics
+/ontic/membrane_bio/             @tigantic/physics
 
 # Energy & Environment group
-/tensornet/energy_env/               @tigantic/physics
-/tensornet/energy/                   @tigantic/physics
-/tensornet/environmental/            @tigantic/physics
-/tensornet/fuel/                     @tigantic/physics
+/ontic/energy_env/               @tigantic/physics
+/ontic/energy/                   @tigantic/physics
+/ontic/environmental/            @tigantic/physics
+/ontic/fuel/                     @tigantic/physics
 
 # ML group
-/tensornet/ml/                       @tigantic/ml
-/tensornet/ml_physics/               @tigantic/ml @tigantic/physics
-/tensornet/ml_surrogates/            @tigantic/ml
-/tensornet/neural/                   @tigantic/ml
-/tensornet/discovery/                @tigantic/ml
+/ontic/ml/                       @tigantic/ml
+/ontic/ml_physics/               @tigantic/ml @tigantic/physics
+/ontic/ml_surrogates/            @tigantic/ml
+/ontic/neural/                   @tigantic/ml
+/ontic/discovery/                @tigantic/ml
 
 # Simulation group
-/tensornet/sim/                      @tigantic/core
-/tensornet/simulation/               @tigantic/core
-/tensornet/digital_twin/             @tigantic/core
-/tensornet/coupled/                  @tigantic/core
-/tensornet/multiscale/               @tigantic/core
-/tensornet/mesh_amr/                 @tigantic/core
+/ontic/sim/                      @tigantic/core
+/ontic/simulation/               @tigantic/core
+/ontic/digital_twin/             @tigantic/core
+/ontic/coupled/                  @tigantic/core
+/ontic/multiscale/               @tigantic/core
+/ontic/mesh_amr/                 @tigantic/core
 
 # Infrastructure group
-/tensornet/infra/                    @tigantic/core @tigantic/security
-/tensornet/distributed/              @tigantic/core
-/tensornet/distributed_tn/           @tigantic/core
-/tensornet/cuda/                     @tigantic/rust
-/tensornet/gpu/                      @tigantic/rust
-/tensornet/hw/                       @tigantic/rust
+/ontic/infra/                    @tigantic/core @tigantic/security
+/ontic/distributed/              @tigantic/core
+/ontic/distributed_tn/           @tigantic/core
+/ontic/cuda/                     @tigantic/rust
+/ontic/gpu/                      @tigantic/rust
+/ontic/hw/                       @tigantic/rust
 
 # Applied group
-/tensornet/applied/                  @tigantic/core
-/tensornet/special_applied/          @tigantic/core
-/tensornet/defense/                  @tigantic/core @tigantic/security
-/tensornet/cyber/                    @tigantic/security
-/tensornet/financial/                @tigantic/core
-/tensornet/urban/                    @tigantic/core
-/tensornet/manufacturing/            @tigantic/core
-/tensornet/autonomy/                 @tigantic/core
-/tensornet/robotics_physics/         @tigantic/core
-/tensornet/emergency/                @tigantic/core
+/ontic/applied/                  @tigantic/core
+/ontic/special_applied/          @tigantic/core
+/ontic/defense/                  @tigantic/core @tigantic/security
+/ontic/cyber/                    @tigantic/security
+/ontic/financial/                @tigantic/core
+/ontic/urban/                    @tigantic/core
+/ontic/manufacturing/            @tigantic/core
+/ontic/autonomy/                 @tigantic/core
+/ontic/robotics_physics/         @tigantic/core
+/ontic/emergency/                @tigantic/core
 
 # EM group
-/tensornet/em/                       @tigantic/physics
-/tensornet/optics/                   @tigantic/physics
-/tensornet/semiconductor/            @tigantic/physics
-/tensornet/acoustics/                @tigantic/physics
+/ontic/em/                       @tigantic/physics
+/ontic/optics/                   @tigantic/physics
+/ontic/semiconductor/            @tigantic/physics
+/ontic/acoustics/                @tigantic/physics
 
 # Remaining tensornet modules
-/tensornet/packs/                    @tigantic/core
-/tensornet/substrate/                @tigantic/core
-/tensornet/adaptive/                 @tigantic/core
-/tensornet/validation/               @tigantic/core @tigantic/physics
-/tensornet/certification/            @tigantic/core @tigantic/security
-/tensornet/provenance/               @tigantic/core @tigantic/security
-/tensornet/zk/                       @tigantic/security
-/tensornet/exploit/                  @tigantic/security
-/tensornet/visualization/            @tigantic/core
-/tensornet/shaders/                  @tigantic/rust
+/ontic/packs/                    @tigantic/core
+/ontic/substrate/                @tigantic/core
+/ontic/adaptive/                 @tigantic/core
+/ontic/validation/               @tigantic/core @tigantic/physics
+/ontic/certification/            @tigantic/core @tigantic/security
+/ontic/provenance/               @tigantic/core @tigantic/security
+/ontic/zk/                       @tigantic/security
+/ontic/exploit/                  @tigantic/security
+/ontic/visualization/            @tigantic/core
+/ontic/shaders/                  @tigantic/rust
 
 # ============================================
-# hypertensor/ — Licensed Execution Fabric
+# physics_os/ — Licensed Execution Fabric
 # ============================================
-/hypertensor/                        @tigantic/core @tigantic/sdk
-/hypertensor/api/                    @tigantic/sdk
-/hypertensor/sdk/                    @tigantic/sdk
-/hypertensor/mcp/                    @tigantic/sdk
-/hypertensor/cli/                    @tigantic/sdk
-/hypertensor/core/                   @tigantic/core @tigantic/security
-/hypertensor/jobs/                   @tigantic/core
-/hypertensor/billing/                @tigantic/core
+/physics_os/                        @tigantic/core @tigantic/sdk
+/physics_os/api/                    @tigantic/sdk
+/physics_os/sdk/                    @tigantic/sdk
+/physics_os/mcp/                    @tigantic/sdk
+/physics_os/cli/                    @tigantic/sdk
+/physics_os/core/                   @tigantic/core @tigantic/security
+/physics_os/jobs/                   @tigantic/core
+/physics_os/billing/                @tigantic/core
 
 # ============================================
 # Rust Crates
@@ -282,8 +282,8 @@
 # ============================================
 # LOCKED — Performance-Critical (attestation required)
 # ============================================
-/tensornet/substrate/morton_ops.py   @tigantic/core
-/tensornet/adaptive/compression.py   @tigantic/core
-/tensornet/adaptive/entanglement.py  @tigantic/core
-/tensornet/adaptive/bond_optimizer.py @tigantic/core
-/tensornet/core/mps.py              @tigantic/core
+/ontic/substrate/morton_ops.py   @tigantic/core
+/ontic/adaptive/compression.py   @tigantic/core
+/ontic/adaptive/entanglement.py  @tigantic/core
+/ontic/adaptive/bond_optimizer.py @tigantic/core
+/ontic/core/mps.py              @tigantic/core

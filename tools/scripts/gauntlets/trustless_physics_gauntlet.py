@@ -383,7 +383,7 @@ def test_summary():
 @gauntlet("trace_session_basic", "computation_trace")
 def test_trace_session_basic():
     """Test basic trace session creation and finalization."""
-    from tensornet.core.trace import TraceSession, TraceDigest
+    from ontic.core.trace import TraceSession, TraceDigest
 
     session = TraceSession()
     assert session.entry_count == 0
@@ -398,7 +398,7 @@ def test_trace_session_basic():
 def test_tensor_hashing():
     """Test deterministic tensor hashing."""
     import torch
-    from tensornet.core.trace import _hash_tensor, _hash_tensor_list
+    from ontic.core.trace import _hash_tensor, _hash_tensor_list
 
     t1 = torch.randn(10, 10, dtype=torch.float64)
     h1 = _hash_tensor(t1)
@@ -425,7 +425,7 @@ def test_tensor_hashing():
 def test_trace_svd_recording():
     """Test SVD trace recording."""
     import torch
-    from tensornet.core.trace import (
+    from ontic.core.trace import (
         trace_session, traced_svd_truncated, OpType,
     )
 
@@ -450,7 +450,7 @@ def test_trace_svd_recording():
 def test_trace_qr_recording():
     """Test QR trace recording."""
     import torch
-    from tensornet.core.trace import trace_session, traced_qr_positive, OpType
+    from ontic.core.trace import trace_session, traced_qr_positive, OpType
 
     A = torch.randn(30, 20, dtype=torch.float64)
 
@@ -468,7 +468,7 @@ def test_trace_qr_recording():
 @gauntlet("trace_hooks_install_uninstall", "computation_trace")
 def test_hooks_install():
     """Test monkey-patch installation and removal."""
-    from tensornet.core.trace import install_trace_hooks, uninstall_trace_hooks
+    from ontic.core.trace import install_trace_hooks, uninstall_trace_hooks
 
     install_trace_hooks()
     install_trace_hooks()  # Idempotent
@@ -481,7 +481,7 @@ def test_hooks_install():
 def test_trace_save_load_json():
     """Test trace persistence in JSON format."""
     import torch
-    from tensornet.core.trace import trace_session, traced_svd_truncated
+    from ontic.core.trace import trace_session, traced_svd_truncated
 
     A = torch.randn(30, 30, dtype=torch.float64)
 
@@ -496,7 +496,7 @@ def test_trace_save_load_json():
         session.save(path)
         assert path.exists()
 
-        from tensornet.core.trace import TraceSession as TS
+        from ontic.core.trace import TraceSession as TS
         loaded = TS.load(path)
         assert loaded.entry_count == 2
         assert loaded.session_id == session.session_id
@@ -508,7 +508,7 @@ def test_trace_save_load_json():
 def test_trace_save_load_binary():
     """Test trace persistence in binary format."""
     import torch
-    from tensornet.core.trace import trace_session, traced_svd_truncated
+    from ontic.core.trace import trace_session, traced_svd_truncated
 
     A = torch.randn(20, 20, dtype=torch.float64)
 
@@ -526,7 +526,7 @@ def test_trace_save_load_binary():
         data = path.read_bytes()
         assert data[:4] == b"TRCV"
 
-        from tensornet.core.trace import TraceSession as TS
+        from ontic.core.trace import TraceSession as TS
         loaded = TS.load_binary(path)
         assert loaded.entry_count == 1
     finally:
@@ -543,7 +543,7 @@ def test_trace_digest_determinism():
     always produces the same output hashes.
     """
     import torch
-    from tensornet.core.trace import (
+    from ontic.core.trace import (
         trace_session, traced_svd_truncated, _hash_tensor,
     )
 
@@ -588,7 +588,7 @@ def test_trace_digest_determinism():
 def test_no_session_passthrough():
     """Verify traced functions work with no active session."""
     import torch
-    from tensornet.core.trace import traced_svd_truncated, traced_qr_positive
+    from ontic.core.trace import traced_svd_truncated, traced_qr_positive
 
     A = torch.randn(20, 20, dtype=torch.float64)
     U, S, Vh = traced_svd_truncated(A, chi_max=5)
@@ -747,7 +747,7 @@ def test_generator_json_export():
 def test_trace_to_certificate():
     """End-to-end: trace computation → generate certificate."""
     import torch
-    from tensornet.core.trace import trace_session, traced_svd_truncated
+    from ontic.core.trace import trace_session, traced_svd_truncated
     from tpc.generator import CertificateGenerator
     from tpc.format import verify_certificate
 

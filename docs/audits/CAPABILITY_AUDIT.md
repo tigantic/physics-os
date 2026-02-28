@@ -81,7 +81,7 @@ HyperTensor solves PDEs using Tensor-Train (TT) and Quantized Tensor-Train (QTT)
 > "Physical fields stored in O(log N × r²) memory instead of O(N)"
 
 **Status:** ✅ TRUE  
-**Evidence:** `tensornet/cfd/pure_qtt_ops.py` — `QTTState` stores log₂(N) cores  
+**Evidence:** `ontic/cfd/pure_qtt_ops.py` — `QTTState` stores log₂(N) cores  
 **Limitation:** Only holds for fields with bounded TT-rank r. Chaotic turbulence may have rank ~ O(N).
 
 ### Claim B: Logarithmic Compute for Linear PDEs
@@ -95,7 +95,7 @@ HyperTensor solves PDEs using Tensor-Train (TT) and Quantized Tensor-Train (QTT)
 > "Euler equations solved in O(log N × r³) per timestep"
 
 **Status:** ✅ TRUE (as of December 2025)  
-**Evidence:** `tensornet/cfd/qtt_tci.py` — TCI-based flux approximation:
+**Evidence:** `ontic/cfd/qtt_tci.py` — TCI-based flux approximation:
 - `qtt_from_function()`: Approximates flux at O(r² × log N) sample points
 - `qtt_rusanov_flux_tci()`: Full Rusanov flux via TCI, max_err 8.67e-05
 - Sod shock tube validated with rank=3 for step function discontinuity
@@ -106,7 +106,7 @@ HyperTensor solves PDEs using Tensor-Train (TT) and Quantized Tensor-Train (QTT)
 > "5th-order WENO reconstruction performed natively in TT format"
 
 **Status:** ✅ TRUE (as of December 2025)  
-**Evidence:** `tensornet/cfd/weno_native_tt.py` — Full native implementation:
+**Evidence:** `ontic/cfd/weno_native_tt.py` — Full native implementation:
 - `compute_smoothness_indicators_tt()`: β₀, β₁, β₂ via native TT arithmetic
 - `compute_weno_weights_tt()`: WENO-Z weights entirely in TT format
 - `weno_reconstruct_native_tt()`: End-to-end 5th-order reconstruction
@@ -1302,13 +1302,13 @@ Global effective rank: ~16 (weighted average)
 
 | File | Purpose | Status |
 |------|---------|--------|
-| `tensornet/cfd/pure_qtt_ops.py` | Core QTT arithmetic | ✅ Complete |
-| `tensornet/cfd/qtt_tci.py` | TCI function approximation | ✅ Complete (<1e-3 error) |
-| `tensornet/cfd/weno_native_tt.py` | Native WENO-TT reconstruction | ✅ Complete (82× speedup) |
-| `tensornet/cfd/qtt_cfd.py` | QTT Euler solver | 📦 Legacy — superseded by qtt_tci.py |
-| `tensornet/cfd/weno_tt.py` | WENO in TT (legacy) | 📦 Legacy — superseded by weno_native_tt.py |
-| `tensornet/cfd/weno.py` | Dense WENO (reference) | ✅ Complete |
-| `tensornet/cfd/tt_cfd.py` | MPS Euler solver | 📦 Legacy |
+| `ontic/cfd/pure_qtt_ops.py` | Core QTT arithmetic | ✅ Complete |
+| `ontic/cfd/qtt_tci.py` | TCI function approximation | ✅ Complete (<1e-3 error) |
+| `ontic/cfd/weno_native_tt.py` | Native WENO-TT reconstruction | ✅ Complete (82× speedup) |
+| `ontic/cfd/qtt_cfd.py` | QTT Euler solver | 📦 Legacy — superseded by qtt_tci.py |
+| `ontic/cfd/weno_tt.py` | WENO in TT (legacy) | 📦 Legacy — superseded by weno_native_tt.py |
+| `ontic/cfd/weno.py` | Dense WENO (reference) | ✅ Complete |
+| `ontic/cfd/tt_cfd.py` | MPS Euler solver | 📦 Legacy |
 | `demos/pure_qtt_pde.py` | Linear PDE demo | ✅ Honest |
 | `demos/qtt_shock_tube.py` | CFD demo | 📦 Legacy — uses old hybrid approach |
 
@@ -1456,10 +1456,10 @@ After 20 advection steps:
 
 | File | Purpose |
 |------|---------|
-| `tensornet/cfd/qtt_2d.py` | Core 2D infrastructure |
-| `tensornet/cfd/qtt_2d_shift_native.py` | Native 2D shift MPO (605× speedup) |
-| `tensornet/cfd/euler2d_strang.py` | 2D Euler solver via Strang splitting |
-| `tensornet/cfd/kelvin_helmholtz.py` | KH IC generator with Morton decoding |
+| `ontic/cfd/qtt_2d.py` | Core 2D infrastructure |
+| `ontic/cfd/qtt_2d_shift_native.py` | Native 2D shift MPO (605× speedup) |
+| `ontic/cfd/euler2d_strang.py` | 2D Euler solver via Strang splitting |
+| `ontic/cfd/kelvin_helmholtz.py` | KH IC generator with Morton decoding |
 | `demos/qtt_2d_test.py` | Morton/Riemann validation |
 | `demos/qtt_2d_shift_test.py` | Shift and advection tests |
 | `demos/kelvin_helmholtz_demo.py` | Full KH validation demo |

@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Optical lattices, SOC"
 
 source_files:
-  - "tensornet/condensed_matter/ultracold_atoms.py"
+  - "ontic/condensed_matter/ultracold_atoms.py"
 
 tests:
   smoke:

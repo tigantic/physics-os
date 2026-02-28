@@ -92,7 +92,7 @@ These operations scale as O(n * r^3) where n = log2(grid_size) and r = bond dime
 - Discriminant improved from 10^146 to 10^22 (124 orders of magnitude)
 - Residual computation now matches between refinement and verification modules
 
-**Code Reference**: tensornet/cfd/kantorovich.py, lines 127-144
+**Code Reference**: ontic/cfd/kantorovich.py, lines 127-144
 
 ### Discovery 2: Resolution Independence of Ansatz Error
 
@@ -105,7 +105,7 @@ These operations scale as O(n * r^3) where n = log2(grid_size) and r = bond dime
 
 **Implication**: The residual is not discretization error converging to zero with resolution. Instead, it indicates the Hou-Luo ansatz itself is not close to a true self-similar fixed point. The profile shape, not the grid spacing, is the limiting factor.
 
-**Code Reference**: tensornet/cfd/stabilized_refine.py
+**Code Reference**: ontic/cfd/stabilized_refine.py
 
 ### Discovery 3: Jacobian Degeneracy at High Resolution
 
@@ -150,9 +150,9 @@ These operations scale as O(n * r^3) where n = log2(grid_size) and r = bond dime
 - Sub-millisecond aerodynamic coefficient evaluation
 
 **Repository Modules**:
-- tensornet/guidance/aero_trn.py (Aerodynamic Tensor Regression Network)
-- tensornet/realtime/ (Real-time inference pipeline)
-- tensornet/autonomy/ (Autonomous decision making)
+- ontic/guidance/aero_trn.py (Aerodynamic Tensor Regression Network)
+- ontic/realtime/ (Real-time inference pipeline)
+- ontic/autonomy/ (Autonomous decision making)
 
 ### Digital Twin Infrastructure
 
@@ -164,9 +164,9 @@ These operations scale as O(n * r^3) where n = log2(grid_size) and r = bond dime
 - Uncertainty quantification via interval arithmetic
 
 **Repository Modules**:
-- tensornet/digital_twin/reduced_order.py
-- tensornet/flight_validation/uncertainty.py
-- tensornet/simulation/monte_carlo.py
+- ontic/digital_twin/reduced_order.py
+- ontic/flight_validation/uncertainty.py
+- ontic/simulation/monte_carlo.py
 
 ---
 
@@ -202,7 +202,7 @@ These operations scale as O(n * r^3) where n = log2(grid_size) and r = bond dime
 - Quantum simulation with 60+ qubits
 - Financial modeling in high-dimensional state spaces
 
-**Code Reference**: tensornet/cfd/pure_qtt_ops.py (600+ lines)
+**Code Reference**: ontic/cfd/pure_qtt_ops.py (600+ lines)
 
 ### Contribution 3: Interval Arithmetic for Rigorous Bounds
 
@@ -215,7 +215,7 @@ These operations scale as O(n * r^3) where n = log2(grid_size) and r = bond dime
 
 **Validation**: 7/7 interval arithmetic tests passing
 
-**Code Reference**: tensornet/numerics/interval.py
+**Code Reference**: ontic/numerics/interval.py
 
 ### Contribution 4: Quantum-Many-Body Physics Benchmarks
 
@@ -264,7 +264,7 @@ python -m pytest tests/test_proofs.py -v
 python proofs/cap_full_power.py
 
 # Run QTT operations test
-python tensornet/cfd/pure_qtt_ops.py
+python ontic/cfd/pure_qtt_ops.py
 
 # Run full integration tests
 python -m pytest tests/test_integration.py -v

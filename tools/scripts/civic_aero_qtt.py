@@ -42,7 +42,7 @@ References
   Chorin A.J., "Numerical solution of the Navier-Stokes equations",
       Math. Comp. 22:745-762, 1968.
   Peskin C.S., "The immersed boundary method", Acta Numerica, 11, 2002.
-  tensornet/cfd/ns2d_qtt_native.py  — QTT CG Poisson template
+  ontic/cfd/ns2d_qtt_native.py  — QTT CG Poisson template
   tools/scripts/civic_aero.py             — Dense solver reference implementation
 
 Author: HyperTensor Team
@@ -72,7 +72,7 @@ from torch import Tensor
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
-from tensornet.cfd.qtt_3d_state import (
+from ontic.cfd.qtt_3d_state import (
     QTT3DState,
     QTT3DVectorField,
     _qtt3d_inner,
@@ -82,7 +82,7 @@ from tensornet.cfd.qtt_3d_state import (
     qtt3d_sub,
     qtt3d_truncate,
 )
-from tensornet.cfd.pure_qtt_ops import (
+from ontic.cfd.pure_qtt_ops import (
     QTTState,
     dense_to_qtt,
     qtt_add,
@@ -90,11 +90,11 @@ from tensornet.cfd.pure_qtt_ops import (
     qtt_to_dense,
     truncate_qtt,
 )
-from tensornet.cfd.nd_shift_mpo import (
+from ontic.cfd.nd_shift_mpo import (
     apply_nd_shift_mpo,
     make_nd_shift_mpo,
 )
-from tensornet.cfd.morton_3d import (
+from ontic.cfd.morton_3d import (
     linear_to_morton_3d,
     morton_to_linear_3d,
 )

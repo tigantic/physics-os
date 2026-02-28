@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Invariants, entanglement"
 
 source_files:
-  - "tensornet/condensed_matter/topological_phases.py"
+  - "ontic/condensed_matter/topological_phases.py"
 
 tests:
   smoke:

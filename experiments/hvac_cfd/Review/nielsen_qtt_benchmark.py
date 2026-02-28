@@ -27,25 +27,25 @@ import numpy as np
 print("Checking QTT infrastructure...")
 
 try:
-    from tensornet.cfd.pure_qtt_ops import dense_to_qtt, qtt_to_dense, QTTState
+    from ontic.cfd.pure_qtt_ops import dense_to_qtt, qtt_to_dense, QTTState
     print("  ✓ pure_qtt_ops available")
 except ImportError as e:
     print(f"  ✗ pure_qtt_ops: {e}")
 
 try:
-    from tensornet.cfd.qtt_2d import QTT2DState, dense_to_qtt_2d
+    from ontic.cfd.qtt_2d import QTT2DState, dense_to_qtt_2d
     print("  ✓ qtt_2d available")
 except ImportError as e:
     print(f"  ✗ qtt_2d: {e}")
 
 try:
-    from tensornet.cfd.fast_euler_3d import QTT3DState, dense_to_qtt_3d, Euler3DConfig
+    from ontic.cfd.fast_euler_3d import QTT3DState, dense_to_qtt_3d, Euler3DConfig
     print("  ✓ fast_euler_3d (3D QTT) available")
 except ImportError as e:
     print(f"  ✗ fast_euler_3d: {e}")
 
 try:
-    from tensornet.cfd.qtt_ns_3d import (
+    from ontic.cfd.qtt_ns_3d import (
         NS3DSolver, NS3DConfig, NS3DState,
         create_inlet_jet_state, create_quiescent_state
     )
@@ -56,7 +56,7 @@ except ImportError as e:
     HAS_NS_SOLVER = False
 
 try:
-    from tensornet.infra.fieldops.operators import Laplacian, Advect, PoissonSolver, Project
+    from ontic.infra.fieldops.operators import Laplacian, Advect, PoissonSolver, Project
     print("  ✓ fieldops operators available")
 except ImportError as e:
     print(f"  ✗ fieldops operators: {e}")
@@ -65,7 +65,7 @@ except ImportError as e:
 print("  ⊘ MPO operators skipped (CUDA compilation)")
 
 try:
-    from tensornet.engine.substrate import Field
+    from ontic.engine.substrate import Field
     print("  ✓ substrate Field available")
 except ImportError as e:
     print(f"  ✗ substrate Field: {e}")

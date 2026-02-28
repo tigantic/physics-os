@@ -1,4 +1,4 @@
-# Module `tensornet.cfd`
+# Module `ontic.cfd`
 
 CFD Module ==========
 

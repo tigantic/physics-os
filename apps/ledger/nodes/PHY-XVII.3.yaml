@@ -13,7 +13,7 @@ state: "V0.2"
 description: "PINNs, neural operators, equivariant nets hooks"
 
 source_files:
-  - "tensornet/ml_physics/__init__.py"
+  - "ontic/ml_physics/__init__.py"
 
 tests:
   smoke:

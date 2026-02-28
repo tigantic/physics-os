@@ -19,7 +19,7 @@ Run: python test_grid_shock.py
 import numpy as np
 import torch
 
-from tensornet.applied.cyber.grid_shock import CyberGrid, run_attack_demo
+from ontic.applied.cyber.grid_shock import CyberGrid, run_attack_demo
 
 
 def full_grid_shock_demo():

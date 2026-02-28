@@ -37,7 +37,7 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tensornet.cfd.euler_2d import BCType, Euler2D, Euler2DState
+from ontic.cfd.euler_2d import BCType, Euler2D, Euler2DState
 
 
 def double_mach_reflection_ic(

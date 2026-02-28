@@ -130,7 +130,7 @@ Forces are computed from the TT-compressed PES via:
 
 ### 4.3 Fallback Implementation
 
-When `tensornet.cfd.qtt_tci` is unavailable, the module uses:
+When `ontic.cfd.qtt_tci` is unavailable, the module uses:
 - `_tt_svd_fallback()` - Pure Python TT-SVD
 - `_qtt_from_function_tci_fallback()` - Random sampling + interpolation
 
@@ -151,13 +151,13 @@ When `tensornet.cfd.qtt_tci` is unavailable, the module uses:
 
 ```bash
 # Run QTT screening demo
-python3 -c "from tensornet.fusion import demo_qtt_screening; demo_qtt_screening()"
+python3 -c "from ontic.fusion import demo_qtt_screening; demo_qtt_screening()"
 
 # Run QTT superionic demo
-python3 -c "from tensornet.fusion import demo_qtt_superionic; demo_qtt_superionic()"
+python3 -c "from ontic.fusion import demo_qtt_superionic; demo_qtt_superionic()"
 
 # Run compression benchmark
-python3 -c "from tensornet.fusion import compare_qtt_vs_dense; compare_qtt_vs_dense()"
+python3 -c "from ontic.fusion import compare_qtt_vs_dense; compare_qtt_vs_dense()"
 ```
 
 ---

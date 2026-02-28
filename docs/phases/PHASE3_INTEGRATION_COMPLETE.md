@@ -49,7 +49,7 @@ Total Latency: <16ms (60+ FPS sustained)
 
 ### Component Inventory
 
-#### **Python Components** (tensornet/sovereign/)
+#### **Python Components** (ontic/sovereign/)
 1. **bridge_writer.py** (320 lines)
    - `TensorBridgeWriter` class with context manager
    - 4KB structured header + 8MB RGBA8 buffer
@@ -253,8 +253,8 @@ glass-cockpit/src/ram_bridge_v2.rs (485 lines)
 glass-cockpit/src/tensor_colormap.rs (398 lines)
 glass-cockpit/src/shaders/tensor_colormap.wgsl (145 lines)
 glass-cockpit/src/main_phase3.rs (462 lines)
-tensornet/sovereign/bridge_writer.py (320 lines)
-tensornet/sovereign/realtime_tensor_stream.py (319 lines)
+ontic/sovereign/bridge_writer.py (320 lines)
+ontic/sovereign/realtime_tensor_stream.py (319 lines)
 test_phase3_integration.py (104 lines)
 PHASE3_INTEGRATION_COMPLETE.md (this file)
 ```

@@ -26,10 +26,10 @@ import torch
 # Add parent to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tensornet.cfd.boundaries import BCType, FlowState
-from tensornet.cfd.euler_2d import (Euler2D, Euler2DState, oblique_shock_exact,
+from ontic.cfd.boundaries import BCType, FlowState
+from ontic.cfd.euler_2d import (Euler2D, Euler2DState, oblique_shock_exact,
                                     supersonic_wedge_ic)
-from tensornet.cfd.geometry import ImmersedBoundary, WedgeGeometry
+from ontic.cfd.geometry import ImmersedBoundary, WedgeGeometry
 
 
 def run_oblique_shock_benchmark(

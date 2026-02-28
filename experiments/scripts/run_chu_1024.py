@@ -26,7 +26,7 @@ import time
 
 import numpy as np
 
-from tensornet.em.chu_limit import (
+from ontic.em.chu_limit import (
     ChuOptConfig,
     AntennaGeometry3D,
     make_chu_antenna_schedule,
@@ -36,7 +36,7 @@ from tensornet.em.chu_limit import (
     solve_forward_conductivity_tt,
     PowerObjectiveConfig,
 )
-from tensornet.em.qtt_3d import (
+from ontic.em.qtt_3d import (
     build_pml_sigma_tt,
     build_sphere_mask_tt,
 )

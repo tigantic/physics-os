@@ -22,15 +22,15 @@ sys.path.insert(0, ".")
 
 import time
 
-from tensornet.cfd.qtt_eval import dense_to_qtt_cores, qtt_eval_batch
-from tensornet.cfd.qtt_tci import qtt_rusanov_flux_tci
-from tensornet.cfd.tci_flux import rusanov_flux
+from ontic.cfd.qtt_eval import dense_to_qtt_cores, qtt_eval_batch
+from ontic.cfd.qtt_tci import qtt_rusanov_flux_tci
+from ontic.cfd.tci_flux import rusanov_flux
 
 # Try to import Rust TCI backend
 try:
     from tci_core import RUST_AVAILABLE
 
-    from tensornet.cfd.qtt_tci import qtt_rusanov_flux_tci_rust
+    from ontic.cfd.qtt_tci import qtt_rusanov_flux_tci_rust
 except ImportError:
     RUST_AVAILABLE = False
 

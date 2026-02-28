@@ -1,29 +1,61 @@
-"""The Physics OS — Platform Shell for The Ontic Engine.
+"""Backward-compatibility shim: ``hypertensor`` → ``physics_os``.
 
-This package is the platform surface layer.  It provides four client surfaces
-(API, SDK, MCP, CLI) over a single closed execution core powered by The Ontic
-Engine.  No source code, compiler implementations, or operator kernels are
-ever distributed to clients.
+.. deprecated:: 40.1.0
+    The ``hypertensor`` package has been renamed to ``physics_os``.
+    Update your imports::
 
-Surfaces
---------
-- ``hypertensor.api``  — FastAPI REST/WebSocket server
-- ``hypertensor.sdk``  — Python client library
-- ``hypertensor.mcp``  — MCP tool server for agent-native workflows
-- ``hypertensor.cli``  — Command-line interface
+        # Old
+        from hypertensor.core.registry import DomainRegistry
+        # New
+        from physics_os.core.registry import DomainRegistry
 
-Core (never distributed)
-------------------------
-- ``hypertensor.core``      — Execution engine, evidence, certificates
-- ``hypertensor.contracts``  — Versioned Pydantic schemas
-- ``hypertensor.jobs``       — Job state machine and store
-
-Brand Hierarchy
----------------
-Tigantic Holdings LLC · DBA HolonomiX · The Physics OS · The Ontic Engine
+    This shim will be removed in a future major release.
 """
+from __future__ import annotations
 
-__version__ = "40.0.1"
-API_VERSION = "2.0.0"
-SCHEMA_VERSION = "1.0.0"
-RUNTIME_VERSION = "1.0.0"
+import importlib
+import sys
+import warnings
+
+warnings.warn(
+    "The 'hypertensor' package has been renamed to 'physics_os'. "
+    "Please update your imports: 'from physics_os import ...' "
+    "This compatibility shim will be removed in a future release.",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+# Import the real package so ``import hypertensor`` exposes the same API.
+import physics_os as _real  # noqa: E402
+
+# Re-export everything from the canonical package.
+from physics_os import *  # noqa: F401, F403
+
+# Dunder attributes are not re-exported by wildcard imports.
+__version__ = _real.__version__
+
+
+class _HypertensorShimFinder:
+    """Meta-path finder that redirects ``hypertensor.*`` to ``physics_os.*``."""
+
+    def find_module(
+        self, fullname: str, path: object = None
+    ) -> "_HypertensorShimFinder | None":
+        if fullname == "hypertensor" or fullname.startswith("hypertensor."):
+            canonical = "physics_os" + fullname[len("hypertensor"):]
+            if canonical not in sys.modules:
+                try:
+                    importlib.import_module(canonical)
+                except ImportError:
+                    return None
+            return self
+        return None
+
+    def load_module(self, fullname: str) -> object:
+        canonical = "physics_os" + fullname[len("hypertensor"):]
+        mod = importlib.import_module(canonical)
+        sys.modules[fullname] = mod
+        return mod
+
+
+sys.meta_path.insert(0, _HypertensorShimFinder())

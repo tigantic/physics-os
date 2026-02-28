@@ -13,7 +13,7 @@ state: "V0.2"
 description: "5D gyrokinetic equations"
 
 source_files:
-  - "tensornet/plasma/gyrokinetics.py"
+  - "ontic/plasma/gyrokinetics.py"
 
 tests:
   smoke:

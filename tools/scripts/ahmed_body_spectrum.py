@@ -40,7 +40,7 @@ from scripts.ahmed_body_ib_solver import (
     ahmed_body_sdf,
     create_body_mask,
 )
-from tensornet.cfd.kolmogorov_spectrum import (
+from ontic.cfd.kolmogorov_spectrum import (
     compute_energy_spectrum_3d,
     fit_power_law,
     find_inertial_range,

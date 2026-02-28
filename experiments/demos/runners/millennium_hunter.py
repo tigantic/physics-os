@@ -38,8 +38,8 @@ from dataclasses import dataclass
 from typing import List, Tuple
 
 # Import our infrastructure
-from tensornet.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo, truncate_cores
-from tensornet.cfd.pure_qtt_ops import QTTState, qtt_add, dense_to_qtt, qtt_to_dense
+from ontic.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo, truncate_cores
+from ontic.cfd.pure_qtt_ops import QTTState, qtt_add, dense_to_qtt, qtt_to_dense
 
 
 @dataclass

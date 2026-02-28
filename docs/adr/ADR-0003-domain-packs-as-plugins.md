@@ -8,12 +8,12 @@
 
 ## Context
 
-The platform currently has ~70 `tensornet/` subdirectories containing solver code for all 140 taxonomy nodes. These are flat Python modules imported directly — there is no plugin interface, no interface compliance enforcement, and no standardized registration mechanism.
+The platform currently has ~70 `ontic/` subdirectories containing solver code for all 140 taxonomy nodes. These are flat Python modules imported directly — there is no plugin interface, no interface compliance enforcement, and no standardized registration mechanism.
 
 This creates several problems:
 
 1. **No interface conformance.** Solvers can define ad-hoc APIs, making composition impossible.
-2. **No isolation.** A broken import in `tensornet/plasma/` breaks unrelated downstream code.
+2. **No isolation.** A broken import in `ontic/plasma/` breaks unrelated downstream code.
 3. **No independent versioning.** All 140 nodes share one version number via `tensornet` package.
 4. **No enforcement.** Anyone can merge a solver that doesn't use the canonical field/operator abstractions.
 

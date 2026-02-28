@@ -37,7 +37,7 @@ The ORACLE (Offensive Reasoning and Assumption-Challenging Logic Engine) is now 
 ```bash
 # Hunt a source file
 python3 -c "
-from tensornet.oracle import ORACLE
+from ontic.oracle import ORACLE
 oracle = ORACLE()
 result = oracle.hunt(source='<solidity_code>')
 for a in result.assumptions:
@@ -703,19 +703,19 @@ Before EVERY hunt, verify:
 
 ```bash
 # 1. Fetch contract + source
-python -m tensornet.exploit.contract_loader --address 0x... --chain eth
+python -m ontic.exploit.contract_loader --address 0x... --chain eth
 
 # 2. Check for formal verification
 grep -r "Certora\|Halmos\|invariant" ./contracts/
 
 # 3. Identify state variables
-python -m tensornet.exploit.state_encoder --analyze 0x...
+python -m ontic.exploit.state_encoder --analyze 0x...
 ```
 
 ### Phase 2: Koopman Hunt (2-4 hours)
 
 ```python
-from tensornet.exploit.koopman_hunter import KoopmanExploitHunter
+from ontic.exploit.koopman_hunter import KoopmanExploitHunter
 
 hunter = KoopmanExploitHunter(
     transition_fn=contract_simulator,
@@ -738,7 +738,7 @@ for mode in result.unstable_modes:
 ### Phase 3: Adjoint Refinement (1-2 hours)
 
 ```python
-from tensornet.cfd.adjoint_blowup import AdjointOptimizer
+from ontic.cfd.adjoint_blowup import AdjointOptimizer
 
 optimizer = AdjointOptimizer(
     objective=profit_function,
@@ -755,7 +755,7 @@ exploit_tx = optimizer.optimize(
 ### Phase 4: Kantorovich Verification (30 min)
 
 ```python
-from tensornet.cfd.kantorovich import NewtonKantorovichVerifier
+from ontic.cfd.kantorovich import NewtonKantorovichVerifier
 
 verifier = NewtonKantorovichVerifier()
 bounds = verifier.verify(exploit_candidate)
@@ -768,7 +768,7 @@ if bounds.status == VerificationStatus.VERIFIED:
 ### Phase 5: Report Generation
 
 ```python
-from tensornet.exploit.bounty_reporter import generate_report
+from ontic.exploit.bounty_reporter import generate_report
 
 report = generate_report(
     finding=exploit,
@@ -1116,16 +1116,16 @@ START
 
 | Tool | Command | Use Case |
 |------|---------|----------|
-| Koopman Hunter | `python -m tensornet.exploit.koopman_hunter` | Find unstable modes |
-| Chi Diagnostic | `python -m tensornet.cfd.chi_diagnostic` | Score exploit proximity |
-| Elite Hunter | `python -m tensornet.exploit.elite_hunter` | Source code pattern match |
-| Invariant Hunter | `python -m tensornet.exploit.invariant_hunter` | ERC4626/first depositor |
-| Bounty API | `python -m tensornet.exploit.bounty_api` | Platform integration |
-| Historical Validator | `python -m tensornet.exploit.historical_validator` | Test on known exploits |
-| Kantorovich Verifier | `python -m tensornet.cfd.kantorovich` | Mathematical proof certificates |
-| Interval Arithmetic | `tensornet.numerics.interval` | Rigorous bounds propagation |
-| Hypergrid Controller | `tensornet.cfd.exploit.hypergrid` | Parallel multi-chain hunting |
-| Precision Analyzer | `tensornet.cfd.exploit.precision_analyzer` | Fixed-point math bug detection |
+| Koopman Hunter | `python -m ontic.exploit.koopman_hunter` | Find unstable modes |
+| Chi Diagnostic | `python -m ontic.cfd.chi_diagnostic` | Score exploit proximity |
+| Elite Hunter | `python -m ontic.exploit.elite_hunter` | Source code pattern match |
+| Invariant Hunter | `python -m ontic.exploit.invariant_hunter` | ERC4626/first depositor |
+| Bounty API | `python -m ontic.exploit.bounty_api` | Platform integration |
+| Historical Validator | `python -m ontic.exploit.historical_validator` | Test on known exploits |
+| Kantorovich Verifier | `python -m ontic.cfd.kantorovich` | Mathematical proof certificates |
+| Interval Arithmetic | `ontic.numerics.interval` | Rigorous bounds propagation |
+| Hypergrid Controller | `ontic.cfd.exploit.hypergrid` | Parallel multi-chain hunting |
+| Precision Analyzer | `ontic.cfd.exploit.precision_analyzer` | Fixed-point math bug detection |
 
 > 📚 **Full module catalog**: See [TOOLBOX.md](TOOLBOX.md) for all 333 modules
 
@@ -1184,7 +1184,7 @@ The ORACLE (Offensive Reasoning and Assumption-Challenging Logic Engine) is our 
 ```bash
 # Execute hunt
 cd /home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main
-python -m tensornet.exploit.elite_hunter --target etherfi --chain eth
+python -m ontic.exploit.elite_hunter --target etherfi --chain eth
 ```
 
 ---

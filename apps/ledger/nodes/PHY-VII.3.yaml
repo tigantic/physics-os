@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Hubbard, DMFT hooks"
 
 source_files:
-  - "tensornet/condensed_matter/strongly_correlated.py"
+  - "ontic/condensed_matter/strongly_correlated.py"
 
 tests:
   smoke:

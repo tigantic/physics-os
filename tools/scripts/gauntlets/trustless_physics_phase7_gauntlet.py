@@ -151,43 +151,43 @@ def _check_adapter_dir(pkg: Path, adapters: list[str], label: str) -> None:
 
 @gauntlet("mechanics_adapter_files_exist", layer="adapter_files")
 def test_mechanics_adapter_files_exist():
-    _check_adapter_dir(ROOT / "tensornet" / "mechanics" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "mechanics" / "trace_adapters",
                        MECHANICS_ADAPTERS, "mechanics")
 
 
 @gauntlet("optics_adapter_files_exist", layer="adapter_files")
 def test_optics_adapter_files_exist():
-    _check_adapter_dir(ROOT / "tensornet" / "optics" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "optics" / "trace_adapters",
                        OPTICS_ADAPTERS, "optics")
 
 
 @gauntlet("astro_adapter_files_exist", layer="adapter_files")
 def test_astro_adapter_files_exist():
-    _check_adapter_dir(ROOT / "tensornet" / "astro" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "astro" / "trace_adapters",
                        ASTRO_ADAPTERS, "astro")
 
 
 @gauntlet("geophysics_adapter_files_exist", layer="adapter_files")
 def test_geophysics_adapter_files_exist():
-    _check_adapter_dir(ROOT / "tensornet" / "geophysics" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "geophysics" / "trace_adapters",
                        GEOPHYSICS_ADAPTERS, "geophysics")
 
 
 @gauntlet("materials_adapter_files_exist", layer="adapter_files")
 def test_materials_adapter_files_exist():
-    _check_adapter_dir(ROOT / "tensornet" / "materials" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "materials" / "trace_adapters",
                        MATERIALS_ADAPTERS, "materials")
 
 
 @gauntlet("coupled_adapter_files_exist", layer="adapter_files")
 def test_coupled_adapter_files_exist():
-    _check_adapter_dir(ROOT / "tensornet" / "coupled" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "coupled" / "trace_adapters",
                        COUPLED_ADAPTERS, "coupled")
 
 
 @gauntlet("chemistry_adapter_files_exist", layer="adapter_files")
 def test_chemistry_adapter_files_exist():
-    _check_adapter_dir(ROOT / "tensornet" / "chemistry" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "chemistry" / "trace_adapters",
                        CHEMISTRY_ADAPTERS, "chemistry")
 
 
@@ -355,7 +355,7 @@ def test_tpc_phase7_importable():
 
 @gauntlet("mechanics_newtonian_solve", layer="mechanics_solvers")
 def test_mechanics_newtonian_solve():
-    from tensornet.materials.mechanics.trace_adapters.newtonian_dynamics_adapter import (
+    from ontic.materials.mechanics.trace_adapters.newtonian_dynamics_adapter import (
         NewtonianDynamicsTraceAdapter,
     )
     pos0 = np.array([[0.0, 0.0], [1.0, 0.0]])
@@ -369,7 +369,7 @@ def test_mechanics_newtonian_solve():
 
 @gauntlet("mechanics_symplectic_solve", layer="mechanics_solvers")
 def test_mechanics_symplectic_solve():
-    from tensornet.materials.mechanics.trace_adapters.symplectic_adapter import (
+    from ontic.materials.mechanics.trace_adapters.symplectic_adapter import (
         SymplecticTraceAdapter,
     )
     adapter = SymplecticTraceAdapter()
@@ -383,7 +383,7 @@ def test_mechanics_symplectic_solve():
 
 @gauntlet("mechanics_continuum_solve", layer="mechanics_solvers")
 def test_mechanics_continuum_solve():
-    from tensornet.materials.mechanics.trace_adapters.continuum_adapter import (
+    from ontic.materials.mechanics.trace_adapters.continuum_adapter import (
         ContinuumMechanicsTraceAdapter,
     )
     adapter = ContinuumMechanicsTraceAdapter(n_elem=20)
@@ -394,7 +394,7 @@ def test_mechanics_continuum_solve():
 
 @gauntlet("mechanics_structural_solve", layer="mechanics_solvers")
 def test_mechanics_structural_solve():
-    from tensornet.materials.mechanics.trace_adapters.structural_adapter import (
+    from ontic.materials.mechanics.trace_adapters.structural_adapter import (
         StructuralMechanicsTraceAdapter,
     )
     adapter = StructuralMechanicsTraceAdapter(n_elem=10, L=1.0)
@@ -406,7 +406,7 @@ def test_mechanics_structural_solve():
 
 @gauntlet("mechanics_nonlinear_dynamics_solve", layer="mechanics_solvers")
 def test_mechanics_nonlinear_dynamics_solve():
-    from tensornet.materials.mechanics.trace_adapters.nonlinear_dynamics_adapter import (
+    from ontic.materials.mechanics.trace_adapters.nonlinear_dynamics_adapter import (
         NonlinearDynamicsTraceAdapter,
     )
     adapter = NonlinearDynamicsTraceAdapter()
@@ -420,7 +420,7 @@ def test_mechanics_nonlinear_dynamics_solve():
 
 @gauntlet("mechanics_acoustics_solve", layer="mechanics_solvers")
 def test_mechanics_acoustics_solve():
-    from tensornet.materials.mechanics.trace_adapters.acoustics_adapter import (
+    from ontic.materials.mechanics.trace_adapters.acoustics_adapter import (
         AcousticsTraceAdapter,
     )
     adapter = AcousticsTraceAdapter(nx=100, Lx=1.0, c=343.0, rho=1.225)
@@ -436,7 +436,7 @@ def test_mechanics_acoustics_solve():
 
 @gauntlet("optics_physical_solve", layer="optics_solvers")
 def test_optics_physical_solve():
-    from tensornet.applied.optics.trace_adapters.physical_optics_adapter import (
+    from ontic.applied.optics.trace_adapters.physical_optics_adapter import (
         PhysicalOpticsTraceAdapter,
     )
     adapter = PhysicalOpticsTraceAdapter(wavelength=633e-9, grid_size=64, pixel_pitch=10e-6)
@@ -450,7 +450,7 @@ def test_optics_physical_solve():
 
 @gauntlet("optics_quantum_solve", layer="optics_solvers")
 def test_optics_quantum_solve():
-    from tensornet.applied.optics.trace_adapters.quantum_optics_adapter import (
+    from ontic.applied.optics.trace_adapters.quantum_optics_adapter import (
         QuantumOpticsTraceAdapter,
     )
     adapter = QuantumOpticsTraceAdapter(n_max=5, g=0.1)
@@ -461,7 +461,7 @@ def test_optics_quantum_solve():
 
 @gauntlet("optics_laser_solve", layer="optics_solvers")
 def test_optics_laser_solve():
-    from tensornet.applied.optics.trace_adapters.laser_physics_adapter import (
+    from ontic.applied.optics.trace_adapters.laser_physics_adapter import (
         LaserPhysicsTraceAdapter,
     )
     adapter = LaserPhysicsTraceAdapter()
@@ -472,7 +472,7 @@ def test_optics_laser_solve():
 
 @gauntlet("optics_ultrafast_solve", layer="optics_solvers")
 def test_optics_ultrafast_solve():
-    from tensornet.applied.optics.trace_adapters.ultrafast_optics_adapter import (
+    from ontic.applied.optics.trace_adapters.ultrafast_optics_adapter import (
         UltrafastOpticsTraceAdapter,
     )
     N = 256
@@ -490,7 +490,7 @@ def test_optics_ultrafast_solve():
 
 @gauntlet("astro_stellar_structure_solve", layer="astro_solvers")
 def test_astro_stellar_structure_solve():
-    from tensornet.astro.trace_adapters.stellar_structure_adapter import (
+    from ontic.astro.trace_adapters.stellar_structure_adapter import (
         StellarStructureTraceAdapter,
     )
     adapter = StellarStructureTraceAdapter()
@@ -501,7 +501,7 @@ def test_astro_stellar_structure_solve():
 
 @gauntlet("astro_compact_objects_solve", layer="astro_solvers")
 def test_astro_compact_objects_solve():
-    from tensornet.astro.trace_adapters.compact_objects_adapter import (
+    from ontic.astro.trace_adapters.compact_objects_adapter import (
         CompactObjectsTraceAdapter,
     )
     adapter = CompactObjectsTraceAdapter()
@@ -513,7 +513,7 @@ def test_astro_compact_objects_solve():
 
 @gauntlet("astro_gravitational_waves_solve", layer="astro_solvers")
 def test_astro_gravitational_waves_solve():
-    from tensornet.astro.trace_adapters.gravitational_waves_adapter import (
+    from ontic.astro.trace_adapters.gravitational_waves_adapter import (
         GravitationalWavesTraceAdapter,
     )
     adapter = GravitationalWavesTraceAdapter()
@@ -524,7 +524,7 @@ def test_astro_gravitational_waves_solve():
 
 @gauntlet("astro_cosmological_sims_solve", layer="astro_solvers")
 def test_astro_cosmological_sims_solve():
-    from tensornet.astro.trace_adapters.cosmological_sims_adapter import (
+    from ontic.astro.trace_adapters.cosmological_sims_adapter import (
         CosmologicalSimsTraceAdapter,
     )
     np.random.seed(99)
@@ -540,7 +540,7 @@ def test_astro_cosmological_sims_solve():
 
 @gauntlet("astro_cmb_solve", layer="astro_solvers")
 def test_astro_cmb_solve():
-    from tensornet.astro.trace_adapters.cmb_adapter import CMBTraceAdapter
+    from ontic.astro.trace_adapters.cmb_adapter import CMBTraceAdapter
 
     adapter = CMBTraceAdapter()
     T_arr, Xe_arr, cons, session = adapter.solve(T_start=5000.0, T_end=2000.0, n_steps=200)
@@ -550,7 +550,7 @@ def test_astro_cmb_solve():
 
 @gauntlet("astro_radiative_transfer_solve", layer="astro_solvers")
 def test_astro_radiative_transfer_solve():
-    from tensornet.astro.trace_adapters.radiative_transfer_adapter import (
+    from ontic.astro.trace_adapters.radiative_transfer_adapter import (
         RadiativeTransferTraceAdapter,
     )
     adapter = RadiativeTransferTraceAdapter(n_depth=50, n_mu=4)
@@ -566,7 +566,7 @@ def test_astro_radiative_transfer_solve():
 
 @gauntlet("geophysics_seismology_solve", layer="geophysics_solvers")
 def test_geophysics_seismology_solve():
-    from tensornet.astro.geophysics.trace_adapters.seismology_adapter import (
+    from ontic.astro.geophysics.trace_adapters.seismology_adapter import (
         SeismologyTraceAdapter,
     )
     adapter = SeismologyTraceAdapter(nx=30, nz=30, nt=100)
@@ -577,7 +577,7 @@ def test_geophysics_seismology_solve():
 
 @gauntlet("geophysics_mantle_convection_solve", layer="geophysics_solvers")
 def test_geophysics_mantle_convection_solve():
-    from tensornet.astro.geophysics.trace_adapters.mantle_convection_adapter import (
+    from ontic.astro.geophysics.trace_adapters.mantle_convection_adapter import (
         MantleConvectionTraceAdapter,
     )
     adapter = MantleConvectionTraceAdapter(nx=16, nz=16)
@@ -588,7 +588,7 @@ def test_geophysics_mantle_convection_solve():
 
 @gauntlet("geophysics_geodynamo_solve", layer="geophysics_solvers")
 def test_geophysics_geodynamo_solve():
-    from tensornet.astro.geophysics.trace_adapters.geodynamo_adapter import (
+    from ontic.astro.geophysics.trace_adapters.geodynamo_adapter import (
         GeodynamoTraceAdapter,
     )
     adapter = GeodynamoTraceAdapter(nr=30)
@@ -599,7 +599,7 @@ def test_geophysics_geodynamo_solve():
 
 @gauntlet("geophysics_atmospheric_solve", layer="geophysics_solvers")
 def test_geophysics_atmospheric_solve():
-    from tensornet.astro.geophysics.trace_adapters.atmospheric_adapter import (
+    from ontic.astro.geophysics.trace_adapters.atmospheric_adapter import (
         AtmosphericPhysicsTraceAdapter,
     )
     adapter = AtmosphericPhysicsTraceAdapter()
@@ -614,7 +614,7 @@ def test_geophysics_atmospheric_solve():
 
 @gauntlet("geophysics_oceanography_solve", layer="geophysics_solvers")
 def test_geophysics_oceanography_solve():
-    from tensornet.astro.geophysics.trace_adapters.oceanography_adapter import (
+    from ontic.astro.geophysics.trace_adapters.oceanography_adapter import (
         OceanographyTraceAdapter,
     )
     nx, ny = 20, 20
@@ -628,7 +628,7 @@ def test_geophysics_oceanography_solve():
 
 @gauntlet("geophysics_glaciology_solve", layer="geophysics_solvers")
 def test_geophysics_glaciology_solve():
-    from tensornet.astro.geophysics.trace_adapters.glaciology_adapter import (
+    from ontic.astro.geophysics.trace_adapters.glaciology_adapter import (
         GlaciologyTraceAdapter,
     )
     nx = 50
@@ -646,7 +646,7 @@ def test_geophysics_glaciology_solve():
 
 @gauntlet("materials_first_principles_solve", layer="materials_solvers")
 def test_materials_first_principles_solve():
-    from tensornet.materials.trace_adapters.first_principles_adapter import (
+    from ontic.materials.trace_adapters.first_principles_adapter import (
         FirstPrinciplesTraceAdapter,
     )
     adapter = FirstPrinciplesTraceAdapter(V0=75.0, E0=-8.5, B0=100.0, B0p=4.0)
@@ -659,7 +659,7 @@ def test_materials_first_principles_solve():
 
 @gauntlet("materials_mechanical_properties_solve", layer="materials_solvers")
 def test_materials_mechanical_properties_solve():
-    from tensornet.materials.trace_adapters.mechanical_properties_adapter import (
+    from ontic.materials.trace_adapters.mechanical_properties_adapter import (
         MechanicalPropertiesTraceAdapter,
     )
     adapter = MechanicalPropertiesTraceAdapter.from_cubic(C11=108.0, C12=61.0, C44=29.0)
@@ -670,7 +670,7 @@ def test_materials_mechanical_properties_solve():
 
 @gauntlet("materials_phase_field_solve", layer="materials_solvers")
 def test_materials_phase_field_solve():
-    from tensornet.materials.trace_adapters.phase_field_adapter import (
+    from ontic.materials.trace_adapters.phase_field_adapter import (
         PhaseFieldTraceAdapter,
     )
     adapter = PhaseFieldTraceAdapter(nx=32, ny=32, dx=1.0, M=1.0, kappa=0.5, W=1.0)
@@ -681,7 +681,7 @@ def test_materials_phase_field_solve():
 
 @gauntlet("materials_microstructure_solve", layer="materials_solvers")
 def test_materials_microstructure_solve():
-    from tensornet.materials.trace_adapters.microstructure_adapter import (
+    from ontic.materials.trace_adapters.microstructure_adapter import (
         MicrostructureTraceAdapter,
     )
     adapter = MicrostructureTraceAdapter(nx=16, ny=16, n_grains=3)
@@ -693,7 +693,7 @@ def test_materials_microstructure_solve():
 
 @gauntlet("materials_radiation_damage_solve", layer="materials_solvers")
 def test_materials_radiation_damage_solve():
-    from tensornet.materials.trace_adapters.radiation_damage_adapter import (
+    from ontic.materials.trace_adapters.radiation_damage_adapter import (
         RadiationDamageTraceAdapter,
     )
     adapter = RadiationDamageTraceAdapter(Ed=40.0, Z=26, A=55.845)
@@ -705,7 +705,7 @@ def test_materials_radiation_damage_solve():
 
 @gauntlet("materials_polymers_solve", layer="materials_solvers")
 def test_materials_polymers_solve():
-    from tensornet.materials.trace_adapters.polymers_adapter import (
+    from ontic.materials.trace_adapters.polymers_adapter import (
         PolymersTraceAdapter,
     )
     adapter = PolymersTraceAdapter(n_grid=16, L=10.0, N=50, f=0.5, chi_N=15.0)
@@ -716,7 +716,7 @@ def test_materials_polymers_solve():
 
 @gauntlet("materials_ceramics_solve", layer="materials_solvers")
 def test_materials_ceramics_solve():
-    from tensornet.materials.trace_adapters.ceramics_adapter import (
+    from ontic.materials.trace_adapters.ceramics_adapter import (
         CeramicsTraceAdapter,
     )
     adapter = CeramicsTraceAdapter(mechanism="volume", a=1e-6)
@@ -732,7 +732,7 @@ def test_materials_ceramics_solve():
 
 @gauntlet("coupled_fsi_solve", layer="coupled_solvers")
 def test_coupled_fsi_solve():
-    from tensornet.fluids.coupled.trace_adapters.fsi_adapter import FSITraceAdapter
+    from ontic.fluids.coupled.trace_adapters.fsi_adapter import FSITraceAdapter
 
     adapter = FSITraceAdapter(n_nodes=20, L=1.0, EI=1.0, rho_A=1.0)
     f_ext = np.sin(np.linspace(0, np.pi, 20))
@@ -743,7 +743,7 @@ def test_coupled_fsi_solve():
 
 @gauntlet("coupled_thermo_mechanical_solve", layer="coupled_solvers")
 def test_coupled_thermo_mechanical_solve():
-    from tensornet.fluids.coupled.trace_adapters.thermo_mechanical_adapter import (
+    from ontic.fluids.coupled.trace_adapters.thermo_mechanical_adapter import (
         ThermoMechanicalTraceAdapter,
     )
     nx, ny = 15, 15
@@ -756,7 +756,7 @@ def test_coupled_thermo_mechanical_solve():
 
 @gauntlet("coupled_electro_mechanical_solve", layer="coupled_solvers")
 def test_coupled_electro_mechanical_solve():
-    from tensornet.fluids.coupled.trace_adapters.electro_mechanical_adapter import (
+    from ontic.fluids.coupled.trace_adapters.electro_mechanical_adapter import (
         ElectroMechanicalTraceAdapter,
     )
     adapter = ElectroMechanicalTraceAdapter(n_elem=20, L=0.05)
@@ -768,7 +768,7 @@ def test_coupled_electro_mechanical_solve():
 
 @gauntlet("coupled_mhd_solve", layer="coupled_solvers")
 def test_coupled_mhd_solve():
-    from tensornet.fluids.coupled.trace_adapters.coupled_mhd_adapter import (
+    from ontic.fluids.coupled.trace_adapters.coupled_mhd_adapter import (
         CoupledMHDTraceAdapter,
     )
     adapter = CoupledMHDTraceAdapter(a=0.01, B0=1.0, rho=1e4, nu=1e-6, sigma=1e6)
@@ -782,7 +782,7 @@ def test_coupled_mhd_solve():
 def test_coupled_reacting_flows_import():
     """Verify reacting flows adapter is importable (Torch may be absent)."""
     try:
-        from tensornet.fluids.coupled.trace_adapters.reacting_flows_adapter import (
+        from ontic.fluids.coupled.trace_adapters.reacting_flows_adapter import (
             ReactingFlowsTraceAdapter,
         )
         assert callable(ReactingFlowsTraceAdapter)
@@ -790,13 +790,13 @@ def test_coupled_reacting_flows_import():
         # Torch not available — skip gracefully
         pass
     # Verify file exists regardless
-    fpath = ROOT / "tensornet" / "coupled" / "trace_adapters" / "reacting_flows_adapter.py"
+    fpath = ROOT / "ontic" / "coupled" / "trace_adapters" / "reacting_flows_adapter.py"
     assert fpath.exists()
 
 
 @gauntlet("coupled_radiation_hydro_solve", layer="coupled_solvers")
 def test_coupled_radiation_hydro_solve():
-    from tensornet.fluids.coupled.trace_adapters.radiation_hydro_adapter import (
+    from ontic.fluids.coupled.trace_adapters.radiation_hydro_adapter import (
         RadiationHydroTraceAdapter,
     )
     adapter = RadiationHydroTraceAdapter(nx=100, Lx=1.0)
@@ -807,7 +807,7 @@ def test_coupled_radiation_hydro_solve():
 
 @gauntlet("coupled_multiscale_solve", layer="coupled_solvers")
 def test_coupled_multiscale_solve():
-    from tensornet.fluids.coupled.trace_adapters.multiscale_adapter import (
+    from ontic.fluids.coupled.trace_adapters.multiscale_adapter import (
         MultiscaleTraceAdapter,
     )
     adapter = MultiscaleTraceAdapter(L_macro=1.0, n_elem_macro=5, n_elem_micro=10)
@@ -823,7 +823,7 @@ def test_coupled_multiscale_solve():
 
 @gauntlet("chemistry_nonadiabatic_solve", layer="chemistry_solvers")
 def test_chemistry_nonadiabatic_solve():
-    from tensornet.life_sci.chemistry.trace_adapters.nonadiabatic_adapter import (
+    from ontic.life_sci.chemistry.trace_adapters.nonadiabatic_adapter import (
         NonadiabaticTraceAdapter,
     )
     adapter = NonadiabaticTraceAdapter(n_states=2, mass=2000.0, dt=0.5)
@@ -834,7 +834,7 @@ def test_chemistry_nonadiabatic_solve():
 
 @gauntlet("chemistry_photochemistry_solve", layer="chemistry_solvers")
 def test_chemistry_photochemistry_solve():
-    from tensornet.life_sci.chemistry.trace_adapters.photochemistry_adapter import (
+    from ontic.life_sci.chemistry.trace_adapters.photochemistry_adapter import (
         PhotochemistryTraceAdapter,
     )
     adapter = PhotochemistryTraceAdapter(S=1.0)
@@ -846,7 +846,7 @@ def test_chemistry_photochemistry_solve():
 
 @gauntlet("chemistry_quantum_reactive_solve", layer="chemistry_solvers")
 def test_chemistry_quantum_reactive_solve():
-    from tensornet.life_sci.chemistry.trace_adapters.quantum_reactive_adapter import (
+    from ontic.life_sci.chemistry.trace_adapters.quantum_reactive_adapter import (
         QuantumReactiveTraceAdapter,
     )
     adapter = QuantumReactiveTraceAdapter(Ea=0.5, nu_imag=1e13, Q_ratio=1.0)
@@ -858,7 +858,7 @@ def test_chemistry_quantum_reactive_solve():
 
 @gauntlet("chemistry_spectroscopy_solve", layer="chemistry_solvers")
 def test_chemistry_spectroscopy_solve():
-    from tensornet.life_sci.chemistry.trace_adapters.spectroscopy_adapter import (
+    from ontic.life_sci.chemistry.trace_adapters.spectroscopy_adapter import (
         SpectroscopyTraceAdapter,
     )
     adapter = SpectroscopyTraceAdapter()
@@ -876,7 +876,7 @@ def test_chemistry_spectroscopy_solve():
 @gauntlet("conservation_newtonian_energy", layer="conservation")
 def test_conservation_newtonian_energy():
     """N-body total energy drift < 1%."""
-    from tensornet.materials.mechanics.trace_adapters.newtonian_dynamics_adapter import (
+    from ontic.materials.mechanics.trace_adapters.newtonian_dynamics_adapter import (
         NewtonianDynamicsTraceAdapter,
     )
     pos0 = np.array([[0.0, 0.0], [1.0, 0.0], [0.5, 0.866]])
@@ -895,7 +895,7 @@ def test_conservation_newtonian_energy():
 @gauntlet("conservation_symplectic_hamiltonian", layer="conservation")
 def test_conservation_symplectic_hamiltonian():
     """Symplectic integrator Hamiltonian drift < 1e-4."""
-    from tensornet.materials.mechanics.trace_adapters.symplectic_adapter import (
+    from ontic.materials.mechanics.trace_adapters.symplectic_adapter import (
         SymplecticTraceAdapter,
     )
     adapter = SymplecticTraceAdapter()
@@ -913,7 +913,7 @@ def test_conservation_symplectic_hamiltonian():
 @gauntlet("conservation_phase_field_mass", layer="conservation")
 def test_conservation_phase_field_mass():
     """Cahn-Hilliard total concentration conservation."""
-    from tensornet.materials.trace_adapters.phase_field_adapter import (
+    from ontic.materials.trace_adapters.phase_field_adapter import (
         PhaseFieldTraceAdapter,
     )
     adapter = PhaseFieldTraceAdapter(nx=32, ny=32, dx=1.0, M=1.0, kappa=0.5, W=1.0)
@@ -928,7 +928,7 @@ def test_conservation_phase_field_mass():
 @gauntlet("conservation_fsi_energy", layer="conservation")
 def test_conservation_fsi_energy():
     """Beam total energy stays positive."""
-    from tensornet.fluids.coupled.trace_adapters.fsi_adapter import FSITraceAdapter
+    from ontic.fluids.coupled.trace_adapters.fsi_adapter import FSITraceAdapter
 
     adapter = FSITraceAdapter(n_nodes=10, L=1.0, EI=1.0, rho_A=1.0)
     f_ext = np.sin(np.linspace(0, np.pi, 10))
@@ -939,7 +939,7 @@ def test_conservation_fsi_energy():
 @gauntlet("conservation_photochemistry_fc_sum", layer="conservation")
 def test_conservation_photochemistry_fc_sum():
     """Franck-Condon sum rule: Σ FC_i = 1."""
-    from tensornet.life_sci.chemistry.trace_adapters.photochemistry_adapter import (
+    from ontic.life_sci.chemistry.trace_adapters.photochemistry_adapter import (
         PhotochemistryTraceAdapter,
     )
     adapter = PhotochemistryTraceAdapter(S=2.0)
@@ -950,7 +950,7 @@ def test_conservation_photochemistry_fc_sum():
 @gauntlet("conservation_oceanography_energy", layer="conservation")
 def test_conservation_oceanography_energy():
     """Shallow water total energy bounded."""
-    from tensornet.astro.geophysics.trace_adapters.oceanography_adapter import (
+    from ontic.astro.geophysics.trace_adapters.oceanography_adapter import (
         OceanographyTraceAdapter,
     )
     nx, ny = 20, 20
@@ -969,7 +969,7 @@ def test_conservation_oceanography_energy():
 @gauntlet("conservation_coupled_mhd_hartmann", layer="conservation")
 def test_conservation_coupled_mhd_hartmann():
     """Hartmann flow: velocity profile matches analytical."""
-    from tensornet.fluids.coupled.trace_adapters.coupled_mhd_adapter import (
+    from ontic.fluids.coupled.trace_adapters.coupled_mhd_adapter import (
         CoupledMHDTraceAdapter,
     )
     adapter = CoupledMHDTraceAdapter(a=0.01, B0=1.0, rho=1e4, nu=1e-6, sigma=1e6)
@@ -988,13 +988,13 @@ def test_conservation_coupled_mhd_hartmann():
 def test_integration_40_domains_covered():
     """All 40 Phase 7 domains have trace adapter files."""
     all_pkg_adapters = [
-        (ROOT / "tensornet/mechanics/trace_adapters", MECHANICS_ADAPTERS),
-        (ROOT / "tensornet/optics/trace_adapters", OPTICS_ADAPTERS),
-        (ROOT / "tensornet/astro/trace_adapters", ASTRO_ADAPTERS),
-        (ROOT / "tensornet/geophysics/trace_adapters", GEOPHYSICS_ADAPTERS),
-        (ROOT / "tensornet/materials/trace_adapters", MATERIALS_ADAPTERS),
-        (ROOT / "tensornet/coupled/trace_adapters", COUPLED_ADAPTERS),
-        (ROOT / "tensornet/chemistry/trace_adapters", CHEMISTRY_ADAPTERS),
+        (ROOT / "ontic/mechanics/trace_adapters", MECHANICS_ADAPTERS),
+        (ROOT / "ontic/optics/trace_adapters", OPTICS_ADAPTERS),
+        (ROOT / "ontic/astro/trace_adapters", ASTRO_ADAPTERS),
+        (ROOT / "ontic/geophysics/trace_adapters", GEOPHYSICS_ADAPTERS),
+        (ROOT / "ontic/materials/trace_adapters", MATERIALS_ADAPTERS),
+        (ROOT / "ontic/coupled/trace_adapters", COUPLED_ADAPTERS),
+        (ROOT / "ontic/chemistry/trace_adapters", CHEMISTRY_ADAPTERS),
     ]
     count = 0
     for pkg, adapters in all_pkg_adapters:
@@ -1027,10 +1027,10 @@ def test_integration_7_lean_proofs():
 def test_integration_phase6_intact():
     """Phase 6 adapters still exist."""
     phase6_dirs = [
-        (ROOT / "tensornet/fluids/trace_adapters", "turbulence_adapter.py"),
-        (ROOT / "tensornet/em/trace_adapters", "electrostatics_adapter.py"),
-        (ROOT / "tensornet/statmech/trace_adapters", "lattice_spin_adapter.py"),
-        (ROOT / "tensornet/plasma/trace_adapters", "ideal_mhd_adapter.py"),
+        (ROOT / "ontic/fluids/trace_adapters", "turbulence_adapter.py"),
+        (ROOT / "ontic/em/trace_adapters", "electrostatics_adapter.py"),
+        (ROOT / "ontic/statmech/trace_adapters", "lattice_spin_adapter.py"),
+        (ROOT / "ontic/plasma/trace_adapters", "ideal_mhd_adapter.py"),
     ]
     for pkg, fname in phase6_dirs:
         assert (pkg / fname).exists(), f"Phase 6 file missing: {pkg / fname}"
@@ -1039,7 +1039,7 @@ def test_integration_phase6_intact():
 @gauntlet("integration_phase5_intact", layer="integration")
 def test_integration_phase5_intact():
     """Phase 5 adapters still exist."""
-    phase5_dir = ROOT / "tensornet" / "cfd" / "trace_adapters"
+    phase5_dir = ROOT / "ontic" / "cfd" / "trace_adapters"
     required = ["euler3d_adapter.py", "ns2d_adapter.py", "heat_adapter.py", "vlasov_adapter.py"]
     for f in required:
         assert (phase5_dir / f).exists(), f"Phase 5 file missing: {f}"
@@ -1048,7 +1048,7 @@ def test_integration_phase5_intact():
 @gauntlet("integration_trace_session_api", layer="integration")
 def test_integration_trace_session_api():
     """TraceSession API works for Phase 7 adapters."""
-    from tensornet.materials.mechanics.trace_adapters.symplectic_adapter import (
+    from ontic.materials.mechanics.trace_adapters.symplectic_adapter import (
         SymplecticTraceAdapter,
     )
     adapter = SymplecticTraceAdapter()

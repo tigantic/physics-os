@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Rate equations, resonators"
 
 source_files:
-  - "tensornet/optics/laser_physics.py"
+  - "ontic/optics/laser_physics.py"
 
 tests:
   smoke:

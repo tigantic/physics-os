@@ -13,7 +13,7 @@ state: "V0.2"
 description: "SIA and full Stokes"
 
 source_files:
-  - "tensornet/geophysics/glaciology.py"
+  - "ontic/geophysics/glaciology.py"
 
 tests:
   smoke:

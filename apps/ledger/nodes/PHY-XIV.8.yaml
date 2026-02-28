@@ -13,7 +13,7 @@ state: "V0.2"
 description: "PHY-XIV.8_Cell_signaling solver"
 
 source_files:
-  - "tensornet/packs/pack_xiv.py"
+  - "ontic/packs/pack_xiv.py"
 
 tests:
   smoke:

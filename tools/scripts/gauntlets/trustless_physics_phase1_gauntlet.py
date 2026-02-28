@@ -440,7 +440,7 @@ def test_tpc_verify():
 @gauntlet("euler3d_solver_runs", "integration")
 def test_euler3d_solver():
     """Verify the Euler 3D solver can be imported and run."""
-    from tensornet.cfd.euler_3d import Euler3D, sod_3d_ic
+    from ontic.cfd.euler_3d import Euler3D, sod_3d_ic
     import torch
 
     solver = Euler3D(Nx=8, Ny=8, Nz=8, Lx=1.0, Ly=1.0, Lz=1.0, gamma=1.4, cfl=0.4)
@@ -462,7 +462,7 @@ def test_euler3d_solver():
 @gauntlet("euler3d_computation_trace", "integration")
 def test_computation_trace():
     """Verify computation traces can be recorded for Euler 3D."""
-    from tensornet.core.trace import TraceSession, OpType
+    from ontic.core.trace import TraceSession, OpType
 
     session = TraceSession()
 
@@ -503,7 +503,7 @@ def test_full_pipeline():
     from tpc.generator import CertificateGenerator
 
     # Step 1: Run Euler 3D solver
-    from tensornet.cfd.euler_3d import Euler3D, sod_3d_ic
+    from ontic.cfd.euler_3d import Euler3D, sod_3d_ic
     import torch
 
     solver = Euler3D(Nx=8, Ny=8, Nz=8, Lx=1.0, Ly=1.0, Lz=1.0, gamma=1.4, cfl=0.4)
@@ -516,7 +516,7 @@ def test_full_pipeline():
     mass_residual = abs(mass_after - mass_before)
 
     # Step 2: Record trace
-    from tensornet.core.trace import TraceSession
+    from ontic.core.trace import TraceSession
     session = TraceSession()
     session.log_custom(
         name="euler3d_sod_3d",

@@ -28,9 +28,9 @@ pytestmark = [
     pytest.mark.convergence,  # DMRG convergence validation
 ]
 
-from tensornet.algorithms.dmrg import dmrg
-from tensornet.core.mps import MPS
-from tensornet.mps.hamiltonians import heisenberg_mpo, tfim_mpo
+from ontic.algorithms.dmrg import dmrg
+from ontic.core.mps import MPS
+from ontic.mps.hamiltonians import heisenberg_mpo, tfim_mpo
 
 # Approximate reference energies (Article IV, Section 4.2)
 # These are rough bounds for sanity checking

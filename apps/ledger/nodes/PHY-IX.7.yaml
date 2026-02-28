@@ -13,7 +13,7 @@ state: "V0.2"
 description: "NEB, dislocations"
 
 source_files:
-  - "tensornet/condensed_matter/defects.py"
+  - "ontic/condensed_matter/defects.py"
 
 tests:
   smoke:

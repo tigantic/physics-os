@@ -13,7 +13,7 @@ state: "V0.4"
 description: "Ideal magnetohydrodynamics"
 
 source_files:
-  - "tensornet/fusion/tokamak.py"
+  - "ontic/fusion/tokamak.py"
 
 tests:
   smoke:

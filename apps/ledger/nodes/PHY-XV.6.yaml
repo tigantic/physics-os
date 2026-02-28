@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Microkinetics, KMC"
 
 source_files:
-  - "tensornet/fusion/resonant_catalysis.py"
+  - "ontic/fusion/resonant_catalysis.py"
 
 tests:
   smoke:

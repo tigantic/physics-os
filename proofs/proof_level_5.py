@@ -32,7 +32,7 @@ import numpy as np
 import torch
 
 # Now we can import normally since __init__.py has graceful fallbacks
-from tensornet.cfd.ns_3d import NS3DSolver
+from ontic.cfd.ns_3d import NS3DSolver
 
 
 @dataclass

@@ -1,8 +1,8 @@
 # Certificate Test Matrix
 
 **Baseline**: v4.0.0
-**Module under test**: `hypertensor/core/certificates.py`
-**Evidence module**: `hypertensor/core/evidence.py`
+**Module under test**: `physics_os/core/certificates.py`
+**Evidence module**: `physics_os/core/evidence.py`
 **Status**: Required for Gate G6 (Certificate Integrity)
 
 ---

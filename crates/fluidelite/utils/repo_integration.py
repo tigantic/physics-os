@@ -41,7 +41,7 @@ try:
     from pathlib import Path
     
     # Direct import without triggering tensornet/__init__.py
-    profiling_path = Path(__file__).parent.parent.parent / "tensornet" / "core" / "profiling.py"
+    profiling_path = Path(__file__).parent.parent.parent / "ontic" / "core" / "profiling.py"
     if profiling_path.exists():
         spec = importlib.util.spec_from_file_location("tensornet_profiling", profiling_path)
         if spec and spec.loader:
@@ -79,7 +79,7 @@ try:
     import importlib.util
     from pathlib import Path
     
-    memory_path = Path(__file__).parent.parent.parent / "tensornet" / "gpu" / "memory.py"
+    memory_path = Path(__file__).parent.parent.parent / "ontic" / "gpu" / "memory.py"
     if memory_path.exists():
         spec = importlib.util.spec_from_file_location("tensornet_memory", memory_path)
         if spec and spec.loader:
@@ -120,7 +120,7 @@ try:
     import importlib.util
     from pathlib import Path
     
-    qtt_path = Path(__file__).parent.parent.parent / "tensornet" / "cuda" / "qtt_native_ops.py"
+    qtt_path = Path(__file__).parent.parent.parent / "ontic" / "cuda" / "qtt_native_ops.py"
     if qtt_path.exists():
         spec = importlib.util.spec_from_file_location("tensornet_qtt_cuda", qtt_path)
         if spec and spec.loader:
@@ -173,7 +173,7 @@ try:
     import importlib.util
     from pathlib import Path
     
-    decomp_path = Path(__file__).parent.parent.parent / "tensornet" / "core" / "decompositions.py"
+    decomp_path = Path(__file__).parent.parent.parent / "ontic" / "core" / "decompositions.py"
     if decomp_path.exists():
         spec = importlib.util.spec_from_file_location("tensornet_decomp", decomp_path)
         if spec and spec.loader:
@@ -234,7 +234,7 @@ try:
     import importlib.util
     from pathlib import Path
     
-    lanczos_path = Path(__file__).parent.parent.parent / "tensornet" / "algorithms" / "lanczos.py"
+    lanczos_path = Path(__file__).parent.parent.parent / "ontic" / "algorithms" / "lanczos.py"
     if lanczos_path.exists():
         spec = importlib.util.spec_from_file_location("tensornet_lanczos", lanczos_path)
         if spec and spec.loader:
@@ -248,7 +248,7 @@ except Exception:
 
 
 # ============================================================================
-# Benchmarking Utilities (from tensornet.benchmarks)
+# Benchmarking Utilities (from ontic.benchmarks)
 # Skip this - requires full tensornet import
 # ============================================================================
 

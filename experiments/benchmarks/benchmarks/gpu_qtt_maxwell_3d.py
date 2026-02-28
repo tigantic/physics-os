@@ -47,7 +47,7 @@ if not torch.cuda.is_available():
 
 DEVICE = torch.device("cuda")
 
-from tensornet.em.qtt_helmholtz_gpu import (
+from ontic.em.qtt_helmholtz_gpu import (
     BenchmarkConfig,
     BenchmarkResult,
     run_benchmark_point,

@@ -30,14 +30,14 @@ the Jordan-Wigner strings cancel, making the MPO local.
 ### `compute_density`
 
 ```python
-def compute_density(mps: tensornet.core.mps.MPS) -> torch.Tensor
+def compute_density(mps: ontic.core.mps.MPS) -> torch.Tensor
 ```
 
 Compute local density ⟨n_i⟩ for each site.
 
 **Parameters:**
 
-- **mps** (`<class 'tensornet.core.mps.MPS'>`): MPS state (for spinless fermions)
+- **mps** (`<class 'ontic.core.mps.MPS'>`): MPS state (for spinless fermions)
 
 **Returns**: `<class 'torch.Tensor'>` - Tensor of local densities
 
@@ -46,7 +46,7 @@ Compute local density ⟨n_i⟩ for each site.
 ### `fermi_sea_mps`
 
 ```python
-def fermi_sea_mps(L: int, n_particles: int, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> tensornet.core.mps.MPS
+def fermi_sea_mps(L: int, n_particles: int, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> ontic.core.mps.MPS
 ```
 
 Create MPS for a Fermi sea (filled lowest modes).
@@ -61,14 +61,14 @@ the first n_particles sites occupied.
 - **dtype** (`<class 'torch.dtype'>`): Data type
 - **device** (`typing.Optional[torch.device]`): Device
 
-**Returns**: `<class 'tensornet.core.mps.MPS'>` - MPS representing the Fermi sea
+**Returns**: `<class 'ontic.core.mps.MPS'>` - MPS representing the Fermi sea
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py:248](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py#L248)*
 
 ### `half_filled_mps`
 
 ```python
-def half_filled_mps(L: int, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> tensornet.core.mps.MPS
+def half_filled_mps(L: int, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> ontic.core.mps.MPS
 ```
 
 Create half-filled MPS (alternating occupied/empty).
@@ -82,14 +82,14 @@ This is a good initial state for repulsive interactions
 - **dtype** (`<class 'torch.dtype'>`): Data type
 - **device** (`typing.Optional[torch.device]`): Device
 
-**Returns**: `<class 'tensornet.core.mps.MPS'>` - MPS with alternating occupation
+**Returns**: `<class 'ontic.core.mps.MPS'>` - MPS with alternating occupation
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py:284](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py#L284)*
 
 ### `hubbard_mpo`
 
 ```python
-def hubbard_mpo(L: int, t: float = 1.0, U: float = 4.0, mu: float = 0.0, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> tensornet.core.mpo.MPO
+def hubbard_mpo(L: int, t: float = 1.0, U: float = 4.0, mu: float = 0.0, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> ontic.core.mpo.MPO
 ```
 
 Hubbard model Hamiltonian as MPO.
@@ -108,14 +108,14 @@ Uses a 4-dimensional local Hilbert space:
 - **dtype** (`<class 'torch.dtype'>`): Data type
 - **device** (`typing.Optional[torch.device]`): Device
 
-**Returns**: `<class 'tensornet.core.mpo.MPO'>` - MPO representation
+**Returns**: `<class 'ontic.core.mpo.MPO'>` - MPO representation
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py:128](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py#L128)*
 
 ### `spinless_fermion_mpo`
 
 ```python
-def spinless_fermion_mpo(L: int, t: float = 1.0, V: float = 0.0, mu: float = 0.0, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> tensornet.core.mpo.MPO
+def spinless_fermion_mpo(L: int, t: float = 1.0, V: float = 0.0, mu: float = 0.0, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> ontic.core.mpo.MPO
 ```
 
 Spinless fermion chain Hamiltonian as MPO.
@@ -135,6 +135,6 @@ n_i = (1 + σ^z_i) / 2
 - **dtype** (`<class 'torch.dtype'>`): Data type
 - **device** (`typing.Optional[torch.device]`): Device
 
-**Returns**: `<class 'tensornet.core.mpo.MPO'>` - MPO representation
+**Returns**: `<class 'ontic.core.mpo.MPO'>` - MPO representation
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py:31](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py#L31)*

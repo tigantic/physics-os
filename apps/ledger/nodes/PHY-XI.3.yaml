@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Vlasov, PIC, continuum"
 
 source_files:
-  - "tensornet/cfd/fast_vlasov_5d.py"
+  - "ontic/cfd/fast_vlasov_5d.py"
 
 tests:
   smoke:

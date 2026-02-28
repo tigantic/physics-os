@@ -24,9 +24,9 @@ from __future__ import annotations
 import torch
 from torch import Tensor
 
-from tensornet.cfd.nd_shift_mpo import make_laplacian_mpo as _make_laplacian_mpo
-from tensornet.cfd.nd_shift_mpo import apply_laplacian_mpo as _apply_laplacian_mpo
-from tensornet.cfd.nd_shift_mpo import truncate_cores as _truncate_cores
+from ontic.cfd.nd_shift_mpo import make_laplacian_mpo as _make_laplacian_mpo
+from ontic.cfd.nd_shift_mpo import apply_laplacian_mpo as _apply_laplacian_mpo
+from ontic.cfd.nd_shift_mpo import truncate_cores as _truncate_cores
 
 
 def laplacian_nd(

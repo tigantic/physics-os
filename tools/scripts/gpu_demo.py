@@ -43,7 +43,7 @@ def check_gpu_availability():
 
 def benchmark_flux_cpu(N: int, iterations: int = 100):
     """Benchmark flux computation on CPU."""
-    from tensornet.cfd.godunov import roe_flux
+    from ontic.cfd.godunov import roe_flux
 
     # Create random conservative variables
     rho = torch.rand(N, dtype=torch.float64) + 0.1
@@ -68,7 +68,7 @@ def benchmark_flux_cpu(N: int, iterations: int = 100):
 
 def benchmark_flux_gpu(N: int, iterations: int = 100):
     """Benchmark flux computation on GPU."""
-    from tensornet.core.gpu import (DeviceType, GPUConfig, get_device,
+    from ontic.core.gpu import (DeviceType, GPUConfig, get_device,
                                     roe_flux_gpu)
 
     config = GPUConfig(device=DeviceType.CUDA)
@@ -221,7 +221,7 @@ def main():
     print("  - CFD flux computation (roe_flux_gpu)")
     print("  - Strain rate tensor (compute_strain_rate_gpu)")
     print("\nTo use GPU in your code:")
-    print("  from tensornet.core.gpu import get_device, GPUConfig, DeviceType")
+    print("  from ontic.core.gpu import get_device, GPUConfig, DeviceType")
     print("  config = GPUConfig(device=DeviceType.CUDA)")
     print("  device = get_device(config)")
     print("  tensor = tensor.to(device)")

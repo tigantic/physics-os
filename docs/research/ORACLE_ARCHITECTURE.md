@@ -592,7 +592,7 @@ Domain-specific reachability checker.
 Replaces Z3 for 95% of queries with faster, targeted analysis.
 """
 
-from tensornet.numerics.interval import Interval
+from ontic.numerics.interval import Interval
 from typing import Optional, List
 from dataclasses import dataclass
 
@@ -1291,7 +1291,7 @@ class ExploitVerifier:
         If profit interval is strictly > 0, exploit is GUARANTEED to work.
         If profit interval is strictly < 0, exploit is IMPOSSIBLE.
         """
-        from tensornet.numerics.interval import Interval
+        from ontic.numerics.interval import Interval
         
         # Initialize state with intervals
         state = self._initial_state_intervals()
@@ -1727,16 +1727,16 @@ ORACLE is considered successful if it can:
 
 | HyperTensor Module | ORACLE Use |
 |-------------------|------------|
-| `tensornet/numerics/interval.py` | Rigorous bounds propagation |
-| `tensornet/cfd/kantorovich.py` | Mathematical proof certificates |
-| `tensornet/cfd/chi_diagnostic.py` | Exploit proximity tracking |
-| `tensornet/cfd/singularity_hunter.py` | Objective maximization |
+| `ontic/numerics/interval.py` | Rigorous bounds propagation |
+| `ontic/cfd/kantorovich.py` | Mathematical proof certificates |
+| `ontic/cfd/chi_diagnostic.py` | Exploit proximity tracking |
+| `ontic/cfd/singularity_hunter.py` | Objective maximization |
 
 ### File Structure
 
 ```
 HyperTensor-VM-main/
-├── tensornet/
+├── ontic/
 │   ├── cfd/           # Existing CFD tools
 │   ├── numerics/      # interval.py lives here
 │   └── oracle/        # NEW: ORACLE engine
@@ -1796,7 +1796,7 @@ oracle verify ./scenario.json --output verified.md
 
 ```python
 # Programmatic usage
-from tensornet.oracle import ORACLE
+from ontic.oracle import ORACLE
 
 oracle = ORACLE(
     anthropic_key="sk-...",

@@ -20,13 +20,13 @@ import pytest
 import torch
 from torch import Tensor
 
-from tensornet.platform.data_model import (
+from ontic.platform.data_model import (
     FieldData,
     Mesh,
     SimulationState,
     StructuredMesh,
 )
-from tensornet.platform.protocols import Observable, SolveResult
+from ontic.platform.protocols import Observable, SolveResult
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -121,7 +121,7 @@ class _LinearDecaySolver:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# QTT Bridging (tensornet.platform.qtt)
+# QTT Bridging (ontic.platform.qtt)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
@@ -129,7 +129,7 @@ class TestQTTBridging:
     """Tests for field_to_qtt, qtt_to_field, QTTOperator, QTTDiscretization."""
 
     def test_field_to_qtt_produces_cores(self, smooth_field):
-        from tensornet.platform.qtt import field_to_qtt
+        from ontic.platform.qtt import field_to_qtt
 
         qtt = field_to_qtt(smooth_field, max_rank=32, tolerance=1e-10)
         assert qtt.name == "u"
@@ -139,7 +139,7 @@ class TestQTTBridging:
         assert qtt.compression_ratio >= 1.0
 
     def test_qtt_round_trip_error(self, smooth_field):
-        from tensornet.platform.qtt import field_to_qtt, qtt_to_field
+        from ontic.platform.qtt import field_to_qtt, qtt_to_field
 
         qtt = field_to_qtt(smooth_field, max_rank=64, tolerance=1e-10)
         reconstructed = qtt_to_field(qtt, n_points=128)
@@ -147,13 +147,13 @@ class TestQTTBridging:
         assert error < 1e-8, f"Round-trip error too large: {error}"
 
     def test_qtt_roundtrip_error_utility(self, smooth_field):
-        from tensornet.platform.qtt import qtt_roundtrip_error
+        from ontic.platform.qtt import qtt_roundtrip_error
 
         err = qtt_roundtrip_error(smooth_field, max_rank=64, tolerance=1e-10)
         assert err < 1e-8
 
     def test_qtt_field_properties(self, smooth_field):
-        from tensornet.platform.qtt import field_to_qtt
+        from ontic.platform.qtt import field_to_qtt
 
         qtt = field_to_qtt(smooth_field, max_rank=32)
         assert qtt.grid_size == 128
@@ -164,7 +164,7 @@ class TestQTTBridging:
         assert qtt.compression_ratio > 1.0
 
     def test_qtt_field_clone(self, smooth_field):
-        from tensornet.platform.qtt import field_to_qtt
+        from ontic.platform.qtt import field_to_qtt
 
         qtt = field_to_qtt(smooth_field, max_rank=32)
         cloned = qtt.clone()
@@ -176,7 +176,7 @@ class TestQTTBridging:
         assert qtt.cores[0].abs().sum() > 0
 
     def test_qtt_operator_apply(self, smooth_field):
-        from tensornet.platform.qtt import QTTOperator, field_to_qtt
+        from ontic.platform.qtt import QTTOperator, field_to_qtt
 
         # Build trivial identity-like MPO: each core is (r_in, 2, 2, r_out)
         n_qubits = 7
@@ -197,7 +197,7 @@ class TestQTTBridging:
         assert result.shape == smooth_field.data.shape
 
     def test_qtt_discretization(self):
-        from tensornet.platform.qtt import QTTDiscretization
+        from ontic.platform.qtt import QTTDiscretization
 
         disc = QTTDiscretization(max_rank=32, tolerance=1e-8, order=2)
         assert disc.method == "QTT"
@@ -205,7 +205,7 @@ class TestQTTBridging:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# TCI Decomposition (tensornet.platform.tci)
+# TCI Decomposition (ontic.platform.tci)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
@@ -213,7 +213,7 @@ class TestTCI:
     """Tests for TCI decomposition engine."""
 
     def test_tci_from_function_basic(self):
-        from tensornet.platform.tci import TCIConfig, tci_from_function
+        from ontic.platform.tci import TCIConfig, tci_from_function
 
         def smooth_fn(x: Tensor) -> Tensor:
             return torch.sin(2.0 * math.pi * x)
@@ -228,7 +228,7 @@ class TestTCI:
         assert result.n_function_evals > 0
 
     def test_tci_from_field(self, smooth_field):
-        from tensornet.platform.tci import TCIConfig, tci_from_field
+        from ontic.platform.tci import TCIConfig, tci_from_field
 
         config = TCIConfig(max_rank=32, tolerance=1e-8)
         qtt = tci_from_field(smooth_field, config=config)
@@ -236,7 +236,7 @@ class TestTCI:
         assert len(qtt.cores) == 7
 
     def test_tci_error_vs_rank(self, smooth_field):
-        from tensornet.platform.tci import tci_error_vs_rank
+        from ontic.platform.tci import tci_error_vs_rank
 
         points = tci_error_vs_rank(smooth_field, rank_schedule=[2, 4, 8, 16])
         assert len(points) == 4
@@ -248,7 +248,7 @@ class TestTCI:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Acceleration Policy (tensornet.platform.acceleration)
+# Acceleration Policy (ontic.platform.acceleration)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
@@ -256,7 +256,7 @@ class TestAccelerationPolicy:
     """Tests for acceleration policy and metrics."""
 
     def test_default_policy_warmup_qtt(self):
-        from tensornet.platform.acceleration import AccelerationMode, AccelerationPolicy
+        from ontic.platform.acceleration import AccelerationMode, AccelerationPolicy
 
         policy = AccelerationPolicy(warmup_steps=5)
         # During warmup, policy runs QTT to establish baselines
@@ -264,14 +264,14 @@ class TestAccelerationPolicy:
         assert mode == AccelerationMode.QTT
 
     def test_policy_after_warmup_qtt(self):
-        from tensornet.platform.acceleration import AccelerationMode, AccelerationPolicy
+        from ontic.platform.acceleration import AccelerationMode, AccelerationPolicy
 
         policy = AccelerationPolicy(warmup_steps=3)
         mode = policy.should_use_qtt(step_index=5)
         assert mode == AccelerationMode.QTT
 
     def test_policy_rank_explosion_fallback(self):
-        from tensornet.platform.acceleration import (
+        from ontic.platform.acceleration import (
             AccelerationMetrics,
             AccelerationMode,
             AccelerationPolicy,
@@ -294,7 +294,7 @@ class TestAccelerationPolicy:
         assert mode == AccelerationMode.FALLBACK
 
     def test_rank_growth_report(self):
-        from tensornet.platform.acceleration import (
+        from ontic.platform.acceleration import (
             AccelerationMetrics,
             AccelerationMode,
             RankGrowthReport,
@@ -318,7 +318,7 @@ class TestAccelerationPolicy:
         assert len(report.summary()) > 0
 
     def test_validate_enablement(self):
-        from tensornet.platform.acceleration import (
+        from ontic.platform.acceleration import (
             AccelerationMetrics,
             AccelerationMode,
             AccelerationPolicy,
@@ -345,7 +345,7 @@ class TestAccelerationPolicy:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# QTT Solver Wrapper (tensornet.platform.qtt_solver)
+# QTT Solver Wrapper (ontic.platform.qtt_solver)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
@@ -353,8 +353,8 @@ class TestQTTSolver:
     """Tests for QTTAcceleratedSolver wrapper."""
 
     def test_qtt_solver_step(self, smooth_state):
-        from tensornet.platform.acceleration import AccelerationPolicy
-        from tensornet.platform.qtt_solver import QTTAcceleratedSolver
+        from ontic.platform.acceleration import AccelerationPolicy
+        from ontic.platform.qtt_solver import QTTAcceleratedSolver
 
         baseline = _LinearDecaySolver()
         solver = QTTAcceleratedSolver(
@@ -369,8 +369,8 @@ class TestQTTSolver:
         assert "u" in new_state.fields
 
     def test_qtt_solver_solve(self, smooth_state):
-        from tensornet.platform.acceleration import AccelerationPolicy
-        from tensornet.platform.qtt_solver import QTTAcceleratedSolver
+        from ontic.platform.acceleration import AccelerationPolicy
+        from ontic.platform.qtt_solver import QTTAcceleratedSolver
 
         baseline = _LinearDecaySolver()
         solver = QTTAcceleratedSolver(
@@ -384,8 +384,8 @@ class TestQTTSolver:
         assert result.t_final == pytest.approx(0.05, abs=1e-10)
 
     def test_qtt_solver_rank_growth_report(self, smooth_state):
-        from tensornet.platform.acceleration import AccelerationPolicy
-        from tensornet.platform.qtt_solver import QTTAcceleratedSolver
+        from ontic.platform.acceleration import AccelerationPolicy
+        from ontic.platform.qtt_solver import QTTAcceleratedSolver
 
         baseline = _LinearDecaySolver()
         solver = QTTAcceleratedSolver(
@@ -401,7 +401,7 @@ class TestQTTSolver:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# QTT-Accelerated Domain Solvers (tensornet.packs.qtt_accelerated)
+# QTT-Accelerated Domain Solvers (ontic.packs.qtt_accelerated)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
@@ -409,7 +409,7 @@ class TestQTTBurgersSolver:
     """Tests for QTT-accelerated Burgers solver."""
 
     def test_burgers_step(self, smooth_state):
-        from tensornet.packs.qtt_accelerated import QTTBurgersSolver
+        from ontic.packs.qtt_accelerated import QTTBurgersSolver
 
         solver = QTTBurgersSolver(nu=0.01, max_rank=32)
         assert "Burgers" in solver.name
@@ -420,7 +420,7 @@ class TestQTTBurgersSolver:
         assert new_state.fields["u"].data.shape == (128,)
 
     def test_burgers_solve(self, smooth_state):
-        from tensornet.packs.qtt_accelerated import QTTBurgersSolver
+        from ontic.packs.qtt_accelerated import QTTBurgersSolver
 
         solver = QTTBurgersSolver(nu=0.02, max_rank=32)
         result = solver.solve(smooth_state, t_span=(0.0, 0.005), dt=0.001)
@@ -430,7 +430,7 @@ class TestQTTBurgersSolver:
         assert torch.isfinite(result.final_state.fields["u"].data).all()
 
     def test_burgers_rank_growth_report(self, smooth_state):
-        from tensornet.packs.qtt_accelerated import QTTBurgersSolver
+        from ontic.packs.qtt_accelerated import QTTBurgersSolver
 
         solver = QTTBurgersSolver(nu=0.01, max_rank=32)
         solver.solve(smooth_state, t_span=(0.0, 0.003), dt=0.001)
@@ -439,7 +439,7 @@ class TestQTTBurgersSolver:
         assert report.n_steps >= 3
 
     def test_burgers_error_vs_rank(self, smooth_field):
-        from tensornet.packs.qtt_accelerated import QTTBurgersSolver
+        from ontic.packs.qtt_accelerated import QTTBurgersSolver
 
         solver = QTTBurgersSolver(nu=0.01, max_rank=32)
         points = solver.error_vs_rank(smooth_field, rank_schedule=[2, 4, 8, 16])
@@ -450,7 +450,7 @@ class TestQTTAdvDiffSolver:
     """Tests for QTT-accelerated advection-diffusion solver."""
 
     def test_advdiff_step(self, smooth_state):
-        from tensornet.packs.qtt_accelerated import QTTAdvDiffSolver
+        from ontic.packs.qtt_accelerated import QTTAdvDiffSolver
 
         solver = QTTAdvDiffSolver(c=1.0, alpha=0.01, max_rank=32)
         assert "AdvDiff" in solver.name
@@ -460,7 +460,7 @@ class TestQTTAdvDiffSolver:
         assert torch.isfinite(new_state.fields["u"].data).all()
 
     def test_advdiff_solve_short(self, smooth_state):
-        from tensornet.packs.qtt_accelerated import QTTAdvDiffSolver
+        from ontic.packs.qtt_accelerated import QTTAdvDiffSolver
 
         solver = QTTAdvDiffSolver(c=0.5, alpha=0.02, max_rank=32)
         result = solver.solve(smooth_state, t_span=(0.0, 0.003), dt=0.001)
@@ -487,7 +487,7 @@ class TestQTTMaxwellSolver:
         )
 
     def test_maxwell_step(self, maxwell_state):
-        from tensornet.packs.qtt_accelerated import QTTMaxwellSolver
+        from ontic.packs.qtt_accelerated import QTTMaxwellSolver
 
         solver = QTTMaxwellSolver(max_rank=32)
         new_state = solver.step(maxwell_state, dt=0.001)
@@ -496,7 +496,7 @@ class TestQTTMaxwellSolver:
         assert torch.isfinite(new_state.fields["E"].data).all()
 
     def test_maxwell_solve_short(self, maxwell_state):
-        from tensornet.packs.qtt_accelerated import QTTMaxwellSolver
+        from ontic.packs.qtt_accelerated import QTTMaxwellSolver
 
         solver = QTTMaxwellSolver(max_rank=32)
         result = solver.solve(maxwell_state, t_span=(0.0, 0.003), dt=0.001)
@@ -525,7 +525,7 @@ class TestQTTVlasovSolver:
         return SimulationState(t=0.0, fields={"distribution_function": fd}, mesh=mesh)
 
     def test_vlasov_step(self, vlasov_state):
-        from tensornet.packs.qtt_accelerated import QTTVlasovSolver
+        from ontic.packs.qtt_accelerated import QTTVlasovSolver
 
         solver = QTTVlasovSolver(Nx=64, Nv=128, max_rank=16)
         new_state = solver.step(vlasov_state, dt=0.01)
@@ -533,7 +533,7 @@ class TestQTTVlasovSolver:
         assert torch.isfinite(new_state.fields["distribution_function"].data).all()
 
     def test_vlasov_solve_short(self, vlasov_state):
-        from tensornet.packs.qtt_accelerated import QTTVlasovSolver
+        from ontic.packs.qtt_accelerated import QTTVlasovSolver
 
         solver = QTTVlasovSolver(Nx=64, Nv=128, max_rank=16)
         result = solver.solve(vlasov_state, t_span=(0.0, 0.02), dt=0.01, max_steps=2)

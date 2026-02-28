@@ -165,7 +165,7 @@ surface.get_current_texture()...
 **Objective:** Extract 2D slices from 3D QTT fields with GPU acceleration
 
 **Files to Create:**
-1. `tensornet/sovereign/qtt_slice_extractor.py` (300-400 lines)
+1. `ontic/sovereign/qtt_slice_extractor.py` (300-400 lines)
    - `QTTSliceExtractor` class
    - `extract_xy_slice()`, `extract_xz_slice()`, `extract_yz_slice()`
    - Morton-order aware indexing
@@ -224,7 +224,7 @@ class QTTSliceExtractor:
 **Objective:** Wire QTT slice extraction into real-time streaming pipeline
 
 **Files to Modify:**
-1. `tensornet/sovereign/realtime_tensor_stream.py`
+1. `ontic/sovereign/realtime_tensor_stream.py`
    - Add `stream_from_qtt()` method
    - Integrate `QTTSliceExtractor`
    - Maintain 60 FPS timing constraints
@@ -273,7 +273,7 @@ def stream_from_qtt(
 **Objective:** Move colormap application entirely to GPU-side
 
 **Files to Modify:**
-1. `tensornet/sovereign/realtime_tensor_stream.py`
+1. `ontic/sovereign/realtime_tensor_stream.py`
    - Remove `tensor_to_rgba8()` call
    - Send raw f32 data to RAM bridge
    
@@ -433,8 +433,8 @@ Total End-to-End         <14ms    <8ms
 **Git Workflow:**
 ```bash
 # Commit Phase 4 implementation
-git add tensornet/sovereign/qtt_slice_extractor.py
-git add tensornet/sovereign/realtime_tensor_stream.py
+git add ontic/sovereign/qtt_slice_extractor.py
+git add ontic/sovereign/realtime_tensor_stream.py
 git add test_phase4_endurance.py
 git commit -m "feat(phase4): Implement QTT → Glass Cockpit live CFD visualization"
 
@@ -613,8 +613,8 @@ Rust:   R32Float → GPU colormap shader → RGBA8 → render
 - [Phase 3: Glass Cockpit Integration](PHASE3_INTEGRATION_COMPLETE.md)
 - [ROADMAP.md](ROADMAP.md) - Validated capabilities
 - [SOVEREIGN_ENGINE_ROADMAP.md](SOVEREIGN_ENGINE_ROADMAP.md) - Performance targets
-- [tensornet/cfd/fast_euler_3d.py](tensornet/cfd/fast_euler_3d.py) - 3D Euler solver
-- [tensornet/quantum/hybrid_qtt_renderer.py](tensornet/quantum/hybrid_qtt_renderer.py) - QTT rendering
+- [ontic/cfd/fast_euler_3d.py](ontic/cfd/fast_euler_3d.py) - 3D Euler solver
+- [ontic/quantum/hybrid_qtt_renderer.py](ontic/quantum/hybrid_qtt_renderer.py) - QTT rendering
 
 ---
 

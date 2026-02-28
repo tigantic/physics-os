@@ -27,11 +27,11 @@ import sys
 import numpy as np
 import torch
 
-# Ensure tensornet is importable
+# Ensure ontic is importable
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from tensornet.energy_env.urban.city_gen import VoxelCity
-from tensornet.energy_env.urban.solver import UrbanFlowSolver, analyze_flight_safety
+from ontic.energy_env.urban.city_gen import VoxelCity
+from ontic.energy_env.urban.solver import UrbanFlowSolver, analyze_flight_safety
 
 
 def print_header():

@@ -9,7 +9,7 @@
 > **Full re-audit completed 2026-02-28.** All 10 gates have been verified against
 > the current codebase (~1,989K LOC, 370+ tests). Two critical runtime bugs were
 > fixed during this audit: (1) OpCode enum dual-import identity failure caused by
-> the `tensornet.vm` shim module, and (2) GPU Dirichlet BC handler incorrectly
+> the `ontic.vm` shim module, and (2) GPU Dirichlet BC handler incorrectly
 > zeroing half the domain instead of operating as a no-op for zero BCs.
 > All 55 criteria now pass.
 

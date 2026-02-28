@@ -146,7 +146,7 @@ where $N \approx 9$ (the "e^N" criterion from Mack).
 
 ### 1. Run Lorenz Chaos Demo
 ```python
-from tensornet.cfd.koopman_tt import demo_koopman_lorenz
+from ontic.cfd.koopman_tt import demo_koopman_lorenz
 
 decomp = demo_koopman_lorenz(verbose=True)
 print(f"Modes: {decomp.n_modes}")
@@ -155,7 +155,7 @@ print(f"Dominant ω: {decomp.dominant_frequency}")
 
 ### 2. Run Boundary Layer Transition
 ```python
-from tensornet.cfd.koopman_tt import demo_boundary_layer_transition
+from ontic.cfd.koopman_tt import demo_boundary_layer_transition
 
 analysis = demo_boundary_layer_transition(verbose=True)
 print(f"Unstable modes: {analysis.n_unstable_modes}")
@@ -164,7 +164,7 @@ print(f"Growth rate: {analysis.growth_rate}")
 
 ### 3. Custom TT-Koopman Fitting
 ```python
-from tensornet.cfd.koopman_tt import TTKoopman, DictionaryType
+from ontic.cfd.koopman_tt import TTKoopman, DictionaryType
 
 # Your CFD data
 X = ...  # States at time t
@@ -230,7 +230,7 @@ if decomp.predict_transition_time():
 
 | File | Description |
 |------|-------------|
-| `tensornet/cfd/koopman_tt.py` | Core TT-Koopman implementation (~1300 lines) |
+| `ontic/cfd/koopman_tt.py` | Core TT-Koopman implementation (~1300 lines) |
 | `TT_KOOPMAN_ATTESTATION.json` | Machine-readable results |
 | `TT_KOOPMAN_BENCH_PROTOCOL.md` | This document |
 

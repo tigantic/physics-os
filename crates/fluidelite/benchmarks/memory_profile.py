@@ -25,9 +25,9 @@ from dataclasses import dataclass
 
 import torch
 
-# Import VRAMManager from tensornet if available
+# Import VRAMManager from ontic if available
 try:
-    from tensornet.engine.gpu.memory import VRAMManager, MemoryStats
+    from ontic.engine.gpu.memory import VRAMManager, MemoryStats
     VRAM_MANAGER_AVAILABLE = True
 except ImportError:
     VRAM_MANAGER_AVAILABLE = False

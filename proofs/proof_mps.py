@@ -35,8 +35,8 @@ import torch
 # Add parent to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tensornet.core.mps import MPS
-from tensornet.core.states import ghz_mps, product_mps
+from ontic.core.mps import MPS
+from ontic.core.states import ghz_mps, product_mps
 
 # Constitutional tolerances (Article I, Section 1.2)
 MACHINE_PRECISION = 1e-14

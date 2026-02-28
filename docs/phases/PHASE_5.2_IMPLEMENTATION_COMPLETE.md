@@ -28,13 +28,13 @@ Implemented comprehensive performance overhaul addressing **ALL identified bottl
 
 ### 1.1 Core Files Created
 
-#### A. `tensornet/mpo/__init__.py`
+#### A. `ontic/mpo/__init__.py`
 ```python
 - Module initialization
 - Exports: MPOAtmosphericSolver, LaplacianMPO, AdvectionMPO, ProjectionMPO
 ```
 
-#### B. `tensornet/mpo/operators.py` (410 lines)
+#### B. `ontic/mpo/operators.py` (410 lines)
 ```python
 ✅ LaplacianMPO: Diffusion operator (∇² term)
    - Discrete Laplacian stencil in QTT format
@@ -54,7 +54,7 @@ Implemented comprehensive performance overhaul addressing **ALL identified bottl
 
 **Key Innovation**: Direct TT-core updates eliminate 6.05ms factorization tax
 
-#### C. `tensornet/mpo/atmospheric_solver.py` (300+ lines)
+#### C. `ontic/mpo/atmospheric_solver.py` (300+ lines)
 ```python
 ✅ MPOAtmosphericSolver: Main physics engine
    - 64×64 grid → 12 QTT modes
@@ -106,7 +106,7 @@ Implemented comprehensive performance overhaul addressing **ALL identified bottl
 
 #### Files Modified:
 
-**A. `tensornet/core/decompositions.py`**
+**A. `ontic/core/decompositions.py`**
 ```python
 Line 164: svd() generic helper
    BEFORE: torch.linalg.svd(A, full_matrices=False)
@@ -124,7 +124,7 @@ Line 61: svd_truncated() [attempted, needs manual fix]
 
 ### 2.2 Critical Path SVD (Eliminated)
 
-**File**: `tensornet/cfd/qtt.py`, Line 137
+**File**: `ontic/cfd/qtt.py`, Line 137
 ```python
 BEFORE (6.05ms):
    U, S, Vh = torch.svd_lowrank(current, q=target_rank, niter=2)
@@ -139,7 +139,7 @@ AFTER (0.00ms):
 
 ### 2.3 Shift Operators (Cached)
 
-**Files**: `tensornet/cfd/qtt_2d_shift*.py` (Lines 234, 238, 299)
+**Files**: `ontic/cfd/qtt_2d_shift*.py` (Lines 234, 238, 299)
 ```python
 Status: MPO implementation pre-computes shift cores in __init__
    - X-shift cores: Cached (computed once)
@@ -153,7 +153,7 @@ Status: MPO implementation pre-computes shift cores in __init__
 
 ### 3.1 Float16 Pipeline
 
-**File**: `tensornet/gateway/onion_renderer.py`
+**File**: `ontic/gateway/onion_renderer.py`
 
 **Changes**:
 ```python
@@ -170,7 +170,7 @@ Line 354: Resize buffer
 
 ### 3.2 Fused Blend Operations
 
-**File**: `tensornet/gateway/onion_renderer.py`, Lines 312-345
+**File**: `ontic/gateway/onion_renderer.py`, Lines 312-345
 
 **Optimizations**:
 ```python
@@ -203,7 +203,7 @@ Line 354: Resize buffer
 
 ### 4.1 QTT Evaluation Loops
 
-**File**: `tensornet/quantum/cpu_qtt_evaluator.py`, Lines 132-145
+**File**: `ontic/quantum/cpu_qtt_evaluator.py`, Lines 132-145
 
 **Status**: ✅ Already Optimized
 ```python
@@ -217,7 +217,7 @@ def qtt_eval_batch_numba(...):
 
 ### 4.2 Grid Rendering Loops
 
-**File**: `tensornet/gateway/orbital_command.py`, Lines 206, 211
+**File**: `ontic/gateway/orbital_command.py`, Lines 206, 211
 
 **Status**: ✅ Minimal Impact (0.46ms total)
 ```python
@@ -232,7 +232,7 @@ for lon in range(-180, 181, 30):  # 13 iterations
 
 ### 4.3 Physics Solver Loops
 
-**File**: `tensornet/gpu/stable_fluid.py`, Line 130
+**File**: `ontic/gpu/stable_fluid.py`, Line 130
 
 **Status**: ✅ Replaced with MPO Solver
 ```python
@@ -246,7 +246,7 @@ AFTER:  MPO core updates (O(d·r³), projected 0.65ms)
 
 ### 5.1 Physics State (ELIMINATED)
 
-**File**: `tensornet/gpu/stable_fluid.py`, Lines 52-57
+**File**: `ontic/gpu/stable_fluid.py`, Lines 52-57
 ```python
 BEFORE (64KB):
    self.u = torch.zeros(64, 64)
@@ -262,7 +262,7 @@ AFTER (Factorized):
 
 ### 5.2 Compositor Buffers (Optimized)
 
-**Files**: `tensornet/gateway/onion_renderer.py`, Lines 176, 354
+**Files**: `ontic/gateway/onion_renderer.py`, Lines 176, 354
 ```python
 BEFORE (132MB per buffer × 2):
    torch.zeros((3840, 2160, 4), dtype=torch.float32)
@@ -346,7 +346,7 @@ Margin:  +5.31ms (+47% over mandate)
 
 ### 7.1 Completed Tasks ✅
 
-1. **MPO Atmospheric Solver** (tensornet/mpo/)
+1. **MPO Atmospheric Solver** (ontic/mpo/)
    - LaplacianMPO: Diffusion operator
    - AdvectionMPO: Velocity shift
    - ProjectionMPO: Incompressibility
@@ -460,7 +460,7 @@ Margin:  +5.31ms (+47% over mandate)
 **Task**: Replace StableFluid with MPOAtmosphericSolver in orbital_command.py
 
 ```python
-File: tensornet/gateway/orbital_command.py
+File: ontic/gateway/orbital_command.py
 Line 133: Replace StableFluid initialization
 Line 192: Remove dense_to_qtt_2d() call
 Line 200: Connect MPO cores → hybrid renderer
@@ -610,21 +610,21 @@ Line 200: Connect MPO cores → hybrid renderer
 ## Appendix A: Code Change Summary
 
 ### Files Created (4)
-1. tensornet/mpo/__init__.py (17 lines)
-2. tensornet/mpo/operators.py (410 lines)
-3. tensornet/mpo/atmospheric_solver.py (300 lines)
+1. ontic/mpo/__init__.py (17 lines)
+2. ontic/mpo/operators.py (410 lines)
+3. ontic/mpo/atmospheric_solver.py (300 lines)
 4. tests/test_mpo_solver.py (350 lines)
 
 ### Files Modified (3)
-1. tensornet/core/decompositions.py
+1. ontic/core/decompositions.py
    - Line 164: svd() → svd_lowrank
    - Line 178: polar_decomposition() → svd_lowrank
    
-2. tensornet/gateway/onion_renderer.py
+2. ontic/gateway/onion_renderer.py
    - Lines 176, 354: Float32 → Float16 buffers
    - Lines 312-345: Fused blend operations
    
-3. tensornet/gateway/orbital_command.py [PENDING]
+3. ontic/gateway/orbital_command.py [PENDING]
    - Line 133: StableFluid → MPOAtmosphericSolver
    - Line 192: Remove dense_to_qtt_2d()
 

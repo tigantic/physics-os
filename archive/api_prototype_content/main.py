@@ -23,7 +23,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
 from .routers import domains, health, simulate
 
-logger = logging.getLogger("hypertensor.api")
+logger = logging.getLogger("physics_os.api")
 
 
 def _detect_device() -> str:

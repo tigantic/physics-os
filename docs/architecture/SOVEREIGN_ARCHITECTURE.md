@@ -104,12 +104,12 @@ Total                   6.06ms  100.0%    (165 FPS) ✓
 
 ### 1. Physics Solver: TT-ALS Fluid Dynamics
 
-**Current**: `tensornet/gpu/stable_fluid.py`
+**Current**: `ontic/gpu/stable_fluid.py`
 - Solves on dense 64×64 grid
 - PCG solver for pressure Poisson equation
 - Outputs dense GPU tensor
 
-**Sovereign**: `tensornet/sovereign/tt_fluid_solver.py` (NEW)
+**Sovereign**: `ontic/sovereign/tt_fluid_solver.py` (NEW)
 - Solves directly on TT-Cores (rank-adaptive)
 - TT-ALS (Alternating Least Squares) for implicit time stepping
 - Cores never leave GPU, never materialize
@@ -141,14 +141,14 @@ Sovereign: TT-ALS on cores G₁, G₂, ..., Gₙ [~240 DOF, rank-8]
 
 ### 2. Renderer: Implicit QTT Fragment Shader
 
-**Current**: `tensornet/quantum/hybrid_qtt_renderer.py`
+**Current**: `ontic/quantum/hybrid_qtt_renderer.py`
 - CPU sparse evaluation (2.14ms)
 - CPU→GPU transfer (0.3ms)
 - GPU bicubic interpolation (0.47ms)
 - GPU colormap (2.07ms)
 - **Total**: 5.08ms
 
-**Sovereign**: `tensornet/sovereign/implicit_qtt_shader.cu` (NEW)
+**Sovereign**: `ontic/sovereign/implicit_qtt_shader.cu` (NEW)
 - Fragment shader evaluates QTT cores directly at pixel coordinates
 - No materialization, no interpolation
 - Colormap inline
@@ -201,13 +201,13 @@ void main() {
 
 ### 3. Compositor: Mathematical Core Summation
 
-**Current**: `tensornet/gateway/onion_renderer.py::composite()`
+**Current**: `ontic/gateway/onion_renderer.py::composite()`
 - 5-layer alpha blending on dense 4K buffers
 - Float16→Float32 conversion (3.05ms overhead)
 - 5 separate kernel launches
 - **Total**: 9.50ms
 
-**Sovereign**: `tensornet/sovereign/implicit_compositor.cu` (NEW)
+**Sovereign**: `ontic/sovereign/implicit_compositor.cu` (NEW)
 - Single fragment shader evaluates all 5 QTT layers
 - Alpha blending in compressed space (before materialization)
 - Never writes intermediate buffers
@@ -265,7 +265,7 @@ vec4 composite_at_pixel(vec2 uv) {
 
 #### Week 1: Core Shader Implementation
 1. **Day 1-2**: CUDA/GLSL fragment shader
-   - Create `tensornet/sovereign/implicit_qtt_kernel.cu`
+   - Create `ontic/sovereign/implicit_qtt_kernel.cu`
    - Implement Morton encoding (12-bit, 64×64 grid)
    - Implement TT-contraction (12 matrix products)
    - Single-layer test with static QTT

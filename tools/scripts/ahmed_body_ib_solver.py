@@ -42,7 +42,7 @@ import torch
 from torch import Tensor
 
 # ── HyperTensor QTT Engine ─────────────────────────────────────────
-from tensornet.cfd.ns3d_native import (
+from ontic.cfd.ns3d_native import (
     QTT3DNative,
     QTT3DVectorNative,
     NativeDerivatives3D,
@@ -52,7 +52,7 @@ from tensornet.cfd.ns3d_native import (
     _qtt_vec_max_abs_native,
     _qtt_scalar_max_abs_native,
 )
-from tensornet.cfd.qtt_native_ops import (
+from ontic.cfd.qtt_native_ops import (
     QTTCores,
     qtt_add_native,
     qtt_add_native_batched,
@@ -68,7 +68,7 @@ from tensornet.cfd.qtt_native_ops import (
     qtt_truncate_now_batched,
     turbulence_rank_profile,
 )
-from tensornet.cfd.qtt_tci import qtt_from_function
+from ontic.cfd.qtt_tci import qtt_from_function
 
 
 # ═══════════════════════════════════════════════════════════════════════

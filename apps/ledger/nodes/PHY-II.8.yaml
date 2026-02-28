@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Oldroyd-B, Bingham"
 
 source_files:
-  - "tensornet/cfd/non_newtonian.py"
+  - "ontic/cfd/non_newtonian.py"
 
 tests:
   smoke:

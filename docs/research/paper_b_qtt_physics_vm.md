@@ -14,7 +14,7 @@
 **Software:** Python 3.12.3, NumPy 2.2.3  
 **Entry Points:**  
 - `tools/scripts/research/vm_resolution_sweep.py` (resolution-independence sweep)  
-**VM Source:** `tensornet/vm/` (IR, runtime, operators, compilers)  
+**VM Source:** `ontic/vm/` (IR, runtime, operators, compilers)  
 **Benchmark Data:** `data/vm_7domain_benchmark.json`, `data/vm_resolution_sweep.json`  
 **Companion Paper:** *χ-Regularity and Rank Atlas: QTT Bond-Dimension Universality Across Physical Law* (Paper A, `docs/research/paper_a_chi_regularity_atlas.md`)
 
@@ -108,24 +108,24 @@ writing a new compiler — no changes to the runtime or operator library.
 
 The VM consists of four layers:
 
-1. **IR layer** (`tensornet/vm/ir.py`, 324 lines): 22-opcode instruction
+1. **IR layer** (`ontic/vm/ir.py`, 324 lines): 22-opcode instruction
    set — `LOAD_FIELD`, `STORE_FIELD`, `GRAD`, `LAPLACE`, `HADAMARD`,
    `ADD`, `SUB`, `SCALE`, `NEGATE`, `TRUNCATE`, `BC_APPLY`,
    `LAPLACE_SOLVE`, `INTEGRATE`, `DIV`, `ADVECT`, `MEASURE`,
    `LOOP_START`, `LOOP_END`, and helpers. All operands are register
    indices; register contents are QTT tensors.
 
-2. **Tensor wrapper** (`tensornet/vm/qtt_tensor.py`, 457 lines):
+2. **Tensor wrapper** (`ontic/vm/qtt_tensor.py`, 457 lines):
    Dimension-aware QTT tensor supporting 1D, 2D, and 3D fields via
    `bits_per_dim` tuples. Operations: `hadamard`, `truncate`,
    `integrate_along`, `broadcast_to`, `inner`, `from_function`.
 
-3. **Operator library** (`tensornet/vm/operators.py`, 391 lines):
+3. **Operator library** (`ontic/vm/operators.py`, 391 lines):
    Analytic MPO construction via binary carry chain — bond dimension 2
    for shift, 3 for gradient, 5 for Laplacian. Multi-dimensional
    embedding via Kronecker extension. Poisson solver via QTT-format CG.
 
-4. **Runtime engine** (`tensornet/vm/runtime.py`, ~470 lines): Universal
+4. **Runtime engine** (`ontic/vm/runtime.py`, ~470 lines): Universal
    executor that dispatches instructions, manages register file, applies
    rank governor, collects per-step telemetry. No domain-specific logic.
 
@@ -195,7 +195,7 @@ of the corresponding PDE. The runtime loops over these opcodes for the
 specified number of steps. No compiler touches the runtime internals —
 they produce only instruction lists.
 
-**Source:** `tensornet/vm/compilers/` — one module per domain.
+**Source:** `ontic/vm/compilers/` — one module per domain.
 
 ---
 
@@ -338,11 +338,11 @@ The QTT Physics VM is, to our knowledge, the first demonstration of:
 
 | Artifact | Path | Content |
 |----------|------|---------|
-| QTT Physics VM IR | `tensornet/vm/ir.py` | 22-opcode instruction set |
-| QTT VM runtime | `tensornet/vm/runtime.py` | Universal execution engine |
-| QTT VM operators | `tensornet/vm/operators.py` | Analytic MPO construction (carry chain) |
-| QTT VM tensor wrapper | `tensornet/vm/qtt_tensor.py` | Dimension-aware QTT tensor (1D/2D/3D) |
-| VM compilers (7) | `tensornet/vm/compilers/` | Burgers, Maxwell, Schrödinger, Diffusion, Vlasov, NS-2D, Maxwell-3D |
+| QTT Physics VM IR | `ontic/vm/ir.py` | 22-opcode instruction set |
+| QTT VM runtime | `ontic/vm/runtime.py` | Universal execution engine |
+| QTT VM operators | `ontic/vm/operators.py` | Analytic MPO construction (carry chain) |
+| QTT VM tensor wrapper | `ontic/vm/qtt_tensor.py` | Dimension-aware QTT tensor (1D/2D/3D) |
+| VM compilers (7) | `ontic/vm/compilers/` | Burgers, Maxwell, Schrödinger, Diffusion, Vlasov, NS-2D, Maxwell-3D |
 | VM 7-domain benchmark | `data/vm_7domain_benchmark.json` | 7/7 pass, bounded rank |
 | VM resolution sweep | `data/vm_resolution_sweep.json` | χ ~ (log₂N)^b polylogarithmic scaling |
 | Resolution sweep script | `tools/scripts/research/vm_resolution_sweep.py` | Automated sweep across 5 domains × 5 resolutions |

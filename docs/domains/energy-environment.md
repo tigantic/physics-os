@@ -6,7 +6,7 @@ These modules are included in the core `tensornet` package.
 
 | Module | Description |
 |--------|-------------|
-| `tensornet.energy_env` | Energy-environment group |
-| `tensornet.energy` | Energy systems |
-| `tensornet.environmental` | Environmental modeling |
-| `tensornet.fuel` | Fuel and combustion |
+| `ontic.energy_env` | Energy-environment group |
+| `ontic.energy` | Energy systems |
+| `ontic.environmental` | Environmental modeling |
+| `ontic.fuel` | Fuel and combustion |

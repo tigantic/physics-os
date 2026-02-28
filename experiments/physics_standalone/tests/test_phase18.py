@@ -27,7 +27,7 @@ class TestAdaptiveBondOptimizer:
     
     def test_adaptive_bond_config_creation(self):
         """Test AdaptiveBondConfig creation."""
-        from tensornet.engine.adaptive.bond_optimizer import (
+        from ontic.engine.adaptive.bond_optimizer import (
             AdaptiveBondConfig,
             TruncationStrategy,
         )
@@ -46,7 +46,7 @@ class TestAdaptiveBondOptimizer:
     
     def test_bond_dimension_tracker(self):
         """Test BondDimensionTracker."""
-        from tensornet.engine.adaptive.bond_optimizer import (
+        from ontic.engine.adaptive.bond_optimizer import (
             BondDimensionTracker,
             AdaptiveBondConfig,
         )
@@ -60,7 +60,7 @@ class TestAdaptiveBondOptimizer:
     
     def test_entropy_monitor(self):
         """Test EntropyMonitor."""
-        from tensornet.engine.adaptive.bond_optimizer import EntropyMonitor
+        from ontic.engine.adaptive.bond_optimizer import EntropyMonitor
         
         monitor = EntropyMonitor(num_sites=10)
         
@@ -73,7 +73,7 @@ class TestAdaptiveBondOptimizer:
     
     def test_truncation_scheduler(self):
         """Test TruncationScheduler."""
-        from tensornet.engine.adaptive.bond_optimizer import (
+        from ontic.engine.adaptive.bond_optimizer import (
             TruncationScheduler,
             AdaptiveBondConfig,
             BondDimensionTracker,
@@ -96,7 +96,7 @@ class TestAdaptiveBondOptimizer:
     
     def test_adaptive_truncator(self):
         """Test AdaptiveTruncator SVD truncation."""
-        from tensornet.engine.adaptive.bond_optimizer import (
+        from ontic.engine.adaptive.bond_optimizer import (
             AdaptiveTruncator,
             AdaptiveBondConfig,
             TruncationStrategy,
@@ -119,7 +119,7 @@ class TestAdaptiveBondOptimizer:
     
     def test_estimate_optimal_chi(self):
         """Test estimate_optimal_chi function."""
-        from tensornet.engine.adaptive.bond_optimizer import estimate_optimal_chi
+        from ontic.engine.adaptive.bond_optimizer import estimate_optimal_chi
         
         # Pass entanglement entropy (float), not singular values
         # estimate_optimal_chi expects entropy value, not tensor
@@ -139,7 +139,7 @@ class TestEntanglement:
     
     def test_entanglement_spectrum(self):
         """Test EntanglementSpectrum analysis."""
-        from tensornet.engine.adaptive.entanglement import EntanglementSpectrum
+        from ontic.engine.adaptive.entanglement import EntanglementSpectrum
         
         # Create test singular values as tensor
         singular_values = torch.tensor([0.7, 0.5, 0.3, 0.1])
@@ -152,7 +152,7 @@ class TestEntanglement:
     
     def test_area_law_analyzer(self):
         """Test AreaLawAnalyzer."""
-        from tensornet.engine.adaptive.entanglement import AreaLawAnalyzer
+        from ontic.engine.adaptive.entanglement import AreaLawAnalyzer
         
         analyzer = AreaLawAnalyzer()
         
@@ -168,7 +168,7 @@ class TestEntanglement:
     
     def test_entanglement_entropy(self):
         """Test EntanglementEntropy computation."""
-        from tensornet.engine.adaptive.entanglement import EntanglementEntropy
+        from ontic.engine.adaptive.entanglement import EntanglementEntropy
         
         # Create from singular values using classmethod
         sv = torch.tensor([1.0, 0.0, 0.0, 0.0])
@@ -180,7 +180,7 @@ class TestEntanglement:
     
     def test_mutual_information(self):
         """Test MutualInformation computation."""
-        from tensornet.engine.adaptive.entanglement import MutualInformation
+        from ontic.engine.adaptive.entanglement import MutualInformation
         
         # I(A:B) = S(A) + S(B) - S(AB)
         expected = 1.5 + 1.2 - 2.0
@@ -198,7 +198,7 @@ class TestEntanglement:
     
     def test_compute_entanglement_entropy_function(self):
         """Test compute_entanglement_entropy convenience function."""
-        from tensornet.engine.adaptive.entanglement import compute_entanglement_entropy
+        from ontic.engine.adaptive.entanglement import compute_entanglement_entropy
         
         # Create singular values as tensor
         singular_values = torch.tensor([0.8, 0.4, 0.2, 0.1])
@@ -213,7 +213,7 @@ class TestCompression:
     
     def test_svd_compression(self):
         """Test SVDCompression."""
-        from tensornet.engine.adaptive.compression import SVDCompression
+        from ontic.engine.adaptive.compression import SVDCompression
         
         compressor = SVDCompression()
         
@@ -229,7 +229,7 @@ class TestCompression:
     
     def test_randomized_svd(self):
         """Test RandomizedSVD."""
-        from tensornet.engine.adaptive.compression import RandomizedSVD
+        from ontic.engine.adaptive.compression import RandomizedSVD
         
         compressor = RandomizedSVD(oversampling=10, n_power_iterations=2)
         
@@ -242,7 +242,7 @@ class TestCompression:
     @pytest.mark.skip(reason="VariationalCompression has matrix shape bug")
     def test_variational_compression(self):
         """Test VariationalCompression."""
-        from tensornet.engine.adaptive.compression import VariationalCompression
+        from ontic.engine.adaptive.compression import VariationalCompression
         
         compressor = VariationalCompression(max_iterations=50)
         
@@ -253,7 +253,7 @@ class TestCompression:
     
     def test_tensor_cross_interpolation(self):
         """Test TensorCrossInterpolation."""
-        from tensornet.engine.adaptive.compression import TensorCrossInterpolation
+        from ontic.engine.adaptive.compression import TensorCrossInterpolation
         
         tci = TensorCrossInterpolation()
         
@@ -269,7 +269,7 @@ class TestCompression:
     
     def test_compress_adaptively(self):
         """Test compress_adaptively function."""
-        from tensornet.engine.adaptive.compression import compress_adaptively
+        from ontic.engine.adaptive.compression import compress_adaptively
         
         tensor = torch.randn(50, 50)
         
@@ -287,7 +287,7 @@ class TestInferenceEngine:
     
     def test_inference_config_creation(self):
         """Test InferenceConfig creation."""
-        from tensornet.engine.realtime.inference_engine import InferenceConfig
+        from ontic.engine.realtime.inference_engine import InferenceConfig
         
         config = InferenceConfig(
             max_batch_size=32,
@@ -303,7 +303,7 @@ class TestInferenceEngine:
     
     def test_inference_engine_basic(self):
         """Test basic InferenceEngine usage."""
-        from tensornet.engine.realtime.inference_engine import (
+        from ontic.engine.realtime.inference_engine import (
             InferenceEngine,
             InferenceConfig,
         )
@@ -322,7 +322,7 @@ class TestInferenceEngine:
     
     def test_inference_engine_batched(self):
         """Test batched inference."""
-        from tensornet.engine.realtime.inference_engine import (
+        from ontic.engine.realtime.inference_engine import (
             InferenceEngine,
             InferenceConfig,
         )
@@ -341,7 +341,7 @@ class TestInferenceEngine:
     
     def test_inference_engine_warmup(self):
         """Test inference engine warmup."""
-        from tensornet.engine.realtime.inference_engine import (
+        from ontic.engine.realtime.inference_engine import (
             InferenceEngine,
             InferenceConfig,
         )
@@ -357,7 +357,7 @@ class TestInferenceEngine:
     
     def test_run_inference_function(self):
         """Test run_inference convenience function."""
-        from tensornet.engine.realtime.inference_engine import run_inference
+        from ontic.engine.realtime.inference_engine import run_inference
         
         model = nn.Linear(10, 5)
         input_tensor = torch.randn(10)
@@ -372,7 +372,7 @@ class TestKernelFusion:
     
     def test_fusion_pattern_matching(self):
         """Test FusionPattern matching."""
-        from tensornet.engine.realtime.kernel_fusion import (
+        from ontic.engine.realtime.kernel_fusion import (
             FusionPattern,
             FusionType,
         )
@@ -390,7 +390,7 @@ class TestKernelFusion:
     
     def test_operator_graph_construction(self):
         """Test OperatorGraph construction."""
-        from tensornet.engine.realtime.kernel_fusion import (
+        from ontic.engine.realtime.kernel_fusion import (
             OperatorGraph,
             OperatorNode,
         )
@@ -426,7 +426,7 @@ class TestKernelFusion:
     
     def test_kernel_fuser(self):
         """Test KernelFuser."""
-        from tensornet.engine.realtime.kernel_fusion import (
+        from ontic.engine.realtime.kernel_fusion import (
             KernelFuser,
             OperatorGraph,
             OperatorNode,
@@ -446,7 +446,7 @@ class TestKernelFusion:
     
     def test_fuse_operators_function(self):
         """Test fuse_operators function."""
-        from tensornet.engine.realtime.kernel_fusion import fuse_operators
+        from ontic.engine.realtime.kernel_fusion import fuse_operators
         
         operations = ["add", "relu"]
         fused = fuse_operators(operations)
@@ -459,7 +459,7 @@ class TestMemoryManager:
     
     def test_memory_config(self):
         """Test MemoryConfig creation."""
-        from tensornet.engine.realtime.memory_manager import (
+        from ontic.engine.realtime.memory_manager import (
             MemoryConfig,
             AllocationStrategy,
         )
@@ -475,7 +475,7 @@ class TestMemoryManager:
     
     def test_tensor_cache(self):
         """Test TensorCache."""
-        from tensornet.engine.realtime.memory_manager import TensorCache
+        from ontic.engine.realtime.memory_manager import TensorCache
         
         cache = TensorCache(max_size=100, max_bytes=10 * 1024 * 1024)
         
@@ -490,7 +490,7 @@ class TestMemoryManager:
     
     def test_memory_pool(self):
         """Test MemoryPool."""
-        from tensornet.engine.realtime.memory_manager import (
+        from ontic.engine.realtime.memory_manager import (
             MemoryPool,
             MemoryConfig,
         )
@@ -509,7 +509,7 @@ class TestMemoryManager:
     
     def test_streaming_buffer(self):
         """Test StreamingBuffer."""
-        from tensornet.engine.realtime.memory_manager import StreamingBuffer
+        from ontic.engine.realtime.memory_manager import StreamingBuffer
         
         buffer = StreamingBuffer(buffer_size=1024)
         
@@ -525,7 +525,7 @@ class TestMemoryManager:
     
     def test_memory_planner(self):
         """Test MemoryPlanner."""
-        from tensornet.engine.realtime.memory_manager import MemoryPlanner
+        from ontic.engine.realtime.memory_manager import MemoryPlanner
         
         planner = MemoryPlanner()
         
@@ -555,7 +555,7 @@ class TestLatencyOptimizer:
     
     def test_latency_target(self):
         """Test LatencyTarget creation."""
-        from tensornet.engine.realtime.latency_optimizer import LatencyTarget
+        from ontic.engine.realtime.latency_optimizer import LatencyTarget
         
         target = LatencyTarget(
             target_ms=10.0,
@@ -568,7 +568,7 @@ class TestLatencyOptimizer:
     
     def test_latency_profile(self):
         """Test LatencyProfile creation."""
-        from tensornet.engine.realtime.latency_optimizer import LatencyProfile
+        from ontic.engine.realtime.latency_optimizer import LatencyProfile
         
         measurements = [5.0, 6.0, 5.5, 7.0, 5.2] * 20  # 100 measurements
         
@@ -581,7 +581,7 @@ class TestLatencyOptimizer:
     
     def test_precision_scheduler(self):
         """Test PrecisionScheduler."""
-        from tensornet.engine.realtime.latency_optimizer import (
+        from ontic.engine.realtime.latency_optimizer import (
             PrecisionScheduler,
             PrecisionPolicy,
         )
@@ -599,7 +599,7 @@ class TestLatencyOptimizer:
     
     def test_pipeline_optimizer(self):
         """Test PipelineOptimizer."""
-        from tensornet.engine.realtime.latency_optimizer import (
+        from ontic.engine.realtime.latency_optimizer import (
             PipelineOptimizer,
             PipelineConfig,
         )
@@ -623,7 +623,7 @@ class TestLatencyOptimizer:
     
     def test_latency_optimizer(self):
         """Test LatencyOptimizer."""
-        from tensornet.engine.realtime.latency_optimizer import (
+        from ontic.engine.realtime.latency_optimizer import (
             LatencyOptimizer,
             LatencyTarget,
         )
@@ -641,7 +641,7 @@ class TestLatencyOptimizer:
     
     def test_optimize_for_latency_function(self):
         """Test optimize_for_latency function."""
-        from tensornet.engine.realtime.latency_optimizer import optimize_for_latency
+        from ontic.engine.realtime.latency_optimizer import optimize_for_latency
         
         model = nn.Linear(10, 5)
         sample = torch.randn(10)
@@ -661,7 +661,7 @@ class TestSwarmCoordination:
     
     def test_vehicle_state_creation(self):
         """Test VehicleState creation."""
-        from tensornet.infra.coordination.swarm import VehicleState
+        from ontic.infra.coordination.swarm import VehicleState
         
         state = VehicleState(
             vehicle_id="uav_001",
@@ -675,7 +675,7 @@ class TestSwarmCoordination:
     
     def test_vehicle_state_tensor_conversion(self):
         """Test VehicleState tensor conversion."""
-        from tensornet.infra.coordination.swarm import VehicleState
+        from ontic.infra.coordination.swarm import VehicleState
         
         state = VehicleState(
             vehicle_id="uav_001",
@@ -691,7 +691,7 @@ class TestSwarmCoordination:
     
     def test_swarm_config(self):
         """Test SwarmConfig creation."""
-        from tensornet.infra.coordination.swarm import SwarmConfig, TopologyType
+        from ontic.infra.coordination.swarm import SwarmConfig, TopologyType
         
         config = SwarmConfig(
             topology=TopologyType.FULLY_CONNECTED,
@@ -703,7 +703,7 @@ class TestSwarmCoordination:
     
     def test_swarm_topology_fully_connected(self):
         """Test fully connected SwarmTopology."""
-        from tensornet.infra.coordination.swarm import (
+        from ontic.infra.coordination.swarm import (
             SwarmTopology,
             TopologyType,
         )
@@ -719,7 +719,7 @@ class TestSwarmCoordination:
     
     def test_swarm_topology_ring(self):
         """Test ring SwarmTopology."""
-        from tensornet.infra.coordination.swarm import (
+        from ontic.infra.coordination.swarm import (
             SwarmTopology,
             TopologyType,
         )
@@ -737,7 +737,7 @@ class TestSwarmCoordination:
     
     def test_swarm_coordinator(self):
         """Test SwarmCoordinator."""
-        from tensornet.infra.coordination.swarm import (
+        from ontic.infra.coordination.swarm import (
             SwarmCoordinator,
             SwarmConfig,
             VehicleState,
@@ -765,7 +765,7 @@ class TestSwarmCoordination:
     
     def test_swarm_step_simulation(self):
         """Test swarm simulation step."""
-        from tensornet.infra.coordination.swarm import (
+        from ontic.infra.coordination.swarm import (
             SwarmCoordinator,
             VehicleState,
         )
@@ -793,7 +793,7 @@ class TestSwarmCoordination:
     
     def test_compute_swarm_functions(self):
         """Test swarm utility functions."""
-        from tensornet.infra.coordination.swarm import (
+        from ontic.infra.coordination.swarm import (
             VehicleState,
             compute_swarm_centroid,
             compute_swarm_spread,
@@ -817,7 +817,7 @@ class TestFormationControl:
     
     def test_formation_config(self):
         """Test FormationConfig creation."""
-        from tensornet.infra.coordination.formation import (
+        from ontic.infra.coordination.formation import (
             FormationConfig,
             FormationType,
         )
@@ -833,7 +833,7 @@ class TestFormationControl:
     
     def test_formation_controller_wedge(self):
         """Test FormationController wedge formation."""
-        from tensornet.infra.coordination.formation import (
+        from ontic.infra.coordination.formation import (
             FormationController,
             FormationConfig,
             FormationType,
@@ -854,7 +854,7 @@ class TestFormationControl:
     
     def test_formation_controller_circle(self):
         """Test FormationController circle formation."""
-        from tensornet.infra.coordination.formation import (
+        from ontic.infra.coordination.formation import (
             FormationController,
             FormationConfig,
             FormationType,
@@ -876,7 +876,7 @@ class TestFormationControl:
     
     def test_formation_controller_grid(self):
         """Test FormationController grid formation."""
-        from tensornet.infra.coordination.formation import (
+        from ontic.infra.coordination.formation import (
             FormationController,
             FormationConfig,
             FormationType,
@@ -895,8 +895,8 @@ class TestFormationControl:
     
     def test_formation_state_from_states(self):
         """Test FormationState creation."""
-        from tensornet.infra.coordination.formation import FormationState
-        from tensornet.infra.coordination.swarm import VehicleState
+        from ontic.infra.coordination.formation import FormationState
+        from ontic.infra.coordination.swarm import VehicleState
         
         states = {
             "v0": VehicleState("v0", np.array([0.0, 0.0, 0.0]), np.zeros(3)),
@@ -915,8 +915,8 @@ class TestFormationControl:
     
     def test_validate_formation(self):
         """Test validate_formation function."""
-        from tensornet.infra.coordination.formation import validate_formation
-        from tensornet.infra.coordination.swarm import VehicleState
+        from ontic.infra.coordination.formation import validate_formation
+        from ontic.infra.coordination.swarm import VehicleState
         
         states = {
             "v0": VehicleState("v0", np.array([0.0, 0.0, 0.0]), np.zeros(3)),
@@ -936,7 +936,7 @@ class TestTaskAllocation:
     
     def test_task_creation(self):
         """Test Task creation."""
-        from tensornet.infra.coordination.task_allocation import (
+        from ontic.infra.coordination.task_allocation import (
             Task,
             TaskPriority,
         )
@@ -956,12 +956,12 @@ class TestTaskAllocation:
     
     def test_task_allocator_greedy(self):
         """Test TaskAllocator greedy allocation."""
-        from tensornet.infra.coordination.task_allocation import (
+        from ontic.infra.coordination.task_allocation import (
             Task,
             TaskAllocator,
             TaskPriority,
         )
-        from tensornet.infra.coordination.swarm import VehicleState
+        from ontic.infra.coordination.swarm import VehicleState
         
         allocator = TaskAllocator()
         
@@ -988,11 +988,11 @@ class TestTaskAllocation:
     
     def test_task_allocator_nearest(self):
         """Test TaskAllocator nearest allocation."""
-        from tensornet.infra.coordination.task_allocation import (
+        from ontic.infra.coordination.task_allocation import (
             Task,
             TaskAllocator,
         )
-        from tensornet.infra.coordination.swarm import VehicleState
+        from ontic.infra.coordination.swarm import VehicleState
         
         allocator = TaskAllocator()
         
@@ -1016,11 +1016,11 @@ class TestTaskAllocation:
     
     def test_auction_protocol(self):
         """Test AuctionProtocol."""
-        from tensornet.infra.coordination.task_allocation import (
+        from ontic.infra.coordination.task_allocation import (
             Task,
             AuctionProtocol,
         )
-        from tensornet.infra.coordination.swarm import VehicleState
+        from ontic.infra.coordination.swarm import VehicleState
         
         auction = AuctionProtocol()
         
@@ -1047,11 +1047,11 @@ class TestTaskAllocation:
     
     def test_allocate_tasks_function(self):
         """Test allocate_tasks convenience function."""
-        from tensornet.infra.coordination.task_allocation import (
+        from ontic.infra.coordination.task_allocation import (
             Task,
             allocate_tasks,
         )
-        from tensornet.infra.coordination.swarm import VehicleState
+        from ontic.infra.coordination.swarm import VehicleState
         
         tasks = [
             Task("t0", "survey", np.array([10.0, 0.0, 0.0])),
@@ -1066,7 +1066,7 @@ class TestTaskAllocation:
             assignments = allocate_tasks(tasks, states, method=method)
             # Reset task status for next method
             for task in tasks:
-                from tensornet.infra.coordination.task_allocation import TaskStatus
+                from ontic.infra.coordination.task_allocation import TaskStatus
                 task.status = TaskStatus.PENDING
 
 
@@ -1075,7 +1075,7 @@ class TestConsensusProtocols:
     
     def test_consensus_config(self):
         """Test ConsensusConfig creation."""
-        from tensornet.infra.coordination.consensus import ConsensusConfig
+        from ontic.infra.coordination.consensus import ConsensusConfig
         
         config = ConsensusConfig(
             max_iterations=500,
@@ -1087,7 +1087,7 @@ class TestConsensusProtocols:
     
     def test_average_consensus(self):
         """Test AverageConsensus protocol."""
-        from tensornet.infra.coordination.consensus import (
+        from ontic.infra.coordination.consensus import (
             AverageConsensus,
             ConsensusConfig,
         )
@@ -1116,7 +1116,7 @@ class TestConsensusProtocols:
     
     def test_max_consensus(self):
         """Test MaxConsensus protocol."""
-        from tensornet.infra.coordination.consensus import (
+        from ontic.infra.coordination.consensus import (
             MaxConsensus,
             ConsensusConfig,
         )
@@ -1142,7 +1142,7 @@ class TestConsensusProtocols:
     
     def test_weighted_consensus(self):
         """Test WeightedConsensus protocol."""
-        from tensornet.infra.coordination.consensus import WeightedConsensus
+        from ontic.infra.coordination.consensus import WeightedConsensus
         
         consensus = WeightedConsensus()
         consensus.set_weights({
@@ -1163,7 +1163,7 @@ class TestConsensusProtocols:
     
     def test_leader_election(self):
         """Test LeaderElection."""
-        from tensornet.infra.coordination.consensus import LeaderElection
+        from ontic.infra.coordination.consensus import LeaderElection
         
         election = LeaderElection()
         
@@ -1180,7 +1180,7 @@ class TestConsensusProtocols:
     
     def test_run_consensus_function(self):
         """Test run_consensus convenience function."""
-        from tensornet.infra.coordination.consensus import run_consensus
+        from ontic.infra.coordination.consensus import run_consensus
         
         initial_values = {
             "a": np.array([1.0]),
@@ -1204,8 +1204,8 @@ class TestPhase18Integration:
     @pytest.mark.skip(reason="InferenceEngine model input shape mismatch")
     def test_adaptive_with_realtime_inference(self):
         """Test adaptive compression with real-time inference."""
-        from tensornet.engine.adaptive.compression import SVDCompression
-        from tensornet.engine.realtime.inference_engine import InferenceEngine
+        from ontic.engine.adaptive.compression import SVDCompression
+        from ontic.engine.realtime.inference_engine import InferenceEngine
         
         # Create and compress a model's weight matrix
         compressor = SVDCompression()
@@ -1223,20 +1223,20 @@ class TestPhase18Integration:
     
     def test_coordination_full_mission(self):
         """Test full coordination mission."""
-        from tensornet.infra.coordination.swarm import (
+        from ontic.infra.coordination.swarm import (
             SwarmCoordinator,
             VehicleState,
         )
-        from tensornet.infra.coordination.formation import (
+        from ontic.infra.coordination.formation import (
             FormationController,
             FormationConfig,
             FormationType,
         )
-        from tensornet.infra.coordination.task_allocation import (
+        from ontic.infra.coordination.task_allocation import (
             Task,
             TaskAllocator,
         )
-        from tensornet.infra.coordination.consensus import (
+        from ontic.infra.coordination.consensus import (
             AverageConsensus,
         )
         
@@ -1287,8 +1287,8 @@ class TestPhase18Integration:
     
     def test_latency_optimized_coordination(self):
         """Test latency-optimized coordination decisions."""
-        from tensornet.engine.realtime.latency_optimizer import LatencyOptimizer, LatencyTarget
-        from tensornet.infra.coordination.swarm import SwarmCoordinator, VehicleState
+        from ontic.engine.realtime.latency_optimizer import LatencyOptimizer, LatencyTarget
+        from ontic.infra.coordination.swarm import SwarmCoordinator, VehicleState
         
         # Create a simple coordination decision model
         class CoordinationModel(nn.Module):

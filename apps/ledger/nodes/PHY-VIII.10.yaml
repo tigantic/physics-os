@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Ab_Initio_MD solver"
 
 source_files:
-  - "tensornet/packs/pack_viii.py"
+  - "ontic/packs/pack_viii.py"
 
 tests:
   smoke:

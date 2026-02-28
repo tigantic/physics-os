@@ -21,12 +21,12 @@ from typing import Any
 
 import pytest
 
-from hypertensor.billing.meter import (
+from physics_os.billing.meter import (
     MeterRecord,
     UsageLedger,
     calculate_cu,
 )
-from hypertensor.billing.invoice import (
+from physics_os.billing.invoice import (
     export_invoice_json,
     generate_invoice,
 )

@@ -22,7 +22,7 @@ class TestWorkflows:
     
     def test_workflow_step(self):
         """Test WorkflowStep creation and execution."""
-        from tensornet.infra.integration import WorkflowStep
+        from ontic.infra.integration import WorkflowStep
         
         def add_step(ctx):
             return {'result': ctx['a'] + ctx['b']}
@@ -44,7 +44,7 @@ class TestWorkflows:
     
     def test_workflow_stage(self):
         """Test WorkflowStage."""
-        from tensornet.infra.integration import WorkflowStep, WorkflowStage
+        from ontic.infra.integration import WorkflowStep, WorkflowStage
         
         stage = WorkflowStage(
             name="compute",
@@ -64,7 +64,7 @@ class TestWorkflows:
     
     def test_workflow_result(self):
         """Test WorkflowResult dataclass."""
-        from tensornet.infra.integration import WorkflowResult, WorkflowStatus
+        from ontic.infra.integration import WorkflowResult, WorkflowStatus
         
         result = WorkflowResult(
             workflow_name="test",
@@ -82,7 +82,7 @@ class TestWorkflows:
     
     def test_workflow_engine(self):
         """Test WorkflowEngine execution."""
-        from tensornet.infra.integration import (
+        from ontic.infra.integration import (
             Workflow, WorkflowStage, WorkflowStep, WorkflowEngine, WorkflowStatus
         )
         
@@ -110,7 +110,7 @@ class TestWorkflows:
     
     def test_cfd_simulation_workflow(self):
         """Test CFDSimulationWorkflow."""
-        from tensornet.infra.integration import CFDSimulationWorkflow, WorkflowEngine
+        from ontic.infra.integration import CFDSimulationWorkflow, WorkflowEngine
         
         workflow = CFDSimulationWorkflow({
             'nx': 20,
@@ -130,7 +130,7 @@ class TestWorkflows:
     
     def test_guidance_workflow(self):
         """Test GuidanceWorkflow."""
-        from tensornet.infra.integration import GuidanceWorkflow, WorkflowEngine
+        from ontic.infra.integration import GuidanceWorkflow, WorkflowEngine
         
         workflow = GuidanceWorkflow({
             'target': [50000.0, 0.0, 0.0],
@@ -146,7 +146,7 @@ class TestWorkflows:
     
     def test_digital_twin_workflow(self):
         """Test DigitalTwinWorkflow."""
-        from tensornet.infra.integration import DigitalTwinWorkflow, WorkflowEngine
+        from ontic.infra.integration import DigitalTwinWorkflow, WorkflowEngine
         
         workflow = DigitalTwinWorkflow()
         
@@ -158,7 +158,7 @@ class TestWorkflows:
     
     def test_run_workflow(self):
         """Test run_workflow convenience function."""
-        from tensornet.infra.integration import create_cfd_workflow, run_workflow
+        from ontic.infra.integration import create_cfd_workflow, run_workflow
         
         workflow = create_cfd_workflow(nx=10, ny=5, n_steps=2)
         result = run_workflow(workflow, verbose=False)
@@ -167,7 +167,7 @@ class TestWorkflows:
     
     def test_workflow_with_failure(self):
         """Test workflow handling of step failures."""
-        from tensornet.infra.integration import (
+        from ontic.infra.integration import (
             Workflow, WorkflowStage, WorkflowStep, WorkflowEngine, WorkflowStatus
         )
         
@@ -194,7 +194,7 @@ class TestConfig:
     
     def test_config_value(self):
         """Test ConfigValue dataclass."""
-        from tensornet.infra.integration import ConfigValue, ConfigSource
+        from ontic.infra.integration import ConfigValue, ConfigSource
         
         value = ConfigValue(
             key="cfl",
@@ -209,7 +209,7 @@ class TestConfig:
     
     def test_config_section(self):
         """Test ConfigSection."""
-        from tensornet.infra.integration import ConfigSection
+        from ontic.infra.integration import ConfigSection
         
         section = ConfigSection(name="solver")
         section.define("tolerance", 1e-10, float, "Convergence tolerance")
@@ -225,7 +225,7 @@ class TestConfig:
     
     def test_configuration(self):
         """Test Configuration."""
-        from tensornet.infra.integration import Configuration, ConfigSection
+        from ontic.infra.integration import Configuration, ConfigSection
         
         config = Configuration(name="test")
         
@@ -240,7 +240,7 @@ class TestConfig:
     
     def test_config_manager(self):
         """Test ConfigManager."""
-        from tensornet.infra.integration import ConfigManager
+        from ontic.infra.integration import ConfigManager
         
         # Create new instance
         manager = ConfigManager()
@@ -255,7 +255,7 @@ class TestConfig:
     
     def test_config_file(self):
         """Test configuration file loading/saving."""
-        from tensornet.infra.integration import ConfigManager
+        from ontic.infra.integration import ConfigManager
         import json
         
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -275,7 +275,7 @@ class TestConfig:
     
     def test_environment_config(self):
         """Test EnvironmentConfig."""
-        from tensornet.infra.integration import EnvironmentConfig
+        from ontic.infra.integration import EnvironmentConfig
         
         # Set environment variable
         os.environ["HYPERTENSOR_CFD_CFL"] = "0.7"
@@ -288,7 +288,7 @@ class TestConfig:
     
     def test_config_validation(self):
         """Test configuration validation."""
-        from tensornet.infra.integration import Configuration, ConfigSection, validate_config
+        from ontic.infra.integration import Configuration, ConfigSection, validate_config
         
         config = Configuration()
         cfd = ConfigSection(name="cfd")
@@ -305,7 +305,7 @@ class TestConfig:
     
     def test_merge_configs(self):
         """Test merge_configs function."""
-        from tensornet.infra.integration import Configuration, ConfigSection, merge_configs
+        from ontic.infra.integration import Configuration, ConfigSection, merge_configs
         
         base = Configuration(name="base")
         section1 = ConfigSection(name="section1")
@@ -327,7 +327,7 @@ class TestMonitoring:
     
     def test_log_entry(self):
         """Test LogEntry dataclass."""
-        from tensornet.infra.integration import LogEntry, LogLevel
+        from ontic.infra.integration import LogEntry, LogLevel
         
         entry = LogEntry(
             timestamp=time.time(),
@@ -344,7 +344,7 @@ class TestMonitoring:
     
     def test_structured_logger(self):
         """Test StructuredLogger."""
-        from tensornet.infra.integration import StructuredLogger, LogLevel
+        from ontic.infra.integration import StructuredLogger, LogLevel
         
         logger = StructuredLogger("test", level=LogLevel.DEBUG)
         
@@ -361,7 +361,7 @@ class TestMonitoring:
     
     def test_log_level_filtering(self):
         """Test log level filtering."""
-        from tensornet.infra.integration import StructuredLogger, LogLevel
+        from ontic.infra.integration import StructuredLogger, LogLevel
         
         logger = StructuredLogger("test", level=LogLevel.WARNING)
         
@@ -377,7 +377,7 @@ class TestMonitoring:
     
     def test_metric_collector(self):
         """Test MetricCollector."""
-        from tensornet.infra.integration import MetricCollector, MetricType
+        from ontic.infra.integration import MetricCollector, MetricType
         
         collector = MetricCollector("test")
         
@@ -398,7 +398,7 @@ class TestMonitoring:
     
     def test_counter_metric(self):
         """Test counter metrics."""
-        from tensornet.infra.integration import MetricCollector
+        from ontic.infra.integration import MetricCollector
         
         collector = MetricCollector()
         
@@ -411,7 +411,7 @@ class TestMonitoring:
     
     def test_timing_metric(self):
         """Test timing metrics."""
-        from tensornet.infra.integration import MetricCollector, MetricType
+        from ontic.infra.integration import MetricCollector, MetricType
         
         collector = MetricCollector()
         
@@ -424,7 +424,7 @@ class TestMonitoring:
     
     def test_metrics_registry(self):
         """Test MetricsRegistry."""
-        from tensornet.infra.integration import MetricsRegistry
+        from ontic.infra.integration import MetricsRegistry
         
         MetricsRegistry.record("test_metric", 42, collector="test")
         
@@ -433,7 +433,7 @@ class TestMonitoring:
     
     def test_telemetry_event(self):
         """Test TelemetryEvent."""
-        from tensornet.infra.integration import TelemetryEvent
+        from ontic.infra.integration import TelemetryEvent
         
         event = TelemetryEvent(
             name="operation",
@@ -448,7 +448,7 @@ class TestMonitoring:
     
     def test_telemetry_collector(self):
         """Test TelemetryCollector."""
-        from tensornet.infra.integration import TelemetryCollector
+        from ontic.infra.integration import TelemetryCollector
         
         collector = TelemetryCollector()
         
@@ -464,7 +464,7 @@ class TestMonitoring:
     
     def test_alert_manager(self):
         """Test AlertManager."""
-        from tensornet.infra.integration import AlertManager, AlertSeverity
+        from ontic.infra.integration import AlertManager, AlertSeverity
         
         manager = AlertManager()
         
@@ -487,7 +487,7 @@ class TestMonitoring:
     
     def test_convenience_functions(self):
         """Test logging convenience functions."""
-        from tensornet.infra.integration import get_logger, log_info, log_warning
+        from ontic.infra.integration import get_logger, log_info, log_warning
         
         logger = get_logger("test_convenience")
         assert logger is not None
@@ -502,7 +502,7 @@ class TestDiagnostics:
     
     def test_memory_info(self):
         """Test MemoryInfo dataclass."""
-        from tensornet.infra.integration import MemoryInfo
+        from ontic.infra.integration import MemoryInfo
         
         info = MemoryInfo(
             total=16 * 1024**3,
@@ -517,7 +517,7 @@ class TestDiagnostics:
     
     def test_gpu_info(self):
         """Test GPUInfo dataclass."""
-        from tensornet.infra.integration import GPUInfo
+        from ontic.infra.integration import GPUInfo
         
         info = GPUInfo(
             device_id=0,
@@ -534,7 +534,7 @@ class TestDiagnostics:
     
     def test_get_system_info(self):
         """Test get_system_info function."""
-        from tensornet.infra.integration import get_system_info
+        from ontic.infra.integration import get_system_info
         
         info = get_system_info()
         
@@ -547,7 +547,7 @@ class TestDiagnostics:
     
     def test_health_check(self):
         """Test HealthCheck."""
-        from tensornet.infra.integration import HealthCheck, HealthStatus
+        from ontic.infra.integration import HealthCheck, HealthStatus
         
         def check_fn():
             return {
@@ -563,7 +563,7 @@ class TestDiagnostics:
     
     def test_health_check_failure(self):
         """Test HealthCheck handling failures."""
-        from tensornet.infra.integration import HealthCheck, HealthStatus
+        from ontic.infra.integration import HealthCheck, HealthStatus
         
         def failing_check():
             raise RuntimeError("Check failed")
@@ -576,7 +576,7 @@ class TestDiagnostics:
     
     def test_system_health_monitor(self):
         """Test SystemHealthMonitor."""
-        from tensornet.infra.integration import SystemHealthMonitor, HealthStatus
+        from ontic.infra.integration import SystemHealthMonitor, HealthStatus
         
         monitor = SystemHealthMonitor()
         
@@ -595,7 +595,7 @@ class TestDiagnostics:
     
     def test_diagnostics_report(self):
         """Test DiagnosticsReport."""
-        from tensornet.infra.integration import (
+        from ontic.infra.integration import (
             DiagnosticsReport, SystemInfo, MemoryInfo, HealthCheckResult, HealthStatus
         )
         
@@ -625,7 +625,7 @@ class TestDiagnostics:
     
     def test_run_diagnostics(self):
         """Test run_diagnostics function."""
-        from tensornet.infra.integration import run_diagnostics
+        from ontic.infra.integration import run_diagnostics
         
         report = run_diagnostics()
         
@@ -634,7 +634,7 @@ class TestDiagnostics:
     
     def test_check_system_health(self):
         """Test check_system_health function."""
-        from tensornet.infra.integration import check_system_health
+        from ontic.infra.integration import check_system_health
         
         # Should return True on a healthy system
         result = check_system_health()
@@ -642,7 +642,7 @@ class TestDiagnostics:
     
     def test_debug_context(self):
         """Test DebugContext."""
-        from tensornet.infra.integration import DebugContext
+        from ontic.infra.integration import DebugContext
         
         ctx = DebugContext.capture("test", x=1, y="hello")
         
@@ -654,7 +654,7 @@ class TestDiagnostics:
     
     def test_profiler(self):
         """Test Profiler."""
-        from tensornet.infra.integration import Profiler
+        from ontic.infra.integration import Profiler
         
         profiler = Profiler()
         
@@ -670,7 +670,7 @@ class TestDiagnostics:
     
     def test_profiler_context_manager(self):
         """Test Profiler context manager."""
-        from tensornet.infra.integration import Profiler
+        from ontic.infra.integration import Profiler
         
         profiler = Profiler()
         
@@ -682,7 +682,7 @@ class TestDiagnostics:
     
     def test_tracing_span(self):
         """Test TracingSpan."""
-        from tensornet.infra.integration import TracingSpan
+        from ontic.infra.integration import TracingSpan
         
         span = TracingSpan(name="test_span", trace_id="trace123")
         
@@ -702,7 +702,7 @@ class TestIntegrationImports:
     
     def test_workflow_imports(self):
         """Test workflow imports."""
-        from tensornet.infra.integration import (
+        from ontic.infra.integration import (
             WorkflowStep,
             WorkflowStage,
             Workflow,
@@ -723,7 +723,7 @@ class TestIntegrationImports:
     
     def test_config_imports(self):
         """Test config imports."""
-        from tensornet.infra.integration import (
+        from ontic.infra.integration import (
             ConfigSource,
             ConfigValue,
             ConfigSection,
@@ -742,7 +742,7 @@ class TestIntegrationImports:
     
     def test_monitoring_imports(self):
         """Test monitoring imports."""
-        from tensornet.infra.integration import (
+        from ontic.infra.integration import (
             LogLevel,
             LogEntry,
             LogFormatter,
@@ -768,7 +768,7 @@ class TestIntegrationImports:
     
     def test_diagnostics_imports(self):
         """Test diagnostics imports."""
-        from tensornet.infra.integration import (
+        from ontic.infra.integration import (
             SystemInfo,
             GPUInfo,
             MemoryInfo,

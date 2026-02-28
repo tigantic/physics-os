@@ -9,33 +9,33 @@
 
 | Directory | Status |
 |-|-|
-| `tensornet/astro/trace_adapters/` | EXISTS |
-| `tensornet/cfd/trace_adapters/` | EXISTS |
-| `tensornet/chemistry/trace_adapters/` | EXISTS |
-| `tensornet/coupled/trace_adapters/` | EXISTS |
-| `tensornet/em/trace_adapters/` | EXISTS |
-| `tensornet/fluids/trace_adapters/` | EXISTS |
-| `tensornet/geophysics/trace_adapters/` | EXISTS |
-| `tensornet/materials/trace_adapters/` | EXISTS |
-| `tensornet/mechanics/trace_adapters/` | EXISTS |
-| `tensornet/optics/trace_adapters/` | EXISTS |
-| `tensornet/plasma/trace_adapters/` | EXISTS |
-| `tensornet/statmech/trace_adapters/` | EXISTS |
+| `ontic/astro/trace_adapters/` | EXISTS |
+| `ontic/cfd/trace_adapters/` | EXISTS |
+| `ontic/chemistry/trace_adapters/` | EXISTS |
+| `ontic/coupled/trace_adapters/` | EXISTS |
+| `ontic/em/trace_adapters/` | EXISTS |
+| `ontic/fluids/trace_adapters/` | EXISTS |
+| `ontic/geophysics/trace_adapters/` | EXISTS |
+| `ontic/materials/trace_adapters/` | EXISTS |
+| `ontic/mechanics/trace_adapters/` | EXISTS |
+| `ontic/optics/trace_adapters/` | EXISTS |
+| `ontic/plasma/trace_adapters/` | EXISTS |
+| `ontic/statmech/trace_adapters/` | EXISTS |
 
 ### New trace_adapters/ directories NEEDED for Phase 8
 
 | Directory | Categories Served |
 |-|-|
-| `tensornet/qm/trace_adapters/` | VI. Quantum Mechanics (70–74) |
-| `tensornet/quantum_mechanics/trace_adapters/` | VI. Quantum Mechanics (70–74, alt location) |
-| `tensornet/condensed_matter/trace_adapters/` | VII. Quantum Many-Body (76–87), IX. Solid State (95–102) |
-| `tensornet/electronic_structure/trace_adapters/` | VIII. Electronic Structure (88–94) |
-| `tensornet/nuclear/trace_adapters/` | X. Nuclear & Particle (103–105) |
-| `tensornet/qft/trace_adapters/` | X. Nuclear & Particle (106–108) |
-| `tensornet/particle/trace_adapters/` | X. Nuclear & Particle (108) |
-| `tensornet/quantum/trace_adapters/` | XIX. Quantum Information (112–114) |
-| `tensornet/mps/trace_adapters/` | VII. Tensor Network / DMRG (75) |
-| `tensornet/algorithms/trace_adapters/` | VII. Tensor Network / DMRG (75, alt) |
+| `ontic/qm/trace_adapters/` | VI. Quantum Mechanics (70–74) |
+| `ontic/quantum_mechanics/trace_adapters/` | VI. Quantum Mechanics (70–74, alt location) |
+| `ontic/condensed_matter/trace_adapters/` | VII. Quantum Many-Body (76–87), IX. Solid State (95–102) |
+| `ontic/electronic_structure/trace_adapters/` | VIII. Electronic Structure (88–94) |
+| `ontic/nuclear/trace_adapters/` | X. Nuclear & Particle (103–105) |
+| `ontic/qft/trace_adapters/` | X. Nuclear & Particle (106–108) |
+| `ontic/particle/trace_adapters/` | X. Nuclear & Particle (108) |
+| `ontic/quantum/trace_adapters/` | XIX. Quantum Information (112–114) |
+| `ontic/mps/trace_adapters/` | VII. Tensor Network / DMRG (75) |
+| `ontic/algorithms/trace_adapters/` | VII. Tensor Network / DMRG (75, alt) |
 
 ---
 
@@ -45,7 +45,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/quantum_mechanics/stationary.py` |
+| **File** | `ontic/quantum_mechanics/stationary.py` |
 | **Primary class** | `DVRSolver` |
 | **Constructor** | `DVRSolver(x_min: float, x_max: float, n_grid: int, mass: float = 1.0, hbar: float = 1.0)` |
 | **Key methods** | `solve(potential, n_states) -> EigenResult`; `solve_2d(potential_2d, n_states)` |
@@ -56,7 +56,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/quantum_mechanics/propagator.py` |
+| **File** | `ontic/quantum_mechanics/propagator.py` |
 | **Primary class** | `SplitOperatorPropagator` |
 | **Constructor** | `SplitOperatorPropagator(x_min: float, x_max: float, n_grid: int, mass: float = 1.0, hbar: float = 1.0)` |
 | **Key methods** | `propagate(psi0, potential, dt, n_steps) -> PropagationResult` |
@@ -67,7 +67,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/qm/scattering.py` |
+| **File** | `ontic/qm/scattering.py` |
 | **Primary class** | `PartialWaveScattering` |
 | **Constructor** | `PartialWaveScattering(k: float = 1.0, l_max: int = 10)` |
 | **Key methods** | (partial wave phase shift computation) |
@@ -78,7 +78,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/qm/semiclassical_wkb.py` |
+| **File** | `ontic/qm/semiclassical_wkb.py` |
 | **Primary class** | `WKBSolver` |
 | **Constructor** | `WKBSolver(V: Callable[[float], float], mass: float = 1.0, hbar: float = 1.0)` |
 | **Key methods** | (WKB tunnelling, quantisation) |
@@ -89,7 +89,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/quantum_mechanics/path_integrals.py` |
+| **File** | `ontic/quantum_mechanics/path_integrals.py` |
 | **Primary class** | `PIMC` |
 | **Constructor** | `PIMC(n_beads: int, temperature: float, mass: float = 1.0, hbar: float = 1.0)` |
 | **Key methods** | `run(potential, n_steps, n_equil) -> dict` |
@@ -104,7 +104,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/algorithms/dmrg.py` + `tensornet/core/mps.py` + `tensornet/mps/hamiltonians.py` |
+| **File** | `ontic/algorithms/dmrg.py` + `ontic/core/mps.py` + `ontic/mps/hamiltonians.py` |
 | **Primary function** | `dmrg(H: MPO, chi_max: int, num_sweeps: int = 10, tol: float = 1e-10, psi0: MPS | None = None, svd_cutoff: float = 1e-14, verbose: bool = False) -> DMRGResult` |
 | **Primary class** | `MPS` (in `core/mps.py`) |
 | **MPS Constructor** | `MPS(tensors: list[Tensor])` |
@@ -118,7 +118,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/mps/hamiltonians.py` (MPO constructors) + `tensornet/packs/pack_vii.py` (solver) |
+| **File** | `ontic/mps/hamiltonians.py` (MPO constructors) + `ontic/packs/pack_vii.py` (solver) |
 | **Primary functions** | `heisenberg_mpo(L, J, Jz, h, ...)`, `tfim_mpo(L, J, h, ...)`, `xx_mpo(L, J, h, ...)`, `xyz_mpo(L, Jx, Jy, Jz, ...)` |
 | **Helper** | `spin_operators(S)`, `pauli_matrices()` |
 | **Pack class** | `SpinSystemsSpec` / solved via `HeisenbergSolver` in `packs/pack_vii.py` |
@@ -128,7 +128,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/strongly_correlated.py` |
+| **File** | `ontic/condensed_matter/strongly_correlated.py` |
 | **Primary class** | `DMFTSolver` |
 | **Constructor** | `DMFTSolver(U: float, mu: float, D: float = 1.0, beta: float = 10.0, n_iwn: int = 256)` |
 | **Key methods** | `solve(max_iter, tol, ...) -> dict` |
@@ -140,7 +140,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/topological_phases.py` |
+| **File** | `ontic/condensed_matter/topological_phases.py` |
 | **Primary class** | `ToricCode` |
 | **Constructor** | `ToricCode(L: int = 4, Js: float = 1.0, Jp: float = 1.0)` |
 | **Key methods** | `ground_state_degeneracy() -> int` |
@@ -152,7 +152,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/mbl_disorder.py` |
+| **File** | `ontic/condensed_matter/mbl_disorder.py` |
 | **Primary class** | `RandomFieldXXZ` |
 | **Constructor** | `RandomFieldXXZ(L: int = 10, J: float = 1.0, Delta: float = 1.0, W: float = ...)` |
 | **Key methods** | (exact diagonalisation of disordered chain) |
@@ -164,7 +164,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/qft/lattice_qft.py` (pure gauge + HMC) + `tensornet/qft/lattice_qcd.py` (Wilson action) |
+| **File** | `ontic/qft/lattice_qft.py` (pure gauge + HMC) + `ontic/qft/lattice_qcd.py` (Wilson action) |
 | **Primary class** | `HMCSampler` (in `lattice_qft.py`, dataclass) |
 | **Constructor** | `HMCSampler(config: LatticeConfig, n_steps: int = 10, step_size: float = 0.1)` |
 | **Key methods** | `trajectory(gf: GaugeField) -> Tuple[GaugeField, bool]` |
@@ -176,7 +176,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/open_quantum.py` |
+| **File** | `ontic/condensed_matter/open_quantum.py` |
 | **Primary class** | `LindbladSolver` |
 | **Constructor** | `LindbladSolver(H: NDArray[np.complex128], L_ops: list[NDArray[np.complex128]], ...)` |
 | **Key methods** | `evolve(rho_0, t_final, dt) -> dict` |
@@ -188,7 +188,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/nonequilibrium_qm.py` |
+| **File** | `ontic/condensed_matter/nonequilibrium_qm.py` |
 | **Primary class** | `FloquetSolver` |
 | **Constructor** | `FloquetSolver(dim: int)` |
 | **Key methods** | (Floquet quasi-energy spectrum computation) |
@@ -200,7 +200,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/kondo_impurity.py` |
+| **File** | `ontic/condensed_matter/kondo_impurity.py` |
 | **Primary class** | `WilsonChainNRG` |
 | **Constructor** | `WilsonChainNRG(Lambda: float = 2.0, n_sites: int = 30, ...)` |
 | **Alternate classes** | `AndersonImpurityModel(eps_d, U, ...)`, `CTQMC_HybridisationExpansion(beta, eps_d, ...)` — `run_sampling(n_mc, n_warmup)`, `KondoTemperatureExtractor` |
@@ -211,7 +211,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/bosonic.py` |
+| **File** | `ontic/condensed_matter/bosonic.py` |
 | **Primary class** | `GrossPitaevskiiSolver` |
 | **Constructor** | `GrossPitaevskiiSolver(N_grid: int, x_max: float, mass: float = 1.0)` |
 | **Key methods** | `ground_state(V_ext, g, ...) -> GPEResult`, `propagate(psi0, V_ext, g, dt, n_steps)` |
@@ -223,7 +223,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/fermionic.py` |
+| **File** | `ontic/condensed_matter/fermionic.py` |
 | **Primary class** | `BCSSolver` |
 | **Constructor** | `BCSSolver(N_k: int = 500, E_cutoff: float = 20.0)` |
 | **Key methods** | `solve_swave(epsilon_k, V0) -> BCSResult`, `solve_dwave(kx, ky, V0)` |
@@ -235,7 +235,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/nuclear_many_body.py` |
+| **File** | `ontic/condensed_matter/nuclear_many_body.py` |
 | **Primary class** | `NuclearShellModel` |
 | **Constructor** | `NuclearShellModel(n_orbits: int = 4, n_particles: int = 2)` |
 | **Key methods** | `ground_state_energy() -> float` |
@@ -247,7 +247,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/ultracold_atoms.py` |
+| **File** | `ontic/condensed_matter/ultracold_atoms.py` |
 | **Primary class** | `BoseHubbardModel` |
 | **Constructor** | `BoseHubbardModel(L: int = 8, n_max: int = 3, ...)` |
 | **Alternate classes** | `BECBCSCrossover(kF, mass)` — `solve_gap_equation(inv_kFas, nk)`, `FeshbachResonance`, `GrossPitaevskiiSolver(nx, Lx)` |
@@ -262,7 +262,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/electronic_structure/dft.py` |
+| **File** | `ontic/electronic_structure/dft.py` |
 | **Primary class** | `KohnShamDFT1D` |
 | **Constructor** | `KohnShamDFT1D(ngrid: int = 200, L: float = 20.0, ...)` |
 | **Key methods** | `scf(max_iter, tol, ...) -> dict` |
@@ -274,7 +274,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/electronic_structure/beyond_dft.py` |
+| **File** | `ontic/electronic_structure/beyond_dft.py` |
 | **Primary class** | `RestrictedHartreeFock` |
 | **Constructor** | `RestrictedHartreeFock(n_basis: int = 10, n_electrons: int = 2)` |
 | **Key methods** | `scf(max_iter, tol) -> Dict[str, float]` |
@@ -285,7 +285,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/electronic_structure/tight_binding.py` |
+| **File** | `ontic/electronic_structure/tight_binding.py` |
 | **Primary class** | `SlaterKosterTB` |
 | **Constructor** | `SlaterKosterTB(n_atoms: int = 2, ...)` |
 | **Alternate classes** | `SCCDFTB(n_atoms, hubbard_U)` — `scf(positions, n_electrons, ...)`, `ExtendedHuckel()` — `solve(H_diag, S)` |
@@ -295,7 +295,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/electronic_structure/excited_states.py` |
+| **File** | `ontic/electronic_structure/excited_states.py` |
 | **Primary class** | `CasidaTDDFT` |
 | **Constructor** | `CasidaTDDFT(eigenvalues: NDArray, n_occ: int, ...)` |
 | **Alternate classes** | `RealTimeTDDFT(H0, n_occ, dt)` — `run(n_steps, r_matrix, ...)`, `GWApproximation(eigenvalues, n_occ)`, `BetheSalpeterEquation(eps_qp, n_occ)` |
@@ -305,7 +305,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/electronic_structure/response.py` |
+| **File** | `ontic/electronic_structure/response.py` |
 | **Primary class** | `DFPTSolver` |
 | **Constructor** | `DFPTSolver(H0: NDArray, psi0: NDArray, eigenvalues: NDArray, ...)` |
 | **Key methods** | (density-functional perturbation theory response) |
@@ -316,7 +316,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/electronic_structure/relativistic.py` |
+| **File** | `ontic/electronic_structure/relativistic.py` |
 | **Primary class** | `ZORAHamiltonian` |
 | **Constructor** | `ZORAHamiltonian(V: NDArray, grid: NDArray)` |
 | **Key methods** | `solve() -> Tuple[NDArray, NDArray]` |
@@ -327,7 +327,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/electronic_structure/embedding.py` |
+| **File** | `ontic/electronic_structure/embedding.py` |
 | **Primary class** | `QMMMEmbedding` |
 | **Constructor** | `QMMMEmbedding(qm_atoms: NDArray, mm_atoms: NDArray, ...)` |
 | **Alternate classes** | `ONIOMEmbedding()`, `DFTPlusDMFT(n_correlated, ...)`, `ProjectionEmbedding(n_basis_A, n_basis_B)` — `solve_embedded(H_A, V_emb, ...)` |
@@ -341,7 +341,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/phonons.py` |
+| **File** | `ontic/condensed_matter/phonons.py` |
 | **Primary class** | `DynamicalMatrix` |
 | **Constructor** | `DynamicalMatrix(masses: NDArray[np.float64], ...)` |
 | **Key methods** | (computes phonon bands via dynamical matrix diagonalisation) |
@@ -353,7 +353,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/band_structure.py` |
+| **File** | `ontic/condensed_matter/band_structure.py` |
 | **Primary class** | `TightBindingBands` |
 | **Constructor** | `TightBindingBands(dim: int = 1, n_orbitals: int = 1)` |
 | **Alternate classes** | `KdotPMethod(Eg, Ep)`, `DensityOfStates`, `WannierProjection(n_bands, n_k)` |
@@ -364,7 +364,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/classical_magnetism.py` |
+| **File** | `ontic/condensed_matter/classical_magnetism.py` |
 | **Primary class** | `LandauLifshitzGilbert` |
 | **Constructor** | `LandauLifshitzGilbert(alpha: float = 0.01, Ms: float = 8e5, ...)` |
 | **Alternate classes** | `StonerWohlfarth(K_u, Ms, ...)`, `DomainWall(A, K_u, ...)`, `HeisenbergModel2D(L, J, D, ...)` |
@@ -375,7 +375,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/fermionic.py` (BCSSolver, FFLOSolver) |
+| **File** | `ontic/condensed_matter/fermionic.py` (BCSSolver, FFLOSolver) |
 | **Primary class** | `BCSSolver` |
 | **Constructor** | `BCSSolver(N_k: int = 500, E_cutoff: float = 20.0)` |
 | **Key methods** | `solve_swave(epsilon_k, V0) -> BCSResult`, `solve_dwave(kx, ky, V0)` |
@@ -387,7 +387,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/disordered.py` |
+| **File** | `ontic/condensed_matter/disordered.py` |
 | **Primary class** | `AndersonModel` |
 | **Constructor** | `AndersonModel(L: int, dim: int = 1, t: float = 1.0, W: float = ...)` |
 | **Alternate classes** | `KPMSpectral(H, n_chebyshev)`, `EdwardsAndersonSpinGlass(L, dim, J_std, ...)`, `LocalisationMetrics` |
@@ -398,7 +398,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/surfaces_interfaces.py` |
+| **File** | `ontic/condensed_matter/surfaces_interfaces.py` |
 | **Primary class** | `SurfaceEnergy` |
 | **Constructor** | `SurfaceEnergy()` |
 | **Alternate classes** | `AdsorptionIsotherms`, `SchottkyBarrier(phi_m, chi_s, ...)`, `HeterostructureBandAlignment(material1, material2)` |
@@ -409,7 +409,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/defects.py` |
+| **File** | `ontic/condensed_matter/defects.py` |
 | **Primary class** | `PointDefectCalculator` |
 | **Constructor** | `PointDefectCalculator(positions: NDArray[np.float64], ...)` |
 | **Alternate classes** | `PeierlsNabarroModel(b, d, mu, nu)`, `GrainBoundaryEnergy(b, mu, nu, ...)` |
@@ -419,7 +419,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/condensed_matter/ferroelectrics.py` |
+| **File** | `ontic/condensed_matter/ferroelectrics.py` |
 | **Primary class** | `LandauDevonshire` |
 | **Constructor** | `LandauDevonshire(alpha_0: float = 3.8e5, Tc: float = 393.0, ...)` |
 | **Alternate classes** | `PiezoelectricCoupling(d33, eps_33, ...)`, `DomainSwitching(Ps, t0, ...)`, `PyroelectricEffect(p, eps_r, ...)` |
@@ -433,7 +433,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/nuclear/structure.py` |
+| **File** | `ontic/nuclear/structure.py` |
 | **Primary class** | `NuclearShellModel` |
 | **Constructor** | `NuclearShellModel(A: int = 16, Z: int = 8, ...)` |
 | **Alternate classes** | `HartreeFockBogoliubov(n_levels)` — `solve(n_particles, G, ...)`, `NuclearDFT(n_grid, r_max)`, `IMSRG(n_sp, n_occ)` — `solve(...)`, `CoupledClusterSD(n_occ, n_unocc)`, `NCSM(...)` |
@@ -444,7 +444,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/nuclear/reactions.py` |
+| **File** | `ontic/nuclear/reactions.py` |
 | **Primary class** | `OpticalModelPotential` |
 | **Constructor** | `OpticalModelPotential(A_target: int = 40, Z_target: int = 20, ...)` |
 | **Alternate classes** | `RMatrixSolver(channel_radius)`, `HauserFeshbach(A_compound, E_excitation)`, `DWBATransfer(mass_projectile, ...)` |
@@ -455,7 +455,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/nuclear/astrophysics.py` |
+| **File** | `ontic/nuclear/astrophysics.py` |
 | **Primary class** | `ThermonuclearRate` |
 | **Constructor** | `ThermonuclearRate(Z1: int = 1, Z2: int = 1, ...)` |
 | **Alternate classes** | `NuclearReactionNetwork()`, `RProcess(T9, n_n)`, `SProcess(n_n_vt)` |
@@ -466,7 +466,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/qft/lattice_qcd.py` |
+| **File** | `ontic/qft/lattice_qcd.py` |
 | **Primary class** | `WilsonGaugeAction` |
 | **Constructor** | `WilsonGaugeAction(L: int, dim: int = 4, beta: float = 6.0, seed: Optional[int] = None)` |
 | **Key methods** | (plaquette, heatbath, average plaquette) |
@@ -478,7 +478,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/qft/perturbative.py` |
+| **File** | `ontic/qft/perturbative.py` |
 | **Primary class** | `FeynmanDiagram` |
 | **Constructor** | `FeynmanDiagram(...)` |
 | **Key methods** | `evaluate_scalar_bubble(p_sq, m1, m2, ...)` |
@@ -490,7 +490,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/particle/beyond_sm.py` |
+| **File** | `ontic/particle/beyond_sm.py` |
 | **Primary class** | `NeutrinoOscillations` |
 | **Constructor** | `NeutrinoOscillations(theta12: float = 33.44, theta23: float = 49.2, ...)` |
 | **Alternate classes** | `DarkMatterRelic(mass_chi, ...)`, `GUTRunningCouplings(model)` — `running_couplings(mu_range)`, `SMEFTOperators(Lambda)` — `run_coefficients(mu_from, mu_to, ...)` |
@@ -505,7 +505,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/chemistry/pes.py` |
+| **File** | `ontic/chemistry/pes.py` |
 | **Primary class** | `NudgedElasticBand` |
 | **Constructor** | `NudgedElasticBand(energy_func: Callable, grad_func: Callable, ...)` |
 | **Key methods** | (NEB path optimisation, saddle point finding) |
@@ -516,7 +516,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/chemistry/reaction_rate.py` |
+| **File** | `ontic/chemistry/reaction_rate.py` |
 | **Primary class** | `TransitionStateTheory` |
 | **Constructor** | `TransitionStateTheory(E_a: float, frequencies_reactant: List[float], ...)` |
 | **Alternate classes** | `VariationalTST(energy_profile, ...)`, `RRKMTheory(E0, freq_reactant, ...)`, `KramersRate(omega_0, omega_b, ...)` |
@@ -526,10 +526,10 @@
 
 | Property | Value |
 |-|-|
-| **File** | **NOT FOUND** in `tensornet/chemistry/` |
-| **Closest** | `tensornet/fusion/resonant_catalysis.py` — `ResonantCatalysisSolver` (fusion catalysis, domain-specific) |
+| **File** | **NOT FOUND** in `ontic/chemistry/` |
+| **Closest** | `ontic/fusion/resonant_catalysis.py` — `ResonantCatalysisSolver` (fusion catalysis, domain-specific) |
 | **Pack class** | `SurfaceChemistrySolver` in `packs/pack_xv.py` (covers heterogeneous catalysis via surface chemistry) |
-| **Note** | No dedicated catalysis solver exists in chemistry — need to create `tensornet/chemistry/catalysis.py` or rely on `SurfaceChemistrySolver` from pack_xv |
+| **Note** | No dedicated catalysis solver exists in chemistry — need to create `ontic/chemistry/catalysis.py` or rely on `SurfaceChemistrySolver` from pack_xv |
 | **Adapter type** | **SCF-type** (microkinetic model convergence / steady-state solution) |
 
 ---
@@ -540,7 +540,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/quantum/hybrid.py` |
+| **File** | `ontic/quantum/hybrid.py` |
 | **Primary class** | `QuantumCircuit` |
 | **Constructor** | `QuantumCircuit(n_qubits: int, chi_max: int = 64)` |
 | **Key methods** | `add_gate(gate: QuantumGate)`, (gate simulation via tensor network contraction) |
@@ -551,7 +551,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/quantum/error_mitigation.py` |
+| **File** | `ontic/quantum/error_mitigation.py` |
 | **Primary class** | `QECCode` (ABC) |
 | **Concrete classes** | `BitFlipCode`, `PhaseFlipCode`, `ShorCode` |
 | **Key methods** | `encode(logical_state) -> Tensor`, `decode(physical_state) -> Tensor`, `syndrome_measure(state) -> Tensor`, `correct_error(state, syndrome) -> Tensor` |
@@ -562,7 +562,7 @@
 
 | Property | Value |
 |-|-|
-| **File** | `tensornet/quantum/hybrid.py` |
+| **File** | `ontic/quantum/hybrid.py` |
 | **Primary class** | `VQE` |
 | **Constructor** | `VQE(hamiltonian: Callable, n_qubits: int, config: VQEConfig | None = None)` |
 | **Key methods** | `optimize(verbose: bool = True) -> dict` |
@@ -589,23 +589,23 @@
 
 | Domain | ID | Status | Action Needed |
 |-|-|-|-|
-| Catalysis | 111 | **NO dedicated solver** | Create `tensornet/chemistry/catalysis.py` OR bridge `SurfaceChemistrySolver` from `packs/pack_xv.py` |
+| Catalysis | 111 | **NO dedicated solver** | Create `ontic/chemistry/catalysis.py` OR bridge `SurfaceChemistrySolver` from `packs/pack_xv.py` |
 | Superconductivity | 98 | No standalone file; uses `fermionic.py` `BCSSolver`/`FFLOSolver` | OK — adapter wraps existing `BCSSolver`. Pack has `SuperconductivitySolver`. |
 | Lattice Gauge | 80 | Uses `qft/lattice_qft.py` `HMCSampler` | OK — adapter wraps `HMCSampler` + `GaugeField` |
 
 ### New trace_adapters/ directories to create (10)
 
 ```
-tensornet/qm/trace_adapters/
-tensornet/quantum_mechanics/trace_adapters/
-tensornet/condensed_matter/trace_adapters/
-tensornet/electronic_structure/trace_adapters/
-tensornet/nuclear/trace_adapters/
-tensornet/qft/trace_adapters/
-tensornet/particle/trace_adapters/
-tensornet/quantum/trace_adapters/
-tensornet/mps/trace_adapters/          (or tensornet/algorithms/trace_adapters/)
-tensornet/chemistry/trace_adapters/    (ALREADY EXISTS — skip)
+ontic/qm/trace_adapters/
+ontic/quantum_mechanics/trace_adapters/
+ontic/condensed_matter/trace_adapters/
+ontic/electronic_structure/trace_adapters/
+ontic/nuclear/trace_adapters/
+ontic/qft/trace_adapters/
+ontic/particle/trace_adapters/
+ontic/quantum/trace_adapters/
+ontic/mps/trace_adapters/          (or ontic/algorithms/trace_adapters/)
+ontic/chemistry/trace_adapters/    (ALREADY EXISTS — skip)
 ```
 
 **Net new directories: 9** (chemistry already has one).

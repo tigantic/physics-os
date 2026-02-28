@@ -41,9 +41,9 @@ def gate_chi_boundedness():
 
     Test: Evolve Taylor-Green, verify chi stays bounded as solution decays.
     """
-    from tensornet.cfd.chi_diagnostic import (ChiTrajectory,
+    from ontic.cfd.chi_diagnostic import (ChiTrajectory,
                                               compute_chi_state_2d)
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.ns_2d import NS2DSolver
 
     print("\n" + "=" * 60)
     print("Gate 1: chi Boundedness Theorem")
@@ -112,9 +112,9 @@ def gate_enstrophy_chi_relationship():
 
     Verify: Both Omega(t) and chi(t) track solution complexity consistently.
     """
-    from tensornet.cfd.chi_diagnostic import (ChiTrajectory,
+    from ontic.cfd.chi_diagnostic import (ChiTrajectory,
                                               compute_chi_state_2d)
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.ns_2d import NS2DSolver
 
     print("\n" + "=" * 60)
     print("Gate 2: Enstrophy-chi Relationship")
@@ -200,8 +200,8 @@ def gate_spectral_radius_tracking():
 
     Test: Taylor-Green -> lambda_max decays; Perturbed -> lambda_max grows.
     """
-    from tensornet.cfd.chi_diagnostic import compute_chi_state_2d
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.chi_diagnostic import compute_chi_state_2d
+    from ontic.cfd.ns_2d import NS2DSolver
 
     print("\n" + "=" * 60)
     print("Gate 3: Spectral Radius Tracking")
@@ -292,10 +292,10 @@ def gate_regularity_assessment_consistency():
 
     Test reproducibility and physical consistency.
     """
-    from tensornet.cfd.chi_diagnostic import (ChiTrajectory,
+    from ontic.cfd.chi_diagnostic import (ChiTrajectory,
                                               analyze_regularity,
                                               compute_chi_state_2d)
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.ns_2d import NS2DSolver
 
     print("\n" + "=" * 60)
     print("Gate 4: Regularity Assessment Consistency")

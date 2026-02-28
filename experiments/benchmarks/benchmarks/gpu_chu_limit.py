@@ -20,7 +20,7 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from tensornet.em.chu_limit_gpu import (
+from ontic.em.chu_limit_gpu import (
     make_chu_gpu_config,
     optimize_chu_antenna_gpu,
     ChuGPUConfig,

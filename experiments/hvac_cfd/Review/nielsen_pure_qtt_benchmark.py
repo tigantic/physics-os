@@ -13,7 +13,7 @@ Room: 9m × 3m × 3m, ceiling inlet, wall outlet
 
 import torch
 import time
-from tensornet.cfd.qtt_ns_3d import (
+from ontic.cfd.qtt_ns_3d import (
     NS3DOperators, NS3DConfig, NielsenBoundaryConditions, QTT3DField,
     dense_to_qtt_3d
 )

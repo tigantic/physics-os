@@ -18,9 +18,9 @@ Run: python test_stealth.py
 import numpy as np
 import torch
 
-from tensornet.aerospace.defense.ocean import (OceanDomain, SoundSpeedProfile,
+from ontic.aerospace.defense.ocean import (OceanDomain, SoundSpeedProfile,
                                      create_deep_ocean)
-from tensornet.aerospace.defense.solver import (analyze_stealth, find_shadow_zones,
+from ontic.aerospace.defense.solver import (analyze_stealth, find_shadow_zones,
                                       scan_for_optimal_hiding_spot,
                                       solve_sonar_ping)
 

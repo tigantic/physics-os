@@ -21,7 +21,7 @@ computational power. Key improvements:
 
 ### 1. ✅ Randomized SVD (rSVD)
 
-**File:** `tensornet/zk/fluidelite_circuit_analyzer.py`
+**File:** `ontic/zk/fluidelite_circuit_analyzer.py`
 
 **Change:** `QTTRankAnalyzer.compute_rank()` now uses `torch.svd_lowrank` for
 matrices larger than 256×256.
@@ -43,7 +43,7 @@ Matrix 2000×2000: numpy=1240ms, rSVD=49ms, speedup=25x
 
 ### 2. ✅ Rigorous Interval Arithmetic
 
-**Change:** `IntervalPropagator` now uses `tensornet.numerics.interval.Interval`
+**Change:** `IntervalPropagator` now uses `ontic.numerics.interval.Interval`
 for mathematically rigorous bounds propagation.
 
 **Before:**
@@ -118,7 +118,7 @@ mpos = mpo_ops.constraint_check_mpo(constraint, num_signals)
 ## Usage
 
 ```python
-from tensornet.zk.fluidelite_circuit_analyzer import (
+from ontic.zk.fluidelite_circuit_analyzer import (
     FluidEliteCircuitAnalyzer,
     QTTRankAnalyzer,
     QTTConstraintMatrix,

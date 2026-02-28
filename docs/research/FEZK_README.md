@@ -71,7 +71,7 @@ python -m tensornet.zk.fluidelite_circuit_analyzer --version
 ### Python API
 
 ```python
-from tensornet.zk.fluidelite_circuit_analyzer import (
+from ontic.zk.fluidelite_circuit_analyzer import (
     FEZKAnalyzer,
     GnarkParser,
     MPOConstraintOps,
@@ -180,12 +180,12 @@ FEZK v2.0 Test Results: 6/6 PASSED | 0/6 FAILED
 
 | File | Description |
 |------|-------------|
-| `tensornet/zk/fluidelite_circuit_analyzer.py` | Core FEZK v2.0 analyzer |
-| `tensornet/zk/halo2_analyzer.py` | Halo2 (Rust) analyzer |
-| `tensornet/cfd/qtt.py` | QTT compression core |
-| `tensornet/cfd/pure_qtt_ops.py` | MPO operations |
-| `tensornet/cfd/qtt_tci.py` | TCI sampling |
-| `tensornet/cfd/qtt_tci_gpu.py` | GPU acceleration |
+| `ontic/zk/fluidelite_circuit_analyzer.py` | Core FEZK v2.0 analyzer |
+| `ontic/zk/halo2_analyzer.py` | Halo2 (Rust) analyzer |
+| `ontic/cfd/qtt.py` | QTT compression core |
+| `ontic/cfd/pure_qtt_ops.py` | MPO operations |
+| `ontic/cfd/qtt_tci.py` | TCI sampling |
+| `ontic/cfd/qtt_tci_gpu.py` | GPU acceleration |
 | `FEZK_V2_ATTESTATION.json` | Version attestation |
 
 ## Future Roadmap (v2.1+)

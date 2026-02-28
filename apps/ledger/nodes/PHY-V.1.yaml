@@ -13,7 +13,7 @@ state: "V0.4"
 description: "Ising/Potts/XY, Monte Carlo"
 
 source_files:
-  - "tensornet/statmech/equilibrium.py"
+  - "ontic/statmech/equilibrium.py"
 
 tests:
   smoke:

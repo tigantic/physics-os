@@ -13,7 +13,7 @@ state: "V0.2"
 description: "MHD and kinetic reconnection"
 
 source_files:
-  - "tensornet/plasma/magnetic_reconnection.py"
+  - "ontic/plasma/magnetic_reconnection.py"
 
 tests:
   smoke:

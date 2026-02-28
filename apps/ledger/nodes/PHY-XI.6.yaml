@@ -13,7 +13,7 @@ state: "V0.2"
 description: "PIC, rad-hydro hooks"
 
 source_files:
-  - "tensornet/plasma/laser_plasma.py"
+  - "ontic/plasma/laser_plasma.py"
 
 tests:
   smoke:

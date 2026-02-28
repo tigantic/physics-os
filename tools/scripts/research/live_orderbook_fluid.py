@@ -30,10 +30,10 @@ import warnings
 warnings.filterwarnings("ignore")
 
 # TensorNet imports
-from tensornet.ml.discovery.connectors.coinbase_l2 import (
+from ontic.ml.discovery.connectors.coinbase_l2 import (
     CoinbaseL2Connector, L2Snapshot, L2Update, HAS_WEBSOCKETS
 )
-from tensornet import field_to_qtt, QTTCompressionResult
+from ontic import field_to_qtt, QTTCompressionResult
 
 
 @dataclass

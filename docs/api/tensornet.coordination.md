@@ -1,4 +1,4 @@
-# Module `tensornet.coordination`
+# Module `ontic.coordination`
 
 Multi-vehicle coordination module.
 

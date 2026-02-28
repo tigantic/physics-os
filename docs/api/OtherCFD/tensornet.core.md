@@ -1,4 +1,4 @@
-# Module `tensornet.core`
+# Module `ontic.core`
 
 Core tensor operations and decompositions.
 

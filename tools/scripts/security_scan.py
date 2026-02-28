@@ -80,7 +80,7 @@ def run_bandit(project_dir: Path) -> Tuple[bool, List[Dict[str, Any]]]:
 
     try:
         result = subprocess.run(
-            [sys.executable, "-m", "bandit", "-r", "tensornet", "-f", "json", "-q"],
+            [sys.executable, "-m", "bandit", "-r", "ontic", "-f", "json", "-q"],
             capture_output=True,
             text=True,
             timeout=300,

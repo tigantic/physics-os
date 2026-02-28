@@ -13,7 +13,7 @@ state: "V0.2"
 description: "CI, CC, nuclear DFT"
 
 source_files:
-  - "tensornet/nuclear/structure.py"
+  - "ontic/nuclear/structure.py"
 
 tests:
   smoke:

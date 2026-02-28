@@ -81,7 +81,7 @@ The complete naming hierarchy from legal entity to code symbol:
 
 ```
 HyperTensor-VM (monorepo)
-├── hypertensor/          Python product layer  (API, SDK, CLI, MCP, core)
+├── physics_os/          Python product layer  (API, SDK, CLI, MCP, core)
 │   ├── api/              REST API (FastAPI)
 │   ├── sdk/              Python SDK
 │   ├── cli/              CLI
@@ -90,7 +90,7 @@ HyperTensor-VM (monorepo)
 │   ├── core/             Executor, registry, sanitizer, certificates, evidence
 │   ├── contracts/        Pydantic schemas
 │   └── jobs/             Job state machine
-├── tensornet/            Python engine layer  (VM + 100+ physics modules)
+├── ontic/            Python engine layer  (VM + 100+ physics modules)
 │   ├── engine/vm/        QTT IR, compilers, runtime, GPU runtime
 │   ├── engine/*/         Adaptive, distributed, gateway, GPU, hardware, realtime
 │   ├── cfd/              77K LOC — CFD solvers
@@ -291,7 +291,7 @@ Physics Problem
 | Phase | Name | Scope | Breaking Changes | Est. Effort |
 |:-----:|------|-------|:----------------:|:-----------:|
 | **0** | Identity Layer | Brand assets, README, docs, LICENSE, headers | None | 1 session |
-| **1** | Python Package Rename | `tensornet/` → `ontic/`, `hypertensor/` → `physics_os/` | **YES** | 2-3 sessions |
+| **1** | Python Package Rename | `ontic/` → `ontic/`, `physics_os/` → `physics_os/` | **YES** | 2-3 sessions |
 | **2** | Rust Crate Rename | `hyper_core` → `ontic_core`, `hyper_bridge` → `ontic_bridge` | **YES** | 1 session |
 | **3** | Repository Rename | `HyperTensor-VM` → `physics-os` on GitHub | **YES** | 1 session |
 | **4** | Documentation Overhaul | Full rebrand of all 30+ docs | None (content) | 1-2 sessions |
@@ -312,8 +312,8 @@ Physics Problem
 | 0.7 | Update VERSION banner | VERSION | None |
 | 0.8 | Update Cargo.toml workspace header | Cargo.toml | None |
 | 0.9 | Update .zenodo.json | .zenodo.json | None |
-| 0.10 | Update hypertensor/__init__.py docstring | hypertensor/__init__.py | None |
-| 0.11 | Update tensornet/__init__.py docstring | tensornet/__init__.py | None |
+| 0.10 | Update physics_os/__init__.py docstring | physics_os/__init__.py | None |
+| 0.11 | Update ontic/__init__.py docstring | ontic/__init__.py | None |
 | 0.12 | Create this technical plan | PHYSICS_OS_TECHNICAL_PLAN.md | None |
 
 **Invariant:** `pytest tests/ -x` must pass before and after Phase 0. Zero broken imports.
@@ -324,14 +324,14 @@ Physics Problem
 
 | Current | New | Size |
 |---------|-----|------|
-| `tensornet/` | `ontic/` | ~471K LOC, 100+ modules |
-| `hypertensor/` | `physics_os/` | ~4K LOC, 8 modules |
+| `ontic/` | `ontic/` | ~471K LOC, 100+ modules |
+| `physics_os/` | `physics_os/` | ~4K LOC, 8 modules |
 
 **Migration Strategy:**
 
 1. **Create compatibility shim packages** that re-export everything:
    ```python
-   # tensornet/__init__.py (shim)
+   # ontic/__init__.py (shim)
    """Backward compatibility — use 'ontic' for new code."""
    import warnings
    warnings.warn("'tensornet' is deprecated. Use 'ontic'.", DeprecationWarning, stacklevel=2)
@@ -346,14 +346,14 @@ Physics Problem
 
 3. **Bulk update all imports** with `sed` + manual review:
    ```bash
-   find . -name '*.py' -exec sed -i 's/from tensornet/from ontic/g; s/import tensornet/import ontic/g' {} +
-   find . -name '*.py' -exec sed -i 's/from hypertensor/from physics_os/g; s/import hypertensor/import physics_os/g' {} +
+   find . -name '*.py' -exec sed -i 's/from ontic/from ontic/g; s/import ontic/import ontic/g' {} +
+   find . -name '*.py' -exec sed -i 's/from physics_os/from physics_os/g; s/import physics_os/import physics_os/g' {} +
    ```
 
 4. **Create shim packages** at old paths for backward compatibility:
    ```
-   tensornet/         (shim → ontic)
-   hypertensor/       (shim → physics_os)
+   ontic/         (shim → ontic)
+   physics_os/       (shim → physics_os)
    ```
 
 5. **Update pyproject.toml:**

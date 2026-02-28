@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Berry phase polarization"
 
 source_files:
-  - "tensornet/condensed_matter/ferroelectrics.py"
+  - "ontic/condensed_matter/ferroelectrics.py"
 
 tests:
   smoke:

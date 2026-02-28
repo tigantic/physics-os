@@ -83,7 +83,7 @@ This document establishes the constitutional framework for extending QTT into se
 
 > All benchmarks SHALL be reproducible via:
 > ```bash
-> python -m tensornet.genesis.<primitive>_gauntlet --seed=42
+> python -m ontic.genesis.<primitive>_gauntlet --seed=42
 > ```
 > Results SHALL match attestation within floating-point tolerance (1e-10 relative).
 
@@ -102,13 +102,13 @@ This document establishes the constitutional framework for extending QTT into se
 
 > All Genesis primitives SHALL be importable via:
 > ```python
-> from tensornet.genesis import <PrimitiveName>
-> from tensornet.genesis.<domain> import <SpecificClass>
+> from ontic.genesis import <PrimitiveName>
+> from ontic.genesis.<domain> import <SpecificClass>
 > ```
 
 **Section 3.3 — Backward Compatibility**
 
-> Genesis primitives SHALL NOT break existing tensornet functionality. All changes to `tensornet/core/` require explicit approval.
+> Genesis primitives SHALL NOT break existing tensornet functionality. All changes to `ontic/core/` require explicit approval.
 
 ---
 
@@ -183,16 +183,16 @@ This document establishes the constitutional framework for extending QTT into se
 
 | Component | File | LOC | Status |
 |-----------|------|:---:|:------:|
-| Module Entry | `tensornet/genesis/__init__.py` | 20 | ✅ |
-| OT Exports | `tensornet/genesis/ot/__init__.py` | 80 | ✅ |
-| Distributions | `tensornet/genesis/ot/distributions.py` | 500 | ✅ |
-| Cost Matrices | `tensornet/genesis/ot/cost_matrices.py` | 500 | ✅ |
-| Sinkhorn Solver | `tensornet/genesis/ot/sinkhorn_qtt.py` | 650 | ✅ |
-| Wasserstein API | `tensornet/genesis/ot/wasserstein.py` | 380 | ✅ |
-| Transport Plans | `tensornet/genesis/ot/transport_plan.py` | 400 | ✅ |
-| Barycenters | `tensornet/genesis/ot/barycenters.py` | 400 | ✅ |
-| Elite Gauntlet | `tensornet/genesis/ot/qtt_ot_gauntlet.py` | 900 | ✅ |
-| Documentation | `tensornet/genesis/ot/README.md` | 200 | ✅ |
+| Module Entry | `ontic/genesis/__init__.py` | 20 | ✅ |
+| OT Exports | `ontic/genesis/ot/__init__.py` | 80 | ✅ |
+| Distributions | `ontic/genesis/ot/distributions.py` | 500 | ✅ |
+| Cost Matrices | `ontic/genesis/ot/cost_matrices.py` | 500 | ✅ |
+| Sinkhorn Solver | `ontic/genesis/ot/sinkhorn_qtt.py` | 650 | ✅ |
+| Wasserstein API | `ontic/genesis/ot/wasserstein.py` | 380 | ✅ |
+| Transport Plans | `ontic/genesis/ot/transport_plan.py` | 400 | ✅ |
+| Barycenters | `ontic/genesis/ot/barycenters.py` | 400 | ✅ |
+| Elite Gauntlet | `ontic/genesis/ot/qtt_ot_gauntlet.py` | 900 | ✅ |
+| Documentation | `ontic/genesis/ot/README.md` | 200 | ✅ |
 | **TOTAL** | | **~4,030** | ✅ |
 
 **Key Achievements**:
@@ -216,14 +216,14 @@ This document establishes the constitutional framework for extending QTT into se
 
 | Component | File | LOC | Status |
 |-----------|------|:---:|:------:|
-| SGW Exports | `tensornet/genesis/sgw/__init__.py` | 90 | ✅ |
-| Graph Laplacian | `tensornet/genesis/sgw/laplacian.py` | 300 | ✅ |
-| Graph Signals | `tensornet/genesis/sgw/graph_signals.py` | 400 | ✅ |
-| Chebyshev Approx | `tensornet/genesis/sgw/chebyshev.py` | 270 | ✅ |
-| Wavelets | `tensornet/genesis/sgw/wavelets.py` | 300 | ✅ |
-| Graph Filters | `tensornet/genesis/sgw/filters.py` | 250 | ✅ |
-| Elite Gauntlet | `tensornet/genesis/sgw/qtt_sgw_gauntlet.py` | 550 | ✅ |
-| Documentation | `tensornet/genesis/sgw/README.md` | 200 | ✅ |
+| SGW Exports | `ontic/genesis/sgw/__init__.py` | 90 | ✅ |
+| Graph Laplacian | `ontic/genesis/sgw/laplacian.py` | 300 | ✅ |
+| Graph Signals | `ontic/genesis/sgw/graph_signals.py` | 400 | ✅ |
+| Chebyshev Approx | `ontic/genesis/sgw/chebyshev.py` | 270 | ✅ |
+| Wavelets | `ontic/genesis/sgw/wavelets.py` | 300 | ✅ |
+| Graph Filters | `ontic/genesis/sgw/filters.py` | 250 | ✅ |
+| Elite Gauntlet | `ontic/genesis/sgw/qtt_sgw_gauntlet.py` | 550 | ✅ |
+| Documentation | `ontic/genesis/sgw/README.md` | 200 | ✅ |
 | **TOTAL** | | **~2,360** | ✅ |
 
 **Key Achievements**:
@@ -246,14 +246,14 @@ This document establishes the constitutional framework for extending QTT into se
 
 | Component | File | LOC | Status |
 |-----------|------|:---:|:------:|
-| RMT Exports | `tensornet/genesis/rmt/__init__.py` | 115 | ✅ |
-| Ensembles | `tensornet/genesis/rmt/ensembles.py` | 350 | ✅ |
-| Resolvent | `tensornet/genesis/rmt/resolvent.py` | 200 | ✅ |
-| Spectral Density | `tensornet/genesis/rmt/spectral_density.py` | 270 | ✅ |
-| Universality | `tensornet/genesis/rmt/universality.py` | 300 | ✅ |
-| Free Probability | `tensornet/genesis/rmt/free_probability.py` | 250 | ✅ |
-| Elite Gauntlet | `tensornet/genesis/rmt/qtt_rmt_gauntlet.py` | 800 | ✅ |
-| Documentation | `tensornet/genesis/rmt/README.md` | 140 | ✅ |
+| RMT Exports | `ontic/genesis/rmt/__init__.py` | 115 | ✅ |
+| Ensembles | `ontic/genesis/rmt/ensembles.py` | 350 | ✅ |
+| Resolvent | `ontic/genesis/rmt/resolvent.py` | 200 | ✅ |
+| Spectral Density | `ontic/genesis/rmt/spectral_density.py` | 270 | ✅ |
+| Universality | `ontic/genesis/rmt/universality.py` | 300 | ✅ |
+| Free Probability | `ontic/genesis/rmt/free_probability.py` | 250 | ✅ |
+| Elite Gauntlet | `ontic/genesis/rmt/qtt_rmt_gauntlet.py` | 800 | ✅ |
+| Documentation | `ontic/genesis/rmt/README.md` | 140 | ✅ |
 | **TOTAL** | | **~2,425** | ✅ |
 
 **Key Achievements**:
@@ -276,14 +276,14 @@ This document establishes the constitutional framework for extending QTT into se
 
 | Component | File | LOC | Status |
 |-----------|------|:---:|:------:|
-| TG Exports | `tensornet/genesis/tropical/__init__.py` | 100 | ✅ |
-| Semiring | `tensornet/genesis/tropical/semiring.py` | 370 | ✅ |
-| Matrix Ops | `tensornet/genesis/tropical/matrix.py` | 480 | ✅ |
-| Shortest Paths | `tensornet/genesis/tropical/shortest_path.py` | 520 | ✅ |
-| Convexity | `tensornet/genesis/tropical/convexity.py` | 350 | ✅ |
-| Optimization | `tensornet/genesis/tropical/optimization.py` | 380 | ✅ |
-| Elite Gauntlet | `tensornet/genesis/tropical/qtt_tropical_gauntlet.py` | 620 | ✅ |
-| Documentation | `tensornet/genesis/tropical/README.md` | 130 | ✅ |
+| TG Exports | `ontic/genesis/tropical/__init__.py` | 100 | ✅ |
+| Semiring | `ontic/genesis/tropical/semiring.py` | 370 | ✅ |
+| Matrix Ops | `ontic/genesis/tropical/matrix.py` | 480 | ✅ |
+| Shortest Paths | `ontic/genesis/tropical/shortest_path.py` | 520 | ✅ |
+| Convexity | `ontic/genesis/tropical/convexity.py` | 350 | ✅ |
+| Optimization | `ontic/genesis/tropical/optimization.py` | 380 | ✅ |
+| Elite Gauntlet | `ontic/genesis/tropical/qtt_tropical_gauntlet.py` | 620 | ✅ |
+| Documentation | `ontic/genesis/tropical/README.md` | 130 | ✅ |
 | **TOTAL** | | **~2,950** | ✅ |
 
 **Key Achievements**:
@@ -306,14 +306,14 @@ This document establishes the constitutional framework for extending QTT into se
 
 | Component | File | LOC | Status |
 |-----------|------|:---:|:------:|
-| RKHS Exports | `tensornet/genesis/rkhs/__init__.py` | 120 | ✅ |
-| Kernels | `tensornet/genesis/rkhs/kernels.py` | 450 | ✅ |
-| Kernel Matrices | `tensornet/genesis/rkhs/kernel_matrices.py` | 380 | ✅ |
-| Feature Maps | `tensornet/genesis/rkhs/feature_maps.py` | 320 | ✅ |
-| Gaussian Processes | `tensornet/genesis/rkhs/gaussian_process.py` | 420 | ✅ |
-| Kernel Methods | `tensornet/genesis/rkhs/kernel_methods.py` | 350 | ✅ |
-| Elite Gauntlet | `tensornet/genesis/rkhs/qtt_rkhs_gauntlet.py` | 680 | ✅ |
-| Documentation | `tensornet/genesis/rkhs/README.md` | 180 | ✅ |
+| RKHS Exports | `ontic/genesis/rkhs/__init__.py` | 120 | ✅ |
+| Kernels | `ontic/genesis/rkhs/kernels.py` | 450 | ✅ |
+| Kernel Matrices | `ontic/genesis/rkhs/kernel_matrices.py` | 380 | ✅ |
+| Feature Maps | `ontic/genesis/rkhs/feature_maps.py` | 320 | ✅ |
+| Gaussian Processes | `ontic/genesis/rkhs/gaussian_process.py` | 420 | ✅ |
+| Kernel Methods | `ontic/genesis/rkhs/kernel_methods.py` | 350 | ✅ |
+| Elite Gauntlet | `ontic/genesis/rkhs/qtt_rkhs_gauntlet.py` | 680 | ✅ |
+| Documentation | `ontic/genesis/rkhs/README.md` | 180 | ✅ |
 | **TOTAL** | | **~2,900** | ✅ |
 
 **Key Achievements**:
@@ -336,13 +336,13 @@ This document establishes the constitutional framework for extending QTT into se
 
 | Component | File | LOC | Status |
 |-----------|------|:---:|:------:|
-| Topology Exports | `tensornet/genesis/topology/__init__.py` | 95 | ✅ |
-| Simplicial Complexes | `tensornet/genesis/topology/simplicial.py` | 520 | ✅ |
-| Boundary Operators | `tensornet/genesis/topology/boundary.py` | 380 | ✅ |
-| Persistence Algorithm | `tensornet/genesis/topology/persistence.py` | 450 | ✅ |
-| Distances | `tensornet/genesis/topology/distances.py` | 320 | ✅ |
-| Elite Gauntlet | `tensornet/genesis/topology/qtt_ph_gauntlet.py` | 560 | ✅ |
-| Documentation | `tensornet/genesis/topology/README.md` | 160 | ✅ |
+| Topology Exports | `ontic/genesis/topology/__init__.py` | 95 | ✅ |
+| Simplicial Complexes | `ontic/genesis/topology/simplicial.py` | 520 | ✅ |
+| Boundary Operators | `ontic/genesis/topology/boundary.py` | 380 | ✅ |
+| Persistence Algorithm | `ontic/genesis/topology/persistence.py` | 450 | ✅ |
+| Distances | `ontic/genesis/topology/distances.py` | 320 | ✅ |
+| Elite Gauntlet | `ontic/genesis/topology/qtt_ph_gauntlet.py` | 560 | ✅ |
+| Documentation | `ontic/genesis/topology/README.md` | 160 | ✅ |
 | **TOTAL** | | **~2,485** | ✅ |
 
 **Key Achievements**:
@@ -366,15 +366,15 @@ This document establishes the constitutional framework for extending QTT into se
 
 | Component | File | LOC | Status |
 |-----------|------|:---:|:------:|
-| GA Exports | `tensornet/genesis/ga/__init__.py` | 150 | ✅ |
-| Clifford Algebra | `tensornet/genesis/ga/multivector.py` | 580 | ✅ |
-| Products | `tensornet/genesis/ga/products.py` | 420 | ✅ |
-| Operations | `tensornet/genesis/ga/operations.py` | 380 | ✅ |
-| Rotors | `tensornet/genesis/ga/rotors.py` | 350 | ✅ |
-| Conformal GA | `tensornet/genesis/ga/cga.py` | 520 | ✅ |
-| QTT Multivectors | `tensornet/genesis/ga/qtt_multivector.py` | 480 | ✅ |
-| Elite Gauntlet | `tensornet/genesis/ga/qtt_ga_gauntlet.py` | 780 | ✅ |
-| Documentation | `tensornet/genesis/ga/README.md` | 200 | ✅ |
+| GA Exports | `ontic/genesis/ga/__init__.py` | 150 | ✅ |
+| Clifford Algebra | `ontic/genesis/ga/multivector.py` | 580 | ✅ |
+| Products | `ontic/genesis/ga/products.py` | 420 | ✅ |
+| Operations | `ontic/genesis/ga/operations.py` | 380 | ✅ |
+| Rotors | `ontic/genesis/ga/rotors.py` | 350 | ✅ |
+| Conformal GA | `ontic/genesis/ga/cga.py` | 520 | ✅ |
+| QTT Multivectors | `ontic/genesis/ga/qtt_multivector.py` | 480 | ✅ |
+| Elite Gauntlet | `ontic/genesis/ga/qtt_ga_gauntlet.py` | 780 | ✅ |
+| Documentation | `ontic/genesis/ga/README.md` | 200 | ✅ |
 | **TOTAL** | | **~3,860** | ✅ |
 
 **Key Achievements**:
@@ -402,7 +402,7 @@ This document establishes the constitutional framework for extending QTT into se
 | **Current Bottleneck** | O(N³) for exact, O(N²) for Sinkhorn |
 | **QTT Complexity** | O(r³ log N) per Sinkhorn iteration |
 | **Speedup Factor** | 10⁶× at N = 10¹² |
-| **Module** | `tensornet/genesis/ot/` |
+| **Module** | `ontic/genesis/ot/` |
 | **Status** | ✅ **COMPLETE** — January 23, 2026 |
 | **Gauntlet** | 19/19 tests passing (100%) |
 | **LOC** | ~4,030 lines |
@@ -433,7 +433,7 @@ $$K_{ij} = e^{-c_{ij}/\varepsilon}, \quad u^{(k+1)} = \frac{a}{Kv^{(k)}}, \quad 
 ### File Structure (IMPLEMENTED ✅)
 
 ```
-tensornet/genesis/ot/
+ontic/genesis/ot/
 ├── __init__.py              ✅ Comprehensive exports
 ├── README.md                ✅ Technical documentation
 ├── distributions.py         ✅ QTTDistribution class (Gaussian, uniform, mixture)
@@ -451,7 +451,7 @@ tensornet/genesis/ot/
 ### API Specification
 
 ```python
-from tensornet.genesis.ot import QTTSinkhorn, wasserstein_distance
+from ontic.genesis.ot import QTTSinkhorn, wasserstein_distance
 
 # Initialize solver
 solver = QTTSinkhorn(
@@ -508,7 +508,7 @@ transported = plan.apply(mu, t=0.5)  # Interpolation at t=0.5
 
 ```bash
 # Run full benchmark suite
-python -m tensornet.genesis.ot.benchmark \
+python -m ontic.genesis.ot.benchmark \
     --grid-sizes 16,20,24,28,32,36,40 \
     --regularizations 0.1,0.01,0.001 \
     --output experiments/benchmarks/benchmarks/qtt_ot_benchmark.json
@@ -559,7 +559,7 @@ python -m tensornet.genesis.ot.benchmark \
 | **Domain** | Graph Signal Processing, Multi-scale Analysis |
 | **Current Bottleneck** | O(N³) for eigendecomposition |
 | **QTT Complexity** | O(r³ log N) for wavelet transform |
-| **Target Module** | `tensornet/genesis/sgw/` |
+| **Target Module** | `ontic/genesis/sgw/` |
 
 ### Mathematical Foundation
 
@@ -580,7 +580,7 @@ $$W_f(s, n) = \langle \psi_{s,n}, f \rangle = \sum_k g(s\lambda_k) \hat{f}(k) \c
 ### File Structure
 
 ```
-tensornet/genesis/sgw/
+ontic/genesis/sgw/
 ├── __init__.py
 ├── README.md
 ├── laplacian.py             # QTT graph Laplacian construction
@@ -595,7 +595,7 @@ tensornet/genesis/sgw/
 ### API Specification
 
 ```python
-from tensornet.genesis.sgw import QTTGraphWavelet, QTTLaplacian
+from ontic.genesis.sgw import QTTGraphWavelet, QTTLaplacian
 
 # Build graph Laplacian for 3D grid (10^12 nodes)
 L = QTTLaplacian.grid_3d(nx=10000, ny=10000, nz=10000)
@@ -638,11 +638,11 @@ for scale, coef in zip(wavelet.scales, coefficients):
 | **Domain** | Eigenvalue Statistics, Universality |
 | **Current Bottleneck** | O(N³) for eigendecomposition |
 | **QTT Complexity** | O(r³ log N) for spectral density |
-| **Module** | `tensornet/genesis/rmt/` |
+| **Module** | `ontic/genesis/rmt/` |
 | **Status** | ✅ **COMPLETE** — January 24, 2026 |
 | **Gauntlet** | 19/19 tests passing (100%) |
 | **LOC** | ~2,425 lines |
-| **Target Module** | `tensornet/genesis/rmt/` |
+| **Target Module** | `ontic/genesis/rmt/` |
 
 ### Mathematical Foundation
 
@@ -663,7 +663,7 @@ $$\rho(\lambda) = -\frac{1}{\pi} \lim_{\eta \to 0^+} \text{Im}[\text{Tr}(G(\lamb
 ### File Structure
 
 ```
-tensornet/genesis/rmt/
+ontic/genesis/rmt/
 ├── __init__.py
 ├── README.md
 ├── resolvent.py             # QTT resolvent computation
@@ -695,7 +695,7 @@ tensornet/genesis/rmt/
 | **Domain** | Optimization, Piecewise-Linear Geometry |
 | **Current Bottleneck** | Purely academic, no scalable implementations |
 | **QTT Complexity** | O(r³ log² N) for tropical operations |
-| **Module** | `tensornet/genesis/tropical/` |
+| **Module** | `ontic/genesis/tropical/` |
 | **Status** | ✅ **COMPLETE** — January 24, 2026 |
 | **Gauntlet** | 20/20 tests passing (100%) |
 | **LOC** | ~2,950 lines |
@@ -728,7 +728,7 @@ As $\beta \to \infty$, this becomes exact min. For finite $\beta$, all operation
 ### File Structure
 
 ```
-tensornet/genesis/tropical/
+ontic/genesis/tropical/
 ├── __init__.py
 ├── README.md
 ├── semiring.py              # Tropical semiring operations
@@ -751,7 +751,7 @@ tensornet/genesis/tropical/
 | **Domain** | Kernel Machines, Gaussian Processes |
 | **Current Bottleneck** | O(N³) for kernel matrix operations |
 | **QTT Complexity** | O(r³ log N) for kernel evaluations |
-| **Target Module** | `tensornet/genesis/rkhs/` |
+| **Target Module** | `ontic/genesis/rkhs/` |
 
 ### Mathematical Foundation
 
@@ -785,7 +785,7 @@ $$\alpha = (K + \lambda I)^{-1} y$$
 | **Domain** | Topological Data Analysis |
 | **Current Bottleneck** | O(N³) for boundary matrix reduction |
 | **QTT Complexity** | O(r³ log N) for homology computation |
-| **Target Module** | `tensornet/genesis/topology/` |
+| **Target Module** | `ontic/genesis/topology/` |
 
 ### Mathematical Foundation
 
@@ -819,7 +819,7 @@ $$\beta_k = \dim(H_k)$$
 ### File Structure
 
 ```
-tensornet/genesis/topology/
+ontic/genesis/topology/
 ├── __init__.py
 ├── README.md
 ├── complexes.py             # Simplicial/cubical complexes in QTT
@@ -843,7 +843,7 @@ tensornet/genesis/topology/
 | **Domain** | Unified Geometric Computing |
 | **Current Bottleneck** | Multivector storage O(2ⁿ) |
 | **QTT Complexity** | O(r³n) for geometric products |
-| **Target Module** | `tensornet/genesis/ga/` |
+| **Target Module** | `ontic/genesis/ga/` |
 
 ### Mathematical Foundation
 
@@ -879,7 +879,7 @@ Embed 3D space into 5D conformal space:
 ### File Structure
 
 ```
-tensornet/genesis/ga/
+ontic/genesis/ga/
 ├── __init__.py
 ├── README.md
 ├── algebra.py               # Geometric algebra definition
@@ -909,7 +909,7 @@ tensornet/genesis/ga/
 | **Layer** | 27 (first Applied Science layer) |
 | **Current Bottleneck** | Cell state ∈ ℝ^{20K×20K×...} is intractable |
 | **QTT Complexity** | O(N·d·r²) for TT-SVD over 88 sites |
-| **Target Module** | `tensornet/genesis/aging/` |
+| **Target Module** | `ontic/genesis/aging/` |
 | **Phase** | Phase 21 — Civilization Stack |
 
 ### Core Thesis
@@ -958,13 +958,13 @@ The 12 hallmarks of aging (López-Otín 2023) are NOT independent — they are e
 
 | Component | File | LOC | Status |
 |-----------|------|:---:|:------:|
-| Package Exports | `tensornet/genesis/aging/__init__.py` | 170 | ✅ |
-| Cell State Tensor | `tensornet/genesis/aging/cell_state.py` | 1,282 | ✅ |
-| Aging Dynamics | `tensornet/genesis/aging/dynamics.py` | 653 | ✅ |
-| Epigenetic Clocks | `tensornet/genesis/aging/epigenetic_clock.py` | 673 | ✅ |
-| Interventions | `tensornet/genesis/aging/interventions.py` | 1,044 | ✅ |
-| Topology | `tensornet/genesis/aging/topology.py` | 636 | ✅ |
-| Gauntlet | `tensornet/genesis/aging/tests/test_aging_gauntlet.py` | 752 | ✅ |
+| Package Exports | `ontic/genesis/aging/__init__.py` | 170 | ✅ |
+| Cell State Tensor | `ontic/genesis/aging/cell_state.py` | 1,282 | ✅ |
+| Aging Dynamics | `ontic/genesis/aging/dynamics.py` | 653 | ✅ |
+| Epigenetic Clocks | `ontic/genesis/aging/epigenetic_clock.py` | 673 | ✅ |
+| Interventions | `ontic/genesis/aging/interventions.py` | 1,044 | ✅ |
+| Topology | `ontic/genesis/aging/topology.py` | 636 | ✅ |
+| Gauntlet | `ontic/genesis/aging/tests/test_aging_gauntlet.py` | 752 | ✅ |
 | **TOTAL** | | **~5,210** | ✅ |
 
 ### Key Achievements
@@ -991,7 +991,7 @@ The 12 hallmarks of aging (López-Otín 2023) are NOT independent — they are e
 ### File Structure
 
 ```
-tensornet/genesis/aging/
+ontic/genesis/aging/
 ├── __init__.py              # Package exports (25 public symbols)
 ├── cell_state.py            # CellStateTensor, BiologicalMode, CellType
 ├── dynamics.py              # AgingOperator, AgingRateModel, AgingTrajectory
@@ -1083,7 +1083,7 @@ import json
 import hashlib
 from datetime import datetime
 from dataclasses import dataclass
-from tensornet.genesis.<module> import *
+from ontic.genesis.<module> import *
 
 @dataclass
 class GauntletResult:
@@ -1241,7 +1241,7 @@ All 7 QTT meta-primitives + 1 applied science layer have been implemented and va
 ### Layer 20: QTT-Optimal Transport ✅ COMPLETE
 *Trillion-point distribution matching — IMPLEMENTED January 23, 2026*
 
-**Implementation**: `tensornet/genesis/ot/` (~4,030 LOC)
+**Implementation**: `ontic/genesis/ot/` (~4,030 LOC)
 
 - **QTTDistribution**: Gaussian, uniform, mixture with TT-SVD ✅
 - **QTTMatrix**: MPO cost matrices, euclidean_cost_mpo (rank 3) ✅
@@ -1311,7 +1311,7 @@ All 7 QTT meta-primitives + 1 applied science layer have been implemented and va
 | Metric | Pre-Genesis | Post-Genesis | Delta |
 |--------|------------:|-------------:|------:|
 | **Total LOC** | 468,168 | ~491,000+ | +23,000 |
-| **tensornet/ LOC** | 213,663 | ~237,000+ | +23,000 |
+| **ontic/ LOC** | 213,663 | ~237,000+ | +23,000 |
 | **Modules** | 95 | 103 | +8 |
 | **Gauntlets** | 17 | 25 | +8 |
 | **Capability Layers** | 19 | 27 | +8 |
@@ -1323,7 +1323,7 @@ All 7 QTT meta-primitives + 1 applied science layer have been implemented and va
 ## Module Location Map
 
 ```
-tensornet/
+ontic/
 ├── genesis/                    # NEW: Meta-primitive extensions
 │   ├── __init__.py
 │   ├── README.md

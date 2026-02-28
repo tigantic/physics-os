@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Quenches, Floquet"
 
 source_files:
-  - "tensornet/condensed_matter/nonequilibrium_qm.py"
+  - "ontic/condensed_matter/nonequilibrium_qm.py"
 
 tests:
   smoke:

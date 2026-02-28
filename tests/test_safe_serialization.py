@@ -148,7 +148,7 @@ class TestFieldSerialization:
     def test_field_save_load_safe(self):
         """Test that Field save/load is safe (if Field class exists)."""
         try:
-            from tensornet.core.field import Field
+            from ontic.core.field import Field
         except ImportError:
             pytest.skip("Field class not available")
 

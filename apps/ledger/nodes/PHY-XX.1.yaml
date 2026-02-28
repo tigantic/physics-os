@@ -13,7 +13,7 @@ state: "V0.2"
 description: "SR dynamics"
 
 source_files:
-  - "tensornet/relativity/relativistic_mechanics.py"
+  - "ontic/relativity/relativistic_mechanics.py"
 
 tests:
   smoke:

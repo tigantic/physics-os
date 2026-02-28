@@ -10,7 +10,7 @@
 
 **Why:** Jacobi diverges. `poisson_iterations=0` is a workaround. 5.8% dissipation at 128³ traces directly to skipping velocity reconstruction. This is the blocker.
 
-- [ ] 1.1 — Review existing FFT infrastructure in codebase (`tensornet/` search for fft, spectral, fourier)
+- [ ] 1.1 — Review existing FFT infrastructure in codebase (`ontic/` search for fft, spectral, fourier)
 - [ ] 1.2 — Design QTT-compressed spectral Poisson solver (`poisson_spectral.py`)
   - Solve ∇²ψ = f in Fourier space: ψ̂(k) = f̂(k) / |k|²
   - QTT-native FFT or hybrid FFT approach

@@ -1,4 +1,4 @@
-# Module `tensornet.benchmarks`
+# Module `ontic.benchmarks`
 
 TensorRT integration benchmarking module.
 

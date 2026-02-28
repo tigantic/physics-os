@@ -391,7 +391,7 @@ class SentinelEngine:
         
         # Import regime detector
         try:
-            from tensornet.ml.neural.regime_detector import (
+            from ontic.ml.neural.regime_detector import (
                 RegimeDetector, RegimeDetectorConfig, MarketRegime as DetectorRegime
             )
             
@@ -455,7 +455,7 @@ class SentinelEngine:
                     confidence = state.confidence
                     
                     # Map detector regime to our enum
-                    from tensornet.ml.neural.regime_detector import MarketRegime as DetectorRegime
+                    from ontic.ml.neural.regime_detector import MarketRegime as DetectorRegime
                     regime_map = {
                         DetectorRegime.MEAN_REVERTING: MarketRegime.MEAN_REVERTING,
                         DetectorRegime.TRENDING: MarketRegime.TRENDING,

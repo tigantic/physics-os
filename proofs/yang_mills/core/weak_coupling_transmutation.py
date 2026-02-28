@@ -61,8 +61,8 @@ import sys
 
 sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
 
-from tensornet.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo
-from tensornet.cfd.pure_qtt_ops import QTTState, dense_to_qtt, qtt_to_dense
+from ontic.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo
+from ontic.cfd.pure_qtt_ops import QTTState, dense_to_qtt, qtt_to_dense
 
 
 def lattice_spacing(g: float, N_c: int = 2) -> float:

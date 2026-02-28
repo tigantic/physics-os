@@ -4,8 +4,8 @@ import time
 
 import torch
 
-from tensornet.cfd.qtt_eval import qtt_eval_batch
-from tensornet.cfd.qtt_tci import RUST_AVAILABLE, qtt_from_function
+from ontic.cfd.qtt_eval import qtt_eval_batch
+from ontic.cfd.qtt_tci import RUST_AVAILABLE, qtt_from_function
 
 
 def test_rust_tci():

@@ -207,13 +207,13 @@ jobs:
         run: |
           docker build \
             -f ${{ env.PRODUCT_ROOT }}/Containerfile \
-            -t hypertensor-facial-plastics:ci-${{ github.sha }} \
+            -t physics-os-facial-plastics:ci-${{ github.sha }} \
             .
 
       - name: Smoke test — import check
         run: |
           docker run --rm --entrypoint python \
-            hypertensor-facial-plastics:ci-${{ github.sha }} \
+            physics-os-facial-plastics:ci-${{ github.sha }} \
             -c "
           from products.facial_plastics.core.types import VolumeMesh
           from products.facial_plastics.sim.orchestrator import SimOrchestrator
@@ -226,12 +226,12 @@ jobs:
       - name: Smoke test — CLI info
         run: |
           docker run --rm --entrypoint python \
-            hypertensor-facial-plastics:ci-${{ github.sha }} \
+            physics-os-facial-plastics:ci-${{ github.sha }} \
             -m products.facial_plastics.cli info || true
 
       - name: Report image size
         run: |
-          SIZE=$(docker image inspect hypertensor-facial-plastics:ci-${{ github.sha }} \
+          SIZE=$(docker image inspect physics-os-facial-plastics:ci-${{ github.sha }} \
             --format '{{.Size}}')
           SIZE_MB=$((SIZE / 1048576))
           echo "Container image size: ${SIZE_MB} MB"
@@ -253,7 +253,7 @@ jobs:
       contents: read
     env:
       REGISTRY: ghcr.io
-      IMAGE_NAME: ${{ github.repository_owner }}/hypertensor-facial-plastics
+      IMAGE_NAME: ${{ github.repository_owner }}/physics-os-facial-plastics
     steps:
       - uses: actions/checkout@v4
 

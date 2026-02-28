@@ -84,7 +84,7 @@ def get_git_commit() -> str:
 
 def compute_enstrophy(omega: List[List[Tensor]]) -> float:
     """Compute enstrophy Ω = ||ω||² from QTT vorticity field."""
-    from tensornet.cfd.qtt_turbo import turbo_inner
+    from ontic.cfd.qtt_turbo import turbo_inner
     return sum(turbo_inner(omega[i], omega[i]).item() for i in range(3))
 
 
@@ -107,7 +107,7 @@ def proof_taylor_green_decay() -> ProofResult:
     metrics: Dict[str, Any] = {}
     
     try:
-        from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+        from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
         
         # Configuration
         n_bits = 5  # 32³
@@ -260,7 +260,7 @@ def proof_energy_conservation() -> ProofResult:
     metrics: Dict[str, Any] = {}
     
     try:
-        from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+        from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
         
         # Inviscid configuration
         n_bits = 5  # 32³
@@ -362,7 +362,7 @@ def proof_scaling() -> ProofResult:
     metrics: Dict[str, Any] = {}
     
     try:
-        from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+        from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
         
         grids = [
             (4, "16³", 4096),
@@ -476,7 +476,7 @@ def proof_compression() -> ProofResult:
     metrics: Dict[str, Any] = {}
     
     try:
-        from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+        from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
         
         grids = [
             (5, "32³", 32768),
@@ -575,7 +575,7 @@ def proof_stability() -> ProofResult:
     metrics: Dict[str, Any] = {}
     
     try:
-        from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+        from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
         
         n_bits = 6  # 64³
         N = 2 ** n_bits

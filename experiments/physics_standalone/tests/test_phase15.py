@@ -20,7 +20,7 @@ class TestPhysicalValidation:
     
     def test_validation_result(self):
         """Test ValidationResult dataclass."""
-        from tensornet.sim.validation import ValidationResult, ValidationSeverity
+        from ontic.sim.validation import ValidationResult, ValidationSeverity
         
         result = ValidationResult(
             test_name="mass_conservation",
@@ -44,7 +44,7 @@ class TestPhysicalValidation:
     
     def test_validation_report(self):
         """Test ValidationReport generation."""
-        from tensornet.sim.validation import ValidationResult, ValidationReport, ValidationSeverity
+        from ontic.sim.validation import ValidationResult, ValidationReport, ValidationSeverity
         
         results = [
             ValidationResult(
@@ -86,7 +86,7 @@ class TestPhysicalValidation:
     
     def test_mass_conservation_validator(self):
         """Test MassConservationTest."""
-        from tensornet.sim.validation import MassConservationTest
+        from ontic.sim.validation import MassConservationTest
         
         validator = MassConservationTest(dx=0.01, tolerance=1e-10)
         
@@ -102,7 +102,7 @@ class TestPhysicalValidation:
     
     def test_momentum_conservation_validator(self):
         """Test MomentumConservationTest."""
-        from tensornet.sim.validation import MomentumConservationTest
+        from ontic.sim.validation import MomentumConservationTest
         
         validator = MomentumConservationTest(dx=0.01, component=0, tolerance=1e-10)
         
@@ -117,7 +117,7 @@ class TestPhysicalValidation:
     
     def test_energy_conservation_validator(self):
         """Test EnergyConservationTest."""
-        from tensornet.sim.validation import EnergyConservationTest
+        from ontic.sim.validation import EnergyConservationTest
         
         validator = EnergyConservationTest(dx=0.01, tolerance=1e-10)
         
@@ -131,7 +131,7 @@ class TestPhysicalValidation:
     
     def test_sod_shock_validator(self):
         """Test SodShockValidator analytical solution."""
-        from tensornet.sim.validation import SodShockValidator
+        from ontic.sim.validation import SodShockValidator
         
         validator = SodShockValidator(gamma=1.4, tolerance=0.01)
         
@@ -149,7 +149,7 @@ class TestPhysicalValidation:
     
     def test_oblique_shock_validator(self):
         """Test ObliqueShockValidator."""
-        from tensornet.sim.validation import ObliqueShockValidator
+        from ontic.sim.validation import ObliqueShockValidator
         
         validator = ObliqueShockValidator(gamma=1.4)
         
@@ -164,7 +164,7 @@ class TestPhysicalValidation:
     
     def test_isentropic_vortex_validator(self):
         """Test IsentropicVortexValidator."""
-        from tensornet.sim.validation import IsentropicVortexValidator
+        from ontic.sim.validation import IsentropicVortexValidator
         
         validator = IsentropicVortexValidator(gamma=1.4, vortex_strength=5.0)
         
@@ -183,7 +183,7 @@ class TestBenchmarks:
     
     def test_benchmark_config(self):
         """Test BenchmarkConfig dataclass."""
-        from tensornet.sim.validation import BenchmarkConfig
+        from ontic.sim.validation import BenchmarkConfig
         
         config = BenchmarkConfig(
             warmup_runs=5,
@@ -199,7 +199,7 @@ class TestBenchmarks:
     
     def test_benchmark_result(self):
         """Test BenchmarkResult dataclass."""
-        from tensornet.sim.validation import BenchmarkResult
+        from ontic.sim.validation import BenchmarkResult
         
         result = BenchmarkResult(
             name="test_bench",
@@ -221,7 +221,7 @@ class TestBenchmarks:
     
     def test_timer_context(self):
         """Test TimerContext."""
-        from tensornet.sim.validation import TimerContext
+        from ontic.sim.validation import TimerContext
         import time
         
         with TimerContext(sync_cuda=False) as timer:
@@ -232,7 +232,7 @@ class TestBenchmarks:
     
     def test_performance_timer(self):
         """Test PerformanceTimer."""
-        from tensornet.sim.validation import PerformanceTimer
+        from ontic.sim.validation import PerformanceTimer
         import time
         
         timer = PerformanceTimer("test", sync_cuda=False)
@@ -247,7 +247,7 @@ class TestBenchmarks:
     
     def test_memory_tracker(self):
         """Test MemoryTracker."""
-        from tensornet.sim.validation import MemoryTracker
+        from ontic.sim.validation import MemoryTracker
         
         tracker = MemoryTracker()
         
@@ -263,7 +263,7 @@ class TestBenchmarks:
     
     def test_benchmark_suite(self):
         """Test BenchmarkSuite."""
-        from tensornet.sim.validation import BenchmarkSuite, BenchmarkConfig
+        from ontic.sim.validation import BenchmarkSuite, BenchmarkConfig
         
         config = BenchmarkConfig(warmup_runs=1, benchmark_runs=3)
         suite = BenchmarkSuite(name="test_suite", config=config)
@@ -286,7 +286,7 @@ class TestBenchmarks:
     
     def test_run_benchmark(self):
         """Test run_benchmark function."""
-        from tensornet.sim.validation import run_benchmark, BenchmarkConfig
+        from ontic.sim.validation import run_benchmark, BenchmarkConfig
         
         config = BenchmarkConfig(warmup_runs=1, benchmark_runs=5)
         
@@ -302,7 +302,7 @@ class TestBenchmarks:
     
     def test_compare_benchmarks(self):
         """Test benchmark comparison."""
-        from tensornet.sim.validation import BenchmarkResult, compare_benchmarks
+        from ontic.sim.validation import BenchmarkResult, compare_benchmarks
         
         baseline = {
             "test1": BenchmarkResult("test1", 1.0, 0.1, 0.9, 1.1, 10),
@@ -325,7 +325,7 @@ class TestRegression:
     
     def test_regression_result(self):
         """Test RegressionResult dataclass."""
-        from tensornet.sim.validation.regression import RegressionResult, ComparisonType
+        from ontic.sim.validation.regression import RegressionResult, ComparisonType
         
         result = RegressionResult(
             test_name="test_reg",
@@ -345,7 +345,7 @@ class TestRegression:
     
     def test_golden_value(self):
         """Test GoldenValue dataclass."""
-        from tensornet.sim.validation import GoldenValue
+        from ontic.sim.validation import GoldenValue
         
         value = torch.randn(10, 10)
         golden = GoldenValue(
@@ -361,7 +361,7 @@ class TestRegression:
     @pytest.mark.skip(reason="GoldenValueStore returns numpy array instead of tensor")
     def test_golden_value_store(self):
         """Test GoldenValueStore operations."""
-        from tensornet.sim.validation import GoldenValueStore
+        from ontic.sim.validation import GoldenValueStore
         
         with tempfile.TemporaryDirectory() as tmpdir:
             store = GoldenValueStore(tmpdir)
@@ -389,7 +389,7 @@ class TestRegression:
     
     def test_array_comparator(self):
         """Test ArrayComparator."""
-        from tensornet.sim.validation import ArrayComparator
+        from ontic.sim.validation import ArrayComparator
         
         comparator = ArrayComparator(rtol=1e-5, atol=1e-8)
         
@@ -407,7 +407,7 @@ class TestRegression:
     
     def test_tensor_comparator(self):
         """Test TensorComparator."""
-        from tensornet.sim.validation import TensorComparator
+        from ontic.sim.validation import TensorComparator
         
         comparator = TensorComparator(rtol=1e-5)
         
@@ -419,7 +419,7 @@ class TestRegression:
     
     def test_state_comparator(self):
         """Test StateComparator."""
-        from tensornet.sim.validation import StateComparator
+        from ontic.sim.validation import StateComparator
         
         comparator = StateComparator(
             field_tolerances={'density': 1e-6},
@@ -442,7 +442,7 @@ class TestRegression:
     
     def test_regression_suite(self):
         """Test RegressionSuite."""
-        from tensornet.sim.validation import (
+        from ontic.sim.validation import (
             RegressionSuite, RegressionTest, TensorComparator,
             GoldenValueStore,
         )
@@ -477,7 +477,7 @@ class TestVV:
     
     def test_vv_test(self):
         """Test VVTest creation and execution."""
-        from tensornet.sim.validation import VVTest, VVCategory, VVLevel
+        from ontic.sim.validation import VVTest, VVCategory, VVLevel
         
         def simple_test():
             return {'error': 0.001, 'passed': True}
@@ -499,7 +499,7 @@ class TestVV:
     
     def test_vv_plan(self):
         """Test VVPlan execution."""
-        from tensornet.sim.validation import VVTest, VVPlan, VVCategory, VVLevel
+        from ontic.sim.validation import VVTest, VVPlan, VVCategory, VVLevel
         
         plan = VVPlan(name="test_plan", version="1.0")
         
@@ -532,7 +532,7 @@ class TestVV:
     
     def test_vv_report(self):
         """Test VVReport generation."""
-        from tensornet.sim.validation import VVTest, VVPlan, VVReport, VVCategory, VVLevel
+        from ontic.sim.validation import VVTest, VVPlan, VVReport, VVCategory, VVLevel
         
         plan = VVPlan(name="report_test", version="1.0")
         plan.add_test(VVTest(
@@ -556,7 +556,7 @@ class TestVV:
     
     def test_unit_verification(self):
         """Test UnitVerification."""
-        from tensornet.sim.validation import UnitVerification
+        from ontic.sim.validation import UnitVerification
         
         def add(a, b):
             return a + b
@@ -578,7 +578,7 @@ class TestVV:
     
     def test_integration_verification(self):
         """Test IntegrationVerification."""
-        from tensornet.sim.validation import IntegrationVerification
+        from ontic.sim.validation import IntegrationVerification
         
         def workflow():
             return {'value': 10, 'valid': True}
@@ -599,7 +599,7 @@ class TestVV:
     
     def test_uncertainty_band(self):
         """Test UncertaintyBand."""
-        from tensornet.sim.validation import UncertaintyBand
+        from ontic.sim.validation import UncertaintyBand
         
         mean = np.array([1.0, 2.0, 3.0])
         std = np.array([0.1, 0.1, 0.1])
@@ -615,7 +615,7 @@ class TestVV:
     
     def test_validation_uncertainty(self):
         """Test ValidationUncertainty."""
-        from tensornet.sim.validation import ValidationUncertainty, UncertaintyBand
+        from ontic.sim.validation import ValidationUncertainty, UncertaintyBand
         
         exp_band = UncertaintyBand.from_mean_std(
             np.array([1.0, 2.0, 3.0]),
@@ -634,7 +634,7 @@ class TestVV:
     
     def test_run_vv_plan(self):
         """Test run_vv_plan function."""
-        from tensornet.sim.validation import VVTest, VVPlan, VVCategory, VVLevel, run_vv_plan
+        from ontic.sim.validation import VVTest, VVPlan, VVCategory, VVLevel, run_vv_plan
         
         plan = VVPlan(name="execution_test")
         plan.add_test(VVTest(
@@ -656,7 +656,7 @@ class TestValidationImports:
     
     def test_physical_imports(self):
         """Test physical validation imports."""
-        from tensornet.sim.validation import (
+        from ontic.sim.validation import (
             ConservationValidator,
             MassConservationTest,
             MomentumConservationTest,
@@ -676,7 +676,7 @@ class TestValidationImports:
     
     def test_benchmark_imports(self):
         """Test benchmark imports."""
-        from tensornet.sim.validation import (
+        from ontic.sim.validation import (
             BenchmarkConfig,
             BenchmarkResult,
             BenchmarkSuite,
@@ -694,7 +694,7 @@ class TestValidationImports:
     
     def test_regression_imports(self):
         """Test regression imports."""
-        from tensornet.sim.validation import (
+        from ontic.sim.validation import (
             RegressionTest,
             RegressionSuite,
             RegressionResult,
@@ -713,7 +713,7 @@ class TestValidationImports:
     
     def test_vv_imports(self):
         """Test V&V imports."""
-        from tensornet.sim.validation import (
+        from ontic.sim.validation import (
             VVLevel,
             VVTest,
             VVPlan,

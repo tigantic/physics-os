@@ -20,7 +20,7 @@ from __future__ import annotations
 import torch
 from torch import Tensor
 
-from tensornet.cfd.qtt_eval import dense_to_qtt_cores
+from ontic.cfd.qtt_eval import dense_to_qtt_cores
 
 
 def from_samples(

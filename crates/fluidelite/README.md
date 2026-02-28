@@ -106,7 +106,7 @@ fluidelite/
   title={FluidElite: Gradient-Free Language Models via Tensor Cross Interpolation},
   author={HyperTensor Team},
   year={2026},
-  url={https://github.com/hypertensor/fluidelite}
+  url={https://github.com/physics_os/fluidelite}
 }
 ```
 

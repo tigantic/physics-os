@@ -27,7 +27,7 @@ import torch
 # Add project to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tensornet.cfd.tt_poisson import (compute_divergence_2d,
+from ontic.cfd.tt_poisson import (compute_divergence_2d,
                                       compute_gradient_2d,
                                       laplacian_spectral_2d,
                                       poisson_solve_fft_2d,

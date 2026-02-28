@@ -1,5 +1,5 @@
 """
-Tests for tensornet.cfd.qtt_native_ops
+Tests for ontic.cfd.qtt_native_ops
 =======================================
 
 Covers:
@@ -30,7 +30,7 @@ pytestmark = pytest.mark.skipif(
     reason="CUDA required for QTT native ops",
 )
 
-from tensornet.cfd.qtt_native_ops import (
+from ontic.cfd.qtt_native_ops import (
     QTTCores,
     qtt_truncate_now,
     qtt_truncate_sweep,

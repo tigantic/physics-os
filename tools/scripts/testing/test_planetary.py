@@ -46,7 +46,7 @@ def run_phase_11_medical():
     print("Testing Non-Newtonian blood flow through stenosed arteries...")
     print("=" * 70 + "\n")
 
-    from tensornet.applied.medical.hemo import ArterySimulation
+    from ontic.applied.medical.hemo import ArterySimulation
 
     # Quick simulation - using actual API params
     sim = ArterySimulation(
@@ -73,7 +73,7 @@ def run_phase_12_racing():
     print("Testing F1 aerodynamic wake turbulence...")
     print("=" * 70 + "\n")
 
-    from tensornet.aerospace.racing.wake import WakeTracker
+    from ontic.aerospace.racing.wake import WakeTracker
 
     wake = WakeTracker(
         track_width=50,
@@ -103,7 +103,7 @@ def run_phase_13_ballistics():
     print("Testing long-range trajectory through variable wind field...")
     print("=" * 70 + "\n")
 
-    from tensornet.aerospace.defense.ballistics import BallisticSolver
+    from ontic.aerospace.defense.ballistics import BallisticSolver
 
     solver = BallisticSolver()
 
@@ -131,7 +131,7 @@ def run_phase_14_wildfire():
     print("Testing fire-atmosphere coupled spread model...")
     print("=" * 70 + "\n")
 
-    from tensornet.applied.emergency.fire import FireSim
+    from ontic.applied.emergency.fire import FireSim
 
     fire = FireSim(
         size=64,
@@ -164,7 +164,7 @@ def run_phase_15_agriculture():
     print("Testing vertical farm microclimate optimization...")
     print("=" * 70 + "\n")
 
-    from tensornet.energy_env.agri.microclimate import VerticalFarm
+    from ontic.energy_env.agri.microclimate import VerticalFarm
 
     farm = VerticalFarm(
         length_m=10.0,

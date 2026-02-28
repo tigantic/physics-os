@@ -26,7 +26,7 @@ Enterprise physics platforms (ANSYS, COMSOL, Dassault) organize capabilities int
 3. Node definitions live in the capability ledger (`apps/ledger/nodes/*.yaml`) per ADR-0001.
 4. Each node has a V-state (V0–V5) indicating maturity from concept to production-hardened.
 5. The `PLATFORM_SPECIFICATION.md` §3 defines the full taxonomy tree.
-6. Domain packs map to `tensornet/` module groups and are the unit of licensing and metering.
+6. Domain packs map to `ontic/` module groups and are the unit of licensing and metering.
 7. The `atlas_*.json` files in `data/atlas/` provide the benchmark reference data for each node.
 
 ### Taxonomy Structure (Top Level)

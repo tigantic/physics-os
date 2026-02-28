@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Eliashberg, BdG"
 
 source_files:
-  - "tensornet/condensed_matter/fermionic.py"
+  - "ontic/condensed_matter/fermionic.py"
 
 tests:
   smoke:

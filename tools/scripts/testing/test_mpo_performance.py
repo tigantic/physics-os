@@ -6,8 +6,8 @@ import time
 
 import torch
 
-from tensornet.cfd.qtt_2d import QTT2DState
-from tensornet.mpo import MPOAtmosphericSolver
+from ontic.cfd.qtt_2d import QTT2DState
+from ontic.mpo import MPOAtmosphericSolver
 
 # Initialize
 device = torch.device("cuda")

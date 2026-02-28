@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Phase 5 — tensornet/ domain decomposition migration script.
+"""Phase 5 — ontic/ domain decomposition migration script.
 
 Moves 89 flat submodules into 13 logical groups (4 expanded existing + 9 new),
-reducing tensornet/ from 107 top-level packages to ~27.
+reducing ontic/ from 107 top-level packages to ~27.
 
 Mechanism:
   1. Create group directories with __init__.py
@@ -31,7 +31,7 @@ from pathlib import Path
 # Configuration: module → group mapping
 # ──────────────────────────────────────────────────────────────
 
-# Modules that STAY flat at tensornet/ level (no move)
+# Modules that STAY flat at ontic/ level (no move)
 FLAT_MODULES = frozenset({
     "core", "types", "mps", "mpo", "qtt", "numerics", "algorithms",
     "cfd", "em", "genesis", "platform", "packs", "cuda", "docs",
@@ -160,20 +160,20 @@ NEW_GROUPS = frozenset({
 # ──────────────────────────────────────────────────────────────
 
 SHIM_TEMPLATE = '''\
-"""Backward-compatibility shim — real module at tensornet.{group}.{module}.
+"""Backward-compatibility shim — real module at ontic.{group}.{module}.
 
 This shim exists so that legacy imports like::
 
-    from tensornet.{module} import X
-    from tensornet.{module}.sub import Y
+    from ontic.{module} import X
+    from ontic.{module}.sub import Y
 
 continue to work after the Phase 5 domain decomposition.
-The canonical import path is now ``tensornet.{group}.{module}``.
+The canonical import path is now ``ontic.{group}.{module}``.
 """
 import importlib as _il
 import sys as _sys
 
-_real = _il.import_module("tensornet.{group}.{module}")
+_real = _il.import_module("ontic.{group}.{module}")
 _sys.modules[__name__] = _real
 '''
 
@@ -182,7 +182,7 @@ _sys.modules[__name__] = _real
 # ──────────────────────────────────────────────────────────────
 
 GROUP_INIT_TEMPLATE = '''\
-"""tensornet.{group} — {description}.
+"""ontic.{group} — {description}.
 
 Submodules
 ----------
@@ -205,12 +205,12 @@ GROUP_DESCRIPTIONS: dict[str, str] = {
 
 
 def repo_root() -> Path:
-    """Return the repository root (parent of tensornet/)."""
+    """Return the repository root (parent of ontic/)."""
     here = Path(__file__).resolve().parent
     # tools/ is one level below root
     root = here.parent
-    if not (root / "tensornet" / "__init__.py").exists():
-        raise RuntimeError(f"Cannot find tensornet/ at {root}")
+    if not (root / "ontic" / "__init__.py").exists():
+        raise RuntimeError(f"Cannot find ontic/ at {root}")
     return root
 
 
@@ -231,9 +231,9 @@ def all_python_files(root: Path) -> list[Path]:
 # ──────────────────────────────────────────────────────────────
 
 def create_group_dirs(root: Path, *, dry_run: bool = True) -> list[str]:
-    """Create new group directories under tensornet/ and write __init__.py."""
+    """Create new group directories under ontic/ and write __init__.py."""
     actions: list[str] = []
-    tn = root / "tensornet"
+    tn = root / "ontic"
 
     for group in NEW_GROUPS:
         group_dir = tn / group
@@ -265,7 +265,7 @@ def create_group_dirs(root: Path, *, dry_run: bool = True) -> list[str]:
 def move_modules(root: Path, *, dry_run: bool = True) -> list[str]:
     """Move each module directory into its group directory."""
     actions: list[str] = []
-    tn = root / "tensornet"
+    tn = root / "ontic"
 
     for module, group in sorted(MODULE_TO_GROUP.items()):
         src = tn / module
@@ -278,7 +278,7 @@ def move_modules(root: Path, *, dry_run: bool = True) -> list[str]:
             actions.append(f"SKIP (already moved): {module} → {group}/{module}")
             continue
 
-        actions.append(f"MOVE: tensornet/{module}/ → tensornet/{group}/{module}/")
+        actions.append(f"MOVE: ontic/{module}/ → ontic/{group}/{module}/")
 
         if not dry_run:
             # Ensure group dir exists (for expand_hosts case)
@@ -295,7 +295,7 @@ def move_modules(root: Path, *, dry_run: bool = True) -> list[str]:
 def create_shims(root: Path, *, dry_run: bool = True) -> list[str]:
     """Create shim __init__.py at old module locations."""
     actions: list[str] = []
-    tn = root / "tensornet"
+    tn = root / "ontic"
 
     for module, group in sorted(MODULE_TO_GROUP.items()):
         # For expand_hosts, the old directory IS the group — no shim needed
@@ -309,10 +309,10 @@ def create_shims(root: Path, *, dry_run: bool = True) -> list[str]:
             # Check if it's already a shim
             content = shim_init.read_text()
             if "Backward-compatibility shim" in content:
-                actions.append(f"SKIP shim (exists): tensornet/{module}/")
+                actions.append(f"SKIP shim (exists): ontic/{module}/")
                 continue
 
-        actions.append(f"CREATE shim: tensornet/{module}/__init__.py → tensornet.{group}.{module}")
+        actions.append(f"CREATE shim: ontic/{module}/__init__.py → ontic.{group}.{module}")
 
         if not dry_run:
             shim_dir.mkdir(parents=True, exist_ok=True)
@@ -341,36 +341,36 @@ def build_import_patterns() -> list[tuple[re.Pattern[str], str]]:
         group = MODULE_TO_GROUP[module]
 
         # Skip expand_hosts — their OWN imports don't change
-        # (quantum stays tensornet.quantum, but quantum_mechanics → tensornet.quantum.quantum_mechanics)
+        # (quantum stays ontic.quantum, but quantum_mechanics → ontic.quantum.quantum_mechanics)
         if module in EXPAND_HOSTS:
             continue
 
-        # Pattern: from tensornet.MODULE -> from tensornet.GROUP.MODULE
-        # Matches: from tensornet.MODULE.sub import X
-        #          from tensornet.MODULE import X
-        #          import tensornet.MODULE
-        # Must NOT match: from tensornet.MODULE_something (partial match)
+        # Pattern: from ontic.MODULE -> from ontic.GROUP.MODULE
+        # Matches: from ontic.MODULE.sub import X
+        #          from ontic.MODULE import X
+        #          import ontic.MODULE
+        # Must NOT match: from ontic.MODULE_something (partial match)
         # Uses word boundary after module name
 
-        # "from tensornet.MODULE." → "from tensornet.GROUP.MODULE."
+        # "from ontic.MODULE." → "from ontic.GROUP.MODULE."
         patterns.append((
-            re.compile(rf"from tensornet\.{re.escape(module)}\."),
-            f"from tensornet.{group}.{module}.",
+            re.compile(rf"from ontic\.{re.escape(module)}\."),
+            f"from ontic.{group}.{module}.",
         ))
 
-        # "from tensornet.MODULE import" → "from tensornet.GROUP.MODULE import"
+        # "from ontic.MODULE import" → "from ontic.GROUP.MODULE import"
         patterns.append((
-            re.compile(rf"from tensornet\.{re.escape(module)} import"),
-            f"from tensornet.{group}.{module} import",
+            re.compile(rf"from ontic\.{re.escape(module)} import"),
+            f"from ontic.{group}.{module} import",
         ))
 
-        # "import tensornet.MODULE" → "import tensornet.GROUP.MODULE"
+        # "import ontic.MODULE" → "import ontic.GROUP.MODULE"
         patterns.append((
-            re.compile(rf"(?<![.\w])import tensornet\.{re.escape(module)}\b"),
-            f"import tensornet.{group}.{module}",
+            re.compile(rf"(?<![.\w])import ontic\.{re.escape(module)}\b"),
+            f"import ontic.{group}.{module}",
         ))
 
-        # "tensornet.MODULE." in string literals / comments (for completeness)
+        # "ontic.MODULE." in string literals / comments (for completeness)
         # Skip this — too aggressive and might break docs/strings
 
     return patterns
@@ -393,7 +393,7 @@ def rewrite_imports(
 
     # Files to SKIP rewriting (the shim __init__.py files themselves)
     shim_files: set[Path] = set()
-    tn = root / "tensornet"
+    tn = root / "ontic"
     for module, group in MODULE_TO_GROUP.items():
         if module not in EXPAND_HOSTS:
             shim_files.add(tn / module / "__init__.py")
@@ -434,18 +434,18 @@ def rewrite_imports(
 def validate_structure(root: Path) -> list[str]:
     """Check that the migration produced a valid structure."""
     issues: list[str] = []
-    tn = root / "tensornet"
+    tn = root / "ontic"
 
     # Check all group dirs exist
     for group in NEW_GROUPS:
         if not (tn / group / "__init__.py").exists():
-            issues.append(f"MISSING group __init__.py: tensornet/{group}/__init__.py")
+            issues.append(f"MISSING group __init__.py: ontic/{group}/__init__.py")
 
     # Check all modules are in their group
     for module, group in MODULE_TO_GROUP.items():
         target = tn / group / module
         if not target.exists():
-            issues.append(f"MISSING moved module: tensornet/{group}/{module}/")
+            issues.append(f"MISSING moved module: ontic/{group}/{module}/")
 
     # Check all shims exist
     for module, group in MODULE_TO_GROUP.items():
@@ -453,13 +453,13 @@ def validate_structure(root: Path) -> list[str]:
             continue
         shim = tn / module / "__init__.py"
         if not shim.exists():
-            issues.append(f"MISSING shim: tensornet/{module}/__init__.py")
+            issues.append(f"MISSING shim: ontic/{module}/__init__.py")
 
     # Count top-level dirs
     top_level = [d for d in tn.iterdir() if d.is_dir() and d.name != "__pycache__"]
     n = len(top_level)
     if n > 35:
-        issues.append(f"WARNING: {n} top-level dirs in tensornet/ (target ≤30)")
+        issues.append(f"WARNING: {n} top-level dirs in ontic/ (target ≤30)")
 
     return issues
 
@@ -469,7 +469,7 @@ def validate_structure(root: Path) -> list[str]:
 # ──────────────────────────────────────────────────────────────
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Phase 5: tensornet/ domain decomposition")
+    parser = argparse.ArgumentParser(description="Phase 5: ontic/ domain decomposition")
     parser.add_argument(
         "--execute",
         action="store_true",
@@ -497,17 +497,17 @@ def main() -> None:
         else:
             print("  ✅ All checks passed")
             # Count final structure
-            tn = root / "tensornet"
+            tn = root / "ontic"
             top_dirs = sorted(
                 d.name for d in tn.iterdir()
                 if d.is_dir() and d.name != "__pycache__"
             )
-            print(f"  📁 {len(top_dirs)} top-level directories in tensornet/")
+            print(f"  📁 {len(top_dirs)} top-level directories in ontic/")
         return
 
     mode = "DRY RUN" if dry_run else "EXECUTING"
     print("=" * 60)
-    print(f"  Phase 5: tensornet/ Domain Decomposition — {mode}")
+    print(f"  Phase 5: ontic/ Domain Decomposition — {mode}")
     print("=" * 60)
     print(f"  Modules to move:  {len(MODULE_TO_GROUP)}")
     print(f"  New group dirs:   {len(NEW_GROUPS)}")
@@ -549,12 +549,12 @@ def main() -> None:
                 print(f"  ❌ {i}")
             print("\n  ⚠️  Migration completed with issues")
         else:
-            tn = root / "tensornet"
+            tn = root / "ontic"
             top_dirs = sorted(
                 d.name for d in tn.iterdir()
                 if d.is_dir() and d.name != "__pycache__"
             )
-            print(f"  ✅ Migration complete — {len(top_dirs)} top-level dirs in tensornet/")
+            print(f"  ✅ Migration complete — {len(top_dirs)} top-level dirs in ontic/")
     else:
         print("  ℹ️  Dry run complete. Run with --execute to apply changes.")
 

@@ -43,7 +43,7 @@ import torch
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from tensornet.cfd.ns3d_native import (
+from ontic.cfd.ns3d_native import (
     NativeNS3DConfig,
     NativeNS3DSolver,
     NativeDiagnostics,
@@ -54,7 +54,7 @@ from tensornet.cfd.ns3d_native import (
     _qtt_vec_max_abs_native,
     _qtt_scalar_max_abs_native,
 )
-from tensornet.core.trace import trace_session, TraceSession
+from ontic.core.trace import trace_session, TraceSession
 from tpc.format import (
     BenchmarkResult,
     HardwareSpec,
@@ -399,25 +399,25 @@ def build_certificate(results: dict[str, Any], output_dir: Path) -> Path:
     theorems = [
         {
             "name": "NavierStokesVorticityEquation",
-            "file": "tensornet/cfd/ns3d_native.py",
+            "file": "ontic/cfd/ns3d_native.py",
             "statement": "∂ω/∂t = ∇×(u×ω) + ν∇²ω (vorticity-velocity formulation)",
             "status": "implemented",
         },
         {
             "name": "ChorinProjection",
-            "file": "tensornet/cfd/ns3d_native.py",
+            "file": "ontic/cfd/ns3d_native.py",
             "statement": "∇²p = (1/dt)∇·u*, u = u* - dt∇p enforces ∇·u = 0",
             "status": "implemented",
         },
         {
             "name": "ShiftMPODerivatives",
-            "file": "tensornet/cfd/qtt_triton_ops.py",
+            "file": "ontic/cfd/qtt_triton_ops.py",
             "statement": "Central difference ∂f/∂x = (S⁺f - S⁻f)/(2h) via ripple-carry MPO",
             "status": "verified_exact",
         },
         {
             "name": "QTTLaplacian",
-            "file": "tensornet/cfd/ns3d_native.py",
+            "file": "ontic/cfd/ns3d_native.py",
             "statement": "∇²f = Σ_d (S⁺_d + S⁻_d - 2I)f / h² (6-point stencil)",
             "status": "verified_exact",
         },
@@ -454,7 +454,7 @@ def build_certificate(results: dict[str, Any], output_dir: Path) -> Path:
     # Generate the STARK proof via the golden-demo Rust binary.
     # This produces a Winterfell STARK proof (thermal chain + MPO×MPS MAC)
     # with 56,975 constraints on a 2^17 = 131,072-row trace.
-    solver_source = PROJECT_ROOT / "tensornet" / "cfd" / "ns3d_native.py"
+    solver_source = PROJECT_ROOT / "ontic" / "cfd" / "ns3d_native.py"
     solver_hash = hashlib.sha256(solver_source.read_bytes()).hexdigest()
 
     proof_bytes = b""
@@ -541,7 +541,7 @@ def build_certificate(results: dict[str, Any], output_dir: Path) -> Path:
         },
         proof_generation_time_s=proof_gen_time or perf["total_wall_time_s"],
         circuit_constraints=proof_constraints,
-        prover_version="winterfell-stark-v0.9+hypertensor-qtt-native-v1.0",
+        prover_version="winterfell-stark-v0.9+physics_os-qtt-native-v1.0",
     )
 
     # ── Layer C: Physical Fidelity ───────────────────────────────────
@@ -649,7 +649,7 @@ def build_certificate(results: dict[str, Any], output_dir: Path) -> Path:
     )
 
     # ── Solver Hash ──────────────────────────────────────────────────
-    gen.set_solver_hash(PROJECT_ROOT / "tensornet" / "cfd")
+    gen.set_solver_hash(PROJECT_ROOT / "ontic" / "cfd")
 
     # ── Generate & Save ──────────────────────────────────────────────
     output_dir.mkdir(parents=True, exist_ok=True)

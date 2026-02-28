@@ -4,8 +4,8 @@ Test QTT-TCI construction accuracy.
 
 import torch
 
-from tensornet.cfd.qtt_eval import qtt_eval_batch
-from tensornet.cfd.qtt_tci import qtt_from_function, qtt_from_function_dense
+from ontic.cfd.qtt_eval import qtt_eval_batch
+from ontic.cfd.qtt_tci import qtt_from_function, qtt_from_function_dense
 
 
 def test_sine_wave():

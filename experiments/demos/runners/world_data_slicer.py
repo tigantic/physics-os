@@ -23,8 +23,8 @@ from datetime import datetime
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tensornet.engine.substrate import Field
-from tensornet.infra.hypervisual import SliceEngine
+from ontic.engine.substrate import Field
+from ontic.infra.hypervisual import SliceEngine
 
 
 class GlobalManifoldSlicer:
@@ -246,22 +246,22 @@ def demo_satellite_comparison():
         {
             'source': 'Sentinel-2 Satellite',
             'traditional': 'Gigabyte-scale tiles with "popping" LODs',
-            'hypertensor': 'Continuous manifold; smooth zoom from 100km to 1m'
+            'physics_os': 'Continuous manifold; smooth zoom from 100km to 1m'
         },
         {
             'source': 'NCAR 3km Forecasts',
             'traditional': 'Massive 3km-grid atmospheric simulations',
-            'hypertensor': 'Rank-stable synthesis; resolution independent'
+            'physics_os': 'Rank-stable synthesis; resolution independent'
         },
         {
             'source': 'Environmental Monitoring',
             'traditional': 'Data gaps due to cloud cover or LEO updates',
-            'hypertensor': 'Dynamic Tasking; re-optimizing schedules on cloud masks'
+            'physics_os': 'Dynamic Tasking; re-optimizing schedules on cloud masks'
         },
         {
             'source': 'Rare Event Analysis',
             'traditional': 'AI emulators struggle with "Black Swan" storms',
-            'hypertensor': 'RES generates full physical trajectories'
+            'physics_os': 'RES generates full physical trajectories'
         }
     ]
     
@@ -272,7 +272,7 @@ def demo_satellite_comparison():
     for c in comparisons:
         src = c['source'][:18]
         trad = c['traditional'][:28]
-        ht = c['hypertensor'][:33]
+        ht = c['physics_os'][:33]
         print(f"│ {src:<18} │ {trad:<28} │ {ht:<33} │")
     
     print("└" + "─"*20 + "┴" + "─"*30 + "┴" + "─"*35 + "┘")
@@ -306,7 +306,7 @@ def main():
         ],
         'comparison': {
             'traditional_gis': 'Download tiles, wait for LOD transitions',
-            'hypertensor': 'Query manifold at any resolution instantly'
+            'physics_os': 'Query manifold at any resolution instantly'
         }
     }
     

@@ -71,7 +71,7 @@ def get_git_commit() -> str:
 
 def compute_enstrophy_from_qtt(omega: list) -> float:
     """Compute enstrophy from QTT vorticity: Ω = ||ω||²."""
-    from tensornet.cfd.qtt_turbo import turbo_inner
+    from ontic.cfd.qtt_turbo import turbo_inner
     return sum(turbo_inner(omega[i], omega[i]).item() for i in range(3))
 
 
@@ -85,8 +85,8 @@ def test_imports() -> TestResult:
     metrics: Dict[str, Any] = {}
     
     try:
-        from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
-        from tensornet.cfd.qtt_turbo import (
+        from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+        from ontic.cfd.qtt_turbo import (
             TurboCores, turbo_truncate, turbo_hadamard_cores,
             turbo_linear_combination, TRITON_AVAILABLE,
         )
@@ -130,7 +130,7 @@ def test_poisson_zero_stability() -> TestResult:
     metrics: Dict[str, Any] = {}
     
     try:
-        from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+        from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
         
         device_str = "cuda" if torch.cuda.is_available() else "cpu"
         
@@ -214,7 +214,7 @@ def test_rank16_optimal() -> TestResult:
     metrics: Dict[str, Any] = {}
     
     try:
-        from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+        from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
         
         device_str = "cuda" if torch.cuda.is_available() else "cpu"
         
@@ -298,7 +298,7 @@ def test_memory_scaling() -> TestResult:
         )
     
     try:
-        from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+        from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
         
         grids = [(6, "64³"), (7, "128³")]
         
@@ -369,7 +369,7 @@ def test_time_scaling() -> TestResult:
     metrics: Dict[str, Any] = {}
     
     try:
-        from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+        from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
         device_str = "cuda" if torch.cuda.is_available() else "cpu"
         
         grids = [(4, "16³"), (5, "32³"), (6, "64³")]
@@ -441,7 +441,7 @@ def test_energy_conservation_inviscid() -> TestResult:
     metrics: Dict[str, Any] = {}
     
     try:
-        from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+        from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
         device_str = "cuda" if torch.cuda.is_available() else "cpu"
         
         config = TurboNS3DConfig(

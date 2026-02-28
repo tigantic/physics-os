@@ -31,7 +31,7 @@ ZK proofs are **pure mathematics**. Bugs are:
 **Your Edge**: These require understanding of:
 - Polynomial evaluation over finite fields
 - Eigenvalue structure of operators (Koopman!)
-- Numerical analysis (interval arithmetic in your `tensornet/numerics/interval.py`)
+- Numerical analysis (interval arithmetic in your `ontic/numerics/interval.py`)
 
 ### Specific Targets
 
@@ -65,7 +65,7 @@ The guarantee verification assumes limb comparisons cascade correctly. But:
 
 ### Why This Is Your Domain
 
-DeFi runs on fixed-point math. Your `tensornet/exploit/precision_analyzer.py` already does:
+DeFi runs on fixed-point math. Your `ontic/exploit/precision_analyzer.py` already does:
 - Share inflation simulation
 - Rounding direction analysis
 - Accumulation attacks over many transactions
@@ -179,7 +179,7 @@ A TWAP oracle is literally **1D advection with a trailing average**.
 
 ```python
 # 1. Build a Koopman hunter for Cairo circuit states
-from tensornet.exploit.koopman_hunter import KoopmanExploitHunter
+from ontic.exploit.koopman_hunter import KoopmanExploitHunter
 
 # 2. Target the u96 guarantee verification
 # - Sample states where limb comparisons cascade
@@ -191,9 +191,9 @@ from tensornet.exploit.koopman_hunter import KoopmanExploitHunter
 
 ### Files To Build
 
-1. `tensornet/exploit/cairo_circuit_hunter.py` - Koopman for Cairo circuits
-2. `tensornet/exploit/field_precision.py` - Felt252 field edge cases
-3. `tensornet/exploit/stark_verifier_attack.py` - STARK verification bypass
+1. `ontic/exploit/cairo_circuit_hunter.py` - Koopman for Cairo circuits
+2. `ontic/exploit/field_precision.py` - Felt252 field edge cases
+3. `ontic/exploit/stark_verifier_attack.py` - STARK verification bypass
 
 ---
 

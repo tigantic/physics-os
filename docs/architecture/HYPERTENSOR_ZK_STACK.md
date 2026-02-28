@@ -141,7 +141,7 @@ Modern GPUs have 300+ TOPS of INT8 tensor core compute, but ZK uses 256-bit modu
 ### Key Files
 
 ```
-tensornet/cuda/
+ontic/cuda/
 ├── tensor_field.py          # Main interface
 ├── rns_decompose.cu         # CUDA decomposition kernel
 ├── rns_reconstruct.cu       # CUDA CRT kernel  
@@ -187,7 +187,7 @@ class PolynomialRing:
 ### Key Files
 
 ```
-tensornet/poly/
+ontic/poly/
 ├── ntt.py                   # GPU NTT implementation
 ├── polynomial.py            # Polynomial ring operations
 └── coset.py                 # Coset FFT for Plonk
@@ -252,7 +252,7 @@ When scalars `sᵢ = f(ωⁱ)` for low-degree polynomial `f`:
 ### Key Files
 
 ```
-tensornet/msm/
+ontic/msm/
 ├── pippenger.py             # Standard implementation
 ├── structured_msm.py        # Tensor-accelerated version
 ├── bucket_tensor.py         # Tensor bucket operations
@@ -318,7 +318,7 @@ Recursive proofs (Nova, HyperNova, ProtoStar) accumulate state across folds. Thi
 ### Key Files
 
 ```
-tensornet/folding/
+ontic/folding/
 ├── nova.py                  # Nova with QTT accumulators
 ├── hypernova.py             # HyperNova extension
 ├── qtt_accumulator.py       # QTT-specific accumulator ops
@@ -342,7 +342,7 @@ tensornet/folding/
 ### API Design
 
 ```python
-from hypertensor import ZKProver, Config
+from physics_os import ZKProver, Config
 
 # Configure stack
 config = Config(
@@ -419,7 +419,7 @@ assert prover.verify(proof, public_inputs)
 
 ```
 HyperTensor-VM-main/
-├── tensornet/
+├── ontic/
 │   ├── cuda/
 │   │   ├── tensor_field.py      # Layer 1
 │   │   └── kernels/             # CUDA kernels

@@ -34,10 +34,10 @@
 **Status**: ⚠️ OPEN — Expected per roadmap
 
 Some modules have placeholder sections with `NotImplementedError` for advanced features not yet needed:
-- `tensornet/cfd/adjoint.py` - Adjoint solve methods
-- `tensornet/cfd/optimization.py` - Some optimizer types
-- `tensornet/digital_twin/reduced_order.py` - ROM methods
-- `tensornet/quantum/hybrid.py` - Some gate/ansatz types
+- `ontic/cfd/adjoint.py` - Adjoint solve methods
+- `ontic/cfd/optimization.py` - Some optimizer types
+- `ontic/digital_twin/reduced_order.py` - ROM methods
+- `ontic/quantum/hybrid.py` - Some gate/ansatz types
 
 Note: Previously flagged `les.py`, `adaptive/`, `autonomy/` are actually fully implemented (500-940 lines each).
 
@@ -258,8 +258,8 @@ The project is now **audit-complete** and ready for beta release.
   - [x] DMRG scales as O(L^2.57), O(chi^0.67) — consistent with expectations
   - [x] Euler1D scales as O(N^1.1) — linear as expected
   - [x] Euler2D is slow (pure Python) but scales as O(N^0.5) — noted for optimization
-  - [x] Distributed DMRG already implemented: `tensornet/distributed_tn/distributed_dmrg.py` (531 lines)
-  - [x] GPU acceleration already implemented: `tensornet/core/gpu.py` (723 lines)
+  - [x] Distributed DMRG already implemented: `ontic/distributed_tn/distributed_dmrg.py` (531 lines)
+  - [x] GPU acceleration already implemented: `ontic/core/gpu.py` (723 lines)
   - [x] GPU demo: `tools/scripts/gpu_demo.py` benchmarks einsum, SVD, Roe flux on CPU vs GPU
 
 - [x] **Compliance & Quality**: — DONE (2025-12-21)
@@ -290,8 +290,8 @@ This section documents the gap between the GRAND_VISION.md and actual implementa
 > "The Physics OS integrates WENO-TT schemes. The high-order reconstruction weights of the WENO scheme are themselves tensorized. This allows the solver to capture shocks with 5th-order accuracy without oscillation."
 
 **Implementation** (commit 2c2cb8a):
-- `tensornet/cfd/weno.py` (600 lines): WENO5-JS, WENO5-Z, TENO5, smoothness indicators
-- `tensornet/cfd/weno_tt.py` (500 lines): Tensorized WENO in MPS format
+- `ontic/cfd/weno.py` (600 lines): WENO5-JS, WENO5-Z, TENO5, smoothness indicators
+- `ontic/cfd/weno_tt.py` (500 lines): Tensorized WENO in MPS format
 - Proofs: 4/4 passing in `proofs/proof_phase_21.py`
 
 **Implementation Required**:
@@ -318,7 +318,7 @@ This section documents the gap between the GRAND_VISION.md and actual implementa
 > "The Physics OS utilizes the Time-Dependent Variational Principle (TDVP). Instead of leaving the tensor manifold, TDVP projects the evolution equation directly onto the tangent space of the tensor manifold of fixed rank."
 
 **Implementation** (commit 2c2cb8a):
-- `tensornet/cfd/tt_cfd.py` (1200 lines): MPSState, EulerMPO, TT_Euler1D, TT_Euler2D
+- `ontic/cfd/tt_cfd.py` (1200 lines): MPSState, EulerMPO, TT_Euler1D, TT_Euler2D
 - `tdvp_euler_step()`: TDVP time evolution projected onto MPS manifold
 - Proofs: TDVP conservation, shock capturing, subsonic-to-supersonic validated
 
@@ -348,7 +348,7 @@ TDVP: d|u⟩/dt = P_T (-L̂|u⟩)  projected onto MPS manifold
 > "The algorithm can dynamically adjust the bond dimension. In smooth laminar regions, D is kept low. Near a shock wave or in a turbulent wake, D is increased locally. This is the tensor equivalent of Adaptive Mesh Refinement (AMR)."
 
 **Implementation** (commit 2c2cb8a):
-- `tensornet/cfd/adaptive_tt.py` (500 lines): ShockDetector, BondAdapter, AdaptiveTTEuler
+- `ontic/cfd/adaptive_tt.py` (500 lines): ShockDetector, BondAdapter, AdaptiveTTEuler
 - Gradient-based shock detection using |∂ρ/∂x|
 - Local bond refinement near discontinuities
 - Entanglement entropy monitoring across bonds
@@ -372,8 +372,8 @@ TDVP: d|u⟩/dt = P_T (-L̂|u⟩)  projected onto MPS manifold
 > "The HyperTensor system continuously simulates the electron density field ne(x,t) around the vehicle... creating a 'Blackout Map' showing instantaneous attenuation for each antenna array."
 
 **Implementation** (commit f1447cd):
-- `tensornet/cfd/plasma.py` (550 lines): Saha ionization, plasma_frequency, rf_attenuation, PlasmaSheath
-- `tensornet/guidance/comms.py` (500 lines): AntennaArray, BlackoutMap, CognitiveComms
+- `ontic/cfd/plasma.py` (550 lines): Saha ionization, plasma_frequency, rf_attenuation, PlasmaSheath
+- `ontic/guidance/comms.py` (500 lines): AntennaArray, BlackoutMap, CognitiveComms
 - Proofs: 9/9 passing in `proofs/proof_phase_22.py`
 
 **Implementation Required**:
@@ -399,9 +399,9 @@ TDVP: d|u⟩/dt = P_T (-L̂|u⟩)  projected onto MPS manifold
 > "Aerodynamic Terrain Relative Navigation (Aero-TRN)... The pressure distribution over the vehicle is a unique fingerprint of its state vector. We can backpropagate the error through the fluid dynamics equations."
 
 **Implementation** (commit f1447cd):
-- `tensornet/simulation/sensors.py` (580 lines): FADSSensor, modified_newtonian_cp, pressure fingerprinting
-- `tensornet/guidance/aero_trn.py` (500 lines): TerrainMap, AeroSignature, AeroTRN navigation filter
-- `tensornet/cfd/differentiable.py` (500 lines): DifferentiableRoe, DifferentiableEuler with autograd
+- `ontic/simulation/sensors.py` (580 lines): FADSSensor, modified_newtonian_cp, pressure fingerprinting
+- `ontic/guidance/aero_trn.py` (500 lines): TerrainMap, AeroSignature, AeroTRN navigation filter
+- `ontic/cfd/differentiable.py` (500 lines): DifferentiableRoe, DifferentiableEuler with autograd
 - Proofs: Sensor physics, differentiable gradients validated
 
 **Implementation Required**:
@@ -424,8 +424,8 @@ TDVP: d|u⟩/dt = P_T (-L̂|u⟩)  projected onto MPS manifold
 > "The Physics OS enables the KV to simulate its own thruster plumes in real-time... The solver computes the interaction of the plume shock with the body boundary layer."
 
 **Implementation** (commit f1447cd):
-- `tensornet/cfd/jet_interaction.py` (500 lines): UnderexpandedJet, JetInteractionCorrector
-- `tensornet/guidance/divert.py` (500 lines): DivertThruster, DivertGuidance, PN/APN/Optimal laws
+- `ontic/cfd/jet_interaction.py` (500 lines): UnderexpandedJet, JetInteractionCorrector
+- `ontic/guidance/divert.py` (500 lines): DivertThruster, DivertGuidance, PN/APN/Optimal laws
 - Proofs: Jet expansion, interaction forces, guidance laws validated
 
 **Implementation Required**:
@@ -447,7 +447,7 @@ TDVP: d|u⟩/dt = P_T (-L̂|u⟩)  projected onto MPS manifold
 > "Triple Modular Redundancy (TMR) on GPU: The critical tensor update kernel is launched as three independent streams... A voter kernel compares the result."
 
 **Implementation** (commit 9f8c50a):
-- `tensornet/deployment/rad_hard.py` (680 lines): TMRConfig, TMRExecutor, MajorityVoter
+- `ontic/deployment/rad_hard.py` (680 lines): TMRConfig, TMRExecutor, MajorityVoter
 - ConservationWatchdog: Physics-based anomaly detection (mass, energy, momentum)
 - CheckpointManager: Robust state persistence with pruning
 - Proofs: 5/5 passing — bit flip correction, watchdog detection, rollback recovery
@@ -496,7 +496,7 @@ Following Constitution Article II (Module Organization) and Article III (Testing
 #### 21.1 WENO/TENO Implementation (Week 1–2)
 
 ```
-tensornet/cfd/weno.py
+ontic/cfd/weno.py
 ├── weno5_js(u, stencil) → reconstructed values
 ├── weno5_z(u, stencil) → improved WENO-Z
 ├── teno5(u, stencil) → targeted ENO
@@ -512,7 +512,7 @@ tensornet/cfd/weno.py
 #### 21.2 WENO-TT Tensorization (Week 2–3)
 
 ```
-tensornet/cfd/weno_tt.py
+ontic/cfd/weno_tt.py
 ├── tensorize_smoothness_indicators(β) → TT cores
 ├── tensorize_weights(γ) → TT weight cores
 ├── weno_tt_reconstruct(mps_state) → reconstructed MPS
@@ -526,7 +526,7 @@ tensornet/cfd/weno_tt.py
 #### 21.3 TDVP-CFD Integration (Week 3–5)
 
 ```
-tensornet/cfd/tt_cfd.py
+ontic/cfd/tt_cfd.py
 ├── EulerMPO — Discretized Euler operator as MPO
 │   ├── flux_mpo(gamma) → F operator
 │   ├── gradient_mpo(dx) → ∂/∂x operator
@@ -547,7 +547,7 @@ tensornet/cfd/tt_cfd.py
 #### 21.4 Adaptive Bond Dimension (Week 5–6)
 
 ```
-tensornet/cfd/adaptive_tt.py
+ontic/cfd/adaptive_tt.py
 ├── ShockDetector — Identify discontinuities
 │   ├── gradient_indicator(mps) → |∂u/∂x| per site
 │   ├── entropy_indicator(mps) → entanglement entropy per bond
@@ -582,7 +582,7 @@ tensornet/cfd/adaptive_tt.py
 #### 22.1 Plasma/Ionization Model (Week 1–2)
 
 ```
-tensornet/cfd/plasma.py
+ontic/cfd/plasma.py
 ├── saha_ionization(T, p, species) → electron density
 ├── plasma_frequency(n_e) → ω_pe
 ├── rf_attenuation(omega_signal, omega_pe) → dB loss
@@ -591,7 +591,7 @@ tensornet/cfd/plasma.py
 ```
 
 ```
-tensornet/guidance/comms.py
+ontic/guidance/comms.py
 ├── AntennaArray — Antenna locations and patterns
 ├── BlackoutMap — Attenuation map over vehicle surface
 │   ├── compute(n_e_field, antenna_positions)
@@ -610,7 +610,7 @@ tensornet/guidance/comms.py
 #### 22.2 Aero-TRN Navigation (Week 2–4)
 
 ```
-tensornet/simulation/sensors.py
+ontic/simulation/sensors.py
 ├── FADSSensor — Flush Air Data System
 │   ├── __init__(port_locations, noise_model)
 │   ├── measure(flow_field) → pressure readings
@@ -618,7 +618,7 @@ tensornet/simulation/sensors.py
 ```
 
 ```
-tensornet/cfd/differentiable.py
+ontic/cfd/differentiable.py
 ├── DifferentiableEuler2D — Autograd-enabled solver
 │   ├── forward(state, dt) → new_state
 │   ├── backward(grad_output) → grad_input
@@ -626,7 +626,7 @@ tensornet/cfd/differentiable.py
 ```
 
 ```
-tensornet/guidance/aero_trn.py
+ontic/guidance/aero_trn.py
 ├── AeroTRN — Aerodynamic Terrain Navigation
 │   ├── __init__(fads_sensor, cfd_solver, nav_filter)
 │   ├── predict_pressure(estimated_state) → expected readings
@@ -643,7 +643,7 @@ tensornet/guidance/aero_trn.py
 #### 22.3 Jet Interaction Model (Week 4–6)
 
 ```
-tensornet/cfd/jet_interaction.py
+ontic/cfd/jet_interaction.py
 ├── UnderexpandedJet — Sonic jet into supersonic crossflow
 │   ├── jet_boundary(p_jet, p_inf, gamma) → Mach disk location
 │   ├── plume_shock(M_inf, jet_angle) → shock structure
@@ -654,7 +654,7 @@ tensornet/cfd/jet_interaction.py
 ```
 
 ```
-tensornet/guidance/divert.py
+ontic/guidance/divert.py
 ├── DivertThruster — RCS model
 │   ├── __init__(thrust, position, direction, delay)
 │   ├── fire(duration) → force/moment history
@@ -678,7 +678,7 @@ tensornet/guidance/divert.py
 **Constitution Compliance**: Article V (Mission Assurance)
 
 ```
-tensornet/deployment/rad_hard.py
+ontic/deployment/rad_hard.py
 ├── TMRConfig — Configuration for triple redundancy
 ├── TMRExecutor — GPU triple execution
 │   ├── __init__(kernel_fn, config)

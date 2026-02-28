@@ -17,7 +17,7 @@ import numpy as np
 
 sys.path.insert(0, "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main")
 
-from tensornet.em.frequency_sweep import (
+from ontic.em.frequency_sweep import (
     FrequencyPoint,
     FrequencySweepResult,
     frequency_sweep_uniform,
@@ -31,14 +31,14 @@ from tensornet.em.frequency_sweep import (
     _geometry_summary,
     _solve_at_frequency,
 )
-from tensornet.em.boundaries import (
+from ontic.em.boundaries import (
     Geometry1D,
     PMLConfig,
     MaterialRegion,
     dielectric_slab_geometry,
     free_space_geometry,
 )
-from tensornet.em.s_parameters import (
+from ontic.em.s_parameters import (
     Port,
     fresnel_slab_reflection,
     fresnel_slab_transmission,

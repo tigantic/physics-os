@@ -73,11 +73,11 @@ torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
 
 # HyperTensor imports
-from tensornet.core.mps import MPS
-from tensornet.cfd.euler_1d import Euler1D, EulerState
-from tensornet.cfd.godunov import hllc_flux
-from tensornet.cfd.weno import weno5_z, WENOVariant
-from tensornet.cfd.weno_tt import weno_tt_reconstruct, WENOTTConfig, ReconstructionSide
+from ontic.core.mps import MPS
+from ontic.cfd.euler_1d import Euler1D, EulerState
+from ontic.cfd.godunov import hllc_flux
+from ontic.cfd.weno import weno5_z, WENOVariant
+from ontic.cfd.weno_tt import weno_tt_reconstruct, WENOTTConfig, ReconstructionSide
 
 
 # =============================================================================

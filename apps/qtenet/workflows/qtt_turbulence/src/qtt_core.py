@@ -1,7 +1,7 @@
 """
 Minimal QTT Core Structures for Self-Contained Workflow
 
-Extracted from tensornet.cfd for standalone execution.
+Extracted from ontic.cfd for standalone execution.
 """
 
 from __future__ import annotations

@@ -22,7 +22,7 @@ import numpy as np
 device_str = 'cpu'
 device = torch.device(device_str)
 
-from tensornet.hvac.solver_3d import Solver3D, Solver3DState, Solver3DConfig, Inlet3D, Outlet3D
+from ontic.hvac.solver_3d import Solver3D, Solver3DState, Solver3DConfig, Inlet3D, Outlet3D
 
 print("=" * 70)
 print("NIELSEN 3D REALISTIC ROOM BENCHMARK")

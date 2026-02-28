@@ -19,8 +19,8 @@ import torch
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tensornet.mpo.atmospheric_solver import MPOAtmosphericSolver
-from tensornet.mpo.operators import AdvectionMPO, LaplacianMPO, ProjectionMPO
+from ontic.mpo.atmospheric_solver import MPOAtmosphericSolver
+from ontic.mpo.operators import AdvectionMPO, LaplacianMPO, ProjectionMPO
 
 
 @pytest.mark.skip(

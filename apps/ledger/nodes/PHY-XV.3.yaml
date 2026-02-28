@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Wavepackets, MCTDH hooks"
 
 source_files:
-  - "tensornet/chemistry/quantum_reactive.py"
+  - "ontic/chemistry/quantum_reactive.py"
 
 tests:
   smoke:

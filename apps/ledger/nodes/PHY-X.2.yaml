@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Coupled channels, optical model"
 
 source_files:
-  - "tensornet/nuclear/reactions.py"
+  - "ontic/nuclear/reactions.py"
 
 tests:
   smoke:

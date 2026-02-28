@@ -111,7 +111,7 @@ Several hypotheses:
 
 ### Code Delivered
 
-- `tensornet/cfd/singularity_hunter.py` — Adjoint-based hunting class
+- `ontic/cfd/singularity_hunter.py` — Adjoint-based hunting class
 - `proofs/proof_level_3.py` — Reynolds scaling tests
 - `proofs/proof_level_3b.py` — Hunter verification
 

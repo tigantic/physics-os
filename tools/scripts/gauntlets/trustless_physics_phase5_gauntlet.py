@@ -96,7 +96,7 @@ def gauntlet(name: str, layer: str = "phase5"):
 @gauntlet("trace_adapters_package_exists", layer="trace_adapters")
 def test_trace_adapters_package_exists():
     """Verify trace_adapters package exists with __init__.py."""
-    pkg = ROOT / "tensornet" / "cfd" / "trace_adapters"
+    pkg = ROOT / "ontic" / "cfd" / "trace_adapters"
     assert pkg.exists(), f"Missing: {pkg}"
     assert (pkg / "__init__.py").exists(), "Missing __init__.py"
     required_files = [
@@ -115,8 +115,8 @@ def test_trace_adapters_package_exists():
 @gauntlet("trace_adapters_euler3d_api", layer="trace_adapters")
 def test_trace_adapters_euler3d_api():
     """Verify Euler3DTraceAdapter has step/solve methods."""
-    from tensornet.cfd.euler_3d import Euler3D
-    from tensornet.cfd.trace_adapters.euler3d_adapter import (
+    from ontic.cfd.euler_3d import Euler3D
+    from ontic.cfd.trace_adapters.euler3d_adapter import (
         Euler3DTraceAdapter,
         Euler3DConservation,
     )
@@ -134,8 +134,8 @@ def test_trace_adapters_euler3d_api():
 @gauntlet("trace_adapters_ns2d_api", layer="trace_adapters")
 def test_trace_adapters_ns2d_api():
     """Verify NS2DTraceAdapter has step/solve methods."""
-    from tensornet.cfd.ns_2d import NS2DSolver
-    from tensornet.cfd.trace_adapters.ns2d_adapter import (
+    from ontic.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.trace_adapters.ns2d_adapter import (
         NS2DTraceAdapter,
         NS2DConservation,
     )
@@ -151,7 +151,7 @@ def test_trace_adapters_ns2d_api():
 @gauntlet("trace_adapters_heat_api", layer="trace_adapters")
 def test_trace_adapters_heat_api():
     """Verify HeatTransferTraceAdapter has step/solve methods."""
-    from tensornet.cfd.trace_adapters.heat_adapter import (
+    from ontic.cfd.trace_adapters.heat_adapter import (
         HeatTransferTraceAdapter,
         HeatConservation,
     )
@@ -166,7 +166,7 @@ def test_trace_adapters_heat_api():
 @gauntlet("trace_adapters_vlasov_api", layer="trace_adapters")
 def test_trace_adapters_vlasov_api():
     """Verify VlasovTraceAdapter has step/solve methods."""
-    from tensornet.cfd.trace_adapters.vlasov_adapter import (
+    from ontic.cfd.trace_adapters.vlasov_adapter import (
         VlasovTraceAdapter,
         VlasovConservation,
     )
@@ -332,8 +332,8 @@ def test_euler3d_solve_and_trace():
     """Run Euler 3D solver via trace adapter and verify conservation."""
     import torch
     import numpy as np
-    from tensornet.cfd.euler_3d import Euler3D, Euler3DState
-    from tensornet.cfd.trace_adapters.euler3d_adapter import Euler3DTraceAdapter
+    from ontic.cfd.euler_3d import Euler3D, Euler3DState
+    from ontic.cfd.trace_adapters.euler3d_adapter import Euler3DTraceAdapter
 
     solver = Euler3D(Nx=16, Ny=16, Nz=16, Lx=1.0, Ly=1.0, Lz=1.0, cfl=0.5)
     adapter = Euler3DTraceAdapter(solver)
@@ -402,8 +402,8 @@ def test_ns2d_solve_and_trace():
     """Run NS-IMEX solver via trace adapter and verify diagnostics."""
     import torch
     import numpy as np
-    from tensornet.cfd.ns_2d import NS2DSolver, NSState
-    from tensornet.cfd.trace_adapters.ns2d_adapter import NS2DTraceAdapter
+    from ontic.cfd.ns_2d import NS2DSolver, NSState
+    from ontic.cfd.trace_adapters.ns2d_adapter import NS2DTraceAdapter
 
     Nx = Ny = 32
     Lx = Ly = 2 * np.pi
@@ -460,7 +460,7 @@ def test_heat_solve_and_trace():
     """Run heat equation solver via trace adapter and verify conservation."""
     import torch
     import numpy as np
-    from tensornet.cfd.trace_adapters.heat_adapter import HeatTransferTraceAdapter
+    from ontic.cfd.trace_adapters.heat_adapter import HeatTransferTraceAdapter
 
     Nx = Ny = 32
     Lx = Ly = 2 * np.pi
@@ -517,7 +517,7 @@ def test_vlasov_solve_and_trace():
     """Run Vlasov-Poisson solver via trace adapter and verify conservation."""
     import torch
     import numpy as np
-    from tensornet.cfd.trace_adapters.vlasov_adapter import VlasovTraceAdapter
+    from ontic.cfd.trace_adapters.vlasov_adapter import VlasovTraceAdapter
 
     Nx = Nv = 32
     Lx = 4 * np.pi
@@ -647,7 +647,7 @@ def test_four_domains_covered():
 @gauntlet("regression_trace_module", layer="regression")
 def test_regression_trace_module():
     """Verify core trace module still works."""
-    from tensornet.core.trace import TraceSession, _hash_tensor
+    from ontic.core.trace import TraceSession, _hash_tensor
     import torch
 
     session = TraceSession()
@@ -824,8 +824,8 @@ def run_all() -> bool:
         "gauntlets": RESULTS,
         "domains": {
             "euler3d": {
-                "solver": "tensornet.cfd.euler_3d.Euler3D",
-                "adapter": "tensornet.cfd.trace_adapters.euler3d_adapter.Euler3DTraceAdapter",
+                "solver": "ontic.cfd.euler_3d.Euler3D",
+                "adapter": "ontic.cfd.trace_adapters.euler3d_adapter.Euler3DTraceAdapter",
                 "lean_proof": "euler_conservation_proof/EulerConservation.lean",
                 "conservation_laws": ["mass", "momentum_x", "momentum_y", "momentum_z", "energy"],
                 "description": (
@@ -834,8 +834,8 @@ def run_all() -> bool:
                 ),
             },
             "ns_imex": {
-                "solver": "tensornet.cfd.ns_2d.NS2DSolver",
-                "adapter": "tensornet.cfd.trace_adapters.ns2d_adapter.NS2DTraceAdapter",
+                "solver": "ontic.cfd.ns_2d.NS2DSolver",
+                "adapter": "ontic.cfd.trace_adapters.ns2d_adapter.NS2DTraceAdapter",
                 "lean_proof": "navier_stokes_proof/NavierStokes.lean",
                 "conservation_laws": ["kinetic_energy", "enstrophy", "divergence_free"],
                 "description": (
@@ -844,8 +844,8 @@ def run_all() -> bool:
                 ),
             },
             "heat": {
-                "solver": "tensornet.cfd.trace_adapters.heat_adapter.HeatTransferTraceAdapter",
-                "adapter": "tensornet.cfd.trace_adapters.heat_adapter.HeatTransferTraceAdapter",
+                "solver": "ontic.cfd.trace_adapters.heat_adapter.HeatTransferTraceAdapter",
+                "adapter": "ontic.cfd.trace_adapters.heat_adapter.HeatTransferTraceAdapter",
                 "lean_proof": "thermal_conservation_proof/ThermalConservation.lean",
                 "conservation_laws": ["energy_integral", "source_integral"],
                 "description": (
@@ -854,8 +854,8 @@ def run_all() -> bool:
                 ),
             },
             "vlasov": {
-                "solver": "tensornet.cfd.trace_adapters.vlasov_adapter.VlasovTraceAdapter",
-                "adapter": "tensornet.cfd.trace_adapters.vlasov_adapter.VlasovTraceAdapter",
+                "solver": "ontic.cfd.trace_adapters.vlasov_adapter.VlasovTraceAdapter",
+                "adapter": "ontic.cfd.trace_adapters.vlasov_adapter.VlasovTraceAdapter",
                 "lean_proof": "vlasov_conservation_proof/VlasovConservation.lean",
                 "conservation_laws": ["l2_norm", "particle_count", "kinetic_energy", "field_energy"],
                 "description": (

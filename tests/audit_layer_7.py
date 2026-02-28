@@ -10,7 +10,7 @@ import numpy as np
 
 def test_agent_creation():
     """Test agent creation and action sampling."""
-    from tensornet.infra.hyperenv import AgentConfig, RandomAgent
+    from ontic.infra.hyperenv import AgentConfig, RandomAgent
 
     config = AgentConfig(action_dim=4)
     agent = RandomAgent(config=config)
@@ -22,7 +22,7 @@ def test_agent_creation():
 
 def test_replay_buffer():
     """Test experience buffer."""
-    from tensornet.infra.hyperenv import ReplayBuffer
+    from ontic.infra.hyperenv import ReplayBuffer
 
     buffer = ReplayBuffer(capacity=100)
 
@@ -43,7 +43,7 @@ def test_trainer_mock_env():
     """Test trainer with mock environment."""
     from unittest.mock import MagicMock
 
-    from tensornet.infra.hyperenv import RandomAgent, Trainer, TrainerConfig
+    from ontic.infra.hyperenv import RandomAgent, Trainer, TrainerConfig
 
     agent = RandomAgent()
     env = MagicMock()
@@ -66,7 +66,7 @@ def test_trainer_mock_env():
 
 def test_callbacks():
     """Test callback system."""
-    from tensornet.infra.hyperenv import CheckpointCallback, EvalCallback
+    from ontic.infra.hyperenv import CheckpointCallback, EvalCallback
 
     # Just verify creation works
     ckpt = CheckpointCallback(save_freq=100, save_path="./checkpoints")

@@ -125,7 +125,7 @@ sequenceDiagram
 
 ## IP Boundary
 
-The **IP Sanitizer** (`hypertensor/core/sanitizer.py`) enforces a whitelist-only boundary between the physics engine and all external surfaces. This is the single chokepoint through which every result must pass.
+The **IP Sanitizer** (`physics_os/core/sanitizer.py`) enforces a whitelist-only boundary between the physics engine and all external surfaces. This is the single chokepoint through which every result must pass.
 
 ```
                           ┌──────────────────────────┐

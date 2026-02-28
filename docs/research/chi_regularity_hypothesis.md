@@ -224,7 +224,7 @@ fields the SVD is the canonical procedure.
 **Implementation note:** The Ontic Engine codebase performs bond-dimension
 measurement via SVD of the QTT cores (see `oracle/qtt_encoder.py`,
 `oracle/qtt_encoder_cuda.py`). The `EntanglementSpectrum.from_singular_values()`
-class method in `tensornet/adaptive/entanglement.py` computes the full
+class method in `ontic/adaptive/entanglement.py` computes the full
 entanglement characterization (von Neumann entropy, Rényi-2 entropy,
 effective rank) from the SVD singular values.
 
@@ -364,7 +364,7 @@ counts against dense storage from 3D through 6D:
 ### 3.4 Physics Domain Coverage
 
 The The Physics OS implements 20 domain packs (I–XX) registered via
-the `DomainRegistry` (see `tensornet/packs/__init__.py`) covering:
+the `DomainRegistry` (see `ontic/packs/__init__.py`) covering:
 
 CFD, Structural, Thermal, Electromagnetics, Quantum, Acoustics, Plasma,
 Combustion, MHD, Multiphase, Relativity, Geophysics, Biophysics, Optics,
@@ -540,7 +540,7 @@ the Conjecture A/B framework.
 
 The following production-grade components are available:
 
-**Bond Dimension Tracking** (`tensornet/adaptive/bond_optimizer.py`):
+**Bond Dimension Tracking** (`ontic/adaptive/bond_optimizer.py`):
 - `BondDimensionTracker`: records per-step truncation events with singular
   values, entropy, and wall time.
 - `TruncationRecord`: stores χ_before, χ_after, truncation_error,
@@ -548,7 +548,7 @@ The following production-grade components are available:
 - `AdaptiveBondConfig`: configurable χ_min, χ_max, target truncation error,
   entropy thresholds.
 
-**Entanglement Analysis** (`tensornet/adaptive/entanglement.py`):
+**Entanglement Analysis** (`ontic/adaptive/entanglement.py`):
 - `EntanglementSpectrum.from_singular_values()`: computes von Neumann
   entropy, Rényi-2 entropy, effective rank, and spectral gap from SVD.
 - `AreaLawAnalyzer`: fits entanglement entropy vs. boundary size to
@@ -557,7 +557,7 @@ The following production-grade components are available:
 - `AreaLawScaling`: reports scaling type, exponent, coefficient,
   R², and residuals.
 
-**Random Matrix Theory** (`tensornet/genesis/rmt/universality.py`):
+**Random Matrix Theory** (`ontic/genesis/rmt/universality.py`):
 - `WignerSemicircle` and Marchenko-Pastur distributions for comparing
   empirical singular value spectra against null (random) models.
 
@@ -716,7 +716,7 @@ satisfying area-law entanglement (S ~ boundary volume rather than bulk
 volume), effective rank grows only polynomially with the boundary, guaranteeing
 efficient TT representation.
 
-The `AreaLawAnalyzer` in `tensornet/adaptive/entanglement.py` can test this
+The `AreaLawAnalyzer` in `ontic/adaptive/entanglement.py` can test this
 empirically by computing $S_k$ at multiple bipartitions and fitting the
 scaling exponent. Area-law behavior is observed in:
 - Ground states of gapped local Hamiltonians (proven: Hastings 2007).
@@ -1211,7 +1211,7 @@ the area law is $S \sim A^{(d-1)/d}$ where $A$ is the boundary area of the
 subregion. The QTT log-index bipartition does *not* correspond to a spatial
 subregion — it separates coarse bits from fine bits within each coordinate.
 There is therefore no direct mapping from γ (QTT-site fit) to the physical
-area-law exponent. The `AreaLawAnalyzer` in `tensornet/adaptive/entanglement.py`
+area-law exponent. The `AreaLawAnalyzer` in `ontic/adaptive/entanglement.py`
 performs a *separate* physical-space analysis by reconstructing spatial
 boundary areas from the QTT site structure; this is complementary to the
 QTT-site fit above and is reported in the `AtlasAreaLawExtension` when
@@ -1229,7 +1229,7 @@ $$
 Report β per domain. Faster decay (larger β) means more compressible.
 Compare empirical distributions against the Marchenko-Pastur null
 (random matrix baseline) using the `WignerSemicircle` and Marchenko-Pastur
-tools in `tensornet/genesis/rmt/universality.py`.
+tools in `ontic/genesis/rmt/universality.py`.
 
 ---
 
@@ -1380,24 +1380,24 @@ should execute *any* physics domain without rank explosion.
 
 The VM consists of four layers:
 
-1. **IR layer** (`tensornet/vm/ir.py`, 324 lines): 22-opcode instruction
+1. **IR layer** (`ontic/vm/ir.py`, 324 lines): 22-opcode instruction
    set — `LOAD_FIELD`, `STORE_FIELD`, `GRAD`, `LAPLACE`, `HADAMARD`,
    `ADD`, `SUB`, `SCALE`, `NEGATE`, `TRUNCATE`, `BC_APPLY`,
    `LAPLACE_SOLVE`, `INTEGRATE`, `DIV`, `ADVECT`, `MEASURE`,
    `LOOP_START`, `LOOP_END`, and helpers. All operands are register
    indices; register contents are QTT tensors.
 
-2. **Tensor wrapper** (`tensornet/vm/qtt_tensor.py`, 457 lines):
+2. **Tensor wrapper** (`ontic/vm/qtt_tensor.py`, 457 lines):
    Dimension-aware QTT tensor supporting 1D, 2D, and 3D fields via
    `bits_per_dim` tuples. Operations: `hadamard`, `truncate`,
    `integrate_along`, `broadcast_to`, `inner`, `from_function`.
 
-3. **Operator library** (`tensornet/vm/operators.py`, 391 lines):
+3. **Operator library** (`ontic/vm/operators.py`, 391 lines):
    Analytic MPO construction via binary carry chain — bond dimension 2
    for shift, 3 for gradient, 5 for Laplacian. Multi-dimensional
    embedding via Kronecker extension. Poisson solver via QTT-format CG.
 
-4. **Runtime engine** (`tensornet/vm/runtime.py`, ~470 lines): Universal
+4. **Runtime engine** (`ontic/vm/runtime.py`, ~470 lines): Universal
    executor that dispatches instructions, manages register file, applies
    rank governor, collects per-step telemetry. No domain-specific logic.
 
@@ -1482,7 +1482,7 @@ rather than an artifact of particular solver implementations.
 **Evidence artifacts:**
 - Benchmark data: `data/vm_7domain_benchmark.json`
 - Resolution sweep: `data/vm_resolution_sweep.json`
-- VM source: `tensornet/vm/` (IR, runtime, operators, compilers)
+- VM source: `ontic/vm/` (IR, runtime, operators, compilers)
 - Sweep script: `tools/scripts/research/vm_resolution_sweep.py`
 
 ### 11.7 Dual-Measurement Protocol Results
@@ -1685,10 +1685,10 @@ Total measurement count across all campaigns: **751+**.
 | Grid reports | `ahmed_ib_results/{128,512,4096}/report.txt` | Compression data |
 | Re scaling study | `tools/scripts/research/rank_vs_re_figure1.py` | Taylor-Green rank measurement |
 | Re sweep workflow | `apps/qtenet/workflows/qtt_turbulence/run_workflow.py` | χ ~ Re^α fitting |
-| Bond optimizer | `tensornet/adaptive/bond_optimizer.py` | BondDimensionTracker |
-| Entanglement analysis | `tensornet/adaptive/entanglement.py` | EntanglementSpectrum, AreaLawAnalyzer |
-| RMT universality | `tensornet/genesis/rmt/universality.py` | Wigner semicircle, Marchenko-Pastur |
-| Domain packs | `tensornet/packs/pack_{i..xx}.py` | 20 physics domain implementations |
+| Bond optimizer | `ontic/adaptive/bond_optimizer.py` | BondDimensionTracker |
+| Entanglement analysis | `ontic/adaptive/entanglement.py` | EntanglementSpectrum, AreaLawAnalyzer |
+| RMT universality | `ontic/genesis/rmt/universality.py` | Wigner semicircle, Marchenko-Pastur |
+| Domain packs | `ontic/packs/pack_{i..xx}.py` | 20 physics domain implementations |
 | Schmidt decomposition | `oracle/qtt_encoder.py` | SVD-based Schmidt rank computation |
 | Curse-breaking benchmark | `apps/qtenet/src/qtenet/qtenet/benchmarks/curse_scaling.py` | O(log N) scaling proof |
 | Coverage assessment | `docs/research/computational_physics_coverage_assessment.md` | 140 sub-domain taxonomy |
@@ -1701,11 +1701,11 @@ Total measurement count across all campaigns: **751+**.
 | Deep sweep data (III/VI) | `rank_atlas_deep_III_VI.json` | 162 measurements, n_bits 4–9 |
 | Deep sweep report | `atlas_results_deep_III_VI/ATLAS_SUMMARY.md` | Polylog scaling analysis |
 | Evidence manifest | `docs/research/evidence_manifest.json` | Claim-to-artifact index with SHA-256 hashes |
-| QTT Physics VM IR | `tensornet/vm/ir.py` | 22-opcode instruction set |
-| QTT VM runtime | `tensornet/vm/runtime.py` | Universal execution engine |
-| QTT VM operators | `tensornet/vm/operators.py` | Analytic MPO construction (carry chain) |
-| QTT VM tensor wrapper | `tensornet/vm/qtt_tensor.py` | Dimension-aware QTT tensor (1D/2D/3D) |
-| VM compilers (7) | `tensornet/vm/compilers/` | Burgers, Maxwell, Schrödinger, Diffusion, Vlasov, NS-2D, Maxwell-3D |
+| QTT Physics VM IR | `ontic/vm/ir.py` | 22-opcode instruction set |
+| QTT VM runtime | `ontic/vm/runtime.py` | Universal execution engine |
+| QTT VM operators | `ontic/vm/operators.py` | Analytic MPO construction (carry chain) |
+| QTT VM tensor wrapper | `ontic/vm/qtt_tensor.py` | Dimension-aware QTT tensor (1D/2D/3D) |
+| VM compilers (7) | `ontic/vm/compilers/` | Burgers, Maxwell, Schrödinger, Diffusion, Vlasov, NS-2D, Maxwell-3D |
 | VM 7-domain benchmark | `data/vm_7domain_benchmark.json` | 7/7 pass, bounded rank |
 | VM resolution sweep | `data/vm_resolution_sweep.json` | χ ~ (log₂N)^b polylogarithmic scaling |
 | Resolution sweep script | `tools/scripts/research/vm_resolution_sweep.py` | Automated sweep across 5 domains × 5 resolutions |

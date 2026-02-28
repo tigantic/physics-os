@@ -28,7 +28,7 @@ requirements:
 test:
   imports:
     - tensornet
-    - tensornet.core
+    - ontic.core
     - tensornet.substrate
     - tensornet.operators
   requires:

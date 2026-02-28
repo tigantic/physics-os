@@ -14,13 +14,13 @@ try:
     torch.cuda.set_device(0)
     log(f"CUDA: {torch.cuda.is_available()}, blocking=1")
 
-    from tensornet.em.chu_limit_gpu import (
+    from ontic.em.chu_limit_gpu import (
         make_chu_gpu_config, build_sphere_mask_tt_gpu,
         spherical_mask_flat_indices_gpu, build_pml_sigma_tt_gpu,
         build_conductivity_eps_tt_gpu, solve_forward_gpu,
     )
-    from tensornet.em.qtt_helmholtz_gpu import tt_norm_gpu
-    from tensornet.em.boundaries import PMLConfig
+    from ontic.em.qtt_helmholtz_gpu import tt_norm_gpu
+    from ontic.em.boundaries import PMLConfig
 
     log("Imports OK")
 

@@ -21,7 +21,7 @@ source_files:
   - "experiments/pwa_engine/__init__.py"
   - "experiments/pwa_engine/core.py"
   - "experiments/run_pwa_engine.py"
-  - "tensornet/packs/pack_x.py"
+  - "ontic/packs/pack_x.py"
 
 tests:
   smoke:

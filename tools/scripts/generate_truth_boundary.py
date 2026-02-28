@@ -105,7 +105,7 @@ def find_doc_file(
     module_path: Path, docs_dir: Path, project_root: Path
 ) -> Optional[Path]:
     """Find corresponding documentation file for a module."""
-    rel_path = module_path.relative_to(project_root / "tensornet")
+    rel_path = module_path.relative_to(project_root / "ontic")
 
     # Try docs/api/{path}.md
     doc_name = str(rel_path).replace("/", ".").replace("\\", ".").replace(".py", ".md")
@@ -156,13 +156,13 @@ def analyze_module(
 
 def generate_report(project_root: Path) -> Dict[str, Any]:
     """Generate the truth boundary report."""
-    tensornet_dir = project_root / "tensornet"
+    tensornet_dir = project_root / "ontic"
     tests_dir = project_root / "tests"
     docs_dir = project_root / "docs"
 
     modules = []
 
-    # Scan all Python files in tensornet
+    # Scan all Python files in ontic
     for py_file in tensornet_dir.rglob("*.py"):
         if py_file.name.startswith("_") and py_file.name != "__init__.py":
             continue

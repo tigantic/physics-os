@@ -14,7 +14,7 @@ import uuid
 
 import pytest
 
-from hypertensor.core.certificates import (
+from physics_os.core.certificates import (
     _init_keys,
     _SIGNING_KEY,
     _USE_ED25519,
@@ -24,8 +24,8 @@ from hypertensor.core.certificates import (
     verify_certificate,
     verify_signature,
 )
-from hypertensor.core.evidence import generate_claims, generate_validation_report
-from hypertensor.core.hasher import canonical_json, content_hash
+from physics_os.core.evidence import generate_claims, generate_validation_report
+from physics_os.core.hasher import canonical_json, content_hash
 
 
 # ── Helpers ──────────────────────────────────────────────────────────
@@ -110,7 +110,7 @@ class TestT1RoundTrip:
 
     def test_issuer(self) -> None:
         cert = _make_certificate()
-        assert cert["issuer"] == "hypertensor-runtime"
+        assert cert["issuer"] == "physics_os-runtime"
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -250,7 +250,7 @@ class TestT6MissingSignature:
 class TestT7WrongKey:
     def test_different_key_rejects(self) -> None:
         """Sign with current key, re-init keys, try to verify with new key."""
-        import hypertensor.core.certificates as cert_mod
+        import physics_os.core.certificates as cert_mod
 
         cert = _make_certificate()
         assert verify_certificate(cert) is True
@@ -282,7 +282,7 @@ class TestT7WrongKey:
 class TestT8HMACFallback:
     def test_hmac_round_trip(self) -> None:
         """Force HMAC mode and verify round-trip."""
-        import hypertensor.core.certificates as cert_mod
+        import physics_os.core.certificates as cert_mod
 
         # Save state
         saved_key = cert_mod._SIGNING_KEY
@@ -511,7 +511,7 @@ class TestG6_4_WrongKeyRejected:
 
     def test_wrong_key(self) -> None:
         # Covered by TestT7WrongKey — re-assert here for gate clarity
-        import hypertensor.core.certificates as cert_mod
+        import physics_os.core.certificates as cert_mod
 
         cert = _make_certificate()
         old_signing = cert_mod._SIGNING_KEY

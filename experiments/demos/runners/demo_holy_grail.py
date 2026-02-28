@@ -23,11 +23,11 @@ from matplotlib.colors import LinearSegmentedColormap
 import time
 import argparse
 
-from tensornet.cfd.fast_vlasov_5d import (
+from ontic.cfd.fast_vlasov_5d import (
     FastVlasov5D, Vlasov5DConfig, QTT5DState,
     create_two_stream_ic, qtt_5d_to_dense
 )
-from tensornet.cfd.pure_qtt_ops import QTTState, qtt_to_dense, dense_to_qtt
+from ontic.cfd.pure_qtt_ops import QTTState, qtt_to_dense, dense_to_qtt
 
 
 def create_proper_two_stream_ic(config: Vlasov5DConfig) -> QTT5DState:
@@ -92,7 +92,7 @@ def create_proper_two_stream_ic(config: Vlasov5DConfig) -> QTT5DState:
         )
     else:
         # For small grids, use direct compression
-        from tensornet.cfd.fast_vlasov_5d import dense_to_qtt_5d
+        from ontic.cfd.fast_vlasov_5d import dense_to_qtt_5d
         f_qtt = dense_to_qtt_5d(f, max_bond=config.max_rank)
     
     t1 = time.perf_counter()

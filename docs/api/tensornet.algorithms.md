@@ -1,4 +1,4 @@
-# Module `tensornet.algorithms`
+# Module `ontic.algorithms`
 
 Tensor Network Algorithms =========================
 

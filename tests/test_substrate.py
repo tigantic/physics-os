@@ -12,7 +12,7 @@ import numpy as np
 import pytest
 import torch
 
-from tensornet.engine.substrate import (BoundedMode, BudgetConfig, BundleMetadata,
+from ontic.engine.substrate import (BoundedMode, BudgetConfig, BundleMetadata,
                                  ContractionCache, Field, FieldBundle,
                                  FieldStats, FieldType, SliceSpec,
                                  StepControls, TelemetryDashboard)

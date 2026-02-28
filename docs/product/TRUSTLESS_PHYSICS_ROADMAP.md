@@ -33,7 +33,7 @@ These infrastructure fixes were applied prior to roadmap execution. They are pre
 |---|-----|--------|---------------|
 | P0-1 | Remove hardcoded API keys (`fp_QsU-...`, `prodkey123`) | ✅ Done | `sovereign-ui/serve.cjs`, `demo/streamlit_app.py` |
 | P0-2 | Make CI security gates blocking (typecheck, bandit, tests) | ✅ Done | `.github/workflows/ci.yml` |
-| P0-3 | Fix all `torch.load` to `weights_only=True` (19 files) | ✅ Done | 19 files across `tensornet/`, `tools/scripts/`, `demos/`, `crates/fluidelite/`, `proofs/` |
+| P0-3 | Fix all `torch.load` to `weights_only=True` (19 files) | ✅ Done | 19 files across `ontic/`, `tools/scripts/`, `demos/`, `crates/fluidelite/`, `proofs/` |
 | P0-4 | Enable V&V failure alerting | ✅ Done | `.github/workflows/vv-validation.yml` |
 
 ---
@@ -425,7 +425,7 @@ Output bond dimension is **multiplicative**: $\chi_{\text{out}} = \chi_{\text{MP
 - Middle sites: propagate or absorb carry. Core values are all 0 or 1.
 - MSB site: absorb carry (periodic boundary).
 
-**Rule 4: Laplacian Is Exact Rank-5 MPO.** The discrete Laplacian $\Delta = (S^+ + S^- - 2I)/\Delta x^2$ is constructed via direct-sum MPO addition of three terms: $S^+$ (bond dim 2) + $S^-$ (bond dim 2) + $-2I$ (bond dim 1). Bond dimension exactly **5** ($= 2 + 2 + 1$). Core values are from $\{0, \pm 1/\Delta x^2, \pm 2/\Delta x^2\}$. **Note:** The "fused rank-3" construction in `tensornet/mpo/operators.py:55–96` is a per-mode Laplacian (diagonal in physical indices), NOT the correct finite-difference Laplacian — it cannot represent cyclic shifts. The direct-sum from `pure_qtt_ops.py` is the authoritative construction.
+**Rule 4: Laplacian Is Exact Rank-5 MPO.** The discrete Laplacian $\Delta = (S^+ + S^- - 2I)/\Delta x^2$ is constructed via direct-sum MPO addition of three terms: $S^+$ (bond dim 2) + $S^-$ (bond dim 2) + $-2I$ (bond dim 1). Bond dimension exactly **5** ($= 2 + 2 + 1$). Core values are from $\{0, \pm 1/\Delta x^2, \pm 2/\Delta x^2\}$. **Note:** The "fused rank-3" construction in `ontic/mpo/operators.py:55–96` is a per-mode Laplacian (diagonal in physical indices), NOT the correct finite-difference Laplacian — it cannot represent cyclic shifts. The direct-sum from `pure_qtt_ops.py` is the authoritative construction.
 
 **Rule 5: System Matrix Is Exact Rank-6 MPO.** $(I - \alpha \Delta t L)$ is formed by direct-sum MPO addition of $I$ (rank 1) and $-\alpha \Delta t \cdot L$ (rank 5): first site concatenates along right bond, middle sites are block-diagonal, last site concatenates along left bond. Bond dimension $D_A = 1 + D_L = 6$. All core values are analytically known constants.
 
@@ -516,10 +516,10 @@ The design follows directly from the QTT rules:
 | `ConservationGadget` | `thermal/gadgets.rs:291–365` (×3 copies) | ✅ Complete | Reuse for residual norm bound $\|\cdot\| \leq \epsilon$ |
 | `SvdOrderingGadget` | `thermal/gadgets.rs:222–289` (×3 copies) | ✅ Complete | Reuse for truncation proof ($\sigma_i \geq \sigma_{i+1}$) |
 | `DiffusionSolveGadget` | `ns_imex/gadgets.rs:397–475` | ✅ Complete | Wire to real data — already computes $\nu \Delta t L u$ via MAC |
-| Python `LaplacianMPO` (fused, rank 3) | `tensornet/mpo/operators.py:55–96` | ⚠️ **Per-mode Laplacian — NOT finite-difference** | DEPRECATED as reference. The fused construction is diagonal in physical indices and cannot represent cyclic shifts. Use `pure_qtt_ops.py` direct-sum (rank 5) instead. |
-| Python `laplacian_mpo()` (direct-sum, rank 5) | `tensornet/cfd/pure_qtt_ops.py:428–470` | ✅ Complete | Cross-validation reference |
-| Python `shifted_operator()` $(I - \alpha L)$ | `tensornet/qtt/pde_solvers.py:80–142` | ✅ Complete | Reference for (I − αΔtL) construction |
-| Python `shift_mpo()` (ripple-carry) | `tensornet/cfd/pure_qtt_ops.py:179–269` | ✅ Complete | Reference for S+/S- core values |
+| Python `LaplacianMPO` (fused, rank 3) | `ontic/mpo/operators.py:55–96` | ⚠️ **Per-mode Laplacian — NOT finite-difference** | DEPRECATED as reference. The fused construction is diagonal in physical indices and cannot represent cyclic shifts. Use `pure_qtt_ops.py` direct-sum (rank 5) instead. |
+| Python `laplacian_mpo()` (direct-sum, rank 5) | `ontic/cfd/pure_qtt_ops.py:428–470` | ✅ Complete | Cross-validation reference |
+| Python `shifted_operator()` $(I - \alpha L)$ | `ontic/qtt/pde_solvers.py:80–142` | ✅ Complete | Reference for (I − αΔtL) construction |
+| Python `shift_mpo()` (ripple-carry) | `ontic/cfd/pure_qtt_ops.py:179–269` | ✅ Complete | Reference for S+/S- core values |
 | Q16 type + BN254/Goldilocks conversion | `fluidelite-core/src/field.rs`, `stark_impl.rs:184–213` | ✅ Complete | Direct |
 | Winterfell STARK AIR framework | `thermal/stark_impl.rs` | ✅ Complete | Extend trace width + constraints |
 | Halo2 gate layout (5 gates, 4 advice cols) | `thermal/halo2_impl.rs:120–183` | ✅ Complete | Reuse — no new gates needed |
@@ -538,8 +538,8 @@ The design follows directly from the QTT rules:
 
 | Task | Deliverable | Acceptance Test | Reuses |
 |------|-------------|-----------------|--------|
-| **6.1** Rust shift MPOs ($S^+$, $S^-$) | `fluidelite-core/src/qtt_operators.rs`: `shift_plus_mpo(num_sites) → MPO` and `shift_minus_mpo(num_sites) → MPO` implementing the ripple-carry construction. All core values from $\{0, 1\}$. Bond dimension exactly 2. MSB-first ordering. **IMPLEMENTED & TESTED.** | ✅ All basis vectors verified for $L=4,8$. ✅ Roundtrip $S^+ \circ S^- = I$. ✅ Bond dim = 2. 25 tests pass. | `tensornet/cfd/pure_qtt_ops.py:179–269` (reference), `fluidelite-core/src/mpo.rs` (MPO struct), `fluidelite-core/src/ops.rs` (`apply_mpo`) |
-| **6.2** Rust Laplacian MPO (direct-sum, rank 5) | `fluidelite-core/src/qtt_operators.rs`: `laplacian_mpo(num_sites, dx) → MPO` implementing the direct-sum construction $(S^+ + S^- - 2I)/\Delta x^2$. Bond dimension exactly **5** ($= 2 + 2 + 1$). Core values from $\{0, \pm 1/\Delta x^2, \pm 2/\Delta x^2\}$. **IMPLEMENTED & TESTED.** | ✅ Dense stencil match for $L=4$. ✅ Basis-vector application matches shift construction. ✅ Bond dim = 5 verified for $L=4,8,12$. 25 tests pass. | `tensornet/cfd/pure_qtt_ops.py` (direct-sum reference), shift MPOs (6.1) |
+| **6.1** Rust shift MPOs ($S^+$, $S^-$) | `fluidelite-core/src/qtt_operators.rs`: `shift_plus_mpo(num_sites) → MPO` and `shift_minus_mpo(num_sites) → MPO` implementing the ripple-carry construction. All core values from $\{0, 1\}$. Bond dimension exactly 2. MSB-first ordering. **IMPLEMENTED & TESTED.** | ✅ All basis vectors verified for $L=4,8$. ✅ Roundtrip $S^+ \circ S^- = I$. ✅ Bond dim = 2. 25 tests pass. | `ontic/cfd/pure_qtt_ops.py:179–269` (reference), `fluidelite-core/src/mpo.rs` (MPO struct), `fluidelite-core/src/ops.rs` (`apply_mpo`) |
+| **6.2** Rust Laplacian MPO (direct-sum, rank 5) | `fluidelite-core/src/qtt_operators.rs`: `laplacian_mpo(num_sites, dx) → MPO` implementing the direct-sum construction $(S^+ + S^- - 2I)/\Delta x^2$. Bond dimension exactly **5** ($= 2 + 2 + 1$). Core values from $\{0, \pm 1/\Delta x^2, \pm 2/\Delta x^2\}$. **IMPLEMENTED & TESTED.** | ✅ Dense stencil match for $L=4$. ✅ Basis-vector application matches shift construction. ✅ Bond dim = 5 verified for $L=4,8,12$. 25 tests pass. | `ontic/cfd/pure_qtt_ops.py` (direct-sum reference), shift MPOs (6.1) |
 | **6.3** Rust system matrix $(I - \alpha \Delta t L)$ | `fluidelite-core/src/qtt_operators.rs`: `system_matrix_mpo(num_sites, alpha_dt, dx) → MPO` constructing $(I - \alpha \Delta t L)$ via direct-sum MPO addition. Bond dimension exactly **6** ($= 1 + 5$). Includes `mpo_add()`, `mpo_scale()`, `mpo_subtract()`, `mpo_negate()` in `qtt_operators.rs`. **IMPLEMENTED & TESTED.** | ✅ Dense matrix matches $(I - \alpha \Delta t L)$ for $L=4$. ✅ Bond dim = 6 verified. ✅ Identity limit ($\alpha \Delta t = 0$). 25 tests pass. | Laplacian (6.2), `fluidelite-core/src/ops.rs` (existing `apply_mpo`, `add_mps`) |
 | **6.4** Shared gadget crate + replace test Laplacian | Extracted 5 shared gadgets into `fluidelite-circuits/src/gadgets.rs`. Replaced `euler3d/gadgets.rs` (573→14 lines), `ns_imex/gadgets.rs` (600→~210 lines, 3 unique preserved), `thermal/gadgets.rs` (474→~95 lines, CgSolveGadget preserved). Replaced `make_test_laplacian_mpos()` to return real `laplacian_mpo(num_sites, Q16::one())` (bond dim 5) instead of `MPO::identity()`. Fixed pre-existing STARK `num_steps` bug in `prover.rs`. Switched integration suite from Halo2 to STARK feature. **IMPLEMENTED & TESTED.** | ✅ 261 tests pass (46 core + 173 circuits + 42 integration). ✅ ~1,050 lines eliminated. ✅ STARK proofs verify with real Laplacian. ✅ Pre-existing `InconsistentOodConstraintEvaluations` bug fixed. | 3× gadget copies (deduplicated), `qtt_operators::laplacian_mpo` (6.2) |
 

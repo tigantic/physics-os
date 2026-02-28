@@ -27,7 +27,7 @@ import pytest
 import torch
 from torch import Tensor
 
-from tensornet.platform.data_model import (
+from ontic.platform.data_model import (
     BCType,
     BoundaryCondition,
     FieldData,
@@ -97,7 +97,7 @@ class TestExportVTU:
     """VTU (VTK XML) export."""
 
     def test_export_vtu_1d(self, tmp_path: Path) -> None:
-        from tensornet.platform.export import export_vtu
+        from ontic.platform.export import export_vtu
 
         state = _make_state_1d(32)
         out = export_vtu(state, tmp_path / "test.vtu")
@@ -107,7 +107,7 @@ class TestExportVTU:
         assert "VTU" in text.upper() or "UnstructuredGrid" in text
 
     def test_export_vtu_2d(self, tmp_path: Path) -> None:
-        from tensornet.platform.export import export_vtu
+        from ontic.platform.export import export_vtu
 
         state = _make_state_2d(8, 8)
         out = export_vtu(state, tmp_path / "test2d.vtu")
@@ -117,7 +117,7 @@ class TestExportVTU:
         assert "NumberOfCells" in content
 
     def test_export_vtu_fields_filter(self, tmp_path: Path) -> None:
-        from tensornet.platform.export import export_vtu
+        from ontic.platform.export import export_vtu
 
         mesh = _make_structured_1d(16)
         fa = FieldData(name="a", data=torch.ones(16), mesh=mesh)
@@ -134,7 +134,7 @@ class TestExportCSV:
     """CSV export."""
 
     def test_export_csv_roundtrip(self, tmp_path: Path) -> None:
-        from tensornet.platform.export import export_csv
+        from ontic.platform.export import export_csv
 
         data = {"energy": [1.0, 0.9, 0.8], "step": [0.0, 1.0, 2.0]}
         out = export_csv(data, tmp_path / "obs.csv")
@@ -150,7 +150,7 @@ class TestExportJSON:
     """JSON export."""
 
     def test_export_json(self, tmp_path: Path) -> None:
-        from tensornet.platform.export import export_json
+        from ontic.platform.export import export_json
 
         payload = {"solver": "RK4", "steps": 100, "converged": True}
         out = export_json(payload, tmp_path / "meta.json")
@@ -164,7 +164,7 @@ class TestExportBundle:
     """ExportBundle convenience wrapper."""
 
     def test_bundle_multi_format(self, tmp_path: Path) -> None:
-        from tensornet.platform.export import ExportBundle
+        from ontic.platform.export import ExportBundle
 
         state = _make_state_1d(32)
         bundle = ExportBundle(state, output_dir=tmp_path)
@@ -183,7 +183,7 @@ class TestMeshImport:
     """Mesh import (raw arrays, GMSH format detection)."""
 
     def test_import_raw_numpy_like(self) -> None:
-        from tensornet.platform.mesh_import import import_raw
+        from ontic.platform.mesh_import import import_raw
 
         nodes = torch.tensor([[0.0, 0.0], [1.0, 0.0], [0.5, 1.0]])
         elements = torch.tensor([[0, 1, 2]], dtype=torch.long)
@@ -193,7 +193,7 @@ class TestMeshImport:
         assert mesh.ndim == 2
 
     def test_import_raw_tet(self) -> None:
-        from tensornet.platform.mesh_import import import_raw
+        from ontic.platform.mesh_import import import_raw
 
         nodes = torch.tensor([
             [0.0, 0.0, 0.0],
@@ -207,7 +207,7 @@ class TestMeshImport:
         assert mesh.ndim == 3
 
     def test_detect_format_gmsh(self, tmp_path: Path) -> None:
-        from tensornet.platform.mesh_import import detect_mesh_format
+        from ontic.platform.mesh_import import detect_mesh_format
 
         gmsh_v2 = "$MeshFormat\n2.2 0 8\n$EndMeshFormat\n"
         f = tmp_path / "test.msh"
@@ -216,7 +216,7 @@ class TestMeshImport:
         assert fmt.startswith("gmsh")  # returns 'gmsh2' or 'gmsh4'
 
     def test_detect_format_unknown(self, tmp_path: Path) -> None:
-        from tensornet.platform.mesh_import import detect_mesh_format
+        from ontic.platform.mesh_import import detect_mesh_format
 
         f = tmp_path / "test.xyz"
         f.write_text("some random content")
@@ -224,7 +224,7 @@ class TestMeshImport:
         assert fmt == "unknown"
 
     def test_import_gmsh_v2(self, tmp_path: Path) -> None:
-        from tensornet.platform.mesh_import import import_gmsh
+        from ontic.platform.mesh_import import import_gmsh
 
         gmsh_content = (
             "$MeshFormat\n"
@@ -248,7 +248,7 @@ class TestMeshImport:
         assert mesh.n_cells == 1
 
     def test_import_gmsh_v4(self, tmp_path: Path) -> None:
-        from tensornet.platform.mesh_import import import_gmsh
+        from ontic.platform.mesh_import import import_gmsh
 
         gmsh_content = (
             "$MeshFormat\n"
@@ -286,7 +286,7 @@ class TestPostProcess:
     """Post-processing operations on field data."""
 
     def test_probe_1d(self) -> None:
-        from tensornet.platform.postprocess import probe
+        from ontic.platform.postprocess import probe
 
         field = _make_field_1d("u", 64)
         val = probe(field, torch.tensor([0.5]))
@@ -294,14 +294,14 @@ class TestPostProcess:
         assert val.numel() == 1
 
     def test_probe_2d(self) -> None:
-        from tensornet.platform.postprocess import probe
+        from ontic.platform.postprocess import probe
 
         field = _make_field_2d("u", 16, 16)
         val = probe(field, torch.tensor([0.5, 0.5]))
         assert isinstance(val, Tensor)
 
     def test_slice_field(self) -> None:
-        from tensornet.platform.postprocess import slice_field
+        from ontic.platform.postprocess import slice_field
 
         field = _make_field_2d("T", 16, 16)
         coords, values = slice_field(field, axis=0, index=8)
@@ -310,7 +310,7 @@ class TestPostProcess:
         assert values.shape[0] == 16
 
     def test_integrate_constant(self) -> None:
-        from tensornet.platform.postprocess import integrate
+        from ontic.platform.postprocess import integrate
 
         mesh = _make_structured_1d(100)
         # Constant field = 1.0 on [0, 1] should integrate to ~1.0
@@ -319,7 +319,7 @@ class TestPostProcess:
         assert abs(val.item() - 1.0) < 0.02  # Within 2%
 
     def test_field_statistics(self) -> None:
-        from tensornet.platform.postprocess import field_statistics, FieldStats
+        from ontic.platform.postprocess import field_statistics, FieldStats
 
         field = _make_field_1d("u", 128)
         stats = field_statistics(field)
@@ -332,7 +332,7 @@ class TestPostProcess:
         assert "percentiles" in d
 
     def test_fft_field_1d(self) -> None:
-        from tensornet.platform.postprocess import fft_field
+        from ontic.platform.postprocess import fft_field
 
         field = _make_field_1d("u", 128)
         freqs, power = fft_field(field)
@@ -341,7 +341,7 @@ class TestPostProcess:
         assert (power >= 0).all()
 
     def test_gradient_field_1d(self) -> None:
-        from tensornet.platform.postprocess import gradient_field
+        from ontic.platform.postprocess import gradient_field
 
         # Linear field: u = x  should have gradient ≈ 1
         mesh = _make_structured_1d(64)
@@ -354,7 +354,7 @@ class TestPostProcess:
         assert torch.allclose(interior, torch.ones_like(interior), atol=0.1)
 
     def test_histogram(self) -> None:
-        from tensornet.platform.postprocess import histogram
+        from ontic.platform.postprocess import histogram
 
         field = _make_field_1d("u", 256)
         edges, counts = histogram(field, n_bins=10)
@@ -371,7 +371,7 @@ class TestDeprecation:
     """SemVer enforcement and API lifecycle."""
 
     def test_version_info_parse(self) -> None:
-        from tensornet.platform.deprecation import VersionInfo
+        from ontic.platform.deprecation import VersionInfo
 
         v = VersionInfo.parse("1.2.3")
         assert v.major == 1
@@ -380,7 +380,7 @@ class TestDeprecation:
         assert str(v) == "1.2.3"
 
     def test_version_info_comparison(self) -> None:
-        from tensornet.platform.deprecation import VersionInfo
+        from ontic.platform.deprecation import VersionInfo
 
         v1 = VersionInfo(1, 0, 0)
         v2 = VersionInfo(2, 0, 0)
@@ -389,7 +389,7 @@ class TestDeprecation:
         assert v1 == VersionInfo(1, 0, 0)
 
     def test_deprecated_warning(self) -> None:
-        from tensornet.platform.deprecation import deprecated, VersionInfo, PLATFORM_VERSION
+        from ontic.platform.deprecation import deprecated, VersionInfo, PLATFORM_VERSION
 
         # Create a function deprecated at a future version
         future = VersionInfo(PLATFORM_VERSION.major + 1, 0, 0)
@@ -406,7 +406,7 @@ class TestDeprecation:
             assert "deprecated" in str(w[0].message).lower()
 
     def test_deprecated_raises_when_overdue(self) -> None:
-        from tensornet.platform.deprecation import deprecated, PLATFORM_VERSION
+        from ontic.platform.deprecation import deprecated, PLATFORM_VERSION
 
         # Removal version == current → should raise
         @deprecated(removal_version=str(PLATFORM_VERSION), alternative="new_func")
@@ -417,7 +417,7 @@ class TestDeprecation:
             dead_func()
 
     def test_since_decorator(self) -> None:
-        from tensornet.platform.deprecation import since
+        from ontic.platform.deprecation import since
 
         @since("1.5.0")
         def new_func() -> str:
@@ -428,7 +428,7 @@ class TestDeprecation:
         assert new_func.__since__ == "1.5.0"
 
     def test_check_version_gate(self) -> None:
-        from tensornet.platform.deprecation import check_version_gate
+        from ontic.platform.deprecation import check_version_gate
 
         # Should not raise if no overdue removals in loaded modules
         violations = check_version_gate()
@@ -445,7 +445,7 @@ class TestSecurity:
     """SBOM generation, dependency audit, license compliance."""
 
     def test_generate_sbom(self, tmp_path: Path) -> None:
-        from tensornet.platform.security import generate_sbom, SBOM
+        from ontic.platform.security import generate_sbom, SBOM
 
         sbom = generate_sbom(output_path=tmp_path / "sbom.json")
         assert isinstance(sbom, SBOM)
@@ -458,7 +458,7 @@ class TestSecurity:
         assert loaded["bomFormat"] == "CycloneDX"
 
     def test_audit_dependencies(self) -> None:
-        from tensornet.platform.security import audit_dependencies
+        from ontic.platform.security import audit_dependencies
 
         result = audit_dependencies()
         assert hasattr(result, "findings")
@@ -466,7 +466,7 @@ class TestSecurity:
         assert result.packages_scanned > 0
 
     def test_license_audit(self) -> None:
-        from tensornet.platform.security import license_audit
+        from ontic.platform.security import license_audit
 
         report = license_audit()
         assert hasattr(report, "entries")
@@ -486,15 +486,15 @@ class TestSDKImports:
     """SDK public API surface: all re-exports are importable."""
 
     def test_sdk_version(self) -> None:
-        from tensornet.infra.sdk import __sdk_version__
+        from ontic.infra.sdk import __sdk_version__
         assert __sdk_version__ == "2.0.0"
 
     def test_workflow_builder_import(self) -> None:
-        from tensornet.infra.sdk import WorkflowBuilder
+        from ontic.infra.sdk import WorkflowBuilder
         assert WorkflowBuilder is not None
 
     def test_data_model_reexports(self) -> None:
-        from tensornet.infra.sdk import (
+        from ontic.infra.sdk import (
             Mesh,
             StructuredMesh,
             UnstructuredMesh,
@@ -506,7 +506,7 @@ class TestSDKImports:
         ])
 
     def test_protocol_reexports(self) -> None:
-        from tensornet.infra.sdk import (
+        from ontic.infra.sdk import (
             ProblemSpec,
             Solver,
             Observable,
@@ -517,11 +517,11 @@ class TestSDKImports:
         ])
 
     def test_export_reexports(self) -> None:
-        from tensornet.infra.sdk import export_vtu, export_csv, export_json
+        from ontic.infra.sdk import export_vtu, export_csv, export_json
         assert all(fn is not None for fn in [export_vtu, export_csv, export_json])
 
     def test_postprocess_reexports(self) -> None:
-        from tensornet.infra.sdk import (
+        from ontic.infra.sdk import (
             probe, slice_field, integrate, field_statistics,
             fft_field, gradient_field, histogram,
         )
@@ -531,12 +531,12 @@ class TestSDKImports:
         ])
 
     def test_deprecation_reexports(self) -> None:
-        from tensornet.infra.sdk import PLATFORM_VERSION, VersionInfo, deprecated, since
+        from ontic.infra.sdk import PLATFORM_VERSION, VersionInfo, deprecated, since
         assert PLATFORM_VERSION is not None
         assert VersionInfo is not None
 
     def test_security_reexports(self) -> None:
-        from tensornet.infra.sdk import generate_sbom, audit_dependencies, license_audit
+        from ontic.infra.sdk import generate_sbom, audit_dependencies, license_audit
         assert all(fn is not None for fn in [
             generate_sbom, audit_dependencies, license_audit,
         ])
@@ -546,7 +546,7 @@ class TestWorkflowBuilderConfig:
     """WorkflowBuilder fluent API configuration."""
 
     def test_builder_domain(self) -> None:
-        from tensornet.infra.sdk import WorkflowBuilder
+        from ontic.infra.sdk import WorkflowBuilder
 
         b = WorkflowBuilder("test")
         b.domain(shape=(64,), extent=((0.0, 1.0),))
@@ -556,7 +556,7 @@ class TestWorkflowBuilderConfig:
         assert wf.name == "test"
 
     def test_builder_validation_no_mesh(self) -> None:
-        from tensornet.infra.sdk import WorkflowBuilder
+        from ontic.infra.sdk import WorkflowBuilder
 
         b = WorkflowBuilder("bad")
         b.field("u")
@@ -565,7 +565,7 @@ class TestWorkflowBuilderConfig:
             b.build()
 
     def test_builder_validation_no_solver(self) -> None:
-        from tensornet.infra.sdk import WorkflowBuilder
+        from ontic.infra.sdk import WorkflowBuilder
 
         b = WorkflowBuilder("bad")
         b.domain(shape=(64,), extent=((0.0, 1.0),))
@@ -574,7 +574,7 @@ class TestWorkflowBuilderConfig:
             b.build()
 
     def test_builder_validation_no_fields(self) -> None:
-        from tensornet.infra.sdk import WorkflowBuilder
+        from ontic.infra.sdk import WorkflowBuilder
 
         b = WorkflowBuilder("bad")
         b.domain(shape=(64,), extent=((0.0, 1.0),))
@@ -583,7 +583,7 @@ class TestWorkflowBuilderConfig:
             b.build()
 
     def test_builder_chaining(self) -> None:
-        from tensornet.infra.sdk import WorkflowBuilder
+        from ontic.infra.sdk import WorkflowBuilder
 
         wf = (
             WorkflowBuilder("chain_test")
@@ -612,20 +612,20 @@ class TestRecipes:
     """Recipe registration and retrieval."""
 
     def test_list_recipes(self) -> None:
-        from tensornet.infra.sdk.recipes import list_recipes
+        from ontic.infra.sdk.recipes import list_recipes
 
         recipes = list_recipes()
         assert isinstance(recipes, list)
         assert len(recipes) >= 8  # We registered 8 built-in recipes
 
     def test_list_recipes_by_domain(self) -> None:
-        from tensornet.infra.sdk.recipes import list_recipes
+        from ontic.infra.sdk.recipes import list_recipes
 
         fluid = list_recipes(domain="fluid_dynamics")
         assert len(fluid) >= 2  # burgers_1d, sod_shock_tube
 
     def test_get_recipe_burgers(self) -> None:
-        from tensornet.infra.sdk.recipes import get_recipe
+        from ontic.infra.sdk.recipes import get_recipe
 
         builder = get_recipe("burgers_1d")
         assert builder._config.name == "burgers_1d"
@@ -633,25 +633,25 @@ class TestRecipes:
         assert wf.name == "burgers_1d"
 
     def test_get_recipe_harmonic(self) -> None:
-        from tensornet.infra.sdk.recipes import get_recipe
+        from ontic.infra.sdk.recipes import get_recipe
 
         builder = get_recipe("harmonic_oscillator")
         assert builder._config.solver_id == "PHY-I.4"
 
     def test_get_recipe_with_overrides(self) -> None:
-        from tensornet.infra.sdk.recipes import get_recipe
+        from ontic.infra.sdk.recipes import get_recipe
 
         builder = get_recipe("burgers_1d", n_cells=512, reynolds=200.0)
         assert builder._config.mesh_shape == (512,)
 
     def test_get_recipe_unknown_raises(self) -> None:
-        from tensornet.infra.sdk.recipes import get_recipe
+        from ontic.infra.sdk.recipes import get_recipe
 
         with pytest.raises(KeyError, match="Unknown recipe"):
             get_recipe("nonexistent_solver_9999")
 
     def test_recipe_info_repr(self) -> None:
-        from tensornet.infra.sdk.recipes import list_recipes
+        from ontic.infra.sdk.recipes import list_recipes
 
         recipes = list_recipes()
         for r in recipes:
@@ -667,7 +667,7 @@ class TestVisualization:
     """Matplotlib-based plotting (smoke tests)."""
 
     def test_ensure_matplotlib(self) -> None:
-        from tensornet.platform.visualize import ensure_matplotlib
+        from ontic.platform.visualize import ensure_matplotlib
 
         # Just returns True/False — should not raise
         result = ensure_matplotlib()
@@ -680,7 +680,7 @@ class TestVisualization:
     def test_plot_field_1d(self, tmp_path: Path) -> None:
         import matplotlib
         matplotlib.use("Agg")
-        from tensornet.platform.visualize import plot_field_1d
+        from ontic.platform.visualize import plot_field_1d
 
         field = _make_field_1d("u", 64)
         fig, ax = plot_field_1d(field, save_path=tmp_path / "field1d.png")
@@ -695,7 +695,7 @@ class TestVisualization:
     def test_plot_field_2d(self, tmp_path: Path) -> None:
         import matplotlib
         matplotlib.use("Agg")
-        from tensornet.platform.visualize import plot_field_2d
+        from ontic.platform.visualize import plot_field_2d
 
         field = _make_field_2d("T", 16, 16)
         fig, ax = plot_field_2d(field, save_path=tmp_path / "field2d.png")
@@ -710,7 +710,7 @@ class TestVisualization:
     def test_plot_convergence(self, tmp_path: Path) -> None:
         import matplotlib
         matplotlib.use("Agg")
-        from tensornet.platform.visualize import plot_convergence
+        from ontic.platform.visualize import plot_convergence
 
         resolutions = [16, 32, 64, 128]
         errors = [0.01, 0.0025, 0.000625, 0.00015625]
@@ -731,12 +731,12 @@ class TestPlatformInit:
     """Platform __init__ exports Phase 7 modules."""
 
     def test_version_updated(self) -> None:
-        from tensornet.platform import __version__
+        from ontic.platform import __version__
 
         assert __version__ == "2.0.0"
 
     def test_new_exports(self) -> None:
-        import tensornet.platform as plat
+        import ontic.platform as plat
 
         # Export
         assert hasattr(plat, "export_vtu")

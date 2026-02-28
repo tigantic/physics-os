@@ -10,9 +10,9 @@ Phases 0–4 established the platform substrate (data model, protocols, solvers,
 domain packs, full taxonomy coverage at ≥ V0.2) but all forward solvers operate
 on dense tensors.  The repository already contains mature QTT / TN primitives:
 
-- `tensornet/cfd/pure_qtt_ops.py` (1069 lines): TT-SVD, rounding, arithmetic.
-- `tensornet/cfd/qtt_tci.py` (1271 lines): Python TCI engine.
-- `tensornet/core/` + `tensornet/algorithms/`: MPS, MPO, DMRG, TEBD, TDVP.
+- `ontic/cfd/pure_qtt_ops.py` (1069 lines): TT-SVD, rounding, arithmetic.
+- `ontic/cfd/qtt_tci.py` (1271 lines): Python TCI engine.
+- `ontic/core/` + `ontic/algorithms/`: MPS, MPO, DMRG, TEBD, TDVP.
 - `apps/qtenet/`: N-D QTT operators, NS3D / Vlasov / Euler solvers.
 
 **Gap identified:** Zero bridge between QTT primitives and the platform data
@@ -22,7 +22,7 @@ harmful (rank explosion → accuracy loss).
 
 ## Decision
 
-### 1. QTT Bridge Layer (`tensornet/platform/qtt.py`)
+### 1. QTT Bridge Layer (`ontic/platform/qtt.py`)
 
 - `QTTFieldData` — QTT analog of `FieldData`: stores TT cores, `n_qubits`,
   compression ratio, max rank.
@@ -35,18 +35,18 @@ harmful (rank explosion → accuracy loss).
 - `QTTDiscretization` — Satisfies `Discretization` protocol for QTT-native
   discretizations.
 
-### 2. TCI Decomposition Engine (`tensornet/platform/tci.py`)
+### 2. TCI Decomposition Engine (`ontic/platform/tci.py`)
 
 - `TCIConfig` / `TCIResult` — Frozen dataclasses for TCI parameters and
   outputs.
-- `tci_from_function()` — Delegates to `tensornet.cfd.qtt_tci`, falls back
+- `tci_from_function()` — Delegates to `ontic.cfd.qtt_tci`, falls back
   to TT-SVD on failure.  Handles heterogeneous output formats (lists, numpy,
   tensors).
 - `tci_from_field()` — Field → QTT via interpolation-based TCI.
 - `tci_error_vs_rank()` — Produces error-vs-rank curves for QTT Enablement
   Policy validation.
 
-### 3. Acceleration Policy (`tensornet/platform/acceleration.py`)
+### 3. Acceleration Policy (`ontic/platform/acceleration.py`)
 
 - `AccelerationMode` enum: DENSE | QTT | FALLBACK | HYBRID.
 - `AccelerationMetrics` — Per-step metrics (rank, compression, error, time).
@@ -56,14 +56,14 @@ harmful (rank explosion → accuracy loss).
   compression floor, growth rate.  `should_use_qtt()` governs per-step
   mode selection; `validate_enablement()` checks post-solve criteria.
 
-### 4. QTT Solver Wrapper (`tensornet/platform/qtt_solver.py`)
+### 4. QTT Solver Wrapper (`ontic/platform/qtt_solver.py`)
 
 - `QTTAcceleratedSolver` — Generic wrapper around any `Solver`-protocol solver.
   Compresses fields before each step, decompresses after, records metrics,
   and triggers fallback per the policy.
 - `QTTSimulationState` — Pairs dense state with QTT-compressed fields.
 
-### 5. V0.6 QTT-Accelerated Domain Solvers (`tensornet/packs/qtt_accelerated.py`)
+### 5. V0.6 QTT-Accelerated Domain Solvers (`ontic/packs/qtt_accelerated.py`)
 
 Four anchor-adjacent V0.6 solvers demonstrating QTT acceleration:
 

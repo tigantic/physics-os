@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Plasma_Instabilities solver"
 
 source_files:
-  - "tensornet/packs/pack_xi.py"
+  - "ontic/packs/pack_xi.py"
 
 tests:
   smoke:

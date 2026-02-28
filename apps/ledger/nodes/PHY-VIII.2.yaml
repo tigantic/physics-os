@@ -13,7 +13,7 @@ state: "V0.2"
 description: "HF/MP2/CC/CI, DMRG-FCI"
 
 source_files:
-  - "tensornet/electronic_structure/beyond_dft.py"
+  - "ontic/electronic_structure/beyond_dft.py"
 
 tests:
   smoke:

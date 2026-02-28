@@ -29,11 +29,11 @@ from typing import Any
 
 import pytest
 
-from hypertensor.core.certificates import issue_certificate, verify_certificate
-from hypertensor.core.evidence import generate_claims, generate_validation_report
-from hypertensor.core.executor import ExecutionConfig, execute
-from hypertensor.core.hasher import content_hash
-from hypertensor.core.sanitizer import sanitize_result
+from physics_os.core.certificates import issue_certificate, verify_certificate
+from physics_os.core.evidence import generate_claims, generate_validation_report
+from physics_os.core.executor import ExecutionConfig, execute
+from physics_os.core.hasher import content_hash
+from physics_os.core.sanitizer import sanitize_result
 
 # ── Baselines ───────────────────────────────────────────────────────
 

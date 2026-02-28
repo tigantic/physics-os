@@ -34,7 +34,7 @@ def test_tt_euler_time_evolution():
     This is the CRITICAL test: does the TT solver produce
     non-trivial dynamics in TT format?
     """
-    from tensornet.cfd.tt_cfd import TT_Euler1D
+    from ontic.cfd.tt_cfd import TT_Euler1D
 
     N = 32
     chi_max = 16
@@ -101,7 +101,7 @@ def test_bond_dimension_effect():
     2. Actual chi adapts to field complexity
     3. TT cores have non-trivial structure
     """
-    from tensornet.cfd.tt_cfd import TT_Euler1D
+    from ontic.cfd.tt_cfd import TT_Euler1D
 
     N = 64
 
@@ -173,7 +173,7 @@ def test_complexity_scaling():
 
     Compare runtime for different N at fixed chi.
     """
-    from tensornet.cfd.tt_cfd import TT_Euler1D
+    from ontic.cfd.tt_cfd import TT_Euler1D
 
     chi = 8
     sizes = [16, 32, 64, 128]
@@ -224,7 +224,7 @@ def test_mps_actually_compressed():
 
     If chi=1 for all bonds, it's just a product state with no compression.
     """
-    from tensornet.cfd.tt_cfd import TT_Euler1D
+    from ontic.cfd.tt_cfd import TT_Euler1D
 
     N = 64
     chi_max = 32

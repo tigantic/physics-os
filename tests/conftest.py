@@ -3,7 +3,7 @@ Shared pytest fixtures and configuration for HyperTensor test suite.
 
 Provides:
     - Deterministic random seeding for reproducible tests
-    - Common test fixtures for tensornet components
+    - Common test fixtures for ontic components
     - Test markers for categorization
 
 Usage:

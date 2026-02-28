@@ -48,7 +48,7 @@ def test_logging_infrastructure() -> bool:
     """Test 1: Verify logging infrastructure works correctly."""
     print("━━━ TEST 1: Logging Infrastructure ━━━")
     
-    from tensornet.genesis.core.logging import (
+    from ontic.genesis.core.logging import (
         get_logger,
         configure_logging,
         GenesisLogger,
@@ -115,7 +115,7 @@ def test_exception_hierarchy() -> bool:
     """Test 2: Verify exception hierarchy with informative messages."""
     print("\n━━━ TEST 2: Exception Hierarchy ━━━")
     
-    from tensornet.genesis.core.exceptions import (
+    from ontic.genesis.core.exceptions import (
         GenesisError,
         QTTRankError,
         ConvergenceError,
@@ -247,7 +247,7 @@ def test_profiling_infrastructure() -> bool:
     """Test 3: Verify profiling decorators and utilities."""
     print("\n━━━ TEST 3: Profiling Infrastructure ━━━")
     
-    from tensornet.genesis.core.profiling import (
+    from ontic.genesis.core.profiling import (
         profile,
         profile_memory,
         timed,
@@ -345,7 +345,7 @@ def test_validation_utilities() -> bool:
     """Test 4: Verify validation utilities."""
     print("\n━━━ TEST 4: Validation Utilities ━━━")
     
-    from tensornet.genesis.core.validation import (
+    from ontic.genesis.core.validation import (
         validate_qtt_cores,
         validate_tensor_shape,
         validate_positive,
@@ -357,7 +357,7 @@ def test_validation_utilities() -> bool:
         check_numerical_stability,
         coerce_array,
     )
-    from tensornet.genesis.core.exceptions import (
+    from ontic.genesis.core.exceptions import (
         DimensionMismatchError,
         QTTRankError,
         InvalidInputError,
@@ -483,7 +483,7 @@ def test_integration_with_genesis_modules() -> bool:
     print("\n━━━ TEST 5: Integration with Genesis Modules ━━━")
     
     # Test that imports work
-    from tensornet.genesis import (
+    from ontic.genesis import (
         # Core
         get_logger,
         configure_logging,
@@ -499,7 +499,7 @@ def test_integration_with_genesis_modules() -> bool:
         Multivector,
     )
     
-    print(f"  ✓ Core infrastructure imports from tensornet.genesis")
+    print(f"  ✓ Core infrastructure imports from ontic.genesis")
     
     # Test logger with Genesis context
     logger = get_logger("integration_test", layer=23, primitive="Tropical")

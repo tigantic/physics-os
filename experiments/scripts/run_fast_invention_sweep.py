@@ -53,7 +53,7 @@ def main() -> None:
 
     # ── Imports ──────────────────────────────────────────────────────
     print("Loading QTT antenna pipeline...", flush=True)
-    from tensornet.engine.vm.antenna import (
+    from ontic.engine.vm.antenna import (
         DipoleAntennaDesign,
         PatchAntennaDesign,
         EShapedPatchDesign,

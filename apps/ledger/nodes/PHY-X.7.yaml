@@ -13,7 +13,7 @@ state: "V0.2"
 description: "PHY-X.7_Dark_matter solver"
 
 source_files:
-  - "tensornet/packs/pack_x.py"
+  - "ontic/packs/pack_x.py"
 
 tests:
   smoke:

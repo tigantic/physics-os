@@ -1,4 +1,4 @@
-# Module `tensornet.adaptive`
+# Module `ontic.adaptive`
 
 Adaptive bond dimension management for tensor network simulations.
 

@@ -29,7 +29,7 @@ Client (SDK/CLI/curl)
    │  │ │ Jobs │ │ │  ← In-memory store + state machine
    │  │ └──────┘ │ │
    │  │ ┌──────┐ │ │
-   │  │ │ QTT  │ │ │  ← tensornet.vm runtime (compute)
+   │  │ │ QTT  │ │ │  ← ontic.vm runtime (compute)
    │  │ │  VM  │ │ │
    │  │ └──────┘ │ │
    │  └──────────┘ │
@@ -58,7 +58,7 @@ python3 -c "import hypertensor; print(hypertensor.__version__)"
 python3 -c "from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey; print('Ed25519: OK')"
 
 # 3. Set required environment variables
-export HYPERTENSOR_SIGNING_KEY_PATH=/etc/hypertensor/signing_key.pem
+export HYPERTENSOR_SIGNING_KEY_PATH=/etc/physics_os/signing_key.pem
 export HYPERTENSOR_API_KEYS="htk_user1_key1,htk_user2_key2"
 export HYPERTENSOR_REQUIRE_AUTH=true
 
@@ -119,7 +119,7 @@ For production JSON logging, configure via environment or logging config.
 
 | Event                        | Level   | Module              | Message Pattern                              |
 |------------------------------|---------|---------------------|----------------------------------------------|
-| Server startup               | INFO    | `hypertensor.api`   | `Starting Physics OS API v{version}`        |
+| Server startup               | INFO    | `physics_os.api`   | `Starting Physics OS API v{version}`        |
 | Key initialization           | INFO    | `certificates`      | `Certificate signing: {scheme} ({source})`   |
 | Ephemeral key warning        | WARNING | `certificates`      | `Certificate signing: HMAC-SHA256 (random...)`|
 | Job compilation              | INFO    | `executor`          | `Compiling: domain={d} n_bits={b} n_steps={s}` |

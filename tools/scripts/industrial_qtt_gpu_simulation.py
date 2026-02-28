@@ -26,7 +26,7 @@ RULES:
   Campaign IV:  Combustion DNS with Meaningful Integration
 
 Hardware: NVIDIA RTX 5070 Laptop (8 GB VRAM, SM 12.0, CUDA 12.8)
-Stack:    PyTorch 2.9.1+cu128, Triton 3.5.1, tensornet 40.x
+Stack:    PyTorch 2.9.1+cu128, Triton 3.5.1, ontic 40.x
 
 Author: HyperTensor Team
 """
@@ -193,9 +193,9 @@ def run_campaign_i(
     Taylor-Green analytical validation: E(t) = E0*exp(-2*nu*t)
     Viscosity nu=0.01 gives Re=100 -> laminar decay, verifiable.
     """
-    from tensornet.cfd.qtt_tci import qtt_from_function_tci_python
-    from tensornet.cfd.nd_shift_mpo import make_3d_shift_operators
-    from tensornet.cfd.qtt_triton_native import (
+    from ontic.cfd.qtt_tci import qtt_from_function_tci_python
+    from ontic.cfd.nd_shift_mpo import make_3d_shift_operators
+    from ontic.cfd.qtt_triton_native import (
         PackedQTT,
         native_rk2_step,
         native_diagnostics,
@@ -533,8 +533,8 @@ def run_campaign_ii(tol: float = 1e-6, rank_cap: int = 256) -> List[CompressionR
     Sod shock, 8-mode turbulent, boundary layer — each at multiple grid sizes.
     Adaptive rank — no fixed max_rank.
     """
-    from tensornet.cfd.qtt_tci import qtt_from_function_tci_python
-    from tensornet.cfd.qtt_triton_native import PackedQTT, adaptive_truncate
+    from ontic.cfd.qtt_tci import qtt_from_function_tci_python
+    from ontic.cfd.qtt_triton_native import PackedQTT, adaptive_truncate
 
     print(f"\n{'='*72}")
     print(f"  CAMPAIGN II -- QTT Compression (Non-Trivial, Adaptive Rank)")
@@ -664,7 +664,7 @@ def run_campaign_iii(
     """
     Benchmark Triton-native PackedQTT ops vs legacy Python-loop ops.
     """
-    from tensornet.cfd.qtt_triton_native import (
+    from ontic.cfd.qtt_triton_native import (
         PackedQTT,
         PackedMPO,
         triton_qtt_add,
@@ -674,7 +674,7 @@ def run_campaign_iii(
         triton_mpo_apply,
         adaptive_truncate,
     )
-    from tensornet.cfd.pure_qtt_ops import (
+    from ontic.cfd.pure_qtt_ops import (
         qtt_add,
         qtt_hadamard,
         qtt_inner_product,
@@ -754,7 +754,7 @@ def run_campaign_iii(
     # CUDA Native Ops
     print("\n  --- CUDA Native Ops ---")
     try:
-        from tensornet.cuda.qtt_native_ops import (
+        from ontic.cuda.qtt_native_ops import (
             qtt_inner_cuda, qtt_add_cuda, qtt_hadamard_cuda,
         )
         record("cuda_native_add", qtt_add_cuda, (raw_a, raw_b), "cuda_native")
@@ -766,7 +766,7 @@ def run_campaign_iii(
     # Triton JIT Morton
     print("\n  --- Triton JIT ---")
     try:
-        from tensornet.cfd.qtt_triton_kernels import morton_encode_triton
+        from ontic.cfd.qtt_triton_kernels import morton_encode_triton
         sz = 1 << 20
         xc = torch.randint(0, 256, (sz,), device=device, dtype=torch.int32)
         yc = torch.randint(0, 256, (sz,), device=device, dtype=torch.int32)
@@ -816,7 +816,7 @@ def run_campaign_iv(nx: int = 256, t_final: float = 5e-4) -> CombustionResult:
     nx must be a power of 2 (QTT requirement).
     t_final = 5e-4 s — flame should propagate ~0.1-0.2 mm at S_L ~ 2-3 m/s.
     """
-    from tensornet.cfd.combustion_dns import CombustionDNSSolver, hydrogen_air_9species
+    from ontic.cfd.combustion_dns import CombustionDNSSolver, hydrogen_air_9species
 
     mech = hydrogen_air_9species()
     print(f"\n{'='*72}")

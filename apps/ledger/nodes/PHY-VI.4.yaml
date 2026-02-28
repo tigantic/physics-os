@@ -13,7 +13,7 @@ state: "V0.2"
 description: "IVR, surface hopping interfaces"
 
 source_files:
-  - "tensornet/qm/semiclassical_wkb.py"
+  - "ontic/qm/semiclassical_wkb.py"
 
 tests:
   smoke:

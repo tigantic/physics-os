@@ -13,7 +13,7 @@ state: "V0.2"
 description: "RCWA, PWE, plasmonics"
 
 source_files:
-  - "tensornet/em/computational_photonics.py"
+  - "ontic/em/computational_photonics.py"
 
 tests:
   smoke:

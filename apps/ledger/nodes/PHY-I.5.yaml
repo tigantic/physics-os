@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Lyapunov exponents, bifurcation, maps"
 
 source_files:
-  - "tensornet/cfd/hou_luo_ansatz.py"
+  - "ontic/cfd/hou_luo_ansatz.py"
 
 tests:
   smoke:

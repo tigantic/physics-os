@@ -1,4 +1,4 @@
-# Module `tensornet.digital_twin`
+# Module `ontic.digital_twin`
 
 Digital Twin Framework for The Physics OS.
 

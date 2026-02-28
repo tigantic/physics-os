@@ -55,13 +55,13 @@ import torch
 from torch import Tensor
 
 # Import from upstream tensornet
-from tensornet.cfd.nd_shift_mpo import (
+from ontic.cfd.nd_shift_mpo import (
     make_nd_shift_mpo,
     apply_nd_shift_mpo,
     truncate_cores,
     truncate_cores_adaptive,
 )
-from tensornet.cfd.pure_qtt_ops import QTTState, qtt_add
+from ontic.cfd.pure_qtt_ops import QTTState, qtt_add
 
 
 @dataclass

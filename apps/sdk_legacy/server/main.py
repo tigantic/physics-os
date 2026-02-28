@@ -274,7 +274,7 @@ if HAS_FASTAPI:
     async def create_field(config: FieldConfig):
         """Create a new field."""
         try:
-            from tensornet.engine.substrate import Field, FieldType
+            from ontic.engine.substrate import Field, FieldType
             import math
             
             field_type_map = {
@@ -397,7 +397,7 @@ if HAS_FASTAPI:
             raise HTTPException(status_code=404, detail=_field_not_found_error(handle))
         
         try:
-            from tensornet.operators import Impulse
+            from ontic.operators import Impulse
             
             impulse = Impulse(
                 center=np.array(request.position),

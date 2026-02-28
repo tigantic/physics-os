@@ -57,7 +57,7 @@ final_u = qtt_3d_to_dense(u_qtt)  # Once, at end, for plotting
 2. **TIER 1 IS 3D, NOT 2D** (2026-01-07)
    - Target: 1 billion cells (1024³)
    - The 2D projection_solver.py is OBSOLETE for this task
-   - Use: `tensornet/cfd/qtt_ns_3d.py`
+   - Use: `ontic/cfd/qtt_ns_3d.py`
 
 3. **CUDA KERNELS HANG** (2026-01-07)
    - `nd_shift_mpo` tries to compile CUDA kernel and hangs on CPU
@@ -71,7 +71,7 @@ final_u = qtt_3d_to_dense(u_qtt)  # Once, at end, for plotting
 
 ### Current State
 
-- **Working solver**: `tensornet/cfd/qtt_ns_3d.py`
+- **Working solver**: `ontic/cfd/qtt_ns_3d.py`
 - **Last successful run**: 128×64×64 grid (524k cells), 20 steps, 0.32 MB memory, 6.4s/step
 - **Regression tests**: 12/12 passing
 
@@ -83,8 +83,8 @@ final_u = qtt_3d_to_dense(u_qtt)  # Once, at end, for plotting
 
 ### Files NOT to use
 
-- `tensornet/hvac/projection_solver.py` - 2D dense, violates Source of Truth
-- `tensornet/cfd/nd_shift_mpo.py` - CUDA kernel hang issue
+- `ontic/hvac/projection_solver.py` - 2D dense, violates Source of Truth
+- `ontic/cfd/nd_shift_mpo.py` - CUDA kernel hang issue
 
 ---
 ## 🔴 FAILURE LOG (Learn from these)

@@ -37,8 +37,8 @@ import sys
 
 sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
 
-from tensornet.cfd.nd_shift_mpo import make_nd_shift_mpo
-from tensornet.cfd.pure_qtt_ops import QTTState, dense_to_qtt, qtt_to_dense, qtt_add
+from ontic.cfd.nd_shift_mpo import make_nd_shift_mpo
+from ontic.cfd.pure_qtt_ops import QTTState, dense_to_qtt, qtt_to_dense, qtt_add
 
 
 def create_multi_plaquette_state(n_plaq: int, g: float, max_rank: int = 64):

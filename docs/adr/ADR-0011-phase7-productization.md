@@ -22,13 +22,13 @@ versions without breaking?  This is the Phase 7 exit gate from
 
 ## Decision
 
-### 1. Stable SDK Surface (`tensornet/sdk/`)
+### 1. Stable SDK Surface (`ontic/sdk/`)
 
 **Architecture:** Thin re-export layer + fluent `WorkflowBuilder`.
 
-- `tensornet.sdk.__init__` re-exports a curated, stable subset of platform
-  internals.  External code imports from `tensornet.sdk`, never from
-  `tensornet.platform.*` directly.
+- `ontic.sdk.__init__` re-exports a curated, stable subset of platform
+  internals.  External code imports from `ontic.sdk`, never from
+  `ontic.platform.*` directly.
 - `WorkflowBuilder` provides a fluent DSL: `.domain()` → `.field()` →
   `.solver()` → `.time()` → `.export()` → `.build()` → `.run()`.
 - `ExecutedWorkflow.run()` handles the full pipeline: mesh generation,
@@ -41,7 +41,7 @@ versions without breaking?  This is the Phase 7 exit gate from
 ~40 platform classes to one entry point.  Re-exports decouple consumers
 from internal refactors.
 
-### 2. Recipe Book (`tensornet/sdk/recipes.py`)
+### 2. Recipe Book (`ontic/sdk/recipes.py`)
 
 **Architecture:** Global registry + per-domain factory functions.
 
@@ -56,7 +56,7 @@ from internal refactors.
 boundary conditions) so novice users can run meaningful simulations
 immediately.  Power users customize by chaining additional builder calls.
 
-### 3. Export / Import (`tensornet/platform/export.py`, `mesh_import.py`)
+### 3. Export / Import (`ontic/platform/export.py`, `mesh_import.py`)
 
 **Export formats:**
 
@@ -77,7 +77,7 @@ immediately.  Power users customize by chaining additional builder calls.
 GMSH is the most common open-source mesher.  CSV/JSON cover lightweight
 data exchange.
 
-### 4. Post-processing (`tensornet/platform/postprocess.py`)
+### 4. Post-processing (`ontic/platform/postprocess.py`)
 
 Operations: `probe()`, `slice_field()`, `integrate()`, `field_statistics()`,
 `fft_field()`, `gradient_field()`, `histogram()`.
@@ -89,7 +89,7 @@ slicing).
 **Rationale:** Users should not have to write their own numpy/scipy
 post-processing glue.  Built-in ops cover 90% of common analysis tasks.
 
-### 5. Visualization (`tensornet/platform/visualize.py`)
+### 5. Visualization (`ontic/platform/visualize.py`)
 
 Matplotlib-based (optional dependency).  Functions: `plot_field_1d()`,
 `plot_field_2d()`, `plot_convergence()`, `plot_observable_history()`,
@@ -99,7 +99,7 @@ Matplotlib-based (optional dependency).  Functions: `plot_field_1d()`,
 ubiquitous in the Python scientific ecosystem.  Making it optional avoids
 bloating minimal installations.
 
-### 6. Deprecation Policy (`tensornet/platform/deprecation.py`)
+### 6. Deprecation Policy (`ontic/platform/deprecation.py`)
 
 - `VersionInfo` frozen dataclass: parses SemVer, supports comparison.
 - `PLATFORM_VERSION = VersionInfo(2, 0, 0)`.
@@ -111,7 +111,7 @@ bloating minimal installations.
 **Rationale:** Explicit version gates prevent "accidental API retention."
 The CI check ensures deprecated code is actually removed on schedule.
 
-### 7. Security Posture (`tensornet/platform/security.py`)
+### 7. Security Posture (`ontic/platform/security.py`)
 
 - `generate_sbom()` — CycloneDX-lite SBOM from `importlib.metadata`.
 - `audit_dependencies()` — Offline heuristic check against known CVEs.

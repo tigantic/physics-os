@@ -6,7 +6,7 @@ A) Release Export Script
 Creates a clean release artifact excluding development files.
 
 Usage:
-    python tools/scripts/export_release_zip.py --out dist/hypertensor-release.zip
+    python tools/scripts/export_release_zip.py --out dist/physics_os-release.zip
 
 Pass Criteria:
     - Excludes: .git/, .venv/, .pytest_cache/, *.egg-info/, dist/, __pycache__/
@@ -210,7 +210,7 @@ def main():
         "--out",
         "-o",
         type=Path,
-        default=Path("dist/hypertensor-release.zip"),
+        default=Path("dist/physics_os-release.zip"),
         help="Output zip file path",
     )
     parser.add_argument(

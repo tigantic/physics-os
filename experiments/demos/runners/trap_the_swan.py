@@ -41,8 +41,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from millennium_hunter import MillenniumSolver, EulerState3D, build_rank1_3d_qtt, QTT3DState
-from tensornet.cfd.nd_shift_mpo import truncate_cores, make_nd_shift_mpo, apply_nd_shift_mpo
-from tensornet.cfd.pure_qtt_ops import QTTState, qtt_add
+from ontic.cfd.nd_shift_mpo import truncate_cores, make_nd_shift_mpo, apply_nd_shift_mpo
+from ontic.cfd.pure_qtt_ops import QTTState, qtt_add
 
 # Auto-detect GPU
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

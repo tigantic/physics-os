@@ -1,4 +1,4 @@
-# Module `tensornet.validation`
+# Module `ontic.validation`
 
 Validation Module for Project The Physics OS.
 

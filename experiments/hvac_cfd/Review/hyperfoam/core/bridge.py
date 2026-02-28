@@ -57,7 +57,7 @@ import numpy as np
 
 # Try to import QTT compression (optional for backwards compatibility)
 try:
-    from tensornet.cfd.qtt import field_to_qtt, QTTCompressionResult
+    from ontic.cfd.qtt import field_to_qtt, QTTCompressionResult
     import torch
     QTT_AVAILABLE = True
 except ImportError:
@@ -856,7 +856,7 @@ def run_qtt_bridge_test(grid_size: tuple = (32, 32, 32), chi_max: int = 16):
     print("DOMINION QTT BRIDGE — Compression Test")
     print("=" * 60)
     print(f"Grid: {grid_size}, χ_max: {chi_max}")
-    print(f"Backend: {'tensornet' if QTT_AVAILABLE else 'numpy (fallback)'}")
+    print(f"Backend: {'ontic' if QTT_AVAILABLE else 'numpy (fallback)'}")
     print()
     
     # Generate test data

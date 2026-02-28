@@ -6,8 +6,8 @@
 
 | Module | Description |
 |--------|-------------|
-| `tensornet.ml` | Core ML module |
-| `tensornet.ml_physics` | Physics-informed ML |
-| `tensornet.ml_surrogates` | Surrogate models |
-| `tensornet.neural` | Neural network layers |
-| `tensornet.discovery` | Automated physics discovery |
+| `ontic.ml` | Core ML module |
+| `ontic.ml_physics` | Physics-informed ML |
+| `ontic.ml_surrogates` | Surrogate models |
+| `ontic.neural` | Neural network layers |
+| `ontic.discovery` | Automated physics discovery |

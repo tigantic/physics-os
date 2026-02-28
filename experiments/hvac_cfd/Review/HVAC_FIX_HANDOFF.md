@@ -92,7 +92,7 @@ Central/skew-symmetric need smaller timestep (already handled in fixed solver wi
 1. **`/home/claude/projection_solver_fixed.py`** — Complete fixed solver
    - Central difference advection
    - Skew-symmetric option (recommended)
-   - Ready to drop into tensornet/hvac/
+   - Ready to drop into ontic/hvac/
 
 2. **`/home/claude/advection_schemes.py`** — Comparison of schemes
    - upwind, central, skew_symmetric, hybrid, QUICK

@@ -13,7 +13,7 @@ state: "V0.2"
 description: "PHY-XII.9_Dark_energy solver"
 
 source_files:
-  - "tensornet/packs/pack_xii.py"
+  - "ontic/packs/pack_xii.py"
 
 tests:
   smoke:

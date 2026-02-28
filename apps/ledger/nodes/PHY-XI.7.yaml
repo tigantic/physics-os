@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Charged dust dynamics"
 
 source_files:
-  - "tensornet/plasma/dusty_plasmas.py"
+  - "ontic/plasma/dusty_plasmas.py"
 
 tests:
   smoke:

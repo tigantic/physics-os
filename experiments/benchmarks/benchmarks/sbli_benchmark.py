@@ -41,10 +41,10 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tensornet.cfd.euler_2d import Euler2DState
-from tensornet.cfd.navier_stokes import (NavierStokes2D, NavierStokes2DConfig,
+from ontic.cfd.euler_2d import Euler2DState
+from ontic.cfd.navier_stokes import (NavierStokes2D, NavierStokes2DConfig,
                                          NavierStokes2DResult)
-from tensornet.cfd.viscous import (recovery_temperature, reynolds_number,
+from ontic.cfd.viscous import (recovery_temperature, reynolds_number,
                                    sutherland_viscosity)
 
 

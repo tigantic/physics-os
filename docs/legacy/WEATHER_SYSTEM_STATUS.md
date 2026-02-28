@@ -197,7 +197,7 @@ python3 demos/weather_viewer.py
 ### Use with The Physics OS Core
 
 ```python
-from tensornet.substrate.field import Field
+from ontic.substrate.field import Field
 import json
 
 # Load weather data

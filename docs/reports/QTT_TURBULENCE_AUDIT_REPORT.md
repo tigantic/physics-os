@@ -26,7 +26,7 @@ This document provides an honest assessment of what works, what doesn't, and the
 
 ### 1. Analytical QTT Initialization
 
-**File:** [tensornet/cfd/analytical_qtt.py](tensornet/cfd/analytical_qtt.py)
+**File:** [ontic/cfd/analytical_qtt.py](ontic/cfd/analytical_qtt.py)
 
 **Claim:** Construct Taylor-Green vortex at 4096³ in O(1) time with O(log N) memory
 
@@ -47,7 +47,7 @@ This document provides an honest assessment of what works, what doesn't, and the
 
 ### 2. O(N^0.063) Time-Stepping Scaling
 
-**File:** [tensornet/cfd/ns3d_native.py](tensornet/cfd/ns3d_native.py)
+**File:** [ontic/cfd/ns3d_native.py](ontic/cfd/ns3d_native.py)
 
 **Verification:**
 

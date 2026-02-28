@@ -158,7 +158,7 @@ def verify_install(wheel_path: Path) -> Tuple[bool, str]:
                 [
                     str(python_path),
                     "-c",
-                    "import tensornet; print(tensornet.__version__)",
+                    "import ontic; print(ontic.__version__)",
                 ],
                 capture_output=True,
                 text=True,

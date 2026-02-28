@@ -54,8 +54,8 @@ def test_tt_step_no_dense_proof_mode():
     If any CRITICAL dense materialization occurs, this test FAILS immediately
     via RuntimeError. This is the strict enforcement mode.
     """
-    from tensornet.cfd.tt_cfd import TT_Euler1D, TTCFDConfig
-    from tensornet.core.dense_guard import (DenseMaterializationGuard,
+    from ontic.cfd.tt_cfd import TT_Euler1D, TTCFDConfig
+    from ontic.core.dense_guard import (DenseMaterializationGuard,
                                             check_tt_complexity)
 
     # Problem parameters
@@ -134,7 +134,7 @@ def test_guard_catches_forced_violation():
 
     This addresses reviewer concern: "Is the guard actually enforcing?"
     """
-    from tensornet.core.dense_guard import DenseMaterializationGuard
+    from ontic.core.dense_guard import DenseMaterializationGuard
 
     N = 64
     d = 3
@@ -233,8 +233,8 @@ def test_tt_solve_no_dense():
     Run extended TT solve and verify no critical violations.
     Uses forbid=False for diagnostic reporting but still checks critical count.
     """
-    from tensornet.cfd.tt_cfd import TT_Euler1D, TTCFDConfig
-    from tensornet.core.dense_guard import DenseMaterializationGuard
+    from ontic.cfd.tt_cfd import TT_Euler1D, TTCFDConfig
+    from ontic.core.dense_guard import DenseMaterializationGuard
 
     N = 32
     d = 3
@@ -292,8 +292,8 @@ def test_mps_operations_no_dense():
         - O(N·d) diagnostic vectors ARE ALLOWED (per-site values, primitives)
         - O(N^2), O(N³) dense grids are FORBIDDEN
     """
-    from tensornet.cfd.tt_cfd import MPSState
-    from tensornet.core.dense_guard import DenseMaterializationGuard
+    from ontic.cfd.tt_cfd import MPSState
+    from ontic.core.dense_guard import DenseMaterializationGuard
 
     N = 64
     d = 3  # ρ, u, p
@@ -369,8 +369,8 @@ def test_complexity_storage_bound():
     CLAIM: Storage is O(N·d·chi^2)
     This is the ROCK-SOLID part of the complexity claim.
     """
-    from tensornet.cfd.tt_cfd import TT_Euler1D
-    from tensornet.core.dense_guard import check_tt_complexity
+    from ontic.cfd.tt_cfd import TT_Euler1D
+    from ontic.core.dense_guard import check_tt_complexity
 
     results = {}
     all_passed = True

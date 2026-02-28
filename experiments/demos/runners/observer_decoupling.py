@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from tensornet.cfd.pure_qtt_ops import QTTState, dense_to_qtt, qtt_to_dense, qtt_norm, qtt_add
+from ontic.cfd.pure_qtt_ops import QTTState, dense_to_qtt, qtt_to_dense, qtt_norm, qtt_add
 
 # ---------------------------------------------------------------------
 # STATE

@@ -21,7 +21,7 @@ Project The Physics OS is a **proprietary physics simulation engine** that appli
 
 ```
 The Physics OS/
-├── tensornet/           # Core Python library (147,000+ LOC)
+├── ontic/           # Core Python library (147,000+ LOC)
 │   ├── algorithms/      # DMRG, TEBD, Lanczos, fermionic ops
 │   ├── mps/             # Matrix Product States
 │   ├── mpo/             # Matrix Product Operators  
@@ -142,16 +142,16 @@ Each domain has validated benchmarks. Key modules:
 
 | Domain | Module | Benchmark |
 |--------|--------|-----------|
-| CFD Core | `tensornet.cfd` | Sod shock tube |
-| Hypersonic | `tensornet.hypersim` | Sutton-Graves |
-| GPU/CUDA | `tensornet.cuda` | cuBLAS validated |
-| Fusion | `tensornet.fusion` | Gyration ratio |
-| Medical | `tensornet.medical` | Poiseuille flow |
-| Urban | `tensornet.urban` | Venturi analytical |
-| Defense | `tensornet.defense` | Snell's law |
-| Financial | `tensornet.financial` | Conservation laws |
-| Energy | `tensornet.energy` | Betz limit |
-| Emergency | `tensornet.emergency` | Fire diffusion |
+| CFD Core | `ontic.cfd` | Sod shock tube |
+| Hypersonic | `ontic.hypersim` | Sutton-Graves |
+| GPU/CUDA | `ontic.cuda` | cuBLAS validated |
+| Fusion | `ontic.fusion` | Gyration ratio |
+| Medical | `ontic.medical` | Poiseuille flow |
+| Urban | `ontic.urban` | Venturi analytical |
+| Defense | `ontic.defense` | Snell's law |
+| Financial | `ontic.financial` | Conservation laws |
+| Energy | `ontic.energy` | Betz limit |
+| Emergency | `ontic.emergency` | Fire diffusion |
 
 See README for complete list.
 
@@ -314,9 +314,9 @@ dtype=torch.float64
 
 | Bottleneck | Location | Notes |
 |------------|----------|-------|
-| **Tensor contraction** | `tensornet/core/` | GPU helps, but large chi still slow |
-| **DMRG sweeps** | `tensornet/algorithms/dmrg.py` | O(chi³) per site; chi > 256 gets expensive |
-| **QTT 2D shifts** | `tensornet/cfd/qtt_2d_shift.py` | Boundary handling adds overhead |
+| **Tensor contraction** | `ontic/core/` | GPU helps, but large chi still slow |
+| **DMRG sweeps** | `ontic/algorithms/dmrg.py` | O(chi³) per site; chi > 256 gets expensive |
+| **QTT 2D shifts** | `ontic/cfd/qtt_2d_shift.py` | Boundary handling adds overhead |
 | **Shared memory latency** | Python → Rust bridge | ~1-2ms per frame; acceptable for 120 FPS |
 
 ### Flaky Tests (Intermittent Failures)
@@ -348,12 +348,12 @@ find . -name "*:Zone.Identifier" -delete
 | `MPS.random()` | Doesn't normalize by default | Call `.normalize()` after |
 | `Euler1D.step()` | CFL not auto-calculated | Manually set `dt` conservatively |
 | `dmrg()` return signature | Returns tuple, order matters | `psi, E, info = dmrg(...)` |
-| `tensornet.cfd` imports | Some modules have lazy imports | Import specific classes directly |
+| `ontic.cfd` imports | Some modules have lazy imports | Import specific classes directly |
 
 ### Documentation Gaps
 
-- [ ] `tensornet/hypersim/` lacks docstrings in some modules
-- [ ] `tensornet/sovereign/` protocol documentation incomplete
+- [ ] `ontic/hypersim/` lacks docstrings in some modules
+- [ ] `ontic/sovereign/` protocol documentation incomplete
 - [ ] Rust crate documentation minimal (use `cargo doc`)
 - [ ] Some `proofs/` scripts reference outdated module paths
 
@@ -377,7 +377,7 @@ Python (tensornet)          Rust (glass-cockpit)
 ```bash
 # Terminal 1: Python streamer
 python -c "
-from tensornet.sovereign.realtime_tensor_stream import test_realtime_stream
+from ontic.sovereign.realtime_tensor_stream import test_realtime_stream
 test_realtime_stream(duration=60, pattern='turbulence', fps=120)
 "
 
@@ -391,9 +391,9 @@ cd glass-cockpit && cargo run --release --bin phase3
 
 | Path | Contents |
 |------|----------|
-| `tensornet/sovereign/` | Real-time streaming, QTT extraction |
-| `tensornet/cfd/` | All CFD solvers, Riemann, WENO |
-| `tensornet/validation/` | V&V framework, regression detection |
+| `ontic/sovereign/` | Real-time streaming, QTT extraction |
+| `ontic/cfd/` | All CFD solvers, Riemann, WENO |
+| `ontic/validation/` | V&V framework, regression detection |
 | `tests/integration/` | MMS tests, benchmark validations |
 | `tools/scripts/` | Automation, profiling, CI helpers |
 | `proofs/` | Mathematical verification scripts |
@@ -426,7 +426,7 @@ cd glass-cockpit && cargo run --release --bin phase3
 1. ☐ Read this document completely
 2. ☐ Skim [CONSTITUTION.md](../governance/CONSTITUTION.md) for code standards
 3. ☐ Review [HYPERTENSOR_VV_FRAMEWORK.md](HYPERTENSOR_VV_FRAMEWORK.md) for V&V requirements
-4. ☐ Understand the tensornet module structure (`ls tensornet/`)
+4. ☐ Understand the tensornet module structure (`ls ontic/`)
 5. ☐ Run tests to verify environment: `pytest tests/ -x -v --tb=short`
 6. ☐ Check current git status: `git log --oneline -10`
 7. ☐ Review recent changes: `git diff HEAD~5 --stat`

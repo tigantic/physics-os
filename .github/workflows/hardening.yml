@@ -82,8 +82,8 @@ jobs:
       - name: Run determinism check
         run: |
           python -c "
-          from tensornet.platform.reproduce import ReproducibilityContext, hash_tensor
-          from tensornet.platform.data_model import StructuredMesh, FieldData, SimulationState
+          from ontic.platform.reproduce import ReproducibilityContext, hash_tensor
+          from ontic.platform.data_model import StructuredMesh, FieldData, SimulationState
           import torch, math
 
           def run_once(seed):
@@ -125,7 +125,7 @@ jobs:
       - name: Generate SBOM
         run: |
           python -c "
-          from tensornet.platform.security import generate_sbom
+          from ontic.platform.security import generate_sbom
           sbom = generate_sbom(output_path='sbom.json')
           print(f'SBOM: {len(sbom.components)} components')
           "
@@ -133,7 +133,7 @@ jobs:
       - name: License audit
         run: |
           python -c "
-          from tensornet.platform.security import license_audit
+          from ontic.platform.security import license_audit
           r = license_audit()
           print(r.summary())
           "
@@ -141,7 +141,7 @@ jobs:
       - name: Deprecation gate
         run: |
           python -c "
-          from tensornet.platform.deprecation import check_version_gate
+          from ontic.platform.deprecation import check_version_gate
           overdue = check_version_gate()
           if overdue:
               for o in overdue:

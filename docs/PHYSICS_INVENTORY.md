@@ -19,23 +19,23 @@
 
 | Domain | Equations | LOC | Primary Sources |
 |--------|-----------|-----|-----------------|
-| Computational Fluid Dynamics | ~60 | ~12,500 | `tensornet/cfd/`, Civilization Stack |
-| Quantum Many-Body Physics | ~35 | ~6,600 | `yangmills/`, `tensornet/algorithms/`, `tensornet/mps/` |
-| Plasma & Magnetohydrodynamics | ~25 | ~3,800 | `tensornet/cfd/plasma.py`, `tensornet/fusion/tokamak.py`, CivStack |
-| Fusion & Nuclear Physics | ~20 | ~3,500 | `tensornet/fusion/`, CivStack |
+| Computational Fluid Dynamics | ~60 | ~12,500 | `ontic/cfd/`, Civilization Stack |
+| Quantum Many-Body Physics | ~35 | ~6,600 | `yangmills/`, `ontic/algorithms/`, `ontic/mps/` |
+| Plasma & Magnetohydrodynamics | ~25 | ~3,800 | `ontic/cfd/plasma.py`, `ontic/fusion/tokamak.py`, CivStack |
+| Fusion & Nuclear Physics | ~20 | ~3,500 | `ontic/fusion/`, CivStack |
 | Condensed Matter & Superconductivity | ~15 | ~2,500 | CivStack (LaLuH₆, SSB superionic) |
 | Computational Electromagnetics | ~12 | ~2,700 | `crates/cem-qtt/`, CivStack |
 | Structural Mechanics & FEA | ~10 | ~1,200 | `crates/fea-qtt/` |
 | Topology Optimization | ~8 | ~1,200 | `crates/opt-qtt/` |
-| Biological Aging & Longevity | ~15 | ~5,300 | `tensornet/genesis/aging/`, CivStack |
+| Biological Aging & Longevity | ~15 | ~5,300 | `ontic/genesis/aging/`, CivStack |
 | Neuroscience & Connectomics | ~12 | ~2,800 | CivStack (QTT-Connectome, Neuromorphic) |
 | Astrodynamics & Gravitation | ~10 | ~1,600 | CivStack (Orbital Forge) |
-| Atmospheric & Climate Science | ~8 | ~1,400 | CivStack (Hermes), `tensornet/cfd/weather.py` |
-| Chemical Kinetics & Catalysis | ~12 | ~2,400 | `tensornet/cfd/chemistry.py`, `tensornet/fusion/resonant_catalysis.py` |
-| Turbulence Modeling (RANS/LES) | ~20 | ~1,800 | `tensornet/cfd/turbulence.py`, `tensornet/cfd/les.py` |
-| Mathematical Physics (Genesis) | ~25 | ~5,500 | `tensornet/genesis/` (8 layers) |
-| Genesis Cross-Primitive Pipeline | ~12 | ~2,700 | `tensornet/genesis/fusion/`, `tensornet/genesis/__init__.py` |
-| Quantum Computing & Error Mitigation | ~15 | ~2,400 | `tensornet/quantum/` |
+| Atmospheric & Climate Science | ~8 | ~1,400 | CivStack (Hermes), `ontic/cfd/weather.py` |
+| Chemical Kinetics & Catalysis | ~12 | ~2,400 | `ontic/cfd/chemistry.py`, `ontic/fusion/resonant_catalysis.py` |
+| Turbulence Modeling (RANS/LES) | ~20 | ~1,800 | `ontic/cfd/turbulence.py`, `ontic/cfd/les.py` |
+| Mathematical Physics (Genesis) | ~25 | ~5,500 | `ontic/genesis/` (8 layers) |
+| Genesis Cross-Primitive Pipeline | ~12 | ~2,700 | `ontic/genesis/fusion/`, `ontic/genesis/__init__.py` |
+| Quantum Computing & Error Mitigation | ~15 | ~2,400 | `ontic/quantum/` |
 | QTeneT Enterprise SDK | ~30 | ~10,400 | `apps/qtenet/` (8 submodules + workflows) |
 | Formal Verification (Lean 4) | 6 proofs | ~633 | `lean/HyperTensor/` |
 | FRONTIER Fusion & Kinetic Plasma | ~12 | ~2,291 | `FRONTIER/01_FUSION/` |
@@ -46,30 +46,30 @@
 | FRONTIER Fusion Control | ~10 | ~2,380 | `FRONTIER/06_FUSION_CONTROL/` |
 | FRONTIER Computational Genomics | ~18 | ~17,323 | `FRONTIER/07_GENOMICS/` |
 | Drug Design & Molecular Physics | ~15 | ~6,955 | Root `tig011a_*.py`, `flu_x001_m2_blocker.py` |
-| Advanced CFD Solvers | ~40 | ~23,355 | `tensornet/cfd/` (33 additional files) |
+| Advanced CFD Solvers | ~40 | ~23,355 | `ontic/cfd/` (33 additional files) |
 | NS Regularity Research | ~8 | ~4,281 | Root `navier_stokes_*.py`, `kida_*.py` |
-| Flight Dynamics & Guidance | ~15 | ~4,708 | `tensornet/guidance/`, `tensornet/physics/` |
-| Applied Domain Physics | ~20 | ~6,852 | `tensornet/{defense,medical,energy,urban,...}/` |
+| Flight Dynamics & Guidance | ~15 | ~4,708 | `ontic/guidance/`, `ontic/physics/` |
+| Applied Domain Physics | ~20 | ~6,852 | `ontic/{defense,medical,energy,urban,...}/` |
 | Proof Engine & Constructive QFT | ~8 | ~2,688 | `proofs/proof_engine/` |
-| Simulation, Digital Twin & RL | ~12 | ~14,805 | `tensornet/{simulation,digital_twin,hyperenv,coordination}/` |
-| Classical Mechanics | ~10 | ~3,527 | `tensornet/mechanics/` (6 files) |
-| Quantum Mechanics (Expanded) | ~15 | ~2,780 | `tensornet/qm/`, `tensornet/quantum_mechanics/` |
-| Condensed Matter (Expanded) | ~50 | ~7,074 | `tensornet/condensed_matter/` (18 files) |
-| Electronic Structure | ~25 | ~2,351 | `tensornet/electronic_structure/` (8 files) |
-| Nuclear Physics | ~10 | ~935 | `tensornet/nuclear/` (4 files) |
-| Particle Physics (BSM) | ~5 | ~327 | `tensornet/particle/` |
-| Astrophysics | ~20 | ~2,246 | `tensornet/astro/` (7 files) |
-| Geophysics | ~15 | ~1,984 | `tensornet/geophysics/` (7 files) |
-| Materials Science | ~20 | ~2,046 | `tensornet/materials/` (7 files) |
-| Computational Chemistry | ~18 | ~2,000 | `tensornet/chemistry/` (7 files) |
-| Optics (Expanded) | ~15 | ~1,743 | `tensornet/optics/` (5 files) |
-| Electromagnetism (Expanded) | ~18 | ~2,297 | `tensornet/em/` (7 files) |
-| Statistical Mechanics (Expanded) | ~15 | ~2,967 | `tensornet/statmech/`, `tensornet/md/` |
-| Plasma Physics (Expanded) | ~18 | ~2,218 | `tensornet/plasma/` (7 files) |
-| Relativity | ~8 | ~756 | `tensornet/relativity/` (3 files) |
-| Multi-Physics & Coupling | ~20 | ~4,314 | `tensornet/{coupled,fsi,multiphase,...}/` |
-| Applied Physics (Expanded) | ~15 | ~4,473 | `tensornet/{acoustics,biomedical,biology,...}/` |
-| **Total** | **~826+** | **~227,000** | **724+ files (tensornet/) + 305+ other** |
+| Simulation, Digital Twin & RL | ~12 | ~14,805 | `ontic/{simulation,digital_twin,hyperenv,coordination}/` |
+| Classical Mechanics | ~10 | ~3,527 | `ontic/mechanics/` (6 files) |
+| Quantum Mechanics (Expanded) | ~15 | ~2,780 | `ontic/qm/`, `ontic/quantum_mechanics/` |
+| Condensed Matter (Expanded) | ~50 | ~7,074 | `ontic/condensed_matter/` (18 files) |
+| Electronic Structure | ~25 | ~2,351 | `ontic/electronic_structure/` (8 files) |
+| Nuclear Physics | ~10 | ~935 | `ontic/nuclear/` (4 files) |
+| Particle Physics (BSM) | ~5 | ~327 | `ontic/particle/` |
+| Astrophysics | ~20 | ~2,246 | `ontic/astro/` (7 files) |
+| Geophysics | ~15 | ~1,984 | `ontic/geophysics/` (7 files) |
+| Materials Science | ~20 | ~2,046 | `ontic/materials/` (7 files) |
+| Computational Chemistry | ~18 | ~2,000 | `ontic/chemistry/` (7 files) |
+| Optics (Expanded) | ~15 | ~1,743 | `ontic/optics/` (5 files) |
+| Electromagnetism (Expanded) | ~18 | ~2,297 | `ontic/em/` (7 files) |
+| Statistical Mechanics (Expanded) | ~15 | ~2,967 | `ontic/statmech/`, `ontic/md/` |
+| Plasma Physics (Expanded) | ~18 | ~2,218 | `ontic/plasma/` (7 files) |
+| Relativity | ~8 | ~756 | `ontic/relativity/` (3 files) |
+| Multi-Physics & Coupling | ~20 | ~4,314 | `ontic/{coupled,fsi,multiphase,...}/` |
+| Applied Physics (Expanded) | ~15 | ~4,473 | `ontic/{acoustics,biomedical,biology,...}/` |
+| **Total** | **~826+** | **~227,000** | **724+ files (ontic/) + 305+ other** |
 
 ---
 
@@ -77,7 +77,7 @@
 
 #### 1.1 Compressible Euler Equations (3D)
 
-**Source**: `tensornet/cfd/euler_3d.py` (660 LOC), CivStack TOMAHAWK
+**Source**: `ontic/cfd/euler_3d.py` (660 LOC), CivStack TOMAHAWK
 
 $$\frac{\partial \mathbf{U}}{\partial t} + \frac{\partial \mathbf{F}}{\partial x} + \frac{\partial \mathbf{G}}{\partial y} + \frac{\partial \mathbf{H}}{\partial z} = 0, \quad \mathbf{U} = [\rho,\;\rho u,\;\rho v,\;\rho w,\;E]^T$$
 
@@ -89,7 +89,7 @@ $$\frac{\partial \mathbf{U}}{\partial t} + \frac{\partial \mathbf{F}}{\partial x
 
 #### 1.2 Compressible Navier-Stokes (2D/3D)
 
-**Source**: `tensornet/cfd/navier_stokes.py` (453 LOC), `tensornet/cfd/viscous.py` (547 LOC)
+**Source**: `ontic/cfd/navier_stokes.py` (453 LOC), `ontic/cfd/viscous.py` (547 LOC)
 
 $$\frac{\partial \mathbf{U}}{\partial t} + \nabla \cdot \mathbf{F}_{\text{inv}} = \nabla \cdot \mathbf{F}_{\text{visc}}$$
 
@@ -100,7 +100,7 @@ $$\frac{\partial \mathbf{U}}{\partial t} + \nabla \cdot \mathbf{F}_{\text{inv}} 
 
 #### 1.3 Reactive Navier-Stokes with Multi-Species Chemistry
 
-**Source**: `tensornet/cfd/reactive_ns.py` (577 LOC), `tensornet/cfd/chemistry.py` (635 LOC)
+**Source**: `ontic/cfd/reactive_ns.py` (577 LOC), `ontic/cfd/chemistry.py` (635 LOC)
 
 $$\frac{\partial(\rho Y_i)}{\partial t} + \nabla\cdot(\rho Y_i\mathbf{u}) = \nabla\cdot(\rho D_i\nabla Y_i) + \dot{\omega}_i$$
 
@@ -111,7 +111,7 @@ $$\frac{\partial(\rho Y_i)}{\partial t} + \nabla\cdot(\rho Y_i\mathbf{u}) = \nab
 
 #### 1.4 Real Gas Thermodynamics
 
-**Source**: `tensornet/cfd/real_gas.py` (485 LOC)
+**Source**: `ontic/cfd/real_gas.py` (485 LOC)
 
 $$\frac{c_p}{R} = a_1 + a_2 T + a_3 T^2 + a_4 T^3 + a_5 T^4 \quad\text{(NASA 7-coefficient)}$$
 
@@ -122,7 +122,7 @@ $$\frac{c_p}{R} = a_1 + a_2 T + a_3 T^2 + a_4 T^3 + a_5 T^4 \quad\text{(NASA 7-c
 
 #### 1.5 RANS Turbulence Models
 
-**Source**: `tensornet/cfd/turbulence.py` (820 LOC)
+**Source**: `ontic/cfd/turbulence.py` (820 LOC)
 
 $$\boldsymbol{\tau}_t = \mu_t\!\left(\nabla\mathbf{u} + (\nabla\mathbf{u})^T - \tfrac{2}{3}k\mathbf{I}\right)$$
 
@@ -136,7 +136,7 @@ $$\boldsymbol{\tau}_t = \mu_t\!\left(\nabla\mathbf{u} + (\nabla\mathbf{u})^T - \
 
 #### 1.6 Large Eddy Simulation (LES)
 
-**Source**: `tensornet/cfd/les.py` (1,001 LOC)
+**Source**: `ontic/cfd/les.py` (1,001 LOC)
 
 $$\frac{\partial(\bar\rho\tilde{u}_i)}{\partial t} + \frac{\partial(\bar\rho\tilde{u}_i\tilde{u}_j)}{\partial x_j} = -\frac{\partial\bar{p}}{\partial x_i} + \frac{\partial(\bar\tau_{ij} - \tau^{\text{sgs}}_{ij})}{\partial x_j}$$
 
@@ -150,7 +150,7 @@ $$\frac{\partial(\bar\rho\tilde{u}_i)}{\partial t} + \frac{\partial(\bar\rho\til
 
 #### 1.7 WENO Reconstruction
 
-**Source**: `tensornet/cfd/weno.py` (769 LOC)
+**Source**: `ontic/cfd/weno.py` (769 LOC)
 
 $$\hat{f}_{i+1/2} = \sum_{k=0}^{2}\omega_k\hat{f}^{(k)}_{i+1/2}$$
 
@@ -160,7 +160,7 @@ $$\hat{f}_{i+1/2} = \sum_{k=0}^{2}\omega_k\hat{f}^{(k)}_{i+1/2}$$
 
 #### 1.8 Hou-Luo Blow-Up Ansatz
 
-**Source**: `tensornet/cfd/hou_luo_ansatz.py` (367 LOC)
+**Source**: `ontic/cfd/hou_luo_ansatz.py` (367 LOC)
 
 $$\omega_\theta(r,z,t) = \frac{1}{(T^*-t)^{\alpha+1}}\,F\!\left(\frac{r}{(T^*-t)^\beta},\;\frac{z}{(T^*-t)^\beta}\right)$$
 
@@ -170,7 +170,7 @@ $$\omega_\theta(r,z,t) = \frac{1}{(T^*-t)^{\alpha+1}}\,F\!\left(\frac{r}{(T^*-t)
 
 #### 1.9 Vlasov-Poisson (5D Phase Space)
 
-**Source**: `tensornet/cfd/fast_vlasov_5d.py` (461 LOC)
+**Source**: `ontic/cfd/fast_vlasov_5d.py` (461 LOC)
 
 $$\frac{\partial f}{\partial t} + \mathbf{v}\cdot\nabla_{\mathbf{x}} f + \frac{q}{m}\mathbf{E}\cdot\nabla_{\mathbf{v}} f = 0$$
 
@@ -179,7 +179,7 @@ $$\frac{\partial f}{\partial t} + \mathbf{v}\cdot\nabla_{\mathbf{x}} f + \frac{q
 
 #### 1.10 Kelvin-Helmholtz Instability
 
-**Source**: `tensornet/cfd/kelvin_helmholtz.py` (369 LOC)
+**Source**: `ontic/cfd/kelvin_helmholtz.py` (369 LOC)
 
 - Shear flow: $u = U_0\tanh(y/\delta)$, sinusoidal perturbation $v_y = A\sin(k_x x)$
 - QTT/Morton-format initialization via TCI
@@ -217,7 +217,7 @@ $$H = \frac{g^2}{2a}\sum_l E^2_l - \frac{1}{g^2 a}\sum_\square \text{Re}\,\text{
 
 #### 2.2 Tensor Network Algorithms
 
-**Source**: `tensornet/algorithms/` (~2,308 LOC)
+**Source**: `ontic/algorithms/` (~2,308 LOC)
 
 **DMRG** (`dmrg.py`, 571 LOC):
 $$E_0 = \min_{|\psi\rangle} \frac{\langle\psi|H|\psi\rangle}{\langle\psi|\psi\rangle}$$
@@ -241,7 +241,7 @@ $$c_i = \left(\prod_{j<i}\sigma^z_j\right)\sigma^-_i \quad\text{(Jordan-Wigner)}
 
 #### 2.3 Quantum Spin Hamiltonians
 
-**Source**: `tensornet/mps/hamiltonians.py` (417 LOC)
+**Source**: `ontic/mps/hamiltonians.py` (417 LOC)
 
 | Model | Hamiltonian | MPO Bond Dim |
 |-------|-------------|:------------:|
@@ -259,7 +259,7 @@ $$c_i = \left(\prod_{j<i}\sigma^z_j\right)\sigma^-_i \quad\text{(Jordan-Wigner)}
 
 #### 3.1 Plasma Ionization
 
-**Source**: `tensornet/cfd/plasma.py` (626 LOC)
+**Source**: `ontic/cfd/plasma.py` (626 LOC)
 
 $$\frac{n_{i+1}n_e}{n_i} = \frac{2g_{i+1}}{g_i}\!\left(\frac{2\pi m_e k_B T}{h^2}\right)^{3/2}\!\exp\!\left(-\frac{E_{\text{ion},i}}{k_B T}\right) \quad\text{(Saha equation)}$$
 
@@ -269,7 +269,7 @@ $$\frac{n_{i+1}n_e}{n_i} = \frac{2g_{i+1}}{g_i}\!\left(\frac{2\pi m_e k_B T}{h^2
 
 #### 3.2 Tokamak Confinement
 
-**Source**: `tensornet/fusion/tokamak.py` (562 LOC)
+**Source**: `ontic/fusion/tokamak.py` (562 LOC)
 
 $$\mathbf{F} = q(\mathbf{E} + \mathbf{v}\times\mathbf{B})$$
 
@@ -292,7 +292,7 @@ $$\mathbf{F} = q(\mathbf{E} + \mathbf{v}\times\mathbf{B})$$
 
 #### 4.1 Electron Screening
 
-**Source**: `tensornet/fusion/electron_screening.py` (505 LOC)
+**Source**: `ontic/fusion/electron_screening.py` (505 LOC)
 
 $$V_{\text{screened}}(r) = \frac{Z_1 Z_2 e^2}{4\pi\varepsilon_0 r}\exp\!\left(-\frac{r}{\lambda_D}\right)$$
 
@@ -301,7 +301,7 @@ $$V_{\text{screened}}(r) = \frac{Z_1 Z_2 e^2}{4\pi\varepsilon_0 r}\exp\!\left(-\
 
 #### 4.2 Phonon-Triggered Fusion
 
-**Source**: `tensornet/fusion/phonon_trigger.py` (550 LOC)
+**Source**: `ontic/fusion/phonon_trigger.py` (550 LOC)
 
 $$\frac{\partial f}{\partial t} = \frac{\partial}{\partial E}\!\left[D(E)\frac{\partial f}{\partial E} + A(E)f\right] + S(E,t) \quad\text{(Fokker-Planck)}$$
 
@@ -312,7 +312,7 @@ $$R_{\text{fusion}} = n_D^2 \int \sigma(E)\,v(E)\,f(E)\,dE$$
 
 #### 4.3 Resonant Catalysis
 
-**Source**: `tensornet/fusion/resonant_catalysis.py` (891 LOC)
+**Source**: `ontic/fusion/resonant_catalysis.py` (891 LOC)
 
 - Selective bond rupture via phonon matching: N≡N ($\tilde\nu = 2330\,\text{cm}^{-1}$, $D=9.79\,\text{eV}$)
 - Lorentzian catalyst phonon spectrum: $g(\omega) = A\gamma/\pi / [(\omega-\omega_0)^2 + \gamma^2]$
@@ -321,7 +321,7 @@ $$R_{\text{fusion}} = n_D^2 \int \sigma(E)\,v(E)\,f(E)\,dE$$
 
 #### 4.4 Superionic Dynamics
 
-**Source**: `tensornet/fusion/superionic_dynamics.py` (585 LOC)
+**Source**: `ontic/fusion/superionic_dynamics.py` (585 LOC)
 
 $$m\frac{d\mathbf{v}}{dt} = -\gamma\mathbf{v} + \mathbf{F}_{\text{lattice}} + \sqrt{2\gamma k_B T}\,\boldsymbol{\xi}(t) \quad\text{(Langevin)}$$
 
@@ -330,7 +330,7 @@ $$m\frac{d\mathbf{v}}{dt} = -\gamma\mathbf{v} + \mathbf{F}_{\text{lattice}} + \s
 
 #### 4.5 Integrated Fusion Enhancement (MARRS)
 
-**Source**: `tensornet/fusion/marrs_simulator.py` (444 LOC)
+**Source**: `ontic/fusion/marrs_simulator.py` (444 LOC)
 
 $$\text{Enhancement}_{\text{total}} = \text{Enhancement}_{\text{screen}} \times \text{Enhancement}_{\text{superionic}} \times \text{Enhancement}_{\text{phonon}}$$
 
@@ -421,7 +421,7 @@ $$\mathbf{K}^T\boldsymbol{\lambda} = -\frac{\partial J}{\partial\mathbf{u}}, \qu
 
 ### 9. Biological Aging & Longevity
 
-**Source**: `tensornet/genesis/aging/` (4,288 LOC), CivStack `proteome_compiler_gauntlet.py`
+**Source**: `ontic/genesis/aging/` (4,288 LOC), CivStack `proteome_compiler_gauntlet.py`
 
 #### 9.1 Aging as Tensor Rank Growth
 
@@ -485,7 +485,7 @@ $$\ddot{\mathbf{r}} = -\frac{\mu}{r^3}\mathbf{r} + \mathbf{a}_{\text{pert}} \qua
 
 ### 12. Atmospheric & Climate Science
 
-**Source**: CivStack `hermes_gauntlet.py`, `tensornet/cfd/weather.py`
+**Source**: CivStack `hermes_gauntlet.py`, `ontic/cfd/weather.py`
 
 $$\frac{\partial T}{\partial t} + \mathbf{u}\cdot\nabla T = \kappa\nabla^2 T + \frac{Q}{c_p\rho} \quad\text{(advection-diffusion)}$$
 
@@ -499,7 +499,7 @@ $$\frac{\partial T}{\partial t} + \mathbf{u}\cdot\nabla T = \kappa\nabla^2 T + \
 
 ### 13. Chemical Kinetics & Catalysis
 
-**Source**: `tensornet/cfd/chemistry.py` (635 LOC), `tensornet/fusion/resonant_catalysis.py` (891 LOC), CivStack `femto_fabricator_gauntlet.py`
+**Source**: `ontic/cfd/chemistry.py` (635 LOC), `ontic/fusion/resonant_catalysis.py` (891 LOC), CivStack `femto_fabricator_gauntlet.py`
 
 $$k_f = A\,T^n\exp\!\left(-\frac{E_a}{RT}\right) \quad\text{(Arrhenius)}$$
 
@@ -521,7 +521,7 @@ $$k_f = A\,T^n\exp\!\left(-\frac{E_a}{RT}\right) \quad\text{(Arrhenius)}$$
 
 ### 14. Mathematical Physics (Genesis Layers)
 
-**Source**: `tensornet/genesis/` (~5,500 LOC across 8 layers)
+**Source**: `ontic/genesis/` (~5,500 LOC across 8 layers)
 
 #### 14.1 Optimal Transport (Layer 20)
 
@@ -575,7 +575,7 @@ $$\text{Cl}(p,q,r): \quad e_i^2 = \begin{cases}+1 & i\leq p \\ -1 & p<i\leq p+q 
 
 #### 14.8 Cross-Primitive Pipeline (Genesis Fusion)
 
-**Source**: `tensornet/genesis/fusion/geometric_types_pipeline.py` (874 LOC), `tensornet/genesis/fusion/genesis_fusion_demo.py` (1,471 LOC), `tensornet/genesis/__init__.py` (388 LOC)
+**Source**: `ontic/genesis/fusion/geometric_types_pipeline.py` (874 LOC), `ontic/genesis/fusion/genesis_fusion_demo.py` (1,471 LOC), `ontic/genesis/__init__.py` (388 LOC)
 
 The Genesis cross-primitive pipeline composes all 7 mathematical primitives into a single end-to-end data flow **without densification** — data remains in QTT format across every stage.
 
@@ -610,13 +610,13 @@ The Genesis cross-primitive pipeline composes all 7 mathematical primitives into
 
 **7-Gauntlet benchmark suite** validates each primitive at $2^{10}$–$2^{16}$ scale with rank boundedness ($\chi \leq 32$), energy conservation, $O(r^3\log N)$ scaling, and cross-primitive composition correctness.
 
-**Master module** (`tensornet/genesis/__init__.py`) exports ~135 symbols across all 8 layers + core, with 4 documented composition patterns: OT+PH (transport-aware topology), SGW+RKHS (spectral kernels), RMT+GA (uncertainty-quantified transforms), TG+OT (discrete optimal transport).
+**Master module** (`ontic/genesis/__init__.py`) exports ~135 symbols across all 8 layers + core, with 4 documented composition patterns: OT+PH (transport-aware topology), SGW+RKHS (spectral kernels), RMT+GA (uncertainty-quantified transforms), TG+OT (discrete optimal transport).
 
 ---
 
 ### 15. Quantum Computing & Error Mitigation
 
-**Source**: `tensornet/quantum/error_mitigation.py` (1,181 LOC), `tensornet/quantum/hybrid.py` (1,248 LOC)
+**Source**: `ontic/quantum/error_mitigation.py` (1,181 LOC), `ontic/quantum/hybrid.py` (1,248 LOC)
 
 #### 15.1 Noise Models (Kraus Channels)
 
@@ -648,7 +648,7 @@ $$\rho \to \mathcal{E}(\rho) = \sum_k K_k\rho K_k^\dagger$$
 
 ### 16. QTT Infrastructure
 
-**Source**: `tensornet/cfd/qtt.py` (514 LOC), `tensornet/cfd/qtt_tci.py` (1,271 LOC), `tensornet/cfd/pure_qtt_ops.py` (1,069 LOC), `tensornet/cfd/nd_shift_mpo.py` (856 LOC)
+**Source**: `ontic/cfd/qtt.py` (514 LOC), `ontic/cfd/qtt_tci.py` (1,271 LOC), `ontic/cfd/pure_qtt_ops.py` (1,069 LOC), `ontic/cfd/nd_shift_mpo.py` (856 LOC)
 
 #### 16.1 Quantized Tensor Train Decomposition
 
@@ -1083,7 +1083,7 @@ $$E_{\text{total}} = \frac{E_{\text{Coulomb}}}{\varepsilon_r} + E_{\text{LJ}} + 
 
 ### 30. Advanced CFD Solvers & Analysis
 
-**Source**: `tensornet/cfd/` (~23,355 LOC across 33 additional files not in §1)
+**Source**: `ontic/cfd/` (~23,355 LOC across 33 additional files not in §1)
 
 #### 30.1 Incompressible NS Solvers (2D/3D)
 
@@ -1188,11 +1188,11 @@ $$\int_0^T \|\omega\|_\infty\,dt < \infty \implies \text{smooth (no blowup)}$$
 
 ### 32. Flight Dynamics & Guidance
 
-**Source**: `tensornet/guidance/` (~3,508 LOC), `tensornet/physics/` (~1,200 LOC)
+**Source**: `ontic/guidance/` (~3,508 LOC), `ontic/physics/` (~1,200 LOC)
 
 #### 32.1 6-DOF Rigid Body Trajectory
 
-**Source**: `tensornet/guidance/trajectory.py` (956 LOC)
+**Source**: `ontic/guidance/trajectory.py` (956 LOC)
 
 - Quaternion attitude representation (singularity-free)
 - Rotating spherical Earth: $R_E = 6{,}371\,\text{km}$, $\Omega_E = 7.2921 \times 10^{-5}\,\text{rad/s}$
@@ -1201,7 +1201,7 @@ $$\int_0^T \|\omega\|_\infty\,dt < \infty \implies \text{smooth (no blowup)}$$
 
 #### 32.2 Hypersonic Guidance Laws
 
-**Source**: `tensornet/guidance/controller.py` (797 LOC)
+**Source**: `ontic/guidance/controller.py` (797 LOC)
 
 - Bank-to-turn for hypersonic glide vehicles
 - Proportional navigation: $\dot\lambda \cdot N$ (navigation ratio)
@@ -1210,7 +1210,7 @@ $$\int_0^T \|\omega\|_\infty\,dt < \infty \implies \text{smooth (no blowup)}$$
 
 #### 32.3 Exoatmospheric Kill Vehicle (EKV)
 
-**Source**: `tensornet/guidance/divert.py` (607 LOC)
+**Source**: `ontic/guidance/divert.py` (607 LOC)
 
 - Terminal homing with proportional navigation variants
 - Thruster pulse modulation: min 10 ms, max 1.0 s, response 5 ms
@@ -1218,13 +1218,13 @@ $$\int_0^T \|\omega\|_\infty\,dt < \infty \implies \text{smooth (no blowup)}$$
 
 #### 32.4 Terrain-Referenced Navigation
 
-**Source**: `tensornet/guidance/aero_trn.py` (561 LOC)
+**Source**: `ontic/guidance/aero_trn.py` (561 LOC)
 
 - Aerodynamic signature correlation for GPS-denied navigation
 
 #### 32.5 Hypersonic Hazard Fields
 
-**Source**: `tensornet/physics/hypersonic.py` (567 LOC)
+**Source**: `ontic/physics/hypersonic.py` (567 LOC)
 
 $$Q = \tfrac{1}{2}\rho V^2, \quad T_{\text{stag}} \propto M^2$$
 
@@ -1235,11 +1235,11 @@ $$Q = \tfrac{1}{2}\rho V^2, \quad T_{\text{stag}} \propto M^2$$
 
 ### 33. Applied Domain Physics
 
-**Source**: `tensornet/{defense,medical,energy,urban,financial,racing,agri,emergency,cyber}/` (~6,852 LOC)
+**Source**: `ontic/{defense,medical,energy,urban,financial,racing,agri,emergency,cyber}/` (~6,852 LOC)
 
 #### 33.1 Exterior Ballistics
 
-**Source**: `tensornet/defense/ballistics.py` (444 LOC)
+**Source**: `ontic/defense/ballistics.py` (444 LOC)
 
 - 6-DOF trajectory: drag + Magnus + Coriolis + 3D wind field
 - $\mathbf{F}_{\text{Coriolis}} = -2m(\boldsymbol{\Omega}\times\mathbf{v})$, variable atmosphere
@@ -1247,7 +1247,7 @@ $$Q = \tfrac{1}{2}\rho V^2, \quad T_{\text{stag}} \propto M^2$$
 
 #### 33.2 Underwater Acoustics
 
-**Source**: `tensornet/defense/ocean.py` (315 LOC)
+**Source**: `ontic/defense/ocean.py` (315 LOC)
 
 $$c(z) = 1500\!\left(1 + \varepsilon(\eta + e^{-\eta} - 1)\right), \quad \eta = 2(z - z_{\text{ch}})/B$$
 
@@ -1255,7 +1255,7 @@ $$c(z) = 1500\!\left(1 + \varepsilon(\eta + e^{-\eta} - 1)\right), \quad \eta = 
 
 #### 33.3 Hemodynamics
 
-**Source**: `tensornet/medical/hemo.py` (414 LOC)
+**Source**: `ontic/medical/hemo.py` (414 LOC)
 
 $$\mu(\dot\gamma) = \mu_\infty + (\mu_0 - \mu_\infty)\bigl[1 + (\lambda\dot\gamma)^2\bigr]^{(n-1)/2} \quad\text{(Carreau-Yasuda)}$$
 
@@ -1264,14 +1264,14 @@ $$\mu(\dot\gamma) = \mu_\infty + (\mu_0 - \mu_\infty)\bigl[1 + (\lambda\dot\gamm
 
 #### 33.4 Wind Energy
 
-**Source**: `tensornet/energy/turbine.py` (429 LOC)
+**Source**: `ontic/energy/turbine.py` (429 LOC)
 
 - Jensen-Park wake model: $r_{\text{wake}} = r_{\text{rotor}} + kx$; wake decay $k = 0.075$ (onshore)
 - Betz limit: $C_P^{\max} = 16/27 \approx 0.593$; optimal induction $a \approx 0.33$
 
 #### 33.5 Urban Wind Engineering
 
-**Source**: `tensornet/urban/solver.py` (514 LOC), `city_gen.py` (511 LOC)
+**Source**: `ontic/urban/solver.py` (514 LOC), `city_gen.py` (511 LOC)
 
 - Venturi effect in canyons: $A_1 v_1 = A_2 v_2$
 - Building-resolved BCs, turbulence kinetic energy (TKE) at edges
@@ -1279,7 +1279,7 @@ $$\mu(\dot\gamma) = \mu_\infty + (\mu_0 - \mu_\infty)\bigl[1 + (\lambda\dot\gamm
 
 #### 33.6 Financial Fluid Dynamics
 
-**Source**: `tensornet/financial/solver.py` (601 LOC)
+**Source**: `ontic/financial/solver.py` (601 LOC)
 
 $$\frac{\partial u}{\partial t} = -\nabla P + \nu\nabla^2 u$$
 
@@ -1287,14 +1287,14 @@ $$\frac{\partial u}{\partial t} = -\nabla P + \nu\nabla^2 u$$
 
 #### 33.7 Motorsport Aerodynamics
 
-**Source**: `tensornet/racing/wake.py` (331 LOC)
+**Source**: `ontic/racing/wake.py` (331 LOC)
 
 - F1 dirty-air wake tracking: downforce loss up to 40% (pre-2022), ~15% (ground effect)
 - Low-pressure vacuum tow, vortex structure destruction modeling
 
 #### 33.8 Agricultural Microclimate
 
-**Source**: `tensornet/agri/microclimate.py` (397 LOC)
+**Source**: `ontic/agri/microclimate.py` (397 LOC)
 
 $$\frac{\partial\varphi}{\partial t} + (\mathbf{u}\cdot\nabla)\varphi = D\nabla^2\varphi + S_{\text{transpiration}} \quad\text{(humidity transport)}$$
 
@@ -1303,7 +1303,7 @@ $$\frac{\partial\varphi}{\partial t} + (\mathbf{u}\cdot\nabla)\varphi = D\nabla^
 
 #### 33.9 Wildfire Dynamics
 
-**Source**: `tensornet/emergency/fire.py` (374 LOC)
+**Source**: `ontic/emergency/fire.py` (374 LOC)
 
 - Rothermel fire spread model: ROS = $f$(wind, slope, fuel moisture)
 - Buoyancy: $F_b = \rho g\,\Delta T/T \cdot V$
@@ -1311,7 +1311,7 @@ $$\frac{\partial\varphi}{\partial t} + (\mathbf{u}\cdot\nabla)\varphi = D\nabla^
 
 #### 33.10 Network Physics (Cyber)
 
-**Source**: `tensornet/cyber/grid_shock.py` (484 LOC)
+**Source**: `ontic/cyber/grid_shock.py` (484 LOC)
 
 $$\frac{\partial u}{\partial t} = \alpha\nabla^2 u \quad\text{(heat equation on graph Laplacian)}$$
 
@@ -1346,11 +1346,11 @@ $$A^{(n+1)} = \text{CoarseGrain}(A^{(n)}) + R^{(n)}$$
 
 ### 35. Simulation, Digital Twin & Reinforcement Learning
 
-**Source**: `tensornet/{simulation,digital_twin,hyperenv,coordination}/` (~14,805 LOC)
+**Source**: `ontic/{simulation,digital_twin,hyperenv,coordination}/` (~14,805 LOC)
 
 #### 35.1 Real-Time CFD Coupling
 
-**Source**: `tensornet/simulation/realtime_cfd.py` (897 LOC), `hil.py` (924 LOC), `flight_data.py` (947 LOC)
+**Source**: `ontic/simulation/realtime_cfd.py` (897 LOC), `hil.py` (924 LOC), `flight_data.py` (947 LOC)
 
 - Real-time aerodynamic coefficient lookup, surrogate models
 - Hardware-in-the-loop (HIL) simulation framework
@@ -1358,7 +1358,7 @@ $$A^{(n+1)} = \text{CoarseGrain}(A^{(n)}) + R^{(n)}$$
 
 #### 35.2 Digital Twin Infrastructure
 
-**Source**: `tensornet/digital_twin/` (~3,735 LOC across 5 files)
+**Source**: `ontic/digital_twin/` (~3,735 LOC across 5 files)
 
 - Reduced-order modeling via proper orthogonal decomposition (POD) in TT format
 - Predictive digital twin with state synchronization
@@ -1366,7 +1366,7 @@ $$A^{(n+1)} = \text{CoarseGrain}(A^{(n)}) + R^{(n)}$$
 
 #### 35.3 Hypersonic RL Environment
 
-**Source**: `tensornet/hyperenv/` (~4,612 LOC across 7 files)
+**Source**: `ontic/hyperenv/` (~4,612 LOC across 7 files)
 
 - Physics-based Gymnasium-compatible RL environment
 - Hypersonic vehicle trajectory control via reinforcement learning
@@ -1374,7 +1374,7 @@ $$A^{(n+1)} = \text{CoarseGrain}(A^{(n)}) + R^{(n)}$$
 
 #### 35.4 Multi-Vehicle Coordination
 
-**Source**: `tensornet/coordination/` (~2,227 LOC across 4 files)
+**Source**: `ontic/coordination/` (~2,227 LOC across 4 files)
 
 - Formation control dynamics (leader-follower, virtual structure)
 - Swarm coordination algorithms with consensus protocols
@@ -1382,11 +1382,11 @@ $$A^{(n+1)} = \text{CoarseGrain}(A^{(n)}) + R^{(n)}$$
 ---
 ### 36. Classical & Structural Mechanics
 
-**Source**: `tensornet/mechanics/` (~3,527 LOC across 6 files)
+**Source**: `ontic/mechanics/` (~3,527 LOC across 6 files)
 
 #### 36.1 Lagrangian/Hamiltonian Mechanics
 
-**Source**: `tensornet/mechanics/symplectic.py`, `variational.py`, `noether.py` (~1,827 LOC)
+**Source**: `ontic/mechanics/symplectic.py`, `variational.py`, `noether.py` (~1,827 LOC)
 
 $$\frac{d}{dt}\frac{\partial L}{\partial\dot{q}_i} - \frac{\partial L}{\partial q_i} = 0, \quad L = T - V$$
 
@@ -1397,7 +1397,7 @@ $$\frac{d}{dt}\frac{\partial L}{\partial\dot{q}_i} - \frac{\partial L}{\partial 
 
 #### 36.2 Continuum Mechanics
 
-**Source**: `tensornet/mechanics/continuum.py` (~1,000 LOC)
+**Source**: `ontic/mechanics/continuum.py` (~1,000 LOC)
 
 $$\mathbf{S} = \frac{\partial W}{\partial \mathbf{E}}, \quad W_{\text{NH}} = \frac{\mu}{2}(I_1 - 3) - \mu\ln J + \frac{\lambda}{2}(\ln J)^2$$
 
@@ -1408,7 +1408,7 @@ $$\mathbf{S} = \frac{\partial W}{\partial \mathbf{E}}, \quad W_{\text{NH}} = \fr
 
 #### 36.3 Structural Mechanics
 
-**Source**: `tensornet/mechanics/structural.py` (~700 LOC)
+**Source**: `ontic/mechanics/structural.py` (~700 LOC)
 
 $$EI\frac{d^4 w}{dx^4} = q(x) \quad\text{(Euler-Bernoulli beam)}$$
 
@@ -1421,11 +1421,11 @@ $$EI\frac{d^4 w}{dx^4} = q(x) \quad\text{(Euler-Bernoulli beam)}$$
 
 ### 37. Quantum Mechanics (Expanded)
 
-**Source**: `tensornet/quantum_mechanics/` (~2,134 LOC), `tensornet/qm/` (~646 LOC)
+**Source**: `ontic/quantum_mechanics/` (~2,134 LOC), `ontic/qm/` (~646 LOC)
 
 #### 37.1 Time-Independent Schrödinger Equation
 
-**Source**: `tensornet/quantum_mechanics/stationary.py`
+**Source**: `ontic/quantum_mechanics/stationary.py`
 
 $$\hat{H}\psi = E\psi, \quad \hat{H} = -\frac{\hbar^2}{2m}\nabla^2 + V(\mathbf{r})$$
 
@@ -1436,7 +1436,7 @@ $$\hat{H}\psi = E\psi, \quad \hat{H} = -\frac{\hbar^2}{2m}\nabla^2 + V(\mathbf{r
 
 #### 37.2 Time-Dependent Schrödinger Equation
 
-**Source**: `tensornet/quantum_mechanics/propagator.py`
+**Source**: `ontic/quantum_mechanics/propagator.py`
 
 $$i\hbar\frac{\partial\psi}{\partial t} = \hat{H}\psi$$
 
@@ -1447,7 +1447,7 @@ $$i\hbar\frac{\partial\psi}{\partial t} = \hat{H}\psi$$
 
 #### 37.3 Path Integrals
 
-**Source**: `tensornet/quantum_mechanics/path_integrals.py`
+**Source**: `ontic/quantum_mechanics/path_integrals.py`
 
 $$K(x_f, x_i; T) = \int \mathcal{D}[x]\,\exp\!\left(\frac{i}{\hbar}S[x]\right)$$
 
@@ -1457,7 +1457,7 @@ $$K(x_f, x_i; T) = \int \mathcal{D}[x]\,\exp\!\left(\frac{i}{\hbar}S[x]\right)$$
 
 #### 37.4 Scattering Theory
 
-**Source**: `tensornet/qm/scattering.py`
+**Source**: `ontic/qm/scattering.py`
 
 $$f(\theta) = \sum_{l=0}^{\infty}(2l+1)f_l\,P_l(\cos\theta), \quad f_l = \frac{e^{2i\delta_l} - 1}{2ik}$$
 
@@ -1468,7 +1468,7 @@ $$f(\theta) = \sum_{l=0}^{\infty}(2l+1)f_l\,P_l(\cos\theta), \quad f_l = \frac{e
 
 #### 37.5 Semiclassical & WKB Methods
 
-**Source**: `tensornet/qm/semiclassical_wkb.py`
+**Source**: `ontic/qm/semiclassical_wkb.py`
 
 $$\psi(x) \approx \frac{A}{\sqrt{p(x)}}\exp\!\left(\pm\frac{i}{\hbar}\int p(x')\,dx'\right)$$
 
@@ -1481,11 +1481,11 @@ $$\psi(x) \approx \frac{A}{\sqrt{p(x)}}\exp\!\left(\pm\frac{i}{\hbar}\int p(x')\
 
 ### 38. Condensed Matter Physics (Expanded)
 
-**Source**: `tensornet/condensed_matter/` (~7,074 LOC across 18 files)
+**Source**: `ontic/condensed_matter/` (~7,074 LOC across 18 files)
 
 #### 38.1 Phonon Dynamics
 
-**Source**: `tensornet/condensed_matter/phonons.py`
+**Source**: `ontic/condensed_matter/phonons.py`
 
 $$\omega^2(\mathbf{q})\,\mathbf{e} = D(\mathbf{q})\,\mathbf{e}, \quad D_{\alpha\beta}(\mathbf{q}) = \frac{1}{\sqrt{M_\alpha M_\beta}}\sum_R \Phi_{\alpha\beta}(R)\,e^{i\mathbf{q}\cdot\mathbf{R}}$$
 
@@ -1495,7 +1495,7 @@ $$\omega^2(\mathbf{q})\,\mathbf{e} = D(\mathbf{q})\,\mathbf{e}, \quad D_{\alpha\
 
 #### 38.2 Strongly Correlated Systems
 
-**Source**: `tensornet/condensed_matter/strongly_correlated.py`
+**Source**: `ontic/condensed_matter/strongly_correlated.py`
 
 $$G(\omega) = \frac{1}{\omega + \mu - \varepsilon_k - \Sigma(\omega)} \quad\text{(DMFT self-consistency)}$$
 
@@ -1505,7 +1505,7 @@ $$G(\omega) = \frac{1}{\omega + \mu - \varepsilon_k - \Sigma(\omega)} \quad\text
 
 #### 38.3 Topological Phases
 
-**Source**: `tensornet/condensed_matter/topological_phases.py`
+**Source**: `ontic/condensed_matter/topological_phases.py`
 
 $$A_s = \prod_{j\in\text{star}(s)} Z_j, \quad B_p = \prod_{j\in\partial p} X_j \quad\text{(Toric code)}$$
 
@@ -1516,7 +1516,7 @@ $$A_s = \prod_{j\in\text{star}(s)} Z_j, \quad B_p = \prod_{j\in\partial p} X_j \
 
 #### 38.4 Many-Body Localization
 
-**Source**: `tensornet/condensed_matter/mbl_disorder.py`
+**Source**: `ontic/condensed_matter/mbl_disorder.py`
 
 $$H = J\sum_{\langle i,j\rangle}\mathbf{S}_i\cdot\mathbf{S}_j + \sum_i h_i S_i^z \quad\text{(random-field XXZ)}$$
 
@@ -1526,7 +1526,7 @@ $$H = J\sum_{\langle i,j\rangle}\mathbf{S}_i\cdot\mathbf{S}_j + \sum_i h_i S_i^z
 
 #### 38.5 Kondo & Impurity Physics
 
-**Source**: `tensornet/condensed_matter/kondo_impurity.py`
+**Source**: `ontic/condensed_matter/kondo_impurity.py`
 
 $$H_{\text{AIM}} = \varepsilon_d n_d + U n_\uparrow n_\downarrow + \sum_k \varepsilon_k c_k^\dagger c_k + \sum_k V_k(c_k^\dagger d + \text{h.c.})$$
 
@@ -1536,7 +1536,7 @@ $$H_{\text{AIM}} = \varepsilon_d n_d + U n_\uparrow n_\downarrow + \sum_k \varep
 
 #### 38.6 Open Quantum Systems
 
-**Source**: `tensornet/condensed_matter/open_quantum.py`
+**Source**: `ontic/condensed_matter/open_quantum.py`
 
 $$\frac{d\rho}{dt} = -\frac{i}{\hbar}[H,\rho] + \sum_k \gamma_k\!\left(L_k\rho L_k^\dagger - \tfrac{1}{2}\{L_k^\dagger L_k,\rho\}\right)$$
 
@@ -1546,7 +1546,7 @@ $$\frac{d\rho}{dt} = -\frac{i}{\hbar}[H,\rho] + \sum_k \gamma_k\!\left(L_k\rho L
 
 #### 38.7 Non-Equilibrium Quantum Dynamics
 
-**Source**: `tensornet/condensed_matter/nonequilibrium_qm.py`
+**Source**: `ontic/condensed_matter/nonequilibrium_qm.py`
 
 $$H_F = \frac{1}{T}\int_0^T H(t)\,dt \quad\text{(Floquet Hamiltonian)}$$
 
@@ -1556,7 +1556,7 @@ $$H_F = \frac{1}{T}\int_0^T H(t)\,dt \quad\text{(Floquet Hamiltonian)}$$
 
 #### 38.8 Bosonic Many-Body Systems
 
-**Source**: `tensornet/condensed_matter/bosonic.py`
+**Source**: `ontic/condensed_matter/bosonic.py`
 
 $$i\hbar\frac{\partial\Psi}{\partial t} = \left(-\frac{\hbar^2}{2m}\nabla^2 + V_{\text{ext}} + g|\Psi|^2\right)\Psi \quad\text{(Gross-Pitaevskii)}$$
 
@@ -1566,7 +1566,7 @@ $$i\hbar\frac{\partial\Psi}{\partial t} = \left(-\frac{\hbar^2}{2m}\nabla^2 + V_
 
 #### 38.9 Fermionic Systems
 
-**Source**: `tensornet/condensed_matter/fermionic.py`
+**Source**: `ontic/condensed_matter/fermionic.py`
 
 $$\Delta_k = -\sum_{k'} V_{kk'}\frac{\Delta_{k'}}{2E_{k'}} \quad\text{(BCS gap equation)}$$
 
@@ -1577,7 +1577,7 @@ $$\Delta_k = -\sum_{k'} V_{kk'}\frac{\Delta_{k'}}{2E_{k'}} \quad\text{(BCS gap e
 
 #### 38.10 Disordered Systems
 
-**Source**: `tensornet/condensed_matter/disordered.py`
+**Source**: `ontic/condensed_matter/disordered.py`
 
 $$H = \sum_i \varepsilon_i c_i^\dagger c_i + t\sum_{\langle i,j\rangle} c_i^\dagger c_j \quad\text{(Anderson tight-binding)}$$
 
@@ -1587,7 +1587,7 @@ $$H = \sum_i \varepsilon_i c_i^\dagger c_i + t\sum_{\langle i,j\rangle} c_i^\dag
 
 #### 38.11 Nuclear Many-Body
 
-**Source**: `tensornet/condensed_matter/nuclear_many_body.py`
+**Source**: `ontic/condensed_matter/nuclear_many_body.py`
 
 $$(H - E)\mathbf{c} = 0 \quad\text{(Configuration interaction in Slater-det basis)}$$
 
@@ -1598,7 +1598,7 @@ $$(H - E)\mathbf{c} = 0 \quad\text{(Configuration interaction in Slater-det basi
 
 #### 38.12 Ultracold Atoms
 
-**Source**: `tensornet/condensed_matter/ultracold_atoms.py`
+**Source**: `ontic/condensed_matter/ultracold_atoms.py`
 
 $$V(x) = V_0\sin^2(kx) \quad\text{(Optical lattice potential)}$$
 
@@ -1608,7 +1608,7 @@ $$V(x) = V_0\sin^2(kx) \quad\text{(Optical lattice potential)}$$
 
 #### 38.13 Defect Physics
 
-**Source**: `tensornet/condensed_matter/defects.py`
+**Source**: `ontic/condensed_matter/defects.py`
 
 $$E_f^{\text{vac}} = E_{\text{defect}} - (N-1)E_{\text{bulk}}/N$$
 
@@ -1619,7 +1619,7 @@ $$E_f^{\text{vac}} = E_{\text{defect}} - (N-1)E_{\text{bulk}}/N$$
 
 #### 38.14 Electronic Band Structure
 
-**Source**: `tensornet/condensed_matter/band_structure.py`
+**Source**: `ontic/condensed_matter/band_structure.py`
 
 $$H_{\mathbf{k}}\,u_{n\mathbf{k}} = \varepsilon_{n\mathbf{k}}\,u_{n\mathbf{k}}$$
 
@@ -1630,7 +1630,7 @@ $$H_{\mathbf{k}}\,u_{n\mathbf{k}} = \varepsilon_{n\mathbf{k}}\,u_{n\mathbf{k}}$$
 
 #### 38.15 Classical Magnetism
 
-**Source**: `tensornet/condensed_matter/classical_magnetism.py`
+**Source**: `ontic/condensed_matter/classical_magnetism.py`
 
 $$\frac{\partial\mathbf{M}}{\partial t} = -\gamma\,\mathbf{M}\times\mathbf{H}_{\text{eff}} + \frac{\alpha}{M_s}\,\mathbf{M}\times\frac{\partial\mathbf{M}}{\partial t} \quad\text{(LLG equation)}$$
 
@@ -1641,7 +1641,7 @@ $$\frac{\partial\mathbf{M}}{\partial t} = -\gamma\,\mathbf{M}\times\mathbf{H}_{\
 
 #### 38.16 Surfaces & Interfaces
 
-**Source**: `tensornet/condensed_matter/surfaces_interfaces.py`
+**Source**: `ontic/condensed_matter/surfaces_interfaces.py`
 
 $$\theta = \frac{Kp}{1 + Kp} \quad\text{(Langmuir adsorption isotherm)}$$
 
@@ -1651,7 +1651,7 @@ $$\theta = \frac{Kp}{1 + Kp} \quad\text{(Langmuir adsorption isotherm)}$$
 
 #### 38.17 Ferroelectrics & Piezoelectrics
 
-**Source**: `tensornet/condensed_matter/ferroelectrics.py`
+**Source**: `ontic/condensed_matter/ferroelectrics.py`
 
 $$F(P) = \alpha P^2 + \beta P^4 + \gamma P^6 \quad\text{(Landau-Devonshire free energy)}$$
 
@@ -1663,11 +1663,11 @@ $$F(P) = \alpha P^2 + \beta P^4 + \gamma P^6 \quad\text{(Landau-Devonshire free 
 
 ### 39. Electronic Structure
 
-**Source**: `tensornet/electronic_structure/` (~2,351 LOC across 8 files)
+**Source**: `ontic/electronic_structure/` (~2,351 LOC across 8 files)
 
 #### 39.1 Density Functional Theory (DFT)
 
-**Source**: `tensornet/electronic_structure/dft.py`
+**Source**: `ontic/electronic_structure/dft.py`
 
 $$\left[-\frac{\hbar^2}{2m}\nabla^2 + V_{\text{eff}}(\mathbf{r})\right]\psi_i(\mathbf{r}) = \varepsilon_i\psi_i(\mathbf{r})$$
 
@@ -1678,7 +1678,7 @@ $$\left[-\frac{\hbar^2}{2m}\nabla^2 + V_{\text{eff}}(\mathbf{r})\right]\psi_i(\m
 
 #### 39.2 Beyond-DFT Methods
 
-**Source**: `tensornet/electronic_structure/beyond_dft.py`
+**Source**: `ontic/electronic_structure/beyond_dft.py`
 
 $$E_{\text{corr}}^{(2)} = -\sum_{ijab}\frac{|\langle ij\|ab\rangle|^2}{\varepsilon_a + \varepsilon_b - \varepsilon_i - \varepsilon_j} \quad\text{(MP2)}$$
 
@@ -1689,7 +1689,7 @@ $$E_{\text{corr}}^{(2)} = -\sum_{ijab}\frac{|\langle ij\|ab\rangle|^2}{\varepsil
 
 #### 39.3 Semi-Empirical & Tight Binding
 
-**Source**: `tensornet/electronic_structure/tight_binding.py`
+**Source**: `ontic/electronic_structure/tight_binding.py`
 
 $$H_{\mu\nu} = \langle\mu|H_0 + V_{\text{rep}}|\nu\rangle \quad\text{(Slater-Koster integrals)}$$
 
@@ -1699,7 +1699,7 @@ $$H_{\mu\nu} = \langle\mu|H_0 + V_{\text{rep}}|\nu\rangle \quad\text{(Slater-Kos
 
 #### 39.4 Excited States
 
-**Source**: `tensornet/electronic_structure/excited_states.py`
+**Source**: `ontic/electronic_structure/excited_states.py`
 
 $$\begin{pmatrix} A & B \\ B^* & A^* \end{pmatrix}\begin{pmatrix} X \\ Y \end{pmatrix} = \omega\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}\begin{pmatrix} X \\ Y \end{pmatrix} \quad\text{(Casida TDDFT)}$$
 
@@ -1710,7 +1710,7 @@ $$\begin{pmatrix} A & B \\ B^* & A^* \end{pmatrix}\begin{pmatrix} X \\ Y \end{pm
 
 #### 39.5 Response Properties
 
-**Source**: `tensornet/electronic_structure/response.py`
+**Source**: `ontic/electronic_structure/response.py`
 
 $$\chi(\mathbf{q},\omega) = \frac{\chi_0(\mathbf{q},\omega)}{1 - v_c(\mathbf{q})\chi_0(\mathbf{q},\omega)} \quad\text{(RPA dielectric function)}$$
 
@@ -1720,7 +1720,7 @@ $$\chi(\mathbf{q},\omega) = \frac{\chi_0(\mathbf{q},\omega)}{1 - v_c(\mathbf{q})
 
 #### 39.6 Relativistic Electronic Structure
 
-**Source**: `tensornet/electronic_structure/relativistic.py`
+**Source**: `ontic/electronic_structure/relativistic.py`
 
 $$H_{\text{ZORA}} = V + \mathbf{p}\cdot\frac{c^2}{2c^2 - V}\mathbf{p}$$
 
@@ -1730,7 +1730,7 @@ $$H_{\text{ZORA}} = V + \mathbf{p}\cdot\frac{c^2}{2c^2 - V}\mathbf{p}$$
 
 #### 39.7 Quantum Embedding
 
-**Source**: `tensornet/electronic_structure/embedding.py`
+**Source**: `ontic/electronic_structure/embedding.py`
 
 $$E_{\text{tot}} = E_{\text{QM}} + E_{\text{MM}} + E_{\text{QM/MM}}$$
 
@@ -1742,11 +1742,11 @@ $$E_{\text{tot}} = E_{\text{QM}} + E_{\text{MM}} + E_{\text{QM/MM}}$$
 
 ### 40. Nuclear & Particle Physics
 
-**Source**: `tensornet/nuclear/` (~935 LOC), `tensornet/particle/` (~327 LOC)
+**Source**: `ontic/nuclear/` (~935 LOC), `ontic/particle/` (~327 LOC)
 
 #### 40.1 Nuclear Structure
 
-**Source**: `tensornet/nuclear/structure.py`
+**Source**: `ontic/nuclear/structure.py`
 
 $$E[\rho] = \int\mathcal{H}(\rho,\tau,\mathbf{J})\,d^3r \quad\text{(Skyrme nuclear DFT)}$$
 
@@ -1756,7 +1756,7 @@ $$E[\rho] = \int\mathcal{H}(\rho,\tau,\mathbf{J})\,d^3r \quad\text{(Skyrme nucle
 
 #### 40.2 Nuclear Reactions
 
-**Source**: `tensornet/nuclear/reactions.py`
+**Source**: `ontic/nuclear/reactions.py`
 
 $$\sigma_{a\to b} = \pi\bar\lambda^2\sum_J (2J+1)\frac{T_a^J\,T_b^J}{\sum_c T_c^J} \quad\text{(Hauser-Feshbach)}$$
 
@@ -1766,7 +1766,7 @@ $$\sigma_{a\to b} = \pi\bar\lambda^2\sum_J (2J+1)\frac{T_a^J\,T_b^J}{\sum_c T_c^
 
 #### 40.3 Nuclear Astrophysics
 
-**Source**: `tensornet/nuclear/astrophysics.py`
+**Source**: `ontic/nuclear/astrophysics.py`
 
 $$\frac{dY_i}{dt} = \sum_j \lambda_j Y_j + \sum_{j,k}\langle jk\rangle Y_j Y_k$$
 
@@ -1776,7 +1776,7 @@ $$\frac{dY_i}{dt} = \sum_j \lambda_j Y_j + \sum_{j,k}\langle jk\rangle Y_j Y_k$$
 
 #### 40.4 Beyond the Standard Model
 
-**Source**: `tensornet/particle/beyond_sm.py`
+**Source**: `ontic/particle/beyond_sm.py`
 
 $$\Omega h^2 \approx \frac{3\times10^{-27}\,\text{cm}^3\text{s}^{-1}}{\langle\sigma v\rangle} \quad\text{(WIMP relic abundance)}$$
 
@@ -1804,11 +1804,11 @@ $$I(\tau) = \sum_{\varepsilon,\varepsilon'} \rho_{\varepsilon\varepsilon'} A_\va
 
 ### 41. Astrophysics
 
-**Source**: `tensornet/astro/` (~2,246 LOC across 7 files)
+**Source**: `ontic/astro/` (~2,246 LOC across 7 files)
 
 #### 41.1 Stellar Structure & Evolution
 
-**Source**: `tensornet/astro/stellar_structure.py`
+**Source**: `ontic/astro/stellar_structure.py`
 
 $$\frac{dP}{dr} = -\frac{G\rho m}{r^2}, \quad \frac{dL}{dr} = 4\pi r^2\rho\varepsilon_{\text{nuc}}$$
 
@@ -1818,7 +1818,7 @@ $$\frac{dP}{dr} = -\frac{G\rho m}{r^2}, \quad \frac{dL}{dr} = 4\pi r^2\rho\varep
 
 #### 41.2 Compact Objects
 
-**Source**: `tensornet/astro/compact_objects.py`
+**Source**: `ontic/astro/compact_objects.py`
 
 $$\frac{dp}{dr} = -\frac{(p + \rho c^2)(m + 4\pi r^3 p/c^2)}{r(r - 2Gm/c^2)} \quad\text{(TOV equation)}$$
 
@@ -1828,7 +1828,7 @@ $$\frac{dp}{dr} = -\frac{(p + \rho c^2)(m + 4\pi r^3 p/c^2)}{r(r - 2Gm/c^2)} \qu
 
 #### 41.3 Gravitational Waves
 
-**Source**: `tensornet/astro/gravitational_waves.py`
+**Source**: `ontic/astro/gravitational_waves.py`
 
 $$h_{+,\times}(t) \quad\text{(EOB inspiral} + \text{BSSN merger} + \text{QNM ringdown)}$$
 
@@ -1839,7 +1839,7 @@ $$h_{+,\times}(t) \quad\text{(EOB inspiral} + \text{BSSN merger} + \text{QNM rin
 
 #### 41.4 Cosmological Simulations
 
-**Source**: `tensornet/astro/cosmological_sims.py`
+**Source**: `ontic/astro/cosmological_sims.py`
 
 $$\mathbf{a}_i = -G\sum_j m_j\frac{\mathbf{r}_i - \mathbf{r}_j}{|\mathbf{r}_i - \mathbf{r}_j|^3} + \mathbf{a}_{\text{PM}}$$
 
@@ -1850,7 +1850,7 @@ $$\mathbf{a}_i = -G\sum_j m_j\frac{\mathbf{r}_i - \mathbf{r}_j}{|\mathbf{r}_i - 
 
 #### 41.5 CMB & Early Universe
 
-**Source**: `tensornet/astro/cmb_early_universe.py`
+**Source**: `ontic/astro/cmb_early_universe.py`
 
 $$\dot{\Theta}_l + \frac{k}{2l+1}\bigl[(l+1)\Theta_{l+1} - l\Theta_{l-1}\bigr] = -\dot\tau[\Theta_l - \delta_{l0}\Theta_0]$$
 
@@ -1861,7 +1861,7 @@ $$\dot{\Theta}_l + \frac{k}{2l+1}\bigl[(l+1)\Theta_{l+1} - l\Theta_{l-1}\bigr] =
 
 #### 41.6 Radiative Transfer
 
-**Source**: `tensornet/astro/radiative_transfer.py`
+**Source**: `ontic/astro/radiative_transfer.py`
 
 $$\frac{dI}{ds} = -\kappa I + j$$
 
@@ -1874,11 +1874,11 @@ $$\frac{dI}{ds} = -\kappa I + j$$
 
 ### 42. Geophysics
 
-**Source**: `tensornet/geophysics/` (~1,984 LOC across 7 files)
+**Source**: `ontic/geophysics/` (~1,984 LOC across 7 files)
 
 #### 42.1 Seismology
 
-**Source**: `tensornet/geophysics/seismology.py`
+**Source**: `ontic/geophysics/seismology.py`
 
 $$\rho\ddot{\mathbf{u}} = \nabla\cdot\boldsymbol{\sigma} + \mathbf{f}$$
 
@@ -1889,7 +1889,7 @@ $$\rho\ddot{\mathbf{u}} = \nabla\cdot\boldsymbol{\sigma} + \mathbf{f}$$
 
 #### 42.2 Mantle Convection
 
-**Source**: `tensornet/geophysics/mantle_convection.py`
+**Source**: `ontic/geophysics/mantle_convection.py`
 
 $$\nabla\cdot\boldsymbol{\sigma} + \text{Ra}\,T\hat{z} = 0, \quad \frac{\partial T}{\partial t} + \mathbf{u}\cdot\nabla T = \nabla^2 T$$
 
@@ -1899,7 +1899,7 @@ $$\nabla\cdot\boldsymbol{\sigma} + \text{Ra}\,T\hat{z} = 0, \quad \frac{\partial
 
 #### 42.3 Geodynamo
 
-**Source**: `tensornet/geophysics/geodynamo.py`
+**Source**: `ontic/geophysics/geodynamo.py`
 
 $$\frac{\partial\mathbf{u}}{\partial t} + 2\boldsymbol{\Omega}\times\mathbf{u} = -\nabla p + \text{Ra}\,T\hat{r} + \frac{1}{\mu_0}(\nabla\times\mathbf{B})\times\mathbf{B} + \nu\nabla^2\mathbf{u}$$
 
@@ -1909,7 +1909,7 @@ $$\frac{\partial\mathbf{u}}{\partial t} + 2\boldsymbol{\Omega}\times\mathbf{u} =
 
 #### 42.4 Glaciology
 
-**Source**: `tensornet/geophysics/glaciology.py`
+**Source**: `ontic/geophysics/glaciology.py`
 
 $$\frac{\partial H}{\partial t} = -\nabla\cdot(\bar{\mathbf{u}}\,H) + a_s, \quad \dot\varepsilon = A\tau^n \quad\text{(Glen's flow law, }n\approx 3\text{)}$$
 
@@ -1919,7 +1919,7 @@ $$\frac{\partial H}{\partial t} = -\nabla\cdot(\bar{\mathbf{u}}\,H) + a_s, \quad
 
 #### 42.5 Atmospheric Physics
 
-**Source**: `tensornet/geophysics/atmosphere.py`
+**Source**: `ontic/geophysics/atmosphere.py`
 
 - Chapman ozone photochemistry cycle
 - Cloud microphysics (Kessler warm-rain scheme)
@@ -1927,7 +1927,7 @@ $$\frac{\partial H}{\partial t} = -\nabla\cdot(\bar{\mathbf{u}}\,H) + a_s, \quad
 
 #### 42.6 Oceanography
 
-**Source**: `tensornet/geophysics/oceanography.py`
+**Source**: `ontic/geophysics/oceanography.py`
 
 $$\frac{\partial u}{\partial t} - fv = -\frac{1}{\rho}\frac{\partial p}{\partial x} + A_H\nabla^2 u \quad\text{(primitive equations on β-plane)}$$
 
@@ -1939,11 +1939,11 @@ $$\frac{\partial u}{\partial t} - fv = -\frac{1}{\rho}\frac{\partial p}{\partial
 
 ### 43. Materials Science
 
-**Source**: `tensornet/materials/` (~2,046 LOC across 7 files)
+**Source**: `ontic/materials/` (~2,046 LOC across 7 files)
 
 #### 43.1 Mechanical Properties
 
-**Source**: `tensornet/materials/mechanical_properties.py`
+**Source**: `ontic/materials/mechanical_properties.py`
 
 $$C_{ij} \quad\text{(full elastic tensor)}, \quad \sigma_{\text{Frenkel}} = \frac{G}{2\pi} \quad\text{(ideal shear strength)}$$
 
@@ -1954,7 +1954,7 @@ $$C_{ij} \quad\text{(full elastic tensor)}, \quad \sigma_{\text{Frenkel}} = \fra
 
 #### 43.2 First-Principles Materials Design
 
-**Source**: `tensornet/materials/first_principles_design.py`
+**Source**: `ontic/materials/first_principles_design.py`
 
 $$\Delta H_f(A_x B_y) \leq 0 \;\wedge\; \text{on convex hull} \quad\text{(thermodynamic stability)}$$
 
@@ -1964,7 +1964,7 @@ $$\Delta H_f(A_x B_y) \leq 0 \;\wedge\; \text{on convex hull} \quad\text{(thermo
 
 #### 43.3 Microstructure Evolution
 
-**Source**: `tensornet/materials/microstructure.py`
+**Source**: `ontic/materials/microstructure.py`
 
 $$\Delta E = -J\sum_{\langle ij\rangle}\delta_{s_i s_j} \quad\text{(Potts model grain growth)}$$
 
@@ -1974,7 +1974,7 @@ $$\Delta E = -J\sum_{\langle ij\rangle}\delta_{s_i s_j} \quad\text{(Potts model 
 
 #### 43.4 Radiation Damage
 
-**Source**: `tensornet/materials/radiation_damage.py`
+**Source**: `ontic/materials/radiation_damage.py`
 
 $$T_{\max} = \frac{4m_1 m_2}{(m_1+m_2)^2}\,E \quad\text{(max energy transfer)}$$
 
@@ -1984,7 +1984,7 @@ $$T_{\max} = \frac{4m_1 m_2}{(m_1+m_2)^2}\,E \quad\text{(max energy transfer)}$$
 
 #### 43.5 Polymers & Soft Matter
 
-**Source**: `tensornet/materials/polymers_soft_matter.py`
+**Source**: `ontic/materials/polymers_soft_matter.py`
 
 $$\frac{\Delta G_{\text{mix}}}{k_BT} = n_1\ln\phi_1 + n_2\ln\phi_2 + \chi\,n_1\phi_2 \quad\text{(Flory-Huggins)}$$
 
@@ -1994,7 +1994,7 @@ $$\frac{\Delta G_{\text{mix}}}{k_BT} = n_1\ln\phi_1 + n_2\ln\phi_2 + \chi\,n_1\p
 
 #### 43.6 Ceramics & High-Temperature Materials
 
-**Source**: `tensornet/materials/ceramics.py`
+**Source**: `ontic/materials/ceramics.py`
 
 - Viscous + solid-state sintering model
 - UHTC oxidation kinetics (parabolic rate law)
@@ -2004,11 +2004,11 @@ $$\frac{\Delta G_{\text{mix}}}{k_BT} = n_1\ln\phi_1 + n_2\ln\phi_2 + \chi\,n_1\p
 
 ### 44. Computational Chemistry
 
-**Source**: `tensornet/chemistry/` (~2,000 LOC across 7 files)
+**Source**: `ontic/chemistry/` (~2,000 LOC across 7 files)
 
 #### 44.1 Potential Energy Surface Construction
 
-**Source**: `tensornet/chemistry/pes.py`
+**Source**: `ontic/chemistry/pes.py`
 
 $$E(\mathbf{R}) = E_{\text{BO}}(\mathbf{R}) \quad\text{(Born-Oppenheimer PES)}$$
 
@@ -2018,7 +2018,7 @@ $$E(\mathbf{R}) = E_{\text{BO}}(\mathbf{R}) \quad\text{(Born-Oppenheimer PES)}$$
 
 #### 44.2 Reaction Rate Theory
 
-**Source**: `tensornet/chemistry/reaction_rate.py`
+**Source**: `ontic/chemistry/reaction_rate.py`
 
 $$k_{\text{TST}} = \frac{k_BT}{h}\frac{Q^\ddagger}{Q_R}\exp\!\left(-\frac{E_a}{k_BT}\right)\kappa(T) \quad\text{(harmonic TST + Wigner tunneling)}$$
 
@@ -2028,7 +2028,7 @@ $$k_{\text{TST}} = \frac{k_BT}{h}\frac{Q^\ddagger}{Q_R}\exp\!\left(-\frac{E_a}{k
 
 #### 44.3 Quantum Reactive Dynamics
 
-**Source**: `tensornet/chemistry/quantum_reactive.py`
+**Source**: `ontic/chemistry/quantum_reactive.py`
 
 $$\Psi = \sum_J A_J \prod_\kappa \varphi_\kappa^{(J)} \quad\text{(MCTDH multiconfigurational)}$$
 
@@ -2038,7 +2038,7 @@ $$\Psi = \sum_J A_J \prod_\kappa \varphi_\kappa^{(J)} \quad\text{(MCTDH multicon
 
 #### 44.4 Nonadiabatic Dynamics
 
-**Source**: `tensornet/chemistry/nonadiabatic.py`
+**Source**: `ontic/chemistry/nonadiabatic.py`
 
 $$g_{i\to j} = \max\!\left(0,\,-\frac{2\,\text{Re}(a_j^* a_i\,d_{ji}\cdot\dot{\mathbf{R}})\,\Delta t}{|a_i|^2}\right) \quad\text{(FSSH hopping)}$$
 
@@ -2048,7 +2048,7 @@ $$g_{i\to j} = \max\!\left(0,\,-\frac{2\,\text{Re}(a_j^* a_i\,d_{ji}\cdot\dot{\m
 
 #### 44.5 Photochemistry
 
-**Source**: `tensornet/chemistry/photochemistry.py`
+**Source**: `ontic/chemistry/photochemistry.py`
 
 - Excited-state relaxation pathways: IC and ISC rates
 - Photodissociation on model PES with branching ratios
@@ -2056,7 +2056,7 @@ $$g_{i\to j} = \max\!\left(0,\,-\frac{2\,\text{Re}(a_j^* a_i\,d_{ji}\cdot\dot{\m
 
 #### 44.6 Spectroscopy Simulation
 
-**Source**: `tensornet/chemistry/spectroscopy.py`
+**Source**: `ontic/chemistry/spectroscopy.py`
 
 $$\alpha(\omega) \propto \text{Im}[\varepsilon(\omega)], \quad I_{\text{IR}} \propto \left|\frac{\partial\mu}{\partial Q}\right|^2, \quad I_{\text{Raman}} \propto \left|\frac{\partial\alpha}{\partial Q}\right|^2$$
 
@@ -2069,11 +2069,11 @@ $$\alpha(\omega) \propto \text{Im}[\varepsilon(\omega)], \quad I_{\text{IR}} \pr
 
 ### 45. Optics (Expanded)
 
-**Source**: `tensornet/optics/` (~1,743 LOC across 5 files)
+**Source**: `ontic/optics/` (~1,743 LOC across 5 files)
 
 #### 45.1 Physical Optics
 
-**Source**: `tensornet/optics/physical_optics.py`
+**Source**: `ontic/optics/physical_optics.py`
 
 $$U(P) = \frac{1}{i\lambda}\iint U_0\,\frac{e^{ikr}}{r}\,\cos\theta\;dS \quad\text{(Huygens-Fresnel)}$$
 
@@ -2083,7 +2083,7 @@ $$U(P) = \frac{1}{i\lambda}\iint U_0\,\frac{e^{ikr}}{r}\,\cos\theta\;dS \quad\te
 
 #### 45.2 Quantum Optics
 
-**Source**: `tensornet/optics/quantum_optics.py`
+**Source**: `ontic/optics/quantum_optics.py`
 
 $$H = \hbar\omega_c\,a^\dagger a + \frac{\hbar\omega_a}{2}\sigma_z + \hbar g(a^\dagger\sigma_- + a\sigma_+) \quad\text{(Jaynes-Cummings)}$$
 
@@ -2093,7 +2093,7 @@ $$H = \hbar\omega_c\,a^\dagger a + \frac{\hbar\omega_a}{2}\sigma_z + \hbar g(a^\
 
 #### 45.3 Laser Physics
 
-**Source**: `tensornet/optics/laser_physics.py`
+**Source**: `ontic/optics/laser_physics.py`
 
 $$\frac{dN}{dt} = R_p - \frac{N}{\tau} - g(N)S, \quad \frac{dS}{dt} = [\Gamma g(N) - 1/\tau_p]S + \beta\frac{N}{\tau}$$
 
@@ -2103,7 +2103,7 @@ $$\frac{dN}{dt} = R_p - \frac{N}{\tau} - g(N)S, \quad \frac{dS}{dt} = [\Gamma g(
 
 #### 45.4 Ultrafast Optics
 
-**Source**: `tensornet/optics/ultrafast_optics.py`
+**Source**: `ontic/optics/ultrafast_optics.py`
 
 $$i\frac{\partial A}{\partial z} + \frac{\beta_2}{2}\frac{\partial^2 A}{\partial t^2} + \gamma|A|^2 A = 0 \quad\text{(NLSE)}$$
 
@@ -2116,11 +2116,11 @@ $$i\frac{\partial A}{\partial z} + \frac{\beta_2}{2}\frac{\partial^2 A}{\partial
 
 ### 46. Electromagnetism (Expanded)
 
-**Source**: `tensornet/em/` (~2,297 LOC across 7 files)
+**Source**: `ontic/em/` (~2,297 LOC across 7 files)
 
 #### 46.1 Electrostatics
 
-**Source**: `tensornet/em/electrostatics.py`
+**Source**: `ontic/em/electrostatics.py`
 
 $$\nabla^2\phi = -\rho/\varepsilon_0 \quad\text{(Poisson equation)}$$
 
@@ -2130,7 +2130,7 @@ $$\nabla^2\phi = -\rho/\varepsilon_0 \quad\text{(Poisson equation)}$$
 
 #### 46.2 Magnetostatics
 
-**Source**: `tensornet/em/magnetostatics.py`
+**Source**: `ontic/em/magnetostatics.py`
 
 $$\mathbf{B}(\mathbf{r}) = \frac{\mu_0}{4\pi}\int \frac{\mathbf{J}(\mathbf{r}')\times\hat{r}'}{r'^2}\,dV'$$
 
@@ -2141,7 +2141,7 @@ $$\mathbf{B}(\mathbf{r}) = \frac{\mu_0}{4\pi}\int \frac{\mathbf{J}(\mathbf{r}')\
 
 #### 46.3 Frequency-Domain EM
 
-**Source**: `tensornet/em/frequency_domain.py`
+**Source**: `ontic/em/frequency_domain.py`
 
 $$\nabla^2\mathbf{E} + k^2\mathbf{E} = 0 \quad\text{(Helmholtz equation)}$$
 
@@ -2151,7 +2151,7 @@ $$\nabla^2\mathbf{E} + k^2\mathbf{E} = 0 \quad\text{(Helmholtz equation)}$$
 
 #### 46.4 EM Wave Propagation
 
-**Source**: `tensornet/em/wave_propagation.py`
+**Source**: `ontic/em/wave_propagation.py`
 
 $$|\nabla S|^2 = n^2 \quad\text{(eikonal equation)}$$
 
@@ -2162,7 +2162,7 @@ $$|\nabla S|^2 = n^2 \quad\text{(eikonal equation)}$$
 
 #### 46.5 Computational Photonics
 
-**Source**: `tensornet/em/computational_photonics.py`
+**Source**: `ontic/em/computational_photonics.py`
 
 $$\nabla\times[\varepsilon^{-1}\nabla\times\mathbf{H}] = (\omega/c)^2\mathbf{H}$$
 
@@ -2173,7 +2173,7 @@ $$\nabla\times[\varepsilon^{-1}\nabla\times\mathbf{H}] = (\omega/c)^2\mathbf{H}$
 
 #### 46.6 Antenna & Microwave Engineering
 
-**Source**: `tensornet/em/antenna_microwave.py`
+**Source**: `ontic/em/antenna_microwave.py`
 
 $$Z_{\text{in}} = Z_0\frac{Z_L + jZ_0\tan(\beta l)}{Z_0 + jZ_L\tan(\beta l)} \quad\text{(transmission line)}$$
 
@@ -2186,11 +2186,11 @@ $$Z_{\text{in}} = Z_0\frac{Z_L + jZ_0\tan(\beta l)}{Z_0 + jZ_L\tan(\beta l)} \qu
 
 ### 47. Statistical Mechanics (Expanded)
 
-**Source**: `tensornet/statmech/` (~2,000 LOC), `tensornet/md/` (~967 LOC), `tensornet/heat_transfer/` (~978 LOC)
+**Source**: `ontic/statmech/` (~2,000 LOC), `ontic/md/` (~967 LOC), `ontic/heat_transfer/` (~978 LOC)
 
 #### 47.1 Equilibrium Statistical Mechanics
 
-**Source**: `tensornet/statmech/equilibrium.py`
+**Source**: `ontic/statmech/equilibrium.py`
 
 $$Z = \sum_{\{s\}} e^{-\beta H(s)}, \quad \langle A\rangle = \frac{1}{Z}\sum_{\{s\}} A(s)\,e^{-\beta H(s)}$$
 
@@ -2201,7 +2201,7 @@ $$Z = \sum_{\{s\}} e^{-\beta H(s)}, \quad \langle A\rangle = \frac{1}{Z}\sum_{\{
 
 #### 47.2 Non-Equilibrium Statistical Mechanics
 
-**Source**: `tensornet/statmech/non_equilibrium.py`
+**Source**: `ontic/statmech/non_equilibrium.py`
 
 $$\langle e^{-\beta W}\rangle = e^{-\beta\Delta F} \quad\text{(Jarzynski equality)}$$
 
@@ -2212,7 +2212,7 @@ $$\langle e^{-\beta W}\rangle = e^{-\beta\Delta F} \quad\text{(Jarzynski equalit
 
 #### 47.3 Molecular Dynamics
 
-**Source**: `tensornet/md/engine.py`
+**Source**: `ontic/md/engine.py`
 
 $$\mathbf{r}(t+\Delta t) = 2\mathbf{r}(t) - \mathbf{r}(t-\Delta t) + \frac{\mathbf{F}(t)}{m}\Delta t^2 \quad\text{(Velocity Verlet)}$$
 
@@ -2223,7 +2223,7 @@ $$\mathbf{r}(t+\Delta t) = 2\mathbf{r}(t) - \mathbf{r}(t-\Delta t) + \frac{\math
 
 #### 47.4 Advanced Monte Carlo Methods
 
-**Source**: `tensornet/statmech/monte_carlo.py`
+**Source**: `ontic/statmech/monte_carlo.py`
 
 $$E[\Psi_T] = \frac{\langle\Psi_T|H|\Psi_T\rangle}{\langle\Psi_T|\Psi_T\rangle} \quad\text{(VMC variational principle)}$$
 
@@ -2234,7 +2234,7 @@ $$E[\Psi_T] = \frac{\langle\Psi_T|H|\Psi_T\rangle}{\langle\Psi_T|\Psi_T\rangle} 
 
 #### 47.5 Heat Transfer & Radiation
 
-**Source**: `tensornet/heat_transfer/radiation.py`
+**Source**: `ontic/heat_transfer/radiation.py`
 
 $$q = \varepsilon\sigma T^4 \quad\text{(Stefan-Boltzmann)}, \quad F_{ij} = \frac{1}{A_i}\int_{A_i}\int_{A_j}\frac{\cos\theta_i\cos\theta_j}{\pi r^2}\,dA_j\,dA_i$$
 
@@ -2247,11 +2247,11 @@ $$q = \varepsilon\sigma T^4 \quad\text{(Stefan-Boltzmann)}, \quad F_{ij} = \frac
 
 ### 48. Plasma Physics (Expanded)
 
-**Source**: `tensornet/plasma/` (~2,218 LOC across 7 files)
+**Source**: `ontic/plasma/` (~2,218 LOC across 7 files)
 
 #### 48.1 Extended MHD
 
-**Source**: `tensornet/plasma/extended_mhd.py`
+**Source**: `ontic/plasma/extended_mhd.py`
 
 $$\mathbf{E} + \mathbf{v}\times\mathbf{B} = \eta\mathbf{J} + \frac{1}{ne}(\mathbf{J}\times\mathbf{B}) \quad\text{(Hall MHD)}$$
 
@@ -2261,7 +2261,7 @@ $$\mathbf{E} + \mathbf{v}\times\mathbf{B} = \eta\mathbf{J} + \frac{1}{ne}(\mathb
 
 #### 48.2 Gyrokinetics
 
-**Source**: `tensornet/plasma/gyrokinetics.py`
+**Source**: `ontic/plasma/gyrokinetics.py`
 
 $$\frac{\partial f}{\partial t} + \dot{\mathbf{R}}\cdot\nabla f + \dot{v}_\|\frac{\partial f}{\partial v_\|} = C[f]$$
 
@@ -2271,7 +2271,7 @@ $$\frac{\partial f}{\partial t} + \dot{\mathbf{R}}\cdot\nabla f + \dot{v}_\|\fra
 
 #### 48.3 Magnetic Reconnection
 
-**Source**: `tensornet/plasma/magnetic_reconnection.py`
+**Source**: `ontic/plasma/magnetic_reconnection.py`
 
 $$v_{\text{in}}/v_A = S^{-1/2} \quad\text{(Sweet-Parker)}, \quad N_{\text{plasmoid}} \sim S^{3/8}$$
 
@@ -2281,7 +2281,7 @@ $$v_{\text{in}}/v_A = S^{-1/2} \quad\text{(Sweet-Parker)}, \quad N_{\text{plasmo
 
 #### 48.4 Laser-Plasma Interaction
 
-**Source**: `tensornet/plasma/laser_plasma.py`
+**Source**: `ontic/plasma/laser_plasma.py`
 
 - Stimulated Raman scattering (SRS) growth rate
 - Stimulated Brillouin scattering (SBS) and parametric instabilities
@@ -2289,7 +2289,7 @@ $$v_{\text{in}}/v_A = S^{-1/2} \quad\text{(Sweet-Parker)}, \quad N_{\text{plasmo
 
 #### 48.5 Space & Astrophysical Plasma
 
-**Source**: `tensornet/plasma/space_plasma.py`
+**Source**: `ontic/plasma/space_plasma.py`
 
 $$\frac{\partial f}{\partial t} + v\mu\frac{\partial f}{\partial z} = \frac{\partial}{\partial\mu}\bigl(D_{\mu\mu}\frac{\partial f}{\partial\mu}\bigr) \quad\text{(Parker transport)}$$
 
@@ -2299,7 +2299,7 @@ $$\frac{\partial f}{\partial t} + v\mu\frac{\partial f}{\partial z} = \frac{\par
 
 #### 48.6 Dusty Plasmas
 
-**Source**: `tensornet/plasma/dusty_plasmas.py`
+**Source**: `ontic/plasma/dusty_plasmas.py`
 
 $$V(r) = \frac{Q^2}{4\pi\varepsilon_0 r}\,e^{-r/\lambda_D} \quad\text{(Yukawa/Debye-Hückel)}$$
 
@@ -2311,11 +2311,11 @@ $$V(r) = \frac{Q^2}{4\pi\varepsilon_0 r}\,e^{-r/\lambda_D} \quad\text{(Yukawa/De
 
 ### 49. General & Special Relativity
 
-**Source**: `tensornet/relativity/` (~756 LOC across 3 files)
+**Source**: `ontic/relativity/` (~756 LOC across 3 files)
 
 #### 49.1 Relativistic Mechanics
 
-**Source**: `tensornet/relativity/relativistic_mechanics.py`
+**Source**: `ontic/relativity/relativistic_mechanics.py`
 
 $$p^\mu = m\frac{dx^\mu}{d\tau} = (\gamma mc, \gamma m\mathbf{v}) \quad\text{(4-momentum)}$$
 
@@ -2326,7 +2326,7 @@ $$p^\mu = m\frac{dx^\mu}{d\tau} = (\gamma mc, \gamma m\mathbf{v}) \quad\text{(4-
 
 #### 49.2 Numerical General Relativity
 
-**Source**: `tensornet/relativity/numerical_gr.py`
+**Source**: `ontic/relativity/numerical_gr.py`
 
 $$\partial_t\tilde\gamma_{ij} = -2\alpha\tilde A_{ij} + \beta^k\partial_k\tilde\gamma_{ij} + \cdots \quad\text{(BSSN)}$$
 
@@ -2339,11 +2339,11 @@ $$\partial_t\tilde\gamma_{ij} = -2\alpha\tilde A_{ij} + \beta^k\partial_k\tilde\
 
 ### 50. Multi-Physics Coupling & Cross-Cutting Methods
 
-**Source**: `tensornet/{coupled,fsi,multiphase,porous_media,free_surface,multiscale,membrane_bio,robotics_physics,ml_physics,mesh_amr}/` (~4,314 LOC)
+**Source**: `ontic/{coupled,fsi,multiphase,porous_media,free_surface,multiscale,membrane_bio,robotics_physics,ml_physics,mesh_amr}/` (~4,314 LOC)
 
 #### 50.1 Fluid-Structure Interaction
 
-**Source**: `tensornet/fsi/` (~485 LOC)
+**Source**: `ontic/fsi/` (~485 LOC)
 
 - Partitioned coupling: fluid traction → solid load → mesh update (ALE)
 - Aeroelastic flutter analysis and vortex-induced vibration
@@ -2351,7 +2351,7 @@ $$\partial_t\tilde\gamma_{ij} = -2\alpha\tilde A_{ij} + \beta^k\partial_k\tilde\
 
 #### 50.2 Thermo-Mechanical Coupling
 
-**Source**: `tensornet/coupled/thermo_mechanical.py`
+**Source**: `ontic/coupled/thermo_mechanical.py`
 
 $$\boldsymbol{\sigma} = \mathbf{C}(\boldsymbol{\varepsilon} - \alpha\Delta T\,\mathbf{I}) \quad\text{(thermal stress)}$$
 
@@ -2360,7 +2360,7 @@ $$\boldsymbol{\sigma} = \mathbf{C}(\boldsymbol{\varepsilon} - \alpha\Delta T\,\m
 
 #### 50.3 Electro-Mechanical Coupling
 
-**Source**: `tensornet/coupled/electro_mechanical.py`
+**Source**: `ontic/coupled/electro_mechanical.py`
 
 $$\boldsymbol{\sigma} = \mathbf{C}\boldsymbol{\varepsilon} - \mathbf{e}^T\mathbf{E}, \quad \mathbf{D} = \mathbf{e}\boldsymbol{\varepsilon} + \boldsymbol{\kappa}\mathbf{E} \quad\text{(piezoelectric)}$$
 
@@ -2369,7 +2369,7 @@ $$\boldsymbol{\sigma} = \mathbf{C}\boldsymbol{\varepsilon} - \mathbf{e}^T\mathbf
 
 #### 50.4 Coupled MHD
 
-**Source**: `tensornet/coupled/coupled_mhd.py`
+**Source**: `ontic/coupled/coupled_mhd.py`
 
 - Hartmann liquid metal flow with Lorentz braking
 - Crystal growth in magnetic field
@@ -2377,7 +2377,7 @@ $$\boldsymbol{\sigma} = \mathbf{C}\boldsymbol{\varepsilon} - \mathbf{e}^T\mathbf
 
 #### 50.5 Multiphase Flow
 
-**Source**: `tensornet/multiphase/multiphase_flow.py`
+**Source**: `ontic/multiphase/multiphase_flow.py`
 
 $$\frac{\partial\phi}{\partial t} + \mathbf{u}\cdot\nabla\phi = M\nabla^2(\phi^3 - \phi - \varepsilon^2\nabla^2\phi) \quad\text{(Cahn-Hilliard)}$$
 
@@ -2386,7 +2386,7 @@ $$\frac{\partial\phi}{\partial t} + \mathbf{u}\cdot\nabla\phi = M\nabla^2(\phi^3
 
 #### 50.6 Porous Media Flow
 
-**Source**: `tensornet/porous_media/` (~390 LOC)
+**Source**: `ontic/porous_media/` (~390 LOC)
 
 $$\mathbf{u} = -\frac{k}{\mu}\nabla p \quad\text{(Darcy's law)}$$
 
@@ -2395,7 +2395,7 @@ $$\mathbf{u} = -\frac{k}{\mu}\nabla p \quad\text{(Darcy's law)}$$
 
 #### 50.7 Free Surface Flow
 
-**Source**: `tensornet/free_surface/` (~264 LOC)
+**Source**: `ontic/free_surface/` (~264 LOC)
 
 - Level-set method in QTT format with CSF surface tension
 - Thin-film equation and contact angle dynamics
@@ -2403,7 +2403,7 @@ $$\mathbf{u} = -\frac{k}{\mu}\nabla p \quad\text{(Darcy's law)}$$
 
 #### 50.8 Multiscale Methods
 
-**Source**: `tensornet/multiscale/multiscale.py`
+**Source**: `ontic/multiscale/multiscale.py`
 
 - FE² concurrent macro-micro coupling
 - Homogenization engine for effective properties
@@ -2411,7 +2411,7 @@ $$\mathbf{u} = -\frac{k}{\mu}\nabla p \quad\text{(Darcy's law)}$$
 
 #### 50.9 Phase-Field Modeling
 
-**Source**: `tensornet/phase_field/` + `tensornet/materials/microstructure.py`
+**Source**: `ontic/phase_field/` + `ontic/materials/microstructure.py`
 
 $$\frac{\partial c}{\partial t} = \nabla\cdot(M\nabla\mu), \quad \mu = f'(c) - \varepsilon^2\nabla^2 c \quad\text{(Cahn-Hilliard)}$$
 
@@ -2420,7 +2420,7 @@ $$\frac{\partial c}{\partial t} = \nabla\cdot(M\nabla\mu), \quad \mu = f'(c) - \
 
 #### 50.10 ML for Physics
 
-**Source**: `tensornet/ml_physics/` (~360 LOC)
+**Source**: `ontic/ml_physics/` (~360 LOC)
 
 $$\mathcal{L}_{\text{PINN}} = \lambda_{\text{PDE}}\|N[u_\theta]\|^2 + \lambda_{\text{data}}\|u_\theta - u_{\text{obs}}\|^2$$
 
@@ -2430,7 +2430,7 @@ $$\mathcal{L}_{\text{PINN}} = \lambda_{\text{PDE}}\|N[u_\theta]\|^2 + \lambda_{\
 
 #### 50.11 Adaptive Mesh Refinement
 
-**Source**: `tensornet/mesh_amr/` (~390 LOC)
+**Source**: `ontic/mesh_amr/` (~390 LOC)
 
 - Octree/quadtree with QTT indexing via Morton Z-curve
 - h-adaptivity: refinement criterion $\|\nabla u\| > \theta_{\text{ref}}$
@@ -2438,7 +2438,7 @@ $$\mathcal{L}_{\text{PINN}} = \lambda_{\text{PDE}}\|N[u_\theta]\|^2 + \lambda_{\
 
 #### 50.12 Membrane Biophysics
 
-**Source**: `tensornet/membrane_bio/` (~276 LOC)
+**Source**: `ontic/membrane_bio/` (~276 LOC)
 
 $$\Delta G(r) = 2\pi\gamma r - \pi r^2\sigma_e \quad\text{(electroporation pore nucleation)}$$
 
@@ -2447,7 +2447,7 @@ $$\Delta G(r) = 2\pi\gamma r - \pi r^2\sigma_e \quad\text{(electroporation pore 
 
 #### 50.13 Robotics Physics
 
-**Source**: `tensornet/robotics_physics/` (~388 LOC)
+**Source**: `ontic/robotics_physics/` (~388 LOC)
 
 $$\boldsymbol{\tau} = \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{g}(\mathbf{q}) \quad\text{(manipulator dynamics)}$$
 
@@ -2457,7 +2457,7 @@ $$\boldsymbol{\tau} = \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\math
 
 #### 50.14 Applied Physics Extensions
 
-**Source**: `tensornet/{acoustics,biomedical,biology,environmental}/` (~2,365 LOC)
+**Source**: `ontic/{acoustics,biomedical,biology,environmental}/` (~2,365 LOC)
 
 - **Applied Acoustics** (`acoustics/applied_acoustics.py`): Lighthill aeroacoustics, FW-H surface integral, LEE linearized Euler, jet noise (Tam-Auriault)
 - **Biomedical Engineering** (`biomedical/biomedical.py`): Bidomain cardiac electrophysiology (FitzHugh-Nagumo), drug delivery PK model, Holzapfel-Ogden tissue mechanics

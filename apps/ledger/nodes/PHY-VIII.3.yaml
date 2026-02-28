@@ -13,7 +13,7 @@ state: "V0.2"
 description: "O(N), Green's functions"
 
 source_files:
-  - "tensornet/electronic_structure/tight_binding.py"
+  - "ontic/electronic_structure/tight_binding.py"
 
 tests:
   smoke:

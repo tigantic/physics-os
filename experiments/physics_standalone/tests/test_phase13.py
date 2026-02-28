@@ -19,7 +19,7 @@ class TestDigitalTwin:
     
     def test_state_sync_imports(self):
         """Test state synchronization imports."""
-        from tensornet.infra.digital_twin import (
+        from ontic.infra.digital_twin import (
             StateSync,
             StateSynchronizer,
             SyncConfig,
@@ -32,12 +32,12 @@ class TestDigitalTwin:
     
     def test_reduced_order_models(self):
         """Test reduced-order models."""
-        from tensornet.infra.digital_twin import (
+        from ontic.infra.digital_twin import (
             PODModel,
             DMDModel,
             AutoencoderROM,
         )
-        from tensornet.infra.digital_twin.reduced_order import ROMConfig
+        from ontic.infra.digital_twin.reduced_order import ROMConfig
         
         # Create snapshot data
         n_snapshots = 50
@@ -54,13 +54,13 @@ class TestDigitalTwin:
     
     def test_health_monitoring(self):
         """Test health monitoring systems."""
-        from tensornet.infra.digital_twin import (
+        from ontic.infra.digital_twin import (
             HealthMonitor,
             StructuralHealth,
             ThermalHealth,
             AnomalyDetector,
         )
-        from tensornet.infra.digital_twin.health_monitor import HealthConfig
+        from ontic.infra.digital_twin.health_monitor import HealthConfig
         
         # Test health monitor creation
         config = HealthConfig()
@@ -71,12 +71,12 @@ class TestDigitalTwin:
     
     def test_predictive_maintenance(self):
         """Test predictive maintenance."""
-        from tensornet.infra.digital_twin import (
+        from ontic.infra.digital_twin import (
             RULEstimator,
             MaintenanceScheduler,
             PredictiveMaintenance,
         )
-        from tensornet.infra.digital_twin.predictive import MaintenanceConfig
+        from ontic.infra.digital_twin.predictive import MaintenanceConfig
         
         # Test RUL estimator creation
         config = MaintenanceConfig()
@@ -87,7 +87,7 @@ class TestDigitalTwin:
     
     def test_digital_twin_creation(self):
         """Test digital twin orchestration."""
-        from tensornet.infra.digital_twin import (
+        from ontic.infra.digital_twin import (
             DigitalTwin,
             TwinMode,
             create_vehicle_twin,
@@ -108,7 +108,7 @@ class TestMLSurrogates:
     
     def test_base_surrogates(self):
         """Test base surrogate models."""
-        from tensornet.ml.ml_surrogates import (
+        from ontic.ml.ml_surrogates import (
             SurrogateConfig,
             MLPSurrogate,
             ResNetSurrogate,
@@ -134,7 +134,7 @@ class TestMLSurrogates:
     
     def test_physics_informed_nets(self):
         """Test physics-informed neural networks."""
-        from tensornet.ml.ml_surrogates import (
+        from ontic.ml.ml_surrogates import (
             PINNConfig,
             PhysicsInformedNet,
             NavierStokesPINN,
@@ -160,7 +160,7 @@ class TestMLSurrogates:
     
     def test_deeponet(self):
         """Test Deep Operator Networks."""
-        from tensornet.ml.ml_surrogates import (
+        from ontic.ml.ml_surrogates import (
             DeepONetConfig,
             DeepONet,
         )
@@ -182,7 +182,7 @@ class TestMLSurrogates:
     
     def test_fourier_neural_operator(self):
         """Test Fourier Neural Operators."""
-        from tensornet.ml.ml_surrogates import (
+        from ontic.ml.ml_surrogates import (
             FNOConfig,
             FNO2d,
             FNO3d,
@@ -209,7 +209,7 @@ class TestMLSurrogates:
     
     def test_uncertainty_quantification(self):
         """Test uncertainty quantification methods."""
-        from tensornet.ml.ml_surrogates import (
+        from ontic.ml.ml_surrogates import (
             UncertaintyConfig,
             EnsembleUQ,
             MCDropoutUQ,
@@ -218,7 +218,7 @@ class TestMLSurrogates:
         )
         
         # Test MC Dropout - use UncertaintyConfig
-        from tensornet.ml.ml_surrogates import SurrogateConfig, MLPSurrogate
+        from ontic.ml.ml_surrogates import SurrogateConfig, MLPSurrogate
         
         config = SurrogateConfig(
             input_dim=4,
@@ -240,14 +240,14 @@ class TestMLSurrogates:
     
     def test_training_utilities(self):
         """Test training utilities."""
-        from tensornet.ml.ml_surrogates import (
+        from ontic.ml.ml_surrogates import (
             TrainingConfig,
             SurrogateTrainer,
             DataAugmentor,
             ActiveLearner,
             train_surrogate,
         )
-        from tensornet.ml.ml_surrogates import SurrogateConfig, MLPSurrogate
+        from ontic.ml.ml_surrogates import SurrogateConfig, MLPSurrogate
         
         # Create model and data
         config = SurrogateConfig(
@@ -288,7 +288,7 @@ class TestDistributedComputing:
     
     def test_domain_decomposition(self):
         """Test domain decomposition."""
-        from tensornet.engine.distributed import (
+        from ontic.engine.distributed import (
             DomainConfig,
             DomainDecomposition,
             decompose_domain,
@@ -318,7 +318,7 @@ class TestDistributedComputing:
     
     def test_gpu_manager(self):
         """Test GPU resource management."""
-        from tensornet.engine.distributed import (
+        from ontic.engine.distributed import (
             GPUConfig,
             GPUManager,
             get_available_gpus,
@@ -342,7 +342,7 @@ class TestDistributedComputing:
     
     def test_communication(self):
         """Test communication patterns."""
-        from tensornet.engine.distributed import (
+        from ontic.engine.distributed import (
             Communicator,
             AllReduceOp,
             all_reduce,
@@ -364,7 +364,7 @@ class TestDistributedComputing:
     
     def test_task_scheduler(self):
         """Test distributed task scheduling."""
-        from tensornet.engine.distributed import (
+        from ontic.engine.distributed import (
             TaskConfig,
             TaskGraph,
             DistributedScheduler,
@@ -397,7 +397,7 @@ class TestDistributedComputing:
     
     def test_parallel_solvers(self):
         """Test parallel iterative solvers."""
-        from tensornet.engine.distributed import (
+        from ontic.engine.distributed import (
             ParallelConfig,
             ParallelCGSolver,
             parallel_solve,
@@ -432,12 +432,12 @@ class TestPhase13Integration:
     
     def test_surrogate_with_twin(self):
         """Test using ML surrogate within digital twin."""
-        from tensornet.ml.ml_surrogates import (
+        from ontic.ml.ml_surrogates import (
             SurrogateConfig,
             MLPSurrogate,
             train_surrogate,
         )
-        from tensornet.infra.digital_twin import (
+        from ontic.infra.digital_twin import (
             DigitalTwin,
             create_vehicle_twin,
         )
@@ -468,13 +468,13 @@ class TestPhase13Integration:
     
     def test_distributed_surrogate_training(self):
         """Test distributed training of surrogates."""
-        from tensornet.ml.ml_surrogates import (
+        from ontic.ml.ml_surrogates import (
             SurrogateConfig,
             MLPSurrogate,
             TrainingConfig,
             SurrogateTrainer,
         )
-        from tensornet.engine.distributed import (
+        from ontic.engine.distributed import (
             distribute_workload,
             execute_parallel,
         )
@@ -505,7 +505,7 @@ class TestPhase13Integration:
     
     def test_full_phase13_imports(self):
         """Test all Phase 13 exports from main package."""
-        from tensornet import (
+        from ontic import (
             # Digital Twin
             StateSync,
             StateSynchronizer,

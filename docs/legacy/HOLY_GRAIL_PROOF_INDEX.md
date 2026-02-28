@@ -12,10 +12,10 @@
 **Validated January 2026**: The true Holy Grail — O(log N) per-step CFD evolution — 
 is implemented and passing all tests.
 
-### Implementation: `tensornet/cfd/qtt_tdvp.py`
+### Implementation: `ontic/cfd/qtt_tdvp.py`
 
 ```python
-from tensornet.cfd.qtt_tdvp import QTT_TDVP_Euler1D
+from ontic.cfd.qtt_tdvp import QTT_TDVP_Euler1D
 
 solver = QTT_TDVP_Euler1D(N=1024, chi_max=32)
 solver.initialize_sod()

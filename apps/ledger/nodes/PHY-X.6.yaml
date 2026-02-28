@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Boltzmann scans, oscillations"
 
 source_files:
-  - "tensornet/particle/beyond_sm.py"
+  - "ontic/particle/beyond_sm.py"
 
 tests:
   smoke:

@@ -5,8 +5,8 @@ import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import torch
-from tensornet.cfd.qtt_3d_state import QTT3DState
-from tensornet.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo
+from ontic.cfd.qtt_3d_state import QTT3DState
+from ontic.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 dtype = torch.float32
@@ -74,7 +74,7 @@ print(f"\n  shift(-1) = f(x+1)?  error = {err_fp:.6e}")
 print(f"  shift(+1) = f(x-1)?  error = {err_fm:.6e}")
 
 # Derivative
-from tensornet.cfd.pure_qtt_ops import qtt_add
+from ontic.cfd.pure_qtt_ops import qtt_add
 deriv_dense = (fp_dense - fm_dense) / (2 * dx)
 expected_deriv = (expected_fp - expected_fm) / (2 * dx)
 exact_deriv = (2 * math.pi / N) * torch.cos(2 * math.pi * xx / N)

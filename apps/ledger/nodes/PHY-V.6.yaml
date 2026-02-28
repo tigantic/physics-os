@@ -13,7 +13,7 @@ state: "V0.2"
 description: "TRG/TNR hooks"
 
 source_files:
-  - "tensornet/mps/hamiltonians.py"
+  - "ontic/mps/hamiltonians.py"
 
 tests:
   smoke:

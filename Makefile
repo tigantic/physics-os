@@ -1,7 +1,7 @@
-# HyperTensor Monorepo Makefile
+# The Physics OS Monorepo Makefile
 # ==========================================
 #
-# Orchestrates BOTH Python (tensornet + hypertensor) and Rust (cargo workspace).
+# Orchestrates BOTH Python (ontic + physics_os) and Rust (cargo workspace).
 #
 # Usage:
 #   make check          - Run all quality gates (Python + Rust)
@@ -61,7 +61,7 @@ else
 endif
 
 # Python source directories (order: core -> products -> tests)
-PY_SRC = tensornet hypertensor tests proofs
+PY_SRC = ontic physics_os tests proofs
 
 # ── Default ───────────────────────────────────────────────────────────
 .DEFAULT_GOAL := help
@@ -167,7 +167,7 @@ format-fix:
 # ============================================
 typecheck:
 	@echo "=== D) Type Checking ==="
-	$(PYTHON) -m mypy tensornet --ignore-missing-imports
+	$(PYTHON) -m mypy ontic --ignore-missing-imports
 	@echo "✓ Type check passed"
 
 # Docstring coverage check
@@ -210,7 +210,7 @@ test: test-unit test-int
 # Test with coverage report
 test-cov:
 	@echo "=== Tests with Coverage ==="
-	$(PYTHON) -m pytest tests/ -v --cov=tensornet --cov-report=term-missing --cov-report=html --cov-report=xml
+	$(PYTHON) -m pytest tests/ -v --cov=ontic --cov-report=term-missing --cov-report=html --cov-report=xml
 	@echo "✓ Coverage report generated (htmlcov/ and coverage.xml)"
 
 # ============================================
@@ -293,7 +293,7 @@ docs-build:
 		$(PYTHON) -m mkdocs build --strict; \
 	else \
 		echo "No mkdocs.yml found, generating API docs with pdoc..."; \
-		$(PYTHON) -m pdoc tensornet -o $(ARTIFACTS_DIR)/api_docs --html; \
+		$(PYTHON) -m pdoc ontic -o $(ARTIFACTS_DIR)/api_docs --html; \
 	fi
 
 docs-serve:
@@ -476,7 +476,7 @@ $(VLASOV_PROVER):
 .PHONY: fp-test fp-typecheck fp-build fp-up fp-down fp-logs fp-keys
 
 FP_ROOT    = products/facial_plastics
-FP_IMAGE   = hypertensor-facial-plastics
+FP_IMAGE   = physics-os-facial-plastics
 FP_COMPOSE = $(FP_ROOT)/docker-compose.yml
 
 fp-test:

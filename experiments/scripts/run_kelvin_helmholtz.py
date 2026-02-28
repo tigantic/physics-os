@@ -31,14 +31,14 @@ from pathlib import Path
 
 import torch
 
-from tensornet.cfd.euler2d_strang import (
+from ontic.cfd.euler2d_strang import (
     Euler2D_Strang,
     Euler2DConfig,
     Euler2DState,
     create_kelvin_helmholtz_ic,
 )
-from tensornet.cfd.kelvin_helmholtz import KHConfig, analyze_kh_ranks
-from tensornet.cfd.qtt_2d import qtt_2d_to_dense
+from ontic.cfd.kelvin_helmholtz import KHConfig, analyze_kh_ranks
+from ontic.cfd.qtt_2d import qtt_2d_to_dense
 
 
 # ─────────────────────────────────────────────────────────────────────

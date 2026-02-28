@@ -50,13 +50,13 @@ from typing import Any
 import torch
 from torch import Tensor
 
-from tensornet.cfd.nd_shift_mpo import (
+from ontic.cfd.nd_shift_mpo import (
     make_nd_shift_mpo,
     apply_nd_shift_mpo,
     truncate_cores,
 )
 
-from tensornet.cfd.pure_qtt_ops import (
+from ontic.cfd.pure_qtt_ops import (
     QTTState,
     qtt_add,
     qtt_hadamard,

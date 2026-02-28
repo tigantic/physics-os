@@ -6,7 +6,7 @@
 
 | Module | Description |
 |--------|-------------|
-| `tensornet.em` | Core electromagnetics |
-| `tensornet.optics` | Optics |
-| `tensornet.semiconductor` | Semiconductor physics |
-| `tensornet.acoustics` | Acoustics |
+| `ontic.em` | Core electromagnetics |
+| `ontic.optics` | Optics |
+| `ontic.semiconductor` | Semiconductor physics |
+| `ontic.acoustics` | Acoustics |

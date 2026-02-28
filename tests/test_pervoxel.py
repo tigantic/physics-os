@@ -8,7 +8,7 @@ import os
 sys.path.insert(0, os.path.dirname(__file__))
 
 import torch
-from tensornet.em.chu_limit_gpu import (
+from ontic.em.chu_limit_gpu import (
     make_chu_gpu_config,
     optimize_chu_antenna_gpu,
 )

@@ -32,7 +32,7 @@ import torch
 # Add parent to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tensornet.core.decompositions import qr_positive, svd_truncated
+from ontic.core.decompositions import qr_positive, svd_truncated
 
 # Constitutional tolerances (Article I, Section 1.2)
 MACHINE_PRECISION = 1e-14

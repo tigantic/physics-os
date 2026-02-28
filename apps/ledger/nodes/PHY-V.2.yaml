@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Master equation, Fokker-Planck"
 
 source_files:
-  - "tensornet/statmech/non_equilibrium.py"
+  - "ontic/statmech/non_equilibrium.py"
 
 tests:
   smoke:

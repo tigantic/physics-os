@@ -30,7 +30,7 @@ sys.path.insert(0, PROJECT_ROOT)
 
 def benchmark_sod_shock_tube():
     """Benchmark 1D Sod shock tube at various resolutions."""
-    from tensornet.cfd import Euler1D, sod_shock_tube_ic, exact_riemann
+    from ontic.cfd import Euler1D, sod_shock_tube_ic, exact_riemann
     
     print("=" * 50)
     print("Benchmark 1: Sod Shock Tube (1D)")
@@ -83,10 +83,10 @@ def benchmark_sod_shock_tube():
 
 def benchmark_taylor_green():
     """Benchmark 3D Taylor-Green at various ranks."""
-    from tensornet.cfd.fast_euler_3d import (
+    from ontic.cfd.fast_euler_3d import (
         Euler3DConfig, FastEuler3D, create_taylor_green_state
     )
-    from tensornet.cfd.nd_shift_mpo import truncate_cores
+    from ontic.cfd.nd_shift_mpo import truncate_cores
     
     print("=" * 50)
     print("Benchmark 2: Taylor-Green Vortex (3D)")
@@ -145,8 +145,8 @@ def benchmark_taylor_green():
 
 def benchmark_gaussian_advection_2d():
     """Benchmark 2D Gaussian advection at various ranks."""
-    from tensornet.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo, truncate_cores
-    from tensornet.cfd.pure_qtt_ops import dense_to_qtt
+    from ontic.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo, truncate_cores
+    from ontic.cfd.pure_qtt_ops import dense_to_qtt
     
     print("=" * 50)
     print("Benchmark 3: 2D Gaussian Advection")
@@ -244,7 +244,7 @@ def benchmark_gaussian_advection_2d():
 
 def benchmark_compression_ratio():
     """Benchmark compression ratios across problem types."""
-    from tensornet.cfd.pure_qtt_ops import dense_to_qtt
+    from ontic.cfd.pure_qtt_ops import dense_to_qtt
     
     print("=" * 50)
     print("Benchmark 4: Compression Ratios")

@@ -25,14 +25,14 @@ Commercial_Execution.md specifies Phase 3's exit gate:
 
 ### 1. Pack Architecture
 
-Each domain pack lives in `tensornet/packs/pack_{id}.py` and:
+Each domain pack lives in `ontic/packs/pack_{id}.py` and:
 
-- Subclasses the `DomainPack` ABC from `tensornet.platform.domain_pack`.
+- Subclasses the `DomainPack` ABC from `ontic.platform.domain_pack`.
 - Overrides `pack_id`, `pack_name`, `taxonomy_ids`, `problem_specs()`, `solvers()`,
   and `version` (as `@property`).
 - Registers itself via the `DomainRegistry` singleton on import.
 
-A shared `tensornet/packs/_base.py` provides common utilities: `BaseProblemSpec`,
+A shared `ontic/packs/_base.py` provides common utilities: `BaseProblemSpec`,
 `run_ode_problem()`, `compute_linf_error()`, `convergence_order()`, `make_1d_state()`.
 
 ### 2. Taxonomy Coverage

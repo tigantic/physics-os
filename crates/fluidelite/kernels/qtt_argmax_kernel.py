@@ -367,7 +367,7 @@ def run_benchmark():
     sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
     
     from collections import defaultdict
-    from tensornet.cfd.qtt_tci import qtt_from_function_dense
+    from ontic.cfd.qtt_tci import qtt_from_function_dense
     
     print("=" * 60)
     print("PHASE 6.5: CUDA/TRITON TCI-LLM BENCHMARK")

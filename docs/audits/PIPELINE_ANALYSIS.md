@@ -22,7 +22,7 @@ The current operational pipeline is **NOT TT-native**. We have multiple "format 
 
 ### Phase 1: Physics Update (MPO → TT Cores)
 
-**File**: `tensornet/mpo/atmospheric_solver.py`
+**File**: `ontic/mpo/atmospheric_solver.py`
 
 ```python
 def step(self):
@@ -47,7 +47,7 @@ def get_cores(self):
 
 ### Phase 2: Visualization Extraction (TT Cores → Dense Placeholder)
 
-**File**: `tensornet/gateway/orbital_command.py` (lines 233-243)
+**File**: `ontic/gateway/orbital_command.py` (lines 233-243)
 
 ```python
 def update_physics(self, dt: float):
@@ -72,7 +72,7 @@ def update_physics(self, dt: float):
 
 ### Phase 3: Rendering Pipeline (TT Cores → Dense Output)
 
-**File**: `tensornet/gateway/orbital_command.py` (lines 300-340)
+**File**: `ontic/gateway/orbital_command.py` (lines 300-340)
 
 ```python
 def render_frame(self):
@@ -99,7 +99,7 @@ def render_frame(self):
 
 ### Phase 3a: Hybrid QTT Renderer Details
 
-**File**: `tensornet/quantum/hybrid_qtt_renderer.py` (lines 120-180)
+**File**: `ontic/quantum/hybrid_qtt_renderer.py` (lines 120-180)
 
 ```python
 def render_qtt_hybrid(self, qtt, sparse_size, output_width, output_height, ...):
@@ -140,7 +140,7 @@ def render_qtt_hybrid(self, qtt, sparse_size, output_width, output_height, ...):
 
 ### Phase 4: Compositor (Dense → Dense)
 
-**File**: `tensornet/gateway/onion_renderer.py` (lines 310-360)
+**File**: `ontic/gateway/onion_renderer.py` (lines 310-360)
 
 ```python
 def composite(self):
@@ -385,7 +385,7 @@ Final framebuffer MUST be dense - unavoidable hardware constraint
 
 ### Priority 1: Fix Visualization Placeholder (P0)
 
-**File**: `tensornet/gateway/orbital_command.py` line 239
+**File**: `ontic/gateway/orbital_command.py` line 239
 
 **Current**:
 ```python
@@ -394,7 +394,7 @@ vel_mag = torch.zeros(64, 64, device=self.device)
 
 **Fix**:
 ```python
-from tensornet.cfd.qtt_2d import qtt_to_dense_2d
+from ontic.cfd.qtt_2d import qtt_to_dense_2d
 vel_mag = qtt_to_dense_2d(qtt_state)  # Evaluate TT-cores to 64×64
 ```
 

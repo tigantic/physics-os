@@ -612,9 +612,9 @@ See: `artifacts/PHASE5_PHYSICS_ATTESTATION.json`
 
 | File | Purpose | Location |
 |------|---------|----------|
-| `ns3d_turbo.py` | TurboNS3DSolver (vorticity formulation) | `tensornet/cfd/` |
-| `qtt_turbo.py` | Core ops (lazy truncation, batched rSVD) | `tensornet/cfd/` |
-| `turbulence_forcing.py` | Spectral/OU/TG forcing | `tensornet/cfd/` |
+| `ns3d_turbo.py` | TurboNS3DSolver (vorticity formulation) | `ontic/cfd/` |
+| `qtt_turbo.py` | Core ops (lazy truncation, batched rSVD) | `ontic/cfd/` |
+| `turbulence_forcing.py` | Spectral/OU/TG forcing | `ontic/cfd/` |
 
 ### Key Functions
 

@@ -13,7 +13,7 @@ state: "V0.2"
 description: "QKD, repeaters"
 
 source_files:
-  - "tensornet/oracle/core/oracle.py"
+  - "ontic/oracle/core/oracle.py"
 
 tests:
   smoke:

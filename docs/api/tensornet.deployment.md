@@ -1,4 +1,4 @@
-# Module `tensornet.deployment`
+# Module `ontic.deployment`
 
 Deployment Module =================
 

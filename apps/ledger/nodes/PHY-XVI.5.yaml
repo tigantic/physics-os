@@ -13,7 +13,7 @@ state: "V0.2"
 description: "FBA, ODE, stochastic"
 
 source_files:
-  - "tensornet/biology/systems_biology.py"
+  - "ontic/biology/systems_biology.py"
 
 tests:
   smoke:

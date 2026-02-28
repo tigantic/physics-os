@@ -764,7 +764,7 @@ The demo must be *undeniably impressive*. Infinite zoom with no latency. Real-ti
   - ✅ Header: 4096 bytes structured (frame index, dimensions, telemetry, statistics)
   - ✅ Buffer: 8MB RGBA8 (1920×1080 color-mapped tensor data)
   - ✅ Frame synchronization with drop detection
-  - ✅ Python writer: `tensornet/sovereign/bridge_writer.py` (320 lines)
+  - ✅ Python writer: `ontic/sovereign/bridge_writer.py` (320 lines)
   - ✅ **INTEGRATED in Phase 7** via `bridge_heatmap_renderer.rs` and `grayscale_bridge_renderer.rs`
 
 - [x] **GPU Colormap System**: Scientific visualization
@@ -775,7 +775,7 @@ The demo must be *undeniably impressive*. Infinite zoom with no latency. Real-ti
   - ✅ **INTEGRATED in Phase 7** via `grayscale_bridge_renderer.rs` (inline colormap implementation, 'C' key cycles)
 
 - [x] **Realtime Tensor Stream**: Live data generator
-  - ✅ File: `tensornet/sovereign/realtime_tensor_stream.py` (319 lines)
+  - ✅ File: `ontic/sovereign/realtime_tensor_stream.py` (319 lines)
   - ✅ GPU-accelerated PyTorch tensor operations
   - ✅ Synthetic patterns: waves, vortex, turbulence
   - ✅ 60 FPS timing with telemetry

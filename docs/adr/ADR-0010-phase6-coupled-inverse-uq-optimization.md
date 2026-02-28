@@ -20,7 +20,7 @@ These capabilities are prerequisites for Phase 7 Productization.
 
 ## Decision
 
-### 1. Coupling Orchestrator (`tensornet/platform/coupled.py`)
+### 1. Coupling Orchestrator (`ontic/platform/coupled.py`)
 
 **Architecture:** Strategy-pattern coupler with pluggable strategies.
 
@@ -38,7 +38,7 @@ it allows reuse of existing single-physics solvers without modification.
 Monolithic coupling is provided for problems where partitioned iteration
 does not converge (e.g., added-mass instability in FSI).
 
-### 2. Adjoint / Sensitivity (`tensornet/platform/adjoint.py`)
+### 2. Adjoint / Sensitivity (`ontic/platform/adjoint.py`)
 
 - `CostFunctional` (ABC) — Scalar objective with `evaluate()` and
   `dJ_dstate()` methods.
@@ -49,7 +49,7 @@ does not converge (e.g., added-mass instability in FSI).
 - `CheckpointedAdjoint` — Memory-efficient variant using Griewank-style
   checkpointing.  Same finite-difference fallback.
 
-### 3. Inverse Problem Toolkit (`tensornet/platform/inverse.py`)
+### 3. Inverse Problem Toolkit (`ontic/platform/inverse.py`)
 
 - `Regularizer` (ABC) with `TikhonovRegularizer` (L2) and `TVRegularizer`
   (total variation).
@@ -61,7 +61,7 @@ does not converge (e.g., added-mass instability in FSI).
   Hessian via finite differences, posterior as N(MAP, H⁻¹), log-evidence
   estimate.
 
-### 4. UQ Toolkit (`tensornet/platform/uq.py`)
+### 4. UQ Toolkit (`ontic/platform/uq.py`)
 
 - `ParameterDistribution` — Supports uniform, normal, lognormal with
   inverse-CDF sampling.
@@ -73,7 +73,7 @@ does not converge (e.g., added-mass instability in FSI).
   total-order multi-index, least-squares coefficient regression,
   and analytical mean/variance from converged coefficients.
 
-### 5. Optimization Toolkit (`tensornet/platform/optimization.py`)
+### 5. Optimization Toolkit (`ontic/platform/optimization.py`)
 
 - `Constraint` — Name + evaluate/gradient callables for g(x) ≤ 0.
 - `volume_fraction_constraint()` — Standard constraint for topology
@@ -84,7 +84,7 @@ does not converge (e.g., added-mass instability in FSI).
   Penalization) with OC update.  Includes density filter for
   regularization and bisection-based volume constraint enforcement.
 
-### 6. Data Lineage DAG (`tensornet/platform/lineage.py`)
+### 6. Data Lineage DAG (`ontic/platform/lineage.py`)
 
 - `LineageEvent` — Typed enumeration of 12 event kinds (forward solve,
   adjoint, coupling, QTT compress/decompress, TCI, inverse, UQ,

@@ -36,7 +36,7 @@ cargo build --release --bin phase3
 **Terminal 1 - Python Streamer:**
 ```bash
 python -c "
-from tensornet.sovereign.realtime_tensor_stream import test_realtime_stream
+from ontic.sovereign.realtime_tensor_stream import test_realtime_stream
 test_realtime_stream(duration=60.0, pattern='turbulence', fps=60.0)
 "
 ```

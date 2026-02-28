@@ -37,7 +37,7 @@ def run_intent_demo():
     print("Part 1: Natural Language Parsing")
     print("=" * 50)
     
-    from tensornet.applied.intent import IntentParser, IntentType
+    from ontic.applied.intent import IntentParser, IntentType
     
     parser = IntentParser()
     
@@ -77,7 +77,7 @@ def run_intent_demo():
     print("Part 2: Query Execution on Physics Fields")
     print("=" * 50)
     
-    from tensornet.applied.intent.query import FieldQuery, QueryResult
+    from ontic.applied.intent.query import FieldQuery, QueryResult
     
     # Create synthetic velocity field (Taylor-Green pattern)
     N = 64
@@ -130,7 +130,7 @@ def run_intent_demo():
     print("Part 3: Live Constraint Toggling")
     print("=" * 50)
     
-    from tensornet.applied.intent.constraints import BoundConstraint, ConstraintSet, ConstraintSolver
+    from ontic.applied.intent.constraints import BoundConstraint, ConstraintSet, ConstraintSolver
     
     # Create a turbulent velocity field
     np.random.seed(42)
@@ -200,7 +200,7 @@ def run_intent_demo():
     print("Part 4: Intent Engine Integration")
     print("=" * 50)
     
-    from tensornet.applied.intent.engine import IntentEngine
+    from ontic.applied.intent.engine import IntentEngine
     
     engine = IntentEngine()
     

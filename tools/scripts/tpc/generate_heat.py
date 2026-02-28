@@ -26,7 +26,7 @@ import torch
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from tensornet.cfd.trace_adapters.heat_adapter import HeatTransferTraceAdapter
+from ontic.cfd.trace_adapters.heat_adapter import HeatTransferTraceAdapter
 from tpc.format import BenchmarkResult, HardwareSpec, TheoremRef
 from tpc.generator import CertificateGenerator
 
@@ -229,7 +229,7 @@ def generate_heat_certificate(
     )
 
     gen.set_solver_hash(
-        PROJECT_ROOT / "tensornet" / "cfd" / "trace_adapters" / "heat_adapter.py"
+        PROJECT_ROOT / "ontic" / "cfd" / "trace_adapters" / "heat_adapter.py"
     )
 
     cert, report = gen.generate_and_save(str(out_path))

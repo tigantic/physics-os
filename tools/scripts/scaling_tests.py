@@ -20,7 +20,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Dict, List
 
-# Add THIS project root to path (before any other tensornet)
+# Add THIS project root to path (before any other ontic)
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import torch
@@ -41,7 +41,7 @@ class ScalingResult:
 
 def measure_dmrg_L_scaling(chi: int = 32, L_values: List[int] = None) -> ScalingResult:
     """Measure DMRG scaling with system size L."""
-    from tensornet import dmrg, heisenberg_mpo
+    from ontic import dmrg, heisenberg_mpo
 
     if L_values is None:
         L_values = [10, 20, 30, 40, 50]
@@ -84,7 +84,7 @@ def measure_dmrg_chi_scaling(
     L: int = 20, chi_values: List[int] = None
 ) -> ScalingResult:
     """Measure DMRG scaling with bond dimension chi."""
-    from tensornet import dmrg, heisenberg_mpo
+    from ontic import dmrg, heisenberg_mpo
 
     if chi_values is None:
         chi_values = [8, 16, 32, 64, 128]
@@ -124,7 +124,7 @@ def measure_dmrg_chi_scaling(
 
 def measure_euler1d_scaling(N_values: List[int] = None) -> ScalingResult:
     """Measure Euler1D scaling with grid resolution."""
-    from tensornet.cfd.euler_1d import Euler1D, EulerState
+    from ontic.cfd.euler_1d import Euler1D, EulerState
 
     if N_values is None:
         N_values = [100, 200, 400, 800, 1600]
@@ -174,7 +174,7 @@ def measure_euler1d_scaling(N_values: List[int] = None) -> ScalingResult:
 
 def measure_euler2d_scaling(grid_sizes: List[tuple] = None) -> ScalingResult:
     """Measure Euler2D scaling with grid size."""
-    from tensornet.cfd.euler_2d import BCType, Euler2D, Euler2DState
+    from ontic.cfd.euler_2d import BCType, Euler2D, Euler2DState
 
     if grid_sizes is None:
         grid_sizes = [(50, 50), (100, 100), (150, 150), (200, 200)]

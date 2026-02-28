@@ -265,16 +265,16 @@ From `ns_qtt_singularity_hunt.py`:
 ## Files to Create/Modify
 
 ### New Files
-1. `tensornet/cfd/ns3d_qtt_native.py` - Main 3D QTT-native NS solver
-2. `tensornet/cfd/morton_3d.py` - 3D Morton encoding utilities
-3. `tensornet/cfd/qtt_3d_ops.py` - 3D-specific QTT operations
-4. `tensornet/cfd/turbulence_benchmark.py` - Validation suite
+1. `ontic/cfd/ns3d_qtt_native.py` - Main 3D QTT-native NS solver
+2. `ontic/cfd/morton_3d.py` - 3D Morton encoding utilities
+3. `ontic/cfd/qtt_3d_ops.py` - 3D-specific QTT operations
+4. `ontic/cfd/turbulence_benchmark.py` - Validation suite
 5. `TURBULENCE_DNS_ATTESTATION.json` - Benchmark results
 
 ### Modify
-1. `tensornet/cfd/qtt_multiscale.py` - Add TURBULENT_3D profile
-2. `tensornet/cfd/nd_shift_mpo.py` - Optimize 3D path
-3. `tensornet/cfd/pure_qtt_ops.py` - 3D-aware truncation
+1. `ontic/cfd/qtt_multiscale.py` - Add TURBULENT_3D profile
+2. `ontic/cfd/nd_shift_mpo.py` - Optimize 3D path
+3. `ontic/cfd/pure_qtt_ops.py` - 3D-aware truncation
 
 ---
 

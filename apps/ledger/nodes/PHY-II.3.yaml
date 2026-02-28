@@ -13,7 +13,7 @@ state: "V0.2"
 description: "DNS, LES, RANS, spectra"
 
 source_files:
-  - "tensornet/cfd/turbulence.py"
+  - "ontic/cfd/turbulence.py"
 
 tests:
   smoke:

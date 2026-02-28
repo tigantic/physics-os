@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Primitive equations"
 
 source_files:
-  - "tensornet/geophysics/oceanography.py"
+  - "ontic/geophysics/oceanography.py"
 
 tests:
   smoke:

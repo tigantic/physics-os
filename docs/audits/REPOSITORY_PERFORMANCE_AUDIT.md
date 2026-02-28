@@ -29,7 +29,7 @@ Comprehensive repository scrub identified **245+ performance bottlenecks** acros
 ### 1.1 Critical Path Loops (P0 - Must Fix for 60 FPS)
 
 #### A. Core QTT Evaluation
-**File**: `tensornet/quantum/cpu_qtt_evaluator.py`
+**File**: `ontic/quantum/cpu_qtt_evaluator.py`
 
 ```python
 Lines 132-145: Core contraction loops (10 nested loops)
@@ -49,7 +49,7 @@ for i in range(n):
 - **Line 241**: `.cpu().numpy()` conversion (redundant copy)
 
 #### B. Grid Rendering
-**File**: `tensornet/gateway/orbital_command.py`
+**File**: `ontic/gateway/orbital_command.py`
 
 ```python
 Lines 206, 211: Latitude/Longitude grid loops
@@ -68,7 +68,7 @@ for lat in latitudes:
 - **Lines 367, 375**: HUD rendering loops (8 total)
 
 #### C. Physics Solver
-**File**: `tensornet/gpu/stable_fluid.py`
+**File**: `ontic/gpu/stable_fluid.py`
 
 ```python
 Line 130: PCG iteration loop
@@ -101,14 +101,14 @@ for pixel_idx in range(batch_size):
 
 ### 1.2 Secondary Loops (P1 - Optimize Later)
 
-**File**: `tensornet/cfd/adaptive_tt.py`
+**File**: `ontic/cfd/adaptive_tt.py`
 - **Line 157**: Two-site SVD loop
 - **Line 480**: Core recompression loop
 
-**File**: `tensornet/algorithms/tdvp.py`
+**File**: `ontic/algorithms/tdvp.py`
 - **Line 291**: TDVP sweep loop
 
-**File**: `tensornet/distributed_tn/distributed_dmrg.py`
+**File**: `ontic/distributed_tn/distributed_dmrg.py`
 - **Line 193**: Distributed merge loop
 
 **File**: `demos/holy_grail_video.py`
@@ -137,7 +137,7 @@ for pixel_idx in range(batch_size):
 ### 2.1 Critical Path SVDs (P0 - Blocking 60 FPS)
 
 #### A. Dense-to-QTT Factorization (HIGHEST PRIORITY)
-**File**: `tensornet/cfd/qtt.py`
+**File**: `ontic/cfd/qtt.py`
 
 ```python
 Line 137: torch.svd_lowrank (Halko-Martinsson-Tropp rSVD)
@@ -155,7 +155,7 @@ U, S, Vh = torch.svd_lowrank(current, q=target_rank, niter=2)
 ```
 
 #### B. Core Recompression SVDs
-**File**: `tensornet/core/decompositions.py`
+**File**: `ontic/core/decompositions.py`
 
 ```python
 Lines 61, 164, 178: Full SVD for rank truncation
@@ -174,7 +174,7 @@ U, S, Vh = torch.linalg.svd(A, full_matrices=False)
 - **Line 178**: Rank truncation helper
 
 #### C. Shift Operator SVDs
-**File**: `tensornet/cfd/qtt_2d_shift_native.py`
+**File**: `ontic/cfd/qtt_2d_shift_native.py`
 
 ```python
 Line 234: Shift MPO core construction
@@ -188,13 +188,13 @@ U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
 ```
 
 **Similar Patterns**:
-- `tensornet/cfd/nd_shift_mpo.py` (Line 238)
-- `tensornet/cfd/qtt_2d_shift.py` (Line 299)
+- `ontic/cfd/nd_shift_mpo.py` (Line 238)
+- `ontic/cfd/qtt_2d_shift.py` (Line 299)
 
 ### 2.2 Non-Critical SVDs (P1 - Audit but Don't Block)
 
 #### A. Digital Twin / POD
-**File**: `tensornet/digital_twin/reduced_order.py`
+**File**: `ontic/digital_twin/reduced_order.py`
 
 ```python
 Lines 210, 293, 622: POD mode extraction
@@ -207,7 +207,7 @@ U, S, Vh = torch.linalg.svd(snapshots_norm, full_matrices=False)
 ```
 
 #### B. TDVP / DMRG Solvers
-**Files**: `tensornet/algorithms/tdvp.py`, `tensornet/distributed_tn/distributed_dmrg.py`
+**Files**: `ontic/algorithms/tdvp.py`, `ontic/distributed_tn/distributed_dmrg.py`
 
 ```python
 Lines 291 (TDVP), 193 (DMRG): Two-site optimization
@@ -252,7 +252,7 @@ Multiple lines: Correctness tests
 ### 3.1 Critical Dense Operations (P0)
 
 #### A. Physics Solver State
-**File**: `tensornet/gpu/stable_fluid.py`
+**File**: `ontic/gpu/stable_fluid.py`
 
 ```python
 Lines 52-57: Dense velocity/pressure fields
@@ -273,7 +273,7 @@ self.pressure = torch.zeros(shape, device=device)  # 64×64 dense
 - `fluid_dynamics_optimized.py` (Lines 55-60)
 
 #### B. Compositor Buffers
-**Files**: `tensornet/gateway/onion_renderer.py`, `profile_components.py`
+**Files**: `ontic/gateway/onion_renderer.py`, `profile_components.py`
 
 ```python
 Lines 79, 176, 353: Dense 4K frame buffers
@@ -288,7 +288,7 @@ self.final_buffer = torch.zeros((h, w, 4), device=device)
 ```
 
 #### C. Grid/HUD Masks
-**File**: `tensornet/gateway/orbital_command.py`
+**File**: `ontic/gateway/orbital_command.py`
 
 ```python
 Lines 199, 360: Dense substrate/mask buffers
@@ -305,7 +305,7 @@ self.grid_mask = torch.zeros((h, w, 4), ...)
 ### 3.2 Temporary Materialization (P1)
 
 #### A. QTT Evaluation Buffers
-**File**: `tensornet/sovereign/implicit_qtt_renderer.py`
+**File**: `ontic/sovereign/implicit_qtt_renderer.py`
 
 ```python
 Lines 144, 185, 192: Output buffers (FAILED EXPERIMENT)
@@ -318,7 +318,7 @@ self.output_buffer = torch.zeros((h, w, 4), ...)
 ```
 
 #### B. TCI Reconstruction
-**File**: `tensornet/cfd/qtt_tci.py`
+**File**: `ontic/cfd/qtt_tci.py`
 
 ```python
 Lines 203, 308, 499, 911: Dense reconstruction for validation
@@ -331,7 +331,7 @@ dense = torch.zeros(N, device=device)
 ```
 
 #### C. Demo/Visualization Code
-**Files**: `demos/*.py`, `tensornet/cfd/qtt_2d_*.py`
+**Files**: `demos/*.py`, `ontic/cfd/qtt_2d_*.py`
 
 ```python
 Multiple locations: Dense output for visualization
@@ -469,8 +469,8 @@ Margin: +5.31ms (+47%)
 
 ### 6.1 Week 1: MPO Solver Core
 **Files to Create**:
-- `tensornet/mpo/atmospheric_solver.py` (MPO engine)
-- `tensornet/mpo/operators.py` (Laplacian, Advection, Projection)
+- `ontic/mpo/atmospheric_solver.py` (MPO engine)
+- `ontic/mpo/operators.py` (Laplacian, Advection, Projection)
 - `tests/test_mpo_solver.py` (unit tests vs dense reference)
 
 **Files to Modify**:
@@ -485,14 +485,14 @@ Margin: +5.31ms (+47%)
 
 ### 6.2 Week 2: Integration
 **Files to Modify**:
-- `tensornet/gateway/orbital_command.py`:
+- `ontic/gateway/orbital_command.py`:
   - Line 133: Replace `StableFluid` with `MPOAtmosphericSolver`
   - Line 192: Remove `dense_to_qtt_2d()` call (no longer needed)
   - Line 200: Connect MPO cores → hybrid renderer
 
 **Files to Delete** (after validation):
-- `tensornet/gpu/stable_fluid.py` (replaced by MPO)
-- `tensornet/cfd/qtt.py:dense_to_qtt_2d()` (no longer needed)
+- `ontic/gpu/stable_fluid.py` (replaced by MPO)
+- `ontic/cfd/qtt.py:dense_to_qtt_2d()` (no longer needed)
 
 **Success Criteria**:
 - [ ] End-to-end QTT pipeline: <6ms (vs 9.38ms current)
@@ -501,7 +501,7 @@ Margin: +5.31ms (+47%)
 
 ### 6.3 Week 3: Compositor Optimization
 **Files to Modify**:
-- `tensornet/gateway/onion_renderer.py`:
+- `ontic/gateway/onion_renderer.py`:
   - Lines 176-180: Unified Float16 buffers
   - Lines 200-250: Fused blend kernel (CUDA)
 
@@ -640,15 +640,15 @@ Margin: +5.31ms (+47%)
 ### A.1 Python Loops (90+ instances)
 
 **Critical Path (P0)**:
-- `tensornet/quantum/cpu_qtt_evaluator.py`: Lines 132, 140, 142, 145, 241
-- `tensornet/gateway/orbital_command.py`: Lines 206, 211, 367, 375
-- `tensornet/gpu/stable_fluid.py`: Line 130
+- `ontic/quantum/cpu_qtt_evaluator.py`: Lines 132, 140, 142, 145, 241
+- `ontic/gateway/orbital_command.py`: Lines 206, 211, 367, 375
+- `ontic/gpu/stable_fluid.py`: Line 130
 - `test_implicit_concept.py`: Lines 49, 55 (FAILED experiment)
 
 **Secondary (P1)**:
-- `tensornet/cfd/adaptive_tt.py`: Lines 157, 480
-- `tensornet/algorithms/tdvp.py`: Line 291
-- `tensornet/distributed_tn/distributed_dmrg.py`: Line 193
+- `ontic/cfd/adaptive_tt.py`: Lines 157, 480
+- `ontic/algorithms/tdvp.py`: Line 291
+- `ontic/distributed_tn/distributed_dmrg.py`: Line 193
 
 **Non-Critical (P2)**:
 - `demos/holy_grail_video.py`: Lines 55, 96
@@ -658,35 +658,35 @@ Margin: +5.31ms (+47%)
 ### A.2 SVD Operations (55+ instances)
 
 **Critical Path (P0)**:
-- `tensornet/cfd/qtt.py`: Line 137 (6.05ms - **HIGHEST PRIORITY**)
-- `tensornet/core/decompositions.py`: Lines 61, 164, 178
+- `ontic/cfd/qtt.py`: Line 137 (6.05ms - **HIGHEST PRIORITY**)
+- `ontic/core/decompositions.py`: Lines 61, 164, 178
 
 **Shift Operators (P1)**:
-- `tensornet/cfd/qtt_2d_shift_native.py`: Line 234
-- `tensornet/cfd/nd_shift_mpo.py`: Line 238
-- `tensornet/cfd/qtt_2d_shift.py`: Line 299
+- `ontic/cfd/qtt_2d_shift_native.py`: Line 234
+- `ontic/cfd/nd_shift_mpo.py`: Line 238
+- `ontic/cfd/qtt_2d_shift.py`: Line 299
 
 **Non-Critical (P2)**:
-- `tensornet/digital_twin/reduced_order.py`: Lines 210, 293, 622
-- `tensornet/algorithms/tdvp.py`: Line 291
-- `tensornet/distributed_tn/distributed_dmrg.py`: Line 193
+- `ontic/digital_twin/reduced_order.py`: Lines 210, 293, 622
+- `ontic/algorithms/tdvp.py`: Line 291
+- `ontic/distributed_tn/distributed_dmrg.py`: Line 193
 - `tools/scripts/gpu_demo.py`: Lines 152, 156, 166, 171
 - `proofs/proof_decompositions.py`: Lines 81
 
 ### A.3 Dense Materializations (100+ instances)
 
 **Critical Path (P0)**:
-- `tensornet/gpu/stable_fluid.py`: Lines 52-57 (physics state)
-- `tensornet/gateway/onion_renderer.py`: Lines 79, 176, 353 (compositor)
+- `ontic/gpu/stable_fluid.py`: Lines 52-57 (physics state)
+- `ontic/gateway/onion_renderer.py`: Lines 79, 176, 353 (compositor)
 
 **Secondary (P1)**:
-- `tensornet/gateway/orbital_command.py`: Lines 199, 360 (grid/HUD)
-- `tensornet/sovereign/implicit_qtt_renderer.py`: Lines 144, 185, 192 (FAILED)
-- `tensornet/cfd/qtt_tci.py`: Lines 203, 308, 499, 911 (TCI reconstruction)
+- `ontic/gateway/orbital_command.py`: Lines 199, 360 (grid/HUD)
+- `ontic/sovereign/implicit_qtt_renderer.py`: Lines 144, 185, 192 (FAILED)
+- `ontic/cfd/qtt_tci.py`: Lines 203, 308, 499, 911 (TCI reconstruction)
 
 **CPU↔GPU Transfers (P1)**:
-- `tensornet/quantum/cpu_qtt_evaluator.py`: Line 241 (double copy)
-- `tensornet/quantum/qtt_glsl_bridge.py`: Lines 98-99
+- `ontic/quantum/cpu_qtt_evaluator.py`: Line 241 (double copy)
+- `ontic/quantum/qtt_glsl_bridge.py`: Lines 98-99
 - `demos/holy_grail_video.py`: Lines 55, 96
 - `demos/flagship_pipeline.py`: Lines 179, 233, 462-464, 595, 720-722
 

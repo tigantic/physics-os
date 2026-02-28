@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Diffraction, coherence, polarization"
 
 source_files:
-  - "tensornet/optics/physical_optics.py"
+  - "ontic/optics/physical_optics.py"
 
 tests:
   smoke:

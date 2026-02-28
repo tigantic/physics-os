@@ -11,12 +11,12 @@
 
 ## Installation
 
-Extract into your `tensornet/cfd/` directory alongside existing files:
+Extract into your `ontic/cfd/` directory alongside existing files:
 
 ```bash
 cd HyperTensor-VM-main
 tar xzf qtt_batched_ops.tar.gz
-# Creates: tensornet/cfd/triton_qtt3d.py, qtt_batched_ops.py, etc.
+# Creates: ontic/cfd/triton_qtt3d.py, qtt_batched_ops.py, etc.
 ```
 
 ## Quick Start
@@ -24,8 +24,8 @@ tar xzf qtt_batched_ops.tar.gz
 ### Option A: Monkey-patch (zero changes to existing code)
 
 ```python
-from tensornet.cfd.ns3d_turbo import TurboNS3DConfig, TurboNS3DSolver
-from tensornet.cfd.qtt_batched_patch import patch_solver
+from ontic.cfd.ns3d_turbo import TurboNS3DConfig, TurboNS3DSolver
+from ontic.cfd.qtt_batched_patch import patch_solver
 
 config = TurboNS3DConfig(
     n_bits=5, nu=0.01, dt=0.02,
@@ -46,7 +46,7 @@ for i in range(100):
 ### Option B: Standalone (no dependency on existing solver)
 
 ```python
-from tensornet.cfd.qtt_batched_ops import (
+from ontic.cfd.qtt_batched_ops import (
     rk2_step_batched,
     batched_diagnostics,
 )
@@ -140,7 +140,7 @@ The dramatic 43x improvement for rank 48 is from fixing the adaptive_rank routin
 
 ```bash
 cd HyperTensor-VM-main
-PYTHONPATH="$PWD:$PYTHONPATH" python3 tensornet/cfd/benchmark_batched.py
+PYTHONPATH="$PWD:$PYTHONPATH" python3 ontic/cfd/benchmark_batched.py
 ```
 
 This runs 6 tests:

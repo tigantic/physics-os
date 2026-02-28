@@ -182,85 +182,85 @@ def _check_adapter_dir(pkg: Path, adapters: list[str], label: str) -> None:
 
 @gauntlet("adapter_files_statmech", layer="adapter_files")
 def test_adapter_files_statmech():
-    _check_adapter_dir(ROOT / "tensornet" / "statmech" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "statmech" / "trace_adapters",
                        STATMECH_ADAPTERS, "statmech")
 
 
 @gauntlet("adapter_files_biophysics", layer="adapter_files")
 def test_adapter_files_biophysics():
-    _check_adapter_dir(ROOT / "tensornet" / "biophysics" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "biophysics" / "trace_adapters",
                        BIOPHYSICS_ADAPTERS, "biophysics")
 
 
 @gauntlet("adapter_files_compmeth", layer="adapter_files")
 def test_adapter_files_compmeth():
-    _check_adapter_dir(ROOT / "tensornet" / "computational_methods" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "computational_methods" / "trace_adapters",
                        COMPMETH_ADAPTERS, "computational_methods")
 
 
 @gauntlet("adapter_files_mlphysics", layer="adapter_files")
 def test_adapter_files_mlphysics():
-    _check_adapter_dir(ROOT / "tensornet" / "ml_physics" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "ml_physics" / "trace_adapters",
                        MLPHYSICS_ADAPTERS, "ml_physics")
 
 
 @gauntlet("adapter_files_qinfo_ext", layer="adapter_files")
 def test_adapter_files_qinfo_ext():
-    _check_adapter_dir(ROOT / "tensornet" / "quantum" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "quantum" / "trace_adapters",
                        QINFO_EXT_ADAPTERS, "quantum_info_ext")
 
 
 @gauntlet("adapter_files_relativity", layer="adapter_files")
 def test_adapter_files_relativity():
-    _check_adapter_dir(ROOT / "tensornet" / "relativity" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "relativity" / "trace_adapters",
                        SPECIAL_RELATIVITY_ADAPTERS, "relativity")
 
 
 @gauntlet("adapter_files_astro", layer="adapter_files")
 def test_adapter_files_astro():
-    _check_adapter_dir(ROOT / "tensornet" / "special_applied" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "special_applied" / "trace_adapters",
                        SPECIAL_APPLIED_ADAPTERS, "astrodynamics")
 
 
 @gauntlet("adapter_files_robotics", layer="adapter_files")
 def test_adapter_files_robotics():
-    _check_adapter_dir(ROOT / "tensornet" / "robotics_physics" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "robotics_physics" / "trace_adapters",
                        ROBOTICS_ADAPTERS, "robotics")
 
 
 @gauntlet("adapter_files_acoustics", layer="adapter_files")
 def test_adapter_files_acoustics():
-    _check_adapter_dir(ROOT / "tensornet" / "acoustics" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "acoustics" / "trace_adapters",
                        ACOUSTICS_ADAPTERS, "acoustics")
 
 
 @gauntlet("adapter_files_biomedical", layer="adapter_files")
 def test_adapter_files_biomedical():
-    _check_adapter_dir(ROOT / "tensornet" / "biomedical" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "biomedical" / "trace_adapters",
                        BIOMEDICAL_ADAPTERS, "biomedical")
 
 
 @gauntlet("adapter_files_environmental", layer="adapter_files")
 def test_adapter_files_environmental():
-    _check_adapter_dir(ROOT / "tensornet" / "environmental" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "environmental" / "trace_adapters",
                        ENVIRONMENTAL_ADAPTERS, "environmental")
 
 
 @gauntlet("adapter_files_energy", layer="adapter_files")
 def test_adapter_files_energy():
-    _check_adapter_dir(ROOT / "tensornet" / "energy" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "energy" / "trace_adapters",
                        ENERGY_ADAPTERS, "energy")
 
 
 @gauntlet("adapter_files_manufacturing", layer="adapter_files")
 def test_adapter_files_manufacturing():
-    _check_adapter_dir(ROOT / "tensornet" / "manufacturing" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "manufacturing" / "trace_adapters",
                        MANUFACTURING_ADAPTERS, "manufacturing")
 
 
 @gauntlet("adapter_files_semiconductor", layer="adapter_files")
 def test_adapter_files_semiconductor():
-    _check_adapter_dir(ROOT / "tensornet" / "semiconductor" / "trace_adapters",
+    _check_adapter_dir(ROOT / "ontic" / "semiconductor" / "trace_adapters",
                        SEMICONDUCTOR_ADAPTERS, "semiconductor")
 
 
@@ -283,14 +283,14 @@ def test_adapter_total_count():
 
 @gauntlet("core_stochastic_adapter", layer="core_adapters")
 def test_core_stochastic_adapter():
-    from tensornet.core.stochastic_trace_adapter import StochasticTraceAdapter, StochasticConvergence
+    from ontic.core.stochastic_trace_adapter import StochasticTraceAdapter, StochasticConvergence
     assert hasattr(StochasticTraceAdapter, "run_traced")
     assert hasattr(StochasticConvergence, "to_dict") or hasattr(StochasticConvergence, "__dataclass_fields__")
 
 
 @gauntlet("core_ml_adapter", layer="core_adapters")
 def test_core_ml_adapter():
-    from tensornet.core.ml_trace_adapter import MLTraceAdapter, MLConvergence
+    from ontic.core.ml_trace_adapter import MLTraceAdapter, MLConvergence
     assert hasattr(MLTraceAdapter, "run_traced")
     assert hasattr(MLConvergence, "to_dict") or hasattr(MLConvergence, "__dataclass_fields__")
 
@@ -425,7 +425,7 @@ def test_tpc_phase9_importable():
 
 @gauntlet("statmech_equilibrium_mc_solve", layer="statmech_solvers")
 def test_statmech_equilibrium_mc_solve():
-    from tensornet.quantum.statmech.trace_adapters.equilibrium_mc_adapter import EquilibriumMCTraceAdapter
+    from ontic.quantum.statmech.trace_adapters.equilibrium_mc_adapter import EquilibriumMCTraceAdapter
     adapter = EquilibriumMCTraceAdapter(L=8, temperature=2.269)
     result, cons, session = adapter.evaluate(n_sweeps=500, n_warmup=100)
     assert cons.detailed_balance
@@ -435,7 +435,7 @@ def test_statmech_equilibrium_mc_solve():
 
 @gauntlet("statmech_monte_carlo_general_solve", layer="statmech_solvers")
 def test_statmech_monte_carlo_general_solve():
-    from tensornet.quantum.statmech.trace_adapters.monte_carlo_general_adapter import MonteCarloGeneralTraceAdapter
+    from ontic.quantum.statmech.trace_adapters.monte_carlo_general_adapter import MonteCarloGeneralTraceAdapter
     adapter = MonteCarloGeneralTraceAdapter(n_replicas=4)
     result, cons, session = adapter.evaluate(n_sweeps=200)
     assert len(session.entries) >= 2
@@ -447,7 +447,7 @@ def test_statmech_monte_carlo_general_solve():
 
 @gauntlet("bio_protein_structure_solve", layer="biophysics_solvers")
 def test_bio_protein_structure_solve():
-    from tensornet.life_sci.biophysics.trace_adapters.protein_structure_adapter import ProteinStructureTraceAdapter
+    from ontic.life_sci.biophysics.trace_adapters.protein_structure_adapter import ProteinStructureTraceAdapter
     adapter = ProteinStructureTraceAdapter(sequence="AVILMFYW")
     result, cons, session = adapter.evaluate()
     assert cons.rg > 0
@@ -456,7 +456,7 @@ def test_bio_protein_structure_solve():
 
 @gauntlet("bio_drug_design_solve", layer="biophysics_solvers")
 def test_bio_drug_design_solve():
-    from tensornet.life_sci.biophysics.trace_adapters.drug_design_adapter import DrugDesignTraceAdapter
+    from ontic.life_sci.biophysics.trace_adapters.drug_design_adapter import DrugDesignTraceAdapter
     adapter = DrugDesignTraceAdapter()
     result, cons, session = adapter.evaluate()
     assert len(session.entries) >= 2
@@ -464,7 +464,7 @@ def test_bio_drug_design_solve():
 
 @gauntlet("bio_membrane_solve", layer="biophysics_solvers")
 def test_bio_membrane_solve():
-    from tensornet.life_sci.biophysics.trace_adapters.membrane_adapter import MembraneTraceAdapter
+    from ontic.life_sci.biophysics.trace_adapters.membrane_adapter import MembraneTraceAdapter
     adapter = MembraneTraceAdapter(kappa=20.0)
     result, cons, session = adapter.evaluate()
     assert cons.bending_energy >= 0
@@ -473,7 +473,7 @@ def test_bio_membrane_solve():
 
 @gauntlet("bio_nucleic_acids_solve", layer="biophysics_solvers")
 def test_bio_nucleic_acids_solve():
-    from tensornet.life_sci.biophysics.trace_adapters.nucleic_acids_adapter import NucleicAcidsTraceAdapter
+    from ontic.life_sci.biophysics.trace_adapters.nucleic_acids_adapter import NucleicAcidsTraceAdapter
     adapter = NucleicAcidsTraceAdapter(sequence="GGGAAACCC")
     result, cons, session = adapter.evaluate()
     assert cons.mfe <= 0
@@ -482,7 +482,7 @@ def test_bio_nucleic_acids_solve():
 
 @gauntlet("bio_systems_biology_solve", layer="biophysics_solvers")
 def test_bio_systems_biology_solve():
-    from tensornet.life_sci.biophysics.trace_adapters.systems_biology_adapter import SystemsBiologyTraceAdapter
+    from ontic.life_sci.biophysics.trace_adapters.systems_biology_adapter import SystemsBiologyTraceAdapter
     adapter = SystemsBiologyTraceAdapter(n_species=2)
     result, cons, session = adapter.evaluate(t_max=10.0)
     assert cons.species_nonneg
@@ -491,7 +491,7 @@ def test_bio_systems_biology_solve():
 
 @gauntlet("bio_neuroscience_solve", layer="biophysics_solvers")
 def test_bio_neuroscience_solve():
-    from tensornet.life_sci.biophysics.trace_adapters.neuroscience_adapter import NeuroscienceTraceAdapter
+    from ontic.life_sci.biophysics.trace_adapters.neuroscience_adapter import NeuroscienceTraceAdapter
     adapter = NeuroscienceTraceAdapter(n_neurons=10, n_steps=1000)
     result, cons, session = adapter.evaluate()
     assert cons.spike_count >= 0
@@ -504,7 +504,7 @@ def test_bio_neuroscience_solve():
 
 @gauntlet("comp_optimization_solve", layer="compmeth_solvers")
 def test_comp_optimization_solve():
-    from tensornet.fluids.computational_methods.trace_adapters.optimization_adapter import OptimizationTraceAdapter
+    from ontic.fluids.computational_methods.trace_adapters.optimization_adapter import OptimizationTraceAdapter
     adapter = OptimizationTraceAdapter(n_control_points=8)
     result, cons, session = adapter.evaluate(n_iterations=20)
     assert cons.objective_decreased
@@ -513,7 +513,7 @@ def test_comp_optimization_solve():
 
 @gauntlet("comp_inverse_problems_solve", layer="compmeth_solvers")
 def test_comp_inverse_problems_solve():
-    from tensornet.fluids.computational_methods.trace_adapters.inverse_problems_adapter import InverseProblemsTraceAdapter
+    from ontic.fluids.computational_methods.trace_adapters.inverse_problems_adapter import InverseProblemsTraceAdapter
     adapter = InverseProblemsTraceAdapter(Nx=16, Ny=16)
     result, cons, session = adapter.evaluate()
     assert len(session.entries) >= 2
@@ -521,7 +521,7 @@ def test_comp_inverse_problems_solve():
 
 @gauntlet("comp_ml_physics_solve", layer="compmeth_solvers")
 def test_comp_ml_physics_solve():
-    from tensornet.ml.ml_physics.trace_adapters.ml_physics_adapter import MLPhysicsTraceAdapter
+    from ontic.ml.ml_physics.trace_adapters.ml_physics_adapter import MLPhysicsTraceAdapter
     adapter = MLPhysicsTraceAdapter(n_colloc=50)
     result, cons, session = adapter.evaluate(n_steps=100)
     assert len(session.entries) >= 2
@@ -529,7 +529,7 @@ def test_comp_ml_physics_solve():
 
 @gauntlet("comp_mesh_generation_solve", layer="compmeth_solvers")
 def test_comp_mesh_generation_solve():
-    from tensornet.fluids.computational_methods.trace_adapters.mesh_generation_adapter import MeshGenerationTraceAdapter
+    from ontic.fluids.computational_methods.trace_adapters.mesh_generation_adapter import MeshGenerationTraceAdapter
     adapter = MeshGenerationTraceAdapter(max_level=5)
     result, cons, session = adapter.evaluate()
     assert cons.n_cells > 0
@@ -538,7 +538,7 @@ def test_comp_mesh_generation_solve():
 
 @gauntlet("comp_large_scale_linalg_solve", layer="compmeth_solvers")
 def test_comp_large_scale_linalg_solve():
-    from tensornet.fluids.computational_methods.trace_adapters.large_scale_linalg_adapter import LargeScaleLinAlgTraceAdapter
+    from ontic.fluids.computational_methods.trace_adapters.large_scale_linalg_adapter import LargeScaleLinAlgTraceAdapter
     adapter = LargeScaleLinAlgTraceAdapter(dim=100)
     result, cons, session = adapter.evaluate(num_iter=50)
     assert cons.eigenvalue_computed
@@ -547,7 +547,7 @@ def test_comp_large_scale_linalg_solve():
 
 @gauntlet("comp_hpc_solve", layer="compmeth_solvers")
 def test_comp_hpc_solve():
-    from tensornet.fluids.computational_methods.trace_adapters.hpc_adapter import HPCTraceAdapter
+    from ontic.fluids.computational_methods.trace_adapters.hpc_adapter import HPCTraceAdapter
     adapter = HPCTraceAdapter()
     result, cons, session = adapter.evaluate(n_trials=5)
     assert cons.bit_exact
@@ -560,7 +560,7 @@ def test_comp_hpc_solve():
 
 @gauntlet("qinfo_quantum_simulation_solve", layer="qinfo_ext_solvers")
 def test_qinfo_quantum_simulation_solve():
-    from tensornet.quantum.trace_adapters.quantum_simulation_adapter import QuantumSimulationTraceAdapter
+    from ontic.quantum.trace_adapters.quantum_simulation_adapter import QuantumSimulationTraceAdapter
     adapter = QuantumSimulationTraceAdapter(n_sites=2)
     result, cons, session = adapter.evaluate(n_steps=40)
     assert len(session.entries) >= 2
@@ -568,7 +568,7 @@ def test_qinfo_quantum_simulation_solve():
 
 @gauntlet("qinfo_quantum_crypto_solve", layer="qinfo_ext_solvers")
 def test_qinfo_quantum_crypto_solve():
-    from tensornet.quantum.trace_adapters.quantum_crypto_adapter import QuantumCryptoTraceAdapter
+    from ontic.quantum.trace_adapters.quantum_crypto_adapter import QuantumCryptoTraceAdapter
     adapter = QuantumCryptoTraceAdapter()
     result, cons, session = adapter.evaluate()
     assert len(session.entries) >= 2
@@ -580,7 +580,7 @@ def test_qinfo_quantum_crypto_solve():
 
 @gauntlet("special_relativity_solve", layer="special_solvers")
 def test_special_relativity_solve():
-    from tensornet.astro.relativity.trace_adapters.special_relativity_adapter import SpecialRelativityTraceAdapter
+    from ontic.astro.relativity.trace_adapters.special_relativity_adapter import SpecialRelativityTraceAdapter
     adapter = SpecialRelativityTraceAdapter()
     result, cons, session = adapter.evaluate()
     assert cons.invariant_mass_conserved
@@ -589,7 +589,7 @@ def test_special_relativity_solve():
 
 @gauntlet("numerical_gr_solve", layer="special_solvers")
 def test_numerical_gr_solve():
-    from tensornet.astro.relativity.trace_adapters.numerical_gr_adapter import NumericalGRTraceAdapter
+    from ontic.astro.relativity.trace_adapters.numerical_gr_adapter import NumericalGRTraceAdapter
     adapter = NumericalGRTraceAdapter(n=16, dx=0.5)
     result, cons, session = adapter.evaluate(n_steps=5)
     assert len(session.entries) >= 2
@@ -597,7 +597,7 @@ def test_numerical_gr_solve():
 
 @gauntlet("astrodynamics_solve", layer="special_solvers")
 def test_astrodynamics_solve():
-    from tensornet.applied.special_applied.trace_adapters.astrodynamics_adapter import AstrodynamicsTraceAdapter
+    from ontic.applied.special_applied.trace_adapters.astrodynamics_adapter import AstrodynamicsTraceAdapter
     adapter = AstrodynamicsTraceAdapter()
     result, cons, session = adapter.evaluate()
     assert len(session.entries) >= 2
@@ -605,7 +605,7 @@ def test_astrodynamics_solve():
 
 @gauntlet("robotics_solve", layer="special_solvers")
 def test_robotics_solve():
-    from tensornet.applied.robotics_physics.trace_adapters.robotics_adapter import RoboticsTraceAdapter
+    from ontic.applied.robotics_physics.trace_adapters.robotics_adapter import RoboticsTraceAdapter
     adapter = RoboticsTraceAdapter(n_links=3)
     result, cons, session = adapter.evaluate()
     assert cons.ke_nonneg
@@ -614,7 +614,7 @@ def test_robotics_solve():
 
 @gauntlet("acoustics_solve", layer="special_solvers")
 def test_acoustics_solve():
-    from tensornet.applied.acoustics.trace_adapters.acoustics_adapter import AcousticsTraceAdapter
+    from ontic.applied.acoustics.trace_adapters.acoustics_adapter import AcousticsTraceAdapter
     adapter = AcousticsTraceAdapter(radius=0.5)
     result, cons, session = adapter.evaluate(frequency=1000.0)
     assert cons.tl_positive
@@ -623,7 +623,7 @@ def test_acoustics_solve():
 
 @gauntlet("biomedical_solve", layer="special_solvers")
 def test_biomedical_solve():
-    from tensornet.life_sci.biomedical.trace_adapters.biomedical_adapter import BiomedicalTraceAdapter
+    from ontic.life_sci.biomedical.trace_adapters.biomedical_adapter import BiomedicalTraceAdapter
     adapter = BiomedicalTraceAdapter()
     result, cons, session = adapter.evaluate()
     assert len(session.entries) >= 2
@@ -631,7 +631,7 @@ def test_biomedical_solve():
 
 @gauntlet("environmental_solve", layer="special_solvers")
 def test_environmental_solve():
-    from tensornet.energy_env.environmental.trace_adapters.environmental_adapter import EnvironmentalTraceAdapter
+    from ontic.energy_env.environmental.trace_adapters.environmental_adapter import EnvironmentalTraceAdapter
     adapter = EnvironmentalTraceAdapter(Q=100.0, H=50.0, u=5.0)
     result, cons, session = adapter.evaluate()
     assert cons.concentration_nonneg
@@ -640,7 +640,7 @@ def test_environmental_solve():
 
 @gauntlet("energy_systems_solve", layer="special_solvers")
 def test_energy_systems_solve():
-    from tensornet.energy_env.energy.trace_adapters.energy_systems_adapter import EnergySystemsTraceAdapter
+    from ontic.energy_env.energy.trace_adapters.energy_systems_adapter import EnergySystemsTraceAdapter
     adapter = EnergySystemsTraceAdapter(L=1e-4, nx=100)
     result, cons, session = adapter.evaluate()
     assert len(session.entries) >= 2
@@ -648,7 +648,7 @@ def test_energy_systems_solve():
 
 @gauntlet("manufacturing_solve", layer="special_solvers")
 def test_manufacturing_solve():
-    from tensornet.materials.manufacturing.trace_adapters.manufacturing_adapter import ManufacturingTraceAdapter
+    from ontic.materials.manufacturing.trace_adapters.manufacturing_adapter import ManufacturingTraceAdapter
     adapter = ManufacturingTraceAdapter()
     result, cons, session = adapter.evaluate()
     assert len(session.entries) >= 2
@@ -656,7 +656,7 @@ def test_manufacturing_solve():
 
 @gauntlet("semiconductor_solve", layer="special_solvers")
 def test_semiconductor_solve():
-    from tensornet.quantum.semiconductor.trace_adapters.semiconductor_adapter import SemiconductorTraceAdapter
+    from ontic.quantum.semiconductor.trace_adapters.semiconductor_adapter import SemiconductorTraceAdapter
     adapter = SemiconductorTraceAdapter()
     result, cons, session = adapter.evaluate()
     assert len(session.entries) >= 2
@@ -668,7 +668,7 @@ def test_semiconductor_solve():
 
 @gauntlet("conservation_equilibrium_mc_detailed_balance", layer="conservation")
 def test_conservation_equilibrium_mc_detailed_balance():
-    from tensornet.quantum.statmech.trace_adapters.equilibrium_mc_adapter import EquilibriumMCTraceAdapter
+    from ontic.quantum.statmech.trace_adapters.equilibrium_mc_adapter import EquilibriumMCTraceAdapter
     adapter = EquilibriumMCTraceAdapter(L=8, temperature=2.269)
     _, cons, _ = adapter.evaluate(n_sweeps=500, n_warmup=100)
     assert cons.detailed_balance, "Detailed balance violated"
@@ -677,7 +677,7 @@ def test_conservation_equilibrium_mc_detailed_balance():
 
 @gauntlet("conservation_protein_energy", layer="conservation")
 def test_conservation_protein_energy():
-    from tensornet.life_sci.biophysics.trace_adapters.protein_structure_adapter import ProteinStructureTraceAdapter
+    from ontic.life_sci.biophysics.trace_adapters.protein_structure_adapter import ProteinStructureTraceAdapter
     adapter = ProteinStructureTraceAdapter(sequence="AVILMFYW")
     _, cons, _ = adapter.evaluate()
     assert cons.rg > 0, "Radius of gyration must be positive"
@@ -686,7 +686,7 @@ def test_conservation_protein_energy():
 
 @gauntlet("conservation_neuroscience_spike", layer="conservation")
 def test_conservation_neuroscience_spike():
-    from tensornet.life_sci.biophysics.trace_adapters.neuroscience_adapter import NeuroscienceTraceAdapter
+    from ontic.life_sci.biophysics.trace_adapters.neuroscience_adapter import NeuroscienceTraceAdapter
     adapter = NeuroscienceTraceAdapter(n_neurons=10, n_steps=1000)
     _, cons, _ = adapter.evaluate()
     assert cons.spike_count >= 0, "Spike count must be non-negative"
@@ -694,7 +694,7 @@ def test_conservation_neuroscience_spike():
 
 @gauntlet("conservation_mesh_balance", layer="conservation")
 def test_conservation_mesh_balance():
-    from tensornet.fluids.computational_methods.trace_adapters.mesh_generation_adapter import MeshGenerationTraceAdapter
+    from ontic.fluids.computational_methods.trace_adapters.mesh_generation_adapter import MeshGenerationTraceAdapter
     adapter = MeshGenerationTraceAdapter(max_level=5)
     _, cons, _ = adapter.evaluate()
     assert cons.n_cells > 0, "Mesh must have cells"
@@ -703,7 +703,7 @@ def test_conservation_mesh_balance():
 
 @gauntlet("conservation_sr_invariant_mass", layer="conservation")
 def test_conservation_sr_invariant_mass():
-    from tensornet.astro.relativity.trace_adapters.special_relativity_adapter import SpecialRelativityTraceAdapter
+    from ontic.astro.relativity.trace_adapters.special_relativity_adapter import SpecialRelativityTraceAdapter
     adapter = SpecialRelativityTraceAdapter()
     _, cons, _ = adapter.evaluate()
     assert cons.invariant_mass_conserved, "Invariant mass not conserved"
@@ -711,7 +711,7 @@ def test_conservation_sr_invariant_mass():
 
 @gauntlet("conservation_environmental_nonneg", layer="conservation")
 def test_conservation_environmental_nonneg():
-    from tensornet.energy_env.environmental.trace_adapters.environmental_adapter import EnvironmentalTraceAdapter
+    from ontic.energy_env.environmental.trace_adapters.environmental_adapter import EnvironmentalTraceAdapter
     adapter = EnvironmentalTraceAdapter(Q=100.0, H=50.0, u=5.0)
     _, cons, _ = adapter.evaluate()
     assert cons.concentration_nonneg, "Concentration must be non-negative"
@@ -724,7 +724,7 @@ def test_conservation_environmental_nonneg():
 @gauntlet("integration_trace_session_api", layer="integration")
 def test_integration_trace_session_api():
     """TraceSession API works uniformly across adapters."""
-    from tensornet.core.trace import TraceSession
+    from ontic.core.trace import TraceSession
     session = TraceSession()
     session.log_custom(
         name="integration_test",
@@ -754,7 +754,7 @@ def test_integration_all_categories_covered():
 @gauntlet("integration_consistency_check", layer="integration")
 def test_integration_consistency_check():
     """Each adapter returns (result, conservation, session) triple."""
-    from tensornet.life_sci.biomedical.trace_adapters.biomedical_adapter import BiomedicalTraceAdapter
+    from ontic.life_sci.biomedical.trace_adapters.biomedical_adapter import BiomedicalTraceAdapter
     adapter = BiomedicalTraceAdapter()
     output = adapter.evaluate()
     assert isinstance(output, tuple) and len(output) == 3, (

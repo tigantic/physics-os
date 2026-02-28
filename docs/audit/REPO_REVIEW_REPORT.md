@@ -39,7 +39,7 @@
               ▼                               ▼
 ┌─────────────────────────┐    ┌──────────────────────────────────────────┐
 │   Python Platform Layer │    │       REST API Layer                     │
-│   tensornet.platform.*  │    │  sovereign_api (FastAPI)                 │
+│   ontic.platform.*  │    │  sovereign_api (FastAPI)                 │
 │   - Protocols (6 ABCs)  │    │  sdk/server (FastAPI)                    │
 │   - Data Model          │    │  products/facial_plastics (Flask+Gunicorn│
 │   - Solvers             │    │  fluidelite-server (Axum/Rust)           │
@@ -76,7 +76,7 @@
 | Entry Point | Path | Protocol |
 |-------------|------|----------|
 | Python package | `import tensornet` | Python API |
-| SDK builder | `tensornet.sdk.WorkflowBuilder` | Python DSL |
+| SDK builder | `ontic.sdk.WorkflowBuilder` | Python DSL |
 | Sovereign API | `sovereign_api/sovereign_api.py` | HTTP REST + WebSocket |
 | SDK Server | `apps/sdk_legacy/server/main.py` | HTTP REST (FastAPI) |
 | Facial Plastics | `products/facial_plastics/` | HTTP REST (Flask) |
@@ -111,13 +111,13 @@ Source → pip install -e ".[all]" (Python)
 
 | Directory | Role | LOC (approx) | Key Files |
 |-----------|------|-------------|-----------|
-| `tensornet/` | Python physics engine | ~884K | `core/mps.py`, `core/mpo.py`, `algorithms/dmrg.py`, `cfd/euler_1d.py` |
-| `tensornet/platform/` | Platform substrate (protocols, data model, V&V) | ~12.6K | `protocols.py`, `data_model.py`, `solvers.py`, `checkpoint.py` |
-| `tensornet/sdk/` | Public SDK surface | ~1.5K | `__init__.py`, `workflow.py`, `recipes.py` |
-| `tensornet/cfd/` | Computational Fluid Dynamics | ~70K | `euler_1d.py`, `euler_2d/3d.py`, `ns2d_qtt_native.py` |
-| `tensornet/exploit/` | DeFi exploit hunting engine | ~26K | `hunter.py`, `etherfi_hunt.py`, `hypergrid.py` |
-| `tensornet/genesis/` | Code/config generation | ~41K | Various generators |
-| `tensornet/cuda/` | CUDA kernels + Python bindings | ~3.7K + 570 | `qtt_native_kernels.cu`, `qtt_native_ops.py` |
+| `ontic/` | Python physics engine | ~884K | `core/mps.py`, `core/mpo.py`, `algorithms/dmrg.py`, `cfd/euler_1d.py` |
+| `ontic/platform/` | Platform substrate (protocols, data model, V&V) | ~12.6K | `protocols.py`, `data_model.py`, `solvers.py`, `checkpoint.py` |
+| `ontic/sdk/` | Public SDK surface | ~1.5K | `__init__.py`, `workflow.py`, `recipes.py` |
+| `ontic/cfd/` | Computational Fluid Dynamics | ~70K | `euler_1d.py`, `euler_2d/3d.py`, `ns2d_qtt_native.py` |
+| `ontic/exploit/` | DeFi exploit hunting engine | ~26K | `hunter.py`, `etherfi_hunt.py`, `hypergrid.py` |
+| `ontic/genesis/` | Code/config generation | ~41K | Various generators |
+| `ontic/cuda/` | CUDA kernels + Python bindings | ~3.7K + 570 | `qtt_native_kernels.cu`, `qtt_native_ops.py` |
 | `crates/hyper_core/` | Rust GPU TT evaluator (WGPU) | ~2K | `src/gpu/tt_eval.rs` |
 | `crates/hyper_bridge/` | Shared-memory IPC | ~6K | `src/protocol.rs`, `src/reader.rs` |
 | `crates/tci_core/` | TT-Cross interpolation (PyO3) | ~3K | `src/lib.rs`, `src/maxvol.rs` |
@@ -170,12 +170,12 @@ make check        # All gates: format + typecheck + test + proofs + physics
 | Issue | Evidence | Impact | Confidence |
 |-------|----------|--------|------------|
 | **Python lockfile is a flat freeze, not a resolver-aware lockfile** | [requirements-lock.txt](requirements-lock.txt) is `pip freeze` output (400+ packages) | Transitive dependency resolution may differ across platforms. No hash verification. | High |
-| **`torch.use_deterministic_algorithms(mode=False)`** | [tensornet/platform/reproduce.py](tensornet/platform/reproduce.py#L160) | Operations like `scatter_add`, `index_put_` may produce non-deterministic results across runs | High |
-| **NumPy RNG state NOT actually captured** | [tensornet/platform/reproduce.py](tensornet/platform/reproduce.py#L118-L120): stores `{"state": "captured", "seed": seed}` instead of actual state arrays | Replay from checkpoint does not restore NumPy RNG to exact position | High |
+| **`torch.use_deterministic_algorithms(mode=False)`** | [ontic/platform/reproduce.py](ontic/platform/reproduce.py#L160) | Operations like `scatter_add`, `index_put_` may produce non-deterministic results across runs | High |
+| **NumPy RNG state NOT actually captured** | [ontic/platform/reproduce.py](ontic/platform/reproduce.py#L118-L120): stores `{"state": "captured", "seed": seed}` instead of actual state arrays | Replay from checkpoint does not restore NumPy RNG to exact position | High |
 | **No scipy RNG seeding** | [tests/conftest.py](tests/conftest.py) seeds Python, NumPy, PyTorch but not scipy | Tests using scipy random generators are non-deterministic | Medium |
 | **Cargo.lock is committed** | Root `Cargo.lock` (6,728 lines) | Good — Rust builds are reproducible | — |
 | **`requirements-dev.txt` pins exact versions** | All dev tools pinned (e.g., `pytest==8.3.3`, `ruff==0.8.4`) | Good — dev environment is reproducible | — |
-| **CUDA JIT uses `--use_fast_math`** | [tensornet/cuda/qtt_native_ops.py](tensornet/cuda/qtt_native_ops.py) | `fast_math` can change NaN/Inf handling and reduce floating-point accuracy | Medium |
+| **CUDA JIT uses `--use_fast_math`** | [ontic/cuda/qtt_native_ops.py](ontic/cuda/qtt_native_ops.py) | `fast_math` can change NaN/Inf handling and reduce floating-point accuracy | Medium |
 
 ---
 
@@ -185,20 +185,20 @@ make check        # All gates: format + typecheck + test + proofs + physics
 
 #### 5.1 MPS/MPO Core Data Structures
 
-**Evidence:** [tensornet/core/mps.py](tensornet/core/mps.py) (395 lines), [tensornet/core/mpo.py](tensornet/core/mpo.py) (229 lines)
+**Evidence:** [ontic/core/mps.py](ontic/core/mps.py) (395 lines), [ontic/core/mpo.py](ontic/core/mpo.py) (229 lines)
 
 | Finding | Impact | Confidence |
 |---------|--------|------------|
 | **Zero input validation in MPS constructor** — no shape, dtype, or bond-dimension compatibility checks | Passing tensors with mismatched bond dimensions between adjacent sites produces silent corruption. Downstream operations (DMRG, TDVP) will compute wrong results without any error. | High |
 | **Zero `raise` statements in mps.py** — no defensive error handling | Any failure mode (empty tensor list, zero-length chains, NaN inputs) manifests as confusing downstream `RuntimeError` or silent wrong answers | High |
 | **`MPO.expectation()` does NOT normalize by ⟨ψ\|ψ⟩** | Returns incorrect expectation values for unnormalized MPS. Inconsistent with `MPS.expectation_local()` which does normalize. | High |
-| **`mpo_sum()` uses bare `assert`** on [mpo.py line 201](tensornet/core/mpo.py#L201) | Silently disabled with `python -O`. Length mismatch passes without error. | Medium |
+| **`mpo_sum()` uses bare `assert`** on [mpo.py line 201](ontic/core/mpo.py#L201) | Silently disabled with `python -O`. Length mismatch passes without error. | Medium |
 
 **Recommendation:** Add a `_validate()` method to both `MPS.__init__` and `MPO.__init__` that checks tensor count, shape compatibility at bonds, dtype consistency, and NaN/Inf presence. Replace all bare `assert` with `raise ValueError`.
 
 #### 5.2 DMRG Algorithm
 
-**Evidence:** [tensornet/algorithms/dmrg.py](tensornet/algorithms/dmrg.py) (571 lines)
+**Evidence:** [ontic/algorithms/dmrg.py](ontic/algorithms/dmrg.py) (571 lines)
 
 | Finding | Impact | Confidence |
 |---------|--------|------------|
@@ -208,7 +208,7 @@ make check        # All gates: format + typecheck + test + proofs + physics
 
 #### 5.3 SVD/Decomposition
 
-**Evidence:** [tensornet/core/decompositions.py](tensornet/core/decompositions.py)
+**Evidence:** [ontic/core/decompositions.py](ontic/core/decompositions.py)
 
 | Finding | Impact | Confidence |
 |---------|--------|------------|
@@ -217,7 +217,7 @@ make check        # All gates: format + typecheck + test + proofs + physics
 
 #### 5.4 Euler/CFD Solvers
 
-**Evidence:** [tensornet/cfd/euler_1d.py](tensornet/cfd/euler_1d.py) (667 lines)
+**Evidence:** [ontic/cfd/euler_1d.py](ontic/cfd/euler_1d.py) (667 lines)
 
 | Finding | Impact | Confidence |
 |---------|--------|------------|
@@ -227,7 +227,7 @@ make check        # All gates: format + typecheck + test + proofs + physics
 
 #### 5.5 Checkpoint Integrity
 
-**Evidence:** [tensornet/platform/checkpoint.py](tensornet/platform/checkpoint.py#L210)
+**Evidence:** [ontic/platform/checkpoint.py](ontic/platform/checkpoint.py#L210)
 
 | Finding | Impact | Confidence |
 |---------|--------|------------|
@@ -268,7 +268,7 @@ make check        # All gates: format + typecheck + test + proofs + physics
 | **SEC-01** | **Hardcoded API key in source** | [sovereign-ui/serve.cjs line 15](sovereign-ui/serve.cjs#L15): `fp_QsU-wSv71x7KKxpNEjCxirFYtB76G7YrHNvq2C_nXgk` | Attacker clones repo → extracts API key → authenticates to any deployment using this key as fallback |
 | **SEC-02** | **Hardcoded API key "prodkey123"** | [demo/streamlit_app.py line 21](demo/streamlit_app.py#L21): `API_KEY = "prodkey123"` | If demo is deployed with this key, all API access is trivially compromised |
 | **SEC-03** | **Arbitrary code execution via pickle.load()** | 9 instances: [tci_llm/svd_llm.py line 213](tci_llm/svd_llm.py#L213), [tci_llm/generalized_tci.py line 360](tci_llm/generalized_tci.py#L360), [The_Compressor/qtt/container.py line 601-605](The_Compressor/qtt/container.py#L601), [FRONTIER/07_GENOMICS/*.py](FRONTIER/07_GENOMICS/) (4 files) | Attacker crafts malicious pickle file → places in expected path → `pickle.load()` executes arbitrary Python code (RCE) |
-| **SEC-04** | **Arbitrary code execution via torch.load(weights_only=False)** | [tensornet/platform/checkpoint.py lines 181,189](tensornet/platform/checkpoint.py#L181): explicit `weights_only=False`; 17+ additional instances without `weights_only=True` across `tensornet/`, `demos/`, `tools/scripts/`, `crates/fluidelite/` | Attacker provides malicious `.pt` checkpoint file → `torch.load` deserializes arbitrary objects → RCE |
+| **SEC-04** | **Arbitrary code execution via torch.load(weights_only=False)** | [ontic/platform/checkpoint.py lines 181,189](ontic/platform/checkpoint.py#L181): explicit `weights_only=False`; 17+ additional instances without `weights_only=True` across `ontic/`, `demos/`, `tools/scripts/`, `crates/fluidelite/` | Attacker provides malicious `.pt` checkpoint file → `torch.load` deserializes arbitrary objects → RCE |
 | **SEC-05** | **Arbitrary code execution via np.load(allow_pickle=True)** | 8 instances across [The_Compressor/](The_Compressor/) and [scripts/tools/](scripts/tools/) | Same vector as SEC-03 via numpy pickle deserialization |
 
 #### HIGH Severity
@@ -288,7 +288,7 @@ make check        # All gates: format + typecheck + test + proofs + physics
 | ID | Vulnerability | Evidence |
 |----|--------------|----------|
 | **SEC-13** | `shell=True` in subprocess | [scripts/packaging_gate.py line 104](scripts/packaging_gate.py#L104) |
-| **SEC-14** | MD5 for hashing (non-crypto but code smell) | 9 instances across `tensornet/` using `hashlib.md5()` |
+| **SEC-14** | MD5 for hashing (non-crypto but code smell) | 9 instances across `ontic/` using `hashlib.md5()` |
 | **SEC-15** | Security scan exclusions too broad | [scripts/security_scan.py](scripts/security_scan.py): excludes `results/*.json`, `artifacts/artifacts/evidence/*.json` — could hide real secrets |
 | **SEC-16** | `sovereign-ui/serve.cjs` strips Origin header | [serve.cjs line 68](sovereign-ui/serve.cjs#L68): `delete proxyHeaders['origin']` — bypasses backend CORS |
 | **SEC-17** | `.env` file committed (sovereign-ui) | [sovereign-ui/.env](sovereign-ui/.env) — currently empty `VITE_API_BASE=` but file is tracked |
@@ -310,7 +310,7 @@ make check        # All gates: format + typecheck + test + proofs + physics
 | Python lockfile | ⚠️ Partial | `requirements-lock.txt` is `pip freeze` — no hashes, no resolver metadata |
 | Rust lockfile | ✅ | `Cargo.lock` committed (6,728 lines) |
 | `pip-audit` in CI | ✅ | Via [scripts/security_scan.py](scripts/security_scan.py) |
-| SBOM generation | ✅ | [tensornet/platform/security.py](tensornet/platform/security.py): CycloneDX format |
+| SBOM generation | ✅ | [ontic/platform/security.py](ontic/platform/security.py): CycloneDX format |
 | Git-sourced Rust deps | ⚠️ | `icicle` pinned to git tag `v4.0.0` — no crates.io version, depends on GitHub availability |
 | Bandit in CI | ⚠️ Non-blocking | `continue-on-error: true` in ci.yml |
 
@@ -336,13 +336,13 @@ make check        # All gates: format + typecheck + test + proofs + physics
 | Rust TCI core | `rayon` thread pool | Sound; no shared mutable state |
 | Rust hyper_bridge | Explicitly NOT thread-safe | Documented; per-consumer instances required |
 | CUDA kernels | GPU parallelism | No stream management; all on default stream → serialized kernel launches |
-| Distributed module | MPI-style via `tensornet.distributed` | Module structure exists; implementation depth not verified |
+| Distributed module | MPI-style via `ontic.distributed` | Module structure exists; implementation depth not verified |
 
 ### 7.3 Memory/IO Patterns
 
 | Pattern | Evidence | Risk |
 |---------|----------|------|
-| **MemoryPool is dead code** | [tensornet/core/gpu.py MemoryPool.allocate()](tensornet/core/gpu.py#L159-L182): returns `torch.zeros()` instead of pool view | Pool tracking overhead with no benefit; every "allocation" is a fresh tensor |
+| **MemoryPool is dead code** | [ontic/core/gpu.py MemoryPool.allocate()](ontic/core/gpu.py#L159-L182): returns `torch.zeros()` instead of pool view | Pool tracking overhead with no benefit; every "allocation" is a fresh tensor |
 | **TDVP environment storage** | All L environment tensors stored simultaneously | O(L·χ²·D) memory; could OOM for large χ with no checkpointing strategy |
 | **TCI sample cache unbounded** | `HashMap<u64, f64>` in [crates/tci_core/src/lib.rs](crates/tci_core/src/lib.rs) | For high-dimensional problems (n_qubits ≤ 40), cache can grow to GB scale |
 | **Shared-memory IPC** | `/dev/shm/hypertensor_bridge` with 8MB+ data buffer | Linux-specific; no timeout/watchdog for reader blocking |
@@ -363,7 +363,7 @@ make check        # All gates: format + typecheck + test + proofs + physics
 | CPU memory profiling | ✅ | `@memory_profile` via `tracemalloc` |
 | GPU profiling | ❌ | No `torch.profiler`, no NVIDIA Nsight integration |
 | Benchmark suite | ⚠️ Partial | 15 benchmark scripts in `experiments/benchmarks/benchmarks/`; no CI-integrated regression detection |
-| Kernel autotuning | ✅ | [tensornet/gpu/kernel_autotune_cache.py](tensornet/gpu/kernel_autotune_cache.py): persistent JSON cache with 10K entry limit |
+| Kernel autotuning | ✅ | [ontic/gpu/kernel_autotune_cache.py](ontic/gpu/kernel_autotune_cache.py): persistent JSON cache with 10K entry limit |
 
 ---
 
@@ -373,7 +373,7 @@ make check        # All gates: format + typecheck + test + proofs + physics
 
 | Layer | Status | Evidence |
 |-------|--------|----------|
-| **Logs** | ✅ | [tensornet/logging_config.py](tensornet/logging_config.py): structured logging with domain methods (`computation()`, `physics()`, `convergence()`); ANSI colors auto-detect; file handler support |
+| **Logs** | ✅ | [ontic/logging_config.py](ontic/logging_config.py): structured logging with domain methods (`computation()`, `physics()`, `convergence()`); ANSI colors auto-detect; file handler support |
 | **Metrics** | ✅ | Prometheus on port 9090; `prometheus_client==0.21.0` in lockfile; `per_solver_metrics = true` in [deployment.toml](deploy/config/deployment.toml) |
 | **Traces** | ⚠️ | OpenTelemetry SDK in lockfile (`opentelemetry-api==1.27.0`, instrumentation for FastAPI, Redis, ASGI) — but no configuration or explicit integration found in application code |
 | **Structured logging** | ✅ | JSON format available via deployment.toml (`format = "json"`, rotation 100MB × 10 files) |
@@ -384,7 +384,7 @@ make check        # All gates: format + typecheck + test + proofs + physics
 |-------|----------|
 | Container HEALTHCHECK | [deploy/Containerfile](deploy/Containerfile): `curl -sf http://localhost:${TRUSTLESS_API_PORT}/health` (30s interval, 3 retries) |
 | Standalone script | [deploy/config/scripts/health_check.sh](deploy/config/scripts/health_check.sh) (324 lines): API health, solver endpoints, metrics, response times (<100ms pass, <500ms warn), system resources |
-| In-code health | `tensornet.integration`: `HealthCheck`, `HealthStatus`, `HealthCheckResult`, `AlertManager`, `AlertSeverity` |
+| In-code health | `ontic.integration`: `HealthCheck`, `HealthStatus`, `HealthCheckResult`, `AlertManager`, `AlertSeverity` |
 
 ### 8.3 Missing Operability Components
 
@@ -402,11 +402,11 @@ make check        # All gates: format + typecheck + test + proofs + physics
 | Scenario | System Behavior | Evidence |
 |----------|----------------|----------|
 | **Dependency outage (PyPI/crates.io)** | Build fails; Icicle from git tag compounds risk | Cargo.lock mitigates; Python lockfile partially mitigates |
-| **GPU OOM** | `VRAMManager` triggers emergency cleanup (`gc.collect()` + `torch.cuda.empty_cache()`) — no prioritized eviction | [tensornet/gpu/memory.py](tensornet/gpu/memory.py) |
+| **GPU OOM** | `VRAMManager` triggers emergency cleanup (`gc.collect()` + `torch.cuda.empty_cache()`) — no prioritized eviction | [ontic/gpu/memory.py](ontic/gpu/memory.py) |
 | **Disk full** | Certificate storage has `max_total_size = "10GB"` in config but no enforcement code found | [deploy/config/deployment.toml](deploy/config/deployment.toml) |
 | **Network partition** | Shared-memory IPC has no timeout; reader blocks indefinitely | [crates/hyper_bridge/src/lib.rs](crates/hyper_bridge/src/lib.rs) |
 | **Invalid config** | `deployment.toml` parsed at startup; missing required fields cause crash | No graceful degradation or defaults documented |
-| **Corrupted checkpoint** | Loads with warning only; simulation continues with bad data | [tensornet/platform/checkpoint.py line 210](tensornet/platform/checkpoint.py#L210) |
+| **Corrupted checkpoint** | Loads with warning only; simulation continues with bad data | [ontic/platform/checkpoint.py line 210](ontic/platform/checkpoint.py#L210) |
 
 ---
 
@@ -461,7 +461,7 @@ make check        # All gates: format + typecheck + test + proofs + physics
 
 | Aspect | Status | Evidence |
 |--------|--------|----------|
-| `__all__` defined | ✅ | [tensornet/sdk/__init__.py](tensornet/sdk/__init__.py): 70+ symbols |
+| `__all__` defined | ✅ | [ontic/sdk/__init__.py](ontic/sdk/__init__.py): 70+ symbols |
 | Versioning | ✅ | `__sdk_version__ = "2.0.0"` (SemVer) |
 | Deprecation policy | ✅ | `@deprecated(removal_version, alternative, reason)` decorator |
 | `@since(version)` | ✅ | Sets `__since__` attribute |
@@ -527,7 +527,7 @@ make check        # All gates: format + typecheck + test + proofs + physics
 | **License** | Proprietary (Tigantic Holdings LLC) | [LICENSE](LICENSE): "PROPRIETARY SOFTWARE LICENSE AGREEMENT" |
 | **Copyright** | © 2025 Bradly Biron Baker Adams / Tigantic Holdings LLC | LICENSE header |
 | **Third-party notices** | ⚠️ Partial | `license_audit()` checks for GPL contamination; no NOTICE file for all transitives |
-| **GPL contamination guard** | ✅ | [tensornet/platform/security.py](tensornet/platform/security.py): `license_audit()` classifies GPL as "copyleft" |
+| **GPL contamination guard** | ✅ | [ontic/platform/security.py](ontic/platform/security.py): `license_audit()` classifies GPL as "copyleft" |
 | **License classification bug** | ⚠️ | Unrecognized licenses default to "permissive" — should default to "unknown" |
 | **SBOM generation** | ✅ | CycloneDX format via `generate_sbom()` |
 | **Data retention** | ⚠️ | `deployment.toml`: `retention_days = 0` (no limit by default); `max_total_size = "10GB"` |
@@ -570,11 +570,11 @@ make check        # All gates: format + typecheck + test + proofs + physics
 |---|--------|----------------|---------------------|----------|
 | QW-1 | **Remove hardcoded API keys** | [sovereign-ui/serve.cjs](sovereign-ui/serve.cjs#L15), [demo/streamlit_app.py](demo/streamlit_app.py#L21) | No API keys in `git grep -i "api.key\|prodkey\|fp_QsU"`; keys rotated in all deployments | P0 |
 | QW-2 | **Make CI security gates blocking** | [.github/workflows/ci.yml](.github/workflows/ci.yml) | Remove `continue-on-error: true` from `security`, `typecheck`, `test-unit` stages; CI fails on bandit CRITICAL/HIGH | P0 |
-| QW-3 | **Fix `torch.load` unsafe calls** | [tensornet/platform/checkpoint.py](tensornet/platform/checkpoint.py#L181,L189) + 17 other files | All `torch.load` calls use `weights_only=True`; add safe deserialization test | P0 |
+| QW-3 | **Fix `torch.load` unsafe calls** | [ontic/platform/checkpoint.py](ontic/platform/checkpoint.py#L181,L189) + 17 other files | All `torch.load` calls use `weights_only=True`; add safe deserialization test | P0 |
 | QW-4 | **Enable V&V failure alerting** | [.github/workflows/vv-validation.yml](.github/workflows/vv-validation.yml) | Remove `if: false` from alert-on-failure job; V&V regressions block or notify | P0 |
-| QW-5 | **Add MPS/MPO input validation** | [tensornet/core/mps.py](tensornet/core/mps.py), [tensornet/core/mpo.py](tensornet/core/mpo.py) | `MPS([])` raises `ValueError`; mismatched bond dims raise; NaN input raises | P1 |
-| QW-6 | **Add Euler state guards** | [tensornet/cfd/euler_1d.py](tensornet/cfd/euler_1d.py) | `rho` clamped to `min=1e-30`; negative pressure detected and handled | P1 |
-| QW-7 | **Fix checkpoint hash enforcement** | [tensornet/platform/checkpoint.py](tensornet/platform/checkpoint.py#L210) | Hash mismatch raises `IntegrityError` instead of logging warning | P1 |
+| QW-5 | **Add MPS/MPO input validation** | [ontic/core/mps.py](ontic/core/mps.py), [ontic/core/mpo.py](ontic/core/mpo.py) | `MPS([])` raises `ValueError`; mismatched bond dims raise; NaN input raises | P1 |
+| QW-6 | **Add Euler state guards** | [ontic/cfd/euler_1d.py](ontic/cfd/euler_1d.py) | `rho` clamped to `min=1e-30`; negative pressure detected and handled | P1 |
+| QW-7 | **Fix checkpoint hash enforcement** | [ontic/platform/checkpoint.py](ontic/platform/checkpoint.py#L210) | Hash mismatch raises `IntegrityError` instead of logging warning | P1 |
 | QW-8 | **Add non-root user to Facial Plastics container** | [products/facial_plastics/Containerfile](products/facial_plastics/Containerfile) | `USER` instruction added; container runs as non-root | P1 |
 | QW-9 | **Add authentication to Sovereign API** | [sovereign_api/sovereign_api.py](sovereign_api/sovereign_api.py) | API key middleware on all endpoints; rate limiting on `/api/analyze` and `/api/verify` | P1 |
 | QW-10 | **Replace `pickle.load` with safe alternatives** | 9 files in `tci_llm/`, `FRONTIER/`, `The_Compressor/` | No `pickle.load` without `RestrictedUnpickler` or replacement with JSON/safetensors | P1 |
@@ -583,16 +583,16 @@ make check        # All gates: format + typecheck + test + proofs + physics
 
 | # | Action | Scope | Acceptance Criteria | Priority |
 |---|--------|-------|---------------------|----------|
-| ST-1 | **Implement property-based testing with Hypothesis** | `tensornet/core/`, `tensornet/algorithms/` | 50+ property tests covering MPS/MPO invariants (norm preservation, bond-dim bounds, hermiticity); integrated into CI | P1 |
-| ST-2 | **Fix CUDA kernel correctness and complete stubs** | [tensornet/cuda/qtt_eval_kernel.cu](tensornet/cuda/qtt_eval_kernel.cu), shared memory kernel | Correctness test: GPU kernel output matches CPU reference within 1e-6 for 1000 random inputs; shared memory kernel implemented | P1 |
-| ST-3 | **Implement GPU profiling integration** | `tensornet/core/profiling.py`, new `tensornet/core/gpu_profiling.py` | `torch.profiler` integration; NVIDIA Nsight export; GPU memory tracking via `torch.cuda.memory_stats()` | P2 |
+| ST-1 | **Implement property-based testing with Hypothesis** | `ontic/core/`, `ontic/algorithms/` | 50+ property tests covering MPS/MPO invariants (norm preservation, bond-dim bounds, hermiticity); integrated into CI | P1 |
+| ST-2 | **Fix CUDA kernel correctness and complete stubs** | [ontic/cuda/qtt_eval_kernel.cu](ontic/cuda/qtt_eval_kernel.cu), shared memory kernel | Correctness test: GPU kernel output matches CPU reference within 1e-6 for 1000 random inputs; shared memory kernel implemented | P1 |
+| ST-3 | **Implement GPU profiling integration** | `ontic/core/profiling.py`, new `ontic/core/gpu_profiling.py` | `torch.profiler` integration; NVIDIA Nsight export; GPU memory tracking via `torch.cuda.memory_stats()` | P2 |
 | ST-4 | **Create operational runbooks** | `docs/runbooks/` | Runbooks for: service restart, checkpoint recovery, GPU failure, config error, security incident; linked from README | P2 |
 | ST-5 | **Migrate to pip-compile/uv for Python lockfile** | `requirements-lock.txt`, `pyproject.toml` | Hash-verified lockfile with resolver metadata; `pip install --require-hashes` works | P2 |
 | ST-6 | **Add REST API documentation (OpenAPI)** | All FastAPI/Flask endpoints | OpenAPI 3.1 spec auto-generated; Swagger UI at `/docs`; versioned API paths (`/v1/`) | P2 |
-| ST-7 | **Implement Lanczos re-orthogonalization** | [tensornet/algorithms/dmrg.py](tensornet/algorithms/dmrg.py) | Partial re-orthogonalization (Parlett-Scott) with configurable threshold; accuracy test on ill-conditioned Hamiltonian | P2 |
+| ST-7 | **Implement Lanczos re-orthogonalization** | [ontic/algorithms/dmrg.py](ontic/algorithms/dmrg.py) | Partial re-orthogonalization (Parlett-Scott) with configurable threshold; accuracy test on ill-conditioned Hamiltonian | P2 |
 | ST-8 | **Add Prometheus alerting rules and Grafana dashboards** | `deploy/config/monitoring/` | Alertmanager config with rules for: error rate > 1%, latency p99 > 500ms, OOM, disk > 80%; 3+ Grafana dashboard JSONs | P2 |
-| ST-9 | **Remove MemoryPool dead code; implement or delete** | [tensornet/core/gpu.py](tensornet/core/gpu.py#L130-L190) | Either implement proper pool (tensor views into pre-allocated buffer + free-list) or remove class entirely | P3 |
-| ST-10 | **Complete distributed computing implementation** | `tensornet/distributed/` | End-to-end integration test: 2-GPU domain decomposition with ghost zone exchange; MPI-based or NCCL-based | P3 |
+| ST-9 | **Remove MemoryPool dead code; implement or delete** | [ontic/core/gpu.py](ontic/core/gpu.py#L130-L190) | Either implement proper pool (tensor views into pre-allocated buffer + free-list) or remove class entirely | P3 |
+| ST-10 | **Complete distributed computing implementation** | `ontic/distributed/` | End-to-end integration test: 2-GPU domain decomposition with ghost zone exchange; MPI-based or NCCL-based | P3 |
 
 ---
 

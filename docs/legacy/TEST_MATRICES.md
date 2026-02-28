@@ -62,7 +62,7 @@ Applying typical ratios (Python ~30% blanks/comments, Rust ~25%):
 
 | Category | Included | Notes |
 |----------|----------|-------|
-| Application source (`tensornet/`) | ✅ | 304 Python files |
+| Application source (`ontic/`) | ✅ | 304 Python files |
 | Test code (`tests/`, `Physics/tests/`) | ✅ | Counted separately |
 | Frontend (`apps/glass_cockpit/`) | ✅ | 100 Rust files |
 | Shaders (WGSL) | ✅ | 17 files |
@@ -109,14 +109,14 @@ Full:   111,030 / (269,610 + 111,030) × 100 = 29.2%
 
 | Module | Files | Est. LOC | Test Coverage |
 |--------|-------|----------|---------------|
-| `tensornet/cfd/` | 59 | ~35,000 | ✅ Heavy |
-| `tensornet/core/` | 10 | ~5,000 | ✅ Heavy |
-| `tensornet/algorithms/` | 6 | ~4,000 | ✅ DMRG/TEBD tested |
-| `tensornet/energy/` | 11 | ~6,000 | ✅ Integration tested |
-| `tensornet/hyperenv/` | 10 | ~5,000 | ✅ RL tests |
-| `tensornet/financial/` | 4 | ~2,500 | ✅ Integration tested |
-| `tensornet/fusion/` | 2 | ~1,500 | ✅ Integration tested |
-| `tensornet/defense/` | 1 | ~500 | ✅ Ballistics tested |
+| `ontic/cfd/` | 59 | ~35,000 | ✅ Heavy |
+| `ontic/core/` | 10 | ~5,000 | ✅ Heavy |
+| `ontic/algorithms/` | 6 | ~4,000 | ✅ DMRG/TEBD tested |
+| `ontic/energy/` | 11 | ~6,000 | ✅ Integration tested |
+| `ontic/hyperenv/` | 10 | ~5,000 | ✅ RL tests |
+| `ontic/financial/` | 4 | ~2,500 | ✅ Integration tested |
+| `ontic/fusion/` | 2 | ~1,500 | ✅ Integration tested |
+| `ontic/defense/` | 1 | ~500 | ✅ Ballistics tested |
 | Other modules | 200+ | ~85,000 | 🟡 Varies |
 
 ---

@@ -72,7 +72,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
 
 ## cfd (50)
 
-- **tensornet/cfd/adaptive_tt.py**
+- **ontic/cfd/adaptive_tt.py**
   - `class AdaptiveTTConfig` (L37) — Configuration for adaptive bond dimension.
   - `class ShockIndicator` (L55) — Types of shock detection methods.
   - `class ShockDetector` (L69) — Detect discontinuities in TT-format CFD solutions.
@@ -81,7 +81,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class EntanglementMonitor` (L654) — Monitor entanglement entropy evolution over time.
   - `function compute_compression_ratio_profile` (L711) — Compute local compression ratio at each bond.
   - `function estimate_memory_savings` (L741) — Estimate memory savings from TT compression.
-- **tensornet/cfd/comfort_metrics.py**
+- **ontic/cfd/comfort_metrics.py**
   - `class ComfortInputs` (L27) — Inputs for PMV/PPD calculation.
   - `function saturated_vapor_pressure` (L46) — Saturated water vapor pressure [Pa] at temperature T [°C].
   - `function calculate_pmv` (L54) — Calculate Predicted Mean Vote (PMV) using Fanger's model.
@@ -93,17 +93,17 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function identify_dead_zones` (L305) — Identify stagnant regions with poor air circulation.
   - `class ComfortMapResult` (L361) — Results from comfort analysis.
   - `function analyze_comfort` (L384) — Analyze thermal comfort from QTT fields.
-- **tensornet/cfd/euler2d_native.py**
+- **ontic/cfd/euler2d_native.py**
   - `class Euler2DNativeConfig` (L38) — Configuration for native 2D Euler solver.
   - `class Euler2DStateNative` (L53) — 2D Euler state in QTT2D format.
   - `class Euler2D_Native` (L113) — Native 2D Euler solver using Strang splitting with TCI flux.
   - `function create_kelvin_helmholtz_native` (L583) — Create Kelvin-Helmholtz initial condition in native QTT2D format.
-- **tensornet/cfd/euler2d_strang.py**
+- **ontic/cfd/euler2d_strang.py**
   - `class Euler2DConfig` (L30) — Configuration for 2D Euler solver.
   - `class Euler2DState` (L44) — 2D Euler state holding conserved variables in QTT format.
   - `class Euler2D_Strang` (L103) — 2D Euler solver using Strang splitting with native QTT shift MPOs.
   - `function create_kelvin_helmholtz_ic` (L381) — Create Kelvin-Helmholtz instability initial conditions.
-- **tensornet/cfd/euler_1d.py**
+- **ontic/cfd/euler_1d.py**
   - `class BCType1D` (L47) — Boundary condition types for 1D Euler equations.
   - `class EulerState` (L56) — Container for Euler equation state variables.
   - `class Euler1D` (L123) — 1D Euler equation solver using tensor networks.
@@ -112,17 +112,17 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function shu_osher_ic` (L612) — Shu-Osher problem initial condition.
   - `function euler_to_mps` (L655) — Convert EulerState to MPS representation.
   - `function mps_to_euler` (L662) — Convert MPS to EulerState.
-- **tensornet/cfd/euler_nd_native.py**
+- **ontic/cfd/euler_nd_native.py**
   - `class EulerNDConfig` (L28) — Configuration for N-dimensional Euler solver.
   - `class EulerNDState` (L58) — State vector for N-dimensional Euler equations.
   - `class EulerND_Native` (L82) — Fully native N-dimensional Euler solver using Strang splitting.
   - `function create_kh_initial_condition_2d` (L270) — Create Kelvin-Helmholtz instability initial condition.
-- **tensornet/cfd/fast_euler_2d.py**
+- **ontic/cfd/fast_euler_2d.py**
   - `class FastEulerConfig` (L30) — Configuration for fast Euler solver.
   - `class FastEulerState` (L54) — State for 2D Euler equations.
   - `class FastEuler2D` (L68) — Ultra-fast 2D Euler solver using pure QTT operations.
   - `function create_kh_state` (L208) — Create Kelvin-Helmholtz initial condition.
-- **tensornet/cfd/fast_euler_3d.py**
+- **ontic/cfd/fast_euler_3d.py**
   - `class QTT3DState` (L31) — 3D field stored in QTT format with Morton ordering.
   - `class Euler3DConfig` (L49) — Configuration for 3D Euler solver.
   - `class Euler3DState` (L77) — State for 3D compressible Euler equations.
@@ -132,7 +132,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function qtt_3d_to_dense` (L153) — Decompress QTT3D to dense 3D array.
   - `class FastEuler3D` (L171) — Native 3D Euler solver using N-dimensional shift MPO.
   - `function create_taylor_green_state` (L279) — Create Taylor-Green vortex initial condition.
-- **tensornet/cfd/fast_vlasov_5d.py**
+- **ontic/cfd/fast_vlasov_5d.py**
   - `class QTT5DState` (L38) — 5D field stored in QTT format with Morton ordering.
   - `class Vlasov5DConfig` (L58) — Configuration for 5D Vlasov-Poisson solver.
   - `function morton_encode_5d` (L97) — Encode 5D index to Morton order.
@@ -141,25 +141,25 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function qtt_5d_to_dense` (L158) — Decompress QTT5D to dense 5D array.
   - `class FastVlasov5D` (L183) — Native 5D Vlasov-Poisson solver using N-dimensional shift MPO.
   - `function create_two_stream_ic` (L320) — Create two-stream instability initial condition.
-- **tensornet/cfd/flux_2d_tci.py**
+- **ontic/cfd/flux_2d_tci.py**
   - `function qtt2d_eval_at_index` (L25) — Evaluate a QTT2D at a single Morton index.
   - `function qtt2d_eval_batch` (L50) — Evaluate QTT2D at a batch of Morton indices.
   - `class Flux2DConfig` (L102) — Configuration for 2D flux computation.
   - `class Flux2DSampler` (L116) — Sampler for 2D Rusanov flux in Morton order.
   - `function compute_flux_2d_tci` (L292) — Compute 2D Rusanov flux entirely in QTT format using TCI.
   - `function compute_flux_difference_2d` (L347) — Compute flux difference: F_{i+1/2} - F_{i-1/2} in QTT format.
-- **tensornet/cfd/flux_batch.py**
+- **ontic/cfd/flux_batch.py**
   - `function _lazy_import_qtt_eval` (L41) — Lazy import to avoid slow torch.compile initialization at module load.
   - `function rusanov_flux_batch` (L48) — Compute Rusanov flux at a batch of interfaces using Rust-precomputed neighbors.
   - `function rusanov_flux_from_dense` (L137) — Compute Rusanov flux from dense field tensors (reference implementation).
-- **tensornet/cfd/kelvin_helmholtz.py**
+- **ontic/cfd/kelvin_helmholtz.py**
   - `class KHConfig` (L30) — Configuration for Kelvin-Helmholtz IC generation.
   - `function decode_morton_vectorized` (L59) — Decode Morton indices (interleaved bits) to (x, y) coordinates.
   - `class KelvinHelmholtzSampler` (L99) — Sampler for Kelvin-Helmholtz initial conditions.
   - `function build_kh_via_dense` (L173) — Build KH IC by creating dense field and compressing.
   - `function analyze_kh_ranks` (L228) — Analyze the QTT ranks of KH initial conditions.
   - `function build_kh_via_tci` (L274) — Build KH IC using TCI for sparse sampling.
-- **tensornet/cfd/koopman_tt.py**
+- **ontic/cfd/koopman_tt.py**
   - `class TTCore` (L57) — A single core in a Tensor Train decomposition.
   - `class TensorTrain` (L79) — Tensor Train representation of a high-dimensional tensor/operator.
   - `function tt_svd` (L141) — TT-SVD: Decompose a dense tensor into Tensor Train format.
@@ -184,7 +184,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function demo_boundary_layer_transition` (L1396) — Demonstrate TT-Koopman for boundary layer transition prediction.
   - `function generate_koopman_attestation` (L1486) — Generate attestation for TT-Koopman turbulence solver.
   - `function run_full_koopman_demo` (L1571) — Run complete TT-Koopman demonstration and generate attestation.
-- **tensornet/cfd/local_flux_native.py**
+- **ontic/cfd/local_flux_native.py**
   - `class LocalFluxConfig` (L38) — Configuration for local flux computation.
   - `function estimate_max_wavespeed` (L51) — Estimate maximum wavespeed |u| + c by sampling.
   - `function qtt2d_add` (L85) — Add two QTT2D states.
@@ -194,7 +194,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function compute_euler_flux_x` (L111) — Compute physical x-flux of Euler equations.
   - `function compute_lax_friedrichs_flux_2d` (L186) — Compute Lax-Friedrichs numerical flux at cell interfaces.
   - `function compute_upwind_update_2d` (L389) — Compute pure upwind update for 2D Euler.
-- **tensornet/cfd/nd_shift_mpo.py**
+- **ontic/cfd/nd_shift_mpo.py**
   - `function _check_cuda_available` (L36) — Lazy check for CUDA availability.
   - `function cuda_shift_available` (L57) — Check if CUDA shift acceleration is available.
   - `function enable_cuda_shifts` (L62) — Enable CUDA acceleration for shift operations.
@@ -212,7 +212,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function validate_shift_mpo` (L516) — Validate shift MPO by comparing against dense reference.
   - `function make_laplacian_mpo` (L564) — Fused 2D Laplacian MPO: ∇²f = (f[i+1] + f[i-1] - 2f)/dx² + (f[j+1] + f[j-1] - 2f)/dy²
   - `function apply_laplacian_mpo` (L762) — Apply fused Laplacian MPO to QTT state.
-- **tensornet/cfd/ns2d_qtt_native.py**
+- **ontic/cfd/ns2d_qtt_native.py**
   - `class QTT2DNativeState` (L71) — 2D field in QTT format with Morton ordering.
   - `class NS2DQTTConfig` (L117) — Configuration for QTT-native 2D Navier-Stokes solver.
   - `function morton_encode_2d` (L180) — Encode 2D index to Morton order (interleaved bits).
@@ -222,7 +222,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function qtt_2d_native_to_dense` (L254) — Decompress QTT2D to dense 2D array (for visualization only).
   - `class NS2D_QTT_Native` (L273) — Native 2D Navier-Stokes solver using vorticity-streamfunction.
   - `function create_conference_room_ic` (L1259) — Create initial condition for conference room ventilation.
-- **tensornet/cfd/pure_qtt_ops.py**
+- **ontic/cfd/pure_qtt_ops.py**
   - `class QTTCore` (L28) — A single core of a QTT decomposition.
   - `class QTTState` (L35) — A full QTT state (MPS with physical dimension 2).
   - `class MPOCore` (L57) — A single core of an MPO (Matrix Product Operator).
@@ -250,7 +250,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function apply_laplacian_qtt` (L880) — Apply Laplacian to QTT state (1D version).
   - `function dense_to_qtt` (L895) — Convert dense tensor to QTT format.
   - `function qtt_to_dense` (L952) — Convert QTT back to dense tensor.
-- **tensornet/cfd/qtt.py**
+- **ontic/cfd/qtt.py**
   - `class QTTCompressionResult` (L53) — Result container for QTT compression.
   - `function _next_power_of_two` (L73) — Return smallest power of 2 >= n.
   - `function _pad_to_power_of_two` (L78) — Pad tensor to target size with zeros.
@@ -261,7 +261,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function qtt_to_euler` (L368) — Reconstruct Euler2DState from QTT-compressed fields.
   - `function compression_analysis` (L397) — Analyze compression quality vs bond dimension.
   - `function estimate_area_law_exponent` (L464) — Estimate the Area Law exponent from compression scaling.
-- **tensornet/cfd/qtt_2d.py**
+- **ontic/cfd/qtt_2d.py**
   - `function morton_encode` (L30) — Interleave bits of x and y into Morton code using magic numbers.
   - `function morton_decode` (L56) — Extract x and y from Morton code using magic numbers.
   - `function morton_encode_batch` (L77) — Vectorized Morton encoding for GPU using magic number bit-interleaving.
@@ -281,7 +281,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function truncate_qtt_2d` (L635) — Truncate QTT2D state to maximum rank using left-to-right SVD sweep.
   - `function test_2d_shift_gaussian` (L692) — Test the interleaved shift MPO by shifting a Gaussian blob.
   - `function test_2d_riemann_quadrant` (L736) — Validate the 2D Riemann quadrant initial condition.
-- **tensornet/cfd/qtt_2d_shift.py**
+- **ontic/cfd/qtt_2d_shift.py**
   - `function build_shift_x_mpo_native` (L24) — Build native MPO for +1 shift in X direction (even bits) with interleaved layout.
   - `function build_shift_y_mpo_native` (L138) — Build native MPO for +1 shift in Y direction (odd bits) with interleaved layout.
   - `function apply_mpo_to_qtt2d` (L235) — Apply MPO to QTT2D state and truncate result.
@@ -289,7 +289,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function test_native_shift_x` (L341) — Test native shift-X MPO on a simple pattern.
   - `function test_native_shift_y` (L398) — Test native shift-Y MPO.
   - `function test_combined_shift` (L432) — Test X+Y shift sequence.
-- **tensornet/cfd/qtt_2d_shift_native.py**
+- **ontic/cfd/qtt_2d_shift_native.py**
   - `function make_interleaved_shift_mpo` (L24) — Creates a Rank-2 MPO that shifts a 2D Morton-ordered QTT state by +1.
   - `function make_interleaved_shift_minus_mpo` (L109) — Creates a Rank-2 MPO that shifts a 2D Morton-ordered QTT state by -1.
   - `function apply_shift_mpo` (L177) — Apply shift MPO to QTT2D state.
@@ -298,12 +298,12 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function test_shift_square` (L320) — Test shift on a square pattern.
   - `function test_advection_native` (L367) — Test advection using native shift (no dense round-trip in hot path).
   - `function benchmark_native_vs_dense` (L426) — Benchmark native shift vs dense round-trip.
-- **tensornet/cfd/qtt_cfd.py**
+- **ontic/cfd/qtt_cfd.py**
   - `class QTTCFDConfig` (L40) — Configuration for QTT-native CFD solver.
   - `class QTTEulerState` (L51) — QTT representation of Euler state (ρ, ρu, E).
   - `class QTT_Euler1D` (L172) — QTT-native 1D Euler solver with O(log N · χ²) complexity.
   - `function complexity_comparison` (L373) — Compare storage complexity between approaches.
-- **tensornet/cfd/qtt_checkpoint_stream.py**
+- **ontic/cfd/qtt_checkpoint_stream.py**
   - `class CheckpointMetadata` (L45) — Metadata for a checkpoint.
   - `class CheckpointConfig` (L81) — Configuration for checkpoint system.
   - `class CheckpointWriter` (L107) — Async checkpoint writer with double buffering.
@@ -311,7 +311,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class SimulationCheckpointer` (L412) — High-level checkpointer for QTT simulations.
   - `function create_checkpointer` (L522) — Create a checkpointer for a named run.
   - `function resume_or_start` (L542) — Resume from checkpoint or initialize fresh.
-- **tensornet/cfd/qtt_eval.py**
+- **ontic/cfd/qtt_eval.py**
   - `class QTTContiguous` (L35) — QTT state stored as a single contiguous tensor for torch.compile.
   - `function index_to_bits` (L103) — Convert flat indices to binary representation.
   - `function qtt_eval_at_index` (L126) — Evaluate QTT at a single index.
@@ -323,7 +323,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function dense_to_qtt_cores` (L421) — Convert dense 1D tensor to QTT cores via TT-SVD.
   - `function verify_qtt_evaluation` (L487) — Verify QTT evaluation against dense reconstruction.
   - `function qtt_to_dense` (L522) — Convert QTT cores back to dense tensor.
-- **tensornet/cfd/qtt_hadamard.py**
+- **ontic/cfd/qtt_hadamard.py**
   - `function qtt_hadamard` (L48) — Element-wise (Hadamard) product of two QTTs: C = A ⊙ B.
   - `function qtt_hadamard_inplace_scale` (L120) — Scale QTT by a scalar (rank-preserving).
   - `function qtt_power` (L135) — Compute f^n via repeated squaring.
@@ -333,14 +333,14 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function qtt_full_advection_3d` (L259) — Compute full 3D advection term: (u·∇)u for all three components.
   - `function qtt_relu_approx` (L316) — Approximate ReLU(f) = max(0, f) using polynomial approximation.
   - `function test_hadamard` (L359) — Test Hadamard product and nonlinear operations.
-- **tensornet/cfd/qtt_imex.py**
+- **ontic/cfd/qtt_imex.py**
   - `class IMEXScheme` (L43) — Available IMEX schemes.
   - `class IMEXConfig` (L52) — Configuration for IMEX integrator.
   - `class IMEXState` (L77) — State container for multi-step IMEX methods.
   - `class IMEXIntegrator` (L92) — IMEX time integrator for stiff PDEs.
   - `class QTTNavierStokesIMEX` (L347) — IMEX integrator specialized for QTT Navier-Stokes.
   - `function create_ns_imex` (L607) — Create a Navier-Stokes IMEX solver.
-- **tensornet/cfd/qtt_multiscale.py**
+- **ontic/cfd/qtt_multiscale.py**
   - `class ScaleProfile` (L42) — Predefined scale-dependent rank profiles.
   - `class MultiScaleConfig` (L52) — Configuration for multi-scale QTT.
   - `class ScaleInfo` (L72) — Information about a single scale level.
@@ -348,7 +348,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class HierarchicalQTT` (L433) — Hierarchical QTT (H-QTT) for extreme compression.
   - `function create_turbulent_profile` (L571) — Create rank profile optimized for turbulent flows.
   - `function estimate_optimal_ranks` (L601) — Estimate optimal ranks via SVD analysis.
-- **tensornet/cfd/qtt_reciprocal.py**
+- **ontic/cfd/qtt_reciprocal.py**
   - `function qtt_reciprocal` (L34) — Compute element-wise reciprocal 1/x in QTT format.
   - `function _estimate_qtt_scale` (L110) — Estimate typical magnitude of QTT vector from core norms.
   - `function _constant_qtt_cores` (L119) — Create QTT cores for a constant function f(i) = value.
@@ -356,7 +356,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function _add_qtt` (L150) — Add two QTTs: C = A + B.
   - `function _clamp_cores` (L192) — Clamp core values to prevent numerical explosion.
   - `function qtt_safe_divide` (L203) — Safe element-wise division: numerator / (denominator + eps).
-- **tensornet/cfd/qtt_regularity.py**
+- **ontic/cfd/qtt_regularity.py**
   - `function qtt_vorticity_3d` (L46) — Compute 3D vorticity ω = ∇ × u in QTT format.
   - `function qtt_sample_random` (L119) — Sample QTT at random indices without dense materialization.
   - `function qtt_max_abs_sample` (L153) — Estimate max |f| via random sampling.
@@ -367,7 +367,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class RegularityTrajectory` (L317) — Full trajectory of regularity diagnostics.
   - `class RegularityMonitor` (L395) — Real-time regularity monitoring for NS simulations.
   - `function test_regularity` (L487) — Test regularity diagnostic suite.
-- **tensornet/cfd/qtt_shift_stable.py**
+- **ontic/cfd/qtt_shift_stable.py**
   - `function qtt_shift_spectral` (L56) — Shift QTT by integer positions using spectral method (rank-preserving).
   - `function _apply_walsh_phase_shift` (L114) — Apply Walsh-domain phase shift operator.
   - `function qtt_roll_by_power_of_2` (L152) — Roll QTT by 2^qubit_idx positions (exact, rank-preserving).
@@ -377,7 +377,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function qtt_3d_roll_exact` (L331) — Roll a 3D interleaved QTT along one axis.
   - `function qtt_3d_central_diff_stable` (L377) — Compute central difference along one axis of 3D QTT.
   - `function compare_shift_methods` (L422) — Compare MPO shift vs spectral/roll shift for rank preservation.
-- **tensornet/cfd/qtt_spectral.py**
+- **ontic/cfd/qtt_spectral.py**
   - `function get_f2_matrix` (L52) — The 2×2 DFT matrix (unnormalized):
   - `function get_f2_inverse` (L64) — The inverse 2×2 DFT matrix (unnormalized):
   - `function get_twiddle_f2` (L74) — Twiddle-modified F_2 for FFT butterfly at level k.
@@ -390,10 +390,10 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class ConservationMonitor` (L348) — Track conservation of energy, enstrophy, and helicity in QTT flows.
   - `function qtt_spectral_filter` (L428) — Apply spectral filter to QTT via WHT → filter → iWHT.
   - `function qtt_frobenius_norm` (L482) — Compute Frobenius norm of QTT: ||A||_F = sqrt(sum A_ij²)
-- **tensornet/cfd/qtt_streaming.py**
+- **ontic/cfd/qtt_streaming.py**
   - `function build_qtt_from_function` (L20) — Build QTT from function by streaming evaluation.
   - `function verify_qtt_accuracy` (L134) — Verify QTT accuracy by sampling random points.
-- **tensornet/cfd/qtt_tci.py**
+- **ontic/cfd/qtt_tci.py**
   - `function _maxvol_simple` (L36) — MaxVol algorithm: find r rows of (n×r) matrix A that form well-conditioned submatrix.
   - `function qtt_from_function_dense` (L86) — Build QTT from function by dense sampling + TT-SVD.
   - `function qtt_from_function_tci_python` (L119) — Build QTT from function using TT-Cross Interpolation (Python implementation).
@@ -409,12 +409,12 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function qtt_from_function` (L771) — Build QTT from black-box function using TT-Cross Interpolation.
   - `function qtt_rusanov_flux_tci` (L843) — Compute Rusanov flux in QTT format using TCI.
   - `function qtt_rusanov_flux_tci_rust` (L951) — Compute Rusanov flux in QTT format using Rust TCI with neighbor indices.
-- **tensornet/cfd/qtt_tci_gpu.py**
+- **ontic/cfd/qtt_tci_gpu.py**
   - `function qtt_from_function_gpu` (L21) — Build QTT decomposition of a function using GPU-accelerated randomized SVD.
   - `function qtt_eval_gpu` (L126) — Evaluate QTT at given indices using GPU.
   - `function qtt_from_function_dense_gpu` (L180) — Drop-in replacement for qtt_from_function_dense.
   - `function qtt_eval_batch_gpu` (L189) — Drop-in replacement for qtt_eval_batch.
-- **tensornet/cfd/qtt_tdvp.py**
+- **ontic/cfd/qtt_tdvp.py**
   - `class QTTTDVPConfig` (L68) — Configuration for QTT-TDVP solver.
   - `class QTTTDVPDiagnostics` (L82) — Diagnostics from a TDVP step.
   - `class QTTState` (L99) — QTT state optimized for TDVP evolution.
@@ -422,7 +422,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function tdvp_sweep` (L451) — Perform one TDVP-style time step for Euler equations in QTT format.
   - `class QTT_TDVP_Euler1D` (L550) — THE HOLY GRAIL: True O(log N) CFD Solver.
   - `function run_holy_grail_demo` (L735) — Run the Holy Grail demo: O(log N) CFD evolution.
-- **tensornet/cfd/qtt_triton_kernels.py**
+- **ontic/cfd/qtt_triton_kernels.py**
   - `function morton_encode_kernel` (L51) — Parallel Morton Z-curve encoding.
   - `function morton_encode_triton` (L83) — Triton Morton encoding wrapper.
   - `function qtt_batch_eval_kernel` (L103) — Evaluate QTT at N Morton indices in parallel.
@@ -452,7 +452,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function dense_to_qtt_triton` (L1322) — Compress dense 1D array to QTT using TT-SVD.
   - `function dense_to_qtt_2d_triton` (L1388) — Convert 2D dense field to QTT with Morton ordering.
   - `function render_qtt_2d_triton` (L1423) — Render QTT 2D to dense image using Triton-accelerated evaluation.
-- **tensornet/cfd/qtt_triton_kernels_v2.py**
+- **ontic/cfd/qtt_triton_kernels_v2.py**
   - `class QTTState` (L102) — QTT state with GPU tensor cores.
   - `class QTT2DState` (L129) — 2D QTT state with Morton ordering.
   - `class MPO` (L157) — Matrix Product Operator.
@@ -484,7 +484,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function qtt_inner_product_gpu` (L1223) — Compute ⟨ψ₁|ψ₂⟩ using batched contractions.
   - `function qtt_norm_gpu` (L1247) — Compute ||ψ|| = sqrt(⟨ψ|ψ⟩).
   - *(+17 more symbols)*
-- **tensornet/cfd/qtt_triton_ops.py**
+- **ontic/cfd/qtt_triton_ops.py**
   - `function triton_matmul` (L278) — Triton-accelerated matrix multiply.
   - `function triton_gram` (L303) — Compute Gram matrix A @ A.T using Triton.
   - `function morton_encode_gpu` (L324) — GPU Morton encoding via Triton kernel.
@@ -514,7 +514,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function qtt_evaluate_batch_cached` (L1247) — Cached version of batch evaluation.
   - `function qtt_evaluate_2d_batch_gpu` (L1295) — Evaluate QTT2D at batch of (x, y) coordinates.
   - `function render_tile_gpu` (L1316) — Render a single tile from QTT — O(tile_size² × r²) not O(full_grid).
-- **tensornet/cfd/singularity_hunter.py**
+- **ontic/cfd/singularity_hunter.py**
   - `class ObjectiveType` (L44) — Objective function for singularity hunting.
   - `class HuntingConfig` (L55) — Configuration for singularity hunt.
   - `class HuntResult` (L71) — Result from singularity hunt.
@@ -522,7 +522,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class ChiGrowthObjective` (L157) — Chi growth rate objective: Maximize d(chi)/dt
   - `class SingularityHunter` (L177) — Hunt for Navier-Stokes singularities via adjoint optimization.
   - `function test_singularity_hunter` (L587) — Test the singularity hunter on a small grid.
-- **tensornet/cfd/stabilized_refine.py**
+- **ontic/cfd/stabilized_refine.py**
   - `class RefinementConfig` (L38) — Configuration for stabilized refinement.
   - `class RefinementResult` (L54) — Result of stabilized refinement.
   - `function apply_spectral_filter` (L65) — Fast spectral dealiasing filter (2/3 rule).
@@ -530,12 +530,12 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function enforce_hou_luo_symmetry` (L143) — Enforce the critical symmetries for Hou-Luo axisymmetric blow-up.
   - `function compute_residual_direct` (L184) — Compute the self-similar fixed point residual F(U).
   - `function stabilized_newton_refinement` (L279) — Stabilized Newton refinement with QTT spectral filtering.
-- **tensornet/cfd/tci_benchmark_suite.py**
+- **ontic/cfd/tci_benchmark_suite.py**
   - `class BenchmarkResult` (L28) — Results from a single benchmark run.
   - `function run_benchmark` (L62) — Run a single TCI benchmark.
   - `function run_benchmark_2d` (L176) — Run a 2D matrix TCI benchmark with proper bit-interleaved (Morton) indexing.
   - `function run_full_suite` (L288) — Run the complete TCI benchmark suite.
-- **tensornet/cfd/tci_flux.py**
+- **ontic/cfd/tci_flux.py**
   - `class TCIFluxConfig` (L37) — Configuration for TCI flux computation.
   - `class FluxFunction` (L69) — Protocol for flux functions.
   - `function rusanov_flux` (L93) — Rusanov (Local Lax-Friedrichs) flux.
@@ -546,7 +546,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function _evaluate_qtt_at_indices` (L752) — Evaluate QTT at given integer indices.
   - `function _indices_to_binary` (L814) — Convert integer indices to binary representation for QTT indexing.
   - `function verify_sound_speed_formula` (L838) — Verify that sound speed formula is correct.
-- **tensornet/cfd/tci_true.py**
+- **ontic/cfd/tci_true.py**
   - `function maxvol` (L31) — MaxVol algorithm: find r rows of (n×r) matrix A that form well-conditioned submatrix.
   - `function maxvol_rect` (L78) — Rectangular MaxVol: select up to max_cols rows from A that form a well-conditioned submatrix.
   - `function tci_build_qtt` (L128) — Build QTT via Two-Pass Tensor Cross-Interpolation.
@@ -558,7 +558,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function qtt_2d_eval_rowmajor` (L674) — Evaluate row-major 2D QTT.
   - `function tci_build_qtt_v2` (L689) — TCI v2: Delegates to the proper tci_build_qtt implementation.
   - `function tci_dmrg_style` (L724) — DMRG-style TCI: Alternating optimization of local 2-site tensors.
-- **tensornet/cfd/thermal_qtt.py**
+- **ontic/cfd/thermal_qtt.py**
   - `class ThermalConfig` (L37) — Configuration for thermal transport solver.
   - `class HeatSource` (L64) — Defines a rectangular heat source region.
   - `class Diffuser` (L82) — Ceiling diffuser specification.
@@ -566,7 +566,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class ThermalQTTSolver` (L153) — Temperature transport solver in QTT format.
   - `function create_open_office_ic` (L268) — Create initial conditions for open office simulation.
   - `class NS2D_Thermal_QTT` (L385) — Combined NS + Thermal solver for HVAC simulations.
-- **tensornet/cfd/tt_cfd.py**
+- **ontic/cfd/tt_cfd.py**
   - `class TTCFDConfig` (L40) — Configuration for TT-native CFD solver.
   - `class TimeIntegrator` (L53) — Time integration schemes.
   - `class MPSState` (L68) — MPS representation of a CFD state vector.
@@ -579,7 +579,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class TT_Euler1D` (L800) — Complete 1D Euler solver operating entirely in TT/MPS format.
   - `class TT_Euler2D` (L975) — 2D Euler solver using TT format with dimensional splitting.
   - `function check_conservation` (L1175) — Verify conservation of mass, momentum, and energy.
-- **tensornet/cfd/tt_poisson.py**
+- **ontic/cfd/tt_poisson.py**
   - `class PoissonResult` (L53) — Result container for TT Poisson solve.
   - `function laplacian_mpo_1d` (L69) — Build 1D discrete Laplacian as MPO.
   - `function _dense_to_mpo_1d` (L169) — Build 1D Laplacian MPO by converting from dense matrix.
@@ -611,7 +611,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function compute_vorticity_2d` (L1469) — Compute vorticity: ω = ∂v/∂x - ∂u/∂y (scalar in 2D).
   - `function test_advection` (L1498) — Test advection operator.
   - *(+1 more symbols)*
-- **tensornet/cfd/weno_native_tt.py**
+- **ontic/cfd/weno_native_tt.py**
   - `class ReconstructionSide` (L45) — Side of cell for reconstruction.
   - `class WENONativeTTConfig` (L53) — Configuration for native WENO-TT.
   - `function shift_mpo_cached` (L69) — Get shift operator MPO using native O(log N) construction.
@@ -631,7 +631,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function _constant_qtt` (L850) — Create a QTT representing a constant value at all positions.
   - `function weno_reconstruct_native_tt` (L884) — Perform full WENO5 reconstruction entirely in TT format.
   - `function weno_flux_native_tt` (L951) — Compute WENO-TT numerical flux using Lax-Friedrichs splitting.
-- **tensornet/cfd/weno_tt.py**
+- **ontic/cfd/weno_tt.py**
   - `class WENOTTConfig` (L37) — Configuration for WENO-TT reconstruction.
   - `function smoothness_indicator_mpo` (L52) — Construct the MPO for computing smoothness indicators in TT format.
   - `function tensorize_smoothness_indicators` (L86) — Compute smoothness indicators β₀, β₁, β₂ in TT format.
@@ -832,26 +832,26 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
 
 ## core (16)
 
-- **tensornet/core/decompositions.py**
+- **ontic/core/decompositions.py**
   - `function svd_truncated` (L28) — Truncated SVD with bond dimension control.
   - `function qr_positive` (L139) — QR decomposition with positive diagonal R.
   - `function thin_svd` (L173) — Thin (economy) SVD without truncation.
   - `function polar_decomposition` (L190) — Polar decomposition A = U @ P where U is unitary and P is positive semidefinite.
-- **tensornet/core/dense_guard.py**
+- **ontic/core/dense_guard.py**
   - `class DenseViolation` (L44) — Record of a dense materialization violation.
   - `class DenseMaterializationGuard` (L56) — Context manager that monitors and optionally forbids dense materialization.
   - `function forbid_dense` (L358) — Context manager to forbid dense materialization with auto-computed thresholds.
   - `function assert_no_dense_materialization` (L396) — Run a function and assert no critical dense materialization occurred.
   - `function check_tt_complexity` (L421) — Verify that TT cores satisfy O(N·d·χ²) storage complexity.
   - `function verify_tt_native_operation` (L457) — Verify that a TT operation maintains TT-native complexity.
-- **tensornet/core/determinism.py**
+- **ontic/core/determinism.py**
   - `function lock_seeds` (L47) — Lock all random number generators to ensure deterministic behavior.
   - `function get_seed` (L79) — Get the deterministic seed for a specific component.
   - `class ToleranceSpec` (L98) — Specification for a numerical tolerance.
   - `function get_tolerance` (L188) — Get the tolerance value for a specific check.
   - `function document_tolerances` (L208) — Generate markdown documentation of all tolerances.
   - `function verify_determinism` (L235) — Verify that a function produces deterministic results.
-- **tensornet/core/gpu.py**
+- **ontic/core/gpu.py**
   - `class DeviceType` (L39) — Compute device types.
   - `class MemoryLayout` (L47) — Memory layout for CFD arrays.
   - `class GPUConfig` (L56) — Configuration for GPU acceleration.
@@ -866,12 +866,12 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function viscous_flux_gpu` (L459) — GPU-optimized viscous flux computation.
   - `function benchmark_kernel` (L550) — Benchmark a GPU kernel.
   - `function validate_gpu` (L598) — Run validation tests for GPU acceleration.
-- **tensornet/core/mpo.py**
+- **ontic/core/mpo.py**
   - `class MPO` (L19) — Matrix Product Operator representation.
   - `function mpo_sum` (L187) — Sum two MPOs: O = O1 + O2.
-- **tensornet/core/mps.py**
+- **ontic/core/mps.py**
   - `class MPS` (L22) — Matrix Product State representation.
-- **tensornet/core/phase_deferred.py**
+- **ontic/core/phase_deferred.py**
   - `class PhaseDeferredError` (L32) — Raised when functionality is intentionally deferred to a future phase.
   - `function phase_24_deferred` (L94) — Helper for Phase 24 deferred features.
   - `function phase_25_deferred` (L103) — Helper for Phase 25 deferred features.
@@ -881,12 +881,12 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class DeferredFeatureRegistry` (L147) — Central registry of all phase-deferred features.
   - `function register_deferred` (L195) — Register a deferred feature and raise the error.
   - `function phase_deferred` (L219) — Decorator to mark a method as phase-deferred.
-- **tensornet/core/profiling.py**
+- **ontic/core/profiling.py**
   - `function profile` (L38) — Decorator that profiles function execution time.
   - `function memory_profile` (L69) — Decorator that profiles function memory usage.
   - `function profile_block` (L110) — Context manager for profiling code blocks.
   - `class PerformanceReport` (L143) — Collect and report performance statistics.
-- **tensornet/core/states.py**
+- **ontic/core/states.py**
   - `function ghz_mps` (L16) — Create GHZ state: |GHZ⟩ = (|00...0⟩ + |11...1⟩) / √2
   - `function product_mps` (L61) — Create product state MPS from local states.
   - `function random_mps` (L91) — Create random MPS.
@@ -894,18 +894,18 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function all_down_mps` (L138) — Create |↓↓...↓⟩ state.
   - `function neel_mps` (L158) — Create Néel state: |↑↓↑↓...⟩
   - `function domain_wall_mps` (L180) — Create domain wall state: |↑↑...↑↓↓...↓⟩
-- **tensornet/mpo/atmospheric_solver.py**
+- **ontic/mpo/atmospheric_solver.py**
   - `class MPOAtmosphericSolver` (L34) — Atmospheric physics solver using Matrix Product Operators.
-- **tensornet/mpo/laplacian_cuda.py**
+- **ontic/mpo/laplacian_cuda.py**
   - `function mpo_tt_contract_cuda` (L50) — GPU-accelerated MPO-TT contraction using custom CUDA kernel.
   - `function batch_mpo_apply_cuda` (L74) — Batched MPO application with optimal GPU utilization.
   - `function compress_core_cuda` (L114) — Fast GPU SVD compression using cuSOLVER batched SVD.
   - `class LaplacianCUDA` (L164) — GPU-accelerated Laplacian MPO operator.
-- **tensornet/mpo/operators.py**
+- **ontic/mpo/operators.py**
   - `class LaplacianMPO` (L17) — Laplacian operator in MPO format for diffusion physics.
   - `class AdvectionMPO` (L197) — Advection operator in MPO format for velocity field transport.
   - `class ProjectionMPO` (L328) — Projection operator in MPO format for incompressibility constraint.
-- **tensornet/mps/hamiltonians.py**
+- **ontic/mps/hamiltonians.py**
   - `function pauli_matrices` (L13) — Return Pauli matrices sigma_x, sigma_y, sigma_z.
   - `function spin_operators` (L33) — Return spin operators S_x, S_y, S_z for spin S.
   - `function heisenberg_mpo` (L73) — Heisenberg XXZ chain Hamiltonian as MPO.
@@ -1594,7 +1594,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
 
 ## genesis (79)
 
-- **tensornet/genesis/benchmarks/massacre.py**
+- **ontic/genesis/benchmarks/massacre.py**
   - `class BenchmarkResult` (L76) — Single benchmark result.
   - `class BenchmarkSuite` (L97) — Collection of benchmark results.
   - `function get_memory_usage` (L148) — Get current process memory in bytes.
@@ -1607,7 +1607,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function mega_scale_demo` (L815) — Demonstrate GENESIS at scales where others can't even start.
   - `function print_massacre_report` (L917) — Print the final devastating report.
   - `function main` (L974)
-- **tensornet/genesis/core/exceptions.py**
+- **ontic/genesis/core/exceptions.py**
   - `class GenesisError` (L20) — Base exception for all Genesis errors.
   - `class QTTRankError` (L67) — Error related to QTT tensor rank issues.
   - `class ConvergenceError` (L119) — Error when an iterative algorithm fails to converge.
@@ -1625,7 +1625,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function _format_bytes` (L498) — Format byte count as human-readable string.
   - `function check_finite` (L514) — Check array for NaN/Inf values and raise if found.
   - `function check_shape` (L541) — Check array shape and raise if mismatched.
-- **tensornet/genesis/core/logging.py**
+- **ontic/genesis/core/logging.py**
   - `class LogLevel` (L30) — Log levels for Genesis modules.
   - `class LogContext` (L48) — Context information attached to log messages.
   - `class GenesisFormatter` (L76) — Custom formatter with Genesis-specific styling.
@@ -1633,7 +1633,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function get_logger` (L357) — Get or create a Genesis logger.
   - `function configure_logging` (L380) — Configure Genesis logging globally.
   - `function logged` (L413) — Decorator to log function calls.
-- **tensornet/genesis/core/profiling.py**
+- **ontic/genesis/core/profiling.py**
   - `class ProfileResult` (L33) — Result of a profiled operation.
   - `class PerformanceTracker` (L118) — Thread-local performance tracker with hierarchical profiling.
   - `function get_tracker` (L263) — Get or create global performance tracker.
@@ -1648,11 +1648,11 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function _summarize_args` (L524) — Summarize function arguments.
   - `function _summarize_value` (L544) — Summarize a value for logging.
   - `function benchmark` (L566) — Benchmark a function with multiple runs.
-- **tensornet/genesis/core/rsvd.py**
+- **ontic/genesis/core/rsvd.py**
   - `function rsvd_gpu` (L28) — Randomized SVD using Gram matrix eigendecomposition.
   - `function tt_decompose_rsvd` (L165) — TT/QTT decomposition using rSVD with adaptive rank.
   - `function svd_fallback` (L244) — Unified SVD that always uses rSVD for large matrices.
-- **tensornet/genesis/core/triton_ops.py**
+- **ontic/genesis/core/triton_ops.py**
   - `function triton_matmul` (L222) — Triton-accelerated matrix multiply.
   - `function triton_gram` (L250) — Compute Gram matrix A @ A.T using Triton.
   - `function rsvd_native` (L278) — Randomized SVD — GPU-native, O(mnk) complexity.
@@ -1665,7 +1665,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function adaptive_rank` (L682) — Compute adaptive rank based on problem scale.
   - `function qtt_evaluate_at_index` (L713) — Evaluate QTT at a single index without full decompression.
   - `function qtt_evaluate_at_indices` (L742) — Evaluate QTT at multiple indices without full decompression.
-- **tensornet/genesis/core/validation.py**
+- **ontic/genesis/core/validation.py**
   - `function validate_qtt_cores` (L31) — Validate QTT tensor cores structure.
   - `function validate_tensor_shape` (L136) — Validate tensor shape.
   - `function validate_positive` (L186) — Validate that value is positive.
@@ -1676,7 +1676,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function coerce_array` (L410) — Convert input to numpy array with specified dtype.
   - `function validate_power_of_two` (L440) — Validate that value is a power of 2.
   - `function validate_range` (L468) — Validate value is within specified range.
-- **tensornet/genesis/demos/gpu_qtt_compress.py**
+- **ontic/genesis/demos/gpu_qtt_compress.py**
   - `function format_bytes` (L44)
   - `function gpu_mem` (L51) — Current GPU memory usage.
   - `function clear_gpu` (L55) — Clear GPU memory.
@@ -1688,13 +1688,13 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class GPUCompressionResult` (L191)
   - `function compress_gpu` (L201) — Compress data at scale using GPU.
   - `function main` (L263)
-- **tensornet/genesis/demos/gpu_qtt_proper.py**
+- **ontic/genesis/demos/gpu_qtt_proper.py**
   - `function format_bytes` (L27)
   - `function svd_wide` (L35) — SVD for wide matrices (m << n) where cusolver fails.
   - `function tt_svd_gpu` (L85) — TT-SVD on GPU using wide-matrix-safe SVD.
   - `function compress_test` (L128) — Test compression at scale.
   - `function main` (L171)
-- **tensornet/genesis/demos/hierarchical_qtt_compress.py**
+- **ontic/genesis/demos/hierarchical_qtt_compress.py**
   - `function format_bytes` (L63) — Format bytes to human-readable string.
   - `function generate_climate_signal` (L83) — Generate structured climate-like data.
   - `function generate_turbulence_signal` (L116) — Generate turbulent flow data with Kolmogorov scaling.
@@ -1704,7 +1704,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function demonstrate_scaling` (L272) — Demonstrate that compression ratio INCREASES with data size.
   - `function hierarchical_stream_compress` (L368) — Stream and compress data at LARGE chunk sizes.
   - `function main` (L435) — Main entry point.
-- **tensornet/genesis/demos/noaa_petabyte_compression.py**
+- **ontic/genesis/demos/noaa_petabyte_compression.py**
   - `class NOAADataset` (L60) — Specification for a NOAA dataset.
   - `function simulate_climate_field` (L128) — Generate a synthetic climate field with realistic correlation structure.
   - `function compute_qtt_compression` (L169) — Compress a climate field using QTT and compute statistics.
@@ -1713,7 +1713,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function run_compression_demo` (L303) — Run the full NOAA compression demonstration.
   - `function demonstrate_extreme_scale` (L434) — Show GENESIS at extreme scales where cloud storage becomes intractable.
   - `function main` (L486) — Main entry point.
-- **tensornet/genesis/demos/rsvd_qtt_compress.py**
+- **ontic/genesis/demos/rsvd_qtt_compress.py**
   - `function format_bytes` (L43)
   - `function gpu_mem` (L50)
   - `function clear_gpu` (L53)
@@ -1725,7 +1725,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function compress_scale` (L238) — Compress at specified scale using rSVD.
   - `function demo_64gb_chunks` (L279) — Compress 64 GB chunks using rSVD streaming through VRAM.
   - `function main` (L355)
-- **tensornet/genesis/demos/stream_compress_1tb.py**
+- **ontic/genesis/demos/stream_compress_1tb.py**
   - `class StreamConfig` (L67) — Configuration for streaming compression.
   - `class CompressionStats` (L80) — Track compression statistics.
   - `function generate_climate_chunk` (L113) — Generate realistic climate-like data chunk.
@@ -1739,7 +1739,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function stream_compress` (L346) — Stream and compress data from source.
   - `function run_demo` (L414) — Run the streaming compression demo.
   - `function main` (L473) — Main entry point.
-- **tensornet/genesis/demos/triton_qtt.py**
+- **ontic/genesis/demos/triton_qtt.py**
   - `function format_bytes` (L44)
   - `function matmul_kernel` (L57) — Triton matmul kernel - L2 cache optimized.
   - `function triton_matmul` (L90) — Triton-accelerated matrix multiply.
@@ -1751,7 +1751,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function generate_turbulence` (L341) — Kolmogorov turbulence - power law spectrum.
   - `function compress_at_scale` (L357) — Compress at scale with full diagnostics.
   - `function main` (L419)
-- **tensornet/genesis/fusion/genesis_fusion_demo.py**
+- **ontic/genesis/fusion/genesis_fusion_demo.py**
   - `class Timer` (L96)
   - `function run_genesis_fusion` (L120) — Execute the GENESIS FUSION pipeline.
   - `function demonstrate_scaling` (L401) — Demonstrate O(log N) scaling.
@@ -1765,7 +1765,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function run_gauntlet_ga` (L1137) — GAUNTLET 7: GEOMETRIC ALGEBRA (Layer 26)
   - `function run_genesis_gauntlet` (L1263) — Execute the complete GENESIS GAUNTLET.
   - `function main` (L1405)
-- **tensornet/genesis/fusion/geometric_types_pipeline.py**
+- **ontic/genesis/fusion/geometric_types_pipeline.py**
   - `class ConstraintViolation` (L60) — Raised when a geometric invariant is violated.
   - `class VectorField` (L81) — Divergence-free vector field on a 3D grid.
   - `class Measure` (L206) — Probability measure on a grid.
@@ -1778,7 +1778,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function stage4_spinor_ga` (L595) — Apply Geometric Algebra rotation to Spinor.
   - `function stage5_measure_rkhs` (L654) — Compute RKHS divergence (MMD) between Measures.
   - `function run_geometric_types_pipeline` (L714) — Run the Geometric Types Pipeline.
-- **tensornet/genesis/ga/cga.py**
+- **ontic/genesis/ga/cga.py**
   - `class ConformalGA` (L34) — Conformal Geometric Algebra for 3D.
   - `function point_to_cga` (L93) — Embed a Euclidean point into CGA.
   - `function cga_to_point` (L126) — Extract Euclidean point from CGA representation.
@@ -1796,7 +1796,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function cga_reflector` (L400) — Reflect an object in a CGA plane.
   - `function reflect_in_plane` (L416) — Reflect CGA object X in the given plane.
   - `function distance_point_to_point` (L434) — Compute Euclidean distance between two CGA points.
-- **tensornet/genesis/ga/multivector.py**
+- **ontic/genesis/ga/multivector.py**
   - `class CliffordAlgebra` (L21) — Defines a Clifford algebra Cl(p, q, r).
   - `class Multivector` (L162) — Element of a Clifford algebra.
   - `function scalar` (L345) — Create scalar multivector.
@@ -1804,7 +1804,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function bivector` (L355) — Create bivector from {(i,j): coefficient} dict.
   - `function pseudoscalar` (L361) — Create the pseudoscalar (highest grade blade).
   - `function random_multivector` (L367) — Create random multivector, optionally restricted to certain grades.
-- **tensornet/genesis/ga/operations.py**
+- **ontic/genesis/ga/operations.py**
   - `function reverse` (L26) — Compute the reverse ã of a multivector.
   - `function grade_involution` (L54) — Compute the grade involution â of a multivector.
   - `function clifford_conjugate` (L80) — Compute the Clifford conjugate a† of a multivector.
@@ -1822,7 +1822,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function reflect_in` (L325) — Reflect multivector a in the hyperplane with normal n.
   - `function exp` (L349) — Compute the exponential exp(a) using Taylor series.
   - `function log` (L380) — Compute the logarithm log(a) using series expansion.
-- **tensornet/genesis/ga/products.py**
+- **ontic/genesis/ga/products.py**
   - `function geometric_product` (L25) — Compute the geometric product ab.
   - `function inner_product` (L58) — Compute the inner (dot) product a·b.
   - `function outer_product` (L78) — Compute the outer (wedge) product a∧b.
@@ -1834,7 +1834,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function regressive_product` (L261) — Compute the regressive (vee) product a∨b.
   - `function sandwich_product` (L288) — Compute the sandwich product aba^{-1}.
   - `function versor_sandwich` (L310) — Compute the versor sandwich product abã.
-- **tensornet/genesis/ga/qtt_ga_gauntlet.py**
+- **ontic/genesis/ga/qtt_ga_gauntlet.py**
   - `function test` (L32) — Record test result.
   - `function section` (L44) — Print section header.
   - `function test_multivector_creation` (L53) — Test multivector creation and basic properties.
@@ -1846,7 +1846,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function test_qtt_multivector` (L326) — Test QTT-compressed multivectors.
   - `function test_large_qtt` (L397) — Test QTT with larger algebras.
   - `function main` (L454) — Run all tests.
-- **tensornet/genesis/ga/qtt_multivector.py**
+- **ontic/genesis/ga/qtt_multivector.py**
   - `class QTTMultivector` (L23) — QTT-compressed multivector for large Clifford algebras.
   - `function qtt_add` (L408) — Add two QTT multivectors.
   - `function qtt_scale` (L450) — Scale QTT multivector by a scalar.
@@ -1854,7 +1854,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function qtt_grade_projection` (L590) — Project QTT multivector onto a single grade.
   - `function qtt_reverse` (L671) — Compute the reverse of a QTT multivector.
   - `function qtt_inner_product` (L734) — Compute the scalar inner product of two QTT multivectors.
-- **tensornet/genesis/ga/rotors.py**
+- **ontic/genesis/ga/rotors.py**
   - `function rotor_from_bivector` (L31) — Create a rotor from a bivector and angle.
   - `function rotor_from_angle_plane` (L63) — Alias for rotor_from_bivector with swapped arguments.
   - `function rotor_from_vectors` (L79) — Create a rotor that rotates vector a to vector b.
@@ -1867,7 +1867,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function matrix_to_rotor` (L287) — Convert a 3x3 rotation matrix to a rotor.
   - `function euler_to_rotor` (L348) — Create rotor from Euler angles (ZYX convention).
   - `function rotor_to_euler` (L380) — Extract Euler angles from a 3D rotor.
-- **tensornet/genesis/ot/barycenters.py**
+- **ontic/genesis/ot/barycenters.py**
   - `class BarycenterResult` (L61) — Result container for barycenter computation.
   - `function barycenter` (L88) — Compute the Wasserstein barycenter of multiple distributions.
   - `function _barycenter_quantile` (L181) — Compute W₂ barycenter using quantile averaging.
@@ -1880,27 +1880,27 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function _tt_rsvd_1d` (L535) — TT-rSVD decomposition for 1D function values.
   - `function _qtt_quantile_search` (L576) — Binary search for quantile index in QTT CDF.
   - `function _evaluate_qtt_at_index` (L594) — Evaluate QTT at a single index given in binary representation.
-- **tensornet/genesis/ot/cost_matrices.py**
+- **ontic/genesis/ot/cost_matrices.py**
   - `class QTTMatrix` (L45) — A matrix represented in QTT-MPO (Matrix Product Operator) format.
   - `function euclidean_cost_mpo` (L214) — Construct the Euclidean distance cost matrix in QTT-MPO format.
   - `function toeplitz_cost_mpo` (L341) — Construct a Toeplitz cost matrix in QTT-MPO format.
   - `function gaussian_kernel_mpo` (L442) — Construct a Gaussian kernel matrix in QTT-MPO format.
   - `function custom_cost_mpo` (L547) — Construct a custom cost matrix using TT-Cross interpolation.
   - `function _dense_to_qtt_mpo` (L625) — Convert dense matrix to QTT-MPO format via sequential SVD.
-- **tensornet/genesis/ot/distributions.py**
+- **ontic/genesis/ot/distributions.py**
   - `class QTTDistribution` (L52) — A probability distribution represented in Quantized Tensor Train format.
   - `function _qtt_sum` (L896) — Compute the sum of all elements in a QTT tensor.
-- **tensornet/genesis/ot/qtt_ot_gauntlet.py**
+- **ontic/genesis/ot/qtt_ot_gauntlet.py**
   - `class TestResult` (L64) — Result of a single test.
   - `class GauntletReport` (L74) — Aggregate report for all tests.
   - `function timer` (L124) — Context manager for timing.
   - `class QTTOTGauntlet` (L132) — Elite test suite for QTT-Optimal Transport.
   - `function main` (L876) — Run the gauntlet.
-- **tensornet/genesis/ot/sinkhorn_qtt.py**
+- **ontic/genesis/ot/sinkhorn_qtt.py**
   - `class SinkhornResult` (L63) — Result container for QTT-Sinkhorn algorithm.
   - `class QTTSinkhorn` (L101) — QTT-native Sinkhorn algorithm for entropy-regularized optimal transport.
   - `function sinkhorn_distance` (L1229) — Compute entropy-regularized Wasserstein distance.
-- **tensornet/genesis/ot/transport_plan.py**
+- **ontic/genesis/ot/transport_plan.py**
   - `class QTTTransportPlan` (L60) — Optimal transport plan in QTT format.
   - `function transport_plan` (L756) — Create a transport plan from a Sinkhorn result.
   - `function monge_map` (L785) — Compute the optimal Monge map T: supp(μ) → supp(ν).
@@ -1908,7 +1908,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function _evaluate_qtt_at_index` (L932) — Evaluate QTT at a single index given in binary.
   - `function _qtt_binary_search` (L941) — Binary search for index j where dist[j] ≈ target.
   - `function _build_qtt_from_function` (L961) — Build QTT cores from a function via TCI sampling.
-- **tensornet/genesis/ot/wasserstein.py**
+- **ontic/genesis/ot/wasserstein.py**
   - `function wasserstein_distance` (L42) — Compute the p-Wasserstein distance between distributions μ and ν.
   - `function _wasserstein_quantile` (L155) — Compute exact Wasserstein distance using quantile functions.
   - `function _qtt_quantile_search` (L259) — Binary search for quantile index in QTT CDF.
@@ -1917,7 +1917,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function wasserstein_barycenter` (L418) — Compute the Wasserstein barycenter of multiple distributions.
   - `function _barycenter_quantile_update` (L514) — Update barycenter using quantile averaging for W₂.
   - `function _barycenter_sinkhorn_update` (L603) — Update barycenter using Sinkhorn iterations.
-- **tensornet/genesis/rkhs/gp.py**
+- **ontic/genesis/rkhs/gp.py**
   - `class GPPrior` (L26) — Gaussian Process prior specification.
   - `class GPPosterior` (L85) — Gaussian Process posterior after conditioning on data.
   - `class GPRegressor` (L234) — Gaussian Process Regression model.
@@ -1925,14 +1925,14 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function gp_posterior_sample` (L346) — Draw posterior samples at test locations.
   - `function gp_marginal_likelihood` (L386) — Compute log marginal likelihood for hyperparameter optimization.
   - `class SparseGP` (L407) — Sparse Gaussian Process using inducing points.
-- **tensornet/genesis/rkhs/kernel_matrix.py**
+- **ontic/genesis/rkhs/kernel_matrix.py**
   - `class QTTKernelMatrix` (L24) — QTT-compressed kernel matrix.
   - `function kernel_matrix` (L372) — Compute kernel matrix K[i,j] = k(x_i, y_j).
   - `function kernel_vector` (L389) — Compute kernel vector k(x_i, x_*) for fixed x_*.
   - `function nystrom_approximation` (L406) — Nyström low-rank approximation of kernel matrix.
   - `function random_fourier_features` (L447) — Random Fourier feature approximation for RBF kernel.
   - `function incomplete_cholesky` (L482) — Incomplete Cholesky decomposition for low-rank approximation.
-- **tensornet/genesis/rkhs/kernels.py**
+- **ontic/genesis/rkhs/kernels.py**
   - `class Kernel` (L20) — Abstract base class for kernel functions.
   - `class RBFKernel` (L98) — Radial Basis Function (Gaussian) kernel.
   - `class MaternKernel` (L136) — Matérn kernel with smoothness parameter ν.
@@ -1944,7 +1944,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class SumKernel` (L309) — Sum of two kernels.
   - `class ProductKernel` (L324) — Product of two kernels.
   - `function verify_kernel_properties` (L338) — Verify that a kernel satisfies key properties.
-- **tensornet/genesis/rkhs/mmd.py**
+- **ontic/genesis/rkhs/mmd.py**
   - `function mmd_squared` (L23) — Compute squared MMD between two samples.
   - `function maximum_mean_discrepancy` (L65) — Compute MMD distance between two samples.
   - `function mmd_test` (L92) — Perform MMD two-sample test with permutation null.
@@ -1960,11 +1960,11 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class QTTKernelMPO` (L553) — RBF Kernel matrix in QTT-MPO format.
   - `function _qtt_inner_product` (L640) — Compute QTT inner product ⟨f, g⟩ = Σ_i f[i] g[i].
   - `function mmd_qtt_native` (L681) — QTT-native MMD computation - ZERO SAMPLING.
-- **tensornet/genesis/rkhs/qtt_rkhs_gauntlet.py**
+- **ontic/genesis/rkhs/qtt_rkhs_gauntlet.py**
   - `class GauntletResult` (L58) — Result of a single gauntlet test.
   - `class QTTRKHSGauntlet` (L66) — Elite test suite for QTT-RKHS kernel methods.
   - `function main` (L597) — Run the QTT-RKHS gauntlet.
-- **tensornet/genesis/rkhs/ridge.py**
+- **ontic/genesis/rkhs/ridge.py**
   - `class KRRSolution` (L27) — Kernel Ridge Regression solution.
   - `function solve_krr` (L101) — Solve kernel ridge regression.
   - `function _solve_cg` (L159) — Conjugate gradient solver.
@@ -1974,13 +1974,13 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function krr_gcv_score` (L335) — Compute generalized cross-validation score.
   - `function optimal_regularization` (L376) — Find optimal regularization parameter.
   - `class QTTKernelRidgeRegressor` (L414) — Kernel Ridge Regression with QTT acceleration.
-- **tensornet/genesis/rmt/ensembles.py**
+- **ontic/genesis/rmt/ensembles.py**
   - `class QTTEnsemble` (L30) — Random matrix ensemble in QTT format.
   - `function goe_matrix` (L532) — Create GOE matrix.
   - `function gue_matrix` (L537) — Create GUE matrix.
   - `function wishart_matrix` (L542) — Create Wishart matrix.
   - `function wigner_matrix` (L548) — Create Wigner matrix.
-- **tensornet/genesis/rmt/free_probability.py**
+- **ontic/genesis/rmt/free_probability.py**
   - `class FreeConvolution` (L36) — Free convolution operations on spectral measures.
   - `function r_transform` (L173) — Compute R-transform of a QTT matrix.
   - `function s_transform` (L199) — Compute S-transform of a QTT matrix (for positive matrices).
@@ -1988,23 +1988,23 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function free_multiplicative_convolution` (L246) — Compute free multiplicative convolution ρ₁ ⊠ ρ₂.
   - `function semicircle_r_transform` (L264) — R-transform for Wigner semicircle.
   - `function marchenko_pastur_r_transform` (L283) — R-transform for Marchenko-Pastur.
-- **tensornet/genesis/rmt/qtt_rmt_gauntlet.py**
+- **ontic/genesis/rmt/qtt_rmt_gauntlet.py**
   - `class TestResult` (L47) — Single test result.
   - `class GauntletConfig` (L56) — Gauntlet configuration.
   - `class QTTRMTGauntlet` (L68) — Elite validation gauntlet for QTT-Random Matrix Theory.
   - `function main` (L777)
-- **tensornet/genesis/rmt/resolvent.py**
+- **ontic/genesis/rmt/resolvent.py**
   - `class QTTResolvent` (L31) — Resolvent operator G(z) = (H - zI)^{-1} in QTT format.
   - `function compute_resolvent` (L221) — Create resolvent operator for given matrix and spectral parameter.
   - `function resolvent_trace` (L247) — Compute Tr(G(z)) = Tr((H - zI)^{-1}).
   - `function resolvent_at_points` (L267) — Compute resolvent trace at multiple real points.
-- **tensornet/genesis/rmt/spectral_density.py**
+- **ontic/genesis/rmt/spectral_density.py**
   - `class SpectralDensity` (L27) — Spectral density estimator for QTT matrices.
   - `function spectral_density` (L188) — Compute spectral density of a QTT matrix.
   - `function stieltjes_transform` (L223) — Compute Stieltjes transform m(z) = (1/N) Tr((H - zI)^{-1}).
   - `function inverse_stieltjes` (L247) — Recover spectral density from Stieltjes transform values.
   - `function density_from_eigenvalues` (L267) — Compute density from actual eigenvalues using KDE.
-- **tensornet/genesis/rmt/universality.py**
+- **ontic/genesis/rmt/universality.py**
   - `class WignerSemicircle` (L25) — Wigner semicircle law for GOE/GUE matrices.
   - `class MarchenkoPastur` (L126) — Marchenko-Pastur law for Wishart matrices.
   - `function wigner_semicircle` (L188) — Evaluate Wigner semicircle density.
@@ -2012,7 +2012,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class UniversalityResult` (L219) — Result of universality verification.
   - `function verify_universality` (L229) — Verify if matrix follows expected universality law.
   - `function verify_with_dense` (L289) — Verify universality using dense eigendecomposition.
-- **tensornet/genesis/sgw/chebyshev.py**
+- **ontic/genesis/sgw/chebyshev.py**
   - `function chebyshev_coefficients` (L29) — Compute Chebyshev coefficients for a function on [-1, 1].
   - `function chebyshev_approximation` (L71) — Evaluate Chebyshev approximation at points x.
   - `class ChebyshevApproximator` (L106) — Chebyshev polynomial approximator for matrix functions.
@@ -2020,7 +2020,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function heat_kernel_chebyshev` (L265) — Create Chebyshev approximator for heat kernel.
   - `function lowpass_chebyshev` (L281) — Create Chebyshev approximator for low-pass filter.
   - `function highpass_chebyshev` (L300) — Create Chebyshev approximator for high-pass filter.
-- **tensornet/genesis/sgw/filters.py**
+- **ontic/genesis/sgw/filters.py**
   - `class GraphFilter` (L30) — Abstract base class for graph filters.
   - `class LowPassFilter` (L98) — Low-pass filter for graph signals.
   - `class HighPassFilter` (L122) — High-pass filter for graph signals.
@@ -2033,19 +2033,19 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function high_pass` (L257) — Create high-pass filter.
   - `function band_pass` (L263) — Create band-pass filter.
   - `function heat_diffusion` (L269) — Create heat diffusion filter.
-- **tensornet/genesis/sgw/graph_signals.py**
+- **ontic/genesis/sgw/graph_signals.py**
   - `class QTTSignal` (L35) — Signal on a graph in QTT format.
-- **tensornet/genesis/sgw/laplacian.py**
+- **ontic/genesis/sgw/laplacian.py**
   - `class QTTLaplacian` (L27) — Graph Laplacian in QTT-MPO format.
   - `function grid_laplacian_1d` (L355) — Create 1D grid Laplacian.
   - `function grid_laplacian_2d` (L360) — Create 2D grid Laplacian.
   - `function grid_laplacian_3d` (L365) — Create 3D grid Laplacian.
-- **tensornet/genesis/sgw/qtt_sgw_gauntlet.py**
+- **ontic/genesis/sgw/qtt_sgw_gauntlet.py**
   - `class TestResult` (L46) — Single test result.
   - `class GauntletConfig` (L55) — Gauntlet configuration.
   - `class QTTSGWGauntlet` (L67) — Elite validation gauntlet for QTT-Spectral Graph Wavelets.
   - `function main` (L995)
-- **tensornet/genesis/sgw/wavelets.py**
+- **ontic/genesis/sgw/wavelets.py**
   - `function mexican_hat_kernel` (L33) — Mexican hat (Difference of Gaussians) wavelet.
   - `function heat_kernel` (L45) — Heat/diffusion kernel.
   - `function meyer_kernel` (L56) — Meyer wavelet kernel (compactly supported).
@@ -2053,7 +2053,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function abspline_kernel` (L91) — Abspline wavelet kernel.
   - `class WaveletResult` (L104) — Result of spectral graph wavelet transform.
   - `class QTTGraphWavelet` (L130) — Spectral graph wavelet transform in QTT format.
-- **tensornet/genesis/topology/boundary.py**
+- **ontic/genesis/topology/boundary.py**
   - `function boundary_matrix` (L23) — Construct the k-th boundary matrix ∂_k: C_k → C_{k-1}.
   - `function boundary_matrix_sparse` (L67) — Construct sparse boundary matrix in COO format.
   - `function coboundary_matrix` (L104) — Construct the k-th coboundary matrix δ^k: C^k → C^{k+1}.
@@ -2061,7 +2061,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function chain_complex_matrices` (L226) — Build all boundary matrices for the chain complex.
   - `function verify_boundary_squared_zero` (L244) — Verify ∂_{k-1} ∘ ∂_k = 0 for all k.
   - `function betti_numbers_from_boundary` (L270) — Compute Betti numbers from boundary matrices.
-- **tensornet/genesis/topology/distances.py**
+- **ontic/genesis/topology/distances.py**
   - `function _l_infinity_cost` (L19) — L∞ distance between two points.
   - `function _l_p_cost` (L24) — Lp distance between two points.
   - `function _diagonal_projection` (L29) — Project point to diagonal.
@@ -2074,7 +2074,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function persistence_image` (L335) — Compute persistence image from diagram.
   - `function diagram_entropy` (L395) — Compute persistent entropy of a diagram.
   - `function silhouette` (L427) — Compute persistence silhouette.
-- **tensornet/genesis/topology/persistence.py**
+- **ontic/genesis/topology/persistence.py**
   - `class PersistencePair` (L23) — A persistence pair representing a topological feature.
   - `class PersistenceDiagram` (L65) — Persistence diagram: collection of persistence pairs.
   - `function reduce_boundary_matrix` (L155) — Standard boundary matrix reduction algorithm.
@@ -2083,7 +2083,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function compute_betti_curve` (L310) — Compute Betti numbers at each filtration value.
   - `function euler_curve` (L340) — Compute Euler characteristic at each filtration value.
   - `class VineyardAlgorithm` (L366) — Vineyard algorithm for tracking persistence across a family of filtrations.
-- **tensornet/genesis/topology/qtt_native.py**
+- **ontic/genesis/topology/qtt_native.py**
   - `class QTTVector` (L41) — QTT representation of a vector of length N = 2^d.
   - `class QTTMatrix` (L154) — QTT representation of an N×N matrix where N = 2^d.
   - `class QTTBoundaryMatrix` (L194) — QTT representation of a boundary operator ∂_k.
@@ -2095,18 +2095,18 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class QTTRipsComplex` (L545) — Implicit Vietoris-Rips complex in QTT format.
   - `function verify_qtt_boundary_correctness` (L698) — Verify QTT boundary operator against dense ground truth.
   - `function verify_qtt_persistence_correctness` (L743) — Verify QTT persistence computation.
-- **tensornet/genesis/topology/qtt_ph_gauntlet.py**
+- **ontic/genesis/topology/qtt_ph_gauntlet.py**
   - `class GauntletResult` (L53) — Result of a single gauntlet test.
   - `class QTTPHGauntlet` (L61) — Elite test suite for QTT-PH persistent homology.
   - `function main` (L516) — Run the QTT-PH gauntlet.
-- **tensornet/genesis/topology/simplicial.py**
+- **ontic/genesis/topology/simplicial.py**
   - `class Simplex` (L19) — A k-simplex represented by a sorted tuple of vertices.
   - `class SimplicialComplex` (L92) — A simplicial complex is a collection of simplices closed under
   - `function pairwise_distances` (L203) — Compute pairwise distance matrix.
   - `class RipsComplex` (L217) — Vietoris-Rips complex construction.
   - `class CechComplex` (L282) — Čech complex construction.
   - `function alpha_complex_2d` (L355) — Alpha complex for 2D point cloud (simplified).
-- **tensornet/genesis/tropical/convexity.py**
+- **ontic/genesis/tropical/convexity.py**
   - `class TropicalHalfspace` (L28) — A tropical halfspace defined by a tropical linear inequality.
   - `class TropicalPolyhedron` (L91) — A tropical polyhedron: intersection of tropical halfspaces.
   - `function tropical_convex_hull` (L191) — Compute the tropical convex hull of a set of points.
@@ -2116,7 +2116,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function _project_onto_halfspace` (L441) — Project point x onto a single tropical halfspace.
   - `function tropical_hilbert_distance` (L513) — Compute the tropical Hilbert distance between two points.
   - `function tropical_barycenter` (L531) — Compute the tropical barycenter (weighted tropical sum).
-- **tensornet/genesis/tropical/matrix.py**
+- **ontic/genesis/tropical/matrix.py**
   - `class TropicalMatrix` (L26) — A tropical matrix with QTT compression support.
   - `function tropical_matmul` (L217) — Tropical matrix multiplication.
   - `function tropical_power` (L257) — Compute A^⊗k using repeated squaring.
@@ -2126,7 +2126,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function has_negative_cycle` (L360) — Check if matrix has a negative cycle.
   - `function tropical_eigenvalue` (L382) — Compute the tropical eigenvalue (max cycle mean / min cycle mean).
   - `function check_tropical_properties` (L477) — Check various tropical matrix properties.
-- **tensornet/genesis/tropical/optimization.py**
+- **ontic/genesis/tropical/optimization.py**
   - `class TropicalEigenResult` (L31) — Result of tropical eigenvalue computation.
   - `function tropical_eigenvalue` (L47) — Compute the tropical eigenvalue of a matrix.
   - `function tropical_eigenvector` (L134) — Compute tropical eigenvector via power iteration.
@@ -2135,7 +2135,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function tropical_determinant` (L307) — Compute the tropical determinant (tropical permanent).
   - `function _tropical_det_hungarian` (L346) — Compute tropical determinant using Hungarian algorithm.
   - `function solve_tropical_equation` (L383) — Solve the tropical linear equation A ⊗ x = b.
-- **tensornet/genesis/tropical/qtt_native.py**
+- **ontic/genesis/tropical/qtt_native.py**
   - `class QTTCore` (L39) — A single TT-core in the QTT format.
   - `class QTTTropicalMatrix` (L64) — TRUE QTT-Native Tropical Matrix.
   - `function qtt_tropical_matmul` (L510) — Tropical matrix multiplication in QTT format.
@@ -2144,12 +2144,12 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function _qtt_tropical_add` (L653) — Tropical addition: elementwise min (or max).
   - `function qtt_shortest_paths` (L706) — Compute all-pairs shortest paths for a graph.
   - `function verify_qtt_tropical_correctness` (L724) — Verify QTT tropical operations against dense ground truth.
-- **tensornet/genesis/tropical/qtt_tropical_gauntlet.py**
+- **ontic/genesis/tropical/qtt_tropical_gauntlet.py**
   - `class TestResult` (L56) — Result of a single test.
   - `class GauntletConfig` (L65) — Configuration for gauntlet run.
   - `class TropicalGauntlet` (L74) — Elite test suite for QTT-Tropical Geometry (Layer 23).
   - `function main` (L792) — Run the QTT-Tropical gauntlet.
-- **tensornet/genesis/tropical/semiring.py**
+- **ontic/genesis/tropical/semiring.py**
   - `class SemiringType` (L26) — Type of tropical semiring.
   - `class TropicalSemiring` (L33) — Abstract tropical semiring with smooth approximations.
   - `function softmin` (L159) — Smooth approximation to elementwise min.
@@ -2162,7 +2162,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function tropical_sum` (L251) — Sum (tropical addition) over dimension.
   - `class TropicalScalar` (L263) — A scalar in the tropical semiring.
   - `function verify_semiring_axioms` (L308) — Verify that a tropical semiring satisfies the semiring axioms.
-- **tensornet/genesis/tropical/shortest_path.py**
+- **ontic/genesis/tropical/shortest_path.py**
   - `class ShortestPathResult` (L30) — Result of a shortest path computation.
   - `function all_pairs_shortest_path` (L82) — Compute all-pairs shortest paths.
   - `function floyd_warshall_tropical` (L108) — Floyd-Warshall algorithm via tropical algebra.
@@ -2179,10 +2179,10 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
 
 ## gpu (6)
 
-- **tensornet/cuda/qtt_eval_gpu.py**
+- **ontic/cuda/qtt_eval_gpu.py**
   - `class GPUQTTEvaluator` (L46) — GPU-accelerated QTT evaluation.
   - `function hybrid_qtt_eval` (L188) — Smart QTT evaluation: GPU if available, CPU fallback.
-- **tensornet/cuda/qtt_native_ops.py**
+- **ontic/cuda/qtt_native_ops.py**
   - `function _try_load_cuda` (L33) — Attempt to load the CUDA extension.
   - `function is_cuda_available` (L69) — Check if CUDA QTT kernels are available.
   - `function _flatten_cores` (L78) — Flatten QTT cores into contiguous buffer with offset/shape metadata.
@@ -2199,7 +2199,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function enable_cuda_backend` (L413) — Enable CUDA backend for QTT operations in the solver.
   - `function disable_cuda_backend` (L463) — Restore original CPU implementations.
   - `function benchmark_cuda_vs_cpu` (L483) — Benchmark CUDA vs CPU for QTT operations.
-- **tensornet/cuda/qtt_ntt.py**
+- **ontic/cuda/qtt_ntt.py**
   - `class FieldParams` (L186) — Parameters for a finite field.
   - `function find_primitive_root` (L206) — Find primitive n-th root of unity in F_p.
   - `function montgomery_reduce` (L234) — Montgomery reduction: compute x * R^{-1} mod p.
@@ -2211,16 +2211,16 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function qtt_ntt_inverse` (L1242) — Quick inverse NTT using QTT.
   - `function qtt_poly_multiply` (L1251) — Polynomial multiplication using QTT-NTT.
   - `function benchmark_qtt_ntt` (L1281) — Benchmark QTT-NTT against standard FFT.
-- **tensornet/cuda/setup.py**
+- **ontic/cuda/setup.py**
   - `function get_extensions` (L31) — Build list of extension modules.
-- **tensornet/cuda/test_qtt_cuda.py**
+- **ontic/cuda/test_qtt_cuda.py**
   - `function test_cpu_operations` (L17) — Test CPU QTT operations work correctly.
   - `function test_cuda_availability` (L52) — Test if CUDA is available and QTT kernels can be loaded.
   - `function test_cuda_correctness` (L81) — Test CUDA operations match CPU results.
   - `function test_cuda_performance` (L150) — Benchmark CUDA vs CPU performance.
   - `function test_solver_with_cuda` (L170) — Test NS2D solver with CUDA backend.
   - `function main` (L220)
-- **tensornet/gpu/kernel_autotune_cache.py**
+- **ontic/gpu/kernel_autotune_cache.py**
   - `class KernelConfig` (L43) — Configuration for a kernel execution.
   - `class ProfilingResult` (L76) — Result from kernel profiling.
   - `class CacheEntry` (L89) — Entry in the autotune cache.
@@ -2955,7 +2955,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class EnergyBalanceCalculator` (L643) — Calculate fusion energy balance and Q-factor.
   - `class STARHEARTGauntlet` (L788) — The Grand Unification Gauntlet.
   - `function main` (L1143) — Run the STAR-HEART Fusion Gauntlet.
-- **tensornet/adaptive/bond_optimizer.py**
+- **ontic/adaptive/bond_optimizer.py**
   - `class TruncationStrategy` (L23) — Truncation strategy selection.
   - `class AdaptiveBondConfig` (L35) — Configuration for adaptive bond dimension management.
   - `class TruncationRecord` (L83) — Record of a single truncation event.
@@ -2966,7 +2966,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class AdaptiveTruncator` (L699) — Main adaptive truncation engine.
   - `function estimate_optimal_chi` (L835) — Estimate optimal bond dimension from entropy and error target.
   - `function adapt_during_evolution` (L868) — Run adaptive truncation during time evolution.
-- **tensornet/adaptive/compression.py**
+- **ontic/adaptive/compression.py**
   - `class CompressionMethod` (L20) — Available compression methods.
   - `class CompressionResult` (L31) — Result of tensor compression.
   - `class CompressionStrategy` (L65) — Abstract base class for compression strategies.
@@ -2976,7 +2976,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class TensorCrossInterpolation` (L490) — Tensor Cross Interpolation (TCI) / skeleton decomposition.
   - `function compress_adaptively` (L622) — Compress a tensor using the specified or best method.
   - `function select_compression_strategy` (L667) — Select the best compression strategy based on tensor properties.
-- **tensornet/adaptive/entanglement.py**
+- **ontic/adaptive/entanglement.py**
   - `class ScalingType` (L22) — Type of entanglement scaling.
   - `class EntanglementSpectrum` (L32) — Entanglement spectrum from Schmidt decomposition.
   - `class AreaLawScaling` (L140) — Result of area law scaling analysis.
@@ -2987,7 +2987,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function compute_mutual_information` (L614) — Compute mutual information between two regions.
   - `function analyze_area_law` (L633) — Analyze area law scaling.
   - `function compute_schmidt_spectrum` (L652) — Compute Schmidt spectrum from a tensor.
-- **tensornet/algorithms/dmrg.py**
+- **ontic/algorithms/dmrg.py**
   - `class DMRGResult` (L44) — Result container for DMRG.
   - `function _contract_left_env` (L56) — Contract left environment with site tensor and MPO.
   - `function _contract_right_env` (L95) — Contract right environment with site tensor and MPO.
@@ -2996,13 +2996,13 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function _two_site_eigensolve` (L234) — Solve for ground state of two-site effective Hamiltonian using Lanczos.
   - `function dmrg_sweep` (L352) — Perform one DMRG sweep.
   - `function dmrg` (L480) — Run 2-site DMRG to find the ground state.
-- **tensornet/algorithms/fermionic.py**
+- **ontic/algorithms/fermionic.py**
   - `function spinless_fermion_mpo` (L32) — Spinless fermion chain Hamiltonian as MPO.
   - `function hubbard_mpo` (L129) — Hubbard model Hamiltonian as MPO.
   - `function fermi_sea_mps` (L249) — Create MPS for a Fermi sea (filled lowest modes).
   - `function half_filled_mps` (L285) — Create half-filled MPS (alternating occupied/empty).
   - `function compute_density` (L319) — Compute local density ⟨n_i⟩ for each site.
-- **tensornet/algorithms/tdvp.py**
+- **ontic/algorithms/tdvp.py**
   - `class TDVPResult` (L41) — Result container for TDVP time evolution.
   - `function tdvp_step` (L51) — Perform one TDVP-2 sweep (left-to-right or right-to-left).
   - `function _build_left_environments` (L124) — Build left environment tensors for TDVP.
@@ -3012,7 +3012,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function _two_site_tdvp_update` (L222) — Perform two-site TDVP update at sites (site, site+1).
   - `function tdvp` (L328) — Time evolution using TDVP-2 algorithm.
   - `function imaginary_time_tdvp` (L423) — Find ground state using imaginary time TDVP.
-- **tensornet/algorithms/tebd.py**
+- **ontic/algorithms/tebd.py**
   - `class TEBDResult` (L42) — Result container for TEBD time evolution.
   - `function _make_two_site_gate` (L52) — Create two-site time evolution gate.
   - `function _apply_two_site_gate` (L78) — Apply a two-site gate at position (site, site+1) and truncate.
@@ -3022,7 +3022,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function build_tfim_gates` (L323) — Build TEBD gates for Transverse Field Ising Model.
   - `function tebd` (L388) — Run TEBD time evolution.
   - `function imaginary_time_evolution` (L465) — Imaginary time evolution for ground state preparation.
-- **tensornet/autonomy/mission_planner.py**
+- **ontic/autonomy/mission_planner.py**
   - `class MissionStatus` (L24) — Status of a mission.
   - `class MissionPhaseType` (L37) — Types of mission phases.
   - `class MissionConstraints` (L50) — Constraints for mission execution.
@@ -3032,7 +3032,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class MissionPlanner` (L196) — Autonomous mission planner.
   - `function plan_mission` (L610) — Convenience function to plan a mission.
   - `function execute_mission` (L644) — Execute a mission.
-- **tensornet/benchmarks/profile_bottlenecks.py**
+- **ontic/benchmarks/profile_bottlenecks.py**
   - `class TimingResult` (L35) — Result from timing a function.
   - `function time_function` (L46) — Time a function with warmup and statistics.
   - `function profile_advection_cpu` (L94) — Profile CPU advection (Semi-Lagrangian style).
@@ -3043,7 +3043,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function profile_tensor_contraction_cpu` (L255) — Profile CPU tensor contraction (simulating TT/QTT operations).
   - `function profile_full_ns_step` (L277) — Profile a full Navier-Stokes step with advection, diffusion, and projection.
   - `function run_profiling` (L340) — Run all profiling benchmarks and save results.
-- **tensornet/deployment/tensorrt_export.py**
+- **ontic/deployment/tensorrt_export.py**
   - `class Precision` (L41) — Inference precision modes.
   - `class OptimizationLevel` (L50) — TensorRT optimization levels.
   - `class ExportConfig` (L60) — Configuration for model export.
@@ -3057,14 +3057,14 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function benchmark_inference` (L394) — Benchmark inference latency and throughput.
   - `class TensorRTExporter` (L478) — High-level interface for exporting models to TensorRT.
   - `function validate_tensorrt_export` (L571) — Run validation tests for TensorRT export.
-- **tensornet/discovery/__main__.py**
+- **ontic/discovery/__main__.py**
   - `function cmd_discover` (L22) — Run discovery pipeline.
   - `function cmd_test` (L260) — Run proof tests.
   - `function cmd_info` (L307) — Show system information.
   - `function cmd_serve` (L427) — Start the API server.
   - `function cmd_live` (L472) — Run live/historical data analysis.
   - `function main` (L632)
-- **tensornet/discovery/api/gpu.py**
+- **ontic/discovery/api/gpu.py**
   - `function gpu_available` (L44) — Check if GPU acceleration is available.
   - `function icicle_available` (L49) — Check if Icicle GPU library is available.
   - `function get_gpu_info` (L54) — Get detailed GPU information.
@@ -3073,14 +3073,14 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class AcceleratorMetrics` (L105) — Metrics from GPU acceleration.
   - `class GPUBackend` (L126) — GPU backend for tensor operations.
   - `class IcicleAccelerator` (L461) — Icicle-specific GPU accelerator for ZK and finite field operations.
-- **tensornet/discovery/api/server.py**
+- **ontic/discovery/api/server.py**
   - `class ServerConfig` (L69) — Server configuration.
   - `class ServerStats` (L83) — Server statistics.
   - `class StreamingSession` (L98) — A WebSocket streaming session.
   - `class DiscoveryAPIServer` (L144) — Main API server for Autonomous Discovery Engine.
   - `function create_app` (L820) — Create a FastAPI application instance.
   - `function main` (L835) — Main entry point for API server.
-- **tensornet/discovery/connectors/fusion.py**
+- **ontic/discovery/connectors/fusion.py**
   - `class FusionConfig` (L34) — Configuration for fusion data connector.
   - `class MHDMode` (L59) — Characterization of an MHD instability mode.
   - `class ConfinementMetrics` (L94) — Plasma confinement quality metrics.
@@ -3088,12 +3088,12 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class TTCompressedMHDAnalyzer` (L159) — TT-compressed MHD field analyzer from TOMAHAWK CFD gauntlet.
   - `class FusionConnector` (L323) — Main fusion plasma data connector for discovery engine.
   - `function main` (L526) — Demo the fusion connector.
-- **tensornet/discovery/engine_v2.py**
+- **ontic/discovery/engine_v2.py**
   - `class Finding` (L47) — A discovery finding.
   - `class DiscoveryResult` (L65) — Results from discovery run.
   - `class DiscoveryEngineV2` (L73) — Autonomous Discovery Engine using QTT-Native Genesis primitives.
   - `function main` (L609) — Quick test of full 7-stage pipeline.
-- **tensornet/discovery/ingest/markets.py**
+- **ontic/discovery/ingest/markets.py**
   - `class OrderBookLevel` (L39) — Single price level in order book.
   - `class OrderBookSnapshot` (L52) — Point-in-time order book state.
   - `class OHLCV` (L101) — Single candlestick bar.
@@ -3103,7 +3103,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class MarketsIngester` (L186) — Ingests financial market data and converts to QTT tensor formats.
   - `function create_synthetic_flash_crash` (L927) — Create synthetic flash crash scenario for testing.
   - `function create_synthetic_market` (L954) — Create synthetic market data for testing.
-- **tensornet/discovery/ingest/molecular.py**
+- **ontic/discovery/ingest/molecular.py**
   - `class Atom` (L58) — Represents an atom in a molecular structure.
   - `class Residue` (L89) — Represents an amino acid residue.
   - `class Chain` (L138) — Represents a protein chain.
@@ -3112,41 +3112,41 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class ProteinStructure` (L205) — Complete protein structure with chains, ligands, and metadata.
   - `class MolecularIngester` (L257) — Ingests molecular structure data for drug discovery analysis.
   - `function create_synthetic_protein` (L732) — Create a synthetic protein structure for testing.
-- **tensornet/discovery/ingest/plasma.py**
+- **ontic/discovery/ingest/plasma.py**
   - `class PlasmaShot` (L17) — A single plasma discharge/shot.
   - `class MagneticField3D` (L35) — 3D magnetic field configuration.
   - `class PlasmaProfile` (L46) — 1D radial plasma profile.
   - `class PlasmaIngester` (L54) — Ingest fusion plasma data for discovery analysis.
   - `function main` (L422) — Test the Plasma ingester.
-- **tensornet/discovery/pipelines/markets_pipeline.py**
+- **ontic/discovery/pipelines/markets_pipeline.py**
   - `class RegimeChange` (L70) — Detected regime change event.
   - `class MarketsPipelineResult` (L80) — Results from markets discovery pipeline.
   - `class MarketsDiscoveryPipeline` (L104) — Discovery pipeline for financial market analysis.
   - `function run_demo` (L1147) — Run demo analysis on synthetic flash crash.
-- **tensornet/discovery/pipelines/molecular_pipeline.py**
+- **ontic/discovery/pipelines/molecular_pipeline.py**
   - `class MolecularPipelineResult` (L71) — Results from molecular discovery pipeline.
   - `class MolecularDiscoveryPipeline` (L92) — Discovery pipeline for drug-protein interaction analysis.
   - `function run_demo` (L999) — Run demo analysis on synthetic protein.
-- **tensornet/discovery/primitives/geometric_algebra.py**
+- **ontic/discovery/primitives/geometric_algebra.py**
   - `class GeometricAlgebraPrimitive` (L65) — Geometric Algebra primitive for geometric analysis.
-- **tensornet/discovery/primitives/kernel.py**
+- **ontic/discovery/primitives/kernel.py**
   - `class KernelPrimitive` (L62) — Kernel Methods primitive for RKHS-based analysis.
-- **tensornet/discovery/primitives/optimal_transport.py**
+- **ontic/discovery/primitives/optimal_transport.py**
   - `class OptimalTransportPrimitive` (L65) — Optimal Transport primitive for distribution analysis.
-- **tensornet/discovery/primitives/random_matrix.py**
+- **ontic/discovery/primitives/random_matrix.py**
   - `class RandomMatrixPrimitive` (L62) — Random Matrix Theory primitive for spectral analysis.
-- **tensornet/discovery/primitives/spectral_wavelets.py**
+- **ontic/discovery/primitives/spectral_wavelets.py**
   - `class SpectralWaveletPrimitive` (L62) — Spectral Graph Wavelet primitive for multi-scale analysis.
-- **tensornet/discovery/primitives/topology.py**
+- **ontic/discovery/primitives/topology.py**
   - `class TopologyPrimitive` (L62) — Persistent Homology primitive for topological analysis.
-- **tensornet/discovery/protocol.py**
+- **ontic/discovery/protocol.py**
   - `class PrimitiveType` (L25) — Genesis primitive identifiers.
   - `class PrimitiveConfig` (L38) — Configuration for a Genesis primitive.
   - `class PrimitiveResult` (L82) — Result from a Genesis primitive operation.
   - `class ChainableInterface` (L132) — Protocol for chainable operations.
   - `class GenesisPrimitive` (L144) — Abstract base class for all Genesis primitives.
   - `class PrimitiveChain` (L311) — Chain of Genesis primitives executed in sequence.
-- **tensornet/distributed_tn/distributed_dmrg.py**
+- **ontic/distributed_tn/distributed_dmrg.py**
   - `class PartitionStrategy` (L28) — Strategy for partitioning MPS across workers.
   - `class PartitionConfig` (L38) — Configuration for DMRG partitioning.
   - `class DMRGPartition` (L57) — A single partition of the DMRG problem.
@@ -3154,7 +3154,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class DMRGWorker` (L114) — Worker for DMRG on a single partition.
   - `class DistributedDMRG` (L253) — Distributed DMRG algorithm.
   - `function run_distributed_dmrg` (L507) — Convenience function for distributed DMRG.
-- **tensornet/distributed_tn/mps_operations.py**
+- **ontic/distributed_tn/mps_operations.py**
   - `class CompressionStrategy` (L26) — Strategy for distributed compression.
   - `class MPSPartition` (L35) — A partition of an MPS.
   - `class CrossNodeContraction` (L71) — Handles cross-node tensor contractions.
@@ -3162,7 +3162,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class DistributedMPS` (L132) — Distributed MPS with partition support.
   - `function merge_partitions` (L438) — Merge partitions into single MPS.
   - `function split_into_partitions` (L455) — Split MPS into partitions.
-- **tensornet/distributed_tn/parallel_tebd.py**
+- **ontic/distributed_tn/parallel_tebd.py**
   - `class SplittingOrder` (L25) — Order of Trotter-Suzuki splitting.
   - `class GhostSites` (L34) — Ghost sites for boundary communication.
   - `class TEBDPartition` (L61) — A partition for parallel TEBD.
@@ -3170,7 +3170,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class TEBDWorker` (L121) — Worker for TEBD on a single partition.
   - `class ParallelTEBD` (L302) — Parallel TEBD implementation.
   - `function run_parallel_tebd` (L540) — Convenience function for parallel TEBD.
-- **tensornet/docs/user_guides.py**
+- **ontic/docs/user_guides.py**
   - `class DifficultyLevel` (L22) — Tutorial difficulty level.
   - `class GuideType` (L31) — Type of user guide.
   - `class CodeExample` (L42) — A runnable code example.
@@ -3181,7 +3181,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function create_cfd_tutorial` (L773) — Create the CFD tutorial for The Physics OS.
   - `function create_tensor_network_primer` (L981) — Create the Tensor Network primer for The Physics OS.
   - `function create_deployment_guide` (L1187) — Create the Deployment guide for The Physics OS.
-- **tensornet/exploit/bounty_api.py**
+- **ontic/exploit/bounty_api.py**
   - `class Platform` (L96) — Supported bounty platforms.
   - `class SubmissionStatus` (L104) — Status of a bounty submission.
   - `class BountyProgram` (L116) — A bug bounty program.
@@ -3190,7 +3190,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class ImmunefiFetcher` (L273) — Immunefi bounty program fetcher.
   - `class Code4renaClient` (L322) — Code4rena client.
   - `class BountyAPI` (L343) — Unified interface to bounty platforms.
-- **tensornet/exploit/bounty_reporter.py**
+- **ontic/exploit/bounty_reporter.py**
   - `class Severity` (L39) — Bug bounty severity levels following Immunefi classification.
   - `class ImpactType` (L62) — Categories of vulnerability impact.
   - `class ExploitEvidence` (L81) — Evidence from a successful exploit hunt.
@@ -3198,37 +3198,37 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class PoCGenerator` (L224) — Generate Proof of Concept code for exploits.
   - `class BountyReport` (L378) — Complete bug bounty report ready for submission.
   - `class BountyReporter` (L505) — Generate professional bug bounty reports from exploit discoveries.
-- **tensornet/exploit/euler_v2_hunt.py**
+- **ontic/exploit/euler_v2_hunt.py**
   - `class SubAccount` (L101) — Represents an Euler v2 sub-account (address || byte).
   - `class EulerVault` (L140) — Represents an Euler v2 EVault.
   - `class BatchItem` (L174) — EVC batch operation item.
   - `class EulerMockEVM` (L182) — Mock EVM simulating Euler v2 protocol.
   - `class EulerV2QTTHunter` (L531) — QTT-based exploit hunter for Euler v2.
   - `function main` (L1012) — Run Euler v2 hunt.
-- **tensornet/exploit/evm_oracle.py**
+- **ontic/exploit/evm_oracle.py**
   - `class ExecutionResult` (L46) — Result of executing a transaction sequence.
   - `class EVMOracle` (L87) — Abstract base for EVM execution backends.
   - `class MockContract` (L118) — Mock contract for testing.
   - `class MockEVM` (L255) — Mock EVM for fast testing.
   - `function create_initial_state` (L471) — Create a standard initial state for hunting.
   - `function compute_profit` (L489) — Compute attacker profit in wei.
-- **tensornet/exploit/exploit_hunter.py**
+- **ontic/exploit/exploit_hunter.py**
   - `class HuntStatus` (L71) — Status of an exploit hunt.
   - `class HotZone` (L82) — A region of high loss/chi in tx space.
   - `class HuntResult` (L96) — Result of an exploit hunt.
   - `class ExploitHunter` (L175) — Main exploit hunting engine.
   - `function hunt_all_toys` (L511) — Run exploit hunter on all toy contracts.
-- **tensornet/exploit/guided_sampling.py**
+- **ontic/exploit/guided_sampling.py**
   - `class AttackPattern` (L33) — Common attack sequence patterns.
   - `class AttackTemplate` (L44) — Template for a specific attack pattern.
   - `class GuidedSampler` (L149) — Sample transaction space using attack pattern templates.
   - `class SmartDiscretizer` (L364) — Improved discretizer that uses contract function specs.
-- **tensornet/exploit/historical_validator.py**
+- **ontic/exploit/historical_validator.py**
   - `class HistoricalExploit` (L214) — Specification for a known historical exploit.
   - `class DAOMockEVM` (L312) — Mock EVM that simulates The DAO's vulnerable behavior.
   - `class HistoricalValidator` (L466) — Validates the exploit engine against known historical exploits.
   - `class LiveForkValidator` (L974) — Validate against actual mainnet state via fork.
-- **tensornet/exploit/hypergrid.py**
+- **ontic/exploit/hypergrid.py**
   - `class Chain` (L74) — Supported blockchain networks.
   - `class HuntType` (L85) — Types of vulnerability hunts.
   - `class HunterStatus` (L98) — Hunter worker status.
@@ -3246,7 +3246,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class HypergridController` (L950) — Main controller for the Hypergrid parallel hunting framework.
   - `function get_default_targets` (L1164) — Get default high-value targets for hunting.
   - `function main` (L1262) — Run the Hypergrid hunting framework.
-- **tensornet/exploit/invariant_hunter.py**
+- **ontic/exploit/invariant_hunter.py**
   - `class InvariantType` (L32) — Categories of DeFi invariants that can be violated.
   - `class Invariant` (L46) — A formal invariant specification.
   - `class ViolationPath` (L55) — A sequence of calls that might violate an invariant.
@@ -3254,7 +3254,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class InvariantHunter` (L149) — Hunts for invariant violations in DeFi protocols.
   - `class RoundingAnalyzer` (L376) — Analyze rounding behavior for profit extraction.
   - `function main` (L454) — Run invariant hunting demonstration.
-- **tensornet/exploit/invariants.py**
+- **ontic/exploit/invariants.py**
   - `class AccountState` (L67) — State of a single account.
   - `class EVMState` (L81) — Complete EVM state snapshot.
   - `class TransactionContext` (L103) — Context for a transaction or sequence.
@@ -3271,13 +3271,13 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class CompositeInvariant` (L720) — Combine multiple invariants with weights.
   - `class Chi` (L762) — χ (chi) — Exploit proximity metric.
   - `class Invariants` (L819) — Registry of pre-built invariants.
-- **tensornet/exploit/mainnet_targets.py**
+- **ontic/exploit/mainnet_targets.py**
   - `class TargetStatus` (L61) — Status of a mainnet target.
   - `class ExploitType` (L69) — Type of exploit.
   - `class MainnetTarget` (L82) — A mainnet contract target for hunting.
   - `class MainnetTargets` (L268) — Registry of mainnet targets.
   - `function hunt_historical_target` (L316) — Hunt a historical target to validate the engine.
-- **tensornet/exploit/morpho_blue_hunt.py**
+- **ontic/exploit/morpho_blue_hunt.py**
   - `class MorphoMarket` (L247) — A Morpho Blue market.
   - `class MorphoPosition` (L265) — User position in a market.
   - `class MorphoState` (L273) — Simulated Morpho Blue state.
@@ -3287,13 +3287,13 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class MorphoHuntResult` (L730) — Result of Morpho Blue hunt.
   - `class MorphoBlueQTTHunter` (L762) — QTT-based exploit hunter for Morpho Blue.
   - `function main` (L954) — Run Morpho Blue hunt.
-- **tensornet/exploit/real_evm.py**
+- **ontic/exploit/real_evm.py**
   - `class CompiledContract` (L102) — Compiled Solidity contract.
   - `class StorageTrace` (L141) — Trace of storage operations during execution.
   - `class RealEVM` (L179) — Real EVM execution using py-evm via eth-tester.
   - `class ForkEVM` (L667) — EVM with mainnet forking support via Web3.
   - `function create_evm` (L801) — Factory function to create EVM backend.
-- **tensornet/exploit/state_encoder.py**
+- **ontic/exploit/state_encoder.py**
   - `function interleave_bits` (L71) — Interleave bits of x and y to create Morton code.
   - `function deinterleave_bits` (L88) — Reverse Morton interleaving to get original x, y.
   - `function slot_to_morton` (L98) — Convert 256-bit storage slot to Morton-ordered index.
@@ -3306,7 +3306,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class StateDiffTracker` (L471) — Track state changes across transaction execution.
   - `function mapping_slot` (L541) — Compute storage slot for mapping[key] given base slot.
   - `function array_slot` (L562) — Compute storage slot for array[index] given base slot.
-- **tensornet/exploit/toy_contracts.py**
+- **ontic/exploit/toy_contracts.py**
   - `class ToyContract` (L41) — A toy contract for testing.
   - `function create_reentrancy_vault` (L59) — Classic reentrancy vulnerability.
   - `class OverflowMock` (L132) — Mock with integer overflow vulnerability.
@@ -3317,7 +3317,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class FlashLoanMock` (L413) — Mock with flash loan vulnerability.
   - `function create_flash_loan_victim` (L479) — Flash loan attack vulnerability.
   - `class ToyContracts` (L532) — Registry of toy contracts for testing.
-- **tensornet/exploit/tx_space.py**
+- **ontic/exploit/tx_space.py**
   - `class FunctionSpec` (L59) — Specification of a contract function.
   - `class ContractSpec` (L110) — Specification of a contract's interface.
   - `class CallerType` (L129) — Who is sending the transaction.
@@ -3331,7 +3331,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function finite_difference_gradient` (L563) — Estimate gradient via finite differences.
   - `function central_difference_gradient` (L584) — Central difference gradient (more accurate, 2x cost).
   - `function stochastic_gradient` (L604) — Stochastic gradient estimation via random perturbations.
-- **tensornet/fieldops/operators.py**
+- **ontic/fieldops/operators.py**
   - `class Operator` (L29) — Base class for all field operators.
   - `class OperatorStats` (L75) — Statistics from operator application.
   - `class Grad` (L90) — Gradient operator: ∇f
@@ -3356,11 +3356,11 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function smoke_graph` (L1038) — Create a standard smoke simulation graph.
   - `function fluid_graph` (L1049) — Create a standard fluid simulation graph.
   - `function heat_graph` (L1059) — Create a heat diffusion graph.
-- **tensornet/fieldos/field.py**
+- **ontic/fieldos/field.py**
   - `class FieldType` (L26) — Type of physical field.
   - `class FieldMetadata` (L42) — Metadata for a field.
   - `class Field` (L113) — Unified field representation.
-- **tensornet/fieldos/kernel.py**
+- **ontic/fieldos/kernel.py**
   - `class FieldOSConfig` (L32) — Configuration for FieldOS kernel.
   - `class KernelState` (L81) — State of the FieldOS kernel.
   - `class KernelStats` (L93) — Runtime statistics for the kernel.
@@ -3369,17 +3369,17 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function create_field` (L499) — Create field using global kernel.
   - `function run` (L504) — Run pipeline using global kernel.
   - `function query` (L509) — Query using global kernel.
-- **tensornet/gateway/onion_renderer.py**
+- **ontic/gateway/onion_renderer.py**
   - `class BlendMode` (L36) — GPU blending modes for layer composition.
   - `class LayerType` (L46) — The five onion layers.
   - `class RenderLayer` (L57) — Single layer in the onion stack.
   - `class OnionRenderer` (L101) — 5-Layer GPU render pipeline with depth-sorted composition.
   - `function demo_renderer` (L486) — Demo: Test onion renderer.
-- **tensornet/gateway/orbital_command.py**
+- **ontic/gateway/orbital_command.py**
   - `function _draw_grid_lines_jit` (L49) — JIT-compiled grid line drawing for substrate.
   - `class OrbitalCommandCenter` (L72) — VALHALLA Orbital Command Center.
   - `function main` (L546) — Main entry point.
-- **tensornet/hw/verilog_elite_analyzer.py**
+- **ontic/hw/verilog_elite_analyzer.py**
   - `class Severity` (L27)
   - `class VulnType` (L34)
   - `class Signal` (L45)
@@ -3388,12 +3388,12 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class VerilogEliteAnalyzer` (L75) — QTT-inspired Verilog/SystemVerilog security analyzer
   - `function print_banner` (L481)
   - `function main` (L496)
-- **tensornet/hypersim/env.py**
+- **ontic/hypersim/env.py**
   - `class FluidEnvConfig` (L31) — Configuration for fluid environment.
   - `class EnvState` (L71) — Serializable environment state for checkpointing.
   - `class StepResult` (L98) — Result from environment step.
   - `class FluidEnv` (L113) — Gymnasium-compatible fluid dynamics environment.
-- **tensornet/hypersim/rewards.py**
+- **ontic/hypersim/rewards.py**
   - `class RewardConfig` (L28) — Configuration for reward computation.
   - `class RewardFunction` (L38) — Base class for reward functions.
   - `class SparseReward` (L87) — Sparse reward: +1 when goal achieved, 0 otherwise.
@@ -3406,7 +3406,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class DissipationReward` (L300) — Reward for energy dissipation rate.
   - `class BoundaryPenalty` (L337) — Penalty for violating boundary conditions.
   - `function make_reward` (L375) — Factory for creating reward functions.
-- **tensornet/hypersim/spaces.py**
+- **ontic/hypersim/spaces.py**
   - `class ObservationType` (L27) — Type of observation encoding.
   - `class ObservationConfig` (L39) — Configuration for observation extraction.
   - `class FieldObservation` (L54) — Extract observations from QTT fields.
@@ -3417,7 +3417,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class ActionMask` (L427) — Mask for valid actions.
   - `function build_observation_space` (L501) — Build Gymnasium observation space from config.
   - `function build_action_space` (L527) — Build Gymnasium action space from config.
-- **tensornet/hypervisual/renderer.py**
+- **ontic/hypervisual/renderer.py**
   - `class TileCoord` (L30) — Coordinates for a tile in the LOD pyramid.
   - `class Tile` (L58) — A rendered tile with metadata.
   - `class RenderConfig` (L91) — Configuration for tile rendering.
@@ -3425,18 +3425,18 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class LODPyramid` (L132) — Level-of-detail pyramid for efficient multi-resolution access.
   - `class TileCache` (L220) — LRU cache for rendered tiles.
   - `class TileRenderer` (L274) — Tile-based renderer for QTT fields.
-- **tensornet/hypervisual/slicer.py**
+- **ontic/hypervisual/slicer.py**
   - `class SlicePlane` (L29) — Standard slice planes.
   - `class SliceResult` (L39) — Result of a slice operation.
   - `class VolumeResult` (L70) — Result of volume rendering.
   - `class SliceEngine` (L91) — Resolution-independent slicing from QTT fields.
   - `class VolumeRenderer` (L270) — Volume rendering via ray marching through QTT field.
-- **tensornet/hypervisual/slicing_core.py**
+- **ontic/hypervisual/slicing_core.py**
   - `class SlicePlane` (L41) — Standard slice planes for Morton slicing.
   - `class MortonSliceResult` (L50) — Result of Morton-aware slice operation.
   - `class MortonSlicer` (L89) — True Morton-aware slicer for 3D QTT fields.
   - `function compare_slicing_methods` (L318) — Compare Morton projection vs point sampling performance.
-- **tensornet/neural/entanglement_gnn.py**
+- **ontic/neural/entanglement_gnn.py**
   - `class NodeFeatures` (L22) — Features for a node (site) in the entanglement graph.
   - `class EdgeFeatures` (L60) — Features for an edge (bond) in the entanglement graph.
   - `class EntanglementGraph` (L93) — Graph representation of entanglement structure.
@@ -3447,7 +3447,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function build_entanglement_graph` (L418) — Build entanglement graph from MPS data.
   - `function predict_entanglement_structure` (L530) — Predict entanglement structure using GNN.
   - `function train_entanglement_gnn` (L556) — Train entanglement GNN.
-- **tensornet/neural/genesis_optimizer.py**
+- **ontic/neural/genesis_optimizer.py**
   - `class GenesisOptimizerConfig` (L39) — Configuration for Genesis Optimizer.
   - `class StiefelManifold` (L74) — Operations on the Stiefel manifold St(n, p) = {X ∈ R^{n×p} : X^T X = I_p}.
   - `class GenesisOptimizer` (L150) — Riemannian optimizer for Tensor Train cores.
@@ -3455,7 +3455,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class GeometricRotorLearner` (L692) — Learn geometric transformations between market states using Rotors.
   - `class TopologyAwareDiscoveryLoss` (L870) — Combined loss function that incorporates:
   - `function train_with_genesis_optimizer` (L963) — Train a differentiable QTT module using the Genesis Optimizer.
-- **tensornet/physics/trajectory_optimizer.py**
+- **ontic/physics/trajectory_optimizer.py**
   - `class Waypoint` (L33) — Single trajectory waypoint.
   - `class Trajectory` (L50) — Complete flight trajectory.
   - `function sample_cost_along_path` (L86) — Sample cost field values along a path using trilinear interpolation.
@@ -3465,13 +3465,13 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function optimize_trajectory_fast_marching` (L373) — Find optimal path using Fast Marching Method.
   - `function find_optimal_trajectory` (L467) — Find optimal trajectory through hazard field.
   - `function demo_trajectory_optimizer` (L539) — Demonstrate trajectory optimization through synthetic weather.
-- **tensornet/provenance/commit.py**
+- **ontic/provenance/commit.py**
   - `class CommitMetadata` (L31) — Metadata associated with a commit.
   - `class FieldCommit` (L83) — Immutable snapshot of a field state.
   - `function make_commit` (L280) — Convenience function to create a commit.
-- **tensornet/quantum/__init__.py**
+- **ontic/quantum/__init__.py**
   - `function __getattr__` (L104)
-- **tensornet/quantum/hybrid.py**
+- **ontic/quantum/hybrid.py**
   - `class GateType` (L37) — Standard quantum gate types.
   - `class QuantumGate` (L60) — Representation of a quantum gate.
   - `class QuantumCircuit` (L89) — Quantum circuit representation.
@@ -3486,7 +3486,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class QuantumInspiredOptimizer` (L1060) — Quantum-inspired classical optimization using tensor network techniques.
   - `function create_ising_hamiltonian` (L1170) — Create Ising Hamiltonian for VQE.
   - `function create_maxcut_hamiltonian` (L1195) — Create MaxCut cost Hamiltonian for QAOA.
-- **tensornet/realtime/inference_engine.py**
+- **ontic/realtime/inference_engine.py**
   - `class InferencePriority` (L24) — Priority levels for inference requests.
   - `class InferenceConfig` (L35) — Configuration for the inference engine.
   - `class InferenceResult` (L73) — Result of an inference request.
@@ -3496,7 +3496,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class InferenceEngine` (L346) — High-performance inference engine with dynamic batching.
   - `function run_inference` (L615) — Run single inference with optional configuration.
   - `function run_batched_inference` (L634) — Run batched inference.
-- **tensornet/site/themes.py**
+- **ontic/site/themes.py**
   - `class ColorScheme` (L11) — Color scheme options.
   - `class ThemeColors` (L20) — Theme color palette.
   - `class ThemeTypography` (L66) — Typography configuration.
@@ -3507,30 +3507,30 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function get_theme` (L505) — Get theme by name.
   - `function list_themes` (L523) — List available theme names.
   - `function register_theme` (L533) — Register a custom theme.
-- **tensornet/sovereign/heatmap_generator.py**
+- **ontic/sovereign/heatmap_generator.py**
   - `class CUDAHeatmapGenerator` (L26) — GPU-accelerated convergence heatmap generator.
   - `function main` (L351) — Run standalone heatmap generator.
-- **tensornet/sovereign/realtime_tensor_stream.py**
+- **ontic/sovereign/realtime_tensor_stream.py**
   - `class RealtimeTensorStream` (L23) — Real-time tensor field streaming to Glass Cockpit.
   - `function test_realtime_stream` (L335) — Test real-time tensor streaming with synthetic patterns.
-- **tensornet/substrate/bounded.py**
+- **ontic/substrate/bounded.py**
   - `class QualityLevel` (L27) — Quality levels for bounded mode.
   - `class BudgetConfig` (L38) — Configuration for bounded-latency mode.
   - `class ContractionPath` (L70) — Precompiled contraction path for efficient execution.
   - `class ContractionCache` (L81) — Cache for intermediate contraction results.
   - `class BoundedMode` (L175) — Bounded-latency execution mode.
   - `class AdaptiveRankController` (L384) — PID-like controller for adaptive rank adjustment.
-- **tensornet/substrate/bundle.py**
+- **ontic/substrate/bundle.py**
   - `class BundleMetadata` (L35) — Metadata for a FieldBundle.
   - `class OperatorLog` (L95) — Log of operators applied to the field (for replay).
   - `class TruncationPolicy` (L125) — Policy for rank truncation.
   - `class FieldBundle` (L149) — Complete serializable representation of a Field.
-- **tensornet/substrate/field.py**
+- **ontic/substrate/field.py**
   - `class FieldType` (L29) — Type of physical field.
   - `class SliceSpec` (L38) — Specification for extracting a 2D/3D slice from a field.
   - `class StepControls` (L63) — Controls for physics stepping.
   - `class Field` (L88) — The Field Oracle - single interface for all field operations.
-- **tensornet/substrate/morton_ops.py**
+- **ontic/substrate/morton_ops.py**
   - `class SlicedQTT2D` (L44) — 2D QTT resulting from slicing a 3D Morton-ordered field.
   - `function get_bit` (L77) — Extract bit at position from index.
   - `function slice_morton_3d_z_plane` (L87) — Extract XY plane at fixed Z from 3D Morton-ordered QTT.
@@ -3543,11 +3543,11 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function create_analytical_3d_qtt` (L323) — Create 3D QTT from analytical function.
   - `function tt_svd_to_3d_qtt` (L390) — TT-SVD decomposition of Morton-ordered 1D array to 3D QTT cores.
   - `function validate_slice_accuracy` (L450) — Validate Morton slice against ground truth.
-- **tensornet/substrate/stats.py**
+- **ontic/substrate/stats.py**
   - `class KernelTiming` (L25) — Timing information for a single kernel/operation.
   - `class FieldStats` (L62) — Comprehensive telemetry for a Field.
   - `class TelemetryDashboard` (L268) — Aggregated telemetry over time for visualization.
-- **tensornet/types/fields.py**
+- **ontic/types/fields.py**
   - `class InvariantViolation` (L58) — Raised when an operation would violate a declared constraint.
   - `class Field` (L78) — Abstract base class for all fields on a space.
   - `class ScalarField` (L170) — Scalar field f: M → R
@@ -3558,7 +3558,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function scalar_field` (L889) — Create a scalar field from tensor data.
   - `function vector_field` (L905) — Create a vector field from tensor data.
   - `function divergence_free_field` (L921) — Create a divergence-free vector field.
-- **tensornet/types/genesis_integration.py**
+- **ontic/types/genesis_integration.py**
   - `class QTTFieldBase` (L65) — Base class for QTT-backed fields.
   - `class QTTScalarField` (L199) — QTT-backed scalar field.
   - `class QTTVectorField` (L280) — QTT-backed vector field for R³.
@@ -3568,11 +3568,11 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function _tt_add` (L828) — Add two TT tensors: A + B.
   - `function _tt_inner_product` (L864) — Compute TT inner product ⟨A, B⟩ = sum of element-wise products.
   - `function main` (L899) — Demonstrate Genesis QTT integration with physics types.
-- **tensornet/visualization/benchmark_render_gpu.py**
+- **ontic/visualization/benchmark_render_gpu.py**
   - `function format_ms` (L35) — Format milliseconds with color coding for 60 FPS target.
   - `function run_benchmark` (L45) — Run comprehensive render benchmark.
   - `function verify_correctness` (L183) — Verify GPU output matches CPU output.
-- **tensornet/visualization/tensor_slicer.py**
+- **ontic/visualization/tensor_slicer.py**
   - `function _check_torch` (L40) — Check if PyTorch with CUDA is available.
   - `function _check_triton` (L53) — Check if Triton is available for fused kernels.
   - `function _get_fused_render_kernel` (L81) — DISABLED: Complex Triton kernels with static_range over 20 cores
@@ -3592,7 +3592,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function create_slicer_from_qtt` (L2040) — Create a TensorSlicer from a QTT object.
   - `function create_test_qtt` (L2061) — Create a test QTT with random cores for benchmarking.
   - `function create_sine_qtt` (L2082) — Create a QTT representing sin(2π * frequency * x).
-- **tensornet/zk/fezk_elite.py**
+- **ontic/zk/fezk_elite.py**
   - `class Severity` (L102) — Bug severity levels matching Immunefi tiers.
   - `class Framework` (L111) — Supported ZK frameworks.
   - `class Signal` (L128) — Universal signal representation across all frameworks.
@@ -3610,7 +3610,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class CairoParser` (L2412) — Cairo parser for StarkNet circuits.
   - `class FEZKElite` (L2621) — FEZK Elite - Unified ZK Circuit Analyzer
   - `function main` (L2849) — Command-line interface.
-- **tensornet/zk/fluidelite_circuit_analyzer.py**
+- **ontic/zk/fluidelite_circuit_analyzer.py**
   - `class Severity` (L111) — Bug severity levels matching Immunefi.
   - `class Signal` (L121) — A signal (wire) in the circuit.
   - `class Constraint` (L132) — R1CS constraint: A·w ⊙ B·w = C·w
@@ -3626,13 +3626,13 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class GnarkParser` (L1860) — Parser for gnark (Go) ZK circuits.
   - `class FEZKAnalyzer` (L2136) — FEZK v2.0 Unified Analyzer.
   - `function main` (L2222)
-- **tensornet/zk/halo2_constraint_extractor.py**
+- **ontic/zk/halo2_constraint_extractor.py**
   - `class Halo2Signal` (L37) — Represents an advice/fixed column at a specific rotation.
   - `class Halo2Constraint` (L57) — Represents a constraint expression: selector * (expression) = 0
   - `class Halo2ConstraintSystem` (L67) — Complete constraint system for a Halo2 circuit.
   - `class Halo2ConstraintExtractor` (L92) — Extracts constraint matrices from Halo2 Rust circuit code.
   - `function analyze_scroll_zkevm` (L572) — Full analysis of Scroll zkEVM circuits.
-- **tensornet/zk/polygon_security_report.py**
+- **ontic/zk/polygon_security_report.py**
   - `class SecurityFinding` (L20) — A security finding from PIL analysis.
   - `class PolygonSecurityReport` (L32) — Generate comprehensive security report for Polygon zkEVM.
   - `function main` (L376)
@@ -4212,7 +4212,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function qtt_compress_unified` (L144) — QTT compression on unified 3D flattened vector.
   - `function download_frame` (L190) — Download and extract a single frame from S3.
   - `function run_unified_4d` (L207)
-- **tensornet/exploit/compound_v3_qtt_hunt.py**
+- **ontic/exploit/compound_v3_qtt_hunt.py**
   - `function create_compound_v3_spec` (L79) — Create ContractSpec for Compound V3 Comet.
   - `class CometState` (L151) — Simulated Compound V3 Comet state.
   - `class CometMockEVM` (L206) — Mock EVM simulating Compound V3 Comet behavior.
@@ -4221,7 +4221,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class CompoundV3HuntResult` (L607) — Result of Compound V3 QTT hunt.
   - `class CompoundV3QTTHunter` (L645) — QTT-based exploit hunter for Compound V3.
   - `function main` (L907) — Run Compound V3 QTT hunt.
-- **tensornet/fusion/qtt_screening.py**
+- **ontic/fusion/qtt_screening.py**
   - `function _tt_svd_fallback` (L99) — Fallback TT-SVD implementation for QTT cores.
   - `function _dense_to_qtt_cores_fallback` (L153) — Fallback to convert dense values to QTT cores.
   - `function _qtt_from_function_dense_fallback` (L170) — Fallback dense sampling + TT-SVD.
@@ -4230,11 +4230,11 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class QTTElectronScreeningSolver` (L267) — Tensor-network compressed solver for electron screening in metal hydrides.
   - `function compare_qtt_vs_dense` (L677) — Benchmark QTT vs dense computation across grid sizes.
   - `function demo_qtt_screening` (L733) — Demonstrate QTT-compressed electron screening solver.
-- **tensornet/fusion/qtt_superionic.py**
+- **ontic/fusion/qtt_superionic.py**
   - `class QTTDiffusionResult` (L53) — Diffusion result with QTT compression metrics.
   - `class QTTSuperionicDynamics` (L83) — QTT-enhanced Langevin dynamics with compressed potential energy surface.
   - `function demo_qtt_superionic` (L479) — Demonstrate QTT-enhanced superionic dynamics.
-- **tensornet/neural/differentiable_qtt.py**
+- **ontic/neural/differentiable_qtt.py**
   - `class NuclearNormRegularizer` (L41) — Nuclear norm regularizer for QTT cores.
   - `class DifferentiableQTTCores` (L201) — Wraps TT cores as trainable nn.Parameters.
   - `class RankAdaptationConfig` (L327) — Configuration for rank adaptation.
@@ -4243,7 +4243,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function qtt_from_tensor` (L665) — Create differentiable QTT from full tensor via TT-SVD.
   - `function reconstruct_from_cores` (L732) — Reconstruct full tensor from TT cores using stable contraction.
   - `function compute_reconstruction_loss` (L776) — Compute reconstruction loss between QTT and target tensor.
-- **tensornet/quantum/cpu_qtt_evaluator.py**
+- **ontic/quantum/cpu_qtt_evaluator.py**
   - `function morton_encode_fast` (L53) — Numba-JIT compiled Morton encoding.
   - `function morton_grid_parallel` (L70) — Generate Morton index grid using parallel CPU threads.
   - `function extract_bit_array` (L86) — Extract bit array from Morton index (MSB first).
@@ -4251,30 +4251,30 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function qtt_eval_batch_numba` (L158) — Parallel batch evaluation of QTT at Morton indices.
   - `class CPUQTTEvaluator` (L182) — High-performance CPU QTT evaluator for the i9-14900HX.
   - `function test_cpu_evaluator` (L361) — Test CPU evaluator with synthetic QTT.
-- **tensornet/quantum/hybrid_qtt_renderer.py**
+- **ontic/quantum/hybrid_qtt_renderer.py**
   - `class HybridQTTRenderer` (L40) — Hybrid CPU-GPU renderer combining sparse QTT evaluation with GPU interpolation.
   - `function create_test_qtt` (L322) — Create synthetic QTT for testing and validation.
   - `function test_hybrid_renderer` (L356) — Validation test for hybrid renderer.
-- **tensornet/quantum/qtt_glsl_bridge.py**
+- **ontic/quantum/qtt_glsl_bridge.py**
   - `class QTTShaderParams` (L33) — Shader parameters for QTT contraction on GPU.
   - `function pack_qtt_for_shader` (L65) — Pack QTT cores into contiguous GPU-friendly buffers.
   - `function generate_shader_header` (L121) — Generate GLSL header with QTT parameters as constants.
   - `function qtt_eval_at_pixel_coords` (L141) — Evaluate QTT at pixel coordinates (x, y) via core contraction.
   - `function create_test_qtt` (L190) — Create a synthetic QTT state for testing.
   - `function validate_shader_contraction` (L214) — Test suite: Compare CPU QTT evaluation vs shader output.
-- **tensornet/quantum/qtt_torch_renderer.py**
+- **ontic/quantum/qtt_torch_renderer.py**
   - `class QTTTorchRenderer` (L33) — GPU-accelerated QTT synthesis for PyTorch rendering pipeline.
   - `function create_plasma_qtt` (L264) — Create a plasma-like QTT field for testing.
   - `function test_qtt_torch_renderer` (L292) — Validation: Render QTT to buffer and check output.
-- **tensornet/sovereign/implicit_qtt_renderer.py**
+- **ontic/sovereign/implicit_qtt_renderer.py**
   - `function _get_cuda_kernel_source` (L18) — Read CUDA kernel source code
   - `function _compile_kernel` (L25) — Compile implicit_qtt_kernel.cu using PyTorch JIT
   - `class ImplicitQTTRenderer` (L97) — Render QTT tensors directly in CUDA without materialization.
   - `function test_implicit_renderer` (L325) — Test implicit renderer with synthetic QTT.
-- **tensornet/sovereign/qtt_bridge_streamer.py**
+- **ontic/sovereign/qtt_bridge_streamer.py**
   - `class QTTBridgeStreamer` (L30) — Stream QTT-synthesized heatmaps to shared memory bridge.
   - `function main` (L367) — Run QTT Bridge Streamer.
-- **tensornet/sovereign/qtt_slice_extractor.py**
+- **ontic/sovereign/qtt_slice_extractor.py**
   - `class QTT3DState` (L35) — 3D field in QTT format with Morton ordering.
   - `class QTTSliceExtractor` (L56) — Extract 2D slices from 3D QTT fields with GPU acceleration.
   - `function test_slice_extractor` (L410) — Test QTT slice extraction with synthetic 3D field.

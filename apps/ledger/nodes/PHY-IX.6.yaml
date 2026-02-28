@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Slab methods, Green's functions"
 
 source_files:
-  - "tensornet/condensed_matter/surfaces_interfaces.py"
+  - "ontic/condensed_matter/surfaces_interfaces.py"
 
 tests:
   smoke:

@@ -28,8 +28,8 @@ from dataclasses import dataclass, asdict
 from typing import List, Optional
 
 # Import QTT infrastructure
-from tensornet.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo, truncate_cores
-from tensornet.cfd.pure_qtt_ops import QTTState, qtt_add, dense_to_qtt
+from ontic.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo, truncate_cores
+from ontic.cfd.pure_qtt_ops import QTTState, qtt_add, dense_to_qtt
 
 
 @dataclass

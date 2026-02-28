@@ -24,17 +24,17 @@ class TestSiteGenerator:
     
     def test_site_config_creation(self):
         """Test SiteConfig creation with defaults."""
-        from tensornet.infra.site.generator import SiteConfig
+        from ontic.infra.site.generator import SiteConfig
         
         config = SiteConfig()
         
         assert config.title == "HyperTensor Documentation"
         assert config.base_url == "/"
-        assert config.theme == "hypertensor"
+        assert config.theme == "physics_os"
     
     def test_site_config_with_options(self):
         """Test SiteConfig with custom options."""
-        from tensornet.infra.site.generator import SiteConfig
+        from ontic.infra.site.generator import SiteConfig
         
         config = SiteConfig(
             title="Custom Docs",
@@ -50,7 +50,7 @@ class TestSiteGenerator:
     
     def test_markdown_renderer_basic(self):
         """Test basic Markdown rendering."""
-        from tensornet.infra.site.generator import MarkdownRenderer, SiteConfig
+        from ontic.infra.site.generator import MarkdownRenderer, SiteConfig
         
         config = SiteConfig()
         renderer = MarkdownRenderer(config)
@@ -63,7 +63,7 @@ class TestSiteGenerator:
     
     def test_markdown_renderer_code_blocks(self):
         """Test code block rendering."""
-        from tensornet.infra.site.generator import MarkdownRenderer, SiteConfig
+        from ontic.infra.site.generator import MarkdownRenderer, SiteConfig
         
         config = SiteConfig()
         renderer = MarkdownRenderer(config)
@@ -76,7 +76,7 @@ class TestSiteGenerator:
     
     def test_navigation_creation(self):
         """Test Navigation structure creation."""
-        from tensornet.infra.site.generator import Navigation, NavItem
+        from ontic.infra.site.generator import Navigation, NavItem
         
         nav = Navigation()
         nav.add_item(NavItem(title="Home", path="/"))
@@ -87,7 +87,7 @@ class TestSiteGenerator:
     
     def test_nav_item_to_dict(self):
         """Test NavItem dictionary conversion."""
-        from tensornet.infra.site.generator import NavItem
+        from ontic.infra.site.generator import NavItem
         
         item = NavItem(title="API", path="/api/", icon="📚")
         d = item.to_dict()
@@ -97,7 +97,7 @@ class TestSiteGenerator:
     
     def test_page_creation(self):
         """Test Page creation."""
-        from tensornet.infra.site.generator import Page, PageType
+        from ontic.infra.site.generator import Page, PageType
         
         page = Page(
             path="/index.html",
@@ -111,7 +111,7 @@ class TestSiteGenerator:
     
     def test_page_toc_extraction(self):
         """Test automatic TOC extraction from page content."""
-        from tensornet.infra.site.generator import Page
+        from ontic.infra.site.generator import Page
         
         content = """# Title
         
@@ -132,7 +132,7 @@ More content.
     
     def test_site_builder_initialization(self):
         """Test SiteBuilder initialization."""
-        from tensornet.infra.site.generator import SiteBuilder, SiteConfig
+        from ontic.infra.site.generator import SiteBuilder, SiteConfig
         
         config = SiteConfig(title="Test")
         builder = SiteBuilder(config)
@@ -141,7 +141,7 @@ More content.
     
     def test_build_result(self):
         """Test BuildResult structure."""
-        from tensornet.infra.site.generator import BuildResult
+        from ontic.infra.site.generator import BuildResult
         
         result = BuildResult(
             success=True,
@@ -160,7 +160,7 @@ class TestThemes:
     
     def test_theme_colors(self):
         """Test ThemeColors structure."""
-        from tensornet.infra.site.themes import ThemeColors
+        from ontic.infra.site.themes import ThemeColors
         
         colors = ThemeColors(
             primary="#1a1a2e",
@@ -171,7 +171,7 @@ class TestThemes:
     
     def test_theme_colors_to_css_vars(self):
         """Test CSS variable generation from colors."""
-        from tensornet.infra.site.themes import ThemeColors
+        from ontic.infra.site.themes import ThemeColors
         
         colors = ThemeColors()
         css = colors.to_css_vars()
@@ -181,7 +181,7 @@ class TestThemes:
     
     def test_theme_typography(self):
         """Test ThemeTypography structure."""
-        from tensornet.infra.site.themes import ThemeTypography
+        from ontic.infra.site.themes import ThemeTypography
         
         typo = ThemeTypography()
         
@@ -190,7 +190,7 @@ class TestThemes:
     
     def test_theme_typography_to_css(self):
         """Test CSS generation from typography."""
-        from tensornet.infra.site.themes import ThemeTypography
+        from ontic.infra.site.themes import ThemeTypography
         
         typo = ThemeTypography()
         css = typo.to_css()
@@ -200,7 +200,7 @@ class TestThemes:
     
     def test_get_theme(self):
         """Test theme retrieval."""
-        from tensornet.infra.site.themes import get_theme
+        from ontic.infra.site.themes import get_theme
         
         theme = get_theme("default")
         
@@ -208,7 +208,7 @@ class TestThemes:
     
     def test_list_themes(self):
         """Test listing available themes."""
-        from tensornet.infra.site.themes import list_themes
+        from ontic.infra.site.themes import list_themes
         
         themes = list_themes()
         
@@ -221,7 +221,7 @@ class TestSearch:
     
     def test_tokenizer_basic(self):
         """Test basic tokenization."""
-        from tensornet.infra.site.search import Tokenizer
+        from ontic.infra.site.search import Tokenizer
         
         tokenizer = Tokenizer()
         tokens = tokenizer.tokenize("Hello World Example")
@@ -230,7 +230,7 @@ class TestSearch:
     
     def test_tokenizer_stop_words(self):
         """Test stop word removal."""
-        from tensornet.infra.site.search import Tokenizer
+        from ontic.infra.site.search import Tokenizer
         
         tokenizer = Tokenizer()
         tokens = tokenizer.tokenize("the quick brown fox")
@@ -240,7 +240,7 @@ class TestSearch:
     
     def test_search_index_add_document(self):
         """Test adding document to search index."""
-        from tensornet.infra.site.search import SearchIndex
+        from ontic.infra.site.search import SearchIndex
         
         index = SearchIndex()
         index.add_document(
@@ -253,7 +253,7 @@ class TestSearch:
     
     def test_search_basic_query(self):
         """Test basic search query."""
-        from tensornet.infra.site.search import SearchIndex
+        from ontic.infra.site.search import SearchIndex
         
         index = SearchIndex()
         index.add_document("doc1", "tensor networks quantum physics", "Tensor Intro")
@@ -266,7 +266,7 @@ class TestSearch:
     
     def test_search_relevance_ranking(self):
         """Test search relevance ranking."""
-        from tensornet.infra.site.search import SearchIndex
+        from ontic.infra.site.search import SearchIndex
         
         index = SearchIndex()
         index.add_document("doc1", "tensor", "Tensor")
@@ -278,7 +278,7 @@ class TestSearch:
     
     def test_search_no_results(self):
         """Test search with no matches."""
-        from tensornet.infra.site.search import SearchIndex
+        from ontic.infra.site.search import SearchIndex
         
         index = SearchIndex()
         index.add_document("doc1", "tensor networks", "Tensors")
@@ -293,7 +293,7 @@ class TestAssets:
     
     def test_asset_creation(self):
         """Test Asset dataclass creation."""
-        from tensornet.infra.site.assets import Asset, AssetType
+        from ontic.infra.site.assets import Asset, AssetType
         
         asset = Asset(
             path=Path("style.css"),
@@ -306,7 +306,7 @@ class TestAssets:
     
     def test_css_minifier(self):
         """Test CSS minification."""
-        from tensornet.infra.site.assets import CSSMinifier
+        from ontic.infra.site.assets import CSSMinifier
         
         minifier = CSSMinifier()
         
@@ -324,7 +324,7 @@ class TestAssets:
     
     def test_js_minifier(self):
         """Test JavaScript minification."""
-        from tensornet.infra.site.assets import JSMinifier
+        from ontic.infra.site.assets import JSMinifier
         
         minifier = JSMinifier()
         
@@ -348,7 +348,7 @@ class TestBenchmarkSuite:
     
     def test_benchmark_config_creation(self):
         """Test BenchmarkConfig creation."""
-        from tensornet.sim.benchmarks.benchmark_suite import BenchmarkConfig
+        from ontic.sim.benchmarks.benchmark_suite import BenchmarkConfig
         
         config = BenchmarkConfig()
         
@@ -357,7 +357,7 @@ class TestBenchmarkSuite:
     
     def test_benchmark_config_custom(self):
         """Test BenchmarkConfig with custom values."""
-        from tensornet.sim.benchmarks.benchmark_suite import BenchmarkConfig
+        from ontic.sim.benchmarks.benchmark_suite import BenchmarkConfig
         
         config = BenchmarkConfig(
             warmup_runs=5,
@@ -370,7 +370,7 @@ class TestBenchmarkSuite:
     
     def test_latency_stats(self):
         """Test LatencyStats calculation."""
-        from tensornet.sim.benchmarks.benchmark_suite import LatencyStats
+        from ontic.sim.benchmarks.benchmark_suite import LatencyStats
         
         latencies = [1.0, 1.5, 1.2, 1.3, 1.1, 1.4, 1.25, 1.35, 1.15, 1.05]
         stats = LatencyStats.from_measurements(latencies)
@@ -382,7 +382,7 @@ class TestBenchmarkSuite:
     
     def test_latency_stats_to_dict(self):
         """Test LatencyStats dictionary conversion."""
-        from tensornet.sim.benchmarks.benchmark_suite import LatencyStats
+        from ontic.sim.benchmarks.benchmark_suite import LatencyStats
         
         stats = LatencyStats.from_measurements([1.0, 1.1, 1.2])
         d = stats.to_dict()
@@ -393,7 +393,7 @@ class TestBenchmarkSuite:
     
     def test_memory_stats(self):
         """Test MemoryStats structure."""
-        from tensornet.sim.benchmarks.benchmark_suite import MemoryStats
+        from ontic.sim.benchmarks.benchmark_suite import MemoryStats
         
         stats = MemoryStats(
             peak_memory_mb=512.0,
@@ -407,7 +407,7 @@ class TestBenchmarkSuite:
     
     def test_throughput_stats(self):
         """Test ThroughputStats structure."""
-        from tensornet.sim.benchmarks.benchmark_suite import ThroughputStats
+        from ontic.sim.benchmarks.benchmark_suite import ThroughputStats
         
         stats = ThroughputStats(
             samples_per_second=1000.0,
@@ -420,7 +420,7 @@ class TestBenchmarkSuite:
     
     def test_benchmark_result(self):
         """Test BenchmarkResult creation."""
-        from tensornet.sim.benchmarks.benchmark_suite import (
+        from ontic.sim.benchmarks.benchmark_suite import (
             BenchmarkResult, PrecisionMode, LatencyStats
         )
         
@@ -437,7 +437,7 @@ class TestBenchmarkSuite:
     
     def test_latency_benchmark(self):
         """Test LatencyBenchmark execution."""
-        from tensornet.sim.benchmarks.benchmark_suite import LatencyBenchmark, BenchmarkConfig
+        from ontic.sim.benchmarks.benchmark_suite import LatencyBenchmark, BenchmarkConfig
         
         config = BenchmarkConfig(
             warmup_runs=2,
@@ -459,7 +459,7 @@ class TestProfiler:
     
     def test_profile_config(self):
         """Test ProfileConfig creation."""
-        from tensornet.sim.benchmarks.profiler import ProfileConfig
+        from ontic.sim.benchmarks.profiler import ProfileConfig
         
         config = ProfileConfig()
         
@@ -467,7 +467,7 @@ class TestProfiler:
     
     def test_tensorrt_profiler_initialization(self):
         """Test TensorRTProfiler initialization."""
-        from tensornet.sim.benchmarks.profiler import TensorRTProfiler, ProfileConfig
+        from ontic.sim.benchmarks.profiler import TensorRTProfiler, ProfileConfig
         
         config = ProfileConfig()
         profiler = TensorRTProfiler(config)
@@ -476,7 +476,7 @@ class TestProfiler:
     
     def test_profile_result_structure(self):
         """Test ProfileResult structure."""
-        from tensornet.sim.benchmarks.profiler import ProfileResult
+        from ontic.sim.benchmarks.profiler import ProfileResult
         
         result = ProfileResult(
             model_name="test_model",
@@ -493,7 +493,7 @@ class TestBenchmarkReports:
     
     def test_report_format_enum(self):
         """Test ReportFormat enum."""
-        from tensornet.sim.benchmarks.reports import ReportFormat
+        from ontic.sim.benchmarks.reports import ReportFormat
         
         assert ReportFormat.MARKDOWN.value == "md"
         assert ReportFormat.JSON.value == "json"
@@ -501,7 +501,7 @@ class TestBenchmarkReports:
     
     def test_benchmark_report_creation(self):
         """Test BenchmarkReport creation."""
-        from tensornet.sim.benchmarks.reports import BenchmarkReport
+        from ontic.sim.benchmarks.reports import BenchmarkReport
         
         report = BenchmarkReport(title="Test Report")
         
@@ -513,7 +513,7 @@ class TestPerformanceAnalysis:
     
     def test_optimization_recommendation(self):
         """Test OptimizationRecommendation structure."""
-        from tensornet.sim.benchmarks.analysis import (
+        from ontic.sim.benchmarks.analysis import (
             OptimizationRecommendation,
             OptimizationCategory,
             ImpactLevel,
@@ -533,7 +533,7 @@ class TestPerformanceAnalysis:
     
     def test_performance_analyzer_initialization(self):
         """Test PerformanceAnalyzer initialization."""
-        from tensornet.sim.benchmarks.analysis import PerformanceAnalyzer
+        from ontic.sim.benchmarks.analysis import PerformanceAnalyzer
         
         analyzer = PerformanceAnalyzer()
         
@@ -549,21 +549,21 @@ class TestFlightDataLoader:
     
     def test_flight_data_source_enum(self):
         """Test FlightDataSource enum."""
-        from tensornet.sim.flight_validation.data_loader import FlightDataSource
+        from ontic.sim.flight_validation.data_loader import FlightDataSource
         
         assert FlightDataSource.FLIGHT_TEST is not None
         assert FlightDataSource.WIND_TUNNEL is not None
     
     def test_flight_data_format_enum(self):
         """Test FlightDataFormat enum."""
-        from tensornet.sim.flight_validation.data_loader import FlightDataFormat
+        from ontic.sim.flight_validation.data_loader import FlightDataFormat
         
         assert FlightDataFormat.CSV.value == "csv"
         assert FlightDataFormat.JSON.value == "json"
     
     def test_flight_condition_creation(self):
         """Test FlightCondition creation."""
-        from tensornet.sim.flight_validation.data_loader import FlightCondition
+        from ontic.sim.flight_validation.data_loader import FlightCondition
         
         condition = FlightCondition(
             timestamp=0.0,
@@ -578,7 +578,7 @@ class TestFlightDataLoader:
     
     def test_flight_condition_dynamic_pressure(self):
         """Test dynamic pressure calculation."""
-        from tensornet.sim.flight_validation.data_loader import FlightCondition
+        from ontic.sim.flight_validation.data_loader import FlightCondition
         
         condition = FlightCondition(
             timestamp=0.0,
@@ -592,7 +592,7 @@ class TestFlightDataLoader:
     
     def test_aerodynamic_data_creation(self):
         """Test AerodynamicData creation."""
-        from tensornet.sim.flight_validation.data_loader import AerodynamicData
+        from ontic.sim.flight_validation.data_loader import AerodynamicData
         
         aero = AerodynamicData(
             timestamp=0.0,
@@ -606,7 +606,7 @@ class TestFlightDataLoader:
     
     def test_flight_record_creation(self):
         """Test FlightRecord creation."""
-        from tensornet.sim.flight_validation.data_loader import (
+        from ontic.sim.flight_validation.data_loader import (
             FlightRecord, FlightDataSource, FlightCondition
         )
         
@@ -623,7 +623,7 @@ class TestFlightDataLoader:
     
     def test_flight_record_interpolation(self):
         """Test flight record time interpolation."""
-        from tensornet.sim.flight_validation.data_loader import (
+        from ontic.sim.flight_validation.data_loader import (
             FlightRecord, FlightDataSource, FlightCondition
         )
         
@@ -644,7 +644,7 @@ class TestFlightDataLoader:
     
     def test_flight_data_loader_csv(self):
         """Test CSV flight data loading."""
-        from tensornet.sim.flight_validation.data_loader import FlightDataLoader
+        from ontic.sim.flight_validation.data_loader import FlightDataLoader
         
         with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as f:
             f.write("time,mach,aoa,cl,cd\n")
@@ -663,7 +663,7 @@ class TestFlightDataLoader:
     
     def test_flight_data_loader_json(self):
         """Test JSON flight data loading."""
-        from tensornet.sim.flight_validation.data_loader import FlightDataLoader
+        from ontic.sim.flight_validation.data_loader import FlightDataLoader
         
         data = {
             "record_id": "test_json",
@@ -692,7 +692,7 @@ class TestFlightDataLoader:
     
     def test_parse_telemetry(self):
         """Test telemetry parsing."""
-        from tensornet.sim.flight_validation.data_loader import parse_telemetry
+        from ontic.sim.flight_validation.data_loader import parse_telemetry
         
         telemetry = {
             "id": "telem_001",
@@ -712,21 +712,21 @@ class TestFlightComparison:
     
     def test_validation_metric_enum(self):
         """Test ValidationMetric enum."""
-        from tensornet.sim.flight_validation.comparison import ValidationMetric
+        from ontic.sim.flight_validation.comparison import ValidationMetric
         
         assert ValidationMetric.MEAN_ERROR is not None
         assert ValidationMetric.RMS_ERROR is not None
     
     def test_comparison_status_enum(self):
         """Test ComparisonStatus enum."""
-        from tensornet.sim.flight_validation.comparison import ComparisonStatus
+        from ontic.sim.flight_validation.comparison import ComparisonStatus
         
         assert ComparisonStatus.EXCELLENT is not None
         assert ComparisonStatus.POOR is not None
     
     def test_field_comparison_metrics(self):
         """Test FieldComparison metric calculations."""
-        from tensornet.sim.flight_validation.comparison import FieldComparison
+        from ontic.sim.flight_validation.comparison import FieldComparison
         
         flight = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
         sim = np.array([1.1, 2.05, 3.0, 4.1, 5.05])
@@ -743,7 +743,7 @@ class TestFlightComparison:
     
     def test_field_comparison_status(self):
         """Test FieldComparison status determination."""
-        from tensornet.sim.flight_validation.comparison import FieldComparison, ComparisonStatus
+        from ontic.sim.flight_validation.comparison import FieldComparison, ComparisonStatus
         
         # Excellent case (< 2% error)
         flight = np.array([100.0, 100.0, 100.0])
@@ -759,7 +759,7 @@ class TestFlightComparison:
     
     def test_temporal_comparison(self):
         """Test TemporalComparison."""
-        from tensornet.sim.flight_validation.comparison import TemporalComparison
+        from ontic.sim.flight_validation.comparison import TemporalComparison
         
         timestamps = np.array([0.0, 1.0, 2.0, 3.0])
         flight = np.array([1.0, 2.0, 3.0, 4.0])
@@ -777,7 +777,7 @@ class TestFlightComparison:
     
     def test_comparison_result(self):
         """Test ComparisonResult."""
-        from tensornet.sim.flight_validation.comparison import (
+        from ontic.sim.flight_validation.comparison import (
             ComparisonResult, FieldComparison
         )
         
@@ -800,8 +800,8 @@ class TestFlightComparison:
     
     def test_flight_data_validator(self):
         """Test FlightDataValidator."""
-        from tensornet.sim.flight_validation.comparison import FlightDataValidator
-        from tensornet.sim.flight_validation.data_loader import (
+        from ontic.sim.flight_validation.comparison import FlightDataValidator
+        from ontic.sim.flight_validation.data_loader import (
             FlightRecord, FlightDataSource, AerodynamicData
         )
         
@@ -829,8 +829,8 @@ class TestFlightComparison:
     
     def test_compare_flight_data_function(self):
         """Test compare_flight_data convenience function."""
-        from tensornet.sim.flight_validation.comparison import compare_flight_data
-        from tensornet.sim.flight_validation.data_loader import (
+        from ontic.sim.flight_validation.comparison import compare_flight_data
+        from ontic.sim.flight_validation.data_loader import (
             FlightRecord, FlightDataSource, AerodynamicData
         )
         
@@ -854,14 +854,14 @@ class TestUncertainty:
     
     def test_uncertainty_source_enum(self):
         """Test UncertaintySource enum."""
-        from tensornet.sim.flight_validation.uncertainty import UncertaintySource
+        from ontic.sim.flight_validation.uncertainty import UncertaintySource
         
         assert UncertaintySource.SENSOR_ACCURACY is not None
         assert UncertaintySource.TURBULENCE_MODEL is not None
     
     def test_uncertainty_component(self):
         """Test UncertaintyComponent."""
-        from tensornet.sim.flight_validation.uncertainty import (
+        from ontic.sim.flight_validation.uncertainty import (
             UncertaintyComponent, UncertaintySource, UncertaintyType
         )
         
@@ -876,7 +876,7 @@ class TestUncertainty:
     
     def test_measurement_uncertainty(self):
         """Test MeasurementUncertainty."""
-        from tensornet.sim.flight_validation.uncertainty import (
+        from ontic.sim.flight_validation.uncertainty import (
             MeasurementUncertainty, UncertaintyComponent,
             UncertaintySource, UncertaintyType
         )
@@ -898,7 +898,7 @@ class TestUncertainty:
     
     def test_model_uncertainty(self):
         """Test ModelUncertainty."""
-        from tensornet.sim.flight_validation.uncertainty import ModelUncertainty
+        from ontic.sim.flight_validation.uncertainty import ModelUncertainty
         
         unc = ModelUncertainty(
             parameter_name="cl",
@@ -914,7 +914,7 @@ class TestUncertainty:
     
     def test_validation_uncertainty(self):
         """Test ValidationUncertainty."""
-        from tensornet.sim.flight_validation.uncertainty import (
+        from ontic.sim.flight_validation.uncertainty import (
             ValidationUncertainty, MeasurementUncertainty, ModelUncertainty
         )
         
@@ -941,7 +941,7 @@ class TestUncertainty:
     
     def test_uncertainty_budget(self):
         """Test UncertaintyBudget."""
-        from tensornet.sim.flight_validation.uncertainty import (
+        from ontic.sim.flight_validation.uncertainty import (
             UncertaintyBudget, MeasurementUncertainty, ModelUncertainty
         )
         
@@ -962,7 +962,7 @@ class TestUncertainty:
     
     def test_uncertainty_propagation_linear(self):
         """Test linear uncertainty propagation."""
-        from tensornet.sim.flight_validation.uncertainty import UncertaintyPropagation
+        from ontic.sim.flight_validation.uncertainty import UncertaintyPropagation
         
         prop = UncertaintyPropagation(method="linear")
         
@@ -982,7 +982,7 @@ class TestUncertainty:
     
     def test_uncertainty_propagation_monte_carlo(self):
         """Test Monte Carlo uncertainty propagation."""
-        from tensornet.sim.flight_validation.uncertainty import UncertaintyPropagation
+        from ontic.sim.flight_validation.uncertainty import UncertaintyPropagation
         
         prop = UncertaintyPropagation(method="monte_carlo")
         
@@ -1002,7 +1002,7 @@ class TestUncertainty:
     
     def test_grid_convergence_index(self):
         """Test Grid Convergence Index calculation."""
-        from tensornet.sim.flight_validation.uncertainty import GridConvergenceIndex
+        from ontic.sim.flight_validation.uncertainty import GridConvergenceIndex
         
         gci = GridConvergenceIndex(refinement_ratio=2.0)
         
@@ -1019,7 +1019,7 @@ class TestUncertainty:
     
     def test_calculate_measurement_uncertainty_function(self):
         """Test calculate_measurement_uncertainty convenience function."""
-        from tensornet.sim.flight_validation.uncertainty import calculate_measurement_uncertainty
+        from ontic.sim.flight_validation.uncertainty import calculate_measurement_uncertainty
         
         unc = calculate_measurement_uncertainty(
             measured_value=0.5,
@@ -1037,21 +1037,21 @@ class TestValidationReports:
     
     def test_report_format_enum(self):
         """Test ReportFormat enum."""
-        from tensornet.sim.flight_validation.reports import ReportFormat
+        from ontic.sim.flight_validation.reports import ReportFormat
         
         assert ReportFormat.MARKDOWN.value == "md"
         assert ReportFormat.HTML.value == "html"
     
     def test_validation_level_enum(self):
         """Test ValidationLevel enum."""
-        from tensornet.sim.flight_validation.reports import ValidationLevel
+        from ontic.sim.flight_validation.reports import ValidationLevel
         
         assert ValidationLevel.UNIT is not None
         assert ValidationLevel.SYSTEM is not None
     
     def test_validation_case_creation(self):
         """Test ValidationCase creation."""
-        from tensornet.sim.flight_validation.reports import ValidationCase
+        from ontic.sim.flight_validation.reports import ValidationCase
         
         case = ValidationCase(
             case_id="case_001",
@@ -1064,7 +1064,7 @@ class TestValidationReports:
     
     def test_validation_campaign(self):
         """Test ValidationCampaign."""
-        from tensornet.sim.flight_validation.reports import (
+        from ontic.sim.flight_validation.reports import (
             ValidationCampaign, ValidationCase, ValidationLevel
         )
         
@@ -1084,7 +1084,7 @@ class TestValidationReports:
     
     def test_validation_campaign_pass_rate(self):
         """Test campaign pass rate calculation."""
-        from tensornet.sim.flight_validation.reports import (
+        from ontic.sim.flight_validation.reports import (
             ValidationCampaign, ValidationCase
         )
         
@@ -1104,7 +1104,7 @@ class TestValidationReports:
     
     def test_validation_report_markdown(self):
         """Test Markdown report generation."""
-        from tensornet.sim.flight_validation.reports import (
+        from ontic.sim.flight_validation.reports import (
             ValidationCampaign, ValidationCase, ValidationReport, ReportFormat
         )
         
@@ -1122,7 +1122,7 @@ class TestValidationReports:
     
     def test_validation_report_html(self):
         """Test HTML report generation."""
-        from tensornet.sim.flight_validation.reports import (
+        from ontic.sim.flight_validation.reports import (
             ValidationCampaign, ValidationCase, ValidationReport, ReportFormat
         )
         
@@ -1140,7 +1140,7 @@ class TestValidationReports:
     
     def test_validation_report_json(self):
         """Test JSON report generation."""
-        from tensornet.sim.flight_validation.reports import (
+        from ontic.sim.flight_validation.reports import (
             ValidationCampaign, ValidationCase, ValidationReport, ReportFormat
         )
         
@@ -1159,7 +1159,7 @@ class TestValidationReports:
     
     def test_generate_validation_report_function(self):
         """Test generate_validation_report convenience function."""
-        from tensornet.sim.flight_validation.reports import (
+        from ontic.sim.flight_validation.reports import (
             generate_validation_report, ValidationCampaign, ValidationCase
         )
         

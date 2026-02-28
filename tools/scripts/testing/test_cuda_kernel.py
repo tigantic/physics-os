@@ -24,7 +24,7 @@ print("Testing CUDA Laplacian Kernel")
 print("=" * 60)
 
 try:
-    from tensornet.mpo.laplacian_cuda import (CUDA_KERNEL_AVAILABLE,
+    from ontic.mpo.laplacian_cuda import (CUDA_KERNEL_AVAILABLE,
                                               LaplacianCUDA)
 
     if CUDA_KERNEL_AVAILABLE:

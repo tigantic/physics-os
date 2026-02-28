@@ -1,4 +1,4 @@
-# Module `tensornet.distributed`
+# Module `ontic.distributed`
 
 Distributed Computing Module for The Physics OS.
 

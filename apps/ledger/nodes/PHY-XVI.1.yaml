@@ -13,7 +13,7 @@ state: "V0.2"
 description: "MD workflows"
 
 source_files:
-  - "tensornet/md/engine.py"
+  - "ontic/md/engine.py"
 
 tests:
   smoke:

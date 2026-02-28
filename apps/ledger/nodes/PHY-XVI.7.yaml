@@ -13,7 +13,7 @@ state: "V0.2"
 description: "PHY-XVI.7_Metamaterials solver"
 
 source_files:
-  - "tensornet/packs/pack_xvi.py"
+  - "ontic/packs/pack_xvi.py"
 
 tests:
   smoke:

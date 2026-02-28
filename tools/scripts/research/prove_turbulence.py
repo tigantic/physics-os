@@ -35,7 +35,7 @@ from torch import Tensor
 import numpy as np
 
 # Import spectral solver (validated)
-from tensornet.cfd.ns_3d import (
+from ontic.cfd.ns_3d import (
     NS3DSolver, NSState3D, 
     compute_divergence_3d, compute_vorticity_3d,
     taylor_green_3d_exact_energy,

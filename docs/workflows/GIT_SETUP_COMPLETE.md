@@ -47,11 +47,11 @@ e459303 Add priority items to Future Work section
 ### Sovereign Engine (Phases 1-5)
 **Commit**: `bae436e`  
 **Content**:
-- Phase 1: tensornet/sovereign/ (core)
-- Phase 2: tensornet/gpu/, tensornet/cuda/ (acceleration)
-- Phase 3: tensornet/shaders/ (WGSL/GLSL)
-- Phase 4: tensornet/gateway/, tensornet/mpo/ (solver)
-- Phase 5: tensornet/fuel/ (checkpoints)
+- Phase 1: ontic/sovereign/ (core)
+- Phase 2: ontic/gpu/, ontic/cuda/ (acceleration)
+- Phase 3: ontic/shaders/ (WGSL/GLSL)
+- Phase 4: ontic/gateway/, ontic/mpo/ (solver)
+- Phase 5: ontic/fuel/ (checkpoints)
 
 ### GPU Validation Suite
 **Commit**: `d799b3f`  

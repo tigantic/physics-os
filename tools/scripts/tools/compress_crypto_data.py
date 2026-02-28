@@ -24,10 +24,10 @@ import torch
 
 # Import QTT from GENESIS
 try:
-    from tensornet.genesis.sgw import QTTSignal
+    from ontic.genesis.sgw import QTTSignal
 except ImportError as e:
     print(f"[ERROR] Failed to import QTTSignal: {e}")
-    print("Ensure tensornet package is available in the path.")
+    print("Ensure ontic package is available in the path.")
     sys.exit(1)
 
 

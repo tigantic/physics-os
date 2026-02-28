@@ -1,4 +1,4 @@
-# Module `tensornet.simulation`
+# Module `ontic.simulation`
 
 Simulation Module =================
 

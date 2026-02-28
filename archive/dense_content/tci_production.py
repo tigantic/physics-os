@@ -129,7 +129,7 @@ def tci_production(
         indices_all = torch.arange(N, device=device)
         values = func(indices_all).to(dtype)
         
-        from tensornet.cfd.qtt_eval import dense_to_qtt_cores
+        from ontic.cfd.qtt_eval import dense_to_qtt_cores
         cores = dense_to_qtt_cores(values, max_rank=max_rank)
         
         metadata = {
@@ -358,7 +358,7 @@ def validate_tci(
     true_values = func(test_indices)
     
     # Evaluate TT
-    from tensornet.cfd.qtt_eval import qtt_eval_batch
+    from ontic.cfd.qtt_eval import qtt_eval_batch
     approx_values = qtt_eval_batch(cores, test_indices)
     
     errors = (true_values - approx_values).abs()

@@ -41,10 +41,10 @@ These are **intentional test utilities** documented in [AUTONOMOUS_DISCOVERY_ENG
 
 | File | Function | Lines | Purpose |
 |------|----------|-------|---------|
-| [ingest/molecular.py](tensornet/discovery/ingest/molecular.py#L732-L820) | `create_synthetic_protein()` | 732-820 | Creates synthetic protein structures for testing |
+| [ingest/molecular.py](ontic/discovery/ingest/molecular.py#L732-L820) | `create_synthetic_protein()` | 732-820 | Creates synthetic protein structures for testing |
 
 ```python
-# tensornet/discovery/ingest/molecular.py:732
+# ontic/discovery/ingest/molecular.py:732
 def create_synthetic_protein(n_residues: int = 100) -> ProteinStructure:
     """Create a synthetic protein structure for testing."""
 ```
@@ -57,10 +57,10 @@ def create_synthetic_protein(n_residues: int = 100) -> ProteinStructure:
 
 | File | Function | Lines | Purpose |
 |------|----------|-------|---------|
-| [ingest/plasma.py](tensornet/discovery/ingest/plasma.py#L425-L480) | Demo section | 425-480 | Creates synthetic plasma shot for testing |
+| [ingest/plasma.py](ontic/discovery/ingest/plasma.py#L425-L480) | Demo section | 425-480 | Creates synthetic plasma shot for testing |
 
 ```python
-# tensornet/discovery/ingest/plasma.py:428
+# ontic/discovery/ingest/plasma.py:428
 device="SYNTHETIC",
 ```
 
@@ -72,10 +72,10 @@ device="SYNTHETIC",
 
 | File | Function | Lines | Purpose |
 |------|----------|-------|---------|
-| [ingest/markets.py](tensornet/discovery/ingest/markets.py#L607-L720) | `generate_synthetic_market()` | 607-720 | Generates synthetic OHLCV data |
-| [ingest/markets.py](tensornet/discovery/ingest/markets.py#L721-L830) | `generate_flash_crash()` | 721-830 | Generates synthetic flash crash patterns |
-| [ingest/markets.py](tensornet/discovery/ingest/markets.py#L917-L932) | `create_synthetic_flash_crash()` | 917-932 | Helper for tests |
-| [ingest/markets.py](tensornet/discovery/ingest/markets.py#L929-L932) | `create_synthetic_market()` | 929-932 | Helper for tests |
+| [ingest/markets.py](ontic/discovery/ingest/markets.py#L607-L720) | `generate_synthetic_market()` | 607-720 | Generates synthetic OHLCV data |
+| [ingest/markets.py](ontic/discovery/ingest/markets.py#L721-L830) | `generate_flash_crash()` | 721-830 | Generates synthetic flash crash patterns |
+| [ingest/markets.py](ontic/discovery/ingest/markets.py#L917-L932) | `create_synthetic_flash_crash()` | 917-932 | Helper for tests |
+| [ingest/markets.py](ontic/discovery/ingest/markets.py#L929-L932) | `create_synthetic_market()` | 929-932 | Helper for tests |
 
 **Document Reference:** Phase 4 tests use this (17/17 PASS)
 
@@ -85,12 +85,12 @@ device="SYNTHETIC",
 
 | File | Function | Lines | Purpose |
 |------|----------|-------|---------|
-| [connectors/historical.py](tensornet/discovery/connectors/historical.py#L137-L180) | `load_2010_flash_crash()` | 137-180 | Synthetic reconstruction of May 6, 2010 Flash Crash |
-| [connectors/historical.py](tensornet/discovery/connectors/historical.py#L181-L220) | `load_2021_gme_squeeze()` | 181-220 | Synthetic reconstruction of GME squeeze |
-| [connectors/historical.py](tensornet/discovery/connectors/historical.py#L224-L250) | `load_2008_lehman_week()` | 224-250 | Synthetic reconstruction of Lehman bankruptcy |
+| [connectors/historical.py](ontic/discovery/connectors/historical.py#L137-L180) | `load_2010_flash_crash()` | 137-180 | Synthetic reconstruction of May 6, 2010 Flash Crash |
+| [connectors/historical.py](ontic/discovery/connectors/historical.py#L181-L220) | `load_2021_gme_squeeze()` | 181-220 | Synthetic reconstruction of GME squeeze |
+| [connectors/historical.py](ontic/discovery/connectors/historical.py#L224-L250) | `load_2008_lehman_week()` | 224-250 | Synthetic reconstruction of Lehman bankruptcy |
 
 ```python
-# tensornet/discovery/connectors/historical.py:165
+# ontic/discovery/connectors/historical.py:165
 data_source="synthetic_reconstruction"
 ```
 
@@ -106,13 +106,13 @@ These are CLI convenience functions for `python -m tensornet.discovery discover 
 
 | File | Function | Lines | Purpose |
 |------|----------|-------|---------|
-| [pipelines/defi_pipeline.py](tensornet/discovery/pipelines/defi_pipeline.py#L314-L360) | `run_demo()` | 314-360 | DeFi demo mode |
-| [pipelines/plasma_pipeline.py](tensornet/discovery/pipelines/plasma_pipeline.py#L863-L970) | `run_demo()` | 863-970 | Plasma demo mode |
-| [pipelines/molecular_pipeline.py](tensornet/discovery/pipelines/molecular_pipeline.py#L984-L1029) | `run_demo()` | 984-1029 | Molecular demo mode |
-| [pipelines/markets_pipeline.py](tensornet/discovery/pipelines/markets_pipeline.py#L1132-L1182) | `run_demo()` | 1132-1182 | Markets demo mode |
-| [hypothesis/generator.py](tensornet/discovery/hypothesis/generator.py#L270-L300) | `run_demo()` | 270-300 | Hypothesis generator demo |
-| [api/models.py](tensornet/discovery/api/models.py#L62) | `demo: bool = False` | 62 | API demo flag |
-| [__main__.py](tensornet/discovery/__main__.py#L35-L37) | Demo mode handling | 35-37 | CLI `--demo` flag |
+| [pipelines/defi_pipeline.py](ontic/discovery/pipelines/defi_pipeline.py#L314-L360) | `run_demo()` | 314-360 | DeFi demo mode |
+| [pipelines/plasma_pipeline.py](ontic/discovery/pipelines/plasma_pipeline.py#L863-L970) | `run_demo()` | 863-970 | Plasma demo mode |
+| [pipelines/molecular_pipeline.py](ontic/discovery/pipelines/molecular_pipeline.py#L984-L1029) | `run_demo()` | 984-1029 | Molecular demo mode |
+| [pipelines/markets_pipeline.py](ontic/discovery/pipelines/markets_pipeline.py#L1132-L1182) | `run_demo()` | 1132-1182 | Markets demo mode |
+| [hypothesis/generator.py](ontic/discovery/hypothesis/generator.py#L270-L300) | `run_demo()` | 270-300 | Hypothesis generator demo |
+| [api/models.py](ontic/discovery/api/models.py#L62) | `demo: bool = False` | 62 | API demo flag |
+| [__main__.py](ontic/discovery/__main__.py#L35-L37) | Demo mode handling | 35-37 | CLI `--demo` flag |
 
 **Document Reference:** The `--demo` flag is documented in [AUTONOMOUS_DISCOVERY_ENGINE.md](AUTONOMOUS_DISCOVERY_ENGINE.md#what-works-today)
 
@@ -126,12 +126,12 @@ These are CLI convenience functions for `python -m tensornet.discovery discover 
 
 | File | Class | Lines | Issue |
 |------|-------|-------|-------|
-| [connectors/coinbase_l2.py](tensornet/discovery/connectors/coinbase_l2.py#L505-L680) | `SimulatedL2Connector` | 505-680 | Simulates L2 orderbook updates without network |
-| [connectors/streaming.py](tensornet/discovery/connectors/streaming.py#L232-L256) | `start_simulated()` | 232-256 | Uses SimulatedL2Connector instead of real feed |
-| [api/server.py](tensornet/discovery/api/server.py#L675-L727) | Streaming endpoints | 675-727 | Uses simulated connector by default |
+| [connectors/coinbase_l2.py](ontic/discovery/connectors/coinbase_l2.py#L505-L680) | `SimulatedL2Connector` | 505-680 | Simulates L2 orderbook updates without network |
+| [connectors/streaming.py](ontic/discovery/connectors/streaming.py#L232-L256) | `start_simulated()` | 232-256 | Uses SimulatedL2Connector instead of real feed |
+| [api/server.py](ontic/discovery/api/server.py#L675-L727) | Streaming endpoints | 675-727 | Uses simulated connector by default |
 
 ```python
-# tensornet/discovery/connectors/coinbase_l2.py:505
+# ontic/discovery/connectors/coinbase_l2.py:505
 class SimulatedL2Connector:
     """Simulated L2 connector for testing without network access."""
 ```
@@ -154,13 +154,13 @@ These `except:` or `except: pass` patterns can mask errors silently.
 
 | File | Line | Code | Risk |
 |------|------|------|------|
-| [connectors/coinbase_l2.py](tensornet/discovery/connectors/coinbase_l2.py#L332) | 332 | `except:` | Timestamp parsing silently fails |
-| [connectors/coinbase_l2.py](tensornet/discovery/connectors/coinbase_l2.py#L375-L376) | 375 | `except: pass` | Queue put silently dropped |
-| [connectors/coinbase_l2.py](tensornet/discovery/connectors/coinbase_l2.py#L388) | 388 | `except:` | Timestamp fallback masks parse errors |
-| [connectors/coinbase_l2.py](tensornet/discovery/connectors/coinbase_l2.py#L615-L616) | 615 | `except: pass` | Simulated bid update errors swallowed |
-| [connectors/coinbase_l2.py](tensornet/discovery/connectors/coinbase_l2.py#L640-L641) | 640 | `except: pass` | Simulated ask update errors swallowed |
-| [connectors/historical.py](tensornet/discovery/connectors/historical.py#L605-L606) | 605 | `except: pass` | JSON parsing errors swallowed |
-| [connectors/streaming.py](tensornet/discovery/connectors/streaming.py#L440-L441) | 440 | `except: pass` | Stop errors swallowed |
+| [connectors/coinbase_l2.py](ontic/discovery/connectors/coinbase_l2.py#L332) | 332 | `except:` | Timestamp parsing silently fails |
+| [connectors/coinbase_l2.py](ontic/discovery/connectors/coinbase_l2.py#L375-L376) | 375 | `except: pass` | Queue put silently dropped |
+| [connectors/coinbase_l2.py](ontic/discovery/connectors/coinbase_l2.py#L388) | 388 | `except:` | Timestamp fallback masks parse errors |
+| [connectors/coinbase_l2.py](ontic/discovery/connectors/coinbase_l2.py#L615-L616) | 615 | `except: pass` | Simulated bid update errors swallowed |
+| [connectors/coinbase_l2.py](ontic/discovery/connectors/coinbase_l2.py#L640-L641) | 640 | `except: pass` | Simulated ask update errors swallowed |
+| [connectors/historical.py](ontic/discovery/connectors/historical.py#L605-L606) | 605 | `except: pass` | JSON parsing errors swallowed |
+| [connectors/streaming.py](ontic/discovery/connectors/streaming.py#L440-L441) | 440 | `except: pass` | Stop errors swallowed |
 
 ### Recommended Fix Pattern:
 
@@ -187,15 +187,15 @@ These are functional but not optimal implementations.
 
 | File | Function | Lines | Issue |
 |------|----------|-------|-------|
-| [api/gpu.py](tensornet/discovery/api/gpu.py#L630-L650) | `_cpu_msm()` | 630-650 | "Simplified MSM for demonstration" |
-| [api/gpu.py](tensornet/discovery/api/gpu.py#L686-L710) | `_cpu_poseidon()` | 686-710 | "Simplified Poseidon for demonstration" |
+| [api/gpu.py](ontic/discovery/api/gpu.py#L630-L650) | `_cpu_msm()` | 630-650 | "Simplified MSM for demonstration" |
+| [api/gpu.py](ontic/discovery/api/gpu.py#L686-L710) | `_cpu_poseidon()` | 686-710 | "Simplified Poseidon for demonstration" |
 
 ```python
-# tensornet/discovery/api/gpu.py:633
+# ontic/discovery/api/gpu.py:633
 # Simplified MSM for demonstration
 # Real implementation would use curve arithmetic
 
-# tensornet/discovery/api/gpu.py:687
+# ontic/discovery/api/gpu.py:687
 # Simplified Poseidon for demonstration
 # Real implementation uses specific round constants and MDS matrix
 ```
@@ -206,12 +206,12 @@ These are functional but not optimal implementations.
 
 | File | Function | Lines | Issue |
 |------|----------|-------|-------|
-| [pipelines/plasma_pipeline.py](tensornet/discovery/pipelines/plasma_pipeline.py#L288-L295) | `_compute_wasserstein()` | 288-295 | "Simplified Wasserstein distance using quantile approach" |
-| [pipelines/molecular_pipeline.py](tensornet/discovery/pipelines/molecular_pipeline.py#L284-L295) | Wasserstein | 284-295 | "Approximate W2 via histogram comparison" |
-| [pipelines/markets_pipeline.py](tensornet/discovery/pipelines/markets_pipeline.py#L304-L310) | Wasserstein | 304-310 | "Approximate W2 via histogram comparison" |
-| [ingest/plasma.py](tensornet/discovery/ingest/plasma.py#L109-L114) | B field | 109-114 | "Simplified 2D" magnetic field |
-| [connectors/streaming.py](tensornet/discovery/connectors/streaming.py#L337-L340) | Price tracking | 337-340 | "This is simplified - real implementation would track order book" |
-| [ingest/molecular.py](tensornet/discovery/ingest/molecular.py#L654) | Chou-Fasman | 654 | "Chou-Fasman propensities (simplified)" |
+| [pipelines/plasma_pipeline.py](ontic/discovery/pipelines/plasma_pipeline.py#L288-L295) | `_compute_wasserstein()` | 288-295 | "Simplified Wasserstein distance using quantile approach" |
+| [pipelines/molecular_pipeline.py](ontic/discovery/pipelines/molecular_pipeline.py#L284-L295) | Wasserstein | 284-295 | "Approximate W2 via histogram comparison" |
+| [pipelines/markets_pipeline.py](ontic/discovery/pipelines/markets_pipeline.py#L304-L310) | Wasserstein | 304-310 | "Approximate W2 via histogram comparison" |
+| [ingest/plasma.py](ontic/discovery/ingest/plasma.py#L109-L114) | B field | 109-114 | "Simplified 2D" magnetic field |
+| [connectors/streaming.py](ontic/discovery/connectors/streaming.py#L337-L340) | Price tracking | 337-340 | "This is simplified - real implementation would track order book" |
+| [ingest/molecular.py](ontic/discovery/ingest/molecular.py#L654) | Chou-Fasman | 654 | "Chou-Fasman propensities (simplified)" |
 
 **Document Reference:** These approximations are acceptable for the MVP per [AUTONOMOUS_DISCOVERY_ENGINE.md](AUTONOMOUS_DISCOVERY_ENGINE.md) but should be noted as limitations.
 
@@ -221,10 +221,10 @@ These are functional but not optimal implementations.
 
 | File | Class | Line | Purpose |
 |------|-------|------|---------|
-| [production/security.py](tensornet/discovery/production/security.py#L43) | `ValidationRule.validate()` | 43 | Abstract base class method |
+| [production/security.py](ontic/discovery/production/security.py#L43) | `ValidationRule.validate()` | 43 | Abstract base class method |
 
 ```python
-# tensornet/discovery/production/security.py:43
+# ontic/discovery/production/security.py:43
 def validate(self, value: Any, field_name: str) -> None:
     """Validate value. Raises ValidationError if invalid."""
     raise NotImplementedError
@@ -236,21 +236,21 @@ def validate(self, value: Any, field_name: str) -> None:
 
 ## 7. HARDCODED MAGIC NUMBERS (LOW SEVERITY) — ✅ RESOLVED
 
-**Remediation:** Created `tensornet/discovery/config.py` with `DiscoveryConfig` dataclass. All values now configurable via environment variables (DISCOVERY_*).
+**Remediation:** Created `ontic/discovery/config.py` with `DiscoveryConfig` dataclass. All values now configurable via environment variables (DISCOVERY_*).
 
 These values should ideally be configurable but have reasonable defaults.
 
 | File | Line | Value | Description |
 |------|------|-------|-------------|
-| [ingest/defi.py](tensornet/discovery/ingest/defi.py#L126) | 126 | `1024` | Number of histogram bins |
-| [ingest/plasma.py](tensornet/discovery/ingest/plasma.py#L156) | 156 | `256` | Target grid length |
-| [primitives/topology.py](tensornet/discovery/primitives/topology.py#L217) | 217 | `256` | MAX_POINTS for persistence |
-| [connectors/coinbase_l2.py](tensornet/discovery/connectors/coinbase_l2.py#L154) | 154 | `10000` | Queue size |
-| [connectors/coinbase_l2.py](tensornet/discovery/connectors/coinbase_l2.py#L515) | 515 | `50000.0` | Initial BTC price |
-| [ingest/markets.py](tensornet/discovery/ingest/markets.py#L407) | 407 | `252` | Trading days for annualization |
-| [production/security.py](tensornet/discovery/production/security.py#L573) | 573 | `300` | Max request age (seconds) |
-| [production/security.py](tensornet/discovery/production/security.py#L732) | 732 | `10000` | Max audit events |
-| [api/gpu.py](tensornet/discovery/api/gpu.py#L689) | 689 | `21888...` | BN254 prime (correct, should stay) |
+| [ingest/defi.py](ontic/discovery/ingest/defi.py#L126) | 126 | `1024` | Number of histogram bins |
+| [ingest/plasma.py](ontic/discovery/ingest/plasma.py#L156) | 156 | `256` | Target grid length |
+| [primitives/topology.py](ontic/discovery/primitives/topology.py#L217) | 217 | `256` | MAX_POINTS for persistence |
+| [connectors/coinbase_l2.py](ontic/discovery/connectors/coinbase_l2.py#L154) | 154 | `10000` | Queue size |
+| [connectors/coinbase_l2.py](ontic/discovery/connectors/coinbase_l2.py#L515) | 515 | `50000.0` | Initial BTC price |
+| [ingest/markets.py](ontic/discovery/ingest/markets.py#L407) | 407 | `252` | Trading days for annualization |
+| [production/security.py](ontic/discovery/production/security.py#L573) | 573 | `300` | Max request age (seconds) |
+| [production/security.py](ontic/discovery/production/security.py#L732) | 732 | `10000` | Max audit events |
+| [api/gpu.py](ontic/discovery/api/gpu.py#L689) | 689 | `21888...` | BN254 prime (correct, should stay) |
 
 ---
 
@@ -260,13 +260,13 @@ These may be intentional protocol/interface placeholders:
 
 | File | Line | Context |
 |------|------|---------|
-| [ingest/molecular.py](tensornet/discovery/ingest/molecular.py#L271) | 271 | In loop iteration |
-| [ingest/markets.py](tensornet/discovery/ingest/markets.py#L197) | 197 | In OHLCV to_dict |
-| [production/resilience.py](tensornet/discovery/production/resilience.py#L435) | 435 | Exception class |
-| [production/resilience.py](tensornet/discovery/production/resilience.py#L525) | 525 | Exception class |
-| [production/security.py](tensornet/discovery/production/security.py#L362) | 362 | Exception class |
-| [production/security.py](tensornet/discovery/production/security.py#L367) | 367 | Exception class |
-| [primitives/kernel.py](tensornet/discovery/primitives/kernel.py#L405) | 405 | In computation |
+| [ingest/molecular.py](ontic/discovery/ingest/molecular.py#L271) | 271 | In loop iteration |
+| [ingest/markets.py](ontic/discovery/ingest/markets.py#L197) | 197 | In OHLCV to_dict |
+| [production/resilience.py](ontic/discovery/production/resilience.py#L435) | 435 | Exception class |
+| [production/resilience.py](ontic/discovery/production/resilience.py#L525) | 525 | Exception class |
+| [production/security.py](ontic/discovery/production/security.py#L362) | 362 | Exception class |
+| [production/security.py](ontic/discovery/production/security.py#L367) | 367 | Exception class |
+| [primitives/kernel.py](ontic/discovery/primitives/kernel.py#L405) | 405 | In computation |
 
 ---
 
@@ -327,7 +327,7 @@ CPU fallbacks for MSM and Poseidon now include:
 
 ### Priority 4 (Low) — Make Magic Numbers Configurable ✅ COMPLETE
 
-Created `tensornet/discovery/config.py` with:
+Created `ontic/discovery/config.py` with:
 ```python
 @dataclass
 class DiscoveryConfig:

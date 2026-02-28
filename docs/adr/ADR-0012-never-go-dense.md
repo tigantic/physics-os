@@ -20,7 +20,7 @@ Prior experiments revealed that even a single `to_dense()` call in a linear solv
 2. All linear algebra (DMRG, ALS, MALS, CG, GMRES) operates on TT/QTT cores directly.
 3. Boundary conditions, source terms, and post-processing maintain compressed form.
 4. Diagnostic routines (norm, energy, divergence) compute from TT cores without expansion.
-5. CI enforces a `grep -r "to_dense\|full_tensor\|numpy\.reshape.*-1" tensornet/` ban in lint.
+5. CI enforces a `grep -r "to_dense\|full_tensor\|numpy\.reshape.*-1" ontic/` ban in lint.
 
 Exceptions require an explicit `# DENSE-JUSTIFIED: <reason>` annotation and a review from two core maintainers.
 

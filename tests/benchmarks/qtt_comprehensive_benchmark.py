@@ -87,7 +87,7 @@ def benchmark_core_qtt_ops():
     print("SECTION 1: CORE QTT OPERATIONS")
     print("=" * 70)
     
-    from tensornet.cfd.pure_qtt_ops import (
+    from ontic.cfd.pure_qtt_ops import (
         dense_to_qtt, qtt_to_dense, truncate_qtt, 
         qtt_add, qtt_scale, qtt_hadamard, qtt_inner_product, qtt_norm,
         identity_mpo, shift_mpo, apply_mpo, QTTState
@@ -207,7 +207,7 @@ def benchmark_mpo_ops():
     print("SECTION 2: MPO OPERATIONS")
     print("=" * 70)
     
-    from tensornet.cfd.pure_qtt_ops import (
+    from ontic.cfd.pure_qtt_ops import (
         identity_mpo, shift_mpo, derivative_mpo, laplacian_mpo,
         apply_mpo, dense_to_qtt, QTTState
     )
@@ -265,7 +265,7 @@ def benchmark_2d_ops():
     print("SECTION 3: 2D OPERATIONS")
     print("=" * 70)
     
-    from tensornet.cfd.qtt_2d import (
+    from ontic.cfd.qtt_2d import (
         morton_encode_batch, dense_to_qtt_2d, qtt_2d_to_dense,
         shift_mpo_x_2d, shift_mpo_y_2d, apply_mpo_2d, truncate_qtt_2d
     )
@@ -336,8 +336,8 @@ def benchmark_rendering():
     print("SECTION 4: RENDERING")
     print("=" * 70)
     
-    from tensornet.sim.visualization.tensor_slicer import TensorSlicer
-    from tensornet.cfd.qtt_2d import dense_to_qtt_2d
+    from ontic.sim.visualization.tensor_slicer import TensorSlicer
+    from ontic.cfd.qtt_2d import dense_to_qtt_2d
     
     results = []
     device = torch.device("cuda")
@@ -419,7 +419,7 @@ def benchmark_ns2d_components():
     print("SECTION 5: NS2D SOLVER COMPONENTS")
     print("=" * 70)
     
-    from tensornet.cfd.ns2d_qtt_native import (
+    from ontic.cfd.ns2d_qtt_native import (
         NS2DQTTConfig, NS2D_QTT_Native, dense_to_qtt_2d_native
     )
     
@@ -503,8 +503,8 @@ def benchmark_memory_compression():
     print("SECTION 6: MEMORY & COMPRESSION ANALYSIS")
     print("=" * 70)
     
-    from tensornet.cfd.pure_qtt_ops import dense_to_qtt
-    from tensornet.cfd.qtt_2d import dense_to_qtt_2d
+    from ontic.cfd.pure_qtt_ops import dense_to_qtt
+    from ontic.cfd.qtt_2d import dense_to_qtt_2d
     
     results = []
     device = torch.device("cuda")
@@ -602,8 +602,8 @@ def benchmark_point_evaluation():
     print("SECTION 7: POINT EVALUATION")
     print("=" * 70)
     
-    from tensornet.sim.visualization.tensor_slicer import TensorSlicer
-    from tensornet.cfd.pure_qtt_ops import dense_to_qtt
+    from ontic.sim.visualization.tensor_slicer import TensorSlicer
+    from ontic.cfd.pure_qtt_ops import dense_to_qtt
     
     results = []
     device = torch.device("cuda")

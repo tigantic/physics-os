@@ -1,5 +1,5 @@
 """
-Test Module: tensornet/financial/solver.py
+Test Module: ontic/financial/solver.py
 
 Phase 6: Financial Physics - Liquidity Flow Solver
 Constitutional Compliance:
@@ -17,7 +17,7 @@ import numpy as np
 import pytest
 import torch
 
-from tensornet.applied.financial.solver import (FlowSignal, LiquiditySolver,
+from ontic.applied.financial.solver import (FlowSignal, LiquiditySolver,
                                         SignalDirection)
 
 # ============================================================================

@@ -70,9 +70,9 @@ echo ""
 # Check TensorNet
 echo "[6/10] TensorNet Package..."
 python3 -c "
-from tensornet.sovereign.bridge_writer import TensorBridgeWriter
-from tensornet.sovereign.qtt_slice_extractor import QTTSliceExtractor
-from tensornet.sovereign.realtime_tensor_stream import RealtimeTensorStream
+from ontic.sovereign.bridge_writer import TensorBridgeWriter
+from ontic.sovereign.qtt_slice_extractor import QTTSliceExtractor
+from ontic.sovereign.realtime_tensor_stream import RealtimeTensorStream
 print('✓ TensorNet modules import successfully')
 "
 echo ""

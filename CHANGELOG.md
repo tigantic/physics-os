@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **GitHub Release v4.0.1** — formal release with comprehensive release notes
 
 ### Changed
-- **README.md** metrics refreshed — LOC 1.51M→1.99M, Python 471K→803K, Rust 151K→132K, tensornet/ 471K→500K, badge/diagram/citation/footer sync
+- **README.md** metrics refreshed — LOC 1.51M→1.99M, Python 471K→803K, Rust 151K→132K, ontic/ 471K→500K, badge/diagram/citation/footer sync
 - **PLATFORM_SPECIFICATION.md** header badges — Python 851K→994K, Solidity 34K→92K, Physics 140/140→168/168
 - **Commercial_Execution.md** — LOC 1,157K→1,989K, tests 295→370+, files 2,808→5,882, physics 140/140→168/168
 - **LAUNCH_READINESS.md** — updated baseline to v4.0.1, added re-assessment note for gates G6/G7/G8
@@ -46,16 +46,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-#### SDK & Workflow Builder (`tensornet/sdk/`)
+#### SDK & Workflow Builder (`ontic/sdk/`)
 - **WorkflowBuilder** fluent DSL for composable simulation pipelines
   (`.domain()` → `.field()` → `.solver()` → `.time()` → `.export()` → `.build().run()`)
 - **ExecutedWorkflow** runner with provenance capture, lineage DAG, and wall-time tracking
 - **Recipes**: 8 built-in per-domain recipes (harmonic_oscillator, lorenz_attractor,
   burgers_1d, sod_shock_tube, maxwell_1d, advection_diffusion_1d, heisenberg_chain,
   landau_damping, kohn_sham_1d) via `get_recipe()` / `list_recipes()`
-- **SDK public surface** (`tensornet.sdk`): 55+ curated re-exports from platform, stable API
+- **SDK public surface** (`ontic.sdk`): 55+ curated re-exports from platform, stable API
 
-#### Export & Interop (`tensornet/platform/export.py`, `mesh_import.py`)
+#### Export & Interop (`ontic/platform/export.py`, `mesh_import.py`)
 - VTK/VTU export (XML + base64 binary, structured → lines/quads/hexes, unstructured pass-through)
 - XDMF + HDF5 export (requires `h5py`, ParaView-compatible)
 - CSV and JSON export for scalar observables and convergence histories
@@ -63,7 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GMSH v2/v4 ASCII mesh import with auto-detection (`import_gmsh()`)
 - Raw-array mesh import (`import_raw()`)
 
-#### Post-Processing & Visualization (`tensornet/platform/postprocess.py`, `visualize.py`)
+#### Post-Processing & Visualization (`ontic/platform/postprocess.py`, `visualize.py`)
 - `probe()` — point/multi-point interpolation (fast path for structured grids)
 - `slice_field()` — axis-aligned slice extraction
 - `integrate()` — volume integration with optional region mask
@@ -74,7 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - matplotlib-based visualization: `plot_field_1d`, `plot_field_2d`, `plot_convergence`,
   `plot_observable_history`, `plot_spectrum` (all optional, graceful if matplotlib absent)
 
-#### Deprecation & Security (`tensornet/platform/deprecation.py`, `security.py`)
+#### Deprecation & Security (`ontic/platform/deprecation.py`, `security.py`)
 - `VersionInfo` frozen dataclass with SemVer `.parse()` and comparison operators
 - `PLATFORM_VERSION = VersionInfo(2, 0, 0)`
 - `@deprecated(removal_version, alternative, reason)` — RuntimeError if overdue, else DeprecationWarning
@@ -98,8 +98,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Platform API version: 1.0.0 → 2.0.0
-- `tensornet/platform/__init__.py`: added all Phase 7 module re-exports
-- `tensornet/sdk/__init__.py`: recipes now re-exported
+- `ontic/platform/__init__.py`: added all Phase 7 module re-exports
+- `ontic/sdk/__init__.py`: recipes now re-exported
 - `pyproject.toml`: added `io` optional extra (`h5py>=3.8`)
 - `.github/workflows/hardening.yml`: `test_vv.py` added to CI matrix
 
@@ -149,7 +149,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Version bumped from 0.1.0 → 40.0.0 across pyproject.toml, CITATION.cff,
-  tensornet/__init__.py, PLATFORM_SPECIFICATION.md
+  ontic/__init__.py, PLATFORM_SPECIFICATION.md
 - Coverage assessment updated to 140/140 COMPLETE
 - Execution plan finalised with all phases marked done
 
@@ -234,7 +234,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | 256³ | 4880 MB | 2878 ms | 10,923× |
 
 #### Files Modified
-- `tensornet/cfd/ns3d_turbo.py` — TurboNS3DSolver critical fixes
+- `ontic/cfd/ns3d_turbo.py` — TurboNS3DSolver critical fixes
 - `tests/test_qtt_turbo_regression.py` — New regression test suite
 
 #### Documentation
@@ -280,7 +280,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 #### Phase 10: Placeholder Resolution (GPU + rSVD)
-- `tensornet/cfd/qtt_reciprocal.py` — Newton-Schulz iteration for QTT element-wise reciprocal
+- `ontic/cfd/qtt_reciprocal.py` — Newton-Schulz iteration for QTT element-wise reciprocal
 - `_tt_rsvd_1d()` in barycenters.py — 1D TT decomposition via randomized SVD
 - `_vector_to_qtt()` in sinkhorn_qtt.py — Scaling vector reconstruction
 - `_tt_svd_gpu()` in koopman_tt.py — GPU-accelerated TT decomposition
@@ -355,7 +355,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.0] - 2025-01-XX
 
 ### Added
-- **Phase 3: 2D Euler Solver** (`tensornet/cfd/`)
+- **Phase 3: 2D Euler Solver** (`ontic/cfd/`)
   - `Euler2D` class — 2D compressible Euler solver with Strang dimensional splitting
   - `Euler2DState` — 2D flow state with conservative/primitive conversions
   - `supersonic_wedge_ic` — Uniform supersonic flow initial condition
@@ -368,7 +368,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Benchmark**: `experiments/benchmarks/benchmarks/oblique_shock.py` — Oblique shock validation with convergence study
 - **Tests**: Extended `tests/test_integration.py` with 2D solver tests (33 tests total)
 
-- **Phase 2: CFD Module** (`tensornet/cfd/`)
+- **Phase 2: CFD Module** (`ontic/cfd/`)
   - `Euler1D` class — 1D Euler equation solver with finite volume method
   - `EulerState` — Container for conserved/primitive fluid variables
   - Godunov-type Riemann solvers: `roe_flux`, `hll_flux`, `hllc_flux`
@@ -379,13 +379,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - MPS interface: `euler_to_mps`, `mps_to_euler`
 - **Benchmark**: `experiments/benchmarks/benchmarks/sod_shock_tube.py` — Sod shock tube validation
 - **Core Package Structure**:
-  - `tensornet/core/mps.py` — Full MPS class (~400 lines)
-  - `tensornet/core/mpo.py` — Full MPO class (~230 lines)
-  - `tensornet/core/decompositions.py` — SVD/QR with truncation
-  - `tensornet/core/states.py` — Standard MPS states (GHZ, product, Néel)
-  - `tensornet/algorithms/dmrg.py` — Two-site DMRG implementation
-  - `tensornet/algorithms/tebd.py` — TEBD time evolution
-  - `tensornet/algorithms/lanczos.py` — Krylov eigensolvers
+  - `ontic/core/mps.py` — Full MPS class (~400 lines)
+  - `ontic/core/mpo.py` — Full MPO class (~230 lines)
+  - `ontic/core/decompositions.py` — SVD/QR with truncation
+  - `ontic/core/states.py` — Standard MPS states (GHZ, product, Néel)
+  - `ontic/algorithms/dmrg.py` — Two-site DMRG implementation
+  - `ontic/algorithms/tebd.py` — TEBD time evolution
+  - `ontic/algorithms/lanczos.py` — Krylov eigensolvers
 
 ### Changed
 - Repository restructuring per Constitutional Law Article II
@@ -398,7 +398,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Repository Structure
 ```
-tensornet/
+ontic/
 ├── __init__.py          # Package exports (MPS, MPO, dmrg, tebd, Euler1D, etc.)
 ├── core/
 │   ├── mps.py           # Matrix Product State
@@ -423,21 +423,21 @@ tensornet/
 ## [0.1.0] - 2025-12-17
 
 ### Added
-- Core tensor network library (`tensornet/`)
+- Core tensor network library (`ontic/`)
   - `MPS` class with canonicalization, truncation, entropy
   - `MPO` class for Hamiltonian representation
   - `dmrg()` — Density Matrix Renormalization Group
   - `tebd()` — Time-Evolving Block Decimation
   - `lanczos()` — Krylov eigenvalue solver
 
-- Hamiltonian library (`tensornet/mps/hamiltonians.py`)
+- Hamiltonian library (`ontic/mps/hamiltonians.py`)
   - `heisenberg_mpo()` — Heisenberg XXZ chain
   - `tfim_mpo()` — Transverse-field Ising model
   - `xx_mpo()` — XX model (free fermions)
   - `xyz_mpo()` — Anisotropic XYZ model
   - `bose_hubbard_mpo()` — Bose-Hubbard model
 
-- Fermionic systems (`tensornet/algorithms/fermionic.py`)
+- Fermionic systems (`ontic/algorithms/fermionic.py`)
   - Jordan-Wigner transformation
   - `spinless_fermion_mpo()` — Spinless fermion chain
   - `hubbard_mpo()` — Fermi-Hubbard model

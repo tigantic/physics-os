@@ -23,13 +23,13 @@ import pytest
 import torch
 from torch import Tensor
 
-from tensornet.platform.data_model import (
+from ontic.platform.data_model import (
     FieldData,
     Mesh,
     SimulationState,
     StructuredMesh,
 )
-from tensornet.platform.protocols import Observable, SolveResult
+from ontic.platform.protocols import Observable, SolveResult
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -166,7 +166,7 @@ class _DiffusionSolver:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Coupling Orchestrator (tensornet.platform.coupled)
+# Coupling Orchestrator (ontic.platform.coupled)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
@@ -174,7 +174,7 @@ class TestMonolithicCoupler:
     """Tests for MonolithicCoupler."""
 
     def test_monolithic_solve(self, mesh_64, simple_state):
-        from tensornet.platform.coupled import (
+        from ontic.platform.coupled import (
             CoupledField,
             CouplingInterface,
             MonolithicCoupler,
@@ -213,7 +213,7 @@ class TestPartitionedCoupler:
     """Tests for PartitionedCoupler with Gauss-Seidel strategy."""
 
     def test_partitioned_solve(self, mesh_64, simple_state):
-        from tensornet.platform.coupled import (
+        from ontic.platform.coupled import (
             CoupledField,
             CouplingInterface,
             CouplingStrategy,
@@ -249,7 +249,7 @@ class TestPartitionedCoupler:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Adjoint / Sensitivity (tensornet.platform.adjoint)
+# Adjoint / Sensitivity (ontic.platform.adjoint)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
@@ -257,7 +257,7 @@ class TestAdjoint:
     """Tests for AdjointSolver and L2TrackingCost."""
 
     def test_l2_tracking_cost(self, simple_state):
-        from tensornet.platform.adjoint import L2TrackingCost
+        from ontic.platform.adjoint import L2TrackingCost
 
         target = simple_state.fields["u"].data * 0.9
         cost = L2TrackingCost(target_field_name="u", target_data=target)
@@ -271,7 +271,7 @@ class TestAdjoint:
         assert dJ["u"].shape == simple_state.fields["u"].data.shape
 
     def test_adjoint_solver_gradient(self, simple_state, mesh_64):
-        from tensornet.platform.adjoint import AdjointSolver, L2TrackingCost
+        from ontic.platform.adjoint import AdjointSolver, L2TrackingCost
 
         # Forward solver with parameter-dependent scaling
         class _ParamSolver:
@@ -314,7 +314,7 @@ class TestCheckpointedAdjoint:
     """Tests for CheckpointedAdjoint (memory-efficient variant)."""
 
     def test_checkpointed_runs(self, simple_state):
-        from tensornet.platform.adjoint import CheckpointedAdjoint, L2TrackingCost
+        from ontic.platform.adjoint import CheckpointedAdjoint, L2TrackingCost
 
         target = simple_state.fields["u"].data * 0.8
         cost = L2TrackingCost("u", target)
@@ -329,7 +329,7 @@ class TestCheckpointedAdjoint:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Inverse Problems (tensornet.platform.inverse)
+# Inverse Problems (ontic.platform.inverse)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
@@ -337,7 +337,7 @@ class TestRegularizers:
     """Tests for Tikhonov and TV regularizers."""
 
     def test_tikhonov_positive(self):
-        from tensornet.platform.inverse import TikhonovRegularizer
+        from ontic.platform.inverse import TikhonovRegularizer
 
         reg = TikhonovRegularizer(alpha=0.1)
         params = {"a": torch.tensor([1.0, 2.0, 3.0], dtype=torch.float64)}
@@ -349,7 +349,7 @@ class TestRegularizers:
         assert grad["a"].shape == (3,)
 
     def test_tikhonov_with_prior(self):
-        from tensornet.platform.inverse import TikhonovRegularizer
+        from ontic.platform.inverse import TikhonovRegularizer
 
         prior = {"a": torch.tensor([1.0, 1.0, 1.0], dtype=torch.float64)}
         reg = TikhonovRegularizer(alpha=0.5, prior=prior)
@@ -358,7 +358,7 @@ class TestRegularizers:
         assert val.item() == pytest.approx(0.0, abs=1e-14)
 
     def test_tv_regularizer(self):
-        from tensornet.platform.inverse import TVRegularizer
+        from ontic.platform.inverse import TVRegularizer
 
         reg = TVRegularizer(alpha=0.1)
         params = {"a": torch.tensor([1.0, 3.0, 2.0, 5.0], dtype=torch.float64)}
@@ -373,8 +373,8 @@ class TestInverseProblem:
     """Tests for InverseProblem and GradientDescentSolver."""
 
     def test_total_cost(self, simple_state):
-        from tensornet.platform.adjoint import L2TrackingCost
-        from tensornet.platform.inverse import InverseProblem, TikhonovRegularizer
+        from ontic.platform.adjoint import L2TrackingCost
+        from ontic.platform.inverse import InverseProblem, TikhonovRegularizer
 
         target = simple_state.fields["u"].data * 0.5
         cost = L2TrackingCost("u", target)
@@ -388,8 +388,8 @@ class TestInverseProblem:
         assert J >= 0
 
     def test_gradient_descent_solver(self, state_32):
-        from tensornet.platform.adjoint import L2TrackingCost
-        from tensornet.platform.inverse import (
+        from ontic.platform.adjoint import L2TrackingCost
+        from ontic.platform.inverse import (
             GradientDescentSolver,
             InverseProblem,
             TikhonovRegularizer,
@@ -414,8 +414,8 @@ class TestBayesianInversion:
     """Smoke test for BayesianInversion."""
 
     def test_bayesian_smoke(self, state_32):
-        from tensornet.platform.adjoint import L2TrackingCost
-        from tensornet.platform.inverse import (
+        from ontic.platform.adjoint import L2TrackingCost
+        from ontic.platform.inverse import (
             BayesianInversion,
             InverseProblem,
             LBFGSSolver,
@@ -440,7 +440,7 @@ class TestBayesianInversion:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Uncertainty Quantification (tensornet.platform.uq)
+# Uncertainty Quantification (ontic.platform.uq)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
@@ -469,7 +469,7 @@ class TestUQ:
         return state.fields["u"].data.abs().max().item()
 
     def test_monte_carlo_uq(self, state_32):
-        from tensornet.platform.uq import MonteCarloUQ, ParameterDistribution
+        from ontic.platform.uq import MonteCarloUQ, ParameterDistribution
 
         solver = _ScaleSolver(0.99)
         mc = MonteCarloUQ(solver=solver, n_samples=10, seed=42)
@@ -490,7 +490,7 @@ class TestUQ:
         assert "u" in result.variance
 
     def test_latin_hypercube_uq(self, state_32):
-        from tensornet.platform.uq import LatinHypercubeUQ, ParameterDistribution
+        from ontic.platform.uq import LatinHypercubeUQ, ParameterDistribution
 
         solver = _ScaleSolver(0.99)
         lhs = LatinHypercubeUQ(solver=solver, n_samples=8, seed=123)
@@ -508,7 +508,7 @@ class TestUQ:
         assert result.n_samples == 8
 
     def test_polynomial_chaos_expansion(self, state_32):
-        from tensornet.platform.uq import ParameterDistribution, PolynomialChaosExpansion
+        from ontic.platform.uq import ParameterDistribution, PolynomialChaosExpansion
 
         solver = _ScaleSolver(0.99)
         pce = PolynomialChaosExpansion(
@@ -532,7 +532,7 @@ class TestUQ:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Optimization (tensornet.platform.optimization)
+# Optimization (ontic.platform.optimization)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
@@ -540,7 +540,7 @@ class TestOptimization:
     """Tests for Constraint, volume_fraction_constraint, ConstrainedOptimizer."""
 
     def test_volume_fraction_constraint(self):
-        from tensornet.platform.optimization import volume_fraction_constraint
+        from ontic.platform.optimization import volume_fraction_constraint
 
         con = volume_fraction_constraint("density", 0.5)
         assert "vol_frac" in con.name
@@ -557,9 +557,9 @@ class TestOptimization:
         assert grad["density"].shape == (100,)
 
     def test_constrained_optimizer_smoke(self, state_32):
-        from tensornet.platform.adjoint import L2TrackingCost
-        from tensornet.platform.inverse import InverseProblem, TikhonovRegularizer
-        from tensornet.platform.optimization import (
+        from ontic.platform.adjoint import L2TrackingCost
+        from ontic.platform.inverse import InverseProblem, TikhonovRegularizer
+        from ontic.platform.optimization import (
             Constraint,
             ConstrainedOptimizer,
         )
@@ -591,7 +591,7 @@ class TestOptimization:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Lineage DAG (tensornet.platform.lineage)
+# Lineage DAG (ontic.platform.lineage)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
@@ -599,7 +599,7 @@ class TestLineageDAG:
     """Tests for LineageDAG operations."""
 
     def test_dag_add_and_query(self):
-        from tensornet.platform.lineage import LineageDAG, LineageEvent, LineageNode
+        from ontic.platform.lineage import LineageDAG, LineageEvent, LineageNode
 
         dag = LineageDAG()
         root = LineageNode(
@@ -618,7 +618,7 @@ class TestLineageDAG:
         assert dag.get("root").label == "Initial solve"
 
     def test_dag_parent_validation(self):
-        from tensornet.platform.lineage import LineageDAG, LineageEvent, LineageNode
+        from ontic.platform.lineage import LineageDAG, LineageEvent, LineageNode
 
         dag = LineageDAG()
         child = LineageNode(
@@ -635,7 +635,7 @@ class TestLineageDAG:
             dag.add(child)
 
     def test_dag_roots_and_leaves(self):
-        from tensornet.platform.lineage import LineageDAG, LineageEvent, LineageNode
+        from ontic.platform.lineage import LineageDAG, LineageEvent, LineageNode
 
         dag = LineageDAG()
         n1 = LineageNode("n1", LineageEvent.FORWARD_SOLVE, "Step 1", [], 1.0, 0.1, "a", "b")
@@ -654,7 +654,7 @@ class TestLineageDAG:
         assert leaves[0].node_id == "n3"
 
     def test_dag_ancestors_descendants(self):
-        from tensornet.platform.lineage import LineageDAG, LineageEvent, LineageNode
+        from ontic.platform.lineage import LineageDAG, LineageEvent, LineageNode
 
         dag = LineageDAG()
         dag.add(LineageNode("a", LineageEvent.FORWARD_SOLVE, "A", [], 1.0, 0.1, "x", "y"))
@@ -670,7 +670,7 @@ class TestLineageDAG:
         assert {n.node_id for n in desc} == {"b", "c"}
 
     def test_dag_filter_by_event(self):
-        from tensornet.platform.lineage import LineageDAG, LineageEvent, LineageNode
+        from ontic.platform.lineage import LineageDAG, LineageEvent, LineageNode
 
         dag = LineageDAG()
         dag.add(LineageNode("s1", LineageEvent.FORWARD_SOLVE, "S1", [], 1.0, 0.1, "a", "b"))
@@ -681,7 +681,7 @@ class TestLineageDAG:
         assert len(solves) == 2
 
     def test_dag_json_roundtrip(self):
-        from tensornet.platform.lineage import LineageDAG, LineageEvent, LineageNode
+        from ontic.platform.lineage import LineageDAG, LineageEvent, LineageNode
 
         dag = LineageDAG()
         dag.add(LineageNode("n1", LineageEvent.FORWARD_SOLVE, "S1", [], 1.0, 0.5, "aa", "bb",
@@ -694,7 +694,7 @@ class TestLineageDAG:
         assert dag2.get("n1").metadata["dt"] == 0.01
 
     def test_dag_summary(self):
-        from tensornet.platform.lineage import LineageDAG, LineageEvent, LineageNode
+        from ontic.platform.lineage import LineageDAG, LineageEvent, LineageNode
 
         dag = LineageDAG()
         dag.add(LineageNode("r", LineageEvent.FORWARD_SOLVE, "Root", [], 1.0, 1.0, "a", "b"))
@@ -707,7 +707,7 @@ class TestLineageTracker:
     """Tests for LineageTracker context manager and instant recording."""
 
     def test_record_instant(self):
-        from tensornet.platform.lineage import LineageDAG, LineageEvent, LineageTracker
+        from ontic.platform.lineage import LineageDAG, LineageEvent, LineageTracker
 
         dag = LineageDAG()
         tracker = LineageTracker(dag)
@@ -727,7 +727,7 @@ class TestLineageTracker:
         assert node.elapsed_seconds == pytest.approx(0.42)
 
     def test_record_context_manager(self):
-        from tensornet.platform.lineage import LineageDAG, LineageEvent, LineageTracker
+        from ontic.platform.lineage import LineageDAG, LineageEvent, LineageTracker
 
         dag = LineageDAG()
         tracker = LineageTracker(dag)
@@ -745,7 +745,7 @@ class TestLineageTracker:
         assert node.elapsed_seconds > 0
 
     def test_tracker_chaining(self):
-        from tensornet.platform.lineage import LineageDAG, LineageEvent, LineageTracker
+        from ontic.platform.lineage import LineageDAG, LineageEvent, LineageTracker
 
         dag = LineageDAG()
         tracker = LineageTracker(dag)
@@ -767,7 +767,7 @@ class TestLineageNodeSerialization:
     """Tests for LineageNode to_dict / from_dict."""
 
     def test_round_trip(self):
-        from tensornet.platform.lineage import LineageEvent, LineageNode
+        from ontic.platform.lineage import LineageEvent, LineageNode
 
         node = LineageNode(
             node_id="abc123",

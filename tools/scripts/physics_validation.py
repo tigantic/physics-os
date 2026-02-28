@@ -45,7 +45,7 @@ def validate_sod_shock_tube() -> ValidationResult:
     start = time.time()
 
     try:
-        from tensornet.cfd.euler_1d import Euler1D, EulerState
+        from ontic.cfd.euler_1d import Euler1D, EulerState
         import torch
 
         # Setup Sod problem
@@ -309,7 +309,7 @@ def validate_conservation() -> ValidationResult:
     start = time.time()
 
     try:
-        from tensornet.cfd.euler_1d import Euler1D, EulerState, BCType1D
+        from ontic.cfd.euler_1d import Euler1D, EulerState, BCType1D
         import torch
 
         # Setup periodic domain
@@ -387,9 +387,9 @@ def validate_dmrg_energy() -> ValidationResult:
     start = time.time()
 
     try:
-        from tensornet.algorithms.dmrg import dmrg
-        from tensornet.core.mps import MPS
-        from tensornet.mps.hamiltonians import heisenberg_mpo
+        from ontic.algorithms.dmrg import dmrg
+        from ontic.core.mps import MPS
+        from ontic.mps.hamiltonians import heisenberg_mpo
 
         # Small Heisenberg chain
         L = 8

@@ -27,7 +27,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 # HMAC key for signing (in production, use env var or secure storage)
-SIGNING_KEY = b"hypertensor-evidence-pack-2025"
+SIGNING_KEY = b"physics_os-evidence-pack-2025"
 
 
 def compute_file_hash(path: Path) -> str:
@@ -62,7 +62,7 @@ def run_validation_case(case: str, output_dir: Path) -> Dict[str, Any]:
         import numpy as np
         import torch
 
-        from tensornet.cfd.euler_1d import Euler1D, EulerState
+        from ontic.cfd.euler_1d import Euler1D, EulerState
 
         N = 200
         solver = Euler1D(N=N, x_min=0.0, x_max=1.0, gamma=1.4)
@@ -117,7 +117,7 @@ def run_validation_case(case: str, output_dir: Path) -> Dict[str, Any]:
         import numpy as np
         import torch
 
-        from tensornet.cfd.weno import weno5_js_reconstruct
+        from ontic.cfd.weno import weno5_js_reconstruct
 
         errors = []
         Ns = [32, 64, 128, 256, 512]
@@ -181,7 +181,7 @@ import sys
 from pathlib import Path
 
 
-SIGNING_KEY = b'hypertensor-evidence-pack-2025'
+SIGNING_KEY = b'physics_os-evidence-pack-2025'
 
 
 def compute_file_hash(path: Path) -> str:

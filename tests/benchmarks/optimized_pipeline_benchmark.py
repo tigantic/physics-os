@@ -100,7 +100,7 @@ def benchmark_tci_construction(n_qubits: int = 16, max_rank: int = 32) -> Tuple[
     """Compare Rust TCI vs Python TCI construction speed."""
     print_header(f"TCI CONSTRUCTION BENCHMARK (n_qubits={n_qubits})")
     
-    from tensornet.cfd.qtt_tci import qtt_from_function_tci_python, qtt_from_function_dense
+    from ontic.cfd.qtt_tci import qtt_from_function_tci_python, qtt_from_function_dense
     
     device = "cuda" if torch.cuda.is_available() else "cpu"
     N = 2 ** n_qubits
@@ -218,7 +218,7 @@ def benchmark_point_evaluation(n_qubits: int = 16, n_points: int = 100000, max_r
     morton_indices = torch.randint(0, 2**n_qubits, (n_points,), device=device, dtype=torch.int64)
     
     # Python/Triton benchmark
-    from tensornet.cfd.qtt_triton_kernels import _batch_contract_simple
+    from ontic.cfd.qtt_triton_kernels import _batch_contract_simple
     
     out = torch.empty(n_points, device=device, dtype=torch.float32)
     
@@ -303,7 +303,7 @@ def benchmark_triton_kernels(n_qubits: int = 16, n_points: int = 100000) -> Benc
         morton = torch.randint(0, 2**n_qubits, (n_points,), device=device, dtype=torch.int64)
         out = torch.empty(n_points, device=device, dtype=torch.float32)
         
-        from tensornet.cfd.qtt_triton_kernels import (
+        from ontic.cfd.qtt_triton_kernels import (
             _batch_contract_pytorch,
             _triton_contract_fixed
         )

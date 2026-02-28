@@ -149,7 +149,7 @@ All measurements must conform to `benchmarks/golden/schema.json`.
 | `grid_resolution` | array[integer] | Per-axis resolution |
 | `domain_bounds` | array | Spatial domain bounds |
 | `wall_time_band_max` | number | Maximum allowed wall time |
-| `runtime_version` | string | tensornet.vm version |
+| `runtime_version` | string | ontic.vm version |
 | `error_message` | string | Error details (if failed) |
 
 ---

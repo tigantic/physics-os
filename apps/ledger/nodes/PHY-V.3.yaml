@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Force fields, thermostats, sampling"
 
 source_files:
-  - "tensornet/md/engine.py"
+  - "ontic/md/engine.py"
 
 tests:
   smoke:

@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Bose-Hubbard, GPE"
 
 source_files:
-  - "tensornet/condensed_matter/bosonic.py"
+  - "ontic/condensed_matter/bosonic.py"
 
 tests:
   smoke:

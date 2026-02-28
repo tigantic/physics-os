@@ -135,8 +135,8 @@ def main():
     parser.add_argument(
         "package",
         nargs="?",
-        default="tensornet",
-        help="Package to check (default: tensornet)",
+        default="ontic",
+        help="Package to check (default: ontic)",
     )
 
     args = parser.parse_args()

@@ -81,11 +81,11 @@ graph TB
 
 ## Module Dependencies
 
-### tensornet/ Internal Dependencies
+### ontic/ Internal Dependencies
 
 ```mermaid
 graph LR
-    subgraph "tensornet/"
+    subgraph "ontic/"
         core[core/]
         algorithms[algorithms/]
         cfd[cfd/]
@@ -109,7 +109,7 @@ graph LR
 
 ```mermaid
 graph TD
-    subgraph "tensornet/core/"
+    subgraph "ontic/core/"
         mps_mod[mps.py]
         mpo[mpo.py]
         qtt[qtt.py]
@@ -132,11 +132,11 @@ graph TD
 
 | Module | PyTorch | NumPy | SciPy | Rust |
 |--------|---------|-------|-------|------|
-| tensornet/core/ | ✅ | ✅ | ✅ | ⚪ |
-| tensornet/algorithms/ | ✅ | ✅ | ✅ | ✅ |
-| tensornet/cfd/ | ✅ | ✅ | ✅ | ✅ |
-| tensornet/mps/ | ✅ | ✅ | ⚪ | ⚪ |
-| tensornet/ml_surrogates/ | ✅ | ✅ | ⚪ | ⚪ |
+| ontic/core/ | ✅ | ✅ | ✅ | ⚪ |
+| ontic/algorithms/ | ✅ | ✅ | ✅ | ✅ |
+| ontic/cfd/ | ✅ | ✅ | ✅ | ✅ |
+| ontic/mps/ | ✅ | ✅ | ⚪ | ⚪ |
+| ontic/ml_surrogates/ | ✅ | ✅ | ⚪ | ⚪ |
 | sdk/server/ | ⚪ | ✅ | ⚪ | ⚪ |
 
 Legend: ✅ Required | ⚪ Optional
@@ -301,8 +301,8 @@ flowchart LR
 ### Adding New Hamiltonians
 
 ```python
-# In tensornet/mps/hamiltonians.py
-from tensornet.core import MPO
+# In ontic/mps/hamiltonians.py
+from ontic.core import MPO
 
 def my_hamiltonian_mpo(L: int, **params) -> MPO:
     """Create MPO for my Hamiltonian."""
@@ -315,8 +315,8 @@ def my_hamiltonian_mpo(L: int, **params) -> MPO:
 ### Adding New CFD Flux Schemes
 
 ```python
-# In tensornet/cfd/fluxes.py
-from tensornet.cfd.base import FluxScheme
+# In ontic/cfd/fluxes.py
+from ontic.cfd.base import FluxScheme
 
 class MyFlux(FluxScheme):
     """Custom flux scheme."""

@@ -93,7 +93,7 @@ def create_test_data(size: int, pattern: str = "smooth", device: str = "cuda") -
 def benchmark_dense_to_qtt(config: PipelineConfig):
     """Benchmark dense → QTT compression."""
     import torch
-    from tensornet.cfd.pure_qtt_ops import dense_to_qtt
+    from ontic.cfd.pure_qtt_ops import dense_to_qtt
     
     print("\n" + "=" * 70)
     print("STAGE 1: DENSE → QTT COMPRESSION (TT-SVD)")
@@ -161,7 +161,7 @@ def benchmark_dense_to_qtt(config: PipelineConfig):
 def benchmark_qtt_eval(config: PipelineConfig):
     """Benchmark QTT point evaluation."""
     import torch
-    from tensornet.cfd.pure_qtt_ops import dense_to_qtt
+    from ontic.cfd.pure_qtt_ops import dense_to_qtt
     
     print("\n" + "=" * 70)
     print("STAGE 2: QTT POINT EVALUATION")
@@ -266,7 +266,7 @@ def benchmark_qtt_eval(config: PipelineConfig):
 def benchmark_qtt_render(config: PipelineConfig):
     """Benchmark QTT 2D rendering using our optimized separable path."""
     import torch
-    from tensornet.sim.visualization.tensor_slicer import TensorSlicer
+    from ontic.sim.visualization.tensor_slicer import TensorSlicer
     
     print("\n" + "=" * 70)
     print("STAGE 3: QTT 2D RENDERING (SEPARABLE)")
@@ -358,7 +358,7 @@ def benchmark_qtt_render(config: PipelineConfig):
 def benchmark_qtt_to_dense(config: PipelineConfig):
     """Benchmark QTT → dense decompression."""
     import torch
-    from tensornet.cfd.pure_qtt_ops import dense_to_qtt, qtt_to_dense
+    from ontic.cfd.pure_qtt_ops import dense_to_qtt, qtt_to_dense
     
     print("\n" + "=" * 70)
     print("STAGE 4: QTT → DENSE DECOMPRESSION")
@@ -411,8 +411,8 @@ def benchmark_qtt_to_dense(config: PipelineConfig):
 def benchmark_end_to_end(config: PipelineConfig):
     """Benchmark complete end-to-end pipeline."""
     import torch
-    from tensornet.cfd.qtt_2d import dense_to_qtt_2d, QTT2DState
-    from tensornet.sim.visualization.tensor_slicer import TensorSlicer
+    from ontic.cfd.qtt_2d import dense_to_qtt_2d, QTT2DState
+    from ontic.sim.visualization.tensor_slicer import TensorSlicer
     
     print("\n" + "=" * 70)
     print("STAGE 5: END-TO-END PIPELINE")

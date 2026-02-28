@@ -93,7 +93,7 @@
       "tensornet/cfd/analytical_qtt.py"
     ],
     "test_commands": [
-      "python3 -c 'from tensornet.cfd.ns3d_native import taylor_green_analytical; u, o = taylor_green_analytical(10)'",
+      "python3 -c 'from ontic.cfd.ns3d_native import taylor_green_analytical; u, o = taylor_green_analytical(10)'",
       "python3 tensornet/cfd/analytical_qtt.py"
     ]
   },

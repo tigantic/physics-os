@@ -27,7 +27,7 @@ import time
 sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
 os.makedirs('/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/results', exist_ok=True)
 
-from tensornet.cfd.ns2d_qtt_native import (
+from ontic.cfd.ns2d_qtt_native import (
     NS2D_QTT_Native,
     NS2DQTTConfig,
     create_conference_room_ic,

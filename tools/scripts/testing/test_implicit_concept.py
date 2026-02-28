@@ -10,7 +10,7 @@ import time
 import numpy as np
 import torch
 
-from tensornet.quantum.hybrid_qtt_renderer import create_test_qtt
+from ontic.quantum.hybrid_qtt_renderer import create_test_qtt
 
 
 def morton_encode_torch(x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:

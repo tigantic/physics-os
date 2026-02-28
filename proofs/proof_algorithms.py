@@ -35,10 +35,10 @@ import torch
 # Add parent to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tensornet.algorithms.lanczos import lanczos_ground_state
-from tensornet.core.decompositions import svd_truncated
-from tensornet.core.mps import MPS
-from tensornet.mps.hamiltonians import heisenberg_mpo
+from ontic.algorithms.lanczos import lanczos_ground_state
+from ontic.core.decompositions import svd_truncated
+from ontic.core.mps import MPS
+from ontic.mps.hamiltonians import heisenberg_mpo
 
 # Constitutional tolerances (Article I, Section 1.2)
 MACHINE_PRECISION = 1e-14

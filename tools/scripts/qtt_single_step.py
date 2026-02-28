@@ -14,9 +14,9 @@ import torch
 import math
 import time
 
-from tensornet.cfd.qtt_3d_state import QTT3DState
-from tensornet.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo
-from tensornet.cfd.pure_qtt_ops import truncate_qtt, qtt_hadamard
+from ontic.cfd.qtt_3d_state import QTT3DState
+from ontic.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo
+from ontic.cfd.pure_qtt_ops import truncate_qtt, qtt_hadamard
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 dtype = torch.float32
@@ -159,7 +159,7 @@ u_brk_dense = u_dense - penalty_factor * pen_dense
 print(f"  Dense: u_brk range=[{u_brk_dense.min():.4f}, {u_brk_dense.max():.4f}]")
 
 # QTT Hadamard
-from tensornet.cfd.pure_qtt_ops import qtt_hadamard as qtt_had_raw
+from ontic.cfd.pure_qtt_ops import qtt_hadamard as qtt_had_raw
 
 def qtt3d_had(a, b, mr):
     cores = qtt_had_raw(

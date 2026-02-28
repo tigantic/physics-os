@@ -53,7 +53,7 @@ def proof_24_1_adjoint_solver():
     """
     print("\nProof 24.1: Adjoint Solver")
 
-    from tensornet.cfd.adjoint import (AdjointConfig, AdjointEuler2D,
+    from ontic.cfd.adjoint import (AdjointConfig, AdjointEuler2D,
                                        AdjointState, DragObjective,
                                        compute_shape_sensitivity)
 
@@ -136,7 +136,7 @@ def proof_24_2_optimization():
     """
     print("\nProof 24.2: Optimization Suite")
 
-    from tensornet.cfd.optimization import (BSplineParameterization,
+    from ontic.cfd.optimization import (BSplineParameterization,
                                             ConstraintSpec, OptimizationConfig,
                                             OptimizerType)
 
@@ -200,7 +200,7 @@ def proof_24_3_rom_methods():
     """
     print("\nProof 24.3: ROM Methods (POD/DMD)")
 
-    from tensornet.infra.digital_twin.reduced_order import (DMDModel, PODModel,
+    from ontic.infra.digital_twin.reduced_order import (DMDModel, PODModel,
                                                       ROMConfig)
 
     # Generate synthetic snapshot data (sine waves with decay)
@@ -281,7 +281,7 @@ def proof_24_4_consensus():
     """
     print("\nProof 24.4: Consensus Protocols")
 
-    from tensornet.infra.coordination.consensus import (AverageConsensus,
+    from ontic.infra.coordination.consensus import (AverageConsensus,
                                                   ConsensusConfig,
                                                   ConsensusState, MaxConsensus,
                                                   WeightedConsensus)
@@ -363,7 +363,7 @@ def proof_24_5_uq():
     """
     print("\nProof 24.5: Uncertainty Quantification")
 
-    from tensornet.ml.ml_surrogates.uncertainty import (UncertaintyConfig,
+    from ontic.ml.ml_surrogates.uncertainty import (UncertaintyConfig,
                                                      UncertaintyEstimate,
                                                      UncertaintyType)
 

@@ -8,12 +8,12 @@
 
 This module provides CUDA acceleration for QTT operations by:
 
-1. Leveraging the existing tensornet infrastructure:
-   - tensornet.core.gpu: GPU utilities, memory pools, device management
-   - tensornet.core.mps: Matrix Product State with GPU support
-   - tensornet.core.mpo: Matrix Product Operator with GPU support
-   - tensornet.algorithms.dmrg: GPU-accelerated DMRG
-   - tensornet.algorithms.lanczos: GPU Lanczos eigenvalue solver
+1. Leveraging the existing ontic infrastructure:
+   - ontic.core.gpu: GPU utilities, memory pools, device management
+   - ontic.core.mps: Matrix Product State with GPU support
+   - ontic.core.mpo: Matrix Product Operator with GPU support
+   - ontic.algorithms.dmrg: GPU-accelerated DMRG
+   - ontic.algorithms.lanczos: GPU Lanczos eigenvalue solver
 
 2. Providing PyTorch-based QTT operations on CUDA:
    - All tensor contractions use torch.einsum (cuBLAS under the hood)
@@ -41,21 +41,21 @@ import numpy as np
 import torch
 from torch import Tensor
 
-# Import from existing tensornet infrastructure
+# Import from existing ontic infrastructure
 sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
 
 try:
-    from tensornet.core.gpu import get_device, GPUConfig, DeviceType, to_device
-    from tensornet.core.mps import MPS
-    from tensornet.core.mpo import MPO
-    from tensornet.algorithms.lanczos import lanczos_ground_state, LanczosResult
-    from tensornet.algorithms.dmrg import dmrg_ground_state, DMRGResult
-    from tensornet.genesis.core.triton_ops import rsvd_native
+    from ontic.core.gpu import get_device, GPUConfig, DeviceType, to_device
+    from ontic.core.mps import MPS
+    from ontic.core.mpo import MPO
+    from ontic.algorithms.lanczos import lanczos_ground_state, LanczosResult
+    from ontic.algorithms.dmrg import dmrg_ground_state, DMRGResult
+    from ontic.genesis.core.triton_ops import rsvd_native
     HAS_TENSORNET = True
 except ImportError:
     HAS_TENSORNET = False
     rsvd_native = None
-    print("Warning: tensornet not available, using standalone CUDA implementation")
+    print("Warning: ontic not available, using standalone CUDA implementation")
 
 
 # =============================================================================

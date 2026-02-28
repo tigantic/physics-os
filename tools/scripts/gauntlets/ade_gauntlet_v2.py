@@ -41,18 +41,18 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 # Import Genesis Stack components
 try:
-    from tensornet.ml.neural.differentiable_qtt import (
+    from ontic.ml.neural.differentiable_qtt import (
         DifferentiableQTTCores,
         RankAdaptiveQTT,
         NuclearNormRegularizer
     )
-    from tensornet.ml.neural.genesis_optimizer import (
+    from ontic.ml.neural.genesis_optimizer import (
         GenesisOptimizer,
         GenesisOptimizerConfig,
         DifferentiablePersistence,
         StiefelManifold
     )
-    from tensornet.ml.neural.regime_detector import (
+    from ontic.ml.neural.regime_detector import (
         RegimeDetector,
         RegimeDetectorConfig,
         RegimeAwareExtrapolator,

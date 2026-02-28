@@ -1,4 +1,4 @@
-# Module `tensornet.ml_surrogates`
+# Module `ontic.ml_surrogates`
 
 Machine Learning Surrogate Models for The Physics OS.
 

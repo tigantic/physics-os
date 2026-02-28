@@ -32,8 +32,8 @@ from typing import List, Dict, Tuple, Optional
 from pathlib import Path
 
 # SpectralNS3D is the production solver (14× faster, spectral accuracy)
-from tensornet.cfd.qtt_fft import SpectralNS3D, SpectralDerivatives3D
-from tensornet.cfd.ns3d_native import QTT3DNative, QTT3DVectorNative, QTTCores
+from ontic.cfd.qtt_fft import SpectralNS3D, SpectralDerivatives3D
+from ontic.cfd.ns3d_native import QTT3DNative, QTT3DVectorNative, QTTCores
 
 
 # ═══════════════════════════════════════════════════════════════════════════════════════

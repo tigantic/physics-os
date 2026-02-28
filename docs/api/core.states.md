@@ -13,7 +13,7 @@ Factory functions for common quantum states.
 ### `all_down_mps`
 
 ```python
-def all_down_mps(L: int, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> tensornet.core.mps.MPS
+def all_down_mps(L: int, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> ontic.core.mps.MPS
 ```
 
 Create |↓↓...↓⟩ state.
@@ -24,14 +24,14 @@ Create |↓↓...↓⟩ state.
 - **dtype** (`<class 'torch.dtype'>`): Data type
 - **device** (`typing.Optional[torch.device]`): Device
 
-**Returns**: `<class 'tensornet.core.mps.MPS'>` - All-down product state
+**Returns**: `<class 'ontic.core.mps.MPS'>` - All-down product state
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py:138](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py#L138)*
 
 ### `all_up_mps`
 
 ```python
-def all_up_mps(L: int, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> tensornet.core.mps.MPS
+def all_up_mps(L: int, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> ontic.core.mps.MPS
 ```
 
 Create |↑↑...↑⟩ state.
@@ -42,14 +42,14 @@ Create |↑↑...↑⟩ state.
 - **dtype** (`<class 'torch.dtype'>`): Data type
 - **device** (`typing.Optional[torch.device]`): Device
 
-**Returns**: `<class 'tensornet.core.mps.MPS'>` - All-up product state
+**Returns**: `<class 'ontic.core.mps.MPS'>` - All-up product state
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py:118](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py#L118)*
 
 ### `domain_wall_mps`
 
 ```python
-def domain_wall_mps(L: int, position: int, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> tensornet.core.mps.MPS
+def domain_wall_mps(L: int, position: int, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> ontic.core.mps.MPS
 ```
 
 Create domain wall state: |↑↑...↑↓↓...↓⟩
@@ -61,14 +61,14 @@ Create domain wall state: |↑↑...↑↓↓...↓⟩
 - **dtype** (`<class 'torch.dtype'>`): Data type
 - **device** (`typing.Optional[torch.device]`): Device
 
-**Returns**: `<class 'tensornet.core.mps.MPS'>` - Domain wall product state
+**Returns**: `<class 'ontic.core.mps.MPS'>` - Domain wall product state
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py:180](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py#L180)*
 
 ### `ghz_mps`
 
 ```python
-def ghz_mps(L: int, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> tensornet.core.mps.MPS
+def ghz_mps(L: int, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> ontic.core.mps.MPS
 ```
 
 Create GHZ state: |GHZ⟩ = (|00...0⟩ + |11...1⟩) / √2
@@ -81,14 +81,14 @@ This is a maximally entangled state with S = ln(2) at every bond.
 - **dtype** (`<class 'torch.dtype'>`): Data type
 - **device** (`typing.Optional[torch.device]`): Device
 
-**Returns**: `<class 'tensornet.core.mps.MPS'>` - MPS representation of GHZ state
+**Returns**: `<class 'ontic.core.mps.MPS'>` - MPS representation of GHZ state
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py:16](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py#L16)*
 
 ### `neel_mps`
 
 ```python
-def neel_mps(L: int, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> tensornet.core.mps.MPS
+def neel_mps(L: int, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> ontic.core.mps.MPS
 ```
 
 Create Néel state: |↑↓↑↓...⟩
@@ -99,14 +99,14 @@ Create Néel state: |↑↓↑↓...⟩
 - **dtype** (`<class 'torch.dtype'>`): Data type
 - **device** (`typing.Optional[torch.device]`): Device
 
-**Returns**: `<class 'tensornet.core.mps.MPS'>` - Néel product state
+**Returns**: `<class 'ontic.core.mps.MPS'>` - Néel product state
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py:158](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py#L158)*
 
 ### `product_mps`
 
 ```python
-def product_mps(states: List[torch.Tensor], dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> tensornet.core.mps.MPS
+def product_mps(states: List[torch.Tensor], dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> ontic.core.mps.MPS
 ```
 
 Create product state MPS from local states.
@@ -119,14 +119,14 @@ Create product state MPS from local states.
 - **dtype** (`<class 'torch.dtype'>`): Data type
 - **device** (`typing.Optional[torch.device]`): Device
 
-**Returns**: `<class 'tensornet.core.mps.MPS'>` - MPS with bond dimension 1
+**Returns**: `<class 'ontic.core.mps.MPS'>` - MPS with bond dimension 1
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py:61](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py#L61)*
 
 ### `random_mps`
 
 ```python
-def random_mps(L: int, d: int, chi: int, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None, normalize: bool = True) -> tensornet.core.mps.MPS
+def random_mps(L: int, d: int, chi: int, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None, normalize: bool = True) -> ontic.core.mps.MPS
 ```
 
 Create random MPS.
@@ -142,6 +142,6 @@ Alias for MPS.random() for convenience.
 - **device** (`typing.Optional[torch.device]`): Device
 - **normalize** (`<class 'bool'>`): Normalize the state
 
-**Returns**: `<class 'tensornet.core.mps.MPS'>` - Random MPS
+**Returns**: `<class 'ontic.core.mps.MPS'>` - Random MPS
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py:91](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py#L91)*

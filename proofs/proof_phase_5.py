@@ -41,9 +41,9 @@ def gate_blowup_indicator_sensitivity():
 
     Test: Create flow with growing gradients, verify chi detects it.
     """
-    from tensornet.cfd.chi_diagnostic import (ChiTrajectory,
+    from ontic.cfd.chi_diagnostic import (ChiTrajectory,
                                               compute_chi_state_2d)
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.ns_2d import NS2DSolver
 
     print("\n" + "=" * 60)
     print("Gate 1: Blowup Indicator Sensitivity")
@@ -139,9 +139,9 @@ def gate_adaptive_resolution_response():
     When chi_actual approaches chi_target, the system should respond.
     Verify chi_ratio tracking enables adaptive decisions.
     """
-    from tensornet.cfd.chi_diagnostic import (ChiTrajectory,
+    from ontic.cfd.chi_diagnostic import (ChiTrajectory,
                                               compute_chi_state_2d)
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.ns_2d import NS2DSolver
 
     print("\n" + "=" * 60)
     print("Gate 2: Adaptive Resolution Response")
@@ -238,8 +238,8 @@ def gate_prevention_via_regularization():
     Increased viscosity prevents gradient blowup.
     Higher nu -> faster decay -> bounded gradients.
     """
-    from tensornet.cfd.chi_diagnostic import compute_chi_state_2d
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.chi_diagnostic import compute_chi_state_2d
+    from ontic.cfd.ns_2d import NS2DSolver
 
     print("\n" + "=" * 60)
     print("Gate 3: Prevention via Regularization")
@@ -328,9 +328,9 @@ def gate_warning_system_timing():
     The chi diagnostic should provide early warning of gradient growth.
     Track when chi_ratio exceeds thresholds vs when enstrophy peaks.
     """
-    from tensornet.cfd.chi_diagnostic import (ChiTrajectory,
+    from ontic.cfd.chi_diagnostic import (ChiTrajectory,
                                               compute_chi_state_2d)
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.ns_2d import NS2DSolver
 
     print("\n" + "=" * 60)
     print("Gate 4: Warning System Timing")

@@ -24,7 +24,7 @@ import torch
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tensornet.hvac.nielsen import (
+from ontic.hvac.nielsen import (
     NielsenBenchmark,
     NielsenConfig,
     NielsenResult,

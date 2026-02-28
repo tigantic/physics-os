@@ -16,7 +16,7 @@ try:
     print(f"CUDA: {torch.cuda.is_available()}", flush=True)
     print(f"GPU: {torch.cuda.get_device_name(0)}", flush=True)
 
-    from tensornet.em.chu_limit_gpu import (
+    from ontic.em.chu_limit_gpu import (
         make_chu_gpu_config,
         build_sphere_mask_tt_gpu,
         spherical_mask_flat_indices_gpu,
@@ -30,8 +30,8 @@ try:
         simp_sigma_gpu,
         compute_pml_power_tt_gpu,
     )
-    from tensornet.em.qtt_helmholtz_gpu import tt_inner_gpu, tt_norm_gpu
-    from tensornet.em.boundaries import PMLConfig
+    from ontic.em.qtt_helmholtz_gpu import tt_inner_gpu, tt_norm_gpu
+    from ontic.em.boundaries import PMLConfig
 
     print("Imports OK", flush=True)
 

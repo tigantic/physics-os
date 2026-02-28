@@ -20,7 +20,7 @@ import os
 sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
 os.makedirs('/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/results', exist_ok=True)
 
-from tensornet.cfd.ns_2d import NS2DSolver, NSState
+from ontic.cfd.ns_2d import NS2DSolver, NSState
 
 
 def run_conference_room_analysis():

@@ -13,7 +13,7 @@ state: "V0.2"
 description: "TST, instantons"
 
 source_files:
-  - "tensornet/chemistry/reaction_rate.py"
+  - "ontic/chemistry/reaction_rate.py"
 
 tests:
   smoke:

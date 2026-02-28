@@ -24,11 +24,11 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from tensornet.cfd.euler2d_strang import (
+from ontic.cfd.euler2d_strang import (
     Euler2D_Strang, Euler2DConfig, Euler2DState, 
     create_kelvin_helmholtz_ic
 )
-from tensornet.cfd.qtt_2d import qtt_2d_to_dense
+from ontic.cfd.qtt_2d import qtt_2d_to_dense
 
 
 def run_kh_simulation(n_bits: int = 7, t_final: float = 2.0, 

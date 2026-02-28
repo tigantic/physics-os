@@ -43,7 +43,7 @@
 ## 1.1 Critical Path (Runtime Impact)
 
 ### FINDING D-001: Initialization Factorization Tax
-- **File:** `tensornet/cfd/fast_euler_2d.py`
+- **File:** `ontic/cfd/fast_euler_2d.py`
 - **Lines:** 215-218
 - **Pattern:**
   ```python
@@ -59,7 +59,7 @@
 ---
 
 ### FINDING D-002: Output Materialization
-- **File:** `tensornet/cfd/fast_euler_2d.py`
+- **File:** `ontic/cfd/fast_euler_2d.py`
 - **Line:** 256
 - **Pattern:**
   ```python
@@ -72,7 +72,7 @@
 ---
 
 ### FINDING D-003: Bridge Writer NumPy Conversion
-- **File:** `tensornet/sovereign/bridge_writer.py`
+- **File:** `ontic/sovereign/bridge_writer.py`
 - **Line:** 188
 - **Pattern:**
   ```python
@@ -87,7 +87,7 @@
 ## 1.2 Non-Critical (Offline/Test Impact)
 
 ### FINDING D-004: Realtime Stream NumPy
-- **File:** `tensornet/sovereign/realtime_tensor_stream.py`
+- **File:** `ontic/sovereign/realtime_tensor_stream.py`
 - **Line:** 177
 - **Pattern:**
   ```python
@@ -99,7 +99,7 @@
 ---
 
 ### FINDING D-005: Benchmark Suite Conversion
-- **File:** `tensornet/benchmarks/benchmark_suite.py`
+- **File:** `ontic/benchmarks/benchmark_suite.py`
 - **Lines:** 410-411
 - **Pattern:**
   ```python
@@ -112,7 +112,7 @@
 ---
 
 ### FINDING D-006: Swarm Coordination Tensor Export
-- **File:** `tensornet/coordination/swarm.py`
+- **File:** `ontic/coordination/swarm.py`
 - **Line:** 126
 - **Pattern:**
   ```python
@@ -124,7 +124,7 @@
 ---
 
 ### FINDING D-007: GPU Tensor Field Export
-- **File:** `tensornet/gpu/tensor_field.py`
+- **File:** `ontic/gpu/tensor_field.py`
 - **Line:** 182
 - **Pattern:**
   ```python
@@ -136,7 +136,7 @@
 ---
 
 ### FINDING D-008: Provenance Diff Arrays
-- **File:** `tensornet/provenance/diff.py`
+- **File:** `ontic/provenance/diff.py`
 - **Lines:** 220, 225, 384
 - **Pattern:**
   ```python
@@ -150,7 +150,7 @@
 ---
 
 ### FINDING D-009: Provenance Commit Serialization
-- **File:** `tensornet/provenance/commit.py`
+- **File:** `ontic/provenance/commit.py`
 - **Line:** 174
 - **Pattern:**
   ```python
@@ -162,7 +162,7 @@
 ---
 
 ### FINDING D-010: Merkle Hash Computation
-- **File:** `tensornet/provenance/merkle.py`
+- **File:** `ontic/provenance/merkle.py`
 - **Line:** 53
 - **Pattern:**
   ```python
@@ -174,7 +174,7 @@
 ---
 
 ### FINDING D-011: Provenance Store Serialization
-- **File:** `tensornet/provenance/store.py`
+- **File:** `ontic/provenance/store.py`
 - **Line:** 313
 - **Pattern:**
   ```python
@@ -186,7 +186,7 @@
 ---
 
 ### FINDING D-012: Field Serialization
-- **File:** `tensornet/substrate/field.py`
+- **File:** `ontic/substrate/field.py`
 - **Lines:** 539, 729
 - **Pattern:**
   ```python
@@ -199,7 +199,7 @@
 ---
 
 ### FINDING D-013: Inference Engine Cache Key
-- **File:** `tensornet/realtime/inference_engine.py`
+- **File:** `ontic/realtime/inference_engine.py`
 - **Line:** 273
 - **Pattern:**
   ```python
@@ -211,7 +211,7 @@
 ---
 
 ### FINDING D-014: Digital Twin Prediction Export
-- **File:** `tensornet/digital_twin/twin.py`
+- **File:** `ontic/digital_twin/twin.py`
 - **Line:** 312
 - **Pattern:**
   ```python
@@ -223,7 +223,7 @@
 ---
 
 ### FINDING D-015: FieldOS Export
-- **File:** `tensornet/fieldos/field.py`
+- **File:** `ontic/fieldos/field.py`
 - **Line:** 436
 - **Pattern:**
   ```python
@@ -235,7 +235,7 @@
 ---
 
 ### FINDING D-016: Hypervisual Slicer
-- **File:** `tensornet/hypervisual/slicer.py`
+- **File:** `ontic/hypervisual/slicer.py`
 - **Lines:** 186, 228-229, 425-426
 - **Pattern:**
   ```python
@@ -251,7 +251,7 @@
 ---
 
 ### FINDING D-017: Slicing Core Export
-- **File:** `tensornet/hypervisual/slicing_core.py`
+- **File:** `ontic/hypervisual/slicing_core.py`
 - **Line:** 77
 - **Pattern:**
   ```python
@@ -267,7 +267,7 @@
 ## 2.1 Critical Path
 
 ### FINDING S-001: Full SVD in Compression
-- **File:** `tensornet/adaptive/compression.py`
+- **File:** `ontic/adaptive/compression.py`
 - **Line:** 541
 - **Pattern:**
   ```python
@@ -282,7 +282,7 @@
 ## 2.2 Optimized (Already Using Randomized SVD)
 
 ### FINDING S-002: Core Decompositions ✅
-- **File:** `tensornet/core/decompositions.py`
+- **File:** `ontic/core/decompositions.py`
 - **Lines:** 69, 166, 182
 - **Pattern:**
   ```python
@@ -294,7 +294,7 @@
 ---
 
 ### FINDING S-003: Parallel TEBD ✅
-- **File:** `tensornet/distributed_tn/parallel_tebd.py`
+- **File:** `ontic/distributed_tn/parallel_tebd.py`
 - **Line:** 192
 - **Pattern:**
   ```python
@@ -305,7 +305,7 @@
 ---
 
 ### FINDING S-004: TDVP Algorithm ✅
-- **File:** `tensornet/algorithms/tdvp.py`
+- **File:** `ontic/algorithms/tdvp.py`
 - **Line:** 292
 - **Pattern:**
   ```python
@@ -316,7 +316,7 @@
 ---
 
 ### FINDING S-005: Morton Ops ✅
-- **File:** `tensornet/substrate/morton_ops.py`
+- **File:** `ontic/substrate/morton_ops.py`
 - **Line:** 411
 - **Pattern:**
   ```python
@@ -327,7 +327,7 @@
 ---
 
 ### FINDING S-006: Field Compression ✅
-- **File:** `tensornet/substrate/field.py`
+- **File:** `ontic/substrate/field.py`
 - **Line:** 669
 - **Pattern:**
   ```python
@@ -338,7 +338,7 @@
 ---
 
 ### FINDING S-007: Reduced Order Model ✅
-- **File:** `tensornet/digital_twin/reduced_order.py`
+- **File:** `ontic/digital_twin/reduced_order.py`
 - **Lines:** 211, 295, 625
 - **Pattern:**
   ```python
@@ -349,7 +349,7 @@
 ---
 
 ### FINDING S-008: Randomized Compression ✅
-- **File:** `tensornet/adaptive/compression.py`
+- **File:** `ontic/adaptive/compression.py`
 - **Lines:** 150, 284, 444
 - **Pattern:**
   ```python
@@ -362,7 +362,7 @@
 ## 2.3 Non-Critical (Offline Analysis)
 
 ### FINDING S-009: MPS Entropy Calculation
-- **File:** `tensornet/core/mps.py`
+- **File:** `ontic/core/mps.py`
 - **Line:** 320
 - **Pattern:**
   ```python
@@ -374,7 +374,7 @@
 ---
 
 ### FINDING S-010: Bond Optimizer Analysis
-- **File:** `tensornet/adaptive/bond_optimizer.py`
+- **File:** `ontic/adaptive/bond_optimizer.py`
 - **Line:** 766
 - **Pattern:**
   ```python
@@ -386,7 +386,7 @@
 ---
 
 ### FINDING S-011: MPS Operations
-- **File:** `tensornet/distributed_tn/mps_operations.py`
+- **File:** `ontic/distributed_tn/mps_operations.py`
 - **Line:** 245
 - **Pattern:**
   ```python
@@ -398,7 +398,7 @@
 ---
 
 ### FINDING S-012: Distributed DMRG
-- **File:** `tensornet/distributed_tn/distributed_dmrg.py`
+- **File:** `ontic/distributed_tn/distributed_dmrg.py`
 - **Line:** 193
 - **Pattern:**
   ```python
@@ -410,7 +410,7 @@
 ---
 
 ### FINDING S-013: Entanglement Analysis
-- **File:** `tensornet/adaptive/entanglement.py`
+- **File:** `ontic/adaptive/entanglement.py`
 - **Line:** 675
 - **Pattern:**
   ```python
@@ -422,7 +422,7 @@
 ---
 
 ### FINDING S-014: SVD Values Only
-- **File:** `tensornet/adaptive/compression.py`
+- **File:** `ontic/adaptive/compression.py`
 - **Line:** 202
 - **Pattern:**
   ```python
@@ -433,7 +433,7 @@
 ---
 
 ### FINDING S-015: Profiling Example
-- **File:** `tensornet/core/profiling.py`
+- **File:** `ontic/core/profiling.py`
 - **Line:** 120
 - **Pattern:**
   ```python
@@ -449,7 +449,7 @@
 ## 3.1 Critical Path (Must Vectorize)
 
 ### FINDING L-001: Bridge Writer Gradient Generation
-- **File:** `tensornet/sovereign/bridge_writer.py`
+- **File:** `ontic/sovereign/bridge_writer.py`
 - **Lines:** 244-245
 - **Pattern:**
   ```python
@@ -472,7 +472,7 @@
 ---
 
 ### FINDING L-002: Morton Encoding Loop
-- **File:** `tensornet/sovereign/qtt_slice_extractor.py`
+- **File:** `ontic/sovereign/qtt_slice_extractor.py`
 - **Lines:** 98-103
 - **Pattern:**
   ```python
@@ -500,7 +500,7 @@
 ---
 
 ### FINDING L-003: Morton Decoding Loop
-- **File:** `tensornet/sovereign/qtt_slice_extractor.py`
+- **File:** `ontic/sovereign/qtt_slice_extractor.py`
 - **Lines:** 130-134
 - **Pattern:**
   ```python
@@ -516,7 +516,7 @@
 ---
 
 ### FINDING L-004: GLSL Bridge Morton Loop
-- **File:** `tensornet/quantum/qtt_glsl_bridge.py`
+- **File:** `ontic/quantum/qtt_glsl_bridge.py`
 - **Lines:** 174-175
 - **Pattern:**
   ```python
@@ -530,7 +530,7 @@
 ---
 
 ### FINDING L-005: GLSL Bridge Core Loop
-- **File:** `tensornet/quantum/qtt_glsl_bridge.py`
+- **File:** `ontic/quantum/qtt_glsl_bridge.py`
 - **Line:** 192
 - **Pattern:**
   ```python
@@ -544,7 +544,7 @@
 ## 3.2 Physics/Simulation (Inherently Sequential)
 
 ### FINDING L-006: Newton Iteration
-- **File:** `tensornet/cfd/stabilized_refine.py`
+- **File:** `ontic/cfd/stabilized_refine.py`
 - **Line:** 309
 - **Pattern:**
   ```python
@@ -556,7 +556,7 @@
 ---
 
 ### FINDING L-007: Fast Euler Time Stepping
-- **File:** `tensornet/cfd/fast_euler_2d.py`
+- **File:** `ontic/cfd/fast_euler_2d.py`
 - **Line:** 246
 - **Pattern:**
   ```python
@@ -568,7 +568,7 @@
 ---
 
 ### FINDING L-008: Real Gas Iteration
-- **File:** `tensornet/cfd/real_gas.py`
+- **File:** `ontic/cfd/real_gas.py`
 - **Lines:** 349, 409
 - **Pattern:**
   ```python
@@ -580,7 +580,7 @@
 ---
 
 ### FINDING L-009: Implicit Solver Newton
-- **File:** `tensornet/cfd/implicit.py`
+- **File:** `ontic/cfd/implicit.py`
 - **Lines:** 89, 122, 173, 273, 319
 - **Pattern:**
   ```python
@@ -595,7 +595,7 @@
 ---
 
 ### FINDING L-010: Adjoint Optimization
-- **File:** `tensornet/cfd/adjoint.py`
+- **File:** `ontic/cfd/adjoint.py`
 - **Line:** 501
 - **Pattern:**
   ```python
@@ -609,7 +609,7 @@
 ## 3.3 Tensor Network Operations (Potentially Vectorizable)
 
 ### FINDING L-011: WENO Shift Accumulation
-- **File:** `tensornet/cfd/weno_native_tt.py`
+- **File:** `ontic/cfd/weno_native_tt.py`
 - **Line:** 94
 - **Pattern:**
   ```python
@@ -621,7 +621,7 @@
 ---
 
 ### FINDING L-012: WENO Core Addition
-- **File:** `tensornet/cfd/weno_native_tt.py`
+- **File:** `ontic/cfd/weno_native_tt.py`
 - **Line:** 122
 - **Pattern:**
   ```python
@@ -633,7 +633,7 @@
 ---
 
 ### FINDING L-013: WENO Truncation Sweep
-- **File:** `tensornet/cfd/weno_native_tt.py`
+- **File:** `ontic/cfd/weno_native_tt.py`
 - **Lines:** 153, 246, 717, 729
 - **Pattern:**
   ```python
@@ -648,7 +648,7 @@
 ---
 
 ### FINDING L-014: WENO Stencil Application
-- **File:** `tensornet/cfd/weno_native_tt.py`
+- **File:** `ontic/cfd/weno_native_tt.py`
 - **Line:** 218
 - **Pattern:**
   ```python
@@ -662,7 +662,7 @@
 ## 3.4 Stabilized Refine (Optimization)
 
 ### FINDING L-015: QTT Filter Component Loop
-- **File:** `tensornet/cfd/stabilized_refine.py`
+- **File:** `ontic/cfd/stabilized_refine.py`
 - **Lines:** 116-117
 - **Pattern:**
   ```python
@@ -676,7 +676,7 @@
 ---
 
 ### FINDING L-016: Symmetry Edge Damping
-- **File:** `tensornet/cfd/stabilized_refine.py`
+- **File:** `ontic/cfd/stabilized_refine.py`
 - **Line:** 159
 - **Pattern:**
   ```python
@@ -688,7 +688,7 @@
 ---
 
 ### FINDING L-017: Line Search
-- **File:** `tensornet/cfd/stabilized_refine.py`
+- **File:** `ontic/cfd/stabilized_refine.py`
 - **Lines:** 372, 397, 411
 - **Pattern:**
   ```python
@@ -704,7 +704,7 @@
 ## 3.5 Rendering/Visualization
 
 ### FINDING L-018: Implicit Renderer Power Iteration
-- **File:** `tensornet/sovereign/implicit_qtt_renderer.py`
+- **File:** `ontic/sovereign/implicit_qtt_renderer.py`
 - **Line:** 179
 - **Pattern:**
   ```python
@@ -716,7 +716,7 @@
 ---
 
 ### FINDING L-019: Implicit Renderer Benchmark
-- **File:** `tensornet/sovereign/implicit_qtt_renderer.py`
+- **File:** `ontic/sovereign/implicit_qtt_renderer.py`
 - **Lines:** 349, 355
 - **Pattern:**
   ```python
@@ -729,7 +729,7 @@
 ---
 
 ### FINDING L-020: QTT Slice Extractor Core Contraction
-- **File:** `tensornet/sovereign/qtt_slice_extractor.py`
+- **File:** `ontic/sovereign/qtt_slice_extractor.py`
 - **Lines:** 163, 414
 - **Pattern:**
   ```python
@@ -744,7 +744,7 @@
 ## 3.6 Gateway/Photonics
 
 ### FINDING L-021: Photonic Discipline RGB Loop
-- **File:** `tensornet/gateway/photonic_discipline.py`
+- **File:** `ontic/gateway/photonic_discipline.py`
 - **Line:** 147
 - **Pattern:**
   ```python
@@ -758,7 +758,7 @@
 ## 3.7 Training/Callbacks
 
 ### FINDING L-022: Trainer Gradient Steps
-- **File:** `tensornet/hyperenv/trainer.py`
+- **File:** `ontic/hyperenv/trainer.py`
 - **Lines:** 316, 335
 - **Pattern:**
   ```python
@@ -771,7 +771,7 @@
 ---
 
 ### FINDING L-023: Callback Dispatch
-- **File:** `tensornet/hyperenv/trainer.py`
+- **File:** `ontic/hyperenv/trainer.py`
 - **Lines:** 375, 393, 417, 421, 425, 435
 - **Pattern:**
   ```python
@@ -783,7 +783,7 @@
 ---
 
 ### FINDING L-024: Callback Manager
-- **File:** `tensornet/hyperenv/callbacks.py`
+- **File:** `ontic/hyperenv/callbacks.py`
 - **Lines:** 107, 111, 115, 126, 135, 139, 281
 - **Pattern:**
   ```python

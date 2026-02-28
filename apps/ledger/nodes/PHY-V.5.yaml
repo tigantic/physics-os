@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Conduction, convection, radiation"
 
 source_files:
-  - "tensornet/heat_transfer/radiation.py"
+  - "ontic/heat_transfer/radiation.py"
 
 tests:
   smoke:

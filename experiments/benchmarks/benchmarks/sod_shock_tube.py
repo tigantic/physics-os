@@ -27,7 +27,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import matplotlib.pyplot as plt
 import torch
 
-from tensornet.cfd import Euler1D, exact_riemann, sod_shock_tube_ic
+from ontic.cfd import Euler1D, exact_riemann, sod_shock_tube_ic
 
 
 def run_sod_benchmark(

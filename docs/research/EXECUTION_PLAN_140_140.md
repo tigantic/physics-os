@@ -20,7 +20,7 @@
 | 2+3 | 40 new (high-value + completeness) | ~38,000 | 12,777 | 51 | `b8944b23` | ✅ |
 | **Total** | **140/140** | **~85,600** | **49,355** | **152** | — | **✅** |
 
-Post-instantiation totals: ~227,000 LOC, 724+ files across `tensornet/` alone.
+Post-instantiation totals: ~227,000 LOC, 724+ files across `ontic/` alone.
 
 ---
 
@@ -274,7 +274,7 @@ Every new solver module **must** include:
 
 ### Code Structure
 ```
-tensornet/<domain>/<solver>.py    # or crates/<domain>/src/
+ontic/<domain>/<solver>.py    # or crates/<domain>/src/
 ├── Physics equations (LaTeX in docstrings)
 ├── QTT-native implementation (MPS/MPO format where applicable)
 ├── Reference parameters (physical constants, standard benchmarks)
@@ -301,7 +301,7 @@ tensornet/<domain>/<solver>.py    # or crates/<domain>/src/
 
 ### Naming Convention
 ```
-tensornet/<category>/          # Python domain modules
+ontic/<category>/          # Python domain modules
 crates/<category>-qtt/         # Rust QTT-native crates
 FRONTIER/<XX>_<NAME>/          # Frontier research projects
 ```

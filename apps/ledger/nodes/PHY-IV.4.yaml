@@ -13,7 +13,7 @@ state: "V0.2"
 description: "NLSE split-step, HHG interfaces"
 
 source_files:
-  - "tensornet/optics/ultrafast_optics.py"
+  - "ontic/optics/ultrafast_optics.py"
 
 tests:
   smoke:

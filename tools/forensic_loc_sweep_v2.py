@@ -102,8 +102,8 @@ def get_module_path(filepath, root):
     if len(parts) == 1:
         return '_root'
     top = parts[0]
-    if top == 'tensornet' and len(parts) > 2:
-        return f"tensornet/{parts[1]}"
+    if top == 'ontic' and len(parts) > 2:
+        return f"ontic/{parts[1]}"
     return top
 
 
@@ -266,7 +266,7 @@ def main():
     
     tn_modules = {}
     for mod, langs in module_stats.items():
-        if not mod.startswith('tensornet/'):
+        if not mod.startswith('ontic/'):
             continue
         submod = mod.split('/', 1)[1]
         all_total = sum(s['total'] for s in langs.values())
@@ -323,7 +323,7 @@ def main():
     print(f"  Vendored lines excluded:     {vendored_lines:>10,}")
     print(f"  Data/binary files skipped:   {skipped_ext:>10,}")
     print(f"  Other non-source skipped:    {skipped_binary:>10,}")
-    print(f"  tensornet/ modules:          {len(tn_modules):>10}")
+    print(f"  ontic/ modules:          {len(tn_modules):>10}")
     print(f"  Languages detected:          {len(lang_stats):>10}")
 
     # Per-language summary

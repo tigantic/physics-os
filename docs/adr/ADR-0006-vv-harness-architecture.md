@@ -24,7 +24,7 @@ Phase 2's exit gate states:
 
 ## Decision
 
-We introduce a `tensornet.platform.vv` subpackage with six complementary modules:
+We introduce a `ontic.platform.vv` subpackage with six complementary modules:
 
 | Module         | Responsibility                                                    |
 |----------------|-------------------------------------------------------------------|
@@ -60,7 +60,7 @@ We introduce a `tensornet.platform.vv` subpackage with six complementary modules
 ### Module Architecture
 
 ```
-tensornet/platform/vv/
+ontic/platform/vv/
 ├── __init__.py        # Package exports
 ├── mms.py             # ManufacturedSolution, MMSProblem, mms_convergence_study
 ├── convergence.py     # RefinementStudy, grid/timestep_refinement_study

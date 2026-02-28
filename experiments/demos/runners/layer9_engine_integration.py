@@ -241,7 +241,7 @@ class MockBridgeServer:
         # Try to create real field
         field = None
         try:
-            from tensornet.engine.substrate import Field
+            from ontic.engine.substrate import Field
             import math
             bits = max(
                 math.ceil(math.log2(max(size_x, 2))),

@@ -19,7 +19,7 @@ The platform's correctness model depends on deterministic, bit-exact execution a
 
 **HyperTensor-VM is a Python monolith with Rust acceleration via PyO3 and shared-memory IPC.** Specifically:
 
-1. `tensornet/` and `hypertensor/` are the Python package roots (108 and ~30 modules respectively).
+1. `ontic/` and `physics_os/` are the Python package roots (108 and ~30 modules respectively).
 2. `crates/` contains 15 Rust workspace members providing core compute, bridge, and ZK capabilities.
 3. `hyper_bridge` exposes Rust functions to Python via PyO3 (`#[pyfunction]`, `#[pyclass]`).
 4. High-throughput data transfer uses `mmap`-backed shared memory (`hyper_core` ↔ Python via `memmap2`).

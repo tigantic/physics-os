@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Resistive, Hall MHD"
 
 source_files:
-  - "tensornet/plasma/extended_mhd.py"
+  - "ontic/plasma/extended_mhd.py"
 
 tests:
   smoke:

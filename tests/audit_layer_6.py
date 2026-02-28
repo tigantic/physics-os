@@ -23,7 +23,7 @@ def test_sod_shock_tube():
     """Inline test of Sod shock tube."""
     import torch
 
-    from tensornet.cfd import Euler1D, exact_riemann, sod_shock_tube_ic
+    from ontic.cfd import Euler1D, exact_riemann, sod_shock_tube_ic
 
     N = 200
     solver = Euler1D(N=N, x_min=0.0, x_max=1.0, gamma=1.4, cfl=0.5)

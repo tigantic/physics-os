@@ -138,7 +138,7 @@ The ledger does not currently exist. Bootstrap steps:
 
 1. Create `apps/ledger/` directory with `schema.yaml` defining the canonical node schema above.
 2. Auto-generate 140 stub `capability.yaml` files (one per taxonomy node) from the taxonomy in `docs/research/computational_physics_taxonomy.md` — all initially set to `state: V0.0`.
-3. Walk existing `tensornet/` subdirectories and `tests/` to upgrade nodes that have runnable code to `state: V0.1` and nodes with passing regression tests to `state: V0.2`.
+3. Walk existing `ontic/` subdirectories and `tests/` to upgrade nodes that have runnable code to `state: V0.1` and nodes with passing regression tests to `state: V0.2`.
 4. Generate `apps/ledger/index.yaml` aggregating all node states.
 5. Wire a CI job that validates every `capability.yaml` against the schema and regenerates the index on every merge to `main`.
 
@@ -335,7 +335,7 @@ Every "Accelerated" solver must provide:
 
 A meaningful subset of PDE/kinetic/quantum cases reach V0.6 Accelerated with published, repeatable metrics.
 
-> **✅ COMPLETE**: 4 anchor-domain QTT-accelerated solvers delivered (Burgers, Maxwell, AdvDiff, Vlasov-Poisson). QTT bridge layer (`tensornet/platform/qtt.py`), TCI engine (`tensornet/platform/tci.py`), acceleration policy (`tensornet/platform/acceleration.py`), and QTT solver wrapper (`tensornet/platform/qtt_solver.py`) all operational. 28 tests passing. ADR-0009 documents decisions. See [COVERAGE_DASHBOARD.md](docs/COVERAGE_DASHBOARD.md) for V0.6 node list.
+> **✅ COMPLETE**: 4 anchor-domain QTT-accelerated solvers delivered (Burgers, Maxwell, AdvDiff, Vlasov-Poisson). QTT bridge layer (`ontic/platform/qtt.py`), TCI engine (`ontic/platform/tci.py`), acceleration policy (`ontic/platform/acceleration.py`), and QTT solver wrapper (`ontic/platform/qtt_solver.py`) all operational. 28 tests passing. ADR-0009 documents decisions. See [COVERAGE_DASHBOARD.md](docs/COVERAGE_DASHBOARD.md) for V0.6 node list.
 
 ---
 
@@ -358,7 +358,7 @@ This is where the platform becomes a "physics + inference engine," not just solv
 
 End-to-end workflows (simulate → infer → optimize) reproduce known reference studies on curated problems.
 
-> **✅ COMPLETE**: Coupling orchestrator (monolithic + Gauss-Seidel/Jacobi partitioned) in `tensornet/platform/coupled.py`. Discrete adjoint with finite-difference fallback in `tensornet/platform/adjoint.py`. Inverse problem toolkit (Tikhonov, TV, GD, L-BFGS, Bayesian Laplace) in `tensornet/platform/inverse.py`. UQ toolkit (MC, LHS, PCE) in `tensornet/platform/uq.py`. Optimization toolkit (augmented-Lagrangian, SIMP topology) in `tensornet/platform/optimization.py`. Lineage DAG in `tensornet/platform/lineage.py`. 27 tests passing. ADR-0010 documents decisions.
+> **✅ COMPLETE**: Coupling orchestrator (monolithic + Gauss-Seidel/Jacobi partitioned) in `ontic/platform/coupled.py`. Discrete adjoint with finite-difference fallback in `ontic/platform/adjoint.py`. Inverse problem toolkit (Tikhonov, TV, GD, L-BFGS, Bayesian Laplace) in `ontic/platform/inverse.py`. UQ toolkit (MC, LHS, PCE) in `ontic/platform/uq.py`. Optimization toolkit (augmented-Lagrangian, SIMP topology) in `ontic/platform/optimization.py`. Lineage DAG in `ontic/platform/lineage.py`. 27 tests passing. ADR-0010 documents decisions.
 
 ---
 
@@ -379,7 +379,7 @@ End-to-end workflows (simulate → infer → optimize) reproduce known reference
 
 External teams can build on it without internal support, and upgrade versions without breaking workflows.
 
-> **✅ COMPLETE**: SDK surface (`tensornet/sdk/`) with fluent `WorkflowBuilder` DSL and curated re-exports. Recipe book with 8 built-in per-domain recipes. Export layer (VTU, XDMF+HDF5, CSV, JSON) in `tensornet/platform/export.py`. Mesh import (GMSH v2/v4/raw) in `tensornet/platform/mesh_import.py`. Post-processing (probe, slice, integrate, FFT, gradient, histogram, stats) in `tensornet/platform/postprocess.py`. Matplotlib visualization (1D/2D fields, convergence, spectrum) in `tensornet/platform/visualize.py`. SemVer deprecation policy with `@deprecated`/`@since` decorators and CI-enforceable version gate in `tensornet/platform/deprecation.py`. Security posture (SBOM, dependency audit, license audit) in `tensornet/platform/security.py`. CI hardening pipeline (`.github/workflows/hardening.yml`). Platform version 3.0.0. 55 new tests, 295 total passing (1 skipped). Platform Substrate: 33 files, 12,618 LOC. SDK: 3 files, 1,072 LOC. PWA Engine: 4 files, 3,772 LOC. ADR-0011 documents decisions. Polish pass: `c0a73ba2`.
+> **✅ COMPLETE**: SDK surface (`ontic/sdk/`) with fluent `WorkflowBuilder` DSL and curated re-exports. Recipe book with 8 built-in per-domain recipes. Export layer (VTU, XDMF+HDF5, CSV, JSON) in `ontic/platform/export.py`. Mesh import (GMSH v2/v4/raw) in `ontic/platform/mesh_import.py`. Post-processing (probe, slice, integrate, FFT, gradient, histogram, stats) in `ontic/platform/postprocess.py`. Matplotlib visualization (1D/2D fields, convergence, spectrum) in `ontic/platform/visualize.py`. SemVer deprecation policy with `@deprecated`/`@since` decorators and CI-enforceable version gate in `ontic/platform/deprecation.py`. Security posture (SBOM, dependency audit, license audit) in `ontic/platform/security.py`. CI hardening pipeline (`.github/workflows/hardening.yml`). Platform version 3.0.0. 55 new tests, 295 total passing (1 skipped). Platform Substrate: 33 files, 12,618 LOC. SDK: 3 files, 1,072 LOC. PWA Engine: 4 files, 3,772 LOC. ADR-0011 documents decisions. Polish pass: `c0a73ba2`.
 
 ---
 

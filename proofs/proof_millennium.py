@@ -73,19 +73,19 @@ from typing import Any, Dict, List, Optional
 import numpy as np
 import torch
 
-from tensornet.cfd.adjoint_blowup import (AdjointOptimizer, OptimizationConfig,
+from ontic.cfd.adjoint_blowup import (AdjointOptimizer, OptimizationConfig,
                                           OptimizationResult,
                                           find_blowup_candidate)
-from tensornet.cfd.kantorovich import (KantorovichBounds,
+from ontic.cfd.kantorovich import (KantorovichBounds,
                                        NewtonKantorovichVerifier,
                                        VerificationStatus,
                                        verify_blowup_candidate)
-from tensornet.cfd.self_similar import (RescaledNSEquations,
+from ontic.cfd.self_similar import (RescaledNSEquations,
                                         SelfSimilarProfile, SelfSimilarScaling,
                                         create_candidate_profile,
                                         verify_self_similar_transform)
 # CAP framework imports
-from tensornet.numerics.interval import (Interval, IntervalTensor,
+from ontic.numerics.interval import (Interval, IntervalTensor,
                                          validate_interval_arithmetic)
 
 

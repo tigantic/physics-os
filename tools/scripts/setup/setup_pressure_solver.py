@@ -23,7 +23,7 @@ setup(
     ext_modules=[
         CUDAExtension(
             name="pressure_solver_cuda",
-            sources=["tensornet/gpu/csrc/pressure_solver.cu"],
+            sources=["ontic/gpu/csrc/pressure_solver.cu"],
             include_dirs=[
                 os.path.join(cuda_home, "include"),
             ],

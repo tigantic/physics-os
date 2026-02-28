@@ -13,7 +13,7 @@ state: "V0.2"
 description: "KPM, transfer matrix"
 
 source_files:
-  - "tensornet/condensed_matter/disordered.py"
+  - "ontic/condensed_matter/disordered.py"
 
 tests:
   smoke:

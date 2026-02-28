@@ -12,9 +12,9 @@ import torch
 import numpy as np
 import time
 
-from tensornet.cfd.qtt_3d_state import QTT3DState
-from tensornet.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo
-from tensornet.cfd.pure_qtt_ops import truncate_qtt, qtt_hadamard
+from ontic.cfd.qtt_3d_state import QTT3DState
+from ontic.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo
+from ontic.cfd.pure_qtt_ops import truncate_qtt, qtt_hadamard
 
 
 # ── QTT 3D helper ops (same as civic_aero_qtt.py) ──────────────────────
@@ -243,7 +243,7 @@ def main():
     du_dx_qtt = QTT3DState.from_dense(du_dx_qtt_dense, max_rank=max_rank)
     print(f"  du/dx QTT rank: {du_dx_qtt.max_rank}")
     
-    from tensornet.cfd.pure_qtt_ops import qtt_hadamard
+    from ontic.cfd.pure_qtt_ops import qtt_hadamard
     
     # Hadamard: u * du/dx
     had_cores = qtt_hadamard(u_qtt.cores, du_dx_qtt.cores)

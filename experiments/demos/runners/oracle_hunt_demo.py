@@ -11,7 +11,7 @@ from pathlib import Path
 # Add parent to path for development
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from tensornet.infra.oracle import ORACLE
+from ontic.infra.oracle import ORACLE
 
 
 # Sample vulnerable vault contract

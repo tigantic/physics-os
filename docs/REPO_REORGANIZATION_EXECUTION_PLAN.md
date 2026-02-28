@@ -23,7 +23,7 @@
 | Zip archives in VCS | 3 | 0 | 🟢 Easy |
 | `nohup.out`, `.coverage`, stale logs | 3 | 0 | 🟢 Easy |
 | Loose `test_*.py` at root | 7 | 0 (→ `tests/` or `experiments/`) | 🟢 Easy |
-| `tensornet/` flat submodules | 108 | ~25 (grouped by domain tier) | ✅ Phase 5 |
+| `ontic/` flat submodules | 108 | ~25 (grouped by domain tier) | ✅ Phase 5 |
 
 ---
 
@@ -39,11 +39,11 @@ HyperTensor-VM-main/
 ├── deploy/                     # Containerfile, docker configs
 ├── docs/                       # ALL documentation except root-required files
 ├── experiments/                # Research experiments, benchmarks, one-off scripts
-├── hypertensor/                # Runtime Access Layer (Python package)
+├── physics_os/                # Runtime Access Layer (Python package)
 ├── integrations/               # Game engine + IDE plugins
 ├── products/                   # Shipped verticals
 ├── proofs/                     # ALL proof artifacts
-├── tensornet/                  # Physics engine (Python package)
+├── ontic/                  # Physics engine (Python package)
 ├── tests/                      # ALL test files
 ├── tools/                      # Developer scripts, audit tools
 │
@@ -83,7 +83,7 @@ HyperTensor-VM-main/
 | `run_ahmed_body.sh:Zone.Identifier` | Windows WSL artifact |
 | `QTeneT.zip` | Archive of checked-in source |
 | `docs.zip` | Archive of checked-in source |
-| `tensornet.zip` | Archive of checked-in source |
+| `ontic.zip` | Archive of checked-in source |
 | `PLATFORM_SPECIFICATION.md.bak` | Backup from spec rewrite |
 | `SPEC_REVAMP_EXECUTION_PLAN.md` | Superseded by this doc + spec |
 
@@ -613,7 +613,7 @@ Comprehensive rules for all artifact types.
 
 ---
 
-## Phase 5 — `tensornet/` Domain Decomposition (Risk: MEDIUM — Future)
+## Phase 5 — `ontic/` Domain Decomposition (Risk: MEDIUM — Future)
 
 **Estimated time**: 2–4 weeks  
 **Code changes**: Import rewrites + compatibility shims  
@@ -668,10 +668,10 @@ Group 107 flat modules into 27 canonical packages via 3-tier decomposition:
 | 5b | proof_engine → proofs/proof_engine | ✅ | 2026-02-26 | Renamed dir, 36+ doc refs updated, 60+ imports preserved |
 | 5b | Full stale path sweep (300+ refs) | ✅ | 2026-02-26 | scripts/, benchmarks/, sdk/, deployment/, evidence/, paper/ |
 | 5b | Test validation | ✅ | 2026-02-26 | 428 passed, 1 pre-existing fail (Euler1D missing export) |
-| 5c | tensornet/cfd/__init__.py re-exports | ✅ | 2026-02-27 | 18 symbols from 8 submodules; fixes Euler1D test failure |
+| 5c | ontic/cfd/__init__.py re-exports | ✅ | 2026-02-27 | 18 symbols from 8 submodules; fixes Euler1D test failure |
 | 5c | bond_predictor + truncation_policy syntax fix | ✅ | 2026-02-27 | Pre-existing IndentationError: missing constructor calls in load() |
 | 5c | Version assertion fix | ✅ | 2026-02-27 | test_integration.py: 0.1.0 → 40.0.0 |
-| 5 | tensornet/ domain decomposition | ✅ | 2026-02-27 | 89 modules → 13 groups, 1,398 import rewrites, 89 backward-compat shims |
+| 5 | ontic/ domain decomposition | ✅ | 2026-02-27 | 89 modules → 13 groups, 1,398 import rewrites, 89 backward-compat shims |
 | 5 | Post-migration test validation | ✅ | 2026-02-27 | 655 passed, 2 pre-existing fails (ai_scientist missing, combustion_dns export) |
 
 ---
@@ -683,7 +683,7 @@ Group 107 flat modules into 27 canonical packages via 3-tier decomposition:
 - [x] `python -c "import hypertensor"` succeeds
 - [x] `cargo check --workspace` succeeds (18 packages resolve; pre-existing `fluidelite-zk` compile error unrelated to moves)
 - [x] `pytest` passes → **655 passed, 2 pre-existing fails (ai_scientist pkg missing, combustion_dns export), 15 skipped**
-- [x] `tensornet/` ≤ 30 real dirs → **27 real directories** (107 → 27, 75% reduction)
+- [x] `ontic/` ≤ 30 real dirs → **27 real directories** (107 → 27, 75% reduction)
 - [x] Zero `Zone.Identifier` files
 - [x] Zero `.zip` files in VCS
 - [x] All governing docs accessible via `docs/` hierarchy
@@ -708,9 +708,9 @@ Group 107 flat modules into 27 canonical packages via 3-tier decomposition:
 | 5a | ✅ Complete | 34 | Deep cross-ref sweep: 207+ stale refs fixed in 34 docs, CODEOWNERS rewrite, Containerfile fix, 3 test path fixes, 112 tests pass |
 | 5b | ✅ Complete | 34 | Full path sweep: 300+ stale refs fixed across scripts/benchmarks/sdk/deployment/evidence/paper, Python imports fixed, proof_engine renamed, 428 tests pass |
 | 5c | ✅ Complete | 34 | cfd __init__.py exports (18 symbols), bond_predictor/truncation_policy syntax fixes, version assertion fix |
-| 5 | ✅ Complete | 34 | tensornet/ domain decomposition: 107 → 27 real dirs, 89 shim dirs, 1,398 import rewrites, 655 tests pass |
+| 5 | ✅ Complete | 34 | ontic/ domain decomposition: 107 → 27 real dirs, 89 shim dirs, 1,398 import rewrites, 655 tests pass |
 
-**Total reduction**: 265 → 34 root items (87% reduction), tensornet/ 107 → 27 real dirs (75% reduction)
+**Total reduction**: 265 → 34 root items (87% reduction), ontic/ 107 → 27 real dirs (75% reduction)
 
 ---
 
@@ -730,5 +730,5 @@ Group 107 flat modules into 27 canonical packages via 3-tier decomposition:
 *Phase 5a (deep cross-reference sweep) completed: February 26, 2026*  
 *Phase 5b (full path sweep + Python import fixes) completed: February 26, 2026*  
 *Phase 5c (cfd exports, syntax fixes) completed: February 27, 2026*  
-*Phase 5 (tensornet/ domain decomposition) completed: February 27, 2026*  
+*Phase 5 (ontic/ domain decomposition) completed: February 27, 2026*  
 *All phases complete.*

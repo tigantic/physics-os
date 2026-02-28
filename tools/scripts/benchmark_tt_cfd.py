@@ -41,7 +41,7 @@ def get_hardware_info() -> dict:
 
 def benchmark_standard_euler_1d(n_cells: int, n_steps: int, dt: float) -> dict:
     """Benchmark standard Euler 1D solver."""
-    from tensornet.cfd.euler_1d import Euler1D, EulerState
+    from ontic.cfd.euler_1d import Euler1D, EulerState
 
     # Initialize Sod shock tube
     solver = Euler1D(N=n_cells, x_min=0.0, x_max=1.0, gamma=1.4)
@@ -84,7 +84,7 @@ def benchmark_standard_euler_1d(n_cells: int, n_steps: int, dt: float) -> dict:
 
 def benchmark_tt_euler_1d(n_cells: int, n_steps: int, dt: float, bond_dim: int) -> dict:
     """Benchmark TT-Euler 1D solver (Phase 21)."""
-    from tensornet.cfd.tt_cfd import TT_Euler1D
+    from ontic.cfd.tt_cfd import TT_Euler1D
 
     # Initialize TT solver - uses N, L, gamma, chi_max
     solver = TT_Euler1D(N=n_cells, L=1.0, gamma=1.4, chi_max=bond_dim)
@@ -125,7 +125,7 @@ def benchmark_tt_euler_1d(n_cells: int, n_steps: int, dt: float, bond_dim: int) 
 
 def benchmark_weno_reconstruction(n_cells: int, n_trials: int = 100) -> dict:
     """Benchmark WENO5-JS vs WENO5-Z vs TENO5 (Phase 21)."""
-    from tensornet.cfd.weno import teno5, weno5_js, weno5_z
+    from ontic.cfd.weno import teno5, weno5_js, weno5_z
 
     # Create test field with shock
     x = torch.linspace(0, 1, n_cells)
@@ -159,7 +159,7 @@ def benchmark_weno_reconstruction(n_cells: int, n_trials: int = 100) -> dict:
 
 def benchmark_conservation_check(n_cells: int = 128, n_steps: int = 100) -> dict:
     """Verify conservation properties of TT-Euler solver."""
-    from tensornet.cfd.tt_cfd import TT_Euler1D
+    from ontic.cfd.tt_cfd import TT_Euler1D
 
     solver = TT_Euler1D(N=n_cells, L=1.0, gamma=1.4, chi_max=32)
 

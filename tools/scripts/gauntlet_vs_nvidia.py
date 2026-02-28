@@ -44,12 +44,12 @@ from scripts.ahmed_body_ib_solver import (
     ahmed_body_sdf,
     create_body_mask,
 )
-from tensornet.cfd.kolmogorov_spectrum import (
+from ontic.cfd.kolmogorov_spectrum import (
     compute_energy_spectrum_3d,
     analyze_spectrum,
     SpectrumResult,
 )
-from tensornet.cfd.ns3d_native import _batched_qtt_eval
+from ontic.cfd.ns3d_native import _batched_qtt_eval
 from scripts.trustless_physics import (
     TrustlessPhysicsProver,
     TrustlessCertificate,

@@ -13,10 +13,10 @@ state: "V0.4"
 description: "MPS/MPO, PEPS, MERA, iDMRG"
 
 source_files:
-  - "tensornet/algorithms/dmrg.py"
-  - "tensornet/algorithms/tebd.py"
-  - "tensornet/algorithms/tdvp.py"
-  - "tensornet/algorithms/lanczos.py"
+  - "ontic/algorithms/dmrg.py"
+  - "ontic/algorithms/tebd.py"
+  - "ontic/algorithms/tdvp.py"
+  - "ontic/algorithms/lanczos.py"
 
 tests:
   smoke:

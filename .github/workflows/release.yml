@@ -65,10 +65,10 @@ jobs:
           python -m pip install -e ".[dev]"
 
       - name: Lint
-        run: python -m ruff check tensornet tests
+        run: python -m ruff check ontic tests
 
       - name: Type check
-        run: python -m mypy tensornet --ignore-missing-imports
+        run: python -m mypy ontic --ignore-missing-imports
 
       - name: Unit tests
         run: python -m pytest tests/ -x -m "not integration and not slow" --timeout=120
@@ -165,7 +165,7 @@ jobs:
             echo ""
             echo "### Install"
             echo '```bash'
-            echo "pip install tensornet==${VERSION}"
+            echo "pip install ontic-engine==${VERSION}"
             echo '```'
             echo ""
             echo "### Checksums"

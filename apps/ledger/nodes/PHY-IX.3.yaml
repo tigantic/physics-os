@@ -13,7 +13,7 @@ state: "V0.2"
 description: "LLG, micromagnetics"
 
 source_files:
-  - "tensornet/condensed_matter/classical_magnetism.py"
+  - "ontic/condensed_matter/classical_magnetism.py"
 
 tests:
   smoke:

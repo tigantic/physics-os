@@ -32,7 +32,7 @@ sys.path.insert(
     "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main",
 )
 
-from tensornet.em.qtt_3d import (
+from ontic.em.qtt_3d import (
     array_3d_to_tt,
     reconstruct_3d,
     stretched_laplacian_mpo_3d,
@@ -47,7 +47,7 @@ from tensornet.em.qtt_3d import (
     spherical_mask,
     spherical_shell_mask,
 )
-from tensornet.em.chu_limit import (
+from ontic.em.chu_limit import (
     C0,
     chu_limit_q,
     thal_limit_q,
@@ -62,8 +62,8 @@ from tensornet.em.chu_limit import (
     objective_minimize_s11,
     objective_target_s11_db,
 )
-from tensornet.em.boundaries import PMLConfig
-from tensornet.engine.vm.operators import identity_mpo
+from ontic.em.boundaries import PMLConfig
+from ontic.engine.vm.operators import identity_mpo
 
 
 def run_tests():
@@ -219,8 +219,8 @@ def run_tests():
           len(I_full) == total_sites)
 
     # Apply to a test vector
-    from tensornet.em.qtt_helmholtz import array_to_tt, reconstruct_1d
-    from tensornet.qtt.sparse_direct import tt_matvec
+    from ontic.em.qtt_helmholtz import array_to_tt, reconstruct_1d
+    from ontic.qtt.sparse_direct import tt_matvec
 
     N3 = N ** 3
     test_vec = rng.standard_normal(N3) + 1j * rng.standard_normal(N3)
@@ -503,7 +503,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 17: Heaviside on 3D density ---")
 
-    from tensornet.em.topology_opt import heaviside_projection, binarisation_metric
+    from ontic.em.topology_opt import heaviside_projection, binarisation_metric
 
     rho_test = rng.uniform(0, 1, 100)
     rho_proj = heaviside_projection(rho_test, beta=16.0)
@@ -596,7 +596,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 21: Monopole seed geometry ---")
 
-    from tensornet.em.chu_limit import PowerSweepResult
+    from ontic.em.chu_limit import PowerSweepResult
 
     cfg_seed = ChuProblemConfig(
         frequency_hz=1e9, ka=0.3, n_bits=3,
@@ -654,7 +654,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 23: compute_input_power ---")
 
-    from tensornet.em.qtt_3d import (
+    from ontic.em.qtt_3d import (
         compute_complex_power,
         compute_input_power,
         compute_reactive_power,
@@ -716,7 +716,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 25: Spherical Hankel functions ---")
 
-    from tensornet.em.qtt_3d import _spherical_hankel_h1, _spherical_hankel_h2
+    from ontic.em.qtt_3d import _spherical_hankel_h1, _spherical_hankel_h2
 
     z_test = 1.5 + 0.1j
     h1_0 = _spherical_hankel_h1(0, z_test)
@@ -745,7 +745,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 26: Legendre polynomials ---")
 
-    from tensornet.em.qtt_3d import _legendre_p
+    from ontic.em.qtt_3d import _legendre_p
 
     check("P_0(x) = 1",
           abs(_legendre_p(0, 0.5) - 1.0) < 1e-12)
@@ -759,7 +759,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 27: solve_and_extract_p_rad ---")
 
-    from tensornet.em.chu_limit import solve_and_extract_p_rad
+    from ontic.em.chu_limit import solve_and_extract_p_rad
 
     cfg_prad = ChuProblemConfig(
         frequency_hz=1e9, ka=0.3, n_bits=3,
@@ -793,7 +793,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 28: P_rad adjoint gradient ---")
 
-    from tensornet.em.chu_limit import compute_adjoint_gradient_p_rad
+    from ontic.em.chu_limit import compute_adjoint_gradient_p_rad
 
     obj_28, grad_28, pin_28, qr_28, res_28 = compute_adjoint_gradient_p_rad(
         geometry=geom_prad,
@@ -820,7 +820,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 29: ChuOptResult defaults ---")
 
-    from tensornet.em.chu_limit import ChuOptResult
+    from ontic.em.chu_limit import ChuOptResult
 
     dummy_result = ChuOptResult(
         density_final=np.array([0.5]),
@@ -839,7 +839,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 30: Conductivity SIMP model ---")
 
-    from tensornet.em.chu_limit import simp_sigma, simp_dsigma_drho
+    from ontic.em.chu_limit import simp_sigma, simp_dsigma_drho
 
     rho_test = np.array([0.0, 0.25, 0.5, 0.75, 1.0])
     sig = simp_sigma(rho_test, sigma_min=0.0, sigma_max=100.0, p=3.0)
@@ -874,8 +874,8 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 31: PML sigma 3D ---")
 
-    from tensornet.em.chu_limit import build_pml_sigma_3d
-    from tensornet.em.boundaries import PMLConfig as _PMLConfig_31
+    from ontic.em.chu_limit import build_pml_sigma_3d
+    from ontic.em.boundaries import PMLConfig as _PMLConfig_31
 
     nb_31 = 5
     N_31 = 2 ** nb_31
@@ -898,7 +898,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 32: MPO Hermitian conjugate ---")
 
-    from tensornet.em.chu_limit import mpo_hermitian_conjugate
+    from ontic.em.chu_limit import mpo_hermitian_conjugate
 
     # Build a simple complex MPO core and check swap + conjugate
     core_a = np.random.randn(2, 4, 4, 3) + 1j * np.random.randn(2, 4, 4, 3)
@@ -941,7 +941,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 34: Augmented Lagrangian volume ---")
 
-    from tensornet.em.chu_limit import augmented_lagrangian_volume
+    from ontic.em.chu_limit import augmented_lagrangian_volume
 
     rho_v = np.full(100, 0.4)
     Jv, dJv, V, g = augmented_lagrangian_volume(rho_v, vol_target=0.3,
@@ -966,7 +966,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 35: PowerObjectiveConfig ---")
 
-    from tensornet.em.chu_limit import PowerObjectiveConfig
+    from ontic.em.chu_limit import PowerObjectiveConfig
 
     poc = PowerObjectiveConfig()
     check("PowerObjectiveConfig alpha_loss default",
@@ -1002,7 +1002,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 37: Forward solve conductivity ---")
 
-    from tensornet.em.chu_limit import solve_forward_conductivity
+    from ontic.em.chu_limit import solve_forward_conductivity
 
     cfg_37 = ChuProblemConfig(n_bits=4, max_rank=16, n_sweeps=5,
                                solver_tol=0.5, sigma_max=50.0, simp_p=2.0)
@@ -1026,7 +1026,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 38: Power metrics ---")
 
-    from tensornet.em.chu_limit import compute_power_metrics, PowerMetrics
+    from ontic.em.chu_limit import compute_power_metrics, PowerMetrics
 
     E_3d_38 = reconstruct_3d(E_cores_37, cfg_37.n_bits)
     pml_38 = cfg_37.pml_config()
@@ -1054,7 +1054,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 39: Exact adjoint gradient ---")
 
-    from tensornet.em.chu_limit import compute_adjoint_gradient_power
+    from ontic.em.chu_limit import compute_adjoint_gradient_power
 
     cfg_39 = ChuProblemConfig(n_bits=4, max_rank=16, n_sweeps=5,
                                solver_tol=0.5, sigma_max=50.0, simp_p=2.0)
@@ -1085,7 +1085,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 40: ChuOptResult power fields ---")
 
-    from tensornet.em.chu_limit import ChuOptResult as _CR40
+    from ontic.em.chu_limit import ChuOptResult as _CR40
 
     result_40 = _CR40(
         density_final=np.array([0.5]),
@@ -1103,7 +1103,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 41: Staged log objective ---")
 
-    from tensornet.em.chu_limit import PowerObjectiveConfig as _POC41
+    from ontic.em.chu_limit import PowerObjectiveConfig as _POC41
 
     poc41 = _POC41(alpha_loss=0.0, vol_target=0.3, use_log_objective=True)
     check("POC use_log_objective default True",
@@ -1213,7 +1213,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 45: Soft coupling constraint ---")
 
-    from tensornet.em.chu_limit import augmented_lagrangian_coupling
+    from ontic.em.chu_limit import augmented_lagrangian_coupling
 
     # 10 design voxels, mask = first 3, threshold = 0.5
     rho_45 = np.array([0.1, 0.2, 0.3, 0.8, 0.9, 0.5, 0.5, 0.5, 0.5, 0.5])
@@ -1261,7 +1261,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 47: make_chu_antenna_schedule ---")
 
-    from tensornet.em.chu_limit import make_chu_antenna_schedule
+    from ontic.em.chu_limit import make_chu_antenna_schedule
 
     for level in ("16", "32", "64", "128"):
         cfg_s, opt_s = make_chu_antenna_schedule(level)
@@ -1371,7 +1371,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 49: ChuValidation scorecard ---")
 
-    from tensornet.em.chu_limit import ChuValidation
+    from ontic.em.chu_limit import ChuValidation
 
     v49 = ChuValidation()
     check("ChuValidation has Q_halfpower",
@@ -1409,7 +1409,7 @@ def run_tests():
     # ==================================================================
     print("\n--- Test 50: compute_poynting_flux_shell ---")
 
-    from tensornet.em.chu_limit import compute_poynting_flux_shell
+    from ontic.em.chu_limit import compute_poynting_flux_shell
 
     # Use a 16³ grid with a synthetic field to verify the function runs
     cfg_pf = ChuProblemConfig(

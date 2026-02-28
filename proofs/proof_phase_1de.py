@@ -29,7 +29,7 @@ def gate_chi_estimation():
     For smooth fields, chi should be small.
     For complex fields, chi should scale with grid.
     """
-    from tensornet.cfd.chi_diagnostic import estimate_required_chi_2d
+    from ontic.cfd.chi_diagnostic import estimate_required_chi_2d
 
     print("\n" + "=" * 60)
     print("Gate 1: chi Estimation Correctness")
@@ -80,8 +80,8 @@ def gate_enstrophy_tracking():
 
     For Taylor-Green: Omega = int|omega|^2 dx
     """
-    from tensornet.cfd.chi_diagnostic import compute_chi_state_2d
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.chi_diagnostic import compute_chi_state_2d
+    from ontic.cfd.ns_2d import NS2DSolver
 
     print("\n" + "=" * 60)
     print("Gate 2: Enstrophy Tracking Accuracy")
@@ -136,7 +136,7 @@ def gate_regularity_assessment():
     - Decaying flow -> 'smooth'
     - Exploding chi -> 'potential_blowup'
     """
-    from tensornet.cfd.chi_diagnostic import (ChiState, ChiTrajectory,
+    from ontic.cfd.chi_diagnostic import (ChiState, ChiTrajectory,
                                               analyze_regularity)
 
     print("\n" + "=" * 60)
@@ -213,10 +213,10 @@ def gate_ns_integration():
     - Assessment is 'smooth'
     - No NaN/Inf values
     """
-    from tensornet.cfd.chi_diagnostic import (ChiTrajectory,
+    from ontic.cfd.chi_diagnostic import (ChiTrajectory,
                                               analyze_regularity,
                                               compute_chi_state_2d)
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.ns_2d import NS2DSolver
 
     print("\n" + "=" * 60)
     print("Gate 4: NS Solver Integration")

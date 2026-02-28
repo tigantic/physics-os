@@ -1,4 +1,4 @@
-# Module `tensornet.integration`
+# Module `ontic.integration`
 
 Integration Module for Project The Physics OS.
 

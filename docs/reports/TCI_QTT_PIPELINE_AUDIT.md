@@ -2,7 +2,7 @@
 
 **Generated**: 2026-01-28  
 **Auditor**: Automated Code Audit  
-**Scope**: tensornet/cfd/{qtt_tci.py, tci_true.py, qtt_eval.py, qtt_triton_kernels.py, pure_qtt_ops.py}
+**Scope**: ontic/cfd/{qtt_tci.py, tci_true.py, qtt_eval.py, qtt_triton_kernels.py, pure_qtt_ops.py}
 
 ---
 
@@ -13,7 +13,7 @@
 | **Python for/while loops** | 75+ | 🔴 CRITICAL |
 | **Dense O(N) allocations** | 15+ | 🔴 CRITICAL |
 | **SVD/rSVD calls** | 65+ across codebase | 🟡 MEDIUM |
-| **dense_to_qtt calls** | 100+ (in tensornet/cfd/) | 🔴 CRITICAL |
+| **dense_to_qtt calls** | 100+ (in ontic/cfd/) | 🔴 CRITICAL |
 | **qtt_to_dense calls** | 20+ | 🔴 CRITICAL |
 | **expand/reshape/broadcast** | 80+ | 🟡 MEDIUM |
 | **Incomplete implementations** | 5 | 🟡 MEDIUM |
@@ -264,7 +264,7 @@ Should use vectorized torch operations.
 
 ---
 
-## DENSE_TO_QTT / QTT_TO_DENSE CALL SITES IN tensornet/cfd/
+## DENSE_TO_QTT / QTT_TO_DENSE CALL SITES IN ontic/cfd/
 
 ### Files Calling dense_to_qtt:
 
@@ -349,7 +349,7 @@ Should use vectorized torch operations.
 
 ### TODO/FIXME Comments
 
-Run `grep -rn "TODO\|FIXME" tensornet/cfd/` for full list.
+Run `grep -rn "TODO\|FIXME" ontic/cfd/` for full list.
 
 ---
 
@@ -370,12 +370,12 @@ Run `grep -rn "TODO\|FIXME" tensornet/cfd/` for full list.
 ## RAW COUNTS
 
 ```
-tensornet/cfd/ Python loops:      75+
-tensornet/cfd/ Dense O(N) allocs: 15+  
-tensornet/cfd/ SVD calls:         65
-tensornet/cfd/ dense_to_qtt:      65+ call sites
-tensornet/cfd/ qtt_to_dense:      15+ call sites
-tensornet/cfd/ reshape/expand:    80+
-tensornet/cfd/ Stubs:             3
-tensornet/cfd/ Incomplete:        5
+ontic/cfd/ Python loops:      75+
+ontic/cfd/ Dense O(N) allocs: 15+  
+ontic/cfd/ SVD calls:         65
+ontic/cfd/ dense_to_qtt:      65+ call sites
+ontic/cfd/ qtt_to_dense:      15+ call sites
+ontic/cfd/ reshape/expand:    80+
+ontic/cfd/ Stubs:             3
+ontic/cfd/ Incomplete:        5
 ```

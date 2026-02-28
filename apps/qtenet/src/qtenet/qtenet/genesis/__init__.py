@@ -30,7 +30,7 @@ Copyright (c) 2026 Tigantic Holdings LLC. All Rights Reserved.
 """
 
 # Re-export all Genesis layers from upstream tensornet
-from tensornet.genesis import (
+from ontic.genesis import (
     # Core Infrastructure
     get_logger,
     configure_logging,
@@ -58,29 +58,29 @@ from tensornet.genesis import (
 )
 
 # Layer 20: Optimal Transport
-from tensornet.genesis import ot
+from ontic.genesis import ot
 
 # Layer 21: Spectral Graph Wavelets
-from tensornet.genesis import sgw
+from ontic.genesis import sgw
 
 # Layer 22: Random Matrix Theory
-from tensornet.genesis import rmt
+from ontic.genesis import rmt
 
 # Layer 23: Tropical Geometry
-from tensornet.genesis import tropical
+from ontic.genesis import tropical
 
 # Layer 24: Kernel Methods (RKHS)
-from tensornet.genesis import rkhs
+from ontic.genesis import rkhs
 
 # Layer 25: Persistent Homology
-from tensornet.genesis import topology
+from ontic.genesis import topology
 
 # Layer 26: Geometric Algebra
-from tensornet.genesis import ga
+from ontic.genesis import ga
 
 
 # Direct symbol exports for convenience
-from tensornet.genesis import (
+from ontic.genesis import (
     # Layer 20: Optimal Transport
     QTTSinkhorn,
     QTTDistribution,

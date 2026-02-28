@@ -33,9 +33,9 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tensornet.cfd.euler_2d import (Euler2D, Euler2DState, oblique_shock_exact,
+from ontic.cfd.euler_2d import (Euler2D, Euler2DState, oblique_shock_exact,
                                     supersonic_wedge_ic)
-from tensornet.cfd.qtt import (QTTCompressionResult, compression_analysis,
+from ontic.cfd.qtt import (QTTCompressionResult, compression_analysis,
                                estimate_area_law_exponent, euler_to_qtt,
                                field_to_qtt, qtt_to_euler, qtt_to_field)
 

@@ -99,7 +99,7 @@ We tried to build 8 layers simultaneously. Result: 8 partial layers, zero valida
 
 | Component | File | Validated By |
 |-----------|------|--------------|
-| QTT State | `tensornet/cfd/pure_qtt_ops.py` | 512³ simulation |
+| QTT State | `ontic/cfd/pure_qtt_ops.py` | 512³ simulation |
 | Dense→QTT | `dense_to_qtt()` | 1024³ IC construction |
 | QTT Addition | `qtt_add()` | Thousands of timesteps |
 | Truncation | `truncate_qtt()` | Rank stayed bounded |
@@ -124,7 +124,7 @@ cores = truncate_qtt(cores, max_rank=64, tol=1e-8)
 
 | Component | File | Validated By |
 |-----------|------|--------------|
-| N-D Shift MPO | `tensornet/cfd/nd_shift_mpo.py` | 512³ Euler to t=10 |
+| N-D Shift MPO | `ontic/cfd/nd_shift_mpo.py` | 512³ Euler to t=10 |
 | Axis-Specific BC | Morton bit-interleaving | Periodic verified all axes |
 | MPO-QTT Matvec | `apply_nd_shift_mpo()` | 4000+ steps stable |
 
@@ -193,16 +193,16 @@ valid = Dilithium2.verify(pk, message, sig)
 
 | Component | File | Validated By |
 |-----------|------|--------------|
-| TileRenderer | `tensornet/hypervisual/renderer.py` | `get_tile()`, `render_view()` |
-| SliceEngine | `tensornet/hypervisual/slicer.py` | XY/XZ/YZ slicing at arbitrary depth |
-| VolumeRenderer | `tensornet/hypervisual/slicer.py` | Ray-marched volume rendering |
-| ColorMaps | `tensornet/hypervisual/colormaps.py` | VIRIDIS, PLASMA, etc. |
-| LODPyramid | `tensornet/hypervisual/renderer.py` | Multi-resolution tile caching |
+| TileRenderer | `ontic/hypervisual/renderer.py` | `get_tile()`, `render_view()` |
+| SliceEngine | `ontic/hypervisual/slicer.py` | XY/XZ/YZ slicing at arbitrary depth |
+| VolumeRenderer | `ontic/hypervisual/slicer.py` | Ray-marched volume rendering |
+| ColorMaps | `ontic/hypervisual/colormaps.py` | VIRIDIS, PLASMA, etc. |
+| LODPyramid | `ontic/hypervisual/renderer.py` | Multi-resolution tile caching |
 
 **API (Validated):**
 ```python
-from tensornet.substrate import Field
-from tensornet.hypervisual import TileRenderer, SliceEngine, VolumeRenderer
+from ontic.substrate import Field
+from ontic.hypervisual import TileRenderer, SliceEngine, VolumeRenderer
 
 # Create field
 field = Field.create(dims=3, bits_per_dim=4, rank=4, init='random')
@@ -237,16 +237,16 @@ result = vol_renderer.render(camera_pos=(2,2,2), look_at=(0.5,0.5,0.5))
 
 | Component | File | Validated By |
 |-----------|------|--------------|
-| Laplacian | `tensornet/fieldops/operators.py` | ∇²(x²+y²+z²) = 6 |
-| Gradient | `tensornet/fieldops/operators.py` | ∇(x²+y²+z²) = (2x,2y,2z) |
-| Divergence | `tensornet/fieldops/operators.py` | ∇·(x,y,z) = 3 |
+| Laplacian | `ontic/fieldops/operators.py` | ∇²(x²+y²+z²) = 6 |
+| Gradient | `ontic/fieldops/operators.py` | ∇(x²+y²+z²) = (2x,2y,2z) |
+| Divergence | `ontic/fieldops/operators.py` | ∇·(x,y,z) = 3 |
 | Diffusion | Explicit Euler integration | Peak smoothing verified |
 | QTT Operators | `Laplacian.apply()` | Rank-bounded output |
 
 **API (Validated):**
 ```python
-from tensornet.fieldops import Laplacian, Grad, Div, Curl, Diffuse
-from tensornet.substrate import Field
+from ontic.fieldops import Laplacian, Grad, Div, Curl, Diffuse
+from ontic.substrate import Field
 
 field = Field.create(dims=3, bits_per_dim=5, rank=32)
 lap = Laplacian(order=2)
@@ -306,7 +306,7 @@ result = lap.apply(field)  # Rank stays bounded
 **Status:** RL agent trained on REAL physics
 
 **What's Validated:**
-- `tensornet/hyperenv/` module (Agent, Trainer, Buffer, Callbacks)
+- `ontic/hyperenv/` module (Agent, Trainer, Buffer, Callbacks)
 - 1D Heat Diffusion control environment (real PDE physics)
 - REINFORCE policy gradient agent trained to completion
 - 78% improvement over random policy baseline
@@ -328,7 +328,7 @@ result = lap.apply(field)  # Rank stays bounded
 **Status:** Parser works, queries execute on real physics
 
 **What's Validated:**
-- `tensornet/intent/` module (71/71 tests pass)
+- `ontic/intent/` module (71/71 tests pass)
 - Natural language parsing (QUERY_VALUE, ACTION_SET, ACTION_OPTIMIZE)
 - Field queries on physics data (temperature, velocity)
 - Constraint solver (bound projection)
@@ -379,7 +379,7 @@ result = lap.apply(field)  # Rank stays bounded
 **Bridge Components:**
 - `integrations/unreal/python_bridge.py` - Full ZMQ bridge
 - `integrations/unity/` - Unity package structure
-- `tensornet/integration/` - Integration module
+- `ontic/integration/` - Integration module
 
 ---
 

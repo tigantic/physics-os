@@ -81,13 +81,13 @@ Files fixed:
 **Resolution:** Converted all tensor defaults to `torch.float64`
 
 Modules fixed:
-- `tensornet/medical/hemo.py`
-- `tensornet/racing/wake.py`
-- `tensornet/defense/ballistics.py`
-- `tensornet/emergency/fire.py`
-- `tensornet/agri/microclimate.py`
-- `tensornet/fusion/tokamak.py`
-- `tensornet/cyber/grid_shock.py`
+- `ontic/medical/hemo.py`
+- `ontic/racing/wake.py`
+- `ontic/defense/ballistics.py`
+- `ontic/emergency/fire.py`
+- `ontic/agri/microclimate.py`
+- `ontic/fusion/tokamak.py`
+- `ontic/cyber/grid_shock.py`
 
 ---
 
@@ -199,14 +199,14 @@ These items are **not blocking** but would improve compliance further:
 **Current State:**
 | Category | Lines |
 |----------|-------|
-| Source (`tensornet/`) | 146,315 |
+| Source (`ontic/`) | 146,315 |
 | Tests (`tests/`) | 16,600 |
 | **Current Ratio** | **11.3%** |
 
 **Target State:**
 | Category | Lines |
 |----------|-------|
-| Source (`tensornet/`) | 146,315 |
+| Source (`ontic/`) | 146,315 |
 | Tests (`tests/`) | **~75,000** |
 | **Target Ratio** | **51%+** |
 
@@ -244,25 +244,25 @@ Expand each of the 10 new test files from ~300 lines to ~1,800 lines:
 
 | Module | Test File | Lines | Priority |
 |--------|-----------|-------|----------|
-| tensornet/core/mps.py | test_mps_core.py | 3,000 | CRITICAL |
-| tensornet/core/mpo.py | test_mpo_core.py | 2,000 | CRITICAL |
-| tensornet/algorithms/dmrg.py | test_dmrg.py | 2,500 | CRITICAL |
-| tensornet/algorithms/tebd.py | test_tebd.py | 2,000 | HIGH |
-| tensornet/cfd/euler_1d.py | test_euler1d.py | 2,500 | HIGH |
-| tensornet/cfd/euler_2d.py | test_euler2d.py | 3,000 | HIGH |
-| tensornet/gpu/gpu_mps.py | test_gpu_mps.py | 2,500 | HIGH |
-| tensornet/physics/*.py | test_physics.py | 2,500 | HIGH |
+| ontic/core/mps.py | test_mps_core.py | 3,000 | CRITICAL |
+| ontic/core/mpo.py | test_mpo_core.py | 2,000 | CRITICAL |
+| ontic/algorithms/dmrg.py | test_dmrg.py | 2,500 | CRITICAL |
+| ontic/algorithms/tebd.py | test_tebd.py | 2,000 | HIGH |
+| ontic/cfd/euler_1d.py | test_euler1d.py | 2,500 | HIGH |
+| ontic/cfd/euler_2d.py | test_euler2d.py | 3,000 | HIGH |
+| ontic/gpu/gpu_mps.py | test_gpu_mps.py | 2,500 | HIGH |
+| ontic/physics/*.py | test_physics.py | 2,500 | HIGH |
 
 #### Wave 3: Infrastructure Tests (~15,000 lines)
 
 | Domain | Test Files | Lines |
 |--------|------------|-------|
-| tensornet/sovereign/ | test_sovereign_*.py | 4,000 |
-| tensornet/gateway/ | test_gateway_*.py | 3,000 |
-| tensornet/ml_surrogates/ | test_surrogates.py | 2,500 |
-| tensornet/visualization/ | test_viz.py | 2,000 |
-| tensornet/deployment/ | test_deployment.py | 2,000 |
-| tensornet/validation/ | test_validation.py | 1,500 |
+| ontic/sovereign/ | test_sovereign_*.py | 4,000 |
+| ontic/gateway/ | test_gateway_*.py | 3,000 |
+| ontic/ml_surrogates/ | test_surrogates.py | 2,500 |
+| ontic/visualization/ | test_viz.py | 2,000 |
+| ontic/deployment/ | test_deployment.py | 2,000 |
+| ontic/validation/ | test_validation.py | 1,500 |
 
 #### Wave 4: Integration & E2E (~8,000 lines)
 
@@ -296,7 +296,7 @@ Target LOC Ratio:  51%+
 
 | Category | Lines |
 |----------|-------|
-| Source (`tensornet/`) | 146,315 |
+| Source (`ontic/`) | 146,315 |
 | Tests (`tests/`) | 16,600 |
 | Benchmarks | 3,506 |
 | **Test/Source Ratio** | **11.3%** |

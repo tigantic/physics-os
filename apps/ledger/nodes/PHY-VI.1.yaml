@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Shooting, spectral, DVR"
 
 source_files:
-  - "tensornet/quantum_mechanics/stationary.py"
+  - "ontic/quantum_mechanics/stationary.py"
 
 tests:
   smoke:

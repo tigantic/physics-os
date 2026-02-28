@@ -13,7 +13,7 @@ state: "V0.2"
 description: "MoM/FDTD/FEM hybrids"
 
 source_files:
-  - "tensornet/em/antenna_microwave.py"
+  - "ontic/em/antenna_microwave.py"
 
 tests:
   smoke:

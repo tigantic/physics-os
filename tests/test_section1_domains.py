@@ -16,10 +16,10 @@ import pytest
 # ── PEPS ────────────────────────────────────────────────────────────
 class TestPEPS:
     def test_import(self):
-        from tensornet.algorithms.peps import PEPSState, random_peps, simple_update_step
+        from ontic.algorithms.peps import PEPSState, random_peps, simple_update_step
 
     def test_random_peps(self):
-        from tensornet.algorithms.peps import random_peps
+        from ontic.algorithms.peps import random_peps
         peps = random_peps(Lx=3, Ly=3, d=2, D=4)
         assert peps is not None
 
@@ -27,7 +27,7 @@ class TestPEPS:
 # ── MERA ────────────────────────────────────────────────────────────
 class TestMERA:
     def test_import(self):
-        from tensornet.algorithms.mera import (
+        from ontic.algorithms.mera import (
             MERAType,
             MERALayer,
             MERAState,
@@ -38,13 +38,13 @@ class TestMERA:
 # ── NEGF ────────────────────────────────────────────────────────────
 class TestNEGF:
     def test_import(self):
-        from tensornet.quantum.condensed_matter.negf import NEGFDevice, NEGFSolver, NEGFResult
+        from ontic.quantum.condensed_matter.negf import NEGFDevice, NEGFSolver, NEGFResult
 
 
 # ── Relativistic Hydrodynamics ──────────────────────────────────────
 class TestRelHydro:
     def test_import(self):
-        from tensornet.astro.relativity.rel_hydro import (
+        from ontic.astro.relativity.rel_hydro import (
             EOSType,
             SRHDState,
             SRHDSolver,
@@ -55,7 +55,7 @@ class TestRelHydro:
 # ── DEM ─────────────────────────────────────────────────────────────
 class TestDEM:
     def test_import(self):
-        from tensornet.materials.mechanics.dem import (
+        from ontic.materials.mechanics.dem import (
             ContactModel,
             MaterialProperties,
             DEMState,
@@ -66,7 +66,7 @@ class TestDEM:
 # ── Caloric ─────────────────────────────────────────────────────────
 class TestCaloric:
     def test_import(self):
-        from tensornet.quantum.condensed_matter.caloric import (
+        from ontic.quantum.condensed_matter.caloric import (
             WeissFerromagnet,
             brillouin,
             BeanRodbell,
@@ -74,7 +74,7 @@ class TestCaloric:
         )
 
     def test_brillouin(self):
-        from tensornet.quantum.condensed_matter.caloric import brillouin
+        from ontic.quantum.condensed_matter.caloric import brillouin
         # For large x, B_J(x) → 1 (full saturation)
         val = brillouin(np.array([100.0]), J=3.5)
         assert abs(val[0] - 1.0) < 1e-6
@@ -83,7 +83,7 @@ class TestCaloric:
 # ── Tribology ───────────────────────────────────────────────────────
 class TestTribology:
     def test_import(self):
-        from tensornet.materials.mechanics.tribology import (
+        from ontic.materials.mechanics.tribology import (
             ArchardWear,
             GWContact,
             ReynoldsLubrication1D,
@@ -91,7 +91,7 @@ class TestTribology:
         )
 
     def test_archard_wear(self):
-        from tensornet.materials.mechanics.tribology import ArchardWear
+        from ontic.materials.mechanics.tribology import ArchardWear
         model = ArchardWear(k=1e-5, H=1e9)
         vol = model.wear_volume(F=100.0, L=0.01)
         assert vol > 0
@@ -100,7 +100,7 @@ class TestTribology:
 # ── Fracture ────────────────────────────────────────────────────────
 class TestFracture:
     def test_import(self):
-        from tensornet.materials.mechanics.fracture import (
+        from ontic.materials.mechanics.fracture import (
             sif_edge_crack,
             sif_center_crack,
             ParisFatigue,
@@ -108,7 +108,7 @@ class TestFracture:
         )
 
     def test_sif_edge_crack(self):
-        from tensornet.materials.mechanics.fracture import sif_edge_crack
+        from ontic.materials.mechanics.fracture import sif_edge_crack
         K_I = sif_edge_crack(sigma=100.0, a=0.01, W=0.1)
         assert K_I > 0
 
@@ -116,7 +116,7 @@ class TestFracture:
 # ── Combustion DNS ──────────────────────────────────────────────────
 class TestCombustionDNS:
     def test_import(self):
-        from tensornet.cfd.combustion_dns import (
+        from ontic.cfd.combustion_dns import (
             CombustionDNSSolver,
             CombustionState,
             hydrogen_air_9species,
@@ -127,14 +127,14 @@ class TestCombustionDNS:
 # ── Magnetotellurics ────────────────────────────────────────────────
 class TestMagnetotellurics:
     def test_import(self):
-        from tensornet.astro.geophysics.magnetotellurics import (
+        from ontic.astro.geophysics.magnetotellurics import (
             mt_forward_1d,
             OccamInversion1D,
             LayeredEarth,
         )
 
     def test_1d_forward(self):
-        from tensornet.astro.geophysics.magnetotellurics import mt_forward_1d, LayeredEarth
+        from ontic.astro.geophysics.magnetotellurics import mt_forward_1d, LayeredEarth
         # LayeredEarth uses sigma (conductivity) and h (thicknesses)
         earth = LayeredEarth(
             sigma=np.array([0.01, 0.1, 0.001]),
@@ -150,14 +150,14 @@ class TestMagnetotellurics:
 # ── Lattice QFT ─────────────────────────────────────────────────────
 class TestLatticeQFT:
     def test_import(self):
-        from tensornet.quantum.qft.lattice_qft import (
+        from ontic.quantum.qft.lattice_qft import (
             LatticeConfig,
             GaugeField,
             wilson_gauge_action,
         )
 
     def test_cold_start_action(self):
-        from tensornet.quantum.qft.lattice_qft import (
+        from ontic.quantum.qft.lattice_qft import (
             LatticeConfig,
             GaugeField,
             wilson_gauge_action,
@@ -172,10 +172,10 @@ class TestLatticeQFT:
 # ── ABM ─────────────────────────────────────────────────────────────
 class TestABM:
     def test_import(self):
-        from tensornet.life_sci.biology.abm import SocialForceModel, BoidsSimulation, Agent
+        from ontic.life_sci.biology.abm import SocialForceModel, BoidsSimulation, Agent
 
     def test_boids_step(self):
-        from tensornet.life_sci.biology.abm import BoidsSimulation, BoidsParams
+        from ontic.life_sci.biology.abm import BoidsSimulation, BoidsParams
         params = BoidsParams()
         sim = BoidsSimulation(n_agents=20, domain_size=10.0, params=params)
         sim.step(dt=0.1)
@@ -185,34 +185,34 @@ class TestABM:
 # ── BSSN (NR extension) ────────────────────────────────────────────
 class TestBSSN:
     def test_import(self):
-        from tensornet.astro.relativity.numerical_gr import BSSNEvolution, BSSNEvolver
+        from ontic.astro.relativity.numerical_gr import BSSNEvolution, BSSNEvolver
 
 
 # ── Dynamical HMC ──────────────────────────────────────────────────
 class TestDynamicalHMC:
     def test_import(self):
-        from tensornet.quantum.qft.lattice_qcd import DynamicalHMC
+        from ontic.quantum.qft.lattice_qcd import DynamicalHMC
 
 
 # ── Nuclear structure extensions ────────────────────────────────────
 class TestNuclearExtensions:
     def test_imsrg_import(self):
-        from tensornet.plasma_nuclear.nuclear.structure import IMSRG
+        from ontic.plasma_nuclear.nuclear.structure import IMSRG
 
     def test_ccsd_import(self):
-        from tensornet.plasma_nuclear.nuclear.structure import CoupledClusterSD
+        from ontic.plasma_nuclear.nuclear.structure import CoupledClusterSD
 
     def test_ncsm_import(self):
-        from tensornet.plasma_nuclear.nuclear.structure import NCSM
+        from ontic.plasma_nuclear.nuclear.structure import NCSM
 
 
 # ── Parton shower ──────────────────────────────────────────────────
 class TestPartonShower:
     def test_import(self):
-        from tensornet.quantum.qft.perturbative import SplittingFunctions, PartonShower
+        from ontic.quantum.qft.perturbative import SplittingFunctions, PartonShower
 
     def test_splitting_pqq(self):
-        from tensornet.quantum.qft.perturbative import SplittingFunctions
+        from ontic.quantum.qft.perturbative import SplittingFunctions
         sf = SplittingFunctions()
         p = sf.P_qq(0.5)
         assert np.isfinite(p)
@@ -221,10 +221,10 @@ class TestPartonShower:
 # ── Radiation MHD ──────────────────────────────────────────────────
 class TestRadiationMHD:
     def test_import(self):
-        from tensornet.plasma_nuclear.plasma.extended_mhd import RadiationMHD, RadiationTransport
+        from ontic.plasma_nuclear.plasma.extended_mhd import RadiationMHD, RadiationTransport
 
 
 # ── N-Way Coupler ──────────────────────────────────────────────────
 class TestNWayCoupler:
     def test_import(self):
-        from tensornet.platform.coupled import NWayCoupler, CouplingEdge
+        from ontic.platform.coupled import NWayCoupler, CouplingEdge

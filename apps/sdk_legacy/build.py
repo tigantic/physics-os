@@ -43,7 +43,7 @@ def clean() -> None:
     dirs_to_clean = [
         ROOT_DIR / "build",
         ROOT_DIR / "dist",
-        ROOT_DIR / "tensornet.egg-info",
+        ROOT_DIR / "ontic.egg-info",
         ROOT_DIR / ".pytest_cache",
     ]
     

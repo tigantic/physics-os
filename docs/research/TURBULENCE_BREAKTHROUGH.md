@@ -80,14 +80,14 @@ Validation: PASSED
 
 ## Files
 
-- **[ns3d_realtime.py](tensornet/cfd/ns3d_realtime.py)**: Production solver
-- **[ns3d_native.py](tensornet/cfd/ns3d_native.py)**: QTT solver (for high-res research)
-- **[qtt_batched_ops.py](tensornet/cfd/qtt_batched_ops.py)**: Batched QTT operations
+- **[ns3d_realtime.py](ontic/cfd/ns3d_realtime.py)**: Production solver
+- **[ns3d_native.py](ontic/cfd/ns3d_native.py)**: QTT solver (for high-res research)
+- **[qtt_batched_ops.py](ontic/cfd/qtt_batched_ops.py)**: Batched QTT operations
 
 ## Usage
 
 ```python
-from tensornet.cfd.ns3d_realtime import RealtimeNS3D
+from ontic.cfd.ns3d_realtime import RealtimeNS3D
 
 # Create solver
 solver = RealtimeNS3D(N=64, nu=0.01, device='cuda')

@@ -32,9 +32,9 @@ import torch
 # Add parent to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tensornet.cfd.euler_2d import (BCType, Euler2D, Euler2DState,
+from ontic.cfd.euler_2d import (BCType, Euler2D, Euler2DState,
                                     oblique_shock_exact, supersonic_wedge_ic)
-from tensornet.cfd.geometry import ImmersedBoundary, WedgeGeometry
+from ontic.cfd.geometry import ImmersedBoundary, WedgeGeometry
 
 
 def run_mach5_wedge(

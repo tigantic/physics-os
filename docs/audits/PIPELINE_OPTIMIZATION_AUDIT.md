@@ -4,7 +4,7 @@
 
 ## CRITICAL PATH LOOPS (Hot Spots)
 
-### 1. **tensornet/mpo/operators.py** ✓ OPTIMIZED
+### 1. **ontic/mpo/operators.py** ✓ OPTIMIZED
 **Line 124**: Loop over 12 QTT cores for MPO-TT contraction
 ```python
 for i, (mpo_core, qtt_core) in enumerate(zip(self.laplacian_cores, qtt_cores)):
@@ -23,7 +23,7 @@ for idx, core in needs_compression:
 
 ---
 
-### 2. **tensornet/gateway/orbital_command.py** ⚠ NEEDS VECTORIZATION
+### 2. **ontic/gateway/orbital_command.py** ⚠ NEEDS VECTORIZATION
 **Lines 208, 213**: Grid generation loops
 ```python
 for lat in range(-90, 91, grid_spacing_lat):  # 181 iterations
@@ -49,7 +49,7 @@ for y in range(0, self.height, grid_spacing):  # ~108 iterations
 
 ---
 
-### 3. **tensornet/gateway/onion_renderer.py** ⚠ LAYER LOOPS
+### 3. **ontic/gateway/onion_renderer.py** ⚠ LAYER LOOPS
 **Line 316**: Layer blending loop
 ```python
 for layer in enabled[1:]:  # 5 layers
@@ -61,7 +61,7 @@ for layer in enabled[1:]:  # 5 layers
 
 ---
 
-### 4. **tensornet/quantum/cpu_qtt_evaluator.py** ✓ REPLACED WITH GPU
+### 4. **ontic/quantum/cpu_qtt_evaluator.py** ✓ REPLACED WITH GPU
 **Lines 139-143**: Nested contraction loops
 ```python
 for i in range(r_left):
@@ -77,15 +77,15 @@ for i in range(r_left):
 
 ### ✓ ALREADY USING rSVD (torch.svd_lowrank)
 
-1. **tensornet/core/decompositions.py** ✓
+1. **ontic/core/decompositions.py** ✓
    - Line 69: `torch.svd_lowrank(A, q=target_rank, niter=2)`
    - Line 166: `torch.svd_lowrank(A, q=min_dim, niter=2)`
    - Line 182: `torch.svd_lowrank(A, q=min_dim, niter=2)`
 
-2. **tensornet/cfd/qtt.py** ✓
+2. **ontic/cfd/qtt.py** ✓
    - Line 137: `torch.svd_lowrank(current, q=target_rank, niter=2)`
 
-3. **tensornet/mpo/operators.py** ✓
+3. **ontic/mpo/operators.py** ✓
    - Line 178: `torch.svd_lowrank(mat_left, q=max_rank, niter=1)`
    - Line 188: `torch.svd_lowrank(mat_right, q=max_rank, niter=1)`
 
@@ -93,7 +93,7 @@ for i in range(r_left):
 
 #### HIGH PRIORITY (On critical path):
 
-1. **tensornet/mpo/laplacian_cuda.py** (Lines 143, 158)
+1. **ontic/mpo/laplacian_cuda.py** (Lines 143, 158)
 ```python
 # BEFORE:
 U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
@@ -103,13 +103,13 @@ U, S, Vh = torch.svd_lowrank(mat, q=min(max_rank, min(mat.shape)), niter=1)
 ```
 **Impact**: Compression happens every frame, causes 1.5s spikes
 
-2. **tensornet/cfd/qtt_2d_shift.py** (Line 299)
+2. **ontic/cfd/qtt_2d_shift.py** (Line 299)
 ```python
 # Shift operations (cached but still used on init)
 U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
 ```
 
-3. **tensornet/cfd/qtt_2d_shift_native.py** (Line 234)
+3. **ontic/cfd/qtt_2d_shift_native.py** (Line 234)
 ```python
 # Similar shift SVD
 U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
@@ -117,19 +117,19 @@ U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
 
 #### MEDIUM PRIORITY (Off critical path but frequent):
 
-4. **tensornet/cfd/pure_qtt_ops.py** (Lines 282, 521, 750)
-5. **tensornet/distributed_tn/parallel_tebd.py** (Line 191)
-6. **tensornet/cfd/adaptive_tt.py** (Lines 157, 480)
-7. **tensornet/algorithms/tdvp.py** (Line 291)
-8. **tensornet/cfd/tt_cfd.py** (Lines 672, 706)
-9. **tensornet/cfd/nd_shift_mpo.py** (Line 238)
+4. **ontic/cfd/pure_qtt_ops.py** (Lines 282, 521, 750)
+5. **ontic/distributed_tn/parallel_tebd.py** (Line 191)
+6. **ontic/cfd/adaptive_tt.py** (Lines 157, 480)
+7. **ontic/algorithms/tdvp.py** (Line 291)
+8. **ontic/cfd/tt_cfd.py** (Lines 672, 706)
+9. **ontic/cfd/nd_shift_mpo.py** (Line 238)
 
 #### LOW PRIORITY (Offline/initialization only):
 
-10. **tensornet/digital_twin/reduced_order.py** (Lines 210, 293, 622) - POD computation
-11. **tensornet/adaptive/compression.py** (Lines 149, 282, 441) - Already has RandomizedSVD class!
-12. **tensornet/substrate/morton_ops.py** (Line 410)
-13. **tensornet/substrate/field.py** (Line 668)
+10. **ontic/digital_twin/reduced_order.py** (Lines 210, 293, 622) - POD computation
+11. **ontic/adaptive/compression.py** (Lines 149, 282, 441) - Already has RandomizedSVD class!
+12. **ontic/substrate/morton_ops.py** (Line 410)
+13. **ontic/substrate/field.py** (Line 668)
 
 ---
 
@@ -137,18 +137,18 @@ U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
 
 ### Priority 1: Replace full SVD with rSVD in hot path
 **Files to fix**:
-1. `tensornet/mpo/laplacian_cuda.py` (lines 143, 158)
-2. `tensornet/cfd/qtt_2d_shift.py` (line 299) 
-3. `tensornet/cfd/qtt_2d_shift_native.py` (line 234)
+1. `ontic/mpo/laplacian_cuda.py` (lines 143, 158)
+2. `ontic/cfd/qtt_2d_shift.py` (line 299) 
+3. `ontic/cfd/qtt_2d_shift_native.py` (line 234)
 
 **Expected impact**: Eliminate 1.5s compression spikes → stable <100ms frames
 
 ### Priority 2: Vectorize grid generation
-**File**: `tensornet/gateway/orbital_command.py` (lines 208-213, 373-381)
+**File**: `ontic/gateway/orbital_command.py` (lines 208-213, 373-381)
 **Expected impact**: 0.46ms → 0.10ms (4.6× speedup on grid rendering)
 
 ### Priority 3: Implement fused blend kernel
-**File**: `tensornet/gateway/onion_renderer.py` (line 316)
+**File**: `ontic/gateway/onion_renderer.py` (line 316)
 **Expected impact**: ~2-3ms savings on compositor
 
 ---

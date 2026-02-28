@@ -39,8 +39,8 @@ def gate_tdvp1_norm_preservation():
     For real-time TDVP, the evolution should preserve norm exactly
     (up to numerical precision).
     """
-    from tensornet.core.mps import MPS
-    from tensornet.mps.hamiltonians import heisenberg_mpo
+    from ontic.core.mps import MPS
+    from ontic.mps.hamiltonians import heisenberg_mpo
 
     print("\n" + "=" * 60)
     print("Gate 1: MPS Norm Preservation")
@@ -95,7 +95,7 @@ def gate_tdvp2_adaptive_chi():
 
     TDVP-2 can adapt chi via SVD. Test that SVD truncation works.
     """
-    from tensornet.core.decompositions import svd_truncated
+    from ontic.core.decompositions import svd_truncated
 
     print("\n" + "=" * 60)
     print("Gate 2: SVD chi Control")
@@ -148,10 +148,10 @@ def gate_chi_growth_physics():
     Use Taylor-Green NS: smooth flow -> stable chi
     This connects Phase 1D/1E chi tracking to TDVP concepts.
     """
-    from tensornet.cfd.chi_diagnostic import (ChiTrajectory,
+    from ontic.cfd.chi_diagnostic import (ChiTrajectory,
                                               analyze_regularity,
                                               compute_chi_state_2d)
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.ns_2d import NS2DSolver
 
     print("\n" + "=" * 60)
     print("Gate 3: chi Growth Matches Physics")
@@ -242,7 +242,7 @@ def gate_energy_conservation():
     For 2D Taylor-Green: KE(t) = KE(0) exp(-2nu|k|^2t) with |k|^2=2.
     So KE(t) = KE(0) exp(-4nut).
     """
-    from tensornet.cfd.ns_2d import NS2DSolver
+    from ontic.cfd.ns_2d import NS2DSolver
 
     print("\n" + "=" * 60)
     print("Gate 4: Energy Conservation")

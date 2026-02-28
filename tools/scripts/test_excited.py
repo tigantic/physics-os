@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Test excited states with Heisenberg model."""
-from tensornet import MPS
-from tensornet.algorithms.excited import find_excited_states
-from tensornet.mps.hamiltonians import heisenberg_mpo
+from ontic import MPS
+from ontic.algorithms.excited import find_excited_states
+from ontic.mps.hamiltonians import heisenberg_mpo
 
 L = 8
 H = heisenberg_mpo(L=L, J=1.0, Jz=1.0)

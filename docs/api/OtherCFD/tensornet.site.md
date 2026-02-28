@@ -1,4 +1,4 @@
-# Module `tensornet.site`
+# Module `ontic.site`
 
 Static documentation site generation module.
 

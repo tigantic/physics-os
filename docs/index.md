@@ -27,7 +27,7 @@ pip install tensornet[all]
 ## Quick Start
 
 ```python
-from tensornet import MPS, heisenberg_mpo, dmrg
+from ontic import MPS, heisenberg_mpo, dmrg
 
 H = heisenberg_mpo(L=10, J=1.0)
 psi = MPS.random(L=10, d=2, chi=32)

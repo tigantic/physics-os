@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "tensornet"
+name = "ontic-engine"
 version = "40.0.1"
 description = "The Physics OS — Powered by The Ontic Engine | ~2M LOC, 168 physics taxonomy nodes, 20 domain packs | Tigantic Holdings LLC, DBA HolonomiX"
 readme = "README.md"
@@ -44,7 +44,7 @@ dependencies = [
 ]
 
 # ---------------------------------------------------------------------------
-# Feature flags — pip install tensornet[cfd,quantum] etc.
+# Feature flags — pip install ontic-engine[cfd,quantum] etc.
 # ---------------------------------------------------------------------------
 [project.optional-dependencies]
 
@@ -84,7 +84,7 @@ em = [
 
 # Aggregate domain extras
 physics-all = [
-    "tensornet[cfd,quantum,fluids,materials,aerospace,astro,plasma,ml,em]",
+    "ontic-engine[cfd,quantum,fluids,materials,aerospace,astro,plasma,ml,em]",
 ]
 
 # Tooling ——————————————————————————————————————————————————————————
@@ -123,7 +123,7 @@ benchmark = [
 
 # Everything
 all = [
-    "tensornet[dev,docs,viz,io,benchmark,physics-all]",
+    "ontic-engine[dev,docs,viz,io,benchmark,physics-all]",
 ]
 
 [project.urls]
@@ -134,11 +134,12 @@ Issues = "https://github.com/tigantic/HyperTensor-VM/issues"
 Changelog = "https://github.com/tigantic/HyperTensor-VM/blob/main/CHANGELOG.md"
 
 [project.scripts]
-tensornet = "tensornet.platform.cli:main"
+ontic = "ontic.platform.cli:main"
+physics-os = "ontic.platform.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["tensornet*", "hypertensor*"]
+include = ["ontic*", "physics_os*", "tensornet*", "hypertensor*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -186,14 +187,14 @@ ignore = [
 "proofs/**/*.py" = ["S101"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["tensornet", "hypertensor"]
+known-first-party = ["ontic", "physics_os", "tensornet", "hypertensor"]
 
 # Security: Flag pickle usage as warning
 [tool.ruff.lint.flake8-bandit]
 check-typed-exception = true
 
 [tool.coverage.run]
-source = ["tensornet"]
+source = ["ontic"]
 branch = true
 
 [tool.coverage.report]

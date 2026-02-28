@@ -24,9 +24,9 @@ from pathlib import Path
 
 import torch
 
-from tensornet.cfd.fast_euler_3d import Euler3DConfig, FastEuler3D
+from ontic.cfd.fast_euler_3d import Euler3DConfig, FastEuler3D
 # Import Phase 4 components
-from tensornet.infra.sovereign.realtime_tensor_stream import RealtimeTensorStream
+from ontic.infra.sovereign.realtime_tensor_stream import RealtimeTensorStream
 
 
 def create_taylor_green_vortex(config: Euler3DConfig):
@@ -41,8 +41,8 @@ def create_taylor_green_vortex(config: Euler3DConfig):
 
     This flow exhibits vortex stretching and energy cascade.
     """
-    from tensornet.cfd.fast_euler_3d import QTT3DState, morton_encode_3d
-    from tensornet.cfd.pure_qtt_ops import dense_to_qtt
+    from ontic.cfd.fast_euler_3d import QTT3DState, morton_encode_3d
+    from ontic.cfd.pure_qtt_ops import dense_to_qtt
 
     grid_size = config.grid_size
     device = config.device
@@ -109,7 +109,7 @@ def create_taylor_green_vortex(config: Euler3DConfig):
         cores_E.append(torch.randn(r_left, 8, r_right, device=device))
 
     # Create QTT3DState objects
-    from tensornet.cfd.fast_euler_3d import Euler3DState
+    from ontic.cfd.fast_euler_3d import Euler3DState
 
     state = Euler3DState(
         rho=QTT3DState(cores_rho, config.qubits_per_dim, device),

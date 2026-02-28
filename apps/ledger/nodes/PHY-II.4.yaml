@@ -13,7 +13,7 @@ state: "V0.2"
 description: "VOF, level set, phase field"
 
 source_files:
-  - "tensornet/multiphase/multiphase_flow.py"
+  - "ontic/multiphase/multiphase_flow.py"
 
 tests:
   smoke:

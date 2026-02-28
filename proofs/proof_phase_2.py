@@ -30,7 +30,7 @@ def gate_velocity_to_qtt():
 
     For smooth Taylor-Green vortex, chi should be small.
     """
-    from tensornet.cfd.qtt import field_to_qtt, qtt_to_field
+    from ontic.cfd.qtt import field_to_qtt, qtt_to_field
 
     print("\n" + "=" * 60)
     print("Gate 1: Velocity Field -> QTT Compression")
@@ -98,7 +98,7 @@ def gate_compression_ratio():
     Smooth fields: high compression
     Random fields: low compression
     """
-    from tensornet.cfd.qtt import field_to_qtt
+    from ontic.cfd.qtt import field_to_qtt
 
     print("\n" + "=" * 60)
     print("Gate 2: Compression Ratio Scaling")
@@ -166,7 +166,7 @@ def gate_laplacian_mpo():
     Build Laplacian MPO and verify spectral eigenvalue accuracy
     using FFT-based spectral Laplacian as ground truth.
     """
-    from tensornet.cfd.tt_poisson import laplacian_spectral_2d
+    from ontic.cfd.tt_poisson import laplacian_spectral_2d
 
     print("\n" + "=" * 60)
     print("Gate 3: Laplacian Spectral Accuracy")
@@ -229,7 +229,7 @@ def gate_tt_poisson():
 
     Solve nabla^2φ = f for known solution.
     """
-    from tensornet.cfd.tt_poisson import poisson_solve_fft_2d
+    from ontic.cfd.tt_poisson import poisson_solve_fft_2d
 
     print("\n" + "=" * 60)
     print("Gate 4: Poisson Solver (FFT)")

@@ -13,7 +13,7 @@ state: "V0.2"
 description: "IR/Raman/NMR/XAS/XPS"
 
 source_files:
-  - "tensornet/chemistry/spectroscopy.py"
+  - "ontic/chemistry/spectroscopy.py"
 
 tests:
   smoke:

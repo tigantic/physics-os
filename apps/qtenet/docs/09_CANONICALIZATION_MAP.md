@@ -6,7 +6,7 @@ Rules are heuristic and *meant to be edited*. The goal is a clean, enterprise AP
 
 ## Scoring heuristics (current)
 
-Preference order (high → low): `tensornet/core` / `tensornet/genesis` / `tci` / `tensornet/cfd` / `fluidelite` / `sdk` / `compressor` (separate product) / demos & benchmarks / archived.
+Preference order (high → low): `ontic/core` / `ontic/genesis` / `tci` / `ontic/cfd` / `fluidelite` / `sdk` / `compressor` (separate product) / demos & benchmarks / archived.
 
 ## Symbol-level canonical picks
 
@@ -32,12 +32,12 @@ Each entry lists: canonical path + all known alternates.
 
 ### `qtt_to_dense` (8 implementations)
 
-**Canonical:** `tensornet/cfd/pure_qtt_ops.py` — `function` at L952 (score 145)
+**Canonical:** `ontic/cfd/pure_qtt_ops.py` — `function` at L952 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/pure_qtt_ops.py` — function L952 (cat=cfd)
-- `tensornet/cfd/qtt_eval.py` — function L522 (cat=cfd)
+- `ontic/cfd/pure_qtt_ops.py` — function L952 (cat=cfd)
+- `ontic/cfd/qtt_eval.py` — function L522 (cat=cfd)
 - `fluidelite/qtt_accuracy_hunt.py` — function L45 (cat=fluidelite)
 - `fluidelite/qtt_inference.py` — function L231 (cat=fluidelite)
 - `fluidelite/qtt_native_inference.py` — function L73 (cat=fluidelite)
@@ -48,12 +48,12 @@ Each entry lists: canonical path + all known alternates.
 
 ### `QTTMatrix` (8 implementations)
 
-**Canonical:** `tensornet/genesis/ot/cost_matrices.py` — `class` at L45 (score 155)
+**Canonical:** `ontic/genesis/ot/cost_matrices.py` — `class` at L45 (score 155)
 
 **Alternates:**
 
-- `tensornet/genesis/ot/cost_matrices.py` — class L45 (cat=genesis)
-- `tensornet/genesis/topology/qtt_native.py` — class L154 (cat=genesis)
+- `ontic/genesis/ot/cost_matrices.py` — class L45 (cat=genesis)
+- `ontic/genesis/topology/qtt_native.py` — class L154 (cat=genesis)
 - `fluidelite/bench_step.py` — class L40 (cat=fluidelite)
 - `fluidelite/qtt_direct_train.py` — class L80 (cat=fluidelite)
 - `fluidelite/qtt_ns_hunt.py` — class L84 (cat=fluidelite)
@@ -64,12 +64,12 @@ Each entry lists: canonical path + all known alternates.
 
 ### `tt_svd_gpu` (7 implementations)
 
-**Canonical:** `tensornet/genesis/demos/gpu_qtt_compress.py` — `function` at L66 (score 153)
+**Canonical:** `ontic/genesis/demos/gpu_qtt_compress.py` — `function` at L66 (score 153)
 
 **Alternates:**
 
-- `tensornet/genesis/demos/gpu_qtt_compress.py` — function L66 (cat=genesis)
-- `tensornet/genesis/demos/gpu_qtt_proper.py` — function L85 (cat=genesis)
+- `ontic/genesis/demos/gpu_qtt_compress.py` — function L66 (cat=genesis)
+- `ontic/genesis/demos/gpu_qtt_proper.py` — function L85 (cat=genesis)
 - `fluidelite/qtt_gpu_real.py` — function L75 (cat=fluidelite)
 - `The_Compressor/qtt/spatial.py` — function L315 (cat=compressor)
 - `qtt_50gb_cloud.py` — function L126 (cat=qtt-misc)
@@ -79,52 +79,52 @@ Each entry lists: canonical path + all known alternates.
 
 ### `QTTState` (6 implementations)
 
-**Canonical:** `tensornet/cfd/pure_qtt_ops.py` — `class` at L35 (score 147)
+**Canonical:** `ontic/cfd/pure_qtt_ops.py` — `class` at L35 (score 147)
 
 **Alternates:**
 
-- `tensornet/cfd/pure_qtt_ops.py` — class L35 (cat=cfd)
-- `tensornet/cfd/qtt_tdvp.py` — class L99 (cat=cfd)
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — class L102 (cat=cfd)
-- `tensornet/cfd/tci_flux.py` — class L588 (cat=cfd)
+- `ontic/cfd/pure_qtt_ops.py` — class L35 (cat=cfd)
+- `ontic/cfd/qtt_tdvp.py` — class L99 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — class L102 (cat=cfd)
+- `ontic/cfd/tci_flux.py` — class L588 (cat=cfd)
 - `apps/sdk_legacy/qtt-sdk/src/qtt_sdk/core.py` — class L18 (cat=sdk)
 - `archive/rns_qtt_ntt_butterfly_mpo_deprecated.py` — class L292 (cat=archive)
 
 
 ### `create_test_qtt` (5 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_eval.py` — `function` at L386 (score 145)
+**Canonical:** `ontic/cfd/qtt_eval.py` — `function` at L386 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_eval.py` — function L386 (cat=cfd)
-- `tensornet/quantum/hybrid_qtt_renderer.py` — function L322 (cat=qtt-misc)
-- `tensornet/quantum/qtt_glsl_bridge.py` — function L190 (cat=qtt-misc)
-- `tensornet/visualization/tensor_slicer.py` — function L2061 (cat=other)
+- `ontic/cfd/qtt_eval.py` — function L386 (cat=cfd)
+- `ontic/quantum/hybrid_qtt_renderer.py` — function L322 (cat=qtt-misc)
+- `ontic/quantum/qtt_glsl_bridge.py` — function L190 (cat=qtt-misc)
+- `ontic/visualization/tensor_slicer.py` — function L2061 (cat=other)
 - `tests/experiments/benchmarks/benchmarks/qtt_render_benchmark.py` — function L42 (cat=qtt-misc)
 
 
 ### `MPO` (5 implementations)
 
-**Canonical:** `tensornet/core/mpo.py` — `class` at L19 (score 162)
+**Canonical:** `ontic/core/mpo.py` — `class` at L19 (score 162)
 
 **Alternates:**
 
-- `tensornet/core/mpo.py` — class L19 (cat=core)
-- `tensornet/cfd/pure_qtt_ops.py` — class L64 (cat=cfd)
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — class L157 (cat=cfd)
+- `ontic/core/mpo.py` — class L19 (cat=core)
+- `ontic/cfd/pure_qtt_ops.py` — class L64 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — class L157 (cat=cfd)
 - `fluidelite/core/mpo.py` — class L24 (cat=fluidelite)
 - `apps/sdk_legacy/qtt-sdk/src/qtt_sdk/core.py` — class L89 (cat=sdk)
 
 
 ### `QTT3DState` (5 implementations)
 
-**Canonical:** `tensornet/cfd/fast_euler_3d.py` — `class` at L31 (score 147)
+**Canonical:** `ontic/cfd/fast_euler_3d.py` — `class` at L31 (score 147)
 
 **Alternates:**
 
-- `tensornet/cfd/fast_euler_3d.py` — class L31 (cat=cfd)
-- `tensornet/sovereign/qtt_slice_extractor.py` — class L35 (cat=qtt-misc)
+- `ontic/cfd/fast_euler_3d.py` — class L31 (cat=cfd)
+- `ontic/sovereign/qtt_slice_extractor.py` — class L35 (cat=qtt-misc)
 - `demos/black_swan_945_forensic.py` — class L36 (cat=demos)
 - `demos/black_swan_reproduce.py` — class L34 (cat=demos)
 - `demos/millennium_hunter.py` — class L46 (cat=demos)
@@ -132,12 +132,12 @@ Each entry lists: canonical path + all known alternates.
 
 ### `QTTCore` (5 implementations)
 
-**Canonical:** `tensornet/genesis/tropical/qtt_native.py` — `class` at L39 (score 155)
+**Canonical:** `ontic/genesis/tropical/qtt_native.py` — `class` at L39 (score 155)
 
 **Alternates:**
 
-- `tensornet/genesis/tropical/qtt_native.py` — class L39 (cat=genesis)
-- `tensornet/cfd/pure_qtt_ops.py` — class L28 (cat=cfd)
+- `ontic/genesis/tropical/qtt_native.py` — class L39 (cat=genesis)
+- `ontic/cfd/pure_qtt_ops.py` — class L28 (cat=cfd)
 - `fluidelite/fe_tci/fluidelite_model.py` — class L18 (cat=fluidelite)
 - `qtt_neural_connectome.py` — class L114 (cat=qtt-misc)
 - `tig011a_multimechanism.py` — class L88 (cat=other)
@@ -169,34 +169,34 @@ Each entry lists: canonical path + all known alternates.
 
 ### `tt_svd` (4 implementations)
 
-**Canonical:** `tensornet/cfd/koopman_tt.py` — `function` at L141 (score 145)
+**Canonical:** `ontic/cfd/koopman_tt.py` — `function` at L141 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/koopman_tt.py` — function L141 (cat=cfd)
-- `tensornet/cfd/qtt.py` — function L88 (cat=cfd)
+- `ontic/cfd/koopman_tt.py` — function L141 (cat=cfd)
+- `ontic/cfd/qtt.py` — function L88 (cat=cfd)
 - `The_Compressor/qtt/spatial.py` — function L52 (cat=compressor)
 - `demos/resolution_independence.py` — function L142 (cat=demos)
 
 
 ### `_evaluate_qtt_at_index` (3 implementations)
 
-**Canonical:** `tensornet/genesis/ot/barycenters.py` — `function` at L594 (score 153)
+**Canonical:** `ontic/genesis/ot/barycenters.py` — `function` at L594 (score 153)
 
 **Alternates:**
 
-- `tensornet/genesis/ot/barycenters.py` — function L594 (cat=genesis)
-- `tensornet/genesis/ot/transport_plan.py` — function L932 (cat=genesis)
-- `tensornet/genesis/ot/wasserstein.py` — function L277 (cat=genesis)
+- `ontic/genesis/ot/barycenters.py` — function L594 (cat=genesis)
+- `ontic/genesis/ot/transport_plan.py` — function L932 (cat=genesis)
+- `ontic/genesis/ot/wasserstein.py` — function L277 (cat=genesis)
 
 
 ### `build_butterfly_mpo` (3 implementations)
 
-**Canonical:** `tensornet/cuda/qtt_ntt.py` — `function` at L373 (score 130)
+**Canonical:** `ontic/cuda/qtt_ntt.py` — `function` at L373 (score 130)
 
 **Alternates:**
 
-- `tensornet/cuda/qtt_ntt.py` — function L373 (cat=gpu)
+- `ontic/cuda/qtt_ntt.py` — function L373 (cat=gpu)
 - `tensornet_qtt_ntt.py` — function L139 (cat=qtt-misc)
 - `archive/rns_qtt_ntt_butterfly_mpo_deprecated.py` — function L542 (cat=archive)
 
@@ -225,56 +225,56 @@ Each entry lists: canonical path + all known alternates.
 
 ### `identity_mpo` (3 implementations)
 
-**Canonical:** `tensornet/cfd/pure_qtt_ops.py` — `function` at L153 (score 145)
+**Canonical:** `ontic/cfd/pure_qtt_ops.py` — `function` at L153 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/pure_qtt_ops.py` — function L153 (cat=cfd)
+- `ontic/cfd/pure_qtt_ops.py` — function L153 (cat=cfd)
 - `apps/sdk_legacy/qtt-sdk/src/qtt_sdk/operators.py` — function L16 (cat=sdk)
 - `yangmills/qtt.py` — function L634 (cat=qtt-misc)
 
 
 ### `MPS` (3 implementations)
 
-**Canonical:** `tensornet/core/mps.py` — `class` at L22 (score 162)
+**Canonical:** `ontic/core/mps.py` — `class` at L22 (score 162)
 
 **Alternates:**
 
-- `tensornet/core/mps.py` — class L22 (cat=core)
+- `ontic/core/mps.py` — class L22 (cat=core)
 - `fluidelite/core/mps.py` — class L81 (cat=fluidelite)
 - `yangmills/tensor_network/mps.py` — class L24 (cat=other)
 
 
 ### `qtt_add` (3 implementations)
 
-**Canonical:** `tensornet/genesis/ga/qtt_multivector.py` — `function` at L408 (score 153)
+**Canonical:** `ontic/genesis/ga/qtt_multivector.py` — `function` at L408 (score 153)
 
 **Alternates:**
 
-- `tensornet/genesis/ga/qtt_multivector.py` — function L408 (cat=genesis)
-- `tensornet/cfd/pure_qtt_ops.py` — function L619 (cat=cfd)
+- `ontic/genesis/ga/qtt_multivector.py` — function L408 (cat=genesis)
+- `ontic/cfd/pure_qtt_ops.py` — function L619 (cat=cfd)
 - `apps/sdk_legacy/qtt-sdk/src/qtt_sdk/operations.py` — function L16 (cat=sdk)
 
 
 ### `qtt_inner_product` (3 implementations)
 
-**Canonical:** `tensornet/genesis/ga/qtt_multivector.py` — `function` at L734 (score 153)
+**Canonical:** `ontic/genesis/ga/qtt_multivector.py` — `function` at L734 (score 153)
 
 **Alternates:**
 
-- `tensornet/genesis/ga/qtt_multivector.py` — function L734 (cat=genesis)
-- `tensornet/cfd/pure_qtt_ops.py` — function L819 (cat=cfd)
+- `ontic/genesis/ga/qtt_multivector.py` — function L734 (cat=genesis)
+- `ontic/cfd/pure_qtt_ops.py` — function L819 (cat=cfd)
 - `apps/sdk_legacy/qtt-sdk/src/qtt_sdk/operations.py` — function L108 (cat=sdk)
 
 
 ### `qtt_scale` (3 implementations)
 
-**Canonical:** `tensornet/genesis/ga/qtt_multivector.py` — `function` at L450 (score 153)
+**Canonical:** `ontic/genesis/ga/qtt_multivector.py` — `function` at L450 (score 153)
 
 **Alternates:**
 
-- `tensornet/genesis/ga/qtt_multivector.py` — function L450 (cat=genesis)
-- `tensornet/cfd/pure_qtt_ops.py` — function L761 (cat=cfd)
+- `ontic/genesis/ga/qtt_multivector.py` — function L450 (cat=genesis)
+- `ontic/cfd/pure_qtt_ops.py` — function L761 (cat=cfd)
 - `apps/sdk_legacy/qtt-sdk/src/qtt_sdk/operations.py` — function L84 (cat=sdk)
 
 
@@ -302,53 +302,53 @@ Each entry lists: canonical path + all known alternates.
 
 ### `TTCore` (3 implementations)
 
-**Canonical:** `tensornet/cfd/koopman_tt.py` — `class` at L57 (score 147)
+**Canonical:** `ontic/cfd/koopman_tt.py` — `class` at L57 (score 147)
 
 **Alternates:**
 
-- `tensornet/cfd/koopman_tt.py` — class L57 (cat=cfd)
+- `ontic/cfd/koopman_tt.py` — class L57 (cat=cfd)
 - `fluidelite/qtt_gpu_real.py` — class L41 (cat=fluidelite)
 - `tomahawk_cfd_gauntlet.py` — class L102 (cat=other)
 
 
 ### `_compute_qtt_cdf` (2 implementations)
 
-**Canonical:** `tensornet/genesis/ot/barycenters.py` — `function` at L527 (score 153)
+**Canonical:** `ontic/genesis/ot/barycenters.py` — `function` at L527 (score 153)
 
 **Alternates:**
 
-- `tensornet/genesis/ot/barycenters.py` — function L527 (cat=genesis)
-- `tensornet/genesis/ot/transport_plan.py` — function L872 (cat=genesis)
+- `ontic/genesis/ot/barycenters.py` — function L527 (cat=genesis)
+- `ontic/genesis/ot/transport_plan.py` — function L872 (cat=genesis)
 
 
 ### `_evaluate_qtt_at_indices` (2 implementations)
 
-**Canonical:** `tensornet/cfd/tci_flux.py` — `function` at L752 (score 145)
+**Canonical:** `ontic/cfd/tci_flux.py` — `function` at L752 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/tci_flux.py` — function L752 (cat=cfd)
+- `ontic/cfd/tci_flux.py` — function L752 (cat=cfd)
 - `_archived_dense/tci_v2.py` — function L290 (cat=archive)
 
 
 ### `_qtt_quantile_search` (2 implementations)
 
-**Canonical:** `tensornet/genesis/ot/barycenters.py` — `function` at L576 (score 153)
+**Canonical:** `ontic/genesis/ot/barycenters.py` — `function` at L576 (score 153)
 
 **Alternates:**
 
-- `tensornet/genesis/ot/barycenters.py` — function L576 (cat=genesis)
-- `tensornet/genesis/ot/wasserstein.py` — function L259 (cat=genesis)
+- `ontic/genesis/ot/barycenters.py` — function L576 (cat=genesis)
+- `ontic/genesis/ot/wasserstein.py` — function L259 (cat=genesis)
 
 
 ### `_tt_add` (2 implementations)
 
-**Canonical:** `tensornet/cfd/weno_tt.py` — `function` at L522 (score 145)
+**Canonical:** `ontic/cfd/weno_tt.py` — `function` at L522 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/weno_tt.py` — function L522 (cat=cfd)
-- `tensornet/types/genesis_integration.py` — function L828 (cat=other)
+- `ontic/cfd/weno_tt.py` — function L522 (cat=cfd)
+- `ontic/types/genesis_integration.py` — function L828 (cat=other)
 
 
 ### `_tt_svd` (2 implementations)
@@ -358,46 +358,46 @@ Each entry lists: canonical path + all known alternates.
 **Alternates:**
 
 - `fluidelite/fe_tci/fluidelite_model.py` — function L235 (cat=fluidelite)
-- `tensornet/types/genesis_integration.py` — function L783 (cat=other)
+- `ontic/types/genesis_integration.py` — function L783 (cat=other)
 
 
 ### `apply_mpo` (2 implementations)
 
-**Canonical:** `tensornet/cfd/pure_qtt_ops.py` — `function` at L471 (score 145)
+**Canonical:** `ontic/cfd/pure_qtt_ops.py` — `function` at L471 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/pure_qtt_ops.py` — function L471 (cat=cfd)
+- `ontic/cfd/pure_qtt_ops.py` — function L471 (cat=cfd)
 - `apps/sdk_legacy/qtt-sdk/src/qtt_sdk/operators.py` — function L238 (cat=sdk)
 
 
 ### `apply_mpo_2d_gpu` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_triton_kernels_v2.py` — `function` at L1702 (score 145)
+**Canonical:** `ontic/cfd/qtt_triton_kernels_v2.py` — `function` at L1702 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — function L1702 (cat=cfd)
-- `tensornet/cfd/qtt_triton_ops.py` — function L1187 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — function L1702 (cat=cfd)
+- `ontic/cfd/qtt_triton_ops.py` — function L1187 (cat=cfd)
 
 
 ### `apply_mpo_gpu` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_triton_kernels_v2.py` — `function` at L1484 (score 145)
+**Canonical:** `ontic/cfd/qtt_triton_kernels_v2.py` — `function` at L1484 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — function L1484 (cat=cfd)
-- `tensornet/cfd/qtt_triton_ops.py` — function L860 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — function L1484 (cat=cfd)
+- `ontic/cfd/qtt_triton_ops.py` — function L860 (cat=cfd)
 
 
 ### `benchmark_qtt_ntt` (2 implementations)
 
-**Canonical:** `tensornet/cuda/qtt_ntt.py` — `function` at L1281 (score 130)
+**Canonical:** `ontic/cuda/qtt_ntt.py` — `function` at L1281 (score 130)
 
 **Alternates:**
 
-- `tensornet/cuda/qtt_ntt.py` — function L1281 (cat=gpu)
+- `ontic/cuda/qtt_ntt.py` — function L1281 (cat=gpu)
 - `tensornet_qtt_ntt.py` — function L538 (cat=qtt-misc)
 
 
@@ -433,42 +433,42 @@ Each entry lists: canonical path + all known alternates.
 
 ### `dense_to_qtt` (2 implementations)
 
-**Canonical:** `tensornet/cfd/pure_qtt_ops.py` — `function` at L895 (score 145)
+**Canonical:** `ontic/cfd/pure_qtt_ops.py` — `function` at L895 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/pure_qtt_ops.py` — function L895 (cat=cfd)
+- `ontic/cfd/pure_qtt_ops.py` — function L895 (cat=cfd)
 - `apps/sdk_legacy/qtt-sdk/src/qtt_sdk/core.py` — function L124 (cat=sdk)
 
 
 ### `dense_to_qtt_cores` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_eval.py` — `function` at L421 (score 145)
+**Canonical:** `ontic/cfd/qtt_eval.py` — `function` at L421 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_eval.py` — function L421 (cat=cfd)
+- `ontic/cfd/qtt_eval.py` — function L421 (cat=cfd)
 - `tci_llm/qtt.py` — function L22 (cat=tci)
 
 
 ### `derivative_mpo` (2 implementations)
 
-**Canonical:** `tensornet/cfd/pure_qtt_ops.py` — `function` at L385 (score 145)
+**Canonical:** `ontic/cfd/pure_qtt_ops.py` — `function` at L385 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/pure_qtt_ops.py` — function L385 (cat=cfd)
+- `ontic/cfd/pure_qtt_ops.py` — function L385 (cat=cfd)
 - `apps/sdk_legacy/qtt-sdk/src/qtt_sdk/operators.py` — function L107 (cat=sdk)
 
 
 ### `derivative_mpo_gpu` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_triton_kernels_v2.py` — `function` at L1336 (score 145)
+**Canonical:** `ontic/cfd/qtt_triton_kernels_v2.py` — `function` at L1336 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — function L1336 (cat=cfd)
-- `tensornet/cfd/qtt_triton_ops.py` — function L891 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — function L1336 (cat=cfd)
+- `ontic/cfd/qtt_triton_ops.py` — function L891 (cat=cfd)
 
 
 ### `extract_features_16k_kernel` (2 implementations)
@@ -483,11 +483,11 @@ Each entry lists: canonical path + all known alternates.
 
 ### `field_to_qtt` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt.py` — `function` at L217 (score 145)
+**Canonical:** `ontic/cfd/qtt.py` — `function` at L217 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt.py` — function L217 (cat=cfd)
+- `ontic/cfd/qtt.py` — function L217 (cat=cfd)
 - `demos/resolution_independence.py` — function L163 (cat=demos)
 
 
@@ -513,12 +513,12 @@ Each entry lists: canonical path + all known alternates.
 
 ### `identity_mpo_gpu` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_triton_kernels_v2.py` — `function` at L1257 (score 145)
+**Canonical:** `ontic/cfd/qtt_triton_kernels_v2.py` — `function` at L1257 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — function L1257 (cat=cfd)
-- `tensornet/cfd/qtt_triton_ops.py` — function L804 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — function L1257 (cat=cfd)
+- `ontic/cfd/qtt_triton_ops.py` — function L804 (cat=cfd)
 
 
 ### `init_qtt_cores` (2 implementations)
@@ -533,42 +533,42 @@ Each entry lists: canonical path + all known alternates.
 
 ### `InvariantType` (2 implementations)
 
-**Canonical:** `tensornet/exploit/invariant_hunter.py` — `class` at L32 (score 62)
+**Canonical:** `ontic/exploit/invariant_hunter.py` — `class` at L32 (score 62)
 
 **Alternates:**
 
-- `tensornet/exploit/invariant_hunter.py` — class L32 (cat=other)
-- `tensornet/exploit/invariants.py` — class L124 (cat=other)
+- `ontic/exploit/invariant_hunter.py` — class L32 (cat=other)
+- `ontic/exploit/invariants.py` — class L124 (cat=other)
 
 
 ### `KernelStats` (2 implementations)
 
-**Canonical:** `tensornet/core/gpu.py` — `class` at L69 (score 162)
+**Canonical:** `ontic/core/gpu.py` — `class` at L69 (score 162)
 
 **Alternates:**
 
-- `tensornet/core/gpu.py` — class L69 (cat=core)
-- `tensornet/fieldos/kernel.py` — class L93 (cat=other)
+- `ontic/core/gpu.py` — class L69 (cat=core)
+- `ontic/fieldos/kernel.py` — class L93 (cat=other)
 
 
 ### `laplacian_mpo` (2 implementations)
 
-**Canonical:** `tensornet/cfd/pure_qtt_ops.py` — `function` at L428 (score 145)
+**Canonical:** `ontic/cfd/pure_qtt_ops.py` — `function` at L428 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/pure_qtt_ops.py` — function L428 (cat=cfd)
+- `ontic/cfd/pure_qtt_ops.py` — function L428 (cat=cfd)
 - `apps/sdk_legacy/qtt-sdk/src/qtt_sdk/operators.py` — function L180 (cat=sdk)
 
 
 ### `laplacian_mpo_gpu` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_triton_kernels_v2.py` — `function` at L1377 (score 145)
+**Canonical:** `ontic/cfd/qtt_triton_kernels_v2.py` — `function` at L1377 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — function L1377 (cat=cfd)
-- `tensornet/cfd/qtt_triton_ops.py` — function L925 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — function L1377 (cat=cfd)
+- `ontic/cfd/qtt_triton_ops.py` — function L925 (cat=cfd)
 
 
 ### `lattice_spacing` (2 implementations)
@@ -583,112 +583,112 @@ Each entry lists: canonical path + all known alternates.
 
 ### `mpo_sum` (2 implementations)
 
-**Canonical:** `tensornet/core/mpo.py` — `function` at L187 (score 160)
+**Canonical:** `ontic/core/mpo.py` — `function` at L187 (score 160)
 
 **Alternates:**
 
-- `tensornet/core/mpo.py` — function L187 (cat=core)
+- `ontic/core/mpo.py` — function L187 (cat=core)
 - `fluidelite/core/mpo.py` — function L193 (cat=fluidelite)
 
 
 ### `MPOCore` (2 implementations)
 
-**Canonical:** `tensornet/cfd/pure_qtt_ops.py` — `class` at L57 (score 147)
+**Canonical:** `ontic/cfd/pure_qtt_ops.py` — `class` at L57 (score 147)
 
 **Alternates:**
 
-- `tensornet/cfd/pure_qtt_ops.py` — class L57 (cat=cfd)
+- `ontic/cfd/pure_qtt_ops.py` — class L57 (cat=cfd)
 - `oracle/oracle_engine.py` — class L29 (cat=oracle)
 
 
 ### `QTT2DState` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_2d.py` — `class` at L103 (score 147)
+**Canonical:** `ontic/cfd/qtt_2d.py` — `class` at L103 (score 147)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_2d.py` — class L103 (cat=cfd)
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — class L129 (cat=cfd)
+- `ontic/cfd/qtt_2d.py` — class L103 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — class L129 (cat=cfd)
 
 
 ### `qtt_add_gpu` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_triton_kernels_v2.py` — `function` at L1002 (score 145)
+**Canonical:** `ontic/cfd/qtt_triton_kernels_v2.py` — `function` at L1002 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — function L1002 (cat=cfd)
-- `tensornet/cfd/qtt_triton_ops.py` — function L608 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — function L1002 (cat=cfd)
+- `ontic/cfd/qtt_triton_ops.py` — function L608 (cat=cfd)
 
 
 ### `qtt_eval_at_index` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_eval.py` — `function` at L126 (score 145)
+**Canonical:** `ontic/cfd/qtt_eval.py` — `function` at L126 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_eval.py` — function L126 (cat=cfd)
+- `ontic/cfd/qtt_eval.py` — function L126 (cat=cfd)
 - `tci_llm/qtt.py` — function L127 (cat=tci)
 
 
 ### `qtt_eval_batch` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_eval.py` — `function` at L168 (score 145)
+**Canonical:** `ontic/cfd/qtt_eval.py` — `function` at L168 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_eval.py` — function L168 (cat=cfd)
+- `ontic/cfd/qtt_eval.py` — function L168 (cat=cfd)
 - `tci_llm/qtt.py` — function L159 (cat=tci)
 
 
 ### `qtt_evaluate_batch_gpu` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_triton_kernels_v2.py` — `function` at L1776 (score 145)
+**Canonical:** `ontic/cfd/qtt_triton_kernels_v2.py` — `function` at L1776 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — function L1776 (cat=cfd)
-- `tensornet/cfd/qtt_triton_ops.py` — function L1203 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — function L1776 (cat=cfd)
+- `ontic/cfd/qtt_triton_ops.py` — function L1203 (cat=cfd)
 
 
 ### `qtt_from_function_dense` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_tci.py` — `function` at L86 (score 145)
+**Canonical:** `ontic/cfd/qtt_tci.py` — `function` at L86 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_tci.py` — function L86 (cat=cfd)
+- `ontic/cfd/qtt_tci.py` — function L86 (cat=cfd)
 - `tci_llm/qtt.py` — function L86 (cat=tci)
 
 
 ### `qtt_hadamard` (2 implementations)
 
-**Canonical:** `tensornet/cfd/pure_qtt_ops.py` — `function` at L768 (score 145)
+**Canonical:** `ontic/cfd/pure_qtt_ops.py` — `function` at L768 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/pure_qtt_ops.py` — function L768 (cat=cfd)
-- `tensornet/cfd/qtt_hadamard.py` — function L48 (cat=cfd)
+- `ontic/cfd/pure_qtt_ops.py` — function L768 (cat=cfd)
+- `ontic/cfd/qtt_hadamard.py` — function L48 (cat=cfd)
 
 
 ### `qtt_hadamard_gpu` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_triton_kernels_v2.py` — `function` at L1173 (score 145)
+**Canonical:** `ontic/cfd/qtt_triton_kernels_v2.py` — `function` at L1173 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — function L1173 (cat=cfd)
-- `tensornet/cfd/qtt_triton_ops.py` — function L730 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — function L1173 (cat=cfd)
+- `ontic/cfd/qtt_triton_ops.py` — function L730 (cat=cfd)
 
 
 ### `qtt_inner_product_gpu` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_triton_kernels_v2.py` — `function` at L1223 (score 145)
+**Canonical:** `ontic/cfd/qtt_triton_kernels_v2.py` — `function` at L1223 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — function L1223 (cat=cfd)
-- `tensornet/cfd/qtt_triton_ops.py` — function L766 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — function L1223 (cat=cfd)
+- `ontic/cfd/qtt_triton_ops.py` — function L766 (cat=cfd)
 
 
 ### `qtt_matvec_native` (2 implementations)
@@ -703,81 +703,81 @@ Each entry lists: canonical path + all known alternates.
 
 ### `qtt_norm` (2 implementations)
 
-**Canonical:** `tensornet/cfd/pure_qtt_ops.py` — `function` at L849 (score 145)
+**Canonical:** `ontic/cfd/pure_qtt_ops.py` — `function` at L849 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/pure_qtt_ops.py` — function L849 (cat=cfd)
+- `ontic/cfd/pure_qtt_ops.py` — function L849 (cat=cfd)
 - `apps/sdk_legacy/qtt-sdk/src/qtt_sdk/operations.py` — function L152 (cat=sdk)
 
 
 ### `qtt_norm_gpu` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_triton_kernels_v2.py` — `function` at L1247 (score 145)
+**Canonical:** `ontic/cfd/qtt_triton_kernels_v2.py` — `function` at L1247 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — function L1247 (cat=cfd)
-- `tensornet/cfd/qtt_triton_ops.py` — function L795 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — function L1247 (cat=cfd)
+- `ontic/cfd/qtt_triton_ops.py` — function L795 (cat=cfd)
 
 
 ### `qtt_ntt_forward` (2 implementations)
 
-**Canonical:** `tensornet/cuda/qtt_ntt.py` — `function` at L1226 (score 130)
+**Canonical:** `ontic/cuda/qtt_ntt.py` — `function` at L1226 (score 130)
 
 **Alternates:**
 
-- `tensornet/cuda/qtt_ntt.py` — function L1226 (cat=gpu)
+- `ontic/cuda/qtt_ntt.py` — function L1226 (cat=gpu)
 - `tensornet_qtt_ntt.py` — function L483 (cat=qtt-misc)
 
 
 ### `qtt_ntt_inverse` (2 implementations)
 
-**Canonical:** `tensornet/cuda/qtt_ntt.py` — `function` at L1242 (score 130)
+**Canonical:** `ontic/cuda/qtt_ntt.py` — `function` at L1242 (score 130)
 
 **Alternates:**
 
-- `tensornet/cuda/qtt_ntt.py` — function L1242 (cat=gpu)
+- `ontic/cuda/qtt_ntt.py` — function L1242 (cat=gpu)
 - `tensornet_qtt_ntt.py` — function L499 (cat=qtt-misc)
 
 
 ### `qtt_poly_multiply` (2 implementations)
 
-**Canonical:** `tensornet/cuda/qtt_ntt.py` — `function` at L1251 (score 130)
+**Canonical:** `ontic/cuda/qtt_ntt.py` — `function` at L1251 (score 130)
 
 **Alternates:**
 
-- `tensornet/cuda/qtt_ntt.py` — function L1251 (cat=gpu)
+- `ontic/cuda/qtt_ntt.py` — function L1251 (cat=gpu)
 - `tensornet_qtt_ntt.py` — function L508 (cat=qtt-misc)
 
 
 ### `qtt_scale_gpu` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_triton_kernels_v2.py` — `function` at L1161 (score 145)
+**Canonical:** `ontic/cfd/qtt_triton_kernels_v2.py` — `function` at L1161 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — function L1161 (cat=cfd)
-- `tensornet/cfd/qtt_triton_ops.py` — function L723 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — function L1161 (cat=cfd)
+- `ontic/cfd/qtt_triton_ops.py` — function L723 (cat=cfd)
 
 
 ### `qtt_sum_gpu` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_triton_kernels_v2.py` — `function` at L1061 (score 145)
+**Canonical:** `ontic/cfd/qtt_triton_kernels_v2.py` — `function` at L1061 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — function L1061 (cat=cfd)
-- `tensornet/cfd/qtt_triton_ops.py` — function L658 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — function L1061 (cat=cfd)
+- `ontic/cfd/qtt_triton_ops.py` — function L658 (cat=cfd)
 
 
 ### `qtt_to_field` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt.py` — `function` at L287 (score 145)
+**Canonical:** `ontic/cfd/qtt.py` — `function` at L287 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt.py` — function L287 (cat=cfd)
+- `ontic/cfd/qtt.py` — function L287 (cat=cfd)
 - `demos/resolution_independence.py` — function L344 (cat=demos)
 
 
@@ -803,11 +803,11 @@ Each entry lists: canonical path + all known alternates.
 
 ### `QTTNTT` (2 implementations)
 
-**Canonical:** `tensornet/cuda/qtt_ntt.py` — `class` at L531 (score 132)
+**Canonical:** `ontic/cuda/qtt_ntt.py` — `class` at L531 (score 132)
 
 **Alternates:**
 
-- `tensornet/cuda/qtt_ntt.py` — class L531 (cat=gpu)
+- `ontic/cuda/qtt_ntt.py` — class L531 (cat=gpu)
 - `tensornet_qtt_ntt.py` — class L294 (cat=qtt-misc)
 
 
@@ -833,11 +833,11 @@ Each entry lists: canonical path + all known alternates.
 
 ### `QTTVector` (2 implementations)
 
-**Canonical:** `tensornet/genesis/topology/qtt_native.py` — `class` at L41 (score 155)
+**Canonical:** `ontic/genesis/topology/qtt_native.py` — `class` at L41 (score 155)
 
 **Alternates:**
 
-- `tensornet/genesis/topology/qtt_native.py` — class L41 (cat=genesis)
+- `ontic/genesis/topology/qtt_native.py` — class L41 (cat=genesis)
 - `tig011a_multimechanism.py` — class L117 (cat=other)
 
 
@@ -863,51 +863,51 @@ Each entry lists: canonical path + all known alternates.
 
 ### `shift_mpo` (2 implementations)
 
-**Canonical:** `tensornet/cfd/pure_qtt_ops.py` — `function` at L179 (score 145)
+**Canonical:** `ontic/cfd/pure_qtt_ops.py` — `function` at L179 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/pure_qtt_ops.py` — function L179 (cat=cfd)
+- `ontic/cfd/pure_qtt_ops.py` — function L179 (cat=cfd)
 - `apps/sdk_legacy/qtt-sdk/src/qtt_sdk/operators.py` — function L38 (cat=sdk)
 
 
 ### `shift_mpo_gpu` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_triton_kernels_v2.py` — `function` at L1272 (score 145)
+**Canonical:** `ontic/cfd/qtt_triton_kernels_v2.py` — `function` at L1272 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — function L1272 (cat=cfd)
-- `tensornet/cfd/qtt_triton_ops.py` — function L817 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — function L1272 (cat=cfd)
+- `ontic/cfd/qtt_triton_ops.py` — function L817 (cat=cfd)
 
 
 ### `shift_mpo_x_2d_gpu` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_triton_kernels_v2.py` — `function` at L1571 (score 145)
+**Canonical:** `ontic/cfd/qtt_triton_kernels_v2.py` — `function` at L1571 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — function L1571 (cat=cfd)
-- `tensornet/cfd/qtt_triton_ops.py` — function L1095 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — function L1571 (cat=cfd)
+- `ontic/cfd/qtt_triton_ops.py` — function L1095 (cat=cfd)
 
 
 ### `shift_mpo_y_2d_gpu` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_triton_kernels_v2.py` — `function` at L1634 (score 145)
+**Canonical:** `ontic/cfd/qtt_triton_kernels_v2.py` — `function` at L1634 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — function L1634 (cat=cfd)
-- `tensornet/cfd/qtt_triton_ops.py` — function L1141 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — function L1634 (cat=cfd)
+- `ontic/cfd/qtt_triton_ops.py` — function L1141 (cat=cfd)
 
 
 ### `svd_truncated` (2 implementations)
 
-**Canonical:** `tensornet/core/decompositions.py` — `function` at L28 (score 160)
+**Canonical:** `ontic/core/decompositions.py` — `function` at L28 (score 160)
 
 **Alternates:**
 
-- `tensornet/core/decompositions.py` — function L28 (cat=core)
+- `ontic/core/decompositions.py` — function L28 (cat=core)
 - `fluidelite/core/decompositions.py` — function L131 (cat=fluidelite)
 
 
@@ -943,32 +943,32 @@ Each entry lists: canonical path + all known alternates.
 
 ### `tropical_eigenvalue` (2 implementations)
 
-**Canonical:** `tensornet/genesis/tropical/matrix.py` — `function` at L382 (score 153)
+**Canonical:** `ontic/genesis/tropical/matrix.py` — `function` at L382 (score 153)
 
 **Alternates:**
 
-- `tensornet/genesis/tropical/matrix.py` — function L382 (cat=genesis)
-- `tensornet/genesis/tropical/optimization.py` — function L47 (cat=genesis)
+- `ontic/genesis/tropical/matrix.py` — function L382 (cat=genesis)
+- `ontic/genesis/tropical/optimization.py` — function L47 (cat=genesis)
 
 
 ### `truncate_qtt` (2 implementations)
 
-**Canonical:** `tensornet/cfd/pure_qtt_ops.py` — `function` at L539 (score 145)
+**Canonical:** `ontic/cfd/pure_qtt_ops.py` — `function` at L539 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/pure_qtt_ops.py` — function L539 (cat=cfd)
+- `ontic/cfd/pure_qtt_ops.py` — function L539 (cat=cfd)
 - `apps/sdk_legacy/qtt-sdk/src/qtt_sdk/operations.py` — function L171 (cat=sdk)
 
 
 ### `truncate_qtt_gpu` (2 implementations)
 
-**Canonical:** `tensornet/cfd/qtt_triton_kernels_v2.py` — `function` at L938 (score 145)
+**Canonical:** `ontic/cfd/qtt_triton_kernels_v2.py` — `function` at L938 (score 145)
 
 **Alternates:**
 
-- `tensornet/cfd/qtt_triton_kernels_v2.py` — function L938 (cat=cfd)
-- `tensornet/cfd/qtt_triton_ops.py` — function L551 (cat=cfd)
+- `ontic/cfd/qtt_triton_kernels_v2.py` — function L938 (cat=cfd)
+- `ontic/cfd/qtt_triton_ops.py` — function L551 (cat=cfd)
 
 
 ### `YangMillsMPO` (2 implementations)

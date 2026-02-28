@@ -14,7 +14,7 @@ try:
     vram = torch.cuda.mem_get_info()[0] / 1024**2
     log(f"CUDA: {torch.cuda.is_available()}, VRAM free: {vram:.0f} MB")
 
-    from tensornet.em.chu_limit_gpu import optimize_chu_antenna_gpu, make_chu_gpu_config
+    from ontic.em.chu_limit_gpu import optimize_chu_antenna_gpu, make_chu_gpu_config
     log("Imports OK")
 
     device = torch.device("cuda")

@@ -1,4 +1,4 @@
-# Module `tensornet.distributed_tn`
+# Module `ontic.distributed_tn`
 
 Distributed Tensor Network Module ==================================
 

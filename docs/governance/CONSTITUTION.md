@@ -51,7 +51,7 @@ Every proof MUST generate:
 
 ```
 The Physics OS/
-├── tensornet/              # Core library (pip-installable)
+├── ontic/              # Core library (pip-installable)
 │   ├── substrate/          # Layer 0: Field Oracle API (THE SPINE)
 │   │   ├── field.py        # sample(), slice(), step(), stats(), serialize()
 │   │   ├── stats.py        # FieldStats telemetry dashboard

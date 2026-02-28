@@ -135,8 +135,8 @@ def run_scale_point(
     dict
         Full measurement record with QTT internals exposed.
     """
-    from tensornet.engine.vm.gpu_runtime import GPURuntime, GPURankGovernor
-    from tensornet.engine.vm.compilers import Maxwell3DCompiler
+    from ontic.engine.vm.gpu_runtime import GPURuntime, GPURankGovernor
+    from ontic.engine.vm.compilers import Maxwell3DCompiler
 
     N_per_axis = 2 ** n_bits
     N_total = N_per_axis ** 3

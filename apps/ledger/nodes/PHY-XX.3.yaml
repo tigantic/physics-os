@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Orbital mechanics, debris"
 
 source_files:
-  - "tensornet/guidance/trajectory.py"
+  - "ontic/guidance/trajectory.py"
 
 tests:
   smoke:

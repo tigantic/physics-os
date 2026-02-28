@@ -13,7 +13,7 @@ state: "V0.4"
 description: "Projection, SIMPLE, PISO methods"
 
 source_files:
-  - "tensornet/cfd/ns_2d.py"
+  - "ontic/cfd/ns_2d.py"
 
 tests:
   smoke:

@@ -1,4 +1,4 @@
-# Module `tensornet.certification`
+# Module `ontic.certification`
 
 Certification Module for The Physics OS ====================================
 
@@ -10,7 +10,7 @@ Modules:
     - hardware: Hardware deployment and optimization
 
 Usage:
-    from tensornet.certification import (
+    from ontic.certification import (
         DAL, VerificationMethod, RequirementsDatabase,
         HardwareSpec, deploy_to_hardware
     )

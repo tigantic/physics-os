@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Krylov, AMG, eigensolvers"
 
 source_files:
-  - "tensornet/algorithms/lanczos.py"
+  - "ontic/algorithms/lanczos.py"
 
 tests:
   smoke:

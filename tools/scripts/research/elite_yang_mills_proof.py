@@ -10,9 +10,9 @@
 ║                                                                                      ║
 ║  ARSENAL DEPLOYED:                                                                   ║
 ║  ────────────────                                                                    ║
-║  • tensornet.algorithms.dmrg    - Production 2-site DMRG with Lanczos                ║
-║  • tensornet.core.mps           - Full MPS class with canonicalization               ║
-║  • tensornet.core.mpo           - MPO Hamiltonian representation                     ║
+║  • ontic.algorithms.dmrg    - Production 2-site DMRG with Lanczos                ║
+║  • ontic.core.mps           - Full MPS class with canonicalization               ║
+║  • ontic.core.mpo           - MPO Hamiltonian representation                     ║
 ║  • yangmills.qtt_dmrg_large_lattice - Large-L lattice (30-100 sites)                 ║
 ║  • yangmills.yangmills_4d_qtt   - 4D Yang-Mills with O(log N) QTT                    ║
 ║  • yangmills.transfer_matrix_final_proof - Transfer matrix gap bounds                ║
@@ -46,9 +46,9 @@ import hashlib
 sys.path.insert(0, str(Path(__file__).parent))
 
 # Import the REAL machinery
-from tensornet.core.mps import MPS
-from tensornet.core.mpo import MPO
-from tensornet.algorithms.dmrg import dmrg, DMRGResult
+from ontic.core.mps import MPS
+from ontic.core.mpo import MPO
+from ontic.algorithms.dmrg import dmrg, DMRGResult
 
 
 # ═══════════════════════════════════════════════════════════════════════════════════════
@@ -478,7 +478,7 @@ def export_lean_proof(results: List[EliteResult], bounds: RigorousBounds) -> str
 ╠══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                              ║
 ║  Generated: {datetime.now().isoformat()}
-║  Method: tensornet DMRG with MPO Hamiltonian                                 ║
+║  Method: ontic DMRG with MPO Hamiltonian                                 ║
 ║  Bound type: Arb interval arithmetic ({bounds.precision}-bit)
 ║                                                                              ║
 ║  THE AXIOMS BELOW ARE JUSTIFIED BY:                                          ║
@@ -623,7 +623,7 @@ def run_elite_pipeline(
     print("╔" + "═" * 78 + "╗")
     print("║" + " " * 20 + "ELITE YANG-MILLS PROOF ENGINE" + " " * 27 + "║")
     print("║" + " " * 78 + "║")
-    print("║  • tensornet DMRG with Lanczos" + " " * 47 + "║")
+    print("║  • ontic DMRG with Lanczos" + " " * 47 + "║")
     print("║  • Arb interval arithmetic" + " " * 51 + "║")
     print("║  • Lean 4 + Mathlib formalization" + " " * 44 + "║")
     print("╚" + "═" * 78 + "╝")

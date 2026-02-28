@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Cahn-Hilliard, Allen-Cahn"
 
 source_files:
-  - "tensornet/phase_field/__init__.py"
+  - "ontic/phase_field/__init__.py"
 
 tests:
   smoke:

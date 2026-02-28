@@ -13,7 +13,7 @@ state: "V0.2"
 description: "PIMC, ring polymer MD"
 
 source_files:
-  - "tensornet/quantum_mechanics/path_integrals.py"
+  - "ontic/quantum_mechanics/path_integrals.py"
 
 tests:
   smoke:

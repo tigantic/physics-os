@@ -1,5 +1,5 @@
 """
-Test Module: tensornet/sovereign/
+Test Module: ontic/sovereign/
 
 Sovereign Engine Infrastructure Tests
 Constitutional Compliance:

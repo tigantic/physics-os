@@ -8,7 +8,7 @@ Key insight: NTT butterfly is an MPO with special structure.
 We use existing qtt_native_ops.apply_mpo_cuda for the heavy lifting.
 
 Usage:
-    from tensornet.cuda.qtt_ntt import QTTNTT, qtt_ntt_forward, qtt_ntt_inverse
+    from ontic.cuda.qtt_ntt import QTTNTT, qtt_ntt_forward, qtt_ntt_inverse
     
     # For complex DFT
     ntt = QTTNTT(n_bits=10)  # N = 1024
@@ -32,18 +32,18 @@ from dataclasses import dataclass
 
 # Import existing QTT infrastructure
 try:
-    from tensornet.cuda.qtt_native_ops import (
+    from ontic.cuda.qtt_native_ops import (
         apply_mpo_cuda,
         qtt_hadamard_cuda,
         _flatten_cores,
         _unflatten_cores,
         is_cuda_available,
     )
-    from tensornet.core.decompositions import svd_truncated
+    from ontic.core.decompositions import svd_truncated
     HAS_TENSORNET = True
 except ImportError:
     HAS_TENSORNET = False
-    print("[QTT-NTT] Warning: tensornet not found, using standalone mode")
+    print("[QTT-NTT] Warning: ontic not found, using standalone mode")
 
 
 # =============================================================================
@@ -350,7 +350,7 @@ class QTTNTT:
         """
         Convert vector to QTT format.
         
-        Uses SVD-based decomposition from tensornet.
+        Uses SVD-based decomposition from ontic.
         """
         assert len(x) == self.N, f"Expected length {self.N}, got {len(x)}"
         

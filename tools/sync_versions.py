@@ -4,8 +4,8 @@
 Reads the canonical VERSION file at the repository root and updates:
   - pyproject.toml         (version field — PACKAGE)
   - CITATION.cff           (version field — RELEASE)
-  - tensornet/__init__.py  (__version__ — PACKAGE major.minor)
-  - hypertensor/__init__.py (__version__, RUNTIME_VERSION — PACKAGE, RUNTIME)
+  - ontic/__init__.py      (__version__ — PACKAGE major.minor)
+  - physics_os/__init__.py  (__version__, RUNTIME_VERSION — PACKAGE, RUNTIME)
   - Cargo.toml             (commented header version — RELEASE)
 
 Usage:
@@ -127,10 +127,10 @@ def check_citation(versions: dict[str, str], apply: bool) -> bool:
     return False
 
 
-def check_tensornet_init(versions: dict[str, str], apply: bool) -> bool:
-    """Check/update tensornet/__init__.py __version__."""
-    path = REPO_ROOT / "tensornet" / "__init__.py"
-    # PACKAGE is e.g. "40.0.1", tensornet __version__ uses major.minor "40.0.0" or full
+def check_ontic_init(versions: dict[str, str], apply: bool) -> bool:
+    """Check/update ontic/__init__.py __version__."""
+    path = REPO_ROOT / "ontic" / "__init__.py"
+    # PACKAGE is e.g. "40.0.1", ontic __version__ uses major.minor "40.0.0" or full
     pattern = re.compile(r'^(__version__\s*=\s*")([^"]+)(")', re.MULTILINE)
     pkg = versions["PACKAGE"]
     # Use major.minor.0 for the module (patch comes from pyproject)
@@ -142,9 +142,9 @@ def check_tensornet_init(versions: dict[str, str], apply: bool) -> bool:
     )
 
 
-def check_hypertensor_init(versions: dict[str, str], apply: bool) -> bool:
-    """Check/update hypertensor/__init__.py __version__ and RUNTIME_VERSION."""
-    path = REPO_ROOT / "hypertensor" / "__init__.py"
+def check_physics_os_init(versions: dict[str, str], apply: bool) -> bool:
+    """Check/update physics_os/__init__.py __version__ and RUNTIME_VERSION."""
+    path = REPO_ROOT / "physics_os" / "__init__.py"
     if not path.exists():
         print(f"  SKIP: {path.name} not found")
         return True
@@ -276,8 +276,8 @@ def main() -> None:
     results = [
         check_pyproject(versions, apply),
         check_citation(versions, apply),
-        check_tensornet_init(versions, apply),
-        check_hypertensor_init(versions, apply),
+        check_ontic_init(versions, apply),
+        check_physics_os_init(versions, apply),
         check_cargo_toml(versions, apply),
     ]
 

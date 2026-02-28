@@ -22,7 +22,7 @@ $$H = J \sum_i \left( S^x_i S^x_{i+1} + S^y_i S^y_{i+1} + \Delta S^z_i S^z_{i+1}
 
 ```python
 import torch
-from tensornet import dmrg, heisenberg_mpo
+from ontic import dmrg, heisenberg_mpo
 
 # System parameters
 L = 20          # Chain length
@@ -86,7 +86,7 @@ $$H = -J \sum_i S^z_i S^z_{i+1} - h \sum_i S^x_i$$
 At the critical point h/J = 1, the system transitions from ferromagnetic (h < J) to paramagnetic (h > J).
 
 ```python
-from tensornet import tfim_mpo
+from ontic import tfim_mpo
 
 # Critical point
 h_c = 1.0
@@ -101,8 +101,8 @@ print(f"Critical ground state energy: {result.energy:.6f}")
 For dynamics, use the Time-Evolving Block Decimation algorithm:
 
 ```python
-from tensornet.algorithms.tebd import tebd_step
-from tensornet.core import MPS
+from ontic.algorithms.tebd import tebd_step
+from ontic.core import MPS
 
 # Create initial state (e.g., Neel state)
 psi = MPS.product_state(L, [0, 1] * (L // 2))

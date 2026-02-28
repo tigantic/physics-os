@@ -45,7 +45,7 @@ def run_phase_1a_proofs():
     # ===== Test 1: Poisson Solver =====
     print("TEST 1: Poisson Solver")
     print("-" * 70)
-    from tensornet.cfd.tt_poisson import test_poisson_solver
+    from ontic.cfd.tt_poisson import test_poisson_solver
 
     poisson_result = test_poisson_solver()
     results["tests"].append(
@@ -62,7 +62,7 @@ def run_phase_1a_proofs():
     # ===== Test 2: Projection =====
     print("\nTEST 2: Velocity Projection")
     print("-" * 70)
-    from tensornet.cfd.tt_poisson import test_projection
+    from ontic.cfd.tt_poisson import test_projection
 
     proj_result = test_projection()
     results["tests"].append(
@@ -79,7 +79,7 @@ def run_phase_1a_proofs():
     # ===== Test 3: Advection Operator =====
     print("\nTEST 3: Advection Operator")
     print("-" * 70)
-    from tensornet.cfd.tt_poisson import test_advection
+    from ontic.cfd.tt_poisson import test_advection
 
     adv_result = test_advection()
     results["tests"].append(
@@ -92,7 +92,7 @@ def run_phase_1a_proofs():
     # ===== Test 4: Taylor-Green Benchmark =====
     print("\nTEST 4: Taylor-Green Vortex Benchmark")
     print("-" * 70)
-    from tensornet.cfd.ns_2d import test_taylor_green
+    from ontic.cfd.ns_2d import test_taylor_green
 
     tg_result = test_taylor_green()
     results["tests"].append(

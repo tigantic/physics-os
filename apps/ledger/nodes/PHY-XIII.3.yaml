@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Rotating MHD shells"
 
 source_files:
-  - "tensornet/geophysics/geodynamo.py"
+  - "ontic/geophysics/geodynamo.py"
 
 tests:
   smoke:

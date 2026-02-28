@@ -13,7 +13,7 @@ state: "V0.2"
 description: "SCFT, coarse-grained"
 
 source_files:
-  - "tensornet/materials/polymers_soft_matter.py"
+  - "ontic/materials/polymers_soft_matter.py"
 
 tests:
   smoke:

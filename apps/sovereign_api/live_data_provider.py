@@ -186,7 +186,7 @@ class LiveDataProvider:
     def _init_detector(self) -> None:
         """Initialize regime detector."""
         try:
-            from tensornet.ml.neural.regime_detector import (
+            from ontic.ml.neural.regime_detector import (
                 RegimeDetector,
                 RegimeDetectorConfig,
                 MarketRegime as DetectorRegime

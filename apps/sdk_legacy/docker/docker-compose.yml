@@ -12,7 +12,7 @@ services:
     image: tigantic/hypertensor:latest
     container_name: hypertensor
     volumes:
-      - hypertensor-data:/home/hypertensor/data
+      - hypertensor-data:/home/physics_os/data
     restart: unless-stopped
 
   # =============================================================================
@@ -33,7 +33,7 @@ services:
               count: all
               capabilities: [gpu]
     volumes:
-      - hypertensor-data:/home/hypertensor/data
+      - hypertensor-data:/home/physics_os/data
     restart: unless-stopped
 
   # =============================================================================
@@ -49,8 +49,8 @@ services:
     ports:
       - "8888:8888"
     volumes:
-      - hypertensor-notebooks:/home/hypertensor/notebooks
-      - hypertensor-data:/home/hypertensor/data
+      - hypertensor-notebooks:/home/physics_os/notebooks
+      - hypertensor-data:/home/physics_os/data
     restart: unless-stopped
 
   # =============================================================================
@@ -67,7 +67,7 @@ services:
       - "8000:8000"  # REST API
       - "5555:5555"  # ZMQ Bridge
     volumes:
-      - hypertensor-data:/home/hypertensor/data
+      - hypertensor-data:/home/physics_os/data
     environment:
       - HYPERTENSOR_LOG_LEVEL=INFO
       - HYPERTENSOR_MAX_WORKERS=4

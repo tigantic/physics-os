@@ -24,7 +24,7 @@ Turbulent flow fields satisfy an **Area Law** analogous to quantum entanglement�
 
 ```
 The Physics OS/
-├── tensornet/                    # Core library
+├── ontic/                    # Core library
 │   ├── __init__.py               # Package exports
 │   ├── substrate/                # Layer 0: Field Oracle API (19 tests)
 │   │   ├── __init__.py           # Substrate exports
@@ -370,7 +370,7 @@ The Physics OS/
 
 ## III. Component Inventory
 
-### A. Tensor Network Core (`tensornet/`)
+### A. Tensor Network Core (`ontic/`)
 
 | Component | File | Status | Proof Coverage |
 |-----------|------|--------|----------------|
@@ -384,7 +384,7 @@ The Physics OS/
 | Lanczos Solver | `algorithms/lanczos.py` | ✅ Implemented | Proof 5.1 |
 | Excited States | `algorithms/excited.py` | ✅ Implemented | Script demo |
 
-### B. CFD Core (`tensornet/cfd/`)
+### B. CFD Core (`ontic/cfd/`)
 
 #### Phase 2: 1D Euler Equations
 
@@ -1131,7 +1131,7 @@ The Physics OS/
 | make_decision | `autonomy/decision_making.py` | ✅ Implemented | Convenience decision function |
 | evaluate_options | `autonomy/decision_making.py` | ✅ Implemented | Option evaluation function |
 
-#### Phase 20: Quantum-Classical Hybrid & Certification (`tensornet/quantum/`, `tensornet/certification/`)
+#### Phase 20: Quantum-Classical Hybrid & Certification (`ontic/quantum/`, `ontic/certification/`)
 
 | Component | File | Status | Description |
 |-----------|------|--------|-------------|
@@ -1167,7 +1167,7 @@ The Physics OS/
 | HILValidator | `certification/hardware.py` | ✅ Implemented | HIL validation framework |
 | DeploymentPackage | `certification/hardware.py` | ✅ Implemented | Deployment artifacts |
 
-#### Phase 21: TT-CFD Core (`tensornet/cfd/weno.py`, `weno_tt.py`, `tt_cfd.py`, `adaptive_tt.py`)
+#### Phase 21: TT-CFD Core (`ontic/cfd/weno.py`, `weno_tt.py`, `tt_cfd.py`, `adaptive_tt.py`)
 
 | Component | File | Status | Description |
 |-----------|------|--------|-------------|
@@ -1194,7 +1194,7 @@ The Physics OS/
 | AdaptiveTTEuler | `cfd/adaptive_tt.py` | ✅ Implemented | Full TT-AMR Euler solver |
 | EntanglementMonitor | `cfd/adaptive_tt.py` | ✅ Implemented | Track entropy evolution |
 
-#### Phase 22: Operational Applications (`tensornet/cfd/plasma.py`, `radar.py`, `threat.py`, `guidance/trajectory.py`)
+#### Phase 22: Operational Applications (`ontic/cfd/plasma.py`, `radar.py`, `threat.py`, `guidance/trajectory.py`)
 
 | Component | File | Status | Description |
 |-----------|------|--------|-------------|
@@ -1211,7 +1211,7 @@ The Physics OS/
 | TrajectoryOptimizer | `guidance/trajectory.py` | ✅ Implemented | Gradient-based optimization |
 | ConstraintHandler | `guidance/trajectory.py` | ✅ Implemented | Path constraints |
 
-#### Phase 23: Radiation Hardening (`tensornet/certification/tmr.py`, `edac.py`, `seu_detection.py`, `watchdog.py`)
+#### Phase 23: Radiation Hardening (`ontic/certification/tmr.py`, `edac.py`, `seu_detection.py`, `watchdog.py`)
 
 | Component | File | Status | Description |
 |-----------|------|--------|-------------|
@@ -1237,7 +1237,7 @@ The Physics OS/
 | Integration tests | `tests/` | ✅ Implemented | Full test coverage |
 | Proof scripts | `proofs/` | ✅ Implemented | All 23 proofs passing |
 
-### C. Hamiltonian Library (`tensornet/mps/hamiltonians.py`)
+### C. Hamiltonian Library (`ontic/mps/hamiltonians.py`)
 
 | Model | Function | Bond Dim | Local Dim | Validation |
 |-------|----------|----------|-----------|------------|
@@ -1247,7 +1247,7 @@ The Physics OS/
 | XYZ Model | `xyz_mpo()` | D=5 | d=2 | Numerics |
 | Bose-Hubbard | `bose_hubbard_mpo()` | D=4 | d=n+1 | Phase trans. |
 
-### D. Fermionic Systems (`tensornet/algorithms/fermionic.py`)
+### D. Fermionic Systems (`ontic/algorithms/fermionic.py`)
 
 | Model | Function | Transformation | Validation |
 |-------|----------|----------------|------------|
@@ -1425,7 +1425,7 @@ $$S(x) = \frac{c}{6} \log\left(\frac{L}{\pi} \sin\frac{\pi x}{L}\right) + \text{
 | Oblique shock validation | ✅ Done | None |
 | OpenFOAM comparison | ⏳ Planned | External dep |
 
-**Phase 2 Components (`tensornet/cfd/`)**:
+**Phase 2 Components (`ontic/cfd/`)**:
 
 | Component | File | Status | Description |
 |-----------|------|--------|-------------|
@@ -1714,14 +1714,14 @@ Form Factor: Missile-compatible SWaP
 
 | Layer | Name | Module | Tests | Commit | Date |
 |-------|------|--------|-------|--------|------|
-| 0 | Substrate | `tensornet/substrate/` | 19 | — | 2025-12-24 |
-| 1 | FieldOps | `tensornet/operators/` | 41 | — | 2025-12-24 |
-| 2 | HyperVisual | `tensornet/hypervisual/` | 43 | — | 2025-12-24 |
-| 3 | HyperSim | `tensornet/hypersim/` | 40 | — | 2025-12-24 |
-| 4 | HyperEnv | `tensornet/hyperenv/` | 35 | — | 2025-12-24 |
-| 5 | Provenance | `tensornet/provenance/` | 72 | `86f8868` | 2025-12-24 |
-| 6 | Intent | `tensornet/intent/` | 71 | `038bb42` | 2025-12-24 |
-| 7 | Field OS | `tensornet/fieldos/` | 79 | `f2778e0` | 2025-12-24 |
+| 0 | Substrate | `ontic/substrate/` | 19 | — | 2025-12-24 |
+| 1 | FieldOps | `ontic/operators/` | 41 | — | 2025-12-24 |
+| 2 | HyperVisual | `ontic/hypervisual/` | 43 | — | 2025-12-24 |
+| 3 | HyperSim | `ontic/hypersim/` | 40 | — | 2025-12-24 |
+| 4 | HyperEnv | `ontic/hyperenv/` | 35 | — | 2025-12-24 |
+| 5 | Provenance | `ontic/provenance/` | 72 | `86f8868` | 2025-12-24 |
+| 6 | Intent | `ontic/intent/` | 71 | `038bb42` | 2025-12-24 |
+| 7 | Field OS | `ontic/fieldos/` | 79 | `f2778e0` | 2025-12-24 |
 | **Total** | | | **639** | | |
 
 ### North Star Achievement
@@ -1801,7 +1801,7 @@ Form Factor: Missile-compatible SWaP
 | L-01 | V.5.2 | Truncation error assertions | ✅ FIXED | Added warnings in DMRG/TEBD when error > 1e-10 | `249cd19` |
 | L-02 | V.5.3 | Degenerate eigenvalue docs | ✅ FIXED | Documented in lanczos.py | `8f6dfbe` |
 | L-03 | VII.7.1 | `master` → `main` rename | ✅ FIXED | Branch renamed, pushed to origin/main | `249cd19` |
-| L-04 | VIII.8.2 | Memory profiling decorator | ✅ FIXED | `tensornet/core/profiling.py` created | `ded009d` |
+| L-04 | VIII.8.2 | Memory profiling decorator | ✅ FIXED | `ontic/core/profiling.py` created | `ded009d` |
 | L-05 | IX.9.3 | Hardware spec details | ✅ FIXED | Added to proof_run.json and benchmarks | `8f6dfbe` |
 
 ### 🟢 Recently Fixed
@@ -1814,7 +1814,7 @@ Form Factor: Missile-compatible SWaP
 | F-04 | VII.7.1 | No develop branch | Created and pushed | `d8f92fe` |
 | F-05 | VII.7.3 | No pre-commit config | `.pre-commit-config.yaml` | `d8f92fe` |
 | F-06 | V.5.1 | No condition warnings | κ > 10¹⁰ warning added | `d8f92fe` |
-| F-07 | VIII.8.2 | Memory profiling decorator | `tensornet/core/profiling.py` created | `ded009d` |
+| F-07 | VIII.8.2 | Memory profiling decorator | `ontic/core/profiling.py` created | `ded009d` |
 | F-08 | II.2.4 | CFD docstrings | Added Example, Raises, References | `8f6dfbe` |
 | F-09 | III.3.4 | Benchmark hardware specs | `get_hardware_specs()` in benchmarks | `8f6dfbe` |
 | F-10 | VI.6.3 | Notebook references | DMRG/TEBD citations in all notebooks | `8f6dfbe` |
@@ -1831,7 +1831,7 @@ Form Factor: Missile-compatible SWaP
 
 **Current (Article II.2.1)**:
 ```
-tensornet/
+ontic/
 ├── core/
 ├── mps/
 ├── algorithms/
@@ -1840,7 +1840,7 @@ tensornet/
 
 **Proposed**:
 ```
-tensornet/
+ontic/
 ├── core/         # Fundamental operations
 ├── mps/          # MPS, MPO, Hamiltonians
 ├── algorithms/   # DMRG, TEBD, TDVP

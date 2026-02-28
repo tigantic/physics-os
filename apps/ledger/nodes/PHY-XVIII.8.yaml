@@ -13,7 +13,7 @@ state: "V0.2"
 description: "PHY-XVIII.8_Data_assimilation solver"
 
 source_files:
-  - "tensornet/packs/pack_xviii.py"
+  - "ontic/packs/pack_xviii.py"
 
 tests:
   smoke:

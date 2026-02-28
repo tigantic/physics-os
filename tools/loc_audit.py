@@ -88,8 +88,8 @@ for root, dirs, files in os.walk(REPO):
         results['by_top_dir'][top_dir]['code_lines'] += code
         results['by_top_dir'][top_dir]['bytes'] += size
         
-        # tensornet submodule breakdown
-        if parts and parts[0] == 'tensornet' and len(parts) >= 2:
+        # ontic submodule breakdown
+        if parts and parts[0] == 'ontic' and len(parts) >= 2:
             submod = parts[1]
             results['tensornet_modules'][submod]['files'] += 1
             results['tensornet_modules'][submod]['total_lines'] += total

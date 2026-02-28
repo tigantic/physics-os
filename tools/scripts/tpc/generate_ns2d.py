@@ -27,7 +27,7 @@ import torch
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from tensornet.cfd.trace_adapters.ns2d_adapter import NS2DTraceAdapter
+from ontic.cfd.trace_adapters.ns2d_adapter import NS2DTraceAdapter
 from tpc.format import BenchmarkResult, HardwareSpec, TheoremRef
 from tpc.generator import CertificateGenerator
 
@@ -108,7 +108,7 @@ def generate_ns2d_certificate(
     log.info(f"dt:      {dt}")
 
     # ── Create solver + adapter ──────────────────────────────────────
-    from tensornet.cfd.ns_2d import NS2DSolver, NSState
+    from ontic.cfd.ns_2d import NS2DSolver, NSState
     solver = NS2DSolver(Nx=Nx, Ny=Ny, Lx=Lx, Ly=Ly, nu=nu)
     adapter = NS2DTraceAdapter(solver)
 
@@ -210,7 +210,7 @@ def generate_ns2d_certificate(
         total_time_s=wall_time,
     )
 
-    gen.set_solver_hash(PROJECT_ROOT / "tensornet" / "cfd" / "ns_2d.py")
+    gen.set_solver_hash(PROJECT_ROOT / "ontic" / "cfd" / "ns_2d.py")
 
     cert, report = gen.generate_and_save(str(out_path))
     log.info(f"  Certificate: {out_path.name}")

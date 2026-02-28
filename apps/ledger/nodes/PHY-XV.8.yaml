@@ -13,7 +13,7 @@ state: "V0.2"
 description: "PHY-XV.8_Combustion solver"
 
 source_files:
-  - "tensornet/packs/pack_xv.py"
+  - "ontic/packs/pack_xv.py"
 
 tests:
   smoke:

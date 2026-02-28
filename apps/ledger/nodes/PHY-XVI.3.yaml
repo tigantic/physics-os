@@ -13,7 +13,7 @@ state: "V0.2"
 description: "CGMD/all-atom pipelines"
 
 source_files:
-  - "tensornet/membrane_bio/__init__.py"
+  - "ontic/membrane_bio/__init__.py"
 
 tests:
   smoke:

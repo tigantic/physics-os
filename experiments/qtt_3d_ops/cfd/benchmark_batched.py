@@ -104,7 +104,7 @@ def test_qtt_operations():
     print("\n[TEST 2] QTT Operation Correctness")
     print("-" * 50)
     
-    from tensornet.cfd.qtt_batched_ops import (
+    from ontic.cfd.qtt_batched_ops import (
         add_cores_raw, hadamard_cores_raw, scale_cores,
         single_truncation_sweep, qtt_inner, qtt_norm,
     )
@@ -168,7 +168,7 @@ def test_qtt_operations():
     print(f"  ✓ Scale: ||3.14*a|| = {norm_s.item():.4f} ≈ 3.14*||a|| = {expected:.4f}")
     
     # Test 6: Batched truncation
-    from tensornet.cfd.qtt_batched_ops import batched_truncation_sweep
+    from ontic.cfd.qtt_batched_ops import batched_truncation_sweep
     fields = [make_qtt(L, max_rank) for _ in range(6)]
     norms_before = [qtt_norm(f).item() for f in fields]
     fields = batched_truncation_sweep(fields, max_rank)
@@ -192,7 +192,7 @@ def test_batched_truncation_performance():
     print("\n[TEST 3] Batched Truncation Sweep Performance")
     print("-" * 50)
     
-    from tensornet.cfd.qtt_batched_ops import (
+    from ontic.cfd.qtt_batched_ops import (
         batched_truncation_sweep, single_truncation_sweep,
     )
     
@@ -252,7 +252,7 @@ def test_triton_kernel():
     print("\n[TEST 4] Triton 3D Kernel Performance")
     print("-" * 50)
     
-    from tensornet.cfd.triton_qtt3d import (
+    from ontic.cfd.triton_qtt3d import (
         triton_residual_absorb_3d, TRITON_AVAILABLE
     )
     
@@ -305,7 +305,7 @@ def test_phase_cross_product():
     print("\n[TEST 5] Phase-Level Cross Product")
     print("-" * 50)
     
-    from tensornet.cfd.qtt_batched_ops import (
+    from ontic.cfd.qtt_batched_ops import (
         batched_cross_product, hadamard_cores_raw, add_cores_raw,
         single_truncation_sweep, qtt_norm,
     )
@@ -375,8 +375,8 @@ def test_full_solver():
     print("-" * 50)
     
     try:
-        from tensornet.cfd.ns3d_turbo import TurboNS3DConfig, TurboNS3DSolver
-        from tensornet.cfd.qtt_batched_patch import patch_solver
+        from ontic.cfd.ns3d_turbo import TurboNS3DConfig, TurboNS3DSolver
+        from ontic.cfd.qtt_batched_patch import patch_solver
     except ImportError as e:
         print(f"  SKIP: {e}")
         return None

@@ -225,7 +225,7 @@ The step gate prevents false convergence triggers during:
 
 | File | Lines | Modifications |
 |:-----|:-----:|:-------------|
-| `tensornet/cfd/qtt_native_ops.py` | ~1,109 | rSVD threshold 512→48; Triton dispatch in hadamard/inner; rank_profile param in truncation |
+| `ontic/cfd/qtt_native_ops.py` | ~1,109 | rSVD threshold 512→48; Triton dispatch in hadamard/inner; rank_profile param in truncation |
 | `scripts/ahmed_body_ib_solver.py` | ~916 | Adaptive rank profile; dead dense removal; separable sponge; correction-based operators |
 | `scripts/ahmed_body_spectrum.py` | ~410 | Reconstructs mask from SDF instead of stored dense |
 | `scripts/gauntlet_vs_nvidia.py` | ~380 | Multi-resolution benchmark harness |
@@ -234,9 +234,9 @@ The step gate prevents false convergence triggers during:
 
 | File | Lines | Role |
 |:-----|:-----:|:-----|
-| `tensornet/cfd/ns3d_native.py` | 1,402 | Native QTT NS solver, derivatives, TT-SVD |
-| `tensornet/cfd/triton_qtt_kernels.py` | 433 | Triton GPU kernels (MPO, Hadamard, inner) |
-| `tensornet/cfd/kolmogorov_spectrum.py` | ~200 | Energy spectrum analysis |
+| `ontic/cfd/ns3d_native.py` | 1,402 | Native QTT NS solver, derivatives, TT-SVD |
+| `ontic/cfd/triton_qtt_kernels.py` | 433 | Triton GPU kernels (MPO, Hadamard, inner) |
+| `ontic/cfd/kolmogorov_spectrum.py` | ~200 | Energy spectrum analysis |
 
 ---
 

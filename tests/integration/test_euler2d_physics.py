@@ -23,7 +23,7 @@ pytestmark = [
     pytest.mark.conservation,  # Mass/momentum/energy conservation tests
 ]
 
-from tensornet.cfd.euler_2d import (BCType, Euler2D, Euler2DState,
+from ontic.cfd.euler_2d import (BCType, Euler2D, Euler2DState,
                                     double_mach_reflection_ic,
                                     oblique_shock_exact, supersonic_wedge_ic)
 
@@ -287,7 +287,7 @@ class TestSupersonicWedgeFlow:
 
     def test_wedge_geometry_inside_detection(self):
         """Verify is_inside correctly identifies points inside wedge."""
-        from tensornet.cfd.geometry import WedgeGeometry
+        from ontic.cfd.geometry import WedgeGeometry
 
         wedge = WedgeGeometry(
             x_leading_edge=0.2,
@@ -313,7 +313,7 @@ class TestSupersonicWedgeFlow:
 
     def test_immersed_boundary_creates_valid_ghost_cells(self):
         """Verify ImmersedBoundary computes ghost cells correctly."""
-        from tensornet.cfd.geometry import ImmersedBoundary, WedgeGeometry
+        from ontic.cfd.geometry import ImmersedBoundary, WedgeGeometry
 
         Nx, Ny = 50, 50
         Lx, Ly = 1.0, 1.0
@@ -346,7 +346,7 @@ class TestSupersonicWedgeFlow:
 
     def test_immersed_boundary_preserves_positivity(self):
         """Verify IB apply method maintains positive density and pressure."""
-        from tensornet.cfd.geometry import ImmersedBoundary, WedgeGeometry
+        from ontic.cfd.geometry import ImmersedBoundary, WedgeGeometry
 
         Nx, Ny = 40, 40
         Lx, Ly = 1.0, 1.0
@@ -391,7 +391,7 @@ class TestSupersonicWedgeFlow:
 
     def test_wedge_surface_normal_orientation(self):
         """Verify surface normals point outward from wedge."""
-        from tensornet.cfd.geometry import WedgeGeometry
+        from ontic.cfd.geometry import WedgeGeometry
 
         wedge = WedgeGeometry(
             x_leading_edge=0.0,

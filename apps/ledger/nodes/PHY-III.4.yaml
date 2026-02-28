@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Helmholtz, modes, scattering"
 
 source_files:
-  - "tensornet/em/frequency_domain.py"
+  - "ontic/em/frequency_domain.py"
 
 tests:
   smoke:

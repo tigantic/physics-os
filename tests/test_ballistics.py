@@ -1,5 +1,5 @@
 """
-Test Module: tensornet/defense/ballistics.py
+Test Module: ontic/defense/ballistics.py
 
 Phase 13: 6-DOF Ballistic Trajectory Solver
 Constitutional Compliance:
@@ -20,7 +20,7 @@ import numpy as np
 import pytest
 import torch
 
-from tensornet.aerospace.defense.ballistics import BallisticSolution, BallisticSolver
+from ontic.aerospace.defense.ballistics import BallisticSolution, BallisticSolver
 
 # ============================================================================
 # FIXTURES

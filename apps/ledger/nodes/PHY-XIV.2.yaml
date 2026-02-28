@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Elastic constants, fracture, fatigue"
 
 source_files:
-  - "tensornet/materials/mechanical_properties.py"
+  - "ontic/materials/mechanical_properties.py"
 
 tests:
   smoke:

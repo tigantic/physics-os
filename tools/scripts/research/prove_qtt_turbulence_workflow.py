@@ -395,7 +395,7 @@ class TurbulenceWorkflow:
     
     def _compute_enstrophy(self, omega: List[List[Tensor]]) -> float:
         """Compute enstrophy from QTT vorticity."""
-        from tensornet.cfd.qtt_turbo import turbo_inner
+        from ontic.cfd.qtt_turbo import turbo_inner
         return sum(turbo_inner(omega[i], omega[i]).item() for i in range(3))
     
     def _phase_init(self) -> PhaseResult:
@@ -414,8 +414,8 @@ class TurbulenceWorkflow:
         
         # Check imports
         try:
-            from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
-            from tensornet.cfd.qtt_turbo import turbo_inner
+            from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+            from ontic.cfd.qtt_turbo import turbo_inner
             metrics["imports_ok"] = True
         except ImportError as e:
             metrics["imports_ok"] = False
@@ -472,7 +472,7 @@ class TurbulenceWorkflow:
         """PHASE 2: Taylor-Green vortex decay proof."""
         print("Validating Taylor-Green vortex decay...")
         
-        from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+        from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
         
         n_bits = 5  # 32³
         N = 2 ** n_bits
@@ -544,7 +544,7 @@ class TurbulenceWorkflow:
         """PHASE 3: Inviscid energy conservation proof."""
         print("Validating inviscid energy conservation...")
         
-        from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+        from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
         
         n_bits = 5  # 32³
         nu = 0.0  # INVISCID
@@ -606,7 +606,7 @@ class TurbulenceWorkflow:
         """PHASE 4: O(log N) time complexity proof."""
         print("Validating O(log N) time scaling...")
         
-        from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+        from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
         
         grids = [
             (4, "16³", 4096),
@@ -682,7 +682,7 @@ class TurbulenceWorkflow:
         """PHASE 5: QTT compression ratio proof."""
         print("Validating QTT compression ratio...")
         
-        from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+        from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
         
         grids = [
             (5, "32³", 32768),
@@ -746,7 +746,7 @@ class TurbulenceWorkflow:
         """PHASE 6: Long-time numerical stability proof."""
         print("Validating numerical stability (long integration)...")
         
-        from tensornet.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
+        from ontic.cfd.ns3d_turbo import TurboNS3DSolver, TurboNS3DConfig
         
         n_bits = 6  # 64³
         N = 2 ** n_bits

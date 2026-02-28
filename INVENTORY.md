@@ -24,7 +24,7 @@
 | 11 | [The Physics OS Service](#11-hypertensor-platform-service) | API, billing, CLI, MCP, SDK |
 | 12 | [Test Suite](#12-test-suite) | 104 test files, ~52K LOC |
 | 13 | [Documentation & Governance](#13-documentation--governance) | docs/, ADRs, governance, specs |
-| 14 | [Backward-Compatibility Shim Map](#14-backward-compatibility-shim-map) | Re-export shims under `tensornet/` |
+| 14 | [Backward-Compatibility Shim Map](#14-backward-compatibility-shim-map) | Re-export shims under `ontic/` |
 | 15 | [Data & Archive](#15-data--archive) | Datasets, cached models, archived artifacts |
 
 ---
@@ -33,7 +33,7 @@
 
 | Area | Files | LOC | Primary Language |
 |------|-------|-----|-----------------|
-| `tensornet/` | 1,192 | ~492K | Python |
+| `ontic/` | 1,192 | ~492K | Python |
 | `apps/` | 207 | ~84K | Python + Rust |
 | `products/` | 154 | ~78K | Python |
 | `experiments/` | 2,623 | ~442K | Python |
@@ -42,7 +42,7 @@
 | `proofs/` | 7,473 | ~371K | Python + JSON |
 | `crates/` | 716 | ~204K | Rust |
 | `contracts/` | 3 | ~675 | Solidity |
-| `hypertensor/` | 31 | ~3.9K | Python |
+| `physics_os/` | 31 | ~3.9K | Python |
 | `integrations/` | 1 | ~518 | C# / C++ |
 | **Total** | **~10,364** | **~1.84M** | |
 
@@ -95,12 +95,12 @@ The oncology drug candidate has the deepest validation suite (6 dedicated files,
 
 ## 2. TensorNet Core Library
 
-`tensornet/` — **1,192 files, ~492K LOC** — the physics engine of The Physics OS-VM.
+`ontic/` — **1,192 files, ~492K LOC** — the physics engine of The Physics OS-VM.
 
 Organized into 16 major modules. Each module may contain STARK trace adapters
 for Trustless Physics Certificate generation.
 
-### 2.1 `tensornet/cfd/` — Computational Fluid Dynamics
+### 2.1 `ontic/cfd/` — Computational Fluid Dynamics
 
 **115 files, ~78,200 LOC** — The flagship CFD engine. QTT-native solvers from
 1D Euler through 6D Vlasov-Poisson, all operating at O(log N) complexity.
@@ -124,7 +124,7 @@ for Trustless Physics Certificate generation.
 | **Infrastructure** | `adaptive_tt.py`, `analytical_qtt.py`, `boundaries.py`, `chi_diagnostic.py`, `differentiable.py`, `geometry.py`, `morton_3d.py`, `multi_objective.py`, `optimization.py`, `qtt_2d.py`, `qtt_2d_shift.py`, `qtt_2d_shift_native.py`, `qtt_3d_state.py`, `qtt_batched_ops.py`, `qtt_checkpoint_stream.py`, `qtt_eval.py`, `qtt_multiscale.py`, `qtt_regularity.py`, `qtt_streaming.py`, `tci_benchmark_suite.py` | AMR, Morton curves, checkpointing, diagnostics |
 | **Trace adapters** | 5 files | STARK adapters for Euler3D, NS-IMEX, Heat, Vlasov |
 
-### 2.2 `tensornet/genesis/` — QTT Meta-Primitive Expansion Protocol
+### 2.2 `ontic/genesis/` — QTT Meta-Primitive Expansion Protocol
 
 **76 files, ~38,000 LOC** — Seven QTT-native mathematical primitives plus
 aging simulator and benchmarks.
@@ -144,7 +144,7 @@ aging simulator and benchmarks.
 | `demos/` | 7 | ~2,900 | GPU QTT, hierarchical compression, NOAA petabyte, 1 TB stream |
 | `benchmarks/` | 2 | ~1,000 | "GENESIS vs The World" massacre benchmark |
 
-### 2.3 `tensornet/ml/discovery/` — Autonomous Discovery Engine
+### 2.3 `ontic/ml/discovery/` — Autonomous Discovery Engine
 
 **42 files, ~23,500 LOC** — Chains Genesis primitives into autonomous
 scientific discovery pipelines with API, connectors, and production hardening.
@@ -160,7 +160,7 @@ scientific discovery pipelines with API, connectors, and production hardening.
 | `primitives/` | 7 | GA, kernel, OT, RMT, SGW, topology discovery primitives |
 | `production/` | 5 | Observability, performance, resilience, security (1,016 LOC) |
 
-### 2.4 `tensornet/aerospace/` — Aerospace, Defense & Exploit Engine
+### 2.4 `ontic/aerospace/` — Aerospace, Defense & Exploit Engine
 
 **56 files, ~26,700 LOC**
 
@@ -172,7 +172,7 @@ scientific discovery pipelines with API, connectors, and production hardening.
 | `racing/` | 2 | ~350 | F1 dirty-air wake tracker |
 | `exploit/` | 38 | ~19,000 | QTT-based DeFi vulnerability hunting — Compound V3, EigenLayer, Ethena, Euler V2, Lido, Morpho Blue, Pendle, Renzo, Usual, Cairo ZK circuits, Koopman structural exploits, historical validator, Immunefi bounty integration |
 
-### 2.5 `tensornet/quantum/` — Quantum Physics
+### 2.5 `ontic/quantum/` — Quantum Physics
 
 **99 files, ~22,500 LOC**
 
@@ -186,7 +186,7 @@ scientific discovery pipelines with API, connectors, and production hardening.
 | `statmech/` | 3 solvers + 5 adapters | Equilibrium, Monte Carlo, non-equilibrium |
 | Root | 7 | Error mitigation, hybrid classical-quantum, QTT renderers (CPU, GLSL, PyTorch) |
 
-### 2.6 `tensornet/engine/` — Execution Engine, GPU, VM
+### 2.6 `ontic/engine/` — Execution Engine, GPU, VM
 
 **93 files, ~36,050 LOC**
 
@@ -204,7 +204,7 @@ scientific discovery pipelines with API, connectors, and production hardening.
 | `fuel/` | 3 | ~600 | S3 fetcher, tile compositor |
 | `hw/` | 3 | ~1,700 | Verilog/SystemVerilog security analyzer, Yosys netlist analyzer (v1 + v2) |
 
-### 2.7 `tensornet/em/` — Electromagnetics
+### 2.7 `ontic/em/` — Electromagnetics
 
 **24 files, ~15,300 LOC**
 
@@ -222,7 +222,7 @@ scientific discovery pipelines with API, connectors, and production hardening.
 | `electrostatics.py` | 805 | Poisson-Boltzmann (III.1) |
 | Others (14 files) | ~1,300 | Magnetostatics, wave propagation, FDFD, photonics, antenna/microwave + 7 STARK adapters |
 
-### 2.8 `tensornet/platform/` — Platform Layer
+### 2.8 `ontic/platform/` — Platform Layer
 
 **40 files, ~15,474 LOC**
 
@@ -235,7 +235,7 @@ scientific discovery pipelines with API, connectors, and production hardening.
 | **Analysis** | `inverse.py`, `adjoint.py`, `optimization.py`, `uq.py`, `postprocess.py`, `visualize.py` | Inverse problems, Bayesian UQ, gradient optimization |
 | **Vertical slices** | `vertical_ode.py`, `vertical_pde.py`, `vertical_vv.py` | End-to-end demo slices |
 
-### 2.9 `tensornet/materials/` — Materials Science & Mechanics
+### 2.9 `ontic/materials/` — Materials Science & Mechanics
 
 **42 files, ~10,100 LOC**
 
@@ -246,7 +246,7 @@ scientific discovery pipelines with API, connectors, and production hardening.
 | `manufacturing/` | 2 + 1 adapter | Goldak welding, Scheil solidification, AM melt pool |
 | Trace adapters | 7 | STARK adapters for XIV.1–XIV.7 |
 
-### 2.10 `tensornet/applied/` — Applied Physics Domains
+### 2.10 `ontic/applied/` — Applied Physics Domains
 
 **48 files, ~11,800 LOC**
 
@@ -265,7 +265,7 @@ scientific discovery pipelines with API, connectors, and production hardening.
 | `robotics_physics/` | 2 | Newton-Euler, Featherstone ABA, LCP contact |
 | `special_applied/` | 2 | Astrodynamics STARK adapter |
 
-### 2.11 `tensornet/plasma_nuclear/` — Plasma & Nuclear Physics
+### 2.11 `ontic/plasma_nuclear/` — Plasma & Nuclear Physics
 
 **36 files, ~8,800 LOC**
 
@@ -275,7 +275,7 @@ scientific discovery pipelines with API, connectors, and production hardening.
 | `nuclear/` | 4 solvers + 3 adapters | Nuclear structure, reactions, astrophysics |
 | `fusion/` | 9 | DARPA MARRS solid-state fusion — electron screening, phonon trigger, resonant catalysis, superionic dynamics, QTT screening, tokamak equilibrium |
 
-### 2.12 `tensornet/fluids/` — Advanced Fluid Physics
+### 2.12 `ontic/fluids/` — Advanced Fluid Physics
 
 **38 files, ~8,900 LOC**
 
@@ -293,7 +293,7 @@ scientific discovery pipelines with API, connectors, and production hardening.
 | `computational_methods/` trace adapters | 6 | HPC, inverse problems, large-scale linalg, mesh generation, optimization |
 | Top-level trace adapters | 8 | STARK adapters for II.3–II.10 |
 
-### 2.13 `tensornet/life_sci/` — Life Sciences
+### 2.13 `ontic/life_sci/` — Life Sciences
 
 **33 files, ~7,500 LOC**
 
@@ -306,7 +306,7 @@ scientific discovery pipelines with API, connectors, and production hardening.
 | `md/` | 2 | Full MD engine — Verlet, Nosé-Hoover, Parrinello-Rahman, PME, REMD (935 LOC) |
 | `membrane_bio/` | 1 | Coarse-grained lipid bilayer, electroporation |
 
-### 2.14 `tensornet/energy_env/` — Energy & Environment
+### 2.14 `ontic/energy_env/` — Energy & Environment
 
 **16 files, ~3,500 LOC**
 
@@ -317,7 +317,7 @@ scientific discovery pipelines with API, connectors, and production hardening.
 | `urban/` | 3 | Procedural voxel city generation, Venturi urban wind solver |
 | `agri/` | 2 | Vertical farm microclimate optimization |
 
-### 2.15 `tensornet/infra/` — Infrastructure Modules
+### 2.15 `ontic/infra/` — Infrastructure Modules
 
 **~70 files** spanning deployment, integration, visualization, and orchestration.
 
@@ -343,18 +343,18 @@ scientific discovery pipelines with API, connectors, and production hardening.
 
 | Module | Description |
 |--------|-------------|
-| `tensornet/core/` | Core TN operations — MPS, MPO, DMRG, TEBD, contraction |
-| `tensornet/algorithms/` | Advanced TN algorithms |
-| `tensornet/mpo/` | Matrix Product Operator library |
-| `tensornet/mps/` | Matrix Product State library |
-| `tensornet/qtt/` | QTT utilities and construction |
-| `tensornet/types/` | Type definitions |
-| `tensornet/numerics/` | Numerical utilities |
-| `tensornet/validation/` | Validation framework |
-| `tensornet/certification/` | TPC certification engine |
-| `tensornet/sim/` | Simulation orchestration |
-| `tensornet/visualization/` | Plotting and rendering |
-| `tensornet/benchmark_runner.py` | Benchmark execution runner |
+| `ontic/core/` | Core TN operations — MPS, MPO, DMRG, TEBD, contraction |
+| `ontic/algorithms/` | Advanced TN algorithms |
+| `ontic/mpo/` | Matrix Product Operator library |
+| `ontic/mps/` | Matrix Product State library |
+| `ontic/qtt/` | QTT utilities and construction |
+| `ontic/types/` | Type definitions |
+| `ontic/numerics/` | Numerical utilities |
+| `ontic/validation/` | Validation framework |
+| `ontic/certification/` | TPC certification engine |
+| `ontic/sim/` | Simulation orchestration |
+| `ontic/visualization/` | Plotting and rendering |
+| `ontic/benchmark_runner.py` | Benchmark execution runner |
 
 ---
 
@@ -817,7 +817,7 @@ ZK proof circuits, conservation proofs, and Yang-Mills research.
 
 ## 11. The Physics OS Service
 
-`hypertensor/` — **31 files, ~3,900 LOC** — The SaaS platform layer.
+`physics_os/` — **31 files, ~3,900 LOC** — The SaaS platform layer.
 
 | Sub-module | Files | Description |
 |------------|-------|-------------|
@@ -926,100 +926,100 @@ ZK proof circuits, conservation proofs, and Yang-Mills research.
 
 ## 14. Backward-Compatibility Shim Map
 
-The `tensornet/` package provides flat re-export shims so that deeply nested
+The `ontic/` package provides flat re-export shims so that deeply nested
 modules can be imported from short paths. Each shim `__init__.py` re-exports
 from the canonical location.
 
 | Shim Path | Canonical Location |
 |-----------|--------------------|
-| `tensornet/acoustics/` | `tensornet.applied.acoustics` |
-| `tensornet/adaptive/` | `tensornet.engine.adaptive` |
-| `tensornet/agri/` | `tensornet.energy_env.agri` |
-| `tensornet/algorithms/` | `tensornet.core.algorithms` |
-| `tensornet/astro/` | `tensornet.applied.special_applied` |
-| `tensornet/autonomy/` | `tensornet.aerospace.autonomy` |
-| `tensornet/biology/` | `tensornet.life_sci.biology` |
-| `tensornet/biomedical/` | `tensornet.life_sci.biomedical` |
-| `tensornet/biophysics/` | `tensornet.life_sci.biophysics` |
-| `tensornet/certification/` | `tensornet.platform.certification` |
-| `tensornet/chemistry/` | `tensornet.life_sci.chemistry` |
-| `tensornet/computational_methods/` | `tensornet.fluids.computational_methods` |
-| `tensornet/condensed_matter/` | `tensornet.quantum.condensed_matter` |
-| `tensornet/coordination/` | `tensornet.infra.coordination` |
-| `tensornet/coupled/` | `tensornet.fluids.coupled` |
-| `tensornet/cyber/` | `tensornet.applied.cyber` |
-| `tensornet/data/` | `tensornet.platform.data` |
-| `tensornet/defense/` | `tensornet.aerospace.defense` |
-| `tensornet/deployment/` | `tensornet.infra.deployment` |
-| `tensornet/digital_twin/` | `tensornet.infra.digital_twin` |
-| `tensornet/discovery/` | `tensornet.ml.discovery` |
-| `tensornet/distributed/` | `tensornet.engine.distributed` |
-| `tensornet/distributed_tn/` | `tensornet.engine.distributed_tn` |
-| `tensornet/electronic_structure/` | `tensornet.quantum.electronic_structure` |
-| `tensornet/emergency/` | `tensornet.applied.emergency` |
-| `tensornet/energy/` | `tensornet.energy_env.energy` |
-| `tensornet/environmental/` | `tensornet.energy_env.environmental` |
-| `tensornet/exploit/` | `tensornet.aerospace.exploit` |
-| `tensornet/fieldops/` | `tensornet.infra.fieldops` |
-| `tensornet/fieldos/` | `tensornet.infra.fieldos` |
-| `tensornet/financial/` | `tensornet.applied.financial` |
-| `tensornet/flight_validation/` | `tensornet.aerospace.flight_validation` |
-| `tensornet/free_surface/` | `tensornet.fluids.free_surface` |
-| `tensornet/fsi/` | `tensornet.fluids.fsi` |
-| `tensornet/fuel/` | `tensornet.engine.fuel` |
-| `tensornet/fusion/` | `tensornet.plasma_nuclear.fusion` |
-| `tensornet/gateway/` | `tensornet.engine.gateway` |
-| `tensornet/geophysics/` | `tensornet.applied.geophysics` |
-| `tensornet/gpu/` | `tensornet.engine.gpu` |
-| `tensornet/guidance/` | `tensornet.aerospace.guidance` |
-| `tensornet/hardware/` | `tensornet.engine.hardware` |
-| `tensornet/heat_transfer/` | `tensornet.fluids.heat_transfer` |
-| `tensornet/hw/` | `tensornet.engine.hw` |
-| `tensornet/hyperenv/` | `tensornet.infra.hyperenv` |
-| `tensornet/hypersim/` | `tensornet.infra.hypersim` |
-| `tensornet/hypervisual/` | `tensornet.infra.hypervisual` |
-| `tensornet/intent/` | `tensornet.applied.intent` |
-| `tensornet/integration/` | `tensornet.infra.integration` |
-| `tensornet/manufacturing/` | `tensornet.materials.manufacturing` |
-| `tensornet/md/` | `tensornet.life_sci.md` |
-| `tensornet/mechanics/` | `tensornet.materials.mechanics` |
-| `tensornet/medical/` | `tensornet.applied.medical` |
-| `tensornet/membrane_bio/` | `tensornet.life_sci.membrane_bio` |
-| `tensornet/mesh_amr/` | `tensornet.fluids.mesh_amr` |
-| `tensornet/ml_physics/` | `tensornet.ml.ml_physics` |
-| `tensornet/ml_surrogates/` | `tensornet.ml.ml_surrogates` |
-| `tensornet/multiphase/` | `tensornet.fluids.multiphase` |
-| `tensornet/multiscale/` | `tensornet.fluids.multiscale` |
-| `tensornet/neural/` | `tensornet.ml.neural` |
-| `tensornet/nuclear/` | `tensornet.plasma_nuclear.nuclear` |
-| `tensornet/optics/` | `tensornet.applied.optics` |
-| `tensornet/oracle/` | `tensornet.infra.oracle` |
-| `tensornet/particle/` | `tensornet.applied.particle` |
-| `tensornet/phase_field/` | `tensornet.fluids.phase_field` |
-| `tensornet/physics/` | `tensornet.applied.physics` |
-| `tensornet/plasma/` | `tensornet.plasma_nuclear.plasma` |
-| `tensornet/porous_media/` | `tensornet.fluids.porous_media` |
-| `tensornet/provenance/` | `tensornet.infra.provenance` |
-| `tensornet/qft/` | `tensornet.quantum.qft` |
-| `tensornet/qm/` | `tensornet.quantum.qm` |
-| `tensornet/quantum_mechanics/` | `tensornet.quantum.quantum_mechanics` |
-| `tensornet/racing/` | `tensornet.aerospace.racing` |
-| `tensornet/radiation/` | `tensornet.applied.radiation` |
-| `tensornet/realtime/` | `tensornet.engine.realtime` |
-| `tensornet/relativity/` | `tensornet.applied.relativity` |
-| `tensornet/robotics_physics/` | `tensornet.applied.robotics_physics` |
-| `tensornet/sdk/` | `tensornet.infra.sdk` |
-| `tensornet/semiconductor/` | `tensornet.quantum.semiconductor` |
-| `tensornet/sim/` | `tensornet.platform.sim` |
-| `tensornet/site/` | `tensornet.infra.site` |
-| `tensornet/sovereign/` | `tensornet.infra.sovereign` |
-| `tensornet/special_applied/` | `tensornet.applied.special_applied` |
-| `tensornet/statmech/` | `tensornet.quantum.statmech` |
-| `tensornet/substrate/` | `tensornet.engine.substrate` |
-| `tensornet/urban/` | `tensornet.energy_env.urban` |
-| `tensornet/visualization/` | `tensornet.platform.visualization` |
-| `tensornet/vm/` | `tensornet.engine.vm` |
-| `tensornet/zk/` | `tensornet.infra.zk` |
+| `ontic/acoustics/` | `ontic.applied.acoustics` |
+| `ontic/adaptive/` | `ontic.engine.adaptive` |
+| `ontic/agri/` | `ontic.energy_env.agri` |
+| `ontic/algorithms/` | `ontic.core.algorithms` |
+| `ontic/astro/` | `ontic.applied.special_applied` |
+| `ontic/autonomy/` | `ontic.aerospace.autonomy` |
+| `ontic/biology/` | `ontic.life_sci.biology` |
+| `ontic/biomedical/` | `ontic.life_sci.biomedical` |
+| `ontic/biophysics/` | `ontic.life_sci.biophysics` |
+| `ontic/certification/` | `ontic.platform.certification` |
+| `ontic/chemistry/` | `ontic.life_sci.chemistry` |
+| `ontic/computational_methods/` | `ontic.fluids.computational_methods` |
+| `ontic/condensed_matter/` | `ontic.quantum.condensed_matter` |
+| `ontic/coordination/` | `ontic.infra.coordination` |
+| `ontic/coupled/` | `ontic.fluids.coupled` |
+| `ontic/cyber/` | `ontic.applied.cyber` |
+| `ontic/data/` | `ontic.platform.data` |
+| `ontic/defense/` | `ontic.aerospace.defense` |
+| `ontic/deployment/` | `ontic.infra.deployment` |
+| `ontic/digital_twin/` | `ontic.infra.digital_twin` |
+| `ontic/discovery/` | `ontic.ml.discovery` |
+| `ontic/distributed/` | `ontic.engine.distributed` |
+| `ontic/distributed_tn/` | `ontic.engine.distributed_tn` |
+| `ontic/electronic_structure/` | `ontic.quantum.electronic_structure` |
+| `ontic/emergency/` | `ontic.applied.emergency` |
+| `ontic/energy/` | `ontic.energy_env.energy` |
+| `ontic/environmental/` | `ontic.energy_env.environmental` |
+| `ontic/exploit/` | `ontic.aerospace.exploit` |
+| `ontic/fieldops/` | `ontic.infra.fieldops` |
+| `ontic/fieldos/` | `ontic.infra.fieldos` |
+| `ontic/financial/` | `ontic.applied.financial` |
+| `ontic/flight_validation/` | `ontic.aerospace.flight_validation` |
+| `ontic/free_surface/` | `ontic.fluids.free_surface` |
+| `ontic/fsi/` | `ontic.fluids.fsi` |
+| `ontic/fuel/` | `ontic.engine.fuel` |
+| `ontic/fusion/` | `ontic.plasma_nuclear.fusion` |
+| `ontic/gateway/` | `ontic.engine.gateway` |
+| `ontic/geophysics/` | `ontic.applied.geophysics` |
+| `ontic/gpu/` | `ontic.engine.gpu` |
+| `ontic/guidance/` | `ontic.aerospace.guidance` |
+| `ontic/hardware/` | `ontic.engine.hardware` |
+| `ontic/heat_transfer/` | `ontic.fluids.heat_transfer` |
+| `ontic/hw/` | `ontic.engine.hw` |
+| `ontic/hyperenv/` | `ontic.infra.hyperenv` |
+| `ontic/hypersim/` | `ontic.infra.hypersim` |
+| `ontic/hypervisual/` | `ontic.infra.hypervisual` |
+| `ontic/intent/` | `ontic.applied.intent` |
+| `ontic/integration/` | `ontic.infra.integration` |
+| `ontic/manufacturing/` | `ontic.materials.manufacturing` |
+| `ontic/md/` | `ontic.life_sci.md` |
+| `ontic/mechanics/` | `ontic.materials.mechanics` |
+| `ontic/medical/` | `ontic.applied.medical` |
+| `ontic/membrane_bio/` | `ontic.life_sci.membrane_bio` |
+| `ontic/mesh_amr/` | `ontic.fluids.mesh_amr` |
+| `ontic/ml_physics/` | `ontic.ml.ml_physics` |
+| `ontic/ml_surrogates/` | `ontic.ml.ml_surrogates` |
+| `ontic/multiphase/` | `ontic.fluids.multiphase` |
+| `ontic/multiscale/` | `ontic.fluids.multiscale` |
+| `ontic/neural/` | `ontic.ml.neural` |
+| `ontic/nuclear/` | `ontic.plasma_nuclear.nuclear` |
+| `ontic/optics/` | `ontic.applied.optics` |
+| `ontic/oracle/` | `ontic.infra.oracle` |
+| `ontic/particle/` | `ontic.applied.particle` |
+| `ontic/phase_field/` | `ontic.fluids.phase_field` |
+| `ontic/physics/` | `ontic.applied.physics` |
+| `ontic/plasma/` | `ontic.plasma_nuclear.plasma` |
+| `ontic/porous_media/` | `ontic.fluids.porous_media` |
+| `ontic/provenance/` | `ontic.infra.provenance` |
+| `ontic/qft/` | `ontic.quantum.qft` |
+| `ontic/qm/` | `ontic.quantum.qm` |
+| `ontic/quantum_mechanics/` | `ontic.quantum.quantum_mechanics` |
+| `ontic/racing/` | `ontic.aerospace.racing` |
+| `ontic/radiation/` | `ontic.applied.radiation` |
+| `ontic/realtime/` | `ontic.engine.realtime` |
+| `ontic/relativity/` | `ontic.applied.relativity` |
+| `ontic/robotics_physics/` | `ontic.applied.robotics_physics` |
+| `ontic/sdk/` | `ontic.infra.sdk` |
+| `ontic/semiconductor/` | `ontic.quantum.semiconductor` |
+| `ontic/sim/` | `ontic.platform.sim` |
+| `ontic/site/` | `ontic.infra.site` |
+| `ontic/sovereign/` | `ontic.infra.sovereign` |
+| `ontic/special_applied/` | `ontic.applied.special_applied` |
+| `ontic/statmech/` | `ontic.quantum.statmech` |
+| `ontic/substrate/` | `ontic.engine.substrate` |
+| `ontic/urban/` | `ontic.energy_env.urban` |
+| `ontic/visualization/` | `ontic.platform.visualization` |
+| `ontic/vm/` | `ontic.engine.vm` |
+| `ontic/zk/` | `ontic.infra.zk` |
 
 ---
 
@@ -1063,12 +1063,12 @@ TensorNet modules as follows:
 
 | TPC Tier | Domain Count | Primary Module |
 |----------|-------------|----------------|
-| Tier 0 (Core) | 4 | `tensornet/cfd/` (Euler3D, NS-IMEX, Heat, Vlasov-Poisson) |
-| Tier 1 (Fluid) | 8 | `tensornet/cfd/`, `tensornet/fluids/` |
-| Tier 2A (25 domains) | 25 | `tensornet/em/`, `tensornet/plasma_nuclear/`, `tensornet/quantum/statmech/` |
-| Tier 2B (40 domains) | 40 | `tensornet/materials/mechanics/`, `tensornet/applied/optics/`, `tensornet/quantum/`, `tensornet/fluids/coupled/` |
-| Tier 3 (45 domains) | 45 | `tensornet/quantum/`, `tensornet/quantum/electronic_structure/`, `tensornet/quantum/condensed_matter/` |
-| Tier 4 (26 domains) | 26 | `tensornet/life_sci/`, `tensornet/quantum/`, `tensornet/applied/` |
+| Tier 0 (Core) | 4 | `ontic/cfd/` (Euler3D, NS-IMEX, Heat, Vlasov-Poisson) |
+| Tier 1 (Fluid) | 8 | `ontic/cfd/`, `ontic/fluids/` |
+| Tier 2A (25 domains) | 25 | `ontic/em/`, `ontic/plasma_nuclear/`, `ontic/quantum/statmech/` |
+| Tier 2B (40 domains) | 40 | `ontic/materials/mechanics/`, `ontic/applied/optics/`, `ontic/quantum/`, `ontic/fluids/coupled/` |
+| Tier 3 (45 domains) | 45 | `ontic/quantum/`, `ontic/quantum/electronic_structure/`, `ontic/quantum/condensed_matter/` |
+| Tier 4 (26 domains) | 26 | `ontic/life_sci/`, `ontic/quantum/`, `ontic/applied/` |
 | **Total** | **168** | |
 
 ---

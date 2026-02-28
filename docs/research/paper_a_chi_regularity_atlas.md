@@ -201,7 +201,7 @@ fields the SVD is the canonical procedure.
 **Implementation note:** The Ontic Engine codebase performs bond-dimension
 measurement via SVD of the QTT cores (see `oracle/qtt_encoder.py`,
 `oracle/qtt_encoder_cuda.py`). The `EntanglementSpectrum.from_singular_values()`
-class method in `tensornet/adaptive/entanglement.py` computes the full
+class method in `ontic/adaptive/entanglement.py` computes the full
 entanglement characterization (von Neumann entropy, Rényi-2 entropy,
 effective rank) from the SVD singular values.
 
@@ -341,7 +341,7 @@ counts against dense storage from 3D through 6D:
 ### 3.4 Physics Domain Coverage
 
 The The Physics OS implements 20 domain packs (I–XX) registered via
-the `DomainRegistry` (see `tensornet/packs/__init__.py`) covering:
+the `DomainRegistry` (see `ontic/packs/__init__.py`) covering:
 
 CFD, Structural, Thermal, Electromagnetics, Quantum, Acoustics, Plasma,
 Combustion, MHD, Multiphase, Relativity, Geophysics, Biophysics, Optics,
@@ -517,7 +517,7 @@ the Conjecture A/B framework.
 
 The following production-grade components are available:
 
-**Bond Dimension Tracking** (`tensornet/adaptive/bond_optimizer.py`):
+**Bond Dimension Tracking** (`ontic/adaptive/bond_optimizer.py`):
 - `BondDimensionTracker`: records per-step truncation events with singular
   values, entropy, and wall time.
 - `TruncationRecord`: stores χ_before, χ_after, truncation_error,
@@ -525,7 +525,7 @@ The following production-grade components are available:
 - `AdaptiveBondConfig`: configurable χ_min, χ_max, target truncation error,
   entropy thresholds.
 
-**Entanglement Analysis** (`tensornet/adaptive/entanglement.py`):
+**Entanglement Analysis** (`ontic/adaptive/entanglement.py`):
 - `EntanglementSpectrum.from_singular_values()`: computes von Neumann
   entropy, Rényi-2 entropy, effective rank, and spectral gap from SVD.
 - `AreaLawAnalyzer`: fits entanglement entropy vs. boundary size to
@@ -534,7 +534,7 @@ The following production-grade components are available:
 - `AreaLawScaling`: reports scaling type, exponent, coefficient,
   R², and residuals.
 
-**Random Matrix Theory** (`tensornet/genesis/rmt/universality.py`):
+**Random Matrix Theory** (`ontic/genesis/rmt/universality.py`):
 - `WignerSemicircle` and Marchenko-Pastur distributions for comparing
   empirical singular value spectra against null (random) models.
 
@@ -693,7 +693,7 @@ satisfying area-law entanglement (S ~ boundary volume rather than bulk
 volume), effective rank grows only polynomially with the boundary, guaranteeing
 efficient TT representation.
 
-The `AreaLawAnalyzer` in `tensornet/adaptive/entanglement.py` can test this
+The `AreaLawAnalyzer` in `ontic/adaptive/entanglement.py` can test this
 empirically by computing $S_k$ at multiple bipartitions and fitting the
 scaling exponent. Area-law behavior is observed in:
 - Ground states of gapped local Hamiltonians (proven: Hastings 2007).
@@ -1188,7 +1188,7 @@ the area law is $S \sim A^{(d-1)/d}$ where $A$ is the boundary area of the
 subregion. The QTT log-index bipartition does *not* correspond to a spatial
 subregion — it separates coarse bits from fine bits within each coordinate.
 There is therefore no direct mapping from γ (QTT-site fit) to the physical
-area-law exponent. The `AreaLawAnalyzer` in `tensornet/adaptive/entanglement.py`
+area-law exponent. The `AreaLawAnalyzer` in `ontic/adaptive/entanglement.py`
 performs a *separate* physical-space analysis by reconstructing spatial
 boundary areas from the QTT site structure; this is complementary to the
 QTT-site fit above and is reported in the `AtlasAreaLawExtension` when
@@ -1206,7 +1206,7 @@ $$
 Report β per domain. Faster decay (larger β) means more compressible.
 Compare empirical distributions against the Marchenko-Pastur null
 (random matrix baseline) using the `WignerSemicircle` and Marchenko-Pastur
-tools in `tensornet/genesis/rmt/universality.py`.
+tools in `ontic/genesis/rmt/universality.py`.
 
 ---
 
@@ -1546,10 +1546,10 @@ Total measurement count across all campaigns: **751+**.
 | Grid reports | `ahmed_ib_results/{128,512,4096}/report.txt` | Compression data |
 | Re scaling study | `tools/scripts/research/rank_vs_re_figure1.py` | Taylor-Green rank measurement |
 | Re sweep workflow | `apps/qtenet/workflows/qtt_turbulence/run_workflow.py` | χ ~ Re^α fitting |
-| Bond optimizer | `tensornet/adaptive/bond_optimizer.py` | BondDimensionTracker |
-| Entanglement analysis | `tensornet/adaptive/entanglement.py` | EntanglementSpectrum, AreaLawAnalyzer |
-| RMT universality | `tensornet/genesis/rmt/universality.py` | Wigner semicircle, Marchenko-Pastur |
-| Domain packs | `tensornet/packs/pack_{i..xx}.py` | 20 physics domain implementations |
+| Bond optimizer | `ontic/adaptive/bond_optimizer.py` | BondDimensionTracker |
+| Entanglement analysis | `ontic/adaptive/entanglement.py` | EntanglementSpectrum, AreaLawAnalyzer |
+| RMT universality | `ontic/genesis/rmt/universality.py` | Wigner semicircle, Marchenko-Pastur |
+| Domain packs | `ontic/packs/pack_{i..xx}.py` | 20 physics domain implementations |
 | Schmidt decomposition | `oracle/qtt_encoder.py` | SVD-based Schmidt rank computation |
 | Curse-breaking benchmark | `apps/qtenet/src/qtenet/qtenet/benchmarks/curse_scaling.py` | O(log N) scaling proof |
 | Coverage assessment | `docs/research/computational_physics_coverage_assessment.md` | 140 sub-domain taxonomy |

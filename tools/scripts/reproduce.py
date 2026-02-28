@@ -25,9 +25,9 @@ import torch
 
 # Install check
 try:
-    from tensornet import MPS, dmrg, heisenberg_mpo, tfim_mpo
+    from ontic import MPS, dmrg, heisenberg_mpo, tfim_mpo
 except ImportError:
-    print("ERROR: tensornet not installed.")
+    print("ERROR: ontic not installed.")
     print("Run: pip install git+https://github.com/tigantic/PytorchTN.git")
     sys.exit(1)
 

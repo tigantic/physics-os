@@ -63,11 +63,11 @@ All 5 proofs passing:
 
 ## Files Modified
 
-1. **tensornet/cfd/poisson_spectral.py**
+1. **ontic/cfd/poisson_spectral.py**
    - Added `solver_qtt_to_dense_3d()` - correct format conversion
    - Added `dense_to_solver_qtt_3d()` - correct format conversion
 
-2. **tensornet/cfd/ns3d_turbo.py**
+2. **ontic/cfd/ns3d_turbo.py**
    - Updated imports to use solver-compatible functions
    - Updated `_reconstruct_velocity_spectral()` to use correct format
    - Added `conservative_truncation` config option
@@ -75,7 +75,7 @@ All 5 proofs passing:
    - Updated `_apply_derivatives_batched()` to support conservative mode
    - Updated `_compute_rhs()` to use conservative truncation
 
-3. **tensornet/cfd/qtt_turbo.py**
+3. **ontic/cfd/qtt_turbo.py**
    - Added `turbo_truncate_conservative()` - energy-preserving truncation
    - Added `turbo_truncate_batched_conservative()` - batched version
 

@@ -33,7 +33,7 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tensornet.cfd.viscous import (GAMMA_AIR, R_AIR,
+from ontic.cfd.viscous import (GAMMA_AIR, R_AIR,
                                    compute_transport_properties,
                                    reynolds_number, stress_tensor_2d,
                                    sutherland_viscosity, velocity_gradients_2d)

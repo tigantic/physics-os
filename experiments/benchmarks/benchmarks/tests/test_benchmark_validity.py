@@ -25,7 +25,7 @@ class TestQTTCompressionBenchmark:
     def test_compression_ratio_positive(self):
         """Test that compression achieves positive ratio."""
         try:
-            from tensornet.core.qtt import compress_qtt
+            from ontic.core.qtt import compress_qtt
 
             # Create test data with compressible structure
             L = 6  # 2^6 = 64 elements
@@ -44,7 +44,7 @@ class TestQTTCompressionBenchmark:
     def test_reconstruction_accuracy(self):
         """Test that decompressed data matches original within tolerance."""
         try:
-            from tensornet.core.qtt import compress_qtt, decompress_qtt
+            from ontic.core.qtt import compress_qtt, decompress_qtt
 
             # Create smooth test signal
             L = 6
@@ -108,7 +108,7 @@ class TestTCIBenchmark:
     def test_tci_rank_bounds(self):
         """Test that TCI produces bounded ranks."""
         try:
-            from tensornet.core.tci import adaptive_tci
+            from ontic.core.tci import adaptive_tci
 
             # Simple smooth function
             def f(idx):
@@ -146,7 +146,7 @@ class TestPerformanceThresholds:
         import time
 
         try:
-            from tensornet.core.qtt import compress_qtt
+            from ontic.core.qtt import compress_qtt
 
             L = 6  # 64 elements
             x = np.sin(np.linspace(0, 4 * np.pi, 2**L))
@@ -169,7 +169,7 @@ class TestPerformanceThresholds:
         import time
 
         try:
-            from tensornet.core.qtt import compress_qtt, decompress_qtt
+            from ontic.core.qtt import compress_qtt, decompress_qtt
 
             L = 6
             x = np.sin(np.linspace(0, 4 * np.pi, 2**L))

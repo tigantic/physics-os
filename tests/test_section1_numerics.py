@@ -18,14 +18,14 @@ from scipy.sparse import diags
 # ── Parareal ────────────────────────────────────────────────────────
 class TestParareal:
     def test_import(self):
-        from tensornet.numerics.parareal import (
+        from ontic.numerics.parareal import (
             PararealSolver,
             forward_euler_propagator,
             rk4_propagator,
         )
 
     def test_exponential_decay(self):
-        from tensornet.numerics.parareal import (
+        from ontic.numerics.parareal import (
             PararealSolver,
             forward_euler_propagator,
             rk4_propagator,
@@ -46,10 +46,10 @@ class TestParareal:
 # ── Exponential Integrators ────────────────────────────────────────
 class TestExponentialIntegrators:
     def test_import(self):
-        from tensornet.numerics.exponential import ETD1, ETDRK2, ETDRK4
+        from ontic.numerics.exponential import ETD1, ETDRK2, ETDRK4
 
     def test_etd1_linear(self):
-        from tensornet.numerics.exponential import ETD1
+        from ontic.numerics.exponential import ETD1
 
         # dy/dt = -y → y = exp(-t)
         L = np.array([-1.0])
@@ -67,10 +67,10 @@ class TestExponentialIntegrators:
 # ── AMG ─────────────────────────────────────────────────────────────
 class TestAMG:
     def test_import(self):
-        from tensornet.numerics.amg import AMGSolver, SmoothingType
+        from ontic.numerics.amg import AMGSolver, SmoothingType
 
     def test_1d_laplacian(self):
-        from tensornet.numerics.amg import AMGSolver
+        from ontic.numerics.amg import AMGSolver
 
         n = 100
         A = diags([-1, 2, -1], [-1, 0, 1], shape=(n, n), format="csr")
@@ -82,7 +82,7 @@ class TestAMG:
         assert r < 1e-6
 
     def test_hierarchy_depth(self):
-        from tensornet.numerics.amg import AMGSolver
+        from ontic.numerics.amg import AMGSolver
 
         n = 200
         A = diags([-1, 2, -1], [-1, 0, 1], shape=(n, n), format="csr")
@@ -93,10 +93,10 @@ class TestAMG:
 # ── p-Multigrid ────────────────────────────────────────────────────
 class TestPMultigrid:
     def test_import(self):
-        from tensornet.numerics.p_multigrid import PMultigridSolver
+        from ontic.numerics.p_multigrid import PMultigridSolver
 
     def test_simple_solve(self):
-        from tensornet.numerics.p_multigrid import PMultigridSolver
+        from ontic.numerics.p_multigrid import PMultigridSolver
 
         def assemble(p):
             n = p + 1
@@ -121,10 +121,10 @@ class TestPMultigrid:
 # ── Deflated Krylov ─────────────────────────────────────────────────
 class TestDeflatedKrylov:
     def test_import(self):
-        from tensornet.numerics.deflated_krylov import DeflatedCG, DeflatedGMRES
+        from ontic.numerics.deflated_krylov import DeflatedCG, DeflatedGMRES
 
     def test_deflated_cg(self):
-        from tensornet.numerics.deflated_krylov import DeflatedCG
+        from ontic.numerics.deflated_krylov import DeflatedCG
 
         n = 50
         A = np.eye(n) * 10.0
@@ -142,7 +142,7 @@ class TestDeflatedKrylov:
         assert r < 1e-6
 
     def test_deflated_gmres(self):
-        from tensornet.numerics.deflated_krylov import DeflatedGMRES
+        from ontic.numerics.deflated_krylov import DeflatedGMRES
 
         n = 30
         np.random.seed(42)
@@ -157,21 +157,21 @@ class TestDeflatedKrylov:
 # ── H-Matrix ───────────────────────────────────────────────────────
 class TestHMatrix:
     def test_import(self):
-        from tensornet.numerics.h_matrix import (
+        from ontic.numerics.h_matrix import (
             HMatrix,
             build_cluster_tree,
             aca,
         )
 
     def test_cluster_tree(self):
-        from tensornet.numerics.h_matrix import build_cluster_tree
+        from ontic.numerics.h_matrix import build_cluster_tree
 
         pts = np.random.rand(100, 2)
         tree = build_cluster_tree(pts, leaf_size=16)
         assert tree.size == 100
 
     def test_matvec(self):
-        from tensornet.numerics.h_matrix import HMatrix
+        from ontic.numerics.h_matrix import HMatrix
 
         np.random.seed(0)
         n = 80
@@ -192,17 +192,17 @@ class TestHMatrix:
 # ── FMM ─────────────────────────────────────────────────────────────
 class TestFMM:
     def test_import(self):
-        from tensornet.numerics.fmm import FMMSolver, build_tree
+        from ontic.numerics.fmm import FMMSolver, build_tree
 
     def test_tree_construction(self):
-        from tensornet.numerics.fmm import build_tree
+        from ontic.numerics.fmm import build_tree
 
         pts = np.random.rand(200, 2)
         tree = build_tree(pts, max_leaf=32)
         assert tree.n_particles == 200
 
     def test_small_fmm_vs_direct(self):
-        from tensornet.numerics.fmm import FMMSolver
+        from ontic.numerics.fmm import FMMSolver
 
         np.random.seed(1)
         n = 30
@@ -224,10 +224,10 @@ class TestFMM:
 # ── PGD ─────────────────────────────────────────────────────────────
 class TestPGD:
     def test_import(self):
-        from tensornet.numerics.pgd import PGDSolver, SeparatedFunction
+        from ontic.numerics.pgd import PGDSolver, SeparatedFunction
 
     def test_2d_laplacian(self):
-        from tensornet.numerics.pgd import PGDSolver
+        from ontic.numerics.pgd import PGDSolver
 
         n = 10
         h = 1.0 / (n + 1)
@@ -246,14 +246,14 @@ class TestPGD:
 # ── Sparse Grid ────────────────────────────────────────────────────
 class TestSparseGrid:
     def test_import(self):
-        from tensornet.numerics.sparse_grid import (
+        from ontic.numerics.sparse_grid import (
             SparseGrid,
             SparseGridQuadrature,
             SparseGridInterpolator,
         )
 
     def test_grid_points(self):
-        from tensornet.numerics.sparse_grid import SparseGrid
+        from ontic.numerics.sparse_grid import SparseGrid
 
         sg = SparseGrid(d=2, level=3)
         result = sg.build()
@@ -261,7 +261,7 @@ class TestSparseGrid:
         assert result.nodes.shape[1] == 2
 
     def test_quadrature_polynomial(self):
-        from tensornet.numerics.sparse_grid import SparseGridQuadrature
+        from ontic.numerics.sparse_grid import SparseGridQuadrature
 
         # Integrate x^2 + y^2 over [-1,1]^2
         # Exact = 2 * (2/3) * 2 = 8/3
@@ -273,14 +273,14 @@ class TestSparseGrid:
 # ── Reduced Basis ──────────────────────────────────────────────────
 class TestReducedBasis:
     def test_import(self):
-        from tensornet.numerics.reduced_basis import (
+        from ontic.numerics.reduced_basis import (
             ReducedBasis,
             GreedyRBM,
             POD_RBM,
         )
 
     def test_pod_rbm(self):
-        from tensornet.numerics.reduced_basis import POD_RBM
+        from ontic.numerics.reduced_basis import POD_RBM
 
         n = 20
 
@@ -301,7 +301,7 @@ class TestReducedBasis:
         assert rb_data.V.shape[1] <= 10
 
     def test_online_solve(self):
-        from tensornet.numerics.reduced_basis import ReducedBasis, POD_RBM
+        from ontic.numerics.reduced_basis import ReducedBasis, POD_RBM
 
         n = 20
 
@@ -331,7 +331,7 @@ class TestReducedBasis:
 # ── AD ──────────────────────────────────────────────────────────────
 class TestAD:
     def test_import(self):
-        from tensornet.numerics.ad import (
+        from ontic.numerics.ad import (
             Dual,
             Variable,
             Tape,
@@ -342,7 +342,7 @@ class TestAD:
         )
 
     def test_forward_mode_polynomial(self):
-        from tensornet.numerics.ad import Dual
+        from ontic.numerics.ad import Dual
 
         # f(x) = x^3, f'(x) = 3x^2
         x = Dual(2.0, 1.0)
@@ -351,7 +351,7 @@ class TestAD:
         assert abs(y.der - 12.0) < 1e-12
 
     def test_forward_mode_trig(self):
-        from tensornet.numerics.ad import Dual
+        from ontic.numerics.ad import Dual
 
         # f(x) = sin(x), f'(x) = cos(x)
         x = Dual(0.5, 1.0)
@@ -360,7 +360,7 @@ class TestAD:
         assert abs(y.der - math.cos(0.5)) < 1e-12
 
     def test_reverse_mode_product(self):
-        from tensornet.numerics.ad import Variable, Tape
+        from ontic.numerics.ad import Variable, Tape
 
         # f(x, y) = x * y → ∂f/∂x = y, ∂f/∂y = x
         tape = Tape()
@@ -372,7 +372,7 @@ class TestAD:
         assert abs(adjoints[y.idx] - 3.0) < 1e-12
 
     def test_grad_convenience(self):
-        from tensornet.numerics.ad import grad, Variable
+        from ontic.numerics.ad import grad, Variable
 
         # f(x,y) = x^2 + xy → ∇f = (2x+y, x)
         def f(x, y):
@@ -383,7 +383,7 @@ class TestAD:
         assert abs(g[1] - 3.0) < 1e-10  # x
 
     def test_forward_gradient(self):
-        from tensornet.numerics.ad import forward_gradient, Dual
+        from ontic.numerics.ad import forward_gradient, Dual
 
         # f(x,y) = x^2 + y^2 → ∇f = (2x, 2y)
         def f(x, y):
@@ -394,7 +394,7 @@ class TestAD:
         assert abs(g[1] - 4.0) < 1e-12
 
     def test_forward_vs_reverse_agree(self):
-        from tensornet.numerics.ad import forward_gradient, grad, Dual, Variable
+        from ontic.numerics.ad import forward_gradient, grad, Dual, Variable
 
         def f_forward(x, y):
             return Dual.exp(x) + Dual.sin(y)

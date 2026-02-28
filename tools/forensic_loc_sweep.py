@@ -93,9 +93,9 @@ def get_module_path(filepath, root):
         return '_root'
     
     top = parts[0]
-    # For tensornet, go one level deeper
-    if top == 'tensornet' and len(parts) > 2:
-        return f"tensornet/{parts[1]}"
+    # For ontic, go one level deeper
+    if top == 'ontic' and len(parts) > 2:
+        return f"ontic/{parts[1]}"
     return top
 
 
@@ -220,7 +220,7 @@ def main():
     
     tn_modules = {}
     for mod, langs in module_stats.items():
-        if not mod.startswith('tensornet/'):
+        if not mod.startswith('ontic/'):
             continue
         submod = mod.split('/', 1)[1]
         py_stats = langs.get('Python', {'files': 0, 'sloc': 0, 'total': 0})
@@ -333,7 +333,7 @@ def main():
     print(f"Total SLOC:            {grand_sloc:>8,}")
     print(f"Total size:            {grand_bytes/(1024*1024):>8.2f} MB")
     print(f"Skipped (binary/large):{skipped_binary:>8,}")
-    print(f"tensornet/ modules:    {len(tn_modules):>8}")
+    print(f"ontic/ modules:    {len(tn_modules):>8}")
     print(f"Languages detected:    {len(lang_stats):>8}")
     
     py_sloc = lang_stats.get('Python', {}).get('sloc', 0)

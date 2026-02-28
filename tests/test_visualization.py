@@ -1,5 +1,5 @@
 """
-Test Module: tensornet/visualization/
+Test Module: ontic/visualization/
 
 Visualization Infrastructure Tests
 Constitutional Compliance:

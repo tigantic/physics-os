@@ -58,35 +58,35 @@
 
 | Module | Files | Description |
 |--------|-------|-------------|
-| `tensornet/cfd/` | 59 | Computational Fluid Dynamics: Euler solvers, Navier-Stokes, shock tubes |
-| `tensornet/core/` | 10 | Fundamental operations: SVD, decompositions, GPU utilities |
-| `tensornet/mpo/` | 4 | Matrix Product Operators: Laplacian, advection, projection |
-| `tensornet/sovereign/` | 8 | RAM Bridge streaming: QTT→GPU pipeline, heatmap generation |
-| `tensornet/algorithms/` | 6 | DMRG, TEBD, TDVP, Lanczos solvers |
-| `tensornet/hyperenv/` | 10 | **Phase 4**: RL environments, HypersonicEnv, PPO training |
-| `tensornet/simulation/` | 6 | Sensors, flight state, HIL simulation |
-| `tensornet/quantum/` | 7 | Quantum-classical hybrid, QTT rendering |
-| `tensornet/neural/` | 5 | Neural-enhanced tensor networks, bond prediction |
-| `tensornet/validation/` | 5 | Physical validation, regression testing |
-| `tensornet/mps/` | 2 | Matrix Product States, Hamiltonians |
-| `tensornet/fieldops/` | — | Physics operators (FieldGraph) |
-| `tensornet/provenance/` | — | Attestation, audit, replay |
-| `tensornet/intent/` | 6 | **Phase 4**: Natural language → swarm commands |
-| `tensornet/physics/` | 4 | **Phase 3**: Hypersonic hazard fields, trajectory optimization |
-| `tensornet/gpu/` | 5 | **Phase 2**: CUDA GEMM, tensor kernels, 30x acceleration |
-| `tensornet/energy/` | 11 | **Phase 5**: Wind farm, turbine, wake CFD, revenue optimization |
-| `tensornet/financial/` | 4 | **Phase 6**: Order book fluids, Navier-Stokes price flow |
-| `tensornet/urban/` | 3 | **Phase 7**: VoxelCity, Venturi physics, drone safety |
-| `tensornet/marine/` | 2 | **Phase 8**: Hydroacoustic stealth, submarine thermoclines |
-| `tensornet/fusion/` | 2 | **Phase 9**: Tokamak plasma, Boris particle pusher |
-| `tensornet/cyber/` | 2 | **Phase 10**: DDoS grid shock, network fluid dynamics |
-| `tensornet/medical/` | 2 | **Phase 11**: Hemodynamics, Carreau-Yasuda viscosity |
-| `tensornet/racing/` | 2 | **Phase 12**: F1 dirty air, wake turbulence tracker |
-| `tensornet/defense/` | 1 | **Phase 13**: 6-DOF ballistics, wind field trajectory |
-| `tensornet/emergency/` | 2 | **Phase 14**: Wildfire spread, fire-atmosphere coupling |
-| `tensornet/agri/` | 2 | **Phase 15**: Vertical farm microclimate optimization |
-| `tensornet/deployment/` | — | TensorRT, radiation hardening, embedded |
-| `tensornet/digital_twin/` | — | State sync, anomaly detection |
+| `ontic/cfd/` | 59 | Computational Fluid Dynamics: Euler solvers, Navier-Stokes, shock tubes |
+| `ontic/core/` | 10 | Fundamental operations: SVD, decompositions, GPU utilities |
+| `ontic/mpo/` | 4 | Matrix Product Operators: Laplacian, advection, projection |
+| `ontic/sovereign/` | 8 | RAM Bridge streaming: QTT→GPU pipeline, heatmap generation |
+| `ontic/algorithms/` | 6 | DMRG, TEBD, TDVP, Lanczos solvers |
+| `ontic/hyperenv/` | 10 | **Phase 4**: RL environments, HypersonicEnv, PPO training |
+| `ontic/simulation/` | 6 | Sensors, flight state, HIL simulation |
+| `ontic/quantum/` | 7 | Quantum-classical hybrid, QTT rendering |
+| `ontic/neural/` | 5 | Neural-enhanced tensor networks, bond prediction |
+| `ontic/validation/` | 5 | Physical validation, regression testing |
+| `ontic/mps/` | 2 | Matrix Product States, Hamiltonians |
+| `ontic/fieldops/` | — | Physics operators (FieldGraph) |
+| `ontic/provenance/` | — | Attestation, audit, replay |
+| `ontic/intent/` | 6 | **Phase 4**: Natural language → swarm commands |
+| `ontic/physics/` | 4 | **Phase 3**: Hypersonic hazard fields, trajectory optimization |
+| `ontic/gpu/` | 5 | **Phase 2**: CUDA GEMM, tensor kernels, 30x acceleration |
+| `ontic/energy/` | 11 | **Phase 5**: Wind farm, turbine, wake CFD, revenue optimization |
+| `ontic/financial/` | 4 | **Phase 6**: Order book fluids, Navier-Stokes price flow |
+| `ontic/urban/` | 3 | **Phase 7**: VoxelCity, Venturi physics, drone safety |
+| `ontic/marine/` | 2 | **Phase 8**: Hydroacoustic stealth, submarine thermoclines |
+| `ontic/fusion/` | 2 | **Phase 9**: Tokamak plasma, Boris particle pusher |
+| `ontic/cyber/` | 2 | **Phase 10**: DDoS grid shock, network fluid dynamics |
+| `ontic/medical/` | 2 | **Phase 11**: Hemodynamics, Carreau-Yasuda viscosity |
+| `ontic/racing/` | 2 | **Phase 12**: F1 dirty air, wake turbulence tracker |
+| `ontic/defense/` | 1 | **Phase 13**: 6-DOF ballistics, wind field trajectory |
+| `ontic/emergency/` | 2 | **Phase 14**: Wildfire spread, fire-atmosphere coupling |
+| `ontic/agri/` | 2 | **Phase 15**: Vertical farm microclimate optimization |
+| `ontic/deployment/` | — | TensorRT, radiation hardening, embedded |
+| `ontic/digital_twin/` | — | State sync, anomaly detection |
 
 ### Frontend: Glass Cockpit (Rust + wgpu)
 
@@ -120,12 +120,12 @@
 
 | Kernel | Location | Purpose |
 |--------|----------|---------|
-| `qtt_eval_kernel.cu` | `tensornet/cuda/` | QTT tensor evaluation |
-| `laplacian_kernel.cu` | `tensornet/mpo/` | GPU Laplacian MPO (640× speedup) |
-| `implicit_qtt_kernel.cu` | `tensornet/sovereign/` | Implicit QTT rendering |
-| `pressure_solver.cu` | `tensornet/gpu/csrc/` | Pressure Poisson solver |
-| `gemm_kernel.cu` | `tensornet/gpu/csrc/` | **Phase 2**: Tensor core GEMM (30× speedup) |
-| `tensor_matmul.cu` | `tensornet/gpu/csrc/` | **Phase 2**: Fused tensor multiplication |
+| `qtt_eval_kernel.cu` | `ontic/cuda/` | QTT tensor evaluation |
+| `laplacian_kernel.cu` | `ontic/mpo/` | GPU Laplacian MPO (640× speedup) |
+| `implicit_qtt_kernel.cu` | `ontic/sovereign/` | Implicit QTT rendering |
+| `pressure_solver.cu` | `ontic/gpu/csrc/` | Pressure Poisson solver |
+| `gemm_kernel.cu` | `ontic/gpu/csrc/` | **Phase 2**: Tensor core GEMM (30× speedup) |
+| `tensor_matmul.cu` | `ontic/gpu/csrc/` | **Phase 2**: Fused tensor multiplication |
 
 ### WGSL Shaders
 
@@ -161,25 +161,25 @@
 
 | Script | Description |
 |--------|-------------|
-| `tensornet/sovereign/qtt_bridge_streamer.py` | QTT→RAM Bridge streaming (2900+ FPS) |
-| `tensornet/sovereign/heatmap_generator.py` | CUDA heatmap generation |
-| `tensornet/sovereign/heatmap_generator_v2.py` | Grayscale intensity streaming |
-| `tensornet/gateway/orbital_command.py` | High-level orchestration |
-| `tensornet/hyperenv/train_pilot.py` | **Phase 4**: PPO agent training for hypersonic flight |
-| `tensornet/physics/trajectory_optimizer.py` | **Phase 3**: Fast Marching trajectory solver |
-| `tensornet/intent/swarm_command.py` | **Phase 4**: Natural language swarm C2 |
-| `tensornet/energy/optimizer.py` | **Phase 5**: Wind farm yaw optimization ($742K/year) |
-| `tensornet/financial/feed.py` | **Phase 6**: Coinbase WebSocket L2 order book |
-| `tensornet/financial/solver.py` | **Phase 6**: Navier-Stokes liquidity flow |
-| `tensornet/urban/solver.py` | **Phase 7**: Urban canyon Venturi physics |
-| `tensornet/marine/hydroacoustic.py` | **Phase 8**: Submarine stealth acoustics |
-| `tensornet/fusion/tokamak.py` | **Phase 9**: Boris pusher plasma confinement |
-| `tensornet/cyber/grid_shock.py` | **Phase 10**: DDoS as network shockwave |
-| `tensornet/medical/hemo.py` | **Phase 11**: Non-Newtonian blood flow |
-| `tensornet/racing/wake.py` | **Phase 12**: F1 dirty air tracker |
-| `tensornet/defense/ballistics.py` | **Phase 13**: 6-DOF long-range trajectory |
-| `tensornet/emergency/fire.py` | **Phase 14**: Wildfire spread prediction |
-| `tensornet/agri/microclimate.py` | **Phase 15**: Vertical farm optimization |
+| `ontic/sovereign/qtt_bridge_streamer.py` | QTT→RAM Bridge streaming (2900+ FPS) |
+| `ontic/sovereign/heatmap_generator.py` | CUDA heatmap generation |
+| `ontic/sovereign/heatmap_generator_v2.py` | Grayscale intensity streaming |
+| `ontic/gateway/orbital_command.py` | High-level orchestration |
+| `ontic/hyperenv/train_pilot.py` | **Phase 4**: PPO agent training for hypersonic flight |
+| `ontic/physics/trajectory_optimizer.py` | **Phase 3**: Fast Marching trajectory solver |
+| `ontic/intent/swarm_command.py` | **Phase 4**: Natural language swarm C2 |
+| `ontic/energy/optimizer.py` | **Phase 5**: Wind farm yaw optimization ($742K/year) |
+| `ontic/financial/feed.py` | **Phase 6**: Coinbase WebSocket L2 order book |
+| `ontic/financial/solver.py` | **Phase 6**: Navier-Stokes liquidity flow |
+| `ontic/urban/solver.py` | **Phase 7**: Urban canyon Venturi physics |
+| `ontic/marine/hydroacoustic.py` | **Phase 8**: Submarine stealth acoustics |
+| `ontic/fusion/tokamak.py` | **Phase 9**: Boris pusher plasma confinement |
+| `ontic/cyber/grid_shock.py` | **Phase 10**: DDoS as network shockwave |
+| `ontic/medical/hemo.py` | **Phase 11**: Non-Newtonian blood flow |
+| `ontic/racing/wake.py` | **Phase 12**: F1 dirty air tracker |
+| `ontic/defense/ballistics.py` | **Phase 13**: 6-DOF long-range trajectory |
+| `ontic/emergency/fire.py` | **Phase 14**: Wildfire spread prediction |
+| `ontic/agri/microclimate.py` | **Phase 15**: Vertical farm optimization |
 | `test_planetary.py` | **FINAL**: All 15-phase validation suite |
 
 ---
@@ -514,7 +514,7 @@ memmap2 = "0.9"
 
 ```
 The Physics OS/
-├── tensornet/                  # Python backend (230K+ LOC)
+├── ontic/                  # Python backend (230K+ LOC)
 │   ├── cfd/                    # CFD solvers (59 files)
 │   ├── core/                   # Core operations (10 files)
 │   ├── mpo/                    # MPO operators (4 files)

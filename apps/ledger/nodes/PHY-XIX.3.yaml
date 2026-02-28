@@ -13,7 +13,7 @@ state: "V0.2"
 description: "VQE/QAOA/HHL simulators"
 
 source_files:
-  - "tensornet/quantum/hybrid.py"
+  - "ontic/quantum/hybrid.py"
 
 tests:
   smoke:

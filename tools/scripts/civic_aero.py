@@ -63,7 +63,7 @@ sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(REPO_ROOT / "HVAC_CFD" / "Review"))
 
 from hyperfoam.core.grid import HyperGrid  # type: ignore[import-untyped]
-from tensornet.cfd.turbulence import (  # type: ignore[import-untyped]
+from ontic.cfd.turbulence import (  # type: ignore[import-untyped]
     ALPHA_1,
     ALPHA_2,
     BETA_1,

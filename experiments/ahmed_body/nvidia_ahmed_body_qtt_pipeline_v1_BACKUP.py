@@ -87,7 +87,7 @@ class PipelineConfig:
     splits: List[str] = field(default_factory=lambda: ["test"])  # train/val/test
 
     # Engine selection
-    engine: str = "tntorch"     # "tntorch" | "hypertensor" | "manual"
+    engine: str = "tntorch"     # "tntorch" | "physics_os" | "manual"
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -577,7 +577,7 @@ def compress_field_hypertensor(
     3. The interface expects: compress(data) → compressed, decompress(compressed) → data
 
     Example integration:
-        from tensornet.qtt import QTTCompressor
+        from ontic.qtt import QTTCompressor
         compressor = QTTCompressor(max_rank=max_rank, tolerance=tolerance)
         compressed = compressor.compress(data)
         reconstructed = compressor.decompress(compressed)
@@ -599,7 +599,7 @@ def compress_field(
     """Route to selected compression engine."""
     if config.engine == "tntorch" and HAS_TNTORCH:
         return compress_field_tntorch(data, field_name, config.max_rank, config.tolerance)
-    elif config.engine == "hypertensor":
+    elif config.engine == "physics_os":
         return compress_field_hypertensor(data, field_name, config.max_rank, config.tolerance)
     else:
         return compress_field_manual(data, field_name, config.max_rank, config.tolerance)
@@ -858,7 +858,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="NVIDIA PhysicsNeMo Ahmed Body → QTT Compression Benchmark"
     )
-    parser.add_argument("--engine", choices=["tntorch", "hypertensor", "manual"],
+    parser.add_argument("--engine", choices=["tntorch", "physics_os", "manual"],
                         default="manual", help="QTT compression engine")
     parser.add_argument("--max-rank", type=int, default=64,
                         help="Maximum TT bond dimension (default: 64)")

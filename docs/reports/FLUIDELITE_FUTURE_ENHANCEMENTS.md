@@ -29,8 +29,8 @@ Complete the MPO-MPS contraction implementation to enable constraint checking
 entirely in QTT space without decompression.
 
 ### Location
-- `tensornet/zk/fluidelite_circuit_analyzer.py` - `MPOConstraintOps` class
-- Reference: `tensornet/cfd/pure_qtt_ops.py` - MPO operations
+- `ontic/zk/fluidelite_circuit_analyzer.py` - `MPOConstraintOps` class
+- Reference: `ontic/cfd/pure_qtt_ops.py` - MPO operations
 
 ### Implementation Details
 ```python
@@ -58,12 +58,12 @@ def check_constraint_qtt(self, constraint, witness_qtt, num_signals, tol=1e-10):
 ## Priority 2: TCI Adaptive Sampling (2-3 weeks)
 
 ### Description
-Integrate Tensor Cross Interpolation (TCI) from `tensornet/cfd/qtt_tci.py`
+Integrate Tensor Cross Interpolation (TCI) from `ontic/cfd/qtt_tci.py`
 to adaptively sample constraint matrices, computing only where needed.
 
 ### Location
-- `tensornet/cfd/qtt_tci.py` - Core TCI implementation
-- `tensornet/zk/fluidelite_circuit_analyzer.py` - Integration point
+- `ontic/cfd/qtt_tci.py` - Core TCI implementation
+- `ontic/zk/fluidelite_circuit_analyzer.py` - Integration point
 
 ### Use Case
 For circuits with structured constraints (repeated subcircuits), TCI can
@@ -78,11 +78,11 @@ identify the essential skeleton without computing all entries.
 ## Priority 3: CUDA GPU Acceleration (1 month)
 
 ### Description
-Enable GPU-accelerated constraint analysis using `tensornet/cfd/qtt_tci_gpu.py`.
+Enable GPU-accelerated constraint analysis using `ontic/cfd/qtt_tci_gpu.py`.
 
 ### Location
-- `tensornet/cfd/qtt_tci_gpu.py` - CUDA kernels
-- `tensornet/zk/fluidelite_circuit_analyzer.py` - GPU path
+- `ontic/cfd/qtt_tci_gpu.py` - CUDA kernels
+- `ontic/zk/fluidelite_circuit_analyzer.py` - GPU path
 
 ### Prerequisites
 - CUDA-capable GPU
@@ -177,10 +177,10 @@ To implement a future enhancement:
 
 | Document | Purpose |
 |----------|---------|
-| `tensornet/cfd/qtt.py` | QTT decomposition, rSVD |
-| `tensornet/cfd/pure_qtt_ops.py` | MPO operations |
-| `tensornet/cfd/qtt_tci.py` | TCI sampling |
-| `tensornet/cfd/qtt_tci_gpu.py` | CUDA kernels |
-| `tensornet/numerics/interval.py` | Rigorous intervals |
+| `ontic/cfd/qtt.py` | QTT decomposition, rSVD |
+| `ontic/cfd/pure_qtt_ops.py` | MPO operations |
+| `ontic/cfd/qtt_tci.py` | TCI sampling |
+| `ontic/cfd/qtt_tci_gpu.py` | CUDA kernels |
+| `ontic/numerics/interval.py` | Rigorous intervals |
 | `FLUIDELITE_ZK_EXECUTION_FRAMEWORK.md` | Architecture |
 | `FLUIDELITE_V1.2_UPGRADE_REPORT.md` | v1.2 changes |

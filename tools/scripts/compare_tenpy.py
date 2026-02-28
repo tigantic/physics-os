@@ -27,7 +27,7 @@ import torch
 
 def run_hypertensor_dmrg(L: int, chi_max: int, num_sweeps: int = 10):
     """Run DMRG with HyperTensor."""
-    from tensornet import dmrg, heisenberg_mpo
+    from ontic import dmrg, heisenberg_mpo
 
     print(f"  Building Heisenberg MPO (L={L})...")
     H = heisenberg_mpo(L, J=1.0, Jz=1.0)

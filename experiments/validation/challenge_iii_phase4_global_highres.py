@@ -34,7 +34,7 @@ from typing import Any, Dict, List, Tuple
 import numpy as np
 from numpy.typing import NDArray
 
-from tensornet.qtt.sparse_direct import tt_round
+from ontic.qtt.sparse_direct import tt_round
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 

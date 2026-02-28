@@ -49,32 +49,32 @@ if torch.cuda.is_available():
     torch.backends.cudnn.allow_tf32 = True
 
 # ── HyperTensor platform imports ──
-from tensornet.engine.adaptive.bond_optimizer import (
+from ontic.engine.adaptive.bond_optimizer import (
     AdaptiveBondConfig,
     BondDimensionTracker,
     TruncationRecord,
 )
-from tensornet.engine.adaptive.entanglement import (
+from ontic.engine.adaptive.entanglement import (
     AreaLawAnalyzer,
     AreaLawScaling,
     EntanglementSpectrum,
     ScalingType,
 )
-from tensornet.packs import discover_all
-from tensornet.packs._base import (
+from ontic.packs import discover_all
+from ontic.packs._base import (
     EigenReferenceSolver,
     MonteCarloReferenceSolver,
     ODEReferenceSolver,
     PDE1DReferenceSolver,
 )
-from tensornet.platform.data_model import (
+from ontic.platform.data_model import (
     FieldData,
     SimulationState,
     StructuredMesh,
 )
-from tensornet.platform.domain_pack import DomainPack, get_registry
-from tensornet.platform.protocols import SolveResult
-from tensornet.platform.qtt import QTTFieldData, field_to_qtt, qtt_to_field
+from ontic.platform.domain_pack import DomainPack, get_registry
+from ontic.platform.protocols import SolveResult
+from ontic.platform.qtt import QTTFieldData, field_to_qtt, qtt_to_field
 
 # V0.2 reference solver base classes (accept raw Tensor, return raw Tensor)
 _V02_SOLVER_BASES = (

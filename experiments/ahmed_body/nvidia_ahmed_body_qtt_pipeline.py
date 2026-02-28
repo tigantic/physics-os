@@ -67,7 +67,7 @@ except ImportError:
     sys.exit(1)
 
 try:
-    from tensornet.cfd.qtt import field_to_qtt, qtt_to_field
+    from ontic.cfd.qtt import field_to_qtt, qtt_to_field
 except ImportError:
     print("[FATAL] HyperTensor QTT engine not found.")
     print("        Ensure tensornet.cfd.qtt is importable.")

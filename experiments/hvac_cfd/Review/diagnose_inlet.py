@@ -8,7 +8,7 @@ sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project HyperTensor')
 
 import numpy as np
 import torch
-from tensornet.hvac.solver_3d import (
+from ontic.hvac.solver_3d import (
     Solver3DConfig, Solver3D, Solver3DState,
     Inlet3D, Outlet3D
 )

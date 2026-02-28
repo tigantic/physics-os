@@ -32,10 +32,10 @@ MPO atmospheric solver has been **fully integrated** into orbital_command.py:
 
 ```python
 # Line 47: Import MPO solver
-from tensornet.mpo import MPOAtmosphericSolver
+from ontic.mpo import MPOAtmosphericSolver
 
 # Line 34: REMOVED (dense solver eliminated)
-# from tensornet.gpu.stable_fluid import FluidDynamicsSolver
+# from ontic.gpu.stable_fluid import FluidDynamicsSolver
 
 # Lines 89-97: MPO initialization
 self.mpo_solver = MPOAtmosphericSolver(
@@ -60,10 +60,10 @@ self.mpo_solver = MPOAtmosphericSolver(...)  # Was: FluidDynamicsSolver
 
 **Verification**:
 ```bash
-$ grep -n "FluidDynamicsSolver" tensornet/gateway/orbital_command.py
+$ grep -n "FluidDynamicsSolver" ontic/gateway/orbital_command.py
 (no results - completely eliminated)
 
-$ grep -n "mpo_solver" tensornet/gateway/orbital_command.py
+$ grep -n "mpo_solver" ontic/gateway/orbital_command.py
 89:     self.mpo_solver = MPOAtmosphericSolver(
 233:    self.mpo_solver.step()
 250:    self.mpo_solver = MPOAtmosphericSolver(

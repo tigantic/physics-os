@@ -13,7 +13,7 @@ state: "V0.2"
 description: "TDDFT, GW, BSE"
 
 source_files:
-  - "tensornet/electronic_structure/excited_states.py"
+  - "ontic/electronic_structure/excited_states.py"
 
 tests:
   smoke:

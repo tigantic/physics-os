@@ -20,7 +20,7 @@ import numpy as np
 
 sys.path.insert(0, "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main")
 
-from tensornet.em.topology_opt import (
+from ontic.em.topology_opt import (
     DesignRegion,
     OptimizationConfig,
     OptimizationResult,
@@ -41,11 +41,11 @@ from tensornet.em.topology_opt import (
     volume_fraction,
     design_complexity,
 )
-from tensornet.em.boundaries import (
+from ontic.em.boundaries import (
     Geometry1D,
     PMLConfig,
 )
-from tensornet.em.s_parameters import (
+from ontic.em.s_parameters import (
     Port,
     s_to_db,
 )
@@ -334,8 +334,8 @@ def run_tests():
         rho_air, design_test, geo_test, beta=0.0,
     )
 
-    from tensornet.em.qtt_helmholtz import tt_amen_solve, reconstruct_1d
-    from tensornet.em.s_parameters import (
+    from ontic.em.qtt_helmholtz import tt_amen_solve, reconstruct_1d
+    from ontic.em.s_parameters import (
         port_source_tt, extract_mode_coefficients_lsq,
     )
 

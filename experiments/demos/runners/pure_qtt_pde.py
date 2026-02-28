@@ -43,7 +43,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import torch
 import numpy as np
 
-from tensornet.cfd.pure_qtt_ops import (
+from ontic.cfd.pure_qtt_ops import (
     dense_to_qtt, qtt_to_dense, apply_mpo,
     derivative_mpo, laplacian_mpo, 
     qtt_add, qtt_scale, qtt_norm, QTTState

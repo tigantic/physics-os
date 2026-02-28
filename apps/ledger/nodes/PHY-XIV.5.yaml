@@ -13,7 +13,7 @@ state: "V0.2"
 description: "BCA/MD cascades/OKMC"
 
 source_files:
-  - "tensornet/materials/radiation_damage.py"
+  - "ontic/materials/radiation_damage.py"
 
 tests:
   smoke:

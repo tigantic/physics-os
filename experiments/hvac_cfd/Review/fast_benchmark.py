@@ -14,7 +14,7 @@ sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project HyperTensor')
 
 import numpy as np
 import torch
-from tensornet.hvac.projection_solver import ProjectionConfig, ProjectionSolver
+from ontic.hvac.projection_solver import ProjectionConfig, ProjectionSolver
 
 # Aalborg experimental data
 AALBORG_DATA = {

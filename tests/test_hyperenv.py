@@ -29,7 +29,7 @@ class TestAgent:
 
     def test_agent_config_defaults(self):
         """Test AgentConfig has sensible defaults."""
-        from tensornet.infra.hyperenv import AgentConfig
+        from ontic.infra.hyperenv import AgentConfig
 
         config = AgentConfig()
         assert config.name == "agent"
@@ -39,7 +39,7 @@ class TestAgent:
 
     def test_agent_state_serialization(self):
         """Test AgentState can be saved and loaded."""
-        from tensornet.infra.hyperenv import AgentState
+        from ontic.infra.hyperenv import AgentState
 
         state = AgentState(step=100, episode=5, epsilon=0.5, total_reward=500.0)
 
@@ -59,7 +59,7 @@ class TestAgent:
 
     def test_random_agent(self):
         """Test RandomAgent produces valid actions."""
-        from tensornet.infra.hyperenv import AgentConfig, RandomAgent
+        from ontic.infra.hyperenv import AgentConfig, RandomAgent
 
         config = AgentConfig(action_dim=4)
         agent = RandomAgent(config=config)
@@ -72,7 +72,7 @@ class TestAgent:
 
     def test_constant_agent(self):
         """Test ConstantAgent returns same action."""
-        from tensornet.infra.hyperenv import ConstantAgent
+        from ontic.infra.hyperenv import ConstantAgent
 
         constant_action = np.array([1.0, 0.0, -1.0, 0.5], dtype=np.float32)
         agent = ConstantAgent(action=constant_action)
@@ -86,7 +86,7 @@ class TestAgent:
 
     def test_agent_train_eval_mode(self):
         """Test agent training/eval mode switching."""
-        from tensornet.infra.hyperenv import RandomAgent
+        from ontic.infra.hyperenv import RandomAgent
 
         agent = RandomAgent()
 
@@ -100,7 +100,7 @@ class TestAgent:
 
     def test_agent_end_episode(self):
         """Test agent episode tracking."""
-        from tensornet.infra.hyperenv import RandomAgent
+        from ontic.infra.hyperenv import RandomAgent
 
         agent = RandomAgent()
 
@@ -127,7 +127,7 @@ class TestMultiAgent:
 
     def test_multiagent_config(self):
         """Test MultiAgentConfig creation."""
-        from tensornet.infra.hyperenv import AgentRole, MultiAgentConfig, TeamConfig
+        from ontic.infra.hyperenv import AgentRole, MultiAgentConfig, TeamConfig
 
         config = MultiAgentConfig(
             teams=[
@@ -142,7 +142,7 @@ class TestMultiAgent:
 
     def test_multiagent_env_creation(self):
         """Test MultiAgentEnv wrapping."""
-        from tensornet.infra.hyperenv import (MultiAgentConfig, MultiAgentEnv,
+        from ontic.infra.hyperenv import (MultiAgentConfig, MultiAgentEnv,
                                         TeamConfig)
 
         # Mock base environment
@@ -159,7 +159,7 @@ class TestMultiAgent:
 
     def test_multiagent_reset(self):
         """Test multi-agent reset returns per-agent observations."""
-        from tensornet.infra.hyperenv import (MultiAgentConfig, MultiAgentEnv,
+        from ontic.infra.hyperenv import (MultiAgentConfig, MultiAgentEnv,
                                         TeamConfig)
 
         base_env = MagicMock()
@@ -176,7 +176,7 @@ class TestMultiAgent:
 
     def test_multiagent_step(self):
         """Test multi-agent step processes all agents."""
-        from tensornet.infra.hyperenv import (AgentRole, MultiAgentConfig,
+        from ontic.infra.hyperenv import (AgentRole, MultiAgentConfig,
                                         MultiAgentEnv, TeamConfig)
 
         base_env = MagicMock()
@@ -200,7 +200,7 @@ class TestMultiAgent:
 
     def test_competitive_rewards(self):
         """Test competitive agents get opposite rewards."""
-        from tensornet.infra.hyperenv import (AgentRole, MultiAgentConfig,
+        from ontic.infra.hyperenv import (AgentRole, MultiAgentConfig,
                                         MultiAgentEnv, TeamConfig)
 
         base_env = MagicMock()
@@ -238,7 +238,7 @@ class TestTrainer:
 
     def test_trainer_config_defaults(self):
         """Test TrainerConfig has sensible defaults."""
-        from tensornet.infra.hyperenv import TrainerConfig
+        from ontic.infra.hyperenv import TrainerConfig
 
         config = TrainerConfig()
         assert config.total_timesteps > 0
@@ -247,7 +247,7 @@ class TestTrainer:
 
     def test_training_state_serialization(self):
         """Test TrainingState save/load."""
-        from tensornet.infra.hyperenv import TrainingState
+        from ontic.infra.hyperenv import TrainingState
 
         state = TrainingState(timestep=50000, episode=100)
         state.episode_rewards = [1.0, 2.0, 3.0]
@@ -267,7 +267,7 @@ class TestTrainer:
 
     def test_trainer_creation(self):
         """Test Trainer can be created."""
-        from tensornet.infra.hyperenv import RandomAgent, Trainer, TrainerConfig
+        from ontic.infra.hyperenv import RandomAgent, Trainer, TrainerConfig
 
         agent = RandomAgent()
         env = MagicMock()
@@ -279,7 +279,7 @@ class TestTrainer:
 
     def test_trainer_train_short(self):
         """Test short training run."""
-        from tensornet.infra.hyperenv import RandomAgent, Trainer, TrainerConfig
+        from ontic.infra.hyperenv import RandomAgent, Trainer, TrainerConfig
 
         agent = RandomAgent()
 
@@ -303,7 +303,7 @@ class TestTrainer:
 
     def test_trainer_stop(self):
         """Test trainer can be stopped."""
-        from tensornet.infra.hyperenv import (LambdaCallback, RandomAgent, Trainer,
+        from ontic.infra.hyperenv import (LambdaCallback, RandomAgent, Trainer,
                                         TrainerConfig)
 
         agent = RandomAgent()
@@ -333,7 +333,7 @@ class TestEvaluator:
 
     def test_evaluation_result(self):
         """Test EvaluationResult creation."""
-        from tensornet.infra.hyperenv import EvaluationResult
+        from ontic.infra.hyperenv import EvaluationResult
 
         result = EvaluationResult(
             mean_reward=100.0,
@@ -346,7 +346,7 @@ class TestEvaluator:
 
     def test_evaluation_result_serialization(self):
         """Test EvaluationResult save/load."""
-        from tensornet.infra.hyperenv import EvaluationResult
+        from ontic.infra.hyperenv import EvaluationResult
 
         result = EvaluationResult(mean_reward=42.0, std_reward=5.0)
 
@@ -364,7 +364,7 @@ class TestEvaluator:
 
     def test_evaluator_evaluate(self):
         """Test Evaluator.evaluate runs episodes."""
-        from tensornet.infra.hyperenv import Evaluator, RandomAgent
+        from ontic.infra.hyperenv import Evaluator, RandomAgent
 
         agent = RandomAgent()
 
@@ -390,7 +390,7 @@ class TestEvaluator:
 
     def test_benchmark_suite(self):
         """Test BenchmarkSuite runs all environments."""
-        from tensornet.infra.hyperenv import BenchmarkSuite, RandomAgent
+        from ontic.infra.hyperenv import BenchmarkSuite, RandomAgent
 
         agent = RandomAgent()
 
@@ -428,7 +428,7 @@ class TestCallbacks:
 
     def test_callback_list(self):
         """Test CallbackList composes callbacks."""
-        from tensornet.infra.hyperenv import Callback, CallbackList
+        from ontic.infra.hyperenv import Callback, CallbackList
 
         calls = []
 
@@ -456,7 +456,7 @@ class TestCallbacks:
 
     def test_early_stopping_callback(self):
         """Test EarlyStoppingCallback stops training."""
-        from tensornet.infra.hyperenv import EarlyStoppingCallback, TrainingState
+        from ontic.infra.hyperenv import EarlyStoppingCallback, TrainingState
 
         callback = EarlyStoppingCallback(patience=2, check_freq=1, verbose=0)
 
@@ -482,7 +482,7 @@ class TestCallbacks:
 
     def test_lambda_callback(self):
         """Test LambdaCallback with custom functions."""
-        from tensornet.infra.hyperenv import LambdaCallback
+        from ontic.infra.hyperenv import LambdaCallback
 
         steps = []
 
@@ -508,7 +508,7 @@ class TestBuffers:
 
     def test_experience_namedtuple(self):
         """Test Experience tuple."""
-        from tensornet.infra.hyperenv import Experience
+        from ontic.infra.hyperenv import Experience
 
         exp = Experience(
             observation=np.zeros(10),
@@ -523,7 +523,7 @@ class TestBuffers:
 
     def test_trajectory(self):
         """Test Trajectory storage."""
-        from tensornet.infra.hyperenv import Trajectory
+        from ontic.infra.hyperenv import Trajectory
 
         traj = Trajectory()
 
@@ -540,7 +540,7 @@ class TestBuffers:
 
     def test_trajectory_compute_returns(self):
         """Test Trajectory return computation."""
-        from tensornet.infra.hyperenv import Trajectory
+        from ontic.infra.hyperenv import Trajectory
 
         traj = Trajectory()
         traj.rewards = [1.0, 1.0, 1.0]
@@ -556,7 +556,7 @@ class TestBuffers:
 
     def test_replay_buffer_add_sample(self):
         """Test ReplayBuffer add and sample."""
-        from tensornet.infra.hyperenv import ReplayBuffer
+        from ontic.infra.hyperenv import ReplayBuffer
 
         buffer = ReplayBuffer(capacity=100)
 
@@ -581,7 +581,7 @@ class TestBuffers:
 
     def test_replay_buffer_circular(self):
         """Test ReplayBuffer wraps around."""
-        from tensornet.infra.hyperenv import ReplayBuffer
+        from ontic.infra.hyperenv import ReplayBuffer
 
         buffer = ReplayBuffer(capacity=10)
 
@@ -604,7 +604,7 @@ class TestBuffers:
 
     def test_prioritized_replay_buffer(self):
         """Test PrioritizedReplayBuffer sampling."""
-        from tensornet.infra.hyperenv import PrioritizedReplayBuffer
+        from ontic.infra.hyperenv import PrioritizedReplayBuffer
 
         buffer = PrioritizedReplayBuffer(capacity=100, alpha=0.6)
 
@@ -628,7 +628,7 @@ class TestBuffers:
 
     def test_rollout_buffer(self):
         """Test RolloutBuffer for on-policy."""
-        from tensornet.infra.hyperenv import RolloutBuffer
+        from ontic.infra.hyperenv import RolloutBuffer
 
         buffer = RolloutBuffer(capacity=100, gamma=0.99)
 
@@ -658,7 +658,7 @@ class TestBuffers:
 
     def test_batch_to_torch(self):
         """Test Batch conversion to PyTorch."""
-        from tensornet.infra.hyperenv import Batch
+        from ontic.infra.hyperenv import Batch
 
         batch = Batch(
             observations=np.zeros((16, 10)),
@@ -685,7 +685,7 @@ class TestIntegration:
 
     def test_agent_to_trainer_pipeline(self):
         """Test complete agent-trainer pipeline."""
-        from tensornet.infra.hyperenv import (RandomAgent, ReplayBuffer, Trainer,
+        from ontic.infra.hyperenv import (RandomAgent, ReplayBuffer, Trainer,
                                         TrainerConfig)
 
         agent = RandomAgent()
@@ -712,7 +712,7 @@ class TestIntegration:
 
     def test_multiagent_with_random_agents(self):
         """Test multi-agent environment with random agents."""
-        from tensornet.infra.hyperenv import (MultiAgentConfig, MultiAgentEnv,
+        from ontic.infra.hyperenv import (MultiAgentConfig, MultiAgentEnv,
                                         RandomAgent, TeamConfig)
 
         # Base environment
@@ -739,7 +739,7 @@ class TestIntegration:
 
     def test_evaluate_trained_agent(self):
         """Test evaluating agent after training."""
-        from tensornet.infra.hyperenv import (Evaluator, RandomAgent, Trainer,
+        from ontic.infra.hyperenv import (Evaluator, RandomAgent, Trainer,
                                         TrainerConfig)
 
         agent = RandomAgent()
@@ -777,7 +777,7 @@ class TestIntegration:
 
     def test_callback_with_trainer(self):
         """Test custom callback during training."""
-        from tensornet.infra.hyperenv import (LambdaCallback, RandomAgent, Trainer,
+        from ontic.infra.hyperenv import (LambdaCallback, RandomAgent, Trainer,
                                         TrainerConfig)
 
         episode_rewards = []

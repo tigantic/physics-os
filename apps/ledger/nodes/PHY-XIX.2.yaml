@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Codes, decoding hooks"
 
 source_files:
-  - "tensornet/quantum/error_mitigation.py"
+  - "ontic/quantum/error_mitigation.py"
 
 tests:
   smoke:

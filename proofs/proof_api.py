@@ -8,7 +8,7 @@ Tests for:
 - Distributed execution
 - End-to-end integration
 
-Run with: python -m tensornet.discovery test
+Run with: python -m ontic.discovery test
 """
 
 from __future__ import annotations
@@ -69,7 +69,7 @@ def test(name: str):
 @test("API Models: DiscoveryRequest")
 def test_discovery_request():
     """Test DiscoveryRequest model."""
-    from tensornet.ml.discovery.api.models import DiscoveryRequest, DomainType
+    from ontic.ml.discovery.api.models import DiscoveryRequest, DomainType
     
     # Create request
     req = DiscoveryRequest(
@@ -92,7 +92,7 @@ def test_discovery_request():
 @test("API Models: DiscoveryResponse")
 def test_discovery_response():
     """Test DiscoveryResponse model."""
-    from tensornet.ml.discovery.api.models import (
+    from ontic.ml.discovery.api.models import (
         DiscoveryResponse, DomainType, Finding, SeverityLevel, PipelineMetrics
     )
     
@@ -131,7 +131,7 @@ def test_discovery_response():
 @test("API Models: LiveDataRequest")
 def test_live_data_request():
     """Test LiveDataRequest model."""
-    from tensornet.ml.discovery.api.models import (
+    from ontic.ml.discovery.api.models import (
         LiveDataRequest, LiveMode, HistoricalEvent
     )
     
@@ -154,7 +154,7 @@ def test_live_data_request():
 @test("API Models: GPUStatus")
 def test_gpu_status():
     """Test GPUStatus model."""
-    from tensornet.ml.discovery.api.models import GPUStatus, GPUDevice
+    from ontic.ml.discovery.api.models import GPUStatus, GPUDevice
     
     status = GPUStatus(
         available=True,
@@ -185,7 +185,7 @@ def test_gpu_status():
 @test("API Models: StreamingRequest")
 def test_streaming_request():
     """Test StreamingRequest model."""
-    from tensornet.ml.discovery.api.models import StreamingRequest, SeverityLevel
+    from ontic.ml.discovery.api.models import StreamingRequest, SeverityLevel
     
     req = StreamingRequest(
         symbol="ETH-USD",
@@ -212,7 +212,7 @@ def test_streaming_request():
 @test("GPU Backend: Availability Check")
 def test_gpu_availability():
     """Test GPU availability detection."""
-    from tensornet.ml.discovery.api.gpu import gpu_available, get_gpu_info
+    from ontic.ml.discovery.api.gpu import gpu_available, get_gpu_info
     
     info = get_gpu_info()
     
@@ -222,7 +222,7 @@ def test_gpu_availability():
 @test("GPU Backend: GPUBackend CPU Fallback")
 def test_gpu_backend_cpu():
     """Test GPUBackend with CPU fallback."""
-    from tensornet.ml.discovery.api.gpu import GPUBackend, AcceleratorConfig, AcceleratorType
+    from ontic.ml.discovery.api.gpu import GPUBackend, AcceleratorConfig, AcceleratorType
     import numpy as np
     
     # Force CPU mode by not using GPU even if available
@@ -247,7 +247,7 @@ def test_gpu_backend_cpu():
 @test("GPU Backend: FFT")
 def test_gpu_backend_fft():
     """Test GPUBackend FFT."""
-    from tensornet.ml.discovery.api.gpu import GPUBackend
+    from ontic.ml.discovery.api.gpu import GPUBackend
     import numpy as np
     
     backend = GPUBackend()
@@ -266,7 +266,7 @@ def test_gpu_backend_fft():
 @test("GPU Backend: Eigendecomposition")
 def test_gpu_backend_eigh():
     """Test GPUBackend eigendecomposition."""
-    from tensornet.ml.discovery.api.gpu import GPUBackend
+    from ontic.ml.discovery.api.gpu import GPUBackend
     import numpy as np
     
     backend = GPUBackend()
@@ -286,7 +286,7 @@ def test_gpu_backend_eigh():
 @test("GPU Backend: SVD")
 def test_gpu_backend_svd():
     """Test GPUBackend SVD."""
-    from tensornet.ml.discovery.api.gpu import GPUBackend
+    from ontic.ml.discovery.api.gpu import GPUBackend
     import numpy as np
     
     backend = GPUBackend()
@@ -305,7 +305,7 @@ def test_gpu_backend_svd():
 @test("GPU Backend: Metrics Tracking")
 def test_gpu_backend_metrics():
     """Test GPUBackend metrics tracking."""
-    from tensornet.ml.discovery.api.gpu import GPUBackend
+    from ontic.ml.discovery.api.gpu import GPUBackend
     import numpy as np
     
     backend = GPUBackend()
@@ -335,7 +335,7 @@ def test_gpu_backend_metrics():
 @test("Icicle: NTT (CPU Fallback)")
 def test_icicle_ntt():
     """Test Icicle NTT with CPU fallback."""
-    from tensornet.ml.discovery.api.gpu import IcicleAccelerator
+    from ontic.ml.discovery.api.gpu import IcicleAccelerator
     import numpy as np
     
     icicle = IcicleAccelerator()
@@ -355,7 +355,7 @@ def test_icicle_ntt():
 @test("Icicle: Poseidon Hash (CPU Fallback)")
 def test_icicle_poseidon():
     """Test Icicle Poseidon hash with CPU fallback."""
-    from tensornet.ml.discovery.api.gpu import IcicleAccelerator
+    from ontic.ml.discovery.api.gpu import IcicleAccelerator
     import numpy as np
     
     icicle = IcicleAccelerator()
@@ -376,7 +376,7 @@ def test_icicle_poseidon():
 @test("Distributed: DistributedConfig")
 def test_distributed_config():
     """Test DistributedConfig."""
-    from tensornet.ml.discovery.api.distributed import DistributedConfig
+    from ontic.ml.discovery.api.distributed import DistributedConfig
     
     config = DistributedConfig(
         coordinator_host="localhost",
@@ -396,7 +396,7 @@ def test_distributed_config():
 @test("Distributed: WorkerNode")
 def test_worker_node():
     """Test WorkerNode."""
-    from tensornet.ml.discovery.api.distributed import WorkerNode, DistributedTask
+    from ontic.ml.discovery.api.distributed import WorkerNode, DistributedTask
     
     worker = WorkerNode(worker_id="test-worker")
     
@@ -429,7 +429,7 @@ def test_worker_node():
 @test("Distributed: DistributedCoordinator")
 def test_distributed_coordinator():
     """Test DistributedCoordinator."""
-    from tensornet.ml.discovery.api.distributed import DistributedCoordinator
+    from ontic.ml.discovery.api.distributed import DistributedCoordinator
     
     coordinator = DistributedCoordinator()
     coordinator.start(local_mode=True)
@@ -454,7 +454,7 @@ def test_distributed_coordinator():
 @test("Distributed: Batch Submission")
 def test_distributed_batch():
     """Test batch task submission."""
-    from tensornet.ml.discovery.api.distributed import DistributedCoordinator
+    from ontic.ml.discovery.api.distributed import DistributedCoordinator
     
     coordinator = DistributedCoordinator()
     coordinator.start(local_mode=True)
@@ -481,7 +481,7 @@ def test_distributed_batch():
 @test("Distributed: Map Operation")
 def test_distributed_map():
     """Test distributed map operation."""
-    from tensornet.ml.discovery.api.distributed import DistributedCoordinator
+    from ontic.ml.discovery.api.distributed import DistributedCoordinator
     
     coordinator = DistributedCoordinator()
     coordinator.start(local_mode=True)
@@ -504,7 +504,7 @@ def test_distributed_map():
 @test("API Server: ServerConfig")
 def test_server_config():
     """Test ServerConfig."""
-    from tensornet.ml.discovery.api.server import ServerConfig
+    from ontic.ml.discovery.api.server import ServerConfig
     
     config = ServerConfig(
         host="0.0.0.0",
@@ -523,7 +523,7 @@ def test_server_config():
 @test("API Server: ServerStats")
 def test_server_stats():
     """Test ServerStats."""
-    from tensornet.ml.discovery.api.server import ServerStats
+    from ontic.ml.discovery.api.server import ServerStats
     
     stats = ServerStats()
     stats.requests_total = 100
@@ -541,7 +541,7 @@ def test_server_stats():
 @test("API Server: DiscoveryAPIServer Creation")
 def test_api_server_creation():
     """Test DiscoveryAPIServer creation."""
-    from tensornet.ml.discovery.api.server import DiscoveryAPIServer, ServerConfig, FASTAPI_AVAILABLE
+    from ontic.ml.discovery.api.server import DiscoveryAPIServer, ServerConfig, FASTAPI_AVAILABLE
     
     config = ServerConfig(port=8001)
     server = DiscoveryAPIServer(config)
@@ -556,7 +556,7 @@ def test_api_server_creation():
 @test("API Server: create_app Factory")
 def test_create_app():
     """Test create_app factory function."""
-    from tensornet.ml.discovery.api.server import create_app, ServerConfig, FASTAPI_AVAILABLE
+    from ontic.ml.discovery.api.server import create_app, ServerConfig, FASTAPI_AVAILABLE
     
     app = create_app(ServerConfig(port=8002))
     
@@ -574,10 +574,10 @@ def test_create_app():
 @test("Integration: Full Discovery Request Flow")
 def test_full_discovery_flow():
     """Test full discovery request flow."""
-    from tensornet.ml.discovery.api.models import (
+    from ontic.ml.discovery.api.models import (
         DiscoveryRequest, DiscoveryResponse, DomainType, Finding, SeverityLevel
     )
-    from tensornet.ml.discovery.api.gpu import GPUBackend
+    from ontic.ml.discovery.api.gpu import GPUBackend
     import numpy as np
     
     # Create request
@@ -622,7 +622,7 @@ def test_full_discovery_flow():
 @test("Integration: Live Data API Flow")
 def test_live_data_api_flow():
     """Test live data API flow."""
-    from tensornet.ml.discovery.api.models import (
+    from ontic.ml.discovery.api.models import (
         LiveDataRequest, LiveDataResponse, LiveMode, HistoricalEvent, StreamingAlert, SeverityLevel
     )
     
@@ -667,8 +667,8 @@ def test_live_data_api_flow():
 @test("Integration: Distributed Discovery")
 def test_distributed_discovery():
     """Test distributed discovery integration."""
-    from tensornet.ml.discovery.api.distributed import DistributedCoordinator
-    from tensornet.ml.discovery.api.gpu import GPUBackend
+    from ontic.ml.discovery.api.distributed import DistributedCoordinator
+    from ontic.ml.discovery.api.gpu import GPUBackend
     import numpy as np
     
     # Setup coordinator
@@ -700,7 +700,7 @@ def test_distributed_discovery():
 @test("Integration: Attestation Hash")
 def test_attestation_hash():
     """Test attestation hash generation."""
-    from tensornet.ml.discovery.api.models import DiscoveryResponse, DomainType
+    from ontic.ml.discovery.api.models import DiscoveryResponse, DomainType
     import hashlib
     import json
     

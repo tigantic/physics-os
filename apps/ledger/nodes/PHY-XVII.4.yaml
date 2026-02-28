@@ -13,7 +13,7 @@ state: "V0.2"
 description: "AMR, immersed"
 
 source_files:
-  - "tensornet/mesh_amr/__init__.py"
+  - "ontic/mesh_amr/__init__.py"
 
 tests:
   smoke:

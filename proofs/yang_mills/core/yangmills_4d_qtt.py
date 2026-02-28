@@ -52,8 +52,8 @@ import os
 # Add paths
 sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
 
-from tensornet.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo, NDShiftConfig
-from tensornet.cfd.pure_qtt_ops import QTTState, dense_to_qtt, qtt_to_dense, qtt_add
+from ontic.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo, NDShiftConfig
+from ontic.cfd.pure_qtt_ops import QTTState, dense_to_qtt, qtt_to_dense, qtt_add
 
 
 @dataclass

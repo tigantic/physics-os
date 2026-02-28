@@ -1894,7 +1894,7 @@ TCI-LLM proves the core thesis: **structured functions compress**.
 This applies to:
 - ✅ Language models (Phase 6 - proven)
 - ✅ Weather prediction (demos/world_data_slicer.py)
-- ✅ CFD simulation (tensornet/cfd/*)
+- ✅ CFD simulation (ontic/cfd/*)
 - ✅ Any function with compositional structure
 
 **The 1980s constraint (backpropagation) is OPTIONAL.**

@@ -190,7 +190,7 @@ tci_llm/
   title = {TCI-LLM: Gradient-Free Language Modeling via Tensor Cross Interpolation},
   author = {Tigantic Holdings LLC},
   year = {2026},
-  url = {https://github.com/hypertensor/tci-llm}
+  url = {https://github.com/physics_os/tci-llm}
 }
 ```
 

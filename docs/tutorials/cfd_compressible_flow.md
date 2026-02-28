@@ -16,7 +16,7 @@ The Sod shock tube is a classic 1D Riemann problem:
 
 ```python
 import torch
-from tensornet.cfd.euler_1d import Euler1D, EulerState
+from ontic.cfd.euler_1d import Euler1D, EulerState
 
 # Create solver
 Nx = 400
@@ -71,7 +71,7 @@ plt.show()
 The Physics OS provides several flux schemes:
 
 ```python
-from tensornet.cfd.godunov import exact_riemann, hll_flux, hllc_flux, roe_flux
+from ontic.cfd.godunov import exact_riemann, hll_flux, hllc_flux, roe_flux
 
 # Exact Riemann solver (most accurate, slower)
 rho, u, p = exact_riemann(rho_L, u_L, p_L, rho_R, u_R, p_R, x_over_t=0.0)
@@ -87,7 +87,7 @@ F_roe = roe_flux(U_L, U_R, gamma=1.4)
 For supersonic flow over a wedge, compute shock properties analytically:
 
 ```python
-from tensornet.cfd.euler_2d import oblique_shock_exact
+from ontic.cfd.euler_2d import oblique_shock_exact
 import math
 
 # Mach 5 flow over 15 degree wedge
@@ -115,8 +115,8 @@ Density ratio: 2.753
 For 2D simulations with complex geometries:
 
 ```python
-from tensornet.cfd.euler_2d import Euler2D, Euler2DState, BCType
-from tensornet.cfd.geometry import WedgeGeometry, ImmersedBoundary
+from ontic.cfd.euler_2d import Euler2D, Euler2DState, BCType
+from ontic.cfd.geometry import WedgeGeometry, ImmersedBoundary
 
 # Domain setup
 Nx, Ny = 200, 100
@@ -156,7 +156,7 @@ For flow over solid bodies:
 
 ```python
 import math
-from tensornet.cfd.geometry import WedgeGeometry, ImmersedBoundary
+from ontic.cfd.geometry import WedgeGeometry, ImmersedBoundary
 
 # Define wedge geometry
 wedge = WedgeGeometry(
@@ -196,7 +196,7 @@ Available boundary condition types:
 For high-resolution schemes:
 
 ```python
-from tensornet.cfd.limiters import minmod, superbee, van_leer, mc_limiter
+from ontic.cfd.limiters import minmod, superbee, van_leer, mc_limiter
 
 # Minmod (most diffusive, most stable)
 phi = minmod(r)

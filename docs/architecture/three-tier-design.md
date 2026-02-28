@@ -18,10 +18,10 @@ source.
 
 **Surfaces:**
 
-- `hypertensor.api` — FastAPI REST/WebSocket server
-- `hypertensor.sdk` — Python client library
-- `hypertensor.mcp` — MCP tool server (agent-native workflows)
-- `hypertensor.cli` — Command-line interface
+- `physics_os.api` — FastAPI REST/WebSocket server
+- `physics_os.sdk` — Python client library
+- `physics_os.mcp` — MCP tool server (agent-native workflows)
+- `physics_os.cli` — Command-line interface
 
 ## Tier 3: crates/ (Rust)
 

@@ -104,7 +104,7 @@ LEAN_REFS: dict[str, list[dict[str, Any]]] = {
 # ═══════════════════════════════════════════════════════════════════════
 
 def _run_turbulence() -> dict[str, Any]:
-    from tensornet.fluids.trace_adapters.turbulence_adapter import TurbulenceTraceAdapter
+    from ontic.fluids.trace_adapters.turbulence_adapter import TurbulenceTraceAdapter
 
     adapter = TurbulenceTraceAdapter(Nx=32, Ny=32, Lx=2 * np.pi, Ly=2 * np.pi,
                                      nu=0.001, mean_shear=1.0)
@@ -113,7 +113,7 @@ def _run_turbulence() -> dict[str, Any]:
 
 
 def _run_multiphase() -> dict[str, Any]:
-    from tensornet.fluids.trace_adapters.multiphase_adapter import MultiphaseTraceAdapter
+    from ontic.fluids.trace_adapters.multiphase_adapter import MultiphaseTraceAdapter
 
     adapter = MultiphaseTraceAdapter(Nx=64, Ny=64, Lx=2 * np.pi, Ly=2 * np.pi,
                                      M=0.01, epsilon=0.005)
@@ -122,17 +122,17 @@ def _run_multiphase() -> dict[str, Any]:
 
 
 def _run_reactive() -> dict[str, Any]:
-    from tensornet.fluids.trace_adapters.reactive_adapter import ReactiveFlowTraceAdapter
+    from ontic.fluids.trace_adapters.reactive_adapter import ReactiveFlowTraceAdapter
 
     try:
-        from tensornet.cfd.reactive_ns import ReactiveNS, ReactiveConfig
+        from ontic.cfd.reactive_ns import ReactiveNS, ReactiveConfig
         config = ReactiveConfig(nx=64, ny=64, n_species=3)
         solver = ReactiveNS(config)
         adapter = ReactiveFlowTraceAdapter(solver)
         t, n, session = adapter.solve(t_final=0.1, dt=0.001)
     except ImportError:
         log.warning("ReactiveNS not available; generating minimal trace")
-        from tensornet.core.trace import TraceSession
+        from ontic.core.trace import TraceSession
         session = TraceSession()
         session.log_custom(name="skip", input_hashes=[], output_hashes=[],
                           params={"reason": "solver_unavailable"}, metrics={})
@@ -141,7 +141,7 @@ def _run_reactive() -> dict[str, Any]:
 
 
 def _run_rarefied() -> dict[str, Any]:
-    from tensornet.fluids.trace_adapters.rarefied_adapter import RarefiedGasTraceAdapter
+    from ontic.fluids.trace_adapters.rarefied_adapter import RarefiedGasTraceAdapter
 
     adapter = RarefiedGasTraceAdapter(Nx=64, Nv=64, Lx=2 * np.pi, v_max=5.0, tau=0.1)
     t, n, session = adapter.solve(t_final=0.5, dt=0.005)
@@ -149,16 +149,16 @@ def _run_rarefied() -> dict[str, Any]:
 
 
 def _run_shallow_water() -> dict[str, Any]:
-    from tensornet.fluids.trace_adapters.shallow_water_adapter import ShallowWaterTraceAdapter
+    from ontic.fluids.trace_adapters.shallow_water_adapter import ShallowWaterTraceAdapter
 
     try:
-        from tensornet.astro.geophysics.oceanography import ShallowWaterEquations
+        from ontic.astro.geophysics.oceanography import ShallowWaterEquations
         solver = ShallowWaterEquations(nx=64, ny=64, Lx=1e5, Ly=1e5, H=100.0, f0=1e-4)
         adapter = ShallowWaterTraceAdapter(solver)
         t, n, session = adapter.solve(t_final=100.0, dt=1.0)
     except ImportError:
         log.warning("ShallowWaterEquations not available; generating minimal trace")
-        from tensornet.core.trace import TraceSession
+        from ontic.core.trace import TraceSession
         session = TraceSession()
         session.log_custom(name="skip", input_hashes=[], output_hashes=[],
                           params={"reason": "solver_unavailable"}, metrics={})
@@ -167,7 +167,7 @@ def _run_shallow_water() -> dict[str, Any]:
 
 
 def _run_non_newtonian() -> dict[str, Any]:
-    from tensornet.fluids.trace_adapters.non_newtonian_adapter import NonNewtonianTraceAdapter
+    from ontic.fluids.trace_adapters.non_newtonian_adapter import NonNewtonianTraceAdapter
 
     adapter = NonNewtonianTraceAdapter(Nx=32, Ny=32, Lx=2 * np.pi, Ly=2 * np.pi,
                                        nu_s=0.01, nu_p=0.01, lam=1.0)
@@ -176,7 +176,7 @@ def _run_non_newtonian() -> dict[str, Any]:
 
 
 def _run_porous_media() -> dict[str, Any]:
-    from tensornet.fluids.trace_adapters.porous_media_adapter import PorousMediaTraceAdapter
+    from ontic.fluids.trace_adapters.porous_media_adapter import PorousMediaTraceAdapter
 
     adapter = PorousMediaTraceAdapter(Nx=64, Ny=64, Lx=1.0, Ly=1.0,
                                       K=1e-12, mu=1e-3, S_s=1e-6, porosity=0.3)
@@ -185,7 +185,7 @@ def _run_porous_media() -> dict[str, Any]:
 
 
 def _run_free_surface() -> dict[str, Any]:
-    from tensornet.fluids.trace_adapters.free_surface_adapter import FreeSurfaceTraceAdapter
+    from ontic.fluids.trace_adapters.free_surface_adapter import FreeSurfaceTraceAdapter
 
     adapter = FreeSurfaceTraceAdapter(Nx=64, Ny=64, Lx=2.0, Ly=2.0, reinit_interval=5)
     t, n, session = adapter.solve(t_final=1.0, dt=0.01)
@@ -197,8 +197,8 @@ def _run_free_surface() -> dict[str, Any]:
 # ═══════════════════════════════════════════════════════════════════════
 
 def _run_electrostatics() -> dict[str, Any]:
-    from tensornet.em.trace_adapters.electrostatics_adapter import ElectrostaticsTraceAdapter
-    from tensornet.em.electrostatics import PoissonBoltzmannSolver
+    from ontic.em.trace_adapters.electrostatics_adapter import ElectrostaticsTraceAdapter
+    from ontic.em.electrostatics import PoissonBoltzmannSolver
 
     solver = PoissonBoltzmannSolver(grid_shape=(64, 64), dx=0.01)
     adapter = ElectrostaticsTraceAdapter(solver)
@@ -210,8 +210,8 @@ def _run_electrostatics() -> dict[str, Any]:
 
 
 def _run_magnetostatics() -> dict[str, Any]:
-    from tensornet.em.trace_adapters.magnetostatics_adapter import MagnetostaticsTraceAdapter
-    from tensornet.em.magnetostatics import MagneticVectorPotential2D
+    from ontic.em.trace_adapters.magnetostatics_adapter import MagnetostaticsTraceAdapter
+    from ontic.em.magnetostatics import MagneticVectorPotential2D
 
     solver = MagneticVectorPotential2D(nx=64, ny=64, Lx=1.0, Ly=1.0)
     adapter = MagnetostaticsTraceAdapter(solver)
@@ -222,8 +222,8 @@ def _run_magnetostatics() -> dict[str, Any]:
 
 
 def _run_maxwell_fdtd() -> dict[str, Any]:
-    from tensornet.em.trace_adapters.maxwell_fdtd_adapter import MaxwellFDTDTraceAdapter
-    from tensornet.em.fdtd import FDTD2D_TM
+    from ontic.em.trace_adapters.maxwell_fdtd_adapter import MaxwellFDTDTraceAdapter
+    from ontic.em.fdtd import FDTD2D_TM
 
     solver = FDTD2D_TM(nx=64, ny=64, dx=0.01, dy=0.01)
     adapter = MaxwellFDTDTraceAdapter(solver)
@@ -232,8 +232,8 @@ def _run_maxwell_fdtd() -> dict[str, Any]:
 
 
 def _run_frequency_domain() -> dict[str, Any]:
-    from tensornet.em.trace_adapters.frequency_domain_adapter import FrequencyDomainTraceAdapter
-    from tensornet.em.fdfd import FDFD2D_TM
+    from ontic.em.trace_adapters.frequency_domain_adapter import FrequencyDomainTraceAdapter
+    from ontic.em.fdfd import FDFD2D_TM
 
     solver = FDFD2D_TM(nx=64, ny=64, Lx=1e-6, Ly=1e-6, freq=3e14)
     adapter = FrequencyDomainTraceAdapter(solver)
@@ -242,8 +242,8 @@ def _run_frequency_domain() -> dict[str, Any]:
 
 
 def _run_wave_propagation() -> dict[str, Any]:
-    from tensornet.em.trace_adapters.wave_propagation_adapter import WavePropagationTraceAdapter
-    from tensornet.em.fdtd import FDTD1D
+    from ontic.em.trace_adapters.wave_propagation_adapter import WavePropagationTraceAdapter
+    from ontic.em.fdtd import FDTD1D
 
     solver = FDTD1D(nz=256, dz=0.001, n_steps=500)
     adapter = WavePropagationTraceAdapter(solver)
@@ -252,8 +252,8 @@ def _run_wave_propagation() -> dict[str, Any]:
 
 
 def _run_photonics() -> dict[str, Any]:
-    from tensornet.em.trace_adapters.photonics_adapter import PhotonicsTraceAdapter
-    from tensornet.em.photonics import TransferMatrix1D
+    from ontic.em.trace_adapters.photonics_adapter import PhotonicsTraceAdapter
+    from ontic.em.photonics import TransferMatrix1D
 
     solver = TransferMatrix1D(n_substrate=1.5, n_superstrate=1.0, theta0=0.0)
     for _ in range(5):
@@ -265,8 +265,8 @@ def _run_photonics() -> dict[str, Any]:
 
 
 def _run_antenna() -> dict[str, Any]:
-    from tensornet.em.trace_adapters.antenna_adapter import AntennaTraceAdapter
-    from tensornet.em.antenna import DipoleAntenna
+    from ontic.em.trace_adapters.antenna_adapter import AntennaTraceAdapter
+    from ontic.em.antenna import DipoleAntenna
 
     solver = DipoleAntenna(length=0.01, freq=1e10)
     adapter = AntennaTraceAdapter(solver)
@@ -279,10 +279,10 @@ def _run_antenna() -> dict[str, Any]:
 # ═══════════════════════════════════════════════════════════════════════
 
 def _run_non_equilibrium() -> dict[str, Any]:
-    from tensornet.quantum.statmech.trace_adapters.non_equilibrium_adapter import NonEquilibriumTraceAdapter
+    from ontic.quantum.statmech.trace_adapters.non_equilibrium_adapter import NonEquilibriumTraceAdapter
 
     try:
-        from tensornet.quantum.statmech.kinetics import GillespieSSA
+        from ontic.quantum.statmech.kinetics import GillespieSSA
         ssa = GillespieSSA(
             species=["A", "B", "C"],
             reactions=[
@@ -295,7 +295,7 @@ def _run_non_equilibrium() -> dict[str, Any]:
         t, n_events, session = adapter.solve(n_events=1000)
     except (ImportError, TypeError):
         log.warning("GillespieSSA not available; generating minimal trace")
-        from tensornet.core.trace import TraceSession
+        from ontic.core.trace import TraceSession
         session = TraceSession()
         session.log_custom(name="skip", input_hashes=[], output_hashes=[],
                           params={"reason": "solver_unavailable"}, metrics={})
@@ -304,17 +304,17 @@ def _run_non_equilibrium() -> dict[str, Any]:
 
 
 def _run_md() -> dict[str, Any]:
-    from tensornet.quantum.statmech.trace_adapters.md_adapter import MDTraceAdapter
+    from ontic.quantum.statmech.trace_adapters.md_adapter import MDTraceAdapter
 
     try:
-        from tensornet.life_sci.md.engine import MDSimulation
+        from ontic.life_sci.md.engine import MDSimulation
         md = MDSimulation(n_atoms=64, box_length=10.0, temperature=1.0,
                          timestep=0.001, seed=42)
         adapter = MDTraceAdapter(md)
         t, n, session = adapter.solve(n_steps=500)
     except (ImportError, TypeError):
         log.warning("MDSimulation not available; generating minimal trace")
-        from tensornet.core.trace import TraceSession
+        from ontic.core.trace import TraceSession
         session = TraceSession()
         session.log_custom(name="skip", input_hashes=[], output_hashes=[],
                           params={"reason": "solver_unavailable"}, metrics={})
@@ -323,7 +323,7 @@ def _run_md() -> dict[str, Any]:
 
 
 def _run_lattice_spin() -> dict[str, Any]:
-    from tensornet.quantum.statmech.trace_adapters.lattice_spin_adapter import LatticeSpinTraceAdapter
+    from ontic.quantum.statmech.trace_adapters.lattice_spin_adapter import LatticeSpinTraceAdapter
 
     adapter = LatticeSpinTraceAdapter(Nx=32, Ny=32, J=1.0, h=0.0, T=2.25, seed=42)
     n_sweeps, session = adapter.solve(n_sweeps=1000, measure_interval=10)
@@ -335,8 +335,8 @@ def _run_lattice_spin() -> dict[str, Any]:
 # ═══════════════════════════════════════════════════════════════════════
 
 def _run_ideal_mhd() -> dict[str, Any]:
-    from tensornet.plasma_nuclear.plasma.trace_adapters.ideal_mhd_adapter import IdealMHDTraceAdapter
-    from tensornet.plasma_nuclear.plasma.extended_mhd import HallMHDSolver1D
+    from ontic.plasma_nuclear.plasma.trace_adapters.ideal_mhd_adapter import IdealMHDTraceAdapter
+    from ontic.plasma_nuclear.plasma.extended_mhd import HallMHDSolver1D
 
     solver = HallMHDSolver1D(nx=256, Lx=1.0, n0=1.0, B0=1.0, eta=0.0, di=0.0)
     adapter = IdealMHDTraceAdapter(solver)
@@ -345,8 +345,8 @@ def _run_ideal_mhd() -> dict[str, Any]:
 
 
 def _run_resistive_mhd() -> dict[str, Any]:
-    from tensornet.plasma_nuclear.plasma.trace_adapters.resistive_mhd_adapter import ResistiveMHDTraceAdapter
-    from tensornet.plasma_nuclear.plasma.extended_mhd import HallMHDSolver1D
+    from ontic.plasma_nuclear.plasma.trace_adapters.resistive_mhd_adapter import ResistiveMHDTraceAdapter
+    from ontic.plasma_nuclear.plasma.extended_mhd import HallMHDSolver1D
 
     solver = HallMHDSolver1D(nx=256, Lx=1.0, n0=1.0, B0=1.0, eta=0.01, di=0.0)
     adapter = ResistiveMHDTraceAdapter(solver)
@@ -355,8 +355,8 @@ def _run_resistive_mhd() -> dict[str, Any]:
 
 
 def _run_gyrokinetics() -> dict[str, Any]:
-    from tensornet.plasma_nuclear.plasma.trace_adapters.gyrokinetics_adapter import GyrokineticsTraceAdapter
-    from tensornet.plasma_nuclear.plasma.gyrokinetics import GyrokineticVlasov1D
+    from ontic.plasma_nuclear.plasma.trace_adapters.gyrokinetics_adapter import GyrokineticsTraceAdapter
+    from ontic.plasma_nuclear.plasma.gyrokinetics import GyrokineticVlasov1D
 
     solver = GyrokineticVlasov1D(nz=64, nv=64, Lz=2 * np.pi, v_max=5.0)
     adapter = GyrokineticsTraceAdapter(solver)
@@ -365,8 +365,8 @@ def _run_gyrokinetics() -> dict[str, Any]:
 
 
 def _run_reconnection() -> dict[str, Any]:
-    from tensornet.plasma_nuclear.plasma.trace_adapters.reconnection_adapter import ReconnectionTraceAdapter
-    from tensornet.plasma_nuclear.plasma.magnetic_reconnection import SweetParkerReconnection
+    from ontic.plasma_nuclear.plasma.trace_adapters.reconnection_adapter import ReconnectionTraceAdapter
+    from ontic.plasma_nuclear.plasma.magnetic_reconnection import SweetParkerReconnection
 
     model = SweetParkerReconnection(B0=1e-4, n=1e18, eta=1.0, L=1e6)
     adapter = ReconnectionTraceAdapter(model)
@@ -375,8 +375,8 @@ def _run_reconnection() -> dict[str, Any]:
 
 
 def _run_laser_plasma() -> dict[str, Any]:
-    from tensornet.plasma_nuclear.plasma.trace_adapters.laser_plasma_adapter import LaserPlasmaTraceAdapter
-    from tensornet.plasma_nuclear.plasma.laser_plasma import LaserPlasmaParams, StimulatedRamanScattering
+    from ontic.plasma_nuclear.plasma.trace_adapters.laser_plasma_adapter import LaserPlasmaTraceAdapter
+    from ontic.plasma_nuclear.plasma.laser_plasma import LaserPlasmaParams, StimulatedRamanScattering
 
     params = LaserPlasmaParams(n_e=5e25, T_e=2000.0, lambda_0=351e-9, I_laser=1e19)
     srs = StimulatedRamanScattering(params)
@@ -386,8 +386,8 @@ def _run_laser_plasma() -> dict[str, Any]:
 
 
 def _run_dusty_plasma() -> dict[str, Any]:
-    from tensornet.plasma_nuclear.plasma.trace_adapters.dusty_plasma_adapter import DustyPlasmaTraceAdapter
-    from tensornet.plasma_nuclear.plasma.dusty_plasmas import DustyPlasmaParams
+    from ontic.plasma_nuclear.plasma.trace_adapters.dusty_plasma_adapter import DustyPlasmaTraceAdapter
+    from ontic.plasma_nuclear.plasma.dusty_plasmas import DustyPlasmaParams
 
     params = DustyPlasmaParams(
         n_d=1e10, T_d=0.025, T_e=3.0, T_i=0.025,
@@ -399,8 +399,8 @@ def _run_dusty_plasma() -> dict[str, Any]:
 
 
 def _run_space_plasma() -> dict[str, Any]:
-    from tensornet.plasma_nuclear.plasma.trace_adapters.space_plasma_adapter import SpacePlasmaTraceAdapter
-    from tensornet.plasma_nuclear.plasma.space_plasma import MeanFieldDynamo
+    from ontic.plasma_nuclear.plasma.trace_adapters.space_plasma_adapter import SpacePlasmaTraceAdapter
+    from ontic.plasma_nuclear.plasma.space_plasma import MeanFieldDynamo
 
     dynamo = MeanFieldDynamo(nr=64, R=1.0, alpha_0=1.0, omega_0=10.0, eta_t=0.01)
     adapter = SpacePlasmaTraceAdapter(dynamo)

@@ -75,7 +75,7 @@ def main() -> None:
     # ── Imports ──────────────────────────────────────────────────────
     print("Loading QTT antenna pipeline...", flush=True)
     import torch
-    from tensornet.engine.vm.antenna import (
+    from ontic.engine.vm.antenna import (
         DipoleAntennaDesign,
         SweepOrchestrator,
     )

@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Darcy/Richards, multiphase"
 
 source_files:
-  - "tensornet/porous_media/__init__.py"
+  - "ontic/porous_media/__init__.py"
 
 tests:
   smoke:

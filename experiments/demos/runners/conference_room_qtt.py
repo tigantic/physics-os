@@ -22,12 +22,12 @@ import time
 sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
 os.makedirs('/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/results', exist_ok=True)
 
-from tensornet.cfd.euler2d_native import (
+from ontic.cfd.euler2d_native import (
     Euler2D_Native, 
     Euler2DNativeConfig, 
     Euler2DStateNative
 )
-from tensornet.cfd.qtt_2d import dense_to_qtt_2d, qtt_2d_to_dense
+from ontic.cfd.qtt_2d import dense_to_qtt_2d, qtt_2d_to_dense
 
 
 def create_ventilation_ic(

@@ -13,7 +13,7 @@ Provides analytical MPO constructions for common models.
 ### `bose_hubbard_mpo`
 
 ```python
-def bose_hubbard_mpo(L: int, n_max: int = 3, t: float = 1.0, U: float = 1.0, mu: float = 0.0, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> tensornet.core.mpo.MPO
+def bose_hubbard_mpo(L: int, n_max: int = 3, t: float = 1.0, U: float = 1.0, mu: float = 0.0, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> ontic.core.mpo.MPO
 ```
 
 Bose-Hubbard model as MPO.
@@ -30,14 +30,14 @@ H = -t * sum_i (b_i^dag b_{i+1} + h.c.) + (U/2) * sum_i n_i(n_i-1) - mu * sum_i 
 - **dtype** (`<class 'torch.dtype'>`): Data type
 - **device** (`typing.Optional[torch.device]`): Device
 
-**Returns**: `<class 'tensornet.core.mpo.MPO'>` - MPO representation
+**Returns**: `<class 'ontic.core.mpo.MPO'>` - MPO representation
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py:336](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py#L336)*
 
 ### `heisenberg_mpo`
 
 ```python
-def heisenberg_mpo(L: int, J: float = 1.0, Jz: Optional[float] = None, h: float = 0.0, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> tensornet.core.mpo.MPO
+def heisenberg_mpo(L: int, J: float = 1.0, Jz: Optional[float] = None, h: float = 0.0, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> ontic.core.mpo.MPO
 ```
 
 Heisenberg XXZ chain Hamiltonian as MPO.
@@ -55,7 +55,7 @@ For XXX model, set Jz = J (or leave as None, which defaults to J).
 - **dtype** (`<class 'torch.dtype'>`): Data type (real dtypes use real representation)
 - **device** (`typing.Optional[torch.device]`): Device
 
-**Returns**: `<class 'tensornet.core.mpo.MPO'>` - MPO representation of Hamiltonian
+**Returns**: `<class 'ontic.core.mpo.MPO'>` - MPO representation of Hamiltonian
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py:73](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py#L73)*
 
@@ -90,7 +90,7 @@ Return spin operators S_x, S_y, S_z for spin S.
 ### `tfim_mpo`
 
 ```python
-def tfim_mpo(L: int, J: float = 1.0, g: float = 1.0, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> tensornet.core.mpo.MPO
+def tfim_mpo(L: int, J: float = 1.0, g: float = 1.0, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> ontic.core.mpo.MPO
 ```
 
 Transverse-field Ising model as MPO.
@@ -107,14 +107,14 @@ Critical point at g = 1 (for J = 1).
 - **dtype** (`<class 'torch.dtype'>`): Data type
 - **device** (`typing.Optional[torch.device]`): Device
 
-**Returns**: `<class 'tensornet.core.mpo.MPO'>` - MPO representation
+**Returns**: `<class 'ontic.core.mpo.MPO'>` - MPO representation
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py:168](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py#L168)*
 
 ### `xx_mpo`
 
 ```python
-def xx_mpo(L: int, J: float = 1.0, h: float = 0.0, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> tensornet.core.mpo.MPO
+def xx_mpo(L: int, J: float = 1.0, h: float = 0.0, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> ontic.core.mpo.MPO
 ```
 
 XX model as MPO.
@@ -131,14 +131,14 @@ This is equivalent to free fermions and exactly solvable.
 - **dtype** (`<class 'torch.dtype'>`): Data type
 - **device** (`typing.Optional[torch.device]`): Device
 
-**Returns**: `<class 'tensornet.core.mpo.MPO'>` - MPO representation
+**Returns**: `<class 'ontic.core.mpo.MPO'>` - MPO representation
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py:230](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py#L230)*
 
 ### `xyz_mpo`
 
 ```python
-def xyz_mpo(L: int, Jx: float = 1.0, Jy: float = 1.0, Jz: float = 1.0, h: float = 0.0, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> tensornet.core.mpo.MPO
+def xyz_mpo(L: int, Jx: float = 1.0, Jy: float = 1.0, Jz: float = 1.0, h: float = 0.0, dtype: torch.dtype = torch.float64, device: Optional[torch.device] = None) -> ontic.core.mpo.MPO
 ```
 
 XYZ model as MPO.
@@ -155,6 +155,6 @@ H = sum_i (Jx * X_i X_{i+1} + Jy * Y_i Y_{i+1} + Jz * Z_i Z_{i+1}) + h * sum_i Z
 - **dtype** (`<class 'torch.dtype'>`): Data type
 - **device** (`typing.Optional[torch.device]`): Device
 
-**Returns**: `<class 'tensornet.core.mpo.MPO'>` - MPO representation
+**Returns**: `<class 'ontic.core.mpo.MPO'>` - MPO representation
 
 *Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py:258](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py#L258)*

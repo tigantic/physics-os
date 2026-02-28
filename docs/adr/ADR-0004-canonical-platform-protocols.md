@@ -16,7 +16,7 @@ impossible without a shared contract.
 
 ## Decision
 
-Introduce six **PEP 544 `Protocol` interfaces** in `tensornet.platform.protocols`:
+Introduce six **PEP 544 `Protocol` interfaces** in `ontic.platform.protocols`:
 
 | Protocol | Purpose |
 |---|---|

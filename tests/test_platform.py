@@ -18,8 +18,8 @@ import pytest
 import torch
 from torch import Tensor
 
-from tensornet.platform.checkpoint import load_checkpoint, save_checkpoint
-from tensornet.platform.data_model import (
+from ontic.platform.checkpoint import load_checkpoint, save_checkpoint
+from ontic.platform.data_model import (
     BCType,
     BoundaryCondition,
     FieldData,
@@ -29,8 +29,8 @@ from tensornet.platform.data_model import (
     StructuredMesh,
     UnstructuredMesh,
 )
-from tensornet.platform.domain_pack import DomainPack, DomainRegistry, get_registry
-from tensornet.platform.protocols import (
+from ontic.platform.domain_pack import DomainPack, DomainRegistry, get_registry
+from ontic.platform.protocols import (
     Discretization,
     Observable,
     OperatorProto,
@@ -39,14 +39,14 @@ from tensornet.platform.protocols import (
     SolveResult,
     Workflow,
 )
-from tensornet.platform.reproduce import (
+from ontic.platform.reproduce import (
     ArtifactHash,
     ReproducibilityContext,
     capture_environment,
     hash_tensor,
     lock_seeds,
 )
-from tensornet.platform.solvers import (
+from ontic.platform.solvers import (
     ConjugateGradient,
     ForwardEuler,
     GMRES,
@@ -213,12 +213,12 @@ class TestProtocols:
     """Ensure protocol checking works via isinstance / structural conformance."""
 
     def test_problem_spec(self):
-        from tensornet.platform.vertical_ode import HarmonicOscillatorSpec
+        from ontic.platform.vertical_ode import HarmonicOscillatorSpec
         spec = HarmonicOscillatorSpec()
         assert isinstance(spec, ProblemSpec)
 
     def test_observable(self):
-        from tensornet.platform.vertical_ode import EnergyObservable, HarmonicOscillatorSpec
+        from ontic.platform.vertical_ode import EnergyObservable, HarmonicOscillatorSpec
         obs = EnergyObservable(HarmonicOscillatorSpec())
         assert isinstance(obs, Observable)
 
@@ -530,7 +530,7 @@ class TestCheckpointing:
 @pytest.mark.integration
 class TestVerticalSliceODE:
     def test_harmonic_oscillator_v04(self):
-        from tensornet.platform.vertical_ode import run_ode_vertical_slice
+        from ontic.platform.vertical_ode import run_ode_vertical_slice
         m = run_ode_vertical_slice(verbose=False)
         assert m["energy_relative_error"] < 1e-8
         assert m["phase_error_deg"] < 0.5
@@ -541,7 +541,7 @@ class TestVerticalSliceODE:
 @pytest.mark.integration
 class TestVerticalSlicePDE:
     def test_heat_equation_v04(self):
-        from tensornet.platform.vertical_pde import run_pde_vertical_slice
+        from ontic.platform.vertical_pde import run_pde_vertical_slice
         m = run_pde_vertical_slice(verbose=False)
         assert m["finest_linf"] < 1e-4
         assert m["refinement_ratios"]["r12"] > 3.5

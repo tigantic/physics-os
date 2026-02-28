@@ -48,7 +48,7 @@ def run_mps_test(seed: int) -> Dict[str, Any]:
     """Run MPS canonicalization test."""
     set_all_seeds(seed)
 
-    from tensornet.core.mps import MPS
+    from ontic.core.mps import MPS
 
     # Create random MPS
     N = 10
@@ -78,7 +78,7 @@ def run_euler_test(seed: int) -> Dict[str, Any]:
     """Run Euler solver test."""
     set_all_seeds(seed)
 
-    from tensornet.cfd.euler_1d import Euler1D, EulerState
+    from ontic.cfd.euler_1d import Euler1D, EulerState
 
     # Initialize solver
     N = 64
@@ -113,7 +113,7 @@ def run_weno_test(seed: int) -> Dict[str, Any]:
     """Run WENO reconstruction test."""
     set_all_seeds(seed)
 
-    from tensornet.cfd.weno import weno5_js_reconstruct, weno5_z_reconstruct
+    from ontic.cfd.weno import weno5_js_reconstruct, weno5_z_reconstruct
 
     # Create test data
     N = 64
@@ -138,8 +138,8 @@ def run_dmrg_test(seed: int) -> Dict[str, Any]:
     set_all_seeds(seed)
 
     try:
-        from tensornet.algorithms.dmrg import DMRG, DMRGConfig
-        from tensornet.algorithms.fermionic import FermionicMPO
+        from ontic.algorithms.dmrg import DMRG, DMRGConfig
+        from ontic.algorithms.fermionic import FermionicMPO
 
         # Small Heisenberg chain
         N = 6

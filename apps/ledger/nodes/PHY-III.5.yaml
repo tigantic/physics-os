@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Ray, parabolic, fibers, atmosphere"
 
 source_files:
-  - "tensornet/em/wave_propagation.py"
+  - "ontic/em/wave_propagation.py"
 
 tests:
   smoke:

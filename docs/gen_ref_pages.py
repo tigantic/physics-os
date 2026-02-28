@@ -14,7 +14,7 @@ import mkdocs_gen_files  # type: ignore[import-untyped]
 nav = mkdocs_gen_files.Nav()
 
 # Walk tensornet source tree
-src = Path("tensornet")
+src = Path("ontic")
 for path in sorted(src.rglob("*.py")):
     # Skip __pycache__, test files, shim-only __init__.py
     if "__pycache__" in str(path):

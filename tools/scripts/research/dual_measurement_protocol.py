@@ -43,13 +43,13 @@ from numpy.typing import NDArray
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from tensornet.engine.vm.compilers.navier_stokes import BurgersCompiler
-from tensornet.engine.vm.compilers.maxwell import MaxwellCompiler
-from tensornet.engine.vm.compilers.schrodinger import SchrodingerCompiler
-from tensornet.engine.vm.compilers.diffusion import DiffusionCompiler
-from tensornet.engine.vm.rank_governor import RankGovernor, TruncationPolicy
-from tensornet.engine.vm.runtime import QTTRuntime
-from tensornet.qtt.sparse_direct import tt_round
+from ontic.engine.vm.compilers.navier_stokes import BurgersCompiler
+from ontic.engine.vm.compilers.maxwell import MaxwellCompiler
+from ontic.engine.vm.compilers.schrodinger import SchrodingerCompiler
+from ontic.engine.vm.compilers.diffusion import DiffusionCompiler
+from ontic.engine.vm.rank_governor import RankGovernor, TruncationPolicy
+from ontic.engine.vm.runtime import QTTRuntime
+from ontic.qtt.sparse_direct import tt_round
 
 
 # ═══════════════════════════════════════════════════════════════════════════

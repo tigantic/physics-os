@@ -5,7 +5,7 @@ import time
 
 import torch
 
-from tensornet.engine.gateway.orbital_command import OrbitalCommandCenter
+from ontic.engine.gateway.orbital_command import OrbitalCommandCenter
 
 print("Initializing OrbitalCommandCenter...")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

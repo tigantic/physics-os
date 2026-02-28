@@ -17,7 +17,7 @@ class TestTciCoreImport:
     def test_import_module(self):
         """Test that the tci_core module can be imported."""
         try:
-            from tensornet import _tci_core
+            from ontic import _tci_core
 
             assert _tci_core is not None
         except ImportError:
@@ -26,7 +26,7 @@ class TestTciCoreImport:
     def test_version_attribute(self):
         """Test that the module has a version attribute."""
         try:
-            from tensornet import _tci_core
+            from ontic import _tci_core
 
             assert hasattr(_tci_core, "__version__")
             assert isinstance(_tci_core.__version__, str)
@@ -36,7 +36,7 @@ class TestTciCoreImport:
     def test_maxvol_config_export(self):
         """Test that MaxVolConfig is exported."""
         try:
-            from tensornet._tci_core import MaxVolConfig
+            from ontic._tci_core import MaxVolConfig
 
             assert MaxVolConfig is not None
         except ImportError:
@@ -45,7 +45,7 @@ class TestTciCoreImport:
     def test_truncation_policy_export(self):
         """Test that TruncationPolicy is exported."""
         try:
-            from tensornet._tci_core import TruncationPolicy
+            from ontic._tci_core import TruncationPolicy
 
             assert TruncationPolicy is not None
         except ImportError:
@@ -54,7 +54,7 @@ class TestTciCoreImport:
     def test_tci_config_export(self):
         """Test that TCIConfig is exported."""
         try:
-            from tensornet._tci_core import TCIConfig
+            from ontic._tci_core import TCIConfig
 
             assert TCIConfig is not None
         except ImportError:
@@ -63,7 +63,7 @@ class TestTciCoreImport:
     def test_tci_sampler_export(self):
         """Test that TCISampler is exported."""
         try:
-            from tensornet._tci_core import TCISampler
+            from ontic._tci_core import TCISampler
 
             assert TCISampler is not None
         except ImportError:
@@ -72,7 +72,7 @@ class TestTciCoreImport:
     def test_index_batch_export(self):
         """Test that IndexBatch is exported."""
         try:
-            from tensornet._tci_core import IndexBatch
+            from ontic._tci_core import IndexBatch
 
             assert IndexBatch is not None
         except ImportError:
@@ -85,7 +85,7 @@ class TestMaxVolConfig:
     def test_default_construction(self):
         """Test default construction of MaxVolConfig."""
         try:
-            from tensornet._tci_core import MaxVolConfig
+            from ontic._tci_core import MaxVolConfig
 
             config = MaxVolConfig()
             assert config is not None
@@ -98,7 +98,7 @@ class TestMaxVolConfig:
     def test_with_parameters(self):
         """Test MaxVolConfig with custom parameters if supported."""
         try:
-            from tensornet._tci_core import MaxVolConfig
+            from ontic._tci_core import MaxVolConfig
 
             # Try common parameter patterns
             try:
@@ -117,7 +117,7 @@ class TestTCIConfig:
     def test_construction(self):
         """Test TCIConfig construction."""
         try:
-            from tensornet._tci_core import TCIConfig
+            from ontic._tci_core import TCIConfig
 
             config = TCIConfig()
             assert config is not None
@@ -134,7 +134,7 @@ class TestTCISampler:
     def test_construction_fails_without_args(self):
         """Test that TCISampler requires proper arguments."""
         try:
-            from tensornet._tci_core import TCISampler
+            from ontic._tci_core import TCISampler
 
             # Should require configuration
             with pytest.raises(TypeError):
@@ -149,7 +149,7 @@ class TestIndexBatch:
     def test_index_batch_exists(self):
         """Test that IndexBatch class exists."""
         try:
-            from tensornet._tci_core import IndexBatch
+            from ontic._tci_core import IndexBatch
 
             assert IndexBatch is not None
         except ImportError:

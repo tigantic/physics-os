@@ -2,7 +2,7 @@
 Legacy Test Configuration
 =========================
 
-These tests import from tensornet.hvac.projection_solver which has been
+These tests import from ontic.hvac.projection_solver which has been
 superseded by the hyperfoam package. They are kept for reference but
 skipped by default.
 

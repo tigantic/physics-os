@@ -18,8 +18,8 @@ from typing import Any, Dict
 import pytest
 import torch
 
-from tensornet.packs import discover_all
-from tensornet.platform.domain_pack import get_registry
+from ontic.packs import discover_all
+from ontic.platform.domain_pack import get_registry
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -165,7 +165,7 @@ class TestPackIIBurgersSmoke:
     """Pack II: quick Burgers check."""
 
     def test_solver_runs(self):
-        from tensornet.packs.pack_ii import BurgersSpec, BurgersSolver
+        from ontic.packs.pack_ii import BurgersSpec, BurgersSolver
         spec = BurgersSpec()
         assert spec.name == "ViscousBurgers1D"
         solver = BurgersSolver()
@@ -176,7 +176,7 @@ class TestPackIIIMaxwellSmoke:
     """Pack III: quick Maxwell check."""
 
     def test_solver_runs(self):
-        from tensornet.packs.pack_iii import Maxwell1DSpec, MaxwellSolver
+        from ontic.packs.pack_iii import Maxwell1DSpec, MaxwellSolver
         spec = Maxwell1DSpec()
         assert "Maxwell" in spec.name
         solver = MaxwellSolver()
@@ -187,7 +187,7 @@ class TestPackVHeatSmoke:
     """Pack V: quick heat transfer check."""
 
     def test_solver_runs(self):
-        from tensornet.packs.pack_v import AdvectionDiffusionSpec, AdvDiffSolver
+        from ontic.packs.pack_v import AdvectionDiffusionSpec, AdvDiffSolver
         spec = AdvectionDiffusionSpec()
         assert "Advection" in spec.name or "AdvDiff" in spec.name
         solver = AdvDiffSolver()
@@ -198,20 +198,20 @@ class TestPackVIIQuantumSmoke:
     """Pack VII: quick MPS check."""
 
     def test_heisenberg_hamiltonian(self):
-        from tensornet.packs.pack_vii import heisenberg_two_site_hamiltonian
+        from ontic.packs.pack_vii import heisenberg_two_site_hamiltonian
         h2 = heisenberg_two_site_hamiltonian(J=1.0)
         assert h2.shape == (4, 4)
         # Symmetric
         assert torch.allclose(h2, h2.T)
 
     def test_exact_diag_small(self):
-        from tensornet.packs.pack_vii import exact_diag_heisenberg
+        from ontic.packs.pack_vii import exact_diag_heisenberg
         E = exact_diag_heisenberg(N=4, J=1.0)
         # Known: E_0(N=4) ≈ -1.6160...
         assert abs(E - (-1.6160254038)) < 1e-6
 
     def test_mps_norm(self):
-        from tensornet.packs.pack_vii import MPS
+        from ontic.packs.pack_vii import MPS
         psi = MPS(N=4, d=2, chi=1)
         assert abs(psi.norm() - 1.0) < 1e-14
 
@@ -220,13 +220,13 @@ class TestPackVIIIDFTSmoke:
     """Pack VIII: quick KS check."""
 
     def test_kinetic_matrix(self):
-        from tensornet.packs.pack_viii import build_kinetic_matrix
+        from ontic.packs.pack_viii import build_kinetic_matrix
         T = build_kinetic_matrix(N=10, dx=0.1)
         assert T.shape == (10, 10)
         assert torch.allclose(T, T.T)  # symmetric
 
     def test_scf_converges(self):
-        from tensornet.packs.pack_viii import kohn_sham_scf
+        from ontic.packs.pack_viii import kohn_sham_scf
         r = kohn_sham_scf(N_grid=50, L=10.0, Z=2.0, a=1.0,
                           N_electrons=2, max_iter=200, mix_alpha=0.3, tol=1e-6)
         assert r["converged"]
@@ -238,7 +238,7 @@ class TestPackXIPlasmaSmoke:
     """Pack XI: quick Vlasov–Poisson check."""
 
     def test_poisson_solve(self):
-        from tensornet.packs.pack_xi import _poisson_solve_1d
+        from ontic.packs.pack_xi import _poisson_solve_1d
         N = 64
         dx = 1.0 / N
         x = torch.linspace(0, 1 - dx, N, dtype=torch.float64)
@@ -262,37 +262,37 @@ class TestAnchorValidation:
     """Full anchor validation — run with pytest -m slow."""
 
     def test_pack_v_heat(self):
-        from tensornet.packs.pack_v import run_heat_vertical_slice
+        from ontic.packs.pack_v import run_heat_vertical_slice
         m = run_heat_vertical_slice(verbose=False)
         assert m["finest_linf"] < 1e-4
         assert all(o > 1.8 for o in m["convergence_orders"])
 
     def test_pack_ii_fluids(self):
-        from tensornet.packs.pack_ii import run_fluids_vertical_slice
+        from ontic.packs.pack_ii import run_fluids_vertical_slice
         m = run_fluids_vertical_slice(verbose=False)
         assert m["finest_linf"] < 1e-3
         assert all(o > 1.5 for o in m["convergence_orders"])
 
     def test_pack_iii_maxwell(self):
-        from tensornet.packs.pack_iii import run_em_vertical_slice
+        from ontic.packs.pack_iii import run_em_vertical_slice
         m = run_em_vertical_slice(verbose=False)
         assert m["finest_linf_E"] < 1e-4
         assert all(o > 1.8 for o in m["convergence_orders"])
 
     def test_pack_vii_quantum(self):
-        from tensornet.packs.pack_vii import run_quantum_mb_vertical_slice
+        from ontic.packs.pack_vii import run_quantum_mb_vertical_slice
         m = run_quantum_mb_vertical_slice(verbose=False)
         assert m["best_error_8"] < 1e-4
         assert m["best_error_12"] < 1e-4
 
     def test_pack_viii_dft(self):
-        from tensornet.packs.pack_viii import run_dft_vertical_slice
+        from ontic.packs.pack_viii import run_dft_vertical_slice
         m = run_dft_vertical_slice(verbose=False)
         assert m["best_error"] < 1e-4
         assert m["min_order"] > 1.8
 
     def test_pack_xi_plasma(self):
-        from tensornet.packs.pack_xi import run_plasma_vertical_slice
+        from ontic.packs.pack_xi import run_plasma_vertical_slice
         m = run_plasma_vertical_slice(verbose=False)
         assert m["best_gamma_error"] < 0.05
         assert m["improves_with_refinement"]

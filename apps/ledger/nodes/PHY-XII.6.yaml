@@ -13,7 +13,7 @@ state: "V0.2"
 description: "MC, S_N, diffusion"
 
 source_files:
-  - "tensornet/astro/radiative_transfer.py"
+  - "ontic/astro/radiative_transfer.py"
 
 tests:
   smoke:

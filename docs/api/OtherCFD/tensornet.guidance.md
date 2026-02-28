@@ -1,4 +1,4 @@
-# Module `tensornet.guidance`
+# Module `ontic.guidance`
 
 Guidance Module ===============
 

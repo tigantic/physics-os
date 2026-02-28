@@ -22,7 +22,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-TARGETS = ["tensornet", "tests", "benchmarks", "scripts", "proofs"]
+TARGETS = ["ontic", "tests", "benchmarks", "scripts", "proofs"]
 
 
 def run_black(fix: bool = False) -> Tuple[bool, List[str]]:

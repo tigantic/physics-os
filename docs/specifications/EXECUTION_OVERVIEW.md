@@ -79,7 +79,7 @@ Goal: Build a 1D Compressed Euler Solver that beats Finite Volume Methods (FVM) 
 [ ] Create Module Structure:
 hypertensor.physics.euler_1d (The Equations)
 hypertensor.solvers.tebd (The Time Stepper)
-hypertensor.core.mpo_utils (Operator Builders)
+physics_os.core.mpo_utils (Operator Builders)
 2. The Physics Operators (Hamiltonian Construction)
 [ ] Implement Conservation Variables Mapping: Map [rho, u, P] $\to$ Conservative Vector U = [rho, rho*u, E].
 [ ] Implement Flux Vector Splitting: Write the function to compute F(U).

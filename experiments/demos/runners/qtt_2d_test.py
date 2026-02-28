@@ -8,7 +8,7 @@ If a Gaussian blob shifts in Y without distorting, the 2D infrastructure works.
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
-from tensornet.cfd.qtt_2d import (
+from ontic.cfd.qtt_2d import (
     dense_to_qtt_2d, qtt_2d_to_dense, 
     shift_mpo_x_2d, shift_mpo_y_2d,
     apply_mpo_2d, riemann_quadrant_ic,

@@ -41,7 +41,7 @@ The following components exist and are production-tested per `PLATFORM_SPECIFICA
 | TPC binary format | `tpc/format.py` | 1,163 | 25/25 | ✅ Phase 0 |
 | TPC certificate generator | `tpc/generator.py` | 511 | — | ✅ Phase 0 |
 | TPC constants | `tpc/constants.py` | 73 | — | ✅ Phase 0 |
-| Computation trace logger | `tensornet/core/trace.py` | 1,013 | — | ✅ Phase 0 |
+| Computation trace logger | `ontic/core/trace.py` | 1,013 | — | ✅ Phase 0 |
 | Proof bridge (Rust) | `crates/proof_bridge/` | 1,718 | 12/12 | ✅ Phase 0 |
 | Standalone verifier | `apps/trustless_verify/` | 965 | — | ✅ Phase 0 |
 | Halo2 circuit framework | `crates/fluidelite_zk/src/circuit/` | ~2K | — | ✅ Phase 1 |
@@ -127,15 +127,15 @@ These domains already have QTT solvers with STARK-compatible computation traces.
 
 | # | Domain | Solver Source | Conservation Law | Existing Lean |
 |:-:|--------|-------------|-----------------|:-------------:|
-| 1 | Euler 3D (Compressible Flow, II.2) | `tensornet/cfd/euler_3d.py` | Mass + Momentum + Energy | — |
-| 2 | NS-IMEX (Incompressible NS, II.1) | `tensornet/cfd/ns_2d.py`, `ns_3d.py` | Momentum + Divergence-free | `NavierStokes.lean` ✅ |
-| 3 | Heat Equation (V.5) | `tensornet/thermal/heat_transfer.py` | Energy conservation | `ThermalConservation.lean` ✅ |
-| 4 | Vlasov-Poisson 6D (XI.3) | `tensornet/cfd/fast_vlasov_5d.py` | L² norm + Phase-space volume | `VlasovConservation.lean` ✅ |
+| 1 | Euler 3D (Compressible Flow, II.2) | `ontic/cfd/euler_3d.py` | Mass + Momentum + Energy | — |
+| 2 | NS-IMEX (Incompressible NS, II.1) | `ontic/cfd/ns_2d.py`, `ns_3d.py` | Momentum + Divergence-free | `NavierStokes.lean` ✅ |
+| 3 | Heat Equation (V.5) | `ontic/thermal/heat_transfer.py` | Energy conservation | `ThermalConservation.lean` ✅ |
+| 4 | Vlasov-Poisson 6D (XI.3) | `ontic/cfd/fast_vlasov_5d.py` | L² norm + Phase-space volume | `VlasovConservation.lean` ✅ |
 
 ### Per-Domain Deliverables
 
 For each domain:
-1. **Trace adapter** (`tensornet/<domain>/trace_adapter.py`, ~50 LOC) — hooks solver to `ComputationTrace`
+1. **Trace adapter** (`ontic/<domain>/trace_adapter.py`, ~50 LOC) — hooks solver to `ComputationTrace`
 2. **Lean 4 conservation shell** (if not existing) — formal statement of governing conservation laws
 3. **TPC generation script** (`tools/scripts/tpc/generate_<domain>.py`, ~80 LOC)
 4. **Gauntlet test** (extend `trustless_physics_phase5_gauntlet.py`)
@@ -173,46 +173,46 @@ These are time-stepping PDE solvers with explicit conservation laws that map dir
 
 | # | Sub-domain | Solver | Conservation Law for Layer A |
 |:-:|-----------|--------|------------------------------|
-| 5 | Turbulence (II.3) | `tensornet/cfd/turbulence.py` | TKE budget, enstrophy |
-| 6 | Multiphase Flow (II.4) | `tensornet/fluids/multiphase.py` | Phase mass, total energy, interface area |
-| 7 | Reactive Flow (II.5) | `tensornet/cfd/reactive_ns.py` | Species mass, total energy, atom counts |
-| 8 | Rarefied Gas (II.6) | `tensornet/fluids/rarefied.py` | Number density, kinetic energy |
+| 5 | Turbulence (II.3) | `ontic/cfd/turbulence.py` | TKE budget, enstrophy |
+| 6 | Multiphase Flow (II.4) | `ontic/fluids/multiphase.py` | Phase mass, total energy, interface area |
+| 7 | Reactive Flow (II.5) | `ontic/cfd/reactive_ns.py` | Species mass, total energy, atom counts |
+| 8 | Rarefied Gas (II.6) | `ontic/fluids/rarefied.py` | Number density, kinetic energy |
 | 9 | Shallow Water (II.7) | CivStack Hermes | Mass, momentum, potential vorticity |
-| 10 | Non-Newtonian (II.8) | `tensornet/fluids/non_newtonian.py` | Momentum, stress–strain energy |
-| 11 | Porous Media (II.9) | `tensornet/fluids/porous_media.py` | Fluid mass, Darcy flux |
-| 12 | Free Surface (II.10) | `tensornet/fluids/free_surface.py` | Volume, total energy, surface area |
+| 10 | Non-Newtonian (II.8) | `ontic/fluids/non_newtonian.py` | Momentum, stress–strain energy |
+| 11 | Porous Media (II.9) | `ontic/fluids/porous_media.py` | Fluid mass, Darcy flux |
+| 12 | Free Surface (II.10) | `ontic/fluids/free_surface.py` | Volume, total energy, surface area |
 
 #### III. Electromagnetism (7 domains)
 
 | # | Sub-domain | Solver | Conservation Law for Layer A |
 |:-:|-----------|--------|------------------------------|
-| 13 | Electrostatics (III.1) | `tensornet/em/electrostatics.py` | Gauss's law, total charge |
-| 14 | Magnetostatics (III.2) | `tensornet/em/magnetostatics.py` | ∇·B = 0, magnetic flux |
+| 13 | Electrostatics (III.1) | `ontic/em/electrostatics.py` | Gauss's law, total charge |
+| 14 | Magnetostatics (III.2) | `ontic/em/magnetostatics.py` | ∇·B = 0, magnetic flux |
 | 15 | Full Maxwell FDTD (III.3) | `crates/cem-qtt/` | Poynting energy, charge conservation |
-| 16 | Frequency-Domain EM (III.4) | `tensornet/em/frequency_domain.py` | Power balance, reciprocity |
-| 17 | EM Wave Propagation (III.5) | `tensornet/em/wave_propagation.py` | Poynting energy, CFL stability |
-| 18 | Computational Photonics (III.6) | `tensornet/em/computational_photonics.py` | Photon number, energy flux |
-| 19 | Antenna & Microwave (III.7) | `tensornet/em/antenna_microwave.py` | Radiated power, input impedance |
+| 16 | Frequency-Domain EM (III.4) | `ontic/em/frequency_domain.py` | Power balance, reciprocity |
+| 17 | EM Wave Propagation (III.5) | `ontic/em/wave_propagation.py` | Poynting energy, CFL stability |
+| 18 | Computational Photonics (III.6) | `ontic/em/computational_photonics.py` | Photon number, energy flux |
+| 19 | Antenna & Microwave (III.7) | `ontic/em/antenna_microwave.py` | Radiated power, input impedance |
 
 #### V. Thermodynamics (3 remaining)
 
 | # | Sub-domain | Solver | Conservation Law for Layer A |
 |:-:|-----------|--------|------------------------------|
-| 20 | Non-Equilibrium StatMech (V.2) | `tensornet/statmech/non_equilibrium.py` | Free energy, detailed balance |
-| 21 | Molecular Dynamics (V.3) | `tensornet/md/molecular_dynamics.py` | Total energy, momentum, angular momentum |
-| 22 | Lattice Spin (V.6) | `tensornet/mps/hamiltonians.py` | Total spin, energy |
+| 20 | Non-Equilibrium StatMech (V.2) | `ontic/statmech/non_equilibrium.py` | Free energy, detailed balance |
+| 21 | Molecular Dynamics (V.3) | `ontic/md/molecular_dynamics.py` | Total energy, momentum, angular momentum |
+| 22 | Lattice Spin (V.6) | `ontic/mps/hamiltonians.py` | Total spin, energy |
 
 #### XI. Plasma Physics (7 remaining)
 
 | # | Sub-domain | Solver | Conservation Law for Layer A |
 |:-:|-----------|--------|------------------------------|
 | 23 | Ideal MHD (XI.1) | CivStack TOMAHAWK | Mass + Momentum + Energy + ∇·B = 0 |
-| 24 | Resistive MHD (XI.2) | `tensornet/plasma/extended_mhd.py` | Magnetic helicity, total energy |
-| 25 | Gyrokinetics (XI.4) | `tensornet/plasma/gyrokinetics.py` | Phase-space volume, energy |
-| 26 | Magnetic Reconnection (XI.5) | `tensornet/plasma/reconnection.py` | Total energy, magnetic flux |
-| 27 | Laser-Plasma (XI.6) | `tensornet/plasma/laser_plasma.py` | Photon number, energy |
-| 28 | Dusty Plasma (XI.7) | `tensornet/plasma/dusty_plasma.py` | Particle count, total energy |
-| 29 | Space Plasma (XI.8) | `tensornet/plasma/space_plasma.py` | Cosmic ray number, magnetic flux |
+| 24 | Resistive MHD (XI.2) | `ontic/plasma/extended_mhd.py` | Magnetic helicity, total energy |
+| 25 | Gyrokinetics (XI.4) | `ontic/plasma/gyrokinetics.py` | Phase-space volume, energy |
+| 26 | Magnetic Reconnection (XI.5) | `ontic/plasma/reconnection.py` | Total energy, magnetic flux |
+| 27 | Laser-Plasma (XI.6) | `ontic/plasma/laser_plasma.py` | Photon number, energy |
+| 28 | Dusty Plasma (XI.7) | `ontic/plasma/dusty_plasma.py` | Particle count, total energy |
+| 29 | Space Plasma (XI.8) | `ontic/plasma/space_plasma.py` | Cosmic ray number, magnetic flux |
 
 ### Exit Criteria
 
@@ -233,76 +233,76 @@ These are time-stepping PDE solvers with explicit conservation laws that map dir
 
 | # | Sub-domain | Solver | Conservation Law |
 |:-:|-----------|--------|-----------------|
-| 30 | Newtonian Dynamics (I.1) | `tensornet/guidance/trajectory.py` | Linear + angular momentum, energy |
-| 31 | Lagrangian/Hamiltonian (I.2) | `tensornet/mechanics/symplectic.py` | Hamiltonian, symplectic form |
-| 32 | Continuum (I.3) | `tensornet/mechanics/continuum.py` | Linear momentum, energy, angular momentum |
-| 33 | Structural (I.4) | `tensornet/mechanics/structural.py` | Virtual work, energy |
+| 30 | Newtonian Dynamics (I.1) | `ontic/guidance/trajectory.py` | Linear + angular momentum, energy |
+| 31 | Lagrangian/Hamiltonian (I.2) | `ontic/mechanics/symplectic.py` | Hamiltonian, symplectic form |
+| 32 | Continuum (I.3) | `ontic/mechanics/continuum.py` | Linear momentum, energy, angular momentum |
+| 33 | Structural (I.4) | `ontic/mechanics/structural.py` | Virtual work, energy |
 | 34 | Nonlinear Dynamics (I.5) | CivStack Dynamics | Lyapunov function, attractor bounds |
-| 35 | Acoustics (I.6) | `tensornet/mechanics/acoustics.py` | Acoustic energy, reciprocity |
+| 35 | Acoustics (I.6) | `ontic/mechanics/acoustics.py` | Acoustic energy, reciprocity |
 
 ### IV. Optics & Photonics (4 domains)
 
 | # | Sub-domain | Solver | Conservation Law |
 |:-:|-----------|--------|-----------------|
-| 36 | Physical Optics (IV.1) | `tensornet/optics/physical_optics.py` | Poynting flux, coherence |
-| 37 | Quantum Optics (IV.2) | `tensornet/optics/quantum_optics.py` | Photon number, trace(ρ) = 1 |
-| 38 | Laser Physics (IV.3) | `tensornet/optics/laser_physics.py` | Population inversion, energy balance |
-| 39 | Ultrafast Optics (IV.4) | `tensornet/optics/ultrafast_optics.py` | Pulse energy, photon number |
+| 36 | Physical Optics (IV.1) | `ontic/optics/physical_optics.py` | Poynting flux, coherence |
+| 37 | Quantum Optics (IV.2) | `ontic/optics/quantum_optics.py` | Photon number, trace(ρ) = 1 |
+| 38 | Laser Physics (IV.3) | `ontic/optics/laser_physics.py` | Population inversion, energy balance |
+| 39 | Ultrafast Optics (IV.4) | `ontic/optics/ultrafast_optics.py` | Pulse energy, photon number |
 
 ### XII. Astrophysics & Cosmology (6 domains)
 
 | # | Sub-domain | Solver | Conservation Law |
 |:-:|-----------|--------|-----------------|
-| 40 | Stellar Structure (XII.1) | `tensornet/astro/stellar_structure.py` | Hydrostatic equilibrium, luminosity |
-| 41 | Compact Objects (XII.2) | `tensornet/astro/compact_objects.py` | TOV mass-energy, geodesic constants |
-| 42 | Gravitational Waves (XII.3) | `tensornet/astro/gravitational_waves.py` | Energy flux, angular momentum |
-| 43 | Cosmological Sims (XII.4) | `tensornet/astro/cosmological_sims.py` | Total mass, energy, Friedmann constraint |
-| 44 | CMB (XII.5) | `tensornet/astro/cmb_early_universe.py` | Photon number, entropy |
-| 45 | Radiative Transfer (XII.6) | `tensornet/astro/radiative_transfer.py` | Radiative energy, photon number |
+| 40 | Stellar Structure (XII.1) | `ontic/astro/stellar_structure.py` | Hydrostatic equilibrium, luminosity |
+| 41 | Compact Objects (XII.2) | `ontic/astro/compact_objects.py` | TOV mass-energy, geodesic constants |
+| 42 | Gravitational Waves (XII.3) | `ontic/astro/gravitational_waves.py` | Energy flux, angular momentum |
+| 43 | Cosmological Sims (XII.4) | `ontic/astro/cosmological_sims.py` | Total mass, energy, Friedmann constraint |
+| 44 | CMB (XII.5) | `ontic/astro/cmb_early_universe.py` | Photon number, entropy |
+| 45 | Radiative Transfer (XII.6) | `ontic/astro/radiative_transfer.py` | Radiative energy, photon number |
 
 ### XIII. Geophysics (6 domains)
 
 | # | Sub-domain | Solver | Conservation Law |
 |:-:|-----------|--------|-----------------|
-| 46 | Seismology (XIII.1) | `tensornet/geophysics/seismology.py` | Elastic energy, wave energy |
-| 47 | Mantle Convection (XIII.2) | `tensornet/geophysics/mantle_convection.py` | Mass, thermal energy, Nusselt |
-| 48 | Geodynamo (XIII.3) | `tensornet/geophysics/geodynamo.py` | Magnetic energy, ∇·B = 0 |
-| 49 | Atmospheric (XIII.4) | `tensornet/atmosphere/atmospheric_physics.py` | Mass, enthalpy, ozone column |
-| 50 | Oceanography (XIII.5) | `tensornet/ocean/oceanography.py` | Mass, salt, heat |
-| 51 | Glaciology (XIII.6) | `tensornet/geophysics/glaciology.py` | Ice volume, thermal energy |
+| 46 | Seismology (XIII.1) | `ontic/geophysics/seismology.py` | Elastic energy, wave energy |
+| 47 | Mantle Convection (XIII.2) | `ontic/geophysics/mantle_convection.py` | Mass, thermal energy, Nusselt |
+| 48 | Geodynamo (XIII.3) | `ontic/geophysics/geodynamo.py` | Magnetic energy, ∇·B = 0 |
+| 49 | Atmospheric (XIII.4) | `ontic/atmosphere/atmospheric_physics.py` | Mass, enthalpy, ozone column |
+| 50 | Oceanography (XIII.5) | `ontic/ocean/oceanography.py` | Mass, salt, heat |
+| 51 | Glaciology (XIII.6) | `ontic/geophysics/glaciology.py` | Ice volume, thermal energy |
 
 ### XIV. Materials Science (7 domains)
 
 | # | Sub-domain | Solver | Conservation Law |
 |:-:|-----------|--------|-----------------|
-| 52 | First-Principles Design (XIV.1) | `tensornet/materials/first_principles_design.py` | Total energy, pressure–volume |
-| 53 | Mechanical Properties (XIV.2) | `tensornet/materials/mechanical.py` | Elastic energy, symmetry |
-| 54 | Phase-Field (XIV.3) | `tensornet/materials/phase_field.py` | Free energy decrease, mass |
-| 55 | Microstructure (XIV.4) | `tensornet/materials/microstructure.py` | Phase fractions, energy |
-| 56 | Radiation Damage (XIV.5) | `tensornet/materials/radiation_damage.py` | Displaced atoms, energy deposition |
-| 57 | Polymers (XIV.6) | `tensornet/materials/polymers_soft_matter.py` | Free energy, chain number |
-| 58 | Ceramics (XIV.7) | `tensornet/materials/ceramics.py` | Mass, thermal energy |
+| 52 | First-Principles Design (XIV.1) | `ontic/materials/first_principles_design.py` | Total energy, pressure–volume |
+| 53 | Mechanical Properties (XIV.2) | `ontic/materials/mechanical.py` | Elastic energy, symmetry |
+| 54 | Phase-Field (XIV.3) | `ontic/materials/phase_field.py` | Free energy decrease, mass |
+| 55 | Microstructure (XIV.4) | `ontic/materials/microstructure.py` | Phase fractions, energy |
+| 56 | Radiation Damage (XIV.5) | `ontic/materials/radiation_damage.py` | Displaced atoms, energy deposition |
+| 57 | Polymers (XIV.6) | `ontic/materials/polymers_soft_matter.py` | Free energy, chain number |
+| 58 | Ceramics (XIV.7) | `ontic/materials/ceramics.py` | Mass, thermal energy |
 
 ### XVIII. Coupled Physics (7 domains)
 
 | # | Sub-domain | Solver | Conservation Law |
 |:-:|-----------|--------|-----------------|
-| 59 | FSI (XVIII.1) | `tensornet/coupled/fsi.py` | Total (fluid + solid) energy, momentum |
-| 60 | Thermo-Mechanical (XVIII.2) | `tensornet/coupled/thermo_mechanical.py` | Thermal + elastic energy |
-| 61 | Electro-Mechanical (XVIII.3) | `tensornet/coupled/electro_mechanical.py` | Electrostatic + elastic energy |
-| 62 | Coupled MHD (XVIII.4) | `tensornet/coupled/coupled_mhd.py` | Kinetic + magnetic energy, ∇·B = 0 |
-| 63 | Reacting Flows (XVIII.5) | `tensornet/cfd/reactive_ns.py` | Species + total energy |
-| 64 | Radiation-Hydro (XVIII.6) | `tensornet/radiation/radiation_hydro.py` | Total (radiation + matter) energy |
-| 65 | Multiscale (XVIII.7) | `tensornet/coupled/multiscale.py` | Fine↔coarse energy consistency |
+| 59 | FSI (XVIII.1) | `ontic/coupled/fsi.py` | Total (fluid + solid) energy, momentum |
+| 60 | Thermo-Mechanical (XVIII.2) | `ontic/coupled/thermo_mechanical.py` | Thermal + elastic energy |
+| 61 | Electro-Mechanical (XVIII.3) | `ontic/coupled/electro_mechanical.py` | Electrostatic + elastic energy |
+| 62 | Coupled MHD (XVIII.4) | `ontic/coupled/coupled_mhd.py` | Kinetic + magnetic energy, ∇·B = 0 |
+| 63 | Reacting Flows (XVIII.5) | `ontic/cfd/reactive_ns.py` | Species + total energy |
+| 64 | Radiation-Hydro (XVIII.6) | `ontic/radiation/radiation_hydro.py` | Total (radiation + matter) energy |
+| 65 | Multiscale (XVIII.7) | `ontic/coupled/multiscale.py` | Fine↔coarse energy consistency |
 
 ### XV. Chemical Physics (4 time-stepping domains)
 
 | # | Sub-domain | Solver | Conservation Law |
 |:-:|-----------|--------|-----------------|
-| 66 | Nonadiabatic Dynamics (XV.4) | `tensornet/chemistry/nonadiabatic.py` | Total energy (electronic + nuclear) |
-| 67 | Photochemistry (XV.5) | `tensornet/chemistry/photochemistry.py` | Oscillator strength sum, energy |
-| 68 | Quantum Reactive (XV.3) | `tensornet/chemistry/quantum_reactive.py` | Total probability, energy |
-| 69 | Spectroscopy (XV.7) | `tensornet/chemistry/spectroscopy.py` | Sum rules, energy levels |
+| 66 | Nonadiabatic Dynamics (XV.4) | `ontic/chemistry/nonadiabatic.py` | Total energy (electronic + nuclear) |
+| 67 | Photochemistry (XV.5) | `ontic/chemistry/photochemistry.py` | Oscillator strength sum, energy |
+| 68 | Quantum Reactive (XV.3) | `ontic/chemistry/quantum_reactive.py` | Total probability, energy |
+| 69 | Spectroscopy (XV.7) | `ontic/chemistry/spectroscopy.py` | Sum rules, energy levels |
 
 ### Exit Criteria
 
@@ -334,7 +334,7 @@ SCF iteration i:
   constraint:      output_energy ≤ input_energy   (variational principle)
 ```
 
-**Deliverable**: `tensornet/core/scf_trace_adapter.py` (~500 LOC)  
+**Deliverable**: `ontic/core/scf_trace_adapter.py` (~500 LOC)  
 **Reuse**: All Tier 3 domains use this adapter
 
 ### Eigenvalue-to-STARK Adapter
@@ -349,7 +349,7 @@ Krylov step k:
   constraint:      Ritz value convergence (monotone decrease)
 ```
 
-**Deliverable**: `tensornet/core/eigenvalue_trace_adapter.py` (~400 LOC)
+**Deliverable**: `ontic/core/eigenvalue_trace_adapter.py` (~400 LOC)
 
 ### Domain List
 
@@ -466,7 +466,7 @@ MC sweep s:
   constraint:       running average converges within stated error bars
 ```
 
-**Deliverable**: `tensornet/core/stochastic_trace_adapter.py` (~600 LOC)
+**Deliverable**: `ontic/core/stochastic_trace_adapter.py` (~600 LOC)
 
 ### ML-to-STARK Adapter
 
@@ -482,7 +482,7 @@ Training step t:
   inference:        input_hash → output_hash via forward(θ_final)
 ```
 
-**Deliverable**: `tensornet/core/ml_trace_adapter.py` (~400 LOC)
+**Deliverable**: `ontic/core/ml_trace_adapter.py` (~400 LOC)
 
 ### Domain List
 
@@ -567,7 +567,7 @@ Build a machine-readable registry of all 140 TPC certificates:
     {
       "domain": "II.1",
       "name": "Incompressible Navier-Stokes",
-      "solver": "tensornet/cfd/ns_3d.py",
+      "solver": "ontic/cfd/ns_3d.py",
       "tpc_path": "certificates/II_1_ns.tpc",
       "lean_theorems": ["ns_mass_conservation", "ns_momentum_conservation", "ns_divergence_free"],
       "proof_system": "STARK",
@@ -672,7 +672,7 @@ This section serves as the canonical "toolbox check" — any new work must verif
 |------|-------|-------------|
 | STARK AIR (ThermalAir) | `fluidelite-circuits` (referenced via PLATFORM_SPEC) | All time-stepping domains |
 | TPC format + generator | `tpc/format.py`, `tpc/generator.py` | All 140 domains |
-| Computation trace logger | `tensornet/core/trace.py` | All 140 domains |
+| Computation trace logger | `ontic/core/trace.py` | All 140 domains |
 | Proof bridge | `crates/proof_bridge/` | All 140 domains |
 | Standalone verifier | `apps/trustless_verify/` | All 140 domains |
 | Halo2 circuit base | `crates/fluidelite_zk/src/circuit/` | All circuit-based proofs |

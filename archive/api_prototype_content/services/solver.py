@@ -35,42 +35,42 @@ class _CompilerSpec:
 # Registry: domain enum → compiler spec
 _SPECS: dict[PhysicsDomain, _CompilerSpec] = {
     PhysicsDomain.BURGERS: _CompilerSpec(
-        module="tensornet.vm.compilers.navier_stokes",
+        module="ontic.vm.compilers.navier_stokes",
         cls_name="BurgersCompiler",
         default_params={"viscosity": 0.01},
         resolution_keys=["n_bits", "n_steps", "dt"],
         param_keys=["viscosity"],
     ),
     PhysicsDomain.MAXWELL_1D: _CompilerSpec(
-        module="tensornet.vm.compilers.maxwell",
+        module="ontic.vm.compilers.maxwell",
         cls_name="MaxwellCompiler",
         default_params={"c": 1.0},
         resolution_keys=["n_bits", "n_steps", "dt"],
         param_keys=["c"],
     ),
     PhysicsDomain.MAXWELL_3D: _CompilerSpec(
-        module="tensornet.vm.compilers.maxwell_3d",
+        module="ontic.vm.compilers.maxwell_3d",
         cls_name="Maxwell3DCompiler",
         default_params={"c": 1.0},
         resolution_keys=["n_bits", "n_steps", "dt"],
         param_keys=["c"],
     ),
     PhysicsDomain.SCHRODINGER: _CompilerSpec(
-        module="tensornet.vm.compilers.schrodinger",
+        module="ontic.vm.compilers.schrodinger",
         cls_name="SchrodingerCompiler",
         default_params={"omega": 4.0, "x0": 0.5, "k0": 10.0},
         resolution_keys=["n_bits", "n_steps", "dt"],
         param_keys=["omega", "x0", "k0"],
     ),
     PhysicsDomain.DIFFUSION: _CompilerSpec(
-        module="tensornet.vm.compilers.diffusion",
+        module="ontic.vm.compilers.diffusion",
         cls_name="DiffusionCompiler",
         default_params={"velocity": 1.0, "diffusivity": 0.01},
         resolution_keys=["n_bits", "n_steps", "dt"],
         param_keys=["velocity", "diffusivity"],
     ),
     PhysicsDomain.VLASOV_POISSON: _CompilerSpec(
-        module="tensornet.vm.compilers.vlasov_poisson",
+        module="ontic.vm.compilers.vlasov_poisson",
         cls_name="VlasovPoissonCompiler",
         default_params={
             "bits_x": 6, "bits_v": 6, "v_max": 6.0, "perturbation": 0.01,
@@ -80,7 +80,7 @@ _SPECS: dict[PhysicsDomain, _CompilerSpec] = {
         param_keys=["bits_x", "bits_v", "v_max", "perturbation"],
     ),
     PhysicsDomain.NAVIER_STOKES_2D: _CompilerSpec(
-        module="tensornet.vm.compilers.navier_stokes_2d",
+        module="ontic.vm.compilers.navier_stokes_2d",
         cls_name="NavierStokes2DCompiler",
         default_params={"viscosity": 0.01},
         resolution_keys=["n_bits", "n_steps", "dt"],
@@ -159,8 +159,8 @@ def execute_simulation(
     This runs synchronously on the calling thread.  The caller is
     responsible for offloading to a thread pool if needed.
     """
-    from tensornet.engine.vm.runtime import QTTRuntime
-    from tensornet.engine.vm.rank_governor import RankGovernor, TruncationPolicy
+    from ontic.engine.vm.runtime import QTTRuntime
+    from ontic.engine.vm.rank_governor import RankGovernor, TruncationPolicy
 
     compiler, params_echo = build_compiler(domain, resolution, parameters)
     program = compiler.compile()

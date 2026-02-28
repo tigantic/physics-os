@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Radiation, chemistry hooks"
 
 source_files:
-  - "tensornet/geophysics/atmosphere.py"
+  - "ontic/geophysics/atmosphere.py"
 
 tests:
   smoke:

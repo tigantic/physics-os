@@ -26,7 +26,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 # QTT Helmholtz solver
-from tensornet.em.qtt_helmholtz import (
+from ontic.em.qtt_helmholtz import (
     HelmholtzConfig,
     HelmholtzResult,
     array_to_tt,
@@ -42,7 +42,7 @@ from tensornet.em.qtt_helmholtz import (
     tt_inner_hermitian,
     tt_norm_c,
 )
-from tensornet.engine.vm.operators import laplacian_mpo_1d
+from ontic.engine.vm.operators import laplacian_mpo_1d
 
 # Sparse solver for ground truth
 try:

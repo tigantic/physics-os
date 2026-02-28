@@ -47,17 +47,17 @@ Traditional engines brute-force compute and hit 90%+ GPU. Sovereign architecture
 ### 1. rSVD Threshold: 100
 
 **Files (12 total):**
-- `tensornet/adaptive/compression.py`
-- `tensornet/adaptive/entanglement.py`
-- `tensornet/adaptive/bond_optimizer.py`
-- `tensornet/distributed_tn/distributed_dmrg.py`
-- `tensornet/distributed_tn/mps_operations.py`
-- `tensornet/quantum/hybrid.py`
-- `tensornet/cfd/weno_native_tt.py`
-- `tensornet/cfd/qtt_eval.py`
-- `tensornet/cfd/qtt_2d.py`
-- `tensornet/cfd/chi_diagnostic.py` (2 locations)
-- `tensornet/core/mps.py`
+- `ontic/adaptive/compression.py`
+- `ontic/adaptive/entanglement.py`
+- `ontic/adaptive/bond_optimizer.py`
+- `ontic/distributed_tn/distributed_dmrg.py`
+- `ontic/distributed_tn/mps_operations.py`
+- `ontic/quantum/hybrid.py`
+- `ontic/cfd/weno_native_tt.py`
+- `ontic/cfd/qtt_eval.py`
+- `ontic/cfd/qtt_2d.py`
+- `ontic/cfd/chi_diagnostic.py` (2 locations)
+- `ontic/core/mps.py`
 
 **Pattern:**
 ```python
@@ -81,7 +81,7 @@ else:
 
 ### 2. Morton Encoding: O(1) Magic Numbers
 
-**File:** `tensornet/substrate/morton_ops.py`
+**File:** `ontic/substrate/morton_ops.py`
 
 ```python
 def spread_bits_2d(v: torch.Tensor) -> torch.Tensor:
@@ -206,7 +206,7 @@ Run these to verify the system still works:
 
 ### Quick Smoke Test
 ```bash
-python -c "from tensornet.sovereign.morton import spread_bits_2d, compact_bits_2d; import torch; x=torch.tensor([5]); y=torch.tensor([7]); m=spread_bits_2d(x)|spread_bits_2d(y)<<1; print(f'Morton: (5,7)→{m.item()}→({compact_bits_2d(m).item()},{compact_bits_2d(m>>1).item()})')"
+python -c "from ontic.sovereign.morton import spread_bits_2d, compact_bits_2d; import torch; x=torch.tensor([5]); y=torch.tensor([7]); m=spread_bits_2d(x)|spread_bits_2d(y)<<1; print(f'Morton: (5,7)→{m.item()}→({compact_bits_2d(m).item()},{compact_bits_2d(m>>1).item()})')"
 ```
 Expected: `Morton: (5,7)→59→(5,7)`
 

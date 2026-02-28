@@ -13,7 +13,7 @@ import numpy as np
 
 def test_intent_parser():
     """Test natural language parsing."""
-    from tensornet.applied.intent import IntentParser, IntentType
+    from ontic.applied.intent import IntentParser, IntentType
 
     parser = IntentParser()
 
@@ -38,7 +38,7 @@ def test_intent_parser():
 
 def test_query_on_physics():
     """Test query execution on real physics data."""
-    from tensornet.applied.intent import Aggregator, FieldQuery, Predicate
+    from ontic.applied.intent import Aggregator, FieldQuery, Predicate
 
     # Create real physics-like field: Gaussian temperature
     x = np.linspace(-1, 1, 64)
@@ -68,7 +68,7 @@ def test_query_on_physics():
 
 def test_constraint_solver():
     """Test constraint satisfaction on fields."""
-    from tensornet.applied.intent import (BoundConstraint, ConstraintSet,
+    from ontic.applied.intent import (BoundConstraint, ConstraintSet,
                                   ConstraintSolver)
 
     # Create constraint set
@@ -93,7 +93,7 @@ def test_constraint_solver():
 
 def test_intent_engine_integration():
     """Test full intent engine with physics field."""
-    from tensornet.applied.intent import (Aggregator, FieldQuery, IntentEngine,
+    from ontic.applied.intent import (Aggregator, FieldQuery, IntentEngine,
                                   ResultStatus)
 
     # Create physics field

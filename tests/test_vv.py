@@ -26,12 +26,12 @@ import pytest
 import torch
 from torch import Tensor
 
-from tensornet.platform.data_model import (
+from ontic.platform.data_model import (
     FieldData,
     SimulationState,
     StructuredMesh,
 )
-from tensornet.platform.solvers import ForwardEuler, RK4, RHSCallable, TimeIntegrator
+from ontic.platform.solvers import ForwardEuler, RK4, RHSCallable, TimeIntegrator
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -82,10 +82,10 @@ def _solver_factory(mesh: StructuredMesh) -> Tuple[TimeIntegrator, RHSCallable, 
 
 
 class TestMMS:
-    """Tests for tensornet.platform.vv.mms."""
+    """Tests for ontic.platform.vv.mms."""
 
     def test_manufactured_solution_exact_field(self) -> None:
-        from tensornet.platform.vv.mms import ManufacturedSolution
+        from ontic.platform.vv.mms import ManufacturedSolution
 
         def exact(x: Tensor, t: float) -> Tensor:
             return torch.sin(x) * math.exp(-t)
@@ -103,7 +103,7 @@ class TestMMS:
         assert torch.allclose(field.data, expected, atol=1e-12)
 
     def test_manufactured_solution_source_field(self) -> None:
-        from tensornet.platform.vv.mms import ManufacturedSolution
+        from ontic.platform.vv.mms import ManufacturedSolution
 
         def exact(x: Tensor, t: float) -> Tensor:
             return x * t
@@ -117,7 +117,7 @@ class TestMMS:
         assert src.data.shape == (5,)
 
     def test_mms_problem_adds_source(self) -> None:
-        from tensornet.platform.vv.mms import ManufacturedSolution, MMSProblem
+        from ontic.platform.vv.mms import ManufacturedSolution, MMSProblem
 
         def exact(x: Tensor, t: float) -> Tensor:
             return torch.ones_like(x)
@@ -142,7 +142,7 @@ class TestMMS:
         assert torch.allclose(result["u"], torch.full((4,), 3.0, dtype=torch.float64), atol=1e-12)
 
     def test_mms_convergence_study_heat(self) -> None:
-        from tensornet.platform.vv.mms import (
+        from ontic.platform.vv.mms import (
             ManufacturedSolution,
             MMSProblem,
             mms_convergence_study,
@@ -176,7 +176,7 @@ class TestMMS:
         assert len(result.points) == 3
 
     def test_mms_convergence_summary(self) -> None:
-        from tensornet.platform.vv.mms import ConvergencePoint, MMSConvergenceResult
+        from ontic.platform.vv.mms import ConvergencePoint, MMSConvergenceResult
 
         pts = [
             ConvergencePoint(N=32, dx=0.03125, dt=1e-4, linf_error=1e-4,
@@ -199,10 +199,10 @@ class TestMMS:
 
 
 class TestConvergence:
-    """Tests for tensornet.platform.vv.convergence."""
+    """Tests for ontic.platform.vv.convergence."""
 
     def test_grid_refinement_passes(self) -> None:
-        from tensornet.platform.vv.convergence import grid_refinement_study
+        from ontic.platform.vv.convergence import grid_refinement_study
 
         result = grid_refinement_study(
             exact_solution=_exact_heat,
@@ -218,7 +218,7 @@ class TestConvergence:
         assert result.observed_order_linf >= 1.7
 
     def test_grid_refinement_summary(self) -> None:
-        from tensornet.platform.vv.convergence import grid_refinement_study
+        from ontic.platform.vv.convergence import grid_refinement_study
 
         result = grid_refinement_study(
             exact_solution=_exact_heat,
@@ -232,7 +232,7 @@ class TestConvergence:
         assert "Observed order" in s
 
     def test_timestep_refinement_ode(self) -> None:
-        from tensornet.platform.vv.convergence import timestep_refinement_study
+        from ontic.platform.vv.convergence import timestep_refinement_study
 
         def ode_exact(x: Tensor, t: float) -> Tensor:
             return torch.full_like(x, math.exp(-t))
@@ -265,7 +265,7 @@ class TestConvergence:
         assert result.observed_order_linf >= 0.7
 
     def test_compute_order(self) -> None:
-        from tensornet.platform.vv.convergence import compute_order
+        from ontic.platform.vv.convergence import compute_order
 
         # Perfect 2nd order: error = C * h^2
         dxs = [0.1, 0.05, 0.025]
@@ -274,7 +274,7 @@ class TestConvergence:
         assert abs(order - 2.0) < 0.01
 
     def test_refinement_study_class(self) -> None:
-        from tensornet.platform.vv.convergence import RefinementStudy
+        from ontic.platform.vv.convergence import RefinementStudy
 
         study = RefinementStudy(
             exact_solution=_exact_heat,
@@ -294,10 +294,10 @@ class TestConvergence:
 
 
 class TestConservation:
-    """Tests for tensornet.platform.vv.conservation."""
+    """Tests for ontic.platform.vv.conservation."""
 
     def test_mass_integral(self) -> None:
-        from tensornet.platform.vv.conservation import MassIntegral
+        from ontic.platform.vv.conservation import MassIntegral
 
         mesh = StructuredMesh(shape=(10,), domain=((0.0, 1.0),))
         u = torch.ones(10, dtype=torch.float64)
@@ -312,7 +312,7 @@ class TestConservation:
         assert abs(val.item() - 1.0) < 1e-12
 
     def test_energy_integral(self) -> None:
-        from tensornet.platform.vv.conservation import EnergyIntegral
+        from ontic.platform.vv.conservation import EnergyIntegral
 
         mesh = StructuredMesh(shape=(10,), domain=((0.0, 1.0),))
         u = 2.0 * torch.ones(10, dtype=torch.float64)
@@ -331,7 +331,7 @@ class TestConservation:
         assert abs(val.item() - 2.0) < 1e-12
 
     def test_lp_norm_quantity(self) -> None:
-        from tensornet.platform.vv.conservation import LpNormQuantity
+        from ontic.platform.vv.conservation import LpNormQuantity
 
         mesh = StructuredMesh(shape=(100,), domain=((0.0, 1.0),))
         u = torch.ones(100, dtype=torch.float64)
@@ -346,7 +346,7 @@ class TestConservation:
         assert abs(val.item() - 1.0) < 1e-8
 
     def test_conservation_monitor_drift(self) -> None:
-        from tensornet.platform.vv.conservation import (
+        from ontic.platform.vv.conservation import (
             ConservationMonitor,
             MassIntegral,
         )
@@ -372,7 +372,7 @@ class TestConservation:
         assert reports[0].passed
 
     def test_conservation_monitor_monotone_l2(self) -> None:
-        from tensornet.platform.vv.conservation import (
+        from ontic.platform.vv.conservation import (
             ConservationMonitor,
             LpNormQuantity,
         )
@@ -398,7 +398,7 @@ class TestConservation:
             assert series[i] >= series[i + 1] - 1e-12
 
     def test_conservation_record_from_history(self) -> None:
-        from tensornet.platform.vv.conservation import (
+        from ontic.platform.vv.conservation import (
             ConservationMonitor,
             MassIntegral,
         )
@@ -419,10 +419,10 @@ class TestConservation:
 
 
 class TestStability:
-    """Tests for tensornet.platform.vv.stability."""
+    """Tests for ontic.platform.vv.stability."""
 
     def test_cfl_advection_pass(self) -> None:
-        from tensornet.platform.vv.stability import CFLChecker
+        from ontic.platform.vv.stability import CFLChecker
 
         mesh = StructuredMesh(shape=(100,), domain=((0.0, 1.0),))
         u = torch.ones(100, dtype=torch.float64)
@@ -438,7 +438,7 @@ class TestStability:
         assert verdict.metric_value == pytest.approx(0.5, abs=0.01)
 
     def test_cfl_advection_fail(self) -> None:
-        from tensornet.platform.vv.stability import CFLChecker
+        from ontic.platform.vv.stability import CFLChecker
 
         mesh = StructuredMesh(shape=(100,), domain=((0.0, 1.0),))
         u = 10.0 * torch.ones(100, dtype=torch.float64)
@@ -453,7 +453,7 @@ class TestStability:
         assert not verdict.passed
 
     def test_cfl_diffusion(self) -> None:
-        from tensornet.platform.vv.stability import CFLChecker
+        from ontic.platform.vv.stability import CFLChecker
 
         mesh = StructuredMesh(shape=(100,), domain=((0.0, 1.0),))
         state = _make_ic(mesh)
@@ -465,7 +465,7 @@ class TestStability:
         assert verdict.metric_value == pytest.approx(0.4, abs=0.01)
 
     def test_cfl_max_stable_dt(self) -> None:
-        from tensornet.platform.vv.stability import CFLChecker
+        from ontic.platform.vv.stability import CFLChecker
 
         mesh = StructuredMesh(shape=(100,), domain=((0.0, 1.0),))
         u = 2.0 * torch.ones(100, dtype=torch.float64)
@@ -480,7 +480,7 @@ class TestStability:
         assert dt_max == pytest.approx(0.0045, abs=1e-6)
 
     def test_blowup_detector_clean(self) -> None:
-        from tensornet.platform.vv.stability import BlowupDetector
+        from ontic.platform.vv.stability import BlowupDetector
 
         mesh = StructuredMesh(shape=(10,), domain=((0.0, 1.0),))
         u = torch.ones(10, dtype=torch.float64)
@@ -494,7 +494,7 @@ class TestStability:
         assert verdict.passed
 
     def test_blowup_detector_nan(self) -> None:
-        from tensornet.platform.vv.stability import BlowupDetector
+        from ontic.platform.vv.stability import BlowupDetector
 
         mesh = StructuredMesh(shape=(10,), domain=((0.0, 1.0),))
         u = torch.ones(10, dtype=torch.float64)
@@ -510,7 +510,7 @@ class TestStability:
         assert "NaN" in verdict.message
 
     def test_blowup_detector_inf(self) -> None:
-        from tensornet.platform.vv.stability import BlowupDetector
+        from ontic.platform.vv.stability import BlowupDetector
 
         mesh = StructuredMesh(shape=(10,), domain=((0.0, 1.0),))
         u = torch.ones(10, dtype=torch.float64)
@@ -526,7 +526,7 @@ class TestStability:
         assert "Inf" in verdict.message
 
     def test_blowup_detector_growth(self) -> None:
-        from tensornet.platform.vv.stability import BlowupDetector
+        from ontic.platform.vv.stability import BlowupDetector
 
         mesh = StructuredMesh(shape=(10,), domain=((0.0, 1.0),))
         det = BlowupDetector(field_names=["u"], max_growth_rate=2.0)
@@ -551,7 +551,7 @@ class TestStability:
         assert not verdict.passed
 
     def test_stability_report_aggregate(self) -> None:
-        from tensornet.platform.vv.stability import (
+        from ontic.platform.vv.stability import (
             StabilityReport,
             StabilityVerdict,
         )
@@ -568,7 +568,7 @@ class TestStability:
         assert report.first_violation_step == 5
 
     def test_stiffness_estimator(self) -> None:
-        from tensornet.platform.vv.stability import StiffnessEstimator
+        from ontic.platform.vv.stability import StiffnessEstimator
 
         mesh = StructuredMesh(shape=(32,), domain=((0.0, 1.0),))
         state = _make_ic(mesh)
@@ -586,7 +586,7 @@ class TestStability:
         assert verdict.metric_value > 0
 
     def test_run_stability_checks(self) -> None:
-        from tensornet.platform.vv.stability import (
+        from ontic.platform.vv.stability import (
             CFLChecker,
             BlowupDetector,
             run_stability_checks,
@@ -614,10 +614,10 @@ class TestStability:
 
 
 class TestPerformance:
-    """Tests for tensornet.platform.vv.performance."""
+    """Tests for ontic.platform.vv.performance."""
 
     def test_harness_basic(self) -> None:
-        from tensornet.platform.vv.performance import PerformanceHarness
+        from ontic.platform.vv.performance import PerformanceHarness
 
         mesh = StructuredMesh(shape=(32,), domain=((0.0, 1.0),))
         state = _make_ic(mesh)
@@ -639,7 +639,7 @@ class TestPerformance:
         assert report.problem_name == "test"
 
     def test_harness_summary(self) -> None:
-        from tensornet.platform.vv.performance import PerformanceHarness
+        from ontic.platform.vv.performance import PerformanceHarness
 
         mesh = StructuredMesh(shape=(16,), domain=((0.0, 1.0),))
         state = _make_ic(mesh)
@@ -659,7 +659,7 @@ class TestPerformance:
         assert "steps/s" in s.lower() or "Throughput" in s
 
     def test_scaling_study_strong(self) -> None:
-        from tensornet.platform.vv.performance import ScalingStudy
+        from ontic.platform.vv.performance import ScalingStudy
 
         def factory(N: int) -> Tuple:
             mesh = StructuredMesh(shape=(N,), domain=((0.0, 1.0),))
@@ -675,7 +675,7 @@ class TestPerformance:
         assert all(t > 0 for t in result.wall_times)
 
     def test_memory_snapshot(self) -> None:
-        from tensornet.platform.vv.performance import _get_memory_snapshot
+        from ontic.platform.vv.performance import _get_memory_snapshot
 
         snap = _get_memory_snapshot()
         # On Linux, RSS should be > 0
@@ -689,10 +689,10 @@ class TestPerformance:
 
 
 class TestBenchmarks:
-    """Tests for tensornet.platform.vv.benchmarks."""
+    """Tests for ontic.platform.vv.benchmarks."""
 
     def test_golden_output_exact(self) -> None:
-        from tensornet.platform.vv.benchmarks import GoldenOutput
+        from ontic.platform.vv.benchmarks import GoldenOutput
 
         golden = GoldenOutput(
             resolution=32,
@@ -706,7 +706,7 @@ class TestBenchmarks:
         assert ref.shape == (32,)
 
     def test_golden_output_stored_data(self) -> None:
-        from tensornet.platform.vv.benchmarks import GoldenOutput
+        from ontic.platform.vv.benchmarks import GoldenOutput
 
         data = torch.randn(10, dtype=torch.float64)
         golden = GoldenOutput(
@@ -720,7 +720,7 @@ class TestBenchmarks:
         assert golden.verify_hash()
 
     def test_benchmark_registry_register_and_get(self) -> None:
-        from tensornet.platform.vv.benchmarks import (
+        from ontic.platform.vv.benchmarks import (
             BenchmarkProblem,
             BenchmarkRegistry,
             GoldenOutput,
@@ -754,7 +754,7 @@ class TestBenchmarks:
         assert "test_bench" in registry.list_by_domain("I")
 
     def test_benchmark_registry_run(self) -> None:
-        from tensornet.platform.vv.benchmarks import (
+        from ontic.platform.vv.benchmarks import (
             BenchmarkProblem,
             BenchmarkRegistry,
             GoldenOutput,
@@ -791,7 +791,7 @@ class TestBenchmarks:
         assert result.observed_order_linf >= 1.7
 
     def test_benchmark_duplicate_registration(self) -> None:
-        from tensornet.platform.vv.benchmarks import (
+        from ontic.platform.vv.benchmarks import (
             BenchmarkProblem,
             BenchmarkRegistry,
             GoldenOutput,
@@ -816,14 +816,14 @@ class TestBenchmarks:
             registry.register(bp)
 
     def test_benchmark_not_found(self) -> None:
-        from tensornet.platform.vv.benchmarks import BenchmarkRegistry
+        from ontic.platform.vv.benchmarks import BenchmarkRegistry
 
         registry = BenchmarkRegistry()
         with pytest.raises(KeyError, match="not found"):
             registry.get("nonexistent")
 
     def test_global_registry_singleton(self) -> None:
-        from tensornet.platform.vv.benchmarks import get_benchmark_registry
+        from ontic.platform.vv.benchmarks import get_benchmark_registry
 
         r1 = get_benchmark_registry()
         r2 = get_benchmark_registry()
@@ -839,7 +839,7 @@ class TestVVImports:
     """Verify that the vv package exports everything correctly."""
 
     def test_import_all(self) -> None:
-        from tensornet.platform import vv
+        from ontic.platform import vv
 
         # MMS
         assert hasattr(vv, "ManufacturedSolution")
@@ -869,7 +869,7 @@ class TestVVImports:
         assert hasattr(vv, "get_benchmark_registry")
 
     def test_version(self) -> None:
-        from tensornet.platform import vv
+        from ontic.platform import vv
 
         assert vv.__version__ == "0.1.0"
 
@@ -884,7 +884,7 @@ class TestVerticalVV:
     """Integration test exercising the full Phase 2 V&V vertical slice."""
 
     def test_run_vv_vertical_slice(self) -> None:
-        from tensornet.platform.vertical_vv import run_vv_vertical_slice
+        from ontic.platform.vertical_vv import run_vv_vertical_slice
 
         results = run_vv_vertical_slice(verbose=False)
         assert all(results.values()), f"Failed checks: {[k for k, v in results.items() if not v]}"

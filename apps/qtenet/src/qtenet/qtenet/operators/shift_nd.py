@@ -45,7 +45,7 @@ import torch
 from torch import Tensor
 
 # Import from upstream tensornet
-from tensornet.cfd.nd_shift_mpo import (
+from ontic.cfd.nd_shift_mpo import (
     make_nd_shift_mpo as _make_nd_shift_mpo,
     apply_nd_shift_mpo as _apply_nd_shift_mpo,
     truncate_cores as _truncate_cores,

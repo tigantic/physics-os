@@ -127,8 +127,8 @@ If confirmed, this demonstrates:
 
 ## Code Location
 - Main script: `demos/millennium_hunter.py`
-- Core infrastructure: `tensornet/cfd/nd_shift_mpo.py`
-- QTT operations: `tensornet/cfd/pure_qtt_ops.py`
+- Core infrastructure: `ontic/cfd/nd_shift_mpo.py`
+- QTT operations: `ontic/cfd/pure_qtt_ops.py`
 
 ## Commands
 ```bash

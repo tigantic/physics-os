@@ -23,7 +23,7 @@ import time
 import math
 
 # Use the actual CFD solver
-from tensornet.cfd.euler_2d import Euler2D, Euler2DState, BCType
+from ontic.cfd.euler_2d import Euler2D, Euler2DState, BCType
 
 
 def create_explosion_ic(Nx: int, Ny: int, Lx: float = 2.0, Ly: float = 2.0) -> Euler2DState:

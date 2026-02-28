@@ -23,7 +23,7 @@ import pytest
 
 class TestTelemetry:
     def test_observability_import(self):
-        from tensornet.ml.discovery.production.observability import MetricsCollector
+        from ontic.ml.discovery.production.observability import MetricsCollector
         assert MetricsCollector is not None
 
 
@@ -33,7 +33,7 @@ class TestTelemetry:
 
 class TestTimeSeriesDB:
     def test_in_memory_write_read(self):
-        from tensornet.platform.timeseries_db import InMemoryTSDB, TimeSeriesPoint
+        from ontic.platform.timeseries_db import InMemoryTSDB, TimeSeriesPoint
         db = InMemoryTSDB()
         now = time.time()
         db.write("cpu", TimeSeriesPoint(now, 45.0, {"host": "a"}))
@@ -41,7 +41,7 @@ class TestTimeSeriesDB:
         assert len(db.list_metrics()) >= 1
 
     def test_query_range(self):
-        from tensornet.platform.timeseries_db import (
+        from ontic.platform.timeseries_db import (
             InMemoryTSDB,
             TimeSeriesPoint,
             TimeSeriesQuery,
@@ -55,7 +55,7 @@ class TestTimeSeriesDB:
         assert len(points) >= 5
 
     def test_aggregation(self):
-        from tensornet.platform.timeseries_db import (
+        from ontic.platform.timeseries_db import (
             InMemoryTSDB,
             TimeSeriesPoint,
             TimeSeriesQuery,
@@ -75,7 +75,7 @@ class TestTimeSeriesDB:
         assert len(agg) >= 1
 
     def test_retention_enforcement(self):
-        from tensornet.platform.timeseries_db import (
+        from ontic.platform.timeseries_db import (
             InMemoryTSDB,
             RetentionPolicy,
             TimeSeriesPoint,
@@ -94,7 +94,7 @@ class TestTimeSeriesDB:
 
 class TestLakehouse:
     def test_catalog_crud(self):
-        from tensornet.platform.lakehouse import (
+        from ontic.platform.lakehouse import (
             ArtifactMetadata,
             ArtifactType,
             LakehouseCatalog,
@@ -112,7 +112,7 @@ class TestLakehouse:
         assert cat.count == 0
 
     def test_catalog_query(self):
-        from tensornet.platform.lakehouse import (
+        from ontic.platform.lakehouse import (
             ArtifactMetadata,
             ArtifactType,
             LakehouseCatalog,
@@ -128,7 +128,7 @@ class TestLakehouse:
         assert len(results) == 3
 
     def test_store_put_get(self):
-        from tensornet.platform.lakehouse import ArtifactType, LakehouseStore
+        from ontic.platform.lakehouse import ArtifactType, LakehouseStore
         with tempfile.TemporaryDirectory() as tmpdir:
             store = LakehouseStore(Path(tmpdir))
             data = np.random.randn(10, 10).astype(np.float32)
@@ -138,7 +138,7 @@ class TestLakehouse:
             np.testing.assert_array_equal(data, loaded)
 
     def test_store_json(self):
-        from tensornet.platform.lakehouse import ArtifactType, LakehouseStore
+        from ontic.platform.lakehouse import ArtifactType, LakehouseStore
         with tempfile.TemporaryDirectory() as tmpdir:
             store = LakehouseStore(Path(tmpdir))
             doc = {"solver": "cfd", "Re": 1000}
@@ -146,7 +146,7 @@ class TestLakehouse:
             assert meta.size_bytes > 0
 
     def test_catalog_save_load(self):
-        from tensornet.platform.lakehouse import (
+        from ontic.platform.lakehouse import (
             ArtifactMetadata,
             ArtifactType,
             LakehouseCatalog,
@@ -162,7 +162,7 @@ class TestLakehouse:
             assert loaded == 1
 
     def test_lakehouse_query_builder(self):
-        from tensornet.platform.lakehouse import (
+        from ontic.platform.lakehouse import (
             ArtifactMetadata,
             ArtifactType,
             LakehouseCatalog,
@@ -190,7 +190,7 @@ class TestLakehouse:
 
 class TestArrowExport:
     def test_arrow_batch_from_dict(self):
-        from tensornet.platform.arrow_export import ArrowBatch
+        from ontic.platform.arrow_export import ArrowBatch
         batch = ArrowBatch.from_dict({
             "x": np.arange(10, dtype=np.float64),
             "y": np.arange(10, dtype=np.float64),
@@ -199,7 +199,7 @@ class TestArrowExport:
         assert batch.num_columns == 2
 
     def test_batch_select_and_slice(self):
-        from tensornet.platform.arrow_export import ArrowBatch
+        from ontic.platform.arrow_export import ArrowBatch
         batch = ArrowBatch.from_dict({
             "a": np.arange(20, dtype=np.float64),
             "b": np.ones(20, dtype=np.float64),
@@ -210,7 +210,7 @@ class TestArrowExport:
         assert sliced.num_rows == 10
 
     def test_parquet_roundtrip(self):
-        from tensornet.platform.arrow_export import (
+        from ontic.platform.arrow_export import (
             ArrowBatch,
             ParquetReader,
             ParquetWriter,
@@ -233,7 +233,7 @@ class TestArrowExport:
             )
 
     def test_export_import_helpers(self):
-        from tensornet.platform.arrow_export import export_to_parquet, import_from_parquet
+        from ontic.platform.arrow_export import export_to_parquet, import_from_parquet
         with tempfile.TemporaryDirectory() as tmpdir:
             state = {
                 "u": np.random.randn(50).astype(np.float64),
@@ -245,7 +245,7 @@ class TestArrowExport:
             np.testing.assert_allclose(state["u"], loaded["u"])
 
     def test_simulation_state_flatten(self):
-        from tensornet.platform.arrow_export import simulation_state_to_batch
+        from ontic.platform.arrow_export import simulation_state_to_batch
         state = {"field": np.random.randn(8, 8)}
         batch = simulation_state_to_batch(state, flatten=True)
         assert batch.num_rows == 64
@@ -257,7 +257,7 @@ class TestArrowExport:
 
 class TestStreamingPipeline:
     def test_streaming_import(self):
-        from tensornet.ml.discovery import StreamingPipeline
+        from ontic.ml.discovery import StreamingPipeline
         assert StreamingPipeline is not None
 
 
@@ -267,7 +267,7 @@ class TestStreamingPipeline:
 
 class TestLineageGraph:
     def test_lineage_import(self):
-        from tensornet.platform import CheckpointStore
+        from ontic.platform import CheckpointStore
         assert CheckpointStore is not None
 
 
@@ -277,14 +277,14 @@ class TestLineageGraph:
 
 class TestExperimentTracker:
     def test_create_experiment(self):
-        from tensornet.platform.experiment_tracker import ExperimentTracker
+        from ontic.platform.experiment_tracker import ExperimentTracker
         tracker = ExperimentTracker()
         exp = tracker.create_experiment("test_exp", description="unit test")
         assert exp.name == "test_exp"
         assert tracker.list_experiments()[0].experiment_id == exp.experiment_id
 
     def test_run_lifecycle(self):
-        from tensornet.platform.experiment_tracker import ExperimentTracker, RunStatus
+        from ontic.platform.experiment_tracker import ExperimentTracker, RunStatus
         tracker = ExperimentTracker()
         exp = tracker.create_experiment("exp1")
         run = tracker.start_run(exp.experiment_id, name="run1")
@@ -297,7 +297,7 @@ class TestExperimentTracker:
         assert run.duration() > 0
 
     def test_leaderboard(self):
-        from tensornet.platform.experiment_tracker import ExperimentTracker
+        from ontic.platform.experiment_tracker import ExperimentTracker
         tracker = ExperimentTracker()
         exp = tracker.create_experiment("bench")
         for i in range(5):
@@ -309,7 +309,7 @@ class TestExperimentTracker:
         assert board[0][1] <= board[1][1]
 
     def test_compare_runs(self):
-        from tensornet.platform.experiment_tracker import ExperimentTracker
+        from ontic.platform.experiment_tracker import ExperimentTracker
         tracker = ExperimentTracker()
         exp = tracker.create_experiment("cmp")
         r1 = tracker.start_run(exp.experiment_id)
@@ -322,7 +322,7 @@ class TestExperimentTracker:
         assert len(cmp) == 2
 
     def test_save_load(self):
-        from tensornet.platform.experiment_tracker import ExperimentTracker
+        from ontic.platform.experiment_tracker import ExperimentTracker
         with tempfile.TemporaryDirectory() as tmpdir:
             tracker = ExperimentTracker(Path(tmpdir))
             exp = tracker.create_experiment("persist")
@@ -336,7 +336,7 @@ class TestExperimentTracker:
             assert loaded == 1
 
     def test_global_leaderboard(self):
-        from tensornet.platform.experiment_tracker import ExperimentTracker
+        from ontic.platform.experiment_tracker import ExperimentTracker
         tracker = ExperimentTracker()
         for e in range(2):
             exp = tracker.create_experiment(f"exp_{e}")
@@ -355,8 +355,8 @@ class TestExperimentTracker:
 
 class TestLiveIngestion:
     def test_noaa_connector_exists(self):
-        import tensornet.ml.discovery
-        assert tensornet.ml.discovery is not None
+        import ontic.ml.discovery
+        assert ontic.ml.discovery is not None
 
 
 # ============================================================== #
@@ -365,7 +365,7 @@ class TestLiveIngestion:
 
 class TestFederation:
     def test_node_lifecycle(self):
-        from tensornet.platform.federation import (
+        from ontic.platform.federation import (
             FederationRegistry,
             FederationNode,
             NodeRole,
@@ -378,7 +378,7 @@ class TestFederation:
         reg.heartbeat(node.node_id)
 
     def test_publish_and_transfer(self):
-        from tensornet.platform.federation import (
+        from ontic.platform.federation import (
             ChunkStatus,
             DataChunk,
             FederationManager,
@@ -395,7 +395,7 @@ class TestFederation:
         np.testing.assert_array_equal(data, fetched)
 
     def test_discover_data(self):
-        from tensornet.platform.federation import FederationManager
+        from ontic.platform.federation import FederationManager
         mgr = FederationManager()
         mgr.init_local_node()
         mgr.share_data(np.zeros(10), domain="fea")
@@ -404,7 +404,7 @@ class TestFederation:
         assert len(disc) == 1
 
     def test_registry_queries(self):
-        from tensornet.platform.federation import (
+        from ontic.platform.federation import (
             FederationNode,
             FederationRegistry,
             NodeRole,
@@ -422,7 +422,7 @@ class TestFederation:
 
 class TestAnomalyDetection:
     def test_regime_detector_exists(self):
-        from tensornet.ml.neural import AlgorithmSelector
+        from ontic.ml.neural import AlgorithmSelector
         assert AlgorithmSelector is not None
 
 
@@ -432,14 +432,14 @@ class TestAnomalyDetection:
 
 class TestReplay:
     def test_replay_log_append(self):
-        from tensornet.platform.replay import EventType, ReplayEvent, ReplayLog
+        from ontic.platform.replay import EventType, ReplayEvent, ReplayLog
         log = ReplayLog(run_id="test")
         log.append(ReplayEvent(event_type=EventType.INIT, step=0))
         log.append(ReplayEvent(event_type=EventType.STEP, step=1))
         assert log.length == 2
 
     def test_record_and_replay(self):
-        from tensornet.platform.replay import ReplayEngine
+        from ontic.platform.replay import ReplayEngine
 
         def step_fn(state, params):
             return {"x": state["x"] + params.get("dx", 1.0)}
@@ -460,7 +460,7 @@ class TestReplay:
         assert cmp["deterministic"] is True
 
     def test_branch_from(self):
-        from tensornet.platform.replay import ReplayEngine
+        from ontic.platform.replay import ReplayEngine
 
         def step_fn(state, params):
             return {"v": state["v"] * params.get("decay", 0.9)}
@@ -480,7 +480,7 @@ class TestReplay:
         assert branch.length > 0
 
     def test_log_save_load(self):
-        from tensornet.platform.replay import EventType, ReplayEvent, ReplayLog
+        from ontic.platform.replay import EventType, ReplayEvent, ReplayLog
         with tempfile.TemporaryDirectory() as tmpdir:
             log = ReplayLog(run_id="persist")
             log.append(ReplayEvent(
@@ -502,14 +502,14 @@ class TestReplay:
 
 class TestDataVersioning:
     def test_content_store(self):
-        from tensornet.platform.data_versioning import ContentStore
+        from ontic.platform.data_versioning import ContentStore
         store = ContentStore()
         key = store.put(b"hello world")
         assert store.exists(key)
         assert store.get(key) == b"hello world"
 
     def test_content_store_array(self):
-        from tensornet.platform.data_versioning import ContentStore
+        from ontic.platform.data_versioning import ContentStore
         store = ContentStore()
         arr = np.random.randn(10, 5).astype(np.float64)
         key = store.put_array(arr)
@@ -518,7 +518,7 @@ class TestDataVersioning:
         np.testing.assert_array_equal(arr, loaded)
 
     def test_snapshot_and_checkout(self):
-        from tensornet.platform.data_versioning import DataVersioning
+        from ontic.platform.data_versioning import DataVersioning
         dv = DataVersioning()
         ds = {"temperature": np.random.randn(20), "pressure": np.random.randn(20)}
         snap = dv.snapshot(ds, message="initial", author="test")
@@ -526,7 +526,7 @@ class TestDataVersioning:
         np.testing.assert_array_equal(ds["temperature"], loaded["temperature"])
 
     def test_diff(self):
-        from tensornet.platform.data_versioning import DataVersioning
+        from ontic.platform.data_versioning import DataVersioning
         dv = DataVersioning()
         ds1 = {"a": np.array([1.0, 2.0]), "b": np.array([3.0])}
         ds2 = {"a": np.array([1.0, 2.0]), "c": np.array([4.0])}
@@ -538,7 +538,7 @@ class TestDataVersioning:
         assert "c" in changes and changes["c"] == "added"
 
     def test_history(self):
-        from tensornet.platform.data_versioning import DataVersioning
+        from ontic.platform.data_versioning import DataVersioning
         dv = DataVersioning()
         for i in range(3):
             dv.snapshot({"x": np.array([float(i)])}, message=f"v{i}")
@@ -546,7 +546,7 @@ class TestDataVersioning:
         assert len(hist) == 3
 
     def test_merge_ours_theirs(self):
-        from tensornet.platform.data_versioning import (
+        from ontic.platform.data_versioning import (
             DatasetSnapshot,
             FileEntry,
             merge_snapshots,
@@ -572,7 +572,7 @@ class TestDataVersioning:
         assert "only_theirs" in merged.files
 
     def test_disk_persistence(self):
-        from tensornet.platform.data_versioning import ContentStore
+        from ontic.platform.data_versioning import ContentStore
         with tempfile.TemporaryDirectory() as tmpdir:
             store = ContentStore(Path(tmpdir))
             arr = np.array([1, 2, 3], dtype=np.float64)
@@ -590,7 +590,7 @@ class TestDataVersioning:
 
 class TestS6Imports:
     def test_platform_init_s6_symbols(self):
-        from tensornet.platform import (
+        from ontic.platform import (
             InMemoryTSDB,
             TimeSeriesPoint,
             LakehouseCatalog,

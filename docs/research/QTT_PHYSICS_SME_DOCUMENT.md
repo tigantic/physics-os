@@ -120,20 +120,20 @@ This justifies using SVD for TT compression — each truncation is locally optim
 ### 3.1 Core Data Structures
 
 ```python
-# From tensornet/core/mps.py
+# From ontic/core/mps.py
 class MPS:
     tensors: list[Tensor]  # Shape: (χ_left, d, χ_right)
     L: int                 # Number of sites
     d: int                 # Physical dimension
     chi: int               # Max bond dimension
 
-# From tensornet/cfd/pure_qtt_ops.py
+# From ontic/cfd/pure_qtt_ops.py
 @dataclass
 class QTTState:
     cores: list[Tensor]    # Shape: (r_left, 2, r_right)
     num_qubits: int        # log2(grid_size)
     
-# From tensornet/cfd/ns2d_qtt_native.py
+# From ontic/cfd/ns2d_qtt_native.py
 @dataclass
 class QTT2DNativeState:
     cores: list[Tensor]
@@ -145,7 +145,7 @@ class QTT2DNativeState:
 
 | Operation | Complexity | Implementation |
 |-----------|------------|----------------|
-| **TT-SVD** | O(d·n·r³) | `tensornet/cfd/qtt.py:tt_svd()` |
+| **TT-SVD** | O(d·n·r³) | `ontic/cfd/qtt.py:tt_svd()` |
 | **QTT Addition** | O(L·r²) then O(L·r³) truncation | `pure_qtt_ops.py:qtt_add()` |
 | **QTT Hadamard** | O(L·r²) product, O(L·r³) truncation | `pure_qtt_ops.py:qtt_hadamard()` |
 | **MPO Application** | O(L·r²·D²) | `pure_qtt_ops.py:apply_mpo()` |
@@ -199,7 +199,7 @@ pub fn maxvol(a: &Array2<f64>, config: &MaxVolConfig) -> MaxVolResult {
 | Implementation | Location | Use Case |
 |----------------|----------|----------|
 | **Rust TCI Core** | `crates/tci_core_rust/` | High-performance pivot selection |
-| **Python TCI** | `tensornet/cfd/qtt_tci.py` | Fallback when Rust unavailable |
+| **Python TCI** | `ontic/cfd/qtt_tci.py` | Fallback when Rust unavailable |
 | **Dense fallback** | `qtt_from_function_dense()` | Small grids (≤2^12) |
 
 ### 4.4 TCI for LLM
@@ -222,7 +222,7 @@ qtt_cores = qtt_from_function_dense(argmax_func, n_qubits, max_rank)
 
 ### 5.1 NS2D QTT-Native
 
-**Location:** `tensornet/cfd/ns2d_qtt_native.py`
+**Location:** `ontic/cfd/ns2d_qtt_native.py`
 
 **Formulation:** Vorticity-Streamfunction
 
@@ -253,7 +253,7 @@ u_dot_grad_omega = self._add(
 
 ### 5.2 Euler Equations (CFD)
 
-**Location:** `tensornet/cfd/euler_1d.py`, `euler_2d.py`, `euler_3d.py`
+**Location:** `ontic/cfd/euler_1d.py`, `euler_2d.py`, `euler_3d.py`
 
 **Conservative form:**
 $$\partial_t U + \nabla \cdot F(U) = 0$$
@@ -264,7 +264,7 @@ Where $U = (\rho, \rho u, \rho v, E)^T$
 
 ### 5.3 DMRG (Ground State)
 
-**Location:** `tensornet/algorithms/dmrg.py`
+**Location:** `ontic/algorithms/dmrg.py`
 
 Variational ground state of Hamiltonians:
 $$E = \min_\psi \frac{\langle \psi | H | \psi \rangle}{\langle \psi | \psi \rangle}$$
@@ -276,7 +276,7 @@ $$E = \min_\psi \frac{\langle \psi | H | \psi \rangle}{\langle \psi | \psi \rang
 
 ### 5.4 TDVP (Time Evolution)
 
-**Location:** `tensornet/algorithms/tdvp.py`
+**Location:** `ontic/algorithms/tdvp.py`
 
 Time evolution on MPS manifold:
 $$i\partial_t |\psi\rangle = P_T H |\psi\rangle$$
@@ -287,7 +287,7 @@ Where $P_T$ projects onto tangent space of MPS manifold.
 
 ### 5.5 Koopman TT (Turbulence)
 
-**Location:** `tensornet/cfd/koopman_tt.py`
+**Location:** `ontic/cfd/koopman_tt.py`
 
 The Koopman operator linearizes nonlinear dynamics:
 $$g(x_{t+1}) = K \cdot g(x_t)$$
@@ -313,32 +313,32 @@ The repository includes validation scripts ("gauntlets") testing against known p
 
 | Algorithm | Location | Complexity | Use Case |
 |-----------|----------|------------|----------|
-| **TT-SVD** | `tensornet/cfd/qtt.py:tt_svd()` | O(d·n·r³) | Initial compression |
+| **TT-SVD** | `ontic/cfd/qtt.py:tt_svd()` | O(d·n·r³) | Initial compression |
 | **rSVD** | `crates/fluidelite/core/decompositions.py:rsvd_truncated()` | O(m·n·k) | Large matrices |
 | **SafeSVD** | `crates/fluidelite/core/decompositions.py:SafeSVD` | O(m·n·r) | Stable gradients |
-| **QR positive** | `tensornet/core/decompositions.py:qr_positive()` | O(m·n²) | Canonical forms |
+| **QR positive** | `ontic/core/decompositions.py:qr_positive()` | O(m·n²) | Canonical forms |
 
 ### 6.2 Time Evolution
 
 | Algorithm | Location | Properties |
 |-----------|----------|------------|
-| **TEBD** | `tensornet/algorithms/tebd.py` | Local gates, O(dt²) or O(dt³) |
-| **TDVP** | `tensornet/algorithms/tdvp.py` | Energy conserving, long-range |
+| **TEBD** | `ontic/algorithms/tebd.py` | Local gates, O(dt²) or O(dt³) |
+| **TDVP** | `ontic/algorithms/tdvp.py` | Energy conserving, long-range |
 | **Verlet** | `hypertensor_dynamics.py` | Symplectic, TT re-compression |
 
 ### 6.3 Ground State
 
 | Algorithm | Location | Properties |
 |-----------|----------|------------|
-| **DMRG** | `tensornet/algorithms/dmrg.py` | Variational, 2-site |
-| **Lanczos** | `tensornet/algorithms/lanczos.py` | Krylov subspace |
+| **DMRG** | `ontic/algorithms/dmrg.py` | Variational, 2-site |
+| **Lanczos** | `ontic/algorithms/lanczos.py` | Krylov subspace |
 
 ### 6.4 Solvers
 
 | Solver | Location | Method |
 |--------|----------|--------|
 | **CG (matrix-free)** | `crates/fluidelite/qtt_features.py:cg_solve_streaming()` | Avoids materializing XtX |
-| **Jacobi (QTT-native)** | `tensornet/cfd/ns2d_qtt_native.py` | Poisson in QTT format |
+| **Jacobi (QTT-native)** | `ontic/cfd/ns2d_qtt_native.py` | Poisson in QTT format |
 | **Least Squares** | `crates/fluidelite/qtt_tci.py` | Closed-form: W = (XtX + λI)⁻¹XtY |
 
 ---
@@ -348,7 +348,7 @@ The repository includes validation scripts ("gauntlets") testing against known p
 ### 7.1 Core QTT
 
 ```
-tensornet/
+ontic/
 ├── core/
 │   ├── mps.py              # MPS class, canonicalization, entropy
 │   ├── mpo.py              # MPO class, apply, expectation
@@ -749,13 +749,13 @@ $$\mathbf{v}^+ = \mathbf{v}^- + \mathbf{v}' \times \mathbf{s}, \quad \mathbf{s} 
 | Innovation | Impact | Location |
 |------------|--------|----------|
 | TCI for LLM | No gradients needed | `tci_llm/`, `crates/fluidelite/` |
-| Morton-ordered QTT | 2D→1D locality | `tensornet/cfd/` |
+| Morton-ordered QTT | 2D→1D locality | `ontic/cfd/` |
 | Matrix-free CG | O(features) memory | `crates/fluidelite/qtt_features.py` |
-| Implicit QTT CUDA | <1.5ms @ 4K | `tensornet/sovereign/` |
+| Implicit QTT CUDA | <1.5ms @ 4K | `ontic/sovereign/` |
 | RTE precision | Sub-meter @ planetary | `apps/glass_cockpit/` |
-| QTT Langevin | 1000× PES compression | `tensornet/fusion/` |
-| Entanglement GNN | Adaptive bond dims | `tensornet/neural/` |
-| ZNE/PEC mitigation | NISQ error correction | `tensornet/quantum/` |
+| QTT Langevin | 1000× PES compression | `ontic/fusion/` |
+| Entanglement GNN | Adaptive bond dims | `ontic/neural/` |
+| ZNE/PEC mitigation | NISQ error correction | `ontic/quantum/` |
 
 ---
 
@@ -770,7 +770,7 @@ $$\mathbf{v}^+ = \mathbf{v}^- + \mathbf{v}' \times \mathbf{s}, \quad \mathbf{s} 
 
 ### 11.1 Error Mitigation Techniques
 
-**Location:** `tensornet/quantum/error_mitigation.py` (1,180 LOC)
+**Location:** `ontic/quantum/error_mitigation.py` (1,180 LOC)
 
 The repository implements state-of-the-art quantum error mitigation for NISQ devices:
 
@@ -816,7 +816,7 @@ class KrausChannel:
 
 ### 11.2 Variational Quantum Algorithms
 
-**Location:** `tensornet/quantum/hybrid.py` (1,137 LOC)
+**Location:** `ontic/quantum/hybrid.py` (1,137 LOC)
 
 #### Tensor Network Quantum Simulator
 
@@ -864,7 +864,7 @@ class NoiseModel:
 
 ### 12.1 Tokamak Reactor Simulation
 
-**Location:** `tensornet/fusion/tokamak.py` (562 LOC)
+**Location:** `ontic/fusion/tokamak.py` (562 LOC)
 
 Implements the **Boris pusher** algorithm — the gold standard for charged particle dynamics:
 
@@ -919,7 +919,7 @@ class FusionReactor:
 
 ### 12.3 QTT-Enhanced Superionic Dynamics
 
-**Location:** `tensornet/fusion/qtt_superionic.py` (416 LOC)
+**Location:** `ontic/fusion/qtt_superionic.py` (416 LOC)
 
 DARPA MARRS application — deuterium mobility in solid lattice:
 
@@ -936,7 +936,7 @@ class QTTSuperionicDynamics:
 
 ### 12.4 Resonant Catalysis (Nitrogen Fixation)
 
-**Location:** `tensornet/fusion/resonant_catalysis.py` (891 LOC)
+**Location:** `ontic/fusion/resonant_catalysis.py` (891 LOC)
 
 "Opera Singer" mechanism for selective bond rupture:
 
@@ -997,7 +997,7 @@ Target: **(Hf,Ta,Zr,Nb)C** with mp > 4000°C, k < 2 W/m·K.
 
 ### 13.1 Deep Operator Networks (DeepONet)
 
-**Location:** `tensornet/ml_surrogates/deep_onet.py` (539 LOC)
+**Location:** `ontic/ml_surrogates/deep_onet.py` (539 LOC)
 
 Learns mappings from input functions to output functions:
 
@@ -1019,7 +1019,7 @@ class DeepONet:
 
 ### 13.2 Fourier Neural Operator (FNO)
 
-**Location:** `tensornet/ml_surrogates/fourier_operator.py` (599 LOC)
+**Location:** `ontic/ml_surrogates/fourier_operator.py` (599 LOC)
 
 Resolution-invariant PDE solver using spectral convolutions:
 
@@ -1039,7 +1039,7 @@ class SpectralConv2d(nn.Module):
 
 ### 13.3 Physics-Informed Neural Networks (PINNs)
 
-**Location:** `tensornet/ml_surrogates/physics_informed.py` (620 LOC)
+**Location:** `ontic/ml_surrogates/physics_informed.py` (620 LOC)
 
 Embeds governing equations as soft constraints:
 
@@ -1063,7 +1063,7 @@ Supports: **Euler, Navier-Stokes, Burgers, Advection-Diffusion**
 
 ### 13.4 Entanglement Graph Neural Networks
 
-**Location:** `tensornet/neural/entanglement_gnn.py` (631 LOC)
+**Location:** `ontic/neural/entanglement_gnn.py` (631 LOC)
 
 GNN for predicting optimal bond dimensions in tensor networks:
 
@@ -1090,7 +1090,7 @@ class EntanglementGNN:
 
 ### 14.1 Digital Twin Orchestrator
 
-**Location:** `tensornet/digital_twin/twin.py` (675 LOC)
+**Location:** `ontic/digital_twin/twin.py` (675 LOC)
 
 ```python
 class DigitalTwin:
@@ -1109,7 +1109,7 @@ class DigitalTwin:
 
 ### 14.2 Reduced Order Models (ROM)
 
-**Location:** `tensornet/digital_twin/reduced_order.py`
+**Location:** `ontic/digital_twin/reduced_order.py`
 
 - **POD (Proper Orthogonal Decomposition):** SVD of snapshot matrix
 - **DMD (Dynamic Mode Decomposition):** Koopman approximation
@@ -1117,7 +1117,7 @@ class DigitalTwin:
 
 ### 14.3 State Synchronization
 
-**Location:** `tensornet/digital_twin/state_sync.py`
+**Location:** `ontic/digital_twin/state_sync.py`
 
 ```python
 class StateSync:
@@ -1130,7 +1130,7 @@ class StateSync:
 
 ### 14.4 Health Monitoring
 
-**Location:** `tensornet/digital_twin/health_monitor.py`
+**Location:** `ontic/digital_twin/health_monitor.py`
 
 Anomaly detection and damage index computation for predictive maintenance.
 
@@ -1163,7 +1163,7 @@ let rte_position = rel_high + rel_low;  // Sub-meter precision!
 
 ### 15.3 Implicit QTT Rendering (CUDA)
 
-**Location:** `tensornet/sovereign/implicit_qtt_kernel.cu` (374 LOC)
+**Location:** `ontic/sovereign/implicit_qtt_kernel.cu` (374 LOC)
 
 Direct GPU evaluation of QTT cores without materializing dense tensor:
 
@@ -1212,7 +1212,7 @@ __device__ float eval_qtt_at_point(const float* cores, float u, float v) {
 
 ### 16.1 Domain Decomposition
 
-**Location:** `tensornet/distributed/domain_decomp.py` (609 LOC)
+**Location:** `ontic/distributed/domain_decomp.py` (609 LOC)
 
 ```python
 class DomainDecomposition:
@@ -1231,13 +1231,13 @@ class DomainDecomposition:
 
 ### 16.2 GPU Manager
 
-**Location:** `tensornet/distributed/gpu_manager.py`
+**Location:** `ontic/distributed/gpu_manager.py`
 
 Multi-GPU allocation and memory management.
 
 ### 16.3 Parallel Solver
 
-**Location:** `tensornet/distributed/parallel_solver.py`
+**Location:** `ontic/distributed/parallel_solver.py`
 
 Domain-decomposed CFD with inter-process communication.
 
@@ -1247,7 +1247,7 @@ Domain-decomposed CFD with inter-process communication.
 
 ### 17.1 Hypersonic Flight Environment
 
-**Location:** `tensornet/hyperenv/hypersonic_env.py` (764 LOC)
+**Location:** `ontic/hyperenv/hypersonic_env.py` (764 LOC)
 
 Gymnasium-compatible environment for autonomous hypersonic flight:
 
@@ -1274,7 +1274,7 @@ class HypersonicEnv(gym.Env):
 
 ### 17.2 Training Infrastructure
 
-**Location:** `tensornet/hyperenv/trainer.py`, `agent.py`
+**Location:** `ontic/hyperenv/trainer.py`, `agent.py`
 
 PPO-based training with custom callbacks and multi-agent support.
 
@@ -1298,7 +1298,7 @@ PPO-based training with custom callbacks and multi-agent support.
 
 | Directory | LOC | % |
 |-----------|-----|---|
-| `tensornet/` | 160,091 | 52.5% |
+| `ontic/` | 160,091 | 52.5% |
 | Root gauntlets | 29,176 | 9.6% |
 | `tests/` | 26,797 | 8.8% |
 | `demos/` | 20,473 | 6.7% |

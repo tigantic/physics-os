@@ -180,11 +180,11 @@ class MetricExtractor:
             return
         
         # Import all required modules
-        from tensornet.genesis.ot import QTTDistribution, wasserstein_distance
-        from tensornet.genesis.sgw import QTTLaplacian, QTTSignal, QTTGraphWavelet
-        from tensornet.genesis.rkhs import RBFKernel, maximum_mean_discrepancy
-        from tensornet.genesis.topology.qtt_native import qtt_persistence_grid_1d
-        from tensornet.genesis.ga import CliffordAlgebra, Multivector
+        from ontic.genesis.ot import QTTDistribution, wasserstein_distance
+        from ontic.genesis.sgw import QTTLaplacian, QTTSignal, QTTGraphWavelet
+        from ontic.genesis.rkhs import RBFKernel, maximum_mean_discrepancy
+        from ontic.genesis.topology.qtt_native import qtt_persistence_grid_1d
+        from ontic.genesis.ga import CliffordAlgebra, Multivector
         
         self._QTTDistribution = QTTDistribution
         self._wasserstein_distance = wasserstein_distance
@@ -314,7 +314,7 @@ class MetricExtractor:
         signal_b = self._QTTSignal.from_cores(qtt_b.cores)
         
         # Sample values at specific indices
-        from tensornet.genesis.core import qtt_evaluate_at_indices
+        from ontic.genesis.core import qtt_evaluate_at_indices
         values_a = qtt_evaluate_at_indices(signal_a.cores, sample_indices)
         values_b = qtt_evaluate_at_indices(signal_b.cores, sample_indices)
         
@@ -364,7 +364,7 @@ class MetricExtractor:
         diff_signal = signal_b.sub(signal_a)
         
         # Sample difference at sparse points for component/hole analysis
-        from tensornet.genesis.core import qtt_evaluate_at_indices
+        from ontic.genesis.core import qtt_evaluate_at_indices
         n = qtt_a.grid_size
         n_samples = min(1024, n)
         sample_indices = torch.linspace(0, n - 1, n_samples, dtype=torch.long)
@@ -425,7 +425,7 @@ class MetricExtractor:
         diff_signal = signal_b.sub(signal_a)
         
         # Sample difference at sparse points
-        from tensornet.genesis.core import qtt_evaluate_at_indices
+        from ontic.genesis.core import qtt_evaluate_at_indices
         n = qtt_a.grid_size
         n_samples = min(1024, n)
         sample_indices = torch.linspace(0, n - 1, n_samples, dtype=torch.long)

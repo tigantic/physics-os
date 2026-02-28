@@ -31,6 +31,6 @@ API_CONTRACT=1
 
 - `pyproject.toml` (PACKAGE)
 - `CITATION.cff` (RELEASE)
-- `tensornet/__init__.py` (PACKAGE)
-- `hypertensor/__init__.py` (PACKAGE, RUNTIME)
+- `ontic/__init__.py` (PACKAGE)
+- `physics_os/__init__.py` (PACKAGE, RUNTIME)
 - `Cargo.toml` header comment (RELEASE)

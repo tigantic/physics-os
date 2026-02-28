@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Species transport, stiff kinetics"
 
 source_files:
-  - "tensornet/cfd/reactive_ns.py"
+  - "ontic/cfd/reactive_ns.py"
 
 tests:
   smoke:

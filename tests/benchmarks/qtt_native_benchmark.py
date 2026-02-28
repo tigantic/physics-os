@@ -80,7 +80,7 @@ def benchmark_tci_construction(config: NativeConfig):
     Complexity: O(r² × n_qubits × iterations) function evals
     NOT: O(2^n_qubits) like dense→QTT
     """
-    from tensornet.cfd.qtt_tci import qtt_from_function_tci_python, qtt_from_function_dense
+    from ontic.cfd.qtt_tci import qtt_from_function_tci_python, qtt_from_function_dense
     
     print("\n" + "=" * 70)
     print("STAGE 1: TCI CONSTRUCTION (NATIVE QTT)")
@@ -195,7 +195,7 @@ def benchmark_triton_eval(config: NativeConfig):
     
     # Import Triton kernels
     try:
-        from tensornet.cfd.qtt_triton_kernels import (
+        from ontic.cfd.qtt_triton_kernels import (
             prepare_cores_flat,
             morton_encode_triton,
             _batch_contract_simple,
@@ -283,7 +283,7 @@ def benchmark_mpo_application(config: NativeConfig):
     
     Doctrine: Operators applied in compressed form, never expanded.
     """
-    from tensornet.cfd.pure_qtt_ops import QTTState, derivative_mpo, apply_mpo, truncate_qtt
+    from ontic.cfd.pure_qtt_ops import QTTState, derivative_mpo, apply_mpo, truncate_qtt
     
     print("\n" + "=" * 70)
     print("STAGE 3: MPO APPLICATION (COMPRESSED OPERATORS)")

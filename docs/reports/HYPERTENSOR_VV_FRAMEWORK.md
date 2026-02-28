@@ -508,7 +508,7 @@ Track over time:
 | Add MMS for Pressure Poisson | P0 | ✅ Done (`test_poisson_mms.py`) |
 | Conservation tests for all CFD solvers | P0 | ✅ Done (`test_euler2d_physics.py`) |
 | Convergence study framework | P1 | ✅ Done (Taylor-Green, MMS) |
-| Provenance manifest generator | P1 | ✅ Done (`tensornet/provenance/`) |
+| Provenance manifest generator | P1 | ✅ Done (`ontic/provenance/`) |
 
 ### Phase 2: Benchmark Expansion (Q2 2026) ✅ COMPLETE
 
@@ -576,7 +576,7 @@ A module is **PRODUCTION-READY** when:
 | V&V | Verification and Validation |
 | TMR | Turbulence Modeling Resource (NASA) |
 | PQC | Post-Quantum Cryptography |
-| Richardson Extrapolation | Error estimation using multiple grid levels. **✅ IMPLEMENTED** in `tensornet/flight_validation/uncertainty.py` via `GridConvergenceIndex` class |
+| Richardson Extrapolation | Error estimation using multiple grid levels. **✅ IMPLEMENTED** in `ontic/flight_validation/uncertainty.py` via `GridConvergenceIndex` class |
 
 ---
 
@@ -597,8 +597,8 @@ A module is **PRODUCTION-READY** when:
 
 | Component | Files | LOC | Status |
 |-----------|-------|-----|--------|
-| `tensornet/validation/` | 5 | **3,665** | ✅ Complete module |
-| `tensornet/provenance/` | 6 | **~5,000** | ✅ Merkle DAG, Audit trails |
+| `ontic/validation/` | 5 | **3,665** | ✅ Complete module |
+| `ontic/provenance/` | 6 | **~5,000** | ✅ Merkle DAG, Audit trails |
 | Integration Tests | 4 | **1,031** | ✅ Physics validation |
 | Physics Tests | 3 | **919** | ✅ CFD, DMRG, Euler2D |
 | Provenance Tests | 1 | **850** | ✅ Merkle, commits, history |

@@ -84,7 +84,7 @@ Browser-compatible build for:
 ### License Management
 
 ```python
-from hypertensor.enterprise import LicenseManager
+from physics_os.enterprise import LicenseManager
 
 # Activate enterprise license
 LicenseManager.activate("ENTERPRISE-LICENSE-KEY")
@@ -97,7 +97,7 @@ print(f"License: {status.tier}, Expires: {status.expires}")
 ### Telemetry & Monitoring
 
 ```python
-from hypertensor.enterprise import Telemetry
+from physics_os.enterprise import Telemetry
 
 # Enable telemetry (opt-in)
 Telemetry.enable(

@@ -5,7 +5,7 @@ import sys
 import time
 sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/Project HyperTensor')
 
-from tensornet.hvac.projection_solver import ProjectionConfig, ProjectionSolver
+from ontic.hvac.projection_solver import ProjectionConfig, ProjectionSolver
 
 config = ProjectionConfig(
     nx=128, ny=64, Re=5000,

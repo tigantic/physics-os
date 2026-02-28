@@ -25,13 +25,13 @@ import warnings
 warnings.filterwarnings("ignore")
 
 # TensorNet imports
-from tensornet.ml.discovery.connectors.coinbase_l2 import (
+from ontic.ml.discovery.connectors.coinbase_l2 import (
     CoinbaseL2Connector, L2Snapshot, L2Update, HAS_WEBSOCKETS
 )
-from tensornet.ml.discovery.ingest.markets import (
+from ontic.ml.discovery.ingest.markets import (
     MarketsIngester, MarketSnapshot, OHLCV, OrderBookSnapshot, Trade
 )
-from tensornet.ml.discovery.pipelines.markets_pipeline import MarketsDiscoveryPipeline
+from ontic.ml.discovery.pipelines.markets_pipeline import MarketsDiscoveryPipeline
 
 
 class LiveMarketAnalyzer:

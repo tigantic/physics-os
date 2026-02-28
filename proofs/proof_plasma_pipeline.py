@@ -23,13 +23,13 @@ from datetime import datetime, timezone
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tensornet.ml.discovery.ingest.plasma import (
+from ontic.ml.discovery.ingest.plasma import (
     PlasmaIngester,
     PlasmaShot,
     PlasmaProfile,
     MagneticField3D,
 )
-from tensornet.ml.discovery.pipelines.plasma_pipeline import (
+from ontic.ml.discovery.pipelines.plasma_pipeline import (
     PlasmaDiscoveryPipeline,
     PlasmaPipelineResult,
     run_demo,

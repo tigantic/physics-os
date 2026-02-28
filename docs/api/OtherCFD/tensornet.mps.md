@@ -1,4 +1,4 @@
-# Module `tensornet.mps`
+# Module `ontic.mps`
 
 Hamiltonian Subpackage ======================
 

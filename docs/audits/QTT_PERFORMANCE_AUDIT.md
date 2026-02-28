@@ -243,7 +243,7 @@ final_frame = self.onion_renderer.composite()
 ## Deep Dive: `dense_to_qtt_2d()` Pipeline
 
 ### Location
-`tensornet/cfd/qtt_2d.py::dense_to_qtt_2d()`
+`ontic/cfd/qtt_2d.py::dense_to_qtt_2d()`
 
 ### Full Code Path
 ```python
@@ -279,7 +279,7 @@ def dense_to_qtt_2d(field: torch.Tensor, max_bond: int, tol: float) -> QTT2DStat
 ## Deep Dive: `HybridQTTRenderer` Pipeline
 
 ### Location
-`tensornet/quantum/hybrid_qtt_renderer.py::render_qtt_hybrid()`
+`ontic/quantum/hybrid_qtt_renderer.py::render_qtt_hybrid()`
 
 ### Internal Timing (from logs)
 ```
@@ -342,7 +342,7 @@ def render_qtt_hybrid(self, qtt, sparse_size, output_width, output_height, color
 ## Deep Dive: Compositor Pipeline
 
 ### Location
-`tensornet/gateway/onion_renderer.py::composite()`
+`ontic/gateway/onion_renderer.py::composite()`
 
 ### Implementation (Lines 298-342)
 ```python
@@ -807,10 +807,10 @@ Requires 14.52ms improvement (57% reduction):
    - Timeline view
 
 ### Code Paths To Examine
-1. `tensornet/cfd/pure_qtt_ops.py::dense_to_qtt()`
-2. `tensornet/gateway/onion_renderer.py::composite()`
-3. `tensornet/quantum/cpu_qtt_evaluator.py::load_qtt()`
-4. `tensornet/gpu/stable_fluid.py::step()`
+1. `ontic/cfd/pure_qtt_ops.py::dense_to_qtt()`
+2. `ontic/gateway/onion_renderer.py::composite()`
+3. `ontic/quantum/cpu_qtt_evaluator.py::load_qtt()`
+4. `ontic/gpu/stable_fluid.py::step()`
 
 ### Optimization Opportunities (No Fixes Yet)
 1. Reduce synchronization points (5 → 1 per frame)

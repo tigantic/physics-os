@@ -15,13 +15,13 @@ import numpy as np
 import pytest
 import torch
 
-from tensornet.infra.fieldops import (Advect, Attractor, BoundaryCondition, Buoyancy,
+from ontic.infra.fieldops import (Advect, Attractor, BoundaryCondition, Buoyancy,
                                 Curl, Diffuse, DirichletBC, Div, FieldGraph,
                                 Grad, Impulse, Laplacian, NeumannBC,
                                 ObstacleMask, Operator, PeriodicBC,
                                 PoissonSolver, Project, Stir, fluid_graph,
                                 heat_graph, smoke_graph)
-from tensornet.engine.substrate import Field
+from ontic.engine.substrate import Field
 
 # =============================================================================
 # FIXTURES

@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Riemann solvers, WENO, DG"
 
 source_files:
-  - "tensornet/cfd/euler_3d.py"
+  - "ontic/cfd/euler_3d.py"
 
 tests:
   smoke:

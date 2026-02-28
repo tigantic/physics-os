@@ -13,7 +13,7 @@ state: "V0.2"
 description: "PHY-XIX.6_Quantum_sensing solver"
 
 source_files:
-  - "tensornet/packs/pack_xix.py"
+  - "ontic/packs/pack_xix.py"
 
 tests:
   smoke:

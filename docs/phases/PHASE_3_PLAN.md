@@ -31,7 +31,7 @@
 │                         Sovereign Engine                          │
 │                      (Python / PyTorch CUDA)                      │
 ├──────────────────────────────────────────────────────────────────┤
-│  tensornet/sovereign/                                            │
+│  ontic/sovereign/                                            │
 │  ├─ qtt_renderer.py       : QTT → Dense on GPU (378 FPS)        │
 │  ├─ bridge_writer.py      : Double-buffered RAM bridge writer   │
 │  └─ navier_stokes.py      : CFD simulation (proven 512³)        │
@@ -114,7 +114,7 @@ struct TensorBridgeHeader {
 
 **Tasks**:
 1. ✅ Define `TensorBridgeHeader` struct in Rust
-2. ⏳ Create `bridge_writer.py` in `tensornet/sovereign/`
+2. ⏳ Create `bridge_writer.py` in `ontic/sovereign/`
    - Double-buffered shared memory writer
    - Frame sequence number tracking
    - Error handling for reader not present
@@ -160,7 +160,7 @@ struct TensorBridgeHeader {
 ### Milestone 3.3: Real-Time Pipeline (3-4 hours)
 
 **Tasks**:
-1. ⏳ Create `tensornet/sovereign/realtime_renderer.py`
+1. ⏳ Create `ontic/sovereign/realtime_renderer.py`
    - Launch Navier-Stokes simulation (512³ → 1920×1080 slice)
    - QTT decompress via GPU (proven 378 FPS capability)
    - Apply colormap via PyTorch (viridis)
@@ -213,7 +213,7 @@ struct TensorBridgeHeader {
 
 ### Colormap Implementation (WGSL)
 
-Reference implementation from `tensornet/visualization/colormaps.py`:
+Reference implementation from `ontic/visualization/colormaps.py`:
 
 ```wgsl
 // Viridis colormap (scientifically optimized)
@@ -288,7 +288,7 @@ fn colormap_main(
 ## CONSTITUTIONAL COMPLIANCE
 
 **Article II (Architecture)**:
-- ✅ Modular design: tensornet/sovereign/ (Python) + glass-cockpit/ (Rust)
+- ✅ Modular design: ontic/sovereign/ (Python) + glass-cockpit/ (Rust)
 - ✅ Type hints: All Python functions fully typed
 - ✅ Docstrings: All public APIs documented
 
@@ -312,8 +312,8 @@ fn colormap_main(
 ## DELIVERABLES
 
 1. **Code**:
-   - `tensornet/sovereign/bridge_writer.py`
-   - `tensornet/sovereign/realtime_renderer.py`
+   - `ontic/sovereign/bridge_writer.py`
+   - `ontic/sovereign/realtime_renderer.py`
    - `glass-cockpit/src/tensor_loader.rs`
    - `glass-cockpit/src/tensor_field.rs`
    - `glass-cockpit/src/shaders/tensor_colormap.wgsl`

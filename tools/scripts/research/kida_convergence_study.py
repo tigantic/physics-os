@@ -25,7 +25,7 @@ from datetime import datetime
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from tensornet.cfd.ns_3d import NS3DSolver, NSState3D
+from ontic.cfd.ns_3d import NS3DSolver, NSState3D
 
 
 def create_kida_vortex_ic(N: int, L: float = 2*np.pi) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:

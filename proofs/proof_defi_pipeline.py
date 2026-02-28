@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 def test_ingester_token_flows():
     """Test token flow ingestion and distribution building."""
-    from tensornet.ml.discovery.ingest.defi import DeFiIngester
+    from ontic.ml.discovery.ingest.defi import DeFiIngester
     
     ingester = DeFiIngester(grid_bits=10)
     
@@ -39,7 +39,7 @@ def test_ingester_token_flows():
 
 def test_ingester_call_graph():
     """Test call graph tensor building."""
-    from tensornet.ml.discovery.ingest.defi import DeFiIngester, ContractData
+    from ontic.ml.discovery.ingest.defi import DeFiIngester, ContractData
     
     ingester = DeFiIngester()
     
@@ -64,7 +64,7 @@ def test_ingester_call_graph():
 
 def test_ingester_price_series():
     """Test price series tensor building."""
-    from tensornet.ml.discovery.ingest.defi import DeFiIngester
+    from ontic.ml.discovery.ingest.defi import DeFiIngester
     
     ingester = DeFiIngester()
     
@@ -78,7 +78,7 @@ def test_ingester_price_series():
 
 def test_pool_analysis():
     """Test DEX pool analysis."""
-    from tensornet.ml.discovery.pipelines.defi_pipeline import DeFiDiscoveryPipeline
+    from ontic.ml.discovery.pipelines.defi_pipeline import DeFiDiscoveryPipeline
     
     pipeline = DeFiDiscoveryPipeline()
     
@@ -99,7 +99,7 @@ def test_pool_analysis():
 
 def test_lending_analysis():
     """Test lending protocol analysis."""
-    from tensornet.ml.discovery.pipelines.defi_pipeline import DeFiDiscoveryPipeline
+    from ontic.ml.discovery.pipelines.defi_pipeline import DeFiDiscoveryPipeline
     
     pipeline = DeFiDiscoveryPipeline()
     
@@ -124,7 +124,7 @@ def test_lending_analysis():
 
 def test_report_generation():
     """Test Immunefi report generation."""
-    from tensornet.ml.discovery.pipelines.defi_pipeline import DeFiDiscoveryPipeline
+    from ontic.ml.discovery.pipelines.defi_pipeline import DeFiDiscoveryPipeline
     
     pipeline = DeFiDiscoveryPipeline()
     

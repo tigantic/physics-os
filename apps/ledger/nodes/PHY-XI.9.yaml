@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Ion_Acoustic_Waves solver"
 
 source_files:
-  - "tensornet/packs/pack_xi.py"
+  - "ontic/packs/pack_xi.py"
 
 tests:
   smoke:

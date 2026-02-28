@@ -294,7 +294,7 @@ python -c "import torch; print(torch.__version__)"
 ```
 
 **Package structure**: `tensornet_standalone/` is a self-contained pip-installable package. It contains:
-- `tensornet/` - The library source (copied from torch/tensornet development)
+- `ontic/` - The library source (copied from torch/tensornet development)
 - `tests/test_proofs.py` - The test file that generates these results
 - `pyproject.toml` - Package metadata
 

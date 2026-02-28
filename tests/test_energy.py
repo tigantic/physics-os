@@ -1,5 +1,5 @@
 """
-Test Module: tensornet/energy/turbine.py
+Test Module: ontic/energy/turbine.py
 
 Phase 5: Wind Farm Wake Physics
 Constitutional Compliance:
@@ -16,7 +16,7 @@ import numpy as np
 import pytest
 import torch
 
-from tensornet.energy_env.energy.turbine import TurbineSpec, WindFarm
+from ontic.energy_env.energy.turbine import TurbineSpec, WindFarm
 
 # ============================================================================
 # FIXTURES

@@ -70,7 +70,7 @@ Final Score: 4/4 tests PASSED
 ## Technical Implementation
 
 ### Grid Caching (21ms → ~0ms)
-**File**: `tensornet/gateway/orbital_command.py`
+**File**: `ontic/gateway/orbital_command.py`
 
 **Before**: Regenerated 1920×1080 grid mask every frame
 ```python
@@ -95,7 +95,7 @@ grid_layer.buffer.copy_(self.grid_cache)  # Zero-copy reuse
 **Savings**: 21.0ms → <0.1ms per frame (when camera static)
 
 ### HUD Throttling (per-frame → 5 Hz)
-**File**: `tensornet/gateway/orbital_command.py`
+**File**: `ontic/gateway/orbital_command.py`
 
 **Before**: Updated text every frame at 60 Hz
 ```python
@@ -116,7 +116,7 @@ self.hud_last_update = current_time
 **Justification**: Human eye cannot perceive text updates faster than 5 Hz
 
 ### Scissor Compositing (full-screen → bounding box)
-**File**: `tensornet/gateway/onion_renderer.py`
+**File**: `ontic/gateway/onion_renderer.py`
 
 **Before**: Blended entire 1920×1080 buffer for UI layers
 ```python
@@ -299,12 +299,12 @@ Conclusion: Architecture is production-ready
 ## Files Modified
 
 ### Core Changes
-1. **tensornet/gateway/orbital_command.py**
+1. **ontic/gateway/orbital_command.py**
    - Lines 195-210: Added event-driven state tracking
    - Lines 407-419: Grid caching with hash invalidation
    - Lines 421-433: HUD throttling with time check
 
-2. **tensornet/gateway/onion_renderer.py**
+2. **ontic/gateway/onion_renderer.py**
    - Lines 88-90: Added dirty_rect to RenderLayer
    - Lines 318-330: Scissor-test compositing
    - Lines 332-375: Region-based blending (ADDITIVE, ALPHA, OVER)

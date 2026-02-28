@@ -8,7 +8,7 @@
 
 set -e
 
-IMAGE_NAME="hypertensor/drug-physics"
+IMAGE_NAME="physics_os/drug-physics"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 

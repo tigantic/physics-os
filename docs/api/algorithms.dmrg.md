@@ -37,7 +37,7 @@ Result container for DMRG.
 
 #### Attributes
 
-- **psi** (`<class 'tensornet.core.mps.MPS'>`): 
+- **psi** (`<class 'ontic.core.mps.MPS'>`): 
 - **energy** (`<class 'float'>`): 
 - **energies** (`typing.List[float]`): 
 - **entropies** (`typing.List[float]`): 
@@ -50,7 +50,7 @@ Result container for DMRG.
 ##### `__init__`
 
 ```python
-def __init__(self, psi: tensornet.core.mps.MPS, energy: float, energies: List[float], entropies: List[float], truncation_errors: List[float], converged: bool, sweeps: int) -> None
+def __init__(self, psi: ontic.core.mps.MPS, energy: float, energies: List[float], entropies: List[float], truncation_errors: List[float], converged: bool, sweeps: int) -> None
 ```
 
 ## Functions
@@ -58,18 +58,18 @@ def __init__(self, psi: tensornet.core.mps.MPS, energy: float, energies: List[fl
 ### `dmrg`
 
 ```python
-def dmrg(H: tensornet.core.mpo.MPO, chi_max: int, num_sweeps: int = 10, tol: float = 1e-10, psi0: Optional[tensornet.core.mps.MPS] = None, svd_cutoff: float = 1e-14, verbose: bool = False) -> dmrg.DMRGResult
+def dmrg(H: ontic.core.mpo.MPO, chi_max: int, num_sweeps: int = 10, tol: float = 1e-10, psi0: Optional[ontic.core.mps.MPS] = None, svd_cutoff: float = 1e-14, verbose: bool = False) -> dmrg.DMRGResult
 ```
 
 Run 2-site DMRG to find the ground state.
 
 **Parameters:**
 
-- **H** (`<class 'tensornet.core.mpo.MPO'>`): Hamiltonian as MPO
+- **H** (`<class 'ontic.core.mpo.MPO'>`): Hamiltonian as MPO
 - **chi_max** (`<class 'int'>`): Maximum bond dimension
 - **num_sweeps** (`<class 'int'>`): Maximum number of sweeps
 - **tol** (`<class 'float'>`): Energy convergence tolerance
-- **psi0** (`typing.Optional[tensornet.core.mps.MPS]`): Initial MPS (random if None)
+- **psi0** (`typing.Optional[ontic.core.mps.MPS]`): Initial MPS (random if None)
 - **svd_cutoff** (`<class 'float'>`): SVD singular value cutoff
 - **verbose** (`<class 'bool'>`): Print progress
 
@@ -80,15 +80,15 @@ Run 2-site DMRG to find the ground state.
 ### `dmrg_sweep`
 
 ```python
-def dmrg_sweep(psi: tensornet.core.mps.MPS, H: tensornet.core.mpo.MPO, chi_max: int, L_envs: List[torch.Tensor], R_envs: List[torch.Tensor], direction: str = 'right', svd_cutoff: float = 1e-14) -> Tuple[float, float, float]
+def dmrg_sweep(psi: ontic.core.mps.MPS, H: ontic.core.mpo.MPO, chi_max: int, L_envs: List[torch.Tensor], R_envs: List[torch.Tensor], direction: str = 'right', svd_cutoff: float = 1e-14) -> Tuple[float, float, float]
 ```
 
 Perform one DMRG sweep.
 
 **Parameters:**
 
-- **psi** (`<class 'tensornet.core.mps.MPS'>`): MPS to optimize (modified in-place)
-- **H** (`<class 'tensornet.core.mpo.MPO'>`): Hamiltonian MPO
+- **psi** (`<class 'ontic.core.mps.MPS'>`): MPS to optimize (modified in-place)
+- **H** (`<class 'ontic.core.mpo.MPO'>`): Hamiltonian MPO
 - **chi_max** (`<class 'int'>`): Maximum bond dimension
 - **L_envs** (`typing.List[torch.Tensor]`): Left environments (modified in-place)
 - **R_envs** (`typing.List[torch.Tensor]`): Right environments

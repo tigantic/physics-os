@@ -13,9 +13,9 @@
 
 | Component | Location | LOC | Status | Production-Ready? |
 |-----------|----------|----:|:------:|:-----------------:|
-| QTT Core Engine | `tensornet/core/` | 3,127 | ✅ | Yes |
-| CFD Solvers | `tensornet/cfd/` | 68,601 | ✅ | Yes |
-| Genesis Primitives (7+1) | `tensornet/genesis/` | 40,836 | ✅ | Yes |
+| QTT Core Engine | `ontic/core/` | 3,127 | ✅ | Yes |
+| CFD Solvers | `ontic/cfd/` | 68,601 | ✅ | Yes |
+| Genesis Primitives (7+1) | `ontic/genesis/` | 40,836 | ✅ | Yes |
 | FluidElite-ZK Prover | `crates/fluidelite_zk/` | 31,325 | ✅ | Partial |
 | Glass Cockpit | `apps/glass_cockpit/` | 30,608 | ✅ | Yes |
 | Hyper Bridge IPC | `crates/hyper_bridge/` | 5,917 | ✅ | Yes |
@@ -62,7 +62,7 @@
 │  │ CUSTOMER  │    │  QTT SOLVER  │    │  ZK PROVER   │    │ CERTIFICATE│ │
 │  │  INPUT    │───▶│  ENGINE      │───▶│  ENGINE      │───▶│ GENERATOR │ │
 │  │           │    │              │    │              │    │           │ │
-│  │ Geometry  │    │ tensornet/   │    │ fluidelite-  │    │ Lean proof│ │
+│  │ Geometry  │    │ ontic/   │    │ fluidelite-  │    │ Lean proof│ │
 │  │ BCs       │    │ cfd/         │    │ zk/          │    │ ZK proof  │ │
 │  │ Params    │    │              │    │              │    │ Attestation│ │
 │  │ Tolerance │    │ QTT state    │    │ π (proof)    │    │ Bundle    │ │
@@ -99,13 +99,13 @@ Customer Input
     ▼
 ┌─────────────────────────┐
 │ 1. TENSORIZE             │  Convert geometry + BCs to QTT format
-│    tensornet/core/       │  Output: MPS/MPO representations
+│    ontic/core/       │  Output: MPS/MPO representations
 └────────────┬────────────┘
              │
              ▼
 ┌─────────────────────────┐
 │ 2. SOLVE                 │  Run physics solver in QTT format
-│    tensornet/cfd/        │  Output: Solution MPS + convergence data
+│    ontic/cfd/        │  Output: Solution MPS + convergence data
 │    (never goes dense)    │  Log: Every truncation, every rank change
 └────────────┬────────────┘
              │
@@ -213,8 +213,8 @@ The trace is the input to the ZK prover. It must be:
 - Complete (every operation captured)
 - Compact (hashes, not full tensors)
 
-**Deliverable:** `tensornet/core/trace.py` — computation trace logger.
-**Location:** Hooks into `tensornet/core/decompositions.py`, `tensornet/core/mpo.py`, `tensornet/core/mps.py`.
+**Deliverable:** `ontic/core/trace.py` — computation trace logger.
+**Location:** Hooks into `ontic/core/decompositions.py`, `ontic/core/mpo.py`, `ontic/core/mps.py`.
 **Effort:** 2 weeks. ~1,200 LOC.
 
 #### Task 0.3: Solver↔Prover Bridge
@@ -421,7 +421,7 @@ Containerized deployment for on-premise installation:
 FROM ubuntu:24.04
 
 # QTT Solver Engine
-COPY tensornet/ /opt/trustless/solver/
+COPY ontic/ /opt/trustless/solver/
 # ZK Prover Engine
 COPY crates/fluidelite_zk/ /opt/trustless/prover/
 # Certificate Tools
@@ -697,7 +697,7 @@ HyperTensor/
 │   ├── format.py                     # .tpc serializer/deserializer
 │   ├── generator.py                  # Certificate generator
 │   └── tests/
-├── tensornet/core/
+├── ontic/core/
 │   └── trace.py                      # NEW: Computation trace logger
 ├── crates/
 │   └── proof_bridge/                 # NEW: Solver↔Prover bridge (Rust)

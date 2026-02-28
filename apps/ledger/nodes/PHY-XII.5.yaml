@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Boltzmann codes hooks"
 
 source_files:
-  - "tensornet/astro/cmb_early_universe.py"
+  - "ontic/astro/cmb_early_universe.py"
 
 tests:
   smoke:

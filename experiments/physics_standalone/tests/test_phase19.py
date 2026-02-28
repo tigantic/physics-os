@@ -30,7 +30,7 @@ class TestTruncationPolicy:
     
     def test_policy_action_enum(self):
         """Test PolicyAction enumeration."""
-        from tensornet.ml.neural.truncation_policy import PolicyAction
+        from ontic.ml.neural.truncation_policy import PolicyAction
         
         # Uses auto() so values are 1, 2, 3, 4, 5
         assert PolicyAction.DECREASE_LARGE is not None
@@ -40,7 +40,7 @@ class TestTruncationPolicy:
     
     def test_policy_state_creation(self):
         """Test PolicyState dataclass."""
-        from tensornet.ml.neural.truncation_policy import PolicyState
+        from ontic.ml.neural.truncation_policy import PolicyState
         
         state = PolicyState(
             current_chi=64,
@@ -63,7 +63,7 @@ class TestTruncationPolicy:
     
     def test_policy_network_forward(self):
         """Test PolicyNetwork forward pass."""
-        from tensornet.ml.neural.truncation_policy import PolicyNetwork
+        from ontic.ml.neural.truncation_policy import PolicyNetwork
         
         network = PolicyNetwork(state_dim=8, hidden_dim=32, action_dim=5)
         state_tensor = torch.randn(1, 8)
@@ -76,7 +76,7 @@ class TestTruncationPolicy:
     
     def test_truncation_policy_creation(self):
         """Test TruncationPolicy wrapper."""
-        from tensornet.ml.neural.truncation_policy import TruncationPolicy, PolicyNetwork
+        from ontic.ml.neural.truncation_policy import TruncationPolicy, PolicyNetwork
         
         network = PolicyNetwork(state_dim=8, action_dim=5, hidden_dim=64)
         policy = TruncationPolicy(network=network, chi_min=4, chi_max=256)
@@ -92,7 +92,7 @@ class TestTruncationPolicy:
     
     def test_replay_buffer(self):
         """Test ReplayBuffer for RL."""
-        from tensornet.ml.neural.truncation_policy import ReplayBuffer, Experience
+        from ontic.ml.neural.truncation_policy import ReplayBuffer, Experience
         
         buffer = ReplayBuffer(capacity=100)
         
@@ -114,7 +114,7 @@ class TestTruncationPolicy:
     
     def test_rl_truncation_agent_creation(self):
         """Test RLTruncationAgent initialization."""
-        from tensornet.ml.neural.truncation_policy import (
+        from ontic.ml.neural.truncation_policy import (
             RLTruncationAgent,
             TruncationPolicy,
             PolicyNetwork,
@@ -133,7 +133,7 @@ class TestBondPredictor:
     
     def test_entropy_features(self):
         """Test EntropyFeatures dataclass."""
-        from tensornet.ml.neural.bond_predictor import EntropyFeatures
+        from ontic.ml.neural.bond_predictor import EntropyFeatures
         
         entropies = torch.tensor([0.1, 0.3, 0.5, 0.7, 0.5, 0.3, 0.1])
         features = EntropyFeatures.from_entropies(entropies)
@@ -143,7 +143,7 @@ class TestBondPredictor:
     
     def test_predictor_config(self):
         """Test PredictorConfig defaults."""
-        from tensornet.ml.neural.bond_predictor import PredictorConfig
+        from ontic.ml.neural.bond_predictor import PredictorConfig
         
         config = PredictorConfig()
         
@@ -154,7 +154,7 @@ class TestBondPredictor:
     
     def test_predictor_network_forward(self):
         """Test BondPredictorNetwork forward pass."""
-        from tensornet.ml.neural.bond_predictor import BondPredictorNetwork, PredictorConfig
+        from ontic.ml.neural.bond_predictor import BondPredictorNetwork, PredictorConfig
         
         config = PredictorConfig(input_dim=16)
         network = BondPredictorNetwork(config)
@@ -168,7 +168,7 @@ class TestBondPredictor:
     
     def test_bond_dimension_predictor(self):
         """Test BondDimensionPredictor class."""
-        from tensornet.ml.neural.bond_predictor import (
+        from ontic.ml.neural.bond_predictor import (
             BondDimensionPredictor,
             EntropyFeatures,
             TemporalFeatures,
@@ -204,7 +204,7 @@ class TestEntanglementGNN:
     
     def test_node_features(self):
         """Test NodeFeatures dataclass."""
-        from tensornet.ml.neural.entanglement_gnn import NodeFeatures
+        from ontic.ml.neural.entanglement_gnn import NodeFeatures
         
         node = NodeFeatures(
             site_index=5,
@@ -222,7 +222,7 @@ class TestEntanglementGNN:
     
     def test_edge_features(self):
         """Test EdgeFeatures dataclass."""
-        from tensornet.ml.neural.entanglement_gnn import EdgeFeatures
+        from ontic.ml.neural.entanglement_gnn import EdgeFeatures
         
         edge = EdgeFeatures(
             source=0,
@@ -241,7 +241,7 @@ class TestEntanglementGNN:
     
     def test_gnn_config(self):
         """Test GNNConfig defaults."""
-        from tensornet.ml.neural.entanglement_gnn import GNNConfig
+        from ontic.ml.neural.entanglement_gnn import GNNConfig
         
         config = GNNConfig()
         
@@ -252,7 +252,7 @@ class TestEntanglementGNN:
     
     def test_message_passing_layer(self):
         """Test MessagePassingLayer forward."""
-        from tensornet.ml.neural.entanglement_gnn import MessagePassingLayer
+        from ontic.ml.neural.entanglement_gnn import MessagePassingLayer
         
         layer = MessagePassingLayer(
             node_dim=7,
@@ -270,7 +270,7 @@ class TestEntanglementGNN:
     
     def test_entanglement_gnn_forward(self):
         """Test EntanglementGNN forward pass."""
-        from tensornet.ml.neural.entanglement_gnn import (
+        from ontic.ml.neural.entanglement_gnn import (
             EntanglementGNN, GNNConfig, EntanglementGraph, NodeFeatures, EdgeFeatures
         )
         
@@ -304,7 +304,7 @@ class TestAlgorithmSelector:
     
     def test_algorithm_type_enum(self):
         """Test AlgorithmType enumeration."""
-        from tensornet.ml.neural.algorithm_selector import AlgorithmType
+        from ontic.ml.neural.algorithm_selector import AlgorithmType
         
         assert AlgorithmType.DMRG.value == 1
         assert AlgorithmType.TEBD.value == 3
@@ -312,7 +312,7 @@ class TestAlgorithmSelector:
     
     def test_selection_criteria_enum(self):
         """Test SelectionCriteria enumeration."""
-        from tensornet.ml.neural.algorithm_selector import SelectionCriteria
+        from ontic.ml.neural.algorithm_selector import SelectionCriteria
         
         assert SelectionCriteria.ACCURACY is not None
         assert SelectionCriteria.SPEED is not None
@@ -320,7 +320,7 @@ class TestAlgorithmSelector:
     
     def test_problem_features(self):
         """Test ProblemFeatures dataclass."""
-        from tensornet.ml.neural.algorithm_selector import ProblemFeatures
+        from ontic.ml.neural.algorithm_selector import ProblemFeatures
         
         features = ProblemFeatures(
             num_sites=20,
@@ -337,7 +337,7 @@ class TestAlgorithmSelector:
     
     def test_algorithm_recommendation(self):
         """Test AlgorithmRecommendation dataclass."""
-        from tensornet.ml.neural.algorithm_selector import (
+        from ontic.ml.neural.algorithm_selector import (
             AlgorithmRecommendation,
             AlgorithmType,
         )
@@ -357,7 +357,7 @@ class TestAlgorithmSelector:
     
     def test_algorithm_selector(self):
         """Test AlgorithmSelector class."""
-        from tensornet.ml.neural.algorithm_selector import (
+        from ontic.ml.neural.algorithm_selector import (
             AlgorithmSelector,
             ProblemFeatures,
             SelectionCriteria,
@@ -387,7 +387,7 @@ class TestDistributedDMRG:
     
     def test_partition_strategy_enum(self):
         """Test PartitionStrategy enumeration."""
-        from tensornet.engine.distributed_tn.distributed_dmrg import PartitionStrategy
+        from ontic.engine.distributed_tn.distributed_dmrg import PartitionStrategy
         
         assert PartitionStrategy.EQUAL is not None
         assert PartitionStrategy.ENTROPY_BASED is not None
@@ -395,7 +395,7 @@ class TestDistributedDMRG:
     
     def test_partition_config(self):
         """Test PartitionConfig dataclass."""
-        from tensornet.engine.distributed_tn.distributed_dmrg import PartitionConfig
+        from ontic.engine.distributed_tn.distributed_dmrg import PartitionConfig
         
         config = PartitionConfig(
             num_partitions=4,
@@ -407,7 +407,7 @@ class TestDistributedDMRG:
     
     def test_dmrg_partition(self):
         """Test DMRGPartition dataclass."""
-        from tensornet.engine.distributed_tn.distributed_dmrg import DMRGPartition
+        from ontic.engine.distributed_tn.distributed_dmrg import DMRGPartition
         
         tensors = [torch.randn(1, 2, 4), torch.randn(4, 2, 1)]
         
@@ -423,7 +423,7 @@ class TestDistributedDMRG:
     
     def test_dmrg_worker(self):
         """Test DMRGWorker class."""
-        from tensornet.engine.distributed_tn.distributed_dmrg import DMRGWorker, DMRGPartition
+        from ontic.engine.distributed_tn.distributed_dmrg import DMRGWorker, DMRGPartition
         
         tensors = [torch.randn(1, 2, 4) for _ in range(5)]
         tensors.append(torch.randn(4, 2, 1))
@@ -442,7 +442,7 @@ class TestDistributedDMRG:
     
     def test_distributed_dmrg_partitioning(self):
         """Test DistributedDMRG.partition_system."""
-        from tensornet.engine.distributed_tn.distributed_dmrg import DistributedDMRG
+        from ontic.engine.distributed_tn.distributed_dmrg import DistributedDMRG
         
         mps_tensors = [torch.randn(1, 2, 4)]
         for _ in range(8):
@@ -461,7 +461,7 @@ class TestParallelTEBD:
     
     def test_splitting_order_enum(self):
         """Test SplittingOrder enumeration."""
-        from tensornet.engine.distributed_tn.parallel_tebd import SplittingOrder
+        from ontic.engine.distributed_tn.parallel_tebd import SplittingOrder
         
         assert SplittingOrder.FIRST.value == 1
         assert SplittingOrder.SECOND.value == 2
@@ -469,7 +469,7 @@ class TestParallelTEBD:
     
     def test_ghost_sites(self):
         """Test GhostSites dataclass."""
-        from tensornet.engine.distributed_tn.parallel_tebd import GhostSites
+        from ontic.engine.distributed_tn.parallel_tebd import GhostSites
         
         ghost = GhostSites(num_ghost=2)
         
@@ -481,7 +481,7 @@ class TestParallelTEBD:
     
     def test_tebd_partition(self):
         """Test TEBDPartition dataclass."""
-        from tensornet.engine.distributed_tn.parallel_tebd import TEBDPartition
+        from ontic.engine.distributed_tn.parallel_tebd import TEBDPartition
         
         tensors = [torch.randn(4, 2, 4) for _ in range(5)]
         
@@ -496,7 +496,7 @@ class TestParallelTEBD:
     
     def test_tebd_worker_gate_application(self):
         """Test TEBDWorker.apply_gate."""
-        from tensornet.engine.distributed_tn.parallel_tebd import TEBDWorker, TEBDPartition
+        from ontic.engine.distributed_tn.parallel_tebd import TEBDWorker, TEBDPartition
         
         d = 2
         tensors = [
@@ -521,7 +521,7 @@ class TestParallelTEBD:
     
     def test_parallel_tebd_partitioning(self):
         """Test ParallelTEBD.partition_mps."""
-        from tensornet.engine.distributed_tn.parallel_tebd import ParallelTEBD
+        from ontic.engine.distributed_tn.parallel_tebd import ParallelTEBD
         
         d = 2
         tensors = [torch.randn(1, d, 4)]
@@ -543,14 +543,14 @@ class TestMPSOperations:
     
     def test_compression_strategy_enum(self):
         """Test CompressionStrategy enumeration."""
-        from tensornet.engine.distributed_tn.mps_operations import CompressionStrategy
+        from ontic.engine.distributed_tn.mps_operations import CompressionStrategy
         
         assert CompressionStrategy.SVD is not None
         assert CompressionStrategy.VARIATIONAL is not None
     
     def test_mps_partition(self):
         """Test MPSPartition dataclass."""
-        from tensornet.engine.distributed_tn.mps_operations import MPSPartition
+        from ontic.engine.distributed_tn.mps_operations import MPSPartition
         
         tensors = [torch.randn(1, 2, 4), torch.randn(4, 2, 1)]
         
@@ -566,7 +566,7 @@ class TestMPSOperations:
     
     def test_distributed_mps_from_tensors(self):
         """Test DistributedMPS.from_tensors."""
-        from tensornet.engine.distributed_tn.mps_operations import DistributedMPS
+        from ontic.engine.distributed_tn.mps_operations import DistributedMPS
         
         tensors = [torch.randn(1, 2, 4)]
         for _ in range(6):
@@ -586,7 +586,7 @@ class TestMPSOperations:
     
     def test_merge_partitions(self):
         """Test merge_partitions function."""
-        from tensornet.engine.distributed_tn.mps_operations import (
+        from ontic.engine.distributed_tn.mps_operations import (
             MPSPartition,
             merge_partitions,
         )
@@ -606,7 +606,7 @@ class TestLoadBalancer:
     
     def test_balancing_strategy_enum(self):
         """Test BalancingStrategy enumeration."""
-        from tensornet.engine.distributed_tn.load_balancer import BalancingStrategy
+        from ontic.engine.distributed_tn.load_balancer import BalancingStrategy
         
         assert BalancingStrategy.STATIC is not None
         assert BalancingStrategy.DYNAMIC is not None
@@ -614,7 +614,7 @@ class TestLoadBalancer:
     
     def test_worker_status(self):
         """Test WorkerStatus dataclass."""
-        from tensornet.engine.distributed_tn.load_balancer import WorkerStatus, WorkerState
+        from ontic.engine.distributed_tn.load_balancer import WorkerStatus, WorkerState
         
         status = WorkerStatus(worker_id=0, capacity=100)
         status.current_load = 50
@@ -625,7 +625,7 @@ class TestLoadBalancer:
     
     def test_work_unit(self):
         """Test WorkUnit dataclass."""
-        from tensornet.engine.distributed_tn.load_balancer import WorkUnit
+        from ontic.engine.distributed_tn.load_balancer import WorkUnit
         
         work = WorkUnit(work_id=0, partition_id=1, estimated_cost=2.0)
         
@@ -636,7 +636,7 @@ class TestLoadBalancer:
     
     def test_load_balancer_add_work(self):
         """Test LoadBalancer.add_work."""
-        from tensornet.engine.distributed_tn.load_balancer import LoadBalancer
+        from ontic.engine.distributed_tn.load_balancer import LoadBalancer
         
         balancer = LoadBalancer(num_workers=4)
         
@@ -649,7 +649,7 @@ class TestLoadBalancer:
     
     def test_load_balancer_complete_work(self):
         """Test LoadBalancer.complete_work."""
-        from tensornet.engine.distributed_tn.load_balancer import LoadBalancer
+        from ontic.engine.distributed_tn.load_balancer import LoadBalancer
         
         balancer = LoadBalancer(num_workers=4)
         work_id = balancer.add_work(partition_id=0, target_worker=0)
@@ -662,7 +662,7 @@ class TestLoadBalancer:
     
     def test_load_balancer_rebalance(self):
         """Test LoadBalancer.rebalance."""
-        from tensornet.engine.distributed_tn.load_balancer import LoadBalancer
+        from ontic.engine.distributed_tn.load_balancer import LoadBalancer
         
         balancer = LoadBalancer(num_workers=4)
         
@@ -677,7 +677,7 @@ class TestLoadBalancer:
     
     def test_rebalance_workload_function(self):
         """Test rebalance_workload function."""
-        from tensornet.engine.distributed_tn.load_balancer import rebalance_workload
+        from ontic.engine.distributed_tn.load_balancer import rebalance_workload
         
         loads = [10, 0, 5, 5]
         moves = rebalance_workload(loads)
@@ -695,7 +695,7 @@ class TestMissionPlanner:
     
     def test_mission_status_enum(self):
         """Test MissionStatus enumeration."""
-        from tensornet.aerospace.autonomy.mission_planner import MissionStatus
+        from ontic.aerospace.autonomy.mission_planner import MissionStatus
         
         assert MissionStatus.PENDING is not None
         assert MissionStatus.EXECUTING is not None
@@ -703,7 +703,7 @@ class TestMissionPlanner:
     
     def test_mission_constraints(self):
         """Test MissionConstraints dataclass."""
-        from tensornet.aerospace.autonomy.mission_planner import MissionConstraints
+        from ontic.aerospace.autonomy.mission_planner import MissionConstraints
         
         constraints = MissionConstraints(
             max_time=60.0,
@@ -716,7 +716,7 @@ class TestMissionPlanner:
     
     def test_mission_phase(self):
         """Test MissionPhase dataclass."""
-        from tensornet.aerospace.autonomy.mission_planner import (
+        from ontic.aerospace.autonomy.mission_planner import (
             MissionPhase,
             MissionPhaseType,
             MissionStatus,
@@ -740,7 +740,7 @@ class TestMissionPlanner:
     
     def test_mission_progress(self):
         """Test Mission progress tracking."""
-        from tensornet.aerospace.autonomy.mission_planner import (
+        from ontic.aerospace.autonomy.mission_planner import (
             Mission,
             MissionPhase,
             MissionPhaseType,
@@ -762,7 +762,7 @@ class TestMissionPlanner:
     
     def test_mission_planner_creation(self):
         """Test MissionPlanner.create_mission."""
-        from tensornet.aerospace.autonomy.mission_planner import MissionPlanner
+        from ontic.aerospace.autonomy.mission_planner import MissionPlanner
         
         planner = MissionPlanner()
         mission = planner.create_mission(
@@ -775,7 +775,7 @@ class TestMissionPlanner:
     
     def test_mission_planner_computation_mission(self):
         """Test MissionPlanner.plan_computation_mission."""
-        from tensornet.aerospace.autonomy.mission_planner import MissionPlanner
+        from ontic.aerospace.autonomy.mission_planner import MissionPlanner
         
         planner = MissionPlanner()
         mission = planner.plan_computation_mission(
@@ -792,7 +792,7 @@ class TestPathPlanning:
     
     def test_planning_algorithm_enum(self):
         """Test PlanningAlgorithm enumeration."""
-        from tensornet.aerospace.autonomy.path_planning import PlanningAlgorithm
+        from ontic.aerospace.autonomy.path_planning import PlanningAlgorithm
         
         assert PlanningAlgorithm.A_STAR is not None
         assert PlanningAlgorithm.RRT is not None
@@ -800,7 +800,7 @@ class TestPathPlanning:
     
     def test_waypoint(self):
         """Test Waypoint dataclass."""
-        from tensornet.aerospace.autonomy.path_planning import Waypoint
+        from ontic.aerospace.autonomy.path_planning import Waypoint
         
         w1 = Waypoint(position=(0.0, 0.0))
         w2 = Waypoint(position=(3.0, 4.0))
@@ -811,7 +811,7 @@ class TestPathPlanning:
     
     def test_path(self):
         """Test Path dataclass."""
-        from tensornet.aerospace.autonomy.path_planning import Path, Waypoint
+        from ontic.aerospace.autonomy.path_planning import Path, Waypoint
         
         path = Path()
         path.add_waypoint(Waypoint(position=(0.0, 0.0)))
@@ -823,7 +823,7 @@ class TestPathPlanning:
     
     def test_path_planner_astar(self):
         """Test PathPlanner with A*."""
-        from tensornet.aerospace.autonomy.path_planning import PathPlanner, PathPlannerConfig
+        from ontic.aerospace.autonomy.path_planning import PathPlanner, PathPlannerConfig
         
         config = PathPlannerConfig()
         planner = PathPlanner(config)
@@ -836,7 +836,7 @@ class TestPathPlanning:
     
     def test_path_planner_with_obstacles(self):
         """Test PathPlanner with obstacles."""
-        from tensornet.aerospace.autonomy.path_planning import PathPlanner
+        from ontic.aerospace.autonomy.path_planning import PathPlanner
         
         planner = PathPlanner()
         planner.set_bounds(0, 0, 20, 20)
@@ -852,7 +852,7 @@ class TestPathPlanning:
     
     def test_plan_path_function(self):
         """Test plan_path convenience function."""
-        from tensornet.aerospace.autonomy.path_planning import plan_path
+        from ontic.aerospace.autonomy.path_planning import plan_path
         
         path = plan_path(
             start=(0.0, 0.0),
@@ -863,7 +863,7 @@ class TestPathPlanning:
     
     def test_smooth_path(self):
         """Test smooth_path function."""
-        from tensornet.aerospace.autonomy.path_planning import smooth_path, Path, Waypoint
+        from ontic.aerospace.autonomy.path_planning import smooth_path, Path, Waypoint
         
         path = Path()
         for i in range(10):
@@ -879,21 +879,21 @@ class TestObstacleAvoidance:
     
     def test_obstacle_type_enum(self):
         """Test ObstacleType enumeration."""
-        from tensornet.aerospace.autonomy.obstacle_avoidance import ObstacleType
+        from ontic.aerospace.autonomy.obstacle_avoidance import ObstacleType
         
         assert ObstacleType.STATIC is not None
         assert ObstacleType.DYNAMIC is not None
     
     def test_avoidance_strategy_enum(self):
         """Test AvoidanceStrategy enumeration."""
-        from tensornet.aerospace.autonomy.obstacle_avoidance import AvoidanceStrategy
+        from ontic.aerospace.autonomy.obstacle_avoidance import AvoidanceStrategy
         
         assert AvoidanceStrategy.POTENTIAL_FIELD is not None
         assert AvoidanceStrategy.REACTIVE is not None
     
     def test_obstacle(self):
         """Test Obstacle dataclass."""
-        from tensornet.aerospace.autonomy.obstacle_avoidance import Obstacle
+        from ontic.aerospace.autonomy.obstacle_avoidance import Obstacle
         
         obs = Obstacle(
             obstacle_id=0,
@@ -908,7 +908,7 @@ class TestObstacleAvoidance:
     
     def test_obstacle_predicted_position(self):
         """Test Obstacle.predicted_position."""
-        from tensornet.aerospace.autonomy.obstacle_avoidance import Obstacle, ObstacleType
+        from ontic.aerospace.autonomy.obstacle_avoidance import Obstacle, ObstacleType
         
         obs = Obstacle(
             obstacle_id=0,
@@ -923,7 +923,7 @@ class TestObstacleAvoidance:
     
     def test_obstacle_avoidance_add_remove(self):
         """Test ObstacleAvoidance add/remove."""
-        from tensornet.aerospace.autonomy.obstacle_avoidance import ObstacleAvoidance
+        from ontic.aerospace.autonomy.obstacle_avoidance import ObstacleAvoidance
         
         avoider = ObstacleAvoidance()
         
@@ -940,7 +940,7 @@ class TestObstacleAvoidance:
     
     def test_potential_field_avoidance(self):
         """Test potential field avoidance."""
-        from tensornet.aerospace.autonomy.obstacle_avoidance import ObstacleAvoidance
+        from ontic.aerospace.autonomy.obstacle_avoidance import ObstacleAvoidance
         
         avoider = ObstacleAvoidance()
         avoider.add_obstacle(position=(5.0, 0.0), radius=1.0)
@@ -956,7 +956,7 @@ class TestObstacleAvoidance:
     
     def test_is_path_clear(self):
         """Test ObstacleAvoidance.is_path_clear."""
-        from tensornet.aerospace.autonomy.obstacle_avoidance import ObstacleAvoidance
+        from ontic.aerospace.autonomy.obstacle_avoidance import ObstacleAvoidance
         
         avoider = ObstacleAvoidance()
         avoider.add_obstacle(position=(5.0, 0.0), radius=1.0)
@@ -975,14 +975,14 @@ class TestDecisionMaking:
     
     def test_decision_type_enum(self):
         """Test DecisionType enumeration."""
-        from tensornet.aerospace.autonomy.decision_making import DecisionType
+        from ontic.aerospace.autonomy.decision_making import DecisionType
         
         assert DecisionType.ACTION is not None
         assert DecisionType.EMERGENCY is not None
     
     def test_state_estimate(self):
         """Test StateEstimate dataclass."""
-        from tensornet.aerospace.autonomy.decision_making import StateEstimate
+        from ontic.aerospace.autonomy.decision_making import StateEstimate
         
         state = StateEstimate(
             position=(1.0, 2.0),
@@ -996,7 +996,7 @@ class TestDecisionMaking:
     
     def test_action_option(self):
         """Test ActionOption dataclass."""
-        from tensornet.aerospace.autonomy.decision_making import ActionOption
+        from ontic.aerospace.autonomy.decision_making import ActionOption
         
         action = ActionOption(
             action_id=0,
@@ -1011,7 +1011,7 @@ class TestDecisionMaking:
     
     def test_action_space(self):
         """Test ActionSpace dataclass."""
-        from tensornet.aerospace.autonomy.decision_making import ActionSpace
+        from ontic.aerospace.autonomy.decision_making import ActionSpace
         
         space = ActionSpace()
         space.add_option("action1", risk=0.1, cost=1.0)
@@ -1025,7 +1025,7 @@ class TestDecisionMaking:
     
     def test_decision_maker_evaluation(self):
         """Test DecisionMaker.evaluate_option."""
-        from tensornet.aerospace.autonomy.decision_making import DecisionMaker, ActionOption
+        from ontic.aerospace.autonomy.decision_making import DecisionMaker, ActionOption
         
         maker = DecisionMaker()
         
@@ -1042,7 +1042,7 @@ class TestDecisionMaking:
     
     def test_decision_maker_decision(self):
         """Test DecisionMaker.make_decision."""
-        from tensornet.aerospace.autonomy.decision_making import DecisionMaker, ActionSpace
+        from ontic.aerospace.autonomy.decision_making import DecisionMaker, ActionSpace
         
         maker = DecisionMaker()
         
@@ -1059,7 +1059,7 @@ class TestDecisionMaking:
     
     def test_make_decision_function(self):
         """Test make_decision convenience function."""
-        from tensornet.aerospace.autonomy.decision_making import make_decision
+        from ontic.aerospace.autonomy.decision_making import make_decision
         
         options = [
             {"name": "option1", "risk": 0.1, "cost": 1.0, "time": 5.0},
@@ -1072,7 +1072,7 @@ class TestDecisionMaking:
     
     def test_evaluate_options_function(self):
         """Test evaluate_options function."""
-        from tensornet.aerospace.autonomy.decision_making import evaluate_options
+        from ontic.aerospace.autonomy.decision_making import evaluate_options
         
         options = [
             {"name": "fast", "risk": 0.2, "cost": 1.0, "time": 1.0},
@@ -1095,7 +1095,7 @@ class TestPhase19Integration:
     
     def test_neural_algorithm_selection_for_distributed(self):
         """Test using neural selector to choose distributed algorithm."""
-        from tensornet.ml.neural.algorithm_selector import (
+        from ontic.ml.neural.algorithm_selector import (
             AlgorithmSelector,
             ProblemFeatures,
             SelectionCriteria,
@@ -1119,8 +1119,8 @@ class TestPhase19Integration:
     
     def test_mission_with_path_planning(self):
         """Test mission that includes path planning."""
-        from tensornet.aerospace.autonomy.mission_planner import MissionPlanner, MissionPhaseType
-        from tensornet.aerospace.autonomy.path_planning import plan_path
+        from ontic.aerospace.autonomy.mission_planner import MissionPlanner, MissionPhaseType
+        from ontic.aerospace.autonomy.path_planning import plan_path
         
         planner = MissionPlanner()
         mission = planner.create_mission("Navigation Mission")
@@ -1137,8 +1137,8 @@ class TestPhase19Integration:
     
     def test_decision_with_obstacle_avoidance(self):
         """Test decision making with obstacle input."""
-        from tensornet.aerospace.autonomy.obstacle_avoidance import ObstacleAvoidance
-        from tensornet.aerospace.autonomy.decision_making import DecisionMaker, ActionSpace
+        from ontic.aerospace.autonomy.obstacle_avoidance import ObstacleAvoidance
+        from ontic.aerospace.autonomy.decision_making import DecisionMaker, ActionSpace
         
         avoider = ObstacleAvoidance()
         avoider.add_obstacle(position=(5.0, 0.0), radius=1.0)
@@ -1162,8 +1162,8 @@ class TestPhase19Integration:
     
     def test_distributed_dmrg_with_load_balancing(self):
         """Test distributed DMRG with load balancer."""
-        from tensornet.engine.distributed_tn.distributed_dmrg import DistributedDMRG
-        from tensornet.engine.distributed_tn.load_balancer import LoadBalancer
+        from ontic.engine.distributed_tn.distributed_dmrg import DistributedDMRG
+        from ontic.engine.distributed_tn.load_balancer import LoadBalancer
         
         # Create MPS
         tensors = [torch.randn(1, 2, 4)]
@@ -1191,10 +1191,10 @@ class TestPhase19Integration:
     
     def test_bond_predictor_for_adaptive_tebd(self):
         """Test bond predictor for adaptive TEBD."""
-        from tensornet.ml.neural.bond_predictor import (
+        from ontic.ml.neural.bond_predictor import (
             BondDimensionPredictor, EntropyFeatures, TemporalFeatures
         )
-        from tensornet.engine.distributed_tn.parallel_tebd import ParallelTEBD
+        from ontic.engine.distributed_tn.parallel_tebd import ParallelTEBD
         
         predictor = BondDimensionPredictor()
         

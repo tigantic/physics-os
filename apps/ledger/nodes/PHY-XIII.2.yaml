@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Stokes with variable viscosity"
 
 source_files:
-  - "tensornet/geophysics/mantle_convection.py"
+  - "ontic/geophysics/mantle_convection.py"
 
 tests:
   smoke:

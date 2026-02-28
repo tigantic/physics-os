@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Workflow engine hooks"
 
 source_files:
-  - "tensornet/materials/first_principles_design.py"
+  - "ontic/materials/first_principles_design.py"
 
 tests:
   smoke:

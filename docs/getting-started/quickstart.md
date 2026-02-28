@@ -3,7 +3,7 @@
 ## Your First DMRG Calculation
 
 ```python
-from tensornet import MPS, heisenberg_mpo, dmrg
+from ontic import MPS, heisenberg_mpo, dmrg
 
 # Build a Heisenberg XXZ Hamiltonian for a 20-site chain
 H = heisenberg_mpo(L=20, J=1.0, Jz=1.0)
@@ -20,7 +20,7 @@ print(f"Final bond dimension: {max(psi.bond_dims)}")
 ## CFD: Sod Shock Tube
 
 ```python
-from tensornet.cfd import Euler1D, sod_shock_tube_ic, euler_to_mps
+from ontic.cfd import Euler1D, sod_shock_tube_ic, euler_to_mps
 
 # Initialize Sod shock tube problem
 state = sod_shock_tube_ic(nx=256)
@@ -35,8 +35,8 @@ for step in range(100):
 ## Time Evolution: TEBD
 
 ```python
-from tensornet import MPS, tebd
-from tensornet.algorithms.tebd import transverse_ising_gates
+from ontic import MPS, tebd
+from ontic.algorithms.tebd import transverse_ising_gates
 
 L, d, chi = 20, 2, 32
 psi = MPS.random(L=L, d=d, chi=chi)

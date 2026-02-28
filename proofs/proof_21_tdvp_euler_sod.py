@@ -25,7 +25,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 def test_sod_initial_structure():
     """Test Sod shock tube has correct initial structure."""
-    from tensornet.cfd.tt_cfd import TT_Euler1D
+    from ontic.cfd.tt_cfd import TT_Euler1D
 
     N = 32
     chi_max = 16
@@ -75,7 +75,7 @@ def test_sod_initial_structure():
 
 def test_solver_state_properties():
     """Test solver state has correct MPS properties."""
-    from tensornet.cfd.tt_cfd import TT_Euler1D
+    from ontic.cfd.tt_cfd import TT_Euler1D
 
     N = 16
     chi_max = 8
@@ -115,7 +115,7 @@ def test_solver_state_properties():
 
 def test_mpo_state_compatibility():
     """Test that MPO can be applied to MPS state (shape compatibility)."""
-    from tensornet.cfd.tt_cfd import TT_Euler1D
+    from ontic.cfd.tt_cfd import TT_Euler1D
 
     N = 8
     chi_max = 4
@@ -154,7 +154,7 @@ def test_mpo_state_compatibility():
 
 def test_density_ratio():
     """Test that the density ratio is preserved correctly."""
-    from tensornet.cfd.tt_cfd import TT_Euler1D
+    from ontic.cfd.tt_cfd import TT_Euler1D
 
     N = 64
     chi_max = 32
@@ -191,7 +191,7 @@ def test_density_ratio():
 
 def test_energy_consistency():
     """Test that energy is consistent with pressure and density."""
-    from tensornet.cfd.tt_cfd import TT_Euler1D
+    from ontic.cfd.tt_cfd import TT_Euler1D
 
     N = 32
     chi_max = 16

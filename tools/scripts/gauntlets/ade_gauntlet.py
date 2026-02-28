@@ -67,7 +67,7 @@ if torch.cuda.is_available():
 # IMPORTS FROM GENESIS STACK
 # ═══════════════════════════════════════════════════════════════════════════════
 
-from tensornet.ml.neural.differentiable_qtt import (
+from ontic.ml.neural.differentiable_qtt import (
     DifferentiableQTTCores,
     NuclearNormRegularizer,
     RankAdaptiveQTT,
@@ -78,7 +78,7 @@ from tensornet.ml.neural.differentiable_qtt import (
     RankAdaptationConfig,
 )
 
-from tensornet.ml.neural.genesis_optimizer import (
+from ontic.ml.neural.genesis_optimizer import (
     GenesisOptimizer,
     GenesisOptimizerConfig,
     DifferentiablePersistence,

@@ -23,9 +23,9 @@ from pathlib import Path
 # Ensure project root is on path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from tensornet.engine.vm.runtime import QTTRuntime
-from tensornet.engine.vm.rank_governor import RankGovernor, TruncationPolicy
-from tensornet.engine.vm.compilers import (
+from ontic.engine.vm.runtime import QTTRuntime
+from ontic.engine.vm.rank_governor import RankGovernor, TruncationPolicy
+from ontic.engine.vm.compilers import (
     BurgersCompiler,
     MaxwellCompiler,
     SchrodingerCompiler,

@@ -12,19 +12,19 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from tensornet.infra.fieldos import (Checkpoint, Event, EventType, Field,
+from ontic.infra.fieldos import (Checkpoint, Event, EventType, Field,
                                FieldMetadata, FieldOS, FieldOSConfig,
                                FieldType, Observable, Observer, Pipeline,
                                Plugin, PluginInfo, PluginManager, Session,
                                SessionState, Stage, StageResult)
-from tensornet.infra.fieldos.kernel import KernelState, KernelStats
-from tensornet.infra.fieldos.observable import (Computed, EventBus, FunctionObserver,
+from ontic.infra.fieldos.kernel import KernelState, KernelStats
+from ontic.infra.fieldos.observable import (Computed, EventBus, FunctionObserver,
                                           ObservableField, Subscription)
-from tensornet.infra.fieldos.pipeline import (FilterStage, FunctionStage,
+from ontic.infra.fieldos.pipeline import (FilterStage, FunctionStage,
                                         PipelineBuilder, StageStatus,
                                         TransformStage)
-from tensornet.infra.fieldos.plugin import PluginHook, PluginState
-from tensornet.infra.fieldos.session import SessionManager, SessionMetadata
+from ontic.infra.fieldos.plugin import PluginHook, PluginState
+from ontic.infra.fieldos.session import SessionManager, SessionMetadata
 
 # =============================================================================
 # FIELD TESTS

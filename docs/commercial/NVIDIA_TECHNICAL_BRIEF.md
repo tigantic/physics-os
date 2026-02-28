@@ -195,7 +195,7 @@ QTT-compressed fields can replace VTP/VTK archives in PhysicsNeMo Curator pipeli
 
 **API surface:**
 ```python
-from tensornet.cfd.qtt_native_ops import qtt_eval_batch
+from ontic.cfd.qtt_native_ops import qtt_eval_batch
 
 # Query field at arbitrary (x,y,z) coordinates
 values = qtt_eval_batch(qtt_cores, morton_indices)  # → GPU tensor

@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Turbulence-chemistry coupling"
 
 source_files:
-  - "tensornet/cfd/chemistry.py"
+  - "ontic/cfd/chemistry.py"
 
 tests:
   smoke:

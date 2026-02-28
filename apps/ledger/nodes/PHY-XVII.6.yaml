@@ -13,9 +13,9 @@ state: "V0.2"
 description: "MPI/OpenMP/GPU, I/O"
 
 source_files:
-  - "tensornet/distributed_tn/distributed_dmrg.py"
-  - "tensornet/distributed_tn/load_balancer.py"
-  - "tensornet/distributed_tn/parallel_tebd.py"
+  - "ontic/distributed_tn/distributed_dmrg.py"
+  - "ontic/distributed_tn/load_balancer.py"
+  - "ontic/distributed_tn/parallel_tebd.py"
 
 tests:
   smoke:

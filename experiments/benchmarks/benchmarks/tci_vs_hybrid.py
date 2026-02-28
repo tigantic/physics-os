@@ -16,9 +16,9 @@ import torch
 
 sys.path.insert(0, ".")
 
-from tensornet.cfd.qtt_eval import dense_to_qtt_cores, qtt_eval_batch
-from tensornet.cfd.qtt_tci import qtt_from_function, qtt_rusanov_flux_tci
-from tensornet.cfd.tci_flux import rusanov_flux
+from ontic.cfd.qtt_eval import dense_to_qtt_cores, qtt_eval_batch
+from ontic.cfd.qtt_tci import qtt_from_function, qtt_rusanov_flux_tci
+from ontic.cfd.tci_flux import rusanov_flux
 
 
 def benchmark_dense(N: int, n_steps: int = 10):

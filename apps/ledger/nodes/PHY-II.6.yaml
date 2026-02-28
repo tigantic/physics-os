@@ -13,7 +13,7 @@ state: "V0.2"
 description: "Boltzmann/BGK, DSMC"
 
 source_files:
-  - "tensornet/cfd/dsmc.py"
+  - "ontic/cfd/dsmc.py"
 
 tests:
   smoke:

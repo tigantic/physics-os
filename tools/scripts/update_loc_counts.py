@@ -138,7 +138,7 @@ def scan_directory(
 
 
 def scan_tensornet_modules(tensornet_path: Path) -> dict[str, DirStats]:
-    """Scan tensornet submodules."""
+    """Scan ontic submodules."""
     modules: dict[str, DirStats] = {}
     
     if not tensornet_path.exists():
@@ -232,8 +232,8 @@ def collect_stats(root: Path) -> LOCStats:
     stats.total_files = stats.python_files + stats.rust_files + stats.lean_files
     stats.total_loc = stats.python_loc + stats.rust_loc + stats.lean_loc
     
-    # tensornet modules
-    tensornet_path = root / "tensornet"
+    # ontic modules
+    tensornet_path = root / "ontic"
     if tensornet_path.exists():
         stats.tensornet_modules = scan_tensornet_modules(tensornet_path)
     
@@ -365,10 +365,10 @@ def generate_catalog_json(root: Path, stats: LOCStats) -> dict:
         "platforms": [
             {
                 "name": "HyperTensor VM",
-                "location": "tensornet/",
+                "location": "ontic/",
                 "language": "Python",
-                "files": stats.python_dirs.get("tensornet", {}).get("files", 0),
-                "loc": stats.python_dirs.get("tensornet", {}).get("loc", 0),
+                "files": stats.python_dirs.get("ontic", {}).get("files", 0),
+                "loc": stats.python_dirs.get("ontic", {}).get("loc", 0),
             },
             {
                 "name": "FluidElite",
@@ -381,12 +381,12 @@ def generate_catalog_json(root: Path, stats: LOCStats) -> dict:
             },
             {
                 "name": "Sovereign Compute",
-                "location": "tensornet/sovereign/, gevulot/",
+                "location": "ontic/sovereign/, gevulot/",
                 "language": "Python + Rust",
             },
         ],
         "modules": {
-            "tensornet": stats.tensornet_modules,
+            "ontic": stats.tensornet_modules,
             "rust_crates": stats.rust_crates,
         },
         "applications": {
@@ -412,7 +412,7 @@ def main() -> int:
     script_dir = Path(__file__).parent
     root = script_dir.parent
     
-    if not (root / "tensornet").exists():
+    if not (root / "ontic").exists():
         print("❌ Error: Must run from HyperTensor repo root")
         return 1
     

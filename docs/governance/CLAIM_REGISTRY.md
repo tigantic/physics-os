@@ -1,7 +1,7 @@
 # Claim Registry
 
 **Baseline**: v4.0.0
-**Source**: `hypertensor/core/evidence.py` — `generate_claims()`
+**Source**: `physics_os/core/evidence.py` — `generate_claims()`
 **Status**: FROZEN — new tags require MINOR version bump
 
 ---

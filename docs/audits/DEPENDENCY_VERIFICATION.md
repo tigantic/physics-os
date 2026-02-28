@@ -170,10 +170,10 @@ pip install -r requirements-lock.txt
 
 **CFD & Physics**:
 - `numba>=0.57.0` (JIT compilation for fast kernels)
-- Custom modules in `tensornet/`:
-  - `tensornet.sovereign.fast_euler_3d` (3D Euler solver with QTT)
-  - `tensornet.sovereign.qtt_slice_extractor` (3D→2D slicing)
-  - `tensornet.sovereign.realtime_tensor_stream` (RAM Bridge writer)
+- Custom modules in `ontic/`:
+  - `ontic.sovereign.fast_euler_3d` (3D Euler solver with QTT)
+  - `ontic.sovereign.qtt_slice_extractor` (3D→2D slicing)
+  - `ontic.sovereign.realtime_tensor_stream` (RAM Bridge writer)
 
 **Data & I/O**:
 - `h5py>=3.8.0` (HDF5 for large datasets)
@@ -231,9 +231,9 @@ pip install -e .
 **Verification**:
 ```bash
 python3 -c "
-from tensornet.sovereign.bridge_writer import TensorBridgeWriter
-from tensornet.sovereign.qtt_slice_extractor import QTTSliceExtractor
-from tensornet.sovereign.realtime_tensor_stream import RealtimeTensorStream
+from ontic.sovereign.bridge_writer import TensorBridgeWriter
+from ontic.sovereign.qtt_slice_extractor import QTTSliceExtractor
+from ontic.sovereign.realtime_tensor_stream import RealtimeTensorStream
 print('✓ TensorNet sovereign modules imported successfully')
 "
 ```
@@ -346,8 +346,8 @@ Get-Process glass-cockpit | Select-Object ProcessorAffinity
 ✅ **Complete**
 
 **Python Side**:
-- `tensornet.sovereign.bridge_writer` (RAM Bridge v2 writer)
-- `tensornet.sovereign.realtime_tensor_stream` (Streaming orchestration)
+- `ontic.sovereign.bridge_writer` (RAM Bridge v2 writer)
+- `ontic.sovereign.realtime_tensor_stream` (Streaming orchestration)
 - Synthetic tensor generation (test patterns)
 
 **Rust Side**:
@@ -359,7 +359,7 @@ Get-Process glass-cockpit | Select-Object ProcessorAffinity
 ```bash
 # Terminal 1 (Python):
 cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor
-python3 tensornet/sovereign/realtime_tensor_stream.py
+python3 ontic/sovereign/realtime_tensor_stream.py
 
 # Terminal 2 (Rust):
 cd glass-cockpit
@@ -372,8 +372,8 @@ cargo run --release --bin phase3
 ✅ **Complete**
 
 **Python Side**:
-- `tensornet.sovereign.qtt_slice_extractor` (3D→2D GPU slicing)
-- `tensornet.sovereign.fast_euler_3d` (QTT-compressed CFD solver)
+- `ontic.sovereign.qtt_slice_extractor` (3D→2D GPU slicing)
+- `ontic.sovereign.fast_euler_3d` (QTT-compressed CFD solver)
 - Modified `realtime_tensor_stream.stream_from_qtt()` (live integration)
 
 **Test Scripts**:
@@ -401,7 +401,7 @@ cd glass-cockpit && cargo run --release --bin phase3
 **Objective**: Achieve 165 FPS @ 4K through Sovereign Architecture.
 
 **Python Side**:
-- `tensornet/mpo/` (MPO physics operators - 245+ optimizations)
+- `ontic/mpo/` (MPO physics operators - 245+ optimizations)
 - Eliminated dense materializations in critical paths
 - GPU-accelerated compositor with float16 pipeline
 
@@ -666,7 +666,7 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 rm /dev/shm/hypertensor_bridge
 
 # Ensure Python writer runs first (creates the bridge):
-python3 tensornet/sovereign/realtime_tensor_stream.py
+python3 ontic/sovereign/realtime_tensor_stream.py
 ```
 
 ### 9.4 Terminal Pager Stuck
@@ -799,9 +799,9 @@ echo ""
 # Check TensorNet
 echo "[6/10] TensorNet Package..."
 python3 -c "
-from tensornet.sovereign.bridge_writer import TensorBridgeWriter
-from tensornet.sovereign.qtt_slice_extractor import QTTSliceExtractor
-from tensornet.sovereign.realtime_tensor_stream import RealtimeTensorStream
+from ontic.sovereign.bridge_writer import TensorBridgeWriter
+from ontic.sovereign.qtt_slice_extractor import QTTSliceExtractor
+from ontic.sovereign.realtime_tensor_stream import RealtimeTensorStream
 print('✓ TensorNet modules import successfully')
 "
 echo ""

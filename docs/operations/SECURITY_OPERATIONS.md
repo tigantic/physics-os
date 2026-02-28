@@ -23,15 +23,15 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from cryptography.hazmat.primitives.serialization import Encoding, PrivateFormat, NoEncryption
 key = Ed25519PrivateKey.generate()
 print(key.private_bytes(Encoding.PEM, PrivateFormat.PKCS8, NoEncryption()).decode())
-" > /etc/hypertensor/signing_key.pem
+" > /etc/physics_os/signing_key.pem
 
-chmod 600 /etc/hypertensor/signing_key.pem
+chmod 600 /etc/physics_os/signing_key.pem
 ```
 
 **Configuration:**
 
 ```bash
-export HYPERTENSOR_SIGNING_KEY_PATH=/etc/hypertensor/signing_key.pem
+export HYPERTENSOR_SIGNING_KEY_PATH=/etc/physics_os/signing_key.pem
 ```
 
 **Without this variable**, the server generates an **ephemeral** Ed25519 key
@@ -247,7 +247,7 @@ See `FORBIDDEN_OUTPUTS.md` — Response to Accidental Leak section.
 ### Start Server (Alpha)
 
 ```bash
-export HYPERTENSOR_SIGNING_KEY_PATH=/etc/hypertensor/signing_key.pem
+export HYPERTENSOR_SIGNING_KEY_PATH=/etc/physics_os/signing_key.pem
 export HYPERTENSOR_API_KEYS="htk_user1_xxx,htk_user2_yyy"
 export HYPERTENSOR_REQUIRE_AUTH=true
 export HYPERTENSOR_HOST=127.0.0.1

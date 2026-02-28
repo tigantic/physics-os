@@ -67,7 +67,7 @@ _FORBIDDEN_IP_PATTERNS: list[re.Pattern[str]] = [
         r"truncation.*policy",
         r"RankGovernor",
         r"QTTRuntime",
-        r"tensornet\.vm\.",
+        r"ontic\.vm\.",
     ]
 ]
 
@@ -114,7 +114,7 @@ class TestG5_4_NoSecretsInLogs:
 
         handler = _CaptureHandler()
         handler.setFormatter(logging.Formatter("%(message)s"))
-        api_logger = logging.getLogger("hypertensor.api")
+        api_logger = logging.getLogger("physics_os.api")
         api_logger.addHandler(handler)
         api_logger.setLevel(logging.DEBUG)
         try:
@@ -143,7 +143,7 @@ class TestG5_4_NoSecretsInLogs:
 
         app_py = (
             pathlib.Path(__file__).resolve().parent.parent
-            / "hypertensor" / "api" / "app.py"
+            / "physics_os" / "api" / "app.py"
         )
         source = app_py.read_text()
         # The old pattern was: logger.info("Dev API key: %s", settings.api_keys[0])
@@ -154,11 +154,11 @@ class TestG5_4_NoSecretsInLogs:
 
     def test_certificate_init_logs_no_private_key(self) -> None:
         """Certificate module logs key type but never the key material."""
-        from hypertensor.core import certificates
+        from physics_os.core import certificates
 
         handler = _CaptureHandler()
         handler.setFormatter(logging.Formatter("%(message)s"))
-        cert_logger = logging.getLogger("hypertensor.core.certificates")
+        cert_logger = logging.getLogger("physics_os.core.certificates")
         cert_logger.addHandler(handler)
         cert_logger.setLevel(logging.DEBUG)
         try:
@@ -177,7 +177,7 @@ class TestG5_4_NoSecretsInLogs:
 
     def test_exception_handler_no_secrets(self) -> None:
         """Internal error handler must not leak API keys in non-debug mode."""
-        from hypertensor.api.app import _generic_error
+        from physics_os.api.app import _generic_error
         from unittest.mock import MagicMock
         import asyncio
 
@@ -187,7 +187,7 @@ class TestG5_4_NoSecretsInLogs:
 
         handler = _CaptureHandler()
         handler.setFormatter(logging.Formatter("%(message)s"))
-        api_logger = logging.getLogger("hypertensor.api")
+        api_logger = logging.getLogger("physics_os.api")
         api_logger.addHandler(handler)
         api_logger.setLevel(logging.DEBUG)
         try:
@@ -211,7 +211,7 @@ class TestG3_3_LogRedaction:
         """Executor info/warning log lines must not contain IP-sensitive data."""
         handler = _CaptureHandler()
         handler.setFormatter(logging.Formatter("%(message)s"))
-        exec_logger = logging.getLogger("hypertensor.core.executor")
+        exec_logger = logging.getLogger("physics_os.core.executor")
         exec_logger.addHandler(handler)
         exec_logger.setLevel(logging.DEBUG)
         try:
@@ -230,19 +230,19 @@ class TestG3_3_LogRedaction:
 
     def test_app_startup_logs_no_ip_fields(self) -> None:
         """App lifespan logs must not contain IP-sensitive data."""
-        import hypertensor
+        import physics_os
 
         handler = _CaptureHandler()
         handler.setFormatter(logging.Formatter("%(message)s"))
-        api_logger = logging.getLogger("hypertensor.api")
+        api_logger = logging.getLogger("physics_os.api")
         api_logger.addHandler(handler)
         api_logger.setLevel(logging.DEBUG)
         try:
             api_logger.info(
                 "HyperTensor API %s  |  runtime %s  |  schema %s  |  device %s",
-                hypertensor.API_VERSION,
-                hypertensor.RUNTIME_VERSION,
-                hypertensor.SCHEMA_VERSION,
+                physics_os.API_VERSION,
+                physics_os.RUNTIME_VERSION,
+                physics_os.SCHEMA_VERSION,
                 "cpu",
             )
             api_logger.warning(
@@ -256,11 +256,11 @@ class TestG3_3_LogRedaction:
 
     def test_certificate_logs_no_ip_fields(self) -> None:
         """Certificate module logs must not contain IP-sensitive data."""
-        from hypertensor.core import certificates
+        from physics_os.core import certificates
 
         handler = _CaptureHandler()
         handler.setFormatter(logging.Formatter("%(message)s"))
-        cert_logger = logging.getLogger("hypertensor.core.certificates")
+        cert_logger = logging.getLogger("physics_os.core.certificates")
         cert_logger.addHandler(handler)
         cert_logger.setLevel(logging.DEBUG)
         try:
@@ -274,7 +274,7 @@ class TestG3_3_LogRedaction:
         """Jobs router log patterns must not contain IP-sensitive data."""
         handler = _CaptureHandler()
         handler.setFormatter(logging.Formatter("%(message)s"))
-        jobs_logger = logging.getLogger("hypertensor.api.routers.jobs")
+        jobs_logger = logging.getLogger("physics_os.api.routers.jobs")
         jobs_logger.addHandler(handler)
         jobs_logger.setLevel(logging.DEBUG)
         try:
@@ -310,7 +310,7 @@ class TestG3_3_LogRedaction:
         """
         import pathlib
 
-        src_root = pathlib.Path(__file__).resolve().parent.parent / "hypertensor"
+        src_root = pathlib.Path(__file__).resolve().parent.parent / "physics_os"
         forbidden_tokens = [
             "chi_max", "chi_mean", "chi_final", "bond_dim",
             "compression_ratio", "storage_ratio", "singular_value",
@@ -365,7 +365,7 @@ class TestG5_5_NoPrivateKeysCommitted:
     def test_no_private_key_in_source(self) -> None:
         import pathlib
 
-        src_root = pathlib.Path(__file__).resolve().parent.parent / "hypertensor"
+        src_root = pathlib.Path(__file__).resolve().parent.parent / "physics_os"
         violations: list[str] = []
         for py_file in src_root.rglob("*.py"):
             content = py_file.read_text()
