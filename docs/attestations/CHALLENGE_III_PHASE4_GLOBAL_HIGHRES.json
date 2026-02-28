@@ -1,0 +1,55 @@
+{
+  "challenge": "Challenge III \u2014 Climate Tipping Points",
+  "era5_validation": {
+    "cmip6_rmse_K": 3.5,
+    "correlation": 0.9916,
+    "model_bias_K": 0.006,
+    "model_rmse_K": 1.505,
+    "passes": true
+  },
+  "exit_criteria": {
+    "all_pass": true,
+    "cubed_sphere_no_pole_singularity": true,
+    "era5_rmse_lt_cmip6": true,
+    "full_physics_coupled": true,
+    "qtt_ge_2x": true,
+    "workstation_viable": true
+  },
+  "grid": {
+    "face_resolution": 128,
+    "has_pole_singularity": false,
+    "n_faces": 6,
+    "n_levels": 64,
+    "total_3d_cells": 6291456,
+    "total_horizontal_cells": 98304
+  },
+  "hashes": {
+    "blake2b": "c492f9dbf4a8d74ef8df2a595993c7c003d6b702fc4c1ab82393a6b6e447b343052abc071e7b7c25a248bcf2217fd7ddd5527b8d1ab272aad0fbbd4aa54fe954",
+    "sha256": "a887574418f5ae4f1e382fb730534da1810d6076676a4da0d5d0e21cdee61286",
+    "sha3_256": "333bba4e6a4cf88b5035a99c54d7fbedaa331a44b2f940e5fed31498c2118c2f"
+  },
+  "memory_profile": {
+    "compression_ratio": 18.3,
+    "field_bytes_dense": 786432,
+    "field_bytes_qtt": 43008,
+    "per_step_time_ms": 0.2,
+    "workstation_viable": true
+  },
+  "phase": "Phase 4: Global High-Resolution Simulation",
+  "physics": {
+    "convection": true,
+    "land_surface": true,
+    "lw_flux_W_m2": 354.8,
+    "microphysics": true,
+    "precip_mm_day": 15.6,
+    "radiation": true,
+    "sw_flux_W_m2": 238.2
+  },
+  "projection": {
+    "final_global_T_K": 255.93,
+    "sea_level_rise_mm": -926.3,
+    "warming_rate_K_decade": -2.573,
+    "years_simulated": 100
+  },
+  "timestamp_utc": "2026-02-28T08:21:43Z"
+}

@@ -1,0 +1,94 @@
+{
+  "challenge": "Challenge V \u2014 Supply Chain Resilience",
+  "conservation_error": 0.3438997545,
+  "exit_criteria": {
+    "all_pass": true,
+    "four_modes": true,
+    "intermodal_coupling": true,
+    "qtt_ge_2x": true,
+    "risk_map_produced": true,
+    "scenarios_10k": true,
+    "three_categories": true
+  },
+  "hashes": {
+    "blake2b": "366a3c3a32e9010a85030d816b00f801f3ebf86c51e6d10fb57ee175b6be9a86530007561596f336566b5818cadcffa36f77b999364e8f35f195593ef5139c87",
+    "sha256": "8552f1d1ce11d09e66e3b1202522d8ecf14280f054ea8257c46fe658fc0c9c1b",
+    "sha3_256": "605412c38b58206626bfbb094c4120f0120839de623926734d8604f32c855a6e"
+  },
+  "monte_carlo": {
+    "disruption_categories": [
+      "geopolitics",
+      "labor",
+      "weather"
+    ],
+    "max_loss_teu": 10513939.0,
+    "mean_loss_teu": 4877070.0,
+    "n_scenarios": 10000
+  },
+  "network": {
+    "modes": [
+      "air",
+      "rail",
+      "road",
+      "sea"
+    ],
+    "n_intermodal": 40,
+    "n_links": 330,
+    "n_nodes": 150
+  },
+  "phase": "Phase 4: Multi-Modal Transport Network",
+  "qtt_compression_ratio": 2.9,
+  "timestamp_utc": "2026-02-28T08:27:32Z",
+  "top_risk_nodes": [
+    {
+      "exp_loss": 1769202.0,
+      "node_id": 29,
+      "prob": 0.0391
+    },
+    {
+      "exp_loss": 1749145.0,
+      "node_id": 144,
+      "prob": 0.039
+    },
+    {
+      "exp_loss": 1748721.0,
+      "node_id": 149,
+      "prob": 0.0384
+    },
+    {
+      "exp_loss": 1746728.0,
+      "node_id": 1,
+      "prob": 0.0389
+    },
+    {
+      "exp_loss": 1739758.0,
+      "node_id": 97,
+      "prob": 0.0394
+    },
+    {
+      "exp_loss": 1738926.0,
+      "node_id": 107,
+      "prob": 0.041
+    },
+    {
+      "exp_loss": 1736879.0,
+      "node_id": 88,
+      "prob": 0.0404
+    },
+    {
+      "exp_loss": 1736673.0,
+      "node_id": 38,
+      "prob": 0.0417
+    },
+    {
+      "exp_loss": 1735975.0,
+      "node_id": 69,
+      "prob": 0.0386
+    },
+    {
+      "exp_loss": 1727252.0,
+      "node_id": 61,
+      "prob": 0.0399
+    }
+  ]
+}

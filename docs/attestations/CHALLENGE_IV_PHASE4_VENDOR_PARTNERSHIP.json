@@ -1,0 +1,61 @@
+{
+  "challenge": "Challenge IV \u2014 Fusion Energy",
+  "exit_criteria": {
+    "all_cycle_lt_200us": true,
+    "all_deadline_0pct": true,
+    "all_pass": true,
+    "diagnostics_integrated": true,
+    "qtt_ge_2x": true,
+    "vendors_ge_3": true
+  },
+  "hashes": {
+    "blake2b": "e4a6b53f59630d4c747a3f633a58e105a1a8f5b2e33d9627d94df12434b6d45911f1e8e3a851f9cb972ac424fc7ec154fd59bb4fc0728f8931eaf772122b2b6e",
+    "sha256": "0ef012a3968eccf25474b142ac4344d7674501ba6da5431ee04d3d6738428c4b",
+    "sha3_256": "3b960d4251744be8f18b3791fb752eb9203d66876828bb5fd1c69feef1968c2f"
+  },
+  "n_vendors": 3,
+  "phase": "Phase 4: Compact Fusion Vendor Partnership",
+  "qtt_compression_ratio": 51.0,
+  "timestamp_utc": "2026-02-28T08:21:52Z",
+  "vendors": [
+    {
+      "P_fusion_MW": 184.0,
+      "Q_achieved": 2.31,
+      "cycle_time_us": 15.25,
+      "deadline_miss_pct": 0.0,
+      "disruptions_avoided": 2,
+      "disruptions_predicted": 2,
+      "geometry": "spherical_tokamak",
+      "max_tracking_error": 1.143166755988368e+17,
+      "mean_tracking_error": 1.1160432503271286e+17,
+      "n_diagnostics": 5,
+      "vendor": "Commonwealth Fusion Systems"
+    },
+    {
+      "P_fusion_MW": 0.1,
+      "Q_achieved": 0.5,
+      "cycle_time_us": 14.95,
+      "deadline_miss_pct": 0.0,
+      "disruptions_avoided": 2,
+      "disruptions_predicted": 2,
+      "geometry": "frc",
+      "max_tracking_error": 1.2383227450983107e+17,
+      "mean_tracking_error": 1.2001749418749808e+17,
+      "n_diagnostics": 5,
+      "vendor": "TAE Technologies"
+    },
+    {
+      "P_fusion_MW": 100.1,
+      "Q_achieved": 10.01,
+      "cycle_time_us": 11.76,
+      "deadline_miss_pct": 0.0,
+      "disruptions_avoided": 2,
+      "disruptions_predicted": 2,
+      "geometry": "pulsed",
+      "max_tracking_error": 537.785811,
+      "mean_tracking_error": 498.661995,
+      "n_diagnostics": 4,
+      "vendor": "Helion Energy"
+    }
+  ]
+}

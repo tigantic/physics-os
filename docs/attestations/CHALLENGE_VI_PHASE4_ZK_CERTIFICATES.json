@@ -1,0 +1,43 @@
+{
+  "aggregate": {
+    "n_of_m": "7-of-10",
+    "valid": true
+  },
+  "certificate": {
+    "id": "56977014a0dcecdcdd0ad5ffb1d96a0d",
+    "media_hash_sha256": "4f3c769fbe1fa39227a62b0c71141684...",
+    "physics_score": 1.0,
+    "version": "1.0.0"
+  },
+  "challenge": "Challenge VI \u2014 Deepfake-Proof Video Certification",
+  "circuits": {
+    "scatter_gates": 6,
+    "shadow_gates": 8
+  },
+  "exit_criteria": {
+    "aggregate_proof": true,
+    "all_pass": true,
+    "certificate_format": true,
+    "gas_under_300k": true,
+    "qtt_ge_2x": true,
+    "scatter_circuit": true,
+    "shadow_circuit": true
+  },
+  "hashes": {
+    "blake2b": "5b1a6c460227466fef0b6afa79597d95845b6a996f31ccc6d9426fbcfd23105fc7691b5b28d8709584ceaf7c3c68502132a15730c39f0f4dcbd88127a8c7c6a6",
+    "sha256": "1ba59e8d61ac5f969fdad353a41f6b578693b3e7a9eda08e7773130f0774f6b9",
+    "sha3_256": "eab39dc21641ff56ec7e7eda49508e4137e0501b4198dc69f945a410b9fd7971"
+  },
+  "on_chain": {
+    "gas_estimate": 207000,
+    "under_300k": true
+  },
+  "phase": "Phase 4: Zero-Knowledge Reality Certificates",
+  "proofs": {
+    "n_frames": 1000,
+    "scatter_pass_rate": 1.0,
+    "shadow_pass_rate": 1.0
+  },
+  "qtt_compression_ratio": 33.6,
+  "timestamp_utc": "2026-02-28T08:28:05Z"
+}
